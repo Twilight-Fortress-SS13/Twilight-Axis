@@ -57,8 +57,25 @@ There are several things that need to be remembered:
 			jazz += 2
 	return jazz
 
+/mob/living/carbon/human // TA EDIT START
+	var/icon_regeneration_batch_depth = 0
+	var/icon_regeneration_body_refresh_pending = FALSE
+	var/icon_regeneration_body_refresh_redraw = FALSE
+
+/mob/living/carbon/human/proc/flush_icon_regeneration_body_refresh()
+	if(icon_regeneration_batch_depth || !icon_regeneration_body_refresh_pending)
+		return
+	var/redraw = icon_regeneration_body_refresh_redraw
+	icon_regeneration_body_refresh_pending = FALSE
+	icon_regeneration_body_refresh_redraw = FALSE
+	rebuild_obscured_flags()
+	update_body_parts(redraw) // TA EDIT END
+
 //HAIR OVERLAY
 /mob/living/carbon/human/update_hair()
+	if(icon_regeneration_batch_depth) // TA EDIT START
+		icon_regeneration_body_refresh_pending = TRUE
+		return // TA EDIT END
 	rebuild_obscured_flags()
 	update_body_parts()
 	return
@@ -320,6 +337,7 @@ There are several things that need to be remembered:
 		if(dna.species)
 			if(dna.species.regenerate_icons(src))
 				return
+		icon_regeneration_batch_depth++ // TA EDIT START
 		update_body()
 		update_hair()
 //		update_inv_w_uniform()
@@ -333,15 +351,16 @@ There are several things that need to be remembered:
 		update_inv_head()
 		update_inv_belt()
 		update_inv_back()
-		update_inv_pants()
 //		update_inv_wear_suit()
-		update_inv_armor()
 		update_inv_pockets()
 		update_inv_neck()
 		update_inv_cloak()
 		update_inv_pants()
+		update_inv_armor()
 		update_inv_shirt()
 		update_inv_mouth()
+		icon_regeneration_batch_depth-- // TA EDIT
+		flush_icon_regeneration_body_refresh() // TA EDIT END
 		update_transform()
 		//damage overlays
 		update_damage_overlays()
@@ -350,6 +369,7 @@ There are several things that need to be remembered:
 	return
 
 /mob/living/carbon/human/regenerate_clothes()
+	icon_regeneration_batch_depth++ // TA EDIT START
 	update_inv_wear_id()
 	update_inv_gloves()
 	update_inv_shoes()
@@ -357,13 +377,15 @@ There are several things that need to be remembered:
 	update_inv_head()
 	update_inv_belt()
 	update_inv_back()
-	update_inv_armor()
 	update_inv_pockets()
 	update_inv_neck()
 	update_inv_cloak()
 	update_inv_pants()
+	update_inv_armor()
 	update_inv_shirt()
 	update_inv_mouth()
+	icon_regeneration_batch_depth-- // TA EDIT
+	flush_icon_regeneration_body_refresh() // TA EDIT END
 
 /* --------------------------------------- */
 //vvvvvv UPDATE_INV PROCS vvvvvv
@@ -1030,7 +1052,8 @@ There are several things that need to be remembered:
 		inv.update_icon()
 	if(backr)
 		if(backr.alternate_worn_layer == CLOAK_BEHIND_LAYER)
-			update_inv_cloak()
+			if(!icon_regeneration_batch_depth) // TA EDIT
+				update_inv_cloak() // TA EDIT
 		else
 			var/mutable_appearance/back_overlay
 			var/mutable_appearance/behindback_overlay
@@ -1083,7 +1106,8 @@ There are several things that need to be remembered:
 
 	if(backl)
 		if(backl.alternate_worn_layer == CLOAK_BEHIND_LAYER)
-			update_inv_cloak()
+			if(!icon_regeneration_batch_depth) // TA EDIT
+				update_inv_cloak() // TA EDIT
 		else
 			update_hud_backl(backl)
 			var/mutable_appearance/back_overlay
@@ -1262,7 +1286,8 @@ There are several things that need to be remembered:
 
 	overlays_standing[CLOAK_LAYER] = cloaklays
 	rebuild_obscured_flags()
-	update_inv_armor() //fixboob
+	if(!icon_regeneration_batch_depth) // TA EDIT
+		update_inv_armor() // TA EDIT
 	apply_overlay(TABARD_LAYER)
 	apply_overlay(CLOAK_BEHIND_LAYER)
 	apply_overlay(CLOAK_LAYER)
@@ -1401,7 +1426,8 @@ There are several things that need to be remembered:
 		update_female_chest()
 		dna.species.handle_body(src)
 	update_hair()
-	update_inv_shirt() // fix boob
+	if(!icon_regeneration_batch_depth) // TA EDIT
+		update_inv_shirt() // TA EDIT
 
 	apply_overlay(ARMOR_LAYER)
 	apply_overlay(ARMORSLEEVE_LAYER)
@@ -1715,26 +1741,26 @@ generate/load female uniform sprites matching all previously decided variables
 	var/detail_state = get_detail_state(t_state)
 
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(file2use, "[detail_state][get_detail_tag()]"), -layer2use)
+		var/mutable_appearance/pic = mutable_appearance(file2use, "[detail_state][get_detail_tag()]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
 		standing.overlays.Add(pic)
 		if(!isinhands && boobed_overlay && boobed_detail && boobed)
-			pic = mutable_appearance(icon(file2use, "[detail_state]_boob[get_detail_tag()]"), -layer2use)
+			pic = mutable_appearance(file2use, "[detail_state]_boob[get_detail_tag()]") // TA EDIT
 			pic.appearance_flags = RESET_COLOR
 			if(get_detail_color())
 				pic.color = get_detail_color()
 			standing.overlays.Add(pic)
 
 	if(get_altdetail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(file2use, "[detail_state][get_altdetail_tag()]"), -layer2use)
+		var/mutable_appearance/pic = mutable_appearance(file2use, "[detail_state][get_altdetail_tag()]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_altdetail_color())
 			pic.color = get_altdetail_color()
 		standing.overlays.Add(pic)
 		if(!isinhands && boobed_overlay && boobed_detail && boobed)
-			pic = mutable_appearance(icon(file2use, "[detail_state]_boob[get_altdetail_tag()]"), -layer2use)
+			pic = mutable_appearance(file2use, "[detail_state]_boob[get_altdetail_tag()]") // TA EDIT
 			pic.appearance_flags = RESET_COLOR
 			if(get_altdetail_color())
 				pic.color = get_altdetail_color()
@@ -1860,7 +1886,7 @@ generate/load female uniform sprites matching all previously decided variables
 		sleeves += r_sleeve
 
 		if(I.get_detail_tag() && I.sleeved_detail)
-			var/mutable_appearance/pic = mutable_appearance(icon(I.sleeved, "[used][I.get_detail_tag()]"), layer=-layer2use)
+			var/mutable_appearance/pic = mutable_appearance(I.sleeved, "[used][I.get_detail_tag()]", layer=-layer2use) // TA EDIT
 //			pic.appearance_flags = RESET_COLOR
 			if(I.get_detail_color())
 				pic.color = I.get_detail_color()
@@ -1889,7 +1915,7 @@ generate/load female uniform sprites matching all previously decided variables
 		sleeves += l_sleeve
 
 		if(I.get_detail_tag() && I.sleeved_detail)
-			var/mutable_appearance/pic = mutable_appearance(icon(I.sleeved, "[used][I.get_detail_tag()]"), layer=-layer2use)
+			var/mutable_appearance/pic = mutable_appearance(I.sleeved, "[used][I.get_detail_tag()]", layer=-layer2use) // TA EDIT
 //			pic.appearance_flags = RESET_COLOR
 			if(I.get_detail_color())
 				pic.color = I.get_detail_color()
@@ -1994,6 +2020,11 @@ generate/load female uniform sprites matching all previously decided variables
 					break
 
 /mob/living/carbon/human/update_body_parts(redraw = FALSE)
+	if(icon_regeneration_batch_depth) // TA EDIT START
+		icon_regeneration_body_refresh_pending = TRUE
+		if(redraw)
+			icon_regeneration_body_refresh_redraw = TRUE
+		return // TA EDIT END
 	//CHECK FOR UPDATE
 	var/oldkey = icon_render_key
 	icon_render_key = generate_icon_render_key()

@@ -726,13 +726,13 @@
 /obj/item/clothing/head/roguetown/decoration/orle/donator_dyeable/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
 		add_overlay(pic)
 	if(get_altdetail_tag())
-		var/mutable_appearance/pic2 = mutable_appearance(icon(icon, "[icon_state][altdetail_tag]"))
+		var/mutable_appearance/pic2 = mutable_appearance(icon, "[icon_state][altdetail_tag]") // TA EDIT
 		pic2.appearance_flags = RESET_COLOR
 		if(get_altdetail_color())
 			pic2.color = get_altdetail_color()
@@ -767,7 +767,7 @@
 /obj/item/clothing/head/roguetown/decoration/featherplume/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
@@ -860,7 +860,7 @@
 /obj/item/clothing/shoes/roguetown/simpleshoes/heels/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
@@ -1438,7 +1438,7 @@
 /obj/item/clothing/suit/roguetown/armor/longcoat/eiren/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
@@ -1586,7 +1586,7 @@
 	cut_overlays()
 	if(!get_detail_tag())
 		return
-	var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+	var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 	message_admins("[pic.icon_state]")
 	pic.appearance_flags = RESET_COLOR
 	if(get_detail_color())
@@ -1980,7 +1980,7 @@ As Excaliber."
 /obj/item/clothing/head/roguetown/crown_hat/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
@@ -2735,7 +2735,7 @@ As Excaliber."
 /obj/item/clothing/head/roguetown/helmet/shadowplate/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[get_detail_state(icon_state)][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[get_detail_state(icon_state)][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
@@ -2963,7 +2963,7 @@ As Excaliber."
 /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/robed/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
@@ -2990,7 +2990,7 @@ As Excaliber."
 /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/fluted/robed/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
@@ -3017,7 +3017,7 @@ As Excaliber."
 /obj/item/clothing/suit/roguetown/armor/plate/full/robed/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
@@ -3164,7 +3164,7 @@ As Excaliber."
 /obj/item/clothing/head/roguetown/helmet/sallet_winged/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[get_detail_state(icon_state)][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[get_detail_state(icon_state)][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
@@ -3228,13 +3228,13 @@ As Excaliber."
 /obj/item/clothing/head/roguetown/helmet/grandmaster_habit/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[get_detail_state(icon_state)][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[get_detail_state(icon_state)][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
 		add_overlay(pic)
 	if(get_altdetail_tag())
-		var/mutable_appearance/pic2 = mutable_appearance(icon(icon, "[get_detail_state(icon_state)][altdetail_tag]"))
+		var/mutable_appearance/pic2 = mutable_appearance(icon, "[get_detail_state(icon_state)][altdetail_tag]") // TA EDIT
 		pic2.appearance_flags = RESET_COLOR
 		if(get_altdetail_color())
 			pic2.color = get_altdetail_color()
@@ -3298,7 +3298,7 @@ As Excaliber."
 /obj/item/clothing/cloak/furcloak/woodland/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
@@ -3351,7 +3351,7 @@ As Excaliber."
 /obj/item/clothing/suit/roguetown/armor/brigandine/light/woodland/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
@@ -3377,7 +3377,7 @@ As Excaliber."
 /obj/item/clothing/suit/roguetown/armor/plate/cuirass/woodland/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
@@ -3403,7 +3403,7 @@ As Excaliber."
 /obj/item/clothing/suit/roguetown/armor/chainmail/woodland/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
@@ -3429,7 +3429,7 @@ As Excaliber."
 /obj/item/clothing/suit/roguetown/armor/leather/studded/woodland/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
@@ -3455,7 +3455,7 @@ As Excaliber."
 /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/woodland/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
@@ -3481,7 +3481,7 @@ As Excaliber."
 /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/woodland/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()

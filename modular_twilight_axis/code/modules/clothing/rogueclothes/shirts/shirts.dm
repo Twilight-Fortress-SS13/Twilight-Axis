@@ -36,7 +36,7 @@
 /obj/item/clothing/suit/roguetown/shirt/twilight_elven/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		add_overlay(pic)
 
 /obj/item/clothing/suit/roguetown/shirt/twilight_elven/coat
@@ -64,7 +64,7 @@
 /obj/item/clothing/suit/roguetown/shirt/twilight_elven/coat/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		add_overlay(pic)
 
 /obj/item/clothing/suit/roguetown/shirt/twilight_elven/coat/alt
@@ -89,7 +89,7 @@
 /obj/item/clothing/suit/roguetown/shirt/twilight_elven/coat/alt/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		add_overlay(pic)
 
 /obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold
@@ -670,7 +670,7 @@
 /obj/item/clothing/suit/roguetown/shirt/dress/etrdress3/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
