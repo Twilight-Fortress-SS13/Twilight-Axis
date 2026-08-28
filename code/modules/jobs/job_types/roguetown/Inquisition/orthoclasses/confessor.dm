@@ -137,4 +137,5 @@
 
 	add_verb(H, /mob/living/carbon/human/proc/faith_test)
 	add_verb(H, /mob/living/carbon/human/proc/torture_victim)
-	change_origin(H, /datum/virtue/origin/otava, "Holy order")
+	//change_origin(H, /datum/virtue/origin/otava, "Holy order") //TA EDIT
+

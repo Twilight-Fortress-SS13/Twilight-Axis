@@ -114,5 +114,5 @@
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_WEAK, devotion_limit = CLERIC_REQ_1)
 
-	change_origin(H, /datum/virtue/origin/naledi, "Holy order")//These are Naledi we make them actually Naledi
-	H.grant_language(/datum/language/celestial)
+	// change_origin(H, /datum/virtue/origin/naledi, "Holy order") // TA edit
+	// H.grant_language(/datum/language/celestial) // TA edit
