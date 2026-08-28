@@ -104,6 +104,7 @@
 	if(!IS_DYNAMIC_LIGHTING(src) && IS_DYNAMIC_LIGHTING(A))
 		add_overlay(/obj/effect/fullbright)
 
+	migrate_legacy_light_range() // TODO(tg-light-port): remove once no .dmm still bakes in light_outer_range
 	if (light_power && light_range)
 		update_light()
 

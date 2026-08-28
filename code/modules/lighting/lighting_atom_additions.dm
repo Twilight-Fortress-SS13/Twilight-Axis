@@ -16,12 +16,25 @@
 	///Optional render_source to apply to this atom's OVERLAY_LIGHT light overlay, hooked up by /datum/light_middleman
 	var/light_render_source
 
+	// TODO(tg-light-port): DEPRECATED COMPAT SHIM - remove this var and migrate_legacy_light_range() once every
+	// .dmm that still has a baked-in `light_outer_range = X` var override has been re-saved by the map editor
+	// (post tg light port, the atom var is just `light_range`). Until then this exists purely so old maps compile.
+	var/light_outer_range
+
 	var/tmp/datum/light_source/light // Our light source. Don't fuck with this directly unless you have a good reason!
 	var/tmp/list/light_sources		// Any light sources that are "inside" of us, for example, if src here was a mob that's carrying a flashlight, that flashlight's light source would be part of this list.
 
 	var/light_system = STATIC_LIGHT
 	///Bitflags to determine lighting-related atom properties.
 	var/light_flags = NONE
+
+///DEPRECATED COMPAT SHIM - see light_outer_range TODO above. Called from /atom/proc/Initialize and /turf/Initialize
+///(which doesn't chain to the former) before either checks light_range, so mapped light_outer_range overrides still work.
+/atom/proc/migrate_legacy_light_range()
+	if(isnull(light_outer_range))
+		return
+	light_range = light_outer_range
+	light_outer_range = null
 
 /atom/movable
 	///Lazylist to keep track on the sources of illumination.
