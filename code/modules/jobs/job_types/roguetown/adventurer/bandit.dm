@@ -122,7 +122,7 @@
 	add_bounty(H.real_name, race, gender, descriptor_height, descriptor_body, descriptor_voice, bounty_total, FALSE, my_crime, bounty_poster)
 
 
-/proc/update_bandits_slots()
+/proc/update_bandits_slots(override_player_count = null) // TA EDIT
 	//update_lost_grenzel_slots() // Lost Grenzel comment
 
 	var/datum/job/bandit_job = SSjob.GetJob("Bandit")
@@ -157,7 +157,7 @@
 		slot_job.spawn_positions = 0
 		return
 
-	var/player_count = SSgamemode.get_correct_popcount()
+	var/player_count = isnull(override_player_count) ? SSgamemode.get_correct_popcount() : override_player_count // TA EDIT
 
 	slot_job.always_show_on_latechoices = TRUE
 	if(!SSgamemode.story_antag_open_slots(antag_path, player_count))
@@ -177,7 +177,15 @@
 			slot_job.spawn_positions = 0
 			return
 
-		slots = max_slots // TA EDIT
+		slots = 4 // TA EDIT START
+		if(player_count > 40)
+			if(storyteller_type == /datum/storyteller/gamemode/guaranteed_antag)
+				slots += floor((player_count - 40) / 10)
+			else
+				slots += floor((player_count - 40) / 20)
+		slots = min(slots, max_slots)
+		if(SSticker.IsRoundInProgress())
+			slots = min(slots, SSgamemode.combat_positions_alive) // TA EDIT END
 
 	slots = SSgamemode.story_antag_slots(slots, antag_path, player_count)
 

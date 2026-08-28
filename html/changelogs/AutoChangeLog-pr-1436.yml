@@ -1,0 +1,5 @@
+author: "Quinalion"
+delete-after: True
+changes:
+  - bugfix: "Рыцарю выдаётся длинный меч. Аксессуар на шлем выдаётся в слот маски."
+  - bugfix: "Донатный скин."

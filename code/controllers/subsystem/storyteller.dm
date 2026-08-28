@@ -220,6 +220,8 @@ SUBSYSTEM_DEF(gamemode)
 	/// Calculated effective pop after weighing garrison & holy warriors at 3x, acolytes at 2x
 	var/effective_pop = 0
 
+	var/combat_positions_alive = 0 // TA EDIT
+
 	/// Is storyteller secret or not
 	var/secret_storyteller = FALSE
 
@@ -684,6 +686,7 @@ SUBSYSTEM_DEF(gamemode)
 	holy_warrior = 0
 	garrison = 0
 	half_combatant = 0
+	combat_positions_alive = 0
 	for(var/mob/player_mob as anything in GLOB.player_list)
 		if(!player_mob.client)
 			continue
@@ -705,6 +708,17 @@ SUBSYSTEM_DEF(gamemode)
 				half_combatant++
 			if(player_mob.mind.job_bitflag & BITFLAG_GARRISON)
 				garrison++
+//TA EDIT BEGIN
+		var/list/combat_positions = list()
+		combat_positions += GLOB.retinue_positions + GLOB.garrison_positions + GLOB.citywatch_positions + GLOB.vanguard_positions
+		if(player_mob.mind.assigned_role in combat_positions)
+			combat_positions_alive++
+
+	if(SSticker.IsRoundInProgress())
+		update_wretch_slots()
+		update_bandits_slots(active_players) // TA EDIT
+//TA EDIT END
+
 	update_pop_scaling()
 
 /datum/controller/subsystem/gamemode/proc/update_pop_scaling()

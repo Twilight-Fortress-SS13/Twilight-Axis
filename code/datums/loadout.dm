@@ -242,60 +242,60 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/tw_d_horns
 	name = "Horns Helmkleinod"
 	category = list("Головные уборы", "Триумфы")
-	path = /obj/item/clothing/head/roguetown/tw_d_horns
+	path = /obj/item/clothing/head/roguetown/onhelm/tw_d_horns
 	triumph_cost = 20
 
 /datum/loadout_item/tw_d_basic
 	name = "Helm's Chaperon"
 	category = "Головные уборы"
-	path = /obj/item/clothing/head/roguetown/tw_d_basic
+	path = /obj/item/clothing/head/roguetown/onhelm/tw_d_basic
 
 /datum/loadout_item/tw_d_castle_red
 	name = "Castle Helmkleinod"
 	category = list("Головные уборы", "Триумфы")
-	path = /obj/item/clothing/head/roguetown/tw_d_castle_red
+	path = /obj/item/clothing/head/roguetown/onhelm/tw_d_castle_red
 	triumph_cost = 20
 
 /datum/loadout_item/tw_d_graggar
 	name = "Bloodied Star Helmkleinod"
 	category = list("Головные уборы", "Триумфы")
-	path = /obj/item/clothing/head/roguetown/tw_d_graggar
+	path = /obj/item/clothing/head/roguetown/onhelm/tw_d_graggar
 	triumph_cost = 20
 
 /datum/loadout_item/tw_d_efreet
 	name = "Afreet Helmkleinod"
 	category = list("Головные уборы", "Триумфы")
-	path = /obj/item/clothing/head/roguetown/tw_d_efreet
+	path = /obj/item/clothing/head/roguetown/onhelm/tw_d_efreet
 	triumph_cost = 15
 
 /datum/loadout_item/tw_d_feathers
 	name = "Feathers Accessory"
 	category = list("Головные уборы", "Триумфы")
-	path = /obj/item/clothing/head/roguetown/tw_d_feathers
+	path = /obj/item/clothing/head/roguetown/onhelm/tw_d_feathers
 	triumph_cost = 15
 
 /datum/loadout_item/tw_d_oathtaker
 	name = "Oathtaker Symbol"
 	category = list("Головные уборы", "Триумфы")
-	path = /obj/item/clothing/head/roguetown/tw_d_oathtaker
+	path = /obj/item/clothing/head/roguetown/onhelm/tw_d_oathtaker
 	triumph_cost = 15
 
 /datum/loadout_item/tw_d_windmill
 	name = "Windmill Helmkleinod"
 	category = list("Головные уборы", "Триумфы")
-	path = /obj/item/clothing/head/roguetown/tw_d_windmill
+	path = /obj/item/clothing/head/roguetown/onhelm/tw_d_windmill
 	triumph_cost = 15
 
 /datum/loadout_item/tw_d_swan
 	name = "Swan on Lake"
 	category = list("Головные уборы", "Триумфы")
-	path = /obj/item/clothing/head/roguetown/tw_d_swan
+	path = /obj/item/clothing/head/roguetown/onhelm/tw_d_swan
 	triumph_cost = 15
 
 /datum/loadout_item/tw_d_dragon_red
 	name = "Dragon's Dread"
 	category = list("Головные уборы", "Триумфы")
-	path = /obj/item/clothing/head/roguetown/tw_d_dragon_red
+	path = /obj/item/clothing/head/roguetown/onhelm/tw_d_dragon_red
 	triumph_cost = 15
 
 /datum/loadout_item/antlers
@@ -3106,63 +3106,63 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/tw_d_horns_donat
 	name = "Horns Helmkleinod (Донат - Т2)"
 	category = list("Головные уборы", "Донат")
-	path = /obj/item/clothing/head/roguetown/tw_d_horns
+	path = /obj/item/clothing/head/roguetown/onhelm/tw_d_horns
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/tw_d_castle_red_donat
 	name = "Castle Helmkleinod (Донат - Т2)"
 	category = list("Головные уборы", "Донат")
-	path = /obj/item/clothing/head/roguetown/tw_d_castle_red
+	path = /obj/item/clothing/head/roguetown/onhelm/tw_d_castle_red
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/tw_d_graggar_donat
 	name = "Bloodied Star Helmkleinod (Донат - Т2)"
 	category = list("Головные уборы", "Донат")
-	path = /obj/item/clothing/head/roguetown/tw_d_graggar
+	path = /obj/item/clothing/head/roguetown/onhelm/tw_d_graggar
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/tw_d_efreet_donat
 	name = "Afreet Helmkleinod (Донат - Т2)"
 	category = list("Головные уборы", "Донат")
-	path = /obj/item/clothing/head/roguetown/tw_d_efreet
+	path = /obj/item/clothing/head/roguetown/onhelm/tw_d_efreet
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/tw_d_feathers_donat
 	name = "Feathers Accessory (Донат - Т2)"
 	category = list("Головные уборы", "Донат")
-	path = /obj/item/clothing/head/roguetown/tw_d_feathers
+	path = /obj/item/clothing/head/roguetown/onhelm/tw_d_feathers
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/tw_d_oathtaker_donat
 	name = "Oathtaker Symbol (Донат - Т2)"
 	category = list("Головные уборы", "Донат")
-	path = /obj/item/clothing/head/roguetown/tw_d_oathtaker
+	path = /obj/item/clothing/head/roguetown/onhelm/tw_d_oathtaker
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/tw_d_windmill_donat
 	name = "Windmill Helmkleinod (Донат - Т2)"
 	category = list("Головные уборы", "Донат")
-	path = /obj/item/clothing/head/roguetown/tw_d_windmill
+	path = /obj/item/clothing/head/roguetown/onhelm/tw_d_windmill
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/tw_d_swan_donat
 	name = "Swan on Lake (Донат - Т2)"
 	category = list("Головные уборы", "Донат")
-	path = /obj/item/clothing/head/roguetown/tw_d_swan
+	path = /obj/item/clothing/head/roguetown/onhelm/tw_d_swan
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/tw_d_dragon_red_donat
 	name = "Dragon's Dread (Донат - Т2)"
 	category = list("Головные уборы", "Донат")
-	path = /obj/item/clothing/head/roguetown/tw_d_dragon_red
+	path = /obj/item/clothing/head/roguetown/onhelm/tw_d_dragon_red
 	donatitem = TRUE
 	donat_tier = 2
 
@@ -4527,6 +4527,13 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Donator Kit - Silver Shashka - Required: Szöréndnížine Sabre or Aavnic Shashka"
 	category = list("Оружие", "Донат")
 	path = /obj/item/enchantingkit/weapon/stinketh_shashka
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/kadeguandao
+	name = "Donator Kit - Dawn Cometh - Required: Halberd, Greataxe or Naginata"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/weapon/kadeguandao
 	donatitem = TRUE
 	donat_tier = 2
 

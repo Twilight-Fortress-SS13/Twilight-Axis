@@ -256,7 +256,7 @@
 	wdefense = 3
 	damfactor = 1.2
 	critfactor = 1
-	reload_time = 12
+	reload_time = 15
 	reload_stamina_cost = 50
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/rifle/getonmobprop(tag)

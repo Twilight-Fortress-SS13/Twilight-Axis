@@ -383,7 +383,7 @@
 		revert_cast(user)
 		return
 
-	var/item_type = itemchoice
+	var/item_type = item_map[itemchoice]
 	if(!ispath(item_type, /obj/item))
 		revert_cast(user)
 		return

@@ -1640,7 +1640,7 @@ tile_coordinates = list(list(1,1), list(-1,1), list(-1,-1), list(1,-1),list(0,0)
 	W.damtype = TOX
 	W.force -= 15
 	W.update_force_dynamic()
-	W.icon_state = "poisonsaber_active"
+	W.icon_state = "poisonsabre_active"
 	howner.regenerate_icons()
 	playsound(W.loc, 'sound/misc/lava_death.ogg', 100)
 
@@ -1650,7 +1650,7 @@ tile_coordinates = list(list(1,1), list(-1,1), list(-1,-1), list(1,-1),list(0,0)
 	W.damtype = BRUTE
 	W.force += 15
 	W.update_force_dynamic()
-	W.icon_state = "poisonsaber"
+	W.icon_state = "poisonsabre"
 	playsound(W.loc, 'sound/magic/bladescrape.ogg', 100)
 
 /datum/special_intent/permafrost

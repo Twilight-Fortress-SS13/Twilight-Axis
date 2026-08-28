@@ -253,7 +253,7 @@
 /obj/structure/roguemachine/mail/proc/log_mail_send(mob/user, sender_name, recipient_name)
 	if(!user)
 		return
-	user.log_message("sent mail via [name]/[(loc)] from [sender_name] to [recipient_name]", LOG_GAME)
+	log_mail("[key_name(user)] sent mail via [name]/[(loc)] from [sender_name] to [recipient_name]") // TA EDIT
 	message_admins("[key_name(user)] sent mail via [name]/[(loc)] from [sender_name] to [recipient_name]")
 
 /obj/structure/roguemachine/mail/proc/build_sanitized_letter(mob/user, sender, recipient, content)
