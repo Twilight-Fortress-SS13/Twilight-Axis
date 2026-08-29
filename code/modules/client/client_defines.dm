@@ -313,21 +313,45 @@
 		PM.filters += W.secondary_filter_type
 	particle_weather_parallax_plane_master = PM
 
+/client/proc/cleanup_particle_weather_parallax_visuals(obj/weather_effect/fog_parallax/keep_visual)
+	var/list/fog_visuals_to_delete = list()
+	for(var/atom/movable/screen/plane_master/weather_effect/PM in screen)
+		for(var/obj/weather_effect/fog_parallax/fog_visual in PM.vis_contents)
+			if(fog_visual == keep_visual)
+				continue
+			fog_visuals_to_delete |= fog_visual
+	for(var/obj/weather_effect/fog_parallax/fog_visual as anything in fog_visuals_to_delete)
+		for(var/atom/movable/screen/plane_master/weather_effect/PM in screen)
+			PM.vis_contents -= fog_visual
+		if(!QDELETED(fog_visual))
+			qdel(fog_visual)
+
 /client/proc/clear_particle_weather_parallax()
 	if(particle_weather_parallax_bound_movable)
 		UnregisterSignal(particle_weather_parallax_bound_movable, COMSIG_MOVABLE_MOVED)
 		particle_weather_parallax_bound_movable = null
-	if(particle_weather_parallax)
+	var/obj/weather_effect/fog_parallax/tracked_parallax = particle_weather_parallax
+	cleanup_particle_weather_parallax_visuals()
+	if(tracked_parallax && !QDELETED(tracked_parallax))
 		if(particle_weather_parallax_plane_master)
-			particle_weather_parallax_plane_master.vis_contents -= particle_weather_parallax
-		qdel(particle_weather_parallax)
-		particle_weather_parallax = null
+			particle_weather_parallax_plane_master.vis_contents -= tracked_parallax
+		qdel(tracked_parallax)
+	particle_weather_parallax = null
 	particle_weather_parallax_previous_turf = null
 	particle_weather_parallax_eye = null
 	particle_weather_parallax_mob = null
 	particle_weather_parallax_plane_master = null
 	particle_weather_parallax_weather = null
 	reset_particle_weather_parallax_plane()
+
+/client/proc/has_particle_weather_parallax_visual()
+	var/atom/movable/screen/plane_master/weather_effect/PM = locate(/atom/movable/screen/plane_master/weather_effect) in screen
+	if(!PM)
+		return FALSE
+	for(var/obj/weather_effect/fog_parallax/fog_visual in PM.vis_contents)
+		if(!QDELETED(fog_visual))
+			return TRUE
+	return FALSE
 
 /client/proc/set_particle_weather_parallax_camera_offset(new_offset_x, new_offset_y, transition_time = 0, easing_mode = 0)
 	particle_weather_parallax_camera_offset_x = new_offset_x
@@ -351,8 +375,16 @@
 	var/atom/movable/screen/plane_master/weather_effect/current_plane_master = locate(/atom/movable/screen/plane_master/weather_effect) in screen
 	if(!current_plane_master)
 		return FALSE
-	if(!force_reconfigure && particle_weather_parallax && particle_weather_parallax_weather == W && particle_weather_parallax_bound_movable == current_movable_eye && particle_weather_parallax_eye == current_eye && particle_weather_parallax_mob == mob && particle_weather_parallax_plane_master == current_plane_master && !QDELETED(particle_weather_parallax_plane_master) && (particle_weather_parallax in current_plane_master.vis_contents))
+	if(particle_weather_parallax && QDELETED(particle_weather_parallax))
+		particle_weather_parallax = null
+	var/obj/weather_effect/fog_parallax/existing_parallax = locate(/obj/weather_effect/fog_parallax) in current_plane_master.vis_contents
+	if(!force_reconfigure && particle_weather_parallax && existing_parallax == particle_weather_parallax && particle_weather_parallax_weather == W && particle_weather_parallax_bound_movable == current_movable_eye && particle_weather_parallax_eye == current_eye && particle_weather_parallax_mob == mob && particle_weather_parallax_plane_master == current_plane_master && !QDELETED(particle_weather_parallax_plane_master))
 		return TRUE
+	var/visual_adopted = FALSE
+	if(!particle_weather_parallax && existing_parallax && !QDELETED(existing_parallax))
+		particle_weather_parallax = existing_parallax
+		visual_adopted = TRUE
+	cleanup_particle_weather_parallax_visuals(particle_weather_parallax)
 	var/turf/T = get_turf(current_eye)
 	if(!T)
 		return FALSE
@@ -377,13 +409,14 @@
 	if(plane_changed)
 		if(particle_weather_parallax_plane_master)
 			particle_weather_parallax_plane_master.vis_contents -= particle_weather_parallax
-		current_plane_master.vis_contents += particle_weather_parallax
+		if(!(particle_weather_parallax in current_plane_master.vis_contents))
+			current_plane_master.vis_contents += particle_weather_parallax
 		particle_weather_parallax_plane_master = current_plane_master
 	else if(!(particle_weather_parallax in current_plane_master.vis_contents))
 		current_plane_master.vis_contents += particle_weather_parallax
 		visual_missing_from_plane = TRUE
 
-	var/full_reconfigure = force_reconfigure || weather_changed || visual_created
+	var/full_reconfigure = force_reconfigure || weather_changed || visual_created || visual_adopted
 	if(full_reconfigure || plane_changed)
 		configure_particle_weather_parallax_plane(W)
 	if(full_reconfigure)
@@ -446,6 +479,8 @@
 		return
 	if(SSParticleWeather.runningWeather?.parallax_weather)
 		update_particle_weather_parallax()
+	else if(particle_weather_parallax || particle_weather_parallax_weather || particle_weather_parallax_plane_master || has_particle_weather_parallax_visual())
+		clear_particle_weather_parallax()
 	if(!force && mob.x == last_weather_x && mob.y == last_weather_y && mob.z == last_weather_z)
 		return
 	last_weather_x = mob.x
