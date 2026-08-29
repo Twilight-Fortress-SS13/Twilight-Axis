@@ -482,7 +482,8 @@ There are several things that need to be remembered:
 	if(wear_ring)
 		wear_ring.screen_loc = rogueui_ringr
 		if(client && hud_used && hud_used.hud_shown)
-			client.screen += wear_ring
+			if(!(wear_ring in client.screen)) // TA EDIT
+				client.screen += wear_ring // TA EDIT
 		update_observer_view(wear_ring)
 		id_overlay = wear_ring.build_worn_icon(default_layer = RING_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', female = FALSE)
 		if(gender == MALE)
@@ -532,7 +533,8 @@ There are several things that need to be remembered:
 		gloves.screen_loc = rogueui_gloves
 		if(client && hud_used && hud_used.hud_shown)
 			if(hud_used.inventory_shown)
-				client.screen += gloves
+				if(!(gloves in client.screen)) // TA EDIT
+					client.screen += gloves // TA EDIT
 		update_observer_view(gloves,1)
 		if(dna && dna.species.sexes)
 			var/racecustom
@@ -587,7 +589,8 @@ There are several things that need to be remembered:
 		wear_wrists.screen_loc = rogueui_wrists
 		if(client && hud_used && hud_used.hud_shown)
 			if(hud_used.inventory_shown)
-				client.screen += wear_wrists
+				if(!(wear_wrists in client.screen)) // TA EDIT
+					client.screen += wear_wrists // TA EDIT
 		update_observer_view(wear_wrists,1)
 		if(dna && dna.species.sexes)
 			var/racecustom
@@ -701,7 +704,8 @@ There are several things that need to be remembered:
 		shoes.screen_loc = rogueui_shoes					//move the item to the appropriate screen loc
 		if(client && hud_used && hud_used.hud_shown)
 			if(hud_used.inventory_shown)			//if the inventory is open
-				client.screen += shoes					//add it to client's screen
+				if(!(shoes in client.screen)) // TA EDIT
+					client.screen += shoes					//add it to client's screen // TA EDIT
 		update_observer_view(shoes,1)
 		if(dna && dna.species.sexes)
 			var/footindex = get_limbloss_index(LEG_RIGHT, LEG_LEFT)
@@ -815,7 +819,8 @@ There are several things that need to be remembered:
 		else
 			beltr.screen_loc = rogueui_beltr
 		if(client && hud_used && hud_used.hud_shown)
-			client.screen += beltr
+			if(!(beltr in client.screen)) // TA EDIT
+				client.screen += beltr // TA EDIT
 		update_observer_view(beltr)
 		if(!(cloak && (cloak.flags_inv & HIDEBELT)))
 			var/mutable_appearance/onbelt_overlay
@@ -876,7 +881,8 @@ There are several things that need to be remembered:
 		else
 			beltl.screen_loc = rogueui_beltl
 		if(client && hud_used && hud_used.hud_shown)
-			client.screen += beltl
+			if(!(beltl in client.screen)) // TA EDIT
+				client.screen += beltl // TA EDIT
 		update_observer_view(beltl)
 		if(!(cloak && (cloak.flags_inv & HIDEBELT)))
 			var/mutable_appearance/onbelt_overlay
@@ -934,7 +940,8 @@ There are several things that need to be remembered:
 	if(belt)
 		belt.screen_loc = rogueui_belt
 		if(client && hud_used && hud_used.hud_shown)
-			client.screen += belt
+			if(!(belt in client.screen)) // TA EDIT
+				client.screen += belt // TA EDIT
 		update_observer_view(belt)
 		if(!(cloak && (cloak.flags_inv & HIDEBELT)))
 			if(dna && dna.species.sexes)
@@ -1188,7 +1195,8 @@ There are several things that need to be remembered:
 		cloak.screen_loc = rogueui_cloak					//move the item to the appropriate screen loc
 		if(client && hud_used && hud_used.hud_shown)
 			if(hud_used.inventory_shown)			//if the inventory is open
-				client.screen += cloak					//add it to client's screen
+				if(!(cloak in client.screen)) // TA EDIT
+					client.screen += cloak					//add it to client's screen // TA EDIT
 		update_observer_view(cloak,1)
 		if(dna && dna.species.sexes)
 			var/racecustom
@@ -1308,7 +1316,8 @@ There are several things that need to be remembered:
 		wear_shirt.screen_loc = rogueui_shirt					//move the item to the appropriate screen loc
 		if(client && hud_used && hud_used.hud_shown)
 			if(hud_used.inventory_shown)			//if the inventory is open
-				client.screen += wear_shirt					//add it to client's screen
+				if(!(wear_shirt in client.screen)) // TA EDIT
+					client.screen += wear_shirt					//add it to client's screen // TA EDIT
 		update_observer_view(wear_shirt,1)
 		if(dna && dna.species.sexes)
 			var/mutable_appearance/shirt_overlay
@@ -1375,7 +1384,8 @@ There are several things that need to be remembered:
 		wear_armor.screen_loc = rogueui_armor					//move the item to the appropriate screen loc
 		if(client && hud_used && hud_used.hud_shown)
 			if(hud_used.inventory_shown)			//if the inventory is open
-				client.screen += wear_armor					//add it to client's screen
+				if(!(wear_armor in client.screen)) // TA EDIT
+					client.screen += wear_armor					//add it to client's screen // TA EDIT
 		update_observer_view(wear_armor,1)
 		if(dna && dna.species.sexes)
 			var/racecustom
@@ -1447,7 +1457,8 @@ There are several things that need to be remembered:
 		wear_pants.screen_loc = rogueui_pants					//move the item to the appropriate screen loc
 		if(client && hud_used && hud_used.hud_shown)
 			if(hud_used.inventory_shown)			//if the inventory is open
-				client.screen += wear_pants					//add it to client's screen
+				if(!(wear_pants in client.screen)) // TA EDIT
+					client.screen += wear_pants					//add it to client's screen // TA EDIT
 		update_observer_view(wear_pants,1)
 		if(dna && dna.species.sexes)
 			var/racecustom
@@ -1593,7 +1604,8 @@ There are several things that need to be remembered:
 	I.screen_loc = rogueui_head
 	if(client && hud_used && hud_used.hud_shown)
 		if(hud_used.inventory_shown)
-			client.screen += I
+			if(!(I in client.screen)) // TA EDIT
+				client.screen += I // TA EDIT
 	update_observer_view(I,1)
 
 //update whether our mask item appears on our hud.
@@ -1601,14 +1613,16 @@ There are several things that need to be remembered:
 	I.screen_loc = rogueui_mask
 	if(client && hud_used && hud_used.hud_shown)
 		if(hud_used.inventory_shown)
-			client.screen += I
+			if(!(I in client.screen)) // TA EDIT
+				client.screen += I // TA EDIT
 	update_observer_view(I,1)
 
 /mob/living/carbon/human/update_hud_mouth(obj/item/I)
 	I.screen_loc = rogueui_mouth
 	if(client && hud_used && hud_used.hud_shown)
 		if(hud_used.inventory_shown)
-			client.screen += I
+			if(!(I in client.screen)) // TA EDIT
+				client.screen += I // TA EDIT
 	update_observer_view(I,1)
 
 //update whether our neck item appears on our hud.
@@ -1616,14 +1630,16 @@ There are several things that need to be remembered:
 	I.screen_loc = rogueui_neck
 	if(client && hud_used && hud_used.hud_shown)
 		if(hud_used.inventory_shown)
-			client.screen += I
+			if(!(I in client.screen)) // TA EDIT
+				client.screen += I // TA EDIT
 	update_observer_view(I,1)
 
 //update whether our back item appears on our hud.
 /mob/living/carbon/human/update_hud_back(obj/item/I)
 	I.screen_loc = ui_back
 	if(client && hud_used && hud_used.hud_shown)
-		client.screen += I
+		if(!(I in client.screen)) // TA EDIT
+			client.screen += I // TA EDIT
 	update_observer_view(I)
 
 //update whether our back item appears on our hud.
@@ -1633,7 +1649,8 @@ There are several things that need to be remembered:
 	else
 		I.screen_loc = rogueui_backr
 	if(client && hud_used && hud_used.hud_shown)
-		client.screen += I
+		if(!(I in client.screen)) // TA EDIT
+			client.screen += I // TA EDIT
 	update_observer_view(I)
 
 //update whether our back item appears on our hud.
@@ -1643,7 +1660,8 @@ There are several things that need to be remembered:
 	else
 		I.screen_loc = rogueui_backl
 	if(client && hud_used && hud_used.hud_shown)
-		client.screen += I
+		if(!(I in client.screen)) // TA EDIT
+			client.screen += I // TA EDIT
 	update_observer_view(I)
 
 /*
@@ -2012,7 +2030,8 @@ generate/load female uniform sprites matching all previously decided variables
 				if(observe.hud_used)
 					if(inventory && !observe.hud_used.inventory_shown)
 						continue
-					observe.client.screen += I
+					if(!(I in observe.client.screen)) // TA EDIT
+						observe.client.screen += I // TA EDIT
 			else
 				observers -= observe
 				if(!observers.len)
