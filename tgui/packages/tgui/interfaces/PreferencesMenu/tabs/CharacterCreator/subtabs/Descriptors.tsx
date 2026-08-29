@@ -260,6 +260,7 @@ const OtherInfo = (props) => {
           >
             {nsfw_ooc_extra_img_link ? 'Change' : 'Set'}
           </Button>
+
         </LabeledGridList.Item>
         <ImageGalleryEdit
           label="Image Gallery"

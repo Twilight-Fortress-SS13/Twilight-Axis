@@ -1,6 +1,7 @@
 import { useBackend } from 'tgui/backend';
 import { Box, Button, Section, Stack, Tooltip } from 'tgui-core/components';
 
+import { TegakiAnimation } from './common/TegakiAnimation';
 import { Window } from '../layouts';
 
 type ReadyJob = {
@@ -55,14 +56,14 @@ export const NewPlayerPanel = () => {
   return (
     <Window width={330} height={830}>
       <Window.Content scrollable>
-        <Box
-          fontSize={2}
-          mb={2}
-          mt={1}
-          textAlign="center"
-          style={{ fontStyle: 'italic' }}
-        >
-          Welcome To Twilight Axis
+        <Box mt={2.5} mb={2.5}>
+          <TegakiAnimation
+            height={4}
+            time={{ mode: 'uncontrolled', speed: 10, loop: false }}
+            style={{ fontSize: 30, textAlign: 'center' }}
+          >
+            Welcome To Twilight Axis
+          </TegakiAnimation>
         </Box>
 
         {isPregame && (

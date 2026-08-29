@@ -191,3 +191,79 @@
 
 	slot_job.total_positions = max(slot_job.current_positions, slots)
 	slot_job.spawn_positions = max(slot_job.current_positions, slots)
+
+/proc/resolve_roundstart_bandit_preferences(list/original_character_slots) // TA EDIT START
+	var/datum/job/bandit_job = SSjob.GetJob("Bandit")
+	if(!bandit_job)
+		return TRUE
+	if(SSgamemode?.story_bandit_conflicts())
+		var/reassign_bandits = FALSE
+		for(var/mob/dead/new_player/player in GLOB.new_player_list)
+			if(player.mind?.assigned_role != "Bandit")
+				continue
+			var/original_slot = original_character_slots ? original_character_slots[player.ckey] : null
+			if(original_slot && player.client?.prefs && player.client.prefs.loaded_slot != original_slot)
+				player.client.prefs.load_character(original_slot)
+			SSrole_class_handler.clear_roundstart_subclass_state(player.ckey)
+			if(player.mind in SSgamemode.roundstart_build_replacement_minds)
+				continue
+			reassign_bandits = TRUE
+			player.mind.assigned_role = null
+		bandit_job.current_positions = 0
+		bandit_job.total_positions = 0
+		bandit_job.spawn_positions = 0
+		if(reassign_bandits)
+			SSjob.unassigned.Cut()
+			return SSjob.DivideOccupations(list())
+		return TRUE
+	update_bandits_slots()
+	assign_roundstart_bandit_preferences()
+	return TRUE // TA EDIT END
+
+/proc/assign_roundstart_bandit_preferences() // TA EDIT START
+	var/datum/job/bandit_job = SSjob.GetJob("Bandit")
+	if(!bandit_job || bandit_job.spawn_positions <= bandit_job.current_positions)
+		return
+
+	var/list/candidates = list()
+	for(var/mob/dead/new_player/player in GLOB.new_player_list)
+		if(player.ready != PLAYER_READY_TO_PLAY || !player.client || !player.client.prefs || !player.mind)
+			continue
+		if(player.mind.assigned_role == "Bandit")
+			continue
+		if(!(ROLE_BANDIT in player.client.prefs.be_special))
+			continue
+		if(is_banned_from(player.ckey, list(ROLE_SYNDICATE, ROLE_BANDIT)))
+			continue
+		if(QDELETED(player))
+			continue
+		if(!bandit_job.player_old_enough(player.client))
+			continue
+		if(bandit_job.required_playtime_remaining(player.client))
+			continue
+		var/datum/preferences/char_prefs = player.client.prefs.get_job_prefs("Bandit")
+		if(!bandit_job.validate_prefs_for_job(char_prefs))
+			continue
+		if(bandit_job.prefs_all_subclasses_restricted(player.client))
+			continue
+		#ifdef USES_PQ
+		if(!isnull(bandit_job.min_pq) && (get_playerquality(player.ckey) < bandit_job.min_pq))
+			continue
+		if(!isnull(bandit_job.max_pq) && (get_playerquality(player.ckey) > bandit_job.max_pq))
+			continue
+		#endif
+		if(CONFIG_GET(flag/usewhitelist) && bandit_job.whitelist_req && !player.client.whitelisted())
+			continue
+		if(!bandit_job.special_job_check(player))
+			continue
+		candidates += player
+
+	candidates = shuffle(candidates)
+	for(var/mob/dead/new_player/player as anything in candidates)
+		if(bandit_job.current_positions >= bandit_job.spawn_positions)
+			break
+		var/old_rank = player.mind.assigned_role
+		if(SSjob.AssignRole(player, "Bandit"))
+			continue
+		if(SSjob.GetJob(old_rank))
+			SSjob.AssignRole(player, old_rank) // TA EDIT END

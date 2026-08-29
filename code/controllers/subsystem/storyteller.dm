@@ -251,6 +251,7 @@ SUBSYSTEM_DEF(gamemode)
 
 	/// List of new player minds we currently want to give our roundstart antag to
 	var/list/roundstart_antag_minds = list()
+	var/list/roundstart_build_replacement_minds = list() // TA EDIT
 
 	var/wizardmode = FALSE //refactor this into just being a unique storyteller
 
@@ -761,6 +762,7 @@ SUBSYSTEM_DEF(gamemode)
 				continue
 			storytellers[type] = new type()
 	roundstart_live = FALSE
+	roundstart_build_replacement_minds.Cut() // TA EDIT
 	for(var/storyteller_name in storytellers)
 		var/datum/storyteller/initialized_storyteller = storytellers[storyteller_name]
 		if(initialized_storyteller?.ascendant)
@@ -780,7 +782,6 @@ SUBSYSTEM_DEF(gamemode)
 	log_storyteller("Roundstart gamemode locked in: [current_storyteller?.name] ([allow_vote ? "player vote" : "admin-set"]).")
 	calculate_ready_players()
 	roll_pre_setup_points()
-	roll_roundstart_antag(TRUE) // TA EDIT
 	update_bandits_slots() // TA EDIT
 	return TRUE
 
@@ -1324,6 +1325,8 @@ SUBSYSTEM_DEF(gamemode)
 
 
 /datum/controller/subsystem/gamemode/proc/story_bandit_conflicts() // TA EDIT START
+	if(story_policy_type(TRUE) != /datum/storyteller/gamemode/guaranteed_antag) // TA EDIT
+		return FALSE // TA EDIT
 	var/datum/round_event_control/antagonist/solo/roundstart_event = current_roundstart_event
 	if(!roundstart_event)
 		return FALSE
@@ -1477,7 +1480,7 @@ SUBSYSTEM_DEF(gamemode)
 	var/list/opened = list()
 	if(allow_vote)
 		return opened
-	for(var/key in list("Bandit", "Lich", "VL", "Werewolf", "Rebel"))
+	for(var/key in list("Lich", "VL", "Werewolf", "Rebel")) // TA EDIT
 		if((admin_slots[key] || 0) > 0)
 			opened += key
 	return opened

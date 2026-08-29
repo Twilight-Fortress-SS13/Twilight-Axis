@@ -102,6 +102,13 @@
 					extra_language = choices[chosen_language]
 			return CHARACTER_ACT_DATA_UPDATE
 
+		if("char_accent")
+			var/chosen_accent = tgui_input_list(user, "Choose your character's accent:", "ACCENT", GLOB.character_accents, char_accent)
+			if(chosen_accent)
+				verbose_pref_log_change(user, "notice", "Accent", char_accent, chosen_accent)
+				char_accent = chosen_accent
+			return CHARACTER_ACT_DATA_UPDATE
+
 		if("age")
 			var/new_age = tgui_input_list(user, "Choose your character's age (18-[pref_species.max_age])", "YILS LIVED", pref_species.possible_ages, age)
 			if(new_age)

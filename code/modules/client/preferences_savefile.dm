@@ -137,7 +137,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["ambiencevol"]		>> ambiencevol
 	S["anonymize"]			>> anonymize
 	S["donor_ooc_color"]	>> donor_ooc_color // TA EDIT
-	S["donor_ooc_icon"]	>> donor_ooc_icon // TA EDIT 
+	S["donor_ooc_icon"]	>> donor_ooc_icon // TA EDIT
 	S["donor_examine_icon"]	>> donor_examine_icon // TA EDIT
 	S["stopdroning"]		>> stopdroning
 	S["masked_examine"]		>> masked_examine
@@ -181,7 +181,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["no_runechat_animation"] >> no_runechat_animation //TA EDIT
 	S["defiant"]			>> defiant
 	// TA Addition start - new ERP SYSTEM
-	S["erp_custom_actions"] >> erp_custom_actions	
+	S["erp_custom_actions"] >> erp_custom_actions
 	S["erp_kink_prefs"] >> erp_kink_prefs
 	S["erp_organ_sensitivity"] >> erp_organ_prefs
 	// TA Addition end - new ERP SYSTEM
@@ -342,7 +342,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["ambiencevol"], ambiencevol)
 	WRITE_FILE(S["anonymize"], anonymize)
 	WRITE_FILE(S["donor_ooc_color"], donor_ooc_color) // TA EDIT
-	WRITE_FILE(S["donor_ooc_icon"], donor_ooc_icon) // TA EDIT 
+	WRITE_FILE(S["donor_ooc_icon"], donor_ooc_icon) // TA EDIT
 	WRITE_FILE(S["donor_examine_icon"], donor_examine_icon) // TA EDIT
 	WRITE_FILE(S["stopdroning"], stopdroning)
 	WRITE_FILE(S["masked_examine"], masked_examine)
@@ -937,7 +937,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	if(!islist(job_characters)) //TA EDIT START
 		job_characters = list()
 	for(var/job_title in job_characters)
-		
+
 		var/slot_num = job_characters[job_title]
 		if(!isnum(slot_num) || slot_num < 1 || slot_num > max_save_slots)
 			job_characters -= job_title //TA EDIT END
@@ -1011,10 +1011,10 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		var/datum/advclass/favorite_subclass_type = favorite_subclass_path
 		job_subclass_preferences[job_title] = initial(favorite_subclass_type.name)
 		job_subclass_strict -= job_title
-	
 
 
-	
+
+
 	validate_customizer_entries()
 
 	// Sanitize virtues
@@ -1044,12 +1044,12 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 /datum/preferences/proc/fast_scan_for_job(savefile/S, slot)
 	S.cd = "/character[slot]"
-	
-	
+
+
 	S["real_name"] >> real_name
 	if(!real_name) real_name = "Slot [slot]"
 
-	
+
 	var/species_name
 	S["species"] >> species_name
 	if(species_name && GLOB.species_list[species_name])
@@ -1058,11 +1058,11 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	else
 		pref_species = new default_species.type
 
-	
+
 	S["age"] >> age
 	S["gender"] >> gender
 
-	
+
 	var/patron_typepath
 	S["selected_patron"] >> patron_typepath
 	if(patron_typepath && GLOB.patronlist[patron_typepath])
@@ -1070,14 +1070,14 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	else
 		selected_patron = GLOB.patronlist[default_patron]
 
-	
+
 	var/saved_virtue_type
 	var/saved_virtuetwo_type
 	var/saved_origin_type
 	S["virtue"] >> saved_virtue_type
 	S["virtuetwo"] >> saved_virtuetwo_type
 	S["virtue_origin"] >> saved_origin_type
-	
+
 	var/list/virtue_data = normalize_saved_virtue(saved_virtue_type, S, "virtue_choices")
 	var/list/virtuetwo_data = normalize_saved_virtue(saved_virtuetwo_type, S, "virtuetwo_choices")
 	var/list/origin_data = normalize_saved_virtue(saved_origin_type, S, "virtue_origin_choices")
@@ -1086,7 +1086,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	virtuetwo = load_clean_virtue(virtuetwo_data[1], virtuetwo_data[2])
 	virtue_origin = load_clean_virtue(origin_data[1], origin_data[2])
 
-	
+
 	charflaws = list()
 	var/list/loaded_flaws
 	S["charflaws"] >> loaded_flaws

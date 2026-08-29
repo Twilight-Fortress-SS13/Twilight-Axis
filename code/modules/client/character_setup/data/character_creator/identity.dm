@@ -31,6 +31,7 @@
 
 		"virtue_origin" = "[virtue_origin]",
 		"free_language" = "None",
+		"char_accent" = char_accent,
 
 		"voice_type" = voice_type,
 		"voice_color" = voice_color,
