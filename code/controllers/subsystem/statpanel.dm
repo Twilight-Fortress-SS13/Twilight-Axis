@@ -15,6 +15,7 @@ SUBSYSTEM_DEF(statpanels)
 	///how many subsystem fires between most tab updates
 	var/default_wait = 10
 	///how many subsystem fires between updates of the status tab
+	var/round_info_wait = 5
 	var/status_wait = 2
 	///how many subsystem fires between updates of the MC tab
 	var/mc_wait = 5
@@ -66,7 +67,7 @@ SUBSYSTEM_DEF(statpanels)
 		if(!target.stat_panel.is_ready())
 			continue
 
-		if(target.stat_tab == "Round Info" && num_fires % status_wait == 0)
+		if(target.stat_tab == "Round Info" && num_fires % round_info_wait == 0)
 			set_status_tab(target)
 
 		if(isliving(target.mob))

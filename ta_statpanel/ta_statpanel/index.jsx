@@ -20,7 +20,9 @@ const state = {
 };
 
 const listeners = new Set();
+const statusListeners = new Set();
 let notifyPending = false;
+let statusNotifyPending = false;
 
 function notify() {
   if (notifyPending) return;
@@ -28,6 +30,15 @@ function notify() {
   Promise.resolve().then(() => {
     notifyPending = false;
     listeners.forEach((l) => l());
+  });
+}
+
+function notifyStatus() {
+  if (statusNotifyPending) return;
+  statusNotifyPending = true;
+  Promise.resolve().then(() => {
+    statusNotifyPending = false;
+    statusListeners.forEach((l) => l());
   });
 }
 
@@ -44,6 +55,21 @@ function useStatState() {
     return () => listeners.delete(fn);
   }, []);
   return state;
+}
+
+function setStatusTabParts(parts) {
+  state.statusTabParts = parts;
+  notifyStatus();
+}
+
+function useStatusTabParts() {
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const fn = () => setTick((t) => t + 1);
+    statusListeners.add(fn);
+    return () => statusListeners.delete(fn);
+  }, []);
+  return state.statusTabParts;
 }
 
 const defaultTab = 'Round Info';
@@ -269,10 +295,10 @@ function StatusRow({ part }) {
 }
 
 function RoundInfoPanel() {
-  const s = useStatState();
+  const statusTabParts = useStatusTabParts();
   return (
     <table>
-      {s.statusTabParts.map((part, i) => (
+      {statusTabParts.map((part, i) => (
         <StatusRow key={i} part={part} />
       ))}
     </table>
@@ -678,7 +704,7 @@ Byond.subscribeTo('update_stat', (payload) => {
   for (const p of payload.global_data) if (p != null) parts.push(p);
   if (payload.ping_str) parts.push(payload.ping_str);
   for (const p of payload.other_str) if (p != null) parts.push(p);
-  setState({ statusTabParts: parts });
+  setStatusTabParts(parts);
 });
 
 Byond.subscribeTo('update_stats', (payload) => setState({ statsTabParts: payload }));
