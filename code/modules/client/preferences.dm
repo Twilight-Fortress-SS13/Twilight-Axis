@@ -11,7 +11,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/loaded_slot = 1
 	var/savefile_write_locked = FALSE // guard against simultaneous savefile writes from the UI causing any sort of horrors
 
-	var/max_save_slots = 60
+	var/max_save_slots = 20
 
 
 	var/list/job_characters = list() //TA EDIT

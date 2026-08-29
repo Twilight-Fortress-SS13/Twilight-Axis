@@ -138,7 +138,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 
 	outfit = /datum/outfit/job/roguetown/mercenary/grenzelhoft_crossbowman
-	traits_applied = list(TRAIT_SURVIVAL_EXPERT, TRAIT_SLEUTH, TRAIT_DODGEEXPERT) //DE to be replaced with Concealment Expert
+	traits_applied = list(TRAIT_SURVIVAL_EXPERT, TRAIT_DODGEEXPERT) //DE to be replaced with Concealment Expert
 	class_select_category = CLASS_CAT_GRENZELHOFT
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_MARKSMAN)
 	cmode_music = 'modular_twilight_axis/sound/music/combat_grenzelhoft_mage.ogg' //TA EDIT

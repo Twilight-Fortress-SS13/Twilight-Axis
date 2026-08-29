@@ -102,6 +102,13 @@
 					extra_language = choices[chosen_language]
 			return CHARACTER_ACT_DATA_UPDATE
 
+		if("char_accent")
+			var/chosen_accent = tgui_input_list(user, "Choose your character's accent:", "ACCENT", GLOB.character_accents, char_accent)
+			if(chosen_accent)
+				verbose_pref_log_change(user, "notice", "Accent", char_accent, chosen_accent)
+				char_accent = chosen_accent
+			return CHARACTER_ACT_DATA_UPDATE
+
 		if("age")
 			var/new_age = tgui_input_list(user, "Choose your character's age (18-[pref_species.max_age])", "YILS LIVED", pref_species.possible_ages, age)
 			if(new_age)
@@ -127,6 +134,14 @@
 		if("dnr_pref")
 			dnr_pref = !dnr_pref
 			verbose_pref_log_change(user, "notice", "Do-Not-Revive Preference", !dnr_pref ? "Do Not Revive" : "Revive", dnr_pref ? "Do Not Revive" : "Revive")
+			return CHARACTER_ACT_DATA_UPDATE
+
+		if("defiant")
+			defiant = !defiant
+			if(defiant)
+				to_chat(user, span_notice("You will now have resistance from people violating you, but be punished for trying to violate others." + " " + span_boldwarning("(COMBAT Mode will disable ERP interactions. Bypassing this is a bannable offense, AHELP if necessary.)")))
+			else
+				to_chat(user, span_boldwarning("You fully immerse yourself in the grim experience, waiving your resistance from people violating you, but letting you do the same unto other non-defiants"))
 			return CHARACTER_ACT_DATA_UPDATE
 
 		if("set_culinary_axis")

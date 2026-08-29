@@ -1,0 +1,4 @@
+author: "Vladmar11"
+delete-after: True
+changes:
+  - balance: "изменен принцип работы нанесения урона у онагра постройкам и игрокам"

@@ -373,11 +373,20 @@ SUBSYSTEM_DEF(ticker)
 //	update_scaling_slots(estimated_pop)
 
 	donor_job_boost_round_tick() // TA EDIT
+	var/list/roundstart_character_slots = list() // TA EDIT START
+	for(var/mob/dead/new_player/player in GLOB.new_player_list)
+		if(player.ready != PLAYER_READY_TO_PLAY || !player.client?.prefs)
+			continue
+		roundstart_character_slots[player.ckey] = player.client.prefs.loaded_slot // TA EDIT END
 	can_continue = can_continue && SSjob.DivideOccupations(list()) 				//Distribute jobs
 
 	CHECK_TICK
 
 	log_game("GAME SETUP: Divide Occupations success")
+
+	SSgamemode.roll_roundstart_antag(TRUE) // TA EDIT
+
+	can_continue = can_continue && resolve_roundstart_bandit_preferences(roundstart_character_slots) // TA EDIT
 
 	CHECK_TICK
 
@@ -442,7 +451,7 @@ SUBSYSTEM_DEF(ticker)
 		if(C.mob)
 			C.mob.playsound_local(C.mob, 'sound/misc/roundstart.ogg', 100, FALSE)
 
-	SSgamemode.roll_roundstart_antag()
+	SSgamemode.roundstart_live = TRUE // TA EDIT
 	SSgamemode.spawn_extra_antags()
 
 	GLOB.dominant_faith_tracker.roundstart_setup() // this needs to be after antags roll because some of them change your patron
@@ -543,7 +552,7 @@ SUBSYSTEM_DEF(ticker)
 	for(var/mob/dead/new_player/new_player as anything in GLOB.new_player_list)
 		var/mob/living/carbon/human/player = new_player.new_character
 		if(istype(player) && player.mind?.assigned_role)
-			if(player.mind.assigned_role != player.mind.special_role)
+			if(!(player.mind in SSgamemode.roundstart_build_replacement_minds) && player.mind.assigned_role != player.mind.special_role) // TA EDIT
 				valid_characters[player] = new_player
 	sortTim(valid_characters, GLOBAL_PROC_REF(cmp_assignedrole_dsc))
 	for(var/mob/character as anything in valid_characters)
@@ -564,7 +573,8 @@ SUBSYSTEM_DEF(ticker)
 				S.Fade(TRUE)
 			livings += living
 			if(ishuman(living))
-				SSrole_class_handler.setup_class_handler(living)
+				if(!(living.mind in SSgamemode.roundstart_build_replacement_minds)) // TA EDIT
+					SSrole_class_handler.setup_class_handler(living) // TA EDIT
 				try_apply_character_post_equipment(living)
 		else
 			continue

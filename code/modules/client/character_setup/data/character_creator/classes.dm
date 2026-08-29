@@ -33,8 +33,11 @@
 	data["pref"] = job_preferences[job.title]
 	data["donor_boost_job_eligible"] = donor_job_boost_ckey_eligible(user.ckey, user.client) && donor_job_boost_job_eligible(job, user.ckey, user.client)
 	data["has_subclass_preferences"] = length(job.job_subclasses) || length(job.advclass_cat_rolls)
+	data["has_job_subclasses"] = length(job.job_subclasses) ? TRUE : FALSE
 	data["preferred_subclass"] = job_subclass_preferences[job.title]
 	data["preferred_subclass_strict"] = job_subclass_strict[job.title] ? TRUE : FALSE
+	data["character_slot"] = job_characters[job.title] ? job_characters[job.title] : null
+	var/datum/preferences/character_prefs = get_job_prefs(job.title)
 	if(!data["preferred_subclass"] && (job.has_subprefs || data["has_subclass_preferences"]))
 		var/list/roleprefs = job.get_roleprefs(user.client)
 		var/favorite_advclass = roleprefs?["favorite_advclass"]
@@ -67,11 +70,11 @@
 		return data
 	if(length(job.virtue_restrictions) && length(job.vice_restrictions))
 		var/list/restricted_list = list()
-		if(virtue.type in job.virtue_restrictions)
-			restricted_list.Add(virtue.name)
-		if(virtuetwo?.type in job.virtue_restrictions)
-			restricted_list.Add(virtuetwo.name)
-		for(var/cf_type in charflaws)
+		if(character_prefs.virtue.type in job.virtue_restrictions)
+			restricted_list.Add(character_prefs.virtue.name)
+		if(character_prefs.virtuetwo?.type in job.virtue_restrictions)
+			restricted_list.Add(character_prefs.virtuetwo.name)
+		for(var/cf_type in character_prefs.charflaws)
 			if(cf_type in job.vice_restrictions)
 				var/datum/charflaw/cf = GLOB.character_flaws_singletons[cf_type]
 				restricted_list.Add(cf.name)
@@ -82,10 +85,10 @@
 			return data
 	if(length(job.virtue_restrictions))
 		var/list/restricted_list = list()
-		if(virtue.type in job.virtue_restrictions)
-			restricted_list.Add(virtue.name)
-		if(virtuetwo?.type in job.virtue_restrictions)
-			restricted_list.Add(virtuetwo.name)
+		if(character_prefs.virtue.type in job.virtue_restrictions)
+			restricted_list.Add(character_prefs.virtue.name)
+		if(character_prefs.virtuetwo?.type in job.virtue_restrictions)
+			restricted_list.Add(character_prefs.virtuetwo.name)
 		if(length(restricted_list))
 			var/restrict_text = english_list(restricted_list)
 			data["unavailable"] = JOB_UNAVAILABLE_VIRTUESVICE
@@ -93,7 +96,7 @@
 			return data
 	if(length(job.vice_restrictions))
 		var/list/restricted_list = list()
-		for(var/cf_type in charflaws)
+		for(var/cf_type in character_prefs.charflaws)
 			if(cf_type in job.vice_restrictions)
 				var/datum/charflaw/cf = GLOB.character_flaws_singletons[cf_type]
 				restricted_list.Add(cf.name)
@@ -102,6 +105,10 @@
 			data["unavailable"] = JOB_UNAVAILABLE_VIRTUESVICE
 			data["unavailable_details"] = "(Disallowed by Vice: [restrict_text])"
 			return data
+	if(!job.validate_prefs_for_job(character_prefs))
+		data["unavailable"] = JOB_UNAVAILABLE_GENERIC
+		data["unavailable_details"] = "(Selected character is ineligible)"
+		return data
 	if(job.prefs_all_subclasses_restricted(user.client))
 		data["unavailable"] = JOB_UNAVAILABLE_VIRTUESVICE
 		data["unavailable_details"] = "(Disallowed by Subclass Virtues/Vice)"

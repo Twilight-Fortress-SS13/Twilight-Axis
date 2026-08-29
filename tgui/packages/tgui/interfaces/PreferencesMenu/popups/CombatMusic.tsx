@@ -15,6 +15,10 @@ import { useFuzzySearch } from 'tgui-core/fuzzysearch';
  */
 export type PopupCombatMusicData = {
   combat_music: string | null;
+  can_custom_combat_music: boolean;
+  custom_cmode_name: string | null;
+  custom_cmode_uploaded: boolean;
+  custom_cmode_enabled: boolean;
 } & PopupData;
 
 const PopupCombatMusic = (props) => {
@@ -47,7 +51,13 @@ const PopupCombatMusicInner = (props: { constantData: ConstantData }) => {
   const { constantData } = props;
   const { combat_music: constant_combat_music } = constantData;
   const { act, data } = usePopupBackend<PopupCombatMusicData>();
-  const { combat_music } = data;
+  const {
+    combat_music,
+    can_custom_combat_music,
+    custom_cmode_name,
+    custom_cmode_uploaded,
+    custom_cmode_enabled,
+  } = data;
 
   const tracks = Object.values(constant_combat_music);
   const { query, setQuery, results } = useFuzzySearch({
@@ -57,6 +67,48 @@ const PopupCombatMusicInner = (props: { constantData: ConstantData }) => {
 
   return (
     <Stack fill vertical p={2}>
+      {can_custom_combat_music && (
+        <Stack.Item>
+          <Section title="Custom Combat Music">
+            <Stack align="center">
+              <Stack.Item grow>
+                {custom_cmode_uploaded
+                  ? `Uploaded: ${custom_cmode_name || 'Custom Combat Music'}`
+                  : 'No custom combat music uploaded.'}
+              </Stack.Item>
+              {custom_cmode_uploaded && (
+                <Stack.Item>
+                  <Button
+                    icon="music"
+                    disabled={custom_cmode_enabled}
+                    onClick={() => act('select_custom_combat_music')}
+                  >
+                    {custom_cmode_enabled ? 'Selected' : 'Use Custom Track'}
+                  </Button>
+                </Stack.Item>
+              )}
+              <Stack.Item>
+                <Button
+                  icon="upload"
+                  onClick={() => act('upload_custom_combat_music')}
+                >
+                  {custom_cmode_uploaded ? 'Replace Track' : 'Upload Track'}
+                </Button>
+              </Stack.Item>
+              {custom_cmode_uploaded && (
+                <Stack.Item>
+                  <Button
+                    icon="trash"
+                    onClick={() => act('clear_custom_combat_music')}
+                  >
+                    Remove Track
+                  </Button>
+                </Stack.Item>
+              )}
+            </Stack>
+          </Section>
+        </Stack.Item>
+      )}
       <Stack.Item>
         <Input
           fluid
