@@ -52,7 +52,7 @@
 	. += span_info("Middle click to transform it into a strap, which allows for a weapon to be openly carried without any delays to drawing or sheathing.")
 	. += span_info("Straps cannot be transformed back into scabbards or sheaths.")
 
-/obj/item/rogueweapon/scabbard/Initialize()
+/obj/item/rogueweapon/scabbard/Initialize(mapload)
 	. = ..()
 
 	hol_comp = GetComponent(/datum/component/holster)
@@ -180,7 +180,7 @@
 
 
 //////////////////////
-//	DAGGER SHEATHS  //
+//	DAGGER SHEATHS	//
 //////////////////////
 
 /obj/item/rogueweapon/scabbard/sheath
@@ -420,7 +420,7 @@
 	resistance_flags = null
 
 ///////////////////////
-//	SWORD SCABBARDS  //
+//	SWORD SCABBARDS	//
 ///////////////////////
 
 /obj/item/rogueweapon/scabbard/sword
@@ -606,7 +606,6 @@
 
 	valid_blade = /obj/item/rogueweapon/sword/long/kriegmesser/ssangsudo
 	can_parry = FALSE
-	sewrepair = TRUE
 	special = null
 	max_integrity = 0
 
@@ -642,14 +641,16 @@
 	desc = "A simple lacquered sheath, for shorter eastern-styled blades."
 	icon_state = "kazscabdagger"
 	item_state = "kazscabdagger"
-	valid_blade = /obj/item/rogueweapon/huntingknife/idagger/steel/kazengun
 	associated_skill = /datum/skill/combat/knives
 	possible_item_intents = list(SHIELD_BASH, SHIELD_SMASH)
 	can_parry = TRUE
 	sewrepair = FALSE
 	anvilrepair = /datum/skill/craft/carpentry
-	wdefense = 4
+	wdefense = 6
 	max_integrity = 220
+	valid_blades = list(
+		/obj/item/rogueweapon/huntingknife/idagger/steel/kazengun,
+		/obj/item/rogueweapon/huntingknife/idagger/blacksteel/kazengun)
 
 
 /obj/item/rogueweapon/scabbard/sheath/courtphysician

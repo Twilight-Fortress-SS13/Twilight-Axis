@@ -1,14 +1,14 @@
 #define ATTACK_OVERRIDE_NODEFENSE 2
 
 /**
-  *This is the proc that handles the order of an item_attack.
-  *The order of procs called is:
-  *tool_act on the target. If it returns TRUE, the chain will be stopped.
-  *pre_attack() on src. If this returns TRUE, the chain will be stopped.
-  *attackby on the target. If it returns TRUE, the chain will be stopped.
-  *and lastly
-  *afterattack. The return value does not matter.
-  */
+	*This is the proc that handles the order of an item_attack.
+	*The order of procs called is:
+	*tool_act on the target. If it returns TRUE, the chain will be stopped.
+	*pre_attack() on src. If this returns TRUE, the chain will be stopped.
+	*attackby on the target. If it returns TRUE, the chain will be stopped.
+	*and lastly
+	*afterattack. The return value does not matter.
+	*/
 /obj/item/proc/melee_attack_chain(mob/user, atom/target, params)
 	if(user.check_arm_grabbed(user.active_hand_index))
 		to_chat(user, span_notice("I can't move my arm!"))
@@ -37,7 +37,7 @@
 				if(!exception)
 					to_chat(user, span_warning("I am too small to properly wield a weapon."))
 					return
-		// Uniquely reskinned variant, for those who don't happen to be familiars.Add a comment on  line R34Add diff commentMarkdown input:  edit mode selected.WritePreviewAdd a suggestionHeadingBoldItalicQuoteCodeLinkUnordered listNumbered listTask listMentionReferenceMore Formatting tools items 0Saved repliesAdd FilesPaste, drop, or click to add filesCancelCommentStart a review
+		// Uniquely reskinned variant, for those who don't happen to be familiars.Add a comment on	line R34Add diff commentMarkdown input:	edit mode selected.WritePreviewAdd a suggestionHeadingBoldItalicQuoteCodeLinkUnordered listNumbered listTask listMentionReferenceMore Formatting tools items 0Saved repliesAdd FilesPaste, drop, or click to add filesCancelCommentStart a review
 		if(HAS_TRAIT(user, TRAIT_WEAPONLESS))
 			var/obj/item/rogueweapon/weapon = src
 			if(istype(weapon) && (!weapon.is_tool || ismob(target)))
@@ -697,6 +697,11 @@
 	I.funny_attack_effects(src, user)
 	if(I.force_dynamic)
 		var/newforce = get_complex_damage(I, user)
+		var/pen = user.used_intent.penfactor
+		// No sweetspot penalty if they are prone
+		if(user.used_intent.out_of_effective_range(src, user))
+			pen = PEN_NONE
+			newforce *= EFF_RANGE_MISS_DAMFACTOR
 		apply_damage(newforce, I.damtype, def_zone = hitlim)
 		I.remove_bintegrity(1)
 		if(I.damtype == BRUTE)
@@ -704,9 +709,9 @@
 			if(HAS_TRAIT(src, TRAIT_SIMPLE_WOUNDS))
 				if((I.is_silver || (I.is_even_lesser_silver && is_npc(src))) && HAS_TRAIT(src, TRAIT_SILVER_WEAK))
 					newforce *= SILVER_SIMPLEMOB_DAM_MULT
-				simple_woundcritroll(user.used_intent.blade_class, newforce, user, hitlim)
+				simple_woundcritroll(user.used_intent.blade_class, newforce, user, hitlim, penfactor = pen, part_mult = user.used_intent.get_part_damage_factor())
 				/* No embedding on simple mobs, thank you!
-				var/datum/wound/crit_wound  = simple_woundcritroll(user.used_intent.blade_class, newforce, user, hitlim)
+				var/datum/wound/crit_wound	= simple_woundcritroll(user.used_intent.blade_class, newforce, user, hitlim)
 				if(should_embed_weapon(crit_wound, I))
 					// throw_alert("embeddedobject", /atom/movable/screen/alert/embeddedobject)
 					simple_add_embedded_object(I, silent = FALSE, crit_message = TRUE)
@@ -732,13 +737,6 @@
 	send_item_attack_message(I, user, hitlim)
 	if(I.force_dynamic)
 		return TRUE
-
-/mob/living/simple_animal/attacked_by(obj/item/I, mob/living/user)
-	if(I.force_dynamic < force_threshold || I.damtype == STAMINA)
-		playsound(loc, 'sound/blank.ogg', I.get_clamped_volume(), TRUE, -1)
-	else
-		. = ..()
-		I.do_special_attack_effect(user, null, null, src, null)
 
 // Proximity_flag is 1 if this afterattack was called on something adjacent, in your square, or on your person.
 // Click parameters is the params string from byond Click() code, see that documentation.

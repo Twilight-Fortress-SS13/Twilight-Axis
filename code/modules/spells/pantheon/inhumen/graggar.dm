@@ -48,7 +48,7 @@
 	cooldown_time = 2 MINUTES
 
 	check_flags = AB_CHECK_CONSCIOUS
-	spell_requirements =  SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
+	spell_requirements =	SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
 /datum/action/cooldown/spell/graggar/rush/cast(atom/cast_on)
 	. = ..()
@@ -312,6 +312,8 @@
 		return FALSE
 
 	for(var/mob/living/carbon/target in view(cast_range, get_turf(owner)))
+		if(!H.cleric_aoe_target_allowed(target))
+			continue
 		if(istype(target.patron, /datum/patron/inhumen))
 			target.apply_status_effect(/datum/status_effect/buff/call_to_slaughter)	//Buffs inhumens
 			continue

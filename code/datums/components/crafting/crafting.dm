@@ -1,4 +1,4 @@
-/datum/component/personal_crafting/Initialize()
+/datum/component/personal_crafting/Initialize(mapload)
 	if(!ismob(parent))
 		return COMPONENT_INCOMPATIBLE
 	var/mob/living/L = parent
@@ -326,7 +326,7 @@
 								CI.was_crafted = TRUE
 								if(CI.has_item_quality)
 									if(R.skip_quality)
-										if(inherited_quality != null)
+										if(!isnull(inherited_quality))
 											CI.apply_quality(null, null, inherited_quality)
 									else
 										CI.apply_quality(user, R.skillcraft)
@@ -355,7 +355,7 @@
 								CI.was_crafted = TRUE
 								if(CI.has_item_quality)
 									if(R.skip_quality)
-										if(inherited_quality != null)
+										if(!isnull(inherited_quality))
 											CI.apply_quality(null, null, inherited_quality)
 									else
 										CI.apply_quality(user, R.skillcraft)
@@ -484,7 +484,7 @@
 						if(!B.stacktype || !ispath(B.stacktype, A))
 							continue
 						if(!R.subtype_reqs && (B.stacktype in subtypesof(A)))
-							continue 
+							continue
 						if(R.blacklist.Find(B.stacktype))
 							continue
 						found_bundle = TRUE
@@ -500,7 +500,7 @@
 									var/obj/item/new_item = new stacktype(old_loc)
 									if(ishuman(old_loc))
 										var/mob/living/carbon/human/H = old_loc
-										H.put_in_hands(new_item) 
+										H.put_in_hands(new_item)
 								if(0)
 									qdel(B)
 							amt = 0
@@ -568,7 +568,7 @@
 			var/obj/item/IT = AM
 			if(!IT.has_item_quality)
 				continue
-			if(min_q == null || IT.item_quality < min_q)
+			if(isnull(min_q) || IT.item_quality < min_q)
 				min_q = IT.item_quality
 		for(var/atom/movable/AM in .)
 			if(!isitem(AM))
@@ -576,7 +576,7 @@
 			var/obj/item/IT = AM
 			if(!IT.has_item_quality)
 				continue
-			if(min_q == null || IT.item_quality < min_q)
+			if(isnull(min_q) || IT.item_quality < min_q)
 				min_q = IT.item_quality
 		quality_out["min_quality"] = min_q
 	while(Deletion.len)

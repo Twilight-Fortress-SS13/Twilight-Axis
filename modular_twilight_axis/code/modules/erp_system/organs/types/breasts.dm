@@ -4,6 +4,27 @@
 #define BREAST_NUTRITION_COST_PER_UNIT	0.5
 #define BREAST_STORAGE_BASE 40
 
+/obj/item/organ/breasts
+	var/lactating = TRUE
+
+/datum/preferences
+	var/lactating = FALSE
+
+/datum/preferences/ui_data_character_creator(mob/user)
+	var/list/data = ..()
+	data["lactating"] = lactating
+	return data
+
+/datum/preferences/ui_act_character_creator(action, list/params, datum/tgui/ui, datum/ui_state/state)
+	. = ..()
+	if(.)
+		return
+	if(action == "toggle_lactation")
+		var/old_lactating = lactating
+		lactating = !lactating
+		verbose_pref_log_change(ui.user, "notice", "Lactation", old_lactating ? "Enabled" : "Disabled", lactating ? "Enabled" : "Disabled")
+		return CHARACTER_ACT_PREVIEW_UPDATE
+
 /datum/erp_sex_organ/breasts
 	erp_organ_type = SEX_ORGAN_BREASTS
 	var/breast_size = 1
@@ -27,6 +48,9 @@
 /datum/erp_sex_organ/breasts/get_production_mult()
 	var/obj/item/organ/breasts/organ_object = host
 	if(!istype(organ_object))
+		return 0
+
+	if(!organ_object.lactating)
 		return 0
 
 	var/mob/living/carbon/human/H = organ_object.owner

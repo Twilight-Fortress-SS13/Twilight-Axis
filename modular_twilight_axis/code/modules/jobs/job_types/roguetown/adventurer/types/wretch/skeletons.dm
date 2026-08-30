@@ -34,19 +34,10 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT
 	)
+	forbidden_races = list(RACES_DESPISED RACES_OOZE)
 
 /datum/outfit/job/roguetown/wretch/hero/proc/skelet(mob/living/carbon/human/H)
-	var/had_godmode = (H.status_flags & GODMODE)
-	H.status_flags |= GODMODE
-	if(isdullahan(H))
-		var/obj/item/bodypart/head/old_head = H.get_bodypart(BODY_ZONE_HEAD)
-		if(old_head)
-			var/obj/item/bodypart/head/new_head = new /obj/item/bodypart/head()
-			new_head.replace_limb(H, TRUE)
-			qdel(old_head)
-	H.set_species(/datum/species/human/northern)
-	if(!had_godmode)
-		H.status_flags &= ~GODMODE
+	REMOVE_TRAITS_IN(H, SPECIES_TRAIT)
 	H.hairstyle = "Bald"
 	H.facial_hairstyle = "Shaved"
 	ADD_TRAIT(H, TRAIT_LIMBATTACHMENT, TRAIT_GENERIC)

@@ -184,9 +184,9 @@
 	playsound(src, 'sound/misc/clockloop.ogg', 25, TRUE)
 
 /obj/item/rogueweapon/contraption/attack_obj(obj/O, mob/living/user)
+	if(brute_attack && (user.used_intent.type != /datum/intent/use))
+		return ..()
 	if(!current_charge)
-		if(brute_attack && (user.used_intent.type != /datum/intent/use))
-			return ..()
 		flick(off_icon, src)
 		to_chat(user, span_info("The contraption beeps! It requires \a [initial(accepted_power_source.name)]!"))
 		playsound(src, 'sound/magic/magic_nulled.ogg', 100, TRUE)
@@ -585,7 +585,7 @@
 	var/active_item = FALSE
 
 
-/obj/item/rogueweapon/contraption/pick/drill/Initialize()
+/obj/item/rogueweapon/contraption/pick/drill/Initialize(mapload)
 	. = ..()
 	START_PROCESSING(SSobj, src)
 

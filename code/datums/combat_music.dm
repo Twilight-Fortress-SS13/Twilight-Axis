@@ -10,14 +10,28 @@
 */
 
 // Admins: please don't molest my lists. You can't add new types at runtime anyways. Kisses! - Zoktiik
-GLOBAL_LIST_EMPTY(cmode_tracks_by_type)
 GLOBAL_LIST_EMPTY(cmode_tracks_by_name)
+GLOBAL_LIST_INIT(cmode_tracks_by_type, build_cmode_tracks())
 
+/proc/build_cmode_tracks()
+	. = list()
+	for(var/path in subtypesof(/datum/combat_music))
+		var/datum/combat_music/track = new path()
+		// People make mistakes. This should help catch when that happens.
+		if(!track.name)
+			stack_trace("CMODE MUSIC: type [track.type] has no name!")
+			continue
+		if(LAZYACCESS(GLOB.cmode_tracks_by_name, track.name))
+			stack_trace("CMODE MUSIC: type [track.type] has duplicate name \"[track.name]\"!")
+			continue
+
+		.[path] = track
+		LAZYSET(GLOB.cmode_tracks_by_name, track.name, track)
 
 /proc/get_custom_combat_music_extension(filename)
 	if(!istext(filename) || !length(filename))
 		return ""
-	return lowertext(copytext(filename, max(length(filename) - 3, 1)))
+	return LOWER_TEXT(copytext(filename, max(length(filename) - 3, 1)))
 
 /proc/is_valid_custom_combat_music_path(path)
 	if(!istext(path) || !length(path))
@@ -74,25 +88,21 @@ GLOBAL_LIST_EMPTY(cmode_tracks_by_name)
 	message_admins("[ADMIN_LOOKUPFLW(user)] uploaded custom combat music [filename] of size [file_size / 1000000] (~MB).")
 	return null // TA EDIT END
 
-// People make mistakes. This should help catch when that happens.
-/proc/cmode_track_to_namelist(var/datum/combat_music/track)
-	if(!track)
-		return
-	if(!track.name)
-		LAZYREMOVE(GLOB.cmode_tracks_by_type, track.type)
-		CRASH("CMODE MUSIC: type [track.type] has no name!")
-	if(GLOB.cmode_tracks_by_name[track.name])
-		LAZYREMOVE(GLOB.cmode_tracks_by_type, track.type)
-		CRASH("CMODE MUSIC: type [track.type] has duplicate name \"[track.name]\"!")
-	GLOB.cmode_tracks_by_name[track.name] = track
-	return
-
 /datum/combat_music
 	var/name
 	var/desc
 	var/shortname
 	var/credits
 	var/musicpath = list()
+
+/datum/combat_music/proc/constant_ui_data()
+	return list(
+		"type" = type,
+		"name" = name,
+		"desc" = desc,
+		"shortname" = shortname,
+		"credits" = credits,
+	)
 
 // Shit WILL break if you change /default's typepath. Don't do it.
 /datum/combat_music/default
@@ -343,9 +353,9 @@ GLOBAL_LIST_EMPTY(cmode_tracks_by_name)
 /datum/combat_music/inquis_ordinator
 	name = "Inquisitor ('Ordinator' Mix)"
 	desc = ""
-	shortname = "Inq. Ordinator" 
+	shortname = "Inq. Ordinator"
 	musicpath = list('sound/music/combat_inqordinator.ogg')
-	
+
 /datum/combat_music/inquis_commander
 	name = "Inquisitor ('Commander' Mix)"
 	desc = "One last parlay at the end of the world. Finish the fight, no matter the odds."
@@ -611,7 +621,7 @@ GLOBAL_LIST_EMPTY(cmode_tracks_by_name)
 
 /datum/combat_music/aavshepherd
 	name = "Aavnic Shepherd"
-	desc = "\"No saber in hand, they crush bones with their fokos!\""
+	desc = "\"No sabre in hand, they crush bones with their fokos!\""
 	shortname = "Shepherd"
 	credits = "MusicImaginary - Yendrek"
 	musicpath = list('sound/music/frei_shepherd.ogg')

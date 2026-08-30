@@ -30,11 +30,11 @@ SUBSYSTEM_DEF(discord)
 	wait = 3000
 	init_order = INIT_ORDER_DISCORD
 
-	var/list/notify_members = list() // People to save to notify file
-	var/list/notify_members_cache = list() // Copy of previous list, so the SS doesnt have to fire if no new members have been added
-	var/list/people_to_notify = list() // People to notify on roundstart
+	// var/list/notify_members = list() // People to save to notify file // TA EDIT START
+	// var/list/notify_members_cache = list() // Copy of previous list, so the SS doesnt have to fire if no new members have been added
+	// var/list/people_to_notify = list() // People to notify on roundstart // TA EDIT END
 	var/list/account_link_cache = list() // List that holds accounts to link, used in conjunction with TGS
-	var/notify_file = file("data/notify.json")
+	// var/notify_file = file("data/notify.json") // TA EDIT
 	var/enabled = 0 // Is TGS enabled (If not we wont fire because otherwise this is useless)
 
 /datum/controller/subsystem/discord/Initialize(start_timeofday)
@@ -45,36 +45,36 @@ SUBSYSTEM_DEF(discord)
 		can_fire = 0 // We dont want excess firing
 		return ..() // Cancel
 
-	try
-		people_to_notify = json_decode(file2text(notify_file))
-	catch
-		pass() // The list can just stay as its defualt (blank). Pass() exists because it needs a catch
-	var/notifymsg = ""
-	for(var/id in people_to_notify)
-		// I would use jointext here, but I dont think you can two-side glue with it, and I would have to strip characters otherwise
-		notifymsg += "<@[id]> " // 22 charaters per notify, 90 notifies per message, so I am not making a failsafe because 90 people arent going to notify at once
-	if(notifymsg)
-		send2chat(new /datum/tgs_message_content("[notifymsg]"), CONFIG_GET(string/chat_announce_new_game)) // Sends the message to the discord, using same config option as the roundstart notification
-	fdel(notify_file) // Deletes the file
+	// try // TA EDIT START
+	// 	people_to_notify = json_decode(file2text(notify_file))
+	// catch
+	// 	pass() // The list can just stay as its defualt (blank). Pass() exists because it needs a catch
+	// var/notifymsg = ""
+	// for(var/id in people_to_notify)
+	// 	// I would use jointext here, but I dont think you can two-side glue with it, and I would have to strip characters otherwise
+	// 	notifymsg += "<@[id]> " // 22 charaters per notify, 90 notifies per message, so I am not making a failsafe because 90 people arent going to notify at once
+	// if(notifymsg)
+	// 	send2chat(new /datum/tgs_message_content("[notifymsg]"), CONFIG_GET(string/chat_announce_new_game)) // Sends the message to the discord, using same config option as the roundstart notification
+	// fdel(notify_file) // Deletes the file // TA EDIT END
 	return ..()
 
-/datum/controller/subsystem/discord/fire()
-	if(!enabled)
-		return // Dont do shit if its disabled
-	if(notify_members == notify_members_cache)
-		return // Dont re-write the file
-	// If we are all clear
-	write_notify_file()
+// /datum/controller/subsystem/discord/fire() // TA EDIT START
+	// if(!enabled)
+	// 	return // Dont do shit if its disabled
+	// if(notify_members == notify_members_cache)
+	// 	return // Dont re-write the file
+	// // If we are all clear
+	// write_notify_file()
 
-/datum/controller/subsystem/discord/Shutdown()
-	write_notify_file() // Guaranteed force-write on server close
+// /datum/controller/subsystem/discord/Shutdown()
+	// write_notify_file() // Guaranteed force-write on server close
 
-/datum/controller/subsystem/discord/proc/write_notify_file()
-	if(!enabled) // Dont do shit if its disabled
-		return
-	fdel(notify_file) // Deletes the file first to make sure it writes properly
-	WRITE_FILE(notify_file, json_encode(notify_members)) // Writes the file
-	notify_members_cache = notify_members // Updates the cache list
+// /datum/controller/subsystem/discord/proc/write_notify_file()
+	// if(!enabled) // Dont do shit if its disabled
+	// 	return
+	// fdel(notify_file) // Deletes the file first to make sure it writes properly
+	// WRITE_FILE(notify_file, json_encode(notify_members)) // Writes the file
+	// notify_members_cache = notify_members // Updates the cache list // TA EDIT END
 
 // Returns ID from ckey
 /datum/controller/subsystem/discord/proc/lookup_id(lookup_ckey)

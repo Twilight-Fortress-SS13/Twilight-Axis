@@ -21,8 +21,8 @@
 	storyteller_slot_scaling = 1	// unused: bandits use a flat cap, not storyteller_scale_slots
 	storyteller_slot_default_cap = 4 // TA EDIT START
 	storyteller_maxcaps = list(
-		/datum/storyteller/gamemode/guaranteed_antag = 6,			// High Intensity
-		/datum/storyteller/gamemode/guaranteed_antag/low_wretch = 5,	// Tempered Intensity
+		/datum/storyteller/gamemode/guaranteed_antag = 8,			// High Intensity
+		/datum/storyteller/gamemode/guaranteed_antag/low_wretch = 6,	// Tempered Intensity
 		/datum/storyteller/gamemode/no_antag = 5,
 	) // TA EDIT END
 	var/favor = 150
@@ -83,6 +83,6 @@
 			var/mob/living/carbon/human/H = owner.current
 			the_name = H.real_name
 		if(!totaldonated)
-			to_chat(world, "[the_name] was a bandit.")
+			to_world("[the_name] was a bandit.")
 		else
-			to_chat(world, "[the_name] was a bandit. Their band stole [totaldonated] mammons worth of loot!")
+			to_world("[the_name] was a bandit. Their band stole [totaldonated] mammons worth of loot!")

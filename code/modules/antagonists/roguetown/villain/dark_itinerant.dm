@@ -151,24 +151,26 @@
 	H.change_stat(STATKEY_CON, 2)
 	H.change_stat(STATKEY_WIL, 2)
 	H.change_stat(STATKEY_SPD, -1) // 11 weighted
-	var/onhelm = list(
-		"horns" = /obj/item/clothing/head/roguetown/tw_d_horns,
-		"towers" = /obj/item/clothing/head/roguetown/tw_d_castle_red,
-		"afreet" = /obj/item/clothing/head/roguetown/tw_d_efreet,
-		"sun" = /obj/item/clothing/head/roguetown/tw_d_sun,
-		"Graggar!!" = /obj/item/clothing/head/roguetown/tw_d_graggar,
-		"astrata" = /obj/item/clothing/head/roguetown/tw_d_peace,
-		"feathers" = /obj/item/clothing/head/roguetown/tw_d_feathers,
-		"lion" = /obj/item/clothing/head/roguetown/tw_d_lion,
-		"dragon" = /obj/item/clothing/head/roguetown/tw_d_dragon_red,
-		"swan" = /obj/item/clothing/head/roguetown/tw_d_swan,
-		"Le Fishe" = /obj/item/clothing/head/roguetown/tw_d_fish,
-		"mighty windmill" = /obj/item/clothing/head/roguetown/tw_d_windmill,
-		"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
-		"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
+	var/onhelm = list( //TA EDIT START
+		"Horns" = /obj/item/clothing/head/roguetown/onhelm/tw_d_horns,
+		"Howers" = /obj/item/clothing/head/roguetown/onhelm/tw_d_castle_red,
+		"Afreet" = /obj/item/clothing/head/roguetown/onhelm/tw_d_efreet,
+		"Sun" = /obj/item/clothing/head/roguetown/onhelm/tw_d_sun,
+		"Astrata" = /obj/item/clothing/head/roguetown/onhelm/tw_d_peace,
+		"Graggar" = /obj/item/clothing/head/roguetown/onhelm/tw_d_graggar,
+		"Feathers" = /obj/item/clothing/head/roguetown/onhelm/tw_d_feathers,
+		"Lion" = /obj/item/clothing/head/roguetown/onhelm/tw_d_lion,
+		"Dragon" = /obj/item/clothing/head/roguetown/onhelm/tw_d_dragon_red,
+		"Swan" = /obj/item/clothing/head/roguetown/onhelm/tw_d_swan,
+		"Le Fishe" = /obj/item/clothing/head/roguetown/onhelm/tw_d_fish,
+		"Mighty Windmill" = /obj/item/clothing/head/roguetown/onhelm/tw_d_windmill,
+		"Oathkeeper" = /obj/item/clothing/head/roguetown/onhelm/tw_d_oathtaker,
+		"Skull" = /obj/item/clothing/head/roguetown/onhelm/tw_d_skull,
+		"None"
 		)
-	var/onhelmchoice = input("Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
-	r_hand = onhelm[onhelmchoice]
+	var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
+	if(onhelmchoice != "None")
+		mask = onhelm[onhelmchoice] //TA EDIT END
 	if(H.mind)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/mindlink)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/convertrole/zizosquire)
@@ -212,7 +214,7 @@
 	zizotrain.explanation_text = "Train your squire [recruit.real_name] in the field. Show them the ropes. Ensure they survive."
 	zk_antag.objectives += zizotrain
 	zizoserve.target = recruiter.mind
-	zizoserve.explanation_text =  "Serve faithfully to your knight [recruiter.real_name], heed their commands and help them."
+	zizoserve.explanation_text =	"Serve faithfully to your knight [recruiter.real_name], heed their commands and help them."
 	zs_antag.objectives += zizoserve
 	recruit.mind.announce_objectives()
 	recruiter.mind.announce_objectives()

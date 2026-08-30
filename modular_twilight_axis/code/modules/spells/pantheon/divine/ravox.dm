@@ -111,6 +111,20 @@
 	parent_type = /datum/status_effect/debuff/TAravox_burden
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/ravox_burden
 
+/mob/living/carbon/human/var/tmp/cleric_aoe_fellowship_mode = FALSE
+
+/mob/living/carbon/human/proc/toggle_cleric_aoe_mode()
+	set name = "Toggle Fellowship AOE"
+	set category = "RoleUnique.Cleric"
+	cleric_aoe_fellowship_mode = !cleric_aoe_fellowship_mode
+	to_chat(src, span_notice("Area miracle mode: [cleric_aoe_fellowship_mode ? "Fellowship only" : "Normal"]."))
+	return TRUE
+
+/mob/living/carbon/human/proc/cleric_aoe_target_allowed(mob/living/target)
+	if(!cleric_aoe_fellowship_mode || target == src)
+		return TRUE
+	return shares_fellowship(src, target)
+
 //Call to Arms - AoE buff for all people surrounding you.
 /obj/effect/proc_holder/spell/self/TAcall_to_arms
 	name = "Call to Arms"
@@ -129,7 +143,10 @@
 	range = 3
 
 /obj/effect/proc_holder/spell/self/TAcall_to_arms/cast(list/targets,mob/living/user = usr)
+	var/mob/living/carbon/human/H = user
 	for(var/mob/living/carbon/target in view(range, get_turf(user)))
+		if(H && !H.cleric_aoe_target_allowed(target))
+			continue
 		if(istype(target.patron, /datum/patron/inhumen))
 			target.apply_status_effect(/datum/status_effect/debuff/call_to_arms)	//Debuffs inhumen worshipers.
 			continue
@@ -600,7 +617,7 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 	if(!locate(/datum/action/cooldown/spell/gravemark) in user.mind?.spell_list)
 		user.mind?.AddSpell(new /datum/action/cooldown/spell/gravemark/no_sprite)
 
-	if(!locate(/datum/action/cooldown/spell/minion_order) in user.mind?.spell_list) 
+	if(!locate(/datum/action/cooldown/spell/minion_order) in user.mind?.spell_list)
 		user.mind?.AddSpell(new /datum/action/cooldown/spell/minion_order)
 
 	var/spirit_type = get_spirit_type()
@@ -638,7 +655,7 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 				new /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/axe(get_step(spawn_turf, NORTH),user)
 				new /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/sword(get_step(spawn_turf, SOUTH),user)
 			for(var/mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/swarm in view(6, user))
-				swarm.ai_controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, target) 
+				swarm.ai_controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, target)
 				if(swarm.buffed_r == FALSE)
 					swarm.maxHealth *= skill
 					swarm.health *= skill

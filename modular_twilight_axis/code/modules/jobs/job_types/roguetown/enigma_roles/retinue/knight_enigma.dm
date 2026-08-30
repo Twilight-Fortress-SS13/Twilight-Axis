@@ -36,15 +36,9 @@
 /datum/job/roguetown/knight_enigma/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	..()
 	if(ishuman(L))
+		addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, cloak_and_title_setup)), 50)
+
 		var/mob/living/carbon/human/H = L
-	/*	if(istype(H.cloak, /obj/item/clothing/cloak)) //TA EDIT
-			var/obj/item/clothing/S = H.cloak
-			var/index = findtext(H.real_name, " ")
-			if(index)
-				index = copytext(H.real_name, 1,index)
-			if(!index)
-				index = H.real_name
-			S.name = "[S.name] ([index])" */
 		var/prev_real_name = H.real_name
 		var/prev_name = H.name
 		var/honorary = "Ser"
@@ -61,19 +55,8 @@
 					MF.known_people -= prev_real_name
 					H.mind.person_knows_me(MF)
 
-/datum/outfit/job/roguetown/knight_enigma/post_equip(mob/living/carbon/human/H)  //TA EDIT
-	..()
-	if(istype(H.cloak, /obj/item/clothing/cloak))
-		var/obj/item/clothing/S = H.cloak
-		var/index = findtext(H.name_archive, " ")
-		if(index)
-			index = copytext(H.name_archive, 1,index)
-		if(!index)
-			index = H.name
-		S.name = "[S.name] ([index])" //TA EDIT
 
 /datum/outfit/job/roguetown/knight_enigma
-	//cloak = /obj/item/clothing/cloak/tabard/stabard/surcoat/guard
 	neck = /obj/item/clothing/neck/roguetown/gorget/steel
 	gloves = /obj/item/clothing/gloves/roguetown/plate
 	wrists = /obj/item/clothing/wrists/roguetown/bracers
@@ -189,31 +172,25 @@
 		if(helmchoice != "None")
 			head = helmets[helmchoice]
 
-		var/heraldy = list(
-				"Surcoat" 	= /obj/item/clothing/cloak/tabard/stabard/guard,
-				"Tabard"		= /obj/item/clothing/cloak/tabard/knight,
-				"Jupon"		= /obj/item/clothing/cloak/tabard/stabard/surcoat/guard,
-				)
-		var/heraldychoice = input(H, "Choose your heraldy.", "RAISE UP THE BANNER") as anything in heraldy
-		cloak = heraldy[heraldychoice]
-
-		var/onhelm = list(
-			"horns" = /obj/item/clothing/head/roguetown/tw_d_horns,
-			"towers" = /obj/item/clothing/head/roguetown/tw_d_castle_red,
-			"afreet" = /obj/item/clothing/head/roguetown/tw_d_efreet,
-			"sun" = /obj/item/clothing/head/roguetown/tw_d_sun,
-			"astrata" = /obj/item/clothing/head/roguetown/tw_d_peace,
-			"feathers" = /obj/item/clothing/head/roguetown/tw_d_feathers,
-			"lion" = /obj/item/clothing/head/roguetown/tw_d_lion,
-			"dragon" = /obj/item/clothing/head/roguetown/tw_d_dragon_red,
-			"swan" = /obj/item/clothing/head/roguetown/tw_d_swan,
-			"Le Fishe" = /obj/item/clothing/head/roguetown/tw_d_fish,
-			"mighty windmill" = /obj/item/clothing/head/roguetown/tw_d_windmill,
-			"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
-			"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
+		var/onhelm = list( //TA EDIT START
+			"Horns" = /obj/item/clothing/head/roguetown/onhelm/tw_d_horns,
+			"Howers" = /obj/item/clothing/head/roguetown/onhelm/tw_d_castle_red,
+			"Afreet" = /obj/item/clothing/head/roguetown/onhelm/tw_d_efreet,
+			"Sun" = /obj/item/clothing/head/roguetown/onhelm/tw_d_sun,
+			"Astrata" = /obj/item/clothing/head/roguetown/onhelm/tw_d_peace,
+			"Feathers" = /obj/item/clothing/head/roguetown/onhelm/tw_d_feathers,
+			"Lion" = /obj/item/clothing/head/roguetown/onhelm/tw_d_lion,
+			"Dragon" = /obj/item/clothing/head/roguetown/onhelm/tw_d_dragon_red,
+			"Swan" = /obj/item/clothing/head/roguetown/onhelm/tw_d_swan,
+			"Le Fishe" = /obj/item/clothing/head/roguetown/onhelm/tw_d_fish,
+			"Mighty Windmill" = /obj/item/clothing/head/roguetown/onhelm/tw_d_windmill,
+			"Oathkeeper" = /obj/item/clothing/head/roguetown/onhelm/tw_d_oathtaker,
+			"Skull" = /obj/item/clothing/head/roguetown/onhelm/tw_d_skull,
+			"None"
 			)
 		var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
-		l_hand = onhelm[onhelmchoice]
+		if(onhelmchoice != "None")
+			mask = onhelm[onhelmchoice] //TA EDIT END
 
 		backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
