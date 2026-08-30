@@ -45,6 +45,26 @@
 // which is invalid as a raw CSS color and renders as blank/white in
 // the UI. This normalizes for display without touching how the value
 // is actually stored (other systems may depend on that convention).
+// Thumbnails (hairstyle/facial-hairstyle/marking previews) are cropped
+// from static icon files that don't change during a round - re-rendering
+// and re-encoding the same base64 string every single time any player
+// opens the panel (or, for markings, on every ui_data() poll) is pure
+// waste. Cache by a stable key (the source typepath) once, reuse for
+// the rest of the round.
+GLOBAL_LIST_EMPTY(mirror_thumb_cache)
+
+/proc/mirror_cached_thumb(cache_key, icon_file, icon_state)
+	if(!icon_file || !icon_state)
+		return null
+	if(GLOB.mirror_thumb_cache[cache_key])
+		return GLOB.mirror_thumb_cache[cache_key]
+	var/icon/thumb_icon = icon(icon_file, icon_state, SOUTH, 1)
+	if(!thumb_icon)
+		return null
+	var/b64 = icon2base64(thumb_icon)
+	GLOB.mirror_thumb_cache[cache_key] = b64
+	return b64
+
 /proc/mirror_ensure_hash(color)
 	if(!color || !length(color))
 		return "#FFFFFF"
@@ -189,12 +209,9 @@
 // reimplemented.
 // ----------------------------------------------------------------------
 /datum/mirror_appearance_ui/proc/marking_thumb(datum/body_marking/BM)
-	if(!BM || !BM.icon || !BM.icon_state)
+	if(!BM)
 		return null
-	var/icon/thumb_icon = icon(BM.icon, BM.icon_state)
-	if(!thumb_icon)
-		return null
-	return icon2base64(thumb_icon)
+	return mirror_cached_thumb("marking_[BM.type]", BM.icon, BM.icon_state)
 
 /datum/mirror_appearance_ui/proc/describe_markings(mob/living/carbon/human/H)
 	var/list/out = list()
@@ -267,8 +284,7 @@
 		out += list(list("name" = "Нет", "path" = ""))
 		seen_names["Нет"] = TRUE
 	for(var/sub_type in subtypesof(base_type))
-		var/datum/sprite_accessory/instance = new sub_type()
-		var/instance_name = instance.name
+		var/instance_name = initial(sub_type:name)
 		if(!instance_name || !length(instance_name))
 			continue
 		if(seen_names[instance_name])
@@ -400,18 +416,16 @@
 	var/list/penis_options = list(list("name" = "Нет", "path" = ""))
 	var/list/seen_penis_names = list("Нет" = TRUE)
 	for(var/choice_type in subtypesof(/datum/customizer_choice/organ/penis))
-		var/datum/customizer_choice/organ/penis/choice = new choice_type()
-		var/choice_name = choice.name
+		var/choice_name = initial(choice_type:name)
 		if(!choice_name || !length(choice_name) || seen_penis_names[choice_name])
-			qdel(choice)
 			continue
-		if(!choice.organ_type || !length(choice.sprite_accessories))
-			qdel(choice)
+		var/organ_type = initial(choice_type:organ_type)
+		var/list/sprite_accessories = initial(choice_type:sprite_accessories)
+		if(!organ_type || !length(sprite_accessories))
 			continue
 		seen_penis_names[choice_name] = TRUE
-		var/encoded_path = "[choice.organ_type]|[choice.sprite_accessories[1]]"
+		var/encoded_path = "[organ_type]|[sprite_accessories[1]]"
 		penis_options += list(list("name" = choice_name, "path" = encoded_path))
-		qdel(choice)
 	data["penis_styles"] = penis_options
 
 	data["vagina_styles"] = build_style_options(/datum/sprite_accessory/vagina)
@@ -423,16 +437,11 @@
 		var/list/hairstyles = list()
 		var/list/seen_hair_names = list()
 		for(var/hair_type in hair_choice.sprite_accessories)
-			var/datum/sprite_accessory/hair/head/instance = new hair_type()
-			var/instance_name = instance.name
+			var/instance_name = initial(hair_type:name)
 			if(!instance_name || !length(instance_name) || seen_hair_names[instance_name])
 				continue
 			seen_hair_names[instance_name] = TRUE
-			var/thumb_b64 = null
-			if(instance.icon && instance.icon_state)
-				var/icon/thumb_icon = icon(instance.icon, instance.icon_state, SOUTH, 1)
-				if(thumb_icon)
-					thumb_b64 = icon2base64(thumb_icon)
+			var/thumb_b64 = mirror_cached_thumb("[hair_type]", initial(hair_type:icon), initial(hair_type:icon_state))
 			hairstyles += list(list("name" = instance_name, "path" = "[hair_type]", "thumb" = thumb_b64))
 		data["hairstyles"] = hairstyles
 
@@ -440,16 +449,11 @@
 		var/list/facial_styles = list(list("name" = "Нет", "path" = "", "thumb" = null))
 		var/list/seen_facial_names = list("Нет" = TRUE)
 		for(var/facial_type in facial_choice.sprite_accessories)
-			var/datum/sprite_accessory/hair/facial/instance = new facial_type()
-			var/instance_name = instance.name
+			var/instance_name = initial(facial_type:name)
 			if(!instance_name || !length(instance_name) || seen_facial_names[instance_name])
 				continue
 			seen_facial_names[instance_name] = TRUE
-			var/thumb_b64 = null
-			if(instance.icon && instance.icon_state)
-				var/icon/thumb_icon = icon(instance.icon, instance.icon_state, SOUTH, 1)
-				if(thumb_icon)
-					thumb_b64 = icon2base64(thumb_icon)
+			var/thumb_b64 = mirror_cached_thumb("[facial_type]", initial(facial_type:icon), initial(facial_type:icon_state))
 			facial_styles += list(list("name" = instance_name, "path" = "[facial_type]", "thumb" = thumb_b64))
 		data["facial_hairstyles"] = facial_styles
 
@@ -457,8 +461,7 @@
 		var/list/accessory_opts = list(list("name" = "Нет", "path" = ""))
 		var/list/seen_accessory_names = list("Нет" = TRUE)
 		for(var/accessory_type in accessory_choice.sprite_accessories)
-			var/datum/sprite_accessory/accessory/instance = new accessory_type()
-			var/instance_name = instance.name
+			var/instance_name = initial(accessory_type:name)
 			if(!instance_name || !length(instance_name) || seen_accessory_names[instance_name])
 				continue
 			seen_accessory_names[instance_name] = TRUE
@@ -469,8 +472,7 @@
 		var/list/face_opts = list(list("name" = "Нет", "path" = ""))
 		var/list/seen_face_names = list("Нет" = TRUE)
 		for(var/detail_type in face_choice.sprite_accessories)
-			var/datum/sprite_accessory/face_detail/instance = new detail_type()
-			var/instance_name = instance.name
+			var/instance_name = initial(detail_type:name)
 			if(!instance_name || !length(instance_name) || seen_face_names[instance_name])
 				continue
 			seen_face_names[instance_name] = TRUE
