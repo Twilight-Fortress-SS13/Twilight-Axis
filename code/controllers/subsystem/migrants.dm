@@ -420,6 +420,10 @@ SUBSYSTEM_DEF(migrants)
 		return FALSE
 	if(role.allowed_ages && !(prefs.age in role.allowed_ages))
 		return FALSE
+#ifdef USES_PQ
+	if(!isnull(role.min_pq) && get_playerquality(player.ckey) < role.min_pq) // TA EDIT
+		return FALSE // TA EDIT
+#endif
 	return TRUE
 
 /// The set of /datum/advclass datums a role can roll, resolved from its advclass_cat_rolls tags (deduped).

@@ -20,9 +20,6 @@
 		else
 			return "000"
 
-/proc/random_backpack()
-	return pick(GLOB.backpacklist)
-
 /proc/random_features()
 	return MANDATORY_FEATURE_LIST
 
@@ -528,12 +525,6 @@ GLOBAL_LIST_EMPTY(species_list)
 /proc/deadchat_broadcast(message, source=null, mob/follow_target=null, turf/turf_target=null, speaker_key=null, message_type=DEADCHAT_REGULAR)
 	message = span_deadsay("[source]<span class='linkify'>[message]</span>")
 	for(var/mob/M in GLOB.player_list)
-		var/datum/preferences/prefs
-		if(M.client.prefs)
-			prefs = M.client.prefs
-		else
-			prefs = new
-
 		var/override = FALSE
 	//	if(M.client.holder && (prefs.chat_toggles & CHAT_DSAY))
 	//		override = TRUE
@@ -543,16 +534,6 @@ GLOBAL_LIST_EMPTY(species_list)
 			continue
 		if(M.stat != DEAD && !override)
 			continue
-		if(speaker_key && (speaker_key in prefs.ignoring))
-			continue
-
-		switch(message_type)
-			if(DEADCHAT_DEATHRATTLE)
-				if(prefs.toggles & DISABLE_DEATHRATTLE)
-					continue
-			if(DEADCHAT_ARRIVALRATTLE)
-				if(prefs.toggles & DISABLE_ARRIVALRATTLE)
-					continue
 
 		if(isobserver(M))
 			var/rendered_message = message
@@ -631,8 +612,6 @@ GLOBAL_LIST_EMPTY(species_list)
 
 		if(QDELETED(src) || !client || choice != "Yes")
 			lobbyer.ready = PLAYER_NOT_READY
-			src << browse(null, "window=playersetup") //closes the player setup window
-			lobbyer.new_player_panel()
 			return FALSE
 	else
 		var/choice = alert(src, "Are you sure you wish to let go and observe?", "LET GO", "Yes", "No")

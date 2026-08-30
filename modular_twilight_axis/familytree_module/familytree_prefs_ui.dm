@@ -1,4 +1,5 @@
 /datum/preferences
+	var/family = FAMILY_NONE
 	var/setspouse = ""
 	var/datum/family_options/family_options
 	var/gender_choice_pref = ANY_GENDER

@@ -168,7 +168,7 @@
 	//RegisterSignal(owner, COMSIG_MOB_APPLY_DAMGE, PROC_REF(on_parent_take_damage)) //TA EDIT
 
 	// Clip message
-	var/maxlen = owned_by.prefs.max_chat_length
+	var/maxlen = CHAT_MESSAGE_MAX_LENGTH
 	if (length_char(text) > maxlen)
 		text = copytext_char(text, 1, maxlen + 1) + "..." // BYOND index moment
 
@@ -176,7 +176,7 @@
 	if(ishuman(target))
 		var/mob/living/carbon/human/H = target
 		if(H.voice_color && (target.chat_color != H.voice_color))
-			target.chat_color = "#[H.voice_color]"
+			target.chat_color = "[H.voice_color]"
 			target.chat_color_darkened = target.chat_color
 			target.chat_color_name = target.name
 	if(!target.chat_color)
@@ -184,7 +184,7 @@
 		target.chat_color_darkened = colorize_string(target.name, 0.85, 0.85)
 		target.chat_color_name = target.name
 	if(target.voicecolor_override)
-		target.chat_color = "#[target.voicecolor_override]"
+		target.chat_color = "[target.voicecolor_override]"
 		target.chat_color_darkened = target.chat_color
 
 	// Get rid of any URL schemes that might cause BYOND to automatically wrap something in an anchor tag

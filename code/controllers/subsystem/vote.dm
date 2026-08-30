@@ -479,7 +479,6 @@ SUBSYSTEM_DEF(vote)
 			if("map")
 				// save_map_vote_log(.)
 				SSmapping.changemap(global.config.maplist[.])
-				SSmapping.map_voted = TRUE
 			if("endround")
 				if(. == "Continue Playing")
 					log_game("LOG VOTE: CONTINUE PLAYING AT [REALTIMEOFDAY]")

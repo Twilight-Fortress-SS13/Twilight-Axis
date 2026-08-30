@@ -1302,6 +1302,7 @@ Inquisitorial armory down here
 	var/active = FALSE
 	var/broken = FALSE
 	var/mob/living/carbon/human/target
+	var/mob/living/fixator // TA EDIT
 	var/atom/movable/screen/alert/blackmirror/effect
 	var/datum/looping_sound/blackmirror/soundloop
 
@@ -1324,10 +1325,13 @@ Inquisitorial armory down here
 	fedblood = FALSE
 	openstate = "bloody"
 	whofedme = null
-	target.clear_alert(usr, "blackmirror", TRUE)
-	target.playsound_local(src, 'sound/items/blackeye.ogg', 40, FALSE)
+	opened = TRUE // TA EDIT START
+	if(target && !QDELETED(target))
+		target.clear_alert(fixator, "blackmirror", TRUE)
+		target.playsound_local(src, 'sound/items/blackeye.ogg', 40, FALSE)
 	effect = null
 	target = null
+	fixator = null // TA EDIT END
 	usesleft--
 	soundloop.stop()
 	visible_message(span_info("[src] clouds itself with a chilling fog."))
@@ -1378,7 +1382,8 @@ Inquisitorial armory down here
 					return
 				target = HL
 				active = TRUE
-				effect = target.throw_alert(usr, "blackmirror", /atom/movable/screen/alert/blackmirror, override = TRUE)
+				fixator = user // TA EDIT
+				effect = target.throw_alert(user, "blackmirror", /atom/movable/screen/alert/blackmirror, override = TRUE) // TA EDIT
 				effect.source = src
 				target.playsound_local(src, 'sound/items/blackeye_warn.ogg', 100, FALSE)
 				playsound(src, 'sound/items/blackmirror_active.ogg', 100, FALSE)
@@ -1474,21 +1479,19 @@ Inquisitorial armory down here
 				update_icon()
 		return
 
-/obj/item/inqarticles/bmirror/attack_right(mob/user, obj/item/T)
+/obj/item/inqarticles/bmirror/attack_right(mob/user) // TA EDIT START
 	..()
 	if(!user.mind)
 		return
-	if(istype(T, /obj/item/inqarticles/bmirror))
-		openorshut()
-	else
-		openorshut()
+	openorshut(user) // TA EDIT END
 
-/obj/item/inqarticles/bmirror/proc/openorshut()
+/obj/item/inqarticles/bmirror/proc/openorshut(mob/user) // TA EDIT START
 	if(opened)
 		if(effect)
-			target.clear_alert(usr, "blackmirror", TRUE)
+			if(target && !QDELETED(target))
+				target.clear_alert(fixator ? fixator : user, "blackmirror", TRUE)
+				target.playsound_local(src, 'sound/items/blackeye.ogg', 40, FALSE)
 			effect = null
-			target.playsound_local(src, 'sound/items/blackeye.ogg', 40, FALSE)
 		playsound(src, 'sound/items/blackmirror_shut.ogg', 100, FALSE)
 		soundloop.stop()
 		opened = FALSE
@@ -1496,14 +1499,15 @@ Inquisitorial armory down here
 		update_icon_state()
 		return
 	playsound(src, 'sound/items/blackmirror_open.ogg', 100, FALSE)
-	if(target)
+	if(target && !QDELETED(target))
 		target.playsound_local(src, 'sound/items/blackeye_warn.ogg', 100, FALSE)
-		effect = target.throw_alert(usr, "blackmirror", /atom/movable/screen/alert/blackmirror, override = TRUE)
-		effect.source = src
+		effect = target.throw_alert(fixator ? fixator : user, "blackmirror", /atom/movable/screen/alert/blackmirror, override = TRUE)
+		if(effect)
+			effect.source = src
 	if(active)
 		soundloop.start()
 	opened = TRUE
-	return update_icon()
+	return update_icon() // TA EDIT END
 
 /obj/item/inqarticles/bmirror/update_icon()
 	if(opened)

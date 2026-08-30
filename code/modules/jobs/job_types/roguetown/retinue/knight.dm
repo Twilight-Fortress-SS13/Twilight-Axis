@@ -159,6 +159,7 @@
 			"Slitted Kettle" = /obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle,
 			"Visored Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor,
 			"Great Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/great,
+			"Snouted Burgonet" = /obj/item/clothing/head/roguetown/helmet/heavy/burgonet,
 			"Volfskulle Bascinet"		= /obj/item/clothing/head/roguetown/helmet/heavy/volfplate,
 			"Roundface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface,
 			"Snouted Roundface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface/snouted,
@@ -178,22 +179,24 @@
 		armor = armors[armorchoice]
 
 		var/onhelm = list( //TA EDIT START
-			"horns" = /obj/item/clothing/head/roguetown/tw_d_horns,
-			"towers" = /obj/item/clothing/head/roguetown/tw_d_castle_red,
-			"afreet" = /obj/item/clothing/head/roguetown/tw_d_efreet,
-			"sun" = /obj/item/clothing/head/roguetown/tw_d_sun,
-			"astrata" = /obj/item/clothing/head/roguetown/tw_d_peace,
-			"feathers" = /obj/item/clothing/head/roguetown/tw_d_feathers,
-			"lion" = /obj/item/clothing/head/roguetown/tw_d_lion,
-			"dragon" = /obj/item/clothing/head/roguetown/tw_d_dragon_red,
-			"swan" = /obj/item/clothing/head/roguetown/tw_d_swan,
-			"Le Fishe" = /obj/item/clothing/head/roguetown/tw_d_fish,
-			"mighty windmill" = /obj/item/clothing/head/roguetown/tw_d_windmill,
-			"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
-			"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
+			"Horns" = /obj/item/clothing/head/roguetown/onhelm/tw_d_horns,
+			"Howers" = /obj/item/clothing/head/roguetown/onhelm/tw_d_castle_red,
+			"Afreet" = /obj/item/clothing/head/roguetown/onhelm/tw_d_efreet,
+			"Sun" = /obj/item/clothing/head/roguetown/onhelm/tw_d_sun,
+			"Astrata" = /obj/item/clothing/head/roguetown/onhelm/tw_d_peace,
+			"Feathers" = /obj/item/clothing/head/roguetown/onhelm/tw_d_feathers,
+			"Lion" = /obj/item/clothing/head/roguetown/onhelm/tw_d_lion,
+			"Dragon" = /obj/item/clothing/head/roguetown/onhelm/tw_d_dragon_red,
+			"Swan" = /obj/item/clothing/head/roguetown/onhelm/tw_d_swan,
+			"Le Fishe" = /obj/item/clothing/head/roguetown/onhelm/tw_d_fish,
+			"Mighty Windmill" = /obj/item/clothing/head/roguetown/onhelm/tw_d_windmill,
+			"Oathkeeper" = /obj/item/clothing/head/roguetown/onhelm/tw_d_oathtaker,
+			"Skull" = /obj/item/clothing/head/roguetown/onhelm/tw_d_skull,
+			"None"
 			)
 		var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
-		l_hand = onhelm[onhelmchoice] //TA EDIT END
+		if(onhelmchoice != "None")
+			mask = onhelm[onhelmchoice] //TA EDIT END
 
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
@@ -279,6 +282,7 @@
 			"Slitted Kettle"	= /obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle,
 			"Visored Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor,
 			"Great Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/great,
+			"Snouted Burgonet" = /obj/item/clothing/head/roguetown/helmet/heavy/burgonet,
 			"Volfskulle Bascinet"		= /obj/item/clothing/head/roguetown/helmet/heavy/volfplate,
 			"Roundface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface,
 			"Snouted Roundface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface/snouted,
@@ -298,22 +302,24 @@
 		armor = armors[armorchoice]
 
 		var/onhelm = list( //TA EDIT START
-			"horns" = /obj/item/clothing/head/roguetown/tw_d_horns,
-			"towers" = /obj/item/clothing/head/roguetown/tw_d_castle_red,
-			"afreet" = /obj/item/clothing/head/roguetown/tw_d_efreet,
-			"sun" = /obj/item/clothing/head/roguetown/tw_d_sun,
-			"astrata" = /obj/item/clothing/head/roguetown/tw_d_peace,
-			"feathers" = /obj/item/clothing/head/roguetown/tw_d_feathers,
-			"lion" = /obj/item/clothing/head/roguetown/tw_d_lion,
-			"dragon" = /obj/item/clothing/head/roguetown/tw_d_dragon_red,
-			"swan" = /obj/item/clothing/head/roguetown/tw_d_swan,
-			"Le Fishe" = /obj/item/clothing/head/roguetown/tw_d_fish,
-			"mighty windmill" = /obj/item/clothing/head/roguetown/tw_d_windmill,
-			"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
-			"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
+			"Horns" = /obj/item/clothing/head/roguetown/onhelm/tw_d_horns,
+			"Howers" = /obj/item/clothing/head/roguetown/onhelm/tw_d_castle_red,
+			"Afreet" = /obj/item/clothing/head/roguetown/onhelm/tw_d_efreet,
+			"Sun" = /obj/item/clothing/head/roguetown/onhelm/tw_d_sun,
+			"Astrata" = /obj/item/clothing/head/roguetown/onhelm/tw_d_peace,
+			"Feathers" = /obj/item/clothing/head/roguetown/onhelm/tw_d_feathers,
+			"Lion" = /obj/item/clothing/head/roguetown/onhelm/tw_d_lion,
+			"Dragon" = /obj/item/clothing/head/roguetown/onhelm/tw_d_dragon_red,
+			"Swan" = /obj/item/clothing/head/roguetown/onhelm/tw_d_swan,
+			"Le Fishe" = /obj/item/clothing/head/roguetown/onhelm/tw_d_fish,
+			"Mighty Windmill" = /obj/item/clothing/head/roguetown/onhelm/tw_d_windmill,
+			"Oathkeeper" = /obj/item/clothing/head/roguetown/onhelm/tw_d_oathtaker,
+			"Skull" = /obj/item/clothing/head/roguetown/onhelm/tw_d_skull,
+			"None"
 			)
 		var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
-		l_hand = onhelm[onhelmchoice] //TA EDIT END
+		if(onhelmchoice != "None")
+			mask = onhelm[onhelmchoice] //TA EDIT END
 
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
@@ -402,7 +408,7 @@
 				r_hand = /obj/item/rogueweapon/mace/goden/steel
 				l_hand = /obj/item/rogueweapon/scabbard/gwstrap
 			if("Sabre + Recurve Bow")
-				backl = /obj/item/rogueweapon/scabbard/sword/noble
+				l_hand = /obj/item/rogueweapon/scabbard/sword/noble
 				r_hand = /obj/item/rogueweapon/sword/sabre
 				beltr = /obj/item/quiver/arrows
 				beltl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
@@ -435,6 +441,7 @@
 			"Slitted Kettle"	= /obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle,
 			"Visored Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor,
 			"Great Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/great,
+			"Snouted Burgonet" = /obj/item/clothing/head/roguetown/helmet/heavy/burgonet,
 			"Volfskulle Bascinet"		= /obj/item/clothing/head/roguetown/helmet/heavy/volfplate,
 			"Roundface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface,
 			"Snouted Roundface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface/snouted,
@@ -454,22 +461,24 @@
 		armor = armors[armorchoice]
 
 		var/onhelm = list( //TA EDIT START
-			"horns" = /obj/item/clothing/head/roguetown/tw_d_horns,
-			"towers" = /obj/item/clothing/head/roguetown/tw_d_castle_red,
-			"afreet" = /obj/item/clothing/head/roguetown/tw_d_efreet,
-			"sun" = /obj/item/clothing/head/roguetown/tw_d_sun,
-			"astrata" = /obj/item/clothing/head/roguetown/tw_d_peace,
-			"feathers" = /obj/item/clothing/head/roguetown/tw_d_feathers,
-			"lion" = /obj/item/clothing/head/roguetown/tw_d_lion,
-			"dragon" = /obj/item/clothing/head/roguetown/tw_d_dragon_red,
-			"swan" = /obj/item/clothing/head/roguetown/tw_d_swan,
-			"Le Fishe" = /obj/item/clothing/head/roguetown/tw_d_fish,
-			"mighty windmill" = /obj/item/clothing/head/roguetown/tw_d_windmill,
-			"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
-			"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
+			"Horns" = /obj/item/clothing/head/roguetown/onhelm/tw_d_horns,
+			"Howers" = /obj/item/clothing/head/roguetown/onhelm/tw_d_castle_red,
+			"Afreet" = /obj/item/clothing/head/roguetown/onhelm/tw_d_efreet,
+			"Sun" = /obj/item/clothing/head/roguetown/onhelm/tw_d_sun,
+			"Astrata" = /obj/item/clothing/head/roguetown/onhelm/tw_d_peace,
+			"Feathers" = /obj/item/clothing/head/roguetown/onhelm/tw_d_feathers,
+			"Lion" = /obj/item/clothing/head/roguetown/onhelm/tw_d_lion,
+			"Dragon" = /obj/item/clothing/head/roguetown/onhelm/tw_d_dragon_red,
+			"Swan" = /obj/item/clothing/head/roguetown/onhelm/tw_d_swan,
+			"Le Fishe" = /obj/item/clothing/head/roguetown/onhelm/tw_d_fish,
+			"Mighty Windmill" = /obj/item/clothing/head/roguetown/onhelm/tw_d_windmill,
+			"Oathkeeper" = /obj/item/clothing/head/roguetown/onhelm/tw_d_oathtaker,
+			"Skull" = /obj/item/clothing/head/roguetown/onhelm/tw_d_skull,
+			"None"
 			)
 		var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
-		l_hand = onhelm[onhelmchoice] //TA EDIT END
+		if(onhelmchoice != "None")
+			mask = onhelm[onhelmchoice] //TA EDIT END
 
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
@@ -520,12 +529,6 @@
 	..()
 	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/knight]
 	add_verb(H, /mob/proc/haltyell)
-	backpack_contents = list(
-		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
-		/obj/item/rope/chain = 1,
-		/obj/item/rogueweapon/scabbard/sheath/noble = 1
-	)
-
 
 	H.adjust_blindness(-3)
 	if(H.mind)
@@ -627,6 +630,7 @@
 			"Slitted Kettle" = /obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle,
 			"Visored Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor,
 			"Great Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/great,
+			"Snouted Burgonet" = /obj/item/clothing/head/roguetown/helmet/heavy/burgonet,
 			"Volfskulle Bascinet"		= /obj/item/clothing/head/roguetown/helmet/heavy/volfplate,
 			"Roundface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface,
 			"Snouted Roundface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface/snouted,
@@ -638,23 +642,29 @@
 			head = helmets[helmchoice]
 
 		var/onhelm = list( //TA EDIT START
-			"horns" = /obj/item/clothing/head/roguetown/tw_d_horns,
-			"towers" = /obj/item/clothing/head/roguetown/tw_d_castle_red,
-			"afreet" = /obj/item/clothing/head/roguetown/tw_d_efreet,
-			"sun" = /obj/item/clothing/head/roguetown/tw_d_sun,
-			"astrata" = /obj/item/clothing/head/roguetown/tw_d_peace,
-			"feathers" = /obj/item/clothing/head/roguetown/tw_d_feathers,
-			"lion" = /obj/item/clothing/head/roguetown/tw_d_lion,
-			"dragon" = /obj/item/clothing/head/roguetown/tw_d_dragon_red,
-			"swan" = /obj/item/clothing/head/roguetown/tw_d_swan,
-			"Le Fishe" = /obj/item/clothing/head/roguetown/tw_d_fish,
-			"mighty windmill" = /obj/item/clothing/head/roguetown/tw_d_windmill,
-			"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
-			"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
+			"Horns" = /obj/item/clothing/head/roguetown/onhelm/tw_d_horns,
+			"Howers" = /obj/item/clothing/head/roguetown/onhelm/tw_d_castle_red,
+			"Afreet" = /obj/item/clothing/head/roguetown/onhelm/tw_d_efreet,
+			"Sun" = /obj/item/clothing/head/roguetown/onhelm/tw_d_sun,
+			"Astrata" = /obj/item/clothing/head/roguetown/onhelm/tw_d_peace,
+			"Feathers" = /obj/item/clothing/head/roguetown/onhelm/tw_d_feathers,
+			"Lion" = /obj/item/clothing/head/roguetown/onhelm/tw_d_lion,
+			"Dragon" = /obj/item/clothing/head/roguetown/onhelm/tw_d_dragon_red,
+			"Swan" = /obj/item/clothing/head/roguetown/onhelm/tw_d_swan,
+			"Le Fishe" = /obj/item/clothing/head/roguetown/onhelm/tw_d_fish,
+			"Mighty Windmill" = /obj/item/clothing/head/roguetown/onhelm/tw_d_windmill,
+			"Oathkeeper" = /obj/item/clothing/head/roguetown/onhelm/tw_d_oathtaker,
+			"Skull" = /obj/item/clothing/head/roguetown/onhelm/tw_d_skull,
+			"None"
 			)
 		var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
-		l_hand = onhelm[onhelmchoice] //TA EDIT END
-
+		if(onhelmchoice != "None")
+			mask = onhelm[onhelmchoice] //TA EDIT END
+	backpack_contents = list(
+		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
+		/obj/item/rope/chain = 1,
+		/obj/item/rogueweapon/scabbard/sheath/noble = 1
+	)
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_UPPER_CLASS, H)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/takeprotege)
@@ -758,7 +768,7 @@
 		if("Edict & Aegis (Sabre & Buckler)")
 			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_MASTER, TRUE)
 			r_hand = /obj/item/rogueweapon/sword/sabre/banneret
-			beltl = /obj/item/rogueweapon/shield/buckler/banneret
+			l_hand = /obj/item/rogueweapon/shield/buckler/banneret
 			beltr = /obj/item/rogueweapon/scabbard/sword/royal
 		if("Claymore")
 			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_MASTER, TRUE)
@@ -869,6 +879,7 @@
 		"Slitted Kettle"	= /obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle,
 		"Visored Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor,
 		"Great Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/great,
+		"Snouted Burgonet" = /obj/item/clothing/head/roguetown/helmet/heavy/burgonet,
 		"Volfskulle Bascinet"		= /obj/item/clothing/head/roguetown/helmet/heavy/volfplate,
 		"Roundface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface,
 		"Snouted Roundface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface/snouted,
@@ -879,22 +890,24 @@
 		head = helmets[helmchoice]
 
 	var/onhelm = list( //TA EDIT START
-		"horns" = /obj/item/clothing/head/roguetown/tw_d_horns,
-		"towers" = /obj/item/clothing/head/roguetown/tw_d_castle_red,
-		"afreet" = /obj/item/clothing/head/roguetown/tw_d_efreet,
-		"sun" = /obj/item/clothing/head/roguetown/tw_d_sun,
-		"astrata" = /obj/item/clothing/head/roguetown/tw_d_peace,
-		"feathers" = /obj/item/clothing/head/roguetown/tw_d_feathers,
-		"lion" = /obj/item/clothing/head/roguetown/tw_d_lion,
-		"dragon" = /obj/item/clothing/head/roguetown/tw_d_dragon_red,
-		"swan" = /obj/item/clothing/head/roguetown/tw_d_swan,
-		"Le Fishe" = /obj/item/clothing/head/roguetown/tw_d_fish,
-		"mighty windmill" = /obj/item/clothing/head/roguetown/tw_d_windmill,
-		"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
-		"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
+		"Horns" = /obj/item/clothing/head/roguetown/onhelm/tw_d_horns,
+		"Howers" = /obj/item/clothing/head/roguetown/onhelm/tw_d_castle_red,
+		"Afreet" = /obj/item/clothing/head/roguetown/onhelm/tw_d_efreet,
+		"Sun" = /obj/item/clothing/head/roguetown/onhelm/tw_d_sun,
+		"Astrata" = /obj/item/clothing/head/roguetown/onhelm/tw_d_peace,
+		"Feathers" = /obj/item/clothing/head/roguetown/onhelm/tw_d_feathers,
+		"Lion" = /obj/item/clothing/head/roguetown/onhelm/tw_d_lion,
+		"Dragon" = /obj/item/clothing/head/roguetown/onhelm/tw_d_dragon_red,
+		"Swan" = /obj/item/clothing/head/roguetown/onhelm/tw_d_swan,
+		"Le Fishe" = /obj/item/clothing/head/roguetown/onhelm/tw_d_fish,
+		"Mighty Windmill" = /obj/item/clothing/head/roguetown/onhelm/tw_d_windmill,
+		"Oathkeeper" = /obj/item/clothing/head/roguetown/onhelm/tw_d_oathtaker,
+		"Skull" = /obj/item/clothing/head/roguetown/onhelm/tw_d_skull,
+		"None"
 		)
 	var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
-	l_hand = onhelm[onhelmchoice] //TA EDIT END
+	if(onhelmchoice != "None")
+		mask = onhelm[onhelmchoice] //TA EDIT END
 
 	if(HAS_TRAIT(H, TRAIT_GOODTRAINER))
 		REMOVE_TRAIT(H, TRAIT_GOODTRAINER, JOB_TRAIT)

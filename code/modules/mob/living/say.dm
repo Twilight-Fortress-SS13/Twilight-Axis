@@ -342,18 +342,8 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 		mob_color = H.voice_color
 		if(H.voicecolor_override)
 			mob_color = H.voicecolor_override
-	var/chatmsg = "<font color = #[mob_color]><b>[src]</b></font> " + sign_verb + "."
+	var/chatmsg = "<font color = [mob_color]><b>[src]</b></font> " + sign_verb + "."
 	visible_message(chatmsg, runechat_message = sign_verb, log_seen = SEEN_LOG_EMOTE, ignored_mobs = understanders)
-
-	//speech bubble
-	var/list/speech_bubble_recipients = list()
-	for(var/mob/M in listening)
-		if(M.client?.prefs)
-			if(M.client && !M.client.prefs.chat_on_map)
-				speech_bubble_recipients.Add(M.client)
-	var/image/I = image('icons/mob/talk.dmi', src, "[bubble_type][say_test(message)]", FLY_LAYER)
-	I.appearance_flags = APPEARANCE_UI_IGNORE_ALPHA
-	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(flick_overlay), I, speech_bubble_recipients, 30)
 
 /datum/species/proc/get_span_language(datum/language/message_language)
 	if(!message_language)
@@ -364,11 +354,7 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 /mob/proc/can_see_runechat(atom/movable/speaker)
 	if(!client || !client.prefs)
 		return FALSE
-	if(!client.prefs.chat_on_map)
-		return FALSE
 	if(stat >= UNCONSCIOUS)
-		return FALSE
-	if(!ismob(speaker) && !client.prefs.see_chat_non_mob)
 		return FALSE
 	return TRUE
 
@@ -616,7 +602,7 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	if(stuttering)
 		message = stutter(message)
 
-	if(slurring)
+	if(slurring || feigning_impairment) // TA EDIT
 		message = slur(message)
 
 	if(cultslurring)

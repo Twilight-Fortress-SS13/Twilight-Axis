@@ -348,8 +348,9 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 	if(hallucination)
 		handle_hallucinations()
 
-	if(drunkenness)
-		drunkenness = max(drunkenness - (drunkenness * 0.04) - 0.01, 0)
+	if(drunkenness) // TA EDIT START
+		if(!has_booze())
+			drunkenness = max(drunkenness - 0.2, 0)
 		if(drunkenness >= 3)
 			if(prob(3))
 				slurring += 2
@@ -358,8 +359,12 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 			add_stress(/datum/stressevent/drunk)
 		else
 			remove_stress(/datum/stressevent/drunk)
+			remove_status_effect(/datum/status_effect/buff/drunk)
 		if(drunkenness >= 11 && slurring < 5)
 			slurring += 1.2
+
+		if(drunkenness >= 21 && prob(2))
+			emote("sway")
 
 		if(drunkenness >= 41)
 			if(prob(25))
@@ -367,39 +372,41 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 			Dizzy(10)
 
 		if(drunkenness >= 51)
-			adjustToxLoss(1)
 			if(prob(3))
 				confused += 15
 				vomit() // vomiting clears toxloss, consider this a blessing
 			Dizzy(25)
 
 		if(drunkenness >= 61)
-			adjustToxLoss(1)
 			if(prob(50))
 				blur_eyes(5)
 
 		if(drunkenness >= 71)
-			adjustToxLoss(1)
 			if(prob(10))
 				blur_eyes(5)
+			if(prob(4) && !stat && !IsKnockdown())
+				to_chat(src, span_warning("Я на мгновение теряю равновесие!"))
+				Knockdown(10)
 
 		if(drunkenness >= 81)
-			adjustToxLoss(3)
+			if(prob(5))
+				drowsyness = min(drowsyness + 10, 100)
 			if(prob(5) && !stat)
 				to_chat(src, span_warning("Maybe I should lie down for a bit..."))
 
 		if(drunkenness >= 91)
-			adjustToxLoss(5)
+			if(has_booze() && prob(10))
+				adjustToxLoss(0.5)
 //			adjustOrganLoss(ORGAN_SLOT_BRAIN, 0.4)
-			if(prob(20) && !stat)
+			if(prob(10) && !stat)
 				to_chat(src, span_warning("Just a quick nap..."))
-				Sleeping(900)
+				Sleeping(300)
 
-		if(drunkenness >= 101)
-			adjustToxLoss(5) //Let's be honest you shouldn't be alive by now
+		if(drunkenness >= 101 && has_booze() && prob(15))
+			adjustToxLoss(1) //Let's be honest you shouldn't be alive by now
 
 //WE HANDLE SUNDERSTACKS HERE
-	if(sunder_stacks)
+	if(sunder_stacks) // TA EDIT END
 		sunder_stacks = max(sunder_stacks - 1, 0) //Takes a bit to shrug off
 		if(cultslurring < 5) //Fucks up our ability to talk, completely until all sunderstacks are gone
 			cultslurring += 1.2
@@ -606,6 +613,8 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 			energy_add(5)
 	//Healing while sleeping in a bed
 	if(IsSleeping())
+		if(drunkenness) // TA EDIT START
+			drunkenness = max(drunkenness - 2, 0) // TA EDIT END
 		if(HAS_TRAIT(src, TRAIT_NOREGEN) || HAS_TRAIT(src, TRAIT_IRONMAN))
 			return
 		var/sleepy_mod = 0.5

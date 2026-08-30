@@ -57,7 +57,6 @@
 
 
 /datum/outfit/job/roguetown/knight_enigma
-	//cloak = /obj/item/clothing/cloak/tabard/stabard/surcoat/guard
 	neck = /obj/item/clothing/neck/roguetown/gorget/steel
 	gloves = /obj/item/clothing/gloves/roguetown/plate
 	wrists = /obj/item/clothing/wrists/roguetown/bracers
@@ -173,23 +172,25 @@
 		if(helmchoice != "None")
 			head = helmets[helmchoice]
 
-		var/onhelm = list(
-			"horns" = /obj/item/clothing/head/roguetown/tw_d_horns,
-			"towers" = /obj/item/clothing/head/roguetown/tw_d_castle_red,
-			"afreet" = /obj/item/clothing/head/roguetown/tw_d_efreet,
-			"sun" = /obj/item/clothing/head/roguetown/tw_d_sun,
-			"astrata" = /obj/item/clothing/head/roguetown/tw_d_peace,
-			"feathers" = /obj/item/clothing/head/roguetown/tw_d_feathers,
-			"lion" = /obj/item/clothing/head/roguetown/tw_d_lion,
-			"dragon" = /obj/item/clothing/head/roguetown/tw_d_dragon_red,
-			"swan" = /obj/item/clothing/head/roguetown/tw_d_swan,
-			"Le Fishe" = /obj/item/clothing/head/roguetown/tw_d_fish,
-			"mighty windmill" = /obj/item/clothing/head/roguetown/tw_d_windmill,
-			"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
-			"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
+		var/onhelm = list( //TA EDIT START
+			"Horns" = /obj/item/clothing/head/roguetown/onhelm/tw_d_horns,
+			"Howers" = /obj/item/clothing/head/roguetown/onhelm/tw_d_castle_red,
+			"Afreet" = /obj/item/clothing/head/roguetown/onhelm/tw_d_efreet,
+			"Sun" = /obj/item/clothing/head/roguetown/onhelm/tw_d_sun,
+			"Astrata" = /obj/item/clothing/head/roguetown/onhelm/tw_d_peace,
+			"Feathers" = /obj/item/clothing/head/roguetown/onhelm/tw_d_feathers,
+			"Lion" = /obj/item/clothing/head/roguetown/onhelm/tw_d_lion,
+			"Dragon" = /obj/item/clothing/head/roguetown/onhelm/tw_d_dragon_red,
+			"Swan" = /obj/item/clothing/head/roguetown/onhelm/tw_d_swan,
+			"Le Fishe" = /obj/item/clothing/head/roguetown/onhelm/tw_d_fish,
+			"Mighty Windmill" = /obj/item/clothing/head/roguetown/onhelm/tw_d_windmill,
+			"Oathkeeper" = /obj/item/clothing/head/roguetown/onhelm/tw_d_oathtaker,
+			"Skull" = /obj/item/clothing/head/roguetown/onhelm/tw_d_skull,
+			"None"
 			)
 		var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
-		l_hand = onhelm[onhelmchoice]
+		if(onhelmchoice != "None")
+			mask = onhelm[onhelmchoice] //TA EDIT END
 
 		backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,

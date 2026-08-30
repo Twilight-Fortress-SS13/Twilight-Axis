@@ -509,8 +509,13 @@
 	return ..()
 
 /obj/structure/bars/grille/obj_break(damage_flag)
+	set_is_platform(FALSE) // TA EDIT
 	obj_flags = CAN_BE_HIT
 	..()
+	var/turf/T = loc // TA EDIT START
+	if(istype(T))
+		for(var/mob/living/M in loc)
+			T.Entered(M) // TA EDIT END
 
 /obj/structure/bars/grille/redstone_triggered()
 	if(obj_broken)

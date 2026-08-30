@@ -739,6 +739,12 @@
 /mob/living/restrained(ignore_grab)
 	return ..() || istype(loc, /obj/item/mob_item)
 
+/mob/living/proc/is_carried()
+	return ismob(buckled) && buckled.buckle_lying > 0
+
+/mob/living/proc/is_legbound()
+	return FALSE
+
 /mob/living/incapacitated(ignore_restraints = FALSE, ignore_grab = TRUE, check_immobilized = FALSE, ignore_stasis = FALSE)
 	if(stat || IsUnconscious() || IsStun() || IsParalyzed() || (!ignore_restraints && restrained(ignore_grab)))
 		return TRUE
@@ -2258,12 +2264,12 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 		return
 	if(!can_look_up())
 		return
-	changeNext_move(HAS_TRAIT(src, TRAIT_SLEUTH) ? CLICK_CD_SLEUTH : CLICK_CD_TRACKING)
+	changeNext_move(HAS_TRAIT(src, TRAIT_PERFECT_TRACKER) ? CLICK_CD_SLEUTH : CLICK_CD_TRACKING)
 	if(m_intent != MOVE_INTENT_SNEAK)
 		visible_message(span_info("[src] begins looking around."))
 	var/looktime = 50 - (STAPER * 2) - (get_skill_level(/datum/skill/misc/tracking) * 5)
 	looktime = clamp(looktime, 7, 50)
-	if(HAS_TRAIT(src, TRAIT_SLEUTH) ? move_after(src, looktime, target = src) : do_after(src, looktime, target = src))
+	if(HAS_TRAIT(src, TRAIT_PERFECT_TRACKER) ? move_after(src, looktime, target = src) : do_after(src, looktime, target = src))
 		for(var/mob/living/M in view(7,src))
 			var/marked = FALSE
 			if(M == src)
@@ -2302,7 +2308,7 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 			if(marked)
 				if(ishuman(src))
 					var/mob/living/carbon/human/H = src
-					if(H.current_mark == M && HAS_TRAIT(H, TRAIT_SLEUTH))
+					if(H.current_mark == M && HAS_TRAIT(H, TRAIT_PERFECT_TRACKER))
 						found_ping(get_turf(M), client, "trap")
 					else
 						found_ping(get_turf(M), client, "hidden")
@@ -2376,17 +2382,17 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 			to_chat(src, span_notice("You spot a faint trail [dist_text] to the [dir_text]."))
 
 		var/trackskill = get_skill_level(/datum/skill/misc/tracking)
-		var/has_sleuth = HAS_TRAIT(src, TRAIT_SLEUTH)
+		var/has_tracking_perk = HAS_TRAIT(src, TRAIT_PERFECT_TRACKER)
 
-		if(trackskill >= SKILL_LEVEL_EXPERT || has_sleuth)
-			var/search_range = has_sleuth ? 7 : (trackskill + 1) // Up to 7 (full screen) w/ Legendary
+		if(trackskill >= SKILL_LEVEL_EXPERT || has_tracking_perk)
+			var/search_range = has_tracking_perk ? 7 : (trackskill + 1) // Up to 7 (full screen) w/ Legendary
 			var/turf_origin = get_turf(src)
 			var/turf_up_one	= get_step_multiz(turf_origin, UP)
 			var/turf_up_two
-			if(turf_up_one && (trackskill >= SKILL_LEVEL_MASTER || has_sleuth))
+			if(turf_up_one && (trackskill >= SKILL_LEVEL_MASTER || has_tracking_perk))
 				turf_up_two = get_step_multiz(turf_up_one, UP)
 			var/turf_up_three
-			if(turf_up_two && (trackskill >= SKILL_LEVEL_LEGENDARY || has_sleuth))
+			if(turf_up_two && (trackskill >= SKILL_LEVEL_LEGENDARY || has_tracking_perk))
 				turf_up_three = get_step_multiz(turf_up_two, UP)	// We physically cannot go higher on dun world, so we don't. This is very niche already.
 
 			var/list/z_highlights
@@ -2399,7 +2405,7 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 
 			if(turf_up_one)
 				for(var/mob/living/L in get_hearers_in_range(search_range, turf_up_one, RECURSIVE_CONTENTS_CLIENT_MOBS))
-					if((L.m_intent == MOVE_INTENT_SNEAK || HAS_TRAIT(src, TRAIT_LIGHT_STEP)) && !has_sleuth)
+					if((L.m_intent == MOVE_INTENT_SNEAK || HAS_TRAIT(src, TRAIT_LIGHT_STEP)) && !has_tracking_perk)
 						continue
 					var/turf/T = locate(L.x, L.y, src.z) // We'll want to highlight the turf on -our- z-level.
 					var/val = "[ZTAG_ONE]"
@@ -2409,7 +2415,7 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 
 			if(turf_up_two)
 				for(var/mob/living/L in get_hearers_in_range(search_range, turf_up_two, RECURSIVE_CONTENTS_CLIENT_MOBS))
-					if((L.m_intent == MOVE_INTENT_SNEAK || HAS_TRAIT(src, TRAIT_LIGHT_STEP)) && !has_sleuth)
+					if((L.m_intent == MOVE_INTENT_SNEAK || HAS_TRAIT(src, TRAIT_LIGHT_STEP)) && !has_tracking_perk)
 						continue
 					var/turf/T = locate(L.x, L.y, src.z) // We'll want to highlight the turf on -our- z-level.
 					var/val = "[ZTAG_TWO]"
@@ -2419,7 +2425,7 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 
 			if(turf_up_three)
 				for(var/mob/living/L in get_hearers_in_range(search_range, turf_up_three, RECURSIVE_CONTENTS_CLIENT_MOBS))
-					if((L.m_intent == MOVE_INTENT_SNEAK || HAS_TRAIT(src, TRAIT_LIGHT_STEP)) && !has_sleuth)
+					if((L.m_intent == MOVE_INTENT_SNEAK || HAS_TRAIT(src, TRAIT_LIGHT_STEP)) && !has_tracking_perk)
 						continue
 					var/turf/T = locate(L.x, L.y, src.z) // We'll want to highlight the turf on -our- z-level.
 					var/val = "[ZTAG_THREE]"
