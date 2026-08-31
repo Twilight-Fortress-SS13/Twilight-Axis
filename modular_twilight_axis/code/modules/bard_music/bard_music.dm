@@ -242,6 +242,8 @@ SUBSYSTEM_DEF(bard_music)
 	var/band_invite_until = 0
 	var/mob/living/band_invite_leader = null
 	var/list/band_members = list()
+	var/band_pending_responses = 0
+	var/band_invite_token = 0
 	var/list/timed_tracks = list()
 	var/music_panel_selected = null
 
@@ -393,28 +395,50 @@ SUBSYSTEM_DEF(bard_music)
 	band_invite_until = world.time + 30 SECONDS
 	band_invite_leader = user
 	band_members = list()
+	band_pending_responses = 0
+	band_invite_token++
+	var/current_token = band_invite_token
 	for(var/mob/living/carbon/human/candidate in view(7, user))
 		if(candidate == user)
 			continue
 		var/obj/item/held = candidate.get_active_held_item()
 		if(istype(held, /obj/item/rogue/instrument))
-			INVOKE_ASYNC(src, PROC_REF(prompt_band_member), candidate, held)
-	addtimer(CALLBACK(src, PROC_REF(finish_band_invite)), 30 SECONDS)
+			band_pending_responses++
+			INVOKE_ASYNC(src, PROC_REF(prompt_band_member), candidate, held, current_token)
+	if(!band_pending_responses)
+		to_chat(user, span_warning("No nearby performers are ready to join a band."))
+		cancel_band_invite()
+		return
+	addtimer(CALLBACK(src, PROC_REF(finish_band_invite), current_token), 30 SECONDS)
 	to_chat(user, span_notice("Band invite started. Waiting 30 seconds for performers."))
 
-/obj/item/rogue/instrument/proc/prompt_band_member(mob/living/candidate, obj/item/rogue/instrument/candidate_instrument)
-	if(!band_invite_active || !candidate || !candidate_instrument)
+/obj/item/rogue/instrument/proc/resolve_band_prompt(prompt_token)
+	if(!band_invite_active || prompt_token != band_invite_token)
 		return
-	if(alert(candidate, "[band_invite_leader] invites you to perform in a band.", "Band Play", "Accept", "Decline") != "Accept" || !band_invite_active)
+	band_pending_responses = max(band_pending_responses - 1, 0)
+	SStgui.update_uis(src)
+	if(!band_pending_responses)
+		finish_band_invite(prompt_token)
+
+/obj/item/rogue/instrument/proc/prompt_band_member(mob/living/candidate, obj/item/rogue/instrument/candidate_instrument, prompt_token)
+	if(!band_invite_active || prompt_token != band_invite_token || !candidate || !candidate_instrument)
+		resolve_band_prompt(prompt_token)
+		return
+	if(alert(candidate, "[band_invite_leader] invites you to perform in a band.", "Band Play", "Accept", "Decline") != "Accept" || !band_invite_active || prompt_token != band_invite_token)
+		resolve_band_prompt(prompt_token)
 		return
 	candidate_instrument.ensure_timed_tracks()
 	var/choice = input(candidate, "Which track will you perform?", "Band Track") as null|anything in candidate_instrument.song_list
-	if(!choice || !band_invite_active)
+	if(!choice || !band_invite_active || prompt_token != band_invite_token)
+		resolve_band_prompt(prompt_token)
 		return
 	var/datum/bard_timed_track/track = candidate_instrument.timed_tracks[choice]
 	var/sing = FALSE
 	if(track?.custom && track.phrases.len)
 		sing = alert(candidate, "Use timed singing for this track?", "Band Mode", "Sing", "Mute") == "Sing"
+	if(!band_invite_active || prompt_token != band_invite_token)
+		resolve_band_prompt(prompt_token)
+		return
 	var/datum/bard_band_member/member = new
 	member.player = candidate
 	member.instrument = candidate_instrument
@@ -424,24 +448,32 @@ SUBSYSTEM_DEF(bard_music)
 	to_chat(candidate, span_notice("You are ready for [band_invite_leader]'s band."))
 	if(band_invite_leader)
 		to_chat(band_invite_leader, span_notice("[candidate] is ready with [candidate_instrument.name]: [choice] ([sing ? "Sing" : "Mute"])."))
-	SStgui.update_uis(src)
+	resolve_band_prompt(prompt_token)
 
-/obj/item/rogue/instrument/proc/finish_band_invite()
-	if(!band_invite_active)
+/obj/item/rogue/instrument/proc/finish_band_invite(invite_token)
+	if(!band_invite_active || invite_token != band_invite_token)
 		return
-	if(band_invite_leader)
-		to_chat(band_invite_leader, span_notice("Band invite finished. Ready performers: [band_members.len]. Start or cancel from the music panel."))
-	SStgui.update_uis(src)
+	if(!band_members.len)
+		if(band_invite_leader)
+			to_chat(band_invite_leader, span_warning("Band invite finished with no ready performers."))
+		cancel_band_invite()
+		return
+	start_synced_band(band_invite_leader, TRUE)
 
 /obj/item/rogue/instrument/proc/cancel_band_invite()
 	band_invite_active = FALSE
 	band_invite_until = 0
 	band_invite_leader = null
 	band_members = list()
+	band_pending_responses = 0
+	band_invite_token++
 	SStgui.update_uis(src)
 
-/obj/item/rogue/instrument/proc/start_synced_band(mob/living/user)
+/obj/item/rogue/instrument/proc/start_synced_band(mob/living/user, from_invite = FALSE)
 	if(!band_invite_active || user != band_invite_leader)
+		return
+	if(!from_invite && band_pending_responses > 0)
+		to_chat(user, span_warning("Some performers have not answered yet."))
 		return
 	var/datum/bard_timed_track/leader_track = get_selected_track()
 	var/leader_sings = auto_song_enabled
@@ -518,7 +550,7 @@ SUBSYSTEM_DEF(bard_music)
 	if(!ui)
 		ui = new(user, src, "BardMusicLibrary", "Music")
 		ui.open()
-	ui.set_autoupdate(band_invite_active)
+	ui.set_autoupdate(FALSE)
 
 /obj/item/rogue/instrument/ui_data(mob/user)
 	ensure_timed_tracks()
