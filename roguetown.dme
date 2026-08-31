@@ -4172,7 +4172,6 @@
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\other\skeleton.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\retinue\marshal.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\sidefolk\mercenary.dm"
-#include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\sidefolk\mercenary\imperial_spellblade.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\sidefolk\mercenary\miragefen.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\sidefolk\mercenary\twilight_hussar.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\sidefolk\mercenary\yohei.dm"
