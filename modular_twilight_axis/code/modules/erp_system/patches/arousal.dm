@@ -18,6 +18,9 @@
 	. = ..()
 	check_processing()
 	seed_satisfaction_if_needed()
+	var/mob/parent_mob = parent
+	if(parent_mob?.client && is_lovefiend())
+		START_PROCESSING(SSobj, src)
 
 /datum/component/arousal/proc/seed_satisfaction_if_needed()
 	var/mob/living/carbon/human/H = parent
@@ -30,7 +33,6 @@
 	else
 		satisfaction_points = 3.0
 	last_sp_decay_time = world.time
-	update_satisfaction_buff()
 
 /datum/component/arousal/proc/get_erp_links()
 	var/list/L = list()
@@ -210,13 +212,11 @@
 		return
 
 	var/tier = get_satisfaction_buff_tier()
-	if(tier <= 5)
-		H.remove_status_effect(/datum/status_effect/buff/erp_satisfaction)
-		return
-
 	var/datum/status_effect/buff/erp_satisfaction/E = H.has_status_effect(/datum/status_effect/buff/erp_satisfaction)
 	if(!E)
 		E = H.apply_status_effect(/datum/status_effect/buff/erp_satisfaction)
+	else
+		E.refresh()
 	if(E)
 		E.set_tier(tier)
 
@@ -280,10 +280,12 @@
 	update_overload_debuff()
 
 /datum/component/arousal/proc/adjust_satisfaction(delta)
+	var/old_satisfaction = satisfaction_points
 	satisfaction_points = clamp(satisfaction_points + delta, 0.0, ERP_SP_MAX)
 	last_sp_decay_time = world.time
 	sync_lovefiend_sated_from_sp()
-	update_satisfaction_buff()
+	if(satisfaction_points > old_satisfaction)
+		update_satisfaction_buff()
 
 /datum/component/arousal/proc/handle_satisfaction_decay()
 	if(!last_sp_decay_time)

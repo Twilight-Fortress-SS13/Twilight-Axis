@@ -13,6 +13,8 @@
 		return ..()
 
 	Aro.sync_lovefiend_sated_from_sp()
+	if(H.client)
+		START_PROCESSING(SSobj, Aro)
 
 	if(!sated)
 		H.add_stress(/datum/stressevent/vice)

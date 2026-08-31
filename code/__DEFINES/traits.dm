@@ -1120,6 +1120,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TIMESTOP_TRAIT "timestop"
 #define HUGBOX_TRAIT "hugbox"
 #define ADVENTURER_TRAIT "adventurer"
+#define CONTRACT_SPAWN_TRAIT "contract-spawn"
 
 #define TURF_Z_TRANSPARENT_TRAIT "turf_z_transparent"
 
