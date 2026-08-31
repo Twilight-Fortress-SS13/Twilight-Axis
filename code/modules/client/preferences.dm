@@ -11,7 +11,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/loaded_slot = 1
 	var/savefile_write_locked = FALSE // guard against simultaneous savefile writes from the UI causing any sort of horrors
 
-	var/max_save_slots = 60
+	var/max_save_slots = 20
 
 
 	var/list/job_characters = list() //TA EDIT
@@ -37,7 +37,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/list/key_bindings = list()
 
 	var/tgui_lock = TRUE
-	var/tgui_theme = "azure_default"
+	var/tgui_theme = "azure_gilbranze" // TA EDIT
 	var/parchment_skin = "leatherbound"
 	var/statbrowser_theme = "dark"
 	var/windowflashing = TRUE
@@ -245,8 +245,17 @@ GLOBAL_LIST_EMPTY(chosen_names)
 		if(!IsGuestKey(C.key))
 			load_path(C.ckey)
 			var/patreon_level = check_patreon_lvl(C.ckey)
-			if(patreon_level)
-				max_save_slots = max(max_save_slots, get_max_save_slots(patreon_level))
+			switch(patreon_level)
+				if(1)
+					max_save_slots = max(max_save_slots, 40)
+				if(2)
+					max_save_slots = max(max_save_slots, 60)
+				if(3)
+					max_save_slots = max(max_save_slots, 80)
+				if(4)
+					max_save_slots = max(max_save_slots, 100)
+				if(5)
+					max_save_slots = max(max_save_slots, 120)
 			if(C.IsByondMember())
 				max_save_slots = max(max_save_slots, 100)
 	var/loaded_preferences_successfully = load_preferences()

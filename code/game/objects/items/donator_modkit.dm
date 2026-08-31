@@ -817,8 +817,7 @@
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Kriegmesser"
 	target_items = list(/obj/item/rogueweapon/sword/long/kriegmesser,
 						/obj/item/rogueweapon/greatsword)
-	result_item = null
-	icon_loadout = /obj/item/rogueweapon/example/waffai_broadsword
+	result_item = /obj/item/rogueweapon/example/waffai_broadsword
 
 /obj/item/enchantingkit/weapon/wafflamberge
 	name = "'Xenolalia' morphing elixir"
@@ -1201,10 +1200,7 @@
 /obj/item/enchantingkit/weapon/sakuyzo
 	name = "'Hævatein' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Kriegmesser"
-	target_items = list(
-		/obj/item/rogueweapon/sword/long/kriegmesser/noc,
-		/obj/item/rogueweapon/sword/long/kriegmesser
-	)
+	target_items = list(/obj/item/rogueweapon/sword/long/kriegmesser/noc, /obj/item/rogueweapon/sword/long/undivided, /obj/item/rogueweapon/sword/long/silver, /obj/item/rogueweapon/sword/long/kriegmesser)
 	result_item = /obj/item/rogueweapon/sakuyzo/sword
 
 // Ollanius
@@ -1259,6 +1255,15 @@
 	)
 	result_item = null
 	icon_loadout = /obj/item/clothing/head/roguetown/helmet/sallet/visored/limetease
+
+//limetease - Greatsword/Halberd
+/obj/item/enchantingkit/limetease_swordspear
+	name = "'avantyne-threaded sword' morphing elixir"
+	target_items = list(
+		/obj/item/rogueweapon/greatsword	= /obj/item/rogueweapon/greatsword/limetease,
+		/obj/item/rogueweapon/halberd		= /obj/item/rogueweapon/halberd/limetease
+	)
+	result_item = null
 
 //MortoSasye - Ice Staffs
 /obj/item/enchantingkit/morto_staff

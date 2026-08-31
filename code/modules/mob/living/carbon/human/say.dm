@@ -1,6 +1,6 @@
 /mob/living/carbon/human/say_mod(input, message_mode)
 	verb_say = dna.species.say_mod
-	if(slurring)
+	if(slurring || feigning_impairment) // TA EDIT
 		return "slurs"
 	else
 		. = ..()

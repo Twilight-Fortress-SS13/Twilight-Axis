@@ -184,6 +184,8 @@ const OtherInfo = (props) => {
     ooc_extra,
     song_artist,
     song_title,
+    ooc_extra_img_link,
+    nsfw_ooc_extra_img_link,
     img_gallery,
     nsfw_img_gallery,
   } = data;
@@ -234,6 +236,31 @@ const OtherInfo = (props) => {
               </Stack>
             </Stack.Item>
           </Stack>
+        </LabeledGridList.Item>
+        <LabeledGridList.Item
+          label="OOC Media"
+          tooltip="Extra image, video, or GIF displayed with the character's flavor text."
+        >
+          <Button
+            fluid
+            tooltip={ooc_extra_img_link || 'No URL Set'}
+            onClick={() => act('ooc_extra_img')}
+          >
+            {ooc_extra_img_link ? 'Change' : 'Set'}
+          </Button>
+        </LabeledGridList.Item>
+        <LabeledGridList.Item
+          label="NSFW OOC Media"
+          tooltip="NSFW extra image, video, or GIF displayed with the character's flavor text."
+        >
+          <Button
+            fluid
+            tooltip={nsfw_ooc_extra_img_link || 'No URL Set'}
+            onClick={() => act('nsfw_ooc_extra_img')}
+          >
+            {nsfw_ooc_extra_img_link ? 'Change' : 'Set'}
+          </Button>
+
         </LabeledGridList.Item>
         <ImageGalleryEdit
           label="Image Gallery"

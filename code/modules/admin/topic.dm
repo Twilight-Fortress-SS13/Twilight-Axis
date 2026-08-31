@@ -22,6 +22,13 @@
 	if(!CheckAdminHref(href, href_list))
 		return
 
+	if(href_list["read_letter"])
+		var/index = text2num(href_list["read_letter"])
+		if(index >= 1 && index <= length(SSroguemachine.letter_archive))
+			var/datum/letter_record/R = SSroguemachine.letter_archive[index]
+			R.show_letter(usr)
+		return
+
 	if(href_list["ccg_manage"])
 		ccg_management_topic(href_list)
 		return

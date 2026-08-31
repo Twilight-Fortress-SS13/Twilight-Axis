@@ -24,6 +24,8 @@
 		if(!HAS_TRAIT(H, TRAIT_NOHUNGER))
 			H.adjust_nutrition(nutriment_factor * metabolization_rate)
 			H.adjust_hydration(hydration_factor * metabolization_rate)
+	if(drink_type & DRINKTYPE_CAFFEINE) // TA EDIT START
+		M.drunkenness = max(M.drunkenness - metabolization_rate, 0) // TA EDIT END
 	return ..()
 
 /datum/reagent/consumable/reaction_mob(mob/living/M, method=TOUCH, reac_volume)

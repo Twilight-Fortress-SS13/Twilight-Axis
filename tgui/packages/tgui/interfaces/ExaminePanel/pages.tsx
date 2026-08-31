@@ -200,6 +200,7 @@ export const FlavorTextPage = (props) => {
                     __html: safeOocExtraImage,
                   }}
                 />
+
               )}
             </>
           )}
@@ -218,6 +219,7 @@ export const FlavorTextPage = (props) => {
                     __html: safeNsfwOocExtraImage,
                   }}
                 />
+
               )}
             </>
           )}

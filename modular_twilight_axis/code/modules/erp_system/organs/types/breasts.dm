@@ -8,7 +8,7 @@
 	var/lactating = TRUE
 
 /datum/preferences
-	var/lactating = TRUE
+	var/lactating = FALSE
 
 /datum/preferences/ui_data_character_creator(mob/user)
 	var/list/data = ..()

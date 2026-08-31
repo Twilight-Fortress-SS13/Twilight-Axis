@@ -1,29 +1,171 @@
+/mob/dead/new_player
+	var/lobby_reopen_pending = FALSE
+
 /mob/dead/new_player/verb/new_player_panel()
 	set category = "Preferences.New Player"
 	set name = "Reopen Lobby Menu"
 	return ui_interact(src)
 
 /mob/dead/new_player/ui_interact(mob/user, datum/tgui/ui)
+	if(SSticker.current_state >= GAME_STATE_SETTING_UP)
+		if(ui)
+			ui.close(can_be_suspended = FALSE)
+		return
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "NewPlayerPanel", "Lobby Menu")
 		ui.open()
 
+/mob/dead/new_player/ui_close(mob/user)
+	. = ..()
+	if(user != src)
+		return
+	if(!client)
+		return
+	if(SSticker.current_state >= GAME_STATE_SETTING_UP)
+		return
+	if(lobby_reopen_pending)
+		return
+	lobby_reopen_pending = TRUE
+	addtimer(CALLBACK(src, PROC_REF(reopen_lobby_menu)), 2 SECONDS)
+
+/mob/dead/new_player/proc/reopen_lobby_menu()
+	lobby_reopen_pending = FALSE
+	if(QDELETED(src))
+		return
+	if(!client)
+		return
+	if(SSticker.current_state >= GAME_STATE_SETTING_UP)
+		return
+	ui_interact(src)
+
 /mob/dead/new_player/ui_state(mob/user)
 	return GLOB.new_player_state
+
+/mob/dead/new_player/ui_status(mob/user, datum/ui_state/state)
+	if(SSticker.current_state >= GAME_STATE_SETTING_UP)
+		return UI_CLOSE
+	return ..()
+
+/mob/dead/new_player/proc/get_grouped_lobby_player_display()
+	var/list/ready_players_by_job = list()
+	var/list/wanderer_jobs = list(
+		"Adventurer",
+		"Wretch",
+		"Court Agent",
+		"Bandit"
+	)
+	var/list/count_only_job = list(
+		"Hag"
+	)
+
+	for(var/mob/dead/new_player/player in GLOB.player_list)
+		var/job_choice = player.client?.prefs?.job_preferences
+		if(!job_choice)
+			continue
+
+		var/selected_job_name
+
+		for(var/job_name in job_choice)
+			if(job_choice[job_name] == JP_BOOST)
+				selected_job_name = job_name
+				break
+
+		if(!selected_job_name)
+			for(var/job_name in job_choice)
+				if(job_choice[job_name] == JP_HIGH)
+					selected_job_name = job_name
+					break
+
+		if(!selected_job_name)
+			continue
+
+		if(selected_job_name in wanderer_jobs)
+			selected_job_name = "Wanderer"
+
+		if(player.ready != PLAYER_READY_TO_PLAY)
+			continue
+
+		if(!ready_players_by_job[selected_job_name])
+			ready_players_by_job[selected_job_name] = list()
+
+		ready_players_by_job[selected_job_name] += player.client.prefs.real_name
+
+	var/list/job_list_by_department = list(
+		"Noblemen" = list(),
+		"Courtiers" = list(),
+		"Garrison" = list(),
+		"Church" = list(),
+		"Burghers" = list(),
+		"Peasants" = list(),
+		"Inquisition" = list(),
+		"Sidefolk" = list(),
+		"Wanderers" = list(),
+	)
+
+	for(var/job_name in ready_players_by_job)
+		var/datum/job/J = SSjob.GetJob(job_name)
+		var/key
+		var/display_name = job_name
+
+		if(!J)
+			key = SSjob.bitflag_to_department(WANDERERS, TRUE)
+		else
+			key = SSjob.bitflag_to_department(J.department_flag)
+			if(J.display_title)
+				display_name = J.display_title
+
+		if(key == "City Watch" || key == "Vanguard" || key == "Retinue")
+			key = "Garrison"
+
+		if(key == "ATC" || key == "Azurian Trading Company")
+			key = "Burghers"
+
+		var/list/job_players = ready_players_by_job[job_name]
+
+		if(!job_list_by_department[key])
+			job_list_by_department[key] = list()
+
+		job_list_by_department[key] += list(list(
+			"name" = display_name,
+			"length" = job_players.len,
+			"players" = job_players.Copy(),
+			"count_only" = (job_name in count_only_job),
+		))
+
+	var/list/result = list()
+
+	for(var/department in job_list_by_department)
+		var/list/jobs_under_department = job_list_by_department[department]
+		if(!jobs_under_department.len)
+			continue
+
+		var/department_color = JCOLOR_BY_DEPARTMENT[department]
+		if(!department_color)
+			department_color = "#aa8f8f"
+
+		result += list(list(
+			"name" = department,
+			"color" = department_color,
+			"jobs" = jobs_under_department,
+		))
+
+	return result
 
 /mob/dead/new_player/ui_data(mob/user)
 	var/list/data = ..()
 
 	data["server_name"] = CONFIG_GET(string/servername)
 	data["ticker_state"] = SSticker.current_state
+	data["pregame"] = SSticker.current_state <= GAME_STATE_PREGAME
+	data["round_in_progress"] = SSticker?.IsRoundInProgress() || FALSE
 	data["ready"] = ready
 	data["migrant"] = client?.prefs?.is_active_migrant() || FALSE // turns null into 0
 	data["active_character"] = client?.prefs?.real_name
 
 	data["time_remaining"] = SSticker.GetTimeLeft()
 	data["ready_count"] = SSticker.totalPlayersReady
-	data["ready_jobs"] = SSlobbymenu.get_lobby_player_display()
+	data["ready_job_groups"] = get_grouped_lobby_player_display()
 
 	return data
 
@@ -57,9 +199,9 @@
 		if("manifest")
 			client.view_actors_manifest()
 			return TRUE
-		if("observe")
+	/*	if("observe")
 			make_me_an_observer()
-			return TRUE
+			return TRUE*/
 		if("show_preferences")
 			client.prefs.ShowChoices(src, PREFERENCE_TAB_CHARACTER_CREATOR)
 			return TRUE

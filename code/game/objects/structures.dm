@@ -198,6 +198,9 @@
 
 /obj/structure/proc/climb_structure(mob/living/user)
 	src.add_fingerprint(user)
+	if(LAZYLEN(user.grabbedby)) // TA EDIT START
+		to_chat(user, span_warning("I cannot climb while being held."))
+		return // TA EDIT END
 	var/adjusted_climb_time = climb_time
 	if(user.restrained()) //climbing takes twice as long when restrained.
 		adjusted_climb_time *= 2
@@ -212,7 +215,7 @@
 	if(!user.start_climb())
 		return
 	structureclimber = user
-	if(do_mob(user, user, adjusted_climb_time, extra_checks = user.climb_check_callback()))
+	if(do_mob(user, user, adjusted_climb_time, extra_checks = user.climb_check_callback()) && !LAZYLEN(user.grabbedby)) // TA EDIT
 		if(src.loc) //Checking if structure has been destroyed
 			if(do_climb(user))
 				user.visible_message(span_warning("[user] climbs onto [src]."), \

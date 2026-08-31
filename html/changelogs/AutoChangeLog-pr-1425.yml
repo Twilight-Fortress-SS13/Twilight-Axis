@@ -1,4 +1,0 @@
-author: "zRainbowcat"
-delete-after: True
-changes:
-  - bugfix: "fixed pouches devouring their own money with collecting"

@@ -501,8 +501,9 @@ Inquisitorial armory down here
 	new /obj/effect/temp_visual/frozen_mist_tile(get_turf(attacker))
 	if(issimple(attacker) || !attacker.mind)
 		attacker.apply_status_effect(/datum/status_effect/syonchurn, src)
-
-	attacker.adjustFireLoss(10)
+	attacker.adjustFireLoss(5)
+	var/zone = pick(BODY_ZONE_CHEST, BODY_ZONE_HEAD, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
+	arcyne_strike(src, attacker, null, 15, zone, BCLASS_BURN, PEN_NONE, "grief", TRUE, TRUE, FALSE, BURN, null, null, null, null)
 
 #define SYONCHURN_FILTER "syonchurn glow"
 
@@ -518,12 +519,12 @@ Inquisitorial armory down here
 	tick_interval = 2 SECONDS
 	examine_text = "<font color='#00fff2'><b>SUBJECTPRONOUN is seared in body and soul by motes of lingering comet dust!</b></font>"
 	status_type = STATUS_EFFECT_REFRESH
-	effectedstats = list(STATKEY_LCK = -2, STATKEY_SPD = -2)
+	effectedstats = list(STATKEY_LCK = -2, STATKEY_SPD = -3)
 	var/datum/weakref/debuffer
 	var/outline_colour = "#70d1e2"
 	var/intensity = 1
 	var/range = 4
-	var/damage_per_tick = 0.5
+	var/damage_per_tick = 0.25
 	var/agony = 0
 
 /datum/status_effect/syonchurn/on_creation(mob/living/new_owner, mob/living/caster, potency)
@@ -565,7 +566,11 @@ Inquisitorial armory down here
 		qdel(src)
 		return
 
-	owner.adjustFireLoss(damage_per_tick * intensity)
+	owner.adjustFireLoss(damage_per_tick * intensity) // the 'damaging armor over time' noises were infuriating for me
+	if(owner.getFireLoss() >= 300 && !owner.mind)
+		owner.apply_status_effect(/datum/status_effect/syonforgive,	source)
+		qdel(src)
+		return
 
 	if(world.time >= agony)
 		agony = world.time + rand(5,15) SECONDS
@@ -578,6 +583,76 @@ Inquisitorial armory down here
 	owner.remove_filter(SYONCHURN_FILTER)
 
 #undef SYONCHURN_FILTER
+
+/datum/status_effect/syonforgive
+	id = "syon_forgive"
+	duration = 6 SECONDS
+	tick_interval = -1
+	status_type = STATUS_EFFECT_UNIQUE
+	var/forgiving = FALSE
+	var/datum/weakref/redeemer
+
+/datum/status_effect/syonforgive/on_creation(mob/living/new_owner, mob/living/caster)
+	if(caster)
+		redeemer = WEAKREF(caster)
+	return ..()
+
+/datum/status_effect/syonforgive/process()
+	if(forgiving)
+		return
+	forgiving = TRUE
+	var/mob/living/L = owner
+	if(!L)
+		return FALSE
+	if(L.mob_biotypes & MOB_UNDEAD)
+		L.Stun(5 SECONDS)
+		L.revive(full_heal = TRUE)
+		L.set_resting(FALSE, FALSE)
+		L.visible_message(span_blue("<i>[L] falls still as the dark forces keeping it together wane. Their body crumbles into ash.</i>"))
+		addtimer(CALLBACK(src, PROC_REF(exorcise)), 2 SECONDS)
+		return TRUE
+	var/list/guilt_messages = list(
+		"[L]'s guilt becomes too much to bear. They flee, weeping.",
+		"[L] breaks beneath the weight of their sins and staggers away in tears.",
+		"[L]'s resolve crumbles. They turn away, unable to face what they have done.",
+		"[L] is overcome by remorse, fleeing with tears in their eyes.",
+		"[L] lowers their head in shame and retreats, sobbing.",
+		"[L] trembles as their regrets consume them. They flee from sight.",
+		"[L]'s heart sinks beneath their guilt. They escape in sorrow.",
+		"[L] cannot bear the burden of their actions any longer and runs away.",
+		"[L] is haunted by their own conscience and flees in despair.",
+		"[L]'s soul cries out beneath the weight of their guilt. They retreat, weeping."
+	)
+	L.visible_message(span_blue(pick(guilt_messages)))
+	L.revive(full_heal = TRUE)
+	L.set_resting(FALSE, FALSE)
+	L.emote("cry")
+	L.Stun(5 SECONDS)
+	sleep(15)
+	if(L.ai_controller)
+		QDEL_NULL(L.ai_controller)
+	var/mob/living/source = redeemer?.resolve()
+	if(source)
+		walk_away(L, source, 100, 2)
+	addtimer(CALLBACK(src, PROC_REF(fade)), 5 SECONDS)
+	return TRUE
+
+/datum/status_effect/syonforgive/proc/exorcise()
+	if(QDELETED(owner))
+		return
+	var/mob/living/L = owner
+	L.dust()
+	qdel(src)
+/datum/status_effect/syonforgive/proc/fade()
+	if(QDELETED(owner))
+		return
+	animate(owner, alpha = 0, time = 4 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(delete_owner)), 4 SECONDS)
+/datum/status_effect/syonforgive/proc/delete_owner()
+	if(QDELETED(owner))
+		return
+	qdel(owner)
+	qdel(src)
 
 /obj/effect/temp_visual/censer_dust
 	icon = 'icons/effects/effects.dmi'
@@ -1302,6 +1377,7 @@ Inquisitorial armory down here
 	var/active = FALSE
 	var/broken = FALSE
 	var/mob/living/carbon/human/target
+	var/mob/living/fixator // TA EDIT
 	var/atom/movable/screen/alert/blackmirror/effect
 	var/datum/looping_sound/blackmirror/soundloop
 
@@ -1324,10 +1400,13 @@ Inquisitorial armory down here
 	fedblood = FALSE
 	openstate = "bloody"
 	whofedme = null
-	target.clear_alert(usr, "blackmirror", TRUE)
-	target.playsound_local(src, 'sound/items/blackeye.ogg', 40, FALSE)
+	opened = TRUE // TA EDIT START
+	if(target && !QDELETED(target))
+		target.clear_alert(fixator, "blackmirror", TRUE)
+		target.playsound_local(src, 'sound/items/blackeye.ogg', 40, FALSE)
 	effect = null
 	target = null
+	fixator = null // TA EDIT END
 	usesleft--
 	soundloop.stop()
 	visible_message(span_info("[src] clouds itself with a chilling fog."))
@@ -1378,7 +1457,8 @@ Inquisitorial armory down here
 					return
 				target = HL
 				active = TRUE
-				effect = target.throw_alert(usr, "blackmirror", /atom/movable/screen/alert/blackmirror, override = TRUE)
+				fixator = user // TA EDIT
+				effect = target.throw_alert(user, "blackmirror", /atom/movable/screen/alert/blackmirror, override = TRUE) // TA EDIT
 				effect.source = src
 				target.playsound_local(src, 'sound/items/blackeye_warn.ogg', 100, FALSE)
 				playsound(src, 'sound/items/blackmirror_active.ogg', 100, FALSE)
@@ -1474,21 +1554,19 @@ Inquisitorial armory down here
 				update_icon()
 		return
 
-/obj/item/inqarticles/bmirror/attack_right(mob/user, obj/item/T)
+/obj/item/inqarticles/bmirror/attack_right(mob/user) // TA EDIT START
 	..()
 	if(!user.mind)
 		return
-	if(istype(T, /obj/item/inqarticles/bmirror))
-		openorshut()
-	else
-		openorshut()
+	openorshut(user) // TA EDIT END
 
-/obj/item/inqarticles/bmirror/proc/openorshut()
+/obj/item/inqarticles/bmirror/proc/openorshut(mob/user) // TA EDIT START
 	if(opened)
 		if(effect)
-			target.clear_alert(usr, "blackmirror", TRUE)
+			if(target && !QDELETED(target))
+				target.clear_alert(fixator ? fixator : user, "blackmirror", TRUE)
+				target.playsound_local(src, 'sound/items/blackeye.ogg', 40, FALSE)
 			effect = null
-			target.playsound_local(src, 'sound/items/blackeye.ogg', 40, FALSE)
 		playsound(src, 'sound/items/blackmirror_shut.ogg', 100, FALSE)
 		soundloop.stop()
 		opened = FALSE
@@ -1496,14 +1574,15 @@ Inquisitorial armory down here
 		update_icon_state()
 		return
 	playsound(src, 'sound/items/blackmirror_open.ogg', 100, FALSE)
-	if(target)
+	if(target && !QDELETED(target))
 		target.playsound_local(src, 'sound/items/blackeye_warn.ogg', 100, FALSE)
-		effect = target.throw_alert(usr, "blackmirror", /atom/movable/screen/alert/blackmirror, override = TRUE)
-		effect.source = src
+		effect = target.throw_alert(fixator ? fixator : user, "blackmirror", /atom/movable/screen/alert/blackmirror, override = TRUE)
+		if(effect)
+			effect.source = src
 	if(active)
 		soundloop.start()
 	opened = TRUE
-	return update_icon()
+	return update_icon() // TA EDIT END
 
 /obj/item/inqarticles/bmirror/update_icon()
 	if(opened)

@@ -19,6 +19,9 @@
 	var/list/allowed_quest_types
 	var/kill_target_floor = 2
 	var/evergreen_target = 0
+	// Mammons the region have stolen, for recovery
+	var/banditry_hoard = 0
+	var/datum/weakref/active_hoard_recovery_ref
 
 /datum/threat_region/New(
 	_region_name = null,
@@ -78,12 +81,19 @@
 			QUEST_BOUNTY,
 			QUEST_COURIER,
 			QUEST_RETRIEVAL,
-			QUEST_RECOVERY
+			QUEST_RECOVERY,
+			QUEST_NOTORIOUS_BOUNTY
 		)
 	if(!isnull(_kill_target_floor))
 		kill_target_floor = _kill_target_floor
 	if(!isnull(_evergreen_target))
 		evergreen_target = _evergreen_target
+
+/datum/threat_region/proc/has_active_blockade()
+	for(var/datum/blockade/B as anything in GLOB.active_blockades)
+		if(B.threat_region_name == region_name)
+			return TRUE
+	return FALSE
 
 /datum/threat_region/proc/get_kill_target(pop)
 	var/scaled = round(pop * QUEST_KILL_FRACTION)
@@ -166,6 +176,8 @@
 	sortTim(shares, /proc/cmp_numeric_dsc, associative = TRUE)
 	for(var/datum/quest_faction/F as anything in shares)
 		result += F.describe_group_count(shares[F])
+	if(banditry_hoard > 0)
+		result += "a hoard of around [banditry_hoard] mammons"
 	return result
 
 /datum/threat_region/proc/get_danger_color(level)

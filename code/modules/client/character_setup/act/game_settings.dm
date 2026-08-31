@@ -73,6 +73,21 @@
 		if("no_storyteller_events")
 			no_storyteller_events = !no_storyteller_events
 			return TRUE
+		if("donor_ooc_color")
+			if(!check_patreon_lvl(user.ckey) && !is_donator(user.ckey))
+				return TRUE
+			donor_ooc_color = !donor_ooc_color
+			return TRUE
+		if("donor_ooc_icon")
+			if(!check_patreon_lvl(user.ckey) && !is_donator(user.ckey))
+				return TRUE
+			donor_ooc_icon = !donor_ooc_icon
+			return TRUE
+		if("donor_examine_icon")
+			if(!check_patreon_lvl(user.ckey) && !is_donator(user.ckey))
+				return TRUE
+			donor_examine_icon = !donor_examine_icon
+			return TRUE
 		if("verbose_character_creator")
 			verbose_character_creator = !verbose_character_creator
 			to_chat(user, span_notice("Verbose character creator messages turned [verbose_character_creator ? "on" : "off"]."))

@@ -266,6 +266,8 @@
 		STATKEY_SPD = -2,
 		STATKEY_STR = -1,
 	)
+	maximum_possible_slots = 1
+	vice_limits = list(/datum/charflaw/silverweakness)
 	subclass_skills = list(
 		/datum/skill/misc/medicine = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,

@@ -11,7 +11,7 @@
 
 	if(client)
 		client.update_ooc_verb_visibility()
-		client.prefs?.ShowChoices(src, PREFERENCE_TAB_CHARACTER_CREATOR)
+		ui_interact(src)
 
 	sight |= SEE_TURFS
 
