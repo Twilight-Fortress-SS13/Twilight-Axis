@@ -68,7 +68,8 @@
 	return TRUE
 
 /datum/tat_directions/proc/get_role_choice()
-	return normalize_role_choice(role_choice)
+	// All mutation and import paths normalize this value. This getter is in TAT's UI hot path.
+	return role_choice
 
 /datum/tat_directions/proc/get_effective_role_trait()
 	var/list/traits_by_role = GLOB.tat_role_choice_effective_traits
