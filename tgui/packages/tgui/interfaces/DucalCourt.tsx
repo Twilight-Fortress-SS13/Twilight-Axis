@@ -811,9 +811,7 @@ const ActionCard = (props: {
   return (
     <TooltipFrame content={tooltip || actionText.desc}>
       <Button
-        className={
-          'DucalCourt__action' + (compact ? ' DucalCourt__action--compact' : '')
-        }
+        className={`DucalCourt__action${compact ? ' DucalCourt__action--compact' : ''}`}
         disabled={!action.enabled}
         onClick={() => action.enabled && onClick(action)}
       >

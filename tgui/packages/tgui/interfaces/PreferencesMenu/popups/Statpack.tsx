@@ -54,7 +54,7 @@ export const PopupStatpackInner = (props: { constantData: ConstantData }) => {
       return true;
     }
     const searchableText =
-      `${pack.name} ${pack.desc.replace(/<[^>]*>/g, ' ')}`.toLowerCase();
+      `${pack.name} ${String(pack.desc).replace(/<[^>]*>/g, ' ')}`.toLowerCase();
     return searchableText.includes(normalizedQuery);
   });
 
