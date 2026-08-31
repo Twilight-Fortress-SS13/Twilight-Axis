@@ -55,7 +55,7 @@
 /*
 	if(makevines)
 		var/turf/target = get_step_multiz(src, UP)
-		if(istype(target, /turf/open/transparent/openspace))
+		if(istype(target, /turf/open/openspace))
 			target.ChangeTurf(/turf/open/floor/rogue/shroud)
 			var/makecanopy = FALSE
 			for(var/D in GLOB.cardinals)
@@ -69,12 +69,12 @@
 				for(var/D in GLOB.cardinals)
 					var/turf/NT = get_step(target, D)
 					if(NT)
-						if(istype(NT, /turf/open/transparent/openspace) || istype(NT, /turf/open/floor/rogue/shroud))
+						if(istype(NT, /turf/open/openspace) || istype(NT, /turf/open/floor/rogue/shroud))
 							NT.ChangeTurf(/turf/closed/wall/shroud)
 							for(var/X in GLOB.cardinals)
 								var/turf/NA = get_step(NT, X)
 								if(NA)
-									if(istype(NA, /turf/open/transparent/openspace))
+									if(istype(NA, /turf/open/openspace))
 										NA.ChangeTurf(/turf/open/floor/rogue/shroud)
 */
 

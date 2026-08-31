@@ -1121,6 +1121,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define HUGBOX_TRAIT "hugbox"
 #define ADVENTURER_TRAIT "adventurer"
 
+#define TURF_Z_TRANSPARENT_TRAIT "turf_z_transparent"
+
 #define TRAIT_I_AM_INVISIBLE_ON_A_BOAT "invisible_on_tram"
 
 //for ai

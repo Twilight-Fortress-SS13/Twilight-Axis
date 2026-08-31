@@ -35,8 +35,7 @@
 	var/fire_type = /obj/machinery/light/rogue/campfire/create_campfire
 	var/static/list/turf_blacklist = list(
 		/turf/open/water,
-		/turf/open/transparent,
-		/turf/closed/transparent,
+		/turf/open/openspace,
 		)
 
 /datum/action/cooldown/spell/create_campfire/cast(atom/cast_on)

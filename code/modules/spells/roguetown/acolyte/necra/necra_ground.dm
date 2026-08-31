@@ -37,7 +37,7 @@
 		return FALSE
 	if(target_turf.density)	//On a wall
 		return FALSE
-	if(istype(target_turf, /turf/open/transparent/openspace))
+	if(istype(target_turf, /turf/open/openspace))
 		return FALSE
 	return TRUE
 

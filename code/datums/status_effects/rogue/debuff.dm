@@ -879,7 +879,7 @@
 		random_shit_under_climber += chandelier
 	for(var/obj/structure/kybraxor/fucking_hatch in climber.loc)
 		random_shit_under_climber += fucking_hatch
-	if(!istype(tile_under_climber, /turf/open/transparent/openspace))// if we aren't on open space turf, remove debuff (aka our feet are on solid shi or water)
+	if(!istype(tile_under_climber, /turf/open/openspace))// if we aren't on open space turf, remove debuff (aka our feet are on solid shi or water)
 		climber.remove_status_effect(/datum/status_effect/debuff/climbing_lfwb)
 	if(random_shit_under_climber.len) // branches dont remove open space turf, so we have to check for it separately
 		climber.remove_status_effect(/datum/status_effect/debuff/climbing_lfwb)

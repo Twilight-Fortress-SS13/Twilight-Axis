@@ -219,7 +219,7 @@
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/outdoors/rtfield)
 "HM" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/rtfield)
 "Ib" = (
 /turf/open/water/river{
@@ -300,7 +300,7 @@
 /turf/open/water/cleanshallow,
 /area/rogue/outdoors/rtfield)
 "WD" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/town/sargoth)
 "Zc" = (
 /obj/item/clothing/cloak/tabard/stabard/surcoat,

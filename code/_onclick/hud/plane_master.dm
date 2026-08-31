@@ -37,7 +37,6 @@
 
 /atom/movable/screen/plane_master/osreal/backdrop(mob/mymob)
 	filters = list()
-	filters += GAUSSIAN_BLUR(1)
 
 /atom/movable/screen/plane_master/proc/outline(_size, _color)
 	filters += filter(type = "outline", size = _size, color = _color)

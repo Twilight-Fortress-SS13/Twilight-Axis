@@ -10,7 +10,7 @@
 	var/clawfootstep = null
 	var/heavyfootstep = null
 	var/footstepstealth = FALSE
-	baseturfs = /turf/open/transparent/openspace
+	baseturfs = /turf/open/openspace
 
 	damage_deflection = INFINITY //TODO: Find a better method for breakable turf system
 

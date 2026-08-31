@@ -42,13 +42,13 @@
 /turf/open/floor/rogue/ruinedwood/herringbone,
 /area/rogue/indoors/town)
 "gp" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/rtfield)
 "gv" = (
 /obj/structure/fluff/railing/border{
 	dir = 10
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/mountains)
 "gB" = (
 /turf/closed/mineral/random/rogue,
@@ -98,7 +98,7 @@
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors/town)
 "iz" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/mountains)
 "iQ" = (
 /obj/structure/table/wood/long_table,
@@ -214,7 +214,7 @@
 	},
 /area/rogue/outdoors/mountains)
 "rD" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/indoors/town)
 "sk" = (
 /obj/structure/table/wood/long_table,
@@ -249,11 +249,11 @@
 /area/rogue/indoors/town)
 "yb" = (
 /obj/structure/fluff/railing/border,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/mountains)
 "zE" = (
 /obj/machinery/light/rogue/chand,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/indoors/town)
 "zJ" = (
 /obj/structure/table/wood/long_table/mid/alt,
@@ -331,7 +331,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 8
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/mountains)
 "KK" = (
 /obj/structure/bearpelt{
@@ -370,7 +370,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 6
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/mountains)
 "Qv" = (
 /obj/structure/closet/crate/chest/neu,

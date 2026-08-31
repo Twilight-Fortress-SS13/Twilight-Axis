@@ -142,7 +142,7 @@
 /turf/closed/Initialize(mapload)
 	. = ..()
 	if(above_floor)
-		var/turf/open/transparent/openspace/target = get_step_multiz(src, UP)
+		var/turf/open/openspace/target = get_step_multiz(src, UP)
 		if(istype(target))
 			target.ChangeTurf(above_floor)
 
@@ -172,16 +172,16 @@
 			if(L.stat != CONSCIOUS)
 				return
 			var/turf/target = get_step_multiz(user, UP)
-			if(!istype(target, /turf/open/transparent/openspace))
+			if(!istype(target, /turf/open/openspace))
 				to_chat(user, span_warning("I can't climb here."))
 				return
 			if(!L.can_zTravel(target, UP))
 				to_chat(user, span_warning("I can't climb there."))
 				return
 			target = get_step_multiz(src, UP)
-			if(!target || istype(target, /turf/closed) || istype(target, /turf/open/transparent/openspace))
+			if(!target || istype(target, /turf/closed) || istype(target, /turf/open/openspace))
 				target = get_step_multiz(user.loc, UP)
-				if(!target || !istype(target, /turf/open/transparent/openspace))
+				if(!target || !istype(target, /turf/open/openspace))
 					to_chat(user, span_warning("I can't climb here."))
 					return
 			for(var/obj/structure/F in target)
@@ -271,7 +271,7 @@
 				user.forceMove(target)
 				if(!hadflying)
 					user.movement_type &= ~FLYING
-				if(istype(user.loc, /turf/open/transparent/openspace)) // basically only apply this slop after we moved. if we are hovering on the openspace turf, then good, we are doing an 'active climb' instead of the usual vaulting action
+				if(istype(user.loc, /turf/open/openspace)) // basically only apply this slop after we moved. if we are hovering on the openspace turf, then good, we are doing an 'active climb' instead of the usual vaulting action
 					var/climber2wall_dir = get_dir(climber, src)
 					climber.wallpressed = climber2wall_dir
 					switch(climber2wall_dir)// we are pressed against the wall after all that shit and are facing it, also hugging it too bcoz sou
@@ -324,7 +324,7 @@
 	if(!target)
 		to_chat(user, span_warning("I can't go there."))
 		return
-	if(!istype(target, /turf/open/transparent/openspace))
+	if(!istype(target, /turf/open/openspace))
 		to_chat(user, span_warning("I can't go there."))
 		return
 	user.forceMove(target)
