@@ -530,7 +530,7 @@ GLOBAL_LIST_INIT(goblin_pyromancer_aggro, list(
 	soundloop.start()
 	spawn_gob()
 
-	set_light(3, 2, 20, l_color = "#7b60f3")
+	set_light(3, 20, l_color = "#7b60f3")
 	playsound(loc, 'sound/misc/portalopen.ogg', 100, FALSE, pressure_affected = FALSE)
 
 /obj/structure/gob_portal/attack_ghost(mob/dead/observer/user)

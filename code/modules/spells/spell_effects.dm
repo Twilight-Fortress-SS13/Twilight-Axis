@@ -88,7 +88,7 @@
 	layer = ABOVE_ALL_MOB_LAYER
 	duration = 1 SECONDS
 	randomdir = FALSE
-	light_outer_range = 3
+	light_range = 3
 	light_color = "#FFFFFF"
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
@@ -99,8 +99,8 @@
 
 	switch(intensity)
 		if(SPELL_IMPACT_LOW)
-			light_outer_range = 3
+			light_range = 3
 		if(SPELL_IMPACT_MEDIUM)
-			light_outer_range = 5
+			light_range = 5
 		if(SPELL_IMPACT_HIGH)
-			light_outer_range = 7
+			light_range = 7

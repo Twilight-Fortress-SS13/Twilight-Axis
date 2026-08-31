@@ -39,7 +39,7 @@
 /mob/living/simple_animal/hostile/retaliate/ghost/Initialize(mapload)
 	. = ..()
 	give_hair()
-	set_light(1, 1, 2) // same glowing as visible player ghosts
+	set_light(1, 2) // same glowing as visible player ghosts
 	if(random)
 		switch(rand(0,1))
 			if(0)
@@ -96,7 +96,7 @@
 
 /mob/living/simple_animal/hostile/retaliate/gaseousform/Initialize(mapload)
 	. = ..()
-	set_light(1, 1, 2)
+	set_light(1, 2)
 	addtimer(CALLBACK(src, TYPE_PROC_REF(/mob/living/simple_animal/hostile/retaliate/gaseousform, revert), "VAMPIRE LORD"), 10 SECONDS)
 
 /mob/living/simple_animal/hostile/retaliate/gaseousform/proc/revert()

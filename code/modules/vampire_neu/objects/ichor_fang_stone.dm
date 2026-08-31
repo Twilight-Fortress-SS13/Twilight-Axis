@@ -8,7 +8,7 @@
 
 /obj/structure/ichor_stone/Initialize(mapload)
 	. = ..()
-	set_light(3, 3, 20, l_color = LIGHT_COLOR_BLOOD_MAGIC) //The funny rock, glows now.
+	set_light(3, 20, l_color = LIGHT_COLOR_BLOOD_MAGIC) //The funny rock, glows now.
 
 /obj/structure/ichor_stone/examine(mob/user)
 	. = ..()

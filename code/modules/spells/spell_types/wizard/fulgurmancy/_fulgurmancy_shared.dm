@@ -7,7 +7,7 @@
 /obj/effect/temp_visual/thunderstrike_actual
 	icon = 'icons/effects/32x96.dmi'
 	icon_state = "lightning"
-	light_outer_range = 2
+	light_range = 2
 	duration = 1 SECONDS
 	layer = MASSIVE_OBJ_LAYER
 

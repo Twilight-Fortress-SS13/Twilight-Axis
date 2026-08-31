@@ -39,7 +39,7 @@
 	icon = 'icons/obj/projectiles.dmi'
 	icon_state = "spark"
 	light_color = "#8a8a8a"
-	light_outer_range = 2
+	light_range = 2
 	speed = MAGE_PROJ_VERY_SLOW
 	nodamage = TRUE
 	damage = 0

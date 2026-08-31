@@ -126,6 +126,8 @@
 
 #define LIGHTING_PLANE 17
 #define LIGHTING_LAYER 15 //15
+///layer used by debug lighting_corner display() overlays
+#define LIGHT_DEBUG_LAYER 15.5
 
 #define EMISSIVE_PLANE 18
 #define EMISSIVE_RENDER_TARGET "*EMISSIVE_PLANE"

@@ -256,11 +256,10 @@ SUBSYSTEM_DEF(outdoor_effects)
 		var/static/datum/lighting_corner/dummy/dummy_lighting_corner = new
 		if (!OE.source_turf.lighting_corners_initialised)
 			OE.source_turf.generate_missing_corners()
-		var/list/corners = OE.source_turf.corners
-		var/datum/lighting_corner/cr = (corners && corners.len >= 3 && corners[3]) ? corners[3] : dummy_lighting_corner
-		var/datum/lighting_corner/cg = (corners && corners.len >= 2 && corners[2]) ? corners[2] : dummy_lighting_corner
-		var/datum/lighting_corner/cb = (corners && corners.len >= 4 && corners[4]) ? corners[4] : dummy_lighting_corner
-		var/datum/lighting_corner/ca = (corners && corners.len >= 1 && corners[1]) ? corners[1] : dummy_lighting_corner
+		var/datum/lighting_corner/cr = OE.source_turf.lighting_corner_SW || dummy_lighting_corner
+		var/datum/lighting_corner/cg = OE.source_turf.lighting_corner_SE || dummy_lighting_corner
+		var/datum/lighting_corner/cb = OE.source_turf.lighting_corner_NW || dummy_lighting_corner
+		var/datum/lighting_corner/ca = OE.source_turf.lighting_corner_NE || dummy_lighting_corner
 
 		var/fr = cr.sunFalloff
 		var/fg = cg.sunFalloff

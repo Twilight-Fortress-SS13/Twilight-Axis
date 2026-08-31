@@ -104,7 +104,8 @@
 	if(!IS_DYNAMIC_LIGHTING(src) && IS_DYNAMIC_LIGHTING(A))
 		add_overlay(/obj/effect/fullbright)
 
-	if (light_power && (light_outer_range || light_inner_range))
+	migrate_legacy_light_range() // TODO(tg-light-port): remove once no .dmm still bakes in light_outer_range
+	if (light_power && light_range)
 		update_light()
 
 	if(turf_integrity == null)

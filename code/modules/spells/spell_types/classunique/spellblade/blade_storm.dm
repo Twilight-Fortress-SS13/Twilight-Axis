@@ -186,7 +186,7 @@
 	return ring
 
 /obj/effect/temp_visual/telegraph/blade_storm
-	light_outer_range = 1
+	light_range = 1
 	duration = 8
 
 /obj/effect/temp_visual/telegraph/blade_storm/fadein

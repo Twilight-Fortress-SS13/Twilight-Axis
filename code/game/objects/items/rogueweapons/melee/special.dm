@@ -634,7 +634,7 @@
 	resistance_flags = FIRE_PROOF
 	light_system = MOVABLE_LIGHT
 	light_power = 5
-	light_outer_range = 5
+	light_range = 5
 	light_on = FALSE
 	light_color = "#db892b"
 	var/is_loaded = FALSE

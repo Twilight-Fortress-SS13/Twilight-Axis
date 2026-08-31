@@ -222,7 +222,7 @@
 
 /obj/item/riddleofsteel/Initialize(mapload)
 	. = ..()
-	set_light(2, 2, 1, l_color = "#ff0d0d")
+	set_light(2, 1, l_color = "#ff0d0d")
 
 /obj/item/pearl
 	name = "pearl"

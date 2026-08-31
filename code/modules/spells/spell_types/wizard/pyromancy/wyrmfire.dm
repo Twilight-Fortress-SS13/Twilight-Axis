@@ -228,7 +228,7 @@
 /obj/effect/temp_visual/fire_pillar
 	icon = 'icons/effects/32x96.dmi'
 	icon_state = "pillar"
-	light_outer_range = 2
+	light_range = 2
 	light_color = LIGHT_COLOR_FIRE
 	duration = 1 SECONDS
 	layer = MASSIVE_OBJ_LAYER

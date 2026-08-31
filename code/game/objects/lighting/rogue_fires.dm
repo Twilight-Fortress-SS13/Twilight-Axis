@@ -133,7 +133,7 @@
 	desc = "A warm fire dances between a pile of half-burnt logs upon a bed of glowing embers."
 	icon_state = "wallfire1"
 	base_state = "wallfire"
-	light_outer_range = 4 //slightly weaker than a torch
+	light_range = 4 //slightly weaker than a torch
 	bulb_colour = "#ffa35c"
 	fueluse = 0
 	no_refuel = TRUE
@@ -165,7 +165,7 @@
 	icon_state = "wallcandle0"
 	base_state = "wallcandle"
 	cookonme = FALSE
-	light_outer_range = 0
+	light_range = 0
 	pixel_y = 32
 	soundloop = null
 	status = LIGHT_BURNED
@@ -221,7 +221,7 @@
 
 /obj/machinery/light/rogue/candle/weak
 	light_power = 0.9
-	light_outer_range =	4
+	light_range =	4
 /obj/machinery/light/rogue/candle/weak/l
 	pixel_x = -32
 	pixel_y = 0
@@ -257,7 +257,7 @@
 	var/torch_off_state = "torchwall0"
 	base_state = "torchwall"
 	density = FALSE
-	light_outer_range = 5 //same as the held torch, if you put a torch into a sconce, it shouldn't magically become twice as bright, it's inconsistent.
+	light_range = 5 //same as the held torch, if you put a torch into a sconce, it shouldn't magically become twice as bright, it's inconsistent.
 	var/obj/item/flashlight/flare/torch/torchy
 	fueluse = FALSE //we use the torch's fuel
 	no_refuel = TRUE

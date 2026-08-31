@@ -492,6 +492,6 @@
 	icon_state = "spellwarning"
 	duration = 2 SECONDS
 	layer = MASSIVE_OBJ_LAYER
-	light_outer_range = 3
+	light_range = 3
 	color = "#1640d7ff"
 	light_color = "#1640d7ff"

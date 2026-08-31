@@ -1,61 +1,64 @@
 /atom/movable/lighting_object
-	name			= ""
-
-	anchored		= TRUE
-
-	icon				= LIGHTING_ICON
-	icon_state		= "transparent"
-	color			= null //we manually set color in init instead
-	plane			= LIGHTING_PLANE
+	name = ""
+	anchored = TRUE
+	plane = LIGHTING_PLANE
+	icon = LIGHTING_ICON
+	icon_state = null
+	color = null //we manually set color in init instead
+	appearance_flags = RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	layer			= LIGHTING_LAYER
-	invisibility		= INVISIBILITY_LIGHTING
-
+	invisibility = INVISIBILITY_LIGHTING
+	move_resist = INFINITY
+	///whether we are already in the SSlighting.objects_queue list
 	var/needs_update = FALSE
-	var/turf/myturf
 
-/atom/movable/lighting_object/Initialize(mapload)
+	///the turf that our light is applied to
+	var/turf/affected_turf
+
+/atom/movable/lighting_object/Initialize(mapload, turf/affected_turf)
+	if(!isnull(loc))
+		if(isturf(loc))
+			affected_turf = loc
+			moveToNullspace()
+			stack_trace("a lighting object was improperly initialized - they should have a null loc, with the affected turf being the second argument")
+		else
+			qdel(src, force = TRUE)
+			CRASH("a lighting object tried to be spawned for a non-turf!")
+	if(!isturf(affected_turf))
+		qdel(src, force = TRUE)
+		CRASH("a lighting object was assigned to [affected_turf], a non turf!")
+
 	. = ..()
-	verbs.Cut()
-	//We avoid setting this in the base as if we do then the parent atom handling will add_atom_color it and that
-	//is totally unsuitable for this object, as we are always changing it's colour manually
-	color = LIGHTING_BASE_MATRIX
 
-	myturf = loc
-	if(myturf.lighting_object)
-		qdel(myturf.lighting_object, force = TRUE)
-	myturf.lighting_object = src
-	myturf.luminosity = 0
+	verbs.Cut()
+
+	src.affected_turf = affected_turf
+	layer = affected_turf.z * 0.01
+	if (affected_turf.lighting_object)
+		qdel(affected_turf.lighting_object, force = TRUE)
+		stack_trace("a lighting object was assigned to a turf that already had a lighting object!")
+
+	affected_turf.lighting_object = src
+	affected_turf.vis_contents += src
+	// Default to fullbright, so things can "see" if they use view() before we update
+	affected_turf.luminosity = 1
 
 	needs_update = TRUE
 	SSlighting.objects_queue += src
 
 /atom/movable/lighting_object/Destroy(force)
-	if (force)
-		SSlighting.objects_queue -= src
-		if (loc != myturf)
-			var/turf/oldturf = get_turf(myturf)
-			var/turf/newturf = get_turf(loc)
-			stack_trace("A lighting object was qdeleted with a different loc then it is suppose to have ([COORD(oldturf)] -> [COORD(newturf)])")
-		if (isturf(myturf))
-			myturf.lighting_object = null
-			myturf.luminosity = 1
-		myturf = null
-
-		return ..()
-
-	else
+	if (!force)
 		return QDEL_HINT_LETMELIVE
+	SSlighting.objects_queue -= src
+	if (isturf(affected_turf))
+		affected_turf.vis_contents -= src
+		affected_turf.lighting_object = null
+		affected_turf.luminosity = 1
+	affected_turf = null
+	return ..()
 
 /atom/movable/lighting_object/proc/update()
-	if (loc != myturf)
-		if (loc)
-			var/turf/oldturf = get_turf(myturf)
-			var/turf/newturf = get_turf(loc)
-			warning("A lighting object realised its loc had changed in update() ([myturf]\[[myturf ? myturf.type : "null"]]([COORD(oldturf)]) -> [loc]\[[ loc ? loc.type : "null"]]([COORD(newturf)]))!")
-
-		qdel(src, TRUE)
-		return
+	var/turf/affected_turf = src.affected_turf
 
 	// To the future coder who sees this and thinks
 	// "Why didn't he just use a loop?"
@@ -65,37 +68,21 @@
 	// Oh it's also shorter line wise.
 	// Including with these comments.
 
-	// See LIGHTING_CORNER_DIAGONAL in lighting_corner.dm for why these values are what they are.
 	var/static/datum/lighting_corner/dummy/dummy_lighting_corner = new
 
-	var/list/corners = myturf.corners
-	var/datum/lighting_corner/cr = dummy_lighting_corner
-	var/datum/lighting_corner/cg = dummy_lighting_corner
-	var/datum/lighting_corner/cb = dummy_lighting_corner
-	var/datum/lighting_corner/ca = dummy_lighting_corner
-	if (corners) //done this way for speed
-		cr = corners[3] || dummy_lighting_corner
-		cg = corners[2] || dummy_lighting_corner
-		cb = corners[4] || dummy_lighting_corner
-		ca = corners[1] || dummy_lighting_corner
+#ifdef VISUALIZE_LIGHT_UPDATES
+	affected_turf.add_atom_colour(COLOR_BLUE_LIGHT, ADMIN_COLOUR_PRIORITY)
+	animate(affected_turf, 10, color = null)
+	addtimer(CALLBACK(affected_turf, TYPE_PROC_REF(/atom, remove_atom_colour), ADMIN_COLOUR_PRIORITY, COLOR_BLUE_LIGHT), 10, TIMER_UNIQUE|TIMER_OVERRIDE)
+#endif
 
-	var/max = max(cr.cache_mx, cg.cache_mx, cb.cache_mx, ca.cache_mx)
+	var/datum/lighting_corner/red_corner = affected_turf.lighting_corner_SW || dummy_lighting_corner
+	var/datum/lighting_corner/green_corner = affected_turf.lighting_corner_SE || dummy_lighting_corner
+	var/datum/lighting_corner/blue_corner = affected_turf.lighting_corner_NW || dummy_lighting_corner
+	var/datum/lighting_corner/alpha_corner = affected_turf.lighting_corner_NE || dummy_lighting_corner
 
-	var/rr = cr.cache_r
-	var/rg = cr.cache_g
-	var/rb = cr.cache_b
+	var/max = max(red_corner.largest_color_luminosity, green_corner.largest_color_luminosity, blue_corner.largest_color_luminosity, alpha_corner.largest_color_luminosity)
 
-	var/gr = cg.cache_r
-	var/gg = cg.cache_g
-	var/gb = cg.cache_b
-
-	var/br = cb.cache_r
-	var/bg = cb.cache_g
-	var/bb = cb.cache_b
-
-	var/ar = ca.cache_r
-	var/ag = ca.cache_g
-	var/ab = ca.cache_b
 
 	#if LIGHTING_SOFT_THRESHOLD != 0
 	var/set_luminosity = max > LIGHTING_SOFT_THRESHOLD
@@ -105,43 +92,27 @@
 	var/set_luminosity = max > 1e-6
 	#endif
 
-	if((rr & gr & br & ar) && (rg + gg + bg + ag + rb + gb + bb + ab == 8))
-	//anything that passes the first case is very likely to pass the second, and addition is a little faster in this case
-		icon_state = "transparent"
-		color = null
-	else if(!set_luminosity)
-		icon_state = "dark"
+	if(!set_luminosity)
+		icon_state = "dark" // our lighting_object.dmi doesn't have tg's "lighting_dark" state name
 		color = null
 	else
 		icon_state = null
 		color = list(
-			rr, rg, rb, 00,
-			gr, gg, gb, 00,
-			br, bg, bb, 00,
-			ar, ag, ab, 00,
+			red_corner.cache_r, red_corner.cache_g, red_corner.cache_b, 00,
+			green_corner.cache_r, green_corner.cache_g, green_corner.cache_b, 00,
+			blue_corner.cache_r, blue_corner.cache_g, blue_corner.cache_b, 00,
+			alpha_corner.cache_r, alpha_corner.cache_g, alpha_corner.cache_b, 00,
 			00, 00, 00, 01
 		)
-/*		if(color)
-			animate(src, color = list(rr, rg, rb,00,gr, gg, gb, 00,br, bg, bb, 00,ar, ag, ab, 00,00, 00, 00, 01), time = 5)
-		else
-			color = list(
-				rr, rg, rb, 00,
-				gr, gg, gb, 00,
-				br, bg, bb, 00,
-				ar, ag, ab, 00,
-				00, 00, 00, 01
-			)*/
+
 	luminosity = set_luminosity
 
 // Variety of overrides so the overlays don't get affected by weird things.
 
 /atom/movable/lighting_object/ex_act(severity)
-	return 0
-
-/atom/movable/lighting_object/onTransitZ()
-	return
+	return FALSE
 
 // Override here to prevent things accidentally moving around overlays.
-/atom/movable/lighting_object/forceMove(atom/destination, no_tp=FALSE, harderforce = FALSE)
+/atom/movable/lighting_object/forceMove(atom/destination, no_tp = FALSE, harderforce = FALSE)
 	if(harderforce)
-		. = ..()
+		return ..()

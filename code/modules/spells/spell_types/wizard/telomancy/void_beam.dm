@@ -193,7 +193,7 @@
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	light_color = "#9400D3"
 	light_power = 4
-	light_outer_range = 3
+	light_range = 3
 	duration = 6
 
 #undef VOID_BEAM_SLOWDOWN_ID

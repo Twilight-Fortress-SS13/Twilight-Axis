@@ -235,7 +235,7 @@
 	return turfs
 
 /obj/effect/temp_visual/telegraph/air_strike
-	light_outer_range = 1
+	light_range = 1
 	duration = 3
 
 /obj/effect/temp_visual/arcyne_strike_fx

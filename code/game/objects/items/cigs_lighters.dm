@@ -136,7 +136,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	icon = 'icons/roguetown/items/lighting.dmi'
 	heat = 1000
 	spitoutmouth = FALSE
-	light_outer_range = 1
+	light_range = 1
 	light_system = MOVABLE_LIGHT
 	light_color = "#f5a885"
 	light_on = FALSE

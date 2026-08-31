@@ -85,7 +85,7 @@
 	icon = 'icons/effects/fire.dmi'
 	icon_state = "3"
 	layer = GASFIRE_LAYER
-	light_outer_range = LIGHT_RANGE_FIRE
+	light_range = LIGHT_RANGE_FIRE
 	light_color = LIGHT_COLOR_FIRE
 	blend_mode = BLEND_ADD
 	duration = 8

@@ -987,7 +987,7 @@
 /obj/structure/flora/rogueshroom/happy/New(loc)
 	..()
 	if(mush_light_power > 0)
-		set_light(mush_light_range, mush_light_range, mush_light_power, l_color = mush_light_color)
+		set_light(mush_light_range, mush_light_power, l_color = mush_light_color)
 
 /obj/structure/flora/rogueshroom/happy/metal
 	name = "metallic mushroom"
@@ -1019,7 +1019,7 @@
 
 /obj/structure/flora/mushroomcluster/New(loc)
 	..()
-	set_light(1.5, 1.5, 1.5, l_color ="#5D3FD3")
+	set_light(1.5, 1.5, l_color ="#5D3FD3")
 
 /obj/structure/flora/tinymushrooms
 	name = "small mushroom cluster"

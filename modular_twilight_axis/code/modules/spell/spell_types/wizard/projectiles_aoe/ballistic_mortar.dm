@@ -144,7 +144,7 @@
 	var/turf/T = get_turf(src)
 	var/obj/effect/temp_visual/fireball_anim/F = new(T, 180)
 	F.pixel_z = 450 
-	F.set_light(3, 2, "#ffcc00")
+	F.set_light(3, l_color = "#ffcc00")
 	animate(F, pixel_z = 0, time = 10, easing = SINE_EASING)
 	playsound(T, 'modular_twilight_axis/awful_artillery/sound/fallingonyou.ogg', 100, FALSE)
 	addtimer(CALLBACK(src, PROC_REF(execute_explosion), F), 10)

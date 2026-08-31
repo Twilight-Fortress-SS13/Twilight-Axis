@@ -47,7 +47,7 @@
 	expose_caster_on_deflect = TRUE
 	speed = 0.3
 	flag = "fire"
-	light_outer_range = 4
+	light_range = 4
 	color = "#00a3d4"
 
 /obj/projectile/energy/divineblast/arc

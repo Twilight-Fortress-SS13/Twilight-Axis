@@ -172,7 +172,8 @@
 	if(color)
 		add_atom_colour(color, FIXED_COLOUR_PRIORITY)
 
-	if (light_system == STATIC_LIGHT && light_power && (light_inner_range || light_outer_range))
+	migrate_legacy_light_range() // TODO(tg-light-port): remove once no .dmm still bakes in light_outer_range
+	if (light_system == STATIC_LIGHT && light_power && light_range)
 		update_light()
 
 	if (opacity && isturf(loc))

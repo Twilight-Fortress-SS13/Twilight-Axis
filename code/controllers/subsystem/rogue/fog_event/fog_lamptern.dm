@@ -46,7 +46,7 @@
 	active = !active
 	if(active)
 		to_chat(user, span_notice("You light the [src]. A soft, protective glow surrounds you."))
-		set_light(l_outer_range = range, l_power = 2, l_color = "#fff2aa")
+		set_light(l_range = range, l_power = 2, l_color = "#fff2aa")
 		icon_state = "[initial(icon_state)]-on" // Ensure you have this state
 		user.apply_status_effect(/datum/status_effect/buff/fog_ward_caster, range, -1, FALSE)
 		start_tracking(user)

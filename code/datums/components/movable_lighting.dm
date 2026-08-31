@@ -5,21 +5,23 @@
 
 #define GET_PARENT (parent_attached_to || parent)
 
+#define SHORT_CAST 2
+
 /**
-		* Movable atom overlay-based lighting component.
-		*
-		* * Component works by applying a visual object to the parent target.
-		*
-		* * The component tracks the parent's loc to determine the current_holder.
-		* * The current_holder is either the parent or its loc, whichever is on a turf. If none, then the current_holder is null and the light is not visible.
-		*
-		* * Lighting works at its base by applying a dark overlay and "cutting" said darkness with light, adding (possibly colored) transparency.
-		* * This component uses the visible_mask visual object to apply said light mask on the darkness.
-		*
-		* * The main limitation of this system is that it uses a limited number of pre-baked geometrical shapes, but for most uses it does the job.
-		*
-		* * Another limitation is for big lights: you only see the light if you see the object emiting it.
-		* * For small objects this is good (you can't see them behind a wall), but for big ones this quickly becomes prety clumsy.
+	 * Movable atom overlay-based lighting component.
+	 *
+	 * * Component works by applying a visual object to the parent target.
+	 *
+	 * * The component tracks the parent's loc to determine the current_holder.
+	 * * The current_holder is either the parent or its loc, whichever is on a turf. If none, then the current_holder is null and the light is not visible.
+	 *
+	 * * Lighting works at its base by applying a dark overlay and "cutting" said darkness with light, adding (possibly colored) transparency.
+	 * * This component uses the visible_mask visual object to apply said light mask on the darkness.
+	 *
+	 * * The main limitation of this system is that it uses a limited number of pre-baked geometrical shapes, but for most uses it does the job.
+	 *
+	 * * Another limitation is for big lights: you only see the light if you see the object emiting it.
+	 * * For small objects this is good (you can't see them behind a wall), but for big ones this quickly becomes prety clumsy.
 */
 /datum/component/overlay_lighting
 	///How far the light reaches, float.
@@ -55,30 +57,58 @@
 		)
 
 	///Overlay effect to cut into the darkness and provide light.
-	var/obj/effect/overlay/light_visible/visible_mask
-	///Lazy list to track the turfs being affected by our light, to determine their visibility.
-	var/list/turf/affected_turfs
+	var/image/visible_mask
 	///Movable atom currently holding the light. Parent might be a flashlight, for example, but that might be held by a mob or something else.
 	var/atom/movable/current_holder
 	///Movable atom the parent is attached to. For example, a flashlight into a helmet or gun. We'll need to track the thing the parent is attached to as if it were the parent itself.
 	var/atom/movable/parent_attached_to
+	///Whether we're a directional light
+	var/directional = FALSE
+	///Whether we're a beam light
+	var/beam = FALSE
+	///A cone overlay for directional light, its alpha and color are dependent on the light
+	var/image/cone
+	/// Are we currently displaying light on our holder?
+	var/currently_displaying = FALSE
+	///Current tracked direction for the directional cast behaviour
+	var/current_direction
+	///Tracks current directional x offset so we don't update unnecessarily
+	var/directional_offset_x
+	///Tracks current directional y offset so we don't update unnecessarily
+	var/directional_offset_y
+	///Cast range for the directional cast (how far away the atom is moved)
+	var/cast_range = 2
 
-
-/datum/component/overlay_lighting/Initialize(_range, _power, _color, starts_on)
+/datum/component/overlay_lighting/Initialize(_range, _power, _color, starts_on, is_directional, is_beam, force)
 	if(!ismovable(parent))
 		return COMPONENT_INCOMPATIBLE
 
 	var/atom/movable/movable_parent = parent
-	if(movable_parent.light_system != MOVABLE_LIGHT)
-		stack_trace("[type] added to [parent], with [movable_parent.light_system] value for the light_system var. Use [MOVABLE_LIGHT] instead.")
+	if(!force && !IS_OVERLAY_LIGHT_SYSTEM(movable_parent.light_system))
+		stack_trace("[type] added to [parent], with [movable_parent.light_system] value for the light_system var. Use [OVERLAY_LIGHT], [OVERLAY_LIGHT_DIRECTIONAL] or [OVERLAY_LIGHT_BEAM] instead.")
 		return COMPONENT_INCOMPATIBLE
 
 	. = ..()
 
-	visible_mask = new()
+	visible_mask = image('icons/effects/light_overlays/light_32.dmi', icon_state = "light")
+	SET_PLANE_EXPLICIT(visible_mask, O_LIGHTING_VISUAL_PLANE, movable_parent)
+	visible_mask.appearance_flags = RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM
+	visible_mask.alpha = 0
+	visible_mask.blend_mode = BLEND_ADD
+	if(is_directional)
+		directional = TRUE
+		cone = image('icons/effects/light_overlays/light_cone.dmi', icon_state = "light")
+		SET_PLANE_EXPLICIT(cone, O_LIGHTING_VISUAL_PLANE, movable_parent)
+		cone.appearance_flags = RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM
+		cone.alpha = 110
+		cone.blend_mode = BLEND_ADD
+		cone.transform = cone.transform.Translate(-32, -32)
+		set_direction(movable_parent.dir)
+	if(is_beam)
+		beam = TRUE
 	if(!isnull(_range))
-		movable_parent.set_light_range(_range, _range)
-	set_range(parent, movable_parent.light_inner_range, movable_parent.light_outer_range)
+		movable_parent.set_light_range(_range)
+	set_range(parent, movable_parent.light_range)
 	if(!isnull(_power))
 		movable_parent.set_light_power(_power)
 	set_power(parent, movable_parent.light_power)
@@ -87,16 +117,20 @@
 	set_color(parent, movable_parent.light_color)
 	if(!isnull(starts_on))
 		movable_parent.set_light_on(starts_on)
-
+	set_light_render_source(parent, "")
 
 /datum/component/overlay_lighting/RegisterWithParent()
 	. = ..()
+	if(directional)
+		RegisterSignal(parent, COMSIG_ATOM_DIR_CHANGE, PROC_REF(on_parent_dir_change))
+	RegisterSignal(parent, COMSIG_ATOM_UPDATE_LIGHT_RANGE, PROC_REF(set_range))
+	RegisterSignal(parent, COMSIG_ATOM_UPDATE_LIGHT_POWER, PROC_REF(set_power))
+	RegisterSignal(parent, COMSIG_ATOM_UPDATE_LIGHT_COLOR, PROC_REF(set_color))
+	RegisterSignal(parent, COMSIG_ATOM_UPDATE_LIGHT_ON, PROC_REF(on_toggle))
+	RegisterSignal(parent, COMSIG_ATOM_UPDATE_LIGHT_FLAGS, PROC_REF(on_light_flags_change))
+	RegisterSignal(parent, COMSIG_ATOM_UPDATE_LIGHT_RENDER_SOURCE, PROC_REF(set_light_render_source))
 	RegisterSignal(parent, COMSIG_MOVABLE_MOVED, PROC_REF(on_parent_moved))
-	RegisterSignal(parent, COMSIG_ATOM_SET_LIGHT_RANGE, PROC_REF(set_range))
-	RegisterSignal(parent, COMSIG_ATOM_SET_LIGHT_POWER, PROC_REF(set_power))
-	RegisterSignal(parent, COMSIG_ATOM_SET_LIGHT_COLOR, PROC_REF(set_color))
-	RegisterSignal(parent, COMSIG_ATOM_SET_LIGHT_ON, PROC_REF(on_toggle))
-	RegisterSignal(parent, COMSIG_ATOM_SET_LIGHT_FLAGS, PROC_REF(on_light_flags_change))
+	RegisterSignal(parent, COMSIG_MOVABLE_Z_CHANGED, PROC_REF(on_z_move))
 	var/atom/movable/movable_parent = parent
 	if(movable_parent.light_flags & LIGHT_ATTACHED)
 		overlay_lighting_flags |= LIGHTING_ATTACHED
@@ -110,15 +144,17 @@
 	overlay_lighting_flags &= ~LIGHTING_ATTACHED
 	set_parent_attached_to(null)
 	set_holder(null)
-	clean_old_turfs()
 	UnregisterSignal(parent, list(
 		COMSIG_MOVABLE_MOVED,
-		COMSIG_ATOM_SET_LIGHT_RANGE,
-		COMSIG_ATOM_SET_LIGHT_POWER,
-		COMSIG_ATOM_SET_LIGHT_COLOR,
-		COMSIG_ATOM_SET_LIGHT_ON,
-		COMSIG_ATOM_SET_LIGHT_FLAGS,
+		COMSIG_MOVABLE_Z_CHANGED,
+		COMSIG_ATOM_UPDATE_LIGHT_RANGE,
+		COMSIG_ATOM_UPDATE_LIGHT_POWER,
+		COMSIG_ATOM_UPDATE_LIGHT_COLOR,
+		COMSIG_ATOM_UPDATE_LIGHT_ON,
+		COMSIG_ATOM_UPDATE_LIGHT_FLAGS,
 		))
+	if(directional)
+		UnregisterSignal(parent, COMSIG_ATOM_DIR_CHANGE)
 	if(overlay_lighting_flags & LIGHTING_ON)
 		turn_off()
 	return ..()
@@ -127,55 +163,85 @@
 /datum/component/overlay_lighting/Destroy()
 	set_parent_attached_to(null)
 	set_holder(null)
-	clean_old_turfs()
-	QDEL_NULL(visible_mask)
+	visible_mask = null
+	cone = null
+	parent_attached_to = null
 	return ..()
 
+///Clears ourselves from the spatial grid cells around holder_loc, removing us from their dynamic_light_sources.
+/datum/component/overlay_lighting/proc/clean_old_cells(atom/holder_loc)
+	var/turf/holder_turf = get_turf(holder_loc)
+	if(isnull(holder_turf))
+		return
+	for(var/datum/spatial_grid_cell/grid_cell as anything in SSspatial_grid.get_cells_in_range(holder_turf, lumcount_range))
+		GRID_CELL_REMOVE(grid_cell.dynamic_light_sources, src)
 
-///Clears the affected_turfs lazylist, removing from its contents the effects of being near the light.
-/datum/component/overlay_lighting/proc/clean_old_turfs()
-	for(var/turf/lit_turf as anything in affected_turfs)
-		lit_turf.dynamic_lumcount -= lum_power
-	affected_turfs = null
 
-
-///Populates the affected_turfs lazylist, adding to its contents the effects of being near the light.
-/datum/component/overlay_lighting/proc/get_new_turfs()
+///Registers ourselves into the spatial grid cells around current_holder, so turfs can lazily pick us up when their lumcount is requested.
+/datum/component/overlay_lighting/proc/register_new_cells()
 	if(!current_holder)
 		return
-	LAZYINITLIST(affected_turfs)
-	if(range <= 2) // lumcount_range is just range rounded up, so range <= 2 is basically lumcount_range < 3
-		//Range here is 1 because actual range of lighting mask is 1 tile even if it says that range is 2
-		for(var/turf/lit_turf as anything in RANGE_TURFS(1, current_holder.loc))
-			lit_turf.dynamic_lumcount += lum_power
-			affected_turfs += lit_turf
-	else
-		for(var/turf/lit_turf in view(lumcount_range, get_turf(current_holder)))
-			lit_turf.dynamic_lumcount += lum_power
-			affected_turfs += lit_turf
+	var/turf/holder_turf = get_turf(current_holder)
+	if(isnull(holder_turf))
+		return
+	for(var/datum/spatial_grid_cell/grid_cell as anything in SSspatial_grid.get_cells_in_range(holder_turf, lumcount_range))
+		GRID_CELL_ASSOC_SET(grid_cell.dynamic_light_sources, src, lum_power)
 
 
-///Clears the old affected turfs and populates the new ones.
-/datum/component/overlay_lighting/proc/make_luminosity_update()
-	clean_old_turfs()
+///Clears the old affected cells and populates the new ones.
+/datum/component/overlay_lighting/proc/make_luminosity_update(atom/old_loc)
+	if(old_loc)
+		clean_old_cells(old_loc)
 	if(!isturf(current_holder?.loc))
 		return
-	get_new_turfs()
+	if(directional)
+		cast_directional_light()
+	register_new_cells()
+
+///Adds the luminosity and source for the affected movable atoms to keep track of their visibility.
+/datum/component/overlay_lighting/proc/add_dynamic_lumi()
+	LAZYSET(current_holder.affected_dynamic_lights, src, lumcount_range + 1)
+	show_to_holder()
+	current_holder.update_dynamic_luminosity()
 
 
-///Adds the luminosity and source for the afected movable atoms to keep track of their visibility.
-/datum/component/overlay_lighting/proc/add_dynamic_lumi(atom/movable/affected_movable)
-	LAZYSET(affected_movable.affected_dynamic_lights, src, lumcount_range + 1)
-	affected_movable.vis_contents += visible_mask
-	affected_movable.update_dynamic_luminosity()
+///Removes the luminosity and source for the affected movable atoms to keep track of their visibility.
+/datum/component/overlay_lighting/proc/remove_dynamic_lumi()
+	LAZYREMOVE(current_holder.affected_dynamic_lights, src)
+	hide_from_holder()
+	current_holder.update_dynamic_luminosity()
 
+///Adds our overlays to our holder, assuming everything's setup proper
+/datum/component/overlay_lighting/proc/show_to_holder()
+	if(currently_displaying)
+		return
+	if(isnull(current_holder) || !(overlay_lighting_flags & LIGHTING_ON))
+		currently_displaying = FALSE
+		return
+	current_holder.underlays += visible_mask
+	if(directional)
+		current_holder.underlays += cone
+	currently_displaying = TRUE
+	// These are very intentionally copies so recipients cannot
+	// Accidentially brick lighting overlays by mutating them
+	var/mutable_appearance/mask_clone = new (visible_mask)
+	var/mutable_appearance/cone_clone = directional ? new /mutable_appearance(cone) : null
+	SEND_SIGNAL(parent, COMSIG_ATOM_OVERLAY_LIGHT_APPLIED, mask_clone, cone_clone, current_holder)
+	SEND_SIGNAL(current_holder, COMSIG_ATOM_HOLDER_OVERLAY_LIGHT_APPLIED, mask_clone, cone_clone, parent)
 
-///Removes the luminosity and source for the afected movable atoms to keep track of their visibility.
-/datum/component/overlay_lighting/proc/remove_dynamic_lumi(atom/movable/affected_movable)
-	LAZYREMOVE(affected_movable.affected_dynamic_lights, src)
-	affected_movable.vis_contents -= visible_mask
-	affected_movable.update_dynamic_luminosity()
-
+///Removes our overlay from our holder, assuming everything's setup proper
+///MUST be called before modifying cone or visible_mask, or you will cause stuck lighting
+/datum/component/overlay_lighting/proc/hide_from_holder()
+	if(!currently_displaying)
+		return
+	if(isnull(current_holder) || !(overlay_lighting_flags & LIGHTING_ON))
+		return
+	current_holder.underlays -= visible_mask
+	if(directional)
+		current_holder.underlays -= cone
+	currently_displaying = FALSE
+	SEND_SIGNAL(parent, COMSIG_ATOM_OVERLAY_LIGHT_REMOVED, current_holder)
+	SEND_SIGNAL(current_holder, COMSIG_ATOM_HOLDER_OVERLAY_LIGHT_REMOVED, parent)
 
 ///Called to change the value of parent_attached_to.
 /datum/component/overlay_lighting/proc/set_parent_attached_to(atom/movable/new_parent_attached_to)
@@ -201,25 +267,38 @@
 /datum/component/overlay_lighting/proc/set_holder(atom/movable/new_holder)
 	if(new_holder == current_holder)
 		return
+	var/atom/old_loc = null
 	if(current_holder)
+		old_loc = get_turf(current_holder)
 		if(current_holder != parent && current_holder != parent_attached_to)
 			UnregisterSignal(current_holder, list(COMSIG_PARENT_QDELETING, COMSIG_MOVABLE_MOVED))
+			if(directional)
+				UnregisterSignal(current_holder, COMSIG_ATOM_DIR_CHANGE)
 		if(overlay_lighting_flags & LIGHTING_ON)
-			remove_dynamic_lumi(current_holder)
+			remove_dynamic_lumi()
 	current_holder = new_holder
 	if(new_holder == null)
-		clean_old_turfs()
+		clean_old_cells(old_loc)
 		return
-	if(overlay_lighting_flags & LIGHTING_ON)
-		add_dynamic_lumi(new_holder)
 	if(new_holder != parent && new_holder != parent_attached_to)
 		RegisterSignal(new_holder, COMSIG_PARENT_QDELETING, PROC_REF(on_holder_qdel))
-		RegisterSignal(new_holder, COMSIG_MOVABLE_MOVED, PROC_REF(on_holder_moved))
+		if(overlay_lighting_flags & LIGHTING_ON)
+			RegisterSignal(new_holder, COMSIG_MOVABLE_MOVED, PROC_REF(on_holder_moved))
+		if(directional)
+			RegisterSignal(new_holder, COMSIG_ATOM_DIR_CHANGE, PROC_REF(on_holder_dir_change))
+	if(directional && current_direction != new_holder.dir)
+		current_direction = new_holder.dir
+	if(overlay_lighting_flags & LIGHTING_ON)
+		add_dynamic_lumi()
+		make_luminosity_update(old_loc)
 
 
 ///Used to determine the new valid current_holder from the parent's loc.
 /datum/component/overlay_lighting/proc/check_holder()
 	var/atom/movable/movable_parent = GET_PARENT
+	if(QDELETED(movable_parent))
+		set_holder(null)
+		return
 	if(isturf(movable_parent.loc))
 		set_holder(movable_parent)
 		return
@@ -228,7 +307,11 @@
 		set_holder(null)
 		return
 	if(isturf(inside.loc))
-		set_holder(inside)
+		// storage items block light, also don't be moving into a qdeleted item
+		if(QDELETED(inside) || istype(inside, /obj/item/storage))
+			set_holder(null)
+		else
+			set_holder(inside)
 		return
 	set_holder(null)
 
@@ -236,115 +319,177 @@
 ///Called when the current_holder is qdeleted, to remove the light effect.
 /datum/component/overlay_lighting/proc/on_holder_qdel(atom/movable/source, force)
 	SIGNAL_HANDLER
+	if(QDELETED(current_holder))
+		set_holder(null)
+		return
 	UnregisterSignal(current_holder, list(COMSIG_PARENT_QDELETING, COMSIG_MOVABLE_MOVED))
+	if(directional)
+		UnregisterSignal(current_holder, COMSIG_ATOM_DIR_CHANGE)
 	set_holder(null)
 
 
 ///Called when current_holder changes loc.
-/datum/component/overlay_lighting/proc/on_holder_moved(atom/movable/source, OldLoc, Dir, Forced)
+/datum/component/overlay_lighting/proc/on_holder_moved(atom/movable/source, atom/old_loc, dir, forced)
 	SIGNAL_HANDLER
 	if(!(overlay_lighting_flags & LIGHTING_ON))
 		return
-	make_luminosity_update()
+	make_luminosity_update(old_loc)
 
 
 ///Called when parent changes loc.
-/datum/component/overlay_lighting/proc/on_parent_moved(atom/movable/source, OldLoc, Dir, Forced)
+/datum/component/overlay_lighting/proc/on_parent_moved(atom/movable/source, atom/old_loc, dir, forced)
 	SIGNAL_HANDLER
 	var/atom/movable/movable_parent = parent
+	clean_old_cells(old_loc) // Clean first, as we might swap holders
 	if(overlay_lighting_flags & LIGHTING_ATTACHED)
 		set_parent_attached_to(ismovable(movable_parent.loc) ? movable_parent.loc : null)
 	check_holder()
 	if(!(overlay_lighting_flags & LIGHTING_ON) || !current_holder)
 		return
-	make_luminosity_update()
+	register_new_cells()
 
+///Called when we change z level, so our visuals stay on the correct plane.
+/datum/component/overlay_lighting/proc/on_z_move(atom/source)
+	SIGNAL_HANDLER
+	hide_from_holder()
+	SET_PLANE_EXPLICIT(visible_mask, O_LIGHTING_VISUAL_PLANE, source)
+	if(cone)
+		SET_PLANE_EXPLICIT(cone, O_LIGHTING_VISUAL_PLANE, source)
+	show_to_holder()
 
 ///Called when the current_holder is qdeleted, to remove the light effect.
 /datum/component/overlay_lighting/proc/on_parent_attached_to_qdel(atom/movable/source, force)
 	SIGNAL_HANDLER
+	if(isnull(parent_attached_to))
+		return
 	UnregisterSignal(parent_attached_to, list(COMSIG_PARENT_QDELETING, COMSIG_MOVABLE_MOVED))
+	if(directional)
+		UnregisterSignal(parent_attached_to, COMSIG_ATOM_DIR_CHANGE)
 	if(parent_attached_to == current_holder)
 		set_holder(null)
 	set_parent_attached_to(null)
 
 
 ///Called when parent_attached_to changes loc.
-/datum/component/overlay_lighting/proc/on_parent_attached_to_moved(atom/movable/source, OldLoc, Dir, Forced)
+/datum/component/overlay_lighting/proc/on_parent_attached_to_moved(atom/movable/source, atom/old_loc, dir, forced)
 	SIGNAL_HANDLER
+	clean_old_cells(old_loc) // Clean first, as we might swap holders
 	check_holder()
 	if(!(overlay_lighting_flags & LIGHTING_ON) || !current_holder)
 		return
-	make_luminosity_update()
+	register_new_cells()
 
 
 ///Changes the range which the light reaches. 0 means no light, 9 is the maximum value.
-/datum/component/overlay_lighting/proc/set_range(atom/source, new_inner_range, new_outer_range)
+/datum/component/overlay_lighting/proc/set_range(atom/source, old_range)
 	SIGNAL_HANDLER
-	if(range == new_outer_range)
+	var/new_range = source.light_range
+	if(range == new_range)
 		return
-	if(range == 0)
+	if(new_range == 0)
 		turn_off()
-	range = clamp(CEILING(new_outer_range, 0.5), 1, 9)
+	range = clamp(CEILING(new_range, 0.5), 1, 9)
 	var/pixel_bounds = ((range - 1) * 64) + 32
 	lumcount_range = CEILING(range, 1)
+	hide_from_holder()
+
 	visible_mask.icon = light_overlays["[pixel_bounds]"]
 	if(pixel_bounds == 32)
 		visible_mask.transform = null
-		return
-	var/offset = (pixel_bounds - 32) * 0.5
-	var/matrix/transform = new
-	transform.Translate(-offset, -offset)
-	visible_mask.transform = transform
+	else
+		var/offset = (pixel_bounds - 32) * 0.5
+		var/matrix/transform = new
+		transform.Translate(-offset, -offset)
+		visible_mask.transform = transform
+
+	show_to_holder()
+	if(directional)
+		if(beam)
+			cast_range = max(round(new_range * 0.5), 1)
+		else
+			cast_range = clamp(round(new_range * 0.5), 1, 3)
 	if(overlay_lighting_flags & LIGHTING_ON)
-		make_luminosity_update()
+		make_luminosity_update(current_holder)
 
 
 ///Changes the intensity/brightness of the light by altering the visual object's alpha.
-/datum/component/overlay_lighting/proc/set_power(atom/source, new_power)
+/datum/component/overlay_lighting/proc/set_power(atom/source, old_power)
 	SIGNAL_HANDLER
-	set_lum_power(new_power >= 0 ? 0.5 : -0.5)
-	//set_alpha = min(230, (abs(new_power) * 120) + 30)
-	visible_mask.alpha = 255
+	var/new_power = source.light_power
+	lum_power = new_power >= 0 ? 0.5 : -0.5
+	set_alpha = min(230, (abs(new_power) * 120) + 30)
+	hide_from_holder()
+	visible_mask.alpha = set_alpha
+	visible_mask.blend_mode = new_power > 0 ? BLEND_ADD : BLEND_SUBTRACT
+	if(directional)
+		cone.alpha = min(120, (abs(new_power) * 60) + 15)
+		cone.blend_mode = new_power > 0 ? BLEND_ADD : BLEND_SUBTRACT
+	show_to_holder()
 
 
 ///Changes the light's color, pretty straightforward.
-/datum/component/overlay_lighting/proc/set_color(atom/source, new_color)
+/datum/component/overlay_lighting/proc/set_color(atom/source, old_color)
 	SIGNAL_HANDLER
+	var/new_color = source.light_color
+	hide_from_holder()
 	visible_mask.color = new_color
+	if(directional)
+		cone.color = new_color
+	show_to_holder()
 
 
 ///Toggles the light on and off.
-/datum/component/overlay_lighting/proc/on_toggle(atom/source, new_value)
+/datum/component/overlay_lighting/proc/on_toggle(atom/source, old_value)
 	SIGNAL_HANDLER
+	var/new_value = source.light_on
 	if(new_value) //Truthy value input, turn on.
 		turn_on()
 		return
 	turn_off() //Falsey value, turn off.
 
 
-///Triggered right before the parent light flags change.
-/datum/component/overlay_lighting/proc/on_light_flags_change(atom/source, new_value)
+///Triggered right after the parent light flags change.
+/datum/component/overlay_lighting/proc/on_light_flags_change(atom/source, old_flags)
 	SIGNAL_HANDLER
+	var/new_flags = source.light_flags
 	var/atom/movable/movable_parent = parent
-	if(new_value & LIGHT_ATTACHED)
-		if(!(movable_parent.light_flags & LIGHT_ATTACHED)) //Gained the LIGHT_ATTACHED property.
-			overlay_lighting_flags |= LIGHTING_ATTACHED
-			if(ismovable(movable_parent.loc))
-				set_parent_attached_to(movable_parent.loc)
-	else if(movable_parent.light_flags & LIGHT_ATTACHED) //Lost the LIGHT_ATTACHED property.
+	if(!((new_flags ^ old_flags) & LIGHT_ATTACHED))
+		return
+
+	if(new_flags & LIGHT_ATTACHED) // Gained the [LIGHT_ATTACHED] property
+		overlay_lighting_flags |= LIGHTING_ATTACHED
+		if(ismovable(movable_parent.loc))
+			set_parent_attached_to(movable_parent.loc)
+	else // Lost the [LIGHT_ATTACHED] property
 		overlay_lighting_flags &= ~LIGHTING_ATTACHED
 		set_parent_attached_to(null)
+
+///Hooks us up to (or detaches us from) a /datum/light_middleman's render_target, so it can intercept and animate our overlays.
+/datum/component/overlay_lighting/proc/set_light_render_source(atom/source, old_render_source)
+	SIGNAL_HANDLER
+	var/new_source = source.light_render_source
+	hide_from_holder()
+	visible_mask.render_source = new_source
+	if(directional)
+		var/new_cone_source = ""
+		if(new_source)
+			new_cone_source = "[new_source]_cone"
+		cone.render_source = new_cone_source
+	show_to_holder()
 
 
 ///Toggles the light on.
 /datum/component/overlay_lighting/proc/turn_on()
 	if(overlay_lighting_flags & LIGHTING_ON)
 		return
-	if(current_holder)
-		add_dynamic_lumi(current_holder)
 	overlay_lighting_flags |= LIGHTING_ON
-	get_new_turfs()
+	if(current_holder)
+		add_dynamic_lumi()
+		if(directional)
+			cast_directional_light()
+	if(current_holder && current_holder != parent && current_holder != parent_attached_to)
+		RegisterSignal(current_holder, COMSIG_MOVABLE_MOVED, PROC_REF(on_holder_moved))
+	register_new_cells()
 
 
 ///Toggles the light off.
@@ -352,23 +497,83 @@
 	if(!(overlay_lighting_flags & LIGHTING_ON))
 		return
 	if(current_holder)
-		remove_dynamic_lumi(current_holder)
+		remove_dynamic_lumi()
 	overlay_lighting_flags &= ~LIGHTING_ON
-	clean_old_turfs()
+	if(current_holder && current_holder != parent && current_holder != parent_attached_to)
+		UnregisterSignal(current_holder, COMSIG_MOVABLE_MOVED)
+	clean_old_cells(current_holder)
 
+///Repositions the light overlay towards current_direction, for directional/beam lights - stopping at walls or our cast_range.
+/datum/component/overlay_lighting/proc/cast_directional_light()
+	var/final_distance = cast_range
+	//Lower the distance by 1 if we're not looking at a cardinal direction, and we're not a short cast
+	if(final_distance > SHORT_CAST && !(ALL_CARDINALS & current_direction))
+		final_distance -= 1
+	var/turf/scanning = get_turf(current_holder)
+	for(var/i in 1 to final_distance)
+		var/turf/next_turf = get_step(scanning, current_direction)
+		if(isnull(next_turf) || IS_OPAQUE_TURF(next_turf))
+			final_distance = i
+			break
+		scanning = next_turf
 
-///Here we append the behavior associated to changing lum_power.
-/datum/component/overlay_lighting/proc/set_lum_power(new_lum_power)
-	if(lum_power == new_lum_power)
+	hide_from_holder()
+
+	var/translate_x = -((range - 1) * 32)
+	var/translate_y = translate_x
+	var/scale_x = 1
+	var/scale_y = 1
+	switch(current_direction)
+		if(NORTH)
+			translate_y += 32 * final_distance
+			if(beam && range > 1)
+				scale_x = 1 / (range - (range/5))
+		if(SOUTH)
+			translate_y += -32 * final_distance
+			if(beam && range > 1)
+				scale_x = 1 / (range - (range/5))
+		if(EAST)
+			translate_x += 32 * final_distance
+			if(beam && range > 1)
+				scale_y = 1 / (range - (range/5))
+		if(WEST)
+			translate_x += -32 * final_distance
+			if(beam && range > 1)
+				scale_y = 1 / (range - (range/5))
+
+	if((directional_offset_x != translate_x) || (directional_offset_y != translate_y))
+		directional_offset_x = translate_x
+		directional_offset_y = translate_y
+		var/matrix/transform = matrix()
+		if(beam && range > 1)
+			transform.Scale(scale_x, scale_y)
+		transform.Translate(translate_x, translate_y)
+		visible_mask.transform = transform
+
+	show_to_holder()
+
+///Called when current_holder changes loc.
+/datum/component/overlay_lighting/proc/on_holder_dir_change(atom/movable/source, olddir, newdir)
+	SIGNAL_HANDLER
+	set_direction(newdir)
+
+///Called when parent changes loc.
+/datum/component/overlay_lighting/proc/on_parent_dir_change(atom/movable/source, olddir, newdir)
+	SIGNAL_HANDLER
+	set_direction(newdir)
+
+///Sets a new direction for the directional cast, then updates luminosity
+/datum/component/overlay_lighting/proc/set_direction(newdir)
+	if(!newdir)
 		return
-	. = lum_power
-	lum_power = new_lum_power
-	var/difference = . - lum_power
-	for(var/t in affected_turfs)
-		var/turf/lit_turf = t
-		lit_turf.dynamic_lumcount -= difference
+	if(current_direction == newdir)
+		return
+	current_direction = newdir
+	if(overlay_lighting_flags & LIGHTING_ON)
+		make_luminosity_update(current_holder)
 
 
 #undef LIGHTING_ON
 #undef LIGHTING_ATTACHED
 #undef GET_PARENT
+#undef SHORT_CAST

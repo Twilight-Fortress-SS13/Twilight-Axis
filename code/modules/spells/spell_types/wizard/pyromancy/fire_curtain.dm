@@ -129,7 +129,7 @@
 	anchored = TRUE
 	density = FALSE
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	light_outer_range = LIGHT_RANGE_FIRE
+	light_range = LIGHT_RANGE_FIRE
 	light_color = LIGHT_COLOR_FIRE
 	ai_path_weight = 15
 	var/lifetime = 10 SECONDS

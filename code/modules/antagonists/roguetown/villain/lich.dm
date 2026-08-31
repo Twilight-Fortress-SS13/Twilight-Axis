@@ -355,7 +355,7 @@
 	layer = HIGH_OBJ_LAYER
 	w_class = WEIGHT_CLASS_TINY
 	light_system = MOVABLE_LIGHT
-	light_outer_range = 3
+	light_range = 3
 	light_color = "#e62424"
 
 	var/datum/antagonist/lich/possessor
@@ -476,7 +476,7 @@
 	anchored = TRUE
 	layer = BELOW_OBJ_LAYER
 	density = FALSE
-	light_outer_range = 3
+	light_range = 3
 	light_color = LIGHT_COLOR_BLUE
 	var/stored_hog_name = "Terrorhog"
 

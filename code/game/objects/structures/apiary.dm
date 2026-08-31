@@ -1047,7 +1047,7 @@
 	honey_color = "#CCFF99"
 	list_reagents = list(/datum/reagent/consumable/honey = 5, /datum/reagent/consumable/nutriment = 3)
 	light_system = MOVABLE_LIGHT
-	light_outer_range = 2
+	light_range = 2
 	light_power = 1
 	light_color = "#CCFF99"
 

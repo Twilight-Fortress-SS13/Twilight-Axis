@@ -39,11 +39,20 @@
 		cell_contents_list |= movable_or_list; \
 	};
 
+///assoc-set a key/value pair into a grid cell contents list, with the same lazy-init trick as GRID_CELL_ADD
+#define GRID_CELL_ASSOC_SET(cell_contents_list, key, value) \
+	if(!length(cell_contents_list)) { \
+		cell_contents_list = list(); \
+		cell_contents_list[key] = value; \
+	} else { \
+		cell_contents_list[key] = value; \
+	};
+
 //dont use these outside of SSspatial_grid's scope use the procs it has for this purpose
 #define GRID_CELL_REMOVE(cell_contents_list, movable_or_list) \
 	cell_contents_list -= movable_or_list; \
 	if(!length(cell_contents_list)) {\
-		cell_contents_list = dummy_list; \
+		cell_contents_list = SSspatial_grid.dummy_list; \
 	};
 
 ///remove from every list

@@ -55,7 +55,7 @@
 	flag = "piercing"
 	hitsound = 'sound/magic/obeliskbeam.ogg'
 	light_color = "#9400D3"
-	light_outer_range = 7
+	light_range = 7
 	spell_impact_intensity = SPELL_IMPACT_MEDIUM
 	/// How many mob targets have been hit so far.
 	var/hits = 0

@@ -27,8 +27,7 @@
 	var/ta_ascended_power_type
 	var/datum/coven_power/ta_ascended_power
 	var/datum/action/ta_ascended_coven/ta_ascended_action
-	var/tmp/ta_old_light_outer_range
-	var/tmp/ta_old_light_inner_range
+	var/tmp/ta_old_light_range
 	var/tmp/ta_old_light_power
 	var/tmp/ta_old_light_color
 	var/tmp/ta_old_light_on
@@ -196,7 +195,7 @@
 	ta_ascended = FALSE
 	if(owner)
 		owner.remove_filter(TA_ASCENDED_COVEN_FILTER)
-		owner.set_light(ta_old_light_outer_range, ta_old_light_inner_range, ta_old_light_power, l_color = ta_old_light_color, l_on = ta_old_light_on)
+		owner.set_light(ta_old_light_range, ta_old_light_power, l_color = ta_old_light_color, l_on = ta_old_light_on)
 		if(ta_ascended_action)
 			ta_ascended_action.Remove(owner)
 	if(ta_ascended_power?.active)
@@ -250,13 +249,12 @@
 /datum/coven/proc/ta_apply_ascended_look(mob/living/carbon/human/lord_body)
 	if(!lord_body)
 		return
-	ta_old_light_outer_range = lord_body.light_outer_range
-	ta_old_light_inner_range = lord_body.light_inner_range
+	ta_old_light_range = lord_body.light_range
 	ta_old_light_power = lord_body.light_power
 	ta_old_light_color = lord_body.light_color
 	ta_old_light_on = lord_body.light_on
 	lord_body.add_filter(TA_ASCENDED_COVEN_FILTER, 2, list("type" = "outline", "color" = TA_ASCENDED_COVEN_LIGHT, "alpha" = 200, "size" = 2))
-	lord_body.set_light(4, 2, 2, l_color = TA_ASCENDED_COVEN_LIGHT)
+	lord_body.set_light(4, 2, l_color = TA_ASCENDED_COVEN_LIGHT)
 
 /datum/action/ta_ascended_coven
 	check_flags = NONE
@@ -1240,7 +1238,7 @@
 /obj/structure/vampire/portal/ta_fae/Initialize(mapload, mob/living/carbon/human/lord_body)
 	. = ..()
 	lord_ref = WEAKREF(lord_body)
-	set_light(4, 2, 3, l_color = LIGHT_COLOR_LAVENDER)
+	set_light(4, 3, l_color = LIGHT_COLOR_LAVENDER)
 	addtimer(CALLBACK(src, PROC_REF(spawn_fae)), 5 SECONDS)
 
 /obj/structure/vampire/portal/ta_fae/Crossed(atom/movable/AM)
@@ -1454,7 +1452,7 @@
 /obj/effect/ta_ascended_poison_cloud/Initialize(mapload, mob/living/carbon/human/lord_body)
 	. = ..()
 	lord_ref = WEAKREF(lord_body)
-	set_light(2, 1, 1, l_color = "#5b8f2a")
+	set_light(2, 1, l_color = "#5b8f2a")
 	addtimer(CALLBACK(src, PROC_REF(pulse)), 1 SECONDS)
 
 /obj/effect/ta_ascended_poison_cloud/proc/pulse()

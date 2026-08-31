@@ -105,6 +105,12 @@
 /// dynamic lighting enabled only if starlight is.
 #define DYNAMIC_LIGHTING_IFSTARLIGHT 3
 #define IS_DYNAMIC_LIGHTING(A) A.dynamic_lighting
+///Whether a turf blocks light, counting both its own opacity and any opaque atoms standing on it.
+#define IS_OPAQUE_TURF(T) ((T).opacity || (T).opaque_atom_count)
+
+/// tg's version of this offsets the plane by our z-stack rendering offset, for simultaneous multi-z plane stacking.
+/// We don't have that infrastructure (single plane only), so this just sets the plane directly - kept as a macro for drop-in compatibility with ported tg lighting code.
+#define SET_PLANE_EXPLICIT(thing, new_value, source) ((thing).plane = (new_value))
 
 
 //code assumes higher numbers override lower numbers.
@@ -145,9 +151,49 @@ GLOBAL_LIST_INIT(em_mask_matrix, EM_MASK_MATRIX)
 /// The default falloff curve for all atoms. It's a magic number you should adjust until it looks good.
 #define LIGHTING_DEFAULT_FALLOFF_CURVE 3
 
-///Light made with the lighting datums, applying a matrix.
-#define STATIC_LIGHT 1
-///Light made by masking the lighting darkness plane.
-#define MOVABLE_LIGHT 2
+/// Random distribution centered around 1, biased by s (higher s = tighter to the middle). Used to make fire_flicker_middleman's flicker timings feel organic instead of metronomic.
+#define ANCHORED_INVERSE_CAUCHY(s) (2 - ( 1 / (s * (1 + ((rand() - 0.5) / s) ** 2 ))) * (s + (0.5 ** 2) / s))
 
+/// Parse the hexadecimal color into lumcounts of each perspective.
+#define PARSE_LIGHT_COLOR(source) \
+do { \
+	if (source.light_color && source.light_color != COLOR_WHITE) { \
+		var/list/color_parts = rgb2num(source.light_color); \
+		source.lum_r = color_parts[1] / 255; \
+		source.lum_g = color_parts[2] / 255; \
+		source.lum_b = color_parts[3] / 255; \
+	} else { \
+		source.lum_r = 1; \
+		source.lum_g = 1; \
+		source.lum_b = 1; \
+	}; \
+} while (FALSE)
+
+/// Object doesn't use any of the light systems. Should be changed to add a light source to the object.
+#define NO_LIGHT_SUPPORT 0
+///Light made with the lighting datums, applying a matrix.
+#define COMPLEX_LIGHT 1
+///Light made by masking the lighting darkness plane.
+#define OVERLAY_LIGHT 2
+///Light made by masking the lighting darkness plane, and is directional.
+#define OVERLAY_LIGHT_DIRECTIONAL 3
+///Light made by masking the lighting darkness plane, and is a directionally focused beam.
+#define OVERLAY_LIGHT_BEAM 4
+// Aliases kept for our ~30 existing light_system == STATIC_LIGHT/MOVABLE_LIGHT callsites, so they don't all need touching.
+#define STATIC_LIGHT COMPLEX_LIGHT
+#define MOVABLE_LIGHT OVERLAY_LIGHT
+
+// Light systems that use the overlay light component
+#define IS_OVERLAY_LIGHT_SYSTEM(system) (system == OVERLAY_LIGHT || system == OVERLAY_LIGHT_DIRECTIONAL || system == OVERLAY_LIGHT_BEAM)
+// Light systems that use the cone image of the overlay light component
+#define IS_OVERLAY_CONE_LIGHT_SYSTEM(system) (system == OVERLAY_LIGHT_DIRECTIONAL || system == OVERLAY_LIGHT_BEAM)
+
+/// Nonesensical value for light color, used for null checks.
+#define NONSENSICAL_VALUE -99999
+
+/// Is our overlay light source attached to another movable (its loc), meaning that the lighting component should go one level deeper.
 #define LIGHT_ATTACHED (1<<0)
+/// Freezes a light in its current state, blocking any attempts at modification
+#define LIGHT_FROZEN (1<<1)
+/// Does this light ignore inherent offsets? (Pixels, transforms, etc)
+#define LIGHT_IGNORE_OFFSET (1<<2)

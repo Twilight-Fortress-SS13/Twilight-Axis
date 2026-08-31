@@ -14,8 +14,7 @@
 	max_integrity = 30
 	blade_dulling = DULLING_CUT
 	resistance_flags = FLAMMABLE
-	light_outer_range = 2
-	light_inner_range = 1
+	light_range = 2
 	light_power = 1.5
 	light_color = "#d4fcac"
 /obj/structure/glowshroom/fire_act(added, maxstacks)

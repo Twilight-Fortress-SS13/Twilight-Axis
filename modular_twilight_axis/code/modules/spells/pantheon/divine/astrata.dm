@@ -42,7 +42,7 @@
 	speed = 0.3
 	flag = "fire"
 	light_color = "#a98107"
-	light_outer_range = 7
+	light_range = 7
 	var/fuck_that_guy_multiplier = 3
 	var/biotype_we_look_for = MOB_UNDEAD
 
@@ -1076,7 +1076,7 @@
 	duration = 1 MINUTES
 	pixel_x = -64
 	pixel_y = -64
-	light_outer_range = 5
+	light_range = 5
 	light_color = "#ffb300ff"
 
 /obj/effect/temp_visual/firewave/sun_mark/pre_sunstrike

@@ -49,7 +49,7 @@
 	var/turf/T = get_turf(target)
 	var/obj/structure/flora/roguetree/wise/new_wise_tree = new(T)
 	new_wise_tree.activated = TRUE
-	new_wise_tree.set_light(2, 2, 2, l_color = "#66FF99")
+	new_wise_tree.set_light(2, 2, l_color = "#66FF99")
 
 	if(istype(target, /obj/structure/flora/newtree))
 		for(var/turf/adjacent in range(1, T))

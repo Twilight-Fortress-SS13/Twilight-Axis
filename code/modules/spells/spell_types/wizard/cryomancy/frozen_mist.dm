@@ -74,7 +74,7 @@
 	anchored = TRUE
 	density = FALSE
 	layer = ABOVE_MOB_LAYER
-	light_outer_range = 3
+	light_range = 3
 	light_color = GLOW_COLOR_ICE
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	var/mob/living/caster
@@ -160,7 +160,7 @@
 	desc = "Freezing mist blankets the area."
 	randomdir = FALSE
 	layer = ABOVE_MOB_LAYER
-	light_outer_range = 1
+	light_range = 1
 	light_color = GLOW_COLOR_ICE
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 

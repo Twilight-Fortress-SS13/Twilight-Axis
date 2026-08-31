@@ -28,7 +28,7 @@
 	var/area_of_effect = 1
 
 /obj/effect/temp_visual/telegraph/diminish
-	light_outer_range = 1
+	light_range = 1
 	duration = 8
 
 /obj/effect/proc_holder/spell/invoked/diminish/cast(list/targets, mob/living/user)

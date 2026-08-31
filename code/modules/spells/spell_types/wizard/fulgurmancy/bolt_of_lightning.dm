@@ -50,7 +50,7 @@
 	nodamage = FALSE
 	speed = 0.3
 	flag = "fire"
-	light_outer_range = 7
+	light_range = 7
 
 /obj/projectile/magic/lightning/on_hit(target, blocked = FALSE)
 	. = ..()

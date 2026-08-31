@@ -92,7 +92,7 @@
 /obj/effect/temp_visual/wither_strike
 	icon = 'icons/effects/effects.dmi'
 	icon_state = "curseblob"
-	light_outer_range = 2
+	light_range = 2
 	light_color = GLOW_COLOR_HEX
 	duration = 1 SECONDS
 	layer = MASSIVE_OBJ_LAYER

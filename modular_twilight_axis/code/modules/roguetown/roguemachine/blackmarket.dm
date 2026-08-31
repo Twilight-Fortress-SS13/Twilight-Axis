@@ -44,7 +44,7 @@
 	if(obj_broken)
 		set_light(0)
 		return
-	set_light(1, 1, 1, l_color = "#1b7bf1")
+	set_light(1, 1, l_color = "#1b7bf1")
 	add_overlay(mutable_appearance(icon, "vendor-merch"))
 
 /obj/structure/roguemachine/blackmarket/attackby(obj/item/P, mob/user, params)

@@ -1099,6 +1099,6 @@
 /obj/effect/temp_visual/firebreath_actual
 	icon = 'icons/effects/fire.dmi'
 	icon_state = "2"
-	light_outer_range = 2
+	light_range = 2
 	light_color = "#FF6A00"
 	duration = 1 SECONDS
