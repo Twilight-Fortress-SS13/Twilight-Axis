@@ -123,8 +123,6 @@
 #define TAT_VIRTUE_CHOICE_PROWLER_LOCKPICKING "Lockpick Skill (+3, Up to Legendary)"
 
 #define TAT_VIRTUE_SKILL_BONUS_RULES list( \
-	/datum/virtue/combat/bowman = list(/datum/skill/combat/bows = 1), \
-	/datum/virtue/combat/crossbowman = list(/datum/skill/combat/crossbows = 1), \
 	/datum/virtue/combat/magical_potential = list(/datum/skill/magic/arcane = 1), \
 	/datum/virtue/combat/devotee = list(/datum/skill/magic/holy = 1), \
 	/datum/virtue/utility/skilled = list(/datum/skill/craft/crafting = 2), \
@@ -142,8 +140,6 @@
 )
 
 #define TAT_VIRTUE_SKILL_CAP_BONUS_RULES list( \
-	/datum/virtue/combat/bowman = list(/datum/skill/combat/bows = 3), \
-	/datum/virtue/combat/crossbowman = list(/datum/skill/combat/crossbows = 3), \
 	/datum/virtue/combat/magical_potential = list(/datum/skill/magic/arcane = 1), \
 	/datum/virtue/combat/devotee = list(/datum/skill/magic/holy = 1), \
 	/datum/virtue/utility/performer = list(/datum/skill/misc/music = 6) \
