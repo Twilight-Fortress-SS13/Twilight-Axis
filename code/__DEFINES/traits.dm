@@ -696,9 +696,9 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_ZURCH = span_warning("I know of sacred sites of worship where followers of the Ascendants convene, and the path to the nearest conclave is etched into my memory."),
 	TRAIT_CAVEDWELLER = span_info("The mountains are my home. I prefer to live beneath the surface away from the sun's gaze and know the caves of this land like the back of my hand."),
 	TRAIT_CURSE_ASTRATA = span_warning("I am forsaken by the Sun. I will find no rest under Her unwavering gaze."),
-	TRAIT_CURSE_NOC = span_warning("I am forsaken by the Moon. I will find no salvation in His grace."),
+	TRAIT_CURSE_NOC = span_warning("I am forsaken by the Moon. I will find no salvation in Her grace."), // TA EDIT
 	TRAIT_CURSE_DENDOR = span_warning("I am forsaken by the Treefather. Reason and common sense abandon me."),
-	TRAIT_CURSE_ABYSSOR = span_warning("I am forsaken by the Dreamer. His domain will surely become my grave."),
+	TRAIT_CURSE_ABYSSOR = span_warning("I am forsaken by the Oceanfather. His domain will surely become my grave."), // TA EDIT
 	TRAIT_CURSE_RAVOX = span_warning("I am forsaken by the Justicar. My opponents will show me no clemency."),
 	TRAIT_CURSE_NECRA = span_warning("I am forsaken by the Undermaiden. Even the lightest strike could send me into Her embrace."),
 	TRAIT_CURSE_XYLIX = span_warning("I am forsaken by the Trickster. Misfortune follows me on every step."),
@@ -709,10 +709,10 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_RECENT_CONVERT = span_info("I have recently converted to a new patron; I shall not forsake them so soon."),
 	TRAIT_UNCONVERTIBLE = span_info("My nature is inextricably tied to my patron. Any attempts at conversion will fail."),
 	TRAIT_SLAVE = span_warning("Я был угнан в рабство! О, боги, помилуйте мою душу - это невыносимая судьба! Со мною обращаются как с вещью!"), // TA EDIT
-	TRAIT_CURSE_ZIZO = span_warning("I am forsaken by the Architect. Her grasp reaches for my heart."),
+	TRAIT_CURSE_ZIZO = span_warning("I am forsaken by the Mistress of Darkness. Her grasp reaches for my heart."), // TA EDIT
 	TRAIT_CURSE_GRAGGAR = span_warning("I am forsaken by the Warlord. Bloodlust is only thing I know for real."),
-	TRAIT_CURSE_MATTHIOS = span_warning("I am forsaken by the Dragon. Greed will be my only salvation."),
-	TRAIT_CURSE_BAOTHA = span_warning("I am forsaken by the Heartbreaker. I am drowning in her promises."),
+	TRAIT_CURSE_MATTHIOS = span_warning("I am forsaken by the Father. Do I not deserve to be free?"), // TA EDIT
+	TRAIT_CURSE_BAOTHA = span_warning("I am forsaken by the Mistress of Pleasures. I am drowning in her promises that will never be."), // TA EDIT
 	TRAIT_JACKOFALLTRADES = span_notice("Skills cost half as much for me to raise."),
 	TRAIT_BLOODLOSS_IMMUNE = span_notice("While I may bleed, I will feel nothing from it."),
 	TRAIT_ASTRATAN_AFFINITY = span_bone("My bond with Astrata is strong. I can tell who worships her from up close."),
@@ -849,6 +849,31 @@ GLOBAL_LIST_INIT(roguetraits, list(
 					SEND_GLOBAL_SIGNAL(COMSIG_ATOM_REMOVE_TRAIT, target, trait); \
 				}; \
 			};\
+			if (!length(_L)) { \
+				target.status_traits = null\
+			};\
+		}\
+	} while (0)
+
+#define REMOVE_TRAITS_IN(target, sources) \
+	do { \
+		var/list/_L = target.status_traits; \
+		var/list/_S = sources; \
+		if (sources && !islist(sources)) { \
+			_S = list(sources); \
+		} else { \
+			_S = sources\
+		}; \
+		if (_L) { \
+			for (var/_T in _L) { \
+				if (_L[_T]) { \
+					_L[_T] -= _S; \
+				}; \
+				if (!length(_L[_T])) { \
+					_L -= _T; \
+					SEND_SIGNAL(target, SIGNAL_REMOVETRAIT(_T), _T); \
+					}; \
+				};\
 			if (!length(_L)) { \
 				target.status_traits = null\
 			};\

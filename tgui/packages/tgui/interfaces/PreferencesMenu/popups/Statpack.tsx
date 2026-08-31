@@ -1,9 +1,9 @@
+import { useState } from 'react';
 import { PrefPopupGuard } from 'pm/components';
 import { type ConstantData, useConstantPrefs } from 'pm/constant_data';
 import type { Path } from 'pm/data';
 import { type PopupData, registerPopup, usePopupBackend } from 'pm/popups';
 import { Box, ImageButton, Input, Section, Stack } from 'tgui-core/components';
-import { useFuzzySearch } from 'tgui-core/fuzzysearch';
 /**
  * Character Selection
  */
@@ -47,9 +47,15 @@ export const PopupStatpackInner = (props: { constantData: ConstantData }) => {
   const statpacks = Object.entries(constantStatpacks)
     .map(([path, val]) => ({ path, ...val }))
     .sort((a, b) => a.name.localeCompare(b.name));
-  const { query, setQuery, results } = useFuzzySearch({
-    getSearchString: (s) => `${s.desc}`,
-    searchArray: statpacks,
+  const [query, setQuery] = useState('');
+  const normalizedQuery = query.trim().toLowerCase();
+  const filteredStatpacks = statpacks.filter((pack) => {
+    if (!normalizedQuery) {
+      return true;
+    }
+    const searchableText =
+      `${pack.name} ${pack.desc.replace(/<[^>]*>/g, ' ')}`.toLowerCase();
+    return searchableText.includes(normalizedQuery);
   });
 
   return (
@@ -65,7 +71,7 @@ export const PopupStatpackInner = (props: { constantData: ConstantData }) => {
       <Stack.Item grow>
         <Section fill scrollable>
           <Stack vertical>
-            {(query.length ? results : statpacks).map((pack) => (
+            {filteredStatpacks.map((pack) => (
               <Stack.Item key={pack.path}>
                 <ImageButton
                   fluid

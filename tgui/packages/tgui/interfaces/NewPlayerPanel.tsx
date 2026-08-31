@@ -56,7 +56,7 @@ export const NewPlayerPanel = () => {
   return (
     <Window width={330} height={830}>
       <Window.Content scrollable>
-        <Box mt={1.5} mb={0.5}>
+        <Box mt={2.5} mb={2.5}>
           <TegakiAnimation
             height={4}
             time={{ mode: 'uncontrolled', speed: 10, loop: false }}

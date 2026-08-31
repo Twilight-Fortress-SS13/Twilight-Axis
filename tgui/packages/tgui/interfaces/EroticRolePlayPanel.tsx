@@ -65,6 +65,7 @@ type ActionsTabPayload = {
   do_knot_action?: boolean;
   has_knotted_penis?: boolean;
   can_knot_now?: boolean;
+  show_climax_controls?: boolean;
 
   climax_mode?: 'outside' | 'inside' | string | null;
   climax_modes?: { id: string; name: string }[];
@@ -895,11 +896,22 @@ const PenisTuningPanel: React.FC<{
   showKnotToggle: boolean;
   doKnotAction: boolean;
   canKnot: boolean;
+  showClimaxControls: boolean;
   climaxMode: string;
   climaxModes?: { id: string; name: string }[];
   onToggleKnot: () => void;
   onSetClimaxMode: (mode: string) => void;
-}> = ({ enabled, showKnotToggle, doKnotAction, canKnot, climaxMode, climaxModes, onToggleKnot, onSetClimaxMode }) => {
+}> = ({
+  enabled,
+  showKnotToggle,
+  doKnotAction,
+  canKnot,
+  showClimaxControls,
+  climaxMode,
+  climaxModes,
+  onToggleKnot,
+  onSetClimaxMode,
+}) => {
   if (!enabled) return null;
   const modes = climaxModes?.length
     ? climaxModes
@@ -923,6 +935,7 @@ const PenisTuningPanel: React.FC<{
         ) : (
           <Stack.Item />
         )}
+        {showClimaxControls ? (
         <Stack.Item>
           <Box color="label" style={{ fontSize: 10, textTransform: 'uppercase' }} mb={0.25} textAlign="right">
             Куда кончить
@@ -937,6 +950,9 @@ const PenisTuningPanel: React.FC<{
             ))}
           </Stack>
         </Stack.Item>
+        ) : (
+          <Stack.Item />
+        )}
       </Stack>
     </Section>
   );
@@ -984,7 +1000,7 @@ const ActionsTab: React.FC<{
       });
   }, [allActions, searchText]);
   const penisEnabled = !!payload?.show_penis_panel;
-  const canKnot = !!payload?.can_knot_now;
+  const canKnot = !!payload?.can_knot_now || !!payload?.do_knot_action;
   const [knotLocal, setKnotLocal] = useState<boolean>(!!payload?.do_knot_action);
   const [climaxModeLocal, setClimaxModeLocal] = useState<string>(String(payload?.climax_mode || 'outside'));
   useEffect(() => {
@@ -1058,6 +1074,7 @@ const ActionsTab: React.FC<{
         showKnotToggle={!!payload?.show_knot_toggle}
         doKnotAction={!!knotLocal}
         canKnot={!!canKnot}
+        showClimaxControls={!!payload?.show_climax_controls}
         climaxMode={climaxModeLocal}
         climaxModes={payload?.climax_modes}
         onToggleKnot={onToggleKnot}

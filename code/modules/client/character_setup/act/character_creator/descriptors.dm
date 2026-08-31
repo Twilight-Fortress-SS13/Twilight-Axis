@@ -243,24 +243,60 @@
 
 		// OOC Extra Image
 		if("ooc_extra_img")
-			var/static/list/valid_ext = list("jpg", "jpeg", "png", "gif")
-			var/new_img = input_image_gallery_entry(user, "OOC Extra Image", ooc_extra_img, valid_ext)
-			if(new_img == null)
+			to_chat(user, span_notice("Add a link to images/videos (jpg, png, gif, mp4) that will be displayed in your Flavor Text."))
+			to_chat(user, span_notice("Images/videos will be constrained by width but have limitless height."))
+			to_chat(user, span_notice("Leave blank to delete your current image/video."))
+			to_chat(user, span_danger("Abuse of this will get you banned."))
+			var/old_link = ooc_extra_img_link
+			var/link = tgui_input_text(user, "Input the image/video link (https):", "OOC Extra Image", ooc_extra_img_link, max_length = MAX_MESSAGE_LEN, encode = FALSE)
+			if(link == null)
 				return CHARACTER_ACT_DATA_UPDATE
-
-			verbose_pref_log_change(user, "notice", "OOC Extra Image", html_encode(ooc_extra_img), html_encode(new_img))
-			ooc_extra_img = new_img || null
+			if(!link || !length(trim(link)))
+				verbose_pref_log_change(user, "notice", "OOC Extra Image", html_encode(ooc_extra_img_link), "")
+				ooc_extra_img = null
+				ooc_extra_img_link = null
+				return CHARACTER_ACT_DATA_UPDATE
+			var/static/list/valid_ext = list("jpg", "jpeg", "png", "gif", "mp4")
+			if(!valid_headshot_link(user, link, FALSE, valid_ext))
+				return CHARACTER_ACT_DATA_UPDATE
+			ooc_extra_img_link = link
+			var/ext = LOWER_TEXT(splittext(link, ".")[length(splittext(link, "."))])
+			switch(ext)
+				if("jpg", "jpeg", "png", "gif")
+					ooc_extra_img = "<div align='center'><br><img src='[link]' style='max-width: 100%;'/></div>"
+				if("mp4")
+					ooc_extra_img = "<div align='center'><br><video style='max-width: 100%;' controls><source src='[link]' type='video/mp4'></video></div>"
+			verbose_pref_log_change(user, "notice", "OOC Extra Image", html_encode(old_link), html_encode(link))
+			log_game("[user] has set their OOC Extra Image to '[html_encode(link)]'.")
 			return CHARACTER_ACT_DATA_UPDATE
 
 		// NSFW OOC Extra Image
 		if("nsfw_ooc_extra_img")
-			var/static/list/valid_ext = list("jpg", "jpeg", "png", "gif")
-			var/new_img = input_image_gallery_entry(user, "NSFW OOC Extra Image", nsfw_ooc_extra_img, valid_ext)
-			if(new_img == null)
+			to_chat(user, span_notice("Add a link to NSFW images/videos (jpg, png, gif, mp4) that will be displayed in your NSFW Flavor Text."))
+			to_chat(user, span_notice("Images/videos will be constrained by width but have limitless height."))
+			to_chat(user, span_notice("Leave blank to delete your current image/video."))
+			to_chat(user, span_danger("Abuse of this will get you banned."))
+			var/old_link = nsfw_ooc_extra_img_link
+			var/link = tgui_input_text(user, "Input the image/video link (https):", "NSFW OOC Extra Image", nsfw_ooc_extra_img_link, max_length = MAX_MESSAGE_LEN, encode = FALSE)
+			if(link == null)
 				return CHARACTER_ACT_DATA_UPDATE
-
-			verbose_pref_log_change(user, "notice", "NSFW OOC Extra Image", html_encode(nsfw_ooc_extra_img), html_encode(new_img))
-			nsfw_ooc_extra_img = new_img || null
+			if(!link || !length(trim(link)))
+				verbose_pref_log_change(user, "notice", "NSFW OOC Extra Image", html_encode(nsfw_ooc_extra_img_link), "")
+				nsfw_ooc_extra_img = null
+				nsfw_ooc_extra_img_link = null
+				return CHARACTER_ACT_DATA_UPDATE
+			var/static/list/valid_ext = list("jpg", "jpeg", "png", "gif", "mp4")
+			if(!valid_headshot_link(user, link, FALSE, valid_ext))
+				return CHARACTER_ACT_DATA_UPDATE
+			nsfw_ooc_extra_img_link = link
+			var/ext = LOWER_TEXT(splittext(link, ".")[length(splittext(link, "."))])
+			switch(ext)
+				if("jpg", "jpeg", "png", "gif")
+					nsfw_ooc_extra_img = "<div align='center'><br><img src='[link]' style='max-width: 100%;'/></div>"
+				if("mp4")
+					nsfw_ooc_extra_img = "<div align='center'><br><video style='max-width: 100%;' controls><source src='[link]' type='video/mp4'></video></div>"
+			verbose_pref_log_change(user, "notice", "NSFW OOC Extra Image", html_encode(old_link), html_encode(link))
+			log_game("[user] has set their NSFW OOC Extra Image to '[html_encode(link)]'.")
 			return CHARACTER_ACT_DATA_UPDATE
 
 		// Rumours
@@ -324,62 +360,6 @@
 				verbose_pref_log_change(user, "notice", "Song URL", html_encode(ooc_extra), html_encode(new_extra_link))
 				ooc_extra = new_extra_link
 				log_game("[user] has set their Song URL to '[html_encode(ooc_extra)]'.")
-			return CHARACTER_ACT_DATA_UPDATE
-
-		if("ooc_extra_img")
-			to_chat(user, span_notice("Add a link to images/videos (jpg, png, gif, mp4) that will be displayed in your Flavor Text."))
-			to_chat(user, span_notice("Images/videos will be constrained by width but have limitless height."))
-			to_chat(user, span_notice("Leave blank to delete your current image/video."))
-			to_chat(user, span_danger("Abuse of this will get you banned."))
-			var/old_link = ooc_extra_img_link
-			var/link = tgui_input_text(user, "Input the image/video link (https):", "OOC Extra Image", ooc_extra_img_link, max_length = MAX_MESSAGE_LEN, encode = FALSE)
-			if(link == null)
-				return CHARACTER_ACT_DATA_UPDATE
-			if(!link || !length(trim(link)))
-				verbose_pref_log_change(user, "notice", "OOC Extra Image", html_encode(ooc_extra_img_link), "")
-				ooc_extra_img = null
-				ooc_extra_img_link = null
-				return CHARACTER_ACT_DATA_UPDATE
-			var/static/list/valid_ext = list("jpg", "jpeg", "png", "gif", "mp4")
-			if(!valid_headshot_link(user, link, FALSE, valid_ext))
-				return CHARACTER_ACT_DATA_UPDATE
-			ooc_extra_img_link = link
-			var/ext = LOWER_TEXT(splittext(link, ".")[length(splittext(link, "."))])
-			switch(ext)
-				if("jpg", "jpeg", "png", "gif")
-					ooc_extra_img = "<div align='center'><br><img src='[link]' style='max-width: 100%;'/></div>"
-				if("mp4")
-					ooc_extra_img = "<div align='center'><br><video style='max-width: 100%;' controls><source src='[link]' type='video/mp4'></video></div>"
-			verbose_pref_log_change(user, "notice", "OOC Extra Image", html_encode(old_link), html_encode(link))
-			log_game("[user] has set their OOC Extra Image to '[html_encode(link)]'.")
-			return CHARACTER_ACT_DATA_UPDATE
-
-		if("nsfw_ooc_extra_img")
-			to_chat(user, span_notice("Add a link to NSFW images/videos (jpg, png, gif, mp4) that will be displayed in your NSFW Flavor Text."))
-			to_chat(user, span_notice("Images/videos will be constrained by width but have limitless height."))
-			to_chat(user, span_notice("Leave blank to delete your current image/video."))
-			to_chat(user, span_danger("Abuse of this will get you banned."))
-			var/old_link = nsfw_ooc_extra_img_link
-			var/link = tgui_input_text(user, "Input the image/video link (https):", "NSFW OOC Extra Image", nsfw_ooc_extra_img_link, max_length = MAX_MESSAGE_LEN, encode = FALSE)
-			if(link == null)
-				return CHARACTER_ACT_DATA_UPDATE
-			if(!link || !length(trim(link)))
-				verbose_pref_log_change(user, "notice", "NSFW OOC Extra Image", html_encode(nsfw_ooc_extra_img_link), "")
-				nsfw_ooc_extra_img = null
-				nsfw_ooc_extra_img_link = null
-				return CHARACTER_ACT_DATA_UPDATE
-			var/static/list/valid_ext = list("jpg", "jpeg", "png", "gif", "mp4")
-			if(!valid_headshot_link(user, link, FALSE, valid_ext))
-				return CHARACTER_ACT_DATA_UPDATE
-			nsfw_ooc_extra_img_link = link
-			var/ext = LOWER_TEXT(splittext(link, ".")[length(splittext(link, "."))])
-			switch(ext)
-				if("jpg", "jpeg", "png", "gif")
-					nsfw_ooc_extra_img = "<div align='center'><br><img src='[link]' style='max-width: 100%;'/></div>"
-				if("mp4")
-					nsfw_ooc_extra_img = "<div align='center'><br><video style='max-width: 100%;' controls><source src='[link]' type='video/mp4'></video></div>"
-			verbose_pref_log_change(user, "notice", "NSFW OOC Extra Image", html_encode(old_link), html_encode(link))
-			log_game("[user] has set their NSFW OOC Extra Image to '[html_encode(link)]'.")
 			return CHARACTER_ACT_DATA_UPDATE
 
 		if("change_artist")

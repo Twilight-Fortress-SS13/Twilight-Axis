@@ -73,6 +73,8 @@ const getGodheadIcon = (patron: ConstantPatron) => {
       return '\u16E3';
     default:
       return '?';
+    case 'Baotha': //TA EDIT
+      return '\uD83D\uDD77';
   }
 };
 

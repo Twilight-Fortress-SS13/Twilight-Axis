@@ -136,7 +136,10 @@
 		return FALSE
 
 	var/datum/erp_sex_organ/penis/P = controller.get_owner_penis_organ()
-	if(!P || !P.have_knot)
+	var/has_owner_penis_knot = P && P.have_knot
+	var/has_receiver_knot = has_knot_capable_link_for_owner_receiving_organ()
+
+	if(!has_owner_penis_knot && !has_receiver_knot)
 		controller.do_knot_action = FALSE
 		controller.ui?.request_update()
 		return FALSE
@@ -147,7 +150,7 @@
 	else
 		new_state = value ? TRUE : FALSE
 
-	if(new_state && !has_knot_capable_link_for_owner_penis())
+	if(new_state && !has_knot_capable_link_for_owner_penis() && !has_receiver_knot)
 		controller.do_knot_action = FALSE
 		controller.ui?.request_update()
 		return FALSE
@@ -240,11 +243,72 @@
 	out["can_knot_now"] = FALSE
 	return out
 
+/// Returns receiving-side knot UI state.
+/datum/erp_knot_service/proc/get_receiving_knot_ui_state(mob/living/carbon/human/H)
+	var/list/out = list(
+		"has_knotted_penis" = FALSE,
+		"can_knot_now" = FALSE
+	)
+
+	if(!H || H.client != controller.owner.client)
+		return out
+
+	for(var/datum/erp_sex_link/L in controller.links)
+		if(!L || QDELETED(L) || !L.is_valid())
+			continue
+		if(!L.action)
+			continue
+		if(L.action.has_action_tag("testicles"))
+			continue
+		if(L.action.has_action_tag("inject_outside_only"))
+			continue
+
+		var/datum/erp_sex_organ/penis/P = null
+		var/datum/erp_sex_organ/receiving = null
+
+		if(istype(L.init_organ, /datum/erp_sex_organ/penis))
+			P = L.init_organ
+			receiving = L.target_organ
+		else if(istype(L.target_organ, /datum/erp_sex_organ/penis))
+			P = L.target_organ
+			receiving = L.init_organ
+		else
+			continue
+
+		if(!P || !P.have_knot || !receiving || QDELETED(receiving))
+			continue
+
+		if(receiving.get_owner() != controller.owner?.get_effect_mob())
+			continue
+
+		if(!(receiving.erp_organ_type in list(SEX_ORGAN_VAGINA, SEX_ORGAN_ANUS, SEX_ORGAN_MOUTH)))
+			continue
+
+		var/mob/living/carbon/human/top = P.get_owner()
+		var/datum/component/erp_knotting/K = get_knotting_component(top)
+		var/already_knotted = FALSE
+		if(K && K.active_links && K.active_links.len)
+			for(var/datum/erp_knot_link/KL as anything in K.active_links)
+				if(!istype(KL) || !KL.is_valid())
+					continue
+				if(KL.penis_org != P)
+					continue
+				if(KL.receiving_org != receiving)
+					continue
+				out["has_knotted_penis"] = TRUE
+				already_knotted = TRUE
+				break
+
+		if(!already_knotted)
+			out["can_knot_now"] = TRUE
+
+	return out
+
 /// Checks if penis panel should be shown.
 /datum/erp_knot_service/proc/should_show_penis_panel(mob/living/carbon/human/H, actor_type_filter)
 	var/datum/erp_sex_organ/penis/P = controller.get_owner_penis_organ()
 	if(!P)
-		return FALSE
+		return has_knot_capable_link_for_owner_receiving_organ()
 
 	if(controller.actions_d.normalize_organ_type(actor_type_filter) == SEX_ORGAN_PENIS)
 		return TRUE
@@ -261,6 +325,61 @@
 			return TRUE
 
 	return FALSE
+
+/datum/erp_knot_service/proc/has_knot_capable_link_for_owner_receiving_organ()
+	if(!controller || QDELETED(controller))
+		return FALSE
+
+	var/mob/living/carbon/human/owner_mob = controller.owner?.get_effect_mob()
+	if(!istype(owner_mob))
+		return FALSE
+
+	if(!controller.links || !controller.links.len)
+		return FALSE
+
+	for(var/datum/erp_sex_link/L in controller.links)
+		if(!L || QDELETED(L) || !L.is_valid())
+			continue
+		if(!L.action)
+			continue
+		if(L.action.has_action_tag("testicles"))
+			continue
+		if(L.action.has_action_tag("inject_outside_only"))
+			continue
+		if(has_receiving_knot_link_for(null, L))
+			return TRUE
+
+	return FALSE
+
+/datum/erp_knot_service/proc/has_receiving_knot_link_for(datum/erp_sex_organ/penis/expected_penis, datum/erp_sex_link/L)
+	if(!controller || !L || QDELETED(L) || !L.is_valid())
+		return FALSE
+
+	var/mob/living/carbon/human/owner_mob = controller.owner?.get_effect_mob()
+	if(!istype(owner_mob))
+		return FALSE
+
+	var/datum/erp_sex_organ/penis/P = null
+	var/datum/erp_sex_organ/receiving = null
+	if(istype(L.init_organ, /datum/erp_sex_organ/penis))
+		P = L.init_organ
+		receiving = L.target_organ
+	else if(istype(L.target_organ, /datum/erp_sex_organ/penis))
+		P = L.target_organ
+		receiving = L.init_organ
+	else
+		return FALSE
+
+	if(expected_penis && P != expected_penis)
+		return FALSE
+	if(!P || !P.have_knot || !receiving || QDELETED(receiving))
+		return FALSE
+	if(receiving.get_owner() != owner_mob)
+		return FALSE
+	if(!(receiving.erp_organ_type in list(SEX_ORGAN_VAGINA, SEX_ORGAN_ANUS, SEX_ORGAN_MOUTH)))
+		return FALSE
+
+	return TRUE
 
 /datum/erp_knot_service/proc/has_knot_capable_link_for_owner_penis()
 	if(!controller || QDELETED(controller))
@@ -322,6 +441,8 @@
 		return FALSE
 
 	if(has_knot_capable_link_for_owner_penis())
+		return FALSE
+	if(has_knot_capable_link_for_owner_receiving_organ())
 		return FALSE
 
 	controller.do_knot_action = FALSE

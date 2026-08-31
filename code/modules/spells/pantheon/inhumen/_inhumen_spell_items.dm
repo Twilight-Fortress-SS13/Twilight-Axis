@@ -416,7 +416,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 
 	to_chat(user, span_notice("You begin pouring the lyfestruth over [target.name]..."))
 
-	if(do_after(user, 6 SECONDS, target))
+	if(do_after(user, 6 SECONDS, target = target)) // TA EDIT
 		if(!target || target.stat != DEAD)
 			return
 		apply_effect(target, user)
@@ -689,7 +689,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 //Uses up to 10 organic items and converts them into 1 lavish food of choice. It can fail and become bread or worse.
 
 /obj/item/matthios_canister/kingsfeast
-	name = "vial of kingsfeast base"
+	name = "vial of freeman's feast base" //TA EDIT
 	desc = "The brew within sloshes thick as spoiled blood. A stench rises from it most foul, resembling a mixture of rot and brine. The very vapours of said tincture can dissolve organic matter."
 
 	var/max_ingredients = 10
@@ -788,7 +788,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 /obj/item/matthios_canister/kingsfeast/alch_transform(mob/user)
 	var/ishungry = user.nutrition < NUTRITION_LEVEL_HUNGRY
 	var/miraclecheck = 10 * user.get_skill_level(/datum/skill/magic/holy)
-	to_chat(user, span_notice("You begin channeling your greed into the mixture..."))
+	to_chat(user, span_notice("You begin channeling your need into the mixture...")) //TA EDIT
 
 	var/list/options = list(
 		"Ducal Peppersteak" = /obj/item/reagent_containers/food/snacks/rogue/peppersteak/ducal,
@@ -802,7 +802,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 		"Meat Handpie" = /obj/item/reagent_containers/food/snacks/rogue/handpie/meat,
 	)
 
-	var/choice = input(user, "What form shall your greed take?", "Kingsfeast") as null|anything in options
+	var/choice = input(user, "What form shall your feast take?", "Feast of the Free") as null|anything in options  //TA EDIT
 	if(!choice)
 		return
 
@@ -816,7 +816,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 		return
 
 	if(!ishungry && prob(80 - miraclecheck)) // bread troll
-		to_chat(user, span_warning("The mixture shifts... simplifying itself into something more befitting your greed."))
+		to_chat(user, span_warning("The mixture shifts... simplifying itself into something more befitting your reality.")) //TA EDIT
 		new /obj/item/reagent_containers/food/snacks/rogue/bread(get_turf(src))
 		if(prob(20))
 			user.emote(pick("sigh","groan"))
@@ -826,9 +826,9 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 
 	if(ishungry && prob(25))
 		to_chat(user, span_notice("Matthios takes pity on your mortal limitations. You compulsively shout in gratitude!"))
-		user.say(pick("PRAISE YOU, O' GENEROUS MATTHIOS!!","AT LAST, THE TRUE GOLD OF CULINARY ALCHEMY!!","BLESSED BE THY HANDS WHICH GRANT ME SUSTENANCE, MATTHIOS!!","I SHALL GIVE ALL FOR THY SMILE, LORD OF FREEDOM!!"), language = /datum/language/common)
+		user.say(pick("PRAISE YOU, O' GENEROUS MATTHIOS!!","AT LAST, THE TRUE GOLD OF CULINARY ALCHEMY!!","BLESSED BE THY HANDS WHICH GRANT ME SUSTENANCE, MATTHIOS!!","I SHALL GIVE ALL FOR THY SMILE, LORD OF NO REALM!!"), language = /datum/language/common) //TA EDIT
 
-	to_chat(user, span_notice("The mixture responds to your greed, shaping and taking the desired form. It feels warm and tasty!"))
+	to_chat(user, span_notice("The mixture responds to your needs, shaping and taking the desired form. It feels warm and tasty!")) //TA EDIT
 
 	new result_type(get_turf(src))
 	funny_smoke(src)
@@ -839,7 +839,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 		to_chat(user, span_warning("It is not yet ready."))
 		return
 
-	to_chat(user, span_notice("The mixture churns expectantly, awaiting the weight of your greed..."))
+	to_chat(user, span_notice("The mixture churns expectantly, awaiting the weight of your desires...")) //TA EDIT
 	alch_transform(user)
 
 /obj/item/matthios_canister/goodnite
@@ -955,7 +955,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	else
 		to_chat(user, span_notice("You begin administering the vial to your own forehead..."))
 
-	if(do_after(user, 6 SECONDS, target))
+	if(do_after(user, 6 SECONDS, target = target)) // TA EDIT
 		apply_firstlaw_insight(target, user)
 
 /obj/item/alchserum/matthios_insight/proc/apply_firstlaw_insight(mob/living/carbon/human/T, mob/user)
@@ -991,7 +991,7 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 
 	to_chat(user, span_notice("You begin gently administering the concoction to [target.name]'s eyes..."))
 
-	if(do_after(user, 6 SECONDS, target))
+	if(do_after(user, 6 SECONDS, target = target)) // TA EDIT
 		apply_sleep(target, user)
 
 /obj/item/alchserum/matthios_goodnite/proc/apply_sleep(mob/living/target, mob/user)
@@ -1004,6 +1004,10 @@ GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 
 	to_chat(target, span_notice("A heavy calm overtakes your body..."))
 	sleep(5)
+	if(!user || !target || user.z != target.z || get_dist(user, target) > 1) // TA EDIT START
+		return
+	if(target != user)
+		log_combat(user, target, "put to sleep", src) // TA EDIT END
 	visible_message(span_notice("[target.name] suddenly goes limp, overtaken by unnatural sleep."))
 
 	target.SetSleeping(600)

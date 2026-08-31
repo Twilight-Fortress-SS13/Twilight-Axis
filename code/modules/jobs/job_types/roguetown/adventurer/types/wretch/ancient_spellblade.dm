@@ -29,6 +29,7 @@
 	)
 	adv_stat_ceiling = list(STAT_INTELLIGENCE = 12, STAT_SPEED = 9, STAT_CONSTITUTION = 10, STAT_WILLPOWER = 12) //infinite fatigue + spellblade fuckery vs vamp
 	extra_context = "This class is unable to be revived and all forms of death will dust you."
+	forbidden_races = list(RACES_DESPISED RACES_OOZE) // ta edit
 
 /datum/outfit/job/roguetown/wretch/ancient_spellblade
 	var/subclass_selected
@@ -43,18 +44,7 @@
 
 /datum/outfit/job/roguetown/wretch/ancient_spellblade/pre_equip(mob/living/carbon/human/H)
 	..()
-
-	var/had_godmode = (H.status_flags & GODMODE) // TA EDIT START
-	H.status_flags |= GODMODE
-	if(isdullahan(H))
-		var/obj/item/bodypart/head/old_head = H.get_bodypart(BODY_ZONE_HEAD)
-		if(old_head)
-			var/obj/item/bodypart/head/new_head = new /obj/item/bodypart/head()
-			new_head.replace_limb(H, TRUE)
-			qdel(old_head)
-	H.set_species(/datum/species/human/northern)
-	if(!had_godmode)
-		H.status_flags &= ~GODMODE // TA EDIT END
+	REMOVE_TRAITS_IN(H, SPECIES_TRAIT)
 
 	H.become_skeleton()
 

@@ -145,3 +145,7 @@
 	if(!controller)
 		return
 	controller.request_ui_update()
+
+/datum/erp_sex_ui/proc/mark_actions_dirty()
+	var/datum/erp_sex_ui_tab/actions/A = actions_tab
+	A?.mark_dirty()

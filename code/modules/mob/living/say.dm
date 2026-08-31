@@ -602,7 +602,7 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	if(stuttering)
 		message = stutter(message)
 
-	if(slurring)
+	if(slurring || feigning_impairment) // TA EDIT
 		message = slur(message)
 
 	if(cultslurring)
