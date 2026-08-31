@@ -1,5 +1,4 @@
 /datum/ai_controller/spectral_maid
-	movement_delay = SKELETON_MOVEMENT_SPEED * 1.5
 
 	ai_movement = /datum/ai_movement/hybrid_pathing
 

@@ -13,7 +13,6 @@
 	turns_per_move = 4
 	see_in_dark = 6
 	move_to_delay = 4
-	speed = 1
 	base_intents = list(/datum/intent/simple/slash)
 	faction = list(FACTION_UNDEAD)
 	mob_biotypes = MOB_UNDEAD|MOB_HUMANOID
@@ -66,7 +65,6 @@
 	turns_per_move = 4
 	see_in_dark = 6
 	move_to_delay = 4
-	speed = 1
 	base_intents = list(/datum/intent/unarmed/claw)
 	faction = list(FACTION_UNDEAD)
 	mob_biotypes = MOB_UNDEAD|MOB_HUMANOID
