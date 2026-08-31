@@ -39,6 +39,7 @@
 	for(var/atom/visible_atom in our_turf.vis_contents)
 		if(isturf(visible_atom))
 			our_turf.vis_contents -= visible_atom
+	our_turf.underlays -= get_baseturf_underlay(our_turf)
 
 /datum/element/turf_z_transparency/proc/update_multi_z(turf/our_turf)
 	clear_visible_turfs(our_turf)
@@ -47,7 +48,7 @@
 	if(below_turf)
 		our_turf.vis_contents += below_turf
 	else
-		add_baseturf_underlay(our_turf)
+		our_turf.underlays += get_baseturf_underlay(our_turf)
 
 	return TRUE
 
@@ -67,7 +68,7 @@
 
 	update_multi_z(our_turf)
 
-/datum/element/turf_z_transparency/proc/add_baseturf_underlay(turf/our_turf)
+/datum/element/turf_z_transparency/proc/get_baseturf_underlay(turf/our_turf)
 	var/turf/path = SSmapping.level_trait(our_turf.z, ZTRAIT_BASETURF) || /turf/open/floor/rogue/naturalstone
 	if(!ispath(path))
 		path = text2path(path)
@@ -76,4 +77,4 @@
 			path = /turf/open/floor/rogue/naturalstone
 	var/mutable_appearance/underlay_appearance = mutable_appearance(initial(path.icon), initial(path.icon_state), layer = TURF_LAYER - 0.02, plane = PLANE_SPACE)
 	underlay_appearance.appearance_flags = RESET_ALPHA | RESET_COLOR
-	our_turf.underlays += underlay_appearance
+	return underlay_appearance

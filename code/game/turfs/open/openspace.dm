@@ -85,9 +85,6 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /mutable_appearance, mutable_a
 		return TRUE
 	return FALSE
 
-/turf/open/openspace/can_traverse_safely(atom/movable/traveler)
-	return FALSE
-
 /turf/open/openspace/proc/CanCoverUp()
 	return can_cover_up
 
