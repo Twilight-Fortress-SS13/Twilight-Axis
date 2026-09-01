@@ -185,7 +185,7 @@ export const CanvasPainter = (props) => {
         const g = imgData[idx + 1];
         const b = imgData[idx + 2];
 
-        const colorHex = '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
+        const colorHex = `#${[r, g, b].map(v => v.toString(16).padStart(2, '0')).join('')}`;
 
         let colorIdx = palette.indexOf(colorHex);
         if (colorIdx === -1) {

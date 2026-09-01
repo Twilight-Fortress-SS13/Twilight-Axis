@@ -633,6 +633,9 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	set name = "Stealth Mode"
 	if(holder)
 		if(holder.fakekey)
+			var/rank_name = usr.client?.holder?.rank.name // TA EDIT
+			if(rank_name in list("Eventmin", "Coder", "Developer")) // TA EDIT
+				return // TA EDIT
 			holder.fakekey = null
 			if(isobserver(mob))
 				mob.invisibility = initial(mob.invisibility)
