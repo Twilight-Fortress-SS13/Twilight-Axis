@@ -13,9 +13,9 @@
 	category_tags = list(CTAG_WRETCH)
 	class_select_category = CLASS_CAT_ACCURSED
 	cmode_music = "modular_twilight_axis/sound/music/combat_skeleton.ogg"
-	min_pq = 30
+	min_pq = 40
 	maximum_possible_slots = 2
-	extra_context = "You're a SKELETON, be ready to shackle your bones. Minimum PQ Required: 30"
+	extra_context = "You're a SKELETON, be ready to shackle your bones. Minimum PQ Required: 40"
 	traits_applied = list(
 		TRAIT_NOHUNGER,
 		TRAIT_NOBREATH,

@@ -178,8 +178,8 @@
 		t += "..." //signals missing text
 	return t
 /**
-  * Makes you speak like you're drunk
-  */
+	* Makes you speak like you're drunk
+	*/
 /proc/slur(n) // TA EDIT START
 	var/phrase = STRIP_HTML_SIMPLE(n, MAX_MESSAGE_LEN)
 	var/leng = length_char(phrase)

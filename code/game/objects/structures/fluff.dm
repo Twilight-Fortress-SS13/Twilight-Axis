@@ -627,18 +627,9 @@
 	attacked_sound = list('sound/combat/hits/onwood/woodimpact (1).ogg','sound/combat/hits/onwood/woodimpact (2).ogg')
 	..()
 
-/obj/structure/fluff/clock/attack_right(mob/user)
-	if(user.mind && isliving(user))
-		if(user.mind.special_items && user.mind.special_items.len)
-			var/item = input(user, "What will I take?", "STASH") as null|anything in user.mind.special_items
-			if(item)
-				if(user.Adjacent(src))
-					if(user.mind.special_items[item])
-						var/path2item = user.mind.special_items[item]
-						user.mind.special_items -= item
-						var/obj/item/I = new path2item(user.loc)
-						user.put_in_hands(I)
-			return
+/obj/structure/fluff/clock/attack_right(mob/user) // TA EDIT START
+	handle_special_items_retrieval(user, src)
+	return // TA EDIT END
 
 /obj/structure/fluff/clock/examine(mob/user)
 	. = ..()
@@ -683,18 +674,9 @@
 	attacked_sound = 'sound/combat/hits/onglass/glasshit.ogg'
 	pixel_y = 32
 
-/obj/structure/fluff/wallclock/attack_right(mob/user)
-	if(user.mind && isliving(user))
-		if(user.mind.special_items && user.mind.special_items.len)
-			var/item = input(user, "What will I take?", "STASH") as null|anything in user.mind.special_items
-			if(item)
-				if(user.Adjacent(src))
-					if(user.mind.special_items[item])
-						var/path2item = user.mind.special_items[item]
-						user.mind.special_items -= item
-						var/obj/item/I = new path2item(user.loc)
-						user.put_in_hands(I)
-			return
+/obj/structure/fluff/wallclock/attack_right(mob/user) // TA EDIT START
+	handle_special_items_retrieval(user, src)
+	return // TA EDIT END
 
 /obj/structure/fluff/wallclock/Destroy()
 	if(soundloop)
@@ -896,18 +878,8 @@
 	dirin = turn(dirin, 180)
 	. = ..()
 
-/obj/structure/fluff/statue/attack_right(mob/user)
-	if(user.mind && isliving(user))
-		if(user.mind.special_items && user.mind.special_items.len)
-			var/item = input(user, "What will I take?", "STASH") as null|anything in user.mind.special_items
-			if(item)
-				if(user.Adjacent(src))
-					if(user.mind.special_items[item])
-						var/path2item = user.mind.special_items[item]
-						user.mind.special_items -= item
-						var/obj/item/I = new path2item(user.loc)
-						user.put_in_hands(I)
-			return
+/obj/structure/fluff/statue/attack_right(mob/user) // TA EDIT
+	handle_special_items_retrieval(user, src)// TA EDIT
 
 /obj/structure/fluff/statue/CanPass(atom/movable/mover, turf/target)
 	if(get_dir(loc, mover) == dir)

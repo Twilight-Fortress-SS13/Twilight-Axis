@@ -183,6 +183,10 @@ SUBSYSTEM_DEF(role_class_handler)
 	if(!RT_JOB && H.mind?.assigned_role)
 		job_title = H.mind.assigned_role
 		RT_JOB = SSjob.GetJob(job_title)
+	if(!RT_JOB) // TA EDIT START
+		return
+	if(!length(RT_JOB.advclass_cat_rolls) && !length(RT_JOB.job_subclasses))
+		return // TA EDIT END
 	if(!register_id)
 		if(job_title == "Towner")
 			register_id = "towner"

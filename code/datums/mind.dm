@@ -1407,7 +1407,7 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 	personal_objectives.Cut()
 
 
-/* /proc/handle_special_items_retrieval(mob/user, atom/host_object)
+/proc/handle_special_items_retrieval(mob/user, atom/host_object)
 	// Attempts to retrieve an item from a player's stash, and applies any base colors, where preferable.
 	if(user.mind && isliving(user))
 		if(user.mind.special_items && user.mind.special_items.len)
@@ -1439,18 +1439,13 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 							I.salvage_result = /obj/item/ash
 						var/list/metadata = user.mind.special_items_metadata[base_name]
 						if(islist(metadata))
-							if(metadata["color"])
-								I.add_atom_colour(metadata["color"], FIXED_COLOUR_PRIORITY)
-							if(metadata["detail_color"] && I.detail_tag)
-								I.detail_color = metadata["detail_color"]
-							if(metadata["altdetail_color"] && I.altdetail_tag)
-								I.altdetail_color = metadata["altdetail_color"]
+							I.apply_loadout_color_metadata(metadata) // TA EDIT
 							if(metadata["custom_name"])
 								I.name = sanitize(metadata["custom_name"])
 							if(metadata["custom_desc"])
 								I.desc = html_encode(metadata["custom_desc"])
 							I.update_icon()
-						else if(istype(I, /obj/item/clothing)) // commit any pref dyes to our item if it is clothing and we have them available
-							var/dye = user.client?.prefs.resolve_loadout_to_color(path2item)
-							if(dye)
-								I.add_atom_colour(dye, FIXED_COLOUR_PRIORITY) */
+//						else if(istype(I, /obj/item/clothing)) // commit any pref dyes to our item if it is clothing and we have them available
+//							var/dye = user.client?.prefs.resolve_loadout_to_color(path2item)
+//							if(dye)
+//								I.add_atom_colour(dye, FIXED_COLOUR_PRIORITY)
