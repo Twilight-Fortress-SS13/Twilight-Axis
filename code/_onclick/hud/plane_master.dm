@@ -34,8 +34,8 @@
 	name = "open space plane master real"
 	plane = OPENSPACE_PLANE
 	appearance_flags = PLANE_MASTER
-	alpha = 175
-	color = "#AEB8C2"
+	alpha = 190
+	color = "#B8C1CA"
 
 /atom/movable/screen/plane_master/osreal/backdrop(mob/mymob)
 	filters = list()
