@@ -480,6 +480,7 @@
 #define TRAIT_VOLF "Volf"
 #define TRAIT_SHAKY_SPEECH "Shaky Speech"
 #define TRAIT_NO_RUNECHAT_ANIMATION "No Runechat Animation"
+#define TRAIT_AZUREWALKER "Azure Walker"
 // If you want description to show up you gotta have the trait name defined BEFORE this lol
 
 GLOBAL_LIST_INIT(roguetraits, list(
@@ -783,6 +784,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_VILLAIN = span_warning("I am a devious, conniving villain!"),
 	TRAIT_WOUNDREGEN = span_info("My wounds and bones mend on their own, my bleeding clots quickly.."),
 	TRAIT_VOLF = span_info("I can barely see in the darkness of the world.."),
+	TRAIT_AZUREWALKER = span_green("I belong to the ancient woods, not the cages of men. In the forest and canopy, my strikes and senses are sharp, but within the suffocating walls of the town, my spirit falters."),
 
 	TRAIT_ARTILLERY_EXPERT = span_greentext("Я ранее обращался с артиллерией и разбираюсь в тонкостях её наводки."),
 	TRAIT_ZIZOEYES = span_notice("You no longer fear a veil of the darkness, yet your eyes are glimmering lights in it.."),

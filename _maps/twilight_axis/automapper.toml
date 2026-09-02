@@ -68,9 +68,22 @@ directory = "_maps/twilight_axis/templates/dun_world/towner_house/"
 required_map = "dun_world.dmm"
 coordinates = [106, 104, 2]
 
-# dunworls bath collars
+# dun world bath collars
 [templates.dunworldbathcollars]
 map_files = ["collar_1.dmm","collar_2.dmm"]
 directory = "_maps/twilight_axis/templates/dun_world/bathcollars/"
 required_map = "dun_world.dmm"
 coordinates = [71, 54, 1]
+
+# dun world black oak placements
+[templates.blackoak1]
+map_files = ["landmark.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/blackoak/"
+required_map = "dun_world.dmm"
+coordinates = [214, 326, 4]
+
+[templates.blackoak2]
+map_files = ["landmark.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/blackoak/"
+required_map = "roguetest.dmm"
+coordinates = [1, 1, 1]

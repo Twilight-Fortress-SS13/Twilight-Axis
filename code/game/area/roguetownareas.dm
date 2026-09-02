@@ -56,6 +56,11 @@ GLOBAL_LIST_INIT(roguetown_areas_typecache, typecacheof(list(/area/rogue/indoors
 		else
 			guy.apply_status_effect(/datum/status_effect/debuff/deathdoorwilloss)
 
+	if((src.town_area == TRUE) && HAS_TRAIT(guy, TRAIT_AZUREWALKER) && !guy.has_status_effect(/datum/status_effect/debuff/surroundedblackoak)) // TA EDIT
+		guy.apply_status_effect(/datum/status_effect/debuff/surroundedblackoak)
+	if((src.warden_area == TRUE) && HAS_TRAIT(guy, TRAIT_AZUREWALKER) && !guy.has_status_effect(/datum/status_effect/buff/blackoak)) // Warden
+		guy.apply_status_effect(/datum/status_effect/buff/blackoak)
+
 /area/rogue/indoors
 	name = "indoors rt"
 	icon_state = "indoors"

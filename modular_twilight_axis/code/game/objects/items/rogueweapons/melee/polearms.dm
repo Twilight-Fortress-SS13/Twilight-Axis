@@ -73,3 +73,21 @@
 
 /obj/item/rogueweapon/spear/partizan/baotha_ta/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_BAOTHA_WEAPON)
+
+/obj/item/rogueweapon/halberd/glaive/elvish/silver
+	force = 20
+	force_wielded = 35
+	desc = "An elven polearm combining an elegant, sweeping silver blade with a sturdy handle. Forged of pure silver to purge both beasts and outsiders, this weapon remains a lethal symbol of the forest's true guardians."
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon_state = "eglaive"
+
+/obj/item/rogueweapon/halberd/glaive/elvish/silver/ComponentInitialize()
+	AddComponent(\
+		/datum/component/silverbless,\
+		pre_blessed = BLESSING_NONE,\
+		silver_type = SILVER_TENNITE,\
+		added_force = 0,\
+		added_blade_int = 50,\
+		added_int = 50,\
+		added_def = 2,\
+	)
