@@ -177,7 +177,9 @@
 	if(!finished && successful && !final_validation(TRUE))
 		successful = FALSE
 	if(!finished && successful && delay > 0)
-		sleep(delay)
+		var/end_time = start_time + delay
+		while(!finished && successful && world.time < end_time)
+			sleep(min(2, end_time - world.time))
 	if(!finished && successful && !final_validation())
 		successful = FALSE
 	if(!finished)
