@@ -208,7 +208,7 @@
 			playsound(loc, 'sound/misc/hiss.ogg', 100, FALSE, -1)
 		return
 	//TA start edit - TAT system
-	if(I.tat_trade_locked)
+	if(isitem(I) && I.tat_trade_locked)
 		if(message)
 			say("TAT-issued goods cannot be deposited here.")
 		return
