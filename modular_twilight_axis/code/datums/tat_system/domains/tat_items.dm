@@ -2323,10 +2323,10 @@
 		player = character.client
 	if(!player?.prefs)
 		return FALSE
+	character.mind.triumph_discount_remaining = get_donator_triumph_discount(player.ckey) // TA EDIT - donor triumph discount scales by Patreon tier
 	if(tat_build_handles_preference_loadout(character, player))
 		return TRUE
 
-	character.mind.triumph_discount_remaining = get_donator_triumph_discount(player.ckey) // TA EDIT - donor triumph discount scales by Patreon tier
 	if(player.prefs.gear_list)
 		for(var/key in player.prefs.gear_list)
 			var/datum/loadout_item/item = GLOB.loadout_items_by_name[key]
@@ -2337,4 +2337,7 @@
 				character.mind.special_items["[item.name][TRIUMPH_STASH_SUFFIX]"] = item.path
 			else
 				character.mind.special_items[item.name] = item.path
+			var/list/loadout_metadata = player.prefs.gear_list[key]
+			if(islist(loadout_metadata) && loadout_metadata.len)
+				character.mind.special_items_metadata[item.name] = deepCopyList(loadout_metadata)
 	return TRUE
