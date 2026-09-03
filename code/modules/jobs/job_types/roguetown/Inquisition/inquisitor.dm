@@ -53,7 +53,6 @@
 		TRAIT_INQUISITION,
 		TRAIT_PERFECT_TRACKER,
 		TRAIT_PURITAN,
-		TRAIT_SLEUTH,
 		TRAIT_ARTILLERY_EXPERT,
 		)
 	subclass_stats = list(
@@ -146,12 +145,9 @@
 			H.equip_to_slot_or_del(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/heavy/relic, SLOT_BACK_L, TRUE)
 			H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, 5, TRUE)
 		if("Relic, 'Marshal's Writ' (Runelock Pistol)") //TA EDIT START
-			qdel(H.get_item_by_slot(SLOT_BELT_L))
-			qdel(H.get_item_by_slot(SLOT_BELT))
-			H.equip_to_slot_or_del(new /obj/item/rogueweapon/whip/antique/psywhip, SLOT_BELT_L, TRUE)
-			H.equip_to_slot_or_del(new /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/black/runelock, SLOT_BELT, TRUE)
+			H.put_in_hands(new /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/black/runelock(H))
 			H.equip_to_slot_or_del(new /obj/item/quiver/twilight_bullet/runicbag/runed, SLOT_BELT_R, TRUE)
-			H.adjust_skillrank_up_to(/datum/skill/combat/twilight_firearms, 3, TRUE) //TA EDIT END
+			H.adjust_skillrank_up_to(/datum/skill/combat/twilight_firearms, 3, TRUE)
 		if("Psydonic Longsword")
 			H.put_in_hands(new /obj/item/rogueweapon/sword/long/psysword(H))
 			H.put_in_hands(new /obj/item/rogueweapon/scabbard/sword/noble(H))

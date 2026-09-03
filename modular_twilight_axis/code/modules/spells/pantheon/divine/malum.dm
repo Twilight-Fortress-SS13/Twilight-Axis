@@ -314,33 +314,24 @@
 /obj/effect/proc_holder/spell/invoked/TAcraftercovenant/cast(list/targets, mob/user = usr)
 	. = ..()
 	var/tithe = 0
-	var/const/divine_tax = 2
+	var/const/divine_tax = 1.3
 	var/turf/altar = get_turf(targets[1])
 	var/datum/effect_system/spark_spread/sparks = new()
 	var/list/sacrifices = list()
+	var/list/item_map = list()
+	var/list/item_descriptions = list()
 	if(!altar)
+		revert_cast(user)
 		return
 
 	for(var/obj/item/sacrifice in altar.contents)
-		var/value = 0
-		if(istype(sacrifice, /obj/item/roguecoin))
-			value = sacrifice.get_real_price()
-		else if(istype(sacrifice, /obj/item/roguestatue) || istype(sacrifice, /obj/item/clothing/ring) || istype(sacrifice, /obj/item/roguegem))
-			value = GLOB.derived_sellprices[sacrifice.type]
-			if(!value)
-				value = sacrifice.get_real_price()
-			if(!value)
-				value = sacrifice.sellprice
+		var/value = sacrifice.get_real_price()
 		if(value <= 0)
 			continue
 		tithe += value
 		sacrifices += sacrifice
 
-	for(var/obj/item/sacrifice as anything in sacrifices)
-		qdel(sacrifice)
-
 	var/buyprice = tithe / divine_tax
-	var/list/item_map = list()
 
 	for(var/datum/anvil_recipe/recipe as anything in GLOB.anvil_recipes)
 		if(recipe.hides_from_books || !recipe.created_item)
@@ -357,6 +348,7 @@
 			continue
 		var/display_name = "[item_name] ([reward_price])"
 		item_map[display_name] = item_type
+		item_descriptions[display_name] = "Cost: [reward_price] mammon."
 
 	var/list/extra_rewards = list(
 		/obj/item/rogue/instrument/flute = 10,
@@ -379,18 +371,26 @@
 			continue
 		var/display_name = "[item_name] ([reward_price])"
 		item_map[display_name] = item_type
+		item_descriptions[display_name] = "Cost: [reward_price] mammon."
 
 	if(!length(item_map))
 		show_visible_message_TA(usr, "A wave of heat washes over the pile as [user] speaks Malum's name. The pile of valuables crumble into dust.", "A wave of heat washes over the pile as you speak Malum's name. The pile of valuables crumble into dust. Malum accepted your sacrifice. Yet it seems it wasn't enough.")
+		revert_cast(user)
 		return
 
-	var/itemchoice = input(user, "Choose your boon", "Available boons") as null|anything in item_map
+	var/itemchoice = tgui_input_list(user, "Choose a boon. The offering is worth [tithe] mammon; Malum accepts 30% as tribute.", "The Crafter's Covenant", item_map, null, 0, GLOB.tgui_always_state, item_descriptions)
 	if(!itemchoice)
+		revert_cast(user)
 		return
 
 	var/item_type = item_map[itemchoice]
 	if(!ispath(item_type, /obj/item))
+		revert_cast(user)
 		return
+
+	for(var/obj/item/sacrifice as anything in sacrifices)
+		if(sacrifice.loc == altar)
+			qdel(sacrifice)
 
 	new item_type(altar)
 	sparks.set_up(1, 1, altar)

@@ -12,7 +12,7 @@
 	Consult your gods."
 	projectile_type = /obj/projectile/bullet/reusable/arrow
 	caliber = "arrow"
-	icon = 'icons/roguetown/weapons/ranged/arrow_mob.dmi'
+	icon = 'icons/roguetown/weapons/ranged/arrow_mob32.dmi'
 	icon_state = "arrow"
 	force = 10
 	dropshrink = 0.6
@@ -53,7 +53,7 @@
 
 /obj/item/ammo_casing/caseless/rogue/arrow/iron/aalloy
 	name = "decrepit broadhead arrow"
-	desc = "An arrow; one end, tipped with flattened and frayed bronze - the other, \
+	desc = "An arrow; one end, tipped with flattened and rotted metal - the other, \
 	inlaid with decayed feathers. The alloy's decrepity forces it to burst into \
 	shrapnel upon impact, shredding flesh."
 	icon_state = "ancientarrow"
@@ -94,6 +94,7 @@
 	speed = 0.4
 	min_range = MIN_ARROW_RANGE
 	max_range = MAX_ARROW_RANGE
+	dam_falloff_factor = DAM_FALLOFF_ARROW
 	var/trains_ranged_skill = TRUE
 
 /obj/projectile/bullet/reusable/arrow/on_hit(atom/target)

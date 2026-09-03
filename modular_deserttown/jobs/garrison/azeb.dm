@@ -27,7 +27,7 @@
 	)
 	same_job_respawn_delay = 30 MINUTES
 
-	
+
 /datum/job/roguetown/azeb/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	. = ..()
 	if(ishuman(L))
@@ -95,7 +95,7 @@
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 	belt = /obj/item/storage/belt/rogue/leather
 	neck = /obj/item/clothing/neck/roguetown/coif/padded
-	backl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve/warden
+	backl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/warden
 	beltr = /obj/item/quiver/arrows
 	beltl = /obj/item/rogueweapon/huntingknife/idagger/steel
 	backpack_contents = list(

@@ -123,6 +123,7 @@
 	name = "ancient kettle helmet"
 	desc = "A polished gilbranze helmet which protects the top and sides of the head. Zizo's glare musn't be interceded, when matters of unholy war are at hand. Undead ballistaemen practice a curious method of tying dyed cloth around its rim; can they, too, think and associate?"
 	icon_state = "ancientkettle"
+	smeltresult = /obj/item/ingot/aaslag
 	body_parts_covered = HEAD|HAIR|EARS
 
 /obj/item/clothing/head/roguetown/helmet/kettle/iron
@@ -455,8 +456,8 @@
 /obj/item/clothing/head/roguetown/helmet/bascinet/pigface
 	name = "pigface bascinet"
 	desc = "A steel bascinet helmet with a pigface visor that protects the entire head and face. Add a feather to show the colors of your family or allegiance."
-	icon_state = "bascinet"
-	item_state = "bascinet"
+	icon_state = "pigface"
+	item_state = "pigface"
 	adjustable = CAN_CADJUST
 	emote_environment = 3
 	body_parts_covered = FULL_HEAD

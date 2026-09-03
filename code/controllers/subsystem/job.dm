@@ -186,9 +186,9 @@ SUBSYSTEM_DEF(job)
 			continue
 		if(length(job.vice_restrictions))
 			var/has_restricted_vice = FALSE
-			for(var/datum/charflaw/cf in player.client.prefs.charflaws)
-				if(cf.type in job.vice_restrictions)
-					JobDebug("FOC incompatible with vices, Player: [player], Job: [job.title], Vice: [cf.name]")
+			for(var/flaw_type in player.client.prefs.charflaws)
+				if(flaw_type in job.vice_restrictions)
+					JobDebug("FOC incompatible with vices, Player: [player], Job: [job.title], Vice: [flaw_type]")
 					has_restricted_vice = TRUE
 					break
 			if(has_restricted_vice)
@@ -203,11 +203,19 @@ SUBSYSTEM_DEF(job)
 		if(!isnull(job.min_pq) && (get_playerquality(player.ckey) < job.min_pq)) continue
 		if(!isnull(job.max_pq) && (get_playerquality(player.ckey) > job.max_pq)) continue
 		#endif
-		if(check_blacklist(player.client.ckey) && !job.bypass_jobban) continue
+		if(!(player.client.prefs.gender in job.allowed_sexes))
+			JobDebug("FOC incompatible with sex, Player: [player], Job: [job.title]")
+			continue
+		if(length(job.allowed_ages) && !(player.client.prefs.age in job.allowed_ages))
+			JobDebug("FOC incompatible with age, Player: [player], Job: [job.title], Age: [player.client.prefs.age]")
+			continue
 		if((player.client.prefs.lastclass == job.title) && !job.bypass_lastclass) continue
-		if(!job.special_job_check(player)) continue
-		if(CONFIG_GET(flag/usewhitelist) && job.whitelist_req && (!player.client.whitelisted())) continue
-
+		if(!job.special_job_check(player))
+			JobDebug("FOC player did not pass special check, Player: [player], Job:[job.title]")
+			continue
+		if(CONFIG_GET(flag/usewhitelist))
+			if(job.whitelist_req && (!player.client.whitelisted()))
+				continue
 		if(player.client.prefs.job_preferences[job.title] == level)
 			JobDebug("FOC pass, Player: [player], Level:[level]")
 			candidates += player
@@ -266,9 +274,9 @@ SUBSYSTEM_DEF(job)
 
 		if(length(job.vice_restrictions))
 			var/has_restricted_vice = FALSE
-			for(var/datum/charflaw/cf in player.client.prefs.charflaws)
-				if(cf.type in job.vice_restrictions)
-					JobDebug("GRJ incompatible with vices, Player: [player], Job: [job.title], Vice: [cf.name]")
+			for(var/flaw_type in player.client.prefs.charflaws)
+				if(flaw_type in job.vice_restrictions)
+					JobDebug("GRJ incompatible with vices, Player: [player], Job: [job.title], Vice: [flaw_type]")
 					has_restricted_vice = TRUE
 					break
 			if(has_restricted_vice)
@@ -293,9 +301,13 @@ SUBSYSTEM_DEF(job)
 		if(!isnull(job.min_pq) && (get_playerquality(player.ckey) < job.min_pq)) continue
 		if(!isnull(job.max_pq) && (get_playerquality(player.ckey) > job.max_pq)) continue
 		#endif
-		if(check_blacklist(player.client.ckey) && !job.bypass_jobban) continue
-		if(!job.special_job_check(player)) continue
-		if(CONFIG_GET(flag/usewhitelist) && job.whitelist_req && (!player.client.whitelisted())) continue
+		if(!job.special_job_check(player))
+			JobDebug("GRJ player did not pass special check, Player: [player], Job:[job.title]")
+			continue
+
+		if(CONFIG_GET(flag/usewhitelist))
+			if(job.whitelist_req && (!player.client.whitelisted()))
+				continue
 
 		if(job.spawn_positions)
 			if((job.current_positions < job.spawn_positions) || job.spawn_positions == -1)
@@ -523,9 +535,9 @@ SUBSYSTEM_DEF(job)
 					continue
 				if(length(job.vice_restrictions))
 					var/has_restricted_vice = FALSE
-					for(var/datum/charflaw/cf in player.client.prefs.charflaws)
-						if(cf.type in job.vice_restrictions)
-							JobDebug("DO incompatible with vices, Player: [player], Job: [job.title], Vice: [cf.name]")
+					for(var/flaw_type in player.client.prefs.charflaws)
+						if(flaw_type in job.vice_restrictions)
+							JobDebug("DO incompatible with vices, Player: [player], Job: [job.title], Vice: [flaw_type]")
 							has_restricted_vice = TRUE
 							break
 					if(has_restricted_vice)
@@ -541,13 +553,6 @@ SUBSYSTEM_DEF(job)
 				if(!isnull(job.max_pq) && (get_playerquality(player.ckey) > job.max_pq))
 					continue
 				#endif
-
-				if((player.client.prefs.lastclass == job.title) && (!job.bypass_lastclass))
-					continue
-
-				if(check_blacklist(player.client.ckey) && !job.bypass_jobban)
-					JobDebug("DO incompatible with blacklist, Player: [player], Job: [job.title]")
-					continue
 
 				if(CONFIG_GET(flag/usewhitelist))
 					if(job.whitelist_req && (!player.client.whitelisted()))
@@ -628,8 +633,8 @@ SUBSYSTEM_DEF(job)
 
 				if(length(job.vice_restrictions))
 					var/has_restricted_vice = FALSE
-					for(var/datum/charflaw/cf in player.client.prefs.charflaws)
-						if(cf.type in job.vice_restrictions)
+					for(var/flaw_type in player.client.prefs.charflaws)
+						if(flaw_type in job.vice_restrictions)
 							has_restricted_vice = TRUE
 							break
 					if(has_restricted_vice)
@@ -642,10 +647,20 @@ SUBSYSTEM_DEF(job)
 				#endif
 
 				if((player.client.prefs.lastclass == job.title) && (!job.bypass_lastclass)) continue
-				if(check_blacklist(player.client.ckey) && !job.bypass_jobban) continue
-				if(CONFIG_GET(flag/usewhitelist) && job.whitelist_req && (!player.client.whitelisted())) continue
-				if(!job.special_job_check(player)) continue
+				if(CONFIG_GET(flag/usewhitelist))
+					if(job.whitelist_req && (!player.client.whitelisted()))
+						continue
 
+				if(length(job.allowed_ages) && !(player.client.prefs.age in job.allowed_ages))
+					continue
+
+				if(length(job.allowed_sexes) && !(player.client.prefs.gender in job.allowed_sexes))
+					continue
+
+				if(!job.special_job_check(player))
+					continue
+
+				// We only need 1 person for the required job, the rest can use the normal system
 				if((job.current_positions < 1))
 					if(AssignRole(player, job.title)) // TA EDIT START
 						unassigned -= player
@@ -780,6 +795,10 @@ SUBSYSTEM_DEF(job)
 		to_chat(M,related_policy)
 	if(job && H)
 		job.after_spawn(H, M, joined_late) // note: this happens before the mob has a key! M will always have a client, H might not.
+
+	if(ishuman(H))
+		var/mob/living/carbon/human/spawned_human = H
+		spawned_human.flag_gear_as_worn()
 
 	return H
 

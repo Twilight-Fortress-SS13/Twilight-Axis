@@ -425,6 +425,13 @@
 	redstone_structure = TRUE
 	broken_icon_state = "passage1b"
 
+/obj/structure/bars/passage/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Most gates are traditionally linked to a lever or winch. Left-clicking the right lever or winch will open the gate that they're connected to.")
+	. += span_info("A skilled Engineer could use a wrench to link this to a device.")
+	. += span_info("The Master of the Guild of Craft can unlink devices from each other by using their special wrench.")
+	. += span_info("While a length process, gates can also be bypassed through destroying them with enough strikes. Bombs of blastpowder in particular excel at damaging these structures.")
+
 /obj/structure/bars/passage/steel
 	name = "steel bars"
 	max_integrity = 2500
@@ -509,8 +516,13 @@
 	return ..()
 
 /obj/structure/bars/grille/obj_break(damage_flag)
+	set_is_platform(FALSE) // TA EDIT
 	obj_flags = CAN_BE_HIT
 	..()
+	var/turf/T = loc // TA EDIT START
+	if(istype(T))
+		for(var/mob/living/M in loc)
+			T.Entered(M) // TA EDIT END
 
 /obj/structure/bars/grille/redstone_triggered()
 	if(obj_broken)
@@ -615,18 +627,9 @@
 	attacked_sound = list('sound/combat/hits/onwood/woodimpact (1).ogg','sound/combat/hits/onwood/woodimpact (2).ogg')
 	..()
 
-/obj/structure/fluff/clock/attack_right(mob/user)
-	if(user.mind && isliving(user))
-		if(user.mind.special_items && user.mind.special_items.len)
-			var/item = input(user, "What will I take?", "STASH") as null|anything in user.mind.special_items
-			if(item)
-				if(user.Adjacent(src))
-					if(user.mind.special_items[item])
-						var/path2item = user.mind.special_items[item]
-						user.mind.special_items -= item
-						var/obj/item/I = new path2item(user.loc)
-						user.put_in_hands(I)
-			return
+/obj/structure/fluff/clock/attack_right(mob/user) // TA EDIT START
+	handle_special_items_retrieval(user, src)
+	return // TA EDIT END
 
 /obj/structure/fluff/clock/examine(mob/user)
 	. = ..()
@@ -671,18 +674,9 @@
 	attacked_sound = 'sound/combat/hits/onglass/glasshit.ogg'
 	pixel_y = 32
 
-/obj/structure/fluff/wallclock/attack_right(mob/user)
-	if(user.mind && isliving(user))
-		if(user.mind.special_items && user.mind.special_items.len)
-			var/item = input(user, "What will I take?", "STASH") as null|anything in user.mind.special_items
-			if(item)
-				if(user.Adjacent(src))
-					if(user.mind.special_items[item])
-						var/path2item = user.mind.special_items[item]
-						user.mind.special_items -= item
-						var/obj/item/I = new path2item(user.loc)
-						user.put_in_hands(I)
-			return
+/obj/structure/fluff/wallclock/attack_right(mob/user) // TA EDIT START
+	handle_special_items_retrieval(user, src)
+	return // TA EDIT END
 
 /obj/structure/fluff/wallclock/Destroy()
 	if(soundloop)
@@ -884,18 +878,8 @@
 	dirin = turn(dirin, 180)
 	. = ..()
 
-/obj/structure/fluff/statue/attack_right(mob/user)
-	if(user.mind && isliving(user))
-		if(user.mind.special_items && user.mind.special_items.len)
-			var/item = input(user, "What will I take?", "STASH") as null|anything in user.mind.special_items
-			if(item)
-				if(user.Adjacent(src))
-					if(user.mind.special_items[item])
-						var/path2item = user.mind.special_items[item]
-						user.mind.special_items -= item
-						var/obj/item/I = new path2item(user.loc)
-						user.put_in_hands(I)
-			return
+/obj/structure/fluff/statue/attack_right(mob/user) // TA EDIT
+	handle_special_items_retrieval(user, src)// TA EDIT
 
 /obj/structure/fluff/statue/CanPass(atom/movable/mover, turf/target)
 	if(get_dir(loc, mover) == dir)

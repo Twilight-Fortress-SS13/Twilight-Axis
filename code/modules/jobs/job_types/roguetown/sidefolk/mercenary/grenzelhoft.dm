@@ -138,7 +138,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 
 	outfit = /datum/outfit/job/roguetown/mercenary/grenzelhoft_crossbowman
-	traits_applied = list(TRAIT_SURVIVAL_EXPERT, TRAIT_SLEUTH, TRAIT_DODGEEXPERT) //DE to be replaced with Concealment Expert
+	traits_applied = list(TRAIT_SURVIVAL_EXPERT, TRAIT_DODGEEXPERT) //DE to be replaced with Concealment Expert
 	class_select_category = CLASS_CAT_GRENZELHOFT
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_MARKSMAN)
 	cmode_music = 'modular_twilight_axis/sound/music/combat_grenzelhoft_mage.ogg' //TA EDIT
@@ -227,7 +227,7 @@
 
 /datum/advclass/mercenary/grenzelhoft_mage
 	name = "Gefechtsgelehrter"
-	tutorial = "You are a Gefechtsgelehrter - \"Combat Scholar\" - A proud magos from the Celestial Academy of Magos, who's skills in Siege Magic and Arcyne Physics are unmatched."
+	tutorial = "You are a Gefechtsgelehrter - \"Combat Scholar\" - A proud magos from the Imperial Academy of Arcyne, specializing in Siege Magic and Arcyne Physics for the good of the Emperate." //TA EDIT
 	allowed_sexes = list(MALE, FEMALE)
 
 	outfit = /datum/outfit/job/roguetown/mercenary/grenzelhoft_mage
@@ -265,7 +265,7 @@
 
 /datum/outfit/job/roguetown/mercenary/grenzelhoft_mage/pre_equip(mob/living/carbon/human/H)
 	..()
-	to_chat(H, span_warning("You are a Gefechtgelehrter - \"Combat Scholar\" - A proud magos from the Celestial Academy of Magos, who's skills in Siege Magic and Arcyne Physics are unmatched."))
+	to_chat(H, span_warning("You are a Gefechtgelehrter - \"Combat Scholar\" - A proud magos from the Imperial Academy of Arcyne, specializing in Siege Magic and Arcyne Physics for the good of the Emperate.")) //TA EDIT
 	belt = /obj/item/storage/belt/rogue/leather/battleskirt
 	backl = /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel
 	cloak = /obj/item/clothing/cloak/tabard/stabard/grenzelmage

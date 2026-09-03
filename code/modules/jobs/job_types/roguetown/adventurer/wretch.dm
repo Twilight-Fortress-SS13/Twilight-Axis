@@ -32,8 +32,8 @@
 	job_traits = list(TRAIT_STEELHEARTED, TRAIT_OUTLAW, TRAIT_HERESIARCH, TRAIT_SELF_SUSTENANCE, TRAIT_ZURCH)
 	job_subclasses = list(
 		/datum/advclass/wretch/licker,
+		/datum/advclass/wretch/deserter_knight,
 		/datum/advclass/wretch/deserter,
-		/datum/advclass/wretch/deserter/generic,
 		/datum/advclass/wretch/berserker,
 		/datum/advclass/wretch/roguemage,
 		/datum/advclass/wretch/necromancer,
@@ -87,6 +87,7 @@
 		return
 	var/list/roleprefs = get_roleprefs(C)
 	var/HTML = {"
+		[subprefs_subclass_html(C)]
 		<i>Set your [title]-specific bounty here. If a global bounty is set, this will override it.</i><br><i>Any fields set here will not prompt you at roundstart.</i><br/><br/>
 		<b>Bounty Poster:</b> <a href="?src=[REF(src)];poster=1">[roleprefs["bounty_poster_key"]?GLOB.bounty_posters[roleprefs["bounty_poster_key"]]:"Unset"]</a><br/>
 		<b>Bounty Severity:</b> <a href="?src=[REF(src)];severity=1">[roleprefs["bounty_severity_key"]?GLOB.wretch_severities[roleprefs["bounty_severity_key"]]:"Unset"]</a><br/>
@@ -276,6 +277,13 @@
 
 	result["tier2_extra"] = tier2_max
 	result["final_slots"] = max(0, min(slots, cap))
+
+	// TA EDIT BEGIN НЕРФ ЛОУПОП ВРЕТЧИКОВ)))
+	//как же ща сгорит у каких нибудь любителей заходить раз в 3 месяца, вретчей занерфили блин((9
+	if(SSticker.IsRoundInProgress() && player_count < 40)
+		result["combat_positions_alive"] = SSgamemode.combat_positions_alive
+		result["final_slots"] = max(0, min(result["final_slots"], SSgamemode.combat_positions_alive, cap))
+	// TA EDIT END
 
 	return result
 

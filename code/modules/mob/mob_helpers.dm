@@ -180,41 +180,76 @@
 /**
 	* Makes you speak like you're drunk
 	*/
-/proc/slur(n)
+/proc/slur(n) // TA EDIT START
 	var/phrase = STRIP_HTML_SIMPLE(n, MAX_MESSAGE_LEN)
 	var/leng = length_char(phrase)
-	var/counter=length_char(phrase)
-	var/newphrase=""
-	var/newletter=""
-	while(counter>=1)
-		newletter=copytext_char(phrase,(leng-counter)+1,(leng-counter)+2)
-		if(rand(1,3)==3)
-			if(LOWER_TEXT(newletter)=="o")
-				newletter="u"
-			if(LOWER_TEXT(newletter)=="s")
-				newletter="ch"
-			if(LOWER_TEXT(newletter)=="a")
-				newletter="ah"
-			if(LOWER_TEXT(newletter)=="u")
-				newletter="oo"
-			if(LOWER_TEXT(newletter)=="c")
-				newletter="k"
-		if(rand(1,20)==20)
-			if(newletter==" ")
-				newletter="...huuuhhh..."
-			if(newletter==".")
-				newletter=" *BURP*."
-		switch(rand(1,20))
-			if(1)
-				newletter+="'"
-			if(10)
-				newletter+="[newletter]"
-			if(20)
-				newletter+="[newletter][newletter]"
-			else
-				;;
-		newphrase+="[newletter]";counter-=1
-	return newphrase
+	var/has_cyrillic = FALSE
+	for(var/i = 1 to leng)
+		var/checkletter = LOWER_TEXT(copytext_char(phrase, i, i + 1))
+		if(checkletter in list("а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "к", "л", "м", "н", "о", "п", "р", "с", "т", "у", "ф", "х", "ц", "ч", "ш", "щ", "ъ", "ы", "ь", "э", "ю", "я"))
+			has_cyrillic = TRUE
+			break
+
+	var/counter = leng
+	var/newphrase = ""
+	var/newletter = ""
+	while(counter >= 1)
+		newletter = copytext_char(phrase, (leng - counter) + 1, (leng - counter) + 2)
+		var/lowerletter = LOWER_TEXT(newletter)
+
+		if(has_cyrillic)
+			if(prob(20))
+				switch(lowerletter)
+					if("с")
+						newletter = (newletter == uppertext(newletter)) ? "Ш" : "ш"
+					if("з")
+						newletter = (newletter == uppertext(newletter)) ? "Ж" : "ж"
+					if("ц")
+						newletter = (newletter == uppertext(newletter)) ? "С" : "с"
+					if("ч")
+						newletter = (newletter == uppertext(newletter)) ? "Щ" : "щ"
+
+			if(lowerletter in list("а", "е", "ё", "и", "о", "у", "ы", "э", "ю", "я"))
+				if(prob(12))
+					newletter += newletter
+					if(prob(20))
+						newletter += copytext_char(newletter, 1, 2)
+			else if(lowerletter in list("б", "в", "г", "д", "ж", "з", "к", "л", "м", "н", "п", "р", "с", "т", "ф", "х", "ц", "ч", "ш", "щ"))
+				if(prob(4))
+					newletter += newletter
+
+			if(newletter == " " && prob(7))
+				newletter = "... э-э... "
+			else if(newletter == "." && prob(5))
+				newletter = " *ИК*."
+		else
+			if(rand(1, 3) == 3)
+				if(lowerletter == "o")
+					newletter = "u"
+				if(lowerletter == "s")
+					newletter = "ch"
+				if(lowerletter == "a")
+					newletter = "ah"
+				if(lowerletter == "u")
+					newletter = "oo"
+				if(lowerletter == "c")
+					newletter = "k"
+			if(rand(1, 20) == 20)
+				if(newletter == " ")
+					newletter = "...huuuhhh..."
+				if(newletter == ".")
+					newletter = " *BURP*."
+			var/repeat_roll = rand(1, 20)
+			if(repeat_roll == 1)
+				newletter += "'"
+			else if(repeat_roll == 10)
+				newletter += "[newletter]"
+			else if(repeat_roll == 20)
+				newletter += "[newletter][newletter]"
+
+		newphrase += "[newletter]"
+		counter -= 1
+	return copytext_char(newphrase, 1, MAX_MESSAGE_LEN) // TA EDIT END
 
 /// Makes you talk like you got cult stunned, which is slurring but with some dark messages
 // Except up, its Psyphied so this is what you get from being sundered instead, thank you whoever left this, I will cook.
@@ -970,8 +1005,7 @@
 		if(source)
 			var/atom/movable/screen/alert/notify_action/A = O.throw_alert("[REF(source)]_notify_action", /atom/movable/screen/alert/notify_action)
 			if(A)
-				if(O.client.prefs && O.client.prefs.UI_style)
-					A.icon = ui_style2icon(O.client.prefs.UI_style)
+				A.icon = 'icons/mob/roguehud.dmi'
 				if (header)
 					A.name = header
 				A.desc = message

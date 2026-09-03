@@ -61,22 +61,12 @@
 	desc = "Delicate, thin-lensed spectacles of foreign make, their craft finer than most local wares."
 	icon_state = "glassesb"
 	mob_overlay_icon = 'icons/roguetown/clothing/onmob/masks.dmi'
-	break_sound = "glassbreak"
-	attacked_sound = 'sound/combat/hits/onglass/glasshit.ogg'
 	max_integrity = 30
-	adjustable = CAN_CADJUST
-	toggle_icon_state = TRUE
 
-/obj/item/clothing/mask/rogue/spectacles/fancy_dark
+/obj/item/clothing/mask/rogue/spectacles/fancy/dark
 	name = "fancy tinted spectacles"
 	desc = "Delicate, thin-lensed spectacles of foreign make, their craft finer than most local wares. This variant has a darker tint to its lenses."
 	icon_state = "glassesb_dark"
-	mob_overlay_icon = 'icons/roguetown/clothing/onmob/masks.dmi'
-	break_sound = "glassbreak"
-	attacked_sound = 'sound/combat/hits/onglass/glasshit.ogg'
-	max_integrity = 30
-	adjustable = CAN_CADJUST
-	toggle_icon_state = TRUE
 
 /obj/item/clothing/mask/rogue/faceveil
 	name = "simple veil"
@@ -390,7 +380,7 @@
 
 /obj/item/clothing/mask/rogue/facemask/aalloy
 	name = "decrepit mask"
-	desc = "Frayed bronze, molded into an unblinking visage. Only the statues, buried within the innards of Mount Decapitation, share its wrinkled lip and sneer of cold command."
+	desc = "Rotted metal, molded into an unblinking visage. Only the statues, buried within the innards of Mount Decapitation, share its wrinkled lip and sneer of cold command."
 	icon_state = "ancientmask"
 	max_integrity = 75
 	color = "#bb9696"
@@ -935,3 +925,21 @@
 /obj/item/clothing/mask/rogue/facemask/maille/fluted/ComponentInitialize()
 	AddComponent(/datum/component/adjustable_clothing, NECK, null, null, 'sound/foley/equip/chain_equip.ogg', null, (UPD_HEAD|UPD_MASK))	//Standard mask
 
+/obj/item/clothing/mask/rogue/facemask/steel/visor
+	name = "helmetless visor"
+	desc = "Fashion eschewing any practicality, or a knight's belonging so downtrodden the rest of their helmet was lost. Only seems to cover the eyes and nose, if barely."
+	icon_state = "helmetless_visor"
+	armor = ARMOR_PLATE
+	flags_inv = HIDEFACE|HIDESNOUT
+	body_parts_covered = EYES | NOSE
+	block2add = FOV_DEFAULT
+	max_integrity = ARMOR_INT_MASK_STEEL
+	slot_flags = ITEM_SLOT_MASK|ITEM_SLOT_HIP|ITEM_SLOT_HEAD
+	smeltresult = /obj/item/ingot/steel
+
+/obj/item/clothing/mask/rogue/facemask/steel/visor/flimsy
+	name = "flimsy helmetless visor"
+	desc = "Hand-made by misplaced Ranesheni tailors that had never touched a real iron bar, this flimsy mask offers barely any protection, as it was made for fashion."
+	armor = ARMOR_BRONZE
+	max_integrity = ARMOR_INT_MASK_STONE
+	smeltresult = null

@@ -4,12 +4,14 @@
 
 /datum/migrant_role/migrant_mercenary
 	name = "Mercenary"
+	min_pq = 25 // TA EDIT
 	role_category = "Mercenary"
 	advclass_cat_rolls = list(CTAG_MERCENARY = 20)
 	greet_text = "A blade for hire."
 
 /datum/migrant_role/pentarchy
 	abstract_type = /datum/migrant_role/pentarchy
+	min_pq = 25 // TA EDIT
 	role_category = "Mercenary"
 
 // Frontliner

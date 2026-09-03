@@ -254,9 +254,9 @@
 	slot_flags = ITEM_SLOT_BACK
 	w_class = WEIGHT_CLASS_BULKY
 	wdefense = 3
-	damfactor = 1.5
+	damfactor = 1.2
 	critfactor = 1
-	reload_time = 12
+	reload_time = 15
 	reload_stamina_cost = 50
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/rifle/getonmobprop(tag)

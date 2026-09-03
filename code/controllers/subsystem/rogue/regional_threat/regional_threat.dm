@@ -35,7 +35,6 @@ SUBSYSTEM_DEF(regionthreat)
 	wait = 30 MINUTES
 	flags = SS_KEEP_TIMING | SS_BACKGROUND
 	runlevels = RUNLEVEL_GAME
-
 	// Regions are loaded from the active map_adjustment template in on_map_ready().
 	var/list/threat_regions = list()
 
@@ -112,6 +111,36 @@ SUBSYSTEM_DEF(regionthreat)
 		threat_region_displays += TRS
 
 	return threat_region_displays
+
+/datum/controller/subsystem/regionthreat/proc/build_scout_region_rows()
+	var/list/blockade_by_threat_name = list()
+	for(var/datum/blockade/B as anything in GLOB.active_blockades)
+		if(B.threat_region_name)
+			blockade_by_threat_name[B.threat_region_name] = B
+	var/list/rows = list()
+	for(var/datum/threat_region/TR as anything in threat_regions)
+		var/list/row = list()
+		row["region_name"] = TR.region_name
+		row["danger_level"] = TR.get_danger_level()
+		row["danger_color"] = TR.get_danger_color()
+		row["ic_descriptions"] = TR.get_ic_description()
+		var/datum/blockade/B = blockade_by_threat_name[TR.region_name]
+		if(B)
+			var/datum/quest_faction/F = B.get_faction()
+			var/datum/economic_region/ER = B.get_region()
+			row["blockaded"] = TRUE
+			row["blockade_writ_out"] = B.has_active_scroll() ? TRUE : FALSE
+			row["blockade_faction_label"] = F ? "[F.group_word] of [F.name_plural]" : (B.faction_id || "")
+			row["blockade_region_label"] = ER ? ER.name : (B.region_id || "")
+			row["blockade_days_active"] = max(0, GLOB.dayspassed - B.day_started)
+		else
+			row["blockaded"] = FALSE
+			row["blockade_writ_out"] = FALSE
+			row["blockade_faction_label"] = ""
+			row["blockade_region_label"] = ""
+			row["blockade_days_active"] = 0
+		rows += list(row)
+	return rows
 
 /datum/controller/subsystem/regionthreat/proc/on_map_ready()
 	threat_regions = list()

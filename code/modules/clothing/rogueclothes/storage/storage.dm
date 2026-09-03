@@ -315,6 +315,7 @@
 	equip_sound = 'sound/blank.ogg'
 	bloody_icon_state = "bodyblood"
 	sewrepair = FALSE
+	anvilrepair = /datum/skill/craft/engineering
 	component_type = /datum/component/storage/concrete/roguetown/backpack
 
 /obj/item/storage/backpack/rogue/backpack/bagpack

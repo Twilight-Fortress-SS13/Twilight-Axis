@@ -72,7 +72,7 @@
 	var/typepath = allowed_cloaks[choive_key]
 	var/obj/item/clothing/cloak/cloak_choice = new typepath(src)
 	var/list/namesplit = splittext(src.real_name, " ")
-	if(src.mind.assigned_role == "Knight" || "Royal Knight") //TA EDIT
+	if(src.mind.assigned_role in list("Knight", "Royal Knight")) //TA EDIT
 		cloak_choice.name = "[name_index] [cloak_choice.name] ([namesplit[2]])"
 	else
 		cloak_choice.name = "[name_index] [cloak_choice.name] ([namesplit[1]])"

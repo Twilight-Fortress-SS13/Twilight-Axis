@@ -67,6 +67,9 @@
 /proc/log_paper(text)
 	logger.Log(LOG_CATEGORY_GAME_PAPER, text)
 
+/proc/log_mail(text) // TA EDIT
+	WRITE_LOG(GLOB.world_mail_log, "MAIL: [text]") // TA EDIT
+
 /proc/log_asset(text)
 	logger.Log(LOG_CATEGORY_DEBUG_ASSET, text)
 

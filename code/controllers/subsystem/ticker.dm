@@ -51,8 +51,6 @@ SUBSYSTEM_DEF(ticker)
 	var/queue_delay = 0
 	var/list/queued_players = list()		//used for join queues when the server exceeds the hard population cap
 
-	var/maprotatechecked = 0
-
 	var/news_report
 
 	var/late_join_disabled
@@ -276,7 +274,6 @@ SUBSYSTEM_DEF(ticker)
 
 		if(GAME_STATE_PLAYING)
 			check_queue()
-			check_maprotate()
 
 			check_for_lord()
 			if(!roundend_check_paused && SSgamemode.check_finished(force_ending) || force_ending)
@@ -301,11 +298,6 @@ SUBSYSTEM_DEF(ticker)
 			if(!player)
 				continue
 			if(player.client.prefs.job_preferences[V] == JP_HIGH)
-				if(player.ready == PLAYER_READY_TO_PLAY)
-					if(player.client.prefs.lastclass == V)
-						if(player.IsJobUnavailable(V) != JOB_AVAILABLE)
-							to_chat(player, span_warning("You cannot be [V] and thus are not considered."))
-							continue
 				readied_jobs.Add(V)
 		/*
 			// These else conditions stop the round from starting unless there is a merchant, king, and queen.
@@ -381,11 +373,20 @@ SUBSYSTEM_DEF(ticker)
 //	update_scaling_slots(estimated_pop)
 
 	donor_job_boost_round_tick() // TA EDIT
+	var/list/roundstart_character_slots = list() // TA EDIT START
+	for(var/mob/dead/new_player/player in GLOB.new_player_list)
+		if(player.ready != PLAYER_READY_TO_PLAY || !player.client?.prefs)
+			continue
+		roundstart_character_slots[player.ckey] = player.client.prefs.loaded_slot // TA EDIT END
 	can_continue = can_continue && SSjob.DivideOccupations(list()) 				//Distribute jobs
 
 	CHECK_TICK
 
 	log_game("GAME SETUP: Divide Occupations success")
+
+	SSgamemode.roll_roundstart_antag(TRUE) // TA EDIT
+
+	can_continue = can_continue && resolve_roundstart_bandit_preferences(roundstart_character_slots) // TA EDIT
 
 	CHECK_TICK
 
@@ -450,7 +451,7 @@ SUBSYSTEM_DEF(ticker)
 		if(C.mob)
 			C.mob.playsound_local(C.mob, 'sound/misc/roundstart.ogg', 100, FALSE)
 
-	SSgamemode.roll_roundstart_antag()
+	SSgamemode.roundstart_live = TRUE // TA EDIT
 	SSgamemode.spawn_extra_antags()
 
 	GLOB.dominant_faith_tracker.roundstart_setup() // this needs to be after antags roll because some of them change your patron
@@ -537,8 +538,6 @@ SUBSYSTEM_DEF(ticker)
 			update_mercenary_slots()
 			update_adventurer_slots()
 			player.create_character(FALSE)
-		else
-			player.new_player_panel()
 		CHECK_TICK
 
 /datum/controller/subsystem/ticker/proc/collect_minds()
@@ -553,7 +552,7 @@ SUBSYSTEM_DEF(ticker)
 	for(var/mob/dead/new_player/new_player as anything in GLOB.new_player_list)
 		var/mob/living/carbon/human/player = new_player.new_character
 		if(istype(player) && player.mind?.assigned_role)
-			if(player.mind.assigned_role != player.mind.special_role)
+			if(!(player.mind in SSgamemode.roundstart_build_replacement_minds) && player.mind.assigned_role != player.mind.special_role) // TA EDIT
 				valid_characters[player] = new_player
 	sortTim(valid_characters, GLOBAL_PROC_REF(cmp_assignedrole_dsc))
 	for(var/mob/character as anything in valid_characters)
@@ -574,7 +573,8 @@ SUBSYSTEM_DEF(ticker)
 				S.Fade(TRUE)
 			livings += living
 			if(ishuman(living))
-				SSrole_class_handler.setup_class_handler(living)
+				if(!(living.mind in SSgamemode.roundstart_build_replacement_minds)) // TA EDIT
+					SSrole_class_handler.setup_class_handler(living) // TA EDIT
 				try_apply_character_post_equipment(living)
 		else
 			continue
@@ -625,19 +625,6 @@ SUBSYSTEM_DEF(ticker)
 			queued_players -= next_in_line
 			queue_delay = 0
 
-/datum/controller/subsystem/ticker/proc/check_maprotate()
-	if (!CONFIG_GET(flag/maprotation))
-		return
-	if (maprotatechecked)
-		return
-
-	maprotatechecked = 1
-
-	//map rotate chance defaults to 75% of the length of the round (in minutes)
-	if (!prob((world.time/600)*CONFIG_GET(number/maprotatechancedelta)))
-		return
-	INVOKE_ASYNC(SSmapping, TYPE_PROC_REF(/datum/controller/subsystem/mapping, maprotate))
-
 /datum/controller/subsystem/ticker/proc/HasRoundStarted()
 	return current_state >= GAME_STATE_PLAYING
 
@@ -666,13 +653,11 @@ SUBSYSTEM_DEF(ticker)
 
 	queue_delay = SSticker.queue_delay
 	queued_players = SSticker.queued_players
-	maprotatechecked = SSticker.maprotatechecked
 	round_start_time = SSticker.round_start_time
 	round_start_irl = SSticker.round_start_irl
 
 	queue_delay = SSticker.queue_delay
 	queued_players = SSticker.queued_players
-	maprotatechecked = SSticker.maprotatechecked
 
 	switch (current_state)
 		if(GAME_STATE_SETTING_UP)

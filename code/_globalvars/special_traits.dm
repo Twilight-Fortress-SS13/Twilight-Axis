@@ -34,8 +34,9 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 /proc/apply_character_post_equipment(mob/living/carbon/human/character, client/player)
 	if(!player)
 		player = character.client
+	if(!player || !player.prefs) // TA EDIT
+		return // TA EDIT
 	apply_charflaw_equipment(character, player)
-	apply_prefs_special(character, player)
 	apply_prefs_virtue(character, player)
 	apply_prefs_race_bonus(character, player)
 	if(!HAS_TRAIT(character, TRAIT_NO_VOICEPACK_OVERRIDE)) //Only roundstart roles that jobload in, should use this. Prevents prefloaded voicepacks overriding yours.
@@ -45,8 +46,8 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 	if(player.prefs.qsr_pref)
 		apply_qsr_trait(character, player)
 	character.mind.triumph_discount_remaining = get_donator_triumph_discount(player.ckey)
-	if(player.prefs.selected_loadout_items)
-		for(var/key in player.prefs.selected_loadout_items)
+	if(player.prefs.gear_list)
+		for(var/key in player.prefs.gear_list)
 			var/datum/loadout_item/item = GLOB.loadout_items_by_name[key]
 			if(!item)
 				continue
@@ -54,6 +55,9 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 				character.mind.special_items["[item.name][TRIUMPH_STASH_SUFFIX]"] = item.path
 			else
 				character.mind.special_items[item.name] = item.path
+			var/list/loadout_metadata = player.prefs.gear_list[key] // TA EDIT START
+			if(islist(loadout_metadata) && loadout_metadata.len)
+				character.mind.special_items_metadata[item.name] = deepCopyList(loadout_metadata) // TA EDIT END
 	var/datum/job/assigned_job = SSjob.GetJob(character.mind?.assigned_role)
 	var/list/prefs = player.prefs?.job_subprefs
 	if(prefs)
@@ -83,6 +87,8 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 	return TRUE
 
 /proc/apply_voicepacks(mob/living/carbon/human/character, client/player)
+	if(!player || !player.prefs) // TA EDIT
+		return // TA EDIT
 	if(player.prefs.voice_pack != "Default")
 		var/datum/voicepack/VP = GLOB.voice_packs[GLOB.voice_packs_list[player.prefs.voice_pack]]
 		character.dna.species.soundpack_m = VP
@@ -227,19 +233,6 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 
 /proc/apply_qsr_trait(mob/living/carbon/human/character, client/player)
 	ADD_TRAIT(player.mob, TRAIT_QUICKSILVERRESISTANT, TRAIT_GENERIC)
-
-/proc/apply_prefs_special(mob/living/carbon/human/character, client/player)
-	if(!player)
-		player = character.client
-	if(!player)
-		return
-	if(!player.prefs)
-		return
-	var/trait_type = player.prefs.next_special_trait
-	if(!trait_type)
-		return
-	apply_special_trait_if_able(character, player, trait_type)
-	player.prefs.next_special_trait = null
 
 /proc/apply_special_trait_if_able(mob/living/carbon/human/character, client/player, trait_type)
 	if(!charactet_eligible_for_trait(character, player, trait_type))

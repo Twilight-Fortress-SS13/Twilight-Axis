@@ -5,7 +5,7 @@
 	mob_overlay_icon = null
 	icon_state = "pouch"
 	item_state = "pouch"
-	slot_flags = ITEM_SLOT_HIP|ITEM_SLOT_NECK
+	slot_flags = ITEM_SLOT_HIP|ITEM_SLOT_NECK|ITEM_SLOT_CLOAK
 	w_class = WEIGHT_CLASS_NORMAL
 	attack_verb = list("whips", "lashes")
 	max_integrity = 300
@@ -35,6 +35,10 @@
 
 	var/datum/component/storage/storage_comp = GetComponent(/datum/component/storage)
 	if(!storage_comp)
+		return
+
+	// TA EDIT
+	if(target_coin in storage_comp.contents())
 		return
 
 	var/original_target_quantity = target_coin.quantity	// Store original quantity for verification

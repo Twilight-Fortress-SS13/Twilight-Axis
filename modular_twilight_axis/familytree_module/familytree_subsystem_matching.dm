@@ -26,6 +26,8 @@
 	return max(0, FAMILYTREE_RELATIVE_JOIN_DELAY - (world.time - SSticker.round_start_time))
 
 /datum/controller/subsystem/familytree/proc/wait_for_relative_join_phase(mob/living/carbon/human/H, reason)
+	if(round_disabled)
+		return
 	if(!H || QDELETED(H) || H.family_datum || H.familytree_opted_out)
 		return
 	if(H.familytree_assignment_scheduled)
@@ -38,6 +40,8 @@
 	addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, H.familytree_pref, 0, familytree_search_id(H), H.real_name, H.ckey), delay)
 
 /datum/controller/subsystem/familytree/proc/wait_for_join_create_phase(mob/living/carbon/human/H, reason)
+	if(round_disabled)
+		return
 	if(!H || QDELETED(H) || H.family_datum || H.familytree_opted_out)
 		return
 	if(H.familytree_assignment_scheduled)
@@ -101,6 +105,8 @@
 	return new_house
 
 /datum/controller/subsystem/familytree/proc/AddLocal(mob/living/carbon/human/H, status)
+	if(round_disabled)
+		return
 	ftlog("AddLocal: [H?.real_name] ([H?.ckey]) status=[status]")
 	if(!H || istype(H, /mob/living/carbon/human/dummy))
 		return
@@ -295,6 +301,8 @@
 		retry_local_assignment(H, "no suitable family found for selected role")
 
 /datum/controller/subsystem/familytree/proc/find_and_confirm_newlywed(mob/living/carbon/human/H)
+	if(round_disabled)
+		return
 	if(!H || QDELETED(H))
 		return FALSE
 	if(H.family_datum)
@@ -413,6 +421,8 @@
 	ask_open_sibling_house(leader, family)
 
 /datum/controller/subsystem/familytree/proc/find_and_confirm_family(mob/living/carbon/human/H, create_if_no_match = TRUE)
+	if(round_disabled)
+		return FALSE
 	if(!H || QDELETED(H) || H.family_datum)
 		return
 	if(H.familytree_confirmation_pending)
@@ -1694,6 +1704,8 @@
 	return A
 
 /datum/controller/subsystem/familytree/proc/wait_for_new_family_founder(mob/living/carbon/human/H)
+	if(round_disabled)
+		return
 	if(!H || QDELETED(H) || H.family_datum)
 		return
 	if(!familytree_is_new_family_candidate(H))
@@ -1706,6 +1718,8 @@
 	wait_for_new_family_match(H, "waiting for a new family founder")
 
 /datum/controller/subsystem/familytree/proc/wait_for_new_family_match(mob/living/carbon/human/H, reason)
+	if(round_disabled)
+		return
 	if(!H || QDELETED(H) || H.family_datum || H.familytree_opted_out)
 		return
 	if(H.familytree_confirmation_pending)
@@ -1721,6 +1735,8 @@
 	addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, H.familytree_pref, 0, familytree_search_id(H), H.real_name, H.ckey), 20 SECONDS)
 
 /datum/controller/subsystem/familytree/proc/FindNewlyWedMatch(mob/living/carbon/human/H)
+	if(round_disabled)
+		return
 	if(!H)
 		return null
 	var/block_reason = get_familytree_runtime_block_reason(H, TRUE)
@@ -1850,6 +1866,8 @@
 	return chosen
 
 /datum/controller/subsystem/familytree/proc/FindFamilyMatch(mob/living/carbon/human/H)
+	if(round_disabled)
+		return
 	if(!H)
 		return null
 	var/houses_scanned = 0
@@ -2156,6 +2174,8 @@
 	return TRUE
 
 /datum/controller/subsystem/familytree/proc/wait_for_relative_house(mob/living/carbon/human/H, reason)
+	if(round_disabled)
+		return
 	if(!H || QDELETED(H) || H.family_datum || H.familytree_opted_out)
 		return
 	if(H.familytree_assignment_scheduled)
@@ -2166,6 +2186,8 @@
 	addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, H.familytree_pref, 0, familytree_search_id(H), H.real_name, H.ckey), 20 SECONDS)
 
 /datum/controller/subsystem/familytree/proc/wake_waiting_relative_seekers(datum/heritage/house)
+	if(round_disabled)
+		return
 	if(!house || house.closed)
 		return
 	if(!familytree_relative_join_phase_open())
@@ -2181,6 +2203,8 @@
 		H.familytree_wake_timerid = addtimer(CALLBACK(src, PROC_REF(familytree_run_wake_assignment), H), 1 SECONDS, TIMER_STOPPABLE)
 
 /datum/controller/subsystem/familytree/proc/familytree_run_wake_assignment(mob/living/carbon/human/H)
+	if(round_disabled)
+		return
 	if(!H || QDELETED(H))
 		return
 	H.familytree_wake_timerid = null
@@ -2189,6 +2213,8 @@
 	run_local_assignment(H, H.familytree_pref)
 
 /datum/controller/subsystem/familytree/proc/retry_local_assignment(mob/living/carbon/human/H, reason)
+	if(round_disabled)
+		return
 	if(!H || QDELETED(H) || H.family_datum || H.familytree_opted_out)
 		return
 	if(H.familytree_assignment_scheduled)

@@ -35,7 +35,7 @@
 	//	G.open_orbit_menu() // TA EDIT
 	else
 		if(G.client)
-			if(isscryeye(G) || G.trapped)
+			if(isscryeye(G))
 				return
 			if(alert(usr, "Travel with the boatman?", "", "Yes", "No") == "Yes")
 				if(G.mind)
@@ -153,10 +153,7 @@
 	if(!.)
 		return
 	var/mob/screenmob = viewmob || mymob
-	if(!screenmob.client.prefs.ghost_hud)
-		screenmob.client.screen -= static_inventory
-	else
-		screenmob.client.screen += static_inventory
+	screenmob.client.screen += static_inventory
 
 /datum/hud/eye/New(mob/owner)
 	..()
@@ -189,10 +186,7 @@
 	if(!.)
 		return
 	var/mob/screenmob = viewmob || mymob
-	if(!screenmob.client.prefs.ghost_hud)
-		screenmob.client.screen -= static_inventory
-	else
-		screenmob.client.screen += static_inventory
+	screenmob.client.screen += static_inventory
 
 /datum/hud/obs/New(mob/owner)
 	..()
