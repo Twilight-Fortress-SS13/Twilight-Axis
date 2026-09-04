@@ -34,35 +34,34 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 /proc/apply_character_post_equipment(mob/living/carbon/human/character, client/player)
 	if(!player)
 		player = character.client
+	if(!player || !player.prefs) // TA EDIT
+		return // TA EDIT
 	apply_charflaw_equipment(character, player)
-	apply_prefs_special(character, player)
 	apply_prefs_virtue(character, player)
 	apply_prefs_race_bonus(character, player)
-	apply_voicepacks(character, player)
+	if(!HAS_TRAIT(character, TRAIT_NO_VOICEPACK_OVERRIDE)) //Only roundstart roles that jobload in, should use this. Prevents prefloaded voicepacks overriding yours.
+		apply_voicepacks(character, player)
 	if(player.prefs.dnr_pref)
 		apply_dnr_trait(character, player)
 	if(player.prefs.qsr_pref)
 		apply_qsr_trait(character, player)
-
-	var/triumph_discount_remaining = get_donator_triumph_discount(player.ckey) // TA EDIT
-	if(player.prefs.selected_loadout_items)
-		for(var/key in player.prefs.selected_loadout_items)
+	character.mind.triumph_discount_remaining = get_donator_triumph_discount(player.ckey)
+	if(player.prefs.gear_list)
+		for(var/key in player.prefs.gear_list)
 			var/datum/loadout_item/item = GLOB.loadout_items_by_name[key]
 			if(!item)
 				continue
-
 			if(item.triumph_cost)
-				var/discounted_cost = max(0, item.triumph_cost - triumph_discount_remaining)
-				if(discounted_cost > 0 && character.get_triumphs() < discounted_cost)
-					to_chat(character, span_warning("Недостаточно триумфов для [item.name]."))
-					continue
-
-				triumph_discount_remaining = max(0, triumph_discount_remaining - item.triumph_cost)
-				if(discounted_cost > 0)
-					character.adjust_triumphs(-discounted_cost)
-
-			character.mind.special_items[item.name] = item.path
+				character.mind.special_items["[item.name][TRIUMPH_STASH_SUFFIX]"] = item.path
+			else
+				character.mind.special_items[item.name] = item.path
+			var/list/loadout_metadata = player.prefs.gear_list[key] // TA EDIT START
+			if(islist(loadout_metadata) && loadout_metadata.len)
+				character.mind.special_items_metadata[item.name] = deepCopyList(loadout_metadata) // TA EDIT END
 	var/datum/job/assigned_job = SSjob.GetJob(character.mind?.assigned_role)
+	var/list/prefs = player.prefs?.job_subprefs
+	if(prefs)
+		character.mind.job_subprefs = prefs.Copy()
 	if(assigned_job)
 		assigned_job.clamp_stats(character)
 	check_trait_incompatibilities(character)
@@ -77,20 +76,23 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 		REMOVE_TRAIT(H, TRAIT_EASYDISMEMBER, null) // Doesn't care for source, they ARE getting canceled
 		REMOVE_TRAIT(H, TRAIT_CRITICAL_RESISTANCE, null)
 		to_chat(H, span_warning("My limbs are too frail and my body too tough... the contradiction leaves me unable to resist critical wounds."))
-		
-	if((H.advjob != "Knight Banneret" && H.mind.assigned_role != "Court Agent" && H.mind.assigned_role != "Adventurer" && H.mind.assigned_role != "Prince" && H.mind.assigned_role != "Court Magician" && H.mind.assigned_role != "Inquisitor"))
+
+	var/datum/advclass/advclass = H.get_advclass_datum()
+	if(advclass?.tempo_capable && H.mind.assigned_role != "Court Agent" && H.mind.assigned_role != "Adventurer" && H.mind.assigned_role != "Towner") // (Easier to filter these out than apply the bool to every subclass)
 		if(!H.mind.has_antag_datum(/datum/antagonist/skeleton) && !H.mind.has_antag_datum(/datum/antagonist/lich) && !H.mind.has_antag_datum(/datum/antagonist/vampire) && !H.mind.has_antag_datum(/datum/antagonist/vampire/lord))
-			ADD_TRAIT(H, TRAIT_TEMPO, SPECIES_TRAIT)		
-	
+			ADD_TRAIT(H, TRAIT_TEMPO, SPECIES_TRAIT)
+
 	if(HAS_TRAIT(H, TRAIT_PSYDONIC_MEDICINE)) //TA EDIT
 		H.adjust_skillrank(/datum/skill/misc/medicine, 2, TRUE) //TA EDIT
 	return TRUE
 
 /proc/apply_voicepacks(mob/living/carbon/human/character, client/player)
+	if(!player || !player.prefs) // TA EDIT
+		return // TA EDIT
 	if(player.prefs.voice_pack != "Default")
-		var/datum/voicepack/VP = GLOB.voice_packs_list[player.prefs.voice_pack]
-		character.dna.species.soundpack_m = new VP()
-		character.dna.species.soundpack_f = new VP()
+		var/datum/voicepack/VP = GLOB.voice_packs[GLOB.voice_packs_list[player.prefs.voice_pack]]
+		character.dna.species.soundpack_m = VP
+		character.dna.species.soundpack_f = VP
 
 
 /proc/apply_prefs_virtue(mob/living/carbon/human/character, client/player)
@@ -145,7 +147,7 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 				origin_type = new character.dna.species.origin_default
 				apply_virtue(character, origin_type)
 
-/proc/origin_check(var/datum/virtue/V, datum/species/species)
+/proc/origin_check(datum/virtue/V, datum/species/species)
 	if(!species || !V)
 		return
 	if(V)
@@ -174,7 +176,7 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 	var/bonus = player.prefs.race_bonus
 	if(!(bonus in character.dna.species.custom_selection))
 		return
-	var/full_bonus 
+	var/full_bonus
 	full_bonus = character.dna.species.custom_selection[bonus]
 	if(!full_bonus)
 		return
@@ -198,7 +200,7 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 	if(bonus in GLOB.roguetraits)
 		ADD_TRAIT(character, bonus, SPECIES_TRAIT)
 
-/proc/virtue_check(var/datum/virtue/V, heretic = FALSE, datum/species/species)
+/proc/virtue_check(datum/virtue/V, heretic = FALSE, datum/species/species)
 	if(V)
 		if(istype(V,/datum/virtue/heretic) && !heretic)
 			return FALSE
@@ -211,32 +213,26 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 	return FALSE
 
 /proc/apply_charflaw_equipment(mob/living/carbon/human/character, client/player)
+	var/has_extra_vice = FALSE
+	var/needs_extra_vice = FALSE
+	for(var/datum/charflaw/cf in character.charflaws) // difficulty flaws don't count as each other's extra vice
+		if(cf.needs_extra_vice)
+			needs_extra_vice = TRUE
+		else
+			has_extra_vice = TRUE
 	for(var/datum/charflaw/cf in character.charflaws)
 		cf.apply_post_equipment(character)
-		if(cf.needs_extra_vice && character.charflaws.len < 2)
-			var/datum/charflaw/randflaw/rf = new()
-			character.charflaws.Add(rf)
-			rf.apply_post_equipment(character)
 		record_featured_object_stat(FEATURED_STATS_VICES, cf.name)
+	if(needs_extra_vice && !has_extra_vice)
+		var/datum/charflaw/randflaw/rf = new()
+		character.charflaws.Add(rf)
+		rf.apply_post_equipment(character)
 
 /proc/apply_dnr_trait(mob/living/carbon/human/character, client/player)
 	ADD_TRAIT(player.mob, TRAIT_DNR, TRAIT_GENERIC)
 
 /proc/apply_qsr_trait(mob/living/carbon/human/character, client/player)
 	ADD_TRAIT(player.mob, TRAIT_QUICKSILVERRESISTANT, TRAIT_GENERIC)
-
-/proc/apply_prefs_special(mob/living/carbon/human/character, client/player)
-	if(!player)
-		player = character.client
-	if(!player)
-		return
-	if(!player.prefs)
-		return
-	var/trait_type = player.prefs.next_special_trait
-	if(!trait_type)
-		return
-	apply_special_trait_if_able(character, player, trait_type)
-	player.prefs.next_special_trait = null
 
 /proc/apply_special_trait_if_able(mob/living/carbon/human/character, client/player, trait_type)
 	if(!charactet_eligible_for_trait(character, player, trait_type))

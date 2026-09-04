@@ -5,12 +5,44 @@
 
 //T0
 
+/obj/item/pocketsand
+	name = "pocket sand"
+	desc = "A fistful of fine, irritating sand. Guaranteed to be clawing at the eyes of the unwise."
+	icon = 'icons/roguetown/items/natural.dmi'
+	icon_state = "clod1"
+	w_class = WEIGHT_CLASS_SMALL
+	dropshrink = 0
+	throwforce = 0
+	throw_speed = 1
+	grid_width = 32
+	grid_height = 32
+
+/obj/item/pocketsand/throw_impact(atom/hit_atom)
+	var/turf/T = get_turf(hit_atom)
+	if(isliving(hit_atom))
+		var/mob/living/target = hit_atom
+		if(!target.mind || istype(target, /mob/living/simple_animal))
+			target.adjustBruteLoss(5)
+		if(iscarbon(target))
+			target.blur_eyes(5)
+			target.adjust_blurriness(10)
+			target.blind_eyes(1.5)
+		target.visible_message(
+			span_warning("[target] is blasted with a cloud of sand!"),
+			span_warning("Sand gets into my eyes! I can't see!")
+		)
+		target.emote("pain")
+		target.apply_status_effect(/datum/status_effect/debuff/clickcd, 3 SECONDS)
+	playsound(T, 'sound/items/firesnuff.ogg', 100)
+	qdel(src)
+
 /datum/action/cooldown/spell/matthios/freemans_tools
+	spell_color = GLOW_COLOR_MATTHIOS
 	desc = "A simple prayer to the Free-God Matthios, for tools of liberation and struggle.<br><br>His will manifests in three forms: gutter-born arts of the freemen, gilded tools of blessed liberation, or by granting the bases of Malchem, a form of primordial alchemy so impossible it is oft mistaken for sorcery."
 	options = list(
 		//a simple 'blinds u for 1 sec' throwable
 		"Pocket Sand" = list(
-			path = /obj/item/impact_grenade/pocketsand,
+			path = /obj/item/pocketsand,
 			m_cooldown = 60 SECONDS,
 			m_devotion = 10,
 			m_rank = SKILL_LEVEL_NOVICE,
@@ -186,12 +218,16 @@
 /obj/effect/proc_holder/spell/invoked/appraise
 	overlay_state = "apprise"
 	action_icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
+	glow_color = GLOW_COLOR_MATTHIOS
+	glow_intensity = GLOW_INTENSITY_LOW
 
 /obj/effect/proc_holder/spell/self/twilight_shacklebreaker
 	name = "Shacklebreaker"
 	desc = "Break anything restraining you, and protect yourself from being slowed down further."
 	overlay_state = "shacklebreaker"
 	action_icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
+	glow_color = GLOW_COLOR_MATTHIOS
+	glow_intensity = GLOW_INTENSITY_LOW
 	recharge_time = 3 MINUTES
 	invocations = list("Отец, сломи мои цепи.",
 		"Маттиос, не дай им сдержать меня.",
@@ -254,6 +290,8 @@
 	desc = "Make those who would oppress others feel the burden of the chains they wield, slowing them down for each symbol of oppression they have on their person."
 	overlay_state = "weightofchains"
 	action_icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
+	glow_color = GLOW_COLOR_MATTHIOS
+	glow_intensity = GLOW_INTENSITY_LOW
 	clothes_req = FALSE
 	associated_skill = /datum/skill/magic/holy
 	chargedloop = /datum/looping_sound/invokeascendant
@@ -349,6 +387,8 @@
 	desc = "Force equality with the target, empowering yourself to match their Strength."
 	overlay_state = "equalize"
 	action_icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
+	glow_color = GLOW_COLOR_MATTHIOS
+	glow_intensity = GLOW_INTENSITY_LOW
 	clothes_req = FALSE
 	associated_skill = /datum/skill/magic/holy
 	chargedloop = /datum/looping_sound/invokeascendant
@@ -424,6 +464,8 @@
 	desc = "Sacrifice an item in your hand, applying a heal over time with strength depending on its value."
 	overlay_state = "transact"
 	action_icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
+	glow_color = GLOW_COLOR_MATTHIOS
+	glow_intensity = GLOW_INTENSITY_LOW
 	invocation_type = "none"
 	releasedrain = 30
 	chargedrain = 0
@@ -493,6 +535,8 @@
 	chargetime = 30
 	action_icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
 	overlay_state = "churnwealthy"
+	glow_color = GLOW_COLOR_MATTHIOS
+	glow_intensity = GLOW_INTENSITY_LOW
 	name = "Churn Wealthy"
 	desc = "Attacks the target by weight of their greed, dealing increased damage and effects depending on how wealthy they are."
 	clothes_req = FALSE
@@ -614,6 +658,8 @@
 	desc = "Dispells all divine gifts applied to those who do not follow the Matthian creed around you, and all divine maluses that affect your allies."
 	overlay_state = "nogodsamongus"
 	action_icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
+	glow_color = GLOW_COLOR_MATTHIOS
+	glow_intensity = GLOW_INTENSITY_LOW
 	recharge_time = 5 MINUTES
 	invocations = list("Нет богов среди нас!",
 	"Ваши боги не защитят вас!")
@@ -703,6 +749,8 @@
 	projectile_type = /obj/projectile/magic/twilight_crownfortheking
 	overlay_state = "crownfortheking"
 	action_icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
+	glow_color = GLOW_COLOR_MATTHIOS
+	glow_intensity = GLOW_INTENSITY_LOW
 	sound = list('sound/magic/whiteflame.ogg')
 	active = FALSE
 
@@ -809,7 +857,7 @@
 	movement_interrupt = TRUE
 	antimagic_allowed = TRUE
 	charging_slowdown = 3
-	glow_color = GLOW_COLOR_METAL
+	glow_color = GLOW_COLOR_MATTHIOS
 	glow_intensity = GLOW_INTENSITY_LOW
 	var/obj/item/rogueweapon/conjured_weapon = null
 
@@ -855,7 +903,7 @@
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
 	icon_state = "matthios_standard"
 	resistance_flags = FIRE_PROOF
-	
+
 /obj/item/rogueweapon/spear/matthios_standard/Initialize()
 	. = ..()
 	for(var/mob/living/carbon/human/H as anything in SSspatial_grid.orthogonal_range_search(src, SPATIAL_GRID_CONTENTS_TYPE_CLIENTS, 7))
@@ -953,6 +1001,8 @@
 	desc = "Transform into the strongest form of Matthios' own - a dragon. A mere mortal can't sustain this form for long, yet with the power Matthios grants you, you shall burn this world of tyranny to the ground."
 	overlay_state = "wingsoffreedom"
 	action_icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
+	glow_color = GLOW_COLOR_MATTHIOS
+	glow_intensity = GLOW_INTENSITY_LOW
 	clothes_req = FALSE
 	human_req = FALSE
 	chargedrain = 0
@@ -1026,7 +1076,7 @@
 
 		var/datum/action/cooldown/spell/projectile/fireball/fireball = new /datum/action/cooldown/spell/projectile/fireball
 		var/datum/action/cooldown/spell/projectile/spitfire/spitfire = new /datum/action/cooldown/spell/projectile/spitfire
-		
+
 		fireball.Grant(src)
 		spitfire.Grant(src)
 
@@ -1201,6 +1251,8 @@
 	name = "Dragon Claws"
 	desc = "Extend or retract your razor-sharp claws."
 	overlay_state = "claws"
+	glow_color = GLOW_COLOR_MATTHIOS
+	glow_intensity = GLOW_INTENSITY_LOW
 	antimagic_allowed = TRUE
 	recharge_time = 2 SECONDS
 	ignore_cockblock = TRUE
@@ -1304,7 +1356,7 @@
 	W.grant_language(/datum/language/draconic)
 	W.base_intents = list(INTENT_HELP, INTENT_DISARM, INTENT_GRAB)
 	W.update_a_intents()
-	
+
 	if(getorganslot(ORGAN_SLOT_PENIS))
 		W.internal_organs_slot[ORGAN_SLOT_PENIS] = /obj/item/organ/penis/knotted/big
 	if(getorganslot(ORGAN_SLOT_TESTICLES))
@@ -1318,7 +1370,7 @@
 	ADD_TRAIT(src, TRAIT_NOSLEEP, TRAIT_SOURCE_WILDSHAPE)
 	ADD_TRAIT(src, TRAIT_NOBREATH, TRAIT_SOURCE_WILDSHAPE)
 	ADD_TRAIT(src, TRAIT_NOPAIN, TRAIT_SOURCE_WILDSHAPE)
-	ADD_TRAIT(src, TRAIT_TOXIMMUNE, TRAIT_SOURCE_WILDSHAPE)	
+	ADD_TRAIT(src, TRAIT_TOXIMMUNE, TRAIT_SOURCE_WILDSHAPE)
 	ADD_TRAIT(src, TRAIT_NOHUNGER, TRAIT_SOURCE_WILDSHAPE)
 	ADD_TRAIT(src, TRAIT_NOMOOD, TRAIT_SOURCE_WILDSHAPE)
 	ADD_TRAIT(src, TRAIT_PACIFISM, TRAIT_SOURCE_WILDSHAPE) // just an extra layer of protection in case something will go wrong
@@ -1396,9 +1448,13 @@
 #undef TRAIT_SOURCE_WILDSHAPE
 
 /obj/effect/proc_holder/spell/invoked/projectile/fireball/greater/matthios_dragon
+	glow_color = GLOW_COLOR_MATTHIOS
+	glow_intensity = GLOW_INTENSITY_LOW
 	invocation_type = "none"
 
 /obj/effect/proc_holder/spell/invoked/projectile/spitfire/matthios_dragon
+	glow_color = GLOW_COLOR_MATTHIOS
+	glow_intensity = GLOW_INTENSITY_LOW
 	invocation_type = "none"
 
 /obj/effect/proc_holder/spell/invoked/resurrect/twilight_matthios
@@ -1408,12 +1464,15 @@
 	alt_required_items = list()
 	required_items = list()
 	sound = 'sound/magic/slimesquish.ogg'
-	chargedloop = /datum/looping_sound/invokelightning
+	chargedloop = /datum/looping_sound/invokeascendant
+	harms_undead = FALSE
 	recharge_time = 2 MINUTES //Anastasis Equivalent
 	overlay_icon = 'icons/mob/actions/matthiosmiracles.dmi'
 	overlay_state = "revival"
 	action_icon_state = "revival"
 	action_icon = 'icons/mob/actions/matthiosmiracles.dmi'
+	glow_color = GLOW_COLOR_MATTHIOS
+	glow_intensity = GLOW_INTENSITY_LOW
 	required_structure = /obj/structure/fluff/psycross/matthios
 
 /datum/status_effect/debuff/twilight_matthios_revival

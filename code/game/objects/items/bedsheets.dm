@@ -21,7 +21,7 @@ LINEN BINS
 	var/list/dream_messages = list("white")
 	var/datum/weakref/signal_sleeper //this is our goldylocks
 
-/obj/item/bedsheet/Initialize()
+/obj/item/bedsheet/Initialize(mapload)
 	. = ..()
 	AddElement(/datum/element/bed_tuckable, 0, 0, 0)
 
@@ -35,7 +35,7 @@ LINEN BINS
 	coverup(user)
 	add_fingerprint(user)
 
-/obj/item/bedsheet/rmb_self(mob/living/user)
+/obj/item/bedsheet/rmb_self(mob/living/user, keybind = FALSE)
 	setDir(turn(dir,180))
 	update_icon()
 	to_chat(user, span_notice("I flip [src]."))
@@ -82,34 +82,56 @@ LINEN BINS
 
 /obj/item/bedsheet/rogue
 	desc = "May be hidden under whenever unable, or unwilling, to face the world."
+	icon_state = ""
+	item_state = ""
+	slot_flags = ITEM_SLOT_BELT|ITEM_SLOT_CLOAK
+	w_class = WEIGHT_CLASS_NORMAL
+	attack_verb = list("whips", "lashes")
+	max_integrity = 300
+	equip_sound = 'sound/blank.ogg'
+	bloody_icon_state = "bodyblood"
+	experimental_inhand = TRUE
+	grid_width = 64
+	grid_height = 32
+	flags_inv = HIDEBOOB | HIDECROTCH
+
+/obj/item/bedsheet/rogue/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Bedsheets can be worn around the waist or shoulders, not unlike a belt, if the need for modesty suddenly arises.")
 
 /obj/item/bedsheet/rogue/cloth
 	icon = 'icons/roguetown/misc/beds.dmi'
+	mob_overlay_icon = 'icons/roguetown/clothing/onmob/belts.dmi'
 	icon_state = "cloth_bedsheet"
 	item_state = "cloth_bedsheet"
 
 /obj/item/bedsheet/rogue/pelt
 	icon = 'icons/roguetown/misc/beds.dmi'
+	mob_overlay_icon = 'icons/roguetown/clothing/onmob/belts.dmi'
 	icon_state = "pelt_bedsheet"
 	item_state = "pelt_bedsheet"
 
 /obj/item/bedsheet/rogue/wool
 	icon = 'icons/roguetown/misc/beds.dmi'
+	mob_overlay_icon = 'icons/roguetown/clothing/onmob/belts.dmi'
 	icon_state = "wool_bedsheet"
 	item_state = "wool_bedsheet"
 
 /obj/item/bedsheet/rogue/double_pelt
 	icon = 'icons/roguetown/misc/beds.dmi'
+	mob_overlay_icon = 'icons/roguetown/clothing/onmob/belts.dmi'
 	icon_state = "double_pelt_bedsheet"
 	item_state = "double_pelt_bedsheet"
 
 /obj/item/bedsheet/rogue/fabric
 	icon = 'icons/roguetown/misc/beds.dmi'
+	mob_overlay_icon = 'icons/roguetown/clothing/onmob/belts.dmi'
 	icon_state = "fabric_bedsheet"
 	item_state = "fabric_bedsheet"
 
 /obj/item/bedsheet/rogue/fabric_double
 	icon = 'icons/roguetown/misc/beds.dmi'
+	mob_overlay_icon = 'icons/roguetown/clothing/onmob/belts.dmi'
 	icon_state = "double_fabric_bedsheet"
 	item_state = "double_fabric_bedsheet"
 

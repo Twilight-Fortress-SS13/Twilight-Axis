@@ -1,5 +1,5 @@
 /obj/item/clothing/gloves/roguetown/angle
-	name = "heavy leather gloves"
+	name = "hardened leather gloves"
 	desc = "A pair of heavy leather gloves, padded with the fur of a forest-dwelling beaste. The lengthened cuffs help to catch unseen bites from prowling monsters; a blessing, when even a single gnash can spread curses-most-foul."
 	icon_state = "angle"
 	armor = ARMOR_LEATHER
@@ -25,6 +25,13 @@
 	sleeved = 'icons/roguetown/clothing/onmob/helpers/stonekeep_merc.dmi'
 	color = "#ffffff"
 
+/obj/item/clothing/gloves/roguetown/angle/grenzelgloves/loadout
+	name = "aesthetic grenzelhoft gloves"
+
+/obj/item/clothing/gloves/roguetown/angle/grenzelgloves/loadout/Initialize(mapload)
+	. = ..()
+	loadoutize()
+
 /obj/item/clothing/gloves/roguetown/angle/grenzelgloves/blacksmith
 	name = "forge gauntlets"
 	color = "#ffffff"
@@ -40,7 +47,15 @@
 	desc = "A pair of hardened leather gloves used by fencers who aren't exactly convinced of losing a finger to a particularly strong feder cut. The inside is padded for extra durability."
 	icon_state = "freigloves"
 	item_state = "freigloves"
-	max_integrity = ARMOR_INT_SIDE_HARDLEATHER + 50
+	max_integrity = ARMOR_INT_SIDE_HARDLEATHER + ARMOR_INT_LIGHT_FENCER_MODIFIER
+	color = null
+
+/obj/item/clothing/gloves/roguetown/angle/freifechter/loadout
+	name = "aesthetic fencing gloves"
+
+/obj/item/clothing/gloves/roguetown/angle/freifechter/loadout/Initialize(mapload)
+	. = ..()
+	loadoutize()
 
 /obj/item/clothing/gloves/roguetown/angle/feld
 	name = "feldsher's gloves"

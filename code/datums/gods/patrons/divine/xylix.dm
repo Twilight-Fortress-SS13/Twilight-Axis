@@ -40,7 +40,9 @@
 	storyteller = /datum/storyteller/xylix
 
 	titles = list(
-		"Tragedian"
+		"Tragedian",
+		"Xyji",
+		"Luck"
 	)
 
 // Near a gambling machine, cross, or within the church
@@ -62,12 +64,12 @@
 	return FALSE
 
 /datum/patron/divine/xylix/on_lesser_heal(
-    mob/living/user,
-    mob/living/target,
-    message_out,
-    message_self,
-    conditional_buff,
-    situational_bonus
+	mob/living/user,
+	mob/living/target,
+	message_out,
+	message_self,
+	conditional_buff,
+	situational_bonus
 )
 	*message_out = span_info("A fugue seems to manifest briefly across [target]!")
 	*message_self = span_notice("My wounds vanish as if they had never been there! ")

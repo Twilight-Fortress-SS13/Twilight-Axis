@@ -1,6 +1,5 @@
 #define ROUND_START_MUSIC_LIST "strings/round_start_sounds.txt"
 
-
 GLOBAL_VAR_INIT(round_timer, INITIAL_ROUND_TIMER)
 
 SUBSYSTEM_DEF(ticker)
@@ -34,6 +33,8 @@ SUBSYSTEM_DEF(ticker)
 
 	var/timeLeft						//pregame timer
 	var/start_at
+	/// world.time the lobby/pregame began; anchor for the gamemode-vote admin window (set once on entering PREGAME).
+	var/lobby_start = 0
 	//576000 dusk
 	//376000 day
 	// 8 AM
@@ -49,8 +50,6 @@ SUBSYSTEM_DEF(ticker)
 
 	var/queue_delay = 0
 	var/list/queued_players = list()		//used for join queues when the server exceeds the hard population cap
-
-	var/maprotatechecked = 0
 
 	var/news_report
 
@@ -101,6 +100,12 @@ SUBSYSTEM_DEF(ticker)
 
 	/// Sunsteal gamestate bool.
 	var/sunstolen = FALSE
+	/// Sunscorch gamestate bool.
+	var/sunscorched = FALSE
+	/// World time when sunscorch begins burning creatures under open sky.
+	var/sunscorch_burn_start_time = 0
+	/// TRUE once the first sunscorch burn warning has been sent to chat.
+	var/sunscorch_burn_warning_sent = FALSE
 
 /datum/controller/subsystem/ticker/Initialize(timeofday)
 	load_mode()
@@ -125,7 +130,7 @@ SUBSYSTEM_DEF(ticker)
 	var/use_rare_music = prob(1)
 
 	for(var/S in provisional_title_music)
-		var/lower = lowertext(S)
+		var/lower = LOWER_TEXT(S)
 		var/list/L = splittext(lower,"+")
 		switch(L.len)
 			if(3) //rare+MAP+sound.ogg or MAP+rare.sound.ogg -- Rare Map-specific sounds
@@ -149,14 +154,15 @@ SUBSYSTEM_DEF(ticker)
 	for(var/S in music)
 		var/list/L = splittext(S,".")
 		if(L.len >= 2)
-			var/ext = lowertext(L[L.len]) //pick the real extension, no 'honk.ogg.exe' nonsense here
+			var/ext = LOWER_TEXT(L[L.len]) //pick the real extension, no 'honk.ogg.exe' nonsense here
 			if(byond_sound_formats[ext])
 				continue
 		music -= S
 
 	if(isemptylist(music))
 		music = world.file2list(ROUND_START_MUSIC_LIST, "\n")
-		login_music = pick(music)
+		if(length(music))
+			login_music = pick(music)
 	else
 		login_music = "[global.config.directory]/title_music/sounds/[pick(music)]"
 
@@ -190,7 +196,7 @@ SUBSYSTEM_DEF(ticker)
 //			start_at = world.time + (CONFIG_GET(number/lobby_countdown) * 10)
 			for(var/client/C in GLOB.clients)
 				window_flash(C, ignorepref = TRUE) //let them know lobby has opened up.
-//			to_chat(world, span_boldnotice("Welcome to [station_name()]!"))
+//			to_world(span_boldnotice("Welcome to [station_name()]!"))
 
 //			send2chat(new /datum/tgs_message_content("New round starting on [SSmapping.config.map_name]! (Round ID: [GLOB.round_id])"), CONFIG_GET(string/chat_announce_new_game))
 
@@ -210,9 +216,20 @@ SUBSYSTEM_DEF(ticker)
 				if(player.ready == PLAYER_READY_TO_PLAY)
 					++totalPlayersReady
 
-			if(!gamemode_voted)
-				SSvote.initiate_vote("storyteller", "Psydon", timeLeft/2)
+			if(!lobby_start)
+				lobby_start = world.time
+
+			var/admin_window = min(GAMEMODE_VOTE_ADMIN_WINDOW, max(0, (start_at - lobby_start) - GAMEMODE_VOTE_END_BUFFER - GAMEMODE_VOTE_MIN_PERIOD))
+			if(!gamemode_voted && world.time >= (lobby_start + admin_window))
 				gamemode_voted = TRUE
+				if(SSgamemode.allow_vote)
+					// Display period only; the lobby countdown force-closes this vote at the end buffer (below).
+					var/vote_period = max(GAMEMODE_VOTE_MIN_PERIOD, timeLeft - GAMEMODE_VOTE_END_BUFFER)
+					SSvote.initiate_vote("storyteller", "Gamemode", vote_period)
+				else
+					message_admins("Gamemode player vote suppressed (Allow Player Vote = No); using the admin-configured gamemode.")
+					log_admin("Gamemode player vote suppressed (Allow Player Vote = No).")
+					SSgamemode.announce_admin_gamemode()
 
 			if(start_immediately)
 				timeLeft = 0
@@ -221,6 +238,11 @@ SUBSYSTEM_DEF(ticker)
 			if(timeLeft < 0)
 				return
 			timeLeft -= wait
+
+			// Single clock: the lobby countdown owns the vote's lifetime. Once only the end buffer remains, close
+			// the gamemode vote here so the round still starts on time (at timeLeft <= 0) with a guaranteed gap after.
+			if(SSvote?.mode == STORYTELLER_VOTE && timeLeft <= GAMEMODE_VOTE_END_BUFFER)
+				SSvote.end_vote()
 
 			if(timeLeft <= 300 && !tipped)
 #ifdef MATURESERVER
@@ -252,7 +274,6 @@ SUBSYSTEM_DEF(ticker)
 
 		if(GAME_STATE_PLAYING)
 			check_queue()
-			check_maprotate()
 
 			check_for_lord()
 			if(!roundend_check_paused && SSgamemode.check_finished(force_ending) || force_ending)
@@ -277,21 +298,16 @@ SUBSYSTEM_DEF(ticker)
 			if(!player)
 				continue
 			if(player.client.prefs.job_preferences[V] == JP_HIGH)
-				if(player.ready == PLAYER_READY_TO_PLAY)
-					if(player.client.prefs.lastclass == V)
-						if(player.IsJobUnavailable(V) != JOB_AVAILABLE)
-							to_chat(player, span_warning("You cannot be [V] and thus are not considered."))
-							continue
 				readied_jobs.Add(V)
 		/*
 			// These else conditions stop the round from starting unless there is a merchant, king, and queen.
 		else
 			var/list/stuffy = list("Set a Ruler to 'high' in your class preferences to start the game!", "PLAY Ruler NOW!", "A Ruler is required to start.", "Pray for a Ruler.", "One day, there will be a Ruler.", "Just try playing Ruler.", "If you don't play Ruler, the game will never start.", "We need at least one Ruler to start the game.", "We're waiting for you to pick Ruler to start.", "Still no Ruler is readied..", "I'm going to lose my mind if we don't get a Ruler readied up.","No. The game will not start because there is no Ruler.","What's the point of ROGUETOWN without a Ruler?")
-			to_chat(world, span_purple("[pick(stuffy)]"))
+			to_world(span_purple("[pick(stuffy)]"))
 			return FALSE
 	else
 		var/list/stuffy = list("Set Merchant to 'high' in your class preferences to start the game!", "PLAY Merchant NOW!", "A Merchant is required to start.", "Pray for a Merchant.", "One day, there will be a Merchant.", "Just try playing Merchant.", "If you don't play Merchant, the game will never start.", "We need at least one Merchant to start the game.", "We're waiting for you to pick Merchant to start.", "Still no Merchant is readied..", "I'm going to lose my mind if we don't get a Merchant readied up.","No. The game will not start because there is no Merchant.","What's the point of ROGUETOWN without a Merchant?")
-		to_chat(world, span_purple("[pick(stuffy)]"))
+		to_world(span_purple("[pick(stuffy)]"))
 		return FALSE
 	*/
 
@@ -303,12 +319,12 @@ SUBSYSTEM_DEF(ticker)
 			amt_ready++
 
 	if(amt_ready < 2)
-		to_chat(world, span_purple("[amt_ready]/20 players ready."))
+		to_world(span_purple("[amt_ready]/20 players ready."))
 		failedstarts++
 		if(failedstarts > 7)
-			to_chat(world, span_purple("[failedstarts]/13"))
+			to_world(span_purple("[failedstarts]/13"))
 		if(failedstarts >= 13)
-			to_chat(world, span_greentext("Starting ROGUEFIGHT..."))
+			to_world(span_greentext("Starting ROGUEFIGHT..."))
 			var/icon/ikon
 			var/file_path = "icons/roguefight_title.dmi"
 			ASSERT(fexists(file_path))
@@ -333,7 +349,7 @@ SUBSYSTEM_DEF(ticker)
 		realm_name = SSmapping.map_adjustment.realm_name
 		realm_type = SSmapping.map_adjustment.realm_type // TA EDIT
 		realm_type_short = SSmapping.map_adjustment.realm_type_short // TA EDIT
-	to_chat(world, "<b><span class='notice'><span class='big'>Welcome to the [SSticker.realm_type] of [SSticker.realm_name].</span></span></b>")
+	to_world("<b><span class='notice'><span class='big'>Welcome to the [SSticker.realm_type] of [SSticker.realm_name].</span></span></b>")
 	var/init_start = world.timeofday
 	CHECK_TICK
 	//Configure mode and assign player to special mode stuff
@@ -357,11 +373,20 @@ SUBSYSTEM_DEF(ticker)
 //	update_scaling_slots(estimated_pop)
 
 	donor_job_boost_round_tick() // TA EDIT
+	var/list/roundstart_character_slots = list() // TA EDIT START
+	for(var/mob/dead/new_player/player in GLOB.new_player_list)
+		if(player.ready != PLAYER_READY_TO_PLAY || !player.client?.prefs)
+			continue
+		roundstart_character_slots[player.ckey] = player.client.prefs.loaded_slot // TA EDIT END
 	can_continue = can_continue && SSjob.DivideOccupations(list()) 				//Distribute jobs
 
 	CHECK_TICK
 
 	log_game("GAME SETUP: Divide Occupations success")
+
+	SSgamemode.roll_roundstart_antag(TRUE) // TA EDIT
+
+	can_continue = can_continue && resolve_roundstart_bandit_preferences(roundstart_character_slots) // TA EDIT
 
 	CHECK_TICK
 
@@ -416,6 +441,7 @@ SUBSYSTEM_DEF(ticker)
 	log_game("GAME SETUP: Game start took [(world.timeofday - init_start)/10]s")
 	round_start_time = world.time
 	round_start_irl = REALTIMEOFDAY
+	GLOB.tod = FALSE
 //	SSshuttle.emergency.startTime = world.time
 //	SSshuttle.emergency.setTimer(ROUNDTIMERBOAT)
 
@@ -425,7 +451,10 @@ SUBSYSTEM_DEF(ticker)
 		if(C.mob)
 			C.mob.playsound_local(C.mob, 'sound/misc/roundstart.ogg', 100, FALSE)
 
-	SSgamemode.roll_roundstart_antag()
+	SSgamemode.roundstart_live = TRUE // TA EDIT
+	SSgamemode.spawn_extra_antags()
+
+	GLOB.dominant_faith_tracker.roundstart_setup() // this needs to be after antags roll because some of them change your patron
 
 //	SEND_SOUND(world, sound('sound/misc/roundstart.ogg'))
 	current_state = GAME_STATE_PLAYING
@@ -434,10 +463,10 @@ SUBSYSTEM_DEF(ticker)
 	Master.SetRunLevel(RUNLEVEL_GAME)
 /*
 	if(SSevents.holidays)
-		to_chat(world, span_notice("and..."))
+		to_world(span_notice("and..."))
 		for(var/holidayname in SSevents.holidays)
 			var/datum/holiday/holiday = SSevents.holidays[holidayname]
-			to_chat(world, "<h4>[holiday.greet()]</h4>")
+			to_world("<h4>[holiday.greet()]</h4>")
 */
 	PostSetup()
 	log_game("GAME SETUP: postsetup success")
@@ -509,8 +538,6 @@ SUBSYSTEM_DEF(ticker)
 			update_mercenary_slots()
 			update_adventurer_slots()
 			player.create_character(FALSE)
-		else
-			player.new_player_panel()
 		CHECK_TICK
 
 /datum/controller/subsystem/ticker/proc/collect_minds()
@@ -525,7 +552,7 @@ SUBSYSTEM_DEF(ticker)
 	for(var/mob/dead/new_player/new_player as anything in GLOB.new_player_list)
 		var/mob/living/carbon/human/player = new_player.new_character
 		if(istype(player) && player.mind?.assigned_role)
-			if(player.mind.assigned_role != player.mind.special_role)
+			if(!(player.mind in SSgamemode.roundstart_build_replacement_minds) && player.mind.assigned_role != player.mind.special_role) // TA EDIT
 				valid_characters[player] = new_player
 	sortTim(valid_characters, GLOBAL_PROC_REF(cmp_assignedrole_dsc))
 	for(var/mob/character as anything in valid_characters)
@@ -546,7 +573,8 @@ SUBSYSTEM_DEF(ticker)
 				S.Fade(TRUE)
 			livings += living
 			if(ishuman(living))
-				SSrole_class_handler.setup_class_handler(living)
+				if(!(living.mind in SSgamemode.roundstart_build_replacement_minds)) // TA EDIT
+					SSrole_class_handler.setup_class_handler(living) // TA EDIT
 				try_apply_character_post_equipment(living)
 		else
 			continue
@@ -562,7 +590,7 @@ SUBSYSTEM_DEF(ticker)
 /datum/controller/subsystem/ticker/proc/send_tip_of_the_round(input)
 	if(!input)
 		return
-	to_chat(world, fieldset_block(span_purple("<b>Tip of the Round</b>"), span_purple("[html_encode(input)]"), "tipoftheround"))
+	to_world(fieldset_block(span_purple("<b>Tip of the Round</b>"), span_purple("[html_encode(input)]"), "tipoftheround"))
 
 /datum/controller/subsystem/ticker/proc/check_queue()
 	if(!queued_players.len)
@@ -592,23 +620,10 @@ SUBSYSTEM_DEF(ticker)
 					return
 				queued_players -= next_in_line //Client disconnected, remove he
 			queue_delay = 0 //No vacancy: restart timer
-		if(25 to INFINITY)  //No response from the next in line when a vacancy exists, remove he
+		if(25 to INFINITY)	//No response from the next in line when a vacancy exists, remove he
 			to_chat(next_in_line, span_danger("No response received. You have been removed from the line."))
 			queued_players -= next_in_line
 			queue_delay = 0
-
-/datum/controller/subsystem/ticker/proc/check_maprotate()
-	if (!CONFIG_GET(flag/maprotation))
-		return
-	if (maprotatechecked)
-		return
-
-	maprotatechecked = 1
-
-	//map rotate chance defaults to 75% of the length of the round (in minutes)
-	if (!prob((world.time/600)*CONFIG_GET(number/maprotatechancedelta)))
-		return
-	INVOKE_ASYNC(SSmapping, TYPE_PROC_REF(/datum/controller/subsystem/mapping, maprotate))
 
 /datum/controller/subsystem/ticker/proc/HasRoundStarted()
 	return current_state >= GAME_STATE_PLAYING
@@ -638,13 +653,11 @@ SUBSYSTEM_DEF(ticker)
 
 	queue_delay = SSticker.queue_delay
 	queued_players = SSticker.queued_players
-	maprotatechecked = SSticker.maprotatechecked
 	round_start_time = SSticker.round_start_time
 	round_start_irl = SSticker.round_start_irl
 
 	queue_delay = SSticker.queue_delay
 	queued_players = SSticker.queued_players
-	maprotatechecked = SSticker.maprotatechecked
 
 	switch (current_state)
 		if(GAME_STATE_SETTING_UP)
@@ -755,18 +768,18 @@ SUBSYSTEM_DEF(ticker)
 
 	var/skip_delay = check_rights()
 	if(delay_end && !skip_delay)
-		to_chat(world, span_boldannounce("A game master has delayed the round end."))
+		to_world(span_boldannounce("A game master has delayed the round end."))
 		return
 
 	SStriumphs.end_triumph_saving_time()
-	to_chat(world, span_boldannounce("Rebooting World in [DisplayTimeText(delay)]. [reason]"))
+	to_world(span_boldannounce("Rebooting World in [DisplayTimeText(delay)]. [reason]"))
 
 	var/start_wait = world.time
 	UNTIL(round_end_sound_sent || (world.time - start_wait) > (delay * 2))	//don't wait forever
 	sleep(delay - (world.time - start_wait))
 
 	if(delay_end && !skip_delay)
-		to_chat(world, span_boldannounce("Reboot was cancelled by an admin."))
+		to_world(span_boldannounce("Reboot was cancelled by an admin."))
 		return
 	if(end_string)
 		end_state = end_string
@@ -774,14 +787,14 @@ SUBSYSTEM_DEF(ticker)
 	var/statspage = CONFIG_GET(string/roundstatsurl)
 	var/gamelogloc = CONFIG_GET(string/gamelogurl)
 	if(statspage)
-		to_chat(world, span_info("Round statistics and logs can be viewed <a href=\"[statspage][GLOB.round_id]\">at this website!</a>"))
+		to_world(span_info("Round statistics and logs can be viewed <a href=\"[statspage][GLOB.round_id]\">at this website!</a>"))
 	else if(gamelogloc)
-		to_chat(world, span_info("Round logs can be located <a href=\"[gamelogloc]\">at this website!</a>"))
+		to_world(span_info("Round logs can be located <a href=\"[gamelogloc]\">at this website!</a>"))
 
 	log_game(span_boldannounce("Rebooting World. [reason]"))
 
 	if(end_party)
-		to_chat(world, span_boldannounce("It's over!"))
+		to_world(span_boldannounce("It's over!"))
 		world.Del()
 	else
 		world.Reboot()
@@ -862,11 +875,66 @@ SUBSYSTEM_DEF(ticker)
 				if(isfloorturf(_T))
 					new /mob/living/carbon/human/species/skeleton/npc(_T)
 
+
+//vheslyn suns tuff. sunscorcher? sunsteal? Get it/? ahaaa bites my lip
+/datum/controller/subsystem/ticker/proc/sunscorch(mob/living/sunscorcher)
+	ASSERT(sunscorcher)
+	sunscorched = TRUE
+	sunscorch_burn_start_time = world.time + 2 MINUTES
+	sunscorch_burn_warning_sent = FALSE
+	RegisterSignal(sunscorcher, list(COMSIG_QDELETING, COMSIG_MOB_DEATH), PROC_REF(on_sunscorcher_death))
+	INVOKE_ASYNC(src, PROC_REF(on_sunscorch)) // Invoke async since on_sunscorch() sleeps in CHECK_TICK
+
+// VHESLYN SUN STUFF
+/datum/controller/subsystem/ticker/proc/on_sunscorch()
+	GLOB.todoverride = "day"
+	settod()
+	priority_announce("WAVE OF AGONY. ASTRATA BLOTS AS AN IMPOSSIBLY-SHAPED NOOSPHERIC GLOME RADIATES BURNING FEAR-HEAT. SCORCHING RAY OF NOTHING; THE WORM SCREAMS DOWN UPON ME IN MALICE. DEADLY HEAT BEGINS TO CREEP INTO THE AIR.", "THE WORM AWAKENS, THE WORLD BURNS // EKPYROSIS - GOD O GOD WHERE'RT THOU?", 'sound/villain/ascendant_intro.ogg')
+	addomen(OMEN_SUNSCORCH)
+	for(var/mob/living/carbon/human/nocite as anything in GLOB.human_list)
+		if(!istype(nocite.patron, /datum/patron/divine/noc))
+			continue
+		to_chat(nocite, span_userdanger("AGONY. I CAN NOT HEAR [nocite.patron]. THEY ARE LOST TO ME."))
+		nocite.emote("painscream", intentional = FALSE)
+
+	for(var/obj/machinery/light/light in GLOB.machines) //this entire block may	cause insane lag i'm not sure sorry
+		if(prob(70))
+			light.seton(TRUE)
+		else
+			light.flicker(rand(2, 5))
+		CHECK_TICK
+
+	for(var/obj/item/flashlight/flare/torch/torch in GLOB.weather_act_upon_list)
+		torch.fire_act(1, 5)
+		CHECK_TICK
+
+	for(var/obj/structure/soil/soil in GLOB.soil_list)
+		soil.plant_dead = TRUE
+		soil.produce_ready = FALSE
+		soil.update_icon()
+		CHECK_TICK
+
+	for(var/mob/living/carbon/human/human in GLOB.human_list)
+		if(istype(human.patron, /datum/patron/divine/astrata))
+			continue
+
+		human.stress_freakout()
+
 /// Returns universe state to normal (minus the water) after the sunstealer has been slain, some neat flavor to show its finally over.
 /datum/controller/subsystem/ticker/proc/on_sunstealer_death()
 	GLOB.todoverride = null
 	sunstolen = FALSE
 	priority_announce("The air remains unnaturally cold as a wounded sun rises once more.", "A long night comes to an end", 'sound/misc/otavanlament.ogg') //THE WORLD IS TORN OPEN, THE ROT TO SEE. WHY DO YOU STILL ENDURE?
+	settod()
+	SSParticleWeather.run_weather(/datum/particle_weather/rain_gentle, TRUE)
+
+/// Returns universe state to normal after the sunscorcher has been slain.
+/datum/controller/subsystem/ticker/proc/on_sunscorcher_death()
+	GLOB.todoverride = null
+	sunscorched = FALSE
+	sunscorch_burn_start_time = 0
+	sunscorch_burn_warning_sent = FALSE
+	priority_announce("ASTRATA's now-weary light slowly seeps back into existence. The WORM recedes; the sky is safe. God is here. God is here and all is well once more.", "THIS DAMNED SUN /// EKPYROSIS ENDS", 'sound/misc/otavanlament.ogg')
 	settod()
 	SSParticleWeather.run_weather(/datum/particle_weather/rain_gentle, TRUE)
 

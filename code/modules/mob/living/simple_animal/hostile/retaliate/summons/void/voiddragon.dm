@@ -3,14 +3,13 @@
 Void dragons are creatures of a bygone age. It is a melee creature, that will chase down and cut most people to shreds if they are by themself.
 It will also call down lightning strikes from the sky, and fling people with it's tail, as well as fly up into the sky.*/
 
-/mob/living/simple_animal/hostile/retaliate/rogue/voiddragon/Initialize()
+/mob/living/simple_animal/hostile/retaliate/rogue/voiddragon/Initialize(mapload)
 	. = ..()
 	ADD_TRAIT(src, TRAIT_NOFIRE, "[type]")
 	ADD_TRAIT(src, TRAIT_NOBREATH, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_TOXIMMUNE, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NOPAINSTUN, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_SHOCKIMMUNE, TRAIT_GENERIC)
-	ADD_TRAIT(src, TRAIT_GUIDANCE, TRAIT_GENERIC)	//The voiddragon rends
 	src.adjust_skillrank(/datum/skill/combat/unarmed, 6, TRUE)	//parrying the voiddragon should be hard
 
 /mob/living/simple_animal/hostile/retaliate/rogue/voiddragon/simple_add_wound(datum/wound/wound, silent = FALSE, crit_message = FALSE)	//no wounding the void dragon
@@ -60,7 +59,7 @@ It will also call down lightning strikes from the sky, and fling people with it'
 	..()
 
 /mob/living/simple_animal/hostile/retaliate/rogue/voiddragon
-	name = "void dragon"
+	name = "void drake"
 	desc = "An ancient creature from a bygone age. Now would be a good time to run."
 	health = 5000
 	maxHealth = 5000
@@ -86,11 +85,10 @@ It will also call down lightning strikes from the sky, and fling people with it'
 	minimum_distance = 0
 	aggressive = 1
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_VISIBLE
-	speed = 5
+	move_base_delay = MOVEMENT_DELAY_LUMBERING
 	move_to_delay = 5
 	ranged = TRUE
 	canparry = TRUE
-	defprob = 70
 	pixel_x = -32
 	var/swooping = NONE
 	var/player_cooldown = 0
@@ -331,7 +329,7 @@ It will also call down lightning strikes from the sky, and fling people with it'
 		if(dist > last_dist)
 			last_dist = dist
 			sleep(2 + min(4 - last_dist, 12) * 0.5) //gets faster
-		new /obj/effect/temp_visual/targetlightning(T)
+		new /obj/effect/temp_visual/telegraph/targetlightning(T)
 
 /mob/living/simple_animal/hostile/retaliate/rogue/voiddragon/proc/lightning_strikes(amount, delay = 0.8)
 	if(!target)
@@ -341,7 +339,7 @@ It will also call down lightning strikes from the sky, and fling people with it'
 		if(QDELETED(target))
 			break
 		var/turf/T = pick(RANGE_TURFS(enraged ? 2 : 1, target))
-		new /obj/effect/temp_visual/targetlightning(T)
+		new /obj/effect/temp_visual/telegraph/targetlightning(T)
 		amount--
 		SLEEP_CHECK_DEATH(delay)
 
@@ -463,7 +461,7 @@ It will also call down lightning strikes from the sky, and fling people with it'
 	if(!swooping)
 		..()
 
-/mob/living/simple_animal/hostile/retaliate/rogue/voiddragon/Goto(target, delay, minimum_distance)
+/mob/living/simple_animal/hostile/retaliate/rogue/voiddragon/Goto(target, minimum_distance)
 	if(!swooping)
 		..()
 
@@ -564,7 +562,7 @@ It will also call down lightning strikes from the sky, and fling people with it'
 	else
 		animate(src, pixel_x = -32, pixel_z = 0, time = 5)
 
-/mob/living/simple_animal/hostile/retaliate/rogue/voiddragon/proc/chain_lightning(var/list/targets, mob/user = usr)
+/mob/living/simple_animal/hostile/retaliate/rogue/voiddragon/proc/chain_lightning(list/targets, mob/user = usr)
 	targets = list()
 
 	for(var/mob/living/target in view(7, src))

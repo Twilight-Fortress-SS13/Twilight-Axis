@@ -18,7 +18,7 @@ SUBSYSTEM_DEF(city_assembly)
 	/// world.time at which Session 1 will resolve automatically. 0 if not yet armed.
 	var/first_session_resolve_at = 0
 
-/datum/controller/subsystem/city_assembly/Initialize()
+/datum/controller/subsystem/city_assembly/Initialize(mapload)
 	current_warrant = new /datum/assembly_warrant()
 	open_session()
 	// Don't schedule timers here - Initialize predates round-start. fire() arms the first-
@@ -179,9 +179,9 @@ SUBSYSTEM_DEF(city_assembly)
 
 /// Per-motion choice whitelist. Prevents ballot pollution from malformed ui_act payloads. Each
 /// motion type has a fixed choice set:
-///   - Election: candidate weakref strings (must match a declared candidate) or NO_ALDERMAN.
-///   - Bracket motions: stringified numbers from that motion's bracket list, NAE, or ABSTAIN.
-///   - Yae/Nay motions: YAE, NAY, or ABSTAIN.
+///	- Election: candidate weakref strings (must match a declared candidate) or NO_ALDERMAN.
+///	- Bracket motions: stringified numbers from that motion's bracket list, NAE, or ABSTAIN.
+///	- Yae/Nay motions: YAE, NAY, or ABSTAIN.
 /datum/controller/subsystem/city_assembly/proc/validate_choice(motion_id, choice)
 	if(isnull(choice))
 		return FALSE
@@ -287,12 +287,12 @@ SUBSYSTEM_DEF(city_assembly)
 		who = departing_job ? "[departing_name], the [departing_job]" : departing_name
 	var/reason_tag = null
 	switch(reason)
-		if("resigned")     reason_tag = "has resigned the seat"
-		if("died")         reason_tag = "has died in office"
+		if("resigned")		reason_tag = "has resigned the seat"
+		if("died")			reason_tag = "has died in office"
 		if("disconnected") reason_tag = "has left the Realm"
-		if("admin")        reason_tag = "has been removed by admin fiat"
-		if("recalled")     reason_tag = "has been recalled by the Assembly"
-		if("censured")     reason_tag = "has been censured by the Assembly"
+		if("admin")		reason_tag = "has been removed by admin fiat"
+		if("recalled")		reason_tag = "has been recalled by the Assembly"
+		if("censured")		reason_tag = "has been censured by the Assembly"
 	var/prefix
 	if(who && reason_tag)
 		prefix = "[who] [reason_tag]. "
@@ -304,7 +304,6 @@ SUBSYSTEM_DEF(city_assembly)
 		"[prefix]The Alderman's seat has been vacated - the citizenry must choose anew at the next session.",
 		ASSEMBLY_ANNOUNCE_TITLE,
 		'sound/misc/royal_decree.ogg',
-		"Town Crier",
 	)
 
 /datum/controller/subsystem/city_assembly/proc/refresh_warrant()
@@ -342,6 +341,17 @@ SUBSYSTEM_DEF(city_assembly)
 	log_game("CITY ASSEMBLY WARRANT: defense -[amount]p by [key_name(actor)] ([reason]). Remaining: [current_warrant.defense_remaining]p.")
 	return TRUE
 
+/datum/controller/subsystem/city_assembly/proc/refund_defense(amount, mob/actor, reason = "")
+	if(amount <= 0)
+		return FALSE
+	if(!current_warrant)
+		return FALSE
+	if(!resolve_get_alderman())
+		return FALSE
+	current_warrant.defense_remaining = min(current_warrant.defense_daily_cap, current_warrant.defense_remaining + amount)
+	log_game("CITY ASSEMBLY WARRANT: defense +[amount]p refunded by [key_name(actor)] ([reason]). Remaining: [current_warrant.defense_remaining]p.")
+	return TRUE
+
 /datum/controller/subsystem/city_assembly/proc/is_alderman(mob/user)
 	var/mob/current = resolve_get_alderman()
 	return current && current == user
@@ -352,6 +362,5 @@ SUBSYSTEM_DEF(city_assembly)
 		body,
 		ASSEMBLY_ANNOUNCE_TITLE,
 		'sound/misc/royal_decree.ogg',
-		"Town Crier",
 		strip_html = FALSE,
 	)

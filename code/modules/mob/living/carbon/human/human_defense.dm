@@ -1,9 +1,9 @@
-/mob/living/carbon/human/getarmor(def_zone, type, damage, armor_penetration = PEN_NONE, blade_dulling, intdamfactor, used_weapon, pen_info)
+/mob/living/carbon/human/getarmor(def_zone, type, damage, armor_penetration = PEN_NONE, blade_dulling, intdamfactor, used_weapon, pen_info, no_debuff = FALSE)
 	var/armorval = 0
 	var/organnum = 0
 
 	if(def_zone)
-		return checkarmor(def_zone, type, damage, armor_penetration, blade_dulling, intdamfactor, used_weapon, pen_info)
+		return checkarmor(def_zone, type, damage, armor_penetration, blade_dulling, intdamfactor, used_weapon, pen_info, no_debuff)
 		//If a specific bodypart is targetted, check how that bodypart is protected and return the value.
 
 	//If you don't specify a bodypart, it checks ALL my bodyparts for protection, and averages out the values
@@ -14,7 +14,7 @@
 	return (armorval/max(organnum, 1))
 
 
-/mob/living/carbon/human/proc/checkarmor(def_zone, d_type, damage, armor_penetration = PEN_NONE, blade_dulling, intdamfactor = 1, obj/item/used_weapon, pen_info)
+/mob/living/carbon/human/proc/checkarmor(def_zone, d_type, damage, armor_penetration = PEN_NONE, blade_dulling, intdamfactor = 1, obj/item/used_weapon, pen_info, no_debuff = FALSE)
 	if(!d_type)
 		return 0
 	if(isbodypart(def_zone))
@@ -22,9 +22,11 @@
 		def_zone = CBP.body_zone
 	var/obj/item/clothing/used
 	var/protection = 0
+	var/dr_armor_present = FALSE
 	var/intdamage = damage
-	var/consume_debuff = TRUE
-	
+	// Only melee weapon should be able to cash in on Exposed / Vulnerable
+	var/consume_debuff = !no_debuff && !istype(used_weapon, /obj/projectile)
+
 	if(HAS_TRAIT(src, TRAIT_IRONMAN)) // free clongo noise when hit
 		playsound(loc, get_armor_sound(PLATEHIT, blade_dulling), 100) // SOVLNUKE!!!
 
@@ -60,7 +62,7 @@
 			if(has_status_effect(/datum/status_effect/buff/iron_skin))
 				intdamage *= 0.75
 
-			if(istype(used_weapon) && used_weapon.is_silver && ((used.smeltresult in list(/obj/item/ingot/aaslag, /obj/item/ingot/aalloy, /obj/item/ingot/purifiedaalloy)) || used.GetComponent(/datum/component/cursed_item)))
+			if(istype(used_weapon) && used_weapon.is_silver && ((used.smeltresult in list(/obj/item/ingot/aaslag, /obj/item/ingot/aalloy, /obj/item/ingot/purifiedaalloy, /obj/item/ingot/component/zizo, /obj/item/ingot/component/graggar, /obj/item/ingot/component/matthios, /obj/item/ingot/component/baotha, /obj/item/ingot/avantyne, /obj/item/ingot/vampire)) || used.GetComponent(/datum/component/cursed_item)))
 				var/datum/component/silverbless/bless = used_weapon.GetComponent(/datum/component/silverbless)
 				if(bless.is_blessed)
 					intdamage = round(intdamage * bless.cursed_item_intdamage)
@@ -84,22 +86,27 @@
 					emote("groan", forced = TRUE)
 
 			used.take_damage(intdamage, damage_flag = d_type, sound_effect = FALSE, armor_penetration = 100)
+			if(intdamage > 0)
+				SEND_SIGNAL(src, COMSIG_MOB_ARMOR_INTEGRITY_DAMAGED, intdamage, used, 1, 1)
 	else
-		// DR types: blunt, fire, acid
+		// DR types: blunt, fire, bullet
 		var/list/layers = get_best_worn_armor_layered(def_zone, d_type)
 		if(length(layers))
+			dr_armor_present = TRUE
+			var/obj/item/clothing/best_layer
 			for(var/C in layers)
-				if(layers[C] > protection)
+				if(!best_layer || layers[C] > protection)
 					protection = layers[C]
+					best_layer = C
 			protection += get_trophy_armor_bonus_for_zone(def_zone, d_type)
 			// DR tier formula: damage * 1 / (1 + 0.2 * tier)
 			if(protection > 0)
 				var/dr_mult = 1 / (1 + 0.2 * protection)
 				if(d_type in ARMOR_DR_PIERCE_TYPES)
-					// Fire/Acid: armor takes the blocked portion (what doesn't reach HP)
+					// Bullet: armor takes the blocked portion (what doesn't reach HP)
 					intdamage *= (1 - dr_mult)
 				else
-					// Blunt: armor takes the DR-reduced amount
+					// Blunt/Fire: armor takes the DR-reduced amount
 					intdamage *= dr_mult
 			if(intdamfactor != 1)
 				intdamage *= intdamfactor
@@ -112,33 +119,48 @@
 				intdamage *= tempo_bonus
 
 			var/full_dmg
-			if(has_status_effect(/datum/status_effect/debuff/exposed))
+			if(consume_debuff && has_status_effect(/datum/status_effect/debuff/exposed))
 				full_dmg = TRUE
+				// Currently only blunt damage enters this block of code, and we do NOT want it to multiply damage on top of its boons.
+				// intdamage *= EXPOSED_INTEG_MOD
 				playsound(src, 'sound/combat/exposed_pop.ogg', 100, TRUE)
 				visible_message("<span class = 'combatsecondarybodypart'>[src] suffers a savage hit to their armor while exposed!</span>")
 				remove_status_effect(/datum/status_effect/debuff/exposed)
 				emote("pain", forced = TRUE)
-			else if(has_status_effect(/datum/status_effect/debuff/vulnerable))
+			else if(consume_debuff && has_status_effect(/datum/status_effect/debuff/vulnerable))
+				intdamage *= VULN_INTEG_MOD
 				playsound(src, 'sound/combat/vulnerable_pop.ogg', 100, TRUE)
 				visible_message(span_biginfo("[src] is struck into their armor while vulnerable!"))
 				remove_status_effect(/datum/status_effect/debuff/vulnerable)
 				emote("groan", forced = TRUE)
 
-			var/layers_deep = 1
-			var/played_sound = FALSE
-			for(var/obj/item/clothing/C in layers)
-				var/actualdmg = intdamage
-				if(!full_dmg)
-					actualdmg /= layers_deep
-				C.take_damage(actualdmg, damage_flag = d_type, sound_effect = FALSE, armor_penetration = 100)
-				if(C.blocksound && !played_sound)
-					playsound(loc, get_armor_sound(C.blocksound, blade_dulling), 100)
-					played_sound = TRUE
-				layers_deep++
+			if(d_type in ARMOR_DR_SINGLE_LAYER_TYPES)
+				if(best_layer)
+					best_layer.take_damage(intdamage, damage_flag = d_type, sound_effect = FALSE, armor_penetration = 100)
+					if(best_layer.blocksound)
+						playsound(loc, get_armor_sound(best_layer.blocksound, blade_dulling), 100)
+			else
+				var/layers_deep = 1
+				var/played_sound = FALSE
+				var/total_layer_count = length(layers)
+				for(var/obj/item/clothing/C in layers)
+					var/actualdmg = intdamage
+					if(!full_dmg)
+						actualdmg /= layers_deep
+					C.take_damage(actualdmg, damage_flag = d_type, sound_effect = FALSE, armor_penetration = 100)
+					if(actualdmg > 0)
+						SEND_SIGNAL(src, COMSIG_MOB_ARMOR_INTEGRITY_DAMAGED, actualdmg, C, layers_deep, total_layer_count)
+					if(C.blocksound && !played_sound)
+						playsound(loc, get_armor_sound(C.blocksound, blade_dulling), 100)
+						played_sound = TRUE
+					layers_deep++
 			layers.Cut()
 
 	if(physiology)
 		protection += physiology.armor.getRating(d_type)
+
+	if(dr_armor_present && protection < 1)
+		return protection + 1
 
 	return protection
 
@@ -155,7 +177,7 @@
 		if(bp && istype(bp , /obj/item/clothing))
 			var/obj/item/clothing/C = bp
 			if(C.eweight)
-				weight +=  C.eweight
+				weight +=	C.eweight
 	return max(weight, 0)
 */
 /mob/living/carbon/human/on_hit(obj/projectile/P)
@@ -165,9 +187,9 @@
 
 /mob/living/carbon/human/bullet_act(obj/projectile/P, def_zone = BODY_ZONE_CHEST)
 
-	if(HAS_TRAIT(src, "ethereal")) //TA EDIT
+	if(HAS_TRAIT(src, "ethereal"))
 		return BULLET_ACT_FORCE_PIERCE
-	
+
 	if(dna && dna.species)
 		var/spec_return = dna.species.bullet_act(P, src, def_zone)
 		if(spec_return)
@@ -266,7 +288,7 @@
 	var/obj/item/W = get_active_held_item()
 	if(!blocked && I && cmode && mind)
 		if(W && get_dir(src, AM) == turn(get_dir(AM, src), 180))	//We are directly facing the thrown item.
-			var/diceroll = (get_skill_level(W.associated_skill)) * 10
+			var/diceroll = (get_wskill(W)) * 10
 			if(projectile_parry_timer > world.time)
 				diceroll *= 2
 			diceroll = min(diceroll, 90)
@@ -291,7 +313,7 @@
 				return TRUE
 	if(blocked)
 		return TRUE
-	
+
 	return ..()
 
 /mob/living/carbon/human/grippedby(mob/living/user, instant = FALSE)
@@ -303,12 +325,12 @@
 /mob/living/carbon/human/attacked_by(obj/item/I, mob/living/user)
 	if(!I || !user)
 		return 0
-	
-	if(HAS_TRAIT(src, "ethereal"))//TA EDIT
+
+	if(HAS_TRAIT(src, "ethereal"))
 		user.visible_message(span_danger("[user] tries to strike [src], but the weapon passes right through the mist!"), \
-							 span_warning("My weapon passes right through [src]!"))
+							span_warning("My weapon passes right through [src]!"))
 		return FALSE
-	
+
 	var/obj/item/bodypart/affecting
 	var/useder = user.zone_selected
 	if(!lying_attack_check(user,I))
@@ -333,7 +355,7 @@
 
 /mob/living/carbon/human/attack_hand(mob/user)
 
-	if(HAS_TRAIT(src, "ethereal"))//TA EDIT
+	if(HAS_TRAIT(src, "ethereal"))
 		return FALSE
 
 	if(..())	//to allow surgery to return properly.
@@ -341,50 +363,6 @@
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		dna.species.spec_attack_hand(H, src)
-
-/mob/living/carbon/human/attack_paw(mob/living/carbon/monkey/M)
-	var/dam_zone = pick(BODY_ZONE_CHEST, BODY_ZONE_PRECISE_L_HAND, BODY_ZONE_PRECISE_R_HAND, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
-	var/obj/item/bodypart/affecting = get_bodypart(ran_zone(dam_zone))
-	if(!affecting)
-		affecting = get_bodypart(BODY_ZONE_CHEST)
-	if(M.used_intent.type == INTENT_HELP)
-		..() //shaking
-		return 0
-
-	if(M.used_intent.type == INTENT_DISARM) //Always drop item in hand, if no item, get stunned instead.
-		var/obj/item/I = get_active_held_item()
-		if(I && dropItemToGround(I, silent = FALSE))
-			playsound(loc, 'sound/blank.ogg', 25, TRUE, -1)
-			visible_message(span_danger("[M] disarmed [src]!"), \
-							span_danger("[M] disarmed you!"), span_hear("I hear aggressive shuffling!"), null, M)
-			to_chat(M, span_danger("I disarm [src]!"))
-		else if(!M.client || prob(5)) // only natural monkeys get to stun reliably, (they only do it occasionaly)
-			playsound(loc, 'sound/blank.ogg', 25, TRUE, -1)
-			if (src.IsKnockdown() && !src.IsParalyzed())
-				Paralyze(40)
-				log_combat(M, src, "pinned")
-				visible_message(span_danger("[M] pins [src] down!"), \
-								span_danger("[M] pins you down!"), span_hear("I hear shuffling and a muffled groan!"), null, M)
-				to_chat(M, span_danger("I pin [src] down!"))
-			else
-				Knockdown(30)
-				log_combat(M, src, "tackled")
-				visible_message(span_danger("[M] tackles [src] down!"), \
-								span_danger("[M] tackles you down!"), span_hear("I hear aggressive shuffling followed by a loud thud!"), null, M)
-				to_chat(M, span_danger("I tackle [src] down!"))
-
-	if(M.limb_destroyer)
-		dismembering_strike(M, affecting.body_zone)
-
-	if(can_inject(M, 1, affecting))//Thick suits can stop monkey bites.
-		if(..()) //successful monkey bite, this handles disease contraction.
-			var/damage = rand(1, 3)
-			if(check_shields(M, damage, "the [M.name]"))
-				return 0
-			if(stat != DEAD)
-				apply_damage(damage, BRUTE, affecting, run_armor_check(affecting, "slash", armor_penetration = PEN_NONE, damage = damage))
-		return 1
-
 
 /mob/living/carbon/human/attack_animal(mob/living/simple_animal/M)
 	. = ..()
@@ -394,12 +372,12 @@
 			return FALSE
 		var/zones = M.zone_selected
 		if(!M.ckey)
-			zones = pick(BODY_ZONE_HEAD, BODY_ZONE_CHEST, BODY_ZONE_PRECISE_NECK, BODY_ZONE_PRECISE_L_HAND, BODY_ZONE_PRECISE_R_HAND, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
+			zones = M.get_attack_zone(src)
 		var/dam_zone = dismembering_strike(M, zones)
 		if(!dam_zone) //Dismemberment successful
 			return TRUE
 
-		var/obj/item/bodypart/affecting = get_bodypart(ran_zone(dam_zone))
+		var/obj/item/bodypart/affecting = get_bodypart(M.ckey ? ran_zone(dam_zone) : check_zone(dam_zone))
 		if(!affecting)
 			affecting = get_bodypart(BODY_ZONE_CHEST)
 		var/armor = run_armor_check(affecting, M.d_type, armor_penetration = M.armor_penetration, damage = damage)
@@ -410,10 +388,12 @@
 			nodmg = TRUE
 			next_attack_msg += VISMSG_ARMOR_BLOCKED
 		else
-			SEND_SIGNAL(M, COMSIG_MOB_AFTERATTACK_SUCCESS, src)
+			SEND_SIGNAL(M, COMSIG_MOB_AFTERATTACK_SUCCESS, src, affecting)
 			affecting.bodypart_attacked_by(M.a_intent.blade_class, damage - armor, M, dam_zone, crit_message = TRUE)
-		visible_message(span_danger("\The [M] [pick(M.a_intent.attack_verb)] [src]![next_attack_msg.Join()]"), \
-					span_danger("\The [M] [pick(M.a_intent.attack_verb)] me![next_attack_msg.Join()]"), null, COMBAT_MESSAGE_RANGE)
+		var/attack_verb = pick(M.a_intent.attack_verb)
+		var/hit_area = parse_zone(affecting.body_zone, affecting)
+		visible_message(span_danger("\The [M] [attack_verb] [src] in the [span_combatsecondarybp(hit_area)]![next_attack_msg.Join()]"), \
+					span_danger("\The [M] [attack_verb] me in the [span_userdanger(hit_area)]![next_attack_msg.Join()]"), null, COMBAT_MESSAGE_RANGE)
 		next_attack_msg.Cut()
 		if(nodmg)
 			return FALSE
@@ -708,7 +688,7 @@
 	else if(user)
 		m1 = "[p_they(TRUE)] [p_are()]"
 		if(!deep_examination)
-			deep_examination = HAS_TRAIT(user, TRAIT_EMPATH)
+			deep_examination = user.has_empath_for(src)
 		examination += span_notice("Let's see how [src] is doing.")
 		if(!user.stat && !silent)
 			user.visible_message(span_notice("[user] examines [src]."), \
@@ -774,7 +754,7 @@
 			visible_message(span_notice("[src] examines [p_their()] [parse_zone(choice)]."))
 	else if(user)
 		if(!deep_examination)
-			deep_examination = HAS_TRAIT(user, TRAIT_EMPATH)
+			deep_examination = user.has_empath_for(src)
 		examination += span_notice("Let's see how [src]'s [parse_zone(choice)] is doing.")
 		if(!user.stat && !silent)
 			visible_message(span_notice("[user] examines [src]'s [parse_zone(choice)]."))
@@ -875,6 +855,11 @@
 					if(val > protection)
 						protection = val
 						used = C
+				// Fire: fall back to a worn real-armor piece even at a 0 rating, so fire-0
+				// plate still reads as "armored" (engages absorb, shows crumble messages). A rated piece wins.
+				// has_armor_value() (any blunt/slash/stab/piercing rating) is the real-armor gate so plain cloth keeps bypassing instead of burning off.
+				else if((d_type in ARMOR_DR_RESIST_TYPES) && C.max_integrity && C.has_armor_value() && !used)
+					used = C
 	return used
 
 /// Helper proc that returns the worn item ref that has the highest rating covering the def_zone (targeted zone) for the d_type (damage type). Returns the whole list of items that cover def_zone, from highest rating to lowest.
@@ -899,14 +884,15 @@
 					if(C.obj_integrity <= 0 || C.obj_broken)
 						continue
 				var/val = C.armor.getRating(d_type)
-				if(val > 0)
+				// Fire: any worn real-armor piece counts even at a 0 rating (blunt keeps its own rating gate), so it soaks
+				// HP damage and takes integrity damage instead of letting it bypass. Plain cloth (no blunt/slash/stab/piercing rating)
+				// and cosmetics (no max_integrity) stay excluded so they bypass instead of burning off. The stored rating is preserved as the value.
+				if(val > 0 || ((d_type in ARMOR_DR_RESIST_TYPES) && C.max_integrity && C.has_armor_value()))
 					used_armor[C] = val
 	return used_armor
 
 /mob/living/carbon/human/on_fire_stack(seconds_per_tick, datum/status_effect/fire_handler/fire_stacks/fire_handler)
 	//SEND_SIGNAL(src, COMSIG_HUMAN_BURNING)
-	if(fire_handler.stacks >= 10)
-		burn_clothing(seconds_per_tick, fire_handler.stacks)
 	var/no_protection = FALSE
 	fire_handler.harm_human(seconds_per_tick, no_protection)
 

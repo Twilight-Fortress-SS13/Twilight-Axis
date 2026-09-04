@@ -1,4 +1,5 @@
 /datum/action/cooldown/spell/advance
+	source_aspect = /datum/magic_aspect/pseudo/spellblade
 	name = "Advance!"
 	desc = "Leap forward up to 4 tiles, passing through enemies, then stab ahead on landing. \
 		At 3+ momentum: consumes 3 to double damage. \
@@ -20,7 +21,7 @@
 	charge_required = TRUE
 	weapon_cast_penalized = FALSE
 	charge_time = CHARGETIME_POKE
-	charge_drain = 0
+	hold_drain = 0
 	charge_slowdown = CHARGING_SLOWDOWN_NONE
 	charge_sound = 'sound/magic/charging.ogg'
 	cooldown_time = 15 SECONDS
@@ -131,10 +132,12 @@
 		return TRUE
 
 	var/hit_count = 0
+	var/deflected = FALSE
 	for(var/mob/living/victim in jab_turf)
 		if(victim == H || victim.stat == DEAD)
 			continue
-		if(spell_guard_check(victim, FALSE, hit_count == 0 ? H : null))
+		if(spell_guard_check(victim, FALSE, H, punish_caster = deflected ? FALSE : null))
+			deflected = TRUE
 			continue
 		arcyne_strike(H, victim, held_weapon, damage, def_zone, BCLASS_STAB, spell_name = "Advance!")
 		hit_count++
@@ -145,7 +148,8 @@
 		for(var/mob/living/victim in landing)
 			if(victim == H || victim.stat == DEAD)
 				continue
-			if(spell_guard_check(victim, FALSE, hit_count == 0 ? H : null))
+			if(spell_guard_check(victim, FALSE, H, punish_caster = deflected ? FALSE : null))
+				deflected = TRUE
 				continue
 			arcyne_strike(H, victim, held_weapon, damage, def_zone, BCLASS_STAB, spell_name = "Advance!")
 			hit_count++

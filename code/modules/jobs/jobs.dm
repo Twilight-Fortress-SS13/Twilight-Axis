@@ -65,7 +65,9 @@ GLOBAL_LIST_INIT(nonhuman_positions, list(
 
 GLOBAL_LIST_INIT(leadership_positions, list( // Used for boldening text primarily
 	"Grand Duke",
+	"Sultan", // Desert Town
 	"Hand",
+	"Vizier", //Desert Town
 	"Court Magician",
 	"Court Physician",
 	"Marshal",
@@ -91,11 +93,15 @@ GLOBAL_LIST_INIT(regency_positions, list( // Used to determine elligibility for 
 	"Steward",
 	"Councillor",
 	"Marshal",
+	"Vizier", //Desert Town
+	"Sheikh", //Desert Town
 ))
 
 GLOBAL_LIST_INIT(noble_positions, list( //Royal family only
 	"Grand Duke",
+	"Sultan", // Desert Town
 	"Consort",
+	"Harem Favorite", // Desert Town
 	"Prince",
 ))
 
@@ -110,6 +116,10 @@ GLOBAL_LIST_INIT(courtier_positions, list( //Anyone that is officially part of t
 	"Archivist",
 	"Seneschal",
 	"Suitor",
+	"Vizier", //TA_EDIT
+	"Head Slave", //TA_EDIT
+	"Slave Master", //TA_EDIT
+	"Sheikh", //TA_EDIT
 ))
 
 GLOBAL_LIST_INIT(retinue_positions, list( //Manorites
@@ -117,6 +127,7 @@ GLOBAL_LIST_INIT(retinue_positions, list( //Manorites
 	"Knight",
 	"Royal Knight",
 	"Squire",
+	"Cataphract", //TA_EDIT
 ))
 
 GLOBAL_LIST_INIT(garrison_positions, list( //Guards
@@ -126,12 +137,15 @@ GLOBAL_LIST_INIT(garrison_positions, list( //Guards
 	"Royal Guard",
 	"Warden",
 	"Watchman",
+	"Janissary Sergeant", //TA_EDIT
+	"Janissary", //TA_EDIT
+	"Azeb Agha", //TA_EDIT 
+	"Azeb", //TA_EDIT
 ))
 
 GLOBAL_LIST_INIT(citywatch_positions, list( //Guards
 	"Town Sheriff",
 	"Town Watch",
-	"Dungeoneer",
 ))
 
 GLOBAL_LIST_INIT(vanguard_positions, list( //Guards
@@ -147,6 +161,7 @@ GLOBAL_LIST_INIT(church_positions, list( //Church of the Ten
 	"Druid",
 	"Acolyte",
 	"Sexton",
+	"Painter",
 ))
 
 GLOBAL_LIST_INIT(burgher_positions, list( //Artisans, store owners what have you.
@@ -157,7 +172,6 @@ GLOBAL_LIST_INIT(burgher_positions, list( //Artisans, store owners what have you
 	"Apothecary",
 	"Innkeeper",
 	"Bathmaster",
-	"Town Crier",
 	"Magicians Associate",
 	"Mayor", //TA_EDIT
 	"Bailiff", //TA_EDIT
@@ -191,6 +205,7 @@ GLOBAL_LIST_INIT(peasant_positions, list( //Serfs / peasants / generic towners
 	"Servant",
 	"Soilson",
 	"Towner",
+	"Palace Slave", //TA_EDIT
 ))
 
 GLOBAL_LIST_INIT(sidefolk_positions, list( //Weerdoes who hang around the town
@@ -198,7 +213,7 @@ GLOBAL_LIST_INIT(sidefolk_positions, list( //Weerdoes who hang around the town
 	"Vagabond",
 	"Migrant",
 	"Pilgrim",
-	"Mercenary",	
+	"Mercenary",
 	"Veteran",
 ))
 
@@ -211,6 +226,8 @@ GLOBAL_LIST_INIT(wanderer_positions, list( //Homeless
 GLOBAL_LIST_INIT(antagonist_positions, list( //Mostly lesser antagonists
 	"Assassin",
 	"Bandit",
+	"Freeman", // TA EDIT
+	"Lost Grenzel", // TA EDIT
 	"Wretch",
 	"Gnoll",
 	"Hag",
@@ -241,9 +258,9 @@ GLOBAL_LIST_INIT(roguefight_positions, list(
 
 //This list is used to prevent the duke from stripping nobility from certain jobs that aren't intrinsically a part of the town.
 GLOBAL_LIST_INIT(foreign_positions, list(
-	"Adventurer", 
-	"Mercenary", 
-	"Bandit", 
+	"Adventurer",
+	"Mercenary",
+	"Bandit",
 	"Wretch",
 	"Inquisitor",
 	"Suitor",
@@ -288,7 +305,7 @@ GLOBAL_LIST_INIT(exp_jobsmap, list(
 
 GLOBAL_LIST_INIT(exp_specialmap, list(
 	EXP_TYPE_LIVING = list(), // all living mobs
-	EXP_TYPE_ANTAG = list(ROLE_MANIAC, ROLE_PREBEL, ROLE_BANDIT, ROLE_ASPIRANT, ROLE_WEREWOLF, ROLE_NBEAST, ROLE_VAMPIRE, ROLE_LICH, ROLE_DREAMWALKER, ROLE_GNOLL, ROLE_ASSASSIN, ROLE_HAG),
+	EXP_TYPE_ANTAG = list(ROLE_MANIAC, ROLE_PREBEL, ROLE_REBEL_LEADER, ROLE_BANDIT, ROLE_ASPIRANT, ROLE_WEREWOLF, ROLE_NBEAST, ROLE_VAMPIRE, ROLE_LICH, ROLE_DREAMWALKER, ROLE_GNOLL, ROLE_ASSASSIN, ROLE_HAG),
 	EXP_TYPE_SPECIAL = list("Lifebringer","Ash Walker","Exile","Servant Golem","Free Golem","Hermit","Translocated Vet","Escaped Prisoner","Hotel Staff","SuperFriend","Space Syndicate","Ancient Crew","Space Doctor","Space Bartender","Beach Bum","Skeleton","Zombie","Space Bar Patron","Lavaland Syndicate","Ghost Role"), // Ghost roles
 	EXP_TYPE_GHOST = list() // dead people, observers
 ))
@@ -337,7 +354,7 @@ GLOBAL_PROTECT(exp_role_lookup)
 	var/static/regex/chef_expand = new("chef")
 	var/static/regex/borg_expand = new("(?<!cy)borg")
 
-	job = lowertext(job)
+	job = LOWER_TEXT(job)
 	job = cap_expand.Replace(job, "captain")
 	job = cmo_expand.Replace(job, "chief medical officer")
 	job = hos_expand.Replace(job, "head of security")

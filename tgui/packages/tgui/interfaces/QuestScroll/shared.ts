@@ -42,6 +42,8 @@ export type QuestScrollData = {
   is_rumor?: BooleanLike;
   is_defense?: BooleanLike;
   is_towner?: BooleanLike;
+  towner_intro?: string;
+  towner_seal_note?: string;
   guild_cut_exempt?: BooleanLike;
   blockade_timer_label?: string;
   blockade_timer_seconds?: number;
@@ -51,16 +53,6 @@ export type QuestScrollData = {
   blockade_failed?: BooleanLike;
   hunt_timer_label?: string;
   hunt_timer_seconds?: number;
-  caravan_parcel_spawned?: BooleanLike;
-  caravan_expired?: BooleanLike;
-  caravan_expiry_seconds?: number;
-  caravan_bearer_arrived?: BooleanLike;
-  orevein_clusters_total?: number;
-  orevein_clusters_remaining?: number;
-  orevein_clusters_spawned?: BooleanLike;
-  orevein_expired?: BooleanLike;
-  orevein_expiry_seconds?: number;
-  orevein_bearer_arrived?: BooleanLike;
 };
 
 export const FACTION_CAT_HUMANOID = 'humanoid';
@@ -77,7 +69,7 @@ export const CONDEMNATION_VOLKOMIR = 'volkomir';
 
 export const WRIT_TYPE_RECOVERY = 'recovery';
 export const WRIT_TYPE_CARRIAGE = 'carriage';
-export const WRIT_TYPE_TOWNER_VEIN = 'towner_vein';
+export const WRIT_TYPE_TOWNER = 'towner';
 
 export const formatMinSec = (totalSeconds: number) => {
   if (totalSeconds <= 0) return '0:00';
@@ -175,6 +167,30 @@ export const failedStamp: CSSProperties = {
   color: 'var(--p-seal-red)',
   fontSize: '1.08em',
   marginTop: '14px',
+};
+
+export const bountyHeader: CSSProperties = {
+  display: 'flex',
+  flexWrap: 'wrap',
+  alignItems: 'baseline',
+  justifyContent: 'center',
+  gap: '6px',
+  background: 'var(--p-card-bg)',
+  border: '1px solid var(--p-ink-faint)',
+  borderRadius: '2px',
+  padding: '6px 12px',
+  marginBottom: '16px',
+  fontSize: '0.95em',
+};
+
+export const netReward = (
+  reward: number,
+  levyRate: number,
+  levyExempt: boolean,
+  guildCutRate: number,
+) => {
+  const effectiveLevy = !levyExempt && levyRate > 0 ? levyRate : 0;
+  return Math.round(reward * (1 - effectiveLevy - guildCutRate));
 };
 
 export const titleHint: CSSProperties = {

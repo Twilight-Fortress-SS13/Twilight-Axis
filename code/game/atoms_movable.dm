@@ -47,10 +47,10 @@
 	var/jumping = FALSE
 	var/zfalling = FALSE
 	/**
-	 * an associative lazylist of relevant nested contents by "channel", the list is of the form: list(channel = list(important nested contents of that type))
-	 * each channel has a specific purpose and is meant to replace potentially expensive nested contents iteration.
-	 * do NOT add channels to this for little reason as it can add considerable memory usage.
-	 */
+		* an associative lazylist of relevant nested contents by "channel", the list is of the form: list(channel = list(important nested contents of that type))
+		* each channel has a specific purpose and is meant to replace potentially expensive nested contents iteration.
+		* do NOT add channels to this for little reason as it can add considerable memory usage.
+		*/
 	var/list/important_recursive_contents
 
 	/// String representing the spatial grid groups we want to be held in.
@@ -399,6 +399,13 @@
 	if(. && pulled && pulledby == pulled && pulled.cmode && pulled.grab_state < GRAB_AGGRESSIVE) //NICHE case of being in a first tier grab state.
 		if(!pulledby || QDELETED(pulledby))
 			return
+
+		if(HAS_TRAIT(pulled, TRAIT_PACIFISM))
+			to_chat(pulled, span_notice("I don't resist as [src] pulls away."))
+			to_chat(pulledby, span_notice("I brush [src] aside and move off."))
+			pulled.stop_pulling()
+			return
+
 		if(pulledby.anchored)
 			pulledby.stop_pulling()
 		else
@@ -745,15 +752,16 @@
 		return TRUE
 	return ..()
 
-// called when this atom is removed from a storage item, which is passed on as S. The loc variable is already set to the new destination before this is called.
+/// Called when this atom is removed from a storage item, which is passed on as S. The loc variable is already set to the new destination before this is called.
 /atom/movable/proc/on_exit_storage(datum/component/storage/concrete/S)
 	return
 
-// called when this atom is added into a storage item, which is passed on as S. The loc variable is already set to the storage item.
-/atom/movable/proc/on_enter_storage(datum/component/storage/concrete/S)
+/// Called when this atom is added into a storage item, which is passed on as S. The loc variable is already set to the storage item.
+/// If the mob putting the atom in storage is known, it is passed on as M.
+/atom/movable/proc/on_enter_storage(datum/component/storage/concrete/S, mob/M)
 	return
 
-//called when a mob resists while inside a container that is itself inside something.
+/// Called when a mob resists while inside a container that is itself inside something.
 /atom/movable/proc/relay_container_resist(mob/living/user, obj/O)
 	return
 
@@ -967,6 +975,7 @@ GLOBAL_VAR_INIT(pixel_diff_time, 1)
 	var/obj/effect/temp_visual/dir_setting/attack_effect/firstatk = new(first_step, newdir)
 	firstatk.icon_state = visual_effect_icon
 	firstatk.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	firstatk.layer = ABOVE_MOB_LAYER
 	var/dist = get_dist(src, A)
 	if(dist > 1)	//2+ tiles, we trace a path to the target.
 		for(var/i = 1, i<dist, i++)
@@ -1020,13 +1029,6 @@ GLOBAL_VAR_INIT(pixel_diff_time, 1)
 	icon = 'icons/effects/effects.dmi'
 	duration = 3
 
-/atom/movable/proc/do_warning()
-	var/image/I
-	I = image('icons/effects/effects.dmi', src, "mobwarning", src.layer + 0.1)
-	I.pixel_y = 16
-	flick_overlay(I, GLOB.clients, 5)
-
-
 /atom/movable/vv_get_dropdown()
 	. = ..()
 	. += "<option value='?_src_=holder;[HrefToken()];adminplayerobservefollow=[REF(src)]'>Follow</option>"
@@ -1041,17 +1043,19 @@ GLOBAL_VAR_INIT(pixel_diff_time, 1)
 	acted_explosions += ex_id
 	return TRUE
 
-//TODO: Better floating
 /atom/movable/proc/float(on)
 	if(throwing)
 		return
 	if(on && !(movement_type & FLOATING))
-		animate(src, pixel_y = pixel_y + 2, time = 1 SECONDS, loop = -1, flags = ANIMATION_RELATIVE)
-		animate(pixel_y = pixel_y - 2, time = 1 SECONDS, loop = -1, flags = ANIMATION_RELATIVE)
 		setMovetype(movement_type | FLOATING)
-	else if (!on && (movement_type & FLOATING))
-		animate(src, pixel_y = initial(pixel_y), time = 1 SECONDS)
+		float_bob()
+	else if(!on && (movement_type & FLOATING))
 		setMovetype(movement_type & ~FLOATING)
+		animate(src, pixel_y = base_pixel_y, time = 5)
+
+/atom/movable/proc/float_bob()
+	animate(src, pixel_y = base_pixel_y + 2, time = 10, easing = SINE_EASING, loop = -1)
+	animate(pixel_y = base_pixel_y - 2, time = 10, easing = SINE_EASING)
 
 /* Language procs */
 /atom/movable/proc/get_language_holder(shadow=TRUE)
@@ -1181,12 +1185,12 @@ GLOBAL_VAR_INIT(pixel_diff_time, 1)
 		to_x = -32
 	if(!direction)
 		to_y = 16
-	flick_overlay(I, GLOB.clients, 6)
+	var/atom/movable/flick_visual/pickup = T.flick_overlay_view(I, 6)
 	var/matrix/M = new
 	M.Turn(pick(-30, 30))
-	animate(I, alpha = 175, pixel_x = to_x, pixel_y = to_y, time = 3, transform = M, easing = CUBIC_EASING)
+	animate(pickup, alpha = 175, pixel_x = to_x, pixel_y = to_y, time = 3, transform = M, easing = CUBIC_EASING)
 	sleep(1)
-	animate(I, alpha = 0, transform = matrix(), time = 1)
+	animate(pickup, alpha = 0, transform = matrix(), time = 1)
 
 /atom/movable/Exited(atom/movable/gone, atom/newLoc)
 	. = ..()

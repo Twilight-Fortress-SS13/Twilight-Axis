@@ -7,7 +7,7 @@ GLOBAL_LIST_EMPTY(custom_fermentation_recipes)
 
 /obj/structure/fermentation_keg
 	name = "fermentation keg"
-	desc = "A keg that bares the duty of birthing plenty of bubbling brews."
+	desc = "A keg that bears the duty of birthing plenty of bubbling brews."
 
 	icon = 'icons/obj/brewing.dmi'
 	icon_state = "barrel_tapless"
@@ -49,9 +49,9 @@ GLOBAL_LIST_EMPTY(custom_fermentation_recipes)
 	var/heated_progress_time
 	///when our heat can decay
 	var/heat_decay = 0
-	sellprice = 15 // Default price for the keg.
+	var/rotation_speed_mult = 1 //for the copper distiller
 
-/obj/structure/fermentation_keg/Initialize()
+/obj/structure/fermentation_keg/Initialize(mapload)
 	create_reagents(900, OPENCONTAINER | NO_REACT | AMOUNT_VISIBLE | REFILLABLE) //on agv it should be 120u for water then rest can be other needed chemicals
 	. = ..()
 	recipe_crop_stocks = list()
@@ -383,6 +383,13 @@ GLOBAL_LIST_EMPTY(custom_fermentation_recipes)
 				to_chat(user, span_notice("This keg needs more [initial(required_chem.name)]!"))
 				ready = FALSE
 
+	if(!selected_recipe)
+		return
+
+	// doubles the brew speed
+	if(!selected_recipe.heat_required && rotation_speed_mult > 1)
+		addtimer(CALLBACK(src, PROC_REF(check_rotated_brew_end)), round((selected_recipe.brew_time * 0.5) / rotation_speed_mult))
+
 	return ready
 
 /obj/structure/fermentation_keg/proc/refuel(obj/item/item, mob/user)
@@ -450,7 +457,7 @@ GLOBAL_LIST_EMPTY(custom_fermentation_recipes)
 				bottle_made.icon_state = "[glass_colour]"
 				bottle_made.name = "brewer's bottle of [selected_recipe.bottle_name]"
 				bottle_made.sellprice = round(selected_recipe.sell_value / selected_recipe.brewed_amount)
-				bottle_made.desc =  selected_recipe.bottle_desc || "A bottle of locally-brewed [selected_recipe.bottle_name]."
+				bottle_made.desc =	selected_recipe.bottle_desc || "A bottle of locally-brewed [selected_recipe.bottle_name]."
 				var/datum/reagent/brewed_reagent = selected_recipe.reagent_to_brew
 				if(selected_recipe.ages)
 					var/time = world.time - age_start_time
@@ -513,7 +520,7 @@ GLOBAL_LIST_EMPTY(custom_fermentation_recipes)
 /obj/item/reagent_containers/glass/bottle/brewing_bottle
 	name = "brewer's bottle"
 	desc = "A bottle with a cork."
-	icon =  'icons/obj/bottle.dmi'
+	icon =	'icons/obj/bottle.dmi'
 	icon_state = "brew_bottle"
 
 	var/glass_name
@@ -539,7 +546,7 @@ GLOBAL_LIST_EMPTY(custom_fermentation_recipes)
 	else
 		. += span_notice("The bottle has been unsealed. It cannot be sold anymore.")
 
-/obj/item/reagent_containers/glass/bottle/brewing_bottle/rmb_self(mob/user)
+/obj/item/reagent_containers/glass/bottle/brewing_bottle/rmb_self(mob/user, keybind = FALSE)
 	. = ..()
 	sealed = FALSE
 	sellprice = 0
@@ -638,17 +645,60 @@ GLOBAL_LIST_EMPTY(custom_fermentation_recipes)
 	anchored = TRUE
 	heated = TRUE
 
-	// accepts_water_input = TRUE
+//this is the part fo copper distillers to speed up
+/obj/structure/fermentation_keg/distiller
+	rotation_structure = TRUE
+	stress_use = 32
+	initialize_dirs = CONN_DIR_FORWARD | CONN_DIR_LEFT | CONN_DIR_RIGHT | CONN_DIR_FLIP
+	/// Speed multiplier: 1 = normal, 2 = twice as fast at 32+ RPM
 
-// /obj/structure/fermentation_keg/distiller/valid_water_connection(direction, obj/structure/water_pipe/pipe)
-// 	if(direction == SOUTH)
-// 		input = pipe
-// 		return TRUE
-// 	return FALSE
+/obj/structure/fermentation_keg/distiller/set_rotations_per_minute(speed)
+	. = ..()
+	if(!.)
+		return
+	set_stress_use(speed ? stress_use : 0)
+	rotation_speed_mult = (speed >= 32) ? 2 : 1
 
-// /obj/structure/fermentation_keg/distiller/setup_water()
-// 	var/turf/north_turf = get_step(src, NORTH)
-// 	input = locate(/obj/structure/water_pipe) in north_turf
+/obj/structure/fermentation_keg/proc/check_rotated_brew_end()
+	if(!brewing)
+		return
+	end_brew()
+
+/obj/structure/fermentation_keg/distiller/process()
+	// Heat decay always runs
+	if(heat_decay < world.time)
+		heat = max(300, heat - 5)
+
+	if(!brewing || !selected_recipe)
+		return
+	// Non-heat-required recipes use addtimer — nothing to do in process
+	if(!selected_recipe.heat_required)
+		return
+
+	if(!start_time)
+		start_time = world.time
+		return
+
+	if(heat > selected_recipe.heat_required)
+		var/tick_progress = world.time - start_time
+		heated_progress_time += tick_progress * rotation_speed_mult
+
+	start_time = world.time
+
+	if(heated_progress_time >= selected_recipe.brew_time)
+		end_brew()
+
+
+/obj/structure/fermentation_keg/distiller/examine(mob/user)
+	. = ..()
+	if(selected_recipe && !ready_to_bottle && rotation_speed_mult > 1)
+		var/multiplier = selected_recipe.heat_required ? 1 : 0.5
+		multiplier /= rotation_speed_mult
+		var/effective_time = selected_recipe.brew_time * multiplier
+		if(effective_time >= 1 MINUTES)
+			. += span_notice("At current RPM, actual brew time: [round(effective_time / 600, 0.1)] minutes.")
+		else
+			. += span_notice("At current RPM, actual brew time: [round(effective_time / 10, 0.1)] seconds.")
 
 // /obj/structure/fermentation_keg/distiller/return_rotation_chat(atom/movable/screen/movable/mouseover/mouseover)
 // 	mouseover.maptext_height = 96

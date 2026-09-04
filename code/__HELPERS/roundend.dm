@@ -83,7 +83,7 @@
 			if(!team_ids[T])
 				team_ids[T] = team_gid++
 			antag_info["team"]["id"] = team_ids[T]
- 
+
 		if(A.objectives.len)
 			for(var/datum/objective/O in A.objectives)
 				var/result = O.check_completion() ? "SUCCESS" : "FAIL"
@@ -94,7 +94,8 @@
 	if(SSticker.current_state != GAME_STATE_FINISHED)
 		return
 	status_flags |= GODMODE
-	ai_controller?.set_ai_status(AI_STATUS_OFF)
+	if(istype(ai_controller, /datum/ai_controller))
+		ai_controller.set_ai_status(AI_STATUS_OFF)
 	if(client)
 		add_verb(client, /client/proc/lobbyooc)
 		add_verb(client, /client/proc/view_stats)
@@ -118,18 +119,13 @@
 	var/atom/movable/screen/splash/credits/S = new(src, FALSE)
 	S.Fade(FALSE,FALSE)
 	RollCredits()
-	if(GLOB.credits_icons.len)
-		for(var/i=0, i<=GLOB.credits_icons.len, i++)
-			var/atom/movable/screen/P = new()
-			P.layer = SPLASHSCREEN_LAYER+1
-			P.appearance = GLOB.credits_icons
-			screen += P
 
 /datum/controller/subsystem/ticker/proc/declare_completion()
 	set waitfor = FALSE
 
 	log_game("The round has ended.")
 	SSerp?.hard_shutdown_all("roundend_credits_start") // TA add - NEW ERP SYSTEM
+	ccg_sync_all_player_collections()
 	to_chat(world, "<BR><BR><BR><span class='reallybig'>So ends this tale on [realm_name].</span>")
 	get_end_reason()
 	roundend_notify_discord()
@@ -148,6 +144,8 @@
 			round_end_music = 5 // 5%
 		if(17 to 21)
 			round_end_music = 6 // 5%
+		if(22 to 26)
+			round_end_music = 7 // 5%
 		else
 			round_end_music = rand(0, 1)
 
@@ -161,15 +159,18 @@
 				if(1)
 					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend.ogg', 100, FALSE)
 				if(2)
-					C.mob.playsound_local(C.mob, 'sound/music/roundend_mirthful.ogg', 100, FALSE) //Hildegard Von Blingin and Whitney Avalon's transformative cover of 'Manchild' by Sabrina Carpenter, circa 2026.
+					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend6.ogg', 100, FALSE) // Die Toteninsel Emptiness
 				if(3)
 					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend2.ogg', 100, FALSE)
 				if(4)
 					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend3.ogg', 100, FALSE)
 				if(5)
-					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend4.ogg', 100, FALSE)
+					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend4.ogg', 100, FALSE) // [FFXIV] Heavensward - Dragonsong
 				if(6)
 					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend5.ogg', 100, FALSE)
+				if(7)
+					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend7.ogg', 100, FALSE)
+
 		if(isliving(C.mob) && C.ckey)
 			key_list += C.ckey
 	var/favor_bonus = SSmerchant_trade ? SSmerchant_trade.favor_triumph_bonus() : 0
@@ -189,7 +190,7 @@
 	add_roundplayed(key_list)
 
 	update_god_rankings()
-	
+
 	for(var/mob/M in GLOB.mob_list)
 		M.do_game_over()
 
@@ -198,13 +199,13 @@
 		cb.InvokeAsync()
 	LAZYCLEARLIST(round_end_events)
 
-	to_chat(world, "Round ID: [GLOB.rogue_round_id]")
+	to_world("Round ID: [GLOB.rogue_round_id]")
 
 	sleep(5 SECONDS)
 
 	gamemode_report()
 
-	to_chat(world, personal_objectives_report())
+	to_world(personal_objectives_report())
 
 	sleep(10 SECONDS)
 
@@ -283,14 +284,11 @@
 						"Whether with loss or life, kingdom survives... for now.",
 						"The people of [realm_name] prepare to look forward; their actions locked in the impermeable past.")
 
-	if(SSmapping.retainer.head_rebel_decree)
-		end_reason = "The rebellious peasants have taken control of Azuria's throne, shepherding forth the beginning of a new community!"
-
 	if(SSmapping.retainer.cult_ascended)
 		end_reason = "ZIZOZIZOZIZOZIZO"
 
 	if(end_reason)
-		to_chat(world, span_bigbold("[end_reason]."))
+		to_world(span_bigbold("[end_reason]."))
 	else
 		var/mob/living/ruler = rulermob
 		var/ruler_name = ruler?.real_name || "an unknown sovereign"
@@ -302,11 +300,11 @@
 			"[title] [ruler_name] has kept the realm together for another week.", \
 			"The rule of [title] [ruler_name] holds firm. [realm_name] endures.", \
 			"Through strife and struggle, [title] [ruler_name] has held [realm_name] together.")
-		to_chat(world, span_bigbold("[good_ending]"))
+		to_world(span_bigbold("[good_ending]"))
 
 	// Epilogue — additional flavor text set by usurpation rites
 	if(roundend_epilogue)
-		to_chat(world, "<BR><b><i>[roundend_epilogue]</i></b>")
+		to_world("<BR><b><i>[roundend_epilogue]</i></b>")
 
 /datum/controller/subsystem/ticker/proc/gamemode_report()
 	var/list/all_teams = list()
@@ -317,7 +315,7 @@
 		header_parts += "<br>"
 		header_parts += "<div style='text-align: center; font-size: 1.2em;'>VILLAINS:</div>"
 		header_parts += "<hr class='paneldivider'>"
-		to_chat(world, header_parts)
+		to_world(header_parts)
 
 	for(var/datum/team/A in GLOB.antagonist_teams)
 		if(!A.members)
@@ -740,6 +738,6 @@
 //Legacy versions of the original prompts, listed at the end of each round. Kept below for posterity, and - for creative minds - repurposement.
 //"Without a Monarch, they were doomed to become slaves of Zizo." //"Without a Monarch, they were doomed to be eaten by nite creachers." //"Without a Monarch, they were doomed to become victims of Gehenna."
 //"Without a Monarch, they were doomed to wander the wilderness as exiles." //"Without a Monarch, the Lich made them his playthings." //"Without a Monarch, some jealous rival reigned in tyranny."
-//"Without a Monarch, the gnomes eventually destroyed the town with explosives." //"Without a Monarch, the courtesans sucked the town dry and moved on to the next one." 
+//"Without a Monarch, the gnomes eventually destroyed the town with explosives." //"Without a Monarch, the courtesans sucked the town dry and moved on to the next one."
 //"Without a Monarch, the town was abandoned." //"The peasant rebels took control of the throne, hail the new community!" //"When the Vampires finished sucking the town dry, they moved on to the next one."
 //"The Werevolves formed an unholy clan, marauding [realm_name] until the end of its daes."

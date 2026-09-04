@@ -14,7 +14,9 @@
 #define TAX_CATEGORY_HEADEATER_LEVY "headeater levy"
 #define TAX_CATEGORY_IMPORT_TARIFF "import tariff"
 #define TAX_CATEGORY_EXPORT_DUTY "export duty"
+#define TAX_CATEGORY_RECOVERED_SPOILS "recovered spoils"
 #define TAX_CATEGORY_FINE "fine"
+#define TAX_CATEGORY_ESTATE_LEVY "estate levy" //TA EDIT
 
 #define GENERIC_RATE_CAP 0.75
 #define STOCKPILE_CROWN_PURCHASE_FLOOR_DEFAULT 1000

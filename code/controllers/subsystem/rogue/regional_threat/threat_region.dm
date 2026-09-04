@@ -10,17 +10,37 @@
 	var/last_induced_ambush_time = 0 // Time between now and the previous ambush triggered by horn
 	var/list/faction_weights = list()
 	var/tp_budget_multiplier = 1.0
-	/// Multiplier on the threat-scaled bonus paid to retrieval/courier quests.
-	/// Independent of tp_budget_multiplier so reward and combat scaling tune separately.
 	var/delivery_reward_multiplier = 1.0
+	var/payout_multiplier = 1.0
+	// How much flat mammons you get for travelling to this region for a blockade
+	var/blockade_travel_fee = 0
 	// Ambush budget percent - uses the higher one for safer region so that they can still spawn some relevant ambushes without needing to adjust the max_ambush downward
 	var/ambush_budget_pct = AMBUSH_BUDGET_PCT_REGULAR
-	/// Quest types this region will host. Default is everything; set per region to restrict (e.g. a dangerous region that won't host trivial kill-easy quests).
 	var/list/allowed_quest_types
 	var/kill_target_floor = 2
 	var/evergreen_target = 0
+	// Mammons the region have stolen, for recovery
+	var/banditry_hoard = 0
+	var/datum/weakref/active_hoard_recovery_ref
 
-/datum/threat_region/New(_region_name = null, _latent_ambush = null, _min_ambush = null, _max_ambush = null, _fixed_ambush = null, _lowpop_tick = null, _highpop_tick = null, _ambush_budget_pct = null, _faction_weights = null, _tp_budget_multiplier = null, _allowed_quest_types = null, _kill_target_floor = null, _evergreen_target = null, _delivery_reward_multiplier = null)
+/datum/threat_region/New(
+	_region_name = null,
+	_latent_ambush = null,
+	_min_ambush = null,
+	_max_ambush = null,
+	_fixed_ambush = null,
+	_lowpop_tick = null,
+	_highpop_tick = null,
+	_ambush_budget_pct = null,
+	_faction_weights = null,
+	_tp_budget_multiplier = null,
+	_allowed_quest_types = null,
+	_kill_target_floor = null,
+	_evergreen_target = null,
+	_delivery_reward_multiplier = null,
+	_payout_multiplier = null,
+	_blockade_travel_fee = null
+)
 	. = ..()
 
 	// Supports both old argument-based construction and TA map-template subtypes created with new path().
@@ -47,14 +67,33 @@
 		tp_budget_multiplier = _tp_budget_multiplier
 	if(!isnull(_delivery_reward_multiplier))
 		delivery_reward_multiplier = _delivery_reward_multiplier
+	if(!isnull(_payout_multiplier))
+		payout_multiplier = _payout_multiplier
+	if(!isnull(_blockade_travel_fee))
+		blockade_travel_fee = _blockade_travel_fee
 	if(!isnull(_allowed_quest_types))
 		allowed_quest_types = _allowed_quest_types
 	else if(isnull(allowed_quest_types))
-		allowed_quest_types = list(QUEST_KILL_EASY, QUEST_CLEAR_OUT, QUEST_RAID, QUEST_BOUNTY, QUEST_COURIER, QUEST_RETRIEVAL, QUEST_RECOVERY)
+		allowed_quest_types = list(
+			QUEST_KILL_EASY,
+			QUEST_CLEAR_OUT,
+			QUEST_RAID,
+			QUEST_BOUNTY,
+			QUEST_COURIER,
+			QUEST_RETRIEVAL,
+			QUEST_RECOVERY,
+			QUEST_NOTORIOUS_BOUNTY
+		)
 	if(!isnull(_kill_target_floor))
 		kill_target_floor = _kill_target_floor
 	if(!isnull(_evergreen_target))
 		evergreen_target = _evergreen_target
+
+/datum/threat_region/proc/has_active_blockade()
+	for(var/datum/blockade/B as anything in GLOB.active_blockades)
+		if(B.threat_region_name == region_name)
+			return TRUE
+	return FALSE
 
 /datum/threat_region/proc/get_kill_target(pop)
 	var/scaled = round(pop * QUEST_KILL_FRACTION)
@@ -98,7 +137,6 @@
 	else
 		latent_ambush += amount
 
-/// Danger level for display — based on percentage of this region's max_ambush.
 /datum/threat_region/proc/get_danger_level()
 	if(!max_ambush)
 		return DANGER_LEVEL_SAFE
@@ -114,10 +152,6 @@
 	else
 		return DANGER_LEVEL_BLEAK
 
-/// Translates latent_ambush into an IC-flavored breakdown by faction.
-/// Returns a list of strings like "12 warbands of bogmen" in descending order of count.
-/// Factions with 0 bands (due to small weights at low threat) are dropped. If nothing to report,
-/// returns an empty list (caller renders "Safe" or equivalent).
 /datum/threat_region/proc/get_ic_description()
 	var/list/result = list()
 	if(!length(faction_weights) || latent_ambush <= 0)
@@ -142,6 +176,8 @@
 	sortTim(shares, /proc/cmp_numeric_dsc, associative = TRUE)
 	for(var/datum/quest_faction/F as anything in shares)
 		result += F.describe_group_count(shares[F])
+	if(banditry_hoard > 0)
+		result += "a hoard of around [banditry_hoard] mammons"
 	return result
 
 /datum/threat_region/proc/get_danger_color(level)

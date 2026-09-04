@@ -15,10 +15,24 @@
 	var/text_cooldown = TRUE
 	/// Shares cooldowns with other cooldown abilities of the same value, not active if null
 	var/shared_cooldown
+	/// Multiplier applied to the cooldown handed to the OTHER abilities in this shared group when
+	/// this ability triggers it. 1 = they get the same cooldown; 0.5 = they get half of it.
+	var/shared_cooldown_mult = 1
+	/// Flat cooldown handed to the OTHER abilities in this shared group, and only when it would
+	/// extend theirs. Takes precedence over shared_cooldown_mult. 0 disables it.
+	var/lockout_time = 0
 
 	// These are only used for click_to_activate actions
 	/// Setting for intercepting clicks before activating the ability
 	var/click_to_activate = FALSE
+	/// AI targeting contract
+	var/use_chance = 0
+	var/npc_min_range = 0
+	var/npc_max_range = 1
+	var/npc_requires_los = TRUE
+	var/self_targetable = FALSE
+	/// Anatomy gate - the ability is unavailable while any of these zones is broken.
+	var/list/required_zones
 	/// The cooldown added onto the user's next click.
 	var/click_cd_override = CLICK_CD_CLICK_ABILITY
 	/// If TRUE, we will unset after using our click intercept.
@@ -71,6 +85,8 @@
 	else
 		button.update_maptext(time_left)
 
+	if(button.our_hud?.rearrange_mode)
+		return
 	if(!IsAvailable() || !is_action_active(button))
 		return
 	// If we don't change the icon state, or don't apply a special overlay,
@@ -98,7 +114,21 @@
 	return click_to_activate && current_button.our_hud?.mymob?.click_intercept == src
 
 /datum/action/cooldown/IsAvailable()
-	return ..() && (next_use_time <= world.time)
+	return ..() && (next_use_time <= world.time) && !crippled()
+
+/// TRUE when a body part this ability depends on has been broken off.
+/datum/action/cooldown/proc/crippled()
+	if(!isanimal(owner))
+		return FALSE
+	if(!length(required_zones))
+		return FALSE
+	var/mob/living/simple_animal/beast = owner
+	if(!length(beast.broken_parts))
+		return FALSE
+	for(var/zone in required_zones)
+		if(zone in beast.broken_parts)
+			return TRUE
+	return FALSE
 
 /datum/action/cooldown/Grant(mob/granted_to)
 	. = ..()
@@ -122,7 +152,14 @@
 		for(var/datum/action/cooldown/shared_ability in owner.actions - src)
 			if(shared_cooldown != shared_ability.shared_cooldown)
 				continue
-			shared_ability.StartCooldownSelf(override_cooldown_time)
+			if(lockout_time)
+				if(shared_ability.next_use_time < world.time + lockout_time)
+					shared_ability.StartCooldownSelf(lockout_time)
+				continue
+			var/shared_time = override_cooldown_time
+			if(shared_cooldown_mult != 1 && isnum(shared_time))
+				shared_time = round(shared_time * shared_cooldown_mult)
+			shared_ability.StartCooldownSelf(shared_time)
 
 	StartCooldownSelf(override_cooldown_time)
 
@@ -186,6 +223,33 @@
 
 	deltimer(retrigger_timer)
 
+/datum/action/cooldown/proc/npc_controlled()
+	return !owner?.client
+
+// Default to 0 to prevent an AI from using it
+/datum/action/cooldown/proc/npc_use_chance(atom/target)
+	return use_chance
+
+/datum/action/cooldown/proc/set_ai_aim_lock(turf/locked_turf)
+	return
+
+/// How long this ability keeps the caster committed once triggered. While committed the AI closes on
+/// its quarry instead of spacing off it, so a telegraphed pattern still lands where it was aimed.
+/datum/action/cooldown/proc/ai_commit_time()
+	return 0
+
+/datum/action/cooldown/proc/can_use(atom/target)
+	if(QDELETED(target))
+		return FALSE
+	if(target == owner)
+		return self_targetable
+	var/dist = get_dist(owner, target)
+	if(dist < npc_min_range || dist > npc_max_range)
+		return FALSE
+	if(npc_requires_los && !can_see(owner, target, npc_max_range))
+		return FALSE
+	return TRUE
+
 /datum/action/cooldown/Trigger(trigger_flags, atom/target)
 	. = ..()
 	if(!.)
@@ -235,7 +299,7 @@
 	// check_click_intercept passes raw params string, not a list — parse it
 	if(istext(modifiers))
 		modifiers = params2list(modifiers)
-	if(!LAZYACCESS(modifiers, MIDDLE_CLICK))
+	if(LAZYACCESS(modifiers, BUTTON_CHANGED) != MIDDLE_CLICK)
 		return FALSE
 	if(!IsAvailable(TRUE))
 		return FALSE
@@ -296,17 +360,21 @@
 	return TRUE
 
 /datum/action/cooldown/process()
-	if(!owner || (next_use_time - world.time) <= 0)
+	var/time_left = next_use_time - world.time
+	if(!owner || time_left <= 0)
 		build_all_button_icons(UPDATE_BUTTON_STATUS)
 		STOP_PROCESSING(SSfastprocess, src)
 		return
-
-	build_all_button_icons(UPDATE_BUTTON_STATUS)
+	if(!text_cooldown || time_left >= COOLDOWN_NO_DISPLAY_TIME)
+		return
+	for(var/datum/hud/hud as anything in viewers)
+		var/atom/movable/screen/movable/action_button/button = viewers[hud]
+		button?.update_maptext(time_left)
 
 #undef COOLDOWN_NO_DISPLAY_TIME
 
 /proc/grant_poke_spell(mob/living/carbon/human/user) // unified proc because atm this is spread across like 5-6 places, uughhghghghgh
-	var/list/poke_options = list("Spitfire", "Frost Bolt", "Arc Bolt", "Greater Arcyne Bolt", "Stygian Efflorescence", "Arcyne Lance", "Lesser Gravel Blast", "Lesser Soulshot")
+	var/list/poke_options = list("Spitfire", "Frost Bolt", "Arc Bolt", "Greater Arcyne Bolt", "Arcyne Lance")
 	var/poke_choice = tgui_input_list(user, "Choose your offensive cantrip.", "Arcyne Awakening", poke_options)
 	if(!poke_choice || !user.mind)
 		return
@@ -319,11 +387,5 @@
 			user.mind.AddSpell(new /datum/action/cooldown/spell/projectile/arc_bolt)
 		if("Greater Arcyne Bolt")
 			user.mind.AddSpell(new /datum/action/cooldown/spell/projectile/greater_arcyne_bolt)
-		if("Stygian Efflorescence")
-			user.mind.AddSpell(new /datum/action/cooldown/spell/projectile/stygian_efflorescence)
 		if("Arcyne Lance")
 			user.mind.AddSpell(new /datum/action/cooldown/spell/projectile/arcyne_lance)
-		if("Lesser Gravel Blast")
-			user.mind.AddSpell(new /datum/action/cooldown/spell/projectile/gravel_blast/lesser)
-		if("Lesser Soulshot")
-			user.mind.AddSpell(new /datum/action/cooldown/spell/projectile/soulshot/lesser)

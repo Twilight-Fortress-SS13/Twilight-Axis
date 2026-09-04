@@ -6,10 +6,9 @@
 	var/payout_price = 1
 	var/withdraw_price = 1
 	var/withdraw_disabled = FALSE
-	var/mint_item = FALSE
+	var/autoexport_disabled = FALSE
 	var/stockpile_limit = 100
 	var/importexport_amt = 10
-	var/percent_bounty = FALSE
 	var/category = "Raw Materials"
 	var/trade_good_id
 	var/accept_toggle_enabled = TRUE

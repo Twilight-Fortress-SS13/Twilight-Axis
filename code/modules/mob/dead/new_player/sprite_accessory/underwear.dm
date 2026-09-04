@@ -12,7 +12,7 @@
 /datum/sprite_accessory/underwear/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	if(hides_breasts)
 		if(is_human_part_visible(owner, HIDECROTCH) || is_human_part_visible(owner, HIDEBOOB))
-			return TRUE	
+			return TRUE
 	return is_human_part_visible(owner, HIDECROTCH)
 
 /datum/sprite_accessory/underwear/briefs
@@ -30,6 +30,7 @@
 /datum/sprite_accessory/underwear/bikini
 	name = "Bikini"
 	icon_state = "female_bikini"
+	preview_states = list("bikini_f_0")
 	underwear_type = /obj/item/undies/bikini
 	hides_breasts = TRUE
 
@@ -61,6 +62,7 @@
 /datum/sprite_accessory/underwear/leotard
 	name = "Leotard"
 	icon_state = "female_leotard"
+	preview_states = list("female_leotard_0")
 	underwear_type = /obj/item/undies/leotard
 	hides_breasts = TRUE
 
@@ -87,6 +89,7 @@
 /datum/sprite_accessory/underwear/athletic_leotard
 	name = "Athletic Leotard"
 	icon_state = "female_sleeved_leotard"
+	preview_states = list("female_athletic_leotard")
 	underwear_type = /obj/item/undies/athletic_leotard
 	hides_breasts = TRUE
 
@@ -116,6 +119,18 @@
 	if(owner.gender == FEMALE)
 		return "eoran_efl"
 	return "eoran_reg"
+
+/datum/sprite_accessory/underwear/bandages
+	name = "Bandages"
+	icon_state = "bandages"
+	underwear_type = /obj/item/undies/bandages
+	hides_breasts = TRUE
+
+/datum/sprite_accessory/underwear/bandages/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
+	if(owner.gender == FEMALE)
+		return "bandages_f"
+	return "bandages"
+
 
 /datum/sprite_accessory/legwear
 	abstract_type = /datum/sprite_accessory/legwear
@@ -179,3 +194,23 @@
 	name = "knee-high stockings - silk"
 	icon_state = "knee_silk"
 	legwear_type = /obj/item/legwears/knee_high_silk
+
+/datum/sprite_accessory/legwear/stockings/sleeve_knee_silk
+	name = "knee-high sleeves - silk"
+	icon_state = "sleeve_k_silk"
+	legwear_type = /obj/item/legwears/sleeve_knee_silk
+
+/datum/sprite_accessory/legwear/stockings/sleeve_stir_knee_silk
+	name = "knee-high sleeves (stirrup) - silk"
+	icon_state = "sleeve_ks_silk"
+	legwear_type = /obj/item/legwears/sleeve_stir_knee_silk
+
+/datum/sprite_accessory/legwear/stockings/sleeve_stir_thigh_silk
+	name = "thigh-high sleeves (stirrup) - silk"
+	icon_state = "sleeve_ts_silk"
+	legwear_type = /obj/item/legwears/sleeve_stir_thigh_silk
+
+/datum/sprite_accessory/legwear/stockings/sleeve_stir_ankle_silk
+	name = "ankle-high sleeves (stirrup) - silk"
+	icon_state = "sleeve_as_silk"
+	legwear_type = /obj/item/legwears/sleeve_stir_ankle_silk

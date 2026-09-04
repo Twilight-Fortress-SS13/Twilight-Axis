@@ -2,7 +2,7 @@
 	name = ""
 	desc = ""
 
-	w_class =  WEIGHT_CLASS_SMALL
+	w_class =	WEIGHT_CLASS_SMALL
 	grid_height = 32
 	grid_width = 32
 
@@ -25,7 +25,7 @@
 	if(resize_factor)
 		transform = transform.Scale(resize_factor, resize_factor)
 
-/obj/item/rotation_contraption/Initialize()
+/obj/item/rotation_contraption/Initialize(mapload)
 	. = ..()
 	if(placed_type)
 		set_type(placed_type)
@@ -76,7 +76,7 @@
 			return
 
 	visible_message("[user] starts placing down [src].", "You start to place [src].")
-	if(!do_after(user, 1.2 SECONDS - user?.get_skill_level(/datum/skill/craft/engineering), T))
+	if(!do_after(user, 1 SECONDS - user?.get_skill_level(/datum/skill/craft/engineering), T))
 		return
 	if(QDELETED(stack_target) && ispath(placed_type, /obj/structure/rotation_piece))
 		stack_target = locate(placed_type) in T
@@ -176,6 +176,12 @@
 	grid_height = 96
 	grid_width = 96
 
+/obj/item/rotation_contraption/windmill
+	placed_type = /obj/structure/windmill
+
+/obj/item/rotation_contraption/windmill/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Windmills only turn under open sky, and spin slower on each level below the top of the map.")
 
 /obj/item/rotation_contraption/debug_source
 	placed_type = /obj/structure/debug_rotation_source

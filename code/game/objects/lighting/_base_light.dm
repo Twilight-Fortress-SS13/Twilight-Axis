@@ -89,7 +89,7 @@
 	icon_state = "tube-empty"
 	start_with_cell = FALSE
 
-/obj/machinery/light/built/Initialize()
+/obj/machinery/light/built/Initialize(mapload)
 	. = ..()
 	status = LIGHT_EMPTY
 	update(0)
@@ -98,7 +98,7 @@
 	icon_state = "bulb-empty"
 	start_with_cell = FALSE
 
-/obj/machinery/light/small/built/Initialize()
+/obj/machinery/light/small/built/Initialize(mapload)
 	. = ..()
 	status = LIGHT_EMPTY
 	update(0)
@@ -113,6 +113,10 @@
 
 /obj/machinery/light/LateInitialize()
 	. = ..()
+
+	if(QDELETED(src))
+		return
+
 	addtimer(CALLBACK(src, PROC_REF(update), 0), 1)
 
 /obj/machinery/light/Destroy()
@@ -209,14 +213,11 @@
 		addtimer(CALLBACK(src, PROC_REF(broken_sparks)), delay, TIMER_UNIQUE | TIMER_NO_HASH_WAIT)
 
 /obj/machinery/light/process()
-	if(on)
-		if(initial(fueluse) > 0)
-			if(fueluse > 0)
-				fueluse = max(fueluse - 10, 0)
-			if(fueluse == 0)
-				burn_out()
-	else
+	if(!on || (initial(fueluse) <= 0)) // if we don't use fuel don't process
 		return PROCESS_KILL
+	fueluse = max(fueluse - 10, 0)
+	if(fueluse == 0) // separate check so that if we hit 0 fuel we burn out the same tick
+		burn_out()
 
 
 /obj/machinery/light/proc/burn_out()
@@ -314,7 +315,7 @@
 // called when on fire
 
 /obj/machinery/light/temperature_expose(exposed_temperature, exposed_volume)
-	if(prob(max(0, exposed_temperature - 673)))   //0% at <400C, 100% at >500C
+	if(prob(max(0, exposed_temperature - 673)))	//0% at <400C, 100% at >500C
 		break_light_tube()
 
 // explode the light

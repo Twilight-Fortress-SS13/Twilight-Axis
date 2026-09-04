@@ -29,6 +29,11 @@
 	path = /obj/item/clothing/suit/roguetown/shirt/undershirt/black
 	sort_category = "Shirts"
 
+/datum/loadout_item/silkshirt
+	name = "Silk Shirt"
+	path = /obj/item/clothing/suit/roguetown/shirt/shadowshirt
+	sort_category = "Shirts"
+
 /datum/loadout_item/shortshirt
 	name = "Short-sleeved Shirt"
 	path = /obj/item/clothing/suit/roguetown/shirt/shortshirt
@@ -42,6 +47,11 @@
 /datum/loadout_item/sailorjacket
 	name = "Leather Jacket"
 	path = /obj/item/clothing/suit/roguetown/armor/leather/vest/sailor
+	sort_category = "Shirts"
+
+/datum/loadout_item/darkjacket
+	name = "Dark Jacket"
+	path = /obj/item/clothing/suit/roguetown/shirt/fancyjacket/triumph_padded
 	sort_category = "Shirts"
 
 /datum/loadout_item/priestrobe
@@ -111,7 +121,7 @@
 	sort_category = "Shirts"
 
 /datum/loadout_item/slitteddress
-	name = "Slitted dress"
+	name = "Slitted Dress"
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/slit
 	sort_category = "Shirts"
 
@@ -138,6 +148,11 @@
 /datum/loadout_item/gown/silkydress
 	name = "Silky Dress"
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/silkydress
+	sort_category = "Shirts"
+
+/datum/loadout_item/gown/loudmouth_robes
+	name = "Criers' Garb"
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/silkdress/loudmouth
 	sort_category = "Shirts"
 
 /datum/loadout_item/noblecoat
@@ -199,4 +214,50 @@
 	name = "Maid Dress"
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/maid
 	sort_category = "Shirts"
+
+/datum/loadout_item/corset
+	name = "Corset"
+	path = /obj/item/clothing/suit/roguetown/armor/corset
+	sort_category = "Shirts"
+
+/datum/loadout_item/saree
+	name = "Saree"
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/saree
+	sort_category = "Shirts"
+
+/datum/loadout_item/greendress
+	name = "Light Green Dress"
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/green
+	sort_category = "Shirts"
+
+/datum/loadout_item/bluedress
+	name = "Light Blue Dress"
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/blue
+	sort_category = "Shirts"
+
+/datum/loadout_item/taverndress
+	name = "Tavern Dress"
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/tavern
+	sort_category = "Shirts"
+
+/datum/loadout_item/courtesandress
+	name = "Courtesan Dress"
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/courtesan
+	sort_category = "Shirts"
+
+/datum/loadout_item/nightgown
+	name = "Nightgown"
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/nightgown
+	sort_category = "Shirts"
+
+/datum/loadout_item/wintercoat
+	name = "Winter Coat"
+	path = /obj/item/clothing/suit/roguetown/shirt/tunic/winter
+	sort_category = "Shirts"
+
+/datum/loadout_item/blouse
+	name = "Blouse"
+	path = /obj/item/clothing/suit/roguetown/shirt/undershirt/blouse
+	sort_category = "Shirts"
+
 */

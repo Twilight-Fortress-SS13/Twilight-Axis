@@ -64,7 +64,7 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 	var/disabling = FALSE
 	/// If TRUE, this is a crit wound
 	var/critical = FALSE
-	/// Some wounds cause instant death for SHATTER_KILL, which is basically critical weakness but softer
+	/// Some wounds cause instant death for SHATTER_KILL, which is basically critical weakness but softer, unique part is that we handle chest-wounds w/ unique traitcheck
 	var/shatter_wound = FALSE
 	/// Some wounds cause instant death for CRITICAL_WEAKNESS
 	var/mortal = FALSE
@@ -188,7 +188,11 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 	owner = bodypart_owner.owner
 	var/initial_bleed = bleed_rate
 	bleed_rate = 0
-	if(initial_bleed)
+	var/mob/living/carbon/human/H = owner
+	// this is needed because rib/skull fractures will bleed even non-blooded mobs otherwise - and they override the "no bleeding wounds can apply to skeletons"
+	// check. note that player skeletons, like ancient deathknight/azurcaephan, don't actually get the skeleton species and therefore the NOBLOOD check will not
+	// catch them - so we need to check bodypart skeletonization instead as it's literally the only way to tell
+	if(initial_bleed && !bodypart_owner.skeletonized && !(ishuman(H) && (NOBLOOD in H.dna?.species?.species_traits)))
 		set_bleed_rate(initial_bleed)
 	on_bodypart_gain(affected)
 	INVOKE_ASYNC(src, PROC_REF(on_mob_gain), affected.owner) //this is literally a fucking lint error like new species cannot possible spawn with wounds until after its ass
@@ -273,6 +277,11 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 		affected.death()
 	if(shatter_wound && HAS_TRAIT(affected, TRAIT_SHATTER_KILL))
 		affected.death()
+	// wounds bad enough to have 0 sleepheal kill way faster than you can sleep them off anyway... for everyone BUT
+	// deathless/deadite-immune players, who also have a good chance of being RRd by them if they die in a random cave
+	// so we let them sleepheal over a really long time to prevent that kind of softlock
+	if(!sleep_healing && (HAS_TRAIT(affected, TRAIT_ZOMBIE_IMMUNE) || HAS_TRAIT(affected, TRAIT_DEATHLESS)))
+		sleep_healing = 0.5
 
 /// Removes this wound from a given, simpler than adding to a bodypart - No extra effects
 /datum/wound/proc/remove_from_mob()
@@ -303,7 +312,7 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 		if(!owner || QDELETED(owner) || QDELETED(src))
 			return FALSE
 
-	if(!HAS_TRAIT(owner, TRAIT_PARALYSIS) && owner.blood_volume > BLOOD_VOLUME_SURVIVE && owner.stat < UNCONSCIOUS) //TA EDIT START
+	if(!HAS_TRAIT(owner, TRAIT_PARALYSIS) && owner.blood_volume > BLOOD_VOLUME_SURVIVE && owner.stat < UNCONSCIOUS && !HAS_TRAIT(src, TRAIT_BLACKBLOOD)) //TA EDIT START
 		var/healamount = 0
 		if(HAS_TRAIT(owner, TRAIT_PSYDONITE_4))
 			healamount = 0.4 + (owner.STAWIL * 0.1)
@@ -318,7 +327,8 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 				return FALSE
 		//TA EDIT END
 
-	if(HAS_TRAIT(owner, TRAIT_PSYDONITE) && !passive_healing)
+	if(HAS_TRAIT(owner, TRAIT_PSYDONITE) && !passive_healing && !HAS_TRAIT(src, TRAIT_BLACKBLOOD))
+
 		if(!istype(src, /datum/wound/slash/incision))
 			heal_wound(0.6)
 		if(!owner || QDELETED(owner) || QDELETED(src))
@@ -335,7 +345,7 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 	if (!owner.client)
 		return
 
-	if (HAS_TRAIT(owner, TRAIT_PSYDONITE) && !passive_healing)
+	if (HAS_TRAIT(owner, TRAIT_PSYDONITE) && !passive_healing && !HAS_TRAIT(src, TRAIT_BLACKBLOOD))
 		heal_wound(0.6) // psydonites are supposed to apparently slightly heal wounds whether dead or alive
 		if(!istype(src, /datum/wound/slash/incision))
 			heal_wound(0.6)
@@ -456,6 +466,9 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 				checkval = bleed_rate
 			if(SEVERITY_TYPE_WHP)
 				checkval = whp
+			if(SEVERITY_TYPE_BURN)
+				if(bodypart_owner && bodypart_owner.max_damage > 0)
+					checkval = round((bodypart_owner.burn_dam / bodypart_owner.max_damage) * 100)
 		for(var/sevname in severity_stages)
 			if(severity_stages[sevname] <= checkval)
 				newname = sevname
@@ -465,10 +478,10 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 		severityval = clamp(severityval, 0, 5)
 		if(severityval)
 			severity = severityval
-		
-	name = "[newname  ? "[newname] " : ""][initial(name)]"	//[adjective] [name], aka, "gnarly slash" or "slash"
+
+	name = "[newname	? "[newname] " : ""][initial(name)]"	//[adjective] [name], aka, "gnarly slash" or "slash"
 	if(name != oldname)
-		owner.visible_message(span_red("The [oldname] on [owner]'s [lowertext(bodyzone2readablezone(bodypart_to_zone(bodypart_owner)))] gets worse!"))
+		owner.visible_message(span_red("The [oldname] on [owner]'s [LOWER_TEXT(bodyzone2readablezone(bodypart_to_zone(bodypart_owner)))] gets worse!"))
 
 // Blank because it'll be overridden by wound code.
 /datum/wound/dynamic

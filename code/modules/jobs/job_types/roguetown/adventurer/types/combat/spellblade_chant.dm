@@ -18,7 +18,7 @@
 	var/mace_weapons
 	switch(faction)
 		if("blackoak")
-			blade_weapons = "Elvish Longsword / Elvish Saber / Elvish Curveblade / Steel Dagger"
+			blade_weapons = "Elvish Longsword / Elvish sabre / Elvish Curveblade / Steel Dagger"
 			phalanx_weapons = "Elvish Glaive"
 			mace_weapons = "Steel Mace / Steel Warhammer & Shield / Grand Mace / Battle Axe / Steel Greataxe"
 		if("zizite")
@@ -30,7 +30,7 @@
 			phalanx_weapons = "Halberd / Bardiche / Boar Spear / Dory & Shield / Naginata"
 			mace_weapons = "Steel Mace / Steel Warhammer & Shield / Grand Mace / Battle Axe / Steel Greataxe"
 		if("almah")
-			blade_weapons = "Dual Shamshirs / Shalal Saber & Shield"
+			blade_weapons = "Dual Shamshirs / Shalal sabre & Shield"
 			phalanx_weapons = "Spear / Dory & Shield"
 			mace_weapons = "Steel Mace / Steel Warhammer & Shield / Grand Mace / Battle Axe / Steel Greataxe"
 		if("undead")
@@ -38,7 +38,7 @@
 			phalanx_weapons = "Ancient Spear / Ancient Bardiche / Dory & Shield"
 			mace_weapons = "Ancient Mace / Ancient Warhammer & Shield / Grand Mace / Ancient Axe / Steel Greataxe"
 		else
-			blade_weapons = "Longsword / Rapier / Sabre / Arming Sword / Shortsword / Hwando  / Steel Dagger & Shield"
+			blade_weapons = "Longsword / Rapier / Sabre / Arming Sword / Shortsword / Hwando	/ Steel Dagger & Shield"
 			phalanx_weapons = "Spear / Dory & Shield / Naginata"
 			mace_weapons = "Mace / Warhammer & Shield / Goedendag / Iron Axe / Greataxe"
 
@@ -51,56 +51,56 @@
 		mace_weapons = "[extra_mace_weapon] / [mace_weapons]"
 
 	// Color palette per faction
-	var/col_bg           // body background
-	var/col_text         // main text
-	var/col_header       // h2, weapon-info, button text, loud preamble
-	var/col_subheader    // h3, h4, closing preamble
-	var/col_border       // borders, preamble text
-	var/col_divider      // inner dividers
-	var/col_gradient     // column/shared-info background
-	var/col_em           // chant emphasized text
-	var/col_li           // list item text
-	var/col_btn_bg       // button background
-	var/col_btn_hover    // button hover background
-	var/col_glow_r       // box-shadow RGB
+	var/col_bg			// body background
+	var/col_text			// main text
+	var/col_header		// h2, weapon-info, button text, loud preamble
+	var/col_subheader	// h3, h4, closing preamble
+	var/col_border		// borders, preamble text
+	var/col_divider		// inner dividers
+	var/col_gradient		// column/shared-info background
+	var/col_em			// chant emphasized text
+	var/col_li			// list item text
+	var/col_btn_bg		// button background
+	var/col_btn_hover	// button hover background
+	var/col_glow_r		// box-shadow RGB
 	var/col_glow_g
 	var/col_glow_b
 	switch(faction)
 		if("zizite", "undead")
-			col_bg = "#140a0a";         col_text = "#d4a0a0"
-			col_header = "#c96e6e";     col_subheader = "#a05050"
-			col_border = "#8b5555";     col_divider = "#5a3030"
-			col_gradient = "#2a1010";   col_em = "#e0b0b0"
-			col_li = "#b08080";         col_btn_bg = "#3a1515"
-			col_btn_hover = "#4a2020";  col_glow_r = "139"; col_glow_g = "85"; col_glow_b = "85"
+			col_bg = "#140a0a";			col_text = "#d4a0a0"
+			col_header = "#c96e6e";		col_subheader = "#a05050"
+			col_border = "#8b5555";		col_divider = "#5a3030"
+			col_gradient = "#2a1010";	col_em = "#e0b0b0"
+			col_li = "#b08080";			col_btn_bg = "#3a1515"
+			col_btn_hover = "#4a2020";	col_glow_r = "139"; col_glow_g = "85"; col_glow_b = "85"
 		if("noccite")
-			col_bg = "#0a0e1a";         col_text = "#a0b8d4"
-			col_header = "#6e8ec9";     col_subheader = "#5070a0"
-			col_border = "#556b8b";     col_divider = "#304a5a"
-			col_gradient = "#101828";   col_em = "#b0c8e0"
-			col_li = "#8098b0";         col_btn_bg = "#152030"
-			col_btn_hover = "#203040";  col_glow_r = "85"; col_glow_g = "107"; col_glow_b = "139"
+			col_bg = "#0a0e1a";			col_text = "#a0b8d4"
+			col_header = "#6e8ec9";		col_subheader = "#5070a0"
+			col_border = "#556b8b";		col_divider = "#304a5a"
+			col_gradient = "#101828";	col_em = "#b0c8e0"
+			col_li = "#8098b0";			col_btn_bg = "#152030"
+			col_btn_hover = "#203040";	col_glow_r = "85"; col_glow_g = "107"; col_glow_b = "139"
 		if("blackoak")
-			col_bg = "#0a140e";         col_text = "#a0d4b0"
-			col_header = "#6ec98e";     col_subheader = "#50a070"
-			col_border = "#558b65";     col_divider = "#305a40"
-			col_gradient = "#102a18";   col_em = "#b0e0c0"
-			col_li = "#80b090";         col_btn_bg = "#153a20"
-			col_btn_hover = "#204a30";  col_glow_r = "85"; col_glow_g = "139"; col_glow_b = "101"
+			col_bg = "#0a140e";			col_text = "#a0d4b0"
+			col_header = "#6ec98e";		col_subheader = "#50a070"
+			col_border = "#558b65";		col_divider = "#305a40"
+			col_gradient = "#102a18";	col_em = "#b0e0c0"
+			col_li = "#80b090";			col_btn_bg = "#153a20"
+			col_btn_hover = "#204a30";	col_glow_r = "85"; col_glow_g = "139"; col_glow_b = "101"
 		if("almah")
-			col_bg = "#1a150a";         col_text = "#d4c090"
-			col_header = "#e0b050";     col_subheader = "#c09840"
-			col_border = "#a08030";     col_divider = "#6a5520"
-			col_gradient = "#2a2010";   col_em = "#f0d080"
-			col_li = "#c0a860";         col_btn_bg = "#3a2a10"
-			col_btn_hover = "#4a3a18";  col_glow_r = "200"; col_glow_g = "160"; col_glow_b = "60"
+			col_bg = "#1a150a";			col_text = "#d4c090"
+			col_header = "#e0b050";		col_subheader = "#c09840"
+			col_border = "#a08030";		col_divider = "#6a5520"
+			col_gradient = "#2a2010";	col_em = "#f0d080"
+			col_li = "#c0a860";			col_btn_bg = "#3a2a10"
+			col_btn_hover = "#4a3a18";	col_glow_r = "200"; col_glow_g = "160"; col_glow_b = "60"
 		else // conventional — default warm brown/gold
-			col_bg = "#1a1410";         col_text = "#d4c4a0"
-			col_header = "#c9a96e";     col_subheader = "#a08050"
-			col_border = "#8b7355";     col_divider = "#5a4a30"
-			col_gradient = "#2a2015";   col_em = "#e0d0b0"
-			col_li = "#b0a080";         col_btn_bg = "#3a2a15"
-			col_btn_hover = "#4a3a20";  col_glow_r = "139"; col_glow_g = "115"; col_glow_b = "85"
+			col_bg = "#1a1410";			col_text = "#d4c4a0"
+			col_header = "#c9a96e";		col_subheader = "#a08050"
+			col_border = "#8b7355";		col_divider = "#5a4a30"
+			col_gradient = "#2a2015";	col_em = "#e0d0b0"
+			col_li = "#b0a080";			col_btn_bg = "#3a2a15"
+			col_btn_hover = "#4a3a20";	col_glow_r = "139"; col_glow_g = "115"; col_glow_b = "85"
 
 	var/html = {"<!DOCTYPE html>
 <html>
@@ -329,8 +329,8 @@ a.choose-btn:hover {
 <div class="abilities">
 <h4>Abilities</h4>
 <ul>
-<li><b>Kastvyl</b> — Hurl a phantom thrown weapon that ricochets between up to 4 victims, seeking new targets after each strike. The same target can be struck twice (the second blow at half damage), but never thrice. Wound type follows your active intent. Empowered: greatly increased damage.</li>
-<li><b>Tremor</b> — Slam the ground, damaging and pushing back everyone adjacent 1 tile. Empowered: doubles damage.</li>
+<li><b>Shatter</b> — Wind up a blow, then strike a line straight ahead, hurling those struck back a tile. Cuts or smashes to match your weapon - the blunt head hits a little softer. Stops at walls but batters structures in its path. Empowered: doubles damage.</li>
+<li><b>Tremor</b> — Wind up a strike, then erupt the ground in a ring around you, hurling back everyone adjacent. Follows you as you wind it up; cuts or smashes to match your weapon. Empowered: doubles damage.</li>
 <li><b>Charge!</b> — Instantly dash forward 4 paces, shoving everyone in the path to the sides. Deals no damage — pure mobility and disruption.</li>
 <li><b>Cataclysm</b> — Conjure and hurl an arcyne hammer at a target area. Crushes a 5x5 area and leaves victims Vulnerable. Bonus damage at max momentum.</li>
 </ul>
@@ -350,7 +350,7 @@ a.choose-btn:hover {
 <li><b>Arcyne Momentum</b> — Build 1 Momentum on melee hits (even if parried or dodged) against a living creature. Melee grants 1 stack every 2 seconds. Spend 3 to unleash empowered versions of your abilities.</li>
 <li><b>Decay</b> — Starts decaying 10 seconds after the last strike, losing 1 stack every 6 seconds.</li>
 <li><b>Disruption</b> — You lose all Momentum when knocked down or stunned. Off-balance costs 3.</li>
-<li><b>Overcharge (7)</b> — Damages your chest and blurs your vision, unlocking your most powerful ability.</li>
+<li><b>Overcharge (7)</b> — Unlocks your most powerful ability. If overcharged Momentum decays, ALL of it discharges at once, straining you - briefly slowed and left Vulnerable. Spend it!</li>
 <li><b>Maximum (10)</b> — Unleash an empowered version of your ultimate ability.</li>
 <li><b>Empower Weapon</b> — Requires 5+ momentum. Burns ALL momentum to empower your next melee attack, bypassing parry and dodge. Visible red glow warns enemies. 30s cooldown. 8s duration.</li>
 <li><b>Arcyne Surge</b> — Certain non-ultimate abilities that strike 2 or more targets grant 1 bonus Momentum.</li>

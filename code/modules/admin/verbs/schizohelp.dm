@@ -205,7 +205,7 @@ GLOBAL_LIST_EMPTY(voice_names)
 		to_chat(src, span_warning("I have already answered this meditation!"))
 		return
 
-	var/answer = input("Answer their meditations...", "VOICE")
+	var/answer = input(src, "Answer their meditations...", "VOICE")
 	if(!answer || QDELETED(schizo))
 		return
 	update_mentor_stat(src.ckey, "answered", 1 , src)

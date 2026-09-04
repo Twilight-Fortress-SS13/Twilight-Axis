@@ -13,7 +13,7 @@ SUBSYSTEM_DEF(investments)
 /datum/controller/subsystem/investments/Initialize(start_timeofday)
 	regenerate_investments()
 	. = ..()
-	
+
 /datum/controller/subsystem/investments/fire(resumed = 0)
 	process_investments()
 	if(times_fired % fire_num_before_regen) 
@@ -65,12 +65,12 @@ SUBSYSTEM_DEF(investments)
 
 				if(investment.onetime_payment > 0)
 					investment.onetime_payment = max(floor(investment.onetime_payment * (rand(90, 130) / 100)),investment.price+5)
-					
+
 				investment.pay_eta = floor(investment.pay_eta * (rand(50, 150) / 100))
 				investment.fail_chance = floor(investment.fail_chance * (rand(80, 120) / 100))
 
 				investment.regular_payment = ceil(investment.regular_payment * (rand(80, 110) / 100))
-				
+
 			available_investments += investment
 	else 
 		return FALSE
@@ -87,7 +87,7 @@ SUBSYSTEM_DEF(investments)
 		return FALSE
 
 	return TRUE
-	
+
 
 /datum/controller/subsystem/investments/proc/process_investments()
 	var/money_earned = 0
@@ -118,7 +118,7 @@ SUBSYSTEM_DEF(investments)
 	if(money_earned != 0)
 		SStreasury.give_money_treasury(money_earned, "Инвестиции")
 		SStreasury.steward_machine.say("Получено [money_earned]m за инвестиции.")
-		
+
 
 
 /////DATUMS////
@@ -238,36 +238,36 @@ SUBSYSTEM_DEF(investments)
 	fail_chance = 10
 
 /datum/investment/salt_mine
-    investment_name = "Доля в соляной шахте"
-    price = 1500
-    pay_eta = 15 MINUTES
-    regular_payment = 50
-    fail_chance = 4
+	investment_name = "Доля в соляной шахте"
+	price = 1500
+	pay_eta = 15 MINUTES
+	regular_payment = 50
+	fail_chance = 4
 
 /datum/investment/blacksmith_guild
-    investment_name = "Поддержка кузнечной гильдии"
-    price = 3000
-    pay_eta = 10 MINUTES
-    regular_payment = 100
-    fail_chance = 6
+	investment_name = "Поддержка кузнечной гильдии"
+	price = 3000
+	pay_eta = 10 MINUTES
+	regular_payment = 100
+	fail_chance = 6
 
 /datum/investment/river_ferry
-    investment_name = "Строительство речной переправы"
-    price = 1200
-    pay_eta = 8 MINUTES
-    regular_payment = 40
-    fail_chance = 5
+	investment_name = "Строительство речной переправы"
+	price = 1200
+	pay_eta = 8 MINUTES
+	regular_payment = 40
+	fail_chance = 5
 
 /datum/investment/alchemist_lab
-    investment_name = "Спонсирование алхимических изысканий"
-    price = 900
-    pay_eta = 5 MINUTES
-    regular_payment = 36
-    fail_chance = 25
+	investment_name = "Спонсирование алхимических изысканий"
+	price = 900
+	pay_eta = 5 MINUTES
+	regular_payment = 36
+	fail_chance = 25
 
 /datum/investment/smugglers_cargo
-    investment_name = "Выкуп конфиската у контрабандистов"
-    price = 1200
-    pay_eta = 15 MINUTES
-    onetime_payment = 2800
-    fail_chance = 40
+	investment_name = "Выкуп конфиската у контрабандистов"
+	price = 1200
+	pay_eta = 15 MINUTES
+	onetime_payment = 2800
+	fail_chance = 40

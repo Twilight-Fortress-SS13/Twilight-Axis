@@ -6,7 +6,7 @@
 		/datum/surgery_step/heal,
 		/datum/surgery_step/cauterize,
 	)
-	target_mobtypes = list(/mob/living/carbon/human, /mob/living/carbon/monkey)
+	target_mobtypes = list(/mob/living/carbon/human)
 	possible_locs = list(BODY_ZONE_CHEST)
 
 /datum/surgery_step/heal
@@ -17,7 +17,7 @@
 		TOOL_IMPROVISED_HEMOSTAT = 50,
 		TOOL_SCREWDRIVER = 50,
 	)
-	target_mobtypes = list(/mob/living/carbon/human, /mob/living/carbon/monkey)
+	target_mobtypes = list(/mob/living/carbon/human)
 	time = 4 SECONDS
 	requires_tech = TRUE
 	replaced_by = /datum/surgery_step
@@ -33,9 +33,9 @@
 	/// How much burn damage we heal per completion
 	var/burnhealing = 0
 	/**
-	 * Heals an extra point of damager per X missing damage of type (burn damage for burn healing, brute for brute)
-	 * Smaller Number = More Healing!
-	 */
+		* Heals an extra point of damager per X missing damage of type (burn damage for burn healing, brute for brute)
+		* Smaller Number = More Healing!
+		*/
 	var/missinghpbonus = 0
 
 /datum/surgery_step/heal/validate_tech(mob/user, mob/living/target, target_zone, datum/intent/intent)

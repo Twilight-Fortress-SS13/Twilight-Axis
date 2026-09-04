@@ -107,7 +107,7 @@
 	SEND_SIGNAL(M, COMSIG_ITEM_ATTACKED_SUCCESS, src, user)
 
 	var/sb_zone = user.zone_selected
-
+/*
 	if(sb_zone == BODY_ZONE_PRECISE_R_INHAND)
 		var/offh = 0
 		var/obj/item/W = M.held_items[1]
@@ -131,7 +131,7 @@
 			M.visible_message(span_notice("[user] disarms [M]!"), \
 							span_boldwarning("I'm disarmed by [user]!"))
 			return
-
+*/
 	var/selzone = melee_accuracy_check(sb_zone, user, M, /datum/skill/combat/unarmed, user.used_intent)
 	if(!isliving(M))
 		return FALSE

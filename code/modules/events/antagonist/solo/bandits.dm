@@ -9,7 +9,7 @@
 	antag_flag = ROLE_BANDIT
 	shared_occurence_type = SHARED_MINOR_THREAT
 	storyteller_antag_flags = STORYTELLER_ANTAG_VILLAIN | STORYTELLER_ANTAG_ROUNDSTART
-	storyteller_guarantee_flags = STORYTELLER_FAVOR_BANDIT
+	storyteller_rumour_name = "bandits"
 
 	restricted_roles = DEFAULT_ANTAG_BLACKLISTED_ROLES
 	base_antags = 0
@@ -27,6 +27,12 @@
 
 /datum/round_event_control/antagonist/solo/bandits/preRunEvent()
 	return EVENT_CANT_RUN
+
+/datum/round_event_control/antagonist/solo/bandits/get_antag_amount()
+	var/admin_slot = SSgamemode.get_admin_slot(antag_datum, storyteller_slot_key)
+	if(!isnull(admin_slot))
+		return max(0, admin_slot)
+	return SSgamemode.story_antag_slot_cap(antag_datum, roundstart = roundstart)
 
 /datum/round_event/antagonist/solo/bandits/start()
 	return

@@ -23,9 +23,9 @@
 
 	container_refs = alist()
 
-	RegisterSignal(parent, COMSIG_MOB_EQUIPPED_ITEM,   PROC_REF(on_equip))
+	RegisterSignal(parent, COMSIG_MOB_EQUIPPED_ITEM,	PROC_REF(on_equip))
 	RegisterSignal(parent, COMSIG_MOB_UNEQUIPPED_ITEM, PROC_REF(on_unequip))
-	RegisterSignal(parent, COMSIG_MOB_DROPITEM,        PROC_REF(on_drop))
+	RegisterSignal(parent, COMSIG_MOB_DROPITEM,		PROC_REF(on_drop))
 
 	full_reappraise()
 
@@ -43,10 +43,8 @@
 	if(all_slot_flags)
 		return
 	all_slot_flags = alist()
-	for(var/i in 0 to SLOTS_AMT - 1)
-		var/flag = (1 << i)
-		if(flag & AI_INVENTORY_WATCHED_SLOTS)
-			all_slot_flags += flag
+	for(var/slot_id in AI_INVENTORY_WATCHED_SLOTS)
+		all_slot_flags += slot_id
 
 /datum/component/ai_inventory_manager/proc/full_reappraise()
 	var/mob/living/carbon/human/H = parent
@@ -108,7 +106,7 @@
 
 /datum/component/ai_inventory_manager/proc/on_equip(datum/source, obj/item/equipment, slot)
 	SIGNAL_HANDLER
-	if(!(slot & AI_INVENTORY_WATCHED_SLOTS))
+	if(!(slot in all_slot_flags))
 		return
 	// Partial rescan: just this slot
 	_purge_slot(slot)
@@ -126,14 +124,17 @@
 	if(!has_container)
 		_classify_item(equipment, slot)
 
-/datum/component/ai_inventory_manager/proc/on_unequip(datum/source, obj/item/equipment, slot)
+/datum/component/ai_inventory_manager/proc/on_unequip(datum/source, obj/item/equipment)
 	SIGNAL_HANDLER
-	if(!(slot & AI_INVENTORY_WATCHED_SLOTS))
-		return
-	_purge_slot(slot)
-	if(slot in container_refs)
-		UnregisterSignal(container_refs[slot], COMSIG_PARENT_QDELETING)
-		container_refs -= slot
+	// The unequip signal's third arg is `force`, not a slot, so work off the item itself.
+	for(var/slot_flag in container_refs)
+		if(container_refs[slot_flag] != equipment)
+			continue
+		UnregisterSignal(equipment, list(COMSIG_PARENT_QDELETING, COMSIG_STORAGE_ADDED))
+		_purge_slot(slot_flag)
+		container_refs -= slot_flag
+		break
+	_remove_item(equipment)
 
 /datum/component/ai_inventory_manager/proc/on_drop(datum/source, obj/item/dropped)
 	SIGNAL_HANDLER
@@ -231,7 +232,7 @@
 		return
 	var/mob/living/carbon/human/H = parent
 
-	var/obj/item/active   = H.get_active_held_item()
+	var/obj/item/active	= H.get_active_held_item()
 	var/obj/item/inactive = H.get_inactive_held_item()
 
 	// Snapshot and clear FIRST to prevent reentrant calls from re-running
@@ -281,25 +282,6 @@
 	STR.handle_item_insertion(it, prevent_warning = TRUE, user = H)
 	_classify_item(it, slot_flag)
 	return TRUE
-
-/// Remove an empty container from inventory tracking and drop it on the ground
-/datum/component/ai_inventory_manager/proc/drop_empty_container(obj/item/reagent_containers/container)
-	var/mob/living/carbon/human/H = parent
-	_remove_item(container)
-
-	// If it's in storage, pull it out and drop it
-	if(container.loc != H)
-		for(var/slot_flag in container_refs)
-			var/obj/item/storage_item = container_refs[slot_flag]
-			var/datum/component/storage/STR = storage_item?.GetComponent(/datum/component/storage)
-			if(!STR)
-				continue
-			if(container in STR.contents())
-				STR.remove_from_storage(container, H)
-				break
-
-	if(container.loc == H)
-		H.dropItemToGround(container)
 
 /// Returns the actual usable item (may differ from what's in inventory_map)
 /datum/component/ai_inventory_manager/proc/draw_usable_item(obj/item/it, category)

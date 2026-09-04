@@ -14,7 +14,9 @@
 	duration = 20 SECONDS
 	mouse_opacity = MOUSE_OPACITY_ICON
 
-/obj/effect/temp_visual/hunting_phantom/Initialize(mapload, target_mob_path, target_rot)
+/obj/effect/temp_visual/hunting_phantom/Initialize(mapload, target_mob_path, target_rot, custom_delay)
+	if(custom_delay)
+		spawn_delay = custom_delay
 	. = ..()
 	if(skip_parent_call)
 		return
@@ -28,13 +30,13 @@
 	src.icon_state = initial(path_cast.icon_state)
 	src.pixel_x = initial(path_cast.pixel_x)
 	src.pixel_y = initial(path_cast.pixel_y)
-	src.color = "#777777" 
+	src.color = "#777777"
 	appear_and_wait()
 
 /obj/effect/temp_visual/hunting_phantom/proc/appear_and_wait()
 	animate(src, alpha = 200, time = spawn_delay, easing = EASE_IN)
 	playsound(src, 'sound/misc/jumpscare (4).ogg', 50, TRUE)
-	addtimer(CALLBACK(src, .proc/finalize_spawn), spawn_delay)
+	addtimer(CALLBACK(src, PROC_REF(finalize_spawn)), spawn_delay)
 
 /obj/effect/temp_visual/hunting_phantom/proc/finalize_spawn()
 	var/turf/T = get_turf(src)

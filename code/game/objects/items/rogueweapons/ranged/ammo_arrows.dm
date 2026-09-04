@@ -12,7 +12,7 @@
 	Consult your gods."
 	projectile_type = /obj/projectile/bullet/reusable/arrow
 	caliber = "arrow"
-	icon = 'icons/roguetown/weapons/ranged/arrow_mob.dmi'
+	icon = 'icons/roguetown/weapons/ranged/arrow_mob32.dmi'
 	icon_state = "arrow"
 	force = 10
 	dropshrink = 0.6
@@ -53,7 +53,7 @@
 
 /obj/item/ammo_casing/caseless/rogue/arrow/iron/aalloy
 	name = "decrepit broadhead arrow"
-	desc = "An arrow; one end, tipped with flattened and frayed bronze - the other, \
+	desc = "An arrow; one end, tipped with flattened and rotted metal - the other, \
 	inlaid with decayed feathers. The alloy's decrepity forces it to burst into \
 	shrapnel upon impact, shredding flesh."
 	icon_state = "ancientarrow"
@@ -79,7 +79,6 @@
 	name = "arrow"
 	damage = 20
 	damage_type = BRUTE
-	npc_simple_damage_mult = 2
 	armor_penetration = PEN_NONE
 	//accuracy = 65 // Default defined by projectile.dm
 	icon = 'icons/roguetown/weapons/ranged/arrow_proj.dmi'
@@ -95,9 +94,13 @@
 	speed = 0.4
 	min_range = MIN_ARROW_RANGE
 	max_range = MAX_ARROW_RANGE
+	dam_falloff_factor = DAM_FALLOFF_ARROW
+	var/trains_ranged_skill = TRUE
 
 /obj/projectile/bullet/reusable/arrow/on_hit(atom/target)
 	..()
+	if(!trains_ranged_skill)
+		return
 	var/mob/living/L = firer
 	if(!L || !L.mind)
 		return
@@ -128,18 +131,17 @@
 /obj/projectile/bullet/reusable/arrow/iron
 	name = "broadhead arrow"
 	ammo_type = /obj/item/ammo_casing/caseless/rogue/arrow/iron
-	damage = 50
+	damage = 55
 	armor_penetration = PEN_LIGHT
 	flag = "piercing"
 	embedchance = 30
-	npc_simple_damage_mult = 2
 
 
 /obj/projectile/bullet/reusable/arrow/iron/aalloy
 	name = "decrepit broadhead arrow"
 	ammo_type = /obj/item/ammo_casing/caseless/rogue/arrow/iron/aalloy
 	icon_state = "ancientarrow_proj"
-	damage = 50
+	damage = 55
 	armor_penetration = PEN_LIGHT
 	flag = "piercing"
 
@@ -150,10 +152,9 @@
 	name = "bodkin arrow"
 	ammo_type = /obj/item/ammo_casing/caseless/rogue/arrow/steel
 	accuracy = 75
-	damage = 25
+	damage = 30
 	armor_penetration = PEN_HEAVY
 	embedchance = 80 // Easy embeds!
-	npc_simple_damage_mult = 3
 
 // Significantly worse armour-piercing, slightly more damage. Should still penetrate most things.
 // Note that it's pretty likely the skeleton using these has a longbow, which penetrates more stuff.
@@ -161,7 +162,7 @@
 	name = "ancient bodkin arrow"
 	ammo_type = /obj/item/ammo_casing/caseless/rogue/arrow/steel/paalloy
 	icon_state = "ancientarrow_proj"
-	damage = 30
+	damage = 35
 	armor_penetration = PEN_HEAVY
 	embedchance = 60
 
@@ -174,7 +175,6 @@
 	damage = 50
 	armor_penetration = PEN_NONE
 	embedchance = 70
-	npc_simple_damage_mult = 3 //More damage over simplemobs!
 	speed = 0.15 // Faster!
 
 // POISON AMMO
@@ -224,8 +224,7 @@
 	damage = 60 //The rarest, but most powerful arrow subtype. Intended to be incredibly scarce, in practice - a 'silver bullet', to the most literal extent.
 	armor_penetration = PEN_HEAVY
 	embedchance = 100
-	npc_simple_damage_mult = 7 //..or 420 damage against a mindless mob. Strike true; reduce if these become craftable or more easily acquirable, through any means.
-	is_silver_proj = TRUE 
+	is_silver_proj = TRUE
 
 /obj/item/ammo_casing/caseless/rogue/arrow/getonmobprop(tag)
 	. = ..()
@@ -277,15 +276,20 @@
 /obj/projectile/bullet/arrow/elemental/fire
 	name = "fire arrow"
 	icon_state = "arrowpyro_proj"
+	damage = 50
+	woundclass = BCLASS_BURN
+	damage_type = BURN
 
-/obj/projectile/bullet/arrow/elemental/fire/on_hit(atom/target)
+/obj/projectile/bullet/arrow/elemental/fire/on_hit(atom/target, blocked = FALSE)
 	..()
-	if(!ismob(target))
+	var/turf/epicenter = get_turf(target)
+	if(epicenter)
+		new /obj/effect/temp_visual/explosion(epicenter)
+		playsound(epicenter, pick('sound/misc/explode/incendiary (1).ogg', 'sound/misc/explode/incendiary (2).ogg'), 100, TRUE, 4)
+	if(!ismob(target) || blocked >= 100)
 		return
 	var/mob/living/M = target
-	M.adjust_fire_stacks(2)
-	M.adjustFireLoss(5)
-	M.ignite_mob()
+	apply_scorch_stack(M, 3, def_zone)
 
 // --- FROST --- (Pending PR #6406 frost stack system - should apply 2 frost stacks)
 /*
@@ -407,6 +411,62 @@
 /obj/projectile/bullet/reusable/arrow/poison/stone
 	name = "stone arrow"
 	ammo_type = /obj/item/ammo_casing/caseless/rogue/arrow/stone
+
+/obj/item/ammo_casing/caseless/rogue/arrow/blacksteel
+	name = "blacksteel arrow"
+	icon_state = "blacksteelarrow"
+	desc = "A magnificent arrow of blacksteel. It shreds flesh, pierces armor, and \
+	always lands where one aims; perfect, yet marred by a prohibitively high cost."
+	projectile_type = /obj/projectile/bullet/reusable/arrow/blacksteel
+
+/obj/projectile/bullet/reusable/arrow/blacksteel
+	name = "blacksteel arrow"
+	ammo_type = /obj/item/ammo_casing/caseless/rogue/arrow/blacksteel
+	damage = 50
+	armor_penetration = PEN_HEAVY
+	icon_state = "blacksteelarrow_proj"
+	embedchance = 80
+	accuracy = 100
+
+/obj/projectile/bullet/reusable/arrow/iron/paint
+	name = "painted arrow"
+	ammo_type = null
+	icon_state = "paint_arrow"
+	damage = 10
+	armor_penetration = PEN_LIGHT
+	flag = "piercing"
+	/// Track if this projectile was primed by the paint bow when shot
+	var/primed = FALSE
+	embedchance = 0
+
+/obj/item/ammo_casing/caseless/rogue/arrow/iron/paint
+	name = "painted arrow"
+	icon_state = "paint_arrow"
+	desc = "A painted arrow, it almost doesn't seem real, if not for the fact it reflects with iridescent light."
+	projectile_type = /obj/projectile/bullet/reusable/arrow/iron/paint
+	item_flags = DROPDEL
+
+/obj/projectile/bullet/reusable/arrow/iron/paint/on_hit(atom/target, blocked = 0, piercing_hit = FALSE)
+	// If not primed, or if it didn't hit a living mob, act like a standard arrow
+	if(!primed || !isliving(target))
+		return ..()
+
+	var/mob/living/living_target = target
+	var/mob/living/caster = firer
+	var/is_mindless = FALSE
+
+	if(istype(living_target, /mob/living/simple_animal) || !living_target.mind)
+		is_mindless = TRUE
+
+	if(is_mindless)
+		living_target.visible_message(span_purple("The umbral paint on \the [src] violently implodes against [living_target]!"))
+		living_target.adjustBruteLoss(60)
+	else
+		if(caster)
+			to_chat(caster, span_notice("My strike doesn't harm [living_target] much, but it does make them ooze beneficial ink."))
+		living_target.adjustBruteLoss(10)
+	living_target.apply_status_effect(/datum/status_effect/debuff/ink_leak, caster)
+	return ..()
 
 #undef MIN_ARROW_RANGE
 #undef MAX_ARROW_RANGE

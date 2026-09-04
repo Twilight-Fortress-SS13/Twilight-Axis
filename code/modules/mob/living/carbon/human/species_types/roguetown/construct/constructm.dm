@@ -8,9 +8,8 @@
 	origin = "Naledi"
 	base_name = "Godtouched"
 	is_subrace = TRUE
-	desc = "<b>Metallic Construct</b><br>\
-	Masterworks of artifice, metal constructs are as the name implies- entirely constructed by mortal hands. They are beings not of flesh and blood, but cold metal and the arcyne. Constructs are said to originate from works of Zizo, and they hail from the far-off lands of the Southern Empty- a great city of artifice, where the only artificers capable of understanding what is necessary to create the constructs live. For some reason, they have found themselves travelling out of the empty, as of late. Children of the Resonator Siphon.<br>\
-	<span style='color: #6a8cb7;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;'><b>+1 WIL | -2 SPD | No Hunger | No Breath | No Blood | Toxic Immunity | Shock Weakness</b></span><br><br>"
+	desc_title = "Metallic Construct"
+	desc = "Masterworks of artifice, metal constructs are as the name implies- entirely constructed by mortal hands. They are beings not of flesh and blood, but cold metal and the arcyne. Constructs are said to originate from works of Zizo, and they hail from the far-off lands of the Southern Empty- a great city of artifice, where the only artificers capable of understanding what is necessary to create the constructs live. For some reason, they have found themselves travelling out of the empty, as of late. Children of the Resonator Siphon."
 	skin_tone_wording = "Material"
 	use_skin_tone_wording_for_examine = FALSE
 	default_color = "FFFFFF"
@@ -24,10 +23,9 @@
 	inherent_traits = list(
 		TRAIT_IRONMAN,
 		TRAIT_LIMBATTACHMENT, // this interacts with trait_ironman, making this take a while to reattach
-		TRAIT_NOPAINSTUN, // look into this later, just remembered Ryan merged NoPainSlow (cur. TRAIT_IGNOREDAMAGESLOWDOWN) into NoPainStun, might be good to separate them again for situations where I want my character to collapse from total pain, but not flinch when being hit
 		TRAIT_NOHUNGER,
-		TRAIT_NOBREATH, 
-		TRAIT_TOXIMMUNE, 
+		TRAIT_NOBREATH,
+		TRAIT_TOXIMMUNE,
 		TRAIT_ZOMBIE_IMMUNE,
 		)
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | RACE_SWAP | SLIME_EXTRACT
@@ -71,6 +69,7 @@
 		/datum/customizer/bodypart_feature/underwear,
 		/datum/customizer/bodypart_feature/legwear,
 		/datum/customizer/bodypart_feature/piercing,
+		/datum/customizer/organ/testicles/anthro,
 		/datum/customizer/organ/penis/anthro,
 		/datum/customizer/organ/breasts/human,
 		/datum/customizer/organ/vagina/human_anthro,
@@ -97,9 +96,22 @@
 
 	restricted_virtues = list(/datum/virtue/utility/noble, /datum/virtue/utility/hollow)
 
+	mechanics_explanations = list("Their wounds cannot be mended with needles or surgery, but instead with mechanical repairs. Light wounds can be mended with just a hammer, but more severe injuries will require a pair of tongs or a wrench held in the off hand for the hammer to work.",
+		"Generic healing miracles used on them will be less effective the closer they are to being at perfect condition.",
+		"Spells of mending can heal their wounds.",
+		"While on the brink of death, can be temporarily stabilized by sticks or rocks.",
+		"Can easily attach any prosthetic limbs to their bodies, including their own when they are lost.",
+		"Can mine rocky terrain by trying to walk into it while in Combat Mode and while in STRONG stance.",
+		"Are vulnerable to electrocution.",
+		"Have unique interactions when certain items are used on them:\n\
+		\t<b>Gemstones, Ingots, Raw Ores, and Stones</b>: Are consumed to heal the construct.\n\
+		\t<b>Cut Tree Logs</b>: Are turned into charcoal.\n\
+		\t<b>Whole Tree Logs</b>: Are split in half.\n\
+		\t<b>Large Rocks</b>: Are broken down into stones.")
+
 /datum/species/construct/metal/check_roundstart_eligible()
 	return TRUE
-	
+
 /datum/species/construct/metal/get_skin_list()
 	return list(
 		"BRASS" = "dfbd6c",
@@ -154,19 +166,25 @@
 		if(M == user)
 			if(!do_after(user, 4 SECONDS))
 				return
-		
+
 		if(M.has_status_effect(/datum/status_effect/debuff/integrity_rig))
-			to_chat(user, span_warning("The jury rigged integrity repairs are still holding, for now..."))
+			to_chat(user, span_warning("The jury rigged integrity repairs are still holding, for now... If you nail it with a hammer it might fix something?"))
 			return
 
 		if(I.type == /obj/item/grown/log/tree/stick)
 			var/obj/item/grown/log/tree/stick/S = I
 			M.apply_status_effect(/datum/status_effect/debuff/integrity_rig, 3 MINUTES)
 			playsound(M, 'sound/combat/hits/blunt/woodblunt (2).ogg', 100, TRUE)
-			user.visible_message(
-				span_notice("[user] wedges [I] into [M]'s damaged lattice, crudely pinning it in place."),
-				span_notice("A weak brace holds my damaged integrity together. It might not last")
-			)
+			if(user == M)
+				M.visible_message(
+					span_notice("[M] wedges [I] into their damaged lattice, crudely pinning it in place."),
+					span_notice("I wedge [I] into my damaged lattice. A weak brace holds my damaged integrity together. It might not last.")
+				)
+			else
+				M.visible_message(
+					span_notice("[user] wedges [I] into [M]'s damaged lattice, crudely pinning it in place."),
+					span_notice("[user] wedges [I] into my damaged lattice. A weak brace holds my damaged integrity together. It might not last.")
+				)
 			qdel(S)
 			return TRUE
 
@@ -174,10 +192,16 @@
 			var/obj/item/grown/log/tree/small/S = I
 			M.apply_status_effect(/datum/status_effect/debuff/integrity_rig, 6 MINUTES)
 			playsound(M, 'sound/combat/hits/blunt/woodblunt (1).ogg', 100, TRUE)
-			user.visible_message(
-				span_notice("[user] jams [I] into [M]'s exposed conduit, safely reinforcing the fracture."),
-				span_notice("The wooden brace steadies my damaged integrity.")
-			)
+			if(user == M)
+				M.visible_message(
+					span_notice("[M] jams [I] into their exposed conduit, safely reinforcing the fracture."),
+					span_notice("I jam [I] into my exposed conduit. The wooden brace steadies my damaged integrity.")
+				)
+			else
+				M.visible_message(
+					span_notice("[user] jams [I] into [M]'s exposed conduit, safely reinforcing the fracture."),
+					span_notice("[user] jams [I] into my exposed conduit. The wooden brace steadies my damaged integrity.")
+				)
 			qdel(S)
 			return TRUE
 
@@ -185,10 +209,16 @@
 			var/obj/item/natural/stone/S = I
 			M.apply_status_effect(/datum/status_effect/debuff/integrity_rig, 9 MINUTES)
 			playsound(M, pick('sound/combat/hits/onmetal/sheet (1).ogg', 'sound/combat/hits/onmetal/sheet (2).ogg', 'sound/combat/hits/onmetal/grille (1).ogg', 'sound/combat/hits/onmetal/grille (2).ogg', 'sound/combat/hits/onmetal/grille (3).ogg'), 100, TRUE)
-			user.visible_message(
-				span_warning("[user] forces [I] into [M]'s ruptured lattice. Sparks violently erupt!"),
-				span_notice("A dense mineral brace locks my damaged integrity into place.")
-			)
+			if(user == M)
+				M.visible_message(
+					span_warning("[M] forces [I] into their ruptured lattice. Sparks violently erupt!"),
+					span_notice("I force [I] into my ruptured lattice. A dense mineral brace locks my damaged integrity into place.")
+				)
+			else
+				M.visible_message(
+					span_warning("[user] forces [I] into [M]'s ruptured lattice. Sparks violently erupt!"),
+					span_notice("[user] forces [I] into my ruptured lattice. A dense mineral brace locks my damaged integrity into place.")
+				)
 			explosion(M, 0, 0, 0, 0, FALSE, FALSE, 0, FALSE, FALSE)
 			for(var/mob/living/L in range(2, M))
 				L.electrocute_act(10, L)
@@ -200,10 +230,16 @@
 			var/obj/item/scrap/S = I
 			M.apply_status_effect(/datum/status_effect/debuff/integrity_rig, 9 MINUTES)
 			playsound(M, pick('sound/combat/hits/onmetal/sheet (1).ogg', 'sound/combat/hits/onmetal/sheet (2).ogg', 'sound/combat/hits/onmetal/grille (1).ogg', 'sound/combat/hits/onmetal/grille (2).ogg', 'sound/combat/hits/onmetal/grille (3).ogg'), 100, TRUE)
-			user.visible_message(
-				span_warning("[user] forces [I] into [M]'s ruptured lattice. Sparks violently erupt, a bit safely!"),
-				span_notice("Odds bits and pieces locks my damaged integrity into place.")
-			)
+			if(user == M)
+				M.visible_message(
+					span_warning("[M] forces [I] into their ruptured lattice. Sparks violently erupt, but safely!"),
+					span_notice("I force [I] into my ruptured lattice. Sparks violently erupt, but my damaged integrity locks back into place.")
+				)
+			else
+				M.visible_message(
+					span_warning("[user] forces [I] into [M]'s ruptured lattice. Sparks violently erupt, but safely!"),
+					span_notice("[user] forces [I] into my ruptured lattice. Sparks violently erupt, but my damaged integrity locks back into place.")
+				)
 			explosion(M, 0, 0, 0, 0, FALSE, FALSE, 0, FALSE, FALSE)
 			qdel(S)
 			return TRUE
@@ -212,23 +248,38 @@
 			qdel(I)
 			M.apply_status_effect(/datum/status_effect/debuff/integrity_rig, 20 MINUTES)
 			playsound(M, pick('sound/combat/hits/onmetal/sheet (1).ogg', 'sound/combat/hits/onmetal/sheet (2).ogg', 'sound/combat/hits/onmetal/grille (1).ogg', 'sound/combat/hits/onmetal/grille (2).ogg', 'sound/combat/hits/onmetal/grille (3).ogg'), 100, TRUE)
-			user.visible_message(
-				span_warning("[user] appends [I] into [M]'s ruptured lattice, stabilizing it properly."),
-				span_notice("A refined mineral brace locks my damaged integrity into place, for now.")
-			)
+			if(user == M)
+				M.visible_message(
+					span_warning("[M] appends [I] into their ruptured lattice, stabilizing it properly."),
+					span_notice("I append [I] into my ruptured lattice. A refined mineral brace locks my damaged integrity into place, for now.")
+				)
+			else
+				M.visible_message(
+					span_warning("[user] appends [I] into [M]'s ruptured lattice, stabilizing it properly."),
+					span_notice("[user] appends [I] into my ruptured lattice. A refined mineral brace locks my damaged integrity into place, for now.")
+				)
 			return TRUE
 
 		to_chat(user, span_warning("That material cannot stabilize exposed integrity damage."))
 		return TRUE
 
-	// === INGOT === 
+	// === INGOT ===
 	if(istype(I, /obj/item/ingot))
 		if(M == user)
 			if(!do_after(user, 12 SECONDS, M))
 				return FALSE
-		power = 5 + I.sellprice * 1.5
+		power = 5 + I.get_real_price() * 1.5
 		M.apply_status_effect(/datum/status_effect/buff/ingotmuncher, power)
-		user.visible_message(span_notice("[user] presses [I] on [M]. It fuses seamlessly, spreading throughout their shell."))
+		if(user == M)
+			M.visible_message(
+				span_notice("[M] presses [I] against their shell. It fuses seamlessly, spreading throughout it."),
+				span_notice("I press [I] against my shell. It fuses seamlessly, spreading throughout it.")
+			)
+		else
+			M.visible_message(
+				span_notice("[user] presses [I] on [M]. It fuses seamlessly, spreading throughout their shell."),
+				span_notice("[user] presses [I] against my shell. It fuses seamlessly, spreading throughout it.")
+			)
 		playsound(user.loc, 'sound/magic/swap.ogg', 40)
 		playsound(user.loc, 'sound/misc/lava_death.ogg', 40)
 		qdel(I)
@@ -239,9 +290,18 @@
 		if(M == user)
 			if(!do_after(user, 12 SECONDS, M))
 				return FALSE
-		power = I.sellprice * 2
+		power = I.get_real_price() * 2
 		M.apply_status_effect(/datum/status_effect/buff/gemmuncher, power)
-		user.visible_message(span_notice("[user] embeds [I] on [M]. It cracks and fuses, rapidly spreading throughout their shell."))
+		if(user == M)
+			M.visible_message(
+				span_notice("[M] embeds [I] into their shell. It cracks and fuses, rapidly spreading throughout it."),
+				span_notice("I embed [I] into my shell. It cracks and fuses, rapidly spreading throughout my shell.")
+			)
+		else
+			M.visible_message(
+				span_notice("[user] embeds [I] on [M]. It cracks and fuses, rapidly spreading throughout their shell."),
+				span_notice("[user] embeds [I] onto my shell. It cracks and fuses, rapidly spreading throughout it.")
+			)
 		qdel(I)
 		playsound(user.loc, 'sound/magic/swap.ogg', 40)
 		playsound(user.loc, 'sound/misc/lava_death.ogg', 40)
@@ -256,25 +316,31 @@
 		var/obj/item/natural/stone/S = I
 		var/pow = S.magic_power + 2
 		var/brute = M.getBruteLoss()
-		var/fire  = M.getFireLoss()
+		var/fire	= M.getFireLoss()
 		var/MAX_DMG = 200
 		var/MULT = 5
 		// Normalize damage
 		var/brute_ratio = clamp(brute / MAX_DMG, 0, 1)
-		var/fire_ratio  = clamp(fire  / MAX_DMG, 0, 1)
+		var/fire_ratio	= clamp(fire	/ MAX_DMG, 0, 1)
 		// Linear 100% to 0% (min 1) effectiveness ratio
 		var/brute_factor = 1 - brute_ratio
-		var/fire_factor  = 1 - fire_ratio
+		var/fire_factor	= 1 - fire_ratio
 		// Final healing
 		var/brute_heal = max(1, round(pow * MULT * brute_factor))
-		var/fire_heal  = max(1, round(pow * MULT * fire_factor))
+		var/fire_heal	= max(1, round(pow * MULT * fire_factor))
 		M.energy_add(5 + (S.magic_power * 10))
 		M.adjustBruteLoss(-brute_heal)
 		M.adjustFireLoss(-fire_heal)
-		user.visible_message(
-			span_notice("[user] offers [I] to [M]'s mouth, and they crunch it down instinctively."),
-			span_notice("I crunch [I] down and swallow it effortlessly.")
-		)
+		if(user == M)
+			M.visible_message(
+				span_notice("[M] crunches [I] down and swallows it effortlessly."),
+				span_notice("I crunch [I] down and swallow it effortlessly.")
+			)
+		else
+			M.visible_message(
+				span_notice("[user] offers [I] to [M]'s mouth, and they crunch it down instinctively."),
+				span_notice("I crunch [I] down and swallow it effortlessly.")
+			)
 		playsound(M.loc, 'sound/misc/eat.ogg', rand(60,100), TRUE)
 		sleep(4)
 		playsound(user.loc, 'sound/foley/smash_rock.ogg', 30)
@@ -282,13 +348,19 @@
 		qdel(I)
 		return TRUE
 
-	// === SCRAP === 
+	// === SCRAP ===
 	if(I.type == /obj/item/scrap)
 		var/obj/item/scrap/L = I
-		user.visible_message(
-			span_notice("[user] offers [L] to [M]'s mouth, and they blow arcyne steam at it!"),
-			span_notice("I puff arcyne steam at [L], combusting it into usable slag!")
-		)
+		if(user == M)
+			M.visible_message(
+				span_notice("[M] blows arcyne steam at [L], combusting it into usable slag!"),
+				span_notice("I puff arcyne steam at [L], combusting it into usable slag!")
+			)
+		else
+			M.visible_message(
+				span_notice("[user] offers [L] to [M]'s mouth, and they blow arcyne steam at it!"),
+				span_notice("I puff arcyne steam at [L], combusting it into usable slag!")
+			)
 		new /obj/effect/particle_effect/thick_steam(get_turf(user))
 		playsound(user.loc, 'sound/items/steamrelease.ogg', 50, FALSE, -1)
 		sleep(4)
@@ -297,13 +369,19 @@
 		new /obj/item/rogueore/iron(get_turf(user))
 		return TRUE
 
-	// === WOOD === 
+	// === WOOD ===
 	if(I.type == /obj/item/grown/log/tree/small)
 		var/obj/item/grown/log/tree/small/L = I
-		user.visible_message(
-			span_notice("[user] offers [L] to [M]'s mouth, and they blow arcyne steam at it!"),
-			span_notice("I puff arcyne steam at [L], combusting it into charcoal!")
-		)
+		if(user == M)
+			M.visible_message(
+				span_notice("[M] blows arcyne steam onto [L], combusting it into charcoal!"),
+				span_notice("I puff arcyne steam at [L], combusting it into charcoal!")
+			)
+		else
+			M.visible_message(
+				span_notice("[user] offers [L] to [M]'s mouth, and they blow arcyne steam at it!"),
+				span_notice("I puff arcyne steam at [L], combusting it into charcoal!")
+			)
 		new /obj/effect/particle_effect/thick_steam(get_turf(user))
 		playsound(user.loc, 'sound/items/steamrelease.ogg', 50, FALSE, -1)
 		sleep(4)
@@ -316,13 +394,19 @@
 			new /obj/item/ash(get_turf(user))
 		return TRUE
 
-	// === LOG === 
+	// === LOG ===
 	if(I.type == /obj/item/grown/log/tree)
 		var/obj/item/grown/log/tree/L = I
-		user.visible_message(
-			span_notice("[user] presses [L] to [M]'s arms, and they crush it in two!"),
-			span_notice("I crush [L] down, splitting it in two!")
-		)
+		if(user == M)
+			M.visible_message(
+				span_notice("[M] presses [L] against their arms and crushes it in two!"),
+				span_notice("I crush [L] down, splitting it in two!")
+			)
+		else
+			M.visible_message(
+				span_notice("[user] presses [L] to [M]'s arms, and they crush it in two!"),
+				span_notice("I crush [L] down, splitting it in two!")
+			)
 		playsound(user.loc, 'sound/misc/woodhit.ogg', 30)
 		sleep(4)
 		playsound(user, 'sound/combat/hits/blunt/woodblunt (2).ogg', 100, TRUE)
@@ -332,13 +416,19 @@
 		new /obj/effect/decal/cleanable/debris/woody(get_turf(user))
 		return TRUE
 
-	// === ROCK === 
+	// === ROCK ===
 	if(istype(I, /obj/item/natural/rock))
 		var/obj/item/natural/rock/S = I
-		user.visible_message(
-			span_notice("[user] presses [I] to [M]'s arms, and they crush it in two!"),
-			span_notice("I crush [S] down, breaking it to fine smithereens!")
-		)
+		if(user == M)
+			M.visible_message(
+				span_notice("[M] crushes [I] in their arms, breaking it in two!"),
+				span_notice("I crush [I] down, breaking it to fine smithereens!")
+			)
+		else
+			M.visible_message(
+				span_notice("[user] presses [I] to [M]'s arms, and they crush it in two!"),
+				span_notice("I crush [I] down, breaking it to fine smithereens!")
+			)
 		playsound(user.loc, 'sound/misc/woodhit.ogg', 30)
 		sleep(4)
 		playsound(user.loc, 'sound/foley/smash_rock.ogg', 30)
@@ -347,14 +437,20 @@
 		new /obj/effect/decal/cleanable/debris/stony(get_turf(user))
 		return TRUE
 
-	// === ORE === 
+	// === ORE ===
 	if(istype(I, /obj/item/rogueore))
-		power = 5 + I.sellprice * 1.25
+		power = 5 + I.get_real_price() * 1.25
 		M.apply_status_effect(/datum/status_effect/buff/oremuncher, power)
-		user.visible_message(
-			span_notice("[user] offers [I] to [M]'s mouth, and they bite it down, munching!"),
-			span_notice("I crunch [I] down and swallow it effortlessly.<br>This is good stuff!")
-		)
+		if(user == M)
+			M.visible_message(
+				span_notice("[M] crunches [I] down and swallows it effortlessly!"),
+				span_notice("I crunch [I] down and swallow it effortlessly.<br>This is good stuff!")
+			)
+		else
+			M.visible_message(
+				span_notice("[user] offers [I] to [M]'s mouth, and they bite it down, munching!"),
+				span_notice("I crunch [I] down and swallow it effortlessly.<br>This is good stuff!")
+			)
 		playsound(M.loc,'sound/misc/eat.ogg', rand(60,100), TRUE)
 		sleep(4)
 		playsound(user.loc, 'sound/foley/smash_rock.ogg', 30)
@@ -659,7 +755,7 @@
 /datum/status_effect/debuff/integrity_rig/on_apply()
 	owner.add_stress(/datum/stressevent/integrity_rig)
 	. = ..()
-	
+
 /datum/status_effect/debuff/integrity_rig/on_remove()
 	owner.remove_stress(/datum/stressevent/integrity_rig)
 	. = ..()
@@ -670,7 +766,7 @@
 	density = FALSE
 	layer = MOB_LAYER+1
 
-/obj/effect/particle_effect/thick_steam/Initialize()
+/obj/effect/particle_effect/thick_steam/Initialize(mapload)
 	. = ..()
 	QDEL_IN(src, 20)
 

@@ -24,6 +24,7 @@
 	job_subclasses = list(
 		/datum/advclass/cook
 	)
+	has_subprefs = FALSE // only one subclass
 	spells = list(/obj/effect/proc_holder/spell/invoked/takeapprentice)
 
 /datum/advclass/cook
@@ -68,7 +69,6 @@
 	else if(should_wear_femme_clothes(H))
 		armor = /obj/item/clothing/suit/roguetown/shirt/dress/gen/random
 	backpack_contents = list(
-		/obj/item/recipe_book/survival,
 		/obj/item/mini_flagpole/innkeeper,
 	)
 	if(H.mind)

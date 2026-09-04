@@ -19,11 +19,29 @@ export const ATCLoanBanner = (props: { atc_loan: AtcLoanState }) => {
   const aldermanActing = !!data.is_alderman_acting;
 
   const [amount, setAmount] = useState(atc_loan.min);
+  // TA EDIT START
+  const labels = atc_loan as AtcLoanState & {
+    authority_capital?: string;
+    authority_lower?: string;
+    authority_possessive?: string;
+    authority_purse?: string;
+    trade_company?: string;
+    pledge_grace_capital?: string;
+  };
+  const authorityLower = labels.authority_lower || 'the Crown';
+  const authorityPurse = labels.authority_purse || "Crown's Purse";
+  const tradeCompany = labels.trade_company || 'Azurian Trading Company';
+  const pledgeGrace = labels.pledge_grace_capital || "The Burghers' grace";
+  // TA EDIT END
 
   if (!atc_loan.can_view) {
     return null;
   }
-  if (!atc_loan.available && atc_loan.loans_drawn === 0 && !atc_loan.arrears_consumed) {
+  if (
+    !atc_loan.available &&
+    atc_loan.loans_drawn === 0 &&
+    !atc_loan.arrears_consumed
+  ) {
     return null;
   }
 
@@ -46,21 +64,24 @@ export const ATCLoanBanner = (props: { atc_loan: AtcLoanState }) => {
           color: accent,
         }}
       >
-        Azurian Trading Company - Company Clerk's Bench
+        {tradeCompany} - Company Clerk&apos;s Bench
       </div>
       <div style={{ color: INK, marginBottom: '6px' }}>
         {atc_loan.available ? (
           <>
             The clerk receives applications for emergency loan of{' '}
-            <b>{atc_loan.min}m to {atc_loan.max}m</b> on the Company&apos;s
-            standing credit, at the customary{' '}
+            <b>
+              {atc_loan.min}m to {atc_loan.max}m
+            </b>{' '}
+            on the Company&apos;s standing credit, at the customary{' '}
             <b>{atc_loan.interest_pct}% interest</b> charged against the
-            principal. The arrears grace stands forfeit on draw - should the
-            Crown miss its next payroll, the realm enters sequestration without
-            warning. Window closes on Day {atc_loan.closed_day}.
+            principal. The arrears grace stands forfeit on draw - should{' '}
+            {authorityLower} miss its next payroll, the realm enters
+            sequestration without warning. Window closes on Day{' '}
+            {atc_loan.closed_day}.
           </>
         ) : (
-          <>{atc_loan.blocker || 'The clerk is unavailable.'}</>
+          atc_loan.blocker || 'The clerk is unavailable.'
         )}
       </div>
       {!!atc_loan.arrears_consumed && (
@@ -72,13 +93,15 @@ export const ATCLoanBanner = (props: { atc_loan: AtcLoanState }) => {
           }}
         >
           Outstanding to the Company: <b>{atc_loan.outstanding}m</b>. All
-          inflow into the Crown&apos;s Purse is skimmed against the debt until
-          it is settled. The Burghers&apos; grace is forfeit; the next missed
-          payroll skips arrears and goes straight to sequestration.
+          inflow into the {authorityPurse} is skimmed against the debt until
+          it is settled. {pledgeGrace} is forfeit; the next missed payroll
+          skips arrears and goes straight to sequestration.
         </div>
       )}
       {atc_loan.loans_drawn > 0 && (
-        <div style={{ color: INK_FAINT, fontSize: FONT_BODY, marginBottom: '6px' }}>
+        <div
+          style={{ color: INK_FAINT, fontSize: FONT_BODY, marginBottom: '6px' }}
+        >
           Loans drawn this week: {atc_loan.loans_drawn}.
         </div>
       )}
@@ -93,7 +116,7 @@ export const ATCLoanBanner = (props: { atc_loan: AtcLoanState }) => {
           }}
           title={
             aldermanActing
-              ? "The Alderman's writ does not extend to drawing loans against the Crown."
+              ? `The Alderman's writ does not extend to drawing loans against ${authorityLower}.`
               : undefined
           }
         >

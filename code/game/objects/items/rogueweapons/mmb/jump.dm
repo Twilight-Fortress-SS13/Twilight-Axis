@@ -28,6 +28,9 @@
 	if(src.get_num_legs() < 2)
 		return FALSE
 
+	if(incapacitated(ignore_restraints = TRUE))
+		return FALSE
+
 	if(pulledby && pulledby != src)
 		to_chat(src, span_warning("I'm being grabbed."))
 		changeNext_move(mmb_intent.clickcd)
@@ -130,6 +133,8 @@
 		is_jumping = FALSE
 		if(jroot && !HAS_TRAIT(src, TRAIT_ZJUMP))	//Jesters and werewolves don't get immobilized at all
 			Immobilize((HAS_TRAIT(src, TRAIT_LEAPER) ? 5 : 10))	//Acrobatics get half the time
+			if(HAS_TRAIT(src, TRAIT_DEADITE)) //Non-Jester deadites collapse and fall over on landing, you're literally rotting apart.
+				Knockdown(10)
 		if(isopenturf(src.loc))
 			var/turf/open/T = src.loc
 			if(T.landsound)
@@ -186,6 +191,8 @@
 	if(A == src || A == src.loc)
 		return FALSE
 	if(get_num_legs() < 2)
+		return FALSE
+	if(incapacitated(ignore_restraints = TRUE))
 		return FALSE
 	if(pulledby && pulledby != src)
 		to_chat(src, span_warning("I'm being grabbed."))

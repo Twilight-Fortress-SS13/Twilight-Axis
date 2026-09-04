@@ -6,4 +6,27 @@
 #define FOOD_CAT_EGGS "Eggs"
 #define FOOD_CAT_SEAFOOD "Seafood"
 #define FOOD_CAT_DRYING "Drying Rack"
-#define FOOD_CAT_STEW "Stews"
+#define FOOD_CAT_STEW "Stew"
+#define FOOD_CAT_DEEPFRIED "Deep Fried"
+#define FOOD_CAT_BOILED "Boiled"
+#define FOOD_CAT_PIES "Pies"
+#define FOOD_CAT_BASICS "Basic Ingredients"
+#define FOOD_CAT_DOUGHS "Doughs"
+#define FOOD_CAT_PRESERVED "Cured & Preserved"
+#define FOOD_CAT_DRIED_FRUIT "Dried Fruit"
+#define FOOD_CAT_SUGARWORK "Sugarwork"
+#define FOOD_CAT_GENERIC "Generic Cooking"
+#define FOOD_CAT_OVEN "Oven"
+#define FOOD_CAT_PAN "Pan"
+#define FOOD_CAT_SMOKED "Smoker"
+
+#define COOKSTEP_TOOL "tool"
+#define COOKSTEP_SHARP "sharp"
+#define COOK_BAKE "bake"
+#define COOK_FRY "fry"
+#define COOK_DEEPFRY "deepfry"
+#define COOK_BOIL "boil"
+#define COOK_SMOKE "smoke"
+
+#define STEW_WATER_REQUIRED 30
+#define STEW_TEMPERATURE 374

@@ -20,7 +20,7 @@
 
 /atom/movable/screen/ghost/orbit/Click()
 	var/mob/dead/observer/G = usr
-	G.follow()
+	G.open_orbit_menu() // TA EDIT
 //skull
 /atom/movable/screen/ghost/orbit/rogue
 	name = "AFTER LIFE"
@@ -30,18 +30,22 @@
 
 /atom/movable/screen/ghost/orbit/rogue/Click(location, control, params)
 	var/mob/dead/observer/G = usr
-	if(G.client)
-		if(istype(G, /mob/dead/observer/rogue/arcaneeye))
-			return
-		if(alert("Travel with the boatman?", "", "Yes", "No") == "Yes")
-			if(G.mind)
-				var/datum/job/target_job = SSjob.GetJob(G.mind.assigned_role)
-				if(target_job)
-					if(target_job.job_reopens_slots_on_death)
-						target_job.current_positions = max(0, target_job.current_positions - 1)
-					if(target_job.same_job_respawn_delay)
-						// Store the current time for the player
-						GLOB.job_respawn_delays[G.ckey] = world.time + target_job.same_job_respawn_delay
+	var/paramslist = params2list(params)
+	if(paramslist["right"]) // screen objects don't do the normal Click() stuff so we'll cheat
+	//	G.open_orbit_menu() // TA EDIT
+	else
+		if(G.client)
+			if(isscryeye(G))
+				return
+			if(alert(usr, "Travel with the boatman?", "", "Yes", "No") == "Yes")
+				if(G.mind)
+					var/datum/job/target_job = SSjob.GetJob(G.mind.assigned_role)
+					if(target_job)
+						if(target_job.job_reopens_slots_on_death)
+							target_job.current_positions = max(0, target_job.current_positions - 1)
+						if(target_job.same_job_respawn_delay)
+							// Store the current time for the player
+							GLOB.job_respawn_delays[G.ckey] = world.time + target_job.same_job_respawn_delay
 				G.returntolobby(0)
 
 /atom/movable/screen/ghost/reenter_corpse
@@ -149,16 +153,13 @@
 	if(!.)
 		return
 	var/mob/screenmob = viewmob || mymob
-	if(!screenmob.client.prefs.ghost_hud)
-		screenmob.client.screen -= static_inventory
-	else
-		screenmob.client.screen += static_inventory
+	screenmob.client.screen += static_inventory
 
 /datum/hud/eye/New(mob/owner)
 	..()
 	var/atom/movable/screen/using
 
-	using =  new /atom/movable/screen/backhudl/ghost()
+	using =	new /atom/movable/screen/backhudl/ghost()
 	using.hud = src
 	static_inventory += using
 
@@ -185,16 +186,13 @@
 	if(!.)
 		return
 	var/mob/screenmob = viewmob || mymob
-	if(!screenmob.client.prefs.ghost_hud)
-		screenmob.client.screen -= static_inventory
-	else
-		screenmob.client.screen += static_inventory
+	screenmob.client.screen += static_inventory
 
 /datum/hud/obs/New(mob/owner)
 	..()
 	var/atom/movable/screen/using
 
-	using =  new /atom/movable/screen/backhudl/obs()
+	using =	new /atom/movable/screen/backhudl/obs()
 	using.hud = src
 	static_inventory += using
 

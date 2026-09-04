@@ -17,7 +17,7 @@
 
 	charge_required = TRUE
 	charge_time = 1 SECONDS
-	charge_drain = 1
+	hold_drain = 1
 	charge_slowdown = CHARGING_SLOWDOWN_SMALL
 	charge_sound = 'sound/magic/charging.ogg'
 	cooldown_time = 60 SECONDS
@@ -59,13 +59,13 @@
 
 		user.emote("me", 1, "mutters an incantation, their mouth briefly flashing white!", TRUE, custom_me = TRUE)
 
-		var/message_color = "7246ff"
+		var/message_color = "#7246ff"
 		var/is_projection = FALSE
 
 		if(alert(user, "Transmit as a wordlessly projected vision or as a whispered message?", "", "Projection", "Message") == "Projection")
 			is_projection = TRUE
 
-		var/message = input(user, "You successfully make a connection! [is_projection ? "What sensory vision are you trying to send into their mind?" : "What are you trying to whisper into their mind?"]")
+		var/message = sanitize(input(user, "You successfully make a connection! [is_projection ? "What sensory vision are you trying to send into their mind?" : "What are you trying to whisper into their mind?"]"))
 		if(!message)
 			return FALSE
 
@@ -83,19 +83,19 @@
 					if(ishuman(user))
 						message_color = user.voice_color
 					if(!is_projection)
-						to_chat(HL, span_big("Arcyne whispers slip into my mind, resolving into [user]'s voice: <font color=#[message_color]><i>\"[message]\"</i></font>"))
-						to_chat(user, span_big("You whisper into [HL]'s mind, identifying yourself in the process: <font color=#[message_color]><i>\"[message]\"</i></font>"))
+						to_chat(HL, span_big("Arcyne whispers slip into my mind, resolving into [user]'s voice: <font color=[message_color]><i>\"[message]\"</i></font>"))
+						to_chat(user, span_big("You whisper into [HL]'s mind, identifying yourself in the process: <font color=[message_color]><i>\"[message]\"</i></font>"))
 					else
-						to_chat(HL, span_big("A brief vision suddenly flashes in my mind, familiar as originating from [user]'s headspace: <font color=#[message_color]>\[<b>[message]</b>\]</font>"))
-						to_chat(user, span_big("You slip a brief vision into [HL]'s mind, identifying yourself in the process: <font color=#[message_color]>\[<b>[message]</b>\]</font>"))
+						to_chat(HL, span_big("A brief vision suddenly flashes in my mind, familiar as originating from [user]'s headspace: <font color=[message_color]>\[<b>[message]</b>\]</font>"))
+						to_chat(user, span_big("You slip a brief vision into [HL]'s mind, identifying yourself in the process: <font color=[message_color]>\[<b>[message]</b>\]</font>"))
 
 		if(!identified)
 			if(!is_projection)
-				to_chat(HL, span_big("Arcyne whispers slip into my mind, resolving into an unknown [user.gender == FEMALE ? "woman" : "man"]'s voice: <font color=#[message_color]><i>\"[message]\"</i></font>"))
-				to_chat(user, span_big("You whisper anonymously into [HL]'s mind: <font color=#[message_color]><i>\"[message]\"</i></font>"))
+				to_chat(HL, span_big("Arcyne whispers slip into my mind, resolving into an unknown [user.gender == FEMALE ? "woman" : "man"]'s voice: <font color=[message_color]><i>\"[message]\"</i></font>"))
+				to_chat(user, span_big("You whisper anonymously into [HL]'s mind: <font color=[message_color]><i>\"[message]\"</i></font>"))
 			else
-				to_chat(HL, span_big("A brief vision suddenly flashes in my mind, originating from an unknown source: <font color=#[message_color]>\[<b>[message]</b>\]</font>"))
-				to_chat(user, span_big("You slip a brief vision anonymously into [HL]'s mind: <font color=#[message_color]>\[<b>[message]</b>\]</font>"))
+				to_chat(HL, span_big("A brief vision suddenly flashes in my mind, originating from an unknown source: <font color=[message_color]>\[<b>[message]</b>\]</font>"))
+				to_chat(user, span_big("You slip a brief vision anonymously into [HL]'s mind: <font color=[message_color]>\[<b>[message]</b>\]</font>"))
 
 		if(!is_projection)
 			user.whisper(message, language = /datum/language/common)

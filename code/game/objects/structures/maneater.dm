@@ -126,6 +126,9 @@
 		var/list/limb_zones = list(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
 		var/zone = null
 		var/obj/item/bodypart/limb = null
+		var/maneater_armor_damage = 500
+		if(HAS_TRAIT(victim, TRAIT_TOUGH_COOKIE))
+			maneater_armor_damage = 250
 		while(length(limb_zones) && !limb)
 			zone = pick(limb_zones)
 			limb_zones -= zone
@@ -136,14 +139,18 @@
 				if(limb.dismember(damage = 20))
 					seednutrition += 25
 			else
-				victim.apply_damage(60, BRUTE, zone, victim.run_armor_check(zone, BCLASS_CUT, damage = 500))
+				victim.apply_damage(60, BRUTE, zone, victim.run_armor_check(zone, BCLASS_CUT, damage = maneater_armor_damage))
 		else
 			var/core_zone = pick(BODY_ZONE_CHEST, BODY_ZONE_HEAD)
-			victim.apply_damage(60, BRUTE, core_zone, victim.run_armor_check(core_zone, BCLASS_CUT, damage = 500))
+			victim.apply_damage(60, BRUTE, core_zone, victim.run_armor_check(core_zone, BCLASS_CUT, damage = maneater_armor_damage))
 
 	if(victim.stat == DEAD || victim.stat == UNCONSCIOUS)
 		if(!victim.mind)
-			victim.gib()
+			if(isanimal(victim))
+				var/mob/living/simple_animal/A = victim
+				A.gib_with_novice_butchery()
+			else
+				victim.gib()
 			seednutrition += 50
 			return
 		maneater_spit_out(victim)
@@ -175,7 +182,7 @@
 		name = "grass"
 		icon_state = "maneater-hidden"
 
-/obj/structure/flora/roguegrass/maneater/real/user_unbuckle_mob(mob/living/M, mob/user, var/break_factor = 1)
+/obj/structure/flora/roguegrass/maneater/real/user_unbuckle_mob(mob/living/M, mob/user, break_factor = 1)
 	if(obj_broken)
 		..()
 		return
@@ -230,7 +237,7 @@
 
 		return TRUE
 
-	
+
 
 
 //JUVENILE MANEATER
@@ -248,10 +255,10 @@
 	var/growth_time = 20 MINUTES
 
 
-/obj/structure/flora/roguegrass/maneater/real/juvenile/Initialize()
+/obj/structure/flora/roguegrass/maneater/real/juvenile/Initialize(mapload)
 	..()
-	transform = transform.Scale(0.5, 0.5)  // Start at half size
-	addtimer(CALLBACK(src, .proc/try_grow), growth_time)
+	transform = transform.Scale(0.5, 0.5)	// Start at half size
+	addtimer(CALLBACK(src, PROC_REF(try_grow)), growth_time)
 
 /obj/structure/flora/roguegrass/maneater/real/juvenile/Crossed(atom/movable/AM)
 	..()
@@ -277,7 +284,7 @@
 		transform = transform.Scale(1.26, 1.26)
 		visible_message(span_warning("[src] grows bigger!"))
 		playsound(loc, list('sound/vo/mobs/plant/attack (1).ogg','sound/vo/mobs/plant/attack (2).ogg','sound/vo/mobs/plant/attack (3).ogg','sound/vo/mobs/plant/attack (4).ogg'), 100, FALSE, -1)
-		addtimer(CALLBACK(src, .proc/try_grow), growth_time)
+		addtimer(CALLBACK(src, PROC_REF(try_grow)), growth_time)
 		return
 
 	// Replace with adult form

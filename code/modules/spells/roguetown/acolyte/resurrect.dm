@@ -32,6 +32,26 @@
 	var/matthios = FALSE
 	priest_excluded = TRUE
 
+/obj/effect/proc_holder/spell/invoked/resurrect/get_spell_statistics(mob/living/user)
+	. = ..()
+	var/list/needed_items = get_current_required_items()
+
+	if(!length(needed_items))
+		. += span_notice("<b>Required Components:</b> None.")
+		return
+
+	var/has_alt_reduction = SSchimeric_tech.has_revival_cost_reduction() && length(alt_required_items)
+	var/cost_header = "Required Components" + (has_alt_reduction ? " (Reduced Cost Active):" : ":")
+
+	. += "<br><span class='notice'><b>[cost_header]</b></span>"
+
+	for(var/item_path in needed_items)
+		var/amount = needed_items[item_path]
+		var/obj/item/item_datum = item_path
+		var/item_name = initial(item_datum.name)
+
+		. += span_info("- [amount]x [item_name][amount > 1 ? "s" : ""]")
+
 /obj/effect/proc_holder/spell/invoked/resurrect/start_recharge()
 	var/old_recharge = recharge_time
 	recharge_time = initial(recharge_time) * SSchimeric_tech.get_resurrection_multiplier()
@@ -55,6 +75,7 @@
 			to_chat(user, span_warning("[validation_result] on the floor next to or on top of [target]."))
 			revert_cast()
 			return FALSE
+		var/list/items_to_consume = get_items_to_consume(target)
 		if(!zizo)
 			var/found_structure = FALSE
 			var/list/search_area = oview(structure_range, target)
@@ -93,8 +114,12 @@
 			target.dust()
 			return TRUE
 
-		if(alert(target, "They are calling for you. Are you ready?", "Revival", "I need to wake up", "Don't let me go") != "I need to wake up")
+		if(alert(target, "They are calling for you. Are you ready?", "TEETERING BETWEEN PARADISE AND PERDITION.", "I need to wake up!", "Don't let me go..") != "I need to wake up!")
 			target.visible_message(span_notice("Nothing happens. They are not being let go."))
+			return FALSE
+		if(!items_are_available(items_to_consume))
+			to_chat(user, span_warning("The required components are no longer available."))
+			revert_cast()
 			return FALSE
 		target.adjustOxyLoss(-target.getOxyLoss()) //Ye Olde CPR
 		if(!target.revive(full_heal = FALSE))
@@ -121,13 +146,17 @@
 			target.apply_status_effect(debuff_type)	//Temp debuff on revive, your stats get hit temporarily. Doubly so if having rotted.
 		//Due to an increased cost and cooldown, these revival types heal quite a bit.
 		target.apply_status_effect(/datum/status_effect/buff/healing, 14)
-		#ifdef REVIVE_GRACE
-		target.apply_status_effect(/datum/status_effect/debuff/revive_grace) // TA EDIT
-		#endif
-		consume_items(target)
+		addtimer(CALLBACK(src, PROC_REF(deathmark), target), 5 MINUTES)
+		consume_selected_items(items_to_consume)
 		return TRUE
 	revert_cast()
 	return FALSE
+
+/obj/effect/proc_holder/spell/invoked/resurrect/proc/deathmark(mob/living/victim)
+	if(victim.stat != DEAD)
+		victim.apply_status_effect(/datum/status_effect/debuff/permadeath) //The deathmark in question. This temporarily adds unrevivability to the target; die again while it's active, and your story'll be over.. for now.
+		victim.play_permadeath_indicator()
+		to_chat(victim, span_danger("You suddenly feel a deathly chill from within, as the lux begins to creep across your heart once more. The thread betwixt your soul and body remains thin; to succumb again so soon would ensure its total severance."))
 
 /obj/effect/proc_holder/spell/invoked/resurrect/cast_check(skipcharge, mob/user = usr)
 	if(!..())
@@ -168,7 +197,7 @@
 	for(var/item_type in current_required_items)
 		var/needed = current_required_items[item_type]
 		var/have = available_items[item_type] || 0
-		
+
 		if(have < needed) {
 			var/obj/item/I = item_type
 			var/amount_needed = needed - have
@@ -182,7 +211,11 @@
 		return "Missing components: [string]"
 	return ""
 
-/obj/effect/proc_holder/spell/invoked/resurrect/proc/consume_items(atom/center)
+/obj/effect/proc_holder/spell/invoked/resurrect/proc/get_items_to_consume(atom/center)
+	var/list/items_to_consume = list()
+	if(zizo || matthios)
+		return items_to_consume
+
 	var/list/current_required_items = get_current_required_items()
 	for(var/item_type in current_required_items)
 		var/needed = current_required_items[item_type]
@@ -192,7 +225,23 @@
 				break
 			if(I.type == item_type)
 				needed--
-				qdel(I)
+				items_to_consume += I
+
+	return items_to_consume
+
+/obj/effect/proc_holder/spell/invoked/resurrect/proc/items_are_available(list/items_to_consume)
+	for(var/obj/item/I in items_to_consume)
+		if(QDELETED(I))
+			return FALSE
+	return TRUE
+
+/obj/effect/proc_holder/spell/invoked/resurrect/proc/consume_selected_items(list/items_to_consume)
+	for(var/obj/item/I in items_to_consume)
+		if(!QDELETED(I))
+			qdel(I)
+
+/obj/effect/proc_holder/spell/invoked/resurrect/proc/consume_items(atom/center)
+	consume_selected_items(get_items_to_consume(center))
 
 /obj/effect/proc_holder/spell/invoked/resurrect/abyssor
 	name = "Abyssal Rite of Anastasis"
@@ -282,7 +331,7 @@
 	var/timed_cooldown
 
 /obj/effect/proc_holder/spell/invoked/summon_dreamfiend_curse/cast(list/targets, mob/living/user)
-	if (world.time < timed_cooldown) 
+	if (world.time < timed_cooldown)
 		to_chat(user, span_warning("You must gather your strength before you are ready to confront your terror!"))
 		to_chat(user, span_warning("Time remaining: [max(0, timed_cooldown - world.time)/10] seconds."))
 		revert_cast()
@@ -330,6 +379,8 @@
 	)
 	debuff_type = /datum/status_effect/debuff/metabolic_acceleration
 	sound = 'sound/magic/heartbeat.ogg'
+	overlay_icon = 'icons/mob/actions/eoramiracles.dmi'
+	action_icon = 'icons/mob/actions/eoramiracles.dmi'
 	overlay_state = "eora_revive"
 
 /atom/movable/screen/alert/status_effect/nutrition_drain
@@ -370,6 +421,9 @@
 	desc = "Resurrects the chosen target, bringing them back from the dead. Side effects may include crippling weaknesses from other godly rites, ending up \
 	butt-naked in the middle of the kingdom's throne room, and much, much, more. </br>Unlike a regular Healing miracle, \
 	this can affect - and resurrect - devout Psydonians as well."
+	action_icon = 'icons/mob/actions/xylixmiracles.dmi'
+	overlay_icon = 'icons/mob/actions/xylixmiracles.dmi'
+	overlay_state = "revive"
 	debuff_type = /datum/status_effect/debuff/random_revival
 	alt_required_items = list(
 		/obj/item/clothing/neck/roguetown/psicross/wood = 1
@@ -583,6 +637,8 @@
 	)
 	debuff_type = /datum/status_effect/debuff/malum_revival
 	sound = 'sound/magic/clang.ogg'
+	overlay_icon = 'icons/mob/actions/malummiracles.dmi'
+	action_icon = 'icons/mob/actions/malummiracles.dmi'
 
 /obj/effect/proc_holder/spell/invoked/resurrect/ravox
 	name = "Just Rite of Anastasis"
@@ -638,16 +694,39 @@
 	overlay_state = "revive"
 	sound = 'sound/magic/owlhoot.ogg'
 
-/obj/effect/proc_holder/spell/invoked/resurrect/undivided
-	name = "Lesser Anastasis"
-	desc = "Resurrects the chosen target, bringing them back from the dead. </br>This blessing requires an offering to complete, in the form of a piece of golden \
-	ore. </br>Casting this on an undead or unholy target will smite them with explosive results. </br>Depending on how far gone \
-	the spirit is, the 'Anastasis' blessing might need to be casted multiple times before successfully resurrecting them. </br>Unlike a regular Healing miracle, this \
-	can affect - and resurrect - devout Psydonians as well."
-	recharge_time = 20 MINUTES //Double the cooldown, no more gold cost, it simply doesn't work with the new economy and transmutation changes.
-	required_items = list()
-	debuff_type = /datum/status_effect/debuff/revived
-	sound = 'sound/magic/revive.ogg'
-	action_icon = 'icons/mob/actions/undividedmiracles.dmi'
-	overlay_icon = 'icons/mob/actions/undividedmiracles.dmi'
-	overlay_state = "revive"
+/obj/effect/proc_holder/spell/invoked/resurrect/dream
+	name = "Oneiric Rite of Anastasis"
+	desc = "Resurrects the chosen target, bringing them back from the dead. \
+	Converts material used into random higher tier materials. \
+	The resurrected target will be tethered to a dream entity. They must invoke the daemon and kill it to be freed from their curse. \
+	Requires ocean water near."
+	sound = 'sound/magic/chime.ogg'
+
+	required_items = list(
+		/obj/item/dream_material/dream_spike = 1,
+		/obj/item/dream_material/parchment_raw = 1,
+		/obj/item/dream_material/dream_ring = 1
+	)
+	alt_required_items = list(
+		/obj/item/dream_material/dream_seed = 1
+	)
+
+	debuff_type = /datum/status_effect/debuff/dreamfiend_curse
+	required_structure = /turf/open/water/ocean
+	action_icon = 'icons/mob/actions/abyssormiracles.dmi'
+	overlay_icon = 'icons/mob/actions/abyssormiracles.dmi'
+	overlay_state = "paint_revive"
+
+/obj/effect/proc_holder/spell/invoked/resurrect/dream/cast(list/targets, mob/living/user)
+	. = ..()
+	if(.)
+		var/turf/T = get_turf(user)
+		if(T)
+			var/static/list/t2_items = list(
+				/obj/item/dream_material/dream_effigy,
+				/obj/item/dream_material/dream_fishes,
+				/obj/item/dream_material/dream_blade
+			)
+			for(var/i in 1 to 3)
+				var/chosen_type = pick(t2_items)
+				new chosen_type(T)

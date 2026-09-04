@@ -141,9 +141,9 @@
 				if(L.defaulted)
 					REMOVE_TRAIT(debtor, TRAIT_DEBTOR, TRAIT_GENERIC)
 					REMOVE_TRAIT(debtor, L.get_faction_debtor_trait(), TRAIT_GENERIC)
-					send_ooc_note("<b>MEISTER:</b> The stigma of default is lifted. [outstanding]m was drawn from your account to settle the outstanding debt in full.", name = debtor.real_name)
+					send_ooc_note("MEISTER: The stigma of default is lifted. [outstanding]m was drawn from your account to settle the outstanding debt in full.", name = debtor.real_name)
 				else
-					send_ooc_note("<b>MEISTER:</b> Your loan of [L.principal]m has been repaid in full ([outstanding]m drawn from your account).", name = debtor.real_name)
+					send_ooc_note("MEISTER: Your loan of [L.principal]m has been repaid in full ([outstanding]m drawn from your account).", name = debtor.real_name)
 				loans -= L
 				qdel(L)
 				continue
@@ -157,7 +157,7 @@
 			ADD_TRAIT(debtor, TRAIT_DEBTOR, TRAIT_GENERIC)
 			ADD_TRAIT(debtor, L.get_faction_debtor_trait(), TRAIT_GENERIC)
 			var/still_owed = L.get_remaining_due()
-			send_ooc_note("<b>MEISTER:</b> Your loan of [L.principal]m has come due and you cannot pay. [seized]m was seized; [still_owed]m remains owed to [destination.name]. You are marked a defaulter until the debt is settled.", name = debtor.real_name)
+			send_ooc_note("MEISTER: Your loan of [L.principal]m has come due and you cannot pay. [seized]m was seized; [still_owed]m remains owed to [destination.name]. You are marked a defaulter until the debt is settled.", name = debtor.real_name)
 			record_round_statistic(STATS_LOANS_DEFAULTED, 1)
 			log_game("LOAN DEFAULT: [L.debtor_name] defaulted on [outstanding]m loan from [destination.name]. [seized]m seized, [still_owed]m remaining.")
 
@@ -202,20 +202,20 @@
 	var/target_label = indenture_faction_label(target)
 	var/msg
 	if(istype(source, /datum/fund/church))
-		msg = "The Church of Azuria has called its loan to [target_label] and finds the coffers wanting. The faithful's alms has been squandered by the faithless. Astrata's generosity has been squandered. [seized]m forfeit, [still_owed]m unsettled."
+		msg = "[capitalize(indenture_faction_label(source))] has called its loan to [target_label] and finds the coffers wanting. The faithful's alms has been squandered by the faithless. Divine generosity has been squandered. [seized]m forfeit, [still_owed]m unsettled."
 	else if(istype(source, /datum/fund/merchant))
-		msg = "The Azurian Trading Company has called its loan to [target_label] and finds the coffers wanting. The Burghers are outraged. There is no wealth without trust, and no realm without wealth. [seized]m forfeit, [still_owed]m unsettled."
+		msg = "[capitalize(indenture_faction_label(source))] has called its loan to [target_label] and finds the coffers wanting. [ta_economy_burghers_capital()] are outraged. There is no wealth without trust, and no realm without wealth. [seized]m forfeit, [still_owed]m unsettled."
 	else if(istype(source, /datum/fund/bathhouse))
 		msg = "The Bathhouse has called its loan to [target_label] and finds the coffers wanting. Her generosity abused! Her love disgraced! To lend from the bathhouse is one shame, to not pay back, a greater one. [seized]m forfeit, [still_owed]m unsettled."
 	else
-		msg = "The Stewardry has called its loan to [target_label] and finds the coffers wanting. The Crown is owed its due, and shall make known its perogative. [seized]m forfeit, [still_owed]m unsettled."
+		msg = "The Stewardry has called its loan to [target_label] and finds the coffers wanting. [ta_economy_authority_capital()] is owed its due, and shall make known its prerogative. [seized]m forfeit, [still_owed]m unsettled."
 	priority_announce(msg, "Indenture Defaulted", pick('sound/misc/royal_decree.ogg', 'sound/misc/royal_decree2.ogg'), "Captain", strip_html = FALSE)
 
 /datum/controller/subsystem/treasury/proc/indenture_faction_label(datum/fund/F)
 	if(istype(F, /datum/fund/church))
-		return "the Church of Azuria"
+		return ta_economy_church_label()
 	if(istype(F, /datum/fund/merchant))
-		return "the Azurian Trading Company"
+		return ta_economy_trade_company_the()
 	if(istype(F, /datum/fund/bathhouse))
 		return "the Bathhouse"
 	if(istype(F, /datum/fund/innkeeper))

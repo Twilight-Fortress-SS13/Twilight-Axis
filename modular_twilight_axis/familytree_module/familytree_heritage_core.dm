@@ -420,7 +420,7 @@
 		"spouses" = list(),
 		"children" = list(),
 		"personRef" = null,
-		"descriptor" = SSfamilytree.familytree_build_member_descriptor(member),
+		"descriptor" = (member.family == src) ? SSfamilytree.familytree_build_member_descriptor(member) : null,
 	)
 
 /datum/heritage/proc/FamilyTreeHasRealParent(datum/family_member/member, datum/family_member/ignore_parent = null)
@@ -466,7 +466,7 @@
 			details += "Married to: [jointext(spouse_names, ", ")]"
 
 	var/entry_ref = (!member.cosmetic && !member.phantom) ? REF(member.person) : null
-	var/entry_descriptor = SSfamilytree.familytree_build_member_descriptor(member)
+	var/entry_descriptor = (member.family == src) ? SSfamilytree.familytree_build_member_descriptor(member) : null
 
 	return list(
 		"name" = member.person.real_name,
@@ -560,7 +560,7 @@
 		details += root_member.person.dna.species.name
 	var/list/parent_names = BuildFamilyTreeParentNames(root_member)
 	var/node_ref = (root_member.person && !root_member.cosmetic && !root_member.phantom) ? REF(root_member.person) : null
-	var/node_descriptor = (root_member.person && !root_member.phantom) ? SSfamilytree.familytree_build_member_descriptor(root_member) : null
+	var/node_descriptor = (root_member.person && !root_member.phantom && root_member.family == src) ? SSfamilytree.familytree_build_member_descriptor(root_member) : null
 
 	var/list/node = list(
 		"name" = root_member.person ? root_member.person.real_name : "Unknown",

@@ -11,6 +11,10 @@
 	altdetail_color = "#FFFFFF"
 	max_integrity = ARMOR_INT_LEG_STEEL_CHAIN + 10
 
+/obj/item/clothing/under/roguetown/chainlegs/grenzelhoft/Initialize()
+	. = ..()
+	update_icon()
+
 /obj/item/clothing/under/roguetown/chainlegs/grenzelhoft/update_icon()
 	cut_overlays()
 	if(get_detail_tag())

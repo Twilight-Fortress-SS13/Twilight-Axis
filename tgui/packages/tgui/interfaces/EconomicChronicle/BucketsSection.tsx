@@ -1,14 +1,10 @@
-import {
-  FONT_BODY,
-  INK_SOFT,
-  subtitleStyle,
-} from '../common/parchment';
+import { FONT_BODY, INK_SOFT, subtitleStyle } from '../common/parchment';
+import { SummarySegment } from '../common/SummarySegment';
 import {
   compactCardStyle,
   compactDataCell,
   compactHeaderCell,
   dividedTwoColumnLayout,
-  SectionTitle,
   twoColTable,
   verticalDividerStyle,
 } from './styles';
@@ -32,11 +28,21 @@ const RealMarketTable = (props: { rows: RealBucket[] }) => (
       <thead>
         <tr>
           <td style={compactHeaderCell}>Bucket</td>
-          <td style={{ ...compactHeaderCell, textAlign: 'right' }}>Sold</td>
           <td
-            style={{ ...compactHeaderCell, textAlign: 'right', paddingRight: 0 }}
+            style={{ ...compactHeaderCell, textAlign: 'right' }}
+            title="Value sold into the warehouse, filling up saturation."
           >
-            Relieved
+            Sold
+          </td>
+          <td
+            style={{
+              ...compactHeaderCell,
+              textAlign: 'right',
+              paddingRight: 0,
+            }}
+            title="Market saturation cleared by a ship docking."
+          >
+            Cleared
           </td>
         </tr>
       </thead>
@@ -72,7 +78,11 @@ const BlackMarketTable = (props: { rows: BmBucket[] }) => (
         <tr>
           <td style={compactHeaderCell}>Bucket</td>
           <td
-            style={{ ...compactHeaderCell, textAlign: 'right', paddingRight: 0 }}
+            style={{
+              ...compactHeaderCell,
+              textAlign: 'right',
+              paddingRight: 0,
+            }}
           >
             Sold
           </td>
@@ -83,7 +93,11 @@ const BlackMarketTable = (props: { rows: BmBucket[] }) => (
           <tr key={row.name}>
             <td style={compactDataCell}>{row.name}</td>
             <td
-              style={{ ...compactDataCell, textAlign: 'right', paddingRight: 0 }}
+              style={{
+                ...compactDataCell,
+                textAlign: 'right',
+                paddingRight: 0,
+              }}
             >
               {row.sold}
             </td>
@@ -96,9 +110,19 @@ const BlackMarketTable = (props: { rows: BmBucket[] }) => (
 
 export const BucketsSection = (props: Props) => {
   const { b } = props;
+  const realSold = b.real.reduce((sum, r) => sum + r.sold, 0);
+  const realRelieved = b.real.reduce((sum, r) => sum + r.relieved, 0);
+  const bmSold = b.black_market.reduce((sum, r) => sum + r.sold, 0);
   return (
     <div style={compactCardStyle}>
-      <SectionTitle>Navigator Buckets</SectionTitle>
+      <SummarySegment
+        title="Navigator Buckets"
+        items={[
+          { label: 'Real market sold', value: realSold },
+          { label: 'Saturation cleared', value: realRelieved },
+          { label: 'Black market sold', value: bmSold },
+        ]}
+      />
       <div style={dividedTwoColumnLayout}>
         <RealMarketTable rows={b.real} />
         <div style={verticalDividerStyle} />

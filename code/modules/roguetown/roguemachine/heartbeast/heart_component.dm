@@ -37,8 +37,10 @@
 	var/response_time_threshold = 10 SECONDS // 10 second threshold for patient/impatient quirks
 
 	var/obj/structure/stone_rack/linked_rack
+	var/last_link_attempt = 0
+	var/link_attempt_interval = 30 SECONDS
 
-/datum/component/chimeric_heart_beast/Initialize()
+/datum/component/chimeric_heart_beast/Initialize(mapload)
 	. = ..()
 	if(!istype(parent, /obj/structure/roguemachine/chimeric_heart_beast))
 		return COMPONENT_INCOMPATIBLE
@@ -48,13 +50,13 @@
 
 	last_happiness_decay = world.time
 
-	RegisterSignal(heart_beast, COMSIG_HEART_BEAST_HEAR, .proc/on_hear)
-	RegisterSignal(heart_beast, COMSIG_ATOM_ATTACK_HAND, .proc/on_interact)
-	RegisterSignal(heart_beast, COMSIG_PARENT_ATTACKBY, .proc/on_item_interact)
+	RegisterSignal(heart_beast, COMSIG_HEART_BEAST_HEAR, PROC_REF(on_hear))
+	RegisterSignal(heart_beast, COMSIG_ATOM_ATTACK_HAND, PROC_REF(on_interact))
+	RegisterSignal(heart_beast, COMSIG_PARENT_ATTACKBY, PROC_REF(on_item_interact))
 
 	initialize_quirks()
 	setup_heartbeast_turfs()
-	addtimer(CALLBACK(src, .proc/link_to_racks), 5 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(link_to_racks)), 5 SECONDS)
 
 /datum/component/chimeric_heart_beast/proc/setup_heartbeast_turfs()
 	var/turf/center_turf = get_turf(heart_beast)
@@ -70,7 +72,7 @@
 	for(var/turf/T in dense_turfs)
 		if(T)
 			T.density = TRUE
-			T.opacity = FALSE
+			T.set_opacity(FALSE)
 
 	heart_beast.dense_turfs = dense_turfs
 
@@ -191,6 +193,11 @@
 		process_environment_quirks()
 		last_environment_process = world.time
 
+	// Re-attempt linking to a rack periodically if we don't have one yet.
+	// (The rack may have been built/moved after our initial one-shot link timer.)
+	if(!linked_rack && world.time > last_link_attempt + link_attempt_interval)
+		link_to_racks()
+
 /datum/component/chimeric_heart_beast/proc/decay_happiness()
 	happiness = max(happiness - (max_happiness * 0.05), 0)
 
@@ -248,7 +255,7 @@
 	for(var/datum/flesh_quirk/quirk in item_interaction_quirks)
 		quirk.apply_item_interaction_quirk(I, user, src)
 
-/datum/component/chimeric_heart_beast/proc/try_fill_blood_container(obj/item/empty_container, mob/user, var/amount, var/filled_type)
+/datum/component/chimeric_heart_beast/proc/try_fill_blood_container(obj/item/empty_container, mob/user, amount, filled_type)
 	if(blood_pool < amount)
 		to_chat(user, span_warning("The blood pool is too low to fill [empty_container]."))
 		return FALSE
@@ -314,7 +321,7 @@
 	// Check for keywords (up to 2)
 	var/keywords_found = 0
 	for(var/keyword in task.answer_keywords)
-		if(findtext(lowertext(message), lowertext(keyword)))
+		if(findtext(LOWER_TEXT(message), LOWER_TEXT(keyword)))
 			keywords_found++
 			if(keywords_found >= 2)
 				break
@@ -329,7 +336,8 @@
 	score = trigger_behavior_quirks(score, speaker, message)
 
 	// Determine success
-	linked_rack.advance_calibration()
+	if(linked_rack)
+		linked_rack.advance_calibration()
 	if(score >= 20) // Passing score
 		complete_task(score, speaker, quirk_effects)
 	else
@@ -341,7 +349,7 @@
 	// Calculate rewards
 	var/blood_reward = (max_blood_pool / 10) * reward_multiplier * (quirk_effects["blood_multiplier"] || 1)
 	// 8 - 16 - 32 - 64 Under perfect circumstances
-	var/rack_multiplier = linked_rack.update_rack_stats()
+	var/rack_multiplier = linked_rack ? linked_rack.update_rack_stats() : 0
 	var/tech_reward = (8 * (2 ** (language_tier - 1))) * reward_multiplier * ((quirk_effects["tech_multiplier"] || 1) * rack_multiplier)
 	var/happiness_reward = (max_happiness / 4) * reward_multiplier * (quirk_effects["happiness_multiplier"] || 1)
 	// 2 perfect answers, or 4 mediocre ones, 8 serviceable answers
@@ -467,7 +475,7 @@
 /datum/flesh_task/knowledge
 	var/datum/flesh_concept/concept
 
-/datum/flesh_task/knowledge/New(language_tier, var/obj/structure/roguemachine/chimeric_heart_beast/heart_beast)
+/datum/flesh_task/knowledge/New(language_tier, obj/structure/roguemachine/chimeric_heart_beast/heart_beast)
 	. = ..()
 	var/list/possible_concepts = list()
 	for(var/datum/flesh_trait/trait in heart_beast.traits)
@@ -495,6 +503,15 @@
 /datum/component/chimeric_heart_beast/proc/link_to_racks()
 	if(!heart_beast || !heart_beast.loc)
 		return
+
+	last_link_attempt = world.time
+
+	// Already linked - make sure the link is still valid (rack wasn't destroyed/moved).
+	if(linked_rack)
+		if(!istype(linked_rack) || !linked_rack.loc || linked_rack.heart_component != src)
+			linked_rack = null
+		else
+			return
 
 	//Range() might be better, but I couldn't find racks through walls so we're doing it this way
 	var/search_range = 7

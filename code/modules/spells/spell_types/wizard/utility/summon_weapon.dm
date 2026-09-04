@@ -27,7 +27,7 @@
 					continue
 				if(HAS_TRAIT(item, TRAIT_NODROP))
 					message += "Though it feels redundant, "
-				marked_item = 		item
+				marked_item =		item
 				message += "You imbue [item] for summoning.</span>"
 				name = "Summon [item]"
 				break
@@ -41,12 +41,12 @@
 		else if(marked_item && (marked_item in hand_items)) //unlinking item to the spell
 			message = span_notice("I remove the imbuement on [marked_item] to use elsewhere.")
 			name = "Instant Summons"
-			marked_item = 		null
+			marked_item =		null
 
 		else if(marked_item && QDELETED(marked_item)) //the item was destroyed at some point
 			message = span_warning("I sense my imbued weapon has been destroyed!")
 			name = "summon weapon"
-			marked_item = 		null
+			marked_item =		null
 
 		else	//Getting previously marked item
 			var/obj/item/rogueweapon/item_to_retrieve = marked_item
@@ -68,6 +68,9 @@
 								part.remove_embedded_object(item_to_retrieve)
 								to_chat(C, span_warning("The [item_to_retrieve] that was embedded in your [part.name] has mysteriously vanished. How fortunate!"))
 								break
+					else if(isliving(M))
+						var/mob/living/simple_holder = M
+						simple_holder.simple_remove_embedded_object(item_to_retrieve)
 					if(!isturf(item_to_retrieve.loc))
 						item_to_retrieve = item_to_retrieve.loc
 

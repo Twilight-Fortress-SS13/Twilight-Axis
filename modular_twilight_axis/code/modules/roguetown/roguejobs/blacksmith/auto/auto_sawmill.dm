@@ -1,5 +1,5 @@
 /obj/machinery/auto_sawmill
-	name = "Sawmill"
+	name = "sawmill"
 	desc = "Простая конструкция с неизвестной внутренней частью и острым лезвием."
 	icon = 'icons/roguetown/misc/auto.dmi'
 	icon_state = "autosawoff"
@@ -33,9 +33,9 @@
 /obj/machinery/auto_sawmill/process()
 	if(!active)
 		return
-	
+
 	var/obj/item/grown/log/tree/small/target_log = null
-	
+
 	for(var/obj/item/grown/log/tree/small/L in range(1, src))
 		if(!isturf(L.loc))
 			continue
@@ -46,11 +46,11 @@
 		idle_ticks = 0
 		target_log.forceMove(src.loc)
 		playsound(src.loc, 'sound/foley/sawing.ogg', 80, TRUE)
-		
+
 		var/woodtotal = pick(1, 2, 2, 3)
 		for(var/i=1, i<=woodtotal, ++i)
 			new /obj/item/natural/wood/plank(src.loc)
-		
+
 		new /obj/effect/decal/cleanable/debris/woody(src.loc)
 		qdel(target_log)
 	else
@@ -68,7 +68,7 @@
 	. += span_info("Place small logs on the tile nearly and turn it on to produce planks.")
 
 /datum/crafting_recipe/roguetown/engineering/auto_sawmill
-	name = "Лесопилка"
+	name = "sawmill"
 	category = "Machines"
 	result = /obj/machinery/auto_sawmill
 	reqs = list(

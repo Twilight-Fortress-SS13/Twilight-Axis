@@ -1,4 +1,4 @@
-//хуйня для работоспособности культа, ктрл+с, ктрл+м, чтобы он хотя-бы работал, как в пре на оффах. Может потом сделаем норм, а может нет. 
+//хуйня для работоспособности культа, ктрл+с, ктрл+м, чтобы он хотя-бы работал, как в пре на оффах. Может потом сделаем норм, а может нет.
 
 //хуйня из code/__DEFINES/_globals.dm
 //All characters between < a > inclusive of the bracket
@@ -6,7 +6,7 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 
 
 // code/__DEFINES/dcs/signals/signals_mob.dm
-//бля крч там по списку с пра - https://github.com/Azure-Peak/Azure-Peak/pull/5092/files 
+//бля крч там по списку с пра - https://github.com/Azure-Peak/Azure-Peak/pull/5092/files
 ///From mob/living/proc/wabbajack(): (randomize_type)
 #define COMSIG_LIVING_PRE_WABBAJACKED "living_mob_wabbajacked"
 	/// Return to stop the rest of the wabbajack from triggering.
@@ -51,9 +51,12 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "EYE")
 
+/obj/item/scrying/eye/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS, HERESYDESC_ZIZO_RELIC)
+
 
 /obj/item/clothing/cloak/shadowcloak/cult
-	name = "Ascension's cloak"
+	name = "ascension's cloak"
 	desc = "Those who wear, thy should beware, for those who do; never come back as who they once were again."
 	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/zcloakicon.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/on_mob/zcloakonmob.dmi'
@@ -65,8 +68,11 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "CLOAK")
 
+/obj/item/clothing/cloak/shadowcloak/cult/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)
+
 /obj/item/clothing/suit/roguetown/armor/leather/studded/cult
-	name = "Ascension's robe"
+	name = "ascension's robe"
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MEDIUM
 	allowed_sex = list(MALE, FEMALE)
 	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/zrobeicon.dmi'
@@ -80,6 +86,9 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ROBE")
 
+/obj/item/clothing/suit/roguetown/armor/leather/studded/cult/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)
+
 /obj/item/clothing/suit/roguetown/armor/leather/studded/cult/equipped(mob/living/carbon/human/user, slot)
 	. = ..()
 	if(slot == SLOT_ARMOR)
@@ -92,7 +101,7 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 
 //котелок, но культа
 /obj/item/clothing/head/roguetown/helmet/skullcap/cult
-	name = "Ascension's hood"
+	name = "ascension's hood"
 	desc = "It echoes with ominous laughter. Worn over a skullcap"
 	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/warlock.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/on_mob/warlock.dmi'
@@ -106,9 +115,12 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 /obj/item/clothing/head/roguetown/helmet/skullcap/cult/Initialize(mapload, ...)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "HOOD")
+
+/obj/item/clothing/head/roguetown/helmet/skullcap/cult/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)
 //коса культа.. дайте две
 /obj/item/rogueweapon/zizo/neant
-	name = "Ascend's neant"
+	name = "ascend's neant"
 	desc = "A dark scythe with a long chain, used to cut the life essence from people, or whip them into shape. The blade is an ominous purple."
 	icon_state = "neant"
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/polearms64.dmi'
@@ -154,6 +166,9 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 /obj/item/rogueweapon/zizo/neant/Initialize(mapload, ...)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "NEANT")
+
+/obj/item/rogueweapon/zizo/neant/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_WEAPON)
 
 /obj/item/rogueweapon/zizo/neant/attack(mob/living/M, mob/living/user)
 	if(user.used_intent.tranged)
@@ -269,6 +284,9 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	desc = "An cursed sword, which can steal life power"
 	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone.dmi'
 	icon_state = "Zsword"
+	max_blade_int = 300
+	max_integrity = 300
+	force = 26
 	smeltresult = /obj/item/ingot/steel/zizo
 
 /obj/item/rogueweapon/sword/sabre/zizo/Initialize(mapload, ...)
@@ -276,7 +294,10 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "SWORD")
 	AddComponent(/datum/component/lifesteal, 15)
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/zizo
+/obj/item/rogueweapon/sword/sabre/zizo/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_WEAPON)
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/cursed
 	name = "cursed dagger"
 	desc = "This is a dagger made of cursed steel... What's this smell?"
 	force = 23
@@ -287,10 +308,13 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	icon_state = "Zdagger"
 	smeltresult = /obj/item/ingot/steel/zizo
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/zizo/Initialize(mapload, ...)
+/obj/item/rogueweapon/huntingknife/idagger/steel/cursed/Initialize(mapload, ...)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "DAGGER")
 	AddElement(/datum/element/tipped_item)
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/cursed/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_WEAPON)
 
 /obj/item/rogueweapon/stoneaxe/battle/zizo
 	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone.dmi'
@@ -318,13 +342,29 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "AXE")
 
+/obj/item/rogueweapon/stoneaxe/battle/zizo/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_WEAPON)
+
 /obj/item/rogueweapon/mace/steel/zizo
 	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone.dmi'
 	icon_state = "Zmaul"
+	name = "cursed mace"
+	force = 30
+	force_wielded = 38
+	wdefense = 5
+	max_integrity = 320
+	special = /datum/special_intent/ground_smash/cult
+
+/datum/special_intent/ground_smash/cult
+	cooldown = 60 SECONDS
+	tile_coordinates = list(list(0,0), list(0,1, 0.1 SECONDS), list(0,2, 0.2 SECONDS), list(1,0), list(1,1, 0.1 SECONDS), list(1,2, 0.1 SECONDS), list(-1,0), list(-1,1, 0.1 SECONDS), list(-1,2, 0.1 SECONDS))
 
 /obj/item/rogueweapon/mace/steel/zizo/Initialize(mapload, ...)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "MACE")
+
+/obj/item/rogueweapon/mace/steel/zizo/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_WEAPON)
 
 /obj/item/rogueweapon/shield/tower/zizo
 	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone.dmi'
@@ -342,6 +382,9 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "SHIELD")
 
+/obj/item/rogueweapon/shield/tower/zizo/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)
+
 /obj/item/rogueweapon/spear/zizo
 	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone_twoh.dmi'
 	icon_state = "Zspear"
@@ -351,13 +394,28 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "SPEAR")
 	AddElement(/datum/element/tipped_item)
 
+/obj/item/rogueweapon/spear/zizo/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_WEAPON)
+
 /obj/item/rogueweapon/greataxe/steel/doublehead/zizo
+	name = "cursed greataxe"
+	desc = "An doublehead axe, which made for kills for Zizo-queen."
 	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone_twoh.dmi'
 	icon_state = "Ztaxe"
+	special = /datum/special_intent/vicious_swipe
+	max_blade_int = 400
+	max_integrity = 380
+	wdefense = 9
+	minstr = 11
+	force = 20
+	force_wielded = 35
 
 /obj/item/rogueweapon/greataxe/steel/doublehead/zizo/Initialize(mapload, ...)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "AXE")
+
+/obj/item/rogueweapon/greataxe/steel/doublehead/zizo/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_WEAPON)
 
 /obj/item/rogueweapon/halberd/glaive/zizo
 	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone_twoh.dmi'
@@ -367,6 +425,9 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "GLAIVE")
 
+/obj/item/rogueweapon/halberd/glaive/zizo/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_WEAPON)
+
 /obj/item/ingot/steel/zizo
 	name = "cursed ancient ingot"
 	desc = "There are legends about the appearance of this ingot..."
@@ -374,6 +435,9 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	icon_state = "zalloy"
 	smeltresult = /obj/item/ingot/steel/zizo
 	sellprice = 0
+
+/obj/item/ingot/steel/zizo/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS, HERESYDESC_ZIZO_MISC)
 
 /// Fully randomizes everything in the character.
 // Reflect changes in [datum/preferences/proc/randomise_appearance_prefs]
@@ -504,7 +568,7 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	to_chat(src, span_hypnophrase(span_big("Your form morphs into that of a [what_to_randomize]!")))
 
 
-/datum/status_effect/debuff/fleshmend_exhaustion 
+/datum/status_effect/debuff/fleshmend_exhaustion
 	id = "fleshmend_tax"
 	duration = 15 MINUTES
 	alert_type = /atom/movable/screen/alert/status_effect/fleshmend_tax
@@ -517,16 +581,16 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult
-	name = "Reverted psycross of ascension's"
+	name = "inverted psycross of ascension's"
 	desc = "This cursed zcross will give something good por followers of Zizo.."
 	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/on_mob/zcross.dmi'
 	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/zcross.dmi'
 	icon_state = "zcross"
-	slot_flags = ITEM_SLOT_NECK
+	slot_flags = ITEM_SLOT_RING
 	sellprice = 0
-	max_integrity = 160
-	body_parts_covered = COVERAGE_FULL | COVERAGE_HEAD_NOSE | NECK | HANDS | FEET 
-	armor = ARMOR_CULTNECK 
+	max_integrity = 180
+	body_parts_covered = COVERAGE_FULL | COVERAGE_HEAD_NOSE | NECK | HANDS | FEET
+	armor = ARMOR_CULTNECK
 	blade_dulling = DULLING_BASHCHOP
 	blocksound = PLATEHIT
 	break_sound = 'sound/foley/breaksound.ogg'
@@ -534,12 +598,17 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	armor_class = ARMOR_CLASS_LIGHT
 	unenchantable = TRUE
 	anvilrepair = null
+	equip_delay_self = 5 SECONDS
+	unequip_delay_self = 5 SECONDS
+
+/obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ICON)
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
 	if(!M.can_equip(src, slot, disable_warning, bypass_equip_delay_self))
 		return FALSE
 
-	
+
 	if(slot == SLOT_WRISTS || (wrist_display && slot != SLOT_NECK))
 		mob_overlay_icon = 'icons/roguetown/clothing/onmob/wrists.dmi'
 		sleeved = 'icons/roguetown/clothing/onmob/wrists.dmi'
@@ -552,6 +621,9 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult/Initialize()
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "CROSS")
+
+/obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS, HERESYDESC_ZIZO_ICON)
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult/equipped(mob/living/carbon/human/user, slot)
 	. = ..()
@@ -596,3 +668,15 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	name = "Cult light armor"
 	desc = "Robe of my queen makes me speedy!"
 	icon_state = "buff"
+
+/atom/proc/prepare_huds_TA()
+	hud_list = list()
+	for(var/hud in hud_possible)
+		var/hint = hud_possible[hud]
+		switch(hint)
+			if(HUD_LIST_LIST)
+				hud_list[hud] = list()
+			else
+				var/image/I = image('modular_twilight_axis/icons/mob/hud.dmi', src, "")
+				I.appearance_flags = RESET_COLOR|RESET_TRANSFORM
+				hud_list[hud] = I

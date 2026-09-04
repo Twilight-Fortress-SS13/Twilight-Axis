@@ -186,6 +186,7 @@
 
 /obj/item/clothing/mask/rogue/lordmask/naledi/steel
 	max_integrity = 200
+	sellprice = 0
 
 /obj/item/clothing/mask/rogue/facemask/etrmask
 	name = "conquistador mask"

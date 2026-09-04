@@ -7,6 +7,8 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "luxsteal0"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 100
 	chargedrain = 0
 	chargetime = 0
@@ -93,10 +95,12 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "mirage"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 10
 	chargedrain = 0
 	chargetime = 0
-	chargedloop = /datum/looping_sound/invokeholy
+	chargedloop = /datum/looping_sound/invokeascendant
 	sound = 'sound/foley/gross.ogg'
 	associated_skill = /datum/skill/magic/holy
 	antimagic_allowed = FALSE
@@ -113,13 +117,13 @@
 	devotion_cost = 40-(5*skill_level)
 	playsound(get_turf(user), 'sound/magic/haste.ogg', 80, TRUE, soundping = TRUE)
 	user.visible_message(span_love("[user]'s body begins shrouded in a corrosive purple haze that obscures his silhouette!"))
-	var/mirage_type = list("Name", "Feature", "Nevermind")
+	var/mirage_type = list("Feature", "Nevermind") // list("Name", "Feature", "Nevermind")
 	var/selection = input(user, "Rituals of Gedonism", src) as null|anything in mirage_type
 	ADD_TRAIT(user, TRAIT_MIRAGE, TRAIT_MIRACLE)
 	ADD_TRAIT(user, TRAIT_EDIT_DESCRIPTORS, TRAIT_MIRACLE)
 	switch(selection) // put ur rite selection here
-		if("Name")
-			mirror_full_transform(user)
+//		if("Name")
+//			mirror_full_transform(user)
 		if("Feature")
 			perform_mirror_transform(user)
 		if("Nevermind")
@@ -154,6 +158,8 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "vice"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 10
 	chargedrain = 0
 	chargetime = 0
@@ -178,7 +184,9 @@
 
 	if(HAS_TRAIT(H, TRAIT_DECEIVING_MEEKNESS) && user.get_skill_level(/datum/skill/magic/holy) <= SKILL_LEVEL_NOVICE)
 		if(isnull(fake_vices[H]))
-			fake_vices[H] = pick(GLOB.character_flaws)
+			var/flaw_type = pick(GLOB.character_flaws_singletons)
+			var/datum/charflaw/fake_flaw = GLOB.character_flaws_singletons[flaw_type]
+			fake_vices[H] = fake_flaw?.name
 		vice_found = fake_vices[H]
 
 		if(prob(50 + ((H.STAPER - 10) * 10)))
@@ -209,6 +217,8 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "bless_drink"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 10
 	chargedrain = 0
 	chargetime = 0
@@ -284,6 +294,8 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "blessing"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 30
 	chargedrain = 0
 	chargetime = 0
@@ -322,6 +334,8 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "ruin"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	chargedrain = 0
 	chargetime = 0
 	releasedrain = 5
@@ -397,7 +411,7 @@
 				break
 
 			var/water_qty = max(1, holy_skill) + 1
-			var/list/water_contents = list(/datum/reagent/medicine/loversruin = water_qty)
+			var/list/water_contents = list(/datum/reagent/consumable/ethanol/loversruin = water_qty)
 			var/datum/reagents/reagents_to_add = new()
 			reagents_to_add.add_reagent_list(water_contents)
 			reagents_to_add.trans_to(thing, reagents_to_add.total_volume, transfered_by = user, method = INGEST)
@@ -422,6 +436,8 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "bloom"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	sound = list('sound/magic/magnet.ogg')
 	releasedrain = 40
 	chargetime = 10
@@ -476,9 +492,11 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "powder"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	clothes_req = FALSE
 	associated_skill = /datum/skill/magic/holy
-	chargedloop = /datum/looping_sound/invokeholy
+	chargedloop = /datum/looping_sound/invokeascendant
 	releasedrain = 10
 	chargedrain = 0
 	chargetime = 15
@@ -518,11 +536,13 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "powder"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	clothes_req = FALSE
 	range = 3	//POCKET OPIUM!
 	associated_skill = /datum/skill/magic/holy
 	projectile_type = /obj/projectile/magic/TAblowingdust
-	chargedloop = /datum/looping_sound/invokeholy
+	chargedloop = /datum/looping_sound/invokeascendant
 	releasedrain = 30
 	chargedrain = 0
 	chargetime = 15
@@ -555,6 +575,8 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "last_high"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 30
 	chargedrain = 0
 	chargetime = 0
@@ -596,6 +618,8 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "joyride"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	range = 2
 	chargetime = 0.5 SECONDS
 	invocation_type = "emote"
@@ -640,6 +664,8 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "pleasure"
+	glow_color = GLOW_COLOR_BAOTHA
+	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 30
 	chargedrain = 0
 	chargetime = 0

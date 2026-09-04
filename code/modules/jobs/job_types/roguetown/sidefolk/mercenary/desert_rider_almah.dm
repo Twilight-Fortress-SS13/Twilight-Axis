@@ -2,17 +2,17 @@
 	name = "Desert Rider Almah"
 	tutorial = "You're an Almah - a blade dancer, trained in the arts of spellbladery, an art originating from Azurea in ancient time. Your people have refined spellbladery into an artform. They call you a bladedancer - for the beautiful, bloody tapestry of magycks and blade you weave out of your foes in battle."
 	allowed_sexes = list(MALE, FEMALE)
-	
+
 	outfit = /datum/outfit/job/roguetown/mercenary/desert_rider_almah
 	class_select_category = CLASS_CAT_RANESHENI
-	category_tags = list(CTAG_MERCENARY)
+	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_WARMAGE)
 	cmode_music = 'sound/music/combat_desertrider.ogg'
 	subclass_languages = list(/datum/language/raneshi)
-	traits_applied = list(TRAIT_ARCYNE)
+	traits_applied = list(TRAIT_ARCYNE, TRAIT_MEDIUMARMOR)
 	subclass_stats = list(
 		STATKEY_SPD = 1, // Weighted 7. Swap str for spd
 		STATKEY_INT = 1, // Weighted 7. But a very nice statblock
-		STATKEY_PER = 1, 
+		STATKEY_PER = 1,
 		STATKEY_CON = 1,
 		STATKEY_WIL = 2, // With 2 Wil they should not be struggling
 	)
@@ -47,14 +47,14 @@
 	to_chat(H, span_warning("You start with Bind Weapon. Remember to Bind your weapon so you can use your abilities and build up Arcyne Momentum."))
 
 	// Gear - mirrors Zeybek
-	head = /obj/item/clothing/head/roguetown/roguehood/shalal/hijab/raneshen
-	neck = /obj/item/clothing/neck/roguetown/gorget/copper
-	mask = /obj/item/clothing/mask/rogue/facemask/copper
-	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/raneshen
+	head = /obj/item/clothing/head/roguetown/helmet/sallet/raneshen
+	neck = /obj/item/clothing/neck/roguetown/chaincoif/full
+	mask = /obj/item/clothing/mask/rogue/facemask/steel
+	armor = /obj/item/clothing/suit/roguetown/armor/plate/scale
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/raneshen
-	wrists = /obj/item/clothing/wrists/roguetown/bracers/copper
-	gloves = /obj/item/clothing/gloves/roguetown/angle
-	pants = /obj/item/clothing/under/roguetown/trou/leather/pontifex/raneshen
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/brigandine
+	gloves = /obj/item/clothing/gloves/roguetown/chain
+	pants = /obj/item/clothing/under/roguetown/brigandinelegs
 	shoes = /obj/item/clothing/shoes/roguetown/shalal
 	belt = /obj/item/storage/belt/rogue/leather/shalal
 	backr = /obj/item/storage/backpack/rogue/satchel/black
@@ -65,7 +65,7 @@
 		/obj/item/clothing/neck/roguetown/shalal,
 		/obj/item/flashlight/flare/torch,
 		/obj/item/storage/belt/rogue/pouch/coins/poor,
-		/obj/item/book/spellbook
+		/obj/item/rogueweapon/spellbook/greater
 		)
 
 	// Spellblade chant selection - almah faction, blade choice is locked to shamshirs
@@ -93,7 +93,7 @@
 				H.mind.AddSpell(new /datum/action/cooldown/spell/caedo)
 				H.mind.AddSpell(new /datum/action/cooldown/spell/air_strike)
 				H.mind.AddSpell(new /datum/action/cooldown/spell/leyline_anchor)
-				H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/blade_storm)
+				H.mind.AddSpell(new /datum/action/cooldown/spell/blade_storm)
 			if("phalangite")
 				H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_EXPERT, TRUE)
 				H.mind.AddSpell(new /datum/action/cooldown/spell/azurean_phalanx)
@@ -102,8 +102,8 @@
 				H.mind.AddSpell(new /datum/action/cooldown/spell/gate_of_reckoning)
 			if("macebearer")
 				H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_EXPERT, TRUE)
-				H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/kastvyl)
-				H.mind.AddSpell(new /datum/action/cooldown/spell/tremor)
+				H.mind.AddSpell(new /datum/action/cooldown/spell/telegraphed_strike/spellblade/shatter)
+				H.mind.AddSpell(new /datum/action/cooldown/spell/telegraphed_strike/spellblade/tremor)
 				H.mind.AddSpell(new /datum/action/cooldown/spell/charge)
 				H.mind.AddSpell(new /datum/action/cooldown/spell/cataclysm)
 
@@ -114,7 +114,7 @@
 
 	switch(subclass_selected)
 		if("blade")
-			var/blade_weapons = list("Dual Shamshirs", "Shalal Saber & Shield")
+			var/blade_weapons = list("Dual Shamshirs", "Shalal sabre & Shield")
 			var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in blade_weapons
 			switch(weapon_choice)
 				if("Dual Shamshirs")
@@ -123,7 +123,7 @@
 					l_hand = /obj/item/rogueweapon/sword/sabre/shamshir
 					beltl = /obj/item/rogueweapon/scabbard/sword
 					beltr = /obj/item/rogueweapon/scabbard/sword
-				if("Shalal Saber & Shield")
+				if("Shalal sabre & Shield")
 					r_hand = /obj/item/rogueweapon/sword/long/marlin
 					beltr = /obj/item/rogueweapon/scabbard/sword
 					backl = /obj/item/rogueweapon/shield/tower/raneshen
@@ -149,11 +149,13 @@
 					backl = /obj/item/rogueweapon/shield/tower/raneshen
 				if("Grand Mace")
 					r_hand = /obj/item/rogueweapon/mace/goden/steel
+					backl = /obj/item/rogueweapon/scabbard/gwstrap
 				if("Battle Axe")
 					r_hand = /obj/item/rogueweapon/stoneaxe/battle
 					picked_axe = TRUE
 				if("Steel Greataxe")
 					r_hand = /obj/item/rogueweapon/greataxe/steel
+					backl = /obj/item/rogueweapon/scabbard/gwstrap
 					picked_axe = TRUE
 			if(picked_axe)
 				H.adjust_skillrank_up_to(/datum/skill/combat/axes, SKILL_LEVEL_EXPERT, TRUE)

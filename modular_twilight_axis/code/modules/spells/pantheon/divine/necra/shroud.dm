@@ -6,6 +6,10 @@
 #define TRANQUILITY_SHROUD_MODE_DEADITE "deadite"
 #define TRANQUILITY_SHROUD_MODE_VAMPIRE "vampire"
 #define TRANQUILITY_SHROUD_SUN_BURN_DAMAGE 3
+#define TRANQUILITY_SHROUD_REMOVAL_HALLOWED "hallowed_ground"
+
+/area/rogue/under/cave/licharena
+	var/hallowed_against_undead_disguise = TRUE
 
 /datum/stressevent/tranquility_shroud/restless
 	stressadd = 2
@@ -227,6 +231,10 @@
 /datum/status_effect/tranquility_shroud/on_apply()
 	if(!owner || QDELETED(owner) || owner.stat != CONSCIOUS || (owner.mob_biotypes & MOB_UNDEAD) || owner.mind?.has_antag_datum(/datum/antagonist/zombie))
 		return FALSE
+	var/area/rogue/under/cave/licharena/arena = get_area(owner)
+	if(istype(arena) && arena.hallowed_against_undead_disguise)
+		to_chat(owner, span_warning("Освящённая земля отвергает саван - здесь чужая личина мёртвых не ляжет."))
+		return FALSE
 	mask_active = TRUE
 	protection_active = (shroud_mode == TRANQUILITY_SHROUD_MODE_RESTLESS && shroud_tier >= CLERIC_T1)
 	owner.AddElement(/datum/element/tranquility_shroud)
@@ -241,7 +249,9 @@
 		remove_shroud_disguise()
 		owner.RemoveElement(/datum/element/tranquility_shroud)
 		if(!suppress_remove_message)
-			if(removal_reason)
+			if(removal_reason == TRANQUILITY_SHROUD_REMOVAL_HALLOWED)
+				to_chat(owner, span_boldwarning("Владения Архилича раздирают украденную личину - саван спадает с меня!"))
+			else if(removal_reason)
 				to_chat(owner, span_warning("Туман рвётся и больше не может сокрыть от нежити."))
 			else
 				to_chat(owner, span_notice("Туман рассеивается вокруг меня."))
@@ -314,28 +324,35 @@
 
 	var/mob/living/owner = target
 	RegisterSignal(owner, COMSIG_ATOM_ATTACKBY, PROC_REF(on_owner_attackby))
-	RegisterSignals(owner, list(COMSIG_ATOM_ATTACK_HAND, COMSIG_ATOM_ATTACK_PAW), PROC_REF(on_owner_attack_generic))
+	RegisterSignal(owner, COMSIG_ATOM_ATTACK_HAND, PROC_REF(on_owner_attack_generic))
 	RegisterSignal(owner, COMSIG_ATOM_ATTACK_ANIMAL, PROC_REF(on_owner_attack_npc))
 	RegisterSignal(owner, COMSIG_ATOM_BULLET_ACT, PROC_REF(on_owner_bullet_act))
 	RegisterSignal(owner, COMSIG_ATOM_HITBY, PROC_REF(on_owner_hitby))
 	RegisterSignal(owner, COMSIG_HUMAN_LIFE, PROC_REF(on_owner_life))
 	RegisterSignal(owner, COMSIG_PARENT_EXAMINE, PROC_REF(on_owner_examine))
 	RegisterSignal(owner, "mob_ai_target_check", PROC_REF(on_owner_ai_target_check))
+	RegisterSignal(owner, COMSIG_ENTER_AREA, PROC_REF(on_owner_enter_area))
 	owner.tranquility_shroud_hide_from_nearby_undead()
 
 /datum/element/tranquility_shroud/Detach(datum/source, ...)
 	UnregisterSignal(source, list(
 		COMSIG_ATOM_ATTACKBY,
 		COMSIG_ATOM_ATTACK_HAND,
-		COMSIG_ATOM_ATTACK_PAW,
 		COMSIG_ATOM_ATTACK_ANIMAL,
 		COMSIG_ATOM_BULLET_ACT,
 		COMSIG_ATOM_HITBY,
 		COMSIG_HUMAN_LIFE,
 		COMSIG_PARENT_EXAMINE,
 		"mob_ai_target_check",
+		COMSIG_ENTER_AREA,
 	))
 	return ..()
+
+/datum/element/tranquility_shroud/proc/on_owner_enter_area(mob/living/source, area/rogue/under/cave/licharena/arena)
+	SIGNAL_HANDLER
+	if(!istype(arena) || !arena.hallowed_against_undead_disguise)
+		return
+	source.remove_tranquility_shroud(TRANQUILITY_SHROUD_REMOVAL_HALLOWED)
 
 /datum/element/tranquility_shroud/proc/break_from_incoming_attack(atom/target, atom/attacker)
 	if(!isliving(target) || !isliving(attacker))

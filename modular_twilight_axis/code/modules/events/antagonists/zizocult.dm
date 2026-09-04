@@ -53,7 +53,6 @@
 	shared_occurence_type = SHARED_HIGH_THREAT
 
 	storyteller_antag_flags = STORYTELLER_ANTAG_VILLAIN | STORYTELLER_ANTAG_ROUNDSTART
-	storyteller_guarantee_flags = STORYTELLER_FAVOR_LICH // При Зизо выпадает или культ или лич
 	allowed_storytellers = list(/datum/storyteller/zizo)
 
 	base_antags = 1

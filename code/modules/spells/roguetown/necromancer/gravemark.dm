@@ -30,7 +30,7 @@
 	if(target == owner)
 		var/list/allies = list()
 
-		for(var/mob/living/M in world)
+		for(var/mob/living/M as anything in GLOB.mob_list)
 			if(M == owner)
 				continue
 
@@ -49,6 +49,10 @@
 		return TRUE
 
 	var/list/faction_list
+
+	if(!target.mind) //Trust the plan, until I can unfuck this or someone else. Its unable to be used on non-players
+		to_chat(owner, span_notice("You cannot declare something mindless an ally."))
+		return FALSE
 
 	if(target.mind?.current)
 		faction_list = target.mind.current.faction

@@ -159,6 +159,26 @@
 	cost = 13
 	contains = list(/obj/item/storage/backpack/rogue/satchel/short)
 
+/datum/supply_pack/rogue/apparel/blacksatchel
+	name = "Black Satchel"
+	cost = 13
+	contains = list(/obj/item/storage/backpack/rogue/satchel/black)
+
+/datum/supply_pack/rogue/apparel/blackshortsatchel
+	name = "Black Satchel, Short"
+	cost = 13
+	contains = list(/obj/item/storage/backpack/rogue/satchel/short/black)
+
+/datum/supply_pack/rogue/apparel/meatpouch
+	name = "Game Satchel"
+	cost = 13
+	contains = list(/obj/item/storage/meatbag)
+
+/datum/supply_pack/rogue/apparel/magebag
+	name = "Scholar's Pouch"
+	cost = 13
+	contains = list(/obj/item/storage/magebag)
+
 /datum/supply_pack/rogue/apparel/backpack
 	name = "Backpack"
 	cost = 18

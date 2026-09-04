@@ -99,10 +99,12 @@
 		W.name = Were.wolfname
 	W.limb_destroyer = TRUE
 	W.ambushable = FALSE
-	var/list/dying_world = list('sound/music/cmode/antag/combat_dying_world.ogg' = 1,  // probably best if its not vocals all the time
+	var/list/dying_world = list('sound/music/cmode/antag/combat_dying_world.ogg' = 1,	// probably best if its not vocals all the time
 							'sound/music/cmode/antag/combat_dying_world_instrumental.ogg' = 3) // 1/4 is good odds for 1/round tho
 	W.cmode_music = pickweight(dying_world)
 	W.skin_armor = new /obj/item/clothing/suit/roguetown/armor/regenerating/skin/werewolf_skin(W)
+	// Equip without checking if we can equip, since it is forced.
+	W.wear_armor = new /obj/item/clothing/suit/roguetown/armor/regenerating/skin/werewolf_skin/extremities(W)
 	playsound(W.loc, pick('sound/combat/gib (1).ogg','sound/combat/gib (2).ogg'), 200, FALSE, 3)
 	W.spawn_gibs(FALSE)
 	src.forceMove(W)
@@ -115,6 +117,7 @@
 	W.cmode_music_override = cmode_music_override
 	W.cmode_music_override_name = cmode_music_override_name
 	mind.transfer_to(W)
+	Were?.add_antag_hud(ANTAG_HUD_WEREWOLF, "werewolf_hud", W) // TA EDIT
 	skills?.known_skills = list()
 	skills?.skill_experience = list()
 	W.grant_language(/datum/language/beast)
@@ -184,6 +187,8 @@
 	REMOVE_TRAIT(W, TRAIT_NOMOOD, TRAIT_SOURCE_WEREWOLF)
 	REMOVE_TRAIT(W, TRAIT_PACIFISM, TRAIT_SOURCE_WEREWOLF)
 
+	var/datum/antagonist/werewolf/Were = mind.has_antag_datum(/datum/antagonist/werewolf/) // TA EDIT
+	Were?.remove_antag_hud(ANTAG_HUD_WEREWOLF, src) // TA EDIT
 	mind.transfer_to(W)
 
 	var/mob/living/carbon/human/species/werewolf/WA = src

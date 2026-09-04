@@ -5,6 +5,7 @@
 // If Combat Mode is off, this will instead restore your Energy.
 
 /datum/action/cooldown/spell/ley_lines
+	source_aspect = /datum/magic_aspect/pseudo/hierophant
 	name = "Ley Lines"
 	desc = "Creates a circle of arcyne power. Standing within it greatly enhances your spellcasting, increasing your intellect and reducing the cooldown of your spells. If you are not in Combat Mode, the ley lines instead restore your energy at a rapid pace.<br><br>While standing in a Leyline, you cannot defend yourself.<br><br>This will also grant a spell that makes you quickly move back to your Leylines."
 	fluff_desc = "'No! My Ley Lines!' is a common cry among Hierophants the moment they are dragged even an inch away from their carefully prepared nexus of power. Within its bounds, arcane formulae seem effortless, threads of mana unravel before the mind's eye, and complex spellwork flows with the precision of an auto-smither. Outside of it, reality becomes frustratingly ordinary once more. Most Magos give stern warnings this sensation can be addictive, and even dangerous. Hierophants take it as a suggestion."
@@ -13,7 +14,8 @@
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_NO_MOVE
 	click_to_activate = FALSE
 	self_cast_possible = TRUE
-	charge_message = "<font color='#ffae00'>Prjperi! Connect! Se-Djed!"
+	invocations = list("Prjperi! Connect! Se-Djed!")
+	invocation_type = INVOCATION_SHOUT
 	charge_required = TRUE
 	charge_time = 1.5 SECONDS
 	charge_slowdown = CHARGING_SLOWDOWN_HEAVY
@@ -41,6 +43,7 @@
 	active_circle = null
 
 /datum/action/cooldown/spell/between_the_lines
+	source_aspect = /datum/magic_aspect/pseudo/hierophant
 	name = "Between the Lines"
 	desc = "Return instantly to your Ley Lines, you addict."
 	fluff_desc = "Among the oldest Hierophant workings recorded, 'Between the Lines' is said to have been born from a simple problem: every moment spent away from a Ley Circle was a moment deprived of perfection. Rather than endure the indignity of walking back, the first Hierophants bent space itself, ensuring they could return to the intoxicating clarity of the Ley Lines without a single step."
@@ -50,7 +53,8 @@
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_NO_MOVE
 	click_to_activate = FALSE
 	self_cast_possible = TRUE
-	charge_message = "<font color='#ffae00'>Se-Khep! Return! Khai!"
+	invocation_type = INVOCATION_SHOUT
+	invocations = list("Se-Khep! Return! Khai!")
 	var/obj/structure/leyline_circle/linked_circle
 	var/max_range = 9
 
@@ -62,7 +66,7 @@
 	if(!linked_circle || QDELETED(linked_circle))
 		return FALSE
 	if(get_dist(user, linked_circle) > max_range)
-		user.balloon_alert(user, "Too far from my ley line! Noooo! My ley lines!!")
+		user.balloon_alert(user, "Too far! Argh! My leylines!!")
 		return FALSE
 	var/turf/T = get_turf(linked_circle)
 	if(!T)
@@ -89,6 +93,7 @@
 /datum/status_effect/buff/circle_of_power/on_apply()
 	. = ..()
 	if(owner)
+		owner.balloon_alert_to_viewers("Can't Parry/Evade!", "Magic Haste! Can't Parry/Evade!")
 		ADD_TRAIT(owner, TRAIT_NODEF, "[id]")
 		ADD_TRAIT(owner, TRAIT_LEYLINE_HASTE, "[id]")
 
@@ -176,13 +181,10 @@
 		qdel(src)
 		return
 	if(get_turf(owner) == get_turf(src))
-		if(owner.cmode)
-			if(!owner.has_status_effect(/datum/status_effect/buff/circle_of_power))
-				var/datum/status_effect/buff/circle_of_power/B = owner.apply_status_effect(/datum/status_effect/buff/circle_of_power)
-				if(B)
-					B.source_circle = src
-		else
-			owner.apply_status_effect(/datum/status_effect/buff/invigoration, 5 SECONDS, 25, 15)
+		if(!owner.has_status_effect(/datum/status_effect/buff/circle_of_power))
+			var/datum/status_effect/buff/circle_of_power/B = owner.apply_status_effect(/datum/status_effect/buff/circle_of_power)
+			if(B)
+				B.source_circle = src
 		if(!length(active_beams))
 			create_beams()
 	else

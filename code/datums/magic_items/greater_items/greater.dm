@@ -1,3 +1,5 @@
+#define PHOENIX_GUARD_COOLDOWN 60 SECONDS
+
 ///T3 Enchantmentsdatum
 /datum/magic_item/greater/lifesteal
 	name = "life steal"
@@ -51,19 +53,13 @@
 
 	if(isliving(target))
 		var/mob/living/L = target
-		L.Immobilize(0.5 SECONDS)
-		L.apply_status_effect(/datum/status_effect/debuff/clickcd, 6 SECONDS)
-		L.electrocute_act(1, src, 1, SHOCK_NOSTUN)
-		L.apply_status_effect(/datum/status_effect/buff/lightningstruck, 6 SECONDS)
+		L.lightning_shock(src)
 
 		for(var/mob/living/nearby in range(2, target))
 			if(nearby == target || nearby == user)
 				continue
 			if(prob(30))
-				nearby.Immobilize(0.5 SECONDS)
-				nearby.apply_status_effect(/datum/status_effect/debuff/clickcd, 6 SECONDS)
-				nearby.electrocute_act(1, src, 1, SHOCK_NOSTUN)
-				nearby.apply_status_effect(/datum/status_effect/buff/lightningstruck, 6 SECONDS)
+				nearby.lightning_shock(src)
 				new /obj/effect/temp_visual/lightning(get_turf(target), get_turf(nearby))
 	last_used[source] = world.time
 
@@ -84,7 +80,7 @@
 		targeted.visible_message(span_danger("[source] chills [targeted]!"))
 		src.last_used = world.time
 
-/datum/magic_item/greater/frostveil/on_hit_response(var/obj/item/I, var/mob/living/carbon/human/owner, var/mob/living/carbon/human/attacker)
+/datum/magic_item/greater/frostveil/on_hit_response(obj/item/I, mob/living/carbon/human/owner, mob/living/carbon/human/attacker)
 	if(world.time < src.last_used + 20 SECONDS)
 		return
 	if(isliving(attacker) && attacker != owner)
@@ -98,8 +94,8 @@
 	glow_color = "#FF4500"
 	var/last_used
 
-/datum/magic_item/greater/phoenixguard/on_hit_response(var/obj/item/I, var/mob/living/carbon/human/owner, var/mob/living/carbon/human/attacker)
-	if(world.time < src.last_used + 20 SECONDS)
+/datum/magic_item/greater/phoenixguard/on_hit_response(obj/item/I, mob/living/carbon/human/owner, mob/living/carbon/human/attacker)
+	if(world.time < src.last_used + PHOENIX_GUARD_COOLDOWN)
 		return
 	if(isliving(attacker) && attacker != owner)
 		attacker.adjust_fire_stacks(5)
@@ -113,7 +109,7 @@
 	glow_color = "#A0E65C"
 	var/active_item = FALSE
 
-/datum/magic_item/greater/woundclosing/on_equip(var/obj/item/i, var/mob/living/user, slot)
+/datum/magic_item/greater/woundclosing/on_equip(obj/item/i, mob/living/user, slot)
 	if(slot == ITEM_SLOT_HANDS)
 		return
 	if(active_item)
@@ -123,7 +119,7 @@
 		to_chat(user, span_notice("[i] feels warm against fingers."))
 		active_item = TRUE
 
-/datum/magic_item/greater/woundclosing/on_drop(var/obj/item/i, var/mob/living/user)
+/datum/magic_item/greater/woundclosing/on_drop(obj/item/i, mob/living/user)
 	if(active_item)
 		active_item = FALSE
 		user.mind.RemoveSpell(/obj/effect/proc_holder/spell/invoked/wound_closure)
@@ -135,7 +131,7 @@
 	glow_color = "#20B2AA"
 	var/active_item = FALSE
 
-/datum/magic_item/greater/returningweapon/on_equip(var/obj/item/i, var/mob/living/user, slot)
+/datum/magic_item/greater/returningweapon/on_equip(obj/item/i, mob/living/user, slot)
 	if(slot == ITEM_SLOT_HANDS)
 		return
 	if(active_item)
@@ -145,7 +141,7 @@
 		user.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/summonweapon)
 		to_chat(user, span_notice("I feel the magick within [i] resonate with my own."))
 
-/datum/magic_item/greater/returningweapon/on_drop(var/obj/item/i, var/mob/living/user)
+/datum/magic_item/greater/returningweapon/on_drop(obj/item/i, mob/living/user)
 	if(active_item)
 		user.mind.RemoveSpell(/obj/effect/proc_holder/spell/targeted/summonweapon)
 		to_chat(user, span_notice("the warmth of [i] fades away."))
@@ -163,7 +159,7 @@
 	var/mastersling = FALSE
 	var/legendsling = FALSE
 
-/datum/magic_item/greater/archery/on_equip(var/obj/item/i, var/mob/living/user, slot)
+/datum/magic_item/greater/archery/on_equip(obj/item/i, mob/living/user, slot)
 	if(slot == ITEM_SLOT_HANDS)
 		return
 	if(active_item)
@@ -208,7 +204,7 @@
 		to_chat(user, span_notice("I feel more dexterious!"))
 		active_item = TRUE
 
-/datum/magic_item/greater/archery/on_drop(var/obj/item/i, var/mob/living/user)
+/datum/magic_item/greater/archery/on_drop(obj/item/i, mob/living/user)
 	if(active_item)
 		active_item = FALSE
 		user.change_stat(STATKEY_PER, 0, "archery_enchant")
@@ -258,3 +254,5 @@
 		if(possible_turfs.len)
 			L.forceMove(pick(possible_turfs))
 		last_used[source] = world.time
+
+#undef PHOENIX_GUARD_COOLDOWN

@@ -20,9 +20,9 @@
 		if(I.armor)
 			add_item(I)
 
-	RegisterSignal(H, COMSIG_MOB_EQUIPPED_ITEM, .proc/on_item_equipped)
-	RegisterSignal(H, COMSIG_MOB_DROPITEM, .proc/on_item_dropped)
-	addtimer(CALLBACK(src, .proc/expire), lifetime)
+	RegisterSignal(H, COMSIG_MOB_EQUIPPED_ITEM, PROC_REF(on_item_equipped))
+	RegisterSignal(H, COMSIG_MOB_DROPITEM, PROC_REF(on_item_dropped))
+	addtimer(CALLBACK(src, PROC_REF(expire)), lifetime)
 	H.apply_status_effect(/datum/status_effect/buff/malum_reinforcement)
 
 /datum/component/dreamwalker_repair/limited/on_item_equipped(mob/user, obj/item/source, slot)
@@ -82,6 +82,7 @@
 /datum/action/cooldown/spell/apply_malum
 	name = "Invoke Malum Reinforcement"
 	desc = "Call upon the Malum energy gifted to you to reinforce your armor."
+	background_icon = 'icons/mob/actions/malummiracles.dmi'
 	button_icon = 'icons/mob/actions/malummiracles.dmi'
 	button_icon_state = "invoke_malum"
 
@@ -94,7 +95,7 @@
 	primary_resource_type = SPELL_COST_STAMINA
 	primary_resource_cost = SPELLCOST_STAT_BUFF
 	spell_color = "#330000"
-	
+
 /datum/action/cooldown/spell/apply_malum/cast(atom/cast_on)
 	. = ..()
 	var/mob/living/L = owner
@@ -104,7 +105,7 @@
 	L.AddComponent(/datum/component/dreamwalker_repair/limited)
 	L.visible_message(span_notice("[L]'s armor begins to hum with a dark, metallic resonance."))
 
-	addtimer(CALLBACK(src, .proc/self_consume, L), 1)
+	addtimer(CALLBACK(src, PROC_REF(self_consume), L), 1)
 	return TRUE
 
 /datum/action/cooldown/spell/apply_malum/proc/self_consume(mob/living/L)
@@ -115,19 +116,26 @@
 	name = "Gift of Malum"
 	desc = "Grant a target the ability to invoke Malum armor reinforcement. \
 	Armor reinforcements causes pickuppable armor repair shards to be dropped when the target's armor is damaged."
+	background_icon = 'icons/mob/actions/malummiracles.dmi'
 	button_icon = 'icons/mob/actions/malummiracles.dmi'
 	button_icon_state = "malum_gift"
 	sound = 'sound/magic/bless.ogg'
 	spell_color = "#330000"
 
 	primary_resource_type = SPELL_COST_DEVOTION
-	devotion_cost = 50
+	primary_resource_cost = SPELLCOST_MIRACLE_MAJOR + 20
+
+	secondary_resource_type = SPELL_COST_STAMINA
+	secondary_resource_cost = SPELLCOST_MIRACLE
+
+	ignore_armor_penalty = TRUE
 	cooldown_time = 10 MINUTES
 	charge_time = 0.1 SECONDS
 
 	invocations = list("Malum's hand will heed you from harm!")
 	invocation_type = INVOCATION_SHOUT
 	cast_range = SPELL_RANGE_GROUND
+	associated_stat = null
 	associated_skill = /datum/skill/magic/holy
 
 /datum/action/cooldown/spell/malum_blessing/cast(atom/cast_on)

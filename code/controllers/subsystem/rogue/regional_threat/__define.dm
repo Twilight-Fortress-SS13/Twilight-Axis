@@ -6,7 +6,8 @@
 /// but there is more pool depth to drain before a region is cleared.
 #define AMBUSH_BUDGET_PCT_REGULAR 0.03
 
-/// Safe regions have proportionally lower budget so that they can still spawn some ambushes without needing to adjust the max_ambush downward.
+/// Safe regions have proportionally lower budget so that they can still spawn some ambushes
+/// without needing to adjust the max_ambush downward.
 #define AMBUSH_BUDGET_PCT_SAFE_REGION 0.02
 
 /// Backwards-compatible default budget percentage for older TA code paths.
@@ -17,10 +18,10 @@
 #define AMBUSH_BUDGET_FLOOR_UNIT 10
 
 /// Display thresholds - percentage of max_ambush for each danger level label.
-#define DANGER_PCT_SAFE 15
-#define DANGER_PCT_LOW 35
-#define DANGER_PCT_MODERATE 55
-#define DANGER_PCT_DANGEROUS 80
+#define DANGER_PCT_SAFE 15 // 0% to this = Safe (green)
+#define DANGER_PCT_LOW 35 // to this = Low (yellow)
+#define DANGER_PCT_MODERATE 55 // to this = Moderate (orange)
+#define DANGER_PCT_DANGEROUS 80 // to this = Dangerous (red), above = Bleak (purple)
 
 /// Tick rate multipliers - fraction of max_ambush added per SS tick.
 /// SS fires every 30 minutes = 6 ticks per 3-hour round.

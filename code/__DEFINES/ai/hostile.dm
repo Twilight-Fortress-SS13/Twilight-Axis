@@ -15,6 +15,12 @@
 //Limit of how many enemies a unit can target through
 #define AI_MAX_ENEMIES 99
 
+// TA EDIT START
+#define AI_MELEE_NO_PROGRESS_LIMIT 20
+#define AI_MELEE_NO_PROGRESS_TIME (30 SECONDS)
+#define AI_MELEE_IGNORE_TIME (30 SECONDS)
+// TA EDIT END
+
 /// After either being given a verbal order or a pointing order, ignore further of each for this duration
 #define AI_HOSTILE_COMMAND_COOLDOWN (2 SECONDS)
 
@@ -39,6 +45,7 @@
 
 ///Targetting subtrees
 #define BB_TARGETED_ACTION "BB_targeted_action"
+#define BB_CHOSEN_ACTION "BB_chosen_action"
 #define BB_BASIC_MOB_CURRENT_TARGET "BB_basic_current_target"
 #define BB_BASIC_MOB_CURRENT_TARGET_HIDING_LOCATION "BB_basic_current_target_hiding_location"
 #define BB_TARGETTING_DATUM "targetting_datum"

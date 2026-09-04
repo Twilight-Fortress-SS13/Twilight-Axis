@@ -42,6 +42,14 @@
 
 	return colors
 
+/datum/body_marking/proc/constant_ui_data()
+	return list(
+		"name" = name,
+		"type" = type,
+		"icon" = REF(icon),
+		"icon_state" = icon_state,
+	)
+
 /datum/body_marking/nose
 	icon = 'icons/mob/body_markings/other_markings.dmi'
 	name = "Nose"
@@ -361,14 +369,14 @@
 	icon_state = "bangs"
 	default_color = "FFFFFF"
 	affected_bodyparts = HEAD
-	
+
 /datum/body_marking/small/bangs
 	icon = 'icons/mob/body_markings/other_markings.dmi'
 	name = "Bangs (Volk)"
 	icon_state = "bangs_s"
 	default_color = "FFFFFF"
 	affected_bodyparts = HEAD
-	
+
 /datum/body_marking/bun
 	icon = 'icons/mob/body_markings/other_markings.dmi'
 	name = "Bun"
@@ -382,3 +390,24 @@
 	icon_state = "bun_s"
 	default_color = "FFFFFF"
 	affected_bodyparts = HEAD
+
+/datum/body_marking/womb_tattoo
+	icon = 'icons/mob/body_markings/small_chest_markings.dmi'
+	name = "Womb Tattoo"
+	icon_state = "groin"
+	default_color = "FF0000"
+	affected_bodyparts = CHEST
+
+/datum/body_marking/butterfly
+	icon = 'icons/mob/body_markings/small_chest_markings.dmi'
+	name = "Butterfly"
+	icon_state = "butterfly"
+	default_color = "FF0000"
+	affected_bodyparts = CHEST
+
+/datum/body_marking/waist
+	icon = 'icons/mob/body_markings/small_chest_markings.dmi'
+	name = "Waist"
+	icon_state = "waist"
+	default_color = "FF0000"
+	affected_bodyparts = CHEST

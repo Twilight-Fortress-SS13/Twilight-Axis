@@ -18,6 +18,11 @@
 	cost = 50
 	contains = list(/obj/item/clothing/head/roguetown/helmet/sallet/visored)
 
+/datum/supply_pack/rogue/Iconoclast/visoredsallet_snouted
+	name = "Snouted Visored Sallet"
+	cost = 50
+	contains = list(/obj/item/clothing/head/roguetown/helmet/sallet/visored/snouted)
+
 /datum/supply_pack/rogue/Iconoclast/savoyard
 	name = "Savoyard Helmet"
 	cost = 60
@@ -32,6 +37,11 @@
 	name = "Armet"
 	cost = 60
 	contains = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet)
+
+/datum/supply_pack/rogue/Iconoclast/armet_snouted
+	name = "Snouted Armet"
+	cost = 60
+	contains = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/snouted)
 
 //////////
 // NECK //
@@ -81,6 +91,11 @@
 	cost = 40
 	contains = list(/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk)
 
+/datum/supply_pack/rogue/Iconoclast/brigandine
+	name = "Brigandine"
+	cost = 80
+	contains = list(/obj/item/clothing/suit/roguetown/armor/brigandine)
+
 /datum/supply_pack/rogue/Iconoclast/halfplate
 	name = "Half-Plate"
 	cost = 80
@@ -95,6 +110,11 @@
 // WRISTS/GLOVES //
 ///////////////////
 
+/datum/supply_pack/rogue/Iconoclast/brigandine_bracers
+	name = "Brigandine Rerebraces"
+	cost = 30
+	contains = list(/obj/item/clothing/wrists/roguetown/bracers/brigandine)
+
 /datum/supply_pack/rogue/Iconoclast/bracers
 	name = "Steel Bracers"
 	cost = 40
@@ -108,6 +128,11 @@
 ///////////////
 // LEGS/FEET //
 ///////////////
+
+/datum/supply_pack/rogue/Iconoclast/brigandine_chausses
+	name = "Brigandine Chausses"
+	cost = 30
+	contains = list(/obj/item/clothing/under/roguetown/brigandinelegs)
 
 /datum/supply_pack/rogue/Iconoclast/platechausses
 	name = "Plate Chausses"
@@ -138,6 +163,11 @@
 	cost = 40
 	contains = list(/obj/item/clothing/gloves/roguetown/knuckles)
 
+/datum/supply_pack/rogue/Iconoclast/quarterstaff
+	name = "Steel Quarterstaff"
+	cost = 45
+	contains = list(/obj/item/rogueweapon/woodstaff/quarterstaff/steel)
+
 /datum/supply_pack/rogue/Iconoclast/flail
 	name = "Iron Flail"
 	cost = 30
@@ -146,7 +176,7 @@
 /datum/supply_pack/rogue/Iconoclast/steelflail
 	name = "Steel Flail"
 	cost = 60
-	contains =  list(/obj/item/rogueweapon/flail/sflail)
+	contains =	list(/obj/item/rogueweapon/flail/sflail)
 
 /////////////
 // SHIELDS //

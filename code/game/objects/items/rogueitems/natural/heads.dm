@@ -164,8 +164,8 @@
 	sellprice = 50
 
 /obj/item/natural/head/dragon/
-	name = "dragon head"
-	desc = "The head of a dragon."
+	name = "drake head"
+	desc = "The head of a drake."
 	w_class = WEIGHT_CLASS_NORMAL // We want them to be placeable in headhook
 	grid_height = 96
 	grid_width = 96
@@ -186,6 +186,12 @@
 	grid_height = 32
 	grid_width = 32
 	sellprice = 10
+
+/obj/item/natural/head/rous/undead
+	name = "deadite rous head"
+	desc = "The head of an unusually large, undead rat."
+	icon_state = "deadroushead"
+	sellprice = 25
 
 /obj/item/natural/head/honeyspider
 	name = "honeyspider head"

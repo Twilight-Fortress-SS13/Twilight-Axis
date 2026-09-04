@@ -1,5 +1,7 @@
 /datum/action/cooldown/spell/cataclysm
+	source_aspect = /datum/magic_aspect/pseudo/spellblade
 	name = "Cataclysm"
+	expose_caster_on_deflect = FALSE
 	desc = "Let the mountain fall. Conjure a hammer of pure arcyne force and hurl it at a target area. \
 		On impact it explodes, crushing everyone in a 5x5 area for 75 blunt damage and leaving them Vulnerable. \
 		Requires 7 momentum. Overcharged at 10 momentum: 135 damage. \
@@ -21,7 +23,7 @@
 	charge_required = TRUE
 	weapon_cast_penalized = FALSE
 	charge_time = CHARGETIME_MAJOR
-	charge_drain = 1
+	hold_drain = 1
 	charge_slowdown = 1
 	charge_sound = 'sound/magic/charging.ogg'
 	cooldown_time = 60 SECONDS
@@ -94,9 +96,9 @@
 	H.visible_message(span_boldwarning("[H] conjures a massive hammer out of arcyne force!"))
 
 	for(var/turf/affected_turf in get_hear(area_of_effect, T))
-		new /obj/effect/temp_visual/blade_storm_telegraph(affected_turf)
+		new /obj/effect/temp_visual/telegraph/blade_storm(affected_turf)
 
-	log_combat(H, cast_on, "used Cataclysm on")
+	log_combat(H, cast_on, "used Cataclysm on", zone=H.zone_selected)
 
 	addtimer(CALLBACK(src, PROC_REF(do_hammer_throw), H, held_weapon, T, final_damage, def_zone, empowered), delay)
 	. = ..()

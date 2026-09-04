@@ -188,7 +188,7 @@
     body_parts_covered = FACE | NECK
     block2add = FOV_DEFAULT
     resistance_flags = FIRE_PROOF
-	
+
 /obj/item/clothing/gloves/roguetown/bandages/pugilist/aria
 	name = "aria bondaged gloves"
 	desc = "A pair of golden black silks to cover hands"
@@ -239,7 +239,7 @@
 	item_state = "nightmare_scales"
 	icon = 'modular_twilight_axis/icons/clothing/nightmare_set.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/nightmare_set.dmi'
-	sleeved = 'modular_twilight_axis/icons/clothing/onmob/nightmare_set.dmi' 
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/nightmare_set.dmi'
 
 /obj/item/clothing/gloves/roguetown/plate/nightmare
 	name = "nightmare tears gauntlets"
@@ -248,7 +248,7 @@
 	item_state = "nightmare_gauntlets"
 	icon = 'modular_twilight_axis/icons/clothing/nightmare_set.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/nightmare_set.dmi'
-	sleeved = 'modular_twilight_axis/icons/clothing/onmob/nightmare_set.dmi' 
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/nightmare_set.dmi'
 
 /obj/item/clothing/under/roguetown/chainlegs/nightmare
 	name = "nightmare tears chausses"
@@ -273,3 +273,108 @@
 	item_state = "nightmare_crown"
 	icon = 'modular_twilight_axis/icons/clothing/nightmare_set.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/nightmare_set.dmi'
+
+//Tiara - Sprites made by G9ose and BolloTea
+
+/obj/item/clothing/head/roguetown/tiara
+	name = "ornate golden tiara"
+	desc = "A delicate tiara, made of gold. It seems to be a symbol of nobility, but also of beauty. It is said that the one who wears it will be blessed by Astrata's light."
+	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_HIP|ITEM_SLOT_MASK
+	icon_state = "tiara"
+	item_state = "tiara"
+	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes.dmi'
+
+//somethingawful917
+//artist beltguy
+/obj/item/clothing/head/roguetown/sagesbighat
+	name = "sage's big hat"
+	desc = "Enormous hat that completely obscures the face. The pair are said to be successors to someone named \"the great sage\", and this big hat is a symbol of their pedigree"
+	slot_flags = ITEM_SLOT_HEAD
+	icon_state = "sagesbighat"
+	item_state = "sagesbighat"
+	icon = 'modular_twilight_axis/icons/clothing/donor_clothes_46x32.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes_46x32.dmi'
+	worn_x_dimension = 46
+
+//Etruscan design cloak resprite
+
+/obj/item/clothing/cloak/poncho/dittocloak
+	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes.dmi'
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/donor_sleeves_armor.dmi'
+
+/obj/item/clothing/cloak/poncho/dittocloak/Initialize()
+	. = ..()
+	update_icon()
+
+/obj/item/clothing/cloak/poncho/dittocloak/update_icon()
+	cut_overlays()
+	if(get_detail_tag())
+		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		pic.appearance_flags = RESET_COLOR
+		if(get_detail_color())
+			pic.color = get_detail_color()
+		add_overlay(pic)
+
+// COMMANDANT SET START
+
+/obj/item/clothing/head/roguetown/helmet/heavy/commandant
+	name = "commandant's helmet"
+	desc = "An old, battered helmet once worn by an officer of the Black Empire's Freikorps. Its scars bear witness to many campaigns."
+	icon = 'modular_twilight_axis/icons/clothing/commandant_set.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/commandant_helmet.dmi'
+	icon_state = "helmet"
+	item_state = "helmet"
+	worn_y_dimension = 32
+	flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR|HIDESNOUT
+
+/obj/item/clothing/cloak/commandant
+	name = "commandant's cloak"
+	desc = "A distinguished military cloak in the austere style of the Black Empire, worn by officers who have earned the right to stand above the rank and file."
+	icon = 'modular_twilight_axis/icons/clothing/commandant_set.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/commandant_set.dmi'
+	icon_state = "raincoat"
+	item_state = "raincoat"
+
+/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/commandant
+	name = "commandant's coat"
+	desc = "A warm and durable field coat made for long campaigns, equally at home in a command tent or on a rain-soaked battlefield."
+	icon = 'modular_twilight_axis/icons/clothing/commandant_set.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/commandant_set.dmi'
+	icon_state = "robe"
+	item_state = "robe"
+	color = null
+
+/obj/item/clothing/suit/roguetown/armor/brigandine/light/commandant
+	name = "commandant's coat"
+	desc = "A warm and durable field coat made for long campaigns, equally at home in a command tent or on a rain-soaked battlefield."
+	icon = 'modular_twilight_axis/icons/clothing/commandant_set.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/commandant_set.dmi'
+	icon_state = "robe"
+	item_state = "robe"
+	color = null
+
+/obj/item/storage/belt/rogue/leather/twilight_holsterbelt/commandant
+	name = "officer's belt"
+	desc = "A durable and reliable officer's belt, made to endure years of campaigning."
+	icon = 'modular_twilight_axis/icons/clothing/commandant_set.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/commandant_set.dmi'
+	icon_state = "holsterbelt"
+	item_state = "holsterbelt"
+
+/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/commandant
+	name = "elegant pistol"
+	desc = "A finely made officer's pistol. Reliable in battle and elegant enough to serve as a badge of rank."
+	icon = 'modular_twilight_axis/icons/clothing/commandant_pistol.dmi'
+	icon_state = "pistol"
+	item_state = "gun"
+	advanced_icon = 'modular_twilight_axis/icons/clothing/commandant_pistol.dmi'
+	advanced_icon_r = 'modular_twilight_axis/icons/clothing/commandant_pistol_loaded.dmi'
+	advanced_icon_norod = 'modular_twilight_axis/icons/clothing/commandant_pistol.dmi'
+	advanced_icon_r_norod = 'modular_twilight_axis/icons/clothing/commandant_pistol_loaded.dmi'
+	lefthand_file = 'modular_twilight_axis/icons/clothing/onmob/commandant_pistol_lefthand.dmi'
+	righthand_file = 'modular_twilight_axis/icons/clothing/onmob/commandant_pistol_righthand.dmi'
+	experimental_inhand = FALSE
+
+// COMMANDANT SET END

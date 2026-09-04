@@ -21,7 +21,8 @@
 	charge_required = TRUE
 	weapon_cast_penalized = TRUE
 	charge_time = CHARGETIME_POKE
-	charge_drain = 1
+	charge_swingdelay_type = SWINGDELAY_PENALTY
+	hold_drain = 1
 	// Very high slowdown to make it offensively less useful
 	charge_slowdown = CHARGING_SLOWDOWN_HEAVY 
 	charge_sound = 'sound/magic/charging.ogg'
@@ -38,6 +39,7 @@
 	var/repulse_force = MOVE_FORCE_EXTREMELY_STRONG
 	var/showsparkles = TRUE
 	var/floor_slam_damage = 90
+	displayed_damage = 90
 	var/push_range = 1
 
 /datum/action/cooldown/spell/repulse/cast(atom/cast_on)
@@ -76,10 +78,11 @@
 			if(isliving(AM))
 				var/mob/living/M = AM
 				M.set_resting(TRUE, TRUE)
-				arcyne_strike(user, AM, null, floor_slam_damage, BODY_ZONE_CHEST, \
+				if(arcyne_strike(user, AM, null, floor_slam_damage, BODY_ZONE_CHEST, \
 				BCLASS_BLUNT, spell_name = "Repulse", \
-				damage_type = BRUTE, npc_simple_damage_mult = 1, \
-				skip_animation = TRUE)
+				damage_type = BRUTE, \
+				skip_animation = TRUE) == ARCYNE_STRIKE_WARDED)
+					continue
 				to_chat(M, span_danger("You're slammed into the floor by [user]!"))
 				new /obj/effect/temp_visual/spell_impact(get_turf(M), spell_color, spell_impact_intensity)
 		else

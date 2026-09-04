@@ -1,7 +1,6 @@
 /datum/ai_behavior/static_melee_attack //attack on the spot, other behaviors will handle moving
 	action_cooldown = 0.2 SECONDS 
 	behavior_flags = AI_BEHAVIOR_REQUIRE_REACH | AI_BEHAVIOR_CAN_PLAN_DURING_EXECUTION
-	var/sidesteps_after = FALSE
 
 /datum/ai_behavior/static_melee_attack/setup(datum/ai_controller/controller, target_key, targetting_datum_key, hiding_location_key)
 	. = ..()
@@ -18,17 +17,15 @@
 	if (isliving(controller.pawn))
 		var/mob/living/pawn = controller.pawn
 		if (world.time < pawn.next_move)
-			return
+			return AI_BEHAVIOR_INSTANT
 
-	. = ..()
 	var/mob/living/simple_animal/basic_mob = controller.pawn
 	//targetting datum will kill the action if not real anymore
 	var/atom/target = controller.blackboard[target_key]
 	var/datum/targetting_datum/targetting_datum = controller.blackboard[targetting_datum_key]
 
-	if(!targetting_datum.can_attack(basic_mob, target))
-		finish_action(controller, FALSE, target_key)
-		return
+	if(controller.is_melee_target_ignored(target) || !targetting_datum.can_attack(basic_mob, target)) // TA EDIT
+		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
 
 	var/hiding_target = targetting_datum.find_hidden_mobs(basic_mob, target) //If this is valid, theyre hidden in something!
 
@@ -36,15 +33,22 @@
 
 	basic_mob.face_atom()
 	basic_mob.a_intent = pick(basic_mob.possible_a_intents)
-	
+
+	// TA EDIT START
 	if(hiding_target)
+		controller.reset_melee_attack_progress()
 		basic_mob.ClickOn(hiding_target, list())
 	else
+		var/next_click_before = basic_mob.next_click
 		basic_mob.ClickOn(target, list())
+		if(basic_mob.next_click != next_click_before && controller.record_melee_attack_progress(target, target_key, hiding_location_key))
+			return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
+	// TA EDIT END
+
+	controller.blackboard[BB_SWINGS_SINCE_CIRCLING] = (controller.blackboard[BB_SWINGS_SINCE_CIRCLING] || 0) + 1
+	return AI_BEHAVIOR_DELAY
 
 /datum/ai_behavior/static_melee_attack/finish_action(datum/ai_controller/controller, succeeded, target_key, targetting_datum_key, hiding_location_key)
 	. = ..()
 	if(!succeeded)
 		controller.clear_blackboard_key(target_key)
-
-

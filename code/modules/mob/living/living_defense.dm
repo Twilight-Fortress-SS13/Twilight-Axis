@@ -1,20 +1,31 @@
-/mob/living/proc/run_armor_check(def_zone = null, attack_flag = "blunt", absorb_text = null, soften_text = null, armor_penetration = PEN_NONE, penetrated_text, damage, blade_dulling, intdamfactor, used_weapon = null, pen_info)
-	var/armor_tier = getarmor(def_zone, attack_flag, damage, armor_penetration, blade_dulling, intdamfactor, used_weapon, pen_info)
+/mob/living/carbon/proc/get_armor_class(def_zone, d_type)
+	if(!ishuman(src))
+		return ARMOR_CLASS_NONE
+
+	var/mob/living/carbon/human/H = src
+	var/obj/item/clothing/C = H.get_best_worn_armor(def_zone, d_type)
+
+	if(!C)
+		return ARMOR_CLASS_NONE
+
+	return C.armor_class
+
+/mob/living/proc/run_armor_check(def_zone = null, attack_flag = "blunt", absorb_text = null, soften_text = null, armor_penetration = PEN_NONE, penetrated_text, damage, blade_dulling, intdamfactor, used_weapon = null, pen_info, no_debuff = FALSE)
+	var/armor_tier = getarmor(def_zone, attack_flag, damage, armor_penetration, blade_dulling, intdamfactor, used_weapon, pen_info, no_debuff)
 
 	// Tier-based armor system.
 	// armor_tier and armor_penetration are both tier values (0-4).
-	// DR Absorb (blunt): damage * 1 / (1 + 0.2 * tier). All damage absorbed by armor, none to HP.
-	// DR Pierce (fire, acid): same DR formula, but reduced damage still hits HP. Armor also takes integrity damage.
+	// DR Absorb (blunt, fire, acid): damage * 1 / (1 + 0.2 * tier). All damage absorbed by armor, none to HP.
 	// DBLOCK types (ARMOR_DBLOCK_TYPES):
-	//   pen > armor  = 100% through (full penetration)
-	//   pen == armor = 20% through (partial penetration)
-	//   pen < armor  = fully blocked
+	//	pen > armor	= 100% through (full penetration)
+	//	pen == armor = 20% through (partial penetration)
+	//	pen < armor	= fully blocked
 	// Safety: if damage wasn't passed, blocked math would return 0 (null * anything = 0 in DM),
 	// silently making armor do nothing. Use a safe fallback for the blocked calculation only —
 	// don't feed it into checkarmor (which already ran above and handles null damage fine).
 	var/block_damage = damage || 999
 	var/blocked = 0
-	if(attack_flag in ARMOR_DR_ABSORB_TYPES)
+	if(attack_flag in ARMOR_DR_ABSORB_TYPES) //TA EDIT START
 		// Blunt: armor absorbs all HP damage. DR reduces integrity damage to armor (in checkarmor).
 		if(armor_tier > 0)
 			blocked = block_damage
@@ -22,14 +33,20 @@
 		// Fire/Acid: DR reduces damage, but reduced damage still reaches HP.
 		if(armor_tier > 0)
 			var/dr_mult = 1 / (1 + 0.2 * armor_tier)
-			blocked = block_damage * (1 - dr_mult)
+			blocked = block_damage * (1 - dr_mult) //TA EDIT END
 	else
 		// Penetration: tier comparison
 		if(attack_flag != "piercing")
 			if(armor_tier > 0)
 				if(armor_penetration >= armor_tier)
 					if(pen_info)
-						blocked = block_damage * (1 - (pen_info * PEN_PASSTHROUGH_RATIO)) 
+						if(used_weapon)
+							var/obj/item/I = used_weapon
+							if(I.sharpness)
+								if((I.blade_int / I.max_blade_int) <= SHARPNESS_TIER2_THRESHOLD) // Our sharpness is 'chunked' (<20%), so we do not pen at all.
+									pen_info = 0
+						if(pen_info)
+							blocked = block_damage * (1 - (PEN_PASSTHROUGH_MINIMUM + (pen_info * PEN_PASSTHROUGH_RATIO)))
 					if(penetrated_text)
 						to_chat(src, span_danger("[penetrated_text]"))
 				else
@@ -57,37 +74,45 @@
 	if(used_weapon)
 		if(isitem(used_weapon))
 			var/obj/item/I = used_weapon
-			if(I.sharpness && I.max_blade_int && !(attack_flag in ARMOR_DR_ABSORB_TYPES))
+			if(I.sharpness && I.max_blade_int && !(attack_flag in ARMOR_DR_TYPES))
 				var/dullness_ratio = I.blade_int / I.max_blade_int
 				if(dullness_ratio <= SHARPNESS_TIER2_THRESHOLD)	//Our weapon is CHUNKED. What are we PENNING WITH.
 					blocked = block_damage * 10
 
-	if(mob_timers[MT_INVISIBILITY] > world.time)
-		mob_timers[MT_INVISIBILITY] = world.time
-		update_sneak_invis(reset = TRUE)
+	break_invisibility_from_combat()
 	return blocked
 
-#define SHARPNESS_PENALTY_RATIO_ONE 0.7
-#define SHARPNESS_PENALTY_RATIO_TWO 0.6
-#define SHARPNESS_PENALTY_RATIO_THREE 0.5
-#define SHARPNESS_PENALTY_RATIO_FOUR 0.4
+/mob/living/proc/break_invisibility_from_combat()
+	var/should_update_invis = FALSE
+	if(vars["rogue_sneaking"])
+		mob_timers[MT_FOUNDSNEAK] = world.time
+		should_update_invis = TRUE
+	if(mob_timers[MT_INVISIBILITY] > world.time)
+		mob_timers[MT_INVISIBILITY] = world.time
+		should_update_invis = TRUE
+	if(should_update_invis)
+		update_sneak_invis(reset = TRUE)
+
 
 /proc/get_pen_info(mob/living/carbon/human/target, mob/living/attacker, obj/item/clothing/used_armor, def_zone, d_type, armor_pen, obj/item/I)
 	if(!target || !def_zone || !d_type || !armor_pen || !ishuman(target))
 		return 1
-	var/pen_total = armor_pen
+	var/pen_total = (armor_pen * 2)
 	var/protection
 	if(!used_armor)
 		used_armor = target.get_best_worn_armor(def_zone, d_type)
 	if(used_armor)
 		protection = used_armor.armor.getRating(d_type)
-	pen_total -= protection
+	pen_total -= (protection * 2)
+
+	if(armor_pen == protection)
+		pen_total = 1	// If we match, we still get a little extra.
 	var/balance_bonus = 0
 	var/sharpness_bonus = 0
 	var/damfactor_bonus = 0
 	if(I)
 		var/use_bonus = TRUE
-		if(I.sharpness && I.max_blade_int) 	// IS_BLUNT is 0, so this will be falsy with blunt weapons.
+		if(I.sharpness && I.max_blade_int)	// IS_BLUNT is 0, so this will be falsy with blunt weapons.
 			var/dullness_ratio = I.blade_int / I.max_blade_int
 
 			if(attacker.used_intent.damfactor != 1)
@@ -95,22 +120,9 @@
 
 			if(dullness_ratio > SHARPNESS_TIER1_THRESHOLD)	// We are above 80% sharpness, so we go along as planned and get a small bonus.
 				sharpness_bonus += 1
-				use_bonus = TRUE
-			else if(dullness_ratio < SHARPNESS_TIER2_THRESHOLD + 0.1)	// We are below sharpness threshold where we use damfactors & STR for damage, so we won't use it for pen either.
+			if(dullness_ratio <= SHARPNESS_TIER1_FLOOR)
 				use_bonus = FALSE
-				if(damfactor_bonus > 0)
-					damfactor_bonus = 0
-			else	// We are inbetween, so we'll apply a penalty.
-				if(dullness_ratio < SHARPNESS_PENALTY_RATIO_ONE)
-					if(damfactor_bonus > 0)
-						damfactor_bonus = max(damfactor_bonus - 1, 0) // -1 from damfactor
-				if(dullness_ratio <= SHARPNESS_PENALTY_RATIO_TWO)
-					sharpness_bonus -= 1	//-1 from the total
-				if(dullness_ratio <= SHARPNESS_PENALTY_RATIO_THREE)
-					if(damfactor_bonus > 0)
-						damfactor_bonus = max(damfactor_bonus - 1, 0) // -2 from damfactor
-				if(dullness_ratio <= SHARPNESS_PENALTY_RATIO_FOUR)
-					sharpness_bonus -= 1	//-2 from the total
+				damfactor_bonus = 0
 
 		if(use_bonus)
 			switch(I.wbalance)
@@ -118,28 +130,25 @@
 					balance_bonus = (attacker.STASTR - 10) + 2
 				if(WBALANCE_NORMAL)
 					balance_bonus = (attacker.STASTR - 10)
-				if(WBALANCE_SWIFT)
-					balance_bonus = (attacker.STASPD - 10)
+				if(WBALANCE_SWIFT)	// We use either SPD or STR, whichever's higher.
+					balance_bonus = max((attacker.STASPD - 10), (attacker.STASTR - 10))
+			if(I.wbalance != WBALANCE_HEAVY)
+				balance_bonus = min(balance_bonus, 4)
 
 	else
 		balance_bonus = (attacker.STASTR - 10)	// Unarmed, probably.
 	// If our negative sharpness malus is equal or greater than the balance bonus, we neutralize them both.
 	// This is to prevent edge cases where losing sharpness would -increase- our pen damage.
 	// Fundamentally, we shouldn't be penalized via sharpness beyond what we would've gained from our stats.
-	if(abs(balance_bonus) <= abs(sharpness_bonus) && sharpness_bonus <= 0 && balance_bonus >= 0)	
+	if(abs(balance_bonus) <= abs(sharpness_bonus) && sharpness_bonus <= 0 && balance_bonus >= 0)
 		balance_bonus = 0
 		sharpness_bonus = 0
 	pen_total += balance_bonus
 	pen_total += sharpness_bonus
-	// This proc's usage is meant to presume we're in the part of the 
+	// This proc's usage is meant to presume we're in the part of the
 	// proc pipeline that is already penning, so we give it at least a 1.
 	pen_total = clamp(pen_total, 1, 8)
 	return pen_total
-
-#undef SHARPNESS_PENALTY_RATIO_ONE
-#undef SHARPNESS_PENALTY_RATIO_TWO
-#undef SHARPNESS_PENALTY_RATIO_THREE
-#undef SHARPNESS_PENALTY_RATIO_FOUR
 
 /mob/living/proc/getarmor(def_zone, type, damage, armor_penetration, blade_dulling, intdamfactor, used_weapon)
 	return 0
@@ -172,17 +181,82 @@
 		return FALSE
 	var/datum/status_effect/buff/clash/guard = has_status_effect(/datum/status_effect/buff/clash)
 	if(guard)
+		var/atom/movable/original_firer = P.firer
 		if(P.on_guard_deflect(src))
 			apply_status_effect(/datum/status_effect/buff/parry_buffer)
-			apply_status_effect(/datum/status_effect/buff/adrenaline_rush)
+			if(original_firer != src)
+				apply_status_effect(/datum/status_effect/buff/adrenaline_rush/ranged)
 			guard.deflected_spell = TRUE
 			remove_status_effect(/datum/status_effect/buff/clash)
+			if(P.expose_caster_on_deflect && isliving(original_firer))
+				punish_deflected_caster(original_firer)
 			return TRUE
 		return FALSE
 	if(has_status_effect(/datum/status_effect/buff/parry_buffer))
 		if(P.on_guard_deflect(src, silent = TRUE))
 			return TRUE
 	return FALSE
+
+/// Riposting Ground Effect should not punish the caster wit an expose, as you can walk into it
+/mob/living/proc/guard_deflect_spell(spell_name = "the spell", no_message = FALSE, mob/living/attacker, punish_caster = TRUE)
+	var/datum/status_effect/buff/clash/guard = has_status_effect(/datum/status_effect/buff/clash)
+	if(guard)
+		if(isarcyne(src))
+			if(!no_message)
+				visible_message(span_warning("[src] deflects [spell_name] with a reactive ward!"))
+				to_chat(src, span_notice("My ward deflects the incoming spell!"))
+			playsound(get_turf(src), pick('sound/combat/parry/shield/magicshield (1).ogg', 'sound/combat/parry/shield/magicshield (2).ogg', 'sound/combat/parry/shield/magicshield (3).ogg'), 100)
+		else
+			if(!no_message)
+				visible_message(span_warning("[src] deflects [spell_name]!"))
+				to_chat(src, span_notice("My guard deflects the incoming spell!"))
+			var/obj/item/held = get_active_held_item()
+			if(held?.parrysound)
+				playsound(get_turf(src), pick(held.parrysound), 100)
+			else
+				playsound(get_turf(src), pick(parry_sound), 100)
+		apply_status_effect(/datum/status_effect/buff/parry_buffer)
+		apply_status_effect(/datum/status_effect/buff/emberward)
+		if(attacker != src)
+			apply_status_effect(/datum/status_effect/buff/adrenaline_rush/ranged)
+		guard.deflected_spell = TRUE
+		remove_status_effect(/datum/status_effect/buff/clash)
+		if(punish_caster)
+			punish_deflected_caster(attacker)
+		return TRUE
+	if(has_status_effect(/datum/status_effect/buff/parry_buffer))
+		return TRUE
+	return FALSE
+
+/// Exposes and staggers the caster of a spell we just Guard-deflected (riposte punish).
+/// Deduped per game tick so a single AOE deflected by multiple guards only punishes once.
+/mob/living/proc/punish_deflected_caster(mob/living/attacker)
+	if(!attacker || attacker == src)
+		return
+	if(attacker.last_deflect_recoil == world.time)
+		return
+	attacker.last_deflect_recoil = world.time
+	var/obj/item/attacker_weapon = arcyne_get_weapon(attacker)
+	if(attacker_weapon?.parrysound)
+		playsound(get_turf(attacker), pick(attacker_weapon.parrysound), 100)
+	else
+		playsound(get_turf(attacker), pick(attacker.parry_sound), 100)
+	if(attacker_weapon)
+		if(attacker_weapon.max_blade_int)
+			attacker_weapon.remove_bintegrity((attacker_weapon.blade_int * RIPOSTE_SHARPNESS_FACTOR), attacker)
+		else
+			var/integdam = max((attacker_weapon.max_integrity / RIPOSTE_INTEG_DIVISOR), (INTEG_PARRY_DECAY_NOSHARP * 5))
+			attacker_weapon.take_damage(integdam, BRUTE, attacker_weapon.d_type)
+	attacker.remove_status_effect(/datum/status_effect/debuff/exposed)
+	attacker.apply_status_effect(/datum/status_effect/debuff/exposed, 5 SECONDS)
+	attacker.apply_status_effect(/datum/status_effect/debuff/clickcd, 3 SECONDS)
+	attacker.Slowdown(3)
+	var/datum/status_effect/buff/arcyne_momentum/momentum = attacker.has_status_effect(/datum/status_effect/buff/arcyne_momentum)
+	if(momentum && momentum.stacks > 0)
+		momentum.consume_all_stacks()
+		to_chat(attacker, span_danger("My spell was deflected - I'm exposed and my momentum is gone!"))
+	else
+		to_chat(attacker, span_danger("My spell was deflected - I'm exposed!"))
 
 /mob/living/bullet_act(obj/projectile/P, def_zone = BODY_ZONE_CHEST)
 
@@ -225,56 +299,62 @@
 	
 	if(SEND_SIGNAL(src, COMSIG_ATOM_BULLET_ACT, P, def_zone) & COMPONENT_ATOM_BLOCK_BULLET)
 		return
-	def_zone = bullet_hit_accuracy_check(P.accuracy + P.bonus_accuracy, def_zone)
+	var/aimed_zone = def_zone
+	var/list/roll_out = list()
+	def_zone = bullet_hit_accuracy_check(P.accuracy + P.bonus_accuracy, def_zone, roll_out)
 	var/armor = run_armor_check(def_zone, P.flag, "", "",armor_penetration = P.armor_penetration, damage = P.damage, intdamfactor = P.intdamfactor, used_weapon = P)
 
 	next_attack_msg.Cut()
 
 	var/on_hit_state = P.on_hit(src, armor)
 	var/actual_damage = P.damage
-	if(!mind && istype(src, /mob/living/simple_animal))
-		var/datum/component/saddleborn = GetComponent(/datum/component/precious_creature)
-		if(!saddleborn)
-			actual_damage *= P.npc_simple_damage_mult
+	if(istype(src, /mob/living/simple_animal))
+		var/mob/living/simple_animal/weakpoint_target = src
+		actual_damage *= weakpoint_target.weakpoint_damage_mod(def_zone)
+		actual_damage *= P.npc_simple_damage_mult
 	var/nodmg = FALSE
 	if(!P.nodamage && on_hit_state != BULLET_ACT_BLOCK)
 		if(!apply_damage(actual_damage, P.damage_type, def_zone, armor))
 			nodmg = TRUE
 			next_attack_msg += VISMSG_ARMOR_BLOCKED
-		apply_effects(stun = P.stun, knockdown = P.knockdown, unconscious = P.unconscious, slur = P.slur, stutter = P.stutter, eyeblur = P.eyeblur, drowsy = P.drowsy, blocked = armor, stamina = P.stamina, jitter = P.jitter, paralyze = P.paralyze, immobilize = P.immobilize)
+		changeNext_inCombat(IN_COMBAT_DELAY)
+		if(!P.out_of_effective_range())
+			apply_effects(stun = P.stun, knockdown = P.knockdown, unconscious = P.unconscious, slur = P.slur, stutter = P.stutter, eyeblur = P.eyeblur, drowsy = P.drowsy, blocked = armor, stamina = P.stamina, jitter = P.jitter, paralyze = P.paralyze, immobilize = P.immobilize)
 		if(!nodmg)
-			if(P.dismemberment)
-				check_projectile_dismemberment(P, def_zone,armor)
-			if(P.woundclass)
-				check_projectile_wounding(P, def_zone, armor)
+			if(!P.out_of_effective_range())
+				if(P.dismemberment || P.dismember_by_default)
+					check_projectile_dismemberment(P, def_zone,armor)
+				if(P.woundclass)
+					check_projectile_wounding(P, def_zone, armor)
 
-			if(P.poisontype)// New proc for poisoning that respects if armor stopped damage from the projectile, by blocking or through reduction. Only called if poison type is defined.
-				if(!P.poisonamount)
-					CRASH("Projectile attempted to add poison with undefined amount.")
-				if(iscarbon(src))
-					var/mob/living/carbon/M = src
-					M.reagents.add_reagent(P.poisontype, P.poisonamount)
-					if(P.poisonfeel)
-						M.show_message(span_danger("You feel an intense [P.poisonfeel] sensation spreading swiftly from the area!"))
+				if(P.poisontype)// New proc for poisoning that respects if armor stopped damage from the projectile, by blocking or through reduction. Only called if poison type is defined.
+					if(!P.poisonamount)
+						CRASH("Projectile attempted to add poison with undefined amount.")
+					if(iscarbon(src))
+						var/mob/living/carbon/M = src
+						M.reagents.add_reagent(P.poisontype, P.poisonamount)
+						if(P.poisonfeel)
+							M.show_message(span_danger("You feel an intense [P.poisonfeel] sensation spreading swiftly from the area!"))
 
-			if(P.embedchance && !check_projectile_embed(P, def_zone, armor))
-				P.handle_drop()
+				if(P.embedchance && !check_projectile_embed(P, def_zone, armor))
+					P.handle_drop()
 
-			P.do_special_projectile_effect(P.firer, get_bodypart(check_zone(def_zone)), src, def_zone)
+				P.do_special_projectile_effect(P.firer, get_bodypart(check_zone(def_zone)), src, def_zone)
 
 		else
 			P.handle_drop()
 
 	var/organ_hit_text = ""
-	var/limb_hit = check_limb_hit(def_zone)//to get the correct message info.
+	var/limb_hit = hit_zone_name(def_zone)//to get the correct message info.
 	if(limb_hit)
-		organ_hit_text = " in \the [parse_zone(limb_hit)]"
+		organ_hit_text = " in \the [limb_hit]"
 	if(P.hitsound && !nodmg)
 		var/volume = P.vol_by_damage()
 		playsound(loc, pick(P.hitsound), volume, TRUE, -1)
 	visible_message(span_danger("[src] is hit by \a [P][organ_hit_text]![next_attack_msg.Join()]"), \
 			span_danger("I'm hit by \a [P][organ_hit_text]![next_attack_msg.Join()]"), null, COMBAT_MESSAGE_RANGE)
 	next_attack_msg.Cut()
+	show_ranged_accuracy_fail(P.firer, aimed_zone, def_zone, roll_out)
 
 
 	return on_hit_state ? BULLET_ACT_HIT : BULLET_ACT_BLOCK
@@ -283,7 +363,7 @@
 	return 0
 
 /mob/living/proc/check_projectile_wounding(obj/projectile/P, def_zone)
-	return simple_woundcritroll(P.woundclass, P.damage, null, def_zone, crit_message = TRUE)
+	return simple_woundcritroll(P.woundclass, P.damage, null, def_zone, crit_message = TRUE, ranged = TRUE, penfactor = P.armor_penetration)
 
 /mob/living/proc/check_projectile_embed(obj/projectile/P, def_zone)
 	// Disable embeds on simples, allowing it to override on complex.
@@ -317,6 +397,7 @@
 				nodmg = TRUE
 				next_attack_msg += VISMSG_ARMOR_BLOCKED
 			if(!nodmg)
+				changeNext_inCombat(IN_COMBAT_DELAY)
 				if(iscarbon(src))
 					var/obj/item/bodypart/affecting = get_bodypart(zone)
 					if(affecting)
@@ -326,7 +407,7 @@
 						affecting.bodypart_attacked_by(I.thrown_bclass, I.throwforce, throwee, affecting.body_zone, crit_message = TRUE, weapon = I)
 					I.do_special_attack_effect(I.thrownby, affecting, null, src, zone, thrown = TRUE)
 				else
-					simple_woundcritroll(I.thrown_bclass, I.throwforce, null, zone, crit_message = TRUE)
+					simple_woundcritroll(I.thrown_bclass, I.throwforce, null, zone, crit_message = TRUE, ranged = TRUE, penfactor = I.armor_penetration)
 					if(((throwingdatum ? throwingdatum.speed : I.throw_speed) >= EMBED_THROWSPEED_THRESHOLD) || I.embedding.embedded_ignore_throwspeed_threshold)
 						if(can_embed(I) && prob(I.embedding.embed_chance) && HAS_TRAIT(src, TRAIT_SIMPLE_WOUNDS) && !HAS_TRAIT(src, TRAIT_PIERCEIMMUNE))
 							simple_add_embedded_object(I, silent = FALSE, crit_message = TRUE)
@@ -350,6 +431,8 @@
 			return 1
 
 /mob/living/fire_act(added, maxstacks)
+	if(has_status_effect(/datum/status_effect/buff/emberward))
+		return
 	if(added > 20)
 		added = 20
 	if(maxstacks > 20)
@@ -395,9 +478,9 @@
 	if(user == src)
 		instant = TRUE
 
-	if(HAS_TRAIT(user, TRAIT_NOSTRUGGLE))	
+	if(HAS_TRAIT(user, TRAIT_NOSTRUGGLE))
 		instant = TRUE
-		
+
 	if(surrendering)
 		combat_modifier = 2
 
@@ -508,7 +591,7 @@
 	return list(/datum/intent/grab/move)
 
 /mob/living/proc/send_grabbed_message(mob/living/carbon/user)
-	if(HAS_TRAIT(user, TRAIT_NOTIGHTGRABMESSAGE))	
+	if(HAS_TRAIT(user, TRAIT_NOTIGHTGRABMESSAGE))
 		return
 	if(HAS_TRAIT(user, TRAIT_PACIFISM))
 		visible_message(span_danger("[user] firmly grips [src]!"),
@@ -551,6 +634,11 @@
 		if(M.incapacitated())
 			return FALSE
 
+		if(ishuman(src))
+			var/mob/living/carbon/human/H = src
+			if(H.has_active_golgatha())
+				H.process_golgatha_rebuke(M)
+
 		if(checkguard(M))
 			return FALSE
 
@@ -563,7 +651,7 @@
 		if(M.attack_sound)
 			playsound(loc, M.a_intent.hitsound, 100, FALSE)
 
-		log_combat(M, src, "attacked")
+		log_combat(M, src, "attacked", zone=M.zone_selected)
 
 	return TRUE
 
@@ -575,68 +663,8 @@
 	target.simple_clash(attacker, IM)
 	return TRUE
 
-/mob/living/attack_paw(mob/living/carbon/monkey/M)
-	if(isturf(loc) && istype(loc.loc, /area/start))
-//		to_chat(M, "No attacking people at spawn, you jackass.")
-		return FALSE
-
-	if (M.used_intent.type == INTENT_HARM)
-		if(HAS_TRAIT(M, TRAIT_PACIFISM))
-			to_chat(M, span_info("I don't want to hurt anyone!"))
-			return FALSE
-		if(M.has_status_effect(/datum/status_effect/debuff/deadite_grace) && src.mind)
-			to_chat(M, span_warning("Ah, Lux... I calm down considerably, but my hunger only increases."))
-			M.remove_status_effect(/datum/status_effect/debuff/deadite_grace)
-
-		if(M.is_muzzled() || M.is_mouth_covered(FALSE, TRUE))
-			to_chat(M, span_warning("I can't bite with my mouth covered!"))
-			return FALSE
-		M.do_attack_animation(src, ATTACK_EFFECT_BITE)
-		if (prob(75))
-			log_combat(M, src, "attacked")
-			playsound(loc, 'sound/blank.ogg', 50, TRUE, -1)
-			visible_message(span_danger("[M.name] bites [src]!"), \
-							span_danger("[M.name] bites you!"), span_hear("I hear a chomp!"), COMBAT_MESSAGE_RANGE, M)
-			to_chat(M, span_danger("I bite [src]!"))
-			return TRUE
-		else
-			visible_message(span_danger("[M.name]'s bite misses [src]!"), \
-							span_danger("I avoid [M.name]'s bite!"), span_hear("I hear the sound of jaws snapping shut!"), COMBAT_MESSAGE_RANGE, M)
-			to_chat(M, span_warning("My bite misses [src]!"))
-	return FALSE
-
 /mob/living/ex_act(severity, target)
 	..()
-
-/mob/living/attack_paw(mob/living/carbon/monkey/M)
-	if(isturf(loc) && istype(loc.loc, /area/start))
-//		to_chat(M, "No attacking people at spawn, you jackass.")
-		return FALSE
-
-	if (M.used_intent.type == INTENT_HARM)
-		if(HAS_TRAIT(M, TRAIT_PACIFISM))
-			to_chat(M, span_info("I don't want to hurt anyone!"))
-			return FALSE
-		if(M.has_status_effect(/datum/status_effect/debuff/deadite_grace) && src.mind)
-			to_chat(M, span_warning("Ah, Lux... I calm down considerably, but my hunger only increases."))
-			M.remove_status_effect(/datum/status_effect/debuff/deadite_grace)
-
-		if(M.is_muzzled() || M.is_mouth_covered(FALSE, TRUE))
-			to_chat(M, span_warning("I can't bite with my mouth covered!"))
-			return FALSE
-		M.do_attack_animation(src, ATTACK_EFFECT_BITE)
-		if (prob(75))
-			log_combat(M, src, "attacked")
-			playsound(loc, 'sound/blank.ogg', 50, TRUE, -1)
-			visible_message(span_danger("[M.name] bites [src]!"), \
-							span_danger("[M.name] bites you!"), span_hear("I hear a chomp!"), COMBAT_MESSAGE_RANGE, M)
-			to_chat(M, span_danger("I bite [src]!"))
-			return TRUE
-		else
-			visible_message(span_danger("[M.name]'s bite misses [src]!"), \
-							span_danger("I avoid [M.name]'s bite!"), span_hear("I hear the sound of jaws snapping shut!"), COMBAT_MESSAGE_RANGE, M)
-			to_chat(M, span_warning("My bite misses [src]!"))
-	return FALSE
 
 //Looking for irradiate()? It's been moved to radiation.dm under the rad_act() for mobs.
 
@@ -675,7 +703,7 @@
 			span_danger("[src] was shocked by \the [source]!"), \
 			span_danger("I feel a powerful shock coursing through my body!"), \
 			span_hear("I hear a heavy electrical crack.")
-		)	
+		)
 	playsound(get_turf(src), pick('sound/misc/elec (1).ogg', 'sound/misc/elec (2).ogg', 'sound/misc/elec (3).ogg'), 100, FALSE)
 	return shock_damage
 
@@ -718,6 +746,8 @@
 		used_item = get_active_held_item()
 	if(!used_intent)
 		used_intent = src.used_intent
+	if(!istype(used_intent, /datum/intent))
+		return
 	var/animation_type
 	if(used_item || !simplified)
 		animation_type = item_animation_override || used_intent?.get_attack_animation_type()

@@ -1,5 +1,5 @@
 import dateformat from 'dateformat';
-import yaml from 'js-yaml';
+import { CORE_SCHEMA, load } from 'js-yaml';
 import { Component, Fragment } from 'react';
 import {
   Box,
@@ -70,28 +70,30 @@ export class Changelog extends Component {
   getData = (date, attemptNumber = 1) => {
     const { act } = useBackend();
     const self = this;
-    const maxAttempts = 6;
+    const maxAttempts = 10;
 
     if (attemptNumber > maxAttempts) {
       return this.setData(`Failed to load data after ${maxAttempts} attempts`);
     }
 
-    act('get_month', { date });
+    if (attemptNumber === 1) {
+      act('get_month', { date });
+    }
 
-    fetch(resolveAsset(`${date}.yml`)).then(async (changelogData) => {
-      const result = await changelogData.text();
-      const errorRegex = /^Cannot find/;
+    const assetKey = `${date}.yml`;
+    const assetUrl = resolveAsset(assetKey);
 
-      if (errorRegex.test(result)) {
-        const timeout = 50 + attemptNumber * 50;
+    // resolveAsset returns the bare key until the server's send_asset response
+    // populates loadedMappings. Retry until the mapping is ready rather than
+    // fetching a broken URL and parsing the error body.
+    if (assetUrl === assetKey) {
+      self.setData(`Loading changelog data${'.'.repeat(Math.min(attemptNumber + 3, 10))}`);
+      setTimeout(() => self.getData(date, attemptNumber + 1), 50 * attemptNumber);
+      return;
+    }
 
-        self.setData(`Loading changelog data${'.'.repeat(attemptNumber + 3)}`);
-        setTimeout(() => {
-          self.getData(date, attemptNumber + 1);
-        }, timeout);
-      } else {
-        self.setData(yaml.load(result, { schema: yaml.CORE_SCHEMA }));
-      }
+    fetch(assetUrl).then(async (response) => {
+      self.setData(load(await response.text(), { schema: CORE_SCHEMA }));
     });
   };
 
@@ -101,9 +103,9 @@ export class Changelog extends Component {
     } = useBackend();
 
     if (dates) {
-      dates.forEach((date) =>
-        this.dateChoices.push(dateformat(date, 'mmmm yyyy', true)),
-      );
+      dates.forEach((date) => {
+        this.dateChoices.push(dateformat(date, 'mmmm yyyy', true));
+      });
       this.setSelectedDate(this.dateChoices[0]);
       this.getData(dates[0]);
     }
@@ -196,10 +198,7 @@ export class Changelog extends Component {
           {'Current organization members can be found '}
           <a href="https://github.com/orgs/Azure-Peak/people">here</a>
           {', recent GitHub contributors can be found '}
-          <a href="https://github.com/Azure-Peak/Azure-Peak/pulse">
-            here
-          </a>
-          .
+          <a href="https://github.com/Azure-Peak/Azure-Peak/pulse">here</a>.
         </p>
         <p>
           {'You can also join our discord '}
@@ -289,7 +288,8 @@ export class Changelog extends Component {
         <p>
           {'Roguetown / Azure Peak was originally forked from '}
           <a href="https://github.com/tgstation/tgstation/commit/c28b351807bad950d2b323ada048190844bbda32">
-            TG station commit c28b351807bad950d2b323ada048190844bbda32 on 2019/17/11
+            TG station commit c28b351807bad950d2b323ada048190844bbda32 on
+            2019/17/11
           </a>
         </p>
         <p>

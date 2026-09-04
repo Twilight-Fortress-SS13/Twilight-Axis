@@ -1,22 +1,18 @@
 GLOBAL_LIST_EMPTY(vampire_objects)
 #define INITIAL_BLOODPOOL_PERCENTAGE 40
-// Storyteller scaling:
-// scaling=2, min_players=0, default_cap=0
-// On Astrata (cap=2): uses storyteller_scale_slots → always 2 slots at any pop.
-// On others (cap=0): falls through to event control's base_antags path.
-//  Event          | base | denom | max | Formula: base + floor(pop/denom), capped at max
-//  Vampires       |  1   |  80   |  2  | 1-79 pop → 1, 80+ → 2
-//  Masquerade     |  2   |  80   |  4  | 1-79 pop → 2, 80-159 → 3, 160+ → 4
-//  Vamp+Werewolf  |  2   |  80   |  4  | 1-79 pop → 2, 80-159 → 3, 160+ → 4
+// Storyteller: no preset maxcap - the vampire count is fixed per spawn event via base_antags/maximum_antags,
+// so the Vampire Lord and Masquerade events differ:
+//	Event			| base | denom | max | Formula: base + floor(pop/denom), capped at max
+//	Vampire Lord	|	1	|	80	|	1	| always 1 (the lord)
+//	Masquerade		|	2	|	80	|	2	| always 2 (the coven)
+//	Vamp+Werewolf	|	2	|	80	|	4	| 1-79 pop -> 2, 80-159 -> 3, 160+ -> 4
 /datum/antagonist/vampire
 	name = "Vampire"
 	roundend_category = "Vampires"
 	antagpanel_category = "Vampire"
 	job_rank = ROLE_VAMPIRE
 	storyteller_antag_flags = STORYTELLER_ANTAG_VILLAIN | STORYTELLER_ANTAG_ROUNDSTART
-	storyteller_favor_flags = STORYTELLER_FAVOR_VAMPIRE_LORD | STORYTELLER_FAVOR_MASQUERADE
 	storyteller_slot_scaling = 2
-	storyteller_maxcaps = list(/datum/storyteller/astrata = 2)
 	antag_hud_type = ANTAG_HUD_VAMPIRE
 	antag_hud_name = "vamp_spawn_hud"
 	confess_lines = list(
@@ -36,8 +32,15 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 	var/datum/clan/forcing_clan
 	var/generation
 	var/research_points = 10
+	var/research_spent = 0
 	var/max_thralls = 1
 	var/thrall_count = 0
+
+	var/STASTR = 12
+	var/STASPD = 12
+	var/STAWIL = 12
+	var/STACON = 12
+	var/STAPER = 12
 
 /datum/antagonist/vampire/New(incoming_clan = /datum/clan/crimson_fang, forced_clan = FALSE, generation)
 	. = ..()
@@ -55,7 +58,7 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 			research_points = 17
 		if(GENERATION_NEONATE)
 			research_points = 9
-		if(GENERATION_THINBLOOD)
+		if(GENERATION_THINBLOOD, GENERATION_THINNERBLOOD)
 			research_points = 0
 
 /datum/antagonist/vampire/get_antag_cap_weight()
@@ -68,6 +71,8 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 			return 0.75 // Licker Wretch
 		if(GENERATION_THINBLOOD)
 			return 0.25 // You are not even an antagonist
+		if(GENERATION_THINNERBLOOD)
+			return 0 //Vagabond class
 		else
 			return 1 // Default weight if generation not set
 
@@ -103,7 +108,8 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 				max_thralls = 69
 			if(GENERATION_ANCILLAE)
 				vampdude?.cmode_music = 'sound/music/cmode/antag/combat_thrall.ogg'
-				vampdude?.adjust_skillrank_up_to(/datum/skill/magic/blood, 5, TRUE)
+				vampdude?.adjust_skillrank_up_to(/datum/skill/magic/blood, 5, TRUE) // Masquerade round antagonist. They should be given a little bit more leeway.
+				vampdude?.adjust_skillrank_up_to(/datum/skill/combat/unarmed, 4, TRUE)
 				max_thralls = 3
 			if(GENERATION_NEONATE)
 				vampdude?.cmode_music = 'sound/music/cmode/antag/combat_thrall.ogg'
@@ -113,9 +119,16 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 				vampdude?.cmode_music = 'sound/music/cmode/antag/combat_thrall.ogg'
 				vampdude?.adjust_skillrank_up_to(/datum/skill/magic/blood, 3, TRUE) // You are not even an antagonist
 				max_thralls = 0
+				ADD_TRAIT(vampdude, TRAIT_NOVAMPMITOSIS, TRAIT_GENERIC) //no bloodpool vamps
+			if(GENERATION_THINNERBLOOD)
+				vampdude?.cmode_music = 'sound/music/cmode/antag/combat_thrall.ogg'
+				vampdude?.adjust_skillrank_up_to(/datum/skill/magic/blood, 1, TRUE)
+				max_thralls = 0
+				ADD_TRAIT(vampdude, TRAIT_NOVAMPMITOSIS, TRAIT_GENERIC) //no bloodpool vamps
 			else
 				vampdude?.adjust_skillrank_up_to(/datum/skill/magic/blood, 2, TRUE) // Default weight if generation not set
 				max_thralls = 0
+				ADD_TRAIT(vampdude, TRAIT_NOVAMPMITOSIS, TRAIT_GENERIC) //no bloodpool vamps
 
 		if(HAS_TRAIT(vampdude, TRAIT_DNR)) //if you have DNR, we add dustable
 			ADD_TRAIT(vampdude, TRAIT_DUSTABLE, TRAIT_GENERIC)
@@ -145,7 +158,7 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 	if(!vampdude)
 		return
 
-	if(vampdude.job == "Wretch")
+	if(vampdude.job == "Wretch" || vampdude.job == "Stray")
 		var/wretch_name = tgui_input_text(vampdude, "Enter your Caitiff clan name:", "Custom Clan", "Custom Clan", MAX_NAME_LEN)
 		create_custom_clan(vampdude, wretch_name)
 		return
@@ -167,14 +180,15 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 	finalize_clan_selection(vampdude, /datum/clan/crimson_fang)
 
 /datum/antagonist/vampire/proc/create_custom_clan(mob/living/carbon/human/vampdude, custom_name = null)
-	custom_clan_name = (istext(custom_name) && length(custom_name)) ? custom_name : "Custom Clan"
+	custom_clan_name = (istext(custom_name) && length(custom_name)) ? sanitize(custom_name) : "Custom Clan"
 
 	var/datum/clan/custom/new_clan = new /datum/clan/custom()
 	new_clan.name = custom_clan_name
 	switch(vampdude.get_vampire_generation())
 		if(GENERATION_NEONATE, GENERATION_THINBLOOD)
 			new_clan.covens_to_select = COVENS_PER_WRETCH_CLAN
-
+		if(GENERATION_THINNERBLOOD)
+			new_clan.covens_to_select = COVENS_PER_VAGABOND
 	vampdude.set_clan_direct(new_clan)
 	clan_selected = TRUE
 	after_gain()
@@ -193,6 +207,8 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 		vampdude.set_clan(null)
 		if(HAS_TRAIT(vampdude, TRAIT_DUSTABLE)) //if you have DNR, we add dustable
 			REMOVE_TRAIT(vampdude, TRAIT_DUSTABLE, TRAIT_GENERIC)
+		if(HAS_TRAIT(vampdude, TRAIT_NOVAMPMITOSIS)) //for whatever reasoning we remove it and re-add it so we don't fuck up bloodpool buying.
+			REMOVE_TRAIT(vampdude, TRAIT_NOVAMPMITOSIS, TRAIT_GENERIC)
 	owner.current?.hud_used?.shutdown_bloodpool()
 	if(!silent && owner.current)
 		to_chat(owner.current, span_danger("I am no longer a [job_rank]!"))
@@ -211,7 +227,7 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 	icon = 'icons/roguetown/topadd/death/vamp-lord.dmi'
 	density = TRUE
 
-/obj/structure/vampire/Initialize()
+/obj/structure/vampire/Initialize(mapload)
 	GLOB.vampire_objects |= src
 	. = ..()
 
@@ -225,7 +241,7 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 	icon_state = "arrow"
 	delete_after_roundstart = FALSE
 
-/obj/effect/landmark/start/vampirelord/Initialize()
+/obj/effect/landmark/start/vampirelord/Initialize(mapload)
 	. = ..()
 	GLOB.vlord_starts += loc
 
@@ -234,7 +250,7 @@ GLOBAL_LIST_EMPTY(vampire_objects)
 	icon_state = "arrow"
 	delete_after_roundstart = FALSE
 
-/obj/effect/landmark/start/vampirespawn/Initialize()
+/obj/effect/landmark/start/vampirespawn/Initialize(mapload)
 	. = ..()
 	GLOB.vspawn_starts += loc
 	GLOB.secondlife_respawns += loc

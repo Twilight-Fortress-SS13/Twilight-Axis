@@ -7,7 +7,7 @@
 		TOOL_SCALPEL = 80,
 		TOOL_SHARP = 60,
 	) // 60% success with any sharp item.
-	target_mobtypes = list(/mob/living/carbon/human, /mob/living/carbon/monkey)
+	target_mobtypes = list(/mob/living/carbon/human)
 	time = 1.6 SECONDS
 	surgery_flags = SURGERY_BLOODY
 	surgery_flags_blocked = SURGERY_INCISED
@@ -54,11 +54,12 @@
 	return TRUE
 
 /datum/surgery_step/clamp/success(mob/user, mob/living/target, target_zone, obj/item/tool, datum/intent/intent)
+	var/obj/item/bodypart/bodypart = target.get_bodypart(check_zone(target_zone))
+	if(!bodypart?.add_embedded_object(tool, crit_message = FALSE, surgery_embed = TRUE))
+		return FALSE
 	display_results(user, target, span_notice("I clamp the bleeders in [target]'s [parse_zone(target_zone)]."),
 		span_notice("[user] clamps the bleeders in [target]'s [parse_zone(target_zone)]."),
 		span_notice("[user] clamps the bleeders in [target]'s [parse_zone(target_zone)]."))
-	var/obj/item/bodypart/bodypart = target.get_bodypart(check_zone(target_zone))
-	bodypart?.add_embedded_object(tool, crit_message = FALSE)
 	notify_embed(user, tool, target, target_zone)
 	return TRUE
 
@@ -84,11 +85,12 @@
 	return TRUE
 
 /datum/surgery_step/retract/success(mob/user, mob/living/target, target_zone, obj/item/tool, datum/intent/intent)
+	var/obj/item/bodypart/bodypart = target.get_bodypart(check_zone(target_zone))
+	if(!bodypart?.add_embedded_object(tool, crit_message = FALSE, surgery_embed = TRUE))
+		return FALSE
 	display_results(user, target, span_notice("I retract [target]'s [parse_zone(target_zone)]."),
 		span_notice("[user] retract [target]'s [parse_zone(target_zone)]."),
 		span_notice("[user] retract [target]'s [parse_zone(target_zone)]."))
-	var/obj/item/bodypart/bodypart = target.get_bodypart(check_zone(target_zone))
-	bodypart?.add_embedded_object(tool, crit_message = FALSE)
 	notify_embed(user, tool, target, target_zone)
 	return TRUE
 

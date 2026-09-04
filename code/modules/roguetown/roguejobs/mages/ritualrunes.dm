@@ -75,9 +75,6 @@ GLOBAL_LIST_INIT(t2rune_types, generate_t2rune_types())
 GLOBAL_LIST_INIT(t3rune_types, generate_t3rune_types())
 GLOBAL_LIST_INIT(t4rune_types, generate_t4rune_types())
 
-/// List of all teleport runes
-GLOBAL_LIST(teleport_runes)
-
 /// Returns an associated list of rune types. [rune.cultist_name] = [typepath]
 /proc/generate_rune_types()
 	RETURN_TYPE(/list)
@@ -335,10 +332,13 @@ GLOBAL_LIST(teleport_runes)
 	can_be_scribed = FALSE
 
 /obj/effect/decal/cleanable/roguerune/arcyne/attack_hand(mob/living/user)
-	if(!isarcyne(user))
+	if(!can_use_arcyne_rune(user))
 		to_chat(user, span_warning("You aren't able to understand the words of [src]."))
 		return
 	. = ..()
+
+/obj/effect/decal/cleanable/roguerune/arcyne/proc/can_use_arcyne_rune(mob/living/user)
+	return HAS_TRAIT(user, TRAIT_LEYLINE_ATTUNEMENT) && !HAS_TRAIT(user, TRAIT_CHUNKYFINGERS)
 
 
 
@@ -359,6 +359,9 @@ GLOBAL_LIST(teleport_runes)
 	. = ..()
 	rituals += GLOB.t3enchantmentrunerituallist
 
+/obj/effect/decal/cleanable/roguerune/arcyne/enchantment/can_use_arcyne_rune(mob/living/user)
+	return HAS_TRAIT(user, TRAIT_LEYLINE_ATTUNEMENT)
+
 /obj/effect/decal/cleanable/roguerune/arcyne/enchantment/invoke(list/invokers, datum/runeritual/runeritual)
 	if(!..())	//VERY important. Calls parent and checks if it fails. parent/invoke has all the checks for ingredients
 		return
@@ -374,7 +377,7 @@ GLOBAL_LIST(teleport_runes)
 			living_invoker.say(invocation, language = /datum/language/common, ignore_spam = TRUE, forced = "cult invocation")
 		if(invoke_damage)
 			living_invoker.apply_damage(invoke_damage, BRUTE)
-			to_chat(living_invoker,  span_italics("[src] saps your strength!"))
+			to_chat(living_invoker,	span_italics("[src] saps your strength!"))
 	do_invoke_glow()
 
 /obj/effect/decal/cleanable/roguerune/arcyne/enchantment/greater	//used for better quality of learning, grants temporary 2 minute INT bonus.
@@ -439,13 +442,13 @@ GLOBAL_LIST(teleport_runes)
 		if(busy)
 			to_chat(user, span_warning("I am already attempting to bind this familiar! I must have patience..."))
 			return
-		var/mob/living/simple_animal/pet/familiar/S = summoned_mob
+		var/mob/living/carbon/human/species/familiar/S = summoned_mob
 		if(!S || QDELETED(S))
 			to_chat(user, span_warning("The containment has already faded."))
 			summoned_mob = null
 			return
 		var/plane = S.planar_origin
-		for(var/mob/living/simple_animal/pet/familiar/existing_fam in GLOB.alive_mob_list + GLOB.dead_mob_list)
+		for(var/mob/living/carbon/human/species/familiar/existing_fam in GLOB.alive_mob_list + GLOB.dead_mob_list)
 			if(existing_fam.familiar_summoner == user)
 				to_chat(user, span_warning("You can only bind one familiar at once!"))
 				return FALSE
@@ -506,26 +509,12 @@ GLOBAL_LIST(teleport_runes)
 			qdel(S)
 			summoned_mob = null
 			var/to_summon = prefs.familiar_species[plane]
-			var/mob/living/simple_animal/pet/familiar/fam = new to_summon(loc)
+			var/mob/living/carbon/human/species/familiar/fam = new to_summon(loc)
 			fam.familiar_summoner = user
 			fam.fully_replace_character_name(null, prefs.familiar_names[plane])
 			fam.pronouns = prefs.familiar_pronouns[plane] ? prefs.familiar_pronouns[plane] : THEY_THEM
-			switch(prefs.familiar_pronouns[plane] ? prefs.familiar_pronouns[plane] : THEY_THEM) // why is our gender handling so bad for simples
-				if(SHE_HER)
-					fam.gender=FEMALE
-				if(HE_HIM)
-					fam.gender=MALE
-				if(THEY_THEM)
-					fam.gender=PLURAL
-				if(IT_ITS)
-					fam.gender=NEUTER
-				else
-					fam.gender=NEUTER
-			// needs 2 be done here because we trans the gender mid-ritual
-			if(fam.gender == MALE)
-				fam.voice_pack = new /datum/voicepack/male
-			else
-				fam.voice_pack = new /datum/voicepack/female
+			fam.voice_color = prefs.familiar_voice_colors[plane]
+			fam.gender = FEMALE // allows them to wear clothing, needed because of legacy code. i hate - whatever
 			src.visible_message(span_notice("[fam.summoning_emote]"))
 
 			if(isnewplayer(chosen))
@@ -546,7 +535,6 @@ GLOBAL_LIST(teleport_runes)
 			fam.client?.init_verbs()
 			mind_datum.RemoveAllSpells()
 			mind_datum.AddSpell(new /datum/action/cooldown/spell/message_summoner())
-			mind_datum.AddSpell(new /datum/action/cooldown/spell/familiar_transform())
 			user.mind?.AddSpell(new /datum/action/cooldown/spell/message_familiar())
 
 			if(fam.inherent_spell)
@@ -555,21 +543,18 @@ GLOBAL_LIST(teleport_runes)
 						var/obj/effect/proc_holder/spell/spell_instance = new spell_path
 						if(spell_instance)
 							mind_datum.AddSpell(spell_instance)
-			fam.can_have_ai = FALSE
-			fam.AIStatus = AI_OFF
-			fam.stop_automated_movement = TRUE
-			fam.stop_automated_movement_when_pulled = TRUE
-			fam.wander = FALSE
 			fam.cmode = FALSE
-
+			fam.mind.i_know_person(user)
+			user.mind.i_know_person(fam)
+			fam.STASPD = min(user.STASPD + (fam.planar_origin=="fae" ? 3 : 0), 20) // so they can always keep up with their summoner
 			var/faction_to_add = "[user.mind.current.real_name]_faction"
 			fam.faction |= faction_to_add
 			var/tutorial = null
-			if(istype(fam,/mob/living/simple_animal/pet/familiar/fae))
+			if(istype(fam,/mob/living/carbon/human/species/familiar/fae))
 				tutorial = "You are a familiar: a lesser being drawn from the outer planes. The faewyld is a primal place, and those that grow beyond their station are often pruned... for those of little power like yourself, the mortal realm is a safer place to grow. Serve your summoner, learn from this realm, and return stronger."
-			else if(istype(fam,/mob/living/simple_animal/pet/familiar/infernal))
+			else if(istype(fam,/mob/living/carbon/human/species/familiar/infernal))
 				tutorial = "You are a familiar: a lesser being drawn from the outer planes. The hells are a brutal place, and those with ambition beyond their ability are often culled... for those of little power like yourself, the mortal realm is a safer place to refuel. Serve your summoner, learn from this realm, and return stronger."
-			else if(istype(fam,/mob/living/simple_animal/pet/familiar/elemental))
+			else if(istype(fam,/mob/living/carbon/human/species/familiar/elemental))
 				tutorial = "You are a familiar: a lesser being drawn from the outer planes. The depths are an unchanging place, and pebbles that stick up are eroded down... for those of little power like yourself, the mortal realm is a safer place to accumulate. Serve your summoner, learn from this realm, and return stronger."
 			else
 				tutorial = "You are a Void Drakeling: a being entirely new to this world, and all others. A fragment of draconic power torn from elsewhere, if you are ever to become as strong as what you were once part of, you must sate this hunger. Serve your creator, and be voracious; planar beings shall be the fuel for your ascension."
@@ -596,22 +581,14 @@ GLOBAL_LIST(teleport_runes)
 
 /obj/effect/decal/cleanable/roguerune/arcyne/binding/attack_right(mob/user)
 	. = ..()
-	if((input(user,"Would you like to cancel this summoning attempt?","Fallback","No") as anything in list("Yes","No") | null)=="Yes")
+	if(summoned_mob && (input(user,"Would you like to cancel this summoning attempt?","Fallback","No") as anything in list("Yes","No") | null)=="Yes")
 		busy = FALSE
-		if(summoned_mob)
-			var/list/refund_costs = list()
-			if(istype(summoned_mob,/mob/living/simple_animal/pet/familiar/fae))
-				refund_costs = list(/obj/item/magic/fae/iridescentscale = 2)
-			else if(istype(summoned_mob,/mob/living/simple_animal/pet/familiar/infernal))
-				refund_costs = list(/obj/item/magic/infernal/fang = 2)
-			else if(istype(summoned_mob,/mob/living/simple_animal/pet/familiar/elemental))
-				refund_costs = list(/obj/item/magic/elemental/shard = 2)
-			else
-				refund_costs = list(/obj/item/magic/artifact = 1, /obj/item/magic/voidstone = 2, /obj/item/magic/leyline = 1)
+		if(istype(summoned_mob,/mob/living/carbon/human/species/familiar/void))
+			var/list/refund_costs = list(/obj/item/magic/artifact = 1, /obj/item/magic/voidstone = 2, /obj/item/magic/leyline = 1)
 			for(var/index in refund_costs)
 				for(var/i in 1 to refund_costs[index])
 					new index(loc)
-			QDEL_NULL(summoned_mob)
+		QDEL_NULL(summoned_mob)
 
 /obj/effect/decal/cleanable/roguerune/arcyne/binding/proc/clear_obstacles(mob/living/user)
 	for(var/turf/closed/wall/anticheese in range(loc, runesize))
@@ -748,7 +725,75 @@ GLOBAL_LIST(teleport_runes)
 			living_invoker.say(invocation, language = /datum/language/common, ignore_spam = TRUE, forced = "cult invocation")
 		if(invoke_damage)
 			living_invoker.apply_damage(invoke_damage, BRUTE)
-			to_chat(living_invoker,  span_italics("[src] saps your strength!"))
+			to_chat(living_invoker,	span_italics("[src] saps your strength!"))
+	do_invoke_glow()
+
+/obj/effect/decal/cleanable/roguerune/arcyne/verglas
+	name = "verglas accession matrix"
+	desc = "arcane symbols litter the ground- a slick sheen of frost spreads from the sigil."
+	icon_state = "wall"
+	tier = 2
+	invocation = "Glacies Surgat!"
+	can_be_scribed = TRUE
+	color = GLOW_COLOR_ICE
+	var/field_radius = 3 // Slippery sliddery (Match spell for ice rink fight)
+	var/list/field = list()
+
+/obj/effect/decal/cleanable/roguerune/arcyne/verglas/New()
+	. = ..()
+	rituals += GLOB.verglasrunerituallist
+
+/obj/effect/decal/cleanable/roguerune/arcyne/verglas/Destroy()
+	QDEL_LIST_CONTENTS(field)
+	field = null
+	return ..()
+
+/obj/effect/decal/cleanable/roguerune/arcyne/verglas/attack_hand(mob/living/user)
+	if(active)
+		QDEL_LIST_CONTENTS(field)
+		to_chat(user, span_warning("You deactivate the [src]!"))
+		playsound(usr, 'sound/magic/teleport_diss.ogg', 75, TRUE)
+		active = FALSE
+		return
+	. = ..()
+
+/obj/effect/decal/cleanable/roguerune/arcyne/verglas/invoke(list/invokers, datum/runeritual/runeritual)
+	if(!..())
+		return
+	var/turf/centerpoint = get_turf(src)
+	var/mob/living/user = usr
+	if(istype(user))
+		var/turf/front = centerpoint
+		for(var/i in 1 to field_radius + 1)
+			var/turf/next = get_step(front, user.dir)
+			if(!next)
+				break
+			front = next
+		centerpoint = front
+	playsound(centerpoint, 'sound/spellbooks/crystal.ogg', 80, TRUE)
+	for(var/turf/T in get_hear(field_radius, centerpoint))
+		if(T.density)
+			continue
+		if(istype(T, /turf/open/water))
+			continue
+		if(locate(/obj/effect/verglas) in T)
+			continue
+		field += new /obj/effect/verglas(T, 0)
+	active = TRUE
+
+	if(ritual_result)
+		pickritual.cleanup_atoms(selected_atoms)
+	invoke_cleanup()
+
+	for(var/atom/invoker in invokers)
+		if(!isliving(invoker))
+			continue
+		var/mob/living/living_invoker = invoker
+		if(invocation)
+			living_invoker.say(invocation, language = /datum/language/common, ignore_spam = TRUE, forced = "cult invocation")
+		if(invoke_damage)
+			living_invoker.apply_damage(invoke_damage, BRUTE)
+			to_chat(living_invoker,	span_italics("[src] saps your strength!"))
 	do_invoke_glow()
 
 /obj/effect/decal/cleanable/roguerune/arcyne/wallgreater
@@ -802,215 +847,8 @@ GLOBAL_LIST(teleport_runes)
 			living_invoker.say(invocation, language = /datum/language/common, ignore_spam = TRUE, forced = "cult invocation")
 		if(invoke_damage)
 			living_invoker.apply_damage(invoke_damage, BRUTE)
-			to_chat(living_invoker,  span_italics("[src] saps your strength!"))
+			to_chat(living_invoker,	span_italics("[src] saps your strength!"))
 	do_invoke_glow()
-
-/obj/effect/decal/cleanable/roguerune/arcyne/teleport
-	name = "leyline teleportation matrix"
-	desc = "A matrix that allows teleportation between leylines, ducking into the leyline and then rematerializing in another spot. The matrix can carry up to five people, though no more than two may lack arcyne knowledge. Despite magos trying their best, no one has been able to conceive a way to teleport more than a mile at once in all of Psydonia. Repeated usages or chaining teleport out of a two mile radius appears to exhaust or degrade the body rapidly."
-	icon = 'icons/effects/96x96.dmi'
-	icon_state = "portal"
-	tier = 2
-	req_keyword = TRUE
-	runesize = 1
-	pixel_x = -32 //So the big ol' 96x96 sprite shows up right
-	pixel_y = -32
-	pixel_z = 0
-	can_be_scribed = TRUE
-	requires_leyline = TRUE
-	rituals = list()
-	var/listkey
-
-/obj/effect/decal/cleanable/roguerune/arcyne/teleport/Initialize(mapload, set_keyword)
-	. = ..()
-	var/area/A = get_area(src)
-	var/locname = initial(A.name)
-	listkey = set_keyword ? "[set_keyword] [locname]":"[locname]"
-	LAZYADD(GLOB.teleport_runes, src)
-
-/obj/effect/decal/cleanable/roguerune/arcyne/teleport/attack_hand(mob/living/user)
-	if(!isarcyne(user))
-		to_chat(user, span_warning("You aren't able to understand the words of [src]."))
-		return
-	if(rune_in_use)
-		to_chat(user, span_notice("Someone is already using this rune."))
-		return
-	rune_in_use = TRUE
-	invoke(list(user))
-	rune_in_use = FALSE
-
-/obj/effect/decal/cleanable/roguerune/arcyne/teleport/Destroy()
-	LAZYREMOVE(GLOB.teleport_runes, src)
-	return ..()
-
-/// Find a leyline within range 5 of this rune
-/obj/effect/decal/cleanable/roguerune/arcyne/teleport/proc/find_nearby_leyline()
-	for(var/obj/structure/leyline/L in range(5, src))
-		return L
-	return null
-
-/obj/effect/decal/cleanable/roguerune/arcyne/teleport/invoke(list/invokers, datum/runeritual/runeritual)
-	// No parent call — this rune has no ritual requirements (no materials)
-	var/mob/living/user = invokers[1]
-
-	// --- Leyline validation (source) ---
-	var/obj/structure/leyline/source_leyline = find_nearby_leyline()
-	if(!source_leyline)
-		to_chat(user, span_warning("There is no leyline nearby. The matrix cannot function without one."))
-		fail_invoke()
-		return
-	if(source_leyline.on_teleport_cooldown())
-		to_chat(user, span_warning("This leyline still resonates from a recent teleportation. It needs time to stabilize."))
-		fail_invoke()
-		return
-
-	// --- Build destination list (filter by leyline proximity + cooldown) ---
-	var/list/potential_runes = list()
-	var/list/teleportnames = list()
-	for(var/obj/effect/decal/cleanable/roguerune/arcyne/teleport/teleport_rune as anything in GLOB.teleport_runes)
-		if(teleport_rune == src)
-			continue
-		var/obj/structure/leyline/dest_ley = teleport_rune.find_nearby_leyline()
-		if(!dest_ley)
-			continue
-		potential_runes[avoid_assoc_duplicate_keys(teleport_rune.listkey, teleportnames)] = teleport_rune
-
-	if(!length(potential_runes))
-		to_chat(user, span_warning("There are no valid leyline destinations. All destination matrices must be near a leyline."))
-		log_game("Teleport rune activated by [user] at [COORD(src)] failed - no valid destinations.")
-		fail_invoke()
-		return
-
-	// --- Select destination ---
-	var/input_rune_key = input(user, "Select a leyline destination", "Leyline Teleportation") as null|anything in potential_runes
-	if(isnull(input_rune_key))
-		return
-	if(isnull(potential_runes[input_rune_key]))
-		fail_invoke()
-		return
-	var/obj/effect/decal/cleanable/roguerune/arcyne/teleport/dest_rune = potential_runes[input_rune_key]
-	if(!Adjacent(user) || QDELETED(src) || !dest_rune)
-		fail_invoke()
-		return
-
-	// Re-validate after input (world state may have changed)
-	var/obj/structure/leyline/dest_leyline = dest_rune.find_nearby_leyline()
-	if(!dest_leyline)
-		to_chat(user, span_warning("The destination leyline is no longer available."))
-		fail_invoke()
-		return
-	if(source_leyline.on_teleport_cooldown())
-		to_chat(user, span_warning("The source leyline has gone on cooldown."))
-		fail_invoke()
-		return
-
-	var/turf/target = get_turf(dest_rune)
-	if(target.is_blocked_turf(TRUE))
-		to_chat(user, span_warning("The destination is blocked. Attempting to teleport there would be catastrophic."))
-		log_game("Teleport rune activated by [user] at [COORD(src)] failed - destination blocked.")
-		fail_invoke()
-		return
-
-	// --- Collect passengers (max TELEPORT_MAX_PASSENGERS total, max TELEPORT_MAX_NONMAGES non-arcyne) ---
-	var/list/mob/living/passengers = list()
-	var/non_arcyne_count = 0
-	var/non_arcyne_excluded = 0
-	passengers += user
-	if(!isarcyne(user))
-		non_arcyne_count++
-
-	for(var/mob/living/M in range(runesize, src))
-		if(M == user)
-			continue
-		if(M.stat != CONSCIOUS)
-			continue
-		if(length(passengers) >= TELEPORT_MAX_PASSENGERS)
-			break
-		if(!isarcyne(M))
-			if(non_arcyne_count >= TELEPORT_MAX_NONMAGES)
-				non_arcyne_excluded++
-				continue
-			non_arcyne_count++
-		passengers += M
-
-	if(non_arcyne_excluded)
-		to_chat(user, span_warning("The matrix can only carry [TELEPORT_MAX_NONMAGES] who lack arcyne knowledge. [non_arcyne_excluded] non-mage\s will be left behind."))
-
-	// --- Check energy (400 total per person, drained across 4 chant phases = 100 per phase) ---
-	var/energy_per_phase = 100
-	for(var/mob/living/P in passengers)
-		if(P.energy < energy_per_phase * 4)
-			to_chat(user, span_warning("[P == user ? "You do" : "[P] does"] not have enough energy for the teleportation."))
-			fail_invoke()
-			return
-
-	var/list/chant_lines = list(
-		"We breach the veil between the threads!",
-		"Iter per venas terrae!",
-		"The distance folds, the path is clear!",
-		"Nodus ad nodum, transimus!"
-	)
-
-	var/list/datum/beam/active_beams = list()
-	playsound(src, 'sound/magic/teleport_diss.ogg', 100, TRUE, 14)
-
-	for(var/phase in 1 to 4)
-		// All arcyne passengers chant — non-arcyne ridealong stays silent
-		for(var/mob/living/P in passengers)
-			if(isarcyne(P))
-				P.say(chant_lines[phase], language = /datum/language/common, ignore_spam = TRUE, forced = "leyline invocation")
-
-		// Beams: visually rune → passenger (origin.Beam draws FROM origin)
-		var/turf/rune_turf = get_turf(src)
-		for(var/mob/living/P in passengers)
-			active_beams += rune_turf.Beam(P, icon_state = "b_beam", time = 5 SECONDS, maxdistance = 10)
-
-		// Drain energy from all passengers
-		for(var/mob/living/P in passengers)
-			P.energy_add(-energy_per_phase)
-			to_chat(P, span_warning("The matrix draws upon your energy..."))
-
-		// 5 second channel — user must stay near the rune
-		if(!do_after(user, 5 SECONDS, target = src))
-			to_chat(user, span_warning("The ritual is interrupted! The leyline connection collapses."))
-			for(var/datum/beam/B in active_beams)
-				B.End()
-			fail_invoke()
-			return
-
-	// Clean up any remaining beams
-	for(var/datum/beam/B in active_beams)
-		B.End()
-
-	// --- Set cooldown on source leyline only (destination stays open to avoid griefing) ---
-	source_leyline.set_teleport_cooldown()
-
-	// --- Energy drain message ---
-	for(var/mob/living/P in passengers)
-		to_chat(P, span_cult("The matrix takes in your energy."))
-
-	// --- Teleport ---
-	invoke_cleanup()
-	var/movesuccess = FALSE
-	// Move non-user passengers first
-	for(var/mob/living/P in passengers)
-		if(P == user)
-			continue
-		if(do_teleport(P, target, channel = TELEPORT_CHANNEL_CULT))
-			movesuccess = TRUE
-
-	playsound(src, 'sound/magic/cosmic_expansion.ogg', 50, TRUE)
-	playsound(target, 'sound/magic/cosmic_expansion.ogg', 50, TRUE)
-
-	// Move user last
-	if(do_teleport(user, target, channel = TELEPORT_CHANNEL_CULT))
-		movesuccess = TRUE
-
-	if(movesuccess)
-		visible_message(span_warning("The leylines flare with blinding light as [length(passengers)] figure\s vanish into the threads!"), null, "<i>You hear a sharp crack and feel the air rush inward.</i>")
-		target.visible_message(span_warning("The leyline surges with energy as [length(passengers)] figure\s step from the light!"), null, "<i>You hear a boom of displaced air.</i>")
-	else
-		to_chat(user, span_warning("The leyline sputters. The teleportation fails."))
 
 // Summoning circles — draw near a leyline to trigger encounters.
 // Tier determines what creatures can be summoned from the leyline.

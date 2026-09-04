@@ -14,9 +14,19 @@ GLOBAL_LIST_INIT(threat_region_templates, list(
 	THREAT_REGION_ROCKHILL_BOG_SOUTH = /datum/threat_region/rockhill_bog_south,
 	THREAT_REGION_ROCKHILL_BOG_SUNKMIRE = /datum/threat_region/rockhill_bog_sunkmire,
 	THREAT_REGION_ROCKHILL_WOODS_NORTH = /datum/threat_region/rockhill_woods_north,
-	THREAT_REGION_ROCKHILL_WOODS_SOUTH = /datum/threat_region/rockhill_woods_south
-))
+	THREAT_REGION_ROCKHILL_WOODS_SOUTH = /datum/threat_region/rockhill_woods_south,
 
+	// Deserttown / Al-Ashur
+	THREAT_REGION_DESERT_NEAR = /datum/threat_region/desert_near,
+	THREAT_REGION_DESERT_DEEP = /datum/threat_region/desert_deep,
+	THREAT_REGION_AL_ASHUR_OASIS = /datum/threat_region/al_ashur_oasis,
+	THREAT_REGION_AL_ASHUR_CARAVAN_ROAD = /datum/threat_region/al_ashur_caravan_road,
+	THREAT_REGION_AL_ASHUR_SPICE_DUNES = /datum/threat_region/al_ashur_spice_dunes,
+	THREAT_REGION_AL_ASHUR_DEEP_DUNES = /datum/threat_region/al_ashur_deep_dunes,
+	THREAT_REGION_AL_ASHUR_SUNKEN_RUINS = /datum/threat_region/al_ashur_sunken_ruins,
+	THREAT_REGION_DESERTDARK = /datum/threat_region/desertdark,
+	THREAT_REGION_DESERTDARK_DEEP = /datum/threat_region/desertdark_deep
+))
 
 // Subsystem meant to handle regional threat level
 
@@ -31,6 +41,7 @@ SUBSYSTEM_DEF(regionthreat)
 /datum/controller/subsystem/regionthreat/fire(resumed)
 	var/player_count = GLOB.player_list.len
 	var/ishighpop = player_count >= LOWPOP_THRESHOLD
+
 	for(var/T in threat_regions)
 		var/datum/threat_region/TR = T
 		if(ishighpop)
@@ -43,30 +54,36 @@ SUBSYSTEM_DEF(regionthreat)
 		var/datum/threat_region/TR = T
 		if(TR.region_name == region_name)
 			return TR
+
 	return null
 
-/// Weighted pick of a region that allows the given quest type, weighted by fill ratio
-/// (latent_ambush / max_ambush). Regions with more relative threat are picked more often, so
-/// as adventurers clear a region its quest share naturally drops. Returns null if no region
-/// allows the type.
+/// Weighted pick of a region that allows the given quest type, weighted by fill ratio.
+/// Regions with more relative threat are picked more often, so as adventurers clear a
+/// region its quest share naturally drops. Returns null if no region allows the type.
 /datum/controller/subsystem/regionthreat/proc/pick_region_for_quest(quest_type)
 	var/list/weights = list()
+
 	for(var/T in threat_regions)
 		var/datum/threat_region/TR = T
 		if(!TR.allows_quest_type(quest_type))
 			continue
+
 		var/weight = TR.get_threat_weight()
 		if(weight <= 0)
 			continue
+
 		weights[TR] = weight
+
 	if(!length(weights))
 		// Fall back: any region that allows the type, ignoring fill ratio.
 		for(var/T in threat_regions)
 			var/datum/threat_region/TR = T
 			if(TR.allows_quest_type(quest_type))
 				weights[TR] = 1
+
 		if(!length(weights))
 			return null
+
 	return pickweight(weights)
 
 /datum/threat_region_display
@@ -74,24 +91,60 @@ SUBSYSTEM_DEF(regionthreat)
 	var/danger_level
 	var/danger_color
 	var/list/ic_description = list()
-	var/can_be_cleared = FALSE //TA EDIT
+	var/can_be_cleared = FALSE // TA EDIT
 
 /datum/controller/subsystem/regionthreat/proc/get_threat_regions_for_display()
 	var/list/threat_region_displays = list()
+
 	for(var/T in threat_regions)
 		var/datum/threat_region/TR = T
 		var/datum/threat_region_display/TRS = new /datum/threat_region_display
+
 		TRS.region_name = TR.region_name
 		TRS.danger_level = TR.get_danger_level()
 		TRS.danger_color = TR.get_danger_color()
 		TRS.ic_description = TR.get_ic_description()
-		if(TR.min_ambush == 0) //TA EDIT
-			TRS.can_be_cleared = TRUE //TA EDIT
+
+		if(TR.min_ambush == 0) // TA EDIT
+			TRS.can_be_cleared = TRUE // TA EDIT
+
 		threat_region_displays += TRS
+
 	return threat_region_displays
+
+/datum/controller/subsystem/regionthreat/proc/build_scout_region_rows()
+	var/list/blockade_by_threat_name = list()
+	for(var/datum/blockade/B as anything in GLOB.active_blockades)
+		if(B.threat_region_name)
+			blockade_by_threat_name[B.threat_region_name] = B
+	var/list/rows = list()
+	for(var/datum/threat_region/TR as anything in threat_regions)
+		var/list/row = list()
+		row["region_name"] = TR.region_name
+		row["danger_level"] = TR.get_danger_level()
+		row["danger_color"] = TR.get_danger_color()
+		row["ic_descriptions"] = TR.get_ic_description()
+		var/datum/blockade/B = blockade_by_threat_name[TR.region_name]
+		if(B)
+			var/datum/quest_faction/F = B.get_faction()
+			var/datum/economic_region/ER = B.get_region()
+			row["blockaded"] = TRUE
+			row["blockade_writ_out"] = B.has_active_scroll() ? TRUE : FALSE
+			row["blockade_faction_label"] = F ? "[F.group_word] of [F.name_plural]" : (B.faction_id || "")
+			row["blockade_region_label"] = ER ? ER.name : (B.region_id || "")
+			row["blockade_days_active"] = max(0, GLOB.dayspassed - B.day_started)
+		else
+			row["blockaded"] = FALSE
+			row["blockade_writ_out"] = FALSE
+			row["blockade_faction_label"] = ""
+			row["blockade_region_label"] = ""
+			row["blockade_days_active"] = 0
+		rows += list(row)
+	return rows
 
 /datum/controller/subsystem/regionthreat/proc/on_map_ready()
 	threat_regions = list()
+
 	var/datum/map_adjustment/template/map = SSmapping.map_adjustment
 	if(!map)
 		stack_trace("RegionThreat: map_adjustment missing in on_map_ready()")
@@ -106,6 +159,7 @@ SUBSYSTEM_DEF(regionthreat)
 		if(!path)
 			stack_trace("RegionThreat: Missing threat template for [region_name]")
 			continue
+
 		threat_regions += new path()
 
 	log_world("RegionThreat: Loaded [threat_regions.len] threat regions for [map.realm_name]")

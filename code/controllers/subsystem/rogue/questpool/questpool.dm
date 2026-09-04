@@ -16,7 +16,7 @@ SUBSYSTEM_DEF(questpool)
 	var/list/evergreen_count_by_region = list()
 	var/list/landmarks_by_type = list()
 
-/datum/controller/subsystem/questpool/Initialize()
+/datum/controller/subsystem/questpool/Initialize(mapload)
 	init_quest_factions()
 	for(var/obj/effect/landmark/quest_spawner/landmark as anything in GLOB.quest_landmarks_list)
 		register_landmark(landmark)
@@ -90,6 +90,18 @@ SUBSYSTEM_DEF(questpool)
 		if(!length(bucket))
 			landmarks_by_type -= qtype
 
+/datum/controller/subsystem/questpool/proc/has_landmark_for_region(type, region)
+	var/list/candidates = landmarks_by_type[type]
+	if(!length(candidates))
+		return FALSE
+	for(var/obj/effect/landmark/quest_spawner/landmark as anything in candidates)
+		if(QDELETED(landmark))
+			continue
+		if(region && landmark.region != region)
+			continue
+		return TRUE
+	return FALSE
+
 /// Sum of per-region kill targets across all regions.
 /datum/controller/subsystem/questpool/proc/total_kill_target()
 	var/pop = GLOB.player_list.len
@@ -105,7 +117,7 @@ SUBSYSTEM_DEF(questpool)
 	return evergreen_count_by_region[region_name] || 0
 
 /proc/is_kill_type(quest_type)
-	return quest_type == QUEST_KILL_EASY || quest_type == QUEST_CLEAR_OUT || quest_type == QUEST_RAID || quest_type == QUEST_BOUNTY || quest_type == QUEST_RECOVERY
+	return quest_type == QUEST_KILL_EASY || quest_type == QUEST_CLEAR_OUT || quest_type == QUEST_RAID || quest_type == QUEST_BOUNTY || quest_type == QUEST_RECOVERY || quest_type == QUEST_NOTORIOUS_BOUNTY
 
 /proc/is_evergreen_type(quest_type)
 	return quest_type == QUEST_COURIER || quest_type == QUEST_RETRIEVAL
@@ -181,13 +193,10 @@ SUBSYSTEM_DEF(questpool)
 	return pickweight(weights)
 
 /datum/controller/subsystem/questpool/proc/reroll_stale()
-	var/pool_cutoff = world.time - QUEST_POOL_STALE_THRESHOLD
-	var/player_cutoff = world.time - QUEST_PLAYER_STALE_THRESHOLD
 	var/list/stale = list()
 	var/kill_replacements_needed = 0
 	for(var/datum/quest/Q as anything in pool)
-		var/cutoff = (Q.source == QUEST_SOURCE_POOL) ? pool_cutoff : player_cutoff
-		if(Q.created_at >= cutoff)
+		if(Q.get_lapse_time() >= world.time)
 			continue
 		stale += Q
 		if(is_kill_type(Q.quest_type))
@@ -246,6 +255,7 @@ SUBSYSTEM_DEF(questpool)
 		if(!Q.materialize(landmark))
 			qdel(Q)
 			return null
+		Q.materialized = TRUE
 		var/obj/item/quest_writ/scroll = new(get_turf(innkeeper))
 		scroll.base_icon_state = Q.get_scroll_icon()
 		scroll.assigned_quest = Q
@@ -301,6 +311,7 @@ SUBSYSTEM_DEF(questpool)
 		if(!Q.materialize(landmark))
 			qdel(Q)
 			return null
+		Q.materialized = TRUE
 		var/obj/item/quest_writ/scroll = new(get_turf(steward))
 		scroll.base_icon_state = Q.get_scroll_icon()
 		scroll.assigned_quest = Q
@@ -342,9 +353,7 @@ SUBSYSTEM_DEF(questpool)
 	if(!Q.preview(landmark))
 		qdel(Q)
 		return null
-	// Reward scales with the region's TP multiplier — far/dangerous regions print more for
-	// the same Steward draft cost. The mob count itself stays at the fixed wave budgets.
-	Q.reward_amount = round(BLOCKADE_SCROLL_REWARD * TR.tp_budget_multiplier)
+	Q.reward_amount = BLOCKADE_SCROLL_REWARD + TR.blockade_travel_fee
 	Q.funding_fund = source_fund
 	Q.funding_cost = cost
 	Q.issued_at = world.time
@@ -356,25 +365,68 @@ SUBSYSTEM_DEF(questpool)
 	scroll.update_quest_text()
 	steward.put_in_hands(scroll)
 	B.active_scroll_ref = WEAKREF(scroll)
+	B.active_quest_ref = WEAKREF(Q)
 	record_round_statistic(STATS_CONTRACTS_GENERATED)
 	log_event("generate", "blockade-defense in-hand for [ER.name] (faction [Q.faction_id], reward [Q.reward_amount])")
 	return Q
 
-/datum/controller/subsystem/questpool/proc/issue_towner_quest(type, mob/living/carbon/human/poster, posting_tier = TOWNER_POSTING_TIER_HARD)
+/// Hoard Recovery: a writ against a region's brigands to reclaim the banditry hoard.
+/// No /datum/blockade is involved - the writ binds to the threat region alone, so
+/// hoard-bearing regions without an economic region (Terrorbog) work. Raised either by a
+/// fellowship's own pledge (is_commission = FALSE, fellowship-gated at issue) or drafted
+/// by the Steward like any defense writ (is_commission = TRUE, fellowship-gated only when
+/// pinned to the ledger). source_fund/cost feed the standard recall-refund machinery.
+/datum/controller/subsystem/questpool/proc/issue_hoard_recovery_request(datum/threat_region/TR, mob/living/carbon/human/requester, datum/fund/source_fund, cost = 0, is_commission = FALSE)
+	if(!TR || !requester)
+		return null
+	var/fid = SSeconomy.pick_blockade_faction_for(TR)
+	if(!fid)
+		return null
+	var/datum/quest/kill/blockade_defense/hoard_recovery/Q = new()
+	Q.faction_id = fid
+	Q.quest_difficulty = QUEST_DIFFICULTY_HARD
+	Q.source = QUEST_SOURCE_BLOCKADE
+	Q.created_at = world.time
+	Q.issued_day = GLOB.dayspassed
+	Q.quest_giver_name = requester.real_name
+	Q.deposit_amount = 0
+	Q.reward_amount = BLOCKADE_SCROLL_REWARD + TR.blockade_travel_fee
+	Q.required_fellowship_size = is_commission ? 0 : BLOCKADE_FELLOWSHIP_REQUIREMENT
+	Q.funding_fund = source_fund
+	Q.funding_cost = cost
+	var/obj/effect/landmark/quest_spawner/landmark = find_quest_landmark(QUEST_BLOCKADE_DEFENSE, TR.region_name, Q)
+	if(!landmark)
+		qdel(Q)
+		return null
+	if(!Q.preview(landmark))
+		qdel(Q)
+		return null
+	Q.issued_at = world.time
+	var/obj/item/quest_writ/blockade/scroll = new(get_turf(requester))
+	scroll.base_icon_state = Q.get_scroll_icon()
+	scroll.assigned_quest = Q
+	Q.quest_scroll = scroll
+	Q.quest_scroll_ref = WEAKREF(scroll)
+	scroll.update_quest_text()
+	requester.put_in_hands(scroll)
+	TR.active_hoard_recovery_ref = WEAKREF(Q)
+	record_round_statistic(STATS_CONTRACTS_GENERATED)
+	log_event("generate", "hoard-recovery [is_commission ? "commission" : "request"] in-hand for [TR.region_name] (faction [Q.faction_id], hoard [TR.banditry_hoard])")
+	return Q
+
+/datum/controller/subsystem/questpool/proc/issue_towner_quest(type, mob/living/carbon/human/poster, posting_tier = TOWNER_POSTING_TIER_MEDIUM, to_hand = FALSE, loadout_variety = null)
 	if(!type || !poster)
 		return null
 	var/datum/quest/Q = instantiate_quest_of_type(type)
 	if(!Q)
 		return null
-	if(istype(Q, /datum/quest/kill/recovery/towner_smith_caravan))
-		var/datum/quest/kill/recovery/towner_smith_caravan/SQ = Q
-		SQ.posting_tier = posting_tier
-	else if(istype(Q, /datum/quest/kill/towner_miner_orevein))
-		var/datum/quest/kill/towner_miner_orevein/MQ = Q
-		MQ.posting_tier = posting_tier
-	else
+	if(!istype(Q, /datum/quest/kill/recovery/towner))
 		qdel(Q)
 		return null
+	var/datum/quest/kill/recovery/towner/TQ = Q
+	TQ.posting_tier = posting_tier
+	TQ.loadout_variety = loadout_variety
+	Q.quest_difficulty = GLOB.towner_tier_difficulties[posting_tier] || QUEST_DIFFICULTY_EASY
 	Q.source = QUEST_SOURCE_TOWNER
 	Q.created_at = world.time
 	Q.issued_day = GLOB.dayspassed
@@ -393,10 +445,20 @@ SUBSYSTEM_DEF(questpool)
 	var/turf/landmark_turf = get_turf(landmark)
 	var/turf/origin = get_nearest_ledger_turf(landmark_turf) || landmark_turf
 	Q.reward_amount = Q.calculate_reward(origin, landmark_turf)
-	pool += Q
-	adjust_region_count(Q, 1)
+	if(to_hand)
+		var/scroll_type = Q.get_scroll_type()
+		var/obj/item/quest_writ/scroll = new scroll_type(get_turf(poster))
+		scroll.base_icon_state = Q.get_scroll_icon()
+		scroll.assigned_quest = Q
+		Q.quest_scroll = scroll
+		Q.quest_scroll_ref = WEAKREF(scroll)
+		scroll.update_quest_text()
+		poster.put_in_hands(scroll)
+	else
+		pool += Q
+		adjust_region_count(Q, 1)
 	record_round_statistic(STATS_CONTRACTS_GENERATED)
-	log_event("generate", "towner-pool [Q.quest_difficulty] [type] at [Q.target_spawn_area || "unknown"] (poster [poster.real_name], tier [posting_tier], reward [Q.reward_amount])")
+	log_event("generate", "towner-[to_hand ? "hand" : "pool"] [Q.quest_difficulty] [type] at [Q.target_spawn_area || "unknown"] (poster [poster.real_name], tier [posting_tier], variety [TQ.effective_variety() || "none"], reward [Q.reward_amount])")
 	return Q
 
 /datum/controller/subsystem/questpool/proc/generate_one(type, datum/threat_region/preferred_region, is_replacement = FALSE)
@@ -405,7 +467,7 @@ SUBSYSTEM_DEF(questpool)
 		return null
 	Q.quest_difficulty = difficulty_for_type(type)
 	Q.source = QUEST_SOURCE_POOL
-	Q.created_at = world.time
+	Q.created_at = world.time + rand(0, QUEST_POOL_STALE_JITTER)
 	Q.issued_day = GLOB.dayspassed
 	Q.deposit_amount = Q.calculate_deposit()
 	// If caller didn't specify a region, pick one weighted by threat (kill) or any eligible (evergreen).
@@ -442,6 +504,8 @@ SUBSYSTEM_DEF(questpool)
 			return QUEST_DIFFICULTY_MEDIUM
 		if(QUEST_RAID, QUEST_BOUNTY)
 			return QUEST_DIFFICULTY_HARD
+		if(QUEST_NOTORIOUS_BOUNTY)
+			return QUEST_DIFFICULTY_NOTORIOUS
 	return QUEST_DIFFICULTY_EASY
 
 /datum/controller/subsystem/questpool/proc/instantiate_quest_of_type(type)
@@ -458,14 +522,18 @@ SUBSYSTEM_DEF(questpool)
 			return new /datum/quest/kill/raid()
 		if(QUEST_BOUNTY)
 			return new /datum/quest/kill/bounty()
+		if(QUEST_NOTORIOUS_BOUNTY)
+			return new /datum/quest/kill/notorious_bounty()
 		if(QUEST_RECOVERY)
 			return new /datum/quest/kill/recovery()
 		if(QUEST_BLOCKADE_DEFENSE)
 			return new /datum/quest/kill/blockade_defense()
+		if(QUEST_HOARD_RECOVERY)
+			return new /datum/quest/kill/blockade_defense/hoard_recovery()
 		if(QUEST_TOWNER_SMITH_CARAVAN)
-			return new /datum/quest/kill/recovery/towner_smith_caravan()
+			return new /datum/quest/kill/recovery/towner/smith_caravan()
 		if(QUEST_TOWNER_MINER_OREVEIN)
-			return new /datum/quest/kill/towner_miner_orevein()
+			return new /datum/quest/kill/recovery/towner/miner_orevein()
 	return null
 
 /datum/controller/subsystem/questpool/proc/claim(datum/quest/Q, mob/user)
@@ -485,6 +553,7 @@ SUBSYSTEM_DEF(questpool)
 			adjust_region_count(Q, 1)
 		log_event("claim_failed", "materialize failed for [Q.quest_difficulty] [Q.quest_type]")
 		return FALSE
+	Q.materialized = TRUE
 	Q.on_claim(user)
 	record_round_statistic(STATS_CONTRACTS_TAKEN)
 	switch(Q.source)

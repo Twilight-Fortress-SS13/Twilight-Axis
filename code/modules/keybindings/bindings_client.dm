@@ -36,11 +36,6 @@
 		qdel(src)
 		return
 
-	//Focus Chat failsafe. Overrides movement checks to prevent WASD.
-	if(!prefs.hotkeys && length(_key) == 1 && _key != "Alt" && _key != "Ctrl" && _key != "Shift")
-		winset(src, null, "input.focus=true ; input.text=[url_encode(_key)]")
-		return
-
 	if(length(keys_held) > MAX_HELD_KEYS)
 		keys_held.Cut(1,2)
 	keys_held[_key] = TRUE
@@ -123,12 +118,6 @@
 	mob.focus?.key_up(_key, src)
 	mob.update_mouse_pointer()
 
-// Called every game tick
-/client/keyLoop()
-	holder?.keyLoop(src)
-	if(mob)
-		mob.focus?.keyLoop(src)
-
 /client/verb/activeInput()
 	set hidden = 1
 	if(isliving(mob))
@@ -136,6 +125,3 @@
 		if(L.stat)
 			return
 		mob.display_typing_indicator()
-
-/client/verb/disableInput()
-	set hidden = 1

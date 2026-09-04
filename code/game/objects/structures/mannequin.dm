@@ -103,7 +103,7 @@
 	update_icon()
 
 /obj/structure/mannequin/attack_hand(mob/living/user)
-	if(user.a_intent.name == "punch")
+	if(istype(user.a_intent, /datum/intent/unarmed/punch))
 		if(!tipped_over)
 			TipOver()
 			return
@@ -116,9 +116,6 @@
 		user.start_pulling(src)
 		return
 	tryEquip(user)
-
-/obj/structure/mannequin/attack_paw(mob/user)
-	return attack_hand(user)
 
 /*
 * Taken from paperbin code. Its a bit immersion breaking
@@ -204,6 +201,7 @@
 	. += "<BR><B>Armor:</B> <A href='byond://?src=[REF(src)];command=item_placement;item_slot=[BODY_ZONE_CHEST]'>[makeStrippingButton(clothing[SLOT_MANNEQUIN_ARMOR])]</A>"
 	. += "<BR><B>Shirt:</B> <A href='byond://?src=[REF(src)];command=item_placement;item_slot=[BODY_ZONE_PRECISE_STOMACH]'>[makeStrippingButton(clothing[SLOT_MANNEQUIN_SHIRT])]</A>"
 	. += "<BR><B>Belt:</B> <A href='byond://?src=[REF(src)];command=item_placement;item_slot=[BODY_ZONE_PRECISE_GROIN]'>[makeStrippingButton(clothing[SLOT_MANNEQUIN_BELT])]</A>"
+	. += "<BR><B>Pants:</B> <A href='byond://?src=[REF(src)];command=item_placement;item_slot=[SLOT_MANNEQUIN_PANTS]'>[makeStrippingButton(clothing[SLOT_MANNEQUIN_PANTS])]</A>" //No direct slot to equip.
 	. += "<BR><B>Ring:</B> <A href='byond://?src=[REF(src)];command=item_placement;item_slot=[SLOT_MANNEQUIN_RING]'>[makeStrippingButton(clothing[SLOT_MANNEQUIN_RING])]</A>" //No direct slot to equip.
 
 /obj/structure/mannequin/attackby(obj/item/I, mob/user)
@@ -516,7 +514,7 @@
 		var/icon/blood_overlay = bloody_layer[used]
 		if(!blood_overlay)
 			blood_overlay = icon(I.sleeved, used)
-			blood_overlay.Blend("#fff", ICON_ADD) 			//fills the icon_state with white (except where it's transparent)
+			blood_overlay.Blend("#fff", ICON_ADD)			//fills the icon_state with white (except where it's transparent)
 			blood_overlay.Blend(icon(I.bloody_icon, I.bloody_icon_state), ICON_MULTIPLY) //adds blood and the remaining white areas become transparant
 			bloody_layer[used] = fcopy_rsc(blood_overlay)
 		var/mutable_appearance/pic = mutable_appearance(blood_overlay, layer=-layer_used)

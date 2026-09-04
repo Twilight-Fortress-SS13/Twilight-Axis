@@ -139,13 +139,24 @@
 		dest = src.loc
 	if(!dest)
 		return
+	var/climb_dir = get_dir(climber_turf, dest) // TA EDIT START
+	for(var/obj/structure/fluff/railing/fence/F in climber_turf)
+		if(F.dir == climb_dir)
+			if(ismob(A))
+				to_chat(A, span_warning("Something is blocking the way."))
+			return
+	for(var/obj/structure/fluff/railing/fence/blocking_fence in dest)
+		if(blocking_fence.dir == get_dir(dest, climber_turf))
+			if(ismob(A))
+				to_chat(A, span_warning("Something is blocking the way."))
+			return // TA EDIT END
 	if(dest.is_blocked_turf(source_atom = A))
 		if(ismob(A))
 			to_chat(A, span_warning("Something is blocking the way."))
 		return
 	. = A.forceMove(dest)
 
-/obj/structure/fluff/railing/Initialize()
+/obj/structure/fluff/railing/Initialize(mapload)
 	. = ..()
 	init_connect_loc_element()
 	var/lay = getwlayer(dir)
@@ -298,7 +309,7 @@
 	pass_crawl = FALSE
 	climb_offset = 6
 
-/obj/structure/fluff/railing/fence/Initialize()
+/obj/structure/fluff/railing/fence/Initialize(mapload)
 	. = ..()
 	smooth_fences()
 
@@ -343,9 +354,10 @@
 	icon = 'icons/roguetown/misc/structure.dmi'
 	icon_state = "bars"
 	density = TRUE
+	climbable = FALSE // TA EDIT
 	anchored = TRUE
 	blade_dulling = DULLING_BASHCHOP
-	max_integrity = 700
+	max_integrity = 1400
 	damage_deflection = 12
 	integrity_failure = 0.15
 	dir = SOUTH
@@ -379,7 +391,7 @@
 
 /obj/structure/bars/steel
 	name = "steel bars"
-	max_integrity = 2000
+	max_integrity = 2500
 
 /obj/structure/bars/tough
 	max_integrity = 9000
@@ -395,7 +407,10 @@
 	..()
 */
 /obj/structure/bars/obj_break(damage_flag)
-	icon_state = "[initial(icon_state)]b"
+	if(isnull(broken_icon_state))
+		icon_state = "[initial(icon_state)]b"
+	else
+		icon_state = broken_icon_state
 	density = FALSE
 	..()
 
@@ -406,12 +421,24 @@
 	icon_state = "passage0"
 	desc = "This looks like it can open and close!"
 	density = TRUE
-	max_integrity = 1500
+	max_integrity = 2000
 	redstone_structure = TRUE
+	broken_icon_state = "passage1b"
+
+/obj/structure/bars/passage/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Most gates are traditionally linked to a lever or winch. Left-clicking the right lever or winch will open the gate that they're connected to.")
+	. += span_info("A skilled Engineer could use a wrench to link this to a device.")
+	. += span_info("The Master of the Guild of Craft can unlink devices from each other by using their special wrench.")
+	. += span_info("While a length process, gates can also be bypassed through destroying them with enough strikes. Bombs of blastpowder in particular excel at damaging these structures.")
 
 /obj/structure/bars/passage/steel
 	name = "steel bars"
-	max_integrity = 2000
+	max_integrity = 2500
+
+/obj/structure/bars/passage/obj_break(damage_flag) // TA EDIT START
+	. = ..()
+	icon_state = "passage1b" // TA EDIT END
 
 /obj/structure/bars/passage/redstone_triggered()
 	if(obj_broken)
@@ -435,11 +462,11 @@
 	if(density)
 		icon_state = "shutter1"
 		density = FALSE
-		opacity = FALSE
+		set_opacity(FALSE)
 	else
 		icon_state = "shutter0"
 		density = TRUE
-		opacity = TRUE
+		set_opacity(TRUE)
 
 /obj/structure/bars/passage/shutter/open
 	icon_state = "shutter1"
@@ -457,7 +484,7 @@
 		user.visible_message("<span class='info'>[user] Carves a name into the passage.</span>")
 		if(do_after(user, 10))
 			var/passagename
-			passagename = input("What name would you like to carve into the passage?")
+			passagename = sanitize(input(user, "What name would you like to carve into the passage?"))
 			if (passagename)
 				name = passagename + "(passage)"
 				desc = "a passage with a name carved into it"
@@ -474,7 +501,7 @@
 	desc = ""
 	icon_state = "floorgrille"
 	density = FALSE
-	layer = TABLE_LAYER
+	//layer = TABLE_LAYER
 	plane = GAME_PLANE
 	damage_deflection = 5
 	blade_dulling = DULLING_BASHCHOP
@@ -483,14 +510,19 @@
 	var/togg = FALSE
 	redstone_structure = TRUE
 
-/obj/structure/bars/grille/Initialize()
+/obj/structure/bars/grille/Initialize(mapload)
 	AddComponent(/datum/component/squeak, list('sound/foley/footsteps/FTMET_A1.ogg','sound/foley/footsteps/FTMET_A2.ogg','sound/foley/footsteps/FTMET_A3.ogg','sound/foley/footsteps/FTMET_A4.ogg'), 40)
 	dir = pick(GLOB.cardinals)
 	return ..()
 
 /obj/structure/bars/grille/obj_break(damage_flag)
+	set_is_platform(FALSE) // TA EDIT
 	obj_flags = CAN_BE_HIT
 	..()
+	var/turf/T = loc // TA EDIT START
+	if(istype(T))
+		for(var/mob/living/M in loc)
+			T.Entered(M) // TA EDIT END
 
 /obj/structure/bars/grille/redstone_triggered()
 	if(obj_broken)
@@ -501,7 +533,8 @@
 	if(togg)
 
 		icon_state = "floorgrilleopen"
-		obj_flags = CAN_BE_HIT
+		set_is_platform(FALSE)
+		obj_flags &= ~BLOCK_Z_IN_UP
 		var/turf/T = loc
 		if(istype(T))
 			for(var/mob/living/M in loc)
@@ -509,7 +542,8 @@
 	else
 
 		icon_state = "floorgrille"
-		obj_flags = CAN_BE_HIT | BLOCK_Z_OUT_DOWN | BLOCK_Z_IN_UP
+		set_is_platform(TRUE)
+		obj_flags |= BLOCK_Z_IN_UP
 
 /obj/structure/bars/grille/attackby(obj/item/I, mob/user, params)
 	. = ..()
@@ -522,7 +556,7 @@
 		user.visible_message("<span class='info'>[user] Carves a name into the grille.</span>")
 		if(do_after(user, 10))
 			var/grillename
-			grillename = input("What name would you like to carve into the grille?")
+			grillename = sanitize(input(user, "What name would you like to carve into the grille?"))
 			if (grillename)
 				name = grillename + "(grille)"
 				desc = "a grille with a name carved into it"
@@ -574,7 +608,7 @@
 	var/datum/looping_sound/clockloop/soundloop
 	drag_slowdown = 3
 
-/obj/structure/fluff/clock/Initialize()
+/obj/structure/fluff/clock/Initialize(mapload)
 	soundloop = new(src, FALSE)
 	soundloop.start()
 	. = ..()
@@ -593,24 +627,15 @@
 	attacked_sound = list('sound/combat/hits/onwood/woodimpact (1).ogg','sound/combat/hits/onwood/woodimpact (2).ogg')
 	..()
 
-/obj/structure/fluff/clock/attack_right(mob/user)
-	if(user.mind && isliving(user))
-		if(user.mind.special_items && user.mind.special_items.len)
-			var/item = input(user, "What will I take?", "STASH") as null|anything in user.mind.special_items
-			if(item)
-				if(user.Adjacent(src))
-					if(user.mind.special_items[item])
-						var/path2item = user.mind.special_items[item]
-						user.mind.special_items -= item
-						var/obj/item/I = new path2item(user.loc)
-						user.put_in_hands(I)
-			return
+/obj/structure/fluff/clock/attack_right(mob/user) // TA EDIT START
+	handle_special_items_retrieval(user, src)
+	return // TA EDIT END
 
 /obj/structure/fluff/clock/examine(mob/user)
 	. = ..()
 	if(obj_broken)
 		return
-	var/day = lowertext(get_current_day_of_week_name())
+	var/day = LOWER_TEXT(get_current_day_of_week_name())
 	. += "Oh no, it's [station_time_timestamp("hh:mm")] on a [day]"
 //		if(SSshuttle.emergency.mode == SHUTTLE_DOCKED)
 //			if(SSshuttle.emergency.timeLeft() < 30 MINUTES)
@@ -649,18 +674,9 @@
 	attacked_sound = 'sound/combat/hits/onglass/glasshit.ogg'
 	pixel_y = 32
 
-/obj/structure/fluff/wallclock/attack_right(mob/user)
-	if(user.mind && isliving(user))
-		if(user.mind.special_items && user.mind.special_items.len)
-			var/item = input(user, "What will I take?", "STASH") as null|anything in user.mind.special_items
-			if(item)
-				if(user.Adjacent(src))
-					if(user.mind.special_items[item])
-						var/path2item = user.mind.special_items[item]
-						user.mind.special_items -= item
-						var/obj/item/I = new path2item(user.loc)
-						user.put_in_hands(I)
-			return
+/obj/structure/fluff/wallclock/attack_right(mob/user) // TA EDIT START
+	handle_special_items_retrieval(user, src)
+	return // TA EDIT END
 
 /obj/structure/fluff/wallclock/Destroy()
 	if(soundloop)
@@ -671,10 +687,10 @@
 	. = ..()
 	if(obj_broken)
 		return
-	var/day = lowertext(get_current_day_of_week_name())
+	var/day = LOWER_TEXT(get_current_day_of_week_name())
 	. += "Oh no, it's [station_time_timestamp("hh:mm")] on a [day]"
 
-/obj/structure/fluff/wallclock/Initialize()
+/obj/structure/fluff/wallclock/Initialize(mapload)
 	soundloop = new(src, FALSE)
 	soundloop.start()
 	. = ..()
@@ -729,10 +745,11 @@
 
 /obj/structure/fluff/signage/examine(mob/user)
 	. = ..()
+	var/realm_name = SSmapping.map_adjustment.realm_name //TA EDIT таблички теперь корректно работают на всех картах
 	if(!user.is_literate())
 		. += "I have no idea what it says."
 	else
-		. += "It says \"Twilight Axis\""
+		. += "It says \"[realm_name]\""
 
 /obj/structure/fluff/sign
 	icon_state = "signwrote"
@@ -852,7 +869,7 @@
 	. = ..()
 	. += span_info("Right-click to access your personal stash. This not only contains the loadout you might've asseembled in the character creation menu, but virtue- and role-specific items as well.")
 
-/obj/structure/fluff/statue/Initialize()
+/obj/structure/fluff/statue/Initialize(mapload)
 	. = ..()
 	var/static/list/loc_connections = list(COMSIG_ATOM_EXIT = PROC_REF(on_exit))
 	AddElement(/datum/element/connect_loc, loc_connections)
@@ -861,18 +878,8 @@
 	dirin = turn(dirin, 180)
 	. = ..()
 
-/obj/structure/fluff/statue/attack_right(mob/user)
-	if(user.mind && isliving(user))
-		if(user.mind.special_items && user.mind.special_items.len)
-			var/item = input(user, "What will I take?", "STASH") as null|anything in user.mind.special_items
-			if(item)
-				if(user.Adjacent(src))
-					if(user.mind.special_items[item])
-						var/path2item = user.mind.special_items[item]
-						user.mind.special_items -= item
-						var/obj/item/I = new path2item(user.loc)
-						user.put_in_hands(I)
-			return
+/obj/structure/fluff/statue/attack_right(mob/user) // TA EDIT
+	handle_special_items_retrieval(user, src)// TA EDIT
 
 /obj/structure/fluff/statue/CanPass(atom/movable/mover, turf/target)
 	if(get_dir(loc, mover) == dir)
@@ -1044,7 +1051,7 @@
 		return
 	practice(user, attacking_weapon.associated_skill, user.used_intent.animname)
 
-/obj/structure/fluff/statue/tdummy/proc/practice(var/mob/living/living_mob, var/associated_skill, var/attack_animation)
+/obj/structure/fluff/statue/tdummy/proc/practice(mob/living/living_mob, associated_skill, attack_animation)
 	living_mob.changeNext_move(CLICK_CD_MELEE)
 	living_mob.stamina_add(rand(4, 6))
 
@@ -1110,7 +1117,7 @@
 		/obj/item/candle/candlestick/gold,
 		/obj/item/kitchen/fork/silver,
 		/obj/item/kitchen/fork/gold,
-        /obj/item/kitchen/spoon/silver,
+		/obj/item/kitchen/spoon/silver,
 		/obj/item/kitchen/spoon/gold,
 		/obj/item/roguestatue,
 		/obj/item/riddleofsteel,
@@ -1123,9 +1130,14 @@
 		/obj/item/scomstone,
 		/obj/item/rogueweapon/greatsword/psygsword,
 		/obj/item/clothing/head/roguetown/circlet,
-		/obj/item/carvedgem,  //Some of these aren't particularly worth much, but it'd be REALLY unintuitive for "valuables" to not actually be offerings
-		/obj/item/rogueweapon/huntingknife/stoneknife/kukri,
-		/obj/item/rogueweapon/huntingknife/stoneknife/opalknife,
+		/obj/item/carvedgem,	//Some of these aren't particularly worth much, but it'd be REALLY unintuitive for "valuables" to not actually be offerings
+		/obj/item/rogueweapon/huntingknife/combat/jadekukri,
+		/obj/item/rogueweapon/huntingknife/combat/opalknife,
+		/obj/item/rogueweapon/spear/turq,
+		/obj/item/rogueweapon/stoneaxe/battle/coral,
+		/obj/item/rogueweapon/sword/amber,
+		/obj/item/rogueweapon/sword/short/messer/onyxa,
+		/obj/item/rogueweapon/huntingknife/idagger/steel/rondel/rose,
 		/obj/item/rogueweapon/mace/cudgel/shellrungu,
 		/obj/item/clothing/mask/rogue/facemask/carved,
 		/obj/item/clothing/neck/roguetown/carved,
@@ -1154,7 +1166,7 @@
 					proceed_with_offer = TRUE
 					break
 			if(proceed_with_offer)
-				if(W.sellprice <= 0)
+				if(W.get_real_price() <= 0)
 					to_chat(user, span_warning("This item is worthless."))
 					return
 				playsound(loc,'sound/items/carvty.ogg', 50, TRUE)
@@ -1203,11 +1215,11 @@
 	if(user.mind.assigned_role == "Bishop")
 		. += span_info("As the Bishop, you can marry two people by having them both bite an apple, then offering it to the cross.")
 		. += span_info("The second person to bite the apple will take the last name of whoever bit it first.")
-	else if(istype(living_user) && HAS_TRAIT(living_user, TRAIT_MARRIAGE_CAPABLE) && (living_user.patron.type == /datum/patron/divine/eora))
+	else if(istype(living_user) && HAS_TRAIT(living_user, TRAIT_MARRIAGE_CAPABLE))
 		. += span_info("As an Eoran, you can marry two people by having them both bite an apple, then offering it to the cross.")
 		. += span_info("The second person to bite the apple will take the last name of whoever bit it first.")
 
-/obj/structure/fluff/psycross/Initialize()
+/obj/structure/fluff/psycross/Initialize(mapload)
 	. = ..()
 	become_hearing_sensitive()
 	var/static/list/loc_connections = list(COMSIG_ATOM_EXIT = PROC_REF(on_exit))
@@ -1309,14 +1321,14 @@
 
 /obj/structure/fluff/psycross/zizocross/stone
 	name = "stone inverted cross"
-	desc = "An unholy symbol, the knowledge that something so sturdy was able to be put up in reverence of the dark star, completely unattended... is a difficult anchovy to swallow for many."
+	desc = "An unholy symbol. The knowledge that something so sturdy was able to be put up in reverence of the archlych, completely unattended, is a difficult anchovy to swallow for many."
 	icon_state = "cross_zizo_r"
 	divine = FALSE
 	max_integrity = 200
 
 /obj/structure/fluff/psycross/zizocross/golden
 	name = "golden inverted cross"
-	desc = "An unholy symbol meticilously plated with leaf gold. It stands in defiance to order. The dead will rise."
+	desc = "An unholy symbol meticulously plated with leaf gold. It stands in defiance to order. The dead will rise."
 	icon_state = "cross_zizo_u"
 	divine = FALSE
 	max_integrity = 350
@@ -1367,7 +1379,7 @@
 	if(user.mind)
 		var/mob/living/living_user = user
 		// if there's no bishop inround, you can still get married... as long as there's an eoran. heretics can do it too!
-		if((user.mind.assigned_role == "Bishop") || (istype(living_user) && HAS_TRAIT(living_user, TRAIT_MARRIAGE_CAPABLE) && (living_user.patron.type == /datum/patron/divine/eora)))
+		if(HAS_TRAIT(living_user, TRAIT_MARRIAGE_CAPABLE))
 			if(istype(W, /obj/item/reagent_containers/food/snacks/grown/apple))
 				var/obj/item/reagent_containers/food/snacks/grown/apple/A = W
 				//The MARRIAGE TEST BEGINS
@@ -1377,54 +1389,54 @@
 					var/mob/living/carbon/human/thebride
 					for(var/mob/M in viewers(src, 7))
 						// You cannot marry an animal, a corpse, a brainless mob, or someone who is already married.
-						if(!ishuman(M)) 
+						if(!ishuman(M))
 							continue
 						var/mob/living/carbon/human/C = M
 
 						if(C.stat == DEAD || !C.client || C.marriedto)
 							continue
-						
+
 						if(C.real_name == A.bitten_names[1])
 							thegroom = C
 						if(C.real_name == A.bitten_names[2])
 							thebride = C
-					
+
 					if(!thegroom || !thebride)
 						to_chat(user, span_warn("nonexistent"))
 						return
-					
+
 					// Astounding update: marriage now requires consent (it didn't before)
 					var/groom_confirm = input(thegroom, "Do you want to marry [thebride]?") as null|anything in list("Yes", "No")
 					if(groom_confirm != "Yes")
 						to_chat(user, span_warning("The groom has declined the marriage!"))
 						return ..()
-					
+
 					var/bride_confirm = input(thebride, "Do you want to marry [thegroom]?") as null|anything in list("Yes", "No")
 					if(bride_confirm != "Yes")
 						to_chat(user, span_warning("The bride has declined the marriage!"))
 						return ..()
-					
+
 					// Horrible terrible last name necromancy (sometimes works)
 					var/groom_index = findtext(thegroom.real_name, " ")
 					var/bride_index = findtext(thebride.real_name, " ")
 					var/bride_firstname = bride_index ? copytext(thebride.real_name, 1, bride_index) : thebride.real_name
-					
+
 					// Get groom's surname
 					var/groom_surname = copytext(thegroom.real_name, groom_index + 1)
 					if(!groom_index)
 						groom_surname = null
 					else if(findtext(thegroom.real_name, " of ") || findtext(thegroom.real_name, " the "))
 						groom_surname = null
-					
+
 					var/final_bride_name
 					// Ask bride if she wants to take the groom's surname
 					if(groom_surname != null)
 						var/bride_surname_choice = input(thebride, "Do you want to take [thegroom]'s surname? (Your new name will be [bride_firstname] [groom_surname])") as null|anything in list("Yes", "No")
 						final_bride_name = (bride_surname_choice == "Yes") ? (bride_firstname + " " + groom_surname) : thebride.real_name
-					
+
 					// Apply the changes
 					thebride.change_name(final_bride_name)
-			
+
 					thegroom.marriedto = thebride.real_name
 					thebride.marriedto = thegroom.real_name
 
@@ -1465,6 +1477,56 @@
 	if(M.flash_act())
 		var/diff = power - M.confused
 		M.confused += min(power, diff)
+
+/obj/structure/fluff/psycross/proc/summon_martyr_weapon_tgui(mob/user)
+	if(!user.mind)
+		return
+
+	var/list/weapon_choices = list(
+		"Sword" = CALLBACK(src, PROC_REF(summon_and_equip), user, /obj/item/rogueweapon/sword/long/martyr),
+		"Axe" = CALLBACK(src, PROC_REF(summon_and_equip), user, /obj/item/rogueweapon/greataxe/steel/doublehead/martyr),
+		"Mace" = CALLBACK(src, PROC_REF(summon_and_equip), user, /obj/item/rogueweapon/mace/goden/martyr),
+		"Trident" = CALLBACK(src, PROC_REF(summon_and_equip), user, /obj/item/rogueweapon/spear/partizan/martyr)
+	)
+
+	var/result = tgui_input_list(user, "Choose a martyr weapon to summon:", "Martyr Weapon", weapon_choices)
+
+	if(result && weapon_choices[result])
+		var/datum/callback/selected_callback = weapon_choices[result]
+		selected_callback.Invoke()
+	else
+		to_chat(user, span_warning("No weapon was chosen."))
+
+/obj/structure/fluff/psycross/proc/summon_and_equip(mob/user, obj/item/rogueweapon/weapontype)
+	var/obj/item/rogueweapon/old_weapon = SSroguemachine.martyrweapon
+	var/integrity
+
+	if(old_weapon)
+		integrity = old_weapon.obj_integrity
+		old_weapon.visible_message(span_danger("[old_weapon] dissolves into mere dust, and flitters away - unbound."))
+		SSroguemachine.martyrweapon = null
+		qdel(old_weapon)
+
+	var/obj/item/rogueweapon/new_weapon = new weapontype(src.loc)
+	new_weapon.obj_integrity = integrity
+	SSroguemachine.martyrweapon = new_weapon
+
+	if(user.put_in_hands(new_weapon))
+		to_chat(user, span_notice("[new_weapon] appears in your hand."))
+	else
+		to_chat(user, span_warning("Your hands are full! [new_weapon] falls to your feet."))
+
+	return new_weapon
+
+/obj/structure/fluff/psycross/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
+	if(user.job != "Martyr")
+		return
+	if((HAS_TRAIT(user, TRAIT_NOPAIN) && HAS_TRAIT(user, TRAIT_STRENGTH_UNCAPPED) && HAS_TRAIT(user, TRAIT_BLOODLOSS_IMMUNE))) // So that the martyr could not change weapons during his special ability... I do not know how to make it smarter.
+		return
+	summon_martyr_weapon_tgui(user)
 
 /obj/structure/fluff/beach_umbrella/security
 	icon_state = "hos_brella"
@@ -1529,7 +1591,6 @@
 	var/obj/item/grown/log/tree/stake/stake
 	var/obj/item/bodypart/head/victim
 
-
 /obj/structure/fluff/headstake/CheckParts(list/parts_list)
 	..()
 	victim = locate(/obj/item/bodypart/head) in parts_list
@@ -1537,7 +1598,7 @@
 	update_icon()
 	stake = locate(/obj/item/grown/log/tree/stake) in parts_list
 
-///obj/structure/fluff/headstake/Initialize()
+///obj/structure/fluff/headstake/Initialize(mapload)
 //	. = ..()
 
 /obj/structure/fluff/headstake/OnCrafted(dirin, user)
@@ -1566,3 +1627,34 @@
 	stake.forceMove(drop_location())
 	stake = null
 	qdel(src)
+
+/obj/structure/fluff/headstake/deconstruct()
+	victim.forceMove(drop_location())
+	victim = null
+	stake.forceMove(drop_location())
+	stake = null
+	qdel(src)
+
+/obj/structure/bars/passage/shutter/bookcase
+	name = "Empty Bookcase"
+	desc = "Refuge for few, an irrelevance to most."
+	icon_state = "decoybookcase0"
+
+/obj/structure/bars/passage/shutter/bookcase/redstone_triggered()
+	if(obj_broken)
+		return
+
+	if(density)
+		icon_state = "decoybookcase1"
+		density = FALSE
+		set_opacity(FALSE)
+	else
+		icon_state = "decoybookcase0"
+		density = TRUE
+		set_opacity(TRUE)
+
+// This is from the Druid Grove remap ages back. Turning it into a proper subtype for faster init. or whatever reason ur supposed
+// to do it.
+/obj/effect/wisp/prestidigitation/willowwisp
+	name = "Will-o'-the-wisp"
+	desc = "A small, fiery ball of light made up of mystical energy."

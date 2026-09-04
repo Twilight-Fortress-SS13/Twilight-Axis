@@ -151,7 +151,7 @@
 	pass()
 
 /datum/status_effect/fire_handler/fire_stacks/tick(wait)
-	if(stacks <= 0)
+	if(stacks <= 0 || HAS_TRAIT(owner, TRAIT_NOFIRE))
 		qdel(src)
 		return TRUE
 
@@ -273,6 +273,20 @@
 	victim?.dna?.species?.handle_fire(victim, no_protection)
 	victim.adjustFireLoss(10)
 
+/datum/status_effect/fire_handler/fire_stacks/vheslyn
+	id = "fire_stacks_vheslyn"
+	fire_alert_type = /atom/movable/screen/alert/fire/vheslyn
+
+/datum/status_effect/fire_handler/fire_stacks/vheslyn/harm_human(seconds_per_tick, no_protection = FALSE)
+	var/mob/living/carbon/human/victim = owner
+	victim?.dna?.species?.handle_fire(victim, no_protection)
+	if(HAS_TRAIT(victim, TRAIT_UNFORGIVABLE))
+		victim.adjustFireLoss(-6) //This heals them instead of burning them.
+		victim.adjustBruteLoss(-4)
+		victim.heal_wounds(0.6)
+	else
+		victim.adjustFireLoss(8) //Slightly less because they're harder to resist off
+
 /datum/status_effect/fire_handler/fire_stacks/sunder
 	id = "fire_stacks_sunder"
 	fire_alert_type = /atom/movable/screen/alert/fire/sunder
@@ -297,9 +311,9 @@
 /// any is_lesser_silver item, escalating in stages: a stress event after a brief grace period (so
 /// "force them to hold silver for two seconds" metachecks can't instantly out a vampyre), and a
 /// real sunder ignition once they've been holding it long enough to count as a true exposure.
-#define LESSER_SILVER_STRESS_DELAY    (10 SECONDS)
-#define LESSER_SILVER_IGNITE_DELAY    (30 SECONDS)
-#define LESSER_SILVER_IGNITE_STACKS   3
+#define LESSER_SILVER_STRESS_DELAY	(10 SECONDS)
+#define LESSER_SILVER_IGNITE_DELAY	(30 SECONDS)
+#define LESSER_SILVER_IGNITE_STACKS	3
 
 /datum/status_effect/fire_handler/fire_stacks/sunder/lesser
 	id = "fire_stacks_sunder_lesser"

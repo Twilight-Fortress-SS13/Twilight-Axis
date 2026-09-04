@@ -137,11 +137,11 @@
 
 /datum/status_effect/buff/soundbreaker_riff/on_apply()
 	. = ..()
-	ADD_TRAIT(owner, TRAIT_GUIDANCE, "soundbreaker_riff")
+//	ADD_TRAIT(owner, TRAIT_GUIDANCE, "soundbreaker_riff")
 	return TRUE
 
 /datum/status_effect/buff/soundbreaker_riff/on_remove()
-	REMOVE_TRAIT(owner, TRAIT_GUIDANCE, "soundbreaker_riff")
+//	REMOVE_TRAIT(owner, TRAIT_GUIDANCE, "soundbreaker_riff")
 	. = ..()
 
 /atom/movable/screen/alert/status_effect/buff/soundbreaker_riff

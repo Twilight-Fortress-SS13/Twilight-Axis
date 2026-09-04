@@ -9,8 +9,8 @@
 		lifespan 	= 4
 		fade 		= 0
 //		fadein		= 0
-		position 	= generator("box", list(-928,-928,0), list(928,928,0))
-//		gravity 	= list(-1, -200)
+		position	= generator("box", list(-928,-928,0), list(928,928,0))
+//		gravity	= list(-1, -200)
 		velocity = list(0, -200)
 
 /obj/emitters
@@ -21,7 +21,7 @@
 	vis_flags = VIS_INHERIT_PLANE
 
 /obj/emitters/weather/rain
-	particles 	= new/particles/rain
+	particles	= new/particles/rain
 //	alpha = 190
 
 /atom/movable/screen/weather/fog

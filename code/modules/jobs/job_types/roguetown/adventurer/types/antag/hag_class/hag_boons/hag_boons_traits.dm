@@ -118,12 +118,6 @@
 	desc = "Slows the rate at which one's blades dull."
 	points = 20
 
-/datum/hag_boon/trait/guidance
-	name = "Trait - Guidance"
-	trait_to_apply = TRAIT_GUIDANCE
-	desc = "Enhances the bearer's combat abilities, functioning as an extra level in their skill with whatever weapon they wield."
-	points = 60
-
 /datum/hag_boon/trait/good_trainer
 	name = "Trait - Good Trainer"
 	trait_to_apply = TRAIT_GOODTRAINER
@@ -131,10 +125,10 @@
 	points = 75
 
 // /datum/hag_boon/trait/counter_counterspell
-// 	name = "Trait - Counter Counterspell"
-// 	trait_to_apply = TRAIT_COUNTERCOUNTERSPELL
-// 	desc = "Prevents Counterspells from affecting the bearer."
-// 	points = 40
+//	name = "Trait - Counter Counterspell"
+//	trait_to_apply = TRAIT_COUNTERCOUNTERSPELL
+//	desc = "Prevents Counterspells from affecting the bearer."
+//	points = 40
 
 /datum/hag_boon/trait/keen_ears
 	name = "Trait - Keen Ears"
@@ -180,9 +174,9 @@
 
 // Disabled for now, they have a blessing for stamina.
 // /datum/hag_boon/trait/infinite_energy
-// 	name = "Trait - No Fatigue"
-// 	trait_to_apply = TRAIT_INFINITE_ENERGY
-// 	points = 100
+//	name = "Trait - No Fatigue"
+//	trait_to_apply = TRAIT_INFINITE_ENERGY
+//	points = 100
 
 /datum/hag_boon/trait/unbound_strength
 	name = "Trait - Unbound Strength"

@@ -4,12 +4,11 @@
 /datum/species/aura
 	name = "Au Ra"
 	id = "aura"
-	desc = "<b>Ау Ра</b><br>\
-	Изогнутые рога и красиво узорчатая чешуя Ау Ра часто заставляют предполагать, что они произошли от драконов.\
+	desc_title = "Ау Ра"
+	desc = "Изогнутые рога и красиво узорчатая чешуя Ау Ра часто заставляют предполагать, что они произошли от драконов. \
 	Это давно оспаривается, и ученые приводят в качестве доказательств против этого явные различия между двумя видами. Улучшенный слух и \
 	способность распознавать пространство, которыми обладают их рога, не встречаются у драконов,а крайний половой диморфизм, характерный для этой расы, \
-	также не встречается у драконов. Представители этой расы крепки и выносливы из-за чешуи, которая защищает их. \
-	(+1 CON, +1 WIL)"
+	также не встречается у драконов. Представители этой расы крепки и выносливы из-за чешуи, которая защищает их."
 	skin_tone_wording = "Skin Colors"
 	skin_tone_wording = "Ancestry"
 	default_color = "FFFFFF"
@@ -62,10 +61,10 @@
 		/datum/customizer/bodypart_feature/piercing,
 		/datum/customizer/organ/horns/humanoid/aura,
 		/datum/customizer/organ/tail/aura,
-		/datum/customizer/organ/testicles/human,
-		/datum/customizer/organ/penis/human,
+		/datum/customizer/organ/testicles/anthro,
+		/datum/customizer/organ/penis/anthro,
 		/datum/customizer/organ/breasts/human,
-		/datum/customizer/organ/vagina/human,
+		/datum/customizer/organ/vagina/human_anthro,
 		)
 	body_marking_sets = list(
 		/datum/body_marking_set/aura/z,
@@ -80,7 +79,7 @@
 		/datum/body_marking/aura/v,
 
 	)
-	
+
 	descriptor_choices = list(
 		/datum/descriptor_choice/trait,
 		/datum/descriptor_choice/stature,

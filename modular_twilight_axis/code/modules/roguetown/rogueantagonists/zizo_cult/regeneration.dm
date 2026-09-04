@@ -31,3 +31,9 @@
 	for(var/effect in purged_effects)
 		H.remove_status_effect(effect)
 	return TRUE
+
+/obj/item/clothing/suit/roguetown/armor/manual/resting/padded/bailiff
+	name = "scar-marred skin"
+	desc = "Bearing scars of countless whips leaves a gnarly visage. Now it's your time to inflict the same fate upon others."
+	armor = ARMOR_PADDED
+	max_integrity = ARMOR_INT_CHEST_LIGHT_MEDIUM

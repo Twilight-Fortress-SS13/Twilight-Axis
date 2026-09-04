@@ -133,7 +133,7 @@
 	update_icon()
 	isSwitchingStates = FALSE
 
-/obj/structure/mineral_door/Initialize()
+/obj/structure/mineral_door/Initialize(mapload)
 	. = ..()
 	if(!base_state)
 		base_state = icon_state
@@ -178,9 +178,7 @@
 				to_chat(user, span_boldnotice("Only town residents can claim this house."))
 				return FALSE
 	if(resident_advclass)
-		if(!human.advjob)
-			return FALSE
-		var/datum/advclass/advclass = SSrole_class_handler.get_advclass_by_name(human.advjob)
+		var/datum/advclass/advclass = human.get_advclass_datum()
 		if(!advclass)
 			return FALSE
 		if(!(advclass.type in resident_advclass))
@@ -238,7 +236,11 @@
 		if(HAS_TRAIT(user, TRAIT_BASHDOORS))
 			if(locked)
 				user.visible_message(span_warning("[user] bashes into [src]!"))
+				var/was_broken = obj_broken
+				var/was_destroyed = obj_destroyed
 				take_damage(200, "brute", "blunt", 1)
+				if((obj_broken && !was_broken) || (obj_destroyed && !was_destroyed))
+					log_door_break(user)
 			else
 				playsound(src, 'sound/combat/hits/onwood/woodimpact (1).ogg', 100)
 				force_open()
@@ -258,9 +260,6 @@
 				else
 					addtimer(CALLBACK(src, PROC_REF(Close), FALSE), 25)
 
-
-/obj/structure/mineral_door/attack_paw(mob/user)
-	return attack_hand(user)
 
 /obj/structure/mineral_door/attack_hand(mob/user)
 	. = ..()
@@ -422,7 +421,7 @@
 			playsound(user, 'sound/misc/wood_saw.ogg', 100, TRUE)
 			user.visible_message("<span class='info'>[user] Carves a name into the door.</span>")
 			if(do_after(user, 10))
-				doorname = input("What name would you like to carve into the door?")
+				doorname = sanitize(input(user, "What name would you like to carve into the door?"))
 				if (doorname)
 					name = doorname + "(door)"
 					desc = "a door with a name carved into it"
@@ -440,14 +439,19 @@
 	var/turf/T = get_turf(src)
 	..()
 	if(obj_broken || obj_destroyed)
-		if(!T)
-			return
-		var/obj/effect/track/structure/new_track = SStracks.get_track(/obj/effect/track/structure, T)
-		if(new_track)
-			new_track.handle_creation(user)
-		if(user?.ckey)
-			message_admins("[user.real_name] [obj_destroyed ? "destroyed" : "broke"] [src.name] at X:[src.x] Y:[src.y] Z:[src.z] in area: [get_area(src)] [ADMIN_JMP(src)]")
-			log_admin("[user.real_name] [obj_destroyed ? "destroyed" : "broke"] [src.name] at X:[src.x] Y:[src.y] Z:[src.z] in area: [get_area(src)]")
+		log_door_break(user, T)
+
+/obj/structure/mineral_door/proc/log_door_break(mob/user, turf/source_turf)
+	if(!source_turf)
+		source_turf = get_turf(src)
+	if(!source_turf)
+		return
+	var/obj/effect/track/structure/new_track = SStracks.get_track(/obj/effect/track/structure, source_turf)
+	if(new_track)
+		new_track.handle_creation(user)
+	if(user?.ckey)
+		message_admins("[user.real_name] [obj_destroyed ? "destroyed" : "broke"] [src.name] at X:[src.x] Y:[src.y] Z:[src.z] in area: [get_area(src)] [ADMIN_JMP(src)]")
+		log_admin("[user.real_name] [obj_destroyed ? "destroyed" : "broke"] [src.name] at X:[src.x] Y:[src.y] Z:[src.z] in area: [get_area(src)]")
 
 /obj/structure/mineral_door/proc/repairdoor(obj/item/I, mob/user)
 	if(brokenstate)
@@ -473,7 +477,7 @@
 						playsound(user, 'sound/misc/wood_saw.ogg', 100, TRUE)
 						icon_state = "[base_state]"
 						density = TRUE
-						opacity = TRUE
+						set_opacity(TRUE)
 						brokenstate = FALSE
 						obj_broken = FALSE
 						obj_integrity = max_integrity
@@ -675,7 +679,7 @@
 	if(!brokenstate)
 		icon_state = "[base_state]br"
 		density = FALSE
-		opacity = FALSE
+		set_opacity(FALSE)
 		brokenstate = TRUE
 	..()
 
@@ -752,7 +756,7 @@
 	repair_skill = /datum/skill/craft/carpentry
 	smashable = TRUE
 
-/obj/structure/mineral_door/wood/Initialize()
+/obj/structure/mineral_door/wood/Initialize(mapload)
 	if(icon_state =="woodhandle")
 		if(icon_state != "wcv")
 			if(prob(10))
@@ -854,7 +858,7 @@
 	dir = turn(dirin, 180)
 	lockdir = dir
 
-/obj/structure/mineral_door/wood/deadbolt/Initialize()
+/obj/structure/mineral_door/wood/deadbolt/Initialize(mapload)
 	. = ..()
 	lockdir = dir
 	icon_state = base_state
@@ -912,7 +916,7 @@
 /obj/structure/mineral_door/wood/donjon/stone/view_toggle(mob/user)
 	return
 
-/obj/structure/mineral_door/wood/donjon/Initialize()
+/obj/structure/mineral_door/wood/donjon/Initialize(mapload)
 	viewportdir = dir
 	icon_state = base_state
 	..()
@@ -937,11 +941,11 @@
 		return
 	if(opacity)
 		to_chat(user, span_info("I slide the viewport open."))
-		opacity = FALSE
+		set_opacity(FALSE)
 		playsound(src, 'sound/foley/doors/windowup.ogg', 100, FALSE)
 	else
 		to_chat(user, span_info("I slide the viewport closed."))
-		opacity = TRUE
+		set_opacity(TRUE)
 		playsound(src, 'sound/foley/doors/windowup.ogg', 100, FALSE)
 
 /obj/structure/mineral_door/wood/donjon/stone/broken
@@ -955,14 +959,14 @@
 	obj_broken = 1
 	repairable = FALSE
 
-/obj/structure/mineral_door/wood/donjon/stone/broken/Initialize()
+/obj/structure/mineral_door/wood/donjon/stone/broken/Initialize(mapload)
 	..()
 	icon_state = "stonebr" // Weird override otherwise
 
 // These are variants of the donjon doors for "high security" locations. They have stronger
 // locks. This SHOULD BE A VALUE BETWEEN 1-2, NOT HIGHER THAN 2. Level 3 doors are near
 // impossible to lockpick through. These should also NOT be placed everywhere, as even lockdiff 2
-// will break picks like no tomorrow. 
+// will break picks like no tomorrow.
 
 /obj/structure/mineral_door/wood/donjon/highsecurity
 	lockdifficulty = 1.8
@@ -1004,7 +1008,7 @@
 	name = "iron door"
 	icon_state = "barsold"
 
-/obj/structure/mineral_door/bars/Initialize()
+/obj/structure/mineral_door/bars/Initialize(mapload)
 	. = ..()
 	add_overlay(mutable_appearance(icon, "barsopen", ABOVE_MOB_LAYER))
 
@@ -1053,6 +1057,10 @@
 /obj/structure/mineral_door/wood/towner/miner
 	resident_advclass = list(/datum/advclass/miner, /datum/advclass/minermaster)
 	lockid = "towner_miner"
+
+/obj/structure/mineral_door/wood/towner/potter
+	resident_advclass = list(/datum/advclass/potter)
+	lockid = "towner_potter"
 
 /obj/structure/mineral_door/wood/towner/seamstress
 	resident_advclass = list(/datum/advclass/seamstress)

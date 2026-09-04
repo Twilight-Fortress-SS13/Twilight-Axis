@@ -4,6 +4,7 @@
 
 	var/datum/job/consort_job = find_job_by_type(/datum/job/roguetown/lady)
 	var/datum/job/suitor_job = find_job_by_type(/datum/job/roguetown/suitor)
+	var/datum/job/harem_job = find_job_by_type(/datum/job/roguetown/harem)
 
 	if(consort_job)
 		royal_partner_job_baselines["consort"] = list(
@@ -21,7 +22,16 @@
 			"spawn_positions" = suitor_job.spawn_positions,
 		)
 
-	return royal_partner_job_baselines.len >= 2
+	if(harem_job)
+		royal_partner_job_baselines["harem"] = list(
+			"forbidden_races" = islist(harem_job.forbidden_races) ? harem_job.forbidden_races.Copy() : list(),
+			"allowed_sexes" = islist(harem_job.allowed_sexes) ? harem_job.allowed_sexes.Copy() : list(),
+			"total_positions" = harem_job.total_positions,
+			"spawn_positions" = harem_job.spawn_positions,
+		)
+
+
+	return royal_partner_job_baselines["consort"] && royal_partner_job_baselines["suitor"]
 
 /datum/controller/subsystem/familytree/proc/get_royal_partner_mode_from_preferences(datum/preferences/P)
 	if(!P)
@@ -30,12 +40,17 @@
 	if(duke_forced_hetero_mode(P))
 		return "consort"
 
+	if(P.desired_relative_role == RELATIVE_SPOUSE)
+		return "consort"
+
 	if(familytree_pref_is_join(P.family) || familytree_pref_is_legacy_spouse(P.family))
 		return "suitor"
+
 	if(familytree_pref_is_create(P.family) || !familytree_pref_enabled(P.family))
 		return "consort"
 
 	return "consort"
+
 
 /datum/controller/subsystem/familytree/proc/duke_forced_hetero_mode(datum/preferences/P)
 	if(!P)
@@ -138,6 +153,8 @@
 			job = find_job_by_type(/datum/job/roguetown/lady)
 		if("suitor")
 			job = find_job_by_type(/datum/job/roguetown/suitor)
+		if("harem")
+			job = find_job_by_type(/datum/job/roguetown/harem)
 
 	var/list/baseline = royal_partner_job_baselines[job_key]
 	if(!job || !baseline)
@@ -168,6 +185,7 @@
 
 	apply_royal_partner_job_state("consort", FALSE)
 	apply_royal_partner_job_state("suitor", FALSE)
+	apply_royal_partner_job_state("harem", FALSE)
 
 /datum/controller/subsystem/familytree/proc/refresh_royal_partner_jobs(mob/living/carbon/human/duke, datum/preferences/P)
 	if(!duke?.client)
@@ -180,6 +198,10 @@
 		P = duke.client.prefs
 	if(!P)
 		return FALSE
+
+	var/datum/job/royal_partner_owner_job = get_familytree_job(duke)
+	if(istype(royal_partner_owner_job, /datum/job/roguetown/sultan))
+		return refresh_sultan_harem_jobs(duke, P)
 
 	if(current_royal_partner_owner == duke && current_royal_partner_snapshot.len)
 		return TRUE
@@ -236,6 +258,8 @@
 
 /datum/controller/subsystem/familytree/proc/get_royal_partner_job_key(role_or_job)
 	var/datum/job/job = resolve_job_datum(role_or_job)
+	if(is_royal_harem_job(job))
+		return "harem"
 	if(is_royal_consort_job(job))
 		return "consort"
 	if(is_royal_suitor_job(job))
@@ -347,6 +371,10 @@
 	return TRUE
 
 /datum/controller/subsystem/familytree/proc/run_royal_hand_assignment_offer(mob/living/carbon/human/H)
+	if(round_disabled)
+		if(H && !QDELETED(H))
+			H.familytree_assignment_scheduled = FALSE
+		return
 	ftlog("run_royal_hand_assignment_offer: [H?.real_name] ([H?.ckey])")
 	if(!H || QDELETED(H))
 		return
@@ -371,6 +399,10 @@
 	INVOKE_ASYNC(src, PROC_REF(do_royal_hand_assignment_offer), H)
 
 /datum/controller/subsystem/familytree/proc/do_royal_hand_assignment_offer(mob/living/carbon/human/H)
+	if(round_disabled)
+		if(H && !QDELETED(H))
+			H.familytree_assignment_scheduled = FALSE
+		return
 	if(!H?.client || H.family_datum)
 		return
 	var/datum/family_member/monarch = GetCurrentMonarch()
@@ -402,6 +434,10 @@
 	stop_tracking_human(H, reason)
 
 /datum/controller/subsystem/familytree/proc/AddRoyal(mob/living/carbon/human/H, status)
+	if(round_disabled)
+		if(H && !QDELETED(H))
+			H.familytree_assignment_scheduled = FALSE
+		return
 	if(!H)
 		return
 	var/block_reason = get_familytree_runtime_block_reason(H, TRUE)
@@ -550,6 +586,8 @@
 					cousin_member.AddParent(sibling_spouse_member)
 
 		current_ancestor = parent
+
+	ta_apply_pending_royal_ancestor()
 
 /datum/controller/subsystem/familytree/proc/set_species_type(mob/living/carbon/human/H, species_type)
 	if(!H || !species_type)

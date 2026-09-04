@@ -1,8 +1,6 @@
 	////////////
 	//SECURITY//
 	////////////
-#define UPLOAD_LIMIT		1048576	//Restricts client uploads to the server to 1MB //Could probably do with being lower.
-
 GLOBAL_LIST_INIT(blacklisted_builds, list(
 	"1407" = "bug preventing client display overrides from working leads to clients being able to see things/mobs they shouldn't be able to see",
 	"1408" = "bug preventing client display overrides from working leads to clients being able to see things/mobs they shouldn't be able to see",
@@ -21,7 +19,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 #define ADMINSWARNED_AT	5
 	/*
 	When somebody clicks a link in game, this Topic is called first.
-	It does the stuff in this proc and  then is redirected to the Topic() proc for the src=[0xWhatever]
+	It does the stuff in this proc and	then is redirected to the Topic() proc for the src=[0xWhatever]
 	(if specified in the link). ie locate(hsrc).Topic()
 
 	Such links can be spoofed.
@@ -32,12 +30,11 @@ GLOBAL_LIST_EMPTY(respawncounts)
 		- If so, does it have checks to see if the person who called it (usr.client) is an admin?
 		- Are the processes being called by Topic() particularly laggy?
 		- If so, is there any protection against somebody spam-clicking a link?
-	If you have any  questions about this stuff feel free to ask. ~Carn
+	If you have any	questions about this stuff feel free to ask. ~Carn
 	*/
 
 /client
 	var/whitelisted = 2
-	var/blacklisted = 2
 
 /client/Topic(href, href_list, hsrc)
 	if(!usr || usr != mob)	//stops us calling Topic for somebody else's client. Also helps prevent usr=null
@@ -79,7 +76,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 			return
 
 	var/stl = CONFIG_GET(number/second_topic_limit)
-	if (!holder && stl)
+	if (!holder && stl && href_list["window_id"] != "statbrowser")
 		var/second = round(world.time, 10)
 		if (!topiclimiter)
 			topiclimiter = new(LIMITER_SIZE)
@@ -172,7 +169,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 		var/mob/voice = locate(href_list["voice"])
 		if(QDELETED(schizo) || !voice.client)
 			return
-		var/msg = input("Ask again:", "To the voice of a [schizo.voice_names[voice.client.ckey]]") as text|null
+		var/msg = input(src, "Ask again:", "To the voice of a [schizo.voice_names[voice.client.ckey]]") as text|null
 		if(msg)
 			mob.schizohelp(msg, TRUE, voice, schizo)
 			schizo.asked_again = TRUE
@@ -228,7 +225,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 			else
 				to_chat(src, span_warning("You already voted on the [schizo.voice_names[voice.client.ckey]] answer!"))
 		return
-	
+
 	if(href_list["viewchronicle"])
 		var/tab = href_list["chronicletab"] || "The Realm"
 		show_chronicle(tab)
@@ -237,6 +234,11 @@ GLOBAL_LIST_EMPTY(respawncounts)
 	if(href_list["vieweconomics"])
 		var/datum/economic_chronicle/chronicle = get_economic_chronicle()
 		chronicle.ui_interact(mob)
+		return
+
+	if(href_list["open_encyclopedia"])
+		var/datum/recipe_wiki/wiki = get_recipe_wiki()
+		wiki.show_library(mob)
 		return
 
 	if(href_list["commandbar_typing"])
@@ -291,11 +293,18 @@ GLOBAL_LIST_EMPTY(respawncounts)
 	log_admin("[key_name(src)] opened the Chronicle preview.")
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "View Chronicle")
 
-/client/proc/is_content_unlocked()
-	if(!prefs.unlock_content)
-		to_chat(src, "Become a BYOND member to access member-perks and features, as well as support the engine that makes this game possible. Only 10 bucks for 3 months! <a href=\"https://secure.byond.com/membership\">Click Here to find out more</a>.")
-		return 0
-	return 1
+/client/proc/cmd_admin_view_economics()
+	set category = "Debug"
+	set name = "View Economics"
+	set desc = "Open the Realm Economics panel without waiting for round end."
+
+	if(!check_rights(R_ADMIN|R_DEBUG))
+		return
+	var/datum/economic_chronicle/chronicle = get_economic_chronicle()
+	chronicle.ui_interact(mob)
+	log_admin("[key_name(src)] opened the Realm Economics preview.")
+	SSblackbox.record_feedback("tally", "admin_verb", 1, "View Economics")
+
 /*
  * Call back proc that should be checked in all paths where a client can send messages
  *
@@ -346,14 +355,24 @@ GLOBAL_LIST_EMPTY(respawncounts)
 		last_message = message
 		src.last_message_count = 0
 		return 0
-/*
-//This stops files larger than UPLOAD_LIMIT being sent from client to server via input(), client.Import() etc.
+
 /client/AllowUpload(filename, filelength)
-	if(filelength > UPLOAD_LIMIT)
-		to_chat(src, "<font color='red'>Error: AllowUpload(): File Upload too large. Upload Limit: [UPLOAD_LIMIT/1024]KiB.</font>")
-		return 0
-	return 1
-*/
+	if(isnull(upload_limit))
+		return TRUE
+	if(filelength > upload_limit)
+		to_chat(src, "<font color='red'>Error: AllowUpload(): File Upload too large. Upload Limit: [round(upload_limit / 1024)]KiB.</font>")
+		return FALSE
+	if(length(upload_exts))
+		var/dot = findlasttext(filename, ".")
+		var/extension = dot ? LOWER_TEXT(copytext(filename, dot)) : ""
+		if(!(extension in upload_exts))
+			to_chat(src, "<font color='red'>Error: AllowUpload(): Wrong file type. Expected: [jointext(upload_exts, ", ")].</font>")
+			return FALSE
+	return TRUE
+
+#if (PRELOAD_RSC == 0)
+GLOBAL_LIST_EMPTY(external_rsc_urls)
+#endif
 
 /client/New(TopicData)
 	var/tdata = TopicData //save this for later use
@@ -368,6 +387,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 	stat_panel = new(src, "statbrowser")
 	stat_panel.subscribe(src, PROC_REF(on_stat_panel_message))
 
+	winset(src, null, "browser-options=find,refresh")
 	initialize_commandbar_spy()
 
 	GLOB.ahelp_tickets.ClientLogin(src)
@@ -390,7 +410,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 					autorank = R
 					break
 			if(!autorank)
-				to_chat(world, "Autoadmin rank not found")
+				to_world("Autoadmin rank not found")
 			else
 				new /datum/admins(autorank, ckey)
 	if(CONFIG_GET(flag/enable_localhost_rank) && !connecting_admin)
@@ -411,8 +431,6 @@ GLOBAL_LIST_EMPTY(respawncounts)
 		prefs.chat_toggles &= ~CHAT_GHOSTEARS
 		prefs.chat_toggles &= ~CHAT_GHOSTWHISPER
 		prefs.save_preferences()
-	prefs.last_ip = address				//these are gonna be used for banning
-	prefs.last_id = computer_id			//these are gonna be used for banning
 	fps = prefs.clientfps
 	preferred_ui_language = sanitize_preferred_ui_language(prefs.preferred_ui_language)
 	prefs.preferred_ui_language = preferred_ui_language
@@ -496,11 +514,19 @@ GLOBAL_LIST_EMPTY(respawncounts)
 			alert(mob, "You have logged in already with another key this round, please log out of this one NOW or risk being banned!")
 
 	tgui_panel.initialize()
+	/* //TA EDIT BEGIN
 	stat_panel.initialize(
 		inline_html = file("html/statbrowser.html"),
 		inline_js = file("html/statbrowser.js"),
 		inline_css = file("html/statbrowser.css"),
 	)
+	*/
+
+	stat_panel.initialize(
+		inline_html = file("ta_statpanel/dist/ta-statbrowser-bundle.html"),
+	)
+
+	//TA EDIT END
 	apply_statbrowser_theme()
 	addtimer(CALLBACK(src, PROC_REF(check_panel_loaded)), 30 SECONDS)
 
@@ -556,7 +582,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 		to_chat(src, get_message_output("memo"))
 		adminGreet()
 	if(!BC_IsKeyAllowedToConnect(ckey))
-		src << "Sorry, but the server is currently only accepting whitelisted players.  Please see the discord to be whitelisted."
+		src << "Sorry, but the server is currently only accepting whitelisted players.	Please see the discord to be whitelisted."
 		message_admins("[ckey] was denied a connection due to not being whitelisted.")
 		log_admin("[ckey] was denied a connection due to not being whitelisted.")
 		qdel(src)
@@ -693,12 +719,12 @@ GLOBAL_LIST_EMPTY(respawncounts)
 	GLOB.directory -= ckey
 	GLOB.clients -= src
 	QDEL_NULL(tgui_panel)
-	QDEL_LIST_ASSOC_VAL(char_render_holders)
 	Master.UpdateTickRate()
 	return ..()
 
 /client/Destroy()
 	SSmouse_entered.hovers -= src
+	QDEL_NULL(game_master_menu)
 	. = ..() //Even though we're going to be hard deleted there are still some things that want to know the destroy is happening
 	STOP_PROCESSING(SSmousecharge, src)
 	QDEL_NULL(droning_sound)
@@ -719,9 +745,10 @@ GLOBAL_LIST_EMPTY(respawncounts)
 	if(!query_get_related_ip.Execute())
 		qdel(query_get_related_ip)
 		return
-	related_accounts_ip = ""
+	var/list/related_ip_ckeys = list()
 	while(query_get_related_ip.NextRow())
-		related_accounts_ip += "[query_get_related_ip.item[1]], "
+		related_ip_ckeys += query_get_related_ip.item[1]
+	related_accounts_ip = jointext(related_ip_ckeys, ", ")
 	qdel(query_get_related_ip)
 	var/datum/DBQuery/query_get_related_cid = SSdbcore.NewQuery(
 		"SELECT ckey FROM [format_table_name("player")] WHERE computerid = :computerid AND ckey != :ckey",
@@ -730,9 +757,10 @@ GLOBAL_LIST_EMPTY(respawncounts)
 	if(!query_get_related_cid.Execute())
 		qdel(query_get_related_cid)
 		return
-	related_accounts_cid = ""
+	var/list/related_cid_ckeys = list()
 	while (query_get_related_cid.NextRow())
-		related_accounts_cid += "[query_get_related_cid.item[1]], "
+		related_cid_ckeys += query_get_related_cid.item[1]
+	related_accounts_cid = jointext(related_cid_ckeys, ", ")
 	qdel(query_get_related_cid)
 	var/admin_rank = "Player"
 	if (src.holder && src.holder.rank)
@@ -821,6 +849,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 		qdel(query_log_player)
 	if(!account_join_date)
 		account_join_date = "Error"
+	notify_admins_of_related_accounts()
 	var/datum/DBQuery/query_log_connection = SSdbcore.NewQuery({"
 		INSERT INTO `[format_table_name("connection_log")]` (`id`,`datetime`,`server_ip`,`server_port`,`round_id`,`ckey`,`ip`,`computerid`)
 		VALUES(null,Now(),INET_ATON(:internet_address),:port,:round_id,:ckey,INET_ATON(:ip),:computerid)
@@ -830,6 +859,64 @@ GLOBAL_LIST_EMPTY(respawncounts)
 	if(new_player)
 		player_age = -1
 	. = player_age
+
+/client/proc/notify_admins_of_related_accounts()
+	if(!length(related_accounts_cid) || computer_id == "4055623708")
+		return
+
+	var/automatic_admin_ckey = "multikeydetector"
+	var/datum/DBQuery/query_existing_note = SSdbcore.NewQuery(
+		"SELECT 1 FROM [format_table_name("messages")] WHERE type = 'note' AND targetckey = :target_ckey AND adminckey = :admin_ckey LIMIT 1",
+		list("target_ckey" = ckey, "admin_ckey" = automatic_admin_ckey)
+	)
+	if(!query_existing_note.warn_execute())
+		qdel(query_existing_note)
+		return
+	if(query_existing_note.NextRow())
+		qdel(query_existing_note)
+		return
+	qdel(query_existing_note)
+
+	var/list/note_lines = list(
+		"Автоматическая проверка: возможный твинк.",
+		"Ключ при обнаружении: [key]",
+		"Ckey при обнаружении: [ckey]",
+		"IP при обнаружении: [address]",
+		"CID при обнаружении: [computer_id]",
+		"Аккаунты с таким же CID: [related_accounts_cid]",
+		"Раунд при обнаружении: [GLOB.round_id]"
+	)
+	if(address == "91.208.52.195")
+		note_lines += "Вход выполнен через серверный прокси 91.208.52.195; совпадения по IP не учитывались."
+	else if(length(related_accounts_ip))
+		note_lines += "Аккаунты с таким же IP: [related_accounts_ip]"
+	else
+		note_lines += "Другие аккаунты с таким же IP не найдены."
+
+	var/note_text = note_lines.Join("<br>")
+	var/server_name = CONFIG_GET(string/serversqlname)
+	var/datum/DBQuery/query_create_note = SSdbcore.NewQuery({"
+		INSERT INTO [format_table_name("messages")] (type, targetckey, adminckey, text, timestamp, server, server_ip, server_port, round_id, secret, expire_timestamp, severity)
+		VALUES ('note', :target_ckey, :admin_ckey, :text, Now(), :server, INET_ATON(:internet_address), :port, :round_id, 1, NULL, 'minor')
+	"}, list(
+		"target_ckey" = ckey,
+		"admin_ckey" = automatic_admin_ckey,
+		"text" = note_text,
+		"server" = server_name,
+		"internet_address" = world.internet_address || "0",
+		"port" = "[world.port]",
+		"round_id" = GLOB.round_id,
+	))
+	if(!query_create_note.warn_execute())
+		qdel(query_create_note)
+		return
+	qdel(query_create_note)
+
+	message_admins(span_adminnotice("<b>Возможный твинк:</b> [key_name_admin(src)] вошёл с CID [computer_id], который также использовали: [related_accounts_cid]. Автоматическая заметка добавлена."))
+	log_admin_private("Automatic multikey note created for [key_name(src)]. IP: [address]. CID: [computer_id]. Related CID accounts: [related_accounts_cid]. Related IP accounts: [related_accounts_ip].")
+	admin_ticket_log(ckey, "<font color='blue'>Automatic possible multikey note created</font>")
+	admin_ticket_log(ckey, note_text)
+	world.TgsAnnounceAdminMessageEntry(automatic_admin_ckey, key, "note", replacetext(note_text, "<br>", "\n"), TRUE, null)
 
 /client/proc/toggle_fullscreeny(new_value)
 	if(new_value)
@@ -924,7 +1011,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 
 			sleep(15 SECONDS) //Longer sleep here since this would trigger if a client tries to reconnect manually because the inital reconnect failed
 
-			 //we sleep after telling the client to reconnect, so if we still exist something is up
+				//we sleep after telling the client to reconnect, so if we still exist something is up
 			log_access("Forced disconnect: [key] [computer_id] [address] - CID randomizer check")
 
 			qdel(src)
@@ -1083,14 +1170,10 @@ GLOBAL_LIST_EMPTY(respawncounts)
 //			to_chat(src, span_danger("My previous click was ignored because you've done too many in a second"))
 			return
 
-	if (prefs.hotkeys)
-		// If hotkey mode is enabled, then clicking the map will automatically
-		// unfocus the text bar. This removes the red color from the text bar
-		// so that the visual focus indicator matches reality.
-		winset(src, null, "command=disableInput input.background-color=[COLOR_INPUT_DISABLED] input.text-color = #ad9eb4")
-
-	else
-		winset(src, null, "input.focus=true command=activeInput input.background-color=[COLOR_INPUT_ENABLED] input.text-color = #EEEEEE")
+	// If hotkey mode is enabled, then clicking the map will automatically
+	// unfocus the text bar. This removes the red color from the text bar
+	// so that the visual focus indicator matches reality.
+	winset(src, null, "input.background-color=[COLOR_INPUT_DISABLED] input.text-color = #ad9eb4")
 
 	var/list/old_mods = mob?.click_mods
 	var/old_params = mob?.click_params
@@ -1136,8 +1219,6 @@ GLOBAL_LIST_EMPTY(respawncounts)
 		add_verb(src, /client/proc/self_playtime)
 
 
-#undef UPLOAD_LIMIT
-
 //checks if a client is afk
 //3000 frames = 5 minutes
 /client/proc/is_afk(duration = CONFIG_GET(number/inactivity_period))
@@ -1164,6 +1245,8 @@ GLOBAL_LIST_EMPTY(respawncounts)
 		//Precache the client with all other assets slowly, so as to not block other browse() calls
 		if (CONFIG_GET(flag/asset_simple_preload))
 			addtimer(CALLBACK(SSassets.transport, TYPE_PROC_REF(/datum/asset_transport, send_assets_slow), src, SSassets.transport.preload), 5 SECONDS)
+
+		addtimer(CALLBACK(src, PROC_REF(ccg_migrate_saved_card_deck)), 3 SECONDS)
 
 		// NOTE: Preload_vox was removed because we do not have vox
 
@@ -1213,9 +1296,6 @@ GLOBAL_LIST_EMPTY(respawncounts)
 	if (isnull(new_size))
 		CRASH("change_view called without argument.")
 
-	if(prefs && !prefs.widescreenpref && new_size == CONFIG_GET(string/default_view))
-		new_size = CONFIG_GET(string/default_view_square)
-
 	view = new_size
 	apply_clickcatcher()
 	mob.reload_fullscreen()
@@ -1236,51 +1316,8 @@ GLOBAL_LIST_EMPTY(respawncounts)
 	void.UpdateGreed(actualview[1],actualview[2])
 
 /client/proc/AnnouncePR(announcement)
-	if(prefs && prefs.chat_toggles & CHAT_PULLR)
+	if(prefs)
 		to_chat(src, announcement)
-
-/client/proc/show_character_previews(mutable_appearance/MA)
-	var/pos = 0
-
-	var/atom/movable/screen/char_preview/background = LAZYACCESS(char_render_holders, "bg")
-	if(background)
-		screen -= background
-		char_render_holders -= background
-		qdel(background)
-	background = new()
-	LAZYSET(char_render_holders, "bg", background)
-	screen += background
-	background.screen_loc = "character_preview_map:0,0 to 3,3"
-
-	// not cardinal anymore, makes taurs more clear
-	for(var/D in GLOB.cardinals)
-		pos++
-		var/atom/movable/screen/char_preview/O = LAZYACCESS(char_render_holders, "[D]")
-		if(O)
-			screen -= O
-			char_render_holders -= O
-			qdel(O)
-		O = new
-		LAZYSET(char_render_holders, "[D]", O)
-		screen += O
-		O.appearance = MA
-		O.dir = D
-		switch(pos)
-			if(1)
-				O.screen_loc = "character_preview_map:2,2"
-			if(2)
-				O.screen_loc = "character_preview_map:1,2"
-			if(3)
-				O.screen_loc = "character_preview_map:1,1"
-			if(4)
-				O.screen_loc = "character_preview_map:2,1"
-
-/client/proc/clear_character_previews()
-	for(var/atom/movable/screen/S in char_render_holders)
-//		var/atom/movable/screen/S = char_render_holders[index]
-		screen -= S
-		qdel(S)
-	char_render_holders = list()
 
 /client/proc/fullscreen()
 	winset(src, "mainwindow", "statusbar=false")
@@ -1288,9 +1325,6 @@ GLOBAL_LIST_EMPTY(respawncounts)
 /client/New()
 	..()
 	fullscreen()
-	if(byond_version >= 516) // Enable 516 compat browser storage mechanisms
-		winset(src, null, "browser-options=find,byondstorage")
-	// byondstorage,devtools <- other options
 
 /client/proc/give_award(achievement_type, mob/user)
 	return	player_details.achievements.unlock(achievement_type, mob/user)
@@ -1316,16 +1350,6 @@ GLOBAL_LIST_EMPTY(respawncounts)
 			whitelisted = 0
 		return whitelisted
 
-/client/proc/blacklisted()
-	if(blacklisted != 2)
-		return blacklisted
-	else
-		if(check_blacklist(ckey))
-			blacklisted = 1
-		else
-			blacklisted = 0
-		return blacklisted
-
 /client/proc/can_commend(silent = FALSE)
 	if(!prefs)
 		return FALSE
@@ -1335,7 +1359,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 		return FALSE
 	return TRUE
 
-/client/proc/commendsomeone(var/forced = FALSE)
+/client/proc/commendsomeone(forced = FALSE)
 	if(!can_commend(forced))
 		return
 	if(alert(src,"Was there a character during this round that you would like to anonymously commend?", "Commendation", "YES", "NO") != "YES")
@@ -1390,7 +1414,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 #undef ADMINSWARNED_AT
 
 /client/proc/check_panel_loaded()
-	if(stat_panel.is_ready())
+	if(stat_panel.is_ready() && !stat_panel.fatally_errored)
 		return
 	to_chat(src, span_userdanger("Statpanel failed to load, click <a href='byond://?src=[REF(src)];reload_statbrowser=1'>here</a> to reload the panel "))
 
@@ -1416,7 +1440,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 	for(var/procpath/verb_to_init as anything in verbstoprocess)
 		if(!verb_to_init)
 			continue
-		if(GLOB.browserpanel_hidden_verbs["[verb_to_init]"])
+		if(verb_to_init.hidden)
 			continue
 		if(!istext(verb_to_init.category))
 			continue

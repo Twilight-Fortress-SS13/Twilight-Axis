@@ -1,5 +1,5 @@
 #define MIN_BULLET_RANGE		0
-#define MAX_BULLET_RANGE		20 // overriden by firearm in all cases, besides runelock
+#define MAX_BULLET_RANGE		20 // overriden by firearm in all cases
 
 #define AP_FALLOFF_BULLET		0.5
 #define DMG_FALLOFF_BULLET		0.5
@@ -21,6 +21,7 @@
 
 /obj/item/ammo_casing
 	var/obj/item/quiver/twilight_bullet/runicbag/linked_bag = null
+	var/breech_loaded = FALSE
 
 /**
  * Generic ammo used by handgonnes and arquebuses
@@ -33,7 +34,7 @@
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "musketball_proj"
 	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_lead
-	range = 12		
+	range = 12
 	hitsound = 'sound/combat/hits/hi_arrow2.ogg'
 	embedchance = 100
 	woundclass = BCLASS_PIERCE
@@ -62,7 +63,7 @@
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "musketball_proj"
 	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_cannonball
-	range = 16		
+	range = 16
 	hitsound = 'sound/combat/hits/hi_arrow2.ogg'
 	embedchance = 0
 	woundclass = BCLASS_PIERCE
@@ -108,7 +109,8 @@
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "musketball_runed"
 	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock
-	range = 50
+	max_range = 7
+	range = 12
 	hitsound = 'sound/combat/hits/hi_bolt (2).ogg'
 	embedchance = 100
 	woundclass = BCLASS_PIERCE
@@ -513,3 +515,11 @@
 	max_integrity = 0.1
 	pellets = 6
 	variance = 30
+
+/obj/item/ammo_casing/caseless/rogue/twilight_lead/paper
+	name = "paper cartridge"
+	desc = "Фундаментально, бумажный патрон мало чем отличается от обычного сочетания пороха и пули - но использовать его значительно удобнее."
+	projectile_type = /obj/projectile/bullet/twilight_lead
+	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
+	icon_state = "paper_bullet"
+	breech_loaded = TRUE

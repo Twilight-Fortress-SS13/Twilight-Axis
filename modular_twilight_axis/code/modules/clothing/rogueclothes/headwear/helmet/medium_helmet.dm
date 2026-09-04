@@ -14,6 +14,10 @@
 	altdetail_color = "#FFFFFF"
 	max_integrity = ARMOR_INT_HELMET_STEEL + 15
 
+/obj/item/clothing/head/roguetown/helmet/sallet/visored/grenzelhoft/Initialize()
+	. = ..()
+	update_icon()
+
 /obj/item/clothing/head/roguetown/helmet/sallet/visored/grenzelhoft/update_icon()
 	cut_overlays()
 	if(get_detail_tag())

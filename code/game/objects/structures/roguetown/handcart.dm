@@ -15,7 +15,10 @@
 
 	var/arbitrary_living_creature_weight = 10 // The arbitrary weight for any thing of a mob and living variety
 	var/upgrade_level = 0 // This is the carts upgrade level, capacity increases with upgrade level
-	var/obj/item/cart_upgrade/upgrade = null
+	/// Dense structures that may still be hauled in the cart (e.g. kegs).
+	var/list/cartloadable_structures = list(/obj/structure/fermentation_keg)
+	/// Arbitrary weight a cartloadable structure takes up in the cart.
+	var/structure_weight = 20
 	facepull = FALSE
 	throw_range = 1
 
@@ -59,13 +62,23 @@
 			update_icon()
 			break
 
-/obj/structure/handcart/dump_contents()
-	var/atom/L = drop_location()
-	for(var/atom/movable/AM in src)
-		AM.forceMove(L)
+/obj/structure/handcart/dump_contents() // TA EDIT START
+	var/turf/dump_turf = get_turf(src)
+	if(!dump_turf)
+		return
+	var/list/items_to_dump = contents.Copy()
+	for(var/atom/movable/AM as anything in items_to_dump)
+		if(QDELETED(AM))
+			contained_items -= AM
+			continue
+		if(AM.loc != src)
+			remove_from(AM)
+			continue
+		if(!AM.forceMove(dump_turf))
+			continue
 		remove_from(AM)
-	contained_items = list()
-	current_capacity = 0
+	recalculate_capacity()
+	update_icon() // TA EDIT END
 
 /obj/structure/handcart/Destroy()
 	dump_contents()
@@ -108,33 +121,35 @@
 			put_in(living_mob)
 			play_sound = TRUE
 		else
-			var/turf/item_turf = get_turf(O)
-			for(var/obj/item/item_on_ground in item_turf)
-				if(item_on_ground == src)
-					continue
-				if(!insertion_allowed(item_on_ground))
-					continue
-				put_in(item_on_ground)
+			if(scoop_from_turf(get_turf(O)))
 				play_sound = TRUE
 		if(play_sound)
 			playsound(loc, 'sound/foley/cartadd.ogg', 100, FALSE, -1)
 
-/obj/structure/handcart/should_click_on_mouse_up(var/atom/original_object)
+/obj/structure/handcart/should_click_on_mouse_up(atom/original_object)
 	return original_object == src
 
 /obj/structure/handcart/MiddleClick(mob/user, params)
 	user.changeNext_move(CLICK_CD_MELEE)
-	var/play_sound = FALSE
-	var/turf/cart_turf = get_turf(src)
-	for(var/obj/item/item_on_ground in cart_turf)
-		if(item_on_ground == src)
-			continue
-		if(!insertion_allowed(item_on_ground))
-			continue
-		put_in(item_on_ground)
-		play_sound = TRUE
-	if(play_sound)
+	if(scoop_from_turf(get_turf(src)))
 		playsound(loc, 'sound/foley/cartadd.ogg', 100, FALSE, -1)
+
+/**
+ * Scoops every cart-loadable thing (items + whitelisted structures like kegs)
+ * from a turf into the cart. Returns TRUE if anything was inserted.
+ */
+/obj/structure/handcart/proc/scoop_from_turf(turf/T)
+	var/inserted_anything = FALSE
+	for(var/atom/movable/AM_on_ground in T)
+		if(AM_on_ground == src)
+			continue
+		if(!isitem(AM_on_ground) && !is_cartloadable_structure(AM_on_ground))
+			continue
+		if(!insertion_allowed(AM_on_ground))
+			continue
+		if(put_in(AM_on_ground))
+			inserted_anything = TRUE
+	return inserted_anything
 
 /obj/structure/handcart/attack_hand(mob/living/user)
 	. = ..()
@@ -165,27 +180,18 @@
 
 /obj/structure/handcart/attackby(obj/item/I, mob/user, params)
 	if(istype(I, /obj/item/cart_upgrade))
-		var/obj/item/cart_upgrade/item = I
-		if(item.ulevel == 1)
-			if(upgrade_level != 0)
+		var/obj/item/cart_upgrade/brace = I
+		if(brace.ulevel != upgrade_level + 1)
+			if(brace.ulevel <= upgrade_level)
 				to_chat(user, span_warning("This wheelbrace is obsolete."))
-				return
 			else
-				upgrade = item
-				upgrade_level = item.ulevel
-				qdel(item)
-				manage_upgrade()
-				playsound(loc, 'sound/foley/cartadd.ogg', 100, FALSE, -1)
-		if(item.ulevel == 2)
-			if(upgrade_level != 1)
 				to_chat(user, span_warning("The cart needs a normal wheelbrace before this one can be used!"))
-				return
-			else
-				upgrade = item
-				upgrade_level = item.ulevel
-				qdel(item)
-				manage_upgrade()
-				playsound(loc, 'sound/foley/cartadd.ogg', 100, FALSE, -1)
+			return
+		upgrade_level = brace.ulevel
+		qdel(brace)
+		manage_upgrade()
+		playsound(loc, 'sound/foley/cartadd.ogg', 100, FALSE, -1)
+		return
 	if(!user.cmode)
 		if(!insertion_allowed(I))
 			return
@@ -201,6 +207,12 @@
 	return TRUE
 
 /obj/structure/handcart/proc/put_in(atom/movable/O, mob/user)
+	if(isitem(O)) // TA EDIT START
+		var/obj/item/I = O
+		if(I.GetComponent(/datum/component/cursed_item))
+			if(user)
+				to_chat(user, span_warning("[I] cannot be placed into [src]."))
+			return FALSE // TA EDIT END
 	if(!fits_in_cart(O))
 		to_chat(user, span_warning("The cart cannot hold any more weight!"))
 		return FALSE
@@ -233,7 +245,7 @@
 	update_icon()
 	return TRUE
 
-/obj/structure/handcart/proc/get_atom_weight(var/atom/movable/atom)
+/obj/structure/handcart/proc/get_atom_weight(atom/movable/atom)
 	var/weight = 0
 	if(isitem(atom))
 		var/obj/item/I = atom
@@ -241,7 +253,15 @@
 	if(isliving(atom))
 		var/mob/living/living_atom = atom
 		weight = arbitrary_living_creature_weight * living_atom.mob_size // small critters take 10 space, human sized takes 20, large takes 30
+	if(is_cartloadable_structure(atom))
+		weight = max(weight, structure_weight)
 	return weight
+
+/obj/structure/handcart/proc/is_cartloadable_structure(atom/movable/AM)
+	for(var/path in cartloadable_structures)
+		if(istype(AM, path))
+			return TRUE
+	return FALSE
 
 /obj/structure/handcart/proc/recalculate_capacity()
 	current_capacity = 0
@@ -291,7 +311,12 @@
 		L.stop_pulling()
 
 	else if(isobj(AM))
-		if((AM.density) || AM.anchored || AM.has_buckled_mobs())
+		if(is_cartloadable_structure(AM))
+			// Cartloadable structures (e.g. kegs) are dense but may still be hauled,
+			// provided they aren't bolted down or hosting buckled mobs.
+			if(AM.anchored || AM.has_buckled_mobs())
+				return FALSE
+		else if((AM.density) || AM.anchored || AM.has_buckled_mobs())
 			return FALSE
 		else
 			if(isitem(AM))

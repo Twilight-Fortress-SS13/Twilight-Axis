@@ -21,7 +21,8 @@
 	charge_required = TRUE
 	weapon_cast_penalized = FALSE
 	charge_time = CHARGETIME_POKE
-	charge_drain = 1
+	charge_swingdelay_type = SWINGDELAY_PENALTY
+	hold_drain = 1
 	charge_slowdown = CHARGING_SLOWDOWN_SMALL
 	charge_sound = 'sound/magic/charging.ogg'
 	cooldown_time = 30 SECONDS
@@ -63,7 +64,7 @@
 
 	var/cast_dir = H.dir
 	for(var/turf/affected_turf in affected_turfs)
-		new /obj/effect/temp_visual/trap_wall(affected_turf)
+		new /obj/effect/temp_visual/telegraph/wall(affected_turf)
 		addtimer(CALLBACK(src, PROC_REF(spawn_ward), affected_turf, H, cast_dir), 1 SECONDS)
 
 	H.visible_message(span_notice("[H] raises a shimmering arrow ward!"))

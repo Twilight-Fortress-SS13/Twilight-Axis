@@ -2,7 +2,6 @@
 /// movement settings, targeting, common subtrees, and signal wiring. Do not assign this
 /// controller directly — use /melee or /archer subtypes.
 /datum/ai_controller/human_npc
-	movement_delay = 0.1 SECONDS
 	max_target_distance = 13
 	ai_movement = /datum/ai_movement/hybrid_pathing
 	blackboard = list(
@@ -11,27 +10,24 @@
 		BB_TARGETTING_DATUM = new /datum/targetting_datum/basic(),
 		BB_PET_TARGETING_DATUM = new /datum/targetting_datum/basic/not_friends(),
 
-		BB_HUMAN_NPC_ATTACK_ZONE_COUNTER = 0,  // how many times we've hit the same zone
-		BB_HUMAN_NPC_LAST_ATTACK_ZONE = null,  // last zone we attacked
-		BB_HUMAN_NPC_WEAKPOINT = null,         // cached weakpoint zone if we found one
-		BB_HUMAN_NPC_JUMP_COOLDOWN = 0,        // world.time when we can next jump
-		BB_HUMAN_NPC_FLANK_ANGLE = null,       // our claimed flank direction (degrees, 0-359)
-		BB_HUMAN_NPC_FLANK_TARGET = null,      // the turf we're moving toward for flanking
-		BB_HUMAN_NPC_HARASS_MODE = FALSE,      // TRUE when in hit-and-run mode
+		BB_HUMAN_NPC_SWINGS_TAKEN = 0,			// swings this engagement, gates the special opener
+		BB_HUMAN_NPC_SWINGS_TARGET = null,		// who the above is counting against
+		BB_HUMAN_NPC_ZONE_COMMIT_COUNTER = 0,	// swings spent on the current self-picked zone
+		BB_HUMAN_NPC_LAST_ATTACK_ZONE = null,	// last zone we attacked
+		BB_HUMAN_NPC_WEAKPOINT = null,			// cached weakpoint zone if we found one
+		BB_HUMAN_NPC_JUMP_COOLDOWN = 0,		// world.time when we can next jump
+		BB_HUMAN_NPC_HARASS_MODE = FALSE,		// TRUE when in hit-and-run mode
 		BB_HUMAN_NPC_HARASS_RETREATING = FALSE,// TRUE when in the back-off phase of harass
-		BB_HUMAN_NPC_HARASS_COOLDOWN = 0,      // world.time before we can dart in again
-		BB_HUMAN_NPC_JUKE_COOLDOWN = 0,        // world.time before we can juke again
+		BB_HUMAN_NPC_HARASS_COOLDOWN = 0,		// world.time before we can dart in again
 	)
 	/// Subtrees shared by all human NPC archetypes. Subtypes prepend archetype-specific
 	/// subtrees via their own planning_subtrees list.
 	planning_subtrees = list(
 		// /datum/ai_planning_subtree/pet_planning, - TEMP COMMENT OUT
+		/datum/ai_planning_subtree/being_a_minion,
 		/datum/ai_planning_subtree/call_for_help,
 		/datum/ai_planning_subtree/generic_break_restraints,
-		/datum/ai_planning_subtree/use_powder,
-		/datum/ai_planning_subtree/use_bandage,
 		/datum/ai_planning_subtree/use_throwable,
-		/datum/ai_planning_subtree/use_healing_drink,
 		/datum/ai_planning_subtree/generic_wield,
 		/datum/ai_planning_subtree/kick_attack,
 		/datum/ai_planning_subtree/generic_resist,
@@ -49,26 +45,16 @@
 
 /datum/ai_controller/human_npc/TryPossessPawn(atom/new_pawn)
 	. = ..()
-	var/mob/living/living_pawn = new_pawn
-	RegisterSignal(new_pawn, COMSIG_MOB_MOVESPEED_UPDATED, PROC_REF(update_movespeed))
-	movement_delay = living_pawn.cached_multiplicative_slowdown
 	new_pawn.AddComponent(/datum/component/ai_inventory_manager)
 	new_pawn.AddElement(/datum/element/interrupt_on_damage)
 	new_pawn.AddComponent(/datum/component/combat_vocalizer)
 
 /datum/ai_controller/human_npc/UnpossessPawn(destroy)
 	var/mob/living/living_pawn = pawn
-	UnregisterSignal(pawn, list(
-		COMSIG_MOB_MOVESPEED_UPDATED,
-	))
 	living_pawn.RemoveElement(/datum/element/interrupt_on_damage)
 	qdel(living_pawn.GetComponent(/datum/component/ai_inventory_manager))
 	qdel(living_pawn.GetComponent(/datum/component/combat_vocalizer))
 	return ..()
-
-/datum/ai_controller/human_npc/proc/update_movespeed(mob/living/pawn)
-	SIGNAL_HANDLER
-	movement_delay = pawn.cached_multiplicative_slowdown
 
 /datum/ai_controller/human_npc/can_move()
 	. = ..()
@@ -100,16 +86,15 @@
 		BB_TARGETTING_DATUM = new /datum/targetting_datum/basic(),
 		BB_PET_TARGETING_DATUM = new /datum/targetting_datum/basic/not_friends(),
 
-		BB_HUMAN_NPC_ATTACK_ZONE_COUNTER = 0,
+		BB_HUMAN_NPC_SWINGS_TAKEN = 0,
+		BB_HUMAN_NPC_SWINGS_TARGET = null,
+		BB_HUMAN_NPC_ZONE_COMMIT_COUNTER = 0,
 		BB_HUMAN_NPC_LAST_ATTACK_ZONE = null,
 		BB_HUMAN_NPC_WEAKPOINT = null,
 		BB_HUMAN_NPC_JUMP_COOLDOWN = 0,
-		BB_HUMAN_NPC_FLANK_ANGLE = null,
-		BB_HUMAN_NPC_FLANK_TARGET = null,
 		BB_HUMAN_NPC_HARASS_MODE = FALSE,
 		BB_HUMAN_NPC_HARASS_RETREATING = FALSE,
 		BB_HUMAN_NPC_HARASS_COOLDOWN = 0,
-		BB_HUMAN_NPC_JUKE_COOLDOWN = 0,
 
 		// Archer-specific state — only relevant to mobs that carry a bow
 		BB_ARCHER_NPC_BOW = null,
@@ -117,14 +102,15 @@
 		BB_ARCHER_NPC_EQUIPMENT_CACHE_EXPIRY = 0,
 		BB_ARCHER_NPC_TARGET_ARROW = null,
 		BB_ARCHER_NPC_STASHED_WEAPON = null,
+		BB_ARCHER_NPC_NEXT_SHOT = 0,
+		BB_ARCHER_NPC_REPOSITION_TURF = null,
+		BB_ARCHER_NPC_REPOSITION_UNTIL = 0,
 	)
 	planning_subtrees = list(
+		/datum/ai_planning_subtree/being_a_minion,
 		/datum/ai_planning_subtree/call_for_help,
 		/datum/ai_planning_subtree/generic_break_restraints,
-		/datum/ai_planning_subtree/use_powder,
-		/datum/ai_planning_subtree/use_bandage,
 		/datum/ai_planning_subtree/use_throwable,
-		/datum/ai_planning_subtree/use_healing_drink,
 		/datum/ai_planning_subtree/generic_wield,
 		/datum/ai_planning_subtree/kick_attack,
 		/datum/ai_planning_subtree/generic_resist,
@@ -132,6 +118,7 @@
 		/datum/ai_planning_subtree/flee_target,
 		/datum/ai_planning_subtree/tree_climb,
 		/datum/ai_planning_subtree/archer_base, // Archer only
+		/datum/ai_planning_subtree/retrieve_arrows, // Archer only
 		/datum/ai_planning_subtree/ranged_attack_subtree, // Archer only
 		/datum/ai_planning_subtree/aggro_find_target,
 		/datum/ai_planning_subtree/attack_obstacle_in_path,
@@ -139,6 +126,28 @@
 		/datum/ai_planning_subtree/basic_melee_attack_subtree/human_npc,
 		/datum/ai_planning_subtree/find_weapon,
 		/datum/ai_planning_subtree/equip_item,
-		/datum/ai_planning_subtree/retrieve_arrows,
 		/datum/ai_planning_subtree/loot,
 	)
+
+
+/proc/npc_technique_cd(mob/living/user, base_cd)
+	if(HAS_TRAIT(user, TRAIT_CONJURED_SUMMON))
+		return base_cd / 1.5
+	return base_cd
+
+// Make it so that every other human NPC in view attacking the same target inherits the cooldown, so that they cannot be chained.
+/proc/propagate_technique_cd(mob/living/user, atom/target, bb_key, cd_end, specialcd_duration = 0)
+	if(!target)
+		return
+	for(var/mob/living/carbon/human/ally in view(5, user))
+		if(ally == user || ally.client || ally.stat == DEAD)
+			continue
+		var/datum/ai_controller/AC = ally.ai_controller
+		if(!istype(AC, /datum/ai_controller/human_npc))
+			continue
+		if(AC.blackboard[BB_BASIC_MOB_CURRENT_TARGET] != target)
+			continue
+		if(bb_key)
+			AC.set_blackboard_key(bb_key, max(AC.blackboard[bb_key] || 0, cd_end))
+		if(specialcd_duration)
+			ally.apply_status_effect(/datum/status_effect/debuff/specialcd, specialcd_duration)

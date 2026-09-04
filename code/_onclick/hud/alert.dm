@@ -1,18 +1,18 @@
 //A system to manage and display alerts on screen without needing you to do it yourself
 
-//PUBLIC -  call these wherever you want
+//PUBLIC -	call these wherever you want
 
 
 /mob/proc/throw_alert(category, type, severity, obj/new_master, override = FALSE)
 
 /* Proc to create or update an alert. Returns the alert if the alert is new or updated, 0 if it was thrown already
- category is a text string. Each mob may only have one alert per category; the previous one will be replaced
- path is a type path of the actual alert type to throw
- severity is an optional number that will be placed at the end of the icon_state for this alert
- For example, high pressure's icon_state is "highpressure" and can be serverity 1 or 2 to get "highpressure1" or "highpressure2"
- new_master is optional and sets the alert's icon state to "template" in the ui_style icons with the master as an overlay.
- Clicks are forwarded to master
- Override makes it so the alert is not replaced until cleared by a clear_alert with clear_override, and it's used for hallucinations.
+	category is a text string. Each mob may only have one alert per category; the previous one will be replaced
+	path is a type path of the actual alert type to throw
+	severity is an optional number that will be placed at the end of the icon_state for this alert
+	For example, high pressure's icon_state is "highpressure" and can be serverity 1 or 2 to get "highpressure1" or "highpressure2"
+	new_master is optional and sets the alert's icon state to "template" in the ui_style icons with the master as an overlay.
+	Clicks are forwarded to master
+	Override makes it so the alert is not replaced until cleared by a clear_alert with clear_override, and it's used for hallucinations.
  */
 
 	if(!category || QDELETED(src))
@@ -100,25 +100,44 @@
 	var/alert_group = ALERT_STATUS //decides where on the screen the alert shows up, if it's a debuff, status effect, or buff
 	nomouseover = FALSE
 	var/atom/movable/screen/maptext_holder/maptext_holder
+	var/last_countdown_text //Cached countdown string so we don't rewrite maptext every fast-process tick
+
+//At or above this, the countdown shows whole minutes ("27m"); below it, M:SS or Ns
+#define ALERT_COUNTDOWN_CUTOFF (3 MINUTES)
 
 /atom/movable/screen/alert/proc/update_countdown(remaining_deciseconds)
-	if(remaining_deciseconds <= 0 || remaining_deciseconds >= 3 MINUTES)
+	if(remaining_deciseconds <= 0)
 		if(istype(maptext_holder))
 			maptext_holder.maptext = null
+		last_countdown_text = null
 		return
+
+	var/countdown_text
+	if(remaining_deciseconds >= ALERT_COUNTDOWN_CUTOFF)
+		var/mins_left = max(round(remaining_deciseconds / (1 MINUTES), 1), 1)
+		countdown_text = "[mins_left]m"
+	else
+		var/seconds_left = round(remaining_deciseconds / (1 SECONDS), 0.1)
+		if(seconds_left >= 60)
+			var/mins = round(seconds_left / 60)
+			var/secs = round(seconds_left) % 60
+			countdown_text = "[mins]:[secs < 10 ? "0[secs]" : "[secs]"]"
+		else
+			countdown_text = "[seconds_left]s"
+
+	if(countdown_text == last_countdown_text)
+		return
+	last_countdown_text = countdown_text
+
 	if(!istype(maptext_holder))
 		maptext_holder = new(src)
 		maptext_holder.x = 4
 		maptext_holder.y = 0
 		maptext_holder.color = "#800000"
 		vis_contents.Add(maptext_holder)
-	var/seconds_left = round(remaining_deciseconds / (1 SECONDS), 0.1)
-	if(seconds_left >= 60)
-		var/mins = round(seconds_left / 60)
-		var/secs = round(seconds_left) % 60
-		maptext_holder.maptext = MAPTEXT("[mins]:[secs < 10 ? "0[secs]" : "[secs]"]")
-	else
-		maptext_holder.maptext = MAPTEXT("[seconds_left]s")
+	maptext_holder.maptext = MAPTEXT(countdown_text)
+
+#undef ALERT_COUNTDOWN_CUTOFF
 
 //Gas alerts
 /atom/movable/screen/alert/not_enough_oxy
@@ -279,6 +298,11 @@
 	L.changeNext_move(CLICK_CD_RESIST)
 	if(L.mobility_flags & MOBILITY_MOVE)
 		return L.resist_fire() //I just want to start a flame in your hearrrrrrtttttt.
+
+/atom/movable/screen/alert/fire/vheslyn
+	name = "Hellfire!"
+	desc = ""
+	icon_state = "vheslynfire"
 
 /atom/movable/screen/alert/fire/sunder
 	name = "Sundered!"

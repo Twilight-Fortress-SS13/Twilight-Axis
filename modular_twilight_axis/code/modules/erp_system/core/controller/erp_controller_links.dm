@@ -60,6 +60,7 @@
 	qdel(L)
 
 	controller.knot_d?.sync_do_knot_action_state()
+	controller.mark_actions_ui_dirty()
 
 /// Finds link datum by UI id.
 /datum/erp_controller_links/proc/find_link(link_id)
@@ -259,6 +260,7 @@
 	controller.links += L
 
 	controller._send_link_start_message(L)
+	controller.mark_actions_ui_dirty()
 	controller.ui?.request_update()
 	return TRUE
 
@@ -299,6 +301,8 @@
 
 	if(!to_stop)
 		return
+
+	controller.mark_actions_ui_dirty()
 
 	for(var/datum/erp_sex_link/L2 in to_stop)
 		stop_link_runtime(L2)

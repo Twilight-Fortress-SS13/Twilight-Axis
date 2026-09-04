@@ -4,13 +4,6 @@
 	including inventories and item quick actions.
 */
 
-// The default UI style is the first one in the list
-GLOBAL_LIST_INIT(available_ui_styles, sortList(list(
-	"Rogue" = 'icons/mob/roguehud.dmi')))
-
-/proc/ui_style2icon(ui_style)
-	return GLOB.available_ui_styles[ui_style] || GLOB.available_ui_styles[GLOB.available_ui_styles[1]]
-
 /datum/hud
 	var/mob/mymob
 
@@ -56,8 +49,9 @@ GLOBAL_LIST_INIT(available_ui_styles, sortList(list(
 	var/list/hand_slots // /atom/movable/screen/inventory/hand objects, assoc list of "[held_index]" = object
 	var/list/atom/movable/screen/plane_master/plane_masters = list() // see "appearance_flags" in the ref, assoc list of "[plane]" = object
 
-	var/atom/movable/screen/movable/action_button/hide_toggle/hide_actions_toggle
 	var/action_buttons_hidden = FALSE
+	var/rearrange_mode = FALSE
+	var/next_rearrange_hint = 0
 
 	var/atom/movable/screen/healths
 	var/atom/movable/screen/bloods
@@ -84,12 +78,7 @@ GLOBAL_LIST_INIT(available_ui_styles, sortList(list(
 
 	if (!ui_style)
 		// will fall back to the default if any of these are null
-		ui_style = ui_style2icon(owner.client && owner.client.prefs && owner.client.prefs.UI_style)
-
-//	hide_actions_toggle = new
-//	hide_actions_toggle.InitialiseIcon(src)
-//	if(mymob.client)
-//		hide_actions_toggle.locked = mymob.client.prefs.buttons_locked
+		ui_style = 'icons/mob/roguehud.dmi'
 
 	if(!hand_slots)
 		hand_slots = list()
@@ -174,7 +163,6 @@ GLOBAL_LIST_INIT(available_ui_styles, sortList(list(
 			if(infodisplay.len)
 				screenmob.client.screen += infodisplay
 
-//			screenmob.client.screen += hide_actions_toggle
 
 			if(action_intent)
 				action_intent.screen_loc = initial(action_intent.screen_loc) //Restore intent selection to the original position
@@ -258,7 +246,6 @@ GLOBAL_LIST_INIT(available_ui_styles, sortList(list(
 
 	ui_style = new_ui_style
 	build_hand_slots()
-//	hide_actions_toggle.InitialiseIcon(src)
 
 //Triggered when F12 is pressed (Unless someone changed something in the DMF)
 /mob/verb/button_pressed_F12()

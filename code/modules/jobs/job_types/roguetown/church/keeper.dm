@@ -6,26 +6,27 @@
 	faction = "Station"
 	total_positions = 2
 	spawn_positions = 2
-	forbidden_races = list(RACES_DESPISED)
 	allowed_ages = ALL_AGES_LIST
 	allowed_patrons = list(/datum/patron/divine/pestra)
-
+	forbidden_races = list(RACES_DESPISED)
 	outfit = /datum/outfit/job/roguetown/keeper
 	display_order = JDO_KEEPER
 	give_bank_account = TRUE
-	min_pq = 3
+	min_pq = 5
 	max_pq = null
 	round_contrib_points = 3
+	same_job_respawn_delay = 20 MINUTES
 
 	job_traits = list(TRAIT_MEDICINE_EXPERT, TRAIT_HOMESTEAD_EXPERT,
-						  TRAIT_ALCHEMY_EXPERT, TRAIT_SEWING_EXPERT,
-						  TRAIT_SURVIVAL_EXPERT, TRAIT_NOSTINK,
-						  TRAIT_GRABIMMUNE, TRAIT_STEELHEARTED)
+							TRAIT_ALCHEMY_EXPERT, TRAIT_SEWING_EXPERT,
+							TRAIT_SURVIVAL_EXPERT, TRAIT_NOSTINK,
+							TRAIT_GRABIMMUNE, TRAIT_STEELHEARTED)
 
 	advclass_cat_rolls = list(CTAG_KEEPER = 2)
 	job_subclasses = list(
 		/datum/advclass/keeper
 	)
+	has_subprefs = FALSE // only one subclass
 
 /datum/advclass/keeper
 	name = "Keeper"
@@ -76,14 +77,14 @@
 	beltl = /obj/item/flashlight/flare/torch/lantern
 	backl = /obj/item/storage/backpack/rogue/backpack
 	backpack_contents = list(/obj/item/rogueweapon/huntingknife/idagger/steel/parrying = 1,
-							 /obj/item/rogueweapon/scabbard/sheath = 1,
-							 /obj/item/storage/belt/rogue/pouch/coins/mid = 1,
-							 /obj/item/heart_canister = 2,
-							 /obj/item/heart_blood_vial/filled = 2,
-							 /obj/item/heart_blood_canister/filled = 1,
-							 /obj/item/heart_blood_vial = 5,
-							 /obj/item/heart_blood_canister = 1,
-							 /obj/item/storage/keyring/keeper = 1)
+								/obj/item/rogueweapon/scabbard/sheath = 1,
+								/obj/item/storage/belt/rogue/pouch/coins/mid = 1,
+								/obj/item/heart_canister = 2,
+								/obj/item/heart_blood_vial/filled = 2,
+								/obj/item/heart_blood_canister/filled = 1,
+								/obj/item/heart_blood_vial = 5,
+								/obj/item/heart_blood_canister = 1,
+								/obj/item/storage/keyring/keeper = 1)
 	H.put_in_hands(new /obj/item/storage/belt/rogue/surgery_bag/full/physician(H))
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T3, passive_gain = CLERIC_REGEN_MINOR, start_maxed = TRUE)

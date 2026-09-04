@@ -24,9 +24,11 @@
 	item_d_type = "blunt"
 	desc = "A powerful blow that delivers Strength-scaling knockback and slowdown to the target. The amount of inflicted knockback scales off your Strength, ranging from X (1 tile) to XIV (4 tiles). </br>Cannot inflict any knockback or slowdown if your Strength is below X. </br>Cannot be used consecutively more than every 5 seconds on the same target. </br>Prone targets halve the knockback distance. </br>Not fully charging the attack limits knockback to 1 tile."
 	var/maxrange = 4
+	var/list/smash_sound_listeners // TA EDIT
+	var/smash_sound_channel	// TA EDIT
 
 /datum/intent/mace/smash/spec_on_apply_effect(mob/living/H, mob/living/user, params)
-	var/chungus_khan_str = user.STASTR 
+	var/chungus_khan_str = user.STASTR
 	if(H.has_status_effect(/datum/status_effect/debuff/yeetcd))
 		return // Recently knocked back, cannot be knocked back again yet
 	if(chungus_khan_str < 10)
@@ -50,9 +52,27 @@
 		force = H.move_force)
 // Do not call handle_knockback like in knockback cuz that means it will hardstun.
 
-/datum/intent/mace/smash/prewarning()
+/datum/intent/mace/smash/prewarning() // TA EDIT START
 	if(mastermob)
-		playsound(mastermob, pick('sound/combat/wooshes/blunt/wooshhuge (2).ogg'), 100, FALSE)
+		stop_smash_sound()
+		smash_sound_channel = SSsounds.random_available_channel()
+		smash_sound_listeners = playsound(mastermob, pick('sound/combat/wooshes/blunt/wooshhuge (2).ogg'), 100, FALSE, channel = smash_sound_channel)
+
+/datum/intent/mace/smash/proc/stop_smash_sound()
+	if(smash_sound_channel)
+		for(var/mob/listener as anything in smash_sound_listeners)
+			if(!QDELETED(listener))
+				listener.stop_sound_channel(smash_sound_channel)
+	smash_sound_listeners = null
+	smash_sound_channel = null
+
+/datum/intent/mace/smash/on_mouse_up()
+	stop_smash_sound()
+	return ..()
+
+/datum/intent/mace/smash/Destroy()
+	stop_smash_sound()
+	return ..() // TA EDIT START END
 
 /datum/intent/mace/smash/lesser
 	name = "one-handed smash" //Exclusive to Warhammers, and other mace-styled bludgeons that can only be wielded in one hand.
@@ -70,6 +90,20 @@
 	item_d_type = "blunt"
 	penfactor = PEN_NONE
 	demolition_mod = 3.5
+	clickcd = CLICK_CD_HEAVY
+	swingdelay = 10
+
+/datum/intent/mace/lesserdemolish
+	name = "break"
+	desc = "A deliberate structure-breaking blow. Deals triple the damage to structures"
+	icon_state = "incrush"
+	blade_class = BCLASS_SMASH
+	attack_verb = list("demolishes", "crushes", "wrecks")
+	animname = "strike"
+	hitsound = list('sound/combat/hits/blunt/metalblunt (1).ogg', 'sound/combat/hits/blunt/metalblunt (2).ogg', 'sound/combat/hits/blunt/metalblunt (3).ogg')
+	item_d_type = "blunt"
+	penfactor = PEN_NONE
+	demolition_mod = 3
 	clickcd = CLICK_CD_HEAVY
 	swingdelay = 10
 
@@ -135,6 +169,9 @@
 	desc = "A titanic blow that delivers Strength-scaling knockback and slowdown to the target. The amount of inflicted knockback scales off your Strength, ranging from X (1 tile) to XV (5 tiles). </br>Actively drains stamina while being charged up. </br>Cannot inflict any knockback or slowdown if your Strength is below X. </br>Cannot be used consecutively more than every 5 seconds on the same target. </br>Prone targets halve the knockback distance. </br>Not fully charging the attack limits knockback to 1 tile."
 	maxrange = 5
 
+/datum/intent/mace/strike/poleaxe
+	damfactor = 1.2
+
 //blunt objs ฅ^•ﻌ•^ฅ
 
 /obj/item/rogueweapon/mace
@@ -188,7 +225,7 @@
 
 /obj/item/rogueweapon/mace/alloy
 	name = "decrepit mace"
-	desc = "Frayed bronze, perched atop a rotwooden shaft. His sacrifice had drowned Old Syon, and - in its wake - left Man bereft of all it had accomplished. With all other prayers falling upon deaf ears, Man had crafted this idol in tribute to its new God; violence."
+	desc = "Rotted metal, perched atop a rotwooden shaft. His sacrifice had drowned Old Syon, and - in its wake - left Man bereft of all it had accomplished. With all other prayers falling upon deaf ears, Man had crafted this idol in tribute to its new God; violence."
 	icon_state = "amace"
 	force = 17
 	force_wielded = 21
@@ -203,7 +240,7 @@
 	force_wielded = 30
 	name = "bell ringer"
 	desc = "Each man's death diminishes me, for I am involved in mankind. </br>Therefore, send not to know for whom the bell tolls. </br>It tolls for thee."
-	icon_state = "churchmace"
+	icon_state = "bellringer"
 	wbalance = WBALANCE_HEAVY
 	smeltresult = /obj/item/ingot/steel
 	wdefense = 3
@@ -212,6 +249,29 @@
 	. = ..()
 	. += span_info("This mace can be used to ring the Church's bell, distinctly hearable by everyone within the Town's limits.")
 
+// Holy See equipment
+
+/obj/item/rogueweapon/mace/steel/holyseemace
+	name = "holy see mace"
+	desc = "A blessed mace, wielded by the Holy See's templars to drive the fiends in the dark back. \
+			Many within the See find the shedding of blood regrettable, thus did an ancient artificer be struck by divine inspiration. \
+			A holy bludgeon that would draw far less blood than its sharper cousins, but still capable of crushing steel, heretic and \
+			deadite both in righteous fury. When evil is at thy doorstep, grasp the Ten's gift in hand and be ever mindful. \
+			It's not what's in front of you that's important, it's what's behind you."
+	icon_state = "churchmace"
+	wdefense = 5
+
+/obj/item/rogueweapon/mace/steel/holyseemace/sunburst
+	name = "sunburst"
+	desc = "A luminous steeled mace with a lengthened handle, adorned with vibrant golden trimmings along a faintly silvered polished metal edge, \
+			the spikes that protrude from its heavy edge radiate with Astrata's glow upon the points. Often issued as a heavy-reminder of divine \
+			judgement to crash against the ever-growing legions of monsters that would dare stand against the weight of Astrata's fury and judgement."
+	icon = 'icons/roguetown/weapons/blunt32.dmi'
+	icon_state = "astratamace"
+	force_wielded = 35
+	max_integrity = 250
+	wdefense = 5
+
 /obj/item/rogueweapon/mace/steel
 	force = 25
 	force_wielded = 32
@@ -219,6 +279,17 @@
 	desc = "Cold steel, royal might. </br>Crushing down upon thine foe. </br>Cracking plate, bone, soul."
 	icon_state = "smace"
 	smeltresult = /obj/item/ingot/steel
+	wdefense = 3
+	smelt_bar_num = 2
+
+/obj/item/rogueweapon/mace/blacksteel
+	force = 30
+	force_wielded = 35
+	max_integrity = 300
+	name = "blacksteel mace"
+	desc = "A magnificent mace of blacksteel. Tied around the handle is crimson silk, which was the style at the tyme."
+	icon_state = "bs_mace"
+	smeltresult = /obj/item/ingot/blacksteel
 	wdefense = 3
 	smelt_bar_num = 2
 
@@ -286,6 +357,13 @@
 	smeltresult = /obj/item/ingot/gold
 	unenchantable = TRUE
 	no_loot_taint = TRUE
+
+/obj/item/rogueweapon/mace/woodclub/militia // it literally just has an aura, and demolish intent
+	name = "bogbark club"
+	desc = "A primitive cudgel carved of a stout piece of treefall, from the deepest parts of the Terrorbog. An unmistakable aura of power surrounds it. This thing looks dangerously strong."
+	aura_color = "#00ff00"
+	gripped_intents = list(/datum/intent/mace/strike/wood/, /datum/intent/mace/smash/wood, /datum/intent/effect/daze, /datum/intent/mace/lesserdemolish)
+	w_class = WEIGHT_CLASS_NORMAL // it's just a stick, can put it in your backpack
 
 /obj/item/rogueweapon/mace/woodclub
 	force = 15
@@ -364,7 +442,7 @@
 	attack_verb = list("twamps", "thwacks", "wallops")
 	damfactor = 1.3		// High damage mod to give high chance of dislocation against unarmored targets.
 	intent_intdamage_factor = 0.4	// Purposefully bad at damaging armor. Specifically deals -60% integrity damage, irregardless of the previous intent's modifiers.
-	icon_state = "inbash"	// Wallop is too long for a button; placeholder.
+	icon_state = "inthresh"	// Wallop is too long for a button; placeholder.
 	desc = "A quick and sudden thwack that can cripple unarmored limbs with tremendous force. </br>Deals TWIST damage instead of BLUNT damage. Critical hits cause DISLOCATIONS, instead of FRACTURES. </br>DISLOCATED ARMS and HANDS cannot wield, grab, or use anything. </br>DISLOCATED LEGS and FEET prevent the target from standing."
 
 // (I'm evil. Slight swing delay.)
@@ -376,7 +454,7 @@
 	damfactor = 1.25
 	intent_intdamage_factor = 0.4 //Reduces integrity damage modifier from +60% to -60%.
 	swingdelay = 6 //Slower than a strike, quicker than a chop or old-school smash.
-	icon_state = "inthresh"	
+	icon_state = "inthresh"
 	desc = "A slow-swinging strike that can cripple unarmored limbs with tremendous force. </br>Deals TWIST damage instead of BLUNT damage. Critical hits cause DISLOCATIONS, instead of FRACTURES. </br>DISLOCATED ARMS and HANDS cannot wield, grab, or use anything. </br>DISLOCATED LEGS and FEET prevent the target from standing."
 
 /obj/item/rogueweapon/mace/cudgel/flanged
@@ -404,7 +482,7 @@
 /obj/item/rogueweapon/mace/cudgel/flanged/silver
 	name = "silver flanged mace"
 	desc = "A flanged mace of silver, fit for a holy paladin's grasp. The weight within your hand is not of silver, alone - but of the fate that you may yet avert; for yourself, and \
-    for the world you love. </br>'Please do not wait for me..' \ </br>'For though I depart, my magic will never die..' </br>'Listen to my laughter in the babbling brook..' \
+	for the world you love. </br>'Please do not wait for me..' \ </br>'For though I depart, my magic will never die..' </br>'Listen to my laughter in the babbling brook..' \
 	</br>'Hear my song being sung by the bards..' </br>'Feel my warmth in the rays of the morning sun..' </br>'See my light in the twinkling stars at night..' \
 	</br>'..and know that my spirit will always be with you..' </br>'..woven into the very fabric of the world we cherished together.'"
 	force = 30
@@ -434,20 +512,80 @@
 	icon_state = "rungu_shell"
 	max_integrity = 75
 
-/obj/item/rogueweapon/mace/cudgel/psy
+/obj/item/rogueweapon/mace/cudgel/flanged/psy
 	name = "psydonic flanged mace"
 	desc = "A flanged mace of blessed silver, wielded by His children. The rosewood handle's curved nature beckons your fingers to curl along its grooves, and to never let go; \
-    no matter the weather nor odds. </br>'Please do not wait for me..' \ </br>'For though I depart, my magic will never die..' </br>'Listen to my laughter in the babbling brook..' \
+	no matter the weather nor odds. </br>'Please do not wait for me..' \ </br>'For though I depart, my magic will never die..' </br>'Listen to my laughter in the babbling brook..' \
 	</br>'Hear my song being sung by the bards..' </br>'Feel my warmth in the rays of the morning sun..' </br>'See my light in the twinkling stars at night..' \
 	</br>'..and know that my spirit will always be with you..' </br>'..woven into the very fabric of the world we cherished together.'"
 	force = 30
-	possible_item_intents = list(/datum/intent/mace/strike, /datum/intent/mace/strike/dislocate, /datum/intent/effect/daze, /datum/intent/mace/warhammer/stab)
-	gripped_intents = null //One-handed. Pseudo-sidegrade between the Mace and Warhammer. Exchanges smashing for dislocation.
 	minstr = 9
 	wdefense = 5
 	resistance_flags = FIRE_PROOF
-	swingsound = BLUNTWOOSH_LARGE
 	icon_state = "psyflangedmace"
+	swingsound = BLUNTWOOSH_LARGE
+	is_silver = TRUE
+	smeltresult = /obj/item/ingot/silverblessed
+
+/obj/item/rogueweapon/mace/cudgel/flanged/psy/ComponentInitialize()
+	AddComponent(\
+		/datum/component/silverbless,\
+		pre_blessed = BLESSING_NONE,\
+		silver_type = SILVER_PSYDONIAN,\
+		added_force = 0,\
+		added_blade_int = 100,\
+		added_int = 50,\
+		added_def = 1,\
+	)
+
+/obj/item/rogueweapon/mace/cudgel/flanged/psy/preblessed/ComponentInitialize()
+	AddComponent(\
+		/datum/component/silverbless,\
+		pre_blessed = BLESSING_PSYDONIAN,\
+		silver_type = SILVER_PSYDONIAN,\
+		added_force = 0,\
+		added_blade_int = 100,\
+		added_int = 50,\
+		added_def = 1,\
+	)
+
+/obj/item/rogueweapon/mace/cudgel/flanged/psy/getonmobprop(tag)
+	. = ..()
+	if(tag)
+		switch(tag)
+			if("gen")
+				return list("shrink" = 0.6,"sx" = -11,"sy" = -8,"nx" = 12,"ny" = -8,"wx" = -5,"wy" = -8,"ex" = 6,"ey" = -8,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 90,"sturn" = -90,"wturn" = -90,"eturn" = 90,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
+			if("onbelt")
+				return list("shrink" = 0.4,"sx" = -3,"sy" = -4,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 70,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 1,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
+
+/obj/item/rogueweapon/mace/cudgel/flanged/psy/old
+	name = "enduring flanged mace"
+	desc = "A flanged mace, weathered by tyme's gaze. It radiates a strange energy; distant, fleeting, but ever-so-familiar. </br>'Please do not wait for me..' \
+	</br>'For though I depart, my magic will never die..' </br>'Listen to my laughter in the babbling brook..' </br>'Hear my song being sung by the bards..' \
+	</br>'Feel my warmth in the rays of the morning sun..' </br>'See my light in the twinkling stars at night..' </br>'..and know that my spirit will always be with you..' \
+	</br>'..woven into the very fabric of the world we cherished together.'"
+	force_wielded = 25
+	wbalance = WBALANCE_NORMAL
+	icon_state = "opsyflangedmace"
+	smeltresult = /obj/item/ingot/iron
+
+/obj/item/rogueweapon/mace/cudgel/flanged/psy/old/ComponentInitialize()
+	return
+
+//
+
+/obj/item/rogueweapon/mace/cudgel/psy
+	name = "psydonic handmace"
+	desc = "A shorter variant of the flanged silver mace, rebalanced for one-handed usage. It isn't uncommon for these sidearms to mysteriously 'vanish' from an Adjudicator's belt, only to be 'rediscovered' - and subsequently kept - by a Confessor."
+	possible_item_intents = list(/datum/intent/mace/strike, /datum/intent/mace/strike/wallop)
+	gripped_intents = list(/datum/intent/mace/strike, /datum/intent/mace/strike/wallop, /datum/intent/mace/smash, /datum/intent/effect/daze)
+	force = 25
+	force_wielded = 30
+	minstr = 7
+	wdefense = 5
+	wbalance = WBALANCE_SWIFT
+	resistance_flags = FIRE_PROOF
+	icon_state = "psycudgel"
 	is_silver = TRUE
 	smeltresult = /obj/item/ingot/silverblessed
 
@@ -473,79 +611,17 @@
 		added_def = 1,\
 	)
 
-/obj/item/rogueweapon/mace/cudgel/psy/getonmobprop(tag)
-	. = ..()
-	if(tag)
-		switch(tag)
-			if("gen")
-				return list("shrink" = 0.6,"sx" = -11,"sy" = -8,"nx" = 12,"ny" = -8,"wx" = -5,"wy" = -8,"ex" = 6,"ey" = -8,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 90,"sturn" = -90,"wturn" = -90,"eturn" = 90,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
-			if("onbelt")
-				return list("shrink" = 0.4,"sx" = -3,"sy" = -4,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 70,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 1,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
-
 /obj/item/rogueweapon/mace/cudgel/psy/old
-	name = "enduring flanged mace"
-	desc = "A flanged mace, weathered by tyme's gaze. It radiates a strange energy; distant, fleeting, but ever-so-familiar. </br>'Please do not wait for me..' \
-	</br>'For though I depart, my magic will never die..' </br>'Listen to my laughter in the babbling brook..' </br>'Hear my song being sung by the bards..' \
-	</br>'Feel my warmth in the rays of the morning sun..' </br>'See my light in the twinkling stars at night..' </br>'..and know that my spirit will always be with you..' \
-	</br>'..woven into the very fabric of the world we cherished together.'"
-	force_wielded = 25
-	wbalance = WBALANCE_NORMAL
-	icon_state = "opsyflangedmace"
-	smeltresult = /obj/item/ingot/iron
-
-/obj/item/rogueweapon/mace/cudgel/psy/old/ComponentInitialize()
-	return
-
-//
-
-/obj/item/rogueweapon/mace/cudgel/psyclassic
-	name = "psydonic handmace"
-	desc = "A shorter variant of the flanged silver mace, rebalanced for one-handed usage. It isn't uncommon for these sidearms to mysteriously 'vanish' from an Adjudicator's belt, only to be 'rediscovered' - and subsequently kept - by a Confessor."
-	possible_item_intents = list(/datum/intent/mace/strike, /datum/intent/mace/strike/wallop)
-	gripped_intents = list(/datum/intent/mace/strike, /datum/intent/mace/strike/wallop, /datum/intent/mace/smash, /datum/intent/effect/daze)
-	force = 25
-	force_wielded = 30
-	minstr = 7
-	wdefense = 5 
-	wbalance = WBALANCE_SWIFT
-	resistance_flags = FIRE_PROOF
-	icon_state = "psyflangedmacelegacy"
-	is_silver = TRUE
-	smeltresult = /obj/item/ingot/silverblessed
-
-/obj/item/rogueweapon/mace/cudgel/psyclassic/ComponentInitialize()
-	AddComponent(\
-		/datum/component/silverbless,\
-		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 100,\
-		added_int = 50,\
-		added_def = 1,\
-	)
-
-/obj/item/rogueweapon/mace/cudgel/psyclassic/preblessed/ComponentInitialize()
-	AddComponent(\
-		/datum/component/silverbless,\
-		pre_blessed = BLESSING_PSYDONIAN,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 100,\
-		added_int = 50,\
-		added_def = 1,\
-	)
-
-/obj/item/rogueweapon/mace/cudgel/psyclassic/old
 	name = "enduring handmace"
 	desc = "A flanged mace, well-balanced for usage in one hand. It radiates with a strange energy: familiar, yet ever-so-distant."
 	force = 20
 	force_wielded = 25
 	wbalance = WBALANCE_NORMAL
-	icon_state = "opsyflangedmacelegacy"
+	icon_state = "opsycudgel"
 	is_silver = FALSE
 	smeltresult = /obj/item/ingot/steel
 
-/obj/item/rogueweapon/mace/cudgel/psyclassic/old/ComponentInitialize()
+/obj/item/rogueweapon/mace/cudgel/psy/old/ComponentInitialize()
 	return
 
 //
@@ -560,7 +636,7 @@
 	wdefense = 2
 
 /obj/item/rogueweapon/mace/cudgel/justice
-	name = "'Justice'"
+	name = "\"Justice\""
 	desc = "The icon of the right of office of the Marshal. While mostly ceremonial in design, it serves its purpose in dishing out some much needed justice."
 	force = 30
 	icon_state = "justice"
@@ -759,29 +835,65 @@
 	max_integrity = 200
 
 /obj/item/rogueweapon/mace/warhammer/bronze
-	force = 22
+	force = 25
+	possible_item_intents = list(/datum/intent/mace/strike, /datum/intent/sword/cut, /datum/intent/mace/warhammer/pick, /datum/intent/mace/smash/lesser)
 	name = "bronze warclub"
 	desc = "The warhammer's ancestral link, carved from a weightsome log and studded with bronze. Elven natureguards carry it to both honor their forefathers, and as a way to sunder those who'd ravage Dendor's bounties without thought-or-restraint; a toss from afar turns into a sundering hurlbat."
 	icon_state = "bronzeclub"
+	max_blade_int = 150
 	wbalance = WBALANCE_HEAVY
-	throwforce = 30
+	throwforce = 25
 	embedding = list("embedded_pain_multiplier" = 4, "embed_chance" = 50, "embedded_fall_chance" = 20)
 	smeltresult = /obj/item/ingot/bronze
 	wdefense = 3
 	max_integrity = 180
+	sharpness = IS_SHARP
+
+/obj/item/rogueweapon/mace/warhammer/bronze/iron
+	force = 20 //just a tad weaker than the bronze to balance it out, this weapon has some versatile intents and i dont want it to be TOO strong.
+	name = "iron warclub"
+	desc = "The warhammer's ancestral link, carved from a weightsome log and studded with iron. Elven natureguards carry it to both honor their forefathers, and as a way to sunder those who'd ravage Dendor's bounties without thought-or-restraint; a toss from afar turns into a sundering hurlbat."
+	icon_state = "iclub"
+	max_blade_int = 100
+	throwforce = 20 // still hurts, just less
+	smeltresult = /obj/item/ingot/iron
+	wdefense = 2
+	max_integrity = 120
+
+/obj/item/rogueweapon/mace/warhammer/bronze/steel
+	force = 28 //just a little better than the bronze club but barely
+	name = "steel warclub"
+	desc = "The warhammer's ancestral link, carved from a weightsome log and studded with steel. Elven natureguards carry it to both honor their forefathers, and as a way to sunder those who'd ravage Dendor's bounties without thought-or-restraint; a toss from afar turns into a sundering hurlbat."
+	icon_state = "steelclub"
+	max_blade_int = 175
+	throwforce = 25
+	smeltresult = /obj/item/ingot/steel
+	wdefense = 3
+	max_integrity = 200
+
+/obj/item/rogueweapon/mace/warhammer/bronze/silver
+	name = "silver warclub"
+	desc = "The warhammer's ancestral link, carved from a weightsome log and studded with silver. Elven natureguards carry it to both honor their forefathers, and as a way to sunder those who'd ravage Dendor's bounties without thought-or-restraint; a toss from afar turns into a sundering hurlbat."
+	icon_state = "clubsilver"
+	throwforce = 30
+	smeltresult = /obj/item/ingot/silver
+	wdefense = 4
+	is_silver = TRUE
 
 /obj/item/rogueweapon/mace/warhammer/bronze/decorated
+	force = 30 // this requires GOLD to make, its going to be a bit more heavy.
 	name = "decorated bronze warclub"
-	desc = "Flowers, silk, and gold caress this carved-and-spiked log; a honored totem who's roots trace back to the daes before Syon's impact. Myths speak of ancient elve-and-humen alike, wielding such bronzen bludgeons against the Archdevil's rampaging hordes."
+	desc = "beads, silk, and gold caress this carved-and-spiked log; a honored totem who's roots trace back to the daes before Syon's impact. Myths speak of ancient elve-and-humen alike, wielding such bronzen bludgeons against the Archdevil's rampaging hordes."
 	icon_state = "bronzeclubdec"
 	smeltresult = /obj/item/ingot/gold
 	wdefense = 5
 	max_integrity = 250
+	max_blade_int = 200
 	no_loot_taint = TRUE
 
 /obj/item/rogueweapon/mace/warhammer/alloy
 	name = "decrepit warhammer"
-	desc = "A macehead of frayed bronze, spiked and perched atop a thin shaft. To see such a knightly implement abandoned to decay and neglect; that wounds the heart greater than any well-poised strike."
+	desc = "A macehead of rotted metal, spiked and perched atop a thin shaft. To see such a knightly implement abandoned to decay and neglect; that wounds the heart greater than any well-poised strike."
 	icon_state = "awarhammer"
 	force = 17
 	max_integrity = 150
@@ -815,6 +927,17 @@
 	desc = "A macehead of polished gilbranze, spiked and perched atop a reinforced shaft. An elegant weapon from a more civilized age; when Man lived in harmony with one-another, and when 'the undying' was nothing more than a nitemare's thought."
 	icon_state = "awarhammer"
 	smeltresult = /obj/item/ingot/aaslag
+
+/obj/item/rogueweapon/mace/warhammer/blacksteel
+	name = "blacksteel warhammer"
+	desc = "A magnificent warhammer of blacksteel. Ornamental, resplendant, and - above all else - lethal; the ideal sidearm for a knight in the sixteenth century."
+	icon_state = "bs_hammer"
+	force = 30
+	minstr = 10
+	max_integrity = 350
+	smeltresult = /obj/item/ingot/blacksteel
+	possible_item_intents = list(/datum/intent/mace/strike, /datum/intent/mace/smash, /datum/intent/mace/warhammer/pick, /datum/intent/mace/warhammer/stab)
+	special = /datum/special_intent/ground_smash
 
 /obj/item/rogueweapon/mace/warhammer/steel/silver
 	name = "silver warhammer"
@@ -879,12 +1002,11 @@
 	damfactor = 0.9
 	item_d_type = "stab"
 
-//Mauls. Woe. Most characters will not be able to engage with this, beyond hobbling.
-//Why? The unique strength lockout. The minimum strength is not a suggestion.
+//Mauls. Woe.
 /obj/item/rogueweapon/mace/maul
 	force = 12 //Don't one-hand this.
 	force_wielded = 32 //-3 compared to grand mace(steel goden). Better intents.
-	possible_item_intents = list(/datum/intent/mace/strike, /datum/intent/mace/bash/ranged) 
+	possible_item_intents = list(/datum/intent/mace/strike, /datum/intent/mace/bash/ranged)
 	gripped_intents = list(/datum/intent/mace/smash/crush, /datum/intent/mace/strike/grand, /datum/intent/mace/sweep, /datum/intent/effect/hobble)
 	name = "maul"
 	desc = "Who would need something this large? It looks like it was made for tearing down walls, rather than men."
@@ -894,7 +1016,7 @@
 	swingsound = BLUNTWOOSH_HUGE
 	slot_flags = null//No.
 	smelt_bar_num = 2
-	minstr = 14
+	minstr = 11
 	wdefense = 3
 	pixel_y = -16
 	pixel_x = -16
@@ -903,7 +1025,6 @@
 	//dropshrink = 0.6
 	bigboy = TRUE
 	gripsprite = TRUE
-	minstr_req = TRUE //You MUST have the required strength. No exceptions.
 
 /obj/item/rogueweapon/mace/maul/getonmobprop(tag)
 	. = ..()
@@ -921,7 +1042,6 @@
 	icon_state = "cross"
 	force_wielded = 34 // -1 compared to grand mace.
 	smeltresult = /obj/item/ingot/steel
-	minstr = 15
 	wdefense_wbonus = 4 // from 6
 	smelt_bar_num = 3
 
@@ -963,7 +1083,7 @@
 	smelt_bar_num = 3 //Please don't...
 	max_integrity = 370
 
-//Psydonite maul. Intended for FUCKING SHIT UP.
+//Psydonite reliquary maul. Intended for FUCKING SHIT UP.
 /obj/item/rogueweapon/mace/maul/grand/psy
 	name = "psydonic maul"
 	gripped_intents = list(/datum/intent/mace/strike/reach, /datum/intent/mace/sweep, /datum/intent/mace/demolish, /datum/intent/effect/hobble)
@@ -1004,47 +1124,49 @@
 		added_def = 2,\
 	)
 
-/obj/item/rogueweapon/mace/maul/grand/psy/attack_obj(obj/O, mob/living/user)
+/obj/item/rogueweapon/mace/attack_turf(turf/T, mob/living/user, multiplier)
 	. = ..()
-	if(!.)
-		return
-	if(!istype(user?.used_intent, /datum/intent/mace/demolish))
-		return
-	if(QDELETED(O))
-		return
-	if(isnull(O.obj_integrity))
-		return
-	if(O.obj_integrity > 900)
-		to_chat(user, span_warning("Too hard!"))
-		return
-	var/bonus_damage = round(O.obj_integrity * 0.15)
-	if(prob(50))
-		bonus_damage += rand(1,10)
-	else
-		bonus_damage -= rand(1,10)
-	O.take_damage(bonus_damage, BRUTE, src.d_type, FALSE)
-	to_chat(user, span_warning("Your blow expertly crushes [O]! (+[bonus_damage])"))
+	if(. && istype(user?.used_intent, /datum/intent/mace/demolish))
+		demolish_turf(T, user)
 
-/obj/item/rogueweapon/mace/maul/grand/psy/attack_turf(turf/T, mob/living/user, multiplier)
+/obj/item/rogueweapon/mace/attack_obj(obj/O, mob/living/user)
 	. = ..()
-	if(!.)
-		return
-	if(!istype(user?.used_intent, /datum/intent/mace/demolish))
-		return
+	if(. && istype(user?.used_intent, /datum/intent/mace/demolish))
+		demolish_obj(O, user)
+
+/obj/item/rogueweapon/mace/proc/demolish_turf(turf/T, mob/living/user)
 	if(QDELETED(T))
-		return
+		return FALSE
+
 	if(isnull(T.max_integrity))
-		return
+		return FALSE
+
 	if(T.max_integrity > 3000)
-		to_chat(user, span_warning("Too hard!"))
-		return
+		to_chat(user, "Too hard, sire!")
+		return FALSE
+
 	var/bonus_damage = round(T.max_integrity * 0.15)
-	if(prob(50))
-		bonus_damage += rand(1,20)
-	else
-		bonus_damage -= rand(1,20)
-	T.take_damage(bonus_damage, BRUTE, src.d_type, 1)
+
+	T.take_damage(bonus_damage, BRUTE, d_type, 1)
 	to_chat(user, span_warning("Your blow expertly caves into [T]! (+[bonus_damage])"))
+	return TRUE
+
+/obj/item/rogueweapon/mace/proc/demolish_obj(obj/O, mob/living/user)
+	if(QDELETED(O))
+		return FALSE
+
+	if(isnull(O.max_integrity))
+		return FALSE
+
+	if(O.max_integrity > 3000)
+		to_chat(user, "Too hard, sire!")
+		return FALSE
+
+	var/bonus_damage = round(O.max_integrity * 0.15)
+
+	O.take_damage(bonus_damage, BRUTE, d_type, 1)
+	to_chat(user, span_warning("Your blow expertly caves into [O]! (+[bonus_damage])"))
+	return TRUE
 
 /datum/intent/mace/sweep
 	name = "sweeping strike"
@@ -1095,10 +1217,10 @@
 	var/last_hit_time = 0
 	var/reset_timeout = 75 SECONDS
 
-/datum/component/mushroom_mace/Initialize()
+/datum/component/mushroom_mace/Initialize(mapload)
 	if(!isitem(parent))
 		return COMPONENT_INCOMPATIBLE
-	RegisterSignal(parent, COMSIG_ITEM_ATTACK_SUCCESS, .proc/on_attack)
+	RegisterSignal(parent, COMSIG_ITEM_ATTACK_SUCCESS, PROC_REF(on_attack))
 
 /datum/component/mushroom_mace/proc/on_attack(obj/item/source, mob/living/target, mob/living/user)
 	SIGNAL_HANDLER
@@ -1142,7 +1264,7 @@
 		var/obj/effect/temp_visual/spore/old_spores = locate(/obj/effect/temp_visual/spore) in cloud_turf
 		if(old_spores)
 			qdel(old_spores)
-		new /obj/effect/temp_visual/spore(cloud_turf) 
+		new /obj/effect/temp_visual/spore(cloud_turf)
 
 /datum/component/mushroom_mace/proc/mushroom_boom(mob/living/target, mob/living/user)
 	var/turf/T = get_turf(target)
@@ -1183,6 +1305,9 @@
 	if(L.stat == DEAD)
 		return
 
+	if(HAS_TRAIT(L, TRAIT_NOBREATH))
+		return
+
 	to_chat(L, span_danger("You breathe in the spiky spores!"))
 	L.apply_damage(damage_amount, BRUTE)
 
@@ -1205,6 +1330,181 @@
 	gripped_intents = list(/datum/intent/mace/strike, /datum/intent/mace/boom, /datum/intent/mace/strike/dislocate, /datum/intent/mace/smash)
 	smeltresult = /obj/item/ingot/lithmyc
 
-/obj/item/rogueweapon/mace/mushroom/Initialize()
+/obj/item/rogueweapon/mace/mushroom/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/mushroom_mace)
+
+/obj/item/rogueweapon/contraption/linker/mace //roughly equivalent to a blacksmith hammer in damage and carryability
+	name = "Bronze-Reinforced Wrench"
+	desc = "A wrench, reinforced with bronze. It'd hurt to get smacked with this."
+	icon_state = "2hbronze"
+	wlength = WLENGTH_SHORT
+	w_class = WEIGHT_CLASS_NORMAL
+	grid_width = 32
+	grid_height = 64
+	possible_item_intents = list(/datum/intent/mace/strike, /datum/intent/use, /datum/intent/mace/strike/dislocate)
+	force = 20
+	max_integrity = 200
+	dropshrink = 0.8
+	throwforce = 15
+	associated_skill = /datum/skill/combat/maces
+	anvilrepair = /datum/skill/craft/engineering
+	wdefense = 3
+	wdefense_wbonus = 3
+	experimental_onhip = TRUE
+	experimental_onback = TRUE
+	brute_attack = TRUE
+	smeltresult = /obj/item/ingot/bronze
+	w_class = WEIGHT_CLASS_NORMAL
+	slot_flags = ITEM_SLOT_HIP | ITEM_SLOT_BACK
+	parrysound = list('sound/combat/parry/parrygen.ogg')
+	swingsound = BLUNTWOOSH_MED
+	//special = /datum/special_intent/dissassemble
+
+/obj/item/rogueweapon/contraption/linker/mace/precharged
+	current_charge = 80
+
+/obj/item/rogueweapon/contraption/linker/mace/big
+	name = "Massive Bronze Wrench"
+	desc = "A wrench with a massive handle, for the toughest of bolts. Clumsy to handle, but weighted for breaking down structures with ease."
+	icon_state = "bronzewrench"
+	icon = 'icons/roguetown/weapons/blunt64.dmi'
+	force = 13
+	force_wielded = 25
+	possible_item_intents = list(/datum/intent/mace/strike, /datum/intent/mace/bash/ranged)
+	gripped_intents = list(/datum/intent/mace/strike, /datum/intent/use, /datum/intent/mace/strike/dislocate, /datum/intent/mace/lesserdemolish)
+	minstr = 8
+	max_integrity = 350
+	w_class = WEIGHT_CLASS_BULKY
+	swingsound = BLUNTWOOSH_LARGE
+	gripsprite = TRUE
+	wlength = WLENGTH_LONG
+	wbalance = WBALANCE_HEAVY
+	grid_width = null
+	grid_height = null
+	pixel_y = -16
+	pixel_x = -16
+	inhand_x_dimension = 64
+	inhand_y_dimension = 64
+	bigboy = TRUE
+	gripsprite = TRUE
+	walking_stick = TRUE //that's just cool
+
+/obj/item/rogueweapon/contraption/linker/mace/big/getonmobprop(tag)
+	. = ..()
+	if(tag)
+		switch(tag)
+			if("gen")
+				return list("shrink" = 0.6, "sx" = -7,"sy" = 2,"nx" = 7,"ny" = 3,"wx" = -2,"wy" = 1,"ex" = 1,"ey" = 1,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = -38,"sturn" = 37,"wturn" = 30,"eturn" = -30,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
+			if("wielded")
+				return list("shrink" = 0.6,"sx" = 5,"sy" = -3,"nx" = -5,"ny" = -2,"wx" = -5,"wy" = -1,"ex" = 3,"ey" = -2,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 7,"sturn" = -7,"wturn" = 16,"eturn" = -22,"nflip" = 8,"sflip" = 0,"wflip" = 8,"eflip" = 0)
+
+/obj/item/rogueweapon/contraption/linker/mace/big/precharged
+	current_charge = 80
+
+/obj/item/rogueweapon/contraption/linker/mace/iron
+	name = "Iron-Reinforced Wrench"
+	desc = "A wrench, reinforced with iron. It'd hurt to get smacked with this."
+	icon_state = "2hiron"
+	smeltresult = /obj/item/ingot/iron
+
+/obj/item/rogueweapon/contraption/linker/mace/big/iron
+	name = "Massive Iron Wrench"
+	icon_state = "ironwrench"
+	smeltresult = /obj/item/ingot/iron
+
+/obj/item/rogueweapon/contraption/linker/mace/steel
+	name = "Steel-Reinforced Wrench"
+	desc = "A wrench, reinforced with steel. It'd hurt to get smacked with this."
+	icon_state = "2hsteel"
+	smeltresult = /obj/item/ingot/steel
+	force = 24
+
+/obj/item/rogueweapon/contraption/linker/mace/big/steel
+	name = "Massive Steel Wrench"
+	icon_state = "steelwrench"
+	smeltresult = /obj/item/ingot/steel
+	force = 15
+	force_wielded = 28
+
+/obj/item/rogueweapon/contraption/linker/mace/big/steel/precharged
+	current_charge = 80
+
+/obj/item/rogueweapon/contraption/linker/mace/silver
+	name = "Silver-Reinforced Wrench"
+	desc = "A wrench, reinforced with silver. Whilst the metal does the tool's integrity no favors, it serves as a charm of good luck for those who work under moonlight."
+	icon_state = "2hsilver"
+	max_integrity = 150
+	smeltresult = /obj/item/ingot/silver
+	is_silver = TRUE
+
+/obj/item/rogueweapon/contraption/linker/mace/big/silver
+	name = "Massive Silver Wrench"
+	desc = "A massive wrench, plated with silver. Well-weighted for smashing troublesome furniture and nite-creatures alike."
+	icon_state = "silverwrench"
+	max_integrity = 200
+	smeltresult = /obj/item/ingot/silver
+	is_silver = TRUE
+
+/obj/item/rogueweapon/contraption/linker/mace/master
+	name = "Gold-Reinforced Wrench"
+	desc = "A wrench, adorned with gold. The badge of an accomplished guildmaster. Capable of advanced linkages, and marvelously heavy"
+	icon_state = "2hgold"
+	max_integrity = 100
+	max_stored_charge = 100
+	smeltresult = /obj/item/ingot/gold
+	force = 24
+
+/obj/item/rogueweapon/contraption/linker/mace/big/master
+	name = "Massive Gold Wrench"
+	desc = "A massive wrench, plated and gold. The badge of an accomplished guildmaster. Capable of delightfully advanced linkages."
+	icon_state = "goldwrench"
+	smeltresult = /obj/item/ingot/gold
+	max_integrity = 200
+	force = 15
+	force_wielded = 28
+
+/obj/item/rogueweapon/contraption/linker/mace/master/bsteel
+	name = "Blacksteel-Reinforced Wrench"
+	desc = "A wrench, reinforced with blacksteel. Capable of terrifyingly advanced linkage."
+	icon_state = "2hbsteel"
+	max_integrity = 350
+	smeltresult = /obj/item/ingot/blacksteel
+	force = 24
+
+/obj/item/rogueweapon/contraption/linker/mace/big/master/bsteel
+	name = "Massive Blacksteel Wrench"
+	desc = "A massive wrench of blacksteel. The durable alloy affords more complex machinations."
+	icon_state = "bsteelwrench"
+	smeltresult = /obj/item/ingot/blacksteel
+	max_integrity = 500
+	max_stored_charge = 100
+	force = 15
+	force_wielded = 28
+
+/obj/item/rogueweapon/contraption/linker/mace/decrepit
+	name = "Decrepit Wrench"
+	desc = "An ancient wrench, reinforced with rotted metal. Once a tool of progress, repurposed into little more than a cudgel"
+	max_integrity = 150
+	icon_state = "2hdecrepit"
+	smeltresult = /obj/item/ingot/aaslag
+	force = 18
+	max_stored_charge = 40
+
+/obj/item/rogueweapon/contraption/linker/mace/decrepit/Initialize(mapload)
+	. = ..()
+	current_charge = rand(0, max_stored_charge) // it's an ancient artifact, rather than crafted. might have some charge left
+
+/obj/item/rogueweapon/contraption/linker/mace/big/decrepit
+	name = "Massive Decrepit Wrench"
+	desc = "A massive tool of ancient, rotted metal. The teeth at its head have been stripped clean from countless years of pointless toil, maintaining a great construct of no clear purpose"
+	max_integrity = 200
+	icon_state = "decrepitwrench"
+	smeltresult = /obj/item/ingot/aaslag
+	force = 12
+	force_wielded = 21
+	max_stored_charge = 40
+
+/obj/item/rogueweapon/contraption/linker/mace/big/decrepit/Initialize(mapload)
+	. = ..()
+	current_charge = rand(0, max_stored_charge) // it's an ancient artifact, rather than crafted. might have some charge left

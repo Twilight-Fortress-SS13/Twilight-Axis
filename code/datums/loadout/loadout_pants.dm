@@ -4,9 +4,19 @@
 	path = /obj/item/clothing/under/roguetown/tights/black
 	sort_category = "Pants"
 
+/datum/loadout_item/hosen
+	name = "Cloth Hosen"
+	path = /obj/item/clothing/under/roguetown/tights/hose
+	sort_category = "Pants"
+
 /datum/loadout_item/leathertights
 	name = "Leather Tights"
 	path = /obj/item/clothing/under/roguetown/trou/leathertights
+	sort_category = "Pants"
+
+/datum/loadout_item/trousershorts
+	name = "Trouser Shorts"
+	path = /obj/item/clothing/under/roguetown/tights/shorts
 	sort_category = "Pants"
 
 /datum/loadout_item/trou
@@ -34,6 +44,11 @@
 	path = /obj/item/clothing/under/roguetown/skirt
 	sort_category = "Pants"
 
+/datum/loadout_item/shortskirt
+	name = "Short Skirt"
+	path = /obj/item/clothing/under/roguetown/skirt/short
+	sort_category = "Pants"
+
 /datum/loadout_item/desertskirt
 	name = "Desert Skirt"
 	path = /obj/item/clothing/under/roguetown/skirt/desert
@@ -47,5 +62,16 @@
 /datum/loadout_item/formaltrousers
 	name = "Formal Trousers"
 	path = /obj/item/clothing/under/roguetown/tights/formalfancy
-	sort_category = "Pants"	
+	sort_category = "Pants"
+
+/datum/loadout_item/dhoti
+	name = "Dhoti"
+	path = /obj/item/clothing/under/roguetown/tights/dhoti
+	sort_category = "Pants"
+
+/datum/loadout_item/formalskirt
+	name = "Knee-High Skirt"
+	path = /obj/item/clothing/under/roguetown/skirt/formal
+	sort_category = "Pants"
+
 */

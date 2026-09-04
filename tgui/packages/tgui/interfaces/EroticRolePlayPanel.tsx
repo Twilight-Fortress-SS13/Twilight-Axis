@@ -65,6 +65,7 @@ type ActionsTabPayload = {
   do_knot_action?: boolean;
   has_knotted_penis?: boolean;
   can_knot_now?: boolean;
+  show_climax_controls?: boolean;
 
   climax_mode?: 'outside' | 'inside' | string | null;
   climax_modes?: { id: string; name: string }[];
@@ -72,7 +73,9 @@ type ActionsTabPayload = {
 
 type LiquidBlock = {
   has?: boolean;
+  pct?: number;
   volume?: number;
+  capacity?: number;
 };
 
 type StatusLinkRow = {
@@ -893,13 +896,24 @@ const PenisTuningPanel: React.FC<{
   showKnotToggle: boolean;
   doKnotAction: boolean;
   canKnot: boolean;
+  showClimaxControls: boolean;
   climaxMode: string;
   climaxModes?: { id: string; name: string }[];
   onToggleKnot: () => void;
   onSetClimaxMode: (mode: string) => void;
-}> = ({ enabled, showKnotToggle, doKnotAction, canKnot, climaxMode, climaxModes, onToggleKnot, onSetClimaxMode }) => {
+}> = ({
+  enabled,
+  showKnotToggle,
+  doKnotAction,
+  canKnot,
+  showClimaxControls,
+  climaxMode,
+  climaxModes,
+  onToggleKnot,
+  onSetClimaxMode,
+}) => {
   if (!enabled) return null;
-  const modes = climaxModes && climaxModes.length
+  const modes = climaxModes?.length
     ? climaxModes
     : [{ id: 'outside', name: 'НАРУЖУ' }, { id: 'inside', name: 'ВНУТРЬ' }];
   return (
@@ -921,6 +935,7 @@ const PenisTuningPanel: React.FC<{
         ) : (
           <Stack.Item />
         )}
+        {showClimaxControls ? (
         <Stack.Item>
           <Box color="label" style={{ fontSize: 10, textTransform: 'uppercase' }} mb={0.25} textAlign="right">
             Куда кончить
@@ -935,6 +950,9 @@ const PenisTuningPanel: React.FC<{
             ))}
           </Stack>
         </Stack.Item>
+        ) : (
+          <Stack.Item />
+        )}
       </Stack>
     </Section>
   );
@@ -982,7 +1000,7 @@ const ActionsTab: React.FC<{
       });
   }, [allActions, searchText]);
   const penisEnabled = !!payload?.show_penis_panel;
-  const canKnot = !!payload?.can_knot_now;
+  const canKnot = !!payload?.can_knot_now || !!payload?.do_knot_action;
   const [knotLocal, setKnotLocal] = useState<boolean>(!!payload?.do_knot_action);
   const [climaxModeLocal, setClimaxModeLocal] = useState<string>(String(payload?.climax_mode || 'outside'));
   useEffect(() => {
@@ -1056,6 +1074,7 @@ const ActionsTab: React.FC<{
         showKnotToggle={!!payload?.show_knot_toggle}
         doKnotAction={!!knotLocal}
         canKnot={!!canKnot}
+        showClimaxControls={!!payload?.show_climax_controls}
         climaxMode={climaxModeLocal}
         climaxModes={payload?.climax_modes}
         onToggleKnot={onToggleKnot}
@@ -1179,10 +1198,20 @@ const fmt1 = (v?: number) => {
 };
 
 const summedFill = (storage?: LiquidBlock, producing?: LiquidBlock) => {
-  const sv = Number(storage?.volume ?? 0);
-  const pv = Number(producing?.volume ?? 0);
-  const total = (Number.isFinite(sv) ? sv : 0) + (Number.isFinite(pv) ? pv : 0);
-  return total;
+  const blocks = [storage, producing].filter((block) => block?.has);
+  const volume = blocks.reduce((sum, block) => sum + Number(block?.volume ?? 0), 0);
+  const capacity = blocks.reduce((sum, block) => sum + Number(block?.capacity ?? 0), 0);
+
+  if (Number.isFinite(volume) && Number.isFinite(capacity) && capacity > 0) {
+    return Math.min(100, Math.max(0, (volume / capacity) * 100));
+  }
+
+  const pcts = blocks.map((block) => Number(block?.pct ?? 0)).filter(Number.isFinite);
+  if (!pcts.length) {
+    return 0;
+  }
+
+  return Math.min(100, Math.max(0, pcts.reduce((sum, pct) => sum + pct, 0) / pcts.length));
 };
 
 const StatusOrganCard: React.FC<{

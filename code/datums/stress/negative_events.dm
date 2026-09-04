@@ -180,6 +180,10 @@
 	stressadd = 5
 	desc = span_red("<u>They</u> are here.")
 
+/datum/stressevent/sundercritted
+	stressadd = 5 //Its literally killing you, sire.
+	desc = span_boldred("I CAN FEEL MY SOUL TEARING APART FROM BLESSED FLAMES, I NEED TO GET AWAY!")
+
 /datum/stressevent/nocrowd
 	timer = 2 MINUTES
 	stressadd = 3
@@ -414,11 +418,6 @@
 	desc = span_red("Where is their head? What is that flame?!")
 	timer = 5 MINUTES
 
-/datum/stressevent/hunted // When a hunted character sees someone in a mask
-	timer = 2 MINUTES
-	stressadd = 3
-	desc = span_boldred("I can't see their face! Have they found me? Is this the end?")
-
 /datum/stressevent/profane // When a non-assassin touches a profane dagger
 	timer = 3 MINUTES
 	stressadd = 4
@@ -519,7 +518,58 @@
 	stressadd = 3
 	desc = span_red("I long for the shelter of wall and roofs. The sun and moon are too bright for me to bear!")
 
+/datum/stressevent/sun_sensitivity_dark
+	timer = 2 MINUTES
+	stressadd = 3
+	desc = span_red("<b><i>The sunlight burns my eyes! It's too bright outside!</b></i>")
+
+/datum/stressevent/sun_sensitivity
+	timer = 2 MINUTES
+	stressadd = 10
+	desc = span_red("<b><i>The sunlight burns my eyes and skin! It's too bright outside!</b></i>")
+
+/datum/stressevent/lesser_sun_sensitivity
+	timer = 2 MINUTES
+	stressadd = 1
+	desc = span_red("I'm shielded from the the sunlight, but still! It's too bright outside!") // always a hater, aren't ya?! shame on u, astrata shames u
+
+/datum/stressevent/inq_trauma
+	timer = 3 MINUTES
+	stressadd = 4
+	desc = span_red("THE INQUISITION?! BY MY PATRON, NOT THEM!!")
+
 /datum/stressevent/water_splashed_noble
 	timer = 30 SECONDS
 	stressadd = 2
 	desc = span_red("The nerve! Water in my face? This indignity is intolerable.")
+
+/datum/stressevent/permadeath_threat
+	stressadd = 5
+	desc = span_boldred("<B>A deathly chill rolls through my heart! Flesh and soul, oh-so-meagerly tethered to this world!</B>")
+	timer = 10 MINUTES
+
+/datum/stressevent/resurrected
+	stressadd = 3
+	desc = span_boldred("<B>I've barely escaped death's grasp!</B>")
+	timer = 15 MINUTES
+
+/datum/stressevent/mimic_jumpscare
+	timer = 30 SECONDS
+	stressadd = 6
+	desc = list(span_boldred("TEETH?!"), span_boldred("IT'S ALIVE!!"), span_boldred("NO, NO, NO!!"), span_boldred("GET BACK!!"), span_boldred("MONSTER!!"), span_boldred("IT MOVED!!"), span_boldred("DON'T TOUCH THE CHEST!!"), span_boldred("IT'S NOT A CHEST!!"), span_boldred("CARKIN', A MIMIC!!"), span_boldred("I'M NEVER OPENING A CHEST AGAIN!!"))
+
+/// The gods are alive and watching you now, idk what you expected going to the church for
+/datum/stressevent/blessed_evil
+	timer = 15 MINUTES
+	stressadd = 2
+	desc = span_artery("I feel a judgmental presence watching over me with disgust. I don't like this.")
+
+/datum/stressevent/remorse
+	timer = 5 MINUTES
+	stressadd = 3
+	desc = list(span_artery("I struck someone who never meant me harm."), span_artery("I can't stop thinking about the blow I dealt to someone defenseless."), span_artery("My conscience weighs heavily after attacking one who refused violence."), span_artery("I regret raising my hand against someone who would never have raised theirs against me."), span_artery("The look of fear instead of hatred lingers in my thoughts."), span_artery("I feel ashamed for harming someone who chose peace."), span_artery("I could have walked away. Instead, I chose violence."), span_artery("The guilt of attacking a helpless soul gnaws at me."), span_artery("I keep replaying the moment I struck someone who would not fight back."), span_artery("My heart grows heavier with every thought of the defenseless person I attacked."))
+
+/datum/stressevent/remorse_evil
+	timer = 5 MINUTES
+	stressadd = 1
+	desc = list(span_artery("Even I found no satisfaction in striking someone so meek."), span_artery("They denied me the thrill of a real fight."), span_artery("Their refusal to resist leaves a bitter taste."), span_artery("There was no struggle... only acceptance. That's insane."), span_artery("I expected fear, hatred, anything... but not acceptance."), span_artery("A defenseless victim is hardly worth remembering, yet the thought lingers."), span_artery("Why won't the image of their helplessness leave my mind?"))

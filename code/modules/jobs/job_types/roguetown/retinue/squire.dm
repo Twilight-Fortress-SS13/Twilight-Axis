@@ -35,22 +35,13 @@
 	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes
 	belt = /obj/item/storage/belt/rogue/leather
 	beltl = /obj/item/storage/keyring/squire
-	cloak = /obj/item/clothing/cloak/tabard/stabard/surcoat/guard
 	id = /obj/item/scomstone/bad/garrison
 	job_bitflag = BITFLAG_GARRISON
 
 /datum/job/roguetown/squire/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	. = ..()
 	if(ishuman(L))
-		var/mob/living/carbon/human/H = L
-		if(istype(H.cloak, /obj/item/clothing/cloak/tabard/stabard/surcoat/guard))
-			var/obj/item/clothing/S = H.cloak
-			var/index = findtext(H.real_name, " ")
-			if(index)
-				index = copytext(H.real_name, 1,index)
-			if(!index)
-				index = H.real_name
-			S.name = "squire's tabard ([index])"
+		addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, cloak_and_title_setup)), 50)
 
 /datum/advclass/squire/lancer
 	name = "Cavalier Squire"
@@ -79,26 +70,29 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
-		/datum/skill/misc/riding = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/riding = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/hunting = SKILL_LEVEL_NOVICE,
 	)
 
 /datum/outfit/job/roguetown/squire/lancer/pre_equip(mob/living/carbon/human/H)
 	. = ..()
 	add_verb(H, /mob/proc/haltyell_exhausting)
-	r_hand = /obj/item/rogueweapon/spear/trainer
+	r_hand = /obj/item/rogueweapon/spear
 	armor = /obj/item/clothing/suit/roguetown/armor/chainmail/iron
 	gloves = /obj/item/clothing/gloves/roguetown/leather
+	neck = /obj/item/clothing/neck/roguetown/chaincoif/iron
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 	pants = /obj/item/clothing/under/roguetown/chainlegs/iron
 	backr = /obj/item/storage/backpack/rogue/satchel
 	backl = /obj/item/rogueweapon/scabbard/gwstrap
 	backpack_contents = list(
+		/obj/item/rogueweapon/huntingknife/idagger,
+		/obj/item/rogueweapon/scabbard/sheath,
 		/obj/item/storage/belt/rogue/pouch,
-		/obj/item/clothing/neck/roguetown/chaincoif/iron,
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot,
-		/obj/item/repair_kit/metal,
-		/obj/item/repair_kit,
+		/obj/item/rogueweapon/hammer/copper,
+		/obj/item/armor_brush = 1,
+		/obj/item/polishing_cream = 1
 	)
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_WORKING_CLASS, H)
@@ -140,25 +134,28 @@
 	gloves = /obj/item/clothing/gloves/roguetown/leather
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 	pants = /obj/item/clothing/under/roguetown/chainlegs/iron
+	neck = /obj/item/clothing/neck/roguetown/chaincoif/iron
 	backr = /obj/item/storage/backpack/rogue/satchel
 	backpack_contents = list(
+		/obj/item/rogueweapon/huntingknife/idagger,
+		/obj/item/rogueweapon/scabbard/sheath,
 		/obj/item/storage/belt/rogue/pouch,
-		/obj/item/clothing/neck/roguetown/chaincoif/iron,
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot,
-		/obj/item/repair_kit/metal,
-		/obj/item/repair_kit,
+		/obj/item/rogueweapon/hammer/copper,
+		/obj/item/armor_brush = 1,
+		/obj/item/polishing_cream = 1
 	)
 	H.adjust_blindness(-3)
 	if(H.mind)
-		var/weapons = list("Training Sword","Club",)
+		var/weapons = list("Iron Sword","Cudgel",)
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		H.set_blindness(0)
 		switch(weapon_choice)
-			if("Training Sword")
+			if("Iron Sword")
 				beltr = /obj/item/rogueweapon/scabbard/sword
-				r_hand = /obj/item/rogueweapon/sword/long/training
-			if("Club")
-				beltr = /obj/item/rogueweapon/mace/woodclub
+				r_hand = /obj/item/rogueweapon/sword/iron
+			if("Cudgel")
+				beltr = /obj/item/rogueweapon/mace/cudgel
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_WORKING_CLASS, H)
 
@@ -179,7 +176,8 @@
 	)
 	subclass_skills = list(
 		/datum/skill/combat/bows = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/combat/crossbows = SKILL_LEVEL_NOVICE,
+		/datum/skill/combat/crossbows = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/slings = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_NOVICE,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_NOVICE,
 		/datum/skill/combat/swords = SKILL_LEVEL_APPRENTICE,
@@ -188,28 +186,28 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
-		/datum/skill/misc/riding = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/hunting = SKILL_LEVEL_NOVICE,
 	)
 
 /datum/outfit/job/roguetown/squire/skirmisher/pre_equip(mob/living/carbon/human/H)
 	. = ..()
 	add_verb(H, /mob/proc/haltyell_exhausting)
-	beltr = /obj/item/quiver/sling/iron
-	beltl = /obj/item/gun/ballistic/revolver/grenadelauncher/sling
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy
 	pants = /obj/item/clothing/under/roguetown/trou/leather
 	gloves = /obj/item/clothing/gloves/roguetown/leather
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
+	neck = /obj/item/clothing/neck/roguetown/chaincoif/iron
 	backr = /obj/item/storage/backpack/rogue/satchel
+	backl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow
+	beltr = /obj/item/quiver/arrows
 	backpack_contents = list(
-		/obj/item/rogueweapon/huntingknife/idagger/steel/trainer,
+		/obj/item/rogueweapon/huntingknife/idagger,
 		/obj/item/storage/belt/rogue/pouch,
-		/obj/item/clothing/neck/roguetown/chaincoif/iron,
 		/obj/item/rogueweapon/scabbard/sheath,
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot,
-		/obj/item/repair_kit/metal,
-		/obj/item/repair_kit,
+		/obj/item/rogueweapon/hammer/copper,
+		/obj/item/armor_brush = 1,
+		/obj/item/polishing_cream = 1
 		)
 	if(H.mind)
-		SStreasury.grant_savings(ECONOMIC_WORKING_CLASS, H)
+		SStreasury.grant_savings(ECONOMIC_WORKING_CLASS , H)

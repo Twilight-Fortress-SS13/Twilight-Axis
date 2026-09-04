@@ -1,5 +1,6 @@
-/// Listed-turf lag guard: hard-cap total entries.
-#define STATBROWSER_TURF_HARD_CAP 100
+/// Listed-turf lag guard: hard-cap total entries shown.
+#define STATBROWSER_TURF_HARD_CAP 250
+#define STATBROWSER_TURF_ICON_CAP 25
 
 SUBSYSTEM_DEF(statpanels)
 	name = "Stat Panels"
@@ -31,7 +32,7 @@ SUBSYSTEM_DEF(statpanels)
 			global_data = list("Map: [SSmapping.config.map_name]")
 
 		// if(SSmapping.config?.mapping_url)
-		// 	global_data += list(list("same_line", " | (View in Browser)", "action=openWebMap"))
+		//	global_data += list(list("same_line", " | (View in Browser)", "action=openWebMap"))
 
 		if(cached)
 			global_data += "Next Map: [cached.map_name]"
@@ -78,7 +79,8 @@ SUBSYSTEM_DEF(statpanels)
 			target.stat_panel.send_message("remove_stats_tab")
 			target.statbrowser_stats_shown = FALSE
 
-		if(target.mob?.listed_turf || target.listedturf_sig)
+		if((target.mob?.listed_turf || target.listedturf_sig) && (target.listedturf_dirty || (num_fires % default_wait == 0)))
+			target.listedturf_dirty = FALSE
 			target.update_listed_turf()
 
 		if(!target.holder)
@@ -107,11 +109,11 @@ SUBSYSTEM_DEF(statpanels)
 			var/update_actions = FALSE
 			// // We're on a spell tab, update the tab so we can see cooldowns progressing and such
 			// if(target.stat_tab in target.spell_tabs)
-			// 	update_actions = TRUE
+			//	update_actions = TRUE
 			// // We're not on a spell tab per se, but we have cooldown actions, and we've yet to
 			// // set up our spell tabs at all
 			// if(!length(target.spell_tabs) && locate(/datum/action/cooldown) in target_mob.actions)
-			// 	update_actions = TRUE
+			//	update_actions = TRUE
 
 			if(update_actions && num_fires % default_wait == 0)
 				set_action_tabs(target, target_mob)
@@ -177,15 +179,16 @@ SUBSYSTEM_DEF(statpanels)
 	// target.spell_tabs.Cut()
 
 	// for(var/action_data in actions)
-	// 	target.spell_tabs |= action_data[1]
+	//	target.spell_tabs |= action_data[1]
 
 	// target.stat_panel.send_message("update_spells", list(spell_tabs = target.spell_tabs, actions = actions))
 
 /datum/controller/subsystem/statpanels/proc/generate_mc_data()
 	mc_data = list(
-		list("", "CPU:", world.cpu),
-		list("", "Instances:", "[num2text(world.contents.len, 10)]"),
-		list("", "World Time:", "[world.time]"),
+		list("", "CPU:", "[world.cpu] ([world.map_cpu] map + [world.cpu - world.map_cpu] process)"),
+		list("", "TIDI / Maptick:", "[round(SStime_track.time_dilation_current, 1)]% AVG:([round(SStime_track.time_dilation_avg_fast, 1)]%, [round(SStime_track.time_dilation_avg, 1)]%, [round(SStime_track.time_dilation_avg_slow, 1)]%) | [world.cpu ? round((world.map_cpu / world.cpu) * 100) : 0]%"),
+		list("", "Controller Overview:", "Click to view", "", "Controller-Overview"),
+		list("", "Instances / World Time:", "[num2text(world.contents.len, 10)] | [world.time]"),
 		list("", "Globals:", GLOB.stat_entry(), text_ref(GLOB)),
 		list("", "[config]:", config.stat_entry(), text_ref(config)),
 		list("", "Master Controller:", Master.stat_entry(), text_ref(Master)),
@@ -242,7 +245,7 @@ SUBSYSTEM_DEF(statpanels)
 /// Stat panel window declaration
 /client/var/datum/tgui_window/stat/stat_panel
 
-/datum/tgui_window/stat/initialize(strict_mode, fancy, assets, inline_html, inline_js, inline_css)
+/datum/tgui_window/stat/initialize(strict_mode, assets, inline_html, inline_js, inline_css)
 	. = ..()
 	send_message("build_topbar") // This is the best way of doing it... don't @ me
 
@@ -268,6 +271,7 @@ SUBSYSTEM_DEF(statpanels)
 				LAZYREMOVE(T.panel_listeners, src)
 			mob?.listed_turf = null
 			listedturf_sig = null
+			clear_listedturf_appearances()
 			stat_panel.send_message("remove_listedturf")
 		return
 	if(stat_tab == "[T]" && listedturf_sig != listedturf_signature(T))
@@ -277,6 +281,7 @@ SUBSYSTEM_DEF(statpanels)
 	var/turf/T = mob?.listed_turf
 	if(!T)
 		return
+	clear_listedturf_appearances()
 	listedturf_sig = listedturf_signature(T)
 	var/list/overrides = list()
 	for(var/image/override_image in images)
@@ -294,7 +299,8 @@ SUBSYSTEM_DEF(statpanels)
 		if(shown >= STATBROWSER_TURF_HARD_CAP)
 			data += list(list("...more contents not shown", null, null))
 			break
-		data += list(list(statpanel_strip_article("[thing]"), REF(thing), listedturf_icon(thing)))
+		var/thing_icon = (shown < STATBROWSER_TURF_ICON_CAP) ? listedturf_icon(thing) : null
+		data += list(list(statpanel_strip_article("[thing]"), REF(thing), thing_icon))
 		shown++
 	stat_panel.send_message("update_listedturf", data)
 
@@ -302,10 +308,20 @@ SUBSYSTEM_DEF(statpanels)
 	if(!thing.icon)
 		return null
 	if(ismob(thing) || length(thing.overlays) > 2 || !isfile(thing.icon))
-		var/atom/movable/screen/container = mob?.send_appearance(copy_appearance_filter_overlays(thing.appearance))
+		var/atom/movable/screen/container = mob?.send_appearance(copy_appearance_filter_overlays(thing.appearance), 0)
 		if(container)
+			LAZYADD(listedturf_appearances, container)
 			return "\ref[container]"
 	return "\ref[thing.icon]?state=[thing.icon_state]&dir=[thing.dir]"
+
+/client/proc/clear_listedturf_appearances()
+	if(!LAZYLEN(listedturf_appearances))
+		return
+	var/datum/hud/our_hud = mob?.hud_used
+	if(our_hud?.vis_holder)
+		for(var/atom/movable/screen/container as anything in listedturf_appearances)
+			our_hud.vis_holder.vis_contents -= container
+	listedturf_appearances = null
 
 /proc/statpanel_strip_article(name)
 	if(findtext(name, "the ") == 1)
@@ -338,3 +354,4 @@ SUBSYSTEM_DEF(statpanels)
 	user.client.Click(src, loc, null, list2params(paramslist))
 
 #undef STATBROWSER_TURF_HARD_CAP
+#undef STATBROWSER_TURF_ICON_CAP

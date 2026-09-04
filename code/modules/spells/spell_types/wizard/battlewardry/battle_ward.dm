@@ -24,8 +24,9 @@
 
 	charge_required = TRUE
 	charge_time = CHARGETIME_HEAVY
-	charge_drain = 1
-	charge_slowdown = CHARGING_SLOWDOWN_HEAVY
+	charge_swingdelay_type = SWINGDELAY_PENALTY
+	hold_drain = 1
+	charge_slowdown = CHARGING_SLOWDOWN_SMALL
 	charge_sound = 'sound/magic/charging.ogg'
 	cooldown_time = 20 SECONDS
 
@@ -67,7 +68,7 @@
 
 	// Show telegraph visuals before runes appear
 	for(var/turf/T in target_turfs)
-		new /obj/effect/temp_visual/trap_wall/battle_ward(T)
+		new /obj/effect/temp_visual/telegraph/wall/battle_ward(T)
 
 	playsound(center, 'sound/magic/whiteflame.ogg', 60, TRUE)
 	H.visible_message(span_warning("[H] completes a complex inscription - runes begin to materialize!"), span_notice("I finish inscribing the [ward_mode] ward pattern."))
@@ -120,8 +121,7 @@
 		holder.maptext_x = 5
 		holder.color = GLOW_COLOR_WARD
 
-/obj/effect/temp_visual/trap_wall/battle_ward
-	color = GLOW_COLOR_WARD
+/obj/effect/temp_visual/telegraph/wall/battle_ward
 	light_color = GLOW_COLOR_WARD
 	duration = BATTLE_WARD_TELEGRAPH_TIME
 

@@ -16,7 +16,6 @@
 	а уже после Королю и его свите, что все еще не хочет выбираться со своей временной ставки. \
 	Да и как защитит эта хваленная Королевская Гвардия жителей Рокхилла, сидя в замке, если не вы?"
 	whitelist_req = TRUE
-	outfit = /datum/outfit/job/roguetown/town_watch
 	advclass_cat_rolls = list(CTAG_TOWN_WATCH = 2)
 	give_bank_account = TRUE
 	min_pq = 6
@@ -40,7 +39,7 @@
 				index = copytext(H.real_name, 1,index)
 			if(!index)
 				index = H.real_name
-			S.name = "watchman ([index]) armor"
+			S.name = "watchman's armor ([index])"
 
 /datum/advclass/town_watch
 	name = "Town Watch"
@@ -51,7 +50,7 @@
 	Так или иначе, ваша верность принадлежит пропавшему Барону, ИСТИННОМУ владыке этого города, горожанам \
 	а уже после Королю и его свите, что все еще не хочет выбираться со своей временной ставки. \
 	Да и как защитит эта хваленная Королевская Гвардия жителей Рокхилла, сидя в замке, если не вы?"
-
+	outfit = /datum/outfit/job/roguetown/town_watch
 	category_tags = list(CTAG_TOWN_WATCH)
 	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_GUARDSMAN)
 	subclass_stats = list(
@@ -78,7 +77,7 @@
 		/datum/skill/combat/crossbows = SKILL_LEVEL_JOURNEYMAN,
 	)
 
-/datum/outfit/job/roguetown/town_watch
+/datum/outfit/job/roguetown/town_watch/pre_equip(mob/living/carbon/human/H)
 	job_bitflag = BITFLAG_CITYWATCH
 	head = /obj/item/clothing/head/roguetown/helmet/heavy/citywatch
 	neck = /obj/item/clothing/neck/roguetown/gorget
@@ -92,12 +91,10 @@
 	beltl = /obj/item/storage/keyring/watchman
 	wrists = /obj/item/clothing/wrists/roguetown/bracers
 	backr = /obj/item/storage/backpack/rogue/satchel/citywatch
-
-/datum/outfit/job/roguetown/town_watch/pre_equip(mob/living/carbon/human/H)
-	..()
 	if(H.mind)
 		backpack_contents = list(
 			/obj/item/rogueweapon/huntingknife/idagger/steel = 1,
+			/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1,
 			/obj/item/rope/chain = 1,
 			/obj/item/rogueweapon/scabbard/sheath = 1,
 		)
@@ -105,11 +102,11 @@
 	H.verbs |= /mob/proc/haltyell
 
 /obj/item/storage/backpack/rogue/satchel/citywatch
-	name = "city watch satchel"
+	name = "watchman's satchel"
 	color = "#586ed3e1"
 
 /obj/item/storage/belt/rogue/leather/citywatch
-	name = "city watch belt"
+	name = "watchman's belt"
 	color = "#60a0dbbb"
 
 /datum/advclass/town_watch/dungeoneer
@@ -154,21 +151,20 @@
 	head = /obj/item/clothing/head/roguetown/menacing/executioner
 	neck = /obj/item/clothing/neck/roguetown/gorget
 	mask = /obj/item/clothing/head/roguetown/roguehood/black
-	armor = /obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/bailiff
+	armor = /obj/item/clothing/suit/roguetown/armor/manual/resting/padded/bailiff
 	wrists = /obj/item/clothing/wrists/roguetown/bracers
 	gloves = /obj/item/clothing/gloves/roguetown/leather
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants
 	beltr = /obj/item/rogueweapon/whip/antique
 	beltl = /obj/item/storage/keyring/dungeoneer
-	backl = /obj/item/rogueweapon/sword/long/exe/cloth
 	H.adjust_blindness(-3)
 	if(H.mind)
 		H.set_blindness(0)
 	backpack_contents = list(
-		/obj/item/rogueweapon/huntingknife = 1,
 		/obj/item/rope/chain = 1,
-		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1,
+		/obj/item/rogueweapon/scabbard/sheath = 1,
+		/obj/item/rogueweapon/huntingknife/idagger/steel = 1
 	)
 	H.verbs |= /mob/proc/haltyell
 

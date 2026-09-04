@@ -1,8 +1,3 @@
-// No Arcana recipes gives XP, to prevent grinding a combat skills
-// Through crafting. However, all of them are gated at only Craft Diff 2 
-// Aka Apprentice, so high int novice can gate it. And every magic 
-// Role can engage competently, thus removing the need to legitimately
-// Grind crafting recipes for XP / crafting purpose.
 /datum/crafting_recipe/roguetown/arcana
 	req_table = TRUE
 	tools = list()
@@ -11,7 +6,6 @@
 	skillcraft = /datum/skill/magic/arcane
 	subtype_reqs = TRUE
 	display_category = ITEM_CAT_ARCYNE_GEARS
-	xp_modifier = 0
 	craftdiff = SKILL_LEVEL_APPRENTICE
 
 /datum/crafting_recipe/roguetown/arcana/amethyst
@@ -37,28 +31,27 @@
 	result = /obj/item/sendingstonesummoner
 	reqs = list(/obj/item/natural/stone = 2,
 				/obj/item/roguegem/amethyst = 2,
-				/obj/item/magic/melded/t1 = 1)
+				/obj/item/magic/fae/iridescentscale = 1)
 
 /datum/crafting_recipe/roguetown/arcana/voidlamptern
 	name = "void lamptern"
 	result = /obj/item/flashlight/flare/torch/lantern/voidlamptern
 	reqs = list(/obj/item/flashlight/flare/torch/lantern = 1,
-				/obj/item/magic/voidstone = 1,
-				/obj/item/magic/melded/t1 = 1)
+				/obj/item/magic/voidstone = 1)
 
 /datum/crafting_recipe/roguetown/arcana/nomagiccollar
 	name = "mana binding collar"
 	result = /obj/item/clothing/neck/roguetown/collar/leather/nomagic
 	reqs = list(/obj/item/clothing/neck/roguetown/collar = 1,
 				/obj/item/roguegem/diamond = 1,
-				/obj/item/magic/melded/t2 = 1)
+				/obj/item/magic/voidstone = 1)
 
 /datum/crafting_recipe/roguetown/arcana/nomagicglove
 	name = "mana binding gloves"
 	result = /obj/item/clothing/gloves/roguetown/nomagic
 	reqs = list(/obj/item/clothing/gloves/roguetown/leather = 1,
 				/obj/item/roguegem/diamond = 1,
-				/obj/item/magic/melded/t3 = 1)
+				/obj/item/magic/voidstone = 1)
 	craftdiff = SKILL_LEVEL_JOURNEYMAN
 
 /datum/crafting_recipe/roguetown/arcana/temporalhourglass
@@ -66,7 +59,7 @@
 	result = /obj/item/hourglass/temporal
 	reqs = list(/obj/item/natural/wood/plank = 4,
 				/obj/item/magic/leyline = 1,
-				/obj/item/magic/melded/t2 = 1)
+				/obj/item/magic/fae/heartwoodcore = 1)
 	craftdiff = SKILL_LEVEL_JOURNEYMAN
 
 /datum/crafting_recipe/roguetown/arcana/shimmeringlens
@@ -74,14 +67,14 @@
 	result = /obj/item/clothing/ring/active/shimmeringlens
 	reqs = list(/obj/item/magic/fae/iridescentscale = 1,
 				/obj/item/magic/leyline = 1,
-				/obj/item/magic/melded/t2 = 1)
+				/obj/item/magic/elemental/fragment = 1)
 	craftdiff = SKILL_LEVEL_JOURNEYMAN
 
 /datum/crafting_recipe/roguetown/arcana/mimictrinket
 	name = "mimic trinket"
 	result = /obj/item/mimictrinket
 	reqs = list(/obj/item/natural/wood/plank = 2,
-				/obj/item/magic/melded/t1 = 1)
+				/obj/item/magic/fae/iridescentscale = 1)
 
 /datum/crafting_recipe/roguetown/arcana/forge
 	name = "infernal forge"
@@ -98,34 +91,6 @@
 	reqs = list(/obj/item/clothing/ring/gold = 1,
 				/obj/item/magic/voidstone = 1)
 	craftdiff = SKILL_LEVEL_EXPERT
-
-/datum/crafting_recipe/roguetown/arcana/meldt1
-	name = "arcanic meld"
-	result = /obj/item/magic/melded/t1
-	reqs = list(/obj/item/magic/infernal/ash = 1,
-				/obj/item/magic/fae/fairydust = 1,
-				/obj/item/magic/elemental/mote = 1)
-
-/datum/crafting_recipe/roguetown/arcana/meldt2
-	name = "dense arcanic meld"
-	result = /obj/item/magic/melded/t2
-	reqs = list(/obj/item/magic/infernal/fang = 1,
-				/obj/item/magic/fae/iridescentscale = 1,
-				/obj/item/magic/elemental/shard = 1)
-
-/datum/crafting_recipe/roguetown/arcana/meldt3
-	name = "sorcerous weave"
-	result = /obj/item/magic/melded/t3
-	reqs = list(/obj/item/magic/infernal/core = 1,
-				/obj/item/magic/fae/heartwoodcore = 1,
-				/obj/item/magic/elemental/fragment = 1)
-
-/datum/crafting_recipe/roguetown/arcana/meldt4
-	name = "magical confluence"
-	result = /obj/item/magic/melded/t4
-	reqs = list(/obj/item/magic/infernal/flame = 1,
-				/obj/item/magic/fae/sylvanessence = 1,
-				/obj/item/magic/elemental/relic = 1)
 
 // ========== Fission (downgrade, same realm) ==========
 // Lesser: 1 T2 → 2 T1. Greater: 1 T3 → 2 T2. Grand: 1 T4 → 1 T3.
@@ -229,7 +194,7 @@
 	result = /obj/item/magic/elemental/relic
 	reqs = list(/obj/item/magic/elemental/fragment = 2)
 
-// Runed Artifacts are only found in bog and run out soon so this is a 
+// Runed Artifacts are only found in bog and run out soon so this is a
 // Loreful way of "replicating" it but requires you to go out at least once
 
 /datum/crafting_recipe/roguetown/arcana/runed_artifact_replication
@@ -243,11 +208,4 @@
 	result = /obj/item/rogueweapon/huntingknife/idagger/silver/arcyne
 	reqs = list(/obj/item/rogueweapon/huntingknife/idagger/silver = 1,
 				/obj/item/rogueore/cinnabar = 1)
-
-/datum/crafting_recipe/roguetown/arcana/pre_arcyne_spellbook
-	name = "tome in waiting"
-	display_category = ITEM_CAT_BOOK_WRIT
-	result = /obj/item/spellbook_unfinished/pre_arcyne
-	reqs = list(/obj/item/natural/hide = 1,
-				/obj/item/paper/scroll = 6)
 

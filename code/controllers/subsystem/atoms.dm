@@ -51,6 +51,8 @@ SUBSYSTEM_DEF(atoms)
 	if(late_loaders.len)
 		for(var/I in late_loaders)
 			var/atom/A = I
+			if(QDELETED(A))
+				continue
 			A.LateInitialize()
 
 		late_loaders.Cut()
