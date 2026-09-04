@@ -325,7 +325,7 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	max_blade_int = 350
 	max_integrity = 300
 	possible_item_intents = list(/datum/intent/axe/cut, /datum/intent/axe/chop)
-	gripped_intents = list(/datum/intent/axe/cut/cult, /datum/intent/axe/chop/cult, /datum/intent/axe/chop/heavy, /datum/intent/axe/bash/battle)
+	gripped_intents = list(/datum/intent/axe/cut/cult, /datum/intent/axe/chop/cult, /datum/intent/axe/bash/battle)  // TA EDIT
 	smeltresult = /obj/item/ingot/steel/zizo
 
 /datum/intent/axe/chop/cult
