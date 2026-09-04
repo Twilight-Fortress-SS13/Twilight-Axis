@@ -85,6 +85,8 @@
 		)
 	H.merctype = 1
 
+//TA EDIT START - Shaman class moved to modular_twilight_axis/code/modules/jobs/job_types/roguetown/sidefolk/mercenary/atgervi_shaman.dm
+/*
 /datum/advclass/mercenary/atgervi_shaman
 	name = "Atgervi Shaman"
 	tutorial = "You are a Shaman of the Fjall, The Northern Empty. Shamans are savage combatants who commune with the Ecclesical Beast Gods through ritualistic violence, rather than idle prayer."
@@ -113,7 +115,7 @@
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
 		/datum/skill/craft/tanning = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/magic/holy = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/craft/spiritism = SKILL_LEVEL_MASTER,
 	)
 
 /datum/outfit/job/roguetown/mercenary/atgervi_shaman
@@ -124,6 +126,9 @@
 	H.set_blindness(0)
 	to_chat(H, span_warning("You are a Shaman of the Fjall, The Northern Empty. Shamans are savage combatants who commune with the Ecclesical Beast gods through ritualistic violence, rather than idle prayer."))
 	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/warrior]
+	if(H.mind)
+		for(var/recipe_type in shamanic_totem_block_recipe_types)
+			H.mind.teach_crafting_recipe(recipe_type)
 
 	head = /obj/item/clothing/head/roguetown/helmet/leather/shaman_hood
 	gloves = /obj/item/clothing/gloves/roguetown/angle/gronnfur
@@ -163,14 +168,85 @@
 		else
 			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/special //Failsafe. Gives a specially-fluffed version of Zizo's talisman, which can be reinterpreted as needed.
 
-	var/datum/devotion/C = new /datum/devotion(H, H.patron)
-	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_WEAK, devotion_limit = CLERIC_REQ_1)	//Capped to T2 miracles.
 	backpack_contents = list(
 		/obj/item/roguekey/mercenary = 1,
 		/obj/item/rogueweapon/huntingknife = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1
 		)
 	H.merctype = 1
+*/
+//TA EDIT END
+
+///////////////////////////////
+// GRONN-SPECIFIC PSICROSSES //
+///////////////////////////////
+
+/obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
+	name = "carved talisman" //plotting talisman
+	desc = "'The hunt, the studying of your prey, the learning of its routes, the knowledge our ancestors passed down, the empowerment of your people and yourself. Learn of the world, or fade away.'  </br>  </br>The Plotting Wolf embodies the virtues of progress and knowledge, so that no obstacle nor threat to the homeland remains insurmountable. She demands that her people learn from their ancestors. They must listen closely to the ancient sagas, seeking out the warnings and lessons that their ancestors embedded in words and imagery. They must explore the world, adapt, and endure the cold and all the trials that nature throws their way. But know this: your rest is not eternal. Sooner or later, the shamans will bring you back from the burial mound so that you may pass on your wisdom or stand alongside the living in their hour of need. Such is her final gift and her final demand." //TA EDIT
+	icon_state = "gronnzizo"
+
+/obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD, HERESYDESC_GRONN)
+
+/obj/item/clothing/neck/roguetown/psicross/inhumen/baothagronn
+	name = "carved talisman" //relishing talisma
+	desc = "'The excess of desire, the want of more, the glory of victory, the lover's embrace. Embrace the Leopard, or forget your strength.' </br> </br>The Relishing Leopard embodies the virtues of love and glory, both in battle and at home. Enjoy the flesh, the drink, and the spice; but be wary to avoid overindulgence, for it shall leave you despondant and lethargic. To become too comfortable is to become weak, and such weakness would turn you into a delicious snack for the Leopard."
+	icon_state = "gronnbaotha"
+
+/obj/item/clothing/neck/roguetown/psicross/inhumen/baothagronn/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD, HERESYDESC_GRONN)
+
+/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gronn
+	name = "carved talisman" //starving talisman
+	desc = "'The hunger, the destruction, the impending frost, the enemy of my enemy. Feed the Bear, or be consumed.'  </br>  </br>The Starving Bear embodies not a virtue, but the necessity to thrive above all else. Hunger is eternal: no matter how much you feed the Bear, he will always demand more. Gold, food, flesh — it makes no difference to him. But the feast is not a goal in itself — the Bear takes from unworthy to ensure the clan's survival. Only those who are able to hold on to what is theirs and defend it are free. Those who cannot stand up for themselves become prey. There is no injustice in this, only the law of nature." //TA EDIT
+	icon_state = "gronnmatthios"
+
+/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gronn/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD, HERESYDESC_GRONN)
+
+/obj/item/clothing/neck/roguetown/psicross/inhumen/graggar/gronn
+	name = "carved talisman" //grinning talisman
+	desc = "'The battle, the combat, the violence, the rush of victory, the honored glories. Defeat the foe, or die with them.' </br> </br>The Grinning Moose embodies the virtues of strengh and domination; to survive both the homeland's frigid blizzards and those who'd seek to maraude its countrymen. Be untamed and unstoppable, but do not lose yourself in the haze; for even the Moose was chained, once. Kill your own without reason, and the chain shall be tugged; and your soul, too, shall be impaled on their horns."
+	icon_state = "gronngraggar"
+
+/obj/item/clothing/neck/roguetown/psicross/inhumen/graggar/gronn/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD, HERESYDESC_GRONN)
+
+/obj/item/clothing/neck/roguetown/psicross/dendor/gronn
+	name = "carved talisman" //volfskinned talisman
+	desc = "'The world above, of knifetoothed plants and rotting carrion. From jungle to desert, even the stones are nature. Heed its call with the respect it commands, or succumb to madness.' </br> </br>The Volfskinned Man embodies the virtue of nature and temperance; to live in harmony with the world and its spirits. Pluck a jackberry, plant a seed - Slay a beast, see no part wasted. Yet, temperance must be shown; to take from the world without respect-nor-exchange is to curse the homeland with misfortune. Yet, to completely embrace the world's primality is to lose your humanity - and worse, to become the very beast you hunt."
+	icon_state = "gronndendor"
+
+/obj/item/clothing/neck/roguetown/psicross/dendor/gronn/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD, HERESYDESC_GRONN)
+
+/obj/item/clothing/neck/roguetown/psicross/abyssor/gronn
+	name = "carved talisman" //hadal talisman
+	desc = "'The chaos below, of coldblack pressure and crushing weight. Be the current. Control the waves. Reign your sails and hold fast against the storm, or be washed away onto an odyssey with no end.' </br> </br>The Spiraling Kraken is no virtue, but a presence; the homeland's nautical warden, who's tentacled presence is as unpredictable as the oceans it lords over. To embrace the uncertainty of lyfe is to be rewarded with fortune and mercy when it is most needed. Do not embrace such futility, however, lest you are swept away with all the others into the abyss."
+	icon_state = "gronnabyssor"
+
+/obj/item/clothing/neck/roguetown/psicross/abyssor/gronn/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD, HERESYDESC_GRONN)
+
+/obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/special
+	name = "carved talisman" //familial talisman
+	desc = "'The memories of the past, and the dreams of the future. A fetish of a beaste, and the carvings of a force that no one beyond your homeland could understand. Sail gracefully, countryman.'"
+
+/obj/item/clothing/neck/roguetown/psicross/abyssor/gronn/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD, HERESYDESC_GRONN)
+
+/// Generic version of the matthios gronn necklace that has no examine highlights. Purely for loadout drip
+/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gronn/generic
+	name = "tooth necklace" //starving talisman, (non-gronnic, generic)
+	desc = "A necklace with a large fanged tooth. Or is that a particularly large claw?"
+
+/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gronn/generic/get_examine_highlight_status()
+	return null
+
+//////////////////////////////
+// GRONN-SPECIFIC EQUIPMENT //
+//////////////////////////////
 
 /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/atgervi
 	name = "varangian hauberk"
@@ -222,9 +298,8 @@
 	desc = "A deceptively strong moosehide hood with a pair of large heavy antlers. It is the reward of the fourth trial of the Iskarn Shamans: To slay a Grinning Moose in the final hunt alone - and fashion a hood from its head."
 	icon_state = "atgervi_shaman"
 	item_state = "atgervi_shaman"
-	flags_inv = HIDEEARS|HIDEFACE
-	mob_overlay_icon = 'icons/roguetown/clothing/onmob/32x48/atgervi.dmi'
 	flags_inv = HIDEEARS
+	mob_overlay_icon = 'icons/roguetown/clothing/onmob/32x48/atgervi.dmi'
 	bloody_icon = 'icons/effects/blood64.dmi'
 	worn_x_dimension = 32
 	worn_y_dimension = 48
@@ -252,6 +327,7 @@
 	parrysound = list('sound/combat/parry/shield/towershield (1).ogg','sound/combat/parry/shield/towershield (2).ogg','sound/combat/parry/shield/towershield (3).ogg')
 	max_integrity = 300
 	experimental_inhand = FALSE
+	slot_flags = ITEM_SLOT_BACK_R
 
 /obj/item/rogueweapon/shield/atgervi/getonmobprop(tag)
 	. = ..()
@@ -284,72 +360,3 @@
 				return list("shrink" = 0.8,"sx" = 2,"sy" = -8,"nx" = -6,"ny" = -3,"wx" = 3,"wy" = -4,"ex" = 4,"ey" = -3,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = -44,"sturn" = 45,"wturn" = 47,"eturn" = 33,"nflip" = 8,"sflip" = 0,"wflip" = 0,"eflip" = 0)
 			if("onbelt")
 				return list("shrink" = 0.6,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 180,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 1,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
-
-///////////////////////////////
-// GRONN-SPECIFIC PSICROSSES //
-///////////////////////////////
-
-/obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
-	name = "carved talisman" //plotting talisman
-	desc = "'The hunt, the studying of your prey, the learning of its routes, the knowledge our ancestors passed down, the empowerment of your people and yourself. Learn of the world, or fade away.'  </br>  </br>The Plotting Wolf embodies the virtues of progress and knowledge, so that no obstacle nor threat to the homeland remains insurmountable. She demands that her people learn from their ancestors. They must listen closely to the ancient sagas, seeking out the warnings and lessons that their ancestors embedded in words and imagery. They must explore the world, adapt, and endure the cold and all the trials that nature throws their way. But know this: your rest is not eternal. Sooner or later, the shamans will bring you back from the burial mound so that you may pass on your wisdom or stand alongside the living in their hour of need. Such is her final gift and her final demand." //TA EDIT
-	icon_state = "gronnzizo"
-
-/obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/get_examine_highlight_status()
-	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD, HERESYDESC_GRONN)
-
-/obj/item/clothing/neck/roguetown/psicross/inhumen/baothagronn
-	name = "carved talisman" //relishing talisma
-	desc = "'“The excess of desire, the want of more, the glory of victory, the lover's embrace. Embrace the Leopard, or forget your strength.'	</br>	</br>The Relishing Leopard embodies the virtues of love and glory, both in battle and at home. Enjoy the flesh, the drink, and the spice; but be wary to avoid overindulgence, for it shall leave you despondant and lethargic. To become too comfortable is to become weak, and such weakness would turn you into a delicious snack for the Leopard."
-	icon_state = "gronnbaotha"
-
-/obj/item/clothing/neck/roguetown/psicross/inhumen/baothagronn/get_examine_highlight_status()
-	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD, HERESYDESC_GRONN)
-
-/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gronn
-	name = "carved talisman" //starving talisman
-	desc = "'“The hunger, the destruction, the impending frost, the enemy of my enemy. Feed the Bear, or be consumed.'  </br>  </br>The Starving Bear embodies not a virtue, but the necessity to thrive above all else. Hunger is eternal: no matter how much you feed the Bear, he will always demand more. Gold, food, flesh — it makes no difference to him. But the feast is not a goal in itself — the Bear takes from unworthy to ensure the clan's survival. Only those who are able to hold on to what is theirs and defend it are free. Those who cannot stand up for themselves become prey. There is no injustice in this, only the law of nature." //TA EDIT
-	icon_state = "gronnmatthios"
-
-/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gronn/get_examine_highlight_status()
-	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD, HERESYDESC_GRONN)
-
-/obj/item/clothing/neck/roguetown/psicross/inhumen/graggar/gronn
-	name = "carved talisman" //grinning talisman
-	desc = "'The battle, the combat, the violence, the rush of victory, the honored glories. Defeat the foe, or die with them.'	</br>	</br>The Grinning Moose embodies the virtues of strengh and domination; to survive both the homeland's frigid blizzards and those who'd seek to maraude its countrymen. Be untamed and unstoppable, but do not lose yourself in the haze; for even the Moose was chained, once. Kill your own without reason, and the chain shall be tugged; and your soul, too, shall be impaled on their horns."
-	icon_state = "gronngraggar"
-
-/obj/item/clothing/neck/roguetown/psicross/inhumen/graggar/gronn/get_examine_highlight_status()
-	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD, HERESYDESC_GRONN)
-
-/obj/item/clothing/neck/roguetown/psicross/dendor/gronn
-	name = "carved talisman" //volfskinned talisman
-	desc = "'The world above, of knifetoothed plants and rotting carrion. From jungle to desert, even the stones are nature. Heed its call with the respect it commands, or succumb to madness.'	</br>	</br>The Volfskinned Man embodies the virtue of nature and temperance; to live in harmony with the world and its spirits. Pluck a jackberry, plant a seed - Slay a beast, see no part wasted. Yet, temperance must be shown; to take from the world without respect-nor-exchange is to curse the homeland with misfortune. Yet, to completely embrace the world's primality is to lose your humanity - and worse, to become the very beast you hunt."
-	icon_state = "gronndendor"
-
-/obj/item/clothing/neck/roguetown/psicross/dendor/gronn/get_examine_highlight_status()
-	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD, HERESYDESC_GRONN)
-
-/obj/item/clothing/neck/roguetown/psicross/abyssor/gronn
-	name = "carved talisman" //hadal talisman
-	desc = "'The chaos below, of coldblack pressure and crushing weight. Be the current. Control the waves. Reign your sails and hold fast against the storm, or be washed away onto an odyssey with no end.'	</br>	</br>The Spiraling Kraken is no virtue, but a presence; the homeland's nautical warden, who's tentacled presence is as unpredictable as the oceans it lords over. To embrace the uncertainty of lyfe is to be rewarded with fortune and mercy when it is most needed. Do not embrace such futility, however, lest you are swept away with all the others into the abyss."
-	icon_state = "gronnabyssor"
-
-/obj/item/clothing/neck/roguetown/psicross/abyssor/gronn/get_examine_highlight_status()
-	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD, HERESYDESC_GRONN)
-
-/obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/special
-	name = "carved talisman" //familial talisman
-	desc = "'The memories of the past, and the dreams of the future. A fetish of a beaste, and the carvings of a force that no one beyond your homeland could understand. Sail gracefully, countryman.'"
-
-/obj/item/clothing/neck/roguetown/psicross/abyssor/gronn/get_examine_highlight_status()
-	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD, HERESYDESC_GRONN)
-
-/// Generic version of the matthios gronn necklace that has no examine highlights. Purely for loadout drip
-/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gronn/generic
-	name = "tooth necklace" //starving talisman, (non-gronnic, generic)
-	desc = "A necklace with a large fanged tooth. Or is that a particularly large claw?"
-
-/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gronn/generic/get_examine_highlight_status()
-	return null
-
-//
