@@ -48,7 +48,7 @@
 	total_positions = 0
 	spawn_positions = 0
 	antag_job = TRUE
-	
+
 	tutorial = "Да будет проклят Султан Аль-Ашура песками и Иблис! Когда-то вы владели этими землями: поля специй, торговые пути - всё это было частью вашего таваифа. Султан забрал ваши права и земли несколько лет назад - и теперь вы боретесь за свои права и свои земли, беспощадно убивая азебов и наёмных убийц. С тех самых пор как вы стали изгоем для цивилизации - вы стали куда более радикальных взглядов и нашли себе новых товарищей по вкусу. Быть может, вместе с ними вы сможете вернуть свои земли?"
 
 	outfit = null
@@ -72,7 +72,7 @@
 	job_traits = list(TRAIT_SELF_SUSTENANCE, TRAIT_STEELHEARTED)//Bandits and knaves truly though
 	vice_restrictions = list(/datum/charflaw/noeyer, /datum/charflaw/noeyel, /datum/charflaw/mute, /datum/charflaw/limbloss/arm_r, /datum/charflaw/limbloss/arm_l)
 	same_job_respawn_delay = 30 MINUTES
-	cmode_music = 'sound/music/combat_imperial_spellblade.ogg'
+	cmode_music = 'sound/music/cmode/antag/combat_cutpurse.ogg'
 	job_subclasses = list(
 		/datum/advclass/sahir_maradun,
 		/datum/advclass/rih_al_sahra,

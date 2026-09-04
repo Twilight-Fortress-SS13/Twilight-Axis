@@ -4,7 +4,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED)
 	outfit = /datum/outfit/job/roguetown/mercenary/twilight_heishi
-	category_tags = list(CTAG_MERCENARY)
+	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
 	class_select_category = CLASS_CAT_RACIAL
 	maximum_possible_slots = 2
 	cmode_music = 'modular_twilight_axis/sound/music/combat_heishi.ogg'
@@ -227,10 +227,6 @@
 	wdefense = 6
 	wdefense_wbonus = 1
 	max_blade_int = 150
-	bigboy = TRUE
-	swingsound = BLADEWOOSH_HUGE
-	wlength = WLENGTH_GREAT
-	w_class = WEIGHT_CLASS_BULKY
 	wbalance = WBALANCE_SWIFT
 	possible_item_intents = list(/datum/intent/sword/cut/miaodao, /datum/intent/sword/strike, /datum/intent/sword/cut/sabre/heavy)
 	gripped_intents = list(/datum/intent/sword/cut/miaodao/fast, /datum/intent/sword/thrust/zwei, /datum/intent/sword/cut/rend)
