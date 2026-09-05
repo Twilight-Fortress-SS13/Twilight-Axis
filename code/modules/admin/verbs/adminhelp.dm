@@ -614,8 +614,9 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 		heard_by_no_admins = FALSE
 		send2irc(initiator_ckey, "Ticket #[id]: Answered by [key_name(usr)]")
 	_interactions += "[time_stamp()]: [formatted_message]"
-	// Update any open TGUI windows
+	// Update both the initiator's ticket chat and the admin ticket panel.
 	SStgui.update_uis(src)
+	SStgui.update_uis(GLOB.ahelp_tickets)
 
 //Removes the ahelp verb and returns it after 2 minutes
 /datum/admin_help/proc/TimeoutVerb()
@@ -1250,13 +1251,13 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 		C = what
 	if(istype(C) && C.current_ticket)
 		var/datum/admin_help/AH = C.current_ticket
-		// Only log to admin logs; do not expose as a ticket chat message
+		AH.AddInteraction(message, player_message)
 		log_admin("Ticket #[AH.id]: [message]")
 		return AH
 	if(istext(what))	//ckey
 		var/datum/admin_help/AH = GLOB.ahelp_tickets.CKey2ActiveTicket(what)
 		if(AH)
-			// Only log to admin logs; do not expose as a ticket chat message
+			AH.AddInteraction(message, player_message)
 			log_admin("Ticket #[AH.id]: [message]")
 			return AH
 

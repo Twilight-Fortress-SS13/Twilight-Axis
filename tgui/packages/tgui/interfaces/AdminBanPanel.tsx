@@ -181,7 +181,7 @@ const compactToggleButtonStyle = {
   textAlign: 'center',
 } as const;
 
-export const AdminBanPanel = (props) => {
+export const AdminBanPanel = () => {
   const { act, data } = useBackend<Data>();
   const {
     mode,
