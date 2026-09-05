@@ -522,7 +522,7 @@
 	icon_state = "germanlong"
 	max_blade_int = 275
 	possible_item_intents = list(/datum/intent/sword/cut, /datum/intent/sword/thrust/long, /datum/intent/dagger/sucker_punch, SWORD_STRIKE)
-	gripped_intents = list(/datum/intent/sword/cut, /datum/intent/sword/thrust/long, /datum/intent/sword/thrust/long/halfsword/lesser, /datum/intent/sword/chop)
+	gripped_intents = list(/datum/intent/sword/cut, /datum/intent/sword/thrust/long, /datum/intent/sword/chop) // TA EDIT
 	wlength = WLENGTH_NORMAL
 
 /obj/item/rogueweapon/sword/long/zizo

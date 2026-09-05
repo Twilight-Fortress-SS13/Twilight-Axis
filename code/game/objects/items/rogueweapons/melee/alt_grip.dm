@@ -634,7 +634,6 @@
 		/datum/intent/sword/thrust/long/halfsword/jab,
 		SWORD_BASH,
 		/datum/intent/sword/thrust/long/deep/halfsword,
-		/datum/intent/sword/thrust/long/halfsword,
 	)
 	onmobprop_overrides = list(
 		"altgrip" = list(
