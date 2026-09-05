@@ -75,9 +75,9 @@ GLOBAL_LIST_EMPTY(standing_order_pool)
 
 /datum/standing_order/demand_armaments/generate_item_mix()
 	var/list/mix = list()
-	mix[TRADE_GOOD_IRON_INGOT] = rand(8, 14)
+	mix[TRADE_GOOD_IRON_INGOT] = rand(2, 8)
 	if(prob(60))
-		mix[TRADE_GOOD_STEEL_INGOT] = rand(3, 7)
+		mix[TRADE_GOOD_STEEL_INGOT] = rand(1, 4)
 	if(prob(60))
 		mix[TRADE_GOOD_CURED_LEATHER] = rand(5, 10)
 	return mix
@@ -129,9 +129,9 @@ GLOBAL_LIST_EMPTY(standing_order_pool)
 
 /datum/standing_order/demand_smithing/generate_item_mix()
 	var/list/mix = list()
-	mix[TRADE_GOOD_IRON_INGOT] = rand(8, 14)
+	mix[TRADE_GOOD_IRON_INGOT] = rand(3, 14)
 	if(prob(70))
-		mix[TRADE_GOOD_COPPER_INGOT] = rand(5, 10)
+		mix[TRADE_GOOD_COPPER_INGOT] = rand(2, 10)
 	return mix
 
 /datum/standing_order/demand_smithing/generate_name(datum/economic_region/region)
@@ -592,13 +592,11 @@ GLOBAL_LIST_EMPTY(standing_order_pool)
 	// overwrite the larger primary qty when the same id was picked twice.
 	var/list/medicinal_pool = list(
 		TRADE_GOOD_HEALTH_POTION,
-		TRADE_GOOD_STAM_POTION,
 		TRADE_GOOD_ANTIDOTE_POTION,
 	)
 	var/list/premium_pool = list(
 		TRADE_GOOD_STRONG_HEALTH_POTION,
 		TRADE_GOOD_STRONG_MANA_POTION,
-		TRADE_GOOD_STRONG_STAM_POTION,
 		TRADE_GOOD_STRONG_ANTIDOTE_POTION,
 		TRADE_GOOD_MANA_POTION,
 	)
@@ -624,7 +622,7 @@ GLOBAL_LIST_EMPTY(standing_order_pool)
 
 // ============================================================================
 // demand_alchemical_warband - elite buff-potion order for adventurers, the conclave,
-// and chosen retinues. Stat-buff potions plus a backbone of strong-* support potions.
+// and chosen retinues. Stat-buff potions and stamina potions plus a backbone of strong-* support potions.
 // ============================================================================
 /datum/standing_order/demand_alchemical_warband
 	roll_weight = 1
@@ -635,15 +633,15 @@ GLOBAL_LIST_EMPTY(standing_order_pool)
 		TRADE_REGION_NORTHFORT = list("a frontier strike-band", "a watch sergeant's chosen", "a local adventuring fellowship"),
 	)
 	var/list/buff_pool = list(
-		TRADE_GOOD_STRENGTH_POTION,
 		TRADE_GOOD_PERCEPTION_POTION,
 		TRADE_GOOD_INTELLIGENCE_POTION,
 		TRADE_GOOD_SPEED_POTION,
+		TRADE_GOOD_STAM_POTION,
+		TRADE_GOOD_STRONG_STAM_POTION,
 	)
 	var/list/support_pool = list(
 		TRADE_GOOD_STRONG_HEALTH_POTION,
 		TRADE_GOOD_STRONG_MANA_POTION,
-		TRADE_GOOD_STRONG_STAM_POTION,
 		TRADE_GOOD_STRONG_ANTIDOTE_POTION,
 	)
 
@@ -811,7 +809,7 @@ GLOBAL_LIST_EMPTY(standing_order_pool)
 	if(prob(55))
 		mix[TRADE_GOOD_HEAVY_LEATHER_GLOVES] = rand(2, 4)
 	if(prob(45))
-		mix[TRADE_GOOD_RECURVE_BOW] = rand(3, 6)
+		mix[TRADE_GOOD_RECURVE_BOW] = rand(1, 5)
 	return mix
 
 /datum/standing_order/demand_frontier_gear/generate_name(datum/economic_region/region)
@@ -877,7 +875,7 @@ GLOBAL_LIST_EMPTY(standing_order_pool)
 	mix[TRADE_GOOD_WOOD] = rand(15, 28)
 	mix[TRADE_GOOD_CLOTH] = rand(6, 12)
 	if(prob(70))
-		mix[TRADE_GOOD_IRON_INGOT] = rand(3, 6)
+		mix[TRADE_GOOD_IRON_INGOT] = rand(2, 4)
 	if(prob(55))
 		mix[TRADE_GOOD_CURED_LEATHER] = rand(4, 8)
 	return mix
@@ -898,7 +896,7 @@ GLOBAL_LIST_EMPTY(standing_order_pool)
 /datum/standing_order/demand_artificery
 	roll_weight = 2
 	var/list/project_by_region = list(
-		TRADE_REGION_DAFTSMARCH = list("the artificers' guild", "a master smith's workshop", "a foundry-master's commission"),
+		TRADE_REGION_DAFTSMARCH = list("the artificers' guild", "a master smith's workshop", "a forgemaster's commission"),
 		TRADE_REGION_KINGSFIELD = list("a court artificer's workshop", "a guild engineer's workshop", "a back-alley contraption maker"),
 		TRADE_REGION_BLACKHOLT = list("a coven's contraption shop", "an arcane engineer's workshop", "a hermit tinkerer's bulk order"),
 		TRADE_REGION_NORTHFORT = list("a garrison's engineer", "a siege-engineer at the keep", "a frontier sapper outfitting"),
@@ -906,13 +904,19 @@ GLOBAL_LIST_EMPTY(standing_order_pool)
 
 /datum/standing_order/demand_artificery/generate_item_mix()
 	var/list/mix = list()
-	mix[TRADE_GOOD_COPPER_INGOT] = rand(6, 12)
-	mix[TRADE_GOOD_TIN_INGOT] = rand(4, 8)
-	mix[TRADE_GOOD_COAL] = rand(8, 14)
+	mix[TRADE_GOOD_FOLD_TABLE] = rand(1, 3)
+
 	if(prob(70))
-		mix[TRADE_GOOD_GLASS_BATCH] = rand(3, 6)
+		mix[TRADE_GOOD_MOBILE_STOVE] = 1
+	else if(prob(50))
+		mix[TRADE_GOOD_KEY] = rand(2, 10)
+		mix[TRADE_GOOD_LOCK] = rand(2, 10)
 	if(prob(45))
-		mix[TRADE_GOOD_MESS_KIT] = rand(2, 4)
+		mix[TRADE_GOOD_WATER_PURIFIER] = rand(1, 3)
+	if(prob(50))
+		mix[TRADE_GOOD_MESS_KIT] = rand(1, 3)
+	else if(prob(50))
+		mix[TRADE_GOOD_SCISSORS] = rand(1, 3)
 	return mix
 
 /datum/standing_order/demand_artificery/generate_name(datum/economic_region/region)
@@ -945,10 +949,10 @@ GLOBAL_LIST_EMPTY(standing_order_pool)
 
 /datum/standing_order/demand_jewelry/generate_item_mix()
 	var/list/mix = list()
-	mix[pick(jewelry_pool)] = rand(2, 4)
+	mix[pick(jewelry_pool)] = rand(1, 2)
 	if(prob(60))
 		var/second = pick(jewelry_pool)
-		mix[second] = rand(1, 3)
+		mix[second] = rand(1, 2)
 	if(prob(15))
 		mix[TRADE_GOOD_DIAMOND_RING] = 1
 	return mix
@@ -964,7 +968,7 @@ GLOBAL_LIST_EMPTY(standing_order_pool)
 
 
 // ============================================================================
-// demand_prosthetic_run - chapel/infirmary order: prosthetics + healing potions
+// demand_prosthetic_run - chapel/infirmary order: prosthetics + healing potions/amputation scissors
 // ============================================================================
 /datum/standing_order/demand_prosthetic_run
 	roll_weight = 2
@@ -980,7 +984,10 @@ GLOBAL_LIST_EMPTY(standing_order_pool)
 	mix[primary_prosthetic] = rand(2, 3)
 	if(prob(35))
 		mix[TRADE_GOOD_STEEL_PROSTHETIC] = 1
-	mix[TRADE_GOOD_HEALTH_POTION] = rand(4, 7)
+	if(prob(50))
+		mix[TRADE_GOOD_ANTIDOTE_POTION] = rand(4, 7)
+	else if(prob(50))
+		mix[TRADE_GOOD_AUTO_SHEARS] = 1
 	if(prob(60))
 		mix[TRADE_GOOD_CURED_LEATHER] = rand(4, 8)
 	return mix
@@ -996,24 +1003,29 @@ GLOBAL_LIST_EMPTY(standing_order_pool)
 
 
 // ============================================================================
-// demand_artificed_panoply - rare premium order: artificed plate + voltic gauntlets
+// demand_artificed_panoply - rare premium order: voltic gauntlets + steam shield,
+// optionally anchored by a smith's steel harness
 // ============================================================================
 /datum/standing_order/demand_artificed_panoply
 	roll_weight = 1
 	var/list/project_by_region = list(
-		TRADE_REGION_KINGSFIELD = list("a duke's master-of-arms", "a knight-artificer's commission", "a tournament-bound champion"),
-		TRADE_REGION_DAFTSMARCH = list("a master smith's signature contract", "a foundry-master's masterpiece", "a guild's exhibition piece"),
+		TRADE_REGION_KINGSFIELD = list("a duke's master-of-arms", "a artificer's commission", "a tournament-bound champion"),
+		TRADE_REGION_DAFTSMARCH = list("a master smith's signature contract", "a forgemaster's masterpiece", "a guild's exhibition piece"),
 		TRADE_REGION_HEARTFELT = list("the count's chosen champion", "a knightly investiture", "a roving warden captain"),
 	)
 
 /datum/standing_order/demand_artificed_panoply/generate_item_mix()
 	var/list/mix = list()
-	mix[TRADE_GOOD_ARTIFICED_HALFPLATE] = 1
+	mix[TRADE_GOOD_CROSSBOW] = rand(1, 3)
+	mix[TRADE_GOOD_BRONZE_INGOT] = rand(1, 4)
 	if(prob(55))
 		mix[TRADE_GOOD_VOLTIC_GAUNTLETS] = 1
-	mix[TRADE_GOOD_STEEL_INGOT] = rand(8, 14)
+	else
+		mix[TRADE_GOOD_STEAM_SHIELD] = 1
 	if(prob(50))
-		mix[TRADE_GOOD_GOLD_INGOT] = rand(2, 4)
+		mix[TRADE_GOOD_AUTO_SHEARS] = 1
+	else if(prob(50))
+		mix[TRADE_GOOD_GRAPPLING_HOOK] = 1
 	return mix
 
 /datum/standing_order/demand_artificed_panoply/generate_name(datum/economic_region/region)
@@ -1022,8 +1034,8 @@ GLOBAL_LIST_EMPTY(standing_order_pool)
 /datum/standing_order/demand_artificed_panoply/generate_description(datum/economic_region/region)
 	var/list/projects = project_by_region[region.region_id]
 	if(length(projects))
-		return "[capitalize(pick(projects))] at [region.name] commissions a panoply of artificed plate. Masterwork pays masterwork's price."
-	return "A patron at [region.name] commissions a panoply of artificed plate."
+		return "[capitalize(pick(projects))] at [region.name] commissions a panoply of artificed war-gear. Masterwork pays masterwork's price."
+	return "A patron at [region.name] commissions a panoply of artificed war-gear."
 
 
 // ============================================================================
@@ -1055,7 +1067,7 @@ GLOBAL_LIST_EMPTY(standing_order_pool)
 	mix[pick(weapon_pool)] = rand(3, 5)
 	mix[pick(armor_pool)] = rand(2, 3)
 	if(prob(50))
-		mix[TRADE_GOOD_RECURVE_BOW] = rand(3, 5)
+		mix[TRADE_GOOD_RECURVE_BOW] = rand(1, 4)
 	return mix
 
 /datum/standing_order/demand_tournament_arms/generate_name(datum/economic_region/region)

@@ -23,7 +23,7 @@
 	var/res = alert(usr, "Show the title of this song to the players?",, "Yes","No", "Cancel")
 	switch(res)
 		if("Yes")
-			to_chat(world, span_boldannounce("An admin played: [S]"))
+			to_world(span_boldannounce("An admin played: [S]"))
 		if("Cancel")
 			return
 
@@ -44,15 +44,6 @@
 	set name = "ChangeMusicPower"
 
 	if(prefs)
-/*		if(blacklisted() == 1)
-			var/vol = input(usr, "Current music power: [prefs.musicvol]",, 100) as null|num
-			vol = 100
-			prefs.musicvol = vol
-			prefs.save_preferences()
-			mob.update_music_volume(CHANNEL_MUSIC, prefs.musicvol)
-			mob.update_music_volume(CHANNEL_LOBBYMUSIC, prefs.musicvol)
-			mob.update_music_volume(CHANNEL_ADMIN, prefs.musicvol)
-		else*/
 		var/vol = input(usr, "Current music power: [prefs.musicvol]",, 100) as null|num
 		if(!vol)
 			if(vol != 0)
@@ -175,7 +166,7 @@
 		to_chat(src, span_boldwarning("Youtube-dl was not configured, action unavailable")) //Check config.txt for the INVOKE_YOUTUBEDL value
 		return
 
-	var/web_sound_input = input("Enter content URL (supported sites only, leave blank to stop playing)", "PASS THE AUX CORD, MILORD.") as text|null
+	var/web_sound_input = input(src, "Enter content URL (supported sites only, leave blank to stop playing)", "PASS THE AUX CORD, MILORD.") as text|null
 	if(istext(web_sound_input))
 		var/web_sound_url = ""
 		var/stop_web_sounds = FALSE
@@ -233,7 +224,7 @@
 					var/res = alert(usr, "Show the title of and link to this song to the players?\n[title]", "PASS THE AUX CORD, MILORD.", "No", "Yes", "Cancel")
 					switch(res)
 						if("Yes")
-							to_chat(world, span_boldannounce("An admin played: [webpage_url]"))
+							to_world(span_boldannounce("An admin played: [webpage_url]"))
 						if("No")
 							// Hide detailed metadata in the chat media widget while still playing the song
 							music_extra_data["title"] = null
@@ -277,13 +268,45 @@
 
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Play Internet Sound")
 
+/client/proc/resolve_admin_music_url(web_sound_input) // TA EDIT START
+	if(!findtext(web_sound_input, "youtube.com") && !findtext(web_sound_input, "youtu.be"))
+		return web_sound_input
+
+	var/ytdl = CONFIG_GET(string/invoke_youtubedl)
+	if(!ytdl)
+		to_chat(src, span_boldwarning("Youtube-dl was not configured, YouTube URLs are unavailable."))
+		return
+
+	var/shell_scrubbed_input = shell_url_scrub(web_sound_input)
+	var/list/output = world.shelleo("[ytdl] --geo-bypass --format \"bestaudio\[ext=mp3]/best\[ext=mp4]\[height<=360]/bestaudio\[ext=m4a]/bestaudio\[ext=aac]\" --dump-single-json --no-playlist -- \"[shell_scrubbed_input]\"")
+	var/errorlevel = output[SHELLEO_ERRORLEVEL]
+	if(errorlevel)
+		to_chat(src, span_boldwarning("Youtube-dl URL retrieval FAILED:"))
+		to_chat(src, span_warning("[output[SHELLEO_STDERR]]"))
+		return
+
+	var/list/data
+	try
+		data = json_decode(output[SHELLEO_STDOUT])
+	catch(var/exception/e)
+		to_chat(src, span_boldwarning("Youtube-dl JSON parsing FAILED:"))
+		to_chat(src, span_warning("[e]: [output[SHELLEO_STDOUT]]"))
+		return
+
+	var/resolved_url = data["url"]
+	if(!resolved_url || !findtext(resolved_url, GLOB.is_http_protocol))
+		to_chat(src, span_boldwarning("Youtube-dl did not return a valid http(s) audio URL."))
+		return
+
+	return resolved_url // TA EDIT END
+
 /client/proc/play_music_global_url()
 	set category = "Game Master"
 	set name = "Music - Global URL"
 	if(!check_rights(R_SOUND))
 		return
 
-	var/web_sound_input = input("Enter direct HTTPS audio URL (leave blank to stop playing)", "PASS THE AUX CORD, MILORD.") as text|null
+	var/web_sound_input = input(src, "Enter direct HTTPS audio URL (leave blank to stop playing)", "PASS THE AUX CORD, MILORD.") as text|null
 	if(isnull(web_sound_input))
 		return
 
@@ -297,7 +320,10 @@
 			to_chat(src, span_boldwarning("Non-http(s) URIs are not allowed."))
 			return
 
-		web_sound_url = web_sound_input
+		var/resolved_url = resolve_admin_music_url(web_sound_input) // TA EDIT START
+		if(!resolved_url)
+			return
+		web_sound_url = resolved_url // TA EDIT END
 
 		var/title = input(usr, "Optional: song title to display (leave blank for Unknown Track)", "Song Title") as null|text
 		var/artist = input(usr, "Optional: song artist to display (leave blank to hide)", "Song Artist") as null|text
@@ -310,7 +336,7 @@
 		var/res = alert(usr, "Show the title and link of this song to the players?\n[title ? title : web_sound_input]", "PASS THE AUX CORD, MILORD.", "No", "Yes", "Cancel")
 		switch(res)
 			if("Yes")
-				to_chat(world, span_boldannounce("An admin played: [title ? title : web_sound_input]"))
+				to_world(span_boldannounce("An admin played: [title ? title : web_sound_input]"))
 			if("No")
 				music_extra_data["title"] = null
 				music_extra_data["link"] = "Song Link Hidden"
@@ -352,7 +378,7 @@
 	if(!check_rights(R_SOUND))
 		return
 
-	var/web_sound_input = input("Enter direct HTTPS audio URL (leave blank to stop playing)", "Play Local Music (URL)") as text|null
+	var/web_sound_input = input(src, "Enter direct HTTPS audio URL (leave blank to stop playing)", "Play Local Music (URL)") as text|null
 	if(isnull(web_sound_input))
 		return
 
@@ -367,7 +393,10 @@
 			to_chat(src, span_boldwarning("Non-http(s) URIs are not allowed."))
 			return
 
-		web_sound_url = web_sound_input
+		var/resolved_url = resolve_admin_music_url(web_sound_input) // TA EDIT START
+		if(!resolved_url)
+			return
+		web_sound_url = resolved_url // TA EDIT END
 
 		dist = input(usr, "How far do you want this music to extend?",, 50) as null|num
 		if(!dist)
@@ -385,7 +414,7 @@
 		var/res = alert(usr, "Show the title and link of this song to nearby players?\n[title ? title : web_sound_input]", "PASS THE AUX CORD, MILORD.", "No", "Yes", "Cancel")
 		switch(res)
 			if("Yes")
-				to_chat(world, span_boldannounce("An admin played locally: [title ? title : web_sound_input]"))
+				to_world(span_boldannounce("An admin played locally: [title ? title : web_sound_input]"))
 			if("No")
 				music_extra_data["title"] = null
 				music_extra_data["link"] = "Song Link Hidden"
@@ -432,7 +461,7 @@
 		return
 
 	if(!M)
-		M = input("Play to whom?", "Active Players") as null|anything in GLOB.player_list
+		M = input(src, "Play to whom?", "Active Players") as null|anything in GLOB.player_list
 
 	if(!M)
 		return
@@ -441,7 +470,7 @@
 	if(!C)
 		return
 
-	var/web_sound_input = input("Enter direct HTTPS audio URL (leave blank to stop playing)", "PASS THE AUX CORD, MILORD.") as text|null
+	var/web_sound_input = input(src, "Enter direct HTTPS audio URL (leave blank to stop playing)", "PASS THE AUX CORD, MILORD.") as text|null
 	if(isnull(web_sound_input))
 		return
 
@@ -455,7 +484,10 @@
 			to_chat(src, span_boldwarning("Non-http(s) URIs are not allowed."))
 			return
 
-		web_sound_url = web_sound_input
+		var/resolved_url = resolve_admin_music_url(web_sound_input) // TA EDIT START
+		if(!resolved_url)
+			return
+		web_sound_url = resolved_url // TA EDIT END
 
 		var/title = input(usr, "Optional: song title to display (leave blank for Unknown Track)", "Song Title") as null|text
 		var/artist = input(usr, "Optional: song artist to display (leave blank to hide)", "Song Artist") as null|text

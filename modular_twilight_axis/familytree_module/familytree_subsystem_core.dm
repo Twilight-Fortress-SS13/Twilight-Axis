@@ -32,13 +32,26 @@ SUBSYSTEM_DEF(familytree)
 	var/mob/living/carbon/human/current_royal_partner_owner
 	var/current_royal_partner_mode = "closed"
 	var/list/current_royal_partner_snapshot = list()
+	var/round_disabled = FALSE
 
 	var/familytree_busy_retry_limit = 30
 	var/familytree_busy_retry_delay = 10 SECONDS
 	var/familytree_log_file
+	var/list/familytree_round_prefs_by_ckey = list()
+	var/familytree_search_id_counter = 0
+	var/list/familytree_search_ids = list()
+	var/list/familytree_retry_signatures = list()
+	var/list/familytree_retry_last_log = list()
+	var/list/familytree_retry_attempts = list()
+	var/list/familytree_retry_suppressed = list()
 	var/ftlog_counter = 0
 	var/ftlog_error_count = 0
 	var/ftlog_warn_count = 0
+#ifdef FAMILYTREE_DEBUG_LOGGING
+	var/verbose_logging = TRUE
+#else
+	var/verbose_logging = FALSE
+#endif
 
 #define FTLOG_DEBUG "DEBUG"
 #define FTLOG_INFO  "INFO"
@@ -46,8 +59,9 @@ SUBSYSTEM_DEF(familytree)
 #define FTLOG_ERROR "ERROR"
 #define FTLOG_CRIT  "CRIT"
 
-/datum/controller/subsystem/familytree/proc/ftlog(msg, level = FTLOG_INFO)
-#ifdef FAMILYTREE_DEBUG_LOGGING
+/datum/controller/subsystem/familytree/proc/ftlog(msg, level = FTLOG_DEBUG)
+	if(level == FTLOG_DEBUG && !verbose_logging)
+		return
 	if(!familytree_log_file)
 		if(GLOB.log_directory)
 			familytree_log_file = "[GLOB.log_directory]/ss_family.log"
@@ -59,11 +73,8 @@ SUBSYSTEM_DEF(familytree)
 	if(level == FTLOG_WARN)
 		ftlog_warn_count++
 	WRITE_LOG(familytree_log_file, "\[[logtime]] [level] #[ftlog_counter] [msg]")
-#endif
-	return
 
 /datum/controller/subsystem/familytree/proc/ftlog_state(tag = "SNAPSHOT")
-#ifdef FAMILYTREE_DEBUG_LOGGING
 	ftlog("=== [tag] ===", FTLOG_INFO)
 	ftlog("[tag] families=[families.len] viable_spouses=[viable_spouses.len] errors=[ftlog_error_count] warns=[ftlog_warn_count]", FTLOG_INFO)
 	var/assigned_count = 0
@@ -88,7 +99,6 @@ SUBSYSTEM_DEF(familytree)
 				names += "[node.person.real_name]([node.person.ckey || "NPC"])"
 		ftlog("[tag] HOUSE '[house.housename]' race=[house.dominant_race] members=[house.member_nodes.len]: [names.Join(", ")]", FTLOG_DEBUG)
 	ftlog("=== /[tag] ===", FTLOG_INFO)
-#endif
 
 /datum/controller/subsystem/familytree/proc/register_family(datum/heritage/house)
 	if(!house)
@@ -116,6 +126,7 @@ SUBSYSTEM_DEF(familytree)
 	create_isolated_species_houses()
 	ftlog("families after isolated houses: [families.len]")
 	load_enigma_roles()
+	load_deserttown_roles()
 	RegisterSignal(SSdcs, COMSIG_GLOB_MOB_CREATED, PROC_REF(on_mob_created))
 	var/registered_count = 0
 	for(var/mob/living/carbon/human/H in GLOB.mob_list)
@@ -143,37 +154,16 @@ SUBSYSTEM_DEF(familytree)
 			families += family
 
 /datum/controller/subsystem/familytree/proc/load_familytree_runtime_preferences(mob/living/carbon/human/H, datum/preferences/P)
-	if(!H || !P)
+	if(!H)
 		return FALSE
-	P.familytree_module_load_character()
-	var/old_setspouse = H.setspouse
-	H.familytree_pref = P.family
-	H.gender_choice_pref = P.gender_choice_pref
-	H.setspouse = P.setspouse
-	if(old_setspouse != H.setspouse)
-		H.familytree_setspouse_retries = 0
-		H.familytree_setspouse_timeout_offered = FALSE
-	H.species_preference_mode = P.species_preference_mode
-	H.preferred_species_types = islist(P.preferred_species_types) ? P.preferred_species_types.Copy() : list()
-	H.preferred_species_anatomy = P.preferred_species_anatomy
-	H.polygamy_mode = P.polygamy_mode
-	H.desired_relative_role = P.desired_relative_role
-	H.allow_low_status_marriage = P.allow_low_status_marriage
-	H.allow_relatives_in_family = P.allow_relatives_in_family
-	H.know_your_fate = P.know_your_fate
-	H.familytree_father_name = istext(P.familytree_father_name) ? P.familytree_father_name : ""
-	H.familytree_mother_name = istext(P.familytree_mother_name) ? P.familytree_mother_name : ""
-	H.familytree_father_species = istext(P.familytree_father_species) ? P.familytree_father_species : ""
-	H.familytree_mother_species = istext(P.familytree_mother_species) ? P.familytree_mother_species : ""
-	if(familytree_donator_relatives_enabled(H.ckey))
-		H.familytree_random_siblings = sanitize_integer(text2num("[P.familytree_random_siblings]"), 0, FAMILYTREE_MAX_RANDOM_RELATIVES, 0)
-		H.familytree_random_children = sanitize_integer(text2num("[P.familytree_random_children]"), 0, FAMILYTREE_MAX_RANDOM_RELATIVES, 0)
-	else
-		H.familytree_random_siblings = 0
-		H.familytree_random_children = 0
-	return TRUE
+	var/datum/familytree_prefs/round_prefs = familytree_get_round_prefs(H, TRUE)
+	if(!round_prefs)
+		return FALSE
+	return round_prefs.apply_to(H)
 
 /datum/controller/subsystem/familytree/proc/on_familytree_target_preference_changed(mob/living/carbon/human/H, old_setspouse)
+	if(round_disabled)
+		return
 	if(!H || QDELETED(H))
 		return
 	var/old_target = istext(old_setspouse) ? old_setspouse : ""
@@ -182,15 +172,20 @@ SUBSYSTEM_DEF(familytree)
 		return
 	H.familytree_setspouse_retries = 0
 	H.familytree_setspouse_timeout_offered = FALSE
-	ftlog("target preference changed for [H.real_name]: '[old_target]' -> '[new_target]'")
+	H.familytree_setspouse_wait_started = 0
+	familytree_reset_search_retry_state(H)
+	ftlog("target preference changed for [familytree_search_actor_summary(H)]: '[old_target]' -> '[new_target]'")
 	if(H.family_datum || H.familytree_opted_out || H.familytree_confirmation_pending)
+		return
+	if(!familytree_get_round_prefs(H, TRUE))
+		ftlog("try_queue STOP: [H.real_name] has no round preference datum")
 		return
 	if(!familytree_pref_enabled(H.familytree_pref))
 		return
 	if(H.familytree_assignment_scheduled)
 		return
 	H.familytree_assignment_scheduled = TRUE
-	addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, H.familytree_pref), 1 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, H.familytree_pref, 0, familytree_search_id(H), H.real_name, H.ckey), 1 SECONDS)
 
 /datum/controller/subsystem/familytree/proc/is_familytree_player_busy(mob/living/carbon/human/H)
 	if(!H || QDELETED(H))
@@ -218,6 +213,9 @@ SUBSYSTEM_DEF(familytree)
 		ftlog("on_mob_created SKIP: dummy")
 		return
 	var/mob/living/carbon/human/H = new_mob
+	if(H.ai_controller || initial(H.ai_controller))
+		ftlog("on_mob_created SKIP: AI-controlled NPC ([H.ai_controller || initial(H.ai_controller)]), not a real player character")
+		return
 	ftlog("on_mob_created PASS: registering [H.real_name] (ckey=[H.ckey] - may be empty, login will handle)")
 	register_human(H)
 	if(H.ckey)
@@ -236,6 +234,7 @@ SUBSYSTEM_DEF(familytree)
 		if(try_grant_holy_spells(H))
 			granted++
 	ftlog("scan_and_grant_holy_spells DONE: scanned=[scanned] granted=[granted]")
+	ftlog_state("ROUNDSTART")
 
 /datum/controller/subsystem/familytree/proc/try_grant_holy_spells(mob/living/carbon/human/H)
 	if(!H || QDELETED(H) || !H.ckey || !H.mind)
@@ -273,11 +272,13 @@ SUBSYSTEM_DEF(familytree)
 		return
 	H.familytree_assignment_scheduled = FALSE
 	H.familytree_confirmation_pending = FALSE
+	H.familytree_consecutive_match_failures = 0
+	H.familytree_clear_confirm_button()
 	viable_spouses -= H
 	if(!H.familytree_module_signal_bound)
 		ftlog("stop_tracking SKIP: [H.real_name] not bound")
 		return
-	ftlog("stop_tracking: [H.real_name] ([H.ckey]) reason=[reason]")
+	ftlog("SEARCH_STOP: [familytree_search_actor_summary(H)] reason=[reason] spouse_count=[familytree_spouse_count(H)] incoming_spouse=[familytree_incoming_spouse_status(H)]", FTLOG_INFO)
 	H.familytree_module_signal_bound = FALSE
 	UnregisterSignal(H, list(COMSIG_MOB_LOGIN, COMSIG_MOB_LOGOUT, COMSIG_MOB_DEATH, COMSIG_LIVING_REVIVE, COMSIG_JOB_RECEIVED))
 
@@ -330,6 +331,10 @@ SUBSYSTEM_DEF(familytree)
 	schedule_house_member_resync(house)
 
 /datum/controller/subsystem/familytree/proc/try_queue_assignment(mob/living/carbon/human/H)
+	if(round_disabled)
+		if(H && !QDELETED(H))
+			H.familytree_assignment_scheduled = FALSE
+		return
 	ftlog("try_queue_assignment: [H?.real_name] ([H?.ckey])")
 	if(!H || QDELETED(H) || istype(H, /mob/living/carbon/human/dummy))
 		ftlog("try_queue SKIP: null/qdel/dummy", FTLOG_WARN)
@@ -339,6 +344,7 @@ SUBSYSTEM_DEF(familytree)
 		ftlog("try_queue UNSUB: [H.real_name] reason=[unsubscribe_reason]", FTLOG_WARN)
 		unsubscribe_familytree_human(H, unsubscribe_reason)
 		return
+	familytree_hydrate_round_state(H)
 	if(H.stat == DEAD)
 		ftlog("try_queue SKIP: [H.real_name] dead")
 		return
@@ -397,29 +403,48 @@ SUBSYSTEM_DEF(familytree)
 		addtimer(CALLBACK(src, PROC_REF(run_royal_assignment), H, royal_status), get_royal_delay(H) SECONDS)
 		return
 
+	if(H.familytree_opted_out)
+		ftlog("try_queue STOP: [H.real_name] opted out this round")
+		stop_tracking_human(H, "opted out this round")
+		return
+
 	if(familytree_pref_enabled(H.familytree_pref))
 		var/target_name = familytree_get_target_name(H)
 		var/timer = (target_name && length(target_name)) ? 3 : (rand(1, 30) + 10)
 		ftlog("try_queue LOCAL: [H.real_name] pref=[H.familytree_pref] timer=[timer]s")
 		H.familytree_assignment_scheduled = TRUE
-		addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, H.familytree_pref), timer SECONDS)
+		addtimer(CALLBACK(src, PROC_REF(run_local_assignment), H, H.familytree_pref, 0, familytree_search_id(H), H.real_name, H.ckey), timer SECONDS)
 		return
 
 	if(H.client && (H.mind?.assigned_role || H.job))
 		ftlog("try_queue STOP: [H.real_name] familytree disabled (pref=FAMILY_NONE)")
 		stop_tracking_human(H, "familytree disabled for this character")
 
-/datum/controller/subsystem/familytree/proc/run_local_assignment(mob/living/carbon/human/H, status, busy_attempt = 0)
-	ftlog("run_local_assignment: [H?.real_name] ([H?.ckey]) status=[status] busy_attempt=[busy_attempt]")
+/datum/controller/subsystem/familytree/proc/familytree_match_retry_delay(mob/living/carbon/human/H)
+	var/failures = 0
+	if(H)
+		failures = clamp(H.familytree_consecutive_match_failures, 0, 6)
+	return (10 + failures * 10) SECONDS
+
+/datum/controller/subsystem/familytree/proc/run_local_assignment(mob/living/carbon/human/H, status, busy_attempt = 0, search_id_hint = 0, search_name_hint = null, search_ckey_hint = null)
+	if(round_disabled)
+		if(H && !QDELETED(H))
+			H.familytree_assignment_scheduled = FALSE
+		return
+	var/search_id = H ? familytree_search_id(H) : search_id_hint
+	var/search_name = H?.real_name || search_name_hint || "null"
+	var/search_ckey = H?.ckey || search_ckey_hint || "null"
+	ftlog("run_local_assignment: search_id=[search_id] name='[search_name]' ckey='[search_ckey]' status=[status] busy_attempt=[busy_attempt]")
 	if(!H || QDELETED(H))
-		ftlog("run_local ABORT: null/qdel", FTLOG_ERROR)
+		var/abort_reason = H ? "qdel" : "null"
+		ftlog("run_local ABORT: search_id=[search_id] name='[search_name]' ckey='[search_ckey]' reason=[abort_reason]", FTLOG_ERROR)
 		return
 	var/effective_status = status
 	var/datum/preferences/P = H.client?.prefs
 	if(P && load_familytree_runtime_preferences(H, P))
 		effective_status = H.familytree_pref
 	if(H.familytree_opted_out || !familytree_pref_enabled(effective_status))
-		ftlog("run_local STOP: [H.real_name] familytree disabled before local assignment")
+		ftlog("SEARCH_CANCELLED: [familytree_search_actor_summary(H)] reason=familytree_disabled_or_optout", FTLOG_INFO)
 		H.familytree_assignment_scheduled = FALSE
 		stop_tracking_human(H, "familytree disabled for this character")
 		return
@@ -445,6 +470,11 @@ SUBSYSTEM_DEF(familytree)
 		ftlog("run_local SKIP: [H.real_name] confirmation already pending")
 		H.familytree_assignment_scheduled = FALSE
 		return
+	if(!familytree_join_create_phase_open())
+		ftlog("run_local WAIT: [H.real_name] matching locked until join/create phase")
+		H.familytree_assignment_scheduled = FALSE
+		wait_for_join_create_phase(H, "matching locked until join/create phase")
+		return
 	H.familytree_assignment_scheduled = FALSE
 	if(try_force_mutual_targeted_match(H))
 		ftlog("run_local TARGETED: [H.real_name] matched via mutual target before AddLocal")
@@ -453,6 +483,10 @@ SUBSYSTEM_DEF(familytree)
 	AddLocal(H, effective_status)
 
 /datum/controller/subsystem/familytree/proc/run_royal_assignment(mob/living/carbon/human/H, status)
+	if(round_disabled)
+		if(H && !QDELETED(H))
+			H.familytree_assignment_scheduled = FALSE
+		return
 	ftlog("run_royal_assignment: [H?.real_name] ([H?.ckey]) status=[status]")
 	if(!H || QDELETED(H))
 		ftlog("run_royal ABORT: null/qdel", FTLOG_ERROR)
@@ -482,3 +516,43 @@ SUBSYSTEM_DEF(familytree)
 	H.familytree_assignment_scheduled = FALSE
 	ftlog("run_royal GO: [H.real_name] calling AddRoyal status=[status]")
 	AddRoyal(H, status)
+
+/datum/controller/subsystem/familytree/proc/disable_for_round()
+	if(round_disabled)
+		return 0
+	round_disabled = TRUE
+	viable_spouses.Cut()
+	var/stopped = 0
+	for(var/mob/living/carbon/human/H in GLOB.player_list)
+		if(!H || QDELETED(H))
+			continue
+		if(H.familytree_wake_timerid)
+			deltimer(H.familytree_wake_timerid)
+			H.familytree_wake_timerid = null
+		if(H.familytree_confirm_timerid)
+			deltimer(H.familytree_confirm_timerid)
+			H.familytree_confirm_timerid = null
+		H.familytree_assignment_scheduled = FALSE
+		H.familytree_confirmation_pending = FALSE
+		H.familytree_consecutive_match_failures = 0
+		H.familytree_clear_confirm_button()
+		if(H.familytree_confirm_prompt && !QDELETED(H.familytree_confirm_prompt))
+			qdel(H.familytree_confirm_prompt)
+		H.familytree_confirm_prompt = null
+		stopped++
+	ftlog("ADMIN: FamilyTree disabled for current round players=[stopped]", FTLOG_WARN)
+	return stopped
+
+/client/proc/familytree_disable_for_round()
+	set name = "FamilyTree Disable For Round"
+	set category = "Admin"
+
+	if(!check_rights(R_DEBUG))
+		return
+	if(!SSfamilytree)
+		return
+	if(SSfamilytree.round_disabled)
+		to_chat(mob, span_warning("FamilyTree уже отключён до конца текущего раунда."))
+		return
+	var/stopped = SSfamilytree.disable_for_round()
+	to_chat(mob, span_notice("FamilyTree отключён до конца текущего раунда. Остановлено персонажей: [stopped]."))

@@ -8,14 +8,11 @@
 	max_integrity = 0
 	layer = ABOVE_MOB_LAYER
 	layer = GAME_PLANE_UPPER
-	/// Turf south of the ledger, marked with a drop-here decal. Retrieval-quest items carry a
-	/// component that consumes them on any tile bearing this decal.
 	var/input_point
-	/// Directive quota tracking. Reset when GLOB.dayspassed advances past directives_day_stamp.
 	var/directives_issued_today = 0
 	var/directives_day_stamp = -1
 
-/obj/structure/roguemachine/contractledger/Initialize()
+/obj/structure/roguemachine/contractledger/Initialize(mapload)
 	. = ..()
 	input_point = locate(x, y - 1, z)
 	var/obj/effect/decal/marker_export/marker = new(get_turf(input_point))
@@ -27,8 +24,6 @@
 	SSquestpool.registered_ledgers -= src
 	return ..()
 
-/// Lazy-reset of the daily directive quota. Called wherever directive state is read or
-/// mutated — cheap comparison, auto-rolls over when GLOB.dayspassed advances.
 /obj/structure/roguemachine/contractledger/proc/refresh_directive_quota()
 	if(directives_day_stamp != GLOB.dayspassed)
 		directives_day_stamp = GLOB.dayspassed
@@ -40,15 +35,54 @@
 	. += span_info("To <b>turn in</b> a completed contract, click the ledger while holding the quest scroll.")
 	. += span_info("Retrieval-quest items should be <b>dropped onto the marked tile</b> in front of the ledger.")
 	. += span_info("Abandoning a contract forfeits its deposit to the treasury and places you under a brief guild cooldown before you may abandon another.")
+	. += span_info("Heads taken from <b>contract targets</b> carry no bounty - the contract's reward is payment in full. Beasts and brigands you hunt outside a contract still fetch coin at a HEADEATER.")
 	. += span_info("The <b>Innkeeper and their tavern staff</b> (Cook, Tapster) may compose rumor contracts here, spending Rumor Points to seed retrieval, courier, and light kill jobs across the realm.")
 	. += span_info("The <b>[english_list(GLOB.crown_authority_roles)]</b> may commission defense writs here - paid from the Burgher Pledge, the Crown's Purse, or issued as an unfunded Request. The Steward is the primary commissioner; the others substitute if the Steward is absent. A Regent sitting in the Lord's absence inherits commission authority for the duration of their regency.")
+	. += span_info("<b>Townsfolk</b> may post contracts of their own using their own coin. It can be pinned to the board or handed over in person. The <b>[english_list(GLOB.crown_authority_roles)]</b> may commission any of them, but it will draw from the Crown's Purse at double the price. Only the poster may open what is recovered.")
+	. += span_info("Your <b>fellowship</b> may turn in contracts you hold on your behalf, should you fall in battle. The reward and levy is credited to the one who turns it in, using their tax exempt status, if any.")
+	// TODO: flavor - plain placeholder, rewrite
+	. += span_info("A <b>Fellowship of [BLOCKADE_FELLOWSHIP_REQUIREMENT] or more</b> may call for a <b>Hoard Recovery</b> in a region whose banditry hoard has reached <b>[HOARD_RECOVERY_HOARD_MINIMUM] mammons</b>, after pledging <b>[HOARD_RECOVERY_PLEDGE] mammons</b>. It pays the standard blockade reward, and the reclaimed hoard is taxed by the Crown as <b>Recovered Spoils</b>. The Steward may also commission a hoard recovery writ like any other defense commission.")
+	. += span_info("A <b>Notorious Bounty</b> may be taken up by a ghost, who then plays the outlaw fighting against you. Its reward rises by <b>[NOTORIOUS_BOUNTY_PLAYER_BONUS] mammons</b> when that happens, or by <b>[NOTORIOUS_BOUNTY_NPC_BONUS]</b> when none answers.")
+	. += span_info("The <b>[english_list(GLOB.contract_proxy_officials)]</b> may turn in any completed contract on the holder's behalf, crediting the reward to the holder's own account. They take no cut.")
 
 /obj/structure/roguemachine/contractledger/attackby(obj/item/P, mob/living/carbon/human/user, params)
 	. = ..()
+	if(istype(P, /obj/item/quest_writ/blockade))
+		post_blockade_writ(user, P)
+		return
 	if(istype(P, /obj/item/quest_writ))
 		turn_in_contract(user, P)
 		return
 	return
+
+/obj/structure/roguemachine/contractledger/proc/post_blockade_writ(mob/living/carbon/human/user, obj/item/quest_writ/blockade/writ)
+	var/datum/quest/kill/blockade_defense/Q = writ.assigned_quest
+	if(!istype(Q))
+		return
+	if(Q.is_directive)
+		to_chat(user, span_warning("A Steward's Request is not for public posting - it must be handed directly to the bearer."))
+		return
+	if(Q.quest_receiver_reference)
+		to_chat(user, span_warning("This writ has already been taken up - it cannot be pinned."))
+		return
+	if(Q in SSquestpool.pool)
+		to_chat(user, span_warning("This writ is already pinned to the ledger."))
+		return
+	if(Q.blockade_ref && !Q.blockade_ref.resolve())
+		to_chat(user, span_warning("The blockade this writ answers has already been lifted."))
+		return
+	Q.required_fellowship_size = BLOCKADE_FELLOWSHIP_REQUIREMENT
+	Q.created_at = world.time
+	Q.quest_scroll = null
+	Q.quest_scroll_ref = null
+	writ.assigned_quest = null
+	SSquestpool.pool += Q
+	var/datum/blockade/B = Q.blockade_ref.resolve()
+	if(B)
+		B.active_scroll_ref = null
+	playsound(src, 'sound/items/inqslip_sealed.ogg', 50, TRUE, -1)
+	to_chat(user, span_notice("You pin the [writ.name] to the ledger. It now calls for a Fellowship of [BLOCKADE_FELLOWSHIP_REQUIREMENT] to answer."))
+	qdel(writ)
 
 /obj/structure/roguemachine/contractledger/attack_hand(mob/living/carbon/human/user)
 	if(!ishuman(user))
@@ -90,8 +124,15 @@
 	data["pool"] = build_pool_listing()
 	data["active"] = build_active_listing(user)
 	data["regions"] = build_region_listing()
+	data["hoard_recovery_regions"] = build_hoard_recovery_region_listing()
+	data["hoard_recovery_pledge"] = HOARD_RECOVERY_PLEDGE
+	data["hoard_recovery_fellowship_min"] = BLOCKADE_FELLOWSHIP_REQUIREMENT
+	data["hoard_recovery_hoard_min"] = HOARD_RECOVERY_HOARD_MINIMUM
+	data["scout_regions"] = SSregionthreat.build_scout_region_rows()
+	data["spoils_tax_rate"] = SStreasury.get_tax_rate(TAX_CATEGORY_RECOVERED_SPOILS)
 	data["tax_rate"] = SStreasury.get_tax_rate(TAX_CATEGORY_CONTRACT_LEVY)
 	data["guild_cut_rate"] = GUILD_REFERRAL_FEE_PCT
+	data["can_proxy_turnin"] = (user.job in GLOB.contract_proxy_officials)
 	var/list/dynamic_roles = resolve_dynamic_roles(user)
 	data["dynamic_roles"] = dynamic_roles
 	data["dynamic_role"] = length(dynamic_roles) ? dynamic_roles[1] : null
@@ -132,6 +173,7 @@
 		data["directives_issued_today"] = directives_issued_today
 	if("towner" in dynamic_roles)
 		data["towner_postings"] = build_towner_posting_listing(user)
+		data["towner_purse_balance"] = SStreasury?.discretionary_fund?.balance || 0
 	return data
 
 GLOBAL_LIST_INIT(crown_authority_roles, list(
@@ -142,11 +184,16 @@ GLOBAL_LIST_INIT(crown_authority_roles, list(
 	"Marshal",
 	"Councillor",
 	"Prince",
+	"Sultan", // Desert Town
+	"Vizier", // Desert Town
+	"Sheikh", // Desert Town
 ))
 
-/// TRUE if the user has standing to commission defense writs - either by job, or by sitting as
-/// the current Regent (Regent inherits commission authority for the duration of their regency,
-/// so a Consort or Prince crowned by the Titan gains access they wouldn't otherwise have).
+GLOBAL_LIST_INIT(contract_proxy_officials, list(
+	"Steward",
+	"Clerk",
+))
+
 /obj/structure/roguemachine/contractledger/proc/can_commission(mob/user)
 	if(!user)
 		return FALSE
@@ -189,6 +236,62 @@ GLOBAL_LIST_INIT(crown_authority_roles, list(
 
 	return known // TA EDIT END
 
+/obj/structure/roguemachine/contractledger/proc/build_hoard_recovery_region_listing()
+	var/list/listing = list()
+	for(var/datum/threat_region/TR as anything in SSregionthreat.threat_regions)
+		if(TR.banditry_hoard < HOARD_RECOVERY_HOARD_MINIMUM)
+			continue
+		// A true blockade takes precedence
+		if(TR.has_active_blockade())
+			continue
+		var/datum/quest/existing = TR.active_hoard_recovery_ref?.resolve()
+		listing += list(list(
+			"region" = TR.region_name,
+			"hoard" = TR.banditry_hoard,
+			"danger" = TR.get_danger_level(),
+			"active" = (existing && !QDELETED(existing)) ? TRUE : FALSE,
+		))
+	return listing
+
+/obj/structure/roguemachine/contractledger/proc/request_hoard_recovery(mob/living/carbon/human/user, region_name)
+	if(!ishuman(user))
+		return
+	var/datum/threat_region/TR = SSregionthreat.get_region(region_name)
+	if(!TR)
+		return
+	if(TR.banditry_hoard < HOARD_RECOVERY_HOARD_MINIMUM)
+		to_chat(user, span_warning("The hoard in [TR.region_name] is below [HOARD_RECOVERY_HOARD_MINIMUM] mammons - you cannot raise a Recovery writ for it."))
+		return
+	if(TR.has_active_blockade())
+		to_chat(user, span_warning("[TR.region_name] is under an active blockade - it must be cleared with a Blockade Defense writ."))
+		return
+	var/datum/quest/existing = TR.active_hoard_recovery_ref?.resolve()
+	if(existing && !QDELETED(existing))
+		to_chat(user, span_warning("A recovery writ for [TR.region_name] is already abroad."))
+		return
+	var/datum/fellowship/F = user.current_fellowship
+	if(!F || length(F.get_members()) < BLOCKADE_FELLOWSHIP_REQUIREMENT)
+		to_chat(user, span_warning("Only a Fellowship of [BLOCKADE_FELLOWSHIP_REQUIREMENT] or more may call for a Hoard Recovery."))
+		return
+	if(!SStreasury.has_account(user))
+		to_chat(user, span_warning("No account on record - register with a Meister before calling for a recovery."))
+		return
+	var/datum/fund/pledge_account = SStreasury.get_account(user)
+	if(SStreasury.get_balance(user) < HOARD_RECOVERY_PLEDGE)
+		to_chat(user, span_warning("Raising a recovery writ requires a pledge of [HOARD_RECOVERY_PLEDGE] mammons."))
+		return
+	if(!SStreasury.burn(pledge_account, HOARD_RECOVERY_PLEDGE, "Hoard Recovery pledge ([TR.region_name])"))
+		to_chat(user, span_warning("The pledge could not be withdrawn from your account."))
+		return
+	var/datum/quest/kill/blockade_defense/Q = SSquestpool.issue_hoard_recovery_request(TR, user, pledge_account, HOARD_RECOVERY_PLEDGE)
+	if(!Q)
+		SStreasury.mint(pledge_account, HOARD_RECOVERY_PLEDGE, "Hoard Recovery pledge refund (issue failure)")
+		to_chat(user, span_warning("No recovery writ can be raised for [TR.region_name] right now. Your pledge is returned."))
+		return
+	playsound(src, 'sound/items/inqslip_sealed.ogg', 50, TRUE, -1)
+	to_chat(user, span_notice("Recovery writ issued for [TR.region_name]."))
+	SSquestpool.log_event("hoard_recovery_request", "[user.real_name] called a hoard recovery on [TR.region_name] (hoard [TR.banditry_hoard], pledge [HOARD_RECOVERY_PLEDGE])")
+
 /obj/structure/roguemachine/contractledger/proc/build_pool_listing()
 	var/list/listing = list()
 	for(var/datum/quest/Q as anything in SSquestpool.pool)
@@ -197,6 +300,7 @@ GLOBAL_LIST_INIT(crown_authority_roles, list(
 		if(istype(Q, /datum/quest/kill))
 			var/datum/quest/kill/KQ = Q
 			threat_bands = KQ.threat_bands_cleared
+		var/lapse_minutes = max(0, round((Q.get_lapse_time() - world.time) / 600, 1))
 		listing += list(list(
 			"ref" = REF(Q),
 			"title" = Q.title || "Unnamed Contract",
@@ -212,10 +316,11 @@ GLOBAL_LIST_INIT(crown_authority_roles, list(
 			"levy_exempt" = Q.levy_exempt,
 			"guild_cut_exempt" = Q.guild_cut_exempt,
 			"is_rumor" = Q.source == QUEST_SOURCE_RUMOR,
-			"is_defense" = Q.source == QUEST_SOURCE_DEFENSE,
+			"is_defense" = Q.source == QUEST_SOURCE_DEFENSE || Q.source == QUEST_SOURCE_BLOCKADE,
 			"is_towner" = Q.source == QUEST_SOURCE_TOWNER,
-			"is_standing" = Q.source == QUEST_SOURCE_RUMOR || Q.source == QUEST_SOURCE_DEFENSE || Q.source == QUEST_SOURCE_TOWNER,
+			"is_standing" = Q.source == QUEST_SOURCE_RUMOR || Q.source == QUEST_SOURCE_DEFENSE || Q.source == QUEST_SOURCE_TOWNER || Q.source == QUEST_SOURCE_BLOCKADE,
 			"required_fellowship_size" = Q.required_fellowship_size,
+			"lapse_minutes" = lapse_minutes,
 		))
 	return listing
 
@@ -296,4 +401,7 @@ GLOBAL_LIST_INIT(crown_authority_roles, list(
 			return TRUE
 		if("compose_towner")
 			compose_towner_from_tgui(user, params)
+			return TRUE
+		if("request_hoard_recovery")
+			request_hoard_recovery(user, params["region"])
 			return TRUE

@@ -21,7 +21,8 @@
 	charge_required = TRUE
 	weapon_cast_penalized = TRUE
 	charge_time = 1 SECONDS
-	charge_drain = 1
+	charge_swingdelay_type = SWINGDELAY_PENALTY
+	hold_drain = 1
 	charge_slowdown = CHARGING_SLOWDOWN_SMALL
 	charge_sound = 'sound/magic/charging.ogg'
 	cooldown_time = 10 SECONDS
@@ -34,6 +35,7 @@
 
 	var/line_length = 4
 	var/blast_damage = 55
+	displayed_damage = 55
 	var/push_dist = 3
 
 /datum/action/cooldown/spell/energetic_blast/cast(atom/cast_on)
@@ -84,7 +86,7 @@
 				BCLASS_BLUNT, spell_name = "Energetic Blast", \
 				allow_shield_check = TRUE, damage_type = BRUTE, \
 				skip_animation = TRUE)
-			if(!damage_dealt)
+			if(damage_dealt <= 0)
 				blocked = TRUE
 			new /obj/effect/temp_visual/spell_impact(get_turf(victim), spell_color, spell_impact_intensity)
 			already_hit += victim

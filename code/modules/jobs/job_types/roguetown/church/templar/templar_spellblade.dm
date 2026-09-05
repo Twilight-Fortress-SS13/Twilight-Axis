@@ -9,9 +9,10 @@
 	outfit = /datum/outfit/job/roguetown/templar/noc_spellblade
 	category_tags = list(CTAG_TEMPLAR)
 	allowed_patrons = list(/datum/patron/divine/noc)
-	maximum_possible_slots = 1 // The Special Snowflake
+	maximum_possible_slots = 2 // The Special Snowflake And Their Friend
 	subclass_languages = list(/datum/language/grenzelhoftian)
 	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_ARCYNE)
+	tempo_capable = FALSE
 	subclass_stats = list(
 		STATKEY_STR = 1,
 		STATKEY_INT = 1, // Weighted 7 but a nice statblock
@@ -23,12 +24,16 @@
 	subclass_skills = list(
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/shields = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/magic/arcane = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/magic/holy = SKILL_LEVEL_NOVICE,
+		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/medicine = SKILL_LEVEL_NOVICE,
 	)
 
 /datum/outfit/job/roguetown/templar/noc_spellblade
@@ -46,24 +51,30 @@
 	..()
 
 	// Equipment — medium armor templar with Noc theming
-	wrists = /obj/item/clothing/neck/roguetown/psicross/noc
 	cloak = /obj/item/clothing/cloak/tabard/devotee/noc
-	armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
+	armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/holysee
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/jackchain
 	gloves = /obj/item/clothing/gloves/roguetown/chain
 	neck = /obj/item/clothing/neck/roguetown/chaincoif
 	pants = /obj/item/clothing/under/roguetown/chainlegs
-	shoes = /obj/item/clothing/shoes/roguetown/boots/armor
+	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced
 	belt = /obj/item/storage/belt/rogue/leather/black
 	backr = /obj/item/rogueweapon/shield/heater
 	backl = /obj/item/storage/backpack/rogue/satchel
-	beltl = /obj/item/storage/belt/rogue/pouch/coins/mid
-	id = /obj/item/clothing/ring/silver
+	beltl = /obj/item/clothing/neck/roguetown/psicross/noc
+	id = /obj/item/clothing/ring/silver/cleric
 	backpack_contents = list(
+		/obj/item/storage/belt/rogue/pouch/coins/mid = 1,
 		/obj/item/ritechalk = 1,
+		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/storage/keyring/acolyte = 1,
-		/obj/item/book/spellbook = 1,
+		/obj/item/rogueweapon/spellbook = 1,
 	)
+
+	var/patron_dagger = get_templar_patron_dagger(H)
+	if(patron_dagger)
+		backpack_contents += patron_dagger
 
 	H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg'
 
@@ -92,15 +103,15 @@
 				H.mind.AddSpell(new /datum/action/cooldown/spell/caedo)
 				H.mind.AddSpell(new /datum/action/cooldown/spell/air_strike)
 				H.mind.AddSpell(new /datum/action/cooldown/spell/leyline_anchor)
-				H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/blade_storm)
+				H.mind.AddSpell(new /datum/action/cooldown/spell/blade_storm)
 			if("phalangite")
 				H.mind.AddSpell(new /datum/action/cooldown/spell/azurean_phalanx)
 				H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/azurean_pilum)
 				H.mind.AddSpell(new /datum/action/cooldown/spell/advance)
 				H.mind.AddSpell(new /datum/action/cooldown/spell/gate_of_reckoning)
 			if("macebearer")
-				H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/kastvyl)
-				H.mind.AddSpell(new /datum/action/cooldown/spell/tremor)
+				H.mind.AddSpell(new /datum/action/cooldown/spell/telegraphed_strike/spellblade/shatter)
+				H.mind.AddSpell(new /datum/action/cooldown/spell/telegraphed_strike/spellblade/tremor)
 				H.mind.AddSpell(new /datum/action/cooldown/spell/charge)
 				H.mind.AddSpell(new /datum/action/cooldown/spell/cataclysm)
 
@@ -111,7 +122,8 @@
 
 		var/helmets = list(
 			"Greatplumed Owl Armet" = /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/owl,
-			"Noc Helmet"			= /obj/item/clothing/head/roguetown/helmet/heavy/nochelm
+			"Noc Helmet"			= /obj/item/clothing/head/roguetown/helmet/heavy/nochelm,
+			"Snouted Noc Helmet"			= /obj/item/clothing/head/roguetown/helmet/heavy/nochelm/snouted
 		)
 		var/helmchoice = input(H, "Choose your Helm.", "REFLECTION OF PALE LIGHT") as anything in helmets
 		head = helmets[helmchoice]
@@ -136,7 +148,7 @@
 					H.put_in_hands(new /obj/item/rogueweapon/sword/long/kriegmesser/noc(H))
 					H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/sword(H), SLOT_BELT_R, TRUE)
 				if("Longsword")
-					H.put_in_hands(new /obj/item/rogueweapon/sword/long(H))
+					H.put_in_hands(new /obj/item/rogueweapon/sword/long/church(H))
 					H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/sword(H), SLOT_BELT_R, TRUE)
 				if("Rapier")
 					H.put_in_hands(new /obj/item/rogueweapon/sword/rapier(H))
@@ -149,7 +161,8 @@
 					H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/sword(H), SLOT_BELT_R, TRUE)
 				if("Steel Greatsword")
 					H.put_in_hands(new /obj/item/rogueweapon/greatsword(H))
-					H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H))
+					qdel(H.get_item_by_slot(SLOT_BACK_R))
+					H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/gwstrap(H), SLOT_BACK_R, TRUE)
 				if("Steel Dagger")
 					H.equip_to_slot_or_del(new /obj/item/rogueweapon/huntingknife/idagger/steel(H), SLOT_BELT_R, TRUE)
 				if("Twilight Fang")
@@ -159,23 +172,27 @@
 			else
 				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
 		if("phalangite")
-			var/polearm_weapons = list("Halberd", "Bardiche", "Boar Spear", "Dory", "Naginata")
+			var/polearm_weapons = list("Halberd", "Bardiche", "Moonlight Spear", "Dory", "Naginata")
 			var/polearm_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in polearm_weapons
 			switch(polearm_choice)
 				if("Halberd")
 					H.put_in_hands(new /obj/item/rogueweapon/halberd(H))
-					H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H))
+					qdel(H.get_item_by_slot(SLOT_BACK_R))
+					H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/gwstrap(H), SLOT_BACK_R, TRUE)
 				if("Bardiche")
 					H.put_in_hands(new /obj/item/rogueweapon/halberd/bardiche(H))
-					H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H))
-				if("Boar Spear")
-					H.put_in_hands(new /obj/item/rogueweapon/spear/boar(H))
-					H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H))
+					qdel(H.get_item_by_slot(SLOT_BACK_R))
+					H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/gwstrap(H), SLOT_BACK_R, TRUE)
+				if("Moonlight Spear")
+					H.put_in_hands(new /obj/item/rogueweapon/spear/boar/noc(H))
+					qdel(H.get_item_by_slot(SLOT_BACK_R))
+					H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/gwstrap(H), SLOT_BACK_R, TRUE)
 				if("Dory")
 					H.put_in_hands(new /obj/item/rogueweapon/spear/spellblade(H))
 				if("Naginata")
 					H.put_in_hands(new /obj/item/rogueweapon/spear/naginata(H))
-					H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H))
+					qdel(H.get_item_by_slot(SLOT_BACK_R))
+					H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/gwstrap(H), SLOT_BACK_R, TRUE)
 			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_EXPERT, TRUE)
 		if("macebearer")
 			var/mace_weapons = list("Steel Mace", "Steel Warhammer", "Grand Mace", "Battle Axe", "Steel Greataxe")
@@ -188,13 +205,15 @@
 					H.put_in_hands(new /obj/item/rogueweapon/mace/warhammer/steel(H))
 				if("Grand Mace")
 					H.put_in_hands(new /obj/item/rogueweapon/mace/goden/steel(H))
-					H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H))
+					qdel(H.get_item_by_slot(SLOT_BACK_R))
+					H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/gwstrap(H), SLOT_BACK_R, TRUE)
 				if("Battle Axe")
-					H.put_in_hands(new /obj/item/rogueweapon/stoneaxe/battle(H))
+					H.put_in_hands(new /obj/item/rogueweapon/stoneaxe/battle/holyseeaxe(H))
 					picked_axe = TRUE
 				if("Steel Greataxe")
 					H.put_in_hands(new /obj/item/rogueweapon/greataxe/steel(H))
-					H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H))
+					qdel(H.get_item_by_slot(SLOT_BACK_R))
+					H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/gwstrap(H), SLOT_BACK_R, TRUE)
 					picked_axe = TRUE
 			if(picked_axe)
 				H.adjust_skillrank_up_to(/datum/skill/combat/axes, SKILL_LEVEL_EXPERT, TRUE)

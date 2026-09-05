@@ -11,6 +11,8 @@
 	var/inqonly = FALSE // Has the Inquisitor locked Marque-spending for lessers?
 	var/keycontrol = "puritan"
 	var/static/list/last_free_send = list()
+	var/static/list/ghost_sends = list()
+	var/allow_ghosts = TRUE
 	var/cat_current = "1"
 	var/list/all_category = list(
 		"✤ RELIQUARY ✤",
@@ -30,7 +32,7 @@
 	var/mailtag
 	var/obfuscated = FALSE
 
-/obj/structure/roguemachine/mail/Initialize()
+/obj/structure/roguemachine/mail/Initialize(mapload)
 	. = ..()
 	SSroguemachine.hermailers += src
 	ournum = SSroguemachine.hermailers.len
@@ -64,7 +66,72 @@
 		return
 	last_free_send[user.ckey] = world.time
 
+/obj/structure/roguemachine/mail/proc/ghosts_allowed()
+	return allow_ghosts && CONFIG_GET(flag/ghost_letters)
+
+/obj/structure/roguemachine/mail/proc/ghost_mailbox(mob/user)
+	var/box_key = mail_key(user)
+	if(!box_key)
+		return null
+	return SSroguemachine.ghost_mailboxes[box_key]
+
+/obj/structure/roguemachine/mail/proc/ghost_unread(mob/user)
+	for(var/datum/ghost_letter/GL as anything in ghost_mailbox(user))
+		if(GL.unread)
+			return TRUE
+	return FALSE
+
+/obj/structure/roguemachine/mail/proc/read_mail(mob/user)
+	var/list/box = ghost_mailbox(user)
+	if(!length(box))
+		return FALSE
+	var/body = ""
+	for(var/i = length(box), i >= 1, i--)
+		var/datum/ghost_letter/GL = box[i]
+		body += "<b>From [GL.sender], to [GL.recipient]</b><br>"
+		body += GL.content
+		GL.unread = FALSE
+		if(i > 1)
+			body += "<hr>"
+	return show_parchment(user, body, "ghostmail")
+
+/obj/structure/roguemachine/mail/proc/can_ghost_mail(mob/dead/observer/user, feedback = FALSE)
+	if(!isobserver(user) || !user.ckey)
+		return FALSE
+	if(!ghosts_allowed())
+		if(feedback)
+			to_chat(user, span_warning("The machine is deaf to the dead."))
+		return FALSE
+	var/last = ghost_sends[user.ckey]
+	if(last && world.time < last + GHOST_LETTER_COOLDOWN)
+		if(feedback)
+			var/wait = last + GHOST_LETTER_COOLDOWN - world.time
+			to_chat(user, span_warning("My grip on the world is spent. I could try again in [round(wait / 600) + 1] minute\s."))
+		return FALSE
+	return TRUE
+
+/obj/structure/roguemachine/mail/attack_ghost(mob/dead/observer/user)
+	if(!in_range(src, user) || !ghosts_allowed())
+		return ..()
+	if(!ghost_unread(user) && can_ghost_mail(user, feedback = TRUE))
+		ui_interact(user)
+		return TRUE
+	if(read_mail(user))
+		return TRUE
+	return ..()
+
 /obj/structure/roguemachine/mail/attack_hand(mob/user)
+	if(user.mind && length(user.mind.manor_packages)) //TA EDIT START
+		var/mob/living/carbon/human/H = user
+		var/obj/item/manor_delivery/D = pick(user.mind.manor_packages)
+		user.mind.manor_packages -= D
+		H.put_in_hands(D)
+		if(SSroguemachine.hermailermaster)
+			var/obj/item/roguemachine/mastermail/M = SSroguemachine.hermailermaster
+			if(!any_additional_mail(M, H))
+				H.remove_status_effect(/datum/status_effect/ugotmail)
+		else
+			H.remove_status_effect(/datum/status_effect/ugotmail) //TA EDIT END
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		var/addl_mail = FALSE
@@ -72,30 +139,30 @@
 		if(SSroguemachine.secret_mail?.len)
 			for(var/obj/item/I in SSroguemachine.secret_mail)
 				var/is_mine = FALSE
-				if(I.mailedto == H.real_name)
-					is_mine = TRUE 
-				else if(H.mind?.assigned_role == "Hand" || H.mind?.special_role == "Hand")
+				if(mail_name_match(I.mailedto, H.real_name)) // TA EDIT
+					is_mine = TRUE
+				else if((H.mind && (H.mind.assigned_role in list("Hand", "Vizier"))) || (H.mind && (H.mind.special_role in list("Hand", "Vizier")))) // TA edit
 					if(findtext(I.mailedto, "#"))
 						var/box2find = text2num(copytext(I.mailedto, findtext(I.mailedto, "#")+1))
-						for(var/obj/structure/roguemachine/mail/X in SSroguemachine.hermailers) 
-							if(X.ournum == box2find && X.mailtag == "Hand") 
-								is_mine = TRUE 
-								break 
-				if(is_mine) 
+						for(var/obj/structure/roguemachine/mail/X in SSroguemachine.hermailers)
+							if(X.ournum == box2find && (X.mailtag in list("Hand", "Vizier")))
+								is_mine = TRUE
+								break
+				if(is_mine)
 					if(!addl_mail)
 						SSroguemachine.remove_secret_mail(I)
 						I.forceMove(src.loc)
 						user.put_in_hands(I)
 						addl_mail = TRUE
-					else 
+					else
 						say("You have additional mail available.")
-						break 
+						break
 		// TA EDIT END
 
 		if(SSroguemachine.hermailermaster)
 			var/obj/item/roguemachine/mastermail/M = SSroguemachine.hermailermaster
 			for(var/obj/item/I in M.contents)
-				if(I.mailedto == H.real_name)
+				if(mail_name_match(I.mailedto, H.real_name)) // TA EDIT
 					if(!addl_mail)
 						I.forceMove(src.loc)
 						user.put_in_hands(I)
@@ -109,7 +176,7 @@
 				H.remove_status_effect(/datum/status_effect/ugotmail)
 	if(!ishuman(user))
 		return
-	if(user.mind?.has_bomb) //for TRAIT_EXPLOSIVE_SUPPLY. One bomb per one day.
+	if (user.mind?.has_bomb) //for TRAIT_EXPLOSIVE_SUPPLY. One bomb per one day.
 		var/mob/living/carbon/human/H = user
 		H.mind?.has_bomb = FALSE
 		var/bomb_type
@@ -166,6 +233,9 @@
 	. += span_info("Insert coins to purchase supplies or send a letters.")
 	. += span_info("Left click with a paper or package to send a prewritten letter for free.")
 	. += span_info("You can wrap an item in paper to create a mailable package.")
+	if(isobserver(user) && ghosts_allowed())
+		. += span_info("Mail from beyond the borders can also be received.")
+	. += span_info("Роль придворного агента может посылать бесплатные письма через ПКМ-панель, но только деснице.") // TA EDIT
 	if(HAS_TRAIT(user, TRAIT_INQUISITION))
 		. += span_info("<br>The MARQUETTE can be accessed via a secret compartment fitted within the HERMES. Load a Marque to access it.")
 		. += span_info("You can send arrival slips, accusation slips, fully loaded INDEXERs or confessions here.")
@@ -178,9 +248,9 @@
 	var/is_court_agent = FALSE // TA EDIT BEGIN
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
-		if(H.mind?.assigned_role == "Court Agent" || H.mind?.special_role == "Court Agent")
-			is_court_agent = TRUE 
-	if(!coin_loaded && !is_court_agent) 
+		if((H.mind?.assigned_role in list("Court Agent", "Enslaved kafir")) || (H.mind?.special_role in list("Court Agent", "Enslaved kafir")))
+			is_court_agent = TRUE
+	if(!coin_loaded && !is_court_agent)
 		to_chat(user, span_warning("Insert coins to use the terminal."))
 		return // TA EDIT END
 	if(!coin_loaded && !free_send_ready(user))
@@ -191,7 +261,28 @@
 	if(inqcoins)
 		to_chat(user, span_warning("The machine doesn't respond."))
 		return
-	ui_interact(user)
+	if(coin_loaded) //TA EDIT START
+		if(ishuman(user))
+			var/mob/living/carbon/human/H = user
+			if(can_open_manor_panel(H))
+				var/choice = tgui_alert(user, "What would you like to do?", "HERMES Terminal", list("Send Mail", "Correspond with Estate"))
+				switch(choice)
+					if("Send Mail")
+						ui_interact(user)
+					if("Correspond with Estate")
+						open_manor_panel(user)
+				return FALSE
+	ui_interact(user) //TA EDIT END
+
+/obj/structure/roguemachine/mail/ui_state(mob/user)
+	return GLOB.human_adjacent_state
+
+/obj/structure/roguemachine/mail/ui_status(mob/user, datum/ui_state/state)
+	if(isobserver(user))
+		if(!can_ghost_mail(user))
+			return UI_CLOSE
+		return in_range(src, user) ? UI_INTERACTIVE : UI_UPDATE
+	return ..()
 
 /obj/structure/roguemachine/mail/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
@@ -204,10 +295,13 @@
 	data["paper_cost"] = 1
 	data["quill_cost"] = 5
 	data["letter_cost"] = 1
+	data["ghost_mode"] = isobserver(user) ? TRUE : FALSE
+	data["delay_min"] = GHOST_LETTER_DELAY_MIN
+	data["delay_max"] = GHOST_LETTER_DELAY_MAX
 	var/is_court_agent = FALSE // TA EDIT BEGIN
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
-		if(H.mind?.assigned_role == "Court Agent" || H.mind?.special_role == "Court Agent") 
+		if((H.mind?.assigned_role in list("Court Agent", "Enslaved kafir")) || (H.mind?.special_role in list("Court Agent", "Enslaved kafir")))
 			is_court_agent = TRUE
 	data["is_court_agent"] = is_court_agent // TA EDIT END
 	return data
@@ -217,32 +311,191 @@
 	data["balance"] = coin_loaded
 	data["free_send_ready"] = free_send_ready(user) ? TRUE : FALSE
 	data["free_send_remaining_ds"] = free_send_remaining(user)
+	data["letter_count"] = isobserver(user) ? length(ghost_mailbox(user)) : 0
 	return data
 
-/obj/structure/roguemachine/mail/proc/log_mail_send(mob/user, sender_name, recipient_name)
+/obj/structure/roguemachine/mail/proc/log_mail_send(mob/user, sender_name, recipient_name, ghost_send = FALSE, content)
 	if(!user)
 		return
-	user.log_message("sent mail via [name]/[(loc)] from [sender_name] to [recipient_name]", LOG_GAME)
-	message_admins("[key_name(user)] sent mail via [name]/[(loc)] from [sender_name] to [recipient_name]")
+	var/what = ghost_send ? "posted GHOST mail (delayed)" : "sent mail"
+	log_mail("[key_name(user)] [what] via [name]/[(loc)] from [sender_name] to [recipient_name]") // TA EDIT
+	var/link = archive_letter(sender_name, recipient_name, content, key_name(user))
+	message_admins("[key_name(user)] [what] via [name]/[(loc)] from [sender_name] to [recipient_name][link]")
+	return link
+
+/proc/show_parchment(mob/user, body, window = "parchment")
+	if(!user?.client)
+		return FALSE
+	user << browse_rsc('html/book.png')
+	var/dat = {"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">
+		<html><head><style type=\"text/css\">
+		body { background-image:url('book.png');background-repeat: repeat; }</style></head><body scroll=yes>"}
+	dat = replacetext(dat, "<head>", "<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">") // TA EDIT
+	dat += body
+	dat += "</body></html>"
+	user << browse(dat, "window=[window];size=500x400;can_close=1;can_minimize=0;can_maximize=0;can_resize=1;titlebar=1;border=0")
+	return TRUE
+
+/datum/letter_record
+	var/sender
+	var/recipient
+	var/content
+	var/sender_key
+
+/datum/letter_record/New(from_whom, to_whom, body, posted_by)
+	. = ..()
+	sender = from_whom
+	recipient = to_whom
+	content = body
+	sender_key = posted_by
+
+/datum/letter_record/proc/show_letter(mob/user)
+	return show_parchment(user, "<b>From [sender], to [recipient]</b> (sent by [sender_key])<hr>[content]", "letterlog")
+
+/proc/archive_letter(sender, recipient, content, sender_key)
+	if(!content)
+		return ""
+	SSroguemachine.letter_archive += new /datum/letter_record(sender, recipient, content, sender_key)
+	return " <a href='?_src_=holder;[HrefToken(TRUE)];read_letter=[length(SSroguemachine.letter_archive)]'>\[Read Letter\]</a>"
+
+/proc/find_mail_box(destination)
+	if(!destination || !findtext(destination, "#"))
+		return null
+	var/wanted = text2num(copytext(destination, findtext(destination, "#") + 1))
+	for(var/obj/structure/roguemachine/mail/X in SSroguemachine.hermailers)
+		if(X.ournum == wanted)
+			return X
+	return null
+
+/proc/find_mail_human(destination)
+	if(!destination)
+		return null
+	for(var/mob/living/carbon/human/H in GLOB.human_list)
+		if(mail_name_match(H.real_name, destination))
+			return H
+	return null
+
+/proc/find_mail_ghost(destination)
+	if(!destination)
+		return null
+	for(var/mob/dead/observer/G in GLOB.dead_mob_list)
+		if(G.ckey && mail_name_match(G.real_name, destination))
+			return G
+	return null
+
+/proc/mail_fail_msg(destination)
+	return findtext(destination, "#") ? "Cannot send it. Bad number?" : "There's no one by that name to receive it."
+
+/proc/mail_exists(destination)
+	if(!destination)
+		return FALSE
+	if(findtext(destination, "#"))
+		return find_mail_box(destination) ? TRUE : FALSE
+	return (find_mail_human(destination) || find_mail_ghost(destination)) ? TRUE : FALSE
+
+/proc/stamp_mail(obj/item/I, destination, sender)
+	I.mailer = sender
+	I.mailedto = destination
+	I.update_icon()
+
+/proc/deliver_mail(obj/item/I, destination, sender)
+	if(QDELETED(I) || !destination)
+		return FALSE
+	if(findtext(destination, "#"))
+		var/obj/structure/roguemachine/mail/box = find_mail_box(destination)
+		if(!box)
+			return FALSE
+		stamp_mail(I, destination, sender)
+		I.forceMove(box.loc)
+		box.say("New mail!")
+		playsound(box, 'sound/misc/hiss.ogg', 100, FALSE, -1)
+		return TRUE
+	var/mob/living/carbon/human/H = find_mail_human(destination)
+	if(I.type == /obj/item/paper && (!H || H.stat == DEAD))
+		var/mob/dead/observer/G = find_mail_ghost(destination)
+		if(G)
+			var/obj/item/paper/P = I
+			deliver_ghost(G, sender, destination, P.info)
+			qdel(I)
+			return TRUE
+	var/obj/item/roguemachine/mastermail/master = SSroguemachine.hermailermaster
+	if(!master)
+		return FALSE
+	stamp_mail(I, destination, sender)
+	I.forceMove(master.loc)
+	var/datum/component/storage/STR = master.GetComponent(/datum/component/storage)
+	STR.handle_item_insertion(I, prevent_warning = TRUE)
+	master.new_mail = TRUE
+	master.update_icon()
+	if(H)
+		send_ooc_note("You got new letter waiting for you in HERMES.", name = H.real_name)
+		H.apply_status_effect(/datum/status_effect/ugotmail)
+		H.playsound_local(H, 'sound/misc/mail.ogg', 100, FALSE, -1)
+	return TRUE
+
+/obj/structure/roguemachine/mail/proc/build_sanitized_letter(mob/user, sender, recipient, content)
+	var/obj/item/paper/P = new
+	var/parsed_content = parsemarkdown(html_encode(content), user)
+	P.info += "<font face=\"[FOUNTAIN_PEN_FONT]\" color=#14103f>[parsed_content]</font>"
+	P.mailer = sanitize(sender)
+	P.mailedto = sanitize(recipient)
+	P.reload_fields()
+	P.update_icon()
+	return P
+
+/obj/structure/roguemachine/mail/proc/ghost_post(mob/dead/observer/user, list/params)
+	if(!can_ghost_mail(user, feedback = TRUE))
+		return FALSE
+	var/content = params["content"]
+	if(!length(content))
+		to_chat(user, span_warning("There is nothing written on it."))
+		return FALSE
+	if(length(content) > 2000)
+		to_chat(user, span_warning("Letter too long."))
+		return FALSE
+	var/obj/item/paper/P = build_sanitized_letter(null, params["sender"], params["recipient"], content)
+	if(!P.mailer)
+		P.mailer = "Anonymous"
+	var/target = P.mailedto
+	var/sender = P.mailer
+	if(!mail_exists(target))
+		to_chat(user, span_warning(mail_fail_msg(target)))
+		qdel(P)
+		return FALSE
+	var/datum/pending_mail/PM = new(P, sender, target, user.ckey, rand(GHOST_LETTER_DELAY_MIN, GHOST_LETTER_DELAY_MAX))
+	SSroguemachine.pending_letters += PM
+	ghost_sends[user.ckey] = world.time
+	PM.link = log_mail_send(user, sender, target, TRUE, P.info)
+	playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
+	to_chat(user, span_notice("The letter slips away into the pipes. It will reach them when it reaches them."))
+	return TRUE
+// TA EDIT START
+/proc/mail_name_match(recipient, target)
+	var/r = html_decode(recipient)
+	var/t = html_decode(target)
+	r = replacetext(r, "'", "")
+	t = replacetext(t, "'", "")
+	return (r == t)
+// TA EDIT END
 
 /obj/structure/roguemachine/mail/proc/check_free_send(mob/user, send2place) // TA EDIT BEGIN
 	var/is_court_agent = FALSE
 	if(ishuman(user))
-		var/mob/living/carbon/human/H_user = user 
-		if(H_user.mind?.assigned_role == "Court Agent" || H_user.mind?.special_role == "Court Agent")
-			is_court_agent = TRUE 
+		var/mob/living/carbon/human/H_user = user
+		if((H_user.mind?.assigned_role in list("Court Agent", "Enslaved kafir")) || (H_user.mind?.special_role in list("Court Agent", "Enslaved kafir")))
+			is_court_agent = TRUE
 
 	var/is_hand = FALSE
 	if(findtext(send2place, "#"))
 		var/box2find = text2num(copytext(send2place, findtext(send2place, "#")+1))
 		for(var/obj/structure/roguemachine/mail/X in SSroguemachine.hermailers)
-			if(X.ournum == box2find && X.mailtag == "Hand")
+			if(X.ournum == box2find && (X.mailtag in list("Hand", "Vizier")))
 				is_hand = TRUE
 				break
 	else
 		for(var/mob/living/carbon/human/H_target in GLOB.human_list)
-			if(H_target.real_name == send2place)
-				if(H_target.mind?.assigned_role == "Hand" || H_target.mind?.special_role == "Hand")
+			if(mail_name_match(H_target.real_name, send2place))
+				if((H_target.mind?.assigned_role in list("Hand", "Vizier")) || (H_target.mind?.special_role in list("Hand", "Vizier")))
 					is_hand = TRUE
 				break
 	return (is_court_agent && is_hand) // TA EDIT END
@@ -251,6 +504,13 @@
 	if(..())
 		return TRUE
 	var/mob/user = usr
+	if(isobserver(user))
+		switch(action)
+			if("send_letter")
+				ghost_post(user, params)
+			if("read_letters")
+				read_mail(user)
+		return TRUE
 	switch(action)
 		if("buy_paper")
 			if(coin_loaded >= 1)
@@ -271,29 +531,23 @@
 					update_icon()
 			return TRUE
 		if("send_letter")
-			var/send2place = params["recipient"]
-			var/sentfrom = params["sender"]
-			var/content = params["content"]
-
-			if(!send2place)
+			if(!params["recipient"])
 				return TRUE
-
-			var/free_send = check_free_send(user, send2place) // TA EDIT BEGIN
-			var/is_free = free_send_ready(user)
-
-			if(!free_send && !is_free && coin_loaded < 1)
-				to_chat(user, span_warning("No free letter ready and no coin loaded. Wait the cooldown or insert a coin."))
-				return TRUE // TA EDIT END
-
+			var/content = params["content"]
 			if(length(content) > 2000)
 				to_chat(user, span_warning("Letter too long."))
 				return TRUE
+			var/obj/item/paper/P = build_sanitized_letter(user, params["sender"], params["recipient"], content)
+			var/send2place = html_decode(P.mailedto) // TA EDIT
+			var/sentfrom = P.mailer
+			var/free_send = check_free_send(user, send2place) // TA EDIT BEGIN
+			var/is_free = free_send_ready(user)
+			if(!free_send && !is_free && coin_loaded < 1)
+				qdel(P)
+				to_chat(user, span_warning("No free letter ready and no coin loaded. Wait the cooldown or insert a coin."))
+				return TRUE // TA EDIT END
 
-			var/obj/item/paper/P = new
-			P.info += content
-			P.mailer = sentfrom
-			P.mailedto = send2place
-			P.update_icon()
+			var/body = P.info
 			// TA EDIT BEGIN
 			if(free_send)
 				SSroguemachine.add_secret_mail(P)
@@ -301,71 +555,42 @@
 				for(var/mob/living/carbon/human/H in GLOB.human_list)
 					var/is_target = FALSE
 					if(findtext(send2place, "#"))
-						if(H.mind?.assigned_role == "Hand" || H.mind?.special_role == "Hand")
-							is_target = TRUE 
+						if((H.mind?.assigned_role in list("Hand", "Vizier")) || (H.mind?.special_role in list("Hand", "Vizier")))
+							is_target = TRUE
 					else
-						if(H.real_name == send2place)
-							is_target = TRUE 
-					
+						if(mail_name_match(send2place, H.real_name)) // TA EDIT
+							is_target = TRUE
+
 					if(is_target)
 						H.apply_status_effect(/datum/status_effect/ugotmail)
 						H.playsound_local(H, 'sound/misc/mail.ogg', 100, FALSE, -1)
 
-				log_mail_send(user, sentfrom, send2place)
+				log_mail_send(user, sentfrom, P.mailedto, FALSE, body) // TA EDIT
 				visible_message(span_warning("[user] sends something."))
-				playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1) 
-				return TRUE 
+				playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
+				return TRUE
 			// TA EDIT END
 
-			var/sent_ok = FALSE
-			if(findtext(send2place, "#"))
-				var/box2find = text2num(copytext(send2place, findtext(send2place, "#")+1))
-				var/found = FALSE
-				for(var/obj/structure/roguemachine/mail/X in SSroguemachine.hermailers)
-					if(X.ournum == box2find)
-						found = TRUE
-						P.forceMove(X.loc)
-						X.say("New mail!")
-						playsound(X, 'sound/misc/hiss.ogg', 100, FALSE, -1)
-						break
-				if(found)
-					log_mail_send(user, sentfrom, send2place)
-					visible_message(span_warning("[user] sends something."))
-					playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
-					sent_ok = TRUE
-				else
-					to_chat(user, span_warning("Failed to send. Bad number?"))
-					qdel(P)
+			if(!mail_exists(send2place))
+				to_chat(user, span_warning(mail_fail_msg(send2place)))
+				qdel(P)
+				return TRUE
+			if(!deliver_mail(P, send2place, sentfrom))
+				to_chat(user, span_warning("The master of mails has perished?"))
+				qdel(P)
+				return TRUE
+			log_mail_send(user, sentfrom, send2place, FALSE, body)
+			visible_message(span_warning("[user] sends something."))
+			playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
+			if(is_free)
+				mark_free_send(user)
+				to_chat(user, span_notice("Your free letter has been sent. Another may be sent in [HERMES_FREE_COOLDOWN / 600] minute\s."))
 			else
-				if(SSroguemachine.hermailermaster)
-					var/obj/item/roguemachine/mastermail/X = SSroguemachine.hermailermaster
-					P.forceMove(X.loc)
-					var/datum/component/storage/STR = X.GetComponent(/datum/component/storage)
-					STR.handle_item_insertion(P, prevent_warning=TRUE)
-					X.new_mail = TRUE
-					X.update_icon()
-					send_ooc_note("You got new letter waiting for you in HERMES.", name = send2place) // TA EDIT
-					for(var/mob/living/carbon/human/H in GLOB.human_list)
-						if(H.real_name == send2place)
-							H.apply_status_effect(/datum/status_effect/ugotmail)
-							H.playsound_local(H, 'sound/misc/mail.ogg', 100, FALSE, -1)
-					log_mail_send(user, sentfrom, send2place)
-					visible_message(span_warning("[user] sends something."))
-					playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
-					sent_ok = TRUE
-				else
-					to_chat(user, span_warning("The master of mails has perished?"))
-					qdel(P)
-			if(sent_ok)
-				if(is_free)
-					mark_free_send(user)
-					to_chat(user, span_notice("Your free letter has been sent. Another may be sent in [HERMES_FREE_COOLDOWN / 600] minute\s."))
-				else
-					SStreasury.mint(SStreasury.discretionary_fund, 1, "Mail Income")
-					record_round_statistic(STATS_TAXES_COLLECTED, 1)
-					coin_loaded -= 1
-					if(coin_loaded <= 0)
-						update_icon()
+				SStreasury.mint(SStreasury.discretionary_fund, 1, "Mail Income")
+				record_round_statistic(STATS_TAXES_COLLECTED, 1)
+				coin_loaded -= 1
+				if(coin_loaded <= 0)
+					update_icon()
 			return TRUE
 		if("refund")
 			if(coin_loaded > 0)
@@ -473,6 +698,16 @@
 				if(I.broken)
 					to_chat(user, (span_warning("Clean it first.")))
 
+	if(istype(P, /obj/item/inqarticles/litany))
+		if((HAS_TRAIT(user, TRAIT_INQUISITION) || HAS_TRAIT(user, TRAIT_PURITAN)))
+			var/obj/item/inqarticles/litany/I = P
+			visible_message(span_warning("[user] sends something."))
+			budget2change(6, user, "MARQUE") //Orthodoxist-centric. The number represents how much marques are restored to the Marquette upon refunding it.
+			qdel(I) //Design idea's that it costs 3/4ths of an Orthodoxist's free marque payout (8, in this case), and allows them to bless one weapon of their choosing.
+			record_round_statistic(STATS_MARQUES_MADE, 6) //It deletes itself after use, but can alternatively be saved to be refunded if an Absolver arrives later.
+			playsound(loc, 'sound/misc/otavanlament.ogg', 100, FALSE, -1)
+			playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
+
 	if(istype(P, /obj/item/paper/inqslip/confession))
 		if((HAS_TRAIT(user, TRAIT_INQUISITION) || HAS_TRAIT(user, TRAIT_PURITAN)))
 			var/obj/item/paper/inqslip/confession/I = P
@@ -554,7 +789,7 @@
 							record_round_statistic(STATS_MARQUES_MADE, bonuses)
 						if(I.paired && !indexed && !correct && !cursedblood)
 							if(I.waxed)
-								bonuses += 4	
+								bonuses += 4
 						budget2change(bonuses, user, "MARQUE")
 						record_round_statistic(STATS_MARQUES_MADE, bonuses)
 					else
@@ -595,18 +830,24 @@
 			return
 
 	if(istype(P, /obj/item/paper/inqslip/accusation))
-		if((HAS_TRAIT(user, TRAIT_INQUISITION) || HAS_TRAIT(user, TRAIT_PURITAN)))
+		if(HAS_TRAIT(user, TRAIT_INQUISITION) || HAS_TRAIT(user, TRAIT_PURITAN))
 			var/obj/item/paper/inqslip/accusation/I = P
-			if(I.paired)
-				if(I.signee && I.paired.full && I.paired.subject)
-					var/no
-					var/specialno
-					var/stopfarming
-					var/indexed
-					var/bonuses = 4
-					var/correct
-					var/cursedblood
-					var/selfreport
+			var/has_signature = !!I.signee
+			var/has_indexer = I.paired && I.paired.full && I.paired.subject
+			if(has_signature || has_indexer)
+				var/no
+				var/specialno
+				var/stopfarming
+				var/indexed
+				var/bonuses = 0
+				var/correct
+				var/cursedblood
+				var/selfreport
+
+				if(has_signature && has_indexer)
+					bonuses = 4
+
+				if(has_indexer)
 					if(HAS_TRAIT(I.paired.subject, TRAIT_INQUISITION))
 						selfreport = TRUE
 					if(HAS_TRAIT(I.paired.subject, TRAIT_CABAL) || HAS_TRAIT(I.paired.subject, TRAIT_HORDE) || HAS_TRAIT(I.paired.subject, TRAIT_DEPRAVED) || HAS_TRAIT(I.paired.subject, TRAIT_FREEMAN))
@@ -622,6 +863,7 @@
 								GLOB.indexed += ", [I.paired.subject]"
 							else
 								GLOB.indexed += "[I.paired.subject]"
+
 					if(I.paired.cursedblood)
 						if(HAS_TRAIT(I.paired.subject.mind, TRAIT_CBLOOD))
 							stopfarming = TRUE
@@ -632,6 +874,7 @@
 								GLOB.cursedsamples += ", [I.paired.subject.mind]"
 							else
 								GLOB.cursedsamples += "[I.paired.subject.mind]"
+
 					if(GLOB.accused && !selfreport)
 						if(HAS_TRAIT(I.paired.subject.mind, TRAIT_ACCUSED))
 							no = TRUE
@@ -641,16 +884,19 @@
 								GLOB.accused += ", [I.paired.subject]"
 							else
 								GLOB.accused += "[I.paired.subject]"
+
 					if(GLOB.confessors && !selfreport)
 						if(HAS_TRAIT(I.paired.subject.mind, TRAIT_CONFESSED))
 							no = TRUE
 							specialno = TRUE
+
 					if(cursedblood)
 						bonuses = bonuses + bonuses * I.paired.cursedblood
 						if(I.waxed)
 							bonuses += 4
 						budget2change(bonuses, user, "MARQUE")
 						record_round_statistic(STATS_MARQUES_MADE, bonuses)
+
 					if(no || selfreport || stopfarming)
 						qdel(I.paired)
 						qdel(I)
@@ -669,31 +915,37 @@
 							else
 								to_chat(user, span_notice("They've already been accused."))
 						return
-					else
-						if(!indexed && !correct && !cursedblood)
-							(I.marquevalue -= 4) += bonuses
-							budget2change(I.marquevalue, user, "MARQUE")
-							record_round_statistic(STATS_MARQUES_MADE, I.marquevalue)
-						if(correct)
-							if(!indexed)
-								I.marquevalue += bonuses
-							budget2change(I.marquevalue, user, "MARQUE")
-							record_round_statistic(STATS_MARQUES_MADE, I.marquevalue)
-						qdel(I.paired)
-						qdel(I)
-						visible_message(span_warning("[user] sends something."))
-						playsound(loc, 'sound/misc/otavanlament.ogg', 100, FALSE, -1)
-						playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
-						return
-				else
-					if(!I.paired.full)
-						to_chat(user, span_warning("[I.paired] needs to be full of the accused's blood."))
-						return
-					else
-						to_chat(user, span_warning("[I] is missing a signature."))
-						return
+
+					if(!indexed && !correct && !cursedblood)
+						I.marquevalue += bonuses
+						budget2change(I.marquevalue, user, "MARQUE")
+						record_round_statistic(STATS_MARQUES_MADE, I.marquevalue)
+
+					if(correct && !indexed)
+						I.marquevalue += bonuses
+						budget2change(I.marquevalue, user, "MARQUE")
+						record_round_statistic(STATS_MARQUES_MADE, I.marquevalue)
+
+					var/obj/item/paper/inquisition_report/R = new
+					var/id = generate_inquisition_id()
+					R.report_id = id
+					R.name = "haemological report (#[id])"
+					R.fill_report(I.paired.subject, user)
+					user.put_in_hands(R)
+
+					qdel(I.paired)
+					qdel(I)
+					visible_message(span_warning("[user] sends something."))
+					visible_message(span_warning("[user] receives a mysterious piece of parchment, after a few minutes..."))
+					playsound(loc, 'sound/misc/otavanlament.ogg', 100, FALSE, -1)
+					playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
+					return
+
 			else
-				to_chat(user, span_warning("[I] is missing an INDEXER."))
+				if(I.paired && !I.paired.full)
+					to_chat(user, span_warning("[I.paired] needs to be full of the accused's blood."))
+				else
+					to_chat(user, span_warning("[I] requires either a signature, or an INDEXER with their blood."))
 				return
 
 	if(istype(P, /obj/item/paper) || istype(P, /obj/item/smallDelivery))
@@ -701,16 +953,18 @@
 			to_chat(user, span_warning("The machine doesn't respond."))
 			return
 		if(alert(user, "Send Mail?",,"YES","NO") == "YES")
-			var/send2place = input(user, "Where to? (Person or #number)", "ROGUETOWN", null)
-			var/sentfrom = input(user, "Who is this from? (Leave blank to send anonymously)", "ROGUETOWN", null)
+			var/send2place = html_decode(sanitize(input(user, "Where to? (Person or #number)", "ROGUETOWN", null)))
+			var/sentfrom = sanitize(input(user, "Who is this from? (Leave blank to send anonymously)", "ROGUETOWN", null))
 			if(!sentfrom)
 				sentfrom = "Anonymous"
-			 // TA EDIT BEGIN
+			if(!send2place)
+				return
+			// TA EDIT BEGIN
 			var/free_send = check_free_send(user, send2place)
 
 			if(free_send)
-				P.mailer = sentfrom 
-				P.mailedto = send2place 
+				P.mailer = sentfrom
+				P.mailedto = send2place
 				if(istype(P, /obj/item/paper))
 					var/obj/item/paper/PA = P
 					PA.update_icon()
@@ -719,76 +973,37 @@
 				for(var/mob/living/carbon/human/H in GLOB.human_list)
 					var/is_target = FALSE
 					if(findtext(send2place, "#"))
-						if(H.mind?.assigned_role == "Hand" || H.mind?.special_role == "Hand")
+						if((H.mind?.assigned_role in list("Hand", "Vizier")) || (H.mind?.special_role in list("Hand", "Vizier")))
 							is_target = TRUE
 					else
-						if(H.real_name == send2place)
+						if(mail_name_match(send2place, H.real_name)) // TA EDIT
 							is_target = TRUE
-					
+
 					if(is_target)
 						H.apply_status_effect(/datum/status_effect/ugotmail)
-						H.playsound_local(H, 'sound/misc/mail.ogg', 100, FALSE, -1) 
+						H.playsound_local(H, 'sound/misc/mail.ogg', 100, FALSE, -1)
 
-				log_mail_send(user, sentfrom, send2place)
+				var/obj/item/paper/secret_letter = istype(P, /obj/item/paper) ? P : null
+				log_mail_send(user, sentfrom, P.mailedto, FALSE, secret_letter?.info) // TA EDIT
 				visible_message(span_warning("[user] sends something."))
 				playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
-				return 
+				return
 				// TA EDIT END
 
-			if(findtext(send2place, "#"))
-				var/box2find = text2num(copytext(send2place, findtext(send2place, "#")+1))
-
-				var/found = FALSE
-				for(var/obj/structure/roguemachine/mail/X in SSroguemachine.hermailers)
-					if(X.ournum == box2find)
-						found = TRUE
-						P.mailer = sentfrom
-						P.mailedto = send2place
-						P.update_icon()
-						P.forceMove(X.loc)
-						X.say("New mail!")
-						playsound(X, 'sound/misc/hiss.ogg', 100, FALSE, -1)
-						break
-				if(found)
-					log_mail_send(user, sentfrom, send2place)
-					visible_message(span_warning("[user] sends something."))
-					playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
-					return
-				else
-					to_chat(user, span_warning("Cannot send it. Bad number?"))
-			else
-				if(!send2place)
-					return
-				var/mob/living/carbon/human/mailrecipient = null
-				for(var/mob/living/carbon/human/H in GLOB.human_list)
-					if(H.real_name == send2place)
-						mailrecipient = H
-				if(!mailrecipient && (alert("Could not find recipient [send2place]. Still send the letter?", "", "YES", "NO") == "NO")) // ask player if they still want to send a letter to a non-found character
-					return
-				var/findmaster
-				if(SSroguemachine.hermailermaster)
-					var/obj/item/roguemachine/mastermail/X = SSroguemachine.hermailermaster
-					findmaster = TRUE
-					P.mailer = sentfrom
-					P.mailedto = send2place
-					P.update_icon()
-					P.forceMove(X.loc)
-					var/datum/component/storage/STR = X.GetComponent(/datum/component/storage)
-					STR.handle_item_insertion(P, prevent_warning=TRUE)
-					X.new_mail=TRUE
-					X.update_icon()
-					playsound(src.loc, 'sound/misc/hiss.ogg', 100, FALSE, -1)
-				if(!findmaster)
-					to_chat(user, span_warning("The master of mails has perished?"))
-				else
-					log_mail_send(user, sentfrom, send2place)
-					visible_message(span_warning("[user] sends something."))
-					playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
-					send_ooc_note("You got new letter waiting for you in HERMES.", name = send2place) // TA EDIT
-					if(mailrecipient)
-						mailrecipient.apply_status_effect(/datum/status_effect/ugotmail)
-						mailrecipient.playsound_local(mailrecipient, 'sound/misc/mail.ogg', 100, FALSE, -1)
-					return
+			if(!mail_exists(send2place))
+				to_chat(user, span_warning(mail_fail_msg(send2place)))
+				return
+			var/obj/item/paper/letter = istype(P, /obj/item/paper) ? P : null
+			var/body = letter?.info
+			if(!deliver_mail(P, send2place, sentfrom))
+				to_chat(user, span_warning("The master of mails has perished?"))
+				return
+			if(!findtext(send2place, "#"))
+				playsound(src.loc, 'sound/misc/hiss.ogg', 100, FALSE, -1)
+			log_mail_send(user, sentfrom, send2place, FALSE, body)
+			visible_message(span_warning("[user] sends something."))
+			playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
+			return
 
 	if(istype(P, /obj/item/roguecoin/aalloy))
 		return
@@ -816,6 +1031,16 @@
 		qdel(C)
 		playsound(src, 'sound/misc/coininsert.ogg', 100, FALSE, -1)
 		update_icon()
+		if(ishuman(user)) //TA EDIT START
+			var/mob/living/carbon/human/H = user
+			if(can_open_manor_panel(H))
+				var/choice = tgui_alert(user, "What would you like to do?", "HERMES Terminal", list("Send Mail", "Correspond with Estate"))
+				switch(choice)
+					if("Send Mail")
+						ui_interact(user)
+					if("Correspond with Estate")
+						open_manor_panel(user)
+				return FALSE //TA EDIT END
 		ui_interact(user)
 		return
 	..()
@@ -892,7 +1117,7 @@
 		CP.rmb_show(user)
 		return TRUE
 
-/obj/item/roguemachine/mastermail/Initialize()
+/obj/item/roguemachine/mastermail/Initialize(mapload)
 	. = ..()
 	SSroguemachine.hermailermaster = src
 	update_icon()
@@ -909,7 +1134,7 @@
 			to_chat(user, span_warning("I carefully re-seal the letter and place it back in the machine, no one will know."))
 		if(PA.mailer && PA.mailedto)
 			for(var/mob/living/carbon/human/H in GLOB.human_list)
-				if(H.real_name == PA.mailedto && !H.has_status_effect(/datum/status_effect/ugotmail)) // quietly readd the status if they tried to check their mail while the letter was being spied on
+				if(mail_name_match(PA.mailedto, H.real_name) && !H.has_status_effect(/datum/status_effect/ugotmail)) // TA EDIT
 					H.apply_status_effect(/datum/status_effect/ugotmail)
 		P.forceMove(loc)
 		var/datum/component/storage/STR = GetComponent(/datum/component/storage)
@@ -926,21 +1151,21 @@
 			STR.remove_from_storage(I, get_turf(src))
 	return ..()
 
- // TA EDIT BEGIN
+// TA EDIT BEGIN
 /obj/structure/roguemachine/mail/proc/any_additional_mail(obj/item/roguemachine/mastermail/M, mob/living/carbon/human/H)
 	if(SSroguemachine.secret_mail?.len)
 		for(var/obj/item/I in SSroguemachine.secret_mail)
-			if(I.mailedto == H.real_name)
+			if(mail_name_match(I.mailedto, H.real_name)) // TA EDIT
 				return TRUE
-			else if(H.mind?.assigned_role == "Hand" || H.mind?.special_role == "Hand")
+			else if((H.mind?.assigned_role in list("Hand", "Vizier")) || (H.mind?.special_role in list("Hand", "Vizier")))
 				if(findtext(I.mailedto, "#"))
 					var/box2find = text2num(copytext(I.mailedto, findtext(I.mailedto, "#")+1))
 					for(var/obj/structure/roguemachine/mail/X in SSroguemachine.hermailers)
-						if(X.ournum == box2find && X.mailtag == "Hand")
+						if(X.ournum == box2find && (X.mailtag in list("Hand", "Vizier")))
 							return TRUE
 	if(M)
 		for(var/obj/item/I in M.contents)
-			if(I.mailedto == H.real_name) // TA EDIT END
+			if(mail_name_match(I.mailedto, H.real_name)) // TA EDIT END
 				return TRUE
 	return FALSE
 

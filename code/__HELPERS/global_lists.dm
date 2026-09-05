@@ -34,9 +34,7 @@
 
 	init_subtypes(/datum/alch_cauldron_recipe, GLOB.alch_cauldron_recipes)
 
-	init_subtypes(/datum/stew_recipe, GLOB.stew_recipes)
-	
-	init_subtypes(/datum/alch_grid_recipe, GLOB.alch_grid_recipes)  
+
 
 	// Faiths
 	for(var/path in subtypesof(/datum/faith))
@@ -63,6 +61,11 @@
 	for (var/path in subtypesof(/datum/virtue))
 		var/datum/virtue/virtue = new path()
 		GLOB.virtues[path] = virtue
+		if(ispath(path, /datum/virtue/origin))
+			var/datum/virtue/origin/origin = virtue
+			GLOB.origins[origin.origin_name] = origin.origin_desc
+
+	ccg_build_card_registry()
 
 	// Loadout items
 	for (var/path in subtypesof(/datum/loadout_item))
@@ -86,16 +89,6 @@
 					GLOB.loadout_items_by_category[item.category] = list()
 				GLOB.loadout_items_by_category[item.category] += item
 				GLOB.loadout_items_by_category["Всё"] += item
-
-
-	// Combat Music Overrides
-	for (var/path in subtypesof(/datum/combat_music))
-		var/datum/combat_music/combat_music = new path()
-		GLOB.cmode_tracks_by_type[path] = combat_music
-
-	for (var/path in GLOB.cmode_tracks_by_type)
-		var/datum/combat_music/trackref = GLOB.cmode_tracks_by_type[path]
-		cmode_track_to_namelist(trackref)
 
 	// Inquisition Hermes list
 	for (var/path in subtypesof(/datum/inqports))
@@ -122,4 +115,3 @@
 		for(var/path in subtypesof(prototype))
 			L+= path
 		return L
-

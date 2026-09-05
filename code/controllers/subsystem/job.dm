@@ -7,6 +7,7 @@ SUBSYSTEM_DEF(job)
 	var/list/datum/job/name_occupations = list()	//Dict of all jobs, keys are titles
 	var/list/type_occupations = list()	//Dict of all jobs, keys are types
 	var/list/unassigned = list()		//Players who need jobs
+	var/list/subclass_role_fallbacks = list() // TA EDIT
 	var/initial_players_to_assign = 0 	//used for checking against population caps
 
 	var/list/prioritized_jobs = list()
@@ -63,7 +64,7 @@ SUBSYSTEM_DEF(job)
 	occupations = list()
 	var/list/all_jobs = subtypesof(/datum/job/roguetown)
 	if(!all_jobs.len)
-		to_chat(world, span_boldannounce("Error setting up jobs, no job datums found"))
+		to_world(span_boldannounce("Error setting up jobs, no job datums found"))
 		return 0
 
 	for(var/J in all_jobs)
@@ -101,17 +102,30 @@ SUBSYSTEM_DEF(job)
 		if(is_banned_from(player.ckey, rank) || QDELETED(player)) return FALSE
 		if(!job.player_old_enough(player.client)) return FALSE
 		if(job.required_playtime_remaining(player.client)) return FALSE
-		
+
 		var/position_limit = job.total_positions
 		if(!latejoin) position_limit = job.spawn_positions
 		JobDebug("Player: [player] is now Rank: [rank], JCP:[job.current_positions], JPL:[position_limit]")
-		
+
+		var/preferred_subclass // TA EDIT START
+		var/preferred_subclass_strict = FALSE
+		if(player.client)
+			SSrole_class_handler.clear_roundstart_subclass_state(player.ckey)
+		if(!latejoin && player.client?.prefs)
+			preferred_subclass = player.client.prefs.job_subclass_preferences[rank]
+			preferred_subclass_strict = player.client.prefs.job_subclass_strict[rank] ? TRUE : FALSE
+			if(preferred_subclass)
+				var/datum/preferences/character_prefs = player.client.prefs.get_job_prefs(rank)
+				if(!SSrole_class_handler.try_reserve_roundstart_subclass(player.client, character_prefs, job, preferred_subclass, preferred_subclass_strict))
+					subclass_role_fallbacks[player.ckey] = preferred_subclass
+					return FALSE // TA EDIT END
+
 		if(player.mind.assigned_role)
 			var/datum/job/old_job = SSjob.GetJob(player.mind.assigned_role)
 			if(old_job)
 				old_job.current_positions = max(old_job.current_positions - 1, 0)
-				
-		
+
+
 		// TA EDIT START - load the character slot mapped to the assigned job for roundstart and latejoin.
 		if(player.client && player.client.prefs)
 			var/assigned_slot = player.client.prefs.job_characters[rank]
@@ -119,7 +133,7 @@ SUBSYSTEM_DEF(job)
 				player.client.prefs.load_character(assigned_slot)
 				player.client.prefs.save_preferences()
 		// TA EDIT END
-				
+
 		player.mind.assigned_role = rank
 		unassigned -= player
 		job.current_positions++
@@ -134,6 +148,7 @@ SUBSYSTEM_DEF(job)
 			if(player.client)
 				player.client.prefs.lastclass = null
 				player.client.prefs.save_preferences()
+		subclass_role_fallbacks.Remove(player.ckey) // TA EDIT
 		GLOB.round_join_times[player.ckey] = world.time
 		addtimer(CALLBACK(player.client, TYPE_PROC_REF(/client, job_greet), job), 5 SECONDS)
 		return TRUE
@@ -171,13 +186,16 @@ SUBSYSTEM_DEF(job)
 			continue
 		if(length(job.vice_restrictions))
 			var/has_restricted_vice = FALSE
-			for(var/datum/charflaw/cf in player.client.prefs.charflaws)
-				if(cf.type in job.vice_restrictions)
-					JobDebug("FOC incompatible with vices, Player: [player], Job: [job.title], Vice: [cf.name]")
+			for(var/flaw_type in player.client.prefs.charflaws)
+				if(flaw_type in job.vice_restrictions)
+					JobDebug("FOC incompatible with vices, Player: [player], Job: [job.title], Vice: [flaw_type]")
 					has_restricted_vice = TRUE
 					break
 			if(has_restricted_vice)
 				continue
+		if(job.prefs_all_subclasses_restricted(player.client))
+			JobDebug("FOC incompatible with advclass virtues/vices, Player: [player], Job: [job.title]")
+			continue
 		if(job.plevel_req > player.client.patreonlevel())
 			JobDebug("FOC incompatible with PATREON LEVEL, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 			continue
@@ -185,11 +203,19 @@ SUBSYSTEM_DEF(job)
 		if(!isnull(job.min_pq) && (get_playerquality(player.ckey) < job.min_pq)) continue
 		if(!isnull(job.max_pq) && (get_playerquality(player.ckey) > job.max_pq)) continue
 		#endif
-		if(check_blacklist(player.client.ckey) && !job.bypass_jobban) continue
+		if(!(player.client.prefs.gender in job.allowed_sexes))
+			JobDebug("FOC incompatible with sex, Player: [player], Job: [job.title]")
+			continue
+		if(length(job.allowed_ages) && !(player.client.prefs.age in job.allowed_ages))
+			JobDebug("FOC incompatible with age, Player: [player], Job: [job.title], Age: [player.client.prefs.age]")
+			continue
 		if((player.client.prefs.lastclass == job.title) && !job.bypass_lastclass) continue
-		if(!job.special_job_check(player)) continue
-		if(CONFIG_GET(flag/usewhitelist) && job.whitelist_req && (!player.client.whitelisted())) continue
-
+		if(!job.special_job_check(player))
+			JobDebug("FOC player did not pass special check, Player: [player], Job:[job.title]")
+			continue
+		if(CONFIG_GET(flag/usewhitelist))
+			if(job.whitelist_req && (!player.client.whitelisted()))
+				continue
 		if(player.client.prefs.job_preferences[job.title] == level)
 			JobDebug("FOC pass, Player: [player], Level:[level]")
 			candidates += player
@@ -248,13 +274,16 @@ SUBSYSTEM_DEF(job)
 
 		if(length(job.vice_restrictions))
 			var/has_restricted_vice = FALSE
-			for(var/datum/charflaw/cf in player.client.prefs.charflaws)
-				if(cf.type in job.vice_restrictions)
-					JobDebug("GRJ incompatible with vices, Player: [player], Job: [job.title], Vice: [cf.name]")
+			for(var/flaw_type in player.client.prefs.charflaws)
+				if(flaw_type in job.vice_restrictions)
+					JobDebug("GRJ incompatible with vices, Player: [player], Job: [job.title], Vice: [flaw_type]")
 					has_restricted_vice = TRUE
 					break
 			if(has_restricted_vice)
 				continue
+		if(job.prefs_all_subclasses_restricted(player.client))
+			JobDebug("GRJ incompatible with advclass virtues/vices, Player: [player], Job: [job.title]")
+			continue
 
 		if(job.plevel_req > player.client.patreonlevel())
 			JobDebug("GRJ incompatible with PATREON LEVEL, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
@@ -272,18 +301,26 @@ SUBSYSTEM_DEF(job)
 		if(!isnull(job.min_pq) && (get_playerquality(player.ckey) < job.min_pq)) continue
 		if(!isnull(job.max_pq) && (get_playerquality(player.ckey) > job.max_pq)) continue
 		#endif
-		if(check_blacklist(player.client.ckey) && !job.bypass_jobban) continue
-		if(!job.special_job_check(player)) continue
-		if(CONFIG_GET(flag/usewhitelist) && job.whitelist_req && (!player.client.whitelisted())) continue
+		if(!job.special_job_check(player))
+			JobDebug("GRJ player did not pass special check, Player: [player], Job:[job.title]")
+			continue
+
+		if(CONFIG_GET(flag/usewhitelist))
+			if(job.whitelist_req && (!player.client.whitelisted()))
+				continue
 
 		if(job.spawn_positions)
 			if((job.current_positions < job.spawn_positions) || job.spawn_positions == -1)
 				JobDebug("GRJ Random job given, Player: [player], Job: [job]")
 				if(AssignRole(player, job.title))
 					return TRUE
+				if(player.ready != PLAYER_READY_TO_PLAY) // TA EDIT START
+					return FALSE // TA EDIT END
 
 /datum/controller/subsystem/job/proc/ResetOccupations()
 	JobDebug("Occupations reset.")
+	SSrole_class_handler.clear_roundstart_subclass_states() // TA EDIT START
+	subclass_role_fallbacks.Cut() // TA EDIT END
 	for(var/i in GLOB.new_player_list)
 		var/mob/dead/new_player/player = i
 		if((player) && (player.mind))
@@ -401,12 +438,13 @@ SUBSYSTEM_DEF(job)
 	return newlist
 
 /** Proc DivideOccupations
- *  fills var "assigned_role" for all ready players.
- *  This proc must not have any side effect besides of modifying "assigned_role".
+ *	fills var "assigned_role" for all ready players.
+ *	This proc must not have any side effect besides of modifying "assigned_role".
  **/
 /datum/controller/subsystem/job/proc/DivideOccupations(list/required_jobs)
 	//Setup new player list and get the jobs list
 	JobDebug("Running DO")
+	subclass_role_fallbacks.Cut() // TA EDIT
 
 	//Get the players who are ready
 	for(var/i in GLOB.new_player_list)
@@ -487,7 +525,7 @@ SUBSYSTEM_DEF(job)
 
 				if(!job.validate_prefs_for_job(char_prefs))
 					JobDebug("DO incompatible with character traits (Race/Faith/Vices/etc), Player: [player], Job: [job.title]")
-				
+
 				if(length(job.allowed_patrons) && !(player.client.prefs.selected_patron?.type in job.allowed_patrons))
 					JobDebug("DO incompatible with patron, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 					continue
@@ -495,7 +533,19 @@ SUBSYSTEM_DEF(job)
 				if(length(job.virtue_restrictions) && ((player.client.prefs.virtue?.type in job.virtue_restrictions) || (player.client.prefs.virtuetwo?.type in job.virtue_restrictions) || (player.client.prefs.virtue_origin?.type in job.virtue_restrictions)))
 					JobDebug("DO incompatible with virtues, Player: [player], Job: [job.title], Virtue 1: [player.client.prefs.virtue?.name]")
 					continue
-				// =========================================================================
+				if(length(job.vice_restrictions))
+					var/has_restricted_vice = FALSE
+					for(var/flaw_type in player.client.prefs.charflaws)
+						if(flaw_type in job.vice_restrictions)
+							JobDebug("DO incompatible with vices, Player: [player], Job: [job.title], Vice: [flaw_type]")
+							has_restricted_vice = TRUE
+							break
+					if(has_restricted_vice)
+						continue
+
+				if(job.prefs_all_subclasses_restricted(player.client))
+					JobDebug("DO incompatible with advclass virtues/vices, Player: [player], Job: [job.title]")
+					continue
 
 				#ifdef USES_PQ
 				if(!isnull(job.min_pq) && (get_playerquality(player.ckey) < job.min_pq))
@@ -503,13 +553,6 @@ SUBSYSTEM_DEF(job)
 				if(!isnull(job.max_pq) && (get_playerquality(player.ckey) > job.max_pq))
 					continue
 				#endif
-
-				if((player.client.prefs.lastclass == job.title) && (!job.bypass_lastclass))
-					continue
-
-				if(check_blacklist(player.client.ckey) && !job.bypass_jobban)
-					JobDebug("DO incompatible with blacklist, Player: [player], Job: [job.title]")
-					continue
 
 				if(CONFIG_GET(flag/usewhitelist))
 					if(job.whitelist_req && (!player.client.whitelisted()))
@@ -523,9 +566,11 @@ SUBSYSTEM_DEF(job)
 				if(player.client.prefs.job_preferences[job.title] == level)
 					// If the job isn't filled
 					if((job.current_positions < job.spawn_positions) || job.spawn_positions == -1)
-						AssignRole(player, job.title)
-						unassigned -= player
-						break
+						if(AssignRole(player, job.title)) // TA EDIT START
+							unassigned -= player
+							break
+						if(player.ready != PLAYER_READY_TO_PLAY)
+							break // TA EDIT END
 
 
 	JobDebug("DO, Handling unassigned.")
@@ -561,10 +606,10 @@ SUBSYSTEM_DEF(job)
 
 				if(is_banned_from(player.ckey, job.title))
 					continue
-				
+
 				var/datum/preferences/char_prefs = player.client.prefs.get_job_prefs(job.title)
 				if(!job.validate_prefs_for_job(char_prefs)) continue
-				
+
 				if(QDELETED(player))
 					break
 
@@ -579,35 +624,49 @@ SUBSYSTEM_DEF(job)
 
 				if(length(job.forbidden_races) && (player.client.prefs.pref_species.type in job.forbidden_races))
 					continue
-				
+
 				if(length(job.allowed_patrons) && !(player.client.prefs.selected_patron?.type in job.allowed_patrons))
 					continue
 
 				if(length(job.virtue_restrictions) && ((player.client.prefs.virtue?.type in job.virtue_restrictions) || (player.client.prefs.virtuetwo?.type in job.virtue_restrictions) || (player.client.prefs.virtue_origin?.type in job.virtue_restrictions)))
 					continue
-					
+
 				if(length(job.vice_restrictions))
 					var/has_restricted_vice = FALSE
-					for(var/datum/charflaw/cf in player.client.prefs.charflaws)
-						if(cf.type in job.vice_restrictions)
+					for(var/flaw_type in player.client.prefs.charflaws)
+						if(flaw_type in job.vice_restrictions)
 							has_restricted_vice = TRUE
 							break
 					if(has_restricted_vice)
 						continue
+				if(job.prefs_all_subclasses_restricted(player.client))
+					continue
 
 				#ifdef USES_PQ
 				if(!isnull(job.min_pq) && (get_playerquality(player.ckey) < job.min_pq) && level != JP_LOW) continue
 				#endif
 
 				if((player.client.prefs.lastclass == job.title) && (!job.bypass_lastclass)) continue
-				if(check_blacklist(player.client.ckey) && !job.bypass_jobban) continue
-				if(CONFIG_GET(flag/usewhitelist) && job.whitelist_req && (!player.client.whitelisted())) continue
-				if(!job.special_job_check(player)) continue
+				if(CONFIG_GET(flag/usewhitelist))
+					if(job.whitelist_req && (!player.client.whitelisted()))
+						continue
 
+				if(length(job.allowed_ages) && !(player.client.prefs.age in job.allowed_ages))
+					continue
+
+				if(length(job.allowed_sexes) && !(player.client.prefs.gender in job.allowed_sexes))
+					continue
+
+				if(!job.special_job_check(player))
+					continue
+
+				// We only need 1 person for the required job, the rest can use the normal system
 				if((job.current_positions < 1))
-					AssignRole(player, job.title)
-					unassigned -= player
-					amt_picked++
+					if(AssignRole(player, job.title)) // TA EDIT START
+						unassigned -= player
+						amt_picked++
+					else if(player.ready != PLAYER_READY_TO_PLAY)
+						break // TA EDIT END
 	return amt_picked
 
 /datum/controller/subsystem/job/proc/validate_required_jobs(list/required_jobs)
@@ -628,7 +687,9 @@ SUBSYSTEM_DEF(job)
 
 //We couldn't find a job from prefs for this guy.
 /datum/controller/subsystem/job/proc/HandleUnassigned(mob/dead/new_player/player)
-	if(PopcapReached())
+	if(player.ckey in subclass_role_fallbacks) // TA EDIT START
+		RejectPlayer(player, "<b>Your preferred subclass was unavailable, and no other selected role could be assigned.</b>")
+	else if(PopcapReached()) // TA EDIT END
 		RejectPlayer(player)
 	else
 		if(player.client.prefs.joblessrole == BEOVERFLOW)
@@ -636,10 +697,10 @@ SUBSYSTEM_DEF(job)
 			if(QDELETED(player) || !allowed_to_be_a_loser)
 				RejectPlayer(player)
 			else
-				if(!AssignRole(player, SSjob.overflow_role))
+				if(!AssignRole(player, SSjob.overflow_role) && player.ready == PLAYER_READY_TO_PLAY) // TA EDIT
 					RejectPlayer(player)
 		else if(player.client.prefs.joblessrole == BERANDOMJOB)
-			if(!GiveRandomJob(player))
+			if(!GiveRandomJob(player) && player.ready == PLAYER_READY_TO_PLAY) // TA EDIT
 				RejectPlayer(player)
 		else if(player.client.prefs.joblessrole == RETURNTOLOBBY)
 			RejectPlayer(player)
@@ -735,6 +796,10 @@ SUBSYSTEM_DEF(job)
 	if(job && H)
 		job.after_spawn(H, M, joined_late) // note: this happens before the mob has a key! M will always have a client, H might not.
 
+	if(ishuman(H))
+		var/mob/living/carbon/human/spawned_human = H
+		spawned_human.flag_gear_as_worn()
+
 	return H
 
 /datum/controller/subsystem/job/proc/handle_auto_deadmin_roles(client/C, rank)
@@ -808,13 +873,15 @@ SUBSYSTEM_DEF(job)
 			return 1
 	return 0
 
-/datum/controller/subsystem/job/proc/RejectPlayer(mob/dead/new_player/player)
+/datum/controller/subsystem/job/proc/RejectPlayer(mob/dead/new_player/player, rejection_message = null) // TA EDIT START
+	SSrole_class_handler.clear_roundstart_subclass_state(player.ckey)
+	subclass_role_fallbacks.Remove(player.ckey) // TA EDIT END
 	if(player.mind && player.mind.special_role)
 		return
 	if(PopcapReached())
 		JobDebug("Popcap overflow Check observer located, Player: [player]")
 	JobDebug("Player rejected :[player]")
-	to_chat(player, "<b>I couldn't find a job to be..</b>")
+	to_chat(player, rejection_message || "<b>I couldn't find a job to be..</b>") // TA EDIT
 	unassigned -= player
 	player.ready = PLAYER_NOT_READY
 
@@ -894,7 +961,7 @@ SUBSYSTEM_DEF(job)
 			. |= player.mind
 
 ////////////////////////////////////////
-//Keeps track of all  security members//
+//Keeps track of all	security members//
 ////////////////////////////////////////
 /datum/controller/subsystem/job/proc/get_all_sec()
 	. = list()

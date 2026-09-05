@@ -19,7 +19,7 @@
 	scent_description = "memories of a former triumph"
 
 /datum/reagent/buff/tri/on_mob_life(mob/living/carbon/M)
-	if(volume >= 10)  //Ensures that, no matter what, you can only buff one person from one vial.
+	if(volume >= 10)	//Ensures that, no matter what, you can only buff one person from one vial.
 		M.apply_status_effect(/datum/status_effect/buff/alch/tripot)
 	return ..()
 
@@ -56,6 +56,52 @@
 	desc = "Her command is absolute, and Her tyranny is unmarrable. Reclaim this world, child of mine, from those who'd seek to destroy it."
 	icon_state = "astrata_g"
 	sellprice = 77
+
+/obj/item/clothing/neck/roguetown/psicross/reform/g/triumph
+	name = "ornate reformist psycross"
+	sellprice = 77
+
+/obj/item/clothing/neck/roguetown/psicross/noc/g/triumph
+	name = "ornate amulet of Noc"
+	sellprice = 77
+
+/obj/item/clothing/neck/roguetown/psicross/abyssor/g/triumph
+	name = "ornate amulet of Abyssor"
+	sellprice = 77
+
+/obj/item/clothing/neck/roguetown/psicross/dendor/g/triumph
+	name = "ornate amulet of Dendor"
+	sellprice = 77
+
+/obj/item/clothing/neck/roguetown/psicross/necra/g/triumph
+	name = "ornate amulet of Necra"
+	sellprice = 77
+
+/obj/item/clothing/neck/roguetown/psicross/pestra/g/triumph
+	name = "ornate amulet of Pestra"
+	sellprice = 77
+
+/obj/item/clothing/neck/roguetown/psicross/ravox/g/triumph
+	name = "ornate amulet of Ravox"
+	sellprice = 77
+
+/obj/item/clothing/neck/roguetown/psicross/malum/g/triumph
+	name = "ornate amulet of Malum"
+	sellprice = 77
+
+/obj/item/clothing/neck/roguetown/psicross/eora/g/triumph
+	name = "ornate amulet of Eora"
+	sellprice = 77
+
+/obj/item/clothing/neck/roguetown/psicross/xylix/g/triumph
+	name = "ornate amulet of Xylix"
+	sellprice = 77
+
+/obj/item/clothing/neck/roguetown/psicross/inhumen/graggar/g/triumph
+	name = "ornate amulet of Graggar"
+	sellprice = 77
+
+//
 
 /obj/item/clothing/ring/diamond/triumph
 	name = "ornate dorpel ring"
@@ -98,7 +144,7 @@
 
 /obj/item/clothing/head/roguetown/grenzelhofthat/triumph
 	name = "grenzelhoft tellerbarret"
-	desc = "The latest in sixteenth-century fashionwear, stitched by the finest tailors in Grenzelhoft. </br>I can fit this onto a sallet, Etruscan bascinet, or Blacksteel armet for added protection."
+	desc = "The latest in sixteenth-century fashionwear, stitched by the finest tailors in Grenzelhoft. </br>I can fit this onto a sallet, Etruscan bascinet, or Blacksteel armet for added protection. Alternatively, I can nestle it onto my helmet's cosmetic inventory."
 	max_integrity = ARMOR_INT_HELMET_CLOTH
 	icon_state = "grenzelhat"
 	item_state = "grenzelhat"
@@ -107,9 +153,9 @@
 	detail_tag = "_detail"
 	altdetail_tag = "_detailalt"
 	dynamic_hair_suffix = ""
-	armor = ARMOR_PADDED_BAD
+	armor = null
 	resistance_flags = FLAMMABLE
-	color = "#262927"
+	color = "#007fff"
 	detail_color = "#FFFFFF"
 	altdetail_color = "#007fff"
 
@@ -125,6 +171,10 @@
 		if(loc == user && ishuman(user))
 			var/mob/living/carbon/H = user
 			H.update_inv_head()
+
+/obj/item/clothing/head/roguetown/grenzelhofthat/triumph/Initialize(mapload)
+	. = ..()
+	update_icon()
 
 /obj/item/clothing/head/roguetown/grenzelhofthat/triumph/update_icon()
 	cut_overlays()

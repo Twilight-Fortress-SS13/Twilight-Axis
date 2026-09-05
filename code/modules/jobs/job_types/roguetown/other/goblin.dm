@@ -9,7 +9,7 @@
 	max_pq = null
 
 	allowed_sexes = list(MALE, FEMALE)
-	
+
 	tutorial = "Make Graggar proud or die trying."
 
 	outfit = /datum/outfit/job/roguetown/npc/goblin
@@ -17,7 +17,7 @@
 	give_bank_account = FALSE
 /datum/job/roguetown/goblin/equip(mob/living/carbon/human/H, visualsOnly, announce, latejoin, datum/outfit/outfit_override, client/preference_source)
 	. = ..()
-	return  H.change_mob_type(/mob/living/carbon/human/species/goblin/cave, delete_old_mob = TRUE)
+	return	H.change_mob_type(/mob/living/carbon/human/species/goblin/cave, delete_old_mob = TRUE)
 
 /datum/job/roguetown/goblin/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	..()
@@ -30,8 +30,8 @@
 			M.mind.current.job = null
 		if(H.dna && H.dna.species)
 			H.dna.species.species_traits |= NOBLOOD
-			H.dna.species.soundpack_m = new /datum/voicepack/other/goblin()
-			H.dna.species.soundpack_f = new /datum/voicepack/other/goblin()
+			H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/other/goblin]
+			H.dna.species.soundpack_f = GLOB.voice_packs[/datum/voicepack/other/goblin]
 		var/obj/item/headdy = H.get_bodypart("head")
 		if(headdy)
 			headdy.icon = 'icons/roguetown/mob/monster/goblins.dmi'
@@ -62,6 +62,7 @@
 		ADD_TRAIT(H, TRAIT_NOMOOD, TRAIT_GENERIC)
 		ADD_TRAIT(H, TRAIT_NOHUNGER, TRAIT_GENERIC)
 		ADD_TRAIT(H, TRAIT_CRITICAL_WEAKNESS, TRAIT_GENERIC)
+		ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_GENERIC)
 		//Ensures we get journeyman skills
 		H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 3, TRUE)
 		H.adjust_skillrank_up_to(/datum/skill/combat/maces, 3, TRUE)

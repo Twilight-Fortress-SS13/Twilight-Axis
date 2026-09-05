@@ -81,7 +81,7 @@
 /datum/intent/dagger/sucker_punch
 	name = "unevadable punch"
 	icon_state = "inpunch"
-	desc = "Breech your target's guard with a swift-and-sudden jab. This strike deals low damage, but cannot be parried or dodged."
+	desc = "Breach your target's guard with a swift-and-sudden jab. This strike deals low damage, but cannot be parried or dodged."
 	attack_verb = list("punches", "jabs", "clocks")
 	animname = "strike"
 	blade_class = BCLASS_BLUNT
@@ -114,7 +114,7 @@
 
 /datum/intent/dagger/cut/blunt
 	blade_class = BCLASS_BLUNT
-	
+
 /datum/intent/dagger/thrust/blunt
 	blade_class = BCLASS_BLUNT
 
@@ -144,6 +144,8 @@
 	max_integrity = 175
 	swingsound = list('sound/combat/wooshes/bladed/wooshsmall (1).ogg','sound/combat/wooshes/bladed/wooshsmall (2).ogg','sound/combat/wooshes/bladed/wooshsmall (3).ogg')
 	associated_skill = /datum/skill/combat/knives
+	twirly = SKILL_LEVEL_JOURNEYMAN
+	twirl_verb = "flip"
 	pickup_sound = 'sound/foley/equip/swordsmall2.ogg'
 	throwforce = 12
 	wdefense = 3
@@ -160,10 +162,8 @@
 	inv_storage_delay = 1 SECONDS
 	edelay_type = 1
 
-	//flipping knives has a cooldown on to_chat to reduce chatspam
-	COOLDOWN_DECLARE(flip_cooldown)
 
-/obj/item/rogueweapon/huntingknife/Initialize()
+/obj/item/rogueweapon/huntingknife/Initialize(mapload)
 	..()
 	var/static/list/slapcraft_recipe_list = list(
 		/datum/crafting_recipe/roguetown/survival/peasantry/maciejowski_knife,
@@ -183,44 +183,19 @@
 			if("onbelt")
 				return list("shrink" = 0.3,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
 
-/obj/item/rogueweapon/huntingknife/rmb_self(mob/user)
-	. = ..()
-	if(.)
-		return
-
-	SpinAnimation(4, 2) // The spin happens regardless of the cooldown
-
-	if(!COOLDOWN_FINISHED(src, flip_cooldown))
-		return
-
-	COOLDOWN_START(src, flip_cooldown, 3 SECONDS)
-	if((user.get_skill_level(/datum/skill/combat/knives) < 3) && prob(40))
-		user.visible_message(
-			span_danger("While trying to flip [src] [user] drops it instead!"),
-			span_userdanger("While trying to flip [src] you drop it instead!"),
-		)
-		var/mob/living/carbon/human/unfortunate_idiot = user
-		var/dropped_knife_target = pick(
-			BODY_ZONE_PRECISE_L_FOOT,
-			BODY_ZONE_PRECISE_R_FOOT,
-			)
-		unfortunate_idiot.apply_damage(src.force, BRUTE, dropped_knife_target)
-		user.dropItemToGround(src, TRUE)
-	else
-		user.visible_message(
-			span_notice("[user] spins [src] around [user.p_their()] finger."),
-			span_notice("You spin [src] around your finger"),
-		)
-		playsound(src, 'sound/foley/equip/swordsmall1.ogg', 20, FALSE)
-
-	return
+/obj/item/rogueweapon/huntingknife/twirl_success(mob/living/user)
+	user.visible_message(
+		span_notice("[user] spins [src] around [user.p_their()] finger."),
+		span_notice("You spin [src] around your finger."),
+	)
+	playsound(src, twirl_sound, 20, FALSE)
 
 /obj/item/rogueweapon/huntingknife/copper
 	name = "copper knife"
-	desc = "A knife made of copper. Lacking in durability."
+	desc = "A knife made of copper, lacking in durability."
 	icon_state = "cdagger"
 	max_integrity = 75
-	smeltresult = null // TODO: We don't have partial melt so coping time
+	smeltresult = /obj/item/ingot/copperslag
 
 /obj/item/rogueweapon/huntingknife/bronze
 	name = "bronze knife"
@@ -402,7 +377,7 @@
 
 /obj/item/rogueweapon/huntingknife/combat/bronze
 	name = "sydearmme"
-	desc = "Wedged bronze and whittled rockwood, handfitted into the dagger's most ancient-of-ancestors. It bares marks of flintknaping along its middlewidth; a customary tradition that's purported to atune its edge to the forces of nature."
+	desc = "Wedged bronze and whittled rockwood, handfitted into the dagger's most ancient-of-ancestors. It bears marks of flintknapping along its middlewidth; a customary tradition that's purported to atune its edge to the forces of nature."
 	icon_state = "bronzedagger"
 	sheathe_icon = "bronzedagger"
 	possible_item_intents = list(/datum/intent/dagger/cut, /datum/intent/dagger/chop/bronze, /datum/intent/dagger/sucker_punch, /datum/intent/dagger/thrust/bronze)
@@ -482,7 +457,7 @@
 	no_early_release = TRUE
 	hitsound = list('sound/combat/hits/bladed/genslash (1).ogg', 'sound/combat/hits/bladed/genslash (2).ogg', 'sound/combat/hits/bladed/genslash (3).ogg')
 	item_d_type = "slash"
-	misscost = 5 
+	misscost = 5
 	intent_intdamage_factor = 0.05
 
 /obj/item/rogueweapon/huntingknife/idagger
@@ -533,7 +508,7 @@
 
 /obj/item/rogueweapon/huntingknife/idagger/adagger
 	name = "decrepit dagger"
-	desc = "A short blade, wrought from frayed bronze and tanged within a rotwooden grip. Pieces of a former legionnaire's scabbard cling to the glimmerless alloy."
+	desc = "A short blade, wrought from rotted metal and tanged within a rotwooden grip. Pieces of a former legionnaire's scabbard cling to the glimmerless alloy."
 	force = 12
 	max_integrity = 75
 	icon_state = "adagger"
@@ -593,7 +568,7 @@
 	icon_state = "pdagger"
 	sheathe_icon = "pdagger"
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/corroded/Initialize()
+/obj/item/rogueweapon/huntingknife/idagger/steel/corroded/Initialize(mapload)
 	. = ..()
 	AddElement(/datum/element/tipped_item)	//Lets you tip your weapon in poison
 
@@ -605,21 +580,82 @@
 	smeltresult = /obj/item/ingot/drow
 	smelt_bar_num = 1
 
+//
+
 /obj/item/rogueweapon/huntingknife/idagger/steel/zizo
 	name = "avantyne dagger"
-	desc = "The very moment of sacrifice; that imperceptable difference between a dagger's edge and a heart's chamber, crystallized into \
+	desc = "<font color='ff0000'>It is tyme that you finally met your Lord.</font> </br> The very moment of sacrifice; that imperceptable difference between a dagger's edge and a heart's chamber, crystallized into \
 	a scalpel of bleeding darksteel. In the hands of Her trusted disciples, it serves as an unholy countermandate against order and sanity."
 	icon_state = "zizodagger"
 	sheathe_icon = "zizodagger"
 	force = 25
 	max_integrity = 250
 	max_blade_int = 300
-	embedding = list("embedded_pain_multiplier" = 1.2, "embed_chance" = 20, "embedded_fall_chance" = 0) 
+	embedding = list("embedded_pain_multiplier" = 1.2, "embed_chance" = 20, "embedded_fall_chance" = 0)
 	smeltresult = /obj/item/ingot/component/zizo
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/zizo/Initialize()
+/obj/item/rogueweapon/huntingknife/idagger/steel/zizo/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "DAGGER")
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/zizo/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_WEAPON)
+
+/obj/item/rogueweapon/huntingknife/combat/graggar
+	name = "vicious seax"
+	desc = "<font color='969d7f'>Strike true, for the blade is thy God.</font>"
+	icon_state = "graggarseax"
+	sheathe_icon = "graggarseax"
+	force = 25
+	max_integrity = 250
+	max_blade_int = 300
+	embedding = list("embedded_pain_multiplier" = 1.2, "embed_chance" = 20, "embedded_fall_chance" = 0)
+	smeltresult = /obj/item/ingot/component/graggar
+
+/obj/item/rogueweapon/huntingknife/combat/graggar/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_HORDE, "DAGGER")
+
+/obj/item/rogueweapon/huntingknife/combat/graggar/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_GRAGGAR_WEAPON)
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/matthios
+	name = "gilded knife"
+	desc = "<font color='ffd700'>Well, well, well; hello there, old sport!</font>"
+	icon_state = "matthiosknife"
+	sheathe_icon = "matthiosknife"
+	force = 25
+	max_integrity = 250
+	max_blade_int = 300
+	embedding = list("embedded_pain_multiplier" = 1.2, "embed_chance" = 20, "embedded_fall_chance" = 0)
+	smeltresult = /obj/item/ingot/component/matthios
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/matthios/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_FREEMAN, "DAGGER")
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/matthios/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_MATTHIOS_WEAPON)
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha
+	name = "saccharine misericorde"
+	desc = "<font color='bf64d0'>Does thou not wish to live deliciously?</font>"
+	icon_state = "baothamisericorde"
+	sheathe_icon = "baothamisericorde"
+	force = 25
+	max_integrity = 250
+	max_blade_int = 300
+	embedding = list("embedded_pain_multiplier" = 1.2, "embed_chance" = 20, "embedded_fall_chance" = 0)
+	smeltresult = /obj/item/ingot/component/baotha
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_DEPRAVED, "DAGGER")
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_BAOTHA_WEAPON)
+
+//
 
 /obj/item/rogueweapon/huntingknife/idagger/avantyne
 	name = "avantyne-threaded dagger"
@@ -630,8 +666,11 @@
 	force = 25
 	max_integrity = 250
 	max_blade_int = 300
-	embedding = list("embedded_pain_multiplier" = 1.2, "embed_chance" = 50, "embedded_fall_chance" = 0) 
+	embedding = list("embedded_pain_multiplier" = 1.2, "embed_chance" = 50, "embedded_fall_chance" = 0)
 	smeltresult = /obj/item/ingot/avantyne
+
+/obj/item/rogueweapon/huntingknife/idagger/avantyne/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_WEAPON)
 
 /obj/item/rogueweapon/huntingknife/idagger/steel/holysee
 	name = "eclipsum dagger"
@@ -666,7 +705,7 @@
 	force = 22 // 10% - This is a 8 clickCD weapon
 	max_integrity = 200
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/pestrasickle/Initialize()
+/obj/item/rogueweapon/huntingknife/idagger/steel/pestrasickle/Initialize(mapload)
 	. = ..()
 	AddElement(/datum/element/tipped_item)	//Lets you tip your weapon in poison
 
@@ -675,7 +714,7 @@
 	icon_state = "keeperkris"
 
 /obj/item/rogueweapon/huntingknife/idagger/dtace
-	name = "'De Tace'"
+	name = "\"De Tace\""
 	desc = "The right hand of the right hand, this narrow length of steel serves as a quick solution to petty greviences."
 	icon = 'icons/roguetown/weapons/special/hand32.dmi'
 	icon_state = "sdaggerhand"
@@ -684,6 +723,40 @@
 	max_integrity = 200
 	sellprice = 200
 	smeltresult = /obj/item/ingot/steel
+
+/obj/item/rogueweapon/huntingknife/idagger/blacksteel
+	name = "blacksteel dagger"
+	desc = "A magnificent dagger of blacksteel. The epitome of elegance, without the woes that such weapons traditionally inherit."
+	icon_state = "bs_dagger"
+	sheathe_icon = "bs_dagger"
+	force = 22
+	max_integrity = 180
+	max_blade_int = 250
+	smeltresult = /obj/item/ingot/blacksteel
+
+/obj/item/rogueweapon/huntingknife/idagger/blacksteel/heavy
+	name = "blacksteel misericorde"
+	desc = "A magnificent armor-piercing dagger of blacksteel. The curved handle is said to naturally improve one's aim, while locked in a \
+	lyfe-or-death struggle with plate-armored opponents."
+	icon_state = "bs_misericorde"
+	sheathe_icon = "bs_misericorde"
+	force = 25
+	wdefense = 4
+	max_integrity = 180
+	max_blade_int = 300
+
+/obj/item/rogueweapon/huntingknife/throwingknife/blacksteel
+	name = "blacksteel tossblade"
+	desc = "A magnificent tossblade of blacksteel. Unorthodox, but nevertheless beloved by assassins who can afford the price - and can't leave anything to chance. </br>This dagger can be stowed away inside a pair of boots, permitting it to be quickly drawn when needed."
+	item_state = "throw_knifebs"
+	max_integrity = 50
+	max_blade_int = 200
+	force = 16
+	throwforce = 28
+	armor_penetration = PEN_HEAVY //Inherits the throwforce of steel and the penetration of silver.
+	icon_state = "throw_knifebs"
+	embedding = list("embedded_pain_multiplier" = 4, "embed_chance" = 50, "embedded_fall_chance" = 0)
+	smeltresult = null
 
 /obj/item/rogueweapon/huntingknife/idagger/steel/rondel
 	name = "rondel dagger"
@@ -706,7 +779,7 @@
 	max_integrity = 200
 
 /obj/item/rogueweapon/huntingknife/idagger/steel/parrying/hand
-	name = "'Repeta'"
+	name = "\"Repeta\""
 	desc = "The left hand of the right hand, this sturdy length of steel serves as a perfect counterpart to any offense."
 	force = 12
 	throwforce = 12
@@ -737,6 +810,16 @@
 	icon_state = "eastdagger"
 	sheathe_icon = "tanto"
 
+/obj/item/rogueweapon/huntingknife/idagger/blacksteel/kazengun //Mostly a blacksteel dagger reskin, trades pick for a faster cut.
+	name = "blacksteel tanto"
+	desc = "A finely balanced blacksteel dagger in the Kazengunese style. The subtle curve of the blade aids swift slashes."
+	possible_item_intents = list(/datum/intent/dagger/thrust, /datum/intent/dagger/cut/quick, /datum/intent/dagger/sucker_punch)
+	icon_state = "bs_eastdagger"
+	sheathe_icon = "bs_tanto"
+
+/datum/intent/dagger/cut/quick //8CD, making it a faster, lower-pen sidegrade to the 10CD stab. Good on flesh.
+	clickcd = CLICK_CD_FAST
+
 /obj/item/rogueweapon/huntingknife/idagger/steel/fire
 	name = "fire dagger"
 	desc = "A dagger enchanted with lost arcyne arts to render it as Astrata's wrath, but only for a short duration."
@@ -744,7 +827,7 @@
 	sheathe_icon = "fdagger"
 	smeltresult = null
 	special = /datum/special_intent/ignite_dagger
-	var/active_intents =  list(/datum/intent/dagger/thrust/blunt,/datum/intent/dagger/cut/blunt, /datum/intent/dagger/thrust/pick/blunt, /datum/intent/dagger/sucker_punch)
+	var/active_intents =	list(/datum/intent/dagger/thrust/blunt,/datum/intent/dagger/cut/blunt, /datum/intent/dagger/thrust/pick/blunt, /datum/intent/dagger/sucker_punch)
 	var/inactive_intents = list()
 
 /obj/item/rogueweapon/huntingknife/idagger/steel/bone
@@ -753,6 +836,12 @@
 	icon_state = "bonedagger"
 	sheathe_icon = "bonedagger"
 	smeltresult = null
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/elvish
+	name = "elvish dirk"
+	desc = "A wave-bladed dagger of Elven design, whose elegant steel craftsmanship is only rivaled by its deceptive lethality."
+	icon_state = "elfsdagger"
+	sheathe_icon = "elfdagger"
 
 /obj/item/rogueweapon/huntingknife/idagger/silver
 	name = "silver dagger"
@@ -794,6 +883,15 @@
 	inv_storage_delay = 0 //No delay when retrieving from a storage slot.
 	anvilrepair = /datum/skill/craft/crafting
 
+/obj/item/rogueweapon/huntingknife/idagger/stake/ComponentInitialize()
+	. = ..()
+	AddComponent(/datum/component/deaditeslayer, time = 15 SECONDS)
+
+/obj/item/rogueweapon/huntingknife/idagger/stake/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Driving a stake through the heart of an incapacitated revenant is one of the few ways to put them down for the week. Sharper stakes, and ones made of silver, are better at this.")
+	. += span_info("Staking also works to kill many other types of undead - generally, anyone you can't kill with bloodloss can be staked.")
+
 /obj/item/rogueweapon/huntingknife/idagger/silver/stake
 	name = "silver-tipped stake"
 	desc = "A branch that has been broken off of a boswellia tree, sharpened to a fine point and tipped with blessed silver. It can lay most unholy creechers to rest, but only by piercing their hearts."
@@ -821,6 +919,7 @@
 		added_int = 0,\
 		added_def = 0,\
 	)
+	AddComponent(/datum/component/deaditeslayer, time = 10 SECONDS) // these r anti undead weapons so they get to be slightly better at it
 
 /obj/item/rogueweapon/huntingknife/idagger/silver/stake/preblessed/ComponentInitialize()
 	AddComponent(\
@@ -832,6 +931,12 @@
 		added_int = 0,\
 		added_def = 0,\
 	)
+	AddComponent(/datum/component/deaditeslayer, time = 10 SECONDS) // these r anti undead weapons so they get to be slightly better at it
+
+/obj/item/rogueweapon/huntingknife/idagger/silver/stake/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Driving a stake through the heart of an incapacitated revenant is one of the few ways to put them down for the week. Sharper stakes, and ones made of silver, are better at this.")
+	. += span_info("Staking also works to kill many other types of undead - generally, anyone you can't kill with bloodloss can be staked.")
 
 /obj/item/rogueweapon/huntingknife/idagger/silver/stake/psy
 	name = "silver-tipped otavan stake"
@@ -847,6 +952,7 @@
 		added_int = 0,\
 		added_def = 0,\
 	)
+	AddComponent(/datum/component/deaditeslayer, time = 10 SECONDS) // these r anti undead weapons so they get to be slightly better at it
 
 /obj/item/rogueweapon/huntingknife/idagger/silver/stake/psy/preblessed/ComponentInitialize()
 	AddComponent(\
@@ -858,23 +964,14 @@
 		added_int = 0,\
 		added_def = 0,\
 	)
+	AddComponent(/datum/component/deaditeslayer, time = 10 SECONDS) // these r anti undead weapons so they get to be slightly better at it
 
-/obj/item/rogueweapon/huntingknife/idagger/silver/stake/psy/lesser
-	name = "silver-tipped handstake"
-	desc = "A smaller branch that has been broken off of an Otavan boswellia tree, sharpened to a fine point and tipped with blessed silver. It can lay most unholy creechers to rest, but only by piercing their hearts."
+/obj/item/rogueweapon/huntingknife/idagger/stake/inq
+	name = "otavan stake"
+	desc = "A smaller branch that has been broken off of an Otavan boswellia tree, sharpened to a fine point. It can lay most unholy creechers to rest, but only by piercing their hearts."
 	force = 15
-	icon_state = "stake_silver"
-
-/obj/item/rogueweapon/huntingknife/idagger/silver/stake/psy/lesser/ComponentInitialize()
-	AddComponent(\
-		/datum/component/silverbless,\
-		pre_blessed = BLESSING_PSYDONIAN,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 100,\
-		added_int = 0,\
-		added_def = 0,\
-	)
+	throwforce = 15
+	icon_state = "stake_otavan"
 
 /obj/item/rogueweapon/huntingknife/idagger/silver/psydagger
 	name = "psydonic dagger"
@@ -882,7 +979,6 @@
 	icon_state = "psydagger"
 	sheathe_icon = "psydagger"
 	smeltresult = /obj/item/ingot/silverblessed
-	sellprice = 70
 
 /obj/item/rogueweapon/huntingknife/idagger/silver/psydagger/ComponentInitialize()
 	AddComponent(\
@@ -929,7 +1025,7 @@
 	is_tool = TRUE
 	anvilrepair = /datum/skill/craft/crafting
 
-/obj/item/rogueweapon/huntingknife/stoneknife/kukri
+/obj/item/rogueweapon/huntingknife/combat/jadekukri
 	name = "jade kukri"
 	desc = "A kukri made out of jade. Its more of a ceremonial piece than it is an implement of war, its somewhat fragile. Be gentle with it."
 	icon = 'icons/roguetown/gems/gem_jade.dmi'
@@ -940,14 +1036,15 @@
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 	anvilrepair = /datum/skill/craft/weaponsmithing
 
-/obj/item/rogueweapon/huntingknife/stoneknife/opalknife
+/obj/item/rogueweapon/huntingknife/combat/opalknife
 	name = "opal knife"
-	desc = "A beautiful knife carved out of opal. Its not intended for combat. Its presence is vital in some Crimson Elven ceremonies."
+	desc = "A beautiful knife carved out of opal, intended for ceremonies over combat. Styled after the curved butchering knives of \
+	antiquity, this gemstone dagger plays a key part in many Elven rituals; more specifically, those involving the sacrifice of livestock."
 	icon = 'icons/roguetown/gems/gem_opal.dmi'
 	icon_state = "knife_opal"
 	max_integrity = 75
 	max_blade_int = 50
-	wdefense = 3
+	wdefense = 1
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 	anvilrepair = /datum/skill/craft/weaponsmithing
 
@@ -957,30 +1054,19 @@
 	force = 22 //One of the rare silver-edged weapons that has a positive damage boost, due to it requiring both silver and gold to create.
 	icon_state = "elfdagger"
 	sheathe_icon = "elfdagger"
-	item_state = "elfdag"
-	last_used = 0
 	smeltresult = /obj/item/ingot/gold
 	smelt_bar_num = 1
 
 /obj/item/rogueweapon/huntingknife/idagger/silver/elvish/poopknife
 	name = "thine majesty's nitesoil-cleaver"
 	desc = "A heraldric accompaniment to the chamberpot, and the most closely-guarded secret in all of Azuria. It is said that this once belonged to the Duke's eldest ancestor, who - in a fit of constipatory labor - had unwittingly realized another use for their wave-bladed trophy. Clinging to its silvered edge is a thin layer of otherworldly ash, refusing to yield to neither soap-nor-rag."
-	force = 15 //On the FIRST ROUND this was added, someone managed to kill the Vampire Lord with the Poop Knife. Reducing the force 
+	force = 15 //On the FIRST ROUND this was added, someone managed to kill the Vampire Lord with the Poop Knife. Reducing the force
 	max_integrity = 50 //Should render to ~100, at most. More fragile than alloyed knives. You know why.
 	max_blade_int = 333 //Exceedingly sharp. Ditto.
 	possible_item_intents = list(/datum/intent/dagger/cut, /datum/intent/dagger/chop/bronze, /datum/intent/dagger/sucker_punch, /datum/intent/dagger/thrust/combat) //Seax's intents, for self-explanatory reasons.
 
-/obj/item/rogueweapon/huntingknife/idagger/silver/elvish/drow
-	name = "dark elvish dagger"
-	desc = "A once-elegant mithril dagger, who's sunless presence has long since been overshadowed by its vicious bite."
-	force = 18 
-	last_used = 0
-	is_silver = FALSE //Intended, as it's technically not silver - or at the very least, so divorced from traditional silver that it no longer retains its properties.
-	smeltresult = /obj/item/ingot/drow
-	smelt_bar_num = 1
-
 /obj/item/rogueweapon/huntingknife/idagger/navaja
-	possible_item_intents = list(/datum/intent/dagger/thrust,/datum/intent/dagger/cut,  /datum/intent/dagger/thrust/pick)
+	possible_item_intents = list(/datum/intent/dagger/thrust,/datum/intent/dagger/cut,	/datum/intent/dagger/thrust/pick)
 	name = "navaja"
 	desc = "A folding Etruscan knife valued by merchants, mercenaries and peasants for its convenience. It possesses a long hilt, allowing for a sizeable blade with good reach."
 	force = 5
@@ -1075,7 +1161,7 @@
 	armor_penetration = PEN_MEDIUM
 	wdefense = 1
 	icon_state = "throw_knifei"
-	embedding = list("embedded_pain_multiplier" = 4, "embed_chance" = 25, "embedded_fall_chance" = 10)
+	embedding = list("embedded_pain_multiplier" = 4, "embed_chance" = 80, "embedded_fall_chance" = 10)
 	possible_item_intents = list(/datum/intent/dagger/thrust, /datum/intent/dagger/cut, /datum/intent/dagger/chop)
 	smeltresult = null
 	thrown_damage_flag = "piercing"		//Checks piercing type like an arrow.
@@ -1097,7 +1183,7 @@
 
 /obj/item/rogueweapon/huntingknife/throwingknife/aalloy
 	name = "decrepit tossblade"
-	desc = "Chunks of frayed bronze, crudely sharpened into throwing daggers. You might be better off chucking the silverware at them, at this rate. </br>This dagger can be stowed away inside a pair of boots, permitting it to be quickly drawn when needed."
+	desc = "Chunks of rotted metal, crudely sharpened into throwing daggers. You might be better off chucking the silverware at them, at this rate. </br>This dagger can be stowed away inside a pair of boots, permitting it to be quickly drawn when needed."
 	icon_state = "throw_knifea"
 	color = "#bb9696"
 	force = 7
@@ -1131,7 +1217,6 @@
 	icon_state = "throw_knifesil"
 	embedding = list("embedded_pain_multiplier" = 4, "embed_chance" = 50, "embedded_fall_chance" = 0)
 	is_silver = TRUE
-	sellprice = 6
 
 /obj/item/rogueweapon/huntingknife/throwingknife/silver/ComponentInitialize()
 	AddComponent(\
@@ -1189,7 +1274,7 @@
 		added_blade_int = 0,\
 		added_int = 100,\
 		added_def = 3,\
-	)	
+	)
 
 /obj/item/rogueweapon/huntingknife/throwingknife/triumph
 	name = "knife"
@@ -1223,7 +1308,7 @@
 	icon_state = "sscissors"
 	smeltresult = /obj/item/ingot/steel
 	is_tool = TRUE
-	
+
 /datum/intent/snip // The salvaging intent!
 	name = "snip"
 	desc = "Target a piece of clothing to sheer it apart. Sheered clothing is destroyed in the process, but provides some salvaged materials in turn. The amount of salvaged materials gained from sheered clothing scales with your Sewing skill. </br>Target the head-or-skull of someone else to begin grooming their hair. This can be used to give someone a completely new hairstyle, or to shave away whatever hair they have."

@@ -1,4 +1,5 @@
 GLOBAL_LIST_INIT(time_change_tips, world.file2list("strings/rt/timechangetips.txt"))
+GLOBAL_LIST_INIT(time_change_quotes, world.file2list("strings/rt/timechangequotes.txt"))
 
 //Returns the world time in english
 /proc/worldtime2text()
@@ -96,7 +97,7 @@ GLOBAL_VAR_INIT(date_override_offset, 0)
 					GLOB.forecast = null
 
 	if(GLOB.tod != oldtod)
-		if(GLOB.tod == "dawn")
+		if(GLOB.tod == "dawn" && SSticker?.current_state == GAME_STATE_PLAYING)
 			GLOB.dayspassed++
 			scom_announce_new_dawn()
 			if(SStreasury?.initialized)
@@ -108,6 +109,9 @@ GLOBAL_VAR_INIT(date_override_offset, 0)
 				SStreasury.tick_loans()
 				SStreasury.tick_poll_tax()
 			SScity_assembly?.on_day_tick()
+			process_manor_production_cycle(TRUE, FALSE) //TA EDIT
+		if(GLOB.tod == "dusk") //TA EDIT
+			process_manor_production_cycle(FALSE, TRUE) //TA EDIT
 		for(var/mob/living/player in GLOB.mob_list)
 			if(player.stat != DEAD && player.client)
 				player.do_time_change()
@@ -117,6 +121,22 @@ GLOBAL_VAR_INIT(date_override_offset, 0)
 	else
 
 		return null
+
+/proc/process_manor_production_cycle(is_dawn = FALSE, is_dusk = FALSE) //TA EDIT START
+	if(!SStreasury || !SSeconomy)
+		return
+
+	for(var/mob/living/player in GLOB.player_list)
+		if(player && player.mind)
+			var/datum/manor/manor = player.mind.get_owned_manor()
+			if(!manor)
+				continue
+			if(is_dawn && !(manor.patron == /datum/patron/divine/noc || manor.patron == /datum/patron/inhumen/zizo))
+				continue
+			if(is_dusk && manor.patron == /datum/patron/divine/noc)
+				continue
+			manor.ensure_initialized(player)
+			manor.produce_resources(player, is_dawn, is_dusk) //TA EDIT END
 
 /mob/living/proc/do_time_change()
 
@@ -165,8 +185,10 @@ GLOBAL_VAR_INIT(date_override_offset, 0)
 		playsound_local(src, 'sound/misc/newday.ogg', 60, FALSE)
 		animate(T, alpha = 255, time = 10, easing = EASE_IN)
 		addtimer(CALLBACK(src, PROC_REF(clear_area_text), T), 35)
+		var/time_change_quotes_random = pick(GLOB.time_change_quotes)
+		to_chat(client, span_notice("<b>[time_change_quotes_random]</b>"))
 		var/time_change_tips_random = pick(GLOB.time_change_tips)
-		to_chat(client, span_notice("<b>[time_change_tips_random]</b>"))
+		to_chat(client, span_notice("<i>[time_change_tips_random]</i>"))
 	else if(GLOB.tod == "day")
 		playsound_local(src, 'sound/misc/midday.ogg', 100, FALSE)
 	else if(GLOB.tod == "night")
@@ -202,7 +224,7 @@ GLOBAL_VAR_INIT(rollovercheck_last_timeofday, 0)
 	return GLOB.midnight_rollovers
 
 /proc/weekdayofthemonth()
-	var/DD = text2num(time2text(world.timeofday, "DD")) 	// get the current day
+	var/DD = text2num(time2text(world.timeofday, "DD"))	// get the current day
 	switch(DD)
 		if(8 to 13)
 			return 2

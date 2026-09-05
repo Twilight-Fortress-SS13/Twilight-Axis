@@ -57,7 +57,7 @@
 	if(.)
 		return FALSE
 	var/list/modifiers = params2list(params)
-	if(!modifiers["middle"])
+	if(modifiers[BUTTON_CHANGED] != MIDDLE_CLICK)
 		return TRUE
 	if(!can_cast(caller) || !cast_check(FALSE, ranged_ability_user))
 		return FALSE
@@ -75,14 +75,14 @@
 
 /obj/effect/proc_holder/spell/invoked/projectile
 	var/obj/projectile/projectile_type = /obj/projectile/magic/teleport
-	var/obj/projectile/projectile_type_arc // If set, this spell supports arc mode via Ctrl+G toggle
+	var/obj/projectile/projectile_type_arc // If set, this spell supports arc mode via Shift+G toggle
 	var/list/projectile_var_overrides = list()
 	var/projectile_amount = 1	//Projectiles per cast.
 	var/current_amount = 0	//How many projectiles left.
 	var/projectiles_per_fire = 1		//Projectiles per fire. Probably not a good thing to use unless you override ready_projectile().
 	gesture_required = TRUE // All projectiles are offensive and should be locked to not handcuff
 	human_req = TRUE
-	/// Whether this spell is set to fire in arc mode. Toggled via Ctrl+G.
+	/// Whether this spell is set to fire in arc mode. Toggled via Shift+G.
 	var/arc_mode = FALSE
 
 /obj/effect/proc_holder/spell/invoked/projectile/proc/ready_projectile(obj/projectile/P, atom/target, mob/user, iteration)
@@ -113,8 +113,8 @@
 			M.spell_impact_intensity = spell_impact_intensity
 		P.def_zone = user.zone_selected
 		// Accuracy modification code, same as bow rebalance PR
-		P.accuracy += (user.STAINT - 9) * 4
-		P.bonus_accuracy += (user.STAINT - 8) * 3
+		P.accuracy += (user.STAPER - 9) * 4
+		P.bonus_accuracy += (user.STAPER - 8) * 3
 		if(user.mind)
 			P.bonus_accuracy += (user.get_skill_level(associated_skill) * 5) // +5% per level
 		P.firer = user
@@ -151,8 +151,11 @@
 /// Dedicated maptext holder for the ARC indicator, separate from the cooldown maptext.
 /atom/movable/screen/arc_maptext_holder
 	layer = ABOVE_HUD_LAYER
-	maptext_x = 6
-	maptext_y = 22
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	maptext_x = 2
+	maptext_y = 0
+	maptext_width = 64
+	maptext_height = 11
 
 /// Updates the ARC maptext indicator on the spell's action button using a dedicated holder.
 /obj/effect/proc_holder/spell/invoked/projectile/proc/update_arc_maptext()
@@ -182,7 +185,6 @@
 	var/proj_range = initial(projectile_type:range)
 	var/proj_speed = initial(projectile_type:speed)
 	var/proj_ap = initial(projectile_type:armor_penetration)
-	var/proj_npc_mult = initial(projectile_type:npc_simple_damage_mult)
 	var/proj_nodamage = initial(projectile_type:nodamage)
 	var/proj_guard = initial(projectile_type:guard_deflectable)
 
@@ -199,10 +201,6 @@
 		html += {"
 			<tr><th>Damage</th><td>[proj_damage] [proj_damage_type]</td></tr>
 		"}
-		if(proj_npc_mult != 1)
-			html += {"
-				<tr><th>NPC Damage Mult</th><td>[proj_npc_mult]x</td></tr>
-			"}
 
 	if(proj_ap)
 		html += {"

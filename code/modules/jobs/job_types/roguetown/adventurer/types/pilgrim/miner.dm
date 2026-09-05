@@ -3,11 +3,12 @@
 	tutorial = "Swing the pick. Heave. Swing. Heave. Deep underground where the days lose their meaning, the work is grueling, the tunnels cramped, and the stale air full of coal dust, yet tales abound of the lucky few who persevered, and found enough precious gems to set them for life."
 
 	allowed_sexes = list(MALE, FEMALE)
-	
+	forbidden_races = list(RACES_DESPISED)
+
 	outfit = /datum/outfit/job/roguetown/adventurer/miner
 
 	category_tags = list(CTAG_PILGRIM, CTAG_TOWNER)
-	traits_applied = list(TRAIT_DARKVISION, TRAIT_SMITHING_EXPERT) // Smithing Expert, because from what I observe of miner players they tend to do smithing far more than farming etc.
+	traits_applied = list(TRAIT_DARKVISION, TRAIT_SMITHING_EXPERT, TRAIT_MASTER_MASON) // Smithing Expert, because from what I observe of miner players they tend to do smithing far more than farming etc.
 	subclass_stats = list(
 		STATKEY_STR = 2,
 		STATKEY_CON = 1,
@@ -50,7 +51,6 @@
 						/obj/item/flashlight/flare/torch = 1,
 						/obj/item/rogueweapon/chisel = 1,
 						/obj/item/rogueweapon/hammer/wood = 1,
-						/obj/item/recipe_book/survival = 1,
 						/obj/item/recipe_book/builder = 1,
 						/obj/item/rogueweapon/scabbard/sheath = 1,
 						/obj/item/rogueweapon/huntingknife = 1,

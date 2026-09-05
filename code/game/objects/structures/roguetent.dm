@@ -14,7 +14,7 @@
 	attacked_sound = list('sound/combat/hits/onwood/woodimpact (1).ogg','sound/combat/hits/onwood/woodimpact (2).ogg')
 	destroy_sound = 'sound/combat/hits/onwood/destroywalldoor.ogg'
 
-/obj/structure/roguetent/Initialize()
+/obj/structure/roguetent/Initialize(mapload)
 	update_icon()
 	..()
 
@@ -28,7 +28,7 @@
 	visible_message(span_info("[user] opens [src]."))
 	playsound(src, 'sound/foley/equip/rummaging-02.ogg', 100, FALSE)
 	density = FALSE
-	opacity = FALSE
+	set_opacity(FALSE)
 	update_icon()
 	alert_ai_visibility_change(src)
 
@@ -36,11 +36,8 @@
 	visible_message(span_info("[user] closes [src]."))
 	playsound(src, 'sound/foley/equip/rummaging-02.ogg', 100, FALSE)
 	density = TRUE
-	opacity = TRUE
+	set_opacity(TRUE)
 	update_icon()
-
-/obj/structure/roguetent/attack_paw(mob/living/user)
-	attack_hand(user)
 
 /obj/structure/roguetent/attack_hand(mob/living/user)
 	. = ..()

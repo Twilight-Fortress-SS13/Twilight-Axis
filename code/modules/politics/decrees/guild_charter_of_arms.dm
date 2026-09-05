@@ -1,17 +1,17 @@
 /datum/decree/guild_charter_of_arms
 	id = DECREE_GUILD_CHARTER_OF_ARMS
-	name = "The Guild Charter of Arms"
+	name = "Статут Гильдии наемников"
 	category = DECREE_CATEGORY_NEW
-	mechanical_text = "Mercenaries get a capped poll tax at 15m; Guild remits a daily tribute to the Burgher Pledge."
-	flavor_text = {"This Guild Charter of Arms, drawn under Ravox's banner and entered unto between the Crown of Azuria and the Guild of Arms, witnesseth that the Crown recognizeth the Guild as a chartered foreign body, self-governing in its own affairs and answerable only to its own captains. Its sworn mercenaries shall bear no common levy save the lightest head-count upon them.
+	mechanical_text = "Предельный размер подушной подати для наемников ограничен 15 маммонами; Гильдия наемников вносит ежедневную подать в счет Обета Горожан."
+	flavor_text = {"Настоящий Статут Гильдии наемников, заключенный под знаменем Равокса между Короной Азурии и Гильдией наемников Западных Королевств, свидетельствует о том, что Корона признаёт Гильдию в качестве зарегистрированной иностранной организации, самоуправляющейся в своих делах и подотчётной исключительно своим капитанам. Наемники, что служат под флагом Гильдии, не будут нести никакого обременения, кроме наименьших из возможных податей.
 
-The Crown commandeth no oath of service from the Guild, and oweth it no service in return. The Crown shall not intervene in the contracts the Guild undertaketh, and shall protect its adherents' right to bear arms and to intervene in private warfare as they see fit, so long as the peace of the Realm be not disturbed thereby, and so long as they undertake no contracts of piracy, brigandry, nor such as directly threaten the Crown's interests.
+Корона не требует от Гильдии клятвы верности и не обязана оказывать ей никаких услуг в ответ. Корона не будет вмешиваться в контракты, заключаемые Гильдией, и будет защищать право ее членов носить оружие, а также начинать сражения и участвовать в оных по своему усмотрению, при условии, что это не нарушает мир в Герцогстве и не связано с пиратством, разбоем или другими действиями, непосредственно угрожающими интересам Короны.
 
-In recognition of this standing, the Guild's treasury, collected from amongst its members as a fee, shall remit a daily tribute unto the Burgher Pledge as a gesture of good will and contribution toward the common wealth of the Realm, as bearers of arms and agents of Ravox for the dispensation of justice therein. And should an outlaw be found wearing the Guild's colours, the Guild answereth for none of it, and the Crown's justice against that individual proceedeth unimpeded.
+В знак признания этого статуса казна Гильдии, наполняемая за счёт взносов её членов, будет ежедневно вносить подать как часть Обета Горожан, в качестве жеста доброй воли и вклада в общее благосостояние Герцогства от носителей оружия и агентов Равокса, обеспечивающих в оном отправление правосудия. И если будет обнаружен преступник, носящий знаки Гильдии, Гильдия не несет за это никакой ответственности, и правосудие Короны в отношении этого лица осуществляется беспрепятственно.
 
-Yeven under the seal of the Crown and the mark of the Guild."}
-	revoke_text = "The %RULER% has suspended the Guild Charter of Arms. The mercenaries of Azuria now bear the Crown's common levy in full - and the Guild's tribute to the Pledge ceases until the compact is renewed."
-	restore_text = "The %RULER% has affirmed the Guild Charter of Arms. The Guild's recognition is restored, and its tribute to the Pledge resumes."
+Заверено печатью Короны и печатью Гильдии намеников Западных Королевств."}
+	revoke_text = "Правитель сиих земель прекратил действие Статута Гильдии наемников. Наемники Гильдии Западных Королевств вновь обязаны выплачивать налоги и подати в полном объеме, а Гильдия, в свою очередь, останавливает выплаты в казну."
+	restore_text = "Правитель сиих земель возобновил Статут Гильдии наемников. Особый налоговый статус Гильдии восстановлен, и она вновь присоединяется к Обету Горожан."
 
 /datum/decree/guild_charter_of_arms/roll_initial_year()
 	return CALENDAR_EPOCH_YEAR - rand(30, 80)

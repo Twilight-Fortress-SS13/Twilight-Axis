@@ -22,6 +22,7 @@
 	job_subclasses = list(
 		/datum/advclass/tailor
 	)
+	has_subprefs = FALSE // only one subclass
 
 /datum/advclass/tailor
 	name = "Tailor"
@@ -44,19 +45,20 @@
 		/datum/skill/labor/farming = SKILL_LEVEL_NOVICE,
 		/datum/skill/craft/cooking = SKILL_LEVEL_NOVICE,
 	)
+	tempo_capable = FALSE
 
 /datum/outfit/job/roguetown/tailor/basic/pre_equip(mob/living/carbon/human/H)
 	..()
 	H.adjust_blindness(-3)
 	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt
 	pants = /obj/item/clothing/under/roguetown/tights
-	belt = /obj/item/storage/belt/rogue/leather/cloth
+	belt = /obj/item/storage/belt/rogue/leather/cloth/upgraded
 	beltr = /obj/item/storage/belt/rogue/pouch/coins/mid
 	beltl = /obj/item/rogueweapon/huntingknife/scissors/steel
 	shoes = /obj/item/clothing/shoes/roguetown/shortboots
 	backr = /obj/item/storage/backpack/rogue/satchel
 	backpack_contents = list(
-		/obj/item/needle,
+		/obj/item/needle/tailor,
 		/obj/item/storage/keyring/tailor,
 		/obj/item/dye_brush,
 		/obj/item/recipe_book/sewing,

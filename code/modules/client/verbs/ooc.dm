@@ -92,10 +92,6 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 			to_chat(src, span_danger("I can't use that."))
 			return
 
-	if(blacklisted())
-		to_chat(src, span_danger("I can't use that."))
-		return
-
 	if(get_playerquality(ckey) <= -5)
 		to_chat(src, span_danger("I can't use that."))
 		return
@@ -135,24 +131,13 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 			message_admins("[key_name_admin(src)] has attempted to advertise in OOC: [msg]")
 			return
 
-	if(!(prefs.chat_toggles & CHAT_OOC))
-		to_chat(src, span_danger("I have OOC muted."))
-		return
-
 	mob.log_talk(raw_msg, LOG_OOC)
 
 	var/keyname = key
-	/*if(ckey in GLOB.anonymize)
-		keyname = get_fake_key(ckey)*/
-//	if(prefs.unlock_content)
-//		if(prefs.toggles & MEMBER_PUBLIC)
-//			keyname = "<font color='[prefs.ooccolor ? prefs.ooccolor : GLOB.normal_ooc_colour]'>[icon2html('icons/member_content.dmi', world, "blag")][keyname]</font>"
 	//The linkify span classes and linkify=TRUE below make ooc text get clickable chat href links if you pass in something resembling a url
 	var/color2use = prefs.voice_color
 	if(!color2use)
 		color2use = "#FFFFFF"
-	else
-		color2use = "#[color2use]"
 	var/chat_color = "#c5c5c5"
 	var/msg_to_send = ""
 
@@ -166,8 +151,6 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 			// Admin: they can opt out while not in lobby
 			if(C.holder && !C.show_lobby_ooc && !istype(C.mob, /mob/dead/new_player))
 				continue
-		if(!(C.prefs.chat_toggles & CHAT_OOC))
-			continue
 		var/real_key = "" // TA EDIT START
 		if(C.holder && keyname != key)
 			real_key = "([key])" // TA EDIT END
@@ -221,10 +204,6 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 			to_chat(src, span_danger("I can't use that."))
 			return
 
-	if(blacklisted())
-		to_chat(src, span_danger("I can't use that."))
-		return
-
 	if(get_playerquality(ckey) <= -5)
 		to_chat(src, span_danger("I can't use that."))
 		return
@@ -260,30 +239,17 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 			message_admins("[key_name_admin(src)] has attempted to advertise in OOC: [msg]")
 			return
 
-	if(!(prefs.chat_toggles & CHAT_OOC))
-		to_chat(src, span_danger("I have OOC muted."))
-		return
-
 	mob.log_talk(raw_msg, LOG_OOC)
 
 	var/keyname = key
-	/*if(ckey in GLOB.anonymize)
-		keyname = get_fake_key(ckey)*/
-//	if(prefs.unlock_content)
-//		if(prefs.toggles & MEMBER_PUBLIC)
-//			keyname = "<font color='[prefs.ooccolor ? prefs.ooccolor : GLOB.normal_ooc_colour]'>[icon2html('icons/member_content.dmi', world, "blag")][keyname]</font>"
 	//The linkify span classes and linkify=TRUE below make ooc text get clickable chat href links if you pass in something resembling a url
 	var/color2use = prefs.voice_color
 	if(!color2use)
 		color2use = "#FFFFFF"
-	else
-		color2use = "#[color2use]"
 	var/chat_color = "#c5c5c5"
 	var/msg_to_send = ""
 
 	for(var/client/C in GLOB.clients)
-		if(!(C.prefs.chat_toggles & CHAT_OOC))
-			continue
 		var/post_round = (SSticker.current_state >= GAME_STATE_FINISHED)
 		if(!post_round)
 			if(!C.holder && !istype(C.mob, /mob/dead/new_player))
@@ -331,7 +297,6 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 /client/proc/set_ooc(newColor as color)
 	set name = "Set Player OOC Color"
 	set desc = ""
-	set category = "Game Master"
 	set hidden = 1
 	if(!holder)
 		return
@@ -342,47 +307,12 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 /client/proc/reset_ooc()
 	set name = "Reset Player OOC Color"
 	set desc = ""
-	set category = "Game Master"
 	set hidden = 1
 	if(!holder)
 		return
 	GLOB.OOC_COLOR = null
 	if(!check_rights(0))
 		return
-/client/verb/colorooc()
-	set name = "Set Your OOC Color"
-	set category = "Preferences"
-	set hidden = 1
-	if(!holder)
-		return
-	if(!check_rights(0))
-		return
-	if(!holder || !check_rights_for(src, R_ADMIN))
-		if(!is_content_unlocked())
-			return
-
-	var/new_ooccolor = input(src, "Please select your OOC color.", "OOC color", prefs.ooccolor) as color|null
-	if(new_ooccolor)
-		prefs.ooccolor = sanitize_ooccolor(new_ooccolor)
-		prefs.save_preferences()
-	SSblackbox.record_feedback("tally", "admin_verb", 1, "Set OOC Color") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
-	return
-
-/client/verb/resetcolorooc()
-	set name = "Reset Your OOC Color"
-	set desc = ""
-	set category = "Preferences"
-	set hidden = 1
-	if(!holder)
-		return
-	if(!check_rights(0))
-		return
-	if(!holder || !check_rights_for(src, R_ADMIN))
-		if(!is_content_unlocked())
-			return
-
-		prefs.ooccolor = initial(prefs.ooccolor)
-		prefs.save_preferences()
 
 /client/verb/toggle_ooc_anonymize()
 	set name = "Toggle OOC Anonymize"
@@ -402,7 +332,6 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 //Checks admin notice
 /client/verb/admin_notice()
 	set name = "Adminnotice"
-	set category = "Admin.Admin"
 	set desc ="Check the admin notice if it has been set"
 	set hidden = 1
 	if(!holder)
@@ -457,7 +386,7 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 		pos = search
 		search = findtext(jd, ",", pos+1)
 		if(search)
-			return lowertext(copytext(jd, pos+9, search))
+			return LOWER_TEXT(copytext(jd, pos+9, search))
 
 /client/verb/html_chat()
 	set name = "{Old Chat}"
@@ -469,7 +398,6 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 
 /client/verb/motd()
 	set name = "MOTD"
-	set category = "OOC"
 	set desc ="Check the Message of the Day"
 	set hidden = 1
 	if(!holder)
@@ -484,7 +412,6 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 
 /client/proc/self_notes()
 	set name = "View Admin Remarks"
-	set category = "OOC"
 	set desc = ""
 	set hidden = 1
 	if(!holder)
@@ -512,46 +439,6 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 	body += "</BODY></HTML>"
 	usr << browse(body.Join(), "window=playerplaytime[ckey];size=550x615")
 
-/client/proc/ignore_key(client, displayed_key)
-	var/client/C = client
-	if(C.key in prefs.ignoring)
-		prefs.ignoring -= C.key
-	else
-		prefs.ignoring |= C.key
-	to_chat(src, "You are [(C.key in prefs.ignoring) ? "now" : "no longer"] ignoring [displayed_key] on the OOC channel.")
-	prefs.save_preferences()
-
-/client/verb/select_ignore()
-	set name = "Ignore"
-	set category = "Preferences.Options"
-	set desc ="Ignore a player's messages on the OOC channel"
-	set hidden = 1
-	if(!holder)
-		return
-
-	var/see_ghost_names = isobserver(mob)
-	var/list/choices = list()
-	var/displayed_choicename = ""
-	for(var/client/C in GLOB.clients)
-		if(C.holder?.fakekey)
-			displayed_choicename = C.holder.fakekey
-		else
-			displayed_choicename = C.key
-		if(isobserver(C.mob) && see_ghost_names)
-			choices["[C.mob]([displayed_choicename])"] = C
-		else
-			choices[displayed_choicename] = C
-	choices = sortList(choices)
-	var/selection = input("Please, select a player!", "Ignore", null, null) as null|anything in choices
-	if(!selection || !(selection in choices))
-		return
-	displayed_choicename = selection // ckey string
-	selection = choices[selection] // client
-	if(selection == src)
-		to_chat(src, "You can't ignore myself.")
-		return
-	ignore_key(selection, displayed_choicename)
-
 /client/proc/show_previous_roundend_report()
 	set name = "Your Last Round"
 	set category = "OOC"
@@ -561,7 +448,6 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 
 /client/verb/fit_viewport()
 	set name = "Fit Viewport"
-	set category = "Preferences.Options"
 	set desc = ""
 	set hidden = 1
 	if(!holder)
@@ -647,7 +533,6 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 /client/verb/policy()
 	set name = "Show Policy"
 	set desc = ""
-	set category = "OOC"
 	set hidden = 1
 	if(!holder)
 		return

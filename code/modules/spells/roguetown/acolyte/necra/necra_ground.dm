@@ -7,7 +7,7 @@
 	cooldown_time = 130 SECONDS //2 min duration + 10 second CD inbetween. Unless it gets destroyed before.
 	charge_time = 1.5 SECONDS
 
-	primary_resource_type  = SPELL_COST_DEVOTION
+	primary_resource_type	= SPELL_COST_DEVOTION
 	primary_resource_cost = SPELLCOST_MIRACLE_MAJOR * 2
 	secondary_resource_type = SPELL_COST_STAMINA
 	secondary_resource_cost = SPELLCOST_MAJOR_AOE
@@ -15,7 +15,7 @@
 	cast_range = 1
 
 	charge_required = TRUE
-	charge_drain = 3
+	hold_drain = 3
 	charge_slowdown = 3
 
 	sparks_amt = 3
@@ -59,7 +59,7 @@
 	new /obj/structure/fluff/psycross/necra/consecrated(target_turf, effect_size)
 
 	return TRUE
-	
+
 
 /obj/structure/fluff/psycross/necra/consecrated
 	name = "spirit necran cross"

@@ -69,7 +69,7 @@
 	if(target.stat != DEAD && target.stat != UNCONSCIOUS)
 		to_chat(target, span_warning("I feel as though the ground is watching me."))
 	ADD_TRAIT(user, TRAIT_NOSSDINDICATOR, "hagmirror")
-	var/mob/dead/observer/screye/blackmirror/S = H.scry_ghost()
+	var/mob/dead/observer/eye/screye/blackmirror/S = H.scry_ghost()
 	if(!S)
 		return
 	S.ManualFollow(target)
@@ -133,7 +133,7 @@
 	if(target.stat != DEAD && target.stat != UNCONSCIOUS)
 		to_chat(target, span_warning("I feel as though the ground is watching me."))
 	ADD_TRAIT(user, TRAIT_NOSSDINDICATOR, "hagmirror")
-	var/mob/dead/observer/screye/blackmirror/S = user.scry_ghost()
+	var/mob/dead/observer/eye/screye/blackmirror/S = user.scry_ghost()
 	if(!S)
 		return
 	S.ManualFollow(target)
@@ -153,5 +153,5 @@
 		. += span_info("Right-click the mirror to scry with it.")
 		. += span_info("You can only scry people if you know them, or if they are in the bog.")
 
-/obj/item/handmirror/hag/rmb_self(mob/user)
+/obj/item/handmirror/hag/rmb_self(mob/user, keybind = FALSE)
 	src.attack_right(user)

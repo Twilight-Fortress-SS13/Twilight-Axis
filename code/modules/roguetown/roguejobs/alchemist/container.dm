@@ -1,15 +1,12 @@
 
 /obj/item/reagent_containers/glass/bottle/rogue/healthpot
 	list_reagents = list(/datum/reagent/medicine/healthpot = 50)
-	flags_ai_inventory = AI_ITEM_HEALING_DRINK | AI_ITEM_DRINK
 
 /obj/item/reagent_containers/glass/bottle/rogue/healthpotnew
 	list_reagents = list(/datum/reagent/medicine/stronghealth = 50)
-	flags_ai_inventory = AI_ITEM_HEALING_DRINK | AI_ITEM_DRINK
 
 /obj/item/reagent_containers/glass/bottle/rogue/restoration
 	list_reagents = list(/datum/reagent/medicine/restoration = 50)
-	flags_ai_inventory = AI_ITEM_HEALING_DRINK | AI_ITEM_DRINK
 
 /obj/item/reagent_containers/glass/bottle/rogue/manapot
 	list_reagents = list(/datum/reagent/medicine/manapot = 50)
@@ -33,15 +30,20 @@
 	particular variant of this, made by fermenting zardines in the Terrorbog, happens to be a very popular condiment back in Rockhill."
 	list_reagents = list(/datum/reagent/medicine/healthpot/zarum = 50)
 
+/obj/item/reagent_containers/glass/bottle/rogue/healthpot/zarum/bog
+	name = "bottle of medicinal fish honeygar"
+	desc = "A bottle with a mudclay cork, tethered to the bottleneck via braided twine. Fermented fish-paste, herbs and honey make for an unexpectedly palatable medicine. Developed by the Levy of Azure Peak from the Terrorbog fish-vinegar recipe, the added honey softens the brew's harsh bite and tempers its fishy aftertaste. It heals no better than ordinary fish vinegar, but goes down with considerably less suffering."
+	list_reagents = list(/datum/reagent/medicine/healthpot/zarum/bog = 50)
+
 //vanderlin potion stuff//
 /obj/item/reagent_containers/glass/bottle/rogue/strongmanapot
 	list_reagents = list(/datum/reagent/medicine/strongmana = 50)
 
 /obj/item/reagent_containers/glass/bottle/rogue/stampot
-	list_reagents = list(/datum/reagent/medicine/stampot = 50)
+	list_reagents = list(/datum/reagent/medicine/stampot = 30)
 
 /obj/item/reagent_containers/glass/bottle/rogue/strongstampot
-	list_reagents = list(/datum/reagent/medicine/strongstam = 50)
+	list_reagents = list(/datum/reagent/medicine/strongstam = 30)
 
 /obj/item/reagent_containers/glass/bottle/rogue/antidote
 	list_reagents = list(/datum/reagent/medicine/antidote = 50)
@@ -102,6 +104,9 @@
 
 /obj/item/reagent_containers/glass/bottle/alchemical/restoration
 	list_reagents = list(/datum/reagent/medicine/restoration = 30)
+
+/obj/item/reagent_containers/glass/bottle/alchemical/water
+	list_reagents = list(/datum/reagent/water = 30)
 
 //////////////////////////
 /// ALCOHOLIC BOTTLES ///

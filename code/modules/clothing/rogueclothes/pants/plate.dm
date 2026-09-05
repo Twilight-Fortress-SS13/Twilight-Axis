@@ -36,7 +36,7 @@
 
 /obj/item/clothing/under/roguetown/platelegs/aalloy
 	name = "decrepit plate chausses"
-	desc = "Frayed bronze plates, shingled over chausses of rotting leather-and-maille. Voided bowels are all that remains of its former legionnaire."
+	desc = "Rotted metal plates, shingled over chausses of rotting leather-and-maille. Voided bowels are all that remains of its former legionnaire."
 	icon_state = "ancientpants"
 	max_integrity = ARMOR_INT_LEG_DECREPIT_PLATE
 	color = "#bb9696"
@@ -63,10 +63,12 @@
 	smeltresult = /obj/item/ingot/component/graggar
 	unenchantable = TRUE
 
-/obj/item/clothing/under/roguetown/platelegs/graggar/Initialize()
+/obj/item/clothing/under/roguetown/platelegs/graggar/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_HORDE, "ARMOR", "RENDERED ASUNDER")
 
+/obj/item/clothing/under/roguetown/platelegs/graggar/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_GRAGGAR_ARMOR)
 
 /obj/item/clothing/under/roguetown/platelegs/matthios
 	max_integrity = ARMOR_INT_LEG_ANTAG
@@ -77,10 +79,13 @@
 	smeltresult = /obj/item/ingot/component/matthios
 	unenchantable = TRUE
 
-/obj/item/clothing/under/roguetown/platelegs/matthios/Initialize()
+/obj/item/clothing/under/roguetown/platelegs/matthios/Initialize(mapload)
 	. = ..()
 	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
 	AddComponent(/datum/component/cursed_item, TRAIT_FREEMAN, "ARMOR")
+
+/obj/item/clothing/under/roguetown/platelegs/matthios/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_MATTHIOS_ARMOR)
 
 /obj/item/clothing/under/roguetown/platelegs/matthios/dropped(mob/living/carbon/human/user)
 	. = ..()
@@ -99,6 +104,10 @@
 	armor_class = ARMOR_CLASS_MEDIUM
 	smeltresult = /obj/item/ingot/component/zizo
 	unenchantable = TRUE
+	alternate_worn_layer = ARMOR_LAYER
+
+/obj/item/clothing/under/roguetown/platelegs/zizo/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)
 
 /obj/item/clothing/under/roguetown/platelegs/zizo/heavy
 	name = "avantyne garments"
@@ -114,7 +123,7 @@
 /obj/item/clothing/under/roguetown/platelegs/zizo/dropped(mob/living/carbon/human/user)
 	return ..()
 
-/obj/item/clothing/under/roguetown/platelegs/zizo/heavy/Initialize()
+/obj/item/clothing/under/roguetown/platelegs/zizo/heavy/Initialize(mapload)
 	. = ..()
 	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
 
@@ -126,13 +135,16 @@
 
 /obj/item/clothing/under/roguetown/platelegs/avantyne
 	name = "avantyne-threaded fauldcoat"
-	desc = "Tassets of threaded darksteel, worn atop a lesser waistcoat. The weightlessness of the alloy is borne from its \
+	desc = "Tassets of threaded darksteel, worn atop a lesser waistcoat. The weightlessness of the alloy is born from its \
 	unholy imbuement; for lux invigorates metal far greater than even the purest ores."
 	icon_state = "zizoplatelegs_med"
 	max_integrity = ARMOR_INT_LEG_STEEL_PLATE
 	armor_class = ARMOR_CLASS_MEDIUM
 	smeltresult = /obj/item/ingot/avantyne
 	armor = ARMOR_PLATE_BSTEEL
+
+/obj/item/clothing/under/roguetown/platelegs/avantyne/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)
 
 /obj/item/clothing/under/roguetown/platelegs/skirt
 	name = "steel plate tassets"

@@ -3,7 +3,6 @@
 	source = portal
 	ADD_TRAIT(src, TRAIT_NOBREATH, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_TOXIMMUNE, TRAIT_GENERIC)
-	ADD_TRAIT(src, TRAIT_NOPAINSTUN, TRAIT_GENERIC)
 
 /mob/living/simple_animal/hostile/retaliate/rogue/leylinelycan
 	icon = 'icons/mob/summonable/32x32.dmi'
@@ -18,7 +17,6 @@
 	emote_see = null
 	turns_per_move = 8
 	see_in_dark = 9
-	move_to_delay = 1
 	vision_range = 9
 	aggro_vision_range = 9
 
@@ -42,7 +40,6 @@
 	retreat_distance = 0
 	minimum_distance = 0
 	deaggroprob = 0
-	defprob = 35
 	retreat_health = 0
 	food = 0
 	dodgetime = 30
@@ -59,18 +56,18 @@
 		return 0
 	if(target in possible_targets)
 		var/target_distance = get_dist(targets_from,target)
-		if(world.time >= teleport_cooldown)
+		if(target_distance > 4 && world.time >= teleport_cooldown)
 			leyline_teleport(target)
 		if(ranged) //We ranged? Shoot at em
 			if(!target.Adjacent(targets_from) && ranged_cooldown <= world.time) //But make sure they're not in range for a melee attack and our range attack is off cooldown
 				OpenFire(target)
 		if(retreat_distance != null) //If we have a retreat distance, check if we need to run from our target
 			if(target_distance <= retreat_distance) //If target's closer than our retreat distance, run
-				walk_away(src,target,retreat_distance,move_to_delay)
+				walk_away(src, target, retreat_distance, cached_multiplicative_slowdown)
 			else
-				Goto(target,move_to_delay,minimum_distance) //Otherwise, get to our minimum distance so we chase them
+				Goto(target, minimum_distance) //Otherwise, get to our minimum distance so we chase them
 		else
-			Goto(target,move_to_delay,minimum_distance)
+			Goto(target, minimum_distance)
 		if(target)
 			if(targets_from && isturf(targets_from.loc) && target.Adjacent(targets_from)) //If they're next to us, attack
 				MeleeAction()
@@ -83,7 +80,7 @@
 	else
 		if(ranged_ignores_vision && ranged_cooldown <= world.time) //we can't see our target... but we can fire at them!
 			OpenFire(target)
-		Goto(target,move_to_delay,minimum_distance)
+		Goto(target, minimum_distance)
 		FindHidden()
 		return 1
 
@@ -104,12 +101,10 @@
 	duration = 3
 
 /mob/living/simple_animal/hostile/retaliate/rogue/leylinelycan/proc/leyline_teleport(target)
-	var/turf/turf_target = get_step(get_step(get_turf(target), src.dir), src.dir)
-	if(!(turf_target in view(12, src)))
-		return
-	if(!isopenturf(turf_target))
-		return
 	teleport_cooldown = world.time + 70
+	var/turf/turf_target = get_step(get_turf(target), get_dir(target, src))
+	if(!isopenturf(turf_target) || !(turf_target in view(12, src)))
+		return
 	var/turf/source = get_turf(src)
 	new /obj/effect/temp_visual/lycan(turf_target, src)
 	new /obj/effect/temp_visual/lycan(source, src)

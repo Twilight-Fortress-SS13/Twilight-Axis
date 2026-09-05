@@ -29,12 +29,18 @@
 				return
 			if(L.m_intent == MOVE_INTENT_SNEAK)
 				return
+			if(!L.badluck()) // only the unlucky (FOR < 10) misstep hard enough to set it off
+				return
 			var/oldx = pixel_x
 			animate(src, pixel_x = oldx + 1, time = 0.5)
 			animate(src, pixel_x = oldx - 1, time = 0.5)
 			animate(src, pixel_x = oldx, time = 0.5)
 			make_gas()
 			time_delay = world.time + 20 SECONDS
+
+/obj/structure/zizo_bane/obj_destruction(damage_flag)
+	make_gas() // burst its spores when smashed apart
+	return ..()
 
 /obj/structure/zizo_bane/proc/make_gas()
 	visible_message(span_warningbig("A cloud of spores burst up from \the [src]!"))
@@ -47,10 +53,10 @@
 	playsound(src.loc, "plantcross", 80, FALSE, -1)
 	user.visible_message(span_warning("[user] starts plucking out \the [src] from the earth."))
 	if(do_after(user, 3 SECONDS, target = src))
-		var/obj/item/reagent_containers/food/snacks/zizo_bane/z =  new /obj/item/reagent_containers/food/snacks/zizo_bane/ (get_turf(src))
+		var/obj/item/reagent_containers/food/snacks/zizo_bane/z =	new /obj/item/reagent_containers/food/snacks/zizo_bane/ (get_turf(src))
 		user.put_in_active_hand(z)
 		qdel(src)
-	
+
 /obj/item/reagent_containers/food/snacks/zizo_bane
 	name = "Zizo's bane"
 	desc = "A small purple mushroom that has been growing in areas of rot."

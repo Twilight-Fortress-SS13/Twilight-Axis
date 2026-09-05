@@ -10,17 +10,17 @@
 	antag_flag = ROLE_DREAMWALKER
 	shared_occurence_type = SHARED_MINOR_THREAT
 	storyteller_antag_flags = STORYTELLER_ANTAG_SOFT
-	storyteller_guarantee_flags = STORYTELLER_FAVOR_DREAMWALKER
+	min_players = HARD_ANTAG_MIN_POP
 
 	denominator = 80
 
 	base_antags = 1
 	maximum_antags = 2
 
-	weight = 18
+	weight = 10
 	max_occurrences = 2
 
-	earliest_start = 0 SECONDS
+	earliest_start = 15 MINUTES
 
 	typepath = /datum/round_event/antagonist/solo/dreamwalker
 	antag_datum = /datum/antagonist/dreamwalker
@@ -28,14 +28,20 @@
 	restricted_roles = DEFAULT_ANTAG_BLACKLISTED_ROLES
 	prompted_picking = TRUE
 
+/datum/round_event_control/antagonist/solo/dreamwalker/canSpawnEvent(players_amt, gamemode, fake_check)
+	var/datum/storyteller/preset = active_preset()
+	if(!preset?.allow_dreamwalker)
+		return FALSE
+	return ..()
+
 /datum/round_event/antagonist/solo/dreamwalker
 
-/datum/round_event_control/antagonist/solo/dreamwalker/roundstart
-	name = "Dreamwalker"
-	roundstart = TRUE
-	min_players = CHARACTER_INJECTION_MIN_POP
-	base_antags = 2
-	maximum_antags = 2
-	max_occurrences = 1
-	prompted_picking = FALSE
-	allowed_storytellers = list(/datum/storyteller/abyssor)
+// Disabled as this does not work with dreamwalker procs right now, spells won't be stripped so mage + dreamwalker is an issue.
+// /datum/round_event_control/antagonist/solo/dreamwalker/roundstart
+// 	name = "Dreamwalker"
+// 	roundstart = TRUE
+// 	min_players = HARD_ANTAG_MIN_POP
+// 	base_antags = 2
+// 	maximum_antags = 2
+// 	max_occurrences = 1
+// 	prompted_picking = FALSE

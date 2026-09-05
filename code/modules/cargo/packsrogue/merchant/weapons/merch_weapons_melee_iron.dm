@@ -12,7 +12,7 @@
 /datum/supply_pack/rogue/iron_weapons/sabre
 	name = "Sabre"
 	cost = 25 // 1 Iron Ingot
-	contains = list(/obj/item/rogueweapon/sword/saber/iron)
+	contains = list(/obj/item/rogueweapon/sword/sabre/iron)
 
 /datum/supply_pack/rogue/iron_weapons/greatsword
 	name = "Iron Greatsword"
@@ -124,10 +124,10 @@
 	cost = 50 // 2 Iron Ingot, 1 Small Log, 1 Chain
 	contains = list(/obj/item/rogueweapon/flail/peasantwarflail/iron)
 
-/datum/supply_pack/rogue/iron_weapons/bardiche
-	name = "Bardiche"
+/datum/supply_pack/rogue/iron_weapons/longswordiron
+	name = "Bastard Sword"
 	cost = 45 // 2 Iron Ingot, 1 Small Log
-	contains = list(/obj/item/rogueweapon/halberd/bardiche)
+	contains = list(/obj/item/rogueweapon/sword/long/iron)
 
 /datum/supply_pack/rogue/iron_weapons/lucerne
 	name = "Lucerne Hammer"
@@ -138,6 +138,11 @@
 	name = "Goedendag"
 	cost = 40 // 2 Iron Ingot
 	contains = list(/obj/item/rogueweapon/mace/goden)
+
+/datum/supply_pack/rogue/iron_weapons/quarterstaff
+	name = "Quarterstaff"
+	cost = 30 // 1 Iron Ingot, 1 Small Log
+	contains = list(/obj/item/rogueweapon/woodstaff/quarterstaff/iron)
 
 /datum/supply_pack/rogue/iron_weapons/maul
 	name = "Maul"
@@ -157,11 +162,11 @@
 /datum/supply_pack/rogue/iron_weapons/heatershield
 	name = "Shield, Heater"
 	cost = 35 // 2 logs, 1 cured leather
-	contains = list(/obj/item/rogueweapon/shield/wood)
+	contains = list(/obj/item/rogueweapon/shield/heater)
 
 /datum/supply_pack/rogue/iron_weapons/ironshield
 	name = "Shield, Iron"
-	cost = 40 // 2 iron 
+	cost = 40 // 2 iron
 	contains = list(/obj/item/rogueweapon/shield/iron)
 
 /datum/supply_pack/rogue/iron_weapons/towershield

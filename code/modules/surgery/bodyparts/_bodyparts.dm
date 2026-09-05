@@ -50,7 +50,6 @@
 	var/no_update = 0
 	var/species_icon = ""
 
-	var/animal_origin = null //for nonhuman bodypart (e.g. monkey)
 	var/prosthetic_prefix = "pr" // for unique prosthetic icons on mob
 	var/dismemberable = 1 //whether it can be dismembered with a weapon.
 	var/disableable = 1
@@ -86,7 +85,7 @@
 	var/skeletonized = FALSE
 
 	var/fingers = TRUE
-	var/organ_slowdown = 0 // Its here because this is first shared definition between two leg organ paths
+	var/organ_slowdown = 0 // Its here because this is first shared definition between two leg organ paths // NOTE for future: The value starts at 0, example flavor of -10% is 0.1, so on.
 	var/is_prosthetic = FALSE
 	var/brand_text = null
 
@@ -110,12 +109,12 @@
 	grid_width = 32
 	grid_height = 64
 
-	resistance_flags = FLAMMABLE
+	resistance_flags = FIRE_PROOF | UNACIDABLE
 
 /obj/item/bodypart/proc/operator""()
 	return "\proper"+name
 
-/obj/item/bodypart/proc/adjust_marking_overlays(var/list/appearance_list)
+/obj/item/bodypart/proc/adjust_marking_overlays(list/appearance_list)
 	return
 
 /obj/item/bodypart/proc/get_specific_markings_overlays(list/specific_markings, aux = FALSE, mob/living/carbon/human/human_owner, override_color)
@@ -185,6 +184,8 @@
 	if(embedded_objects && length(embedded_objects))
 		for(var/obj/item/embedded as anything in embedded_objects)
 			embedded_objects -= embedded
+			embedded.is_embedded = FALSE
+			embedded.embedded_host = null
 			if(!QDELETED(embedded))
 				qdel(embedded)
 		embedded_objects = null
@@ -217,22 +218,21 @@
 				used_time -= (user.get_skill_level(/datum/skill/labor/butchering) * 30)
 			visible_message("[user] begins to butcher \the [src].")
 			playsound(src, 'sound/foley/gross.ogg', 100, FALSE)
-			var/steaks = 1
-			switch(user.get_skill_level(/datum/skill/labor/butchering))
-				if(3)
-					steaks = 2
-				if(4 to 5)
-					steaks = 3
-				if(6)
-					steaks = 4 // the steaks have never been higher
+
+			var/butcher_skill = user.get_skill_level(/datum/skill/labor/butchering)
 			var/amt2raise = user.STAINT/3
 			var/produced_steaks = list()
+
 			if(do_after(user, used_time, target = src))
-				for(steaks, steaks>0, steaks--)
-					var/obj/item/reagent_containers/food/snacks/rogue/meat/steak/new_steak = new(get_turf(src))
-					produced_steaks += new_steak
+				var/obj/item/reagent_containers/food/snacks/rogue/meat/humanoid/new_steak = new(get_turf(src))
+				produced_steaks += new_steak
+				// 10% per level starting from apprentice
+				var/second_chance = max(0, (butcher_skill - 1) * 10)
+				if(prob(second_chance))
+					var/obj/item/reagent_containers/food/snacks/rogue/meat/humanoid/second_steak = new(get_turf(src))
+					produced_steaks += second_steak
 				if(rotted)
-					for(var/obj/item/reagent_containers/food/snacks/rogue/meat/steak/putrid in produced_steaks)
+					for(var/obj/item/reagent_containers/food/snacks/rogue/meat/humanoid/putrid in produced_steaks)
 						putrid.become_rotten()
 				var/datum/component/decal/blood/blood_decal = GetComponent(/datum/component/decal/blood)
 				new /obj/effect/decal/cleanable/blood/splatter(get_turf(src), blood_decal?.blood_color || BLOOD_COLOR_RED)
@@ -244,7 +244,7 @@
 	if(ishuman(C))
 		var/mob/living/carbon/human/H = C
 		if(HAS_TRAIT(C, TRAIT_LIMBATTACHMENT))
-			if(!H.get_bodypart(body_zone) && !animal_origin)
+			if(!H.get_bodypart(body_zone))
 				if(HAS_TRAIT(C, TRAIT_IRONMAN)) // there we go, figured a way to give this a delay, now ima go sleep
 					if(!do_after(C, 20 SECONDS))
 						return
@@ -257,19 +257,6 @@
 				user.temporarilyRemoveItemFromInventory(src, TRUE)
 				attach_limb(C)
 				return
-	return ..()
-
-/obj/item/bodypart/head/attackby(obj/item/I, mob/user, params)
-	if(length(contents) && I.get_sharpness() && !user.cmode)
-		add_fingerprint(user)
-		playsound(loc, 'sound/combat/hits/bladed/genstab (1).ogg', 60, vary = FALSE)
-		user.visible_message(span_warning("[user] begins to cut open [src]."),\
-			span_notice("You begin to cut open [src]..."))
-		if(do_after(user, 5 SECONDS, target = src))
-			drop_organs(user)
-			user.visible_message(span_danger("[user] cuts [src] open!"),\
-				span_notice("You finish cutting [src] open."))
-		return
 	return ..()
 
 /obj/item/bodypart/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
@@ -326,7 +313,7 @@
 		heal_damage(0, 0, INFINITY, null, FALSE)
 		. |= BODYPART_LIFE_UPDATE_HEALTH
 
-/obj/item/bodypart/Initialize()
+/obj/item/bodypart/Initialize(mapload)
 	. = ..()
 	update_HP()
 
@@ -362,14 +349,13 @@
 
 	if(!brute && !burn && !stamina)
 		return FALSE
-
 	//cap at maxdamage
 	if(brute_dam + brute > max_damage)
-		brute_dam = max_damage
+		brute_dam = max(brute_dam, max_damage)
 	else
 		brute_dam += brute
 	if(burn_dam + burn > max_damage)
-		burn_dam = max_damage
+		burn_dam = max(burn_dam, max_damage)
 	else
 		burn_dam += burn
 
@@ -410,9 +396,9 @@
 	if(required_status && (status != required_status)) //So we can only heal certain kinds of limbs, ie robotic vs organic.
 		return
 	if(owner && owner.has_status_effect(/datum/status_effect/buff/fortify))
-		brute *= 1.5
-		burn *= 1.5
-		stamina *= 1.5
+		brute *= 1.3
+		burn *= 1.3
+		stamina *= 1.3
 
 	brute_dam	= round(max(brute_dam - brute, 0), DAMAGE_PRECISION)
 	burn_dam	= round(max(burn_dam - burn, 0), DAMAGE_PRECISION)
@@ -532,44 +518,40 @@
 	if(no_update)
 		return
 
-	if(!animal_origin)
-		var/mob/living/carbon/human/H = C
-		should_draw_greyscale = FALSE
-		if(!H.dna || !H.dna.species)
-			return
-		var/datum/species/S = H.dna.species
-		species_id = S.limbs_id
-		if(H.gender == MALE)
-			species_icon = S.limbs_icon_m
+	var/mob/living/carbon/human/H = C
+	should_draw_greyscale = FALSE
+	if(!H.dna || !H.dna.species)
+		return
+	var/datum/species/S = H.dna.species
+	species_id = S.limbs_id
+	if(H.gender == MALE)
+		species_icon = S.limbs_icon_m
+	else
+		species_icon = S.limbs_icon_f
+	species_flags_list = H.dna.species.species_traits
+
+
+	if(S.use_skintones)
+		skin_tone = H.skin_tone
+		should_draw_greyscale = TRUE
+	else
+		skin_tone = ""
+
+	body_gender = H.gender
+	should_draw_gender = S.sexes
+
+	if((MUTCOLORS in S.species_traits) || (DYNCOLORS in S.species_traits))
+		if(S.fixed_mut_color)
+			species_color = S.fixed_mut_color
 		else
-			species_icon = S.limbs_icon_f
-		species_flags_list = H.dna.species.species_traits
+			species_color = H.dna.features["mcolor"]
+		should_draw_greyscale = TRUE
+	else
+		species_color = ""
 
+	mutation_color = ""
 
-		if(S.use_skintones)
-			skin_tone = H.skin_tone
-			should_draw_greyscale = TRUE
-		else
-			skin_tone = ""
-
-		body_gender = H.gender
-		should_draw_gender = S.sexes
-
-		if((MUTCOLORS in S.species_traits) || (DYNCOLORS in S.species_traits))
-			if(S.fixed_mut_color)
-				species_color = S.fixed_mut_color
-			else
-				species_color = H.dna.features["mcolor"]
-			should_draw_greyscale = TRUE
-		else
-			species_color = ""
-
-		mutation_color = ""
-
-		dmg_overlay_type = S.damage_overlay_type
-
-	else if(animal_origin == MONKEY_BODYPART) //currently monkeys are the only non human mob to have damage overlays.
-		dmg_overlay_type = animal_origin
+	dmg_overlay_type = S.damage_overlay_type
 
 	if(status == BODYPART_ROBOTIC)
 		dmg_overlay_type = "robotic"
@@ -637,18 +619,6 @@
 
 	. += limb
 
-	if(animal_origin)
-		if(is_organic_limb())
-			limb.icon = 'icons/mob/animal_parts.dmi'
-			if(species_id == "husk")
-				limb.icon_state = "[animal_origin]_husk_[body_zone]"
-			else
-				limb.icon_state = "[animal_origin]_[body_zone]"
-		else
-			limb.icon = 'icons/mob/augmentation/augments.dmi'
-			limb.icon_state = "[animal_origin]_[body_zone]"
-		return
-
 //	if((body_zone != BODY_ZONE_HEAD && body_zone != BODY_ZONE_CHEST))
 //		should_draw_gender = FALSE
 	should_draw_gender = TRUE
@@ -690,7 +660,7 @@
 	if(rotted)
 		override_color = SKIN_COLOR_ROT
 	if(is_organic_limb && should_draw_greyscale && !skeletonized)
-		var/draw_color =  mutation_color || species_color || skin_tone
+		var/draw_color =	mutation_color || species_color || skin_tone
 		if(rotted || (owner && HAS_TRAIT(owner, TRAIT_ROTMAN) && !owner.mind))
 			draw_color = SKIN_COLOR_ROT
 		if(draw_color)
@@ -750,7 +720,7 @@
 	name = BODY_ZONE_CHEST
 	desc = ""
 	icon_state = "default_human_chest"
-	max_damage = 300
+	max_damage = BODYPART_MAX_DAMAGE_CHEST
 	body_zone = BODY_ZONE_CHEST
 	body_part = CHEST
 	px_x = 0
@@ -786,22 +756,12 @@
 		cavity_item = null
 	..()
 
-/obj/item/bodypart/chest/monkey
-	icon = 'icons/mob/animal_parts.dmi'
-	icon_state = "default_monkey_chest"
-	animal_origin = MONKEY_BODYPART
-
-/obj/item/bodypart/chest/devil
-	dismemberable = 0
-	max_damage = 5000
-	animal_origin = DEVIL_BODYPART
-
 /obj/item/bodypart/l_arm
 	name = "left arm"
 	desc = ""
 	icon_state = "default_human_l_arm"
 	attack_verb = list("slapped", "punched")
-	max_damage = 200
+	max_damage = BODYPART_MAX_DAMAGE_LIMB
 	max_stamina_damage = 50
 	body_zone = BODY_ZONE_L_ARM
 	body_part = ARM_LEFT
@@ -841,24 +801,12 @@
 		if(L)
 			L.update_hand_vis()
 
-/obj/item/bodypart/l_arm/monkey
-	icon = 'icons/mob/animal_parts.dmi'
-	icon_state = "default_monkey_l_arm"
-	animal_origin = MONKEY_BODYPART
-	px_x = -5
-	px_y = -3
-
-/obj/item/bodypart/l_arm/devil
-	dismemberable = 0
-	max_damage = 5000
-	animal_origin = DEVIL_BODYPART
-
 /obj/item/bodypart/r_arm
 	name = "right arm"
 	desc = ""
 	icon_state = "default_human_r_arm"
 	attack_verb = list("slapped", "punched")
-	max_damage = 200
+	max_damage = BODYPART_MAX_DAMAGE_LIMB
 	body_zone = BODY_ZONE_R_ARM
 	body_part = ARM_RIGHT
 	aux_zone = BODY_ZONE_PRECISE_R_HAND
@@ -898,24 +846,12 @@
 		if(R)
 			R.update_hand_vis()
 
-/obj/item/bodypart/r_arm/monkey
-	icon = 'icons/mob/animal_parts.dmi'
-	icon_state = "default_monkey_r_arm"
-	animal_origin = MONKEY_BODYPART
-	px_x = 5
-	px_y = -3
-
-/obj/item/bodypart/r_arm/devil
-	dismemberable = 0
-	max_damage = 5000
-	animal_origin = DEVIL_BODYPART
-
 /obj/item/bodypart/l_leg
 	name = "left leg"
 	desc = ""
 	icon_state = "default_human_l_leg"
 	attack_verb = list("kicked", "stomped")
-	max_damage = 200
+	max_damage = BODYPART_MAX_DAMAGE_LIMB
 	body_zone = BODY_ZONE_L_LEG
 	body_part = LEG_LEFT
 	body_damage_coeff = 1
@@ -948,24 +884,13 @@
 	name = "left digitigrade leg"
 	use_digitigrade = FULL_DIGITIGRADE
 
-/obj/item/bodypart/l_leg/monkey
-	icon = 'icons/mob/animal_parts.dmi'
-	icon_state = "default_monkey_l_leg"
-	animal_origin = MONKEY_BODYPART
-	px_y = 4
-
-/obj/item/bodypart/l_leg/devil
-	dismemberable = 0
-	max_damage = 5000
-	animal_origin = DEVIL_BODYPART
-
 /obj/item/bodypart/r_leg
 	name = "right leg"
 	desc = ""
 	// alternative spellings of 'pokey' are availible
 	icon_state = "default_human_r_leg"
 	attack_verb = list("kicked", "stomped")
-	max_damage = 200
+	max_damage = BODYPART_MAX_DAMAGE_LIMB
 	body_zone = BODY_ZONE_R_LEG
 	body_part = LEG_RIGHT
 	body_damage_coeff = 1
@@ -997,14 +922,3 @@
 /obj/item/bodypart/r_leg/digitigrade
 	name = "right digitigrade leg"
 	use_digitigrade = FULL_DIGITIGRADE
-
-/obj/item/bodypart/r_leg/monkey
-	icon = 'icons/mob/animal_parts.dmi'
-	icon_state = "default_monkey_r_leg"
-	animal_origin = MONKEY_BODYPART
-	px_y = 4
-
-/obj/item/bodypart/r_leg/devil
-	dismemberable = 0
-	max_damage = 5000
-	animal_origin = DEVIL_BODYPART

@@ -1,13 +1,12 @@
 //Speech verbs.
 
 
-//Because of how classic keys work, we need to use a custom verb to show the typing indicator. 
+//Because of how classic keys work, we need to use a custom verb to show the typing indicator.
 //Otherwise when you press enter, it will open up the input box.
 /mob/verb/say_typing_indicator()
 	set name = "say_indicator"
 	set hidden = TRUE
-	set category = "IC"
-	
+
 	display_typing_indicator()
 	var/message = input(usr, "", "say") as text|null
 	// If they don't type anything just drop the message.
@@ -18,7 +17,6 @@
 
 /mob/verb/say_verb(message as text)
 	set name = "Say"
-	set category = "IC"
 	set hidden = 1
 
 	if(!length(message))
@@ -33,7 +31,6 @@
 ///Whisper verb
 /mob/verb/whisper_verb(message as text)
 	set name = "Whisper"
-	set category = "IC"
 	set hidden = 1
 
 	if(GLOB.say_disabled)	//This is here to try to identify lag problems
@@ -49,7 +46,6 @@
 /mob/verb/me_typing_indicator()
 	set name = "me_indicator"
 	set hidden = TRUE
-	set category = "IC"
 
 	display_typing_indicator()
 	var/message = input(usr, "", "me") as text|null
@@ -63,7 +59,6 @@
 ///The me emote verb
 /mob/verb/me_verb(message as text)
 	set name = "Me"
-	set category = "IC"
 	set hidden = 1
 #ifndef MATURESERVER
 	return
@@ -88,7 +83,6 @@
 
 /mob/verb/me_big_verb_indicator()
 	set name = "me_big_indicator"
-	set category = "IC"
 	set hidden = 1
 
 	display_typing_indicator()
@@ -102,7 +96,6 @@
 ///The me emote verb
 /mob/verb/me_big_verb(message as message)
 	set name = "Me(big)"
-	set category = "IC"
 	set hidden = 1
 #ifndef MATURESERVER
 	return
@@ -154,13 +147,13 @@
 	return LINGHIVE_NONE
 
 /**
-  * Get the mode of a message
-  *
-  * Result can be
-  * * MODE_WHISPER (Quiet speech)
-  * * MODE_HEADSET (Common radio channel)
-  * * A department radio (lots of values here)
-  */
+	* Get the mode of a message
+	*
+	* Result can be
+	* * MODE_WHISPER (Quiet speech)
+	* * MODE_HEADSET (Common radio channel)
+	* * A department radio (lots of values here)
+	*/
 /mob/proc/get_message_mode(message)
 	var/key = copytext_char(message, 1, 2)
 	if(key == "#")
@@ -170,5 +163,5 @@
 	else if(key == "%")
 		return MODE_SING
 	else if(length(message) > 2 && (key in GLOB.department_radio_prefixes))
-		var/key_symbol = lowertext(copytext_char(message, 2, 3))
+		var/key_symbol = LOWER_TEXT(copytext_char(message, 2, 3))
 		return GLOB.department_radio_keys[key_symbol]

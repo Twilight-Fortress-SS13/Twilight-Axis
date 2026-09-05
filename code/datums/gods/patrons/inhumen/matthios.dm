@@ -7,16 +7,14 @@
 	mob_traits = list(TRAIT_FREEMAN, TRAIT_MATTHIOS_EYES, TRAIT_SEEPRICES_SHITTY)
 	miracles = list(/datum/action/cooldown/spell/touch/orison					= CLERIC_ORI,
 					/datum/action/cooldown/spell/matthios/freemans_tools		= CLERIC_T0,
-					/datum/action/cooldown/spell/matthios/raze					= CLERIC_T0,
-					/datum/action/cooldown/spell/miracle/heal 					= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/heal					= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/bloodmiracle			= CLERIC_T1,
-					/obj/effect/proc_holder/spell/invoked/matthios_transact		= CLERIC_T1, //It says it should be T1
-					/obj/effect/proc_holder/spell/self/skulduggery				= CLERIC_T1, // AAAAAAAAAAA
-					/datum/action/cooldown/spell/mammonite						= CLERIC_T2,
-					/obj/effect/proc_holder/spell/invoked/barter				= CLERIC_T2,
-					/obj/effect/proc_holder/spell/invoked/matthios_equalize		= CLERIC_T2,
-					/obj/effect/proc_holder/spell/invoked/matthios_churn		= CLERIC_T3,
-					/obj/effect/proc_holder/spell/invoked/resurrect/matthios	= CLERIC_T3, // Counterpart to anastasis
+					/datum/action/cooldown/spell/matthios/mammonite				= CLERIC_T1,
+					/datum/action/cooldown/spell/matthios/transact				= CLERIC_T2,
+					/datum/action/cooldown/spell/matthios/barter				= CLERIC_T2,
+					/datum/action/cooldown/spell/matthios/equalize				= CLERIC_T3,
+					/obj/effect/proc_holder/spell/invoked/resurrect/matthios	= CLERIC_T3,
+					/datum/action/cooldown/spell/matthios/churn					= CLERIC_T4
 	)
 	confess_lines = list(
 		"MATTHIOS STEALS FROM THE WORTHLESS!",
@@ -30,7 +28,9 @@
 		"Fire-Thief",
 		"Thief-of-Fyre",
 		"Thief-of-Fire", // aaaaaaaa
-		"Lord" // catchall for various titles of his
+		"Lord", // catchall for various titles of his
+		"Matoko",
+		"Bear" // fjall
 	)
 
 // When near coin of at least 100 mammon, zchurch, bad-cross, or ritual talk
@@ -40,7 +40,7 @@
 	if(istype(get_area(follower), /area/rogue/under/cave/inhumen))
 		return TRUE
 	// Allows prayer near EEEVIL psycross
-	for(var/obj/structure/fluff/psycross/zizocross/cross in view(4, get_turf(follower)))
+	for(var/obj/structure/fluff/psycross/cross in view(4, get_turf(follower)))
 		if(cross.divine == TRUE)
 			to_chat(follower, span_danger("That acсursed cross interupts my prayers!"))
 			return FALSE
@@ -62,12 +62,12 @@
 	return FALSE
 
 /datum/patron/inhumen/matthios/on_lesser_heal(
-    mob/living/user,
-    mob/living/target,
-    message_out,
-    message_self,
-    conditional_buff,
-    situational_bonus,
+	mob/living/user,
+	mob/living/target,
+	message_out,
+	message_self,
+	conditional_buff,
+	situational_bonus,
 	is_inhumen
 )
 	*is_inhumen = TRUE

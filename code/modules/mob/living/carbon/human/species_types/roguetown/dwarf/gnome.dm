@@ -8,13 +8,12 @@
 	origin_default = /datum/virtue/origin/hammerhold
 	origin = "Hammerhold"
 	base_name = "Dwarf"
-	desc = "<b>Gnome</b><br>\
-	Gnomes are short delicate creatures known for their quick thinking and wit.<br>\
+	desc_title = "Gnome"
+	desc = "Gnomes are short delicate creatures known for their quick thinking and wit.<br>\
 The naturally inquisitive mind of a Gnome inclines them towards arcane pursuits, artificing and teaching others.\
 Gnomish folk have an earned reputation for being brilliant tradespeople and crafters, although their rapid thoughts often lead to them seeming scatterbrained to the other beings of Azuria.<br>\
 Gnomes are typically a mixed race of Dwarves and a magical race, typically Elves when the two aren't arguing, but some are born with fae blood as well. <br>\
-Even though they are of mixed blood and smaller than typical dwarves, most gnomes and dwarves still regard each other as kin.<br>\
-	<span style='color: #6a8cb7;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;'><b>+1 INT | +1 PER </b></span><br>"
+Even though they are of mixed blood and smaller than typical dwarves, most gnomes and dwarves still regard each other as kin."
 
 	skin_tone_wording = "Skintone"
 	use_skin_tone_wording_for_examine = FALSE
@@ -43,7 +42,7 @@ Even though they are of mixed blood and smaller than typical dwarves, most gnome
 		OFFSET_FACE = list(0,-5), OFFSET_BELT = list(0,-5), OFFSET_BACK = list(0,-4), \
 		OFFSET_NECK = list(0,-5), OFFSET_MOUTH = list(0,-5), OFFSET_PANTS = list(0,0), \
 		OFFSET_SHIRT = list(0,0), OFFSET_ARMOR = list(0,0), OFFSET_HANDS = list(0,-4), \
-		
+
 		OFFSET_ID_F = list(0,-4), OFFSET_GLOVES_F = list(0,-4), OFFSET_WRISTS_F = list(0,-4), OFFSET_HANDS_F = list(0,-4), \
 		OFFSET_CLOAK_F = list(0,0), OFFSET_FACEMASK_F = list(0,-5), OFFSET_HEAD_F = list(0,-5), \
 		OFFSET_FACE_F = list(0,-5), OFFSET_BELT_F = list(0,-5), OFFSET_BACK_F = list(0,-5), \
@@ -62,6 +61,7 @@ Even though they are of mixed blood and smaller than typical dwarves, most gnome
 		ORGAN_SLOT_LIVER = /obj/item/organ/liver,
 		ORGAN_SLOT_STOMACH = /obj/item/organ/stomach,
 		ORGAN_SLOT_APPENDIX = /obj/item/organ/appendix,
+		ORGAN_SLOT_GUTS = /obj/item/organ/guts,
 		)
 	customizers = list(
 		/datum/customizer/organ/eyes/humanoid,

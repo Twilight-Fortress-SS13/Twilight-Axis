@@ -40,6 +40,7 @@
 	sewrepair = TRUE
 	salvage_result = /obj/item/natural/cloth
 	unarmed_bonus = 3 //Light armor with good durability and a flat unarmed damage bonus. Loadout-selectable.
+	unarmed_weapon_effects = TRUE
 
 /obj/item/clothing/gloves/roguetown/bandages/get_mechanics_examine(mob/user)
 	. = ..()
@@ -68,6 +69,7 @@
 	anvilrepair = /datum/skill/craft/weaponsmithing
 	smeltresult = /obj/item/ingot/steel
 	unarmed_bonus = 8
+	unarmed_weapon_effects = TRUE
 
 /obj/item/clothing/gloves/roguetown/knuckles/get_mechanics_examine(mob/user)
 	. = ..()
@@ -79,6 +81,19 @@
 	desc = "A mean looking pair of bronze knuckles. Mildly heavier than its steel counterpart, making it a solid defensive option, if less wieldy."
 	icon_state = "bronzeknuckle"
 	smeltresult = /obj/item/ingot/bronze
+
+/obj/item/clothing/gloves/roguetown/knuckles/iron
+	name = "iron knuckles"
+	desc = "A mean looking pair of iron knuckles, not that good in quality but they do the job."
+	icon = 'icons/roguetown/weapons/unarmed32.dmi'
+	icon_state = "ironknuckle"
+	mob_overlay_icon = 'icons/roguetown/clothing/onmob/gloves.dmi'
+	w_class = WEIGHT_CLASS_SMALL
+	armor = ARMOR_PADDED_BAD
+	max_integrity = ARMOR_INT_SIDE_LEATHER -50 // 150 — small iron pieces, leather-tier durability
+	anvilrepair = /datum/skill/craft/weaponsmithing
+	smeltresult = /obj/item/ingot/iron
+	unarmed_bonus = 7
 
 /obj/item/clothing/gloves/roguetown/knuckles/psydon
 	name = "psydonic knuckles"
@@ -100,7 +115,7 @@
 
 /obj/item/clothing/gloves/roguetown/knuckles/psydon/attack_self(mob/living/user)
 	. = ..()
-	user.visible_message(span_warning("[user] starts adjusting their grip on[src]."))
+	user.visible_message(span_warning("[user] starts adjusting their grip on [src]."))
 	if(do_after(user, 3 SECONDS))
 		var/obj/item/clothing/gloves/roguetown/knuckles/psydon/P = new /obj/item/rogueweapon/knuckledusters/psy(get_turf(src.loc))
 		if(user.is_holding(src))
@@ -133,7 +148,7 @@
 
 /obj/item/clothing/gloves/roguetown/knuckles/silver/attack_self(mob/living/user)
 	. = ..()
-	user.visible_message(span_warning("[user] starts adjusting their grip on[src]."))
+	user.visible_message(span_warning("[user] starts adjusting their grip on [src]."))
 	if(do_after(user, 3 SECONDS))
 		var/obj/item/clothing/gloves/roguetown/knuckles/silver/P = new /obj/item/rogueweapon/knuckledusters/silver(get_turf(src.loc))
 		if(user.is_holding(src))
@@ -155,7 +170,7 @@
 
 /obj/item/clothing/gloves/roguetown/knuckles/psydon/old/attack_self(mob/living/user)
 	. = ..()
-	user.visible_message(span_warning("[user] starts adjusting their grip on[src]."))
+	user.visible_message(span_warning("[user] starts adjusting their grip on [src]."))
 	if(do_after(user, 3 SECONDS))
 		var/obj/item/clothing/gloves/roguetown/knuckles/psydon/old/P = new /obj/item/rogueweapon/knuckledusters/enduring(get_turf(src.loc))
 		if(user.is_holding(src))
@@ -174,7 +189,7 @@
 	name = "decrepit knuckles"
 	desc = "A set of knuckles made of ancient metals, Aeon's grasp withers their form."
 	icon_state = "aknuckle"
-	max_integrity = 50 //Extra fragile — ancient and degraded.
+	max_integrity = 50 //Extra fragile - ancient and degraded.
 	smeltresult = /obj/item/ingot/aalloy
 	unarmed_bonus = 4
 
@@ -191,3 +206,11 @@
 	icon_state = "eoraknuckle"
 	max_integrity = 150
 	unarmed_bonus = 10//So they are better how they used to be
+
+/obj/item/clothing/gloves/roguetown/knuckles/blacksteel
+	name = "blacksteel knuckles"
+	desc = "Take that, taste the pain!"
+	icon_state = "bsknuckle"
+	max_integrity = 200
+	unarmed_bonus = 12
+	smeltresult = /obj/item/ingot/blacksteel

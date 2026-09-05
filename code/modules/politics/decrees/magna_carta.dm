@@ -1,17 +1,17 @@
 /datum/decree/magna_carta
 	id = DECREE_MAGNA_CARTA
-	name = "The Magna Carta"
+	name = "Великая хартия вольности"
 	category = DECREE_CATEGORY_NEW
-	mechanical_text = "Zeroes every Crown levy and poll tax. Fines remain. The Crown collects only voluntary tribute."
+	mechanical_text = "Отменяются все сборы и подушные налоги. Штрафы остаются в силе. Корона взимает только добровольные пожертвования."
 	active = FALSE
-	flavor_text = {"%RULER_NAME%, by the grace of Astrata, %RULER% of Azuria, Count of Kingsfield, Blackholt, and Saltwick, Overlord of Rosawood, Rockhill, and Daftsmarch, Protector of Bleakcoast, Northfort, and Heartfelt, Defender of the Ten, to his archbishops, priests, templars, inquisitors, dukes, princes, consorts, hands, stewards, councillors, clerks, marshals, knights, sergeants, men-at-arms, wardens, squires, court magicians, archivists, apothecaries, head physicians, merchants, innkeepers, bathmasters, guildsmen, burghers, residents, peasants, farmers, cooks, tapsters, bathmaids, servants, soilsons, mercenaries, adventurers, pilgrims, and to all his officials and loyal subjects, Greeting.
+	flavor_text = {"%RULER_NAME%, по милости Астраты, Великий Герцог Азурии, сюзерен Кингсфилда, Блэкхолта, Хагенвальда, Солтвика, Розавуда, Генавы и Дафтсмарча, баннерет Мрачного Побережья, Нортфорта и Лазурного Анклава, верный слуга Десяти Неделимых, своим архиепископам, священникам, тамплиерам, инквизиторам, графам, принцам, супругам, помощникам, управляющим, советникам, клеркам, маршалам, рыцарям, сержантам, воинам, стражам, оруженосцам, придворным магам, архивариусам, апотекариям, главным врачам, купцам, трактирщикам, банщикам, гильдейцам, горожанам, крестьянам, фермерам, поварам, трактирщикам, слугам, подневольным, наемникам, авантюристам, паломникам, а также всем своим чиновникам и верным подданным, возношу честь и приветствие.
 
-Know ye, that for the health of our soul, for the common benefit of the Realm, to the honour of the Ten, the exaltation of the holy Church, and the better ordering of our kingdom, we have granted unto every subject of Azuria, of whatsoever rank, station, or origin, that they shall bear no tax, no levy, no tariff, no duty, nor any fiscal imposition whatsoever upon their persons, estates, goods, labours, or callings, nor upon the instruments thereof, neither in coin nor in kind.
+Знайте же, что ради спасения нашей души, для общего блага Великого Герцогства, во славу Десяти, во возвышение святой Церкви и для лучшего управления нашим герцогством я дарую каждому подданному Азурии, какого бы ни было ранга, положения или происхождения, освобождение от всяких налогов, сборов, пошлин и всех иных финансовых обременений в отношении их лиц, поместий, имущества, труда и ремесла, а также в отношении средств их обеспечения, будь то в денежной или любой иной форме.
 
-In return, the subjects of Azuria shall remember the Crown in their private thoughts, speak well of its name when it becometh them to do so, and furnish such revenue as conscience may prompt and good weather allow, in such quantity and at such times as each subject shall deem fitting unto themselves.
+Взамен подданные Азурии должны помнить о Короне в своих личных мыслях, говорить о ней с уважением, когда это уместно, и предоставлять такие доходы, насколько подсказывает совесть и позволяет достаток, в таком количестве и в такие сроки, какие каждый подданный сочтет для себя подходящими.
 
-Yeven under the seal of %RULER_NAME%, %RULER% of this yeer, who shall be remembered for it."}
-	revoke_text = "Hear ye, hear ye. %RULER_NAME%, by the grace of Astrata, %RULER% of Azuria, Count of Kingsfield, Blackholt, and Saltwick, Overlord of Rosawood, Rockhill, and Daftsmarch, Protector of Bleakcoast, Northfort, and Heartfelt, Defender of the Ten, hath this day set aside the Magna Carta. The Realm's subjects are hereby restored to their accustomed fiscal obligations, and the Crown's revenue is restored in kind. Let the record reflect the reconsideration of %RULER_NAME%."
+Заверено печатью %RULER_NAME%, Великого Герцога сиих земель, и да будет его имя прославлено вовеки."}
+	revoke_text = "Слушайте, слушайте. Великий Герцог Азурии, сюзерен Кингсфилда, Блэкхолта, Хагенвальда, Солтвика, Розавуда, Генавы и Дафтсмарча, баннерет Мрачного Побережья, Нортфорта и Лазурного Анклава, верный слуга Десяти Неделимых, сегодня отменил Великую хартию вольности. На подданных Герцогства вновь возлагаются привычные финансовые обязательства, а доходы Короны восстанавливаются в полном объеме. Пусть в летописи будет отражен пересмотр решения %RULER_NAME%."
 	// restore_text intentionally unset - broadcast_state_change is overridden below so that
 	// restoring the Carta reads the full charter aloud, ruler's name and all. That's the joke.
 

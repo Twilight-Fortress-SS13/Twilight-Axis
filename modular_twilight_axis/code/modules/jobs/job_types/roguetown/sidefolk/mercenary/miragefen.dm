@@ -2,8 +2,9 @@
 	name = "Miragefen Rogue"
 	tutorial = "With their eloquence and thieving skills, some Tabaxi from Miragefen began offering their services to obtain necessary items or assist in combat due to their agility."
 	allowed_sexes = list(MALE, FEMALE)
+	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED)
 	outfit = /datum/outfit/job/roguetown/mercenary/twilight_miragefen_rogue
-	category_tags = list(CTAG_MERCENARY)
+	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
 	class_select_category = CLASS_CAT_RACIAL
 	maximum_possible_slots = 3
 	cmode_music = 'modular_twilight_axis/sound/music/combat_tabaxi.ogg'
@@ -117,6 +118,19 @@
 	detail_tag = "_detail"
 	detail_color = CLOTHING_YARROW
 
+/obj/item/clothing/cloak/twilight_desert/Initialize()
+	. = ..()
+	update_icon()
+
+/obj/item/clothing/cloak/twilight_desert/update_icon()
+	cut_overlays()
+	if(get_detail_tag())
+		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		pic.appearance_flags = RESET_COLOR
+		if(get_detail_color())
+			pic.color = get_detail_color()
+		add_overlay(pic)
+
 /obj/item/clothing/head/hooded/desert_hood
 	name = "desert cloak hood"
 	desc = "This one will shelter me from the sand."
@@ -130,7 +144,19 @@
 	body_parts_covered = HEAD
 	flags_inv = HIDEEARS|HIDEHAIR
 	detail_tag = "_detail"
-	detail_color = CLOTHING_YARROW
+
+/obj/item/clothing/head/hooded/desert_hood/Initialize()
+	. = ..()
+	update_icon()
+
+/obj/item/clothing/head/hooded/desert_hood/update_icon()
+	cut_overlays()
+	if(get_detail_tag())
+		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		pic.appearance_flags = RESET_COLOR
+		if(get_detail_color())
+			pic.color = get_detail_color()
+		add_overlay(pic)
 
 /obj/item/clothing/mask/rogue/facemask/steel/miragefen_rogue
 	name = "bronze-decorated steel mask"

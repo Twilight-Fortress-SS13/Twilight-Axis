@@ -15,12 +15,20 @@
 	var/islesser = TRUE
 	var/change_stats = TRUE
 
-	innate_traits = list(
+	var/traits_cult = list(
 		TRAIT_STEELHEARTED,
 		TRAIT_VILLAIN,
-		TRAIT_CABAL,
+		TRAIT_NOMOOD,
+		TRAIT_BLOOD_RESISTANCE
 	)
-
+	var/traits_cult_leader = list(
+		TRAIT_DECEIVING_MEEKNESS,
+		TRAIT_STEELHEARTED,
+		TRAIT_NOMOOD,
+		TRAIT_VILLAIN,
+		TRAIT_CRITICAL_RESISTANCE,
+		TRAIT_NOPAIN,
+	)
 /datum/antagonist/zizocultist/zizo_knight
 	change_stats = FALSE
 	name = "Zizoid's knight"
@@ -30,14 +38,6 @@
 	antag_hud_type = ANTAG_HUD_ZIZOID
 	antag_hud_name = "zizoid"
 	islesser = FALSE
-	innate_traits = list(
-		TRAIT_DECEIVING_MEEKNESS,
-		TRAIT_STEELHEARTED,
-		TRAIT_NOMOOD,
-		TRAIT_VILLAIN,
-		TRAIT_CRITICAL_RESISTANCE,
-		TRAIT_CABAL,
-	)
 
 /datum/antagonist/zizocultist/examine_friendorfoe(datum/antagonist/examined_datum, mob/examiner, mob/examined)
 	if(istype(examined_datum, /datum/antagonist/zizocultist/leader))
@@ -53,11 +53,12 @@
 	SSmapping.retainer.cultists |= owner
 	H.set_patron(/datum/patron/inhumen/zizo)
 	SSmapping.retainer.cultist_number += 1
-
+	to_chat(H, span_userdanger("I'm a member of Ascension cult of zizo."))
+	owner.announce_objectives()
 	owner.special_role = "Zizoid Lackey"
 	H.cmode_music = 'sound/music/combat_cult.ogg'
 	H.playsound_local(get_turf(H), 'sound/music/maniac.ogg', 80, FALSE, pressure_affected = FALSE)
-	H.verbs |= list(/mob/living/carbon/human/proc/communicate, /mob/living/carbon/human/proc/cultist_number, /mob/living/carbon/human/proc/ascension_check)
+	add_verb(H, /mob/living/carbon/human/proc/communicate)
 	add_antag_hud(antag_hud_type, antag_hud_name, owner.current)
 
 	if(change_stats)
@@ -65,25 +66,26 @@
 		H.adjust_skillrank(/datum/skill/misc/reading, 3, 3, TRUE)
 
 	if(islesser)
+		for (var/trait in traits_cult)
+			ADD_TRAIT(H, trait, "[type]")
 		add_objective(/datum/objective/zizoserve)
 		if(!change_stats)
 			return
-		H.adjust_skillrank(/datum/skill/combat/knives, 1, 1, TRUE)
-		H.adjust_skillrank(/datum/skill/combat/swords, 1, 1, TRUE)
-		H.adjust_skillrank(/datum/skill/combat/polearms, 1, 1, TRUE)
+		H.adjust_skillrank(/datum/skill/combat/knives, 1)
+		H.adjust_skillrank(/datum/skill/combat/swords, 1)
+		H.adjust_skillrank(/datum/skill/combat/polearms, 1)
 		H.change_stat(STATKEY_INT, -2)
 		H.grant_language(/datum/language/undead)
 		return
 
 	add_objective(/datum/objective/zizo)
 	owner.special_role = ROLE_ZIZOIDCULTIST
-	H.verbs |= /mob/living/carbon/human/proc/release_minion
 	if(!change_stats)
 		return
-	H.adjust_skillrank(/datum/skill/combat/knives, 1, 1, TRUE)
-	H.adjust_skillrank(/datum/skill/combat/swords, 1, 1, TRUE)
-	H.adjust_skillrank(/datum/skill/combat/wrestling, 1, 1, TRUE)
-	H.adjust_skillrank(/datum/skill/misc/athletics, 1, 1, TRUE)
+	H.adjust_skillrank(/datum/skill/combat/knives, 2)
+	H.adjust_skillrank(/datum/skill/combat/swords, 2)
+	H.adjust_skillrank(/datum/skill/combat/wrestling, 2)
+	H.adjust_skillrank(/datum/skill/misc/athletics, 2)
 	H.change_stat(STATKEY_STR, 2)
 	H.change_stat(STATKEY_PER, 2)
 	H.change_stat(STATKEY_WIL, 1)
@@ -91,13 +93,18 @@
 	H.change_stat(STATKEY_SPD, 1)
 	H.change_stat(STATKEY_INT, 1)
 	H.grant_language(/datum/language/undead)
+	add_verb(H, /mob/living/carbon/human/proc/release_minion)
+	add_verb(H,/mob/living/carbon/human/proc/cultist_number)
+	add_verb(H,/mob/living/carbon/human/proc/ascension_check)
+	for (var/trait in traits_cult_leader)
+		ADD_TRAIT(H, trait, "[type]")
 
 /datum/antagonist/zizocultist/greet()
-	to_chat(owner, span_danger("I'm a lackey to the LEADER. A new future begins."))
+	to_chat(owner.current, span_userdanger("I'm a lackey to the LEADER. A new future begins."))
 	owner.announce_objectives()
 
 /datum/antagonist/zizocultist/leader/greet()
-	to_chat(owner, span_danger("I'm a cultist to the ALMIGHTY. They call it the UNSPEAKABLE. I require LACKEYS to make my RITUALS easier. I SHALL ASCEND."))
+	to_chat(owner.current, span_userdanger("I'm a cultist to the ALMIGHTY. They call it the UNSPEAKABLE. I require LACKEYS to make my RITUALS easier. I SHALL ASCEND."))
 	owner.announce_objectives()
 
 /datum/antagonist/zizocultist/can_be_owned(datum/mind/new_owner)

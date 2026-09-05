@@ -9,14 +9,14 @@
 	antag_flag = ROLE_LICH
 	shared_occurence_type = SHARED_HIGH_THREAT
 	storyteller_antag_flags = STORYTELLER_ANTAG_VILLAIN | STORYTELLER_ANTAG_ROUNDSTART
-	storyteller_guarantee_flags = STORYTELLER_FAVOR_LICH
+	storyteller_rumour_name = "liches"
 
 	denominator = 80
 
 	base_antags = 1
 	maximum_antags = 1
 
-	weight = 2	//i hate you
+	weight = 11	//i hate you
 	max_occurrences = 1 // mashallah
 
 	earliest_start = 0 SECONDS
@@ -32,3 +32,13 @@
 	return ..()
 
 /datum/round_event/antagonist/solo/lich
+/datum/round_event/antagonist/solo/lich/setup() // TA EDIT START
+	..()
+	if(!setup || SSticker.HasRoundStarted() || SSgamemode?.roundstart_live)
+		return
+	for(var/datum/mind/antag_mind as anything in setup_minds)
+		var/mob/dead/new_player/player = antag_mind.current
+		if(!istype(player) || !antag_mind.assigned_role)
+			continue
+		SSrole_class_handler.clear_roundstart_subclass_state(player.ckey)
+		SSgamemode.roundstart_build_replacement_minds |= antag_mind // TA EDIT END

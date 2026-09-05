@@ -62,6 +62,7 @@
 			"is_self" = (M == holder),
 		))
 	data["members"] = member_data
+	data["total_summons"] = F.count_summons()
 	var/list/invite_data = list()
 	for(var/invitee_name in F.pending_invites)
 		var/list/entry = F.pending_invites[invitee_name]
@@ -170,6 +171,8 @@
 		if(H.current_fellowship)
 			continue
 		if(F.has_member(H))
+			continue
+		if(H.rogue_sneaking || (H.name == "Unknown"))
 			continue
 		var/display = H.get_visible_name()
 		var/label = display

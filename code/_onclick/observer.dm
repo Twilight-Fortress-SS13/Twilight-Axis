@@ -1,29 +1,20 @@
 /mob/dead/observer/DblClickOn(atom/A, params)
+	return
+
+/mob/dead/observer/admin/DblClickOn(atom/A, params)
 	if(check_click_intercept(params, A))
 		return
 
 	if(can_reenter_corpse && mind && mind.current)
-		if(A == mind.current || (mind.current in A)) // double click your corpse or whatever holds it
-			reenter_corpse()						// (cloning scanner, body bag, closet, mech, etc)
-			return									// seems legit.
+		if(A == mind.current || (mind.current in A))
+			reenter_corpse()
+			return
 
-	// Things you might plausibly want to follow
 	if(ismovableatom(A))
 		ManualFollow(A)
 
-	// Otherwise jump
 	else if(A.loc)
 		forceMove(get_turf(A))
-
-/mob/dead/observer/profane/DblClickOn(atom/A, params) // Souls trapped by the dagger should not be jumping around.
-	return
-
-/mob/dead/observer/rogue/DblClickOn(atom/A, params)
-	var/mob/target
-	if(ismob(A))
-		target = A
-	if(target && (target.client.prefs.ghost_toggles & TOGGLE_ANTIGHOST))
-		return
 
 /mob/dead/observer/ClickOn(atom/A, params)
 	if(check_click_intercept(params, A))
@@ -83,9 +74,6 @@
 /atom/proc/attack_ghost(mob/dead/observer/user)
 	if(SEND_SIGNAL(src, COMSIG_ATOM_ATTACK_GHOST, user) & COMPONENT_NO_ATTACK_HAND)
 		return TRUE
-	if(user.client)
-		if(user.client.prefs.inquisitive_ghost)
-			user.examinate(src)
 	return FALSE
 
 /mob/living/attack_ghost(mob/dead/observer/user)

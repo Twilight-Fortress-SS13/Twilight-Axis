@@ -14,6 +14,7 @@
 #define ROLE_ASSASSIN			"Assassin"
 #define ROLE_DELF				"Dark Elf"
 #define ROLE_PREBEL				"Peasant Rebel"
+#define ROLE_REBEL_LEADER		"Rebellion Leader"
 #define ROLE_ASPIRANT			"Aspirant"
 #define ROLE_LICH				"Lich"
 #define ROLE_DREAMWALKER		"Dreamwalker"
@@ -24,6 +25,8 @@
 #define ROLE_UNBOUND_DEATHKNIGHT "Unbound Death Knight"
 #define ROLE_DARK_ITINERANT "Dark Itinerant"
 #define ROLE_CULT			"Cult of Ascension"
+#define ROLE_FREEMAN		"Freeman" // TA EDIT
+#define ROLE_LOSTGRENZEL	"Lost Grenzel" // TA EDIT
 
 #define ROLE_SYNDICATE			"Syndicate"
 #define ROLE_TRAITOR			"Traitor"
@@ -37,7 +40,6 @@
 #define ROLE_CULTIST			"Cultist"
 #define ROLE_BLOB				"Blob"
 #define ROLE_NINJA				"Space Ninja"
-#define ROLE_MONKEY				"Monkey"
 #define ROLE_ABDUCTOR			"Abductor"
 #define ROLE_REVENANT			"Revenant"
 #define ROLE_DEVIL				"Devil"
@@ -58,10 +60,12 @@
 #define ROLE_LICH_SKELETON		"Lich Skeleton"
 #define ROLE_CHOSEN				"Chosen"
 #define ROLE_VAMPIRE_SUMMON		"Vampire Summon"
+#define ROLE_NOTORIOUS_BOUNTY	"Notorious Bounty Target"
 
 GLOBAL_LIST_INIT(special_roles_rogue, list(
 	ROLE_MANIAC = /datum/antagonist/maniac,
 	ROLE_PREBEL = /datum/antagonist/prebel,
+	ROLE_REBEL_LEADER = /datum/antagonist/prebel/head,
 	ROLE_BANDIT = /datum/antagonist/bandit,
 	ROLE_ASPIRANT = /datum/antagonist/aspirant,
 	ROLE_WEREWOLF = /datum/antagonist/werewolf,
@@ -76,7 +80,7 @@ GLOBAL_LIST_INIT(special_roles_rogue, list(
 ))
 
 //Job defines for what happens when you fail to qualify for any job during job selection
-#define BEOVERFLOW 	1
+#define BEOVERFLOW	1
 #define BERANDOMJOB "Be Random Role"
 #define RETURNTOLOBBY 	"Return to Lobby"
 

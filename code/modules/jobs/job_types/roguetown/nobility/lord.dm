@@ -43,11 +43,48 @@ GLOBAL_LIST_EMPTY(lord_titles)
 		/datum/advclass/lord/mage,
 		/datum/advclass/lord/inbred
 	)
-	
+	default_subprefs = list("favorite_advclass" = null, "primcolor" = null, "seccolor" = null)
 
 /datum/outfit/job/roguetown/lord
 	job_bitflag = BITFLAG_ROYALTY
 	has_loadout = TRUE
+
+/datum/job/roguetown/lord/update_subprefs_window(mob/user)
+	var/client/C = usr.client
+	if(!C || !C.prefs)
+		return
+	var/list/roleprefs = get_roleprefs(C)
+	var/HTML = {"
+		[subprefs_subclass_html(C)]
+		<hr>
+		<i>You can choose your ducal colors here; this will only take effect if both are set.</i><br/>
+		<b>Primary color:</b> <a href="?src=[REF(src)];primcolor=1">[roleprefs["primcolor"] || "Choose"]</a><br/>
+		<b>Secondary color:</b> <a href="?src=[REF(src)];seccolor=1">[roleprefs["seccolor"] || "Choose"]</a><br/>
+		<center><a href="?src=[REF(src)];subprefsexit=1">EXIT</a>\t\t<a href="?src=[REF(src)];subprefsreset=1">RESET</a></center>
+	"}
+	// the fact that the window width/height will be different each time is the main reason this isn't all done in a parent proc on /datum/job
+	var/datum/browser/popup = new(user, "[JOB_SUBPREFS_WINDOW_ID]", "<div align='center'>[title] Preferences</div>", 500, 400)
+	popup.set_content(HTML)
+	popup.open(FALSE)
+	if(winexists(usr, "[JOB_SUBPREFS_WINDOW_ID]"))
+		winset(usr, "[JOB_SUBPREFS_WINDOW_ID]", "focus=true")
+
+/datum/job/roguetown/lord/Topic(href, list/href_list)
+	. = ..()
+	var/client/C = usr.client
+	if(!C || !C.prefs)
+		return
+	var/list/roleprefs = get_roleprefs(C)
+	if(href_list["primcolor"])
+		var/choice = input(usr, "Choose a Primary Color", "ROYAL STANDARD") as anything in COLOR_MAP
+		if(choice)
+			roleprefs["primcolor"] = choice
+			update_subprefs_window(usr)
+	if(href_list["seccolor"])
+		var/choice = input(usr, "Choose a Secondary Color", "ROYAL STANDARD") as anything in COLOR_MAP
+		if(choice)
+			roleprefs["seccolor"] = choice
+			update_subprefs_window(usr)
 
 /datum/job/roguetown/lord/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	. = ..()
@@ -60,7 +97,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 			GLOB.lordsurname = "of [L.real_name]"
 		SSticker.set_ruler_mob(L)
 		var/realm = SSticker.realm_name || "Azure Peak"
-		to_chat(world, "<b><span class='notice'><span class='big'>[L.real_name] is [SSticker.rulertype] of [realm].</span></span></b>")
+		to_world("<b><span class='notice'><span class='big'>[L.real_name] is [SSticker.rulertype] of [realm].</span></span></b>")
 		if(istype(SSticker.regentmob, /mob/living/carbon/human))
 			var/mob/living/carbon/human/regentbuddy = SSticker.regentmob
 			to_chat(L, span_notice("Word reached me on the approach that [regentbuddy.real_name], the [regentbuddy.job], served as regent in my absence."))
@@ -68,8 +105,21 @@ GLOBAL_LIST_EMPTY(lord_titles)
 
 		addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, lord_marriage_choice)), 50)
 		addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, lord_suitor_choice)), 50)
-		addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, lord_color_choice)), 50)
-
+		if(STATION_TIME_PASSED() <= 30 MINUTES) //Late to the party? Stuck with default colors, sorry!
+			spawn(50){
+				var/list/prefs = get_roleprefs(L.client)
+				if(prefs && prefs["primcolor"] && prefs["seccolor"])
+					var/prim = COLOR_MAP[prefs["primcolor"]]
+					var/sec = COLOR_MAP[prefs["seccolor"]]
+					GLOB.lordprimary = prim
+					GLOB.lordsecondary = sec
+					for(var/obj/O in GLOB.lordcolor)
+						O.lordcolor(prim,sec)
+					for(var/turf/T in GLOB.lordcolor)
+						T.lordcolor(prim,sec)
+				else
+					L.lord_color_choice()
+			}
 
 /datum/outfit/job/roguetown/lord
 	neck = /obj/item/storage/belt/rogue/pouch/coins/rich
@@ -115,9 +165,11 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	if(player.prefs)
 		if(SSmapping.config.map_name == "Rockhill")
 			if(!istype(player.prefs.virtue_origin, /datum/virtue/origin/enigma) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/valorian) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/zybantian))
-				var/list/new_origins = list("Enigma" = /datum/virtue/origin/enigma, 
-				"Valoria" = /datum/virtue/origin/valorian,
-				"Zybantu" = /datum/virtue/origin/zybantian)
+				var/list/new_origins = list(
+					"Enigma" = /datum/virtue/origin/enigma,
+					"Valoria" = /datum/virtue/origin/valorian,
+					"Zybantu" = /datum/virtue/origin/zybantian
+				)
 				var/new_origin
 				var/choice = input(player, "Your origins are not compatible with the Kingdom. Where do you hail from?", "ANCESTRY") as anything in new_origins
 				if(choice)
@@ -128,9 +180,11 @@ GLOBAL_LIST_EMPTY(lord_titles)
 				change_origin(H, new_origin, "Royal line")
 		else
 			if(!istype(player.prefs.virtue_origin, /datum/virtue/origin/azuria) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/grenzelhoft) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/valorian))
-				var/list/new_origins = list("Azuria" = /datum/virtue/origin/azuria, 
-				"Grenzelhoft" = /datum/virtue/origin/grenzelhoft,
-				"Valoria" = /datum/virtue/origin/valorian)
+				var/list/new_origins = list(
+					"Azuria" = /datum/virtue/origin/azuria,
+					"Grenzelhoft" = /datum/virtue/origin/grenzelhoft,
+					"Valoria" = /datum/virtue/origin/valorian
+				)
 				var/new_origin
 				var/choice = input(player, "Your origins are not compatible with the Duchy. Where do you hail from?", "ANCESTRY") as anything in new_origins
 				if(choice)
@@ -178,7 +232,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	subclass_virtues = list(
 		/datum/virtue/utility/riding
 	)
-	
+
 	subclass_stashed_items = list(
 		"Ducal Caparison (Saiga)" = /obj/item/caparison/azure,
 		"Fogbeast Caparison" = /obj/item/caparison/fogbeast)
@@ -261,14 +315,14 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	)
 	subclass_mage_aspects = list("mastery" = FALSE, "major" = 1, "minor" = 1, "utilities" = 4, "ward" = TRUE)
 	subclass_skills = list(
-		/datum/skill/combat/staves = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/arcyne = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/polearms = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_NOVICE,
 		/datum/skill/combat/swords = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/knives = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_MASTER,
-		/datum/skill/misc/riding = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/magic/arcane = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/alchemy = SKILL_LEVEL_APPRENTICE,
 	)
@@ -283,9 +337,10 @@ GLOBAL_LIST_EMPTY(lord_titles)
 
 /datum/outfit/job/roguetown/lord/mage/pre_equip(mob/living/carbon/human/H)
 	..()
+	l_hand = /obj/item/rogueweapon/lordscepter
 	backr = /obj/item/storage/backpack/rogue/satchel
 
-	backpack_contents = list(/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1, /obj/item/book/spellbook = 1, /obj/item/blueprint/mace_mushroom = 1, /obj/item/chalk = 1, /obj/item/hunting_map/white_stag = 1,)
+	backpack_contents = list(/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1, /obj/item/rogueweapon/spellbook = 1, /obj/item/blueprint/mace_mushroom = 1, /obj/item/chalk = 1, /obj/item/hunting_map/white_stag = 1,)
 
 /**
 	Inbred Lord subclass. A joke class, evolution of the Inbred Wastrel.
@@ -310,7 +365,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	)
 	subclass_skills = list(
 		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/misc/riding = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/riding = SKILL_LEVEL_LEGENDARY,
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/cooking = SKILL_LEVEL_NOVICE,
 		/datum/skill/craft/sewing = SKILL_LEVEL_NOVICE,
@@ -459,6 +514,8 @@ GLOBAL_LIST_EMPTY(lord_titles)
 			recruiter.say("I HEREBY STRIP YOU, [uppertext(recruit.name)], OF NOBILITY!!")
 			REMOVE_TRAIT(recruit, TRAIT_NOBLE, TRAIT_GENERIC)
 			REMOVE_TRAIT(recruit, TRAIT_NOBLE, TRAIT_VIRTUE)
+			REMOVE_TRAIT(recruit, TRAIT_NOBLE, JOB_TRAIT)
+			REMOVE_TRAIT(recruit, TRAIT_NOBLE, ROUNDSTART_TRAIT)
 			return FALSE
 		else
 			to_chat(recruiter, span_warning("Their nobility is not mine to strip!"))
@@ -487,6 +544,9 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	var/refuse_message = "I refuse."
 	ignore_los = 1 // this needs to ignore normal "range", it looks like
 	range = 3
+	/// traits to apply on recruitment - currently only used to let new maids use the vomitorium to cook
+	/// since that's an administrative thing not an innate trait
+	var/applied_traits = list()
 
 /obj/effect/proc_holder/spell/self/convertrole/cast(list/targets,mob/user = usr)
 	. = ..()
@@ -547,6 +607,9 @@ GLOBAL_LIST_EMPTY(lord_titles)
 		recruit.say(accept_message, forced = "[name]")
 	if(new_role) //We assign our role here. + log it.
 		recruit.job = new_role
+		recruit.override_advclass_examine = TRUE // makes your servants display as 'servant' instead of like. 'witch' or w/e
+		for(var/trait in applied_traits)
+			ADD_TRAIT(recruit, trait, JOB_TRAIT)
 		SEND_SIGNAL(SSdcs, COMSIG_GLOB_ROLE_CONVERTED, recruiter, recruit, new_role)
 		message_admins("ROLE RECRUITMENT: [recruiter.real_name] ([recruiter.ckey]) has converted [recruit.real_name] ([recruit.ckey]) to [new_role]")
 		log_game("ROLE RECRUITMENT: [recruiter.real_name] ([recruiter.ckey]) has converted [recruit.real_name] ([recruit.ckey]) to [new_role]")
@@ -576,6 +639,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	accept_message = "FOR THE CROWN!"
 	refuse_message = "I refuse."
 	recharge_time = 100
+	applied_traits = list(TRAIT_ROYAL_SUBSIDY)
 
 /obj/effect/proc_holder/spell/self/convertrole/bog
 	name = "Recruit Warden"

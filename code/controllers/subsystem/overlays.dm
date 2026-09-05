@@ -50,10 +50,10 @@ SUBSYSTEM_DEF(overlays)
 		if(istext(overlay))
 			// This is too expensive to run normally but running it during CI is a good test
 			// if(PERFORM_ALL_TESTS(focus_only/invalid_overlays))
-			// 	if(!icon_exists(icon, overlay))
-			// 		var/icon_file = "[icon]" || "Unknown Generated Icon"
-			// 		stack_trace("Invalid overlay: Icon object '[icon_file]' [REF(icon)] used in '[src]' [type] is missing icon state [overlay].")
-			// 		continue
+			//	if(!icon_exists(icon, overlay))
+			//		var/icon_file = "[icon]" || "Unknown Generated Icon"
+			//		stack_trace("Invalid overlay: Icon object '[icon_file]' [REF(icon)] used in '[src]' [type] is missing icon state [overlay].")
+			//		continue
 			build_overlays -= overlay
 			build_overlays += iconstate2appearance(icon, overlay)
 		else if(isicon(overlay))
@@ -70,7 +70,7 @@ SUBSYSTEM_DEF(overlays)
 	STAT_LOG_ENTRY(SSoverlays.stats, type)
 
 /atom/proc/cut_overlay(list/remove_overlays)
-	if(!overlays)
+	if(!remove_overlays)
 		return
 	STAT_START_STOPWATCH
 	overlays -= build_appearance_list(remove_overlays)
@@ -79,7 +79,7 @@ SUBSYSTEM_DEF(overlays)
 	STAT_LOG_ENTRY(SSoverlays.stats, type)
 
 /atom/proc/add_overlay(list/add_overlays)
-	if(!overlays)
+	if(!add_overlays)
 		return
 	STAT_START_STOPWATCH
 	overlays += build_appearance_list(add_overlays)

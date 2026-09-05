@@ -39,7 +39,7 @@ T1 Enchantments below here*/
 /obj/item/enchantmentscroll/basic/woodcut/attack_obj(obj/item/O, mob/living/user)
 	if(!..())
 		return
-	if(istype(O,/obj/item/rogueweapon/stoneaxe))
+	if(istype(O,/obj/item/rogueweapon/stoneaxe) || istype(O,/obj/item/rogueweapon/halberd) || istype(O,/obj/item/rogueweapon/greataxe) || istype(O,/obj/item/rogueweapon/pick/bronze))
 		to_chat(user, span_notice("You open [src] and place [O] within. Moments later, it flashes blue with arcana, and [src] crumbles to dust."))
 		var/magiceffect= new component
 		O.AddComponent(/datum/component/magic_item, magiceffect)
@@ -134,6 +134,23 @@ T1 Enchantments below here*/
 	else
 		to_chat(user, span_notice("Nothing happens. Perhaps you can't enchant [O] with this?"))
 
+/obj/item/enchantmentscroll/basic/fairseeming
+	name = "enchanting scroll of fair seeming"
+	desc = "A scroll imbued with an enchantment of fair seeming. Allows an enchanted item to clean its owner."
+	component = /datum/magic_item/mundane/fairseeming
+
+/obj/item/enchantmentscroll/basic/fairseeming/attack_obj(obj/item/O, mob/living/user)
+	if(!..())
+		return
+	if(istype(O,/obj/item/clothing)|| istype(O,/obj/item/handmirror))
+		to_chat(user, span_notice("You open [src] and place [O] within. Moments later, it flashes blue with arcana, and [src] crumbles to dust."))
+		var/magiceffect= new component
+		O.AddComponent(/datum/component/magic_item, magiceffect)
+		O.name += " of fair seeming"
+		qdel(src)
+	else
+		to_chat(user, span_notice("Nothing happens. Perhaps you can't enchant [O] with this?"))
+
 //T2 Enchantments below
 
 /obj/item/enchantmentscroll/superior/nightvision
@@ -153,23 +170,6 @@ T1 Enchantments below here*/
 	else
 		to_chat(user, span_notice("Nothing happens. Perhaps you can't enchant [O] with this?"))
 
-/obj/item/enchantmentscroll/superior/unbreaking
-	name = "enchanting scroll of unbreaking"
-	desc = "A scroll imbued with an enchantment of unbreakingt. Causes an enchanted item to be able to take more punishment.."
-	component = /datum/magic_item/superior/unbreaking
-
-/obj/item/enchantmentscroll/superior/unbreaking/attack_obj(obj/item/O, mob/living/user)
-	if(!..())
-		return
-	if(istype(O,/obj/item/clothing)|| istype(O,/obj/item/rogueweapon))
-		to_chat(user, span_notice("You open [src] and place [O] within. Moments later, it flashes blue with arcana, and [src] crumbles to dust."))
-		var/magiceffect= new component
-		O.AddComponent(/datum/component/magic_item, magiceffect)
-		O.name += " of unbreaking"
-		qdel(src)
-	else
-		to_chat(user, span_notice("Nothing happens. Perhaps you can't enchant [O] with this?"))
-
 /obj/item/enchantmentscroll/superior/featherstep
 	name = "enchanting scroll of featherstep"
 	desc = "A scroll imbued with an enchantment of featherstep. Makes you speedier, and makes your footfalls silent."
@@ -183,23 +183,6 @@ T1 Enchantments below here*/
 		var/magiceffect= new component
 		O.AddComponent(/datum/component/magic_item, magiceffect)
 		O.name += " of featherstep"
-		qdel(src)
-	else
-		to_chat(user, span_notice("Nothing happens. Perhaps you can't enchant [O] with this?"))
-
-/obj/item/enchantmentscroll/superior/fireresist
-	name = "enchanting scroll of fire resistance"
-	desc = "A scroll imbued with an enchantment of fire resistance. Prevents you from catching fire."
-	component = /datum/magic_item/superior/fireresist
-
-/obj/item/enchantmentscroll/superior/fireresist/attack_obj(obj/item/O, mob/living/user)
-	if(!..())
-		return
-	if(istype(O,/obj/item/clothing))
-		to_chat(user, span_notice("You open [src] and place [O] within. Moments later, it flashes blue with arcana, and [src] crumbles to dust."))
-		var/magiceffect= new component
-		O.AddComponent(/datum/component/magic_item, magiceffect)
-		O.name += " of fire resistance"
 		qdel(src)
 	else
 		to_chat(user, span_notice("Nothing happens. Perhaps you can't enchant [O] with this?"))
@@ -264,7 +247,7 @@ T1 Enchantments below here*/
 /obj/item/enchantmentscroll/greater/lifesteal/attack_obj(obj/item/O, mob/living/user)
 	if(!..())
 		return
-	if(istype(O,/obj/item/rogueweapon))
+	if(istype(O,/obj/item/rogueweapon) || istype(O,/obj/item/clothing/gloves/roguetown/knuckles) || istype(O,/obj/item/clothing/gloves/roguetown/bandages))
 		to_chat(user, span_notice("You open [src] and place [O] within. Moments later, it flashes blue with arcana, and [src] crumbles to dust."))
 		var/magiceffect= new component
 		O.AddComponent(/datum/component/magic_item, magiceffect)
@@ -281,28 +264,11 @@ T1 Enchantments below here*/
 /obj/item/enchantmentscroll/greater/lightning/attack_obj(obj/item/O, mob/living/user)
 	if(!..())
 		return
-	if(istype(O,/obj/item/rogueweapon))
+	if(istype(O,/obj/item/rogueweapon) || istype(O,/obj/item/clothing/gloves/roguetown/knuckles) || istype(O,/obj/item/clothing/gloves/roguetown/bandages))
 		to_chat(user, span_notice("You open [src] and place [O] within. Moments later, it flashes blue with arcana, and [src] crumbles to dust."))
 		var/magiceffect= new component
 		O.AddComponent(/datum/component/magic_item, magiceffect)
 		O.name += " of lightning"
-		qdel(src)
-	else
-		to_chat(user, span_notice("Nothing happens. Perhaps you can't enchant [O] with this?"))
-
-/obj/item/enchantmentscroll/greater/voidtouched
-	name = "enchanting scroll of voidtouched"
-	desc = "A scroll imbued with an enchantment of voidtouched. This enchantment pulls foes briefly into the void, and spits them out nearby."
-	component = /datum/magic_item/greater/void
-
-/obj/item/enchantmentscroll/greater/voidtouched/attack_obj(obj/item/O, mob/living/user)
-	if(!..())
-		return
-	if(istype(O,/obj/item/rogueweapon))
-		to_chat(user, span_notice("You open [src] and place [O] within. Moments later, it flashes blue with arcana, and [src] crumbles to dust."))
-		var/magiceffect= new component
-		O.AddComponent(/datum/component/magic_item, magiceffect)
-		O.name += " of voidtouched"
 		qdel(src)
 	else
 		to_chat(user, span_notice("Nothing happens. Perhaps you can't enchant [O] with this?"))
@@ -329,7 +295,8 @@ T1 Enchantments below here*/
 	component = /datum/magic_item/greater/phoenixguard
 
 /obj/item/enchantmentscroll/greater/phoenixguard/attack_obj(obj/item/O, mob/living/user)
-	.=..()
+	if(!..())
+		return
 	if(istype(O,/obj/item/clothing))
 		to_chat(user, span_notice("You open [src] and place [O] within. Moments later, it flashes blue with arcana, and [src] crumbles to dust."))
 		var/magiceffect= new component
@@ -345,7 +312,8 @@ T1 Enchantments below here*/
 	component = /datum/magic_item/greater/woundclosing
 
 /obj/item/enchantmentscroll/greater/woundclosing/attack_obj(obj/item/O, mob/living/user)
-	.=..()
+	if(!..())
+		return
 	if(istype(O,/obj/item/clothing/ring))
 		to_chat(user, span_notice("You open [src] and place [O] within. Moments later, it flashes blue with arcana, and [src] crumbles to dust."))
 		var/magiceffect= new component
@@ -397,7 +365,8 @@ T1 Enchantments below here*/
 	component = /datum/magic_item/mythic/infernalflame
 
 /obj/item/enchantmentscroll/mythic/infernalflame/attack_obj(obj/item/O, mob/living/user)
-	.=..()
+	if(!..())
+		return
 	if(istype(O,/obj/item/gun/ballistic/revolver/grenadelauncher)|| istype(O,/obj/item/rogueweapon)|| istype(O,/obj/item/clothing))	//bow and crossbows included
 		to_chat(user, span_notice("You open [src] and place [O] within. Moments later, it flashes blue with arcana, and [src] crumbles to dust."))
 		var/magiceffect= new component
@@ -413,7 +382,8 @@ T1 Enchantments below here*/
 	component = /datum/magic_item/mythic/freezing
 
 /obj/item/enchantmentscroll/mythic/freeze/attack_obj(obj/item/O, mob/living/user)
-	.=..()
+	if(!..())
+		return
 	if(istype(O,/obj/item/gun/ballistic/revolver/grenadelauncher)||istype(O,/obj/item/clothing)|| istype(O,/obj/item/rogueweapon))//bow and crossbows included
 		to_chat(user, span_notice("You open [src] and place [O] within. Moments later, it flashes blue with arcana, and [src] crumbles to dust."))
 		var/magiceffect= new component
@@ -429,7 +399,8 @@ T1 Enchantments below here*/
 	component = /datum/magic_item/mythic/rewind
 
 /obj/item/enchantmentscroll/mythic/rewind/attack_obj(obj/item/O, mob/living/user)
-	.=..()
+	if(!..())
+		return
 	if(istype(O,/obj/item/clothing)|| istype(O,/obj/item/rogueweapon))
 		to_chat(user, span_notice("You open [src] and place [O] within. Moments later, it flashes blue with arcana, and [src] crumbles to dust."))
 		var/magiceffect= new component
@@ -447,28 +418,11 @@ T1 Enchantments below here*/
 /obj/item/enchantmentscroll/mythic/briars/attack_obj(obj/item/O, mob/living/user)
 	if(!..())
 		return
-	if(istype(O,/obj/item/rogueweapon))
+	if(istype(O,/obj/item/rogueweapon) || istype(O,/obj/item/clothing/gloves/roguetown/knuckles) || istype(O,/obj/item/clothing/gloves/roguetown/bandages))
 		to_chat(user, span_notice("You open [src] and place [O] within. Moments later, it flashes blue with arcana, and [src] crumbles to dust."))
 		var/magiceffect= new component
 		O.AddComponent(/datum/component/magic_item, magiceffect)
 		O.name += " of briar's curse"
-		qdel(src)
-	else
-		to_chat(user, span_notice("Nothing happens. Perhaps you can't enchant [O] with this?"))
-
-/obj/item/enchantmentscroll/mythic/chaos_storm
-	name = "enchanting scroll of chaos storm"
-	desc = "A scroll imbued with an enchantment of chaos. A weapon with this enchantment causes random effects."
-	component = /datum/magic_item/mythic/chaos_storm
-
-/obj/item/enchantmentscroll/mythic/chaos_storm/attack_obj(obj/item/O, mob/living/user)
-	if(!..())
-		return
-	if(istype(O,/obj/item/rogueweapon))
-		to_chat(user, span_notice("You open [src] and place [O] within. Moments later, it flashes blue with arcana, and [src] crumbles to dust."))
-		var/magiceffect= new component
-		O.AddComponent(/datum/component/magic_item, magiceffect)
-		O.name += " of chaos storm"
 		qdel(src)
 	else
 		to_chat(user, span_notice("Nothing happens. Perhaps you can't enchant [O] with this?"))

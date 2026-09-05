@@ -2,7 +2,7 @@
 	name = "Outlaw"
 	tutorial = "You are the person folk fear at night - use your cunning and speed to strike fast and get out with your spoils before anyone notices."
 	allowed_sexes = list(MALE, FEMALE)
-	
+
 	outfit = /datum/outfit/job/roguetown/wretch/outlaw
 	cmode_music = 'sound/music/cmode/antag/combat_cutpurse.ogg'
 	class_select_category = CLASS_CAT_ROGUE
@@ -33,8 +33,9 @@
 		/datum/skill/craft/traps = SKILL_LEVEL_MASTER,
 	)
 	subclass_stashed_items = list(
-        "Sewing Kit" =  /obj/item/repair_kit,
-    )
+		"Sewing Kit" =	/obj/item/repair_kit,
+		"Stashed Funds" = /obj/item/roguecoin/silver/pile/wretchpile,
+	)
 
 /datum/outfit/job/roguetown/wretch/outlaw/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -43,7 +44,6 @@
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat
 	cloak = /obj/item/clothing/cloak/tabard/stabard/dungeon
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson
-	backr = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
 	backl = /obj/item/storage/backpack/rogue/satchel/short
 	belt = /obj/item/storage/belt/rogue/leather/knifebelt/black/steel
 	gloves = /obj/item/clothing/gloves/roguetown/fingerless_leather
@@ -51,7 +51,6 @@
 	neck = /obj/item/clothing/neck/roguetown/coif/heavypadding
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/heavy
 	mask = /obj/item/clothing/mask/rogue/ragmask/black
-	beltr = /obj/item/quiver/bolt/standard
 	backpack_contents = list(
 		/obj/item/lockpickring/mundane = 1,
 		/obj/item/flashlight/flare/torch/lantern/prelit = 1,
@@ -63,6 +62,8 @@
 	if(H.mind)
 		var/weapons = list("Rapier","Parrying Dagger", "Whip")
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
+		var/rangedweapons = list("Slurbow", "Crossbow")
+		var/rangedweapon_choice = input(H,"Choose your BOW.", "TAKE AIM.") as anything in rangedweapons
 		var/specialization = list("Fleet-Footed","Marksmanship","Athleticism","Night-Burglar","Master-Tracker","Dualist")
 		var/specialization_choice = input(H, "Choose your talent.", "TAKE UP ARMS") as anything in specialization
 		H.set_blindness(0)
@@ -77,6 +78,13 @@
 			if ("Whip")
 				H.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, SKILL_LEVEL_EXPERT, TRUE)
 				l_hand = /obj/item/rogueweapon/whip
+		switch(rangedweapon_choice)
+			if("Slurbow")
+				backr = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow
+				beltr = /obj/item/quiver/bolt/light
+			if("Crossbow")
+				backr = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
+				beltr = /obj/item/quiver/bolt/standard
 		switch(specialization_choice)
 			if("Fleet-Footed")
 				H.adjust_skillrank_up_to(/datum/skill/misc/sneaking, SKILL_LEVEL_LEGENDARY, TRUE)
@@ -92,15 +100,18 @@
 				ADD_TRAIT(H, TRAIT_DARKVISION, TRAIT_GENERIC)
 			if("Master-Tracker")
 				H.adjust_skillrank_up_to(/datum/skill/misc/tracking, SKILL_LEVEL_LEGENDARY, TRUE)
-				ADD_TRAIT(H, TRAIT_SLEUTH, TRAIT_GENERIC)
 				ADD_TRAIT(H, TRAIT_PERFECT_TRACKER, TRAIT_GENERIC)
 			if("Dualist")//Yes the typo is intentional
 				ADD_TRAIT(H, TRAIT_DUALWIELDER, TRAIT_GENERIC)
-				ADD_TRAIT(H, TRAIT_DECEIVING_MEEKNESS, TRAIT_GENERIC)
+
+				ADD_TRAIT(H, TRAIT_DECEIVING_MEEKNESS, TRAIT_VIRTUE)
+				add_verb(H, /mob/living/carbon/human/proc/toggle_descriptors)
+				add_verb(H, /mob/living/carbon/human/proc/emote_ffsalute)
+				add_verb(H, /mob/living/carbon/human/proc/toggle_guarded)
+
 		wretch_select_bounty(H)
 
 //Keep it as is from now on, this is kind of overbloated as it be but the entire point of this class is catchall no good doer (speed).
 //It is mostly reverted to how it originally was with some boons to not be worse than heretic spy (that is limited, this is not).
 //Kettle and Hardened Leather should be maintained in spite of the medium armour it's more there as an option.
 //A true hybrid of Melee and Ranged (Xbow / Tossblades)
-		wretch_select_bounty(H)

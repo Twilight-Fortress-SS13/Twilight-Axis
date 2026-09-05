@@ -9,7 +9,6 @@
 	antag_flag = ROLE_ASSASSIN
 	shared_occurence_type = SHARED_MINOR_THREAT
 	storyteller_antag_flags = STORYTELLER_ANTAG_ROUNDSTART | STORYTELLER_ANTAG_SOFT
-	storyteller_guarantee_flags = STORYTELLER_FAVOR_ASSASSIN
 
 	restricted_roles = list(
 		"Grand Duke",
@@ -35,7 +34,6 @@
 		"Hand",
 		"Steward",
 		"Head Physician",
-		"Town Crier",
 		"Captain",
 		"Archivist",
 		"Knight Captain",
@@ -53,9 +51,10 @@
 	maximum_antags = 2
 
 	earliest_start = 0 SECONDS
-	max_occurrences = 2
-
-	weight = 10
+	// solo assassin is kill due to various balance fuckeries and plans for the future.
+	// IF YOU ARE RE-ENABLING THIS MAKE 100% SURE IT RESPECTS PREFERENCES!!!!!!!!!!!!!!!!!!!!!!
+	max_occurrences = 0
+	weight = 0
 
 	typepath = /datum/round_event/antagonist/solo/assassins
 	antag_datum = /datum/antagonist/assassin
@@ -69,6 +68,17 @@
 	if(is_storyteller_soft_antag_blocked())
 		return EVENT_CANT_RUN
 	return ..()
+
+// override that includes removal of targeted & hunted individuals. i'm pretty sure it works.
+/datum/round_event_control/antagonist/solo/assassins/trim_candidates(list/candidates)
+	candidates = ..()
+	for(var/mob/living/candidate in candidates)
+		if(candidate.has_flaw(/datum/charflaw/targeted) || candidate.has_flaw(/datum/charflaw/hunted))
+			candidates -= candidate
+		// needs to be a gaggarite
+		if(istype(candidate.patron, /datum/patron/inhumen/graggar))
+			candidates -= candidate
+	return candidates
 
 /datum/round_event/antagonist/solo/assassins/start()
 	var/datum/job/assassin_job = SSjob.GetJob("Assassin")
@@ -89,11 +99,12 @@
 
 		H.unequip_everything()
 		SSjob.AssignRole(H, "Assassin")
+		H.job = "Assassin"
 		SSmapping.retainer.assassins |= H
 		antag_mind.add_antag_datum(/datum/antagonist/assassin)
 
 		SSrole_class_handler.setup_class_handler(H, list(CTAG_ASSASSIN = 20))
-		H.advsetup = TRUE
+		H.set_advsetup(TRUE)
 		H.hud_used?.set_advclass()
 
 	SSrole_class_handler.assassins_in_round = TRUE
@@ -103,6 +114,6 @@
 	for(var/mob/living/carbon/human/player as anything in GLOB.human_list)
 		if(!player.mind || !player.client)
 			continue
-		if(player.has_flaw(/datum/charflaw/hunted) && (player.job in GLOB.hunted_protected_roles))
+		if(player.has_flaw(/datum/charflaw/targeted))
 			count++
 	return count

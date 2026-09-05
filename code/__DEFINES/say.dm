@@ -44,8 +44,6 @@
 #define MODE_VOCALCORDS "cords"
 #define MODE_KEY_VOCALCORDS "x"
 
-#define MODE_MONKEY "monkeyhive"
-
 //Spans. Robot speech, italics, etc. Applied in compose_message().
 #define SPAN_ROBOT "robot"
 #define SPAN_YELL "yell"
@@ -53,7 +51,6 @@
 #define SPAN_SANS "sans"
 #define SPAN_PAPYRUS "papyrus"
 #define SPAN_REALLYBIG "reallybig"
-#define SPAN_COMMAND "command_headset"
 #define SPAN_CLOWN "clown"
 #define SPAN_SINGING "singing"
 
@@ -80,7 +77,7 @@
 #define SPAN_AAVNIC "aavnic"
 #define SPAN_UNDERCOMMON "undercommon"
 #define SPAN_UNDEAD "undead"
-#define SPAN_CAT "cat"		 //nyi but file found
+#define SPAN_CAT "cat"			//nyi but file found
 #define SPAN_PULSEDEATH "pulsedeath"
 
 #define SPAN_GYEDZENESE "gyedzenese" //TA EDIT

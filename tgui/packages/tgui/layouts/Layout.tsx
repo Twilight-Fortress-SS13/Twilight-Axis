@@ -5,12 +5,11 @@
  */
 
 import { useEffect, useRef } from 'react';
+import { useBackend } from 'tgui/backend';
 import type { Box } from 'tgui-core/components';
 import { addScrollableNode, removeScrollableNode } from 'tgui-core/events';
 import { classes } from 'tgui-core/react';
 import { computeBoxClassName, computeBoxProps } from 'tgui-core/ui';
-
-import { useBackend } from '../backend';
 
 type BoxProps = React.ComponentProps<typeof Box>;
 
@@ -34,10 +33,16 @@ export function Layout(props: Props) {
 
   const resolveVariant = PARCHMENT_VARIANTS[theme];
   const resolvedTheme = resolveVariant ? resolveVariant(config) : theme;
+
   const themeClass = `theme-${resolvedTheme}`;
-  
+
   useEffect(() => {
     document.documentElement.className = themeClass;
+    // workaround for https://www.byond.com/forum/post/2964419 to make it less eye-blinding when browser flashes
+    const computed_bg = window
+      .getComputedStyle(document.body)
+      .getPropertyValue('--color-base');
+    Byond.winset(Byond.windowId, { 'background-color': computed_bg });
   }, [themeClass]);
 
   return (
@@ -80,7 +85,6 @@ function LayoutContent(props: ContentProps) {
         'Layout__content',
         scrollable && 'Layout__content--scrollable',
         className,
-
         computeBoxClassName(rest),
       ])}
       ref={node}

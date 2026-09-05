@@ -8,8 +8,8 @@
 	origin_default = /datum/virtue/origin/unknown
 	origin = "The Seven Winds" // I am going to be doing a larger PR with the permission and use of Sarkness lore. Let us just please get this bug fixed.
 	base_name = "Beastvolk"
-	desc = "Many comparisons have been made to the common moths in an attempt to describe this unique species. From the appetite for clothing to the disconcertingly insectoid appearance, the name 'Moth' is forever stamped onto the common vocabulary. The comparison, however, falls short on the matter of flight.<br>\
-	<span style='color: #6a8cb7;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;'><b>+1 SPD</b></span><br>"
+	desc_title = "Fluvian"
+	desc = "Many comparisons have been made to the common moths in an attempt to describe this unique species. From the appetite for clothing to the disconcertingly insectoid appearance, the name 'Moth' is forever stamped onto the common vocabulary. The comparison, however, falls short on the matter of flight."
 	species_traits = list(EYECOLOR,LIPS,STUBBLE,MUTCOLORS,HAIR)
 	possible_ages = ALL_AGES_LIST
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | RACE_SWAP | SLIME_EXTRACT
@@ -46,9 +46,12 @@
 		ORGAN_SLOT_LIVER = /obj/item/organ/liver,
 		ORGAN_SLOT_STOMACH = /obj/item/organ/stomach,
 		ORGAN_SLOT_APPENDIX = /obj/item/organ/appendix,
+		ORGAN_SLOT_GUTS = /obj/item/organ/guts,
 		ORGAN_SLOT_ANTENNAS = /obj/item/organ/antennas/moth,
 		ORGAN_SLOT_NECK_FEATURE = /obj/item/organ/neck_feature/moth_fluff,
 		ORGAN_SLOT_WINGS = /obj/item/organ/wings/moth,
+		ORGAN_SLOT_SNOUT = /obj/item/organ/snout/moth,
+		ORGAN_SLOT_TAIL = /obj/item/organ/tail/moth,
 		//ORGAN_SLOT_TESTICLES = /obj/item/organ/testicles,
 		//ORGAN_SLOT_PENIS = /obj/item/organ/penis/tapered,
 		//ORGAN_SLOT_BREASTS = /obj/item/organ/breasts,
@@ -70,6 +73,8 @@
 		/datum/customizer/organ/wings/moth,
 		/datum/customizer/organ/antennas/moth,
 		/datum/customizer/organ/neck_feature/moth_fluff,
+		/datum/customizer/organ/snout/moth,
+		/datum/customizer/organ/tail/moth,
 		/datum/customizer/organ/testicles/anthro,
 		/datum/customizer/organ/penis/anthro,
 		/datum/customizer/organ/breasts/animal,
@@ -122,6 +127,9 @@
 		/datum/body_marking/tonage,
 		/datum/body_marking/bangs,
 		/datum/body_marking/bun,
+		/datum/body_marking/waist,
+		/datum/body_marking/womb_tattoo,
+		/datum/body_marking/butterfly
 	)
 	descriptor_choices = list(
 		/datum/descriptor_choice/trait,

@@ -16,7 +16,6 @@
 	var/next_decree = 0
 	var/listening = TRUE
 	var/speaking = TRUE
-	var/loudmouth_listening = TRUE
 	var/dictating = FALSE
 	var/scom_number
 	var/scom_tag
@@ -130,15 +129,9 @@
 		listening = !listening
 		to_chat(user, span_info("I [listening ? "unmute" : "mute"] the input on the SCOM."))
 		return
-	if(loudmouth_listening)
-		to_chat(user, span_info("I quell the Loudmouth's prattling on the SCOM. It may be muted entirely still."))
-		loudmouth_listening = FALSE
-	else
-		listening = !listening
-		speaking = listening
-		to_chat(user, span_info("I [speaking ? "unmute" : "mute"] the SCOM."))
-		if(listening)
-			loudmouth_listening = TRUE
+	listening = !listening
+	speaking = listening
+	to_chat(user, span_info("I [speaking ? "unmute" : "mute"] the SCOM."))
 	update_icon()
 
 /obj/structure/roguemachine/scomm/attackby(obj/item/W, mob/user, params)
@@ -179,7 +172,7 @@
 	if(.)
 		return
 	if(HAS_TRAIT(user, TRAIT_GARRISON_ITEM))
-		if(alert("Would you like to swap lines or connect to a jabberline?",, "swap", "jabberline") != "jabberline")
+		if(alert(user, "Would you like to swap lines or connect to a jabberline?",, "swap", "jabberline") != "jabberline")
 			garrisonline = !garrisonline
 			to_chat(user, span_info("I [garrisonline ? "connect to the garrison SCOMline" : "connect to the general SCOMLINE"]"))
 			playsound(loc, 'sound/misc/garrisonscom.ogg', 100, FALSE, -1)
@@ -266,7 +259,7 @@
 	update_icon()
 	icon_state = "[icon_state]-br"
 
-/obj/structure/roguemachine/scomm/Initialize()
+/obj/structure/roguemachine/scomm/Initialize(mapload)
 	. = ..()
 	START_PROCESSING(SSroguemachine, src)
 	become_hearing_sensitive()
@@ -287,9 +280,6 @@
 		icon_state = "scomm1"
 	else
 		icon_state = "scomm0"
-	if(listening)
-		if(!loudmouth_listening)
-			icon_state = "scomm3"
 
 /obj/structure/roguemachine/scomm/Destroy()
 	lose_hearing_sensitivity()

@@ -132,7 +132,7 @@ export const SpellLibrary = () => {
                 Cost {sortDirection === 'asc' ? '▲' : '▼'}
               </div>
               <div
-                className={"btn " + (hide_unavailable ? "selected" : "")}
+                className={`btn ${hide_unavailable ? 'selected' : ''}`}
                 style={{ ...btnBaseStyle(hide_unavailable), minWidth: '80px', marginLeft: '10px' }}
                 onClick={() => act('toggle_filter')}
               >
@@ -243,7 +243,7 @@ export const SpellLibrary = () => {
                         </div>
                       ) : (
                         <div
-                           className={"btn " + (spell.can_afford ? "" : "disabled")}
+                           className={`btn ${spell.can_afford ? '' : 'disabled'}`}
                            onClick={() => spell.can_afford && act('learn', { path: spell.path })}
                            style={{ 
                              width: '100%', 
@@ -254,7 +254,7 @@ export const SpellLibrary = () => {
                              fontSize: '10px',
                              border: spell.can_afford ? '1px solid #4caf50' : '1px solid transparent',
                              padding: '4px 0',
-                             cursor: (spell.can_afford ? 'pointer' : 'default') as const,
+                             cursor: spell.can_afford ? 'pointer' : 'default',
                              borderRadius: '3px'
                            }}
                         >

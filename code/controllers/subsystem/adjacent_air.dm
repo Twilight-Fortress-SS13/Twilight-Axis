@@ -13,7 +13,7 @@ SUBSYSTEM_DEF(adjacent_air)
 	return ..("P:[length(queue)]")
 	#endif
 
-/datum/controller/subsystem/adjacent_air/Initialize()
+/datum/controller/subsystem/adjacent_air/Initialize(mapload)
 	while(length(queue))
 		fire(mc_check = FALSE)
 	return ..()
@@ -54,7 +54,6 @@ SUBSYSTEM_DEF(adjacent_air)
 	var/obj/effect/abstract/liquid_turf/liquids
 	var/liquid_height = 0
 	var/turf_height = 0
-	var/path_weight = 0
 
 /turf/open
 	var/obj/effect/hotspot/active_hotspot

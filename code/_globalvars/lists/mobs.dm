@@ -33,9 +33,6 @@ GLOBAL_LIST_EMPTY(bots_list)
 GLOBAL_LIST_EMPTY(aiEyes)
 GLOBAL_LIST_EMPTY(familiar_queue)			//all the registered familiars's clients, ready to spawn.
 
-GLOBAL_LIST_EMPTY(language_datum_instances)
-GLOBAL_LIST_EMPTY(all_languages)
-
 GLOBAL_LIST_EMPTY(sentient_disease_instances)
 
 GLOBAL_LIST_EMPTY(latejoin_ai_cores)
@@ -43,8 +40,6 @@ GLOBAL_LIST_EMPTY(latejoin_ai_cores)
 GLOBAL_LIST_EMPTY(mob_config_movespeed_type_lookup)
 
 GLOBAL_LIST_EMPTY(emote_list)
-
-GLOBAL_LIST_EMPTY(broadcast_list)
 
 GLOBAL_LIST_INIT(dangerous_turfs, typecacheof(list(
 	/turf/open/lava,

@@ -25,7 +25,7 @@
 		if(!ispath(private, /datum/patron) && private)	//Trait-exclusivity. At the moment it's only TRAIT_EMPATH for stress indicators.
 			var/list/can_see = list(src)
 			for(var/mob/M in viewers(world.view, src))
-				if(HAS_TRAIT(M, private))
+				if(HAS_TRAIT(M, private) || (private == TRAIT_EMPATH && M.has_empath_for(src)))
 					if(M != src)
 						can_see += M
 			
@@ -141,6 +141,9 @@
 
 /mob/living/proc/play_relief_indicator()
 	play_overhead_indicator('icons/mob/overhead_effects.dmi', "relief", 15, OBJ_LAYER, private = TRAIT_EMPATH, soundin = 'sound/ddrelief.ogg')
+
+/mob/living/proc/play_permadeath_indicator()
+	play_overhead_indicator('icons/mob/overhead_effects.dmi', "permadeath", 25, OBJ_LAYER, private = TRAIT_EMPATH, soundin = 'sound/stressaffliction.ogg')
 
 /mob/living/proc/play_mental_break_indicator()
 	play_overhead_indicator('icons/mob/overhead_effects.dmi', "mentalbreak", 20, OBJ_LAYER)

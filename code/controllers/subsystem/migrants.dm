@@ -21,7 +21,7 @@ SUBSYSTEM_DEF(migrants)
 	var/list/spawned_waves = list()
 	var/list/global_triumph_contributions = list()
 
-/datum/controller/subsystem/migrants/Initialize()
+/datum/controller/subsystem/migrants/Initialize(mapload)
 	track_next_roll[MIGRANT_TRACK_REGULAR] = world.time + 2 MINUTES
 	track_next_roll[MIGRANT_TRACK_SPECIAL] = world.time + special_roll_interval
 	return ..()
@@ -36,14 +36,14 @@ SUBSYSTEM_DEF(migrants)
 /datum/controller/subsystem/migrants/proc/process_event_track()
 	if(!track_forming[MIGRANT_TRACK_EVENT])
 		return
-	if(world.time < track_arrival[MIGRANT_TRACK_EVENT])
+	if(!should_resolve_forming(MIGRANT_TRACK_EVENT))
 		return
 	resolve_forming_wave(MIGRANT_TRACK_EVENT)
 
 /datum/controller/subsystem/migrants/proc/process_track(track, roll_interval, announce)
 	var/forming = track_forming[track]
 	if(forming)
-		if(world.time < track_arrival[track])
+		if(!should_resolve_forming(track))
 			return
 		resolve_forming_wave(track)
 		track_next_roll[track] = world.time + roll_interval
@@ -60,7 +60,7 @@ SUBSYSTEM_DEF(migrants)
 /datum/controller/subsystem/migrants/proc/process_triumph_track()
 	var/forming = track_forming[MIGRANT_TRACK_TRIUMPH]
 	if(forming)
-		if(world.time < track_arrival[MIGRANT_TRACK_TRIUMPH])
+		if(!should_resolve_forming(MIGRANT_TRACK_TRIUMPH))
 			return
 		resolve_forming_wave(MIGRANT_TRACK_TRIUMPH)
 		return
@@ -68,6 +68,28 @@ SUBSYSTEM_DEF(migrants)
 	if(wave_type)
 		begin_forming(MIGRANT_TRACK_TRIUMPH, wave_type)
 		announce_special_wave(wave_type)
+
+/datum/controller/subsystem/migrants/proc/should_resolve_forming(track)
+	if(!track_forming[track])
+		return FALSE
+	if(world.time >= track_arrival[track])
+		return TRUE
+	return is_forming_wave_full(MIGRANT_WAVE(track_forming[track]))
+
+/datum/controller/subsystem/migrants/proc/is_forming_wave_full(datum/migrant_wave/wave)
+	if(!wave)
+		return FALSE
+	var/total_slots = wave.get_roles_amount()
+	if(total_slots <= 0)
+		return FALSE
+	var/list/candidates = get_wave_candidates(wave.type)
+	if(length(candidates) < total_slots)
+		return FALSE
+	var/list/picked = list()
+	var/list/assignments = assemble_role_wave(wave, candidates, picked)
+	if(isnull(assignments))
+		return FALSE
+	return length(assignments) >= total_slots
 
 /datum/controller/subsystem/migrants/proc/is_forced_forming(wave_type)
 	for(var/track in track_forced)
@@ -212,7 +234,7 @@ SUBSYSTEM_DEF(migrants)
 	else
 		candidates = active_migrants
 	for(var/client/client as anything in candidates)
-		if(!can_be_role(client, assignment.role_type))
+		if(!can_fill_role(client, assignment.role_type))
 			continue
 		assignment.client = client
 		active_migrants -= client
@@ -224,6 +246,8 @@ SUBSYSTEM_DEF(migrants)
 	for(var/wave_type in GLOB.migrant_waves)
 		var/datum/migrant_wave/wave = MIGRANT_WAVE(wave_type)
 		if(!wave.can_roll)
+			continue
+		if(!wave.can_roll())
 			continue
 		if(!isnull(wave.max_spawns))
 			var/used_wave_type = wave.type
@@ -298,13 +322,16 @@ SUBSYSTEM_DEF(migrants)
 		var/fakekey = character.ckey
 		if(character.ckey in GLOB.anonymize)
 			fakekey = get_fake_key(character.ckey)
+		GLOB.dominant_faith_tracker.handle_addition(humanc)
 		GLOB.character_list[character.mobid] = "[fakekey] was [character.real_name] ([rank])<BR>"
 		GLOB.character_ckey_list[character.real_name] = character.ckey
 		var/mob_name = character.real_name
-		var/mob_rank = rank
+		var/mob_rank = role.name // TA EDIT
 		if(character.mind.special_role == "Court Agent")
 			mob_rank = "Adventurer"
-		GLOB.actors_list[character.mobid] = list("name" = mob_name, "rank" = mob_rank)
+		if(!GLOB.actors_list["Migrants"]) // TA EDIT
+			GLOB.actors_list["Migrants"] = list() // TA EDIT
+		GLOB.actors_list["Migrants"] += list("[character.mobid]" = "[mob_name] as the [humanc.dna.species.name] [mob_rank]<BR>") // TA EDIT
 		log_character("[character.ckey] ([fakekey]) - [character.real_name] - [rank]")
 	if(GLOB.respawncounts[character.ckey])
 		var/AN = GLOB.respawncounts[character.ckey]
@@ -341,6 +368,10 @@ SUBSYSTEM_DEF(migrants)
 		grant_lit_torch(character)
 
 	role.after_spawn(character)
+
+	if(ishuman(character))
+		var/mob/living/carbon/human/human_character = character
+		human_character.flag_gear_as_worn()
 
 	if(role.advclass_cat_rolls)
 		SSrole_class_handler.setup_class_handler(character, role.advclass_cat_rolls)
@@ -389,14 +420,56 @@ SUBSYSTEM_DEF(migrants)
 		return FALSE
 	if(role.allowed_ages && !(prefs.age in role.allowed_ages))
 		return FALSE
+	if(role.banned_flaws)
+		for(var/datum/charflaw/checked_flaw in prefs.charflaws)
+			if(checked_flaw.type in role.banned_flaws)
+				return FALSE
+	if(role.banned_virtues)
+		// i just stole this from the normal virtue restriction code i cant even lie
+		if((prefs.virtue?.type in role.banned_virtues) || (prefs.virtuetwo?.type in role.banned_virtues) || (prefs.virtue_origin?.type in role.banned_virtues))
+			return FALSE
+#ifdef USES_PQ
+	if(!isnull(role.min_pq) && get_playerquality(player.ckey) < role.min_pq) // TA EDIT
+		return FALSE // TA EDIT
+#endif
 	return TRUE
 
-/datum/controller/subsystem/migrants/proc/wave_eligible(datum/migrant_wave/wave)
+/// The set of /datum/advclass datums a role can roll, resolved from its advclass_cat_rolls tags (deduped).
+/// Empty for roles that equip a fixed outfit instead of rolling a class.
+/datum/controller/subsystem/migrants/proc/get_role_pool(role_type)
+	var/list/classes = list()
+	var/datum/migrant_role/role = MIGRANT_ROLE(role_type)
+	if(!role || !role.advclass_cat_rolls)
+		return classes
+	for(var/ctag in role.advclass_cat_rolls)
+		var/list/tagged = SSrole_class_handler.sorted_class_categories[ctag]
+		if(tagged)
+			classes |= tagged
+	return classes
+
+/// Like can_be_role, but also requires the character to have at least one playable class in the role's pool.
+/// Roles without a class pool (outfit roles) fall back to the plain role-level check.
+/datum/controller/subsystem/migrants/proc/can_fill_role(client/player, role_type)
+	if(!can_be_role(player, role_type))
+		return FALSE
+	if(!player?.prefs)
+		return FALSE
+	var/list/pool = get_role_pool(role_type)
+	if(!length(pool))
+		return TRUE
+	for(var/datum/advclass/advclass as anything in pool)
+		if(isnull(advclass.prefs_lock_reason(player.prefs)))
+			return TRUE
+	return FALSE
+
+/datum/controller/subsystem/migrants/proc/wave_eligible(datum/migrant_wave/wave, ignore_round_time = FALSE)
 	if(!wave.can_roll)
+		return FALSE
+	if(!wave.can_roll())
 		return FALSE
 	var/active_migrants = get_active_migrant_amount()
 	var/active_players = get_round_active_players()
-	if(wave.min_round_time && (world.time - SSticker.round_start_time) < wave.min_round_time)
+	if(!ignore_round_time && wave.min_round_time && (world.time - SSticker.round_start_time) < wave.min_round_time)
 		return FALSE
 	if(!isnull(wave.min_active) && active_migrants < wave.min_active)
 		return FALSE
@@ -418,6 +491,8 @@ SUBSYSTEM_DEF(migrants)
 		var/datum/migrant_wave/wave = MIGRANT_WAVE(wave_type)
 		if(wave.track != track)
 			continue
+		if(wave.triumph_only)
+			continue
 		if(!wave_eligible(wave))
 			continue
 		if(wave_cooldown[wave_type] && world.time < wave_cooldown[wave_type])
@@ -435,7 +510,7 @@ SUBSYSTEM_DEF(migrants)
 		var/datum/migrant_wave/wave = MIGRANT_WAVE(wave_type)
 		if(wave.triumph_total < wave.triumph_threshold)
 			continue
-		if(!wave_eligible(wave))
+		if(!wave_eligible(wave, ignore_round_time = TRUE))
 			continue
 		if(wave.triumph_total > highest_triumph)
 			highest_triumph = wave.triumph_total
@@ -446,7 +521,7 @@ SUBSYSTEM_DEF(migrants)
 	var/base_weight = wave.weight
 	var/triumph_bonus = wave.triumph_total
 
-	var/triumph_multiplier = 6
+	var/triumph_multiplier = wave.triumph_weight_multiplier // TA EDIT
 	var/final_weight = base_weight + (triumph_bonus * triumph_multiplier)
 
 	return max(final_weight, 1)
@@ -514,7 +589,7 @@ SUBSYSTEM_DEF(migrants)
 		var/amount = wave.triumph_contributions[ckey]
 		if(amount <= 0)
 			continue
-		SStriumphs.triumph_adjust(amount, ckey)
+		SStriumphs.triumph_adjust(amount, ckey, "wave contribution refund: [wave.name]")
 		var/client/client = GLOB.directory[ckey]
 		if(client)
 			to_chat(client, span_nicegreen("[wave.name] failed to arrive - your [amount] pledged triumph has been refunded."))
@@ -546,7 +621,7 @@ SUBSYSTEM_DEF(migrants)
 		line += "<br>Needs: [needs.Join(", ")]."
 	if(length(slots))
 		line += "<br>Slots open for [slots.Join(", ")]."
-	line += "<br><a href='?src=[REF(src)];open_panel=1'>Click to join.</a> [wave_wait_time / (1 SECONDS)]s remaining."
+	line += "<br>The wave will form in [wave_wait_time / (1 SECONDS)]s (sooner if every slot fills). <a href='?src=[REF(src)];open_panel=1'>Click to join.</a>"
 	for(var/mob/dead/new_player/lobby_nerd in GLOB.player_list)
 		if(!lobby_nerd.client)
 			continue
@@ -636,7 +711,7 @@ SUBSYSTEM_DEF(migrants)
 	. = TRUE
 	var/mob/user = usr
 	message_admins("Admin [key_name_admin(user)] is forcing the next migrant wave.")
-	var/picked_wave_type = input(user, "Choose migrant wave to force:", "Migrants")  as null|anything in GLOB.migrant_waves
+	var/picked_wave_type = input(user, "Choose migrant wave to force:", "Migrants")	as null|anything in GLOB.migrant_waves
 	if(!picked_wave_type)
 		return
 	message_admins("Admin [key_name_admin(user)] forced next migrant wave: [picked_wave_type]")
@@ -656,7 +731,7 @@ SUBSYSTEM_DEF(migrants)
 	return get_turf(pick(landmarks))
 
 /proc/hugboxify_for_class_selection(mob/living/carbon/human/character)
-	character.advsetup = 1
+	character.set_advsetup(TRUE)
 	character.invisibility = INVISIBILITY_MAXIMUM
 	character.become_blind("advsetup")
 

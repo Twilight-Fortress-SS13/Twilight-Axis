@@ -14,18 +14,21 @@
 	tutorial = "You are bygone. A wandering has-been. But maybe your luck has not run out, yet.."
 
 	outfit = /datum/outfit/job/roguetown/greater_skeleton/necro
-	show_in_credits = TRUE 
+	show_in_credits = TRUE
 	give_bank_account = FALSE
 	hidden_job = TRUE
-	vice_restrictions = list(/datum/charflaw/hunted)
+	vice_restrictions = list(/datum/charflaw/hunted, /datum/charflaw/targeted)
 
 /datum/outfit/job/roguetown/greater_skeleton/pre_equip(mob/living/carbon/human/H)
 	..()
 
 	ADD_TRAIT(H, TRAIT_OUTLAW, TRAIT_GENERIC) //No miesters for skeletons, you're an undead, bloodless skeletal abomination.
 	ADD_TRAIT(H, TRAIT_SHATTER_KILL, TRAIT_GENERIC) //Softer version of crit weakness that only kills with paralysis/rib fractures and nothing else.
+	ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_NO_VOICEPACK_OVERRIDE, TRAIT_GENERIC) //In case we get edge-cases I.E siege skeletons. Otherwise its on the skeleton race too.
 
 	H.set_patron(/datum/patron/inhumen/zizo)
+	H.can_do_sex = FALSE // we've had one too many skeletons panel themselves in public
 
 	H.possible_rmb_intents = list(/datum/rmb_intent/feint,\
 	/datum/rmb_intent/aimed,\
@@ -48,7 +51,7 @@
 	var/mob/living/carbon/human/H = L
 	H.mob_biotypes |= MOB_UNDEAD
 
-	H.advsetup = TRUE
+	H.set_advsetup(TRUE)
 	H.invisibility = INVISIBILITY_MAXIMUM
 	H.become_blind("advsetup")
 	for (var/obj/item/bodypart/B in H.bodyparts)
@@ -60,20 +63,9 @@ NECRO SKELETONS
 
 
 /datum/outfit/job/roguetown/greater_skeleton/necro
-	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
-	armor = /obj/item/clothing/suit/roguetown/armor/chainmail/iron
-	pants = /obj/item/clothing/under/roguetown/chainlegs/iron
-	head = /obj/item/clothing/head/roguetown/helmet/leather
-	shoes = /obj/item/clothing/shoes/roguetown/boots
-	belt = /obj/item/storage/belt/rogue/leather
-	backl = /obj/item/storage/backpack/rogue/satchel
-	neck = /obj/item/clothing/neck/roguetown/chaincoif/iron/aalloy
+	neck = /obj/item/clothing/neck/roguetown/chaincoif/iron
 
-/datum/outfit/job/roguetown/greater_skeleton/necro/pre_equip(mob/living/carbon/human/H)
-	..()
-	shirt = prob(50) ? /obj/item/clothing/suit/roguetown/shirt/undershirt/vagrant : /obj/item/clothing/suit/roguetown/shirt/undershirt/vagrant/l
-
-// Melee fighter with a shield. Holds the line.
+// Melee fighter with a shield/spear. Holds the line. All-rounder
 /datum/advclass/greater_skeleton/necro/legionnaire
 	name = "Decrepit Legionnaire"
 	tutorial = "Legions rise and you answer. Stand proud with your line; for you serve the architect. You know death. Memento mori. You just can't understand it."
@@ -82,8 +74,12 @@ NECRO SKELETONS
 	category_tags = list(CTAG_NSKELETON)
 	subclass_skills = list(
 		/datum/skill/combat/swords = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/whipsflails = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/maces = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/polearms = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/axes = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/shields = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/carpentry = SKILL_LEVEL_NOVICE,
@@ -97,22 +93,57 @@ NECRO SKELETONS
 /datum/outfit/job/roguetown/greater_skeleton/necro/legionnaire/pre_equip(mob/living/carbon/human/H)
 	..()
 
-	H.STASTR = prob(2) ? 18 : rand(11,12)
-	H.STAPER = rand(9,11)
-	H.STASPD = rand(7,8)
-	H.STACON = rand(7,9)
-	H.STAWIL = rand(10,11)
-	H.STAINT = rand(1,3)
+	REMOVE_TRAIT(H, TRAIT_HEAVYARMOR, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
+	H.STASTR = 12
+	H.STAPER = 11
+	H.STASPD = 8
+	H.STACON = 9
+	H.STAWIL = 11
+	H.STAINT = 3
 
-	backr = /obj/item/rogueweapon/shield/wood
+	head = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/iron
+	gloves = /obj/item/clothing/gloves/roguetown/chain/iron
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/iron
+	pants = /obj/item/clothing/under/roguetown/chainlegs/iron/kilt
+	armor = /obj/item/clothing/suit/roguetown/armor/plate/scale/iron
+	shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/iron
+	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/iron
+	backl = /obj/item/storage/backpack/rogue/satchel
+	belt = /obj/item/storage/belt/rogue/leather
+
+	backpack_contents = list(
+		/obj/item/natural/feather = 1, //For your helm
+	)
 
 	H.adjust_blindness(-3)
-	var/weapon_choice = input(H, "Choose your weapon.", "WHAT WILL YOU CARRY?") as anything in list("Sword", "Axe")
+	var/tabards = list("Black Jupon", "Black Tabard", "Black Cloak", "Black Toga")
+	var/tabard_choice = input(H, "Choose your CLOAK.", "BEAR YOUR HERALDRY.") as anything in tabards
+	switch(tabard_choice)
+		if("Black Jupon")
+			cloak = /obj/item/clothing/cloak/tabard/stabard/surcoat/necro
+		if("Black Tabard")
+			cloak = /obj/item/clothing/cloak/tabard/necro
+		if("Black Cloak")
+			cloak = /obj/item/clothing/cloak/half/lich
+		if("Black Toga")
+			cloak = /obj/item/clothing/cloak/tabard/toga/lich
+	var/weapon_choice = input(H, "Choose your weapon.", "RISE AGAINST THE LYVING.") as anything in list("Sword + Shield", "Spear", "Mace + Shield", "Axe + Shield", "Flail + Shield")
 	H.set_blindness(0)
 	switch(weapon_choice)
-		if("Sword")
+		if("Sword + Shield")
 			beltr = /obj/item/rogueweapon/sword
-		if("Axe")
+			backr = /obj/item/rogueweapon/shield/wood
+		if("Spear")
+			r_hand = /obj/item/rogueweapon/spear
+		if("Mace + Shield")
+			backr = /obj/item/rogueweapon/shield/wood
+			beltr = /obj/item/rogueweapon/mace
+		if("Flail + Shield")
+			backr = /obj/item/rogueweapon/shield/wood
+			beltr = /obj/item/rogueweapon/flail
+		if("Axe + Shield")
+			backr = /obj/item/rogueweapon/shield/wood
 			beltr = /obj/item/rogueweapon/stoneaxe/woodcut
 
 	H.energy = H.max_energy
@@ -127,8 +158,10 @@ NECRO SKELETONS
 	subclass_skills = list(
 		/datum/skill/combat/bows = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/slings = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/crossbows = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/crafting = SKILL_LEVEL_NOVICE,
 		/datum/skill/craft/carpentry = SKILL_LEVEL_NOVICE,
@@ -140,62 +173,242 @@ NECRO SKELETONS
 /datum/outfit/job/roguetown/greater_skeleton/necro/ballistiare/pre_equip(mob/living/carbon/human/H)
 	..()
 
-	H.STASTR = rand(6,8)
-	H.STASPD = rand(8,10)
-	H.STACON = rand(5,7)
-	H.STAWIL = rand(11,13)
-	H.STAINT = rand(4,6)
-	H.STAPER = prob(2) ? 18 : rand(13,15)
+	REMOVE_TRAIT(H, TRAIT_HEAVYARMOR, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
+	H.STASTR = 8
+	H.STASPD = 8
+	H.STACON = 8
+	H.STAWIL = 12
+	H.STAINT = 3
+	H.STAPER = 14
 
+	head = /obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle/iron //intentional jaw weakspot
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/iron
+	pants = /obj/item/clothing/under/roguetown/chainlegs/iron/hose/dyeable/necro
+	armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/iron
+	gloves = /obj/item/clothing/gloves/roguetown/leather
+	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/light //so they don't die to groin hits too quickly, still a weakspot
+	shoes = /obj/item/clothing/shoes/roguetown/sandals //hosen covers feet but also legs, very easy to incapacitate by default
+	backl = /obj/item/storage/backpack/rogue/satchel
+	belt = /obj/item/storage/belt/rogue/leather
 	beltr = /obj/item/rogueweapon/huntingknife/idagger
 
+	backpack_contents = list(
+		/obj/item/natural/cloth = 1 //for your helm
+	)
+
 	H.adjust_blindness(-3)
-	var/weapon_choice = input(H, "Choose your weapon.", "WHAT WILL YOU CARRY?") as anything in list("Bow", "Sling")
+	var/tabards = list("Black Jupon", "Black Tabard", "Black Cloak", "Black Toga")
+	var/tabard_choice = input(H, "Choose your CLOAK.", "BEAR YOUR HERALDRY.") as anything in tabards
+	switch(tabard_choice)
+		if("Black Jupon")
+			cloak = /obj/item/clothing/cloak/tabard/stabard/surcoat/necro
+		if("Black Tabard")
+			cloak = /obj/item/clothing/cloak/tabard/necro
+		if("Black Toga")
+			cloak = /obj/item/clothing/cloak/tabard/toga/lich
+	var/weapon_choice = input(H, "Choose your weapon.", "RISE AGAINST THE LYVING.") as anything in list("Bow", "Sling", "Crossbow")
 	H.set_blindness(0)
 	switch(weapon_choice)
 		if("Bow")
-			backr = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/short
+			backr = /obj/item/gun/ballistic/revolver/grenadelauncher/bow
 			beltl = /obj/item/quiver/arrows
+			H.adjust_skillrank(/datum/skill/combat/bows, 1, TRUE)
 		if("Sling")
-			backr = /obj/item/gun/ballistic/revolver/grenadelauncher/sling
+			backr = /obj/item/rogueweapon/shield/wood
+			l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/sling
 			beltl = /obj/item/quiver/sling/iron
+			H.adjust_skillrank(/datum/skill/combat/slings, 1, TRUE)
+		if("Crossbow")
+			backr = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/iron //NPC-grade crossbow
+			beltl = /obj/item/quiver/bolt/standard
+			H.adjust_skillrank(/datum/skill/combat/crossbows, 1, TRUE)
 
 	H.energy = H.max_energy
 
-// Crafting and labor skeleton. Tools double as weapons.
+// Melee Heavy-Plate fighter with a mace/spear. Heavy weapon specialist that cracks to fire/when their armor is busted up.
+/datum/advclass/greater_skeleton/necro/bulwark
+	name = "Shattered Bulwark"
+	tutorial = "Legions rise and you answer. Stand rigid and unbreakable; for you serve the architect. Death comes for all but you delay and defy it."
+	outfit = /datum/outfit/job/roguetown/greater_skeleton/necro/bulwark
+
+	category_tags = list(CTAG_NSKELETON)
+	subclass_skills = list(
+		/datum/skill/combat/swords = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/combat/polearms = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/combat/shields = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN, //higher because less disposable goon than lich bulwarks
+		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/craft/carpentry = SKILL_LEVEL_NOVICE,
+		/datum/skill/craft/crafting = SKILL_LEVEL_NOVICE,
+		/datum/skill/craft/masonry = SKILL_LEVEL_NOVICE,
+		/datum/skill/craft/sewing = SKILL_LEVEL_NOVICE,
+
+	)
+	traits_applied = list(TRAIT_SILVER_WEAK)
+
+/datum/outfit/job/roguetown/greater_skeleton/necro/bulwark/pre_equip(mob/living/carbon/human/H)
+	..()
+
+	H.STASTR = 12
+	H.STAPER = 10
+	H.STASPD = 7 //Slightly faster than lich one cause its got to keep up with the other necro's goons + less disposable + worse statline due to lux cost.
+	H.STACON = 6 //Relies on armor
+	H.STAWIL = 12
+	H.STAINT = 1
+
+	gloves = /obj/item/clothing/gloves/roguetown/plate/iron
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/iron/chain
+	pants = /obj/item/clothing/under/roguetown/chainlegs/iron/kilt
+	armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/iron/heavy
+	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson
+	backl = /obj/item/storage/backpack/rogue/satchel
+	belt = /obj/item/storage/belt/rogue/leather/battleskirt/black
+	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/iron
+
+	backpack_contents = list(
+		/obj/item/natural/feather = 1, //For your helm
+	)
+
+	var/helmets = list(
+		"Bucket Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/bucket/iron,
+		"Knight's Armet"		= /obj/item/clothing/head/roguetown/helmet/heavy/knight/iron,
+		"Knight's Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/knight/old/iron,
+		"Knight's Greatplumed Armet"		= /obj/item/clothing/head/roguetown/helmet/heavy/knight/iron/greatplume,
+		"None"
+		)
+	H.adjust_blindness(-3)
+	var/helmchoice = input(H, "Choose your Helm.", "TAKE UP HELMS") as anything in helmets
+	if(helmchoice != "None")
+		head = helmets[helmchoice]
+	var/tabards = list("Black Jupon", "Black Tabard", "Black Cloak", "Black Toga")
+	var/tabard_choice = input(H, "Choose your CLOAK.", "BEAR YOUR HERALDRY.") as anything in tabards
+	switch(tabard_choice)
+		if("Black Jupon")
+			cloak = /obj/item/clothing/cloak/tabard/stabard/surcoat/necro
+		if("Black Tabard")
+			cloak = /obj/item/clothing/cloak/tabard/necro
+		if("Black Cloak")
+			cloak = /obj/item/clothing/cloak/half/lich
+		if("Black Toga")
+			cloak = /obj/item/clothing/cloak/tabard/toga/lich
+	var/weapon_choice = input(H, "Choose your weapon.", "RISE AGAINST THE LYVING.") as anything in list("Greatsword", "Spear", "Great Flail", "Warhammer + Shield")
+	H.set_blindness(0)
+	switch(weapon_choice)
+		if("Greatsword")
+			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_JOURNEYMAN, TRUE)
+			r_hand = /obj/item/rogueweapon/greatsword/iron
+		if("Spear")
+			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_JOURNEYMAN, TRUE)
+			r_hand = /obj/item/rogueweapon/spear
+		if("Great Flail")
+			H.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, SKILL_LEVEL_JOURNEYMAN, TRUE)
+			r_hand = /obj/item/rogueweapon/flail/peasantwarflail/iron
+		if("Warhammer + Shield")
+			H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_JOURNEYMAN, TRUE)
+			backr = /obj/item/rogueweapon/shield/wood
+			beltr = /obj/item/rogueweapon/mace/warhammer
+
+	H.energy = H.max_energy
+
+// Crafting and labor skeleton, sidegrades completely from the lich sapper w/ maile training. Higher potental, but no magic or the exceptionally high skill level + self destruction that lich sapper has
 /datum/advclass/greater_skeleton/necro/sapper
-	name = "Lesser Bone Sapper"
-	tutorial = "Toil toil toil. You rise to work. You rise to rebell; but your rebellion is localized in the smithy, in the sawmills, in the plants. Create under the foreman and the architect."
+	name = "Bone Toiler"
+	tutorial = "Toil toil toil. You rise to work. You rise to rebel; but your rebellion is localized in the smithy, in the sawmills, in the plants. Create under the foreman and the architect."
 	outfit = /datum/outfit/job/roguetown/greater_skeleton/necro/sapper
 
 	category_tags = list(CTAG_NSKELETON)
 	subclass_skills = list(
-		/datum/skill/combat/axes = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/axes = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/craft/carpentry = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/craft/carpentry = SKILL_LEVEL_EXPERT,
 		/datum/skill/craft/masonry = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/crafting = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/sewing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/traps = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/engineering = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/craft/alchemy = SKILL_LEVEL_APPRENTICE, //For the alchemy mortar + pestle for explosives, remove once the recipe changes.
 		/datum/skill/craft/cooking = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/labor/mining = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/labor/lumberjacking = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/craft/blacksmithing = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/craft/armorsmithing = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/craft/weaponsmithing = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/craft/smelting = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/craft/tanning = SKILL_LEVEL_NOVICE, //You /can/ do it, is the point here
+		/datum/skill/labor/butchering = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/labor/mining = SKILL_LEVEL_EXPERT,
+		/datum/skill/labor/lumberjacking = SKILL_LEVEL_MASTER, //High because necromancer has a skeleton cap and they have /you/
 	)
-	traits_applied = list(TRAIT_SILVER_WEAK)
+	/*Gimmic here is for smithing, you have to spect out into what you want.
+	You remain mostly spread into utility as well as construction however this still remains a non-combat role,
+	for skeles to pick into, expect to be pretty chill playing this.
+
+	vs lich skele you can't artifice as-well as them, nor do you get free spells + wall destroying explosion + decent as they have armor
+	Nor do you get yourself a free spec of golden specs to tell structure health, you're sort of a knockoff one to say the least.
+	You do however completely sidegrade it as a toiler by having medium armor so you can technically "Become" a combat build, you just won't be as-good as one.
+	*/
+	traits_applied = list(TRAIT_SILVER_WEAK, TRAIT_HOMESTEAD_EXPERT, TRAIT_SMITHING_EXPERT, TRAIT_SELF_SUSTENANCE)
 
 /datum/outfit/job/roguetown/greater_skeleton/necro/sapper/pre_equip(mob/living/carbon/human/H)
 	..()
 
-	H.STASTR = rand(8,10)
-	H.STASPD = rand(4,6)
-	H.STACON = rand(6,8)
-	H.STAWIL = rand(8,10)
-	H.STAINT = prob(2) ? 18 : rand(4,6)
-	H.STAPER = rand(6,8)
+	REMOVE_TRAIT(H, TRAIT_HEAVYARMOR, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_MEDIUMARMOR, TRAIT_GENERIC) //sidegrade here
+	H.STASTR = 10
+	H.STASPD = 10
+	H.STACON = 5 //Non-Combat Role, low con.
+	H.STAWIL = 10
+	H.STAINT = 6
+	H.STAPER = 8
 
+	head = /obj/item/clothing/head/roguetown/articap/lich
+	pants = /obj/item/clothing/under/roguetown/chainlegs/iron/kilt
+	shirt = prob(50) ? /obj/item/clothing/suit/roguetown/shirt/undershirt/vagrant : /obj/item/clothing/suit/roguetown/shirt/undershirt/vagrant/l
+	armor = /obj/item/clothing/suit/roguetown/armor/chainmail/iron
+	shoes = /obj/item/clothing/shoes/roguetown/boots/leather
+	gloves = /obj/item/clothing/gloves/roguetown/leather
+	backl = /obj/item/storage/backpack/rogue/backpack
+	belt = /obj/item/storage/belt/rogue/leather/battleskirt/black
 	beltr = /obj/item/rogueweapon/stoneaxe/woodcut
 	beltl = /obj/item/rogueweapon/pick
 
+	var/tabards = list("Black Jupon", "Black Tabard", "Black Cloak", "Black Toga")
+	var/tabard_choice = input(H, "Choose your CLOAK.", "BEAR YOUR HERALDRY.") as anything in tabards
+	switch(tabard_choice)
+		if("Black Jupon")
+			cloak = /obj/item/clothing/cloak/tabard/stabard/surcoat/necro
+		if("Black Tabard")
+			cloak = /obj/item/clothing/cloak/tabard/necro
+		if("Black Cloak")
+			cloak = /obj/item/clothing/cloak/half/lich
+		if("Black Toga")
+			cloak = /obj/item/clothing/cloak/tabard/toga/lich
+
+	//this might seem **extremely** overkill, but frankly if you pick a non-combat construction skeleton. Just have your toolset, people ain't gonna roundstart as skeles most of the time if it ain't lich.
+	//this lets you get doing the thing you need to and lets you build at least cause most people are going to take frag role skeles that are better anyway in most cases, so ehhhhhhhhh...
+	backpack_contents = list(
+		/obj/item/rogueweapon/hammer/iron = 1,
+		/obj/item/rogueweapon/tongs = 1,
+		/obj/item/rogueweapon/hammer/wood = 1,
+		/obj/item/rogueweapon/chisel = 1,
+		/obj/item/rogueweapon/handsaw = 1,
+		/obj/item/dye_brush = 1
+	)
+
 	H.energy = H.max_energy
+
+/obj/item/clothing/cloak/tabard/stabard/surcoat/necro
+	name = "decrepit jupon"
+	desc = "Roughspun fabrics from beyond your lyfetime, donned by those who are condemned to walk forevermore."
+	color = CLOTHING_BLACK
+
+/obj/item/clothing/cloak/tabard/necro
+	name = "decrepit tabard"
+	desc = "Roughspun fabrics from beyond your lyfetime, donned by those who once knew of class and place."
+	color = CLOTHING_BLACK
+
+/obj/item/clothing/under/roguetown/chainlegs/iron/hose/dyeable/necro
+	name = "iron chain hosen with decrepit coverings"
+	altdetail_color = CLOTHING_BLACK
+	detail_color = CLOTHING_BLACK

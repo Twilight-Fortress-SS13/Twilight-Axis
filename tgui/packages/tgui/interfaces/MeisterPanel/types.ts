@@ -1,4 +1,4 @@
-import { type RoutedActFunctionType } from '../../backend';
+import type { sendAct } from 'tgui/events/act';
 
 export type FundEntry = {
   id: string;
@@ -117,5 +117,5 @@ export type TabKey =
 
 export type TabProps = {
   data: Data;
-  act: RoutedActFunctionType;
+  act: typeof sendAct;
 };

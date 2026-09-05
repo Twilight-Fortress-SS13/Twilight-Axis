@@ -14,7 +14,7 @@
 	equip_sound = 'sound/blank.ogg'
 	bloody_icon_state = "bodyblood"
 	alternate_worn_layer = UNDER_CLOAK_LAYER
-	strip_delay = 20
+	strip_delay = STRIP_DELAY_FAST
 	var/max_storage = 20 // Weight budget. Regular ammo = 1 weight each.
 	var/list/arrows = list()
 	var/preferred_ammo_type
@@ -115,18 +115,44 @@
 			types[A.type]["count"]++
 	return types
 
-/obj/item/quiver/proc/pick_ammo(ammo_base_type)
+/obj/item/quiver/proc/pick_ammo(ammo_base_type, wanted_caliber)
 	var/obj/item/ammo_casing/caseless/rogue/fallback
 	for(var/obj/item/ammo_casing/caseless/rogue/A in arrows)
 		if(ammo_base_type && !istype(A, ammo_base_type))
+			continue
+		if(wanted_caliber && A.caliber != wanted_caliber)
 			continue
 		if(!fallback)
 			fallback = A
 		if(preferred_ammo_type && istype(A, preferred_ammo_type))
 			return A
-	if(preferred_ammo_type)
+	if(preferred_ammo_type && !wanted_caliber)
 		preferred_ammo_type = fallback?.type
 	return fallback
+
+/obj/item/quiver/proc/try_quick_load(obj/item/gun/ballistic/revolver/grenadelauncher/B, mob/user, params)
+	if(B.chambered)
+		return FALSE
+	if(!B.can_quick_load(user))
+		return FALSE
+	if(!length(arrows))
+		to_chat(user, span_warning("[src] is empty!"))
+		return FALSE
+	var/obj/item/ammo_casing/caseless/rogue/AR = pick_ammo(allowed_ammo_type, B.magazine?.caliber)
+	if(!AR)
+		to_chat(user, span_warning("Nothing in [src] fits [B]."))
+		return FALSE
+	arrows -= AR
+	B.quickloading = TRUE
+	B.attackby(AR, user, params)
+	B.quickloading = FALSE
+	if(!B.chambered)
+		arrows += AR
+		return FALSE
+	if(HAS_TRAIT(user, TRAIT_COMBAT_AWARE))
+		user.balloon_alert(user, "[length(arrows)] left...")
+	update_icon()
+	return TRUE
 
 /obj/item/quiver/attack_turf(turf/T, mob/living/user)
 	if(get_current_weight() >= max_storage)
@@ -163,35 +189,25 @@
 
 	update_icon()
 
-/obj/item/quiver/attackby(obj/A, loc, params)
+/obj/item/quiver/attackby(obj/A, mob/user, params)
 	if(istype(A, /obj/item/ammo_casing/caseless/rogue))
 		if(!istype(A, allowed_ammo_type))
-			to_chat(loc, span_warning("That doesn't fit in [src]."))
+			to_chat(user, span_warning("That doesn't fit in [src]."))
 			return FALSE
 		var/obj/item/ammo_casing/caseless/rogue/ammo = A
 		if(get_current_weight() + ammo.ammo_weight <= max_storage)
-			if(ismob(loc))
-				var/mob/M = loc
-				M.doUnEquip(A, TRUE, src, TRUE, silent = TRUE)
+			if(ismob(user))
+				user.doUnEquip(A, TRUE, src, TRUE, silent = TRUE)
 			else
 				A.forceMove(src)
 			arrows += A
 			update_icon()
 		else
-			to_chat(loc, span_warning("Full!"))
+			to_chat(user, span_warning("Full!"))
 		return
-	if(istype(A, /obj/item/gun/ballistic/revolver/grenadelauncher/bow))
-		var/obj/item/gun/ballistic/revolver/grenadelauncher/bow/B = A
-		if(arrows.len && !B.chambered)
-			var/obj/item/ammo_casing/caseless/rogue/AR = pick_ammo(/obj/item/ammo_casing/caseless/rogue/arrow)
-			if(AR)
-				arrows -= AR
-				B.attackby(AR, loc, params)
-				if(ismob(loc))
-					var/mob/M = loc
-					if(HAS_TRAIT(M, TRAIT_COMBAT_AWARE))
-						M.balloon_alert(M, "[length(arrows)] left...")
-				update_icon()
+	if(istype(A, /obj/item/gun/ballistic/revolver/grenadelauncher))
+		if(ismob(user))
+			try_quick_load(A, user, params)
 		return
 	..()
 
@@ -240,11 +256,11 @@
 	for(var/ammo_path in ammo_types)
 		var/list/info = ammo_types[ammo_path]
 		var/selected_marker = (ammo_path == preferred_ammo_type) ? " (selected)" : ""
-		. += span_notice("  [info["name"]] x[info["count"]][selected_marker]")
+		. += span_notice("	[info["name"]] x[info["count"]][selected_marker]")
 
 /obj/item/quiver/get_mechanics_examine(mob/user)
 	. = ..()
-	. += span_info("Left-click the quiver with a bow or sling to quick-load.")
+	. += span_info("Left-click with a compatible ranged weapon to nock straight from it. Bows and crossbows need my other hand free; slings do not.")
 	. += span_info("Left-click on the ground to pick up ammo.")
 	. += span_info("Shift-Right-click to select which ammo type to load first.")
 	. += span_info("Ctrl-Click to drop all ammo on the ground one by one.")
@@ -256,88 +272,148 @@
 	else
 		icon_state = "quiver0"
 
-/obj/item/quiver/arrows/Initialize()
+/obj/item/quiver/arrows
+	var/fill_amount
+
+/obj/item/quiver/arrows/Initialize(mapload)
 	..()
-	for(var/i in 1 to max_storage)
+	for(var/i in 1 to (fill_amount || max_storage))
 		var/obj/item/ammo_casing/caseless/rogue/arrow/iron/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/stonearrows/Initialize()
+/obj/item/quiver/arrows/scarce
+	fill_amount = 2
+
+/obj/item/quiver/stonearrows/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/arrow/stone/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/bluntarrows/Initialize()
+/obj/item/quiver/bluntarrows/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/arrow/blunt/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/poisonarrows/Initialize()
+/obj/item/quiver/poisonarrows/Initialize(mapload)
 	. = ..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/arrow/poison/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/pyroarrows/Initialize()
+/obj/item/quiver/pyroarrows/Initialize(mapload)
 	. = ..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/arrow/elemental/fire/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/Parrows/Initialize()
+/obj/item/quiver/Parrows/Initialize(mapload)
 	. = ..()
 
-/obj/item/quiver/Warrows/Initialize()
+/obj/item/quiver/Warrows/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/arrow/water/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/bodkin/Initialize()
+/obj/item/quiver/bodkin/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/arrow/steel/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/paalloy/Initialize()
+/obj/item/quiver/paalloy/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/arrow/steel/paalloy/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/broadhead_aalloy/Initialize()
+/obj/item/quiver/broadhead_aalloy/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/arrow/iron/aalloy/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/silver/Initialize()
+/obj/item/quiver/silver/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/arrow/silver/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/bronzearrows/Initialize()
+/obj/item/quiver/bronzearrows/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/arrow/bronze/A = new()
 		arrows += A
 	update_icon()
 
+/obj/item/quiver/blacksteelarrows/Initialize(mapload)
+	..()
+	for(var/i in 1 to max_storage)
+		var/obj/item/ammo_casing/caseless/rogue/arrow/blacksteel/A = new()
+		arrows += A
+	update_icon()
+
+
+//////////// AI ARCHER QUIVERS ////////////
+/obj/item/quiver/randomfill
+	var/list/fill_table
+
+/obj/item/quiver/randomfill/Initialize(mapload)
+	. = ..()
+	if(length(fill_table))
+		for(var/i in 1 to max_storage)
+			var/arrow_type = pickweight(fill_table)
+			if(!arrow_type)
+				continue
+			var/obj/item/ammo_casing/caseless/rogue/arrow/A = new arrow_type()
+			arrows += A
+	update_icon()
+
+/obj/item/quiver/randomfill/skeleton
+	fill_table = list(
+		/obj/item/ammo_casing/caseless/rogue/arrow/iron = 100
+	)
+
+/obj/item/quiver/randomfill/highwayman
+	fill_table = list(
+		/obj/item/ammo_casing/caseless/rogue/arrow/iron = 100,
+
+	)
+
+/obj/item/quiver/randomfill/reaver
+	fill_table = list(
+		/obj/item/ammo_casing/caseless/rogue/arrow/iron = 80,
+		/obj/item/ammo_casing/caseless/rogue/arrow/steel = 15,
+	)
+
+/obj/item/quiver/npc
+	var/fill_type = /obj/item/ammo_casing/caseless/rogue/arrow/iron
+
+/obj/item/quiver/npc/Initialize(mapload)
+	. = ..()
+	if(fill_type)
+		for(var/i in 1 to max_storage)
+			var/obj/item/ammo_casing/caseless/rogue/arrow/A = new fill_type()
+			arrows += A
+	update_icon()
+
+/obj/item/quiver/npc/stone
+	fill_type = /obj/item/ammo_casing/caseless/rogue/arrow/stone
+
 //////////// Note - silver quivers and bolt pouches shouldn't be obtainable through normal circumstances.
-// BOLTS  // For now, they should only be available as uncraftable singles.
+// BOLTS	// For now, they should only be available as uncraftable singles.
 ////////////
 
 /obj/item/quiver/bolt
@@ -417,87 +493,97 @@
 	else
 		icon_state = "boltpouch0"
 
-/obj/item/quiver/bolt/standard/Initialize()
+/obj/item/quiver/bolt/standard/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/bolt/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/bolt/aalloy/Initialize()
+/obj/item/quiver/bolt/npc
+	max_storage = 8
+
+/obj/item/quiver/bolt/npc/Initialize(mapload)
+	..()
+	for(var/i in 1 to max_storage)
+		var/obj/item/ammo_casing/caseless/rogue/bolt/A = new()
+		arrows += A
+	update_icon()
+
+/obj/item/quiver/bolt/aalloy/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/bolt/aalloy/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/bolt/bronze/Initialize()
+/obj/item/quiver/bolt/bronze/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/bolt/bronze/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/bolt/paalloy/Initialize()
+/obj/item/quiver/bolt/paalloy/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/bolt/paalloy/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/bolt/blunt/Initialize()
+/obj/item/quiver/bolt/blunt/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/bolt/blunt/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/bolt/holy/Initialize()
+/obj/item/quiver/bolt/holy/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/bolt/holy/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/bolt/lightholy/Initialize()
+/obj/item/quiver/bolt/lightholy/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/bolt/lightholy/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/bolt/pyro/Initialize()
+/obj/item/quiver/bolt/pyro/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/bolt/pyro/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/bolt/water/Initialize()
+/obj/item/quiver/bolt/water/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/bolt/water/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/bolt/silver/Initialize()
+/obj/item/quiver/bolt/silver/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/bolt/silver/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/bolt/light/Initialize()
+/obj/item/quiver/bolt/light/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/bolt/light/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/bolt/silver/Initialize()
+/obj/item/quiver/bolt/blacksteel/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
-		var/obj/item/ammo_casing/caseless/rogue/bolt/bronze/A = new()
+		var/obj/item/ammo_casing/caseless/rogue/bolt/blacksteel/A = new()
 		arrows += A
 	update_icon()
 
@@ -529,56 +615,56 @@
 	else
 		icon_state = "boltpouch0"
 
-/obj/item/quiver/bolt/heavy/standard/Initialize()
+/obj/item/quiver/bolt/heavy/standard/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/heavy_bolt/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/bolt/heavy/bronze/Initialize()
+/obj/item/quiver/bolt/heavy/bronze/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/heavy_bolt/bronze/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/bolt/heavy/aalloy/Initialize()
+/obj/item/quiver/bolt/heavy/aalloy/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/heavy_bolt/aalloy/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/bolt/heavy/paalloy/Initialize()
+/obj/item/quiver/bolt/heavy/paalloy/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/heavy_bolt/paalloy/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/bolt/heavy/blunt/Initialize()
+/obj/item/quiver/bolt/heavy/blunt/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/heavy_bolt/blunt/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/bolt/heavy/silver/Initialize()
+/obj/item/quiver/bolt/heavy/silver/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/heavy_bolt/silver/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/bolt/heavy/stake/Initialize()
+/obj/item/quiver/bolt/heavy/stake/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/heavy_bolt/stake/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/bolt/heavy/stake_silver/Initialize()
+/obj/item/quiver/bolt/heavy/stake_silver/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/heavy_bolt/stake_silver/A = new()
@@ -586,7 +672,7 @@
 	update_icon()
 
 /////////////
-// STAKES  //
+// STAKES	//
 /////////////
 
 /obj/item/quiver/bolt/stake
@@ -613,14 +699,14 @@
 	else
 		icon_state = "stakepouch0"
 
-/obj/item/quiver/bolt/stake/standard/Initialize()
+/obj/item/quiver/bolt/stake/standard/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/stake/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/bolt/stake/silver/Initialize()
+/obj/item/quiver/bolt/stake/silver/Initialize(mapload)
 	..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/stake/silver/A = new()
@@ -655,31 +741,38 @@
 	else
 		icon_state = "javelinbag0"
 
-/obj/item/quiver/javelin/iron/Initialize()
+/obj/item/quiver/javelin/iron/Initialize(mapload)
 	..()
 	for(var/i in 1 to 4)
 		var/obj/item/ammo_casing/caseless/rogue/javelin/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/javelin/steel/Initialize()
+/obj/item/quiver/javelin/steel/Initialize(mapload)
 	..()
 	for(var/i in 1 to 4)
 		var/obj/item/ammo_casing/caseless/rogue/javelin/steel/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/javelin/paalloy/Initialize()
+/obj/item/quiver/javelin/paalloy/Initialize(mapload)
 	..()
 	for(var/i in 1 to 4)
 		var/obj/item/ammo_casing/caseless/rogue/javelin/steel/paalloy/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/javelin/bronze/Initialize()
+/obj/item/quiver/javelin/bronze/Initialize(mapload)
 	..()
 	for(var/i in 1 to 4)
 		var/obj/item/ammo_casing/caseless/rogue/javelin/bronze/A = new()
+		arrows += A
+	update_icon()
+
+/obj/item/quiver/javelin/blacksteel/Initialize(mapload)
+	..()
+	for(var/i in 1 to 4)
+		var/obj/item/ammo_casing/caseless/rogue/javelin/blacksteel/A = new()
 		arrows += A
 	update_icon()
 
@@ -710,17 +803,6 @@
 			if(!eatarrow(sling_bullet))
 				break
 
-/obj/item/quiver/sling/attackby(obj/A, loc, params)
-	if(istype(A, /obj/item/gun/ballistic/revolver/grenadelauncher/sling))
-		var/obj/item/gun/ballistic/revolver/grenadelauncher/sling/B = A
-		if(arrows.len && !B.chambered)
-			var/obj/item/ammo_casing/caseless/rogue/AR = pick_ammo(/obj/item/ammo_casing/caseless/rogue/sling_bullet)
-			if(AR)
-				arrows -= AR
-				B.attackby(AR, loc, params)
-		return
-	..()
-
 /obj/item/quiver/sling/attack_right(mob/user)
 	if(arrows.len)
 		var/obj/O = arrows[arrows.len]
@@ -733,65 +815,448 @@
 /obj/item/quiver/sling/update_icon()
 	return
 
-/obj/item/quiver/sling/stone/Initialize()
+/obj/item/quiver/sling/stone/Initialize(mapload)
 	. = ..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/sling_bullet/stone/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/sling/iron/Initialize()
+/obj/item/quiver/sling/npc
+	max_storage = 20
+
+/obj/item/quiver/sling/npc/Initialize(mapload)
+	. = ..()
+	for(var/i in 1 to max_storage)
+		var/obj/item/ammo_casing/caseless/rogue/sling_bullet/stone/A = new()
+		arrows += A
+	update_icon()
+
+/obj/item/quiver/sling/iron/Initialize(mapload)
 	. = ..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/sling_bullet/iron/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/sling/steel/Initialize()
+/obj/item/quiver/sling/steel/Initialize(mapload)
 	. = ..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/sling_bullet/scattershot/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/sling/aalloy/Initialize()
+/obj/item/quiver/sling/aalloy/Initialize(mapload)
 	. = ..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/sling_bullet/aalloy/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/sling/paalloy/Initialize()
+/obj/item/quiver/sling/paalloy/Initialize(mapload)
 	. = ..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/sling_bullet/paalloy/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/sling/bronze/Initialize()
+/obj/item/quiver/sling/bronze/Initialize(mapload)
 	. = ..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/sling_bullet/bronze/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/sling/scattershot/Initialize()
+/obj/item/quiver/sling/scattershot/Initialize(mapload)
 	. = ..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/sling_bullet/scattershot/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/sling/heavy_sling_bullet/Initialize()
+/obj/item/quiver/sling/heavy_sling_bullet/Initialize(mapload)
 	. = ..()
 	for(var/i in 1 to 13) // 3 weight each, 13 rocks = 39/40 capacity
 		var/obj/item/ammo_casing/caseless/rogue/sling_bullet/heavy_sling_bullet/A = new()
 		arrows += A
 	update_icon()
 
-/obj/item/quiver/sling/fire_pot/Initialize()
+/obj/item/quiver/sling/fire_pot/Initialize(mapload)
 	. = ..()
 	for(var/i in 1 to 13) // 3 weight each, 13 pots = 39/40 capacity
 		var/obj/item/ammo_casing/caseless/rogue/sling_bullet/fire_pot/A = new()
 		arrows += A
 	update_icon()
+
+/obj/item/quiver/sling/blacksteel/Initialize(mapload)
+	. = ..()
+	for(var/i in 1 to max_storage)
+		var/obj/item/ammo_casing/caseless/rogue/sling_bullet/blacksteel/A = new()
+		arrows += A
+	update_icon()
+
+/obj/item/quiver/sling/bs_scattershot/Initialize(mapload)
+	. = ..()
+	for(var/i in 1 to max_storage)
+		var/obj/item/ammo_casing/caseless/rogue/sling_bullet/bs_scattershot/A = new()
+		arrows += A
+	update_icon()
+
+// ============================================================
+// MECHANIZED QUIVERS
+// Three variants: bow, crossbow, siegebow
+// - Auto-pickup of matching ammo when walking over it
+// - Stores the matching ranged weapon via holster component
+// - Crafted at the autosmither
+// ============================================================
+
+// ---- BASE TYPE ----
+
+/obj/item/quiver/mechanized
+	name = "mechanized quiver"
+	desc = "A cogwork quiver that automatically collects ammunition."
+	icon = 'icons/roguetown/weapons/ammo.dmi'
+	icon_state = "mechquiver0"
+	w_class = WEIGHT_CLASS_BULKY
+	slot_flags = ITEM_SLOT_BACK
+	resistance_flags = FIRE_PROOF
+	max_integrity = 400
+	sewrepair = FALSE
+	anvilrepair = /datum/skill/craft/engineering
+	smeltresult = /obj/item/ingot/bronze
+	//whether a weapon can go on a particular quiver
+	var/obj/item/gun/ballistic/revolver/grenadelauncher/valid_weapon
+	var/obj/item/gun/ballistic/revolver/grenadelauncher/holstered_weapon
+	//we're giving it the same delay as the great weapon straps have
+	equip_delay_self = 5 SECONDS
+	unequip_delay_self = 5 SECONDS
+	strip_delay = STRIP_DELAY_FAST
+	var/sheathe_time = 2 SECONDS
+	//these control the pixel adjustment for hanging bows/crossbows on
+	var/bowoverlay_x = 8
+	var/bowoverlay_y = -4
+
+//referencing the mechanized ore bag code for the autopickup part. look in storage.dm
+/obj/item/quiver/mechanized/equipped(mob/living/user, slot)
+	. = ..()
+	RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(on_user_moved))
+
+/obj/item/quiver/mechanized/dropped(mob/living/user)
+	. = ..()
+	UnregisterSignal(user, COMSIG_MOVABLE_MOVED)
+
+/obj/item/quiver/mechanized/proc/on_user_moved(mob/living/source)
+	SIGNAL_HANDLER
+	if(!source || source.incapacitated())
+		return
+	// tried to use the signal handler from the ore bag but it gave warnings about passive listenders, went with a recommended use of the async process
+	INVOKE_ASYNC(src, PROC_REF(pickup_from_turf), get_turf(source), source)
+
+//compartmentalized arrow pickup
+/obj/item/quiver/mechanized/proc/pickup_from_turf(turf/T, mob/living/user)
+	for(var/obj/item/ammo_casing/caseless/rogue/A in T.contents)
+		if(!istype(A, allowed_ammo_type))
+			continue
+		if(get_current_weight() >= max_storage)
+			break
+		eatarrow(A)
+
+//copying parts in from great weapon straps
+/obj/item/quiver/mechanized/proc/holster_bow(obj/item/gun/ballistic/revolver/grenadelauncher/W, mob/living/user)
+	if(!istype(W, valid_weapon))
+		if(user)
+			to_chat(user, span_warning("[W] doesn't fit in [src]. Only Bows"))
+		return FALSE
+	if(holstered_weapon)
+		if(user)
+			to_chat(user, span_warning("[src] already has [holstered_weapon.name] holstered."))
+		return FALSE
+	W.forceMove(src)
+	holstered_weapon = W
+	if(!move_after(user, sheathe_time, target = user))
+		return FALSE
+	if(user)
+		to_chat(user, span_notice("I stow [W] into [src]."))
+		playsound(src, 'sound/misc/chestclose.ogg', 30, TRUE)
+	update_icon()
+	return TRUE
+
+/obj/item/quiver/mechanized/proc/draw_bow(mob/living/user)
+	if(!holstered_weapon)
+		to_chat(user, span_warning("Nothing is holstered in [src]."))
+		return FALSE
+	if(!move_after(user, sheathe_time, target = user))
+		return FALSE
+	var/obj/item/gun/ballistic/revolver/grenadelauncher/W = holstered_weapon
+	holstered_weapon = null
+	if(!user.put_in_active_hand(W))
+		W.forceMove(get_turf(user))
+	playsound(src, 'sound/misc/chestclose.ogg', 30, TRUE)
+	update_icon()
+	return TRUE
+
+/obj/item/quiver/mechanized/MiddleClick(mob/living/user)
+	//pull out the bow if its holstered
+	if(holstered_weapon)
+		draw_bow(user)
+		return
+	// nothing is holstered, are we carrying a valid bow?
+	var/obj/item/held = user.get_active_held_item()
+	if(!held)
+		to_chat(user, span_warning("I'm not holding anything to stow in [src]."))
+		return
+	if(!valid_weapon || !istype(held, valid_weapon))
+		to_chat(user, span_warning("[held] doesn't fit in [src]."))
+		return
+	if(user.transferItemToLoc(held, src))
+		holstered_weapon = held
+		to_chat(user, span_notice("I holster [held] into [src]."))
+		playsound(src, 'sound/misc/chestclose.ogg', 30, TRUE)
+		update_icon()
+
+/obj/item/quiver/mechanized/attack_right(mob/user)
+	if(holstered_weapon)
+		draw_bow(user)
+		return TRUE
+	return ..()
+
+/obj/item/quiver/mechanized/examine(mob/user)
+	. = ..()
+	if(holstered_weapon)
+		. += span_notice("Holstered: [holstered_weapon.name].")
+	else
+		. += span_warning("No weapon holstered. Middle-click with a compatible weapon to holster it.")
+
+/obj/item/quiver/mechanized/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Automatically picks up compatible ammo when you walk over it.")
+	. += span_info("Middle-click with a compatible weapon to holster it.")
+	. += span_info("Right-click or middle-click with an empty hand to draw the holstered weapon to your active hand.")
+
+/obj/item/quiver/mechanized/crossbow/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Use a hammer or wrench to reconfigure this quiver for either crossbows and bolts, or slurbows and light bolts.")
+
+//this controls the overlays, you migh need to adjust the bowoverlay_x and bowoverlay_y vars in the specific quiver types depending on the graphic
+/obj/item/quiver/mechanized/update_overlays()
+	. = ..()
+	if(!holstered_weapon)
+		return
+	var/mutable_appearance/weapon_overlay = mutable_appearance(
+		holstered_weapon.icon,
+		holstered_weapon.icon_state
+	)
+	var/matrix/M = matrix()
+	M.Scale(0.5, 0.5)
+	weapon_overlay.transform = M
+	weapon_overlay.pixel_x = bowoverlay_x
+	weapon_overlay.pixel_y = bowoverlay_y
+	. += weapon_overlay
+
+//we destroy both to ensure we don't have jankiness, hopefully?
+/obj/item/quiver/mechanized/Destroy()
+	if(holstered_weapon && !QDELETED(holstered_weapon))
+		holstered_weapon.forceMove(get_turf(src))
+	holstered_weapon = null
+	return ..()
+
+// ============================================================
+// QUIVERS
+// ============================================================
+
+//bow and arrows
+/obj/item/quiver/mechanized/bow
+	name = "mechanized bow quiver"
+	desc = "A mechanical quiver for bows and arrows, it will suck up arrows off the ground and hold a bow!"
+	icon_state = "mechquiver0"
+	max_storage = 20
+	allowed_ammo_type = /obj/item/ammo_casing/caseless/rogue/arrow
+	valid_weapon = /obj/item/gun/ballistic/revolver/grenadelauncher/bow
+
+/obj/item/quiver/mechanized/bow/update_icon()
+	icon_state = arrows.len ? "mechquiver1" : "mechquiver0"
+	// Rebuild overlays whenever icon updates so holstered weapon shows
+	bowoverlay_x = -14
+	bowoverlay_y = -14
+	cut_overlays()
+	var/list/new_overlays = update_overlays()
+	if(length(new_overlays))
+		overlays = new_overlays
+
+//crossbow, slurbow, bolts, and light bolts
+/obj/item/quiver/mechanized/crossbow
+	name = "mechanized bolt quiver"
+	desc = "A mechanical bolt pouch for crossbows and bolts. It will suck up bolts off the ground and hold a crossbow!"
+	icon_state = "mechboltpouch0"
+	max_storage = 16
+	allowed_ammo_type = /obj/item/ammo_casing/caseless/rogue/bolt
+	valid_weapon = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
+	var/slurbow_mode = FALSE
+	var/reconfigure_time = 3 SECONDS
+
+/obj/item/quiver/mechanized/crossbow/update_icon()
+	icon_state = arrows.len ? "mechboltpouch1" : "mechboltpouch0"
+	cut_overlays()
+	var/list/new_overlays = update_overlays()
+	if(length(new_overlays))
+		overlays = new_overlays
+
+/// Whether the given ammo casing matches whichever mode this quiver is currently configured for.
+/obj/item/quiver/mechanized/crossbow/proc/valid_ammo(obj/item/A)
+	if(slurbow_mode)
+		return istype(A, /obj/item/ammo_casing/caseless/rogue/bolt/light)
+	return istype(A, /obj/item/ammo_casing/caseless/rogue/bolt) && !istype(A, /obj/item/ammo_casing/caseless/rogue/bolt/light)
+
+/// Whether the given weapon matches whichever mode this quiver is currently configured for.
+/obj/item/quiver/mechanized/crossbow/proc/valid_weapon(obj/item/gun/ballistic/revolver/grenadelauncher/W)
+	if(!istype(W, /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow))
+		return FALSE
+	if(istype(W, /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/heavy))
+		return FALSE
+	if(slurbow_mode)
+		return istype(W, /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow)
+	return !istype(W, /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow)
+
+/// Flips between crossbow/bolt mode and slurbow/light-bolt mode.
+/obj/item/quiver/mechanized/crossbow/proc/toggle_mode(mob/living/user)
+	slurbow_mode = !slurbow_mode
+	if(slurbow_mode)
+		allowed_ammo_type = /obj/item/ammo_casing/caseless/rogue/bolt/light
+		valid_weapon = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow
+		name = "mechanized light bolt quiver"
+		desc = "A mechanical bolt pouch reconfigured for slurbows and light bolts. Adjust it with a hammer or wrench, while empty, to reconfigure it back for a crossbow and standard bolts."
+	else
+		allowed_ammo_type = /obj/item/ammo_casing/caseless/rogue/bolt
+		valid_weapon = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
+		name = "mechanized bolt quiver"
+		desc = "A mechanical bolt pouch for crossbows and bolts. Adjust it with a hammer or wrench, while empty, to reconfigure it for a slurbow and light bolts instead."
+	if(user)
+		to_chat(user, span_notice("I finish reconfiguring [src] for [slurbow_mode ? "a slurbow and light bolts" : "a crossbow and bolts"]."))
+	update_icon()
+
+/obj/item/quiver/mechanized/crossbow/attackby(obj/item/A, mob/user, params)
+	if(istype(A, /obj/item/rogueweapon/contraption/linker)||istype(A, /obj/item/rogueweapon/hammer))
+		if(arrows.len || holstered_weapon)
+			to_chat(user, span_warning("[src] needs to be emptied of bolts and any holstered weapon before I can reconfigure it."))
+			return TRUE
+		to_chat(user, span_notice("I start reconfiguring [src]..."))
+		if(!(do_after(user, reconfigure_time)))
+			return TRUE
+		toggle_mode(user)
+		return TRUE
+	if(istype(A, /obj/item/ammo_casing/caseless/rogue/bolt))
+		if(!valid_ammo(A))
+			to_chat(user, span_warning("[A] doesn't fit in [src] right now."))
+			return TRUE
+		var/obj/item/ammo_casing/caseless/rogue/ammo = A
+		if(get_current_weight() + ammo.ammo_weight <= max_storage)
+			if(ismob(user))
+				user.doUnEquip(A, TRUE, src, TRUE, silent = TRUE)
+			else
+				A.forceMove(src)
+			arrows += A
+			update_icon()
+		else
+			to_chat(user, span_warning("Full!"))
+		return TRUE
+	return ..()
+
+// Accept both standard bolts and light bolts
+/obj/item/quiver/mechanized/crossbow/eatarrow(obj/A)
+	if(!istype(A, /obj/item/ammo_casing/caseless/rogue/bolt) && \
+		!istype(A, /obj/item/ammo_casing/caseless/rogue/bolt/light))
+		return FALSE
+	var/obj/item/ammo_casing/caseless/rogue/ammo = A
+	if(get_current_weight() + ammo.ammo_weight <= max_storage)
+		A.forceMove(src)
+		arrows += A
+		update_icon()
+		return TRUE
+	return FALSE
+
+/obj/item/quiver/mechanized/crossbow/pickup_from_turf(turf/T, mob/living/user)
+	// Standard bolts
+	for(var/obj/item/ammo_casing/caseless/rogue/bolt/A in T.contents)
+		if(get_current_weight() >= max_storage)
+			break
+		if(!valid_ammo(A))
+			continue
+		eatarrow(A)
+
+/obj/item/quiver/mechanized/crossbow/holster_bow(obj/item/gun/ballistic/revolver/grenadelauncher/W, mob/living/user)
+	if(!valid_weapon(W))
+		if(user)
+			to_chat(user, span_warning("[W] doesn't fit in [src] right now."))
+		return FALSE
+	return ..()
+
+/obj/item/quiver/mechanized/crossbow/MiddleClick(mob/living/user)
+	//if there's somthing holstered, pull it out
+	if(holstered_weapon)
+		draw_bow(user)
+		return
+	//next we check what we're holding and holster it if its valid
+	var/obj/item/held = user.get_active_held_item()
+	if(!held)
+		to_chat(user, span_warning("I'm not holding anything to stow in [src]."))
+		return
+	if(!valid_weapon(held))
+		to_chat(user, span_warning("[held] doesn't fit in [src] right now."))
+		return
+	if(user.transferItemToLoc(held, src))
+		holstered_weapon = held
+		to_chat(user, span_notice("I clip [held] to [src]."))
+		playsound(src, 'sound/misc/chestclose.ogg', 30, TRUE)
+		update_icon()
+
+// ============================================================
+// SIEGEBOW QUIVER — heavy bolts only, siegebow only
+// ============================================================
+
+/obj/item/quiver/mechanized/siegebow
+	name = "mechanized heavy bolt quiver"
+	desc = "A mechanical heavy bolt pouch for siegebows and heavy bolts. It will suck up heavy bolts off the ground and hold a siegebow!"
+	icon_state = "mechboltpouch0"
+	w_class = WEIGHT_CLASS_HUGE
+	max_storage = 8
+	allowed_ammo_type = /obj/item/ammo_casing/caseless/rogue/heavy_bolt
+	valid_weapon = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/heavy
+
+/obj/item/quiver/mechanized/siegebow/update_icon()
+	icon_state = arrows.len ? "mechboltpouch1" : "mechboltpouch0"
+	cut_overlays()
+	var/list/new_overlays = update_overlays()
+	if(length(new_overlays))
+		overlays = new_overlays
+
+/obj/item/quiver/mechanized/siegebow/pickup_from_turf(turf/T, mob/living/user)
+	for(var/obj/item/ammo_casing/caseless/rogue/heavy_bolt/A in T.contents)
+		if(get_current_weight() >= max_storage)
+			break
+		eatarrow(A)
+
+/obj/item/quiver/mechanized/siegebow/holster_bow(obj/item/gun/ballistic/revolver/grenadelauncher/W, mob/living/user)
+	if(!istype(W, /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/heavy))
+		if(user)
+			to_chat(user, span_warning("[W] doesn't fit — it can carry only siegebows."))
+		return FALSE
+	return ..()
+
+/obj/item/quiver/mechanized/siegebow/MiddleClick(mob/living/user)
+	//if there's somthing holstered, pull it out
+	if(holstered_weapon)
+		draw_bow(user)
+		return
+	//next we check what we're holding and holster it if its valid
+	var/obj/item/held = user.get_active_held_item()
+	if(!held)
+		to_chat(user, span_warning("I'm not holding anything to stow in [src]."))
+		return
+	if(!istype(held, /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/heavy))
+		to_chat(user, span_warning("[held] doesn't fit — this pouch can only hold siegebows."))
+		return
+	if(user.transferItemToLoc(held, src))
+		holstered_weapon = held
+		to_chat(user, span_notice("I strap [held] to [src]."))
+		playsound(src, 'sound/misc/chestclose.ogg', 30, TRUE)
+		update_icon()

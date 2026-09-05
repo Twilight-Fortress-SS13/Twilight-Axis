@@ -28,6 +28,7 @@
 	job_subclasses = list(
 		/datum/advclass/guildmaster
 	)
+	has_subprefs = FALSE // only one subclass
 	spells = list(/obj/effect/proc_holder/spell/invoked/takeapprentice)
 
 /datum/advclass/guildmaster
@@ -66,6 +67,7 @@
 		/datum/skill/craft/traps = SKILL_LEVEL_EXPERT, //setting to higher level to counter an antag trap maker
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
 	)
+	tempo_capable = FALSE
 
 /datum/outfit/job/roguetown/guildmaster
 	has_loadout = TRUE
@@ -88,12 +90,18 @@
 			/obj/item/rogueweapon/tongs = 1,
 			/obj/item/recipe_book/blacksmithing = 1,
 			/obj/item/clothing/mask/rogue/spectacles/golden = 1,
-			/obj/item/contraption/linker/master = 1,
 			/obj/item/blueprint/mace_mushroom = 1
 			)
 		belt = /obj/item/storage/belt/rogue/leather
 		beltl = /obj/item/storage/belt/rogue/pouch/coins/rich
 		beltr = /obj/item/storage/keyring/guildmaster
+		var/wrenches = list("Compact Golden Wrench", "Massive Golden Wrench")
+		var/wrench_choice = input(H, "Choose your wrench.", "SYMBOL OF OFFICE") as anything in wrenches
+		switch(wrench_choice)
+			if("Compact Golden Wrench")
+				r_hand = /obj/item/rogueweapon/contraption/linker/mace/master
+			if("Massive Golden Wrench")
+				r_hand = /obj/item/rogueweapon/contraption/linker/mace/big/master
 	ADD_TRAIT(H, TRAIT_MASTER_CARPENTER, TRAIT_GENERIC)
 	ADD_TRAIT(H, TRAIT_MASTER_MASON, TRAIT_GENERIC)
 	if(H.mind)

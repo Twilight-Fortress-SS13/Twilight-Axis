@@ -8,3 +8,8 @@
 	name = "Chessboard"
 	cost = 80
 	contains = list(/obj/item/chessboard_folded)
+
+/datum/supply_pack/rogue/luxury/ball
+	name = "Ball"
+	cost = 20
+	contains = list(/obj/item/ball)

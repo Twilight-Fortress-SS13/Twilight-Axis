@@ -38,7 +38,7 @@
 		is_high_tier = TRUE
 	// skill happens as per normal
 	human_target.check_for_injuries(user)
-	//but from here on out, is where the magic happens... 
+	//but from here on out, is where the magic happens...
 	//anyway starting from something that diagnosis will now make -very clear- is when someone is rotting to death and needs immediate care, behold:
 	if(human_target.has_status_effect(/datum/status_effect/zombie_infection))
 		if(is_high_tier)
@@ -46,6 +46,10 @@
 		else
 			to_chat(user, span_necrosis("Their humors rot unnaturally, as their body is quickly decaying."))
 		to_chat(user, span_infection("Their rot needs to be burned immediately!"))
+		to_chat(user, span_infection("==="))
+	if(HAS_TRAIT(human_target, TRAIT_DEADITE)) //IDK what you expected but hey, Pestra's looking out for you!
+		to_chat(user, span_necrosis("They are infected and have already turned into a DEADITE!"))
+		to_chat(user, span_infection("Their rot needs to be burned to prevent them from spreading their infection!"))
 		to_chat(user, span_infection("==="))
 	// suffocation levels are also 'free for all', since this is the highest cause of deaths in game right now, medics not knowing that sometimes you gotta get down and dirty with that non-con oxygen kiss.
 	//ofc, if you are expert or above, you get the exact number
@@ -117,7 +121,7 @@
 		if (human_target.reagents.has_reagent(/datum/reagent/infection/major))
 			to_chat(user, span_boldwarning("A severe infection taints their humors."))
 		else if (human_target.reagents.has_reagent(/datum/reagent/infection))
-			to_chat(user, span_warning("A natural taints their humors."))
+			to_chat(user, span_warning("A notable infection taints their humors."))
 		else if (human_target.reagents.has_reagent(/datum/reagent/infection/minor))
 			to_chat(user, span_warning("A minor infection taints their humors."))
 
@@ -132,7 +136,7 @@
 					to_chat(user, span_necrosis("I can see the Black Rot in its third stage, 'Boiling'."))
 				if(4)
 					to_chat(user, span_necrosis("I can see the Black Rot in its terminal stage, 'Necrosis'."))
-			
+
 			to_chat(user, span_infection("<i>Drinking Heartblood should delay the inevitable, but excising it is the cure.<i>"))
 
 	var/has_cheele = FALSE
@@ -159,22 +163,24 @@
 	var/list/names_with_amounts = list()
 	var/datum/reagent/top_reagent = null
 	var/top_volume = 0
-	var/more_than_one = names.len > 1
+	var/more_than_one = FALSE
+
 
 	for(var/datum/reagent/R in human_target.reagents.reagent_list)
 		if(R.volume > 0 && R.type != /datum/reagent/water && R.type != /datum/reagent/consumable/nutriment)
-			names += R.name
-			names_with_amounts += "[R.name] ([round(R.volume, 0.1)]u)"
-
+			names += LOWER_TEXT(R.name)
+			names_with_amounts += "[LOWER_TEXT(R.name)] ([round(R.volume, 0.1)]u)"
 			if(R.volume > top_volume)
 				top_volume = R.volume
 				top_reagent = R
+	// now that the list has names we can check if we've got more than 1
+	more_than_one = names.len > 1
 	// the way for babies to check if something's wrong with them on the run, just throw a leech and diagnose! cant be simpler than that
 	if(has_cheele)
-		if(names.len)
-			to_chat(user, span_red("The blood-sucking creecher stirs uncomfortably... a foreign substance may be in their blood."))
-		else if(more_than_one)
+		if(more_than_one)
 			to_chat(user, span_red("The blood-sucking creecher stirs very uncomfortably... more than one foreign substances may be in their blood."))
+		else if(names.len)
+			to_chat(user, span_red("The blood-sucking creecher stirs uncomfortably... a foreign substance may be in their blood."))
 		else
 			to_chat(user, span_blue("The blood-sucking creecher seems unbothered and content; hinting a clean blood."))
 	// and this is mostly for when you have surgical tools, pestrans with miracles can cheat better (of course why the hell not rolls eyes), it takes an incision only rather than a forceps inside
@@ -185,11 +191,12 @@
 		else if(is_high_tier && has_hemostat && !miracle)
 			to_chat(user, span_boldwarning("<i>Studying the blood drawn upon the instrument, I easily discern [english_list(names)] within.</i>"))
 
-		else if(is_mid_tier && has_hemostat && top_reagent && !miracle)
-			to_chat(user, span_boldwarning("<i>Studying the blood drawn upon the instrument, I can only see heavy traces of [top_reagent.name] within.</i>"))
-		
 		else if(is_mid_tier && has_hemostat && more_than_one && !miracle)
-			to_chat(user, span_boldwarning("<i>Studying the blood drawn upon the instrument, I can only see heavy traces of [top_reagent.name], though other substances may be present.</i>"))
+			to_chat(user, span_boldwarning("<i>Studying the blood drawn upon the instrument, I can only see heavy traces of [LOWER_TEXT(top_reagent.name)], though other substances may be present.</i>"))
+
+		else if(is_mid_tier && has_hemostat && top_reagent && !miracle)
+			to_chat(user, span_boldwarning("<i>Studying the blood drawn upon the instrument, I can only see heavy traces of [LOWER_TEXT(top_reagent.name)] within.</i>"))
+
 	else
 		if(miracle && has_incision)
 			to_chat(user, span_boldgreen("<i>Even with divine insight, I perceive no foreign substances within their blood.</i>"))
@@ -297,6 +304,7 @@
 		ORGAN_SLOT_LIVER,
 		ORGAN_SLOT_STOMACH,
 		ORGAN_SLOT_APPENDIX,
+		ORGAN_SLOT_GUTS,
 	)
 
 	// Remove organs that are already present
@@ -364,9 +372,8 @@
 	associated_skill = /datum/skill/magic/holy
 	antimagic_allowed = FALSE
 	miracle = TRUE
-
-	invocations = list("Rot, take them!")
-	invocation_type = "shout" //can be none, whisper, emote and shout
+	invocation_type = "shout"
+	invocations = list("Rot, take them.")
 	var/datum/component/infestation_charges/charge_component
 
 /obj/effect/proc_holder/spell/invoked/infestation/on_gain(mob/living/user)
@@ -480,7 +487,7 @@
 	var/mob/living/carbon/C = target
 	if(!extended_duration && !target.mind) // 30 seconds on npc so we don't need to worry too much about upkeep and can focus on healing friends
 		duration += 20 SECONDS
-		extended_duration = TRUE		
+		extended_duration = TRUE
 	if(!target.mind) // technically speaking we're just turning the brain rot into actual body rot, rotception
 		target.adjustToxLoss(3)
 		target.adjustBruteLoss(1)
@@ -492,7 +499,7 @@
 
 		if(world.time >= next_spread && !(HAS_TRAIT(target,TRAIT_NOBREATH)))
 			next_spread = world.time + 5 SECONDS
-			
+
 			if(prob(15)) // I don't want this to be guaranteed or else it'll make pve boring
 				target.emote(pick("gag","cough","breathgasp"))
 				var/turf/open/T = get_turf(target)
@@ -522,8 +529,7 @@
 					M.visible_message(span_necrosis("[target] is contaminated by [M]!"), span_danger("The plague-ridden miasma descends upon me!"))
 					M.apply_status_effect(/datum/status_effect/buff/infestation)
 	else // i mean at least we got pestilent blade or something idk
-		target.adjustToxLoss(2)
-		target.adjustBruteLoss(1)
+		target.adjustBruteLoss(2)
 	var/prompt = pick(1,2,3)
 	var/message = pick(
 		"Ticks on my skin start to engorge with blood!",
@@ -607,6 +613,9 @@
 				to_chat(user, span_warning("[target] is already infused with Pestra's black blessing."))
 				revert_cast()
 				return FALSE
+		if(!target.mind.has_spell(/datum/action/cooldown/spell/summon_bed/pestra) && target.patron?.type == /datum/patron/divine/pestra && target.get_skill_level(/datum/skill/magic/holy) >= 1 && SSchimeric_tech.get_node_status("BLACK_ROSE"))
+			target.visible_message(span_green("[target]'s body seems to jitter for a moment, their eyes flash with black rot momentarily."), span_green("Thanks to your affinity to Pestra, you can now create black rose petal beds."))
+			target.mind.AddSpell(new /datum/action/cooldown/spell/summon_bed/pestra)
 
 		if(GLOB.tod == "night")
 			to_chat(user, span_warning("Let there be light."))
@@ -614,7 +623,7 @@
 			S.AOE_flash(user, range = 8)
 
 		var/datum/antagonist/zombie/was_zombie = target.mind?.has_antag_datum(/datum/antagonist/zombie)
-		if(target.stat == DEAD || was_zombie)	//Checks if the target is a dead rotted corpse.
+		if(target.stat == DEAD || was_zombie)	//Checks if the target is a dead rotted corpse
 			var/datum/component/rot/rot = target.GetComponent(/datum/component/rot)
 			if(rot && rot.amount && rot.amount >= 5 MINUTES)	//Fail-safe to make sure the dead person has at least rotted for ~5 min.
 				stinky = TRUE
@@ -737,7 +746,12 @@
 			return FALSE
 		var/mob/living/target = targets[1]
 		if(HAS_TRAIT(target, TRAIT_PSYDONITE))
-			target.visible_message(span_info("[target] stirs for a moment, the miracle dissipates."), span_notice("A dull warmth swells in your heart, only to fade as quickly as it arrived."))
+			target.visible_message(span_info("[target] stirs for a moment, the miracle dissipates."), span_blue("A dull warmth swells in your heart, only to fade as quickly as it arrived."))
+			playsound(target, 'sound/magic/PSY.ogg', 100, FALSE, -1)
+			user.playsound_local(user, 'sound/magic/PSY.ogg', 100, FALSE, -1)
+			return FALSE
+		if(HAS_TRAIT(target, TRAIT_UNFORGIVABLE)) //Vhelsynites aren't affected
+			target.visible_message(span_info("[target] stirs for a moment, the miracle dissipates."), span_blue("A dull warmth passes through your hollow husk of a body, only to fade as quickly as it arrived."))
 			playsound(target, 'sound/magic/PSY.ogg', 100, FALSE, -1)
 			user.playsound_local(user, 'sound/magic/PSY.ogg', 100, FALSE, -1)
 			return FALSE

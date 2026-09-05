@@ -1,5 +1,6 @@
 /datum/job/roguetown/pilgrim
 	title = "Pilgrim"
+	vice_restrictions = list()
 	flag = PILGRIM
 	department_flag = WANDERERS
 	faction = "Station"
@@ -10,7 +11,6 @@
 
 	outfit = null
 	outfit_female = null
-	bypass_lastclass = TRUE
 	bypass_jobban = FALSE
 	
 

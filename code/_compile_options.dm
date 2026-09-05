@@ -42,8 +42,6 @@
 #define FORCE_MAP "_maps/roguetest.json"
 #endif
 
-// #define NO_DUNGEON //comment this to load dungeons.
-
 //Update this whenever you need to take advantage of more recent byond features
 #define MIN_COMPILER_VERSION 514
 #if DM_VERSION < MIN_COMPILER_VERSION
@@ -77,4 +75,3 @@
 // Comment this to remove traits based skill gating (The traits exist, but it will not have any effect)
 #define USES_TRAIT_SKILL_GATING
 
-#define REVIVE_GRACE // TA EDIT

@@ -7,7 +7,6 @@
 				/obj/item/natural/silk = 1)
 	tools = list(/obj/item/needle)
 	craftdiff = 6
-	sellprice = 30
 
 /datum/crafting_recipe/roguetown/sewing/soundbreakerhat
 	name = "soundbreaker hat"
@@ -18,7 +17,6 @@
 				/obj/item/natural/silk = 2)
 	tools = list(/obj/item/needle)
 	craftdiff = 6
-	sellprice = 20
 
 /datum/crafting_recipe/roguetown/sewing/gambesonpants
 	name = "gamboised cuisses"
@@ -28,7 +26,6 @@
 	            /obj/item/natural/fibers = 4)
 	tools = list(/obj/item/needle)
 	craftdiff = 2
-	sellprice = 10
 
 /datum/crafting_recipe/roguetown/sewing/pgambesonpants
 	name = "padded gamboised cuisses"
@@ -38,4 +35,3 @@
 	            /obj/item/natural/fibers = 4)
 	tools = list(/obj/item/needle)
 	craftdiff = 3
-	sellprice = 25

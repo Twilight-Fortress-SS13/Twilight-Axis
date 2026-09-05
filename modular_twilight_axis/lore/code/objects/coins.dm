@@ -114,12 +114,29 @@
 		plural_name = "shillings"
 		icon = 'modular_twilight_axis/lore/icons/valuable.dmi'
 		update_icon()
+	else if(SSmapping.config.map_name == "Desert Town")
+		name = "fulus"
+		desc = "The fulus is a small copper coin."
+		if(sellprice != 0)
+			sellprice = 1
+		plural_name = "fulus"
+		icon = 'modular_twilight_axis/lore/icons/zyb_valuable.dmi'
+		update_icon()
 
 /obj/item/roguecoin/copper/update_icon()
 	. = ..()
-	if(quantity == 1 && SSmapping.config.map_name == "Rockhill")
-		name = "shilling"
+	if(SSmapping.config.map_name == "Rockhill")
 		desc = "The shilling is a small copper coin minted by the Valorian Treasury. The coin bears the Lion of Most Serene Eterna and the symbol of Ten Undivided."
+		if(quantity == 1)
+			name = "shilling"
+	else if(SSmapping.config.map_name == "Desert Town")
+		desc = "The fulus is a small copper coin."
+		if(quantity == 1)
+			name = "fulus"
+		if(quantity <= 2)
+			icon = 'modular_twilight_axis/lore/icons/zyb_valuable.dmi'
+		else
+			icon = 'icons/roguetown/items/valuable.dmi'
 
 /obj/item/roguecoin/copper/ready_pile_rockhill/Initialize()
 	. = ..()
@@ -150,17 +167,35 @@
 			icon = 'modular_twilight_axis/lore/icons/valuable.dmi'
 			quantity = floor(quantity/3)
 			update_icon()
+	else if(SSmapping.config.map_name == "Desert Town")
+		name = "dirham"
+		desc = "The dirham is a silver coin."
+		if(sellprice != 0)
+			sellprice = 5
+		plural_name = "dirhams"
+		icon = 'modular_twilight_axis/lore/icons/zyb_valuable.dmi'
+		update_icon()
 
 /obj/item/roguecoin/silver/update_icon()
 	. = ..()
-	if(quantity == 1 && SSmapping.config.map_name == "Rockhill")
+	if(SSmapping.config.map_name == "Rockhill")
 		switch(base_type)
 			if(CTYPE_COPPER)
-				name = "shilling"
 				desc = "The shilling is a small copper coin minted by the Valorian Treasury. The coin bears the Lion of Most Serene Eterna and the symbol of Ten Undivided."
+				if(quantity == 1)
+					name = "shilling"
 			if(CTYPE_GOLD)
-				name = "krona"
 				desc = "The krona, or 'crown' in simplified Imperial, is a gold coin minted in the Valorian capital of Eterna, serving as the national currency of Valoria and several neighbouring realms. The coin bears the Crown of Most Serene Doge and the symbol of Ten Undivided."
+				if(quantity == 1)
+					name = "krona"
+	else if(SSmapping.config.map_name == "Desert Town")
+		desc = "The dirham is a silver coin."
+		if(quantity == 1)
+			name = "dirham"
+		if(quantity <= 2)
+			icon = 'modular_twilight_axis/lore/icons/zyb_valuable.dmi'
+		else
+			icon = 'icons/roguetown/items/valuable.dmi'
 
 /obj/item/roguecoin/gold/Initialize(mapload)
 	. = ..()
@@ -174,12 +209,29 @@
 		plural_name = "kronas"
 		icon = 'modular_twilight_axis/lore/icons/valuable.dmi'
 		update_icon()
+	else if(SSmapping.config.map_name == "Desert Town")
+		name = "dinar"
+		desc = "The dinar is a gold coin."
+		if(sellprice != 0)
+			sellprice = 10
+		plural_name = "dinars"
+		icon = 'modular_twilight_axis/lore/icons/zyb_valuable.dmi'
+		update_icon()
 
 /obj/item/roguecoin/gold/update_icon()
 	. = ..()
-	if(quantity == 1 && SSmapping.config.map_name == "Rockhill")
-		name = "krona"
+	if(SSmapping.config.map_name == "Rockhill")
 		desc = "The krona, or 'crown' in simplified Imperial, is a gold coin minted in the Valorian capital of Eterna, serving as the national currency of Valoria and several neighbouring realms. The coin bears the Crown of Most Serene Doge and the symbol of Ten Undivided."
+		if(quantity == 1)
+			name = "krona"
+	else if(SSmapping.config.map_name == "Desert Town")
+		desc = "The dinar is a gold coin."
+		if(quantity == 1)
+			name = "dinar"
+		if(quantity <= 2)
+			icon = 'modular_twilight_axis/lore/icons/zyb_valuable.dmi'
+		else
+			icon = 'icons/roguetown/items/valuable.dmi'
 
 //KAZENGUNESE MONIES
 /obj/item/roguecoin/shucoin

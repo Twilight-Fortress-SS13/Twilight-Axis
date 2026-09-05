@@ -1,7 +1,6 @@
 #define INFERNAL_FLAME_COOLDOWN 1 MINUTES
 #define FREEZING_COOLDOWN 20 SECONDS
 #define REWIND_COOLDOWN 20 SECONDS
-#define CHAOS_COOLDOWN 10 SECONDS
 
 //T4 Enchantments
 /datum/magic_item/mythic/infernalflame
@@ -37,7 +36,7 @@
 			damaging.visible_message(span_danger("[fired_from] sets [damaging] on fire!"))
 			src.last_used = world.time
 
-/datum/magic_item/mythic/infernalflame/on_hit_response(var/obj/item/I, var/mob/living/carbon/human/owner, var/mob/living/carbon/human/attacker)
+/datum/magic_item/mythic/infernalflame/on_hit_response(obj/item/I, mob/living/carbon/human/owner, mob/living/carbon/human/attacker)
 	if(world.time < src.last_used + INFERNAL_FLAME_COOLDOWN)
 		return
 	if(isliving(attacker) && attacker != owner)
@@ -53,7 +52,7 @@
 	var/last_used
 	var/warned
 
-/datum/magic_item/mythic/freezing/on_hit_response(var/obj/item/I, var/mob/living/carbon/human/owner, var/mob/living/carbon/human/attacker)
+/datum/magic_item/mythic/freezing/on_hit_response(obj/item/I, mob/living/carbon/human/owner, mob/living/carbon/human/attacker)
 	if(world.time < src.last_used + FREEZING_COOLDOWN)
 		return
 	if(isliving(attacker) && attacker != owner)
@@ -91,8 +90,12 @@
 	glow_color = "#556B2F"
 	var/last_used
 
-/datum/magic_item/mythic/briarcurse/on_apply(var/obj/item/i)
+/datum/magic_item/mythic/briarcurse/on_apply(obj/item/i)
 	.=..()
+	if(istype(i, /obj/item/clothing/gloves/roguetown/knuckles) || istype(i, /obj/item/clothing/gloves/roguetown/bandages))
+		var/obj/item/clothing/gloves/roguetown/glove = i
+		glove.unarmed_bonus += 10
+		return
 	i.force = i.force + 10
 	if (i.force_wielded)
 		i.force_wielded = i.force_wielded + 10
@@ -102,10 +105,10 @@
 	.=..()
 	if(!proximity_flag)
 		return
-	if(isliving(target))
-		var/mob/living/carbon/targeted = target
-		targeted.adjustBruteLoss(10)
-		to_chat(target, span_notice("[source] gouges you with its sharp edges!"))
+	if(isliving(user))
+		var/mob/living/carbon/targeted = user
+		targeted.adjustBruteLoss(5)
+		to_chat(user, span_notice("[source] gouges you with its sharp edges!"))
 
 /datum/magic_item/mythic/rewind
 	name = "Temporal Rewind"
@@ -129,7 +132,7 @@
 		do_teleport(user, target_turf, channel = TELEPORT_CHANNEL_QUANTUM)
 		src.last_used = world.time
 
-/datum/magic_item/mythic/rewind/on_hit_response(var/obj/item/I, var/mob/living/carbon/human/owner, var/mob/living/carbon/human/attacker)
+/datum/magic_item/mythic/rewind/on_hit_response(obj/item/I, mob/living/carbon/human/owner, mob/living/carbon/human/attacker)
 	if(world.time < src.last_used + REWIND_COOLDOWN)
 		return
 	if(!active_item)
@@ -141,44 +144,6 @@
 		src.last_used = world.time
 		active_item = FALSE
 
-
-/datum/magic_item/mythic/chaos_storm
-	name = "chaos storm"
-	description = "It crackles with unpredictable chaotic energy."
-	glow_color = "#9400D3"
-	var/last_used
-
-/datum/magic_item/mythic/chaos_storm/on_hit(obj/item/source, atom/target, mob/user, proximity_flag, click_parameters)
-	.=..()
-	if(!proximity_flag)
-		return
-	if(world.time < (src.last_used + CHAOS_COOLDOWN))
-		return
-	if(isliving(target))
-		var/mob/living/L = target
-		switch(rand(1,5))
-			if(1)
-				L.apply_damage(15, BURN)
-				L.adjust_fire_stacks(5)
-				L.ignite_mob()
-				to_chat(L, span_warning("Chaotic flames engulf you!"))
-			if(2)
-				L.apply_damage(10, BRUTE)
-				L.Knockdown(20)
-				L.drop_all_held_items()
-				to_chat(L, span_warning("Chaotic force slams into you!"))
-			if(3)
-				L.electrocute_act(12, source, 1)
-				to_chat(L, span_warning("Chaotic lightning courses through you!"))
-			if(4)
-				L.OffBalance(2.5 SECONDS)
-				to_chat(L, span_warning("Chaotic energy disrupts your coordination!"))
-			if(5)
-				L.confused += 2 SECONDS
-				to_chat(L, span_warning("Chaotic energy scrambles your thoughts!"))
-		src.last_used = world.time
-
 #undef INFERNAL_FLAME_COOLDOWN
 #undef FREEZING_COOLDOWN
 #undef REWIND_COOLDOWN
-#undef CHAOS_COOLDOWN

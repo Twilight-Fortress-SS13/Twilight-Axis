@@ -186,7 +186,7 @@
 	var/picked = FALSE
 	var/rogavid = list("halo", "knighty")
 	var/antlers_final_icon = null
-	
+
 /obj/item/clothing/head/roguetown/antlers/attack_right(mob/user)
 	..()
 	if(!picked)
@@ -305,7 +305,6 @@
 				/obj/item/natural/silk = 2)
 	tools = list(/obj/item/needle)
 	craftdiff = 3
-	sellprice = 20
 
 /obj/item/clothing/head/roguetown/duelhat/etrusca
 	name = "etruscian duelist hat"
@@ -332,7 +331,6 @@
 	reqs = list(/obj/item/natural/silk = 4)
 	tools = list(/obj/item/needle)
 	craftdiff = 2
-	sellprice = 15
 
 /obj/item/clothing/head/roguetown/duelhat/etrhat
 	name = "wanderer's hat"

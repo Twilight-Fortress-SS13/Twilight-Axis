@@ -14,16 +14,14 @@
  * This keeps the first few days focused on lower-tier encounters.
  *
  * Leyline types:
- *   Tamed (hamlet/tower) — 4 uses/day, T1 only, neutral alignment.
- *     Neutral = not aligned with anything, so rituals always get -1 mob (training wheels).
- *   Normal (coast/grove/decap) — 2 uses/day, up to T4. Realm-aligned.
- *     Matching ritual alignment = full mob count. Wrong alignment = -1 mob.
- *   Powerful (bog) — 2 uses/day, up to T5. Void-aligned. Always +1 primary mob.
- *     Wrong alignment in Bog nets to normal — the +1 and -1 cancel out.
- *     Only leyline type that supports the T5 Void Dragon ritual (uses a T4 circle).
+ *	Tamed (hamlet/tower) — 4 uses/day, T1 only, neutral alignment.
+ *		Neutral = not aligned with anything, so rituals always get -1 mob (training wheels).
+ *	Normal (coast/grove/decap) — 2 uses/day, up to T4. Realm-aligned.
+ *		Matching ritual alignment = full mob count. Wrong alignment = -1 mob.
+ *	Powerful (bog) — 2 uses/day, up to T5. Void-aligned. Always +1 primary mob.
+ *		Wrong alignment in Bog nets to normal — the +1 and -1 cancel out.
+ *		Only leyline type that supports the T5 Void Dragon ritual (uses a T4 circle).
  */
-
-#define LEYLINE_TELEPORT_COOLDOWN (5 MINUTES)
 
 GLOBAL_LIST_EMPTY(leyline_sites)
 GLOBAL_LIST_EMPTY(leyline_activations)
@@ -63,9 +61,8 @@ GLOBAL_LIST_EMPTY(leyline_activations)
 	var/uses_today = 0
 	var/last_reset_day = 0
 	var/max_tier = 0
-	var/last_used_for_teleport = -LEYLINE_TELEPORT_COOLDOWN
 
-/obj/structure/leyline/Initialize()
+/obj/structure/leyline/Initialize(mapload)
 	. = ..()
 	last_process = world.time
 	GLOB.leyline_sites += src
@@ -74,12 +71,6 @@ GLOBAL_LIST_EMPTY(leyline_activations)
 /obj/structure/leyline/Destroy()
 	GLOB.leyline_sites -= src
 	return ..()
-
-/obj/structure/leyline/proc/on_teleport_cooldown()
-	return (world.time - last_used_for_teleport) < LEYLINE_TELEPORT_COOLDOWN
-
-/obj/structure/leyline/proc/set_teleport_cooldown()
-	last_used_for_teleport = world.time
 
 /obj/structure/leyline/proc/check_daily_reset()
 	if(GLOB.dayspassed != last_reset_day)
@@ -96,8 +87,8 @@ GLOBAL_LIST_EMPTY(leyline_activations)
 
 /obj/structure/leyline/examine(mob/living/user)
 	. = ..()
-	if(istype(user, /mob/living/simple_animal/pet/familiar))
-		var/mob/living/simple_animal/pet/familiar/fam = user
+	if(istype(user, /mob/living/carbon/human/species/familiar))
+		var/mob/living/carbon/human/species/familiar/fam = user
 		if(istype(src, /obj/structure/leyline/powerful))
 			. += span_info("A leyline convergence of singular power! I could efficiently heal this body by resting within.")
 		else
@@ -117,6 +108,8 @@ GLOBAL_LIST_EMPTY(leyline_activations)
 	var/counts = list(0,0,0,0)
 	var/list/candidates = list()
 	for(var/mob/dead/observer/G in GLOB.player_list)
+		if(isscryeye(G))
+			continue
 		candidates += G
 
 	for(var/mob/living/carbon/spirit/bigchungus in GLOB.player_list)
@@ -190,5 +183,3 @@ GLOBAL_LIST_EMPTY(leyline_activations)
 	mega_region = "bog"
 	max_tier = 5
 	color = "#AB47BC" // purple — void
-
-#undef LEYLINE_TELEPORT_COOLDOWN

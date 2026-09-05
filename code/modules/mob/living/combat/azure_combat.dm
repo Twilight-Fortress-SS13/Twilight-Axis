@@ -1,40 +1,68 @@
-/mob/living/carbon/human/proc/process_clash(mob/user, obj/item/IM, obj/item/IU)
+/mob/living/carbon/human/proc/process_clash(mob/user, obj/item/IM, obj/item/IU, is_bite = FALSE)
 	if(!ishuman(user))
 		return
 	if(user == src)
 		bad_guard(span_warning("I hit myself."))
 		return
 	var/mob/living/carbon/human/H = user
-	if(!IU)	//The opponent is trying to rawdog us with their bare hands while we have Guard up. We get a free attack on their active hand.
-		if(!IM)	//We are also unarmed -- no clash or riposte without a weapon on the guarder's side.
-			remove_status_effect(/datum/status_effect/buff/clash)
-			return
-		var/obj/item/bodypart/affecting = H.get_bodypart("[(user.active_hand_index % 2 == 0) ? "r" : "l" ]_arm")
-		var/force = get_complex_damage(IM, src)
-		var/armor_block = H.run_armor_check(BODY_ZONE_PRECISE_L_HAND, used_intent.item_d_type, armor_penetration = used_intent.penfactor, damage = force, used_weapon = IM)
-		if(H.apply_damage(force, IM.damtype, affecting, armor_block))
-			visible_message(span_suicide("[src] gores [user]'s hands with \the [IM]!"))
-			affecting.bodypart_attacked_by(used_intent.blade_class, force, crit_message = TRUE, weapon = IM)
-		else
-			visible_message(span_suicide("[src] clashes into [user]'s hands with \the [IM]!"))
-		playsound(src, pick(used_intent.hitsound), 80)
-		remove_status_effect(/datum/status_effect/buff/clash)
-		apply_status_effect(/datum/status_effect/buff/adrenaline_rush)
+	if(H.has_status_effect(/datum/status_effect/buff/clash))	//They also have Riposte active. It'll trigger the special event.
+		clash(user, IM, IU)
 		return
-	if(!IM)	//We are guarding unarmed but they have a weapon -- no clash, just consume the guard to block the hit.
-		visible_message(span_warning("[src] deflects [H]'s strike with [p_their()] bare hands!"))
-		playsound(src, 'sound/combat/clash_struck.ogg', 100)
+	if(!IU)	//The opponent is trying to rawdog us with their bare hands while we have Guard up. We get a riposte window.
+		if(is_bite)	//They lunged in with their teeth -- rather than a hand or weapon, we give them an extra bonk to the head.
+			var/obj/item/bodypart/affecting = H.get_bodypart(BODY_ZONE_HEAD)
+			var/force = IM ? get_complex_damage(IM, src) : get_punch_dmg()
+			var/armor_block = H.run_armor_check(BODY_ZONE_PRECISE_MOUTH, "blunt", armor_penetration = PEN_NONE, damage = force)
+			if(IM)
+				visible_message(span_suicide("[src] catches [H]'s bite and bashes \the [IM] into [H.p_their()] mouth!"))
+			else
+				visible_message(span_suicide("[src] catches [H]'s bite and smashes [p_their()] fist into [H.p_their()] mouth!"))
+			if(affecting && H.apply_damage(force, BRUTE, affecting, armor_block))
+				affecting.bodypart_attacked_by(BCLASS_BLUNT, force, crit_message = TRUE, weapon = IM, zone_precise = BODY_ZONE_PRECISE_MOUTH)
+			H.apply_status_effect(/datum/status_effect/debuff/exposed, 3 SECONDS)
+			H.apply_status_effect(/datum/status_effect/debuff/clickcd, 3 SECONDS)
+			if(H.mind)
+				H.dodgetime = clamp(H.dodgetime + 5, 0, CLICK_CD_HEAVY)
+			H.Slowdown(3)
+			to_chat(src, span_notice("[capitalize(H.p_theyre())] exposed!"))
+			playsound(src, 'sound/combat/clash_struck.ogg', 100)
+			remove_status_effect(/datum/status_effect/buff/clash)
+			apply_status_effect(/datum/status_effect/buff/adrenaline_rush/melee)
+			return
+		if(!IM)
+			visible_message(span_suicide("[src] ripostes [H]'s strike with [p_their()] bare hands!"))
+		else
+			visible_message(span_suicide("[src] ripostes [H] with \the [IM]!"))
 		H.apply_status_effect(/datum/status_effect/debuff/exposed, 3 SECONDS)
 		H.apply_status_effect(/datum/status_effect/debuff/clickcd, 3 SECONDS)
 		if(H.mind)
 			H.dodgetime = clamp(H.dodgetime + 5, 0, CLICK_CD_HEAVY)
 		H.Slowdown(3)
 		to_chat(src, span_notice("[capitalize(H.p_theyre())] exposed!"))
+		playsound(src, 'sound/combat/clash_struck.ogg', 100)
 		remove_status_effect(/datum/status_effect/buff/clash)
-		apply_status_effect(/datum/status_effect/buff/adrenaline_rush)
+		apply_status_effect(/datum/status_effect/buff/adrenaline_rush/melee)
 		return
-	if(H.has_status_effect(/datum/status_effect/buff/clash))	//They also have Riposte active. It'll trigger the special event.
-		clash(user, IM, IU)
+	if(!IM)	//We are guarding unarmed but they have a weapon -- no clash, just consume the guard to block the hit.
+		visible_message(span_suicide("[src] ripostes [H]'s strike with [p_their()] bare hands!"))
+		var/sharpnesspenalty = RIPOSTE_SHARPNESS_FACTOR
+		if(IU.max_blade_int)
+			IU.remove_bintegrity((IU.blade_int * sharpnesspenalty), user)
+		else
+			var/integdam = max((IU.max_integrity / RIPOSTE_INTEG_DIVISOR), (INTEG_PARRY_DECAY_NOSHARP * 5))
+			if(IU.blade_dulling == DULLING_SHAFT_CONJURED)
+				integdam *= 2
+			IU.take_damage(integdam, BRUTE, "blunt")
+		H.apply_status_effect(/datum/status_effect/debuff/exposed, 3 SECONDS)
+		H.apply_status_effect(/datum/status_effect/debuff/clickcd, 3 SECONDS)
+		if(H.mind)
+			H.dodgetime = clamp(H.dodgetime + 5, 0, CLICK_CD_HEAVY)
+		H.Slowdown(3)
+		to_chat(src, span_notice("[capitalize(H.p_theyre())] exposed!"))
+		playsound(src, 'sound/combat/clash_struck.ogg', 100)
+		remove_status_effect(/datum/status_effect/buff/clash)
+		apply_status_effect(/datum/status_effect/buff/adrenaline_rush/melee)
+		return
 	else	//Otherwise, we just riposte them.
 		var/sharpnesspenalty = RIPOSTE_SHARPNESS_FACTOR
 		if(IM.wbalance == WBALANCE_HEAVY || IU.blade_dulling == DULLING_SHAFT_CONJURED)
@@ -54,10 +82,10 @@
 			H.dodgetime = clamp(H.dodgetime + 5, 0, CLICK_CD_HEAVY)
 		dodgetime = clamp(dodgetime - 5, 0, CLICK_CD_DODGE)
 		H.Slowdown(3)
-		
+
 		to_chat(src, span_notice("[capitalize(H.p_theyre())] exposed!"))
 		remove_status_effect(/datum/status_effect/buff/clash)
-		apply_status_effect(/datum/status_effect/buff/adrenaline_rush)
+		apply_status_effect(/datum/status_effect/buff/adrenaline_rush/melee)
 		H.reset_desert_rider_momentum_tier()
 
 /mob/living/carbon/human/proc/simple_clash(mob/user, obj/item/IM)
@@ -67,7 +95,7 @@
 	if(user == src)
 		bad_guard(span_warning("I hit myself."))
 		return
-	if(!IM)	
+	if(!IM)
 		visible_message(span_warning("[src] deflects [L]'s strike with [p_their()] bare hands!"))
 		playsound(src, 'sound/combat/clash_struck.ogg', 100)
 		L.apply_status_effect(/datum/status_effect/debuff/exposed, 3 SECONDS)
@@ -77,7 +105,7 @@
 		L.Slowdown(3)
 		to_chat(src, span_notice("[capitalize(L.p_theyre())] exposed!"))
 		remove_status_effect(/datum/status_effect/buff/clash)
-		apply_status_effect(/datum/status_effect/buff/adrenaline_rush)
+		apply_status_effect(/datum/status_effect/buff/adrenaline_rush/melee)
 		return
 	visible_message(span_suicide("[src] ripostes [L] with \the [IM]!"))
 	playsound(src, 'sound/combat/clash_struck.ogg', 100)
@@ -87,18 +115,16 @@
 		L.dodgetime = clamp(L.dodgetime + 5, 0, CLICK_CD_HEAVY)
 	dodgetime = clamp(dodgetime - 5, 0, CLICK_CD_DODGE)
 	user.Slowdown(3)
-		
+
 	to_chat(src, span_notice("[capitalize(L.p_theyre())] exposed!"))
 	remove_status_effect(/datum/status_effect/buff/clash)
-	apply_status_effect(/datum/status_effect/buff/adrenaline_rush)
+	apply_status_effect(/datum/status_effect/buff/adrenaline_rush/melee)
 	return
 
 //This is a gargantuan, clunky proc that is meant to tally stats and weapon properties for the potential disarm.
 //For future coders: Feel free to change this, just make sure someone like Struggler statpack doesn't get 3-fold advantage.
 /mob/living/carbon/human/proc/clash(mob/user, obj/item/IM, obj/item/IU)
 	var/mob/living/carbon/human/HU = user
-	var/instantloss = FALSE
-	var/instantwin = FALSE
 
 	//Stat checks. Basic comparison.
 	var/strdiff = STASTR - HU.STASTR
@@ -110,21 +136,13 @@
 	var/list/statdiffs = list(strdiff, perdiff, spddiff, fordiff, intdiff)
 
 	//Skill check, very simple. If you're more skilled with your weapon than the opponent is with theirs -> +10% to disarm or vice-versa.
-	var/skilldiff
-	if(IM.associated_skill)
-		skilldiff = get_skill_level(IM.associated_skill)
-	else
-		instantloss = TRUE	//We are Guarding with a book or something -- no chance for us.
+	var/skilldiff = get_wskill(IM, /datum/skill/combat/unarmed)
+	skilldiff -= HU.get_wskill(IU, /datum/skill/combat/unarmed)
 
-	if(IU.associated_skill)
-		skilldiff = skilldiff - HU.get_skill_level(IU.associated_skill)
-	else
-		instantwin = TRUE	//THEY are Guarding with a book or something -- no chance for them.
-	
 	//Weapon checks.
-	var/lengthdiff = IM.wlength - IU.wlength //The longer the weapon the better.
-	var/wieldeddiff = IM.wielded - IU.wielded //If ours is wielded but theirs is not.
-	var/weightdiff = (IM.wbalance < IU.wbalance) //If our weapon is heavy-balanced and theirs is not.
+	var/lengthdiff = IM?.wlength - IU?.wlength //The longer the weapon the better.
+	var/wieldeddiff = IM?.wielded - IU?.wielded //If ours is wielded but theirs is not.
+	var/weightdiff = (IM?.wbalance < IU?.wbalance) //If our weapon is heavy-balanced and theirs is not.
 	var/wildcard = pick(-1,0,1)
 
 	var/list/wepdiffs = list(lengthdiff, wieldeddiff, weightdiff)
@@ -138,7 +156,12 @@
 			prob_us += 10
 		else if(statdiff <= -2)
 			prob_opp += 10
-	
+
+	if(skilldiff > 0)
+		prob_us += 10
+	else if(skilldiff < 0)
+		prob_opp +=10
+
 	for(var/wepdiff in wepdiffs)
 		if(wepdiff > 0)
 			prob_us += 10
@@ -150,7 +173,7 @@
 		prob_us += 10
 	else if(wildcard < 0 )
 		prob_opp += 10
-	
+
 	//Small bonus to the first one to strike in a Clash.
 	var/initiator_bonus = rand(5, 10)
 	prob_us += initiator_bonus
@@ -163,43 +186,45 @@
 		prob_us = max(prob_us, prob_opp)
 		prob_opp = max(prob_us, prob_opp)
 
-	if((!instantloss && !instantwin) || (instantloss && instantwin))	//We are both using normal weapons OR we're both using memes. Either way, proceed as normal.
-		visible_message(span_boldwarning("[src] and [HU] clash!"))
-		flash_fullscreen("whiteflash")
-		HU.flash_fullscreen("whiteflash")
-		var/datum/effect_system/spark_spread/S = new()
-		var/turf/front = get_step(src,src.dir)
-		S.set_up(1, 1, front)
-		S.start()
-		var/success
-		if(prob(prob_us))
-			HU.play_overhead_indicator('icons/mob/overhead_effects.dmi', "clashtwo", 1 SECONDS, OBJ_LAYER, soundin = 'sound/combat/clash_disarm_us.ogg', y_offset = 24)
+	visible_message(span_boldwarning("[src] and [HU] clash!"))
+	flash_fullscreen("whiteflash")
+	HU.flash_fullscreen("whiteflash")
+	var/datum/effect_system/spark_spread/S = new()
+	var/turf/front = get_step(src,src.dir)
+	S.set_up(1, 1, front)
+	S.start()
+	var/success
+	if(prob(prob_us))
+		HU.play_overhead_indicator('icons/mob/overhead_effects.dmi', "clashtwo", 1 SECONDS, OBJ_LAYER, soundin = 'sound/combat/clash_disarm_us.ogg', y_offset = 24)
+		if(IM)
 			disarmed(IM)
-			Slowdown(5)
-			success = TRUE
-		if(prob(prob_opp))
+		else
+			apply_status_effect(/datum/status_effect/debuff/vulnerable, 5 SECONDS)
+			apply_status_effect(/datum/status_effect/debuff/clickcd, 3 SECONDS)
+		Slowdown(5)
+		success = TRUE
+	if(prob(prob_opp))
+		if(IU)
 			HU.disarmed(IU)
-			HU.Slowdown(5)
-			play_overhead_indicator('icons/mob/overhead_effects.dmi', "clashtwo", 1 SECONDS, OBJ_LAYER, soundin = 'sound/combat/clash_disarm_opp.ogg', y_offset = 24)
-			success = TRUE
-		if(!success)
-			to_chat(src, span_warningbig("Draw! Opponent's chances were... [prob_opp]%"))
-			to_chat(HU, span_warningbig("Draw! Opponent's chances were... [prob_us]%"))
-			playsound(src, 'sound/combat/clash_draw.ogg', 100, TRUE)
-	else
-		if(instantloss)
-			disarmed(IM)
-		if(instantwin)
-			HU.disarmed(IU)
-	
+		else
+			HU.apply_status_effect(/datum/status_effect/debuff/vulnerable, 3 SECONDS)
+			HU.apply_status_effect(/datum/status_effect/debuff/clickcd, 3 SECONDS)
+		HU.Slowdown(5)
+		play_overhead_indicator('icons/mob/overhead_effects.dmi', "clashtwo", 1 SECONDS, OBJ_LAYER, soundin = 'sound/combat/clash_disarm_opp.ogg', y_offset = 24)
+		success = TRUE
+	if(!success)
+		to_chat(src, span_warningbig("Draw! Opponent's chances were... [prob_opp]%"))
+		to_chat(HU, span_warningbig("Draw! Opponent's chances were... [prob_us]%"))
+		playsound(src, 'sound/combat/clash_draw.ogg', 100, TRUE)
+
 	remove_status_effect(/datum/status_effect/buff/clash)
 	HU.remove_status_effect(/datum/status_effect/buff/clash)
 
-///Proc that will try to throw the src's held I and throw it 1 - 5 tiles to their side. 
+///Proc that will try to throw the src's held I and throw it 1 - 5 tiles to their side.
 ///At the moment it doesn't have a get_active_held_item() failsafe, so the I has to be defined first.
 ///This is due to, uh, bad code.
 /mob/living/carbon/human/proc/disarmed(obj/item/I)
-	visible_message(span_suicide("[src] is disarmed!"), 
+	visible_message(span_suicide("[src] is disarmed!"),
 					span_boldwarning("I'm disarmed!"))
 	var/turnangle = (prob(50) ? 270 : 90)
 	var/turndir = turn(dir, turnangle)
@@ -210,6 +235,8 @@
 	apply_status_effect(/datum/status_effect/debuff/clickcd, 3 SECONDS)
 
 /mob/living/carbon/human/proc/try_guard()
+	if(stat || !(mobility_flags & MOBILITY_STAND) || !(mobility_flags & MOBILITY_MOVE))
+		return FALSE
 	if(has_status_effect(/datum/status_effect/buff/clash) || has_status_effect(/datum/status_effect/debuff/clashcd) || has_status_effect(/datum/status_effect/buff/clash/limbguard))
 		return FALSE
 	if(!get_active_held_item())
@@ -218,7 +245,7 @@
 			return FALSE
 	if(r_grab || l_grab || length(grabbedby))
 		return FALSE
-	if(IsImmobilized() || IsOffBalanced())
+	if(IsImmobilized() || IsOffBalanced() || incapacitated(ignore_restraints = TRUE))
 		return FALSE
 	if(m_intent == MOVE_INTENT_RUN)
 		to_chat(src, span_warning("I can't focus on this while running."))
@@ -232,11 +259,10 @@
 	if(is_swinging(disrupt_only = TRUE))
 		return FALSE
 
-	if(has_status_effect(/datum/status_effect/debuff/exposed))
+	if(has_status_effect(/datum/status_effect/debuff/exposed) || has_status_effect(/datum/status_effect/debuff/vulnerable))
 		return FALSE
 
-	if(get_skill_level(/datum/skill/misc/sneaking) >= SKILL_LEVEL_JOURNEYMAN || HAS_TRAIT(src, TRAIT_LIGHT_STEP))
-		apply_status_effect(/datum/status_effect/stealth_revealed)
+	changeNext_inCombat(IN_COMBAT_DELAY)
 
 	apply_status_effect(/datum/status_effect/buff/clash)
 	return TRUE
@@ -263,7 +289,7 @@
 /mob/living/carbon/human/proc/reset_dodgetime()
 	if(!cmode && mind)
 		dodgetime = 0
-		max_dodge = MAX_DODGE_CEIL
+		max_dodge = MAX_DODGE_START
 
 ///A Unique Stat comparison between src and HT.
 ///It takes the highest stats up to 14 and lowest stats 'up to' 14.
@@ -279,12 +305,12 @@
 	var/min_target = min(HT.STASTR, HT.STACON, HT.STAWIL, HT.STAINT, HT.STAPER, HT.STASPD)
 	var/max_user = min(max(STASTR, STACON, STAWIL, STAINT, STAPER, STASPD), 14)
 	var/min_user = min(STASTR, STACON, STAWIL, STAINT, STAPER, STASPD)
-	
+
 	if(max_target > max_user)
 		finalprob -= max_target
 	if(min_target > min_user)
 		finalprob -= 3 * min_target
-	
+
 	if(max_target < max_user)
 		finalprob += max_user
 	if(min_target < min_user)
@@ -312,35 +338,42 @@
 
 /// Returns the highest AC worn, or held in hands.
 /mob/living/carbon/human/proc/highest_ac_worn(check_hands, check_helmet = TRUE)
-	var/list/slots = list(wear_armor, wear_pants, wear_wrists, wear_shirt, gloves, head, shoes, wear_neck, wear_mask, wear_ring)
-	if(!check_helmet)
-		slots.Remove(head)
-	for(var/slot in slots)
-		if(isnull(slot) || !istype(slot, /obj/item/clothing))
-			slots.Remove(slot)
+	if(worn_ac_dirty)
+		update_worn_ac_cache()
+#if defined(TESTING) || defined(UNIT_TESTS)
+	else
+		var/frozen_worn = cached_worn_ac
+		var/frozen_head = cached_head_ac
+		var/frozen_hands = cached_hands_ac
+		var/frozen_body = cached_body_ac
+		update_worn_ac_cache()
+		if(frozen_worn != cached_worn_ac || frozen_head != cached_head_ac || frozen_hands != cached_hands_ac || frozen_body != cached_body_ac)
+			stack_trace("Stale worn AC cache on [src]: worn [frozen_worn]->[cached_worn_ac] head [frozen_head]->[cached_head_ac] hands [frozen_hands]->[cached_hands_ac] body [frozen_body]->[cached_body_ac]")
+#endif
+	. = cached_worn_ac
+	if(check_helmet && cached_head_ac > .)
+		. = cached_head_ac
+	if(check_hands && cached_hands_ac > .)
+		. = cached_hands_ac
 
-	
-	var/highest_ac = ARMOR_CLASS_NONE
-
-	for(var/obj/item/clothing/C in slots)
-		if(C.armor_class)
-			if(C.armor_class > highest_ac)
-				highest_ac = C.armor_class
-				if(highest_ac == ARMOR_CLASS_HEAVY)
-					return highest_ac
-	if(check_hands)
-		var/mainh = get_active_held_item()
-		var/offh = get_inactive_held_item()
-		if(mainh && istype(mainh, /obj/item/clothing))
-			var/obj/item/clothing/CMH = mainh
-			if(CMH.armor_class > highest_ac)
-				highest_ac = CMH.armor_class 
-		if(offh && istype(offh, /obj/item/clothing))
-			var/obj/item/clothing/COH = offh
-			if(COH.armor_class > highest_ac)
-				highest_ac = COH.armor_class 
-	
-	return highest_ac
+/mob/living/carbon/human/proc/update_worn_ac_cache()
+	cached_body_ac = ARMOR_CLASS_NONE
+	cached_head_ac = ARMOR_CLASS_NONE
+	cached_hands_ac = ARMOR_CLASS_NONE
+	for(var/obj/item/clothing/C in list(wear_armor, wear_shirt, wear_pants))
+		if(C.armor_class > cached_body_ac)
+			cached_body_ac = C.armor_class
+	cached_worn_ac = cached_body_ac
+	for(var/obj/item/clothing/C in list(wear_wrists, gloves, shoes, wear_neck, wear_mask, wear_ring, cloak))
+		if(C.armor_class > cached_worn_ac)
+			cached_worn_ac = C.armor_class
+	if(istype(head, /obj/item/clothing))
+		var/obj/item/clothing/C = head
+		cached_head_ac = C.armor_class || ARMOR_CLASS_NONE
+	for(var/obj/item/clothing/C in held_items)
+		if(C.armor_class > cached_hands_ac)
+			cached_hands_ac = C.armor_class
+	worn_ac_dirty = FALSE
 
 /mob/living/carbon/human/proc/process_tempo_attack(mob/living/carbon/attacker)
 	if(iscarbon(attacker) && attacker != src && attacker.mind)
@@ -466,11 +499,11 @@
 		//How much stamloss we take away from dodging. Flat number.
 		if(TEMPO_TAG_STAMLOSS_DODGE)
 			if(has_status_effect(/datum/status_effect/buff/tempo_one))
-				return 3
+				return 4
 			if(has_status_effect(/datum/status_effect/buff/tempo_two))
-				return 5
+				return 6
 			if(has_status_effect(/datum/status_effect/buff/tempo_three))
-				return 7
+				return 8
 		//How much stamloss we take away from parrying. Flat number.
 		if(TEMPO_TAG_STAMLOSS_PARRY)
 			if(has_status_effect(/datum/status_effect/buff/tempo_one))
@@ -525,7 +558,9 @@
 		return
 	if(!user.get_active_held_item())
 		return
-	if(get_skill_level(used_weapon.associated_skill) < SKILL_LEVEL_JOURNEYMAN)
+	if(istype(used_weapon.associated_skill, /datum/skill/combat/unarmed))
+		return
+	if(get_wskill(used_weapon) < SKILL_LEVEL_JOURNEYMAN)
 		return
 	if(has_status_effect(/datum/status_effect/debuff/bindcd))
 		return
@@ -555,8 +590,8 @@
 			var/obj/item/rogueweapon/RW = user.get_active_held_item()
 			if(RW)
 				RW.take_damage(RW.sharpness ? (INTEG_PARRY_DECAY) : (INTEG_PARRY_DECAY_NOSHARP), BRUTE, used_weapon.d_type)
-				RW.remove_bintegrity((SHARPNESS_ONHIT_DECAY), src)
-			
+				RW.remove_bintegrity((SHARPNESS_ONHIT_DECAY), user)
+
 			//if(used_weapon)
 			//	used_weapon.take_damage((used_weapon.sharpness ? (INTEG_PARRY_DECAY) : (INTEG_PARRY_DECAY_NOSHARP)), BRUTE, used_weapon.d_type)
 			//	used_weapon.remove_bintegrity((SHARPNESS_ONHIT_DECAY), src)
@@ -582,7 +617,7 @@
 		else
 			return FALSE
 
-/mob/living/proc/attempt_disarm(mob/living/user, obj/item/O) //Codeblock for handling weapon-based disarming checks. 
+/mob/living/proc/attempt_disarm(mob/living/user, obj/item/O) //Codeblock for handling weapon-based disarming checks.
 	var/obj/item/I
 	if(!IsOffBalanced(src))
 		to_chat(user, span_warning("They must be off-balanced before I can disarm them!"))

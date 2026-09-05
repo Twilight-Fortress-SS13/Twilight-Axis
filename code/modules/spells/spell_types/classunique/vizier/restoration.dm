@@ -1,4 +1,5 @@
 /datum/action/cooldown/spell/vizier
+	source_aspect = /datum/magic_aspect/pseudo/vizier
 	button_icon = 'icons/mob/actions/classuniquespells/vizier.dmi'
 	spell_color = GLOW_COLOR_ARCANE
 	glow_intensity = GLOW_INTENSITY_LOW
@@ -11,6 +12,9 @@
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 	/// Fatigue/mana cost for the Vizier's origin magic system.
 	var/cost
+
+/datum/action/cooldown/spell/vizier/restoration/lesser
+	cooldown_time = 24 SECONDS // w.Yogi gets double the cooldown of Vizier, who is a master at it, but there's a catch. INT gives CDR to this, so if you pick INT-based packs, Crystalhide, potions, etc. There may be a method to circumvent it being so high.
 
 /datum/action/cooldown/spell/vizier/restoration
 	name = "Restoration"
@@ -84,11 +88,11 @@
 			if(!W)
 				continue
 			if(W.bleed_rate > 0)
-				W.set_bleed_rate(0)
+				W.set_bleed_rate(W.bleed_rate - 3)
 				step_check = TRUE
 
 	if(step_check)
-		C.visible_message(span_info("Origin arts reverse [C]'s bleeding!"),	span_notice("My open wounds close, as if reverting in time!"))
+		C.visible_message(span_info("Origin arts reverse [C]'s bleeding!"),	span_notice("My bleeding wounds begin to creep shut, as if reverting in time!"))
 		return TRUE
 
 	// Healing

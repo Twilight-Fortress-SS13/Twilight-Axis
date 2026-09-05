@@ -1,4 +1,4 @@
-/datum/component/personal_crafting/Initialize()
+/datum/component/personal_crafting/Initialize(mapload)
 	if(!ismob(parent))
 		return COMPONENT_INCOMPATIBLE
 	var/mob/living/L = parent
@@ -134,20 +134,23 @@
 			else
 				.["other"][I.type] += 1
 
-/datum/component/personal_crafting/proc/check_tools(mob/user, datum/crafting_recipe/R, list/contents)
+/datum/component/personal_crafting/proc/check_tools(mob/user, datum/crafting_recipe/R, list/contents, list/out_found_tools = null)
 	if(!R.tools.len)
 		return TRUE
 	var/list/possible_tools = list()
 	var/list/present_qualities = list()
+	var/list/actual_tools = list()
 	present_qualities |= contents["tool_behaviour"]
 	for(var/obj/item/I in user.contents)
 		if(istype(I, /obj/item/storage))
 			for(var/obj/item/SI in I.contents)
 				possible_tools += SI.type
+				actual_tools[SI.type] = SI //TA EDIT
 				if(SI.tool_behaviour)
 					present_qualities.Add(SI.tool_behaviour)
 
 		possible_tools += I.type
+		actual_tools[I.type] = I //TA EDIT
 
 		if(I.tool_behaviour)
 			present_qualities.Add(I.tool_behaviour)
@@ -161,6 +164,8 @@
 			else
 				for(var/I in possible_tools)
 					if(ispath(I, A))
+						if(out_found_tools) //TA EDIT
+							out_found_tools += actual_tools[I] //TA EDIT
 						continue main_loop
 			return FALSE
 	return TRUE
@@ -223,8 +228,10 @@
 	if(user.doing)
 		return
 	var/list/contents = get_surroundings(user)
+	var/list/found_tools = list() //TA EDIT
 //	var/send_feedback = 1
-	var/turf/T = get_step(user, user.dir)
+	var/build_dir = user.dir
+	var/turf/T = get_step(user, build_dir)
 	if(isopenturf(T) && R.wallcraft)
 		to_chat(user, span_warning("Need to craft this on a wall."))
 		return
@@ -269,7 +276,7 @@
 			to_chat(user, span_warning("I'm missing a structure I need: \the <b>[str]</b>"))
 			return
 	if(check_contents(R, contents))
-		if(check_tools(user, R, contents))
+		if(check_tools(user, R, contents, found_tools)) //TA EDIT
 			if(R.craftsound)
 				playsound(T, R.craftsound, 100, TRUE)
 			var/time2use = 10
@@ -294,6 +301,8 @@
 							prob2craft += ((10-L.STAINT)*-1)*2
 						if(HAS_TRAIT(L, TRAIT_INTELLECTUAL) && L.STAINT > 8)
 							prob2craft += 5
+						if(HAS_TRAIT(L, TRAIT_MALUMCHOSEN))
+							prob2craft += 20
 					prob2craft = CLAMP(prob2craft, 0, 99)
 					if(i == 100 && prob2craft > 0)
 						prob2craft = 100
@@ -311,13 +320,13 @@
 						for(var/IT in L)
 							var/atom/movable/I = new IT(T)
 							I.CheckParts(parts, R)
-							I.OnCrafted(user.dir, user)
+							I.OnCrafted(build_dir, user)
 							if(isitem(I))
 								var/obj/item/CI = I
 								CI.was_crafted = TRUE
 								if(CI.has_item_quality)
 									if(R.skip_quality)
-										if(inherited_quality != null)
+										if(!isnull(inherited_quality))
 											CI.apply_quality(null, null, inherited_quality)
 									else
 										CI.apply_quality(user, R.skillcraft)
@@ -326,7 +335,7 @@
 						if(ispath(R.result, /turf))
 							var/turf/X = T.PlaceOnTop(R.result)
 							if(X)
-								X.OnCrafted(user.dir, user)
+								X.OnCrafted(build_dir, user)
 								X.add_fingerprint(user)
 								if(R.loud)
 									X.loud_message("Construction sounds can be heard")
@@ -340,19 +349,31 @@
 							if(R.diagonal)
 								I.OnCrafted(I.SelectDiagDirection(), user)
 							else
-								I.OnCrafted(user.dir, user)
+								I.OnCrafted(build_dir, user)
 							if(isitem(I))
 								var/obj/item/CI = I
 								CI.was_crafted = TRUE
 								if(CI.has_item_quality)
 									if(R.skip_quality)
-										if(inherited_quality != null)
+										if(!isnull(inherited_quality))
 											CI.apply_quality(null, null, inherited_quality)
 									else
 										CI.apply_quality(user, R.skillcraft)
 							I.add_fingerprint(user)
 					user.visible_message(span_notice("[user] [R.verbage] \a [R.name]!"), \
 										span_notice("I [R.verbage_simple] \a [R.name]!"))
+					if(found_tools && found_tools.len) //TA EDIT START
+						for(var/atom/movable/tool_inst in found_tools)
+							if(istype(tool_inst, /obj/item/twilight_powderflask))
+								var/obj/item/twilight_powderflask/flask = tool_inst
+								flask.charges -= 1
+								if(flask.charges <= 0)
+									qdel(flask)
+									var/obj/item/twilight_powderflask_empty/E = new /obj/item/twilight_powderflask_empty(get_turf(user))
+									if(isliving(user))
+										user.put_in_hands(E)
+									else
+										E.Move(get_turf(user)) //TA EDIT END
 					if(user.mind && R.skillcraft && R.xp_modifier > 0)
 						if(isliving(user))
 							var/mob/living/L = user
@@ -463,7 +484,7 @@
 						if(!B.stacktype || !ispath(B.stacktype, A))
 							continue
 						if(!R.subtype_reqs && (B.stacktype in subtypesof(A)))
-							continue 
+							continue
 						if(R.blacklist.Find(B.stacktype))
 							continue
 						found_bundle = TRUE
@@ -479,7 +500,7 @@
 									var/obj/item/new_item = new stacktype(old_loc)
 									if(ishuman(old_loc))
 										var/mob/living/carbon/human/H = old_loc
-										H.put_in_hands(new_item) 
+										H.put_in_hands(new_item)
 								if(0)
 									qdel(B)
 							amt = 0
@@ -547,7 +568,7 @@
 			var/obj/item/IT = AM
 			if(!IT.has_item_quality)
 				continue
-			if(min_q == null || IT.item_quality < min_q)
+			if(isnull(min_q) || IT.item_quality < min_q)
 				min_q = IT.item_quality
 		for(var/atom/movable/AM in .)
 			if(!isitem(AM))
@@ -555,7 +576,7 @@
 			var/obj/item/IT = AM
 			if(!IT.has_item_quality)
 				continue
-			if(min_q == null || IT.item_quality < min_q)
+			if(isnull(min_q) || IT.item_quality < min_q)
 				min_q = IT.item_quality
 		quality_out["min_quality"] = min_q
 	while(Deletion.len)

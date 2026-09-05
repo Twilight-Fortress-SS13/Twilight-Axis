@@ -1,15 +1,15 @@
 /datum/patron/divine/necra
 	name = "Necra"
 	domain = "Goddess of Death and the Afterlife"
-	desc = "Veiled Lady of the underworld, equally feared and respected by mortals. She taught mortals the inevitability of death and cares for them as they reach the afterlife."
-	worshippers = "The Dead, Mourners, Gravekeepers"
+	desc = "The Veiled Lady of the underworld, equally feared and respected by mortals. She taught mortals the inevitability of death and cares for them as they reach the afterlyfe."
+	worshippers = "Mourners, Gravekeepers, and the Dead"
 	mob_traits = list(TRAIT_SOUL_EXAMINE, TRAIT_NOSTINK)	//No stink is generic but they deal with dead bodies so.. makes sense, I suppose?
 	miracles = list(/datum/action/cooldown/spell/touch/orison						= CLERIC_ORI,
 					/obj/effect/proc_holder/spell/invoked/necras_sight				= CLERIC_T0,
-					/datum/action/cooldown/spell/miracle/heal 						= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/heal						= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/bloodmiracle				= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/avert						= CLERIC_T1,
-					/obj/effect/proc_holder/spell/self/locate_dead 					= CLERIC_T1,
+					/obj/effect/proc_holder/spell/self/locate_dead					= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/fog_ward					= CLERIC_T1, // Not bugged, only appears on fog rounds!
 					/obj/effect/proc_holder/spell/invoked/raise_spirits_vengeance	= CLERIC_T2,
 					/datum/action/cooldown/spell/miracle/necra_consecrate			= CLERIC_T2,
@@ -26,7 +26,8 @@
 	titles = list(
 		"Veiled Lady",
 		"Corpse Mother",
-		"Undermaiden"
+		"Undermaiden",
+		"Neriko"
 	)
 
 // Near a grave, cross, or within the church
@@ -48,12 +49,12 @@
 	return FALSE
 
 /datum/patron/divine/necra/on_lesser_heal(
-    mob/living/user,
-    mob/living/target,
-    message_out,
-    message_self,
-    conditional_buff,
-    situational_bonus
+	mob/living/user,
+	mob/living/target,
+	message_out,
+	message_self,
+	conditional_buff,
+	situational_bonus
 )
 	*message_out = span_info("A sense of quiet respite radiates from [target]!")
 	*message_self = span_notice("I feel the Undermaiden's gaze turn from me for now!")

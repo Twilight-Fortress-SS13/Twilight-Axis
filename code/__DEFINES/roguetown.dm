@@ -157,6 +157,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/goblinp,\
 	/datum/species/dullahan,\
 	/datum/species/dwarf/gnome,\
+	/datum/species/construct/metal,\
 	/datum/species/ooze,\
 
 // All but elves & half-elves.
@@ -181,6 +182,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/goblinp,\
 	/datum/species/dullahan,\
 	/datum/species/dwarf/gnome,\
+	/datum/species/construct/metal,\
 	/datum/species/ooze,\
 
 // All but dwarves.
@@ -207,6 +209,8 @@ Balloon Alert / Floating Text defines
 	/datum/species/kobold,\
 	/datum/species/goblinp,\
 	/datum/species/dullahan,\
+	/datum/species/dwarf/gnome,\
+	/datum/species/construct/metal,\
 	/datum/species/ooze,\
 
 // All but Dwarves, Gnomes, Kobolds, D. Elves, Oozes, Moths & Anthrosmall
@@ -228,6 +232,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/demihuman,\
 	/datum/species/halforc,\
 	/datum/species/dullahan,\
+	/datum/species/construct/metal,\
 
 
 // All but Dracon, Lizardfolk, Kobolds.
@@ -253,6 +258,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/goblinp,\
 	/datum/species/dullahan,\
 	/datum/species/dwarf/gnome,\
+	/datum/species/construct/metal,\
 	/datum/species/ooze,\
 
 
@@ -355,6 +361,44 @@ Balloon Alert / Floating Text defines
 	/datum/species/ooze,\
 	/datum/species/aura,\
 )
+
+/*Used for races that won't break the game completely if an NPC picks from this listing - Or look terrible like, really, really terrible.
+
+HARD NOS:
+-> Reverents (Head/Body issues + NPCs can't use this properly)
+-> Constructs (Meant to be RARE, keep them solely limited to NPC types MEANT for them)
+-> Assimar (Pure lux via lux extraction, balance issues)
+
+
+Notable but possible races
+-> Drow axed for now to avoid extra checks until I proc the voice + hair stuff properly in a refactor to make their hair white + yellow/red/green eye colors more often
+-> Murklings as well because y'know, hair is supposed to be body-colored since they're just gloop of some assimulated fool
+-> Anthromorphs/lizards look poor without their snouts, like really, really goofy af.
+
+-> some other races look bad but they're semi-acceptable for now I.E teiflings/halfkin since they don't come w/ears and tails randomly.
+
+Regards: Shadows
+PS: You may also wanna split this list for regional stuff + weight stuff in future.
+We also might want a proper NPC randomise set of verbs for less copypasting shit over and over, I've been meaning for that but not gotten to it yet.
+
+To avoid TOO much conflicts w/random char parts, consider a proc that checks if we have X race and applies features out of a listing. Its kinda janky but its an idea.
+
+*/
+#define NPC_RACES_TYPES list(\
+	/datum/species/human/northern,\
+	/datum/species/human/halfelf,\
+	/datum/species/elf/wood,\
+	/datum/species/elf/sun,\
+	/datum/species/dwarf/mountain,\
+	/datum/species/tieberian,\
+	/datum/species/demihuman,\
+	/datum/species/halforc,\
+	/datum/species/goblinp,\
+	/datum/species/dwarf/gnome\
+)
+
+#define OLD_GOD_PATRON list(/datum/patron/old_god)
+
 #define ALL_CLERIC_PATRONS list(/datum/patron/divine/astrata, /datum/patron/divine/noc, /datum/patron/divine/dendor, /datum/patron/divine/necra, /datum/patron/divine/pestra, /datum/patron/divine/ravox, /datum/patron/divine/malum, /datum/patron/divine/eora, /datum/patron/divine/undivided) // Currently unused.
 
 #define ALL_PALADIN_PATRONS list(/datum/patron/divine/undivided, /datum/patron/divine/astrata, /datum/patron/divine/noc, /datum/patron/divine/abyssor, /datum/patron/divine/dendor, /datum/patron/divine/necra, /datum/patron/divine/pestra, /datum/patron/divine/ravox, /datum/patron/divine/malum, /datum/patron/divine/eora, /datum/patron/divine/xylix, /datum/patron/old_god) // Currently unused.
@@ -369,7 +413,7 @@ Balloon Alert / Floating Text defines
 
 #define NON_PSYDON_PATRONS list(/datum/patron/divine/undivided, /datum/patron/divine/astrata, /datum/patron/divine/noc, /datum/patron/divine/dendor, /datum/patron/divine/abyssor, /datum/patron/divine/ravox, /datum/patron/divine/necra, /datum/patron/divine/xylix, /datum/patron/divine/pestra, /datum/patron/divine/malum, /datum/patron/divine/eora, /datum/patron/inhumen/zizo, /datum/patron/inhumen/graggar, /datum/patron/inhumen/matthios, /datum/patron/inhumen/baotha)	//For lord/heir usage
 
-#define ALL_PATRONS  list(/datum/patron/divine/undivided, /datum/patron/divine/astrata, /datum/patron/divine/noc, /datum/patron/divine/dendor, /datum/patron/divine/abyssor, /datum/patron/divine/ravox, /datum/patron/divine/necra, /datum/patron/divine/xylix, /datum/patron/divine/pestra, /datum/patron/divine/malum, /datum/patron/divine/eora, /datum/patron/old_god, /datum/patron/inhumen/zizo, /datum/patron/inhumen/graggar, /datum/patron/inhumen/matthios, /datum/patron/inhumen/baotha)
+#define ALL_PATRONS	list(/datum/patron/divine/undivided, /datum/patron/divine/astrata, /datum/patron/divine/noc, /datum/patron/divine/dendor, /datum/patron/divine/abyssor, /datum/patron/divine/ravox, /datum/patron/divine/necra, /datum/patron/divine/xylix, /datum/patron/divine/pestra, /datum/patron/divine/malum, /datum/patron/divine/eora, /datum/patron/old_god, /datum/patron/inhumen/zizo, /datum/patron/inhumen/graggar, /datum/patron/inhumen/matthios, /datum/patron/inhumen/baotha)
 
 #define ALL_SLAYER_PATRONS list(/datum/patron/divine/malum, /datum/patron/divine/ravox)
 
@@ -414,10 +458,6 @@ GLOBAL_LIST_EMPTY(accused)
 GLOBAL_LIST_EMPTY(confessors)
 
 //preference stuff
-#define FAMILY_NONE 1
-#define FAMILY_PARTIAL 2
-#define FAMILY_FULL 3
-
 GLOBAL_LIST_EMPTY(head_bounties)
 GLOBAL_LIST_EMPTY(noticeboard_notices)
 GLOBAL_LIST_EMPTY(noticeboard_listings)
@@ -439,14 +479,14 @@ GLOBAL_LIST_EMPTY(round_join_times)
 */
 
 #define CTAG_ALLCLASS		"CAT_ALLCLASS"		// jus a define for allclass to not deal with actively typing strings
-#define CTAG_DISABLED 		"CAT_DISABLED" 		// Disabled, aka don't make it fuckin APPEAR
-#define CTAG_PILGRIM 		"CAT_PILGRIM"  		// Pilgrim classes
-#define CTAG_ADVENTURER 	"CAT_ADVENTURER"  	// Adventurer classes
-#define CTAG_TOWNER 		"CAT_TOWNER"  		// Villager class - Villagers can use it
-#define CTAG_ANTAG 			"CAT_ANTAG"  		// Antag class - results in an antag
+#define CTAG_DISABLED		"CAT_DISABLED"		// Disabled, aka don't make it fuckin APPEAR
+#define CTAG_PILGRIM		"CAT_PILGRIM"			// Pilgrim classes
+#define CTAG_ADVENTURER	"CAT_ADVENTURER"		// Adventurer classes
+#define CTAG_TOWNER		"CAT_TOWNER"			// Villager class - Villagers can use it
+#define CTAG_ANTAG			"CAT_ANTAG"			// Antag class - results in an antag
 #define CTAG_BANDIT			"CAT_BANDIT"		// Bandit class - Tied to the bandit antag really
 #define CTAG_ASSASSIN		"CAT_ASSASSIN"		// Assassin classes - Tied to the assassin antag for specialization
-#define CTAG_CHALLENGE 		"CAT_CHALLENGE"  	// Challenge class - Meant to be free for everyone
+#define CTAG_CHALLENGE		"CAT_CHALLENGE"		// Challenge class - Meant to be free for everyone
 #define CTAG_VAGABOND		"CAT_VAGABOND"		// Vagabond class - start with nothing and work your way up
 #define CTAG_ORTHODOXIST	"CAT_ORTHODOXIST"	// For Orthodoxist subclasses
 #define CTAG_INQUSITOR		"CAT_INQUISITOR"	// For Inquisitor subclasses
@@ -460,7 +500,7 @@ GLOBAL_LIST_EMPTY(round_join_times)
 #define CTAG_VAMPSERVANT	"CAT_VAMPSERVANT"	// Vampire lord bloodpool servant classes
 #define CTAG_VAMPGUARD		"CAT_VAMPGUARD"		// Vampire Lord bloodpool guard classes
 #define CTAG_VAMPSPAWN		"CAT_VAMPSPAWN"		// Vampire Lord bloodpool elite classes
-#define CTAG_LICKER_WRETCH  "CAT_LICKER_WRETCH" // Licker wretch. Nuff said.
+#define CTAG_LICKER_WRETCH	"CAT_LICKER_WRETCH" // Licker wretch. Nuff said.
 #define CTAG_GNOLL			"CAT_GNOLL"			// Wretch-esque gnolls, graggar's chosen.
 #define CTAG_GNOLL_IMPURE	"CAT_GNOLL_IMPURE"	// Reward for beating enough gnolls.
 #define CTAG_HAG			"CAT_HAG"
@@ -480,18 +520,25 @@ GLOBAL_LIST_EMPTY(round_join_times)
 #define CTAG_SQUIRE			"CAT_SQUIRE"		// Squire class - Handles Squire class selector
 #define CTAG_VETERAN		"CAT_VETERAN"		// Veteran class - Handles Veteran class selector
 #define CTAG_MARSHAL		"CAT_MARSHAL"		// Marshal class
-#define CTAG_SENESCHAL		"CAT_SENESCHAL"		// Seneschal's aesthetic choices. 
+#define CTAG_SENESCHAL		"CAT_SENESCHAL"		// Seneschal's aesthetic choices.
 #define CTAG_SERVANT		"CAT_SERVANT"		// Servant's aesthetic choices.
 #define CTAG_WAPPRENTICE	"CTAG_WAPPRENTICE"	// Mage Apprentice Classes - Handles Mage Apprentices class selector
-#define CTAG_GUILDSMASTER 	"CAT_GUILDSMASTER"	// Guildsmaster class - Handles Guildsmaster class selector 
-#define CTAG_GUILDSMEN 		"CAT_GUILDSMEN"		// Guildsmen class - Handles Guildsmen class selector
+#define CTAG_GUILDSMASTER	"CAT_GUILDSMASTER"	// Guildsmaster class - Handles Guildsmaster class selector
+#define CTAG_GUILDSMEN		"CAT_GUILDSMEN"		// Guildsmen class - Handles Guildsmen class selector
 #define CTAG_BATHWORKER		"CAT_BATHWORKER"	// Bathhouse Attendant's aesthetic choices.
 
 // List of Migrant Classes.
-#define CTAG_HFT_LORD "CAT_HFT_LORD"  // Heartfelt Lord Class - Handles Heartfelt Lord class selector.
-#define CTAG_HFT_HAND "CAT_HFT_HAND"  // Heartfelt Hand Class - Handles Heartfelt Hand class selector.
-#define CTAG_HFT_KNIGHT "CAT_HFT_KNIGHT"  // Heartfelt Knight Class - Handles Heartfelt Knight class selector.
-#define CTAG_HFT_RETINUE "CAT_HFT_RETINUE"  // Heartfelt Retinue Class - Handles Heartfelt Retinue class selector.
+#define CTAG_HFT_LORD "CAT_HFT_LORD"	// Heartfelt Lord Class - Handles Heartfelt Lord class selector.
+#define CTAG_HFT_HAND "CAT_HFT_HAND"	// Heartfelt Hand Class - Handles Heartfelt Hand class selector.
+#define CTAG_HFT_KNIGHT "CAT_HFT_KNIGHT"	// Heartfelt Knight Class - Handles Heartfelt Knight class selector.
+#define CTAG_HFT_RETINUE "CAT_HFT_RETINUE"	// Heartfelt Retinue Class - Handles Heartfelt Retinue class selector.
+
+// Pentarchy wave archetype tags; between them they cover every mercenary subclass exactly once.
+#define CTAG_MERCPARTY_VANGUARD "CAT_MERCPARTY_VANGUARD"	// line soldiers
+#define CTAG_MERCPARTY_BULWARK "CAT_MERCPARTY_BULWARK"	// bruisers / tanks
+#define CTAG_MERCPARTY_MARKSMAN "CAT_MERCPARTY_MARKSMAN"	// ranged skirmishers
+#define CTAG_MERCPARTY_BRAVO "CAT_MERCPARTY_BRAVO"	// duelists / hunters
+#define CTAG_MERCPARTY_WARMAGE "CAT_MERCPARTY_WARMAGE"	// battle casters
 
 // List of mono-class categories. Only here for standardisation sake, but can be added on if desired.
 #define CTAG_BISHOP			"CAT_BISHOP"
@@ -511,8 +558,8 @@ GLOBAL_LIST_EMPTY(round_join_times)
 #define CTAG_MERCH			"CAT_MERCH"
 #define CTAG_SHOPHAND		"CAT_SHOPHAND"
 #define CTAG_ARCHIVIST		"CAT_ARCHIVIST"
-#define CTAG_TOWNCRIER		"CAT_TOWNCRIER"
 #define CTAG_KEEPER			"CAT_KEEPER"
+#define CTAG_PAINTER		"CAT_PAINTER"
 #define CTAG_TAILOR			"CAT_TAILOR"
 #define CTAG_SOILBRIDE		"CAT_SOILBRIDE"
 #define CTAG_INNKEEPER		"CAT_INNKEEPER"
@@ -527,6 +574,9 @@ GLOBAL_LIST_EMPTY(round_join_times)
 #define TRIUMPH_CAT_CHARACTER "CHARACTER"
 #define TRIUMPH_CAT_MISC "MISC!"
 #define TRIUMPH_CAT_ACTIVE_DATUMS "ACTIVE"
+
+// Suffix for a triumph entry so that it doesn't overlap
+#define TRIUMPH_STASH_SUFFIX " - TR"
 
 #define ARMOR_CLASS_NONE 0
 #define ARMOR_CLASS_LIGHT 1

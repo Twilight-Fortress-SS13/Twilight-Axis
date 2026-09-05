@@ -22,13 +22,15 @@
 	var/voyeur_fund = 0
 	var/zadcage_dir = null
 	var/list/mail_log = list()
+	var/spawn_cages = TRUE
 
-/obj/item/roguemachine/zadcote/Initialize()
+/obj/item/roguemachine/zadcote/Initialize(mapload)
 	. = ..()
 	for(var/i in 1 to ZADCOTE_SLOT_CAP)
 		slots += new /datum/zadlink(src, i)
 	START_PROCESSING(SSroguemachine, src)
-	addtimer(CALLBACK(src, PROC_REF(spawn_starter_cages)), 1)
+	if(spawn_cages)
+		addtimer(CALLBACK(src, PROC_REF(spawn_starter_cages)), 1)
 
 /obj/item/roguemachine/zadcote/proc/spawn_starter_cages()
 	var/turf/forced_tile = null
@@ -195,6 +197,11 @@
 
 /obj/item/roguemachine/zadcote/ui_state(mob/user)
 	return GLOB.human_adjacent_state
+
+/obj/item/roguemachine/zadcote/ui_status(mob/user, datum/ui_state/state)
+	if(isobserver(user))
+		return UI_CLOSE
+	return ..()
 
 /obj/item/roguemachine/zadcote/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
@@ -384,10 +391,10 @@
 
 /obj/item/roguemachine/zadcote/steward
 	name = "stewardry zadcote"
-	desc = "A zadcote of the stewardry, kept open to any membes of the Royal Court."
+	desc = "A zadcote of the stewardry, kept open to any members of the Royal Court."
 	faction = ZADCOTE_FACTION_STEWARD
 	motto = "STEWARDRY ZADCOTE"
-	operator_jobs = list("Grand Duke", "Regent", "Steward", "Clerk", "Councillor", "Hand")
+	operator_jobs = list("Grand Duke", "Regent", "Steward", "Clerk", "Councillor", "Hand", "Sultan", "Vizier", "Sheikh") //TA_EDIT
 	allows_voyeur = FALSE
 
 /obj/item/roguemachine/zadcote/merchant
@@ -407,3 +414,19 @@
 	operator_jobs = list("Bathmaster", "Bathhouse Attendant")
 	operator_trait = TRAIT_AGENT_BATHHOUSE
 	allows_voyeur = TRUE
+
+GLOBAL_VAR_INIT(hand_zadcote, null)
+
+/obj/item/roguemachine/zadcote/hand
+	name = "hand's zadcote"
+	desc = "A zadcote used by the Hand of the Crown."
+	faction = ZADCOTE_FACTION_HAND
+	motto = "HAND ZADCOTE"
+	operator_jobs = list("Hand", "Court Agent")
+	allows_voyeur = TRUE
+	is_important = TRUE
+	spawn_cages = FALSE
+
+/obj/item/roguemachine/zadcote/hand/Initialize(mapload)
+	. = ..()
+	GLOB.hand_zadcote = src

@@ -171,6 +171,76 @@
 /mob/living/carbon/human/proc/CloseWings()
 	return
 
+/datum/emote/living/carbon/human/eflick
+	key = "eflick"
+	key_third_person = "flicks"
+	message = "flicks their ears."
+	emote_type = EMOTE_VISIBLE
+	show_runechat = TRUE
+
+/datum/emote/living/carbon/human/eflick/run_emote(mob/user, params, type_override, intentional)
+	. = ..()
+	if(!.)
+		return
+	var/mob/living/carbon/human/H = user
+	if(!istype(H) || !H.dna || !H.dna.species || !H.dna.species.can_flick_ears(H))
+		return
+	if(!H.dna.species.is_flicking_ears(H))
+		H.dna.species.perform_flick_ears(H)
+
+/datum/emote/living/carbon/human/eflick/can_run_emote(mob/user, status_check = TRUE , intentional)
+	if(!..())
+		return FALSE
+	var/mob/living/carbon/human/H = user
+	return H.dna && H.dna.species && H.dna.species.can_flick_ears(user)
+
+/mob/living/carbon/human/verb/emote_eflick()
+	set name = "Ear Flick"
+	set category = "Emotes"
+
+	emote("eflick", intentional = TRUE)
+
+/datum/emote/living/gulp
+	key = "gulp"
+	key_third_person = "gulps"
+	message = "gulps."
+	emote_type = EMOTE_AUDIBLE
+	show_runechat = TRUE
+	needs_emotion = TRUE
+
+/mob/living/carbon/human/verb/gulp()
+	set name = "Gulp"
+	set category = "Emotes.Noises"
+
+	emote("gulp", intentional = TRUE)
+
+/datum/emote/living/crack
+	key = "crack"
+	key_third_person = "cracks"
+	message = "cracks their knuckles."
+	emote_type = EMOTE_AUDIBLE | EMOTE_VISIBLE
+	show_runechat = TRUE
+
+/mob/living/carbon/human/verb/crack()
+	set name = "Knuckles"
+	set category = "Emotes.Noises"
+
+	emote("crack", intentional = TRUE)
+
+/datum/emote/living/facepalm
+	key = "facepalm"
+	key_third_person = "facepalms"
+	message = "facepalms."
+	emote_type =	EMOTE_AUDIBLE
+	show_runechat = TRUE
+
+/mob/living/carbon/human/verb/facepalm()
+	set name = "Facepalm"
+	set category = "Emotes.Noises"
+
+	emote("facepalms", intentional = TRUE)
+
+
 /mob/living/carbon/human/verb/hand_games()
 	set name = "Игры руками"
 	set desc = "Challenge another to a variety of handgames, which can either be done while standing next to each other or while across a table."
@@ -227,7 +297,7 @@
 
 // Checks to make sure everything is fine to continue playing.
 
-/mob/living/carbon/human/proc/hand_games_check(var/mob/living/carbon/human/player1, var/mob/living/carbon/human/player2)
+/mob/living/carbon/human/proc/hand_games_check(mob/living/carbon/human/player1, mob/living/carbon/human/player2)
 	if(!istype(player1) || !istype(player2))
 		return 0
 	if(player1.stat || player2.stat) //Make sure they're still standing.
@@ -239,7 +309,7 @@
 
 ///// A simple game of Rock Paper Scissors, each player chooses an option and the choices are declared simultaneously.
 
-/mob/living/carbon/human/proc/game_rps(var/mob/living/carbon/human/player1, var/mob/living/carbon/human/player2)
+/mob/living/carbon/human/proc/game_rps(mob/living/carbon/human/player1, mob/living/carbon/human/player2)
 	if(!hand_games_check(player1,player2))
 		return
 	to_chat(player1, span_notice("Asking [player2] if they want to play Rock, Paper, Shears!"))
@@ -269,7 +339,7 @@
 
 /////// Armwrestling! Each player gets a modifier based on their size and can choose the strength of their character, then a weighted roll is made.
 
-/mob/living/carbon/human/proc/game_armwrestle(var/mob/living/carbon/human/player1, var/mob/living/carbon/human/player2)
+/mob/living/carbon/human/proc/game_armwrestle(mob/living/carbon/human/player1, mob/living/carbon/human/player2)
 	if(!hand_games_check(player1,player2))
 		return
 	to_chat(player1, span_notice("Asking [player2] if they want to play Armwrestling!"))
@@ -348,7 +418,7 @@
 
 /////// Slaphands! Each player gets a modifier based on their size and can choose the reaction time of their character, then a weighted roll is made. This one gives the advantage to smaller players.
 
-/mob/living/carbon/human/proc/game_slaphands(var/mob/living/carbon/human/player1, var/mob/living/carbon/human/player2)
+/mob/living/carbon/human/proc/game_slaphands(mob/living/carbon/human/player1, mob/living/carbon/human/player2)
 	if(!hand_games_check(player1,player2))
 		return
 	to_chat(player1, span_notice("Asking [player2] if they want to play Slaphands!"))
@@ -384,7 +454,7 @@
 
 ///// Thumbwars! This one is pure chance, and - in a pinch - can essentially work like a cointoss.
 
-/mob/living/carbon/human/proc/game_thumbwars(var/mob/living/carbon/human/player1, var/mob/living/carbon/human/player2)
+/mob/living/carbon/human/proc/game_thumbwars(mob/living/carbon/human/player1, mob/living/carbon/human/player2)
 	if(!hand_games_check(player1,player2))
 		return
 	to_chat(player1, span_notice("Asking [player2] if they want to play Thumbwars!"))

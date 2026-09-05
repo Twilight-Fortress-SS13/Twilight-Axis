@@ -1,5 +1,5 @@
 import { Button, Section, Stack, Table } from 'tgui-core/components';
-import { BooleanLike } from 'tgui-core/react';
+import type { BooleanLike } from 'tgui-core/react';
 
 import { useBackend } from '../backend';
 import { Window } from '../layouts';
@@ -24,7 +24,7 @@ type Data = {
   unknown_languages: Language[];
 };
 
-export const LanguageMenu = (props) => {
+export const LanguageMenu = () => {
   const { data } = useBackend<Data>();
   const { admin_mode } = data;
 
@@ -46,7 +46,7 @@ export const LanguageMenu = (props) => {
   );
 };
 
-export const KnownLanguages = (props) => {
+export const KnownLanguages = () => {
   const { data } = useBackend<Data>();
 
   const { languages, admin_mode } = data;
@@ -105,7 +105,7 @@ export const KnownLanguageRow = (props: { lang: KnownLanguage }) => {
   );
 };
 
-export const AdminMenu = (props) => {
+export const AdminMenu = () => {
   const { act, data } = useBackend<Data>();
 
   const { unknown_languages, omnitongue } = data;

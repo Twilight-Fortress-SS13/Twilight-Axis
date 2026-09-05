@@ -153,7 +153,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 	. += span_info("Stones can be 'slapcrafted' into new items by left-clicking them with certain tools and materials. 'Slapcrafted' items don't require a Crafting skill to make.")
 	. += span_info("'Slapcrafts' for stones include tools and pots.")
 
-/obj/item/natural/stone/Initialize()
+/obj/item/natural/stone/Initialize(mapload)
 	. = ..()
 	stone_lore()
 	update_force_dynamic() // Else it will not display the force properly.
@@ -199,7 +199,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 	. += span_info("Whetstones can be 'slapcrafted' into new items by left-clicking them with certain tools and materials. 'Slapcrafted' items don't require a Crafting skill to make.")
 	. += span_info("'Slapcrafts' for whestones include tools, and - if used with hunting knives and farming tools - unique weapons.")
 
-/obj/item/natural/whetstone/Initialize()
+/obj/item/natural/whetstone/Initialize(mapload)
 	. = ..()
 	var/static/list/slapcraft_recipe_list = list(
 		/datum/crafting_recipe/roguetown/survival/peasantry/thresher/whetstone,
@@ -331,7 +331,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 	var/skill_level = user.get_skill_level(/datum/skill/craft/masonry)
 	var/work_time = (35 - (skill_level * 5))
 	if(istype(W, /obj/item/natural/stone))
-		playsound(src.loc, pick('sound/items/stonestone.ogg'), 100)
+		playsound(loc, pick('sound/items/stonestone.ogg'), 100)
 		user.visible_message(span_info("[user] strikes the stones together."))
 		if(prob(10))
 			var/datum/effect_system/spark_spread/S = new()
@@ -339,22 +339,25 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 			S.set_up(1, 1, front)
 			S.start()
 	if( user.used_intent.type == /datum/intent/chisel )
-		playsound(src.loc, pick('sound/combat/hits/onrock/onrock (1).ogg', 'sound/combat/hits/onrock/onrock (2).ogg', 'sound/combat/hits/onrock/onrock (3).ogg', 'sound/combat/hits/onrock/onrock (4).ogg'), 100)
-		user.visible_message("<span class='info'>[user] chisels the stone into a block.</span>")
-		if(do_after(user, work_time))
-			new /obj/item/natural/stoneblock(get_turf(src.loc))
-			if(HAS_TRAIT(user, TRAIT_MASTER_MASON)) //double the amount for any in a stone worker role
-				new /obj/item/natural/stoneblock(get_turf(src.loc))
-			new /obj/effect/decal/cleanable/debris/stony(get_turf(src))
-			playsound(src.loc, pick('sound/combat/hits/onrock/onrock (1).ogg', 'sound/combat/hits/onrock/onrock (2).ogg', 'sound/combat/hits/onrock/onrock (3).ogg', 'sound/combat/hits/onrock/onrock (4).ogg'), 100)
-			qdel(src)
-			user.mind.add_sleep_experience(/datum/skill/craft/masonry, (user.STAINT*0.2))
+		var/location = loc
+		for(var/obj/item/natural/stone/S in get_turf(src))
+			user.visible_message("<span class='info'>[user] chisels the stone into a block.</span>")
+			if(do_after(user, work_time))
+				new /obj/item/natural/stoneblock(get_turf(location))
+				if(HAS_TRAIT(user, TRAIT_MASTER_MASON)) //double the amount for any in a stone worker role
+					new /obj/item/natural/stoneblock(get_turf(location))
+				new /obj/effect/decal/cleanable/debris/stony(get_turf(location))
+				playsound(location, pick('sound/combat/hits/onrock/onrock (1).ogg', 'sound/combat/hits/onrock/onrock (2).ogg', 'sound/combat/hits/onrock/onrock (3).ogg', 'sound/combat/hits/onrock/onrock (4).ogg'), 100)
+				qdel(S)
+				user.mind.add_sleep_experience(/datum/skill/craft/masonry, (user.STAINT*0.2))
+			else
+				return
 		return
 	else if(istype(W, /obj/item/rogueweapon/chisel/assembly))
 		to_chat(user, span_warning("You most use both hands to chisel blocks."))
 	else
 		..()
-		
+
 //rock munching
 /obj/item/natural/stone/attack(mob/living/M, mob/user)
 	if(!user.cmode)
@@ -396,11 +399,13 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 	. += span_info("Left-clicking a rock with a stone has a chance to spawn sparks. Sparks can be used to reignite extinguished torches, lampterns, hearths, and other igniteable structures.")
 	. += span_info("Left-clicking a rock with a chisel will turn it into a stone block, which can be used for masonry and construction.")
 
-/obj/item/natural/rock/Initialize(mapload, autodeconstruct)
+/obj/item/natural/rock/Initialize(mapload, autodeconstruct, hp_override)
 	icon_state = "stonebig[rand(1,2)]"
 	if(autodeconstruct)
 		deconstruct()
 		return
+	if(hp_override)
+		obj_integrity = hp_override
 	..()
 
 /obj/item/natural/rock/Crossed(mob/living/L)
@@ -434,9 +439,9 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 		if(mineralType && mineralAmt)
 			if(has_world_trait(/datum/world_trait/malum_diligence))
 				mineralAmt += rand(1,2)
-			new mineralType(src.loc, mineralAmt)
+			new mineralType(loc, mineralAmt)
 		for(var/i in 1 to rand(1,4))
-			var/obj/item/S = new /obj/item/natural/stone(src.loc)
+			var/obj/item/S = new /obj/item/natural/stone(loc)
 			S.pixel_x = rand(25,-25)
 			S.pixel_y = rand(25,-25)
 		record_round_statistic(STATS_ROCKS_MINED)
@@ -458,7 +463,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 	var/work_time = (120 - (skill_level * 15))
 	if(istype(W, /obj/item/natural/stone))
 		user.visible_message(span_info("[user] strikes the stone against the boulder."))
-		playsound(src.loc, 'sound/items/stonestone.ogg', 100)
+		playsound(loc, 'sound/items/stonestone.ogg', 100)
 		if(prob(35))
 			var/datum/effect_system/spark_spread/S = new()
 			var/turf/front = get_turf(src)
@@ -466,7 +471,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 			S.start()
 		return
 	if(istype(W, /obj/item/natural/rock))
-		playsound(src.loc, pick('sound/items/stonestone.ogg'), 100)
+		playsound(loc, pick('sound/items/stonestone.ogg'), 100)
 		user.visible_message(span_info("[user] strikes the boulders together."))
 		if(prob(10))
 			var/datum/effect_system/spark_spread/S = new()
@@ -474,12 +479,12 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 			S.set_up(1, 1, front)
 			S.start()
 		return
-	if(istype(W, /obj/item/contraption/pick/drill) && user.used_intent.type == /datum/intent/drill)
-		var/obj/item/contraption/pick/drill/drillitem = W
+	if(istype(W, /obj/item/rogueweapon/contraption/pick/drill) && user.used_intent.type == /datum/intent/drill)
+		var/obj/item/rogueweapon/contraption/pick/drill/drillitem = W
 		if(drillitem.current_charge < 10)
 			to_chat(user, span_warning("Not enough fuel."))
 			return
-		playsound(src.loc, 'sound/items/stonestone.ogg', 100)
+		playsound(loc, 'sound/items/stonestone.ogg', 100)
 		if(prob(35))
 			var/datum/effect_system/spark_spread/S = new()
 			var/turf/front = get_turf(src)
@@ -491,19 +496,20 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 			ungrip(user, "it runs out of fuel")
 		return
 	if( user.used_intent.type == /datum/intent/chisel )
-		var/location = src.loc
-		for(var/obj/item/natural/stone/S in get_turf(src))
-			user.visible_message("<span class='info'>[user] chisels the stone into a block.</span>")
-			if(do_after(user, work_time))
-				new /obj/item/natural/stoneblock(get_turf(location))
-				if(HAS_TRAIT(user, TRAIT_MASTER_MASON)) //double the amount for any in a stone worker role
-					new /obj/item/natural/stoneblock(get_turf(location))
-				new /obj/effect/decal/cleanable/debris/stony(get_turf(location))
-				playsound(location, pick('sound/combat/hits/onrock/onrock (1).ogg', 'sound/combat/hits/onrock/onrock (2).ogg', 'sound/combat/hits/onrock/onrock (3).ogg', 'sound/combat/hits/onrock/onrock (4).ogg'), 100)
-				qdel(S)
-				user.mind.add_sleep_experience(/datum/skill/craft/masonry, (user.STAINT*0.2))
-			else
-				return
+		playsound(loc, pick('sound/combat/hits/onrock/onrock (1).ogg', 'sound/combat/hits/onrock/onrock (2).ogg', 'sound/combat/hits/onrock/onrock (3).ogg', 'sound/combat/hits/onrock/onrock (4).ogg'), 100)
+		user.visible_message("<span class='info'>[user] chisels the boulder into blocks.</span>")
+		if(do_after(user, work_time))
+			new /obj/item/natural/stoneblock(get_turf(loc))
+			new /obj/item/natural/stoneblock(get_turf(loc))
+			new /obj/item/natural/stoneblock(get_turf(loc))
+			if(HAS_TRAIT(user, TRAIT_MASTER_MASON)) //double the amount for any in a stone worker role
+				new /obj/item/natural/stoneblock(get_turf(loc))
+				new /obj/item/natural/stoneblock(get_turf(loc))
+				new /obj/item/natural/stoneblock(get_turf(loc))
+			new /obj/effect/decal/cleanable/debris/stony(get_turf(loc))
+			playsound(loc, pick('sound/combat/hits/onrock/onrock (1).ogg', 'sound/combat/hits/onrock/onrock (2).ogg', 'sound/combat/hits/onrock/onrock (3).ogg', 'sound/combat/hits/onrock/onrock (4).ogg'), 100)
+			user.mind.add_sleep_experience(/datum/skill/craft/masonry, (user.STAINT*0.5))
+			qdel(src)
 		return
 	else if(istype(W, /obj/item/rogueweapon/chisel/assembly))
 		to_chat(user, span_warning("You most use both hands to chisel blocks."))
@@ -553,7 +559,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 	icon_state = "dungeon_rock"
 
 // actually random
-/obj/item/natural/rock/random_ore/Initialize()
+/obj/item/natural/rock/random_ore/Initialize(mapload)
 	. = ..()
 	var/obj/item/natural/rock/theboi = pick(list(
 		/obj/item/natural/rock/copper,
@@ -572,7 +578,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 BECAUSE this is a dungeon reward, and you're SUPPOSED to get SOMETHING, they've got a pretty high chance for good stuff.
 - MUMBLEMANCER
 */
-/obj/item/natural/rock/dungeon/Initialize()
+/obj/item/natural/rock/dungeon/Initialize(mapload)
 	. = ..()
 	// The amounts are going to be weird BC I wanted a % out of 100 and it's a 7 layer list.
 	// I am considering gems to be less problematic than gold BC gold can be melted into way more

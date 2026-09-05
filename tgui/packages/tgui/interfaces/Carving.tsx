@@ -1,11 +1,5 @@
-import { Dispatch, SetStateAction, useState } from 'react';
-import {
-  Box,
-  Button,
-  Input,
-  Section,
-  Stack,
-} from 'tgui-core/components';
+import { type Dispatch, type SetStateAction, useState } from 'react';
+import { Box, Button, Input, Section, Stack } from 'tgui-core/components';
 
 import { useBackend } from '../backend';
 import { Window } from '../layouts';
@@ -20,7 +14,7 @@ type Data = {
   carvings: Carving[];
 };
 
-export const Carving = (props) => {
+export const Carving = () => {
   const { data } = useBackend<Data>();
 
   if (!data.carvings) {
@@ -42,12 +36,14 @@ export const Carving = (props) => {
   );
 };
 
-export const Carveless = (props) => {
+export const Carveless = () => {
   return (
     <Stack align="center" justify="center" fill>
       <Stack.Item>
         <Stack vertical align="center" justify="center">
-          <Stack.Item fontSize={2}>Woe is you, there is nothing to carve.</Stack.Item>
+          <Stack.Item fontSize={2}>
+            Woe is you, there is nothing to carve.
+          </Stack.Item>
           <Stack.Item fontSize={1}>You shouldn't be seeing this!</Stack.Item>
         </Stack>
       </Stack.Item>
@@ -63,7 +59,7 @@ export const SearchBar = (props: {
   return <Input value={search} onChange={setSearch} fluid />;
 };
 
-export const CarvingDisplay = (props) => {
+export const CarvingDisplay = () => {
   const [search, setSearch] = useState('');
 
   const { act, data } = useBackend<Data>();
@@ -78,10 +74,7 @@ export const CarvingDisplay = (props) => {
         return true;
       }
     })
-    .sort(
-      (a, b) =>
-        a.name.localeCompare(b.name),
-    );
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <Section
@@ -100,9 +93,7 @@ export const CarvingDisplay = (props) => {
             <Stack.Item>
               <Box className={carving.icon} mr={2} inline />
             </Stack.Item>
-            <Stack.Item>
-              {carving.name}
-            </Stack.Item>
+            <Stack.Item>{carving.name}</Stack.Item>
           </Stack>
         </Button>
       ))}

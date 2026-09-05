@@ -32,7 +32,6 @@
 	item_state = "leather"
 	equip_sound = 'sound/blank.ogg'
 	sewrepair = TRUE
-	sellprice = 10
 	resistance_flags = FIRE_PROOF
 
 /obj/item/storage/belt/rogue/leather/plaquegold
@@ -51,13 +50,19 @@
 	name = "black belt"
 	icon_state = "blackbelt"
 	item_state = "blackbelt"
-	sellprice = 10
 
 /obj/item/storage/belt/rogue/leather/double
 	name = "pair of belts"
 	desc = "A pair of slim black belts worn around the waist."
 	icon_state = "belt_double"
 	item_state = "belt_double"
+
+
+/obj/item/storage/belt/rogue/leather/beltshawl
+	name = "belt shawl"
+	desc = "A fancy shawl worn around the waist."
+	icon_state = "beltshawl"
+	item_state = "beltshawl"
 
 /obj/item/storage/belt/rogue/leather/plaquesilver
 	name = "plaque belt"
@@ -70,7 +75,7 @@
 	name = "cloth military skirt"
 	desc = "A fine leather strap notched with holes for a buckle to secure itself, notched above a flared military skirt."
 	icon_state = "battleskirt"
-	sewrepair = FALSE
+	sewrepair = TRUE
 	detail_tag = "_belt"
 
 /obj/item/storage/belt/rogue/leather/battleskirt/update_icon()
@@ -95,7 +100,6 @@
 	name = "belt with faulds"
 	desc = "A fine leather strap notched with holes for a buckle to secure itself, notched above a halved military skirt."
 	icon_state = "faulds"
-	sewrepair = FALSE
 	detail_tag = "_belt"
 
 /obj/item/storage/belt/rogue/leather/battleskirt/faulds/red
@@ -106,7 +110,6 @@
 	desc = "A fine leather strap notched with holes for a buckle to secure itself, and nestled above a halved tabard's coverings."
 	icon_state = "breechcloth"
 	flags_inv = HIDECROTCH
-	sewrepair = FALSE
 	detail_tag = "_belt"
 
 /obj/item/storage/belt/rogue/leather/battleskirt/breechcloth/blackbelt
@@ -114,7 +117,6 @@
 	desc = "A fine black-leather strap notched with holes for a buckle to secure itself, and nestled above a halved tabard's coverings."
 	icon_state = "breechclothalt"
 	flags_inv = HIDECROTCH
-	sewrepair = FALSE
 	detail_tag = "_belt"
 
 /obj/item/storage/belt/rogue/leather/battleskirt/breechcloth/red
@@ -127,10 +129,24 @@
 	sewrepair = FALSE
 	anvilrepair = /datum/skill/craft/armorsmithing
 
+/obj/item/storage/belt/rogue/leather/iron
+	name = "iron belt"
+	desc = "A fine leather belt that's been sleeved within many segments of iron, protecting its delicate innards from prying hands-and-blades."
+	icon_state = "ironplaque"
+	sewrepair = FALSE
+	anvilrepair = /datum/skill/craft/armorsmithing
+
 /obj/item/storage/belt/rogue/leather/steel/tasset
 	name = "tasseted belt"
 	desc = "A fine leather belt that's been sleeved within many segments of steel, and further reinforced with the tassets of a fluted cuirass."
 	icon_state = "steeltasset"
+	sewrepair = FALSE
+	anvilrepair = /datum/skill/craft/armorsmithing
+
+/obj/item/storage/belt/rogue/leather/iron/tasset
+	name = "tasseted iron belt"
+	desc = "A fine leather belt that's been sleeved within many segments of iron, and further reinforced with the tassets of a fluted cuirass."
+	icon_state = "irontasset"
 	sewrepair = FALSE
 	anvilrepair = /datum/skill/craft/armorsmithing
 
@@ -142,13 +158,24 @@
 	color = "#b9a286"
 	component_type = /datum/component/storage/concrete/roguetown/belt/cloth
 
+/obj/item/storage/belt/rogue/leather/rope/upgraded
+	name = "pouch-fitted rope belt"
+	desc = "A length of strong rope repurposed into a belt, fitted with a pouch for the same space as a leather belt."
+	component_type = /datum/component/storage/concrete/roguetown/belt
+
 /obj/item/storage/belt/rogue/leather/cloth
 	name = "cloth sash"
 	desc = "A strip of cloth tied together at the ends into a makeshift belt. It's better than nothing."
 	icon_state = "cloth"
+	sewrepair = TRUE
 	component_type = /datum/component/storage/concrete/roguetown/belt/cloth
 
-/obj/item/storage/belt/rogue/leather/cloth/lady
+/obj/item/storage/belt/rogue/leather/cloth/upgraded
+	name = "pouch-fitted cloth sash"
+	desc = "A strip of cloth tied together at the ends into a makeshift belt, fitted with a pouch for the same space as a leather belt."
+	component_type = /datum/component/storage/concrete/roguetown/belt
+
+/obj/item/storage/belt/rogue/leather/cloth/upgraded/lady
 	color = "#575160"
 
 /obj/item/storage/belt/rogue/leather/cloth/bandit
@@ -220,7 +247,6 @@
 	name = "black satchel"
 	icon_state = "bsatchel"
 	item_state = "bsatchel"
-	sellprice = 10
 
 /obj/item/storage/backpack/rogue/attack_right(mob/user)
 	var/datum/component/storage/CP = GetComponent(/datum/component/storage)
@@ -234,6 +260,11 @@
 	icon_state = "satchelshort"
 	item_state = "satchelshort"
 	slot_flags = ITEM_SLOT_BACK|ITEM_SLOT_HIP //Implement a check in the future that prevents more than one being worn at once.
+
+/obj/item/storage/backpack/rogue/satchel/short/black
+	name = "black short satchel"
+	icon_state = "bsatchelshort"
+	item_state = "bsatchelshort"
 
 /obj/item/storage/backpack/rogue/satchel/beltpack
 	name = "beltpack" //Satchel that fits on the cloak or belt slot. Should be exceptionally rare for on-spawn loadouts, unless a flag's added to make it incompatable with regular satchels.
@@ -284,6 +315,7 @@
 	equip_sound = 'sound/blank.ogg'
 	bloody_icon_state = "bodyblood"
 	sewrepair = FALSE
+	anvilrepair = /datum/skill/craft/engineering
 	component_type = /datum/component/storage/concrete/roguetown/backpack
 
 /obj/item/storage/backpack/rogue/backpack/bagpack
@@ -339,8 +371,8 @@
 	desc = "A five-slotted belt meant for tossblades. Little room left over."
 	icon_state = "knife"
 	item_state = "knife"
-	strip_delay = 20
-	var/max_storage = 5			//Javelin bag is 4 and they can't hold items. So, more fair having it like this since these are pretty decent weapons.
+	strip_delay = STRIP_DELAY_FAST
+	var/max_storage = 5		//Javelin bag is 4 and they can't hold items. So, more fair having it like this since these are pretty decent weapons.
 	var/list/knives = list()
 	sewrepair = TRUE
 	component_type = /datum/component/storage/concrete/roguetown/belt/knife_belt
@@ -405,7 +437,7 @@
 		return TRUE
 	return FALSE
 
-/obj/item/storage/belt/rogue/leather/knifebelt/iron/Initialize()
+/obj/item/storage/belt/rogue/leather/knifebelt/iron/Initialize(mapload)
 	. = ..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/rogueweapon/huntingknife/throwingknife/K = new()
@@ -416,49 +448,49 @@
 	icon_state = "blackknife"
 	item_state = "blackknife"
 
-/obj/item/storage/belt/rogue/leather/knifebelt/black/iron/Initialize()
+/obj/item/storage/belt/rogue/leather/knifebelt/black/iron/Initialize(mapload)
 	. = ..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/rogueweapon/huntingknife/throwingknife/K = new()
 		knives += K
 	update_icon()
 
-/obj/item/storage/belt/rogue/leather/knifebelt/black/steel/Initialize()
+/obj/item/storage/belt/rogue/leather/knifebelt/black/steel/Initialize(mapload)
 	. = ..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/rogueweapon/huntingknife/throwingknife/steel/K = new()
 		knives += K
 	update_icon()
 
-/obj/item/storage/belt/rogue/leather/knifebelt/black/silver/Initialize()
+/obj/item/storage/belt/rogue/leather/knifebelt/black/silver/Initialize(mapload)
 	. = ..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/rogueweapon/huntingknife/throwingknife/silver/K = new()
 		knives += K
 	update_icon()
 
-/obj/item/storage/belt/rogue/leather/knifebelt/black/silver_blessed/Initialize()
+/obj/item/storage/belt/rogue/leather/knifebelt/black/silver_blessed/Initialize(mapload)
 	. = ..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/rogueweapon/huntingknife/throwingknife/silver/preblessed/K = new()
 		knives += K
 	update_icon()
 
-/obj/item/storage/belt/rogue/leather/knifebelt/black/psydon/Initialize()
+/obj/item/storage/belt/rogue/leather/knifebelt/black/psydon/Initialize(mapload)
 	. = ..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/rogueweapon/huntingknife/throwingknife/psydon/K = new()
 		knives += K
 	update_icon()
 
-/obj/item/storage/belt/rogue/leather/knifebelt/black/psydon_blessed/Initialize()
+/obj/item/storage/belt/rogue/leather/knifebelt/black/psydon_blessed/Initialize(mapload)
 	. = ..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/rogueweapon/huntingknife/throwingknife/psydon/preblessed/K = new()
 		knives += K
 	update_icon()
 
-/obj/item/storage/belt/rogue/leather/knifebelt/black/kazengun/Initialize()
+/obj/item/storage/belt/rogue/leather/knifebelt/black/kazengun/Initialize(mapload)
 	. = ..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/rogueweapon/huntingknife/throwingknife/kazengun/K = new()
@@ -545,8 +577,8 @@
 	openspace.zFall(user) // slop?
 
 /obj/item/clothing/wall_grab/intercept_zImpact(atom/movable/AM, levels = 1) // with this shit it doesn't generate "X falls through open space". thank u guppyluxx
-    . = ..()
-    . |= FALL_NO_MESSAGE
+	. = ..()
+	. |= FALL_NO_MESSAGE
 
 /obj/item/storage/hip/orestore/bronze
 	name = "mechanized ore bag"
@@ -555,7 +587,7 @@
 	//mob_overlay_icon = 'icons/roguetown/clothing/onmob/belts.dmi'
 	icon_state = "rucksack"
 	item_state = "rucksack"
-	slot_flags = ITEM_SLOT_HIP|ITEM_SLOT_BACK 
+	slot_flags = ITEM_SLOT_HIP|ITEM_SLOT_BACK
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 400
 	equip_sound = 'sound/blank.ogg'
@@ -666,7 +698,7 @@
 	equip_sound = 'sound/blank.ogg'
 	bloody_icon_state = "bodyblood"
 	alternate_worn_layer = UNDER_CLOAK_LAYER
-	strip_delay = 20
+	strip_delay = STRIP_DELAY_FAST
 	component_type = /datum/component/storage/concrete/roguetown/zig_bandolier
 
 /obj/item/storage/belt/rogue/leather/suspenders
@@ -679,4 +711,5 @@
 	name = "cloth belt"
 	desc = "This belt has been sewn out of cloth, as opposed to tied. Which makes it superior. Obviously."
 	icon_state = "clothsash"
+	sewrepair = TRUE
 	salvage_result = /obj/item/natural/cloth

@@ -25,13 +25,12 @@ GLOBAL_LIST_EMPTY(antagonists)
 	var/antagpanel_category = "Uncategorized"	//Antagpanel will display these together, REQUIRED
 	var/show_name_in_check_antagonists = FALSE //Will append antagonist name in admin listings - use for categories that share more than one antag type
 	var/increase_votepwr = TRUE
-	var/rogue_enabled = FALSE
+	var/rogue_enabled = FALSE // this also determines whether it shows up in the panel! i dont know why!
 
 	///flags used by storytellers
 	var/antag_flags = NONE
 	var/has_tempo = FALSE
 	var/storyteller_antag_flags = STORYTELLER_ANTAG_NONE
-	var/storyteller_favor_flags = STORYTELLER_FAVOR_NONE
 	var/storyteller_slot_scaling = 1
 	var/storyteller_slot_default_cap = 0
 	var/list/storyteller_maxcaps
@@ -60,7 +59,7 @@ GLOBAL_LIST_EMPTY(antagonists)
 	. = TRUE
 	var/datum/mind/tested = new_owner || owner
 
-	if(tested?.current && is_banned(tested.current))
+	if(tested?.current && (QDELETED(tested.current) || is_banned(tested.current)))
 		return FALSE
 
 	if(tested.has_antag_datum(type))
@@ -71,7 +70,7 @@ GLOBAL_LIST_EMPTY(antagonists)
 		if(is_type_in_typecache(src, A.typecache_datum_blacklist))
 			return FALSE
 
-/// Proc to return the weight of this antagonist for purpose of antag cap calculations. Meant to be overriddeable  
+/// Proc to return the weight of this antagonist for purpose of antag cap calculations. Meant to be overriddeable
 /datum/antagonist/proc/get_antag_cap_weight()
 	return 1
 
@@ -123,9 +122,9 @@ GLOBAL_LIST_EMPTY(antagonists)
 			REMOVE_TRAIT(owner.current, TRAIT_TEMPO, SPECIES_TRAIT)
 
 /datum/antagonist/proc/is_banned(mob/M)
-	if(!M)
+	if(!M || !M.ckey)
 		return FALSE
-	. = (is_banned_from(M.ckey, list(ROLE_SYNDICATE, job_rank)) || QDELETED(M))
+	return is_banned_from(M.ckey, list(ROLE_SYNDICATE, job_rank))
 
 /datum/antagonist/proc/on_life(mob/user)
 	return
@@ -191,7 +190,7 @@ GLOBAL_LIST_EMPTY(antagonists)
 
 //Displayed at the start of roundend_category section, default to roundend_category header
 /datum/antagonist/proc/roundend_report_header()
-	return 	"<span class='header'>The [roundend_category] were:</span><br>"
+	return	"<span class='header'>The [roundend_category] were:</span><br>"
 
 //Displayed at the end of roundend_category section
 /datum/antagonist/proc/roundend_report_footer()

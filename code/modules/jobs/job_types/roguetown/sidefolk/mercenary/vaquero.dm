@@ -4,9 +4,12 @@
 	outfit = /datum/outfit/job/roguetown/mercenary/vaquero
 	class_select_category = CLASS_CAT_ETRUSCA
 	cmode_music = 'sound/music/combat_vaquero.ogg'
-	category_tags = list(CTAG_MERCENARY)
+	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_BRAVO)
 	subclass_languages = list(/datum/language/etruscan)
-	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_DECEIVING_MEEKNESS)
+	traits_applied = list(TRAIT_DODGEEXPERT)
+	subclass_virtues = list(
+		/datum/virtue/combat/guarded
+	)
 	subclass_stats = list(
 		STATKEY_SPD = 3,
 		STATKEY_INT = 2,
@@ -28,9 +31,6 @@
 		/datum/skill/misc/riding = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/music = SKILL_LEVEL_EXPERT,
-	)
-	subclass_virtues = list(
-		/datum/virtue/utility/riding
 	)
 
 /datum/advclass/mercenary/vaquero/equipme(mob/living/carbon/human/H, dummy)
@@ -99,4 +99,5 @@
 			if("Bardic Inspiration")
 				var/datum/inspiration/I = new /datum/inspiration(H)
 				I.grant_inspiration(H, bard_tier = BARD_T1)
+				H.mind?.AddSpell(new /datum/action/cooldown/spell/projectile/vicious_mockery) //I guess all the other bards have it too?
 	H.merctype = 13

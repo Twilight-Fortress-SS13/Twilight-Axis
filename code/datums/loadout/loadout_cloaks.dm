@@ -19,6 +19,11 @@
 	path = /obj/item/clothing/cloak/tabard/stabard/surcoat/short
 	sort_category = "Cloaks"
 
+/datum/loadout_item/pouched_suspenders
+	name = "Pouched Suspenders"
+	path = /obj/item/clothing/cloak/suspenders
+	sort_category = "Cloaks"
+
 /datum/loadout_item/cape
 	name = "Cape"
 	path = /obj/item/clothing/cloak/cape
@@ -27,6 +32,11 @@
 /datum/loadout_item/halfcloak
 	name = "Halfcloak"
 	path = /obj/item/clothing/cloak/half
+	sort_category = "Cloaks"
+
+/datum/loadout_item/scoutcloak
+	name = "Scout Cloak"
+	path = /obj/item/clothing/cloak/scout
 	sort_category = "Cloaks"
 
 /datum/loadout_item/ridercloak
@@ -114,9 +124,9 @@
 	path = /obj/item/clothing/cloak/poncho
 	sort_category = "Cloaks"
 
-/datum/loadout_item/toga
-	name = "Toga"
-	path = /obj/item/clothing/cloak/tabard/toga
+/datum/loadout_item/traditionaltabard
+	name = "Traditional Tabard, Psydonic"
+	path = /obj/item/clothing/cloak/tabard/psydontabard/white
 	sort_category = "Cloaks"
 
 /datum/loadout_item/aproncook
@@ -127,6 +137,11 @@
 /datum/loadout_item/fancycoat
 	name = "Fancy Coat"
 	path = /obj/item/clothing/cloak/poncho/fancycoat
+	sort_category = "Cloaks"
+
+/datum/loadout_item/fancycoattrimmed
+	name = "Trimmed Fancy Coat"
+	path = /obj/item/clothing/cloak/poncho/fancycoat/trimmed
 	sort_category = "Cloaks"
 
 /datum/loadout_item/cloakgoldenorder
@@ -193,4 +208,30 @@
 	name = "Wicker Cloak"
 	path = /obj/item/clothing/cloak/wickercloak
 	sort_category = "Cloaks"
+
+/datum/loadout_item/sash
+	name = "Sash"
+	path = /obj/item/clothing/cloak/sash
+	sort_category = "Cloaks"
+
+/datum/loadout_item/ranger_cloak
+	name = "Ranger Cloak, Forest Green"
+	path = /obj/item/clothing/cloak/rangercloak
+	sort_category = "Cloaks"
+
+/datum/loadout_item/ranger_cloak_gray
+	name = "Ranger Cloak, Neutral Gray"
+	path = /obj/item/clothing/cloak/rangercloak/gray
+	sort_category = "Cloaks"
+ 
+/datum/loadout_item/toga
+	name = "Toga, Robed"
+	path = /obj/item/clothing/cloak/tabard/toga
+	sort_category = "Cloaks"
+
+/datum/loadout_item/toga_dress
+	name = "Toga, Dress"
+	path = /obj/item/clothing/cloak/tabard/toga/dress
+	sort_category = "Cloaks"
+
 */

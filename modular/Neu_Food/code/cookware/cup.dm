@@ -73,7 +73,7 @@
 
 	if(!dice_in_cup.len)
 		return
-	
+
 	playsound(src, 'sound/items/cup_dice_roll.ogg', 100, TRUE)
 	if(do_after(user, 1.5 SECONDS))
 		rolling = TRUE
@@ -158,9 +158,44 @@
 	force = 10
 	throwforce = 15
 
+/obj/item/reagent_containers/glass/cup/glass
+	name = "glass"
+	desc = "A tall glass, offering a clear glimpse into the tastes of those who can afford it."
+	icon_state = "glassgoblet"
+	force = 10
+	throwforce = 20 //Did you ever get a glass chucked at your head, before? It hurts!
+
+/obj/item/reagent_containers/glass/cup/glass/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum, do_splash = TRUE)
+	playsound(loc, 'sound/combat/hits/onglass/glassbreak (4).ogg', 100)
+	shatter(get_turf(src))
+	..()
+
+/obj/item/reagent_containers/glass/cup/glass/proc/shatter(turf/T)
+	if(istransparentturf(T))
+		shatter(GET_TURF_BELOW(T))
+		return
+	new /obj/item/natural/glass_shard(get_turf(T))
+	new /obj/effect/decal/cleanable/debris/glassy(get_turf(T))
+	qdel(src)
+
+/obj/item/reagent_containers/glass/cup/glass/small
+	name = "small glass"
+	desc = "A short glass, abating the sorrows of royalty - one shot at a time."
+	icon_state = "glasscup"
+	dropshrink = 1
+	dropshrink = 0.85
+
+/obj/item/reagent_containers/glass/cup/glass/flute
+	name = "glass flute"
+	desc = "A tall glass with a narrower chamber, delighted by those who wish to savor the finer things in lyfe."
+	icon_state = "glassflute"
+	force = 10
+	throwforce = 20 //Did you ever get a glass chucked at your head, before? It hurts!
+	volume = 15
+
 /obj/item/reagent_containers/glass/cup/aalloymug
 	name = "decrepit mug"
-	desc = "Frayed bronze, coiled into a cup. Here, adventurers of centuries-past would laugh and legendize; but now, nothing but empty chairs and empty tables remain."
+	desc = "Rotted metal, coiled into a cup. Here, adventurers of centuries-past would laugh and legendize; but now, nothing but empty chairs and empty tables remain."
 	color = "#bb9696"
 	icon_state = "amug"
 	force = 5
@@ -168,7 +203,7 @@
 
 /obj/item/reagent_containers/glass/cup/aalloygob
 	name = "decrepit goblet"
-	desc = "Frayed bronze, coiled into a hooked vessel. To think that this was once a nobleman's goblet; yet, it has endured far longer than their now-withered bloodline."
+	desc = "Rotted metal, coiled into a hooked vessel. To think that this was once a nobleman's goblet; yet, it has endured far longer than their now-withered bloodline."
 	color = "#bb9696"
 	icon_state = "agoblet"
 	force = 10
@@ -227,6 +262,15 @@
 	icon_state = "gcup"
 	force = 5
 	throwforce = 10
+
+/obj/item/reagent_containers/glass/cup/mug
+	name = "ceramic mug"
+	desc = "A classic clay mug. often associated with fatherhood."
+	icon_state = "claymugbaked"
+	icon = 'modular/Neu_Food/icons/cookware/cup.dmi'
+	force = 5
+	throwforce = 10
+	w_class = WEIGHT_CLASS_NORMAL
 
 /obj/item/reagent_containers/glass/cup/golden/poison
 	name = "golden goblet"
@@ -313,6 +357,12 @@
 	dropshrink = 1
 	icon_state = "cup_onyxa"
 
+/obj/item/reagent_containers/glass/cup/carved/porcelain
+	name = "porcelain cup"
+	desc = "A simple cup made out of porcelain."
+	dropshrink = 1
+	icon_state = "cup_porcelain"
+	sellprice = 5
 /obj/item/reagent_containers/glass/cup/carved/shell
 	name = "shell cup"
 	desc = "A simple cup carved out of shell."
@@ -378,3 +428,11 @@
 	desc = "A fancy cup carved out of onyxa."
 	dropshrink = 1
 	icon_state = "fancycup_onyxa"
+
+/obj/item/reagent_containers/glass/cup/carved/porcelainfancy
+	name = "fancy porcelain goblet"
+	desc = "A fancy goblet made out of porcelain."
+	dropshrink = 1
+	icon_state = "fancycup_porcelain"
+
+

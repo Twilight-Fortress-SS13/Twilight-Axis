@@ -38,7 +38,7 @@
 	/// List of boon paths the hag has pre-prepared: [boon_path] = quantity
 	var/list/prepared_boons = list()
 
-/datum/component/hag_curio_tracker/Initialize()
+/datum/component/hag_curio_tracker/Initialize(mapload)
 	if(!isliving(parent))
 		return COMPONENT_INCOMPATIBLE
 	RegisterSignal(src, COMSIG_STATUS_EFFECT_HAG_CURSE_CLEARED, PROC_REF(handle_curse_cleared))
@@ -257,7 +257,7 @@
 			if(B.hag_is_valid && !B.hag_curse && !istype(B, /datum/hag_boon/curse_scar))
 				has_real_boon = TRUE
 				break
-		
+
 		if(has_real_boon)
 			active_victims++
 
@@ -290,15 +290,15 @@
 	// --- Individual Point/Trait Logic ---
 	var/current_total_points = 0
 	var/trait_boon_count = 0
-	
+
 	if(boon_registry[name_to_check])
 		for(var/datum/hag_boon/B in boon_registry[name_to_check])
 			if(!B.hag_is_valid || !B.hag_curse)
 				continue
-			
+
 			// Scars and Curses STILL count toward the soul's total capacity (max_points)
 			current_total_points += B.points
-			
+
 			// Only count traits for the 3-trait limit
 			if(B.hag_trait)
 				trait_boon_count++
@@ -323,7 +323,7 @@
 				if(S.type == target_spell_type)
 					to_chat(parent, span_warning("[name_to_check] already possesses the knowledge this boon would grant."))
 					return FALSE
-					
+
 	return TRUE
 
 /datum/component/hag_curio_tracker/proc/antag_check(mob/living/carbon/C)
@@ -338,6 +338,8 @@
 	if(C.mind.has_antag_datum(/datum/antagonist/hag))
 		return FALSE
 	if(C.mind.has_antag_datum(/datum/antagonist/skeleton))
+		return FALSE
+	if(C.mind.has_antag_datum(/datum/antagonist/assassin))
 		return FALSE
 	if(HAS_TRAIT(C, TRAIT_FEYTOUCHED))
 		return FALSE
@@ -392,7 +394,7 @@
 
 /datum/component/hag_curio_tracker/proc/revive_hag(mob/living/L)
 	L.grab_ghost(force = TRUE)
-	L.revive(full_heal = TRUE, admin_revive = FALSE)
+	L.revive(full_heal = TRUE, admin_revive = TRUE)
 	playsound(L, 'sound/magic/slimesquish.ogg', 100, TRUE)
 	last_revive_time = world.time
 

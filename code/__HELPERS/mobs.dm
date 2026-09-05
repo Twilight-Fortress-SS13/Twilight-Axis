@@ -20,9 +20,6 @@
 		else
 			return "000"
 
-/proc/random_backpack()
-	return pick(GLOB.backpacklist)
-
 /proc/random_features()
 	return MANDATORY_FEATURE_LIST
 
@@ -199,7 +196,7 @@ GLOBAL_LIST_EMPTY(species_list)
 		if(!can_move && (!user.Adjacent(target)))
 			. = 0
 			break
-			
+
 		if(user.get_active_held_item() != holding || user.incapacitated() || (extra_checks && !extra_checks.Invoke()))
 			. = 0
 			break
@@ -230,6 +227,7 @@ GLOBAL_LIST_EMPTY(species_list)
 	var/titles_pref = null
 	var/clothes_pref = CLOTHES_M
 	var/obscured_flags = NONE
+	var/override_advclass_examine = FALSE // if you get converted to a different role like servant with advjob_examine set to true, your title won't change on examine bcs your advclass hasn't actually changed - so we override that setting
 
 /**
  * Timed action involving one mob user. Target is optional.
@@ -237,21 +235,21 @@ GLOBAL_LIST_EMPTY(species_list)
  * mob/user - The mob performing the action.
  *
  * delay = the time in deciseconds. Use time defines (SECONDS, MINUTES) for readability.
- * 
+ *
  * needhand - check for an empty hand
- * 
+ *
  * target - the target of the action
  *
  * progress - whether to display a progress bar
- * 
+ *
  * datum/callback/extra_checks - additional check callbacks to perform during do_after
- * 
+ *
  * same_direction - whether the mob performing the action may switch directions or not
- * 
+ *
  * interrupt - whether to interrupt a prior do_after or not
 */
 
-/proc/do_after(mob/user, delay, needhand = TRUE, atom/target = null, progress = TRUE, datum/callback/extra_checks = null, same_direction = FALSE, no_interrupt = FALSE)
+/proc/do_after(mob/user, delay, needhand = TRUE, atom/target = null, progress = TRUE, datum/callback/extra_checks = null, same_direction = FALSE, no_interrupt = FALSE, allow_movement = FALSE)
 	if(!user)
 		return FALSE
 
@@ -292,7 +290,7 @@ GLOBAL_LIST_EMPTY(species_list)
 		if (progress)
 			progbar.update(world.time - starttime)
 
-		if(QDELETED(user) || user.stat || (!drifting && user.loc != Uloc) || (extra_checks && !extra_checks.Invoke()) || (same_direction && user.dir != original_dir))
+		if(QDELETED(user) || user.stat || (!drifting && !allow_movement && user.loc != Uloc) || (extra_checks && !extra_checks.Invoke()) || (same_direction && user.dir != original_dir))
 			. = FALSE
 			break
 
@@ -527,12 +525,6 @@ GLOBAL_LIST_EMPTY(species_list)
 /proc/deadchat_broadcast(message, source=null, mob/follow_target=null, turf/turf_target=null, speaker_key=null, message_type=DEADCHAT_REGULAR)
 	message = span_deadsay("[source]<span class='linkify'>[message]</span>")
 	for(var/mob/M in GLOB.player_list)
-		var/datum/preferences/prefs
-		if(M.client.prefs)
-			prefs = M.client.prefs
-		else
-			prefs = new
-
 		var/override = FALSE
 	//	if(M.client.holder && (prefs.chat_toggles & CHAT_DSAY))
 	//		override = TRUE
@@ -542,16 +534,6 @@ GLOBAL_LIST_EMPTY(species_list)
 			continue
 		if(M.stat != DEAD && !override)
 			continue
-		if(speaker_key && (speaker_key in prefs.ignoring))
-			continue
-
-		switch(message_type)
-			if(DEADCHAT_DEATHRATTLE)
-				if(prefs.toggles & DISABLE_DEATHRATTLE)
-					continue
-			if(DEADCHAT_ARRIVALRATTLE)
-				if(prefs.toggles & DISABLE_ARRIVALRATTLE)
-					continue
 
 		if(isobserver(M))
 			var/rendered_message = message
@@ -621,7 +603,7 @@ GLOBAL_LIST_EMPTY(species_list)
 		AM.setDir(originaldir)
 
 //When you cop out of the round
-/mob/proc/make_me_an_observer(var/existing = FALSE)
+/mob/proc/make_me_an_observer(existing = FALSE)
 	var/mob/dead/new_player/lobbyer
 
 	if(!existing)
@@ -630,8 +612,6 @@ GLOBAL_LIST_EMPTY(species_list)
 
 		if(QDELETED(src) || !client || choice != "Yes")
 			lobbyer.ready = PLAYER_NOT_READY
-			src << browse(null, "window=playersetup") //closes the player setup window
-			lobbyer.new_player_panel()
 			return FALSE
 	else
 		var/choice = alert(src, "Are you sure you wish to let go and observe?", "LET GO", "Yes", "No")
@@ -643,7 +623,7 @@ GLOBAL_LIST_EMPTY(species_list)
 	if(check_rights(R_WATCH, FALSE))
 		observer = new /mob/dead/observer/admin(src)
 	else
-		observer = new /mob/dead/observer/rogue/nodraw(src)
+		observer = new /mob/dead/observer/nodraw(src)
 	if(!existing)
 		lobbyer.spawning = TRUE
 
@@ -673,3 +653,27 @@ GLOBAL_LIST_EMPTY(species_list)
 		mind = null
 		qdel(src)
 	return TRUE
+
+/proc/is_human_part_visible(mob/living/carbon/human/human, flags_inv)
+	if(!human)
+		return TRUE
+	if(flags_inv == NONE)
+		return TRUE
+	// this previously monumentally sucked and iterated over every item in a person's inventory every time their appearance needed to be checked, which was often.
+	// replaced it by checking what hide slots are obscured at any given point in a /mob/'s `obscured_flags` var, so we check that instead
+	return !(human.obscured_flags & flags_inv)
+
+/mob/living/proc/rebuild_obscured_flags()
+	// we do this when we equip and unequip anything to make sure all our flags are set properly
+	var/list/equipped_items = get_equipped_items(FALSE)
+	var/new_flags = NONE
+	for(var/obj/item/thing as anything in equipped_items)
+		if (thing.flags_inv)
+			new_flags |= thing.flags_inv
+
+	if(new_flags == obscured_flags)
+		return
+	obscured_flags = new_flags
+	if(ishuman(src))
+		var/mob/living/carbon/human/H = src
+		H.update_body_parts()

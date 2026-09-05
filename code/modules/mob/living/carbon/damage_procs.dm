@@ -68,8 +68,6 @@
 	if(amount > 0)
 		take_overall_damage(amount, 0, 0, updating_health, required_status)
 	else
-		if(has_status_effect(/datum/status_effect/buff/fortify))
-			amount *= 1.5
 		heal_overall_damage(abs(amount), 0, 0, required_status ? required_status : BODYPART_ORGANIC, updating_health)
 	return amount
 
@@ -79,8 +77,6 @@
 	if(amount > 0)
 		take_overall_damage(0, amount, 0, updating_health, required_status)
 	else
-		if(has_status_effect(/datum/status_effect/buff/fortify))
-			amount *= 1.5
 		heal_overall_damage(0, abs(amount), 0, required_status ? required_status : BODYPART_ORGANIC, updating_health)
 	return amount
 
@@ -94,8 +90,6 @@
 		blood_volume = max(blood_volume, 0)
 	if(HAS_TRAIT(src, TRAIT_TOXIMMUNE)) //Prevents toxin damage, but not healing
 		amount = min(amount, 0)
-	if(has_status_effect(/datum/status_effect/buff/fortify) && amount < 0)
-		amount *= 1.5
 	return ..()
 
 /mob/living/carbon/getStaminaLoss()
@@ -121,31 +115,31 @@
 	adjustStaminaLoss(diff, updating_health, forced)
 
 /** adjustOrganLoss
-  * inputs: slot (organ slot, like ORGAN_SLOT_HEART), amount (damage to be done), and maximum (currently an arbitrarily large number, can be set so as to limit damage)
-  * outputs:
-  * description: If an organ exists in the slot requested, and we are capable of taking damage (we don't have GODMODE on), call the damage proc on that organ.
-  */
+	* inputs: slot (organ slot, like ORGAN_SLOT_HEART), amount (damage to be done), and maximum (currently an arbitrarily large number, can be set so as to limit damage)
+	* outputs:
+	* description: If an organ exists in the slot requested, and we are capable of taking damage (we don't have GODMODE on), call the damage proc on that organ.
+	*/
 /mob/living/carbon/adjustOrganLoss(slot, amount, maximum)
 	var/obj/item/organ/O = getorganslot(slot)
 	if(O && !(status_flags & GODMODE))
 		O.applyOrganDamage(amount, maximum)
 
 /** setOrganLoss
-  * inputs: slot (organ slot, like ORGAN_SLOT_HEART), amount(damage to be set to)
-  * outputs:
-  * description: If an organ exists in the slot requested, and we are capable of taking damage (we don't have GODMODE on), call the set damage proc on that organ, which can
-  *				 set or clear the failing variable on that organ, making it either cease or start functions again, unlike adjustOrganLoss.
-  */
+	* inputs: slot (organ slot, like ORGAN_SLOT_HEART), amount(damage to be set to)
+	* outputs:
+	* description: If an organ exists in the slot requested, and we are capable of taking damage (we don't have GODMODE on), call the set damage proc on that organ, which can
+	*					set or clear the failing variable on that organ, making it either cease or start functions again, unlike adjustOrganLoss.
+	*/
 /mob/living/carbon/setOrganLoss(slot, amount)
 	var/obj/item/organ/O = getorganslot(slot)
 	if(O && !(status_flags & GODMODE))
 		O.setOrganDamage(amount)
 
 /** getOrganLoss
-  * inputs: slot (organ slot, like ORGAN_SLOT_HEART)
-  * outputs: organ damage
-  * description: If an organ exists in the slot requested, return the amount of damage that organ has
-  */
+	* inputs: slot (organ slot, like ORGAN_SLOT_HEART)
+	* outputs: organ damage
+	* description: If an organ exists in the slot requested, return the amount of damage that organ has
+	*/
 /mob/living/carbon/getOrganLoss(slot)
 	var/obj/item/organ/O = getorganslot(slot)
 	if(O)
@@ -200,9 +194,9 @@
 /mob/living/carbon/heal_overall_damage(brute = 0, burn = 0, stamina = 0, required_status, updating_health = TRUE)
 	var/list/obj/item/bodypart/parts = get_damaged_bodyparts(brute, burn, stamina, required_status)
 	if(has_status_effect(/datum/status_effect/buff/fortify))
-		brute *= 1.5
-		burn *= 1.5
-		stamina *= 1.5
+		brute *= 1.3
+		burn *= 1.3
+		stamina *= 1.3
 
 	var/update = NONE
 	while(length(parts) && (brute > 0 || burn > 0 || stamina > 0))

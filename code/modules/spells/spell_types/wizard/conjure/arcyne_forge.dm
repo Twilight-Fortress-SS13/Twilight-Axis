@@ -23,10 +23,10 @@
 
 	charge_required = TRUE
 	charge_time = 2 SECONDS
-	charge_drain = 1
+	hold_drain = 1
 	charge_slowdown = CHARGING_SLOWDOWN_MEDIUM
 	charge_sound = 'sound/magic/charging.ogg'
-	cooldown_time = 5 MINUTES
+	cooldown_time = 1 MINUTES
 
 	associated_skill = /datum/skill/magic/arcane
 	spell_tier = 2
@@ -39,18 +39,8 @@
 	var/obj/item/conjured_item
 
 	var/list/conjure_options = list(
-		// Weapons
-		"Short Sword" = /obj/item/rogueweapon/sword/short/iron,
-		"Hunting Sword" = /obj/item/rogueweapon/sword/short/messer/iron,
-		"Arming Sword" = /obj/item/rogueweapon/sword/iron,
-		"Cudgel" = /obj/item/rogueweapon/mace/cudgel,
-		"Warhammer" = /obj/item/rogueweapon/mace/warhammer,
 		"Dagger" = /obj/item/rogueweapon/huntingknife/idagger,
 		"Axe" = /obj/item/rogueweapon/stoneaxe/woodcut,
-		"Flail" = /obj/item/rogueweapon/flail,
-		"Whip" = /obj/item/rogueweapon/whip,
-		"Wooden Shield" = /obj/item/rogueweapon/shield/wood,
-		// Tools
 		"Pickaxe" = /obj/item/rogueweapon/pick,
 		"Hoe" = /obj/item/rogueweapon/hoe,
 		"Thresher" = /obj/item/rogueweapon/thresher,
@@ -60,6 +50,7 @@
 		"Hammer" = /obj/item/rogueweapon/hammer/iron,
 		"Shovel" = /obj/item/rogueweapon/shovel,
 		"Handsaw" = /obj/item/rogueweapon/handsaw,
+		"Broom" = /obj/item/broom,
 		"Scissors" = /obj/item/rogueweapon/huntingknife/scissors,
 		"Fishing Rod" = /obj/item/fishingrod,
 		"Frying Pan" = /obj/item/cooking/pan,
@@ -72,10 +63,12 @@
 /datum/action/cooldown/spell/arcyne_forge/cast(atom/cast_on)
 	. = ..()
 	var/mob/living/carbon/human/H = owner
+
 	if(!istype(H))
 		return FALSE
 
 	var/choice = tgui_input_list(H, "Choose what to conjure", "Arcyne Forge", conjure_options)
+
 	if(!choice)
 		return FALSE
 
@@ -94,10 +87,15 @@
 	// Mark as conjured — no salvage, no smelting
 	R.smeltresult = null
 	R.salvage_result = null
+	R.salvage_amount = 0
 	R.fiber_salvage = FALSE
+	R.unmintable = TRUE
+	R.has_item_quality = TRUE
+	R.item_quality = ITEM_QUALITY_LOOTED
+	R.sellprice = 0
 
 	// Conjured glow
-	R.AddComponent(/datum/component/conjured_item, GLOW_COLOR_ARCANE)
+	R.AddComponent(/datum/component/conjured_item, GLOW_COLOR_ARCANE, FALSE, H, src)
 
 	H.put_in_hands(R)
 	conjured_item = R
@@ -111,7 +109,12 @@
 	return ..()
 
 /datum/action/cooldown/spell/arcyne_forge/miracle
+	name = "Divine Forge"
+	background_icon = 'icons/mob/actions/malummiracles.dmi'
+	button_icon = 'icons/mob/actions/malummiracles.dmi'
+	button_icon_state = "forge"
 	invocations = list("Malum, grant me your tool!")//Old incantation
 	point_cost = 0
 	spell_tier = 0
+	associated_stat = null
 	associated_skill = /datum/skill/magic/holy

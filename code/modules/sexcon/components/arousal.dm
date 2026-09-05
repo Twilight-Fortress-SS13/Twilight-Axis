@@ -43,18 +43,25 @@
 
 /datum/component/arousal/process(dt)
 	handle_charge(dt * 1)
-	if(!can_lose_arousal())
-		return
-	adjust_arousal(parent, dt * -1)
+	if(can_lose_arousal())
+		adjust_arousal(parent, dt * -1)
+	if(arousal <= 0 && charge >= SEX_MAX_CHARGE)
+		return PROCESS_KILL
 
 /// Checks if our parent has a client and adjusts processing.
 /datum/component/arousal/proc/check_processing()
 	SIGNAL_HANDLER
 	var/mob/parent_mob = parent
 	if(parent_mob.client)
-		START_PROCESSING(SSobj, src)
+		wake_processing()
 	else
 		STOP_PROCESSING(SSobj, src)
+
+/// Starts processing only when there is something to process, arousal to decay or charge to regain.
+/datum/component/arousal/proc/wake_processing()
+	var/mob/parent_mob = parent
+	if(parent_mob.client && (arousal > 0 || charge < SEX_MAX_CHARGE))
+		START_PROCESSING(SSobj, src)
 
 /datum/component/arousal/proc/can_lose_arousal()
 	if(last_arousal_increase_time + AROUSAL_TIME_TO_UNHORNY > world.time)
@@ -70,7 +77,11 @@
 		clamp_max = THRILLSEEKER_THRESHOLD
 		if(forced)
 			clamp_max = 50
-	arousal = clamp(amount, 0, clamp_max)
+	var/new_arousal = clamp(amount, 0, clamp_max)
+	if(!new_arousal && !arousal)
+		return arousal
+	arousal = new_arousal
+	wake_processing()
 	update_arousal_effects()
 	try_ejaculate()
 	SEND_SIGNAL(parent, COMSIG_SEX_AROUSAL_CHANGED)
@@ -102,6 +113,7 @@
 	if(limit)
 		clamp_max = limit
 	arousal = clamp(amount, 0, clamp_max)
+	wake_processing()
 	update_arousal_effects()
 	SEND_SIGNAL(parent, COMSIG_SEX_AROUSAL_CHANGED)
 	return arousal
@@ -162,7 +174,7 @@
 	var/list/parent_sessions = return_sessions_with_user(parent)
 	var/datum/sex_session/highest_priority = return_highest_priority_action(parent_sessions, parent)
 	var/mob/living/carbon/human/climaxer
-	var/mob/living/carbon/human/partner 
+	var/mob/living/carbon/human/partner
 	var/datum/sex_action/action = SEX_ACTION(highest_priority.current_action)
 
 	if(action.flipped)
@@ -172,23 +184,28 @@
 		climaxer = highest_priority.user
 		partner = highest_priority.target
 
-	playsound(parent, 'sound/misc/mat/endout.ogg', 50, TRUE, ignore_walls = FALSE)
+	if(mob == partner && action.flipped)
+		climaxer = mob
+		partner = highest_priority.target
+
+	playsound(parent, 'sound/misc/mat/endout.ogg', 50, TRUE, extrarange = (highest_priority.doing_subtly ? -6 : 0), ignore_walls = FALSE)
 	// Special case for when the climaxer has a penis but no testicles
 	if(!mob.getorganslot(ORGAN_SLOT_TESTICLES) && mob.getorganslot(ORGAN_SLOT_PENIS))
-		mob.visible_message(span_love("[mob] climaxes, yet nothing is released!"))
+		mob.visible_message(span_love("[mob] climaxes, yet nothing is released!"), vision_distance = (highest_priority.doing_subtly ? 1 : DEFAULT_MESSAGE_RANGE))
 		after_ejaculation(action, climaxer, partner)
 		return
-	if(!highest_priority)
+	if(!highest_priority)	// We reached this part without a dedicated session.
 		mob.visible_message(span_love("[mob] makes a mess!"))
 		var/turf/turf = get_turf(parent)
 		new /obj/effect/decal/cleanable/coom(turf)
 		after_ejaculation(action, climaxer, partner)
-	else	
+	else
 		var/return_message = action.handle_climax_message(climaxer, partner)
 		if(!return_message)
-			mob.visible_message(span_love("[mob] makes a mess!"))
+			mob.visible_message(span_love("[mob] makes a mess!"), vision_distance = (highest_priority.doing_subtly ? 1 : DEFAULT_MESSAGE_RANGE))
 			var/turf/turf = get_turf(parent)
-			new /obj/effect/decal/cleanable/coom(turf)
+			if(!highest_priority.doing_subtly)
+				new /obj/effect/decal/cleanable/coom(turf)
 			after_ejaculation(action, climaxer, partner)
 		else
 			handle_climax(return_message, climaxer, partner, action)
@@ -237,6 +254,7 @@
 	SEND_SIGNAL(climaxer, COMSIG_SEX_CLIMAX)
 
 	charge = max(0, charge - CHARGE_FOR_CLIMAX)
+	wake_processing()
 
 	var/intensity
 	if(action)
@@ -253,7 +271,7 @@
 			climaxer.add_stress(/datum/stressevent/thrillsex)
 		if(prob(10))
 			climaxer.emote("groan", forced = TRUE)
-		return	
+		return
 
 	climaxer.emote("moan", forced = TRUE)
 	climaxer.playsound_local(climaxer, 'sound/misc/mat/end.ogg', 100)
@@ -293,6 +311,7 @@
 /datum/component/arousal/proc/set_charge(amount)
 	var/empty = (charge < CHARGE_FOR_CLIMAX)
 	charge = clamp(amount, 0, SEX_MAX_CHARGE)
+	wake_processing()
 	var/after_empty = (charge < CHARGE_FOR_CLIMAX)
 	if(empty && !after_empty)
 		to_chat(parent, span_notice("I feel like I'm not so spent anymore"))
@@ -346,7 +365,7 @@
 		return
 	user.apply_damage(damage, BRUTE, part)
 
-/datum/component/arousal/proc/try_do_moan(arousal_amt, pain_amt, applied_force, giving)
+/datum/component/arousal/proc/try_do_moan(arousal_amt, pain_amt, applied_force, giving, doing_subtly)
 	var/mob/user = parent
 	if(arousal_amt < 1.5)
 		return
@@ -378,8 +397,13 @@
 			if(prob(60))
 				chosen_emote = "painmoan"
 
+	var/be_quiet = FALSE
+	var/list/parent_sessions = return_sessions_with_user(parent)
+	var/datum/sex_session/highest_priority = return_highest_priority_action(parent_sessions, parent)
+	if(pain_amt < PAIN_MILD_EFFECT && highest_priority?.doing_subtly)
+		be_quiet = TRUE
 	last_moan = world.time
-	user.emote(chosen_emote)
+	user.emote(chosen_emote, quiet = be_quiet)
 
 /datum/component/arousal/proc/try_do_pain_effect(pain_amt, giving)
 	var/mob/user = parent

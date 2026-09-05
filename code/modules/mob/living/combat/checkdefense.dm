@@ -1,4 +1,4 @@
-/mob/living/proc/checkdefense(datum/intent/intenty, mob/living/user)
+/mob/living/proc/checkdefense(datum/intent/attack_intent, mob/living/user)
 
 	// We check for a disruptable swingdelay first.
 	var/datum/status_effect/swingdelay/disrupt/SW = has_status_effect(/datum/status_effect/swingdelay/disrupt)
@@ -11,11 +11,8 @@
 	if(mid_climb)
 		interrupt_climb()
 
-	if(!has_status_effect(/datum/status_effect/stealth_revealed) || !user.has_status_effect(/datum/status_effect/stealth_revealed))
-		if(get_skill_level(/datum/skill/misc/sneaking) >= SKILL_LEVEL_JOURNEYMAN || HAS_TRAIT(src, TRAIT_LIGHT_STEP))
-			apply_status_effect(/datum/status_effect/stealth_revealed)
-		if(user.get_skill_level(/datum/skill/misc/sneaking) >= SKILL_LEVEL_JOURNEYMAN || HAS_TRAIT(user, TRAIT_LIGHT_STEP))
-			user.apply_status_effect(/datum/status_effect/stealth_revealed)
+	changeNext_inCombat(IN_COMBAT_DELAY)
+	user.changeNext_inCombat(IN_COMBAT_DELAY)
 
 	if(!cmode)
 		return FALSE
@@ -42,6 +39,8 @@
 			CAR.adjust_arousal_special(src, 2)
 
 	if(has_status_effect(/datum/status_effect/debuff/vulnerable))
+		remove_status_effect(/datum/status_effect/buff/clash)
+		remove_status_effect(/datum/status_effect/buff/clash/limbguard)
 		if(!has_status_effect(/datum/status_effect/buff/weapon_binded) && !has_status_effect(/datum/status_effect/debuff/weapon_binded))
 			if(ishuman(src) && user.get_tempo_bonus(TEMPO_TAG_BINDABLE) && mind && user?.mind)
 				var/held = get_active_held_item()
@@ -51,17 +50,18 @@
 						if(HL.try_bind(held, user, TRUE))
 							remove_status_effect(/datum/status_effect/debuff/vulnerable)
 							return TRUE
+		return FALSE
 
 		// TA Edit start - SOUNDBREAKER
 	var/success = FALSE
 
 	switch(d_intent)
 		if(INTENT_PARRY)
-			success = attempt_parry(intenty, user)
+			success = attempt_parry(attack_intent, user)
 			if(success)
 				ronin_on_parry_success(src, user)
 		if(INTENT_DODGE)
-			success = attempt_dodge(intenty, user)
+			success = attempt_dodge(attack_intent, user)
 
 	if(success)
 		soundbreaker_riff_defense_success(src)
@@ -69,11 +69,26 @@
 	return success
 	// TA Edit end - SOUNDBREAKER
 
+/mob/living/proc/start_climb()
+	if(doing || mid_climb)
+		return FALSE
+	mid_climb = TRUE
+	return TRUE
+
+/mob/living/proc/end_climb()
+	mid_climb = FALSE
+	return TRUE
+
+/mob/living/proc/climb_check()
+	return mid_climb
+
+/mob/living/proc/climb_check_callback()
+	return CALLBACK(src, PROC_REF(climb_check))
+
 /mob/living/proc/interrupt_climb()
 	if(!mid_climb)
 		return FALSE
-	mid_climb = FALSE
-	doing = FALSE
+	end_climb()
 	playsound(src, 'sound/combat/swingdelay_disrupted.ogg', 100, TRUE)
 	visible_message(span_warning("[src]'s grip is broken!"), span_warning("My grip is broken!"))
 	return TRUE

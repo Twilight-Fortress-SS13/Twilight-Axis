@@ -27,6 +27,9 @@ with light edits to work with roguecode */
 	///whether our owner has a muffling trait.
 	var/has_light_steps = FALSE
 
+	///awful badcode just to make the stupid heels work more seamlessly.
+	var/is_overridden = FALSE
+
 	var/static/list/valid_storage_rustlers = list(
 		/datum/component/storage/concrete/roguetown/hat
 	)
@@ -97,22 +100,27 @@ with light edits to work with roguecode */
 
 /datum/component/item_equipped_movement_rustle/proc/try_step(obj/item/clothing/source)//(mob/source)
 	SIGNAL_HANDLER
-	/*if (source.moving_diagonally == FIRST_DIAG_STEP)   //you can uncomment these if someone ever implements diagonal movement
+	/*if (source.moving_diagonally == FIRST_DIAG_STEP)	//you can uncomment these if someone ever implements diagonal movement
 		return*/
 	move_counter++
 	if(move_counter >= move_delay)
-		play_rustle_sound(source)
+		if(!is_overridden)
+			play_rustle_sound(source)
 		move_counter = 0
 
 /datum/component/item_equipped_movement_rustle/proc/try_step_quick(obj/item/clothing/source)//(mob/source)
 	SIGNAL_HANDLER
-	/*if (source.moving_diagonally == FIRST_DIAG_STEP)   //you can uncomment these if someone ever implements diagonal movement
+	/*if (source.moving_diagonally == FIRST_DIAG_STEP)	//you can uncomment these if someone ever implements diagonal movement
 		return*/
 	move_counter++
 	if(move_counter >= (move_delay / 2))
-		play_rustle_sound(source)
+		if(!is_overridden)
+			play_rustle_sound(source)
 		move_counter = 0
 
 /datum/component/item_equipped_movement_rustle/proc/play_rustle_sound(obj/item/clothing/source)//(mob/source)
 	if(!has_light_steps)
 		playsound(source, rustle_sounds, volume, sound_vary, sound_extra_range, sound_falloff_exponent, falloff = sound_falloff_distance)
+
+/datum/component/item_equipped_movement_rustle/proc/set_override(state)
+	is_overridden = state

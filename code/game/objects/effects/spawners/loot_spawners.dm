@@ -26,6 +26,9 @@
 		/obj/item/rogueore/iron = 2,
 		/obj/item/natural/bundle/fibers = 2,
 		/obj/item/reagent_containers/food/snacks/tallow = 1,
+		/obj/item/ccg_card_generator/common = 5,
+		/obj/item/ccg_card_booster = 2,
+		/obj/item/ccg_card_booster/premium = 1,
 		//clothing
 		/obj/item/clothing/head/roguetown/cap = 4,
 		/obj/item/clothing/head/roguetown/knitcap = 4,
@@ -150,7 +153,7 @@
 		/obj/item/reagent_containers/food/snacks/rogue/raisins = 3,
 		/obj/item/reagent_containers/food/snacks/rogue/crackerscooked = 1,
 		/obj/item/reagent_containers/powder/salt = 3,
-		/obj/item/reagent_containers/food/snacks/egg = 1,
+		/obj/item/reagent_containers/food/snacks/rogue/egg = 1,
 	)
 
 /obj/effect/spawner/lootdrop/general_loot_mid
@@ -174,6 +177,10 @@
 		/obj/item/rogueore/silver = 1,
 		/obj/item/ingot/iron = 2,
 		/obj/item/reagent_containers/food/snacks/tallow = 1,
+		/obj/item/ccg_card_generator/common = 5,
+		/obj/item/ccg_card_generator/rare = 4,
+		/obj/item/ccg_card_booster = 2,
+		/obj/item/ccg_card_booster/premium = 1,
 		//clothing
 		/obj/item/clothing/head/roguetown/cap = 4,
 		/obj/item/clothing/head/roguetown/knitcap = 4,
@@ -317,7 +324,7 @@
 		/obj/item/reagent_containers/food/snacks/rogue/raisins = 3,
 		/obj/item/reagent_containers/food/snacks/rogue/crackerscooked = 1,
 		/obj/item/reagent_containers/powder/salt = 3,
-		/obj/item/reagent_containers/food/snacks/egg = 1,
+		/obj/item/reagent_containers/food/snacks/rogue/egg = 1,
 	)
 
 /obj/effect/spawner/lootdrop/general_loot_hi
@@ -338,6 +345,11 @@
 		/obj/item/rogueore/coal	= 1,
 		/obj/item/rogueore/silver = 1,
 		/obj/item/ingot/steel = 2,
+		/obj/item/ccg_card_generator/common = 1,
+		/obj/item/ccg_card_generator/rare = 4,
+		/obj/item/ccg_card_generator/unique = 3,
+		/obj/item/ccg_card_booster = 2,
+		/obj/item/ccg_card_booster/premium = 1,
 		//clothing
 		/obj/item/clothing/head/roguetown/fancyhat = 1,
 		/obj/item/clothing/head/roguetown/roguehood/shalal/heavyhood = 1,
@@ -365,7 +377,7 @@
 		/obj/item/natural/bundle/cloth/bandage/full = 3,
 		//weapons
 		/obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve = 4,
-		/obj/item/gun/ballistic/revolver/grenadelauncher/bow/longbow  = 4,
+		/obj/item/gun/ballistic/revolver/grenadelauncher/bow/longbow	= 4,
 		/obj/item/gun/ballistic/revolver/grenadelauncher/crossbow = 3,
 		/obj/item/gun/ballistic/revolver/grenadelauncher/sling = 4,
 		/obj/item/quiver/arrows = 2,
@@ -462,6 +474,7 @@
 		/obj/item/reagent_containers/food/snacks/rogue/cheddarwedge/aged = 1,
 		/obj/item/reagent_containers/food/snacks/rogue/meat/salami = 1,
 		/obj/item/reagent_containers/food/snacks/grown/apple/gold = 1,
+		/obj/item/heelkit = 1,
 	)
 
 //x3 of the above
@@ -546,8 +559,8 @@
 ⢠⠎⠉⠐⠀⠀⠸⡆⠀⠀⠀⠀⠀⠀⠠⠄⡀⠀⠀⠀⢹⠊⠈⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣘⠢⢤⣠⡔⣎⠀⡇⡌⠃⠀⡸⢠⢣⡇⢆⢠⠁⢠⢻⠀⣌⣸⠀⢃⠎⡸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⢸⣆⠀⠀⠀⠀⢸⠃⠀⠀⢰⠉⠑⠤⠃⠀⡇⠀⠀⠀⠀⢂⠀⠀⠀⠀⠀⢀⡀⠀⠀⠀⠀⠀⢲⣿⡟⣾⣾⡦⠱⣸⣿⠘⠀⣰⡡⠁⠸⣇⢀⠇⠀⠎⡌⣼⡪⢷⠸⠃⡰⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠙⠲⠤⠄⠀⠎⠀⠀⠀⠈⢆⢄⠀⠀⢠⠃⠀⠀⠀⠀⠀⠱⡀⠀⠀⠀⠀⠑⠀⠀⠀⠀⠀⠈⠉⡝⠚⠿⠃⠆⡝⡝⡆⡴⠟⢁⠂⢀⢋⣬⢀⢊⡜⡼⠋⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  ⠀⠑⠒⠂⠁⠀⠀⠀⠀⠀⠀⠀⠈⢢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢰⣣⡘⡀⠀⡎⢀⡧⠂⡏⡰⢱⠊⠀⠀⠀⠈⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀  ⠑⠤⠀⣀⣀⣀⣀⣀⣀⣀⠀⠀⠤⠐⠂⠈⠋⡏⢱⢠⣿⡇⣬⣀⠀⢷⠁⠈⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀	⠀⠑⠒⠂⠁⠀⠀⠀⠀⠀⠀⠀⠈⢢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢰⣣⡘⡀⠀⡎⢀⡧⠂⡏⡰⢱⠊⠀⠀⠀⠈⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀	⠑⠤⠀⣀⣀⣀⣀⣀⣀⣀⠀⠀⠤⠐⠂⠈⠋⡏⢱⢠⣿⡇⣬⣀⠀⢷⠁⠈⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠰⡉⠀⠀⡇⠀⠀⠀⠉⠀⠉⠉⠉⠉⠉⠁⣠⡔⠛⢆⠰⡼⣣⠀⠀⠀⠀⠀⠀⡠⠊⠀⡇⣿⣾⠛⠳⠇⠶⣭⣺⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠈⠉⠀⠀⠀⠀⠀⠀⠀⠀⣀⠤⠤⠴⠿⡷⡀⠘⡄⢻⡿⠆⠀⠀⡠⠔⠁⠀⠀⣀⣿⣽⠟⠠⠠⠐⠂⠙⠋⣁⡅⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 */

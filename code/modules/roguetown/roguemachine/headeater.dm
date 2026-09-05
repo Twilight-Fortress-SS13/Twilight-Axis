@@ -42,6 +42,8 @@
 	if(istype(H, /obj/item/bodypart/head))
 		var/obj/item/bodypart/head/E = H
 		sellprice = E.sellprice
+		if(E.no_head_bounty)
+			sellprice = 0
 	else if(istype(H, /obj/item/natural/head))
 		var/obj/item/natural/head/A = H
 		sellprice = A.sellprice
@@ -54,9 +56,9 @@
 		if(!supress_message)
 			var/levy = sellprice - net
 			if(levy > 0)
-				to_chat(user, span_danger("the [src] consumes [H], crediting [net] mammons to your account, less [levy] mammon to the Crown's Levy."))
+				to_chat(user, span_danger("The [src] consumes [H], crediting [net] mammons to your account, less [levy] mammon to the Crown's Levy."))
 			else
-				to_chat(user, span_danger("the [src] consumes [H], crediting [sellprice] mammons to your account."))
+				to_chat(user, span_danger("The [src] consumes [H], crediting [sellprice] mammons to your account."))
 	else
 		topay += sellprice
 	qdel(H)

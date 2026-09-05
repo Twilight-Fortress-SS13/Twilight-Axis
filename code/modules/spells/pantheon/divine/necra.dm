@@ -5,6 +5,8 @@
 /obj/effect/proc_holder/spell/invoked/avert
 	name = "Borrowed Time"
 	desc = "Shield your fellow man from the Undermaiden's gaze, preventing them from slipping into death for as long as your faith and fatigue may muster."
+	action_icon = 'icons/mob/actions/necramiracles.dmi'
+	overlay_icon = 'icons/mob/actions/necramiracles.dmi'
 	overlay_state = "borrowtime"
 	req_items = list(/obj/item/clothing/neck/roguetown/psicross)
 	associated_skill = /datum/skill/magic/holy
@@ -53,7 +55,7 @@
 		if (user.devotion?.check_devotion(src))
 			user.devotion?.update_devotion(-10)
 		else
-			to_chat(span_warning("My devotion runs dry - the Intercession fades from my lips!"))
+			to_chat(user, span_warning("My devotion runs dry - the Intercession fades from my lips!"))
 			break
 
 	REMOVE_TRAIT(living_target, TRAIT_NODEATH, "avert_spell")
@@ -64,6 +66,8 @@
 	name = "Abrogation"
 	desc = "Debuffs targeted undead as long as they remain near you, slowly getting set on fire if they stay."
 	range = 8
+	action_icon = 'icons/mob/actions/necramiracles.dmi'
+	overlay_icon = 'icons/mob/actions/necramiracles.dmi'
 	overlay_state = "necra"
 	releasedrain = 30
 	chargedloop = /datum/looping_sound/invokeholy
@@ -186,15 +190,17 @@
 
 #undef CHURN_FILTER
 
-#define NECRA_HATES        1
-#define NECRA_DISAPPROVES  2
-#define NECRA_NEUTRAL      3
-#define NECRA_APPROVES     4
+#define NECRA_HATES		1
+#define NECRA_DISAPPROVES	2
+#define NECRA_NEUTRAL		3
+#define NECRA_APPROVES		4
 
 /obj/effect/proc_holder/spell/self/locate_dead
 	name = "Locate Corpse"
 	desc = "Invoke the Undermaiden's guidance to sense the direction of those within her domain who lack proper burial. She may also reveal the earthbound, though seeking those newly claimed risks her displeasure.<br><br>Costs 20 Devotion to use, and the sustain cost varies on corpse freshness."
-	overlay_state = "necraeye"
+	action_icon = 'icons/mob/actions/necramiracles.dmi'
+	overlay_icon = 'icons/mob/actions/necramiracles.dmi'
+	overlay_state = "locatecorpse"
 	sound = 'sound/magic/whiteflame.ogg'
 	cast_without_targets = TRUE
 	miracle = TRUE
@@ -244,20 +250,20 @@
 
 	return NECRA_APPROVES
 
-var/global/list/_corpse_sort_list = null
-var/global/mob/_corpse_sort_ref = null
+GLOBAL_LIST_EMPTY(_corpse_sort_list)
+GLOBAL_DATUM_INIT(_corpse_sort_ref, /mob, null)
 
 /proc/_corpse_dist_compare_simple(a, b)
-	var/mob/A = _corpse_sort_list[a]
-	var/mob/B = _corpse_sort_list[b]
+	var/mob/A = GLOB._corpse_sort_list[a]
+	var/mob/B = GLOB._corpse_sort_list[b]
 
 	if(!A || QDELETED(A))
 		return 1
 	if(!B || QDELETED(B))
 		return -1
 
-	var/da = get_dist(_corpse_sort_ref, A)
-	var/db = get_dist(_corpse_sort_ref, B)
+	var/da = get_dist(GLOB._corpse_sort_ref, A)
+	var/db = get_dist(GLOB._corpse_sort_ref, B)
 
 	if(da < db)
 		return -1
@@ -265,12 +271,12 @@ var/global/mob/_corpse_sort_ref = null
 		return 1
 	return 0
 
-/proc/sort_corpse_list_by_distance_simple(var/list/L, var/mob/ref)
+/proc/sort_corpse_list_by_distance_simple(list/L, mob/ref)
 	if(!L || !length(L) || !ref)
 		return L
 
-	_corpse_sort_list = L
-	_corpse_sort_ref = ref
+	GLOB._corpse_sort_list = L
+	GLOB._corpse_sort_ref = ref
 
 	var/list/keys = list()
 	for(var/k in L)
@@ -278,8 +284,8 @@ var/global/mob/_corpse_sort_ref = null
 
 	sortTim(keys, GLOBAL_PROC_REF(_corpse_dist_compare_simple))
 
-	_corpse_sort_list = null
-	_corpse_sort_ref = null
+	GLOB._corpse_sort_list = null
+	GLOB._corpse_sort_ref = null
 
 	var/list/new_list = list()
 	for(var/k in keys)
@@ -313,22 +319,8 @@ var/global/mob/_corpse_sort_ref = null
 	var/list/departed = list()
 	var/list/forsaken = list()
 
-	for(var/mob/living/carbon/C in GLOB.mob_list)
-		if(!C || QDELETED(C))
-			continue
-
-		// --- corpse logic ---
-		var/is_dead = (C.stat == DEAD)
-		var/is_deadite = FALSE
-		if(C.mind)
-			is_deadite = C.mind.has_antag_datum(/datum/antagonist/zombie)
-
-		var/is_skeleton = istype(C, /mob/living/carbon/human/species/skeleton)
-		var/is_skeleton_valid = (is_skeleton && !(C.mobility_flags & MOBILITY_STAND))
-		var/no_burialrites = !C.burialrited
-
-		var/is_corpse = ((is_dead || is_deadite || is_skeleton_valid) && no_burialrites)
-		if(!is_corpse)
+	for(var/mob/living/carbon/C in GLOB.dead_mob_list)
+		if(QDELETED(C) || C.burialrited || C.contract_spawned)
 			continue
 
 		// --- classification ---
@@ -389,11 +381,16 @@ var/global/mob/_corpse_sort_ref = null
 		corpse_name += "of \a [descriptor_name]"
 
 		// --- markers ---
+		var/is_deadite = C.mind?.has_antag_datum(/datum/antagonist/zombie)
+		var/is_skeleton = istype(C, /mob/living/carbon/human/species/skeleton) || C.mind?.has_antag_datum(/datum/antagonist/skeleton)
+
 		if(is_deadite && C.stat != DEAD)
 			corpse_name += " (!!☣︎!!)"
+
 		else if(is_deadite)
 			corpse_name += " (☣︎)"
-		else if(is_skeleton_valid)
+
+		else if(is_skeleton)
 			corpse_name += " (☠)"
 
 		// --- pick list ---
@@ -524,7 +521,7 @@ var/global/mob/_corpse_sort_ref = null
 		src.necra_tracked_corpse = null
 		STOP_PROCESSING(SSprocessing, src)
 		return
-	
+
 	if(necra_tracked_corpse?.mind && !necra_tracked_corpse.mind.has_antag_datum(/datum/antagonist/zombie) && necra_tracked_corpse.stat != DEAD)
 		to_chat(src, span_purple("<i>The Undermaiden's interest wanes, you briefly sense your bounty back from undeath, alive once more.</i>"))
 		src.necra_tracked_corpse = null
@@ -551,7 +548,7 @@ var/global/mob/_corpse_sort_ref = null
 
 	src.necra_score = score
 	src.necra_judgement = judgement
-	
+
 	// --- Devotion cost ---
 	var/devotion_cost = 2
 	switch(judgement)
@@ -667,7 +664,7 @@ var/global/mob/_corpse_sort_ref = null
 		to_chat(src, span_warning(msg))
 		src.adjustOxyLoss(20)
 		if(src.hallucination < 200)
-			src.hallucination += 50	
+			src.hallucination += 50
 		if(prob(20))
 			switch(rand(1,5))
 				if(1) // CRITICAL HIIIIT!!!
@@ -812,7 +809,7 @@ var/global/mob/_corpse_sort_ref = null
 
 	if(judgement == NECRA_APPROVES)
 		msg += " - <b>[dist]</b> meters"
-	
+
 	msg += "."
 
 	to_chat(src, span_warning(msg))
@@ -900,6 +897,8 @@ var/global/mob/_corpse_sort_ref = null
 	invocation_type = "whisper"
 	invocations = list("Undermaiden guide my gaze...")
 	associated_skill = /datum/skill/magic/holy
+	action_icon = 'icons/mob/actions/necramiracles.dmi'
+	overlay_icon = 'icons/mob/actions/necramiracles.dmi'
 	overlay_state = "necraeye"
 	miracle = TRUE
 	devotion_cost = 30
@@ -966,7 +965,7 @@ var/global/mob/_corpse_sort_ref = null
 		)
 
 	// Create scry eye
-	var/mob/dead/observer/screye/S = user.scry_ghost()
+	var/mob/dead/observer/eye/screye/S = user.scry_ghost()
 	if(!S)
 		return FALSE
 
@@ -1026,7 +1025,7 @@ var/global/mob/_corpse_sort_ref = null
 	no_early_release = TRUE
 	charging_slowdown = 1
 	chargedloop = /datum/looping_sound/invokeholy
-	gesture_required = TRUE 
+	gesture_required = TRUE
 	associated_skill = /datum/skill/magic/holy
 	recharge_time = 90 SECONDS
 	hide_charge_effect = TRUE
@@ -1060,7 +1059,7 @@ var/global/mob/_corpse_sort_ref = null
 			new /mob/living/simple_animal/hostile/rogue/spirit_vengeance(get_step(user, NORTH),user)
 			new /mob/living/simple_animal/hostile/rogue/spirit_vengeance(get_step(user, SOUTH),user)
 		for(var/mob/living/simple_animal/hostile/rogue/spirit_vengeance/swarm in view(2, user))
-			swarm.ai_controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, target) 
+			swarm.ai_controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, target)
 		return TRUE
 	revert_cast()
 	return FALSE

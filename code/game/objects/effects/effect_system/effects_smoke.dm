@@ -17,6 +17,7 @@
 	var/amount = 4
 	var/lifetime = 5
 	var/opaque = 1 //whether the smoke can block the view when in enough amount
+	var/breathin = TRUE
 
 /obj/effect/particle_effect/smoke/proc/fade_out(frames = 16)
 	if(alpha == 0) //Handle already transparent case
@@ -30,7 +31,7 @@
 			set_opacity(0) //if we were blocking view, we aren't now because we're fading out
 		stoplag()
 
-/obj/effect/particle_effect/smoke/Initialize()
+/obj/effect/particle_effect/smoke/Initialize(mapload)
 	. = ..()
 	create_reagents(500)
 	START_PROCESSING(SSobj, src)
@@ -64,7 +65,8 @@
 	if(istype(C.wear_mask, /obj/item/clothing/mask/rogue/facemask/steel/confessor))
 		return FALSE
 	if(HAS_TRAIT(C, TRAIT_NOBREATH) || HAS_TRAIT(C, TRAIT_NOMETABOLISM))
-		return FALSE
+		if(breathin)
+			return FALSE
 	C.smoke_delay++
 	addtimer(CALLBACK(src, PROC_REF(remove_smoke_delay), C), 10)
 	return TRUE
@@ -128,6 +130,7 @@
 	lifetime = 8
 
 /obj/effect/particle_effect/smoke/bad/smoke_mob(mob/living/carbon/M)
+	breathin = TRUE
 	if(..())
 		M.drop_all_held_items()
 		M.adjustOxyLoss(1)
@@ -147,6 +150,7 @@
 	lifetime = 10
 
 /obj/effect/particle_effect/smoke/poison_gas/smoke_mob(mob/living/carbon/M)
+	breathin = TRUE
 	if(..())
 		if(HAS_TRAIT(M, TRAIT_HOLDBREATH))
 			return FALSE
@@ -163,10 +167,11 @@
 
 
 /obj/effect/particle_effect/smoke/healing_gas
-  color = "#da4011"
-  lifetime = 15
+	color = "#da4011"
+	lifetime = 15
 
 /obj/effect/particle_effect/smoke/healing_gas/smoke_mob(mob/living/carbon/M)
+	breathin = TRUE
 	if(..())
 		if(HAS_TRAIT(M, TRAIT_HOLDBREATH))
 			return FALSE
@@ -192,10 +197,9 @@
 	lifetime = 10
 
 /obj/effect/particle_effect/smoke/fire_gas/smoke_mob(mob/living/carbon/M)
+	breathin = FALSE
 	if(..())
-		M.adjustFireLoss(3, 0)
-		M.adjust_fire_stacks(3)
-		M.ignite_mob()
+		apply_scorch_stack(M, 2, BODY_ZONE_CHEST)
 		M.emote("scream")
 		return TRUE
 
@@ -211,11 +215,13 @@
 	lifetime = 5
 
 /obj/effect/particle_effect/smoke/blind_gas/smoke_mob(mob/living/carbon/M)
+	breathin = FALSE
 	if(..())
 		if(HAS_TRAIT(M, TRAIT_HOLDBREATH))
 			return FALSE
-		M.adjust_blurriness(3)
-		M.adjust_blindness(3)
+		if(M.has_status_effect(STATUS_EFFECT_BLINDED))
+			return FALSE
+		M.apply_status_effect(STATUS_EFFECT_BLINDED)
 		M.emote("cry")
 		return TRUE
 
@@ -232,10 +238,11 @@
 	lifetime = 10
 
 /obj/effect/particle_effect/smoke/mute_gas/smoke_mob(mob/living/carbon/M)
+	breathin = FALSE
 	if(..())
 		if(HAS_TRAIT(M, TRAIT_HOLDBREATH))
 			return FALSE
-		M.silent = max(M.silent, 8)
+		M.silent = max(M.silent, 20)
 		return TRUE
 
 /datum/effect_system/smoke_spread/mute_gas
@@ -250,6 +257,7 @@
 	lifetime = 10
 
 /obj/effect/particle_effect/smoke/sleeping/smoke_mob(mob/living/carbon/M)
+	breathin = TRUE
 	if(..())
 		if(HAS_TRAIT(M, TRAIT_HOLDBREATH))
 			return FALSE
@@ -311,11 +319,22 @@
 	return ..()
 
 /datum/effect_system/smoke_spread/chem/set_up(datum/reagents/carry = null, radius = 1, loca, silent = FALSE)
+	if(!istype(carry, /datum/reagents))
+		if(isnum(carry))
+			loca = radius
+			radius = carry
+		carry = null
+
 	if(isturf(loca))
 		location = loca
 	else
 		location = get_turf(loca)
+
 	amount = radius
+
+	if(!carry)
+		return FALSE
+
 	carry.copy_to(chemholder, carry.total_volume)
 
 	if(!silent)
@@ -337,8 +356,13 @@
 			message_admins("Smoke: ([ADMIN_VERBOSEJMP(location)])[contained]. No associated key.")
 			log_game("A chemical smoke reaction has taken place in ([where])[contained]. No associated key.")
 
+	return TRUE
+
 
 /datum/effect_system/smoke_spread/chem/start()
+	if(!chemholder || !chemholder.reagents || !chemholder.reagents.total_volume)
+		return FALSE
+
 	var/mixcolor = mix_color_from_reagents(chemholder.reagents.reagent_list)
 	if(holder)
 		location = get_turf(holder)
@@ -352,6 +376,8 @@
 	S.amount = amount
 	if(S.amount)
 		S.spread_smoke() //calling process right now so the smoke immediately attacks mobs.
+
+	return TRUE
 
 
 /////////////////////////////////////////////

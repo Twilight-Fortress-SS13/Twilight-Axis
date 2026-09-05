@@ -1,6 +1,5 @@
 /datum/trade_good/gem
 	behavior = TRADE_BEHAVIOR_GEM
-	mint_eligible = TRUE
 	crown_accepts = FALSE
 	source_region_id = null
 
@@ -87,6 +86,13 @@
 	category = TRADE_CATEGORY_GEM_COMMON
 	base_price = SELLPRICE_CLAMSHELL
 	item_type = /obj/item/carvedgem/shell/rawshell
+
+/datum/trade_good/gem/open_clam
+	id = TRADE_GOOD_OPEN_CLAM
+	name = "Open Fossilized Clam"
+	category = TRADE_CATEGORY_GEM_COMMON
+	base_price = SELLPRICE_OPEN_CLAM
+	item_type = /obj/item/carvedgem/shell/openoyster
 
 /datum/trade_good/gem/rosestone
 	id = TRADE_GOOD_ROSESTONE

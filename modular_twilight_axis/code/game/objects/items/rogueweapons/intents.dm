@@ -10,10 +10,28 @@
 		to_chat(src, span_warning("My foot passes right through the mist!"))
 		return FALSE
 
+	var/atom/target = get_kick_target(A)
+	var/uses_ball_recovery = target?.uses_ball_kick_recovery()
+	if(uses_ball_recovery && has_status_effect(STATUS_EFFECT_BALL_KICK_RECOVERY))
+		to_chat(src, span_warning("I haven't regained my balance yet."))
+		return FALSE
+
 	if(!can_kick(A))
 		return FALSE
 
-	changeNext_move(mmb_intent.clickcd)
+	var/mob/living/living_target = null
+	if(isliving(target))
+		living_target = target
+
+	var/ball_kick_cooldown = null
+	if(uses_ball_recovery)
+		ball_kick_cooldown = target.get_kick_cooldown(src)
+		if(isnum(ball_kick_cooldown) && ball_kick_cooldown > 0)
+			SetBallKickRecovery(ball_kick_cooldown)
+			changeNext_move(ball_kick_cooldown, override = TRUE)
+	else
+		changeNext_move(mmb_intent?.clickcd || 3 SECONDS)
+
 	face_atom(A)
 	SEND_SIGNAL(src, COMSIG_MOB_ON_KICK)
 	playsound(src, pick(PUNCHWOOSH), 100, FALSE, -1)
@@ -21,17 +39,8 @@
 	if(mmb_intent)
 		do_attack_animation_simple(A, visual_effect_icon = mmb_intent.animname)
 
-	var/atom/target = A
-	if(isturf(A))
-		for(var/mob/living/M in A)
-			target = M
-			break
-
-	var/mob/living/living_target = null
-	if(isliving(target))
-		living_target = target
-
 	var/kick_success = FALSE
+	var/kick_result = null
 
 	if(ismob(target) && mmb_intent)
 		var/mob/living/M = target
@@ -54,11 +63,32 @@
 			var/mob/living/carbon/human/H = M
 			H.dna.species.kicked(src, H)
 		else
-			M.onkick(src)
+			kick_result = M.onkick(src)
 
 		kick_success = TRUE
 	else
-		target.onkick(src)
+		kick_result = target.onkick(src)
+		if(uses_ball_recovery)
+			if(!kick_result)
+				remove_status_effect(STATUS_EFFECT_BALL_KICK_RECOVERY)
+				return FALSE
+
+			if(isnum(kick_result) && kick_result > 0 && kick_result != ball_kick_cooldown)
+				ball_kick_cooldown = kick_result
+				SetBallKickRecovery(ball_kick_cooldown)
+				changeNext_move(ball_kick_cooldown, override = TRUE)
+			else if(islist(kick_result))
+				var/list/kick_result_data = kick_result
+				var/result_cooldown = kick_result_data["cooldown"]
+				if(isnum(result_cooldown) && result_cooldown > 0 && result_cooldown != ball_kick_cooldown)
+					ball_kick_cooldown = result_cooldown
+					SetBallKickRecovery(ball_kick_cooldown)
+					changeNext_move(ball_kick_cooldown, override = TRUE)
+
+			SEND_SIGNAL(src, COMSIG_SOUNDBREAKER_KICK_SUCCESS, target)
+			SEND_SIGNAL(src, COMSIG_ATTACK_TRY_CONSUME, living_target || target, zone_selected, null, 2)
+			return TRUE
+
 		kick_success = TRUE
 
 	if(kick_success)
@@ -67,6 +97,19 @@
 
 	OffBalance(get_special_kick_offbalance_duration(src, 3 SECONDS))
 	return TRUE
+
+/mob/living/proc/get_kick_target(atom/A)
+	var/atom/target = A
+	if(isturf(A))
+		for(var/mob/living/M in A)
+			target = M
+			break
+		if(target == A)
+			for(var/atom/movable/AM as anything in A)
+				if(AM.uses_ball_kick_recovery() || !isnull(AM.get_kick_cooldown(src)))
+					target = AM
+					break
+	return target
 
 /proc/get_special_kick_offbalance_duration(mob/living/user, base_duration = 3 SECONDS)
 	if(!isliving(user))

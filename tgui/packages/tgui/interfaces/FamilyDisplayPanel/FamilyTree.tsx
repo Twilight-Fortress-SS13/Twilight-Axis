@@ -9,6 +9,7 @@ const CARD_GAP_X = 30;
 const ROW_H = 170;
 const ROW_GAP_PAD = 48;
 const PADDING = 48;
+const MIN_NODE_GAP = 12;
 const CONNECTOR_COLOR = '#6f7562';
 const SPOUSE_COLOR = '#b57d5d';
 
@@ -309,6 +310,60 @@ function placeSubtree(
   return { width: subtreeWidth, selfCenterX, y };
 }
 
+function resolveOverlaps(nodes: LaidNode[], edges: LaidEdge[]): void {
+  const rows = new Map<number, LaidNode[]>();
+  for (const node of nodes) {
+    const row = Math.round(node.y / ROW_H);
+    const bucket = rows.get(row);
+    if (bucket) {
+      bucket.push(node);
+    } else {
+      rows.set(row, [node]);
+    }
+  }
+
+  const shifts: { rowY: number; oldCX: number; dx: number }[] = [];
+  for (const [row, rowNodes] of rows) {
+    rowNodes.sort((a, b) => a.x - b.x);
+    let minX = Number.NEGATIVE_INFINITY;
+    for (const node of rowNodes) {
+      if (node.x < minX) {
+        const dx = minX - node.x;
+        shifts.push({ rowY: row * ROW_H, oldCX: node.anchorCX, dx });
+        node.x += dx;
+        node.anchorCX += dx;
+      }
+      minX = node.x + CARD_W + MIN_NODE_GAP;
+    }
+  }
+
+  if (!shifts.length) {
+    return;
+  }
+
+  const tol = CARD_W / 2 + 1;
+  const applyShift = (x: number, y: number): number => {
+    let best: { d: number; dx: number } | null = null;
+    for (const shift of shifts) {
+      if (Math.abs(y - shift.rowY) >= ROW_H / 2) {
+        continue;
+      }
+      const d = Math.abs(x - shift.oldCX);
+      if (d >= tol) {
+        continue;
+      }
+      if (!best || d < best.d) {
+        best = { d, dx: shift.dx };
+      }
+    }
+    return best ? x + best.dx : x;
+  };
+  for (const edge of edges) {
+    edge.x1 = applyShift(edge.x1, edge.y1);
+    edge.x2 = applyShift(edge.x2, edge.y2);
+  }
+}
+
 function computeLayout(roots: FamilyTreeNode[]): LayoutResult {
   const nodes: LaidNode[] = [];
   const edges: LaidEdge[] = [];
@@ -342,7 +397,14 @@ function computeLayout(roots: FamilyTreeNode[]): LayoutResult {
       edge.y2 += yShift;
     }
   }
-  const totalWidth = Math.max(0, cursor - CARD_GAP_X * 2);
+  resolveOverlaps(nodes, edges);
+  let maxRight = 0;
+  for (const node of nodes) {
+    if (node.x + CARD_W > maxRight) {
+      maxRight = node.x + CARD_W;
+    }
+  }
+  const totalWidth = Math.max(0, cursor - CARD_GAP_X * 2, maxRight);
   const totalHeight = (maxDepthRef.v - minDepthRef.v + 1) * ROW_H;
   return {
     nodes,

@@ -15,6 +15,7 @@
 	ambush_mobs = list(
 				/mob/living/simple_animal/hostile/retaliate/rogue/bigrat = 30,
 				/mob/living/carbon/human/species/goblin/npc/ambush/cave = 20,
+				/mob/living/carbon/human/species/goblin/npc/archer/cave = 5,
 				/mob/living/carbon/human/species/skeleton/npc/ambush = 10,
 				/mob/living/carbon/human/species/human/northern/highwayman/ambush = 5,
 				/mob/living/simple_animal/hostile/retaliate/rogue/direbear = 5,
@@ -27,6 +28,19 @@
 	droning_sound = 'sound/music/area/peace.ogg'
 	droning_sound_dusk = null
 	droning_sound_night = null
+
+// Shameless copy of peace cave since someone liked it so much.
+/area/rogue/under/cave/abyssor
+	name = "abyssal grotto"
+	icon_state = "caves"
+	droning_sound = 'sound/music/area/peace.ogg'
+	droning_sound_dusk = null
+	droning_sound_night = null
+
+// Can use the normal caves music
+/area/rogue/under/cave/abyssor/inner
+	name = "inner abyssal grotto"
+	first_time_text = "THE ABYSSAL GROTTO"
 
 /area/rogue/outdoors/caves
 	icon_state = "caves"

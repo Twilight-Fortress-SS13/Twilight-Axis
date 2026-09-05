@@ -1,11 +1,3 @@
-/obj/item/clothing/suit/roguetown/armor/leather/jacket/artijacket/bandit
-	name = "studied jacket"
-	desc = "A loose garment that is usually draped across ones upper body. No one's quite sure of its cultural origin but it does look fancy."
-	color = "#B36A57"
-	body_parts_covered = COVERAGE_ALL_BUT_ARMS
-	armor = ARMOR_LEATHER
-	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER
-
 /datum/advclass/twilight_afreet
 	name = "Afreet"
 	tutorial = "'Demon of Fire', the slaves used to call you, when you, dressed in black uniform, emerged from the sands, having shot their masters dead with weapons they could not comprehend. During the War, you were deployed deep within the Naledi lands, tasked with plundering Golden Empire's slave trade routes. Perhaps you found it too profitable and enjoyable to leave behind, or perhaps you still wage your war to this day — either way, you no longer answer to the Kaiser or his lackeys."
@@ -25,15 +17,16 @@
 		STATKEY_CON = 2,
 	)
 	subclass_skills = list(
-		/datum/skill/combat/twilight_firearms = SKILL_LEVEL_EXPERT,
+		/datum/skill/combat/twilight_firearms = SKILL_LEVEL_MASTER,
 		/datum/skill/combat/axes = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/combat/knives = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/combat/staves = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/polearms = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/labor/butchering = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
-		/datum/skill/misc/sneaking = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/sneaking = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/stealing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
@@ -53,22 +46,33 @@
 	if (!istype(H.patron, /datum/patron/inhumen/matthios))
 		to_chat(H, span_warning("My former deity has abandoned me.. Matthios is my new master."))
 		H.set_patron(/datum/patron/inhumen/matthios)	//We allow other heretics into the cool-kids club, but if you are a tennite/psydonian it sets you to matthiosan.
-	beltl = /obj/item/quiver/twilight_bullet/lead
 	neck = /obj/item/clothing/neck/roguetown/coif
 	shoes = /obj/item/clothing/shoes/roguetown/grenzelhoft
 	gloves = /obj/item/clothing/gloves/roguetown/angle/grenzelgloves
 	id = /obj/item/mattcoin
 	var/classes = list("Jäger Deserter", "Veteran")
-	var/classchoice = input("Choose your archetypes", "Available archetypes") as anything in classes
+	var/classchoice = input(H, "Choose your archetypes", "Available archetypes") as anything in classes
 	switch(classchoice)
 		if("Jäger Deserter")
 			mask = /obj/item/clothing/mask/rogue/facemask/steel
 			cloak = /obj/item/clothing/cloak/half/brown
-			backr = /obj/item/gun/ballistic/twilight_firearm/flintgonne
+			var/list/firearm_choices = list("Arquebus", "Handgonne")
+			var/firearm_choice = input(H, "Choose your firearm", "Available firearms") as anything in firearm_choices
+			if(firearm_choice == "Handgonne")
+				backr = /obj/item/gun/ballistic/twilight_firearm/handgonne
+				var/list/ammo_choices = list("Lead Cannonballs", "Grapeshot")
+				var/ammo_choice = input(H, "Choose your ammunition", "Available ammunition") as anything in ammo_choices
+				if(ammo_choice == "Grapeshot")
+					beltl = /obj/item/quiver/twilight_bullet/cannonball/grapeshot
+				else
+					beltl = /obj/item/quiver/twilight_bullet/cannonball/lead
+			else
+				backr = /obj/item/gun/ballistic/twilight_firearm/arquebus
+				beltl = /obj/item/quiver/twilight_bullet/lead
 			pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants
 			armor = /obj/item/clothing/suit/roguetown/armor/leather
 			pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants
-			beltr = /obj/item/rogueweapon/stoneaxe/woodcut
+			beltr = /obj/item/rogueweapon/stoneaxe/woodcut/steel
 			backl = /obj/item/storage/backpack/rogue/backpack
 			shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/grenzelhoft
 			head = /obj/item/clothing/head/roguetown/grenzelhofthat
@@ -76,27 +80,28 @@
 			wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 			belt = /obj/item/storage/belt/rogue/leather
 			backpack_contents = list(
-				/obj/item/twilight_powderflask = 1, 
-				/obj/item/rogueweapon/huntingknife = 1, 
-				/obj/item/flint = 1, /obj/item/bedroll = 1, 
-				/obj/item/needle/thorn = 1, 
-				/obj/item/natural/cloth/bandage = 1, 
+				/obj/item/twilight_powderflask = 1,
+				/obj/item/rogueweapon/huntingknife = 1,
+				/obj/item/flint = 1, /obj/item/bedroll = 1,
+				/obj/item/needle/thorn = 1,
+				/obj/item/natural/cloth/bandage = 1,
 				/obj/item/flashlight/flare/torch = 1
 			)
 			H.adjust_skillrank_up_to(/datum/skill/combat/axes, 4, TRUE)
 		if("Veteran")
 			mask = /obj/item/clothing/mask/rogue/ragmask/red
-			armor = /obj/item/clothing/suit/roguetown/armor/leather/jacket/artijacket/bandit
+			armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat
 			shirt = /obj/item/clothing/suit/roguetown/shirt/freifechter
 			beltr = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol
+			beltl = /obj/item/rogueweapon/huntingknife/idagger/steel
 			backl = /obj/item/storage/backpack/rogue/satchel
 			wrists = /obj/item/rogueweapon/katar/punchdagger
 			pants = /obj/item/clothing/under/roguetown/heavy_leather_pants
 			belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt
 			backpack_contents = list(
-				/obj/item/twilight_powderflask = 1,  
-				/obj/item/needle/thorn = 1, 
-				/obj/item/natural/cloth/bandage = 1, 
+				/obj/item/twilight_powderflask = 1,
+				/obj/item/needle/thorn = 1,
+				/obj/item/natural/cloth/bandage = 1,
 				/obj/item/flashlight/flare/torch = 1,
 				/obj/item/rogueweapon/huntingknife/idagger/steel = 1,
 				/obj/item/rogueweapon/scabbard/sheath = 1

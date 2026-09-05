@@ -2,6 +2,7 @@
 	name = "clandestine tube"
 	desc = "A crude pneumatic tube. It seems to connect somewhere nearby."
 	obfuscated = TRUE
+	allow_ghosts = FALSE
 	var/next_send_time = 0
 	var/notify_bathhouse = FALSE
 	/// This tube's identity for pairing
@@ -39,9 +40,10 @@
 		to_chat(user, span_warning("The tube rumbles but nothing happens. It doesn't seem connected to anything."))
 		return FALSE
 	var/recipient_name = I?.mailedto || target.name
+	var/obj/item/paper/letter = istype(I, /obj/item/paper) ? I : null
 	I.forceMove(target)
 	playsound(target, 'sound/misc/hiss.ogg', 100, FALSE, -1)
-	log_mail_send(user, sender_name, recipient_name)
+	log_mail_send(user, sender_name, recipient_name, FALSE, letter?.info)
 	visible_message(span_warning("[user] sends something."))
 	playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
 	if(target.notify_bathhouse)
@@ -50,20 +52,18 @@
 	return TRUE
 
 /obj/structure/roguemachine/mail/paired_hermes/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
+	if(isobserver(usr))
+		return TRUE
 	if(action == "send_tube")
 		var/mob/user = usr
 		var/content = params["content"]
-		var/sentfrom = params["sender"]
-		if(!sentfrom)
-			sentfrom = "Anonymous"
 		if(length(content) > 2000)
 			to_chat(user, span_warning("Letter too long."))
 			return TRUE
-		var/obj/item/paper/P = new
-		P.info += content
-		P.mailer = sentfrom
-		P.mailedto = "Clandestine Tube"
-		P.update_icon()
+		var/obj/item/paper/P = build_sanitized_letter(user, params["sender"], "Clandestine Tube", content)
+		if(!P.mailer)
+			P.mailer = "Anonymous"
+		var/sentfrom = P.mailer
 		if(!send_through_tube(P, user, sentfrom))
 			qdel(P)
 		return TRUE
@@ -85,7 +85,7 @@
 		return
 	if(alert(user, "Send through the tube?",,"YES","NO") != "YES")
 		return
-	var/sentfrom = input(user, "Who is this from? (Leave blank to send anonymously)", "ROGUETOWN", null)
+	var/sentfrom = sanitize(input(user, "Who is this from? (Leave blank to send anonymously)", "ROGUETOWN", null))
 	if(!sentfrom)
 		sentfrom = "Anonymous"
 	P.mailer = sentfrom

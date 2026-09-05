@@ -222,31 +222,6 @@
 	cost = 20
 	contains = list(/obj/item/rogueweapon/stoneaxe/battle)
 
-/datum/supply_pack/rogue/Afreet/flintgonne
-	name = "Hakenbüchse"
-	cost = 100
-	contains = list(/obj/item/gun/ballistic/twilight_firearm/flintgonne)
-
-/datum/supply_pack/rogue/Afreet/mortar
-	name = "Hand mortar"
-	cost = 120
-	contains = list(/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/mortar)
-
-/datum/supply_pack/rogue/Afreet/culverin
-	name = "Culverin"
-	cost = 250
-	contains = list(/obj/item/gun/ballistic/twilight_firearm/handgonne)
-
-/datum/supply_pack/rogue/Afreet/arquebuspistol
-	name = "Arquebus Pistol"
-	cost = 400
-	contains = list(/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol)
-
-/datum/supply_pack/rogue/Afreet/arquebus
-	name = "Arquebus"
-	cost = 400
-	contains = list(/obj/item/gun/ballistic/twilight_firearm/arquebus)
-
 /datum/supply_pack/rogue/Afreet/bulletbag
 	name = "Bullet bag (empty)"
 	cost = 10
@@ -330,7 +305,7 @@
 /datum/supply_pack/rogue/Afreet/lockpicks
 	name = "Lockpick ring"
 	cost = 10
-	contains = list(/obj/item/lockpickring/mundane)	
+	contains = list(/obj/item/lockpickring/mundane)
 
 // BIG INQ SHOP
 

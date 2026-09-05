@@ -1,3 +1,5 @@
+GLOBAL_LIST_EMPTY(escrow_machines)
+
 /datum/escrow_order
 	var/commissioner_name
 	var/datum/weakref/commissioner_ref
@@ -13,6 +15,7 @@
 	var/list/cached_required_counts
 	var/list/cached_lines
 	var/list/cached_materials
+	var/list/cached_material_tally
 
 /datum/escrow_order/proc/label()
 	var/list/parts = list()
@@ -50,6 +53,22 @@
 			continue
 		out[result_path] = (out[result_path] || 0) + want
 	cached_required_counts = out
+	return out
+
+/// Raw materials the whole order consumes, keyed by typepath. Used by the round-end material flow report.
+/datum/escrow_order/proc/material_tally(obj/structure/roguemachine/escrow/E)
+	if(cached_material_tally)
+		return cached_material_tally
+	var/list/out = list()
+	if(E)
+		for(var/key in recipe_quantities)
+			var/want = recipe_quantities[key]
+			if(want <= 0)
+				continue
+			var/list/per_craft = E.recipe_material_tally(key)
+			for(var/path in per_craft)
+				out[path] = (out[path] || 0) + (per_craft[path] * want)
+		cached_material_tally = out
 	return out
 
 /datum/escrow_order/proc/is_fulfilled()
@@ -158,9 +177,11 @@
 		ITEM_CAT_ENG_MISC,
 	)
 	var/list/group_order = list("Armor", "Weapons", "Tools", "Valuables", "Decoration", "Engineering", "Other")
+	var/flow_source = MATERIAL_SOURCE_COMMISSIONER
 
-/obj/structure/roguemachine/escrow/Initialize()
+/obj/structure/roguemachine/escrow/Initialize(mapload)
 	. = ..()
+	GLOB.escrow_machines += src
 	init_material_prices()
 	disabled_materials = default_disabled_materials?.Copy() || list()
 	rebuild_catalog()
@@ -219,6 +240,7 @@
 	return FALSE
 
 /obj/structure/roguemachine/escrow/Destroy()
+	GLOB.escrow_machines -= src
 	orders?.Cut()
 	manifests?.Cut()
 	manifest_deposits?.Cut()
@@ -242,7 +264,7 @@
 			continue
 		if(recipe_uses_excluded_material(AR))
 			continue
-		if(AR.req_bar in disabled_materials)
+		if(recipe_uses_disabled_material(AR))
 			continue
 		catalog += AR
 	for(var/datum/crafting_recipe/CR in GLOB.crafting_recipes)
@@ -254,23 +276,30 @@
 			continue
 		if(recipe_uses_excluded_material(CR))
 			continue
-		if(crafting_primary_req(CR) in disabled_materials)
+		if(recipe_uses_disabled_material(CR))
 			continue
 		catalog += CR
 	prune_unused_material_prices()
 	dirty_catalog_view()
 
-/obj/structure/roguemachine/escrow/proc/crafting_primary_req(datum/crafting_recipe/CR)
-	if(!islist(CR.reqs) || !length(CR.reqs))
-		return null
-	var/best_path
-	var/best_qty = 0
-	for(var/path in CR.reqs)
-		var/qty = CR.reqs[path]
-		if(qty > best_qty)
-			best_qty = qty
-			best_path = path
-	return best_path
+/obj/structure/roguemachine/escrow/proc/recipe_uses_disabled_material(datum/recipe)
+	if(!length(disabled_materials))
+		return FALSE
+	if(istype(recipe, /datum/anvil_recipe))
+		var/datum/anvil_recipe/AR = recipe
+		if(AR.req_bar in disabled_materials)
+			return TRUE
+		if(islist(AR.additional_items))
+			for(var/path in AR.additional_items)
+				if(path in disabled_materials)
+					return TRUE
+	else if(istype(recipe, /datum/crafting_recipe))
+		var/datum/crafting_recipe/CR = recipe
+		if(islist(CR.reqs))
+			for(var/path in CR.reqs)
+				if(path in disabled_materials)
+					return TRUE
+	return FALSE
 
 /obj/structure/roguemachine/escrow/proc/recipe_uses_excluded_material(datum/recipe)
 	if(!length(excluded_materials) && !length(excluded_material_parents))
@@ -410,7 +439,7 @@
 				total += get_material_price(path) * CR.reqs[path]
 	return total
 
-/obj/structure/roguemachine/escrow/proc/recipe_materials(datum/recipe)
+/obj/structure/roguemachine/escrow/proc/recipe_material_tally(datum/recipe)
 	var/list/tally = list()
 	if(istype(recipe, /datum/anvil_recipe))
 		var/datum/anvil_recipe/AR = recipe
@@ -424,6 +453,10 @@
 		if(islist(CR.reqs))
 			for(var/path in CR.reqs)
 				tally[path] = (tally[path] || 0) + CR.reqs[path]
+	return tally
+
+/obj/structure/roguemachine/escrow/proc/recipe_materials(datum/recipe)
+	var/list/tally = recipe_material_tally(recipe)
 	var/list/sorted_paths = list()
 	for(var/path in tally)
 		var/qty = tally[path]
@@ -918,6 +951,9 @@
 	if(!is_guild_member(user))
 		to_chat(user, span_warning("Only a member of the crafter's guild may claim a commission."))
 		return
+	if(escrow_key(user) == O.commissioner_name)
+		to_chat(user, span_warning("I cannot fulfill my own commission."))
+		return
 	O.status = "claimed"
 	O.smith_name = escrow_key(user)
 	O.day_claimed = GLOB.dayspassed
@@ -940,6 +976,12 @@
 	if(forced)
 		notify_commissioner(O, "The guildmaster has released the stalled claim on your commission at [src].")
 
+/obj/structure/roguemachine/escrow/proc/record_order_materials_fulfilled(datum/escrow_order/O, ratio = 1, mammons = 0)
+	var/list/tally = O.material_tally(src)
+	for(var/path in tally)
+		record_material_flow(MATERIAL_FLOW_OUT, flow_source, path, ratio >= 1 ? tally[path] : round(tally[path] * ratio))
+	record_commission_mammons(flow_source, mammons)
+
 /obj/structure/roguemachine/escrow/proc/settle_partial_order(datum/escrow_order/O, mob/user)
 	if(!O || O.status != "claimed" || escrow_key(user) != O.smith_name)
 		return
@@ -959,6 +1001,7 @@
 		return
 	var/progress_ratio = done_count / needed_count
 	var/smith_payout = round(O.deposited * progress_ratio * (100 - ESCROW_PARTIAL_HAIRCUT_PERCENT) / 100)
+	record_order_materials_fulfilled(O, progress_ratio, smith_payout)
 	var/commissioner_refund = O.deposited - smith_payout
 	var/turf/T = get_turf(src)
 	for(var/obj/item/I in O.delivered_items)
@@ -984,6 +1027,7 @@
 		return
 	O.status = "complete"
 	var/payout = O.deposited
+	record_order_materials_fulfilled(O, 1, payout)
 	O.deposited = 0
 	budget -= payout
 	budget2change(payout, user)

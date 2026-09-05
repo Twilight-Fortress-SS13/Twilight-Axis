@@ -175,6 +175,11 @@
 	cost = 75 // 2 Steel Ingot, 1 Small Log
 	contains = list(/obj/item/rogueweapon/halberd)
 
+/datum/supply_pack/rogue/steel_weapons/bardiche
+	name = "Bardiche"
+	cost = 75 // 2 Steel Ingot, 1 Small Log
+	contains = list(/obj/item/rogueweapon/halberd/bardiche)
+
 /datum/supply_pack/rogue/steel_weapons/eaglebeak
 	name = "Eagle's Beak"
 	cost = 75 // 2 Steel Ingot, 1 Small Log
@@ -189,6 +194,11 @@
 	name = "Grand Maul"
 	cost = 105 // 3 Steel Ingot
 	contains = list(/obj/item/rogueweapon/mace/maul/grand)
+
+/datum/supply_pack/rogue/steel_weapons/quarterstaff
+	name = "Quarterstaff"
+	cost = 45 // 1 Steel Ingot, 1 Small Log
+	contains = list(/obj/item/rogueweapon/woodstaff/quarterstaff/steel)
 
 /datum/supply_pack/rogue/steel_weapons/partizan
 	name = "Partizan"
@@ -219,3 +229,8 @@
 	name = "Falx"
 	cost = 40 // 1 Steel Ingot
 	contains = list(/obj/item/rogueweapon/sword/falx)
+
+/datum/supply_pack/rogue/steel_weapons/axe
+	name = "Steel Axe"
+	cost = 40 // 1 Steel Ingot
+	contains = list(/obj/item/rogueweapon/stoneaxe/woodcut/steel)

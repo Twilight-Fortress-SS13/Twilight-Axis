@@ -91,7 +91,7 @@
 	var/maxrange = 4
 
 /datum/intent/flail/smash/spec_on_apply_effect(mob/living/H, mob/living/user, params)
-	var/chungus_khan_str = user.STASTR 
+	var/chungus_khan_str = user.STASTR
 	if(H.has_status_effect(/datum/status_effect/debuff/yeetcd))
 		return // Recently knocked back, cannot be knocked back again yet
 	if(chungus_khan_str < 10)
@@ -269,7 +269,7 @@
 	)
 
 /obj/item/rogueweapon/flail/sflail/psyflail/relic
-	name = "Consecratia"
+	name = "\"Consecratia\""
 	desc = "The weight of His anguish, His pain, His hope and His love for humenkind - all hanging on the ornamental silver-steel head chained to this arm. <br><br>A declaration of love for all that Psydon lives for, and a crushing reminder to the arch-nemesis that they will not triumph as long as He endures."
 	icon_state = "psymorningstar"
 	possible_item_intents = list(/datum/intent/flail/strike, /datum/intent/flail/smash/ranged, /datum/intent/flail/bash)
@@ -306,7 +306,7 @@
 	minstr = 9
 	wbalance = WBALANCE_HEAVY
 	smeltresult = /obj/item/ingot/iron
-	associated_skill = /datum/skill/combat/polearms
+	associated_skill = /datum/skill/combat/whipsflails
 	anvilrepair = /datum/skill/craft/carpentry
 	dropshrink = 0.9
 	wdefense = 4
@@ -343,9 +343,12 @@
 	anvilrepair = /datum/skill/craft/weaponsmithing
 	smeltresult = /obj/item/ingot/component/matthios
 
-/obj/item/rogueweapon/flail/peasantwarflail/matthios/Initialize()
+/obj/item/rogueweapon/flail/peasantwarflail/matthios/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_FREEMAN, "FLAIL")
+
+/obj/item/rogueweapon/flail/peasantwarflail/matthios/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_MATTHIOS_WEAPON)
 
 /obj/item/rogueweapon/flail/militia
 	name = "militia flail"
@@ -355,3 +358,23 @@
 	force = 27
 	wdefense = 3
 	wbalance = WBALANCE_HEAVY
+
+/obj/item/rogueweapon/flail/sflail/holysee
+	name = "holy see flail"
+	desc = "A blessed flail, oft conflicts arise betwixt the Otavian Orthodoxy and Holy See on the origins \
+			being betwixt Psydon and Noc being the origin of such weapon, regardless against the forces of evil, \
+			it serves one absolute truth - smashing through plate and skull of Heathen and Heretic alike. Often favored \
+			by Xylix's following for theatrics but also curiously Noc's following as a ceremonial tool of war."
+	icon_state = "churchflail"
+	wlength = WLENGTH_LONG
+
+/obj/item/rogueweapon/flail/blacksteel
+	name = "blacksteel flail"
+	icon_state = "bs_flail"
+	possible_item_intents = list(/datum/intent/flail/strike, /datum/intent/flail/smash, /datum/intent/flail/bash, /datum/intent/flail/sweep)
+	desc = "An elegant flail of blacksteel. The heftsome weight makes it unmatched for driving back plate-armored opponents, so long as one \
+	has the stamina to swing its alloyed chains around."
+	smeltresult = /obj/item/ingot/blacksteel
+	max_integrity = 250
+	minstr = 12
+	force = 35

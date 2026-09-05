@@ -56,7 +56,6 @@
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/music = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/misc/riding = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/whipsflails = SKILL_LEVEL_NOVICE,
 		/datum/skill/combat/knives = SKILL_LEVEL_NOVICE,
@@ -81,7 +80,7 @@
 		shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt
 		armor = /obj/item/clothing/suit/roguetown/shirt/dress/gen/sexy/random
 		pants = /obj/item/clothing/under/roguetown/skirt/brown
-		belt =	/obj/item/storage/belt/rogue/leather/cloth/lady
+		belt =	/obj/item/storage/belt/rogue/leather/cloth/upgraded/lady
 	else
 		belt = /obj/item/storage/belt/rogue/leather
 		pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/shorts
@@ -113,7 +112,6 @@
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/music = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
-		/datum/skill/misc/riding = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/medicine = SKILL_LEVEL_NOVICE,
 		/datum/skill/combat/whipsflails = SKILL_LEVEL_NOVICE,
 		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
@@ -145,7 +143,7 @@
 		shirt = /obj/item/clothing/suit/roguetown/shirt/dress/gen/sexy/random
 		armor = /obj/item/clothing/suit/roguetown/armor/corset
 		pants = /obj/item/clothing/under/roguetown/skirt/brown
-		belt =	/obj/item/storage/belt/rogue/leather/cloth/lady
+		belt =	/obj/item/storage/belt/rogue/leather/cloth/upgraded/lady
 	else
 		belt = /obj/item/storage/belt/rogue/leather
 		pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/shorts
@@ -175,7 +173,6 @@
 		/datum/skill/misc/reading = SKILL_LEVEL_EXPERT,
 		/datum/skill/craft/sewing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/crafting = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/misc/riding = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/medicine = SKILL_LEVEL_NOVICE,
 		/datum/skill/craft/cooking = SKILL_LEVEL_NOVICE,
 	)
@@ -212,7 +209,7 @@
 	if(should_wear_femme_clothes(H))
 		armor = /obj/item/clothing/suit/roguetown/shirt/dress/silkydress/random
 		shirt = /obj/item/clothing/suit/roguetown/armor/corset
-		belt = /obj/item/storage/belt/rogue/leather/cloth/lady
+		belt = /obj/item/storage/belt/rogue/leather/cloth/upgraded/lady
 		shoes = /obj/item/clothing/shoes/roguetown/anklets
 	else
 		shirt = /obj/item/clothing/suit/roguetown/shirt/tunic/random
@@ -249,17 +246,3 @@
 			if("Shamisen")
 				backr = /obj/item/rogue/instrument/shamisen
 		SStreasury.grant_savings(ECONOMIC_UPPER_CLASS, H)
-
-/obj/item/soap/bath
-	name = "herbal soap"
-	desc = "A soap made from various herbs"
-	icon = 'icons/obj/items_and_weapons.dmi'
-	icon_state = "soap"
-	lefthand_file = 'icons/mob/inhands/equipment/custodial_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/equipment/custodial_righthand.dmi'
-	w_class = WEIGHT_CLASS_TINY
-	item_flags = NOBLUDGEON
-
-/obj/item/bath/soap/ComponentInitialize()
-	. = ..()
-	AddComponent(/datum/component/slippery, 80)

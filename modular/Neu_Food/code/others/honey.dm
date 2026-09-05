@@ -1,6 +1,8 @@
 
 // -------------- SPIDER HONEY -----------------
 /obj/item/reagent_containers/food/snacks/rogue/honey
+	cuisine = CUISINE_SOUTH_IMPERIAL
+	dish_type = DISH_SWEET
 	name = "honey"
 	icon = 'modular/Neu_Food/icons/others/honey.dmi'
 	icon_state = "honeycomb"
@@ -21,7 +23,7 @@
 
 	var/honey_color = ""
 
-/obj/item/reagent_containers/food/snacks/rogue/honey/Initialize()
+/obj/item/reagent_containers/food/snacks/rogue/honey/Initialize(mapload)
 	. = ..()
 	pixel_x = rand(8,-8)
 	pixel_y = rand(8,-8)

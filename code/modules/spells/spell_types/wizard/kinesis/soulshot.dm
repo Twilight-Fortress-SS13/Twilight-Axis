@@ -1,9 +1,10 @@
+#define SOULSHOT_BASE_DAMAGE 80
+#define SOULSHOT_PIERCE_DAMAGE_MULT 0.75
 /datum/action/cooldown/spell/projectile/soulshot
 	button_icon = 'icons/mob/actions/mage_shared.dmi'
 	name = "Soulshot"
 	desc = "Fire a devastating beam of kinetic force that pierces through up to 4 targets. Stopped by solid objects. \
-	Damage is halved after the first target. \
-	Deals 50% increased damage to simple-minded creechurs. \
+	Damage is three-quartered after the first target. \
 	Basic offensive magic, refined for over a millenium since the first Magi expelled mana from their body with pure malice and determination to destroy another."
 	fluff_desc = "Basic offensive magic, refined for over two millenium since the first Magi expelled mana from their body with pure malice and determination to destroy another. The natural evolution of the arcyne bolt - a barely held together ball of energy - into a focused beam of destructive force. The name 'soulshot' is derived from the original idea that one must put their soul into it to exert such a powerful projectiles. Its alignment - of pure arcynic energy, means that most magis cannot cast the spell when they are attuned to a 'unpure' aspect - like fire or lightning. Instead, this spell is generally used when one is attuned to Augmentation - one's own body, or Kinesis - the usage of motional force to displace your foes."
 	button_icon_state = "soulshot"
@@ -24,10 +25,11 @@
 	charge_required = TRUE
 	weapon_cast_penalized = TRUE
 	charge_time = CHARGETIME_MAJOR
-	charge_drain = 1
+	charge_swingdelay_type = SWINGDELAY_PENALTY
+	hold_drain = 1
 	charge_slowdown = CHARGING_SLOWDOWN_SMALL
 	charge_sound = 'sound/magic/charging.ogg'
-	cooldown_time = 8 SECONDS
+	cooldown_time = 12 SECONDS
 	attunement_school = ASPECT_NAME_KINESIS
 
 	associated_skill = /datum/skill/magic/arcane
@@ -43,10 +45,10 @@
 	hitscan = TRUE
 	movement_type = UNSTOPPABLE
 	guard_deflectable = TRUE
-	damage = 95
+	expose_caster_on_deflect = TRUE
+	damage = SOULSHOT_BASE_DAMAGE
 	damage_type = BRUTE
 	woundclass = BCLASS_STAB
-	npc_simple_damage_mult = 1.5
 	accuracy = 40
 	nodamage = FALSE
 	speed = 0.3
@@ -76,25 +78,13 @@
 	hits++
 	// Halve damage after the first target
 	if(hits <= 1)
-		damage = 95
+		damage = SOULSHOT_BASE_DAMAGE
 	else
-		damage = round(95 * 0.5)
+		damage = round(SOULSHOT_BASE_DAMAGE * SOULSHOT_PIERCE_DAMAGE_MULT)
 	if(hits >= max_hits)
 		qdel(src)
 		return . || BULLET_ACT_HIT
 	return BULLET_ACT_FORCE_PIERCE
 
-/datum/action/cooldown/spell/projectile/soulshot/lesser
-	name = "Lesser Soulshot"
-	desc = "Fire a devastating beam of kinetic force that pierces through up to 2 targets. Stopped by solid objects. \
-	Damage is halved after the first target. \
-	Deals 50% increased damage to simple-minded creechurs. \
-	Basic offensive magic, refined for over a millenium since the first Magi expelled mana from their body with pure malice and determination to destroy another."
-	invocations = list("Animus Ictus!")
-	projectile_type = /obj/projectile/magic/soulshot/lesser
-	attunement_school = null
-	spell_tier = 0
-	point_cost = 0
-
-/obj/projectile/magic/soulshot/lesser
-	max_hits = 2
+#undef SOULSHOT_BASE_DAMAGE
+#undef SOULSHOT_PIERCE_DAMAGE_MULT

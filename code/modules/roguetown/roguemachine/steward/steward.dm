@@ -1,7 +1,6 @@
 #define TAB_MAIN 1
 #define TAB_BANK 2
 #define TAB_IMPORT 3
-#define TAB_BOUNTIES 4
 #define TAB_FISCAL 6
 #define TAB_PAYDAY 7
 #define TAB_DEBT 8
@@ -36,7 +35,7 @@
 	var/list/ledger_view = list()
 	COOLDOWN_DECLARE(fulfill_retry_cooldown)
 
-/obj/structure/roguemachine/steward/Initialize()
+/obj/structure/roguemachine/steward/Initialize(mapload)
 	. = ..()
 	if(SStreasury.steward_machine == null) //The "only one" mapped in Nerve Master at map start
 		SStreasury.steward_machine = src
@@ -63,6 +62,23 @@
 		daily_payments["Apothecary"] = 10
 		daily_payments["Mayor"] = 40
 		daily_payments["Bailiff"] = 10
+	else if(SSmapping.config.map_name == "Desert Town") //TA EDIT
+		daily_payments["Cataphract"] = 40 //TA EDIT
+		daily_payments["Azeb Agha"] = 40 //TA EDIT
+		daily_payments["Azeb"] = 20 //TA EDIT
+		daily_payments["Janissary Sergeant"] = 40 //TA EDIT
+		daily_payments["Janissary"] = 30 //TA EDIT
+		daily_payments["Head Slave"] = 40 //TA EDIT
+		daily_payments["Slave Master"] = 30 //TA EDIT
+		daily_payments["Sheikh"] = 40 //TA EDIT
+		daily_payments["Veteran"] = 20 //TA EDIT
+		daily_payments["Squire"] = 10 //TA EDIT
+		daily_payments["Servant"] = 20 //TA EDIT
+		daily_payments["Head Physician"] = 20 //Doctors //TA EDIT
+		daily_payments["Apothecary"] = 10 //TA EDIT
+		daily_payments["Court Magician"] = 40 //University //TA EDIT
+		daily_payments["Archivist"] = 20 //TA EDIT
+		daily_payments["Magicians Associate"] = 10 //TA EDIT
 	else
 		daily_payments["Marshal"] = 60 //Garrison
 		daily_payments["Knight"] = 40
@@ -90,10 +106,10 @@
 		if(isnull(daily_payments[job]))
 			daily_payments[job] = SStreasury.get_wage_floor(job)
 
-/obj/structure/roguemachine/steward/proc/has_fiscal_authority(mob/user)
+/proc/has_fiscal_authority(mob/user)
 	if(!user)
 		return FALSE
-	if(user.job in list("Steward", "Clerk", "Grand Duke", "Mayor"))
+	if(user.job in list("Steward", "Clerk", "Grand Duke", "Mayor", "Sultan", "Vizier",)) // TA edit
 		return TRUE
 	if(SSticker.rulermob && user == SSticker.rulermob)
 		return TRUE
@@ -130,8 +146,8 @@
 		return
 	if(istype(P, /obj/item/roguecoin/aalloy))
 		return
-	if(istype(P, /obj/item/roguecoin/inqcoin))	
-		return	
+	if(istype(P, /obj/item/roguecoin/inqcoin))
+		return
 	if(istype(P, /obj/item/roguecoin))
 		record_round_statistic(STATS_MAMMONS_DEPOSITED, P.get_real_price())
 		SStreasury.mint(SStreasury.discretionary_fund, P.get_real_price(), "NERVE MASTER deposit")
@@ -157,6 +173,7 @@
 			return
 		SStreasury.total_import += amt
 		record_round_statistic(STATS_STOCKPILE_IMPORTS_VALUE, amt)
+		record_treasury_expense(TREASURY_FLOW_IMPORT, treasury_role_of(usr), amt)
 		if(amt >= 100) //Only announce big spending.
 			scom_announce("[SSticker.realm_name] imports [D.name] for [amt] mammon.") //TA_EDIT
 		D.raise_demand()
@@ -197,7 +214,7 @@
 			if(A == X)
 				var/max_fine = SStreasury.get_max_fine_for(A)
 				if(max_fine <= 0)
-					say("[A] cannot be fined by the Crown at this time.")
+					say("[A] cannot be fined by [ta_economy_authority_lower()] at this time.")
 					playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
 					return
 				var/newtax = input(usr, "How much to fine [A]? (Maximum [max_fine]m)", src, max_fine) as null|num
@@ -232,14 +249,14 @@
 		if(!usr.canUseTopic(src, BE_CLOSE) || locked)
 			return
 		var/current_floor = SStreasury.stockpile_purchase_floor
-		var/new_floor = input(usr, "Set the Crown's Purchase Floor. Below this balance the stockpile refuses purchases - goods stay with the seller. (0-10000m)", src, current_floor) as null|num
+		var/new_floor = input(usr, "Set [ta_economy_authority_possessive_lower()] Purchase Floor. Below this balance the stockpile refuses purchases - goods stay with the seller. (0-10000m)", src, current_floor) as null|num
 		if(isnull(new_floor))
 			return
 		if(!usr.canUseTopic(src, BE_CLOSE) || locked)
 			return
 		new_floor = CLAMP(round(new_floor), 0, 10000)
 		SStreasury.stockpile_purchase_floor = new_floor
-		say("Crown's Purchase Floor set to [new_floor]m.")
+		say("[ta_economy_authority_possessive()] Purchase Floor set to [new_floor]m.")
 		log_game("PURCHASE FLOOR: [key_name(usr)] set stockpile purchase floor to [new_floor]m")
 	if(href_list["clearloandebtor"])
 		if(!usr.canUseTopic(src, BE_CLOSE) || locked)
@@ -266,9 +283,9 @@
 			SStreasury.loans -= forgiven
 			qdel(forgiven)
 		SStreasury.clear_poll_tax_debt(target)
-		say("[target.real_name]'s debtor mark has been cleared; all Crown debts forgiven.")
+		say("[target.real_name]'s debtor mark has been cleared; all [ta_economy_authority_noun()] debts forgiven.")
 		log_game("DEBT FORGIVEN: [key_name(usr)] cleared debtor mark on [key_name(target)][loan_amt ? " (wrote off [loan_amt]m loan)" : ""]")
-		to_chat(target, span_notice("The Stewardry has cleared the defaulter mark from my name. My debts to the Crown are forgiven."))
+		to_chat(target, span_notice("The Stewardry has cleared the defaulter mark from my name. My debts to [ta_economy_authority_lower()] are forgiven."))
 	if(href_list["clearpolltax"])
 		if(!usr.canUseTopic(src, BE_CLOSE) || locked)
 			return
@@ -292,7 +309,7 @@
 		SStreasury.clear_poll_tax_debt(target)
 		say("[target.real_name]'s poll tax arrears have been cleared.")
 		log_game("POLL TAX CLEARED: [key_name(usr)] cleared [was_owed]m poll tax arrears on [key_name(target)] ([was_overdue] day\s overdue)")
-		to_chat(target, span_notice("The Stewardry has cleared my poll tax arrears. The Crown's ledger on my head is wiped clean."))
+		to_chat(target, span_notice("The Stewardry has cleared my poll tax arrears. [ta_economy_authority_capital()]'s ledger on my head is wiped clean."))
 	if(href_list["payroll"])
 		var/list/L = list(GLOB.noble_positions) + list(GLOB.retinue_positions) + list(GLOB.garrison_positions) + list(GLOB.vanguard_positions) + list(GLOB.citywatch_positions) + list(GLOB.courtier_positions) + list(GLOB.church_positions) + list(GLOB.burgher_positions) + list(GLOB.atc_positions) + list(GLOB.peasant_positions) + list(GLOB.sidefolk_positions) + list(GLOB.inquisition_positions)
 		var/list/things = list()
@@ -315,7 +332,7 @@
 			return
 		for(var/mob/living/carbon/human/H in GLOB.human_list)
 			if(H.job == job_to_pay)
-				if(SStreasury.give_money_account(amount_to_pay, H, "NERVE MASTER"))
+				if(SStreasury.give_money_account(amount_to_pay, H, "NERVE MASTER", is_salary = TRUE))
 					record_round_statistic(STATS_WAGES_PAID, amount_to_pay)
 	if(href_list["setdailypay"])
 		var/list/L = list(GLOB.noble_positions) + list(GLOB.retinue_positions) + list(GLOB.garrison_positions) + list(GLOB.vanguard_positions) + list(GLOB.citywatch_positions) + list(GLOB.courtier_positions) + list(GLOB.church_positions) + list(GLOB.burgher_positions) + list(GLOB.atc_positions) + list(GLOB.peasant_positions) + list(GLOB.sidefolk_positions) + list(GLOB.inquisition_positions)
@@ -380,34 +397,6 @@
 				to_chat(A, span_danger("My wages have been suspended by the Stewardry!"))
 	if(href_list["compact"])
 		compact = !compact
-	if(href_list["setbounty"])
-		// Bounty-only price setter (the TAB_BOUNTIES tab). Stockpile-good prices are
-		// managed via the StewardTrade TGUI now, not this Topic handler.
-		var/datum/roguestock/bounty/D = locate(href_list["setbounty"]) in SStreasury.stockpile_datums
-		if(!D || !istype(D))
-			return
-		if(!D.percent_bounty)
-			var/newtax = input(usr, "Set a new price for [D.name]", src, D.payout_price) as null|num
-			if(newtax)
-				if(!usr.canUseTopic(src, BE_CLOSE) || locked)
-					return
-				if(findtext(num2text(newtax), "."))
-					return
-				newtax = CLAMP(newtax, 0, 999)
-				if(newtax > D.payout_price)
-					scom_announce("The bounty for [D.name] was increased.")
-				D.payout_price = newtax
-		else
-			var/newtax = input(usr, "Set a new percent for [D.name]", src, D.payout_price) as null|num
-			if(newtax)
-				if(!usr.canUseTopic(src, BE_CLOSE) || locked)
-					return
-				if(findtext(num2text(newtax), "."))
-					return
-				newtax = CLAMP(newtax, 1, 99)
-				if(newtax > D.payout_price)
-					scom_announce("The bounty for [D.name] was increased.")
-				D.payout_price = newtax
 	if(href_list["trade_tgui"])
 		open_trade_tgui(usr)
 		return
@@ -499,7 +488,9 @@
 		"quantity" = quantity,
 		"max_units" = TRADE_MAX_BULK_UNITS,
 		"daily_pace" = daily_pace,
-		"capacity_today" = max(0, daily_pace - starting_index),
+		"batch_capacity" = region.get_batch_capacity(good_id, side == "import"),
+		"capacity_today" = region.get_day_capacity(good_id, side == "import"),
+		"capacity_total" = region.get_day_capacity_total(good_id, side == "import"),
 		"base_unit_price" = base_unit_price,
 		"base_subtotal" = base_subtotal,
 		"escalation_subtotal" = escalation_subtotal,
@@ -652,6 +643,7 @@
 	if(!A)
 		return
 	var/obj/item/I = new D.item_type()
+	record_material_flow(MATERIAL_FLOW_IN, MATERIAL_SOURCE_LOCAL_IMPORT, D.item_type, 1)
 	var/list/turfs = list()
 	for(var/turf/T in A)
 		turfs += T
@@ -683,7 +675,6 @@
 			contents += "<a href='?src=\ref[src];switchtab=[TAB_BANK]'>\[Bank\]</a><BR>"
 			contents += "<a href='?src=\ref[src];trade_tgui=1'>\[Trade & Stockpile\]</a><BR>"
 			contents += "<a href='?src=\ref[src];switchtab=[TAB_IMPORT]'>\[Import\]</a><BR>"
-			contents += "<a href='?src=\ref[src];switchtab=[TAB_BOUNTIES]'>\[Bounties\]</a><BR>"
 			contents += "<a href='?src=\ref[src];switchtab=[TAB_PAYDAY]'>\[Daily Payments\]</a><BR>"
 			contents += "<a href='?src=\ref[src];switchtab=[TAB_FISCAL]'>\[Fiscal Ledger\]</a><BR>"
 			contents += "<a href='?src=\ref[src];switchtab=[TAB_DEBT]'>\[Debts &amp; Arrears\]</a><BR>"
@@ -756,7 +747,7 @@
 			// ── Active Loans ──────────────────────────────────────────────────
 			if(length(SStreasury.loans))
 				var/crown_loans = 0
-				var/crown_loan_content = "" 
+				var/crown_loan_content = ""
 				for(var/datum/loan/L in SStreasury.loans)
 					crown_loans++
 					if(L.source_fund == SStreasury.discretionary_fund)
@@ -810,19 +801,6 @@
 					var/blockade_tag_full = A.is_blockaded() ? " <font color='#c44'>(BLOCKADED - 2x COST)</font>" : ""
 					contents += "<b>[A.name][blockade_tag_full]</b> - <i>[A.desc]</i> "
 					contents += "<a href='?src=\ref[src];import=\ref[A]'>\[Import [A.import_amt] ([A.get_import_price()])\]</a><BR>"
-		if(TAB_BOUNTIES)
-			contents += "<a href='?src=\ref[src];switchtab=[TAB_MAIN]'>\[Return\]</a>"
-			contents += "<center>Bounties<BR>"
-			contents += "--------------<BR>"
-			contents += "Treasury: [SStreasury.discretionary_fund.balance]m</center><BR>"
-			for(var/datum/roguestock/bounty/A in SStreasury.stockpile_datums)
-				contents += "[A.name]<BR>"
-				contents += "[A.desc]<BR>"
-				contents += "Total Collected: [SStreasury.minted]<BR>"
-				if(A.percent_bounty)
-					contents += "Bounty Price: <a href='?src=\ref[src];setbounty=\ref[A]'>[A.payout_price]%</a><BR><BR>"
-				else
-					contents += "Bounty Price: <a href='?src=\ref[src];setbounty=\ref[A]'>[A.payout_price]</a><BR><BR>"
 		if(TAB_FISCAL)
 			contents += "<a href='?src=\ref[src];switchtab=[TAB_MAIN]'>\[Return\]</a><BR>"
 			var/list/snap = SStreasury.compute_fiscal_snapshot()
@@ -833,8 +811,8 @@
 			// Balances (two-column)
 			contents += "<b><font color='#e6b327'>BALANCES</font></b>"
 			contents += "<table width='100%' cellspacing='0' cellpadding='2'>"
-			contents += "<tr><td>Crown's Purse</td><td align='right'><font color='#e6b327'>[snap["discretionary"]]m</font></td>"
-			contents += "<td>Burgher Pledge</td><td align='right'><font color='#e6b327'>[snap["burgher_pledge"]]m</font></td></tr>"
+			contents += "<tr><td>[ta_economy_authority_purse()]</td><td align='right'><font color='#e6b327'>[snap["discretionary"]]m</font></td>"
+			contents += "<td>[ta_economy_pledge_capital()]</td><td align='right'><font color='#e6b327'>[snap["burgher_pledge"]]m</font></td></tr>"
 			contents += "<tr><td>Total Bank Coin</td><td align='right'>[snap["total_bank"]]m</td>"
 			contents += "<td>Held Accounts</td><td align='right'>[snap["held_accounts"]]</td></tr>"
 			contents += "<tr><td>Average Balance</td><td align='right'>[snap["avg_balance"]]m</td>"
@@ -842,7 +820,7 @@
 			contents += "</table><br>"
 
 			// Revenue (two-column, green) - only mammon that lands in Crown's Purse
-			contents += "<b><font color='#5cb85c'>CROWN REVENUE THIS WEEK</font></b>"
+			contents += "<b><font color='#5cb85c'>[uppertext(ta_economy_authority_noun())] REVENUE THIS WEEK</font></b>"
 			contents += "<table width='100%' cellspacing='0' cellpadding='2'>"
 			contents += "<tr><td>Rural Tax</td><td align='right'><font color='#5cb85c'>[SStreasury.total_rural_tax]m</font></td>"
 			contents += "<td>Fines</td><td align='right'><font color='#5cb85c'>[GLOB.azure_round_stats[STATS_FINES_INCOME]]m</font></td></tr>"
@@ -852,8 +830,8 @@
 			contents += "<td>Headeater Levy</td><td align='right'><font color='#5cb85c'>[GLOB.azure_round_stats[STATS_REVENUE_HEADEATER_LEVY]]m</font></td></tr>"
 			contents += "<tr><td>Import Tariff</td><td align='right'><font color='#5cb85c'>[GLOB.azure_round_stats[STATS_REVENUE_IMPORT_TARIFF]]m</font></td>"
 			contents += "<td>Export Duty</td><td align='right'><font color='#5cb85c'>[GLOB.azure_round_stats[STATS_REVENUE_EXPORT_DUTY]]m</font></td></tr>"
-			contents += "<tr><td>Treasure Minted (Gross)</td><td align='right'>[GLOB.azure_round_stats[STATS_MINTED_TREASURE_GROSS]]m</td>"
-			contents += "<td>Treasure Minted (Crown Cut)</td><td align='right'><font color='#5cb85c'>[GLOB.azure_round_stats[STATS_MINTED_TREASURE_NET]]m</font></td></tr>"
+			contents += "<tr><td>Recovered Spoils</td><td align='right'><font color='#5cb85c'>[GLOB.azure_round_stats[STATS_REVENUE_RECOVERED_SPOILS] || 0]m</font></td>"
+			contents += "<td></td><td></td></tr>"
 			contents += "</table><br>"
 
 			// Forgone Revenue (two-column, muted - what the Crown *could* have collected)
@@ -875,7 +853,7 @@
 			contents += "<tr><td><b>Total Forgone</b></td><td align='right'><b><font color='#8f7a5a'>[exempt_total]m</font></b></td>"
 			contents += "<td></td><td></td></tr>"
 			contents += "</table>"
-			contents += "<font size='1'><i>Charter exemptions, levy-exempt stamps, and rate-cap gaps. Mammon the Crown would have collected had no exemption applied.</i></font><br><br>"
+			contents += "<font size='1'><i>Charter exemptions, levy-exempt stamps, and rate-cap gaps. Mammon [ta_economy_authority_lower()] would have collected had no exemption applied.</i></font><br><br>"
 
 			// Trade (two-column, mixed)
 			contents += "<b><font color='#c0b283'>TRADE</font></b>"
@@ -988,7 +966,7 @@
 			contents += "<td align='right'>[GLOB.azure_round_stats[STATS_CONTRACTS_GENERATED_RUMOR]]</td>"
 			contents += "<td align='right'>[GLOB.azure_round_stats[STATS_CONTRACTS_TAKEN_RUMOR]]</td>"
 			contents += "<td align='right'><font color='#5cb85c'>[GLOB.azure_round_stats[STATS_CONTRACTS_COMPLETED_RUMOR]]</font></td></tr>"
-			contents += "<tr><td>Crown</td>"
+			contents += "<tr><td>[ta_economy_authority_noun()]</td>"
 			contents += "<td align='right'>[GLOB.azure_round_stats[STATS_CONTRACTS_GENERATED_DEFENSE]]</td>"
 			contents += "<td align='right'>[GLOB.azure_round_stats[STATS_CONTRACTS_TAKEN_DEFENSE]]</td>"
 			contents += "<td align='right'><font color='#5cb85c'>[GLOB.azure_round_stats[STATS_CONTRACTS_COMPLETED_DEFENSE]]</font></td></tr>"
@@ -1122,7 +1100,6 @@
 #undef TAB_MAIN
 #undef TAB_BANK
 #undef TAB_IMPORT
-#undef TAB_BOUNTIES
 #undef TAB_FISCAL
 #undef TAB_PAYDAY
 #undef TAB_DEBT

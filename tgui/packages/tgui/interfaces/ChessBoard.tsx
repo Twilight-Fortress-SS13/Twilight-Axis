@@ -922,7 +922,7 @@ export const ChessBoard = () => {
 
     const renderPointStack = (pointNumber: number, idx: number, isTop: boolean) => {
       const point = pointMap.get(pointNumber);
-      if (!point || !point.color || !point.count) {
+      if (!point?.color || !point.count) {
         return null;
       }
 

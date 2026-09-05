@@ -2,7 +2,8 @@
 	name = "Bow-Hunter"
 	tutorial = "You are a hunter. With your bow you hunt the fauna of the glade, skinning what you kill and cooking any meat left over. The job is dangerous but important in the circulation of clothing and light armor."
 	allowed_sexes = list(MALE, FEMALE)
-	
+	forbidden_races = list(RACES_DESPISED)
+
 	outfit = /datum/outfit/job/roguetown/adventurer/hunter
 	traits_applied = list(TRAIT_OUTDOORSMAN, TRAIT_SURVIVAL_EXPERT, TRAIT_MASTERFUL_HUNTER)
 	townie_contract_gate_exempt = TRUE
@@ -54,7 +55,6 @@
 				/obj/item/flint = 1,
 				/obj/item/bait = 1,
 				/obj/item/rogueweapon/huntingknife/combat/messser = 1,
-				/obj/item/recipe_book/survival = 1,
 				/obj/item/recipe_book/leatherworking = 1,
 				/obj/item/rogueweapon/scabbard/sheath = 1,
 				/obj/item/hunting_map/white_stag = 1,
@@ -64,15 +64,13 @@
 		SStreasury.grant_savings(ECONOMIC_LOWER_CLASS, H)
 	if(H.mind)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/huntersyell)
-		var/datum/action/bloodhound_scent/BS = new()//TA EDIT
-		BS.Grant(H)//TA EDIT
-		var/weapons = list("Recurve Bow","Crossbow")
+		var/weapons = list("Bow","Crossbow")
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		H.set_blindness(0)
 		switch(weapon_choice)
-			if("Recurve Bow")
+			if("Bow")
 				H.adjust_skillrank_up_to(/datum/skill/combat/bows, SKILL_LEVEL_EXPERT, TRUE)
-				backr = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
+				backr = /obj/item/gun/ballistic/revolver/grenadelauncher/bow
 				beltl = /obj/item/quiver/arrows
 			if("Crossbow")
 				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_EXPERT, TRUE)
@@ -119,7 +117,7 @@
 	head = /obj/item/clothing/head/roguetown/armingcap
 	neck = /obj/item/storage/belt/rogue/pouch/coins/poor
 	cloak = /obj/item/clothing/cloak/raincloak/furcloak/brown
-	mask = /obj/item/clothing/head/roguetown/roguehood/red	
+	mask = /obj/item/clothing/head/roguetown/roguehood/red
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/light
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/hide
 	gloves = /obj/item/clothing/gloves/roguetown/fingerless_leather
@@ -135,7 +133,6 @@
 				/obj/item/flint = 1,
 				/obj/item/bait = 1,
 				/obj/item/rogueweapon/huntingknife/combat/messser = 1,
-				/obj/item/recipe_book/survival = 1,
 				/obj/item/recipe_book/leatherworking = 1,
 				/obj/item/rogueweapon/scabbard/sheath = 1,
 				/obj/item/hunting_map/white_stag = 1,

@@ -226,6 +226,18 @@
 		S.start()
 		user.visible_message(span_notice("[user] snaps [user.p_their()] fingers, producing a spark!"), span_notice("I will forth a tiny spark with a snap of my fingers."))
 	else
+		if(isliving(thing) && user.zone_selected == BODY_ZONE_PRECISE_MOUTH)
+			var/mob/living/carbon/M = thing
+			var/obj/item/clothing/mask/cigarette/cig = help_light_cig(M)
+
+			if(cig)
+				if(!cig.lit)
+					M.spark_act()
+					if(M == user)
+						cig.light(span_notice("[user] snaps [user.p_their()] fingers, willing a spark to light [user.p_their()] [cig.name]."))
+					else
+						cig.light(span_notice("[user] snaps [user.p_their()] fingers, willing a spark to light [M]'s [cig.name]."))
+				return TRUE
 		thing.spark_act()
 		user.visible_message(span_notice("[user] snaps [user.p_their()] fingers, and a spark leaps forth towards [thing]!"), span_notice("I will forth a tiny spark and direct it towards [thing]."))
 
@@ -274,8 +286,9 @@
 	name = "minor magelight mote"
 	desc = "A tiny display of arcyne power used to illuminate."
 	pixel_x = 20
-	light_outer_range =  5
+	light_outer_range =	5
 	light_color = "#3FBAFD"
+	light_system = MOVABLE_LIGHT
 
 	icon = 'icons/roguetown/items/lighting.dmi'
 	icon_state = "wisp"
@@ -284,3 +297,10 @@
 #undef PRESTI_SPARK
 #undef PRESTI_MOTE
 #undef PRESTI_SENSE
+
+/obj/effect/temp_visual/cleaning_pulse
+	name = "cleaning pulse"
+	icon = 'icons/effects/wizard_spell_effects.dmi'
+	icon_state = "cleaning_pulse"
+	duration = 8
+	randomdir = 0

@@ -3,3 +3,7 @@
 
 /obj/item/rogueweapon/scabbard/sword/royal/donat
 	sellprice = 0
+
+/obj/item/rogueweapon/scabbard/sword/kazengun/Initialize()
+	. = ..()
+	max_integrity = 0

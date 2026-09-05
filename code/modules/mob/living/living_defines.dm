@@ -5,9 +5,9 @@
 	sight = 0
 	see_in_dark = 8
 	hud_possible = list(ANTAG_HUD)
-	
+
 	typing_indicator_enabled = TRUE
-	
+
 	var/resize = 1 //Badminnery resize
 	var/lastattacker = null
 	var/lastattackerckey = null
@@ -17,7 +17,7 @@
 
 	//Health and life related vars
 	var/maxHealth = 100 //Maximum health that should be possible.
-	var/health = 100 	//A mob's health
+	var/health = 100	//A mob's health
 
 	//Damage related vars, NOTE: THESE SHOULD ONLY BE MODIFIED BY PROCS
 	var/bruteloss = 0	//Brutal damage caused by brute force (punching, being clubbed by a toolbox ect... this also accounts for pressure damage)
@@ -31,6 +31,7 @@
 	var/mobility_flags = MOBILITY_FLAGS_DEFAULT
 
 	var/resting = FALSE
+	var/rest_locked_until = 0
 	var/wallpressed = FALSE
 	var/climbing = FALSE
 
@@ -50,7 +51,7 @@
 
 	//Allows mobs to move through dense areas without restriction. For instance, in space or out of holder objects.
 	var/incorporeal_move = FALSE //FALSE is off, INCORPOREAL_MOVE_BASIC is normal, INCORPOREAL_MOVE_SHADOW is for ninjas
-								 //and INCORPOREAL_MOVE_JAUNT is blocked by holy water/salt
+									//and INCORPOREAL_MOVE_JAUNT is blocked by holy water/salt
 
 	var/list/roundstart_quirks
 
@@ -62,7 +63,7 @@
 
 	var/tod = null // Time of death
 
-	/// The boolean "Are we on fire?" var. 
+	/// The boolean "Are we on fire?" var.
 	var/on_fire = FALSE
 	/// Helper vars for quick access to firestacks, these should be updated every time firestacks are adjusted
 	var/fire_stacks = 0
@@ -113,6 +114,7 @@
 	var/slurring = 0
 	var/cultslurring = 0
 	var/derpspeech = 0
+	var/feigning_impairment = FALSE // TA EDIT
 
 	var/list/implants = null
 
@@ -124,7 +126,7 @@
 
 	var/list/obj/effect/proc_holder/abilities = list()
 
-	var/can_be_held = FALSE	//whether this can be picked up and held.
+	var/item_state // iconstate for when we get turned into an item
 
 	var/ventcrawl_layer = PIPING_LAYER_DEFAULT
 	var/losebreath = 0
@@ -145,6 +147,9 @@
 	var/ambushable = 0
 	var/threat_point = 0 // Threat Point cost for the ambush budget system. Set on NPC subtypes.
 	var/ambush_faction = "" // Faction tag for ambush same/wrong-faction purchasing. Separate from mob faction list.
+	var/gm_name // Display label in the game master panel. Unset derives one from the type path.
+	var/gm_category // Filter category in the game master panel. Unset uses the primary faction.
+	var/gm_hidden = FALSE // Keep this type out of the game master panel entirely.
 
 	var/datum/fellowship/current_fellowship
 	var/list/incoming_fellowship_invites = list() // list of /datum/weakref to /datum/fellowship; kept in sync with fellowship.pending_invites
@@ -161,7 +166,7 @@
 	var/eyesclosed = 0
 	var/fallingas = 0
 	var/is_asleep = FALSE
-	
+
 	var/bleed_rate = 0 //how much are we bleeding
 	var/bleedsuppress = 0 //for stopping bloodloss, eventually this will be limb-based like bleeding
 
@@ -194,8 +199,8 @@
 	var/list/custom_descriptors
 
 	/**This variable updated in mob_movement.dm primarily. Mainly a shitcode measure for existing shitcode because this is SHITCODE!
-	 * All it does is track when a mob is sneaking so we don't have to constantly reset alpha values as this fucks with how things are intended to be.
-	 * if you really need to cancel someone who is sneaking, call update_sneak_invis(TRUE).*/
+		* All it does is track when a mob is sneaking so we don't have to constantly reset alpha values as this fucks with how things are intended to be.
+		* if you really need to cancel someone who is sneaking, call update_sneak_invis(TRUE).*/
 	var/rogue_sneaking = FALSE
 	/* Can be used to change the lighting threshholds at which players can sneak.*/
 	var/rogue_sneaking_light_threshhold = 0.15
@@ -205,6 +210,10 @@
 	var/domhand = 0
 
 	var/pet_passive = FALSE
+
+	var/list/summoned_minions
+	var/attack_relay_refs = 0
+	var/attack_relay_self_added = FALSE
 
 	var/cmode_music_override = list() // set by prefs or the verb, ignored if empty
 	var/cmode_music_override_name // solely for autoselecting as a spawned-in mob
@@ -231,3 +240,20 @@
 	var/mid_climb = FALSE
 	/// This one's for when you're choking to death.
 	var/last_gasp
+	/// Fixes to the hunger/thirst nonsense, stuffing them in species rather than mob.
+	var/hunger_stage
+	var/thirst_stage
+	var/vitae_stage
+
+	/// Had to put this here because attack() is not used solely by humans. That's fucked up, manne.
+	var/dualwield_attack_count = 0
+	var/dualwield_processing = FALSE
+	var/dualwield_finisher = FALSE
+	var/dualwield_resets_in = 0
+	var/dualwield_buff_cd = 0
+
+	/// "In Combat" timer that is used to prevent stealth and a few other mechanics while active.
+	var/in_combat_until
+
+	/// Bypasses positioning and exposure checks entirely
+	var/freeuse = FALSE

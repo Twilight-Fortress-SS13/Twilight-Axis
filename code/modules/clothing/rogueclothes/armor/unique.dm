@@ -22,7 +22,8 @@
 	break_sound = 'sound/foley/cloth_rip.ogg'
 	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
 	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
-	armor = ARMOR_MAILLE
+	armor = ARMOR_PADDED
+	max_integrity = ARMOR_INT_CHEST_LIGHT_MEDIUM
 	blocksound = SOFTHIT
 	sewrepair = TRUE
 	nodismemsleeves = TRUE
@@ -34,6 +35,16 @@
 /obj/item/clothing/suit/roguetown/armor/basiceast/ComponentInitialize()
 	AddComponent(/datum/component/armour_filtering/positive, TRAIT_HONORBOUND)
 
+/obj/item/clothing/suit/roguetown/armor/basiceast/loadout
+	name = "aesthetic simple dobo robe"
+
+/obj/item/clothing/suit/roguetown/armor/basiceast/loadout/ComponentInitialize()
+	return
+
+/obj/item/clothing/suit/roguetown/armor/basiceast/loadout/Initialize(mapload)
+	. = ..()
+	loadoutize()
+
 //less integrity than a leather cuirass, incredibly weak to blunt damage - great against slash - standard leather value against stab
 //the intent for these armors is to create specific weaknesses/strengths for people to play with
 
@@ -43,6 +54,17 @@
 	icon_state = "eastsuit2"
 	item_state = "eastsuit2"
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER
+	sellprice = 0
+
+/obj/item/clothing/suit/roguetown/armor/basiceast/crafteast/loadout
+	name = "aesthetic decorated dobo robe"
+
+/obj/item/clothing/suit/roguetown/armor/basiceast/crafteast/loadout/ComponentInitialize()
+	return
+
+/obj/item/clothing/suit/roguetown/armor/basiceast/crafteast/loadout/Initialize(mapload)
+	. = ..()
+	loadoutize()
 
 //craftable variation of eastsuit, essentially requiring the presence of a tailor with relevant materials
 //still weak against blunt
@@ -54,6 +76,16 @@
 	item_state = "eastsuit1"
 	sleeved = 'icons/roguetown/clothing/onmob/helpers/sleeves_armor.dmi'
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER
+
+/obj/item/clothing/suit/roguetown/armor/basiceast/mentorsuit/loadout
+	name = "aesthetic old dobo robe"
+
+/obj/item/clothing/suit/roguetown/armor/basiceast/mentorsuit/loadout/ComponentInitialize()
+	return
+
+/obj/item/clothing/suit/roguetown/armor/basiceast/mentorsuit/loadout/Initialize(mapload)
+	. = ..()
+	loadoutize()
 
 /obj/item/clothing/suit/roguetown/armor/plate/full/dwarven
 	name = "grudgebearer dwarven plate"

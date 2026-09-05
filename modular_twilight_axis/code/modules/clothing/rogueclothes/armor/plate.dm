@@ -1,3 +1,8 @@
+/obj/item/clothing/suit/roguetown/armor/plate/Initialize()
+	. = ..()
+	if(body_parts_covered == COVERAGE_ALL_BUT_HANDFEET || armor_class == ARMOR_CLASS_HEAVY)
+		body_parts_covered |= NECK
+
 /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fencer/twilight_elven
 	name = "elven rider cuirass"
 	desc = "An expertly smithed form-fitting steel cuirass that is much lighter and agile, but breaks with much more ease. Its sleek design marks it as a product of elven craftsmanship."
@@ -9,7 +14,7 @@
 
 /obj/item/clothing/suit/roguetown/armor/plate/raneshen_scale
 	slot_flags = ITEM_SLOT_ARMOR
-	name = "ranesheni medium lamellar armor"
+	name = "ranesheni scalemail"
 	desc = "Armor used by the Empire's vanguard fighters. The plates are connected to each other with cord for mobility. The arms are protected by pauldrons, and the legs by a small chainmail skirt. The armor itself is decorated with bronze."
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/armor.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/32х48/armor.dmi'
@@ -33,7 +38,7 @@
 	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/helpers/32х48/sleeves_armor.dmi'
 	icon_state = "heavy_armour"
 	item_state = "heavy_armour"
-	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET | NECK
+	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
 	equip_delay_self = 12 SECONDS
 	unequip_delay_self = 12 SECONDS
 	equip_delay_other = 3 SECONDS
@@ -41,38 +46,6 @@
 	max_integrity = ARMOR_INT_CHEST_PLATE_STEEL
 	smelt_bar_num = 4
 	armor_class = ARMOR_CLASS_HEAVY
-
-// Heavy armour NECK coverage buff:
-
-/obj/item/clothing/suit/roguetown/armor/plate/fluted
-	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET | NECK
-
-/obj/item/clothing/suit/roguetown/armor/plate/fluted/graggar // As specified in PR neck coverage buff is only for HEAVY, therefore i exclude graggar halfplate
-	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
-
-/obj/item/clothing/suit/roguetown/armor/plate/fluted/ornate
-	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET | NECK
-
-/obj/item/clothing/suit/roguetown/armor/plate/otavan
-	body_parts_covered = COVERAGE_TORSO | NECK
-
-/obj/item/clothing/suit/roguetown/armor/plate/full
-	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET | NECK
-
-/obj/item/clothing/suit/roguetown/armor/plate/full/samsibsa
-	body_parts_covered = COVERAGE_ALL_BUT_LEGS | NECK
-
-/obj/item/clothing/suit/roguetown/armor/plate/vampire
-	body_parts_covered = COVERAGE_ALL_BUT_LEGS | NECK
-
-/obj/item/clothing/suit/roguetown/armor/plate/full/bikini
-	body_parts_covered = CHEST|GROIN|LEGS|ARMS|NECK
-
-/obj/item/clothing/suit/roguetown/armor/heartfelt/lord // In fact - is plate armour
-	body_parts_covered = COVERAGE_ALL_BUT_LEGS | NECK
-
-/obj/item/clothing/suit/roguetown/armor/heartfelt/hand
-	body_parts_covered = COVERAGE_ALL_BUT_LEGS | NECK
 
 /obj/item/clothing/suit/roguetown/armor/plate/scale/townguard
 	name = "watchman's armor"
@@ -133,3 +106,211 @@
 	smeltresult = /obj/item/ingot/drow
 	smelt_bar_num = 2
 	body_parts_covered = COVERAGE_ALL_BUT_HANDLEGS
+
+/obj/item/clothing/head/roguetown/helmet/baotha_ta
+	name = "saccharine sallet"
+	desc = "Lo', the twins of beauty; Eora and Belladoth, they sought a prize which but one may have.."
+	icon_state = "baothahelm"
+	item_state = "baothahelm"
+	body_parts_covered = HEAD | HAIR | EARS | MOUTH | EYES
+	armor_class = ARMOR_CLASS_LIGHT
+	max_integrity = ARMOR_INT_HELMET_ANTAG - 250 //Halved durability, compared to traditional Ascendant-tier armor.
+	smeltresult = /obj/item/ingot/component/baotha
+
+/obj/item/clothing/head/roguetown/helmet/baotha_ta/Initialize()
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_DEPRAVED, "HELMET")
+
+/obj/item/clothing/head/roguetown/helmet/baotha_ta/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_BAOTHA_ARMOR)
+
+/obj/item/clothing/neck/roguetown/coif/baotha_ta
+	name = "saccharine veil"
+	desc = "And yet, their methods differed; Belladoth proposed with Her lust and temptation, Eora with Her love and warmth.."
+	icon_state = "baothacoif"
+	item_state = "baothacoif"
+	armor = ARMOR_MAILLE
+	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER + 150
+	body_parts_covered = NECK | HAIR | EARS | HEAD | NOSE
+	armor_class = ARMOR_CLASS_LIGHT
+	adjustable = CAN_CADJUST
+	toggle_icon_state = TRUE
+	resistance_flags = FIRE_PROOF
+	blocksound = SOFTHIT
+	color = null
+	chunkcolor = "#645567"
+	smeltresult = /obj/item/ingot/component/baotha
+
+/obj/item/clothing/neck/roguetown/coif/baotha_ta/Initialize()
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_DEPRAVED, "VEIL")
+	AddComponent(/datum/component/adjustable_clothing, NECK, null, null, 'sound/foley/cloth_wipe (1).ogg', null, (UPD_HEAD|UPD_MASK|UPD_NECK))
+	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
+
+/obj/item/clothing/neck/roguetown/coif/baotha_ta/dropped(mob/living/carbon/human/user)
+	. = ..()
+	if(QDELETED(src))
+		return
+	qdel(src)
+
+/obj/item/clothing/neck/roguetown/coif/baotha_ta/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_BAOTHA_ARMOR)
+
+/obj/item/clothing/suit/roguetown/armor/plate/fluted/baotha_ta
+	name = "saccharine plate armor"
+	desc = "Is it not obvious what Ravox would've chosen? Yet upon the dae of His choice, She refused to gift any chance to Her sister.."
+	icon_state = "baothaplate"
+	item_state = "baothaplate"
+	max_integrity = ARMOR_INT_CHEST_PLATE_ANTAG - 250 //TA EDIT
+	armor_class = ARMOR_CLASS_LIGHT //The big, big thing.
+	color = null
+	chunkcolor = "#dd2166"
+	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
+	smeltresult = /obj/item/ingot/component/baotha
+
+/obj/item/clothing/suit/roguetown/armor/plate/fluted/baotha_ta/Initialize()
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_DEPRAVED, "ARMOR")
+	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
+
+/obj/item/clothing/suit/roguetown/armor/plate/fluted/baotha_ta/dropped(mob/living/carbon/human/user)
+	. = ..()
+	if(QDELETED(src))
+		return
+	qdel(src)
+
+/obj/item/clothing/suit/roguetown/armor/plate/fluted/baotha_ta/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_BAOTHA_ARMOR)
+
+/obj/item/clothing/suit/roguetown/armor/gambeson/baotha_ta
+	name = "saccharine vestments"
+	desc = "A gemmed chalice, Eora's own, swilled with Psydonia's most noxious venoms - and but a simple sip was enough to bring Her to death's door.."
+	icon_state = "baothagamb"
+	armor_class = ARMOR_CLASS_LIGHT
+	armor = ARMOR_BRIGANDINE
+	color = null
+	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER + 150
+	armor_class = ARMOR_CLASS_LIGHT
+	resistance_flags = FIRE_PROOF
+	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
+	icon = 'icons/roguetown/clothing/shirts.dmi'
+	mob_overlay_icon = 'icons/roguetown/clothing/onmob/shirts.dmi'
+	sleeved = 'icons/roguetown/clothing/onmob/helpers/sleeves_shirts.dmi'
+	smeltresult = /obj/item/ingot/component/baotha
+
+/obj/item/clothing/suit/roguetown/armor/gambeson/baotha_ta/Initialize()
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_DEPRAVED, "VESTMENTS")
+	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
+
+/obj/item/clothing/suit/roguetown/armor/gambeson/baotha_ta/dropped(mob/living/carbon/human/user)
+	. = ..()
+	if(QDELETED(src))
+		return
+	qdel(src)
+
+/obj/item/clothing/suit/roguetown/armor/gambeson/baotha_ta/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_BAOTHA_ARMOR)
+
+/obj/item/clothing/wrists/roguetown/bracers/leather/baotha_ta
+	name = "saccharine cuffs"
+	desc = "A betrayal without compare, and a sin without redemption; or so, She believed.."
+	icon_state = "baothabracers"
+	chunkcolor = "#6d1c87"
+	armor = ARMOR_MAILLE
+	resistance_flags = FIRE_PROOF
+	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER + 150
+	smeltresult = /obj/item/ingot/component/baotha
+
+/obj/item/clothing/wrists/roguetown/bracers/leather/baotha_ta/Initialize()
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_DEPRAVED, "BRACERS")
+	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
+
+/obj/item/clothing/wrists/roguetown/bracers/leather/baotha_ta/dropped(mob/living/carbon/human/user)
+	. = ..()
+	if(QDELETED(src))
+		return
+	qdel(src)
+
+/obj/item/clothing/wrists/roguetown/bracers/leather/baotha_ta/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_BAOTHA_ARMOR)
+
+/obj/item/clothing/under/roguetown/skirt/baotha_ta
+	name = "saccharine fauldcoat"
+	desc = "Only did Belladona's haze clear, once She heard Eora's gasps and Ravox's fright; what else could She've done besides fleeing the heavens?"
+	armor = ARMOR_MAILLE
+	icon_state = "baothaskirt"
+	chunkcolor = "#6d1c87"
+	resistance_flags = FIRE_PROOF
+	armor_class = ARMOR_CLASS_LIGHT
+	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER + 150
+	body_parts_covered = GROIN | LEGS
+	smeltresult = /obj/item/ingot/component/baotha
+
+/obj/item/clothing/under/roguetown/skirt/baotha_ta/Initialize()
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_DEPRAVED, "SKIRT")
+	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
+
+/obj/item/clothing/under/roguetown/skirt/baotha_ta/dropped(mob/living/carbon/human/user)
+	. = ..()
+	if(QDELETED(src))
+		return
+	qdel(src)
+
+/obj/item/clothing/under/roguetown/skirt/baotha_ta/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_BAOTHA_ARMOR)
+
+/obj/item/clothing/gloves/roguetown/plate/baotha_ta
+	name = "saccharine gauntlets"
+	desc = "Belladonna's ego died on that dae, and Baotha's venomous id rose in Her stead; for it was better to numb the regret than to face the guilt.."
+	icon_state = "baothagloves"
+	item_state = "baothagloves"
+	chunkcolor = "#6d1c87"
+	max_integrity = ARMOR_INT_SIDE_ANTAG - 250
+	armor_class = ARMOR_CLASS_LIGHT
+	smeltresult = /obj/item/ingot/component/baotha
+
+/obj/item/clothing/gloves/roguetown/plate/baotha_ta/Initialize()
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_DEPRAVED, "GLOVES")
+	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
+
+/obj/item/clothing/gloves/roguetown/plate/baotha_ta/dropped(mob/living/carbon/human/user)
+	. = ..()
+	if(QDELETED(src))
+		return
+	qdel(src)
+
+/obj/item/clothing/gloves/roguetown/plate/baotha_ta/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_BAOTHA_ARMOR)
+
+/obj/item/clothing/shoes/roguetown/boots/armor/baotha_ta
+	name = "saccharine heels"
+	desc = "..yet, even as She indulges and mourns beneath the stars, one must wonder; is She truly damned by the Pantheon, or by Herself alone?"
+	icon_state = "baothaboots"
+	item_state = "baothaboots"
+	chunkcolor = "#6d1c87"
+	max_integrity = ARMOR_INT_SIDE_ANTAG - 200
+	armor_class = ARMOR_CLASS_LIGHT
+	smeltresult = /obj/item/ingot/component/baotha
+
+/obj/item/clothing/shoes/roguetown/boots/armor/baotha_ta/ComponentInitialize()
+	. = ..()
+	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_HEELS, 2)
+	stepnoise_flag = STEPNOISE_HEELS // This will prevent default footstep noise from being made by the heels (sounds odd)
+
+/obj/item/clothing/shoes/roguetown/boots/armor/baotha_ta/Initialize()
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_DEPRAVED, "BOOTS")
+	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
+
+/obj/item/clothing/shoes/roguetown/boots/armor/baotha_ta/dropped(mob/living/carbon/human/user)
+	. = ..()
+	if(QDELETED(src))
+		return
+	qdel(src)
+
+/obj/item/clothing/shoes/roguetown/boots/armor/baotha_ta/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_BAOTHA_ARMOR)

@@ -1,3 +1,10 @@
+// Multiplier to standardize values per second to how long a prayer loop takes
+#define PRAYER_DEVOTION_TIME_MULT 3
+// Amount of devotion before holy skill is factored in per prayer loop
+#define PRAYER_DEVOTION_BASE 0.5 * PRAYER_DEVOTION_TIME_MULT
+// Amount of devotion per holy skill level per prayer loop
+#define PRAYER_DEVOTION_SKILL 1 * PRAYER_DEVOTION_TIME_MULT
+
 // Cleric Holder Datums
 /datum/devotion
 	/// Mob that owns this datum
@@ -20,10 +27,14 @@
 	var/passive_devotion_gain = 0
 	/// How much progression is gained per process call
 	var/passive_progression_gain = 0
-	/// How much devotion is gained per prayer cycle
-	var/prayer_effectiveness = 2
+	/// How much % devotion is gained per prayer cycle
+	var/prayer_effectiveness = 1
 	/// Spells we have granted thus far
 	var/list/granted_spells
+	/// Whether or not we can progress devotion spells
+	var/able_to_progress = TRUE
+	/// Whether the prompt is active
+	var/path_choice_prompt = FALSE
 
 /datum/devotion/New(mob/living/carbon/human/holder, datum/patron/patron)
 	. = ..()
@@ -39,6 +50,12 @@
 	. = ..()
 	if (patron.type == /datum/patron/inhumen/zizo || patron.type == /datum/patron/divine/necra)
 		REMOVE_TRAIT(holder, TRAIT_DEATHSIGHT, "devotion")
+
+	if(length(patron.traits_tier))
+		for(var/trait in patron.traits_tier)
+			var/required_tier = patron.traits_tier[trait]
+			if(required_tier <= level)
+				REMOVE_TRAIT(holder, trait, ROUNDSTART_TRAIT)
 	holder?.hud_used?.shutdown_bloodpool()
 	holder?.devotion = null
 	holder = null
@@ -72,6 +89,8 @@
 		to_chat(holder, span_warning("I have reached the limit of my devotion..."))
 	if(!prog_amt) // no point in the rest if it's just an expenditure
 		return TRUE
+	if(!able_to_progress)
+		return TRUE
 	progression = clamp(progression + prog_amt, 0, max_progression)
 	switch(level)
 		if(CLERIC_T0)
@@ -98,18 +117,27 @@
 		return
 
 	if(patron)
-		if(length(patron.miracles))
-			for(var/spell_type in patron.miracles)
-				var/required_tier = patron.miracles[spell_type]			
-				if(required_tier <= level)
-					if(holder.mind.has_spell(spell_type))
-						continue
+		if(istype(patron, /datum/patron/divine/abyssor) && level >= CLERIC_T1)
+			if(HAS_TRAIT(holder, TRAIT_INK_AFFINITY))
+				var/datum/patron/divine/abyssor/A = patron
+				grant_paint_miracles(A, silent)
+				lock_down_progression()
+			else if(!path_choice_prompt)
+				path_choice_prompt = TRUE
+				handle_abyssor_paths(silent)
+		else
+			if(length(patron.miracles))
+				for(var/spell_type in patron.miracles)
+					var/required_tier = patron.miracles[spell_type]
+					if(required_tier <= level)
+						if(holder.mind.has_spell(spell_type))
+							continue
+						var/obj/effect/proc_holder/spell/newspell = new spell_type
+						if(!silent)
+							to_chat(holder, span_boldnotice("I have unlocked a new spell: [newspell]"))
+						holder.mind.AddSpell(newspell, holder)
+						LAZYADD(granted_spells, newspell)
 
-					var/obj/effect/proc_holder/spell/newspell = new spell_type
-					if(!silent)
-						to_chat(holder, span_boldnotice("I have unlocked a new spell: [newspell]"))
-					holder.mind.AddSpell(newspell, holder)
-					LAZYADD(granted_spells, newspell)
 		if(length(patron.traits_tier))
 			for(var/trait in patron.traits_tier)
 				var/required_tier = patron.traits_tier[trait]
@@ -121,6 +149,20 @@
 					if(istype(patron, /datum/patron/old_god)) //TA EDIT START
 						run_psydon_updates(trait)
 
+GLOBAL_LIST_EMPTY(miracle_tiers)
+
+/proc/get_miracle_tier(miracle_type)
+	if(!length(GLOB.miracle_tiers))
+		for(var/patron_key in GLOB.patronlist)
+			var/datum/patron/patron = GLOB.patronlist[patron_key]
+			if(!islist(patron.miracles))
+				continue
+			for(var/mtype in patron.miracles)
+				var/tier = patron.miracles[mtype]
+				if(isnull(GLOB.miracle_tiers[mtype]) || tier < GLOB.miracle_tiers[mtype])
+					GLOB.miracle_tiers[mtype] = tier
+	return GLOB.miracle_tiers[miracle_type]
+
 /datum/devotion/proc/run_psydon_updates(trait)
 	if(!holder || !holder.mind)
 		return
@@ -131,9 +173,21 @@
 		REMOVE_TRAIT(holder, TRAIT_PSYDONITE_2, ROUNDSTART_TRAIT)
 	//TA EDIT END
 
+/datum/devotion/proc/get_progression_requirement_for_tier(cleric_tier)
+	switch(cleric_tier)
+		if(CLERIC_T1)
+			return CLERIC_REQ_1
+		if(CLERIC_T2)
+			return CLERIC_REQ_2
+		if(CLERIC_T3)
+			return CLERIC_REQ_3
+		if(CLERIC_T4)
+			return CLERIC_REQ_4
+	return null
+
 //The main proc that distributes all the needed devotion tweaks to the given class.
-//cleric_tier 		- The cleric tier that the holder will get spells of immediately.
-//passive_gain 		- Passive devotion gain, if any, will begin processing this datum.
+//cleric_tier		- The cleric tier that the holder will get spells of immediately.
+//passive_gain		- Passive devotion gain, if any, will begin processing this datum.
 //devotion_limit	- The CLERIC_REQ max_devotion and max_progression will be set to. Devotee overrides this with its own value!
 //start_maxed		- Whether this class starts out with all devotion maxed. Mostly used by Acolytes & Priests to spawn with everything.
 /datum/devotion/proc/grant_miracles(mob/living/carbon/human/H, cleric_tier = CLERIC_T0, passive_gain = 0, devotion_limit, start_maxed = FALSE)
@@ -143,6 +197,11 @@
 	if(devotion_limit) //Upper devotion limit - Limits gain to that tier's miracles. Mostly used by Templars / Paladins.
 		max_devotion = devotion_limit
 		max_progression = devotion_limit
+	else if(cleric_tier > CLERIC_T0 && !start_maxed)
+		var/tier_limit = get_progression_requirement_for_tier(cleric_tier)
+		if(tier_limit)
+			max_devotion = tier_limit
+			max_progression = tier_limit
 	if(passive_gain)
 		passive_devotion_gain = passive_gain
 		passive_progression_gain = passive_gain
@@ -194,10 +253,11 @@
 			break
 		if(!do_after(src, 30))
 			break
-		var/devotion_multiplier = 1
+		// Values standardized for 3 seconds.
+		var/devotion_multiplier = PRAYER_DEVOTION_BASE
 		if(mind)
-			devotion_multiplier += (get_skill_level(/datum/skill/magic/holy) / SKILL_LEVEL_LEGENDARY)
-		var/prayer_effectiveness = round(devotion.prayer_effectiveness * devotion_multiplier)
+			devotion_multiplier += (get_skill_level(/datum/skill/magic/holy) * PRAYER_DEVOTION_TIME_MULT)
+		var/prayer_effectiveness = round(devotion.prayer_effectiveness * devotion_multiplier, 0.1)
 		devotion.update_devotion(prayer_effectiveness, prayer_effectiveness)
 		prayersesh += prayer_effectiveness
 	visible_message("[src] concludes their prayer.", "I conclude my prayer.")
@@ -225,7 +285,7 @@
 	var/picked_name = input(src, "Choose how your SECOND voice is described:", "VIRTUE") as null|anything in voice_options
 	if(!picked_name)
 		return FALSE
-	V.second_color = sanitize_hexcolor(newcolor)
+	V.second_color = sanitize_hexcolor(newcolor, 6, TRUE)
 	V.second_desc_path = voice_options[picked_name]
 	to_chat(src, span_notice("Second voice configured: Color [V.second_color] with the '[picked_name]' description."))
 	remove_verb(src, /mob/living/carbon/human/proc/changevoice)
@@ -252,7 +312,7 @@
 	set category = "RoleUnique.Virtue"
 
 	if(HAS_TRAIT(src, TRAIT_COMBAT_AWARE))
-		REMOVE_TRAIT(src, TRAIT_COMBAT_AWARE, TRAIT_VIRTUE) 
+		REMOVE_TRAIT(src, TRAIT_COMBAT_AWARE, TRAIT_VIRTUE)
 	else
 		ADD_TRAIT(src, TRAIT_COMBAT_AWARE, TRAIT_VIRTUE)
 	to_chat(src, "I will see [HAS_TRAIT(src, TRAIT_COMBAT_AWARE) ? "more" : "less"] combat information now.")
@@ -274,7 +334,7 @@
 	set category = "RoleUnique.Virtue"
 
 	if(HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS))
-		REMOVE_TRAIT(src, TRAIT_DECEIVING_MEEKNESS, TRAIT_VIRTUE) 
+		REMOVE_TRAIT(src, TRAIT_DECEIVING_MEEKNESS, TRAIT_VIRTUE)
 	else
 		ADD_TRAIT(src, TRAIT_DECEIVING_MEEKNESS, TRAIT_VIRTUE)
 	to_chat(src, "I have [HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS) ? "raised" : "lowered"] my guard around others.")
@@ -296,3 +356,85 @@
 	var/datum/component/ore_sight/COS = GetComponent(/datum/component/ore_sight)
 	if(COS)
 		COS.change_range()
+
+/datum/devotion/proc/handle_abyssor_paths(silent = FALSE)
+	if(!holder || !patron)
+		return
+
+	var/datum/patron/divine/abyssor/A = patron
+	var/choice
+
+	// If they already have ink affinity, automatically assign them to the Painter path without asking
+	if(HAS_TRAIT(holder, TRAIT_INK_AFFINITY))
+		choice = "Path of the Painter (support)"
+		if(!silent)
+			to_chat(holder, span_boldnotice("Your innate ink affinity draws you onto the Path of the Painter."))
+	else
+		choice = input(holder, "Choose your studies under the Deepfather:", "Call Of The Deep") as null|anything in list("Path of the Dreamer (offense)", "Path of the Painter (support)")
+		if(!choice)
+			choice = "Path of the Dreamer (offense)"
+
+	switch(choice)
+		if("Path of the Painter (support)")
+			grant_paint_miracles(A, silent)
+			lock_down_progression()
+			ADD_TRAIT(holder, TRAIT_INK_AFFINITY, ROUNDSTART_TRAIT)
+		if("Path of the Dreamer (offense)")
+			if(!silent)
+				to_chat(holder, span_boldnotice("You have chosen the Path of the Dreamer. Your mind sinks under the waves."))
+			// Heretics picking path of the dreamer do not get paint affinity, as they might end up fighting church members.
+			if(!HAS_TRAIT(holder, TRAIT_HERESIARCH))
+				ADD_TRAIT(holder, TRAIT_INK_AFFINITY, ROUNDSTART_TRAIT)
+			allocate_standard_miracles(silent)
+			lock_down_progression()
+
+/datum/devotion/proc/allocate_standard_miracles(silent = FALSE)
+	if(!patron || !holder?.mind)
+		return
+	if(length(patron.miracles))
+		for(var/spell_type in patron.miracles)
+			var/required_tier = patron.miracles[spell_type]
+			if(required_tier <= level)
+				if(holder.mind.has_spell(spell_type))
+					continue
+				var/obj/effect/proc_holder/spell/newspell = new spell_type
+				if(!silent)
+					to_chat(holder, span_boldnotice("I have unlocked a new spell: [newspell]"))
+				holder.mind.AddSpell(newspell, holder)
+				LAZYADD(granted_spells, newspell)
+
+/datum/devotion/proc/lock_down_progression()
+	able_to_progress = FALSE
+
+/datum/devotion/proc/grant_paint_miracles(datum/patron/divine/abyssor/A, silent = FALSE)
+	if(!length(A.paint_miracles))
+		return
+	for(var/spell_type in A.paint_miracles)
+		var/required_tier = A.paint_miracles[spell_type]
+		if(required_tier <= level)
+			if(holder.mind.has_spell(spell_type))
+				continue
+			var/obj/effect/proc_holder/spell/new_paint_spell = new spell_type
+			if(!silent)
+				to_chat(holder, span_boldnotice("You have unlocked a paint miracle: [new_paint_spell]"))
+			holder.mind.AddSpell(new_paint_spell, holder)
+			LAZYADD(granted_spells, new_paint_spell)
+
+/**
+ * Formats a skill or patron check text string with custom status prefixing.
+ *
+ * Output format: "[Check Name: Success/Failure] Content"
+ *
+ * * check_name - The display name of the check (e.g., "Abyssor", "Medical", "Half-Light").
+ * * success - Whether the check succeeded (TRUE = greentext "Success", FALSE = redtext "Failure").
+ * * content - The body text/flavor text to display inside the notice span.
+ */
+/proc/skill_check_text(check_name, success = TRUE, content = "")
+	var/status_text = success ? "Success" : "Failure"
+	var/bracket_text = "\[[check_name]: [status_text]\]"
+	var/prefix = success ? span_greentext(bracket_text) : span_redtext(bracket_text)
+	return "[prefix] [span_notice(content)]"
+
+#undef PRAYER_DEVOTION_TIME_MULT
+#undef PRAYER_DEVOTION_BASE
+#undef PRAYER_DEVOTION_SKILL

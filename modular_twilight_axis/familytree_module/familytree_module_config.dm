@@ -12,6 +12,8 @@
 // familytree_rituals.dm             - clergy helpers, desired-role search, ritual_adopt, vampire_bind, family_curse
 // familytree_holy_verbs.dm          - holy skill verbs: establish_bond, dissolve_marriage (manual marriage/adoption/sibling)
 // familytree_lifecycle.dm           - royal job hooks, enigma, noble dynasty, notifications, confirmation sessions, setspouse reset
+// familytree_round_ledger.dm        - per-ckey round ledger: opt-out/blocked pairs persist across relogs and new bodies
+// familytree_round_prefs.dm         - /datum/familytree_prefs: per-ckey round-locked snapshot of character prefs; no datum = no matching
 // familytree_subsystem_core.dm      - SUBSYSTEM_DEF(familytree): init, signals, queue, local/royal runners
 // familytree_subsystem_helpers.dm   - species/anatomy/gender compat, job helpers, age checks, DetermineAppropriateRole
 // familytree_subsystem_matching.dm  - AddLocal, AssignToHouse/Family, NewlyWed/Family matching, favorite, wedding ring
@@ -20,10 +22,11 @@
 // familytree_graph_api.dm           - SSfamilytree graph facade + hooks + relation/display cache (source of truth for parent/spouse)
 // familytree_debug.dm               - admin/debug scenarios (stress/royal/favorite/roles/isolated/edge/lifecycle)
 // familytree_debug_populate.dm      - admin "populate my house" panel (ftpop_*). Admin/debug only
+// familytree_unit_tests.dm          - CI unit tests for the subsystem chains; runs under UNIT_TESTS (CIBUILDING). Update when a chain changes
 //
 // TGUI: tgui/packages/tgui/interfaces/FamilySettingsPanel.tsx
 //       tgui/packages/tgui/interfaces/FamilyDisplayPanel.tsx
-//       tgui/packages/tgui/interfaces/FamilyDisplayPanel/*.tsx (FamilyTree, FamilyTreeBranch, FamilyTreeCard, FamilyListSections, types)
+//       tgui/packages/tgui/interfaces/FamilyDisplayPanel/*.tsx (FamilyTree, FamilyTreeCard, FamilyListSections, types)
 // Assets: relations.dmi
 //
 // Notes:
@@ -67,6 +70,11 @@
 #define FAMILYTREE_PLAYERS_PER_TARGET_HOUSE 10
 #define FAMILYTREE_MAX_RANDOM_RELATIVES 3
 #define FAMILYTREE_DONATOR_RELATIVES_TIER 1
+#define FAMILYTREE_SETSPOUSE_TIMEOUT (30 MINUTES)
+// An unanswered confirmation is not a refusal: the pair is held back for this many
+// matching iterations of each side, then becomes available again.
+#define FAMILYTREE_TIMEOUT_BLOCK_ITERATIONS 3
+#define FAMILYTREE_PAIR_OFFER_LIMIT 3
 
 #define ANY_GENDER 1
 #define SAME_GENDER 2
@@ -103,6 +111,7 @@
 #define FTREJ_H_AGE          (1<<4)
 #define FTREJ_H_EMPTY        (1<<5)
 #define FTREJ_H_OFFLINE      (1<<6)
+#define FTREJ_H_BLOCKED      (1<<7)
 
 // FindNewlyWedMatch
 #define FTREJ_N_POLY         (1<<0)
@@ -128,6 +137,7 @@
 #define FTREJ_F_OPTOUT       (1<<10)
 
 #include "familytree_prefs_ui.dm"
+#include "familytree_confirm_alert.dm"
 #include "familytree_mob_procs.dm"
 #include "familytree_heritage_core.dm"
 #include "familytree_member.dm"
@@ -135,7 +145,10 @@
 #include "familytree_rituals.dm"
 #include "familytree_holy_verbs.dm"
 #include "familytree_lifecycle.dm"
+#include "familytree_round_ledger.dm"
 #include "familytree_subsystem_core.dm"
+#include "familytree_round_prefs.dm"
+#include "familytree_royal_harem.dm"
 #include "familytree_subsystem_helpers.dm"
 #include "familytree_subsystem_matching.dm"
 #include "familytree_subsystem_royal.dm"
@@ -143,3 +156,4 @@
 #include "familytree_graph_api.dm"
 #include "familytree_debug.dm"
 #include "familytree_debug_populate.dm"
+#include "familytree_unit_tests.dm"

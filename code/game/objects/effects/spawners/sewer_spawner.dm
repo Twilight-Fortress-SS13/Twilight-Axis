@@ -1,5 +1,6 @@
 /obj/effect/spawner/lootdrop/roguetown/sewers
 	name = "sewer spawner"
+	icon_state = "sewer"
 	lootcount = 3
 	loot_value = LOOT_VALUE_SEWERS
 	junk_loot = list(/obj/item/ash = 5, /obj/item/natural/glass_shard = 5, /obj/item/natural/stone = 3)
@@ -113,6 +114,6 @@
 		/obj/item/reagent_containers/food/snacks/rogue/crackerscooked = 3,
 		/obj/item/reagent_containers/food/snacks/butterslice = 6, //ew
 		/obj/item/reagent_containers/powder/salt = 6,
-		/obj/item/reagent_containers/food/snacks/egg = 6,
+		/obj/item/reagent_containers/food/snacks/rogue/egg = 6,
 
 	)

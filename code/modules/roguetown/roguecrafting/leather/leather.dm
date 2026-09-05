@@ -41,23 +41,19 @@
 	reqs = list(/obj/item/natural/hide/cured = 1,
 				/obj/item/natural/fibers = 1)
 	tools = list(/obj/item/needle)
-	sellprice = 15
 	craftdiff = 2
 
 /datum/crafting_recipe/roguetown/leather/gloves
 	name = "leather gloves"
 	display_category = ITEM_CAT_ARMOR_GLOVES
-	result = list(/obj/item/clothing/gloves/roguetown/leather,
-	/obj/item/clothing/gloves/roguetown/leather)
+	result = /obj/item/clothing/gloves/roguetown/leather
 	reqs = list(/obj/item/natural/hide/cured = 1)
-	sellprice = 10
 
 /datum/crafting_recipe/roguetown/leather/heavygloves
-	name = "heavy leather gloves"
+	name = "hardened leather gloves"
 	display_category = ITEM_CAT_ARMOR_GLOVES
 	result = /obj/item/clothing/gloves/roguetown/angle
 	reqs = list(/obj/item/natural/fur = 1)
-	sellprice = 20
 	craftdiff = 3
 
 /datum/crafting_recipe/roguetown/leather/heavyglovesphys
@@ -65,7 +61,6 @@
 	display_category = ITEM_CAT_ARMOR_GLOVES
 	result = /obj/item/clothing/gloves/roguetown/angle/phys
 	reqs = list(/obj/item/natural/fur = 1)
-	sellprice = 30
 	craftdiff = 3
 
 /datum/crafting_recipe/roguetown/leather/heavyglovesfeld
@@ -73,7 +68,6 @@
 	display_category = ITEM_CAT_ARMOR_GLOVES
 	result = /obj/item/clothing/gloves/roguetown/angle/feld
 	reqs = list(/obj/item/natural/fur = 1)
-	sellprice = 30
 	craftdiff = 4
 
 /datum/crafting_recipe/roguetown/leather/fingerless_leather_gloves
@@ -85,14 +79,12 @@
 		/obj/item/reagent_containers/food/snacks/tallow = 1,
 		/obj/item/natural/fibers = 1,
 		)
-	sellprice = 10 //TA EDIT
 
 /datum/crafting_recipe/roguetown/leather/bandana
 	name = "leather bandana"
 	display_category = ITEM_CAT_ARMOR_HELMETS
 	result = /obj/item/clothing/head/roguetown/helmet/bandana
 	reqs = list(/obj/item/natural/hide/cured = 1)
-	sellprice = 7 //TA EDIT
 	craftdiff = 0
 
 /datum/crafting_recipe/roguetown/leather/tricorn
@@ -100,7 +92,6 @@
 	display_category = ITEM_CAT_ARMOR_HELMETS
 	result = /obj/item/clothing/head/roguetown/helmet/tricorn
 	reqs = list(/obj/item/natural/hide/cured = 1)
-	sellprice = 7 //TA EDIT
 
 /datum/crafting_recipe/roguetown/leather/vest
 	name = "leather vest"
@@ -111,14 +102,12 @@
 	name = "leather corslet"
 	result = /obj/item/clothing/suit/roguetown/armor/leather/bikini
 	reqs = list(/obj/item/natural/hide/cured = 2)
-	sellprice = 16 //TA EDIT
 
 /datum/crafting_recipe/roguetown/leather/hidebikini
 	name = "hide corslet"
 	result = /obj/item/clothing/suit/roguetown/armor/leather/hide/bikini
 	reqs = list(/obj/item/natural/hide/cured = 2,
 				/obj/item/natural/fur = 1)
-	sellprice = 16 //TA EDIT
 
 /datum/crafting_recipe/roguetown/leather/cloak
 	name = "rain cloak"
@@ -137,7 +126,6 @@
 	reqs = list(/obj/item/natural/hide/cured = 2,/obj/item/natural/fur = 1)
 
 /obj/item/clothing/cloak/raincloak/furcloak/crafted
-	sellprice = 55
 
 /datum/crafting_recipe/roguetown/leather/papakha
 	name = "papakha hat"
@@ -146,7 +134,6 @@
 	reqs = list(/obj/item/natural/fur = 1, /obj/item/natural/fibers = 2)
 
 /obj/item/clothing/head/roguetown/papakha/crafted
-	sellprice = 10
 
 /datum/crafting_recipe/roguetown/leather/saddle
 	name = "saddle"
@@ -159,7 +146,6 @@
 	display_category = ITEM_CAT_WEAPONS_FLAILS
 	result = /obj/item/rogueweapon/whip
 	reqs = list(/obj/item/natural/hide/cured = 2,/obj/item/natural/stone = 1)
-	sellprice = 18 //TA EDIT
 
 /datum/crafting_recipe/roguetown/leather/drum
 	name = "Drum"
@@ -174,36 +160,32 @@
 
 /datum/crafting_recipe/roguetown/leather/darkcloak
 	name = "dark cloak"
-	result = list(/obj/item/clothing/cloak/darkcloak)
+	result = /obj/item/clothing/cloak/darkcloak
 	reqs = list(/obj/item/natural/fur = 2,
 				/obj/item/natural/hide/cured = 4)
 	craftdiff = 5
-	sellprice = 80
 
 /datum/crafting_recipe/roguetown/leather/bearcloak
 	name = "direbear cloak"
-	result = list(/obj/item/clothing/cloak/darkcloak/bear)
+	result = /obj/item/clothing/cloak/darkcloak/bear
 	reqs = list(/obj/item/natural/fur/direbear = 1,
 				/obj/item/natural/hide/cured = 4)
 	craftdiff = 3
-	sellprice = 80
 
 /datum/crafting_recipe/roguetown/leather/lightbearcloak
 	name = "light direbear cloak"
-	result = list(/obj/item/clothing/cloak/darkcloak/bear/light)
+	result = /obj/item/clothing/cloak/darkcloak/bear/light
 	reqs = list(/obj/item/natural/fur/direbear = 1,
 				/obj/item/natural/hide/cured = 4)
 	craftdiff = 3
-	sellprice = 80
 
 /datum/crafting_recipe/roguetown/leather/leathertights
 	name = "leather tights"
 	display_category = ITEM_CAT_ARMOR_LEGS
-	result = list(/obj/item/clothing/under/roguetown/trou/leathertights)
+	result = /obj/item/clothing/under/roguetown/trou/leathertights
 	reqs = list(/obj/item/natural/hide/cured = 2)
 	tools = list(/obj/item/needle)
 	craftdiff = 3
-	sellprice = 10
 
 /datum/crafting_recipe/roguetown/leather/doctormask
 	name = "plague mask"
@@ -293,3 +275,23 @@
 	)
 	result = /obj/item/storage/belt/rogue/leather/suspenders
 	craftdiff = 3
+
+/datum/crafting_recipe/roguetown/leather/belt_alt
+	name = "pouched suspenders"
+	display_category = ITEM_CAT_ARMOR_CHESTPIECES
+	reqs = list(
+		/obj/item/natural/hide/cured = 1,
+		/obj/item/natural/cloth = 2,
+		/obj/item/storage/belt/rogue/pouch = 1,
+	)
+	result = /obj/item/clothing/cloak/suspenders
+	craftdiff = 3
+	subtype_reqs = TRUE
+
+/datum/crafting_recipe/roguetown/leather/leathermask
+	name = "leather mask"
+	display_category = ITEM_CAT_ARMOR_MASKS
+	result = /obj/item/clothing/mask/rogue/facemask/leather
+	reqs = list(/obj/item/natural/hide/cured = 2)
+	tools = list(/obj/item/needle)
+	craftdiff = 1

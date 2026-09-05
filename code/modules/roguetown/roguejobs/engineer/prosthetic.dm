@@ -1,4 +1,4 @@
-/obj/item/bodypart/proc/prosthetic_attachment(var/mob/living/carbon/human/H, var/mob/user)
+/obj/item/bodypart/proc/prosthetic_attachment(mob/living/carbon/human/H, mob/user)
 	if(!ishuman(H))
 		return
 
@@ -15,34 +15,34 @@
 		user.visible_message(span_notice("[user] attaches [src] to [H]."))
 		return 1
 
-/obj/item/contraption/bronzeprosthetic
+/obj/item/rogueweapon/contraption/bronzeprosthetic
 	name = "bronze prosthetic"
 	desc = "A prosthetic made of bronze. Use it in your hand to determine what limb it will function as."
 	icon = 'icons/roguetown/items/misc.dmi'
 	icon_state = "prb_blank"
 
-/obj/item/contraption/ironprosthetic
+/obj/item/rogueweapon/contraption/ironprosthetic
 	name = "iron prosthetic"
 	desc = "A prosthetic made of iron. Use it in your hand to determine what limb it will function as."
 	icon = 'icons/roguetown/items/misc.dmi'
 	icon_state = "pri_blank"
 	smeltresult = /obj/item/ingot/iron
 
-/obj/item/contraption/steelprosthetic
+/obj/item/rogueweapon/contraption/steelprosthetic
 	name = "steel prosthetic"
 	desc = "A prosthetic made of steel. Use it in your hand to determine what limb it will function as."
 	icon = 'icons/roguetown/items/misc.dmi'
 	icon_state = "prs_blank"
 	smeltresult = /obj/item/ingot/steel
 
-/obj/item/contraption/goldprosthetic
+/obj/item/rogueweapon/contraption/goldprosthetic
 	name = "golden prosthetic"
 	desc = "A prosthetic made of gold. Use it in your hand to determine what limb it will function as."
 	icon = 'icons/roguetown/items/misc.dmi'
 	icon_state = "prc_blank"
 	smeltresult = /obj/item/ingot/gold
 
-/obj/item/contraption/bronzeprosthetic/attack_self(mob/user)
+/obj/item/rogueweapon/contraption/bronzeprosthetic/attack_self(mob/user)
 	. = ..()
 	var/choice = input(user, "Choose the side and the limb") as null|anything in list("Left Arm", "Right Arm", "Left Leg", "Right Leg", "Cancel")
 	switch(choice)
@@ -67,7 +67,7 @@
 			qdel(src)
 			return
 
-/obj/item/contraption/ironprosthetic/attack_self(mob/user)
+/obj/item/rogueweapon/contraption/ironprosthetic/attack_self(mob/user)
 	. = ..()
 	var/choice = input(user, "Choose the side and the limb") as null|anything in list("Left Arm", "Right Arm", "Left Leg", "Right Leg", "Cancel")
 	switch(choice)
@@ -92,7 +92,7 @@
 			qdel(src)
 			return
 
-/obj/item/contraption/steelprosthetic/attack_self(mob/user)
+/obj/item/rogueweapon/contraption/steelprosthetic/attack_self(mob/user)
 	. = ..()
 	var/choice = input(user, "Choose the side and the limb") as null|anything in list("Left Arm", "Right Arm", "Left Leg", "Right Leg", "Cancel")
 	switch(choice)
@@ -117,7 +117,7 @@
 			qdel(src)
 			return
 
-/obj/item/contraption/goldprosthetic/attack_self(mob/user)
+/obj/item/rogueweapon/contraption/goldprosthetic/attack_self(mob/user)
 	. = ..()
 	var/choice = input(user, "Choose the side and the limb") as null|anything in list("Left Arm", "Right Arm", "Left Leg", "Right Leg", "Cancel")
 	switch(choice)
@@ -142,7 +142,7 @@
 			qdel(src)
 			return
 
-/////     ARMS     /////
+/////		ARMS		/////
 
 /obj/item/bodypart/l_arm/prosthetic/woodleft
 	name = "wooden left arm"
@@ -159,7 +159,6 @@
 	max_damage = 20
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 300
-	sellprice = 7 //TA EDIT
 	fingers = FALSE //can't swing weapons but can pick stuff up and punch
 	anvilrepair = /datum/skill/craft/carpentry
 	dismember_wound = /datum/wound/bruise/large
@@ -179,7 +178,6 @@
 	max_integrity = 300
 	brute_reduction = 5
 	burn_reduction = 5
-	sellprice = 30
 	anvilrepair = /datum/skill/craft/engineering
 	smeltresult = /obj/item/ingot/iron
 
@@ -198,7 +196,6 @@
 	max_integrity = 300
 	brute_reduction = 10
 	burn_reduction = 10
-	sellprice = 40
 	anvilrepair = /datum/skill/craft/engineering
 	smeltresult = /obj/item/ingot/steel
 
@@ -217,7 +214,6 @@
 	max_damage = 110
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 350
-	sellprice = 30
 	fingers = TRUE // it acts like a normal arm
 	anvilrepair = /datum/skill/craft/engineering
 	smeltresult = /obj/item/ingot/bronze
@@ -237,7 +233,6 @@
 	w_class = WEIGHT_CLASS_BULKY
 	max_integrity = 300
 	fingers = TRUE
-	sellprice = 70
 	anvilrepair = /datum/skill/craft/engineering
 	smeltresult = /obj/item/ingot/gold
 
@@ -258,7 +253,6 @@
 	max_damage = 40
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 300
-	sellprice = 7 //TA EDIT
 	fingers = FALSE //can't swing weapons but can pick stuff up and punch
 	anvilrepair = /datum/skill/craft/carpentry
 	dismember_wound = /datum/wound/bruise/large
@@ -278,7 +272,6 @@
 	max_integrity = 300
 	brute_reduction = 5
 	burn_reduction = 5
-	sellprice = 30
 	anvilrepair = /datum/skill/craft/engineering
 	smeltresult = /obj/item/ingot/iron
 
@@ -297,7 +290,6 @@
 	max_integrity = 300
 	brute_reduction = 10
 	burn_reduction = 10
-	sellprice = 40
 	anvilrepair = /datum/skill/craft/engineering
 	smeltresult = /obj/item/ingot/steel
 
@@ -316,7 +308,6 @@
 	max_damage = 110
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 350
-	sellprice = 30
 	fingers = TRUE // it acts like a normal arm
 	anvilrepair = /datum/skill/craft/engineering
 	smeltresult = /obj/item/ingot/bronze
@@ -336,14 +327,13 @@
 	w_class = WEIGHT_CLASS_BULKY
 	max_integrity = 300
 	fingers = TRUE
-	sellprice = 70
 	anvilrepair = /datum/skill/craft/engineering
 	smeltresult = /obj/item/ingot/gold
 
 /obj/item/bodypart/r_arm/prosthetic/attack(mob/living/M, mob/user)
 	prosthetic_attachment(M, user)
 
-/////     LEGS     /////
+/////		LEGS		/////
 
 /obj/item/bodypart/l_leg/prosthetic
 	name = "wooden left leg"
@@ -359,9 +349,9 @@
 	brute_reduction = 0
 	burn_reduction = 0
 	max_damage = 40
+	organ_slowdown = 0.05 // -5%
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 300
-	sellprice = 7 //TA EDIT
 	anvilrepair = /datum/skill/craft/carpentry
 	dismember_wound = /datum/wound/bruise/large
 
@@ -377,10 +367,9 @@
 	max_damage = 150
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 300
-	organ_slowdown = 1.2
+	organ_slowdown = 0.2 // -20%
 	brute_reduction = 5
 	burn_reduction = 5
-	sellprice = 30
 	anvilrepair = /datum/skill/craft/engineering
 	smeltresult = /obj/item/ingot/iron
 
@@ -396,10 +385,9 @@
 	max_damage = 200
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 300
-	organ_slowdown = 1.1
+	organ_slowdown = 0.1 // -10%
 	brute_reduction = 10
 	burn_reduction = 10
-	sellprice = 40
 	anvilrepair = /datum/skill/craft/engineering
 	smeltresult = /obj/item/ingot/steel
 
@@ -417,7 +405,7 @@
 	max_damage = 220
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 350
-	sellprice = 30
+	organ_slowdown = 0.15 // -15%
 	anvilrepair = /datum/skill/craft/engineering
 	smeltresult = /obj/item/ingot/bronze
 
@@ -434,7 +422,6 @@
 	w_class = WEIGHT_CLASS_BULKY
 	max_integrity = 300
 	organ_slowdown = 0
-	sellprice = 70
 	anvilrepair = /datum/skill/craft/engineering
 	smeltresult = /obj/item/ingot/gold
 
@@ -453,9 +440,9 @@
 	brute_reduction = 0
 	burn_reduction = 0
 	max_damage = 40
+	organ_slowdown = 0.05 // -5%
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 300
-	sellprice = 7 //TA EDIT
 	anvilrepair = /datum/skill/craft/carpentry
 	dismember_wound = /datum/wound/bruise/large
 
@@ -472,10 +459,9 @@
 	max_damage = 150
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 300
-	organ_slowdown = 1.2
+	organ_slowdown = 0.2 // -20%
 	brute_reduction = 5
 	burn_reduction = 5
-	sellprice = 30
 	anvilrepair = /datum/skill/craft/engineering
 	smeltresult = /obj/item/ingot/iron
 
@@ -492,10 +478,9 @@
 	max_damage = 200
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 300
-	organ_slowdown = 1.1
+	organ_slowdown = 0.1 // -10%
 	brute_reduction = 10
 	burn_reduction = 10
-	sellprice = 40
 	anvilrepair = /datum/skill/craft/engineering
 	smeltresult = /obj/item/ingot/steel
 
@@ -514,7 +499,7 @@
 	max_damage = 220
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 350
-	sellprice = 30
+	organ_slowdown = 0.15 // -15%
 	anvilrepair = /datum/skill/craft/engineering
 	smeltresult = /obj/item/ingot/bronze
 
@@ -532,7 +517,6 @@
 	w_class = WEIGHT_CLASS_BULKY
 	max_integrity = 300
 	organ_slowdown = 0
-	sellprice = 70
 	anvilrepair = /datum/skill/craft/engineering
 	smeltresult = /obj/item/ingot/gold
 

@@ -8,9 +8,17 @@
 	for(var/datum/fellowship/F as anything in GLOB.fellowships)
 		if(F.faction_tag == full_tag)
 			return FALSE
-		if(lowertext(F.name) == lowertext(candidate))
+		if(LOWER_TEXT(F.name) == LOWER_TEXT(candidate))
 			return FALSE
 	return TRUE
+
+/proc/shares_fellowship(mob/living/A, mob/living/B)
+	if(!istype(A) || !istype(B))
+		return FALSE
+	var/datum/fellowship/F = A.current_fellowship
+	if(!F)
+		return FALSE
+	return F == B.current_fellowship
 
 /proc/apply_fellowship_faction(mob/living/summoner, mob/living/summoned)
 	if(!istype(summoner) || !istype(summoned))

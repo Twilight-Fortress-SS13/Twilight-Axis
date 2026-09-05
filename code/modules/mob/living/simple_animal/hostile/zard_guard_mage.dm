@@ -29,7 +29,6 @@
 	minimum_distance = 0
 	limb_destroyer = 1
 	d_intent = INTENT_PARRY
-	defprob = 50
 	faction = list(FACTION_PSY_VAULT_GUARD)
 	footstep_type = FOOTSTEP_MOB_BAREFOOT
 	del_on_death = FALSE
@@ -37,12 +36,13 @@
 	can_have_ai = FALSE //disable native ai
 	AIStatus = AI_OFF
 	ai_controller = /datum/ai_controller/skeleton_ranged/event
+	move_base_delay = MOVEMENT_DELAY_SPD_3
 	melee_cooldown = SKELETON_ATTACK_SPEED
 
 	projectiletype = /obj/projectile/magic/zardman_jailer_mage/lightning
 	projectilesound = list('sound/magic/charged.ogg')
 
-/mob/living/simple_animal/hostile/rogue/zardman_jailer_mage/Initialize()
+/mob/living/simple_animal/hostile/rogue/zardman_jailer_mage/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/ai_aggro_system)
 
@@ -57,6 +57,8 @@
 			return BULLET_ACT_BLOCK
 		if(isliving(target))
 			var/mob/living/L = target
+			if(out_of_effective_range())
+				return
 			L.Immobilize(1, src)
 			playsound(get_turf(src), pick('sound/misc/elec (1).ogg', 'sound/misc/elec (2).ogg', 'sound/misc/elec (3).ogg'), 100, FALSE)
 	qdel(src)
@@ -86,6 +88,8 @@
 			return BULLET_ACT_BLOCK
 		if(isliving(target))
 			var/mob/living/L = target
+			if(out_of_effective_range())
+				return
 			L.Immobilize(1, src)
 			playsound(get_turf(src), pick('sound/misc/elec (1).ogg', 'sound/misc/elec (2).ogg', 'sound/misc/elec (3).ogg'), 100, FALSE)
 	qdel(src)

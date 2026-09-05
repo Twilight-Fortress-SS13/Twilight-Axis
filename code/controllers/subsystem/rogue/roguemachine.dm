@@ -7,13 +7,15 @@ PROCESSING_SUBSYSTEM_DEF(roguemachine)
 	var/list/hermailers = list()
 	var/list/cameras = list()
 	var/list/scomm_machines = list()
-	var/list/broadcaster_machines = list()
 	var/list/stock_machines = list()
 	var/list/noticeboards = list()
 	var/hermailermaster
 	var/list/secret_mail = list() // TA EDIT 
 	var/list/death_queue = list()
 	var/last_death_report
+	var/list/pending_letters = list()
+	var/list/ghost_mailboxes = list()
+	var/list/letter_archive = list()
 	var/obj/item/clothing/head/roguetown/crown/serpcrown/crown
 	var/obj/item/rogueweapon/sword/long/martyr/martyrweapon
 	var/obj/item/key
@@ -24,6 +26,15 @@ PROCESSING_SUBSYSTEM_DEF(roguemachine)
 
 /datum/controller/subsystem/processing/roguemachine/fire(resumed = 0)
 	. = ..()
+	if(pending_letters.len)
+		var/list/arriving = list()
+		for(var/datum/pending_mail/PM as anything in pending_letters)
+			if(world.time >= PM.deliver_at)
+				arriving += PM
+		for(var/datum/pending_mail/PM as anything in arriving)
+			pending_letters -= PM
+			PM.deliver()
+			qdel(PM)
 	if(death_queue.len)
 		if(world.time > last_death_report + 3 SECONDS)
 			last_death_report = world.time

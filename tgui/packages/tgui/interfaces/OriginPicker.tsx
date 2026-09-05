@@ -1,4 +1,10 @@
-import { CSSProperties, ReactNode, useEffect, useMemo, useState } from 'react';
+import {
+  type CSSProperties,
+  type ReactNode,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { Button, Section, Stack } from 'tgui-core/components';
 
 import { resolveAsset } from '../assets';

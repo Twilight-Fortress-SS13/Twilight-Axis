@@ -53,8 +53,12 @@
 /datum/status_effect/buff/hag_boon/storm_rebirth/proc/staggered_strike(mob/living/L, turf/T)
 	if(!T)
 		return
-	var/obj/effect/proc_holder/spell/invoked/thunderstrike/S = new /obj/effect/proc_holder/spell/invoked/thunderstrike()
-	S.cast(list(T), L)
+	for(var/turf/zone_turf in range(2, T))
+		if(!(zone_turf in get_hear(2, T)))
+			continue
+		new /obj/effect/temp_visual/telegraph/pillar/fadein(zone_turf, TELEGRAPH_AREA_DENIAL)
+	playsound(T, 'sound/magic/charging.ogg', 80, TRUE)
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(thunderstrike_erupt), T, L, 2, 50), TELEGRAPH_AREA_DENIAL)
 
 /datum/status_effect/buff/hag_boon/storm_rebirth/proc/revive_owner(mob/living/L)
 	if(!L || L.stat != DEAD)
@@ -67,9 +71,6 @@
 	L.mind.remove_antag_datum(/datum/antagonist/zombie)
 	L.remove_status_effect(/datum/status_effect/debuff/rotted_zombie)
 	L.apply_status_effect(/datum/status_effect/debuff/hag_curse/storm_weakness)
-	#ifdef REVIVE_GRACE
-	L.apply_status_effect(/datum/status_effect/debuff/revive_grace) // TA EDIT
-	#endif
 	L.visible_message(span_boldnotice("[L] wakes up!"))
 
 	spawn_repel_blast(L)
@@ -94,8 +95,8 @@
 	alert_type = /atom/movable/screen/alert/status_effect/buff/natural_communion
 	var/energy_cooldown = 0
 	var/static/list/natural_turfs = list(/turf/open/floor/rogue/dirt, /turf/open/floor/rogue/snow,
-								  /turf/open/floor/rogue/grass, /turf/open/floor/rogue/grassyel, /turf/open/floor/rogue/grassred, /turf/open/floor/rogue/grasscold,
-								  /turf/open/water/swamp,)
+									/turf/open/floor/rogue/grass, /turf/open/floor/rogue/grassyel, /turf/open/floor/rogue/grassred, /turf/open/floor/rogue/grasscold,
+									/turf/open/water/swamp,)
 
 /atom/movable/screen/alert/status_effect/buff/natural_communion
 	name = "Natural Communion"
@@ -146,8 +147,8 @@
 	var/image/moss_image
 
 	var/static/list/natural_turfs = list(/turf/open/floor/rogue/dirt, /turf/open/floor/rogue/snow,
-								  /turf/open/floor/rogue/grass, /turf/open/floor/rogue/grassyel, /turf/open/floor/rogue/grassred, /turf/open/floor/rogue/grasscold,
-								  /turf/open/water/swamp,)
+									/turf/open/floor/rogue/grass, /turf/open/floor/rogue/grassyel, /turf/open/floor/rogue/grassred, /turf/open/floor/rogue/grasscold,
+									/turf/open/water/swamp,)
 
 /atom/movable/screen/alert/status_effect/buff/creeping_moss
 	name = "Healing Moss"
@@ -232,7 +233,7 @@
 /datum/status_effect/buff/hag_boon/creeping_moss/proc/on_attackby(datum/source, obj/item/W, mob/user, params)
 	SIGNAL_HANDLER
 
-	if(user.cmode == TRUE) 
+	if(user.cmode == TRUE)
 		return
 
 	if(!istype(W, /obj/item/flashlight/flare/torch))
@@ -254,7 +255,7 @@
 		return
 
 	user.visible_message(span_notice("[user] begins carefully burning the moss off of [owner] with [W]."), \
-						 span_notice("You begin burning the damp moss off of [owner]."))
+							span_notice("You begin burning the damp moss off of [owner]."))
 
 	if(!do_after(user, 3 SECONDS, target = owner))
 		return

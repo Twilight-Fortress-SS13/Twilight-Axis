@@ -1,4 +1,4 @@
-import { Box, Button, ProgressBar, Section, Slider, Stack } from 'tgui-core/components';
+import { Box, Button, ProgressBar, Slider, Stack } from 'tgui-core/components';
 
 import { useBackend } from '../backend';
 import { Window } from '../layouts';

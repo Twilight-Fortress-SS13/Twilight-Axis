@@ -1,5 +1,5 @@
 /obj/machinery/auto_stonecutter
-	name = "Stone cutter"
+	name = "stonecutter"
 	desc = "Автоматическая машина для резки камня, работает на пружинах и шестернях."
 	icon = 'icons/roguetown/misc/auto.dmi'
 	icon_state = "autochisel"
@@ -8,7 +8,7 @@
 	var/active = FALSE
 	var/idle_ticks = 0
 	var/max_idle_ticks = 5
-	
+
 /obj/machinery/auto_stonecutter/update_icon()
 	icon_state = active ? "autochisel" : "autochisel"
 
@@ -31,7 +31,7 @@
 		return
 
 	var/obj/item/natural/stone/target_stone = null
-	
+
 	for(var/obj/item/natural/stone/S in range(1, src))
 		if(istype(S, /obj/item/natural/stoneblock) || !isturf(S.loc))
 			continue
@@ -42,7 +42,7 @@
 		idle_ticks = 0
 		target_stone.forceMove(src.loc)
 		playsound(src.loc, pick('sound/combat/hits/onrock/onrock (1).ogg', 'sound/combat/hits/onrock/onrock (2).ogg'), 80, TRUE)
-		
+
 		new /obj/item/natural/stoneblock(src.loc)
 		new /obj/effect/decal/cleanable/debris/stony(src.loc)
 		qdel(target_stone)
@@ -60,7 +60,7 @@
 	. += span_info("It will process any raw stones lying nearly on its floor.")
 
 /datum/crafting_recipe/roguetown/engineering/auto_stonecutter
-	name = "Камнерезка"
+	name = "stonecutter"
 	category = "Machines"
 	result = /obj/machinery/auto_stonecutter
 	reqs = list(

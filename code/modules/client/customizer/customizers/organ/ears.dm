@@ -50,7 +50,7 @@
 
 /datum/customizer_choice/organ/ears/tajaran
 	name = "Tabaxi Ears"
-	organ_type = /obj/item/organ/ears/tajaran         // Renamed them IN GAME but in-code they're still 'tajaran' because im afraid of breaking shit
+	organ_type = /obj/item/organ/ears/tajaran			// Renamed them IN GAME but in-code they're still 'tajaran' because im afraid of breaking shit
 	sprite_accessories = list(
 		/datum/sprite_accessory/ears/cat_big,
 		/datum/sprite_accessory/ears/cat_normal,
@@ -86,7 +86,9 @@
 	sprite_accessories = list(
 		/datum/sprite_accessory/ears/elf,
 		/datum/sprite_accessory/ears/elfw,
-		/datum/sprite_accessory/ears/elf_short)
+		/datum/sprite_accessory/ears/elf_short,
+		/datum/sprite_accessory/ears/elf_long,
+		/datum/sprite_accessory/ears/elf_small)
 
 /datum/customizer/organ/ears/elf
 	customizer_choices = list(/datum/customizer_choice/organ/ears/elf)
@@ -100,6 +102,8 @@
 		/datum/sprite_accessory/ears/elf,
 		/datum/sprite_accessory/ears/elfw,
 		/datum/sprite_accessory/ears/elf_short,
+		/datum/sprite_accessory/ears/elf_long,
+		/datum/sprite_accessory/ears/elf_small,
 		/datum/sprite_accessory/ears/wispy,
 		/datum/sprite_accessory/ears/small)
 
@@ -308,8 +312,9 @@
 	sprite_accessories = list(
 		/datum/sprite_accessory/ears/elf,
 		/datum/sprite_accessory/ears/elfw,
-		/datum/sprite_accessory/ears/elf_short
-		)
+		/datum/sprite_accessory/ears/elf_short,
+		/datum/sprite_accessory/ears/elf_long,
+		/datum/sprite_accessory/ears/elf_small)
 
 // ---- Dullahan
 /datum/customizer/organ/ears/dullahan

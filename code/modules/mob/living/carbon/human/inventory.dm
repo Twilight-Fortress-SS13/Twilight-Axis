@@ -131,8 +131,6 @@
 		if(SLOT_GLASSES)
 			glasses = I
 			var/obj/item/clothing/glasses/G = I
-			if(G.glass_colour_type)
-				update_glasses_color(G, 1)
 			if(G.tint)
 				update_tint()
 			if(G.vision_correction)
@@ -233,6 +231,8 @@
 		. += thing?.slowdown
 
 /mob/living/carbon/human/doUnEquip(obj/item/I, force, newloc, no_move, invdrop = TRUE, silent = FALSE)
+	if(I && no_move && !force && HAS_TRAIT(I, TRAIT_NODROP) && HAS_TRAIT(src, TRAIT_CONJURED_SUMMON))
+		force = TRUE
 	var/index = get_held_index_of_item(I)
 	. = ..() //See mob.dm for an explanation on this and some rage about people copypasting instead of calling ..() like they should.
 	if(!. || !I)
@@ -274,8 +274,6 @@
 	else if(I == glasses)
 		glasses = null
 		var/obj/item/clothing/glasses/G = I
-		if(G.glass_colour_type)
-			update_glasses_color(G, 0)
 		if(G.tint)
 			update_tint()
 		if(G.vision_correction)
@@ -349,6 +347,8 @@
 		if(!QDELETED(src))
 			update_inv_mouth()
 
+	worn_ac_dirty = TRUE
+
 	// Armor class warning — must run after slot vars are nulled so check_armor_skill() sees the correct state
 	if(!QDELETED(src) && istype(I, /obj/item/clothing))
 		var/obj/item/clothing/C = I
@@ -394,6 +394,9 @@
 
 	. = O.equip(src, visualsOnly)
 	if(!visualsOnly)
+		// Recalculate pain threshold for NPC since they set STAWIL directly
+		if(ai_controller)
+			recalculate_pain_threshold()
 		if(!client && !mind)
 			taints_loot = TRUE
 		if(taints_loot)
@@ -404,6 +407,12 @@
 		if(I.no_loot_taint)
 			continue
 		I.mark_as_looted()
+
+/mob/living/carbon/human/proc/flag_gear_as_worn()
+	for(var/obj/item/I in get_all_gear())
+		if(!istype(I, /obj/item/clothing) && !istype(I, /obj/item/rogueweapon) && !istype(I, /obj/item/gun) && !istype(I, /obj/item/storage))
+			continue
+		I.mark_as_worn()
 
 
 //delete all equipment without dropping anything
@@ -494,46 +503,46 @@
 	stored.attack_hand(src) // take out thing from belt
 
 /mob/living/carbon/human/proc/smart_equipcloak() // put held thing in cloak or take most recent item out of cloak
-    if(incapacitated())
-        return
-    var/obj/item/thing = get_active_held_item()
-    var/obj/item/equipped_cloak = get_item_by_slot(SLOT_CLOAK)
-    if(equip_scabbard(thing, equipped_cloak, SLOT_CLOAK))
-        return
-    if(!equipped_cloak) // We also let you equip a cloak like this
-        if(!thing)
-            to_chat(src, span_warning("I have no cloak to take something out of!"))
-            return
-        if(equip_to_slot_if_possible(thing, SLOT_CLOAK))
-            update_inv_hands()
-        return
-    if(!SEND_SIGNAL(equipped_cloak, COMSIG_CONTAINS_STORAGE)) // not a storage item
-        if(!thing)
-            equipped_cloak.attack_hand(src)
-        else
-            to_chat(src, span_warning("I can't fit anything in!"))
-        return
-    if(thing) // put thing in cloak
-        if(thing.inv_storage_delay)
-            if(!move_after(src, thing.inv_storage_delay, target = thing, progress = TRUE))
-                return
-        if(!SEND_SIGNAL(equipped_cloak, COMSIG_TRY_STORAGE_INSERT, thing, src))
-            to_chat(src, span_warning("I can't fit anything in!"))
-        return
-    if(!equipped_cloak.contents.len) // nothing to take out
-        to_chat(src, span_warning("There's nothing in your cloak to take out!"))
-        return
-    var/obj/item/stored = equipped_cloak.contents[equipped_cloak.contents.len]
-    if(!stored || stored.on_found(src))
-        return
-    if(istype(stored, /obj/item/rogueweapon/scabbard))
-        var/obj/item/rogueweapon/scabbard/scab = stored
-        if(scab.hol_comp.sheathed)
-            stored.attack_right(src)
-            return
-    stored.attack_hand(src) // take out thing from cloak
+	if(incapacitated())
+		return
+	var/obj/item/thing = get_active_held_item()
+	var/obj/item/equipped_cloak = get_item_by_slot(SLOT_CLOAK)
+	if(equip_scabbard(thing, equipped_cloak, SLOT_CLOAK))
+		return
+	if(!equipped_cloak) // We also let you equip a cloak like this
+		if(!thing)
+			to_chat(src, span_warning("I have no cloak to take something out of!"))
+			return
+		if(equip_to_slot_if_possible(thing, SLOT_CLOAK))
+			update_inv_hands()
+		return
+	if(!SEND_SIGNAL(equipped_cloak, COMSIG_CONTAINS_STORAGE)) // not a storage item
+		if(!thing)
+			equipped_cloak.attack_hand(src)
+		else
+			to_chat(src, span_warning("I can't fit anything in!"))
+		return
+	if(thing) // put thing in cloak
+		if(thing.inv_storage_delay)
+			if(!move_after(src, thing.inv_storage_delay, target = thing, progress = TRUE))
+				return
+		if(!SEND_SIGNAL(equipped_cloak, COMSIG_TRY_STORAGE_INSERT, thing, src))
+			to_chat(src, span_warning("I can't fit anything in!"))
+		return
+	if(!equipped_cloak.contents.len) // nothing to take out
+		to_chat(src, span_warning("There's nothing in your cloak to take out!"))
+		return
+	var/obj/item/stored = equipped_cloak.contents[equipped_cloak.contents.len]
+	if(!stored || stored.on_found(src))
+		return
+	if(istype(stored, /obj/item/rogueweapon/scabbard))
+		var/obj/item/rogueweapon/scabbard/scab = stored
+		if(scab.hol_comp.sheathed)
+			stored.attack_right(src)
+			return
+	stored.attack_hand(src) // take out thing from cloak
 
-/mob/living/carbon/human/proc/equip_scabbard(var/obj/item/thing, var/obj/item/equipped, slot_id)
+/mob/living/carbon/human/proc/equip_scabbard(obj/item/thing, obj/item/equipped, slot_id)
 	var/obj/item/use_thing = null
 
 	if(!equipped)

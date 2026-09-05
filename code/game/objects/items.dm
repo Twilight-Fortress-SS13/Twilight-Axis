@@ -89,7 +89,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	var/inv_storage_delay = 0 //In deciseconds, how long an item takes to store in/pull out of a mob storage item (like, bags).
 	var/edelay_type = 1 //if 1, can be moving while equipping (for helmets etc)
 	var/equip_delay_other = 20 //In deciseconds, how long an item takes to put on another person
-	var/strip_delay = 40 //In deciseconds, how long an item takes to remove from another person
+	var/strip_delay = STRIP_DELAY_NORMAL //How long an item takes to remove from another person. Use the STRIP_DELAY_* tiers.
 	var/breakouttime = 0 // greater than 15 str get this isnstead
 	var/slipouttime = 0
 
@@ -102,6 +102,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 
 	var/datum/embedding_behavior/embedding
 	var/is_embedded = FALSE
+	var/atom/embedded_host = null
 
 	var/flags_cover = 0 //for flags such as GLASSESCOVERSEYES
 	var/heat = 0
@@ -140,7 +141,10 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 
 	var/canMouseDown = FALSE
 	var/can_parry = FALSE
+	/// Weapon's actual skill
 	var/datum/skill/associated_skill
+	/// Secondary skills with factored effectiveness
+	var/list/secondary_skills
 
 	var/list/possible_item_intents = list(/datum/intent/use)
 	var/saved_intent_index = 1 // Stores the last selected intent index when item is dropped
@@ -158,7 +162,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	/// Original values for vars overridden by the active alt grip state.
 	var/list/alt_grip_restore_vars
 	///intents while gripped, replacing main intents. if list != null, will allow the weapon to be wielded. set to null to remove wielding.
-	var/list/gripped_intents 
+	var/list/gripped_intents
 	var/force_wielded = 0
 	var/gripsprite = FALSE //use alternate grip sprite for inhand
 	var/wieldsound = FALSE
@@ -280,6 +284,8 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	/// "Lesser" silver items still count as silver, but their bite against the silver-weak is muted: no pickup ignition,
 	/// no force-undisguise on hit, and only a slow accumulation of (non-igniting) sunder stacks while held/worn.
 	var/is_lesser_silver = FALSE
+	/// PVE-only effects - for stuff like the cleric longsword, which is lorewise just blessed, not actual silver.
+	var/is_even_lesser_silver = FALSE
 	var/last_used = 0
 	var/override_state = null
 	var/icon_x_offset = 0
@@ -332,6 +338,9 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 					B.apply()
 				if (obj_broken)
 					update_damaged_state()
+			if(override_state)
+				icon_state = "[override_state][gripsprite ? "1" : ""]"
+			refresh_detail_overlay()
 			return
 		if(wielded)
 			if(gripsprite)
@@ -345,6 +354,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 					update_damaged_state()
 			if(override_state)
 				icon_state = "[override_state]1"
+			refresh_detail_overlay()
 			return
 		if(gripsprite)
 			if(!override_state)
@@ -356,10 +366,11 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 				B.remove()
 				B.generate_appearance()
 				B.apply()
+			refresh_detail_overlay()
 			if (obj_broken)
 				update_damaged_state()
 
-/obj/item/Initialize()
+/obj/item/Initialize(mapload)
 	if (attack_verb)
 		attack_verb = typelist("attack_verb", attack_verb)
 
@@ -440,11 +451,12 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	for(var/X in actions)
 		qdel(X)
 	if(is_embedded)
-		if(isbodypart(loc))
-			var/obj/item/bodypart/embedded_part = loc
+		var/atom/host = embedded_host || loc
+		if(isbodypart(host))
+			var/obj/item/bodypart/embedded_part = host
 			embedded_part.remove_embedded_object(src)
-		else if(isliving(loc))
-			var/mob/living/embedded_mob = loc
+		else if(isliving(host))
+			var/mob/living/embedded_mob = host
 			embedded_mob.simple_remove_embedded_object(src)
 	return ..()
 
@@ -497,15 +509,15 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		to_chat(usr, output)
 
 	if(href_list["explaindef"])
-		var/output = span_info("Each point of defense adds 10% to your parry chance.\n\
-		Your parry chance is increased by 20% per skill level in the weapon, and reduced by 20% per skill level of your attacker.\n\
+		var/output = span_info("Each point of defense adds [PARRY_PER_WDEF_POINT]% to your parry chance.\n\
+		Your parry chance is increased by [PARRY_PER_SKILL_LEVEL]% per skill level in the weapon, and reduced by [PARRY_PER_SKILL_LEVEL]% per skill level of your attacker.\n\
 		Defense is often increased when you wield a weapon two-handed.")
 		if(!usr.client.prefs.no_examine_blocks)
 			output = examine_block(output)
 		to_chat(usr, output)
 
 	if(href_list["explainlength"])
-		var/output = span_info("A short weapon gains +10% accuracy on hitting any bodypart and can only attack the legs from the ground.\n\
+		var/output = span_info("A short weapon gains +[ACC_SHORT_WEAPON_BONUS]% accuracy on hitting any bodypart and can only attack the legs from the ground.\n\
 		A long weapon can hit chest or below from the ground, and can hit the feet while standing.\n\
 		A great weapon can hit any bodypart from anywhere.")
 		if(!usr.client.prefs.no_examine_blocks)
@@ -524,8 +536,8 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 			output = examine_block(output)
 		to_chat(usr, output)
 
-	var/additional_explanation = "This determines the damage dealt by this weapon. Force is increased / decreased by strength above / below 10 by 10% per point of difference,\n\
-	Each point of strength at 15 or above only applies an additional +3% damage, except on punches. Damage is also multiplied by damage factor on intents. \n\
+	var/additional_explanation = "This determines the damage dealt by this weapon. Force is increased / decreased by strength above / below 10 by [round(STRENGTH_MULT * 100)]% per point of difference,\n\
+	Each point of strength at [STRENGTH_SOFTCAP + 1] or above only applies an additional +[round(STRENGTH_CAPPEDMULT * 100)]% damage, except on punches. Damage is also multiplied by damage factor on intents. \n\
 	Both multipliers are applied to the base number, and do not multiply each other. Reduced sharpness decreases the contribution of strength.\n\
 	Armor penetration on an intent determines whether an attack penetrates the target's armor. Armor penetrating attacks deal less damage to the armor itself."
 	if(href_list["showforce"])
@@ -570,19 +582,21 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		to_chat(usr, output)
 
 	if(href_list["explainpenfactor"])
-		var/output = span_info("Armor Penetration determines whether this attack goes through armor.\n\
+		var/output = span_info("Armor Penetration determines how much of this attack goes through armor.\n\
 		Each armor piece has a blocking tier (Light, Medium, Heavy, Blacksteel).\n\
-		Penetration > armor tier: 100% damage goes through.\n\
-		Penetration = armor tier: 20% damage through. Armor absorbs remaining %.\n\
-		Penetration < armor tier: Fully blocked.\n\
+		Penetration below the armor tier: fully blocked.\n\
+		Penetration at or above the armor tier: Only a portion go through, and the armor absorbs the rest as integrity damage.\n\
+		The wider the gap between your penetration and the armor tier, the more damage gets through. Strength is used to determine how much of the penetration go through. Swift Balance weapon may use Speed instead.\n\
+		A dulled weapon penetrates worse, and a chunked one cannot penetrate at all.\n\
+		Piercing damage (arrows, bolts) ignores those modifiers and uses fixed amounts based on whether penetration matches or exceeds the tier.\n\
 		All attacks go through armor with no protection of that type, including attacks with no armor penetration.\n\
-		Blunt / Burn / Acid attacks bypass this system entirely and use damage reduction instead.")
+		Blunt / Burn / Bullet attacks bypass this system entirely and use damage reduction instead.")
 		if(!usr.client.prefs.no_examine_blocks)
 			output = examine_block(output)
 		to_chat(usr, output)
 
 	if(href_list["explaindemolitionmod"])
-		var/output = span_info("Multiplies the damage done to objects when hitting them.\nAlso multiplies durability damage dealt to shields on parry (if higher than Integrity Damage).")
+		var/output = span_info("Multiplies the damage done to objects when hitting them.\nAlso multiplies durability damage dealt to shields on parry (if higher than Integrity Damage).\nIntegrity Damage below 100% applies the same multiplier to simple animal part damage.")
 		if(!usr.client.prefs.no_examine_blocks)
 			output = examine_block(output)
 		to_chat(usr, output)
@@ -658,8 +672,18 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 			var/percent = round(((blade_int / max_blade_int) * 100), 1)
 			inspec += "[percent]% ([blade_int]) <span class='info'><a href='?src=[REF(src)];explainsharpness=1'>{?}</a></span>"
 
-		if(associated_skill && associated_skill.name)
-			inspec += "\n<b>SKILL:</b> [associated_skill.name] <span class='info'><a href='?src=[REF(src)];explainskill=1'>{?}</a></span>"
+		if(has_wskill())
+			var/list/lines = list()
+			if(associated_skill)
+				var/datum/skill/primary = associated_skill
+				lines += "- [initial(primary.name)] (1x)"
+			if(length(secondary_skills))
+				var/list/ordered = sortTim(secondary_skills.Copy(), /proc/cmp_numeric_dsc, TRUE)
+				for(var/sk in ordered)
+					var/datum/skill/secondary = sk
+					lines += "- [initial(secondary.name)] ([ordered[sk]]x)"
+				LAZYCLEARLIST(ordered)
+			inspec += "\n<details><summary><b>ASSOCIATED SKILLS</b> <span class='info'><a href='?src=[REF(src)];explainskill=1'>{?}</a></span></summary>[jointext(lines, "<br>")]</details>"
 
 		if(istype(src, /obj/item/rogueweapon))
 			var/obj/item/rogueweapon/W = src
@@ -721,16 +745,21 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		if(istype(src, /obj/item/clothing))	//awful
 			var/obj/item/clothing/C = src
 			var/str
+			var/spdcap
 			switch(C.armor_class)
 				if(ARMOR_CLASS_NONE)
 					str = "None"
 				if(ARMOR_CLASS_LIGHT)
 					str = "Light"
+					spdcap = AC_LIGHT_SPDCAP
 				if(ARMOR_CLASS_MEDIUM)
 					str = "Medium"
+					spdcap = AC_MEDIUM_SPDCAP
 				if(ARMOR_CLASS_HEAVY)
 					str = "Heavy"
+					spdcap = AC_HEAVY_SPDCAP
 			inspec += "\n<b>ARMOR CLASS:</b> [str]"
+			inspec += "\n<b>MOVEMENT SPD CAP:</b> [spdcap ? spdcap : "None"]"
 
 		var/output = inspec.Join()
 		if(!usr.client.prefs.no_examine_blocks)
@@ -844,25 +873,6 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 /obj/item/proc/allow_attack_hand_drop(mob/user)
 	return TRUE
 
-/obj/item/attack_paw(mob/user)
-	if(!user)
-		return
-	if(anchored)
-		return
-
-	SEND_SIGNAL(loc, COMSIG_TRY_STORAGE_TAKE, src, user.loc, TRUE)
-
-	if(throwing)
-		throwing.finalize(FALSE)
-	if(loc == user)
-		if(!user.temporarilyRemoveItemFromInventory(src))
-			return
-
-	pickup(user)
-	add_fingerprint(user)
-	if(!user.put_in_active_hand(src, FALSE, FALSE))
-		user.dropItemToGround(src)
-
 /obj/item/proc/GetDeconstructableContents()
 	return GetAllContents() - src
 
@@ -883,6 +893,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 
 /obj/item/proc/dropped(mob/user, silent = FALSE)
 	SHOULD_CALL_PARENT(TRUE)
+	end_spin()
 	for(var/X in actions)
 		var/datum/action/A = X
 		A.Remove(user)
@@ -979,7 +990,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 //If you are making custom procs but would like to retain partial or complete functionality of this one, include a 'return ..()' to where you want this to happen.
 //Set disable_warning to TRUE if you wish it to not give you outputs.
 /obj/item/proc/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
-	if((is_silver || smeltresult == /obj/item/ingot/silver) && !is_lesser_silver && (HAS_TRAIT(M, TRAIT_SILVER_WEAK) &&  !M.has_status_effect(STATUS_EFFECT_ANTIMAGIC)))
+	if((is_silver || (is_even_lesser_silver && is_npc(M)) || smeltresult == /obj/item/ingot/silver) && !is_lesser_silver && (HAS_TRAIT(M, TRAIT_SILVER_WEAK) &&	!M.has_status_effect(STATUS_EFFECT_ANTIMAGIC)))
 		var/datum/antagonist/vampire/V_lord = M.mind?.has_antag_datum(/datum/antagonist/vampire/)
 		if(V_lord?.generation >= GENERATION_METHUSELAH)
 			return
@@ -1074,7 +1085,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	else
 		M.take_bodypart_damage(7)
 
-	log_combat(user, M, "attacked", "[name]", "(INTENT: [uppertext(user.used_intent)])")
+	log_combat(user, M, "attacked", "[name]", intent=user.used_intent?.name)
 
 	var/obj/item/organ/eyes/eyes = M.getorganslot(ORGAN_SLOT_EYES)
 	if (!eyes)
@@ -1243,31 +1254,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		else
 			return 0
 
-	if(nuforce < 10)
-		return 0
-
-	var/probability = nuforce * (total_dam / affecting.max_damage)
-	var/hard_dismember = HAS_TRAIT(affecting, TRAIT_HARDDISMEMBER)
-	var/easy_dismember = affecting.rotted || affecting.skeletonized || HAS_TRAIT(affecting, TRAIT_EASYDISMEMBER)
-	var/easy_decapitation = HAS_TRAIT(affecting, TRAIT_EASYDECAPITATION)
-	if(affecting.owner)
-		if(!hard_dismember)
-			hard_dismember = HAS_TRAIT(affecting.owner, TRAIT_HARDDISMEMBER)
-		if(!easy_dismember)
-			easy_dismember = HAS_TRAIT(affecting.owner, TRAIT_EASYDISMEMBER)
-		if(!easy_decapitation)
-			easy_decapitation = HAS_TRAIT(affecting.owner, TRAIT_EASYDECAPITATION)
-	// If you don't have easy dismember, then you must hit 90% damage or more to dismember a limb.
-	if((affecting.get_damage() <= (affecting.max_damage * CRIT_DISMEMBER_DAMAGE_THRESHOLD)) && !easy_dismember)
-		return FALSE
-	if(easy_decapitation && zone_sel == BODY_ZONE_PRECISE_NECK)
-		// May want to include hard dismember compatibility.
-		return probability * 1.5
-	if(hard_dismember)
-		return min(probability, 5)
-	else if(easy_dismember)
-		return probability * 1.5
-	return probability
+	return affecting.dismemberment_chance_from_force(nuforce, zone_sel)
 
 /obj/item/proc/get_dismember_sound()
 	if(damtype == BURN)
@@ -1331,13 +1318,13 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 /obj/item/proc/grind_requirements() //Used to check for extra requirements for grinding an object
 	return TRUE
 
- //Called BEFORE the object is ground up - use this to change grind results based on conditions
- //Use "return -1" to prevent the grinding from occurring
+//Called BEFORE the object is ground up - use this to change grind results based on conditions
+//Use "return -1" to prevent the grinding from occurring
 /obj/item/proc/on_grind()
 
 /obj/item/proc/on_juice()
 
-/obj/item/proc/get_force_string(var/force)
+/obj/item/proc/get_force_string(force)
 	switch(force)
 		if(0 to 9)
 			return "Puny"
@@ -1354,7 +1341,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		else
 			return "Mighty"
 
-/obj/item/proc/get_falloff_string(var/falloff)
+/obj/item/proc/get_falloff_string(falloff)
 	switch(falloff)
 		if(0 to 0.25)
 			return "Major"
@@ -1469,6 +1456,20 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		return
 	return ..()
 
+/obj/item/proc/is_smeltable()
+	return !!smeltresult
+
+/obj/item/proc/is_salvageable()
+	return sewrepair && salvage_result && (salvage_amount > 0)
+
+/obj/item/proc/matches_loot_filter(loot_filter)
+	switch(loot_filter)
+		if(LOOT_FILTER_FABRIC)
+			return is_salvageable()
+		if(LOOT_FILTER_SMELT)
+			return is_smeltable()
+	return TRUE
+
 /obj/item/proc/canStrip(mob/stripper, mob/owner)
 	return !HAS_TRAIT(src, TRAIT_NODROP)
 
@@ -1504,8 +1505,8 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	if (obj_broken)
 		to_chat(user, span_warning("It's completely broken."))
 		return FALSE
-	if (istype(src, /obj/item/contraption))
-		var/obj/item/contraption/i = src
+	if (istype(src, /obj/item/rogueweapon/contraption/pick))
+		var/obj/item/rogueweapon/contraption/pick/i = src
 		if (i.current_charge <= 0)
 			to_chat(user, span_warning("Not charged."))
 			return FALSE
@@ -1578,8 +1579,6 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	if(user.get_active_held_item() == src)
 		user.update_a_intents()
 	user.changeNext_move(CLICK_CD_RAPID)
-	if(override_state)
-		apply_override_state(override_state)
 	return TRUE
 
 /obj/item/proc/altgrip(mob/living/carbon/user)
@@ -1638,7 +1637,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		var/obj/item/clothing/C = src
 		if(C.armor)
 			var/datum/armor/def_armor = C.armor
-			return def_armor.blunt || def_armor.slash || def_armor.stab || def_armor.piercing
+			return def_armor.blunt || def_armor.slash || def_armor.stab || def_armor.piercing || def_armor.fire || def_armor.bullet
 
 	return FALSE
 
@@ -1648,14 +1647,13 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		var/obj/item/clothing/C = src
 		if(C.armor)
 			var/datum/armor/def_armor = C.armor
-			if(!def_armor.blunt && !def_armor.slash && !def_armor.stab && !def_armor.piercing)
+			if(!def_armor.blunt && !def_armor.slash && !def_armor.stab && !def_armor.piercing && !def_armor.fire && !def_armor.bullet)
 				str += "<b>NO ARMOR!</b>"
 			else
 				var/defense = "[SPAN_TOOLTIP("Each tier increases effective HP of the armor by 20%. Absorbed attacks never reach HP. The armor must be broken first.", "<u><b>ABSORB:</b></u>")] [colorgrade_rating("BLUNT", def_armor.blunt, elaborate = TRUE, max_tier = 5)]"
 				defense += "<br>"
 				defense += "[SPAN_TOOLTIP("Each tier reduces damage by 20% of base. Reduced damage still reaches HP. Armor absorbs what was blocked.", "<u><b>REDUCE:</b></u>")] [colorgrade_rating("BURN", def_armor.fire, elaborate = TRUE, max_tier = 5)]"
-				defense += " | [colorgrade_rating("ACID", def_armor.acid, elaborate = TRUE, max_tier = 5)]"
-				defense += " | [colorgrade_rating("BULLET", def_armor.bullet, elaborate = TRUE, max_tier = 5)]" //TA EDIT
+				defense += " | [colorgrade_rating("BULLET", def_armor.bullet, elaborate = TRUE, max_tier = 5)]"
 				defense += "<br>"
 				defense += "[SPAN_TOOLTIP("Blocks attacks below this tier (Armor takes all damage). Same tier penetrates 20% (80% goes to armor). Exceeding tier penetrates fully.", "<u><b>BLOCK:</b></u>")] "
 				defense += "[colorgrade_rating("SLASH", def_armor.slash, elaborate = TRUE)] | "
@@ -1761,7 +1759,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 
 /obj/item/proc/apply_quality(mob/crafter, skill_path, forced_tier = null)
 	var/tier
-	if(forced_tier != null)
+	if(!isnull(forced_tier))
 		tier = forced_tier
 	else
 		var/skill_level = 0
@@ -1825,7 +1823,10 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 			prefix = ITEM_QUALITY_PREFIX_MASTERWORK
 	if(prefix)
 		name = "[prefix] [name]"
-	if(initial(sellprice) > 0)
+	if(!sellprice && !initial(sellprice) && !static_price)
+		sellprice = GLOB.derived_sellprices?[type] || lookup_derived_subtype_price(type)
+		randomize_price()
+	if(sellprice > 0)
 		sellprice = max(1, round(sellprice * ITEM_QUALITY_MULT(tier)))
 	return tier
 
@@ -1843,6 +1844,24 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	item_quality = ITEM_QUALITY_STANDARD
 	name = replacetext(name, "[ITEM_QUALITY_PREFIX_LOOTED] ", "")
 
+// Do not rename the item
+/obj/item/proc/mark_as_worn()
+	if(worn_out || looted || no_loot_taint)
+		return
+	if(item_quality != ITEM_QUALITY_STANDARD)
+		return
+	worn_out = TRUE
+	has_item_quality = TRUE
+	item_quality = ITEM_QUALITY_WORN
+
+/obj/item/proc/unmark_as_worn()
+	if(!worn_out)
+		return
+	worn_out = FALSE
+	item_quality = ITEM_QUALITY_STANDARD
+	if(!initial(has_item_quality))
+		has_item_quality = FALSE
+
 /obj/item/proc/update_force_dynamic()
 	force_dynamic = (wielded ? force_wielded : force)
 
@@ -1854,3 +1873,138 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 
 /obj/item/proc/ai_withdraw_item(obj/item/it, mob/living/user)
 	return FALSE
+
+/** Does this item have an important, immediately notable quality (such as being heretical)?
+*	If it is, this should to return a list containing:
+* - First: A highlight status (see `code\__DEFINES\highlight_examine_defines.dm`).
+* - Second: A short description explaining in-character why this item has that status.
+*
+* When set, highlights the item's mob examine name/tooltip with obvious heretical flavor when worn/held.
+*
+* If this returns null, the item will not be shown as heretical.*/
+/obj/item/proc/get_examine_highlight_status()
+	return null
+
+/** Returns an HTML-formatted string explaining how/why this item has the highlight status it does.
+* - `examine_highlight_status`: This item's examine highlight status (see `proc/get_examine_highlight_status()`).
+* - `itis`: Determines if the string will start with "It is".
+* - `allcaps`: Determines if the returned string will be in allcaps.
+*/
+/obj/item/proc/get_examine_highlight_description(list/examine_highlight_status, itis = FALSE, allcaps = TRUE)
+	if(examine_highlight_status)
+		var/severity = examine_highlight_status[1]
+		var/heresy_desc = examine_highlight_status[2]
+		if(!severity || !heresy_desc)
+			return null
+		var/highlight_itis = "[itis ? "It is " : ""]<b>[get_examine_highlight_adjective(severity)]</b>"
+		return get_examine_highlight_labeled_string(severity, "[allcaps ? uppertext(highlight_itis) : highlight_itis]: [allcaps ? uppertext(heresy_desc) : heresy_desc]")
+	return null
+
+/// Returns `label_string` HTML formatted depending on the provided highlight status (see `code\__DEFINES\highlight_examine_defines.dm`).
+/obj/item/proc/get_examine_highlight_labeled_string(examine_highlight_type, label_string)
+	if(!examine_highlight_type || !label_string)
+		return null
+	var/highlight_color = get_examine_highlight_color(examine_highlight_type)
+	var/highlight_symbol = get_examine_highlight_symbol(examine_highlight_type)
+	return "<font color = '[highlight_color]'>[highlight_symbol] [label_string] [highlight_symbol]</font>"
+
+/// Returns a full HTML-formatted tooltip string whose contents depend on the given highlight status type (See `proc/get_examine_highlight_status()` and `code\__DEFINES\highlight_examine_defines.dm`).
+/obj/item/proc/get_examine_highlight_tooltip_string(list/examine_highlight_status)
+	if(!examine_highlight_status)
+		return null
+	var/highlight_reason = get_examine_highlight_description(examine_highlight_status)
+	var/highlight_explanation = get_examine_highlight_explanation(examine_highlight_status[1])
+
+	return "[highlight_reason]<br>[highlight_explanation]"
+
+/// See `proc/get_examine_highlight_status()` and `code\__DEFINES\highlight_examine_defines.dm`.
+/obj/item/proc/get_examine_highlight_adjective(highlight_type)
+	switch(highlight_type)
+		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING)
+			return "HERETICAL"
+		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS)
+			return "SUSPICIOUS"
+		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD)
+			return "Odd"
+		if(EXAMINEHIGHLIGHT_VIBE_FRIEND)
+			return "Sworn Ally"
+		if(EXAMINEHIGHLIGHT_VIBE_FOE)
+			return "Sworn Enemy"
+		if(EXAMINEHIGHLIGHT_VIBE_CROWN)
+			return "Divine"
+		if(EXAMINEHIGHLIGHT_VIBE_GOLGATHA)
+			return "Blessed"
+		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_VERYODD)
+			return "ALARMINGLY ODD"
+	return null
+
+/// See `proc/get_examine_highlight_status()` and `code\__DEFINES\highlight_examine_defines.dm`.
+/obj/item/proc/get_examine_highlight_explanation(highlight_type)
+	switch(highlight_type)
+		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING)
+			return EXAMINEHIGHLIGHT_TOOLTIP_HERESYSEVERITY_ALARMING
+		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS)
+			return EXAMINEHIGHLIGHT_TOOLTIP_HERESYSEVERITY_SUSPICIOUS
+		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD)
+			return EXAMINEHIGHLIGHT_TOOLTIP_HERESYSEVERITY_ODD
+		if(EXAMINEHIGHLIGHT_VIBE_FRIEND)
+			return EXAMINEHIGHLIGHT_TOOLTIP_VIBE_FRIEND
+		if(EXAMINEHIGHLIGHT_VIBE_FOE)
+			return EXAMINEHIGHLIGHT_TOOLTIP_VIBE_FOE
+		if(EXAMINEHIGHLIGHT_VIBE_CROWN)
+			return EXAMINEHIGHLIGHT_TOOLTIP_VIBE_CROWN
+		if(EXAMINEHIGHLIGHT_VIBE_GOLGATHA)
+			return EXAMINEHIGHLIGHT_TOOLTIP_VIBE_GOLGATHA
+		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_VERYODD)
+			return EXAMINEHIGHLIGHT_TOOLTIP_HERESYSEVERITY_VERYODD
+	return null
+
+/// See `proc/get_examine_highlight_status()` and `code\__DEFINES\highlight_examine_defines.dm`.
+/obj/item/proc/get_examine_highlight_color(highlight_type)
+	switch(highlight_type)
+		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING)
+			return COLOR_HERESYSEVERITY_ALARMING
+		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS)
+			return COLOR_HERESYSEVERITY_SUSPICIOUS
+		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD)
+			return COLOR_HERESYSEVERITY_ODD
+		if(EXAMINEHIGHLIGHT_VIBE_FRIEND)
+			return COLOR_VIBE_FRIEND
+		if(EXAMINEHIGHLIGHT_VIBE_FOE)
+			return COLOR_VIBE_FOE
+		if(EXAMINEHIGHLIGHT_VIBE_CROWN)
+			return COLOR_VIBE_CROWN
+		if(EXAMINEHIGHLIGHT_VIBE_GOLGATHA)
+			return COLOR_VIBE_GOLGATHA
+		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_VERYODD)
+			return COLOR_HERESYSEVERITY_VERYODD //Its meant to be a double-take. Intentional.
+	return null
+
+/// See `proc/get_examine_highlight_status()` and `code\__DEFINES\highlight_examine_defines.dm`.
+/obj/item/proc/get_examine_highlight_symbol(highlight_type)
+	switch(highlight_type)
+		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING)
+			return EXAMINEHIGHLIGHT_SYMBOL_HERESYSEVERITY_ALARMING
+		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS)
+			return EXAMINEHIGHLIGHT_SYMBOL_HERESYSEVERITY_SUSPICIOUS
+		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD)
+			return EXAMINEHIGHLIGHT_SYMBOL_HERESYSEVERITY_ODD
+		if(EXAMINEHIGHLIGHT_VIBE_FRIEND)
+			return SYMBOL_VIBE_FRIEND
+		if(EXAMINEHIGHLIGHT_VIBE_FOE)
+			return SYMBOL_VIBE_FOE
+		if(EXAMINEHIGHLIGHT_VIBE_CROWN)
+			return SYMBOL_VIBE_CROWN
+		if(EXAMINEHIGHLIGHT_VIBE_GOLGATHA)
+			return SYMBOL_VIBE_GOLGATHA
+		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_VERYODD)
+			return EXAMINEHIGHLIGHT_SYMBOL_HERESYSEVERITY_VERYODD //Its meant to be a double-take. Intentional.
+	return null
+
+/obj/item/can_zFall(turf/source, levels, turf/target, direction)
+	if(item_flags & FLOATING_ITEM)
+		return FALSE
+	. = ..()
+
+/obj/item/proc/remove_floating() // needed for timers
+	item_flags &= ~FLOATING_ITEM

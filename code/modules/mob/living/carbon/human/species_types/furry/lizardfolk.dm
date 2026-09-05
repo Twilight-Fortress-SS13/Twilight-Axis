@@ -7,13 +7,12 @@
 	origin_default = /datum/virtue/origin/racial/lirvas
 	origin = "Lirvas"
 	base_name = "Zard"
-	desc = "<b>Zardman</b><br>\
-	Zardmen are semi-aquatic reptilian humanoids. \
+	desc_title = "Zardman"
+	desc = "Zardmen are semi-aquatic reptilian humanoids. \
 	Their flesh is covered in scales varying in color from dark green to shades of brown and gray. \
 	Taller than humans and powerfully built, zardmen are often between 6 and 7 feet tall. \
 	Zardmen have non-prehensile muscular tails that grow to three or four feet in length, and these are used for balance. \
-	They also have sharp claws and teeth.<br>\
-	<span style='color: #6a8cb7;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;'><b>+1 CON | +1 WIL </b></span><br>"
+	They also have sharp claws and teeth."
 	skin_tone_wording = "Skin Colors"
 	use_skin_tone_wording_for_examine = FALSE
 	species_traits = list(EYECOLOR,LIPS,STUBBLE,MUTCOLORS)
@@ -52,6 +51,7 @@
 		ORGAN_SLOT_LIVER = /obj/item/organ/liver,
 		ORGAN_SLOT_STOMACH = /obj/item/organ/stomach,
 		ORGAN_SLOT_APPENDIX = /obj/item/organ/appendix,
+		ORGAN_SLOT_GUTS = /obj/item/organ/guts,
 		ORGAN_SLOT_TAIL = /obj/item/organ/tail/lizard,
 		ORGAN_SLOT_SNOUT = /obj/item/organ/snout/lizard,
 		ORGAN_SLOT_TAIL_FEATURE = /obj/item/organ/tail_feature/lizard_spines,
@@ -109,6 +109,9 @@
 		/datum/body_marking/bun,
 		/datum/body_marking/gradient,
 		/datum/body_marking/tips,
+		/datum/body_marking/waist,
+		/datum/body_marking/womb_tattoo,
+		/datum/body_marking/butterfly
 	)
 	languages = list(
 		/datum/language/common,

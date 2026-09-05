@@ -6,6 +6,7 @@ GLOBAL_LIST_INIT(t3summoningrunerituallist, generate_t3summoning_rituallist())
 GLOBAL_LIST_INIT(t4summoningrunerituallist, generate_t4summoning_rituallist())
 GLOBAL_LIST_INIT(t2wallrunerituallist, generate_t2wall_rituallist())
 GLOBAL_LIST_INIT(t4wallrunerituallist, generate_t4wall_rituallist())
+GLOBAL_LIST_INIT(verglasrunerituallist, generate_verglas_rituallist())
 GLOBAL_LIST_INIT(t2enchantmentrunerituallist,generate_t2enchantment_rituallist())
 GLOBAL_LIST_INIT(t3enchantmentrunerituallist,generate_t3enchantment_rituallist())
 GLOBAL_LIST_INIT(t4enchantmentrunerituallist,generate_t4enchantment_rituallist())
@@ -90,6 +91,15 @@ GLOBAL_LIST_INIT(familiarbindingrituallist, generate_familiarbinding_rituallist(
 		runerituals[initial(runeritual.name)] = runeritual
 	return runerituals
 
+/proc/generate_verglas_rituallist()
+	RETURN_TYPE(/list)
+	var/list/runerituals = list()
+	for(var/datum/runeritual/runeritual as anything in typesof(/datum/runeritual/other/verglas))
+		if(runeritual.blacklisted)
+			continue
+		runerituals[initial(runeritual.name)] = runeritual
+	return runerituals
+
 /proc/generate_t2enchantment_rituallist()	//list of all rituals for player use
 	RETURN_TYPE(/list)
 	var/list/runerituals = list()
@@ -159,14 +169,14 @@ GLOBAL_LIST_INIT(familiarbindingrituallist, generate_familiarbinding_rituallist(
 		<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'/>
 		<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
 		<body>
-		  <div>
-		    <h1>[name]</h1>
-		    <div>
-			  [desc ? "<div class='recipe-desc'>[desc]</div>" : ""]
-			  <h2>Complexity Tier: [tier] </h2>
-			  <br>
-			  <h2>Requirements</h2>
-			  <br>
+			<div>
+			<h1>[name]</h1>
+			<div>
+				[desc ? "<div class='recipe-desc'>[desc]</div>" : ""]
+				<h2>Complexity Tier: [tier] </h2>
+				<br>
+				<h2>Requirements</h2>
+				<br>
 		"}
 	if(length(required_atoms))
 		html += "<strong>Items Required</strong><br>"

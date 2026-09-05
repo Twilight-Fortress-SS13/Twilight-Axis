@@ -6,8 +6,8 @@
 	total_positions = 0
 	spawn_positions = 0
 	antag_job = TRUE
-	
-	tutorial = "Long ago you did a crime worthy of your bounty being hung on the wall outside of the local inn. You now live with your fellow freemen in the bog, and generally get up to no good."
+
+	tutorial = "Desertation, desperation, rebelious desires, unmeetable quotas, outcast from society or driven to greed, it matters not. In the teachings of Matthios you found solace; liberate yourself from your misfortunes of your past by taking from others."
 
 	outfit = null
 	outfit_female = null
@@ -28,7 +28,7 @@
 	always_show_on_latechoices = TRUE
 	job_reopens_slots_on_death = FALSE //no endless stream of bandits, unless the migration waves deem it so
 	job_traits = list(TRAIT_SELF_SUSTENANCE, TRAIT_STEELHEARTED)//Bandits and knaves truly though
-	vice_restrictions = list(/datum/charflaw/noeyer, /datum/charflaw/noeyel, /datum/charflaw/mute, /datum/charflaw/limbloss/arm_r, /datum/charflaw/limbloss/arm_l)
+	vice_restrictions = list(/datum/charflaw/wanted)
 	same_job_respawn_delay = 30 MINUTES
 	cmode_music = 'sound/music/cmode/antag/combat_deadlyshadows.ogg'
 	job_subclasses = list(
@@ -62,7 +62,7 @@
 		H.grant_language(/datum/language/thievescant)
 		addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living/carbon/human, choose_name_popup), "BANDIT"), 5 SECONDS)
 		var/wanted = list("I am a notorious criminal", "I am a nobody")
-		var/wanted_choice = input("Are you a known criminal?") as anything in wanted
+		var/wanted_choice = input(H, "Are you a known criminal?") as anything in wanted
 		switch(wanted_choice)
 			if("I am a notorious criminal") //Extra challenge for those who want it
 				bandit_select_bounty(H)
@@ -121,60 +121,149 @@
 
 	add_bounty(H.real_name, race, gender, descriptor_height, descriptor_body, descriptor_voice, bounty_total, FALSE, my_crime, bounty_poster)
 
-/proc/update_bandits_slots()
+
+/proc/update_bandits_slots(override_player_count = null) // TA EDIT
+	//update_lost_grenzel_slots() // Lost Grenzel comment
+
 	var/datum/job/bandit_job = SSjob.GetJob("Bandit")
 	if(!bandit_job)
 		return
 
-	var/slots = 0
+	var/is_desert_town = SSmapping?.config?.map_name == "Desert Town"
+	var/datum/job/slot_job = bandit_job
+	var/antag_path = /datum/antagonist/bandit
+	var/admin_slot_key = "Bandit"
+
+	if(is_desert_town)
+		bandit_job.always_show_on_latechoices = FALSE
+		bandit_job.total_positions = 0
+		bandit_job.spawn_positions = 0
+
+		slot_job = SSjob.GetJob("Freeman")
+		if(!slot_job)
+			return
+
+		antag_path = /datum/antagonist/bandit/freeman
+		admin_slot_key = "Freeman"
+		slot_job.always_show_on_latechoices = FALSE
+		slot_job.total_positions = 0
+		slot_job.spawn_positions = 0
+
+	if(slot_job.admin_slot_override)
+		return
 
 	if(!SSgamemode)
+		slot_job.total_positions = 0
+		slot_job.spawn_positions = 0
+		return
+
+	var/player_count = isnull(override_player_count) ? SSgamemode.get_correct_popcount() : override_player_count // TA EDIT
+
+	slot_job.always_show_on_latechoices = TRUE
+	if(!SSgamemode.story_antag_open_slots(antag_path, player_count))
+		slot_job.total_positions = 0
+		slot_job.spawn_positions = 0
+		return
+
+	var/slots = 0
+	var/admin_slot = !SSgamemode.allow_vote ? SSgamemode.admin_slots[admin_slot_key] : null
+	if(!isnull(admin_slot))
+		slots = max(0, admin_slot)
+	else
+		var/storyteller_type = SSgamemode.story_policy_type(TRUE)
+		var/max_slots = SSgamemode.story_antag_slot_cap(antag_path, TRUE, storyteller_type)
+		if(max_slots <= 0)
+			slot_job.total_positions = 0
+			slot_job.spawn_positions = 0
+			return
+
+		slots = 4 // TA EDIT START
+		if(player_count > 40)
+			if(storyteller_type == /datum/storyteller/gamemode/guaranteed_antag)
+				slots += floor((player_count - 40) / 10)
+			else
+				slots += floor((player_count - 40) / 20)
+		slots = min(slots, max_slots)
+		if(SSticker.IsRoundInProgress())
+			slots = min(slots, SSgamemode.combat_positions_alive) // TA EDIT END
+
+	slots = SSgamemode.story_antag_slots(slots, antag_path, player_count)
+
+	slot_job.total_positions = max(slot_job.current_positions, slots)
+	slot_job.spawn_positions = max(slot_job.current_positions, slots)
+
+/proc/resolve_roundstart_bandit_preferences(list/original_character_slots) // TA EDIT START
+	var/datum/job/bandit_job = SSjob.GetJob("Bandit")
+	if(!bandit_job)
+		return TRUE
+	if(SSgamemode?.story_bandit_conflicts())
+		var/reassign_bandits = FALSE
+		for(var/mob/dead/new_player/player in GLOB.new_player_list)
+			if(player.mind?.assigned_role != "Bandit")
+				continue
+			var/original_slot = original_character_slots ? original_character_slots[player.ckey] : null
+			if(original_slot && player.client?.prefs && player.client.prefs.loaded_slot != original_slot)
+				player.client.prefs.load_character(original_slot)
+			SSrole_class_handler.clear_roundstart_subclass_state(player.ckey)
+			if(player.mind in SSgamemode.roundstart_build_replacement_minds)
+				continue
+			reassign_bandits = TRUE
+			player.mind.assigned_role = null
+		bandit_job.current_positions = 0
 		bandit_job.total_positions = 0
 		bandit_job.spawn_positions = 0
+		if(reassign_bandits)
+			SSjob.unassigned.Cut()
+			return SSjob.DivideOccupations(list())
+		return TRUE
+	update_bandits_slots()
+	assign_roundstart_bandit_preferences()
+	return TRUE // TA EDIT END
+
+/proc/assign_roundstart_bandit_preferences() // TA EDIT START
+	var/datum/job/bandit_job = SSjob.GetJob("Bandit")
+	if(!bandit_job || bandit_job.spawn_positions <= bandit_job.current_positions)
 		return
 
-	var/player_count = SSgamemode.get_correct_popcount()
+	var/list/candidates = list()
+	for(var/mob/dead/new_player/player in GLOB.new_player_list)
+		if(player.ready != PLAYER_READY_TO_PLAY || !player.client || !player.client.prefs || !player.mind)
+			continue
+		if(player.mind.assigned_role == "Bandit")
+			continue
+		if(!(ROLE_BANDIT in player.client.prefs.be_special))
+			continue
+		if(is_banned_from(player.ckey, list(ROLE_SYNDICATE, ROLE_BANDIT)))
+			continue
+		if(QDELETED(player))
+			continue
+		if(!bandit_job.player_old_enough(player.client))
+			continue
+		if(bandit_job.required_playtime_remaining(player.client))
+			continue
+		var/datum/preferences/char_prefs = player.client.prefs.get_job_prefs("Bandit")
+		if(!bandit_job.validate_prefs_for_job(char_prefs))
+			continue
+		if(bandit_job.prefs_all_subclasses_restricted(player.client))
+			continue
+		#ifdef USES_PQ
+		if(!isnull(bandit_job.min_pq) && (get_playerquality(player.ckey) < bandit_job.min_pq))
+			continue
+		if(!isnull(bandit_job.max_pq) && (get_playerquality(player.ckey) > bandit_job.max_pq))
+			continue
+		#endif
+		if(CONFIG_GET(flag/usewhitelist) && bandit_job.whitelist_req && !player.client.whitelisted())
+			continue
+		if(!bandit_job.special_job_check(player))
+			continue
+		candidates += player
 
-	if(!SSgamemode.story_antag_open_slots(/datum/antagonist/bandit, player_count))
-		bandit_job.total_positions = 0
-		bandit_job.spawn_positions = 0
-		return
-
-	var/storyteller_type = SSgamemode.story_policy_type(TRUE)
-	var/min_players = SSgamemode.story_antag_min_players(/datum/antagonist/bandit)
-
-	if(storyteller_type == /datum/storyteller/ravox)
-		if(player_count >= 41)
-			slots = 4
-		else if(player_count >= min_players)
-			slots = 2
-		slots = SSgamemode.story_antag_slots(slots, /datum/antagonist/bandit, player_count)
-		bandit_job.total_positions = slots
-		bandit_job.spawn_positions = slots
-		return
-
-	var/unlocks_bandits = SSgamemode.storyteller_unlocks_scaled_antag_slots(/datum/antagonist/bandit)
-
-	if(!unlocks_bandits && (SSgamemode.story_favor_flags(storyteller_type) & STORYTELLER_FAVOR_HARD_ANTAGS))
-		unlocks_bandits = TRUE
-
-	if(!unlocks_bandits)
-		bandit_job.total_positions = 0
-		bandit_job.spawn_positions = 0
-		return
-
-	var/max_slots = SSgamemode.story_antag_slot_cap(/datum/antagonist/bandit, TRUE, storyteller_type)
-	var/slot_scaling = SSgamemode.story_antag_scaling_step(/datum/antagonist/bandit)
-
-	slots = SSgamemode.storyteller_scale_slots(
-		max_slots,
-		player_count,
-		FALSE,
-		slot_scaling,
-		min_players,
-	)
-
-	slots = SSgamemode.story_antag_slots(slots, /datum/antagonist/bandit, player_count)
-
-	bandit_job.total_positions = slots
-	bandit_job.spawn_positions = slots
+	candidates = shuffle(candidates)
+	for(var/mob/dead/new_player/player as anything in candidates)
+		if(bandit_job.current_positions >= bandit_job.spawn_positions)
+			break
+		var/old_rank = player.mind.assigned_role
+		if(SSjob.AssignRole(player, "Bandit"))
+			continue
+		if(SSjob.GetJob(old_rank))
+			SSjob.AssignRole(player, old_rank) // TA EDIT END

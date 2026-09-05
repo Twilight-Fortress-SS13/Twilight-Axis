@@ -5,8 +5,17 @@
 	var/default_aggro_range = 9
 	/// Default range at which mobs maintain aggro before dropping target
 	var/default_maintain_range = 12
-	/// Default decay rate per second
-	var/default_decay_rate = 2
+	/// Flat threat removed each decay tick, applied after the proportional decay
+	var/default_decay_rate = AGGRO_THREAT_DECAY_FLAT
+	var/decay_rate
+	/// Ceiling on any one mob's threat
+	var/threat_cap = AGGRO_THREAT_CAP
+	/// Threat is scaled by this each decay tick
+	var/decay_mult = AGGRO_THREAT_DECAY_MULT
+	/// How far a challenger must exceed the current focus before we turn on them
+	var/switch_margin = AGGRO_THREAT_SWITCH_MARGIN
+	/// Multiplier on threat from an attacker who isn't our current focus
+	var/peel_bonus = AGGRO_THREAT_PEEL_BONUS
 
 /datum/component/ai_aggro_system/Initialize(threat_threshold, aggro_range, maintain_range, decay_rate)
 	. = ..()
@@ -22,6 +31,7 @@
 	living_mob.ai_controller.blackboard[BB_MOB_AGGRO_TABLE] = list()
 
 	// Set configurable parameters
+	src.decay_rate = decay_rate || default_decay_rate
 	living_mob.ai_controller.set_blackboard_key(BB_THREAT_THRESHOLD, threat_threshold || default_threat_threshold)
 	living_mob.ai_controller.set_blackboard_key(BB_AGGRO_RANGE, aggro_range || default_aggro_range)
 	living_mob.ai_controller.set_blackboard_key(BB_AGGRO_MAINTAIN_RANGE, maintain_range || default_maintain_range)
@@ -78,6 +88,11 @@
 	if(attacker == victim)
 		return
 
+	var/mob/mob_attacker = attacker
+	if(mob_attacker.ai_controller && victim.faction_check_mob(mob_attacker))
+		AI_THINK(victim, "AGGRO: ignored friendly fire from faction-mate [attacker]")
+		return
+
 	// Base threat from being attacked
 	var/threat_to_add = 5
 
@@ -85,11 +100,14 @@
 	if(damage)
 		threat_to_add += damage * 0.5
 
+	var/mob/current_focus = victim.ai_controller.blackboard[BB_HIGHEST_THREAT_MOB]
+	if(current_focus && current_focus != attacker)
+		threat_to_add *= peel_bonus
+
 	AI_THINK(victim, "AGGRO: +[threat_to_add] from [attacker]")
 	add_threat(victim, attacker, threat_to_add)
 
-	if(victim.ai_controller.ai_status == AI_STATUS_IDLE)
-		victim.ai_controller.set_ai_status(AI_STATUS_ON)
+	victim.ai_controller.wake_for_combat()
 
 /// Clears the aggro table when the mob dies
 /datum/component/ai_aggro_system/proc/on_death(mob/living/source)
@@ -108,12 +126,12 @@
 		return
 	if(attacker == victim)
 		return
-	// TA EDIT
+	if(victim.faction_check_mob(attacker))
+		return
 	if(isliving(attacker))
 		var/mob/living/living_attacker = attacker
 		if(SEND_SIGNAL(living_attacker, "mob_ai_target_check", victim))
 			return
-	// TA EDIT END
 
 	var/list/aggro_table = victim.ai_controller.blackboard[BB_MOB_AGGRO_TABLE]
 	if(!aggro_table)
@@ -125,9 +143,7 @@
 	else
 		aggro_table[attacker] = amount
 
-	// Ensure threat level isn't negative
-	if(aggro_table[attacker] < 0)
-		aggro_table[attacker] = 0
+	aggro_table[attacker] = clamp(aggro_table[attacker], 0, threat_cap)
 
 	// Update the aggro table
 	victim.ai_controller.blackboard[BB_MOB_AGGRO_TABLE] = aggro_table
@@ -135,17 +151,16 @@
 	if(!victim.ai_controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET])
 		victim.ai_controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, attacker)
 
-	// Any threat addition should wake the AI from IDLE — otherwise NPCs that get aggro
+	// Any threat addition should wake the AI - otherwise NPCs that get aggro
 	// via call_for_help, proximity scans, or provocation miracles stay stuck staring.
-	if(victim.ai_controller.ai_status == AI_STATUS_IDLE)
-		victim.ai_controller.set_ai_status(AI_STATUS_ON)
+	victim.ai_controller.wake_for_combat()
 
 	// Update highest threat mob
 	update_highest_threat(victim)
 
 /// Periodically decays threat levels
 /datum/component/ai_aggro_system/process()
-	var/decay_amount = default_decay_rate
+	var/decay_amount = decay_rate || default_decay_rate
 	var/mob/living/living_mob = parent
 	if(!living_mob?.ai_controller)
 		return
@@ -158,7 +173,7 @@
 
 	// Decay all threat values
 	for(var/mob/threat_mob as anything in aggro_table)
-		aggro_table[threat_mob] -= decay_amount
+		aggro_table[threat_mob] = (aggro_table[threat_mob] * decay_mult) - decay_amount
 
 		// If threat drops below 0, mark for removal
 		if(aggro_table[threat_mob] <= 0)
@@ -192,15 +207,20 @@
 
 	// Find the mob with the highest threat
 	for(var/mob/threat_mob as anything in aggro_table)
-		// TA EDIT
 		if(isliving(threat_mob))
 			var/mob/living/living_threat = threat_mob
 			if(SEND_SIGNAL(living_threat, "mob_ai_target_check", source))
 				continue
-		// TA EDIT END
 		if(aggro_table[threat_mob] > highest_threat)
 			highest_threat = aggro_table[threat_mob]
 			highest_threat_mob = threat_mob
+
+	var/mob/current_focus = source.ai_controller.blackboard[BB_HIGHEST_THREAT_MOB]
+	if(current_focus && current_focus != highest_threat_mob && !QDELETED(current_focus) && current_focus.stat != DEAD)
+		var/focus_threat = aggro_table[current_focus]
+		if(focus_threat && highest_threat < focus_threat + switch_margin)
+			highest_threat = focus_threat
+			highest_threat_mob = current_focus
 
 	// Update highest threat mob if it meets threshold
 	var/threat_threshold = source.ai_controller.blackboard[BB_THREAT_THRESHOLD] || default_threat_threshold

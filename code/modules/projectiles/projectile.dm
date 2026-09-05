@@ -11,6 +11,7 @@
 	pass_flags = PASSTABLE
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	movement_type = FLYING
+	light_system = MOVABLE_LIGHT
 	//The sound this plays on impact.
 	var/hitsound = 'sound/blank.ogg'
 	var/hitsound_wall = ""
@@ -107,7 +108,8 @@
 	var/ignore_source_check = FALSE
 
 	var/damage = 10
-	var/npc_simple_damage_mult = 1 // Multiplicative bonus damage vs mindless simple animals.
+	/// Bonus damage vs simple animals. DO NOT EVER SET THIS OUTSIDE THE CROSSBOW / SLURBOW / STAKER AMMO FAMILY. It used to exists on nearly every projectile to get around simple animals being unfun. I don't see a way to make it "viable" in PVE without using this multiplier. DO NOT UNDER ANY CIRCUMSTANCES PROLIFERATE THIS.
+	var/npc_simple_damage_mult = 1
 	var/damage_type = BRUTE //BRUTE, BURN, TOX, OXY, CLONE are the only things that should be in here
 	var/nodamage = FALSE //Determines if the projectile will skip any damage inflictions
 	var/flag = "piercing" //Defines what armor to use when it hits things. Setting this to "blunt" might result in unexpected behavior (i.e. knockout on hit, figure out the root causes and excise it)
@@ -122,6 +124,8 @@
 	var/reflectable = NONE // Can it be reflected or not?
 	/// Whether this projectile can be deflected by Guard (clash status). Opt-in per subtype.
 	var/guard_deflectable = FALSE
+	/// If TRUE, Guard-deflecting this projectile exposes its firer (riposte punish). Arcyne/wizard bolts opt in.
+	var/expose_caster_on_deflect = FALSE
 		//Effects
 	var/stun = 0
 	var/knockdown = 0
@@ -135,12 +139,15 @@
 	var/stamina = 0
 	var/jitter = 0
 	var/dismemberment = 0 //The higher the number, the greater the bonus to dismembering. 0 will not dismember at all.
+	var/dismember_by_default = FALSE
 	var/impact_effect_type //what type of impact effect to show when hitting something
 	var/log_override = FALSE //is this type spammed enough to not log? (KAs)
 
 	var/temporary_unstoppable_movement = FALSE
 
 	var/woundclass = null
+	/// If TRUE, this projectile applies wounds but never rolls a critical hit.
+	var/no_crit = FALSE
 	var/embedchance = 0
 	var/obj/item/dropped = null
 	var/ammo_type
@@ -155,17 +162,22 @@
 	var/accuracy = 65 //How likely the project will hit it's intended target area. Decreases over distance moved, increased from perception.
 	var/bonus_accuracy = 0 //bonus accuracy that cannot be affected by range drop off.
 
-	/// Min tile distance for full damage/AP.
+	/// Min tile distance for full damage.
 	var/min_range = 0
-	/// Max tile distance for full damage/AP.
+	/// Max tile distance for full damage.
 	var/max_range = 0
 	/// Falloff factor for damage. Multiplicative.
 	var/dam_falloff_factor = 1
+	var/suppress_effects_past_range = FALSE
 
 /obj/projectile/proc/handle_drop()
 	return
 
-/obj/projectile/Initialize()
+
+/obj/projectile/proc/out_of_effective_range()
+	return suppress_effects_past_range && max_range && check_range(get_turf(src))
+
+/obj/projectile/Initialize(mapload)
 	. = ..()
 	permutated = list()
 	decayedRange = range
@@ -207,6 +219,9 @@
 	//when a limb is missing the damage is actually passed to the chest
 	return BODY_ZONE_CHEST
 
+/mob/living/proc/hit_zone_name(hit_zone)
+	return parse_zone(check_limb_hit(hit_zone))
+
 /obj/projectile/proc/prehit(atom/target)
 	return TRUE
 
@@ -245,6 +260,16 @@
 
 	var/mob/living/L = target
 
+	if(isliving(firer) && HAS_TRAIT(L, TRAIT_PACIFISM))
+		var/mob/living/user = firer
+		reduce_intent_cooldown(user, /datum/status_effect/debuff/clashcd, 5 SECONDS)
+
+		if(!HAS_TRAIT(user, TRAIT_NOMOOD))
+			if(user.patron?.type in ALL_INHUMEN_PATRONS)
+				user.add_stress(/datum/stressevent/remorse_evil)
+			else
+				user.add_stress(/datum/stressevent/remorse)
+
 	if(blocked != 100) // not completely blocked
 		if(damage && L.blood_volume && damage_type == BRUTE)
 			var/splatter_dir = dir
@@ -267,9 +292,9 @@
 			reagent_note += "[R.name] ([num2text(R.volume)])"
 
 	if(ismob(firer))
-		log_combat(firer, L, "shot", src, reagent_note)
+		log_combat(firer, L, "shot", src, reagent_note, zone=def_zone)
 	else
-		L.log_message("has been shot by [firer] with [src]", LOG_ATTACK, color="orange")
+		L.log_message("has been shot by [firer] with [src] (ZONE: [uppertext(def_zone)])", LOG_ATTACK, color="orange")
 
 	if((min_range || max_range) && !check_range(target_loca) && isliving(target))
 		var/obj/effect/temp_visual/dir_setting/attack_effect/atk_effrange = new(target_loca, target.dir)
@@ -380,7 +405,7 @@
 		playsound(loc, hitsound_wall, volume, TRUE, -1)
 
 	if(arcshot)
-		if(A.loc != original.loc)
+		if(get_turf(A) != get_turf(original))
 			if(ismob(A))
 				var/mob/M = A
 				if(!CHECK_BITFIELD(movement_type, UNSTOPPABLE))
@@ -395,7 +420,7 @@
 #define DO_NOT_QDEL 2		//Pass through.
 #define FORCE_QDEL 3		//Force deletion.
 
-/obj/projectile/proc/process_hit(turf/T, atom/target, qdel_self, hit_something = FALSE) 	//probably needs to be reworked entirely when pixel movement is done.
+/obj/projectile/proc/process_hit(turf/T, atom/target, qdel_self, hit_something = FALSE)	//probably needs to be reworked entirely when pixel movement is done.
 	if(check_range(T))
 		if(damage)
 			damage = round(damage * dam_falloff_factor)
@@ -714,7 +739,7 @@
 	else
 		var/mob/living/L = target
 		if(!direct_target)
-			//If they're able to 1. stand or 2. use items or 3. move, AND they are not softcrit,  they are able to avoid indirect projectiles passing over.
+			//If they're able to 1. stand or 2. use items or 3. move, AND they are not softcrit,	they are able to avoid indirect projectiles passing over.
 			//If they're unconscious or dead they shouldn't be getting hit by indirect fire
 			if((CHECK_BITFIELD(L.mobility_flags, MOBILITY_USE | MOBILITY_STAND | MOBILITY_MOVE) && L.stat == CONSCIOUS) || L.stat >= UNCONSCIOUS)
 				return FALSE

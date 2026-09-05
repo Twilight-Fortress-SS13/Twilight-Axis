@@ -47,7 +47,7 @@
 		heal_wounds(1)
 
 	/// ENDVRE AS HE DOES.
-	if(!stat && HAS_TRAIT(src, TRAIT_PSYDONITE) && !HAS_TRAIT(src, TRAIT_PARALYSIS))
+	if(!stat && (HAS_TRAIT(src, TRAIT_PSYDONITE) && !HAS_TRAIT(src, TRAIT_BLACKBLOOD) && !HAS_TRAIT(src, TRAIT_PARALYSIS)))
 		//handle_wounds() //TA EDIT
 		//passively heal wounds, when you're in trouble..
 		if(blood_volume > BLOOD_VOLUME_SURVIVE)
@@ -68,6 +68,24 @@
 		for(var/datum/wound/wound as anything in get_wounds())
 			wound.heal_wound(10)
 
+	/// Should not stack with the above, hopefully.
+	if(!stat && HAS_TRAIT(src, TRAIT_BLACKBLOOD) && !HAS_TRAIT(src, TRAIT_PARALYSIS))
+		if(src.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder) || src.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed)) // silver fire stops the regen completely
+			return
+		handle_wounds()
+		if(blood_volume > BLOOD_VOLUME_SURVIVE && nutrition > NUTRITION_LEVEL_STARVING && hydration > HYDRATION_LEVEL_DEHYDRATED) // starving is the minimal here, thirst also stops the regen now
+			for(var/datum/wound/wound as anything in get_wounds())
+				if(!istype(wound, /datum/wound/slash/incision))
+					wound.heal_wound(0.5) // roughly half of what psydonite can heal up, after some tests (the above is 0.4, because 0.6 is in life() and death())
+					if(wound.bleed_rate > 0) // but we also slowly recover from bleeding now
+						var/bleed_heal = max(wound.bleed_rate * 0.1, 0.2)
+						wound.set_bleed_rate(max(wound.bleed_rate - bleed_heal, 0))
+						if(wound.bleed_rate <= 0)
+							if(wound.sew_threshold)
+								wound.sew_progress = wound.sew_threshold
+								wound.sew_wound() // it does not heal the wound, however! another nick and you're back to bleeding like a pig.
+					nutrition = max(0, nutrition - (NUTRITION_LEVEL_FULL * 0.0025)) // drains 0.25% of your hunger to restore all of above, still
+
 	if(!stat && HAS_TRAIT(src, TRAIT_LYCANRESILENCE) && !HAS_TRAIT(src, TRAIT_PARALYSIS))
 		if(src.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder) || src.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed))
 			return
@@ -77,6 +95,14 @@
 				if(!istype(wound, /datum/wound/slash/incision))
 					wound.heal_wound(3)
 
+	if(!stat && HAS_TRAIT(src, TRAIT_DEADITE)) //Deadites are always regenerating unless under the effects of ANY KIND OF firestacks. Finish them off or restrain them.
+		if(src.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder) || src.has_status_effect(/datum/status_effect/fire_handler/fire_stacks) || src.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed))
+			return
+		handle_wounds()
+		heal_overall_damage(3, 2) //Brute heals better than our burns.
+		for(var/datum/wound/wound as anything in get_wounds())
+			wound.heal_wound(0.5) //Skullcracks and severe wounds keep us down longer. BUT WE STILL GET BACK UP.
+
 	if(blood_volume <= BLOOD_VOLUME_SURVIVE && stat)
 		handle_passive_blood()
 
@@ -84,7 +110,7 @@
 		return
 
 	handle_environment()
-	
+
 	//Random events (vomiting etc)
 	handle_random_events()
 
@@ -137,7 +163,7 @@
 				return
 			if(istype(drownrelay.loc, /turf/open/water))
 				handle_inwater(drownrelay.loc, extinguish = FALSE, force_drown = TRUE)
-			if(istype(loc, /turf/open/water)) // Extinguish ourselves if our body is in water.	
+			if(istype(loc, /turf/open/water)) // Extinguish ourselves if our body is in water.
 				extinguish_mob()
 			return
 	. =..()
@@ -157,23 +183,7 @@
 		handle_inwater(loc)
 
 /mob/living/proc/handle_random_events()
-	//random painstun
-	if(!stat && !HAS_TRAIT(src, TRAIT_NOPAINSTUN))
-		if(world.time > mob_timers["painstun"] + 600)
-			if(getBruteLoss() + getFireLoss() >= (STAWIL * 10))
-				var/probby = 53 - (STAWIL * 2)
-				if(!(mobility_flags & MOBILITY_STAND))
-					probby = probby - 20
-				if(prob(probby))
-					mob_timers["painstun"] = world.time
-					Immobilize(10)
-					emote("painscream")
-					visible_message(span_warning("[src] freezes in pain!"),
-								span_warning("I'm frozen in pain!"))
-					sleep(10)
-					Stun(110)
-					Knockdown(110)
-					drop_all_held_items()
+	return
 
 /mob/living/proc/handle_environment()
 	return
@@ -197,7 +207,7 @@
 			continue
 
 		if(prob(embedded.embedding.embedded_pain_chance))
-			if(embedded.is_silver && HAS_TRAIT(src, TRAIT_SILVER_WEAK) && !has_status_effect(STATUS_EFFECT_ANTIMAGIC))
+			if((embedded.is_silver || (embedded.is_even_lesser_silver && is_npc(src))) && HAS_TRAIT(src, TRAIT_SILVER_WEAK) && !has_status_effect(STATUS_EFFECT_ANTIMAGIC))
 				var/datum/component/silverbless/psyblessed = embedded.GetComponent(/datum/component/silverbless)
 				adjust_fire_stacks(1, psyblessed?.is_blessed ? /datum/status_effect/fire_handler/fire_stacks/sunder/blessed : /datum/status_effect/fire_handler/fire_stacks/sunder)
 			to_chat(src, span_danger("[embedded] in me hurts!"))

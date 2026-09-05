@@ -1,6 +1,10 @@
-/datum/reagent/water/rosewater
+/datum/reagent/consumable/rosewater
 	name = "rosa tea"
 	description = "Steeped rosa petals with mild health regeneration and antidotal properties."
+	cuisine = CUISINE_SOUTH_IMPERIAL
+	drink_type = DRINKTYPE_CAFFEINE
+	quality = DRINK_VERYGOOD
+	hydration_factor = 5
 	reagent_state = LIQUID
 	color = "#f398b6"
 	taste_description = "floral sweetness"
@@ -8,13 +12,13 @@
 	metabolization_rate = REAGENTS_METABOLISM
 	alpha = 173
 
-/datum/reagent/water/rosewater/on_mob_life(mob/living/carbon/M)
+/datum/reagent/consumable/rosewater/on_mob_life(mob/living/carbon/M)
 	. = ..()
 	if (M.mob_biotypes & MOB_BEAST)
-		M.adjustFireLoss(0.5  * REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustFireLoss(0.5	* REAGENTS_EFFECT_MULTIPLIER)
 	else
-		M.adjustBruteLoss(-0.1  * REAGENTS_EFFECT_MULTIPLIER)
-		M.adjustFireLoss(-0.1  * REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustBruteLoss(-0.1	* REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustFireLoss(-0.1	* REAGENTS_EFFECT_MULTIPLIER)
 		M.adjustOxyLoss(-0.1, 0)
 		M.adjustToxLoss(-2, 0)
 		var/list/our_wounds = M.get_wounds()
@@ -23,9 +27,13 @@
 			if (upd)
 				M.update_damage_overlays()
 
-/datum/reagent/water/rosewater_spiced
+/datum/reagent/consumable/rosewater_spiced
 	name = "spiced rosa tea"
 	description = "Spiced rose petals that help to reinvigorate the body's humors, providing modest health regeneration and antidotal properties."
+	cuisine = CUISINE_SOUTH_IMPERIAL
+	drink_type = DRINKTYPE_CAFFEINE
+	quality = DRINK_FANTASTIC
+	hydration_factor = 5
 	reagent_state = LIQUID
 	color = "#F2638C"
 	taste_description = "floral spiciness"
@@ -33,13 +41,13 @@
 	metabolization_rate = REAGENTS_METABOLISM
 	alpha = 173
 
-/datum/reagent/water/rosewater_spiced/on_mob_life(mob/living/carbon/M)
+/datum/reagent/consumable/rosewater_spiced/on_mob_life(mob/living/carbon/M)
 	. = ..()
 	if (M.mob_biotypes & MOB_BEAST)
-		M.adjustFireLoss(0.8  * REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustFireLoss(0.8	* REAGENTS_EFFECT_MULTIPLIER)
 	else
-		M.adjustBruteLoss(-0.46  * REAGENTS_EFFECT_MULTIPLIER)
-		M.adjustFireLoss(-0.46  * REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustBruteLoss(-0.46	* REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustFireLoss(-0.46	* REAGENTS_EFFECT_MULTIPLIER)
 		M.adjustOxyLoss(-0.2, 0)
 		M.adjustToxLoss(-3, 0)
 		var/list/our_wounds = M.get_wounds()
@@ -50,6 +58,7 @@
 
 // Reagents system don't have the idea of solute and solvent so we need a type for each
 /datum/reagent/consumable/caffeine/
+	drink_type = DRINKTYPE_CAFFEINE
 	name = "caffeine"
 	description = "Why are you seeing this?"
 	hydration_factor = 5
@@ -67,8 +76,9 @@
 	M.Jitter(2)
 	if(prob(5))
 		M.heart_attack()
-	
+
 /datum/reagent/consumable/caffeine/coffee
+	cuisine = CUISINE_RANESHENI
 	name = "coffee"
 	description = "Coffee beans brewed into a hot drink. With a hint of bitterness. Rejuvenating."
 	reagent_state = LIQUID
@@ -76,9 +86,10 @@
 	taste_description = "caramelized bitterness" // coffee has so many flavors I am going for one
 	metabolization_rate = REAGENTS_METABOLISM
 	alpha = 200
-	quality = DRINK_NICE
+	quality = DRINK_VERYGOOD
 
 /datum/reagent/consumable/caffeine/coffee_spiced
+	cuisine = CUISINE_RANESHENI
 	name = "spiced coffee"
 	description = "Spiced offee beans brewed into a hot drink, with a hint of bitterness. Modestly rejuvenating."
 	reagent_state = LIQUID
@@ -91,10 +102,10 @@
 /datum/reagent/consumable/caffeine/coffee_spiced/on_mob_life(mob/living/carbon/M)
 	. = ..()
 	if (M.mob_biotypes & MOB_BEAST)
-		M.adjustFireLoss(-0.1  * REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustFireLoss(-0.1	* REAGENTS_EFFECT_MULTIPLIER)
 	else
-		M.adjustBruteLoss(-0.3  * REAGENTS_EFFECT_MULTIPLIER)
-		M.adjustFireLoss(-0.3  * REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustBruteLoss(-0.3	* REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustFireLoss(-0.3	* REAGENTS_EFFECT_MULTIPLIER)
 		M.adjustOxyLoss(-0.15, 0)
 		var/list/our_wounds = M.get_wounds()
 		if (LAZYLEN(our_wounds))
@@ -103,6 +114,7 @@
 				M.update_damage_overlays()
 
 /datum/reagent/consumable/caffeine/tea
+	cuisine = CUISINE_SOUTHEASTERN
 	name = "tea"
 	description = "Tea leaves brewed into a hot drink. Slight hint of bitterness. Smooth."
 	reagent_state = LIQUID
@@ -110,9 +122,10 @@
 	taste_description = "smooth grassiness" // Yeah, uh.
 	metabolization_rate = REAGENTS_METABOLISM
 	alpha = 173
-	quality = DRINK_NICE
+	quality = DRINK_VERYGOOD
 
 /datum/reagent/consumable/caffeine/tea_spiced
+	cuisine = CUISINE_SOUTHEASTERN
 	name = "spiced tea"
 	description = "Spiced tea leaves brewed into a hot drink. Slight hint of bitterness. Smoothly rejuvinating."
 	reagent_state = LIQUID
@@ -125,10 +138,10 @@
 /datum/reagent/consumable/caffeine/tea_spiced/on_mob_life(mob/living/carbon/M)
 	. = ..()
 	if (M.mob_biotypes & MOB_BEAST)
-		M.adjustFireLoss(-0.1  * REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustFireLoss(-0.1	* REAGENTS_EFFECT_MULTIPLIER)
 	else
-		M.adjustBruteLoss(-0.3  * REAGENTS_EFFECT_MULTIPLIER)
-		M.adjustFireLoss(-0.3  * REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustBruteLoss(-0.3	* REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustFireLoss(-0.3	* REAGENTS_EFFECT_MULTIPLIER)
 		M.adjustOxyLoss(-0.15, 0)
 		var/list/our_wounds = M.get_wounds()
 		if (LAZYLEN(our_wounds))
@@ -159,6 +172,8 @@
 
 // Tea ported from Vanderlin from Misc Fixes PR #862
 /datum/reagent/consumable/golden_calendula_tea
+	drink_type = DRINKTYPE_CAFFEINE
+	cuisine = CUISINE_SOUTHEASTERN
 	name = "Golden Calendula Tea"
 	description = "A refreshing tea, great to soothe wounds and relieve fatigue."
 	color = "#b38e17"
@@ -175,14 +190,15 @@
 	if(wCount.len > 0)
 		M.heal_wounds(1) //at a metabolism of .5 U a tick this translates to 120WHP healing with 20 U Most wounds are unsewn 15-100. This is powerful on single wounds but rapidly weakens at multi wounds.
 	if(volume > 0.99)
-		M.adjustBruteLoss(-0.75  * REAGENTS_EFFECT_MULTIPLIER, 0)
-		M.adjustFireLoss(-0.75  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustBruteLoss(-0.75	* REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustFireLoss(-0.75	* REAGENTS_EFFECT_MULTIPLIER, 0)
 		M.adjustOxyLoss(-0.25, 0)
-		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -1  * REAGENTS_EFFECT_MULTIPLIER)
-		M.adjustCloneLoss(-0.75  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -1	* REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustCloneLoss(-0.75	* REAGENTS_EFFECT_MULTIPLIER, 0)
 	..()
 
 /datum/reagent/consumable/chocolate
+	cuisine = CUISINE_OTAVAIS
 	name = "hot chocolate"
 	description = "Lovingly smooth, velvety, and rich. Provides a modest portion of health regeneration, and minor stamina regeneration."
 	color = "#3F291C"
@@ -199,14 +215,15 @@
 	if(wCount.len > 0)
 		M.heal_wounds(1)
 	if(volume > 0.99)
-		M.adjustBruteLoss(-0.3  * REAGENTS_EFFECT_MULTIPLIER, 0)
-		M.adjustFireLoss(-0.3  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustBruteLoss(-0.3	* REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustFireLoss(-0.3	* REAGENTS_EFFECT_MULTIPLIER, 0)
 		M.adjustOxyLoss(-0.15, 0)
-		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -0.3  * REAGENTS_EFFECT_MULTIPLIER)
-		M.adjustCloneLoss(-0.3  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -0.3	* REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustCloneLoss(-0.3	* REAGENTS_EFFECT_MULTIPLIER, 0)
 	..()
 
 /datum/reagent/consumable/spiced_chocolate
+	cuisine = CUISINE_RANESHENI
 	name = "spiced chocolate"
 	description = "Impossibly smooth, velvety, and rich. Provides a generous portion of health regeneration, and minor stamina regeneration."
 	color = "#6D472F"
@@ -223,14 +240,16 @@
 	if(wCount.len > 0)
 		M.heal_wounds(1)
 	if(volume > 0.99)
-		M.adjustBruteLoss(-0.5  * REAGENTS_EFFECT_MULTIPLIER, 0)
-		M.adjustFireLoss(-0.5  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustBruteLoss(-0.5	* REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustFireLoss(-0.5	* REAGENTS_EFFECT_MULTIPLIER, 0)
 		M.adjustOxyLoss(-0.15, 0)
-		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -0.5  * REAGENTS_EFFECT_MULTIPLIER)
-		M.adjustCloneLoss(-0.5  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -0.5	* REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustCloneLoss(-0.5	* REAGENTS_EFFECT_MULTIPLIER, 0)
 	..()
 
 /datum/reagent/consumable/soothing_valerian_tea
+	drink_type = DRINKTYPE_CAFFEINE
+	cuisine = CUISINE_SOUTHEASTERN
 	name = "Soothing Valerian Tea"
 	description = "A refreshing tea, great to ease fatigue and relieve stress."
 	color = "#3b9146"

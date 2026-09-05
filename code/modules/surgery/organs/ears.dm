@@ -33,6 +33,12 @@
 	//Used for the panel - probably can be used for something ELSE as well.
 	var/ear_sensitivity = EARS_NORMAL //Nothing happens
 
+	/// Can we flick our ears?
+	var/can_flick = TRUE
+
+	/// Bool for ear flicking -- are we currently in the flick animation?
+	var/is_flicking = FALSE
+
 /obj/item/organ/ears/Insert(mob/living/carbon/M, special, drop_if_replaced)
 	. = ..()
 	for(var/datum/wound/facial/ears/ear_wound as anything in M.get_wounds())
@@ -118,7 +124,7 @@
 		to_chat(H, span_notice("I suddenly feel like you've lost my balance."))
 		waddle = H.AddComponent(/datum/component/waddling)
 
-/obj/item/organ/ears/penguin/Remove(mob/living/carbon/human/H,  special = 0)
+/obj/item/organ/ears/penguin/Remove(mob/living/carbon/human/H,	special = 0)
 	. = ..()
 	if(istype(H))
 		to_chat(H, span_notice("My sense of balance comes back to you."))

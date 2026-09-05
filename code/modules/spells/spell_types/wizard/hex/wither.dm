@@ -1,6 +1,7 @@
 /datum/action/cooldown/spell/wither
 	button_icon = 'icons/mob/actions/mage_hex.dmi'
 	name = "Wither"
+	expose_caster_on_deflect = FALSE
 	desc = "Lash out a delayed line of dark magic, sapping the physical prowess of all in its path.\n\
 	The line telegraphs for a moment before striking every tile at once."
 	button_icon_state = "wither"
@@ -20,7 +21,8 @@
 	charge_required = TRUE
 	weapon_cast_penalized = TRUE
 	charge_time = CHARGETIME_MAJOR
-	charge_drain = 1
+	charge_swingdelay_type = SWINGDELAY_PENALTY
+	hold_drain = 1
 	charge_slowdown = CHARGING_SLOWDOWN_MEDIUM
 	charge_sound = 'sound/magic/charging.ogg'
 	cooldown_time = 20 SECONDS
@@ -56,7 +58,7 @@
 		if(!(line_turf in get_hear(cast_range, source_turf)))
 			continue
 		affected_turfs += line_turf
-		new /obj/effect/temp_visual/trap/wither_line(line_turf, strike_delay)
+		new /obj/effect/temp_visual/telegraph/wither_line(line_turf, strike_delay)
 
 	if(!length(affected_turfs))
 		return FALSE
@@ -73,33 +75,19 @@
 				L.visible_message(span_warning("The dark magic fades away around [L]!"))
 				playsound(damage_turf, 'sound/magic/magic_nulled.ogg', 100)
 				continue
-			var/datum/status_effect/buff/clash/guard = L.has_status_effect(/datum/status_effect/buff/clash)
-			if(guard)
-				guard.deflected_spell = TRUE
-				L.remove_status_effect(/datum/status_effect/buff/clash)
-				L.apply_status_effect(/datum/status_effect/buff/parry_buffer)
+			if(spell_guard_check(L, TRUE))
 				L.visible_message(span_warning("[L] resists the withering curse!"))
-				var/obj/item/held = L.get_active_held_item()
-				if(held?.parrysound)
-					playsound(get_turf(L), pick(held.parrysound), 100)
-				else
-					playsound(get_turf(L), pick(L.parry_sound), 100)
 				continue
 			L.apply_status_effect(/datum/status_effect/buff/witherd)
 
-/obj/effect/temp_visual/trap/wither_line
+/obj/effect/temp_visual/telegraph/wither_line
 	icon = 'icons/effects/effects.dmi'
 	icon_state = "curse"
 	color = GLOW_COLOR_HEX
-	light_outer_range = 0
 	duration = 1 SECONDS
 	layer = MASSIVE_OBJ_LAYER
+	plane = GAME_PLANE
 	alpha = 70
-
-/obj/effect/temp_visual/trap/wither_line/Initialize(mapload, duration_override)
-	if(duration_override)
-		duration = duration_override
-	. = ..()
 
 /obj/effect/temp_visual/wither_strike
 	icon = 'icons/effects/effects.dmi'

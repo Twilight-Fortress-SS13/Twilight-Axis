@@ -1,7 +1,14 @@
 import { useState } from 'react';
 import { useBackend } from 'tgui/backend';
 import { Window } from 'tgui/layouts';
-import { Autofocus, Button, Divider, Input, Section, Stack } from 'tgui-core/components';
+import {
+  Autofocus,
+  Button,
+  Divider,
+  Input,
+  Section,
+  Stack,
+} from 'tgui-core/components';
 import { isAlphabetic, isNumeric, KEY } from 'tgui-core/keys';
 
 import { InputButtons } from './common/InputButtons';
@@ -17,7 +24,7 @@ type ListInputData = {
   title: string;
 };
 
-export const ListInputModal = (props) => {
+export const ListInputModal = () => {
   const { act, data } = useBackend<ListInputData>();
   const {
     items = [],
@@ -187,14 +194,27 @@ export const ListInputModal = (props) => {
   );
 };
 
+type ListDisplayProps = Pick<ListInputData, 'descriptions'> & {
+  filteredItems: string[];
+  onClick: (idx: number) => void;
+  onFocusSearch: () => void;
+  searchBarVisible: boolean;
+  selected: number;
+};
 /**
  * Displays the list of selectable items.
  * If a search query is provided, filters the items.
  */
-const ListDisplay = (props) => {
+const ListDisplay = (props: ListDisplayProps) => {
   const { act } = useBackend<ListInputData>();
-  const { descriptions, filteredItems, onClick, onFocusSearch, searchBarVisible, selected } =
-    props;
+  const {
+    descriptions,
+    filteredItems,
+    onClick,
+    onFocusSearch,
+    searchBarVisible,
+    selected,
+  } = props;
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     const key = event.key;
@@ -214,7 +234,7 @@ const ListDisplay = (props) => {
             className="candystripe"
             color="transparent"
             fluid
-            id={index}
+            id={`${index}`}
             key={index}
             onClick={() => onClick(index)}
             onDoubleClick={(event) => {

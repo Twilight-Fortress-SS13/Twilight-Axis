@@ -22,7 +22,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	var/s_req
 	var/w_req
 
-	// Насильно присваивает в книгу что нужно положить на руну. 
+	// Насильно присваивает в книгу что нужно положить на руну.
 	// Полезно если ритуал требует, например, аасимара на севере, а культиста по центру. Можно адекватно это вписать.
 	// Картинок при этом не будет. В теории, могу улучшить метод, чтоб можно было еще и особые картинки пихать, если потребуется.
 	var/north_book
@@ -40,6 +40,22 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 /datum/ritual/proc/invoke(mob/living/user, turf/center)
 	return
 
+/obj/effect/decal/cleanable/sigil/proc/find_ritual_ingredient(turf/target_turf, required_type)
+	if(!target_turf || !required_type)
+		return null
+	for(var/atom/movable/found_ingredient in target_turf)
+		if(istype(found_ingredient, required_type))
+			return found_ingredient
+	return null
+
+/obj/effect/decal/cleanable/sigil/proc/consume_ritual_ingredients(list/ingredients_to_consume)
+	if(!length(ingredients_to_consume))
+		return
+	for(var/atom/movable/ingredient as anything in ingredients_to_consume)
+		if(!ingredient || QDELETED(ingredient) || ismob(ingredient))
+			continue
+		qdel(ingredient)
+
 // Счетчик количества ритуалов
 /proc/get_ritual_count(ritual_name)
 	if(!GLOB.ritual_counters[ritual_name])
@@ -55,24 +71,24 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 /proc/get_dynamic_ritual_limit(datum/ritual/ritual, current_cultists)
 	var/base_limit = ritual.ritual_limit
 	var/cultists_per_additional_limit = ritual.number_cultist_for_add_limit
-	
+
 	if(cultists_per_additional_limit <= 0)
 		return base_limit
-	
+
 	var/additional_limit = 0
 	if(current_cultists > ritual.cultist_number)
 		var/extra_cultists = current_cultists - ritual.cultist_number
 		additional_limit = round(extra_cultists / cultists_per_additional_limit)
-	
+
 	return base_limit + additional_limit
 
 /obj/effect/decal/cleanable/sigil/proc/show_ritual_tgui(mob/living/user)
 	if(!user.client)
 		return
-	
+
 	var/list/available_rituals = list()
 	var/list/ritual_categories = list()
-	
+
 	switch(sigil_type)
 		if("Transmutation")
 			ritual_categories = subtypesof(/datum/ritual/transmutation)
@@ -82,44 +98,44 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 			ritual_categories = subtypesof(/datum/ritual/servantry)
 		if("Weaponary")
 			ritual_categories = subtypesof(/datum/ritual/weaponary)
-	
+
 	if(!length(ritual_categories))
 		return
-	
+
 	var/current_cultists = length(SSmapping.retainer.cultists)
-	
+
 	for(var/datum/ritual/ritual_type as anything in ritual_categories)
 		if(is_abstract(ritual_type))
 			continue
-		
+
 		var/ritual_name = initial(ritual_type.name)
 		var/is_cultist_only = initial(ritual_type.is_cultist_ritual)
-		
+
 		if(is_cultist_only && !(is_zizocultist(user.mind) || is_zizolackey(user.mind)))
 			continue
-		
+
 		available_rituals[ritual_name] = ritual_type
-	
+
 	if(!length(available_rituals))
 		to_chat(user, span_warning("No rituals for this rune."))
 		return
-	
+
 	var/chosen_ritual_name = tgui_input_list(user, "Choose Ritual:", "Rituals [sigil_type]", available_rituals)
 	if(!chosen_ritual_name || !user.Adjacent(src))
 		return
-	
+
 	var/ritual_type = available_rituals[chosen_ritual_name]
 	var/datum/ritual/pickritual = GLOB.ritualslist[chosen_ritual_name]
-	
+
 	if(!pickritual)
 		pickritual = new ritual_type()
 		GLOB.ritualslist[chosen_ritual_name] = pickritual
-	
+
 	// Специальная проверка для ритуала ASCEND
 	var/required_cultists = pickritual.cultist_number
 	if(istype(pickritual, /datum/ritual/fleshcrafting/ascend))
 		required_cultists = SSmapping.retainer.get_cult_ascension_required_cultists()
-		
+
 		if(current_cultists < required_cultists)
 			to_chat(user, span_danger("This ritual requires at least [required_cultists] cultists, but there are only [current_cultists]. You need [required_cultists - current_cultists] more cultists."))
 			return
@@ -128,9 +144,9 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 		if(current_cultists < required_cultists)
 			to_chat(user, span_danger("This ritual requires at least [required_cultists] cultists, but there are only [current_cultists]. You need [required_cultists - current_cultists] more cultists."))
 			return
-	
+
 	var/dynamic_limit = get_dynamic_ritual_limit(pickritual, current_cultists)
-	
+
 	if(dynamic_limit > 0)
 		var/current_count = get_ritual_count(chosen_ritual_name)
 		if(current_count >= dynamic_limit)
@@ -138,65 +154,60 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 				var/needed_cultists_for_more = pickritual.number_cultist_for_add_limit
 				var/current_extra_cultists = max(0, current_cultists - required_cultists)
 				var/needed_for_next = needed_cultists_for_more - (current_extra_cultists % needed_cultists_for_more)
-				
+
 				to_chat(user, span_danger("This ritual can only be performed [dynamic_limit] times, and it has already been performed [current_count] times. You need [needed_for_next] more cultists to perform it again."))
 			else
 				to_chat(user, span_danger("This ritual can only be performed [dynamic_limit] times, and it has already been performed [current_count] times."))
 			return
-	
+
 	var/cardinal_success = FALSE
 	var/center_success = FALSE
 	var/dews = 0
+	var/list/ingredients_to_consume = list()
+	var/atom/movable/found_ingredient
 
 	if(pickritual.e_req)
-		for(var/atom/A in get_step(src, EAST))
-			if(istype(A, pickritual.e_req))
-				dews++
-				break
-			else
-				continue
+		found_ingredient = find_ritual_ingredient(get_step(src, EAST), pickritual.e_req)
+		if(found_ingredient)
+			dews++
+			ingredients_to_consume += found_ingredient
 	else
 		dews++
 
 	if(pickritual.s_req)
-		for(var/atom/A in get_step(src, SOUTH))
-			if(istype(A, pickritual.s_req))
-				dews++
-				break
-			else
-				continue
+		found_ingredient = find_ritual_ingredient(get_step(src, SOUTH), pickritual.s_req)
+		if(found_ingredient)
+			dews++
+			ingredients_to_consume += found_ingredient
 	else
 		dews++
 
 	if(pickritual.w_req)
-		for(var/atom/A in get_step(src, WEST))
-			if(istype(A, pickritual.w_req))
-				dews++
-				break
-			else
-				continue
+		found_ingredient = find_ritual_ingredient(get_step(src, WEST), pickritual.w_req)
+		if(found_ingredient)
+			dews++
+			ingredients_to_consume += found_ingredient
 	else
 		dews++
 
 	if(pickritual.n_req)
-		for(var/atom/A in get_step(src, NORTH))
-			if(istype(A, pickritual.n_req))
-				dews++
-				break
-			else
-				continue
+		found_ingredient = find_ritual_ingredient(get_step(src, NORTH), pickritual.n_req)
+		if(found_ingredient)
+			dews++
+			ingredients_to_consume += found_ingredient
 	else
 		dews++
 
 	if(dews >= 4)
 		cardinal_success = TRUE
 
-	for(var/atom/A in loc.contents)
-		if(!istype(A, pickritual.center_requirement))
-			continue
-		else
+	if(pickritual.center_requirement)
+		found_ingredient = find_ritual_ingredient(get_turf(src), pickritual.center_requirement)
+		if(found_ingredient)
 			center_success = TRUE
-			break
+			ingredients_to_consume += found_ingredient
+	else
+		center_success = TRUE
 
 	var/badritualpunishment = FALSE
 	if(cardinal_success != TRUE)
@@ -213,12 +224,12 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 		user.electrocute_act(10, src)
 		return
 
-	consume_ingredients(pickritual)
+	consume_ritual_ingredients(ingredients_to_consume)
 	user.playsound_local(user, 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sounds/tesa.ogg', 25)
 	user.whisper("O'vena tesa...")
 
 	increment_ritual_count(chosen_ritual_name)
-	
+
 	var/datum/ritual/ritual_instance = new ritual_type()
 	ritual_instance.invoke(user, loc)
 
@@ -280,7 +291,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	if(target.stat == DEAD)
 		to_chat(user, span_danger("Он должен быть живым..."))
 		return
-	
+
 	var/list/options = list(
 		"Yield",
 		"Resist"
@@ -288,7 +299,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	if(target.mind && target.mind.has_antag_datum(/datum/antagonist/skeleton))
 		to_chat(user, span_danger("В пустых глазницах уже сияет воля Зизо. Просветление им не нужно."))
 		return
-	
+
 	var/chosen = tgui_input_list(target, "Do you yield to the darkness?", "You are shown the path of Zizo.", options)
 
 	if(!chosen)
@@ -337,14 +348,14 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	var/mob/living/carbon/human/target = locate() in center.contents
 	if(!target)
 		return
-	
+
 	if(target == user)
 		return
-	
+
 	if(target.mind && is_zizocultist(target.mind))
 		to_chat(target, span_danger("I will not let my followers become mindless brutes."))
 		return
-	
+
 	if(!target.ckey || !target.mind)
 		var/list/candidates = pollGhostCandidates("Do you want to play as skeleton?", ROLE_LICH_SKELETON, null, null, 10 SECONDS, POLL_IGNORE_LICH_SKELETON)
 		if(!LAZYLEN(candidates))
@@ -402,7 +413,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	w_req = /obj/item/bodypart/l_leg
 	e_req = /obj/item/bodypart/r_leg
 	n_req = /obj/item/alch/matricaria
-	s_req = /obj/item/reagent_containers/food/snacks/grown/manabloom 
+	s_req = /obj/item/reagent_containers/food/snacks/grown/manabloom
 
 /datum/ritual/servantry/thecall/invoke(mob/living/user, turf/center)
 
@@ -424,22 +435,22 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 				to_chat(human, span_warning("I sense an unholy presence loom near my soul."))
 				to_chat(user, span_danger("They are protected..."))
 				return
-			
+
 			if(human.mind?.assigned_role in GLOB.noble_positions)
 				to_chat(human, span_warning("I sense an unholy presence loom near my soul."))
 				to_chat(user, span_danger("They are protected..."))
 				return
-			
+
 			if(human.mind?.assigned_role in GLOB.retinue_positions)
 				to_chat(human, span_warning("I sense an unholy presence loom near my soul."))
 				to_chat(user, span_danger("They are protected..."))
 				return
-			
+
 			if(human.mind?.assigned_role in GLOB.regency_positions)
 				to_chat(human, span_warning("I sense an unholy presence loom near my soul."))
 				to_chat(user, span_danger("They are protected..."))
 				return
-			
+
 			if(human.mind?.assigned_role in GLOB.courtier_positions)
 				to_chat(human, span_warning("I sense an unholy presence loom near my soul."))
 				to_chat(user, span_danger("They are protected..."))
@@ -496,10 +507,8 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	desk = "Призывает проклятое сердце, кое может помочь в захвате жертв. Не поможет в бою."
 	center_requirement = /obj/item/organ/heart
 
-	n_req = /obj/item/natural/worms/leech
 	s_req = /obj/item/alch/sinew
 	w_req = /obj/item/alch/viscera
-	e_req = /obj/item/alch/taraxacum
 
 	is_cultist_ritual = TRUE
 
@@ -581,7 +590,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	if(!user.mind?.do_i_know(name = target.real_name))
 		to_chat(user, span_warning("I didn't saw his face."))
 		return
-	
+
 	var/assassin_found = FALSE
 	for(var/mob/living/carbon/human/HL in GLOB.human_list)
 		if(HAS_TRAIT(HL, TRAIT_ASSASSIN))
@@ -734,9 +743,6 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 		target.heal_wounds(500)
 		if(target.stat == DEAD)
 			target.revive()
-			#ifdef REVIVE_GRACE
-			target.apply_status_effect(/datum/status_effect/debuff/revive_grace)
-			#endif
 		target.apply_status_effect(/datum/status_effect/debuff/fleshmend_exhaustion)
 		to_chat(target, span_notice("ZIZO EMPOWERS ME!"))
 
@@ -880,7 +886,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	center_requirement = /mob/living/carbon/human
 
 	n_req = /mob/living/carbon/human
-	
+
 /datum/ritual/fleshcrafting/immortality/invoke(mob/living/user, turf/center)
 	var/mob/living/carbon/human/target = locate() in center.contents
 	var/mob/living/carbon/human/victim = locate() in get_step(center, NORTH)
@@ -914,9 +920,9 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	target.mind.AddSpell(new /obj/effect/proc_holder/spell/self/zizo_regenerate)
 
 /datum/ritual/fleshcrafting/fleshform
-	name = "Форма Плоти"
+	name = "Боевая плоть"
 	desk = "Превращает жертву в глупую живую плоть."
-	cultist_number = 5
+	cultist_number = 2
 	center_requirement = /mob/living/carbon/human
 	center_book = "Жертва"
 
@@ -930,7 +936,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	if(is_zizocultist(target.mind))
 		to_chat(target, span_danger("I'm not letting my strongest follower become a mindless brute."))
 		return
-	
+
 	if(!target.ckey || !target.mind)
 		var/list/candidates = pollGhostCandidates("Do you want to play as cultistic flesh?", null, null, null, 10 SECONDS, POLL_IGNORE_LICH_SKELETON)
 		if(!LAZYLEN(candidates))
@@ -1020,22 +1026,22 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	var/required_cultists = SSmapping.retainer.get_cult_ascension_required_cultists()
 	// Меняя формулу и требование меняйте это все и в /mob/living/carbon/human/proc/ascension_check() чтобы оно совпадало и не псиопило культистов
 	var/current_cultists = length(SSmapping.retainer.cultists)
-	
+
 	if(current_cultists < required_cultists)
 		to_chat(user, span_danger("This ritual requires at least [required_cultists] cultists, but there are only [current_cultists]. You need [required_cultists - current_cultists] more cultists."))
 		return
-	
+
 	var/mob/living/carbon/human/cultist = locate() in center.contents
 	if(!cultist || cultist != user)
 		return
 	if(!is_zizocultist(cultist.mind))
 		return
-	
+
 	// Поиск жертвы по приоритету
 	var/mob/living/carbon/human/sacrifice_target = null
 	var/target_role = null
 	var/obj/item/clothing/head/roguetown/crown/crown_target = null
-	
+
 	// Приоритет 1: Епископ
 	for(var/mob/living/carbon/human/H in GLOB.human_list)
 		if(H.stat == DEAD)
@@ -1054,7 +1060,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 			sacrifice_target = H
 			target_role = "Bishop"
 			break
-	
+
 	// Приоритет 2: Герцог/Король
 	if(!sacrifice_target)
 		if(SSticker.rulermob && istype(SSticker.rulermob, /mob/living/carbon/human))
@@ -1062,7 +1068,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 			if(ruler.stat != DEAD)
 				sacrifice_target = ruler
 				target_role = "Ruler"
-	
+
 	// Приоритет 3: Десница
 	if(!sacrifice_target)
 		for(var/mob/living/carbon/human/H in GLOB.human_list)
@@ -1082,7 +1088,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 				sacrifice_target = H
 				target_role = "Hand"
 				break
-	
+
 	// Приоритет 4: Принц или Принцесса
 	if(!sacrifice_target)
 		for(var/mob/living/carbon/human/H in GLOB.human_list)
@@ -1102,7 +1108,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 				sacrifice_target = H
 				target_role = role_title
 				break
-	
+
 	// Приоритет 5: Маршал
 	if(!sacrifice_target)
 		for(var/mob/living/carbon/human/H in GLOB.human_list)
@@ -1122,7 +1128,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 				sacrifice_target = H
 				target_role = "Marshal"
 				break
-	
+
 	// Приоритет 6: Придворный маг
 	if(!sacrifice_target)
 		for(var/mob/living/carbon/human/H in GLOB.human_list)
@@ -1142,7 +1148,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 				sacrifice_target = H
 				target_role = "Court Magician"
 				break
-	
+
 	// Приоритет 7: Рыцарь-капитан
 	if(!sacrifice_target)
 		for(var/mob/living/carbon/human/H in GLOB.human_list)
@@ -1162,7 +1168,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 				sacrifice_target = H
 				target_role = "Knight Captain"
 				break
-	
+
 	// Приоритет 8: Казначей
 	if(!sacrifice_target)
 		for(var/mob/living/carbon/human/H in GLOB.human_list)
@@ -1182,34 +1188,34 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 				sacrifice_target = H
 				target_role = "Steward"
 				break
-	
+
 	// Приоритет 9: Корона
 	if(!sacrifice_target)
 		for(var/obj/item/clothing/head/roguetown/crown/C in get_step(center, NORTH))
 			crown_target = C
 			target_role = "Crown"
 			break
-	
+
 	if(!sacrifice_target && !crown_target)
 		to_chat(user, span_danger("No suitable sacrifice found. Check ascension requirements."))
 		return
-	
+
 	if(sacrifice_target)
 		var/mob/living/carbon/human/RULER = locate() in get_step(center, NORTH)
 		if(RULER != sacrifice_target)
 			to_chat(user, span_danger("[sacrifice_target.real_name] ([target_role]) must stand on the northern cell of the sigil."))
 			return
-		
+
 		if(sacrifice_target.stat == DEAD)
 			to_chat(user, span_danger("[sacrifice_target.real_name] ([target_role]) must be alive for this ritual."))
 			return
-		
+
 		sacrifice_target.gib()
 		to_chat(user, span_notice("You have sacrificed [sacrifice_target.real_name], the [target_role]!"))
 	else if(crown_target)
 		qdel(crown_target)
 		to_chat(user, span_notice("You have sacrificed the Crown!"))
-	
+
 	SSmapping.retainer.cult_ascended = TRUE
 	addomen(OMEN_ASCEND)
 	to_chat(cultist, span_userdanger("I HAVE DONE IT! I HAVE REACHED A HIGHER FORM! ZIZO SMILES UPON ME WITH MALICE IN HER EYES TOWARD THE ONES WHO LACK KNOWLEDGE AND UNDERSTANDING!"))
@@ -1233,7 +1239,6 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	desk = "Ритуал, который позволяет создать сталь из простых кусочков"
 	center_requirement = /obj/item/scrap
 
-	n_req = /obj/item/scrap
 	s_req = /obj/item/scrap
 	w_req = /obj/item/scrap
 	e_req = /obj/item/scrap
@@ -1312,13 +1317,13 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 
 	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
 
-	new /obj/item/rogueweapon/huntingknife/idagger/steel/zizo(center)
+	new /obj/item/rogueweapon/huntingknife/idagger/steel/cursed(center)
 
 /datum/ritual/weaponary/summonweapon
 	name = "Создание длинного меча"
 	desk = "Призывает длинный меч Зизо."
 	center_requirement = /obj/item/rogueweapon/sword/long
-	
+
 	e_req = /obj/item/ingot/steel/zizo
 	w_req = /obj/item/ingot/steel/zizo
 
@@ -1334,7 +1339,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	name = "Создание боевого топора"
 	desk = "Призывает особо-острый боевой топор."
 	center_requirement = /obj/item/rogueweapon/stoneaxe
-	
+
 	n_req = /obj/item/ingot/steel/zizo
 
 /datum/ritual/weaponary/summonaxe/invoke(mob/living/user, turf/center)
@@ -1345,11 +1350,26 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	new /obj/item/rogueweapon/stoneaxe/battle/zizo(center)
 	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
 
+/datum/ritual/weaponary/summonegreataxe
+	name = "Создание двустороннего двуручного топора"
+	desk = "Призывает особо-острый боевой двуручный топор."
+	center_requirement = /obj/item/rogueweapon/stoneaxe/battle/zizo
+
+	n_req = /obj/item/ingot/steel/zizo
+
+/datum/ritual/weaponary/summonegreataxe/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/rogueweapon/greataxe/steel/doublehead/zizo(center)
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
 /datum/ritual/weaponary/summonasword
 	name = "Создание поглощающего меча"
 	desk = "Призывает меч, который ворует жизненную энергию."
 	center_requirement = /obj/item/rogueweapon/sword
-	
+
 	n_req = /obj/item/ingot/steel/zizo
 
 /datum/ritual/weaponary/summonasword/invoke(mob/living/user, turf/center)
@@ -1360,11 +1380,28 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	new /obj/item/rogueweapon/sword/sabre/zizo(center)
 	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
 
+/datum/ritual/weaponary/summonmace
+	name = "Призыв булавы"
+	desk = "Призывает особую булаву Зизо."
+	center_requirement = /obj/item/rogueweapon/mace
+
+	n_req = /obj/item/ingot/steel/zizo
+
+/datum/ritual/weaponary/summonmace/invoke(mob/living/user, turf/center)
+
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/rogueweapon/mace/steel/zizo(center)
+
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
 /datum/ritual/weaponary/summonshield
 	name = "Создание щита"
 	desk = "Призывает длинный меч Зизо."
 	center_requirement = /obj/item/rogueweapon/shield/tower
-	
+
 	e_req = /obj/item/ingot/steel/zizo
 	w_req = /obj/item/ingot/steel/zizo
 
@@ -1417,4 +1454,3 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	new /obj/item/rope(center)
 
 	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
-

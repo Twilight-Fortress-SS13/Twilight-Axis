@@ -52,7 +52,7 @@
 	. += span_info("Leeches can be found by roaming through murkwater and sewage. Examine yourself - or click the heart on your HUD - to check your limbs, and click any highlighted mentions of the leech to remove them.")
 	. += span_info("When attached to someone, leeches will passively drain blood and toxins from the body. This can be used to counteract poisons, overdoses, and imbalanced humors.")
 
-/obj/item/natural/worms/leech/Initialize()
+/obj/item/natural/worms/leech/Initialize(mapload)
 	. = ..()
 	//leech lore
 	leech_lore()
@@ -62,6 +62,26 @@
 /obj/item/natural/worms/leech/update_icon()
 	. = ..()
 	icon_state = initial(icon_state)
+
+/obj/item/natural/worms/leech/proc/remove_from_host(mob/living/target, obj/item/bodypart/bodypart)
+	if(bodypart)
+		bodypart.remove_embedded_object(src)
+	else if(target)
+		target.simple_remove_embedded_object(src)
+
+/obj/item/natural/worms/leech/proc/give_stored_blood(mob/living/target, obj/item/bodypart/bodypart)
+	if(!target)
+		return TRUE
+
+	var/blood_given = min(max(BLOOD_VOLUME_NORMAL - target.blood_volume, 0), blood_storage, blood_sucking)
+	target.blood_volume = min(target.blood_volume + blood_given, BLOOD_VOLUME_NORMAL)
+	blood_storage = max(blood_storage - blood_given, 0)
+
+	if((blood_storage <= 0) || (target.blood_volume >= BLOOD_VOLUME_NORMAL))
+		remove_from_host(target, bodypart)
+		return TRUE
+
+	return FALSE
 
 /obj/item/natural/worms/leech/process()
 	if(!drainage && !is_embedded)
@@ -77,14 +97,7 @@
 	host.adjustToxLoss(toxin_healing)
 	var/obj/item/bodypart/bp = loc
 	if(giving)
-		var/blood_given = min(BLOOD_VOLUME_MAXIMUM - host.blood_volume, blood_storage, blood_sucking)
-		host.blood_volume += blood_given
-		blood_storage = max(blood_storage - blood_given, 0)
-		if((blood_storage <= 0) || (host.blood_volume >= BLOOD_VOLUME_MAXIMUM))
-			if(bp)
-				bp.remove_embedded_object(src)
-			else
-				host.simple_remove_embedded_object(src)
+		if(give_stored_blood(host, bp))
 			return TRUE
 	else
 		var/blood_extracted = min(blood_maximum - blood_storage, host.blood_volume, blood_sucking)
@@ -103,14 +116,7 @@
 		return
 	user.adjustToxLoss(toxin_healing)
 	if(giving)
-		var/blood_given = min(BLOOD_VOLUME_MAXIMUM - user.blood_volume, blood_storage, blood_sucking)
-		user.blood_volume += blood_given
-		blood_storage = max(blood_storage - blood_given, 0)
-		if((blood_storage <= 0) || (user.blood_volume >= BLOOD_VOLUME_MAXIMUM))
-			if(bodypart)
-				bodypart.remove_embedded_object(src)
-			else
-				user.simple_remove_embedded_object(src)
+		if(give_stored_blood(user, bodypart))
 			return TRUE
 	else
 		var/blood_extracted = min(blood_maximum - blood_storage, user.blood_volume, blood_sucking)
@@ -272,7 +278,7 @@
 		"embedded_fall_chance" = 0,
 		"embedded_bloodloss"= 0,
 		"embedded_ignore_throwspeed_threshold" = TRUE,
-		"embedded_unsafe_removal_pain_multiplier" = 0, 
+		"embedded_unsafe_removal_pain_multiplier" = 0,
 	) // the humble cheele is gentle. so gentle.
 
 /obj/item/natural/worms/leech/cheele/attack_self(mob/user)

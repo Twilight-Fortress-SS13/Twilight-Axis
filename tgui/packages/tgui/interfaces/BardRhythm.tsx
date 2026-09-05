@@ -1,3 +1,4 @@
+import { useBackend } from 'tgui/backend';
 import { Button, Section, Stack } from 'tgui-core/components';
 
 type Rhythm = {
@@ -12,11 +13,12 @@ type Props = {
   slots_remaining: number;
   can_unlearn: boolean;
   unlearn_cooldown_text: string;
-  act: (action: string, payload?: object) => void;
 };
 
 export const BardRhythmSection = (props: Props) => {
-  const { rhythms, slots_remaining, can_unlearn, unlearn_cooldown_text, act } = props;
+  const { act } = useBackend();
+  const { rhythms, slots_remaining, can_unlearn, unlearn_cooldown_text } =
+    props;
 
   return (
     <Section
@@ -28,7 +30,9 @@ export const BardRhythmSection = (props: Props) => {
             {rhythm.known ? (
               <Button
                 fluid
-                tooltip={can_unlearn ? 'Click to unlearn' : unlearn_cooldown_text}
+                tooltip={
+                  can_unlearn ? 'Click to unlearn' : unlearn_cooldown_text
+                }
                 tooltipPosition="bottom"
                 color="grey"
                 disabled={!can_unlearn}

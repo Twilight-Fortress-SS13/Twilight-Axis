@@ -2,7 +2,7 @@
 	name = "Confessor"
 	tutorial = "Psydonite hunters, unmatched in the fields of subterfuge and investigation. There is no suspect too powerful to investigate, no room too guarded to infiltrate, and no weakness too hidden to exploit."
 	allowed_sexes = list(MALE, FEMALE)
-	
+
 	outfit = /datum/outfit/job/roguetown/confessor
 	category_tags = list(CTAG_ORTHODOXIST)
 	subclass_languages = list(/datum/language/otavan)
@@ -11,8 +11,7 @@
 		TRAIT_DODGEEXPERT,
 		TRAIT_BLACKBAGGER,
 		TRAIT_PERFECT_TRACKER,
-		TRAIT_PSYDONITE,
-		TRAIT_SLEUTH,
+		TRAIT_PSYDONITE
 	)
 	subclass_stats = list(
 		STATKEY_SPD = 3,
@@ -47,26 +46,26 @@
 /datum/outfit/job/roguetown/confessor/pre_equip(mob/living/carbon/human/H, visualsOnly)
 	..()
 	if(H.mind)
-		var/weapons = list("Psydonic Rapier", "Psydonic Shortsword", "Psydonic Tomahawk", "Psydonic Handmace - Swift-Balanced", "Psydonic Flanged Mace - Heavy-Balanced")
+		var/weapons = list("Psydonic Rapier", "Psydonic Shortsword", "Psydonic Tomahawk", "Psydonic Cudgel", "Psydonic Flanged Mace")
 		var/weapon_choice = input(H,"Choose your WEAPON.", "TAKE UP PSYDON'S ARMS.") as anything in weapons
 		switch(weapon_choice)
 			if("Psydonic Rapier")
-				l_hand = /obj/item/rogueweapon/sword/rapier/psy/preblessed
+				l_hand = /obj/item/rogueweapon/sword/rapier/psy
 				r_hand = /obj/item/rogueweapon/scabbard/sword
 				H.adjust_skillrank_up_to(/datum/skill/combat/swords, 4, TRUE)
 			if("Psydonic Shortsword")
-				l_hand = /obj/item/rogueweapon/sword/short/psy/preblessed
+				l_hand = /obj/item/rogueweapon/sword/short/psy
 				r_hand = /obj/item/rogueweapon/scabbard/sword
 				H.adjust_skillrank_up_to(/datum/skill/combat/swords, 4, TRUE)
 			if("Psydonic Tomahawk")
-				l_hand = /obj/item/rogueweapon/stoneaxe/handaxe/psy/preblessed
+				l_hand = /obj/item/rogueweapon/stoneaxe/handaxe/psy
 				H.adjust_skillrank_up_to(/datum/skill/combat/axes, 4, TRUE)
-			if("Psydonic Handmace - Swift-Balanced")
-				l_hand = /obj/item/rogueweapon/mace/cudgel/psyclassic/preblessed
+			if("Psydonic Cudgel")
+				l_hand = /obj/item/rogueweapon/mace/cudgel/psy
 				H.adjust_skillrank_up_to(/datum/skill/combat/maces, 4, TRUE)
-			if("Psydonic Flanged Mace - Heavy-Balanced")
-				l_hand = /obj/item/rogueweapon/mace/cudgel/psy/preblessed
-				H.adjust_skillrank_up_to(/datum/skill/combat/maces, 4, TRUE)	
+			if("Psydonic Flanged Mace")
+				l_hand = /obj/item/rogueweapon/mace/cudgel/flanged/psy
+				H.adjust_skillrank_up_to(/datum/skill/combat/maces, 4, TRUE)
 		var/armors = list("Confessor - Dodge Expert, Complete Coverage", "Arbalist - Master Crossbows, +III STR / -III SPD")
 		var/armor_choice = input(H, "Choose your ARCHETYPE.", "TAKE UP PSYDON'S DUTY.") as anything in armors
 		switch(armor_choice)
@@ -77,7 +76,7 @@
 			if("Arbalist - Master Crossbows, +III STR / -III SPD")
 				head = /obj/item/clothing/head/roguetown/headband/bloodied
 				armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fencer/psydon
-				shirt = /obj/item/clothing/suit/roguetown/armor/manual/sewable/confessor
+				shirt = /obj/item/clothing/suit/roguetown/armor/manual/tool/needle/chest/confessor
 				REMOVE_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, 5, TRUE)
 				H.adjust_skillrank_up_to(/datum/skill/misc/swimming, 4, TRUE)

@@ -1,9 +1,9 @@
 /datum/action/cooldown/spell/crush
 	button_icon = 'icons/mob/actions/mage_kinesis.dmi'
 	name = "Crush"
+	expose_caster_on_deflect = FALSE
 	desc = "Compress gravitational force onto a single point, crushing the aimed body part. It is telegraphed and can be walked out of. \
-	Crushes through armor with exceptional force. Slows struck targets briefly. \
-	Deals 100% more damage to simple-minded creechurs."
+	Crushes through armor with exceptional force. Slows struck targets briefly."
 	button_icon_state = "crush"
 	sound = 'sound/magic/repulse.ogg'
 	spell_color = GLOW_COLOR_KINESIS
@@ -22,7 +22,8 @@
 	charge_required = TRUE
 	weapon_cast_penalized = TRUE
 	charge_time = CHARGETIME_MINOR
-	charge_drain = 1
+	charge_swingdelay_type = SWINGDELAY_PENALTY
+	hold_drain = 1
 	charge_slowdown = CHARGING_SLOWDOWN_SMALL
 	charge_sound = 'sound/magic/charging.ogg'
 	cooldown_time = 8 SECONDS
@@ -36,7 +37,6 @@
 
 	var/telegraph_delay = TELEGRAPH_SKILLSHOT
 	var/crush_damage = 60
-	var/npc_simple_damage_mult = 2
 	var/crush_intdamage_factor = 2
 
 /datum/action/cooldown/spell/crush/cast(atom/cast_on)
@@ -76,10 +76,11 @@
 			continue
 
 		var/target_zone = caster?.zone_selected || pick(BODY_ZONE_HEAD, BODY_ZONE_CHEST)
-		arcyne_strike(caster, L, null, crush_damage, target_zone, BCLASS_BLUNT, \
+		if(arcyne_strike(caster, L, null, crush_damage, target_zone, BCLASS_BLUNT, \
 			spell_name = "Crushing Force", damage_type = BRUTE, \
-			npc_simple_damage_mult = npc_simple_damage_mult, skip_animation = TRUE, \
-			intdamage_factor = crush_intdamage_factor)
+			skip_animation = TRUE, \
+			intdamage_factor = crush_intdamage_factor) == ARCYNE_STRIKE_WARDED)
+			continue
 		L.Slowdown(1)
 		to_chat(L, span_userdanger("Gravitational force compresses around me!"))
 		new /obj/effect/temp_visual/spell_impact(get_turf(L), spell_color, spell_impact_intensity)

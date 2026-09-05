@@ -11,7 +11,7 @@
 	plane = GAME_PLANE_UPPER
 	var/last_market_refresh = 0
 
-/obj/structure/roguemachine/noticeboard/Initialize()
+/obj/structure/roguemachine/noticeboard/Initialize(mapload)
 	. = ..()
 	SSroguemachine.noticeboards += src
 	update_icon()
@@ -22,21 +22,6 @@
 	SSroguemachine.noticeboards -= src
 	if(SSmerchant_trade)
 		SSmerchant_trade.unregister_market_watcher(src)
-	return ..()
-
-/obj/structure/roguemachine/noticeboard/attackby(obj/item/P, mob/living/carbon/human/user, params)
-	if(istype(P, /obj/item/quest_writ/blockade))
-		var/obj/item/quest_writ/blockade/B = P
-		if(B.assigned_quest?.is_directive)
-			to_chat(user, span_warning("A Steward's request is not for public posting - it must be handed directly to the bearer."))
-			return
-		if(B.assigned_quest?.required_fellowship_size >= BLOCKADE_FELLOWSHIP_REQUIREMENT)
-			to_chat(user, span_warning("This writ is already posted publicly."))
-			return
-		B.promote_to_board_gated()
-		to_chat(user, span_notice("You pin the [B.name] to the board. Any who take it must have a fellowship of [BLOCKADE_FELLOWSHIP_REQUIREMENT]."))
-		playsound(src, 'sound/items/inqslip_sealed.ogg', 50, TRUE, -1)
-		return
 	return ..()
 
 /obj/structure/roguemachine/noticeboard/wall
@@ -98,7 +83,7 @@
 
 /obj/structure/roguemachine/noticeboard/ui_data(mob/user)
 	var/list/data = list()
-	data["scout_regions"] = build_scout_regions()
+	data["scout_regions"] = SSregionthreat.build_scout_region_rows()
 	data["trade_orders"] = build_trade_orders()
 	data["harbor_demands"] = build_harbor_demands()
 	data["charters"] = build_charters()
@@ -137,36 +122,6 @@
 	data["has_active_notice"] = has_active_notice
 	data["has_active_listing"] = has_active_listing
 	return data
-
-/obj/structure/roguemachine/noticeboard/proc/build_scout_regions()
-	var/list/blockade_by_threat_name = list()
-	for(var/datum/blockade/B as anything in GLOB.active_blockades)
-		if(B.threat_region_name)
-			blockade_by_threat_name[B.threat_region_name] = B
-	var/list/rows = list()
-	for(var/datum/threat_region/TR as anything in SSregionthreat.threat_regions)
-		var/list/row = list()
-		row["region_name"] = TR.region_name
-		row["danger_level"] = TR.get_danger_level()
-		row["danger_color"] = TR.get_danger_color()
-		row["ic_descriptions"] = TR.get_ic_description()
-		var/datum/blockade/B = blockade_by_threat_name[TR.region_name]
-		if(B)
-			var/datum/quest_faction/F = B.get_faction()
-			var/datum/economic_region/ER = B.get_region()
-			row["blockaded"] = TRUE
-			row["blockade_writ_out"] = B.has_active_scroll() ? TRUE : FALSE
-			row["blockade_faction_label"] = F ? "[F.group_word] of [F.name_plural]" : (B.faction_id || "")
-			row["blockade_region_label"] = ER ? ER.name : (B.region_id || "")
-			row["blockade_days_active"] = max(0, GLOB.dayspassed - B.day_started)
-		else
-			row["blockaded"] = FALSE
-			row["blockade_writ_out"] = FALSE
-			row["blockade_faction_label"] = ""
-			row["blockade_region_label"] = ""
-			row["blockade_days_active"] = 0
-		rows += list(row)
-	return rows
 
 /obj/structure/roguemachine/noticeboard/proc/build_trade_orders()
 	var/list/rows = list()
