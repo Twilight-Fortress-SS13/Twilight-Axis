@@ -2,13 +2,13 @@
 	name = "Gnoll Knight"
 	tutorial = "You were forged in the fires of the volcano, burn marks have long since healed, but the armor hammered against your muscle isn't so fleeting."
 	allowed_sexes = list(MALE, FEMALE)
-	
+
 	outfit = /datum/outfit/job/roguetown/gnoll/knight
 	category_tags = list(CTAG_GNOLL)
 	traits_applied = list(TRAIT_HEAVYARMOR, TRAIT_UNCONVERTIBLE) // Flavoring
-	
+
 	cmode_music = 'sound/music/cmode/antag/combat_thewall.ogg'
-	reset_stats = TRUE
+	reset_stats = FALSE // TA EDIT
 	subclass_stats = list(
 		STATKEY_WIL = 5,
 		STATKEY_CON = 5,
