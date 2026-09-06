@@ -102,6 +102,8 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 		return
 	if (!player.prefs)
 		return
+	if(character.dna?.species?.id == "vurdalak") //TA EDIT
+		return
 
 	var/virtuous = FALSE
 	var/heretic = FALSE

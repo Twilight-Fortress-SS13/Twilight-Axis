@@ -307,7 +307,7 @@
 		"ATC" = ta_roleban_panel_list(GLOB.atc_positions, null),
 		"Sidefolk" = ta_roleban_panel_list(GLOB.sidefolk_positions, null),
 		"Ghost and Other Roles" = list(ROLE_NECRO_SKELETON, ROLE_LICH_SKELETON, ROLE_UNBOUND_DEATHKNIGHT, ROLE_DARK_ITINERANT),
-		"Antagonist Positions" = ta_roleban_panel_list(list(ROLE_ASCENDANT, ROLE_ASPIRANT, ROLE_BANDIT, "Freeman", "Lost Grenzel", ROLE_NBEAST, ROLE_WEREWOLF, ROLE_LICH, ROLE_PREBEL, ROLE_REBEL_LEADER, ROLE_CULT), null),
+		"Antagonist Positions" = ta_roleban_panel_list(list(ROLE_ASCENDANT, ROLE_ASPIRANT, ROLE_BANDIT, "Freeman", "Lost Grenzel", ROLE_VURDALAK, ROLE_NBEAST, ROLE_WEREWOLF, ROLE_LICH, ROLE_PREBEL, ROLE_REBEL_LEADER, ROLE_CULT), null),
 		"Lesser Antagonst Positions" = list(ROLE_WRETCH, ROLE_DREAMWALKER, ROLE_GNOLL, ROLE_VAMPIRE),
 	)
 	for(var/group_name in group_sources)
