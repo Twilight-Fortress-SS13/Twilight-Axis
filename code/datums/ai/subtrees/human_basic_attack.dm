@@ -346,7 +346,8 @@
 	if(!special.apply_cost(pawn))
 		return FALSE
 	SEND_SIGNAL(pawn, COMSIG_MOB_TRY_BARK, 100)
-	special.deploy(pawn, held_weapon, target)
+	if(!special.deploy(pawn, held_weapon, target)) // TA EDIT
+		return FALSE // TA EDIT
 	controller.set_blackboard_key(BB_HUMAN_NPC_TECHNIQUE_CD, world.time + 3 SECONDS)
 	// AI penalty: re-stamp the special cooldown longer than the player baseline so NPCs
 	// can't chain specials as tightly as a human player could. Override replaces the

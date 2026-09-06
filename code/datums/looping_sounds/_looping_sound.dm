@@ -148,6 +148,8 @@ GLOBAL_LIST_EMPTY(created_sound_groups)
 	on_start()
 
 /datum/looping_sound/proc/stop(null_parent)
+	if(stopped) // TA EDIT
+		return // TA EDIT
 	stopped = TRUE
 	if(null_parent)
 		set_parent(null)

@@ -259,7 +259,7 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	if(!message)
 		return
 
-	if(D.flags & SIGNLANG)
+	if(D?.flags & SIGNLANG) // TA EDIT
 		send_speech_sign(message, message_range, src, bubble_type, spans, language, message_mode, original_message)
 	else
 		send_speech(message, message_range, src, bubble_type, spans, language, message_mode, original_message)

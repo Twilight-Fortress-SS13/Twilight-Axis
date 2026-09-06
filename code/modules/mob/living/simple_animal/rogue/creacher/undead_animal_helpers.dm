@@ -123,7 +123,7 @@ GLOBAL_LIST_INIT(animal_to_undead, list(
 
 	playsound(mob, 'sound/combat/fracture/fracturewet (2).ogg', 100, TRUE)
 	animate(mob)
-	var/undead_type = GLOB.animal_to_undead[mob.type]
+	var/undead_type = get_undead_type(mob.type) // TA EDIT
 	new undead_type(mob.loc)
 	mob.visible_message(span_danger("[mob] walks again... As a terrifying deadite!"))
 
