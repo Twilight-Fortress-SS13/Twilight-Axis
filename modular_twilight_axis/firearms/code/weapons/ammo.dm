@@ -130,14 +130,22 @@
 
 /atom/movable/screen/alert/status_effect/debuff/psypowder
 	name = "Runed Poison"
-	desc = "This powder is killing my eyes and body. I cant see and move..."
-	icon_state = "blind"
+	desc = "This powder is killing my eyes and body. I barely can see and move..."
+	icon = 'modular_twilight_axis/icons/mob/screen_alert.dmi'
+	icon_state = "runed_poison"
 
 /datum/status_effect/debuff/psypowder
-	id = "blind"
+	id = "runed_poison"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/psypowder
-	effectedstats = list(STATKEY_STR = -5, STATKEY_SPD = -5, STATKEY_CON = -3)
+	effectedstats = list(STATKEY_STR = -3, STATKEY_SPD = -3, STATKEY_CON = -2, STATKEY_PER = -2)
 	duration = 15 SECONDS
+
+/datum/status_effect/debuff/psypowder/on_apply()
+	. = ..()
+
+/datum/status_effect/debuff/psypowder/on_remove()
+	. = ..()
+	to_chat(owner, span_warning("My vision returns...!"))
 
 /atom/movable/screen/alert/status_effect/debuff/thunderpowder
 	name = "Struck by Thunder"
@@ -236,7 +244,6 @@
 							T.apply_status_effect(/datum/status_effect/debuff/thunderpowder)
 						if("psypowder")
 							T.apply_status_effect(/datum/status_effect/debuff/psypowder)
-							T.apply_status_effect(/datum/status_effect/debuff/blindness)
 						if("corrosive gunpowder")
 							playsound(src, 'sound/misc/drink_blood.ogg', 100)
 							T.apply_status_effect(/datum/status_effect/debuff/corrosivesplash)
@@ -281,7 +288,6 @@
 							T.apply_status_effect(/datum/status_effect/debuff/thunderpowder)
 						if("psypowder")
 							T.apply_status_effect(/datum/status_effect/debuff/psypowder)
-							T.apply_status_effect(/datum/status_effect/debuff/blindness/psy)
 						if("terrorpowder")
 							gunpowder_npc_critfactor += 1
 				if(!T.mind)
@@ -397,7 +403,6 @@
 			L.apply_status_effect(/datum/status_effect/debuff/thunderpowder)
 		if("psypowder")
 			L.apply_status_effect(/datum/status_effect/debuff/psypowder)
-			L.apply_status_effect(/datum/status_effect/debuff/blindness)
 		if("arcyne gunpowder")
 			if(ishuman(L))
 				var/mob/living/carbon/human/H = L

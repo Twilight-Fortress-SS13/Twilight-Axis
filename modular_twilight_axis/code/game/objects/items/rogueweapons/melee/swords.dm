@@ -3,9 +3,9 @@
 	desc = "An ornate rapier, plated in a ceremonial veneer of silver. The barbs pierce your palm, and - for just a moment - you see red. Never forget that you are why Psydon wept."
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
 	icon_state = "psyrapier"
-	item_state = "psyrapier"
+	sheathe_icon = "silverrapier"
 	resistance_flags = FIRE_PROOF
-	force = 17
+	force = 20
 	force_wielded = 20
 	is_silver = TRUE
 
@@ -25,34 +25,32 @@
 	desc = "Дорогостоющий складной меч, сделанный специально по заказу для десницы. Можно носить как обычный меч в ножнах, так и в сумке или в поясе, если сложить."
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
 	icon_state = "folding_sword_on"
-	item_state = "folding_sword_on"
-	var/on = FALSE
-
-/obj/item/rogueweapon/sword/rapier/foldsword/update_icon()
-	if(on)
-		icon_state = "folding_sword_on"
-	else
-		icon_state = "folding_sword_off"
+	var/extended = FALSE
 
 /obj/item/rogueweapon/sword/rapier/foldsword/attack_self(mob/user)
-	if(on)
-		on = FALSE
+	extended = !extended
+	playsound(src.loc, 'sound/blank.ogg', 50, TRUE)
+	if(extended)
+		possible_item_intents = list(/datum/intent/sword/thrust/rapier, /datum/intent/sword/cut/rapier, /datum/intent/sword/thrust/rapier/lunge)
+		wlength = WLENGTH_NORMAL
+		w_class = WEIGHT_CLASS_BULKY
+		sharpness = IS_SHARP
+		slot_flags = ITEM_SLOT_HIP | ITEM_SLOT_BACK
+		equip_delay_self = initial(equip_delay_self)
+		unequip_delay_self = initial(unequip_delay_self)
+		inv_storage_delay = initial(inv_storage_delay)
+		icon_state = "foldingblade_on"
+		playsound(user, 'sound/items/knife_open.ogg', 100, TRUE)
+	else
 		possible_item_intents = list(/datum/intent/sword/strike)
 		wlength = WLENGTH_SHORT
 		w_class = WEIGHT_CLASS_SMALL
+		sharpness = IS_BLUNT
+		slot_flags = ITEM_SLOT_HIP
 		equip_delay_self = 0 SECONDS
 		unequip_delay_self = 0 SECONDS
 		inv_storage_delay = 0 SECONDS
-		slot_flags = ITEM_SLOT_HIP
-	else
-		on = TRUE
-		possible_item_intents = list(/datum/intent/sword/thrust/rapier, /datum/intent/sword/cut/rapier, /datum/intent/sword/peel)
-		wlength = WLENGTH_NORMAL
-		w_class = WEIGHT_CLASS_BULKY
-		equip_delay_self = 1.5 SECONDS
-		unequip_delay_self = 1.5 SECONDS
-		inv_storage_delay = 1.5 SECONDS
-		slot_flags = ITEM_SLOT_HIP | ITEM_SLOT_BACK
+		icon_state = "foldingblade_off"
 	if(user.a_intent)
 		var/datum/intent/I = user.a_intent
 		if(istype(I))
@@ -111,5 +109,41 @@
 			if("onback")
 				return list("shrink" = 0.6,"sx" = -1,"sy" = 2,"nx" = 0,"ny" = 2,"wx" = 2,"wy" = 1,"ex" = 0,"ey" = 1,"nturn" = 0,"sturn" = 0,"wturn" = 70,"eturn" = 15,"nflip" = 1,"sflip" = 1,"wflip" = 1,"eflip" = 1,"northabove" = 1,"southabove" = 0,"eastabove" = 0,"westabove" = 0)
 
-/datum/intent/sword/chop/cleave
-	icon_state = "incleave"
+/obj/item/rogueweapon/sword/rapier/psy/folding
+	name = "psydonian folding blade"
+	desc = "A costly folding blade commissioned for the rune volves of the Psydonian Inquisition. Built for investigators and executioners alike, it folds into a compact package for discreet carry before locking into a deadly dueling weapon."
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon_state = "psyfoldingblade_on"
+	sheathe_icon = "silverrapier"
+	var/extended = FALSE
+
+/obj/item/rogueweapon/sword/rapier/psy/folding/attack_self(mob/user)
+	extended = !extended
+	playsound(src.loc, 'sound/blank.ogg', 50, TRUE)
+	if(extended)
+		possible_item_intents = list(/datum/intent/sword/thrust/rapier, /datum/intent/sword/cut/rapier, /datum/intent/sword/thrust/rapier/lunge)
+		wlength = WLENGTH_NORMAL
+		w_class = WEIGHT_CLASS_BULKY
+		sharpness = IS_SHARP
+		slot_flags = ITEM_SLOT_HIP | ITEM_SLOT_BACK
+		equip_delay_self = initial(equip_delay_self)
+		unequip_delay_self = initial(unequip_delay_self)
+		inv_storage_delay = initial(inv_storage_delay)
+		icon_state = "psyfoldingblade_on"
+		playsound(user, 'sound/items/knife_open.ogg', 100, TRUE)
+	else
+		possible_item_intents = list(/datum/intent/sword/strike)
+		wlength = WLENGTH_SHORT
+		w_class = WEIGHT_CLASS_SMALL
+		sharpness = IS_BLUNT
+		slot_flags = ITEM_SLOT_HIP
+		equip_delay_self = 0 SECONDS
+		unequip_delay_self = 0 SECONDS
+		inv_storage_delay = 0 SECONDS
+		icon_state = "psyfoldingblade_off"
+	if(user.a_intent)
+		var/datum/intent/I = user.a_intent
+		if(istype(I))
+			I.afterchange()
+	user.update_a_intents()
+	update_icon()

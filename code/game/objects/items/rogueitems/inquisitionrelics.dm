@@ -1014,7 +1014,7 @@ Inquisitorial armory down here
 			if("onbelt")
 				return list("shrink" = 0.3,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
 
-/*		//TA-EDITSTART
+		//TA-EDITSTART
 /obj/item/inqarticles/garrote // Do not give this item out freely to other classes. Do not subtype this item for other classes. This is intended purely as the Confessor's identifying sidegrade, and as a bonus for the Inspector INQ. I will be very sad if you disregard this comment. Thank you. - Yische.
 	name = "\proper seizing garrote" // It's nonlethal. It's so silly and fun.
 	desc = "A macabre instrument favored by the more clandestine of the Psydonian Silver Order; A length of thick leather inquiry cordage that has been dipped in both holy water and dye before being consecrated and spell-laced, held and threaded between two iron links. Perfect for apprehension."
@@ -1111,6 +1111,25 @@ Inquisitorial armory down here
 		active = FALSE
 		playsound(loc, 'sound/items/garroteshut.ogg', 65, TRUE)
 
+/obj/item/inqarticles/garrote/proc/has_oxy_protection(obj/item/I) //TA EDIT START
+	if(!I || I.obj_broken)
+		return FALSE
+	return istype(I, /obj/item/clothing/neck/roguetown/gorget) || istype(I, /obj/item/clothing/neck/roguetown/leather) || istype(I, /obj/item/clothing/neck/roguetown/bevor) || istype(I, /obj/item/clothing/neck/roguetown/coif) || istype(I, /obj/item/clothing/neck/roguetown/chaincoif)
+
+/obj/item/inqarticles/garrote/proc/log_garrote_grab(mob/living/user, mob/living/target)
+	if(!user || !target)
+		return
+	log_attack("[key_name(user)] wrapped [src] around [key_name(target)]'s throat at [AREACOORD(user)].")
+	user.log_message("wrapped [src] around [key_name(target)]'s throat.", LOG_ATTACK, color = "red")
+	target.log_message("had [src] wrapped around their throat by [key_name(user)].", LOG_ATTACK, color = "orange")
+
+/obj/item/inqarticles/garrote/proc/log_garrote_choke(mob/living/user, mob/living/target, oxy_damage)
+	if(!user || !target)
+		return
+	log_attack("[key_name(user)] choked [key_name(target)] with [src] for [oxy_damage] oxygen damage at [AREACOORD(user)].")
+	user.log_message("choked [key_name(target)] with [src] for [oxy_damage] oxygen damage.", LOG_ATTACK, color = "red")
+	target.log_message("was choked by [key_name(user)] with [src] for [oxy_damage] oxygen damage.", LOG_ATTACK, color = "orange") //TA EDIT END
+
 /obj/item/inqarticles/garrote/attack_self(mob/user)
 	if(obj_broken)
 		to_chat(user, span_warning("It's useless now, although.."))
@@ -1191,6 +1210,9 @@ Inquisitorial armory down here
 		if(user.zone_selected != "neck")
 			to_chat(user, span_warning("I need to wrap it around their throat."))
 			return
+		if(target.can_see_cone(user) && target.stat == CONSCIOUS) //TA EDIT START
+			to_chat(user, span_warning("They looking right at me. This isn't going to work."))
+			return //TA EDIT END
 		if(HAS_TRAIT(target, TRAIT_GARROTED))
 			to_chat(user, span_warning("They already have one wrapped around their throat."))
 			return
@@ -1203,6 +1225,7 @@ Inquisitorial armory down here
 		if(target != user)
 			user.start_pulling(target, state = 1, supress_message = TRUE, item_override = src)
 		user.visible_message(span_danger("[user] wraps the [src] around [target]'s throat!"))
+		log_garrote_grab(user, target) //TA EDIT
 		user.stamina_add(25)
 		user.changeNext_move(CLICK_CD_MELEE)
 		REMOVE_TRAIT(user, TRAIT_NOSTRUGGLE, TRAIT_GENERIC)
@@ -1226,15 +1249,25 @@ Inquisitorial armory down here
 		// if(get_location_accessible(C, BODY_ZONE_PRECISE_NECK))
 		playsound(loc, pick('sound/items/garrotechoke1.ogg', 'sound/items/garrotechoke2.ogg', 'sound/items/garrotechoke3.ogg', 'sound/items/garrotechoke4.ogg', 'sound/items/garrotechoke5.ogg'), 100, TRUE)
 		if(prob(40))
-			C.emote("choke")
-		C.adjustOxyLoss(choke_damage)
+			C.emote("choke") //TA EDIT START
+		var/oxy_damage = 20
+		if(C.InCritical())
+			oxy_damage = choke_damage
+		else if(ishuman(C))
+			var/mob/living/carbon/human/H = C
+			if(has_oxy_protection(H.wear_neck) || has_oxy_protection(H.head))
+				oxy_damage = choke_damage
+		var/total_oxy_damage = oxy_damage
+		C.adjustOxyLoss(oxy_damage)
 		if(!C.mind) // NPCs can be choked out twice as fast
-			C.adjustOxyLoss(choke_damage)
+			C.adjustOxyLoss(oxy_damage)
+			total_oxy_damage += oxy_damage
+		log_garrote_choke(user, C, total_oxy_damage) //TA EDIT END
 		C.visible_message(span_danger("[user] [pick("garrotes", "asphyxiates")] [C]!"), \
 		span_userdanger("[user] [pick("garrotes", "asphyxiates")] me!"), span_hear("I hear the sickening sound of cordage!"), COMBAT_MESSAGE_RANGE, user)
 		to_chat(user, span_danger("I [pick("garrote", "asphyxiate")] [C]!"))
 		user.changeNext_move(CLICK_CD_RESIST)	//Stops spam for choking.
-*/			//TA-EDITEND
+			//TA-EDITEND
 /obj/item/clothing/head/inqarticles/blackbag
 	name = "black bag"
 	desc = "A heavily spell-weaved padded sack intended to muffle the cries made within it. Due to the heaviness of the materials involved, application and removal of these is usually difficult for the untrained."

@@ -13,6 +13,12 @@
 	grid_width = 96
 	grid_height = 96
 
+/obj/item/storage/belt/rogue/leather/twilight_holsterbelt/update_icon()
+	if(pistol.len)
+		icon_state = "holsterbelt_full"
+	else
+		icon_state = "holsterbelt"
+
 /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/proc/eatpistol(obj/A)
 	if((A.type in typesof(/obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock)) || (A.type in typesof(/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol)))
 		var/obj/item/gun/ballistic/P = A
@@ -20,7 +26,6 @@
 			if(pistol.len < max_storage)
 				P.forceMove(src)
 				pistol += P
-				icon_state = "holsterbelt_full"
 				update_icon()
 				return TRUE
 			else
@@ -37,7 +42,6 @@
 				else
 					P.forceMove(src)
 				pistol += P
-				icon_state = "holsterbelt_full"
 				update_icon()
 				to_chat(usr, span_notice("I holster the [P.name] into [src.name]."))
 			else
@@ -51,7 +55,6 @@
 		pistol -= O
 		O.forceMove(user.loc)
 		user.put_in_hands(O)
-		icon_state = "holsterbelt"
 		update_icon()
 		return TRUE
 
@@ -74,9 +77,7 @@
 /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/lord/New()
 	. = ..()
 	for(var/i in 1 to max_storage)
-		var/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/A = new()
-		pistol += A
-	icon_state = "holsterbelt_full"
+		pistol += new /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol(src)
 	update_icon()
 
 /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/black
@@ -88,9 +89,7 @@
 /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/black/runelock/New()
 	. = ..()
 	for(var/i in 1 to max_storage)
-		var/obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/A = new()
-		pistol += A
-	icon_state = "holsterbelt_full"
+		pistol += new /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock(src)
 	update_icon()
 
 /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/blackpowder
@@ -99,3 +98,26 @@
 	icon = 'modular_twilight_axis/firearms/icons/obj_belts_blackpowder.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/firearms/icons/onmob_belts_blackpowder.dmi'
 	component_type = /datum/component/storage/concrete/roguetown/belt
+
+/obj/item/storage/belt/rogue/leather/twilight_holsterbelt/blackpowder/update_icon()
+	if(pistol.len)
+		var/obj/item/gun/ballistic/P = pistol[1]
+		if(istype(P, /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock))
+			icon = 'modular_twilight_axis/firearms/icons/obj_belts_blackpowder_runelock.dmi'
+		else if(istype(P, /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/umbra))
+			icon = 'modular_twilight_axis/firearms/icons/obj_belts_blackpowder_umbra.dmi'
+		else
+			icon = 'modular_twilight_axis/firearms/icons/obj_belts_blackpowder.dmi'
+	return ..()
+
+/obj/item/storage/belt/rogue/leather/twilight_holsterbelt/blackpowder/runelock/New()
+	. = ..()
+	for(var/i in 1 to max_storage)
+		pistol += new /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock(src)
+	update_icon()
+
+/obj/item/storage/belt/rogue/leather/twilight_holsterbelt/blackpowder/umbra/New()
+	. = ..()
+	for(var/i in 1 to max_storage)
+		pistol += new /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/umbra(src)
+	update_icon()

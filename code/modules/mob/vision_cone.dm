@@ -292,10 +292,10 @@
 			var/datum/species/dullahan/dullahan = H.dna.species
 			head = dullahan.my_head
 
-		var/cyclops_left = HAS_TRAIT(src, TRAIT_CYCLOPS_LEFT) 
+		var/cyclops_left = HAS_TRAIT(src, TRAIT_CYCLOPS_LEFT)
 		var/cyclops_right = HAS_TRAIT(src, TRAIT_CYCLOPS_RIGHT)
 
-		if(H.has_status_effect(STATUS_EFFECT_BLINDED))
+		if(H.has_status_effect(STATUS_EFFECT_BLINDED) || H.has_status_effect(STATUS_EFFECT_PSYPOWDER)) //TA EDIT
 			fovangle |= FOV_LEFT
 			fovangle |= FOV_RIGHT
 
