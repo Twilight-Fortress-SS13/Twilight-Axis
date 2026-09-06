@@ -314,3 +314,20 @@
 
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha_ta/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_BAOTHA_ARMOR)
+
+/obj/item/clothing/suit/roguetown/armor/plate/cuirass/legion
+	name = "elyrian lorica masculata"
+	desc = "Доспех, демонстрирующий высокое мастерство кузнеца. Чётко выведенный рельеф анатомического торса подчеркивает красоту и мужество его обладателя. Из-за высокой цены маскулату носят в основном преторианцы и почтенные патриции Элиррии."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/armor.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/armor.dmi'
+	icon_state = "legioncuirass"
+	item_state = "legioncuirass"
+	max_integrity = ARMOR_INT_CHEST_PLATE_STEEL
+
+/obj/item/clothing/suit/roguetown/armor/plate/legion
+	name = "elyrian lorica segmentata"
+	desc = "Пластинчатый доспех, собранный из скрепленных между собой стальных пластин. Несмотря на дороговизну, легионеры и преторианцы отдают ему предпочтение за надёжность и удобство."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/armor.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/armor.dmi'
+	icon_state = "legionplate"
+	item_state = "legionplate"

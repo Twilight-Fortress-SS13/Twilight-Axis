@@ -79,3 +79,11 @@
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/boots.dmi'
 	icon_state = "lplateboots"
 	item_state = "lplateboots"
+
+/obj/item/clothing/shoes/roguetown/boots/armor/legion
+	name = "elyrian greaves"
+	desc = "Сегментированные стальные поножи, обеспечивающие полноценную защиту ног и ступней. Пластины фиксируются кожаными ремешками, что позволяет быстро их снять. В годы войны плохая защита ног дорого обошлась легионерам наместника - ошибки были учтены и исправлены."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/boots.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/boots.dmi'
+	icon_state = "legionboots"
+	item_state = "legionboots"

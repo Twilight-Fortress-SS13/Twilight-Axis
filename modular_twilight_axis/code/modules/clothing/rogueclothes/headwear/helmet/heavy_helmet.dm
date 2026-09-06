@@ -200,3 +200,11 @@
 	desc = "As if facing a Dark Elf raider was not intimidating enough by itself, this helmet, designed to resemble the head of a giant lizard hailing from the Underdark, is meant to invoke primal terror in men and creechers alike."
 	icon_state = "shadowvolf"
 	item_state = "shadowvolf"
+
+/obj/item/clothing/head/roguetown/helmet/heavy/barbute/legion
+	name = "elyrian coolus"
+	desc = "Проверенный временем шлем, любимый легионерами и преторианцами за удобную защиту: он закрывает уязвимые места, не сильно загораживая обзор."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/head.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/head.dmi'
+	icon_state = "legionhelmet"
+	item_state = "legionhelmet"

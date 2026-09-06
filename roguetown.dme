@@ -3506,6 +3506,7 @@
 #include "code\modules\surgery\organs\feature_organs\taur_body.dm"
 #include "code\modules\surgery\organs\feature_organs\wings.dm"
 #include "code\modules\surgery\organs\organ_dna\_organ_dna.dm"
+#include "modular_twilight_axis\code\modules\clothing\rogueclothes\gloves\plate.dm"
 #include "modular_twilight_axis\code\modules\erp_panels\genitals.dm"
 #include "code\modules\surgery\surgeries\amputation.dm"
 #include "code\modules\surgery\surgeries\bloodletting.dm"
