@@ -48,7 +48,7 @@
 	if (!H)
 		return
 	var/should_update = FALSE
-	var/list/choices = list("Accessory", "Breast Quantity", "Breast Size", "Ears", "Ear Color One", "Ear Color Two", "Eye Color", "Skin Color", "Skin Color 2", "Skin Color 3", "Facial Hairstyle", "Facial Hair Color", "Face Detail", "Hairstyle", "Hair Primary Color", "Hair Secondary Gradient", "Hair Secondary Natural Color", "Hair Third Gradient", "Hair Third Dye Color", "Horns", "Horn Color", "Penis", "Penis Size", "Tail", "Tail Color One", "Tail Color Two", "Tail Color Three", "Snout", "Snout Color One", "Snout Color Two", "Snout Color Three", "Fluff", "Fluff Color One", "Fluff Color Two", "Testicles", "Testicle Size", "Vagina", "Wings", "Wing Color")
+	var/list/choices = list("Accessory", "Breast Quantity", "Breast Size", "Breast Color", "Ears", "Ear Color One", "Ear Color Two", "Eye Color", "Skin Color", "Skin Color 2", "Skin Color 3", "Facial Hairstyle", "Facial Hair Color", "Face Detail", "Hairstyle", "Hair Primary Color", "Hair Secondary Gradient", "Hair Secondary Natural Color", "Hair Third Gradient", "Hair Third Dye Color", "Horns", "Horn Color", "Penis", "Penis Size", "Tail", "Tail Color One", "Tail Color Two", "Tail Color Three", "Snout", "Snout Color One", "Snout Color Two", "Snout Color Three", "Fluff", "Fluff Color One", "Fluff Color Two", "Testicles", "Testicle Size", "Vagina", "Wings", "Wing Color")
 	if(HAS_TRAIT(H, TRAIT_EDIT_DESCRIPTORS))
 		choices += "Descriptors"
 	var/chosen = input(H, "Change what?", "Appearance") as null|anything in choices
@@ -510,6 +510,18 @@
 					breasts.accessory_colors = mirror_pick_accessory_colors(H, breasts_type, breasts.accessory_colors) //TA edit - new ERP SYSTEM
 					H.update_body()
 					should_update = TRUE
+
+		if("Breast Color")
+			var/obj/item/organ/breasts/breasts = H.getorganslot(ORGAN_SLOT_BREASTS)
+			if(breasts)
+				var/datum/sprite_accessory/breasts/breasts_type = SPRITE_ACCESSORY(breasts.accessory_type)
+				breasts.Remove(H)
+				breasts.accessory_colors = mirror_pick_accessory_colors(H, breasts_type, breasts.accessory_colors) //TA edit - new ERP SYSTEM
+				breasts.Insert(H, TRUE, FALSE)
+				H.update_body()
+				should_update = TRUE
+			else
+				to_chat(H, span_warning("You don't have breasts!"))
 
 		if("Vagina")
 			var/list/valid_vagina_types = list("none", "human", "hairy", "spade", "furred", "gaping", "cloaca")
@@ -1040,6 +1052,27 @@
 		H.update_body()
 		H.update_body_parts()
 		erp_mark_actor_organs_dirty(H)
+
+/**
+ * Opens the new TGUI-based appearance editor for H, instead of the legacy
+ * chain of input() popups used by perform_mirror_transform().
+ *
+ * `source` should be the mirror (or hand mirror) atom that granted access,
+ * if any - the UI uses it to keep enforcing "still near the mirror" for
+ * as long as the panel stays open, the same way the click-to-open checks
+ * already do once, up front.
+ *
+ * Wire this into whatever currently calls perform_mirror_transform(H) - e.g.
+ * the mirror object's attack_self()/interact() - if you want the TGUI panel
+ * to be the primary interface. Both entry points share the same underlying
+ * mob state, so it's safe to offer both (e.g. legacy as a fallback for
+ * ancient clients) if you want.
+ */
+/proc/perform_mirror_transform_ui(mob/living/carbon/human/H, atom/source)
+	if(!H)
+		return
+	var/datum/mirror_appearance_ui/ui = new(H, source)
+	ui.ui_interact(H)
 
 /proc/mirror_pick_accessory_colors(mob/living/carbon/human/H, datum/sprite_accessory/A, current_colors)
 	if(!H || !A)
