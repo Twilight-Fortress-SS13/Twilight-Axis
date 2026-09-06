@@ -3855,6 +3855,7 @@
 #include "modular_twilight_axis\code\modules\admin\verbs\admin.dm"
 #include "modular_twilight_axis\code\modules\admin\verbs\debug_admin_dress_full.dm"
 #include "modular_twilight_axis\code\modules\bard_music\bard_music.dm"
+#include "modular_twilight_axis\code\modules\buildings\blueprint_planner.dm"
 #include "modular_twilight_axis\code\modules\cargo\packsrogue\adventure_supplies.dm"
 #include "modular_twilight_axis\code\modules\cargo\packsrogue\alcohols.dm"
 #include "modular_twilight_axis\code\modules\cargo\packsrogue\Brigand.dm"

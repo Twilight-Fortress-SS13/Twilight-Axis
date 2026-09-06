@@ -421,6 +421,7 @@
 	desc = "A window with a solid and sturdy stone frame."
 	opacity = FALSE
 	max_integrity = 1500
+	icon_state = "brickwindow"
 
 /turf/closed/wall/shroud //vines
 	name = "thick treetop"
