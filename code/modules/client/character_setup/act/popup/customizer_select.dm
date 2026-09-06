@@ -37,3 +37,24 @@
 			verbose_pref_log_change(user, "notice", "Feature [customizer.name] accessory", old.name, accessory.name)
 			current_choice.set_accessory_type(src, accessory.type, current_entry)
 			return CHARACTER_ACT_PREVIEW_UPDATE
+		if("rotate_accessory")
+			var/list/accessories = current_choice.sprite_accessories
+			if(!length(accessories))
+				return CHARACTER_ACT_DATA_UPDATE
+			var/current_index = accessories.Find(current_entry.accessory_type)
+			if(!current_index)
+				current_index = 1
+			var/new_index
+			if(params["direction"] == "prev")
+				new_index = current_index > 1 ? current_index - 1 : length(accessories)
+			else if(params["direction"] == "next")
+				new_index = current_index < length(accessories) ? current_index + 1 : 1
+			else
+				return CHARACTER_ACT_DATA_UPDATE
+			var/datum/sprite_accessory/old = SPRITE_ACCESSORY(current_entry.accessory_type)
+			var/datum/sprite_accessory/accessory = SPRITE_ACCESSORY(accessories[new_index])
+			if(!accessory)
+				return CHARACTER_ACT_DATA_UPDATE
+			verbose_pref_log_change(user, "notice", "Feature [customizer.name] accessory", old.name, accessory.name)
+			current_choice.set_accessory_type(src, accessory.type, current_entry)
+			return CHARACTER_ACT_PREVIEW_UPDATE

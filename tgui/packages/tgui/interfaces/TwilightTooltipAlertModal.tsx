@@ -27,7 +27,7 @@ function renderButtonContent(button: string, largeButtons: BooleanLike) {
   return !largeButtons ? button : button.toUpperCase();
 }
 
-export function TwilightTooltipAlertModal(props) {
+export function TwilightTooltipAlertModal() {
   const { act, data } = useBackend<Data>();
   const {
     autofocus,

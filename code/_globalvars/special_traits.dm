@@ -34,6 +34,8 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 /proc/apply_character_post_equipment(mob/living/carbon/human/character, client/player)
 	if(!player)
 		player = character.client
+	if(!player || !player.prefs) // TA EDIT
+		return // TA EDIT
 	apply_charflaw_equipment(character, player)
 	apply_prefs_virtue(character, player)
 	apply_prefs_race_bonus(character, player)
@@ -53,6 +55,9 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 				character.mind.special_items["[item.name][TRIUMPH_STASH_SUFFIX]"] = item.path
 			else
 				character.mind.special_items[item.name] = item.path
+			var/list/loadout_metadata = player.prefs.gear_list[key] // TA EDIT START
+			if(islist(loadout_metadata) && loadout_metadata.len)
+				character.mind.special_items_metadata[item.name] = deepCopyList(loadout_metadata) // TA EDIT END
 	var/datum/job/assigned_job = SSjob.GetJob(character.mind?.assigned_role)
 	var/list/prefs = player.prefs?.job_subprefs
 	if(prefs)
@@ -82,6 +87,8 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 	return TRUE
 
 /proc/apply_voicepacks(mob/living/carbon/human/character, client/player)
+	if(!player || !player.prefs) // TA EDIT
+		return // TA EDIT
 	if(player.prefs.voice_pack != "Default")
 		var/datum/voicepack/VP = GLOB.voice_packs[GLOB.voice_packs_list[player.prefs.voice_pack]]
 		character.dna.species.soundpack_m = VP

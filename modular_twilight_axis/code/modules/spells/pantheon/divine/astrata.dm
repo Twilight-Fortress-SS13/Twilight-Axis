@@ -72,82 +72,167 @@
 	qdel(src)
 	return TRUE
 
-/obj/effect/proc_holder/spell/invoked/TAignition
+#define IGNITION_MODE_FIRE 1
+#define IGNITION_MODE_FOCUS 2
+#define IGNITION_MODE_SOLARSTRIKE 3
+
+/datum/action/cooldown/spell/TAignition
 	name = "Ignition"
 	desc = "Ignites target, living or object. No cooldown on objects."
-	action_icon = 'icons/mob/actions/astratamiracles.dmi'
-	overlay_icon = 'icons/mob/actions/astratamiracles.dmi'
-	overlay_state = "ignite"
-	releasedrain = 15
-	chargedrain = 0
-	chargetime = 0
-	range = 15
-	warnie = "sydwarning"
-	movement_interrupt = FALSE
-	chargedloop = null
-	req_items = list(/obj/item/clothing/neck/roguetown/psicross)
-	sound = 'sound/magic/heal.ogg'
-	invocations = list("Flame.")
-	invocation_type = "whisper"
-	associated_skill = /datum/skill/magic/holy
-	antimagic_allowed = TRUE
-	recharge_time = 10 SECONDS
-	miracle = TRUE
-	devotion_cost = 15
-	var/rechargefast = FALSE
+	button_icon = 'icons/mob/actions/astratamiracles.dmi'
+	button_icon_state = "ignite"
+	glow_intensity = GLOW_INTENSITY_LOW
+	sparks_amt = 2
+	click_to_activate = TRUE
+	cast_range = 15
 
-/obj/effect/proc_holder/spell/invoked/TAignition/cast(list/targets, mob/user = usr)
+	primary_resource_cost = SPELLCOST_MIRACLE_MINOR
+	secondary_resource_cost = SPELLCOST_MINOR_PROJECTILE
+
+	sound = 'sound/magic/heal.ogg'
+	invocations = list("Flame.", "Burn.")
+	invocation_type = INVOCATION_SHOUT
+	charge_required = FALSE
+	cooldown_time = 15 SECONDS
+
+	spell_flags = SPELL_PSYDON
+	spell_tier = CLERIC_T0
+	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
+
+	var/spell_mode = IGNITION_MODE_FIRE
+	var/labels = list("IGNITE", "FOCUS", "STRIKE")
+
+/datum/action/cooldown/spell/TAignition/proc/get_available_spell_tier(mob/living/carbon/caster)
+	var/applied_spell_tier = spell_tier
+	if(ishuman(caster))
+		var/mob/living/carbon/human/human_caster = caster
+		if(human_caster.devotion)
+			applied_spell_tier = max(applied_spell_tier, human_caster.devotion.level)
+	return applied_spell_tier
+
+/datum/action/cooldown/spell/TAignition/toggle_alt_mode(mob/user)
+	spell_mode = (spell_mode % IGNITION_MODE_SOLARSTRIKE) + 1
+	get_available_spell_tier()
+	update_mode_maptext()
+	return TRUE
+
+/datum/action/cooldown/spell/TAignition/proc/update_mode_maptext()
+	var/label_color = (spell_mode == IGNITION_MODE_FIRE) ? GLOW_COLOR_FIRE : "#ff6a3d"
+	for(var/datum/hud/hud as anything in viewers)
+		var/atom/movable/screen/movable/action_button/B = viewers[hud]
+		var/atom/movable/screen/arc_maptext_holder/holder
+		for(var/atom/movable/screen/arc_maptext_holder/existing in B.vis_contents)
+			holder = existing
+			break
+		if(!holder)
+			holder = new(B)
+			B.vis_contents.Add(holder)
+		holder.maptext = MAPTEXT(labels[spell_mode])
+		holder.maptext_x = 5
+		holder.color = label_color
+
+/datum/action/cooldown/spell/TAignition/cast(atom/cast_on, mob/user = usr, applied_spell_tier)
 	..()
 	. = ..()
-	rechargefast = FALSE
-	if(isliving(targets[1]))
-		var/mob/living/L = targets[1]
+	cooldown_time = 15 SECONDS
+	applied_spell_tier = get_available_spell_tier(user)
+	if(isliving(cast_on) || isturf(cast_on))
+		var/mob/living/L = cast_on
 		user.visible_message("<font color='yellow'>[user] points at [L]!</font>")
-		if(L.anti_magic_check(TRUE, TRUE))
-			return FALSE
-		var/firebust = (user.get_skill_level(associated_skill) - 1) //Your miracle skill increase them, 2 JOURNMAN, 3 EXPERT, 4 MASTER, 5 LEGENDARY.
-		if(firebust < 1)
-			firebust = 1
-		if(GLOB.tod == "day" || GLOB.tod == "dawn" || GLOB.tod == "dusk")
-			firebust += 1
-		if(firebust >= 4) //Master, Legend, or Expert on day.
-			recharge_time = 5 SECONDS
-		if(firebust >= 5) //LEGENDARY ASTRATAN, or MASTER casts it on day.
-			new /obj/effect/hotspot(get_turf(L))
-		if(firebust > 0)
-			L.adjust_fire_stacks(firebust, /datum/status_effect/fire_handler/fire_stacks/divine)
-			L.ignite_mob()
-		if(!L.mind || istype(L, /mob/living/simple_animal)) //Firestacks not effective VS carbon-AL enemy. Simple mobs don't take fire damage.
-			L.adjustFireLoss(10*firebust) //10 * skill-1. Legendary cast take 50 burn damage for non-minded creatures.
+		var/skill_user = user.get_skill_level(associated_skill)
+		var/damage_final = 15*skill_user+30
+		var/def_zone = user.zone_selected
+		if(spell_mode == IGNITION_MODE_FIRE)
+			if(!L)
+				return FALSE
+			if(L.anti_magic_check(TRUE, TRUE))
+				return FALSE
+			var/firebust = 1
+			if(GLOB.tod == "day" || GLOB.tod == "dawn" || GLOB.tod == "dusk")
+				firebust += 1
+			if(skill_user > 4) //Master, Legend.
+				firebust += 1
+			if(firebust > 0)
+				if(L.has_status_effect(/datum/status_effect/debuff/focused3))
+					apply_focus_stack(L, 1, def_zone)
+					firebust = 10
+					L.apply_status_effect(/datum/status_effect/debuff/staggered, 6 SECONDS)
+					L.apply_status_effect(/datum/status_effect/debuff/exposed, 6 SECONDS)
+					L.Slowdown(6)
+					L.OffBalance(1 SECONDS)
+					L.Immobilize(1 SECONDS)
+				L.adjust_fire_stacks(firebust, /datum/status_effect/fire_handler/fire_stacks/divine)
+				L.ignite_mob()
+			if(!L.mind || istype(L, /mob/living/simple_animal)) //Firestacks not effective VS carbon-AL enemy. Simple mobs don't take fire damage.
+				L.adjustFireLoss(10*(firebust*(user.get_skill_level(associated_skill) - 1))) //10 * skill-1. Legendary cast take 50 burn damage for non-minded creatures.
+		if(spell_mode == IGNITION_MODE_FOCUS)
+			if(applied_spell_tier <= CLERIC_T0)
+				to_chat(user, span_warning("You not skilled for use that form of this miracle!"))
+				return FALSE
+			if(!L)
+				return FALSE
+			if(L.anti_magic_check(TRUE, TRUE))
+				return FALSE
+			var/firebust = skill_user+4
+			L.apply_damage(10, BURN, def_zone, 0)
+			if(L.has_status_effect(/datum/status_effect/debuff/focused3))
+				L.adjust_fire_stacks(firebust, /datum/status_effect/fire_handler/fire_stacks/divine)
+				if(!L.mind || istype(L, /mob/living/simple_animal))
+					damage_final *= 1.5
+				L.apply_damage(damage_final, BURN, def_zone, 0)
+				L.ignite_mob()
+			apply_focus_stack(L, 1, def_zone)
+		if(spell_mode == IGNITION_MODE_SOLARSTRIKE)
+			if(applied_spell_tier <= CLERIC_T2)
+				to_chat(user, span_warning("You not skilled for use that form of this miracle!"))
+				return FALSE
+			new /obj/effect/temp_visual/firewave/strike(get_turf(L))
+
 
 		return TRUE
 
 	// Spell interaction with ignitable objects (burn wooden things, light torches up)
-	else if(isobj(targets[1]))
-		var/obj/O = targets[1]
+	else if(isobj(cast_on))
+		var/obj/O = cast_on
 		if(O.fire_act())
 			user.visible_message("<font color='yellow'>[user] points at [O], igniting it with sacred flames!</font>")
 			O.fire_act()
-			rechargefast = TRUE
+			cooldown_time = 1 SECONDS
 			return TRUE
 		else
 			to_chat(user, span_warning("You point at [O], but it fails to catch fire."))
 			return FALSE
-	revert_cast()
 	return FALSE
 
-/obj/effect/proc_holder/spell/invoked/TAignition/start_recharge()
-	if(rechargefast)
-		charge_counter = max(recharge_time - (1.5 SECONDS), 0)
-		if(action)
-			action.build_all_button_icons()
-		STOP_PROCESSING(SSfastprocess, src)
-		return
-	. = ..()
+/obj/effect/temp_visual/firewave/strike
+	icon_state = "flame"
+	duration = 1 SECONDS
 
-/obj/effect/proc_holder/spell/invoked/TAignition/after_cast(list/targets, mob/user = usr)
+/obj/effect/temp_visual/firewave/strike/Initialize(mapload)
 	. = ..()
-	rechargefast = FALSE
+	addtimer(CALLBACK(src, TYPE_PROC_REF(/obj/effect/temp_visual/firewave/strike, pre_strike), TRUE), 1 SECONDS)
+
+/obj/effect/temp_visual/firewave/strike/proc/pre_strike()
+	var/turf/T = get_turf(src)
+
+	playsound(T, 'sound/magic/revive.ogg', 80, TRUE)
+	var/obj/effect/temp_visual/mark = new /obj/effect/temp_visual/firewave/sunbeam(T)
+	animate(mark, alpha = 255, time = 10, flags = ANIMATION_PARALLEL)
+
+	new /obj/effect/hotspot(T)
+
+	for(var/mob/living/L in T.contents)
+		if(L.anti_magic_check(TRUE, TRUE))
+			continue
+		L.adjustFireLoss(40)
+		if(L.has_status_effect(/datum/status_effect/debuff/focused3))
+			L.adjustFireLoss(20)
+			explosion(T, -1, 0, 0, 0, 0, flame_range = 2, soundin = 'sound/misc/explode/incendiary (1).ogg')
+		apply_focus_stack(L, 1, BODY_ZONE_CHEST)
+
+#undef IGNITION_MODE_FIRE
+#undef IGNITION_MODE_FOCUS
+#undef IGNITION_MODE_SOLARSTRIKE
 
 /obj/effect/proc_holder/spell/invoked/TArevive
 	name = "Anastasis"
@@ -998,7 +1083,7 @@
 	sound = 'sound/magic/revive.ogg'
 	associated_skill = /datum/skill/magic/holy
 	antimagic_allowed = FALSE
-	recharge_time = 20 MINUTES //One per day
+	recharge_time = 10 MINUTES //Two per day
 	miracle = TRUE
 	devotion_cost = 200
 
@@ -1029,6 +1114,8 @@
 		check = 1
 	else
 		to_chat(user, span_warning("Let there be light."))
+		revert_cast()
+		return FALSE
 	if(!check)
 		revert_cast()
 		return FALSE
@@ -1224,4 +1311,5 @@
 	set_light(5, 4, l_color = GLOW_COLOR_FIRE)
 	addtimer(CALLBACK(src, PROC_REF(TAskillcheck), src), wait = 1)
 	AddComponent(/datum/component/cursed_item, TRAIT_APRICITY, "SOLAR SABRE")
+
 */

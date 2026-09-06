@@ -15,7 +15,7 @@ const sanitizeMarkupValue = (value?: string | null) => {
   return value;
 };
 
-export const FlavorTextPage = (props) => {
+export const FlavorTextPage = () => {
   const { data } = useBackend<ExaminePanelData>();
   const {
     flavor_text,
@@ -229,7 +229,7 @@ export const FlavorTextPage = (props) => {
   );
 };
 
-export const ImageGalleryPage = (props) => {
+export const ImageGalleryPage = () => {
   const { data } = useBackend<ExaminePanelData>();
   const {
     img_gallery,

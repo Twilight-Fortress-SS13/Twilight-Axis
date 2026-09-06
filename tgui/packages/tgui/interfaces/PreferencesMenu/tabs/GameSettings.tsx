@@ -23,7 +23,7 @@ type DonorGameSettingsData = GameSettingsData & {
   donor_examine_icon: BooleanLike;
 };
 
-export const GameSettings = (props) => {
+export const GameSettings = () => {
   return (
     <Section
       fill
@@ -52,7 +52,7 @@ export const GameSettings = (props) => {
   );
 };
 
-const Settings = (props) => {
+const Settings = () => {
   const { act, data } = useBackendStrict<DonorGameSettingsData>();
   const {
     tgui_theme,
@@ -183,7 +183,7 @@ const Settings = (props) => {
   );
 };
 
-const SpecialRoles = (props) => {
+const SpecialRoles = () => {
   const { act, data } = useBackendStrict<GameSettingsData>();
   const { antags, no_storyteller_events } = data;
 
@@ -252,7 +252,7 @@ const AntagListItem = (props: { antag: Antag }) => {
   );
 };
 
-const AdminPreferences = (props) => {
+const AdminPreferences = () => {
   const { act, data } = useBackendStrict<GameSettingsData>();
 
   if (!data.admin_prefs) {

@@ -3,6 +3,8 @@
 	tutorial = "You were too weak to carry armour or heavy blade, but your devoution dragged you to serving Gods. You are knife in shadows and eternal nightblade."
 	outfit = /datum/outfit/job/roguetown/cleric/nightblade
 	traits_applied = list(TRAIT_DODGEEXPERT)
+	min_pq = 30
+	extra_context = "Minimum PQ Required: 30"
 	subclass_stats = list(
 		STATKEY_SPD = 1,
 		STATKEY_WIL = 1,
@@ -251,7 +253,8 @@
 	outfit = /datum/outfit/job/roguetown/adventurer/oblate
 	forbidden_races = list(RACES_CONSTRUCT RACES_OOZE)
 	allowed_patrons = list(/datum/patron/old_god)
-	min_pq = 9
+	min_pq = 50
+	extra_context = "Minimum PQ Required: 50"
 	traits_applied = list(
 		TRAIT_IGNOREDAMAGESLOWDOWN,
 		TRAIT_PACIFISM,
@@ -266,7 +269,7 @@
 		STATKEY_SPD = -2,
 		STATKEY_STR = -1,
 	)
-	maximum_possible_slots = 1
+	maximum_possible_slots = 2
 	vice_limits = list(/datum/charflaw/silverweakness)
 	subclass_skills = list(
 		/datum/skill/misc/medicine = SKILL_LEVEL_JOURNEYMAN,

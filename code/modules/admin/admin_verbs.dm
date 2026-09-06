@@ -335,7 +335,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 			add_verb(src, GLOB.admin_verbs_possess)
 		if(rights & R_PERMISSIONS)
 			add_verb(src, GLOB.admin_verbs_permissions)
-		if(rights & R_STEALTH)
+		if((rights & R_STEALTH) && !(holder.rank.name in list("Eventmin", "Coder", "Developer"))) // TA EDIT
 			add_verb(src, /client/proc/stealth)
 		if(rights & R_ADMIN)
 			add_verb(src, GLOB.admin_verbs_poll)
@@ -632,6 +632,9 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	set category = "Admin.Preferences"
 	set name = "Stealth Mode"
 	if(holder)
+		var/rank_name = holder.rank?.name // TA EDIT START
+		if(rank_name in list("Eventmin", "Coder", "Developer"))
+			return // TA EDIT END
 		if(holder.fakekey)
 			holder.fakekey = null
 			if(isobserver(mob))

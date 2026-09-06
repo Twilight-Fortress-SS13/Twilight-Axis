@@ -16,7 +16,7 @@ const isValidAssetValue = (value?: string | null) =>
   !!value && value !== '0' && value !== '00';
 // TA EDIT END
 
-export const ExaminePanel = (props) => {
+export const ExaminePanel = () => {
   const { act, data } = useBackend<ExaminePanelData>();
   const {
     is_vet,

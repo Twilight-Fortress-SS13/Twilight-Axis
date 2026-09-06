@@ -25,8 +25,8 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	if(donat_tier > 0)
 		desc += "<b>Доступно для меценатов уровня: [donat_tier]</b>"
 
-/datum/loadout_item/proc/donator_ckey_check(key)
-	if(donator_unlocked && is_donator(key))
+/datum/loadout_item/proc/donator_ckey_check(key, client/user)
+	if((donator_unlocked && (is_donator(key) || user?.holder)))
 		return TRUE
 	if(ckeywhitelist && ckeywhitelist.Find(key))
 		return TRUE
