@@ -1,23 +1,15 @@
-//Rain - goes down
-/particles/weather/rain
-	icon_state				= "drop"
-	color					= "#ccffff"
-	position				= generator("box", list(-500,-256,0), list(400,500,0))
-	grow					= list(-0.01,-0.01)
-	gravity				= list(0, -10, 0.5)
-	drift					= generator("circle", 0, 1) // Some random movement for variation
-	friction				= 0.3	// shed 30% of velocity and drift every 0.1s
-	transform				= null // Rain is directional - so don't make it "3D"
-	//Weather effects, max values
-	maxSpawning			= 150
-	minSpawning			= 40
-	wind					= 2
-	spin					= 0 // explicitly set spin to 0 - there is a bug that seems to carry generators over from old particle effects
-
 /datum/particle_weather/rain_gentle
 	name = "Rain"
 	desc = "Gentle Rain, la la description."
-	particleEffectType = /particles/weather/rain
+	weather_icon_state = "rain"
+	weather_visual_color = "#ccffff"
+	weather_scroll_y = -512
+	weather_scroll_time = 20
+	weather_alpha_min = 75
+	weather_alpha_max = 165
+	weather_tile_count = 4
+	weather_duration_lower = 5 MINUTES
+	weather_duration_upper = 10 MINUTES
 
 	scale_vol_with_severity = TRUE
 	weather_sounds = list(/datum/looping_sound/rain)
@@ -49,7 +41,15 @@
 /datum/particle_weather/rain_storm
 	name = "Rain"
 	desc = "Gentle Rain, la la description."
-	particleEffectType = /particles/weather/rain
+	weather_icon_state = "rain_storm"
+	weather_visual_color = "#ccffff"
+	weather_scroll_y = -512
+	weather_scroll_time = 12
+	weather_alpha_min = 95
+	weather_alpha_max = 190
+	weather_tile_count = 4
+	weather_duration_lower = 5 MINUTES
+	weather_duration_upper = 10 MINUTES
 
 	scale_vol_with_severity = TRUE
 	weather_sounds = list(/datum/looping_sound/storm)
