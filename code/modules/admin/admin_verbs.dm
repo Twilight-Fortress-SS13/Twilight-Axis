@@ -1023,4 +1023,3 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 			to_chat(target_client, "\n<font color='purple'>[amt2change] TRIUMPH(S) awarded.</font>")
 		else
 			to_chat(target_client, "\n<font color='purple'>[amt2change * -1] TRIUMPH(S) lost.</font>")
-

@@ -872,7 +872,6 @@
 			if("black")
 				. += "<span class='info' style='color: #313131ff'>[m1] wearing black lipstick.</span>"
 
-
 	if(show_descriptors)
 		var/list/lines
 		if((get_face_name() != real_name) && !observer_privilege)
@@ -933,6 +932,8 @@
 		var/can_identify_face = !obscure_name || observer_privilege
 		var/used_name = name
 		var/used_title = get_role_title()
+		if(tat_pliant_title) // TA EDIT - TAT system
+			used_title = tat_pliant_title // TA EDIT - TAT system
 		if(SSticker.regentmob == src)
 			used_title = "[used_title]" + " Regent"
 		var/display_as_wanderer = FALSE

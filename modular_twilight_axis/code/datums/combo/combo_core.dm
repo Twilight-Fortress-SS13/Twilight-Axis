@@ -20,10 +20,10 @@
 	var/callback
 
 /// global proc for intercept ability on attack
-/proc/try_consume_attack_effects(mob/living/user, atom/target_atom, zone)
+/proc/try_consume_attack_effects(mob/living/user, atom/target_atom, zone, obj/item/W)
 	if(!isliving(user))
 		return FALSE
-	var/result = SEND_SIGNAL(user, COMSIG_ATTACK_TRY_CONSUME, target_atom, zone)
+	var/result = SEND_SIGNAL(user, COMSIG_ATTACK_TRY_CONSUME, target_atom, zone, W)
 	return (result & COMPONENT_ATTACK_CONSUMED)
 
 /// sort by priority desc

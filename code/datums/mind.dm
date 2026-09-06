@@ -1413,6 +1413,7 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 						var/path2item = user.mind.special_items[item]
 						user.mind.special_items -= item
 						var/obj/item/I = new path2item(user.loc)
+						user.mind.tat_apply_special_item_sale_lock(item, I)
 						user.put_in_hands(I)
 						if(!LI?.triumph_cost)
 							I.special_item = TRUE
