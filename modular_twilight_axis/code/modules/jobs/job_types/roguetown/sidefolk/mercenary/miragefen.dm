@@ -48,6 +48,7 @@
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/raneshen/new_coat
 	cloak = /obj/item/clothing/cloak/twilight_desert
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/raneshen
+	gloves = /obj/item/clothing/gloves/roguetown/leather
 	backl = /obj/item/storage/backpack/rogue/satchel
 	belt = /obj/item/storage/belt/rogue/leather/shalal
 	neck = 	/obj/item/clothing/neck/roguetown/leather
@@ -62,13 +63,13 @@
 
 /datum/outfit/job/roguetown/mercenary/twilight_miragefen_rogue/choose_loadout(mob/living/carbon/human/H)
 	. = ..()
-	var/weapons = list("Hooksword and Sling", "Dual Daggers", "Trident")
+	var/weapons = list("Shamshir and Sling", "Dual Daggers", "Trident")
 	var/weapon_choice = input("Choose your weapon.", "The paw chooses...") as anything in weapons
 	switch(weapon_choice) //Трезубец ради тестов, Владмар сказал посмотрим как это будет играться, если будет имба пиздец, удалить это : - выделить и нажать Бекспейс.
-		if ("Hooksword and Sling")
+		if ("Shamshir and Sling")
 			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
 			H.adjust_skillrank_up_to(/datum/skill/combat/slings, SKILL_LEVEL_JOURNEYMAN, TRUE)
-			H.put_in_hands(new /obj/item/rogueweapon/sword/sabre/hook)
+			H.put_in_hands(new /obj/item/rogueweapon/sword/sabre/shamshir)
 			H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/sword, SLOT_BACK_R, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/quiver/sling/iron, SLOT_BELT_R, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/gun/ballistic/revolver/grenadelauncher/sling, SLOT_BELT_L, TRUE)
@@ -83,10 +84,13 @@
 			H.put_in_hands(new /obj/item/rogueweapon/huntingknife/idagger/steel/curved_dagger)
 		if ("Trident") //Исходя из кода 25 форса в 1 руке и 20 в 2 руках, с 30 сроуфорса, посмотрим как играется на доджере. Ес чё удалить дело 10 минут ИРЛа.
 			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_EXPERT, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_JOURNEYMAN, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/gwstrap, SLOT_BACK_R, TRUE)
 			H.put_in_hands(new /obj/item/rogueweapon/spear/trident)
-			H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/sheath, SLOT_BELT_L, TRUE)
-			H.equip_to_slot_or_del(new /obj/item/rogueweapon/huntingknife/idagger/steel/curved_dagger, SLOT_BELT_R, TRUE)
+			H.put_in_hands(new /obj/item/rogueweapon/huntingknife/idagger/steel/curved_dagger)
+			H.equip_to_slot_or_del(new /obj/item/quiver/bolt/light, SLOT_BELT_L, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow, SLOT_BELT_R, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/sheath, SLOT_WRISTS, TRUE)
 			H.change_stat(STATKEY_SPD, -1)
 			H.change_stat(STATKEY_STR, 2) //Выходит -1 спд, +1 сила, т.к. идёт -1 сила сверху, то есть общее число статов остаётся тем же.
 
