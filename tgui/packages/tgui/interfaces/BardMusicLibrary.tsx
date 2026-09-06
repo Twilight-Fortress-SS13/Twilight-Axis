@@ -601,17 +601,16 @@ export const BardMusicLibrary = () => {
           {showBandInvite && (
             <Stack.Item>
               <Section
-                title={`Band invite (${band_invite_seconds_left}s)`}
+                title={
+                  band_invite_seconds_left > 0
+                    ? `Band invite (${band_invite_seconds_left}s)`
+                    : 'Band invite'
+                }
                 buttons={
                   is_band_leader && (
-                    <>
-                      <Button icon="play" onClick={() => act('start_band')}>
-                        Start
-                      </Button>
-                      <Button icon="times" color="red" onClick={() => act('cancel_band')}>
-                        Cancel
-                      </Button>
-                    </>
+                    <Button icon="times" color="red" onClick={() => act('cancel_band')}>
+                      Cancel
+                    </Button>
                   )
                 }
               >
