@@ -138,7 +138,7 @@
 	if(!isliving(L))
 		return
 	if(L.doing)
-		L.doing = 0
+		L.stop_all_doing() // TA EDIT
 	L.submit(TRUE)
 	return TRUE
 
