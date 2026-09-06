@@ -95,7 +95,8 @@
 	ADD_TRAIT(src, TRAIT_SILVER_WEAK, TRAIT_GENERIC) //Dreamfiends fall into the 'eldritch' category. Technically not 'unholy', but certainly monstrous.
 	ADD_TRAIT(src, TRAIT_NPC_EXAMINE, TRAIT_GENERIC)
 	. = ..()
-	AddComponent(/datum/component/ai_aggro_system)
+	if(istype(ai_controller, /datum/ai_controller/dreamfiend_unbound) || istype(ai_controller, /datum/ai_controller/dreamfiend_unbound_ancient)) // TA EDIT
+		AddComponent(/datum/component/ai_aggro_system) // TA EDIT
 
 /mob/living/simple_animal/hostile/rogue/dreamfiend/ancient/Initialize(mapload)
 	ADD_TRAIT(src, TRAIT_NOMOOD, TRAIT_GENERIC)

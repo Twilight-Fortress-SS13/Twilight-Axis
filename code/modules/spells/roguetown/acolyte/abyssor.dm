@@ -491,11 +491,18 @@
 	. = ..()
 	var/turf/T = get_turf(targets[1])
 	if(isopenturf(T))
-		if(!user.mind.has_spell(/datum/action/cooldown/spell/minion_order))
-			user.mind.AddSpell(new /datum/action/cooldown/spell/minion_order)
+		if(!("[user.mind.current.real_name]_faction" in user.faction)) // TA EDIT START
+			user.faction |= "[user.mind.current.real_name]_faction"
+		if(!user.mind.has_spell(/datum/action/cooldown/spell/gravemark/abyssor))
+			user.mind.AddSpell(new /datum/action/cooldown/spell/gravemark/abyssor)
+		if(!user.mind.has_spell(/datum/action/cooldown/spell/minion_order/abyssor))
+			user.mind.AddSpell(new /datum/action/cooldown/spell/minion_order/abyssor)
 		QDEL_NULL(summoned)
-		summoned = new /mob/living/simple_animal/hostile/retaliate/rogue/mossback(T, user, townercrab)
-		return TRUE
+		summoned = new /mob/living/simple_animal/hostile/retaliate/rogue/mossback/summoned_abyssor(T, user, townercrab)
+		if(ishuman(user))
+			var/mob/living/carbon/human/H = user
+			H.apply_abyssor_mossback_mode(summoned)
+		return TRUE // TA EDIT END
 	else
 		to_chat(user, span_warning("The targeted location is blocked. My call fails to draw a mossback."))
 		return FALSE

@@ -4202,6 +4202,7 @@
 #include "modular_twilight_axis\code\modules\spells\spell_cooldown.dm"
 #include "modular_twilight_axis\code\modules\spells\soundbreaker.dm"
 #include "modular_twilight_axis\code\modules\spells\ronin.dm"
+#include "modular_twilight_axis\code\modules\spells\pantheon\divine\abyssor.dm"
 #include "modular_twilight_axis\code\modules\spells\pantheon\astrata_debuff.dm"
 #include "modular_twilight_axis\code\modules\spells\pantheon\divine\astrata.dm"
 #include "modular_twilight_axis\code\modules\spells\necromancer.dm"
