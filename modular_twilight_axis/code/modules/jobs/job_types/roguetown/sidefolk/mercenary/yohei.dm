@@ -228,7 +228,7 @@
 	wdefense_wbonus = 1
 	max_blade_int = 150
 	wbalance = WBALANCE_SWIFT
-	possible_item_intents = list(/datum/intent/sword/cut/miaodao, /datum/intent/sword/strike, /datum/intent/sword/cut/sabre/heavy)
+	possible_item_intents = list(/datum/intent/sword/cut/miaodao, /datum/intent/sword/strike)
 	gripped_intents = list(/datum/intent/sword/cut/miaodao/fast, /datum/intent/sword/thrust/zwei, /datum/intent/sword/cut/rend)
 	alt_grips = null
 	slot_flags = null
