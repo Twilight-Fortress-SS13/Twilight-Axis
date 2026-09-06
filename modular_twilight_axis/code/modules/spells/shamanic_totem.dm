@@ -287,7 +287,7 @@
 	. = ..()
 
 /obj/item/shamanic_totem_block/dendor
-	name = "volf block"
+	name = "Overgrown block"
 	desc = "A carved block overgrown with vines and thorns, with a clawed hand carved on top of it."
 	icon_state = "Dendor_totem"
 	god_name = "Volfskinned Man"
