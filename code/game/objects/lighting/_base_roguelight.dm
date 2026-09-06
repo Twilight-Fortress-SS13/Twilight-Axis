@@ -242,9 +242,7 @@
 			if(istype(W, /obj/item/natural/dirtclod))
 				if(!user.temporarilyRemoveItemFromInventory(W))
 					return
-				on = FALSE
-				set_light(0)
-				update_icon()
+				burn_out() // TA EDIT
 				qdel(W)
 				src.visible_message("<span class='warning'>[user] snuffs the fire.</span>")
 				return

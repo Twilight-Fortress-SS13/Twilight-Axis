@@ -37,12 +37,14 @@
 /datum/component/baotha_joyride/proc/remove_bond()
 	var/mob/living/L = parent
 	if(L)
+		L.remove_filter("joyride") // TA EDIT
 		L.remove_status_effect(/datum/status_effect/baotha_joyride)
 		UnregisterSignal(L, list(
 			COMSIG_PARENT_QDELETING
 		))
 
 	if(partner)
+		partner.remove_filter("joyride") // TA EDIT
 		partner.remove_status_effect(/datum/status_effect/baotha_joyride)
 		var/datum/component/baotha_joyride/other = partner.GetComponent(/datum/component/baotha_joyride)
 		if(other)

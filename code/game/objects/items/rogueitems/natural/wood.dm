@@ -461,23 +461,17 @@
 	. = ..()
 	AddComponent(/datum/component/deaditeslayer, time = 10 SECONDS) // improvised as hell, so it takes a while. sharpen it first you peasant
 
-/obj/item/grown/log/tree/stake/attack_obj(obj/O, mob/living/user)
-	. = ..()
+/obj/item/grown/log/tree/stake/attack_obj(obj/O, mob/living/user) // TA EDIT START
 	if(isitem(O))
 		var/obj/item/I = O
-		if(istype(I, /obj/item/ingot/iron))
+		if(istype(I, /obj/item/ingot/iron) || (I.anvilrepair && I.smeltresult == /obj/item/ingot/iron))
 			if(!do_after(user, 4 SECONDS, target = I))
 				return
 			to_chat(user, span_warning("The [user] breaks an [I] into small parts with the stake!"))
 			new /obj/item/scrap(get_turf(I))
 			qdel(I)
-		if(I.anvilrepair)
-			if(I.smeltresult == /obj/item/ingot/iron)
-				if(!do_after(user, 4 SECONDS, target = I))
-					return
-				to_chat(user, span_warning("The [user] breaks an [I] into small parts with the stake!"))
-				new /obj/item/scrap(get_turf(I))
-				qdel(I)
+			return
+	. = ..() // TA EDIT END
 
 /////////////
 // Planks //

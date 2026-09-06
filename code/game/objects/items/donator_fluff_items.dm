@@ -3713,6 +3713,7 @@ As Excaliber."
 	icon = 'icons/obj/items/donor_weapons.dmi'
 	icon_state = "stalkerino_crossbowalt0"
 	item_state = "stalkerino_crossbowalt"
+	hasloadedsprite = FALSE // TA EDIT
 	smeltresult = /obj/item/ingot/drow
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow/donator_stalkerino
@@ -3722,6 +3723,7 @@ As Excaliber."
 	icon = 'icons/obj/items/donor_weapons.dmi'
 	icon_state = "stalkerino_crossbowalt0"
 	item_state = "stalkerino_crossbowalt"
+	hasloadedsprite = FALSE // TA EDIT
 	smeltresult = /obj/item/ingot/drow
 
 /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/donator_stalkerino
