@@ -69,6 +69,60 @@
 	reqs = list(/obj/item/ash = 1, /obj/item/reagent_containers/powder/ozium = 1, /obj/item/reagent_containers/powder/moondust = 1, /obj/item/reagent_containers/powder/smartium)
 	craftdiff = 4
 
+/datum/crafting_recipe/roguetown/alchemy/ointment_brute
+	name = "calendula ointment (x3)"
+	structurecraft = null
+	result = list(/obj/item/ointment/brute,
+				/obj/item/ointment/brute,
+				/obj/item/ointment/brute)
+	reqs = list(/obj/item/ash = 2, /obj/item/alch/calendula = 2, /obj/item/alch/viscera = 2, /obj/item/reagent_containers/glass/bowl = 3)
+	craftdiff = 2
+
+/datum/crafting_recipe/roguetown/alchemy/ointment_brute_two
+	name = "caleleaf ointment (x3)"
+	structurecraft = null
+	result = list(/obj/item/ointment/brute/t2,
+				/obj/item/ointment/brute/t2,
+				/obj/item/ointment/brute/t2)
+	reqs = list(/obj/item/alch/puresalt = 1, /obj/item/ointment/brute = 3,  /obj/item/alch/swampdust = 3)
+	craftdiff = 3
+
+/datum/crafting_recipe/roguetown/alchemy/ointment_burn
+	name = "taraxium ointment (x3)"
+	structurecraft = null
+	result = list(/obj/item/ointment/burn,
+				/obj/item/ointment/burn,
+				/obj/item/ointment/burn)
+	reqs = list(/obj/item/ash = 2, /obj/item/alch/taraxacum = 2, /obj/item/alch/viscera = 2, /obj/item/reagent_containers/glass/bowl = 3)
+	craftdiff = 2
+
+/datum/crafting_recipe/roguetown/alchemy/ointment_burn_two
+	name = "taraxaleaf ointment (x3)"
+	structurecraft = null
+	result = list(/obj/item/ointment/burn/t2,
+				/obj/item/ointment/burn/t2,
+				/obj/item/ointment/burn/t2)
+	reqs = list(/obj/item/alch/puresalt = 1, /obj/item/ointment/burn = 3,  /obj/item/alch/tobaccodust = 3)
+	craftdiff = 3
+
+/datum/crafting_recipe/roguetown/alchemy/ointment_wound
+	name = "leech ointment (x3)"
+	structurecraft = null
+	result = list(/obj/item/ointment/wound,
+				/obj/item/ointment/wound,
+				/obj/item/ointment/wound)
+	reqs = list(/obj/item/ointment/brute = 3, /obj/item/natural/worms/leech = 2, /datum/reagent/water = 24)
+	craftdiff = 2
+
+/datum/crafting_recipe/roguetown/alchemy/ointment_wound_two
+	name = "caleechtar ointment (x3)"
+	structurecraft = null
+	result = list(/obj/item/ointment/wound/t2,
+				/obj/item/ointment/wound/t2,
+				/obj/item/ointment/wound/t2)
+	reqs = list(/obj/item/ash = 2, /obj/item/ointment/burn = 3, /obj/item/ointment/wound = 3)
+	craftdiff = 2
+
 /datum/crafting_recipe/roguetown/alchemy/quicksilver/blessed
 	name = "quicksilver (blessed silver)"
 	reqs = list(/obj/item/reagent_containers/food/snacks/grown/rogue/fyritius/bloodied = 1, /datum/reagent/water/blessed = 45, /obj/item/natural/cloth = 1, /obj/item/alch/silverdust_blessed = 1)

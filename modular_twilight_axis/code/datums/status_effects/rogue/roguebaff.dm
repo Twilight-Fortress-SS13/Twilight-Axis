@@ -192,29 +192,33 @@
 	if(owner)
 		to_chat(owner, span_warning("AHAHAHA!! AHAHAHAHAHAHAHAH!!!!"))
 		if(owner.cmode)
+			owner.reagents?.remove_reagent(/datum/reagent/grave_powder, 100)
 			return
 		if(HAS_TRAIT(owner, TRAIT_IRONMAN))
+			owner.reagents?.remove_reagent(/datum/reagent/grave_powder, 100)
 			return
 		owner.hallucination = min(owner.hallucination + 10, 50)
 
 /datum/status_effect/buff/grave_powder/tick()
 	if(owner) //heal and immobilize owner
 		if(owner.cmode)
+			owner.reagents?.remove_reagent(/datum/reagent/grave_powder, 100)
 			return
 		if(HAS_TRAIT(owner, TRAIT_IRONMAN))
+			owner.reagents?.remove_reagent(/datum/reagent/grave_powder, 100)
 			return
 		var/obj/effect/temp_visual/heal/H = new /obj/effect/temp_visual/heal_blood(get_turf(owner))
 		H.color = "#fbbebe"
 		if(owner.blood_volume < BLOOD_VOLUME_NORMAL)
-			owner.blood_volume = min(owner.blood_volume+5, BLOOD_VOLUME_NORMAL)
+			owner.blood_volume = min(owner.blood_volume+10, BLOOD_VOLUME_NORMAL)
 		var/list/wCount = owner.get_wounds()
 		if(length(wCount))
 			owner.heal_wounds(1)
 			owner.update_damage_overlays()
-		owner.adjustBruteLoss(-5, 0)
-		owner.adjustFireLoss(-5, 0)
-		owner.adjustOxyLoss(-5, 0)
-		owner.adjustToxLoss(-5, 0)
+		owner.adjustBruteLoss(-10, 0)
+		owner.adjustFireLoss(-10, 0)
+		owner.adjustOxyLoss(-10, 0)
+		owner.adjustToxLoss(-10, 0)
 		owner.adjustOrganLoss(ORGAN_SLOT_BRAIN, -5)
 		owner.adjustCloneLoss(-5, 0)
 

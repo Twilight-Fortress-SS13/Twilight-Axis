@@ -87,7 +87,55 @@
 		return
 	if(!victim.ambushable() && victim.mind)
 		return
-	if(victim.m_intent == MOVE_INTENT_SNEAK || HAS_TRAIT(victim, TRAIT_AZURENATIVE)) // TA_EDIT +HAS_TRAIT(victim, TRAIT_AZURENATIVE)
+	if(victim.m_intent == MOVE_INTENT_SNEAK) //TA Edit Start
+		return
+	if(HAS_TRAIT(victim, DENDOR_BLESSING))
+		return
+	if(!victim.ambushable() && !isliving(victim))
+		return
+	if((HAS_TRAIT(victim, TRAIT_AZURENATIVE) && victim.m_intent != MOVE_INTENT_RUN))
+		return //TA Edit End
+
+	if(!aggroed)
+		START_PROCESSING(SSobj, src)
+	aggroed = world.time
+	update_icon()
+
+	buckle_mob(victim, TRUE, check_loc = FALSE)
+	playsound(loc, list('sound/vo/mobs/plant/attack (1).ogg','sound/vo/mobs/plant/attack (2).ogg','sound/vo/mobs/plant/attack (3).ogg','sound/vo/mobs/plant/attack (4).ogg'), 100, FALSE, -1)
+	visible_message(span_userdanger("[src] begins to gnaw on [victim]! RESIST as many times as possible, or risk being chewed apart!"))
+	addtimer(CALLBACK(src, PROC_REF(begin_eat), victim), 3 SECONDS, TIMER_OVERRIDE|TIMER_UNIQUE|TIMER_STOPPABLE)
+/*
+/obj/structure/flora/roguegrass/maneater/real/Crossed(atom/movable/AM)
+	..()
+	if(obj_broken)
+		return
+	if(world.time <= last_eat + 8 SECONDS)
+		return
+
+	var/mob/living/victim = AM
+
+	if(!aggroed)
+		START_PROCESSING(SSobj, src)
+	aggroed = world.time
+	update_icon()
+
+	if(!istype(victim))
+		return
+	if(victim == planter)
+		return
+	if(victim.m_intent == MOVE_INTENT_SNEAK)
+		return
+	
+
+	if(!isliving(AM))
+		if(is_type_in_list(AM, eatablez))
+			last_eat = world.time
+			playsound(src,'sound/misc/eat.ogg', rand(30,60), TRUE)
+			AM.forceMove(src)
+			seednutrition += 10
+		return
+	if(!(has_buckled_mobs() && victim.buckled))
 		return
 
 	if(!aggroed)
@@ -99,7 +147,7 @@
 	playsound(loc, list('sound/vo/mobs/plant/attack (1).ogg','sound/vo/mobs/plant/attack (2).ogg','sound/vo/mobs/plant/attack (3).ogg','sound/vo/mobs/plant/attack (4).ogg'), 100, FALSE, -1)
 	visible_message(span_userdanger("[src] begins to gnaw on [victim]! RESIST as many times as possible, or risk being chewed apart!"))
 	addtimer(CALLBACK(src, PROC_REF(begin_eat), victim), 3 SECONDS, TIMER_OVERRIDE|TIMER_UNIQUE|TIMER_STOPPABLE)
-
+*/
 /obj/structure/flora/roguegrass/maneater/real/proc/begin_eat(mob/living/victim, chew_factor = 1)
 	if(!victim || QDELETED(victim))
 		return

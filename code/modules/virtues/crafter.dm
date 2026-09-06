@@ -29,7 +29,7 @@
 		SKILLED_BSMITH	= "Grants Expert Forgehand. Weaponsmithing, Armorsmithing, Blacksmithing and Smelting raised to Apprentice. Stashed Hammer and Tongs.",
 		SKILLED_TAILOR	= "Grants Expert Clothier. Butchering, Tanning raised to Apprentice. Sewing raised to Journeyman. Stashed Needle & Scissors.",
 		SKILLED_HUNTER	= "Grants Expert Survivalist. Trapping, Tracking, Butchering, Sewing and Tanning raised to Apprentice.",
-		SKILLED_PHYS	= "Grants Expert Physicker and Alchemist. Alchemy and Medicine raised to Apprentice. Grants secular diagnose, a stashed medicine pouch and an improvised surgery kit.",
+		SKILLED_PHYS	= "Grants Expert Physicker and Alchemist. Alchemy and Medicine raised to Apprentice. Grants secular diagnose, a stashed medicine pouch, ointment pouches and an improvised surgery kit.",
 		SKILLED_FORESTER= "Cooking, Athletics, Farming, Fishing, Lumberjacking raised to Apprentice. Stashed hoe.",
 		SKILLED_ARTIF	= "Grants Expert Forgehand. Carpentry, Masonry, Engineering, Smelting and Ceramics raised to Apprentice. Stashed Hammer, Chisel and Hand Saw.",
 		SKILLED_ENCHANT = "Grants Expert Enchanter and Alchemist. Allows you to do magical rituals. Alchemy, Engineering, Smelting, Blacksmithing and Arcane raised to Apprentice. Stashed Chalk, Mortar, and Pestle."
@@ -80,6 +80,9 @@
 				if(!recipient.mind?.has_spell(/obj/effect/proc_holder/spell/invoked/diagnose/secular))
 					recipient.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/diagnose/secular)
 				recipient.mind?.special_items["Medicine Pouch"] = /obj/item/storage/belt/rogue/pouch/medicine
+				recipient.mind?.special_items["Medicine Ointment Pouch"] = /obj/item/storage/belt/rogue/pouch/t2_oint
+				recipient.mind?.special_items["Utility Ointment Pouch (1)"] = /obj/item/storage/belt/rogue/pouch/t1_oint
+				recipient.mind?.special_items["Utility Ointment Pouch (2)"] = /obj/item/storage/belt/rogue/pouch/t1_oint
 				recipient.mind?.special_items["Improv. Surgery Kit"] = /obj/item/storage/belt/rogue/surgery_bag/full/bad
 			if(SKILLED_FORESTER)
 				added_skills.Add(list(list(/datum/skill/craft/cooking, 2, 2)))
@@ -151,6 +154,3 @@
 		if(ispath(extra_choices[choice], /obj/item))
 			var/obj/item/I = extra_choices[choice]
 			recipient.mind?.special_items[capitalize(I::name)] = extra_choices[choice]
-
-
-
