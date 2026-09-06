@@ -184,7 +184,7 @@
 				armor = /obj/item/clothing/suit/roguetown/armor/brigandine/light	// find a smithy to fix it
 			if("Studded Leather Vest")
 				armor = /obj/item/clothing/suit/roguetown/armor/leather/studded		// or maintain it yourself!
-		var/weapons = list("Crossbow & 20 Bolts","Heavy Crossbow & 8 Heavy Bolts","Arquebus & 30 Lead Bullets")
+		var/weapons = list("Crossbow & 20 Bolts","Heavy Crossbow & 8 Heavy Bolts","Arquebus Rifle & 30 Lead Spheres")
 		var/weapon_choice = input(H, "Choose your weapon.", "TOOLS OF THE TRADE") as anything in weapons //TA EDIT
 		switch(weapon_choice)
 			if("Crossbow & 20 Bolts")
@@ -197,7 +197,7 @@
 				H.change_stat(STATKEY_STR, 1) //Without any statpack or racial modifier, this meets the bare minimum for using the Siegebow as a melee weapon.
 				H.change_stat(STATKEY_SPD, -1)
 				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, 5, TRUE)
-			if("Arquebus & 30 Lead Bullets") //TA EDIT
+			if("Arquebus Rifle & 30 Lead Spheres") //TA EDIT
 				r_hand = /obj/item/gun/ballistic/twilight_firearm/arquebus
 				l_hand = /obj/item/twilight_powderflask
 				beltr = /obj/item/quiver/twilight_bullet/lead

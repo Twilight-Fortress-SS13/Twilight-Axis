@@ -13,13 +13,14 @@
 	spread = 10
 	recoil = 3
 	force = 10
+	obj_flags = CAN_BE_HIT | UNIQUE_RENAME | CLAMP_BREAK
 	var/cocked = FALSE
 	cartridge_wording = "runed sphere"
 	load_sound = 'modular_twilight_axis/firearms/sound/musketload.ogg'
 	fire_sound = 'modular_twilight_axis/firearms/sound/musketfire2.ogg'
 	vary_fire_sound = TRUE
 	fire_sound_volume = 200
-	anvilrepair = null
+	anvilrepair = /datum/skill/craft/engineering
 	smeltresult = /obj/item/ingot/steel
 	/// Chance for the weapon to misfire
 	var/misfire_chance = 0
@@ -29,6 +30,9 @@
 	damfactor = 1
 	var/critfactor = 0.7
 	var/npcdamfactor = 4
+	equip_delay_self = 1 SECONDS
+	unequip_delay_self = 1 SECONDS
+	inv_storage_delay = 1 SECONDS
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/getonmobprop(tag)
 	. = ..()
@@ -67,9 +71,9 @@
 					playsound(H, 'modular_twilight_axis/firearms/sound/musketcock.ogg', 100, FALSE)
 					cocked = TRUE
 			else
-				to_chat(H, "<span class='warning'>Я совершенно не понимаю, как этим пользоваться!</span>")
+				to_chat(H, span_warning("Я совершенно не понимаю, как этим пользоваться!"))
 		else
-			to_chat(user, "<span class='warning'>Я совершенно не понимаю, как этим пользоваться!</span>")
+			to_chat(user, span_warning("Я совершенно не понимаю, как этим пользоваться!"))
 	else
 		if(alt_grips)
 			altgrip(user)
@@ -98,67 +102,25 @@
 			..()
 		else
 			to_chat(user, span_warning("I need to cock the runelock first!"))
-	if(istype(A, /obj/item/rogueweapon/hammer))
-		var/repair_percent = 0.025 // 2.5% Repairing per hammer smack
-		if(locate(/obj/machinery/anvil) in src.loc)
-			repair_percent *= 2 // Double the repair amount if we're using an anvil
-		var/exp_gained = 0
-		var/repair_skill = (user?.mind ? user.get_skill_level(/datum/skill/craft/engineering) : 1)
-		if((obj_integrity >= max_integrity) || !isturf(src.loc))
-			return
-
-		if(!src.ontable())
-			to_chat(user, span_warning("I should put this on a table or an anvil first."))
-			return
-
-		if(repair_skill <= 0)
-			if(HAS_TRAIT(user, TRAIT_SQUIRE_REPAIR))
-				if(locate(/obj/machinery/anvil) in src.loc)
-					repair_percent = 0.035
-				//Squires can repair on tables, but less efficiently
-				else if(src.ontable())
-					repair_percent = 0.015
-			else if(prob(30))
-				repair_percent = 0.01
-			else
-				repair_percent = 0
-		else
-			repair_percent *= repair_skill
-
-		playsound(src,'modular_twilight_axis/firearms/sound/arq_repair.ogg', 40, FALSE)
-		if(repair_percent)
-			repair_percent *= max_integrity
-			exp_gained = min(obj_integrity + repair_percent, max_integrity) - obj_integrity
-			obj_integrity = min(obj_integrity + repair_percent, max_integrity)
-			if(repair_percent == 0.01) // If an inexperienced repair attempt has been successful
-				to_chat(user, span_warning("You fumble your way into slightly repairing [src]."))
-			else
-				user.visible_message(span_info("[user] repairs [src]!"))
-			if(obj_broken && obj_integrity == max_integrity)
-				src.obj_fix()
-			adjust_experience(user, /datum/skill/craft/engineering, exp_gained/2) //We gain as much exp as we fix divided by 2
-			return
-		else
-			user.visible_message(span_warning("[user] fumbles trying to repair [src]!"))
-			if(do_after(user, CLICK_CD_MELEE, target = src))
-				attack_obj(src, user)
-			return
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/examine(mob/user)
 	. = ..()
 	if(ishuman(user))
 		var/mob/living/carbon/human/u = user
 		if(HAS_TRAIT(u, TRAIT_INQUISITION) || (u.STAINT >= 15) || (u.merctype == 10))
-			. += span_info("Это оружие оснащено руническим замком — для стрельбы достаточно взвести курок, но зарядить его можно лишь специальными рунными пулями, изготавливаемыми из черной стали или серебра.")
 			if(cocked)
 				if(chambered)
-					. += span_bold("Взведено и готово к стрельбе.")
+					. += span_notice("Взведено и готово к стрельбе.")
 				else
-					. += span_bold("Руны напитаны энергией, но пуля не установлена.")
+					. += span_notice("Руны напитаны энергией, но пуля не установлена.")
 			else
-				. += span_bold("Не заряжено.")
+				. += span_notice("Не заряжено.")
 		else
-			. += span_info("Конструкция замка, установленного на этом оружии, вам незнакома.")
+			. += span_notice("Конструкция замка, установленного на этом оружии, вам незнакома.")
+
+/obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Рунные замки требуют специальную рунную пулю, после чего замок необходимо взвести перед стрельбой.")
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/process_fire/(atom/target, mob/living/user, message = TRUE, params = null, zone_override = "", bonus_spread = 0)
 	var/skill = user.get_skill_level(/datum/skill/combat/twilight_firearms)
@@ -195,6 +157,7 @@
 	start_empty = TRUE
 
 /datum/intent/shoot/twilight_runelock
+	ready_sound = "modular_twilight_axis/firearms/sound/musketcock.ogg"
 	chargedrain = 0
 
 /datum/intent/shoot/twilight_runelock/get_chargetime()
@@ -213,6 +176,7 @@
 	return chargetime
 
 /datum/intent/arc/twilight_runelock
+	ready_sound = "modular_twilight_axis/firearms/sound/musketcock.ogg"
 	chargetime = 1
 	chargedrain = 0
 
@@ -258,6 +222,9 @@
 	critfactor = 1
 	reload_time = 15
 	reload_stamina_cost = 50
+	equip_delay_self = 2 SECONDS
+	unequip_delay_self = 2 SECONDS
+	inv_storage_delay = 1 SECONDS
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/rifle/getonmobprop(tag)
 	. = ..()

@@ -484,7 +484,7 @@
 	icon_state = "musketball_silver"
 
 /obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock/blessed
-	name = "blessed sphere"
+	name = "blessed runed sphere"
 	desc = "Небольшой, идеально круглый шар, изготовленный из чистого серебра. Такие боеприпасы создаются лучшими из отаванских кузнецов и освящяются лично Великим Магистром. Смертоностны против нежити, но весьма эффективны и против других еретиков."
 	projectile_type = /obj/projectile/bullet/twilight_lead/twilight_runelock/blessed
 	icon_state = "musketball_blessed"
@@ -505,7 +505,7 @@
 	ammo_weight = 1
 
 /obj/item/ammo_casing/caseless/rogue/twilight_cannonball/grapeshot
-	name = "grapeshot"
+	name = "lead grapeshot"
 	desc = "Плотно упакованный в бумагу набор небольших металлических шариков. Хорошо сочетается с порохом."
 	projectile_type = /obj/projectile/bullet/twilight_grapeshot
 	caliber = "cannonball"
