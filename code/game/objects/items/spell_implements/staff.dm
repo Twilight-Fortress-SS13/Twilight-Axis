@@ -93,7 +93,7 @@
 			if(H.anti_magic_check())
 				to_chat(user, span_danger("Their magic protection has interrupted my cast!"))
 				return
-			if(H.job != "Magicians Associate")
+			if(!(H.job in list("Magicians Associate", "Archivist"))) //TA_EDIT
 				to_chat(user, span_danger("The target must one of my associates!"))
 				return
 			if(istype(user.used_intent, /datum/intent/magos_electrocute))
