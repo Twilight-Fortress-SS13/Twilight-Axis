@@ -3,6 +3,7 @@
 	job_subclasses += list(
 		/datum/advclass/wretch/twilight_corsair,
 		/datum/advclass/wretch/lunacyembracer,
+		/datum/advclass/wretch/twilight_blood_raider,
 		/datum/advclass/wretch/gudsklor,
 		/datum/advclass/wretch/thehero,
 	)
@@ -78,7 +79,7 @@
 		if("I'm nobody")
 			return
 		if("They fear me")
-			wretch_select_bounty(H)								
+			wretch_select_bounty(H)
 
 /proc/bountychoice_lunacy(mob/living/carbon/human/H)
 	var/crimes = list("I'm nobody", "They fear me")
@@ -88,6 +89,6 @@
 			GLOB.excommunicated_players += H.real_name
 		if("They fear me")
 			H.put_in_hands(new /obj/item/rogueweapon/handclaw(H))
-			wretch_select_bounty(H)						
+			wretch_select_bounty(H)
 			H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_NOVICE, TRUE)
 			H.adjust_skillrank(/datum/skill/misc/athletics, SKILL_LEVEL_NOVICE, TRUE)

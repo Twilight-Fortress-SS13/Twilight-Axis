@@ -314,3 +314,28 @@
 
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha_ta/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_BAOTHA_ARMOR)
+
+/obj/item/clothing/suit/roguetown/armor/plate/cuirass/bloodraider
+	slot_flags = ITEM_SLOT_ARMOR
+	name = "raiders cuirass"
+	desc = "An elegant cuirass that doesn't restrict movement, intimidates enemies, and is simply beautiful. What more could you need?"
+	body_parts_covered = COVERAGE_ALL_BUT_HANDLEGS
+	icon_state = "bloodcuirass"
+	item_state = "bloodcuirass"
+	allowed_race = list(/datum/species/human/halfelf,/datum/species/elf/dark,/datum/species/elf/dark/raider,/datum/species/elf/wood,/datum/species/elf/sun)
+	armor = ARMOR_PLATE
+	nodismemsleeves = TRUE
+	blocking_behavior = null
+	max_integrity = ARMOR_INT_CHEST_MEDIUM_STEEL
+	anvilrepair = /datum/skill/craft/armorsmithing
+	smeltresult = /obj/item/ingot/steel
+	armor_class = ARMOR_CLASS_LIGHT
+	smelt_bar_num = 1
+	icon = 'modular_twilight_axis/icons/clothing/bloodraider.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/bloodraider.dmi'
+
+/obj/item/clothing/suit/roguetown/armor/plate/cuirass/bloodraider/ComponentInitialize()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")
+
+/obj/item/clothing/suit/roguetown/armor/plate/cuirass/bloodraider/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)

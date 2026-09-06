@@ -49,3 +49,34 @@
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/pants.dmi'
 	smeltresult = /obj/item/ingot/drow
 	smelt_bar_num = 2
+
+/obj/item/clothing/under/roguetown/bloodsplintlegs
+	name = "raiders splintlegs"
+	desc = "Raiders best friend, designed to protect the legs while still providing almost complete free range of movement."
+	icon_state = "bloodsplintlegs"
+	item_state = "bloodsplintlegs"
+	max_integrity = ARMOR_INT_LEG_BRIGANDINE
+	armor = ARMOR_BRIGANDINE
+	blocksound = SOFTHIT
+	drop_sound = 'sound/foley/dropsound/chain_drop.ogg'
+	pickup_sound = 'sound/foley/equip/equip_armor_chain.ogg'
+	equip_sound = 'sound/foley/equip/equip_armor_chain.ogg'
+	anvilrepair = /datum/skill/craft/armorsmithing
+	smeltresult = /obj/item/ingot/steel
+	r_sleeve_status = SLEEVE_NOMOD
+	l_sleeve_status = SLEEVE_NOMOD
+	armor_class = ARMOR_CLASS_LIGHT
+	w_class = WEIGHT_CLASS_NORMAL
+	//resistance_flags = FIRE_PROOF // these ones should be burning since is cloth + metal
+	sewrepair = FALSE
+	icon = 'modular_twilight_axis/icons/clothing/bloodraider.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/bloodraider.dmi'
+
+/obj/item/clothing/under/roguetown/bloodsplintlegs/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_PLATE_COAT_STEP, 10)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")
+
+/obj/item/clothing/under/roguetown/bloodsplintlegs/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)

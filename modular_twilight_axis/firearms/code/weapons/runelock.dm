@@ -17,6 +17,9 @@
 	cartridge_wording = "runed sphere"
 	load_sound = 'modular_twilight_axis/firearms/sound/musketload.ogg'
 	fire_sound = 'modular_twilight_axis/firearms/sound/musketfire2.ogg'
+	var/list/fire_sound_variations = list(
+		'modular_twilight_axis/firearms/sound/musketfire2.ogg' = 100 
+	)
 	vary_fire_sound = TRUE
 	fire_sound_volume = 200
 	anvilrepair = null
@@ -144,21 +147,33 @@
 				attack_obj(src, user)
 			return
 
-/obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/examine(mob/user)
+/obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/proc/get_special_examine_hint(mob/living/carbon/human/user)
+	if(HAS_TRAIT(user, TRAIT_INQUISITION) || (user.STAINT >= 15) || (user.merctype == 10))
+		return span_info("Это оружие оснащено руническим замком — для стрельбы достаточно взвести курок, но зарядить его можно лишь специальными рунными пулями, изготавливаемыми из черной стали или серебра.")
+
+/obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/examine(mob/living/carbon/human/user)
 	. = ..()
-	if(ishuman(user))
-		var/mob/living/carbon/human/u = user
-		if(HAS_TRAIT(u, TRAIT_INQUISITION) || (u.STAINT >= 15) || (u.merctype == 10))
-			. += span_info("Это оружие оснащено руническим замком — для стрельбы достаточно взвести курок, но зарядить его можно лишь специальными рунными пулями, изготавливаемыми из черной стали или серебра.")
-			if(cocked)
-				if(chambered)
-					. += span_bold("Взведено и готово к стрельбе.")
-				else
-					. += span_bold("Руны напитаны энергией, но пуля не установлена.")
-			else
-				. += span_bold("Не заряжено.")
-		else
-			. += span_info("Конструкция замка, установленного на этом оружии, вам незнакома.")
+
+	if(!istype(user))
+		return
+	
+	var/hint = get_special_examine_hint(user)
+
+	if(!hint)
+		. += span_info("Конструкция замка, установленного на этом оружии, вам незнакома.")
+		return
+	
+	. += hint
+
+	if(!cocked)
+		. += span_bold("Не заряжено.")
+		return
+
+	if(!chambered)
+		. += span_bold("Руны напитаны энергией, но пуля не установлена.")
+		return
+
+	. += span_bold("Взведено и готово к стрельбе.")
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/process_fire/(atom/target, mob/living/user, message = TRUE, params = null, zone_override = "", bonus_spread = 0)
 	var/skill = user.get_skill_level(/datum/skill/combat/twilight_firearms)
