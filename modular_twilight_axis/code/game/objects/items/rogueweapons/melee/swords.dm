@@ -46,7 +46,7 @@
 		slot_flags = ITEM_SLOT_HIP
 	else
 		on = TRUE
-		possible_item_intents = list(/datum/intent/sword/thrust/rapier, /datum/intent/sword/cut/rapier, /datum/intent/sword/peel)
+		possible_item_intents = list(/datum/intent/sword/thrust/rapier, /datum/intent/sword/cut/rapier)
 		wlength = WLENGTH_NORMAL
 		w_class = WEIGHT_CLASS_BULKY
 		equip_delay_self = 1.5 SECONDS

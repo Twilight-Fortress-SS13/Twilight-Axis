@@ -11,9 +11,9 @@
 	subclass_languages = list(/datum/language/kazengunese)
 	traits_applied = list(TRAIT_MEDIUMARMOR)
 	subclass_stats = list(
-		STATKEY_STR = 1,
+		STATKEY_STR = 2,
 		STATKEY_INT = 2,
-		STATKEY_CON = 1,
+		STATKEY_CON = 2,
 		STATKEY_WIL = 1,
 		STATKEY_PER = 2,
 		STATKEY_SPD = -1 //Au Ra bodies are naturally more agile, so a slight speed penalty to balance out their racial bonus
@@ -53,7 +53,7 @@
 	armor = /obj/item/clothing/suit/roguetown/armor/brigandine/harayoroi
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy
 	pants = /obj/item/clothing/under/roguetown/chainlegs
-	belt = /obj/item/storage/belt/rogue/leather/cloth
+	belt = /obj/item/storage/belt/rogue/leather/cloth/upgraded
 	neck = /obj/item/clothing/neck/roguetown/gorget/steel/kazengun
 	cloak = /obj/item/clothing/cloak/kazengun
 	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced/kazengun
@@ -71,13 +71,13 @@
 
 /datum/outfit/job/roguetown/mercenary/twilight_heishi/choose_loadout(mob/living/carbon/human/H)
 	. = ..()
-	var/weapons = list("Great Sword", "Great Mace", "Spear", "Longbow", "Quarterstaff")
+	var/weapons = list("Greatsword", "Great Mace", "Spear", "Longbow", "Quarterstaff")
 	var/weapon_choice = input("Choose your weapon.", "LET YOUR HANDS SPEAK BEFORE YOUR MOUTH.") as anything in weapons
 	switch(weapon_choice)
-		if ("Great Sword")
+		if ("Greatsword")
 			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
 			H.put_in_hands(new /obj/item/rogueweapon/greatsword/miaodao)
-			H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/gwstrap, SLOT_BACK_R, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/sword/kazengun/miaodao, SLOT_BELT_R, TRUE)
 		if ("Great Mace")
 			H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_EXPERT, TRUE)
 			H.put_in_hands(new /obj/item/rogueweapon/mace/goden/steel/tetsubo)
@@ -91,7 +91,6 @@
 			H.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_EXPERT, TRUE)
 			H.put_in_hands(new /obj/item/gun/ballistic/revolver/grenadelauncher/bow/longbow/yumi)
 			H.equip_to_slot_or_del(new /obj/item/quiver/arrows, SLOT_BELT_L, TRUE)
-			H.change_stat(STATKEY_STR, 1) //Longbows require a bit more strength to use effectively.
 		if ("Quarterstaff")
 			H.adjust_skillrank_up_to(/datum/skill/combat/staves, SKILL_LEVEL_EXPERT, TRUE)
 			H.put_in_hands(new /obj/item/rogueweapon/woodstaff/quarterstaff/bostaff)
@@ -155,7 +154,7 @@
 	cloak = /obj/item/clothing/cloak/thief_cloak/yohei
 	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/eastshirt1
 	backl = /obj/item/storage/backpack/rogue/satchel
-	belt = /obj/item/storage/belt/rogue/leather/cloth
+	belt = /obj/item/storage/belt/rogue/leather/cloth/upgraded
 	neck = 	/obj/item/storage/belt/rogue/pouch/coins/poor
 	gloves = /obj/item/clothing/gloves/roguetown/eastgloves1
 	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced
@@ -170,13 +169,13 @@
 
 /datum/outfit/job/roguetown/mercenary/twilight_yohei/choose_loadout(mob/living/carbon/human/H)
 	. = ..()
-	var/weapons = list("Great Sword", "Dual Wield Hookswords", "Bow")
+	var/weapons = list("Greatsword", "Dual Wield Hookswords", "Bow")
 	var/weapon_choice = input("Choose your weapon.", "THE BLADE DECIDES...") as anything in weapons
 	switch(weapon_choice) //A large selection of exotic starter options, as per the class gimmick.
-		if ("Great Sword")
+		if ("Greatsword")
 			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
 			H.put_in_hands(new /obj/item/rogueweapon/greatsword/miaodao)
-			H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/gwstrap, SLOT_BACK_R, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/sword/kazengun/miaodao, SLOT_BELT_R, TRUE)
 		if ("Dual Wield Hookswords")
 			ADD_TRAIT(H, TRAIT_DUALWIELDER, TRAIT_GENERIC)
 			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
@@ -195,39 +194,160 @@
 		if("Half-Mask")
 			H.equip_to_slot_or_del(new /obj/item/clothing/mask/rogue/facemask/steel/kazengun/yohei, SLOT_WEAR_MASK, TRUE)
 		if("Oni")
-			H.equip_to_slot_or_del(new /obj/item/clothing/mask/rogue/facemask/steel/kazengun/yohei/oni, SLOT_WEAR_MASK, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/clothing/mask/rogue/facemask/steel/kazengun/full/yohei, SLOT_WEAR_MASK, TRUE)
 		if("Kitsune")
-			H.equip_to_slot_or_del(new /obj/item/clothing/mask/rogue/facemask/steel/kazengun/yohei/kitsune, SLOT_WEAR_MASK, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/clothing/mask/rogue/facemask/steel/kazengun/full/yohei/kitsune, SLOT_WEAR_MASK, TRUE)
 
 ///////////////////////////
 //Kagekiri Specific Items//
 ///////////////////////////
 /datum/intent/sword/cut/miaodao
+	name = "draw slash"
 	reach = 2
 	penfactor = PEN_LIGHT
 
 /datum/intent/sword/cut/miaodao/fast
+	name = "flickering edge"
+	attack_verb = list("slashes", "flicks", "clips")
 	clickcd = 9
-
-/datum/intent/sword/peel/miaodao
-	name = "long sword armor peel"
-	reach = 2
 
 /obj/item/rogueweapon/greatsword/miaodao
 	name = "miaodao"
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
 	icon_state = "odachi"
+	sheathe_icon = "odachi"
 	desc = "An unusually long saber of Kazengunese origin. The lighter blade lends itself to one-handed use better than a zweihander, but maintaining edge alignment is tricky and requires experience."
-	force = 24
+	force = 25
 	force_wielded = 30
 	minstr = 8
-	wdefense = 6
-	wdefense_wbonus = 1
+	wdefense = 5
+	wdefense_wbonus = 2
 	max_blade_int = 150
 	wbalance = WBALANCE_SWIFT
-	possible_item_intents = list(/datum/intent/sword/cut/miaodao, /datum/intent/sword/strike)
-	gripped_intents = list(/datum/intent/sword/cut/miaodao/fast, /datum/intent/sword/thrust/zwei, /datum/intent/sword/peel/miaodao, /datum/intent/sword/chop/long)
+	possible_item_intents = list(/datum/intent/sword/cut/miaodao, /datum/intent/sword/cut/zwei/cleave, /datum/intent/sword/strike)
+	gripped_intents = list(/datum/intent/sword/cut/miaodao/fast, /datum/intent/sword/thrust/zwei, /datum/intent/sword/cut/zwei/sweep, /datum/intent/sword/cut/rend)
 	alt_grips = null
+
+/obj/item/rogueweapon/greatsword/miaodao/getonmobprop(tag)
+	. = ..()
+	if(tag)
+		switch(tag)
+			if("gen")
+				return list(
+					"shrink" = 0.6,
+					"sx" = -14,
+					"sy" = -8,
+					"nx" = 15,
+					"ny" = -7,
+					"wx" = -10,
+					"wy" = -5,
+					"ex" = 7,
+					"ey" = -6,
+					"northabove" = 0,
+					"southabove" = 1,
+					"eastabove" = 1,
+					"westabove" = 0,
+					"nturn" = -13,
+					"sturn" = 110,
+					"wturn" = -60,
+					"eturn" = -30,
+					"nflip" = 1,
+					"sflip" = 1,
+					"wflip" = 8,
+					"eflip" = 1,
+				)
+			if("wielded")
+				return list(
+					"shrink" = 0.6,
+					"sx" = 9,
+					"sy" = 3,
+					"nx" = -7,
+					"ny" = 3,
+					"wx" = -9,
+					"wy" = 2,
+					"ex" = 10,
+					"ey" = 2,
+					"northabove" = 0,
+					"southabove" = 1,
+					"eastabove" = 1,
+					"westabove" = 0,
+					"nturn" = 5,
+					"sturn" = -10,
+					"wturn" = -170,
+					"eturn" = -10,
+					"nflip" = 8,
+					"sflip" = 0,
+					"wflip" = 1,
+					"eflip" = 0,
+				)
+
+/obj/item/rogueweapon/scabbard/sword/kazengun/miaodao
+	name = "lacquered miaodao scabbard"
+	desc = "An elongated wooden scabbard coated in dark lacquer, designed to protect and balance a heavy curved two-handed blade."
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon_state = "odscabbard"
+	item_state = "odscabbard"
+	pixel_y = -16
+	pixel_x = -16
+	inhand_x_dimension = 64
+	inhand_y_dimension = 64
+	bigboy = 1
+	valid_blade = /obj/item/rogueweapon/greatsword/miaodao
+	max_integrity = 200
+	wlength = WLENGTH_GREAT
+
+/obj/item/rogueweapon/scabbard/sword/miaodao/getonmobprop(tag)
+	. = ..()
+	if(tag)
+		switch(tag)
+			if("onbelt")
+				return list(
+					"shrink" = 0.6,
+					"sx" = -1,
+					"sy" = -3,
+					"nx" = 2,
+					"ny" = -3,
+					"wx" = -4,
+					"wy" = -2,
+					"ex" = 3,
+					"ey" = -2,
+					"northabove" = 1,
+					"southabove" = 0,
+					"eastabove" = 0,
+					"westabove" = 0,
+					"nturn" = 34,
+					"sturn" = -26,
+					"wturn" = -16,
+					"eturn" = 20,
+					"nflip" = 0,
+					"sflip" = 8,
+					"wflip" = 8,
+					"eflip" = 0,
+				)
+			if("onback")
+				return list(
+					"shrink" = 0.6,
+					"sx" = 4,
+					"sy" = 6,
+					"nx" = -6,
+					"ny" = 5,
+					"wx" = 5,
+					"wy" = 5,
+					"ex" = -5,
+					"ey" = 5,
+					"northabove" = 1,
+					"southabove" = 0,
+					"eastabove" = 0,
+					"westabove" = 0,
+					"nturn" = 0,
+					"sturn" = 0,
+					"wturn" = 0,
+					"eturn" = 0,
+					"nflip" = 8,
+					"sflip" = 0,
+					"wflip" = 0,
+					"eflip" = 4,
+				)
 
 /obj/item/clothing/suit/roguetown/armor/basiceast/yohei
 	name = "black dobo robe"
@@ -240,7 +360,9 @@
 
 /obj/item/clothing/head/roguetown/roguehood/shalal/hijab/yohei
 	name = "shadowed hood"
-	max_integrity = 100
+	item_state = "monkhood"
+	icon_state = "monkhood"
+	max_integrity = ARMOR_INT_HELMET_LEATHER
 	armor = ARMOR_LEATHER
 	color = CLOTHING_BLACK
 	desc = "A traditional Kazengunese hood, dyed in dark colors."
@@ -256,21 +378,18 @@
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/masks.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/masks.dmi'
 	icon_state = "kazengunhalf"
-	armor = ARMOR_PLATE
 
-/obj/item/clothing/mask/rogue/facemask/steel/kazengun/yohei/oni
+/obj/item/clothing/mask/rogue/facemask/steel/kazengun/full/yohei
 	name = "steel oni mask"
 	desc = "\"The second article: Endure in silence, speak only through steel.\""
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/masks.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/masks.dmi'
 	icon_state = "kazengunoni"
-	armor = ARMOR_PLATE
-	body_parts_covered = FACE
 
-/obj/item/clothing/mask/rogue/facemask/steel/kazengun/yohei/kitsune
+/obj/item/clothing/mask/rogue/facemask/steel/kazengun/full/yohei/kitsune
 	name = "steel kitsune mask"
 	desc = "\"The third article: Mercy is a luxury the wise cannot afford.\""
 	icon_state = "kazengunkitsune"
-	armor = ARMOR_PLATE
-	body_parts_covered = FACE
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve/hankyu
 	name = "hankyu bow"
