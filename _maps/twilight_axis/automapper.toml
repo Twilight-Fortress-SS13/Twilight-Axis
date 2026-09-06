@@ -68,6 +68,12 @@ directory = "_maps/twilight_axis/templates/dun_world/towner_house/"
 required_map = "dun_world.dmm"
 coordinates = [106, 104, 2]
 
+# dunworld drowvillage_kingtomb
+[templates.drowvillage_kingtomb]
+map_files = ["drowvillage_kingtomb_1.dmm","drowvillage_kingtomb_2.dmm"]
+directory = "_maps/twilight_axis/templates/dungeons/drowvillage_kingtomb/"
+required_map = "dun_world.dmm"
+coordinates = [2, 317, 1]
 # dunworls bath collars
 [templates.dunworldbathcollars]
 map_files = ["collar_1.dmm","collar_2.dmm"]
