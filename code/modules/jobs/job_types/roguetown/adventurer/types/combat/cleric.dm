@@ -650,6 +650,27 @@
 			head = /obj/item/clothing/head/roguetown/roguehood
 			H.mind?.AddSpell(new /datum/action/cooldown/spell/minion_order)
 			H.mind?.AddSpell(new /datum/action/cooldown/spell/gravemark)
+		// TA ADDITION START - ADDS SKILLRANK BONUSES TO OTHER PATRONS
+			H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_NOVICE, TRUE)
+		if	(/datum/patron/inhumen/baotha)
+			cloak = /obj/item/clothing/suit/roguetown/shirt/robe
+			head = /obj/item/clothing/head/roguetown/roguehood
+			H.adjust_skillrank(/datum/skill/misc/medicine, SKILL_LEVEL_NOVICE, TRUE)
+			H.adjust_skillrank(/datum/skill/craft/cooking, SKILL_LEVEL_APPRENTICE, TRUE)
+			H.adjust_skillrank(/datum/skill/craft/alchemy, SKILL_LEVEL_NOVICE, TRUE)
+		if	(/datum/patron/inhumen/graggar)
+			cloak = /obj/item/clothing/suit/roguetown/shirt/robe
+			head = /obj/item/clothing/head/roguetown/roguehood
+			H.adjust_skillrank(/datum/skill/combat/whipsflails, SKILL_LEVEL_NOVICE, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/wrestling, SKILL_LEVEL_APPRENTICE, TRUE)
+			ADD_TRAIT(H, TRAIT_STEELHEARTED, TRAIT_GENERIC)
+		if	(/datum/patron/inhumen/matthios)
+			cloak = /obj/item/clothing/suit/roguetown/shirt/robe
+			head = /obj/item/clothing/head/roguetown/roguehood
+			H.adjust_skillrank(/datum/skill/misc/stealing, SKILL_LEVEL_APPRENTICE, TRUE)
+			H.adjust_skillrank(/datum/skill/misc/sneaking, SKILL_LEVEL_APPRENTICE, TRUE)
+			H.adjust_skillrank(/datum/skill/misc/lockpicking, SKILL_LEVEL_NOVICE, TRUE)
+		// TA ADDITION END - ADDS SKILLRANK BONUSES TO OTHER PATRONS
 		else
 			cloak = /obj/item/clothing/suit/roguetown/shirt/robe //placeholder, anyone who doesn't have cool patron drip sprites just gets generic robes
 			head = /obj/item/clothing/head/roguetown/roguehood
