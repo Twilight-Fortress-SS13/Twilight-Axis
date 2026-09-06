@@ -71,7 +71,7 @@
 		for(var/obj/structure/flora/newleaf/LEAF in DIA)
 			LEAF.obj_destruction(damage_flag)
 
-	if(!istype(NT, /turf/open/transparent/openspace) && !(locate(/obj/structure/flora/roguetree/stump) in NT))//if i don't add the stump check it spawns however many zlevels it goes up because of src recursion
+	if(!istype(NT, /turf/open/openspace) && !(locate(/obj/structure/flora/roguetree/stump) in NT))//if i don't add the stump check it spawns however many zlevels it goes up because of src recursion
 		new /obj/structure/flora/roguetree/stump(NT)
 	playsound(src, 'sound/misc/treefall.ogg', 100, FALSE)
 	. = ..()
@@ -82,7 +82,7 @@
 		if(L.stat != CONSCIOUS || L.incapacitated() || !(L.mobility_flags & MOBILITY_STAND))
 			return
 		var/turf/target = get_step_multiz(user, UP)
-		if(!istype(target, /turf/open/transparent/openspace))
+		if(!istype(target, /turf/open/openspace))
 			to_chat(user, span_warning("I can't climb here."))
 			return
 		if(!L.can_zTravel(target, UP))
@@ -155,7 +155,7 @@
 
 /obj/structure/flora/newtree/proc/build_trees()
 	var/turf/target = get_step_multiz(src, UP)
-	if(istype(target, /turf/open/transparent/openspace))
+	if(istype(target, /turf/open/openspace))
 		var/obj/structure/flora/newtree/T = new(target)
 		T.base_state = "center-leaf[rand(1,2)]"
 		T.update_icon()
@@ -165,9 +165,9 @@
 		return
 	for(var/D in GLOB.cardinals)
 		var/turf/NT = get_step(src, D)
-		if(istype(NT, /turf/open/transparent/openspace))
+		if(istype(NT, /turf/open/openspace))
 			var/turf/NB = get_step(NT, D)
-			if(istype(NB, /turf/open/transparent/openspace) && prob(50))//make an ending branch
+			if(istype(NB, /turf/open/openspace) && prob(50))//make an ending branch
 				if(prob(50))
 					if(!locate(/obj/structure) in NB)
 						var/obj/structure/flora/newbranch/T = new(NB)
@@ -188,7 +188,7 @@
 		else
 			if(prob(70))
 				if(isopenturf(NT))
-					if(!istype(loc, /turf/open/transparent/openspace)) //must be lowest
+					if(!istype(loc, /turf/open/openspace)) //must be lowest
 						if(!locate(/obj/structure) in NT)
 							var/obj/structure/flora/newbranch/leafless/T = new(NT)
 							T.dir = D
@@ -197,7 +197,7 @@
 /obj/structure/flora/newtree/proc/build_leafs()
 	for(var/D in GLOB.diagonals)
 		var/turf/NT = get_step(src, D)
-		if(istype(NT, /turf/open/transparent/openspace))
+		if(istype(NT, /turf/open/openspace))
 			if(!locate(/obj/structure) in NT)
 				var/obj/structure/flora/newleaf/corner/T = new(NT)
 				T.dir = D

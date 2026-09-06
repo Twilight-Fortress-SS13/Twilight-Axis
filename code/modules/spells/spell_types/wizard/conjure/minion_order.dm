@@ -116,7 +116,7 @@
 		return FALSE
 	var/list/landing_turfs = list()
 	for(var/turf/T in range(2, center))
-		if(!isopenturf(T) || istype(T, /turf/open/transparent/openspace))
+		if(!isopenturf(T) || istype(T, /turf/open/openspace))
 			continue
 		if(T.is_transition_turf() || T.is_blocked_turf(exclude_mobs = TRUE))
 			continue

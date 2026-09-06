@@ -140,7 +140,7 @@ SUBSYSTEM_DEF(automapper)
 		if(!iterating_template.load_turf)
 			CRASH("Automapper: locate failed for [iterating_template.name] at [iterating_template.load_x],[iterating_template.load_y],[iterating_template.load_z] (required_map=[iterating_template.required_map]) world=[world.maxx]x[world.maxy]x[world.maxz]")
 
-		iterating_template.nuke_placement_area(iterating_template.load_turf, FALSE, /turf/open/transparent/openspace)
+		iterating_template.nuke_placement_area(iterating_template.load_turf, FALSE, /turf/open/openspace)
 
 		if(iterating_template.load(iterating_template.load_turf, FALSE))
 			log_world("AUTOMAPPER: Successfully loaded map template [iterating_template.name] at [iterating_template.load_turf.x], [iterating_template.load_turf.y], [iterating_template.load_turf.z]!")

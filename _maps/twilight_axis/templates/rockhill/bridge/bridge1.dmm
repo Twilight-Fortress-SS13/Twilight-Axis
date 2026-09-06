@@ -1,6 +1,6 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
 "a" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/bograt/above)
 "b" = (
 /turf/open/water/river{
@@ -42,7 +42,7 @@
 /turf/closed/wall/mineral/rogue/stone/moss,
 /area/rogue/outdoors/bograt/north)
 "k" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/rtfield/rockhill)
 "l" = (
 /obj/structure/stairs/stone,
@@ -137,7 +137,7 @@
 /turf/open/floor/rogue/cobble,
 /area/rogue/outdoors/rtfield/rockhill)
 "I" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/bograt/north)
 "J" = (
 /turf/open/floor/rogue/dirt/road,
@@ -191,7 +191,7 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/under/cavewet)
 "V" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/rtfield/rockhill/above)
 "W" = (
 /turf/open/floor/rogue/cobble,

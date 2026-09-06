@@ -85,7 +85,7 @@
 	craftdiff = 2
 
 /datum/crafting_recipe/roguetown/engineering/trapdoor/TurfCheck(mob/user, turf/T)
-	if(istype(T,/turf/open/transparent/openspace))
+	if(istype(T,/turf/open/openspace))
 		return TRUE
 	if(istype(T,/turf/open/lava))
 		return FALSE
@@ -106,7 +106,7 @@
 	craftdiff = 3
 
 /datum/crafting_recipe/roguetown/engineering/floorgrille/TurfCheck(mob/user, turf/T)
-	if(istype(T,/turf/open/transparent/openspace))
+	if(istype(T,/turf/open/openspace))
 		return TRUE
 	if(istype(T,/turf/open/lava))
 		return FALSE
@@ -176,7 +176,7 @@
 	craftdiff = 2
 
 /datum/crafting_recipe/roguetown/engineering/passage/TurfCheck(mob/user, turf/T)
-	if(istype(T,/turf/open/transparent/openspace))
+	if(istype(T,/turf/open/openspace))
 		return FALSE
 	if(istype(T,/turf/open/lava))
 		return FALSE
@@ -199,7 +199,7 @@
 	craftdiff = 2
 
 /datum/crafting_recipe/roguetown/engineering/shutters/TurfCheck(mob/user, turf/T)
-	if(istype(T,/turf/open/transparent/openspace))
+	if(istype(T,/turf/open/openspace))
 		return FALSE
 	if(istype(T,/turf/open/lava))
 		return FALSE
