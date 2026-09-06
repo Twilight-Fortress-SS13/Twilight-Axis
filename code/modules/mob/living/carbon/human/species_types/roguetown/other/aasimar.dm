@@ -87,6 +87,8 @@
 		/datum/language/celestial
 	)
 
+	// TA REMOVAL START - NOW EVERY RACE CAN CHOOSE BONUSES, SEE code/modules/mob/living/carbon/human/species.dm, 183 line for more information
+	/*
 	custom_selection = list(
 		"+1 FOR" = STATKEY_LCK,
 		"+1 INT" = STATKEY_INT,
@@ -95,6 +97,9 @@
 		"+1 PER" = STATKEY_PER,
 		"No Hunger & Thirst" = TRAIT_NOHUNGER
 	)
+	*/
+	// TA REMOVAL END
+
 	mechanics_explanations = list("Are the only race whose lux is already purified when extracted. However, their lux takes far longer to regrow than every other races.")
 
 /datum/species/aasimar/on_species_gain(mob/living/carbon/C, datum/species/old_species)
@@ -170,5 +175,15 @@
 /datum/species/aasimar/random_surname()
 	return
 
+// TA EDIT START
+// ORIGINAL:
+/*
 /datum/species/aasimar/get_string_bonus_stats(return_null_if_no_stats = FALSE, end_with_glue = FALSE)
 	return ..(TRUE, TRUE) + "CHOOSE: +1 bonus stat of your choosing, OR No Hunger & Thirst"
+*/
+// ORIGINAL END
+
+/datum/species/aasimar/get_string_bonus_stats(return_null_if_no_stats = FALSE, end_with_glue = FALSE)
+	return ..(TRUE, TRUE) + "CHOOSE: +1 bonus stat to 2 stats of your choosing, OR No Hunger & Thirst and +1 stat"
+
+// TA EDIT END
