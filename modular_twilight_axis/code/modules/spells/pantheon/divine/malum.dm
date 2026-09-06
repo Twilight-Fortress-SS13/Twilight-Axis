@@ -399,9 +399,9 @@
 
 //T0
 
-/obj/effect/proc_holder/spell/invoked/TArework //this whole thing, barely works and fixing it causes only further issues
-	name = "Rework"
-	desc = "Burn a piece of equipment to create a blessing for the appropriate type of equipment. Cast once more on another item to bless it."
+/obj/effect/proc_holder/spell/invoked/TAmalum_inspiration //this whole thing, barely works and fixing it causes only further issues
+	name = "Malum's Inspiration"
+	desc = "Bless the target, Malum's Bless grants the energy to work and learn further!"
 	action_icon = 'icons/mob/actions/malummiracles.dmi'
 	overlay_icon = 'icons/mob/actions/malummiracles.dmi'
 	overlay_state = "rework"
@@ -414,130 +414,46 @@
 	chargedloop = null
 	req_items = list(/obj/item/clothing/neck/roguetown/psicross)
 	sound = 'sound/magic/heal.ogg'
-	invocations = list("Rework.")
-	invocation_type = "whisper"
+	invocations = list("May the malum bless you to work from morning till night, and may there be magma in your eyes, and a flame in your heart!")
+	invocation_type = "none"
 	associated_skill = /datum/skill/magic/holy
 	antimagic_allowed = TRUE
-	recharge_time = 5 SECONDS
+	recharge_time = 2 MINUTES
 	miracle = TRUE
-	devotion_cost = 100
-	var/order_type = null
-	var/current_bonus = null
-	var/current_duration = null
-	var/list/itemblacklist = list(/obj/item/rogueweapon/hoe,
-		/obj/item/rogueweapon/thresher,
-		/obj/item/rogueweapon/sickle,
-		/obj/item/rogueweapon/pitchfork,
-		/obj/item/rogueweapon/tongs,
-		/obj/item/rogueweapon/hammer/iron,
-		/obj/item/rogueweapon/shovel,
-		/obj/item/fishingrod,
-	)
+	devotion_cost = 50
 
-/obj/effect/proc_holder/spell/invoked/TArework/cast(list/targets, mob/user = usr)
+/obj/effect/proc_holder/spell/invoked/TAmalum_inspiration/cast(list/targets, mob/user = usr)
 	. = ..()
 	if(ishuman(targets[1]))
 		var/mob/living/carbon/human/H = targets[1]
-		if(H == user)
-			to_chat(user, "I purge all blessing options!")
-			order_type = null
-			current_bonus = null
-			current_duration = null
-	if(isobj(targets[1]))
-		var/obj/item/O = targets[1]
-		var/bonus = 0
-		var/quality = 0
-		var/skill = usr.get_skill_level(/datum/skill/magic/holy)
-		var/skill_debuff = 6 - skill
-		if(!order_type)
-			switch(O.smeltresult)
-				if(/obj/item/ingot/iron)
-					bonus = 0
-				if(/obj/item/ingot/bronze)
-					bonus = 1.5
-				if(/obj/item/ingot/steel)
-					bonus = 2
-				if(/obj/item/ingot/blacksteel)
-					bonus = 3
-			if(istype(O, /obj/item/clothing))
-				if(O.smeltresult == /obj/item/ash)
-					revert_cast()
-					return FALSE
-				var/obj/item/clothing/A = O
-				quality = (A.max_integrity / A.obj_integrity) * 100
-				order_type = "armor"
-				overlay_state = order_type
-				update_overlays()
-				current_bonus = (bonus*100) - (skill_debuff * 10)
-				current_duration = ((quality / 10) + bonus) MINUTES
-				var/view_time = floor((current_duration/10)/60)
-				if(current_bonus < 0)
-					current_bonus *= -1
-				to_chat(user, "<font color='purple'>Current Blessing: [order_type], additional max integrity [current_bonus] for [view_time] minutes.</font>")
-				devotion_cost = 10
-				qdel(A)
-				revert_cast()
-				return TRUE
-			if(O.smeltresult != /obj/item/ash && O.smeltresult != /obj/item/rogueore/coal)
-				quality = (O.max_integrity / O.obj_integrity) * 200
-				if(istype(O, /obj/item/rogueweapon))
-					order_type = "weapon"
-				else
-					order_type = "forge"
-				overlay_state = order_type
-				update_overlays()
-				current_bonus = (quality + (bonus * 100)) - (skill_debuff * 20)
-				current_duration = null
-				to_chat(user, "<font color='purple'>Current Blessing: [order_type], fixes [current_bonus] item integrity.</font>")
-				devotion_cost = 10
-				qdel(O)
-				revert_cast()
-				return TRUE
-			revert_cast()
+		if(H.has_status_effect(/datum/status_effect/buff/TAmalum_inspiration))
+			to_chat(user, span_notice("They have been blessed by Malum already."))
+			revert_cast(user)
 			return FALSE
+		if(H.stat == DEAD)
+			to_chat(user, span_notice("They are dead."))
+			revert_cast(user)
+			return FALSE
+		var/associated_skill_level = H.get_skill_level(associated_skill)
+		H.apply_status_effect(/datum/status_effect/buff/TAmalum_inspiration, associated_skill_level)
 
-		else if(order_type == "armor")
-			if(istype(O, /obj/item/clothing))
-				var/obj/item/clothing/A = O
-				if(A.malumblessed_c == TRUE)
-					to_chat(user, "The [A.name] already blessed!")
-					revert_cast()
-					return FALSE
-				A.max_integrity = A.max_integrity + current_bonus
-				A.malumblessed_c = TRUE
-				var/view_time = floor((current_duration/10)/60)
-				to_chat(user, "<font color='purple'>The [A.name] gain additional [current_bonus] integrity!</font>")
-				to_chat(user, "<font color='purple'>This bonus active [view_time] Minutes!</font>")
-				addtimer(CALLBACK(A, TYPE_PROC_REF(/obj/item/clothing, unbuff), TRUE), current_duration)
+/datum/status_effect/buff/TAmalum_inspiration
+	id = "malum_inspiration"
+	alert_type = /atom/movable/screen/alert/status_effect/malum_inspiration
+	effectedstats = list(STATKEY_WIL = 3,STATKEY_INT = 4,STATKEY_CON = -2,STATKEY_SPD = -1) // It's kind of harmful to work so much time!
+	duration = 1 MINUTES
 
-		else if(order_type == "forge" || order_type == "weapon")
-			if((O.obj_integrity + current_bonus) > O.max_integrity)
-				var/need_points = (O.max_integrity - O.obj_integrity)
-				O.obj_integrity += need_points
-				to_chat(user, "<font color='purple'>A [need_points] integrity for [O.name] has been fixed!</font>")
-			else
-				O.obj_integrity += current_bonus
-				to_chat(user, "<font color='purple'>A [current_bonus] integrity for [O.name] has been fixed!</font>")
+/datum/status_effect/buff/TAmalum_inspiration/on_creation(mob/living/new_owner, associated_skill_level)
+	if(isnum(associated_skill_level))
+		var/new_duration = associated_skill_level * 1 MINUTES
+		duration = new_duration
+	return ..()
 
-		overlay_state = "rework"
-		devotion_cost = 100
-		order_type = null
-		current_bonus = null
-		current_duration = null
-		return TRUE
-	revert_cast()
-	return FALSE
-
-/obj/item/rogueweapon/proc/unbuff()
-	force = initial(force)
-	malumblessed_w = FALSE
-	visible_message("<font color='purple'>A holy blessing no longer affects [name]!</font>")
-
-/obj/item/clothing/proc/unbuff()
-	max_integrity = initial(max_integrity)
-	obj_integrity = max_integrity/2
-	malumblessed_c = FALSE
-	visible_message("<font color='purple'>A holy blessing no longer affects [name]!</font>")
+/atom/movable/screen/alert/status_effect/malum_inspiration
+	name = "Malum's Inspiration"
+	desc = "Malum blesses you to keep working through fatigue and pain."
+	icon = 'icons/mob/actions/malummiracles.dmi'
+	icon_state = "rework"
 
 /obj/effect/proc_holder/spell/self/TArepair
 	name = "Order: Repair"
