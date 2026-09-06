@@ -4210,6 +4210,7 @@
 #include "modular_twilight_axis\code\modules\spells\pantheon\inhumen\graggar.dm"
 #include "modular_twilight_axis\code\modules\spells\pantheon\divine\ravox.dm"
 #include "modular_twilight_axis\code\modules\spells\pantheon\divine\malum.dm"
+#include "modular_twilight_axis\code\modules\spells\pantheon\divine\noc.dm"
 #include "modular_twilight_axis\code\modules\spells\pantheon\inhumen\matthios.dm"
 #include "modular_twilight_axis\code\modules\spells\pantheon\divine\necra\garden_skeleton.dm"
 #include "modular_twilight_axis\code\modules\spells\pantheon\divine\necra\shroud.dm"
