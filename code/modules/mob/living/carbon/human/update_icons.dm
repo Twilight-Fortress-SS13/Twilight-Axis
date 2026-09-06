@@ -57,8 +57,25 @@ There are several things that need to be remembered:
 			jazz += 2
 	return jazz
 
+/mob/living/carbon/human // TA EDIT START
+	var/icon_regeneration_batch_depth = 0
+	var/icon_regeneration_body_refresh_pending = FALSE
+	var/icon_regeneration_body_refresh_redraw = FALSE
+
+/mob/living/carbon/human/proc/flush_icon_regeneration_body_refresh()
+	if(icon_regeneration_batch_depth || !icon_regeneration_body_refresh_pending)
+		return
+	var/redraw = icon_regeneration_body_refresh_redraw
+	icon_regeneration_body_refresh_pending = FALSE
+	icon_regeneration_body_refresh_redraw = FALSE
+	rebuild_obscured_flags()
+	update_body_parts(redraw) // TA EDIT END
+
 //HAIR OVERLAY
 /mob/living/carbon/human/update_hair()
+	if(icon_regeneration_batch_depth) // TA EDIT START
+		icon_regeneration_body_refresh_pending = TRUE
+		return // TA EDIT END
 	rebuild_obscured_flags()
 	update_body_parts()
 	return
@@ -320,6 +337,7 @@ There are several things that need to be remembered:
 		if(dna.species)
 			if(dna.species.regenerate_icons(src))
 				return
+		icon_regeneration_batch_depth++ // TA EDIT START
 		update_body()
 		update_hair()
 //		update_inv_w_uniform()
@@ -333,15 +351,16 @@ There are several things that need to be remembered:
 		update_inv_head()
 		update_inv_belt()
 		update_inv_back()
-		update_inv_pants()
 //		update_inv_wear_suit()
-		update_inv_armor()
 		update_inv_pockets()
 		update_inv_neck()
 		update_inv_cloak()
 		update_inv_pants()
+		update_inv_armor()
 		update_inv_shirt()
 		update_inv_mouth()
+		icon_regeneration_batch_depth-- // TA EDIT
+		flush_icon_regeneration_body_refresh() // TA EDIT END
 		update_transform()
 		//damage overlays
 		update_damage_overlays()
@@ -350,6 +369,7 @@ There are several things that need to be remembered:
 	return
 
 /mob/living/carbon/human/regenerate_clothes()
+	icon_regeneration_batch_depth++ // TA EDIT START
 	update_inv_wear_id()
 	update_inv_gloves()
 	update_inv_shoes()
@@ -357,13 +377,15 @@ There are several things that need to be remembered:
 	update_inv_head()
 	update_inv_belt()
 	update_inv_back()
-	update_inv_armor()
 	update_inv_pockets()
 	update_inv_neck()
 	update_inv_cloak()
 	update_inv_pants()
+	update_inv_armor()
 	update_inv_shirt()
 	update_inv_mouth()
+	icon_regeneration_batch_depth-- // TA EDIT
+	flush_icon_regeneration_body_refresh() // TA EDIT END
 
 /* --------------------------------------- */
 //vvvvvv UPDATE_INV PROCS vvvvvv
@@ -460,7 +482,8 @@ There are several things that need to be remembered:
 	if(wear_ring)
 		wear_ring.screen_loc = rogueui_ringr
 		if(client && hud_used && hud_used.hud_shown)
-			client.screen += wear_ring
+			if(!(wear_ring in client.screen)) // TA EDIT
+				client.screen += wear_ring // TA EDIT
 		update_observer_view(wear_ring)
 		id_overlay = wear_ring.build_worn_icon(default_layer = RING_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', female = FALSE)
 		if(gender == MALE)
@@ -510,7 +533,8 @@ There are several things that need to be remembered:
 		gloves.screen_loc = rogueui_gloves
 		if(client && hud_used && hud_used.hud_shown)
 			if(hud_used.inventory_shown)
-				client.screen += gloves
+				if(!(gloves in client.screen)) // TA EDIT
+					client.screen += gloves // TA EDIT
 		update_observer_view(gloves,1)
 		if(dna && dna.species.sexes)
 			var/racecustom
@@ -565,7 +589,8 @@ There are several things that need to be remembered:
 		wear_wrists.screen_loc = rogueui_wrists
 		if(client && hud_used && hud_used.hud_shown)
 			if(hud_used.inventory_shown)
-				client.screen += wear_wrists
+				if(!(wear_wrists in client.screen)) // TA EDIT
+					client.screen += wear_wrists // TA EDIT
 		update_observer_view(wear_wrists,1)
 		if(dna && dna.species.sexes)
 			var/racecustom
@@ -679,7 +704,8 @@ There are several things that need to be remembered:
 		shoes.screen_loc = rogueui_shoes					//move the item to the appropriate screen loc
 		if(client && hud_used && hud_used.hud_shown)
 			if(hud_used.inventory_shown)			//if the inventory is open
-				client.screen += shoes					//add it to client's screen
+				if(!(shoes in client.screen)) // TA EDIT
+					client.screen += shoes					//add it to client's screen // TA EDIT
 		update_observer_view(shoes,1)
 		if(dna && dna.species.sexes)
 			var/footindex = get_limbloss_index(LEG_RIGHT, LEG_LEFT)
@@ -793,7 +819,8 @@ There are several things that need to be remembered:
 		else
 			beltr.screen_loc = rogueui_beltr
 		if(client && hud_used && hud_used.hud_shown)
-			client.screen += beltr
+			if(!(beltr in client.screen)) // TA EDIT
+				client.screen += beltr // TA EDIT
 		update_observer_view(beltr)
 		if(!(cloak && (cloak.flags_inv & HIDEBELT)))
 			var/mutable_appearance/onbelt_overlay
@@ -854,7 +881,8 @@ There are several things that need to be remembered:
 		else
 			beltl.screen_loc = rogueui_beltl
 		if(client && hud_used && hud_used.hud_shown)
-			client.screen += beltl
+			if(!(beltl in client.screen)) // TA EDIT
+				client.screen += beltl // TA EDIT
 		update_observer_view(beltl)
 		if(!(cloak && (cloak.flags_inv & HIDEBELT)))
 			var/mutable_appearance/onbelt_overlay
@@ -912,7 +940,8 @@ There are several things that need to be remembered:
 	if(belt)
 		belt.screen_loc = rogueui_belt
 		if(client && hud_used && hud_used.hud_shown)
-			client.screen += belt
+			if(!(belt in client.screen)) // TA EDIT
+				client.screen += belt // TA EDIT
 		update_observer_view(belt)
 		if(!(cloak && (cloak.flags_inv & HIDEBELT)))
 			if(dna && dna.species.sexes)
@@ -1030,7 +1059,8 @@ There are several things that need to be remembered:
 		inv.update_icon()
 	if(backr)
 		if(backr.alternate_worn_layer == CLOAK_BEHIND_LAYER)
-			update_inv_cloak()
+			if(!icon_regeneration_batch_depth) // TA EDIT
+				update_inv_cloak() // TA EDIT
 		else
 			var/mutable_appearance/back_overlay
 			var/mutable_appearance/behindback_overlay
@@ -1083,7 +1113,8 @@ There are several things that need to be remembered:
 
 	if(backl)
 		if(backl.alternate_worn_layer == CLOAK_BEHIND_LAYER)
-			update_inv_cloak()
+			if(!icon_regeneration_batch_depth) // TA EDIT
+				update_inv_cloak() // TA EDIT
 		else
 			update_hud_backl(backl)
 			var/mutable_appearance/back_overlay
@@ -1164,7 +1195,8 @@ There are several things that need to be remembered:
 		cloak.screen_loc = rogueui_cloak					//move the item to the appropriate screen loc
 		if(client && hud_used && hud_used.hud_shown)
 			if(hud_used.inventory_shown)			//if the inventory is open
-				client.screen += cloak					//add it to client's screen
+				if(!(cloak in client.screen)) // TA EDIT
+					client.screen += cloak					//add it to client's screen // TA EDIT
 		update_observer_view(cloak,1)
 		if(dna && dna.species.sexes)
 			var/racecustom
@@ -1262,7 +1294,8 @@ There are several things that need to be remembered:
 
 	overlays_standing[CLOAK_LAYER] = cloaklays
 	rebuild_obscured_flags()
-	update_inv_armor() //fixboob
+	if(!icon_regeneration_batch_depth) // TA EDIT
+		update_inv_armor() // TA EDIT
 	apply_overlay(TABARD_LAYER)
 	apply_overlay(CLOAK_BEHIND_LAYER)
 	apply_overlay(CLOAK_LAYER)
@@ -1283,7 +1316,8 @@ There are several things that need to be remembered:
 		wear_shirt.screen_loc = rogueui_shirt					//move the item to the appropriate screen loc
 		if(client && hud_used && hud_used.hud_shown)
 			if(hud_used.inventory_shown)			//if the inventory is open
-				client.screen += wear_shirt					//add it to client's screen
+				if(!(wear_shirt in client.screen)) // TA EDIT
+					client.screen += wear_shirt					//add it to client's screen // TA EDIT
 		update_observer_view(wear_shirt,1)
 		if(dna && dna.species.sexes)
 			var/mutable_appearance/shirt_overlay
@@ -1350,7 +1384,8 @@ There are several things that need to be remembered:
 		wear_armor.screen_loc = rogueui_armor					//move the item to the appropriate screen loc
 		if(client && hud_used && hud_used.hud_shown)
 			if(hud_used.inventory_shown)			//if the inventory is open
-				client.screen += wear_armor					//add it to client's screen
+				if(!(wear_armor in client.screen)) // TA EDIT
+					client.screen += wear_armor					//add it to client's screen // TA EDIT
 		update_observer_view(wear_armor,1)
 		if(dna && dna.species.sexes)
 			var/racecustom
@@ -1401,7 +1436,8 @@ There are several things that need to be remembered:
 		update_female_chest()
 		dna.species.handle_body(src)
 	update_hair()
-	update_inv_shirt() // fix boob
+	if(!icon_regeneration_batch_depth) // TA EDIT
+		update_inv_shirt() // TA EDIT
 
 	apply_overlay(ARMOR_LAYER)
 	apply_overlay(ARMORSLEEVE_LAYER)
@@ -1421,7 +1457,8 @@ There are several things that need to be remembered:
 		wear_pants.screen_loc = rogueui_pants					//move the item to the appropriate screen loc
 		if(client && hud_used && hud_used.hud_shown)
 			if(hud_used.inventory_shown)			//if the inventory is open
-				client.screen += wear_pants					//add it to client's screen
+				if(!(wear_pants in client.screen)) // TA EDIT
+					client.screen += wear_pants					//add it to client's screen // TA EDIT
 		update_observer_view(wear_pants,1)
 		if(dna && dna.species.sexes)
 			var/racecustom
@@ -1567,7 +1604,8 @@ There are several things that need to be remembered:
 	I.screen_loc = rogueui_head
 	if(client && hud_used && hud_used.hud_shown)
 		if(hud_used.inventory_shown)
-			client.screen += I
+			if(!(I in client.screen)) // TA EDIT
+				client.screen += I // TA EDIT
 	update_observer_view(I,1)
 
 //update whether our mask item appears on our hud.
@@ -1575,14 +1613,16 @@ There are several things that need to be remembered:
 	I.screen_loc = rogueui_mask
 	if(client && hud_used && hud_used.hud_shown)
 		if(hud_used.inventory_shown)
-			client.screen += I
+			if(!(I in client.screen)) // TA EDIT
+				client.screen += I // TA EDIT
 	update_observer_view(I,1)
 
 /mob/living/carbon/human/update_hud_mouth(obj/item/I)
 	I.screen_loc = rogueui_mouth
 	if(client && hud_used && hud_used.hud_shown)
 		if(hud_used.inventory_shown)
-			client.screen += I
+			if(!(I in client.screen)) // TA EDIT
+				client.screen += I // TA EDIT
 	update_observer_view(I,1)
 
 //update whether our neck item appears on our hud.
@@ -1590,14 +1630,16 @@ There are several things that need to be remembered:
 	I.screen_loc = rogueui_neck
 	if(client && hud_used && hud_used.hud_shown)
 		if(hud_used.inventory_shown)
-			client.screen += I
+			if(!(I in client.screen)) // TA EDIT
+				client.screen += I // TA EDIT
 	update_observer_view(I,1)
 
 //update whether our back item appears on our hud.
 /mob/living/carbon/human/update_hud_back(obj/item/I)
 	I.screen_loc = ui_back
 	if(client && hud_used && hud_used.hud_shown)
-		client.screen += I
+		if(!(I in client.screen)) // TA EDIT
+			client.screen += I // TA EDIT
 	update_observer_view(I)
 
 //update whether our back item appears on our hud.
@@ -1607,7 +1649,8 @@ There are several things that need to be remembered:
 	else
 		I.screen_loc = rogueui_backr
 	if(client && hud_used && hud_used.hud_shown)
-		client.screen += I
+		if(!(I in client.screen)) // TA EDIT
+			client.screen += I // TA EDIT
 	update_observer_view(I)
 
 //update whether our back item appears on our hud.
@@ -1617,7 +1660,8 @@ There are several things that need to be remembered:
 	else
 		I.screen_loc = rogueui_backl
 	if(client && hud_used && hud_used.hud_shown)
-		client.screen += I
+		if(!(I in client.screen)) // TA EDIT
+			client.screen += I // TA EDIT
 	update_observer_view(I)
 
 /*
@@ -1715,26 +1759,26 @@ generate/load female uniform sprites matching all previously decided variables
 	var/detail_state = get_detail_state(t_state)
 
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(file2use, "[detail_state][get_detail_tag()]"), -layer2use)
+		var/mutable_appearance/pic = mutable_appearance(file2use, "[detail_state][get_detail_tag()]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
 		standing.overlays.Add(pic)
 		if(!isinhands && boobed_overlay && boobed_detail && boobed)
-			pic = mutable_appearance(icon(file2use, "[detail_state]_boob[get_detail_tag()]"), -layer2use)
+			pic = mutable_appearance(file2use, "[detail_state]_boob[get_detail_tag()]") // TA EDIT
 			pic.appearance_flags = RESET_COLOR
 			if(get_detail_color())
 				pic.color = get_detail_color()
 			standing.overlays.Add(pic)
 
 	if(get_altdetail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(file2use, "[detail_state][get_altdetail_tag()]"), -layer2use)
+		var/mutable_appearance/pic = mutable_appearance(file2use, "[detail_state][get_altdetail_tag()]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_altdetail_color())
 			pic.color = get_altdetail_color()
 		standing.overlays.Add(pic)
 		if(!isinhands && boobed_overlay && boobed_detail && boobed)
-			pic = mutable_appearance(icon(file2use, "[detail_state]_boob[get_altdetail_tag()]"), -layer2use)
+			pic = mutable_appearance(file2use, "[detail_state]_boob[get_altdetail_tag()]") // TA EDIT
 			pic.appearance_flags = RESET_COLOR
 			if(get_altdetail_color())
 				pic.color = get_altdetail_color()
@@ -1860,7 +1904,7 @@ generate/load female uniform sprites matching all previously decided variables
 		sleeves += r_sleeve
 
 		if(I.get_detail_tag() && I.sleeved_detail)
-			var/mutable_appearance/pic = mutable_appearance(icon(I.sleeved, "[used][I.get_detail_tag()]"), layer=-layer2use)
+			var/mutable_appearance/pic = mutable_appearance(I.sleeved, "[used][I.get_detail_tag()]", layer=-layer2use) // TA EDIT
 //			pic.appearance_flags = RESET_COLOR
 			if(I.get_detail_color())
 				pic.color = I.get_detail_color()
@@ -1889,7 +1933,7 @@ generate/load female uniform sprites matching all previously decided variables
 		sleeves += l_sleeve
 
 		if(I.get_detail_tag() && I.sleeved_detail)
-			var/mutable_appearance/pic = mutable_appearance(icon(I.sleeved, "[used][I.get_detail_tag()]"), layer=-layer2use)
+			var/mutable_appearance/pic = mutable_appearance(I.sleeved, "[used][I.get_detail_tag()]", layer=-layer2use) // TA EDIT
 //			pic.appearance_flags = RESET_COLOR
 			if(I.get_detail_color())
 				pic.color = I.get_detail_color()
@@ -1986,7 +2030,8 @@ generate/load female uniform sprites matching all previously decided variables
 				if(observe.hud_used)
 					if(inventory && !observe.hud_used.inventory_shown)
 						continue
-					observe.client.screen += I
+					if(!(I in observe.client.screen)) // TA EDIT
+						observe.client.screen += I // TA EDIT
 			else
 				observers -= observe
 				if(!observers.len)
@@ -1994,6 +2039,11 @@ generate/load female uniform sprites matching all previously decided variables
 					break
 
 /mob/living/carbon/human/update_body_parts(redraw = FALSE)
+	if(icon_regeneration_batch_depth) // TA EDIT START
+		icon_regeneration_body_refresh_pending = TRUE
+		if(redraw)
+			icon_regeneration_body_refresh_redraw = TRUE
+		return // TA EDIT END
 	//CHECK FOR UPDATE
 	var/oldkey = icon_render_key
 	icon_render_key = generate_icon_render_key()

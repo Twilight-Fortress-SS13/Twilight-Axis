@@ -49,7 +49,7 @@
 	balloon_alert.appearance_flags = RESET_ALPHA|RESET_COLOR|RESET_TRANSFORM
 	balloon_alert.maptext = MAPTEXT("<span style='text-align: center; -dm-text-outline: 1px #0005'>[text]</span>")
 	balloon_alert.maptext_x = (BALLOON_TEXT_WIDTH - ICON_SIZE_X) * -0.5 - base_pixel_x + x_offset
-	WXH_TO_HEIGHT(viewer_client?.MeasureText(text, null, BALLOON_TEXT_WIDTH), balloon_alert.maptext_height)
+	balloon_alert.maptext_height = ICON_SIZE_Y * 2
 	balloon_alert.maptext_width = BALLOON_TEXT_WIDTH
 
 	viewer_client?.images += balloon_alert
@@ -95,7 +95,7 @@
 ///Proc for creating a balloon alert that only someone with a specific trait would see.
 /atom/proc/filtered_balloon_alert(trait, text, x_offset, y_offset, show_self = TRUE)
 	var/list/candidates = get_hearers_in_view(DEFAULT_MESSAGE_RANGE, src, RECURSIVE_CONTENTS_CLIENT_MOBS)
-	if(trait)	
+	if(trait)
 		for(var/mob/living/carbon/human/H in candidates)
 			if(!show_self && H == src)
 				candidates -= H
