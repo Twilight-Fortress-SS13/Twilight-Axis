@@ -404,7 +404,7 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 #define SWIFTCAP_CHEST 10
 #define SWIFTCAP_LIMBS 25
 #define SWIFTCAP_PRECISE 45
-#define STAM_DRAIN_PER_STR_DIFF_HEAVY_BAL -2
+#define STAM_DRAIN_PER_STR_DIFF_HEAVY_BAL -3
 
 /* TEMPO DEFINES */
 #define TEMPO_CULL_DELAY	12 SECONDS	//Interval for checking our tempo lists. Only relevant to player mobs with TRAIT_TEMPO
