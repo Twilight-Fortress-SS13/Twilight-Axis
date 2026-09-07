@@ -155,9 +155,16 @@ export const BlueprintPlanner = () => {
   };
 
   const saveDesign = () => {
-    const filteredGrid = grid.filter((c) => c.z < totalFloors);
+    const packed_data: Record<string, string[]> = {};
+
+    grid.forEach((c) => {
+      if (c.z >= totalFloors) return;
+      if (!packed_data[c.type]) packed_data[c.type] = [];
+      packed_data[c.type].push(`${c.x},${c.y},${c.z},${c.dir || 2}`);
+    });
+
     act('save_design', {
-      grid_data: filteredGrid,
+      packed_data,
       max_floors: totalFloors,
     });
   };

@@ -474,6 +474,16 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_file" = 'icons/obj/stairs.dmi',
 		"icon_state" = "stonestairs"
 	),
+	"ladder" = list(
+		"name" = "Лестница",
+		"category" = "Двери и Лестницы",
+		"layer_type" = "obj",
+		"build_order" = 2,
+		"path" = /obj/structure/ladder,
+		"reqs" = list(/obj/item/grown/log/tree/small = 2),
+		"icon_file" = 'icons/roguetown/misc/structure.dmi',
+		"icon_state" = "ladder11"
+	),
 	"door_wood" = list(
 		"name" = "Деревянная дверь",
 		"category" = "Двери и Лестницы",
@@ -869,6 +879,36 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_file" = 'icons/roguetown/misc/lighting.dmi',
 		"icon_state" = "torchwall1"
 	),
+	"lanternpost" = list(
+		"name" = "Уличный Фонарь",
+		"category" = "Отопление и Свет",
+		"layer_type" = "obj",
+		"build_order" = 3,
+		"path" = /obj/machinery/light/rogue/lanternpost,
+		"reqs" = list(/obj/item/natural/stone = 2),
+		"icon_file" = 'icons/roguetown/misc/tallstructure.dmi',
+		"icon_state" = "streetlantern1"
+	),
+	"torch_standing" = list(
+		"name" = "Стоячий факел",
+		"category" = "Отопление и Свет",
+		"layer_type" = "obj",
+		"build_order" = 3,
+		"path" = /obj/machinery/light/rogue/firebowl/standing,
+		"reqs" = list(/obj/item/natural/stone = 2),
+		"icon_file" = 'icons/roguetown/misc/lighting.dmi',
+		"icon_state" = "standing1"
+	),
+	"firebowl" = list(
+		"name" = "Жирник",
+		"category" = "Отопление и Свет",
+		"layer_type" = "obj",
+		"build_order" = 3,
+		"path" = /obj/machinery/light/rogue/firebowl,
+		"reqs" = list(/obj/item/natural/stone = 2),
+		"icon_file" = 'icons/roguetown/misc/lighting.dmi',
+		"icon_state" = "stonefire1"
+	),
 	"torch_lantern_standing" = list(
 		"name" = "Каменный фонарь",
 		"category" = "Отопление и Свет",
@@ -1049,6 +1089,76 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"reqs" = list(/obj/item/grown/log/tree/small = 2),
 		"icon_file" = 'modular/Neu_Food/icons/cookware/bakers_trough.dmi',
 		"icon_state" = "through_empty"
+	),
+	"grille" = list(
+		"name" = "Половая Решетка",
+		"category" = "Ремесло и Станки",
+		"layer_type" = "obj",
+		"build_order" = 3,
+		"path" = /obj/structure/bars/grille,
+		"reqs" = list(/obj/item/ingot/iron = 1),
+		"icon_file" = 'icons/roguetown/misc/structure.dmi',
+		"icon_state" = "floorgrille"
+	),
+	"minecart_rail" = list(
+		"name" = "Рельсы",
+		"category" = "Ремесло и Станки",
+		"layer_type" = "obj",
+		"build_order" = 3,
+		"path" = /obj/structure/minecart_rail,
+		"reqs" = list(/obj/item/ingot/iron = 1),
+		"icon_file" = 'icons/obj/track.dmi',
+		"icon_state" = "track"
+	),
+	"scomm" = list(
+		"name" = "СКОМ",
+		"category" = "Ремесло и Станки",
+		"layer_type" = "obj",
+		"build_order" = 3,
+		"path" = /obj/structure/roguemachine/scomm/r,
+		"reqs" = list(/obj/item/grown/log/tree/small = 2, /obj/item/ingot/iron = 2, /obj/item/natural/wood/plank = 4, /obj/item/ingot/bronze = 2),
+		"icon_file" = 'icons/roguetown/misc/machines.dmi',
+		"icon_state" = "scomm1"
+	),
+	"stockpile" = list(
+		"name" = "Яма",
+		"category" = "Ремесло и Станки",
+		"layer_type" = "obj",
+		"build_order" = 3,
+		"path" = /obj/structure/roguemachine/stockpile,
+		"reqs" = list(/obj/item/grown/log/tree/small = 2, /obj/item/ingot/iron = 2, /obj/item/natural/wood/plank = 4, /obj/item/ingot/bronze = 2),
+		"icon_file" = 'icons/roguetown/misc/machines.dmi',
+		"icon_state" = "stockpile_vendor"
+	),
+	"atm" = list(
+		"name" = "Мейстер",
+		"category" = "Ремесло и Станки",
+		"layer_type" = "obj",
+		"build_order" = 3,
+		"path" = /obj/structure/roguemachine/atm,
+		"reqs" = list(/obj/item/grown/log/tree/small = 2, /obj/item/ingot/iron = 2, /obj/item/natural/wood/plank = 4, /obj/item/ingot/bronze = 2),
+		"icon_file" = 'icons/roguetown/misc/machines.dmi',
+		"icon_state" = "atm"
+	),
+	"floordoor" = list(
+		"name" = "Половая дверь",
+		"category" = "Ремесло и Станки",
+		"layer_type" = "obj",
+		"build_order" = 3,
+		"path" = /obj/structure/floordoor,
+		"reqs" = list(/obj/item/grown/log/tree/small = 2),
+		"icon_file" = 'icons/roguetown/misc/structure.dmi',
+		"icon_state" = "floorhatch1"
+	),
+	"lever" = list(
+		"name" = "Рычаг",
+		"category" = "Ремесло и Станки",
+		"layer_type" = "obj",
+		"build_order" = 3,
+		"path" = /obj/structure/lever/wall,
+		"reqs" = list(/obj/item/ingot/iron = 1),
+		"icon_file" = 'icons/roguetown/misc/structure.dmi',
+		"icon_state" = "leverwall0"
 	),
 	"millstone" = list(
 		"name" = "Жернова",
@@ -1461,17 +1571,30 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		return TRUE
 
 	if(action == "save_design")
-		var/list/raw_data = params["grid_data"]
+		var/list/packed_data = params["packed_data"]
 		var/list/safe_data = list()
 
-		for(var/entry in raw_data)
-			var/dx = isnum(entry["x"]) ? entry["x"] : text2num(entry["x"])
-			var/dy = isnum(entry["y"]) ? entry["y"] : text2num(entry["y"])
+		for(var/b_type in packed_data)
+			var/list/coords = packed_data[b_type]
+			for(var/coord_str in coords)
+				var/list/parts = splittext(coord_str, ",")
+				if(length(parts) < 3) continue
 
-			if(abs(dx) > MAX_PLANNER_RADIUS || abs(dy) > MAX_PLANNER_RADIUS)
-				continue
+				var/dx = text2num(parts[1])
+				var/dy = text2num(parts[2])
+				var/dz = text2num(parts[3])
+				var/ddir = length(parts) >= 4 ? text2num(parts[4]) : 2
 
-			safe_data += list(entry)
+				if(abs(dx) > MAX_PLANNER_RADIUS || abs(dy) > MAX_PLANNER_RADIUS)
+					continue
+
+				safe_data += list(list(
+					"x" = dx,
+					"y" = dy,
+					"z" = dz,
+					"type" = b_type,
+					"dir" = ddir
+				))
 
 		design_data = safe_data
 		max_floors = clamp(text2num(params["max_floors"]) || 2, 2, 4)
@@ -1752,11 +1875,6 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 
 		built_tiles_count++
 
-		if(findtext(b_type, "wood"))
-			new /obj/effect/decal/cleanable/debris/woody(target_turf)
-		else if(findtext(b_type, "stone"))
-			new /obj/effect/decal/cleanable/debris/stony(target_turf)
-
 /obj/structure/blueprint_site/proc/pull_resources()
 	var/has_needed = FALSE
 	for(var/res in required_resources)
@@ -1890,17 +2008,29 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		return TRUE
 
 	if(action == "save_design")
-		var/list/raw_data = params["grid_data"]
+		var/list/packed_data = params["packed_data"]
 		var/list/safe_data = list()
+		for(var/b_type in packed_data)
+			var/list/coords = packed_data[b_type]
+			for(var/coord_str in coords)
+				var/list/parts = splittext(coord_str, ",")
+				if(length(parts) < 3) continue
 
-		for(var/entry in raw_data)
-			var/dx = isnum(entry["x"]) ? entry["x"] : text2num(entry["x"])
-			var/dy = isnum(entry["y"]) ? entry["y"] : text2num(entry["y"])
+				var/dx = text2num(parts[1])
+				var/dy = text2num(parts[2])
+				var/dz = text2num(parts[3])
+				var/ddir = length(parts) >= 4 ? text2num(parts[4]) : 2
 
-			if(abs(dx) > MAX_SPELL_RADIUS || abs(dy) > MAX_SPELL_RADIUS)
-				continue
+				if(abs(dx) > MAX_SPELL_RADIUS || abs(dy) > MAX_SPELL_RADIUS)
+					continue
 
-			safe_data += list(entry)
+				safe_data += list(list(
+					"x" = dx,
+					"y" = dy,
+					"z" = dz,
+					"type" = b_type,
+					"dir" = ddir
+				))
 
 		L.arcyne_blueprint_data = safe_data
 		L.arcyne_blueprint_floors = clamp(text2num(params["max_floors"]) || 2, 2, 4)
@@ -1908,7 +2038,6 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		L.balloon_alert(L, "План сохранен в памяти!")
 		SStgui.close_uis(src)
 		return TRUE
-
 	if(action == "clear_design")
 		L.arcyne_blueprint_data = list()
 		to_chat(L, span_notice("План в памяти стерт."))
