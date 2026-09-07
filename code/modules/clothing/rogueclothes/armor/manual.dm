@@ -218,6 +218,7 @@
 	desc = "The moon calls and my skin answers. I ran wild under its light until my flesh hardened like stone beneath a hunter's boot.\
 	</br>Now I meditate, and it knits itself whole once more. I do not remember who I was before.\
 	</br>I do not care to."
+	attachment_component = null
 	armor = list("blunt" = DR_HEAVY, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_MEDIUM, "fire" = DR_NONE, "bullet" = DR_SUPER)
 	max_integrity = ARMOR_INT_CHEST_PLATE_BRIGANDINE - ARMOR_INT_CHEST_PLATE_BRIGANDINE_WEIGHT_MODIFIER
 	repairmsg_end = "The moonlight fades from my skin as it settles into calm strength."
@@ -229,6 +230,7 @@
 	desc = "Deeper than the skin, harder than the bone. The moon's blessing settled here first, in the place where breath lives.\
 	</br>To strike this core is to strike the riverbed; the water parts, and the stone remains.\
 	</br>I meditate to keep it so."
+	attachment_component = null
 	armor = ARMOR_BRIGANDINE
 	max_integrity = ARMOR_INT_CHEST_PLATE_BRIGANDINE - ARMOR_INT_CHEST_PLATE_BRIGANDINE_WEIGHT_MODIFIER
 	repairmsg_end = "The moonlight fades from my chest as it settles into calm strength."

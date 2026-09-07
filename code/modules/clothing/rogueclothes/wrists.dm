@@ -273,6 +273,7 @@
 	. = ..()
 	if(isnull(repair_percent))
 		repair_percent = repair_fraction * max_integrity
+	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
 
 /obj/item/clothing/wrists/roguetown/bracers/lunacy/equipped(mob/user, slot, initial = FALSE)
 	. = ..()
@@ -282,7 +283,10 @@
 /obj/item/clothing/wrists/roguetown/bracers/lunacy/dropped(mob/living/carbon/human/user)
 	if(ismob(user))
 		UnregisterSignal(user, COMSIG_MOB_MEDITATED)
-	return ..()
+	..()
+	if(QDELETED(src))
+		return
+	qdel(src)
 
 /obj/item/clothing/wrists/roguetown/bracers/lunacy/get_mechanics_examine(mob/user)
 	. = ..()
