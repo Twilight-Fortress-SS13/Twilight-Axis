@@ -1,0 +1,8 @@
+author: "Chituka"
+delete-after: True
+changes:
+  - balance: "Heavy balance now inflicts 3 stamina damage per point of STR difference instead of 2."
+  - balance: "Normal balance now helps against other balances, reducing their effects."
+  - rscadd: "Estoc now has rapier's special attack."
+  - rscadd: "Fish."
+  - bugfix: "defenestration now removes job nobility as well."

@@ -3,7 +3,7 @@
 	tutorial = "An eternal glory, a proud name of winged hussar, a noble cause... This is all that remains in the past. Whether after a miserable defeat, fabricated treason, or a dishonorable discharge, you have been cast out from your homeland. But you are not one to give up. You have taken up the life of a mercenary, and now you seek to reclaim your honor and your place in the world."
 	outfit = /datum/outfit/job/roguetown/mercenary/twilight_hussar
 	traits_applied = list(TRAIT_NOBLE, TRAIT_HEAVYARMOR, TRAIT_STEELHEARTED)
-	category_tags = list(CTAG_MERCENARY)
+	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
 	maximum_possible_slots = 2
 	class_select_category = CLASS_CAT_AAVNR
 	subclass_languages = list(/datum/language/aavnic)

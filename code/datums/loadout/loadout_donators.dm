@@ -852,7 +852,12 @@
 /datum/loadout_item/donator/kadeguandao
 	name = "Donator Kit - Dawn Cometh"
 	path = /obj/item/enchantingkit/weapon/kadeguandao
-	ckeywhitelist = list("shiroseschnee", "Zerantio")
+	ckeywhitelist = list("shiroseschnee", "Zerantio", "elox2000")
+
+/datum/loadout_item/donator/kadedao
+	name = "Donator Kit - Spring Cometh"
+	path = /obj/item/enchantingkit/weapon/kadedao
+	ckeywhitelist = list("shiroseschnee", "Zerantio", "elox2000")
 
 /datum/loadout_item/donator/falling_star
 	name = "Donator Kit - Falling Star"
@@ -1012,7 +1017,7 @@
 /datum/loadout_item/donator/chivalre_drowmantle
 	name = "Donator Kit - Scourge Mantle"
 	path = /obj/item/enchantingkit/donator_chivalre_drowmantle
-	ckeywhitelist = list("oddbomber3768")
+	ckeywhitelist = list("oddbomber3768", "wickedcybs")
 
 /datum/loadout_item/donator/chivalre_drowgreatflail
 	name = "Donator Kit - Jagged Skikuldic Greatflail"

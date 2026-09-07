@@ -15,7 +15,7 @@ type Layer = {
   pixels: Record<string, string>;
 };
 
-export const CanvasPainter = (props) => {
+export const CanvasPainter = () => {
   const { act, data } = useBackend<Data>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const baseImgRef = useRef<HTMLImageElement | null>(null);

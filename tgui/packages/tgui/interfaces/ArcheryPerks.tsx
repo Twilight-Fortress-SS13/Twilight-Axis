@@ -28,7 +28,7 @@ interface Data {
   selected_perk: string;
 }
 
-export const ArcheryPerks = (props) => {
+export const ArcheryPerks = () => {
   const { act, data } = useBackend<Data>();
   const { has_perk, selected_perk } = data;
 
