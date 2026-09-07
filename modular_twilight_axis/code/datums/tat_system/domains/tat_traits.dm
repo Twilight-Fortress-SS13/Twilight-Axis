@@ -1328,8 +1328,10 @@
 		return FALSE
 
 	if(!has_trait(TAT_TRAIT_WANTED))
-		var/skin_path = /obj/item/clothing/suit/roguetown/armor/manual/pushups/barbarian
-		owner_build.items.spawn_item_to_exact_slot_or_bag(H, skin_path, SLOT_ARMOR)
+		var/skin_path_1 = /obj/item/clothing/suit/roguetown/armor/manual/resting/chest/barbarian
+		var/skin_path_2 = /obj/item/clothing/suit/roguetown/armor/manual/pushups/barbarian
+		owner_build.items.spawn_item_to_exact_slot_or_bag(H, skin_path_1, SLOT_ARMOR)
+		owner_build.items.spawn_item_to_exact_slot_or_bag(H, skin_path_2, SLOT_SHIRT)
 	else
 		var/skin_path_1 = /obj/item/clothing/suit/roguetown/armor/manual/resting/chest/berzerker
 		var/skin_path_2 = /obj/item/clothing/suit/roguetown/armor/manual/resting/body/berzerker
