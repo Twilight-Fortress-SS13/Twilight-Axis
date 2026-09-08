@@ -885,7 +885,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/machinery/light/rogue/lanternpost,
-		"reqs" = list(/obj/item/natural/stone = 2),
+		"reqs" = list(/obj/item/ingot/iron = 1, /obj/item/grown/log/tree/small = 2, /obj/item/natural/wood/plank = 2),
 		"icon_file" = 'icons/roguetown/misc/tallstructure.dmi',
 		"icon_state" = "streetlantern1"
 	),
@@ -1110,35 +1110,6 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_file" = 'icons/obj/track.dmi',
 		"icon_state" = "track"
 	),
-	"scomm" = list(
-		"name" = "СКОМ",
-		"category" = "Ремесло и Станки",
-		"layer_type" = "obj",
-		"build_order" = 3,
-		"path" = /obj/structure/roguemachine/scomm/r,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2, /obj/item/ingot/iron = 2, /obj/item/natural/wood/plank = 4, /obj/item/ingot/bronze = 2),
-		"icon_file" = 'icons/roguetown/misc/machines.dmi',
-		"icon_state" = "scomm1"
-	),
-	"stockpile" = list(
-		"name" = "Яма",
-		"category" = "Ремесло и Станки",
-		"layer_type" = "obj",
-		"build_order" = 3,
-		"path" = /obj/structure/roguemachine/stockpile,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2, /obj/item/ingot/iron = 2, /obj/item/natural/wood/plank = 4, /obj/item/ingot/bronze = 2),
-		"icon_file" = 'icons/roguetown/misc/machines.dmi',
-		"icon_state" = "stockpile_vendor"
-	),
-	"atm" = list(
-		"name" = "Мейстер",
-		"category" = "Ремесло и Станки",
-		"layer_type" = "obj",
-		"build_order" = 3,
-		"path" = /obj/structure/roguemachine/atm,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2, /obj/item/ingot/iron = 2, /obj/item/natural/wood/plank = 4, /obj/item/ingot/bronze = 2),
-		"icon_file" = 'icons/roguetown/misc/machines.dmi',
-		"icon_state" = "atm"
 	),
 	"floordoor" = list(
 		"name" = "Половая дверь",
