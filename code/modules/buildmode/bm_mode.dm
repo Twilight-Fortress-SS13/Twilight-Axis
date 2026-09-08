@@ -1,5 +1,7 @@
 /datum/buildmode_mode
 	var/key = "oops"
+	var/button_icon = 'icons/misc/buildmode.dmi' // TA EDIT
+	var/button_icon_state // TA EDIT
 
 	var/datum/buildmode/BM
 
@@ -27,8 +29,11 @@
 /datum/buildmode_mode/proc/exit_mode(datum/buildmode/BM)
 	return
 
+/datum/buildmode_mode/proc/get_button_icon() // TA EDIT
+	return button_icon || 'icons/misc/buildmode.dmi' // TA EDIT
+
 /datum/buildmode_mode/proc/get_button_iconstate()
-	return "buildmode_[key]"
+	return button_icon_state || "buildmode_[key]" // TA EDIT
 
 /datum/buildmode_mode/proc/show_help(client/c)
 	CRASH("No help defined, yell at a coder")

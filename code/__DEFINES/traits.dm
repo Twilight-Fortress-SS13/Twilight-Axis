@@ -308,7 +308,6 @@
 #define TRAIT_LEYLINE_ATTUNEMENT "Leyline Attunement" //enables echanting
 
 //Antagonist role unique
-#define TRAIT_ASSASSIN	"Assassin"
 #define TRAIT_DREAMWALKER "Dreamwalker"
 #define TRAIT_NOPVE "Natural Accord" //Hag only. PVE exemption.
 #define TRAIT_VAMPBITE "Vampire Bite" //Handles hazy effect on vamp biting
@@ -346,6 +345,11 @@
 #define TRAIT_DEPRAVED "Fallen" //Baothans can use exclusive gear
 #define TRAIT_DUSTRUNNER "Dust Runner" //Dust runners recognize each other, and are known to bathhouse workers and matthiosites
 
+// ASSASSIN ANTAG TRAITS
+#define TRAIT_CLAIMED_BY_DARKSTAR "Claimed by the Dark Star" // applied to targeted users that get dagger'd
+#define TRAIT_ASSASSIN	"Assassin" // needed by assassin to use dagger
+
+
 //ASCENDANT GOD CURSES
 
 #define TRAIT_CURSE_ZIZO "Curse of Zizo" //int nuke and no magic
@@ -368,6 +372,7 @@
 
 //Dusting/Respawn related
 #define TRAIT_DUSTABLE "Dustable"
+#define TRAIT_SKELETAL_GIB_ON_DEATH "Skeletal Unraveling" //non-player facing in traits, intended for skeletons in odd places
 #define TRAIT_DUST_LEAVE_HEAD "Dust Leave Head"
 #define TRAIT_DUST_DELETE_GEAR "Dust Delete Gear"
 #define TRAIT_SECONDLIFE "Second Life"
@@ -536,7 +541,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_NALEDI = span_info("I hail from the lands of Naledi. My blood and knowledge storied in yils of texts and techniques. My birthright is my pride."),
 	TRAIT_JAILOR = span_info("I am the ducal torturer and executioneer. Society looks down upon me and I will never be graced by loving touch of the Gods."),
 	TRAIT_SKILLBLESSED = span_greentext("I've reunited with an old friend of mine. All is well."),
-	TRAIT_LONGSWORDSMAN = span_info("\"I will crush anyone who opposes me. I am of royal blood. I dispense justice, advance the cause of good and destroy evil. To those who learn my crossings I will grant great fame and renown in the art of armed fighting.\" - I fight like a Master when I wield any longsword, though I can only perform master strikes with a perfectly balanced basket-hilted or reformist longsword."),
+	TRAIT_LONGSWORDSMAN = span_info("\"I will crush anyone who opposes me. I am of royal blood. I dispense justice, advance the cause of good and destroy evil. To those who learn my crossings I will grant great fame and renown in the art of armed fighting.\" - I fight like a Master when I wield a traditional longsword and I know how to perform master strikes with them."),
 	TRAIT_SABRIST = span_info("I've learned all there is to know about the Southern curve. When using a szöréndnížine sabre, I fight like a Master. My swings are innately more accurate when targetting hands and arms."),
 	TRAIT_MEDIUMARMOR = span_info("I can move freely in medium armor."),
 	TRAIT_HEAVYARMOR = span_info("I can move freely in heavy armor."),
@@ -553,6 +558,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_CRITICAL_WEAKNESS = span_danger("I am weak to wounds that others could survive."),
 	TRAIT_SHATTER_KILL = span_danger("My form is vulnerable to chest fractures and paralysis, I will be crippled if my ribs shatter or die if I am paralyised."),
 	TRAIT_DNR = span_danger("My lux' vigor is weak. There is no hope for me. This lyfe is all I have."),
+	TRAIT_CLAIMED_BY_DARKSTAR = span_danger("My soul has been trapped inside an assassin's dagger. I will not be able to return to lyfe until the dagger is destroyed..."),
 	TRAIT_PHILOSOPHER_BOUND = span_danger("I bound my soul."),
 	TRAIT_MANIAC_AWOKEN = span_danger("I am <b>WAKING UP</b> and the sheeple know this. They will resist."),
 	TRAIT_INFINITE_STAMINA = "I have boundless energy, I will never tire.",
@@ -696,9 +702,9 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_ZURCH = span_warning("I know of sacred sites of worship where followers of the Ascendants convene, and the path to the nearest conclave is etched into my memory."),
 	TRAIT_CAVEDWELLER = span_info("The mountains are my home. I prefer to live beneath the surface away from the sun's gaze and know the caves of this land like the back of my hand."),
 	TRAIT_CURSE_ASTRATA = span_warning("I am forsaken by the Sun. I will find no rest under Her unwavering gaze."),
-	TRAIT_CURSE_NOC = span_warning("I am forsaken by the Moon. I will find no salvation in His grace."),
+	TRAIT_CURSE_NOC = span_warning("I am forsaken by the Moon. I will find no salvation in Her grace."), // TA EDIT
 	TRAIT_CURSE_DENDOR = span_warning("I am forsaken by the Treefather. Reason and common sense abandon me."),
-	TRAIT_CURSE_ABYSSOR = span_warning("I am forsaken by the Dreamer. His domain will surely become my grave."),
+	TRAIT_CURSE_ABYSSOR = span_warning("I am forsaken by the Oceanfather. His domain will surely become my grave."), // TA EDIT
 	TRAIT_CURSE_RAVOX = span_warning("I am forsaken by the Justicar. My opponents will show me no clemency."),
 	TRAIT_CURSE_NECRA = span_warning("I am forsaken by the Undermaiden. Even the lightest strike could send me into Her embrace."),
 	TRAIT_CURSE_XYLIX = span_warning("I am forsaken by the Trickster. Misfortune follows me on every step."),
@@ -709,10 +715,10 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_RECENT_CONVERT = span_info("I have recently converted to a new patron; I shall not forsake them so soon."),
 	TRAIT_UNCONVERTIBLE = span_info("My nature is inextricably tied to my patron. Any attempts at conversion will fail."),
 	TRAIT_SLAVE = span_warning("Я был угнан в рабство! О, боги, помилуйте мою душу - это невыносимая судьба! Со мною обращаются как с вещью!"), // TA EDIT
-	TRAIT_CURSE_ZIZO = span_warning("I am forsaken by the Architect. Her grasp reaches for my heart."),
+	TRAIT_CURSE_ZIZO = span_warning("I am forsaken by the Mistress of Darkness. Her grasp reaches for my heart."), // TA EDIT
 	TRAIT_CURSE_GRAGGAR = span_warning("I am forsaken by the Warlord. Bloodlust is only thing I know for real."),
-	TRAIT_CURSE_MATTHIOS = span_warning("I am forsaken by the Dragon. Greed will be my only salvation."),
-	TRAIT_CURSE_BAOTHA = span_warning("I am forsaken by the Heartbreaker. I am drowning in her promises."),
+	TRAIT_CURSE_MATTHIOS = span_warning("I am forsaken by the Father. Do I not deserve to be free?"), // TA EDIT
+	TRAIT_CURSE_BAOTHA = span_warning("I am forsaken by the Mistress of Pleasures. I am drowning in her promises that will never be."), // TA EDIT
 	TRAIT_JACKOFALLTRADES = span_notice("Skills cost half as much for me to raise."),
 	TRAIT_BLOODLOSS_IMMUNE = span_notice("While I may bleed, I will feel nothing from it."),
 	TRAIT_ASTRATAN_AFFINITY = span_bone("My bond with Astrata is strong. I can tell who worships her from up close."),
@@ -736,7 +742,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_BLACKOAK = span_warning("The Black Oaks can spot <b>any</b> foreigners and outsiders, no matter how long they've lived in Azuria. I can spot an invader at a glance."),
 	TRAIT_DREAMWALKER = span_warning("I walk the dream and reality at the same time. My mind frays, but my vision shall be reality."),
 	TRAIT_ENGINEERING_GOGGLES = span_warning("I can see structural details others can't."),
-	TRAIT_ASSASSIN = span_warning("My soul has been tainted by foul spirits, through them I honor my pact."),
+	TRAIT_ASSASSIN = span_cult("Holy my Hecatomb. Holy my Hunger. Wholly I offer my flesh. The Sinistar has chosen me to be one of his huntsmen."),
 	TRAIT_MASTER_CARPENTER = span_warning("I've been trained to make the most of wood"),
 	TRAIT_MASTER_MASON = span_warning("I've been trained to make the most of stone"),
 	TRAIT_EQUESTRIAN = span_warning("I am a capable rider. My mount is an extension of me."),
@@ -855,9 +861,34 @@ GLOBAL_LIST_INIT(roguetraits, list(
 		}\
 	} while (0)
 
+#define REMOVE_TRAITS_IN(target, sources) \
+	do { \
+		var/list/_L = target.status_traits; \
+		var/list/_S = sources; \
+		if (sources && !islist(sources)) { \
+			_S = list(sources); \
+		} else { \
+			_S = sources\
+		}; \
+		if (_L) { \
+			for (var/_T in _L) { \
+				if (_L[_T]) { \
+					_L[_T] -= _S; \
+				}; \
+				if (!length(_L[_T])) { \
+					_L -= _T; \
+					SEND_SIGNAL(target, SIGNAL_REMOVETRAIT(_T), _T); \
+					}; \
+				};\
+			if (!length(_L)) { \
+				target.status_traits = null\
+			};\
+		}\
+	} while (0)
+
 #define HAS_TRAIT(target, trait) (target.status_traits ? (target.status_traits[trait] ? TRUE : FALSE) : FALSE)
 #define HAS_TRAIT_FROM(target, trait, source) (target.status_traits ? (target.status_traits[trait] ? (source in target.status_traits[trait]) : FALSE) : FALSE)
-#define HAS_TRAIT_FROM_ONLY(target, trait, source) (HAS_TRAIT(target, trait) && (source in target._status_traits[trait]) && (length(target.status_traits[trait]) == 1))
+#define HAS_TRAIT_FROM_ONLY(target, trait, source) (HAS_TRAIT(target, trait) && (source in target.status_traits[trait]) && (length(target.status_traits[trait]) == 1))
 #define HAS_TRAIT_NOT_FROM(target, trait, source) (HAS_TRAIT(target, trait) && (length(target.status_traits[trait] - source) > 0))
 
 /*
@@ -1095,6 +1126,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TIMESTOP_TRAIT "timestop"
 #define HUGBOX_TRAIT "hugbox"
 #define ADVENTURER_TRAIT "adventurer"
+#define GRAGGAR_ASSASSINATED "graggar_assassinated"
+#define CONTRACT_SPAWN_TRAIT "contract-spawn"
 
 #define TRAIT_I_AM_INVISIBLE_ON_A_BOAT "invisible_on_tram"
 

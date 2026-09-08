@@ -44,17 +44,17 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	if(!target_turf || !required_type)
 		return null
 	for(var/atom/movable/found_ingredient in target_turf)
+		if(found_ingredient.type == required_type)
+			return found_ingredient
+	for(var/atom/movable/found_ingredient in target_turf)
 		if(istype(found_ingredient, required_type))
 			return found_ingredient
 	return null
 
-/obj/effect/decal/cleanable/sigil/proc/consume_ritual_ingredients(list/ingredients_to_consume)
-	if(!length(ingredients_to_consume))
+/obj/effect/decal/cleanable/sigil/proc/consume_ritual_ingredient(atom/movable/ingredient)
+	if(!ingredient || QDELETED(ingredient) || ismob(ingredient))
 		return
-	for(var/atom/movable/ingredient as anything in ingredients_to_consume)
-		if(!ingredient || QDELETED(ingredient) || ismob(ingredient))
-			continue
-		qdel(ingredient)
+	qdel(ingredient)
 
 // Счетчик количества ритуалов
 /proc/get_ritual_count(ritual_name)
@@ -86,22 +86,20 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	if(!user.client)
 		return
 
-	var/list/available_rituals = list()
-	var/list/ritual_categories = list()
+	var/list/categories = list(
+		"Servantry" = /datum/ritual/servantry,
+		"Transmutation" = /datum/ritual/transmutation,
+		"Fleshcrafting" = /datum/ritual/fleshcrafting,
+		"Weaponary" = /datum/ritual/weaponary
+	)
 
-	switch(sigil_type)
-		if("Transmutation")
-			ritual_categories = subtypesof(/datum/ritual/transmutation)
-		if("Fleshcrafting")
-			ritual_categories = subtypesof(/datum/ritual/fleshcrafting)
-		if("Servantry")
-			ritual_categories = subtypesof(/datum/ritual/servantry)
-		if("Weaponary")
-			ritual_categories = subtypesof(/datum/ritual/weaponary)
-
-	if(!length(ritual_categories))
+	var/chosen_category = tgui_input_list(user, "Choose Ritual Category:", "Ritual Categories", categories)
+	if(!chosen_category || !user.Adjacent(src))
 		return
 
+	var/category_type = categories[chosen_category]
+	var/list/ritual_categories = subtypesof(category_type)
+	var/list/available_rituals = list()
 	var/current_cultists = length(SSmapping.retainer.cultists)
 
 	for(var/datum/ritual/ritual_type as anything in ritual_categories)
@@ -117,10 +115,10 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 		available_rituals[ritual_name] = ritual_type
 
 	if(!length(available_rituals))
-		to_chat(user, span_warning("No rituals for this rune."))
+		to_chat(user, span_warning("No available rituals in this category."))
 		return
 
-	var/chosen_ritual_name = tgui_input_list(user, "Choose Ritual:", "Rituals [sigil_type]", available_rituals)
+	var/chosen_ritual_name = tgui_input_list(user, "Choose Ritual:", "Rituals - [chosen_category]", available_rituals)
 	if(!chosen_ritual_name || !user.Adjacent(src))
 		return
 
@@ -163,38 +161,37 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	var/cardinal_success = FALSE
 	var/center_success = FALSE
 	var/dews = 0
-	var/list/ingredients_to_consume = list()
-	var/atom/movable/found_ingredient
+	var/atom/movable/east_ingredient
+	var/atom/movable/south_ingredient
+	var/atom/movable/west_ingredient
+	var/atom/movable/north_ingredient
+	var/atom/movable/center_ingredient
 
 	if(pickritual.e_req)
-		found_ingredient = find_ritual_ingredient(get_step(src, EAST), pickritual.e_req)
-		if(found_ingredient)
+		east_ingredient = find_ritual_ingredient(get_step(src, EAST), pickritual.e_req)
+		if(east_ingredient)
 			dews++
-			ingredients_to_consume += found_ingredient
 	else
 		dews++
 
 	if(pickritual.s_req)
-		found_ingredient = find_ritual_ingredient(get_step(src, SOUTH), pickritual.s_req)
-		if(found_ingredient)
+		south_ingredient = find_ritual_ingredient(get_step(src, SOUTH), pickritual.s_req)
+		if(south_ingredient)
 			dews++
-			ingredients_to_consume += found_ingredient
 	else
 		dews++
 
 	if(pickritual.w_req)
-		found_ingredient = find_ritual_ingredient(get_step(src, WEST), pickritual.w_req)
-		if(found_ingredient)
+		west_ingredient = find_ritual_ingredient(get_step(src, WEST), pickritual.w_req)
+		if(west_ingredient)
 			dews++
-			ingredients_to_consume += found_ingredient
 	else
 		dews++
 
 	if(pickritual.n_req)
-		found_ingredient = find_ritual_ingredient(get_step(src, NORTH), pickritual.n_req)
-		if(found_ingredient)
+		north_ingredient = find_ritual_ingredient(get_step(src, NORTH), pickritual.n_req)
+		if(north_ingredient)
 			dews++
-			ingredients_to_consume += found_ingredient
 	else
 		dews++
 
@@ -202,10 +199,9 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 		cardinal_success = TRUE
 
 	if(pickritual.center_requirement)
-		found_ingredient = find_ritual_ingredient(get_turf(src), pickritual.center_requirement)
-		if(found_ingredient)
+		center_ingredient = find_ritual_ingredient(get_turf(src), pickritual.center_requirement)
+		if(center_ingredient)
 			center_success = TRUE
-			ingredients_to_consume += found_ingredient
 	else
 		center_success = TRUE
 
@@ -224,7 +220,11 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 		user.electrocute_act(10, src)
 		return
 
-	consume_ritual_ingredients(ingredients_to_consume)
+	consume_ritual_ingredient(east_ingredient)
+	consume_ritual_ingredient(south_ingredient)
+	consume_ritual_ingredient(west_ingredient)
+	consume_ritual_ingredient(north_ingredient)
+	consume_ritual_ingredient(center_ingredient)
 	user.playsound_local(user, 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sounds/tesa.ogg', 25)
 	user.whisper("O'vena tesa...")
 

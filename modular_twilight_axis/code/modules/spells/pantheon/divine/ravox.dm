@@ -125,6 +125,50 @@
 		return TRUE
 	return shares_fellowship(src, target)
 
+/mob/living/carbon/human/var/tmp/ravox_spirit_aggressive_mode = FALSE
+
+/mob/living/carbon/human/proc/toggle_ravox_spirit_mode()
+	set name = "Toggle Spirit Aggression"
+	set category = "RoleUnique.Cleric"
+	ravox_spirit_aggressive_mode = !ravox_spirit_aggressive_mode
+	var/count = 0
+	for(var/mob/living/minion as anything in GLOB.mob_list)
+		if(!istype(minion, /mob/living/carbon/human/species/human/northern/ravox_spirit) && !istype(minion, /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost))
+			continue
+		if(!ravox_spirit_belongs_to_user(minion))
+			continue
+		apply_ravox_spirit_mode(minion)
+		if(minion.ai_controller)
+			minion.ai_controller.nudge_target_scan()
+			minion.ai_controller.wake_for_combat()
+		count++
+	var/updated_text = count ? " Updated [count] active spirit[count == 1 ? "" : "s"]." : ""
+	to_chat(src, span_notice("Warrior spirit mode: [ravox_spirit_aggressive_mode ? "Aggressive - attack everyone except Mark of Allegiance allies" : "Normal"].[updated_text]"))
+	return TRUE
+
+/mob/living/carbon/human/proc/ravox_spirit_belongs_to_user(mob/living/spirit)
+	if(!spirit || !mind?.current)
+		return FALSE
+	var/faction_tag = "[mind.current.real_name]_faction"
+	return faction_tag in spirit.faction
+
+/mob/living/carbon/human/proc/apply_ravox_spirit_mode(mob/living/spirit)
+	if(!spirit || !mind?.current)
+		return FALSE
+	var/faction_tag = "[mind.current.real_name]_faction"
+	if(ravox_spirit_aggressive_mode)
+		spirit.faction = list(faction_tag)
+	else if(istype(spirit, /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost))
+		spirit.faction = faction.Copy()
+		spirit.faction |= faction_tag
+	else if(istype(spirit, /mob/living/carbon/human/species/human/northern/ravox_spirit))
+		spirit.faction = list(FACTION_DUNDEAD, "ravox_spirit", faction_tag)
+	else
+		return FALSE
+	spirit.pet_passive = FALSE
+	spirit.notify_faction_change()
+	return TRUE
+
 //Call to Arms - AoE buff for all people surrounding you.
 /obj/effect/proc_holder/spell/self/TAcall_to_arms
 	name = "Call to Arms"
@@ -569,6 +613,19 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 		effectedstats = list(STATKEY_CON = con_bonus, STATKEY_WIL = con_bonus)
 	. = ..()
 
+
+/datum/action/cooldown/spell/gravemark/ravox
+	name = "Mark of Allegiance"
+	desc = "Marks a chosen target as an ally under Ravox's banner. Your summoned Warrior Spirits will not target or attack marked allies while aggressive. Casting Mark of Allegiance on them again removes the mark."
+	background_icon = 'icons/mob/actions/ravoxmiracles.dmi'
+	button_icon = 'modular_twilight_axis/icons/mob/actions/ravoxspells.dmi'
+	button_icon_state = "mark_of_allegiance"
+
+/datum/action/cooldown/spell/minion_order/ravox
+	background_icon = 'icons/mob/actions/ravoxmiracles.dmi'
+	button_icon = 'modular_twilight_axis/icons/mob/actions/ravoxspells.dmi'
+	button_icon_state = "order_minions"
+
 #define RAVOX_SIMPLE "SIMPLE"
 #define RAVOX_CARBON "CARBON"
 
@@ -614,54 +671,100 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 	if(!("[user.mind.current.real_name]_faction" in user.faction))
 		user.faction |= "[user.mind.current.real_name]_faction"
 
-	if(!locate(/datum/action/cooldown/spell/gravemark) in user.mind?.spell_list)
-		user.mind?.AddSpell(new /datum/action/cooldown/spell/gravemark/no_sprite)
+	if(!locate(/datum/action/cooldown/spell/gravemark/ravox) in user.mind?.spell_list)
+		user.mind?.AddSpell(new /datum/action/cooldown/spell/gravemark/ravox)
 
-	if(!locate(/datum/action/cooldown/spell/minion_order) in user.mind?.spell_list)
-		user.mind?.AddSpell(new /datum/action/cooldown/spell/minion_order)
+	if(!locate(/datum/action/cooldown/spell/minion_order/ravox) in user.mind?.spell_list)
+		user.mind?.AddSpell(new /datum/action/cooldown/spell/minion_order/ravox)
 
 	var/spirit_type = get_spirit_type()
 	var/skill = user.get_skill_level(/datum/skill/magic/holy)
 	var/time = 1 MINUTES
 	time *= skill
 
-	var/turf/spawn_turf = get_step(user, user.dir)
+	var/turf/spawn_turf = get_turf(cast_on)
+	if(!isopenturf(spawn_turf) || spawn_turf.is_blocked_turf())
+		to_chat(user, span_warning("The targeted location is blocked. My summon fails to come forth."))
+		return FALSE
 
-	if(!spawn_turf)
-		spawn_turf = get_turf(user)
-
+	var/mob/living/target
 	if(isliving(cast_on))
-		var/mob/living/target = cast_on
-		if(spirit_type == "carbon")
-			new /mob/living/carbon/human/species/human/northern/ravox_spirit(spawn_turf, user)
-			for(var/mob/living/carbon/human/species/human/northern/ravox_spirit/swarm in view(6, user))
-				swarm.faction |= list("ravox_spirit", "[user.mind.current.real_name]_faction")
+		target = cast_on
+
+	if(spirit_type == "carbon")
+		var/mob/living/carbon/human/species/human/northern/ravox_spirit/swarm = new /mob/living/carbon/human/species/human/northern/ravox_spirit(spawn_turf, user)
+		user.apply_ravox_spirit_mode(swarm)
+		if(swarm.ai_controller)
+			swarm.ai_controller.CancelActions()
+			swarm.ai_controller.clear_blackboard_key(BB_FOLLOW_TARGET)
+			swarm.ai_controller.max_target_distance = 30
+			if(target)
+				swarm.ai_controller.set_blackboard_key(BB_CURRENT_PET_TARGET, target)
 				swarm.ai_controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, target)
+				swarm.ai_controller.set_blackboard_key(BB_HIGHEST_THREAT_MOB, target)
 				swarm.ai_controller.set_blackboard_key(BB_MAIN_TARGET, target)
 				swarm.ai_controller.insert_blackboard_key_lazylist(BB_BASIC_MOB_RETALIATE_LIST, target)
-				swarm.visible_message(span_notice("A [swarm] manifests following after [target]... !"))
-				if(swarm.buffed_r == FALSE)
-					addtimer(CALLBACK(swarm, TYPE_PROC_REF(/mob/living/simple_animal/hostile/rogue/skeleton, deathtime), TRUE), time)
-					swarm.buffed_r = TRUE
-					swarm.name = "[user.real_name]'s Spirit"
-			return TRUE
-		if(spirit_type == "simple")
-			if(user.dir == SOUTH || user.dir == NORTH)
-				new /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/spear(spawn_turf, user)
-				new /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/axe(get_step(spawn_turf, EAST),user)
-				new /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/sword(get_step(spawn_turf, WEST),user)
-			else
-				new /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/spear(spawn_turf,user)
-				new /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/axe(get_step(spawn_turf, NORTH),user)
-				new /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/sword(get_step(spawn_turf, SOUTH),user)
-			for(var/mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/swarm in view(6, user))
-				swarm.ai_controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, target)
-				if(swarm.buffed_r == FALSE)
-					swarm.maxHealth *= skill
-					swarm.health *= skill
-					addtimer(CALLBACK(swarm, TYPE_PROC_REF(/mob/living/simple_animal/hostile/rogue/skeleton, deathtime), TRUE), time)
-					swarm.buffed_r = TRUE
-			return TRUE
+			swarm.ai_controller.nudge_target_scan()
+			swarm.ai_controller.wake_for_combat()
+		if(target)
+			swarm.visible_message(span_notice("A [swarm] manifests following after [target]... !"))
+		else
+			swarm.visible_message(span_notice("A [swarm] manifests from a spectral haze!"))
+		if(swarm.buffed_r == FALSE)
+			addtimer(CALLBACK(swarm, TYPE_PROC_REF(/mob/living/simple_animal/hostile/rogue/skeleton, deathtime), TRUE), time)
+			swarm.buffed_r = TRUE
+			swarm.name = "[user.real_name]'s Spirit"
+		return TRUE
+	if(spirit_type == "simple")
+		var/list/spawned_spirits = list()
+		var/turf/axe_turf
+		var/turf/sword_turf
+		if(user.dir == SOUTH || user.dir == NORTH)
+			axe_turf = get_step(spawn_turf, EAST)
+			sword_turf = get_step(spawn_turf, WEST)
+		else
+			axe_turf = get_step(spawn_turf, NORTH)
+			sword_turf = get_step(spawn_turf, SOUTH)
+		spawned_spirits += new /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/spear(spawn_turf, user)
+		if(isopenturf(axe_turf) && !axe_turf.is_blocked_turf())
+			spawned_spirits += new /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/axe(axe_turf, user)
+		if(isopenturf(sword_turf) && !sword_turf.is_blocked_turf())
+			spawned_spirits += new /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/sword(sword_turf, user)
+		for(var/mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/swarm as anything in spawned_spirits)
+			user.apply_ravox_spirit_mode(swarm)
+			if(swarm.ai_controller)
+				swarm.ai_controller.idle_requires_client = TRUE
+				swarm.ai_controller.max_target_distance = 30
+				swarm.ai_controller.CancelActions()
+				if(istype(swarm, /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/spear))
+					swarm.ai_controller.replace_planning_subtrees(list(
+						/datum/ai_planning_subtree/summoned_skeleton_find_target,
+						/datum/ai_planning_subtree/attack_obstacle_in_path,
+						/datum/ai_planning_subtree/spacing/melee,
+						/datum/ai_planning_subtree/basic_melee_attack_subtree/spear,
+						/datum/ai_planning_subtree/being_a_minion,
+					))
+				else
+					swarm.ai_controller.replace_planning_subtrees(list(
+						/datum/ai_planning_subtree/summoned_skeleton_find_target,
+						/datum/ai_planning_subtree/attack_obstacle_in_path,
+						/datum/ai_planning_subtree/basic_melee_attack_subtree,
+						/datum/ai_planning_subtree/being_a_minion,
+					))
+				swarm.ai_controller.clear_blackboard_key(BB_FOLLOW_TARGET)
+				if(target)
+					swarm.ai_controller.set_blackboard_key(BB_CURRENT_PET_TARGET, target)
+					swarm.ai_controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, target)
+					swarm.ai_controller.set_blackboard_key(BB_HIGHEST_THREAT_MOB, target)
+				swarm.pet_passive = FALSE
+				swarm.ai_controller.nudge_target_scan()
+				swarm.ai_controller.wake_for_combat()
+			if(swarm.buffed_r == FALSE)
+				swarm.maxHealth *= skill
+				swarm.health *= skill
+				addtimer(CALLBACK(swarm, TYPE_PROC_REF(/mob/living/simple_animal/hostile/rogue/skeleton, deathtime), TRUE), time)
+				swarm.buffed_r = TRUE
+		return TRUE
 	return FALSE
 
 

@@ -300,7 +300,7 @@
 
 	if(tcompare)
 		var/atom/target_atom = object
-		if(istype(target_atom) && tcompare != mob && (mob.atkswinging == "middle" || mob.used_intent?.tranged || (mob.atkswinging && object != tcompare)))
+		if(istype(target_atom) && tcompare != mob && !istype(target_atom, /atom/movable/screen) && (mob.atkswinging == "middle" || mob.used_intent?.tranged || (mob.atkswinging && object != tcompare)))
 			target_atom.Click(location, control, params)
 		tcompare = null
 

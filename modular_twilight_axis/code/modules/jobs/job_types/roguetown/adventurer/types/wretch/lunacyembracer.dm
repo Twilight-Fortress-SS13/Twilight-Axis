@@ -5,12 +5,12 @@
 	Clergy of Azuria assume you are a radical dendorite and rejected you, your connection with Treefather is weaken but you will serve him whatever it takes."
 	allowed_sexes = list(MALE, FEMALE)
 	forbidden_races = list(RACES_CONSTRUCT)
-	min_pq = 30
-	maximum_possible_slots = 2
+	min_pq = 40
+	maximum_possible_slots = 1
 	outfit = /datum/outfit/job/roguetown/wretch/lunacyembracer
 	category_tags = list(CTAG_WRETCH)
 	class_select_category = CLASS_CAT_CLERIC
-	extra_context = "Minimum PQ Required: 30"
+	extra_context = "Minimum PQ Required: 40"
 	subclass_languages = list(/datum/language/beast)
 
 	traits_applied = list(
@@ -52,14 +52,10 @@
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T3, passive_gain = CLERIC_REGEN_WEAK, devotion_limit = CLERIC_REQ_1)
 	neck = /obj/item/clothing/neck/roguetown/psicross/dendor
-	armor = /obj/item/clothing/suit/roguetown/armor/manual/resting/chest/berzerker
-	shirt = /obj/item/clothing/suit/roguetown/armor/manual/resting/body/berzerker
+	armor = /obj/item/clothing/suit/roguetown/armor/manual/meditation/chest/lunacy
+	shirt = /obj/item/clothing/suit/roguetown/armor/manual/meditation/body/lunacy
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/lunacy
 	head = /obj/item/flowercrown/briar
-
-/*	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/dropkick)
-	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/chokeslam)
-	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/headbutt)
-	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/stunner)*/
 
 	H.cmode_music = 'modular_twilight_axis/sound/music/combat_berserker.ogg'
 	to_chat(H, span_danger("You have abandoned your humanity to run wild under the moon. The call of nature fills your soul!"))

@@ -114,6 +114,10 @@
 		if(!controller.active_partner.has_testicles())
 			return "У цели нет тестикул."
 
+	if(islist(A.action_tags) && ("actor_testicles" in A.action_tags))
+		if(!controller.owner.has_testicles())
+			return "У инициатора нет тестикул."
+
 	if(A.inject_timing != INJECT_NONE && A.inject_target_mode == INJECT_CONTAINER)
 		if(!ctx.has_container)
 			return "Нужен контейнер с реагентами рядом."

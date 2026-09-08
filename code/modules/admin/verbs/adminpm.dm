@@ -177,9 +177,17 @@
 				//omg this is dumb, just fill in both their tickets
 				var/interaction_message = "<font color='purple'>PM from-<b>[name_key_with_link]</b> to-<b>[key_name(recipient, TRUE, TRUE)]</b>: [keywords_lookup(msg)]</font>"
 				var/player_interaction_message = "<font color='purple'>PM from-<b>[key_name(src, TRUE, FALSE)]</b> to-<b>[key_name(recipient, TRUE, FALSE)]</b>: [msg]</font>"
-				admin_ticket_log(src,
-				interaction_message,
-				player_message = player_interaction_message)
+				var/datum/admin_help/sender_ticket = admin_ticket_log(src,
+					interaction_message,
+					player_message = player_interaction_message)
+				if(sender_ticket)
+					sender_ticket.AddInteraction(interaction_message, player_interaction_message)
+				if(recipient != src)
+					var/datum/admin_help/recipient_ticket = admin_ticket_log(recipient,
+						interaction_message,
+						player_message = player_interaction_message)
+					if(recipient_ticket && recipient_ticket != sender_ticket)
+						recipient_ticket.AddInteraction(interaction_message, player_interaction_message)
 
 			else		//recipient is an admin but sender is not
 				if(current_ticket)

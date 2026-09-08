@@ -157,7 +157,7 @@
 			acheck_dflag = "fire"
 	if(!armor)
 		armor = owner.run_armor_check(zone_precise, acheck_dflag, damage = 0)
-	if(ishuman(owner) && bclass != BCLASS_PICK)
+	if(ishuman(owner) && bclass != BCLASS_PICK && acheck_dflag) // TA EDIT
 		var/mob/living/carbon/human/H = owner
 		var/obj/item/clothing/worn_armor = H.get_best_worn_armor(zone_precise, acheck_dflag)
 		if(worn_armor && !worn_armor.obj_broken)

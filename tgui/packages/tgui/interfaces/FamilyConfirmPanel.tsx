@@ -5,7 +5,6 @@ import { Box, Button, Section, Stack } from 'tgui-core/components';
 type Data = {
   title?: string;
   message?: string;
-  partner?: string;
   mutual?: boolean;
   openCount?: number;
 };
@@ -15,7 +14,6 @@ export const FamilyConfirmPanel = () => {
   const {
     title = 'Семейная система',
     message = '',
-    partner = '',
   } = data;
 
   return (
@@ -25,11 +23,6 @@ export const FamilyConfirmPanel = () => {
           <Stack.Item grow>
             <Section fill scrollable title="Семейное предложение">
               <Box style={{ whiteSpace: 'pre-line' }}>{message}</Box>
-              {!!partner && (
-                <Box mt={2} color="label">
-                  Связанный персонаж: {partner}
-                </Box>
-              )}
             </Section>
           </Stack.Item>
 

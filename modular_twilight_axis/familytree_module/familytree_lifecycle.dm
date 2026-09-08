@@ -277,7 +277,6 @@
 	return list(
 		"title" = "Семейная система",
 		"message" = body,
-		"partner" = context_person?.real_name || "",
 		"mutual" = is_mutual,
 		"openCount" = open_count,
 	)

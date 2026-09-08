@@ -1200,10 +1200,7 @@
 /obj/item/enchantingkit/weapon/sakuyzo
 	name = "'Hævatein' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Kriegmesser"
-	target_items = list(
-		/obj/item/rogueweapon/sword/long/kriegmesser/noc,
-		/obj/item/rogueweapon/sword/long/kriegmesser
-	)
+	target_items = list(/obj/item/rogueweapon/sword/long/kriegmesser/noc, /obj/item/rogueweapon/sword/long/undivided, /obj/item/rogueweapon/sword/long/silver, /obj/item/rogueweapon/sword/long/kriegmesser)
 	result_item = /obj/item/rogueweapon/sakuyzo/sword
 
 // Ollanius
@@ -1658,6 +1655,15 @@
 		/obj/item/rogueweapon/greataxe
 	)
 	result_item = /obj/item/rogueweapon/example/kadeguandao
+
+/obj/item/enchantingkit/weapon/kadedao
+	name = "'Spring Cometh' morphing elixr"
+	desc = "A small container of special morphing dust, perfect to make a specific item."
+	target_items = list(
+		/obj/item/rogueweapon/sword/short,
+		/obj/item/rogueweapon/sword/sabre
+	)
+	result_item = /obj/item/rogueweapon/example/kadedao
 
 // Lagomorphica + Stalkerino
 /obj/item/enchantingkit/weapon/donator_lagomorphica_obligatoire

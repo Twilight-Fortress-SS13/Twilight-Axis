@@ -6,7 +6,7 @@
 	// Disabled for now, handled by bandit wave!
 	weight = 0
 	earliest_start = 30 MINUTES
-	min_players = 40
+	min_players = 45 //TA Edit
 	tags = list(
 		TAG_COMBAT,
 		TAG_VILLIAN,

@@ -9,7 +9,7 @@
 	track = MIGRANT_TRACK_SPECIAL
 	weight = 6
 	min_round_time = 40 MINUTES
-	min_pop = 40
+	min_pop = 45
 	max_spawns = 1
 	triumph_threshold = 100
 	triumph_weight_multiplier = 4

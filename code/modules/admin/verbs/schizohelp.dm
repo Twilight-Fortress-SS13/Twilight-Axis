@@ -192,9 +192,11 @@ GLOBAL_LIST_EMPTY(voice_names)
 	return name
 
 /client/proc/answer_schizohelp(datum/schizohelp/schizo, ask_again = FALSE)
-	if(QDELETED(schizo) && schizo.locked && !ask_again)
-		to_chat(src, span_warning("This meditation can no longer be answered..."))
+	if(!istype(schizo, /datum/schizohelp) || QDELETED(schizo)) // TA EDIT START
 		return
+	if(schizo.locked && !ask_again)
+		to_chat(src, span_warning("This meditation can no longer be answered..."))
+		return // TA EDIT END
 	var/mob/schizo_mob = schizo.owner?.resolve()
 	if(!schizo_mob)
 		return

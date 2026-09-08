@@ -18,6 +18,7 @@
 	A.mark_organs_dirty()
 	A.rebuild_organs()
 	SSerp.apply_prefs_for_mob(M)
+	controller?.mark_actions_ui_dirty()
 	controller?.request_ui_update()
 
 /// Builds partners list for UI.
@@ -51,6 +52,7 @@
 		if(A && (A.physical == target_atom || A.active_actor == target_atom))
 			if(set_active)
 				controller.active_partner = A
+				controller.mark_actions_ui_dirty()
 				controller.ui?.request_update()
 			return
 
@@ -69,6 +71,7 @@
 
 	if(set_active)
 		controller.active_partner = NA
+		controller.mark_actions_ui_dirty()
 		controller.ui?.request_update()
 
 /// Adds partner convenience wrapper.
@@ -99,6 +102,7 @@
 
 	if(controller.owner && controller.owner.get_ref() == ref)
 		controller.active_partner = controller.owner
+		controller.mark_actions_ui_dirty()
 		controller.ui?.request_update()
 		return TRUE
 
@@ -107,6 +111,7 @@
 			continue
 		if(A.get_ref() == ref)
 			controller.active_partner = A
+			controller.mark_actions_ui_dirty()
 			controller.ui?.request_update()
 			return TRUE
 

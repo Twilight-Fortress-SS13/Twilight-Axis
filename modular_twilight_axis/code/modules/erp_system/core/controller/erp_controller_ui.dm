@@ -23,6 +23,7 @@
 			O.sanitize_owner_links(controller)
 
 	controller.owner_client?.prefs?.apply_erp_kinks_to_mob(M)
+	controller.ui.mark_actions_dirty()
 	controller.ui.ui_interact(M)
 
 /// Builds controller payload and injects partners + active partner info.
@@ -30,7 +31,8 @@
 	if(!controller.ui)
 		return null
 
-	var/list/p = controller.ui.build_payload()
+	var/mob/M = controller._get_ui_user()
+	var/list/p = controller.ui.build_payload(M)
 	if(!islist(p))
 		p = list()
 

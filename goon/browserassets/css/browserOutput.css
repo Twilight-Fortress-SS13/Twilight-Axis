@@ -1,8 +1,8 @@
 /*****************************************
-*
-* GLOBAL STYLES
-*
-******************************************/
+ *
+ * GLOBAL STYLES
+ *
+ ******************************************/
 html,
 body {
 	padding: 0;
@@ -22,7 +22,10 @@ body {
 	scrollbar-face-color: #1a1a1a;
 	scrollbar-track-color: #171717;
 	scrollbar-highlight-color: #171717;
-	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+	text-shadow:
+		-1px -1px 0 #000,
+		1px -1px 0 #000,
+		-1px 1px 0 #000,
 		1px 1px 0 #000;
 }
 
@@ -43,8 +46,8 @@ body {
 
 @font-face {
 	font-family: "Project Sans";
-	src: url('orator.ttf');
-  }
+	src: url("orator.ttf");
+}
 
 @font-face {
 	font-family: "Celtes SP";
@@ -193,10 +196,10 @@ a.popt {
 }
 
 /*****************************************
-*
-* OUTPUT NOT RELATED TO ACTUAL MESSAGES
-*
-******************************************/
+ *
+ * OUTPUT NOT RELATED TO ACTUAL MESSAGES
+ *
+ ******************************************/
 #loading {
 	position: fixed;
 	width: 300px;
@@ -446,10 +449,10 @@ a.popt {
 }
 
 /*****************************************
-*
-* OUTPUT ACTUALLY RELATED TO MESSAGES
-*
-******************************************/
+ *
+ * OUTPUT ACTUALLY RELATED TO MESSAGES
+ *
+ ******************************************/
 
 body {
 	word-wrap: break-word;
@@ -666,6 +669,12 @@ h2.alert {
 	color: #a9a5b6;
 	font-size: 75%;
 }
+
+.redinfo {
+	color: #b9322b;
+	font-size: 75%;
+}
+
 .biginfo {
 	color: #a9a5b6;
 }
@@ -860,7 +869,7 @@ h2.alert {
 .elf {
 	font-family: "MarkScript-Regular", cursive, "Mookmania";
 }
-.oldazure{
+.oldazure {
 	font-family: "BaggageMasterText79 ttcon", "Pterra";
 	font-size: 110%;
 }
@@ -990,7 +999,11 @@ h2.alert {
 
 .racialstatinfo {
 	color: #6a8cb7;
-	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+	text-shadow:
+		-1px -1px 0 #000,
+		1px -1px 0 #000,
+		-1px 1px 0 #000,
+		1px 1px 0 #000;
 	font-weight: bold;
 }
 
@@ -1077,12 +1090,12 @@ h2.alert {
 }
 
 .astrata {
-	color: #FFCC33;
+	color: #ffcc33;
 	font-size: 75%;
 }
 
 .undivided {
-	color: #28908C;
+	color: #28908c;
 	font-size: 75%;
 }
 

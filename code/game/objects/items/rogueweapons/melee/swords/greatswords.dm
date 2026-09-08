@@ -389,7 +389,8 @@
 	inhand_x_dimension = 64
 	inhand_y_dimension = 64
 	force = 20
-	force_wielded = 25
+	force_wielded = 28
+	special = /datum/special_intent/piercing_lunge
 	possible_item_intents = list(
 		/datum/intent/sword/thrust,
 		/datum/intent/sword/strike,

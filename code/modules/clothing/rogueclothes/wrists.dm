@@ -244,6 +244,7 @@
 	desc = "Sheared burlap and cloth, meticulously fashioned around the forearms. Taut fibers turn weeping gashes into mere tears along the cloth. </br>"
 	color = "#BFB8A9"
 
+
 //Queensleeves
 /obj/item/clothing/wrists/roguetown/royalsleeves
 	name = "royal sleeves"

@@ -8,6 +8,7 @@
 				new_name = reject_bad_name(new_name)
 				if(new_name)
 					verbose_pref_log_change(user, "notice", "Real Name", real_name, new_name)
+					log_ready_character_name_change(user, real_name, new_name) // TA EDIT
 					real_name = new_name
 				else
 					to_chat(user, span_warning("Invalid name. Your name should be at least 2 and at most [MAX_NAME_LEN] characters long. It may only contain the characters A-Z, a-z, -, ', . and ,."))
@@ -16,6 +17,7 @@
 		if("randomize_real_name")
 			var/randomized = pref_species.random_name(gender, TRUE)
 			verbose_pref_log_change(user, "notice", "Real Name", real_name, "[randomized] (randomized)")
+			log_ready_character_name_change(user, real_name, randomized) // TA EDIT
 			real_name = randomized
 			return CHARACTER_ACT_DATA_UPDATE
 
@@ -25,7 +27,9 @@
 				return
 			COOLDOWN_START(src, ui_refresh_cooldown, 2.5 SECONDS)
 			verbose_pref_log_notification(user, "danger", "Randomized character with profile: Normal")
+			var/old_normal_name = real_name // TA EDIT
 			random_character(null, RANDOMIZE_NORMAL)
+			log_ready_character_name_change(user, old_normal_name, real_name) // TA EDIT
 			return CHARACTER_ACT_PREVIEW_UPDATE
 
 		if("randomize_full")
@@ -34,7 +38,9 @@
 				return
 			COOLDOWN_START(src, ui_refresh_cooldown, 5 SECONDS)
 			verbose_pref_log_notification(user, "danger", "Randomized character with profile: Full")
+			var/old_full_name = real_name // TA EDIT
 			random_character(null, RANDOMIZE_NEW_CHARACTER)
+			log_ready_character_name_change(user, old_full_name, real_name) // TA EDIT
 			return CHARACTER_ACT_PREVIEW_UPDATE
 
 		if("nickname")

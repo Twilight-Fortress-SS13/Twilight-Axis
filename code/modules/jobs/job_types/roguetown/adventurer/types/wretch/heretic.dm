@@ -32,6 +32,7 @@
 	)
 	subclass_stashed_items = list(
 		"Armor Plates" =	/obj/item/repair_kit/metal,
+		"Stashed Funds" = /obj/item/roguecoin/silver/pile/wretchpile,
 	)
 
 	extra_context = "This subclass gain the Wound Heal miracle and the Convert Heretic spell."
@@ -162,22 +163,37 @@
 			H.change_stat(STATKEY_INT, 1)
 			H.change_stat(STATKEY_PER, 1)
 			H.change_stat(STATKEY_WIL, 1)
+			H.adjust_skillrank(/datum/skill/magic/holy, 1, TRUE) // TA ADDITION - ADDS SKILLRANK BONUSES TO OTHER PATRONS
 		if(/datum/patron/inhumen/matthios)
 			H.cmode_music = 'sound/music/combat_matthios.ogg'
 			helmets += list("Decorated Bucket Helmet" = /obj/item/clothing/head/roguetown/helmet/heavy/bucket/gold/cleric,) // This is so stupid. - Just a little, but it does look cool!
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios, SLOT_RING, TRUE)
 			H.change_stat(STATKEY_WIL, 2)
 			H.change_stat(STATKEY_STR, 1)
+			// TA ADDITION START - ADDS SKILLRANK BONUSES TO OTHER PATRONS
+			H.adjust_skillrank(/datum/skill/misc/stealing, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/misc/sneaking, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/misc/lockpicking, 1, TRUE)
+			// TA ADDITION END
 		if(/datum/patron/inhumen/baotha)
 			H.cmode_music = 'sound/music/combat_baotha.ogg'
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/baotha, SLOT_RING, TRUE)
 			H.change_stat(STATKEY_INT, 1)
 			H.change_stat(STATKEY_PER, 3)
+			// TA ADDITION START - ADDS SKILLRANK BONUSES TO OTHER PATRONS
+			H.adjust_skillrank(/datum/skill/misc/medicine, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/craft/cooking, 2, TRUE)
+			H.adjust_skillrank(/datum/skill/craft/alchemy, 1, TRUE)
+			// TA ADDITION END
 		if(/datum/patron/inhumen/graggar)
 			H.cmode_music = 'sound/music/combat_graggar.ogg'
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/graggar, SLOT_RING, TRUE)
 			H.change_stat(STATKEY_STR, 2)
 			H.change_stat(STATKEY_WIL, 1)
+			// TA ADDITION START - ADDS SKILLRANK BONUSES TO OTHER PATRONS
+			H.adjust_skillrank(/datum/skill/magic/holy, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/misc/athletics, 1, TRUE)
+			// TA ADDITION END
 		if(/datum/patron/divine/astrata)
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/astrata, SLOT_RING, TRUE)
 			H.change_stat(STATKEY_INT, 2)
@@ -412,7 +428,7 @@
 			if("Bow")
 				H.adjust_skillrank_up_to(/datum/skill/combat/bows, SKILL_LEVEL_JOURNEYMAN, TRUE)
 				beltr = /obj/item/quiver/arrows
-				backr = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
+				backr = /obj/item/gun/ballistic/revolver/grenadelauncher/bow
 				H.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_EXPERT, TRUE)
 				beltl = /obj/item/rogueweapon/scabbard/sheath
 				if(HAS_TRAIT(H, TRAIT_PSYDONIAN_GRIT))
@@ -465,15 +481,29 @@
 			H.cmode_music = 'sound/music/combat_heretic.ogg'
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/iron, SLOT_RING, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/book/rogue/bibble/zizo,SLOT_IN_BACKPACK, TRUE)
+			H.adjust_skillrank(/datum/skill/magic/holy, 1, TRUE) // TA ADDITION - ADDS SKILLRANK BONUSES TO OTHER PATRONS
 		if(/datum/patron/inhumen/matthios)
 			H.cmode_music = 'sound/music/combat_matthios.ogg'
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios, SLOT_RING, TRUE)
+			// TA ADDITION START - ADDS SKILLRANK BONUSES TO OTHER PATRONS
+			H.adjust_skillrank(/datum/skill/misc/stealing, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/misc/sneaking, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/misc/lockpicking, 1, TRUE)
+			// TA ADDITION END
 		if(/datum/patron/inhumen/baotha)
 			H.cmode_music = 'sound/music/combat_baotha.ogg'
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/baotha, SLOT_RING, TRUE)
+			// TA ADDITION START - ADDS SKILLRANK BONUSES TO OTHER PATRONS
+			H.adjust_skillrank(/datum/skill/misc/medicine, 1, TRUE)
+			H.adjust_skillrank(/datum/skill/craft/cooking, 2, TRUE)
+			H.adjust_skillrank(/datum/skill/craft/alchemy, 1, TRUE)
+			// TA ADDITION END
 		if(/datum/patron/inhumen/graggar)
 			H.cmode_music = 'sound/music/combat_graggar.ogg'
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/graggar, SLOT_RING, TRUE)
+			// TA ADDITION START - ADDS SKILLRANK BONUSES TO OTHER PATRONS
+			H.adjust_skillrank(/datum/skill/misc/athletics, 1, TRUE)
+			// TA ADDITION END
 		if(/datum/patron/divine/astrata)
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/astrata, SLOT_RING, TRUE)
 			H.adjust_skillrank(/datum/skill/magic/holy, 1, TRUE)
