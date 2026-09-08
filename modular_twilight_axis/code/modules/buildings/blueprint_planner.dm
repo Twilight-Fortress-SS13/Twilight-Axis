@@ -5,7 +5,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /turf/open/floor/rogue/ruinedwood,
-		"reqs" = list(/obj/item/natural/wood/plank = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/wood/floor,
 		"icon_file" = 'icons/turf/roguefloor.dmi',
 		"icon_state" = "wooden_floor"
 	),
@@ -15,7 +15,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /turf/open/floor/rogue/wood,
-		"reqs" = list(/obj/item/natural/wood/plank = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/wood/floor,
 		"icon_file" = 'icons/turf/roguefloor.dmi',
 		"icon_state" = "wooden_floor2"
 	),
@@ -25,7 +25,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /turf/open/floor/rogue/ruinedwood/herringbone_clear,
-		"reqs" = list(/obj/item/natural/wood/plank = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/wood/floorhl,
 		"icon_file" = 'icons/turf/roguefloor.dmi',
 		"icon_state" = "herringbonewood2"
 	),
@@ -35,7 +35,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /turf/open/floor/rogue/ruinedwood/herringbone,
-		"reqs" = list(/obj/item/natural/wood/plank = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/wood/floorhw,
 		"icon_file" = 'icons/turf/roguefloor.dmi',
 		"icon_state" = "herringbonewood"
 	),
@@ -45,7 +45,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /turf/open/floor/rogue/ruinedwood/chevron,
-		"reqs" = list(/obj/item/natural/wood/plank = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/wood/floorhs,
 		"icon_file" = 'icons/turf/roguefloor.dmi',
 		"icon_state" = "weird2"
 	),
@@ -55,7 +55,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /turf/open/floor/rogue/ruinedwood/spiral,
-		"reqs" = list(/obj/item/natural/wood/plank = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/wood/floorslanted,
 		"icon_file" = 'icons/turf/roguefloor.dmi',
 		"icon_state" = "weird1"
 	),
@@ -65,7 +65,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /turf/open/floor/rogue/ruinedwood/platform,
-		"reqs" = list(/obj/item/natural/wood/plank = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/wood/platform,
 		"icon_file" = 'icons/turf/roguefloor.dmi',
 		"icon_state" = "wooden_floor"
 	),
@@ -75,7 +75,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /turf/open/floor/rogue/hay,
-		"reqs" = list(/obj/item/grown/log/tree/stick = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/hay,
 		"icon_file" = 'icons/turf/roguefloor.dmi',
 		"icon_state" = "hay"
 	),
@@ -85,7 +85,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /turf/open/floor/rogue/twig,
-		"reqs" = list(/obj/item/grown/log/tree/stick = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/twig,
 		"icon_file" = 'icons/turf/roguefloor.dmi',
 		"icon_state" = "twig"
 	),
@@ -95,7 +95,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /turf/open/floor/rogue/blocks,
-		"reqs" = list(/obj/item/natural/stoneblock = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/stone/block,
 		"icon_file" = 'icons/turf/roguefloor.dmi',
 		"icon_state" = "blocks"
 	),
@@ -105,7 +105,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /turf/open/floor/rogue/hexstone,
-		"reqs" = list(/obj/item/natural/stoneblock = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/stone/hexstone,
 		"icon_file" = 'icons/turf/roguefloor.dmi',
 		"icon_state" = "hexstone"
 	),
@@ -115,7 +115,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /turf/open/floor/rogue/herringbone,
-		"reqs" = list(/obj/item/natural/stoneblock = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/stone/herringbone,
 		"icon_file" = 'icons/turf/roguefloor.dmi',
 		"icon_state" = "herringbone"
 	),
@@ -125,7 +125,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /turf/open/floor/rogue/cobble,
-		"reqs" = list(/obj/item/natural/stone = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/stone/cobble,
 		"icon_file" = 'icons/turf/roguefloor.dmi',
 		"icon_state" = "cobblestone1"
 	),
@@ -135,7 +135,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /turf/open/floor/rogue/cobblerock,
-		"reqs" = list(/obj/item/natural/stone = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/stone/cobblerock,
 		"icon_file" = 'icons/turf/roguefloor.dmi',
 		"icon_state" = "cobblerock"
 	),
@@ -145,7 +145,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /turf/open/floor/rogue/blocks/stonered,
-		"reqs" = list(/obj/item/natural/stoneblock = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/stone/redstone,
 		"icon_file" = 'icons/turf/roguefloor.dmi',
 		"icon_state" = "stoneredlarge"
 	),
@@ -155,7 +155,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /turf/open/floor/rogue/blocks/stonered/tiny,
-		"reqs" = list(/obj/item/natural/stoneblock = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/stone/tinyredstone,
 		"icon_file" = 'icons/turf/roguefloor.dmi',
 		"icon_state" = "stoneredtiny"
 	),
@@ -165,7 +165,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /turf/open/floor/rogue/tile/brick,
-		"reqs" = list(/obj/item/natural/brick = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/brick/floor,
 		"icon_file" = 'icons/turf/roguefloor.dmi',
 		"icon_state" = "bricktile"
 	),
@@ -175,7 +175,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /turf/open/floor/carpet/inn,
-		"reqs" = list(/obj/item/natural/silk = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/carpet,
 		"icon_file" = 'icons/turf/roguefloor.dmi',
 		"icon_state" = "carpet"
 	),
@@ -185,7 +185,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /turf/open/floor/carpet/purple,
-		"reqs" = list(/obj/item/natural/silk = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/carpet/purple,
 		"icon_file" = 'icons/turf/floors/carpet_purple.dmi',
 		"icon_state" = "carpet"
 	),
@@ -195,7 +195,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /turf/open/floor/carpet/red,
-		"reqs" = list(/obj/item/natural/silk = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/carpet/red,
 		"icon_file" = 'icons/turf/floors/carpet_red.dmi',
 		"icon_state" = "carpet"
 	),
@@ -205,7 +205,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /turf/open/floor/carpet/royalblack,
-		"reqs" = list(/obj/item/natural/silk = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/carpet/royalblack,
 		"icon_file" = 'icons/turf/floors/carpet_royalblack.dmi',
 		"icon_state" = "carpet"
 	),
@@ -215,7 +215,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /turf/open/floor/carpet/stellar,
-		"reqs" = list(/obj/item/natural/silk = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/carpet/stellar,
 		"icon_file" = 'icons/turf/floors/carpet_stellar.dmi',
 		"icon_state" = "carpet"
 	),
@@ -225,7 +225,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /obj/structure/bearpelt,
-		"reqs" = list(/obj/item/natural/fur/direbear = 2, /obj/item/natural/head/direbear = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/bearrug,
 		"icon_file" = 'icons/turf/floors/bear.dmi',
 		"icon_state" = "bear"
 	),
@@ -235,7 +235,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /obj/structure/foxpelt,
-		"reqs" = list(/obj/item/natural/fur/fox = 2, /obj/item/natural/head/fox = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/foxrug,
 		"icon_file" = 'icons/turf/floors/animal_rugs.dmi',
 		"icon_state" = "fox"
 	),
@@ -245,7 +245,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "floor",
 		"build_order" = 1,
 		"path" = /obj/structure/bobcatpelt,
-		"reqs" = list(/obj/item/natural/fur/bobcat = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/bobcatrug,
 		"icon_file" = 'icons/turf/floors/animal_rugs.dmi',
 		"icon_state" = "bobcat"
 	),
@@ -257,7 +257,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "wall",
 		"build_order" = 2,
 		"path" = /turf/closed/wall/mineral/rogue/wood,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/wood/wall,
 		"icon_file" = 'icons/turf/walls/roguewood.dmi',
 		"icon_state" = "wood"
 	),
@@ -267,7 +267,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "wall",
 		"build_order" = 2,
 		"path" = /turf/closed/wall/mineral/rogue/decowood,
-		"reqs" = list(/obj/item/natural/wood/plank = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/wood/fancy,
 		"icon_file" = 'icons/turf/roguewall.dmi',
 		"icon_state" = "decowood"
 	),
@@ -277,7 +277,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "wall",
 		"build_order" = 2,
 		"path" = /turf/closed/wall/mineral/rogue/tent,
-		"reqs" = list(/obj/item/grown/log/tree/stick = 3, /obj/item/natural/cloth = 3, /obj/item/rope = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/tentwall,
 		"icon_file" = 'icons/turf/roguewall.dmi',
 		"icon_state" = "tent"
 	),
@@ -287,7 +287,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "wall",
 		"build_order" = 2,
 		"path" = /turf/closed/wall/mineral/rogue/stone,
-		"reqs" = list(/obj/item/natural/stone = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/stone/wall,
 		"icon_file" = 'icons/turf/walls/stone_wall.dmi',
 		"icon_state" = "stone"
 	),
@@ -297,7 +297,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "wall",
 		"build_order" = 2,
 		"path" = /turf/closed/wall/mineral/rogue/stonebrick,
-		"reqs" = list(/obj/item/natural/stoneblock = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/stone/brick,
 		"icon_file" = 'icons/turf/walls/stonebrick.dmi',
 		"icon_state" = "stonebrick"
 	),
@@ -307,7 +307,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "wall",
 		"build_order" = 2,
 		"path" = /turf/closed/wall/mineral/rogue/craftstone,
-		"reqs" = list(/obj/item/natural/stoneblock = 3),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/stone/craft,
 		"icon_file" = 'icons/turf/walls/craftstone.dmi',
 		"icon_state" = "box"
 	),
@@ -317,7 +317,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "wall",
 		"build_order" = 2,
 		"path" = /turf/closed/wall/mineral/rogue/decostone,
-		"reqs" = list(/obj/item/natural/stone = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/stone/decorated,
 		"icon_file" = 'icons/turf/roguewall.dmi',
 		"icon_state" = "decostone-b"
 	),
@@ -327,7 +327,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "wall",
 		"build_order" = 2,
 		"path" = /turf/closed/wall/mineral/rogue/brick,
-		"reqs" = list(/obj/item/natural/brick = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/brick/wall,
 		"icon_file" = 'icons/turf/walls/brick_wall.dmi',
 		"icon_state" = "brick"
 	),
@@ -349,7 +349,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "wall",
 		"build_order" = 2,
 		"path" = /turf/closed/wall/mineral/rogue/wood/window,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/wood/murderhole,
 		"icon_file" = 'icons/turf/walls/roguewood.dmi',
 		"icon_state" = "woodwindow"
 	),
@@ -359,7 +359,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "wall",
 		"build_order" = 2,
 		"path" = /turf/closed/wall/mineral/rogue/stone/window,
-		"reqs" = list(/obj/item/natural/stoneblock = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/stone/window,
 		"icon_file" = 'icons/turf/walls/stone_wall.dmi',
 		"icon_state" = "stonewindow"
 	),
@@ -369,7 +369,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "wall",
 		"build_order" = 2,
 		"path" = /turf/closed/wall/mineral/rogue/brick/window,
-		"reqs" = list(/obj/item/natural/brick = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/brick/window,
 		"icon_file" = 'icons/turf/walls/brick_wall.dmi',
 		"icon_state" = "brickwindow"
 	),
@@ -379,7 +379,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 2,
 		"path" = /obj/structure/roguewindow,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2, /obj/item/natural/glass = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/roguewindow,
 		"icon_file" = 'icons/roguetown/misc/roguewindow.dmi',
 		"icon_state" = "window-solid"
 	),
@@ -389,7 +389,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 2,
 		"path" = /obj/structure/roguewindow/openclose,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2, /obj/item/natural/glass = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/roguewindow/dynamic,
 		"icon_file" = 'icons/roguetown/misc/roguewindow.dmi',
 		"icon_state" = "woodwindowdir"
 	),
@@ -399,7 +399,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 2,
 		"path" = /obj/structure/roguewindow/openclose/reinforced,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2, /obj/item/ingot/iron = 1, /obj/item/natural/glass = 1, /obj/item/natural/dirtclod = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/roguewindow/reinforced,
 		"icon_file" = 'icons/roguetown/misc/roguewindow.dmi',
 		"icon_state" = "reinforcedwindowdir"
 	),
@@ -409,7 +409,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 2,
 		"path" = /obj/structure/roguewindow/stained/silver,
-		"reqs" = list(/obj/item/natural/stone = 2, /obj/item/natural/glass = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/roguewindow/stone_psydon,
 		"icon_file" = 'icons/roguetown/misc/roguewindow.dmi',
 		"icon_state" = "stained-silver"
 	),
@@ -419,7 +419,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 2,
 		"path" = /obj/structure/roguewindow/stained/yellow,
-		"reqs" = list(/obj/item/natural/stone = 2, /obj/item/natural/glass = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/roguewindow/stone_astrata,
 		"icon_file" = 'icons/roguetown/misc/roguewindow.dmi',
 		"icon_state" = "stained-yellow"
 	),
@@ -429,7 +429,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 2,
 		"path" = /obj/structure/roguewindow/stained/zizo,
-		"reqs" = list(/obj/item/natural/stone = 2, /obj/item/natural/glass = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/roguewindow/stone_zizo,
 		"icon_file" = 'icons/roguetown/misc/roguewindow.dmi',
 		"icon_state" = "stained-zizo"
 	),
@@ -450,7 +450,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 2,
 		"path" = /obj/structure/stairs/d,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/stairsd,
 		"icon_file" = 'icons/obj/stairs.dmi',
 		"icon_state" = "stairs"
 	),
@@ -470,7 +470,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 2,
 		"path" = /obj/structure/stairs/stone/d,
-		"reqs" = list(/obj/item/natural/stone = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/stonestairsd,
 		"icon_file" = 'icons/obj/stairs.dmi',
 		"icon_state" = "stonestairs"
 	),
@@ -490,7 +490,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 2,
 		"path" = /obj/structure/mineral_door/wood,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/door,
 		"icon_file" = 'icons/roguetown/misc/doors.dmi',
 		"icon_state" = "woodhandle"
 	),
@@ -500,7 +500,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 2,
 		"path" = /obj/structure/mineral_door/wood/deadbolt,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2, /obj/item/grown/log/tree/stick = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/doorbolt,
 		"icon_file" = 'icons/roguetown/misc/doors.dmi',
 		"icon_state" = "wooddir"
 	),
@@ -510,7 +510,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 2,
 		"path" = /obj/structure/mineral_door/wood/fancywood,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/fancydoor,
 		"icon_file" = 'icons/roguetown/misc/doors.dmi',
 		"icon_state" = "fancy_wood"
 	),
@@ -520,7 +520,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 2,
 		"path" = /obj/structure/mineral_door/swing_door,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/swing_door,
 		"icon_file" = 'icons/roguetown/misc/doors.dmi',
 		"icon_state" = "woodhandle"
 	),
@@ -530,7 +530,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 2,
 		"path" = /obj/structure/mineral_door/wood/donjon/stone,
-		"reqs" = list(/obj/item/natural/stone = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/stonedoor,
 		"icon_file" = 'icons/roguetown/misc/doors.dmi',
 		"icon_state" = "stone"
 	),
@@ -540,7 +540,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 2,
 		"path" = /obj/structure/roguetent,
-		"reqs" = list(/obj/item/grown/log/tree/stick = 1, /obj/item/natural/cloth = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/turfs/tentdoor,
 		"icon_file" = 'icons/turf/roguewall.dmi',
 		"icon_state" = "tent_door1"
 	),
@@ -550,7 +550,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "border",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/railing/fence,
-		"reqs" = list(/obj/item/grown/log/tree/stake = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/fence,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "fence"
 	),
@@ -560,7 +560,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "border",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/railing/wood,
-		"reqs" = list(/obj/item/grown/log/tree/small = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/railing,
 		"icon_file" = 'icons/obj/railing.dmi',
 		"icon_state" = "woodrailing"
 	),
@@ -570,7 +570,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "border",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/railing/border,
-		"reqs" = list(/obj/item/natural/wood/plank = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/border,
 		"icon_file" = 'icons/obj/railing.dmi',
 		"icon_state" = "border"
 	),
@@ -580,7 +580,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/wallladder,
-		"reqs" = list(/obj/item/grown/log/tree/small = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/wallladder,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "ladderwall"
 	),
@@ -592,7 +592,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/table/wood/crafted,
-		"reqs" = list(/obj/item/grown/log/tree/small = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/table,
 		"icon_file" = 'icons/roguetown/misc/tables.dmi',
 		"icon_state" = "tablewood1"
 	),
@@ -602,7 +602,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/table/wood/long_table,
-		"reqs" = list(/obj/item/natural/wood/plank = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/longtable,
 		"icon_file" = 'icons/roguetown/misc/tables.dmi',
 		"icon_state" = "longtable"
 	),
@@ -612,7 +612,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/table/wood/large_table,
-		"reqs" = list(/obj/item/natural/wood/plank = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/largetable,
 		"icon_file" = 'icons/roguetown/misc/tables.dmi',
 		"icon_state" = "largetable"
 	),
@@ -622,7 +622,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/table/church,
-		"reqs" = list(/obj/item/natural/stone = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/stonetable,
 		"icon_file" = 'icons/roguetown/misc/tables.dmi',
 		"icon_state" = "churchtable"
 	),
@@ -632,7 +632,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/table/finestone,
-		"reqs" = list(/obj/item/natural/stoneblock = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/finestonetable,
 		"icon_file" = 'icons/roguetown/misc/tables.dmi',
 		"icon_state" = "stonetable_small"
 	),
@@ -642,7 +642,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/table/optable,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/operatingtable,
 		"icon_file" = 'icons/obj/surgery.dmi',
 		"icon_state" = "optable"
 	),
@@ -652,7 +652,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/item/chair/rogue/crafted,
-		"reqs" = list(/obj/item/grown/log/tree/small = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/chair,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "chair2"
 	),
@@ -662,7 +662,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/item/chair/rogue/fancy/crafted,
-		"reqs" = list(/obj/item/grown/log/tree/small = 1, /obj/item/natural/silk = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/fancychair,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "chair1"
 	),
@@ -672,7 +672,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/item/chair/stool/bar/rogue/crafted,
-		"reqs" = list(/obj/item/grown/log/tree/small = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/stool,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "barstool"
 	),
@@ -682,7 +682,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/chair/wood/rogue/throne,
-		"reqs" = list(/obj/item/natural/wood/plank = 2, /obj/item/natural/silk = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/chairthrone,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "thronechair"
 	),
@@ -692,7 +692,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/chair/hotspring_bench,
-		"reqs" = list(/obj/item/grown/log/tree/small = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/parkbenchmiddle,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "bench"
 	),
@@ -702,7 +702,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/chair/bench/couch,
-		"reqs" = list(/obj/item/natural/wood/plank = 3, /obj/item/natural/silk = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/couchleft,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "redcouch"
 	),
@@ -712,7 +712,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/chair/bench/couchablack,
-		"reqs" = list(/obj/item/natural/wood/plank = 3, /obj/item/natural/silk = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/blackcouchleft,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "couchablackaleft"
 	),
@@ -722,7 +722,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/bed/rogue/shit,
-		"reqs" = list(/obj/item/grown/log/tree/small = 1, /obj/item/natural/fibers = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/strawbed,
 		"icon_file" = 'icons/roguetown/misc/beds.dmi',
 		"icon_state" = "shitbed"
 	),
@@ -732,7 +732,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/bed/rogue/inn,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2, /obj/item/natural/cloth = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/bed,
 		"icon_file" = 'icons/roguetown/misc/beds.dmi',
 		"icon_state" = "inn_bed"
 	),
@@ -742,7 +742,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/bed/rogue/inn/wool,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2, /obj/item/natural/cloth = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/woolbed,
 		"icon_file" = 'icons/roguetown/misc/beds.dmi',
 		"icon_state" = "woolbed"
 	),
@@ -752,7 +752,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/bed/rogue/inn/double,
-		"reqs" = list(/obj/item/grown/log/tree/small = 3, /obj/item/natural/cloth = 4),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/doublebed,
 		"icon_file" = 'icons/roguetown/misc/beds.dmi',
 		"icon_state" = "double"
 	),
@@ -762,7 +762,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/curtain/red,
-		"reqs" = list(/obj/item/natural/cloth = 2, /obj/item/natural/silk = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/curtainred,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "curtain-open"
 	),
@@ -772,7 +772,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/curtain/blue,
-		"reqs" = list(/obj/item/natural/cloth = 2, /obj/item/natural/silk = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/curtainblue,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "curtain-open"
 	),
@@ -782,7 +782,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/mirror,
-		"reqs" = list(/obj/item/natural/wood/plank = 2, /obj/item/ingot/iron = 1, /obj/item/natural/glass = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/mirror,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "mirror"
 	),
@@ -792,7 +792,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/mannequin,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2, /obj/item/grown/log/tree/stick = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/display_stand,
 		"icon_file" = 'icons/obj/mannequin.dmi',
 		"icon_state" = "coat_hanger"
 	),
@@ -804,7 +804,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/closet/crate/chest/crafted,
-		"reqs" = list(/obj/item/grown/log/tree/small = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/chest,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "chest3s"
 	),
@@ -814,7 +814,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/closet/crate/roguecloset,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/closet,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "closet"
 	),
@@ -824,7 +824,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/rack/rogue,
-		"reqs" = list(/obj/item/grown/log/tree/stick = 3),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/rack,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "rack"
 	),
@@ -834,7 +834,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/fermentation_keg/crafted,
-		"reqs" = list(/obj/item/grown/log/tree/small = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/barrel,
 		"icon_file" = 'icons/obj/brewing.dmi',
 		"icon_state" = "barrel_tapless"
 	),
@@ -844,7 +844,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/closet/crate/coffin,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/coffin,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "casket"
 	),
@@ -854,7 +854,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/closet/crate/chest/wicker,
-		"reqs" = list(/obj/item/grown/log/tree/stick = 4, /obj/item/natural/fibers = 3),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/wicker,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "wicker"
 	),
@@ -865,7 +865,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/machinery/light/rogue/campfire/fireplace,
-		"reqs" = list(/obj/item/grown/log/tree/small = 1, /obj/item/natural/stoneblock = 3),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/fireplace,
 		"icon_file" = 'icons/roguetown/misc/lighting.dmi',
 		"icon_state" = "wallfire1"
 	),
@@ -875,7 +875,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/machinery/light/rogue/torchholder,
-		"reqs" = list(/obj/item/natural/stone = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/torchholder,
 		"icon_file" = 'icons/roguetown/misc/lighting.dmi',
 		"icon_state" = "torchwall1"
 	),
@@ -895,7 +895,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/machinery/light/rogue/firebowl/standing,
-		"reqs" = list(/obj/item/natural/stone = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/standing,
 		"icon_file" = 'icons/roguetown/misc/lighting.dmi',
 		"icon_state" = "standing1"
 	),
@@ -915,7 +915,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/machinery/light/rogue/torchholder/hotspring/standing,
-		"reqs" = list(/obj/item/natural/stone = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/stonelanternstanding,
 		"icon_file" = 'icons/obj/structures/hotspring.dmi',
 		"icon_state" = "stonelantern_standing1"
 	),
@@ -925,7 +925,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/machinery/light/rogue/candle,
-		"reqs" = list(/obj/item/natural/stone = 1, /obj/item/candle/yellow = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/wallcandle,
 		"icon_file" = 'icons/roguetown/misc/lighting.dmi',
 		"icon_state" = "wallcandle1"
 	),
@@ -935,7 +935,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/machinery/light/rogue/campfire,
-		"reqs" = list(/obj/item/grown/log/tree/stick = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/campfire,
 		"icon_file" = 'icons/roguetown/misc/lighting.dmi',
 		"icon_state" = "badfire1"
 	),
@@ -945,7 +945,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/machinery/light/rogue/hearth,
-		"reqs" = list(/obj/item/grown/log/tree/stick = 1, /obj/item/natural/stone = 3),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/cookpit,
 		"icon_file" = 'icons/roguetown/misc/lighting.dmi',
 		"icon_state" = "hearth1"
 	),
@@ -955,7 +955,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/machinery/light/rogue/oven,
-		"reqs" = list(/obj/item/grown/log/tree/small = 1, /obj/item/natural/stone = 3),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/oven,
 		"icon_file" = 'icons/roguetown/misc/lighting.dmi',
 		"icon_state" = "oven1"
 	),
@@ -966,7 +966,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/machinery/anvil,
-		"reqs" = list(/obj/item/ingot/iron = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/anvil,
 		"icon_file" = 'icons/roguetown/misc/forge.dmi',
 		"icon_state" = "anvil"
 	),
@@ -976,7 +976,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/machinery/anvil/bronze,
-		"reqs" = list(/obj/item/ingot/bronze = 2, /obj/item/natural/stone = 4),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/anvil/bronze,
 		"icon_file" = 'icons/roguetown/misc/forge.dmi',
 		"icon_state" = "broanvil"
 	),
@@ -986,7 +986,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/machinery/light/rogue/forge,
-		"reqs" = list(/obj/item/natural/stone = 4, /obj/item/rogueore/coal = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/forge,
 		"icon_file" = 'icons/roguetown/misc/forge.dmi',
 		"icon_state" = "forge0"
 	),
@@ -996,7 +996,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/machinery/light/rogue/smelter,
-		"reqs" = list(/obj/item/natural/stone = 4, /obj/item/rogueore/coal = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/smelter,
 		"icon_file" = 'icons/roguetown/misc/forge.dmi',
 		"icon_state" = "cavesmelter0"
 	),
@@ -1006,7 +1006,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/machinery/light/rogue/smelter/hiron,
-		"reqs" = list(/obj/item/natural/stone = 7, /obj/item/rogueore/coal = 2, /obj/item/rogueore/iron = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/smelterhiron,
 		"icon_file" = 'icons/roguetown/misc/forge.dmi',
 		"icon_state" = "hironsmelter0"
 	),
@@ -1016,7 +1016,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/machinery/light/rogue/smelter/great,
-		"reqs" = list(/obj/item/ingot/iron = 2, /obj/item/riddleofsteel = 1, /obj/item/rogueore/coal = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/greatsmelter,
 		"icon_file" = 'icons/roguetown/misc/forge.dmi',
 		"icon_state" = "smelter0"
 	),
@@ -1026,7 +1026,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/grindwheel,
-		"reqs" = list(/obj/item/ingot/iron = 1, /obj/item/natural/stone = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/sharpwheel,
 		"icon_file" = 'icons/roguetown/misc/forge.dmi',
 		"icon_state" = "grindwheel"
 	),
@@ -1036,7 +1036,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/machinery/loom,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2, /obj/item/grown/log/tree/stick = 2, /obj/item/natural/fibers = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/loom,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "loom"
 	),
@@ -1046,7 +1046,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/ceramicswheel,
-		"reqs" = list(/obj/item/natural/whetstone = 2, /obj/item/grown/log/tree/small = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/ceramicswheel,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "potwheel"
 	),
@@ -1056,7 +1056,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/machinery/gear_painter,
-		"reqs" = list(/obj/item/natural/stone = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/dyestation,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "dyestation"
 	),
@@ -1066,7 +1066,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/alch,
-		"reqs" = list(/obj/item/natural/cloth = 2, /obj/item/natural/stone = 4, /obj/item/grown/log/tree/small = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/alch,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "alch"
 	),
@@ -1076,7 +1076,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/table/cooling,
-		"reqs" = list(/obj/item/grown/log/tree/small = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/engineering/coolingtable,
 		"icon_file" = 'icons/roguetown/misc/tables.dmi',
 		"icon_state" = "tablewood_alt"
 	),
@@ -1086,7 +1086,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/bakers_trough,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/bakers_trough,
 		"icon_file" = 'modular/Neu_Food/icons/cookware/bakers_trough.dmi',
 		"icon_state" = "through_empty"
 	),
@@ -1096,7 +1096,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/bars/grille,
-		"reqs" = list(/obj/item/ingot/iron = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/engineering/floorgrille,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "floorgrille"
 	),
@@ -1146,7 +1146,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/floordoor,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/engineering/trapdoor,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "floorhatch1"
 	),
@@ -1166,7 +1166,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/item/millstone,
-		"reqs" = list(/obj/item/natural/stone = 3),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/millstone,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "millstone"
 	),
@@ -1176,7 +1176,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/machinery/tanningrack,
-		"reqs" = list(/obj/item/grown/log/tree/stick = 3),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/tanningrack,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "dryrack"
 	),
@@ -1186,7 +1186,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/apiary,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2, /obj/item/grown/log/tree/stick = 4),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/apiary,
 		"icon_file" = 'icons/obj/structures/apiary.dmi',
 		"icon_state" = "beebox-empty"
 	),
@@ -1197,7 +1197,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/statue/femalestatue,
-		"reqs" = list(/obj/item/natural/stone = 3),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/statue,
 		"icon_file" = 'icons/roguetown/misc/ay.dmi',
 		"icon_state" = "1"
 	),
@@ -1207,7 +1207,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/psycross/crafted,
-		"reqs" = list(/obj/item/grown/log/tree/small = 1, /obj/item/grown/log/tree/stake = 3),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/pantheon_cross,
 		"icon_file" = 'icons/roguetown/misc/tallstructure.dmi',
 		"icon_state" = "cross_undivided"
 	),
@@ -1217,7 +1217,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/psycross,
-		"reqs" = list(/obj/item/natural/stone = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/pantheon_cross_stone,
 		"icon_file" = 'icons/roguetown/misc/tallstructure.dmi',
 		"icon_state" = "cross_undivided_r"
 	),
@@ -1227,7 +1227,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/psycross/psycrucifix,
-		"reqs" = list(/obj/item/grown/log/tree/small = 1, /obj/item/grown/log/tree/stake = 3),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/psydon_cross,
 		"icon_file" = 'icons/roguetown/misc/tallstructure.dmi',
 		"icon_state" = "cross_psy"
 	),
@@ -1237,7 +1237,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/psycross/psycrucifix/stone,
-		"reqs" = list(/obj/item/natural/stone = 3),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/psydon_cross_stone,
 		"icon_file" = 'icons/roguetown/misc/tallstructure.dmi',
 		"icon_state" = "cross_psy_r"
 	),
@@ -1247,7 +1247,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/psycross/psycrucifix/silver,
-		"reqs" = list(/obj/item/ingot/silverblessed = 1, /obj/item/ingot/steel = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/psydon_cross_silver,
 		"icon_file" = 'icons/roguetown/misc/tallstructure.dmi',
 		"icon_state" = "cross_psy_s"
 	),
@@ -1257,7 +1257,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/psycross/astrata,
-		"reqs" = list(/obj/item/grown/log/tree/small = 1, /obj/item/grown/log/tree/stake = 3),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/astrata_cross,
 		"icon_file" = 'icons/roguetown/misc/tallstructure.dmi',
 		"icon_state" = "cross_astrata"
 	),
@@ -1267,7 +1267,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/psycross/astrata/stone,
-		"reqs" = list(/obj/item/natural/stone = 3),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/astrata_cross_stone,
 		"icon_file" = 'icons/roguetown/misc/tallstructure.dmi',
 		"icon_state" = "cross_astrata_r"
 	),
@@ -1277,7 +1277,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/psycross/astrata/golden,
-		"reqs" = list(/obj/item/natural/stone = 3, /obj/item/rogueore/gold = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/astrata_cross_gold,
 		"icon_file" = 'icons/roguetown/misc/tallstructure.dmi',
 		"icon_state" = "cross_astrata_u"
 	),
@@ -1287,7 +1287,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/psycross/necra,
-		"reqs" = list(/obj/item/natural/stone = 3),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/necra_cross,
 		"icon_file" = 'icons/roguetown/misc/tallstructure.dmi',
 		"icon_state" = "cross_necra"
 	),
@@ -1297,7 +1297,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/psycross/zizocross,
-		"reqs" = list(/obj/item/grown/log/tree/small = 1, /obj/item/grown/log/tree/stake = 3),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/zizo_cross,
 		"icon_file" = 'icons/roguetown/misc/tallstructure.dmi',
 		"icon_state" = "cross_zizo"
 	),
@@ -1307,7 +1307,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/psycross/zizocross/stone,
-		"reqs" = list(/obj/item/natural/stone = 3),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/zizo_cross_stone,
 		"icon_file" = 'icons/roguetown/misc/tallstructure.dmi',
 		"icon_state" = "cross_zizo_r"
 	),
@@ -1317,7 +1317,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/psycross/zizocross/golden,
-		"reqs" = list(/obj/item/natural/stone = 3, /obj/item/rogueore/gold = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/zizo_cross_gold,
 		"icon_file" = 'icons/roguetown/misc/tallstructure.dmi',
 		"icon_state" = "cross_zizo_u"
 	),
@@ -1327,7 +1327,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/psycross/graggar,
-		"reqs" = list(/obj/item/natural/stone = 3),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/graggar_cross_stone,
 		"icon_file" = 'icons/roguetown/misc/tallstructure.dmi',
 		"icon_state" = "cross_graggar"
 	),
@@ -1337,7 +1337,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/psycross/matthios,
-		"reqs" = list(/obj/item/natural/stone = 3),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/matthios_cross_stone,
 		"icon_file" = 'icons/roguetown/misc/tallstructure.dmi',
 		"icon_state" = "cross_matthios"
 	),
@@ -1347,7 +1347,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/psycross/baotha,
-		"reqs" = list(/obj/item/natural/stone = 3),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/baotha_cross_stone,
 		"icon_file" = 'icons/roguetown/misc/tallstructure.dmi',
 		"icon_state" = "cross_baotha"
 	),
@@ -1357,7 +1357,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/statue/tdummy,
-		"reqs" = list(/obj/item/grown/log/tree/small = 1, /obj/item/grown/log/tree/stick = 1, /obj/item/natural/fibers = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/dummy,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "p_dummy"
 	),
@@ -1367,7 +1367,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/customsign,
-		"reqs" = list(/obj/item/grown/log/tree/small = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/sign,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "sign"
 	),
@@ -1378,7 +1378,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/spike_pit,
-		"reqs" = list(/obj/item/grown/log/tree/stake = 3),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/spike_pit,
 		"icon_file" = 'icons/turf/roguefloor.dmi',
 		"icon_state" = "spike_pit"
 	),
@@ -1388,7 +1388,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/fluff/headstake,
-		"reqs" = list(/obj/item/grown/log/tree/stake = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/headstake,
 		"icon_file" = 'icons/roguetown/items/natural.dmi',
 		"icon_state" = "headstake"
 	),
@@ -1398,7 +1398,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/pillory/crafted,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2, /obj/item/natural/stone = 2),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/pillory,
 		"icon_file" = 'modular/icons/obj/pillory.dmi',
 		"icon_state" = "pillory_single"
 	),
@@ -1408,7 +1408,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/meathook,
-		"reqs" = list(/obj/item/grown/log/tree/small = 2, /obj/item/rope = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/meathook,
 		"icon_file" = 'icons/roguetown/misc/tallstructure.dmi',
 		"icon_state" = "meathook"
 	),
@@ -1418,7 +1418,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/noose,
-		"reqs" = list(/obj/item/rope = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/noose,
 		"icon_file" = 'modular/icons/obj/gallows.dmi',
 		"icon_state" = "noose"
 	),
@@ -1428,9 +1428,100 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"layer_type" = "obj",
 		"build_order" = 3,
 		"path" = /obj/structure/handcart,
-		"reqs" = list(/obj/item/grown/log/tree/small = 3, /obj/item/rope = 1),
+		"reqs" = /datum/crafting_recipe/roguetown/structure/handcart,
 		"icon_file" = 'icons/roguetown/misc/structure.dmi',
 		"icon_state" = "cart-empty"
+	),
+
+	"artificer_table" = list(
+		"name" = "Стол артефактора",
+		"category" = "Ремесло и Станки",
+		"layer_type" = "obj",
+		"build_order" = 3,
+		"path" = /obj/structure/artificer_table,
+		"reqs" = /datum/crafting_recipe/roguetown/engineering/art_table,
+		"icon_file" = 'icons/roguetown/misc/tables.dmi',
+		"icon_state" = "art_table"
+	),
+	"cauldron_alchemy" = list(
+		"name" = "Алхимический котел",
+		"category" = "Ремесло и Станки",
+		"layer_type" = "obj",
+		"build_order" = 3,
+		"path" = /obj/machinery/light/rogue/cauldron,
+		"reqs" = /datum/crafting_recipe/roguetown/structure/cauldronalchemy,
+		"icon_file" = 'icons/roguetown/misc/alchemy.dmi',
+		"icon_state" = "cauldron1"
+	),
+	"smoker_meat" = list(
+		"name" = "Коптильня",
+		"category" = "Ремесло и Станки",
+		"layer_type" = "obj",
+		"build_order" = 3,
+		"path" = /obj/machinery/light/rogue/smoker,
+		"reqs" = /datum/crafting_recipe/roguetown/structure/smoker,
+		"icon_file" = 'icons/roguetown/misc/smoker.dmi',
+		"icon_state" = "smoker"
+	),
+	"sleep_coffin" = list(
+		"name" = "Обитый гроб",
+		"category" = "Хранилища",
+		"layer_type" = "obj",
+		"build_order" = 3,
+		"path" = /obj/structure/closet/crate/coffin/vampire,
+		"reqs" = /datum/crafting_recipe/roguetown/structure/sleepcoffin,
+		"icon_file" = 'icons/roguetown/misc/structure.dmi',
+		"icon_state" = "vcasket"
+	),
+	"minecart" = list(
+		"name" = "Шахтерская вагонетка",
+		"category" = "Оборона и Ловушки",
+		"layer_type" = "obj",
+		"build_order" = 3,
+		"path" = /obj/structure/closet/crate/miningcar,
+		"reqs" = /datum/crafting_recipe/roguetown/engineering/minecart,
+		"icon_file" = 'icons/obj/track.dmi',
+		"icon_state" = "minecart"
+	),
+	"iron_gate" = list(
+		"name" = "Металлические ворота",
+		"category" = "Двери и Лестницы",
+		"layer_type" = "obj",
+		"build_order" = 2,
+		"path" = /obj/structure/bars/passage,
+		"reqs" = /datum/crafting_recipe/roguetown/engineering/gate,
+		"icon_file" = 'icons/roguetown/misc/structure.dmi',
+		"icon_state" = "passage0"
+	),
+	"iron_shutters" = list(
+		"name" = "Жалюзи-решетка",
+		"category" = "Окна и Витражи",
+		"layer_type" = "obj",
+		"build_order" = 2,
+		"path" = /obj/structure/bars/passage/shutter,
+		"reqs" = /datum/crafting_recipe/roguetown/engineering/shutters,
+		"icon_file" = 'icons/roguetown/misc/structure.dmi',
+		"icon_state" = "shutter0"
+	),
+	"rock_trap" = list(
+		"name" = "Камнепад (Ловушка)",
+		"category" = "Оборона и Ловушки",
+		"layer_type" = "obj",
+		"build_order" = 3,
+		"path" = /obj/structure/trap/rock_fall,
+		"reqs" = /datum/crafting_recipe/roguetown/engineering/rocktrap,
+		"icon_file" = 'icons/roguetown/misc/traps.dmi',
+		"icon_state" = "rockfall_trap_plate"
+	),
+	"flame_trap" = list(
+		"name" = "Огнеметная труба (Ловушка)",
+		"category" = "Оборона и Ловушки",
+		"layer_type" = "obj",
+		"build_order" = 3,
+		"path" = /obj/structure/trap/flame,
+		"reqs" = /datum/crafting_recipe/roguetown/engineering/flametrap,
+		"icon_file" = 'icons/roguetown/misc/traps.dmi',
+		"icon_state" = "trap_plate"
 	)
 ))
 
@@ -1468,7 +1559,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 			var/icon/I = icon(i_file, i_state, SOUTH, 1)
 			info["image"] = icon2base64(I)
 
-		var/list/reqs_list = info["reqs"]
+		var/list/reqs_list = get_blueprint_reqs(info)
 		var/reqs_text = ""
 		for(var/r_path in reqs_list)
 			var/obj/item/temp = r_path
@@ -1688,7 +1779,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		var/list/info = GLOB.blueprint_buildable_types[b_type]
 		if(!info) continue
 
-		var/list/reqs_list = info["reqs"]
+		var/list/reqs_list = get_blueprint_reqs(info)
 		for(var/res_path in reqs_list)
 			var/cost = reqs_list[res_path]
 			if(!required_resources[res_path])
@@ -2170,7 +2261,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 			var/icon/I = icon(i_file, i_state, SOUTH, 1)
 			info["image"] = icon2base64(I)
 
-		var/list/reqs_list = info["reqs"]
+		var/list/reqs_list = get_blueprint_reqs(info)
 		var/reqs_text = ""
 		for(var/r_path in reqs_list)
 			var/obj/item/temp = r_path
@@ -2188,5 +2279,24 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 
 	data["buildable_types"] = types_data
 	return data
+
+/proc/get_blueprint_reqs(list/info)
+	if(islist(info["reqs"]))
+		return info["reqs"]
+
+	if(ispath(info["reqs"], /datum/crafting_recipe))
+		var/craft_path = info["reqs"]
+		var/datum/crafting_recipe/dummy = new craft_path()
+		var/list/actual_reqs = list()
+		for(var/req_key in dummy.reqs)
+			actual_reqs[req_key] = dummy.reqs[req_key]
+
+		info["reqs"] = actual_reqs
+		qdel(dummy)
+
+		return actual_reqs
+
+	return list()
+
 #undef MAX_PLANNER_RADIUS
 #undef MAX_SPELL_RADIUS
