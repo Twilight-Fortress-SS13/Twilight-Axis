@@ -2715,6 +2715,10 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 		stack_trace("no offered_to or offered_item in offer_item()")
 		return
 
+	if(offered_to.surrendering) // TA EDIT START
+		to_chat(src, span_warning("[offered_to] cannot take items while surrendering."))
+		return FALSE // TA EDIT END
+
 	var/time_left = COOLDOWN_TIMELEFT(src, offer_cooldown)
 
 	if(time_left)
@@ -2787,6 +2791,12 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 	update_a_intents()
 
 /mob/living/proc/try_accept_offered_item(mob/living/offerer, obj/offered_item, stealthy)
+	if(surrendering) // TA EDIT START
+		to_chat(src, span_warning("I cannot take items while surrendering."))
+		to_chat(offerer, span_warning("[src] cannot take items while surrendering."))
+		offerer.stop_offering_item()
+		return FALSE // TA EDIT END
+
 	if(get_active_held_item())
 		to_chat(src, span_warning("I need a free hand to take it!"))
 		return FALSE

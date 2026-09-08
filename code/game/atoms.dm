@@ -1233,7 +1233,12 @@
 
 /atom/movable/proc/get_filter(name)
 	if(filter_data && filter_data[name])
-		return filters[filter_data.Find(name)]
+		var/filter_index = filter_data.Find(name) // TA EDIT START
+		if(!filter_index || filter_index > length(filters))
+			update_filters()
+			filter_index = filter_data.Find(name)
+		if(filter_index && filter_index <= length(filters))
+			return filters[filter_index] // TA EDIT END
 
 /** Update a filter's parameter and animate this change. If the filter doesn't exist we won't do anything.
  * Basically a [datum/proc/modify_filter] call but with animations. Unmodified filter parameters are kept.

@@ -179,6 +179,8 @@
 							ceilclamp = SWIFTCAP_LIMBS
 							if(permod > 0)
 								spdmod -= permod
+						if(used_weapon?.wbalance == WBALANCE_NORMAL)
+							ceilclamp -= 10
 						finalmod = clamp(spdmod, 0, ceilclamp)
 					prob2defend -= finalmod
 	else
@@ -195,7 +197,10 @@
 					spdmod -= intmod
 			var/finalmod = spdmod
 			if(mind)
-				finalmod = clamp(spdmod, 0, 30)
+				if(used_weapon?.wbalance == WBALANCE_NORMAL)
+					finalmod = clamp(spdmod, 0, 20)
+				else
+					finalmod = clamp(spdmod, 0, 30)
 			prob2defend -= finalmod
 
 	// --- Weapon binding! ---
@@ -269,7 +274,10 @@
 		if(!has_status_effect(/datum/status_effect/buff/weapon_binded))
 			if(attacker_weapon)
 				if(attacker_weapon.wbalance == WBALANCE_HEAVY && user.STASTR > src.STASTR) //enemy weapon is heavy, so get a bonus scaling on strdiff
-					drained = drained + ( attacker_weapon.wbalance * ((user.STASTR - src.STASTR) * STAM_DRAIN_PER_STR_DIFF_HEAVY_BAL) )
+					var/heavy_weapon_drain = min(( attacker_weapon.wbalance * ((user.STASTR - src.STASTR) * STAM_DRAIN_PER_STR_DIFF_HEAVY_BAL) ), 20)
+					if(used_weapon?.wbalance == WBALANCE_NORMAL)
+						heavy_weapon_drain -= STAM_DRAIN_PER_STR_DIFF_HEAVY_BAL
+					drained += max(heavy_weapon_drain, 0)
 	else
 		text += span_warning(" The enemy defeated my parry!")
 	if(src.client?.prefs.showrolls)
