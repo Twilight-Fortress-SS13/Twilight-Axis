@@ -879,16 +879,6 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_file" = 'icons/roguetown/misc/lighting.dmi',
 		"icon_state" = "torchwall1"
 	),
-	"lanternpost" = list(
-		"name" = "Уличный Фонарь",
-		"category" = "Отопление и Свет",
-		"layer_type" = "obj",
-		"build_order" = 3,
-		"path" = /obj/machinery/light/rogue/lanternpost,
-		"reqs" = list(/obj/item/ingot/iron = 1, /obj/item/grown/log/tree/small = 2, /obj/item/natural/wood/plank = 2),
-		"icon_file" = 'icons/roguetown/misc/tallstructure.dmi',
-		"icon_state" = "streetlantern1"
-	),
 	"torch_standing" = list(
 		"name" = "Стоячий факел",
 		"category" = "Отопление и Свет",
