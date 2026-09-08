@@ -1100,7 +1100,6 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_file" = 'icons/obj/track.dmi',
 		"icon_state" = "track"
 	),
-	),
 	"floordoor" = list(
 		"name" = "Половая дверь",
 		"category" = "Ремесло и Станки",
