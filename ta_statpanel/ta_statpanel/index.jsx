@@ -732,15 +732,15 @@ Byond.subscribeTo('create_debug', () => {
 });
 
 Byond.subscribeTo('remove_admin_tabs', () => {
-  setState({ hrefToken: null });
-  removePermanentTab('MC');
-  if (state.currentTab === 'MC') tabChange(defaultTab);
-  removePermanentTab('Tickets');
-  setState({ tickets: [] });
-  if (state.currentTab === 'Tickets') tabChange(defaultTab);
-  removePermanentTab('SDQL2');
-  setState({ sdql2: [] });
-  if (state.currentTab === 'SDQL2') tabChange(defaultTab);
+  if (state.hrefToken !== null) setState({ hrefToken: null });
+  if (state.mcTabParts.length) setState({ mcTabParts: [] });
+  if (state.tickets.length) setState({ tickets: [] });
+  if (state.sdql2.length) setState({ sdql2: [] });
+  for (const tab of ['MC', 'Tickets', 'SDQL2']) {
+    removePermanentTab(tab);
+    removeStatusTab(tab);
+    if (state.currentTab === tab) tabChange(defaultTab);
+  }
 });
 
 Byond.subscribeTo('update_split_admin_tabs', (status) => {
@@ -761,7 +761,7 @@ Byond.subscribeTo('set_theme', (payload) => set_theme(payload));
 set_theme('dark');
 
 Byond.subscribeTo('add_admin_tabs', (ht) => {
-  setState({ hrefToken: ht });
+  if (state.hrefToken !== ht) setState({ hrefToken: ht });
   addPermanentTab('MC');
   addPermanentTab('Tickets');
 });
