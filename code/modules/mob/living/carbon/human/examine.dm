@@ -932,6 +932,8 @@
 		var/can_identify_face = !obscure_name || observer_privilege
 		var/used_name = name
 		var/used_title = get_role_title()
+		if(HAS_TRAIT(src, TRAIT_RESIDENT) && used_title == "Licker" && licker_subclass)
+			used_title = licker_subclass.name
 		if(tat_pliant_title) // TA EDIT - TAT system
 			used_title = tat_pliant_title // TA EDIT - TAT system
 		if(SSticker.regentmob == src)
@@ -1225,17 +1227,21 @@
 			var/mob/living/carbon/carbs = user
 			if(HAS_TRAIT(user, TRAIT_PSYDONIAN_GRIT) || HAS_TRAIT(user, TRAIT_NOMOOD))
 				return
-			if(!carbs.has_stress_event(/datum/stressevent/inq_trauma))
-				carbs.add_stress(/datum/stressevent/inq_trauma)
-				if(prob(20))
-					carbs.stress_freakout()
-				else if(prob(40))
-					carbs.freak_out()
-				else
-					carbs.emote("gulp")
-			if(!HAS_TRAIT(user, TRAIT_STEELHEARTED))
-				carbs.Jitter(10)
-				carbs.stuttering += 25
+
+			if(!(src in examined_inquisitors)) // only once per inquisitor!
+				examined_inquisitors += src
+
+				if(!carbs.has_stress_event(/datum/stressevent/inq_trauma))
+					carbs.add_stress(/datum/stressevent/inq_trauma)
+					if(prob(20))
+						carbs.stress_freakout()
+					else if(prob(40))
+						carbs.freak_out()
+					else
+						carbs.emote("gulp")
+				if(!HAS_TRAIT(user, TRAIT_STEELHEARTED))
+					carbs.Jitter(10)
+					carbs.stuttering += 25
 
 		if(HAS_TRAIT(src, TRAIT_DNR) && src != user)
 			// if you have deathsight, you get the deathsight message. always.
@@ -1291,12 +1297,12 @@
 		seer = TRUE
 
 	if(HAS_TRAIT(src, TRAIT_DUSTRUNNER))
-		var/mob/living/living_examiner = examiner
+		var/mob/living/living_examiner = isliving(examiner) ? examiner : null // TA EDIT
 		if(HAS_TRAIT(examiner, TRAIT_DUSTRUNNER))
 			heretic_text += "Fellow runner. The dust moves."
 		else if(living_examiner?.patron?.type == /datum/patron/inhumen/matthios)
 			heretic_text += "A Guild runner, by the look of them."
-		else if(examiner.job in GLOB.bathhouse_positions)
+		else if(living_examiner?.job in GLOB.bathhouse_positions) // TA EDIT
 			heretic_text += "One of the Guild's runners. I know the signs."
 
 	if(HAS_TRAIT(src, TRAIT_FREEMAN))

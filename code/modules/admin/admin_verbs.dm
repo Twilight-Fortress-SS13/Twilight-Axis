@@ -65,6 +65,7 @@ GLOBAL_PROTECT(admin_verbs_admin)
 	/client/proc/cmd_admin_pm_panel,		/*admin-pm list*/
 	/client/proc/stop_sounds,
 	/client/proc/mark_datum_mapview,
+	/client/proc/view_admin_favorites, // TA EDIT
 
 	/client/proc/invisimin,				/*allows our mob to go invisible/visible*/
 //	/datum/admins/proc/show_traitor_panel,	/*interface which shows a mob's mind*/ -Removed due to rare practical use. Moved to debug verbs ~Errorage
@@ -142,6 +143,7 @@ GLOBAL_PROTECT(admin_verbs_sounds)
 GLOBAL_LIST_INIT(admin_verbs_fun, list(
 	/client/proc/cmd_admin_dress,
 	/client/proc/cmd_admin_dress_full,
+	/client/proc/cmd_admin_select_equipment, // TA EDIT
 	/client/proc/cmd_admin_gib_self,
 	/client/proc/drop_bomb,
 	/client/proc/set_dynex_scale,
@@ -165,7 +167,12 @@ GLOBAL_LIST_INIT(admin_verbs_fun, list(
 	/client/proc/smite
 	))
 GLOBAL_PROTECT(admin_verbs_fun)
-GLOBAL_LIST_INIT(admin_verbs_spawn, list(/datum/admins/proc/spawn_atom, /datum/admins/proc/podspawn_atom, /client/proc/respawn_character, /datum/admins/proc/beaker_panel))
+GLOBAL_LIST_INIT(admin_verbs_spawn, list(
+	/datum/admins/proc/spawn_atom,
+	/datum/admins/proc/podspawn_atom,
+	/client/proc/respawn_character,
+	/datum/admins/proc/beaker_panel
+))
 GLOBAL_PROTECT(admin_verbs_spawn)
 GLOBAL_LIST_INIT(admin_verbs_server, world.AVerbsServer())
 GLOBAL_PROTECT(admin_verbs_server)
@@ -335,7 +342,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 			add_verb(src, GLOB.admin_verbs_possess)
 		if(rights & R_PERMISSIONS)
 			add_verb(src, GLOB.admin_verbs_permissions)
-		if(rights & R_STEALTH)
+		if((rights & R_STEALTH) && !(holder.rank.name in list("Eventmin", "Coder", "Developer"))) // TA EDIT
 			add_verb(src, /client/proc/stealth)
 		if(rights & R_ADMIN)
 			add_verb(src, GLOB.admin_verbs_poll)
@@ -632,10 +639,10 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	set category = "Admin.Preferences"
 	set name = "Stealth Mode"
 	if(holder)
+		var/rank_name = holder.rank?.name // TA EDIT START
+		if(rank_name in list("Eventmin", "Coder", "Developer"))
+			return // TA EDIT END
 		if(holder.fakekey)
-			var/rank_name = usr.client?.holder?.rank.name // TA EDIT
-			if(rank_name in list("Eventmin", "Coder", "Developer")) // TA EDIT
-				return // TA EDIT
 			holder.fakekey = null
 			if(isobserver(mob))
 				mob.invisibility = initial(mob.invisibility)
@@ -750,25 +757,25 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 
 /client/proc/give_spell(mob/T in GLOB.mob_list)
 	set category = "Game Master"
-	set name = "Give Spell"
+	// TA EDIT START
+	set name = "Give Spells"
 	set desc = ""
 
-	var/granted = loadout_add_spell(T)
-	if(granted)
-		SSblackbox.record_feedback("tally", "admin_verb", 1, "Give Spell") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	var/list/granted = loadout_add_spell(T)
+	if(length(granted))
+		SSblackbox.record_feedback("tally", "admin_verb", 1, "Give Spells") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	// TA EDIT END
 
 /client/proc/remove_spell(mob/T in GLOB.mob_list)
 	set category = "Game Master"
-	set name = "Remove Spell"
+	// TA EDIT START
+	set name = "Remove Spells"
 	set desc = ""
 
-	if(T && T.mind)
-		var/obj/effect/proc_holder/spell/S = input(usr, "Choose the spell to remove", "NO ABRAKADABRA") as null|anything in sortList(T.mind.spell_list)
-		if(S)
-			T.mind.RemoveSpell(S)
-			log_admin("[key_name(usr)] removed the spell [S] from [key_name(T)].")
-			message_admins(span_adminnotice("[key_name_admin(usr)] removed the spell [S] from [key_name_admin(T)]."))
-			SSblackbox.record_feedback("tally", "admin_verb", 1, "Remove Spell") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	var/list/removed = ta_remove_spells(T)
+	if(length(removed))
+		SSblackbox.record_feedback("tally", "admin_verb", 1, "Remove Spells") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	// TA EDIT END
 
 /client/proc/object_say(obj/O in world)
 	set category = "Admin.Special"

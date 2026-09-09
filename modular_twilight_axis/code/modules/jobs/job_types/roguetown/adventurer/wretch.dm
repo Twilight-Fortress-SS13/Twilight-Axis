@@ -3,6 +3,7 @@
 	job_subclasses += list(
 		/datum/advclass/wretch/twilight_corsair,
 		/datum/advclass/wretch/lunacyembracer,
+		/datum/advclass/wretch/twilight_blood_raider,
 		/datum/advclass/wretch/gudsklor,
 		/datum/advclass/wretch/thehero,
 		/datum/advclass/tat_class/wretch

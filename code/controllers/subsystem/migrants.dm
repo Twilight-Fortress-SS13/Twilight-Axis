@@ -374,6 +374,7 @@ SUBSYSTEM_DEF(migrants)
 		human_character.flag_gear_as_worn()
 
 	if(role.advclass_cat_rolls)
+		hugboxify_for_class_selection(character) // TA EDIT
 		SSrole_class_handler.setup_class_handler(character, role.advclass_cat_rolls)
 	else
 		// Apply a special if we're not applying an adv class, otherwise let the adv class apply it afterwards
