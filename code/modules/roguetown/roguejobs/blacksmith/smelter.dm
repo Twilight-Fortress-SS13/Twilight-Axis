@@ -126,7 +126,10 @@
 
 	if(attacking_item.firefuel)
 		. = ..()
-		return
+		// TA EDIT START
+		if(!attacking_item || QDELING(attacking_item) || attacking_item.loc != user) //Tries to use the item as fuel. ..() returns true even if it does get consumed so we have to loc check.
+			return
+		// TA EDIT END
 
 	if(attacking_item.smeltresult)
 		add_item(attacking_item, user) // Adds the item to the smelter's contained_items list, if it can be smelted.

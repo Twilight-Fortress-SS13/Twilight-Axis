@@ -24,6 +24,10 @@
 	/// Whether to show wanderer examine like adventurers or pilgrims
 	var/show_wanderer_examine = TRUE
 	var/advjob_examine = TRUE
+	/// Restricts the flaws a person can have if list != null
+	var/list/banned_flaws
+	/// Restricts the virtues a person can have if list != null
+	var/list/banned_virtues
 
 /datum/migrant_role/proc/after_spawn(mob/living/carbon/human/character)
 	return
@@ -49,9 +53,12 @@
 	min_pq = 20 // TA EDIT
 	antag_datum = /datum/antagonist/assassin
 	advclass_cat_rolls = list(CTAG_ASSASSIN = 20)
+	banned_flaws = list(/datum/charflaw/hunted, /datum/charflaw/targeted)
+	banned_virtues = list(/datum/virtue/utility/feytouched)
 
 /datum/migrant_role/gnoll
 	name = "Gnoll"
 	min_pq = 40 // TA EDIT
 	antag_datum = /datum/antagonist/gnoll
 	advclass_cat_rolls = list(CTAG_GNOLL = 20)
+	banned_flaws = list(/datum/charflaw/hunted, /datum/charflaw/targeted)

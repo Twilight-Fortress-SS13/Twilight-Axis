@@ -21,7 +21,7 @@
 	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_conquistador.ogg'
 	class_select_category = CLASS_CAT_ETRUSCA
 	subclass_languages = list(/datum/language/etruscan)
-	category_tags = list(CTAG_MERCENARY)
+	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
 	traits_applied = list(TRAIT_NOBLE)
 	classes = list("Tercio" = "Волею судьбы ваш путь лежал в авангарде, вместе с вашей верной алебардой.",
 					"Hidalgo" = "Волею судьбы ваш путь связан с порохом и дестрезой.")

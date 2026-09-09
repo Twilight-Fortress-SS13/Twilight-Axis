@@ -135,7 +135,7 @@
 	max_choices = 4
 	choice_costs = list(0, 0, 2, 4)
 	extra_choices = list(
-	SOCIALITE_MASSAGE,
+//	SOCIALITE_MASSAGE,
 	SOCIALITE_NUTCRACKER,
 	SOCIALITE_EMPATH,
 	"Cookies" = /obj/item/reagent_containers/food/snacks/rogue/cookie,
@@ -163,9 +163,9 @@
 	recipient.mind.special_items["Hand Mirror"] = /obj/item/handmirror
 	for(var/choice in picked_choices)
 		switch(choice)
-			if(SOCIALITE_MASSAGE)
-				if(recipient.mind)
-					recipient.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/massage)
+		//	if(SOCIALITE_MASSAGE)
+		//		if(recipient.mind)
+		//			recipient.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/massage)
 			if(SOCIALITE_NUTCRACKER)
 				ADD_TRAIT(recipient, TRAIT_NUTCRACKER, TRAIT_VIRTUE)
 			if(SOCIALITE_EMPATH)
@@ -383,6 +383,7 @@
 /datum/virtue/utility/tracker
 	name = "Perfect Tracker"
 	desc = "You realised long ago that the ability to find a man is as helpful to aid the law as it is to evade it."
+	ui_fa_icon = "binoculars"
 	added_skills = list(list(/datum/skill/misc/tracking, 2, 6))
 	added_traits = list(TRAIT_PERFECT_TRACKER)
 	custom_text = "- Upon right clicking a track, you will Mark the person who made them <i>(Expert skill required, not exclusive to this Virtue)</i>.\n- Further tracks found will be automatically highlighted as theirs, along with the person themselves, if they are not sneaking or invisible at the time.\n- Reduces the cooldown for tracking, allows track examining right away, and movement no longer cancels tracking."

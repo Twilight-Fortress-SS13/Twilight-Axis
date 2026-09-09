@@ -5,7 +5,6 @@
 /datum/storyteller/gamemode
 	always_votable = TRUE
 	hag_slots = 1
-
 // ----------------------------------------------------------------------------------------------------------
 // PSYDON pool - lowest intensity. No hard antags. Extended opens nothing; Low Intensity opens a few wretches.
 // (Low Intensity is defined further down as no_antag/small_wretch but votes in this pool via preset_pool.)
@@ -42,7 +41,6 @@
 		EVENT_TRACK_OMENS = 1,
 		EVENT_TRACK_RAIDS = 1,
 	)
-
 // ----------------------------------------------------------------------------------------------------------
 // Admin sandbox - NOT votable. Admins pick before the 120s mark to disable player vote and
 // insert their own antags in.
@@ -63,7 +61,6 @@
 	roundstart_prob = 0
 	preferred_gnoll_mode = GNOLL_SCALING_DYNAMIC	// max 3
 	wretch_slot_cap = 12
-
 	starting_point_multipliers = list(
 		EVENT_TRACK_MUNDANE = 1,
 		EVENT_TRACK_PERSONAL = 1,
@@ -82,7 +79,6 @@
 		EVENT_TRACK_OMENS = 1,
 		EVENT_TRACK_RAIDS = 1,
 	)
-
 // ----------------------------------------------------------------------------------------------------------
 // ASCENDANT pool - guaranteed roundstart hard antag. At least one main antag will be selected.
 // ----------------------------------------------------------------------------------------------------------
@@ -101,36 +97,33 @@
 	allow_dreamwalker = TRUE
 	preferred_gnoll_mode = GNOLL_SCALING_FLAT	// max 2
 	wretch_slot_cap = 9
-
 /datum/storyteller/gamemode/guaranteed_antag/low_wretch
 	name = "Tempered Intensity"
 	vote_desc = "Гарантированный крупный антагонист случайного типа. Также присутствует несколько малых антагонистов."
-	desc = "Гарантированный раундстартовый крупный антагонист с более агрессивным масштабированием от онлайна. До 4 изгоев (Wretches). До 1 гнолла. Карга (Hag) присутствует. Сноходцы (Dreamwalkers) не появляются."
+	desc = "Гарантированный раундстартовый крупный антагонист с более агрессивным масштабированием от онлайна. До 4 изгоев (Wretches). До 1 гнолла. Карга (Hag) присутствует. Сноходец (Dreamwalker) может появиться."
 	color_theme = "#7a1f1f"
 	hard_mult = 2
 	block_soft = FALSE
-	allow_dreamwalker = FALSE
+	allow_dreamwalker = TRUE
 	preferred_gnoll_mode = GNOLL_SCALING_SINGLE	// max 1
 	wretch_slot_cap = 4
-
 // ----------------------------------------------------------------------------------------------------------
 // TEN pool - no hard antags, soft antags only. Standard is the lighter option, Medium the default fallback.
 // ----------------------------------------------------------------------------------------------------------
 /datum/storyteller/gamemode/no_antag	// DEFAULT (inconclusive-vote fallback)
 	name = "Medium Intensity"
 	vote_desc = "Без крупных антагонистов. Малые антагонисты масштабируются умеренно."
-	desc = "Без крупных антагонистов. Изгои (Wretches) масштабируются обычно: от 5 до 12. До 3 гноллов. Карга (Hag) присутствует. Сноходцы (Dreamwalkers) не появляются."
+	desc = "Без крупных антагонистов. Изгои (Wretches) масштабируются обычно: от 5 до 12. До 3 гноллов. Карга (Hag) присутствует. Сноходец (Dreamwalker) может появиться."
 	welcome_text = "Тёплый дневной свет пробуждает вас ото сна..."
 	color_theme = "#2b8c87"
 	preset_pool = GAMEMODE_POOL_NOANTAG
 	block_hard = TRUE
 	block_soft = FALSE
-	allow_dreamwalker = FALSE
+	allow_dreamwalker = TRUE
 	preferred_gnoll_mode = GNOLL_SCALING_DYNAMIC	// max 3
 	wretch_slot_cap = 12
 	roundstart_prob = 50
 	guarantees_roundstart_roleset = FALSE
-
 /datum/storyteller/gamemode/no_antag/standard
 	name = "Standard Intensity"
 	vote_desc = "Без крупных антагонистов. Умеренное количество малых антагонистов."
@@ -139,7 +132,6 @@
 	allow_dreamwalker = FALSE
 	preferred_gnoll_mode = GNOLL_SCALING_FLAT	// max 2
 	wretch_slot_cap = 6
-
 // Low Intensity - votes in the PSYDON pool (see preset_pool) despite being a no_antag subtype.
 /datum/storyteller/gamemode/no_antag/small_wretch
 	name = "Low Intensity"
@@ -152,7 +144,6 @@
 	preferred_gnoll_mode = GNOLL_SCALING_NONE
 	wretch_slot_cap = 4
 	roundstart_prob = 0
-
 	starting_point_multipliers = list(
 		EVENT_TRACK_MUNDANE = 1,
 		EVENT_TRACK_PERSONAL = 1,

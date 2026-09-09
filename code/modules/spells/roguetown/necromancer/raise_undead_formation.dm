@@ -10,14 +10,6 @@
 
 	var/aggro_range = controller.blackboard[BB_AGGRO_RANGE] || 9 // TA EDIT
 	var/mob/living/current_target = controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET]
-	var/current_target_valid = isliving(current_target) && !QDELETED(current_target) && current_target.stat != DEAD && get_dist_3d(pawn, current_target) <= aggro_range && targetting_datum.can_attack(pawn, current_target) // TA EDIT
-	if(!current_target_valid && current_target) // TA EDIT
-		controller.CancelActions()
-		controller.clear_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET)
-		controller.clear_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET_HIDING_LOCATION)
-		controller.clear_blackboard_key(BB_HIGHEST_THREAT_MOB)
-		current_target = null
-
 	var/mob/living/commanded_target = controller.blackboard[BB_CURRENT_PET_TARGET]
 	if(isliving(commanded_target) && !QDELETED(commanded_target) && commanded_target.stat != DEAD && targetting_datum.can_attack(pawn, commanded_target))
 		if(current_target != commanded_target)
@@ -28,6 +20,14 @@
 		return
 	if(commanded_target)
 		controller.clear_blackboard_key(BB_CURRENT_PET_TARGET)
+
+	var/current_target_valid = isliving(current_target) && !QDELETED(current_target) && current_target.stat != DEAD && get_dist_3d(pawn, current_target) <= aggro_range && targetting_datum.can_attack(pawn, current_target) // TA EDIT
+	if(!current_target_valid && current_target) // TA EDIT
+		controller.CancelActions()
+		controller.clear_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET)
+		controller.clear_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET_HIDING_LOCATION)
+		controller.clear_blackboard_key(BB_HIGHEST_THREAT_MOB)
+		current_target = null
 
 	if(pawn.pet_passive)
 		return

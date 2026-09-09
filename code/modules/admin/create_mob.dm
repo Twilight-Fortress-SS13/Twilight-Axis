@@ -7,6 +7,7 @@
 		create_mob_html = file2text('html/create_object.html')
 		create_mob_html = replacetext(create_mob_html, "Create Object", "Create Mob")
 		create_mob_html = replacetext(create_mob_html, "null /* object types */", "\"[mobjs]\"")
+		create_mob_html = replacetext(create_mob_html, "<div id=\"advanced_description\">", "<div id=\"advanced_description\" style=\"display:none\">") // TA EDIT
 
 		var/faction_options = "<option value=\"\">- default (keep mob's native faction) -</option>"
 		for(var/faction in GLOB.gm_spawn_factions)

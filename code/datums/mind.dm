@@ -193,6 +193,9 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 			known_people[H.real_name] = list()
 		known_people[H.real_name]["VCOLOR"] = H.voice_color
 		var/used_title = H.get_role_title()
+		var/datum/job/J = SSjob.GetJob(H.job)
+		if(J && J.wanderer_examine && !(HAS_TRAIT(src, TRAIT_RESIDENT)))
+			used_title = "Wanderer"
 		if(!used_title)
 			used_title = "unknown"
 		known_people[H.real_name]["FJOB"] = used_title
@@ -232,6 +235,9 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 					M.known_people[H.real_name] = list()
 				M.known_people[H.real_name]["VCOLOR"] = H.voice_color
 				var/used_title = H.get_role_title()
+				var/datum/job/J = SSjob.GetJob(H.job)
+				if(J && J.wanderer_examine && !(HAS_TRAIT(src, TRAIT_RESIDENT)))
+					used_title = "Wanderer"
 				if(!used_title)
 					used_title = "unknown"
 				M.known_people[H.real_name]["FJOB"] = used_title
@@ -649,25 +655,6 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 		recipient << browse(output,"window=memory")
 	else if(all_objectives.len || memory || personal_objectives.len)
 		to_chat(recipient, "<i>[output]</i>")
-
-/// output current targets to the player
-/datum/mind/proc/recall_targets(mob/recipient, window=1)
-	var/output = "<B>[recipient.real_name]'s Hitlist:</B><br>"
-	for(var/mob/living/carbon in GLOB.mob_living_list) // Iterate through all mobs in the world
-		if(carbon.real_name == recipient.real_name)
-			continue
-		if(istype(carbon, /mob/living/carbon/human/dummy))
-			continue
-		if(!(carbon.has_flaw(/datum/charflaw/hunted) || HAS_TRAIT(carbon, TRAIT_ZIZOID_HUNTED)))
-			continue
-
-		output += "<br>[carbon.real_name]"
-		if(carbon.job)
-			output += " - [carbon.job]"
-	output += "<br>Your creed is blood, your faith is steel. You will not rest until these souls are yours. Use the profane dagger to trap their souls for Graggar."
-
-	if(window)
-		recipient << browse(output,"window=memory")
 
 // Graggar culling event - tells people where the other is.
 /datum/mind/proc/recall_culling(mob/recipient, window=1)
@@ -1407,7 +1394,7 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 	personal_objectives.Cut()
 
 
-/* /proc/handle_special_items_retrieval(mob/user, atom/host_object)
+/proc/handle_special_items_retrieval(mob/user, atom/host_object)
 	// Attempts to retrieve an item from a player's stash, and applies any base colors, where preferable.
 	if(user.mind && isliving(user))
 		if(user.mind.special_items && user.mind.special_items.len)
@@ -1439,18 +1426,17 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 							I.salvage_result = /obj/item/ash
 						var/list/metadata = user.mind.special_items_metadata[base_name]
 						if(islist(metadata))
-							if(metadata["color"])
-								I.add_atom_colour(metadata["color"], FIXED_COLOUR_PRIORITY)
-							if(metadata["detail_color"] && I.detail_tag)
-								I.detail_color = metadata["detail_color"]
-							if(metadata["altdetail_color"] && I.altdetail_tag)
-								I.altdetail_color = metadata["altdetail_color"]
-							if(metadata["custom_name"])
+							I.apply_loadout_color_metadata(metadata) // TA EDIT
+							if(metadata["custom_name_parsed"])
+								I.name = metadata["custom_name_parsed"] // this is sanitized when we apply the markdown procesor
+							else if(metadata["custom_name"])
 								I.name = sanitize(metadata["custom_name"])
-							if(metadata["custom_desc"])
+							if(metadata["custom_desc_parsed"])
+								I.desc = metadata["custom_desc_parsed"] // this is sanitized when we apply the markdown procesor
+							else if(metadata["custom_desc"])
 								I.desc = html_encode(metadata["custom_desc"])
 							I.update_icon()
-						else if(istype(I, /obj/item/clothing)) // commit any pref dyes to our item if it is clothing and we have them available
-							var/dye = user.client?.prefs.resolve_loadout_to_color(path2item)
-							if(dye)
-								I.add_atom_colour(dye, FIXED_COLOUR_PRIORITY) */
+//						else if(istype(I, /obj/item/clothing)) // commit any pref dyes to our item if it is clothing and we have them available
+//							var/dye = user.client?.prefs.resolve_loadout_to_color(path2item)
+//							if(dye)
+//								I.add_atom_colour(dye, FIXED_COLOUR_PRIORITY)

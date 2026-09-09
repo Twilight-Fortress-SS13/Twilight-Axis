@@ -1,4 +1,4 @@
-/datum/combat_music/grenzelhoft_mage 
+/datum/combat_music/grenzelhoft_mage
 	name = "Grenzelhoft Gefechtsgelehrter"
 	desc = ""
 	shortname = "Gefechtsgelehrter"
@@ -90,7 +90,7 @@
 	credits = "Half-Life Alyx - APC Cannon"
 	musicpath = list('modular_twilight_axis/sound/music/combat_highgrain.ogg')
 
-/datum/combat_music/lich 
+/datum/combat_music/lich
 	name = "Lich - Herald of HER will"
 	desc = "March of the Dead"
 	shortname = "Lich"
@@ -173,13 +173,6 @@
 	shortname = "OlNewDreamer"
 	credits = "Judge Bitch - Hot Plates"
 	musicpath = list('modular_twilight_axis/sound/music/combat_dreamerold.ogg')
-
-/datum/combat_music/ImperialSpellbade
-	name = "Imperial Spellblade combat song"
-	desc = "Вот и ты, грензельская свинья, предатель традиций и неверный ученик нашей школы. Я сражусь с тобой лишь из великой милости к твоей убогой жизни."
-	shortname = "ImperialSpellbade"
-	credits = "Оригинал: https://youtu.be/mhsFGJs8a3A?si=wR0c07aVHyqXOPUG"
-	musicpath = list('sound/music/combat_imperial_spellblade.ogg')
 
 /datum/combat_music/hussar
 	name = "Winged Hussars"
