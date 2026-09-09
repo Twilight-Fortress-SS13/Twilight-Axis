@@ -549,6 +549,7 @@ GLOBAL_VAR_INIT(mobids, 1)
 ///Update the pulling hud icon
 /mob/proc/update_pull_hud_icon()
 	hud_used?.pull_icon?.update_icon()
+	update_vision_cone() // TA EDIT
 
 ///Update the resting hud icon
 /mob/proc/update_rest_hud_icon()
