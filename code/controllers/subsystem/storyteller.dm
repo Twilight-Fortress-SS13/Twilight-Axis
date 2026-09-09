@@ -1056,6 +1056,8 @@ SUBSYSTEM_DEF(gamemode)
 			continue
 		seen += label
 		caps[label] = cap
+	if(preset.allow_dreamwalker) // TA EDIT
+		caps["Dreamwalker"] = 1 // TA EDIT
 	return caps
 
 /// Compact pill row shown under a preset in the vote panel: each antag the preset opens and its max count, at a
@@ -1280,6 +1282,8 @@ SUBSYSTEM_DEF(gamemode)
 		return FALSE
 	if(isnull(player_count))
 		player_count = get_correct_popcount()
+	if(antag_datum == /datum/antagonist/bandit && story_policy_type(TRUE) == /datum/storyteller/gamemode/guaranteed_antag) // TA EDIT
+		return player_count >= 60 // TA EDIT
 	return player_count >= story_antag_min_players(antag_datum)
 
 /// Lazy cache: antag type path -> assoc list of storyteller type -> max cap (or null if none defined).
@@ -1302,6 +1306,11 @@ SUBSYSTEM_DEF(gamemode)
 	if(!ispath(antag_datum, /datum/antagonist))
 		return 0
 	storyteller_type = story_policy_type(roundstart, storyteller_type)
+	if(antag_datum == /datum/antagonist/bandit) // TA EDIT START
+		if(storyteller_type == /datum/storyteller/gamemode/guaranteed_antag)
+			return 5
+		if(storyteller_type == /datum/storyteller/gamemode/guaranteed_antag/low_wretch)
+			return 9 // TA EDIT END
 	var/storyteller_antag_flags = initial(antag_datum:storyteller_antag_flags)
 	if(storyteller_blocks_antag(storyteller_antag_flags, roundstart, storyteller_type) && !(ispath(antag_datum, /datum/antagonist/bandit) && storyteller_type == /datum/storyteller/gamemode/no_antag)) // TA EDIT
 		return 0
@@ -1311,11 +1320,15 @@ SUBSYSTEM_DEF(gamemode)
 		return max(0, maxcaps[storyteller_type])
 	return default_cap
 /datum/controller/subsystem/gamemode/proc/story_antag_slots(slot_count, antag_datum, player_count = null)
-	if(slot_count <= 0)
-		return 0
 	if(isnull(player_count))
 		player_count = get_correct_popcount()
-	if(ispath(antag_datum, /datum/antagonist/bandit)) // TA EDIT START
+	if(antag_datum == /datum/antagonist/bandit && story_policy_type(TRUE) == /datum/storyteller/gamemode/guaranteed_antag) // TA EDIT START
+		var/admin_bandit_slot = get_admin_slot(antag_datum)
+		if(isnull(admin_bandit_slot))
+			return player_count >= 60 ? 5 : 0
+	if(slot_count <= 0)
+		return 0
+	if(ispath(antag_datum, /datum/antagonist/bandit))
 		if(story_bandit_conflicts())
 			return 0
 	else if(initial(antag_datum:storyteller_antag_flags) & STORYTELLER_ANTAG_VILLAIN && story_villain_conflicts(antag_datum))
@@ -1326,17 +1339,8 @@ SUBSYSTEM_DEF(gamemode)
 	return slot_count
 
 
-/datum/controller/subsystem/gamemode/proc/story_bandit_conflicts() // TA EDIT START
-	if(story_policy_type(TRUE) != /datum/storyteller/gamemode/guaranteed_antag) // TA EDIT
-		return FALSE // TA EDIT
-	var/datum/round_event_control/antagonist/solo/roundstart_event = current_roundstart_event
-	if(!roundstart_event)
-		return FALSE
-	if(istype(roundstart_event, /datum/round_event_control/antagonist/solo/lich))
-		return TRUE
-	if(istype(roundstart_event, /datum/round_event_control/antagonist/solo/vampires))
-		return TRUE
-	return FALSE // TA EDIT END
+/datum/controller/subsystem/gamemode/proc/story_bandit_conflicts()
+	return FALSE // TA EDIT
 
 /datum/controller/subsystem/gamemode/proc/story_villain_conflicts(antag_datum)
 	if(!ispath(antag_datum, /datum/antagonist))
