@@ -4,7 +4,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED)
 	outfit = /datum/outfit/job/roguetown/mercenary/twilight_miragefen_rogue
-	category_tags = list(CTAG_MERCENARY)
+	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
 	class_select_category = CLASS_CAT_RACIAL
 	maximum_possible_slots = 3
 	cmode_music = 'modular_twilight_axis/sound/music/combat_tabaxi.ogg'

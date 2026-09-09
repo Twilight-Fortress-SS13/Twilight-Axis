@@ -1222,6 +1222,28 @@ GLOBAL_VAR_INIT(mobids, 1)
 	var/datum/language_holder/H = get_language_holder()
 	H.open_language_menu(usr)
 
+///Show the sleep level up screen if available
+/mob/living/verb/open_sleep_adv_menu()
+	set name = "Open Dream Menu"
+	set category = "IC"
+	set hidden = FALSE
+
+	if(!mind || !mind.sleep_adv)
+		to_chat(src, span_warning("You have no dreams to contemplate."))
+		return
+
+	if(!IsSleeping())
+		to_chat(src, span_warning("You must be asleep to enter your dreams."))
+		return
+
+	var/datum/sleep_adv/SA = mind.sleep_adv
+
+	if(SA.sleep_adv_points <= 0)
+		to_chat(src, span_warning("You lack the inspiration granted by a proper rest in order to contemplate your dreams."))
+		return
+
+	SA.show_ui(src)
+
 /// Custom pose setting
 /mob/living/carbon/human/verb/set_pose()
 	set name = "Set Pose"
@@ -1344,10 +1366,12 @@ GLOBAL_VAR_INIT(mobids, 1)
 	SEND_SIGNAL(src, COMSIG_MOB_GET_STATUS_TAB_ITEMS, .)
 	if(client)
 		. += list(list("IC DATE: ", "[get_current_ic_date_as_string()] (CLICK FOR CALENDAR)", "src=[REF(client)];statbrowser_calendar=1"))
-		var/current_tod = GLOB.tod
+		// TA EDIT START
+		var/current_tod = get_current_ic_tod_as_string()
 		if(!istext(current_tod) || !length(current_tod))
-			current_tod = "day"
+			current_tod = "dae"
 		. += list(list("tod", current_tod, "IC TIME: [get_current_ic_time_as_string()]"))
+		// TA EDIT END
 	return .
 
 /mob/proc/get_stats_tab_items()

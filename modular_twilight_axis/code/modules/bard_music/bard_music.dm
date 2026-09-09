@@ -341,6 +341,7 @@ SUBSYSTEM_DEF(bard_music)
 	playing = TRUE
 	soundloop.set_mid_sounds(list(curfile))
 	soundloop.mid_length = max(track.duration_seconds * 10, 1)
+	soundloop.preload_persistent_to_all_clients = !track.custom // TA EDIT
 	soundloop.start()
 	user.apply_status_effect(/datum/status_effect/buff/playing_music, stressevent, note_color)
 	user.bard_music_playing = TRUE

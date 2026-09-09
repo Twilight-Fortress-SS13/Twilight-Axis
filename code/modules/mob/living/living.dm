@@ -2195,7 +2195,7 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 
 /proc/build_sight_trait_signals()
 	. = list()
-	for(var/trait in list(TRAIT_DARKVISION, TRAIT_NITEVISION, TRAIT_NOCSHADES, TRAIT_GILDED_SIGHT, TRAIT_THERMAL_VISION, TRAIT_XRAY_VISION, TRAIT_ZIZOSIGHT))
+	for(var/trait in list(TRAIT_DARKVISION, TRAIT_NITEVISION, TRAIT_NOCSHADES, TRAIT_GILDED_SIGHT, TRAIT_THERMAL_VISION, TRAIT_XRAY_VISION, TRAIT_ZIZOSIGHT, TRAIT_BLIND))
 		. += SIGNAL_ADDTRAIT(trait)
 		. += SIGNAL_REMOVETRAIT(trait)
 
@@ -2715,6 +2715,10 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 		stack_trace("no offered_to or offered_item in offer_item()")
 		return
 
+	if(offered_to.surrendering) // TA EDIT START
+		to_chat(src, span_warning("[offered_to] cannot take items while surrendering."))
+		return FALSE // TA EDIT END
+
 	var/time_left = COOLDOWN_TIMELEFT(src, offer_cooldown)
 
 	if(time_left)
@@ -2787,6 +2791,12 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 	update_a_intents()
 
 /mob/living/proc/try_accept_offered_item(mob/living/offerer, obj/offered_item, stealthy)
+	if(surrendering) // TA EDIT START
+		to_chat(src, span_warning("I cannot take items while surrendering."))
+		to_chat(offerer, span_warning("[src] cannot take items while surrendering."))
+		offerer.stop_offering_item()
+		return FALSE // TA EDIT END
+
 	if(get_active_held_item())
 		to_chat(src, span_warning("I need a free hand to take it!"))
 		return FALSE
@@ -2795,8 +2805,17 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 	return TRUE
 
 /mob/living/proc/accept_offered_item(mob/living/offerer, obj/offered_item, stealthy)
-	transferItemToLoc(offered_item, src)
+	transferItemToLoc(offered_item, src.loc)
 	put_in_active_hand(offered_item)
+
+	// Safety check
+	if(!offered_item || offered_item.loc != src)
+		transferItemToLoc(offered_item, offerer.loc, TRUE)
+		offerer.put_in_active_hand(offered_item)
+		to_chat(src, span_warning("I couldn't accept the item! I let go!"))
+		offerer.stop_offering_item()
+		return FALSE
+
 	if(stealthy)
 		to_chat(offerer, span_notice("[src] takes the secretly offered [offered_item]."))
 		to_chat(src, span_notice("I take the secretly offered [offered_item] from [offerer]."))
@@ -2810,6 +2829,7 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 		)
 	SEND_SIGNAL(offered_item, COMSIG_OBJ_HANDED_OVER, src, offerer)
 	offerer.stop_offering_item()
+	return TRUE
 
 /// Marks a freshly-spawned mob as belonging to a contract/quest: strips its head bounty so it
 /// can't be farmed at a HEADEATER, and arranges for the corpse to dust shortly after death.
