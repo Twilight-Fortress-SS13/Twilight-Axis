@@ -3873,6 +3873,7 @@
 #include "modular_twilight_axis\code\modules\clothing\rogueclothes\headwear\helmet\blacksteel.dm"
 #include "modular_twilight_axis\code\modules\clothing\rogueclothes\pants\blacksteel.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\courtier\jester.dm"
+#include "modular_twilight_axis\code\modules\mob\living\carbon\human\mounted_combat.dm"
 #include "modular_twilight_axis\code\modules\mob\living\carbon\human\say.dm"
 #include "modular_twilight_axis\code\modules\mob\living\carbon\human\skeletonize.dm"
 #include "modular_twilight_axis\code\modules\cargo\packsrogue\merch_armor_light.dm"
