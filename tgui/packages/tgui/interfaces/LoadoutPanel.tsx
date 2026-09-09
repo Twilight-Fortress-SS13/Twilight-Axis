@@ -14,11 +14,19 @@ interface Data {
   categories: Record<string, Record<string, Item>>;
   isDonator: boolean | number;
   selectedLoadoutItems: string[];
+  selectedLoadoutDetails?: SelectedLoadoutItem[];
   donatTier: number;
   triumphDiscount: number;
   triumphDiscountUsed: number;
   curLoadoutSlots: number;
   maxLoadoutSlots: number;
+}
+
+interface SelectedLoadoutItem {
+  name: string;
+  colorChannels?: Record<string, string>;
+  colors?: Record<string, string>;
+  colorLabels?: Record<string, string>;
 }
 
 interface Item {
@@ -41,6 +49,9 @@ export const LoadoutPanel = () => {
   const [confirmReset, setConfirmReset] = useState(false);
 
   const selectedSet = new Set(data.selectedLoadoutItems ?? []);
+  const selectedDetails: SelectedLoadoutItem[] =
+    data.selectedLoadoutDetails ??
+    (data.selectedLoadoutItems ?? []).map((name) => ({ name }));
 
   const categoriesArray = Object.entries(data.categories ?? {}).map(
     ([name, items]) => ({
@@ -296,10 +307,10 @@ export const LoadoutPanel = () => {
                     Выбранные предметы:
                   </Box>
 
-                  {(data.selectedLoadoutItems ?? []).length ? (
-                    (data.selectedLoadoutItems ?? []).map((item) => (
+                  {selectedDetails.length ? (
+                    selectedDetails.map((item) => (
                       <Box
-                        key={item}
+                        key={item.name}
                         mb={1}
                         style={{
                           display: 'flex',
@@ -309,21 +320,68 @@ export const LoadoutPanel = () => {
                         }}
                       >
                         <div
-                          title={item}
+                          title={item.name}
                           style={{
+                            flex: 1,
+                            minWidth: 0,
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
                           }}
                         >
-                          {item}
+                          {item.name}
                         </div>
-                        <Button
-                          color="danger"
-                          onClick={() => act('remove', { item })}
+                        <Box
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px',
+                            flexShrink: 0,
+                          }}
                         >
-                          Удалить
-                        </Button>
+                          {Object.entries(item.colorChannels ?? {}).map(
+                            ([channel, label]) => {
+                              const color = item.colors?.[channel];
+                              const colorLabel = item.colorLabels?.[channel];
+                              return (
+                                <Button
+                                  key={`${item.name}-${channel}`}
+                                  icon="palette"
+                                  tooltip={`${label}: ${colorLabel || color || 'исходный цвет'}`}
+                                  onClick={() =>
+                                    act('pick_color', {
+                                      item: item.name,
+                                      channel,
+                                    })
+                                  }
+                                  style={{
+                                    minWidth: '26px',
+                                    width: '26px',
+                                    height: '26px',
+                                    padding: 0,
+                                    border: `2px solid ${color || 'rgba(255,255,255,0.28)'}`,
+                                    color: color || undefined,
+                                  }}
+                                />
+                              );
+                            }
+                          )}
+                          {Object.keys(item.colorLabels ?? {}).length ? (
+                            <Button
+                              icon="undo"
+                              tooltip="Сбросить цвета"
+                              onClick={() =>
+                                act('clear_colors', { item: item.name })
+                              }
+                            />
+                          ) : null}
+                          <Button
+                            color="danger"
+                            onClick={() => act('remove', { item: item.name })}
+                          >
+                            Удалить
+                          </Button>
+                        </Box>
                       </Box>
                     ))
                   ) : (

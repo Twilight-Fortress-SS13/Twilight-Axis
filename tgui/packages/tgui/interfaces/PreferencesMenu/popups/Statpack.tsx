@@ -11,7 +11,7 @@ export type StatpackData = {
   current_statpack: Path;
 } & PopupData;
 
-const PopupStatpack = (props) => {
+const PopupStatpack = () => {
   const [constantData] = useConstantPrefs();
   const { data } = usePopupBackend<StatpackData>();
   const { popup_data_ready } = data;
@@ -54,7 +54,7 @@ export const PopupStatpackInner = (props: { constantData: ConstantData }) => {
       return true;
     }
     const searchableText =
-      `${pack.name} ${pack.desc.replace(/<[^>]*>/g, ' ')}`.toLowerCase();
+      `${pack.name} ${String(pack.desc).replace(/<[^>]*>/g, ' ')}`.toLowerCase();
     return searchableText.includes(normalizedQuery);
   });
 

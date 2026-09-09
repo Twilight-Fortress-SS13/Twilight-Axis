@@ -234,9 +234,9 @@
 	..()
 
 /obj/item/grown/log/tree/bowpartial
-	name = "crude bowstave"
+	name = "bowstave"
 	desc = "A partially completed bow, waiting to be strung."
-	icon_state = "bowpartial"
+	icon_state = "bow_stave"
 	max_integrity = 30
 	firefuel = 10 MINUTES
 	twohands_required = FALSE
@@ -259,8 +259,7 @@
 /obj/item/grown/log/tree/bowpartial/recurve
 	name = "recurve bowstave"
 	desc = "An incomplete recurve bow, waiting to be strung."
-	icon = 'icons/roguetown/items/64x.dmi'
-	icon_state = "recurve_bowstave"
+	icon_state = "recurve_stave"
 
 /obj/item/grown/log/tree/bowpartial/recurve/Initialize(mapload)
 	. = ..()
@@ -271,8 +270,7 @@
 /obj/item/grown/log/tree/bowpartial/longbow
 	name = "long bowstave"
 	desc = "An incomplete longbow, waiting to be strung."
-	icon = 'icons/roguetown/items/64x.dmi'
-	icon_state = "long_bowstave"
+	icon_state = "longbow_stave"
 
 /obj/item/grown/log/tree/bowpartial/longbow/Initialize(mapload)
 	. = ..()
@@ -461,25 +459,19 @@
 
 /obj/item/grown/log/tree/stake/ComponentInitialize()
 	. = ..()
-	AddComponent(/datum/component/deaditeslayer, time = 20 SECONDS) // improvised as hell, so it takes a while. sharpen it first you peasant
+	AddComponent(/datum/component/deaditeslayer, time = 10 SECONDS) // improvised as hell, so it takes a while. sharpen it first you peasant
 
-/obj/item/grown/log/tree/stake/attack_obj(obj/O, mob/living/user)
-	. = ..()
+/obj/item/grown/log/tree/stake/attack_obj(obj/O, mob/living/user) // TA EDIT START
 	if(isitem(O))
 		var/obj/item/I = O
-		if(istype(I, /obj/item/ingot/iron))
+		if(istype(I, /obj/item/ingot/iron) || (I.anvilrepair && I.smeltresult == /obj/item/ingot/iron))
 			if(!do_after(user, 4 SECONDS, target = I))
 				return
 			to_chat(user, span_warning("The [user] breaks an [I] into small parts with the stake!"))
 			new /obj/item/scrap(get_turf(I))
 			qdel(I)
-		if(I.anvilrepair)
-			if(I.smeltresult == /obj/item/ingot/iron)
-				if(!do_after(user, 4 SECONDS, target = I))
-					return
-				to_chat(user, span_warning("The [user] breaks an [I] into small parts with the stake!"))
-				new /obj/item/scrap(get_turf(I))
-				qdel(I)
+			return
+	. = ..() // TA EDIT END
 
 /////////////
 // Planks //

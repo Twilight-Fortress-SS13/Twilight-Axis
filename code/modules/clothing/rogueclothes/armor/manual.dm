@@ -210,7 +210,6 @@
 	name = "seon-mul core" //Baseline for shoring up chest integ, less flashy than ruma since mistwalker power budget is in Journey's End.
 	desc = "The flowing clouds of the Ruma are but fleeting shadow across the plains, pale imitation of Xinyi's spiritual alchemy. Imperfect, impotent. Their legend is one writ in avarice and hate.</br></br>Recount yours in love."
 
-
 /*
  * SEWABLE (& potentially hammerable) ARMOUR
  */
