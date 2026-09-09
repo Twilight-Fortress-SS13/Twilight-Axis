@@ -18,7 +18,7 @@
 	. += list(_make_field("allow_when_restrained", "Можно в оковах", "bool", A.allow_when_restrained, "ОГРАНИЧЕНИЯ"))
 	. += list(_make_field("require_grab", "Нужен граб", "bool", A.require_grab, "ОГРАНИЧЕНИЯ"))
 	. += list(_make_field("required_item_tags", "Нужные теги предмета", "string_list", A.required_item_tags, "ТЕГИ", null, null, null, null, "Напр: dildo. Если список не пуст — действие потребует предмет с одним из тегов. Имя предмета тоже является тегом.", "tag"))
-	. += list(_make_field("action_tags", "Теги действия", "string_list", A.action_tags, "ТЕГИ", null, null, null, null, "Напр: spanking, testicles. Для фильтров/логики/совместимости.", "tag"))
+	. += list(_make_field("action_tags", "Теги действия", "string_list", A.action_tags, "ТЕГИ", null, null, null, null, "Условия внешности: hair, wings, tail, snout, horns, frills, fluff, accessory, face_detail, underwear, legwear, piercing — для цели; actor_<тег> — для инициатора. Напр: actor_tail.", "tag"))
 	. += list(_make_field("message_start", "Сообщение: старт", "text", A.message_start, "СООБЩЕНИЯ"))
 	. += list(_make_field("message_tick", "Сообщение: процесс", "text", A.message_tick, "СООБЩЕНИЯ"))
 	. += list(_make_field("message_finish", "Сообщение: финиш", "text", A.message_finish, "СООБЩЕНИЯ"))
