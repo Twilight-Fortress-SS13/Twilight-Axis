@@ -181,11 +181,9 @@
 /datum/status_effect/buff/shamanic_totem_commit_graggar/on_apply()
 	. = ..()
 	ADD_TRAIT(owner, TRAIT_STRENGTH_UNCAPPED, TRAIT_GENERIC)
-	ADD_TRAIT(owner, TRAIT_NOPAINSTUN, TRAIT_GENERIC)
 
 /datum/status_effect/buff/shamanic_totem_commit_graggar/on_remove()
 	REMOVE_TRAIT(owner, TRAIT_STRENGTH_UNCAPPED, TRAIT_GENERIC)
-	REMOVE_TRAIT(owner, TRAIT_NOPAINSTUN, TRAIT_GENERIC)
 	return ..()
 
 /obj/item/shamanic_totem_block/zizo
