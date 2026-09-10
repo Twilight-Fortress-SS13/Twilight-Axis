@@ -72,9 +72,14 @@
 	data["loadout_cost"] = loadout_cost
 	data["loadout_tri_cost"] = loadout_tri_cost
 
-	var/datum/faith/selected_faith = GLOB.faithlist[selected_patron.associated_faith]
-	data["selected_faith"] = selected_faith.name
-	data["selected_patron"] = selected_patron.name
+	if(!selected_patron) // TA EDIT START
+		selected_patron = GLOB.patronlist[default_patron]
+
+	if(selected_patron)
+		var/datum/faith/selected_faith = GLOB.faithlist[selected_patron.associated_faith]
+		if(selected_faith)
+			data["selected_faith"] = selected_faith.name
+		data["selected_patron"] = selected_patron.name // TA EDIT END
 
 
 	return data

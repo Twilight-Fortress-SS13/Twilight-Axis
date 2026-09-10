@@ -350,30 +350,6 @@
 	playsound(user,'sound/items/seedextract.ogg', 100, FALSE)
 	qdel(src)
 
-/obj/item/grown/log/tree/stick/attack_right(mob/living/user)
-	. = ..()
-	if(user.get_active_held_item())
-		return
-	to_chat(user, span_warning("I start to collect [src]..."))
-	if(move_after(user, 4 SECONDS, target = src))
-		var/stackcount = 0
-		for(var/obj/item/grown/log/tree/stick/F in get_turf(src))
-			stackcount++
-		while(stackcount > 0)
-			if(stackcount == 1)
-				var/obj/item/grown/log/tree/stick/S = new(get_turf(user))
-				user.put_in_hands(S)
-				stackcount--
-			else if(stackcount >= 2)
-				var/obj/item/natural/bundle/stick/B = new(get_turf(user))
-				B.amount = clamp(stackcount, 2, 10)
-				B.update_bundle()
-				stackcount -= clamp(stackcount, 2, 10)
-				user.put_in_hands(B)
-		for(var/obj/item/grown/log/tree/stick/F in get_turf(src))
-			qdel(F)
-		playsound(get_turf(user.loc), 'sound/foley/dropsound/wooden_drop.ogg', 100)
-
 
 /obj/item/grown/log/tree/stick/attackby(obj/item/I, mob/living/user, params)
 	user.changeNext_move(CLICK_CD_INTENTCAP)
@@ -459,25 +435,19 @@
 
 /obj/item/grown/log/tree/stake/ComponentInitialize()
 	. = ..()
-	AddComponent(/datum/component/deaditeslayer, time = 20 SECONDS) // improvised as hell, so it takes a while. sharpen it first you peasant
+	AddComponent(/datum/component/deaditeslayer, time = 10 SECONDS) // improvised as hell, so it takes a while. sharpen it first you peasant
 
-/obj/item/grown/log/tree/stake/attack_obj(obj/O, mob/living/user)
-	. = ..()
+/obj/item/grown/log/tree/stake/attack_obj(obj/O, mob/living/user) // TA EDIT START
 	if(isitem(O))
 		var/obj/item/I = O
-		if(istype(I, /obj/item/ingot/iron))
+		if(istype(I, /obj/item/ingot/iron) || (I.anvilrepair && I.smeltresult == /obj/item/ingot/iron))
 			if(!do_after(user, 4 SECONDS, target = I))
 				return
 			to_chat(user, span_warning("The [user] breaks an [I] into small parts with the stake!"))
 			new /obj/item/scrap(get_turf(I))
 			qdel(I)
-		if(I.anvilrepair)
-			if(I.smeltresult == /obj/item/ingot/iron)
-				if(!do_after(user, 4 SECONDS, target = I))
-					return
-				to_chat(user, span_warning("The [user] breaks an [I] into small parts with the stake!"))
-				new /obj/item/scrap(get_turf(I))
-				qdel(I)
+			return
+	. = ..() // TA EDIT END
 
 /////////////
 // Planks //
@@ -505,28 +475,6 @@
 	bundletype = /obj/item/natural/bundle/plank
 	smeltresult = /obj/item/ash
 
-/obj/item/natural/wood/plank/attack_right(mob/living/user)
-	if(user.get_active_held_item())
-		return
-	to_chat(user, span_warning("I start to collect [src]..."))
-	if(move_after(user, 4 SECONDS, target = src))
-		var/stackcount = 0
-		for(var/obj/item/natural/wood/plank/F in get_turf(src))
-			stackcount++
-		while(stackcount > 0)
-			if(stackcount == 1)
-				var/obj/item/natural/wood/plank/S = new(get_turf(user))
-				user.put_in_hands(S)
-				stackcount--
-			else if(stackcount >= 2)
-				var/obj/item/natural/bundle/plank/B = new(get_turf(user))
-				B.amount = clamp(stackcount, 2, 6)
-				B.update_bundle()
-				stackcount -= clamp(stackcount, 2, 6)
-				user.put_in_hands(B)
-		for(var/obj/item/natural/wood/plank/F in get_turf(src))
-			playsound(get_turf(user.loc), 'sound/foley/dropsound/wooden_drop.ogg', 80)
-			qdel(F)
 
 /obj/item/natural/bundle/plank
 	name = "stack of wooden planks"

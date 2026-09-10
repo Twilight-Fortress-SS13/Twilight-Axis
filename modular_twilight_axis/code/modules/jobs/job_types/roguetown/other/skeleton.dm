@@ -46,7 +46,11 @@
     spawned.base_intents = list(INTENT_HELP, INTENT_DISARM, INTENT_GRAB, /datum/intent/simple/claw)
     spawned.update_a_intents()
     spawned.ambushable = FALSE
-    spawned.underwear = "Nude"
+    if(spawned.underwear)
+        var/obj/item/bodypart/underwear_chest = spawned.get_bodypart(BODY_ZONE_CHEST)
+        if(underwear_chest && spawned.underwear.undies_feature)
+            underwear_chest.remove_bodypart_feature(spawned.underwear.undies_feature)
+        QDEL_NULL(spawned.underwear)
     spawned.update_body()
     spawned.mob_biotypes = MOB_UNDEAD
     spawned.grant_language(/datum/language/undead)
@@ -75,4 +79,8 @@
 
 /datum/outfit/skeleton/pre_equip(mob/living/carbon/human/equipped_human)
 	. = ..()
-	equipped_human.underwear = "Nude"
+	if(equipped_human.underwear)
+		var/obj/item/bodypart/underwear_chest = equipped_human.get_bodypart(BODY_ZONE_CHEST)
+		if(underwear_chest && equipped_human.underwear.undies_feature)
+			underwear_chest.remove_bodypart_feature(equipped_human.underwear.undies_feature)
+		QDEL_NULL(equipped_human.underwear)

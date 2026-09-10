@@ -60,7 +60,7 @@
 	H.dna.species.soundpack_m = new /datum/voicepack/male/knight()
 	if(H.mind)
 		var/weapons = list("Lance", "Pike")
-		var/weapon_choice = input("Choose your weapon.", "LET YOUR HANDS SPEAK BEFORE YOUR MOUTH.") as anything in weapons
+		var/weapon_choice = input(H, "Choose your weapon.", "LET YOUR HANDS SPEAK BEFORE YOUR MOUTH.") as anything in weapons
 		switch(weapon_choice)
 			if ("Lance")
 				r_hand = /obj/item/rogueweapon/spear/lance

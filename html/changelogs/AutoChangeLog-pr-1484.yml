@@ -1,0 +1,4 @@
+author: "zRainbowcat"
+delete-after: True
+changes:
+  - bugfix: "Шапка грензелей из лоадаута больше не требует усилий шлема для снятия"

@@ -369,7 +369,7 @@
 		)
 	craftdiff = 0
 
-/datum/crafting_recipe/roguetown/survival/rucksack
+/datum/crafting_recipe/roguetown/survival/rucksack // TA EDIT START
 	name = "rucksack"
 	result = /obj/item/storage/backpack/rogue/backpack/bagpack
 	reqs = list(
@@ -377,10 +377,7 @@
 		/obj/item/rope = 1,
 		)
 	craftdiff = 0
-
-/datum/crafting_recipe/roguetown/survival/rucksack/crafted
-	reqs = list(/obj/item/storage/roguebag/crafted = 1,
-				/obj/item/rope = 1)
+	subtype_reqs = TRUE // TA EDIT END
 
 /datum/crafting_recipe/roguetown/survival/handmirror
 	name = "hand mirror"

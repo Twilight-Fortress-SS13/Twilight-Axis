@@ -71,6 +71,33 @@
 	allowed_race = NON_DWARVEN_RACE_TYPES
 	smeltresult = /obj/item/ingot/drow
 
+/obj/item/clothing/shoes/roguetown/boots/bloodboots
+	name = "raiders boots"
+	desc = "Custom-fitted sabatons, made from a series of interlinking darksteel plates. "
+	body_parts_covered = FEET
+	icon_state = "bloodboots"
+	item_state = "bloodboots"
+	color = null
+	blocksound = PLATEHIT
+	resistance_flags = FIRE_PROOF
+	max_integrity = ARMOR_INT_SIDE_STEEL
+	armor = ARMOR_PLATE
+	pickup_sound = 'sound/foley/equip/equip_armor_plate.ogg'
+	equip_sound = 'sound/foley/equip/equip_armor_plate.ogg'
+	anvilrepair = /datum/skill/craft/armorsmithing
+	sewrepair = FALSE
+	smeltresult = /obj/item/ingot/steel
+	icon = 'modular_twilight_axis/icons/clothing/bloodraider.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/bloodraider.dmi'
+
+/obj/item/clothing/shoes/roguetown/boots/bloodboots/ComponentInitialize()
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")
+
+/obj/item/clothing/shoes/roguetown/boots/bloodboots/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)
+
 /obj/item/clothing/shoes/roguetown/boots/armor/blacksteel/legate
 	name = "legate's caligae"
 	desc = "Сделанные в форме сандалий сабатоны, выкованные из ценной черной стали. Когда-то это были шлемы гордых рыцарей Грензельхофта, теперь же в них маршируют по горячему песку Зибантии. \
