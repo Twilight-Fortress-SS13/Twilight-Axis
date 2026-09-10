@@ -1,6 +1,6 @@
 GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 	"wood_floor" = list(
-		"name" = "Деревянный пол",
+		"name" = "Wooden Floor",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -10,7 +10,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "wooden_floor"
 	),
 	"wood_floor_polished" = list(
-		"name" = "Полированный пол",
+		"name" = "Polished Wood Floor",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -20,7 +20,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "wooden_floor2"
 	),
 	"floor_herringbone_light" = list(
-		"name" = "Паркет (Светлая ёлочка)",
+		"name" = "Light Herringbone Floor",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -30,7 +30,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "herringbonewood2"
 	),
 	"floor_herringbone_weathered" = list(
-		"name" = "Паркет (Состаренная ёлочка)",
+		"name" = "Weathered Herringbone Floor",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -40,7 +40,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "herringbonewood"
 	),
 	"floor_herringbone_stamped" = list(
-		"name" = "Паркет (Тисненый)",
+		"name" = "Stamped Herringbone Floor",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -50,7 +50,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "weird2"
 	),
 	"floor_slanted" = list(
-		"name" = "Паркет (Диагональный)",
+		"name" = "Slanted Wood Floor",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -60,7 +60,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "weird1"
 	),
 	"platform_wood" = list(
-		"name" = "Деревянная платформа",
+		"name" = "Wooden Platform",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -70,7 +70,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "wooden_floor"
 	),
 	"floor_hay" = list(
-		"name" = "Соломенный настил",
+		"name" = "Hay Floor",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -80,7 +80,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "hay"
 	),
 	"floor_twig" = list(
-		"name" = "Настил из хвороста",
+		"name" = "Twig Floor",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -90,7 +90,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "twig"
 	),
 	"stone_floor" = list(
-		"name" = "Каменный пол (Плиты)",
+		"name" = "Stone Block Floor",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -100,7 +100,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "blocks"
 	),
 	"stone_hex_floor" = list(
-		"name" = "Шестиугольная плитка",
+		"name" = "Hexagonal Stone Floor",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -110,7 +110,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "hexstone"
 	),
 	"stone_herringbone_floor" = list(
-		"name" = "Каменная ёлочка",
+		"name" = "Stone Herringbone Floor",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -120,7 +120,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "herringbone"
 	),
 	"cobblestone_floor" = list(
-		"name" = "Булыжная мостовая",
+		"name" = "Cobblestone Floor",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -130,7 +130,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "cobblestone1"
 	),
 	"cobblerock_road" = list(
-		"name" = "Каменистая дорога",
+		"name" = "Cobblerock Road",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -140,7 +140,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "cobblerock"
 	),
 	"redstone_floor" = list(
-		"name" = "Терракотовая плитка (Крупная)",
+		"name" = "Large Redstone Floor",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -150,7 +150,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "stoneredlarge"
 	),
 	"tiny_redstone_floor" = list(
-		"name" = "Терракотовая плитка (Мелкая)",
+		"name" = "Tiny Redstone Floor",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -160,7 +160,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "stoneredtiny"
 	),
 	"floor_brick" = list(
-		"name" = "Кирпичный пол",
+		"name" = "Brick Floor",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -170,7 +170,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "bricktile"
 	),
 	"carpet_inn" = list(
-		"name" = "Ковер (Трактирный)",
+		"name" = "Inn Carpet",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -180,7 +180,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "carpet"
 	),
 	"carpet_purple" = list(
-		"name" = "Ковер (Пурпурный)",
+		"name" = "Purple Carpet",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -190,7 +190,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "carpet"
 	),
 	"carpet_red" = list(
-		"name" = "Ковер (Красный)",
+		"name" = "Red Carpet",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -200,7 +200,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "carpet"
 	),
 	"carpet_royal" = list(
-		"name" = "Ковер (Королевский черный)",
+		"name" = "Royal Black Carpet",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -210,7 +210,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "carpet"
 	),
 	"carpet_stellar" = list(
-		"name" = "Ковер (Звездный)",
+		"name" = "Stellar Carpet",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -220,7 +220,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "carpet"
 	),
 	"bear_rug" = list(
-		"name" = "Шкура медведя",
+		"name" = "Bear Rug",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -230,7 +230,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "bear"
 	),
 	"fox_rug" = list(
-		"name" = "Шкура лисы",
+		"name" = "Fox Rug",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -240,7 +240,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "fox"
 	),
 	"lynx_rug" = list(
-		"name" = "Шкура рыси",
+		"name" = "Bobcat Rug",
 		"category" = "Полы и Дорожки",
 		"layer_type" = "floor",
 		"build_order" = 1,
@@ -252,7 +252,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 
 
 	"wood_wall" = list(
-		"name" = "Деревянная стена",
+		"name" = "Wood Wall",
 		"category" = "Стены и Крыша",
 		"layer_type" = "wall",
 		"build_order" = 2,
@@ -262,7 +262,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "wood"
 	),
 	"wood_wall_fancy" = list(
-		"name" = "Резная деревянная стена",
+		"name" = "Fancy Wood Wall",
 		"category" = "Стены и Крыша",
 		"layer_type" = "wall",
 		"build_order" = 2,
@@ -272,7 +272,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "decowood"
 	),
 	"tent_wall" = list(
-		"name" = "Палаточная стена",
+		"name" = "Tent Wall",
 		"category" = "Стены и Крыша",
 		"layer_type" = "wall",
 		"build_order" = 2,
@@ -282,7 +282,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "tent"
 	),
 	"stone_wall" = list(
-		"name" = "Каменная стена",
+		"name" = "Stone Wall",
 		"category" = "Стены и Крыша",
 		"layer_type" = "wall",
 		"build_order" = 2,
@@ -292,7 +292,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "stone"
 	),
 	"stone_wall_brick" = list(
-		"name" = "Стена из каменного кирпича",
+		"name" = "Stone Brick Wall",
 		"category" = "Стены и Крыша",
 		"layer_type" = "wall",
 		"build_order" = 2,
@@ -302,7 +302,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "stonebrick"
 	),
 	"stone_wall_craft" = list(
-		"name" = "Стена из тесаного камня",
+		"name" = "Crafted Stone Wall",
 		"category" = "Стены и Крыша",
 		"layer_type" = "wall",
 		"build_order" = 2,
@@ -312,7 +312,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "box"
 	),
 	"stone_wall_deco" = list(
-		"name" = "Декорированная каменная стена",
+		"name" = "Decorated Stone Wall",
 		"category" = "Стены и Крыша",
 		"layer_type" = "wall",
 		"build_order" = 2,
@@ -322,7 +322,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "decostone-b"
 	),
 	"brick_wall" = list(
-		"name" = "Кирпичная стена",
+		"name" = "Brick Wall",
 		"category" = "Стены и Крыша",
 		"layer_type" = "wall",
 		"build_order" = 2,
@@ -332,7 +332,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "brick"
 	),
 	"roof_wood" = list(
-		"name" = "Деревянная крыша",
+		"name" = "Wood Rooftop",
 		"category" = "Стены и Крыша",
 		"layer_type" = "wall",
 		"build_order" = 4,
@@ -344,7 +344,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 
 
 	"wood_window_murderhole" = list(
-		"name" = "Деревянная бойница",
+		"name" = "Wood Murderhole",
 		"category" = "Окна и Витражи",
 		"layer_type" = "wall",
 		"build_order" = 2,
@@ -354,7 +354,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "woodwindow"
 	),
 	"stone_window_murderhole" = list(
-		"name" = "Каменная бойница",
+		"name" = "Stone Murderhole",
 		"category" = "Окна и Витражи",
 		"layer_type" = "wall",
 		"build_order" = 2,
@@ -364,7 +364,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "stonewindow"
 	),
 	"brick_window_murderhole" = list(
-		"name" = "Кирпичная бойница",
+		"name" = "Brick Murderhole",
 		"category" = "Окна и Витражи",
 		"layer_type" = "wall",
 		"build_order" = 2,
@@ -374,7 +374,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "brickwindow"
 	),
 	"window_glass_static" = list(
-		"name" = "Окно со стеклом (Глухое)",
+		"name" = "Fixed Glass Window",
 		"category" = "Окна и Витражи",
 		"layer_type" = "obj",
 		"build_order" = 2,
@@ -384,7 +384,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "window-solid"
 	),
 	"window_glass_openable" = list(
-		"name" = "Открывающееся окно",
+		"name" = "Openable Window",
 		"category" = "Окна и Витражи",
 		"layer_type" = "obj",
 		"build_order" = 2,
@@ -394,7 +394,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "woodwindowdir"
 	),
 	"window_glass_reinforced" = list(
-		"name" = "Усиленное решеткой окно",
+		"name" = "Reinforced Window",
 		"category" = "Окна и Витражи",
 		"layer_type" = "obj",
 		"build_order" = 2,
@@ -404,7 +404,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "reinforcedwindowdir"
 	),
 	"window_stained_psydon" = list(
-		"name" = "Витраж Псидонии (Серебро)",
+		"name" = "Psydonian Stained Glass",
 		"category" = "Окна и Витражи",
 		"layer_type" = "obj",
 		"build_order" = 2,
@@ -414,7 +414,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "stained-silver"
 	),
 	"window_stained_astrata" = list(
-		"name" = "Витраж Астраты (Золото)",
+		"name" = "Astratan Stained Glass",
 		"category" = "Окна и Витражи",
 		"layer_type" = "obj",
 		"build_order" = 2,
@@ -424,7 +424,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "stained-yellow"
 	),
 	"window_stained_zizo" = list(
-		"name" = "Витраж Зизо",
+		"name" = "Zizo Stained Glass",
 		"category" = "Окна и Витражи",
 		"layer_type" = "obj",
 		"build_order" = 2,
@@ -435,7 +435,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 	),
 
 	"stairs_wood" = list(
-		"name" = "Деревянная лестница (Вверх)",
+		"name" = "Wooden Stairs (Up)",
 		"category" = "Двери и Лестницы",
 		"layer_type" = "obj",
 		"build_order" = 2,
@@ -445,7 +445,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "stairs"
 	),
 	"stairs_wood_down" = list(
-		"name" = "Деревянная лестница (Вниз)",
+		"name" = "Wooden Stairs (Down)",
 		"category" = "Двери и Лестницы",
 		"layer_type" = "obj",
 		"build_order" = 2,
@@ -455,7 +455,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "stairs"
 	),
 	"stairs_stone" = list(
-		"name" = "Каменная лестница (Вверх)",
+		"name" = "Stone Stairs (Up)",
 		"category" = "Двери и Лестницы",
 		"layer_type" = "obj",
 		"build_order" = 2,
@@ -465,7 +465,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "stonestairs"
 	),
 	"stairs_stone_down" = list(
-		"name" = "Каменная лестница (Вниз)",
+		"name" = "Stone Stairs (Down)",
 		"category" = "Двери и Лестницы",
 		"layer_type" = "obj",
 		"build_order" = 2,
@@ -475,7 +475,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "stonestairs"
 	),
 	"ladder" = list(
-		"name" = "Лестница",
+		"name" = "Ladder",
 		"category" = "Двери и Лестницы",
 		"layer_type" = "obj",
 		"build_order" = 2,
@@ -485,7 +485,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "ladder11"
 	),
 	"door_wood" = list(
-		"name" = "Деревянная дверь",
+		"name" = "Wooden Door",
 		"category" = "Двери и Лестницы",
 		"layer_type" = "obj",
 		"build_order" = 2,
@@ -495,7 +495,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "woodhandle"
 	),
 	"door_wood_deadbolt" = list(
-		"name" = "Дверь с задвижкой",
+		"name" = "Deadbolt Wooden Door",
 		"category" = "Двери и Лестницы",
 		"layer_type" = "obj",
 		"build_order" = 2,
@@ -505,7 +505,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "wooddir"
 	),
 	"door_wood_fancy" = list(
-		"name" = "Резная дверь",
+		"name" = "Fancy Wooden Door",
 		"category" = "Двери и Лестницы",
 		"layer_type" = "obj",
 		"build_order" = 2,
@@ -515,7 +515,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "fancy_wood"
 	),
 	"door_swing" = list(
-		"name" = "Распашная дверь (Бар)",
+		"name" = "Swing Door",
 		"category" = "Двери и Лестницы",
 		"layer_type" = "obj",
 		"build_order" = 2,
@@ -525,7 +525,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "woodhandle"
 	),
 	"door_stone" = list(
-		"name" = "Каменная дверь",
+		"name" = "Stone Door",
 		"category" = "Двери и Лестницы",
 		"layer_type" = "obj",
 		"build_order" = 2,
@@ -535,7 +535,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "stone"
 	),
 	"tent_door" = list(
-		"name" = "Тканевый проход (Палатка)",
+		"name" = "Tent Door",
 		"category" = "Двери и Лестницы",
 		"layer_type" = "obj",
 		"build_order" = 2,
@@ -545,7 +545,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "tent_door1"
 	),
 	"fence_palisade" = list(
-		"name" = "Частокол / Забор",
+		"name" = "Palisade Fence",
 		"category" = "Двери и Лестницы",
 		"layer_type" = "border",
 		"build_order" = 3,
@@ -555,7 +555,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "fence"
 	),
 	"railing_wood" = list(
-		"name" = "Деревянные перила",
+		"name" = "Wooden Railing",
 		"category" = "Двери и Лестницы",
 		"layer_type" = "border",
 		"build_order" = 3,
@@ -565,7 +565,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "woodrailing"
 	),
 	"border_wood" = list(
-		"name" = "Деревянный бордюр",
+		"name" = "Wooden Border",
 		"category" = "Двери и Лестницы",
 		"layer_type" = "border",
 		"build_order" = 3,
@@ -575,7 +575,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "border"
 	),
 	"wall_ladder" = list(
-		"name" = "Настенная лестница",
+		"name" = "Wall Ladder",
 		"category" = "Двери и Лестницы",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -587,7 +587,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 
 
 	"table_wood" = list(
-		"name" = "Деревянный стол",
+		"name" = "Wooden Table",
 		"category" = "Мебель",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -597,7 +597,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "tablewood1"
 	),
 	"table_long" = list(
-		"name" = "Длинный стол",
+		"name" = "Long Table",
 		"category" = "Мебель",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -607,7 +607,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "longtable"
 	),
 	"table_large" = list(
-		"name" = "Большой стол",
+		"name" = "Large Table",
 		"category" = "Мебель",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -617,7 +617,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "largetable"
 	),
 	"table_stone" = list(
-		"name" = "Каменный стол",
+		"name" = "Stone Table",
 		"category" = "Мебель",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -627,7 +627,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "churchtable"
 	),
 	"table_finestone" = list(
-		"name" = "Полированный каменный стол",
+		"name" = "Fine Stone Table",
 		"category" = "Мебель",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -637,7 +637,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "stonetable_small"
 	),
 	"table_operating" = list(
-		"name" = "Хирургический стол",
+		"name" = "Operating Table",
 		"category" = "Мебель",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -647,7 +647,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "optable"
 	),
 	"chair_wood" = list(
-		"name" = "Деревянный стул",
+		"name" = "Wooden Chair",
 		"category" = "Мебель",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -657,7 +657,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "chair2"
 	),
 	"chair_fancy" = list(
-		"name" = "Богатый мягкий стул",
+		"name" = "Fancy Chair",
 		"category" = "Мебель",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -667,7 +667,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "chair1"
 	),
 	"stool_wood" = list(
-		"name" = "Барный табурет",
+		"name" = "Bar Stool",
 		"category" = "Мебель",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -677,7 +677,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "barstool"
 	),
 	"throne_small" = list(
-		"name" = "Малый трон",
+		"name" = "Small Throne",
 		"category" = "Мебель",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -687,7 +687,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "thronechair"
 	),
 	"bench_park" = list(
-		"name" = "Парковая скамья",
+		"name" = "Park Bench",
 		"category" = "Мебель",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -697,7 +697,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "bench"
 	),
 	"couch_red" = list(
-		"name" = "Красный диван",
+		"name" = "Red Couch",
 		"category" = "Мебель",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -707,7 +707,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "redcouch"
 	),
 	"couch_black" = list(
-		"name" = "Черный диван",
+		"name" = "Black Couch",
 		"category" = "Мебель",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -717,7 +717,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "couchablackaleft"
 	),
 	"bed_straw" = list(
-		"name" = "Соломенная кровать",
+		"name" = "Straw Bed",
 		"category" = "Мебель",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -727,7 +727,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "shitbed"
 	),
 	"bed_inn" = list(
-		"name" = "Мягкая кровать",
+		"name" = "Inn Bed",
 		"category" = "Мебель",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -737,7 +737,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "inn_bed"
 	),
 	"bed_wool" = list(
-		"name" = "Шерстяная кровать",
+		"name" = "Wool Bed",
 		"category" = "Мебель",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -747,7 +747,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "woolbed"
 	),
 	"bed_double" = list(
-		"name" = "Двуспальная кровать",
+		"name" = "Double Bed",
 		"category" = "Мебель",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -757,7 +757,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "double"
 	),
 	"curtain_red" = list(
-		"name" = "Шторы (Красные)",
+		"name" = "Red Curtains",
 		"category" = "Мебель",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -767,7 +767,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "curtain-open"
 	),
 	"curtain_blue" = list(
-		"name" = "Шторы (Синие)",
+		"name" = "Blue Curtains",
 		"category" = "Мебель",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -777,7 +777,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "curtain-open"
 	),
 	"mirror_wood" = list(
-		"name" = "Настенное зеркало",
+		"name" = "Wall Mirror",
 		"category" = "Мебель",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -787,7 +787,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "mirror"
 	),
 	"display_stand" = list(
-		"name" = "Стойка манекена",
+		"name" = "Mannequin Stand",
 		"category" = "Мебель",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -799,7 +799,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 
 
 	"chest_wood" = list(
-		"name" = "Сундук",
+		"name" = "Wooden Chest",
 		"category" = "Хранилища",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -809,7 +809,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "chest3s"
 	),
 	"closet_wood" = list(
-		"name" = "Шкаф",
+		"name" = "Wooden Closet",
 		"category" = "Хранилища",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -819,7 +819,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "closet"
 	),
 	"rack_wood" = list(
-		"name" = "Оружейная стойка",
+		"name" = "Weapon Rack",
 		"category" = "Хранилища",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -829,7 +829,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "rack"
 	),
 	"barrel_wood" = list(
-		"name" = "Деревянная бочка",
+		"name" = "Wooden Barrel",
 		"category" = "Хранилища",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -839,7 +839,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "barrel_tapless"
 	),
 	"coffin_wood" = list(
-		"name" = "Гроб",
+		"name" = "Wooden Coffin",
 		"category" = "Хранилища",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -849,7 +849,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "casket"
 	),
 	"wicker_basket" = list(
-		"name" = "Плетеная корзина",
+		"name" = "Wicker Basket",
 		"category" = "Хранилища",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -860,7 +860,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 	),
 
 	"fireplace_north" = list(
-		"name" = "Настенный камин",
+		"name" = "Wall Fireplace",
 		"category" = "Отопление и Свет",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -870,7 +870,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "wallfire1"
 	),
 	"torch_holder" = list(
-		"name" = "Настенный факел",
+		"name" = "Torch Holder",
 		"category" = "Отопление и Свет",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -880,7 +880,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "torchwall1"
 	),
 	"torch_standing" = list(
-		"name" = "Стоячий факел",
+		"name" = "Standing Torch",
 		"category" = "Отопление и Свет",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -890,7 +890,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "standing1"
 	),
 	"firebowl" = list(
-		"name" = "Жирник",
+		"name" = "Fire Bowl",
 		"category" = "Отопление и Свет",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -900,7 +900,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "stonefire1"
 	),
 	"torch_lantern_standing" = list(
-		"name" = "Каменный фонарь",
+		"name" = "Standing Stone Lantern",
 		"category" = "Отопление и Свет",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -910,7 +910,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "stonelantern_standing1"
 	),
 	"wall_candles" = list(
-		"name" = "Настенные свечи",
+		"name" = "Wall Candles",
 		"category" = "Отопление и Свет",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -920,7 +920,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "wallcandle1"
 	),
 	"campfire" = list(
-		"name" = "Костер",
+		"name" = "Campfire",
 		"category" = "Отопление и Свет",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -930,7 +930,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "badfire1"
 	),
 	"hearth" = list(
-		"name" = "Очаг",
+		"name" = "Hearth",
 		"category" = "Отопление и Свет",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -940,7 +940,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "hearth1"
 	),
 	"oven" = list(
-		"name" = "Печь",
+		"name" = "Oven",
 		"category" = "Отопление и Свет",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -951,7 +951,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 	),
 
 	"anvil_iron" = list(
-		"name" = "Железная наковальня",
+		"name" = "Iron Anvil",
 		"category" = "Ремесло и Станки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -961,7 +961,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "anvil"
 	),
 	"anvil_bronze" = list(
-		"name" = "Бронзовая наковальня",
+		"name" = "Bronze Anvil",
 		"category" = "Ремесло и Станки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -971,7 +971,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "broanvil"
 	),
 	"forge" = list(
-		"name" = "Кузнечный горн",
+		"name" = "Blacksmith Forge",
 		"category" = "Ремесло и Станки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -981,7 +981,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "forge0"
 	),
 	"smelter_ore" = list(
-		"name" = "Плавильная печь для руды",
+		"name" = "Ore Smelter",
 		"category" = "Ремесло и Станки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -991,7 +991,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "cavesmelter0"
 	),
 	"smelter_bloomery" = list(
-		"name" = "Сыродутный горн (Железо)",
+		"name" = "Bloomery Smelter",
 		"category" = "Ремесло и Станки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1001,7 +1001,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "hironsmelter0"
 	),
 	"smelter_great" = list(
-		"name" = "Великая сталеплавильня",
+		"name" = "Great Smelter",
 		"category" = "Ремесло и Станки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1011,7 +1011,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "smelter0"
 	),
 	"grindwheel" = list(
-		"name" = "Точильный круг",
+		"name" = "Grindwheel",
 		"category" = "Ремесло и Станки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1021,7 +1021,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "grindwheel"
 	),
 	"loom" = list(
-		"name" = "Ткацкий станок",
+		"name" = "Loom",
 		"category" = "Ремесло и Станки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1031,7 +1031,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "loom"
 	),
 	"potters_wheel" = list(
-		"name" = "Гончарный круг",
+		"name" = "Potter's Wheel",
 		"category" = "Ремесло и Станки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1041,7 +1041,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "potwheel"
 	),
 	"dye_station" = list(
-		"name" = "Красильня",
+		"name" = "Dye Station",
 		"category" = "Ремесло и Станки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1051,7 +1051,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "dyestation"
 	),
 	"alchemy_station" = list(
-		"name" = "Алхимический стол",
+		"name" = "Alchemy Table",
 		"category" = "Ремесло и Станки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1061,7 +1061,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "alch"
 	),
 	"cooling_table" = list(
-		"name" = "Охлаждающий стол для погреба",
+		"name" = "Cooling Table",
 		"category" = "Ремесло и Станки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1071,7 +1071,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "tablewood_alt"
 	),
 	"bakers_trough" = list(
-		"name" = "Корыто пекаря",
+		"name" = "Baker's Trough",
 		"category" = "Ремесло и Станки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1081,7 +1081,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "through_empty"
 	),
 	"grille" = list(
-		"name" = "Половая Решетка",
+		"name" = "Floor Grille",
 		"category" = "Ремесло и Станки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1091,7 +1091,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "floorgrille"
 	),
 	"minecart_rail" = list(
-		"name" = "Рельсы",
+		"name" = "Minecart Rails",
 		"category" = "Ремесло и Станки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1101,7 +1101,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "track"
 	),
 	"floordoor" = list(
-		"name" = "Половая дверь",
+		"name" = "Trapdoor",
 		"category" = "Ремесло и Станки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1111,7 +1111,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "floorhatch1"
 	),
 	"lever" = list(
-		"name" = "Рычаг",
+		"name" = "Wall Lever",
 		"category" = "Ремесло и Станки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1121,7 +1121,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "leverwall0"
 	),
 	"millstone" = list(
-		"name" = "Жернова",
+		"name" = "Millstone",
 		"category" = "Ремесло и Станки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1131,7 +1131,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "millstone"
 	),
 	"tanning_rack" = list(
-		"name" = "Стойка сушки шкур",
+		"name" = "Tanning Rack",
 		"category" = "Ремесло и Станки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1141,7 +1141,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "dryrack"
 	),
 	"apiary_beehive" = list(
-		"name" = "Пасека / Улей",
+		"name" = "Beehive",
 		"category" = "Ремесло и Станки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1152,7 +1152,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 	),
 
 	"statue_stone" = list(
-		"name" = "Каменная статуя девы",
+		"name" = "Stone Maiden Statue",
 		"category" = "Религия и Статуи",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1162,7 +1162,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "1"
 	),
 	"cross_pantheon_wood" = list(
-		"name" = "Крест Пантеона (Дерево)",
+		"name" = "Pantheon Cross (Wood)",
 		"category" = "Религия и Статуи",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1172,7 +1172,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "cross_undivided"
 	),
 	"cross_pantheon_stone" = list(
-		"name" = "Крест Пантеона (Камень)",
+		"name" = "Pantheon Cross (Stone)",
 		"category" = "Религия и Статуи",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1182,7 +1182,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "cross_undivided_r"
 	),
 	"cross_psydon_wood" = list(
-		"name" = "Распятие Псидона (Дерево)",
+		"name" = "Psydonic Crucifix (Wood)",
 		"category" = "Религия и Статуи",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1192,7 +1192,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "cross_psy"
 	),
 	"cross_psydon_stone" = list(
-		"name" = "Распятие Псидона (Камень)",
+		"name" = "Psydonic Crucifix (Stone)",
 		"category" = "Религия и Статуи",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1202,7 +1202,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "cross_psy_r"
 	),
 	"cross_psydon_silver" = list(
-		"name" = "Распятие Псидона (Серебро)",
+		"name" = "Psydonic Crucifix (Silver)",
 		"category" = "Религия и Статуи",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1212,7 +1212,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "cross_psy_s"
 	),
 	"cross_astrata_wood" = list(
-		"name" = "Крест Астраты (Дерево)",
+		"name" = "Astratan Cross (Wood)",
 		"category" = "Религия и Статуи",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1222,7 +1222,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "cross_astrata"
 	),
 	"cross_astrata_stone" = list(
-		"name" = "Крест Астраты (Камень)",
+		"name" = "Astratan Cross (Stone)",
 		"category" = "Религия и Статуи",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1232,7 +1232,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "cross_astrata_r"
 	),
 	"cross_astrata_gold" = list(
-		"name" = "Крест Астраты (Позолота)",
+		"name" = "Astratan Cross (Gold)",
 		"category" = "Религия и Статуи",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1242,7 +1242,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "cross_astrata_u"
 	),
 	"cross_necra_stone" = list(
-		"name" = "Крест Некры (Камень)",
+		"name" = "Necra Cross (Stone)",
 		"category" = "Религия и Статуи",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1252,7 +1252,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "cross_necra"
 	),
 	"cross_zizo_wood" = list(
-		"name" = "Оскверненный крест Зизо (Дерево)",
+		"name" = "Defiled Zizo Cross (Wood)",
 		"category" = "Религия и Статуи",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1262,7 +1262,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "cross_zizo"
 	),
 	"cross_zizo_stone" = list(
-		"name" = "Оскверненный крест Зизо (Камень)",
+		"name" = "Defiled Zizo Cross (Stone)",
 		"category" = "Религия и Статуи",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1272,7 +1272,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "cross_zizo_r"
 	),
 	"cross_zizo_gold" = list(
-		"name" = "Оскверненный крест Зизо (Золото)",
+		"name" = "Defiled Zizo Cross (Gold)",
 		"category" = "Религия и Статуи",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1282,7 +1282,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "cross_zizo_u"
 	),
 	"cross_graggar_stone" = list(
-		"name" = "Кровавый крест Граггара",
+		"name" = "Bloody Graggar Cross",
 		"category" = "Религия и Статуи",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1292,7 +1292,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "cross_graggar"
 	),
 	"cross_matthios_stone" = list(
-		"name" = "Ухмыляющийся крест Маттиоса",
+		"name" = "Grinning Matthios Cross",
 		"category" = "Религия и Статуи",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1302,7 +1302,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "cross_matthios"
 	),
 	"cross_baotha_stone" = list(
-		"name" = "Паучий крест Баоты",
+		"name" = "Spider Baotha Cross",
 		"category" = "Религия и Статуи",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1312,7 +1312,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "cross_baotha"
 	),
 	"training_dummy" = list(
-		"name" = "Тренировочный манекен",
+		"name" = "Training Dummy",
 		"category" = "Религия и Статуи",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1322,7 +1322,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "p_dummy"
 	),
 	"custom_sign" = list(
-		"name" = "Деревянная вывеска (Табличка)",
+		"name" = "Wooden Sign",
 		"category" = "Религия и Статуи",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1333,7 +1333,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 	),
 
 	"spike_pit_trap" = list(
-		"name" = "Яма с кольями (Ловушка)",
+		"name" = "Spike Pit Trap",
 		"category" = "Оборона и Ловушки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1343,7 +1343,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "spike_pit"
 	),
 	"head_stake" = list(
-		"name" = "Кол с головой (Устрашение)",
+		"name" = "Head on a Stake",
 		"category" = "Оборона и Ловушки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1353,7 +1353,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "headstake"
 	),
 	"pillory_stocks" = list(
-		"name" = "Позорный столб (Колодки)",
+		"name" = "Pillory Stocks",
 		"category" = "Оборона и Ловушки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1363,7 +1363,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "pillory_single"
 	),
 	"meathook_hanging" = list(
-		"name" = "Мясницкий подвесной крюк",
+		"name" = "Hanging Meat Hook",
 		"category" = "Оборона и Ловушки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1373,7 +1373,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "meathook"
 	),
 	"noose_hanging" = list(
-		"name" = "Виселица (Петля)",
+		"name" = "Hanging Noose",
 		"category" = "Оборона и Ловушки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1383,7 +1383,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "noose"
 	),
 	"handcart_wagon" = list(
-		"name" = "Ручная тележка",
+		"name" = "Handcart",
 		"category" = "Оборона и Ловушки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1394,7 +1394,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 	),
 
 	"artificer_table" = list(
-		"name" = "Стол артефактора",
+		"name" = "Artificer Table",
 		"category" = "Ремесло и Станки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1404,7 +1404,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "art_table"
 	),
 	"cauldron_alchemy" = list(
-		"name" = "Алхимический котел",
+		"name" = "Alchemy Cauldron",
 		"category" = "Ремесло и Станки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1414,7 +1414,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "cauldron1"
 	),
 	"smoker_meat" = list(
-		"name" = "Коптильня",
+		"name" = "Meat Smoker",
 		"category" = "Ремесло и Станки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1424,7 +1424,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "smoker"
 	),
 	"sleep_coffin" = list(
-		"name" = "Обитый гроб",
+		"name" = "Padded Coffin",
 		"category" = "Хранилища",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1434,7 +1434,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "vcasket"
 	),
 	"minecart" = list(
-		"name" = "Шахтерская вагонетка",
+		"name" = "Minecart",
 		"category" = "Оборона и Ловушки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1444,7 +1444,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "minecart"
 	),
 	"iron_gate" = list(
-		"name" = "Металлические ворота",
+		"name" = "Iron Gate",
 		"category" = "Двери и Лестницы",
 		"layer_type" = "obj",
 		"build_order" = 2,
@@ -1454,7 +1454,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "passage0"
 	),
 	"iron_shutters" = list(
-		"name" = "Жалюзи-решетка",
+		"name" = "Iron Shutters",
 		"category" = "Окна и Витражи",
 		"layer_type" = "obj",
 		"build_order" = 2,
@@ -1464,7 +1464,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "shutter0"
 	),
 	"rock_trap" = list(
-		"name" = "Камнепад (Ловушка)",
+		"name" = "Rockfall Trap",
 		"category" = "Оборона и Ловушки",
 		"layer_type" = "obj",
 		"build_order" = 3,
@@ -1474,7 +1474,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, list(
 		"icon_state" = "rockfall_trap_plate"
 	),
 	"flame_trap" = list(
-		"name" = "Огнеметная труба (Ловушка)",
+		"name" = "Flame Trap",
 		"category" = "Оборона и Ловушки",
 		"layer_type" = "obj",
 		"build_order" = 3,
