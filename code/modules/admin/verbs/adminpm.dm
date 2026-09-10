@@ -197,11 +197,8 @@
 					to_chat(src, span_notice("Message: [rawmsg]"))
 					return
 
-			SEND_SOUND(recipient, sound('sound/adminhelp.ogg'))
-
-			//play the receiving admin the adminhelp sound (if they have them enabled)
-			if(recipient.prefs.toggles & SOUND_ADMINHELP)
-				SEND_SOUND(recipient, sound('sound/blank.ogg'))
+			if(holder && (recipient.prefs.toggles & SOUND_ADMINHELP)) // TA EDIT
+				SEND_SOUND(recipient, sound('sound/adminhelp.ogg')) // TA EDIT
 
 		else if(holder)	//sender is an admin but recipient is not. Do BIG RED TEXT
 			var/datum/admin_help/created_ticket

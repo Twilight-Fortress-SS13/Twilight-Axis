@@ -568,10 +568,10 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 		to_chat(user, span_warning("The launcher can't fire anything out of that bag."))
 		return TRUE
 
-	// Quivers: allow all ammo types including javelins; block only slings
+//TA EDIT START - Block loading quivers with sling or firearm ammo
 	if(!ammo && istype(I, /obj/item/quiver))
-		if(istype(I, /obj/item/quiver/sling))
-			to_chat(user, span_warning("The launcher can't fire sling bullets."))
+		if(istype(I, /obj/item/quiver/sling) || istype(I, /obj/item/quiver/twilight_bullet))
+			to_chat(user, span_warning("The launcher can't fire that type of ammo."))
 			return TRUE
 		if(!user.transferItemToLoc(I, src))
 			return
@@ -580,6 +580,7 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 		ammo = I
 		update_icon()
 		return TRUE
+//TA EDIT END
 
 	return ..()
 
@@ -652,10 +653,21 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 			quiver_fire(firedirectionthree, bodyzone)
 		return
 
+//TA EDIT START - Prevent launcher from firing sling or firearm ammo
 /obj/structure/englauncher/proc/quiver_fire(launcher_direction, launcher_bodyzone)
 	if(!ammo || !ammo.arrows.len)
 		return
 	var/obj/item/ammo_casing/caseless/rogue/AR = ammo.arrows[1]
+
+	if(istype(AR, /obj/item/ammo_casing/caseless/rogue/sling_bullet) || \
+	   istype(AR, /obj/item/ammo_casing/caseless/rogue/bullet) || \
+	   istype(AR, /obj/item/ammo_casing/caseless/rogue/twilight_lead) || \
+	   istype(AR, /obj/item/ammo_casing/caseless/rogue/twilight_cannonball))
+		ammo.arrows -= AR
+		qdel(AR)
+		ammo.update_icon()
+		return
+
 	ammo.arrows -= AR
 
 	// Javelins are thrown as physical items rather than fired as casings
@@ -667,6 +679,7 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 		ammo.contents -= AR
 
 	ammo.update_icon()
+//TA EDIT END
 
 
 /obj/structure/englauncher/proc/launch_throwable(obj/item/I)

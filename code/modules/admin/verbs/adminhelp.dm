@@ -1109,7 +1109,7 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 				return FALSE
 
 			// Send the message
-			MessageNoRecipient(message, FALSE)
+			MessageNoRecipient(message) // TA EDIT
 			TimeoutVerb()
 
 			return TRUE
@@ -1212,7 +1212,7 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	if(current_ticket)
 		if(alert(usr, "You already have a ticket open. Is this for the same issue?",,"Yes","No") != "No")
 			if(current_ticket)
-				current_ticket.MessageNoRecipient(msg, FALSE)
+				current_ticket.MessageNoRecipient(msg) // TA EDIT
 				current_ticket.TimeoutVerb()
 				return
 			else

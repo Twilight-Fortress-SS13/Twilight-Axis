@@ -518,14 +518,14 @@
 
 	return TRUE
 
-/turf/open/floor/proc/generateSigils(mob/M)
-	if(!can_generate_sigils(M))
+/turf/open/floor/proc/generateSigils(mob/living/carbon/human/M)
+	if(!M.can_draw_sigil() || !can_generate_sigils(M))
 		return
 
-	if(!do_after(M, 5 SECONDS))
+	if(!do_after(M, 5 SECONDS, extra_checks = CALLBACK(M, TYPE_PROC_REF(/mob/living/carbon/human, can_draw_sigil))))
 		return
 
-	if(!can_generate_sigils(M))
+	if(!M.can_draw_sigil() || !can_generate_sigils(M))
 		return
 
 	M.bloody_hands--
@@ -549,10 +549,13 @@
 		var/sigil = sigilsPath[i]
 		new sigil(floor)
 
+/mob/living/carbon/human/proc/can_draw_sigil()
+	return !incapacitated() && bloody_hands > 0
+
 /mob/living/carbon/human/proc/draw_sigil()
 	set name = "Draw Sigil"
 	set category = "ZIZO"
-	if(stat >= UNCONSCIOUS)
+	if(incapacitated())
 		return
 	
 	if(mind && mind.has_antag_datum(/datum/antagonist/skeleton))
