@@ -52,7 +52,7 @@
 	town_area = TRUE
 	ceiling_protected = TRUE
 	deathsight_message = "a room full of aging ales"
-	
+
 /area/rogue/outdoors/town/grovercout
 	name = "Druid's Grove"
 	first_time_text = "Druid's Grove"
@@ -82,7 +82,7 @@
 	droning_sound_night = null
 	warden_area = TRUE
 	town_area = FALSE
-	
+
 /area/rogue/indoors/town/grovercunder
 	name = "Under Druid's Grove"
 	icon_state = "cave"
@@ -129,7 +129,7 @@
 	droning_sound = 'sound/music/area/catacombs.ogg'
 	droning_sound_dusk = null
 	droning_sound_night = null
-	
+
 /area/rogue/indoors/town/magician/tower
 	first_time_text = "Magician Tower"
 	name = "Magician Tower"
@@ -162,7 +162,7 @@
 	town_area = TRUE
 	outdoors = TRUE
 	soundenv = 16
-	
+
 /area/rogue/outdoors/beach/inqshipout
 	name = "The Inquisition ship"
 	first_time_text = "ZEALOUS"
@@ -404,6 +404,170 @@
 	ceiling_protected = TRUE
 	droning_sound = 'sound/music/area/dwarf.ogg'
 	deathsight_message = "the deep, root-bound halls carved from solid granite"
+
+/area/rogue/karnfels_map/outlands
+	parent_type = /area/rogue/outdoors/woodsrat
+	name = "Outlands"
+	first_time_text = "THE OUTLANDS"
+	icon_state = "woods"
+	warden_area = TRUE
+	deathsight_message = "the untamed, lawless wilds beyond Karnfels"
+	ambush_times = list("night", "dawn", "dusk", "day")
+	ambush_mobs = list(
+		/mob/living/carbon/human/species/human/northern/highwayman/ambush = 35,
+		/mob/living/carbon/human/species/skeleton/npc/medium = 20,
+		/mob/living/simple_animal/hostile/retaliate/rogue/wolf = 30,
+		/mob/living/simple_animal/hostile/retaliate/rogue/bigrat = 25,
+		/mob/living/simple_animal/hostile/retaliate/rogue/direbear = 15,
+		/mob/living/simple_animal/hostile/retaliate/rogue/fox = 20,
+		/mob/living/simple_animal/hostile/retaliate/rogue/bobcat = 15,
+		/mob/living/simple_animal/hostile/retaliate/rogue/boar = 20
+	)
+
+/area/rogue/karnfels_map/crimsonlands_outdoors
+	parent_type = /area/rogue/outdoors
+	name = "Crimsonlands"
+	first_time_text = "THE CRIMSONLANDS"
+	icon_state = "decap"
+	ambientsounds = list('sound/ambience/hell1.ogg')
+	droning_sound = 'sound/music/area/sargoth.ogg'
+	deathsight_message = "blood-soaked earth beneath a stagnant sky"
+	converted_type = /area/rogue/karnfels_map/crimsonlands_indoors
+
+/area/rogue/karnfels_map/crimsonlands_indoors
+	parent_type = /area/rogue/indoors/shelter
+	name = "Crimsonlands (shelter)"
+	first_time_text = "Crimsonlands Shelter"
+	droning_sound = 'sound/music/area/sargoth.ogg'
+
+/area/rogue/karnfels_map/hagmoor
+	parent_type = /area/rogue/outdoors/bograt
+	name = "Hagmoor"
+	first_time_text = "HAGMOOR"
+	icon_state = "bog"
+	deathsight_message = "the murky, rotting waters of the Hagmoor"
+	ambush_times = list("night", "dawn", "dusk", "day")
+	ambush_mobs = list(
+		/mob/living/simple_animal/hostile/retaliate/rogue/bigrat = 50,
+		/mob/living/simple_animal/hostile/retaliate/rogue/spider/rock = 30,
+		/mob/living/carbon/human/species/goblin/npc/ambush/cave = 35,
+		/mob/living/simple_animal/hostile/retaliate/rogue/troll/bog = 15,
+		/mob/living/carbon/human/species/skeleton/npc/bogguard = 20,
+		/mob/living/simple_animal/hostile/retaliate/rogue/wolf = 20,
+		/mob/living/simple_animal/hostile/retaliate/rogue/wolf_undead = 10
+	)
+
+/area/rogue/karnfels_map/rotland_outdoors
+	parent_type = /area/rogue/outdoors
+	name = "Rotland"
+	first_time_text = "THE ROTLAND"
+	icon_state = "bog"
+	droning_sound = 'sound/music/area/underworlddrone.ogg'
+	spookysounds = SPOOKY_GEN
+	spookynight = SPOOKY_GEN
+	deathsight_message = "blighted soil choked with marrow and decaying bone"
+	converted_type = /area/rogue/karnfels_map/rotland_indoors
+	ambush_times = list("night", "dawn", "dusk", "day")
+	ambush_mobs = list(
+		/mob/living/carbon/human/species/skeleton/npc/easy = 30,
+		/mob/living/carbon/human/species/skeleton/npc/medium = 25,
+		/mob/living/carbon/human/species/skeleton/npc/hard = 15,
+		/mob/living/carbon/human/species/skeleton/npc/ambush = 20,
+		/mob/living/carbon/human/species/skeleton/npc/bogguard = 15
+	)
+
+/area/rogue/karnfels_map/rotland_indoors
+	parent_type = /area/rogue/indoors/shelter
+	name = "Rotland Crypt"
+	first_time_text = "Rotland Crypt"
+	droning_sound = 'sound/music/area/catacombs.ogg'
+
+
+/area/rogue/karnfels_map/hollow_quarter_outdoors
+	parent_type = /area/rogue/outdoors/town
+	name = "Hollow Quarter"
+	first_time_text = "THE HOLLOW QUARTER"
+	icon_state = "town"
+	town_area = TRUE
+	deathsight_message = "desolate streets where cutthroats wait in every alcove"
+	converted_type = /area/rogue/karnfels_map/hollow_quarter_indoors
+	ambush_times = list("night", "dawn", "dusk", "day")
+	ambush_mobs = list(
+		/mob/living/carbon/human/species/human/northern/highwayman/ambush = 40,
+		/mob/living/carbon/human/species/human/northern/searaider/ambush = 35
+	)
+
+/area/rogue/karnfels_map/hollow_quarter_indoors
+	parent_type = /area/rogue/indoors/shelter/town
+	name = "Hollow Quarter (dens)"
+	town_area = TRUE
+
+
+/area/rogue/karnfels_map/boblins_domain_outdoors
+	parent_type = /area/rogue/outdoors
+	name = "Boblin's Domain"
+	first_time_text = "BOBLIN'S DOMAIN"
+	icon_state = "under"
+	droning_sound = 'modular_twilight_axis/sound/music/area/gobcamp.ogg'
+	deathsight_message = "a chaotic territory claimed by squabbling goblin broods"
+	converted_type = /area/rogue/karnfels_map/boblins_domain_indoors
+	ambush_times = list("night", "dawn", "dusk", "day")
+	ambush_mobs = list(
+		/mob/living/carbon/human/species/goblin/npc/ambush = 30,
+		/mob/living/carbon/human/species/goblin/npc/ambush/cave = 25,
+		/mob/living/carbon/human/species/goblin/npc/ambush/moon = 25,
+		/mob/living/carbon/human/species/goblin/npc/ambush/sea = 15,
+		/mob/living/carbon/human/species/goblin/npc/hell = 10
+	)
+
+/area/rogue/karnfels_map/boblins_domain_indoors
+	parent_type = /area/rogue/indoors/shelter
+	name = "Boblin's Encampment"
+	first_time_text = "Boblin's Encampment"
+	droning_sound = 'modular_twilight_axis/sound/music/area/gobcamp.ogg'
+
+/area/rogue/karnfels_map/ueberzauberturm_outdoors
+	parent_type = /area/rogue/outdoors/town
+	name = "Der Überzauberturm Grounds"
+	first_time_text = "TOWER APPROACH"
+	icon_state = "magician"
+	droning_sound = 'sound/music/area/magiciantower.ogg'
+	town_area = TRUE
+	converted_type = /area/rogue/karnfels_map/ueberzauberturm
+
+/area/rogue/karnfels_map/haunted_manor
+	parent_type = /area/rogue/indoors/vampire_manor
+	name = "Haunted Manor"
+	first_time_text = "THE HAUNTED MANOR"
+	icon_state = "spidercave"
+	spookysounds = SPOOKY_MYSTICAL
+	spookynight = SPOOKY_MYSTICAL
+	droning_sound = 'sound/ambience/creepywind.ogg'
+	deathsight_message = "cold corridors haunted by unseen whispers"
+
+
+/area/rogue/karnfels_map/abandoned_estate_outdoors
+	parent_type = /area/rogue/outdoors
+	name = "Abandoned Estate Grounds"
+	first_time_text = "ABANDONED ESTATE"
+	icon_state = "manor"
+	deathsight_message = "overgrown gardens and overgrown ruins"
+	converted_type = /area/rogue/karnfels_map/abandoned_estate_indoors
+	ambush_times = list("night", "dawn", "dusk", "day")
+	ambush_mobs = list(
+		/mob/living/carbon/human/species/human/northern/highwayman/ambush = 35,
+		/mob/living/carbon/human/species/human/northern/highwayman/archer = 35,
+		/mob/living/simple_animal/hostile/retaliate/rogue/fox = 25,
+		/mob/living/simple_animal/hostile/retaliate/rogue/boar = 20,
+		/mob/living/simple_animal/hostile/retaliate/rogue/wolf = 25,
+		/mob/living/simple_animal/hostile/retaliate/rogue/direbear = 10
+	)
+
+/area/rogue/karnfels_map/abandoned_estate_indoors
+	parent_type = /area/rogue/indoors/shelter
+	name = "Abandoned Estate Interior"
+	first_time_text = "Abandoned Estate"
+	icon_state = "indoors"
 
 /area/rogue/outdoors/town/karnfels
 	name = "Die Zitadelle von Karnfels"
