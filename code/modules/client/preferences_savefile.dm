@@ -728,10 +728,12 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	var/patron_typepath
 	S["selected_patron"]	>> patron_typepath
-	if(patron_typepath)
+	if(patron_typepath && GLOB.patronlist[patron_typepath]) // TA EDIT START
 		selected_patron = GLOB.patronlist[patron_typepath]
-		if(!selected_patron) //failsafe
-			selected_patron = GLOB.patronlist[default_patron]
+	else
+		selected_patron = GLOB.patronlist[default_patron]
+		if(selected_patron)
+			WRITE_FILE(S["selected_patron"], selected_patron.type) // TA EDIT END
 
 	S["have_manor"] >> have_manor  //TA EDIT
 	S["manor_name"] >> manor_name  //TA EDIT

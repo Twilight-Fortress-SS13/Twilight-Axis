@@ -193,6 +193,9 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 			known_people[H.real_name] = list()
 		known_people[H.real_name]["VCOLOR"] = H.voice_color
 		var/used_title = H.get_role_title()
+		var/datum/job/J = SSjob.GetJob(H.job)
+		if(J && J.wanderer_examine && !(HAS_TRAIT(src, TRAIT_RESIDENT)))
+			used_title = "Wanderer"
 		if(!used_title)
 			used_title = "unknown"
 		known_people[H.real_name]["FJOB"] = used_title
@@ -232,6 +235,9 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 					M.known_people[H.real_name] = list()
 				M.known_people[H.real_name]["VCOLOR"] = H.voice_color
 				var/used_title = H.get_role_title()
+				var/datum/job/J = SSjob.GetJob(H.job)
+				if(J && J.wanderer_examine && !(HAS_TRAIT(src, TRAIT_RESIDENT)))
+					used_title = "Wanderer"
 				if(!used_title)
 					used_title = "unknown"
 				M.known_people[H.real_name]["FJOB"] = used_title
@@ -1421,9 +1427,13 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 						var/list/metadata = user.mind.special_items_metadata[base_name]
 						if(islist(metadata))
 							I.apply_loadout_color_metadata(metadata) // TA EDIT
-							if(metadata["custom_name"])
+							if(metadata["custom_name_parsed"])
+								I.name = metadata["custom_name_parsed"] // this is sanitized when we apply the markdown procesor
+							else if(metadata["custom_name"])
 								I.name = sanitize(metadata["custom_name"])
-							if(metadata["custom_desc"])
+							if(metadata["custom_desc_parsed"])
+								I.desc = metadata["custom_desc_parsed"] // this is sanitized when we apply the markdown procesor
+							else if(metadata["custom_desc"])
 								I.desc = html_encode(metadata["custom_desc"])
 							I.update_icon()
 //						else if(istype(I, /obj/item/clothing)) // commit any pref dyes to our item if it is clothing and we have them available

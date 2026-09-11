@@ -155,7 +155,7 @@
 		"modular_twilight_axis/firearms/sound/fyrepowder/arquefire3.ogg",
 		"modular_twilight_axis/firearms/sound/fyrepowder/arquefire4.ogg",
 		"modular_twilight_axis/firearms/sound/fyrepowder/arquefire5.ogg")
-	charges = 30
+	charges = 20
 
 /obj/effect/particle_effect/smoke/arquebus
 	name = "smoke"
