@@ -1,0 +1,11 @@
+{
+	"map_name": "Via World 2",
+	"map_path": "map_files/otherz",
+	"map_file": "via_world2.dmm",
+	"traits": [
+		{ "Name": "Via World", "Up": true },
+		{ "Up": true, "Down": true },
+		{ "Up": true, "Down": true },
+		{ "Down": true }
+	]
+}
