@@ -158,13 +158,19 @@
 	M.clear_fullscreen("druqk")
 
 /datum/reagent/grave_powder/on_mob_life(mob/living/carbon/M)
+	if(M.cmode)
+		M.reagents.remove_reagent(/datum/reagent/grave_powder, 100)
+		return
+	if(HAS_TRAIT(M, TRAIT_IRONMAN))
+		M.reagents.remove_reagent(/datum/reagent/grave_powder, 100)
+		return
 	narcolepsy_drug_up(M)
 	M.handle_hallucinations_custome(/datum/hallucination/death)
 	M.sate_addiction(/datum/charflaw/addiction/junkie)
 	M.apply_status_effect(/datum/status_effect/buff/grave_powder)
-	M.Immobilize(10 SECONDS)
-	M.OffBalance(10 SECONDS)
-	M.Knockdown(10 SECONDS)
+	M.Immobilize(5 SECONDS)
+	M.OffBalance(5 SECONDS)
+	M.Knockdown(5 SECONDS)
 	if(prob(50))
 		shake_camera(M, 5, 5)
 
