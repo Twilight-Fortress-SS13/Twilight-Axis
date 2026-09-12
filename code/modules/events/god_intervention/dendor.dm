@@ -17,7 +17,7 @@
 	for(var/area/rogue/outdoors/town/A in world)
 		for(var/turf/open/F in A)
 			if(F.Enter(SV))
-				if(!istype(F, /turf/open/transparent/openspace))
+				if(!istype(F, /turf/open/openspace))
 					turfs += F
 
 	qdel(SV)
@@ -49,7 +49,7 @@
 	for(var/area/rogue/outdoors/town/A in world)
 		for(var/turf/open/F in A)
 			if(F.Enter(SV))
-				if(!istype(F, /turf/open/transparent/openspace))
+				if(!istype(F, /turf/open/openspace))
 					turfs += F
 
 	qdel(SV)

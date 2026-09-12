@@ -152,7 +152,7 @@
 "gd" = (
 /obj/structure/fluff/railing/border/north,
 /obj/structure/fluff/railing/corner/south_west,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/mountains)
 "go" = (
 /obj/structure/table/wood/long_table/right,
@@ -501,7 +501,7 @@
 /area/rogue/indoors/town)
 "pH" = (
 /obj/structure/fluff/railing/corner/south_west,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/mountains)
 "qb" = (
 /obj/structure/fluff/railing/border/north,
@@ -597,7 +597,7 @@
 /area/rogue/indoors/town)
 "rR" = (
 /obj/structure/fluff/railing/border/north,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/mountains)
 "rS" = (
 /turf/closed/wall/mineral/rogue/stone,
@@ -612,7 +612,7 @@
 "sp" = (
 /obj/structure/fluff/railing/corner/south_west,
 /obj/structure/fluff/railing/corner,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/mountains)
 "sq" = (
 /turf/open/floor/rogue/rooftop/green,
@@ -813,7 +813,7 @@
 /turf/open/floor/rogue/rooftop/green/east,
 /area/rogue/outdoors/mountains)
 "wV" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/mountains)
 "xk" = (
 /obj/effect/decal/edge{
@@ -833,7 +833,7 @@
 /area/rogue/indoors/town)
 "xC" = (
 /obj/structure/fluff/railing/corner,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/mountains)
 "xD" = (
 /obj/effect/turf_decal/weather/dirt{
@@ -921,7 +921,7 @@
 /area/rogue/indoors/town)
 "zT" = (
 /obj/structure/fluff/railing/corner/north_east,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/mountains)
 "zU" = (
 /obj/effect/decal/edge{
@@ -1003,7 +1003,7 @@
 /area/rogue/outdoors/rtfield)
 "BS" = (
 /obj/structure/fluff/railing/border/west,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/mountains)
 "Cm" = (
 /turf/closed/wall/mineral/rogue/wooddark,
@@ -1078,7 +1078,7 @@
 /area/rogue/indoors/town)
 "Ff" = (
 /obj/structure/fluff/railing/corner/south_east,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/mountains)
 "Fs" = (
 /turf/open/floor/rogue/rooftop/green/north,
@@ -1192,7 +1192,7 @@
 /area/rogue/indoors/town)
 "In" = (
 /obj/structure/fluff/railing/border,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/mountains)
 "Ip" = (
 /obj/structure/chair/bench/couchablack,
@@ -1300,7 +1300,7 @@
 /area/rogue/indoors/town)
 "Nw" = (
 /obj/structure/fluff/railing/border/east,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/mountains)
 "NA" = (
 /obj/structure/mineral_door/wood/towner/generic,
@@ -1474,7 +1474,7 @@
 "SZ" = (
 /obj/structure/fluff/railing/corner/south_east,
 /obj/structure/fluff/railing/corner,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/mountains)
 "Tn" = (
 /obj/effect/decal/edge{
@@ -1514,7 +1514,7 @@
 /obj/structure/bars/grille{
 	dir = 4
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/indoors/town)
 "UP" = (
 /obj/effect/decal/edge_corner{
@@ -1652,7 +1652,7 @@
 /area/rogue/indoors/town)
 "XY" = (
 /obj/machinery/light/rogue/candle,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/indoors/town)
 "Yf" = (
 /obj/structure/well,
@@ -1688,7 +1688,7 @@
 /turf/closed/wall/mineral/rogue/decowood/vert,
 /area/rogue/indoors/town)
 "ZW" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/indoors/town)
 "ZY" = (
 /obj/machinery/light/rogue/candle{

@@ -44,7 +44,7 @@
 	if(!trunk || QDELETED(trunk))
 		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
 	var/turf/above = get_step_multiz(pawn, UP)
-	if(!istype(above, /turf/open/transparent/openspace))
+	if(!istype(above, /turf/open/openspace))
 		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
 	controller.ai_movement.stop_moving_towards(controller)
 	walk(pawn, 0)

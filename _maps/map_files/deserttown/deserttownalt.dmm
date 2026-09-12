@@ -1827,7 +1827,7 @@
 /area/rogue/indoors/banditcamp/desert)
 "my" = (
 /obj/machinery/light/rogue/chand,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/banditcamp/desert)
 "mz" = (
 /obj/item/cushion/desert2{
@@ -2182,7 +2182,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 8
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/banditcamp/desert)
 "oF" = (
 /obj/structure/bars,
@@ -2220,7 +2220,7 @@
 /turf/open/water/pond,
 /area/rogue/outdoors/desert)
 "oP" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/desertdeep/safe)
 "oQ" = (
 /obj/structure/mineral_door/wood{
@@ -2646,7 +2646,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 4
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/banditcamp/desert)
 "rd" = (
 /obj/machinery/light/rogue/candle,
@@ -3402,7 +3402,7 @@
 /obj/structure/stairs/desert{
 	dir = 8
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/under/cave/inhumen)
 "wt" = (
 /obj/effect/decal/carpet/kover_black{
@@ -3639,7 +3639,7 @@
 /area/rogue/outdoors/desert)
 "xZ" = (
 /obj/structure/bars/grille,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/banditcamp/desert)
 "ya" = (
 /obj/machinery/light/rogue/hearth{
@@ -3945,7 +3945,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 1
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/banditcamp/desert)
 "zW" = (
 /obj/structure/fluff/statue/noc{
@@ -4249,7 +4249,7 @@
 /turf/open/floor/rogue/dunes,
 /area/rogue/indoors)
 "BP" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/banditcamp/desert)
 "BQ" = (
 /turf/open/floor/rogue/naturalstone,
@@ -5462,7 +5462,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 4
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/banditcamp/desert)
 "JL" = (
 /obj/item/reagent_containers/powder/salt,
@@ -6964,7 +6964,7 @@
 /turf/open/floor/rogue/blocks/flipped,
 /area/rogue/under/cave/inhumen)
 "Us" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/under/cave/inhumen)
 "Uv" = (
 /obj/structure/closet/crate/coffin/vampire{

@@ -23,7 +23,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 8
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/town/roofs)
 "g" = (
 /obj/effect/decal/edge{
@@ -62,7 +62,7 @@
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/town)
 "k" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/town/roofs)
 "m" = (
 /turf/open/floor/carpet/red,
@@ -126,7 +126,7 @@
 /turf/closed/wall/mineral/rogue/wooddark,
 /area/rogue/indoors/town)
 "E" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/indoors/town)
 "F" = (
 /obj/structure/roguewindow,
@@ -164,7 +164,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 6
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/town/roofs)
 "I" = (
 /obj/structure/stairs{
@@ -189,13 +189,13 @@
 /obj/structure/fluff/railing/border{
 	dir = 4
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/town/roofs)
 "N" = (
 /obj/structure/fluff/railing/border{
 	dir = 10
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/town/roofs)
 "O" = (
 /obj/structure/chair/wood/rogue/chair4{
@@ -216,7 +216,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 9
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/town/roofs)
 "U" = (
 /obj/structure/fluff/railing/border{
@@ -239,11 +239,11 @@
 /obj/structure/stairs{
 	dir = 4
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/indoors/town)
 "X" = (
 /obj/structure/fluff/railing/border,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/town/roofs)
 "Y" = (
 /turf/open/floor/rogue/dirt/road,

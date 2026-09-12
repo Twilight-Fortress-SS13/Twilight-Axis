@@ -1,6 +1,6 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
 "a" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/bograt/above)
 "b" = (
 /turf/open/water/river{
@@ -37,7 +37,7 @@
 /turf/closed/wall/mineral/rogue/stone/moss,
 /area/rogue/outdoors/bograt/north)
 "k" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/rtfield/rockhill)
 "l" = (
 /obj/structure/stairs,
@@ -51,7 +51,7 @@
 	color = "a27b39";
 	redstone_id = "bridge_north"
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/rtfield/rockhill)
 "r" = (
 /turf/open/floor/rogue/dirt/road,
@@ -105,7 +105,7 @@
 /turf/open/floor/rogue/blocks/platform,
 /area/rogue/outdoors/rtfield/rockhill)
 "I" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/bograt/north)
 "J" = (
 /turf/open/floor/rogue/dirt/road,
@@ -134,7 +134,7 @@
 	color = "a27b39";
 	redstone_id = "bridge_south"
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/bograt/north)
 "S" = (
 /obj/structure/lever/wall{
@@ -149,14 +149,14 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/under/cavewet)
 "V" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/rtfield/rockhill/above)
 "W" = (
 /obj/structure/floordoor{
 	color = "a27b39";
 	redstone_id = "bridge_south"
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/rtfield/rockhill)
 "X" = (
 /turf/open/floor/rogue/dirt/road,

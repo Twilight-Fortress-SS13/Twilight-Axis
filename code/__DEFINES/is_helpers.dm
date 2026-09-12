@@ -16,7 +16,7 @@
 GLOBAL_LIST_INIT(turfs_without_ground, typecacheof(list(
 	/turf/open/lava,
 	/turf/open/water,
-	/turf/open/transparent/openspace
+	/turf/open/openspace
 	)))
 
 GLOBAL_LIST_INIT(our_forest_sex, typecacheof(list(
@@ -57,7 +57,9 @@ GLOBAL_LIST_INIT(our_forest_sex, typecacheof(list(
 
 #define isplatingturf(A) (istype(A, /turf/open/floor/plating))
 
-#define istransparentturf(A) (istype(A, /turf/open/transparent) || istype(A, /turf/closed/transparent))
+#define isopenspace(A) (istype(A, /turf/open/openspace))
+
+#define istransparentturf(A) (isturf(A) && HAS_TRAIT(A, TURF_Z_TRANSPARENT_TRAIT))
 
 //Mobs
 #define isliving(A) (istype(A, /mob/living))

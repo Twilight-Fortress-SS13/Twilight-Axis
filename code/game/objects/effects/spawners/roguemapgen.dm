@@ -20,7 +20,7 @@
 	var/turf/T = get_turf(src)
 	var/turf/below = get_step_multiz(src, DOWN)
 	if(below)
-		T.ChangeTurf(/turf/open/transparent/openspace)
+		T.ChangeTurf(/turf/open/openspace)
 		below.ChangeTurf(/turf/open/floor/rogue/dirt/road)
 
 	STOP_PROCESSING(SSmapgen, src)

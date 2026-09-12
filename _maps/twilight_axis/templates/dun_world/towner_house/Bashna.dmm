@@ -72,7 +72,7 @@
 /turf/open/floor/rogue/ruinedwood/herringbone,
 /area/rogue/indoors/town)
 "u" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/mountains)
 "x" = (
 /obj/structure/rack/rogue/shelf/biggest,
@@ -210,7 +210,7 @@
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town)
 "X" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/rtfield)
 "Y" = (
 /obj/machinery/light/rogue/hearth,

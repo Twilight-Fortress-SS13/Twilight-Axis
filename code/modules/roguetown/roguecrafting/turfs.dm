@@ -74,7 +74,7 @@
 /datum/crafting_recipe/roguetown/turfs/wood/platform/TurfCheck(mob/user, turf/T)
 	if(isclosedturf(T))
 		return
-	if(!istype(T, /turf/open/transparent/openspace))
+	if(!istype(T, /turf/open/openspace))
 		if(!istype(T, /turf/open/water))
 			return
 	return TRUE
@@ -254,7 +254,7 @@
 /datum/crafting_recipe/roguetown/turfs/stone/platform/TurfCheck(mob/user, turf/T)
 	if(isclosedturf(T))
 		return
-	if(!istype(T, /turf/open/transparent/openspace))
+	if(!istype(T, /turf/open/openspace))
 		if(!istype(T, /turf/open/water))
 			return
 	return TRUE
@@ -456,7 +456,7 @@
 /datum/crafting_recipe/roguetown/turfs/twigplatform/TurfCheck(mob/user, turf/T)
 	if(isclosedturf(T))
 		return
-	if(!istype(T, /turf/open/transparent/openspace))
+	if(!istype(T, /turf/open/openspace))
 		if(!istype(T, /turf/open/water))
 			return
 	return TRUE

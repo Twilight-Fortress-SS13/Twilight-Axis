@@ -254,7 +254,7 @@
 					attacking_shovel.heldclod = new(attacking_shovel)
 					attacking_shovel.update_icon()
 					playsound(mastert,'sound/items/dig_shovel.ogg', 100, TRUE)
-					mastert.ChangeTurf(/turf/open/transparent/openspace)
+					mastert.ChangeTurf(/turf/open/openspace)
 					return
 			to_chat(user, span_warning("I can't dig myself any deeper."))
 			return

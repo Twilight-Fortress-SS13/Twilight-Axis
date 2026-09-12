@@ -144,7 +144,7 @@
 /turf/open/floor/rogue/grassred,
 /area/rogue/outdoors/woods/south)
 "gT" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/mountains)
 "gW" = (
 /obj/structure/bed/rogue/inn/double{
@@ -259,7 +259,7 @@
 /turf/open/floor/rogue/grass,
 /area/rogue/outdoors/woods/southeast)
 "lD" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/indoors/town)
 "mc" = (
 /obj/structure/flora/newtree,

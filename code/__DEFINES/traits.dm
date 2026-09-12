@@ -1129,6 +1129,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define GRAGGAR_ASSASSINATED "graggar_assassinated"
 #define CONTRACT_SPAWN_TRAIT "contract-spawn"
 
+#define TURF_Z_TRANSPARENT_TRAIT "turf_z_transparent"
+
 #define TRAIT_I_AM_INVISIBLE_ON_A_BOAT "invisible_on_tram"
 
 //for ai

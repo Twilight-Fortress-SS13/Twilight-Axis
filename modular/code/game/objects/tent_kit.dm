@@ -70,7 +70,7 @@
 		for(var/turf/T in roof_tiles)
 			T.pseudo_roof = FALSE
 		for(var/turf/RT in roof_turfs)
-			RT.ChangeTurf(/turf/open/transparent/openspace, flags = CHANGETURF_INHERIT_AIR)
+			RT.ChangeTurf(/turf/open/openspace, flags = CHANGETURF_INHERIT_AIR)
 		roof_turfs.Cut()
 		roof_tiles.Cut()
 	for(var/obj/structure/tent_wall/wall in tent_walls)
@@ -361,7 +361,7 @@
 
 	// CLEANUP ROOF TURFS: Revert twig floors back to openspace
 	for(var/turf/RT in roof_turfs)
-		RT.ChangeTurf(/turf/open/transparent/openspace, flags = CHANGETURF_INHERIT_AIR)
+		RT.ChangeTurf(/turf/open/openspace, flags = CHANGETURF_INHERIT_AIR)
 	roof_turfs.Cut()
 	roof_tiles.Cut()
 
@@ -497,7 +497,7 @@
 /proc/is_openspace(atom/A)
 	if(!A) return FALSE
 	var/turf/T = get_turf(A)
-	return istype(T, /turf/open/transparent/openspace)
+	return istype(T, /turf/open/openspace)
 
 /obj/structure/roguetent/ShiftClick(mob/user)
 	if(!parent_tent || !parent_tent.assembled) return ..()

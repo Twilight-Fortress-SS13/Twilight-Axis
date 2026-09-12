@@ -65,7 +65,7 @@
 		var/turf/step_side = get_step(src, direction)
 		var/found = FALSE
 
-		if(step_up && istype(above_turf, /turf/open/transparent/openspace))
+		if(step_up && istype(above_turf, /turf/open/openspace))
 			for(var/obj/structure/minecart_rail/rail in step_up.contents)
 				if(!(REVERSE_DIR(direction) & rail.minecart_dirs))
 					continue
@@ -77,7 +77,7 @@
 				found = TRUE
 				break
 
-		if(!found && step_down && istype(step_side, /turf/open/transparent/openspace))
+		if(!found && step_down && istype(step_side, /turf/open/openspace))
 			for(var/obj/structure/minecart_rail/rail in step_down.contents)
 				if(!(REVERSE_DIR(direction) & rail.minecart_dirs))
 					continue

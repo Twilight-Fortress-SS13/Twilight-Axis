@@ -3,7 +3,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 4
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/bograt/north)
 "cC" = (
 /obj/structure/fluff/railing/wood/east,
@@ -20,7 +20,7 @@
 /turf/open/floor/rogue/ruinedwood/turned,
 /area/rogue/outdoors/rtfield/rockhill)
 "hy" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/rtfield/rockhill)
 "hE" = (
 /turf/closed/wall/mineral/rogue/stone/moss,
@@ -48,7 +48,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 4
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/rtfield/rockhill)
 "lc" = (
 /turf/open/floor/rogue/rooftop/green/west,
@@ -130,7 +130,7 @@
 /turf/open/floor/rogue/rooftop/green/west,
 /area/rogue/outdoors/rtfield/rockhill/above)
 "Ff" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/bograt/north)
 "Fk" = (
 /turf/closed/wall/mineral/rogue/roofwall/outercorner/dir8,
@@ -148,7 +148,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 8
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/rtfield/rockhill)
 "LQ" = (
 /turf/open/floor/rogue/blocks/platform,
@@ -164,7 +164,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 8
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/bograt/north)
 "Pj" = (
 /turf/closed/wall/mineral/rogue/roofwall/middle/dir1,
@@ -212,7 +212,7 @@
 /turf/open/floor/rogue/ruinedwood/turned,
 /area/rogue/outdoors/bograt/north)
 "Vo" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/rtfield/rockhill/above)
 "VF" = (
 /obj/structure/fluff/railing/wood/east,
@@ -231,7 +231,7 @@
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/under/cavewet)
 "YW" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/bograt/above)
 
 (1,1,1) = {"

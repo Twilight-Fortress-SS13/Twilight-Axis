@@ -7,7 +7,7 @@
 	craftsound = 'sound/foley/Building-01.ogg'
 
 /datum/crafting_recipe/roguetown/structure/TurfCheck(mob/user, turf/T)
-	if(istype(T,/turf/open/transparent/openspace))
+	if(istype(T,/turf/open/openspace))
 		return FALSE
 	if(istype(T, /turf/open/water))
 		return FALSE
@@ -36,7 +36,7 @@
 		return FALSE
 	if(!isopenturf(checking))
 		return FALSE
-	if(istype(checking,/turf/open/transparent/openspace))
+	if(istype(checking,/turf/open/openspace))
 		return FALSE
 	return TRUE
 
@@ -761,14 +761,14 @@
 	var/turf/checking = get_step_multiz(T, UP)
 	if(!checking)
 		return FALSE
-	if(!istype(checking,/turf/open/transparent/openspace))
+	if(!istype(checking,/turf/open/openspace))
 		return FALSE
 	checking = get_step(checking, user.dir)
 	if(!checking)
 		return FALSE
 	if(!isopenturf(checking))
 		return FALSE
-	if(istype(checking,/turf/open/transparent/openspace))
+	if(istype(checking,/turf/open/openspace))
 		return FALSE
 	for(var/obj/structure/S in checking)
 		if(istype(S, /obj/structure/stairs))
@@ -792,14 +792,14 @@
 	var/turf/checking = get_step(T, user.dir)
 	if(!checking)
 		return FALSE
-	if(!istype(checking,/turf/open/transparent/openspace))
+	if(!istype(checking,/turf/open/openspace))
 		return FALSE
 	checking = get_step_multiz(checking, DOWN)
 	if(!checking)
 		return FALSE
 	if(!isopenturf(checking))
 		return FALSE
-	if(istype(checking,/turf/open/transparent/openspace))
+	if(istype(checking,/turf/open/openspace))
 		return FALSE
 	for(var/obj/structure/S in checking)
 		if(istype(S, /obj/structure/stairs))
@@ -823,14 +823,14 @@
 	var/turf/checking = get_step(T, user.dir)
 	if(!checking)
 		return FALSE
-	if(!istype(checking,/turf/open/transparent/openspace))
+	if(!istype(checking,/turf/open/openspace))
 		return FALSE
 	checking = get_step_multiz(checking, DOWN)
 	if(!checking)
 		return FALSE
 	if(!isopenturf(checking))
 		return FALSE
-	if(istype(checking,/turf/open/transparent/openspace))
+	if(istype(checking,/turf/open/openspace))
 		return FALSE
 	for(var/obj/structure/S in checking)
 		if(istype(S, /obj/structure/stairs))

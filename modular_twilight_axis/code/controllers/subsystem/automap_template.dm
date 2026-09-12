@@ -68,7 +68,7 @@
 
 	return block(placement, locate(x2, y2, z2))
 
-/datum/map_template/proc/nuke_placement_area(turf/T, centered = FALSE, turf/empty_type = /turf/open/transparent/openspace)
+/datum/map_template/proc/nuke_placement_area(turf/T, centered = FALSE, turf/empty_type = /turf/open/openspace)
 	var/list/turfs = get_affected_turfs(T, centered)
 	for(var/turf/iter as anything in turfs)
 		for(var/atom/movable/A as anything in iter.contents)

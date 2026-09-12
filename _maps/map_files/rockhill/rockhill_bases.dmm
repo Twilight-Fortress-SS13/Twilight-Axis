@@ -1242,7 +1242,7 @@
 /area/rogue/indoors/wretchcamp)
 "fD" = (
 /obj/machinery/light/rogue/chand,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/indoors/wretchcamp)
 "fE" = (
 /obj/effect/decal/edge{
@@ -2526,7 +2526,7 @@
 /turf/open/floor/rogue/cobble/mossy,
 /area/rogue/indoors/wretchcamp)
 "kH" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/bograt/safe)
 "kI" = (
 /turf/open/floor/carpet/royalblack,
@@ -2809,11 +2809,11 @@
 /obj/structure/fluff/railing/border{
 	dir = 10
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/bograt/above)
 "lT" = (
 /obj/machinery/light/rogue/candle/blue,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/indoors/vampire_manor)
 "lU" = (
 /obj/item/reagent_containers/glass/bottle/frankenbrew{
@@ -2946,7 +2946,7 @@
 	dir = 8
 	},
 /obj/machinery/light/rogue/candle/blue/r,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/indoors/wretchcamp)
 "mz" = (
 /obj/structure/fluff/walldeco/church/line{
@@ -2992,7 +2992,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 8
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/bograt/above)
 "mH" = (
 /obj/structure/flora/ausbushes/ppflowers,
@@ -3327,7 +3327,7 @@
 /turf/open/floor/rogue/snowrough,
 /area/rogue/outdoors/banditcamp)
 "ol" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/under/town/basement)
 "om" = (
 /obj/effect/decal/cleanable/blood/tracks{
@@ -4604,7 +4604,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 8
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/indoors/wretchcamp)
 "tN" = (
 /obj/effect/decal/remains/fox,
@@ -4948,7 +4948,7 @@
 /turf/open/floor/rogue/cobble,
 /area/rogue/indoors/wretchcamp)
 "vK" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/indoors/vampire_manor)
 "vN" = (
 /obj/effect/decal/edge{
@@ -5162,7 +5162,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 9
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/bograt/above)
 "wU" = (
 /turf/open/floor/rogue/dirt,
@@ -5822,7 +5822,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 6
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/bograt/above)
 "zC" = (
 /obj/structure/fluff/railing/border/east,
@@ -6450,7 +6450,7 @@
 /area/rogue/indoors/wretchcamp)
 "Cb" = (
 /obj/structure/fluff/railing/border,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/bograt/above)
 "Cc" = (
 /obj/structure/stairs/stone{
@@ -7429,7 +7429,7 @@
 /area/rogue/outdoors/bograt/safe)
 "FT" = (
 /obj/structure/gate/bars,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/indoors/wretchcamp)
 "FU" = (
 /obj/machinery/light/rogue/candle/l,
@@ -8352,7 +8352,7 @@
 /area/rogue/under/cave/inhumen)
 "Ju" = (
 /obj/machinery/light/rogue/chand,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/under/town/basement)
 "Jv" = (
 /obj/item/reagent_containers/glass/bowl,
@@ -9210,7 +9210,7 @@
 /area/rogue/indoors/vampire_manor)
 "MJ" = (
 /obj/structure/fluff/railing/border,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/under/town/basement)
 "MK" = (
 /obj/effect/decal/cleanable/sigil/N,
@@ -9371,7 +9371,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 5
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/bograt/above)
 "Ns" = (
 /obj/structure/well,
@@ -9659,7 +9659,7 @@
 /turf/open/floor/rogue/tile/bfloorz,
 /area/rogue/indoors/vampire_manor)
 "Oz" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/under/cave/inhumen)
 "OB" = (
 /obj/machinery/light/rogue/torchholder/l,
@@ -10074,7 +10074,7 @@
 	pixel_x = -26;
 	pixel_y = -10
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/indoors/wretchcamp)
 "Qf" = (
 /obj/structure/ritualcircle/necra,
@@ -10264,7 +10264,7 @@
 /turf/open/floor/rogue/cobble,
 /area/rogue/outdoors/bograt/safe)
 "QU" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/bograt/above)
 "QV" = (
 /obj/structure/fluff/statue/gargoyle,
@@ -10624,7 +10624,7 @@
 /area/rogue/outdoors/bograt/safe)
 "Sn" = (
 /obj/structure/fluff/railing/border,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/indoors/wretchcamp)
 "So" = (
 /obj/structure/fluff/walldeco/church/line{
@@ -11040,7 +11040,7 @@
 	dir = 1;
 	pixel_y = 5
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/bograt/above)
 "Uu" = (
 /obj/machinery/light/rogue/firebowl/standing{
@@ -11199,7 +11199,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 4
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/outdoors/bograt/above)
 "Vd" = (
 /obj/machinery/light/rogue/firebowl/stump,
@@ -11347,7 +11347,7 @@
 /turf/open/floor/rogue/twig,
 /area/rogue/indoors/banditcamp)
 "VL" = (
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/indoors/wretchcamp)
 "VM" = (
 /obj/structure/stairs/stone,
@@ -11604,7 +11604,7 @@
 	pixel_x = 5;
 	pixel_y = -10
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/indoors/wretchcamp)
 "WK" = (
 /obj/effect/decal/cleanable/blood/splatter,
@@ -11927,7 +11927,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 6
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/under/town/basement)
 "Ya" = (
 /obj/effect/decal/cobbleedge{
@@ -12018,7 +12018,7 @@
 /area/rogue/indoors/banditcamp)
 "Yk" = (
 /obj/structure/bars,
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/under/town/basement)
 "Yl" = (
 /obj/structure/vine,
@@ -12212,7 +12212,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 10
 	},
-/turf/open/transparent/openspace,
+/turf/open/openspace,
 /area/rogue/indoors/wretchcamp)
 "Zh" = (
 /turf/open/floor/rogue/tile,

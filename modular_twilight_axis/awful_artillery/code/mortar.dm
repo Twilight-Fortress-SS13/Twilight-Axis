@@ -25,7 +25,7 @@
 	if(!T)
 		T = get_turf(src)
 
-	while(GET_TURF_BELOW(T) && istype(T, /turf/open/transparent))
+	while(GET_TURF_BELOW(T) && istransparentturf(T))
 		T = GET_TURF_BELOW(T)
 	
 	playsound(src, 'modular_twilight_axis/awful_artillery/sound/fallingonyou.ogg', 100, 0, 10, 1, null, null, FALSE, TRUE)
@@ -41,7 +41,7 @@
 		var/turf/turf_below = GET_TURF_BELOW(T)
 		if(istype(turf_below, /turf/open))
 			explosion(T, 4, 10, 20, flame_range = 3, smoke = TRUE, ignorecap = TRUE)
-			T.ChangeTurf(/turf/open/transparent/openspace)
+			T.ChangeTurf(/turf/open/openspace)
 
 			var/ex_range = 5
 			for(var/turf/affected_turf in range(ex_range, T))
@@ -57,7 +57,7 @@
 				var/chance = 100 * (falloff * falloff)
 
 				if(prob(chance))
-					affected_turf.ChangeTurf(/turf/open/transparent/openspace)
+					affected_turf.ChangeTurf(/turf/open/openspace)
 
 			explosion(turf_below, 4, 10, 20, flame_range = 3, smoke = TRUE, ignorecap = TRUE)
 		else 

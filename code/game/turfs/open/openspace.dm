@@ -1,27 +1,11 @@
-GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdrop, new)
+GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /mutable_appearance, mutable_appearance('icons/turf/floors.dmi', "grey", layer = SPLASHSCREEN_LAYER, plane = OPENSPACE_BACKDROP_PLANE))
 
-/atom/movable/openspace_backdrop
-	name			= "openspace_backdrop"
-
-	anchored		= TRUE
-
-	icon			= 'icons/turf/floors.dmi'
-	icon_state		= "grey"
-	plane			= OPENSPACE_BACKDROP_PLANE
-	mouse_opacity	= MOUSE_OPACITY_TRANSPARENT
-	layer			= SPLASHSCREEN_LAYER
-	//I don't know why the others are aligned but I shall do the same.
-	vis_flags		= VIS_INHERIT_ID
-
-/atom/movable/openspace_backdrop/Initialize(mapload)
-	. = ..()
-//	filters += filter(type = "blur", size = 3)
-
-/turf/open/transparent/openspace
+/turf/open/openspace
 	name = "open space"
 	desc = "My eyes can see far down below."
 	icon_state = "openspace"
-	baseturfs = /turf/open/transparent/openspace
+	baseturfs = /turf/open/openspace
+	intact = FALSE
 	CanAtmosPassVertical = ATMOS_PASS_YES
 //	appearance_flags = KEEP_TOGETHER
 	//mouse_opacity = MOUSE_OPACITY_TRANSPARENT
@@ -32,10 +16,10 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 	smooth = SMOOTH_MORE
 	neighborlay_override = "staticedge"
 
-/turf/open/transparent/openspace/cardinal_smooth(adjacencies)
+/turf/open/openspace/cardinal_smooth(adjacencies)
 	roguesmooth(adjacencies)
 
-/turf/open/transparent/openspace/roguesmooth(adjacencies)
+/turf/open/openspace/roguesmooth(adjacencies)
 	var/list/Yeah = ..()
 	for(var/O in Yeah)
 		var/mutable_appearance/M = mutable_appearance(icon, O)
@@ -43,28 +27,26 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 		M.plane = OPENSPACE_BACKDROP_PLANE + 0.01
 		add_overlay(M)
 
-/turf/open/transparent/openspace/airless
+/turf/open/openspace/airless
 
-/turf/open/transparent/openspace/debug/update_multiz()
-	..()
-	return TRUE
 
-///No bottom level for openspace.
-/turf/open/transparent/openspace/show_bottom_level()
-	return FALSE
-
-/turf/open/transparent/openspace/Initialize(mapload) // handle plane and layer here so that they don't cover other obs/turfs in Dream Maker
+/turf/open/openspace/Initialize(mapload) // handle plane and layer here so that they don't cover other obs/turfs in Dream Maker
 	. = ..()
 	dynamic_lighting = 1
-	vis_contents += GLOB.openspace_backdrop_one_for_all //Special grey square for projecting backdrop darkness filter on it.
+	add_overlay(GLOB.openspace_backdrop_one_for_all) //Special grey square for projecting backdrop darkness filter on it.
+	return INITIALIZE_HINT_LATELOAD
 
-/turf/open/transparent/openspace/zAirIn()
+/turf/open/openspace/LateInitialize()
+	. = ..()
+	AddElement(/datum/element/turf_z_transparency, is_openspace = TRUE)
+
+/turf/open/openspace/zAirIn()
 	return TRUE
 
-/turf/open/transparent/openspace/zAirOut()
+/turf/open/openspace/zAirOut()
 	return TRUE
 
-/turf/open/transparent/openspace/zPassIn(atom/movable/A, direction, turf/source)
+/turf/open/openspace/zPassIn(atom/movable/A, direction, turf/source)
 	if(direction == DOWN)
 		for(var/obj/O in contents)
 			if(O.obj_flags & BLOCK_Z_IN_DOWN)
@@ -77,7 +59,7 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 		return TRUE
 	return FALSE
 
-/turf/open/transparent/openspace/zPassOut(atom/movable/A, direction, turf/destination)
+/turf/open/openspace/zPassOut(atom/movable/A, direction, turf/destination)
 	if(A.anchored)
 		return FALSE
 	if(HAS_TRAIT(A, TRAIT_I_AM_INVISIBLE_ON_A_BOAT))
@@ -93,7 +75,7 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 		return TRUE
 	return FALSE
 
-/turf/open/transparent/openspace/can_traverse_safely(atom/movable/traveler)
+/turf/open/openspace/can_traverse_safely(atom/movable/traveler)
 	var/turf/destination = GET_TURF_BELOW(src)
 	if(!destination)
 		return TRUE // this shouldn't happen, but if it does we can't fall
@@ -103,16 +85,13 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 		return TRUE
 	return FALSE
 
-/turf/open/transparent/openspace/can_traverse_safely(atom/movable/traveler)
-	return FALSE
-
-/turf/open/transparent/openspace/proc/CanCoverUp()
+/turf/open/openspace/proc/CanCoverUp()
 	return can_cover_up
 
-/turf/open/transparent/openspace/proc/CanBuildHere()
+/turf/open/openspace/proc/CanBuildHere()
 	return can_build_on
 
-/turf/open/transparent/openspace/attack_hand(mob/user)
+/turf/open/openspace/attack_hand(mob/user)
 	if(isliving(user))
 		var/mob/living/L = user
 		if(L.stat != CONSCIOUS)
@@ -153,7 +132,7 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 			user.forceMove(target)
 			if(!hadflying)
 				user.movement_type &= ~FLYING
-			if(istype(user.loc, /turf/open/transparent/openspace)) // basically only apply this slop after we moved. if we are hovering on the openspace turf, then good, we are doing an 'active climb' instead of the usual vaulting action
+			if(istype(user.loc, /turf/open/openspace)) // basically only apply this slop after we moved. if we are hovering on the openspace turf, then good, we are doing an 'active climb' instead of the usual vaulting action
 				climber.wallpressed = climber2wall_dir
 				switch(climber2wall_dir)// we are pressed against the wall after all that shit and are facing it, also hugging it too bcoz sou
 					if(NORTH)
@@ -175,7 +154,7 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 ///LIFEWEB-LIKE CLIMBING, DRAG AND DROP URSELF ONTO AN OPENSPACE TURF CHUDDIE///
 ///////////////////////////////////////////////////////////////////////////////
 
-/turf/open/transparent/openspace/MouseDrop_T(atom/movable/O, mob/user)
+/turf/open/openspace/MouseDrop_T(atom/movable/O, mob/user)
 	. = ..()
 	if(user == O && isliving(O))
 		var/mob/living/L = O
@@ -187,7 +166,7 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 			wallpress(L)
 			return
 
-/turf/open/transparent/openspace/proc/wallpress(mob/living/user) // only cardinals, correct chat
+/turf/open/openspace/proc/wallpress(mob/living/user) // only cardinals, correct chat
 	var/turf/climb_target = src
 	var/mob/living/carbon/human/climber = user // https://discord.com/channels/1389349752700928050/1389452066493169765/1413195734441922580
 	if(!(climber.stat != CONSCIOUS))
@@ -271,7 +250,7 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 					if(climber.mind)
 						climber.mind.add_sleep_experience(/datum/skill/misc/climbing, (climber.STAINT/2), FALSE)
 
-/turf/open/transparent/openspace/attack_ghost(mob/dead/observer/user)
+/turf/open/openspace/attack_ghost(mob/dead/observer/user)
 	var/turf/target = get_step_multiz(src, DOWN)
 	if(!user.Adjacent(src))
 		return
@@ -282,7 +261,7 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 	to_chat(user, span_warning("I glide down."))
 	. = ..()
 
-/turf/open/transparent/openspace/attackby(obj/item/C, mob/user, params)
+/turf/open/openspace/attackby(obj/item/C, mob/user, params)
 	..()
 	if(C.type == /obj/item/rope && isliving(user))
 		var/mob/living/living_user = user
@@ -315,7 +294,7 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 	if(!CanBuildHere())
 		return
 
-/turf/open/transparent/openspace/bullet_act(obj/projectile/P)
+/turf/open/openspace/bullet_act(obj/projectile/P)
 	if(!P.arcshot)
 		return ..()
 	if(P.original && (P.x == P.original.x && P.y == P.original.y))
