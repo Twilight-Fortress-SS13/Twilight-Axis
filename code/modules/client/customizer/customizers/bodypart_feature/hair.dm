@@ -870,6 +870,7 @@
 		/datum/sprite_accessory/hair/head/twintail_floor,
 		/datum/sprite_accessory/hair/head/sideways_ponytail,
 		/datum/sprite_accessory/hair/head/dreadlocks_long,
+		/datum/sprite_accessory/hair/head/t_dreadlocks,
 		/datum/sprite_accessory/hair/head/rows1,
 		/datum/sprite_accessory/hair/head/rows2,
 		/datum/sprite_accessory/hair/head/rowbraid,
