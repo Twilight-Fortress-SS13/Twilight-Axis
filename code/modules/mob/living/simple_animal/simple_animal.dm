@@ -1058,6 +1058,7 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	D.set_vehicle_dir_layer(NORTH, north_layer)
 	D.set_vehicle_dir_layer(EAST, east_layer)
 	D.set_vehicle_dir_layer(WEST, west_layer)
+	AddComponent(/datum/component/mounted_combat)//TA EDIT
 
 /mob/living/simple_animal/proc/add_saddleicon(saddle_above_state, saddle_state, overlay_layer = 4.3)
 	if(!ssaddle)
