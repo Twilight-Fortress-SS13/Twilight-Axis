@@ -296,6 +296,7 @@
 		head = helmets[helmchoice]
 
 		var/armors = list(
+			"Half-Plate"		= /obj/item/clothing/suit/roguetown/armor/plate/iron, //TA EDIT
 			"Cuirass"			= /obj/item/clothing/suit/roguetown/armor/plate/cuirass,
 			"Brigandine"		= /obj/item/clothing/suit/roguetown/armor/brigandine,
 			"Scalemail"			= /obj/item/clothing/suit/roguetown/armor/plate/scale,
