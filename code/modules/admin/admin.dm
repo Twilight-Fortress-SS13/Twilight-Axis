@@ -277,7 +277,7 @@
 		body += "<br>"
 		body += "</body></html>"
 
-	usr << browse(body, "window=adminplayeropts-[REF(M)];size=800x600")
+	usr << browse(body, "window=adminplayeropts-[REF(M)];size=1000x800")
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Player Panel") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /datum/admins/proc/admin_heal(mob/living/M in GLOB.mob_list)
@@ -913,8 +913,7 @@
 	else
 		alert(usr, "Target has no mind!") // Optional Error check that may or may not be neccessary
 	GLOB.chosen_names -= H.real_name
-	if(mob_job)
-		LAZYREMOVE(GLOB.actors_list[SSjob.bitflag_to_department(mob_job.department_flag, mob_job.obsfuscated_job)], H.mobid)
+	LAZYREMOVE(GLOB.actors_list, H.mobid)
 	H.returntolobby()
 
 

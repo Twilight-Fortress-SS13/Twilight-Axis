@@ -378,3 +378,402 @@
 	experimental_inhand = FALSE
 
 // COMMANDANT SET END
+
+/obj/item/rogueweapon/sword/rapier/crowcane
+	name = "crow cane blade"
+	desc = ""
+	icon = 'modular_twilight_axis/icons/obj/items/crowcane.dmi'
+	icon_state = "cane_blade"
+	item_state = "cane_blade"
+	sheathe_icon = "crowblade"
+	bigboy = FALSE
+	pixel_x = 0
+	pixel_y = 0
+	dropshrink = null
+
+/obj/item/rogueweapon/sword/rapier/crowcane/getonmobprop(tag)
+	. = ..()
+	if(tag)
+		switch(tag)
+			if("gen") return list(
+				"shrink" = 0.30,
+				"sx" = -8,
+				"sy" = -5,
+				"nx" = 9,
+				"ny" = -4,
+				"wx" = -6,
+				"wy" = -3,
+				"ex" = 4,
+				"ey" = -4,
+				"northabove" = 0,
+				"southabove" = 1,
+				"eastabove" = 1,
+				"westabove" = 0,
+				"nturn" = -13,
+				"sturn" = 110,
+				"wturn" = -60,
+				"eturn" = -30,
+				"nflip" = 1,
+				"sflip" = 1,
+				"wflip" = 8,
+				"eflip" = 1,
+				)
+			if("onback") return list(
+				"shrink" = 0.5,
+				"sx" = -1,
+				"sy" = 2,
+				"nx" = 0,
+				"ny" = 2,
+				"wx" = 2,
+				"wy" = 1,
+				"ex" = 0,
+				"ey" = 1,
+				"nturn" = 0,
+				"sturn" = 0,
+				"wturn" = 70,
+				"eturn" = 15,
+				"nflip" = 1,
+				"sflip" = 1,
+				"wflip" = 1,
+				"eflip" = 1,
+				"northabove" = 1,
+				"southabove" = 0,
+				"eastabove" = 0,
+				"westabove" = 0,
+				)
+			if("onbelt") return list(
+				"shrink" = 0.4,
+				"sx" = -4,
+				"sy" = -6,
+				"nx" = 5,
+				"ny" = -6,
+				"wx" = 0,
+				"wy" = -6,
+				"ex" = -1,
+				"ey" = -6,
+				"nturn" = 100,
+				"sturn" = 156,
+				"wturn" = 90,
+				"eturn" = 180,
+				"nflip" = 0,
+				"sflip" = 0,
+				"wflip" = 0,
+				"eflip" = 0,
+				"northabove" = 0,
+				"southabove" = 1,
+				"eastabove" = 1,
+				"westabove" = 0,
+				)
+
+/obj/item/rogueweapon/sword/sabre/crowcane
+	name = "crow cane blade"
+	desc = ""
+	icon = 'modular_twilight_axis/icons/obj/items/crowcane.dmi'
+	icon_state = "cane_blade"
+	item_state = "cane_blade"
+	sheathe_icon = "crowblade"
+	bigboy = FALSE
+	pixel_x = 0
+	pixel_y = 0
+	dropshrink = null
+
+/obj/item/rogueweapon/sword/sabre/crowcane/getonmobprop(tag)
+	. = ..()
+	if(tag)
+		switch(tag)
+			if("gen") return list(
+				"shrink" = 0.30,
+				"sx" = -8,
+				"sy" = -5,
+				"nx" = 9,
+				"ny" = -4,
+				"wx" = -6,
+				"wy" = -3,
+				"ex" = 4,
+				"ey" = -4,
+				"northabove" = 0,
+				"southabove" = 1,
+				"eastabove" = 1,
+				"westabove" = 0,
+				"nturn" = -13,
+				"sturn" = 110,
+				"wturn" = -60,
+				"eturn" = -30,
+				"nflip" = 1,
+				"sflip" = 1,
+				"wflip" = 8,
+				"eflip" = 1,
+				)
+			if("onback") return list(
+				"shrink" = 0.5,
+				"sx" = -1,
+				"sy" = 2,
+				"nx" = 0,
+				"ny" = 2,
+				"wx" = 2,
+				"wy" = 1,
+				"ex" = 0,
+				"ey" = 1,
+				"nturn" = 0,
+				"sturn" = 0,
+				"wturn" = 70,
+				"eturn" = 15,
+				"nflip" = 1,
+				"sflip" = 1,
+				"wflip" = 1,
+				"eflip" = 1,
+				"northabove" = 1,
+				"southabove" = 0,
+				"eastabove" = 0,
+				"westabove" = 0,
+				)
+			if("onbelt") return list(
+				"shrink" = 0.4,
+				"sx" = -4,
+				"sy" = -6,
+				"nx" = 5,
+				"ny" = -6,
+				"wx" = 0,
+				"wy" = -6,
+				"ex" = -1,
+				"ey" = -6,
+				"nturn" = 100,
+				"sturn" = 156,
+				"wturn" = 90,
+				"eturn" = 180,
+				"nflip" = 0,
+				"sflip" = 0,
+				"wflip" = 0,
+				"eflip" = 0,
+				"northabove" = 0,
+				"southabove" = 1,
+				"eastabove" = 1,
+				"westabove" = 0,
+				)
+
+/obj/item/rogueweapon/scabbard/sword/crowcane
+	name = "crow cane"
+	desc = ""
+	icon = 'modular_twilight_axis/icons/obj/items/crowcane.dmi'
+	icon_state = "cane_scabbard"
+	item_state = "cane_scabbard"
+	bigboy = FALSE
+	pixel_x = 0
+	pixel_y = 0
+	valid_blade = null
+	valid_blades = list(
+		/obj/item/rogueweapon/sword/rapier/crowcane,
+		/obj/item/rogueweapon/sword/sabre/crowcane)
+	cant_strip = TRUE
+
+/obj/item/rogueweapon/scabbard/sword/crowcane/getonmobprop(tag)
+	. = ..()
+	if(!tag)
+		return .
+
+	if(hol_comp?.sheathed)
+		switch(tag)
+			if("gen")
+				return list(
+					"shrink" = 0.30,
+					"sx" = -5,
+					"sy" = -5,
+					"nx" = 5,
+					"ny" = -4,
+					"wx" = -1,
+					"wy" = -5,
+					"ex" = -1,
+					"ey" = -5,
+					"nturn" = -45,
+					"sturn" = -45,
+					"wturn" = -45,
+					"eturn" = -45,
+					"nflip" = 0,
+					"sflip" = 0,
+					"wflip" = 0,
+					"eflip" = 0,
+					"northabove" = FALSE,
+					"southabove" = TRUE,
+					"eastabove" = TRUE,
+					"westabove" = FALSE
+				)
+			if("wielded")
+				return list(
+					"shrink" = 0.30,
+					"sx" = 0,
+					"sy" = -1,
+					"nx" = 0,
+					"ny" = -1,
+					"wx" = -2,
+					"wy" = -1,
+					"ex" = 2,
+					"ey" = -1,
+					"nturn" = -90,
+					"sturn" = 0,
+					"wturn" = -90,
+					"eturn" = 0,
+					"nflip" = 0,
+					"sflip" = 0,
+					"wflip" = 0,
+					"eflip" = 0,
+					"northabove" = FALSE,
+					"southabove" = TRUE,
+					"eastabove" = TRUE,
+					"westabove" = TRUE
+				)
+			if("onbelt")
+				return list(
+					"shrink" = 0.25,
+					"sx" = -2,
+					"sy" = -5,
+					"nx" = 4,
+					"ny" = -5,
+					"wx" = 0,
+					"wy" = -5,
+					"ex" = 2,
+					"ey" = -5,
+					"nturn" = 0,
+					"sturn" = 0,
+					"wturn" = -90,
+					"eturn" = 0,
+					"nflip" = 0,
+					"sflip" = 0,
+					"wflip" = 0,
+					"eflip" = 0,
+					"northabove" = 0,
+					"southabove" = 1,
+					"eastabove" = 1,
+					"westabove" = 1
+				)
+
+	switch(tag)
+		if("gen")
+			return list(
+				"shrink" = 0.30,
+				"sx" = -6,
+				"sy" = -1,
+				"nx" = 6,
+				"ny" = -1,
+				"wx" = 0,
+				"wy" = -2,
+				"ex" = 0,
+				"ey" = -2,
+				"northabove" = 0,
+				"southabove" = 1,
+				"eastabove" = 1,
+				"westabove" = 0,
+				"nturn" = 0,
+				"sturn" = 0,
+				"wturn" = 0,
+				"eturn" = 0,
+				"nflip" = 4,
+				"sflip" = 0,
+				"wflip" = 8,
+				"eflip" = 0
+			)
+		if("onback")
+			return list(
+				"shrink" = 0.4,
+				"sx" = 0,
+				"sy" = 2,
+				"nx" = 0,
+				"ny" = 2,
+				"wx" = 2,
+				"wy" = 1,
+				"ex" = 0,
+				"ey" = 1,
+				"nturn" = 0,
+				"sturn" = 0,
+				"wturn" = 70,
+				"eturn" = 15,
+				"nflip" = 1,
+				"sflip" = 1,
+				"wflip" = 1,
+				"eflip" = 1,
+				"northabove" = 1,
+				"southabove" = 0,
+				"eastabove" = 0,
+				"westabove" = 0
+			)
+		if("onbelt")
+			return list(
+				"shrink" = 0.25,
+				"sx" = -2,
+				"sy" = -5,
+				"nx" = 4,
+				"ny" = -5,
+				"wx" = 0,
+				"wy" = -5,
+				"ex" = 2,
+				"ey" = -5,
+				"nturn" = 0,
+				"sturn" = 0,
+				"wturn" = -90,
+				"eturn" = 0,
+				"nflip" = 0,
+				"sflip" = 0,
+				"wflip" = 0,
+				"eflip" = 0,
+				"northabove" = 0,
+				"southabove" = 1,
+				"eastabove" = 1,
+				"westabove" = 1
+			)
+
+/obj/item/gun/ballistic/twilight_firearm/arquebus/jezail
+	name = "jezail"
+	desc = ""
+	icon = 'modular_twilight_axis/firearms/icons/jezail.dmi'
+	advanced_icon = 'modular_twilight_axis/firearms/icons/jezail.dmi'
+	advanced_icon_norod = 'modular_twilight_axis/firearms/icons/jezail.dmi'
+
+/obj/item/gun/ballistic/twilight_firearm/arquebus/jezail/attackby(obj/item/I, mob/user, params)
+	if(istype(I, /obj/item/rogueweapon/huntingknife))
+		to_chat(user, span_warning("A bayonet cannot be attached to [src]."))
+		return TRUE
+	return ..()
+
+/obj/item/gun/ballistic/twilight_firearm/arquebus/teppo
+	name = "teppo"
+	desc = ""
+	icon = 'modular_twilight_axis/firearms/icons/teppo.dmi'
+	advanced_icon = 'modular_twilight_axis/firearms/icons/teppo.dmi'
+	advanced_icon_norod = 'modular_twilight_axis/firearms/icons/teppo.dmi'
+
+/obj/item/gun/ballistic/twilight_firearm/arquebus/teppo/attackby(obj/item/I, mob/user, params)
+	if(istype(I, /obj/item/rogueweapon/huntingknife))
+		to_chat(user, span_warning("A bayonet cannot be attached to [src]."))
+		return TRUE
+	return ..()
+
+
+/obj/item/gun/ballistic/twilight_firearm/flintgonne/jezail
+	name = "jezail"
+	desc = ""
+	icon = 'modular_twilight_axis/firearms/icons/jezail.dmi'
+	icon_state = "flintgonne"
+	item_state = "flintgonne"
+
+/obj/item/gun/ballistic/twilight_firearm/flintgonne/teppo
+	name = "teppo"
+	desc = ""
+	icon = 'modular_twilight_axis/firearms/icons/teppo.dmi'
+	icon_state = "flintgonne"
+	item_state = "flintgonne"
+
+/obj/item/gun/ballistic/twilight_firearm/barker/jezail
+	name = "jezail"
+	desc = ""
+	icon = 'modular_twilight_axis/firearms/icons/jezail.dmi'
+	icon_state = "barker"
+	item_state = "barker"
+
+/obj/item/gun/ballistic/twilight_firearm/barker/teppo
+	name = "teppo"
+	desc = ""
+	icon = 'modular_twilight_axis/firearms/icons/teppo.dmi'
+	icon_state = "barker"
+	item_state = "barker"
+
+/obj/item/clothing/head/roguetown/wizhat/bighat
+	name = "wizard's big hat"

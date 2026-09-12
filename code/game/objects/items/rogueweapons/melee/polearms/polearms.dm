@@ -664,7 +664,7 @@
 /obj/item/rogueweapon/fishspear/attack_self(mob/user)
 	if(user.used_intent.type == SPEAR_CAST)
 		if(user.doing)
-			user.doing = 0
+			user.stop_all_doing() // TA EDIT
 
 /obj/item/rogueweapon/fishspear/afterattack(obj/target, mob/user, proximity)
 	var/sl = user.get_skill_level(/datum/skill/labor/fishing) // User's skill level
@@ -1349,7 +1349,7 @@
 
 /obj/item/rogueweapon/spear/partizan/baotha
 	name = "saccharine swordspear"
-	desc = "Keep the rest at arm's length, lest you're burdened with the pain of rememberance."
+	desc = "Keep her at arm's length, lest you're burdened with the pain of her earnestness and her joy. That would be a final, unbearable cut."
 	force = 25
 	force_wielded = 35
 	possible_item_intents = list(/datum/intent/sword/thrust/long, /datum/intent/sword/cut/long, /datum/intent/sword/strike, /datum/intent/sword/thrust/heavy)
