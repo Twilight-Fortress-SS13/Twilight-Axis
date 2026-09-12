@@ -43,33 +43,20 @@
 
 
 // ----------------------------------------------------
-// DUST STORM PARTICLE
-// ----------------------------------------------------
-
-/particles/weather/dust_storm
-	icon 				   = 'icons/effects/96x96.dmi'
-	icon_state             = list("smoke-static" = 5)
-	gradient               = list(0,"#c2b280e3", 100,"#e6d299e3", "loop") // Sandy desert colors
-	color                  = 0
-	color_change		   = generator("num",0,3)
-	position               = generator("box", list(-500,-256,0), list(500,500,0))
-	gravity                = list(-5 -1, 0.1)
-	drift                  = generator("circle", 0, 3) 
-	friction               = 0.3
-	//Weather effects, max values
-	maxSpawning            = 120
-	minSpawning            = 40
-	wind                   = 5
-
-
-// ----------------------------------------------------
 // DUST STORM WEATHER DATUM
 // ----------------------------------------------------
 
 /datum/particle_weather/dust_storm
 	name = "Dust Storm"
 	desc = "A fierce dust storm sweeps across the desert."
-	particleEffectType = /particles/weather/dust_storm
+	weather_icon_state = "fog"
+	weather_visual_color = "#d3bf8c"
+	weather_scroll_x = -512
+	weather_scroll_y = 0
+	weather_scroll_time = 200
+	weather_alpha_min = 155
+	weather_alpha_max = 245
+	weather_tile_count = 4
 
 	scale_vol_with_severity = TRUE
 	weather_sounds = list(/datum/looping_sound/dust_storm)

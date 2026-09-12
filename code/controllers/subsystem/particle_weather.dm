@@ -8,8 +8,8 @@ SUBSYSTEM_DEF(ParticleWeather)
 	var/datum/particle_weather/runningWeather
 	// var/list/next_hit = list() //Used by barometers to know when the next storm is coming
 
-	var/particles/weather/particleEffect
-	var/obj/weatherEffect
+	var/list/obj/weather_effect/weatherEffects = list()
+	var/current_effect_color
 
 	var/list/turfs_to_process = list()
 	var/list/weathered_turfs = list()
@@ -27,6 +27,12 @@ SUBSYSTEM_DEF(ParticleWeather)
 
 	if(!resumed)
 		runningWeather.tick()
+		if(runningWeather.parallax_weather)
+			for(var/client/C as anything in GLOB.clients)
+				C.ensure_particle_weather_parallax()
+		else
+			for(var/client/C as anything in GLOB.clients)
+				C.ensure_particle_weather_world_effect()
 		currentrun_mobs = GLOB.player_list.Copy()
 		// Every registered obj's weather_act_on() gates on PARTICLEWEATHER_RAIN, and target_trait is
 		// what we pass it - so only rain-trait weather (incl. fog) can affect objs. Skip the whole
@@ -96,33 +102,79 @@ SUBSYSTEM_DEF(ParticleWeather)
 	elligble_weather = possible_weather
 //	next_hit = null
 
-/datum/controller/subsystem/ParticleWeather/proc/getweatherEffect()
-	if(!weatherEffect)
-		weatherEffect = new /obj()
-		weatherEffect.particles = particleEffect
-		weatherEffect.filters += filter(type="alpha", render_source=WEATHER_RENDER_TARGET)
-		weatherEffect.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	return weatherEffect
+/datum/controller/subsystem/ParticleWeather/proc/registerWeatherEffect(obj/weather_effect/effect)
+	if(!effect)
+		return
+	weatherEffects |= effect
+	syncWeatherEffect(effect)
 
-/datum/controller/subsystem/ParticleWeather/proc/SetparticleEffect(particles/P, blend_type, filter_type, color, secondary_filter_type)
-	particleEffect = P
-	weatherEffect.particles = particleEffect
-	if(color)
-		weatherEffect.color = color
-	if(!blend_type)
-		weatherEffect.blend_mode = BLEND_DEFAULT
-	else
-		weatherEffect.blend_mode = blend_type
-	weatherEffect.filters = list()
-	weatherEffect.filters += filter(type="alpha", render_source=WEATHER_RENDER_TARGET)
+/datum/controller/subsystem/ParticleWeather/proc/unregisterWeatherEffect(obj/weather_effect/effect)
+	weatherEffects -= effect
+
+/datum/controller/subsystem/ParticleWeather/proc/configureWeatherEffect(obj/weather_effect/effect, icon_file, icon_state, effect_color, blend_type, filter_type, secondary_filter_type, scroll_x, scroll_y, scroll_time, tile_size, tile_count, scroll_pingpong, offset_x = 0, offset_y = 0)
+	if(!effect)
+		return
+	effect.configure(icon_file, icon_state, scroll_x, scroll_y, scroll_time, tile_size, tile_count, scroll_pingpong, offset_x, offset_y)
+	effect.color = effect_color
+	effect.blend_mode = blend_type ? blend_type : BLEND_DEFAULT
+	effect.filters = list()
 	if(filter_type)
-		weatherEffect.filters += filter_type
+		effect.filters += filter_type
 	if(secondary_filter_type)
-		weatherEffect.filters += secondary_filter_type
+		effect.filters += secondary_filter_type
+
+/datum/controller/subsystem/ParticleWeather/proc/syncWeatherEffect(obj/weather_effect/effect)
+	if(!runningWeather || !runningWeather.running || !runningWeather.weather_icon_state)
+		effect.clear_visual()
+		return
+	if(runningWeather.parallax_weather)
+		effect.clear_visual()
+		return
+	var/effect_color = current_effect_color ? current_effect_color : runningWeather.weather_visual_color
+	configureWeatherEffect(effect, runningWeather.weather_icon, runningWeather.weather_icon_state, effect_color, runningWeather.blend_type, runningWeather.filter_type, runningWeather.secondary_filter_type, runningWeather.weather_scroll_x, runningWeather.weather_scroll_y, runningWeather.weather_scroll_time, runningWeather.weather_tile_size, runningWeather.weather_tile_count, runningWeather.weather_scroll_pingpong, runningWeather.weather_offset_x, runningWeather.weather_offset_y)
+	var/severity_mod = runningWeather.severityMod()
+	if(severity_mod <= 0)
+		effect.alpha = 0
+	else
+		var/clamped_severity = min(1, max(0, severity_mod))
+		effect.alpha = round(runningWeather.weather_alpha_min + ((runningWeather.weather_alpha_max - runningWeather.weather_alpha_min) * clamped_severity))
+
+/datum/controller/subsystem/ParticleWeather/proc/SetweatherEffect(icon_file, icon_state, effect_color, blend_type, filter_type, secondary_filter_type, scroll_x, scroll_y, scroll_time, tile_size, tile_count, scroll_pingpong)
+	current_effect_color = effect_color
+	for(var/obj/weather_effect/effect as anything in weatherEffects)
+		syncWeatherEffect(effect)
+		if(effect)
+			effect.alpha = 0
+	for(var/client/C as anything in GLOB.clients)
+		C.update_particle_weather_parallax(TRUE)
+		C.update_particle_weather_world_effect(TRUE)
+
+/datum/controller/subsystem/ParticleWeather/proc/setWeatherSeverity(severity_mod, transition_time = 0)
+	if(!runningWeather)
+		return
+	var/new_alpha = 0
+	if(severity_mod > 0)
+		var/clamped_severity = min(1, max(0, severity_mod))
+		new_alpha = round(runningWeather.weather_alpha_min + ((runningWeather.weather_alpha_max - runningWeather.weather_alpha_min) * clamped_severity))
+	for(var/obj/weather_effect/effect as anything in weatherEffects)
+		if(!effect?.icon_state)
+			continue
+		if(transition_time > 0)
+			animate(effect, alpha = new_alpha, time = transition_time, tag = "weather_alpha")
+		else
+			animate(effect, tag = "weather_alpha")
+			effect.alpha = new_alpha
+	for(var/client/C as anything in GLOB.clients)
+		C.set_particle_weather_parallax_alpha(severity_mod, transition_time > 0 ? transition_time : 5)
 
 /datum/controller/subsystem/ParticleWeather/proc/stopWeather()
+	for(var/client/C as anything in GLOB.clients)
+		C.clear_particle_weather_parallax()
+		C.clear_particle_weather_world_effect()
 	for(var/obj/act_on as anything in GLOB.weather_act_upon_list)
 		act_on.weather = FALSE
-	weatherEffect.particles = null
+	for(var/obj/weather_effect/effect as anything in weatherEffects)
+		if(effect)
+			effect.clear_visual()
+	current_effect_color = null
 	QDEL_NULL(runningWeather)
-	QDEL_NULL(particleEffect)

@@ -25,7 +25,7 @@
 	impacted_z_levels = list()
 	var/lastlightning = 0
 
-	particles = list(/obj/emitters/weather/rain)
+	weather_visuals = list(/atom/movable/screen/weather/rain)
 
 /datum/weather/rain/New(z_levels)
 	impacted_z_levels = GLOB.sky_z.Copy()
