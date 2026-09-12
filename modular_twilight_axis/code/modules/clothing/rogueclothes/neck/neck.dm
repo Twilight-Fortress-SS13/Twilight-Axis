@@ -75,21 +75,15 @@
 	item_state = "gronnspider"
 
 /obj/item/clothing/neck/roguetown/chaincoif/chainmantle/bloodraider
-	name = "raiders mantle"
+	name = "raider's chain mantle"
 	desc = "A thicker and more durable piece of neck protection that also covers the mouth when pulled up."
 	icon_state = "bloodchainmantle"
 	item_state = "bloodchainmantle"
-	armor = ARMOR_MAILLE
-	body_parts_covered = NECK|MOUTH
-	slot_flags = ITEM_SLOT_NECK
-	flags_inv = HIDEFACE|HIDEFACIALHAIR|HIDESNOUT
 	icon = 'modular_twilight_axis/icons/clothing/bloodraider.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/bloodraider.dmi'
 
-/obj/item/clothing/neck/roguetown/chaincoif/chainmantle/bloodraider/ComponentInitialize()
-	AddComponent(/datum/component/adjustable_clothing, (NECK), null, null, 'sound/foley/equip/equip_armor_chain.ogg', null, (UPD_HEAD|UPD_MASK|UPD_NECK))	//Chain coif.
-	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
-	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
+/obj/item/clothing/neck/roguetown/chaincoif/chainmantle/bloodraider/Initialize(mapload)
+	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")
 
 /obj/item/clothing/neck/roguetown/chaincoif/chainmantle/bloodraider/get_examine_highlight_status()

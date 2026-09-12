@@ -55,9 +55,21 @@
 /obj/item/quiver/twilight_bullet/attackby(obj/A, loc, params)
 	if(A.type in typesof(ammo_type))
 		if(!eatarrow(A, loc))
-			to_chat(loc, span_warning("Full!"))
+			to_chat(loc, span_warning("My [src.name] is full!"))
 		return
 	..()
+
+/obj/item/quiver/twilight_bullet/attack_right(mob/user)
+	if(!arrows.len)
+		return FALSE
+	var/obj/item/ammo_casing/caseless/rogue/O = pick_ammo()
+	if(!O)
+		O = arrows[arrows.len]
+	arrows -= O
+	O.forceMove(user.loc)
+	user.put_in_hands(O)
+	update_icon()
+	return TRUE
 
 /obj/item/quiver/twilight_bullet/runed/Initialize()
 	. = ..()
@@ -142,15 +154,6 @@
 	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock
 	var/list/linked_ammo_types = list()
 
-/obj/item/quiver/twilight_bullet/runicbag/attack_right(mob/user)
-	if(arrows.len)
-		var/obj/O = arrows[arrows.len]
-		arrows -= O
-		O.forceMove(user.loc)
-		user.put_in_hands(O)
-		update_icon()
-		return TRUE
-
 /obj/item/quiver/twilight_bullet/runicbag/update_icon()
 	icon_state = "runebag"
 
@@ -221,16 +224,15 @@
 /obj/item/quiver/twilight_bullet/paper/attackby(obj/A, loc, params)
 	if(A.type in typesof(ammo_type))
 		if(!eatarrow(A, loc))
-			to_chat(loc, span_warning("Full!"))
+			to_chat(loc, span_warning("My [src.name] is full!"))
 		return
 	if(istype(A, /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/puffer))
 		var/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/puffer/B = A
 		if(arrows.len && !B.chambered && B.breech_open)
-			for(var/AR in arrows)
-				if(istype(AR, /obj/item/ammo_casing/caseless/rogue/twilight_lead/paper))
-					arrows -= AR
-					B.attackby(AR, loc, params)
-					break
+			var/obj/item/ammo_casing/caseless/rogue/AR = pick_ammo(/obj/item/ammo_casing/caseless/rogue/twilight_lead/paper)
+			if(AR)
+				arrows -= AR
+				B.attackby(AR, loc, params)
 		return
 	..()
 
