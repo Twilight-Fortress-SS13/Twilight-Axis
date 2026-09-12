@@ -73,6 +73,7 @@
 	var/detail_color
 	var/altdetail_color
 	var/mutable_appearance/detail_overlay
+	var/mutable_appearance/altdetail_overlay
 	var/boobed_detail = TRUE
 	var/sleeved_detail = TRUE
 	var/malumblessed_c = FALSE

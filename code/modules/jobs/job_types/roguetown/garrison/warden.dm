@@ -115,7 +115,7 @@
 		switch(weapon_choice)
 			if("Bowhunter - Blackhorn Bow + 20 Broadheads")
 				beltr = /obj/item/quiver/arrows
-				backl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/warden
+				backl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve/warden //TA EDIT Bow -> Recurve Bow
 				H.adjust_skillrank_up_to(/datum/skill/combat/bows, SKILL_LEVEL_MASTER, TRUE)
 			if("Spearhunter - Spear + Sling, +I STR / -I SPD")
 				beltr = /obj/item/quiver/sling/iron
