@@ -50,6 +50,14 @@
 	smeltresult = /obj/item/ingot/drow
 	smelt_bar_num = 2
 
+/obj/item/clothing/under/roguetown/chainlegs/kilt/legion
+	name = "elyrian cingulum kilt"
+	desc = "Сочетание отлитого из бронзы цингулума, плотной кожи и сегментированных стальных пластин под туникой. Создает иллюзию незащищенности ног, провоцируя врага нанести удар в кажущееся «слабое» место воина."
+	icon_state = "legionkilt"
+	item_state = "legionkilt"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/pants.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/pants.dmi'
+
 /obj/item/clothing/under/roguetown/bloodsplintlegs
 	name = "raiders splintlegs"
 	desc = "Raiders best friend, designed to protect the legs while still providing almost complete free range of movement."
