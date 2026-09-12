@@ -18,7 +18,7 @@
 	smeltresult = /obj/item/ingot/steel
 	equip_delay_self = 4 SECONDS
 	unequip_delay_self = 4 SECONDS
-	armor_class = ARMOR_CLASS_HEAVY
+	armor_class = ARMOR_CLASS_MEDIUM //TA EDIT
 	smelt_bar_num = 3
 	chunkcolor = "#a9c1ca"
 	material_category = ARMOR_MAT_PLATE
@@ -57,7 +57,7 @@
 	max_integrity = ARMOR_INT_CHEST_PLATE_IRON + 25
 	icon_state = "ibandedarmor"
 	item_state = "ibandedarmor"
-	armor_class = ARMOR_CLASS_HEAVY
+	armor_class = ARMOR_CLASS_MEDIUM
 	body_parts_covered = CHEST | ARMS | LEGS | GROIN
 	smelt_bar_num = 1
 	drop_sound = 'sound/foley/dropsound/scrap_drop.ogg'
