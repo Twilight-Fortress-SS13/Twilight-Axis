@@ -5,7 +5,6 @@
 	wdefense = 6
 	icon_state = "moonlight_saber"
 	icon = 'modular_twilight_axis/church_classes/icons/prismatic_weapons64.dmi'
-	possible_item_intents = list(/datum/intent/sword/cut/sabre, /datum/intent/sword/thrust, /datum/intent/sword/peel, /datum/intent/sword/chop)
 	bigboy = TRUE
 	pixel_y = -16
 	pixel_x = -16
@@ -27,7 +26,6 @@
 	icon_state = "moonlight_rapier"
 	icon = 'modular_twilight_axis/church_classes/icons/prismatic_weapons64.dmi'
 	sheathe_icon = "rapier"
-	possible_item_intents = list(/datum/intent/sword/thrust/rapier, /datum/intent/sword/cut/rapier, /datum/intent/sword/peel)
 	special = /datum/special_intent/piercing_lunge
 	max_integrity = 50
 	max_blade_int = 500
@@ -70,7 +68,7 @@
 	desc = "Молот сотканный из света Нок, кажется тяжелым, но в руке ощущается легко. Идеальное орудие грубой силы."
 	icon_state = "moonlight_hammer"
 	icon = 'modular_twilight_axis/church_classes/icons/prismatic_weapons64.dmi'
-	force_wielded = 28 
+	force_wielded = 28
 	max_integrity = 50
 	smeltresult = null
 	minstr = 1
@@ -85,7 +83,7 @@
 	desc = "Щит сотканный из света Нок, кажется тяжелым, но в руке ощущается легко, структура напоминает кристаллическую и вероятно хрупкое."
 	icon_state = "moonlight_shield"
 	icon = 'modular_twilight_axis/church_classes/icons/prismatic_weapons64.dmi'
-	max_integrity = 100 
+	max_integrity = 100
 	possible_item_intents = list(/datum/intent/shield/block, /datum/intent/mace/smash/shield/metal/great, /datum/intent/effect/daze)
 	force = 15
 	minstr = 1
@@ -111,7 +109,7 @@
 	if(!istype(loc, /mob/living/carbon/human))
 		qdel(src)
 	return ..()
-	
+
 /obj/item/rogueweapon/sword/rapier/moonlight_rapier/Move()
 	if(!istype(loc, /mob/living/carbon/human))
 		qdel(src)
@@ -140,7 +138,7 @@
 	owner.adjust_skillrank_down_to(associated_skill, 0, TRUE)
 	playsound(get_turf(owner), 'modular_twilight_axis/church_classes/sound/despell_sfx.ogg', 100, FALSE)
 	return ..()
-	
+
 /obj/item/rogueweapon/sword/rapier/moonlight_rapier/Destroy()
 	to_chat(owner, "[src] растворяется в воздухе. Нок забирает знания вместе с ним.")
 	owner.adjust_skillrank_down_to(associated_skill, 0, TRUE)
