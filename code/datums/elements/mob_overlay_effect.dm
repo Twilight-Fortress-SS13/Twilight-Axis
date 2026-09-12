@@ -8,6 +8,7 @@
 	var/y_offset = 0
 	var/mask_y_offset = 0
 	var/effect_alpha = 0
+	var/static/icon/mob_moving_effect_mask_icon = icon('icons/effects/icon_cutter.dmi', "icon_cutter") // TA EDIT
 
 /datum/element/mob_overlay_effect/Attach(datum/target, _y_offset = 0, _mask_y_offset = 0, _effect_alpha = 0)
 	. = ..()
@@ -69,7 +70,7 @@
 		offset += 7
 	var/atom/movable/arrived = target
 	if(effect_alpha)
-		arrived.add_filter(MOB_MOVING_EFFECT_MASK, 1, alpha_mask_filter(0, mask_y_offset + offset, icon('icons/effects/icon_cutter.dmi', "icon_cutter"), null, MASK_INVERSE))
+		arrived.add_filter(MOB_MOVING_EFFECT_MASK, 1, alpha_mask_filter(0, mask_y_offset + offset, mob_moving_effect_mask_icon, null, MASK_INVERSE)) // TA EDIT
 	if(ismob(mob))
 		mob.update_vision_cone()
 	RegisterSignal(arrived, COMSIG_ITEM_PICKUP, TYPE_PROC_REF(/datum/element/mob_overlay_effect, on_remove_proxy), override = TRUE)

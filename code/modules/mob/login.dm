@@ -30,6 +30,7 @@
 	log_access("Mob Login: [key_name(src)] was assigned to a [type]")
 	world.update_status()
 	client.screen = list()				//remove hud items just in case
+	client.clear_cone_images() // TA EDIT
 	client.images = list()
 
 	canon_client = client
@@ -97,6 +98,7 @@
 	log_message("Client [key_name(src)] has taken ownership of mob [src]([src.type])", LOG_OWNERSHIP)
 	enable_client_mobs_in_contents(client) // TA EDIT
 	SEND_SIGNAL(src, COMSIG_MOB_CLIENT_LOGIN, client)
+	update_vision_cone() // TA EDIT
 
 /**
 	* Checks if the attached client is an admin and may deadmin them

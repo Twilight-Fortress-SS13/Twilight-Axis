@@ -653,7 +653,7 @@
 /obj/item/clothing/shoes/roguetown/boots/leather/reinforced/kazengun/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
@@ -674,7 +674,7 @@
 /obj/item/clothing/shoes/roguetown/jester/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
@@ -891,7 +891,7 @@
 /obj/item/clothing/shoes/courtphysician/female/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()

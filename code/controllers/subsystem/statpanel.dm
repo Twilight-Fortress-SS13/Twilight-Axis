@@ -15,6 +15,7 @@ SUBSYSTEM_DEF(statpanels)
 	///how many subsystem fires between most tab updates
 	var/default_wait = 10
 	///how many subsystem fires between updates of the status tab
+	var/round_info_wait = 5
 	var/status_wait = 2
 	///how many subsystem fires between updates of the MC tab
 	var/mc_wait = 5
@@ -66,7 +67,7 @@ SUBSYSTEM_DEF(statpanels)
 		if(!target.stat_panel.is_ready())
 			continue
 
-		if(target.stat_tab == "Round Info" && num_fires % status_wait == 0)
+		if(target.stat_tab == "Round Info" && num_fires % round_info_wait == 0)
 			set_status_tab(target)
 
 		if(isliving(target.mob))
@@ -83,12 +84,8 @@ SUBSYSTEM_DEF(statpanels)
 			target.listedturf_dirty = FALSE
 			target.update_listed_turf()
 
-		if(!target.holder)
-			target.stat_panel.send_message("remove_admin_tabs")
-		else
-			if(!("MC" in target.panel_tabs) || !("Tickets" in target.panel_tabs))
-				target.stat_panel.send_message("add_admin_tabs", target.holder.href_token)
-
+		target.stat_panel.sync_admin_tabs()
+		if(target.holder)
 			if(target.stat_tab == "MC" && ((num_fires % mc_wait == 0)))
 				set_MC_tab(target)
 
@@ -245,9 +242,33 @@ SUBSYSTEM_DEF(statpanels)
 /// Stat panel window declaration
 /client/var/datum/tgui_window/stat/stat_panel
 
+/datum/tgui_window/stat // TA EDIT START
+	var/admin_tabs_synced = FALSE
+	var/admin_tabs_token // TA EDIT END
+
 /datum/tgui_window/stat/initialize(strict_mode, assets, inline_html, inline_js, inline_css)
+	admin_tabs_synced = FALSE // TA EDIT
+	admin_tabs_token = null // TA EDIT
 	. = ..()
 	send_message("build_topbar") // This is the best way of doing it... don't @ me
+
+/datum/tgui_window/stat/on_message(type, payload, href_list) // TA EDIT START
+	if(type == "ready")
+		admin_tabs_synced = FALSE
+	return ..()
+
+/datum/tgui_window/stat/proc/sync_admin_tabs()
+	if(!client || !is_ready())
+		return
+	var/current_token = client.holder?.href_token
+	if(admin_tabs_synced && admin_tabs_token == current_token)
+		return
+	admin_tabs_synced = TRUE
+	admin_tabs_token = current_token
+	if(client.holder)
+		send_message("add_admin_tabs", current_token)
+	else
+		send_message("remove_admin_tabs") // TA EDIT END
 
 /client/proc/open_listed_turf(turf/T)
 	if(!mob || !T || !mob.TurfAdjacent(T))

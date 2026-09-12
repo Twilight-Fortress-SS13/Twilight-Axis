@@ -71,7 +71,7 @@
 	return
 
 /mob/proc/update_cone()
-	return
+	client?.clear_cone_images() // TA EDIT
 
 /mob/living/update_vision_cone()
 	if(client)
@@ -93,46 +93,57 @@
 				hud_used.fov_blocker.dir = src.dir
 		START_PROCESSING(SSincone, client)
 
-/client/proc/update_cone()
-	if(mob)
+/client/proc/update_cone() // TA EDIT START
+	if(!QDELETED(mob))
 		mob.update_cone()
+	else
+		clear_cone_images()
+
+/client/proc/clear_cone_images()
+	if(!length(hidden_images))
+		return
+	images -= hidden_images
+	hidden_images.Cut()
+
+/client/proc/update_cone_image(atom/target, image_flags)
+	if(QDELETED(target))
+		return
+	var/image/cone_image
+	for(var/image/existing_image as anything in hidden_images)
+		if(existing_image.loc == target)
+			cone_image = existing_image
+			break
+	if(!cone_image)
+		cone_image = image(loc = target)
+	var/source_appearance = target.appearance
+	if(hidden_images[cone_image] != source_appearance || cone_image.appearance_flags != image_flags)
+		var/mutable_appearance/cone_appearance = new(source_appearance)
+		cone_appearance.override = TRUE
+		cone_appearance.plane = GAME_PLANE_UPPER
+		cone_appearance.pixel_x = 0
+		cone_appearance.pixel_y = 0
+		cone_appearance.appearance_flags = image_flags
+		cone_image.appearance = cone_appearance
+		hidden_images[cone_image] = source_appearance
+	if(!(cone_image in images))
+		images += cone_image
+	return cone_image
 
 /mob/living/update_cone()
-	for(var/hidden_hud in client.hidden_images)
-		client.images -= hidden_hud
-		client.hidden_images -= hidden_hud
-	if(hud_used?.fov)
-		if(hud_used.fov.alpha == 0)
-			return
-	var/image/I = image(src, src)
-	I.override = 1
-	I.plane = GAME_PLANE_UPPER
-	I.layer = layer
-	I.pixel_x = 0
-	I.pixel_y = 0
-	client.images += I
-	client.hidden_images += I
-	I.appearance_flags = RESET_TRANSFORM|KEEP_TOGETHER|PIXEL_SCALE
-	if(buckled)
-		var/image/IB = image(buckled, buckled)
-		IB.override = 1
-		IB.plane = GAME_PLANE_UPPER
-		IB.layer = IB.layer
-		IB.pixel_x = 0
-		IB.pixel_y = 0
-		IB.appearance_flags = RESET_TRANSFORM|KEEP_TOGETHER
-		client.hidden_images += IB
-		client.images += IB
-	if(pulling)
-		var/image/IB = image(pulling, pulling)
-		IB.override = 1
-		IB.plane = GAME_PLANE_UPPER
-		IB.layer = IB.layer
-		IB.pixel_x = 0
-		IB.pixel_y = 0
-		IB.appearance_flags = RESET_TRANSFORM|KEEP_TOGETHER
-		client.hidden_images += IB
-		client.images += IB
+	if(!client)
+		return
+	if(QDELETED(src) || (hud_used?.fov && hud_used.fov.alpha == 0))
+		client.clear_cone_images()
+		return
+	for(var/index = length(client.hidden_images), index >= 1, index--)
+		var/image/cone_image = client.hidden_images[index]
+		var/atom/target = cone_image.loc
+		if(QDELETED(target) || (target != src && target != buckled && target != pulling))
+			client.images -= cone_image
+			client.hidden_images -= cone_image
+	client.update_cone_image(src, RESET_TRANSFORM|KEEP_TOGETHER|PIXEL_SCALE)
+	client.update_cone_image(buckled, RESET_TRANSFORM|KEEP_TOGETHER)
+	client.update_cone_image(pulling, RESET_TRANSFORM|KEEP_TOGETHER) // TA EDIT END
 /*	if(hud_used && hud_used.fov_blocker)
 		fov_blocker
 
@@ -364,10 +375,12 @@
 		hud_used.fov_blocker.alpha = 255
 	var/atom/movable/screen/plane_master/game_world_fov_hidden/PM = locate(/atom/movable/screen/plane_master/game_world_fov_hidden) in client.screen
 	PM.backdrop(src)
+	update_vision_cone() // TA EDIT
 
 /mob/proc/hide_cone()
 	if(!client)
 		return
+	client.clear_cone_images() // TA EDIT
 	if(!cone_showing)
 		return
 	cone_showing = FALSE
