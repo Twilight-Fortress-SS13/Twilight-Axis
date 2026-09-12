@@ -23,7 +23,9 @@
 
 /obj/item/clothing/head/roguetown/grenzelhofthat/decorated
 	armor = null
-
+	equip_delay_self = 0
+	unequip_delay_self = 0
+	
 /obj/item/clothing/head/roguetown/twilight_elven_hat
 	name = "elven burka"
 	desc = "A warm hat, designed to protect long elven ears from cold winds of northen Valoria."

@@ -130,8 +130,8 @@
 	/// This job is immune to species-based swapped gender locks
 	var/immune_to_genderswap = FALSE
 
-	/// Jobs that are obsfuscated on actor screen
-	var/obsfuscated_job = FALSE
+	/// Jobs that are obfuscated on actor screen
+	var/obfuscated_job = FALSE
 
 	///Jobs that are hidden from actor screen
 	var/hidden_job = FALSE
@@ -409,19 +409,14 @@
 
 	if(cmode_music)
 		H.cmode_music = cmode_music
-	var/department = SSjob.bitflag_to_department(department_flag, obsfuscated_job)
 	if (!hidden_job)
-		var/mob/living/carbon/human/Hu = H
-		if (istype(H, /mob/living/carbon/human))
-			if (obsfuscated_job) // WANDERER
-				GLOB.actors_list[department] += list("[H.mobid]" = "[H.real_name] as the [Hu.dna.species.name] Adventurer<BR>")
-			else
-				GLOB.actors_list[department] += list("[H.mobid]" = "[H.real_name] as the [Hu.dna.species.name] [H.mind.assigned_role]<BR>")
+		var/mob_name = H.real_name
+		var/mob_rank
+		if (obfuscated_job)
+			mob_rank = "Adventurer"
 		else
-			if (obsfuscated_job)
-				GLOB.actors_list[department] += list("[H.mobid]" = "[H.real_name] as Adventurer<BR>")
-			else
-				GLOB.actors_list[department] += list("[H.mobid]" = "[H.real_name] as [H.mind.assigned_role]<BR>")
+			mob_rank = H.mind.assigned_role
+		GLOB.actors_list[H.mobid] = list("name" = mob_name, "rank" = mob_rank)
 
 	if(islist(advclass_cat_rolls))
 		hugboxify_for_class_selection(H)

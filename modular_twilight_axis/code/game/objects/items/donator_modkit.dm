@@ -287,3 +287,54 @@
 	icon_loadout = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/commandant
 
 // COMMANDANT SET END
+
+/obj/item/enchantingkit/crowcane_blade
+	name = "'Crow Cane Blade' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Decorated Rapier or Decorated Sabre."
+	target_items = list(
+		/obj/item/rogueweapon/sword/rapier/dec = /obj/item/rogueweapon/sword/rapier/crowcane,
+		/obj/item/rogueweapon/sword/sabre/dec = /obj/item/rogueweapon/sword/sabre/crowcane)
+	exact_type = TRUE
+	icon_loadout = /obj/item/rogueweapon/sword/rapier/crowcane
+
+/obj/item/enchantingkit/crowcane_blade/inherit_item_mechanics(obj/item/source_item, obj/item/result_item)
+	. = ..()
+	result_item.bigboy = FALSE
+
+/obj/item/enchantingkit/crowcane_scabbard
+	name = "'Crow Cane Scabbard' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Decorated Scabbard, Golden."
+	target_items = list(/obj/item/rogueweapon/scabbard/sword/royal)
+	result_item = /obj/item/rogueweapon/scabbard/sword/crowcane
+	exact_type = TRUE
+	icon_loadout = /obj/item/rogueweapon/scabbard/sword/crowcane
+
+/obj/item/enchantingkit/crowcane_scabbard/pre_attack(obj/item/I, mob/user)
+	if(can_morph_item(I) && length(I.contents))
+		to_chat(user, span_warning("The scabbard must be empty before it can be morphed."))
+		return TRUE
+	return ..()
+
+/obj/item/enchantingkit/crowcane_scabbard/inherit_item_mechanics(obj/item/source_item, obj/item/result_item)
+	. = ..()
+	result_item.bigboy = FALSE
+
+/obj/item/enchantingkit/jezail
+	name = "'Jezail' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Arquebus, Hakenbüchse, or Barker."
+	target_items = list(
+		/obj/item/gun/ballistic/twilight_firearm/arquebus = /obj/item/gun/ballistic/twilight_firearm/arquebus/jezail,
+		/obj/item/gun/ballistic/twilight_firearm/flintgonne = /obj/item/gun/ballistic/twilight_firearm/flintgonne/jezail,
+		/obj/item/gun/ballistic/twilight_firearm/barker = /obj/item/gun/ballistic/twilight_firearm/barker/jezail)
+	exact_type = TRUE
+	icon_loadout = /obj/item/gun/ballistic/twilight_firearm/arquebus/jezail
+
+/obj/item/enchantingkit/teppo
+	name = "'Teppo' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Arquebus, Hakenbüchse, or Barker."
+	target_items = list(
+		/obj/item/gun/ballistic/twilight_firearm/arquebus = /obj/item/gun/ballistic/twilight_firearm/arquebus/teppo,
+		/obj/item/gun/ballistic/twilight_firearm/flintgonne = /obj/item/gun/ballistic/twilight_firearm/flintgonne/teppo,
+		/obj/item/gun/ballistic/twilight_firearm/barker = /obj/item/gun/ballistic/twilight_firearm/barker/teppo)
+	exact_type = TRUE
+	icon_loadout = /obj/item/gun/ballistic/twilight_firearm/arquebus/teppo

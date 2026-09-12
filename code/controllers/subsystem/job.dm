@@ -332,9 +332,9 @@ SUBSYSTEM_DEF(job)
 	unassigned = list()
 	return
 
-/datum/controller/subsystem/job/proc/bitflag_to_department(department_flag, obsfuscated = FALSE)
+/datum/controller/subsystem/job/proc/bitflag_to_department(department_flag, obfuscated = FALSE)
 	var/key = "Wanderers"
-	if(obsfuscated)
+	if(obfuscated)
 		return key
 	switch(department_flag) // Omega tier slop.
 		if(NOBLEMEN)
@@ -353,6 +353,8 @@ SUBSYSTEM_DEF(job)
 			key = "Church"
 		if(BURGHERS)
 			key = "Burghers"
+		if(GUILDSMAN)
+			key = "Guildsmen"
 		if(ATC)
 			key = "Azurian Trading Company"
 		if(PEASANTS)

@@ -301,6 +301,16 @@
   - rscadd: mixing languages in the same sentence [,v Imperial and ,v(this is Otavais)].
   - rscadd: ryan donor
   - bugfix: remove cordage tying
+  Saukykouko:
+  - balance: "\u0421\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u044C Second\
+      \ Wind \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0442\u0440\u0435\u0431\
+      \u0443\u0435\u0442 \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C \u0434\u043B\
+      \u044F \u0430\u043A\u0442\u0438\u0432\u0430\u0446\u0438\u0438, \u0447\u0442\u043E\
+      \ \u043F\u0440\u0435\u0434\u043E\u0442\u0432\u0440\u0430\u0449\u0430\u0435\u0442\
+      \ \u043C\u043E\u043C\u0435\u043D\u0442\u044B, \u043A\u043E\u0433\u0434\u0430\
+      \ \u0410\u0431\u0438\u0441\u0441\u043E\u0440 \u043D\u0435 \u043C\u043E\u0436\
+      \u0435\u0442 \u043A\u0430\u0441\u0442\u043E\u0432\u0430\u0442\u044C \u043F\u043E\
+      \u0434 \u0432\u043E\u0434\u043E\u0439."
   bearrrrrrrr:
   - bugfix: Notorious contract mobs are no longer ai-piloted when taken by a player.
   borneblood:
@@ -313,17 +323,14 @@
   zRainbowcat:
   - bugfix: edited conjured skeleton's items so they are dissapearing once stripped,
       preventing existence of glued-up junk
-  Saukykouko:
-  - balance: "\u0421\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u044C Second\
-      \ Wind \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0442\u0440\u0435\u0431\
-      \u0443\u0435\u0442 \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C \u0434\u043B\
-      \u044F \u0430\u043A\u0442\u0438\u0432\u0430\u0446\u0438\u0438, \u0447\u0442\u043E\
-      \ \u043F\u0440\u0435\u0434\u043E\u0442\u0432\u0440\u0430\u0449\u0430\u0435\u0442\
-      \ \u043C\u043E\u043C\u0435\u043D\u0442\u044B, \u043A\u043E\u0433\u0434\u0430\
-      \ \u0410\u0431\u0438\u0441\u0441\u043E\u0440 \u043D\u0435 \u043C\u043E\u0436\
-      \u0435\u0442 \u043A\u0430\u0441\u0442\u043E\u0432\u0430\u0442\u044C \u043F\u043E\
-      \u0434 \u0432\u043E\u0434\u043E\u0439."
 2026-09-08:
+  Chituka:
+  - balance: Heavy balance now inflicts 3 stamina damage per point of STR difference
+      instead of 2.
+  - balance: Normal balance now helps against other balances, reducing their effects.
+  - rscadd: Estoc now has rapier's special attack.
+  - rscadd: Fish.
+  - bugfix: defenestration now removes job nobility as well.
   Fi:
   - bugfix: Restores and improves the Wretch Licker's title obfuscation when they
       take the "Well Off -> Residency" virtue.
@@ -337,53 +344,6 @@
   - rscadd: you can MMB toggle between ear show, hair+ear show, and both hidden
   - rscadd: MMB layering for belt under cloak
   - balance: give night vision to blind people
-  borneblood:
-  - balance: Blackblood's regeneration gets stunted by 50% for every 'bad scenario'
-      a Blackblood is in and shouldn't be, including (and specifically) being in combat.
-  radarseas:
-  - rscadd: added more variance in styles for missionaries + acolytes + psydonite
-      cantors + druids
-  - balance: Necrans missionaries/acolytes now spawn with winding wraps in their satchel
-      for transporting bodies rapidly.
-  - balance: Druids have recieved a slight miracle level buff (this doesn't really
-      do anything for them)
-  - balance: Druids have slightly higher non-unarmed skills to fight NPCs better with,
-      so they don't die to a skeleton parrying their whip 20 times over, moreso since
-      they lost kneestingers.
-  - balance: Missionary advs + Clergy acolytes + Druids now spawn with some basic
-      medical supplies to do their job, missionaries notably get better needles, this
-      is intended as you're out in the field, acolytes have better tools in their
-      dedicated facilities. Druids aren't healers.
-  - balance: Martyr/Monks/Guardians/Templar/Church Spellblades now spawn with chains
-      in their satchel so they can immediately do their job instead of killing people
-      first, chains later.
-  - balance: Xylixian missionaries no longer get luck charms, instead they get a Patron-Fitting
-      Psicross like everyone else.
-  - balance: Acolytes get apprentice climbing just like missionaries so you can prop
-      a chair up against a wall to climb.
-  - balance: Missionary adventurers get Journeyman medical to put them above Paladin
-      on a Clerical Oath, this should make them more distinctive as a class.
-  - balance: Malumite Acolyte gets a wood-cutting axe off-the bat to give them a bit
-      of patron-distinctive gear, you can still summon gear or melt it down into an
-      anvil but its useful.
-  - balance: Paladins can now pick an arming sword as a weapon choice, which is in
-      most cases better for PVE anyway due to mobs lacking a crit theshold and because
-      it has higher accuracy.
-  - balance: Paladins can't pick between fluted cuirass and haulberk without being
-      to be Psydonites.
-  - balance: Painters and the Abyssorian cult got a minor tuneup in style asimilar
-      to clergymen.
-  - balance: Graggar/Zizo missionaries have a "unique" outfits for now. other ascendants
-      may come later.
-  zRainbowcat:
-  - bugfix: aavnic bow sprite returned
-  Chituka:
-  - balance: Heavy balance now inflicts 3 stamina damage per point of STR difference
-      instead of 2.
-  - balance: Normal balance now helps against other balances, reducing their effects.
-  - rscadd: Estoc now has rapier's special attack.
-  - rscadd: Fish.
-  - bugfix: defenestration now removes job nobility as well.
   Saukykouko:
   - rscadd: "\u041C\u0438\u0441\u0441\u0438\u043E\u043D\u0435\u0440\u044B-\u0430\u0434\
       \u0432\u0435\u043D\u0447\u0443\u0440\u044B \u0438 \u0435\u0440\u0435\u0442\u0438\
@@ -509,11 +469,51 @@
   - bugfix: "\u0423\u043B\u0443\u0447\u0448\u0435\u043D \u0418\u0418 Dreamfiend, \u0434\
       \u0443\u0445\u043E\u0432 \u0420\u0430\u0432\u043E\u043A\u0441\u0430 \u0438 \u043A\
       \u0440\u0430\u0431\u0430 \u0438\u0437 Call Mossback."
+  borneblood:
+  - balance: Blackblood's regeneration gets stunted by 50% for every 'bad scenario'
+      a Blackblood is in and shouldn't be, including (and specifically) being in combat.
+  radarseas:
+  - rscadd: added more variance in styles for missionaries + acolytes + psydonite
+      cantors + druids
+  - balance: Necrans missionaries/acolytes now spawn with winding wraps in their satchel
+      for transporting bodies rapidly.
+  - balance: Druids have recieved a slight miracle level buff (this doesn't really
+      do anything for them)
+  - balance: Druids have slightly higher non-unarmed skills to fight NPCs better with,
+      so they don't die to a skeleton parrying their whip 20 times over, moreso since
+      they lost kneestingers.
+  - balance: Missionary advs + Clergy acolytes + Druids now spawn with some basic
+      medical supplies to do their job, missionaries notably get better needles, this
+      is intended as you're out in the field, acolytes have better tools in their
+      dedicated facilities. Druids aren't healers.
+  - balance: Martyr/Monks/Guardians/Templar/Church Spellblades now spawn with chains
+      in their satchel so they can immediately do their job instead of killing people
+      first, chains later.
+  - balance: Xylixian missionaries no longer get luck charms, instead they get a Patron-Fitting
+      Psicross like everyone else.
+  - balance: Acolytes get apprentice climbing just like missionaries so you can prop
+      a chair up against a wall to climb.
+  - balance: Missionary adventurers get Journeyman medical to put them above Paladin
+      on a Clerical Oath, this should make them more distinctive as a class.
+  - balance: Malumite Acolyte gets a wood-cutting axe off-the bat to give them a bit
+      of patron-distinctive gear, you can still summon gear or melt it down into an
+      anvil but its useful.
+  - balance: Paladins can now pick an arming sword as a weapon choice, which is in
+      most cases better for PVE anyway due to mobs lacking a crit theshold and because
+      it has higher accuracy.
+  - balance: Paladins can't pick between fluted cuirass and haulberk without being
+      to be Psydonites.
+  - balance: Painters and the Abyssorian cult got a minor tuneup in style asimilar
+      to clergymen.
+  - balance: Graggar/Zizo missionaries have a "unique" outfits for now. other ascendants
+      may come later.
   sinerume:
   - rscadd: "\u041D\u043E\u0432\u044B\u0439 \u043A\u043B\u0430\u0441\u0441 \u041A\u0440\
       \u043E\u0432\u0430\u0432\u044B\u0439 \u0440\u0435\u0439\u0434\u0435\u0440"
   - rscadd: "\u041D\u043E\u0432\u0430\u044F \u043F\u0443\u0448\u043A\u0430 \u0411\u043B\
       \u0430\u0434\u043B\u043E\u043A"
+  zRainbowcat:
+  - bugfix: aavnic bow sprite returned
 2026-09-09:
   Acrepe:
   - refactor: Reverted wretches to previous Second Chance availability
@@ -552,3 +552,148 @@
   - rscadd: more gameplay tips in timechangers
   radarseas:
   - rscadd: Added heretic daggers to heretic spies of other inhumen patrons.
+2026-09-10:
+  KatTheFox:
+  - bugfix: Nocblades are now unconvertible, as a patron-locked role.
+  - bugfix: Prayers are no longer double-sanitized in chat, meaning apostrophes will
+      no longer be mutated in your prayer whisper
+  - bugfix: Conversions from one of the Ten to another no longer provide a mood buff,
+      this was the last mechanical benefit they had. This isn't a gamey thing it's
+      meant to be a roleplay tool, guys, come on.
+  Lamasmaster:
+  - bugfix: Elemental arrows using wrong icons.
+  - image: Shortens the arrow sprites to fit better on the bows and onmob, elemental
+      arrows now have a unified sprite.
+  Ollanius:
+  - bugfix: CKEY-specific shibari ropes now properly render their object sprite.
+  - bugfix: Iron Pigfaces and Bascinets now have their proper unreversed naming schemes,
+      just like their Steel variants.
+  - bugfix: Fixes an errant capitalization on 'cooling backpack'.
+  - bugfix: Dwarven bodytypes can now wear Grenzelhoftian boots, Freifechter boots,
+      and Freifechter pants.
+  - bugfix: Tabis can now be worn by both men and women.
+  - bugfix: Morphing elixirs that can potentially delete items now have a warning
+      in their description. This is only notable towards the types that can alter
+      storage-centric equipment, such as belts and satchels.
+  - bugfix: Plackarts no longer mysteriously obscure one's uncovered chest and crotch.
+  - rscadd: Detailing support for decorated armor, allowing for the steel to be colored
+      independantly from the golden trim.
+  - rscadd: Belted backpacks and shaded hats, as Donator-specific items. Note that
+      belted backpacks, despite the name, do not actually go on the belt; they're
+      just a reskin.
+  - rscadd: Plackarts can now be morphed from studded- and heavy leather armorpieces,
+      alongside steel- and fluted halfplate.
+  - rscadd: Elegant Stechers and Winged Spears, morphed from Stechers and Enduring
+      Spears via the 'Elegant Armory' Morphing Elixir.
+  - rscadd: Donator-specific greatcoats, coming in both dyeable and leatherspun variants.
+      RMBing allows them to be worn more loosely around the shoulders.
+  - rscadd: The Inquisitor's longcoat can now be attached to an Ordinator's set of
+      plate armor.
+  - rscadd: Scabbard support for Lagomorphica's and Stalkerino's swords.
+  - rscadd: CKEY-locked donator items to Naman, Terrydactal, DRD, Lizzy, and Sanshoom.
+  - rscadd: Standalone Shieldcrest variant for orles.
+  SaundMinah:
+  - rscadd: Added ckeys to previous donor items originally merged by my request.
+  - rscadd: Added Astratan Cadwyn Items for Specific Donors
+  - rscadd: Added additional Ckeys to Ravoxian Cadwyn Items.
+  ShadowLarkens:
+  - rscadd: You can now force the preview grid size to 1x1, 2x2, or 3x3 instead of
+      autosizing to character.
+  - bugfix: Refreshing preview while outside 1x1 grid size will no longer break the
+      character position.
+  - bugfix: highlight_color ignored the red channel, no longer.
+  - bugfix: Taurs will no longer infect every credit icon after them with their tauriness
+  bearrrrrrrr:
+  - rscadd: BEEEEG Baotha update pt 2, peep github for more info.
+  borneblood:
+  - bugfix: Rekindled Exchange now checks if you're dead before doing its thing, oops.
+  mumblemancer:
+  - code_imp: all RMB bundling is now universal
+  - rscadd: bones should now be RMB collectable as well as cured leather
+  - qol: meathook mechanics examine given
+  - qol: meathook is faster if the target is dead
+  - qol: meathook can be MMB'd to move items off it's tile
+  - balance: 'touched meathook times a bit for hooking/unhooking
+
+      code; tried to make meathook code more readable'
+  - rscadd: assassins are forced gaggar patron on antag datum gain
+  - rscadd: assassins who (somehow) clerics of a different faith will gain gaggar
+      miracles
+  - rscdel: ever heard of fifth humor, buddy?
+  - rscadd: the other 4 humors
+  - code_imp: quotes/tips will alternate depending on what day of the week it is
+2026-09-11:
+  Ollanius:
+  - rscadd: Morto's unique donator-specific dress.
+  - code_imp: Stages some supplemental assets for later, including some more donator-specific
+      sprites.
+  - rscadd: Shalwar Pants and Dupatta Sash. Credit to Dromkii for the sprites!
+  Quinalion:
+  - image: "Dendorite\u2019s helmet now looks normal."
+  - bugfix: Emotes now properly appear as Runechat messages above your character's
+      head.
+  - balance: The ogre mask now has the durability of a steel mask and blocks vision
+      as intended.
+  - rscadd: You can now light another character's cigarette while kissing them.
+  - qol: Removed the redundant dram count description from vessels.
+  - balance: "\u0420\u0435\u0432\u043e\u0440\u043a \u0440\u0443\u043d\u043d\u044b\u0445\
+      \ \u043a\u043b\u0430\u0441\u0441\u043e\u0432 \u0438\u043d\u043a\u0432\u0438\u0437\
+      \u0438\u0446\u0438\u0438."
+  Ryan180602:
+  - balance: jester's floor of music skill is expert
+  WeNeedMorePhoron:
+  - balance: Dash like effects lock eachother out for 30 seconds
+  changelingonberry:
+  - admin: increases the window size of  he actors manifest, VV, player panel and
+      logs windows
+  kilozombie:
+  - rscadd: Dun World hamlet expanded. Town center given a well, church given a basement,
+      caves expanded, farmer's house given a second floor, inn given a humid hookah
+      den, stairs added to the coast
+  - qol: Dun World hamlet touched up. Herbs and bushes can now spawn, inn rooms expanded,
+      basements detailed, west house given a proper porch, smithy house made into
+      a small storefront, various layouts retooled to become more usable
+  - bugfix: Giant stupid skywall removed from the northmost point of the top Z-level
+      on Dun World
+  zRainbowcat:
+  - bugfix: Xylix decoy now copy your looks properly
+  - bugfix: "\u0428\u0430\u043f\u043a\u0430 \u0433\u0440\u0435\u043d\u0437\u0435\u043b\
+      \u0435\u0439 \u0438\u0437 \u043b\u043e\u0430\u0434\u0430\u0443\u0442\u0430 \u0431\
+      \u043e\u043b\u044c\u0448\u0435 \u043d\u0435 \u0442\u0440\u0435\u0431\u0443\u0435\
+      \u0442 \u0443\u0441\u0438\u043b\u0438\u0439 \u0448\u043b\u0435\u043c\u0430 \u0434\
+      \u043b\u044f \u0441\u043d\u044f\u0442\u0438\u044f"
+  - bugfix: "\u041b\u0430\u0443\u043d\u0447\u0435\u0440 \u0438\u043d\u0436\u0435\u043d\
+      \u0435\u0433\u0440\u043e\u0432 \u0431\u043e\u043b\u0435\u0435 \u043d\u0435 \u0441\
+      \u0442\u0440\u0435\u043b\u044f\u0435\u0442 \u043e\u0433\u043d\u0435\u0441\u0442\
+      \u0440\u0435\u043b\u043e\u043c"
+  Oni328:
+  - qol: "\u0421\u043b\u0435\u0433\u043a\u0430 \u0438\u0437\u043c\u0435\u043d\u0438\
+      \u043b \u043b\u043e\u0434\u0430\u0443\u0442 \u0440\u043e\u0433\u0438 \u0438\u0437\
+      \ \u041c\u0438\u0440\u0430\u0436\u0444\u0435\u043d\u0430."
+  Pivo24:
+  - rscadd: "Nude Sleeper \u0442\u0435\u043f\u0435\u0440\u044c \u043c\u043e\u0436\u043d\
+      \u043e \u0432\u044b\u0431\u0440\u0430\u0442\u044c \u0432 \u043a\u0430\u0447\u0435\
+      \u0441\u0442\u0432\u0435 \u0432\u0430\u0439\u0441\u0430"
+  Vladmar11:
+  - refactor: "\u041e\u043f\u0442\u0438\u043c\u0438\u0437\u0430\u0446\u0438\u044f\
+      \ do_after, do_mob \u0438 \u043f\u0440\u043e\u0433\u0440\u0435\u0441\u0441\u0431\
+      \u0430\u0440\u0430"
+2026-09-12:
+  BurpleBineapple:
+  - rscadd: Added a rare FOR based easter egg to weapon flourishing.
+  Dorodomki:
+  - rscadd: 'Added new donator item for lief
+
+      :cl:'
+  KatTheFox:
+  - bugfix: Elemental familiars no longer qdel themselves if you abandon them for
+      too long. You monster.
+  - bugfix: Void drakelings being dismissed via the free familiar ritual will now
+      refund the resources used to summon them.
+  - bugfix: Revenant heads can now be properly panelled
+  borneblood:
+  - bugfix: Fixed more things with Rekindled Exchange
+  plsleavemealon:
+  - rscadd: Ports a hat and cape sprite from vanderlin
+  voidwytch:
+  - rscadd: Added TEN new sets of clothes, acquirable at the Tailor only

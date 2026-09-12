@@ -239,43 +239,6 @@
 	desc = ""
 	icon_state = "acid"
 
-/datum/status_effect/buff/baothablessing
-	id = "druqks"
-	alert_type = /atom/movable/screen/alert/status_effect/buff/baothablessing
-	duration = 2 MINUTES
-
-/datum/status_effect/buff/baothablessing/on_apply()
-	. = ..()
-	ADD_TRAIT(owner, TRAIT_CRACKHEAD, TRAIT_MIRACLE)
-	if(owner?.client)
-		if(owner.client.screen && owner.client.screen.len)
-			var/atom/movable/screen/plane_master/game_world/PM = locate(/atom/movable/screen/plane_master/game_world) in owner.client.screen
-			PM.backdrop(owner)
-			PM = locate(/atom/movable/screen/plane_master/game_world_fov_hidden) in owner.client.screen
-			PM.backdrop(owner)
-			PM = locate(/atom/movable/screen/plane_master/game_world_above) in owner.client.screen
-			PM.backdrop(owner)
-			owner.add_stress(/datum/stressevent/high)
-
-/datum/status_effect/buff/baothablessing/on_remove()
-	REMOVE_TRAIT(owner, TRAIT_CRACKHEAD, TRAIT_MIRACLE)
-	if(owner?.client)
-		if(owner.client.screen && owner.client.screen.len)
-			var/atom/movable/screen/plane_master/game_world/PM = locate(/atom/movable/screen/plane_master/game_world) in owner.client.screen
-			PM.backdrop(owner)
-			PM = locate(/atom/movable/screen/plane_master/game_world_fov_hidden) in owner.client.screen
-			PM.backdrop(owner)
-			PM = locate(/atom/movable/screen/plane_master/game_world_above) in owner.client.screen
-			PM.backdrop(owner)
-			owner.remove_stress(/datum/stressevent/high)
-
-	. = ..()
-
-/atom/movable/screen/alert/status_effect/buff/baothablessing
-	name = "Baothan Blessing"
-	desc = "Baotha has blessed you with immunity to overdose. Rejoice!"
-	icon_state = "acid"
-
 /datum/status_effect/buff/ozium
 	id = "ozium"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/druqks
@@ -2512,7 +2475,7 @@
 	duration = 5 SECONDS
 	var/original_alpha = 255
 
-/datum/status_effect/buff/phase/on_creation(mob/living/new_owner)
+/datum/status_effect/buff/phase/on_creation(mob/living/new_owner, duration_mult = 1)
 	if(ishuman(new_owner))
 		var/mob/living/carbon/human/H = new_owner
 		switch(H.highest_ac_worn())
@@ -2528,6 +2491,7 @@
 			if(ARMOR_CLASS_HEAVY)
 				duration = 2 SECONDS
 				effectedstats[STATKEY_SPD] = 1
+	duration *= duration_mult
 	. = ..()
 
 /datum/status_effect/buff/phase/on_apply()

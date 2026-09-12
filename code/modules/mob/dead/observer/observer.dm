@@ -1064,7 +1064,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	if(!J)
 		return null
 
-	var/department = SSjob.bitflag_to_department(J.department_flag, J.obsfuscated_job)
+	var/department = SSjob.bitflag_to_department(J.department_flag, J.obfuscated_job)
 	switch(department)
 		if("Noblemen")
 			return "Ducal Family"
@@ -1148,7 +1148,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 			if(J.selection_color)
 				resolved_color = J.selection_color
 			else
-				var/department = SSjob.bitflag_to_department(J.department_flag, J.obsfuscated_job)
+				var/department = SSjob.bitflag_to_department(J.department_flag, J.obfuscated_job)
 				var/list/department_colors = JCOLOR_BY_DEPARTMENT
 				if(department_colors[department])
 					resolved_color = department_colors[department]
