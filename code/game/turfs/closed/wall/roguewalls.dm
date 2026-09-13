@@ -409,6 +409,7 @@
 	name = "brick window"
 	desc = "A window with a solid and sturdy stone frame."
 	opacity = FALSE
+	icon_state = "brickwindow"
 	max_integrity = 1400
 
 /////////////////

@@ -242,4 +242,9 @@
 	ADD_TRAIT(H, TRAIT_MASTER_MASON, TRAIT_GENERIC)
 	if(H.mind)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/takeapprentice)
+		var/datum/action/cooldown/spell/architect_plan/P = new /datum/action/cooldown/spell/architect_plan(H)
+		P.Grant(H)
+
+		var/datum/action/cooldown/spell/architect_conjure/C = new /datum/action/cooldown/spell/architect_conjure(H)
+		C.Grant(H)
 		SStreasury.grant_savings(ECONOMIC_UPPER_MIDDLE_CLASS, H)
