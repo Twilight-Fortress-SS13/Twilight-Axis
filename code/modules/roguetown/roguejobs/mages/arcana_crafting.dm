@@ -54,14 +54,6 @@
 				/obj/item/magic/voidstone = 1)
 	craftdiff = SKILL_LEVEL_JOURNEYMAN
 
-/datum/crafting_recipe/roguetown/arcana/temporalhourglass
-	name = "temporal hourglass"
-	result = /obj/item/hourglass/temporal
-	reqs = list(/obj/item/natural/wood/plank = 4,
-				/obj/item/magic/leyline = 1,
-				/obj/item/magic/fae/heartwoodcore = 1)
-	craftdiff = SKILL_LEVEL_JOURNEYMAN
-
 /datum/crafting_recipe/roguetown/arcana/shimmeringlens
 	name = "shimmering lens"
 	result = /obj/item/clothing/ring/active/shimmeringlens
