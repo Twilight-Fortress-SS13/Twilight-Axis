@@ -45,19 +45,7 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 		apply_dnr_trait(character, player)
 	if(player.prefs.qsr_pref)
 		apply_qsr_trait(character, player)
-	character.mind.triumph_discount_remaining = get_donator_triumph_discount(player.ckey)
-	if(player.prefs.gear_list)
-		for(var/key in player.prefs.gear_list)
-			var/datum/loadout_item/item = GLOB.loadout_items_by_name[key]
-			if(!item)
-				continue
-			if(item.triumph_cost)
-				character.mind.special_items["[item.name][TRIUMPH_STASH_SUFFIX]"] = item.path
-			else
-				character.mind.special_items[item.name] = item.path
-			var/list/loadout_metadata = player.prefs.gear_list[key] // TA EDIT START
-			if(islist(loadout_metadata) && loadout_metadata.len)
-				character.mind.special_items_metadata[item.name] = deepCopyList(loadout_metadata) // TA EDIT END
+	tat_apply_legacy_preference_loadout(character, player)
 	var/datum/job/assigned_job = SSjob.GetJob(character.mind?.assigned_role)
 	var/list/prefs = player.prefs?.job_subprefs
 	if(prefs)

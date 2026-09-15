@@ -352,6 +352,10 @@
 					if(IT.is_important)
 						continue
 					if(IT.atc_sealed)
+					//TA start edit - TAT system
+						continue
+					if(IT.tat_trade_locked)
+					//TA end edit - TAT system
 						continue
 					if(IT.unmintable && !accepts_unmintable)
 						continue
