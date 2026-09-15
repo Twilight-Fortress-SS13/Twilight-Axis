@@ -76,8 +76,8 @@
 #define ARMOR_INT_HELMET_BRONZE 350 //More integrity, less protection.
 #define ARMOR_INT_HELMET_STEEL 300
 #define ARMOR_INT_HELMET_IRON 225
-#define ARMOR_INT_HELMET_HARDLEATHER 200
-#define ARMOR_INT_HELMET_LEATHER 150
+#define ARMOR_INT_HELMET_HARDLEATHER 250 // TA EDIT
+#define ARMOR_INT_HELMET_LEATHER 200 // TA EDIT
 #define ARMOR_INT_HELMET_CLOTH 100
 
 // Chest / Armor Pieces
@@ -100,18 +100,18 @@
 #define ARMOR_INT_CHEST_MEDIUM_IRON 225
 #define ARMOR_INT_CHEST_MEDIUM_SCALE 200 // More coverage, less integrity
 #define ARMOR_INT_CHEST_PLATE_BRIGANDINE 350 //weaker protection, more integrity.
-#define ARMOR_INT_CHEST_PLATE_BRIGANDINE_WEIGHT_MODIFIER 100 //Deducted from Light AC brigandine parts, added to Heavy AC brigandine parts.
+#define ARMOR_INT_CHEST_PLATE_BRIGANDINE_WEIGHT_MODIFIER 50 //Deducted from Light AC brigandine parts, added to Heavy AC brigandine parts. // TA EDIT
 #define ARMOR_INT_CHEST_MEDIUM_DECREPIT 150
 
 // LIGHT
 #define ARMOR_INT_CHEST_LIGHT_ANTAG 360 //1.5x Master.
 #define ARMOR_INT_CHEST_LIGHT_ELITE 300 //1.25x Master. Snowflake top-tier light armor
-#define ARMOR_INT_CHEST_LIGHT_MASTER 240 // High tier cloth / leather armor
-#define ARMOR_INT_CHEST_LIGHT_MEDIUM 200 // Medium tier cloth / leather armor
-#define ARMOR_INT_CHEST_LIGHT_BASE 160
+#define ARMOR_INT_CHEST_LIGHT_MASTER 300 // High tier cloth / leather armor // TA EDIT
+#define ARMOR_INT_CHEST_LIGHT_MEDIUM 250 // Medium tier cloth / leather armor // TA EDIT
+#define ARMOR_INT_CHEST_LIGHT_BASE 200 // TA EDIT
 #define ARMOR_INT_CHEST_LIGHT_BRONZE 180
 #define ARMOR_INT_CHEST_LIGHT_STEEL 180
-#define ARMOR_INT_CHEST_LIGHT_IRON 150
+#define ARMOR_INT_CHEST_LIGHT_IRON 180 // TA EDIT
 #define ARMOR_INT_CHEST_CIVILIAN 100
 #define ARMOR_INT_LIGHT_FENCER_MODIFIER 30 //bonus integrity for Fencer items over standard light armor.
 #define ARMOR_INT_LIGHT_BETWEENTIER_MODIFIER 25 //Penalty for studded leather, bonus for various other variants.
@@ -127,8 +127,8 @@
 #define ARMOR_INT_LEG_BRIGANDINE 250
 #define ARMOR_INT_LEG_IRON_CHAIN 225
 #define ARMOR_INT_LEG_DECREPIT_CHAIN 150
-#define ARMOR_INT_LEG_HARDLEATHER 200
-#define ARMOR_INT_LEG_LEATHER 150
+#define ARMOR_INT_LEG_HARDLEATHER 250 // TA EDIT
+#define ARMOR_INT_LEG_LEATHER 200 // TA EDIT
 #define ARMOR_INT_LEG_CLOTH 10
 
 // SIDE PIECES - Non-Chest armor
@@ -137,8 +137,8 @@
 #define ARMOR_INT_SIDE_BRONZE 250 // Integrity for bronze pieces
 #define ARMOR_INT_SIDE_STEEL 300 // Integrity for steel pieces
 #define ARMOR_INT_SIDE_IRON 225 // Integrity for iron pieces
-#define ARMOR_INT_SIDE_HARDLEATHER 200
-#define ARMOR_INT_SIDE_LEATHER 150 // Integrity for leather / copper pieces
+#define ARMOR_INT_SIDE_HARDLEATHER 250 // TA EDIT
+#define ARMOR_INT_SIDE_LEATHER 200 // Integrity for leather / copper pieces // TA EDIT
 #define ARMOR_INT_SIDE_DECREPIT 150 // Integrity for decrepit pieces
 #define ARMOR_INT_SIDE_CLOTH 100 // Integrity for cloth / aesthetic oriented pieces
 #define ARMOR_INT_SIDE_GOLDPLUS 10 // Integrity for royal variants of golden / cermemonial pieces
