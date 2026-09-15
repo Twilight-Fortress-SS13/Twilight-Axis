@@ -41,6 +41,14 @@
 /datum/erp_link_rules/proc/is_dullahan_scene(datum/erp_sex_link/L)
 	return L?.actor_passive?.is_dullahan_scene() || FALSE
 
+/// Template conditional for a partner's anatomy/customization tag.
+/datum/erp_link_rules/proc/partner_has_appearance_tag(datum/erp_sex_link/L, tag)
+	return L?.actor_passive?.has_appearance_tag(tag) || FALSE
+
+/// Template conditional for the initiating actor's anatomy/customization tag.
+/datum/erp_link_rules/proc/actor_has_appearance_tag(datum/erp_sex_link/L, tag)
+	return L?.actor_active?.has_appearance_tag(tag) || FALSE
+
 /// Template conditional (knot).
 /datum/erp_link_rules/proc/is_knot_scene(datum/erp_sex_link/L)
 	if(!L)
