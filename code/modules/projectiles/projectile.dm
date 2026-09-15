@@ -763,7 +763,7 @@
 				start_loc = above
 		else if(arcshot && targloc.z < curloc.z)
 			var/turf/hole = locate(targloc.x, targloc.y, curloc.z)
-			if(istype(hole, /turf/open/transparent/openspace))
+			if(istype(hole, /turf/open/openspace))
 				target = hole
 				targloc = hole
 

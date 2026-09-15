@@ -255,8 +255,7 @@
 	var/fire_type = /obj/machinery/light/rogue/campfire/miracle_pyre
 	var/static/list/turf_blacklist = list(
 		/turf/open/water,
-		/turf/open/transparent,
-		/turf/closed/transparent,
+		/turf/open/openspace,
 		)
 
 /datum/action/cooldown/spell/astrata/miracle_pyre/cast(atom/cast_on)
