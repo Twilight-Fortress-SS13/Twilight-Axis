@@ -84,7 +84,8 @@
 		/obj/item/rogueweapon/scabbard/sheath = 1
 		)
 	H.merctype = 1
-
+//TA EDIT START - Shaman class moved to modular_twilight_axis/code/modules/jobs/job_types/roguetown/sidefolk/mercenary/atgervi_shaman.dm
+/*
 /datum/advclass/mercenary/atgervi_shaman
 	name = "Atgervi Shaman"
 	tutorial = "You are a Shaman of the Fjall, The Northern Empty. Shamans are savage combatants who commune with the Ecclesical Beast Gods through ritualistic violence, rather than idle prayer."
@@ -171,7 +172,8 @@
 		/obj/item/rogueweapon/scabbard/sheath = 1
 		)
 	H.merctype = 1
-
+*/
+//TA EDIT END
 /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/atgervi
 	name = "varangian hauberk"
 	desc = "The pride of the Highland mercenaries, this hauberk is a well crafted blend of chain and leather woven into a dense, protective coat."
