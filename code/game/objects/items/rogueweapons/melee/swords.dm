@@ -81,7 +81,7 @@
 	name = "falx"
 	desc = "An unusual type of curved sword that evolved from the farmer's sickle. It has an inwards edge, making it useful for cutting and chopping, great for destroying shields and men alike."
 	force = 22
-	possible_item_intents = list(/datum/intent/sword/cut/falx, /datum/intent/sword/chop/falx, /datum/intent/sword/cut/falx/heavy, /datum/intent/sword/strike)
+	possible_item_intents = list(/datum/intent/sword/cut/falx, /datum/intent/sword/chop/falx, /datum/intent/sword/strike) // TA EDIT
 	icon_state = "falx"
 	max_blade_int = 230 // Tiny downgrade like the sabre
 	gripped_intents = null
@@ -591,7 +591,7 @@
 	icon_state = "germanlong"
 	max_blade_int = 275
 	possible_item_intents = list(/datum/intent/sword/cut, /datum/intent/sword/thrust/long, /datum/intent/dagger/sucker_punch, SWORD_STRIKE)
-	gripped_intents = list(/datum/intent/sword/cut, /datum/intent/sword/thrust/long, /datum/intent/sword/thrust/long/halfsword/lesser, /datum/intent/sword/chop)
+	gripped_intents = list(/datum/intent/sword/cut, /datum/intent/sword/thrust/long, /datum/intent/sword/chop) // TA EDIT
 	wlength = WLENGTH_NORMAL
 
 /obj/item/rogueweapon/sword/long/zizo
@@ -1420,7 +1420,7 @@
 	desc = "A magnificent shortsword of blacksteel. Divorced from the labors that originally warranted its creation, yet no-less-adept at cleaving \
 	whatever might trouble one's morning strolls."
 	force = 27
-	possible_item_intents = list(/datum/intent/sword/cut/sabre, /datum/intent/sword/thrust, /datum/intent/axe/chop, /datum/intent/sword/cut/sabre/heavy)
+	possible_item_intents = list(/datum/intent/sword/cut/sabre, /datum/intent/sword/thrust, /datum/intent/axe/chop) // TA EDIT
 	smeltresult = /obj/item/ingot/blacksteel
 	icon_state = "bs_messer"
 	sheathe_icon = "bs_messer"
@@ -1433,7 +1433,7 @@
 	notoriously cementing itself as the preferred weapon of the Potentate's Hussars."
 	icon_state = "sabre"
 	sheathe_icon = "sabre"
-	possible_item_intents = list(/datum/intent/sword/cut/sabre, /datum/intent/sword/cut/sabre/heavy, /datum/intent/sword/thrust/sabre, /datum/intent/sword/strike)
+	possible_item_intents = list(/datum/intent/sword/cut/sabre, /datum/intent/sword/thrust/sabre, /datum/intent/sword/strike)  // TA EDIT
 	gripped_intents = null
 	parrysound = list('sound/combat/parry/bladed/bladedthin (1).ogg', 'sound/combat/parry/bladed/bladedthin (2).ogg', 'sound/combat/parry/bladed/bladedthin (3).ogg')
 	swingsound = BLADEWOOSH_SMALL
@@ -1605,7 +1605,7 @@
 	wdefense = 6	//Loses 1 wdef for that extra 2 force
 	icon_state = "tabi"
 	icon = 'icons/roguetown/weapons/swords64.dmi'
-	possible_item_intents = list(/datum/intent/sword/cut/sabre, /datum/intent/sword/chop, /datum/intent/sword/cut/sabre/heavy, /datum/intent/sword/strike)
+	possible_item_intents = list(/datum/intent/sword/cut/sabre, /datum/intent/sword/chop, /datum/intent/sword/strike)  // TA EDIT
 	bigboy = TRUE
 	pixel_y = -16
 	pixel_x = -16
@@ -1639,7 +1639,7 @@
 	inhand_y_dimension = 64
 	dropshrink = 0.75
 	max_blade_int = 230
-	possible_item_intents = list(/datum/intent/sword/thrust/rapier, /datum/intent/sword/cut/rapier, /datum/intent/sword/thrust/rapier/lunge)
+	possible_item_intents = list(/datum/intent/sword/thrust/rapier, /datum/intent/sword/cut/rapier)  // TA EDIT
 	gripped_intents = null
 	special = /datum/special_intent/piercing_lunge
 	parrysound = list(
@@ -1773,7 +1773,7 @@
 	icon_state = "blacksteelrapier"
 	sheathe_icon = "blacksteelrapier"
 	max_blade_int = 400
-	possible_item_intents = list(/datum/intent/sword/thrust/rapier, /datum/intent/sword/cut/rapier, /datum/intent/sword/thrust/rapier/lunge)
+	possible_item_intents = list(/datum/intent/sword/thrust/rapier, /datum/intent/sword/cut/rapier) // TA EDIT
 	wdefense = 9 //Absurdly high defense, but no added integrity; for the discerning duelmaster.
 	var/used = FALSE
 	var/list/selection = list(
@@ -2078,7 +2078,7 @@
 	force = 22
 	force_wielded = 27 // Do not want it to become the meat mulcher on 2 hand with this speed
 	possible_item_intents = list(/datum/intent/sword/cut/falx, /datum/intent/sword/strike, /datum/intent/sword/chop/falx)
-	gripped_intents = list(/datum/intent/sword/cut/falx, /datum/intent/sword/chop/falx, /datum/intent/sword/cut/falx/heavy, /datum/intent/sword/cut/zwei/sweep)
+	gripped_intents = list(/datum/intent/sword/cut/falx, /datum/intent/sword/chop/falx, /datum/intent/sword/cut/zwei/sweep)  // TA EDIT
 	icon_state = "rhomphaia"
 	smeltresult = /obj/item/ingot/steel
 
