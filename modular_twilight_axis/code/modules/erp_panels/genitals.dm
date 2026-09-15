@@ -211,7 +211,7 @@
 
 /proc/ta_uses_wide_taur_genitals(mob/living/carbon/owner)
 	var/obj/item/bodypart/taur/taur_body = owner?.get_taur_tail()
-	return istype(taur_body, /obj/item/bodypart/taur/spider) || istype(taur_body, /obj/item/bodypart/taur/horse)
+	return istype(taur_body, /obj/item/bodypart/taur/spider) || istype(taur_body, /obj/item/bodypart/taur/horse) || istype(taur_body, /obj/item/bodypart/taur/feline) || istype(taur_body, /obj/item/bodypart/taur/feline_furry)
 
 /datum/sprite_accessory/penis/get_appearance(obj/item/organ/organ, obj/item/bodypart/bodypart, color_string)
 	var/mob/living/carbon/owner = organ?.owner
