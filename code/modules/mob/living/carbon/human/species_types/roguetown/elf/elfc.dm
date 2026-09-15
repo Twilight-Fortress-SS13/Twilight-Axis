@@ -28,6 +28,8 @@
 	It is a common sentiment among Sun Elves that they are the 'chosen' of Astrata, leading \
 	to a great deal of condescension or disdain toward those faiths deemed 'lesser'."
 
+	// TA REMOVAL START - NOW EVERY RACE CAN CHOOSE BONUSES, SEE code/modules/mob/living/carbon/human/species.dm, 183 line for more information
+	/*
 	custom_selection = list(
 		"+1 FOR" = STATKEY_LCK,
 		"+1 INT" = STATKEY_INT,
@@ -37,6 +39,8 @@
 		"+1 STR, -1 CON" = list(STATKEY_STR = 1, STATKEY_CON = -1),
 		"Astratan Affinity" = list(TRAIT_ASTRATAN_AFFINITY, /datum/virtue/combat/devotee/astratan_affinity)
 	)
+	*/
+	// TA REMOVAL END
 
 	skin_tone_wording = "Skintone"
 	use_skin_tone_wording_for_examine = FALSE
@@ -187,5 +191,15 @@
 /datum/species/elf/sun/random_surname()
 	return " [pick(world.file2list("strings/rt/names/elf/elfwlast.txt"))]"
 
+// TA EDIT START
+// ORIGINAL:
+/*
 /datum/species/elf/sun/get_string_bonus_stats(return_null_if_no_stats = FALSE, end_with_glue = FALSE)
 	return ..(TRUE, TRUE) + "CHOOSE: +1 bonus stat of your choosing, OR Astratan Affinity (Tier 0 Miracles, Astrata patron only)"
+*/
+// ORIGINAL END
+
+/datum/species/elf/sun/get_string_bonus_stats(return_null_if_no_stats = FALSE, end_with_glue = FALSE)
+	return ..(TRUE, TRUE) + "CHOOSE: +1 bonus stat to 2 stats of your choosing, OR Astratan Affinity (Tier 0 Miracles, Astrata patron only) and +1 stat"
+
+// TA EDIT END

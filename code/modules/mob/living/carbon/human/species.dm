@@ -176,7 +176,26 @@ GLOBAL_LIST_EMPTY(roundstart_races_paths)
 
 	var/list/restricted_virtues
 
+	// TA EDIT START - ORIRIGNAL:
+	/*
 	var/list/custom_selection
+	*/
+	// ORIGINAL END
+	var/list/custom_selection = list(
+		"+1 FOR, +1 PER" = list(STATKEY_LCK = 1, STATKEY_PER = 1),
+		"+1 FOR, +1 INT" = list(STATKEY_LCK = 1, STATKEY_INT = 1),
+		"+1 FOR, +1 CON" = list(STATKEY_LCK = 1, STATKEY_CON = 1),
+		"+1 FOR, +1 WIL" = list(STATKEY_LCK = 1, STATKEY_WIL = 1),
+		"+1 INT, +1 PER" = list(STATKEY_INT = 1, STATKEY_PER = 1),
+		"+1 INT, +1 CON" = list(STATKEY_INT = 1, STATKEY_CON = 1),
+		"+1 INT, +1 WIL" = list(STATKEY_INT = 1, STATKEY_WIL = 1),
+		"+1 PER, +1 CON" = list(STATKEY_PER = 1, STATKEY_CON = 1),
+		"+1 PER, +1 WIL" = list(STATKEY_PER = 1, STATKEY_WIL = 1),
+		"+1 WIL, +1 CON" = list(STATKEY_WIL = 1, STATKEY_CON = 1),
+		"+1 SPD" = STATKEY_SPD,
+		"+1 STR" = STATKEY_STR,
+	)
+	// TA EDIT END
 
 	/// Some species have less than standard gender locks
 	var/gender_swapping = FALSE
