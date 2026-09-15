@@ -598,8 +598,23 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	armor_class = ARMOR_CLASS_LIGHT
 	unenchantable = TRUE
 	anvilrepair = null
+	sewrepair = null
 	equip_delay_self = 5 SECONDS
 	unequip_delay_self = 5 SECONDS
+
+/obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult/attackby(obj/item/I, mob/user, params)
+	if(istype(I, /obj/item/needle) || istype(I, /obj/item/rogueweapon/surgery/cautery))
+		to_chat(user, span_warning("This cursed cross cannot be repaired."))
+		return FALSE
+
+	return
+
+/obj/item/repair_kit/attack_obj(obj/O, mob/living/user)
+	if(istype(O, /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult))
+		to_chat(user, span_warning("This cursed cross cannot be repaired."))
+		return FALSE
+
+	return
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ICON)
