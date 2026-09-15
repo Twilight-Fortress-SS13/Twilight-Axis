@@ -77,7 +77,8 @@
 /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/lord/New()
 	. = ..()
 	for(var/i in 1 to max_storage)
-		pistol += new /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol(src)
+		var/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/A = new()
+		pistol += A
 	update_icon()
 
 /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/black
@@ -89,7 +90,8 @@
 /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/black/runelock/New()
 	. = ..()
 	for(var/i in 1 to max_storage)
-		pistol += new /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock(src)
+		var/obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/A = new()
+		pistol += A
 	update_icon()
 
 /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/blackpowder
@@ -113,11 +115,13 @@
 /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/blackpowder/runelock/New()
 	. = ..()
 	for(var/i in 1 to max_storage)
-		pistol += new /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock(src)
+		var/obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/A = new()
+		pistol += A
 	update_icon()
 
 /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/blackpowder/umbra/New()
 	. = ..()
 	for(var/i in 1 to max_storage)
-		pistol += new /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/umbra(src)
+		var/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/umbra/A = new()
+		pistol += A
 	update_icon()
