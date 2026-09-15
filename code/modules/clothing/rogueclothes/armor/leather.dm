@@ -32,7 +32,7 @@
 /obj/item/clothing/suit/roguetown/armor/leather/vest/winterjacket/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
@@ -234,7 +234,7 @@
 /obj/item/clothing/suit/roguetown/armor/leather/heavy/freifechter/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
@@ -367,7 +367,7 @@
 /obj/item/clothing/suit/roguetown/armor/leather/heavy/jacket/courtphysician/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
@@ -393,7 +393,7 @@
 /obj/item/clothing/suit/roguetown/armor/leather/heavy/jacket/courtphysician/female/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()

@@ -157,7 +157,7 @@
 	var/detail_state = "[icon_state][detail_tag]"
 	if(!icon_exists(icon, detail_state))
 		detail_state = "[initial(icon_state)][detail_tag]"
-	var/mutable_appearance/pic = mutable_appearance(icon(icon, detail_state))
+	var/mutable_appearance/pic = mutable_appearance(icon, detail_state) // TA EDIT
 	pic.appearance_flags = RESET_COLOR
 	if(get_detail_color())
 		pic.color = get_detail_color()
