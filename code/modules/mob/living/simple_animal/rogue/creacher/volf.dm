@@ -47,11 +47,15 @@
 	retreat_distance = 0
 	minimum_distance = 0
 	milkies = FALSE
+	animal_species = /mob/living/simple_animal/hostile/retaliate/rogue/wolf // TA EDIT
 	food_type = list(/obj/item/reagent_containers/food/snacks,
 					//obj/item/bodypart,
 					//obj/item/organ,
 					/obj/item/natural/bone,
 					/obj/item/natural/hide)
+	tame_food_type = list(/obj/item/reagent_containers/food/snacks/rogue/meat) // TA EDIT
+	tame_chance = 15 // TA EDIT
+	bonus_tame_chance = 10 // TA EDIT
 	footstep_type = FOOTSTEP_MOB_BAREFOOT
 	pooptype = null
 	STACON = 7
@@ -70,6 +74,7 @@
 	eat_forever = TRUE
 	var/chomp_cd = 0
 	var/chomp_roll = 0
+	var/fixed_gender = FALSE // TA EDIT
 
 //new ai, old ai off
 	AIStatus = AI_OFF
@@ -108,18 +113,82 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/ai_aggro_system)
-	AddElement(/datum/element/ai_flee_while_injured, 0.75, 0.4)
-	gender = MALE
-	if(prob(33))
-		gender = FEMALE
+	// TA EDIT START
+	if(ai_controller)
+		AddComponent(/datum/component/ai_aggro_system)
+		AddElement(/datum/element/ai_flee_while_injured, 0.75, 0.4)
+	if(!fixed_gender)
+		gender = prob(33) ? FEMALE : MALE
+	if(gender == FEMALE && !adult_growth)
+		childtype = list(
+			/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup = 67,
+			/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/female = 33,
+		)
+	else
+		childtype = null
+	// TA EDIT END
 	update_icon()
-	ai_controller.set_blackboard_key(BB_BASIC_FOODS, food_type)
+	if(ai_controller) // TA EDIT
+		ai_controller.set_blackboard_key(BB_BASIC_FOODS, food_type) // TA EDIT
 	var/color = pick("brown", "black", "white")
 	icon_state = "volf_[color]"
 	icon_living = "volf_[color]"
 	icon_dead = "volf_[color]_dead"
 
+// TA EDIT START
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/male
+	fixed_gender = TRUE
+	gender = MALE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/female
+	fixed_gender = TRUE
+	gender = FEMALE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup
+	name = "volf pup"
+	desc = "A young volf, not yet grown into its full strength."
+	fixed_gender = TRUE
+	gender = MALE
+	animal_species = null
+	adult_growth = /mob/living/simple_animal/hostile/retaliate/rogue/wolf/male
+	health = 35
+	maxHealth = 35
+	melee_damage_lower = 3
+	melee_damage_upper = 8
+	STACON = 4
+	STASTR = 3
+	STASPD = 9
+	mob_size = MOB_SIZE_SMALL
+	aggressive = 0
+	ai_controller = null
+	can_receive_livestock_commands = FALSE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/CanAttack(atom/the_target)
+	return FALSE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/Retaliate()
+	return 0
+
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/GiveTarget(new_target)
+	return 0
+
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/Initialize(mapload)
+	. = ..()
+	var/matrix/pup_scale = matrix()
+	pup_scale.Scale(0.7, 0.7)
+	transform = pup_scale
+
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/female
+	gender = FEMALE
+	adult_growth = /mob/living/simple_animal/hostile/retaliate/rogue/wolf/female
+// TA EDIT END
+
+// TA EDIT START
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/tamed(mob/user)
+	clear_enemies()
+	LoseTarget()
+	return ..(user)
+// TA EDIT END
 
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf/death(gibbed)
 	..()

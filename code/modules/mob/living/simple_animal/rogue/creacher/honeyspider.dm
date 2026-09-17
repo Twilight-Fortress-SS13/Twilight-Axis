@@ -39,10 +39,14 @@
 	retreat_distance = 0
 	minimum_distance = 0
 	milkies = FALSE
+	animal_species = /mob/living/simple_animal/hostile/retaliate/rogue/spider // TA EDIT
 	food_type = list(/obj/item/reagent_containers/food/snacks/rogue/meat,
 					//obj/item/bodypart,
 					/obj/item/organ,
 					)
+	tame_food_type = list(/obj/item/reagent_containers/food/snacks/rogue/meat) // TA EDIT
+	tame_chance = 15 // TA EDIT
+	bonus_tame_chance = 10 // TA EDIT
 	footstep_type = FOOTSTEP_MOB_BAREFOOT
 	pooptype = null
 	STACON = 6
@@ -53,6 +57,7 @@
 	retreat_health = 0.3
 	attack_sound = list('sound/vo/mobs/spider/attack (1).ogg','sound/vo/mobs/spider/attack (2).ogg','sound/vo/mobs/spider/attack (3).ogg','sound/vo/mobs/spider/attack (4).ogg')
 	aggressive = 1
+	var/fixed_gender = FALSE // TA EDIT
 
 	//new ai, old ai off
 	AIStatus = AI_OFF
@@ -76,16 +81,72 @@
 					/obj/item/natural/hide = 1)
 	health = HONEYSPIDER_MUTATED_HEALTH
 	maxHealth = HONEYSPIDER_MUTATED_HEALTH
+	animal_species = null // TA EDIT
+	breedchildren = 0 // TA EDIT
 
 /mob/living/simple_animal/hostile/retaliate/rogue/spider/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/ai_aggro_system)
-	gender = MALE
-	if(prob(33))
-		gender = FEMALE
+	if(ai_controller) // TA EDIT START
+		AddComponent(/datum/component/ai_aggro_system)
+	if(!fixed_gender)
+		gender = prob(33) ? FEMALE : MALE
+	if(gender == FEMALE && !adult_growth && !istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/spider/mutated))
+		childtype = list(
+			/mob/living/simple_animal/hostile/retaliate/rogue/spider/spiderling = 67,
+			/mob/living/simple_animal/hostile/retaliate/rogue/spider/spiderling/female = 33,
+		)
+	else
+		childtype = null
 	update_icon()
-	ai_controller.set_blackboard_key(BB_BASIC_FOODS, food_type)
+	if(ai_controller)
+		ai_controller.set_blackboard_key(BB_BASIC_FOODS, food_type) // TA EDIT END
 	ADD_TRAIT(src, TRAIT_KNEESTINGER_IMMUNITY, INNATE_TRAIT)
+
+/mob/living/simple_animal/hostile/retaliate/rogue/spider/male // TA EDIT START
+	fixed_gender = TRUE
+	gender = MALE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/spider/female
+	fixed_gender = TRUE
+	gender = FEMALE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/spider/spiderling
+	name = "beespiderling"
+	desc = "A young beespider, still too small to pose much of a threat."
+	fixed_gender = TRUE
+	gender = MALE
+	animal_species = null
+	adult_growth = /mob/living/simple_animal/hostile/retaliate/rogue/spider/male
+	health = 25
+	maxHealth = 25
+	melee_damage_lower = 1
+	melee_damage_upper = 4
+	STACON = 3
+	STASTR = 2
+	STASPD = 7
+	mob_size = MOB_SIZE_SMALL
+	aggressive = 0
+	ai_controller = null
+	can_receive_livestock_commands = FALSE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/spider/spiderling/CanAttack(atom/the_target)
+	return FALSE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/spider/spiderling/Retaliate()
+	return 0
+
+/mob/living/simple_animal/hostile/retaliate/rogue/spider/spiderling/GiveTarget(new_target)
+	return 0
+
+/mob/living/simple_animal/hostile/retaliate/rogue/spider/spiderling/Initialize(mapload)
+	. = ..()
+	var/matrix/spiderling_scale = matrix()
+	spiderling_scale.Scale(0.65, 0.65)
+	transform = spiderling_scale
+
+/mob/living/simple_animal/hostile/retaliate/rogue/spider/spiderling/female
+	gender = FEMALE
+	adult_growth = /mob/living/simple_animal/hostile/retaliate/rogue/spider/female // TA EDIT END
 
 /mob/living/simple_animal/hostile/retaliate/rogue/spider/AttackingTarget()
 	. = ..()
@@ -93,6 +154,12 @@
 		var/mob/living/L = target
 		if(L.reagents)
 			L.reagents.add_reagent(/datum/reagent/toxin/venom, 1)
+
+
+/mob/living/simple_animal/hostile/retaliate/rogue/spider/tamed(mob/user) // TA EDIT START
+	clear_enemies()
+	LoseTarget()
+	return ..(user) // TA EDIT END
 
 /mob/living/simple_animal/hostile/retaliate/rogue/spider/death(gibbed)
 	..()
