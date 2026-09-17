@@ -48,12 +48,18 @@ GLOBAL_LIST_INIT(virtue_mount_choices_anthrax, (list(
 	var/mob/living/our_owner = owner.resolve()
 	if(!our_owner || QDELETED(our_owner))
 		return
+	if(ishuman(our_owner)) // TA EDIT START
+		var/mob/living/carbon/human/human_owner = our_owner
+		if(!human_owner.saddleborn_mount || human_owner.saddleborn_mount.resolve() != parent)
+			return // TA EDIT END
 	to_chat(our_owner, span_boldwarning("A quavering pang of loneliness streaks through your chest like cold lightning, sinking to the pit of your stomach. THEY ARE GONE!"))
 	our_owner.add_stress(/datum/stressevent/precious_mob_died)
 
 /mob/living/carbon/human
 	/// Weakref to our bespoke Saddleborn mount (added by the virtue)
 	var/datum/weakref/saddleborn_mount
+	var/saddleborn_mount_targeting = FALSE // TA EDIT
+	var/saddleborn_mount_change_in_progress = FALSE // TA EDIT
 
 /obj/effect/proc_holder/spell/self/choose_riding_virtue_mount
 	name = "Choose Mount"
@@ -63,65 +69,59 @@ GLOBAL_LIST_INIT(virtue_mount_choices_anthrax, (list(
 	chargedrain = 0
 	chargetime = 0
 
-/obj/effect/proc_holder/spell/self/choose_riding_virtue_mount/cast(list/targets, mob/living/carbon/human/user = usr)
-	. = ..()
-	//list of spells you can learn, it may be good to move this somewhere else eventually
-	var/area/place = get_area(user.loc)
-	if (!place || !place.outdoors)
-		to_chat(user, span_warning("You need to be outside! How do you expect your trusty steed to hear you?"))
-		return
-
+/mob/living/carbon/human/proc/get_saddleborn_mount_choices(show_special_messages = FALSE) // TA EDIT START
 	var/list/choices = list()
+	var/list/mount_choices = GLOB.virtue_mount_choices.Copy()
 
-	var/list/mount_choices = GLOB.virtue_mount_choices
-	if (HAS_TRAIT(user, TRAIT_NOBLE) || user.job == "Man at Arms") //TA EDIT
-		to_chat(user, span_info("As an anointed noble, your steed can also come from pedigree stock."))
+	if(HAS_TRAIT(src, TRAIT_NOBLE) || job == "Man at Arms")
+		if(show_special_messages)
+			to_chat(src, span_info("As an anointed noble, your steed can also come from pedigree stock."))
 		mount_choices += GLOB.virtue_mount_choices_noble
-	if (HAS_TRAIT(user, TRAIT_ANTHRAXI))
-		to_chat(user, span_info("As a Drow, you are skilled in handling giant spiders of the Underdark."))
+	if(HAS_TRAIT(src, TRAIT_ANTHRAXI))
+		if(show_special_messages)
+			to_chat(src, span_info("As a Drow, you are skilled in handling giant spiders of the Underdark."))
 		mount_choices += GLOB.virtue_mount_choices_anthrax
 
 	for(var/i = 1, i <= mount_choices.len, i++)
 		var/mob/living/simple_animal/honse
-		if (islist(mount_choices[i])) // noble/other overrides are lists (because of how horse typing works), so hacky workaround for display's sake
+		if(islist(mount_choices[i]))
 			honse = mount_choices[i][2]
 			choices[mount_choices[i][1]] = honse
 		else
 			honse = mount_choices[i]
 			choices["[honse.name]"] = honse
 
-	choices = sortList(choices)
+	return sortList(choices)
 
-	var/choice = input(user, "What form does your treasured steed take?") as null|anything in choices
-	var/mob/living/simple_animal/our_chosen_honse = choices[choice]
+/mob/living/carbon/human/proc/create_saddleborn_mount(mount_type)
+	if(!mount_type)
+		return null
 
-	if (!our_chosen_honse)
-		return
-
-	var/has_name = alert(user, "Have you named your noble steed?", "Saddleborn", "Yes", "No")
-	if (!has_name)
-		has_name = "No"
-
-	//spawn in our creature and set it up
 	var/mob/living/simple_animal/the_real_honse
-	if(ispath(our_chosen_honse, /mob/living/simple_animal/hostile/retaliate/rogue/fogbeast))
-		var/fogbeast_color_choice = input(user, "What color is your trusty steed?") as null|anything in GLOB.valid_fogbeast_colors
-		the_real_honse = new our_chosen_honse(user.loc, fogbeast_color_choice)
+	if(ispath(mount_type, /mob/living/simple_animal/hostile/retaliate/rogue/fogbeast))
+		var/fogbeast_color_choice = input(src, "What color is your trusty steed?") as null|anything in GLOB.valid_fogbeast_colors
+		the_real_honse = new mount_type(loc, fogbeast_color_choice)
 	else
-		the_real_honse = new our_chosen_honse(user.loc)
-	the_real_honse.AddComponent(/datum/component/precious_creature, user)
-	user.saddleborn_mount = WEAKREF(the_real_honse)
-	the_real_honse.assign_livestock_owner(user) // TA EDIT
+		the_real_honse = new mount_type(loc)
+	if(!the_real_honse)
+		return null
 
-	if (has_name == "Yes")
-		var/honse_name = sanitize(input(user, "What is your steed's name?", "Saddleborn"))
-		if (honse_name)
+	the_real_honse.AddComponent(/datum/component/precious_creature, src)
+	saddleborn_mount = WEAKREF(the_real_honse)
+	the_real_honse.assign_livestock_owner(src)
+
+	var/has_name = alert(src, "Have you named your noble steed?", "Saddleborn", "Yes", "No")
+	if(!has_name)
+		has_name = "No"
+	if(has_name == "Yes")
+		var/honse_name = sanitize(input(src, "What is your steed's name?", "Saddleborn"))
+		if(honse_name)
 			the_real_honse.name = honse_name
 			the_real_honse.real_name = honse_name
 
 	if(istype(the_real_honse, /mob/living/simple_animal/hostile/retaliate/rogue/saiga))
 		var/saiga_barding = list("None","Padded Barding","Chainmail Barding")
-		var/saiga_barding_choice = input(user, "What protection have you acquired for your steed?", "Saddleborn") as anything in saiga_barding
+		var/saiga_barding_choice = input(src, "What protection have you acquired for your steed?", "Saddleborn") as anything in saiga_barding
 		switch(saiga_barding_choice)
 			if("Padded Barding")
 				the_real_honse.bbarding = new /obj/item/clothing/barding()
@@ -131,7 +131,7 @@ GLOBAL_LIST_INIT(virtue_mount_choices_anthrax, (list(
 				the_real_honse.update_icon()
 	else if(istype(the_real_honse, /mob/living/simple_animal/hostile/retaliate/rogue/fogbeast))
 		var/fogbeast_barding = list("None","Padded Barding","Chainmail Barding")
-		var/fogbeast_barding_choice = input(user, "What protection have you acquired for your steed?", "Saddleborn") as anything in fogbeast_barding
+		var/fogbeast_barding_choice = input(src, "What protection have you acquired for your steed?", "Saddleborn") as anything in fogbeast_barding
 		switch(fogbeast_barding_choice)
 			if("Padded Barding")
 				the_real_honse.bbarding = new /obj/item/clothing/barding/fogbeast()
@@ -140,19 +140,184 @@ GLOBAL_LIST_INIT(virtue_mount_choices_anthrax, (list(
 				the_real_honse.bbarding = new /obj/item/clothing/barding/fogbeast/chain()
 				the_real_honse.update_icon()
 
-	user.visible_message(span_info("[user] whistles sharply, and [the_real_honse] pads up from afar to their side."), span_notice("With a trusty whistle, my treasured steed returns to my side."))
-	playsound(user, 'sound/magic/saddleborn-call.ogg', 150, FALSE, 5)
-	if (!user.buckled)
-		the_real_honse.buckle_mob(user, TRUE)
+	visible_message(span_info("[src] whistles sharply, and [the_real_honse] pads up from afar to their side."), span_notice("With a trusty whistle, my treasured steed returns to my side."))
+	playsound(src, 'sound/magic/saddleborn-call.ogg', 150, FALSE, 5)
+	if(!buckled)
+		the_real_honse.buckle_mob(src, TRUE)
 		if(istype(the_real_honse, /mob/living/simple_animal/hostile/retaliate/rogue/drider/tame/saddled))
 			playsound(the_real_honse, 'sound/vo/mobs/spider/speak (3).ogg', 100, FALSE, 2)
 		else
 			playsound(the_real_honse, 'sound/magic/saddleborn-summoned.ogg', 100, FALSE, 2)
 
-	// give us all the saddleborn summon/send-away spells and all that jazz
+	return the_real_honse
+
+/mob/living/carbon/human/proc/change_saddleborn_mount()
+	set name = "Change Mount"
+	set category = "RoleUnique.Virtue"
+
+	if(!HasSpell(/obj/effect/proc_holder/spell/self/saddleborn/whistle))
+		remove_verb(src, /mob/living/carbon/human/proc/change_saddleborn_mount)
+		cancel_saddleborn_mount_targeting()
+		return FALSE
+	if(saddleborn_mount_change_in_progress)
+		to_chat(src, span_warning("You are already trying to bond with a new mount."))
+		return FALSE
+	if(saddleborn_mount_targeting)
+		cancel_saddleborn_mount_targeting()
+		to_chat(src, span_notice("You stop looking for a new treasured mount."))
+		return TRUE
+
+	saddleborn_mount_targeting = TRUE
+	RegisterSignal(src, COMSIG_MOB_CLICKON, PROC_REF(on_saddleborn_mount_target_click))
+	client?.mouse_pointer_icon = 'modular_twilight_axis/icons/hud/animal_command_cursor.dmi'
+	update_mouse_pointer()
+	to_chat(src, span_notice("Click a tamed rideable animal to make it your new treasured mount. Use Change Mount again to cancel."))
+	return TRUE
+
+/mob/living/carbon/human/proc/cancel_saddleborn_mount_targeting()
+	if(!saddleborn_mount_targeting)
+		return
+	saddleborn_mount_targeting = FALSE
+	UnregisterSignal(src, COMSIG_MOB_CLICKON)
+	update_mouse_pointer()
+
+/mob/living/carbon/human/proc/on_saddleborn_mount_target_click(mob/living/source, atom/target, params)
+	SIGNAL_HANDLER
+	if(source != src || !saddleborn_mount_targeting)
+		return
+	var/list/modifiers = islist(params) ? params : params2list(params)
+	if(!modifiers["left"] || modifiers["right"] || modifiers["middle"])
+		return
+	cancel_saddleborn_mount_targeting()
+	INVOKE_ASYNC(src, PROC_REF(try_change_saddleborn_mount), target)
+	return COMSIG_MOB_CANCEL_CLICKON
+
+/mob/living/carbon/human/proc/can_use_as_saddleborn_mount(mob/living/simple_animal/candidate, show_message = FALSE)
+	if(!istype(candidate) || QDELETED(candidate) || !candidate.loc || candidate.stat == DEAD)
+		if(show_message)
+			to_chat(src, span_warning("That is not a living animal you can bond with."))
+		return FALSE
+	if(candidate == saddleborn_mount?.resolve())
+		if(show_message)
+			to_chat(src, span_warning("[candidate] is already your treasured mount."))
+		return FALSE
+	if(!candidate.can_saddle || !candidate.can_buckle)
+		if(show_message)
+			to_chat(src, span_warning("[candidate] is not a rideable mount."))
+		return FALSE
+	if(!candidate.tame)
+		if(show_message)
+			to_chat(src, span_warning("[candidate] must be tamed before you can form this bond."))
+		return FALSE
+	if(candidate.client)
+		if(show_message)
+			to_chat(src, span_warning("You cannot replace your mount with a creature currently controlled by another player."))
+		return FALSE
+	if(candidate.has_buckled_mobs())
+		if(show_message)
+			to_chat(src, span_warning("[candidate] must have no riders before you can form this bond."))
+		return FALSE
+	if(!Adjacent(candidate))
+		if(show_message)
+			to_chat(src, span_warning("You need to stand next to [candidate] to form this bond."))
+		return FALSE
+
+	var/datum/component/precious_creature/existing_bond = candidate.GetComponent(/datum/component/precious_creature)
+	var/mob/living/existing_owner = existing_bond?.owner?.resolve()
+	if(ishuman(existing_owner) && existing_owner != src)
+		var/mob/living/carbon/human/existing_human_owner = existing_owner
+		if(existing_human_owner.saddleborn_mount?.resolve() == candidate)
+			if(show_message)
+				to_chat(src, span_warning("[candidate] is already another person's treasured mount."))
+			return FALSE
+	return TRUE
+
+/datum/tgui_alert/saddleborn_mount_change/ui_interact(mob/user, datum/tgui/ui) // TA EDIT START
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "AlertModal", title, 420, 220)
+		ui.open() // TA EDIT END
+
+/mob/living/carbon/human/proc/try_change_saddleborn_mount(atom/target)
+	if(saddleborn_mount_change_in_progress || !HasSpell(/obj/effect/proc_holder/spell/self/saddleborn/whistle))
+		return FALSE
+	var/mob/living/simple_animal/new_mount = target
+	if(!can_use_as_saddleborn_mount(new_mount, TRUE))
+		return FALSE
+
+	var/mob/living/simple_animal/old_mount = saddleborn_mount?.resolve()
+	var/warning
+	if(old_mount && !QDELETED(old_mount))
+		if(isnull(old_mount.loc))
+			warning = "Replace your bond with [old_mount] and make [new_mount] your treasured mount? Your current mount is sent away. If the 15-second bonding process completes, [old_mount] will disappear forever."
+		else
+			warning = "Replace your bond with [old_mount] and make [new_mount] your treasured mount? [old_mount] will remain in the world, but can no longer be recalled with Mount: Whistle."
+	else
+		warning = "Make [new_mount] your treasured mount?"
+	warning += " You must remain beside [new_mount] for 15 seconds; moving will cancel the process."
+
+	var/datum/tgui_alert/saddleborn_mount_change/confirmation_alert = new(src, warning, "Change Mount", list("Begin Bonding", "Cancel")) // TA EDIT START
+	confirmation_alert.ui_interact(src)
+	confirmation_alert.wait()
+	var/confirmation = confirmation_alert?.choice
+	if(confirmation_alert)
+		qdel(confirmation_alert) // TA EDIT END
+	if(confirmation != "Begin Bonding" || !can_use_as_saddleborn_mount(new_mount, TRUE))
+		return FALSE
+
+	saddleborn_mount_change_in_progress = TRUE
+	visible_message(span_notice("[src] begins patiently bonding with [new_mount]."), span_notice("I begin forming a new bond with [new_mount]..."))
+	var/bond_complete = do_after(src, 15 SECONDS, target = new_mount)
+	saddleborn_mount_change_in_progress = FALSE
+	if(!bond_complete)
+		to_chat(src, span_warning("The bonding process is interrupted."))
+		return FALSE
+	if(!can_use_as_saddleborn_mount(new_mount, TRUE))
+		return FALSE
+
+	old_mount = saddleborn_mount?.resolve()
+	var/old_mount_was_away = old_mount && !QDELETED(old_mount) && isnull(old_mount.loc)
+	saddleborn_mount = WEAKREF(new_mount)
+	var/datum/component/precious_creature/new_bond = new_mount.GetComponent(/datum/component/precious_creature)
+	if(new_bond)
+		new_bond.owner = WEAKREF(src)
+	else
+		new_mount.AddComponent(/datum/component/precious_creature, src)
+	new_mount.assign_livestock_owner(src)
+
+	var/new_mount_name = tgui_input_text(src, "What would you like to name your new treasured mount?", "Rename Mount", new_mount.name, MAX_NAME_LEN)
+	if(new_mount_name)
+		new_mount_name = sanitize(new_mount_name)
+		if(new_mount_name)
+			new_mount.name = new_mount_name
+			new_mount.real_name = new_mount_name
+
+	if(old_mount_was_away && old_mount && !QDELETED(old_mount))
+		qdel(old_mount)
+	visible_message(span_notice("[new_mount] accepts [src] as its new treasured rider."), span_notice("My bond with [new_mount] settles into place."))
+	return TRUE
+
+/obj/effect/proc_holder/spell/self/choose_riding_virtue_mount/cast(list/targets, mob/living/carbon/human/user = usr)
+	. = ..()
+	var/area/place = get_area(user.loc)
+	if(!place || !place.outdoors)
+		to_chat(user, span_warning("You need to be outside! How do you expect your trusty steed to hear you?"))
+		return
+
+	var/list/choices = user.get_saddleborn_mount_choices(TRUE)
+	var/choice = input(user, "What form does your treasured steed take?") as null|anything in choices
+	var/mount_type = choices[choice]
+	if(!mount_type)
+		return
+
+	var/mob/living/simple_animal/the_real_honse = user.create_saddleborn_mount(mount_type)
+	if(!the_real_honse)
+		return
+
 	user.AddSpell(new /obj/effect/proc_holder/spell/self/saddleborn/sendaway)
 	user.AddSpell(new /obj/effect/proc_holder/spell/self/saddleborn/whistle)
-	QDEL_IN(src, 0)
+	add_verb(user, /mob/living/carbon/human/proc/change_saddleborn_mount)
+	QDEL_IN(src, 0) // TA EDIT END
 
 // dirty subtype for saddleborn spells that handles checking if we can actually do fucking anything at all
 /obj/effect/proc_holder/spell/self/saddleborn/proc/check_mount(mob/living/carbon/human/user)
