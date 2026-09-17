@@ -6,7 +6,6 @@
 		/obj/item/clothing/shoes/roguetown/boots/nobleboot = /obj/item/clothing/shoes/roguetown/boots/nobleboot/aristocratic)
 	icon_loadout = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced/aristocratic
 
-
 //Kumie donator item - Aristocratic gloves
 /obj/item/enchantingkit/kumie_gloves
 	name = "'Aristocratic gloves' morphing elixer'"
@@ -91,7 +90,6 @@
 		/obj/item/clothing/suit/roguetown/armor/gambeson = /obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/robe/light,
 		/obj/item/clothing/suit/roguetown/armor/gambeson/heavy = /obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/robe/heavy)
 	icon_loadout = /obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/robe/heavy
-
 
 /obj/item/enchantingkit/hammerhold_coat
 	name = "'Hammerhold Mage Coat' morphing elixer'"
@@ -290,10 +288,10 @@
 
 /obj/item/enchantingkit/crowcane_blade
 	name = "'Crow Cane Blade' morphing elixir"
-	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Rapier or Sabre."
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Decorated Rapier or Decorated Sabre."
 	target_items = list(
-		/obj/item/rogueweapon/sword/rapier = /obj/item/rogueweapon/sword/rapier/crowcane,
-		/obj/item/rogueweapon/sword/sabre = /obj/item/rogueweapon/sword/sabre/crowcane)
+		/obj/item/rogueweapon/sword/rapier/dec = /obj/item/rogueweapon/sword/rapier/crowcane,
+		/obj/item/rogueweapon/sword/sabre/dec = /obj/item/rogueweapon/sword/sabre/crowcane)
 	exact_type = TRUE
 	icon_loadout = /obj/item/rogueweapon/sword/rapier/crowcane
 
@@ -303,8 +301,8 @@
 
 /obj/item/enchantingkit/crowcane_scabbard
 	name = "'Crow Cane Scabbard' morphing elixir"
-	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Simple Scabbard."
-	target_items = list(/obj/item/rogueweapon/scabbard/sword)
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Decorated Scabbard, Golden."
+	target_items = list(/obj/item/rogueweapon/scabbard/sword/royal)
 	result_item = /obj/item/rogueweapon/scabbard/sword/crowcane
 	exact_type = TRUE
 	icon_loadout = /obj/item/rogueweapon/scabbard/sword/crowcane
@@ -338,3 +336,16 @@
 		/obj/item/gun/ballistic/twilight_firearm/barker = /obj/item/gun/ballistic/twilight_firearm/barker/teppo)
 	exact_type = TRUE
 	icon_loadout = /obj/item/gun/ballistic/twilight_firearm/arquebus/teppo
+
+/obj/item/enchantingkit/donator_overseer_gold_mask
+	name = "'Golden Confessor Mask' morphing elixir"
+	desc = "A small container of special morphing dust. It can be used to alter the appearance of any armor mask."
+	target_items = list(/obj/item/clothing/mask/rogue/facemask)
+	result_item = /obj/item/clothing/mask/rogue/overseer_gold
+
+/obj/item/enchantingkit/donator_overseer_silver_mask
+	name = "'Silver Confessor Mask' morphing elixir"
+	desc = "A small container of special morphing dust. It can be used to alter the appearance of any armor mask."
+	target_items = list(/obj/item/clothing/mask/rogue/facemask)
+	result_item = /obj/item/clothing/mask/rogue/overseer_silver
+

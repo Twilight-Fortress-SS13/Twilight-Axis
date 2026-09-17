@@ -97,6 +97,16 @@
 	if(mob)
 		mob.update_cone()
 
+/// The override image update_cone() shows our own client in place of us so it ignores our transform
+/// anything animating our transform has to animate this too for the client to see it.
+/mob/living/proc/get_cone_self_image()
+	if(!client)
+		return null
+	for(var/image/cone_image as anything in client.hidden_images)
+		if(cone_image.loc == src)
+			return cone_image
+	return null
+
 /mob/living/update_cone()
 	for(var/hidden_hud in client.hidden_images)
 		client.images -= hidden_hud
