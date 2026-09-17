@@ -24,6 +24,8 @@
 	var/structurecraft = null
 	var/buildsame = FALSE //allows palisades to be built on top of each other just not the same dir
 	var/wallcraft = FALSE
+	var/doorcraft = FALSE //TA EDIT
+	var/windowcraft = FALSE //TA EDIT
 	var/diagonal = FALSE //allows diagonal structures to have their direction chosen.
 	var/craftdiff = 1
 	var/xp_modifier = 1 // Multiplier for crafting XP. Set to 0 to disable XP (e.g. arcana recipes).
@@ -323,6 +325,10 @@
 		html += "<br><strong>Start the process next to a table.</strong><br>"
 	if(wallcraft)
 		html += "<br><strong>Start the process next to a wall.</strong><br>"
+	if(doorcraft)
+		html += "<br><strong>Start the process next to a door.</strong><br>"
+	if(windowcraft)
+		html += "<br><strong>Start the process next to a window.</strong><br>"
 
 	if(final_sellprice)
 		html += "<br><strong class=class='scroll'>You can sell this for [final_sellprice] mammons at a normal quality</strong> <br>"

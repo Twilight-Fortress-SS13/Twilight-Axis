@@ -84,7 +84,8 @@
 	name = "crude plank barricade"
 	icon_state = "woodenbarricade-old"
 	drop_amount = 1
-	max_integrity = 50
+	layer = ABOVE_ALL_MOB_LAYER //TA EDIT
+	max_integrity = 150
 	proj_pass_rate = 65
 
 /obj/structure/barricade/crude/snow
