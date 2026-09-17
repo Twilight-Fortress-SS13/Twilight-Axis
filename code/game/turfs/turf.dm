@@ -149,7 +149,7 @@
 	T = get_turf_below_ztraits(src)
 	if(T)
 		T.multiz_turf_del(src, UP)
-		
+
 	STOP_PROCESSING(SSweather,src)
 	if(force)
 		..()
@@ -825,7 +825,6 @@
 						}; \
 					}; \
 				}; \
-				break set_adj_in_dir; \
 			} while(FALSE) \
 		}
 

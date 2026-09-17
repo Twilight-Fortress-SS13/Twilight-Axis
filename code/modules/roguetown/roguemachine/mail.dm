@@ -318,7 +318,14 @@
 	if(!user)
 		return
 	var/what = ghost_send ? "posted GHOST mail (delayed)" : "sent mail"
-	log_mail("[key_name(user)] [what] via [name]/[(loc)] from [sender_name] to [recipient_name]") // TA EDIT
+	var/logged_content = "(no text content)"
+	if(istext(content) && length(content))
+		logged_content = replacetext(content, "<br>", "\\n")
+		logged_content = replacetext(logged_content, "<br/>", "\\n")
+		logged_content = replacetext(logged_content, "<br />", "\\n")
+		logged_content = html_decode(logged_content)
+		logged_content = replacetext(logged_content, "\n", "\\n")
+	log_mail("[key_name(user)] [what] via [name]/[(loc)] from [sender_name] to [recipient_name] | CONTENT: [logged_content]") // TA EDIT
 	var/link = archive_letter(sender_name, recipient_name, content, key_name(user))
 	message_admins("[key_name(user)] [what] via [name]/[(loc)] from [sender_name] to [recipient_name][link]")
 	return link

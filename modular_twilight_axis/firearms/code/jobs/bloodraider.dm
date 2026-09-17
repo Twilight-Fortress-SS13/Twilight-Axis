@@ -39,30 +39,26 @@
 /datum/outfit/job/roguetown/wretch/twilight_blood_raider/pre_equip(mob/living/carbon/human/H)
 	..()
 	H.adjust_blindness(-3)
-	var/crimes = list("I'm nobody", "They fear me")
-	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+
 	if(istype(H.dna.species, /datum/species/elf/dark))
 		H.set_blindness(0)
 		backl = /obj/item/storage/backpack/rogue/satchel/black
 		neck = /obj/item/clothing/neck/roguetown/chaincoif/chainmantle/bloodraider
-		head = /obj/item/clothing/head/roguetown/helmet/bloodhelmet
-		armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/bloodraider
-		pants = /obj/item/clothing/under/roguetown/bloodsplintlegs
-		gloves = /obj/item/clothing/gloves/roguetown/bloodraider
+		head = /obj/item/clothing/head/roguetown/helmet/heavy/zizo/bascinet/bloodraider
+		armor = /obj/item/clothing/suit/roguetown/armor/plate/fluted/zizo/bloodraider
+		pants = /obj/item/clothing/under/roguetown/platelegs/zizo/bloodraider
+		gloves = /obj/item/clothing/gloves/roguetown/plate/zizo/bloodraider
 		r_hand = /obj/item/rogueweapon/sword/sabre/stalker
-		backpack_contents = list(/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1, /obj/item/rogueweapon/huntingknife/idagger/steel/stalker = 1, /obj/item/rope/chain = 1, /obj/item/storage/belt/rogue/pouch/coins/poor = 1, /obj/item/chalk = 1, /obj/item/rogueweapon/spellbook = 1)
-		switch(crimeschoice)
-			if("I'm nobody")
-				to_chat(H, span_warning("Моя прошлая жизнь не даёт мне покоя по ночам. Кошмары заставляют меня оглядываться назад чаще..."))
-			if("They fear me")
-				wretch_select_bounty(H)
-				ADD_TRAIT(H, TRAIT_ANTHRAXI, "bloodraider")
-				H.change_stat(STATKEY_SPD, 1)
-				H.change_stat(STATKEY_PER, 1)
-				to_chat(H, span_warning("Они боятся меня. Моя ловкость и зоркость не подводили ни разу на рейдах мерзких чужеземцев."))
+		belt = /obj/item/storage/belt/rogue/leather/double
+		backpack_contents = list(
+			/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1,
+			/obj/item/rogueweapon/huntingknife/idagger/steel/stalker = 1,
+			/obj/item/rope/chain = 1,
+			/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
+			/obj/item/chalk = 1,
+			/obj/item/rogueweapon/spellbook = 1)
 	else
 		H.set_blindness(0)
-
 		backl = /obj/item/storage/backpack/rogue/satchel
 		neck = /obj/item/clothing/neck/roguetown/chaincoif/chainmantle
 		head = /obj/item/clothing/head/roguetown/helmet/heavy/volfplate/berserker
@@ -70,17 +66,16 @@
 		pants = /obj/item/clothing/under/roguetown/brigandinelegs
 		gloves = /obj/item/clothing/gloves/roguetown/plate
 		r_hand = /obj/item/rogueweapon/sword/sabre
-		backpack_contents = list(/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1, /obj/item/rogueweapon/huntingknife/idagger/steel/special = 1, /obj/item/rope/chain = 1, /obj/item/storage/belt/rogue/pouch/coins/poor = 1, /obj/item/chalk = 1, /obj/item/rogueweapon/spellbook = 1)
-		switch(crimeschoice)
-			if("I'm nobody")
-				to_chat(H, span_warning("Антракси идут по мою душу, я не могу быть уверенным в завтрашнем дне..."))
-			if("They fear me")
-				wretch_select_bounty(H)
-				H.change_stat(STATKEY_WIL, 1)
-				H.change_stat(STATKEY_CON, 1)
-				to_chat(H, span_warning("Приспособившись к новому оружию, мне стало легче избегать охотников за головой."))
-
-
+		belt = /obj/item/storage/belt/rogue/leather
+		backpack_contents = list(
+			/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1,
+			/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
+			/obj/item/rope/chain = 1,
+			/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
+			/obj/item/chalk = 1,
+			/obj/item/rogueweapon/spellbook = 1
+			)
+	bountychoice_blood_raider(H)
 	H.set_patron(/datum/patron/inhumen/zizo)
 	ADD_TRAIT(H, TRAIT_NOHUNGER, "bloodraider")
 	ADD_TRAIT(H, TRAIT_NOBREATH, "bloodraider")
@@ -89,13 +84,12 @@
 	ADD_TRAIT(H, TRAIT_DARKVISION, "bloodraider")
 	ADD_TRAIT(H, TRAIT_NOSLEEP, "bloodraider")
 	ADD_TRAIT(H, TRAIT_SILVER_BLESSED, "bloodraider")
-	shoes = /obj/item/clothing/shoes/roguetown/boots/bloodboots
-	backr = /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/twilight_bloodlock
-	wrists = /obj/item/clothing/wrists/roguetown/bracers/twilight_elven/bloodraider
-	shirt = /obj/item/clothing/suit/roguetown/shirt/bloodraider
-	belt = /obj/item/storage/belt/rogue/leather/double
-	beltl = /obj/item/quiver/twilight_bullet/lead
-	beltr = /obj/item/rogueweapon/scabbard/sword
+	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/zizo/bloodraider
+	backr = /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/rifle/twilight_bloodlock
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/zizo/bloodraider
+	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/bloodraider
+	beltr = /obj/item/quiver/twilight_bullet/lead
+	beltl = /obj/item/rogueweapon/scabbard/sword
 	H.grant_language(/datum/language/undead)
 
 	H.maxbloodpool = 3500
