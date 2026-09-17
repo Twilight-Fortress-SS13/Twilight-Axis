@@ -23,7 +23,7 @@
 
 /obj/item/fishingrod/attack_self(mob/user)
 	if(user.doing)
-		user.doing = 0
+		user.stop_all_doing() // TA EDIT
 	else
 		..()
 

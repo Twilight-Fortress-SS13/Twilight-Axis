@@ -396,15 +396,15 @@
 	if(tag)
 		switch(tag)
 			if("gen") return list(
-				"shrink" = 0.5,
-				"sx" = -14,
-				"sy" = -8,
-				"nx" = 15,
-				"ny" = -7,
-				"wx" = -10,
-				"wy" = -5,
-				"ex" = 7,
-				"ey" = -6,
+				"shrink" = 0.30,
+				"sx" = -8,
+				"sy" = -5,
+				"nx" = 9,
+				"ny" = -4,
+				"wx" = -6,
+				"wy" = -3,
+				"ex" = 4,
+				"ey" = -4,
 				"northabove" = 0,
 				"southabove" = 1,
 				"eastabove" = 1,
@@ -482,15 +482,15 @@
 	if(tag)
 		switch(tag)
 			if("gen") return list(
-				"shrink" = 0.5,
-				"sx" = -14,
-				"sy" = -8,
-				"nx" = 15,
-				"ny" = -7,
-				"wx" = -10,
-				"wy" = -5,
-				"ex" = 7,
-				"ey" = -6,
+				"shrink" = 0.30,
+				"sx" = -8,
+				"sy" = -5,
+				"nx" = 9,
+				"ny" = -4,
+				"wx" = -6,
+				"wy" = -3,
+				"ex" = 4,
+				"ey" = -4,
 				"northabove" = 0,
 				"southabove" = 1,
 				"eastabove" = 1,
@@ -568,120 +568,74 @@
 
 /obj/item/rogueweapon/scabbard/sword/crowcane/getonmobprop(tag)
 	. = ..()
-	if(tag)
-		if(hol_comp?.sheathed)
-			switch(tag)
-				if("gen")
-					return list(
-						"shrink" = 0.30,
-						"sx" = -5,
-						"sy" = -5,
-						"nx" = 5,
-						"ny" = -4,
-						"wx" = -1,
-						"wy" = -5,
-						"ex" = -1,
-						"ey" = -5,
-						"nturn" = -45,
-						"sturn" = -45,
-						"wturn" = -45,
-						"eturn" = -45,
-						"nflip" = 0,
-						"sflip" = 0,
-						"wflip" = 0,
-						"eflip" = 0,
-						"northabove" = FALSE,
-						"southabove" = TRUE,
-						"eastabove" = TRUE,
-						"westabove" = FALSE
-					)
-				if("wielded")
-					return list(
-						"shrink" = 0.30,
-						"sx" = 0,
-						"sy" = -1,
-						"nx" = 0,
-						"ny" = -1,
-						"wx" = -2,
-						"wy" = -1,
-						"ex" = 2,
-						"ey" = -1,
-						"nturn" = -90,
-						"sturn" = 0,
-						"wturn" = -90,
-						"eturn" = 0,
-						"nflip" = 0,
-						"sflip" = 0,
-						"wflip" = 0,
-						"eflip" = 0,
-						"northabove" = FALSE,
-						"southabove" = TRUE,
-						"eastabove" = TRUE,
-						"westabove" = TRUE
-					)
-				if("onbelt")
-					return list("shrink" = 0.3,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
-			switch(tag)
-				if("gen") return list(
-					"shrink" = 0.45,
-					"sx" = -12,
-					"sy" = -7,
-					"nx" = 13,
-					"ny" = -6,
-					"wx" = -9,
-					"wy" = -4,
-					"ex" = 6,
+	if(!tag)
+		return .
+
+	if(hol_comp?.sheathed)
+		switch(tag)
+			if("gen")
+				return list(
+					"shrink" = 0.30,
+					"sx" = -5,
+					"sy" = -5,
+					"nx" = 5,
+					"ny" = -4,
+					"wx" = -1,
+					"wy" = -5,
+					"ex" = -1,
 					"ey" = -5,
-					"northabove" = 0,
-					"southabove" = 1,
-					"eastabove" = 1,
-					"westabove" = 0,
-					"nturn" = -13,
-					"sturn" = 110,
-					"wturn" = -60,
-					"eturn" = -30,
-					"nflip" = 1,
-					"sflip" = 1,
-					"wflip" = 8,
-					"eflip" = 1,
-					)
-				if("onback") return list(
-					"shrink" = 0.4,
+					"nturn" = -45,
+					"sturn" = -45,
+					"wturn" = -45,
+					"eturn" = -45,
+					"nflip" = 0,
+					"sflip" = 0,
+					"wflip" = 0,
+					"eflip" = 0,
+					"northabove" = FALSE,
+					"southabove" = TRUE,
+					"eastabove" = TRUE,
+					"westabove" = FALSE
+				)
+			if("wielded")
+				return list(
+					"shrink" = 0.30,
 					"sx" = 0,
-					"sy" = 2,
+					"sy" = -1,
 					"nx" = 0,
-					"ny" = 2,
-					"wx" = 2,
-					"wy" = 1,
-					"ex" = 0,
-					"ey" = 1,
+					"ny" = -1,
+					"wx" = -2,
+					"wy" = -1,
+					"ex" = 2,
+					"ey" = -1,
+					"nturn" = -90,
+					"sturn" = 0,
+					"wturn" = -90,
+					"eturn" = 0,
+					"nflip" = 0,
+					"sflip" = 0,
+					"wflip" = 0,
+					"eflip" = 0,
+					"northabove" = FALSE,
+					"southabove" = TRUE,
+					"eastabove" = TRUE,
+					"westabove" = TRUE
+				)
+			if("onbelt")
+				return list(
+					"shrink" = 0.25,
+					"sx" = -2,
+					"sy" = -5,
+					"nx" = 4,
+					"ny" = -5,
+					"wx" = 0,
+					"wy" = -5,
+					"ex" = 2,
+					"ey" = -5,
 					"nturn" = 0,
 					"sturn" = 0,
-					"wturn" = 70,
-					"eturn" = 15,
-					"nflip" = 1,
-					"sflip" = 1,
-					"wflip" = 1,
-					"eflip" = 1,
-					"northabove" = 1,
-					"southabove" = 0,
-					"eastabove" = 0,
-					"westabove" = 0,
-					)
-				if("onbelt") return list(
-					"shrink" = 0.38,
-					"sx" = -3,
-					"sy" = -6,
-					"nx" = 4,
-					"ny" = -6,
-					"wx" = 0,
-					"wy" = -6,
-					"ex" = 0,
-					"ey" = -6,
-					"nturn" = 100,
-					"sturn" = 156,
-					"wturn" = 90,
-					"eturn" = 180,
+					"wturn" = -90,
+					"eturn" = 0,
 					"nflip" = 0,
 					"sflip" = 0,
 					"wflip" = 0,
@@ -689,8 +643,82 @@
 					"northabove" = 0,
 					"southabove" = 1,
 					"eastabove" = 1,
-					"westabove" = 0,
-					)
+					"westabove" = 1
+				)
+
+	switch(tag)
+		if("gen")
+			return list(
+				"shrink" = 0.30,
+				"sx" = -6,
+				"sy" = -1,
+				"nx" = 6,
+				"ny" = -1,
+				"wx" = 0,
+				"wy" = -2,
+				"ex" = 0,
+				"ey" = -2,
+				"northabove" = 0,
+				"southabove" = 1,
+				"eastabove" = 1,
+				"westabove" = 0,
+				"nturn" = 0,
+				"sturn" = 0,
+				"wturn" = 0,
+				"eturn" = 0,
+				"nflip" = 4,
+				"sflip" = 0,
+				"wflip" = 8,
+				"eflip" = 0
+			)
+		if("onback")
+			return list(
+				"shrink" = 0.4,
+				"sx" = 0,
+				"sy" = 2,
+				"nx" = 0,
+				"ny" = 2,
+				"wx" = 2,
+				"wy" = 1,
+				"ex" = 0,
+				"ey" = 1,
+				"nturn" = 0,
+				"sturn" = 0,
+				"wturn" = 70,
+				"eturn" = 15,
+				"nflip" = 1,
+				"sflip" = 1,
+				"wflip" = 1,
+				"eflip" = 1,
+				"northabove" = 1,
+				"southabove" = 0,
+				"eastabove" = 0,
+				"westabove" = 0
+			)
+		if("onbelt")
+			return list(
+				"shrink" = 0.25,
+				"sx" = -2,
+				"sy" = -5,
+				"nx" = 4,
+				"ny" = -5,
+				"wx" = 0,
+				"wy" = -5,
+				"ex" = 2,
+				"ey" = -5,
+				"nturn" = 0,
+				"sturn" = 0,
+				"wturn" = -90,
+				"eturn" = 0,
+				"nflip" = 0,
+				"sflip" = 0,
+				"wflip" = 0,
+				"eflip" = 0,
+				"northabove" = 0,
+				"southabove" = 1,
+				"eastabove" = 1,
+				"westabove" = 1
+			)
 
 /obj/item/gun/ballistic/twilight_firearm/arquebus/jezail
 	name = "jezail"
@@ -749,3 +777,8 @@
 
 /obj/item/clothing/head/roguetown/wizhat/bighat
 	name = "wizard's big hat"
+
+/obj/item/clothing/suit/roguetown/shirt/robe/limetease
+	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes.dmi'
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/donor_sleeves_armor.dmi'

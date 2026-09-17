@@ -12,7 +12,7 @@
 	outfit = null
 	outfit_female = null
 
-	obsfuscated_job = TRUE
+	obfuscated_job = TRUE
 
 	display_order = JDO_BANDIT
 	announce_latejoin = FALSE
@@ -179,7 +179,7 @@
 
 		slots = 4 // TA EDIT START
 		if(player_count > 40)
-			if(storyteller_type == /datum/storyteller/gamemode/guaranteed_antag)
+			if(storyteller_type == /datum/storyteller/gamemode/guaranteed_antag || storyteller_type == /datum/storyteller/gamemode/guaranteed_antag/low_wretch)
 				slots += floor((player_count - 40) / 10)
 			else
 				slots += floor((player_count - 40) / 20)
