@@ -302,10 +302,10 @@
 	if(length(allowed_patrons) && !(P.selected_patron.type in allowed_patrons)) return FALSE
 	if(length(allowed_ages) && !(P.age in allowed_ages)) return FALSE
 	if(length(allowed_sexes) && !(P.gender in allowed_sexes)) return FALSE
-	
+
 	if(length(virtue_restrictions) && ((P.virtue.type in virtue_restrictions) || (P.virtuetwo?.type in virtue_restrictions) || (P.virtue_origin?.type in virtue_restrictions)))
 		return FALSE
-		
+
 	if(length(vice_restrictions))
 		for(var/flaw_type in P.charflaws)
 			if(flaw_type in vice_restrictions)
@@ -427,7 +427,7 @@
 	if(islist(advclass_cat_rolls))
 		hugboxify_for_class_selection(H)
 
-	log_admin("[H.key]/([mob_name]) has joined as [H.mind.assigned_role].")
+	log_admin("[M.key]/([mob_name]) has joined as [H.mind.assigned_role].") // TA EDIT
 
 /// Sets the ready-up repair kit stash entry based on the mob's current armor traits.
 /// Safe to call multiple times — later calls overwrite earlier ones, so loadout-based armor picks can re-run this to upgrade the kit after choose_loadout finishes.

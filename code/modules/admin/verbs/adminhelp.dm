@@ -552,6 +552,7 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	var/ticket_ping = FALSE
 	/// Who is handling this admin help?
 	var/handler
+	COOLDOWN_DECLARE(adminhelp_sound_cooldown) // TA EDIT
 
 //call this on its own to create a ticket, don't manually assign current_ticket
 //msg is the title of the ticket: usually the ahelp text
@@ -675,8 +676,11 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	log_admin("Ticket #[id]: [initiator_key_name] -> Admins: [msg]")
 
 	//send this msg to all admins
+	var/play_adminhelp_sound = play_sound && COOLDOWN_FINISHED(src, adminhelp_sound_cooldown) // TA EDIT START
+	if(play_adminhelp_sound)
+		COOLDOWN_START(src, adminhelp_sound_cooldown, 5 SECONDS) // TA EDIT END
 	for(var/client/X in GLOB.admins)
-		if(play_sound && (X.prefs.toggles & SOUND_ADMINHELP))
+		if(play_adminhelp_sound && (X.prefs.toggles & SOUND_ADMINHELP)) // TA EDIT
 			SEND_SOUND(X, sound('sound/adminhelp.ogg'))
 		window_flash(X, ignorepref = TRUE)
 		to_chat(X, admin_msg)

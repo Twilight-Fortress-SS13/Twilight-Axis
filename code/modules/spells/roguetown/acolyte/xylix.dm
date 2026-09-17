@@ -16,6 +16,12 @@
 	if(isobj(targets[1]))
 		var/obj/target = targets[1]
 		var/input_message = sanitize(input(usr, "What shall [target] say?", src) as null|text)
+		if(input_message)
+			var/turf/target_turf = get_turf(target)
+			if(target_turf)
+				log_admin("[key_name(user)] used Ventriloquism to make [target] say \"[input_message]\" at [get_area(target_turf)] ([target_turf.x], [target_turf.y], [target_turf.z]).")
+			else
+				log_admin("[key_name(user)] used Ventriloquism to make [target] say \"[input_message]\" at an unknown location.")
 		target.say("[input_message]", language = /datum/language/common)
 		return TRUE
 	revert_cast()
