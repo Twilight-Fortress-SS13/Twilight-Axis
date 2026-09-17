@@ -32,3 +32,21 @@
 
 /obj/item/clothing/gloves/roguetown/bloodraider/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)
+
+/obj/item/clothing/gloves/roguetown/otavan/psygloves/overseer
+	name = "confessor gloves"
+	desc = "Перчатки из черной кожи, украшенные яркими полосами."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/overseer.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/onmob/overseer_onmob.dmi'
+	icon_state = "overseergloves"
+	item_state = "overseergloves"
+	color = null
+
+/obj/item/clothing/gloves/roguetown/otavan/inqgloves/overseer
+	name = "silver-trimmed confessor gloves"
+	desc = "Перчатки из черной кожи, украшенные яркими полосами."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/overseer.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/onmob/overseer_onmob.dmi'
+	icon_state = "viceseergloves"
+	item_state = "viceseergloves"
+	color = null

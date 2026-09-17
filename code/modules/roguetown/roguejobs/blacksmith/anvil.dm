@@ -97,7 +97,7 @@
 			ui_interact(user)
 			return
 		advance_multiplier = 1
-		user.doing = FALSE
+		user.stop_all_doing() // TA EDIT
 		spawn(1)
 			while(hingot)
 				if(!hott)

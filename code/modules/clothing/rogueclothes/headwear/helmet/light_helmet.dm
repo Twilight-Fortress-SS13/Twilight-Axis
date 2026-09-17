@@ -207,6 +207,8 @@
 
 /obj/item/clothing/head/roguetown/grenzelhofthat/loadout
 	name = "aesthetic grenzelhoft plume hat"
+	equip_delay_self = 0 //TA EDIT
+	unequip_delay_self = 0 //TA EDIT
 
 /obj/item/clothing/head/roguetown/grenzelhofthat/loadout/Initialize(mapload)
 	. = ..()

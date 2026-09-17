@@ -529,7 +529,7 @@ GLOBAL_LIST_EMPTY(roundstart_races_paths)
 			add_verb(H, /mob/living/carbon/human/verb/choose_cosmetic_claws)
 
 	SEND_SIGNAL(C, COMSIG_SPECIES_GAIN, src, old_species)
-	RegisterSignal(C, COMSIG_MOB_SAY, PROC_REF(handle_speech))
+	RegisterSignal(C, COMSIG_MOB_SAY, PROC_REF(handle_speech), TRUE)
 
 
 /datum/species/proc/on_species_loss(mob/living/carbon/human/C, datum/species/new_species, pref_load)
@@ -1596,6 +1596,7 @@ GLOBAL_LIST_EMPTY(roundstart_races_paths)
 	if(user.stamina >= user.max_stamina)
 		return FALSE
 	var/stander = TRUE
+	var/kickchest = FALSE
 	if(!(target.mobility_flags & MOBILITY_STAND))
 		stander = FALSE
 	if(!get_dist(user, target))
@@ -1637,7 +1638,7 @@ GLOBAL_LIST_EMPTY(roundstart_races_paths)
 			return FALSE
 	else
 		if(!target.kick_attack_check(user))
-			return 0
+			kickchest = TRUE
 		user.break_invisibility_from_combat()
 		user.do_attack_animation_simple(target, ATTACK_EFFECT_KICK, TRUE)
 		playsound(target, 'sound/combat/hits/kick/kick.ogg', 100, TRUE, -1)
@@ -1737,6 +1738,8 @@ GLOBAL_LIST_EMPTY(roundstart_races_paths)
 			log_combat(user, target, "kicked")
 
 		var/selzone = melee_accuracy_check(user.zone_selected, user, target, /datum/skill/combat/unarmed, user.used_intent)
+		if(kickchest)
+			selzone = target.get_bodypart(BODY_ZONE_CHEST)
 		var/obj/item/bodypart/affecting = target.get_bodypart(check_zone(selzone))
 		if(!affecting)
 			affecting = target.get_bodypart(BODY_ZONE_CHEST)

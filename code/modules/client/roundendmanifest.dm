@@ -4,7 +4,7 @@
 	for(var/X in GLOB.character_list)
 		dat += "[GLOB.character_list[X]]"
 
-	var/datum/browser/popup = new(src, "actors", "<center>Inhabitants of Twilight Axis</center>", 387, 420)
+	var/datum/browser/popup = new(src, "actors", "<center>Inhabitants of Twilight Axis</center>", 500, 600)
 	popup.set_content(dat.Join(""))
 	popup.open(FALSE)
 
@@ -28,32 +28,41 @@
 		"Sidefolk",
 		"Wanderers"
 	)
-	var/list/normalized_actors_list = list()
+	var/list/actors_by_department = list()
 	var/list/extra_departments = list()
 
 	for(var/department in department_display_order)
-		normalized_actors_list[department] = list()
+		actors_by_department[department] = list()
 
-	for(var/department in GLOB.actors_list)
-		if(department == "Migrants") // TA EDIT START
-			continue // TA EDIT END
-		var/normalized_department = department
-		if(normalized_department == "City Watch" || normalized_department == "Vanguard" || normalized_department == "Retinue")
-			normalized_department = "Garrison"
+	for(var/mob_id in GLOB.actors_list)
+		var/list/actor_data = GLOB.actors_list[mob_id]
+		if(!islist(actor_data))
+			continue
 
-		if(isnull(normalized_actors_list[normalized_department]))
-			normalized_actors_list[normalized_department] = list()
-			extra_departments += normalized_department
+		var/actor_name = actor_data["name"]
+		var/actor_rank = actor_data["rank"]
+		if(!actor_name || !actor_rank)
+			continue
 
-		var/list/normalized_department_entries = normalized_actors_list[normalized_department]
-		for(var/X in GLOB.actors_list[department])
-			var/entry = GLOB.actors_list[department][X]
-			if(!entry || normalized_department_entries.Find(entry))
-				continue
-			normalized_department_entries += entry
+		var/department = "Wanderers"
+		var/datum/job/actor_job = SSjob.GetJob(actor_rank)
+		if(actor_job)
+			department = SSjob.bitflag_to_department(actor_job.department_flag, actor_job.obfuscated_job)
+
+		if(department == "City Watch" || department == "Vanguard" || department == "Retinue")
+			department = "Garrison"
+
+		if(isnull(actors_by_department[department]))
+			actors_by_department[department] = list()
+			extra_departments += department
+
+		var/list/department_entries = actors_by_department[department]
+		var/entry = "[actor_name] as the [actor_rank]<BR>"
+		if(!(entry in department_entries))
+			department_entries += entry
 
 	for(var/department in department_display_order)
-		var/list/actors_under_department = normalized_actors_list[department]
+		var/list/actors_under_department = actors_by_department[department]
 		if(actors_under_department.len)
 			var/department_color = JCOLOR_BY_DEPARTMENT[department] || "#ffffff"
 			dat += "<h2><font color='[department_color]'>[department]</font></h2><hr>"
@@ -61,13 +70,13 @@
 				dat += "[entry]"
 
 	for(var/department in extra_departments)
-		var/list/actors_under_department = normalized_actors_list[department]
+		var/list/actors_under_department = actors_by_department[department]
 		if(actors_under_department.len)
 			var/department_color = JCOLOR_BY_DEPARTMENT[department] || "#ffffff"
 			dat += "<h2><font color='[department_color]'>[department]</font></h2><hr>"
 			for(var/entry in actors_under_department)
 				dat += "[entry]"
 
-	var/datum/browser/popup = new(src, "actors", "<center>This Story's Actors</center>", 387, 420)
+	var/datum/browser/popup = new(src, "actors", "<center>This Story's Actors</center>", 500, 600)
 	popup.set_content(dat.Join(""))
 	popup.open(FALSE)

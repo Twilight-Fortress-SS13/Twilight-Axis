@@ -171,7 +171,7 @@
 		var/mob/M = AM
 		log_combat(src, M, "grabbed", addition="passive grab")
 		if(M.doing)
-			M.doing = FALSE
+			M.stop_all_doing() // TA EDIT
 		if(!supress_message)
 			M.visible_message("<span class='warning'>[src] [M.cmode ? "<b>clings</b> onto" : "grabs"] [M].</span>", \
 				"<span class='danger'>[src] grabs onto you.</span>")

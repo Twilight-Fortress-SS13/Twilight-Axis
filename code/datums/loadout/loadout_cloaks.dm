@@ -214,6 +214,11 @@
 	path = /obj/item/clothing/cloak/sash
 	sort_category = "Cloaks"
 
+/datum/loadout_item/sash_dupatta
+	name = "Sash, Dupatta"
+	path = /obj/item/clothing/cloak/sash/dupatta
+	sort_category = "Cloaks"
+
 /datum/loadout_item/ranger_cloak
 	name = "Ranger Cloak, Forest Green"
 	path = /obj/item/clothing/cloak/rangercloak
@@ -223,7 +228,12 @@
 	name = "Ranger Cloak, Neutral Gray"
 	path = /obj/item/clothing/cloak/rangercloak/gray
 	sort_category = "Cloaks"
- 
+
+/datum/loadout_item/duelistscloak
+	name = "Duelist's Cape"
+	path = /obj/item/clothing/cloak/half/duelcape
+	sort_category = "Cloaks"
+
 /datum/loadout_item/toga
 	name = "Toga, Robed"
 	path = /obj/item/clothing/cloak/tabard/toga
