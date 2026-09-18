@@ -53,9 +53,9 @@
 					//obj/item/organ,
 					/obj/item/natural/bone,
 					/obj/item/natural/hide)
-	tame_food_type = list(/obj/item/reagent_containers/food/snacks/rogue/meat) // TA EDIT
-	tame_chance = 15 // TA EDIT
-	bonus_tame_chance = 10 // TA EDIT
+	tame_food_type = null // TA EDIT START
+	tame_chance = 0
+	bonus_tame_chance = 0 // TA EDIT END
 	footstep_type = FOOTSTEP_MOB_BAREFOOT
 	pooptype = null
 	STACON = 7
@@ -113,8 +113,7 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf/Initialize(mapload)
 	. = ..()
-	// TA EDIT START
-	if(ai_controller)
+	if(ai_controller) // TA EDIT START
 		AddComponent(/datum/component/ai_aggro_system)
 		AddElement(/datum/element/ai_flee_while_injured, 0.75, 0.4)
 	if(!fixed_gender)
@@ -125,8 +124,7 @@
 			/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/female = 33,
 		)
 	else
-		childtype = null
-	// TA EDIT END
+		childtype = null // TA EDIT END
 	update_icon()
 	if(ai_controller) // TA EDIT
 		ai_controller.set_blackboard_key(BB_BASIC_FOODS, food_type) // TA EDIT
@@ -135,8 +133,7 @@
 	icon_living = "volf_[color]"
 	icon_dead = "volf_[color]_dead"
 
-// TA EDIT START
-/mob/living/simple_animal/hostile/retaliate/rogue/wolf/male
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/male // TA EDIT START
 	fixed_gender = TRUE
 	gender = MALE
 
@@ -151,17 +148,21 @@
 	gender = MALE
 	animal_species = null
 	adult_growth = /mob/living/simple_animal/hostile/retaliate/rogue/wolf/male
-	health = 35
-	maxHealth = 35
-	melee_damage_lower = 3
-	melee_damage_upper = 8
+	health = WOLF_HEALTH / 2
+	maxHealth = WOLF_HEALTH / 2
+	melee_damage_lower = round(19 / 2)
+	melee_damage_upper = round(29 / 2)
 	STACON = 4
 	STASTR = 3
 	STASPD = 9
 	mob_size = MOB_SIZE_SMALL
 	aggressive = 0
+	del_on_deaggro = 0
 	ai_controller = null
 	can_receive_livestock_commands = FALSE
+	tame_food_type = list(/obj/item/reagent_containers/food/snacks/rogue/meat)
+	tame_chance = 15
+	bonus_tame_chance = 10
 
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/CanAttack(atom/the_target)
 	return FALSE
@@ -181,14 +182,27 @@
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/female
 	gender = FEMALE
 	adult_growth = /mob/living/simple_animal/hostile/retaliate/rogue/wolf/female
-// TA EDIT END
 
-// TA EDIT START
-/mob/living/simple_animal/hostile/retaliate/rogue/wolf/tamed(mob/user)
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/wild
+	fixed_gender = FALSE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/wild/Initialize(mapload)
+	. = ..()
+	adult_growth = gender == FEMALE ? /mob/living/simple_animal/hostile/retaliate/rogue/wolf/female : /mob/living/simple_animal/hostile/retaliate/rogue/wolf/male
+	roll_initial_genetics()
+
+/proc/get_wolf_family_types()
+	return list(
+		/mob/living/simple_animal/hostile/retaliate/rogue/wolf/female,
+		/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/wild,
+		/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/wild,
+		/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/wild,
+	) // TA EDIT END
+
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/tamed(mob/user) // TA EDIT START
 	clear_enemies()
 	LoseTarget()
-	return ..(user)
-// TA EDIT END
+	return ..(user) // TA EDIT END
 
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf/death(gibbed)
 	..()
