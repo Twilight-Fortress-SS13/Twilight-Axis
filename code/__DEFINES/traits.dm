@@ -20,9 +20,6 @@
 #define TRAIT_PARRYEXPERT "Parry Expert"// TA ADD - new ronin class
 #define TRAIT_MAGEARMOR "Magic Barrier"
 #define TRAIT_PHILOSOPHER_BOUND "Philosopher bound"
-#define TRAIT_BOW_DOUBLESHOT "Double Shot Archer"//TA EDIT
-#define TRAIT_BOW_LONGSHOT "Long Shot Archer"//TA EDIT
-#define TRAIT_BOW_BACKSTEP "Skirmisher Archer"//TA EDIT
 #define TRAIT_NASTY_EATER "Inhumen Digestion" //can eat rotten/raw/burned food, organs, and drink murky water. Does NOT protect against actual poisons.
 #define TRAIT_WILD_EATER "Beastly Digestion" //can eat raw and rotten food and drink murky water
 #define TRAIT_INSPIRING_MUSICIAN "Inspiring Musician" // unlocks bardic inspiration stuff
@@ -586,9 +583,6 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_KNEESTINGER_IMMUNITY = "I am immune to the shock of kneestingers and vines.",
 	TRAIT_SOUL_EXAMINE = span_deadsay("I know when someone's soul has departed."),
 	TRAIT_CRACKHEAD = span_love("I can use drugs as much as I want!"),
-	TRAIT_BOW_DOUBLESHOT = span_info("Я овладел искусством Двойного выстрела. Могу быстро достать вторую стрелу из колчана."),//TA EDIT
-	TRAIT_BOW_LONGSHOT = span_info("Я овладел Дальнобойным выстрелом. Чем дальше моя цель, тем смертоноснее моя стрела."),//TA EDIT
-	TRAIT_BOW_BACKSTEP = span_info("Я овладел искусством Выстрел с отскоком. Дал дал ушел."),//TA EDIT
 	TRAIT_FREEMAN = span_bloody("I can recognize other free men, and they can recognize me too."),
 	TRAIT_KNOWNCRIMINAL = span_bloody("I am a branded criminal. Nothing can change this."),
 	TRAIT_NORUN = span_warning("My body has atrophied in my state of decay; my leg joints just don't have the strength or durability for running anymore"),

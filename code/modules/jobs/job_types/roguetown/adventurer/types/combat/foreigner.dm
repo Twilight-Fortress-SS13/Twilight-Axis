@@ -742,7 +742,7 @@
 				backr = /obj/item/rogueweapon/scabbard/gwstrap
 			if("Autumned Bow")
 				H.adjust_skillrank_up_to(/datum/skill/combat/bows, SKILL_LEVEL_JOURNEYMAN, TRUE)
-				l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/autumn
+				l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve/autumn //TA EDIT Bow -> Recurve Bow
 				beltr = /obj/item/quiver/arrows
 	head = /obj/item/clothing/head/roguetown/helmet/heavy/elven_helm/autumn/light
 	armor = /obj/item/clothing/suit/roguetown/armor/plate/elven_plate/autumn/light
