@@ -98,8 +98,8 @@ GLOBAL_LIST_INIT(valid_fogbeast_colors, list("White" = COLOR_WHITE, "Gray" = COL
 	Retaliate()
 	GiveTarget(user)
 
-/mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/tamed()
-	..()
+/mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/tamed(mob/user) // TA EDIT
+	..(user) // TA EDIT
 	deaggroprob = 20
 	setup_mount()
 
