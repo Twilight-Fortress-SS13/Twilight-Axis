@@ -1513,7 +1513,7 @@ SUBSYSTEM_DEF(gamemode)
 	var/list/admin_hard = opened_hard_antags()
 	if(length(admin_hard))
 		for(var/datum/round_event_control/antagonist/solo/event as anything in valid_events)
-			if(event.occurrences || !event.consumes_hard_antag_slot)
+			if(!event.consumes_hard_antag_slot) // TA EDIT
 				continue
 			// Use the event's own slot key (Masquerade) when set, else its antag datum's key.
 			if((event.storyteller_slot_key || antag_slot_key(event.antag_datum)) in admin_hard)
@@ -1523,7 +1523,7 @@ SUBSYSTEM_DEF(gamemode)
 	if(!preset?.guaranteed_hard)
 		return guaranteed_events
 	for(var/datum/round_event_control/antagonist/solo/event as anything in valid_events)
-		if(event.occurrences || !event.consumes_hard_antag_slot) // TA EDIT
+		if(!event.consumes_hard_antag_slot) // TA EDIT
 			continue
 		if(event.storyteller_antag_flags & STORYTELLER_ANTAG_VILLAIN)
 			guaranteed_events[event] = valid_events[event]
