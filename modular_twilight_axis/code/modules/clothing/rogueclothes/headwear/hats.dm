@@ -342,3 +342,13 @@
 	icon_state = "etrhat"
 	item_state = "etrhat"
 	color = null
+
+/obj/item/clothing/head/roguetown/roguehood/psydon/confessor/overseer
+	name = "closed hood"
+	desc = "Вы бы не скрывали свое лицо, если бы на то не было причины."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/overseer.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/onmob/overseer_onmob.dmi'
+	icon_state = "overseerhood"
+	item_state = "overseerhood"
+	color = null
+	toggle_icon_state = FALSE

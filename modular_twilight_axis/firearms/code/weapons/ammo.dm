@@ -196,7 +196,7 @@
 		var/obj/item/gun/ballistic/twilight_firearm/gun = fired_from
 		if(isliving(firer))
 			var/mob/living/L = firer
-			var/per_scaling = 1 + ((min(L.STAPER, RANGED_STAT_SOFTCAP) - 10) * RANGED_STAT_MULT) + (max(0, L.STAPER - RANGED_STAT_SOFTCAP) * RANGED_STAT_CAPPEDMULT)
+			var/per_scaling = max(RANGED_PER_DAMAGE_FLOOR, 1 + ((min(L.STAPER, RANGED_PER_DAMAGE_SOFTCAP) - RANGED_PER_DAMAGE_BASELINE) * RANGED_PER_DAMAGE_MULT) + (max(0, L.STAPER - RANGED_PER_DAMAGE_SOFTCAP) * RANGED_PER_DAMAGE_CAPPEDMULT))
 			damage *= gun.damfactor * per_scaling
 		else
 			damage *= gun.damfactor
@@ -489,7 +489,7 @@
 	icon_state = "musketball_silver"
 
 /obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock/blessed
-	name = "blessed sphere"
+	name = "blessed runed sphere"
 	desc = "Небольшой, идеально круглый шар, изготовленный из чистого серебра. Такие боеприпасы создаются лучшими из отаванских кузнецов и освящяются лично Великим Магистром. Смертоностны против нежити, но весьма эффективны и против других еретиков."
 	projectile_type = /obj/projectile/bullet/twilight_lead/twilight_runelock/blessed
 	icon_state = "musketball_blessed"
@@ -510,7 +510,7 @@
 	ammo_weight = 1
 
 /obj/item/ammo_casing/caseless/rogue/twilight_cannonball/grapeshot
-	name = "grapeshot"
+	name = "lead grapeshot"
 	desc = "Плотно упакованный в бумагу набор небольших металлических шариков. Хорошо сочетается с порохом."
 	projectile_type = /obj/projectile/bullet/twilight_grapeshot
 	caliber = "cannonball"

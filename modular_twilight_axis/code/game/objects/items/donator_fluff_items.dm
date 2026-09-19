@@ -777,3 +777,8 @@
 
 /obj/item/clothing/head/roguetown/wizhat/bighat
 	name = "wizard's big hat"
+
+/obj/item/clothing/suit/roguetown/shirt/robe/limetease
+	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes.dmi'
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/donor_sleeves_armor.dmi'
