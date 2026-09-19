@@ -669,7 +669,7 @@ SUBSYSTEM_DEF(gamemode)
 			if(istype(ec, /datum/round_event_control/antagonist/solo/dreamwalker) && !preset.allow_dreamwalker)
 				continue
 			spawn_it = prob(50)
-		if(!spawn_it || !ec.canSpawnEvent(pop))
+		if(!spawn_it || !ec.canSpawnEvent(pop, null, TRUE)) // TA EDIT
 			continue
 		log_storyteller("Spawning bonus roundstart soft antag [ec.name] alongside the main roll.")
 		TriggerEvent(ec, TRUE)
@@ -1522,8 +1522,8 @@ SUBSYSTEM_DEF(gamemode)
 	var/datum/storyteller/preset = active_preset()
 	if(!preset?.guaranteed_hard)
 		return guaranteed_events
-	for(var/datum/round_event_control/event as anything in valid_events)
-		if(event.occurrences)
+	for(var/datum/round_event_control/antagonist/solo/event as anything in valid_events)
+		if(event.occurrences || !event.consumes_hard_antag_slot) // TA EDIT
 			continue
 		if(event.storyteller_antag_flags & STORYTELLER_ANTAG_VILLAIN)
 			guaranteed_events[event] = valid_events[event]

@@ -5156,7 +5156,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donat_tier = 3
 
 /datum/loadout_item/donator/koruu_cadwynhelm_astrata
-	name = "Donator Item - Lux In Tenebris - Required: Astratan Helmet"
+	name = "Donator Item - Lux In Tenebris - Required: Astratan/Astrata Helmet"
 	category = list("Броня", "Донат")
 	path = /obj/item/enchantingkit/donator_koruu_astrataclerichelm
 	donatitem = TRUE
@@ -5458,5 +5458,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Donator Kit - Silver Confessor Mask - Required: Any ArmorMask"
 	category = list("Броня", "Донат")
 	path = /obj/item/enchantingkit/donator_overseer_silver_mask
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/mystogan_radiantmask
+	name = "Donator Item - Radiant Golden Mask"
+	category = list("Одежда", "Донат")
+	path = /obj/item/clothing/mask/rogue/facemask/goldmask/radiant
 	donatitem = TRUE
 	donat_tier = 2
