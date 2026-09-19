@@ -181,7 +181,7 @@
 		explosion(final_T, 0, 1, 2, 3, flame_range = 2, smoke = TRUE)
 		if(final_T.z != safe_z) 
 			if(isopenturf(final_T) && final_T.max_integrity > 0)
-				final_T.ChangeTurf(/turf/open/transparent/openspace)
+				final_T.ChangeTurf(/turf/open/openspace)
 			
 			var/turf/t_below = get_step_multiz(final_T, DOWN)
 			if(t_below)

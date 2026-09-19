@@ -5,7 +5,7 @@
 	var/smooth_icon = null
 	var/prettifyturf = FALSE
 	icon = 'icons/turf/roguefloor.dmi'
-	baseturfs = list(/turf/open/transparent/openspace)
+	baseturfs = list(/turf/open/openspace)
 	neighborlay = ""
 
 /turf/open/floor/rogue/break_tile()
