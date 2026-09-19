@@ -79,8 +79,8 @@
 	environment_smash = ENVIRONMENT_SMASH_NONE
 	simple_detect_bonus = 20
 	ranged = TRUE
-	ranged_cooldown = 40
-	projectiletype = /obj/projectile/magic/frostbolt
+	ranged_cooldown_time = 40
+	projectiletype = /obj/projectile/magic/frostbolt/spectral
 	retreat_distance = 4
 	minimum_distance = 3
 	check_friendly_fire = 1
@@ -106,18 +106,9 @@
 
 	ai_controller = /datum/ai_controller/spectral_maid
 
-/obj/projectile/magic/frostbolt
-	name = "frost bolt"
-	icon_state = "ice_2"
-	damage = 30
+/obj/projectile/magic/frostbolt/spectral
 	npc_simple_damage_mult = 2
-	damage_type = BURN
-	woundclass = BCLASS_BURN
-	flag = "fire"
-	range = SPELL_RANGE_PROJECTILE
 	speed = MAGE_PROJ_SLOW
-	accuracy = 40
-	nodamage = FALSE
 
 /mob/living/simple_animal/hostile/rogue/spectral/Initialize()
 	. = ..()
