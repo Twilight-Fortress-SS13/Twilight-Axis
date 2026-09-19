@@ -69,17 +69,12 @@
 	if(!type)
 		return 0
 	var/armorval = 0
-	if(genetics && !ispath(genetics)) // TA EDIT START
-		var/natural_armor = genetics.get_natural_armor_for_type(type)
-		if(natural_armor > 0)
-			armorval += max(0, natural_armor - armor_penetration) // TA EDIT END
 	if(bbarding && !bbarding.obj_broken)
-		var/barding_armor = bbarding.armor.getRating(type) // TA EDIT
-		armorval += barding_armor // TA EDIT
+		armorval = bbarding.armor.getRating(type)
 		var/intdamage = damage
 		if(type != "blunt")
-			if((damage + armor_penetration) > barding_armor) // TA EDIT
-				intdamage = (damage + armor_penetration) - barding_armor // TA EDIT
+			if((damage + armor_penetration) > armorval)
+				intdamage = (damage + armor_penetration) - armorval
 
 			if(intdamfactor != 1)
 				intdamage *= intdamfactor
@@ -87,8 +82,8 @@
 			bbarding.take_damage(intdamage, damage_flag = type, sound_effect = FALSE, armor_penetration = 100)
 		else
 			if(mind)
-				if(barding_armor > 0) // TA EDIT
-					intdamage -= intdamage * ((barding_armor / 1.66) / 100)	//Reduces it up to 60% (100 dmg -> 40 dmg at Blunt S armor (100)) // TA EDIT
+				if(armorval > 0)
+					intdamage -= intdamage * ((armorval / 1.66) / 100)	//Reduces it up to 60% (100 dmg -> 40 dmg at Blunt S armor (100))
 			if(intdamfactor != 1)
 				intdamage *= intdamfactor
 

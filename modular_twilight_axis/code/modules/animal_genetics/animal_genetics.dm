@@ -158,6 +158,18 @@
 			total += round(gene.intensity)
 	return total
 
+/mob/living/simple_animal/run_armor_check(def_zone = null, attack_flag = "blunt", absorb_text = null, soften_text = null, armor_penetration = PEN_NONE, penetrated_text, damage, blade_dulling, intdamfactor, used_weapon = null, pen_info, no_debuff = FALSE)
+	. = ..()
+	if(!isnum(damage) || damage <= 0 || !genetics || ispath(genetics))
+		return
+	var/natural_armor_percent = genetics.get_natural_armor_for_type(attack_flag)
+	if(natural_armor_percent <= 0)
+		return
+	var/unblocked_damage = max(0, damage - .)
+	if(unblocked_damage <= 0)
+		return
+	. += unblocked_damage * (clamp(natural_armor_percent, 0, 100) * 0.01)
+
 /datum/animal_genetics/proc/_build_allele_pool()
 	var/list/pool = list()
 	for(var/datum/animal_gene/gene in genes)
@@ -301,9 +313,38 @@
 	var/list/genetic_base_foods
 	var/can_receive_livestock_commands = FALSE
 
+/mob/living/simple_animal/proc/ta_supports_animal_genetics()
+	if(istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/cow))
+		return TRUE
+	if(istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/bull))
+		return TRUE
+	if(istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/goat))
+		return TRUE
+	if(istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/goatmale))
+		return TRUE
+	if(istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/swine))
+		return TRUE
+	if(istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/saiga))
+		return TRUE
+	if(istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/fogbeast))
+		return TRUE
+	if(istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/wolf))
+		return TRUE
+	if(istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/spider))
+		return TRUE
+	if(istype(src, /mob/living/simple_animal/hostile/retaliate/rogue/mirespider))
+		return TRUE
+	return FALSE
+
 /mob/living/simple_animal/proc/initialize_animal_genetics()
-	if(!generate_genetics || adult_growth)
+	if(adult_growth)
 		return
+	var/supported_species = ta_supports_animal_genetics()
+	if(!generate_genetics && !supported_species)
+		return
+	if(supported_species)
+		generate_genetics = TRUE
+		can_receive_livestock_commands = TRUE
 	if(!genetics || ispath(genetics))
 		var/genetics_type = ispath(genetics) ? genetics : /datum/animal_genetics
 		genetics = new genetics_type(src)
