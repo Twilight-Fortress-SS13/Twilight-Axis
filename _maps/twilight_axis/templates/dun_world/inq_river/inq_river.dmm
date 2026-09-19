@@ -1,0 +1,2374 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aw" = (
+/obj/item/reagent_containers/food/snacks/smallrat,
+/obj/effect/decal/edge{
+	color = "#3f3f3f"
+	},
+/turf/open/floor/rogue/blocks,
+/area/rogue)
+"az" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f"
+	},
+/turf/open/floor/rogue/blocks,
+/area/rogue)
+"aE" = (
+/obj/structure/fluff/railing/corner,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue)
+"bD" = (
+/obj/effect/decal/remains/human,
+/turf/open/floor/rogue/dirt,
+/area/rogue)
+"bU" = (
+/obj/structure/vine,
+/obj/structure/fluff/railing/corner/north_east,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue)
+"bX" = (
+/obj/structure/fluff/walldeco/chains,
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 4
+	},
+/turf/open/floor/rogue/hexstone,
+/area/rogue)
+"cL" = (
+/obj/effect/decal/cleanable/blood,
+/obj/structure/fluff/walldeco/psybanner/red{
+	pixel_y = 32
+	},
+/turf/open/floor/rogue/blocks,
+/area/rogue)
+"cS" = (
+/turf/closed/mineral/rogue/bedrock,
+/area/rogue)
+"dE" = (
+/obj/structure/fluff/psycross/psycrucifix/silver,
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 8
+	},
+/turf/open/floor/rogue/hexstone,
+/area/rogue)
+"dR" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf,
+/turf/open/floor/rogue/dirt,
+/area/rogue)
+"eQ" = (
+/turf/closed/mineral/random/rogue/high,
+/area/rogue)
+"eW" = (
+/obj/structure/stairs/stone{
+	dir = 1
+	},
+/obj/structure/fluff/railing/border/east,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue)
+"fW" = (
+/obj/structure/flora/roguegrass,
+/turf/open/floor/rogue/dirt,
+/area/rogue)
+"gK" = (
+/obj/effect/decal/cleanable/blood,
+/obj/effect/decal/edge{
+	color = "#3f3f3f"
+	},
+/obj/machinery/light/rogue/candle/l,
+/turf/open/floor/rogue/blocks,
+/area/rogue)
+"hB" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 4
+	},
+/obj/effect/decal/edge{
+	color = "#3f3f3f"
+	},
+/turf/open/floor/rogue/hexstone,
+/area/rogue)
+"iY" = (
+/obj/structure/bars,
+/obj/structure/curtain/black,
+/turf/open/floor/rogue/concrete,
+/area/rogue)
+"jo" = (
+/obj/effect/landmark/chimeric_calyx_spawner/fifteen,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue)
+"mU" = (
+/obj/structure/fluff/railing/corner/north_east,
+/obj/effect/spawner/lootdrop/roguetown/dungeon/misc,
+/turf/open/floor/rogue/dirt,
+/area/rogue)
+"mX" = (
+/obj/structure/table/wood/poor,
+/obj/item/paper/inqslip/accusation{
+	pixel_x = -9
+	},
+/obj/item/paper/inqslip/confession{
+	pixel_x = 8
+	},
+/obj/item/inqarticles/indexer,
+/obj/structure/fluff/walldeco/med6{
+	pixel_y = 32
+	},
+/turf/open/floor/rogue/metal{
+	icon_state = "plating2"
+	},
+/area/rogue)
+"nH" = (
+/obj/structure/roguerock,
+/obj/structure/vine,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue)
+"on" = (
+/obj/structure/fluff/psycross/psycrucifix/silver,
+/obj/effect/decal/edge{
+	color = "#3f3f3f"
+	},
+/turf/open/floor/rogue/blocks,
+/area/rogue)
+"oz" = (
+/turf/open/floor/rogue/dirt,
+/area/rogue)
+"oA" = (
+/obj/structure/vine,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue)
+"oQ" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue)
+"oS" = (
+/obj/structure/stairs/stone{
+	dir = 1
+	},
+/obj/structure/fluff/railing/border/west,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue)
+"px" = (
+/turf/open/water/cleanshallow,
+/area/rogue)
+"pQ" = (
+/obj/effect/decal/cleanable/dirt/cobweb{
+	dir = 1
+	},
+/turf/open/floor/rogue/blocks,
+/area/rogue)
+"qr" = (
+/obj/structure/flora/hotspring_rocks/small/two,
+/obj/effect/decal/edge{
+	color = "#3f3f3f"
+	},
+/turf/open/floor/rogue/naturalstone,
+/area/rogue)
+"sx" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f"
+	},
+/turf/open/floor/rogue/naturalstone,
+/area/rogue)
+"vJ" = (
+/obj/structure/closet/crate/coffin/keylock{
+	lockid = "inquisition"
+	},
+/obj/item/burial_shroud,
+/obj/item/burial_shroud,
+/obj/item/burial_shroud,
+/turf/open/floor/rogue/hexstone,
+/area/rogue)
+"xk" = (
+/obj/structure/stairs/stone{
+	dir = 1
+	},
+/turf/open/floor/rogue/naturalstone,
+/area/rogue)
+"xG" = (
+/obj/effect/decal/remains/human,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue)
+"Ag" = (
+/turf/closed/mineral/random/rogue/med,
+/area/rogue)
+"BH" = (
+/turf/closed/wall/mineral/rogue/craftstone,
+/area/rogue)
+"CY" = (
+/obj/structure/glowshroom,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue)
+"DO" = (
+/obj/machinery/light/rogue/forge,
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 8
+	},
+/obj/effect/decal/edge{
+	color = "#3f3f3f"
+	},
+/turf/open/floor/rogue/hexstone,
+/area/rogue)
+"EN" = (
+/obj/effect/spawner/lootdrop/roguetown/dungeon/money,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue)
+"FN" = (
+/obj/structure/curtain/black{
+	pixel_x = -32
+	},
+/turf/open/floor/rogue/hexstone,
+/area/rogue)
+"GS" = (
+/obj/effect/decal/cleanable/dirt/cobweb,
+/obj/effect/decal/edge{
+	color = "#3f3f3f"
+	},
+/turf/open/floor/rogue/blocks,
+/area/rogue)
+"JM" = (
+/obj/effect/decal/cleanable/blood,
+/obj/effect/decal/edge{
+	color = "#3f3f3f"
+	},
+/turf/open/floor/rogue/blocks,
+/area/rogue)
+"Le" = (
+/obj/structure/bed/rogue/shit{
+	name = "makeshift bed"
+	},
+/obj/structure/fluff/walldeco/chains,
+/turf/open/floor/rogue/blocks,
+/area/rogue)
+"LC" = (
+/turf/closed/mineral/random/rogue,
+/area/rogue)
+"LZ" = (
+/turf/open/water/river/flow/east,
+/area/rogue)
+"MF" = (
+/obj/structure/roguerock,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue)
+"MK" = (
+/obj/structure/roguerock,
+/turf/open/floor/rogue/dirt,
+/area/rogue)
+"MT" = (
+/obj/structure/flora/hotspring_rocks/small/five,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue)
+"Od" = (
+/obj/structure/bed/rogue/shit{
+	name = "makeshift bed"
+	},
+/obj/effect/decal/cleanable/blood,
+/turf/open/floor/rogue/blocks,
+/area/rogue)
+"Og" = (
+/turf/open/floor/rogue/naturalstone,
+/area/rogue)
+"OZ" = (
+/obj/structure/bars,
+/turf/open/floor/rogue/concrete,
+/area/rogue)
+"Pj" = (
+/obj/structure/fluff/walldeco/psybanner/red{
+	pixel_x = -32
+	},
+/obj/structure/fermentation_keg/water,
+/obj/item/reagent_containers/glass/cup/wooden{
+	pixel_y = 9
+	},
+/obj/effect/decal/edge{
+	color = "#3f3f3f"
+	},
+/turf/open/floor/rogue/hexstone,
+/area/rogue)
+"Pz" = (
+/obj/structure/vine,
+/turf/open/floor/rogue/dirt,
+/area/rogue)
+"PB" = (
+/turf/open/floor/rogue/metal{
+	icon_state = "plating2"
+	},
+/area/rogue)
+"Qh" = (
+/obj/effect/spawner/lootdrop/roguetown/sewers,
+/turf/open/floor/rogue/dirt,
+/area/rogue)
+"QK" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 4
+	},
+/turf/open/floor/rogue/hexstone,
+/area/rogue)
+"RW" = (
+/turf/open/floor/rogue/blocks,
+/area/rogue)
+"UT" = (
+/obj/structure/fluff/walldeco/psybanner/red{
+	pixel_y = 32
+	},
+/turf/open/floor/rogue/blocks,
+/area/rogue)
+"VR" = (
+/obj/structure/fluff/walldeco/chains{
+	icon_state = "chains5"
+	},
+/turf/open/floor/rogue/blocks,
+/area/rogue)
+"YG" = (
+/obj/machinery/light/rogue/torchholder/r,
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 8
+	},
+/turf/open/floor/rogue/hexstone,
+/area/rogue)
+
+(1,1,1) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+"}
+(2,1,1) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+"}
+(3,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+"}
+(4,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+"}
+(5,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+"}
+(6,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+"}
+(7,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+"}
+(8,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+LC
+"}
+(9,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+LC
+"}
+(10,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+LC
+"}
+(11,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+Ag
+LC
+"}
+(12,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+LC
+LC
+"}
+(13,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+Ag
+LC
+LC
+"}
+(14,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+Ag
+LC
+LC
+"}
+(15,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+LC
+LC
+LC
+"}
+(16,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+LC
+LC
+LC
+"}
+(17,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+LC
+LC
+LC
+"}
+(18,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+Ag
+LC
+LC
+"}
+(19,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+LC
+LC
+LC
+"}
+(20,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+LC
+LC
+LC
+"}
+(21,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+LC
+LC
+Og
+"}
+(22,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+LC
+jo
+Og
+"}
+(23,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+LC
+LC
+Og
+"}
+(24,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+LC
+LC
+Og
+"}
+(25,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+LC
+LC
+Og
+"}
+(26,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+LC
+LC
+CY
+"}
+(27,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+Ag
+LC
+oA
+oA
+"}
+(28,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+Ag
+LC
+Og
+oA
+"}
+(29,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+Ag
+LC
+LC
+Og
+"}
+(30,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+LC
+Ag
+Og
+"}
+(31,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+Ag
+Ag
+Og
+"}
+(32,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+Ag
+Ag
+Og
+"}
+(33,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+Ag
+Ag
+Og
+"}
+(34,1,1) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Ag
+Ag
+MF
+Og
+"}
+
+(1,1,2) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+"}
+(2,1,2) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+"}
+(3,1,2) = {"
+cS
+cS
+eQ
+eQ
+LC
+LC
+LC
+LC
+Ag
+eQ
+eQ
+eQ
+eQ
+"}
+(4,1,2) = {"
+cS
+cS
+eQ
+eQ
+LC
+LC
+LC
+LC
+Ag
+eQ
+eQ
+eQ
+eQ
+"}
+(5,1,2) = {"
+cS
+cS
+eQ
+eQ
+LC
+LC
+LC
+LC
+Ag
+eQ
+eQ
+eQ
+eQ
+"}
+(6,1,2) = {"
+cS
+cS
+eQ
+eQ
+LC
+LC
+LC
+LC
+Ag
+Ag
+eQ
+eQ
+eQ
+"}
+(7,1,2) = {"
+cS
+cS
+eQ
+eQ
+LC
+LC
+LC
+LC
+LC
+Ag
+eQ
+eQ
+eQ
+"}
+(8,1,2) = {"
+cS
+cS
+eQ
+eQ
+LC
+LC
+LC
+LC
+LC
+Ag
+Ag
+eQ
+eQ
+"}
+(9,1,2) = {"
+cS
+cS
+eQ
+eQ
+LC
+LC
+LC
+LC
+LC
+Ag
+Ag
+Ag
+eQ
+"}
+(10,1,2) = {"
+cS
+cS
+eQ
+eQ
+LC
+LC
+LC
+LC
+LC
+LC
+Ag
+Ag
+eQ
+"}
+(11,1,2) = {"
+cS
+cS
+eQ
+eQ
+LC
+LC
+LC
+LC
+LC
+LC
+Ag
+Ag
+eQ
+"}
+(12,1,2) = {"
+cS
+cS
+eQ
+eQ
+LC
+LC
+LC
+LC
+LC
+LC
+Ag
+Ag
+eQ
+"}
+(13,1,2) = {"
+cS
+cS
+eQ
+eQ
+LC
+LC
+LC
+LC
+LC
+LC
+Ag
+Ag
+eQ
+"}
+(14,1,2) = {"
+cS
+cS
+eQ
+eQ
+LC
+LC
+LC
+LC
+LC
+LC
+Ag
+Ag
+eQ
+"}
+(15,1,2) = {"
+cS
+cS
+eQ
+eQ
+LC
+LC
+LC
+LC
+LC
+LC
+Ag
+Ag
+eQ
+"}
+(16,1,2) = {"
+cS
+cS
+eQ
+eQ
+LC
+LC
+LC
+LC
+LC
+LC
+Ag
+Ag
+eQ
+"}
+(17,1,2) = {"
+cS
+cS
+eQ
+eQ
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+Ag
+Ag
+"}
+(18,1,2) = {"
+cS
+cS
+eQ
+eQ
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+Ag
+"}
+(19,1,2) = {"
+cS
+cS
+eQ
+eQ
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+Ag
+"}
+(20,1,2) = {"
+cS
+cS
+eQ
+eQ
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+Ag
+"}
+(21,1,2) = {"
+cS
+cS
+eQ
+eQ
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+Ag
+"}
+(22,1,2) = {"
+cS
+cS
+eQ
+eQ
+Ag
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+Ag
+"}
+(23,1,2) = {"
+cS
+cS
+eQ
+eQ
+Ag
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+Ag
+"}
+(24,1,2) = {"
+cS
+cS
+eQ
+eQ
+Ag
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+Ag
+"}
+(25,1,2) = {"
+cS
+cS
+eQ
+eQ
+Ag
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+"}
+(26,1,2) = {"
+cS
+cS
+eQ
+eQ
+Ag
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+"}
+(27,1,2) = {"
+cS
+cS
+eQ
+eQ
+Ag
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+"}
+(28,1,2) = {"
+cS
+cS
+eQ
+eQ
+Ag
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+"}
+(29,1,2) = {"
+cS
+cS
+eQ
+eQ
+Ag
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+"}
+(30,1,2) = {"
+cS
+cS
+eQ
+eQ
+Ag
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+"}
+(31,1,2) = {"
+cS
+cS
+eQ
+eQ
+Ag
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+"}
+(32,1,2) = {"
+cS
+cS
+eQ
+eQ
+Ag
+Ag
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+"}
+(33,1,2) = {"
+cS
+cS
+eQ
+eQ
+Ag
+Ag
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+"}
+(34,1,2) = {"
+cS
+cS
+eQ
+eQ
+Ag
+Ag
+LC
+LC
+LC
+LC
+LC
+LC
+LC
+"}
+
+(1,1,3) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+"}
+(2,1,3) = {"
+cS
+cS
+cS
+cS
+px
+LZ
+px
+cS
+cS
+cS
+cS
+BH
+BH
+"}
+(3,1,3) = {"
+eQ
+eQ
+eQ
+eQ
+px
+LZ
+px
+MF
+cS
+cS
+BH
+BH
+GS
+"}
+(4,1,3) = {"
+eQ
+eQ
+eQ
+Og
+px
+LZ
+px
+Og
+sx
+BH
+BH
+Od
+az
+"}
+(5,1,3) = {"
+eQ
+eQ
+eQ
+Og
+px
+LZ
+px
+Og
+sx
+OZ
+iY
+RW
+az
+"}
+(6,1,3) = {"
+eQ
+eQ
+Og
+Og
+px
+LZ
+px
+Og
+sx
+BH
+BH
+VR
+JM
+"}
+(7,1,3) = {"
+eQ
+Og
+Og
+Og
+px
+LZ
+px
+Og
+sx
+BH
+BH
+iY
+BH
+"}
+(8,1,3) = {"
+eQ
+Og
+Og
+Og
+px
+LZ
+px
+Og
+sx
+BH
+BH
+Le
+gK
+"}
+(9,1,3) = {"
+eQ
+Og
+Og
+Og
+px
+LZ
+px
+Og
+sx
+BH
+BH
+UT
+az
+"}
+(10,1,3) = {"
+eQ
+Og
+Og
+Og
+px
+LZ
+px
+MT
+sx
+OZ
+iY
+RW
+aw
+"}
+(11,1,3) = {"
+eQ
+eQ
+Og
+Og
+px
+LZ
+px
+Og
+sx
+BH
+BH
+cL
+az
+"}
+(12,1,3) = {"
+eQ
+eQ
+Og
+Og
+px
+LZ
+px
+px
+sx
+BH
+BH
+pQ
+on
+"}
+(13,1,3) = {"
+eQ
+eQ
+Og
+Og
+px
+LZ
+LZ
+px
+qr
+BH
+BH
+OZ
+BH
+"}
+(14,1,3) = {"
+eQ
+eQ
+Og
+Og
+px
+LZ
+LZ
+px
+cS
+BH
+vJ
+FN
+Pj
+"}
+(15,1,3) = {"
+eQ
+eQ
+eQ
+Og
+Og
+px
+LZ
+LZ
+px
+BH
+bX
+QK
+hB
+"}
+(16,1,3) = {"
+eQ
+eQ
+eQ
+Og
+Og
+px
+LZ
+LZ
+px
+BH
+mX
+PB
+PB
+"}
+(17,1,3) = {"
+eQ
+eQ
+eQ
+Og
+Og
+Og
+px
+LZ
+px
+BH
+dE
+YG
+DO
+"}
+(18,1,3) = {"
+eQ
+eQ
+eQ
+eQ
+Og
+Og
+px
+LZ
+px
+BH
+BH
+BH
+BH
+"}
+(19,1,3) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+Og
+px
+LZ
+px
+px
+cS
+cS
+cS
+"}
+(20,1,3) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+Og
+px
+LZ
+LZ
+px
+cS
+cS
+cS
+"}
+(21,1,3) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+Og
+px
+LZ
+LZ
+px
+cS
+cS
+cS
+"}
+(22,1,3) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+Og
+px
+LZ
+LZ
+px
+cS
+cS
+cS
+"}
+(23,1,3) = {"
+eQ
+eQ
+eQ
+eQ
+eQ
+Og
+px
+LZ
+LZ
+px
+px
+cS
+cS
+"}
+(24,1,3) = {"
+eQ
+eQ
+eQ
+eQ
+Og
+Og
+px
+LZ
+LZ
+LZ
+px
+cS
+cS
+"}
+(25,1,3) = {"
+eQ
+eQ
+eQ
+Og
+Og
+Og
+px
+LZ
+LZ
+LZ
+px
+cS
+cS
+"}
+(26,1,3) = {"
+eQ
+eQ
+eQ
+Og
+Og
+Og
+LC
+px
+LZ
+LZ
+px
+cS
+cS
+"}
+(27,1,3) = {"
+Og
+Og
+Og
+Og
+Og
+LC
+LC
+px
+LZ
+LZ
+px
+cS
+cS
+"}
+(28,1,3) = {"
+Og
+Og
+Og
+Og
+Og
+LC
+LC
+px
+px
+LZ
+px
+cS
+cS
+"}
+(29,1,3) = {"
+Og
+Og
+Og
+Og
+Og
+Og
+LC
+LC
+px
+LZ
+px
+px
+Og
+"}
+(30,1,3) = {"
+eQ
+eQ
+eQ
+eQ
+Og
+Og
+Og
+LC
+px
+LZ
+LZ
+px
+Og
+"}
+(31,1,3) = {"
+eQ
+eQ
+eQ
+eQ
+Og
+Og
+Og
+Og
+px
+LZ
+LZ
+px
+LC
+"}
+(32,1,3) = {"
+eQ
+eQ
+eQ
+eQ
+Ag
+Og
+Og
+Og
+px
+LZ
+LZ
+px
+LC
+"}
+(33,1,3) = {"
+eQ
+eQ
+eQ
+eQ
+Ag
+Og
+Og
+Og
+px
+LZ
+LZ
+px
+LC
+"}
+(34,1,3) = {"
+eQ
+eQ
+eQ
+eQ
+Ag
+Ag
+Og
+Og
+Og
+px
+LZ
+LZ
+LC
+"}
+
+(1,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+"}
+(2,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+"}
+(3,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+"}
+(4,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+"}
+(5,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+"}
+(6,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+"}
+(7,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+"}
+(8,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+"}
+(9,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+"}
+(10,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+"}
+(11,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+"}
+(12,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+"}
+(13,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+"}
+(14,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+"}
+(15,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+"}
+(16,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+"}
+(17,1,4) = {"
+cS
+cS
+cS
+MF
+dR
+bD
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+"}
+(18,1,4) = {"
+cS
+cS
+EN
+Og
+Og
+oz
+fW
+cS
+cS
+cS
+cS
+cS
+cS
+"}
+(19,1,4) = {"
+cS
+cS
+oA
+Og
+cS
+oQ
+oz
+fW
+cS
+cS
+cS
+cS
+cS
+"}
+(20,1,4) = {"
+cS
+oA
+oA
+oA
+cS
+cS
+Og
+Og
+cS
+cS
+cS
+cS
+cS
+"}
+(21,1,4) = {"
+cS
+bU
+oA
+oz
+cS
+cS
+oA
+oz
+cS
+cS
+cS
+cS
+cS
+"}
+(22,1,4) = {"
+oS
+aE
+oz
+fW
+cS
+cS
+cS
+Pz
+Pz
+cS
+cS
+cS
+cS
+"}
+(23,1,4) = {"
+xk
+Og
+fW
+cS
+cS
+cS
+cS
+cS
+oz
+fW
+cS
+cS
+cS
+"}
+(24,1,4) = {"
+eW
+mU
+MK
+cS
+cS
+cS
+cS
+cS
+oz
+dR
+cS
+cS
+cS
+"}
+(25,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+oz
+oz
+Qh
+cS
+cS
+"}
+(26,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+fW
+oz
+oz
+bD
+cS
+"}
+(27,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+oz
+dR
+cS
+cS
+"}
+(28,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+Og
+MK
+cS
+cS
+"}
+(29,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+oA
+cS
+cS
+cS
+"}
+(30,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+nH
+Og
+cS
+cS
+cS
+"}
+(31,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+Og
+Og
+cS
+cS
+cS
+"}
+(32,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+oA
+Og
+Og
+cS
+cS
+"}
+(33,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+xG
+Og
+cS
+cS
+"}
+(34,1,4) = {"
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+cS
+oA
+Og
+Og
+cS
+"}

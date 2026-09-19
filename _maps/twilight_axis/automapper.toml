@@ -74,3 +74,10 @@ map_files = ["collar_1.dmm","collar_2.dmm"]
 directory = "_maps/twilight_axis/templates/dun_world/bathcollars/"
 required_map = "dun_world.dmm"
 coordinates = [71, 54, 1]
+
+# dunworld inq river
+[templates.inq_river]
+map_files = ["inq_river.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/inq_river/"
+required_map = "dun_world.dmm"
+coordinates = [1, 145, 1]
