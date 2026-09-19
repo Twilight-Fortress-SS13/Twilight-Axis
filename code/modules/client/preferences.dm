@@ -236,10 +236,16 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	/// Whether we can see the feint HUD bar.
 	var/feint_hud = FALSE
 
+	var/datum/tat_build/tat_build
+	var/list/legacy_tat_build_data
+	var/legacy_tat_build_migrated = FALSE
+
 /datum/preferences/New(client/C)
 	parent = C
 	migrant = new /datum/migrant_pref(src)
 	familiar_prefs = new /datum/familiar_prefs(src)
+
+	tat_build = new(src)
 
 	if(istype(C))
 		if(!IsGuestKey(C.key))
