@@ -455,7 +455,8 @@
 
 	var/available_local = maximum_local_children - nearby_children
 	var/available_global = get_max_farm_animals() - GLOB.farm_animals
-	var/wanted = get_genetic_litter_size(min(available_local, available_global))
+	var/available_lifetime = max(0, breedchildren)
+	var/wanted = get_genetic_litter_size(min(available_local, min(available_global, available_lifetime)))
 	var/turf/target = get_turf(src)
 	if(!target || wanted <= 0)
 		return 0
@@ -475,6 +476,8 @@
 			var/mob/living/inherited_owner = (tame && owner) ? owner : (partner.tame ? partner.owner : null)
 			baby.tamed(inherited_owner)
 		spawned++
+	if(spawned)
+		breedchildren = max(0, breedchildren - spawned)
 	if(spawned > 1)
 		visible_message(span_notice("[src] gives birth to a litter of [spawned]!"))
 	return spawned

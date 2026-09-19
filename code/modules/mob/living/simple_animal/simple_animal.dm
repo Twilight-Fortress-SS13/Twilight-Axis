@@ -327,7 +327,7 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 			qdel(O)
 			food = min(food + 30, 100)
 			adjustHealth(-rand(10,20))
-			if(tame && owner == user)
+			if(tame) // TA EDIT
 				return
 			var/can_tame_with_food = !length(tame_food_typecache) || tame_food_typecache[O.type] // TA EDIT
 			var/realchance = can_tame_with_food ? clamp(tame_chance + genetic_tame_chance_bonus, 0, 95) : 0 // TA EDIT
@@ -424,6 +424,8 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 
 ///Extra effects to add when the mob is tamed, such as adding a riding component
 /mob/living/simple_animal/proc/tamed(mob/user)
+	if(tame && owner && user && owner != user) // TA EDIT
+		return // TA EDIT
 	INVOKE_ASYNC(src, PROC_REF(emote), "lower_head", null, null, null, TRUE)
 	tame = TRUE
 	stop_automated_movement_when_pulled = TRUE
@@ -431,13 +433,11 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 		owner = user
 		SEND_SIGNAL(user, COMSIG_ANIMAL_TAMED, src)
 	pet_passive = TRUE
-	// TA EDIT START
-	if(ai_controller)
+	if(ai_controller) // TA EDIT START
 		ai_controller.clear_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET)
 		ai_controller.clear_blackboard_key(BB_BASIC_MOB_RETALIATE_LIST)
 		ai_controller.set_blackboard_key(BB_BASIC_MOB_TAMED, TRUE)
-	setup_livestock_commands()
-	// TA EDIT END
+	setup_livestock_commands() // TA EDIT END
 
 //mob/living/simple_animal/examine(mob/user)
 //	. = ..()

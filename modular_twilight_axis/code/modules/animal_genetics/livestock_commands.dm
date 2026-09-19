@@ -1,6 +1,7 @@
 #define BB_TA_LIVESTOCK_COMMAND "BB_ta_livestock_command"
 #define BB_TA_LIVESTOCK_AGGRESSIVE "BB_ta_livestock_aggressive"
 #define BB_TA_LIVESTOCK_HIDING_TARGET "BB_ta_livestock_hiding_target"
+#define BB_TA_LIVESTOCK_CAN_CLIMB_DEFAULT "BB_ta_livestock_can_climb_default"
 
 #define TA_LIVESTOCK_STAY "stay"
 #define TA_LIVESTOCK_FREE "free"
@@ -11,8 +12,37 @@
 /datum/targetting_datum/basic/not_friends/ta_livestock
 	attack_until_past_stat = CONSCIOUS
 
+/datum/targetting_datum/basic/not_friends/ta_livestock/can_attack(mob/living/living_mob, atom/target, vision_range)
+	if(!..())
+		return FALSE
+	if(!istype(living_mob, /mob/living/simple_animal))
+		return TRUE
+	var/mob/living/simple_animal/animal = living_mob
+	return !animal.is_livestock_ally(target)
+
+/turf/proc/ta_livestock_reachableTurftest3d(caller, turf/T, ID, recursive_call = 0)
+	if(!reachableTurftest3d(caller, T, ID, recursive_call))
+		return FALSE
+	if(!ismovableatom(caller))
+		return TRUE
+	var/atom/movable/mover = caller
+	for(var/obj/structure/structure in T)
+		if(structure.density && structure.climbable && !structure.CanPass(mover, T))
+			return FALSE
+	for(var/obj/machinery/machinery in T)
+		if(machinery.density && machinery.climbable && !machinery.CanPass(mover, T))
+			return FALSE
+	return TRUE
+
+/datum/ai_movement/hybrid_pathing/ta_livestock_command
+	always_advanced = TRUE
+	max_path_distance = 60
+	max_pathing_attempts = 30
+	repath_anticipation_distance = 8
+	advanced_adjacent_proc = TYPE_PROC_REF(/turf, ta_livestock_reachableTurftest3d)
+
 /datum/ai_behavior/ta_livestock_follow
-	required_distance = 1
+	required_distance = 2
 	behavior_flags = AI_BEHAVIOR_REQUIRE_MOVEMENT | AI_BEHAVIOR_CAN_PLAN_DURING_EXECUTION
 
 /datum/ai_behavior/ta_livestock_follow/setup(datum/ai_controller/controller, target_key)
@@ -20,13 +50,21 @@
 	var/atom/target = controller.blackboard[target_key]
 	if(QDELETED(target))
 		return FALSE
-	set_movement_target(controller, target)
+	set_movement_target(controller, target, /datum/ai_movement/hybrid_pathing/ta_livestock_command)
 
 /datum/ai_behavior/ta_livestock_follow/perform(seconds_per_tick, datum/ai_controller/controller, target_key)
 	var/atom/target = controller.blackboard[target_key]
 	if(QDELETED(target))
 		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
 	return AI_BEHAVIOR_DELAY
+
+/datum/ai_behavior/ta_livestock_follow/finish_action(datum/ai_controller/controller, succeeded, target_key)
+	. = ..()
+	controller.change_ai_movement_type(initial(controller.ai_movement))
+
+/datum/ai_behavior/travel_towards/ta_livestock_move
+	clear_target = TRUE
+	new_movement_type = /datum/ai_movement/hybrid_pathing/ta_livestock_command
 
 /datum/ai_planning_subtree/ta_livestock_commands
 
@@ -44,6 +82,9 @@
 		if(QDELETED(follow_target))
 			controller.clear_blackboard_key(BB_TA_LIVESTOCK_COMMAND)
 			controller.clear_blackboard_key(BB_CURRENT_PET_TARGET)
+			var/follow_default_can_climb = controller.blackboard[BB_TA_LIVESTOCK_CAN_CLIMB_DEFAULT]
+			if(!isnull(follow_default_can_climb))
+				controller.can_climb_structures = follow_default_can_climb
 			return
 		controller.queue_behavior(/datum/ai_behavior/ta_livestock_follow, BB_CURRENT_PET_TARGET)
 		return SUBTREE_RETURN_FINISH_PLANNING
@@ -52,8 +93,11 @@
 		var/atom/move_target = controller.blackboard[BB_CURRENT_PET_TARGET]
 		if(QDELETED(move_target))
 			controller.clear_blackboard_key(BB_TA_LIVESTOCK_COMMAND)
+			var/move_default_can_climb = controller.blackboard[BB_TA_LIVESTOCK_CAN_CLIMB_DEFAULT]
+			if(!isnull(move_default_can_climb))
+				controller.can_climb_structures = move_default_can_climb
 			return
-		controller.queue_behavior(/datum/ai_behavior/travel_towards/stop_on_arrival, BB_CURRENT_PET_TARGET)
+		controller.queue_behavior(/datum/ai_behavior/travel_towards/ta_livestock_move, BB_CURRENT_PET_TARGET)
 		return SUBTREE_RETURN_FINISH_PLANNING
 
 	if(command == TA_LIVESTOCK_ATTACK)
@@ -96,6 +140,11 @@
 	var/old_ai_command
 	var/datum/weakref/old_ai_target_ref
 	var/old_ai_aggressive = FALSE
+	var/list/old_ai_movement_path
+	var/turf/old_ai_path_destination
+	var/old_ai_next_repath = 0
+	var/old_ai_move_generation = 0
+	var/old_ai_move_loop_running = FALSE
 
 /datum/component/ta_livestock_commands/Initialize(mob/living/new_owner)
 	if(!istype(parent, /mob/living/simple_animal))
@@ -104,6 +153,7 @@
 	uses_ai_controller = !!animal.ai_controller
 	if(uses_ai_controller)
 		animal.ai_controller.add_subtree_at(/datum/ai_planning_subtree/ta_livestock_commands, 1)
+		animal.ai_controller.set_blackboard_key(BB_TA_LIVESTOCK_CAN_CLIMB_DEFAULT, animal.ai_controller.can_climb_structures)
 		if(!animal.ai_controller.blackboard[BB_PET_TARGETING_DATUM])
 			animal.ai_controller.set_blackboard_key(BB_PET_TARGETING_DATUM, new /datum/targetting_datum/basic/not_friends/ta_livestock())
 	else if(!istype(animal, /mob/living/simple_animal/hostile))
@@ -117,6 +167,11 @@
 
 /datum/component/ta_livestock_commands/UnregisterFromParent()
 	UnregisterSignal(parent, list(COMSIG_CLICK_ALT, COMSIG_LIVING_LIFE))
+	var/mob/living/simple_animal/animal = parent
+	if(uses_ai_controller && animal && animal.ai_controller)
+		var/default_can_climb = animal.ai_controller.blackboard[BB_TA_LIVESTOCK_CAN_CLIMB_DEFAULT]
+		if(!isnull(default_can_climb))
+			animal.ai_controller.can_climb_structures = default_can_climb
 	clear_owner_signals()
 
 /datum/component/ta_livestock_commands/Destroy()
@@ -137,6 +192,12 @@
 	if(!animal)
 		return
 	var/mob/living/old_owner = owner_ref?.resolve()
+	if(istype(animal, /mob/living/simple_animal/hostile))
+		var/mob/living/simple_animal/hostile/hostile_animal = animal
+		if(old_owner && old_owner != new_owner)
+			hostile_animal.friends -= old_owner
+		if(new_owner)
+			hostile_animal.friends |= new_owner
 	animal.owner = new_owner
 	if(old_owner == new_owner)
 		sync_friends()
@@ -173,6 +234,25 @@
 			hostile_animal.friends -= remove_owner
 		if(owner)
 			hostile_animal.friends |= owner
+
+/mob/living/simple_animal/proc/is_livestock_ally(atom/target)
+	if(!target || target == src)
+		return TRUE
+	if(!isliving(target))
+		return FALSE
+	var/mob/living/living_target = target
+	if(living_target == owner)
+		return TRUE
+	if(owner && shares_fellowship(owner, living_target))
+		return TRUE
+	if(istype(living_target, /mob/living/simple_animal))
+		var/mob/living/simple_animal/target_animal = living_target
+		if(target_animal.owner)
+			if(target_animal.owner == owner)
+				return TRUE
+			if(owner && shares_fellowship(owner, target_animal.owner))
+				return TRUE
+	return FALSE
 
 /datum/component/ta_livestock_commands/proc/on_alt_click(datum/source, mob/living/clicker)
 	SIGNAL_HANDLER
@@ -273,6 +353,9 @@
 		animal.ai_controller.set_ai_status(AI_STATUS_ON)
 		animal.ai_controller.CancelActions()
 		animal.ai_controller.halt_movement()
+		var/default_can_climb = animal.ai_controller.blackboard[BB_TA_LIVESTOCK_CAN_CLIMB_DEFAULT]
+		if(!isnull(default_can_climb))
+			animal.ai_controller.can_climb_structures = default_can_climb
 	else if(istype(animal, /mob/living/simple_animal/hostile))
 		var/mob/living/simple_animal/hostile/hostile_animal = animal
 		hostile_animal.toggle_ai(AI_ON)
@@ -287,6 +370,7 @@
 			animal.visible_message(span_notice("[animal] stops and waits for [commander]."))
 		if("Free")
 			if(animal.ai_controller)
+				animal.ai_controller.set_blackboard_key(BB_TA_LIVESTOCK_AGGRESSIVE, FALSE)
 				animal.ai_controller.clear_blackboard_key(BB_TA_LIVESTOCK_COMMAND)
 				animal.ai_controller.clear_blackboard_key(BB_CURRENT_PET_TARGET)
 			else
@@ -296,6 +380,7 @@
 			animal.visible_message(span_notice("[animal] relaxes and resumes its normal behavior."))
 		if("Follow")
 			if(animal.ai_controller)
+				animal.ai_controller.can_climb_structures = FALSE
 				animal.ai_controller.set_blackboard_key(BB_TA_LIVESTOCK_COMMAND, TA_LIVESTOCK_FOLLOW)
 				animal.ai_controller.set_blackboard_key(BB_CURRENT_PET_TARGET, commander)
 			else
@@ -311,7 +396,7 @@
 			else
 				set_old_ai_command(null)
 				old_ai_aggressive = TRUE
-				reset_old_ai_hostility(FALSE)
+				reset_old_ai_hostility()
 			animal.visible_message(span_warning("[animal] becomes alert and aggressive at [commander]'s order."))
 		if("Calm")
 			if(animal.ai_controller)
@@ -338,7 +423,15 @@
 
 /datum/component/ta_livestock_commands/proc/apply_targeted_command(mob/living/commander, command_name, atom/target)
 	var/mob/living/simple_animal/animal = parent
-	if(!animal || !target || get_dist(animal, target) > 9 || !can_see(animal, target))
+	if(!animal || !target)
+		return
+
+	if(command_name == "Move")
+		var/turf/destination = get_turf(target)
+		if(!destination || get_dist(animal, destination) > 30)
+			to_chat(commander, span_warning("[animal] cannot reach a destination that far away."))
+			return
+	else if(get_dist(animal, target) > 9 || !can_see(animal, target))
 		to_chat(commander, span_warning("[animal] cannot act on that target."))
 		return
 
@@ -348,6 +441,7 @@
 			if(!destination)
 				return
 			if(animal.ai_controller)
+				animal.ai_controller.can_climb_structures = FALSE
 				animal.ai_controller.set_blackboard_key(BB_TA_LIVESTOCK_COMMAND, TA_LIVESTOCK_MOVE)
 				animal.ai_controller.set_blackboard_key(BB_CURRENT_PET_TARGET, destination)
 			else
@@ -402,6 +496,11 @@
 /datum/component/ta_livestock_commands/proc/set_old_ai_command(command, atom/target)
 	old_ai_command = command
 	old_ai_target_ref = target ? WEAKREF(target) : null
+	old_ai_move_generation++
+	old_ai_move_loop_running = FALSE
+	old_ai_movement_path = null
+	old_ai_path_destination = null
+	old_ai_next_repath = 0
 	var/mob/living/simple_animal/hostile/animal = parent
 	if(!istype(animal))
 		return
@@ -413,6 +512,83 @@
 		animal.toggle_ai(AI_ON)
 		animal.stop_automated_movement = FALSE
 	animal.LoseTarget()
+	if(command == TA_LIVESTOCK_FOLLOW || command == TA_LIVESTOCK_MOVE)
+		start_old_ai_command_movement()
+
+/datum/component/ta_livestock_commands/proc/start_old_ai_command_movement()
+	if(old_ai_move_loop_running)
+		return
+	if(old_ai_command != TA_LIVESTOCK_FOLLOW && old_ai_command != TA_LIVESTOCK_MOVE)
+		return
+	old_ai_move_loop_running = TRUE
+	var/generation = old_ai_move_generation
+	INVOKE_ASYNC(src, PROC_REF(process_old_ai_command_movement), generation)
+
+/datum/component/ta_livestock_commands/proc/process_old_ai_command_movement(generation)
+	if(generation != old_ai_move_generation)
+		return
+	var/mob/living/simple_animal/hostile/animal = parent
+	if(!istype(animal) || QDELETED(animal))
+		old_ai_move_loop_running = FALSE
+		return
+	if(old_ai_command != TA_LIVESTOCK_FOLLOW && old_ai_command != TA_LIVESTOCK_MOVE)
+		old_ai_move_loop_running = FALSE
+		return
+
+	var/atom/move_target = old_ai_target_ref?.resolve()
+	if(QDELETED(move_target))
+		old_ai_move_loop_running = FALSE
+		set_old_ai_command(null)
+		return
+
+	if(IS_DEAD_OR_INCAP(animal) || !isturf(animal.loc))
+		addtimer(CALLBACK(src, PROC_REF(process_old_ai_command_movement), generation), 1 SECONDS)
+		return
+
+	var/minimum_distance = old_ai_command == TA_LIVESTOCK_FOLLOW ? 2 : 0
+	if(get_dist(animal, move_target) <= minimum_distance)
+		old_ai_movement_path = null
+		old_ai_path_destination = get_turf(move_target)
+		walk(animal, 0)
+		if(old_ai_command == TA_LIVESTOCK_MOVE)
+			old_ai_move_loop_running = FALSE
+			set_old_ai_command(null)
+			return
+		addtimer(CALLBACK(src, PROC_REF(process_old_ai_command_movement), generation), 0.5 SECONDS)
+		return
+
+	var/turf/current_turf = get_turf(animal)
+	var/turf/target_turf = get_turf(move_target)
+	if(!current_turf || !target_turf)
+		old_ai_move_loop_running = FALSE
+		set_old_ai_command(null)
+		return
+
+	var/needs_repath = !length(old_ai_movement_path)
+	if(old_ai_path_destination && get_dist(old_ai_path_destination, target_turf) > 3)
+		needs_repath = TRUE
+	if(world.time >= old_ai_next_repath)
+		needs_repath = TRUE
+
+	if(needs_repath)
+		old_ai_path_destination = target_turf
+		old_ai_next_repath = world.time + 1 SECONDS
+		old_ai_movement_path = get_path_to(animal, target_turf, TYPE_PROC_REF(/turf, Heuristic_cardinal_3d), 60, 60, minimum_distance, adjacent = TYPE_PROC_REF(/turf, ta_livestock_reachableTurftest3d))
+		if(length(old_ai_movement_path) && old_ai_movement_path[1] == current_turf)
+			old_ai_movement_path.Cut(1, 2)
+
+	if(length(old_ai_movement_path))
+		var/turf/next_step = old_ai_movement_path[1]
+		var/turf/before_move = get_turf(animal)
+		var/moved = step(animal, get_dir(animal, next_step))
+		if(moved && get_turf(animal) == next_step)
+			old_ai_movement_path.Cut(1, 2)
+		else if(get_turf(animal) == before_move)
+			old_ai_movement_path = null
+			old_ai_next_repath = min(old_ai_next_repath, world.time + 0.5 SECONDS)
+
+	var/move_delay = max(1, round(animal.cached_multiplicative_slowdown))
+	addtimer(CALLBACK(src, PROC_REF(process_old_ai_command_movement), generation), move_delay)
 
 /datum/component/ta_livestock_commands/proc/reset_old_ai_hostility(clear_enemies = TRUE)
 	var/mob/living/simple_animal/hostile/animal = parent
@@ -430,8 +606,7 @@
 /datum/component/ta_livestock_commands/proc/old_ai_can_attack(mob/living/simple_animal/hostile/animal, atom/target)
 	if(!animal || !target || target == animal)
 		return FALSE
-	var/mob/living/owner = owner_ref?.resolve()
-	if(target == owner)
+	if(animal.is_livestock_ally(target))
 		return FALSE
 	if(ismob(target) && (target in animal.friends))
 		return FALSE
@@ -447,29 +622,14 @@
 		walk(animal, 0)
 		return
 
-	if(old_ai_command == TA_LIVESTOCK_FOLLOW)
-		var/atom/follow_target = old_ai_target_ref?.resolve()
-		if(QDELETED(follow_target))
-			set_old_ai_command(null)
-			return
-		animal.stop_automated_movement = TRUE
-		if(get_dist(animal, follow_target) > 1)
-			animal.Goto(follow_target, 1)
-		else
-			walk(animal, 0)
-		return
-
-	if(old_ai_command == TA_LIVESTOCK_MOVE)
+	if(old_ai_command == TA_LIVESTOCK_FOLLOW || old_ai_command == TA_LIVESTOCK_MOVE)
 		var/atom/move_target = old_ai_target_ref?.resolve()
 		if(QDELETED(move_target))
 			set_old_ai_command(null)
 			return
 		animal.stop_automated_movement = TRUE
-		if(get_dist(animal, move_target) > 0)
-			animal.Goto(move_target, 0)
-		else
-			walk(animal, 0)
-			set_old_ai_command(null)
+		if(!old_ai_move_loop_running)
+			start_old_ai_command_movement()
 		return
 
 	if(old_ai_command == TA_LIVESTOCK_ATTACK)

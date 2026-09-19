@@ -150,8 +150,8 @@
 	adult_growth = /mob/living/simple_animal/hostile/retaliate/rogue/wolf/male
 	health = WOLF_HEALTH / 2
 	maxHealth = WOLF_HEALTH / 2
-	melee_damage_lower = round(19 / 2)
-	melee_damage_upper = round(29 / 2)
+	melee_damage_lower = 9
+	melee_damage_upper = 14
 	STACON = 4
 	STASTR = 3
 	STASPD = 9
