@@ -1245,7 +1245,7 @@
 			pic.color = get_detail_color()
 		add_overlay(pic)
 
-/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/heavy/rockhill/iron
+/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/iron/heavy/rockhill
 	name = "jacketed iron plate-and-maille"
 	desc = "A maille-aketon of iron, comfortably fitted beneath a matching cuirass and a thick clothspun jacket. Originating from Rockhill's \
 	armories, this slightly-less-expensive alternative to plate armor was fashioned to ensure every man-at-arms could stand and face the fief's \
@@ -1257,6 +1257,19 @@
 	item_state = "irockhillmaille"
 	detail_tag = "_detail"
 	detail_color = COLOR_WHITE
+
+/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/iron/heavy/rockhill/Initialize(mapload)
+	. = ..()
+	update_icon()
+
+/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/iron/heavy/rockhill/update_icon()
+	cut_overlays()
+	if(get_detail_tag())
+		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		pic.appearance_flags = RESET_COLOR
+		if(get_detail_color())
+			pic.color = get_detail_color()
+		add_overlay(pic)
 
 //
 
@@ -3279,10 +3292,12 @@ As Excaliber."
 	desc = "Noble lapels for a noble coat."
 	item_state = "broche"
 	icon_state = "broche"
-	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_MASK|ITEM_SLOT_ARMOR
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
+	sleeved = 'icons/clothing/onmob/donor_sleeves_armor.dmi'
 	color = null
+	body_parts_covered = CHEST
+	slot_flags = ITEM_SLOT_HEAD | ITEM_SLOT_CLOAK | ITEM_SLOT_MASK
 	grid_width = 32
 	grid_height = 32
 
@@ -4078,6 +4093,14 @@ As Excaliber."
 					H.update_inv_armor()
 			return
 
+/obj/item/clothing/suit/roguetown/armor/gambeson/light/donator_arming
+	name = "light jacketed gambeson"
+	icon_state = "darming"
+	item_state = "darming"
+	icon = 'icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
+	sleeved = 'icons/clothing/onmob/donor_sleeves_armor.dmi'
+
 /obj/item/clothing/suit/roguetown/armor/gambeson/donator_jacket
 	name = "jacketed gambeson"
 	icon_state = "djacket"
@@ -4149,6 +4172,14 @@ As Excaliber."
 					H.update_inv_shirt()
 					H.update_inv_armor()
 			return
+
+/obj/item/clothing/suit/roguetown/armor/gambeson/light/donator_jacket
+	name = "light jacketed gambeson"
+	icon_state = "djacket"
+	item_state = "djacket"
+	icon = 'icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
+	sleeved = 'icons/clothing/onmob/donor_sleeves_armor.dmi'
 
 // LAGOMORPHICA + STALKERINO
 /obj/item/rogueweapon/example/lagomorphica_obligatoire
