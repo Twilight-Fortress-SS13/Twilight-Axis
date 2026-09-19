@@ -184,10 +184,10 @@
 				armor = /obj/item/clothing/suit/roguetown/armor/brigandine/light	// find a smithy to fix it
 			if("Studded Leather Vest")
 				armor = /obj/item/clothing/suit/roguetown/armor/leather/studded		// or maintain it yourself!
-		var/weapons = list("Crossbow & 20 Bolts","Heavy Crossbow & 8 Heavy Bolts","Arquebus Rifle & 30 Lead Spheres")
+		var/weapons = list("Crossbow & 16 Bolts","Heavy Crossbow & 8 Heavy Bolts","Arquebus Rifle & 30 Lead Spheres")
 		var/weapon_choice = input(H, "Choose your weapon.", "TOOLS OF THE TRADE") as anything in weapons //TA EDIT
 		switch(weapon_choice)
-			if("Crossbow & 20 Bolts")
+			if("Crossbow & 16 Bolts")
 				beltr = /obj/item/quiver/bolt/standard
 				r_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
 				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, 5, TRUE)

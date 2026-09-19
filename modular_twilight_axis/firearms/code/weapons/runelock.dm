@@ -28,6 +28,7 @@
 	var/reload_time = 8
 	var/reload_stamina_cost = 30
 	damfactor = 1
+	per_scales_damage = TRUE
 	var/critfactor = 0.7
 	var/npcdamfactor = 4
 	equip_delay_self = 1 SECONDS
@@ -146,8 +147,7 @@
 		var/obj/projectile/bullet/BB = CB.BB
 		BB.gunpowder_npc_critfactor *= npcdamfactor
 		BB.critfactor *= critfactor
-		var/per_scaling = 1 + ((min(user.STAPER, RANGED_STAT_SOFTCAP) - 10) * RANGED_STAT_MULT) + (max(0, user.STAPER - RANGED_STAT_SOFTCAP) * RANGED_STAT_CAPPEDMULT)
-		BB.damage *= damfactor * per_scaling
+		BB.damage *= damfactor * get_per_damage_scaling(user)
 	cocked = FALSE
 	update_icon()
 	var/shoot_dir = get_dir(src, target)

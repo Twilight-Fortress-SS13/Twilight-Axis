@@ -14,6 +14,10 @@
 	item_type = item_class
 	verbed = verbiage
 
+	if(isclothing(parent)) // TA EDIT START
+		var/obj/item/clothing/cursed_clothing = parent
+		cursed_clothing.resistance_flags |= FIRE_PROOF // TA EDIT END
+
 	RegisterSignal(parent, COMSIG_ITEM_EQUIPPED, PROC_REF(on_equip))
 
 /datum/component/cursed_item/proc/on_equip()

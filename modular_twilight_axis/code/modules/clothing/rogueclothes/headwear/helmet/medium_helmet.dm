@@ -8,7 +8,6 @@
 	detail_tag = "_detail"
 	altdetail_tag = "_detailalt"
 	resistance_flags = FIRE_PROOF
-	var/picked = FALSE
 	color = "#FFFFFF"
 	detail_color = "#262927"
 	altdetail_color = "#FFFFFF"
