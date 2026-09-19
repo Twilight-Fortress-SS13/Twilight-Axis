@@ -231,6 +231,7 @@ GLOBAL_LIST_INIT(antagonist_positions, list( //Mostly lesser antagonists
 	"Wretch",
 	"Gnoll",
 	"Hag",
+	"Vurdalak", //TA EDIT
 ))
 
 GLOBAL_LIST_INIT(inquisition_positions, list( //Self explanatory

@@ -111,7 +111,9 @@ GLOBAL_VAR_INIT(date_override_offset, 0)
 			SScity_assembly?.on_day_tick()
 			process_manor_production_cycle(TRUE, FALSE) //TA EDIT
 		if(GLOB.tod == "dusk") //TA EDIT
-			process_manor_production_cycle(FALSE, TRUE) //TA EDIT
+			process_manor_production_cycle(FALSE, TRUE)
+		if(GLOB.tod == "night")
+			vurdalak_on_nightfall() //TA EDIT
 		for(var/mob/living/player in GLOB.mob_list)
 			if(player.stat != DEAD && player.client)
 				player.do_time_change()

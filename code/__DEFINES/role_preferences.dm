@@ -27,6 +27,7 @@
 #define ROLE_CULT			"Cult of Ascension"
 #define ROLE_FREEMAN		"Freeman" // TA EDIT
 #define ROLE_LOSTGRENZEL	"Lost Grenzel" // TA EDIT
+#define ROLE_VURDALAK		"Vurdalak"// TA EDIT
 
 #define ROLE_SYNDICATE			"Syndicate"
 #define ROLE_TRAITOR			"Traitor"
