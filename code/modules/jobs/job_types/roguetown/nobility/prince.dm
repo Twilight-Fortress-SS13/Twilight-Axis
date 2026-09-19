@@ -57,10 +57,11 @@
 					new_origin = pick(/datum/virtue/origin/enigma, /datum/virtue/origin/valorian, /datum/virtue/origin/zybantian)
 				change_origin(H, new_origin, "Royal line")
 		else if(SSmapping.config.map_name != "Desert Town")
-			if(!istype(player.prefs.virtue_origin, /datum/virtue/origin/azuria) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/grenzelhoft) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/valorian))
+			if(!istype(player.prefs.virtue_origin, /datum/virtue/origin/azuria) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/grenzelhoft) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/valorian) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/hammerhold))
 				var/list/new_origins = list("Azuria" = /datum/virtue/origin/azuria, 
 				"Grenzelhoft" = /datum/virtue/origin/grenzelhoft,
-				"Valoria" = /datum/virtue/origin/valorian)
+				"Valoria" = /datum/virtue/origin/valorian,
+				"Hammerhold" = /datum/virtue/origin/hammerhold)
 				var/new_origin
 				var/choice = input(player, "Your origins are not compatible with the Duchy. Where do you hail from?", "ANCESTRY") as anything in new_origins
 				if(choice)
