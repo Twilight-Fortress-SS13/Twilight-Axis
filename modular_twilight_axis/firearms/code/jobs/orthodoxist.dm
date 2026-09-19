@@ -111,6 +111,11 @@
 		var/discipline_choice = input(H, "Choose your DISCIPLINE.", "TAKE UP PSYDON'S PATH.") as anything in disciplines
 		switch(discipline_choice)
 			if("Blackpowder Legionnaire - Heavy Firearms, Medium or Light Armor (+I CON / +I INT)")
+				head = /obj/item/clothing/head/roguetown/helmet/kettle
+				backpack_contents = list(
+					/obj/item/roguekey/inquisitionmanor = 1,
+					/obj/item/paper/inqslip/arrival/ortho = 1,
+					)
 				var/armors = list("Medium Armor - Maille Training, Psydonic Cuirass", "Light Armor - Dodge Expert, Psydonic Chestplate")
 				var/armor_choice = input(H, "Choose your ARMOR.", "TAKE UP PSYDON'S MANTLE.") as anything in armors
 				switch(armor_choice)
@@ -155,12 +160,19 @@
 					if("Runelock Pistol - Rapid Reload, Runic Ammunition")
 						belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/blackpowder/runelock
 						beltr = /obj/item/quiver/twilight_bullet/runicbag/runed
-				head = /obj/item/clothing/head/roguetown/helmet/kettle
+			if("Rune Volf - Stealth, Rune Magic & Silent Firearms (+I SPD)")
+				head = /obj/item/clothing/head/roguetown/roguehood/psydon/confessor
+				armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/confessor
+				pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan
+				belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/blackpowder/umbra
+				beltr = /obj/item/quiver/twilight_bullet/lead
 				backpack_contents = list(
 					/obj/item/roguekey/inquisitionmanor = 1,
 					/obj/item/paper/inqslip/arrival/ortho = 1,
+					/obj/item/twilight_powderflask/volf = 1,
+					/obj/item/inqarticles/garrote = 1,
+					/obj/item/clothing/head/inqarticles/blackbag = 1
 					)
-			if("Rune Volf - Stealth, Rune Magic & Silent Firearms (+I SPD)")
 				var/weapons = list("Psydonic Parrying Dagger", "Psydonic Foil", "Psydonic Claws")
 				var/weapon_choice = input(H,"Choose your WEAPON.", "TAKE UP PSYDON'S ARMS.") as anything in weapons
 				switch(weapon_choice)
@@ -184,18 +196,6 @@
 						H.mind?.AddSpell(new /datum/action/cooldown/spell/stasis)
 					if("Runed Repel")
 						H.mind?.AddSpell(new /datum/action/cooldown/spell/projectile/repel/runed)
-				head = /obj/item/clothing/head/roguetown/roguehood/psydon/confessor
-				armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/confessor
-				pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan
-				belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/blackpowder/umbra
-				beltr = /obj/item/quiver/twilight_bullet/lead
-				backpack_contents = list(
-					/obj/item/roguekey/inquisitionmanor = 1,
-					/obj/item/paper/inqslip/arrival/ortho = 1,
-					/obj/item/twilight_powderflask/volf = 1,
-					/obj/item/inqarticles/garrote = 1,
-					/obj/item/clothing/head/inqarticles/blackbag = 1
-					)
 				ADD_TRAIT(H, TRAIT_BLACKBAGGER, TRAIT_GENERIC)
 				ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 				H.adjust_skillrank_up_to(/datum/skill/misc/sneaking, SKILL_LEVEL_EXPERT, TRUE)
