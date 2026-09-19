@@ -46,11 +46,11 @@
 		/datum/advclass/wretch/pyromaniac,
 		/datum/advclass/wretch/vigilante,
 		/datum/advclass/wretch/munitioneer,
-		/datum/advclass/wretch/pariah,
+	//	/datum/advclass/wretch/pariah, //TA EDIT
 		/datum/advclass/wretch/profane_champion,
 		/datum/advclass/wretch/heretic_spellblade,
 		/datum/advclass/wretch/ancient_spellblade,
-	//	/datum/advclass/wretch/ancient_deathknight,
+	//	/datum/advclass/wretch/ancient_deathknight, //TA EDIT
 		/datum/advclass/wretch/slasher,
 		/datum/advclass/wretch/maestro
 	)

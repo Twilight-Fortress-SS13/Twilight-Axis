@@ -160,10 +160,13 @@ Balloon Alert / Floating Text defines
 	/datum/species/construct/metal,\
 	/datum/species/ooze,\
 
-// All but elves & half-elves.
+// All but elves & half-elves. //TA EDIT -> but true elves
 #define RACES_BLACKOAK \
 	/datum/species/human/northern,\
+	/datum/species/human/halfelf,\
+	/datum/species/elf/dark,\
 	/datum/species/elf/dark/raider,\
+	/datum/species/elf/sun,\
 	/datum/species/dwarf/mountain,\
 	/datum/species/tieberian,\
 	/datum/species/aasimar,\
@@ -504,6 +507,7 @@ GLOBAL_LIST_EMPTY(round_join_times)
 #define CTAG_GNOLL			"CAT_GNOLL"			// Wretch-esque gnolls, graggar's chosen.
 #define CTAG_GNOLL_IMPURE	"CAT_GNOLL_IMPURE"	// Reward for beating enough gnolls.
 #define CTAG_HAG			"CAT_HAG"
+#define CTAG_BLACKOAK		"CAT_BLACKOAK"		// TA EDIT
 
 #define CTAG_WARDEN			"CAT_WARDEN"		// Warden class - Handles warden class selector.
 #define CTAG_WATCH			"CAT_WATCH"			// Watch class - Handles Town Watch class selector
@@ -633,7 +637,7 @@ GLOBAL_LIST_EMPTY(round_join_times)
 #define CTAG_ROYALGUARD_ENIGMA "CAT_ROYALGUARD_ENIGMA"
 #define CTAG_ROYALKNIGHT "CAT_ROYALKNIGHT"
 #define CTAG_ROYALSERGEANT "CAT_ROYALSERGEANT"
-#define CTAG_SHERIFF "CAT_SHERIFF"			
+#define CTAG_SHERIFF "CAT_SHERIFF"
 #define CTAG_TOWN_WATCH "CAT_TOWN_WATCH"
 #define CTAG_VANGUARD "CAT_VANGUARD"
 #define CTAG_OVERSEER "CAT_OVERSEER"

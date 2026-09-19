@@ -37,7 +37,7 @@
 				preserve = TRUE
 		if(!preserve)
 			owner.remove_status_effect(/datum/status_effect/buff/clergybuff)
-	
+
 /mob/living/carbon/human
 	var/priest_timer_check = 0
 	var/matthios_banner_timer_check = 0
@@ -48,7 +48,7 @@
 	if((src.holy_area == TRUE) && HAS_TRAIT(guy, TRAIT_CLERGY_TA) && !guy.has_status_effect(/datum/status_effect/buff/clergybuff) && !HAS_TRAIT(guy, TRAIT_EXCOMMUNICATED) && !HAS_TRAIT(guy, TRAIT_HERESIARCH))
 		guy.apply_status_effect(/datum/status_effect/buff/clergybuff)
 
-/datum/status_effect/buff/mist_form 
+/datum/status_effect/buff/mist_form
 	id = "mist_form"
 	duration = 6666
 	alert_type = /atom/movable/screen/alert/status_effect/buff/dagger_dash
@@ -56,8 +56,8 @@
 /datum/status_effect/buff/mist_form/on_apply()
 	if(!isliving(owner)) return FALSE
 	var/mob/living/L = owner
-	
-	L.alpha = 100 
+
+	L.alpha = 100
 
 	ADD_TRAIT(L, "ethereal", MAGIC_TRAIT)
 	ADD_TRAIT(L, TRAIT_PACIFISM, MAGIC_TRAIT)
@@ -70,24 +70,24 @@
 	L.status_flags |= GODMODE
 
 
-	L.density = FALSE 
-	
+	L.density = FALSE
+
 
 	L.pass_flags |= LETPASSTHROW
 
 	L.pass_flags |= PASSMOB
-	
+
 	return ..()
 
 /datum/status_effect/buff/mist_form/on_remove()
 	var/mob/living/L = owner
 	if(!L) return
-	
+
 	L.alpha = 255
-	
+
 
 	L.density = TRUE
-	
+
 
 	REMOVE_TRAIT(L, "ethereal", MAGIC_TRAIT)
 	REMOVE_TRAIT(L, TRAIT_PACIFISM, MAGIC_TRAIT)
@@ -99,7 +99,7 @@
 	L.status_flags &= ~GODMODE
 	L.pass_flags &= ~LETPASSTHROW
 	L.pass_flags &= ~PASSMOB
-	
+
 	..()
 
 /atom/movable/screen/alert/status_effect/buff/smartium
@@ -294,3 +294,48 @@
 /datum/status_effect/buff/starsugar/nextmove_modifier()
 	return 0.7
 //***************************************************//
+
+/datum/status_effect/buff/blackoak
+	id = "blackoak"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/blackoak
+	effectedstats = list(STATKEY_PER = 2, STATKEY_WIL = 1, STATKEY_SPD = 1)
+
+/atom/movable/screen/alert/status_effect/buff/blackoak
+	name = "Whispers of the Oak"
+	desc = "The ancient timber breathes alongside you. The forest lends you its swiftness, sharpens your senses, and bolsters your resolve."
+	icon = 'modular_twilight_axis/icons/mob/screen_alert.dmi'
+	icon_state = "blackoak_buff"
+
+/datum/status_effect/buff/blackoak/on_apply()
+	. = ..()
+	ADD_TRAIT(owner, TRAIT_LONGSTRIDER, id)
+
+/datum/status_effect/buff/blackoak/on_remove()
+	. = ..()
+	REMOVE_TRAIT(owner, TRAIT_LONGSTRIDER, id)
+
+
+/datum/status_effect/buff/blackoak/process()
+
+	.=..()
+	var/area/rogue/our_area = get_area(owner)
+	if(!(our_area.warden_area))
+		owner.remove_status_effect(/datum/status_effect/buff/blackoak)
+
+/datum/status_effect/debuff/surroundedblackoak
+	id = "surroundedblackoak"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/surroundedblackoak
+	effectedstats = list(STATKEY_STR = -2, STATKEY_LCK = -2, STATKEY_PER = -2, STATKEY_SPD = -2)
+
+/atom/movable/screen/alert/status_effect/debuff/surroundedblackoak
+	name = "Unsanctified Ground"
+	desc = "The cold stone, stench of iron, and crowded streets alienate your senses. The sky is blocked, and the spirit of the oak cannot reach you here."
+	icon = 'modular_twilight_axis/icons/mob/screen_alert.dmi'
+	icon_state = "blackoak_debuff"
+
+/datum/status_effect/debuff/surroundedblackoak/process()
+
+	.=..()
+	var/area/rogue/our_area = get_area(owner)
+	if(!(our_area.town_area))
+		owner.remove_status_effect(/datum/status_effect/debuff/surroundedblackoak)

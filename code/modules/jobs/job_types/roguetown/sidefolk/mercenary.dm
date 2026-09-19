@@ -52,9 +52,9 @@
 		/datum/advclass/mercenary/warscholar,
 		/datum/advclass/mercenary/warscholar_pontifex,
 		/datum/advclass/mercenary/warscholar_vizier,
-		/datum/advclass/mercenary/blackoak,
-		/datum/advclass/mercenary/blackoak_ranger,
-		/datum/advclass/mercenary/blackoak_adept,
+	//	/datum/advclass/mercenary/blackoak, //TA EDIT START
+	//	/datum/advclass/mercenary/blackoak_ranger,
+	//	/datum/advclass/mercenary/blackoak_adept, //TA EDIT END
 		/datum/advclass/mercenary/underdweller,
 		/datum/advclass/mercenary/grudgebearer,
 		/datum/advclass/mercenary/grudgebearer_soldier,
@@ -132,7 +132,7 @@
 	var/player_count = length(GLOB.joined_player_list)
 	var/ready_player_count = length(GLOB.ready_player_list)
 	var/slots = 4
-	
+
 	var/current_players = (SSticker.current_state == GAME_STATE_PREGAME) ? ready_player_count : player_count
 	if(current_players > 50)
 		var/extra = floor((current_players - 50) / 10)

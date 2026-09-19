@@ -200,3 +200,8 @@
 	desc = "As if facing a Dark Elf raider was not intimidating enough by itself, this helmet, designed to resemble the head of a giant lizard hailing from the Underdark, is meant to invoke primal terror in men and creechers alike."
 	icon_state = "shadowvolf"
 	item_state = "shadowvolf"
+
+/obj/item/clothing/head/roguetown/helmet/heavy/elven_helm/warmaster
+	name = "woad elven great barbute"
+	desc = "Bound from the dark heartwood of ancient Black Oaks and shaped by blood-rituals, this helm is noticeably heavier and far more imposing than standard forest armor. Thick, iron-hard roots coil around the brow like a jagged crown, absorbing crushing blows that would splinter lesser wood. It does not merely guard its bearer—it commands the wrath of the woods."
+	max_integrity = ARMOR_INT_HELMET_HEAVY_STEEL

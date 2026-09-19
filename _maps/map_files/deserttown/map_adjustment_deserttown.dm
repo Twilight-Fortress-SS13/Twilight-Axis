@@ -117,7 +117,7 @@
 		// /datum/job/roguetown/niteman,
 		// /datum/job/roguetown/tailor,
 		// /datum/job/roguetown/elder,
-		
+
 		// /datum/job/roguetown/villager,
 		// /datum/job/roguetown/farmer,
 		// /datum/job/roguetown/prisonerb,
@@ -132,7 +132,7 @@
 		//inquisition. Fine as is
 
 		//mercenaries. Fine as is
-		
+
 		/datum/job/roguetown/servant,//slave
 		// /datum/job/roguetown/apothecary,
 		// /datum/job/roguetown/churchling,
@@ -141,23 +141,24 @@
 		// /datum/job/roguetown/orphan,
 		// /datum/job/roguetown/prince,//dtprince
 		// /datum/job/roguetown/shophand,
-		
+
 	//	/datum/job/roguetown/tribalchieftain,
 	//	/datum/job/roguetown/tribalshaman,
 	//	/datum/job/roguetown/tribalguard,
 	//	/datum/job/roguetown/tribalrabble,
 	//	/datum/job/roguetown/tribalvillager,
 
-		/datum/job/roguetown/royal_guard, 
-		/datum/job/roguetown/sheriff, 
-		/datum/job/roguetown/town_watch, 
-		/datum/job/roguetown/vanguard, 
-		/datum/job/roguetown/courtphysician, 
-		/datum/job/roguetown/knight_enigma, 
-		/datum/job/roguetown/royal_sergeant, 
-		/datum/job/roguetown/overseer, 
+		/datum/job/roguetown/royal_guard,
+		/datum/job/roguetown/sheriff,
+		/datum/job/roguetown/town_watch,
+		/datum/job/roguetown/vanguard,
+		/datum/job/roguetown/courtphysician,
+		/datum/job/roguetown/knight_enigma,
+		/datum/job/roguetown/royal_sergeant,
+		/datum/job/roguetown/overseer,
 		/datum/job/roguetown/mayor,
 		/datum/job/roguetown/bailiff,
+		/datum/job/roguetown/blackoak,
 	)
 
 
