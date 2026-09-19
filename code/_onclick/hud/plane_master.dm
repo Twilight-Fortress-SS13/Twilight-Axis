@@ -231,17 +231,22 @@
 	name = "weather effect plane master"
 	plane = WEATHER_EFFECT_PLANE
 	blend_mode = BLEND_OVERLAY
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	screen_loc = "CENTER-2:-16, CENTER"
 	//render_relay_plane = RENDER_PLANE_GAME
+	var/obj/weather_effect/weather_visual
 
 /atom/movable/screen/plane_master/weather_effect/Initialize(mapload)
 	. = ..()
-	//filters += filter(type="alpha", render_source=WEATHER_RENDER_TARGET)
-	SSoutdoor_effects.weather_planes_need_vis |= src
+	filters += filter(type="alpha", render_source=WEATHER_RENDER_TARGET)
+	weather_visual = new /obj/weather_effect()
+	vis_contents = list(weather_visual)
+	SSParticleWeather.registerWeatherEffect(weather_visual)
 
 /atom/movable/screen/plane_master/weather_effect/Destroy()
-	. = ..()
-	SSoutdoor_effects.weather_planes_need_vis -= src
+	SSParticleWeather.unregisterWeatherEffect(weather_visual)
+	QDEL_NULL(weather_visual)
+	return ..()
 /* Our sunlight planemaster mashes all of our sunlight overlays together into one				*/
 /* The fullscreen then grabs the plane_master with a layer filter, and colours it				*/
 /* We do this so the sunlight fullscreen acts as a big lighting object, in our lighting plane */
