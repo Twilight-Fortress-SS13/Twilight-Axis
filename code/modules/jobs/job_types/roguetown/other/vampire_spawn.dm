@@ -27,7 +27,7 @@
 
 /datum/advclass/vampire_spawn
 	name = "Vampire Spawn"
-	outfit = /datum/outfit/job/roguetown/vampire_spawn
+	outfit = null // TA EDIT
 
 	category_tags = list(CTAG_VAMPSPAWN)
 

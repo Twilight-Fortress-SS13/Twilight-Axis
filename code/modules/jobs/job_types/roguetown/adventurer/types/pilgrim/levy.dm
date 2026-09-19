@@ -142,12 +142,12 @@
 				backr = /obj/item/rogueweapon/scabbard/gwstrap
 
 			if ("THE MINER'S PICKAXE (Pickaxe)")
-				H.adjust_skillrank_up_to(/datum/skill/labor/mining, SKILL_LEVEL_JOURNEYMAN, TRUE)
+				H.adjust_skillrank_up_to(/obj/item/rogueweapon/pick/militia::associated_skill, SKILL_LEVEL_JOURNEYMAN, TRUE) // ta edit
 				r_hand = /obj/item/rogueweapon/pick/militia
 				gloves = /obj/item/clothing/gloves/roguetown/leather
 
 			if ("MINE SCYTHE (Scythe)")
-				H.adjust_skillrank_up_to(/datum/skill/labor/farming, SKILL_LEVEL_JOURNEYMAN, TRUE)
+				H.adjust_skillrank_up_to(/obj/item/rogueweapon/scythe/militia::associated_skill, SKILL_LEVEL_JOURNEYMAN, TRUE) // ta edit
 				r_hand = /obj/item/rogueweapon/scythe/militia
 				gloves = /obj/item/clothing/gloves/roguetown/leather
 				backr = /obj/item/rogueweapon/scabbard/gwstrap

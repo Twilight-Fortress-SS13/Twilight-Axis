@@ -5460,3 +5460,10 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/donator_overseer_silver_mask
 	donatitem = TRUE
 	donat_tier = 2
+
+/datum/loadout_item/donator/mystogan_radiantmask
+	name = "Donator Item - Radiant Golden Mask"
+	category = list("Одежда", "Донат")
+	path = /obj/item/clothing/mask/rogue/facemask/goldmask/radiant
+	donatitem = TRUE
+	donat_tier = 2
