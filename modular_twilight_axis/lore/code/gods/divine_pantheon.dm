@@ -139,6 +139,23 @@
 	domain = "Природа, звери, охота, плодородие, безумие, преображение."
 	desc = "Младший сын Псайдона, тот, кому любящий Отец отмерил во владения зелёные заросли, могущественных зверей и дубравы. Со временем он обезумел от жестокости этого мира и его влияние ослабло, и тем не менее… чем дальше от цивилизации, в чёрных от зарослей лесах, влажных джунглях и горах… ты поймёшь насколько его влияние велико."
 	worshippers = "Друиды, шаманы, звери, безумцы, охотники, скотоводцы, собиратели."
+	miracles = list(/datum/action/cooldown/spell/touch/orison					 = CLERIC_ORI,
+					/obj/effect/proc_holder/spell/invoked/spiderspeak 			 = CLERIC_T0,
+					/obj/effect/proc_holder/spell/targeted/blesscrop			 = CLERIC_T0,
+					/datum/action/cooldown/spell/miracle/heal 					 = CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/bloodmiracle			 = CLERIC_T1,
+					/obj/effect/proc_holder/spell/targeted/beasttame			 = CLERIC_T1,
+					/obj/effect/proc_holder/spell/self/wildshape				 = CLERIC_T2,
+					/datum/action/cooldown/spell/create_maneater				 = CLERIC_T2,
+					/obj/effect/proc_holder/spell/targeted/conjure_glowshroom	 = CLERIC_T3,
+					/obj/effect/proc_holder/spell/targeted/conjure_vines		 = CLERIC_T3,
+					/datum/action/cooldown/spell/wood_emergence		             = CLERIC_T3,
+					/obj/effect/proc_holder/spell/self/howl/call_of_the_moon	 = CLERIC_T4,
+					/obj/effect/proc_holder/spell/invoked/resurrect/dendor		 = CLERIC_T4,
+					/obj/effect/proc_holder/spell/invoked/root_affinity			 = CLERIC_T4,
+					/obj/effect/proc_holder/spell/invoked/transform_tree/miracle = CLERIC_T4,
+	)
+	traits_tier = list(DENDOR_BLESSING = CLERIC_T1)
 	confess_lines = list(
 		"ДЕНДОР ОБЕСПЕЧИВАЕТ ЕДОЙ!",
 		"ОТЕЦ ДЕРЕВЬЕВ ПРИНОСИТ ЩЕДРОСТЬ!",

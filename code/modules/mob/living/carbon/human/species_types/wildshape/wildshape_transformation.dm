@@ -41,12 +41,10 @@
 	// TA edit end - new ERP SYSTEM
 
 	//before we shed our items, save our neck and ring, if we have any, so we can quickly rewear them
-	var/obj/item/stored_neck = wear_neck
 	var/obj/item/stored_ring = wear_ring
-	dropItemToGround(stored_neck)
 	dropItemToGround(stored_ring)
 
-	wildshape_drop_items(allowed_equipment, disallowed_equipment)
+	//wildshape_drop_items() TA Edit
 
 	regenerate_icons()
 	icon = null
@@ -73,8 +71,6 @@
 	if (stored_ring)
 		W.equip_to_slot_if_possible(stored_ring, SLOT_RING) // have to do this because we can wear psycrosses as rings even though we shouldn't be able to
 
-	if (stored_neck)
-		W.equip_to_slot_if_possible(stored_neck, SLOT_NECK)
 	W.after_creation()
 	W.stored_language = new
 	W.stored_language.copy_known_languages_from(src)
@@ -165,7 +161,7 @@
 	dropItemToGround(stored_neck)
 	dropItemToGround(stored_ring)
 
-	wildshape_drop_items()
+	//wildshape_drop_items() TA Edit
 
 	icon = null
 	invisibility = INVISIBILITY_MAXIMUM

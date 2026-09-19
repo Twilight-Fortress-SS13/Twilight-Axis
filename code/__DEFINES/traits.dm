@@ -482,6 +482,7 @@
 #define TRAIT_ZIZOEYES "Zizo eyes"
 #define TRAIT_NOC_LIGHT_BLESSING "Noc Blessing"
 #define TRAIT_OUTLANDER "Outlander"
+#define DENDOR_BLESSING "Dendor blessing"
 #define TRAIT_VOLF "Volf"
 #define TRAIT_SHAKY_SPEECH "Shaky Speech"
 #define TRAIT_NO_RUNECHAT_ANIMATION "No Runechat Animation"
@@ -788,6 +789,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_FIREARMS_MARKSMAN = span_greentext("I'm an experienced gunslinger, and have spent many years learning to shoot firearms accurately over great distances. Firearms can progress to Legendary levels."),
 	TRAIT_VILLAIN = span_warning("I am a devious, conniving villain!"),
 	TRAIT_WOUNDREGEN = span_info("My wounds and bones mend on their own, my bleeding clots quickly.."),
+	DENDOR_BLESSING = span_info("Maneaters no longer trying to catch you"),
 	TRAIT_VOLF = span_info("I can barely see in the darkness of the world.."),
 
 	TRAIT_ARTILLERY_EXPERT = span_greentext("Я ранее обращался с артиллерией и разбираюсь в тонкостях её наводки."),
