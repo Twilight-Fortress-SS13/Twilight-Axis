@@ -83,7 +83,7 @@
 		var/mob/living/L = owner
 		var/adjusted = get_adjusted_cost(upfront_stamina_cost)
 		if(adjusted > 0)
-			L.stamina_add(adjusted)
+			INVOKE_ASYNC(L, TYPE_PROC_REF(/mob/living, stamina_add), adjusted) // TA EDIT
 
 /datum/action/cooldown/spell/conjure_arcyne_ward/Grant(mob/grant_to)
 	. = ..()
@@ -288,7 +288,7 @@
 		var/mob/living/L = owner
 		var/adjusted = get_adjusted_cost(upfront_stamina_cost)
 		if(adjusted > 0)
-			L.stamina_add(adjusted)
+			INVOKE_ASYNC(L, TYPE_PROC_REF(/mob/living, stamina_add), adjusted) // TA EDIT
 
 /datum/action/cooldown/spell/regenerate_arcyne_ward/cast(atom/cast_on)
 	. = ..()

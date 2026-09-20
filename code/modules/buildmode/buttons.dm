@@ -28,6 +28,7 @@
 	return 1
 
 /atom/movable/screen/buildmode/mode/update_icon()
+	icon = bd.mode.get_button_icon() // TA EDIT
 	icon_state = bd.mode.get_button_iconstate()
 
 /atom/movable/screen/buildmode/help
@@ -59,7 +60,8 @@
 
 /atom/movable/screen/buildmode/modeswitch/New(bld, mt)
 	modetype = mt
-	icon_state = "buildmode_[initial(modetype.key)]"
+	icon = initial(modetype.button_icon) || initial(icon) // TA EDIT
+	icon_state = initial(modetype.button_icon_state) || "buildmode_[initial(modetype.key)]" // TA EDIT
 	name = initial(modetype.key)
 	return ..(bld)
 

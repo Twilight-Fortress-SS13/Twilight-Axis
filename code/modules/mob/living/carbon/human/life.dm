@@ -97,6 +97,8 @@
 	if((istype(src.get_inactive_held_item(), /obj/item/rogueweapon/spear/matthios_standard) || istype(src.get_active_held_item(), /obj/item/rogueweapon/spear/matthios_standard)) && !(world.time < matthios_banner_timer_check + 5 SECONDS))
 		matthios_banner_timer_check = world.time
 		for(var/mob/living/carbon/human/H as anything in SSspatial_grid.orthogonal_range_search(src, SPATIAL_GRID_CONTENTS_TYPE_CLIENTS, 7))
+			if(!ishuman(H)) // TA EDIT
+				continue // TA EDIT
 			if(get_dist(src, H) > 7)
 				continue
 			if(istype(H.patron, /datum/patron/inhumen/matthios))

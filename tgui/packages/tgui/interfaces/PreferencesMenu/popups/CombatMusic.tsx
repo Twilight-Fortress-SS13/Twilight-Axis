@@ -21,7 +21,7 @@ export type PopupCombatMusicData = {
   custom_cmode_enabled: boolean;
 } & PopupData;
 
-const PopupCombatMusic = (props) => {
+const PopupCombatMusic = () => {
   const [constantData] = useConstantPrefs();
   const { data } = usePopupBackend<PopupCombatMusicData>();
   const { popup_data_ready } = data;

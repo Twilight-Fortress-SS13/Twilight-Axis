@@ -41,7 +41,7 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 	apply_prefs_race_bonus(character, player)
 	if(!HAS_TRAIT(character, TRAIT_NO_VOICEPACK_OVERRIDE)) //Only roundstart roles that jobload in, should use this. Prevents prefloaded voicepacks overriding yours.
 		apply_voicepacks(character, player)
-	if(player.prefs.dnr_pref)
+	if(player.prefs.dnr_pref || SSgamemode?.dnr_round)
 		apply_dnr_trait(character, player)
 	if(player.prefs.qsr_pref)
 		apply_qsr_trait(character, player)
@@ -59,9 +59,6 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 			if(islist(loadout_metadata) && loadout_metadata.len)
 				character.mind.special_items_metadata[item.name] = deepCopyList(loadout_metadata) // TA EDIT END
 	var/datum/job/assigned_job = SSjob.GetJob(character.mind?.assigned_role)
-	var/list/prefs = player.prefs?.job_subprefs
-	if(prefs)
-		character.mind.job_subprefs = prefs.Copy()
 	if(assigned_job)
 		assigned_job.clamp_stats(character)
 	check_trait_incompatibilities(character)

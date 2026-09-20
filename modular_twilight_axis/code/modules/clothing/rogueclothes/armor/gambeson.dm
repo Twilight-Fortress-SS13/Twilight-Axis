@@ -162,3 +162,32 @@
 /obj/item/clothing/suit/roguetown/shirt/padedetrshirt/ComponentInitialize()
 	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FENCERDEXTERITY)
 	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
+
+/obj/item/clothing/suit/roguetown/armor/gambeson/bloodraider
+	name = "raider's gambeson"
+	desc = "A strong loosely worn quilted shirt that places little weight on the arms and legs, usually worn for protection from spiders "
+	icon = 'modular_twilight_axis/icons/clothing/bloodraider.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/bloodraider.dmi'
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/bloodraider.dmi'
+	icon_state = "bloodgambeson"
+	color = null
+	max_integrity = ARMOR_INT_CHEST_LIGHT_ANTAG
+	smeltresult = /obj/item/ingot/component/zizo
+	shiftable = FALSE
+
+/obj/item/clothing/suit/roguetown/armor/gambeson/bloodraider/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")
+
+/obj/item/clothing/suit/roguetown/armor/gambeson/bloodraider/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)
+
+/obj/item/clothing/suit/roguetown/armor/gambeson/heavy/inq/overseer
+	name = "confessor shirt"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/overseer.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/onmob/overseer_onmob.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/onmob/overseer_onmob.dmi'
+	icon_state = "overseershirt"
+	item_state = "overseershirt"
+	color = null
+	boobed = TRUE

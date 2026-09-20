@@ -68,9 +68,8 @@
 			return CHARACTER_ACT_DATA_UPDATE
 
 		if("preview_examine")
-			var/datum/examine_panel/preview_examine_panel = new(user)
+			var/datum/examine_panel/preview_examine_panel = new()
 			preview_examine_panel.pref = src
-			preview_examine_panel.holder = user
 			preview_examine_panel.viewing = user
 			preview_examine_panel.ui_interact(user)
 			return CHARACTER_ACT_DATA_UPDATE
@@ -110,40 +109,40 @@
 				else
 					return CHARACTER_ACT_DATA_UPDATE
 
-			if(length(params["value"]) > max_length)
+			if(length_char(params["value"]) > max_length) //TA EDIT
 				to_chat(user, span_danger("Warning: [type_name] exceeds maximum length [max_length], it will be cut to size. Reload editors to see the final result in your Preferences Menu."))
 
 			var/value = trim(params["value"], PREVENT_CHARACTER_TRIM_LOSS(max_length)) || null
 			var/value_parsed = value ? parsemarkdown_basic(html_encode(value), hyperlink = TRUE) : null
 
 			var/prev_length
-			switch(type)
+			switch(type) //TA EDIT length_char <= length for non eng server
 				if("flavortext")
-					prev_length = length(flavortext)
+					prev_length = length_char(flavortext)
 					flavortext = value
 					flavortext_cached = value_parsed
 				if("ooc_notes")
-					prev_length = length(ooc_notes)
+					prev_length = length_char(ooc_notes)
 					ooc_notes = value
 					ooc_notes_cached = value_parsed
 				if("nsfwflavortext")
-					prev_length = length(nsfwflavortext)
+					prev_length = length_char(nsfwflavortext)
 					nsfwflavortext = value
 					nsfwflavortext_cached = value_parsed
 				if("erpprefs")
-					prev_length = length(erpprefs)
+					prev_length = length_char(erpprefs)
 					erpprefs = value
 					erpprefs_cached = value_parsed
 				if("rumour")
-					prev_length = length(rumour)
+					prev_length = length_char(rumour)
 					rumour = value
 					rumour_cached = value_parsed
 				if("noble_gossip")
-					prev_length = length(noble_gossip)
+					prev_length = length_char(noble_gossip)
 					noble_gossip = value
 					noble_gossip_cached = value_parsed
 
-			verbose_pref_log_change(user, "notice", "[type_name]", "[prev_length] characters", "[length(value)] characters")
+			verbose_pref_log_change(user, "notice", "[type_name]", "[prev_length] characters", "[length_char(value)] characters") //TA EDIT
 			log_game(replacetext(log, "%VALUE%", html_encode(value)))
 			return CHARACTER_ACT_DATA_UPDATE
 

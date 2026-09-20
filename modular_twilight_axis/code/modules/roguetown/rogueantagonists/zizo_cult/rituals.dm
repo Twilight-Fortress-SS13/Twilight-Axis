@@ -44,17 +44,17 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	if(!target_turf || !required_type)
 		return null
 	for(var/atom/movable/found_ingredient in target_turf)
+		if(found_ingredient.type == required_type)
+			return found_ingredient
+	for(var/atom/movable/found_ingredient in target_turf)
 		if(istype(found_ingredient, required_type))
 			return found_ingredient
 	return null
 
-/obj/effect/decal/cleanable/sigil/proc/consume_ritual_ingredients(list/ingredients_to_consume)
-	if(!length(ingredients_to_consume))
+/obj/effect/decal/cleanable/sigil/proc/consume_ritual_ingredient(atom/movable/ingredient)
+	if(!ingredient || QDELETED(ingredient) || ismob(ingredient))
 		return
-	for(var/atom/movable/ingredient as anything in ingredients_to_consume)
-		if(!ingredient || QDELETED(ingredient) || ismob(ingredient))
-			continue
-		qdel(ingredient)
+	qdel(ingredient)
 
 // Счетчик количества ритуалов
 /proc/get_ritual_count(ritual_name)
@@ -86,23 +86,20 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	if(!user.client)
 		return
 
-	var/list/available_rituals = list()
-	var/list/ritual_categories = list()
+	var/list/categories = list(
+		"Servantry" = /datum/ritual/servantry,
+		"Transmutation" = /datum/ritual/transmutation,
+		"Fleshcrafting" = /datum/ritual/fleshcrafting,
+		"Weaponary" = /datum/ritual/weaponary
+	)
 
-	switch(sigil_type)
-		if("Transmutation")
-			ritual_categories = subtypesof(/datum/ritual/transmutation)
-		if("Fleshcrafting")
-			ritual_categories = subtypesof(/datum/ritual/fleshcrafting)
-		if("Servantry")
-			ritual_categories = subtypesof(/datum/ritual/servantry)
-		if("Weaponary")
-			ritual_categories = subtypesof(/datum/ritual/weaponary)
-
-	if(!length(ritual_categories))
+	var/chosen_category = tgui_input_list(user, "Choose Ritual Category:", "Ritual Categories", categories)
+	if(!chosen_category || !user.Adjacent(src))
 		return
 
-	var/current_cultists = length(SSmapping.retainer.cultists)
+	var/category_type = categories[chosen_category]
+	var/list/ritual_categories = subtypesof(category_type)
+	var/list/available_rituals = list()
 
 	for(var/datum/ritual/ritual_type as anything in ritual_categories)
 		if(is_abstract(ritual_type))
@@ -117,23 +114,26 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 		available_rituals[ritual_name] = ritual_type
 
 	if(!length(available_rituals))
-		to_chat(user, span_warning("No rituals for this rune."))
+		to_chat(user, span_warning("No available rituals in this category."))
 		return
 
-	var/chosen_ritual_name = tgui_input_list(user, "Choose Ritual:", "Rituals [sigil_type]", available_rituals)
+	var/chosen_ritual_name = tgui_input_list(user, "Choose Ritual:", "Rituals - [chosen_category]", available_rituals)
 	if(!chosen_ritual_name || !user.Adjacent(src))
 		return
 
-	var/ritual_type = available_rituals[chosen_ritual_name]
-	var/datum/ritual/pickritual = GLOB.ritualslist[chosen_ritual_name]
+	perform_ritual(user, available_rituals[chosen_ritual_name])
 
-	if(!pickritual)
-		pickritual = new ritual_type()
-		GLOB.ritualslist[chosen_ritual_name] = pickritual
+/obj/effect/decal/cleanable/sigil/proc/perform_ritual(mob/living/user, ritual_type)
+	if(!ispath(ritual_type, /datum/ritual))
+		return
+
+	var/datum/ritual/ritual = new ritual_type()
+	var/chosen_ritual_name = ritual.name
+	var/current_cultists = length(SSmapping.retainer.cultists)
 
 	// Специальная проверка для ритуала ASCEND
-	var/required_cultists = pickritual.cultist_number
-	if(istype(pickritual, /datum/ritual/fleshcrafting/ascend))
+	var/required_cultists = ritual.cultist_number
+	if(istype(ritual, /datum/ritual/fleshcrafting/ascend))
 		required_cultists = SSmapping.retainer.get_cult_ascension_required_cultists()
 
 		if(current_cultists < required_cultists)
@@ -145,13 +145,13 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 			to_chat(user, span_danger("This ritual requires at least [required_cultists] cultists, but there are only [current_cultists]. You need [required_cultists - current_cultists] more cultists."))
 			return
 
-	var/dynamic_limit = get_dynamic_ritual_limit(pickritual, current_cultists)
+	var/dynamic_limit = get_dynamic_ritual_limit(ritual, current_cultists)
 
 	if(dynamic_limit > 0)
 		var/current_count = get_ritual_count(chosen_ritual_name)
 		if(current_count >= dynamic_limit)
-			if(pickritual.number_cultist_for_add_limit > 0)
-				var/needed_cultists_for_more = pickritual.number_cultist_for_add_limit
+			if(ritual.number_cultist_for_add_limit > 0)
+				var/needed_cultists_for_more = ritual.number_cultist_for_add_limit
 				var/current_extra_cultists = max(0, current_cultists - required_cultists)
 				var/needed_for_next = needed_cultists_for_more - (current_extra_cultists % needed_cultists_for_more)
 
@@ -160,78 +160,62 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 				to_chat(user, span_danger("This ritual can only be performed [dynamic_limit] times, and it has already been performed [current_count] times."))
 			return
 
-	var/cardinal_success = FALSE
-	var/center_success = FALSE
-	var/dews = 0
-	var/list/ingredients_to_consume = list()
-	var/atom/movable/found_ingredient
+	var/atom/movable/east_ingredient
+	var/atom/movable/south_ingredient
+	var/atom/movable/west_ingredient
+	var/atom/movable/north_ingredient
+	var/atom/movable/center_ingredient
 
-	if(pickritual.e_req)
-		found_ingredient = find_ritual_ingredient(get_step(src, EAST), pickritual.e_req)
-		if(found_ingredient)
-			dews++
-			ingredients_to_consume += found_ingredient
-	else
-		dews++
-
-	if(pickritual.s_req)
-		found_ingredient = find_ritual_ingredient(get_step(src, SOUTH), pickritual.s_req)
-		if(found_ingredient)
-			dews++
-			ingredients_to_consume += found_ingredient
-	else
-		dews++
-
-	if(pickritual.w_req)
-		found_ingredient = find_ritual_ingredient(get_step(src, WEST), pickritual.w_req)
-		if(found_ingredient)
-			dews++
-			ingredients_to_consume += found_ingredient
-	else
-		dews++
-
-	if(pickritual.n_req)
-		found_ingredient = find_ritual_ingredient(get_step(src, NORTH), pickritual.n_req)
-		if(found_ingredient)
-			dews++
-			ingredients_to_consume += found_ingredient
-	else
-		dews++
-
-	if(dews >= 4)
-		cardinal_success = TRUE
-
-	if(pickritual.center_requirement)
-		found_ingredient = find_ritual_ingredient(get_turf(src), pickritual.center_requirement)
-		if(found_ingredient)
-			center_success = TRUE
-			ingredients_to_consume += found_ingredient
-	else
-		center_success = TRUE
-
-	var/badritualpunishment = FALSE
-	if(cardinal_success != TRUE)
-		if(badritualpunishment)
+	if(ritual.e_req)
+		east_ingredient = find_ritual_ingredient(get_step(src, EAST), ritual.e_req)
+		if(!east_ingredient)
+			to_chat(user, span_danger("That's not how you do it, fool."))
+			user.electrocute_act(10, src)
 			return
-		to_chat(user, span_danger("That's not how you do it, fool."))
-		user.electrocute_act(10, src)
-		return
 
-	if(center_success != TRUE)
-		if(badritualpunishment)
+	if(ritual.s_req)
+		south_ingredient = find_ritual_ingredient(get_step(src, SOUTH), ritual.s_req)
+		if(!south_ingredient)
+			to_chat(user, span_danger("That's not how you do it, fool."))
+			user.electrocute_act(10, src)
 			return
-		to_chat(user, span_danger("That's not how you do it, fool."))
-		user.electrocute_act(10, src)
-		return
 
-	consume_ritual_ingredients(ingredients_to_consume)
+	if(ritual.w_req)
+		west_ingredient = find_ritual_ingredient(get_step(src, WEST), ritual.w_req)
+		if(!west_ingredient)
+			to_chat(user, span_danger("That's not how you do it, fool."))
+			user.electrocute_act(10, src)
+			return
+
+	if(ritual.n_req)
+		north_ingredient = find_ritual_ingredient(get_step(src, NORTH), ritual.n_req)
+		if(!north_ingredient)
+			to_chat(user, span_danger("That's not how you do it, fool."))
+			user.electrocute_act(10, src)
+			return
+
+	if(ritual.center_requirement)
+		center_ingredient = find_ritual_ingredient(get_turf(src), ritual.center_requirement)
+		if(!center_ingredient)
+			to_chat(user, span_danger("That's not how you do it, fool."))
+			user.electrocute_act(10, src)
+			return
+
+	var/list/ingredients_to_consume = list(
+		east_ingredient,
+		south_ingredient,
+		west_ingredient,
+		north_ingredient,
+		center_ingredient
+	)
+	for(var/atom/movable/ingredient as anything in ingredients_to_consume)
+		consume_ritual_ingredient(ingredient)
+
 	user.playsound_local(user, 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sounds/tesa.ogg', 25)
 	user.whisper("O'vena tesa...")
 
 	increment_ritual_count(chosen_ritual_name)
-
-	var/datum/ritual/ritual_instance = new ritual_type()
-	ritual_instance.invoke(user, loc)
+	ritual.invoke(user, loc)
 
 // SERVANTRY
 /datum/ritual/servantry

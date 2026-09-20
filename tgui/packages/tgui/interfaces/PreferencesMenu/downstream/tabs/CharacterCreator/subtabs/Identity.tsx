@@ -34,7 +34,7 @@ export const SubtabIdentityCardGameplayDownstream = () => {
   );
 };
 
-export const SubtabIdentityDownstreamPaneLeft = (props) => {
+export const SubtabIdentityDownstreamPaneLeft = () => {
   // Suggested format:
   // return (
   //   <>
@@ -50,7 +50,7 @@ export const SubtabIdentityDownstreamPaneLeft = (props) => {
   return null;
 };
 
-export const SubtabIdentityDownstreamPaneRight = (props) => {
+export const SubtabIdentityDownstreamPaneRight = () => {
   // Suggested format:
   // return (
   //   <>

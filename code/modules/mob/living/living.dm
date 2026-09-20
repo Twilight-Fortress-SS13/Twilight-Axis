@@ -1290,6 +1290,7 @@
 
 
 /mob/proc/stop_attack(message = FALSE)
+	used_intent?.on_charge_cancel()
 	if(atkswinging)
 		atkswinging = FALSE
 		if(message)
@@ -2190,12 +2191,14 @@
 			AT.get_remote_view_fullscreens(src)
 		else
 			clear_fullscreen("remote_view", 0)
+		client?.update_particle_weather_parallax()
+		client?.update_particle_weather_world_effect()
 
 GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 
 /proc/build_sight_trait_signals()
 	. = list()
-	for(var/trait in list(TRAIT_DARKVISION, TRAIT_NITEVISION, TRAIT_NOCSHADES, TRAIT_GILDED_SIGHT, TRAIT_THERMAL_VISION, TRAIT_XRAY_VISION, TRAIT_ZIZOSIGHT))
+	for(var/trait in list(TRAIT_DARKVISION, TRAIT_NITEVISION, TRAIT_NOCSHADES, TRAIT_GILDED_SIGHT, TRAIT_THERMAL_VISION, TRAIT_XRAY_VISION, TRAIT_ZIZOSIGHT, TRAIT_BLIND, TRAIT_VOLF)) //TA EDIT VOLF
 		. += SIGNAL_ADDTRAIT(trait)
 		. += SIGNAL_REMOVETRAIT(trait)
 
@@ -2633,6 +2636,8 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 	else
 		to_chat(src, message)
 	animate(client, pixel_x = world.icon_size*_x, pixel_y = world.icon_size*_y, ttime)
+	client.set_particle_weather_parallax_camera_offset(world.icon_size*_x, world.icon_size*_y, ttime)
+	client.set_particle_weather_world_camera_offset(world.icon_size*_x, world.icon_size*_y, ttime)
 //	RegisterSignal(src, COMSIG_MOVABLE_PRE_MOVE, PROC_REF(stop_looking))
 	update_cone_show()
 
@@ -2681,6 +2686,8 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 	if(!client.pixel_x && !client.pixel_y && client.perspective == MOB_PERSPECTIVE && client.eye == client.mob)
 		return
 	animate(client, pixel_x = 0, pixel_y = 0, 2, easing = SINE_EASING)
+	client.set_particle_weather_parallax_camera_offset(0, 0, 2, SINE_EASING)
+	client.set_particle_weather_world_camera_offset(0, 0, 2, SINE_EASING)
 	if(client)
 		client.pixel_x = 0
 		client.pixel_y = 0
@@ -2714,6 +2721,10 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 	if(isnull(offered_to) || isnull(offered_item))
 		stack_trace("no offered_to or offered_item in offer_item()")
 		return
+
+	if(offered_to.surrendering) // TA EDIT START
+		to_chat(src, span_warning("[offered_to] cannot take items while surrendering."))
+		return FALSE // TA EDIT END
 
 	var/time_left = COOLDOWN_TIMELEFT(src, offer_cooldown)
 
@@ -2787,6 +2798,12 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 	update_a_intents()
 
 /mob/living/proc/try_accept_offered_item(mob/living/offerer, obj/offered_item, stealthy)
+	if(surrendering) // TA EDIT START
+		to_chat(src, span_warning("I cannot take items while surrendering."))
+		to_chat(offerer, span_warning("[src] cannot take items while surrendering."))
+		offerer.stop_offering_item()
+		return FALSE // TA EDIT END
+
 	if(get_active_held_item())
 		to_chat(src, span_warning("I need a free hand to take it!"))
 		return FALSE

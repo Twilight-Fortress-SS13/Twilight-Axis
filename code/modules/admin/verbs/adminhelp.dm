@@ -552,6 +552,7 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	var/ticket_ping = FALSE
 	/// Who is handling this admin help?
 	var/handler
+	COOLDOWN_DECLARE(player_message_cooldown) // TA EDIT
 
 //call this on its own to create a ticket, don't manually assign current_ticket
 //msg is the title of the ticket: usually the ahelp text
@@ -595,6 +596,7 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 		AddInteraction("<font color='green'>Ticket opened. Your message has been sent to the admin team.</font>")
 
 		MessageNoRecipient(msg, newticket = TRUE)
+		COOLDOWN_START(src, player_message_cooldown, 1 MINUTES) // TA EDIT
 
 	GLOB.ahelp_tickets.active_tickets += src
 	SStgui.update_uis(GLOB.ahelp_tickets) // TA EDIT
@@ -614,8 +616,9 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 		heard_by_no_admins = FALSE
 		send2irc(initiator_ckey, "Ticket #[id]: Answered by [key_name(usr)]")
 	_interactions += "[time_stamp()]: [formatted_message]"
-	// Update any open TGUI windows
+	// Update both the initiator's ticket chat and the admin ticket panel.
 	SStgui.update_uis(src)
+	SStgui.update_uis(GLOB.ahelp_tickets)
 
 //Removes the ahelp verb and returns it after 2 minutes
 /datum/admin_help/proc/TimeoutVerb()
@@ -692,6 +695,15 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 			"message"= discord_sanitize_ahelp(msg)
 		)
 		send2discordwh(data)
+
+/datum/admin_help/proc/SendPlayerMessage(msg) // TA EDIT START
+	if(!COOLDOWN_FINISHED(src, player_message_cooldown))
+		to_chat(initiator, span_warning("You can only send one adminhelp message per minute."))
+		return FALSE
+	MessageNoRecipient(msg)
+	COOLDOWN_START(src, player_message_cooldown, 1 MINUTES)
+	return TRUE
+// TA EDIT END
 
 //Reopen a closed ticket
 /datum/admin_help/proc/Reopen(key_name = null)
@@ -1108,7 +1120,8 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 				return FALSE
 
 			// Send the message
-			MessageNoRecipient(message, FALSE)
+			if(!SendPlayerMessage(message)) // TA EDIT
+				return FALSE
 			TimeoutVerb()
 
 			return TRUE
@@ -1211,8 +1224,8 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	if(current_ticket)
 		if(alert(usr, "You already have a ticket open. Is this for the same issue?",,"Yes","No") != "No")
 			if(current_ticket)
-				current_ticket.MessageNoRecipient(msg, FALSE)
-				current_ticket.TimeoutVerb()
+				if(current_ticket.SendPlayerMessage(msg)) // TA EDIT
+					current_ticket.TimeoutVerb()
 				return
 			else
 				to_chat(usr, span_warning("Ticket not found, creating new one..."))
@@ -1250,13 +1263,11 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 		C = what
 	if(istype(C) && C.current_ticket)
 		var/datum/admin_help/AH = C.current_ticket
-		// Only log to admin logs; do not expose as a ticket chat message
 		log_admin("Ticket #[AH.id]: [message]")
 		return AH
 	if(istext(what))	//ckey
 		var/datum/admin_help/AH = GLOB.ahelp_tickets.CKey2ActiveTicket(what)
 		if(AH)
-			// Only log to admin logs; do not expose as a ticket chat message
 			log_admin("Ticket #[AH.id]: [message]")
 			return AH
 

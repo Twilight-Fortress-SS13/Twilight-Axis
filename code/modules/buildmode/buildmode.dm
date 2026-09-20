@@ -12,7 +12,6 @@
 
 	// SECTION UI
 	var/list/buttons
-
 	// Switching management
 	var/switch_state = BM_SWITCHSTATE_NONE
 	var/switch_width = 5
@@ -22,7 +21,6 @@
 	// dirswitch UI
 	var/atom/movable/screen/buildmode/bdir/dirbutton
 	var/list/dirswitch_buttons = list()
-
 /datum/buildmode/New(client/c)
 	mode = new /datum/buildmode_mode/basic(src)
 	holder = c
@@ -39,7 +37,6 @@
 	holder.screen -= buttons
 	holder.click_intercept = null
 	qdel(src)
-
 /datum/buildmode/Destroy()
 	close_switchstates()
 	holder.player_details.post_login_callbacks -= li_cb
@@ -58,7 +55,6 @@
 			open_modeswitch()
 		if(BM_SWITCHSTATE_DIR)
 			open_dirswitch()
-
 /datum/buildmode/proc/create_buttons()
 	// keep a reference so we can update it upon mode switch
 	modebutton = new /atom/movable/screen/buildmode/mode(src)
@@ -71,7 +67,6 @@
 	// build the lists of switching buttons
 	build_options_grid(subtypesof(/datum/buildmode_mode), modeswitch_buttons, /atom/movable/screen/buildmode/modeswitch)
 	build_options_grid(list(SOUTH,EAST,WEST,NORTH,NORTHWEST), dirswitch_buttons, /atom/movable/screen/buildmode/dirswitch)
-
 // this creates a nice offset grid for choosing between buildmode options,
 // because going "click click click ah hell" sucks.
 /datum/buildmode/proc/build_options_grid(list/elements, list/buttonslist, buttontype)
@@ -84,7 +79,6 @@
 		B.screen_loc = "NORTH-[(1 + 0.5 + y*1.5)],WEST+[0.5 + x*1.5]"
 		buttonslist += B
 		pos_idx++
-
 /datum/buildmode/proc/close_switchstates()
 	switch(switch_state)
 		if(BM_SWITCHSTATE_MODE)
@@ -102,7 +96,6 @@
 /datum/buildmode/proc/open_modeswitch()
 	switch_state = BM_SWITCHSTATE_MODE
 	holder.screen += modeswitch_buttons
-
 /datum/buildmode/proc/close_modeswitch()
 	switch_state = BM_SWITCHSTATE_NONE
 	holder.screen -= modeswitch_buttons
@@ -121,7 +114,6 @@
 /datum/buildmode/proc/close_dirswitch()
 	switch_state = BM_SWITCHSTATE_NONE
 	holder.screen -= dirswitch_buttons
-
 /datum/buildmode/proc/change_mode(newmode)
 	mode.exit_mode(src)
 	QDEL_NULL(mode)
@@ -129,6 +121,8 @@
 	mode = new newmode(src)
 	mode.enter_mode(src)
 	modebutton.update_icon()
+	if(holder) // TA EDIT
+		log_admin("Build Mode: [key_name(holder)] switched to [mode.key] mode.") // TA EDIT
 
 /datum/buildmode/proc/change_dir(newdir)
 	build_dir = newdir
@@ -137,9 +131,9 @@
 	return 1
 
 /datum/buildmode/proc/InterceptClickOn(mob/user, params, atom/object)
+	log_world_action(user, params, object) // TA EDIT
 	mode.handle_click(user.client, params, object)
 	return TRUE // no doing underlying actions
-
 /proc/togglebuildmode(mob/M as mob in GLOB.player_list)
 	set name = "Toggle Build Mode"
 	set category = "Event"
@@ -153,7 +147,6 @@
 			new /datum/buildmode(M.client)
 			message_admins("[key_name_admin(usr)] has entered build mode.")
 			log_admin("[key_name(usr)] has entered build mode.")
-
 #undef BM_SWITCHSTATE_NONE
 #undef BM_SWITCHSTATE_MODE
 #undef BM_SWITCHSTATE_DIR

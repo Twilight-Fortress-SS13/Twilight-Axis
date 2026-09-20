@@ -26,6 +26,15 @@
 	tastes = list("spelt" = 1)
 	bitesize = 6
 	rotprocess = null
+	var/fished = FALSE
+
+/obj/item/reagent_containers/food/snacks/rogue/crackerscooked/Initialize()
+	if(prob(20))
+		icon = 'modular_twilight_axis/icons/obj/items/fish.dmi'
+		icon_state += "_fish"
+		desc += span_notice("\nAbyssor's blessing.")
+		fished = TRUE
+	. = ..()
 
 /obj/item/reagent_containers/food/snacks/rogue/crackerscooked/On_Consume(mob/living/eater)
 	..()
@@ -40,6 +49,8 @@
 	if(bitecount == 5)
 		icon_state = "tack1"
 
+	if(fished)
+		icon_state += "_fish"
 
 /*	.................	Bread	................... */
 /obj/item/reagent_containers/food/snacks/rogue/bread
@@ -150,7 +161,7 @@
 	cooked_type = null
 	foodtype = GRAIN
 	bitesize = 1
-	rotprocess = SHELFLIFE_DECENT
+	rotprocess = null
 
 // -------------- BREAD WITH FOOD ON IT (not american sandwich) -----------------
 /obj/item/reagent_containers/food/snacks/rogue/sandwich

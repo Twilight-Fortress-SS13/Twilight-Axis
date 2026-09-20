@@ -1,5 +1,7 @@
 /obj/effect/proc_holder/spell/invoked/psydonvicariate
 	name = "VICARIATE"
+	action_icon = 'modular_twilight_axis/icons/mob/actions/roguespells.dmi'
+	overlay_icon = 'modular_twilight_axis/icons/mob/actions/roguespells.dmi' // ДОБАВЛЕНО: не хватало для корректной работы overlay_state
 	overlay_state = "VICARIATE"
 	desc = "A lesser form of the mighty art of ABSOLUTION. You take upon yourself the wounds, sickness, and frailty of another. Use carefully."
 	releasedrain = 25
@@ -15,7 +17,6 @@
 	recharge_time = 30 SECONDS // 60 seconds cooldown
 	miracle = TRUE
 	devotion_cost = 100
-	action_icon = 'modular_twilight_axis/icons/mob/actions/roguespells.dmi'
 
 /obj/effect/proc_holder/spell/invoked/psydonvicariate/cast(list/targets, mob/living/user)
 
@@ -75,6 +76,13 @@
 			revert_cast()
 			return FALSE
 
+	H.visible_message(span_red("[C] connects their Lux with [H]'s own."))
+
+	if(HAS_TRAIT(H, TRAIT_NOHEAL))
+		H.visible_message(span_artery("--But their Lux is forcefully repelled for some reason!"))
+		H.playsound_local(H, 'sound/magic/PSY.ogg', 100, FALSE, -1)
+		return FALSE
+
 	// INVOCATION AND IRONMAN REACTIONS
 	if(C.cmode)
 		C.say(pick("LET IT BE MINE...","I'LL BLEED IN YOUR STEAD!","I SHALL WEEP IN YOUR STEAD!","PERSIST, AS HE DOES!"))
@@ -96,7 +104,7 @@
 			var/obj/item/bodypart/cBP = C.get_bodypart(zone)
 			if(cBP)
 				cBP.dismember()
-				if(HAS_TRAIT(H, TRAIT_IRONMAN)) 
+				if(HAS_TRAIT(H, TRAIT_IRONMAN))
 					var/obj/item/bodypart/daChest = H.get_bodypart(BODY_ZONE_CHEST)
 					daChest.add_wound(/datum/wound/integrity/chest)
 				else
@@ -180,15 +188,15 @@
 	// VISUALS
 	C.visible_message(span_danger("[C] assumes [H]'s suffering through VICARIATE!"))
 
-	new /obj/effect/temp_visual/psyheal_rogue(get_turf(H), "#5e1d1d") 
-	new /obj/effect/temp_visual/psyheal_rogue(get_turf(H), "#5e1d1d") 
-	new /obj/effect/temp_visual/psyheal_rogue(get_turf(H), "#5e1d1d") 
+	new /obj/effect/temp_visual/psyheal_rogue(get_turf(H), "#5e1d1d")
+	new /obj/effect/temp_visual/psyheal_rogue(get_turf(H), "#5e1d1d")
+	new /obj/effect/temp_visual/psyheal_rogue(get_turf(H), "#5e1d1d")
 
-	new /obj/effect/temp_visual/psyheal_rogue(get_turf(C), "#5e1d1d") 
-	new /obj/effect/temp_visual/psyheal_rogue(get_turf(C), "#5e1d1d") 
-	new /obj/effect/temp_visual/psyheal_rogue(get_turf(C), "#5e1d1d") 
-	
+	new /obj/effect/temp_visual/psyheal_rogue(get_turf(C), "#5e1d1d")
+	new /obj/effect/temp_visual/psyheal_rogue(get_turf(C), "#5e1d1d")
+	new /obj/effect/temp_visual/psyheal_rogue(get_turf(C), "#5e1d1d")
+
 	to_chat(C, span_warning("You take [H]'s suffering into your own flesh."))
 	to_chat(H, span_notice("[C] bears your wounds as their own."))
-	
+
 	return TRUE

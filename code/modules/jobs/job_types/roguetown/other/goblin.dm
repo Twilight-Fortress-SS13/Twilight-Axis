@@ -51,7 +51,11 @@
 		eyes = new /obj/item/organ/eyes/night_vision/zombie
 		eyes.Insert(H)
 		H.ambushable = FALSE
-		H.underwear = "Nude"
+		if(H.underwear) // TA EDIT START
+			var/obj/item/bodypart/underwear_chest = H.get_bodypart(BODY_ZONE_CHEST)
+			if(underwear_chest && H.underwear.undies_feature)
+				underwear_chest.remove_bodypart_feature(H.underwear.undies_feature)
+			QDEL_NULL(H.underwear) // TA EDIT END
 		for(var/datum/charflaw/cf in H.charflaws)
 			H.charflaws.Remove(cf)
 			QDEL_NULL(cf)

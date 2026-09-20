@@ -47,6 +47,9 @@
 		var/turf/end_turf = get_turf(controller.current_movement_target)
 		var/advanced = TRUE
 		var/turf/current_turf = get_turf(movable_pawn)
+		if(!end_turf) // TA EDIT START
+			controller.CancelActions()
+			continue // TA EDIT END
 
 		var/mob/cliented_mob = controller.current_movement_target
 		var/cliented = FALSE

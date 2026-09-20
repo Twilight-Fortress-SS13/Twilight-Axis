@@ -74,10 +74,13 @@
 
 /// Fire the projectile(s) at the target.
 /datum/action/cooldown/spell/projectile/proc/fire_projectile(atom/target)
+	var/turf/target_turf = get_turf(target) // TA EDIT START
 	for(var/i in 1 to projectiles_per_fire)
 		var/active_type = (arc_mode && projectile_type_arc) ? projectile_type_arc : projectile_type
 		var/obj/projectile/to_fire = new active_type(owner.loc)
-		ready_projectile(to_fire, target, owner, i)
+		ready_projectile(to_fire, QDELETED(target) ? target_turf : target, owner, i)
+		if(QDELETED(to_fire))
+			continue // TA EDIT END
 		to_fire.fire()
 	return TRUE
 
@@ -97,9 +100,7 @@
 	// Accuracy from PER and skill, matching the old proc_holder system
 	if(isliving(user))
 		var/mob/living/L = user
-		L.apply_ranged_accuracy(to_fire)
-		if(L.mind)
-			to_fire.bonus_accuracy += (L.get_skill_level(associated_skill) * 5)
+		L.apply_spell_accuracy(to_fire)
 
 	// Apply attunement glow if the caster is holding a spell implement
 	if(attunement_school && ishuman(user))

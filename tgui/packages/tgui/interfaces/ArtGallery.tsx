@@ -21,7 +21,7 @@ type Data = {
   deletion_logs?: string[];
 };
 
-export const ArtGallery = (props) => {
+export const ArtGallery = () => {
   const { act, data } = useBackend<Data>();
   const [loadedImages, setLoadedImages] = useState<Record<string, string>>({});
   const [selectedId, setSelectedId] = useState<string | null>(null);

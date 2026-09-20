@@ -1,3 +1,28 @@
+/obj/item/clothing/cloak/captain/ComponentInitialize()
+	. = ..()
+	AddComponent(/datum/component/storage/concrete/roguetown/cloak)
+
+/obj/item/clothing/cloak/captain/dropped(mob/living/carbon/human/user)
+	..()
+	var/datum/component/storage/STR = GetComponent(/datum/component/storage)
+	if(STR)
+		var/list/things = STR.contents()
+		for(var/obj/item/I in things)
+			STR.remove_from_storage(I, get_turf(src))
+
+/obj/item/clothing/cloak/captain/update_icon()
+	cut_overlays()
+	if(get_detail_tag())
+		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		pic.appearance_flags = RESET_COLOR
+		if(get_detail_color())
+			pic.color = get_detail_color()
+		add_overlay(pic)
+
+/obj/item/clothing/cloak/captain/lordcolor(primary,secondary)
+	detail_color = primary
+	update_icon()
+
 /obj/item/clothing/cloak/half/guard
 	desc = "A halfcloak of the lord's most loyal retinue."
 	color = CLOTHING_AZURE
@@ -306,3 +331,11 @@
 //	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR|ITEM_SLOT_CLOAK
 //	flags_inv = HIDECROTCH|HIDEBOOB
 //	var/custom_design = FALSE
+
+/obj/item/clothing/cloak/bandolier/inq
+	name = "inquisitorial bandolier"
+	desc = "A masterworked leather bandolier, lined with silvered fittings and sturdy loops for the tools of inquiry. Every strap serves a purpose; every buckle stands ready for the next hunt."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/cloaks.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/cloaks.dmi'
+	icon_state = "inqbandolier"
+	item_state = "inqbandolier"

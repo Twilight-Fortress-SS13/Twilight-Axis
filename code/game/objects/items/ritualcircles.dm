@@ -1830,6 +1830,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	to_chat(victim, span_userdanger("ASTRATA WEEPS!"))
 	victim.emote("superagony")
 	REMOVE_TRAIT(victim, TRAIT_NOBLE, TRAIT_GENERIC)
+	REMOVE_TRAIT(victim, TRAIT_NOBLE, JOB_TRAIT)
 	REMOVE_TRAIT(victim, TRAIT_NOBLE, TRAIT_VIRTUE)
 	ADD_TRAIT(victim, TRAIT_DEFILED_NOBLE, TRAIT_GENERIC)
 	playsound(loc, 'sound/misc/evilevent.ogg', 100, FALSE, -1)

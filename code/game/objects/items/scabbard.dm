@@ -38,6 +38,9 @@
 	/// Stores the holster component
 	var/datum/component/holster/hol_comp
 
+	var/holster_empty_item_state = null // TA EDIT
+	var/holster_sheathed_item_state = null // TA EDIT
+
 	var/sheathe_time = 0.1 SECONDS
 	var/sheathe_sound = 'sound/foley/equip/scabbard_holster.ogg'
 	/// If true, this weapon's examine highlights (see `get_examine_highlight_status()`) will not reveal the weapon stored in it.

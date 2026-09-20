@@ -52,7 +52,7 @@ function renderButtonContent(button: string, large_buttons: BooleanLike) {
   );
 }
 
-export function AlertModal(props) {
+export function AlertModal() {
   const { act, data } = useBackend<Data>();
   const {
     autofocus,
