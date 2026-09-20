@@ -2330,7 +2330,7 @@
 /area/rogue/under/kingtomb)
 "Gl" = (
 /obj/structure/fluff/statue/gargoyle/candles,
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/carpet/lord/center,
 /area/rogue/under/kingtomb/bossarena)
 "Gm" = (
 /obj/structure/closet/crate/chest/old_crate,
@@ -2899,6 +2899,12 @@
 	},
 /turf/open/floor/rogue/blocks,
 /area/rogue/under/kingtomb)
+"Qs" = (
+/obj/machinery/light/rogue/candle/floorcandle/alt,
+/turf/closed/wall/mineral/rogue/decostone/long/east_west{
+	max_integrity = 99999
+	},
+/area/rogue/under/kingtomb/bossarena)
 "Qx" = (
 /obj/structure/closet/crate/chest/gold,
 /mob/living/simple_animal/hostile/retaliate/rogue/bigrat,
@@ -3454,6 +3460,12 @@
 /obj/machinery/light/rogue/candle/floorcandle/alt,
 /turf/open/floor/rogue/dirt,
 /area/rogue/under/kingtomb/approaching)
+"ZX" = (
+/obj/machinery/light/rogue/candle/floorcandle,
+/turf/closed/wall/mineral/rogue/decostone/long/east_west{
+	max_integrity = 99999
+	},
+/area/rogue/under/kingtomb/bossarena)
 "ZY" = (
 /obj/effect/landmark/chest_or_mimic/loot_chest/locked,
 /turf/open/floor/rogue/blocks,
@@ -5888,11 +5900,11 @@ GP
 hu
 GP
 FU
-bc
+Qs
 Rj
-Gl
 FU
 FU
+IX
 IX
 IX
 ZE
@@ -5988,11 +6000,11 @@ tR
 tR
 Bf
 tR
-tR
 Rj
 qO
 tR
 tR
+YX
 YX
 eB
 Ue
@@ -6088,11 +6100,11 @@ rb
 rb
 Kh
 rb
-rb
 cl
+Gl
 rb
 rb
-rb
+aZ
 aZ
 qg
 VZ
@@ -6188,11 +6200,11 @@ Sd
 Sd
 jZ
 Sd
-Sd
 Rj
 dA
 Sd
 Sd
+vT
 vT
 cq
 dS
@@ -6288,11 +6300,11 @@ Vd
 ps
 Vd
 FU
-WD
+ZX
 Rj
-Gl
 FU
 FU
+IX
 IX
 IX
 ZE
