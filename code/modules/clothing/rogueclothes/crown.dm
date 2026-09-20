@@ -18,21 +18,29 @@
 	var/messagereceivedsound = 'sound/misc/scom.ogg'
 	var/hearrange = 0 // Only hearable by wearer
 	is_important = TRUE
+	var/register_as_roguemachine_crown = TRUE // New vars to allow custom donor crowns. Does not prevent custom crowns from being replaced by the original, though.
+	var/replace_existing_roguemachine_crown = FALSE
 
 /obj/item/clothing/head/roguetown/crown/serpcrown/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_VIBE_CROWN, VIBEDESC_CROWN)
 
 /obj/item/clothing/head/roguetown/crown/serpcrown/Initialize(mapload)
 	. = ..()
-	if(SSmapping.config.map_name == "Rockhill")
-		name = "Crown of Enigma"
-	if(SSmapping.config.map_name == "Desert Town")
-		name = "Crown of Al-Ashur"
-	else
-		name = "Crown of Azuria"
-	if(SSroguemachine.crown)
-		qdel(src)
-	else
+	// TA EDIT START
+	if(type == /obj/item/clothing/head/roguetown/crown/serpcrown)
+		if(SSmapping.config.map_name == "Rockhill")
+			name = "Crown of Enigma"
+		else if(SSmapping.config.map_name == "Desert Town")
+			name = "Crown of Al-Ashur"
+		else
+			name = "Crown of Azuria"
+	// TA EDIT END
+	if(register_as_roguemachine_crown)
+		if(SSroguemachine.crown)
+			if(!replace_existing_roguemachine_crown)
+				qdel(src)
+				return
+			qdel(SSroguemachine.crown)
 		SSroguemachine.crown = src
 		SSroguemachine.scomm_machines += src
 	become_hearing_sensitive()
@@ -127,6 +135,9 @@
 		send_speech(message, hearrange, src, , spans, message_language=language)
 
 /obj/item/clothing/head/roguetown/crown/serpcrown/Destroy()
+	SSroguemachine.scomm_machines -= src
+	if(SSroguemachine.crown == src)
+		SSroguemachine.crown = null
 	lose_hearing_sensitivity()
 	return ..()
 

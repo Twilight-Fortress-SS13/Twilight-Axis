@@ -583,7 +583,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 /datum/emote/living/lick
 	key = "lick"
 	key_third_person = "licks"
-	message = "licking."
+	message = "licks their lips."
 	message_param = "licks %t."
 	emote_type = EMOTE_VISIBLE
 	use_params_for_runechat = TRUE

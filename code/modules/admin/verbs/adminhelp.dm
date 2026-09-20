@@ -552,7 +552,7 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	var/ticket_ping = FALSE
 	/// Who is handling this admin help?
 	var/handler
-	COOLDOWN_DECLARE(adminhelp_sound_cooldown) // TA EDIT
+	COOLDOWN_DECLARE(player_message_cooldown) // TA EDIT
 
 //call this on its own to create a ticket, don't manually assign current_ticket
 //msg is the title of the ticket: usually the ahelp text
@@ -596,6 +596,7 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 		AddInteraction("<font color='green'>Ticket opened. Your message has been sent to the admin team.</font>")
 
 		MessageNoRecipient(msg, newticket = TRUE)
+		COOLDOWN_START(src, player_message_cooldown, 1 MINUTES) // TA EDIT
 
 	GLOB.ahelp_tickets.active_tickets += src
 	SStgui.update_uis(GLOB.ahelp_tickets) // TA EDIT
@@ -676,11 +677,8 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	log_admin("Ticket #[id]: [initiator_key_name] -> Admins: [msg]")
 
 	//send this msg to all admins
-	var/play_adminhelp_sound = play_sound && COOLDOWN_FINISHED(src, adminhelp_sound_cooldown) // TA EDIT START
-	if(play_adminhelp_sound)
-		COOLDOWN_START(src, adminhelp_sound_cooldown, 5 SECONDS) // TA EDIT END
 	for(var/client/X in GLOB.admins)
-		if(play_adminhelp_sound && (X.prefs.toggles & SOUND_ADMINHELP)) // TA EDIT
+		if(play_sound && (X.prefs.toggles & SOUND_ADMINHELP))
 			SEND_SOUND(X, sound('sound/adminhelp.ogg'))
 		window_flash(X, ignorepref = TRUE)
 		to_chat(X, admin_msg)
@@ -697,6 +695,15 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 			"message"= discord_sanitize_ahelp(msg)
 		)
 		send2discordwh(data)
+
+/datum/admin_help/proc/SendPlayerMessage(msg) // TA EDIT START
+	if(!COOLDOWN_FINISHED(src, player_message_cooldown))
+		to_chat(initiator, span_warning("You can only send one adminhelp message per minute."))
+		return FALSE
+	MessageNoRecipient(msg)
+	COOLDOWN_START(src, player_message_cooldown, 1 MINUTES)
+	return TRUE
+// TA EDIT END
 
 //Reopen a closed ticket
 /datum/admin_help/proc/Reopen(key_name = null)
@@ -1113,7 +1120,8 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 				return FALSE
 
 			// Send the message
-			MessageNoRecipient(message) // TA EDIT
+			if(!SendPlayerMessage(message)) // TA EDIT
+				return FALSE
 			TimeoutVerb()
 
 			return TRUE
@@ -1216,8 +1224,8 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	if(current_ticket)
 		if(alert(usr, "You already have a ticket open. Is this for the same issue?",,"Yes","No") != "No")
 			if(current_ticket)
-				current_ticket.MessageNoRecipient(msg) // TA EDIT
-				current_ticket.TimeoutVerb()
+				if(current_ticket.SendPlayerMessage(msg)) // TA EDIT
+					current_ticket.TimeoutVerb()
 				return
 			else
 				to_chat(usr, span_warning("Ticket not found, creating new one..."))

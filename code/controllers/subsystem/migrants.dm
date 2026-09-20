@@ -406,11 +406,24 @@ SUBSYSTEM_DEF(migrants)
 	priority += shuffle(unpledged)
 	return priority
 
+/datum/controller/subsystem/migrants/proc/get_respawn_cooldown_remaining(client/player) // TA EDIT
+	if(!player?.ckey)
+		return 0
+	var/datum/job/migrant_job = SSjob.GetJob("Migrant")
+	if(!migrant_job?.same_job_respawn_delay)
+		return 0
+	var/delay_until = GLOB.job_respawn_delays[player.ckey]
+	if(!delay_until || world.time >= delay_until)
+		return 0
+	return delay_until - world.time
+
 /datum/controller/subsystem/migrants/proc/can_be_role(client/player, role_type)
 	var/datum/migrant_role/role = MIGRANT_ROLE(role_type)
 	if(!player)
 		return FALSE
 	if(!player.prefs)
+		return FALSE
+	if(get_respawn_cooldown_remaining(player)) // TA EDIT
 		return FALSE
 	var/datum/preferences/prefs = player.prefs
 	if(role.forbidden_races && (prefs.pref_species.type in role.forbidden_races))
