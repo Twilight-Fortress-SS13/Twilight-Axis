@@ -868,6 +868,7 @@
 /area/rogue/under/kingtomb)
 "lp" = (
 /obj/structure/stairs/fancy/r,
+/mob/living/carbon/human/species/kingguard/knight,
 /turf/open/floor/rogue/carpet/lord/right,
 /area/rogue/under/kingtomb/bossarena)
 "lr" = (
@@ -1054,6 +1055,7 @@
 /obj/item/roguecoin/silver/pile,
 /obj/item/clothing/ring/gold,
 /obj/item/forgeable/gold/bust,
+/obj/effect/spawner/lootdrop/general_loot_hi/x3,
 /turf/open/floor/rogue/churchmarble,
 /area/rogue/under/kingtomb/bossarena)
 "ok" = (
@@ -1503,6 +1505,7 @@
 /obj/item/roguestatue/gold,
 /obj/item/roguestatue/silver,
 /obj/item/clothing/neck/roguetown/carved/goldopal,
+/obj/effect/spawner/lootdrop/general_loot_hi/x3,
 /turf/open/floor/rogue/churchmarble,
 /area/rogue/under/kingtomb/bossarena)
 "uo" = (
@@ -2562,6 +2565,7 @@
 /area/rogue/under/kingtomb)
 "KD" = (
 /obj/structure/stairs/fancy/l,
+/mob/living/carbon/human/species/kingguard/knight,
 /turf/open/floor/rogue/carpet/lord/left,
 /area/rogue/under/kingtomb/bossarena)
 "KE" = (
@@ -5478,16 +5482,16 @@ FU
 FU
 FU
 FU
-rF
-aS
+FU
+FU
 FU
 FU
 WD
 FU
 FU
-aS
 FU
-aS
+FU
+FU
 FU
 IX
 kO
@@ -5681,11 +5685,11 @@ UZ
 WD
 FU
 FU
-rF
+FU
 UZ
 bc
 FU
-FU
+je
 FU
 FU
 FU
@@ -5781,12 +5785,12 @@ FU
 FU
 yM
 FU
+rF
 FU
 FU
 FU
+Rj
 FU
-WD
-bc
 FU
 FU
 IX
@@ -5885,7 +5889,7 @@ hu
 GP
 FU
 bc
-je
+Rj
 Gl
 FU
 FU
@@ -6285,7 +6289,7 @@ ps
 Vd
 FU
 WD
-je
+Rj
 Gl
 FU
 FU
@@ -6381,12 +6385,12 @@ FU
 FU
 yM
 FU
+rF
 FU
 FU
 FU
+Rj
 FU
-bc
-WD
 FU
 FU
 IX
@@ -6481,11 +6485,11 @@ PD
 FU
 FU
 FU
-rF
+FU
 PD
 WD
 FU
-FU
+je
 FU
 FU
 FU
@@ -6678,16 +6682,16 @@ FU
 FU
 FU
 WD
-rF
-aS
+FU
+FU
 FU
 FU
 bc
 FU
 FU
-aS
 FU
-aS
+FU
+FU
 FU
 IX
 kO
