@@ -618,8 +618,6 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	return can_speak_in_language(language)
 
 /mob/living/proc/can_stutter_speech() // TA EDIT START
-	if(HAS_TRAIT(src, TRAIT_EMPATH))
-		return TRUE
 	if(HAS_TRAIT(src, TRAIT_NOPAIN) || HAS_TRAIT(src, TRAIT_NOPAINSTUN) || HAS_TRAIT(src, TRAIT_IRONMAN) || HAS_TRAIT(src, TRAIT_NOMOOD) || isconstruct(src))
 		return FALSE
 	return TRUE
@@ -642,10 +640,11 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 		return 0
 
 	var/pain_percent = (current_pain / pain_threshold) * 100
-	if(pain_percent < 15)
+	if(pain_percent < 35)
 		return 0
 
-	return clamp(round(pain_percent), 20, 100) // TA EDIT END
+	var/stutter_strength = 15 + ((pain_percent - 35) / 65) * 85
+	return clamp(round(stutter_strength), 15, 100) // TA EDIT END
 
 /mob/living/proc/treat_message(message, language, capitalize_message = TRUE)
 	if(HAS_TRAIT(src, TRAIT_ZOMBIE_SPEECH) && !ispath(language, /datum/language/undead))
