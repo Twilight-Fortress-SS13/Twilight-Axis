@@ -352,7 +352,9 @@
 	if(!candidates.len)
 		return message
 
-	var/target_words = max(1, round((candidates.len * strength) / 100))
+	var/target_words = round((candidates.len * strength) / 100)
+	if(target_words <= 0)
+		return message
 	target_words = min(target_words, candidates.len)
 
 	for(var/i in 1 to target_words)

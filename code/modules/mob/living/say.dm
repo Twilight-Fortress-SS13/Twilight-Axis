@@ -626,25 +626,15 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	return 0
 
 /mob/living/carbon/get_pain_stutter_strength()
-	if(!can_stutter_speech())
+	if(!can_stutter_speech() || pain_threshold <= 0)
 		return 0
 
-	var/current_pain = get_complex_pain()
-	if(current_pain <= 0)
+	var/pain_percent = (get_complex_pain() / pain_threshold) * 100
+	if(pain_percent < 70)
 		return 0
 
-	if(HAS_TRAIT(src, TRAIT_EMPATH))
-		return 100
-
-	if(pain_threshold <= 0)
-		return 0
-
-	var/pain_percent = (current_pain / pain_threshold) * 100
-	if(pain_percent < 35)
-		return 0
-
-	var/stutter_strength = 15 + ((pain_percent - 35) / 65) * 85
-	return clamp(round(stutter_strength), 15, 100) // TA EDIT END
+	var/stutter_strength = ((pain_percent - 70) / 80) * 100
+	return clamp(round(stutter_strength), 10, 100) // TA EDIT END
 
 /mob/living/proc/treat_message(message, language, capitalize_message = TRUE)
 	if(HAS_TRAIT(src, TRAIT_ZOMBIE_SPEECH) && !ispath(language, /datum/language/undead))
@@ -658,11 +648,12 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	if(derpspeech)
 		message = derpspeech(message, stuttering)
 
-	var/pain_stutter_strength = get_pain_stutter_strength() // TA EDIT START
-	if(pain_stutter_strength)
-		message = pain_stutter(message, pain_stutter_strength)
-	else if(stuttering && can_stutter_speech())
-		message = stutter(message) // TA EDIT END
+	if(stuttering && can_stutter_speech()) // TA EDIT START
+		var/pain_stutter_strength = get_pain_stutter_strength()
+		if(pain_stutter_strength)
+			message = pain_stutter(message, pain_stutter_strength)
+		else
+			message = stutter(message) // TA EDIT END
 
 	if(slurring || feigning_impairment) // TA EDIT
 		message = slur(message)
@@ -703,7 +694,7 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 		. = verb_whisper
 	else if(message_mode == MODE_WHISPER_CRIT)
 		. = "[verb_whisper] in [p_their()] last breath"
-	else if(can_stutter_speech() && (stuttering || get_pain_stutter_strength())) // TA EDIT
+	else if(stuttering && can_stutter_speech()) // TA EDIT
 		. = "stammers"
 	else if(derpspeech)
 		. = "gibbers"
