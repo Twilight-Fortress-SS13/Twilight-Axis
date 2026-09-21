@@ -98,23 +98,35 @@
 		if("Wōkòu")
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 			H.change_stat(STATKEY_SPD, 2)
-			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
 			mask = /obj/item/clothing/mask/rogue/facemask/steel/kazengun
 			pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/eastpants2
 			armor = /obj/item/clothing/suit/roguetown/armor/basiceast/mentorsuit
 			cloak = /obj/item/clothing/cloak/eastcloak1
-			wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
+			wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/heavy
 			head = /obj/item/clothing/head/roguetown/mentorhat
 			gloves = /obj/item/clothing/gloves/roguetown/eastgloves2
-			shoes = /obj/item/clothing/shoes/roguetown/boots
-			neck = /obj/item/storage/belt/rogue/pouch/coins/poor
-			shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/eastshirt1
-			belt = /obj/item/storage/belt/rogue/leather/black
+			shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced/kazengun
+			neck = /obj/item/clothing/neck/roguetown/gorget/steel/kazengun
+			shirt = /obj/item/clothing/suit/roguetown/shirt/freifechter
+			belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/black
 			beltl = /obj/item/quiver/twilight_bullet/lead
-			beltr = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol
+			l_hand = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol
 			backl = /obj/item/storage/backpack/rogue/satchel
-			backpack_contents = list(/obj/item/bomb/smoke = 2, /obj/item/rogueweapon/huntingknife/idagger/steel/kazengun = 1, /obj/item/twilight_powderflask = 1, /obj/item/rope/chain = 1)
+			backpack_contents = list(/obj/item/bomb/smoke = 2, /obj/item/rogueweapon/huntingknife/idagger/steel/kazengun = 1, /obj/item/twilight_powderflask = 1, /obj/item/rope/chain = 1,/obj/item/storage/belt/rogue/pouch/coins/poor = 1)
 			H.grant_language(/datum/language/kazengunese)
+			var/weapons = list("Tanto", "Kodachi")
+			var/weapon_choice = input(H, "Choose your weapon.", "Available weapons") as anything in weapons
+			switch(weapon_choice)
+				if("Tanto")
+					beltr = /obj/item/rogueweapon/scabbard/sheath
+					r_hand = /obj/item/rogueweapon/huntingknife/idagger/steel/kazengun
+					H.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_EXPERT, TRUE)
+					H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_JOURNEYMAN, TRUE)
+				if("Kodachi")
+					beltr = /obj/item/rogueweapon/scabbard
+					r_hand = /obj/item/rogueweapon/sword/sabre/mulyeog
+					H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
+
 			switch(crimeschoice)
 				if("I'm nobody")
 					return
