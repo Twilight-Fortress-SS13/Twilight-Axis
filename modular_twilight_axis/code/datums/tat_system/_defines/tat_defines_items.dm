@@ -271,8 +271,8 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/mask/rogue/spectacles = TAT_ITEM_ENTRY("Spectacles", 0.5, "clothing", "armor_family", TAT_ARMOR_CLOTH, "eyes"), \
 	/obj/item/clothing/mask/rogue/facemask/padded = TAT_ITEM_ENTRY("Padded Mask", 1, "clothing", "armor_family", TAT_ARMOR_CLOTH, "mask"), \
 	/obj/item/clothing/mask/rogue/facemask/leather = TAT_ITEM_ENTRY("Padded Leather Mask", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "mask"), \
-	/obj/item/clothing/mask/rogue/facemask/maille = TAT_ITEM_ENTRY("Iron Chainmaille Mask", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "mask"), \
-	/obj/item/clothing/mask/rogue/facemask/maille/fluted = TAT_ITEM_ENTRY("Iron Fluted Chainmaille Mask", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "mask"), \
+	/obj/item/clothing/mask/rogue/facemask/maille = TAT_ITEM_ENTRY("Iron Maille Mask", 1, "clothing", "weapon_supply", TAT_SUPPLY_IRON, "mask"), \
+	/obj/item/clothing/mask/rogue/facemask/maille/fluted = TAT_ITEM_ENTRY("Iron Fluted Mask", 1, "clothing", "weapon_supply", TAT_SUPPLY_IRON, "mask"), \
 	/obj/item/clothing/mask/rogue/wildguard = TAT_ITEM_ENTRY("Wildguard Mask", 1, "clothing", "weapon_supply", TAT_SUPPLY_IRON, "mask"), \
 	/obj/item/clothing/mask/rogue/facemask/steel/kazengun = TAT_DONATION_ITEM_ENTRY("Soldier's Half-Mask", 1, "clothing", "weapon_supply", TAT_SUPPLY_STEEL, "mask", TAT_DONATION_TIER_TWO), \
 	/obj/item/clothing/mask/rogue/facemask/steel/kazengun/yohei = TAT_DONATION_ITEM_ENTRY("Demon's Half-Mask", 1, "clothing", "weapon_supply", TAT_SUPPLY_STEEL, "mask", TAT_DONATION_TIER_TWO), \
@@ -525,6 +525,8 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/rogueweapon/stoneaxe/woodcut/troll = TAT_ITEM_ENTRY("Crude Heavy Axe", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "axe"), \
 	/obj/item/rogueweapon/sword/falchion/militia/bronze = TAT_ITEM_ENTRY("kopis", 2, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "sword"), \
 	/obj/item/rogueweapon/whip = TAT_ITEM_ENTRY("Leather Whip", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "whip"), \
+	/obj/item/rogueweapon/whip/witcher_chain = TAT_ITEM_ENTRY("Battle Chain", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "whip"), \
+	/obj/item/rogueweapon/whip/witcher_chain/bronze = TAT_ITEM_ENTRY("Bronze Battle Chain", 2, "weapon", "weapon_supply", TAT_SUPPLY_BRONZE, "whip"), \
 	/obj/item/rogueweapon/whip/nagaika = TAT_ITEM_ENTRY("Nagaika Whip", 2, "weapon", "weapon_supply", TAT_ARMOR_LEATHER, "whip"), \
 	/obj/item/rogueweapon/handclaw = TAT_ITEM_ENTRY("Ravager Claws", 4, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "unarmed"), \
 	/obj/item/rogueweapon/handclaw/gronn/silver = TAT_ITEM_ENTRY("Silver Claws", 7, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "unarmed"), \
