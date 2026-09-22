@@ -226,7 +226,7 @@ GLOBAL_LIST_INIT(ranged_draw_curve, list(1, 0.79, 0.58, 0.33, 0.17, 0.08, 0))
 //slowdown for fractured limbs
 #define FRACTURED_ADD_SLOWDOWN 3
 //slowdown for armour class. movement speed only.
-#define AC_LIGHT_SPDCAP 20
+#define AC_LIGHT_SPDCAP 16
 #define AC_MEDIUM_SPDCAP 13
 #define AC_HEAVY_SPDCAP 11
 
@@ -550,7 +550,7 @@ Medical defines
 #define CRIT_RESISTANCE_STACKS_NPC 1
 #define CRIT_RESISTANCE_STACKS_OP 1 // Noblood / Revenant etc.
 #define CRIT_RESISTANCE_EFFECTIVE_BLEEDRATE 0.5 // How much CR reduce bleedrate by
-#define CRIT_RESISTANCE_TIMER_CD 30 SECONDS // Cooldown between guaranteed CR procs. DOES NOT APPLY TO DISMEMBERMENT.
+#define CRIT_RESISTANCE_TIMER_CD 45 SECONDS // Cooldown between guaranteed CR procs. DOES NOT APPLY TO DISMEMBERMENT. // TA edit: 30 -> 45
 
 #define BLOOD_RESISTANCE_EFFECTIVE_BLEEDRATE 0.5
 
