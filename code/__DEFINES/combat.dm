@@ -226,7 +226,7 @@ GLOBAL_LIST_INIT(ranged_draw_curve, list(1, 0.79, 0.58, 0.33, 0.17, 0.08, 0))
 //slowdown for fractured limbs
 #define FRACTURED_ADD_SLOWDOWN 3
 //slowdown for armour class. movement speed only.
-#define AC_LIGHT_SPDCAP 16
+#define AC_LIGHT_SPDCAP 16 //TA edit: 20 -> 16
 #define AC_MEDIUM_SPDCAP 13
 #define AC_HEAVY_SPDCAP 11
 
