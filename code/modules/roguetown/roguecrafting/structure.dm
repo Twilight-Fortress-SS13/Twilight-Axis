@@ -214,31 +214,6 @@
 	verbage = "constructs"
 	skillcraft = /datum/skill/craft/carpentry
 
-/datum/crafting_recipe/roguetown/structure/barricade //TA EDIT
-	name = "barricade"
-	category = "Misc"
-	result = /obj/structure/barricade/crude
-	reqs = list(/obj/item/grown/log/tree/small = 2,
-				/obj/item/grown/log/tree/stake = 1)
-	verbage_simple = "construct"
-	verbage = "constructs"
-	doorcraft = TRUE
-	windowcraft = TRUE
-	ignoredensity = TRUE
-	skillcraft = /datum/skill/craft/crafting
-
-/datum/crafting_recipe/roguetown/structure/barricade/plank
-	name = "barricade(plank)"
-	category = "Misc"
-	result = /obj/structure/barricade/crude
-	reqs = list(/obj/item/natural/wood/plank = 2)
-	verbage_simple = "construct"
-	verbage = "constructs"
-	doorcraft = TRUE
-	windowcraft = TRUE
-	ignoredensity = TRUE
-	skillcraft = /datum/skill/craft/crafting //TA EDIT END
-
 /datum/crafting_recipe/roguetown/structure/door
 	name = "wooden door"
 	category = "Doors"
