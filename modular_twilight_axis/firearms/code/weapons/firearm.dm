@@ -858,9 +858,6 @@
 	wlength = WLENGTH_SHORT
 	w_class = WEIGHT_CLASS_SMALL
 	slot_flags = ITEM_SLOT_HIP
-	equip_delay_self = 1 SECONDS
-	unequip_delay_self = 1 SECONDS
-	inv_storage_delay = 1 SECONDS
 	walking_stick = FALSE
 	bigboy = FALSE
 	gripsprite = FALSE
