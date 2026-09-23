@@ -219,9 +219,6 @@
 	bigboy = TRUE
 	wlength = WLENGTH_LONG
 	slot_flags = ITEM_SLOT_BACK
-	equip_delay_self = 3 SECONDS
-	unequip_delay_self = 3 SECONDS
-	inv_storage_delay = 2 SECONDS
 	wdefense = 3
 	can_parry = TRUE
 	minstr = 6
