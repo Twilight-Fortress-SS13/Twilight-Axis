@@ -2,7 +2,7 @@
 	if(!istext(text))
 		return null
 
-	text = STRIP_HTML_SIMPLE(LOWER_TEXT(text), CUSTOM_DESCRIPTOR_TEXT_LENGTH)
+	text = STRIP_HTML_SIMPLE(LOWER_TEXT(html_decode(text)), PREVENT_CHARACTER_TRIM_LOSS(CUSTOM_DESCRIPTOR_TEXT_LENGTH))
 	if(!is_english_custom_descriptor_text(text))
 		return null
 
