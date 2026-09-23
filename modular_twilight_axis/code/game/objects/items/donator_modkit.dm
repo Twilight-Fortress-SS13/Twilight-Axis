@@ -281,8 +281,36 @@
 	target_items = list(
 		/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/commandant
 	)
-	exact_type = TRUE
 	icon_loadout = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/commandant
+
+/obj/item/enchantingkit/commandant_blade
+	name = "commandant's blade morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Rapier or Sabre."
+	target_items = list(
+		/obj/item/rogueweapon/sword/rapier = /obj/item/rogueweapon/sword/rapier/commandant,
+		/obj/item/rogueweapon/sword/sabre = /obj/item/rogueweapon/sword/sabre/commandant)
+	icon_loadout = /obj/item/rogueweapon/sword/rapier/commandant
+
+/obj/item/enchantingkit/commandant_blade/inherit_item_mechanics(obj/item/source_item, obj/item/result_item)
+	. = ..()
+	result_item.bigboy = FALSE
+
+/obj/item/enchantingkit/commandant_cane
+	name = "commandant's cane morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Any Sword Scabbard."
+	target_items = list(/obj/item/rogueweapon/scabbard/sword)
+	result_item = /obj/item/rogueweapon/scabbard/sword/commandant
+	icon_loadout = /obj/item/rogueweapon/scabbard/sword/commandant
+
+/obj/item/enchantingkit/commandant_cane/pre_attack(obj/item/I, mob/user)
+	if(can_morph_item(I) && length(I.contents))
+		to_chat(user, span_warning("The scabbard must be empty before it can be morphed."))
+		return TRUE
+	return ..()
+
+/obj/item/enchantingkit/commandant_cane/inherit_item_mechanics(obj/item/source_item, obj/item/result_item)
+	. = ..()
+	result_item.bigboy = FALSE
 
 // COMMANDANT SET END
 

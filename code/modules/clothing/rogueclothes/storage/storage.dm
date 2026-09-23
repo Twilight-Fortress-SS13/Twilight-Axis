@@ -725,3 +725,11 @@
 	icon_state = "clothsash"
 	sewrepair = TRUE
 	salvage_result = /obj/item/natural/cloth
+
+/obj/item/storage/belt/rogue/leather/belthooks
+	name = "belt hooks"
+	desc = "Etruscan-designed leather-wrapped hooks with an actuating hinge. To clip things to other things."
+	item_state = "belthooks"
+	// belt + empty onmob sprite = welcome to fashion 💀
+	icon_state = "belthooks"
+

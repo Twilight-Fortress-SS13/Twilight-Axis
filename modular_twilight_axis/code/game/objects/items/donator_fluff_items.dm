@@ -345,6 +345,7 @@
 	icon_state = "robe"
 	item_state = "robe"
 	color = null
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/commandant_sleeves.dmi'
 
 /obj/item/clothing/suit/roguetown/armor/brigandine/light/commandant
 	name = "commandant's coat"
@@ -354,6 +355,7 @@
 	icon_state = "robe"
 	item_state = "robe"
 	color = null
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/commandant_sleeves.dmi'
 
 /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/commandant
 	name = "officer's belt"
@@ -376,6 +378,62 @@
 	lefthand_file = 'modular_twilight_axis/icons/clothing/onmob/commandant_pistol_lefthand.dmi'
 	righthand_file = 'modular_twilight_axis/icons/clothing/onmob/commandant_pistol_righthand.dmi'
 	experimental_inhand = FALSE
+
+/obj/item/rogueweapon/sword/rapier/commandant
+	name = "commandant's blade"
+	desc = "A superbly forged blade adorned with a ruby suspiciously similar to unrefined lux. Perfect for concealed carry inside a cane."
+	icon = 'modular_twilight_axis/icons/clothing/commandant_tools.dmi'
+	icon_state = "dagger"
+	item_state = "dagger"
+	lefthand_file = 'modular_twilight_axis/icons/clothing/onmob/commandant_tools_lefthand.dmi'
+	righthand_file = 'modular_twilight_axis/icons/clothing/onmob/commandant_tools_righthand.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/commandant_belt_mounted_tools.dmi'
+	sheathe_icon = "dagger"
+	experimental_inhand = FALSE
+	experimental_onhip = FALSE
+	bigboy = FALSE
+	pixel_x = 0
+	pixel_y = 0
+	dropshrink = null
+
+/obj/item/rogueweapon/sword/sabre/commandant
+	name = "commandant's blade"
+	desc = "A superbly forged blade adorned with a ruby suspiciously similar to unrefined lux. Perfect for concealed carry inside a cane."
+	icon = 'modular_twilight_axis/icons/clothing/commandant_tools.dmi'
+	icon_state = "dagger"
+	item_state = "dagger"
+	lefthand_file = 'modular_twilight_axis/icons/clothing/onmob/commandant_tools_lefthand.dmi'
+	righthand_file = 'modular_twilight_axis/icons/clothing/onmob/commandant_tools_righthand.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/commandant_belt_mounted_tools.dmi'
+	sheathe_icon = "dagger"
+	experimental_inhand = FALSE
+	experimental_onhip = FALSE
+	bigboy = FALSE
+	pixel_x = 0
+	pixel_y = 0
+	dropshrink = null
+
+/obj/item/rogueweapon/scabbard/sword/commandant
+	name = "commandant's cane"
+	desc = "A cane made for the finest officers of the Black Empire. It seems to have an opening for a hidden blade."
+	icon = 'modular_twilight_axis/icons/clothing/commandant_tools.dmi'
+	icon_state = "cane_m"
+	item_state = "cane_m"
+	lefthand_file = 'modular_twilight_axis/icons/clothing/onmob/commandant_tools_lefthand.dmi'
+	righthand_file = 'modular_twilight_axis/icons/clothing/onmob/commandant_tools_righthand.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/commandant_belt_mounted_tools.dmi'
+	experimental_inhand = FALSE
+	experimental_onhip = FALSE
+	bigboy = FALSE
+	pixel_x = 0
+	pixel_y = 0
+	valid_blade = null
+	valid_blades = list(
+		/obj/item/rogueweapon/sword/rapier/commandant,
+		/obj/item/rogueweapon/sword/sabre/commandant)
+	cant_strip = TRUE
+	holster_empty_item_state = "cane_m"
+	holster_sheathed_item_state = "cane"
 
 // COMMANDANT SET END
 

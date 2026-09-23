@@ -1410,11 +1410,11 @@ SUBSYSTEM_DEF(gamemode)
 		player_count = get_correct_popcount()
 	var/list/valid_lines = list()
 	if(length(valid_events))
-		for(var/datum/round_event_control/antagonist/solo/event as anything in valid_events)
+		for(var/datum/round_event_control/event as anything in valid_events) // TA EDIT
 			valid_lines += "[event.name]=[valid_events[event]]"
 	var/list/invalid_lines = list()
 	if(length(invalid_reasons))
-		for(var/datum/round_event_control/antagonist/solo/event as anything in invalid_reasons)
+		for(var/datum/round_event_control/event as anything in invalid_reasons) // TA EDIT
 			invalid_lines += "[event.name]=[invalid_reasons[event]]"
 	var/message = "STORYTELLER: Roundstart antag pool at pop [player_count][guaranteed_only ? " (guaranteed-only filter)" : ""]: valid([length(valid_lines) ? jointext(valid_lines, "; ") : "none"]) invalid([length(invalid_lines) ? jointext(invalid_lines, "; ") : "none"])"
 	message_admins(message)
@@ -1512,8 +1512,8 @@ SUBSYSTEM_DEF(gamemode)
 	var/list/guaranteed_events = list()
 	var/list/admin_hard = opened_hard_antags()
 	if(length(admin_hard))
-		for(var/datum/round_event_control/antagonist/solo/event as anything in valid_events)
-			if(event.occurrences || !event.consumes_hard_antag_slot)
+		for(var/datum/round_event_control/antagonist/solo/event in valid_events) // TA EDIT
+			if(!event.consumes_hard_antag_slot) // TA EDIT
 				continue
 			// Use the event's own slot key (Masquerade) when set, else its antag datum's key.
 			if((event.storyteller_slot_key || antag_slot_key(event.antag_datum)) in admin_hard)
@@ -1522,8 +1522,8 @@ SUBSYSTEM_DEF(gamemode)
 	var/datum/storyteller/preset = active_preset()
 	if(!preset?.guaranteed_hard)
 		return guaranteed_events
-	for(var/datum/round_event_control/antagonist/solo/event as anything in valid_events)
-		if(event.occurrences || !event.consumes_hard_antag_slot) // TA EDIT
+	for(var/datum/round_event_control/antagonist/solo/event in valid_events) // TA EDIT
+		if(!event.consumes_hard_antag_slot) // TA EDIT
 			continue
 		if(event.storyteller_antag_flags & STORYTELLER_ANTAG_VILLAIN)
 			guaranteed_events[event] = valid_events[event]
@@ -1533,7 +1533,7 @@ SUBSYSTEM_DEF(gamemode)
 	var/list/valid_events = list()
 	if(isnull(player_count))
 		player_count = get_correct_popcount()
-	for(var/datum/round_event_control/antagonist/solo/event as anything in event_pools?[EVENT_TRACK_CHARACTER_INJECTION])
+	for(var/datum/round_event_control/antagonist/solo/event in event_pools?[EVENT_TRACK_CHARACTER_INJECTION]) // TA EDIT
 		if(!event.roundstart)
 			continue
 		if(!event.canSpawnEvent(player_count))
@@ -1666,7 +1666,7 @@ SUBSYSTEM_DEF(gamemode)
 	dat += "<BR>Antagonist Count vs Maximum: [get_antag_count()] / [get_antag_cap()]"
 	var/list/guaranteed_roundstart_pool = get_roundstart_guaranteed_pool(roundstart_pool_pop)
 	var/list/guaranteed_roundstart_names = list()
-	for(var/datum/round_event_control/antagonist/solo/event as anything in guaranteed_roundstart_pool)
+	for(var/datum/round_event_control/antagonist/solo/event in guaranteed_roundstart_pool) // TA EDIT
 		guaranteed_roundstart_names += event.name
 	var/guaranteed_pool_text = length(guaranteed_roundstart_names) ? story_ru_list(guaranteed_roundstart_names) : "Нет"
 	dat += "<BR>Гарантированный пул старта раунда: [guaranteed_pool_text]"

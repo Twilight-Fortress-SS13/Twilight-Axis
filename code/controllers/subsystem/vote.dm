@@ -491,7 +491,8 @@ SUBSYSTEM_DEF(vote)
 					SSgamemode.roundvoteend = TRUE
 					SSgamemode.round_ends_at = world.time + ROUND_END_TIME
 					world.TgsAnnounceVoteEndRound()
-					addtimer(CALLBACK(src, PROC_REF(initiate_vote), "map", "Psydon"), 10) // TA EDIT
+					var/map_vote_period = ROUND_END_TIME + (CONFIG_GET(number/round_end_countdown) * 10) // TA EDIT
+					addtimer(CALLBACK(src, PROC_REF(initiate_vote), "map", "Psydon", map_vote_period), 10) // TA EDIT
 			if("storyteller")
 				save_storyteller_vote_log(., "completed")
 				SSgamemode.storyteller_vote_result(.)
@@ -809,6 +810,14 @@ SUBSYSTEM_DEF(vote)
 		to_chat(C, "\n<font color='purple'><b>[text]</b>\nClick <a href='?src=[REF(src)]'>here</a> to place your vote.\nYou have [DisplayTimeText(remaining_time)] to vote.</font>")
 	if(!isliving(C.mob))
 		show_vote(C)
+
+/datum/controller/subsystem/vote/proc/remind_map_vote() // TA EDIT START
+	if(mode != "map")
+		return
+	var/vote_period = custom_vote_period || CONFIG_GET(number/vote_period)
+	var/remaining_time = max(0, started_time + vote_period - world.time)
+	var/text = "[capitalize(mode)] vote started by [initiator]."
+	to_world("\n<font color='purple'><b>[text]</b>\nClick <a href='?src=[REF(src)]'>here</a> to place your vote.\nYou have [DisplayTimeText(remaining_time)] to vote.</font>") // TA EDIT END
 
 /datum/controller/subsystem/vote/proc/interface(client/C)
 	if(!C)

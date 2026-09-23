@@ -230,4 +230,9 @@
 	name = "Weathered Xylixian Mask"
 	path = /obj/item/clothing/mask/rogue/xylixmask/weathered
 	sort_category = "Accessories"
+
+/datum/loadout_item/belthooks
+	name = "Belt Hooks"
+	path = /obj/item/storage/belt/rogue/leather/belthooks
+	sort_category = "Accessories"
 */

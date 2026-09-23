@@ -66,10 +66,10 @@
 		/mob/living/carbon/human/species/skeleton/npc/bogguard = 20,
 		/mob/living/simple_animal/hostile/retaliate/rogue/wolf = 20,
 		/mob/living/simple_animal/hostile/retaliate/rogue/wolf_undead = 10,
-		new /datum/ambush_config/bog_guard_deserters = 15,
-		new /datum/ambush_config/bog_guard_deserters/hard = 2,
-		new /datum/ambush_config/mirespiders_ambush = 30,
-		new /datum/ambush_config/mirespiders_crawlers = 15,
+		/datum/npc_warband/bog_guard_deserters = 15,
+		/datum/npc_warband/bog_guard_deserters/hard = 2,
+		/datum/npc_warband/mirespiders_ambush = 30,
+		/datum/npc_warband/mirespiders_crawlers = 15,
 		/mob/living/simple_animal/hostile/retaliate/rogue/mossback = 10,)
 	deathsight_message = "the depths of the wretched bog, home to old magycks and zizite prayers alike"
 	warden_area = FALSE
@@ -89,8 +89,8 @@
 		/mob/living/carbon/human/species/human/northern/searaider/ambush = 5,
 		/mob/living/carbon/human/species/goblin/npc/ambush/sea = 30,
 		/mob/living/simple_animal/hostile/retaliate/rogue/mossback = 30,
-		new /datum/ambush_config/triple_deepone = 30,
-		new /datum/ambush_config/deepone_party = 20,)
+		/datum/npc_warband/triple_deepone = 30,
+		/datum/npc_warband/deepone_party = 20,)
 	deathsight_message = "the terrible marsh towards setting sun"
 	warden_area = FALSE
 
@@ -106,10 +106,10 @@
 		/mob/living/carbon/human/species/skeleton/npc/rockhill = 15,
 		/mob/living/carbon/human/species/goblin/npc/ambush/moon = 30,
 		/mob/living/simple_animal/hostile/retaliate/rogue/wolf_undead = 15,
-		new /datum/ambush_config/mirespiders_ambush = 110,
-		new /datum/ambush_config/mirespiders_crawlers = 25,
-		new /datum/ambush_config/mirespiders_aragn = 10,
-		new /datum/ambush_config/mirespiders_unfair = 5)
+		/datum/npc_warband/mirespiders_ambush = 110,
+		/datum/npc_warband/mirespiders_crawlers = 25,
+		/datum/npc_warband/mirespiders_aragn = 10,
+		/datum/npc_warband/mirespiders_unfair = 5)
 	deathsight_message = "the deepest depths of the mire, as dangerous as it is sunken"
 	warden_area = FALSE
 
