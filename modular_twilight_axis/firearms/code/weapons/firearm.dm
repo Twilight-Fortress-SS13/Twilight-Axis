@@ -241,9 +241,9 @@
 	associated_skill = /datum/skill/combat/staves
 	//pickup_sound = 'sound/sheath_sounds/draw_from_holster.ogg'
 	//sheathe_sound = 'sound/sheath_sounds/put_back_to_holster.ogg'
-	equip_delay_self = 1 SECONDS
-	unequip_delay_self = 1 SECONDS
-	inv_storage_delay = 1 SECONDS
+	equip_delay_self = 3 SECONDS
+	unequip_delay_self = 3 SECONDS
+	inv_storage_delay = 2 SECONDS
 	var/spread_num = 10
 	var/damfactor = 1
 	var/critfactor = 1
@@ -858,6 +858,9 @@
 	wlength = WLENGTH_SHORT
 	w_class = WEIGHT_CLASS_SMALL
 	slot_flags = ITEM_SLOT_HIP
+	equip_delay_self = 1 SECONDS
+	unequip_delay_self = 1 SECONDS
+	inv_storage_delay = 1 SECONDS
 	walking_stick = FALSE
 	bigboy = FALSE
 	gripsprite = FALSE
