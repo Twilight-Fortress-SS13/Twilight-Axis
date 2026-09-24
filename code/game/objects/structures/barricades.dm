@@ -85,7 +85,7 @@
 	icon_state = "woodenbarricade-old"
 	drop_amount = 1
 	layer = ABOVE_ALL_MOB_LAYER //TA EDIT
-	max_integrity = 150
+	max_integrity = 150 //TA EDIT
 	proj_pass_rate = 65
 
 /obj/structure/barricade/crude/snow

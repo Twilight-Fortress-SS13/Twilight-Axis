@@ -325,10 +325,10 @@
 		html += "<br><strong>Start the process next to a table.</strong><br>"
 	if(wallcraft)
 		html += "<br><strong>Start the process next to a wall.</strong><br>"
-	if(doorcraft)
+	if(doorcraft) // TA EDIT START
 		html += "<br><strong>Start the process next to a door.</strong><br>"
 	if(windowcraft)
-		html += "<br><strong>Start the process next to a window.</strong><br>"
+		html += "<br><strong>Start the process next to a window.</strong><br>" //TA EDIT END
 
 	if(final_sellprice)
 		html += "<br><strong class=class='scroll'>You can sell this for [final_sellprice] mammons at a normal quality</strong> <br>"
