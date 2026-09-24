@@ -354,6 +354,7 @@
 	icon = 'icons/roguetown/misc/structure.dmi'
 	icon_state = "bars"
 	density = TRUE
+	climbable = FALSE // TA EDIT
 	anchored = TRUE
 	blade_dulling = DULLING_BASHCHOP
 	max_integrity = 700
