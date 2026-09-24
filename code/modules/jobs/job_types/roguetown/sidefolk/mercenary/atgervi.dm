@@ -2,12 +2,12 @@
 	name = "Atgervi"
 	tutorial = "You are a Varangian of the Gronn Highlands. Warrior-Traders most known for their exploits into the Raneshen Empire, which will be forever remembered by historians."
 	allowed_sexes = list(MALE, FEMALE)
-	
+
 	outfit = /datum/outfit/job/roguetown/mercenary/atgervi
 	subclass_languages = list(/datum/language/gronnic)
 	cmode_music = 'sound/music/combat_vagarian.ogg'
 	class_select_category = CLASS_CAT_GRONN
-	category_tags = list(CTAG_MERCENARY)
+	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
 	traits_applied = list(TRAIT_MEDIUMARMOR)
 	subclass_stats = list(
 		STATKEY_WIL = 3,
@@ -17,21 +17,20 @@
 		STATKEY_SPD = -1
 	)
 	subclass_skills = list(
-		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/misc/sneaking = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/axes = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/bows = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/swords = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/combat/shields = SKILL_LEVEL_EXPERT,	
+		/datum/skill/combat/shields = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/polearms = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/maces = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/knives = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
-		/datum/skill/magic/holy = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/sneaking = SKILL_LEVEL_APPRENTICE,
 	)
 
 /datum/outfit/job/roguetown/mercenary/atgervi
@@ -56,7 +55,16 @@
 
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
-			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
+			if(H.mind) //TA EDIT START
+				var/talismans = list("The Wolf, Plotting", "The Spider, Rising")
+				var/talismanschoice = input(H, "Choose your path", "Beasts of the North") as anything in talismans
+				switch(talismanschoice)
+					if("The Wolf, Plotting")
+						id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
+					if("The Spider, Rising")
+						id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/spider
+			else
+				id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn //TA EDIT END
 		if(/datum/patron/inhumen/graggar)
 			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/graggar/gronn
 		if(/datum/patron/inhumen/matthios)
@@ -70,8 +78,6 @@
 		else
 			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/special //Failsafe. Gives a specially-fluffed version of Zizo's talisman, which can be reinterpreted as needed.
 
-	var/datum/devotion/C = new /datum/devotion(H, H.patron)
-	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_WEAK, devotion_limit = CLERIC_REQ_2)	//Capped to T1 miracles.
 	backpack_contents = list(
 		/obj/item/roguekey/mercenary = 1,
 		/obj/item/rogueweapon/huntingknife = 1,
@@ -83,12 +89,12 @@
 	name = "Atgervi Shaman"
 	tutorial = "You are a Shaman of the Fjall, The Northern Empty. Shamans are savage combatants who commune with the Ecclesical Beast Gods through ritualistic violence, rather than idle prayer."
 	allowed_sexes = list(MALE, FEMALE)
-	
+
 	outfit = /datum/outfit/job/roguetown/mercenary/atgervi_shaman
 	subclass_languages = list(/datum/language/gronnic)
 	cmode_music = 'sound/music/combat_shaman2.ogg'
 	class_select_category = CLASS_CAT_GRONN
-	category_tags = list(CTAG_MERCENARY)
+	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_BULWARK)
 	traits_applied = list(TRAIT_STRONGBITE, TRAIT_CIVILIZEDBARBARIAN, TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN)
 	subclass_stats = list(
 		STATKEY_STR = 3,
@@ -134,7 +140,16 @@
 
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
-			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
+			if(H.mind) //TA EDIT START
+				var/talismans = list("The Wolf, Plotting", "The Spider, Rising")
+				var/talismanschoice = input(H, "Choose your path", "Beasts of the North") as anything in talismans
+				switch(talismanschoice)
+					if("The Wolf, Plotting")
+						id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
+					if("The Spider, Rising")
+						id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/spider
+			else
+				id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn //TA EDIT END
 		if(/datum/patron/inhumen/graggar)
 			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/graggar/gronn
 		if(/datum/patron/inhumen/matthios)
@@ -147,18 +162,6 @@
 			id = /obj/item/clothing/neck/roguetown/psicross/dendor/gronn
 		else
 			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/special //Failsafe. Gives a specially-fluffed version of Zizo's talisman, which can be reinterpreted as needed.
-
-	var/techniques = list("Dropkick - Pushback + Extra Damage", "Chokeslam - Stamina Damage", "Stunner - Dazed Debuff", "Headbutt - Vulnerable Debuff") // cool wrestling moves
-	var/technique_choice = input(H,"Choose your TECHNIQUE.", "TOSS THEM.") as anything in techniques
-	switch(technique_choice)
-		if("Dropkick - Pushback + Extra Damage")
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/dropkick)
-		if("Chokeslam - Stamina Damage")
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/chokeslam)
-		if("Stunner - Dazed Debuff")
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/stunner)
-		if("Headbutt - Vulnerable Debuff")
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/headbutt)
 
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_WEAK, devotion_limit = CLERIC_REQ_1)	//Capped to T2 miracles.
@@ -187,7 +190,7 @@
 	desc = "Thick fur pants made to endure the coldest winds, offering a share of protection from the fangs and claws of beasts and men alike."
 	icon_state = "atgervi_pants"
 	item_state = "atgervi_pants"
-	
+
 /obj/item/clothing/gloves/roguetown/angle/atgervi
 	name = "fur-lined leather gloves"
 	desc = "Dense, padded gloves made for the harshest of climates and the wildest of beasts encountered in the untamed highlands."
@@ -289,7 +292,7 @@
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
 	name = "carved talisman" //plotting talisman
-	desc = "'The hunt, the studying of your prey, the learning of its routes, the knowledge our ancestors passed down, the empowerment of your people and yourself. Learn of the world, or fade away.'  </br>  </br>The Plotting Wolf embodies the virtues of progress and knowledge, so that no obstacle nor threat to the homeland remains insurmountable. To understand the truths of beast-and-bronze is to lighten the future's hardships. Do not humor magicka, however, for playing with fire shall always end in someone being burned."
+	desc = "'The hunt, the studying of your prey, the learning of its routes, the knowledge our ancestors passed down, the empowerment of your people and yourself. Learn of the world, or fade away.'  </br>  </br>The Plotting Wolf embodies the virtues of progress and knowledge, so that no obstacle nor threat to the homeland remains insurmountable. She demands that her people learn from their ancestors. They must listen closely to the ancient sagas, seeking out the warnings and lessons that their ancestors embedded in words and imagery. They must explore the world, adapt, and endure the cold and all the trials that nature throws their way. But know this: your rest is not eternal. Sooner or later, the shamans will bring you back from the burial mound so that you may pass on your wisdom or stand alongside the living in their hour of need. Such is her final gift and her final demand." //TA EDIT
 	icon_state = "gronnzizo"
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/get_examine_highlight_status()
@@ -297,7 +300,7 @@
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/baothagronn
 	name = "carved talisman" //relishing talisma
-	desc = "'“The excess of desire, the want of more, the glory of victory, the lover's embrace. Embrace the Leopard, or forget your strength.'  </br>  </br>The Relishing Leopard embodies the virtues of love and glory, both in battle and at home. Enjoy the flesh, the drink, and the spice; but be wary to avoid overindulgence, for it shall leave you despondant and lethargic. To become too comfortable is to become weak, and such weakness would turn you into a delicious snack for the Leopard." 
+	desc = "'“The excess of desire, the want of more, the glory of victory, the lover's embrace. Embrace the Leopard, or forget your strength.'  </br>  </br>The Relishing Leopard embodies the virtues of love and glory, both in battle and at home. Enjoy the flesh, the drink, and the spice; but be wary to avoid overindulgence, for it shall leave you despondant and lethargic. To become too comfortable is to become weak, and such weakness would turn you into a delicious snack for the Leopard."
 	icon_state = "gronnbaotha"
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/baothagronn/get_examine_highlight_status()
@@ -305,7 +308,7 @@
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gronn
 	name = "carved talisman" //starving talisman
-	desc = "'“The hunger, the destruction, the impending frost, the enemy of my enemy. Feed the Bear, or be consumed.'  </br>  </br>The Starving Bear embodies not a virtue, but the necessity to thrive above all else. Avarice is not a sin, but a virtue; to ensure that the homeland never suffers from poverty nor starvation again. Pillage, plunder, and perforate the wealth that others would keep from you, but do not forget that every choice begets consequences."
+	desc = "'“The hunger, the destruction, the impending frost, the enemy of my enemy. Feed the Bear, or be consumed.'  </br>  </br>The Starving Bear embodies not a virtue, but the necessity to thrive above all else. Hunger is eternal: no matter how much you feed the Bear, he will always demand more. Gold, food, flesh — it makes no difference to him. But the feast is not a goal in itself — the Bear takes from unworthy to ensure the clan's survival. Only those who are able to hold on to what is theirs and defend it are free. Those who cannot stand up for themselves become prey. There is no injustice in this, only the law of nature." //TA EDIT
 	icon_state = "gronnmatthios"
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gronn/get_examine_highlight_status()

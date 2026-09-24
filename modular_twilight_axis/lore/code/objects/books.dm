@@ -90,7 +90,7 @@
 
 /obj/item/book/rogue/bibble/zizo
 	name = "Lexicon of Her Truth"
-	desc = "'Познавая Её учение, однажды мы пройдем по Её стопам.'</br>Том, запрещенный к прочтению Святым Престолом, содержащий пересказ смертной жизни и вознесения Зизо, Госпожи Тьмы - или, по крайней мере, ту версию оных, которой придерживаются культисты Спасения. Подозрительно пахнет засохшей кровью."
+	desc = "<font color='ff0000'>'Познавая Её учение, однажды мы пройдем по Её стопам.'</font></br>Том, запрещенный к прочтению Святым Престолом, содержащий пересказ смертной жизни и вознесения Зизо, Госпожи Тьмы - или, по крайней мере, ту версию оных, которой придерживаются культисты Спасения. Подозрительно пахнет засохшей кровью."
 	icon = 'modular_twilight_axis/lore/icons/books.dmi'
 	icon_state = "zizoble_0"
 	base_icon_state = "zizoble"
@@ -101,6 +101,9 @@
 	return
 
 /obj/item/book/rogue/bibble/zizo/MiddleClick(mob/user, params)
+	return
+
+/obj/item/book/rogue/bibble/zizo/get_mechanics_examine(mob/user)
 	return
 
 /obj/item/book/rogue/bibble/zizo/read(mob/living/carbon/human/user)

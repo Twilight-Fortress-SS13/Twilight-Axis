@@ -30,6 +30,13 @@ directory = "_maps/twilight_axis/templates/rockhill/bridge/"
 required_map = "rockhill.dmm"
 coordinates = [145, 190, 1]
 
+# rockhill bath collars
+[templates.rockhillbathcollars]
+map_files = ["collar_1.dmm","collar_2.dmm"]
+directory = "_maps/twilight_axis/templates/rockhill/bathcollars/"
+required_map = "rockhill.dmm"
+coordinates = [133, 336, 1]
+
 # dunworld towner house
 [templates.towner_house1]
 map_files = ["Bashna.dmm"]
@@ -60,3 +67,10 @@ map_files = ["Ydvorcha.dmm"]
 directory = "_maps/twilight_axis/templates/dun_world/towner_house/"
 required_map = "dun_world.dmm"
 coordinates = [106, 104, 2]
+
+# dunworls bath collars
+[templates.dunworldbathcollars]
+map_files = ["collar_1.dmm","collar_2.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/bathcollars/"
+required_map = "dun_world.dmm"
+coordinates = [71, 54, 1]

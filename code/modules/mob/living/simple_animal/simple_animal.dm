@@ -216,6 +216,7 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	var/barding_speed_mult = 1
 	var/do_footstep = FALSE
 	var/fly_time = 3 SECONDS //default fly delay
+	var/datum/voicepack/voicepack = null
 
 /mob/living/simple_animal/get_mechanics_examine(mob/user)
 	. = ..()
@@ -249,6 +250,12 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 		var/obj/effect/proc_holder/spell/newspell = new spell()
 		AddSpell(newspell)
 	initial_butcher_count = length(butcher_results)
+	add_verb(src, list(
+		/mob/living/proc/emote_squeak,
+		/mob/living/proc/emote_mrrp,
+		/mob/living/proc/emote_prbt,
+		/mob/living/proc/emote_hiss,
+	))
 
 /mob/living/simple_animal/Destroy()
 	for(var/list/SA_list in GLOB.simple_animals)
@@ -331,9 +338,9 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 		user.visible_message(span_notice("[user] removes the bard from [src]."), span_notice("I remove the bard from [src]."))
 		var/obj/item/clothing/barding/B = bbarding
 		bbarding = null
-		// Reset any movement slowdown from barding when it is removed
 		barding_speed_mult = 1
 		updatehealth()
+		update_mount_move_delay()
 		B.forceMove(get_turf(src))
 		user.put_in_hands(B)
 		update_icon()
@@ -556,10 +563,10 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	if(stat == DEAD)
 		var/obj/item/held_item = user.get_active_held_item()
 		if(held_item)
-			if((butcher_results || guaranteed_butcher_results) && ((held_item.get_sharpness() && held_item.wlength == WLENGTH_SHORT) || istype(held_item, /obj/item/contraption/shears)))
+			if((butcher_results || guaranteed_butcher_results) && ((held_item.get_sharpness() && held_item.wlength == WLENGTH_SHORT) || istype(held_item, /obj/item/rogueweapon/contraption/shears)))
 				var/used_time = BUTCHERING_UNSKILLED_PRE_TIME
 				var/on_meathook = FALSE
-				if((src.buckled && istype(src.buckled, /obj/structure/meathook))|| istype(held_item, /obj/item/contraption/shears))
+				if((src.buckled && istype(src.buckled, /obj/structure/meathook))|| istype(held_item, /obj/item/rogueweapon/contraption/shears))
 					on_meathook = TRUE //will work efficiently if they are using autosheers as well
 					used_time -= BUTCHERING_UNSKILLED_PRE_TIME
 					visible_message("[user] begins to efficiently butcher [src]...")
@@ -1062,10 +1069,29 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	mounted_overlay.appearance_flags = RESET_ALPHA|RESET_COLOR
 	add_overlay(mounted_overlay)
 
+/mob/living/simple_animal/proc/get_riding_datum()
+	var/datum/component/riding/riding_datum = GetComponent(/datum/component/riding/no_ocean)
+	if(!riding_datum)
+		riding_datum = GetComponent(/datum/component/riding)
+	return riding_datum
+
+/mob/living/simple_animal/proc/update_mount_move_delay()
+	var/datum/component/riding/riding_datum = get_riding_datum()
+	if(!riding_datum)
+		return
+	var/mob/living/driver = null
+	if(buckled_mobs && buckled_mobs.len)
+		driver = buckled_mobs[1]
+	riding_datum.vehicle_move_delay = adjust_speed(driver)
+
 /mob/living/simple_animal/proc/adjust_speed(mob/living/driver)
-	var/delay = vars["move_to_delay"]
+	var/delay = initial(move_to_delay)
 	if(!isnum(delay))
 		delay = 3
+	if(!HAS_TRAIT(src, TRAIT_RIGIDMOVEMENT) && !HAS_TRAIT(src, TRAIT_IGNOREDAMAGESLOWDOWN))
+		var/health_deficiency = getBruteLoss() + getFireLoss()
+		if(health_deficiency >= (maxHealth - (maxHealth * 0.50)))
+			delay += 2
 	if(driver?.m_intent == MOVE_INTENT_RUN)
 		delay -= 1
 	if(driver?.mind)
@@ -1074,6 +1100,11 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 			delay -= 5 + amt/6
 		else
 			delay -= 3
+	if(bbarding)
+		barding_speed_mult = max(bbarding.slowdown_factor, 1)
+	else
+		barding_speed_mult = 1
+	delay = max(delay, 1) * barding_speed_mult
 	return max(delay, 1)
 
 /mob/living/simple_animal/user_unbuckle_mob(mob/living/M, mob/user)
@@ -1270,8 +1301,11 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
             // Player
             set_glide_size(DELAY_TO_GLIDE_SIZE(world.tick_lag))
         else
-            // AI
-            set_glide_size(DELAY_TO_GLIDE_SIZE(move_to_delay))
+            var/datum/component/riding/riding_datum = get_riding_datum()
+            if(riding_datum && has_buckled_mobs())
+                set_glide_size(DELAY_TO_GLIDE_SIZE(riding_datum.vehicle_move_delay))
+            else
+                set_glide_size(DELAY_TO_GLIDE_SIZE(move_to_delay))
     return .
 
 /mob/living/simple_animal/proc/eat_plants()
@@ -1377,6 +1411,19 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 		else
 			to_chat(src, span_notice("I can't fly away while being grabbed!"))
 //End flight
+
+/mob/living/simple_animal/proc/get_animal_voicepack()
+	if(voicepack)
+		return voicepack
+
+	// Only assign the animal voicepack if the simple animal is player-controlled / has a mind
+	if(mind)
+		var/static/datum/voicepack/animal/shared_animal_vp
+		if(!shared_animal_vp)
+			shared_animal_vp = new /datum/voicepack/animal()
+		voicepack = shared_animal_vp
+
+	return voicepack
 
 #undef MAX_FARM_ANIMALS
 #undef BUTCHERING_UNSKILLED_PRE_TIME

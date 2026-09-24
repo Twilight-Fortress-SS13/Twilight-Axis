@@ -54,6 +54,7 @@
 	forceMove(animal)
 	animal.barding_speed_mult = slowdown_factor
 	animal.updatehealth()
+	animal.update_mount_move_delay()
 	animal.update_icon()
 	user.visible_message(span_notice("[user] fits a bard onto [animal]."), span_notice("I fit a bard onto [animal]."))
 
@@ -64,6 +65,7 @@
 			A.bbarding = null
 			A.barding_speed_mult = 1
 			A.updatehealth()
+			A.update_mount_move_delay()
 	. = ..()
 
 /obj/item/clothing/barding/chain

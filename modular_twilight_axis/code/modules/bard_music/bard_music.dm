@@ -273,16 +273,18 @@ SUBSYSTEM_DEF(bard_music)
 	note_color = "#7f7f7f"
 	if(user?.mind)
 		switch(user.get_skill_level(/datum/skill/misc/music))
+			if(1)
+				note_color = "#ffffff"; stressevent = /datum/stressevent/music/novice
 			if(2)
-				note_color = "#ffffff"; stressevent = /datum/stressevent/music/two
+				note_color = "#ffffff"; stressevent = /datum/stressevent/music/apprentice
 			if(3)
-				note_color = "#1eff00"; stressevent = /datum/stressevent/music/three
+				note_color = "#1eff00"; stressevent = /datum/stressevent/music/journeyman
 			if(4)
-				note_color = "#0070dd"; stressevent = /datum/stressevent/music/four
+				note_color = "#0070dd"; stressevent = /datum/stressevent/music/expert
 			if(5)
-				note_color = "#a335ee"; stressevent = /datum/stressevent/music/five
+				note_color = "#a335ee"; stressevent = /datum/stressevent/music/master
 			if(6)
-				note_color = "#ff8000"; stressevent = /datum/stressevent/music/six
+				note_color = "#ff8000"; stressevent = /datum/stressevent/music/legendary
 	soundloop.stress2give = stressevent
 	return stressevent
 

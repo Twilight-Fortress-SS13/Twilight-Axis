@@ -191,14 +191,13 @@
 /proc/typecache_filter_list(list/atoms, list/typecache)
 	RETURN_TYPE(/list)
 	. = list()
-	if(!islist(typecache))
+	if(!length(typecache))
 		return
 	for(var/thing in atoms)
 		var/atom/A = thing
 		if(!A || !A.type)
-			stack_trace("typecache_filter_list got a null/typeless entry [thing] - fix the caller passing this list")
 			continue
-		if (typecache[A.type])
+		if(typecache[A.type])
 			. += A
 
 /proc/typecache_filter_list_reverse(list/atoms, list/typecache)
@@ -209,16 +208,19 @@
 	for(var/thing in atoms)
 		var/atom/A = thing
 		if(!A || !A.type)
-			stack_trace("typecache_filter_list_reverse got a null/typeless entry [thing] - fix the caller passing this list")
 			continue
-		if(!typecache[A.type])
+		if(!length(typecache) || !typecache[A.type])
 			. += A
 
 /proc/typecache_filter_multi_list_exclusion(list/atoms, list/typecache_include, list/typecache_exclude)
 	. = list()
+	if(!length(typecache_include))
+		return
 	for(var/thing in atoms)
 		var/atom/A = thing
-		if(typecache_include[A.type] && !typecache_exclude[A.type])
+		if(!A || !A.type)
+			continue
+		if(typecache_include[A.type] && (!length(typecache_exclude) || !typecache_exclude[A.type]))
 			. += A
 
 //Like typesof() or subtypesof(), but returns a typecache instead of a list

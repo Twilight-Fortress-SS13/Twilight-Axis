@@ -65,3 +65,11 @@
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/moneta/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD, "Strange luck charm")
+
+/obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/spider
+	name = "carved talisman" //rising spider
+	desc = "'Sacrifice, purification through pain, healing through suffering, duty and fate woven together. If you reach out for every perishing soul, the web will tear, and everyone will drown.'  </br>  </br>The Rising Spider stands apart from the other Beasts of Gronn. Her Priestesses preach that the world is sick, and the sickness cannot be burned away without pain. She demands that suffering be accepted as the price of salvation: part of the tree must rot so that the trunk may survive. Due to alarming similarities between these teachings and the outsider Cult of Salvation, most Gronnic harbors and settlements barely tolerate the followers of the Spider: they are allowed to set up small shrines outside the walls, but are rarely accepted into a clan."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/neck.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/neck.dmi'
+	icon_state = "gronnspider"
+	item_state = "gronnspider"

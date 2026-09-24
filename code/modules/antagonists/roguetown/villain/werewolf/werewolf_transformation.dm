@@ -117,6 +117,7 @@
 	W.cmode_music_override = cmode_music_override
 	W.cmode_music_override_name = cmode_music_override_name
 	mind.transfer_to(W)
+	Were?.add_antag_hud(ANTAG_HUD_WEREWOLF, "werewolf_hud", W) // TA EDIT
 	skills?.known_skills = list()
 	skills?.skill_experience = list()
 	W.grant_language(/datum/language/beast)
@@ -186,6 +187,8 @@
 	REMOVE_TRAIT(W, TRAIT_NOMOOD, TRAIT_SOURCE_WEREWOLF)
 	REMOVE_TRAIT(W, TRAIT_PACIFISM, TRAIT_SOURCE_WEREWOLF)
 
+	var/datum/antagonist/werewolf/Were = mind.has_antag_datum(/datum/antagonist/werewolf/) // TA EDIT
+	Were?.remove_antag_hud(ANTAG_HUD_WEREWOLF, src) // TA EDIT
 	mind.transfer_to(W)
 
 	var/mob/living/carbon/human/species/werewolf/WA = src

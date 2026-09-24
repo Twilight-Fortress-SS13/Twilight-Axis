@@ -76,6 +76,7 @@ have ways of interacting with a specific atom and control it. They posses a blac
 
 	///Can this AI idle?
 	var/can_idle = TRUE
+	var/idle_requires_client = FALSE // TA EDIT
 	///What distance should we be checking for interesting things when considering idling/deidling? Defaults to AI_DEFAULT_INTERESTING_DIST
 	var/interesting_dist = AI_DEFAULT_INTERESTING_DIST
 	///Whether the pathing layer should fall back to climbing climbable structures when blocked.
@@ -282,6 +283,11 @@ have ways of interacting with a specific atom and control it. They posses a blac
 /datum/ai_controller/proc/should_idle()
 	if(!can_idle)
 		return FALSE
+	if(idle_requires_client) // TA EDIT START
+		for(var/datum/spatial_grid_cell/grid as anything in our_cells.member_cells)
+			if(length(grid.client_contents))
+				return FALSE
+		return TRUE // TA EDIT END
 	var/alert_until = blackboard[BB_AI_ALERT_MODE_UNTIL] || 0
 	if(alert_until > world.time)
 		return FALSE

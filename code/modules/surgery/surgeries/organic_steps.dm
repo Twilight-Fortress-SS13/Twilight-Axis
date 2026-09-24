@@ -54,11 +54,12 @@
 	return TRUE
 
 /datum/surgery_step/clamp/success(mob/user, mob/living/target, target_zone, obj/item/tool, datum/intent/intent)
+	var/obj/item/bodypart/bodypart = target.get_bodypart(check_zone(target_zone))
+	if(!bodypart?.add_embedded_object(tool, crit_message = FALSE, surgery_embed = TRUE))
+		return FALSE
 	display_results(user, target, span_notice("I clamp the bleeders in [target]'s [parse_zone(target_zone)]."),
 		span_notice("[user] clamps the bleeders in [target]'s [parse_zone(target_zone)]."),
 		span_notice("[user] clamps the bleeders in [target]'s [parse_zone(target_zone)]."))
-	var/obj/item/bodypart/bodypart = target.get_bodypart(check_zone(target_zone))
-	bodypart?.add_embedded_object(tool, crit_message = FALSE)
 	notify_embed(user, tool, target, target_zone)
 	return TRUE
 
@@ -84,11 +85,12 @@
 	return TRUE
 
 /datum/surgery_step/retract/success(mob/user, mob/living/target, target_zone, obj/item/tool, datum/intent/intent)
+	var/obj/item/bodypart/bodypart = target.get_bodypart(check_zone(target_zone))
+	if(!bodypart?.add_embedded_object(tool, crit_message = FALSE, surgery_embed = TRUE))
+		return FALSE
 	display_results(user, target, span_notice("I retract [target]'s [parse_zone(target_zone)]."),
 		span_notice("[user] retract [target]'s [parse_zone(target_zone)]."),
 		span_notice("[user] retract [target]'s [parse_zone(target_zone)]."))
-	var/obj/item/bodypart/bodypart = target.get_bodypart(check_zone(target_zone))
-	bodypart?.add_embedded_object(tool, crit_message = FALSE)
 	notify_embed(user, tool, target, target_zone)
 	return TRUE
 

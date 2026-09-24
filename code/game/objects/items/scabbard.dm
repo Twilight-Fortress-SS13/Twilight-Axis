@@ -77,6 +77,18 @@
 /obj/item/rogueweapon/scabbard/attack_obj(obj/O, mob/living/user)
 	return FALSE
 
+/obj/item/rogueweapon/scabbard/proc/can_sheathe_item(obj/item/I, mob/user)
+	var/datum/component/martyrweapon/martyr_weapon = I.GetComponent(/datum/component/martyrweapon)
+	if(martyr_weapon?.is_active)
+		to_chat(user, span_warning("The burning relic refuses to be stowed while my Oath is invoked!"))
+		return FALSE
+	return TRUE
+
+/obj/item/rogueweapon/scabbard/attackby(obj/item/I, mob/user, params)
+	if(!can_sheathe_item(I, user))
+		return TRUE
+	return ..()
+
 /obj/item/rogueweapon/scabbard/MouseDrop(atom/over)
 	..()
 	var/mob/living/M = usr
@@ -577,6 +589,17 @@
 
 	max_integrity = 200
 
+/obj/item/rogueweapon/scabbard/sword/kazengun/MiddleClick(mob/user)
+	if(hol_comp?.sheathed)
+		to_chat(user, span_notice("There's something inside!"))
+		return FALSE
+	return FALSE
+
+/obj/item/rogueweapon/scabbard/sword/kazengun/obj_fix(mob/user, full_repair = TRUE)
+	obj_broken = FALSE
+	if(full_repair)
+		obj_integrity = max_integrity
+
 /obj/item/rogueweapon/scabbard/sword/kazengun/noparry
 	name = "ceremonial kazengun scabbard"
 	desc = "A simple wooden scabbard, trimmed with bronze. Unlike its steel cousins, this one cannot parry."
@@ -621,7 +644,7 @@
 	item_state = "kazscabdagger"
 	valid_blade = /obj/item/rogueweapon/huntingknife/idagger/steel/kazengun
 	associated_skill = /datum/skill/combat/knives
-	possible_item_intents = list(SHIELD_BASH, SHIELD_BLOCK)
+	possible_item_intents = list(SHIELD_BASH, SHIELD_SMASH)
 	can_parry = TRUE
 	sewrepair = FALSE
 	anvilrepair = /datum/skill/craft/carpentry
@@ -735,7 +758,7 @@
 
 	equip_delay_self = 5 SECONDS
 	unequip_delay_self = 5 SECONDS
-	strip_delay = 2 SECONDS
+	strip_delay = STRIP_DELAY_FAST
 	sheathe_time = 2 SECONDS
 
 	max_integrity = 0

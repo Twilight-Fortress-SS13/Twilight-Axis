@@ -40,13 +40,14 @@
 		TRAIT_HERESIARCH, //Just because I'm putting their spawns here, that's all.
 		TRAIT_ZURCH,
 		TRAIT_UNLYCKERABLE, //Just stop
+		TRAIT_NOWW,
 		TRAIT_MASTERFUL_HUNTER,
 		TRAIT_TOUGH_COOKIE,
 		TRAIT_BLOOD_RESISTANCE,
 		TRAIT_NOPAINSTUN // TA EDIT
 	)
 	inherent_biotypes = MOB_HUMANOID
-	no_equip = list(SLOT_SHIRT, SLOT_HEAD, SLOT_WEAR_MASK, SLOT_ARMOR, SLOT_GLOVES, SLOT_SHOES, SLOT_PANTS, SLOT_CLOAK, SLOT_BELT, SLOT_BACK_R, SLOT_BACK_L, SLOT_S_STORE)
+	no_equip = list(SLOT_SHIRT, SLOT_HEAD, SLOT_WEAR_MASK, SLOT_ARMOR, SLOT_GLOVES, SLOT_SHOES, SLOT_PANTS, SLOT_CLOAK, SLOT_BELT, SLOT_BACK_L, SLOT_S_STORE)
 	nojumpsuit = 1
 	sexes = 1
 	offset_features = list(OFFSET_HANDS = list(0,2), OFFSET_HANDS_F = list(0,2))
@@ -72,6 +73,8 @@
 	var/gnoll_armor_icon = "beserker"
 
 /datum/species/gnoll/send_voice(mob/living/carbon/human/H)
+	if(H.m_intent == MOVE_INTENT_SNEAK)
+		return
 	playsound(get_turf(H), pick('sound/vo/mobs/wwolf/wolftalk1.ogg','sound/vo/mobs/wwolf/wolftalk2.ogg'), 100, TRUE, -1)
 
 /datum/species/gnoll/regenerate_icons(mob/living/carbon/human/H)

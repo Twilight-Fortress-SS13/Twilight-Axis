@@ -30,6 +30,8 @@
 	if(bprv & BODYPART_LIFE_UPDATE_HEALTH)
 		update_stamina() //needs to go before updatehealth to remove stamcrit
 		updatehealth()
+	if(client)
+		update_damage_hud()
 	if (times_fired % 3 == 0) // every 3rd tick, fire stress handler. it isn't time-critical, so we don't particularly need it to go EVERY tick
 		update_stress()
 	handle_nausea()
@@ -135,24 +137,41 @@
 				next_smell = world.time + 30 SECONDS
 				T.pollution.smell_act(src)
 
-/mob/living/proc/handle_inwater()
-	extinguish_mob()
+/mob/living/proc/handle_inwater(turf/onturf, extinguish = TRUE, force_drown = FALSE)
+	if(extinguish)
+		extinguish_mob()
+	return FALSE
 
 /mob/living/carbon/handle_inwater(turf/onturf, extinguish = TRUE, force_drown = FALSE)
-	..()
+	. = ..(onturf, extinguish, force_drown)
+
+	if(QDELETED(src) || stat == DEAD)
+		return FALSE
 
 	if(!(mobility_flags & MOBILITY_STAND) || force_drown)
 		if(HAS_TRAIT(src, TRAIT_NOBREATH) || HAS_TRAIT(src, TRAIT_WATERBREATHING) || HAS_TRAIT(src, TRAIT_HOLDBREATH))
 			return TRUE
-		if(stat == DEAD && client)
-			record_round_statistic(STATS_PEOPLE_DROWNED)
+
+		var/was_alive = stat != DEAD
 		var/drown_damage = has_world_trait(/datum/world_trait/abyssor_rage) ? 10 : 5
+
 		adjustOxyLoss(drown_damage)
-		emote("drown")
-	return TRUE
+
+		if(was_alive && stat == DEAD && client)
+			record_round_statistic(STATS_PEOPLE_DROWNED)
+
+		if(!QDELETED(src) && stat != DEAD)
+			emote("drown")
+
+		return TRUE
+
+	return FALSE
 
 /mob/living/carbon/human/handle_inwater(turf/onturf, extinguish = TRUE, force_drown = FALSE)
-	. = ..()
+	. = ..(onturf, extinguish, force_drown)
+
+	if(QDELETED(src) || stat == DEAD)
+		return FALSE
 
 	if(istype(onturf, /turf/open/water/sewer) && !HAS_TRAIT(src, TRAIT_NOSTINK))
 		if(!HAS_TRAIT(src, TRAIT_HOLDBREATH))
@@ -160,6 +179,8 @@
 
 	if(istype(onturf, /turf/open/water/bath) && !wear_armor && !wear_shirt && !wear_pants)
 		add_stress(/datum/stressevent/bathwater)
+
+	return TRUE
 
 #define BURN_PAIN_WEIGHT 0.6
 
@@ -713,9 +734,11 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 							sleepless_flaw.dream_prob += 500
 							sleepless_flaw.drugged_up = FALSE
 							Sleeping(250)
+							SEND_SIGNAL(src, COMSIG_MOB_SLEEP)
 						else
 							teleport_to_dream(src, 10000, dream_prob)
 							Sleeping(300)
+							SEND_SIGNAL(src, COMSIG_MOB_SLEEP)
 
 			else
 				is_asleep = FALSE

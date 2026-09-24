@@ -168,6 +168,8 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 
 	// language comma detection.
 	var/datum/language/message_language = get_message_language(message)
+	if(findtext(message, ",y", 1, 3) == 1 || findtext(message, ",mst", 1, 5) == 1) // TA EDIT
+		message_language = null // TA EDIT
 	if(message_language)
 		// No, you cannot speak in xenocommon just because you know the key
 		if(can_speak_in_language(message_language))

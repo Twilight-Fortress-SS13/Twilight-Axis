@@ -219,8 +219,9 @@
 	if(..())
 		if(HAS_TRAIT(M, TRAIT_HOLDBREATH))
 			return FALSE
-		M.adjust_blurriness(3)
-		M.adjust_blindness(3)
+		if(M.has_status_effect(STATUS_EFFECT_BLINDED))
+			return FALSE
+		M.apply_status_effect(STATUS_EFFECT_BLINDED)
 		M.emote("cry")
 		return TRUE
 
@@ -318,11 +319,22 @@
 	return ..()
 
 /datum/effect_system/smoke_spread/chem/set_up(datum/reagents/carry = null, radius = 1, loca, silent = FALSE)
+	if(!istype(carry, /datum/reagents))
+		if(isnum(carry))
+			loca = radius
+			radius = carry
+		carry = null
+
 	if(isturf(loca))
 		location = loca
 	else
 		location = get_turf(loca)
+
 	amount = radius
+
+	if(!carry)
+		return FALSE
+
 	carry.copy_to(chemholder, carry.total_volume)
 
 	if(!silent)
@@ -344,8 +356,13 @@
 			message_admins("Smoke: ([ADMIN_VERBOSEJMP(location)])[contained]. No associated key.")
 			log_game("A chemical smoke reaction has taken place in ([where])[contained]. No associated key.")
 
+	return TRUE
+
 
 /datum/effect_system/smoke_spread/chem/start()
+	if(!chemholder || !chemholder.reagents || !chemholder.reagents.total_volume)
+		return FALSE
+
 	var/mixcolor = mix_color_from_reagents(chemholder.reagents.reagent_list)
 	if(holder)
 		location = get_turf(holder)
@@ -359,6 +376,8 @@
 	S.amount = amount
 	if(S.amount)
 		S.spread_smoke() //calling process right now so the smoke immediately attacks mobs.
+
+	return TRUE
 
 
 /////////////////////////////////////////////

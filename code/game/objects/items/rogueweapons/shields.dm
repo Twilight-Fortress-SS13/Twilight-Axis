@@ -463,7 +463,7 @@
 	bullet_damage_mult = 0 //TA EDIT
 
 /obj/item/rogueweapon/shield/tower/metal/zizo/get_examine_highlight_status()
-	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, "An alloy of Zizo's anointed metals; Avantyne and Darksteel")
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_WEAPON)
 
 /obj/item/rogueweapon/shield/tower/metal/zizo/Initialize()
 	. = ..()
@@ -505,7 +505,7 @@
 	unenchantable = TRUE
 
 /obj/item/rogueweapon/shield/tower/metal/psy
-	name = "Covenant"
+	name = "\"Covenant\""
 	desc = "'A Psydonian endures. A Psydonian preserves themselves. A Psydonian preserves His flock.' </br>A blessed silver pavise, capable of thwarting the deadliness of \
 	even the hottest balefires. The one who wields it shall never falter; and the ones behind them shall never suffer."
 	icon_state = "psyshield"
@@ -655,7 +655,7 @@
 
 // unique, better buckler for champion
 /obj/item/rogueweapon/shield/buckler/banneret
-	name = "'Aegis'"
+	name = "\"Aegis\""
 	desc = "A special buckler made out of blacksteel for the Knight Banneret, adorned with a crest. An inscription along the top reads,\"RUAT CAELUM\""
 	icon_state = "capbuckler"
 	icon = 'icons/roguetown/weapons/special/captain.dmi'

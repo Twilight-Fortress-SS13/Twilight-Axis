@@ -243,6 +243,8 @@
 	apply_status_effect(/datum/status_effect/debuff/clickcd, 3 SECONDS)
 
 /mob/living/carbon/human/proc/try_guard()
+	if(stat || !(mobility_flags & MOBILITY_STAND) || !(mobility_flags & MOBILITY_MOVE))
+		return FALSE
 	if(has_status_effect(/datum/status_effect/buff/clash) || has_status_effect(/datum/status_effect/debuff/clashcd) || has_status_effect(/datum/status_effect/buff/clash/limbguard))
 		return FALSE
 	if(!get_active_held_item())

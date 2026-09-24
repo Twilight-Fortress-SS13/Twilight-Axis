@@ -35,6 +35,8 @@
 		normalized_actors_list[department] = list()
 
 	for(var/department in GLOB.actors_list)
+		if(department == "Migrants") // TA EDIT START
+			continue // TA EDIT END
 		var/normalized_department = department
 		if(normalized_department == "City Watch" || normalized_department == "Vanguard" || normalized_department == "Retinue")
 			normalized_department = "Garrison"
@@ -67,14 +69,5 @@
 				dat += "[entry]"
 
 	var/datum/browser/popup = new(src, "actors", "<center>This Story's Actors</center>", 387, 420)
-	popup.set_content(dat.Join(""))
-	popup.open(FALSE)
-
-/client/proc/view_roleplay_ads()
-	var/list/dat = list()
-	for(var/X in GLOB.roleplay_ads)
-		dat += "[GLOB.roleplay_ads[X]]"
-
-	var/datum/browser/popup = new(src, "actors", "<center>Roleplay Ads</center>", 500, 600)
 	popup.set_content(dat.Join(""))
 	popup.open(FALSE)

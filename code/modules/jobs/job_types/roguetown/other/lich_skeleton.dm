@@ -19,6 +19,19 @@ LICH SKELETONS
 	ADD_TRAIT(H, TRAIT_LICHLAIR, TRAIT_GENERIC) //Ability to leave/enter the lich's lair without being softlocked inside.
 	H.taints_loot = TRUE
 
+// TA EDIT START
+/datum/advclass/greater_skeleton/lich/equipme(mob/living/carbon/human/H)
+	. = ..()
+	if(maximum_possible_slots != -1)
+		RegisterSignal(H, COMSIG_LIVING_DEATH, PROC_REF(on_limited_lich_skeleton_death))
+
+/datum/advclass/greater_skeleton/lich/proc/on_limited_lich_skeleton_death(mob/living/carbon/human/H)
+	SIGNAL_HANDLER
+	UnregisterSignal(H, COMSIG_LIVING_DEATH)
+	if(total_slots_occupied > 0)
+		SSrole_class_handler.adjust_class_amount(src, -1)
+// TA EDIT END
+
 // Melee goon w/ sidearm picks like javs/sling/knife/single use net. All-rounder.
 /datum/advclass/greater_skeleton/lich/legionnaire
 	name = "Ancient Legionnaire"
@@ -344,7 +357,7 @@ LICH SKELETONS
 	H.energy = H.max_energy
 
 // Fragile Non-Combat crafter/demolishing artificer goon with a seige-use cavet. Worse weapons + very little armor but does base-building. Fortnite.
-// Has a unique extra varient calcic outburst choice that destroys walls and does a huge amount of damage on exploding but takes 8 seconds to prime, on top of their regular varient. 
+// Has a unique extra varient calcic outburst choice that destroys walls and does a huge amount of damage on exploding but takes 8 seconds to prime, on top of their regular varient.
 /datum/advclass/greater_skeleton/lich/sapper
 	name = "Ancient 'Broken Bone' Sapper"
 	tutorial = "Simple. Obedient. Like an ant in a colony. Toil, fortify, smelt, labor and destroy to the tune of your master's whims. After all; what good is an army if it hasn't a sword-nor-shield to wield?"
@@ -545,7 +558,7 @@ LICH SKELETONS
 
 	ADD_TRAIT(H, TRAIT_HEAVYARMOR, TRAIT_GENERIC)
 	ADD_TRAIT(H, TRAIT_STRENGTH_UNCAPPED, TRAIT_GENERIC) //Unique perk, you can splash out a TON of damage.
-	ADD_TRAIT(H, TRAIT_NORUN, TRAIT_GENERIC) //You can't sprint at all, lock in. Mages/Archers will wipe you.
+	//ADD_TRAIT(H, TRAIT_NORUN, TRAIT_GENERIC) //You can't sprint at all, lock in. Mages/Archers will wipe you.
 
 	H.adjust_skillrank(/datum/skill/combat/swords, 3, TRUE)
 	H.adjust_skillrank(/datum/skill/combat/shields, 3, TRUE)
@@ -873,7 +886,7 @@ LICH SKELETONS
 	H.adjust_blindness(-3)
 
 	//Our offensive kit
-	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/unholyblast)
+	H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/unholy_blast)
 	H.mind.AddSpell(new /datum/action/cooldown/spell/raise_deadite) //SPREAD THE... ROT? turn-player-corpses-into-player-zombies spell. No skeleton mitosis please.
 	//Our Utility Spells
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/diagnose/secular)

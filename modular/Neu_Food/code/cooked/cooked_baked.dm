@@ -449,6 +449,26 @@
 	eat_effect = /datum/status_effect/buff/snackbuff
 
 /*	.................   Apple Bread   ................... */
+/obj/item/reagent_containers/food/snacks/rogue/applebread_half
+	name = "half-done apple dough"
+	desc = "It needs more apple slices!"
+	icon = 'modular/Neu_Food/icons/cooked/cooked_baked.dmi'
+	icon_state = "dough_apple"
+	list_reagents = list(/datum/reagent/consumable/nutriment = 1)
+	w_class = WEIGHT_CLASS_NORMAL
+	rotprocess = SHELFLIFE_DECENT
+
+/obj/item/reagent_containers/food/snacks/rogue/applebread_uncooked
+	name = "raw apple loaf"
+	desc = "Into the oven you go!"
+	icon = 'modular/Neu_Food/icons/cooked/cooked_baked.dmi'
+	icon_state = "applebread_uncooked"
+	slices_num = 0
+	cooked_type = /obj/item/reagent_containers/food/snacks/rogue/applebread
+	list_reagents = list(/datum/reagent/consumable/nutriment = 1)
+	w_class = WEIGHT_CLASS_NORMAL
+	rotprocess = SHELFLIFE_DECENT
+
 /obj/item/reagent_containers/food/snacks/rogue/applebread
 	cuisine = CUISINE_NORTH_IMPERIAL|CUISINE_SOUTH_IMPERIAL
 	dish_type = DISH_BREAD
@@ -888,7 +908,7 @@
 	icon = 'modular/Neu_Food/icons/cooked/cooked_pasta.dmi'
 	icon_state = "lasagna_pesto"
 	faretype = FARE_LAVISH
-	list_reagents = list(/datum/reagent/consumable/nutriment = NUTRITION_MEAL_AND_QUARTER, /datum/reagent/consumable/acorn_powder = 4, /datum/reagent/drug/nicotine = 4)
+	list_reagents = list(/datum/reagent/consumable/nutriment = NUTRITION_MEAL_AND_QUARTER, /datum/reagent/consumable/acorn_powder = 4, /datum/reagent/drug/westleach = 4)
 	tastes = list("richly smooth and salty tomatoes" = 1, "melted cheese between noodle sheets" = 1)
 	w_class = WEIGHT_CLASS_NORMAL
 	foodtype = GRAIN | VEGETABLES

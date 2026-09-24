@@ -15,7 +15,6 @@
 
 	var/arbitrary_living_creature_weight = 10 // The arbitrary weight for any thing of a mob and living variety
 	var/upgrade_level = 0 // This is the carts upgrade level, capacity increases with upgrade level
-	var/obj/item/cart_upgrade/upgrade = null
 	/// Dense structures that may still be hauled in the cart (e.g. kegs).
 	var/list/cartloadable_structures = list(/obj/structure/fermentation_keg)
 	/// Arbitrary weight a cartloadable structure takes up in the cart.
@@ -63,13 +62,23 @@
 			update_icon()
 			break
 
-/obj/structure/handcart/dump_contents()
-	var/atom/L = drop_location()
-	for(var/atom/movable/AM in src)
-		AM.forceMove(L)
+/obj/structure/handcart/dump_contents() // TA EDIT START
+	var/turf/dump_turf = get_turf(src)
+	if(!dump_turf)
+		return
+	var/list/items_to_dump = contents.Copy()
+	for(var/atom/movable/AM as anything in items_to_dump)
+		if(QDELETED(AM))
+			contained_items -= AM
+			continue
+		if(AM.loc != src)
+			remove_from(AM)
+			continue
+		if(!AM.forceMove(dump_turf))
+			continue
 		remove_from(AM)
-	contained_items = list()
-	current_capacity = 0
+	recalculate_capacity()
+	update_icon() // TA EDIT END
 
 /obj/structure/handcart/Destroy()
 	dump_contents()
@@ -171,27 +180,18 @@
 
 /obj/structure/handcart/attackby(obj/item/I, mob/user, params)
 	if(istype(I, /obj/item/cart_upgrade))
-		var/obj/item/cart_upgrade/item = I
-		if(item.ulevel == 1)
-			if(upgrade_level != 0)
+		var/obj/item/cart_upgrade/brace = I
+		if(brace.ulevel != upgrade_level + 1)
+			if(brace.ulevel <= upgrade_level)
 				to_chat(user, span_warning("This wheelbrace is obsolete."))
-				return
 			else
-				upgrade = item
-				upgrade_level = item.ulevel
-				qdel(item)
-				manage_upgrade()
-				playsound(loc, 'sound/foley/cartadd.ogg', 100, FALSE, -1)
-		if(item.ulevel == 2)
-			if(upgrade_level != 1)
 				to_chat(user, span_warning("The cart needs a normal wheelbrace before this one can be used!"))
-				return
-			else
-				upgrade = item
-				upgrade_level = item.ulevel
-				qdel(item)
-				manage_upgrade()
-				playsound(loc, 'sound/foley/cartadd.ogg', 100, FALSE, -1)
+			return
+		upgrade_level = brace.ulevel
+		qdel(brace)
+		manage_upgrade()
+		playsound(loc, 'sound/foley/cartadd.ogg', 100, FALSE, -1)
+		return
 	if(!user.cmode)
 		if(!insertion_allowed(I))
 			return
@@ -207,6 +207,12 @@
 	return TRUE
 
 /obj/structure/handcart/proc/put_in(atom/movable/O, mob/user)
+	if(isitem(O)) // TA EDIT START
+		var/obj/item/I = O
+		if(I.GetComponent(/datum/component/cursed_item))
+			if(user)
+				to_chat(user, span_warning("[I] cannot be placed into [src]."))
+			return FALSE // TA EDIT END
 	if(!fits_in_cart(O))
 		to_chat(user, span_warning("The cart cannot hold any more weight!"))
 		return FALSE

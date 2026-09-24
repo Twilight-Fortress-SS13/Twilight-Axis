@@ -7,7 +7,7 @@
 	falloff = 0
 	blocked_z_levels = list(1)
 	persistent_loop = TRUE
-	var/stress2give = /datum/stressevent/music/musicbox
+	var/stress2give = /datum/stressevent/musicbox
 	channel = CHANNEL_JUKEBOX
 
 /datum/looping_sound/musloop/on_hear_sound(mob/M)

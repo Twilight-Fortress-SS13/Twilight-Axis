@@ -42,9 +42,26 @@
 
 /datum/component/riding/proc/vehicle_mob_buckle(datum/source, mob/living/M, force = FALSE)
 	var/atom/movable/AM = parent
+	update_vehicle_glide_size()
 	M.set_glide_size(AM.glide_size)
 	M.updating_glide_size = FALSE
+	sync_rider_glide_sizes()
 	handle_vehicle_offsets()
+
+/datum/component/riding/proc/update_vehicle_glide_size()
+	var/atom/movable/AM = parent
+	AM.set_glide_size(DELAY_TO_GLIDE_SIZE(vehicle_move_delay))
+
+/datum/component/riding/proc/sync_rider_glide_sizes()
+	var/atom/movable/AM = parent
+	if(!AM.has_buckled_mobs())
+		return
+	for(var/mob/M in AM.buckled_mobs)
+		if(!istype(M, /mob/living))
+			continue
+		var/mob/living/rider = M
+		rider.set_glide_size(AM.glide_size)
+		rider.updating_glide_size = FALSE
 
 /datum/component/riding/proc/handle_vehicle_layer()
 	var/atom/movable/AM = parent
@@ -61,13 +78,14 @@
 
 /datum/component/riding/proc/vehicle_moved(datum/source)
 	var/atom/movable/AM = parent
-	AM.set_glide_size(DELAY_TO_GLIDE_SIZE(vehicle_move_delay))
+	update_vehicle_glide_size()
 	for(var/mob/M in AM.buckled_mobs)
 		if(!istype(M, /mob/living))
 			continue
 		var/mob/living/rider = M
 		ride_check(M)
-		M.set_glide_size(AM.glide_size)
+		rider.set_glide_size(AM.glide_size)
+		rider.updating_glide_size = FALSE
 		if(rider.m_intent == MOVE_INTENT_RUN)
 			riding_xp_move_counter++
 			if(riding_xp_move_counter >= 5) 			 	// Determines how many steps are needed before Riding-type EXP is rewarded. In this case, you obtain EXP every time you travel five tiles while riding a mount.
@@ -216,6 +234,8 @@
 		return
 	if(!isturf(AM.loc))
 		return
+	update_vehicle_glide_size()
+	sync_rider_glide_sizes()
 	step(AM, direction)
 	if((direction & (direction - 1)) && (AM.loc == next))
 		last_move_diagonal = TRUE

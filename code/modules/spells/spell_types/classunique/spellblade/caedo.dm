@@ -65,6 +65,22 @@
 		to_chat(H, span_warning("I can't dash there!"))
 		return FALSE
 
+	var/turf/last_open_turf = start // TA EDIT START
+	for(var/turf/path_turf in getline(start, dest))
+		if(path_turf == start)
+			continue
+		if(path_turf.density || istransparentturf(path_turf) || !isfloorturf(path_turf))
+			break
+		var/blocked = FALSE
+		for(var/atom/movable/blocker in path_turf)
+			if(!isliving(blocker) && blocker.density)
+				blocked = TRUE
+				break
+		if(blocked)
+			break
+		last_open_turf = path_turf
+	dest = last_open_turf // TA EDIT END
+
 	var/distance = get_dist(start, dest)
 	if(distance < 1)
 		to_chat(H, span_warning("I need somewhere to dash to!"))
@@ -92,7 +108,7 @@
 	do_teleport(H, dest, channel = TELEPORT_CHANNEL_MAGIC)
 	playsound(dest, 'sound/magic/blink.ogg', 25, TRUE)
 
-	log_combat(H, cast_on, "used Caedo on")
+	log_combat(H, cast_on, "used Caedo on", zone=H.zone_selected)
 
 	var/empowered = FALSE
 	var/datum/status_effect/buff/arcyne_momentum/momentum = H.has_status_effect(/datum/status_effect/buff/arcyne_momentum)
@@ -146,6 +162,8 @@
 
 /datum/action/cooldown/spell/caedo/proc/second_strike(mob/living/carbon/human/user, mob/living/victim, obj/item/weapon, def_zone)
 	if(!user || QDELETED(user) || !victim || QDELETED(victim) || victim.stat == DEAD)
+		return
+	if(spell_guard_check(victim, FALSE, user))
 		return
 	var/total_damage = strike_damage
 	arcyne_strike(user, victim, weapon, total_damage, def_zone, spell_name = "Caedo", skip_animation = TRUE)

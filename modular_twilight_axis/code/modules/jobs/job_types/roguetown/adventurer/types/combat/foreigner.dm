@@ -20,15 +20,15 @@
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/craft/cooking = SKILL_LEVEL_NOVICE,		
+		/datum/skill/craft/cooking = SKILL_LEVEL_NOVICE,
 		/datum/skill/labor/fishing = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE, 
+		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/sewing = SKILL_LEVEL_APPRENTICE		//all nomads have it
 
 	)
 
 /datum/outfit/job/roguetown/adventurer/gronnadv
-	allowed_patrons = ALL_GRONNIC_PATRONS 
+	allowed_patrons = ALL_GRONNIC_PATRONS
 
 /datum/outfit/job/roguetown/adventurer/gronnadv/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -53,7 +53,16 @@
 
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
-			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
+			if(H.mind)
+				var/talismans = list("The Wolf, Plotting", "The Spider, Rising")
+				var/talismanschoice = input(H, "Choose your path", "Beasts of the North") as anything in talismans
+				switch(talismanschoice)
+					if("The Wolf, Plotting")
+						id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
+					if("The Spider, Rising")
+						id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/spider
+			else
+				id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
 		if(/datum/patron/inhumen/graggar)
 			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/graggar/gronn
 		if(/datum/patron/inhumen/matthios)
@@ -65,7 +74,7 @@
 		if(/datum/patron/divine/dendor)
 			id = /obj/item/clothing/neck/roguetown/psicross/dendor/gronn
 		else
-			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/special 
+			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/special
 
 	H.dna.species.soundpack_m = new /datum/voicepack/male/evil()
 
@@ -94,7 +103,7 @@
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
-		/datum/skill/craft/sewing = SKILL_LEVEL_APPRENTICE, 
+		/datum/skill/craft/sewing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,
 	)
 	origin_limits = list(/datum/virtue/origin/kazengun, /datum/virtue/origin/lingyue)

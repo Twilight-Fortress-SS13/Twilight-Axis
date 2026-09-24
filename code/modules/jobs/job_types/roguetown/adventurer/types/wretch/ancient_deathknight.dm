@@ -1,9 +1,8 @@
-/*
 /datum/advclass/wretch/ancient_deathknight
 	name = "Unbound Ancient Death Knight"
 	tutorial = "You were once a Death Knight - a warrior risen from death to serve a master. How long you have been dead - you do not remember anymore. And you find yourself severed from any master's command. Why do you fight? Does it matter? All that you know is to move forward. The world sees you as an abomination. Seek your own path."
 	allowed_sexes = list(MALE, FEMALE)
-	
+
 	outfit = /datum/outfit/job/roguetown/wretch/ancient_deathknight
 	class_select_category = CLASS_CAT_ACCURSED
 	category_tags = list(CTAG_WRETCH)
@@ -35,6 +34,18 @@
 
 /datum/outfit/job/roguetown/wretch/ancient_deathknight/pre_equip(mob/living/carbon/human/H)
 	..()
+
+	var/had_godmode = (H.status_flags & GODMODE) // TA EDIT START
+	H.status_flags |= GODMODE
+	if(isdullahan(H))
+		var/obj/item/bodypart/head/old_head = H.get_bodypart(BODY_ZONE_HEAD)
+		if(old_head)
+			var/obj/item/bodypart/head/new_head = new /obj/item/bodypart/head()
+			new_head.replace_limb(H, TRUE)
+			qdel(old_head)
+	H.set_species(/datum/species/human/northern)
+	if(!had_godmode)
+		H.status_flags &= ~GODMODE // TA EDIT END
 
 	H.become_skeleton()
 
@@ -81,7 +92,7 @@
 			shirt = /obj/item/clothing/suit/roguetown/armor/gambeson
 			armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/paalloy/heavy
 			wrists = /obj/item/clothing/wrists/roguetown/bracers/paalloy/chain
-			
+
 	var/weapon_choice = input(H, "Choose your WEAPON.", "RAGE AGAINST THE LYVING.") as anything in list("Longsword + Shield", "Ancient Greatsword", "Ancient Axe + Shield", "Ancient Mace + Shield", "Ancient Warhammer + Shield", "Bardiche", "Grand Mace")
 	switch(weapon_choice)
 		if("Longsword + Shield")
@@ -142,4 +153,3 @@
 
 	to_chat(H, span_danger("You are playing an Antagonist role. Your very existence is an abomination — everyone is justified in laying you down. You are an ancient warrior risen from death, not a comedic skeleton. Having fun with your character is encouraged, but do not use the role to grief or disregard the setting — play it with gravitas and create memorable moments. Failure to maintain High Roleplay standards may result in punishment."))
 	H.select_skeleton_features()
-*/

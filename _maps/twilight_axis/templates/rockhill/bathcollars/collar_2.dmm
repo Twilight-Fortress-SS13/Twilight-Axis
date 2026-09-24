@@ -1,0 +1,20 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/obj/effect/decal/cobbleedge{
+	dir = 8;
+	icon_state = "borderfall";
+	pixel_x = -8
+	},
+/obj/effect/decal/cobbleedge{
+	icon_state = "borderfall";
+	pixel_y = -8
+	},
+/obj/structure/closet/crate/chest,
+/obj/item/clothing/neck/roguetown/collar/leather/nomagic,
+/obj/item/clothing/neck/roguetown/collar/leather/nomagic,
+/turf/open/floor/carpet/purple,
+/area/rogue/indoors/town/bath)
+
+(1,1,1) = {"
+a
+"}

@@ -155,6 +155,8 @@
 	. = ..()
 	var/mob/living/L = firer
 	if(!L || !L.mind) return
+	if(ricochets && target == firer)
+		return .
 	var/skill_multiplier = 0
 	if(isliving(target)) // If the target theyre shooting at is a mob/living
 		var/mob/living/T = target
@@ -194,6 +196,8 @@
 	. = ..()
 	var/mob/living/L = firer
 	if(!L || !L.mind) return
+	if(ricochets && target == firer)
+		return .
 	var/skill_multiplier = 0
 	if(isliving(target)) // If the target theyre shooting at is a mob/living
 		var/mob/living/T = target

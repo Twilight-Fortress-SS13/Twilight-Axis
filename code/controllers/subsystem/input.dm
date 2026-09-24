@@ -84,14 +84,20 @@ SUBSYSTEM_DEF(input)
 // Badmins just wanna have fun ♪
 /datum/controller/subsystem/input/proc/refresh_client_macro_sets()
 	var/list/clients = GLOB.clients
-	for(var/i in 1 to clients.len)
+	for(var/i in clients.len to 1 step -1)
 		var/client/user = clients[i]
+		if(!user)
+			clients.Cut(i, i + 1)
+			continue
 		user.set_macros()
 		user.update_movement_keys()
 
 /datum/controller/subsystem/input/fire()
 	for(var/mob/user as anything in GLOB.player_list)
-		user.focus?.keyLoop(user.client)
+		var/client/user_client = user?.client
+		if(!user_client)
+			continue
+		user.focus?.keyLoop(user_client)
 
 /// A verb that does nothing, used for clearing keybinds faster.
 /client/verb/NONSENSICAL_VERB_THAT_DOES_NOTHING()

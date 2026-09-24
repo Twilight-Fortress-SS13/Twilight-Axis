@@ -36,7 +36,7 @@
 
 /datum/examine_panel/familiar/ui_static_data(mob/user) //altered and condensed version used for familiars. sorry
 
-	var/flavor_text
+	var/flavor_text = ""
 	var/flavor_text_nsfw //probably breaks if i remove it entirely, just leaving it null
 	var/ooc_notes = ""
 	var/ooc_notes_nsfw
@@ -52,15 +52,15 @@
 	var/is_naked = FALSE
 	var/obscured = FALSE
 
-	var/mob/living/simple_animal/pet/familiar/fam = holder
+	var/mob/living/carbon/human/species/familiar/fam = holder
 	var/datum/preferences/prefs = holder.client?.prefs
 	var/datum/familiar_prefs/fam_pref = prefs?.familiar_prefs
 
 	if(!fam_pref.familiar_headshot_link) // prefs object from the dev period before we had examines; update that shit
 		fam_pref.instantiate_examine_prefs()
 
-	flavor_text = fam_pref.familiar_flavortext_display[fam.planar_origin]
-	ooc_notes = fam_pref.familiar_ooc_notes_display[fam.planar_origin]
+	flavor_text += fam_pref.familiar_flavortext_display[fam.planar_origin]
+	ooc_notes += fam_pref.familiar_ooc_notes_display[fam.planar_origin]
 	headshot = fam_pref.familiar_headshot_link[fam.planar_origin]
 	char_name = fam_pref.familiar_names[fam.planar_origin]
 	song_url = fam_pref.familiar_ooc_extra[fam.planar_origin]

@@ -338,6 +338,8 @@ GLOBAL_LIST_INIT(familytree_title_prefixes, list(
 	return "unknown([relative_role])"
 
 /datum/controller/subsystem/familytree/proc/familytree_gender_pref_label(gender_pref)
+	if(!gender_pref)
+		gender_pref = ANY_GENDER
 	switch(gender_pref)
 		if(ANY_GENDER)
 			return "any"
@@ -346,6 +348,201 @@ GLOBAL_LIST_INIT(familytree_title_prefixes, list(
 		if(DIFFERENT_GENDER)
 			return "different"
 	return "unknown([gender_pref])"
+
+/datum/controller/subsystem/familytree/proc/familytree_search_id(mob/living/carbon/human/H)
+	if(!H)
+		return 0
+	var/ref_key = REF(H)
+	var/search_id = familytree_search_ids[ref_key]
+	if(!search_id)
+		familytree_search_id_counter++
+		search_id = familytree_search_id_counter
+		familytree_search_ids[ref_key] = search_id
+	return search_id
+
+/datum/controller/subsystem/familytree/proc/familytree_reset_search_retry_state(mob/living/carbon/human/H)
+	if(!H)
+		return
+	var/search_id = familytree_search_id(H)
+	for(var/kind in list("FindFamilyMatch", "FindNewlyWedMatch"))
+		var/state_key = "[search_id]|[kind]"
+		familytree_retry_signatures[state_key] = null
+		familytree_retry_last_log[state_key] = null
+		familytree_retry_attempts[state_key] = null
+		familytree_retry_suppressed[state_key] = null
+
+/datum/controller/subsystem/familytree/proc/familytree_sex_label(mob/living/carbon/human/H)
+	if(!H)
+		return "unknown"
+	switch(H.gender)
+		if(MALE)
+			return "male"
+		if(FEMALE)
+			return "female"
+		if(PLURAL)
+			return "plural"
+		if(NEUTER)
+			return "neuter"
+	return "unknown"
+
+/datum/controller/subsystem/familytree/proc/familytree_pronouns_label(mob/living/carbon/human/H)
+	if(!H || isnull(H.pronouns))
+		return "unknown"
+	if(H.pronouns == HE_HIM)
+		return "he/him"
+	if(H.pronouns == SHE_HER)
+		return "she/her"
+	return "[H.pronouns]"
+
+/datum/controller/subsystem/familytree/proc/familytree_anatomy_label(mob/living/carbon/human/H)
+	if(!H)
+		return "unknown"
+	var/has_penis = H.getorganslot(ORGAN_SLOT_PENIS) != null
+	var/has_vagina = H.getorganslot(ORGAN_SLOT_VAGINA) != null
+	if(has_penis && has_vagina)
+		return "both"
+	if(has_penis)
+		return "penis"
+	if(has_vagina)
+		return "vagina"
+	return "none"
+
+/datum/controller/subsystem/familytree/proc/familytree_anatomy_pref_label(anatomy_pref)
+	switch(anatomy_pref)
+		if(0)
+			return "any"
+		if(1)
+			return "penis"
+		if(2)
+			return "vagina"
+	return "unknown([anatomy_pref])"
+
+/datum/controller/subsystem/familytree/proc/familytree_seeks_sex_label(mob/living/carbon/human/H, gender_pref = null)
+	if(!H)
+		return "unknown"
+	if(isnull(gender_pref) || !gender_pref)
+		gender_pref = ANY_GENDER
+	switch(gender_pref)
+		if(ANY_GENDER)
+			return "any"
+		if(SAME_GENDER)
+			if(H.pronouns == HE_HIM)
+				return "male"
+			if(H.pronouns == SHE_HER)
+				return "female"
+			return "same"
+		if(DIFFERENT_GENDER)
+			if(H.pronouns == HE_HIM)
+				return "female"
+			if(H.pronouns == SHE_HER)
+				return "male"
+			return "different"
+	return "unknown"
+
+/datum/controller/subsystem/familytree/proc/familytree_seeks_pronouns_label(mob/living/carbon/human/H, gender_pref = null)
+	if(!H)
+		return "unknown"
+	if(isnull(gender_pref) || !gender_pref)
+		gender_pref = ANY_GENDER
+	switch(gender_pref)
+		if(ANY_GENDER)
+			return "any"
+		if(SAME_GENDER)
+			return familytree_pronouns_label(H)
+		if(DIFFERENT_GENDER)
+			if(H.pronouns == HE_HIM)
+				return "she/her"
+			if(H.pronouns == SHE_HER)
+				return "he/him"
+			return "different"
+	return "unknown"
+
+/datum/controller/subsystem/familytree/proc/familytree_search_actor_summary(mob/living/carbon/human/H)
+	if(!H)
+		return "search_id=0 name='null' ckey='null' sex=unknown self_pronouns=unknown self_anatomy=unknown seeks_sex=unknown seeks_pronouns=unknown seeks_anatomy=unknown pronouns_pref=unknown role=unknown target=''"
+	var/gender_pref = H.gender_choice_pref || ANY_GENDER
+	var/target_name = istext(H.setspouse) ? H.setspouse : ""
+	return "search_id=[familytree_search_id(H)] name='[H.real_name]' ckey='[H.ckey]' sex=[familytree_sex_label(H)] self_pronouns=[familytree_pronouns_label(H)] self_anatomy=[familytree_anatomy_label(H)] seeks_sex=[familytree_seeks_sex_label(H, gender_pref)] seeks_pronouns=[familytree_seeks_pronouns_label(H, gender_pref)] seeks_anatomy=[familytree_anatomy_pref_label(H.preferred_species_anatomy)] pronouns_pref=[familytree_gender_pref_label(gender_pref)] role=[familytree_relative_pref_label(H.desired_relative_role)]([H.desired_relative_role]) target='[target_name]'"
+
+/datum/controller/subsystem/familytree/proc/familytree_reject_count_add(list/reject_counts, reason, amount = 1)
+	if(!reject_counts || !reason || amount <= 0)
+		return
+	reject_counts[reason] = (reject_counts[reason] || 0) + amount
+
+/datum/controller/subsystem/familytree/proc/familytree_reject_counts_text(list/reject_counts)
+	if(!reject_counts || !reject_counts.len)
+		return "none"
+	var/list/parts = list()
+	for(var/reason in reject_counts)
+		var/count = reject_counts[reason]
+		if(count)
+			parts += "[reason]=[count]"
+	return parts.len ? parts.Join(",") : "none"
+
+/datum/controller/subsystem/familytree/proc/familytree_consider_closest_candidate(list/closest_state, mob/living/carbon/human/candidate, datum/heritage/house, stage, reason)
+	if(!closest_state || !candidate)
+		return
+	var/current_stage = isnum(closest_state["stage"]) ? closest_state["stage"] : -1
+	if(stage <= current_stage)
+		return
+	closest_state["stage"] = stage
+	closest_state["candidate"] = candidate
+	closest_state["house"] = house
+	closest_state["reason"] = reason
+
+/datum/controller/subsystem/familytree/proc/familytree_closest_candidate_text(list/closest_state)
+	if(!closest_state)
+		return "none"
+	var/mob/living/carbon/human/candidate = closest_state["candidate"]
+	if(!candidate)
+		return "none"
+	var/datum/heritage/house = closest_state["house"]
+	var/house_name = house?.housename || "none"
+	var/reason = closest_state["reason"] || "unknown"
+	return "[familytree_search_actor_summary(candidate)] house='[house_name]' first_reject=[reason]"
+
+/datum/controller/subsystem/familytree/proc/familytree_log_match_retry(mob/living/carbon/human/H, kind, scope_label, scope_count, reject_mask, reject_text, matches, list/reject_counts, list/closest_state)
+	if(!H)
+		return
+	var/search_id = familytree_search_id(H)
+	var/state_key = "[search_id]|[kind]"
+	var/counts_text = familytree_reject_counts_text(reject_counts)
+	var/closest_text = familytree_closest_candidate_text(closest_state)
+	var/signature = "[scope_count]|[reject_mask]|[matches]|[counts_text]|[closest_text]"
+	var/attempts = (familytree_retry_attempts[state_key] || 0) + 1
+	familytree_retry_attempts[state_key] = attempts
+	var/last_signature = familytree_retry_signatures[state_key]
+	var/last_log = familytree_retry_last_log[state_key] || 0
+	var/same_signature = (last_signature == signature)
+	if(same_signature && last_log && (world.time - last_log) < 120 SECONDS)
+		familytree_retry_suppressed[state_key] = (familytree_retry_suppressed[state_key] || 0) + 1
+		return
+	var/suppressed = familytree_retry_suppressed[state_key] || 0
+	var/status_text = same_signature ? "PENDING" : "REJECTS"
+	var/log_level = matches ? FTLOG_DEBUG : FTLOG_WARN
+	ftlog("[kind] [status_text]: [familytree_search_actor_summary(H)] [scope_label]=[scope_count] mask=[reject_mask] ([reject_text]) matches=[matches] first_rejects={[counts_text]} closest={[closest_text]} attempts=[attempts] suppressed=[suppressed]", log_level)
+	familytree_retry_signatures[state_key] = signature
+	familytree_retry_last_log[state_key] = world.time
+	familytree_retry_suppressed[state_key] = 0
+
+/datum/controller/subsystem/familytree/proc/familytree_spouse_count(mob/living/carbon/human/H)
+	if(!H)
+		return 0
+	var/spouse_count = 0
+	if(H.family_member_datum)
+		var/list/spouses = H.family_member_datum.get_spouse_members()
+		if(islist(spouses))
+			spouse_count = spouses.len
+	if(!spouse_count && H.spouse_mob)
+		spouse_count = 1
+	return spouse_count
+
+/datum/controller/subsystem/familytree/proc/familytree_incoming_spouse_status(mob/living/carbon/human/H)
+	if(!H || H.familytree_opted_out || !familytree_pref_enabled(H.familytree_pref))
+		return "blocked"
+	if(!familytree_spouse_count(H))
+		return "possible"
+	return familytree_can_have_multiple_spouses(H) ? "possible" : "blocked"
 
 /datum/controller/subsystem/familytree/proc/familytree_polygamy_pref_label(polygamy_pref)
 	switch(polygamy_pref)
@@ -371,7 +568,7 @@ GLOBAL_LIST_INIT(familytree_title_prefixes, list(
 		var/list/species_names = islist(H.preferred_species_types) ? H.preferred_species_types : list()
 		var/specific_species_text = species_names.len ? species_names.Join(", ") : "none"
 		species_text += "; species=[specific_species_text]"
-	species_text += "; anatomy=[H.preferred_species_anatomy]"
+	species_text += "; seeks_anatomy=[familytree_anatomy_pref_label(H.preferred_species_anatomy)]; anatomy_pref=[H.preferred_species_anatomy]"
 	return species_text
 
 /datum/controller/subsystem/familytree/proc/familytree_search_summary(mob/living/carbon/human/H)
@@ -380,8 +577,14 @@ GLOBAL_LIST_INIT(familytree_title_prefixes, list(
 
 	var/list/parts = list()
 	var/datum/job/job = get_familytree_job(H)
+	parts += "search_id=[familytree_search_id(H)]"
 	parts += "pref=[familytree_pref_label(H.familytree_pref)]"
 	parts += "desired_role=[familytree_relative_pref_label(H.desired_relative_role)]"
+	parts += "sex=[familytree_sex_label(H)]"
+	parts += "self_pronouns=[familytree_pronouns_label(H)]"
+	parts += "self_anatomy=[familytree_anatomy_label(H)]"
+	parts += "seeks_sex=[familytree_seeks_sex_label(H, H.gender_choice_pref)]"
+	parts += "seeks_pronouns=[familytree_seeks_pronouns_label(H, H.gender_choice_pref)]"
 	parts += "gender=[familytree_gender_pref_label(H.gender_choice_pref)]"
 	parts += "polygamy=[familytree_polygamy_pref_label(H.polygamy_mode)]"
 	parts += familytree_species_pref_summary(H)
@@ -437,6 +640,9 @@ GLOBAL_LIST_INIT(familytree_title_prefixes, list(
 	var/found_text = found_summary || "unknown"
 	var/message = "FAMILYTREE: [key_name(H)] joined house '[house_name]'. searched=[search_summary]; found=[found_text]; nearest_relative=[nearest_summary]"
 	ftlog(message, FTLOG_INFO)
+	var/spouse_count = familytree_spouse_count(H)
+	var/result = spouse_count ? "spouse_assigned" : (H.desired_relative_role == RELATIVE_SPOUSE ? "solo_house" : "family_assigned")
+	ftlog("SEARCH_RESULT: [familytree_search_actor_summary(H)] result=[result] house='[house_name]' spouse_count=[spouse_count] outgoing_search=closed incoming_spouse=[familytree_incoming_spouse_status(H)] can_have_multiple=[familytree_can_have_multiple_spouses(H)] can_be_additional=[familytree_can_be_additional_spouse(H)]", FTLOG_INFO)
 
 /datum/controller/subsystem/familytree/proc/is_job_of_type(datum/job/job, list/type_list)
 	if(!job || !type_list)

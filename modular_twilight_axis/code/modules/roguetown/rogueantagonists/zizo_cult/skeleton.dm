@@ -8,7 +8,7 @@
 	min_pq = null //no pq
 	max_pq = null
 	announce_latejoin = FALSE
-	
+
 	advclass_cat_rolls = list(CTAG_NSKELETON = 20)
 
 	tutorial = "You are a resurrected skeleton, summoned by the cult of Zizo itself. Obey the cultists and Her believers without question."
@@ -53,12 +53,12 @@ NECRO SKELETONS
 
 
 /datum/outfit/job/roguetown/cult/skeleton/zizoid
-	wrists = /obj/item/clothing/wrists/roguetown/bracers/zizo/heavy
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/zizo
 	armor =  /obj/item/clothing/suit/roguetown/armor/plate/full/zizo
 	pants = /obj/item/clothing/under/roguetown/platelegs/zizo/heavy
 	head = /obj/item/clothing/head/roguetown/helmet/skullcap/cult
 	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/zizo
-	neck = /obj/item/clothing/neck/roguetown/bevor/zizo/heavy
+	neck = /obj/item/clothing/neck/roguetown/bevor/zizo
 	gloves = /obj/item/clothing/gloves/roguetown/plate/zizo/heavy
 
 /datum/advclass/cult/skeleton/zizoid/raider

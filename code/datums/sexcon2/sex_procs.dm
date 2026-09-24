@@ -103,8 +103,7 @@
 
 	if(dragged != user && !(istype(dragged, /obj/item/bodypart/head/dullahan)))
 		return
-
-	if(!human_user.can_do_sex)
+	if(!(human_user.can_do_sex && target.can_do_sex))
 		to_chat(user, "<span class='warning'>I can't do this.</span>")
 		return
 

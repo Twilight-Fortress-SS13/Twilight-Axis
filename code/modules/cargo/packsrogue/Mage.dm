@@ -61,6 +61,11 @@
 	cost = 10
 	contains = list(/obj/item/clothing/suit/roguetown/armor/leather)
 
+/datum/supply_pack/rogue/Mage/brigandine_light
+	name = "Lightweight Brigandine"
+	cost = 45
+	contains = list(/obj/item/clothing/suit/roguetown/armor/brigandine/light)
+
 ///////////////////
 // WRISTS/GLOVES //
 ///////////////////

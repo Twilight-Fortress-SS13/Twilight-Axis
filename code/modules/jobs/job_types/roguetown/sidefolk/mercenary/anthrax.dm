@@ -4,7 +4,7 @@
 	forbidden_races = list(RACES_ANTHRAX)
 	outfit = /datum/outfit/job/roguetown/mercenary/anthrax
 	class_select_category = CLASS_CAT_RACIAL
-	category_tags = list(CTAG_MERCENARY)
+	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_BRAVO)
 
 	cmode_music = 'sound/music/combat_delf.ogg'
 
@@ -21,8 +21,8 @@
 		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT, 
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN, 
+		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/riding = SKILL_LEVEL_JOURNEYMAN,
@@ -48,8 +48,8 @@
 	backl = /obj/item/storage/backpack/rogue/satchel/black
 	head = /obj/item/clothing/neck/roguetown/chaincoif/full/black
 	backpack_contents = list(
-		/obj/item/roguekey/mercenary = 1, 
-		/obj/item/storage/belt/rogue/pouch/coins/poor = 1, 
+		/obj/item/roguekey/mercenary = 1,
+		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
 		/obj/item/rogueweapon/huntingknife/idagger/steel/corroded/dirk = 1,
 		/obj/item/reagent_containers/glass/bottle/rogue/strongpoison = 1,
 		/obj/item/rogueweapon/scabbard/sheath)
@@ -60,7 +60,7 @@
 	mask = /obj/item/clothing/mask/rogue/facemask/shadowfacemask
 	neck = /obj/item/clothing/neck/roguetown/chaincoif/chainmantle
 	backr = /obj/item/rogueweapon/shield/tower/spidershield
-	beltr = /obj/item/rogueweapon/whip/spiderwhip	
+	beltr = /obj/item/rogueweapon/whip/spiderwhip
 	beltl = /obj/item/rope/chain
 
 
@@ -99,7 +99,7 @@
 	that your contract is fulfilled and your pockets heavy with mammon."
 	outfit = /datum/outfit/job/roguetown/mercenary/anthrax_assassin
 	forbidden_races = list(RACES_ANTHRAX)
-	category_tags = list(CTAG_MERCENARY)
+	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_BRAVO)
 	class_select_category = CLASS_CAT_RACIAL
 	cmode_music = 'sound/music/combat_delf.ogg'
 	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_ANTHRAXI, TRAIT_ALCHEMY_EXPERT) //TA EDIT
@@ -112,8 +112,8 @@
 	subclass_skills = list(
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT, 
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN, 
+		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/riding = SKILL_LEVEL_JOURNEYMAN,
@@ -137,8 +137,8 @@
 	head = /obj/item/clothing/neck/roguetown/chaincoif/full/black
 	backl = /obj/item/storage/backpack/rogue/satchel/black
 	backpack_contents = list(
-		/obj/item/roguekey/mercenary = 1, 
-		/obj/item/storage/belt/rogue/pouch/coins/poor = 1, 
+		/obj/item/roguekey/mercenary = 1,
+		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
 		/obj/item/rogueweapon/huntingknife/idagger/steel/corroded/dirk = 1,
 		/obj/item/reagent_containers/glass/bottle/rogue/strongpoison = 1,
 		/obj/item/rogueweapon/scabbard/sheath)
@@ -189,9 +189,9 @@
 			if("Spidertamer (Tameable Spider Mount)")
 				apply_virtue(H, new /datum/virtue/utility/riding)
 			if("Shroomwalker (+I to Athletics)")
-				H.adjust_skillrank_up_to(/datum/skill/misc/athletics, SKILL_LEVEL_MASTER, TRUE)	
+				H.adjust_skillrank_up_to(/datum/skill/misc/athletics, SKILL_LEVEL_MASTER, TRUE)
 
-	H.merctype = 15	
+	H.merctype = 15
 
 /datum/advclass/mercenary/anthrax_paladin //TA EDIT START
 	name = "Spider Queen Baneblade"
@@ -217,8 +217,8 @@
 		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT, 
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN, 
+		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/riding = SKILL_LEVEL_JOURNEYMAN,
@@ -241,8 +241,8 @@
 	backr = /obj/item/storage/backpack/rogue/satchel/black
 	backl = /obj/item/rogueweapon/scabbard/gwstrap
 	backpack_contents = list(
-		/obj/item/roguekey/mercenary = 1, 
-		/obj/item/storage/belt/rogue/pouch/coins/poor = 1, 
+		/obj/item/roguekey/mercenary = 1,
+		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
 		/obj/item/rogueweapon/huntingknife/idagger/steel/corroded/dirk = 1,
 		/obj/item/reagent_containers/glass/bottle/rogue/strongpoison = 1,
 		/obj/item/rogueweapon/scabbard/sheath)

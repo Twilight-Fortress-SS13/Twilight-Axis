@@ -13040,6 +13040,13 @@
 	},
 /turf/open/floor/rogue/churchrough,
 /area/rogue/indoors/town)
+"cDk" = (
+/obj/structure/fluff/walldeco/church/line{
+	dir = 8
+	},
+/obj/effect/landmark/start/painter,
+/turf/open/floor/rogue/churchmarble,
+/area/rogue/indoors/town/church/chapel)
 "cDn" = (
 /obj/structure/fluff/railing/border{
 	dir = 10
@@ -65051,6 +65058,10 @@
 /obj/item/rogueweapon/tongs,
 /turf/open/floor/rogue/blocks,
 /area/rogue/indoors)
+"nky" = (
+/obj/effect/landmark/start/painter,
+/turf/open/floor/rogue/church,
+/area/rogue/indoors/town/church/chapel)
 "nkE" = (
 /obj/structure/fluff/railing/wood{
 	dir = 8;
@@ -95541,7 +95552,7 @@
 	pixel_x = -3;
 	pixel_y = 1
 	},
-/obj/item/rogueweapon/huntingknife/idagger/silver/elvish/drow,
+/obj/item/rogueweapon/huntingknife/idagger/silver/elvish,
 /obj/item/roguegem/random,
 /turf/open/floor/rogue/grasscold,
 /area/rogue/under/underdark/south)
@@ -542362,7 +542373,7 @@ ygx
 bUY
 msg
 ntK
-ntK
+nky
 lkJ
 qUF
 tCv
@@ -543226,7 +543237,7 @@ gor
 gor
 gor
 gor
-gor
+cDk
 lkJ
 qUF
 jrm

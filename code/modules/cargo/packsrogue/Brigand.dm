@@ -173,6 +173,11 @@
 	cost = 60
 	contains =  list(/obj/item/rogueweapon/flail/sflail)
 
+/datum/supply_pack/rogue/Brigand/greatflail
+	name = "Iron Greatflail"
+	cost = 50
+	contains = list(/obj/item/rogueweapon/flail/peasantwarflail/iron)
+
 /datum/supply_pack/rogue/Brigand/axe
 	name = "Steel Axe"
 	cost = 20
@@ -197,6 +202,11 @@
 	name = "Steel Double-Headed Greataxe"
 	cost = 80
 	contains = list(/obj/item/rogueweapon/greataxe/steel/doublehead)
+
+/datum/supply_pack/rogue/Brigand/billhook
+	name = "Billhook"
+	cost = 40
+	contains = list(/obj/item/rogueweapon/spear/billhook)
 
 /////////////
 // SHIELDS //

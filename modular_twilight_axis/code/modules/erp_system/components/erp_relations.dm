@@ -122,6 +122,8 @@
 		var/is_partner = (T == partner)
 
 		for(var/flag in GLOB.relationship_settings)
+			if(!isnum(flag))
+				continue
 			if(!(R.flags & flag))
 				continue
 

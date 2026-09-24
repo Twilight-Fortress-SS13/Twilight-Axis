@@ -80,6 +80,32 @@
 	//TA edit - Bard chages start
 	if(playing)
 		return
+	if(user.mind)
+		switch(user.get_skill_level(/datum/skill/misc/music))
+			if(1)
+				note_color = "#ffffff"
+				soundloop.stress2give = /datum/stressevent/music/novice
+			if(2)
+				note_color = "#ffffff"
+				soundloop.stress2give = /datum/stressevent/music/apprentice
+			if(3)
+				note_color = "#1eff00"
+				soundloop.stress2give = /datum/stressevent/music/journeyman
+			if(4)
+				note_color = "#0070dd"
+				soundloop.stress2give = /datum/stressevent/music/expert
+			if(5)
+				note_color = "#a335ee"
+				soundloop.stress2give = /datum/stressevent/music/master
+			if(6)
+				note_color = "#ff8000"
+				soundloop.stress2give = /datum/stressevent/music/legendary
+			else
+				note_color = initial(note_color)
+				soundloop.stress2give = /datum/stressevent/music
+	else
+		note_color = initial(note_color)
+		soundloop.stress2give = /datum/stressevent/music
 	ui_interact(user)
 	//TA edit - Bard chages end
 
@@ -107,7 +133,7 @@
 	"We Toil Together" = 'sound/music/instruments/accord (3).ogg',
 	"Just One More, Tavern Wench" = 'sound/music/instruments/accord (4).ogg',
 	"Moonlight Carnival" = 'sound/music/instruments/accord (5).ogg',
-	"'Ye Best Be Goin'" = 'sound/music/instruments/accord (6).ogg',
+	"\"Ye Best Be Goin\"" = 'sound/music/instruments/accord (6).ogg',
 	"Beloved Blue" = 'sound/music/instruments/accord (7).ogg')
 
 /obj/item/rogue/instrument/guitar
@@ -117,7 +143,7 @@
 	song_list = list("Fire-Cast Shadows" = 'sound/music/instruments/guitar (1).ogg',
 	"The Forced Hand" = 'sound/music/instruments/guitar (2).ogg',
 	"Regrets Unpaid" = 'sound/music/instruments/guitar (3).ogg',
-	"'Took the Mammon and Ran'" = 'sound/music/instruments/guitar (4).ogg',
+	"\"Took the Mammon and Ran\"" = 'sound/music/instruments/guitar (4).ogg',
 	"Poor Man's Tithe" = 'sound/music/instruments/guitar (5).ogg',
 	"In His Arms Ye'll Find Me" = 'sound/music/instruments/guitar (6).ogg',
 	"El Odio" = 'sound/music/instruments/guitar (7).ogg',

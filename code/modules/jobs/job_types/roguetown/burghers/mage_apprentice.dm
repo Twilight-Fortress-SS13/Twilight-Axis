@@ -20,8 +20,8 @@
 
 	display_order = JDO_APPRENTICE
 	give_bank_account = TRUE
-
-	min_pq = 0
+	same_job_respawn_delay = 20 MINUTES
+	min_pq = 2
 	max_pq = null
 	round_contrib_points = 2
 	cmode_music = 'sound/music/cmode/nobility/combat_courtmage.ogg'
@@ -72,7 +72,6 @@
 		/datum/skill/misc/athletics = SKILL_LEVEL_NOVICE,
 		/datum/skill/craft/crafting = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/medicine = SKILL_LEVEL_NOVICE,
-		/datum/skill/misc/riding = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_MASTER,
 		/datum/skill/craft/alchemy = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/magic/arcane = SKILL_LEVEL_JOURNEYMAN,
@@ -100,7 +99,7 @@
 		SStreasury.grant_savings(ECONOMIC_LOWER_MIDDLE_CLASS, H)
 	if(SSmapping.config.map_name == "Rockhill") //TA_EDIT
 		beltr = /obj/item/storage/keyring/apprenticeenigma
-	else 
+	else
 		beltr = /obj/item/storage/keyring/apprentice
 
 /datum/advclass/wapprentice/alchemist

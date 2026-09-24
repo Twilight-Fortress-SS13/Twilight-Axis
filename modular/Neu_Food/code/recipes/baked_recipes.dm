@@ -200,19 +200,21 @@
 	)
 	result_type = /obj/item/reagent_containers/food/snacks/rogue/rbreaduncooked
 
-/datum/food_recipe/baked/apple_loaf
-	name = "apple loaf"
+/datum/food_recipe/baked/apple_loaf_half
+	name = "apple dough"
 	base_item = /obj/item/reagent_containers/food/snacks/rogue/dough
 	ingredients = list(
-		/obj/item/reagent_containers/food/snacks/rogue/fruit/apple_sliced,
-		/obj/item/reagent_containers/food/snacks/rogue/fruit/apple_sliced,
+		/obj/item/reagent_containers/food/snacks/rogue/fruit/apple_sliced
 	)
-	step_visuals = list(
-		list('modular/Neu_Food/icons/cooked/cooked_baked.dmi', "dough_apple"), 
-		list('modular/Neu_Food/icons/cooked/cooked_baked.dmi', "applebread_uncooked"), 
+	result_type = /obj/item/reagent_containers/food/snacks/rogue/applebread_half
+
+/datum/food_recipe/baked/apple_loaf
+	name = "raw apple loaf"
+	base_item = /obj/item/reagent_containers/food/snacks/rogue/applebread_half
+	ingredients = list(
+		/obj/item/reagent_containers/food/snacks/rogue/fruit/apple_sliced
 	)
-	cook_method = COOK_BAKE
-	result_type = /obj/item/reagent_containers/food/snacks/rogue/applebread
+	result_type = /obj/item/reagent_containers/food/snacks/rogue/applebread_uncooked
 
 /datum/food_recipe/baked/pear_bookbread
 	name = "pear bookbread"

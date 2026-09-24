@@ -1,5 +1,5 @@
 #define MAX_RAISED_SKELETONS 2
-#define TWILIGHT_NECRO_CRYSTAL_MAX_SUMMONS 1
+#define TWILIGHT_NECRO_CRYSTAL_MAX_SUMMONS 2
 #define TWILIGHT_NECRO_CRYSTAL_MAX_CHARGES 1
 
 /datum/advclass/wretch/necromancer/post_equip(mob/living/carbon/human/spawned, client/player_client)
