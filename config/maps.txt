@@ -30,3 +30,7 @@ map deserttown
 	default
 	votable
 endmap
+
+map Karnfels
+	votable
+endmap
