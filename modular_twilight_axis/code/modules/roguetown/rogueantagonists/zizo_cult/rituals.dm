@@ -509,6 +509,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 /datum/ritual/servantry/luxstol/invoke(mob/living/user, turf/center)
 	. = ..()
 	var/mob/living/carbon/human/target = locate() in center.contents
+	var/apply_greater = FALSE
 	if(target.mind && target.mind.has_antag_datum(/datum/antagonist/skeleton))
 		to_chat(user, span_danger("Это скелет, в нем уже не может быть частички души..."))
 		return
@@ -521,14 +522,29 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	if(target.patron.type == /datum/patron/inhumen/zizo)
 		to_chat(user, span_danger("Зизо не может отдать частичку души своего же последователя..."))
 		return
-	if(target.has_status_effect(/datum/status_effect/debuff/ritualdefiled/cult))
+	if(target.has_status_effect(/datum/status_effect/debuff/devitalised))
 		to_chat(user, span_danger("Его душа уже осквернена..."))
 		return
+	if(target.stat == DEAD)
+		to_chat(user, span_danger("Он уже мертв..."))
+		return
+	if(!target.has_extractable_lux())
+		to_chat(user, span_danger("Его душа слишком слаба, чтобы отдать частичку..."))
+		return FALSE
+	if(istiefling(target) || isdullahan(target)) //TA EDIT
+		to_chat(user, span_danger("Его люкс инфернальный. Это не сработает."))
+		return FALSE
+	if(isaasimar(target) && !(HAS_TRAIT(target, TRAIT_ANCIENT_HAG) || HAS_TRAIT(target, TRAIT_FEYTOUCHED)))
+		new /obj/item/reagent_containers/lux(target.loc)
+		apply_greater = TRUE
+	else if(HAS_TRAIT(target, TRAIT_ANCIENT_HAG) || HAS_TRAIT(target, TRAIT_FEYTOUCHED))
+		new /obj/item/reagent_containers/lux_moss(target.loc)
+	else
+		new /obj/item/reagent_containers/lux_impure(target.loc)
 	target.Stun(30)
 	target.Knockdown(30)
 	target.Sleeping(60)
-	new /obj/item/reagent_containers/lux(center)
-	target.apply_status_effect(/datum/status_effect/debuff/ritualdefiled/cult)
+	target.apply_status_effect((apply_greater ? /datum/status_effect/debuff/devitalised/greater : /datum/status_effect/debuff/devitalised))
 
 /obj/item/corruptedheart
 	name = "corrupted heart"
@@ -846,7 +862,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	var/mob/living/carbon/human/target = locate() in center.contents
 	var/mob/living/carbon/human/victim = locate() in get_step(center, NORTH)
 
-	if(victim.has_status_effect(/datum/status_effect/debuff/ritualdefiled/cult))
+	if(victim.has_status_effect(/datum/status_effect/debuff/devitalised))
 		to_chat(target, span_danger("Его душа уже осквернена..."))
 		return
 	if(victim.patron.type != /datum/patron/old_god)
@@ -857,7 +873,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 		to_chat(target, span_notice("За счет его силы люкса, я теперь не чувствую боли!"))
 		to_chat(victim, span_danger("О нет.. За счет силы моей веры они стали сильнее.. Что же мне делать дальше.."))
 		target.change_stat(STATKEY_WIL, 1)
-		victim.apply_status_effect(/datum/status_effect/debuff/ritualdefiled/cult)
+		victim.apply_status_effect(/datum/status_effect/debuff/devitalised)
 		victim.Stun(30)
 		victim.Knockdown(30)
 		victim.Sleeping(60)
@@ -876,10 +892,10 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	var/mob/living/carbon/human/victim = locate() in get_step(center, NORTH)
 	if(!(is_species(victim, /datum/species/aasimar)))
 		return
-	if(victim.has_status_effect(/datum/status_effect/debuff/ritualdefiled/cult))
+	if(victim.has_status_effect(/datum/status_effect/debuff/devitalised))
 		to_chat(target, span_notice("This aasimar is already used in ritual..."))
 		return
-	victim.apply_status_effect(/datum/status_effect/debuff/ritualdefiled/cult)
+	victim.apply_status_effect(/datum/status_effect/debuff/devitalised)
 	victim.Stun(30)
 	victim.Knockdown(30)
 	ADD_TRAIT(user, TRAIT_NOPAIN, TRAIT_GENERIC)
@@ -975,12 +991,12 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 		cavity.cavity_item = null
 	for(var/obj/item/bodypart/part as anything in target.bodyparts)
 		part.drop_limb()
-	if(target.has_status_effect(/datum/status_effect/debuff/ritualdefiled/cult))
+	if(target.has_status_effect(/datum/status_effect/debuff/devitalised))
 		to_chat(user, span_danger("Он уже выпотрошен"))
 		return
 	new /obj/item/natural/bundle/bone(center)
 	new /obj/item/natural/bundle/bone(center)
-	target.apply_status_effect(/datum/status_effect/debuff/ritualdefiled/cult)
+	target.apply_status_effect(/datum/status_effect/debuff/devitalised)
 
 /* /datum/ritual/fleshcrafting/badomen
 	name = "Bad Omen"

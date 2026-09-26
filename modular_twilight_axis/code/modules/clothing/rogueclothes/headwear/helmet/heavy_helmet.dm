@@ -204,7 +204,10 @@
 /obj/item/clothing/head/roguetown/helmet/heavy/barbute/legion
 	name = "elyrian coolus"
 	desc = "Проверенный временем шлем, любимый легионерами и преторианцами за удобную защиту: он закрывает уязвимые места, не сильно загораживая обзор."
+	worn_x_dimension = 32
+	worn_y_dimension = 32
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/head.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/head.dmi'
+	bloody_icon = 'icons/effects/blood.dmi'
 	icon_state = "legionhelmet"
 	item_state = "legionhelmet"
