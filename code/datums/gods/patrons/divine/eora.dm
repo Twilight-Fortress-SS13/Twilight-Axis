@@ -21,7 +21,7 @@
 		"HER BEAUTY IS EVEN IN THIS TORMENT!",
 		"I LOVE YOU, EVEN AS YOU TRESPASS AGAINST ME!",
 	)
-	traits_tier = list(TRAIT_EORAN_CALM = CLERIC_T0, TRAIT_EORAN_SERENE = CLERIC_T2)
+	traits_tier = list(TRAIT_EORAN_CALM = CLERIC_T0, TRAIT_BEAUTIFUL = CLERIC_T1, TRAIT_EORAN_SERENE = CLERIC_T2)
 	storyteller = /datum/storyteller/eora
 	titles = list(
 		"Mother", // have seen people call her this, or variants like 'Great Mother', ic. she doesn't really get titles though
