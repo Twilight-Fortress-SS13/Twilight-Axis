@@ -27,6 +27,9 @@ jobs:
     # For example, `Run Tests (runtimestation; 515)`.
     name: Run Tests (${{ inputs.major && format('{0}.{1}; ', inputs.major, inputs.minor) || '' }}${{ inputs.map }}; ${{ inputs.max_required_byond_client }})
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
@@ -52,7 +55,28 @@ jobs:
         id: run_tests
         run: |
           source $HOME/BYOND/byond/bin/byondsetup
-          bash tools/ci/run_server.sh ${{ inputs.map }}
+
+          set +e
+
+          /usr/bin/time -v bash tools/ci/run_server.sh ${{ inputs.map }} > server_stdout.txt 2> metrics.txt
+          STATUS=$?
+
+          echo "===== server stdout ====="
+          cat server_stdout.txt || true
+
+          echo "===== metrics / stderr ====="
+          cat metrics.txt || true
+
+          echo "===== ci logs ====="
+          find ci_test/data/logs -maxdepth 4 -type f -print -exec sed -n '1,260p' {} \; || true
+
+          MEM_KB=$(grep "Maximum resident set size" metrics.txt | awk '{print $6}')
+          if [ -n "$MEM_KB" ]; then
+            echo "max_mem=$((MEM_KB / 1024))MB" >> $GITHUB_OUTPUT
+          fi
+
+          exit $STATUS
+
       # - name: On test fail, write a step summary
       #   if: always() && steps.run_tests.outcome == 'failure'
       #   run: |
@@ -76,3 +100,77 @@ jobs:
       #       echo '```' >> $GITHUB_STEP_SUMMARY
       #       echo "" >> $GITHUB_STEP_SUMMARY
       #     done
+
+      - name: Write unit test summary
+        if: always()
+        run: |
+          RESULTS=ci_test/data/unit_tests.json
+
+          if [ ! -f "$RESULTS" ]; then
+            {
+              echo "## Unit tests — ${{ inputs.map }}"
+              echo ""
+              echo ":warning: No unit test results were produced. The world most likely failed before \`RunUnitTests()\` ran."
+            } >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+
+          TOTAL=$(jq 'length' "$RESULTS")
+          PASSED=$(jq '[.[] | select(.status == 0)] | length' "$RESULTS")
+          FAILED=$(jq '[.[] | select(.status == 1)] | length' "$RESULTS")
+          SKIPPED=$(jq '[.[] | select(.status == 2)] | length' "$RESULTS")
+
+          if [ "$FAILED" -gt 0 ]; then
+            VERDICT=":x: $FAILED failed"
+          else
+            VERDICT=":white_check_mark: all green"
+          fi
+
+          {
+            echo "## Unit tests — ${{ inputs.map }}"
+            echo ""
+            echo "$VERDICT"
+            echo ""
+            echo "| Total | Passed | Failed | Skipped |"
+            echo "|------:|-------:|-------:|--------:|"
+            echo "| $TOTAL | $PASSED | $FAILED | $SKIPPED |"
+          } >> $GITHUB_STEP_SUMMARY
+
+          if [ "$FAILED" -gt 0 ]; then
+            {
+              echo ""
+              echo "### Failures"
+              echo ""
+            } >> $GITHUB_STEP_SUMMARY
+            jq -r '
+              to_entries
+              | map(.value)
+              | map(select(.status == 1))
+              | .[]
+              | "<details><summary><code>\(.name)</code></summary>\n\n```\n\(.message)\n```\n\n</details>\n"
+            ' "$RESULTS" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          FAMILYTREE_TOTAL=$(jq '[to_entries[] | select(.key | test("unit_test/familytree"))] | length' "$RESULTS")
+          FAMILYTREE_FAILED=$(jq '[to_entries[] | select(.key | test("unit_test/familytree")) | select(.value.status == 1)] | length' "$RESULTS")
+          {
+            echo ""
+            echo "<sub>Family subsystem chains covered: $FAMILYTREE_TOTAL test(s), $FAMILYTREE_FAILED failing.</sub>"
+          } >> $GITHUB_STEP_SUMMARY
+
+          if [ "$FAMILYTREE_TOTAL" -eq 0 ]; then
+            echo "::warning title=Family subsystem::No familytree unit tests ran on ${{ inputs.map }}; the suite may have been dropped from the build"
+          elif [ "$FAMILYTREE_FAILED" -gt 0 ]; then
+            echo "::error title=Family subsystem::$FAMILYTREE_FAILED of $FAMILYTREE_TOTAL familytree chain test(s) failed on ${{ inputs.map }}"
+          else
+            echo "::notice title=Family subsystem::All $FAMILYTREE_TOTAL familytree chain test(s) passed on ${{ inputs.map }}"
+          fi
+
+      - name: Upload unit test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-tests-${{ inputs.map }}
+          path: ci_test/data/unit_tests.json
+          if-no-files-found: ignore
+          retention-days: 7

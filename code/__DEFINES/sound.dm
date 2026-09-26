@@ -13,12 +13,13 @@
 #define CHANNEL_CMUSIC 1013
 #define CHANNEL_WEATHER 1012
 #define CHANNEL_CHARGED_SPELL 1011
-#define CHANNEL_WEAPON_DRAW 1010
+#define CHANNEL_GWYNT_MUSIC 1010
+#define CHANNEL_WEAPON_DRAW 1009
 
 //THIS SHOULD ALWAYS BE THE LOWEST ONE!
 //KEEP IT UPDATED
 
-#define CHANNEL_HIGHEST_AVAILABLE 1009
+#define CHANNEL_HIGHEST_AVAILABLE 1008
 
 
 #define SOUND_MINIMUM_PRESSURE 10
@@ -198,6 +199,13 @@
 #define SFX_WOOD_ARMOR "wood_armor"
 #define SFX_HEELS	"heels"
 #define SFX_TRICK "trick"
+
+#define SFX_COLLARJINGLE list('sound/items/jinglebell1.ogg',\
+							'sound/items/jinglebell2.ogg',\
+							'sound/items/jinglebell3.ogg',\
+							'sound/items/jinglebell4.ogg',\
+							'sound/items/jinglebell5.ogg',\
+							'sound/items/jinglebell6.ogg')
 
 #define INTERACTION_SOUND_RANGE_MODIFIER 0
 #define EQUIP_SOUND_VOLUME 100

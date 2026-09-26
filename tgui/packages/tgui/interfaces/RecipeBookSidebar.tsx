@@ -21,7 +21,7 @@ type Props = {
   selectedRecipe: string | null;
   onCategoryChange: (value: string) => void;
   onSelectRecipe: (path: string) => void;
-  onBack: () => void;
+  onBack?: () => void;
 };
 
 export const RecipeBookSidebar = memo((props: Props) => {
@@ -40,11 +40,15 @@ export const RecipeBookSidebar = memo((props: Props) => {
   const filtered = useMemo(() => {
     const query = search.toLowerCase();
     const seen = new Set<string>();
+    // TA EDIT
+    const isAllCategory = category === 'All' || category === 'Всё';
     return recipes.filter((r) => {
-      const matchCat = category === 'All' || r.category === category;
+      // TA EDIT
+      const matchCat = isAllCategory || r.category === category;
       const matchSearch = !query || r.name?.toLowerCase().includes(query);
       if (!matchCat || !matchSearch) return false;
-      if (category === 'All') {
+      // TA EDIT
+      if (isAllCategory) {
         if (seen.has(r.path)) return false;
         seen.add(r.path);
       }
@@ -53,6 +57,8 @@ export const RecipeBookSidebar = memo((props: Props) => {
   }, [recipes, search, category]);
 
   const hasCategories = categories.length > 1;
+  // TA EDIT
+  const hasBack = Boolean(onBack);
 
   return (
     <Stack fill>
@@ -60,7 +66,7 @@ export const RecipeBookSidebar = memo((props: Props) => {
         <Stack.Item style={{ overflow: 'auto', minWidth: '140px' }}>
           <Stack vertical fill>
             <Stack.Item grow basis={0} style={{ overflow: 'auto' }}>
-              <Section fill scrollable title="Filter">
+              <Section fill scrollable title="Фильтр">
                 {categories.map((cat) => {
                   const active = category === cat;
                   return (
@@ -77,21 +83,27 @@ export const RecipeBookSidebar = memo((props: Props) => {
                 })}
               </Section>
             </Stack.Item>
-            <Stack.Item
-              style={{ flexShrink: 0, marginTop: '6px', marginBottom: '6px' }}
-            >
-              <button
-                type="button"
+            {hasBack && (
+              <Stack.Item
                 style={{
-                  ...inkButtonStyle(),
-                  width: '100%',
-                  textAlign: 'center',
+                  flexShrink: 0,
+                  marginTop: '6px',
+                  marginBottom: '6px',
                 }}
-                onClick={onBack}
               >
-                &larr; Library
-              </button>
-            </Stack.Item>
+                <button
+                  type="button"
+                  style={{
+                    ...inkButtonStyle(),
+                    width: '100%',
+                    textAlign: 'center',
+                  }}
+                  onClick={onBack}
+                >
+                  &larr; Library
+                </button>
+              </Stack.Item>
+            )}
           </Stack>
         </Stack.Item>
       )}
@@ -137,9 +149,13 @@ export const RecipeBookSidebar = memo((props: Props) => {
               }}
             />
           </Stack.Item>
-          {!hasCategories && (
+          {!hasCategories && hasBack && (
             <Stack.Item
-              style={{ flexShrink: 0, marginTop: '6px', marginBottom: '6px' }}
+              style={{
+                flexShrink: 0,
+                marginTop: '6px',
+                marginBottom: '6px',
+              }}
             >
               <button
                 type="button"

@@ -4,8 +4,8 @@
 	var/min_ambush = 0
 	var/max_ambush = 150
 	var/fixed_ambush = FALSE // Some region like Underdark cannot be reduced in danger
-	var/lowpop_tick = 3 // How much TP to tick up every 15 min (<= 30 pop)
-	var/highpop_tick = 5 // How much TP to tick up every 15 min (> 30 pop)
+	var/lowpop_tick = 3 // How much TP to tick up every iteration <= 30 pop
+	var/highpop_tick = 5 // How much TP to tick up every iteration > 30 pop
 	var/last_natural_ambush_time = -AMBUSH_REGION_COOLDOWN // Pre-expired so start-of-round doesn't block ambushes
 	var/last_induced_ambush_time = 0 // Time between now and the previous ambush triggered by horn
 	var/list/faction_weights = list()
@@ -23,27 +23,71 @@
 	var/banditry_hoard = 0
 	var/datum/weakref/active_hoard_recovery_ref
 
-/datum/threat_region/New(_region_name, _latent_ambush, _min_ambush, _max_ambush, _fixed_ambush, _lowpop_tick, _highpop_tick, _ambush_budget_pct = AMBUSH_BUDGET_PCT_REGULAR, _faction_weights, _tp_budget_multiplier = 1.0, _allowed_quest_types, _kill_target_floor = 2, _evergreen_target = 0, _delivery_reward_multiplier = 1.0, _payout_multiplier = 1.0, _blockade_travel_fee = 0)
-	region_name = _region_name
-	latent_ambush = _latent_ambush
-	min_ambush = _min_ambush
-	max_ambush = _max_ambush
-	fixed_ambush = _fixed_ambush
-	lowpop_tick = _lowpop_tick
-	highpop_tick = _highpop_tick
-	if(_faction_weights)
+/datum/threat_region/New(
+	_region_name = null,
+	_latent_ambush = null,
+	_min_ambush = null,
+	_max_ambush = null,
+	_fixed_ambush = null,
+	_lowpop_tick = null,
+	_highpop_tick = null,
+	_ambush_budget_pct = null,
+	_faction_weights = null,
+	_tp_budget_multiplier = null,
+	_allowed_quest_types = null,
+	_kill_target_floor = null,
+	_evergreen_target = null,
+	_delivery_reward_multiplier = null,
+	_payout_multiplier = null,
+	_blockade_travel_fee = null
+)
+	. = ..()
+
+	// Supports both old argument-based construction and TA map-template subtypes created with new path().
+	// Do not blindly assign nulls here, or subtype defaults will be wiped during on_map_ready().
+	if(!isnull(_region_name))
+		region_name = _region_name
+	if(!isnull(_latent_ambush))
+		latent_ambush = _latent_ambush
+	if(!isnull(_min_ambush))
+		min_ambush = _min_ambush
+	if(!isnull(_max_ambush))
+		max_ambush = _max_ambush
+	if(!isnull(_fixed_ambush))
+		fixed_ambush = _fixed_ambush
+	if(!isnull(_lowpop_tick))
+		lowpop_tick = _lowpop_tick
+	if(!isnull(_highpop_tick))
+		highpop_tick = _highpop_tick
+	if(!isnull(_ambush_budget_pct))
+		ambush_budget_pct = _ambush_budget_pct
+	if(!isnull(_faction_weights))
 		faction_weights = _faction_weights
-	tp_budget_multiplier = _tp_budget_multiplier
-	delivery_reward_multiplier = _delivery_reward_multiplier
-	payout_multiplier = _payout_multiplier
-	blockade_travel_fee = _blockade_travel_fee
-	ambush_budget_pct = _ambush_budget_pct
-	if(_allowed_quest_types)
+	if(!isnull(_tp_budget_multiplier))
+		tp_budget_multiplier = _tp_budget_multiplier
+	if(!isnull(_delivery_reward_multiplier))
+		delivery_reward_multiplier = _delivery_reward_multiplier
+	if(!isnull(_payout_multiplier))
+		payout_multiplier = _payout_multiplier
+	if(!isnull(_blockade_travel_fee))
+		blockade_travel_fee = _blockade_travel_fee
+	if(!isnull(_allowed_quest_types))
 		allowed_quest_types = _allowed_quest_types
-	else
-		allowed_quest_types = list(QUEST_KILL_EASY, QUEST_CLEAR_OUT, QUEST_RAID, QUEST_BOUNTY, QUEST_COURIER, QUEST_RETRIEVAL, QUEST_RECOVERY, QUEST_NOTORIOUS_BOUNTY)
-	kill_target_floor = _kill_target_floor
-	evergreen_target = _evergreen_target
+	else if(isnull(allowed_quest_types))
+		allowed_quest_types = list(
+			QUEST_KILL_EASY,
+			QUEST_CLEAR_OUT,
+			QUEST_RAID,
+			QUEST_BOUNTY,
+			QUEST_COURIER,
+			QUEST_RETRIEVAL,
+			QUEST_RECOVERY,
+			QUEST_NOTORIOUS_BOUNTY
+		)
+	if(!isnull(_kill_target_floor))
+		kill_target_floor = _kill_target_floor
+	if(!isnull(_evergreen_target))
+		evergreen_target = _evergreen_target
 
 /datum/threat_region/proc/has_active_blockade()
 	for(var/datum/blockade/B as anything in GLOB.active_blockades)

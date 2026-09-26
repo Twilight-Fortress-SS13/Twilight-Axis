@@ -26,6 +26,8 @@
 @include meta.load-css('./themes/azure_lingyue.scss');
 @include meta.load-css('./themes/trey_liam.scss');
 @include meta.load-css('./themes/grimoire.scss');
+@include meta.load-css('./themes/blackstone.scss');
+@include meta.load-css('./themes/ducal_court.scss');
 @include meta.load-css('./themes/parchment.scss');
 @include meta.load-css('./themes/parchment_vellum.scss');
 @include meta.load-css('./themes/parchment_leatherbound.scss');
@@ -37,8 +39,10 @@
 @include meta.load-css('./interfaces/ColorPicker.scss');
 @include meta.load-css('./interfaces/ContractLedger.scss');
 @include meta.load-css('./interfaces/CrewManifest.scss');
+@include meta.load-css('./interfaces/DucalCourt.scss');
 @include meta.load-css('./interfaces/Emojipedia.scss');
 @include meta.load-css('./interfaces/ExperimentConfigure.scss');
+@include meta.load-css('./interfaces/FamilySettingsPanel.scss');
 @include meta.load-css('./interfaces/Fabricator.scss');
 @include meta.load-css('./interfaces/GameMaster.scss');
 @include meta.load-css('./interfaces/HellishRunes.scss');
@@ -56,6 +60,7 @@
 @include meta.load-css('./interfaces/Paper.scss');
 @include meta.load-css('./interfaces/PreferencesMenu.scss');
 @include meta.load-css('./interfaces/RequestManager.scss');
+@include meta.load-css('./interfaces/ResidentManuscript.scss');
 @include meta.load-css('./interfaces/Roulette.scss');
 @include meta.load-css('./interfaces/Safe.scss');
 @include meta.load-css('./interfaces/Techweb.scss');

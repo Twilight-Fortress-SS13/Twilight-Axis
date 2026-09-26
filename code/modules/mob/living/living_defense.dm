@@ -25,10 +25,15 @@
 	// don't feed it into checkarmor (which already ran above and handles null damage fine).
 	var/block_damage = damage || 999
 	var/blocked = 0
-	if(attack_flag in ARMOR_DR_TYPES)
-		// Blunt/Fire/Acid: armor absorbs all HP damage. DR reduces integrity damage to armor (in checkarmor).
+	if(attack_flag in ARMOR_DR_ABSORB_TYPES) //TA EDIT START
+		// Blunt: armor absorbs all HP damage. DR reduces integrity damage to armor (in checkarmor).
 		if(armor_tier > 0)
 			blocked = block_damage
+	else if(attack_flag in ARMOR_DR_PIERCE_TYPES)
+		// Fire/Acid: DR reduces damage, but reduced damage still reaches HP.
+		if(armor_tier > 0)
+			var/dr_mult = 1 / (1 + 0.2 * armor_tier)
+			blocked = block_damage * (1 - dr_mult) //TA EDIT END
 	else
 		// Penetration: tier comparison
 		if(attack_flag != "piercing")
@@ -74,10 +79,19 @@
 				if(dullness_ratio <= SHARPNESS_TIER2_THRESHOLD && armor_tier)	//Our weapon is CHUNKED. What are we PENNING WITH.
 					blocked = block_damage * 10
 
+	break_invisibility_from_combat()
+	return blocked
+
+/mob/living/proc/break_invisibility_from_combat()
+	var/should_update_invis = FALSE
+	if(vars["rogue_sneaking"])
+		mob_timers[MT_FOUNDSNEAK] = world.time
+		should_update_invis = TRUE
 	if(mob_timers[MT_INVISIBILITY] > world.time)
 		mob_timers[MT_INVISIBILITY] = world.time
+		should_update_invis = TRUE
+	if(should_update_invis)
 		update_sneak_invis(reset = TRUE)
-	return blocked
 
 
 /proc/get_pen_info(mob/living/carbon/human/target, mob/living/attacker, obj/item/clothing/used_armor, def_zone, d_type, armor_pen, obj/item/I)
@@ -245,6 +259,44 @@
 		to_chat(attacker, span_danger("My spell was deflected - I'm exposed!"))
 
 /mob/living/bullet_act(obj/projectile/P, def_zone = BODY_ZONE_CHEST)
+
+	if(HAS_TRAIT(src, "ethereal"))//TA EDIT START
+		return BULLET_ACT_FORCE_PIERCE
+
+	if(HAS_TRAIT(src, TRAIT_MAGIC_SHIELD) && P.firer && P.firer != src)
+		var/obj/effect/proc_holder/spell/self/magic_shield/S
+		if(src.status_traits && src.status_traits[TRAIT_MAGIC_SHIELD])
+			for(var/source in src.status_traits[TRAIT_MAGIC_SHIELD])
+				if(istype(source, /obj/effect/proc_holder/spell/self/magic_shield))
+					S = source
+					break
+	
+		if(S && S.active)
+		
+			var/damage_cost = P.damage * S.stamina_damage_ratio
+		
+		
+			if(!src.stamina_add(damage_cost))
+				S.deactivate_shield(src, shattered = TRUE)
+			
+				return ..() 
+		
+		
+			src.visible_message(span_danger("[src.name]'s shield flares, reflecting [P.name] back at [P.firer]!"))
+			playsound(src.loc, 'sound/combat/parry/shield/magicshield (1).ogg', 50, TRUE)
+		
+		
+			var/new_angle = Get_Angle(src, P.firer)
+			new_angle += rand(-10, 10) 
+			P.setAngle(new_angle)
+
+			P.decayedRange = max(0, P.decayedRange - P.reflect_range_decrease)
+			P.range = P.decayedRange
+			P.permutated = list()
+			P.firer = src 
+
+			return BULLET_ACT_FORCE_PIERCE //TA EDIT END
+	
 	if(SEND_SIGNAL(src, COMSIG_ATOM_BULLET_ACT, P, def_zone) & COMPONENT_ATOM_BLOCK_BULLET)
 		return
 	var/aimed_zone = def_zone
@@ -326,6 +378,10 @@
 		return 0
 
 /mob/living/hitby(atom/movable/AM, skipcatch, hitpush = TRUE, blocked = FALSE, datum/thrownthing/throwingdatum, damage_flag = "blunt")
+	
+	if(HAS_TRAIT(src, "ethereal")) //TA EDIT
+		return FALSE 
+	
 	if(istype(AM, /obj/item))
 		var/obj/item/I = AM
 		// Hit the selected zone, or else a random zone centered on the chest
@@ -703,5 +759,3 @@
 		else
 			do_item_attack_animation(A, visual_effect_icon, used_item, animation_type, used_intent)
 	setMovetype(movement_type & ~FLOATING) // If we were without gravity, the bouncing animation got stopped, so we make sure we restart the bouncing after the next movement.
-
-

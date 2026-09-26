@@ -12,7 +12,7 @@
 	outfit_female = null
 	display_order = JDO_WRETCH
 	show_in_credits = FALSE
-	min_pq = 10
+	min_pq = 20
 	max_pq = null
 
 	obfuscated_job = TRUE
@@ -20,15 +20,15 @@
 
 	advclass_cat_rolls = list(CTAG_WRETCH = 20)
 	PQ_boost_divider = 10
-	round_contrib_points = 2
+	round_contrib_points = null
 
 	announce_latejoin = FALSE
 	wanderer_examine = TRUE
 	advjob_examine = TRUE
 	always_show_on_latechoices = TRUE
 	job_reopens_slots_on_death = FALSE
-	same_job_respawn_delay = 1 MINUTES
-	virtue_restrictions = list(/datum/virtue/heretic/zchurch_keyholder) //all wretch classes automatically get this ///
+	same_job_respawn_delay = 30 MINUTES
+	virtue_restrictions = list(/datum/virtue/heretic/zchurch_keyholder) //all wretch classes automatically get this
 	job_traits = list(TRAIT_STEELHEARTED, TRAIT_OUTLAW, TRAIT_HERESIARCH, TRAIT_SELF_SUSTENANCE, TRAIT_ZURCH)
 	job_subclasses = list(
 		/datum/advclass/wretch/licker,
@@ -50,7 +50,7 @@
 		/datum/advclass/wretch/profane_champion,
 		/datum/advclass/wretch/heretic_spellblade,
 		/datum/advclass/wretch/ancient_spellblade,
-		/datum/advclass/wretch/ancient_deathknight,
+	//	/datum/advclass/wretch/ancient_deathknight,
 		/datum/advclass/wretch/slasher,
 		/datum/advclass/wretch/maestro
 	)
@@ -86,11 +86,8 @@
 	if(!C || !C.prefs)
 		return
 	var/list/roleprefs = get_roleprefs(C)
-	var/datum/advclass/favorite = roleprefs["favorite_advclass"] // note that this key is shared between a bunch of different things n is treated specially. if it's set, you'll automatically try to roll that subclass
-	var/favorite_name = favorite ? favorite::name : "Choose"
 	var/HTML = {"
-		<i>You can choose a favorite subclass here. You'll automatically select this subclass on roundstart if possible.</i><br/><br/>
-		<b>Selected class:</b> <a href="?src=[REF(src)];class=1">[favorite_name]</a><br/><br/>
+		[subprefs_subclass_html(C)]
 		<i>Set your [title]-specific bounty here. If a global bounty is set, this will override it.</i><br><i>Any fields set here will not prompt you at roundstart.</i><br/><br/>
 		<b>Bounty Poster:</b> <a href="?src=[REF(src)];poster=1">[roleprefs["bounty_poster_key"]?GLOB.bounty_posters[roleprefs["bounty_poster_key"]]:"Unset"]</a><br/>
 		<b>Bounty Severity:</b> <a href="?src=[REF(src)];severity=1">[roleprefs["bounty_severity_key"]?GLOB.wretch_severities[roleprefs["bounty_severity_key"]]:"Unset"]</a><br/>
@@ -126,10 +123,23 @@
 
 /datum/job/roguetown/wretch/on_round_removal(mob/M)
 	// Respawn delay applies immediately
-	if(same_job_respawn_delay && M.ckey)
+	if(same_job_respawn_delay && M?.ckey)
 		GLOB.job_respawn_delays[M.ckey] = world.time + same_job_respawn_delay
-	// Delayed slot reopen after 1 hour — subclass always reopens, global slot only if garrison criteria met
-	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(wretch_delayed_slot_reopen), M.advjob), 1 HOURS)
+
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(wretch_delayed_slot_reopen), M?.advjob), 1 HOURS)
+
+/proc/wretch_delayed_slot_reopen(advclass_name)
+	if(advclass_name)
+		var/datum/advclass/target_class = SSrole_class_handler.get_advclass_by_name(advclass_name)
+		if(target_class)
+			SSrole_class_handler.adjust_class_amount(target_class, -1)
+
+	var/datum/job/wretch_job = SSjob.GetJob("Wretch")
+	if(!wretch_job)
+		return
+
+	wretch_job.current_positions = max(0, wretch_job.current_positions - 1)
+	update_wretch_slots()
 
 // Proc for wretch to select a bounty
 /proc/wretch_select_bounty(mob/living/carbon/human/H)
@@ -201,10 +211,15 @@
 		to_chat(H, span_danger("You are playing an Antagonist role. By choosing to spawn as a Wretch, you are expected to actively create conflict with other players. Failing to play this role with the appropriate gravitas may result in punishment for Low Roleplay standards."))
 
 /// Returns an assoc list with all intermediate wretch scaling values for admin display.
-/// If override_player_count is provided (e.g. from readied player count at roundstart), use that instead of the live joined list.
 /proc/calculate_wretch_scaling(override_player_count)
 	var/list/result = list()
-	var/player_count = override_player_count || length(GLOB.joined_player_list)
+
+	var/player_count
+	if(isnull(override_player_count))
+		player_count = length(GLOB.joined_player_list)
+	else
+		player_count = override_player_count
+
 	result["player_count"] = player_count
 	var/cap = SSgamemode.current_storyteller?.wretch_slot_cap
 	if(!SSgamemode.allow_vote && !isnull(SSgamemode.admin_slots["Wretch"]))
@@ -259,72 +274,33 @@
 	if(slots >= 10 && cap > 10 && !major_antag_active)
 		tier2_max = min(max(0, combat_count - 10), 5, cap - slots)
 		slots += tier2_max
+
 	result["tier2_extra"] = tier2_max
 	result["final_slots"] = max(0, min(slots, cap))
 
+	// TA EDIT BEGIN НЕРФ ЛОУПОП ВРЕТЧИКОВ)))
+	//как же ща сгорит у каких нибудь любителей заходить раз в 3 месяца, вретчей занерфили блин((9
+	if(SSticker.IsRoundInProgress() && player_count < 40)
+		result["combat_positions_alive"] = SSgamemode.combat_positions_alive
+		result["final_slots"] = max(0, min(result["final_slots"], SSgamemode.combat_positions_alive, cap))
+	// TA EDIT END
+
 	return result
 
-/proc/update_wretch_slots(override_player_count)
+/proc/update_wretch_slots()
 	var/datum/job/wretch_job = SSjob.GetJob("Wretch")
 	if(!wretch_job)
 		return
 	if(wretch_job.admin_slot_override)
 		return
+
+	var/override_player_count = null
+	if(SSticker.current_state == GAME_STATE_PREGAME)
+		override_player_count = length(GLOB.ready_player_list)
+
 	// Admin fine-tuning (the Wretch slot as a scaling cap) is handled inside calculate_wretch_scaling().
 	var/list/scaling = calculate_wretch_scaling(override_player_count)
 	var/slots = max(0, scaling["final_slots"])
-	// Never reduce below current occupancy
+
 	wretch_job.total_positions = max(wretch_job.current_positions, slots)
 	wretch_job.spawn_positions = max(wretch_job.current_positions, slots)
-
-/// Called after 1 hour delay when a wretch leaves the round.
-/// Always reopens the subclass slot. Only reopens the global slot if garrison criteria make sense.
-/proc/wretch_delayed_slot_reopen(advclass_name)
-	// Always reopen the subclass slot
-	if(advclass_name)
-		var/datum/advclass/target_class = SSrole_class_handler.get_advclass_by_name(advclass_name)
-		if(target_class)
-			SSrole_class_handler.adjust_class_amount(target_class, -1)
-
-	var/datum/job/wretch_job = SSjob.GetJob("Wretch")
-	if(!wretch_job)
-		return
-	wretch_job.current_positions = max(0, wretch_job.current_positions - 1)
-	update_scaling_slots()
-
-/// Returns an assoc list with intermediate adventurer scaling values for admin display.
-/// If override_player_count is provided (e.g. from readied player count at roundstart), use that instead of the live joined list.
-/proc/calculate_adventurer_scaling(override_player_count)
-	var/list/result = list()
-	var/player_count = override_player_count || length(GLOB.joined_player_list)
-	result["player_count"] = player_count
-
-	// Adventurer slots absorb the wretch headroom each pantheon forfeits below the original 15-slot ceiling.
-	var/cap = SSgamemode.current_storyteller?.wretch_slot_cap
-	if(isnull(cap))
-		cap = 10
-	var/wretch_offset = max(0, 15 - cap)
-	result["wretch_offset"] = wretch_offset
-
-	var/slots = 20 + wretch_offset
-	if(player_count > 70)
-		slots += floor((player_count - 70) / 10) * 2
-	slots = min(slots, 40 + wretch_offset)
-	result["final_slots"] = slots
-
-	return result
-
-/proc/update_adventurer_slots(override_player_count)
-	var/datum/job/adventurer_job = SSjob.GetJob("Adventurer")
-	if(!adventurer_job)
-		return
-	var/list/scaling = calculate_adventurer_scaling(override_player_count)
-	var/slots = scaling["final_slots"]
-	// Never reduce below current value, so admin-opened slots aren't overwritten.
-	adventurer_job.total_positions = max(adventurer_job.total_positions, slots)
-	adventurer_job.spawn_positions = max(adventurer_job.spawn_positions, slots)
-
-/// Convenience proc to update both wretch and adventurer scaling in one call.
-/proc/update_scaling_slots(override_player_count)
-	update_wretch_slots(override_player_count)
-	update_adventurer_slots(override_player_count)

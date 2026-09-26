@@ -30,12 +30,13 @@ GLOBAL_LIST_EMPTY(prayers)
 	/// Assoc list of miracles it grants. Type = Cleric_Tier
 	var/list/miracles = list()
 	/// List of words that this god considers profane. (Master for all faiths. Inhumen have their own list.)
-	var/list/profane_words = list("zizo","matthios","graggar","baotha","cock","dick","fuck","shit","pussy","cuck","cunt","asshole","pintle","vheslyn")
+	var/list/profane_words = list()
 
 	/// List of traits associated with rank. Trait = Cleric_Tier
 	var/list/traits_tier = list()
 
 	var/datum/storyteller/storyteller
+	var/list/added_verbs
 
 /datum/patron/proc/constant_ui_data()
 	return list(
@@ -54,14 +55,20 @@ GLOBAL_LIST_EMPTY(prayers)
 		add_verb(pious, /mob/living/carbon/human/proc/emote_ffsalute)
 	if(HAS_TRAIT(pious, TRAIT_CABAL))
 		pious.faction |= "cabal"
+		pious.grant_language(/datum/language/undead)
+	for(var/verb in added_verbs)
+		pious.verbs |= verb
 
 /datum/patron/proc/on_loss(mob/living/pious)
 	if (HAS_TRAIT(pious, TRAIT_CABAL))
 		pious.faction -= "cabal"
+		pious.remove_language(/datum/language/undead)
 	if(HAS_TRAIT(pious, TRAIT_XYLIX))
 		pious.remove_language(/datum/language/tricksterscant)
 	for(var/trait in mob_traits)
 		REMOVE_TRAIT(pious, trait, "[type]")
+	for(var/verb in added_verbs)
+		pious.verbs -= verb
 
 /datum/patron/proc/post_equip(mob/living/pious)
 	return
@@ -92,12 +99,13 @@ GLOBAL_LIST_EMPTY(prayers)
 
 /// Called when a patron's follower prays to them.
 /// Returns TRUE if their prayer was heard and the patron was not insulted
-/datum/patron/proc/hear_prayer(mob/living/follower, prayer)
-	if(!follower || !prayer)
+/datum/patron/proc/hear_prayer(mob/living/follower, message)
+	if(!follower || !message)
 		return FALSE
-	if(length(prayer) < 15)
+	if(length(message) < 120) // TA EDIT 15 -> 120
 		to_chat(follower, span_warning("Your prayer is too weak to be considered!"))
 		return FALSE
+	var/prayer = sanitize_hear_message(message)
 	for(var/profanity in profane_words)
 		var/regex/cussjar = regex("([profanity])", "im")
 		if(cussjar.Find(prayer))
@@ -115,14 +123,14 @@ GLOBAL_LIST_EMPTY(prayers)
 	else
 		follower.mob_timers[MT_PSYPRAY] = world.time
 
-	. = TRUE //the prayer has succeeded by this point forward
+	. = TRUE
 	GLOB.prayers |= prayer
 	record_round_statistic(STATS_PRAYERS_MADE)
-
-	for(var/title in (follower.patron.titles + patron_name))
-		if(findtext(prayer, title))
+	for(var/patron_namerus in rusgodnames)
+		var/regex/p_name = regex("([patron_namerus])", "im")
+		if(p_name.Find(prayer))
 			reward_prayer(follower)
-			return .
+	return .
 
 /// The follower has somehow offended the patron and is now being punished.
 /datum/patron/proc/punish_prayer(mob/living/follower)

@@ -339,7 +339,7 @@
 	name = "wooden left leg"
 	desc = "A left leg made of wood."
 	icon = 'icons/roguetown/items/misc.dmi'
-	icon_state = "pr_leg"
+	icon_state = "prleg"
 	resistance_flags = FLAMMABLE
 	obj_flags = CAN_BE_HIT
 	status = BODYPART_ROBOTIC
@@ -432,7 +432,7 @@
 	name = "wooden right leg"
 	desc = "A right leg made of wood."
 	icon = 'icons/roguetown/items/misc.dmi'
-	icon_state = "pr_leg"
+	icon_state = "prleg"
 	resistance_flags = FLAMMABLE
 	obj_flags = CAN_BE_HIT
 	status = BODYPART_ROBOTIC

@@ -60,8 +60,8 @@
 #define SPAN_DWARF "dwarf"
 #define SPAN_ABYSS "abyssal"
 #define SPAN_ELF "elf"
-#define SPAN_CELESTIAL "celestial"
-#define SPAN_RANESHI "raneshi"
+#define SPAN_CELESTIAL "valorian" //TA EDIT
+#define SPAN_RANESHI "sandspeak" //TA EDIT
 #define SPAN_DELF "delf"
 #define SPAN_HELL "hellspeak"
 #define SPAN_GRENZELHOFTIAN "grenzelhoftian"
@@ -80,7 +80,10 @@
 #define SPAN_CAT "cat"			//nyi but file found
 #define SPAN_PULSEDEATH "pulsedeath"
 
-#define LANGUAGE_SPANS list(SPAN_GEN,SPAN_ORATOR, SPAN_DWARF, SPAN_ABYSS, SPAN_ELF, SPAN_CELESTIAL, SPAN_RANESHI, SPAN_DELF, SPAN_HELL, SPAN_GRENZELHOFTIAN, SPAN_OTAVAN, SPAN_ETRUSCAN, SPAN_GRONNIC, SPAN_BEAST, SPAN_ORC, SPAN_DRACONIC, SPAN_KAZENGUNESE, SPAN_LINGYUESE, SPAN_AAVNIC, SPAN_UNDEAD, SPAN_CAT, SPAN_PULSEDEATH, SPAN_OLDAZURE, SPAN_UNDERCOMMON)
+#define SPAN_GYEDZENESE "gyedzenese" //TA EDIT
+#define SPAN_VALORIAN "valorian" //TA EDIT
+
+#define LANGUAGE_SPANS list(SPAN_GEN,SPAN_ORATOR, SPAN_DWARF, SPAN_ABYSS, SPAN_ELF, SPAN_CELESTIAL, SPAN_RANESHI, SPAN_DELF, SPAN_HELL, SPAN_GRENZELHOFTIAN, SPAN_OTAVAN, SPAN_ETRUSCAN, SPAN_GRONNIC, SPAN_BEAST, SPAN_ORC, SPAN_DRACONIC, SPAN_KAZENGUNESE, SPAN_LINGYUESE, SPAN_AAVNIC, SPAN_UNDEAD, SPAN_CAT, SPAN_PULSEDEATH, SPAN_OLDAZURE, SPAN_UNDERCOMMON, SPAN_GYEDZENESE, SPAN_VALORIAN) //TA EDIT
 
 //bitflag #defines for return value of the radio() proc.
 #define ITALICS 1
@@ -101,8 +104,8 @@
 #define LINGHIVE_LINK 3
 
 //Don't set this very much higher then 1024 unless you like inviting people in to dos your server with message spam
-#define MAX_MESSAGE_BIGME		4096
-#define MAX_MESSAGE_LEN			2048
+#define MAX_MESSAGE_BIGME		8192
+#define MAX_MESSAGE_LEN			4096
 #define MAX_NAME_LEN			42
 #define MAX_HERMES_NAME_LEN		80
 #define MAX_BROADCAST_LEN		512
@@ -119,7 +122,7 @@
 #define SANITIZE_FILENAME(text) (GLOB.filename_forbidden_chars.Replace(text, ""))
 /// Simply removes the < and > characters, and limits the length of the message.
 #define STRIP_HTML_SIMPLE(text, limit) (GLOB.angular_brackets.Replace(copytext(text, 1, limit), ""))
-
+#define STRIP_HTML_FULL(text, limit) (GLOB.html_tags.Replace(copytext(text, 1, limit), ""))
 GLOBAL_LIST_INIT(correct_punctuation, list("!" = TRUE, "." = TRUE, "?" = TRUE, "-" = TRUE, "~" = TRUE, \
 											"*" = TRUE, "/" = TRUE, ">" = TRUE, "'" = TRUE, "|" = TRUE, \
 											"," = TRUE, ":" = TRUE, ";" = TRUE, "\"" = TRUE, "+" = TRUE))

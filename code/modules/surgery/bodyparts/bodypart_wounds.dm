@@ -145,7 +145,7 @@
 	var/acheck_dflag = bclass_to_armor_rating(bclass)
 	if(!armor)
 		armor = owner.run_armor_check(zone_precise, acheck_dflag, damage = 0)
-	if(ishuman(owner) && bclass != BCLASS_PICK)
+	if(ishuman(owner) && bclass != BCLASS_PICK && acheck_dflag) // TA EDIT
 		var/mob/living/carbon/human/H = owner
 		var/obj/item/clothing/worn_armor = H.get_best_worn_armor(zone_precise, acheck_dflag)
 		if(worn_armor && !worn_armor.obj_broken)
@@ -603,10 +603,12 @@
 	return FALSE
 
 /// Embeds an object in this bodypart
-/obj/item/bodypart/proc/add_embedded_object(obj/item/embedder, silent = FALSE, crit_message = FALSE, ranged = FALSE)
+/obj/item/bodypart/proc/add_embedded_object(obj/item/embedder, silent = FALSE, crit_message = FALSE, ranged = FALSE, surgery_embed = FALSE)
 	if(!embedder || !can_embed(embedder))
 		return FALSE
-	if(owner && ((owner.status_flags & GODMODE) || HAS_TRAIT(owner, TRAIT_PIERCEIMMUNE)))
+	if(owner && (owner.status_flags & GODMODE))
+		return FALSE
+	if(owner && HAS_TRAIT(owner, TRAIT_PIERCEIMMUNE) && !surgery_embed)
 		return FALSE
 	if(istype(embedder, /obj/item/natural/worms/leech))
 		record_round_statistic(STATS_LEECHES_EMBEDDED)

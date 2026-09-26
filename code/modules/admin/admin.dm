@@ -5,6 +5,13 @@
 		if(check_rights_for(C, R_ADMIN))
 			to_chat(C, msg)
 
+/proc/message_admins_without(msg, toexcl)
+	var/list/adminlist = GLOB.admins - toexcl
+	msg = "<span class=\"admin\"><span class=\"prefix\">ADMIN LOG:</span> <span class=\"message linkify\">[msg]</span></span>"
+	for(var/client/C in adminlist)
+		if(check_rights_for(C, R_ADMIN))
+			to_chat(C, msg)
+
 /proc/spawn_message_admins(msg)
 	msg = "<span class=\"admin\"><span class=\"prefix\">ADMIN LOG:</span> <span class=\"message linkify\">[msg]</span></span>"
 	for(var/client/C in GLOB.admins)
@@ -103,11 +110,11 @@
 		var/idstatus = "<br>ID Status: "
 		if(!M.ckey)
 			idstatus += "No key!"
-		else if(!M.check_agevet())
-			idstatus += "Unverified"
-		else
-			var/vetadmin = LAZYACCESS(GLOB.agevetted_list, M.ckey)
-			idstatus += "<b>Age Verified</b> by [vetadmin]"
+	//	else if(!M.check_agevet())
+	//		idstatus += "Unverified"
+	//	else
+	//		var/vetadmin = LAZYACCESS(GLOB.agevetted_list, M.ckey)
+	//		idstatus += "<b>Age Verified</b> by [vetadmin]"
 		body += idstatus
 
 		//Azure port. Incompatibility.
@@ -157,7 +164,8 @@
 		body += "<A href='?_src_=holder;[HrefToken()];mute=[M.ckey];mute_type=[MUTE_PRAY]'><font color='[(muted & MUTE_PRAY)?"red":"blue"]'>PRAY</font></a> | "
 		body += "<A href='?_src_=holder;[HrefToken()];mute=[M.ckey];mute_type=[MUTE_ADMINHELP]'><font color='[(muted & MUTE_ADMINHELP)?"red":"blue"]'>ADMINHELP</font></a> | "
 		body += "<A href='?_src_=holder;[HrefToken()];mute=[M.ckey];mute_type=[MUTE_DEADCHAT]'><font color='[(muted & MUTE_DEADCHAT)?"red":"blue"]'>DEADCHAT</font></a> | "
-		body += "<A href='?_src_=holder;[HrefToken()];mute=[M.ckey];mute_type=[MUTE_LOOC]'><font color='[(muted & MUTE_LOOC)?"red":"blue"]'>LOOC</font></a>\]"
+		body += "<A href='?_src_=holder;[HrefToken()];mute=[M.ckey];mute_type=[MUTE_LOOC]'><font color='[(muted & MUTE_LOOC)?"red":"blue"]'>LOOC</font></a> | "
+		body += "<A href='?_src_=holder;[HrefToken()];mute=[M.ckey];mute_type=[MUTE_MEDITATE]'><font color='[(muted & MUTE_MEDITATE)?"red":"blue"]'>MENTORHELP</font></a>]"
 		body += "(<A href='?_src_=holder;[HrefToken()];mute=[M.ckey];mute_type=[MUTE_ALL]'><font color='[(muted & MUTE_ALL)?"red":"blue"]'>toggle all</font></a>)"
 
 	body += "<br><br>"
@@ -171,7 +179,9 @@
 	body += "<A href='?_src_=holder;[HrefToken()];subtlemessage=[REF(M)]'>Subtle message</A>"
 	//body += "<A href='?_src_=holder;[HrefToken()];languagemenu=[REF(M)]'>Language Menu</A>"
 	body += "<br><A href='?_src_=holder;[HrefToken()];heal_panel=[REF(M)]'>Heal Panel</A> | "
-	body += "<A href='?_src_=holder;[HrefToken()];inventory_panel=[REF(M)]'>Inventory Panel</A> |"
+	body += "<A href='?_src_=holder;[HrefToken()];inventory_panel=[REF(M)]'>Inventory Panel</A> | " // TA EDIT START
+	if(ishuman(M) || isobserver(M))
+		body += "<A href='?_src_=holder;[HrefToken()];select_equipment=[REF(M)]'>Select Equipment</A> | " // TA EDIT END
 	body += "<A href='?_src_=holder;[HrefToken()];examine_player=[REF(M)]'>Flavor Text</A>"
 
 	body += "</div>"
@@ -291,6 +301,8 @@
 		return
 
 	show_player_panel_next(M)
+	message_admins("Admin [key_name_admin(usr)] checked the player panel of [key_name_admin(M)]!")
+	log_admin("Admin [key_name(usr)] checked the player panel of [key_name_admin(M)]!")
 
 /client/proc/show_player_panel_next(mob/M)
 	holder?.show_player_panel_next(M)
@@ -376,12 +388,15 @@
 
 	var/ckey = LOWER_TEXT(M.ckey)
 	var/admin = LOWER_TEXT(usr.key)
+	var/canonical_ckey = replacetext(replacetext(replacetext(replacetext(LOWER_TEXT(ckey), " ", ""), "_", ""), ".", ""), "-", "")
+	var/folder_prefix = copytext(canonical_ckey, 1, 2)
+	var/full_path = "data/player_saves/[folder_prefix]/[canonical_ckey]/preferences.sav"
 
 	/*if(ckey == admin)
 		to_chat(src, span_boldwarning("That's you!"))
 		return
 	*/
-	if(!fexists("data/player_saves/[copytext(ckey,1,2)]/[ckey]/preferences.sav"))
+	if(!fexists(full_path))
 		to_chat(src, span_boldwarning("User does not exist."))
 		return
 	var/amt2change = input(usr, "How much to modify the PQ by? (20 to -20, or 0 to just add a note)") as null|num
@@ -389,6 +404,9 @@
 		amt2change = CLAMP(amt2change, -20, 20)
 	var/raisin = stripped_input(usr, "State a short reason for this change", "Game Master", "", null)
 	if((!isnull(amt2change) && amt2change != 0) && !raisin)
+		return
+	if(ckey == admin)
+		to_chat(src, span_boldwarning("Самому себе PQ менять нельзя."))
 		return
 	adjust_playerquality(amt2change, ckey, admin, raisin)
 	to_chat(M.client, "<span class=\"admin\"><span class=\"prefix\">ADMIN LOG:</span> <span class=\"message linkify\">Your PQ has been adjusted by [amt2change] by [admin] for reason: [raisin]</span></span>")
@@ -865,6 +883,16 @@
 /client/proc/returntolobby()
 	set category = "Admin.Special"
 	set name = "Back to Lobby"
+
+	if(!mob)
+		return
+
+	if(tgui_alert(usr, "Are you sure you want to return to the lobby? This will remove your current character from the round.", "Back to Lobby", list("Cancel", "Return to Lobby")) != "Return to Lobby")
+		return
+
+	if(!ishuman(mob))
+		mob.returntolobby()
+		return
 
 	var/mob/living/carbon/human/H = mob
 	var/datum/job/mob_job

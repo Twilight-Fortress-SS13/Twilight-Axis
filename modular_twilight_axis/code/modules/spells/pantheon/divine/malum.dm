@@ -1,0 +1,625 @@
+/obj/effect/proc_holder/spell/invoked/TAvigorousexchange
+	name = "Vigorous Exchange"
+	desc = "Restores the target's Energy, twice as effective on someone else."
+	action_icon = 'icons/mob/actions/malummiracles.dmi'
+	overlay_icon = 'icons/mob/actions/malummiracles.dmi'
+	overlay_state = "vigorousexchange"
+	releasedrain = 0
+	chargedrain = 0
+	chargetime = 0
+	warnie = "sydwarning"
+	movement_interrupt = FALSE
+	no_early_release = TRUE
+	req_items = list(/obj/item/clothing/neck/roguetown/psicross)
+	sound = 'sound/items/bsmithfail.ogg'
+	invocations = list("Through flame and ash, let vigor rise, by Malum’s hand, let strength reprise!")
+	invocation_type = "shout"
+	associated_skill = /datum/skill/magic/holy
+	antimagic_allowed = FALSE
+	recharge_time = 3 MINUTES
+	chargetime = 2 SECONDS
+	miracle = TRUE
+	charging_slowdown = 3
+	chargedloop = /datum/looping_sound/invokegen
+	devotion_cost = 30
+
+/obj/effect/proc_holder/spell/invoked/TAheatmetal
+	name = "Heat Metal"
+	desc= "Damages Armor, forces target to drop a metallic weapon, heats up an ingot in tongs or smelts a single item."
+	action_icon = 'icons/mob/actions/malummiracles.dmi'
+	overlay_icon = 'icons/mob/actions/malummiracles.dmi'
+	overlay_state = "heatmetal"
+	releasedrain = 30
+	chargedrain = 0
+	chargetime = 0
+	range = 15
+	warnie = "sydwarning"
+	movement_interrupt = FALSE
+	no_early_release = TRUE
+	req_items = list(/obj/item/clothing/neck/roguetown/psicross)
+	sound = 'sound/items/bsmithfail.ogg'
+	invocations = list("With heat I wield, with flame I claim, Let metal serve in Malum's name!")
+	invocation_type = "shout"
+	associated_skill = /datum/skill/magic/holy
+	antimagic_allowed = FALSE
+	recharge_time = 1 MINUTES
+	chargetime = 2 SECONDS
+	miracle = TRUE
+	charging_slowdown = 3
+	chargedloop = /datum/looping_sound/invokegen
+	devotion_cost = 40
+
+/obj/effect/proc_holder/spell/invoked/TAheatmetal/cast(list/targets, mob/user = usr)
+	. = ..()
+	var/list/nosmeltore = list(/obj/item/rogueore/coal)
+	var/datum/effect_system/spark_spread/sparks = new()
+	var/target
+	for(var/i in targets)
+		target = i
+	if (!target)
+		return
+	if(target in nosmeltore)
+		return
+	if (istype(target, /obj/item))
+		handle_item_smelting_TA(target, user, sparks, nosmeltore)
+	else if (iscarbon(target))
+		if(spell_guard_check(target, TRUE))
+			var/mob/living/carbon/C = target
+			C.visible_message(span_warning("[target] resists the searing heat!"))
+			return
+		handle_living_entity_TA(target, user, nosmeltore)
+
+/obj/effect/proc_holder/spell/invoked/TAhammerfall
+	name = "Hammerfall"
+	desc = "Damages structures in an area while possibly knocking down mobs in the area."
+	action_icon = 'icons/mob/actions/malummiracles.dmi'
+	overlay_icon = 'icons/mob/actions/malummiracles.dmi'
+	overlay_state = "hammerfall"
+	releasedrain = 30
+	chargedrain = 0
+	chargetime = 0
+	range = 15
+	warnie = "sydwarning"
+	movement_interrupt = FALSE
+	no_early_release = TRUE
+	req_items = list(/obj/item/clothing/neck/roguetown/psicross)
+	sound = 'sound/items/bsmithfail.ogg'
+	invocations = list("By molten might and hammer's weight, in Malum’s flame, the earth shall quake!")
+	invocation_type = "shout"
+	associated_skill = /datum/skill/magic/holy
+	antimagic_allowed = TRUE
+	recharge_time = 5 MINUTES
+	chargetime = 3 SECONDS // Used to be 2 seconds but we don't want a race condition and chain casting
+	miracle = TRUE
+	charging_slowdown = 3
+	chargedloop = /datum/looping_sound/invokegen
+	devotion_cost = 80
+
+/obj/effect/proc_holder/spell/invoked/TAhammerfall/cast(list/targets, mob/user = usr)
+	var/turf/fallzone = null
+	var/skill = user.get_skill_level(/datum/skill/magic/holy)
+	var/damage = 500 + (skill * 100) //So weak damage for this cooldown. Upped
+	var/const/radius = 1 //Radius of the spell
+	var/const/shakeradius = 7 //Radius of the quake
+	var/diceroll = 0
+	var/const/dc = 42 //Code will roll 2d20 and add target's perception and Speed then compare to this to see if they fall down or not. 42 Means they need to roll 2x 20 with Speed and Perception at I
+	var/const/delay = 2 SECONDS // Delay between the ground marking appearing and the effect playing.
+	fallzone = get_turf(targets[1])
+	if(!fallzone)
+		return
+	else
+		show_visible_message_TA(usr, "[usr] raises their arm, conjuring a hammer wreathed in molten fire. As they hurl it toward the ground, the earth trembles under its impact, shaking its very foundations!", "You raise your arm, conjuring a hammer wreathed in molten fire. As you hurl it toward the ground, the earth trembles under its impact, shaking its very foundations!")
+	for (var/turf/open/visual in view(radius, fallzone))
+		var/obj/effect/temp_visual/lavastaff/Lava = new /obj/effect/temp_visual/lavastaff(visual)
+		animate(Lava, alpha = 255, time = 5)
+	sleep(delay)
+	for (var/mob/living/carbon/screenshaken in view(shakeradius, fallzone))
+		shake_camera(screenshaken, 5, 5)
+	for (var/mob/living/carbon/shaken in view(radius, fallzone))
+		if(spell_guard_check(shaken, TRUE))
+			shaken.visible_message(span_warning("[shaken] braces against the quake!"))
+			continue
+		diceroll = roll(2,20) + shaken.STAPER + shaken.STASPD
+		if (diceroll > dc)
+			shaken.apply_effect(5 SECONDS, EFFECT_IMMOBILIZE, 0)
+			show_visible_message_TA(shaken, null, "The ground quakes but I manage to keep my footing.")
+		else
+			shaken.apply_effect(5 SECONDS, EFFECT_KNOCKDOWN, 0)
+			show_visible_message_TA(shaken, null, "The ground quakes, making me fall over.")
+	for (var/obj/structure/damaged in view(radius, fallzone))
+		if(!istype(damaged, /obj/structure/flora/newbranch))
+			damaged.take_damage(damage,BRUTE,"blunt",1)
+	for (var/turf/closed/wall/damagedwalls in view(radius, fallzone))
+		damagedwalls.take_damage(damage,BRUTE,"blunt",1)
+	for (var/turf/closed/mineral/aoemining in view(radius, fallzone))
+		aoemining.lastminer = usr
+		aoemining.take_damage(damage*5,BRUTE,"blunt",1)
+	return TRUE
+
+/obj/effect/temp_visual/lavastaff
+	icon_state = "lavastaff_warn"
+	duration = 50
+
+/obj/effect/proc_holder/spell/invoked/TAcraftercovenant
+	name = "The Crafter’s Covenant"
+	desc = "Melt a pile of valuables and convert them into a single item. Sacrifice is accepted even if it's not valuable enough to make anything."
+	action_icon = 'icons/mob/actions/malummiracles.dmi'
+	overlay_icon = 'icons/mob/actions/malummiracles.dmi'
+	overlay_state = "craftercovenant"
+	releasedrain = 30
+	chargedrain = 0
+	chargetime = 0
+	range = 1
+	warnie = "sydwarning"
+	movement_interrupt = TRUE
+	no_early_release = TRUE
+	req_items = list(/obj/item/clothing/neck/roguetown/psicross)
+	sound = 'sound/items/bsmithfail.ogg'
+	invocations = list("Coins to ash, flame to form, in Malum’s name, let creation be born!")
+	invocation_type = "shout"
+	associated_skill = /datum/skill/magic/holy
+	antimagic_allowed = FALSE
+	recharge_time = 25 MINUTES
+	chargetime = 10 SECONDS
+	miracle = TRUE
+	charging_slowdown = 3
+	chargedloop = /datum/looping_sound/invokegen
+	devotion_cost = 100
+
+/proc/show_visible_message_TA(mob/user, text, selftext)
+	var/text_to_send = addtext("<font color='yellow'>", text, "</font>")
+	var/selftext_to_send = addtext("<font color='yellow'>", selftext, "</font>")
+	user.visible_message(text_to_send, selftext_to_send)
+
+/proc/handle_item_smelting_TA(obj/item/target, mob/user, datum/effect_system/spark_spread/sparks, list/nosmeltore)
+	if (!target.smeltresult) return
+	var/obj/item/itemtospawn = target.smeltresult
+	show_visible_message_TA(user, "After [user]'s incantation, [target] glows brightly and melts into an ingot.", null)
+	new itemtospawn(target.loc)
+	sparks.set_up(1, 1, target.loc)
+	sparks.start()
+	qdel(target)
+
+/proc/handle_living_entity_TA(mob/target, mob/user, list/nosmeltore)
+	var/obj/item/targeteditem = get_targeted_item_TA(user, target)
+	if (!targeteditem || targeteditem.smeltresult == /obj/item/ash || target.anti_magic_check(TRUE,TRUE))
+		show_visible_message_TA(user, "After their incantation, [user] points at [target] but it seems to have no effect.", "After your incantation, you point at [target] but it seems to have no effect.")
+		return
+	if (istype(targeteditem, /obj/item/rogueweapon/tongs))
+		handle_tongs_TA(targeteditem, user)
+	else if (should_heat_in_hand_TA(user, target, targeteditem, nosmeltore))
+		handle_heating_in_hand_TA(target, targeteditem, user)
+	else
+		handle_heating_equipped_TA(target, targeteditem, user)
+
+/proc/get_targeted_item_TA(mob/user, mob/target)
+    var/target_item
+    switch(user.zone_selected)
+        if (BODY_ZONE_PRECISE_R_HAND)
+            target_item = target.held_items[2]
+        if (BODY_ZONE_PRECISE_L_HAND)
+            target_item = target.held_items[1]
+        if (BODY_ZONE_HEAD)
+            target_item = target.get_item_by_slot(SLOT_HEAD)
+        if (BODY_ZONE_PRECISE_EARS)
+            target_item = target.get_item_by_slot(SLOT_HEAD)
+        if (BODY_ZONE_CHEST)
+            if(target.get_item_by_slot(SLOT_ARMOR))
+                target_item = target.get_item_by_slot(SLOT_ARMOR)
+            else if (target.get_item_by_slot(SLOT_SHIRT))
+                target_item = target.get_item_by_slot(SLOT_SHIRT)
+        if (BODY_ZONE_PRECISE_NECK)
+            target_item = target.get_item_by_slot(SLOT_NECK)
+        if (BODY_ZONE_PRECISE_R_EYE)
+            target_item = target.get_item_by_slot(ITEM_SLOT_MASK)
+        if ( BODY_ZONE_PRECISE_L_EYE)
+            target_item = target.get_item_by_slot(ITEM_SLOT_MASK)
+        if (BODY_ZONE_PRECISE_NOSE)
+            target_item = target.get_item_by_slot(ITEM_SLOT_MASK)
+        if (BODY_ZONE_PRECISE_MOUTH)
+            target_item = target.get_item_by_slot(ITEM_SLOT_MOUTH)
+        if (BODY_ZONE_L_ARM)
+            target_item = target.get_item_by_slot(ITEM_SLOT_WRISTS)
+        if (BODY_ZONE_R_ARM)
+            target_item = target.get_item_by_slot(ITEM_SLOT_WRISTS)
+        if (BODY_ZONE_L_LEG)
+            target_item = target.get_item_by_slot(ITEM_SLOT_PANTS)
+        if (BODY_ZONE_R_LEG)
+            target_item = target.get_item_by_slot(ITEM_SLOT_PANTS)
+        if (BODY_ZONE_PRECISE_GROIN)
+            target_item = target.get_item_by_slot(ITEM_SLOT_PANTS)
+        if (BODY_ZONE_PRECISE_R_FOOT)
+            target_item = target.get_item_by_slot(ITEM_SLOT_SHOES)
+        if (BODY_ZONE_PRECISE_L_FOOT)
+            target_item = target.get_item_by_slot(ITEM_SLOT_SHOES)
+    return target_item
+
+/proc/handle_tongs_TA(obj/item/rogueweapon/tongs/T, mob/user) //Stole the code from smithing.
+	if (!T.hingot) return
+	var/tyme = world.time
+	T.hott = tyme
+	addtimer(CALLBACK(T, TYPE_PROC_REF(/obj/item/rogueweapon/tongs, make_unhot), tyme), 100)
+	T.update_icon()
+	show_visible_message_TA(user, "After [user]'s incantation, the ingot inside [T] starts glowing.", "After your incantation, the ingot inside [T] starts glowing.")
+
+/proc/handle_heating_in_hand_TA(mob/living/carbon/target, obj/item/targeteditem, mob/user)
+	var/datum/effect_system/spark_spread/sparks = new()
+	apply_damage_to_hands_TA(target, user)
+	target.dropItemToGround(targeteditem)
+	show_visible_message_TA(target, "[target]'s [targeteditem.name] glows brightly, searing their flesh.", "Your [targeteditem.name] glows brightly, It burns!")
+	target.emote("painscream")
+	playsound(target.loc, 'sound/misc/frying.ogg', 100, FALSE, -1)
+	sparks.set_up(1, 1, target.loc)
+	sparks.start()
+
+/proc/should_heat_in_hand_TA(mob/user, mob/target, obj/item/targeteditem, list/nosmeltore)
+	return ((user.zone_selected == BODY_ZONE_PRECISE_L_HAND && target.held_items[1]) || (user.zone_selected == BODY_ZONE_PRECISE_R_HAND && target.held_items[2])) && !(targeteditem in nosmeltore) && targeteditem.smeltresult
+
+/proc/apply_damage_to_hands_TA(mob/living/carbon/target, mob/user)
+	var/obj/item/bodypart/affecting
+	var/const/adth_damage_to_apply = 10 //How much damage should burning your hand before dropping the item do.
+	if (user.zone_selected == BODY_ZONE_PRECISE_R_HAND)
+		affecting = target.get_bodypart(BODY_ZONE_R_ARM)
+	else if (user.zone_selected == BODY_ZONE_PRECISE_L_HAND)
+		affecting = target.get_bodypart(BODY_ZONE_L_ARM)
+	affecting.receive_damage(0, adth_damage_to_apply)
+
+/proc/handle_heating_equipped_TA(mob/living/carbon/target, obj/item/clothing/targeteditem, mob/user)
+	var/obj/item/armor = target.get_item_by_slot(SLOT_ARMOR)
+	var/obj/item/shirt = target.get_item_by_slot(SLOT_SHIRT)
+	var/armor_can_heat = armor && armor.smeltresult && armor.smeltresult != /obj/item/ash
+	var/shirt_can_heat = shirt && shirt.smeltresult && shirt.smeltresult != /obj/item/ash // Full damage if no shirt
+	var/damage_to_apply = 20 // How much damage should your armor burning you should do.
+	if (user.zone_selected == BODY_ZONE_CHEST)
+		if (armor_can_heat && (!shirt_can_heat && shirt))
+			damage_to_apply = damage_to_apply / 2 // Halve the damage if only armor can heat but shirt can't.
+		if (targeteditem == shirt & armor_can_heat) //this looks redundant but it serves to make sure the damage is doubled if both shirt and armor are metallic.
+			apply_damage_if_covered_TA(target, list(BODY_ZONE_CHEST), armor, CHEST, damage_to_apply)
+		else if (targeteditem == armor & shirt_can_heat)
+			apply_damage_if_covered_TA(target, list(BODY_ZONE_CHEST), shirt, CHEST, damage_to_apply)
+	apply_damage_if_covered_TA(target, list(BODY_ZONE_CHEST), targeteditem, CHEST, damage_to_apply)
+	apply_damage_if_covered_TA(target, list(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM), targeteditem, ARMS|HANDS, damage_to_apply)
+	apply_damage_if_covered_TA(target, list(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG), targeteditem, GROIN|LEGS|FEET, damage_to_apply)
+	apply_damage_if_covered_TA(target, list(BODY_ZONE_HEAD), targeteditem, HEAD|HAIR|NECK|NOSE|MOUTH|EARS|EYES, damage_to_apply)
+	show_visible_message_TA(target, "[target]'s [targeteditem.name] glows brightly, searing their flesh.", "My [targeteditem.name] glows brightly, It burns!")
+	playsound(target.loc, 'sound/misc/frying.ogg', 100, FALSE, -1)
+
+/proc/apply_damage_if_covered_TA(mob/living/carbon/target, list/body_zones, obj/item/clothing/targeteditem, mask, damage)
+	var/datum/effect_system/spark_spread/sparks = new()
+	var/obj/item/bodypart/affecting = null
+	for (var/zone in body_zones)
+	{
+		if (targeteditem.body_parts_covered & mask)
+			affecting = target.get_bodypart(zone)
+		if (affecting)
+			affecting.receive_damage(0, damage)
+			sparks.set_up(1, 1, target.loc)
+			sparks.start()
+	}
+
+/obj/effect/proc_holder/spell/invoked/TAvigorousexchange/cast(list/targets, mob/living/carbon/user = usr)
+	. = ..()
+	var/const/starminatoregen = 500 // How much stamina should the spell give back to the caster.
+	var/mob/target = targets[1]
+	if (!iscarbon(target))
+		return
+	if (target == user)
+		target.energy_add(starminatoregen)
+		show_visible_message_TA(usr, "As [user] intones the incantation, vibrant flames swirl around them.", "As you intone the incantation, vibrant flames swirl around you. You feel refreshed.")
+	else if (user.energy > (starminatoregen * 2))
+		user.energy_add(-(starminatoregen * 2))
+		target.energy_add(starminatoregen * 2)
+		show_visible_message_TA(target, "As [user] intones the incantation, vibrant flames swirl around them, a dance of energy flowing towards [target].", "As [user] intones the incantation, vibrant flames swirl around them, a dance of energy flowing towards you. You feel refreshed.")
+
+/obj/effect/proc_holder/spell/invoked/TAcraftercovenant/cast(list/targets, mob/user = usr)
+	. = ..()
+	var/tithe = 0
+	var/const/divine_tax = 1.3
+	var/turf/altar = get_turf(targets[1])
+	var/datum/effect_system/spark_spread/sparks = new()
+	var/list/sacrifices = list()
+	var/list/item_map = list()
+	var/list/item_descriptions = list()
+	if(!altar)
+		revert_cast(user)
+		return
+
+	for(var/obj/item/sacrifice in altar.contents)
+		var/value = sacrifice.get_real_price()
+		if(value <= 0)
+			continue
+		tithe += value
+		sacrifices += sacrifice
+
+	var/buyprice = tithe / divine_tax
+
+	for(var/datum/anvil_recipe/recipe as anything in GLOB.anvil_recipes)
+		if(recipe.hides_from_books || !recipe.created_item)
+			continue
+		var/item_type = recipe.created_item
+		if(!ispath(item_type, /obj/item))
+			continue
+		var/reward_price = GLOB.derived_sellprices[item_type]
+		if(!reward_price || reward_price > buyprice)
+			continue
+		var/obj/item/item_path = item_type
+		var/item_name = initial(item_path.name)
+		if(!item_name)
+			continue
+		var/display_name = "[item_name] ([reward_price])"
+		item_map[display_name] = item_type
+		item_descriptions[display_name] = "Cost: [reward_price] mammon."
+
+	var/list/extra_rewards = list(
+		/obj/item/rogue/instrument/flute = 10,
+		/obj/item/rogue/instrument/drum = 10,
+		/obj/item/rogue/instrument/harp = 20,
+		/obj/item/rogue/instrument/lute = 20,
+		/obj/item/rogue/instrument/guitar = 30,
+		/obj/item/rogue/instrument/accord = 30,
+		/obj/item/riddleofsteel = 400,
+		/obj/item/dmusicbox = 500,
+	)
+
+	for(var/item_type in extra_rewards)
+		var/reward_price = GLOB.derived_sellprices[item_type] || extra_rewards[item_type]
+		if(reward_price > buyprice)
+			continue
+		var/obj/item/item_path = item_type
+		var/item_name = initial(item_path.name)
+		if(!item_name)
+			continue
+		var/display_name = "[item_name] ([reward_price])"
+		item_map[display_name] = item_type
+		item_descriptions[display_name] = "Cost: [reward_price] mammon."
+
+	if(!length(item_map))
+		show_visible_message_TA(usr, "A wave of heat washes over the pile as [user] speaks Malum's name. The pile of valuables crumble into dust.", "A wave of heat washes over the pile as you speak Malum's name. The pile of valuables crumble into dust. Malum accepted your sacrifice. Yet it seems it wasn't enough.")
+		revert_cast(user)
+		return
+
+	var/itemchoice = tgui_input_list(user, "Choose a boon. The offering is worth [tithe] mammon; Malum accepts 30% as tribute.", "The Crafter's Covenant", item_map, null, 0, GLOB.tgui_always_state, item_descriptions)
+	if(!itemchoice)
+		revert_cast(user)
+		return
+
+	var/item_type = item_map[itemchoice]
+	if(!ispath(item_type, /obj/item))
+		revert_cast(user)
+		return
+
+	for(var/obj/item/sacrifice as anything in sacrifices)
+		if(sacrifice.loc == altar)
+			qdel(sacrifice)
+
+	new item_type(altar)
+	sparks.set_up(1, 1, altar)
+	sparks.start()
+	show_visible_message_TA(usr, "A wave of heat washes over the pile as [user] speaks Malum's name. The pile of valuables crumble into dust, only for the dust to reform into an item as if reborn from the flames. Malum has accepted the offering.", "A wave of heat washes over the pile as you speak Malum's name. The pile of valuables crumble into dust, only for the dust to reform into an item as if reborn from the flames. Malum has accepted the offering.")
+
+//T0
+
+/obj/effect/proc_holder/spell/invoked/TAmalum_inspiration //this whole thing, barely works and fixing it causes only further issues
+	name = "Malum's Inspiration"
+	desc = "Bless the target, Malum's Bless grants the energy to work and learn further!"
+	action_icon = 'icons/mob/actions/malummiracles.dmi'
+	overlay_icon = 'icons/mob/actions/malummiracles.dmi'
+	overlay_state = "rework"
+	releasedrain = 15
+	chargedrain = 0
+	chargetime = 0
+	range = 15
+	warnie = "sydwarning"
+	movement_interrupt = FALSE
+	chargedloop = null
+	req_items = list(/obj/item/clothing/neck/roguetown/psicross)
+	sound = 'sound/magic/heal.ogg'
+	invocations = list("Да благословит тебя Малум работать день и ночь, и будет жар в твоих глазах, и магма в сердце!")
+	invocation_type = INVOCATION_SHOUT
+	associated_skill = /datum/skill/magic/holy
+	antimagic_allowed = TRUE
+	recharge_time = 2 MINUTES
+	miracle = TRUE
+	devotion_cost = 50
+
+/obj/effect/proc_holder/spell/invoked/TAmalum_inspiration/cast(list/targets, mob/user = usr)
+	. = ..()
+	if(ishuman(targets[1]))
+		var/mob/living/carbon/human/H = targets[1]
+		if(H.has_status_effect(/datum/status_effect/buff/TAmalum_inspiration))
+			to_chat(user, span_notice("They have been blessed by Malum already."))
+			revert_cast(user)
+			return FALSE
+		if(H.stat == DEAD)
+			to_chat(user, span_notice("They are dead."))
+			revert_cast(user)
+			return FALSE
+		var/associated_skill_level = H.get_skill_level(associated_skill)
+		H.apply_status_effect(/datum/status_effect/buff/TAmalum_inspiration, associated_skill_level)
+
+/datum/status_effect/buff/TAmalum_inspiration
+	id = "malum_inspiration"
+	alert_type = /atom/movable/screen/alert/status_effect/malum_inspiration
+	effectedstats = list(STATKEY_WIL = 3,STATKEY_INT = 4,STATKEY_CON = -2,STATKEY_SPD = -1) // It's kind of harmful to work so much time!
+	duration = 1 MINUTES
+
+/datum/status_effect/buff/TAmalum_inspiration/on_creation(mob/living/new_owner, associated_skill_level)
+	if(isnum(associated_skill_level))
+		var/new_duration = associated_skill_level * 1 MINUTES
+		duration = new_duration
+	return ..()
+
+/atom/movable/screen/alert/status_effect/malum_inspiration
+	name = "Malum's Inspiration"
+	desc = "Malum blesses you to keep working through fatigue and pain."
+	icon = 'icons/mob/actions/malummiracles.dmi'
+	icon_state = "rework"
+
+/obj/effect/proc_holder/spell/self/TArepair
+	name = "Order: Repair"
+	desc = "Stand and fix all your metallic equipment"
+	action_icon = 'icons/mob/actions/malummiracles.dmi'
+	overlay_icon = 'icons/mob/actions/malummiracles.dmi'
+	overlay_state = "repair"
+	releasedrain = 30
+	chargedrain = 0
+	chargetime = 0
+	range = 7
+	warnie = "sydwarning"
+	req_items = list(/obj/item/clothing/neck/roguetown/psicross)
+	sound = 'sound/magic/timestop.ogg'
+	invocations = list("Repair!")
+	invocation_type = "shout"
+	associated_skill = /datum/skill/magic/holy
+	antimagic_allowed = TRUE
+	recharge_time = 20 SECONDS
+	miracle = TRUE
+	devotion_cost = 30
+	var/rrange = 0
+
+/obj/effect/proc_holder/spell/self/TArepair/cast(mob/living/carbon/human/user)
+	var/skill = user.get_skill_level(/datum/skill/magic/holy)
+	var/repair_points = 200 * skill
+	var/one_fix_points = 50 + (skill * 10)
+	var/cost = 40 - (skill * 5)
+	for(var/obj/item/I in range(rrange, user)) //items on usertill and user
+		var/dist = get_dist(I, user)
+		if(repair_points <= 0 || (repair_points - one_fix_points) <= 0)
+			repair_points = 0
+			return FALSE
+		if(dist > 1)
+			continue
+		if(!I.smeltresult) //only metal items.
+			continue
+		if(I.smeltresult == /obj/item/ash && I.smeltresult == /obj/item/rogueore/coal) //not clotch and wood.
+			continue
+		if(I.max_integrity <= I.obj_integrity)
+			continue
+		if(!do_after(user, 50))
+			repair_points = 0
+			return FALSE
+		I.obj_integrity += one_fix_points
+		I.visible_message(span_info("[I] glows in a faint mending light."))
+		user.devotion?.update_devotion(-cost)
+		if(cost != 0)
+			to_chat(user, "<font color='purple'>I lose [cost] devotion!</font>")
+		if(I.max_integrity <= I.obj_integrity)
+			if(I.obj_broken)
+				I.obj_fix()
+			if(I.body_parts_covered_dynamic != I.body_parts_covered)
+				I.repair_coverage()
+			if(I.max_integrity < I.obj_integrity)
+				I.obj_integrity = I.max_integrity
+			I.visible_message(span_info("[I]'s mend together, completely."))
+			continue
+		if((user.devotion?.devotion - cost) < 0)
+			to_chat(user, span_warning("I don't have enough devotion!"))
+			return FALSE
+		cast(user)
+	revert_cast()
+	return FALSE
+
+/obj/effect/proc_holder/spell/invoked/TArestoration
+	name = "Order: Restoration"
+	desc = "Restore integrity of any structure."
+	action_icon = 'icons/mob/actions/malummiracles.dmi'
+	overlay_icon = 'icons/mob/actions/malummiracles.dmi'
+	overlay_state = "restoration"
+	releasedrain = 30
+	chargedrain = 0
+	chargetime = 0
+	range = 7
+	warnie = "sydwarning"
+	req_items = list(/obj/item/clothing/neck/roguetown/psicross)
+	sound = 'sound/magic/timestop.ogg'
+	invocations = list("Repair!")
+	invocation_type = "shout"
+	associated_skill = /datum/skill/magic/holy
+	antimagic_allowed = TRUE
+	recharge_time = 20 SECONDS
+	miracle = TRUE
+	devotion_cost = 50
+
+/obj/effect/proc_holder/spell/invoked/TArestoration/cast(list/targets, mob/living/user)
+	var/skill = user.get_skill_level(/datum/skill/magic/holy)
+	var/repair_points = 50 * skill
+	var/starget = targets[1]
+	if(isobj(starget))
+		if(istype(starget, /obj/item))
+			revert_cast()
+			return FALSE
+		var/obj/structure/S = starget
+		if(S.obj_integrity >= S.max_integrity)
+			revert_cast()
+			return FALSE
+		if(istype(S, /obj/structure/mineral_door/))
+			var/obj/structure/mineral_door/door = S
+			to_chat(user, span_warning("[door.obj_integrity]"))
+			user.visible_message(span_notice("[user] starts concentrate on [door.name]."),
+			span_notice("I start concentrate on [door.name]."))
+			playsound(user, 'sound/misc/wood_saw.ogg', 100, TRUE)
+			if(!do_after(user, (150 / skill), target = door))
+				return
+			playsound(user, 'sound/misc/wood_saw.ogg', 100, TRUE)
+			door.icon_state = "[door.base_state]"
+			door.density = TRUE
+			door.opacity = TRUE
+			door.brokenstate = FALSE
+			door.obj_broken = FALSE
+			door.repair_state = 0
+			if((S.obj_integrity + repair_points) > S.max_integrity)
+				var/need_points = (S.max_integrity - S.obj_integrity)
+				S.obj_integrity += need_points
+			else
+				S.obj_integrity += repair_points
+			user.visible_message(span_notice("[user] point on [door.name] and repair this."), \
+			span_notice("I point on [door.name]. Malum blessing!"))
+			return TRUE
+
+		if(istype(S, /obj/structure/roguewindow/))
+			var/obj/structure/roguewindow/window = S
+			if(window.obj_integrity < window.max_integrity)
+				to_chat(user, span_warning("[window.obj_integrity]"))
+				user.visible_message(span_notice("[user] starts concentrate on [window.name]."),
+				span_notice("I start concentrate on [window.name]."))
+				playsound(user, 'sound/misc/wood_saw.ogg', 100, TRUE)
+				if(!do_after(user, (150 / skill), target = window))
+					return
+				playsound(user, 'sound/misc/wood_saw.ogg', 100, TRUE)
+				window.icon_state = "[window.base_state]"
+				window.density = TRUE
+				window.brokenstate = FALSE
+				window.obj_broken = FALSE
+				if((S.obj_integrity + repair_points) > S.max_integrity)
+					var/need_points = (S.max_integrity - S.obj_integrity)
+					S.obj_integrity += need_points
+				else
+					S.obj_integrity += repair_points
+				user.visible_message(span_notice("[user] point on [window.name] and repair this."), \
+				span_notice("I point on [window.name]. Malum blessing!"))
+				return TRUE
+		else
+			if(!do_after(user, (150 / skill), target = S))
+				return
+			if((S.obj_integrity + repair_points) > S.max_integrity)
+				var/need_points = (S.max_integrity - S.obj_integrity)
+				S.obj_integrity += need_points
+			else
+				S.obj_integrity += repair_points
+			return TRUE
+	if(get_turf(starget))
+		var/turf/closed/wall/mineral/W = targets[1]
+		if(W.turf_integrity >= W.max_integrity)
+			revert_cast()
+			return FALSE
+		if(!do_after(user, (150 / skill), target = W))
+			return
+		if((W.turf_integrity + repair_points) > W.max_integrity)
+			var/need_points = (W.max_integrity - W.turf_integrity)
+			W.turf_integrity += need_points
+		else
+			W.turf_integrity += repair_points
+		return TRUE
+	revert_cast()
+	return FALSE
+

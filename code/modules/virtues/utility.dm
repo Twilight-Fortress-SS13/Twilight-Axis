@@ -4,7 +4,7 @@
 	ui_fa_icon = "crown"
 	restricted = TRUE
 	max_choices = 1
-	races = list(/datum/species/construct, /datum/species/dullahan)
+	races = list(/datum/species/construct, /datum/species/dullahan, /datum/species/ooze) //TA EDIT
 	added_traits = list(TRAIT_NOBLE, TRAIT_EXPERT_HUNTER)
 	added_skills = list(list(/datum/skill/misc/reading, 1, 6))
 	added_stashed_items = list("Hefty Coinpurse" = /obj/item/storage/belt/rogue/pouch/coins/virtuepouch)
@@ -78,6 +78,7 @@
 						record_round_statistic(STATS_MAMMONS_DEPOSITED, rand(80, 120))
 			if(NOTABLE_RESIDENCY)
 				ADD_TRAIT(recipient, TRAIT_RESIDENT, TRAIT_VIRTUE)
+				recipient.mind?.special_items["Грамота горожанина"] = /obj/item/book/granter/resident_manuscript/commoner
 				if(recipient.mind)
 					for(var/X in (GLOB.peasant_positions + GLOB.burgher_positions + GLOB.retinue_positions + GLOB.garrison_positions + GLOB.noble_positions + GLOB.inquisition_positions))
 						for(var/datum/mind/MF in get_minds(X))
@@ -138,7 +139,7 @@
 	choice_costs = list(0, 0, 0, 2, 4)
 	extra_choices = list(
 	SOCIALITE_BEAUTIFUL,
-	SOCIALITE_MASSAGE,
+//	SOCIALITE_MASSAGE,
 	SOCIALITE_NUTCRACKER,
 	SOCIALITE_EMPATH,
 	SOCIALITE_PERFORMER,
@@ -177,9 +178,9 @@
 	..()
 	for(var/choice in picked_choices)
 		switch(choice)
-			if(SOCIALITE_MASSAGE)
-				if(recipient.mind)
-					recipient.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/massage)
+		//	if(SOCIALITE_MASSAGE)
+		//		if(recipient.mind)
+		//			recipient.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/massage)
 			if(SOCIALITE_BEAUTIFUL)
 				if(isdullahan(recipient))
 					ADD_TRAIT(recipient, TRAIT_BEAUTIFUL_UNCANNY, TRAIT_VIRTUE)
@@ -240,8 +241,9 @@
 		"Orcish" = /datum/language/orcish,
 		"Infernal" = /datum/language/hellspeak,
 		"Draconic" = /datum/language/draconic,
-		"Celestial" = /datum/language/celestial,
-		"Ranesheni" = /datum/language/raneshi,
+		"Valorian" = /datum/language/valorian, //TA EDIT
+		"Sama'glos" = /datum/language/raneshi, //TA EDIT
+		"Gyedzenese" = /datum/language/gyedzenese, //TA EDIT
 		"Grenzelhoftian" = /datum/language/grenzelhoftian,
 		"Kazengunese" = /datum/language/kazengunese,
 		"Lingyuese" = /datum/language/lingyuese,

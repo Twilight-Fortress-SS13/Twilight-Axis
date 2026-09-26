@@ -49,7 +49,7 @@
 		/datum/advclass/vagabond_accursed
 	)
 	has_subprefs = TRUE
-	default_subprefs = list("bounty_poster_key" = null, "bounty_severity_key" = null, "my_crime" = null, "favorite_advclass" = null)
+	default_subprefs = list("bounty_poster_key" = null, "bounty_severity_key" = null, "my_crime" = null)
 
 /datum/job/roguetown/vagabond/Topic(href, list/href_list)
 	var/client/C = usr.client
@@ -78,11 +78,8 @@
 	if(!C || !C.prefs)
 		return
 	var/list/roleprefs = get_roleprefs(C)
-	var/datum/advclass/favorite = roleprefs["favorite_advclass"]
-	var/favorite_name = favorite ? favorite::name : "Choose"
 	var/HTML = {"
-		<i>You can choose a favorite subclass here. You'll automatically select this subclass on roundstart if possible.</i><br/><br/>
-		<b>Selected class:</b> <a href="?src=[REF(src)];class=1">[favorite_name]</a><br/>
+		[subprefs_subclass_html(C)]
 		<i>Set your [title]-specific bounty here. Only applies to the Wanted subclass. If a global bounty is set, this will override it.</i><br><i>Any fields set here will not prompt you at roundstart.</i><br/><br/>
 		<b>Bounty Poster:</b> <a href="?src=[REF(src)];poster=1">[roleprefs["bounty_poster_key"]?GLOB.bounty_posters[roleprefs["bounty_poster_key"]]:"Unset"]</a><br/>
 		<b>Bounty Severity:</b> <a href="?src=[REF(src)];severity=1">[roleprefs["bounty_severity_key"]?GLOB.vagabond_severities[roleprefs["bounty_severity_key"]]:"Unset"]</a><br/>

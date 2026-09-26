@@ -2,6 +2,7 @@
 // All transitions go through these helpers. distribute_daily_payments and the debt-skim
 // path read treasury_state but never mutate it.
 
+
 /datum/controller/subsystem/treasury/proc/is_in_receivership()
 	return treasury_state == TREASURY_BANKRUPTCY
 
@@ -19,10 +20,10 @@
 	record_round_statistic(STATS_ARREARS_DECLARED, 1)
 	// Direct credit so the loan itself isn't immediately skimmed against the debt we just registered.
 	discretionary_fund.balance += loan_amount
-	log_fund_entry(new /datum/treasury_entry("mint", null, discretionary_fund, loan_amount, "Arrears advance from the Azurian Trading Company"))
+	log_fund_entry(new /datum/treasury_entry("mint", null, discretionary_fund, loan_amount, "Arrears advance from [ta_economy_trade_company_the()]"))
 	priority_announce(
-		"The Crown's coffers ran dry at payroll. The Burghers of Azuria, by their standing pledge, advance [loan_amount]m at no interest to cover the day's wages. Should the Crown fail again on the morrow, the realm enters sequestration.",
-		"THE BURGHERS LEND",
+		"[ta_economy_authority_capital()]'s coffers ran dry at payroll. [ta_economy_burghers_capital()], by their standing pledge, advance [loan_amount]m at no interest to cover the day's wages. Should [ta_economy_authority_lower()] fail again on the morrow, the realm enters sequestration.",
+		ta_economy_burghers_lend_title(),
 		'sound/misc/royal_decree2.ogg',
 		"Captain",
 	)
@@ -43,8 +44,7 @@
 	else if(discretionary_fund.balance < BANKRUPTCY_OPERATING_FLOOR)
 		var/topup = BANKRUPTCY_OPERATING_FLOOR - discretionary_fund.balance
 		discretionary_fund.balance = BANKRUPTCY_OPERATING_FLOOR
-		log_fund_entry(new /datum/treasury_entry("mint", null, discretionary_fund, topup, "Sequestration: operating reserve from the Azurian Trading Company"))
-
+		log_fund_entry(new /datum/treasury_entry("mint", null, discretionary_fund, topup, "Sequestration: operating reserve from [ta_economy_trade_company_the()]"))
 	// Existing arrears debt is rolled into the new sequestration debt rather than dropped,
 	// so the Crown doesn't escape the smaller obligation by failing harder.
 	var/new_debt = BANKRUPTCY_DEBT_FLAT
@@ -57,7 +57,7 @@
 	suspend_wages_for_bankruptcy()
 
 	priority_announce(
-		"Following seizure of [atc_seizure_blurb()] against the Crown's outstanding obligations, the Azurian Trading Company - most blessed, most devout servant of Malum the Worker and Abyssor the Dreamer - has graciously advanced an interest-free reserve of [BANKRUPTCY_OPERATING_FLOOR]m in exchange for a debt of [new_debt]m to the Company. Until the debt is repaid in full, the Company holds the sequestered revenues of the realm and farms the customs and salt tolls in perpetuity; the stockpile and trade-engine pass to its hand, that the orderly operation of commerce may be assured for the common weal. Salaries stand suspended; all Charters but the Golden Bull are dissolved.",
+		"Following seizure of [atc_seizure_blurb()] against [ta_economy_authority_lower()]'s outstanding obligations, [ta_economy_trade_company_the()] - servant of [ta_economy_company_patron_gods()] - has advanced an interest-free reserve of [BANKRUPTCY_OPERATING_FLOOR]m in exchange for a debt of [new_debt]m to the Company. Until the debt is repaid in full, the Company holds the sequestered revenues of the realm and farms the customs and salt tolls in perpetuity; the stockpile and trade-engine pass to its hand, that the orderly operation of commerce may be assured for the common weal. Salaries stand suspended; all Charters but the Golden Bull are dissolved.",
 		"SEQUESTRATION DECLARED",
 		'sound/misc/royal_decree.ogg',
 		"Captain",
@@ -75,7 +75,7 @@
 		if(!account || account.wages_suspended)
 			continue
 		account.wages_suspended = TRUE
-		to_chat(owner, span_danger("My wages have been suspended after the Crown's sequestration. They will resume when the realm recovers."))
+		to_chat(owner, span_danger("My wages have been suspended after [ta_economy_authority_lower()]'s sequestration. They will resume when the realm recovers."))
 
 /datum/controller/subsystem/treasury/proc/resume_wages_after_bankruptcy()
 	var/list/payments = steward_machine?.daily_payments
@@ -87,7 +87,7 @@
 			continue
 		account.wages_suspended = FALSE
 		if(payments && payments[owner.job] > 0)
-			to_chat(owner, span_notice("My wages have been reinstated as the Crown's sequestration lifts."))
+			to_chat(owner, span_notice("My wages have been reinstated as [ta_economy_authority_lower()]'s sequestration lifts."))
 
 /datum/controller/subsystem/treasury/proc/clear_treasury_debt_state()
 	switch(treasury_state)
@@ -95,8 +95,8 @@
 			if(atc_loan_arrears_consumed)
 				atc_loan_arrears_consumed = FALSE
 				priority_announce(
-					"The Crown's debt to the Azurian Trading Company is settled. The Burghers' grace stands restored.",
-					"ATC LOAN SETTLED",
+					"[ta_economy_authority_capital()]'s debt to [ta_economy_trade_company_the()] is settled. [ta_economy_burghers_capital()]' grace stands restored.",
+					ta_economy_loan_settled_title(),
 					'sound/misc/royal_decree2.ogg',
 					"Captain",
 				)
@@ -111,8 +111,8 @@
 	treasury_state = TREASURY_NORMAL
 	atc_loan_arrears_consumed = FALSE
 	priority_announce(
-		"The Crown has settled its arrears with the Burghers. The realm is solvent once more.",
-		"THE BURGHERS PAID",
+		"[ta_economy_authority_capital()] has settled its arrears with [ta_economy_burghers_lower()]. The realm is solvent once more.",
+		ta_economy_burghers_paid_title(),
 		'sound/misc/royal_decree2.ogg',
 		"Captain",
 	)
@@ -121,22 +121,19 @@
 	if(treasury_state != TREASURY_BANKRUPTCY)
 		return
 	treasury_state = TREASURY_NORMAL
-
 	// The skim leaves the purse at exactly the operating floor; top up to the recovery target
 	// so the Crown has working capital to resume.
 	if(discretionary_fund.balance < BANKRUPTCY_RECOVERY_RESET)
 		var/topup = BANKRUPTCY_RECOVERY_RESET - discretionary_fund.balance
 		discretionary_fund.balance = BANKRUPTCY_RECOVERY_RESET
 		log_fund_entry(new /datum/treasury_entry("mint", null, discretionary_fund, topup, "Sequestration lifted: working capital"))
-
 	resume_wages_after_bankruptcy()
 	// Trade configuration intentionally NOT restored - re-tuning it is part of the cost of failure.
 	bankruptcy_concession_picks = BANKRUPTCY_CONCESSION_PICKS
 	atc_loan_arrears_consumed = FALSE
 	GLOB.azure_round_stats[STATS_TREASURY_DEBT_OUTSTANDING] = 0
-
 	priority_announce(
-		"The Azurian Trading Company releases the Crown's commerce. Wages resume on the morrow. The Lord may, by ancient prerogative, restore up to [BANKRUPTCY_CONCESSION_PICKS] of the suspended Charters at once; all others must wait the customary span between proclamations.",
+		"[ta_economy_trade_company_the()] releases [ta_economy_authority_lower()]'s commerce. Wages resume on the morrow. The [ta_economy_ruler_title()] may, by ancient prerogative, restore up to [BANKRUPTCY_CONCESSION_PICKS] of the suspended Charters at once; all others must wait the customary span between proclamations.",
 		"SEQUESTRATION LIFTED",
 		'sound/misc/royal_decree.ogg',
 		"Captain",
@@ -214,7 +211,7 @@
 	return "Unknown"
 
 /// Properties the Azurian Trading Company "seizes" against the Crown's debts on bankruptcy entry.
-/// Two or three are picked at random for the sequestration announcement. 
+/// Two or three are picked at random for the sequestration announcement.
 GLOBAL_LIST_INIT(atc_seizure_inventory, list(
 	"the Lord's gilded bathing-tub",
 	"a brace of falcons from the royal mews",
@@ -253,7 +250,7 @@ GLOBAL_LIST_INIT(atc_seizure_inventory, list(
 /proc/atc_seizure_blurb()
 	var/list/picks = list()
 	var/count = rand(2, 3)
-	var/list/pool = GLOB.atc_seizure_inventory.Copy()
+	var/list/pool = ta_economy_seizure_inventory()
 	for(var/i in 1 to count)
 		if(!length(pool))
 			break
@@ -284,7 +281,7 @@ GLOBAL_LIST_INIT(atc_seizure_inventory, list(
 	if(treasury_state == TREASURY_BANKRUPTCY)
 		return "The Company administers commerce. No further loans until sequestration lifts."
 	if(GLOB.dayspassed >= ATC_LOAN_CLOSED_DAY)
-		return "The Guilds clerk is out of office. The loan window has closed for the week."
+		return "The trade clerk is out of office. The loan window has closed for the week."
 	if(atc_loan_arrears_consumed)
 		return "A prior advance stands unpaid. The Company refuses a second loan until the first is settled."
 	return null
@@ -303,12 +300,12 @@ GLOBAL_LIST_INIT(atc_seizure_inventory, list(
 	atc_loan_arrears_consumed = TRUE
 	// Direct credit so the principal isn't immediately skimmed against the debt we just registered.
 	discretionary_fund.balance += amount
-	log_fund_entry(new /datum/treasury_entry("mint", null, discretionary_fund, amount, "ATC emergency loan (principal)"))
+	log_fund_entry(new /datum/treasury_entry("mint", null, discretionary_fund, amount, "Trading company emergency loan (principal)"))
 	priority_announce(
-		"The Crown takes an advance of [amount]m from the Azurian Trading Company at the customary one-quarter interest, registering a debt of [debt_owed]m. The arrears grace stands forfeit; should the Crown miss its next payroll, the realm enters sequestration without warning.",
-		"THE CROWN BORROWS",
+		"[ta_economy_authority_capital()] takes an advance of [amount]m from [ta_economy_trade_company_the()] at the customary one-quarter interest, registering a debt of [debt_owed]m. The arrears grace stands forfeit; should [ta_economy_authority_lower()] miss its next payroll, the realm enters sequestration without warning.",
+		ta_economy_borrows_title(),
 		'sound/misc/royal_decree.ogg',
 		"Captain",
 	)
-	log_game("ATC LOAN: [applicant ? key_name(applicant) : "system"] drew [amount]m principal from the Azurian Trading Company; debt of [debt_owed]m registered")
+	log_game("TRADING COMPANY LOAN: [applicant ? key_name(applicant) : "system"] drew [amount]m principal from [ta_economy_trade_company_the()]; debt of [debt_owed]m registered")
 	return TRUE

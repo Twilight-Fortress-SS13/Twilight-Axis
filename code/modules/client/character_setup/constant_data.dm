@@ -15,7 +15,6 @@
 		"MIN_VOICE_PITCH" = MIN_VOICE_PITCH,
 		"MAX_VOICE_PITCH" = MAX_VOICE_PITCH,
 		// Lists
-		"barksounds" = get_barksounds(),
 		"charflaws" = get_charflaws(),
 		"classes" = get_classes(),
 		"combat_music" = get_combat_music(),
@@ -51,13 +50,6 @@ Add a new override in your modular folder that looks like this:
 	return data
 */
 
-/datum/asset/json/preferences/proc/get_barksounds()
-	. = list()
-	for(var/id in GLOB.bark_list)
-		var/datum/bark/B = GLOB.bark_list[id]
-		if(B::ignore)
-			continue
-		. += B::name
 
 /datum/asset/json/preferences/proc/get_charflaws()
 	. = list()

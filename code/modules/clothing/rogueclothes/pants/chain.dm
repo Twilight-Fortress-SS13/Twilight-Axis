@@ -195,7 +195,7 @@
 	name = "layer a cloth hose atop iron chain hosen"
 	result = list(/obj/item/clothing/under/roguetown/chainlegs/iron/hose/dyeable)
 	reqs = list(/obj/item/clothing/under/roguetown/tights/hose = 1,
-				/obj/item/clothing/under/roguetown/chainlegs/iron = 1)
+	            /obj/item/clothing/under/roguetown/chainlegs/iron/hose = 1) // TA EDIT
 	craftdiff = 0
 	req_table = TRUE
 	bypass_dupe_test = TRUE

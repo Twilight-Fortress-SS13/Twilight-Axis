@@ -11,13 +11,14 @@
 	selection_color = JCOLOR_INQUISITION
 	outfit = /datum/outfit/job/roguetown/absolver
 	display_order = JDO_ABSOLVER
-	min_pq = 3
+	min_pq = 13
 	max_pq = null
 	round_contrib_points = 2
 	wanderer_examine = FALSE
 	advjob_examine = FALSE
 	give_bank_account = 15
 	vice_restrictions = list(/datum/charflaw/silverweakness)
+	same_job_respawn_delay = 30 MINUTES
 
 	job_traits = list(
 		TRAIT_NOPAINSTUN,
@@ -78,6 +79,7 @@
 	if(ishuman(L))
 		var/mob/living/carbon/human/H = L
 		if(H.mind)
+			H.mind.AddSpell(new /datum/action/cooldown/spell/touch/asperges) //TA EDIT
 			H.mind.AddSpell(new /datum/action/cooldown/spell/psydon/persist)
 			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/psydonlux_tamper)
 			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/psydonabsolve)
@@ -115,5 +117,3 @@
 		)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T4, passive_gain = CLERIC_REGEN_ABSOLVER, start_maxed = TRUE) // PSYDONIAN MIRACLE-WORKER. LUX-MERGING FREEK.
-	if(!istype(H.client?.prefs.virtue_origin, /datum/virtue/origin/azuria))
-		change_origin(H, /datum/virtue/origin/otava, "Holy order") //presume that Otavan origin is a good default if people have misclicked their origin in setup or w/e

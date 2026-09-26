@@ -33,11 +33,27 @@ All effects don't start immediately, but rather get worse over time; the rate is
 */
 
 
+/mob/living/carbon/proc/has_booze() // TA EDIT START
+	if(!reagents)
+		return FALSE
+	for(var/datum/reagent/consumable/ethanol/booze in reagents.reagent_list)
+		if(booze.volume > 0)
+			return TRUE
+	return FALSE // TA EDIT END
+
 /datum/reagent/consumable/ethanol/on_mob_life(mob/living/carbon/C)
 	if(C.drunkenness < volume * boozepwr * ALCOHOL_THRESHOLD_MODIFIER || boozepwr < 0)
 		var/booze_power = boozepwr
-		C.drunkenness = max((C.drunkenness + (sqrt(volume) * booze_power * ALCOHOL_RATE)), 0) //Volume, power, and server alcohol rate effect how quickly one gets drunk
-	if(C.blood_volume < BLOOD_VOLUME_NORMAL && !holder.has_reagent(/datum/reagent/water))
+		var/alcohol_rate = ALCOHOL_RATE // TA EDIT START
+		var/obj/item/organ/liver/liver = C.getorganslot(ORGAN_SLOT_LIVER)
+		if(liver)
+			alcohol_rate *= max(liver.alcohol_tolerance / ALCOHOL_RATE, 0.2)
+		else
+			alcohol_rate *= 2
+		if(HAS_TRAIT(C, TRAIT_ALCOHOL_TOLERANCE))
+			alcohol_rate *= 0.5
+		C.drunkenness = max((C.drunkenness + (sqrt(volume) * booze_power * alcohol_rate)), 0) //Volume, power, and server alcohol rate effect how quickly one gets drunk
+	if(C.blood_volume < BLOOD_VOLUME_NORMAL && !holder.has_reagent(/datum/reagent/water)) // TA EDIT END
 		C.blood_volume = min(C.blood_volume + ALCOHOL_BLOOD_RESTORE, BLOOD_VOLUME_NORMAL)
 //		if(boozepwr > 0)
 //			var/obj/item/organ/liver/L = C.getorganslot(ORGAN_SLOT_LIVER)

@@ -88,11 +88,11 @@
 						LAZYREMOVE(contained_items, I)
 						I.forceMove(get_turf(user))
 						playsound(user, pick('sound/items/ingot_collect1.ogg', 'sound/items/ingot_collect2.ogg'), 100, TRUE)
-					if(user.mind && isliving(user) && istype(I, /obj/item/ingot))
-						var/obj/item/ingot/ING = I
-						if(ING.smelted && ING.smeltresult)
-							var/mob/living/L = user
-							user.mind.add_sleep_experience(/datum/skill/craft/smelting, L.STAINT * 2, FALSE)
+						if(user.mind && isliving(user) && istype(I, /obj/item/ingot))
+							var/obj/item/ingot/ING = I
+							if(ING.smelted && ING.smeltresult)
+								var/mob/living/L = user
+								user.mind.add_sleep_experience(/datum/skill/craft/smelting, L.STAINT * 2, FALSE)
 			else
 				var/obj/item/item_to_remove = contained_items[contained_items.len]
 				contained_items -= item_to_remove
@@ -126,8 +126,10 @@
 
 	if(attacking_item.firefuel)
 		. = ..()
+		// TA EDIT START
 		if(!attacking_item || QDELING(attacking_item) || attacking_item.loc != user) //Tries to use the item as fuel. ..() returns true even if it does get consumed so we have to loc check.
 			return
+		// TA EDIT END
 
 	if(attacking_item.smeltresult)
 		add_item(attacking_item, user) // Adds the item to the smelter's contained_items list, if it can be smelted.

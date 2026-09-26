@@ -55,6 +55,10 @@
   - rscadd: slowclap emote
   - bugfix: briar's curse now works on onehanded/unwieldable weapons
 2026-06-02:
+  Antoonij:
+  - bugfix: "\u043B\u0438\u0448\u043D\u0438\u0435 \u0437\u0430\u043F\u0440\u0435\u0449\
+      \u0435\u043D\u043D\u044B\u0435 \u0440\u0430\u0441\u044B \u0432 \u0440\u043E\u043B\
+      \u044F\u0445 \u043D\u0430 \u0440\u043E\u043A\u0445\u0438\u043B\u043B\u0435"
   FeniaFox:
   - bugfix: Fixed various helmets not respecting trait locks properly.
   - balance: Squire Errants now spawn with brush and polishing cream instead of tongs.
@@ -147,6 +151,39 @@
       ascendants as I am not privvy to their balance.
   Ryan180602:
   - bugfix: optimise rain
+  SillyMoff:
+  - bugfix: "\u041F\u043E\u0444\u0438\u043A\u0448\u0435\u043D \u0440\u0438\u0442\u0443\
+      \u0430\u043B \u0431\u0430\u043E\u0442\u044B \u0438 \u0441\u043F\u0435\u043B\u043B\
+      \ \u043D\u0430 \u043A\u0440\u0430\u0436\u0443 \u043B\u044E\u043A\u0441\u0430"
+  UEDCommander:
+  - balance: "\u0421\u0432\u0438\u043D\u0446\u043E\u0432\u0430\u044F \u043F\u0443\u043B\
+      \u044F - +20 \u0443\u0440\u043E\u043D\u0430"
+  - balance: "\u041C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u044B\u0439\
+      \ \u0437\u0430\u043F\u0430\u0441 \u043F\u0443\u043B\u044C \u0432 \u0444\u0430\
+      \u0440\u0435\u0442\u0440\u0435 4 -> 6"
+  - balance: "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D \u0432\u0442\u043E\u0440\
+      \u0438\u0447\u043D\u044B\u0439 \u0443\u0440\u043E\u043D \u043E\u0442 \u043E\u0433\
+      \u043D\u044F \u0441\u0432\u0438\u043D\u0446\u043E\u0432\u044B\u043C \u043F\u0443\
+      \u043B\u044F\u043C, \u0441\u0435\u0440\u0435\u0431\u0440\u044F\u043D\u044B\u043C\
+      \ \u043F\u0443\u043B\u044F\u043C, \u043A\u0430\u0440\u0442\u0435\u0447\u0438\
+      . \u041E\u0441\u0442\u0430\u0432\u043B\u044F\u0435\u0442 \u043E\u0436\u043E\u0433\
+      \u0438 \u0438 \u0441\u043D\u0438\u0436\u0430\u0435\u0442\u0441\u044F \u0437\u0430\
+      \u0449\u0438\u0442\u043E\u0439 \u0431\u0440\u043E\u043D\u0438 \u043E\u0442 \u043E\
+      \u0433\u043D\u044F."
+  - balance: "\u041C\u043D\u043E\u0436\u0438\u0442\u0435\u043B\u044C \u0443\u0440\u043E\
+      \u043D\u0430 \u0443 \u0414\u0443\u043C\u0441\u0434\u0430\u0435 1 -> 1.5"
+  - balance: "\u0420\u0430\u0437\u043C\u0435\u0440 \u043F\u043E\u044F\u0441\u0430\
+      \ \u0441 \u043A\u043E\u0431\u0443\u0440\u043E\u0439 2\u04452 -> 3x3"
+  Vladmar11:
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D \u043F\u043E\u0444\
+      \u0438\u0433\u0438\u0437\u043C \u043F\u0443\u043B\u044C \u043D\u0430 \u0431\u0440\
+      \u043E\u043D\u044E, \u0431\u0440\u043E\u043D\u044F \u0441\u043D\u043E\u0432\u0430\
+      \ \u0440\u0435\u0436\u0435\u0442 \u0443\u0440\u043E\u043D \u043E\u0442 \u043F\
+      \u0443\u043B\u044C \u0438 \u043F\u043E\u043B\u0443\u0447\u0430\u0435\u0442 \u043E\
+      \u0442 \u043D\u0438\u0445 \u0434\u0430\u043C\u0430\u0433"
+  - rscadd: "HIGH+ \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442 \u0434\u043B\
+      \u044F \u0434\u043E\u043D\u0430\u0442\u0435\u0440\u043E\u0432 \u043E\u0442 \u0422\
+      3"
   WeNeedMorePhoron:
   - rscadd: Renamed and repathed the old "Cooking" book, which was left unfinished,
       to a Brewing book
@@ -185,12 +222,26 @@
   - bugfix: fixed vice tracking, hopefully
   changelingonberry:
   - rscadd: Maestro Bard Wretch class
+  namenlos66:
+  - bugfix: "\u041F\u043E\u0444\u0438\u043A\u0448\u0435\u043D\u0430 \u0430\u043D\u043E\
+      \u043D\u0438\u043C\u043D\u043E\u0441\u0442\u044C \u0430\u0434\u043C\u0438\u043D\
+      \u0438\u0441\u0442\u0440\u0430\u0442\u043E\u0440\u0430 \u0447\u0435\u0440\u0435\
+      \u0437 \u0441\u0442\u0435\u043B\u0441-\u043C\u043E\u0434 \u0438 \u0430\u043D\
+      \u043E\u043D\u0438\u043C\u043D\u043E\u0441\u0442\u044C \u0422\u0413\u0423\u0418\
+      -\u043F\u0430\u043D\u0435\u043B\u044C\u043A\u0438 \u0442\u0438\u043A\u0435\u0442\
+      \u043E\u0432."
   radarseas:
   - balance: portal goblins are slightly tougher, can use specials and always spawn
       with armor.
   - balance: due to respawnability + no shutdown nor cap, latejoin goblins still have
       worse stats.
   - bugfix: no expert skill gobins from latejoining ancient issues. F U C K.
+  sadsadpart-cyber:
+  - bugfix: "\u041F\u043E\u043F\u044B\u0442\u043A\u0430 \u043F\u043E\u0447\u0438\u043D\
+      \u043A\u0438 \u043F\u0435\u043D\u0438\u044F"
+  - bugfix: "\u0410\u043A\u0446\u0435\u043D\u0442\u044B \u0440\u0430\u0431\u043E\u0442\
+      \u0430\u044E\u0442 \u0441\u043E \u0437\u043D\u0430\u043A\u0430\u043C\u0438 \u043F\
+      \u0440\u0435\u043F\u0438\u043D\u0430\u043D\u0438\u044F"
   sakke03:
   - balance: Maneaters are no longer revealed by walking over them in cases where
       they won't attack
@@ -222,6 +273,11 @@
 2026-06-06:
   Ryan180602:
   - bugfix: weeping cross now needs you to be a psydonite to work.
+  Vladmar11:
+  - bugfix: "\u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442 \u0441\u043B\
+      \u043E\u043C\u0430\u043D\u043D\u044B\u0435 \u0432\u0438\u0440\u0442\u0443\u0435\
+      \ \u0432 \u043F\u0440\u0435\u0444\u0435\u043D\u0441\u0430\u0445 \u043F\u0435\
+      \u0440\u0441\u043E\u043D\u0430\u0436\u0435\u0439"
 2026-06-07:
   FeniaFox:
   - rscadd: Added leather helms to tailor silverface as sidegrade vs headbands, trading
@@ -262,6 +318,10 @@
   - rscadd: Added wicker cloak to loadout
   Randall:
   - rscadd: Added the Stecher to Battlemaster's loadout options
+  Vladmar11:
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442 \u043D\u0435\
+      \ \u0441\u043E\u0432\u0441\u0435\u043C \u0440\u0430\u0431\u043E\u0447\u0438\u0439\
+      \ \u0431\u0430\u043D \u0430\u043D\u0442\u0430\u0433\u043E\u0432"
   WeNeedMorePhoron:
   - rscadd: Added noc shine as a three steps distillation recipe
   - rscdel: Removed the Z level swim feature and swimming tab. The two test ponds
@@ -363,6 +423,12 @@
       to use them.
   scarrmu:
   - rscadd: light armour option for sojourner + jman sneak
+2026-06-09:
+  Corde50:
+  - rscadd: "\u041A\u0440\u0430\u0441\u043D\u044B\u0435/\u0437\u0435\u043B\u0435\u043D\
+      \u044B\u0435/\u043F\u0443\u0440\u043F\u0443\u0440\u043D\u044B\u0435 \u043D\u0430\
+      \u0441\u0442\u0435\u043D\u043D\u044B\u0435 \u0441\u0432\u0435\u0447\u043A\u0438\
+      \ \u0438 standing fire"
 2026-06-10:
   BurpleBineapple:
   - balance: The longsword's alt-grip intents have been modified. Daze and Impale
@@ -423,6 +489,9 @@
 2026-06-11:
   FreeStylaLT:
   - balance: Wave Animation is now longer
+  Quinalion:
+  - spellcheck: "\u0414\u043E\u0440\u0430\u0431\u043E\u0442\u043A\u0430 \u043F\u0435\
+      \u0440\u0435\u0432\u043E\u0434\u0430."
   Ryan180602:
   - balance: poleaxe stab has 2-tile sweetspot and is delayed. but has 1x damfactor
       instead of 0.9x.
@@ -438,6 +507,10 @@
   - admin: flavor text button in player panel
   kiwedespars:
   - bugfix: miracles properly have cd against someone with an embed
+  namenlos66:
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u043E\u0442\
+      \u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u0441\u043E\u043E\u0431\
+      \u0449\u0435\u043D\u0438\u0439 \u0432 \u0442\u0438\u043A\u0435\u0442\u0435."
 2026-06-12:
   KatTheFox:
   - rscadd: Revenants can now select from skin, fur, scale, feather, or chitin descriptors,
@@ -463,10 +536,8 @@
   - rscadd: Gem staves now have unique sprites again
   Ollanius:
   - balance: Adds the 'Death's Door' debuff, which temporarily applies the 'DNR' trait
-      - and a heavy mood decrease - while active. It lasts for about ten-to-fifteen
-      minutes, and provides a modest mood increase (alongside removing the 'DNR' trait)
-      upon completion. Currently timed to expire alongside the 'Revival Sickness'
-      debuff.
+      - and a heavy mood decrease - while active. It lasts for one hour, and provides
+      a modest mood increase alongside removing the 'DNR' trait upon completion.
   - balance: Most forms of resurrection (barring Absolves and other certain methods)
       now have an internal timer added to them. If the timer reaches five minutes
       without the target-in-question dying again, a 'deathmark' is applied. Deathmarks
@@ -601,7 +672,28 @@
   - rscadd: Ports the Loose Straps vice from Lokaka21, who Ported Free's original
       Armor fling code. Its a vice that makes all armor be flung off 2-3 tiles on
       integrity break, and makes it easier to strip you.  So free vice for bath attendants.
+  Vladmar11:
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0430 \u043F\u0440\
+      \u043E\u0431\u043B\u0435\u043C\u0430 \u0441 \u043D\u0435\u0432\u043E\u0437\u043C\
+      \u043E\u0436\u043D\u043E\u0441\u0442\u044C\u044E \u043F\u043E\u043C\u044B\u0442\
+      \u044C\u0441\u044F \u043E\u0431\u043B\u0430\u0434\u0430\u0442\u0435\u043B\u044F\
+      \u043C \u0440\u0435\u0433\u0435\u043D\u0435\u0440\u0430\u0442\u0438\u0432\u043D\
+      \u043E\u0439 \u043A\u043E\u0436\u0438"
+  - bugfix: "\u0424\u0438\u043A\u0441\u0438\u0442\u0441\u044F \u0437\u0430\u0433\u0440\
+      \u0443\u0437\u043A\u0430 \u0434\u0430\u043D\u0436\u0430"
+  - rscadd: "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D \u0437\u0438\u0431\u0430\
+      \u043D\u0442\u0438\u0439\u0441\u043A\u0438\u0439 \u0430\u043A\u0446\u0435\u043D\
+      \u0442"
+  - bugfix: "\u0422\u0435\u043F\u0435\u0440\u044C \u043F\u0438\u043D\u043A\u0438 \u0438\
+      \ \u0443\u043A\u0443\u0441\u044B \u0440\u0430\u0441\u043A\u0440\u044B\u0432\u0430\
+      \u044E\u0442 \u043D\u0435\u0432\u0438\u0434\u0438\u043C\u043E\u0441\u0442\u044C"
+  - bugfix: "\u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D \u0432\u043E\u0440\
+      \u0443\u044E\u0449\u0438\u0439 \u0441\u043A\u0432\u043E\u0437\u044C \u0441\u0442\
+      \u0435\u043D\u044B \u043A\u0440\u044E\u043A"
 2026-06-15:
+  Antoonij:
+  - rscadd: "\u0431\u0438\u043D\u0434 \u0434\u043B\u044F \u0434\u0438\u0437\u0430\u0440\
+      \u043C\u043E\u0432"
   BurpleBineapple:
   - bugfix: Kazengunese dobo robes were incorrectly using ARMOR_MAILLE. They now use
       ARMOR_PADDED.
@@ -615,6 +707,8 @@
       other items with similar stats.
   FreeStylaLT:
   - rscadd: Added a bunch of new hair. Courtesy of Ratwood / Vanderlin.
+  G9ose:
+  - balance: stat bonus for Baota wretch deleted
   KatTheFox:
   - rscdel: Removed arcanic melds, replaced them with thematically-appropriate planar
       materials. Artificer armor is now powered by an infernal core like the infernal
@@ -625,6 +719,17 @@
       only giving a new one anytime you change any of the speed, the intensity or
       the action type.
   - bugfix: Fixed Mage and God Hands from not working with the backdoor. Rejoice.
+  Quinalion:
+  - rscadd: "\u0422\u0438\u0430\u0440\u0430 \u0432 \u043B\u043E\u0434\u0430\u0443\u0442\
+      ."
+  - bugfix: "\u041A\u043B\u0430\u0441\u0441 \u041D\u0430\u043B\u0435\u0434\u0438\u0439\
+      \u0441\u043A\u043E\u0433\u043E \u0411\u043E\u0435\u0432\u043E\u0433\u043E \u041C\
+      \u0430\u0433\u0430 \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0434\u0443\
+      \u0431\u043B\u0438\u0440\u0443\u0435\u0442\u0441\u044F \u0432 \u0441\u043F\u0438\
+      \u0441\u043A\u0435."
+  - rscadd: "\u041D\u0430\u043B\u0435\u0434\u0438\u0439\u0441\u043A\u0438\u0439 \u0412\
+      \u0438\u0437\u0438\u0440\u044C \u0437\u043D\u0430\u0435\u0442 \u0417\u0438\u0431\
+      \u0430\u043D\u0442\u0438\u0439\u0441\u043A\u0438\u0439."
   Ryumi:
   - rscadd: Heretical items now have big, obvious highlights and tooltips making their
       heretical / PVP-escalating nature clear, as well as brief explanations of how
@@ -697,6 +802,11 @@
   Ketrai:
   - balance: Made territorial heartbeast attacks respect armor again, but damages
       armor heavily.
+  Risraivyn:
+  - rscdel: "\u0423\u0434\u0430\u043B\u0435\u043D\u0438\u0435 \u0430\u043B\u0445\u0438\
+      \u043C\u0438\u0447\u0435\u0441\u043A\u043E\u0433\u043E \u0441\u0442\u043E\u043B\
+      \u0430 \u0438 \u0432\u0441\u0435\u0445 \u0435\u0433\u043E \u0437\u0435\u043B\
+      \u0438\u0439"
   Ryan180602:
   - bugfix: optimise playsound
   - bugfix: runtimes
@@ -951,6 +1061,20 @@
   - balance: Glass batch no longer requires expert skill to make.
   - balance: Glass statues can now be smelted back into glass.
   - bugfix: alch_grind_recipe for horn was missing its name, this is now fixed.
+  Vladmar11:
+  - bugfix: "\u0423\u0431\u0440\u0430\u043D\u0430 \u0441\u0442\u043E\u0438\u043C\u043E\
+      \u0441\u0442\u044C \u0443 \u043F\u0440\u0438\u0437\u044B\u0432\u043D\u044B\u0445\
+      \ \u0432\u0435\u0449\u0435\u0439"
+  - bugfix: "\u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D \u043D\u0435\u0434\
+      \u043E\u0447\u0435\u0442 \u0441 \u0442\u0435\u043C, \u0447\u0442\u043E \u0441\
+      \u043C\u0435\u0440\u0442\u044C \u043D\u0435 \u0443\u0431\u0438\u0440\u0430\u043B\
+      \u0430 \u0441\u0442\u0435\u043B\u0441"
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0430 \u0432\u043E\
+      \u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u044C \u043E\u0431\u0445\u043E\
+      \u0434\u0438\u0442\u044C \u0443\u044F\u0437\u0432\u0438\u043C\u043E\u0441\u0442\
+      \u044C \u043E\u0442 \u0444\u0438\u043D\u0442\u0430 \u0447\u0435\u0440\u0435\u0437\
+      \ \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043A\
+      \u043E\u043C\u0431\u0430\u0442 \u043C\u043E\u0434\u0430"
   crunchypretzels:
   - bugfix: fixed incorrect paths on new glasses
   kimesik:
@@ -1082,6 +1206,12 @@
       it easier for newcomers to understand how it works.
   - rscadd: Improvised metal- and fabric-repair kits can now be purchased on the Triumph
       menu for 5 TRI each.
+  Vladmar11:
+  - server: "\u0411\u0414 \u0434\u043B\u044F \u0434\u043E\u043D\u0430\u0442 \u0441\
+      \u0438\u0441\u0442\u0435\u043C\u044B"
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u044B \u043B\u0438\
+      \u0448\u043D\u0438\u0435 \u0431\u0435\u0437\u0443\u043C\u043D\u044B\u0435 \u0441\
+      \u043A\u0430\u043D\u044B \u0432\u0441\u0435\u0433\u043E \u043C\u0438\u0440\u0430"
   WeNeedMorePhoron:
   - server: Round should announces when it is extended now in restart annoucements
   - rscadd: Sending letter to someone who don't exist reject letter on TGUI
@@ -1178,9 +1308,29 @@
   - balance: Burghers no longer have Tempo. This includes Mage Associates.
   - balance: Bishop no longer have Tempo.
   - balance: Acolytes no longer have Tempo.
+  Quinalion:
+  - rscadd: Animated Runechat.
+  SmthAwfl:
+  - bugfix: performance issue with status tab
   SomeDeviant:
   - rscdel: Removed .transform check in wrestling spells to prevent sprite scale corruption
   - bugfix: fixed runtime on interrupted timers in wrestling spells
+  UEDCommander:
+  - rscadd: "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0430 \u043C\u0435\u0445\
+      \u0430\u043D\u0438\u043A\u0430 \u0438\u043C\u0435\u043D\u0438\u0439 \u0434\u043B\
+      \u044F \u0433\u043E\u0440\u043E\u0434\u0441\u043A\u0438\u0445 \u0434\u0432\u043E\
+      \u0440\u044F\u043D \u0438 \u043F\u0440\u0438\u0434\u0432\u043E\u0440\u043D\u044B\
+      \u0445"
+  Vladmar11:
+  - balance: "\u0420\u0435\u0431\u0430\u043B\u0430\u043D\u0441 \u0433\u0430\u0440\u0440\
+      \u043E\u0442\u044B, \u0442\u0435\u043F\u0435\u0440\u044C \u043C\u0435\u043D\u044C\
+      \u0448\u0435 \u0443\u0440\u043E\u043D\u0430 \u0446\u0435\u043B\u044F\u043C \u0441\
+      \ \u0433\u043E\u0440\u0436\u0435\u0442\u043E\u043C \u0438\u043B\u0438 \u0446\
+      \u0435\u043B\u044F\u043C \u0432 \u043A\u0440\u0438\u0442\u0435"
+  - balance: "\u0427\u0443\u0434\u043E \u041C\u0438\u0440\u0430\u0436\u0430 \u0431\
+      \u043E\u043B\u0435\u0435 \u043D\u0435 \u043C\u0435\u043D\u044F\u0435\u0442 \u0438\
+      \u043C\u044F \u0438 \u043D\u0435 \u0443\u0431\u0438\u0440\u0430\u0435\u0442\
+      \ \u0440\u043E\u0437\u044B\u0441\u043A"
   WeNeedMorePhoron:
   - rscdel: Excessive amount of baseturfs generated will no longer swap out for an
       indestructible buggy tile and then tell you to report to your coder, because
@@ -1191,6 +1341,20 @@
       becomes a problem I will revert to the generic fallback instead.
   changelingonberry:
   - bugfix: gulp, faceplam and crack knuckles go into the correct categories now
+  msw7007:
+  - rscadd: "\u041F\u041A\u041C \u043F\u043E\u0437\u0432\u043E\u043B\u044F\u0435\u0442\
+      \ \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0442\u044C \u0441\u0442\
+      \u043E\u043F\u043A\u0443 \u043A\u0430\u0440\u0442 \u0432 \u043A\u0430\u0440\u0442\
+      \u043E\u0447\u043D\u044B\u0439 \u0441\u0442\u043E\u043B \u0434\u043B\u044F 4\
+      \ \u0440\u0430\u0437\u043B\u0438\u0447\u043D\u044B\u0435 \u043A\u0430\u0440\u0442\
+      \u043E\u0447\u043D\u044B\u0435 \u0438\u0433\u0440\u044B."
+  namenlos66:
+  - qol: "\u041F\u0435\u0440\u0435\u0432\u043E\u0434 + \u0438\u0441\u043F\u0440\u0430\
+      \u0432\u043B\u0435\u043D\u0438\u044F \u0433\u0440\u0430\u043C\u043C\u0430\u0442\
+      \u0438\u0447\u0435\u0441\u043A\u0438\u0445, \u043F\u0443\u043D\u043A\u0442\u0443\
+      \u0430\u0446\u0438\u043E\u043D\u043D\u044B\u0445 \u0438 \u043E\u0440\u0444\u043E\
+      \u0433\u0440\u0430\u0444\u0438\u0447\u0435\u0441\u043A\u0438\u0445 \u043E\u0448\
+      \u0438\u0431\u043E\u043A."
 2026-06-27:
   EvenInDeathIStillServe:
   - rscadd: You can export your preferences/characters using the "Export Preferences"
@@ -1397,6 +1561,18 @@
   - bugfix: Bronze-armored boots now properly have ARMOR_BRONZE as their protection
       tier, rather than ARMOR_PLATE.
   - bugfix: Adds missing light armor values to decrepit-tiered feetwear.
+  - bugfix: Bronze-armored boots now properly have ARMOR_BRONZE as their protection
+      tier, rather than ARMOR_PLATE.
+  - bugfix: Adds missing light armor values to decrepit-tiered feetwear.
+  Vladmar11:
+  - code_imp: "\u0423\u043B\u0443\u0447\u0448\u0435\u043D\u0438\u0435 \u0418\u0418\
+      \ \u0441\u043A\u0435\u043B\u0435\u0442\u043E\u0432 \u043D\u0435\u043A\u0440\u043E\
+      \u043C\u0430\u043D\u0442\u0430"
+  - balance: "\u0422\u0435\u043F\u0435\u0440\u044C \u0433\u0440\u0430\u0431\u043D\u0443\
+      \u0442\u044B\u0439 \u043D\u0435 \u0442\u0435\u0440\u044F\u0435\u0442 \u0441\u0442\
+      \u0430\u043C\u0438\u043D\u0443 \u043E\u0442 \u043F\u0435\u0440\u0435\u0445\u043E\
+      \u0434\u043E\u0432 \u043C\u0435\u0436\u0434\u0443 \u043B\u0435\u0441\u0442\u043D\
+      \u0438\u0446"
   WeNeedMorePhoron:
   - rscadd: Duel Settler now come with a gwstrap like other 2h weapon
   - rscadd: Arcyne ward actually covers your mouth against mouthgrab

@@ -19,8 +19,6 @@
 
 /mob/living/carbon/human/examine(mob/user)
 	. = list()
-	if(!user.client?.prefs?.top_examine)
-		. += span_info("ø ------------ ø")
 	var/observer_privilege = isobserver(user)
 	var/t_He = p_they(TRUE)
 	var/t_his = p_their()
@@ -64,8 +62,7 @@
 	if(observer_privilege)
 		obscure_name = FALSE
 
-	if(user.client?.prefs?.top_examine)
-		. += generate_main_examine_body(user, m1, m2, m3, obscure_name, race_name, origin_name, observer_privilege, unknown_names)
+	. += generate_main_examine_body(user, m1, m2, m3, obscure_name, race_name, origin_name, observer_privilege, unknown_names)
 
 	if(user != src && HAS_TRAIT(user, TRAIT_MATTHIOS_EYES) && !HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS))
 		var/atom/item = get_most_expensive()
@@ -128,6 +125,20 @@
 						. += shit
 		if(user.mind?.has_antag_datum(/datum/antagonist/vampire) || user.mind?.has_antag_datum(/datum/antagonist/vampire))
 			. += span_userdanger("<a href='?src=[REF(src)];task=bloodpoolinfo;'>Vitae: [(mind && !clan) ? (bloodpool * CLIENT_VITAE_MULTIPLIER) : bloodpool]; Blood: [blood_volume]</a>")
+
+	/*if(SSmapping.config.map_name == "Desert Town")
+		var/species_origin = src.dna?.species?.origin
+		var/mob/living/carbon/human/H_user = ishuman(user) ? user : null
+		var/user_origin = H_user?.dna?.species?.origin
+			var/user_is_lg = H_user.mind?.has_antag_datum(/datum/antagonist/bandit/lost_grenzel) // Lost Grenzel comment
+			var/target_is_lg = mind?.has_antag_datum(/datum/antagonist/bandit/lost_grenzel)
+
+			if(user_is_lg && species_origin == "Grenzelhoft" && !target_is_lg)
+				. += span_userdanger("<b>ПОДЛЫЙ ПРЕДАТЕЛЬ!</b>")
+			if(target_is_lg && user_origin == "Grenzelhoft" && !user_is_lg)
+				. += span_userdanger("<b>ОБЕЗУМЕВШИЙ В ПЕСКАХ!</b>")
+		if(mind?.has_antag_datum(/datum/antagonist/bandit/lost_grenzel) && !HAS_TRAIT(user, TRAIT_OUTLANDER))
+			. += span_userdanger("<b>НАЛЁТНИЧЕСКАЯ МРАЗЬ, ДЕТОУБИЙЦА!</b>")*/ // Lost Grenzel comment
 
 
 	if(is_npc(src) && src.stat == CONSCIOUS) //NPCs always show up if they're mindless.
@@ -218,6 +229,63 @@
 		var/str = "[m3] [get_item_examine_label(backl, user)] on [m2] back. "
 		str += backl.integrity_check(is_smart, guarded)
 		. += str
+
+
+	// Knotted effect message
+	if(has_status_effect(/datum/status_effect/knot_tied))
+		. += span_warning("A knot is locked inside them. They're being pulled around like a pet.")
+
+	// ERP: coating + active partner (hidden-mode aware)
+	var/datum/erp_controller/erpC = SSerp?.get_controller_for(src)
+	var/erp_hidden = erpC?.hidden_mode
+	var/close_enough = Adjacent(user)
+	var/can_see_hidden = observer_privilege || close_enough || (user == src)
+	if(erpC)
+		var/mob/living/partner_mob = erpC._get_partner_effect_mob()
+		if(partner_mob && partner_mob != src && erpC.has_active_actions())
+			if(erp_hidden)
+				if(can_see_hidden)
+					. += span_warning("[m1] сплетается с [partner_mob].")
+			else
+				if(user != src && isliving(user))
+					var/mob/living/L = user
+					. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] сплетается с [partner_mob].") : span_warning("[m1] сплетается с кем-то...")
+				else
+					. += span_aiprivradio("[m1] сплетается с [partner_mob].")
+
+	if(can_see_hidden)
+		var/datum/status_effect/erp_coating/groin/G = null
+		if(observer_privilege || get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
+			G = has_status_effect(/datum/status_effect/erp_coating/groin)
+
+		var/datum/status_effect/erp_coating/chest/CH = null
+		if(observer_privilege || get_location_accessible(src, BODY_ZONE_CHEST, skipundies = TRUE))
+			CH = has_status_effect(/datum/status_effect/erp_coating/chest)
+
+		var/datum/status_effect/erp_coating/face/B = has_status_effect(/datum/status_effect/erp_coating/face)
+		if(G)
+			var/txt = !G.has_dried_up ? "имеет влажные стекающие следы выделений на паху" : "имеет влажные подсыхающие следы выделений на паху"
+			if(user != src && isliving(user))
+				var/mob/living/L = user
+				. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [txt].") : span_warning("[m1] выглядит грязно в районе паха.")
+			else
+				. += span_aiprivradio("[m1] [txt].")
+
+		if(CH)
+			var/txt = !CH.has_dried_up ? "имеет влажные следы выделений на груди" : "имеет подсохшие выделения на груди"
+			if(user != src && isliving(user))
+				var/mob/living/L = user
+				. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [txt].") : span_warning("[m1] имеет чем-то запачканную грудь.")
+			else
+				. += span_aiprivradio("[m1] [txt].")
+
+		if(B)
+			var/txt = !B.has_dried_up ? "блестит влажными выделениями" : "имеет сухие следы выделений на лице"
+			if(user != src && isliving(user))
+				var/mob/living/L = user
+				. += (L.STAPER >= 8 && L.STAINT >= 5) ? span_aiprivradio("[m1] [txt].") : span_warning("[m1] выглядит грязно.")
+			else
+				. += span_aiprivradio("[m1] [txt].")
 
 	//Hands
 	for(var/obj/item/I in held_items)
@@ -353,12 +421,77 @@
 	if(effect && HAS_TRAIT(user, TRAIT_INQUISITION))
 		. += "<A href='?src=[REF(src)];item=[effect.device]'><span class='warning'>[m3] \a [effect.device] implanted.</span></A>"
 
-		if(HAS_TRAIT(src, TRAIT_SILVER_BLESSED) && user.mind?.has_antag_datum(/datum/antagonist/vampire))
-			. += span_redtext ("SILVER-BLOODED...")
+	if(HAS_TRAIT(src, TRAIT_SILVER_BLESSED) && user.mind?.has_antag_datum(/datum/antagonist/vampire))
+		. += span_redtext("SILVER-BLOODED...")
 
-		var/datum/antagonist/vampire/vamp_inspect_vlord = src.mind?.has_antag_datum(/datum/antagonist/vampire/lord)
-		if(vamp_inspect_vlord && (!SEND_SIGNAL(src, COMSIG_DISGUISE_STATUS)))
-			. += span_userdanger("A MONSTER!")
+
+	var/showassess = FALSE
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		if(get_dist(src, H) <= ((2 + clamp(floor(((H.STAPER - 10))),-1, 4)) + HAS_TRAIT(user, TRAIT_INTELLECTUAL)))
+			showassess = TRUE
+
+	var/displayed_headshot
+	var/datum/antagonist/vampire/headshot_vampire = src.mind?.has_antag_datum(/datum/antagonist/vampire)
+	var/datum/antagonist/lich/headshot_lich = src.mind?.has_antag_datum(/datum/antagonist/lich)
+	if(headshot_vampire && (!SEND_SIGNAL(src, COMSIG_DISGUISE_STATUS)) && !isnull(vampire_headshot_link))
+		displayed_headshot = src.vampire_headshot_link
+	else if(headshot_lich && !isnull(src.lich_headshot_link))
+		displayed_headshot = src.lich_headshot_link
+	else
+		displayed_headshot = src.headshot_link
+
+	var/can_show_masked_identity = !obscure_name || client?.prefs?.masked_examine || observer_privilege
+
+	if(can_show_masked_identity && (valid_headshot_link(src, displayed_headshot, TRUE)) && (user.client?.prefs.chatheadshot))
+		. += span_info("[chat_headshot(displayed_headshot)]")
+
+	var/medical_text = ""
+	if(Adjacent(user))
+		if(observer_privilege)
+			var/static/list/check_zones = list(
+				BODY_ZONE_HEAD,
+				BODY_ZONE_CHEST,
+				BODY_ZONE_R_ARM,
+				BODY_ZONE_L_ARM,
+				BODY_ZONE_R_LEG,
+				BODY_ZONE_L_LEG,
+			)
+			for(var/zone in check_zones)
+				var/obj/item/bodypart/bodypart = get_bodypart(zone)
+				if(!bodypart)
+					continue
+				. += "<a href='?src=[REF(src)];inspect_limb=[zone]'>Inspect [parse_zone(zone)]</a>"
+			. += "<a href='?src=[REF(src)];check_hb=1'>Check Heartbeat</a>"
+		else
+			var/checked_zone = check_zone(user.zone_selected)
+			var/heartbeat
+			if(!(mobility_flags & MOBILITY_STAND) && user != src && (user.zone_selected == BODY_ZONE_CHEST))
+				heartbeat = "<a href='?src=[REF(src)];check_hb=1'>Listen to Heartbeat</a>"
+			medical_text = "[heartbeat ? "[heartbeat] | " : ""]<a href='?src=[REF(src)];inspect_limb=[checked_zone]'>Inspect [parse_zone(checked_zone)]</a>"
+
+	if(length(medical_text))
+		. += medical_text
+
+	if(can_show_masked_identity)
+		var/list/examine_links = list()
+		if(showassess)
+			examine_links += "<a href='?src=[REF(src)];task=assess;'>Assess</a>"
+		if(flavortext || displayed_headshot || ooc_notes)
+			examine_links += "<a href='?src=[REF(src)];task=view_headshot;'>Examine closer</a>"
+		if(length(rumour) || length(noble_gossip))
+			if(!obscure_name || (obscure_name && client?.prefs.masked_examine) || observer_privilege)
+				examine_links += "<a href='?src=[REF(src)];task=view_rumours_gossip;'>Recall Rumours & Gossip</a>"
+		if(length(examine_links))
+			. += jointext(examine_links, " | ")
+
+	/// Rumours & Gossip
+//	if(length(rumour) || length(noble_gossip)) TA EDIT START
+//		if(!obscure_name || (obscure_name && client?.prefs.masked_examine) || observer_privilege)
+//			. += "<a href='?src=[REF(src)];task=view_rumours_gossip;'>Recall Rumours & Gossip</a>" TA EDIT END
+
+
+
 	//Gets encapsulated with a warning span
 	var/list/msg = list()
 
@@ -465,6 +598,12 @@
 		else
 			missing_limb_message = span_danger("[missing_limb_message]")
 		msg += missing_limb_message
+
+	// Brand marks
+	for(var/obj/item/bodypart/BP in bodyparts)
+		if(BP.brand_text)
+			if(observer_privilege || get_location_accessible(src, BP.body_zone))
+				msg += "<span class='warning' style='font-size: 1.15em;'>[m1] branded on [m2] [BP.name]: <b style='font-size: 1.3em; color: #c48e42;'>\"[uppertext(BP.brand_text)]\"</b></span>"
 
 	//Grabbing
 	if(pulledby && pulledby.grab_state)
@@ -586,13 +725,16 @@
 
 		if(InCritical())
 			msg += span_warning("[m1] barely conscious.")
-		else
-			if(stat >= UNCONSCIOUS)
-				msg += "[m1] [IsSleeping() ? "sleeping" : "unconscious"]."
-			else if(eyesclosed)
-				msg += "[capitalize(m2)] eyes are closed."
-			else if(has_status_effect(/datum/status_effect/debuff/sleepytime))
-				msg += "[m1] looking a little tired."
+		else if(stat >= UNCONSCIOUS)
+			msg += "[m1] [IsSleeping() ? "sleeping" : "unconscious"]."
+		else if(eyesclosed)
+			msg += "[capitalize(m2)] eyes are closed."
+		else if(has_status_effect(/datum/status_effect/debuff/sleepytime))
+			msg += "[m1] looking a little tired."
+
+		if(key && !client && disconnected_at)
+			var/disconnected_minutes = max(0, ceil((world.time - disconnected_at) / (1 MINUTES)))
+			msg += "<b>[m1] won't be able to wake up soon. [m1] been like this for about [disconnected_minutes] minute[disconnected_minutes == 1 ? "" : "s"].</b>"
 	else
 		msg += "[m1] unconscious."
 //		else
@@ -672,6 +814,18 @@
 			. += span_warning(phys_msg)
 		else
 			. += phys_msg
+
+		if(HAS_TRAIT(src, TRAIT_SLAVE)) // TA EDIT
+			var/slave_descriptor
+			switch(pronouns)
+				if(HE_HIM)
+					slave_descriptor = "Он всего лишь жалкий раб..."
+				if(SHE_HER)
+					slave_descriptor = "Она всего лишь жалкая рабыня..."
+				else
+					slave_descriptor = "Это всего лишь жалкий раб..."
+			if(slave_descriptor)
+				. += span_warning(slave_descriptor) // TA EDIT
 
 	if((HAS_TRAIT(user,TRAIT_INTELLECTUAL)))
 		var/mob/living/L = user
@@ -757,8 +911,6 @@
 	if(!isnull(trait_exam))
 		. += trait_exam
 
-	if(!user.client?.prefs?.top_examine)
-		. += generate_main_examine_body(user, m1, m2, m3, obscure_name, race_name, origin_name, observer_privilege, unknown_names)
 
 	if(pose_text)
 		. += fieldset_block("Pose", pose_text, "pose_block")
@@ -784,6 +936,7 @@
 		. += span_info("ø ------------ ø\nThis is an unknown <EM>[name]</EM>.")
 	else
 		on_examine_face(user)
+		var/can_identify_face = !obscure_name || observer_privilege
 		var/used_name = name
 		var/used_title = get_role_title()
 		if(HAS_TRAIT(src, TRAIT_RESIDENT) && used_title == "Licker" && licker_subclass)
@@ -813,30 +966,12 @@
 			display_as_wanderer = FALSE
 		if(src.mind?.has_antag_datum(/datum/antagonist/vampire/lord) && SSticker.rulermob != src && SSticker.regentmob != src)
 			display_as_wanderer = TRUE
-		var/displayed_headshot
-		var/datum/antagonist/vampire/vampireplayer = src.mind?.has_antag_datum(/datum/antagonist/vampire)
-		var/datum/antagonist/lich/lichplayer = src.mind?.has_antag_datum(/datum/antagonist/lich)
-		if(vampireplayer && (!SEND_SIGNAL(src, COMSIG_DISGUISE_STATUS))&& !isnull(vampire_headshot_link)) //vampire with their disguise down and a valid headshot
-			displayed_headshot = src.vampire_headshot_link
-		else if (lichplayer && !isnull(src.lich_headshot_link))//Lich with a valid headshot
-			displayed_headshot = src.lich_headshot_link
+		if(display_as_wanderer)
+			. += (span_info("ø ------------ ø\nThis is <EM>[used_name]</EM>, the wandering [race_name]."))
+		else if(used_title)
+			. += (span_info("ø ------------ ø\nThis is <EM>[used_name]</EM>, the [race_name] [used_title]."))
 		else
-			displayed_headshot = src.headshot_link
-
-		if ((valid_headshot_link(src, displayed_headshot, TRUE)) && (user.client?.prefs.chatheadshot))
-			if(display_as_wanderer)
-				. += (span_info("ø ------------ ø\n[chat_headshot(displayed_headshot)]\nThis is <EM>[used_name]</EM>, the wandering [race_name]."))
-			else if(used_title)
-				. += (span_info("ø ------------ ø\n[chat_headshot(displayed_headshot)]\nThis is <EM>[used_name]</EM>, the [race_name] [used_title]."))
-			else
-				. += (span_info("ø ------------ ø\n[chat_headshot(displayed_headshot)]\nThis is the <EM>[used_name]</EM>, the [race_name]."))
-		else
-			if(display_as_wanderer)
-				. += (span_info("ø ------------ ø\nThis is <EM>[used_name]</EM>, the wandering [race_name]."))
-			else if(used_title)
-				. += (span_info("ø ------------ ø\nThis is <EM>[used_name]</EM>, the [race_name] [used_title]."))
-			else
-				. += (span_info("ø ------------ ø\nThis is the <EM>[used_name]</EM>, the [race_name]."))
+			. += (span_info("ø ------------ ø\nThis is the <EM>[used_name]</EM>, the [race_name]."))
 
 		//Origins
 		var/pronoun	//They / Their
@@ -866,7 +1001,16 @@
 				if(issunelf(src) || patron?.type == /datum/patron/divine/astrata)
 					astratan_symbol = icon2html('icons/misc/language.dmi', world, "celestial")
 					astratan_tooltip = SPAN_TOOLTIP("One of Astrata's [issunelf(src) ? "chosen" : "followers"]", astratan_symbol)
-		. += span_info("[pronoun] [wording] [origin]. [astratan_tooltip]")	//"He hails from [X / Nowhere]" || "His [word] originates from [X]" || "His [word] is implacable..."
+		var/origin_suffix = ""
+		if(SSmapping.config.map_name == "Desert Town")
+			var/species_origin = dna?.species?.origin
+			var/mob/living/carbon/human/H_user = ishuman(user) ? user : null
+			var/user_origin = H_user?.dna?.species?.origin
+			if(species_origin == "Grenzelhoft" && !HAS_TRAIT(user, TRAIT_OUTLANDER) && user_origin != "Grenzelhoft")
+				origin_suffix = " <span class='warning' style='font-size: inherit !important; font-weight: inherit !important;'>Имперский кафир!</span>"
+			else if(H_user && user_origin == "Grenzelhoft" && (species_origin == "Raneshan" || species_origin == "Naledi" || species_origin == "Zybantu"))
+				origin_suffix = " <span class='warning' style='font-size: inherit !important; font-weight: inherit !important;'>Зибантийский швайнехунд!</span>"
+		. += span_info("[pronoun] [wording] [origin].[origin_suffix] [astratan_tooltip]")	//"He hails from [X / Nowhere]" || "His [word] originates from [X]" || "His [word] is implacable..."
 
 		if(HAS_TRAIT(src, TRAIT_WITCH))
 			if(HAS_TRAIT(user, TRAIT_NOBLE) || HAS_TRAIT(user, TRAIT_INQUISITION) || HAS_TRAIT(user, TRAIT_WITCH))
@@ -895,7 +1039,7 @@
 					. += span_notice("A noble!")
 
 		if(HAS_TRAIT(src, TRAIT_RESIDENT))
-			. += span_notice("A chartered resident of Azuria.")
+			. += span_notice("A chartered resident.")
 
 		if(HAS_TRAIT(src, TRAIT_AGENT_MERCHANT))
 			. += span_notice("An agent of the Azurian Trading Company.")
@@ -931,12 +1075,15 @@
 					. += span_smallred("Destitute..")
 
 		if(src.job in GLOB.church_positions)
-			. += span_notice("A member of the Church of Azuria.")
-		else if(HAS_TRAIT(src, TRAIT_AGENT_CHURCH))
-			. += span_notice("A benefactor of the Church of Azuria.")
+			. += span_notice("A member of the Church of the Ten.")
+		else if(HAS_TRAIT(src, TRAIT_AGENT_CHURCH) || HAS_TRAIT(src, TRAIT_DECLARED_BENEFACTOR))
+			. += span_notice("A benefactor of the Church of the Ten.")
 
 		if(src.job in GLOB.inquisition_positions)
 			. += span_notice("An adherent of the Holy Otavan Inquisition.")
+
+		if((HAS_TRAIT(src, TRAIT_OUTLANDER) && !HAS_TRAIT(user, TRAIT_OUTLANDER))) //TA EDIT
+			. += span_boldred("A foreigner...") //TA EDIT
 
 		if((HAS_TRAIT(user, TRAIT_BLACKOAK) && !(src.dna.species.name == "Elf" || src.dna.species.name == "Dark Elf" || src.dna.species.name == "Half-Elf")))
 			. += span_phobia("An invader...")
@@ -962,6 +1109,7 @@
 
 		if(HAS_TRAIT(src, TRAIT_EXCOMMUNICATED))
 			. += span_userdanger("EXCOMMUNICATED! SHAME!")//Temporary, probably going to get rid of the trait since it doesn't fit for us.
+
 /*
 		if(name in GLOB.excommunicated_players)
 			var/mob/living/carbon/human/H = src
@@ -973,14 +1121,15 @@
 				if (istype(H.patron, /datum/patron/old_god))
 					. += span_userdanger("HEATHEN! SHAME!")
 */
-		if(name in GLOB.outlawed_players)
-			. += span_userdanger("OUTLAW!")
+		if(can_identify_face)
+			if(name in GLOB.outlawed_players)
+				. += span_userdanger("OUTLAW!")
 
-		if(HAS_TRAIT(user, TRAIT_JUSTICARSIGHT) && !HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS))
-			for(var/datum/bounty/b in GLOB.head_bounties) //I hate this.
-				if(b.target == real_name)
-					. += span_syndradio("[m3] a bounty on [m2] head of [b.amount] mammon for [b.reason], issued by [b.employer].")
-					break
+			if(HAS_TRAIT(user, TRAIT_JUSTICARSIGHT) && !HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS))
+				for(var/datum/bounty/b in GLOB.head_bounties) //I hate this.
+					if(b.target == real_name)
+						. += span_syndradio("[m3] a bounty on [m2] head of [b.amount] mammon for [b.reason], issued by [b.employer].")
+						break
 
 		if(name in GLOB.court_agents)
 			var/datum/job/J = SSjob.GetJob(user.mind?.assigned_role)
@@ -1040,7 +1189,7 @@
 			if(HAS_TRAIT(user, TRAIT_EMPATH) && HAS_TRAIT(src, TRAIT_PERMAMUTE))
 				. += span_notice("[m1] lacks a voice. [m1] is a mute!")
 
-		var/villain_text = get_villain_text(user)
+		var/villain_text = get_villain_text(user, can_identify_face)
 		if(villain_text)
 			. += villain_text
 		var/heretic_text = get_heretic_text(user)
@@ -1140,46 +1289,6 @@
 			if(L.STAINT > 9 && L.STAPER > 9)
 				. += span_redtext("<i>[m1] critically fragile!</i>")
 
-	var/medical_text = ""
-	if(Adjacent(user))
-		if(observer_privilege)
-			var/static/list/check_zones = list(
-				BODY_ZONE_HEAD,
-				BODY_ZONE_CHEST,
-				BODY_ZONE_R_ARM,
-				BODY_ZONE_L_ARM,
-				BODY_ZONE_R_LEG,
-				BODY_ZONE_L_LEG,
-			)
-			for(var/zone in check_zones)
-				var/obj/item/bodypart/bodypart = get_bodypart(zone)
-				if(!bodypart)
-					continue
-				. += "<a href='?src=[REF(src)];inspect_limb=[zone]'>Inspect [parse_zone(zone)]</a>"
-			. += "<a href='?src=[REF(src)];check_hb=1'>Check Heartbeat</a>"
-		else
-			var/checked_zone = check_zone(user.zone_selected)
-			var/heartbeat
-			if(!(mobility_flags & MOBILITY_STAND) && user != src && (user.zone_selected == BODY_ZONE_CHEST))
-				heartbeat = "<a href='?src=[REF(src)];check_hb=1'>Listen to Heartbeat</a>"
-			medical_text = "[heartbeat ? "[heartbeat] | " : ""]<a href='?src=[REF(src)];inspect_limb=[checked_zone]'>Inspect [parse_zone(checked_zone)]</a>"
-
-	. += medical_text
-
-	var/showassess = FALSE
-	if(ishuman(user))
-		var/mob/living/carbon/human/H = user
-		if(get_dist(src, H) <= ((2 + clamp(floor(((H.STAPER - 10))),-1, 4)) + HAS_TRAIT(user, TRAIT_INTELLECTUAL)))
-			showassess = TRUE
-
-	if((!obscure_name || client?.prefs.masked_examine) && (flavortext || headshot_link || ooc_notes))
-		. += "<a href='?src=[REF(src)];task=view_headshot;'>Examine closer</a> [showassess ? " | <a href='?src=[REF(src)];task=assess;'>Assess</a>" : ""]"
-
-	/// Rumours & Gossip
-	if(length(rumour_cached) || length(noble_gossip_cached))
-		if(!obscure_name || (obscure_name && client?.prefs.masked_examine) || observer_privilege)
-			. += "<a href='?src=[REF(src)];task=view_rumours_gossip;'>Recall Rumours & Gossip</a>"
-
 /mob/living/proc/status_effect_examines(pronoun_replacement) //You can include this in any mob's examine() to show the examine texts of status effects!
 	var/list/dat = list()
 	if(!pronoun_replacement)
@@ -1205,12 +1314,12 @@
 		seer = TRUE
 
 	if(HAS_TRAIT(src, TRAIT_DUSTRUNNER))
-		var/mob/living/living_examiner = examiner
+		var/mob/living/living_examiner = isliving(examiner) ? examiner : null // TA EDIT
 		if(HAS_TRAIT(examiner, TRAIT_DUSTRUNNER))
 			heretic_text += "Fellow runner. The dust moves."
 		else if(living_examiner?.patron?.type == /datum/patron/inhumen/matthios)
 			heretic_text += "A Guild runner, by the look of them."
-		else if(examiner.job in GLOB.bathhouse_positions)
+		else if(living_examiner?.job in GLOB.bathhouse_positions) // TA EDIT
 			heretic_text += "One of the Guild's runners. I know the signs."
 
 	if(HAS_TRAIT(src, TRAIT_FREEMAN))
@@ -1246,12 +1355,12 @@
 	if(HAS_TRAIT(src, TRAIT_FREEMAN) && HAS_TRAIT(examiner, TRAIT_FREEMAN))
 		heretic_text += "⚖️" //♠ is the original
 	//Defunct as of *fsalute changes, leaving here as a symbol reference.
-	/*else if(HAS_TRAIT(src, TRAIT_CABAL) && HAS_TRAIT(examiner, TRAIT_CABAL))
+	else if(HAS_TRAIT(src, TRAIT_CABAL) && HAS_TRAIT(examiner, TRAIT_CABAL))
 		heretic_text += "♦"
 	else if(HAS_TRAIT(src, TRAIT_HORDE) && HAS_TRAIT(examiner, TRAIT_HORDE))
 		heretic_text += "♠"
 	else if(HAS_TRAIT(src, TRAIT_DEPRAVED) && HAS_TRAIT(examiner, TRAIT_DEPRAVED))
-		heretic_text += "♥"*/
+		heretic_text += "♥"
 
 	return heretic_text
 
@@ -1294,17 +1403,18 @@
 	return clergy_text
 
 /// Returns antagonist-related examine text for the mob, if any. Can return null.
-/mob/living/proc/get_villain_text(mob/examiner)
+/mob/living/proc/get_villain_text(mob/examiner, can_identify_face = TRUE)
 	var/villain_text
 	if(mind)
 		if(mind.special_role == "Bandit")
 			if(HAS_TRAIT(examiner, TRAIT_FREEMAN))
 				villain_text = span_notice("Free man!")
-			if(HAS_TRAIT(src,TRAIT_KNOWNCRIMINAL))
+			if(can_identify_face && HAS_TRAIT(src,TRAIT_KNOWNCRIMINAL))
 				villain_text = span_userdanger("BANDIT!")
 		if(mind.assigned_role == "Lunatic")
 			villain_text += span_userdanger("LUNATIC!")
-
+	if(HAS_TRAIT(src, TRAIT_ZIZOEYES))
+		villain_text += span_userdanger("Their eyes send chills down your spine...")
 	return villain_text
 
 /proc/get_blade_dulling_text(obj/item/rogueweapon/I, verbose = FALSE)

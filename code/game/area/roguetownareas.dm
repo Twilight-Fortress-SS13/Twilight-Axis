@@ -301,9 +301,9 @@ GLOBAL_LIST_INIT(roguetown_areas_typecache, typecacheof(list(/area/rogue/indoors
 	soundenv = 16
 	droning_sound = 'sound/music/area/townstreets.ogg'
 	droning_sound_dusk = 'sound/music/area/septimus.ogg'
-	droning_sound_night = 'sound/music/area/sleeping.ogg'
+	droning_sound_night = 'modular_twilight_axis/sound/music/ambient/bluefire.ogg'
 	converted_type = /area/rogue/indoors/shelter/town
-	first_time_text = "THE CITY OF AZURE PEAK"
+	first_time_text = "THE CITY OF TWILIGHT AXIS"
 	town_area = TRUE
 	fog_protected = TRUE
 	area_sniff_message = "You smell the stench of the town."

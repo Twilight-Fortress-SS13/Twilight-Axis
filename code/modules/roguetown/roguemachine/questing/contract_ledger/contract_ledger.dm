@@ -187,6 +187,9 @@ GLOBAL_LIST_INIT(crown_authority_roles, list(
 	"Marshal",
 	"Councillor",
 	"Prince",
+	"Sultan", // Desert Town
+	"Vizier", // Desert Town
+	"Sheikh", // Desert Town
 ))
 
 GLOBAL_LIST_INIT(contract_proxy_officials, list(
@@ -214,11 +217,27 @@ GLOBAL_LIST_INIT(contract_proxy_officials, list(
 	roles += "towner"
 	return roles
 
-/obj/structure/roguemachine/contractledger/proc/build_region_listing()
-	var/list/known = list()
+/obj/structure/roguemachine/contractledger/proc/build_region_listing() // TA EDIT START
+	var/list/known = get_active_map_threat_regions()
+	if(length(known))
+		return known
+
 	for(var/datum/threat_region/TR as anything in SSregionthreat.threat_regions)
-		known += TR.region_name
+		known |= TR.region_name
+
 	return known
+
+/proc/get_active_map_threat_regions()
+	var/list/known = list()
+
+	var/datum/map_adjustment/template/map = SSmapping.map_adjustment
+	if(map?.threat_regions)
+		for(var/region_name in map.threat_regions)
+			if(!(region_name in GLOB.threat_region_templates))
+				continue
+			known |= region_name
+
+	return known // TA EDIT END
 
 /obj/structure/roguemachine/contractledger/proc/build_hoard_recovery_region_listing()
 	var/list/listing = list()

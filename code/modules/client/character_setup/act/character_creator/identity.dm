@@ -8,6 +8,7 @@
 				new_name = reject_bad_name(new_name)
 				if(new_name)
 					verbose_pref_log_change(user, "notice", "Real Name", real_name, new_name)
+					log_ready_character_name_change(user, real_name, new_name) // TA EDIT
 					real_name = new_name
 				else
 					to_chat(user, span_warning("Invalid name. Your name should be at least 2 and at most [MAX_NAME_LEN] characters long. It may only contain the characters A-Z, a-z, -, ', . and ,."))
@@ -16,6 +17,7 @@
 		if("randomize_real_name")
 			var/randomized = pref_species.random_name(gender, TRUE)
 			verbose_pref_log_change(user, "notice", "Real Name", real_name, "[randomized] (randomized)")
+			log_ready_character_name_change(user, real_name, randomized) // TA EDIT
 			real_name = randomized
 			return CHARACTER_ACT_DATA_UPDATE
 
@@ -25,7 +27,9 @@
 				return
 			COOLDOWN_START(src, ui_refresh_cooldown, 2.5 SECONDS)
 			verbose_pref_log_notification(user, "danger", "Randomized character with profile: Normal")
+			var/old_normal_name = real_name // TA EDIT
 			random_character(null, RANDOMIZE_NORMAL)
+			log_ready_character_name_change(user, old_normal_name, real_name) // TA EDIT
 			return CHARACTER_ACT_PREVIEW_UPDATE
 
 		if("randomize_full")
@@ -34,7 +38,9 @@
 				return
 			COOLDOWN_START(src, ui_refresh_cooldown, 5 SECONDS)
 			verbose_pref_log_notification(user, "danger", "Randomized character with profile: Full")
+			var/old_full_name = real_name // TA EDIT
 			random_character(null, RANDOMIZE_NEW_CHARACTER)
+			log_ready_character_name_change(user, old_full_name, real_name) // TA EDIT
 			return CHARACTER_ACT_PREVIEW_UPDATE
 
 		if("nickname")
@@ -102,6 +108,13 @@
 					extra_language = choices[chosen_language]
 			return CHARACTER_ACT_DATA_UPDATE
 
+		if("char_accent")
+			var/chosen_accent = tgui_input_list(user, "Choose your character's accent:", "ACCENT", GLOB.character_accents, char_accent)
+			if(chosen_accent)
+				verbose_pref_log_change(user, "notice", "Accent", char_accent, chosen_accent)
+				char_accent = chosen_accent
+			return CHARACTER_ACT_DATA_UPDATE
+
 		if("age")
 			var/new_age = tgui_input_list(user, "Choose your character's age (18-[pref_species.max_age])", "YILS LIVED", pref_species.possible_ages, age)
 			if(new_age)
@@ -127,6 +140,14 @@
 		if("dnr_pref")
 			dnr_pref = !dnr_pref
 			verbose_pref_log_change(user, "notice", "Do-Not-Revive Preference", !dnr_pref ? "Do Not Revive" : "Revive", dnr_pref ? "Do Not Revive" : "Revive")
+			return CHARACTER_ACT_DATA_UPDATE
+
+		if("defiant")
+			defiant = !defiant
+			if(defiant)
+				to_chat(user, span_notice("You will now have resistance from people violating you, but be punished for trying to violate others." + " " + span_boldwarning("(COMBAT Mode will disable ERP interactions. Bypassing this is a bannable offense, AHELP if necessary.)")))
+			else
+				to_chat(user, span_boldwarning("You fully immerse yourself in the grim experience, waiving your resistance from people violating you, but letting you do the same unto other non-defiants"))
 			return CHARACTER_ACT_DATA_UPDATE
 
 		if("set_culinary_axis")
@@ -190,6 +211,11 @@
 				user.playsound_local(user, voiceline, 100, frequency = voice_pitch)
 			return CHARACTER_ACT_DATA_UPDATE
 
+		if("open_origin_picker")
+			var/datum/origin_picker_panel/origin_picker = new(src)
+			origin_picker.ui_interact(user)
+			return CHARACTER_ACT_DATA_UPDATE
+
 		if("subvirtue")
 			return ui_act_character_creator_identity_subvirtue(action, params, ui, state)
 
@@ -201,93 +227,63 @@
 			return CHARACTER_ACT_DATA_UPDATE
 
 		if("open_loadout")
-			var/datum/loadout_menu/LM = new(user.client)
+			var/datum/loadout_panel/LM = new(user)
 			LM.ui_interact(user)
 			return CHARACTER_ACT_DATA_UPDATE
 
-		if("set_barksound")
-			var/new_bork = params["barksound"]
-
-			var/list/woof_woof = list()
-			for(var/id in GLOB.bark_list)
-				var/datum/bark/B = GLOB.bark_list[id]
-				if(B::ignore)
-					continue
-				woof_woof[B::name] = B
-
-			if(!(new_bork in woof_woof))
-				return CHARACTER_ACT_DATA_UPDATE
-
-			var/datum/bark/old_bark = GLOB.bark_list[bark_id]
-			var/datum/bark/new_bark = woof_woof[new_bork]
-
-			bark_id = new_bark::id
-
-			verbose_pref_log_change(user, "notice", "Vocal Bark", old_bark::name, new_bark::name)
-			bark_speed = round(clamp(bark_speed, new_bark::minspeed, new_bark::maxspeed), 1)
-			bark_pitch = clamp(bark_pitch, new_bark::minpitch, new_bark::maxpitch)
-			bark_variance = clamp(bark_variance, new_bark::minvariance, new_bark::maxvariance)
+		if("open_manor_preferences")
+			var/list/manor_type_choices = list(
+				"Manor" = "manor",
+				"Hunter Mansion" = "hunter_mansion",
+				"Village" = "village",
+				"Fisher Hamlet" = "fisher_hamlet",
+				"Mining Settlement" = "mining_settlement",
+			)
+			while(TRUE)
+				var/current_manor_type = "Manor"
+				for(var/type_name in manor_type_choices)
+					if(manor_type_choices[type_name] == manor_type)
+						current_manor_type = type_name
+						break
+				var/manor_enabled_text = have_manor ? "Enabled" : "Disabled"
+				var/manor_display_name = manor_name ? manor_name : "Unknown Manor"
+				var/choice = tgui_input_list(user, "Estate: [manor_enabled_text]\nName: [manor_display_name]\nType: [current_manor_type]", "MANOR SETTINGS", list("Toggle Estate", "Change Estate Name", "Change Estate Type", "Done"))
+				if(!choice || choice == "Done")
+					break
+				switch(choice)
+					if("Toggle Estate")
+						var/old_have_manor = have_manor
+						have_manor = !have_manor
+						verbose_pref_log_change(user, "notice", "Estate", old_have_manor ? "Enabled" : "Disabled", have_manor ? "Enabled" : "Disabled")
+						if(have_manor)
+							to_chat(user, span_notice("При наличии дворянства, вы сможете управлять имением, которое будет приносить вам доход и предоставлять различные бонусы. Для того, чтобы связаться с имением, используйте ГЕРМЕС."))
+						else
+							to_chat(user, span_notice("При наличии дворянства ваш персонаж будет считаться безземельным дворянином, не получая доступ к имению."))
+					if("Change Estate Name")
+						var/new_name = tgui_input_text(user, "Choose a name for your manor:", "MANOR NAME", manor_name, encode = FALSE)
+						if(new_name)
+							new_name = reject_bad_name(new_name)
+							if(new_name)
+								verbose_pref_log_change(user, "notice", "Estate Name", manor_name, new_name)
+								manor_name = new_name
+							else
+								to_chat(user, "<font color='red'>Invalid manor name. It should be at least 2 and at most [MAX_NAME_LEN] characters long. It may only contain the characters A-Z, a-z, -, ', . and ,.</font>")
+					if("Change Estate Type")
+						var/new_manor_type = tgui_input_list(user, "Choose the type of manor you'd like to manage:", "MANOR TYPE", manor_type_choices, current_manor_type)
+						if(new_manor_type)
+							var/old_manor_type = manor_type
+							manor_type = manor_type_choices[new_manor_type]
+							verbose_pref_log_change(user, "notice", "Estate Type", old_manor_type, manor_type)
 			return CHARACTER_ACT_DATA_UPDATE
 
-		if("set_bark_speed")
-			var/datum/bark/B = GLOB.bark_list[bark_id]
-			if(!B)
-				to_chat(user, span_danger("ERROR: Vocal bark set to an invalid option."))
-				return CHARACTER_ACT_DATA_UPDATE
-			var/borkset = clamp(params["speed"], B::minspeed, B::maxspeed)
-			verbose_pref_log_change(user, "notice", "Bark Speed", bark_speed, borkset)
-			bark_speed = borkset
+		if("open_ccg_preferences")
+			ccg_open_preferences_deckbuilder(user)
 			return CHARACTER_ACT_DATA_UPDATE
 
-		if("set_bark_pitch")
-			var/datum/bark/B = GLOB.bark_list[bark_id]
-			if(!B)
-				to_chat(user, span_danger("ERROR: Vocal bark set to an invalid option."))
-				return CHARACTER_ACT_DATA_UPDATE
-			var/borkset = clamp(params["pitch"], B::minpitch, B::maxpitch)
-			verbose_pref_log_change(user, "notice", "Bark Pitch", bark_pitch, borkset)
-			bark_pitch = borkset
+		if("open_family_preferences")
+			user.client?.familytree_module_open_preferences(user)
 			return CHARACTER_ACT_DATA_UPDATE
 
-		if("set_bark_variance")
-			var/datum/bark/B = GLOB.bark_list[bark_id]
-			if(!B)
-				to_chat(user, span_danger("ERROR: Vocal bark set to an invalid option."))
-				return CHARACTER_ACT_DATA_UPDATE
-			var/borkset = clamp(params["variance"], B::minvariance, B::maxvariance)
-			verbose_pref_log_change(user, "notice", "Bark Variance", bark_variance, borkset)
-			bark_variance = borkset
-			return CHARACTER_ACT_DATA_UPDATE
-
-		if("barkpreview")
-			var/datum/bark/B = GLOB.bark_list[bark_id]
-			if(!B)
-				to_chat(user, span_danger("ERROR: Vocal bark set to an invalid option."))
-				return CHARACTER_ACT_DATA_UPDATE
-			if(!B::soundpath)
-				to_chat(user, span_warning("Your current bark has no sound."))
-				return CHARACTER_ACT_DATA_UPDATE
-
-			user.playsound_local(user, B::soundpath, vol = 100, vary = TRUE, frequency = BARK_DO_VARY(bark_pitch, bark_variance))
-			return CHARACTER_ACT_DATA_UPDATE
-
-		if("barkpreview_long")
-			var/datum/bark/B = GLOB.bark_list[bark_id]
-			if(!B)
-				to_chat(user, span_danger("ERROR: Vocal bark set to an invalid option."))
-				return CHARACTER_ACT_DATA_UPDATE
-			if(!B::soundpath)
-				to_chat(user, span_warning("Your current bark has no sound."))
-				return CHARACTER_ACT_DATA_UPDATE
-
-			var/total_delay = 0
-			for(var/i in 1 to (round((32 / bark_speed)) + 1))
-				addtimer(CALLBACK(src, PROC_REF(preview_bark), user, B::soundpath, BARK_DO_VARY(bark_pitch, bark_variance)), total_delay)
-				total_delay += rand(DS2TICKS(bark_speed/4), DS2TICKS(bark_speed/4) + DS2TICKS(bark_speed/4)) TICKS
-			return CHARACTER_ACT_DATA_UPDATE
-
-/datum/preferences/proc/preview_bark(mob/user, soundpath, pitch)
-	user.playsound_local(user, soundpath, vol = 100, vary = TRUE, frequency = pitch)
 
 /datum/preferences/proc/process_virtue_text(datum/virtue/V)
 	var/dat

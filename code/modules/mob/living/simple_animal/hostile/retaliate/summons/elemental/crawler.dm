@@ -59,5 +59,5 @@
 /mob/living/simple_animal/hostile/retaliate/rogue/elemental/crawler/death(gibbed)
 	..()
 	update_icon()
-	spawn(1)
-		qdel(src)
+	stoplag(1)
+	qdel(src)

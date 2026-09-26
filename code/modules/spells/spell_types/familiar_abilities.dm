@@ -176,9 +176,10 @@
 /datum/action/cooldown/spell/rootcheck/cast(atom/cast_on)
 	. = ..()
 	var/turf/target = get_turf(cast_on)
-	target.visible_message(span_notice("Hidden roots tremble underfoot as crops flourish before your very eyes, bursting through the ground!"))
 	if(!target)
 		return FALSE
+
+	target.visible_message(span_notice("Hidden roots tremble underfoot as crops flourish before your very eyes, bursting through the ground!"))
 	for(var/i in 1 to 3)
 		var/obj/item/path = pick(rootpool)
 		new path(target)
@@ -421,6 +422,16 @@
 
 	var/obj/conjured_item
 
+/datum/action/cooldown/spell/earthen_forge/IsAvailable(feedback = FALSE)
+	var/mob/living/carbon/human/species/familiar/user = owner
+	if(istype(user) && conjured_item && !QDELETED(conjured_item) && user.loc == conjured_item)
+		var/old_check_flags = check_flags
+		check_flags &= ~AB_CHECK_IMMOBILE
+		. = ..(feedback)
+		check_flags = old_check_flags
+		return
+	return ..(feedback)
+
 /datum/action/cooldown/spell/earthen_forge/cast(atom/cast_on)
 	. = ..()
 	var/mob/living/carbon/human/species/familiar/H = owner
@@ -468,15 +479,35 @@
 	return TRUE
 
 /datum/action/cooldown/spell/earthen_forge/proc/revert_perspective()
-	owner.reset_perspective()
-	owner.update_cone_show()
+	var/mob/living/carbon/human/species/familiar/H = owner
+	if(!istype(H))
+		return
+	H.reset_perspective()
+	H.update_cone_show()
 
 /datum/action/cooldown/spell/earthen_forge/proc/revert()
-	if(conjured_item)
-		owner.forceMove(get_turf(owner))
-		owner.status_flags &= ~GODMODE
-		owner.update_cone_show()
+	var/mob/living/carbon/human/species/familiar/H = owner
+	if(!istype(H))
 		QDEL_NULL(conjured_item)
+		return
+
+	if(!conjured_item || QDELETED(conjured_item))
+		H.status_flags &= ~GODMODE
+		H.reset_perspective()
+		H.update_cone_show()
+		return
+
+	var/turf/T = get_turf(H)
+	if(!T)
+		T = get_turf(conjured_item)
+	if(!T)
+		return
+
+	H.forceMove(T)
+	H.status_flags &= ~GODMODE
+	H.reset_perspective()
+	H.update_cone_show()
+	QDEL_NULL(conjured_item)
 
 /datum/action/cooldown/spell/earthen_forge/infernal
 	name = "Arcyne Attunement"

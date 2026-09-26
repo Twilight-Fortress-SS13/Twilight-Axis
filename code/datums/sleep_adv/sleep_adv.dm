@@ -8,6 +8,7 @@
 	var/list/sleep_exp = list()
 	var/datum/mind/mind = null
 	var/woke_up = TRUE
+	var/last_supply_cycle = 0 // TA EDIT
 	COOLDOWN_DECLARE(xp_show)
 	COOLDOWN_DECLARE(level_up)
 
@@ -271,6 +272,14 @@
 	woke_up = TRUE
 	if(mind.aspect_resets_used > 0)
 		mind.aspect_resets_used = 0
+	if(sleep_adv_cycle > last_supply_cycle) // TA EDIT START
+		last_supply_cycle = sleep_adv_cycle
+		if(HAS_TRAIT(mind.current, TRAIT_EXPLOSIVE_SUPPLY) && !mind.has_bomb)
+			mind.has_bomb = TRUE
+			to_chat(mind.current, span_smallnotice("I need to check on HERMES. I think a new package has arrived."))
+		if(HAS_TRAIT(mind.current, TRAIT_DRUG_SUPPLY) && !mind.has_drug_delivery)
+			mind.has_drug_delivery = TRUE
+			to_chat(mind.current, span_smallnotice("The Guild left something for me. I should check HERMES for my delivery.")) // TA EDIT END
 
 /datum/sleep_adv/proc/is_considered_sleeping()
 	if(!mind.current)
@@ -380,12 +389,6 @@
 	if(HAS_TRAIT(mind.current, TRAIT_STUDENT))
 		REMOVE_TRAIT(mind.current, TRAIT_STUDENT, TRAIT_GENERIC)
 		to_chat(mind.current, span_smallnotice("I feel that I can be educated in a skill once more."))
-	if(HAS_TRAIT(mind.current, TRAIT_EXPLOSIVE_SUPPLY))
-		mind.has_bomb = TRUE
-		to_chat(mind.current, span_smallnotice("I need to check on HERMES. I think a new package has arrived."))
-	if(HAS_TRAIT(mind.current, TRAIT_DRUG_SUPPLY))
-		mind.has_drug_delivery = TRUE
-		to_chat(mind.current, span_smallnotice("The Guild left something for me. I should check HERMES for my delivery."))
 	close_ui()
 
 /datum/sleep_adv/Topic(href, list/href_list)

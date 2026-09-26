@@ -16,7 +16,7 @@
 	subclass_skills = list(
 		/datum/skill/misc/swimming = SKILL_LEVEL_EXPERT, //To make a clean getaway from the constables
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT, // RUN BOY RUN
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN, // To escape grapplers, fuck you
+		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT, // To escape grapplers, fuck you
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
@@ -84,7 +84,7 @@
 				H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, SKILL_LEVEL_EXPERT, TRUE) //No Civbarb.
 				l_hand = /obj/item/rogueweapon/katar
 				r_hand = /obj/item/clothing/gloves/roguetown/knuckles
-	wretch_select_bounty(H)
+	bountychoice_vigilante(H)
 
 /datum/outfit/job/roguetown/wretch/vigilante/proc/owl_equip(mob/living/carbon/human/H)
 	backl = /obj/item/rogueweapon/woodstaff/quarterstaff/steel //nonlethal takedowns
@@ -115,7 +115,7 @@
 	H.change_stat(STATKEY_INT, 3)
 	H.change_stat(STATKEY_WIL, 3)
 	H.change_stat(STATKEY_PER, 3)
-	wretch_select_bounty(H)
+	bountychoice_vigilante(H)
 
 /datum/outfit/job/roguetown/wretch/vigilante/proc/bullshit_equip(mob/living/carbon/human/H)
 	beltr = /obj/item/rogueweapon/stoneaxe/hurlbat
@@ -134,4 +134,4 @@
 	H.change_stat(STATKEY_SPD, 2)
 	H.change_stat(STATKEY_WIL, 1)
 	H.change_stat(STATKEY_INT, 4) //Hilarious
-	wretch_select_bounty(H)
+	bountychoice_vigilante(H)

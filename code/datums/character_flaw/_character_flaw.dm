@@ -14,7 +14,7 @@ GLOBAL_LIST_INIT(averse_factions, list(
 	"Burghers" = BURGHERS,
 	"Azurian Trading Company" = ATC,
 	"Retinue" = RETINUE,
-	"Garrison" = GARRISON,
+	"Garrison" = (GARRISON | VANGUARD | CITYWATCH),
 	"Churchmen" = CHURCHMEN,
 	"Peasants" = PEASANTS,
 	"Wanderers" = WANDERERS,

@@ -57,6 +57,25 @@
   borneblood:
   - rscdel: Removed Toxophilite and Marksman virtues.
   - balance: Trained & Ready has the skills and weapons for Bows and Crossbows now.
+  msw7007:
+  - rscadd: "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0430 \u0432\u043E\u0437\
+      \u043C\u043E\u0436\u043D\u043E\u0441\u0442\u044C \u0441\u0430\u043C\u043E\u043C\
+      \u0443 \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u0441\u0435\u043A\u0441\u0430\
+      \ \u0441 \u043A\u043D\u043E\u0442\u043E\u043C \u0434\u043E\u0431\u0440\u043E\
+      \u0432\u043E\u043B\u044C\u043D\u043E \u0437\u0430\u043A\u043D\u043E\u0442\u0430\
+      \u0442\u044C\u0441\u044F."
+  - bugfix: "\u0411\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u043A\u0430 \u0415\u0420\
+      \u041F-\u043F\u0430\u043D\u0435\u043B\u0438 \u0434\u043B\u044F \u0444\u0430\u043C\
+      \u0438\u043B\u044C\u044F\u0440\u043E\u0432"
+  - bugfix: "\u0424\u0438\u043A\u0441 \u043F\u0440\u043E\u0433\u043B\u0430\u0442\u044B\
+      \u0432\u0430\u043D\u0438\u044F \u043F\u0440\u0438 \u0448\u0438\u0444\u0442-\u043A\
+      \u043B\u0438\u043A\u0435"
+  - bugfix: "\u0424\u0438\u043A\u0441 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\
+      \u0438\u044F \u0441\u0435\u043C\u0435\u043D\u0438 \u0432\u043E \u0440\u0442\u0443\
+      \ \u043F\u0440\u0438 \u0441\u043C\u0435\u0440\u0442\u0438 \u0438 \u0432\u043E\
+      \u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u0438 \u043F\u0440\u043E\u0433\
+      \u043B\u0430\u0442\u044B\u0432\u0430\u0442\u044C \u0441\u0435\u043C\u044F \u0442\
+      \u0440\u0443\u043F\u043E\u043C"
   mumblemancer:
   - rscadd: bloodletting now removes "infection" reagent from bad surgery. remember
       to pump out the blood w/ a hand after cutting the vein!
@@ -69,12 +88,14 @@
   - balance: Keep Footknights now have steel instead of iron warhammers. Since specials
       on other weapons made its prior case of being a straight-upgrade moot.
   zRainbowcat:
+  - rscadd: Lunacy embracer buff
   - qol: Added repairing to cooling backpack via hammer and engineering
   - bugfix: Fixed a bug that counted readiness in lobby as time on mercenary, so merc
       statue link was always expired even before server actually started round
   - bugfix: confessional hood coverage
   - bugfix: Added a different name for bullion recipe variant which fixed conflict
       between two
+  - bugfix: hud works normally with ranged weapons
 2026-09-02:
   FreeStylaLT:
   - image: Added an icon for the Perfect Tracker virtue.
@@ -124,6 +145,14 @@
   - balance: Ravox Arena moved to T4, Trial of Glory T2, Judgement T0 (smites mindless
       enemies now)
   - balance: Graggar Hamstring now reduces dodge chance.
+  Saukykouko:
+  - balance: "\u042D\u043C\u0431\u0435\u0440\u0432\u0438\u043D\u043E \u0431\u043E\u043B\
+      \u044C\u0448\u0435 \u043D\u0435 \u0434\u0435\u043B\u0430\u0435\u0442 \u0437\u0430\
+      \u0432\u0438\u0441\u0438\u043C\u044B\u043C \u043E\u0442 \u0441\u0435\u043A\u0441\
+      \u0430 \u043D\u0430 \u0432\u0435\u0441\u044C \u0440\u0430\u0443\u043D\u0434\
+      \ \u0441 \u043F\u044F\u0442\u0438 \u0433\u043B\u043E\u0442\u043A\u043E\u0432\
+      . \u0422\u0435\u043F\u0435\u0440\u044C \u043D\u0430\u0434\u043E \u0434\u0435\
+      \u0441\u044F\u0442\u044C."
   borneblood:
   - bugfix: Graggar T1 - Hamstring works now.
   - rscdel: Removed some unnecessary Rituos zizo fluff.
@@ -173,6 +202,24 @@
       to go and reapply it
   - image: removed the unused sprites for 'hyper'-sized 'size four' pintles
 2026-09-05:
+  Dark-Umbrella:
+  - rscadd: "\u041C\u0435\u0445\u0430\u043D\u0438\u043A\u0430 \u043C\u0435\u0442\u043E\
+      \u043A \u0434\u043B\u044F \u0438\u0433\u043D\u0430\u0439\u0448\u0435\u043D\u0430\
+      \ \u0410\u0441\u0442\u0440\u0430\u0442\u044B."
+  - rscadd: "\u0414\u0432\u0430 \u043D\u043E\u0432\u044B\u0445 \u0440\u0435\u0436\u0438\
+      \u043C\u0430 \u0434\u043B\u044F \u0438\u0433\u043D\u0430\u0439\u0448\u0435\u043D\
+      \u0430 \u0410\u0441\u0442\u0440\u0430\u0442\u044B."
+  - rscadd: "\u0414\u043E\u0431\u0430\u0432\u0438\u043B \u043E\u0444\u0444\u043E\u0432\
+      \u0441\u043A\u043E\u0435 \u0447\u0443\u0434\u043E, \u043D\u0430 \u04223 \u0441\
+      \u043E\u0437\u0434\u0430\u043D\u0438\u0435 \u043A\u0440\u0443\u0442\u043E\u0433\
+      \u043E \u0430\u0441\u0442\u0440\u0430\u0442\u0430\u043D\u0441\u043A\u043E\u0433\
+      \u043E \u043A\u043E\u0441\u0442\u0440\u0430."
+  - balance: "\u041F\u0435\u0440\u0435\u0440\u0430\u0431\u043E\u0442\u0430\u043D \u0418\
+      \u0433\u043D\u0430\u0439\u0448\u0435\u043D, \u043D\u0430 \u0444\u043E\u043D\u0435\
+      \ \u0447\u0440\u0435\u0437\u043C\u0435\u0440\u043D\u043E\u0439 \u044D\u0444\u0444\
+      \u0435\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u0438."
+  - balance: "\u041A\u0414 \u0421\u0430\u043D\u0441\u0442\u0440\u0430\u0439\u043A\u0430\
+      \ 20 \u043C\u0438\u043D\u0443\u0442 -> 10 \u043C\u0438\u043D\u0443\u0442."
   Lamasmaster:
   - rscadd: Guts you can gutspill, no more liver drop on gutspills.
   Quinalion:
@@ -183,6 +230,11 @@
   - rscadd: Added a new striped warpaint.
   - rscadd: Added eyebags as a Face Detail.
   - image: Ported the updated dwarf sprites from Vanderlin.
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u044B \u0440\u043E\
+      \u0431\u044B \u043D\u0430\u0451\u043C\u043D\u0438\u043A\u0430 \u0420\u0443\u043C\
+      \u0430\u043A\u043B\u0430\u043D\u043E\u0432\u0446\u0430."
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D \u0445\u0438\u043B\
+      \ \u041E\u0431\u043B\u0430\u0442\u0430."
   Ryan180602:
   - bugfix: left-hand twirling onmob.
   mumblemancer:
@@ -249,6 +301,16 @@
   - rscadd: mixing languages in the same sentence [,v Imperial and ,v(this is Otavais)].
   - rscadd: ryan donor
   - bugfix: remove cordage tying
+  Saukykouko:
+  - balance: "\u0421\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u044C Second\
+      \ Wind \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0442\u0440\u0435\u0431\
+      \u0443\u0435\u0442 \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C \u0434\u043B\
+      \u044F \u0430\u043A\u0442\u0438\u0432\u0430\u0446\u0438\u0438, \u0447\u0442\u043E\
+      \ \u043F\u0440\u0435\u0434\u043E\u0442\u0432\u0440\u0430\u0449\u0430\u0435\u0442\
+      \ \u043C\u043E\u043C\u0435\u043D\u0442\u044B, \u043A\u043E\u0433\u0434\u0430\
+      \ \u0410\u0431\u0438\u0441\u0441\u043E\u0440 \u043D\u0435 \u043C\u043E\u0436\
+      \u0435\u0442 \u043A\u0430\u0441\u0442\u043E\u0432\u0430\u0442\u044C \u043F\u043E\
+      \u0434 \u0432\u043E\u0434\u043E\u0439."
   bearrrrrrrr:
   - bugfix: Notorious contract mobs are no longer ai-piloted when taken by a player.
   borneblood:
@@ -262,13 +324,18 @@
   - bugfix: edited conjured skeleton's items so they are dissapearing once stripped,
       preventing existence of glued-up junk
 2026-09-08:
+  Chituka:
+  - balance: Heavy balance now inflicts 3 stamina damage per point of STR difference
+      instead of 2.
+  - balance: Normal balance now helps against other balances, reducing their effects.
+  - rscadd: Estoc now has rapier's special attack.
+  - rscadd: Fish.
+  - bugfix: defenestration now removes job nobility as well.
   Fi:
   - bugfix: Restores and improves the Wretch Licker's title obfuscation when they
       take the "Well Off -> Residency" virtue.
   IHOPMommyLich:
   - bugfix: fixed the smithing skill for the Executioner's Sword
-  KatTheFox:
-  - rscadd: Re-enabled the wordfilter.
   Mannybrado:
   - rscadd: new feminine body sprite that has significantly less pronounced default
       boobs, thus if you have no boobs your chest visually has none and its just flat
@@ -277,6 +344,131 @@
   - rscadd: you can MMB toggle between ear show, hair+ear show, and both hidden
   - rscadd: MMB layering for belt under cloak
   - balance: give night vision to blind people
+  Saukykouko:
+  - rscadd: "\u041C\u0438\u0441\u0441\u0438\u043E\u043D\u0435\u0440\u044B-\u0430\u0434\
+      \u0432\u0435\u043D\u0447\u0443\u0440\u044B \u0438 \u0435\u0440\u0435\u0442\u0438\
+      \u043A\u0438 \u043F\u0440\u0435\u0437\u0440\u0435\u043D\u043D\u044B\u0445 \u0440\
+      \u0435\u043B\u0438\u0433\u0438\u0439 \u0442\u0435\u043F\u0435\u0440\u044C \u0442\
+      \u043E\u0436\u0435 \u043F\u043E\u043B\u0443\u0447\u0430\u044E\u0442 \u0432\u043B\
+      \u0430\u0434\u0435\u043D\u0438\u0435 \u043D\u0430\u0432\u044B\u043A\u0430\u043C\
+      \u0438"
+  Vladmar11:
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u044B \u0433\u043B\
+      \u043E\u0431\u0430\u043B\u044C\u043D\u044B\u0435 \u043E\u0431\u044A\u044F\u0432\
+      \u043B\u0435\u043D\u0438\u044F \u043E\u0431 \u043E\u0442\u043B\u0443\u0447\u0435\
+      \u043D\u0438\u0438 \u043E\u0442 \u0446\u0435\u0440\u043A\u0432\u0438. Excommunicate,\
+      \ Apostasy \u0438 Divine Curse \u043F\u0435\u0440\u0435\u0432\u0435\u0434\u0435\
+      \u043D\u044B \u043D\u0430 \u0422\u0413\u0423\u0418 \u0432\u044B\u0431\u043E\u0440\
+      \ \u0437\u043D\u0430\u043A\u043E\u043C\u044B\u0445 \u043F\u0435\u0440\u0441\u043E\
+      \u043D\u0430\u0436\u0435\u0439 \u0441 \u043E\u0442\u043E\u0431\u0440\u0430\u0436\
+      \u0435\u043D\u0438\u0435\u043C \u043D\u0430\u0441\u0442\u043E\u044F\u0449\u0438\
+      \u0445 \u0438\u043C\u0451\u043D. \u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\
+      \u043D\u0430 \u043E\u0448\u0438\u0431\u043E\u0447\u043D\u0430\u044F \u043F\u0440\
+      \u043E\u0432\u0435\u0440\u043A\u0430 \u0437\u043D\u0430\u043A\u043E\u043C\u044B\
+      \u0445 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0435\u0439 \u0443 \u0435\
+      \u043F\u0438\u0441\u043A\u043E\u043F\u0430. Apostasy \u0442\u0435\u043F\u0435\
+      \u0440\u044C \u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u043E \u043F\u0440\
+      \u043E\u0432\u0435\u0440\u044F\u0435\u0442 devotion \u0438 \u043F\u043E\u043A\
+      \u0430\u0437\u044B\u0432\u0430\u0435\u0442 \u043E\u0441\u0442\u0430\u0432\u0448\
+      \u0435\u0435\u0441\u044F \u0432\u0440\u0435\u043C\u044F \u043A\u0443\u043B\u0434\
+      \u0430\u0443\u043D\u0430. \u041F\u043E \u0431\u0430\u0433-\u0440\u0435\u043F\
+      \u043E\u0440\u0442\u0443"
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u0441\u043E\
+      \u0437\u0434\u0430\u043D\u0438\u0435 \u043A\u043D\u0438\u0433: \u0441\u043E\u0445\
+      \u0440\u0430\u043D\u044F\u044E\u0442\u0441\u044F \u0442\u0435\u043A\u0441\u0442\
+      , \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0438 \u0430\u0432\u0442\
+      \u043E\u0440. \u041F\u0440\u0438 \u043F\u043E\u043C\u0435\u0449\u0435\u043D\u0438\
+      \u0438 \u0441\u043E\u0437\u0434\u0430\u043D\u043D\u043E\u0439 \u0438\u0433\u0440\
+      \u043E\u043A\u043E\u043C \u043A\u043D\u0438\u0433\u0438 \u0432 \u0430\u0440\u0445\
+      \u0438\u0432 \u043C\u043E\u0436\u043D\u043E \u0432\u044B\u0431\u0440\u0430\u0442\
+      \u044C, \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u0442\u044C \u043B\u0438\
+      \ \u0435\u0451 \u0434\u043B\u044F \u0431\u0443\u0434\u0443\u0449\u0438\u0445\
+      \ \u0440\u0430\u0443\u043D\u0434\u043E\u0432."
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u0440\u0430\
+      \u0441\u0445\u043E\u0434\u043E\u0432\u0430\u043D\u0438\u0435 \u0438\u043D\u0433\
+      \u0440\u0435\u0434\u0438\u0435\u043D\u0442\u043E\u0432 \u0432 \u0440\u0438\u0442\
+      \u0443\u0430\u043B\u0430\u0445 \u0417\u0438\u0437\u043E."
+  - bugfix: "\u0420\u0443\u043D\u0443 \u0417\u0438\u0437\u043E \u0442\u0435\u043F\u0435\
+      \u0440\u044C \u043D\u0435\u043B\u044C\u0437\u044F \u043D\u0430\u0440\u0438\u0441\
+      \u043E\u0432\u0430\u0442\u044C \u0431\u0435\u0437 \u0441\u0432\u043E\u0431\u043E\
+      \u0434\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0441\u0442\u0440\u0430\u043D\
+      \u0441\u0442\u0432\u0430 3 \u043D\u0430 3."
+  - bugfix: "\u0412\u0441\u0435 \u0440\u0438\u0442\u0443\u0430\u043B\u044B \u0417\u0438\
+      \u0437\u043E \u043E\u0431\u044A\u0435\u0434\u0438\u043D\u0435\u043D\u044B \u0432\
+      \ \u043E\u0434\u043D\u0443 \u0440\u0443\u043D\u0443, \u0442\u0435\u043F\u0435\
+      \u0440\u044C \u043D\u0435 \u043D\u0430\u0434\u043E \u043A\u0430\u0436\u0434\u044B\
+      \u0439 \u0443\u0433\u043E\u043B \u043E\u0431\u0433\u0430\u0436\u0438\u0432\u0430\
+      \u0442\u044C \u0440\u0443\u043D\u0430\u043C\u0438."
+  - bugfix: "\u0410\u0441\u0441\u0430\u0441\u0438\u043D\u0430 \u0442\u0435\u043F\u0435\
+      \u0440\u044C \u043D\u0435 \u043F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0435\
+      \u0442 \u0432 \u043B\u043E\u0431\u0431\u0438."
+  - bugfix: "\u0423\u0431\u0440\u0430\u043D \u0432\u0442\u043E\u0440\u043E\u0439 \u043B\
+      \u0438\u0448\u043D\u0438\u0439 \u043A\u0440\u0430\u0444\u0442 \u0440\u044E\u0437\
+      \u043A\u0430\u043A\u0430, \u0442\u0435\u043F\u0435\u0440\u044C \u043E\u043D\
+      \ \u043E\u0434\u0438\u043D \u0438 \u043F\u0440\u0438\u043D\u0438\u043C\u0430\
+      \u0435\u0442 \u043F\u043E\u0434\u0442\u0438\u043F\u044B \u043F\u0440\u0435\u0434\
+      \u043C\u0435\u0442\u043E\u0432."
+  - bugfix: "\u0422\u0435\u043F\u0435\u0440\u044C \u043D\u0435\u043B\u044C\u0437\u044F\
+      \ \u0434\u0430\u0432\u0430\u0442\u044C \u0432\u0435\u0449\u0438 \u0442\u0435\
+      \u043C, \u043A\u0442\u043E \u0441\u0434\u0430\u0435\u0442\u0441\u044F, \u0447\
+      \u0442\u043E\u0431\u044B \u043E\u043D\u0438 \u043D\u0435 \u043F\u0440\u043E\u043F\
+      \u0430\u0434\u0430\u043B\u0438."
+  - bugfix: "\u0423\u0431\u0440\u0430\u043D\u043E \u0434\u0443\u0431\u043B\u0438\u0440\
+      \u043E\u0432\u0430\u043D\u0438\u0435 \u0444\u0440\u0430\u0437, \u043A\u043E\u0442\
+      \u043E\u0440\u044B\u0435 \u043F\u0438\u0448\u0443\u0442\u0441\u044F \u043A\u0430\
+      \u0436\u0434\u044B\u0439 \u0434\u0435\u043D\u044C."
+  - bugfix: "\u0423\u0431\u0440\u0430\u043D \u0432\u044B\u0431\u043E\u0440 \u0441\u0442\
+      \u0438\u043B\u044F swatchbook \u0443 \u043A\u043D\u0438\u0433, \u0442\u0430\u043A\
+      \ \u043A\u0430\u043A, \u0442\u0430\u043A\u043E\u0433\u043E \u0441\u043F\u0440\
+      \u0430\u0439\u0442\u0430 \u043F\u0440\u043E\u0441\u0442\u043E \u043D\u0435\u0442\
+      ."
+  - bugfix: "\u0423\u0434\u0430\u0440 \u043A\u043E\u043B\u044B\u0448\u043A\u043E\u043C\
+      \ \u043F\u043E \u0432\u0435\u0449\u0430\u043C \u0431\u043E\u043B\u044C\u0448\
+      \u0435 \u0442\u0435 \u043D\u0435 \u043E\u0442\u0431\u0440\u0430\u0441\u044B\u0432\
+      \u0430\u0435\u0442."
+  - bugfix: "\u0424\u0438\u043A\u0441 \u0441\u043F\u0440\u0430\u0439\u0442\u043E\u0432\
+      \ \u0443 \u0430\u0440\u0431\u0430\u043B\u0435\u0442\u043E\u0432 \u0434\u0440\
+      \u043E\u0443."
+  - bugfix: "\u0422\u0435\u043F\u0435\u0440\u044C \u043C\u043E\u0436\u043D\u043E \u0442\
+      \u0443\u0448\u0438\u0442\u044C \u0444\u043E\u043D\u0430\u0440\u0438 \u0433\u0440\
+      \u044F\u0437\u044C\u044E, \u043A\u0430\u043A \u0438 \u0431\u044B\u043B\u043E\
+      \ \u0438\u0437\u043D\u0430\u0447\u0430\u043B\u044C\u043D\u043E \u0437\u0430\u0434\
+      \u0443\u043C\u0430\u043D\u043E"
+  - bugfix: "\u0422\u0435\u043F\u0435\u0440\u044C \u0444\u0438\u043B\u044C\u0442\u0440\
+      \ \u0443 \u0447\u0443\u0434\u0430 \u0431\u0430\u043E\u0442\u0438\u0441\u0442\
+      \u043E\u0432 - joyride \u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u043E\
+      \ \u0443\u0431\u0438\u0440\u0430\u0435\u0442\u0441\u044F."
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u043C\u043D\
+      \u043E\u0436\u0435\u0441\u0442\u0432\u043E \u0440\u0430\u043D\u0442\u0430\u0439\
+      \u043C\u043E\u0432"
+  - rscadd: "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u044B \u043D\u043E\u0440\
+      \u043C\u0430\u043B\u044C\u043D\u044B\u0439 \u0438 \u0430\u0433\u0440\u0435\u0441\
+      \u0441\u0438\u0432\u043D\u044B\u0439 \u0440\u0435\u0436\u0438\u043C\u044B \u0434\
+      \u043B\u044F \u043F\u0440\u0438\u0437\u044B\u0432\u043E\u0432 \u0420\u0430\u0432\
+      \u043E\u043A\u0441\u0430 \u0438 \u0410\u0431\u0438\u0441\u0441\u043E\u0440\u0430\
+      . \u041F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u044E\u0442\u0441\u044F\
+      \ \u0447\u0435\u0440\u0435\u0437 \u0432\u0435\u0440\u0431 Togle Mossback/Spirit\
+      \ Aggression"
+  - rscadd: "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u044B \u0441\u0432\u043E\
+      \u0438 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u0438 \u0438\u043A\u043E\
+      \u043D\u043A\u0438 \u0441\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\
+      \u0435\u0439 \u0434\u043B\u044F \u043C\u0435\u0442\u043A\u0438 \u043D\u0430\
+      \ \u0441\u043E\u044E\u0437\u043D\u0438\u043A\u043E\u0432 \u0438 \u0434\u043B\
+      \u044F \u043A\u043E\u043C\u0430\u043D\u0434\u043E\u0432\u0430\u043D\u0438\u044F\
+      \ \u043C\u043E\u0431\u0430\u043C\u0438 \u0443 \u0420\u0430\u0432\u043E\u043A\
+      \u0441\u0430 \u0438 \u0410\u0431\u0438\u0441\u0441\u043E\u0440\u0430."
+  - rscadd: "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D \u0432\u0435\u0440\u0431\
+      \ Togle Fellowship AOE \u0434\u043B\u044F \u043A\u043B\u0435\u0440\u0438\u043A\
+      \u043E\u0432 \u0420\u0430\u0432\u043E\u043A\u0441\u0430 \u0438 \u0413\u0440\u0430\
+      \u0433\u0433\u0430\u0440\u0430"
+  - qol: "\u0414\u0443\u0445\u043E\u0432 \u0420\u0430\u0432\u043E\u043A\u0441\u0430\
+      \ \u0442\u0435\u043F\u0435\u0440\u044C \u043C\u043E\u0436\u043D\u043E \u043F\
+      \u0440\u0438\u0437\u044B\u0432\u0430\u0442\u044C \u043D\u0430 \u043B\u044E\u0431\
+      \u043E\u0439 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0439 \u0442\
+      \u0430\u0439\u043B"
+  - bugfix: "\u0423\u043B\u0443\u0447\u0448\u0435\u043D \u0418\u0418 Dreamfiend, \u0434\
+      \u0443\u0445\u043E\u0432 \u0420\u0430\u0432\u043E\u043A\u0441\u0430 \u0438 \u043A\
+      \u0440\u0430\u0431\u0430 \u0438\u0437 Call Mossback."
   borneblood:
   - balance: Blackblood's regeneration gets stunted by 50% for every 'bad scenario'
       a Blackblood is in and shouldn't be, including (and specifically) being in combat.
@@ -315,6 +507,11 @@
       to clergymen.
   - balance: Graggar/Zizo missionaries have a "unique" outfits for now. other ascendants
       may come later.
+  sinerume:
+  - rscadd: "\u041D\u043E\u0432\u044B\u0439 \u043A\u043B\u0430\u0441\u0441 \u041A\u0440\
+      \u043E\u0432\u0430\u0432\u044B\u0439 \u0440\u0435\u0439\u0434\u0435\u0440"
+  - rscadd: "\u041D\u043E\u0432\u0430\u044F \u043F\u0443\u0448\u043A\u0430 \u0411\u043B\
+      \u0430\u0434\u043B\u043E\u043A"
   zRainbowcat:
   - bugfix: aavnic bow sprite returned
 2026-09-09:
@@ -431,6 +628,14 @@
   - code_imp: Stages some supplemental assets for later, including some more donator-specific
       sprites.
   - rscadd: Shalwar Pants and Dupatta Sash. Credit to Dromkii for the sprites!
+  Oni328:
+  - qol: "\u0421\u043B\u0435\u0433\u043A\u0430 \u0438\u0437\u043C\u0435\u043D\u0438\
+      \u043B \u043B\u043E\u0434\u0430\u0443\u0442 \u0440\u043E\u0433\u0438 \u0438\u0437\
+      \ \u041C\u0438\u0440\u0430\u0436\u0444\u0435\u043D\u0430."
+  Pivo24:
+  - rscadd: "Nude Sleeper \u0442\u0435\u043F\u0435\u0440\u044C \u043C\u043E\u0436\u043D\
+      \u043E \u0432\u044B\u0431\u0440\u0430\u0442\u044C \u0432 \u043A\u0430\u0447\u0435\
+      \u0441\u0442\u0432\u0435 \u0432\u0430\u0439\u0441\u0430"
   Quinalion:
   - image: "Dendorite\u2019s helmet now looks normal."
   - bugfix: Emotes now properly appear as Runechat messages above your character's
@@ -439,8 +644,15 @@
       as intended.
   - rscadd: You can now light another character's cigarette while kissing them.
   - qol: Removed the redundant dram count description from vessels.
+  - balance: "\u0420\u0435\u0432\u043E\u0440\u043A \u0440\u0443\u043D\u043D\u044B\u0445\
+      \ \u043A\u043B\u0430\u0441\u0441\u043E\u0432 \u0438\u043D\u043A\u0432\u0438\u0437\
+      \u0438\u0446\u0438\u0438."
   Ryan180602:
   - balance: jester's floor of music skill is expert
+  Vladmar11:
+  - refactor: "\u041E\u043F\u0442\u0438\u043C\u0438\u0437\u0430\u0446\u0438\u044F\
+      \ do_after, do_mob \u0438 \u043F\u0440\u043E\u0433\u0440\u0435\u0441\u0441\u0431\
+      \u0430\u0440\u0430"
   WeNeedMorePhoron:
   - balance: Dash like effects lock eachother out for 30 seconds
   changelingonberry:
@@ -457,6 +669,15 @@
       on Dun World
   zRainbowcat:
   - bugfix: Xylix decoy now copy your looks properly
+  - bugfix: "\u0428\u0430\u043F\u043A\u0430 \u0433\u0440\u0435\u043D\u0437\u0435\u043B\
+      \u0435\u0439 \u0438\u0437 \u043B\u043E\u0430\u0434\u0430\u0443\u0442\u0430 \u0431\
+      \u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0442\u0440\u0435\u0431\u0443\u0435\
+      \u0442 \u0443\u0441\u0438\u043B\u0438\u0439 \u0448\u043B\u0435\u043C\u0430 \u0434\
+      \u043B\u044F \u0441\u043D\u044F\u0442\u0438\u044F"
+  - bugfix: "\u041B\u0430\u0443\u043D\u0447\u0435\u0440 \u0438\u043D\u0436\u0435\u043D\
+      \u0435\u0433\u0440\u043E\u0432 \u0431\u043E\u043B\u0435\u0435 \u043D\u0435 \u0441\
+      \u0442\u0440\u0435\u043B\u044F\u0435\u0442 \u043E\u0433\u043D\u0435\u0441\u0442\
+      \u0440\u0435\u043B\u043E\u043C"
 2026-09-12:
   BurpleBineapple:
   - rscadd: Added a rare FOR based easter egg to weapon flourishing.
@@ -557,6 +778,10 @@
   voidwytch:
   - bugfix: high society cloak issue
   - bugfix: velvet dress two electric boogaloo rename
+  zRainbowcat:
+  - bugfix: "\u0442\u043E\u0447\u043D\u043E \u043F\u043E\u0444\u0438\u043A\u0441\u0438\
+      \u043B \u0448\u0430\u043F\u043A\u0438 \u0433\u0440\u0435\u043D\u0437\u0435\u043B\
+      \u044F"
 2026-09-14:
   KatTheFox:
   - bugfix: Roundstart known characters will no longer have their role title show
@@ -643,6 +868,8 @@
   - bugfix: athletics skill description is no longer psyop
   - bugfix: fixed nodrop items from conjured summons
 2026-09-16:
+  Antoonij:
+  - rscadd: "\u041A\u0430\u0440\u0442\u0430 pilgrim"
   DmitriyPershukov:
   - rscadd: added bulk pure moondust recipe
   - balance: lowered pure moondust recipe difficulty to expert from master
@@ -685,6 +912,35 @@
       kits as well.
   - bugfix: Undestroys the recent Donor PR's item access point.
   - rscadd: Iron variants of the new maille-and-armets.
+  Saukykouko:
+  - rscadd: "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0430 \u0441\u043F\u043E\
+      \u0441\u043E\u0431\u043D\u043E\u0441\u0442\u044C Malum's Inspiration, \u043A\
+      \u043E\u0442\u043E\u0440\u0430\u044F \u0434\u0430\u0435\u0442 \u0432\u044B\u0431\
+      \u0440\u0430\u043D\u043D\u043E\u0439 \u0446\u0435\u043B\u0438 +3 \u043A \u0432\
+      \u043E\u043B\u0438, +4 \u043A \u0438\u043D\u0442\u0435\u043B\u043B\u0435\u043A\
+      \u0442\u0443 \u0438 -2 \u0432\u044B\u043D\u043E\u0441\u043B\u0438\u0432\u043E\
+      \u0441\u0442\u0438, -1 \u0441\u043A\u043E\u0440\u043E\u0441\u0442\u0438. \u0414\
+      \u043B\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C \u0437\u0430\
+      \u0432\u0438\u0441\u0438\u0442 \u043E\u0442 \u0443\u0440\u043E\u0432\u043D\u044F\
+      \ \u043D\u0430\u0432\u044B\u043A\u0430 \u0427\u0443\u0434\u0435\u0441, \u0430\
+      \ \u041A\u0414 2 \u043C\u0438\u043D\u0443\u0442\u044B"
+  - rscdel: "\u0423\u0434\u0430\u043B\u0435\u043D\u0430 \u0441\u043F\u043E\u0441\u043E\
+      \u0431\u043D\u043E\u0441\u0442\u044C Rework \u0443 \u041C\u0430\u043B\u0443\u043C\
+      \u0438\u0441\u0442\u043E\u0432"
+  - rscadd: "Nightblade \u0442\u0435\u043F\u0435\u0440\u044C \u0442\u043E\u0436\u0435\
+      \ \u0438\u043C\u0435\u0435\u0442 \u0431\u043E\u043D\u0443\u0441\u044B \u043A\
+      \ \u043D\u0430\u0432\u044B\u043A\u0430\u043C \u043E\u0442 \u043F\u0440\u0435\
+      \u0437\u0440\u0435\u043D\u043D\u044B\u0445"
+  - rscadd: "\u0424\u043B\u044E\u0432\u0438\u0430\u043D\u0435 \u0442\u0435\u043F\u0435\
+      \u0440\u044C \u043C\u043E\u0433\u0443\u0442 \u0432\u044B\u0431\u0440\u0430\u0442\
+      \u044C \u043F\u043E\u0434\u0437\u0435\u043C\u043D\u043E\u0435 \u043F\u0440\u043E\
+      \u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435"
+  Vladmar11:
+  - balance: "\u0411\u0430\u043D\u0434\u0438\u0442\u044B \u0442\u0435\u043F\u0435\u0440\
+      \u044C \u043D\u0435 \u043C\u0435\u0448\u0430\u044E\u0442 \u0432\u044B\u043F\u0430\
+      \u0434\u0435\u043D\u0438\u044E \u043C\u0430\u0436\u043E\u0440 \u0430\u043D\u0442\
+      \u0430\u0433\u043E\u0432 \u0432 \u0445\u0430\u0439 \u0438\u043D\u0442\u0435\u043D\
+      \u0441\u0438\u0442\u0438"
   WeNeedMorePhoron:
   - rscadd: You can no longer fine yourself
   mumblemancer:
@@ -692,6 +948,11 @@
   - balance: unbound skeletons also got swift back for consistency
   tmyqlfpir:
   - bugfix: Ice slipping letting mobs clip through solid objects
+  zRainbowcat:
+  - bugfix: "\u0413\u0440\u0430\u043C\u043E\u0442\u0430 \u0442\u0435\u043F\u0435\u0440\
+      \u044C \u0441\u043D\u043E\u0432\u0430 \u0434\u0430\u0435\u0442\u0441\u044F \u0441\
+      \ \u0432\u0438\u0440\u0447\u0435\u0439 \u0440\u0435\u0437\u0438\u0434\u0435\u043D\
+      \u0442\u0430"
 2026-09-17:
   FreeStylaLT:
   - refactor: Added more PQ ranks.
@@ -720,6 +981,12 @@
   - bugfix: Jacketed plate-and-maille now properly renders sleeve sprites.
   Pokebutt:
   - rscadd: new milling recipes
+  Quinalion:
+  - balance: "\u0420\u0435\u0431\u0430\u043B\u0430\u043D\u0441 \u043D\u0430\u0451\u043C\
+      \u043D\u0438\u043A\u043E\u0432 \u0410\u0443 \u0420\u0430."
+  - refactor: "\u041C\u0438\u043D\u043E\u0440\u043D\u044B\u0439 \u0440\u0435\u0444\
+      \u0430\u043A\u0442\u043E\u0440 \u043A\u043E\u0434\u0430 \u043E\u0433\u043D\u0435\
+      \u0441\u0442\u0440\u0435\u043B\u0430."
   Ryan180602:
   - bugfix: reverts 9045 to fix items with cosmetic storage hiding hair
   - balance: Dueling goggles lose the armour.
@@ -764,6 +1031,10 @@
   - qol: Items in cosmetic clots properly cover your body now
   - bugfix: Hallowed trait actually works now
 2026-09-18:
+  Antoonij:
+  - balance: "\u043E\u0431\u044B\u0447\u043D\u044B\u0435 \u0432\u0430\u0440\u043F\u0438\
+      \u043A\u0438 \u0441\u043A\u0435\u0439\u043B\u044F\u0442\u0441\u044F \u043E\u0442\
+      \ \u0442\u043E\u043F\u043E\u0440\u043E\u0432"
   FreeStylaLT:
   - refactor: Weapon integrity values have all been slightly increased to reflect
       the backend values more accurately.
@@ -814,6 +1085,9 @@
       well as feeling the effects of critical sunders slightly longer than regular
       silver-weak.
   - qol: bedrock is named bedrock, its also darker so you can tell at a glance.
+  zRainbowcat:
+  - bugfix: "\u0445\u0430\u043B\u043B\u043E\u0432\u0435\u0434 \u0440\u0430\u0431\u043E\
+      \u0442\u0430\u0435\u0442 \u0441\u043D\u043E\u0432\u0430"
 2026-09-19:
   KatTheFox:
   - bugfix: Characters with special characters - such as apostrophes - in their names
@@ -844,6 +1118,12 @@
   OrbisAnima:
   - qol: Removes random chance to fail picking bushes, swampweed, wild firitus and
       wild pumpkin.
+  Saukykouko:
+  - bugfix: "\u041D\u0430 \u043D\u043E\u043A\u0442\u0438\u0441\u0442\u043A\u0438\u0445\
+      \ \u0431\u0430\u043D\u043D\u0435\u0440\u0430\u0445 \u0431\u043E\u043B\u044C\u0448\
+      \u0435 \u043D\u0435 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u043E \u0411\u0420\
+      \u0410\u0422, \u0430 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u043E \u0421\
+      \u0435\u0441\u0442\u0440\u0430"
   ToasterStrudes:
   - bugfix: you can now unbind keys that were previously bugged and unable to be unbound
       in keybindings.
@@ -851,6 +1131,10 @@
   - bugfix: removed second_chance virtue from mistwalker
   racobio:
   - rscadd: Added three new dark elf skin tones
+  zRainbowcat:
+  - balance: "\u0440\u0435\u0431\u0430\u043B\u0430\u043D\u0441 \u0441\u0430\u043C\u043E\
+      \u0433\u043E \u0441\u0438\u043B\u044C\u043D\u043E\u0433\u043E \u043E\u0440\u0443\
+      \u0436\u0438\u044F \u043C\u044B\u043B\u0430"
 2026-09-21:
   KatTheFox:
   - bugfix: Ochre arils are now functional.
@@ -878,6 +1162,8 @@
   - bugfix: fixed naledi light skin color characters from ending up whitewashed.
   - rscadd: Added support for custom sprites for the azure crown.
   Quinalion:
+  - rscadd: "\u0414\u043E\u0441\u043F\u0435\u0445\u0438 \u041B\u0435\u0433\u0438\u043E\
+      \u043D\u0430, \u043A\u0440\u0430\u0444\u0442 \u043E\u043D\u044B\u0445."
   - rscadd: Added Inquisitorial Heels for Inquisitors with SHE_HER pronouns.
   Ryan180602:
   - bugfix: allow special characters in custom descriptors
@@ -888,6 +1174,12 @@
   - rscadd: Minion Order and Gravemark to Zizo Shamans
   - rscadd: Minion Order and Gravemark to Zizo Godsblood Witches
   - rscadd: Minion Order and Gravemark to Zizo Devotion Cantors
+  Vladmar11:
+  - refactor: "\u043F\u043E\u0433\u043E\u0434\u0430 \u0442\u0435\u043F\u0435\u0440\
+      \u044C \u0441\u0434\u0435\u043B\u0430\u043D\u0430 \u043D\u0435 \u043D\u0430\
+      \ \u043E\u0441\u043D\u043E\u0432\u0435 \u043F\u0430\u0440\u0442\u0438\u043A\u043B\
+      \u0435\u0439, \u0430 \u043D\u0430 \u043E\u0441\u043D\u043E\u0432\u0435 \u043E\
+      \u0431\u044B\u0447\u043D\u044B\u0445 \u0442\u0435\u043A\u0441\u0442\u0443\u0440"
   WeNeedMorePhoron:
   - rscadd: An "issued" tabs show quests you have issued. You can cancel / take back
       any quests that has not been taken up. Once it is taken up but not started (i.e.
@@ -1115,6 +1407,15 @@
       having order and gravemark if zizo is chosen
   - refactor: changed logic for giving skeleton's controlling abilities
 2026-09-26:
+  Quinalion:
+  - bugfix: "\u0414\u0443\u0431\u043B\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435\
+      \ \u043F\u0438\u0441\u0442\u043E\u043B\u044F \u0432 \u043A\u043E\u0431\u0443\
+      \u0440\u0435."
+  - bugfix: "\u0421\u043F\u0440\u0430\u0439\u0442\u044B \u043A\u043E\u0431\u0443\u0440\
+      \u044B \u043B\u0435\u0433\u0438\u043E\u043D\u0435\u0440\u0430."
+  - bugfix: "\u0412\u044B\u0434\u0430\u0447\u0430 \u0441\u0432\u044F\u0442\u043E\u0433\
+      \u043E \u043F\u043E\u0440\u043E\u0445\u0430 \u043B\u0435\u0433\u0438\u043E\u043D\
+      \u0435\u0440\u0443"
   Lamasmaster:
   - spellcheck: Makes Ravox just Justicar in game, Justiciar is left up to secular
       matters (the Crown).

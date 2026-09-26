@@ -53,6 +53,8 @@
 			CAR.adjust_arousal_special(src, 2)
 
 	if(has_status_effect(/datum/status_effect/debuff/vulnerable))
+		remove_status_effect(/datum/status_effect/buff/clash)
+		remove_status_effect(/datum/status_effect/buff/clash/limbguard)
 		if(!has_status_effect(/datum/status_effect/buff/weapon_binded) && !has_status_effect(/datum/status_effect/debuff/weapon_binded))
 			if(ishuman(src) && user.get_tempo_bonus(TEMPO_TAG_BINDABLE) && mind && user?.mind)
 				var/held = get_active_held_item()
@@ -62,12 +64,24 @@
 						if(HL.try_bind(held, user, TRUE))
 							remove_status_effect(/datum/status_effect/debuff/vulnerable)
 							return TRUE
+		return FALSE
+
+		// TA Edit start - SOUNDBREAKER
+	var/success = FALSE
 
 	switch(d_intent)
 		if(INTENT_PARRY)
-			return attempt_parry(attack_intent, user)
+			success = attempt_parry(attack_intent, user)
+			if(success)
+				ronin_on_parry_success(src, user)
 		if(INTENT_DODGE)
-			return attempt_dodge(attack_intent, user)
+			success = attempt_dodge(attack_intent, user)
+
+	if(success)
+		soundbreaker_riff_defense_success(src)
+
+	return success
+	// TA Edit end - SOUNDBREAKER
 
 /mob/living/proc/start_climb()
 	if(doing || mid_climb)

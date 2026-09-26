@@ -1,4 +1,10 @@
+#define WATER_PULLING_STAMINA_MULTIPLIER 1.5 // TA EDIT
+
 ///////////// OVERLAY EFFECTS /////////////
+
+/atom/movable // TA EDIT
+	var/tmp/water_dragged = FALSE // TA EDIT
+
 /obj/effect/overlay/water
 	icon = 'icons/turf/newwater.dmi'
 	icon_state = "bottom"
@@ -104,6 +110,8 @@
 						if(!locate(/mob/living) in src)
 							water_overlay.layer = BELOW_MOB_LAYER
 							water_overlay.plane = GAME_PLANE
+			if(user.water_dragged) // TA EDIT
+				return // TA EDIT
 			var/drained = get_stamina_drain(user, get_dir(src, newloc))
 			if(drained && !user.stamina_add(drained))
 				user.Immobilize(30)
@@ -158,6 +166,10 @@
 		for(var/D in GLOB.cardinals) //adjacent to a floor to hold onto
 			if(istype(get_step(src, D), /turf/open/floor))
 				return 0
+	if(.)
+		var/atom/movable/pulled = swimmer.pulling
+		if(!swimmer.moving_from_pull && pulled && pulled != swimmer && isliving(pulled))
+			. *= WATER_PULLING_STAMINA_MULTIPLIER
 
 // Mobs won't try to path through water if low on stamina,
 // and will take advantage of water flow to move faster.
@@ -328,6 +340,11 @@
 		var/mob/living/L = user
 		if(L.stat != CONSCIOUS)
 			return
+		//TA edit - Bard chages start
+		if(L.is_blocked_by_music_consumption())
+			to_chat(user, span_warning("I can't drink while performing music."))
+			return
+		//TA edit - Bard chages end
 		if(iscarbon(user))
 			var/mob/living/carbon/C = user
 			if(C.is_mouth_covered())
@@ -832,3 +849,5 @@
 
 /turf/open/water/river/flow/murk/deep/north
 	dir = 1
+
+#undef WATER_PULLING_STAMINA_MULTIPLIER // TA EDIT

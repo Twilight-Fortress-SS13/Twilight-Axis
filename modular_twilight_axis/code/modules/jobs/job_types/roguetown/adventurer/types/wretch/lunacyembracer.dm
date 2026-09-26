@@ -1,0 +1,62 @@
+/datum/advclass/wretch/lunacyembracer
+	name = "Lunacy Embracer"
+	tutorial = "You have rejected and terrorized civilization in the name of nature. \
+	You run wild under the moon, a terror to the townsfolk and a champion of Dendor's wild domain. \
+	Clergy of Azuria assume you are a radical dendorite and rejected you, your connection with Treefather is weaken but you will serve him whatever it takes."
+	allowed_sexes = list(MALE, FEMALE)
+	forbidden_races = list(RACES_CONSTRUCT)
+	min_pq = 40
+	maximum_possible_slots = 1
+	outfit = /datum/outfit/job/roguetown/wretch/lunacyembracer
+	category_tags = list(CTAG_WRETCH)
+	class_select_category = CLASS_CAT_CLERIC
+	extra_context = "Minimum PQ Required: 40"
+	subclass_languages = list(/datum/language/beast)
+
+	traits_applied = list(
+		TRAIT_NUDIST,
+		TRAIT_CRITICAL_RESISTANCE,
+		TRAIT_NOPAIN,
+		TRAIT_DODGEEXPERT,
+		TRAIT_CIVILIZEDBARBARIAN,
+		TRAIT_STRONGBITE,
+		TRAIT_LONGSTRIDER,
+		TRAIT_WOODWALKER,
+		TRAIT_NASTY_EATER,
+		TRAIT_OUTDOORSMAN
+	)
+
+	subclass_skills = list(
+		/datum/skill/combat/wrestling = SKILL_LEVEL_MASTER,
+		/datum/skill/combat/unarmed = SKILL_LEVEL_MASTER,
+		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
+		/datum/skill/labor/farming = SKILL_LEVEL_NOVICE,
+		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
+		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/tracking = SKILL_LEVEL_EXPERT,
+		/datum/skill/craft/crafting = SKILL_LEVEL_NOVICE,
+		/datum/skill/magic/holy = SKILL_LEVEL_APPRENTICE,
+	)
+
+	subclass_stats = list(
+		STATKEY_STR = 3,
+		STATKEY_CON = 2,
+		STATKEY_WIL = 2,
+		STATKEY_SPD = 2,
+		STATKEY_INT = -3,
+		STATKEY_PER = -2
+	)
+
+/datum/outfit/job/roguetown/wretch/lunacyembracer/pre_equip(mob/living/carbon/human/H)
+	H.set_patron(/datum/patron/divine/dendor)
+	var/datum/devotion/C = new /datum/devotion(H, H.patron)
+	C.grant_miracles(H, cleric_tier = CLERIC_T3, passive_gain = CLERIC_REGEN_WEAK, devotion_limit = CLERIC_REQ_1)
+	neck = /obj/item/clothing/neck/roguetown/psicross/dendor
+	armor = /obj/item/clothing/suit/roguetown/armor/manual/meditation/chest/lunacy
+	shirt = /obj/item/clothing/suit/roguetown/armor/manual/meditation/body/lunacy
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/lunacy
+	head = /obj/item/flowercrown/briar
+
+	H.cmode_music = 'modular_twilight_axis/sound/music/combat_berserker.ogg'
+	to_chat(H, span_danger("You have abandoned your humanity to run wild under the moon. The call of nature fills your soul!"))
+	bountychoice_lunacy(H)

@@ -62,3 +62,11 @@
 		to_chat(victim, span_silver("Silver rebukes my presence! My vitae smolders, and my powers wane!"))
 		victim.adjust_fire_stacks(1, /datum/status_effect/fire_handler/fire_stacks/sunder) // Ammunition can't be blessed.
 		victim.ignite_mob()
+
+	if(secondary_damage && secondary_damage_type) //TA EDIT
+		var/armor
+		if(secondary_damage_type == BRUTE)
+			armor = victim.run_armor_check(selzone, src.flag, "", "", armor_penetration = src.armor_penetration, damage = secondary_damage, used_weapon = src)
+		else
+			armor = victim.run_armor_check(selzone, "fire", "", "", armor_penetration = src.armor_penetration, damage = secondary_damage, used_weapon = src)
+		victim.apply_damage(secondary_damage, secondary_damage_type, selzone, armor) //TA EDIT END

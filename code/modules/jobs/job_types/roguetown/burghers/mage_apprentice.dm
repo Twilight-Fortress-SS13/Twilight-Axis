@@ -20,8 +20,8 @@
 
 	display_order = JDO_APPRENTICE
 	give_bank_account = TRUE
-
-	min_pq = 0
+	same_job_respawn_delay = 20 MINUTES
+	min_pq = 2
 	max_pq = null
 	round_contrib_points = 2
 	cmode_music = 'sound/music/cmode/nobility/combat_courtmage.ogg'
@@ -82,7 +82,6 @@
 	pants = /obj/item/clothing/under/roguetown/tights/random
 	belt = /obj/item/storage/belt/rogue/leather
 	beltl = /obj/item/storage/magebag/associate
-	beltr = /obj/item/storage/keyring/apprentice
 	backl = /obj/item/storage/backpack/rogue/satchel
 	shoes = /obj/item/clothing/shoes/roguetown/gladiator
 	armor = /obj/item/clothing/suit/roguetown/shirt/robe/mage
@@ -97,6 +96,10 @@
 	if(H.mind)
 		backr = choose_implement(H, "lesser")
 		SStreasury.grant_savings(ECONOMIC_LOWER_MIDDLE_CLASS, H)
+	if(SSmapping.config.map_name == "Rockhill") //TA_EDIT
+		beltr = /obj/item/storage/keyring/apprenticeenigma
+	else
+		beltr = /obj/item/storage/keyring/apprentice
 
 /datum/outfit/job/roguetown/wapprentice/associate/post_equip(mob/living/carbon/human/H, visualsOnly)
 	. = ..() 			// small bonus picks to get you into your field of study - also a good character-building tool. Not impactful enough to
@@ -132,11 +135,11 @@
 // And unlike adventurer, the University being technically keep aligned means they can jump in and gank antags and there's less admins can do about it.
 // If the University becomes independent one day, we can restore it. Until then, it will remain commented out.
 
-/*
+
 /datum/advclass/wapprentice/spellblade
-	name = "Azurcaephan Associate"
+	name = "Magician's Practice"
 	maximum_possible_slots = 2
-	tutorial = "You are an Azurcaephan Associate — a Spellblade, carrier of the five hundred yils tradition \
+	tutorial = "You are an Magician Practice — a Spellblade, carrier of the five hundred yils tradition \
 		originating in Azurea. You are employed under the University \
 		as a fellow Magos. The arcyne arts are dangerous, \
 		and you are to protect your peers from their own recklessness. \
@@ -302,4 +305,3 @@
 	H.cmode_music = 'sound/music/cmode/nobility/combat_courtmage.ogg'
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_LOWER_MIDDLE_CLASS, H)
-*/

@@ -63,6 +63,7 @@
 		/datum/mob_descriptor/testicles,
 		/datum/mob_descriptor/breasts,
 		/datum/mob_descriptor/vagina,
+		/datum/mob_descriptor/defiant,
 		)
 
 /mob/living/proc/get_descriptor_of_slot(descriptor_slot, list/descs)
@@ -141,6 +142,11 @@
 	if(sixth)
 		lines += sixth
 
+//TA EDIT
+	var/defiant_line = build_coalesce_description(desc_copy, described,	list(MOB_DESCRIPTOR_SLOT_DEFIANT),	"%THEY% %DESC1%.")
+	if(defiant_line)
+		lines += defiant_line
+//TA EDIT
 	return lines
 
 /proc/build_coalesce_description(list/descriptors, mob/living/described, list/slots, string)

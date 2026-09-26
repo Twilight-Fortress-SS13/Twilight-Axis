@@ -47,6 +47,27 @@
 		//passively heal even wounds with no passive healing
 		heal_wounds(1)
 
+	// PSYDONITE PASSIVE HEALING -- Does not stack with Blackblooded, the latter overwrites this.
+	if(!stat && HAS_TRAIT(src, TRAIT_PSYDONITE) && !HAS_TRAIT(src, TRAIT_BLACKBLOOD) && !HAS_TRAIT(src, TRAIT_PARALYSIS))
+		//handle_wounds() //TA EDIT
+		// Passively heal wounds when you're in trouble.
+		if(blood_volume > BLOOD_VOLUME_SURVIVE)
+			/*for(var/datum/wound/wound as anything in get_wounds())//TA EDIT START
+				if(wound?.severity <= WOUND_SEVERITY_MODERATE)
+					if(!istype(wound, /datum/wound/slash/incision))
+						wound.heal_wound(0.4)*/
+			if(HAS_TRAIT(src, TRAIT_PSYDONITE_4))
+				adjustBruteLoss(-5)
+				adjustFireLoss(-5)
+			else if(HAS_TRAIT(src, TRAIT_PSYDONITE_3))
+				adjustBruteLoss(-2)
+				adjustFireLoss(-2)
+			else if(HAS_TRAIT(src, TRAIT_PSYDONITE_2))
+				adjustBruteLoss(-1)
+				adjustFireLoss(-1) //TA EDIT END
+	if(HAS_TRAIT(src, TRAIT_WOUNDREGEN))
+		for(var/datum/wound/wound as anything in get_wounds())
+			wound.heal_wound(10)
 	// REGEN RESTRICTIONS -- Starving, or being on fire/silverfired.
 	var/noregen = nutrition < NUTRITION_LEVEL_STARVING - 75 || has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder) || has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
 

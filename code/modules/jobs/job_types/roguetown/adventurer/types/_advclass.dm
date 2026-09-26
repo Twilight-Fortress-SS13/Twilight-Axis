@@ -66,6 +66,7 @@
 
 	var/list/virtue_limits = list()
 	var/list/vice_limits = list()
+	var/list/origin_limits = list() //TA EDIT
 
 	var/datum/class_age_mod/age_mod = null
 
@@ -145,6 +146,8 @@
 
 	if(length(subclass_virtues))
 		for(var/virtue in subclass_virtues)
+			if(!virtue)
+				continue
 			apply_virtue(H, new virtue)
 
 	if(age_mod)
@@ -225,6 +228,86 @@
 	if(class_tempo_faction)
 		H.tempo_faction_flag = class_tempo_faction
 
+	if(length(origin_limits) && H.client) //TA EDIT START
+		var/correlation = FALSE
+		for(var/origintype in origin_limits)
+			if(istype(H.client.prefs?.virtue_origin, origintype))
+				correlation = TRUE
+		if(!correlation)
+			var/datum/virtue/origin/first_origin = origin_limits[1]
+			to_chat(H, span_warning("I've spent so many daes in [first_origin.origin_name] that I've come to call it my home."))
+			change_origin(H, first_origin)
+
+/datum/advclass/proc/change_origin(mob/living/carbon/human/H, new_origin = /datum/virtue/none, wording)
+	var/client/player = H?.client
+	if(player?.prefs)
+		var/datum/virtue/origin/origin_memory = player.prefs.virtue_origin
+		player.prefs.virtue_origin = new new_origin
+		if(wording)
+			H.dna.species.skin_tone_wording = wording
+		player.prefs.virtue_origin.last_origin = origin_memory
+		player.prefs.virtue_origin.apply_to_human(H)
+		if(length(player.prefs.virtue_origin.added_languages))
+			for(var/L in player.prefs.virtue_origin.added_languages)
+				H.grant_language(L)
+		if(length(player.prefs.virtue_origin.last_origin.added_languages))
+			for(var/L in player.prefs.virtue_origin.last_origin.added_languages)
+				if(L != player.prefs.extra_language)
+					H.remove_language(L)
+		H.grant_language(player.prefs.extra_language)  //TA EDIT END
+
+/datum/advclass/proc/check_preferences_requirements(datum/preferences/prefs, client/player, check_slots = TRUE, check_probability = TRUE) // TA EDIT START
+	if(!prefs)
+		return FALSE
+
+	var/datum/species/pref_species = prefs.pref_species
+	var/list/local_allowed_sexes = list()
+	if(length(allowed_sexes))
+		local_allowed_sexes |= allowed_sexes
+	if(!immune_to_genderswap && pref_species?.gender_swapping)
+		if(MALE in allowed_sexes)
+			local_allowed_sexes -= MALE
+			local_allowed_sexes += FEMALE
+		if(FEMALE in allowed_sexes)
+			local_allowed_sexes -= FEMALE
+			local_allowed_sexes += MALE
+	if(length(local_allowed_sexes) && !(prefs.gender in local_allowed_sexes))
+		return FALSE
+
+	if(length(forbidden_races) && (pref_species?.type in forbidden_races))
+		return FALSE
+
+	if(length(allowed_ages) && !(prefs.age in allowed_ages))
+		return FALSE
+
+	if(length(allowed_patrons) && !(prefs.selected_patron?.type in allowed_patrons))
+		return FALSE
+
+	if(length(virtue_limits))
+		for(var/virtuetype in virtue_limits)
+			if(istype(prefs.virtue, virtuetype) || istype(prefs.virtuetwo, virtuetype))
+				return FALSE
+
+	var/list/current_vice_limits = vice_limits
+	if(player?.prefs == prefs)
+		current_vice_limits = get_prefs_vice_limits(player)
+	if(length(current_vice_limits) && has_limited_vice(prefs.charflaws, current_vice_limits))
+		return FALSE
+
+	if(check_slots && !SSrole_class_handler.class_has_available_slot(src, player?.ckey))
+		return FALSE
+
+	#ifdef USES_PQ
+	if(min_pq != -100)
+		if(!player || !(get_playerquality(player.ckey) >= min_pq))
+			return FALSE
+	#endif
+
+	if(check_probability && !prob(pickprob))
+		return FALSE
+
+	return TRUE // TA EDIT END
+
 /*
 	Whoa! we are checking requirements here!
 	On the datum! Wow!
@@ -264,9 +347,8 @@
 		if(has_limited_vice(H.charflaws, current_vice_limits))
 			return FALSE
 
-	if(maximum_possible_slots > -1)
-		if(total_slots_occupied >= maximum_possible_slots)
-			return FALSE
+	if(!SSrole_class_handler.class_has_available_slot(src, H.client?.ckey)) // TA EDIT START
+		return FALSE // TA EDIT END
 
 	#ifdef USES_PQ
 	if(min_pq != -100) // If someone sets this we actually do the check.

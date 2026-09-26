@@ -1,3 +1,4 @@
+/*
 /datum/advclass/templar/noc_spellblade
 	name = "Noccite Azurcaephan"
 	tutorial = "You are a Noccite Azurcaephan - A devotee of the Azurean Church\
@@ -219,3 +220,4 @@
 				H.adjust_skillrank_up_to(/datum/skill/combat/axes, SKILL_LEVEL_EXPERT, TRUE)
 			else
 				H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_EXPERT, TRUE)
+*/

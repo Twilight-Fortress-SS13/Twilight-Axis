@@ -1,4 +1,5 @@
 /datum/preferences/proc/ui_data_game_settings(mob/user)
+	var/can_use_donor_visuals = check_patreon_lvl(user.ckey) || is_donator(user.ckey)
 	var/list/data = list(
 		"tgui_theme" = get_tgui_theme_display_name(),
 		"parchment_skin" = get_parchment_skin_display_name(),
@@ -11,6 +12,10 @@
 		"schizo_voice" = (toggles & SCHIZO_VOICE),
 		"no_storyteller_events" = no_storyteller_events,
 		"verbose_character_creator" = verbose_character_creator,
+		"donor_visuals" = can_use_donor_visuals,
+		"donor_ooc_color" = donor_ooc_color,
+		"donor_ooc_icon" = donor_ooc_icon,
+		"donor_examine_icon" = donor_examine_icon,
 		"admin_prefs" = ui_data_admin_prefs(user),
 		"antags" = list(),
 	)

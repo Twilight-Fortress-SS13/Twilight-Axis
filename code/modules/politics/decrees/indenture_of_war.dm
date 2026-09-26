@@ -1,8 +1,8 @@
 /datum/decree/indenture_of_war
 	id = DECREE_INDENTURE_OF_WAR
-	name = "The Indenture of War"
+	name = "Контракт защитников Азурии"
 	category = DECREE_CATEGORY_ANCIENT
-	mechanical_text = "Sets minimum daily wages for soldiery: Marshal 60m, Knight/Sergeant 40m, Man-at-Arms/Warden 20m, Squire 10m."
+	mechanical_text = "Устанавливает минимальную суточную плату для солдат: маршал — 60 м, рыцарь/сержант — 40 м, воин/смотритель — 20 м, оруженосец — 10 м."
 	/// Per-rank mandated daily wage. Steward cannot set below these amounts while the Indenture
 	/// stands, and any existing below-floor wage is bumped up at activation. Military ranks only -
 	/// courtiers, healers, scholars, and civilian staff are not covered by this charter.
@@ -14,17 +14,26 @@
 		"Warden" = 20,
 		"Squire" = 10,
 	)
-	flavor_text = {"This Indenture of War, made betwene the Crown of Azuria on the one part, and the armed men of the Realm on the other part, witnesseth that:
+	flavor_text = {"Настоящий Контракт защитников Азурии, заключённый между Короной Азурии, с одной стороны, и Вооружёнными силами Великого Герцогства, с другой стороны, свидетельствует о следующем:
 
-The Crown shall paye unto its soldiery their just wages, by the daye, and without lette or delay, according to the ranks herein set forth. The Marshal of the Realm at threescore marks, the Knights at twoscore, a Sergeant at twoscore likewise, a Man at Armes at a score, a Warden at a score, and a Squire at ten. Beneath these sums no wage shall fall whilst this Indenture stands.
+Корона обязуется выплачивать своим солдатам справедливое жалованье на ежедневной основе, без задержек и отсрочек, в соответствии с званиями, указанными в настоящем документе:
+ 
+- Маршал Великого Герцогства — шестьдесят маммон,
+- Рыцари Азурии — сорок маммон, 
+- Сержанты Гвардии — также по сорок маммон, 
+- Солдаты — двадцать маммон, 
+- Смотрители — двадцать маммон,
+- Оруженосцы рыцарей Азурии — десять маммон. 
 
-In return, the armed men of the Realm shall do their trewe service to the Duke, and shall obey the Duke's lieutenants and officers in all things lawful and reasonable. And if the saide armed men shall break or contravene this Indenture, they shall be at the Duke's wille and mercye. And if the Crown shall break this Indenture - withholding the wages herein pledged, or setting them lower than here set forth - the soldier is released from his oath, and the Crown shall answer for the faith it hath broken.
+Никакое вознаграждение не может быть ниже указанных сумм в течение срока действия настоящего Контракта.
 
-In witness whereof, the Crown of Azuria hath set his seale to this Indenture, and the said armed men of the Realm have set their seales in like manner.
+Взамен военнослужащие Великого Герцогства обязуются верно служить Великому Герцогу и подчиняться его лейтенантам и офицерам во всех законных и разумных делах. И если указанные военнослужащие нарушат или не выполнят настоящий Контракт, Герцог наделяется законным правом единолично определить их судьбу, сколь сурова бы ни была она. И если Корона нарушит настоящий Контракт — удерживая обещанное в нем вознаграждение или устанавливая его ниже указанного здесь — солдат освобождается от своей клятвы, и Корона ответит за содеянное нарушение клятвы.
 
-Yeven under the seal of the Crown."}
-	revoke_text = "The %RULER% has broken the Indenture of War. The soldier's oath is dissolved, and the Crown's armed men stand at liberty of service - let the garrison remember whose seal was cut first."
-	restore_text = "The %RULER% has renewed the Indenture of War. The soldier's wage is pledged, and the soldier's oath stands - each binds the other."
+В подтверждение чего Корона Азурии поставила свою печать на настоящем Контракте, и законный представитель военнослужащих Великого Герцогства поставил свою печать аналогичным образом.
+
+Заверено печатью Короны и печатью Маршала Великого Герцогства."}
+	revoke_text = "Правитель сиих земель нарушил Контракт защитников Азурии. Клятва воинов Герцогства аннулирована, и они свободны в выборе господина — и пусть помнят они, чья печать была срублена первой."
+	restore_text = "Правитель сиих земель возобновил Контракт защитников Азурии. Солдату обещано жалованье, и его клятва остается в силе — одно обязывает другое."
 
 /datum/decree/indenture_of_war/roll_initial_year()
 	return CALENDAR_EPOCH_YEAR - rand(40, 120)

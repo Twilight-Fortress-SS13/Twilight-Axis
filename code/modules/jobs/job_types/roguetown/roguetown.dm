@@ -23,6 +23,12 @@
 		for(var/X in GLOB.garrison_positions)
 			peopleiknow += X
 			peopleknowme += X
+		for(var/X in GLOB.citywatch_positions)
+			peopleiknow += X
+			peopleknowme += X
+		for(var/X in GLOB.vanguard_positions)
+			peopleiknow += X
+			peopleknowme += X
 		for(var/X in GLOB.noble_positions)
 			peopleiknow += X
 			peopleknowme += X

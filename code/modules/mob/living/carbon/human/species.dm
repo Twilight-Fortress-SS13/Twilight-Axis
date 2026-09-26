@@ -1390,6 +1390,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 		if(!target.lying_attack_check(user))
 			return 0
 
+		user.break_invisibility_from_combat()
 		var/armor_block = target.run_armor_check(selzone, "blunt", armor_penetration = PEN_NONE, blade_dulling = user.used_intent.blade_class, damage = damage, intdamfactor = user.used_intent?.intent_intdamage_factor)
 
 		target.lastattacker = user.real_name
@@ -1398,6 +1399,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 		target.lastattackerckey = user.ckey
 		target.lastattacker_weakref = WEAKREF(user)
 		user.dna.species.spec_unarmedattacked(user, target)
+		user.break_invisibility_from_combat()
 
 		target.next_attack_msg.Cut()
 
@@ -1666,6 +1668,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 
 //shameless copypaste
 /datum/species/proc/kicked(mob/living/carbon/human/user, mob/living/carbon/human/target)
+	SEND_SIGNAL(user, COMSIG_MOB_KICK_ATTACK, target) //Ta edit
 	if(HAS_TRAIT(user, TRAIT_PACIFISM))
 		to_chat(user, span_warning("I don't want to harm [target]!"))
 		return FALSE
@@ -1689,6 +1692,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 		stander = FALSE
 	if(!get_dist(user, target))
 		if(!stander)
+			user.break_invisibility_from_combat()
 			target.lastattacker = user.real_name
 			target.lastattackerckey = user.ckey
 			target.lastattacker_weakref = WEAKREF(user)
@@ -1726,6 +1730,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 	else
 		if(!target.kick_attack_check(user))
 			kickchest = TRUE
+		user.break_invisibility_from_combat()
 		user.do_attack_animation_simple(target, ATTACK_EFFECT_KICK, TRUE)
 		playsound(target, 'sound/combat/hits/kick/kick.ogg', 100, TRUE, -1)
 
@@ -2271,7 +2276,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 		thermal_protection -= H.get_heat_protection(loc_temp) //This returns a 0 - 1 value, which corresponds to the percentage of protection based on what you're wearing and what you're exposed to.
 		if(H.bodytemperature < BODYTEMP_NORMAL) //and we're cold, insulation enhances our ability to retain body heat but reduces the heat we get from the environment
 			H.adjust_bodytemperature((thermal_protection+1)*natural + min(thermal_protection * (loc_temp - H.bodytemperature) / BODYTEMP_HEAT_DIVISOR, BODYTEMP_HEATING_MAX))
-		else //we're sweating, insulation hinders out ability to reduce heat - but will reduce the amount of heat we get from the environment
+		else //we're sweating, insulation hinders out ability to reduce heat - but will reduce the amount of heat you get from the environment
 			H.adjust_bodytemperature(natural*(1/(thermal_protection+1)) + min(thermal_protection * (loc_temp - H.bodytemperature) / BODYTEMP_HEAT_DIVISOR, BODYTEMP_HEATING_MAX))
 
 	// +/- 50 degrees from 310K is the 'safe' zone, where no damage is dealt.

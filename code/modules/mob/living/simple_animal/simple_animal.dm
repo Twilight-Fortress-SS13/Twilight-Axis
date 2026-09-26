@@ -901,9 +901,9 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	if(be_close && !in_range(M, src))
 		to_chat(src, span_warning("I am too far away!"))
 		return FALSE
-	if(!(no_dexterity || dextrous))
-		to_chat(src, span_warning("I don't have the dexterity to do this!"))
-		return FALSE
+	// if(!(no_dexterity || dextrous))
+	// 	to_chat(src, span_warning("I don't have the dexterity to do this!"))
+	// 	return FALSE
 	return TRUE
 
 /mob/living/simple_animal/stripPanelUnequip(obj/item/what, mob/who, where)
@@ -1076,10 +1076,20 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	mounted_overlay.appearance_flags = RESET_ALPHA|RESET_COLOR
 	add_overlay(mounted_overlay)
 
+/mob/living/simple_animal/proc/get_riding_datum()
+	var/datum/component/riding/riding_datum = GetComponent(/datum/component/riding/no_ocean)
+	if(!riding_datum)
+		riding_datum = GetComponent(/datum/component/riding)
+	return riding_datum
+
 /mob/living/simple_animal/proc/adjust_speed(mob/living/driver)
-	var/delay = vars["move_to_delay"]
+	var/delay = initial(move_to_delay)
 	if(!isnum(delay))
 		delay = 3
+	if(!HAS_TRAIT(src, TRAIT_RIGIDMOVEMENT) && !HAS_TRAIT(src, TRAIT_IGNOREDAMAGESLOWDOWN))
+		var/health_deficiency = getBruteLoss() + getFireLoss()
+		if(health_deficiency >= (maxHealth - (maxHealth * 0.50)))
+			delay += 2
 	if(driver?.m_intent == MOVE_INTENT_RUN)
 		delay -= 1
 	if(driver?.mind)
@@ -1277,7 +1287,19 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 /mob/living/simple_animal/Move(NewLoc, Dir, step_x, step_y)
 	if(binded)
 		return FALSE
-	return ..()
+	var/oldloc = loc
+	. = ..()
+	if(. && loc != oldloc)
+		if(client)
+			// Player
+			set_glide_size(DELAY_TO_GLIDE_SIZE(world.tick_lag))
+		else
+			var/datum/component/riding/riding_datum = get_riding_datum()
+			if(riding_datum && has_buckled_mobs())
+				set_glide_size(DELAY_TO_GLIDE_SIZE(riding_datum.vehicle_move_delay))
+			else
+				set_glide_size(DELAY_TO_GLIDE_SIZE(move_to_delay))
+	return .
 
 /mob/living/simple_animal/proc/eat_plants()
 

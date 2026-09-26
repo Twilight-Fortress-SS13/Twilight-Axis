@@ -28,7 +28,7 @@ import {
   type IdentityData,
 } from '../data';
 
-const PRIORITY_BUTTON_SIZE = 18;
+const PRIORITY_BUTTON_SIZE = 16;
 
 // INSTRUCTIONS FOR DOWNSTREAM: you may need to manage this list yourself
 const COLS = [
@@ -106,6 +106,9 @@ const Controls = () => {
 };
 
 const ExplainerKey = () => {
+  const { data } = useBackendStrict<ClassData>();
+  const { donor_boost_visible } = data;
+
   return (
     <Stack.Item>
       <Section
@@ -181,6 +184,21 @@ const ExplainerKey = () => {
               <Stack.Item>- High</Stack.Item>
             </Stack>
           </Stack.Item>
+
+
+          {donor_boost_visible ? (
+            <Stack.Item>
+              <Stack>
+                <PriorityButton
+                accentColor="#d4af37"
+                enabled
+                color="transparent"
+                name="High+"
+              />
+                <Stack.Item>- High+ (Donator)</Stack.Item>
+              </Stack>
+            </Stack.Item>
+          ) : null}
         </Stack>
       </Section>
     </Stack.Item>
@@ -286,26 +304,113 @@ export const Department = (props: { dept: DepartmentEnum }) => {
 
 export const ClassEntry = (props: { cls: Class }) => {
   const { cls } = props;
+  const { act, data } = useBackendStrict<ClassData>();
+  const {
+    donor_boost_available,
+    donor_boost_rounds_remaining,
+    donor_boost_visible,
+  } = data;
 
   const createSetPriority = createCreateSetPriorityFromName(cls.title);
 
+  const priorityColumnWidth = donor_boost_visible ? 84 : 67;
+
   return (
     <Stack.Item style={{ minHeight: PRIORITY_BUTTON_SIZE + 4 }}>
-      <Stack align="center">
-        <Stack.Item>
+      <Box
+        style={{
+          alignItems: 'start',
+          columnGap: '1px',
+          display: 'grid',
+          gridTemplateColumns: `minmax(0, 1fr) 13px 13px ${priorityColumnWidth}px`,
+        }}
+      >
+        <Box style={{ minWidth: 0 }}>
           <ClassTitle cls={cls} />
-        </Stack.Item>
-        <Stack.Item grow textAlign="right">
+        </Box>
+        <Tooltip
+          content={
+            cls.character_slot
+              ? `Character Slot ${cls.character_slot}. Click to change.`
+              : 'Active Slot (Default). Click to change.'
+          }
+        >
+          <Box
+            inline
+            onClick={() => act('set_job_slot', { job: cls.title })}
+            style={{
+              cursor: 'pointer',
+              height: PRIORITY_BUTTON_SIZE,
+              lineHeight: `${PRIORITY_BUTTON_SIZE}px`,
+              textAlign: 'center',
+              width: 13,
+            }}
+          >
+            {cls.character_slot || 'A'}
+          </Box>
+        </Tooltip>
+        <Box
+          style={{
+            height: PRIORITY_BUTTON_SIZE,
+            lineHeight: `${PRIORITY_BUTTON_SIZE}px`,
+            textAlign: 'center',
+            width: 13,
+          }}
+        >
+          {cls.has_job_subclasses ? (
+            <Tooltip
+              content={
+                cls.preferred_subclass
+                  ? `Subclass: ${cls.preferred_subclass} / ${
+                      cls.preferred_subclass_strict
+                        ? 'Try Another Role, Otherwise Return to Lobby'
+                        : 'Choose Another Subclass'
+                    }`
+                  : 'Subclass: Any'
+              }
+            >
+              <Box
+                inline
+                onClick={() => act('set_job_subclass', { job: cls.title })}
+                style={{
+                  color: cls.preferred_subclass ? '#e3c06f' : 'gray',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  height: PRIORITY_BUTTON_SIZE,
+                  lineHeight: `${PRIORITY_BUTTON_SIZE}px`,
+                  textAlign: 'center',
+                  width: 13,
+                }}
+              >
+                {cls.preferred_subclass ? '★' : '☆'}
+              </Box>
+            </Tooltip>
+          ) : null}
+        </Box>
+        <Box
+          style={{
+            alignItems: 'flex-start',
+            display: 'flex',
+            height: PRIORITY_BUTTON_SIZE,
+            justifyContent: 'flex-end',
+            minWidth: 0,
+            width: priorityColumnWidth,
+          }}
+        >
           {cls.unavailable ? (
             <UnavailableExplanation cls={cls} />
           ) : (
             <PriorityButtons
               createSetPriority={createSetPriority}
+              donorBoostAvailable={Boolean(donor_boost_available)}
+              donorBoostJobEligible={Boolean(cls.donor_boost_job_eligible)}
+              donorBoostRoundsRemaining={donor_boost_rounds_remaining}
+              donorBoostVisible={Boolean(donor_boost_visible)}
               priority={cls.pref}
             />
           )}
-        </Stack.Item>
-      </Stack>
+        </Box>
+      </Box>
     </Stack.Item>
   );
 };
@@ -314,11 +419,20 @@ export const UnavailableExplanation = (props: { cls: Class }) => {
   const { cls } = props;
   const { act } = useBackendStrict();
   const { unavailable, unavailable_details } = cls;
+  const virtueViceLocked =
+    unavailable === ClassAvailability.UNAVAILABLE_VIRTUESVICE;
+  const unavailableName = virtueViceLocked
+    ? 'Unavailable'
+    : CLASSAVAIL_NAME[unavailable];
+  const unavailableTooltip = virtueViceLocked
+    ? `Unavailable due to Virtue/Vice restrictions${unavailable_details ? ` ${unavailable_details}` : ''}`
+    : unavailable_details;
 
   return (
-    <Tooltip content={unavailable_details}>
+    <Tooltip content={unavailableTooltip}>
       <Box
         inline
+        fontSize={0.9}
         textColor={CLASSAVAIL_COLOR[unavailable]}
         style={
           unavailable_details
@@ -326,7 +440,7 @@ export const UnavailableExplanation = (props: { cls: Class }) => {
             : undefined
         }
       >
-        {CLASSAVAIL_NAME[unavailable]}
+        {unavailableName}
         {unavailable === ClassAvailability.UNAVAILABLE_BANNED ? (
           <Button
             color="bad"
@@ -381,7 +495,13 @@ export const ClassTitle = (props: { cls: Class }) => {
           <Stack.Item italic fontSize={0.9}>
             Left-click to see subclass details!
           </Stack.Item>
-          {constClass.has_subprefs ? (
+          {cls.preferred_subclass ? (
+            <Stack.Item fontSize={0.9}>
+              Preferred subclass: <b>{cls.preferred_subclass}</b>
+              {cls.preferred_subclass_strict ? ' (Strict)' : ''}
+            </Stack.Item>
+          ) : null}
+          {constClass.has_subprefs || cls.has_subclass_preferences ? (
             <Stack.Item italic fontSize={0.9}>
               Right-click to see class-specific preferences!
             </Stack.Item>
@@ -422,7 +542,10 @@ export const ClassTitle = (props: { cls: Class }) => {
             : undefined
         }
         onClick={() => act('explainjob', { job: cls.title })}
-        onContextMenu={() => act('subprefs', { job: cls.title })}
+        onContextMenu={(event) => {
+          event.preventDefault();
+          act('subprefs', { job: cls.title });
+        }}
       >
         {getClassDisplayTitle(constantData, cls.title, titles_pref)}
       </Box>
@@ -435,18 +558,21 @@ type PriorityButtonProps = {
   color: string;
   modifier?: string;
   enabled: boolean;
+  disabled?: boolean;
+  accentColor?: string;
   onClick?: () => void;
 };
 
 const PriorityButton = (props: PriorityButtonProps) => {
-  const { color, enabled, modifier, name, onClick } = props;
+  const { accentColor, color, disabled, enabled, modifier, name, onClick } = props;
   const className = `PreferencesMenu__Class__PriorityButton`;
 
   return (
     <Stack.Item>
       <Button
         circular
-        color={enabled ? color : 'white'}
+        color={accentColor ? 'transparent' : enabled ? color : 'white'}
+        disabled={disabled}
         onClick={onClick}
         tooltip={name}
         tooltipPosition="bottom"
@@ -455,6 +581,12 @@ const PriorityButton = (props: PriorityButtonProps) => {
           modifier && `${className}--${modifier}`,
         ])}
         style={{
+          backgroundColor: accentColor
+            ? enabled
+              ? accentColor
+              : 'transparent'
+            : undefined,
+          border: accentColor ? `1px solid ${accentColor}` : undefined,
           height: PRIORITY_BUTTON_SIZE,
           minHeight: PRIORITY_BUTTON_SIZE,
           padding: '0',
@@ -501,18 +633,35 @@ function createCreateSetPriorityFromName(jobName: string): CreateSetPriority {
 
 type PriorityButtonsProps = {
   createSetPriority: CreateSetPriority;
+  donorBoostAvailable: boolean;
+  donorBoostJobEligible: boolean;
+  donorBoostRoundsRemaining: number;
+  donorBoostVisible: boolean;
   priority: ClassPreference | null;
 };
 
 const PriorityButtons = (props: PriorityButtonsProps) => {
-  const { createSetPriority, priority } = props;
+  const {
+    createSetPriority,
+    donorBoostAvailable,
+    donorBoostJobEligible,
+    donorBoostRoundsRemaining,
+    donorBoostVisible,
+    priority,
+  } = props;
+  const donorBoostTooltip = !donorBoostJobEligible
+    ? 'High+ is unavailable for this role'
+    : !donorBoostAvailable
+      ? `High+ is on cooldown for ${donorBoostRoundsRemaining} more round${donorBoostRoundsRemaining === 1 ? '' : 's'}`
+      : 'High+';
 
   return (
     <Stack
       style={{
         alignItems: 'center',
+        gap: '1px',
         justifyContent: 'flex-end',
-        paddingLeft: '0.3em',
+        paddingLeft: '0.15em',
       }}
     >
       <PriorityButton
@@ -543,6 +692,17 @@ const PriorityButtons = (props: PriorityButtonsProps) => {
         enabled={priority === ClassPreference.JP_HIGH}
         onClick={createSetPriority(ClassPreference.JP_HIGH)}
       />
+
+      {donorBoostVisible ? (
+        <PriorityButton
+          accentColor="#d4af37"
+          color="transparent"
+          disabled={!donorBoostAvailable || !donorBoostJobEligible}
+          name={donorBoostTooltip}
+          enabled={priority === ClassPreference.JP_BOOST}
+          onClick={createSetPriority(ClassPreference.JP_BOOST)}
+        />
+      ) : null}
     </Stack>
   );
 };

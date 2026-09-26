@@ -87,6 +87,25 @@
 		cull_tempo_list()
 		next_tempo_cull = world.time + TEMPO_CULL_DELAY
 
+	if((src.mind?.assigned_role == "Bishop") && !(world.time < priest_timer_check + 10 SECONDS))
+		priest_timer_check = world.time
+		for(var/mob/living/carbon/human/H as anything in SSspatial_grid.orthogonal_range_search(src, SPATIAL_GRID_CONTENTS_TYPE_CLIENTS, 7))
+			if(get_dist(src, H) > 7)
+				continue
+			if(HAS_TRAIT(H, TRAIT_CLERGY_TA) && !H.has_status_effect(/datum/status_effect/buff/clergybuff))
+				H.apply_status_effect(/datum/status_effect/buff/clergybuff)
+	if((istype(src.get_inactive_held_item(), /obj/item/rogueweapon/spear/matthios_standard) || istype(src.get_active_held_item(), /obj/item/rogueweapon/spear/matthios_standard)) && !(world.time < matthios_banner_timer_check + 5 SECONDS))
+		matthios_banner_timer_check = world.time
+		for(var/mob/living/carbon/human/H as anything in SSspatial_grid.orthogonal_range_search(src, SPATIAL_GRID_CONTENTS_TYPE_CLIENTS, 7))
+			if(!ishuman(H)) // TA EDIT
+				continue // TA EDIT
+			if(get_dist(src, H) > 7)
+				continue
+			if(istype(H.patron, /datum/patron/inhumen/matthios))
+				H.apply_status_effect(/datum/status_effect/buff/twilight_peoplesbanner)
+			else if(HAS_TRAIT(H, TRAIT_NOBLE) || HAS_TRAIT(H, TRAIT_CLERGY_TA))
+				H.apply_status_effect(/datum/status_effect/debuff/twilight_peoplesbanner)
+
 	if(stat != DEAD)
 		return 1
 
@@ -134,8 +153,10 @@
 			var/datum/status_effect/fire_handler/fire_stacks/divine_status = has_status_effect(/datum/status_effect/fire_handler/fire_stacks/divine)
 			var/datum/status_effect/fire_handler/fire_stacks/vheslyn_status = has_status_effect(/datum/status_effect/fire_handler/fire_stacks/vheslyn)
 			var/datum/status_effect/fire_handler/fire_stacks/sunder/blessed/blessed_sunder = has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
-			if(!HAS_TRAIT(src, TRAIT_UNFORGIVABLE)) //VHESLYNITES DO NOT CARE, THEY UNIQUELY CAN PUSH THROUGH LETHAL FIRESTACKS WITHOUT A STUN. FUCKING RUN.
+			if(!HAS_TRAIT(src, TRAIT_UNFORGIVABLE))
 				if(fire_status?.stacks + sunder_status?.stacks + divine_status?.stacks + vheslyn_status?.stacks + blessed_sunder?.stacks > 10)
+					if(has_status_effect(/atom/movable/screen/alert/status_effect/buff/dragonhide))
+						return ..()
 					Immobilize(30)
 					emote("firescream", TRUE)
 				else

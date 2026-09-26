@@ -484,6 +484,8 @@
 	canSmoothWith = list(/turf/open/floor/rogue/grassred,
 						/turf/open/floor/rogue/grassyel,
 						/turf/open/floor/rogue/grasscold,
+						/turf/open/floor/rogue/grassgrey,
+						/turf/open/floor/rogue/grasspurple,
 						/turf/open/floor/rogue/snowpatchy,
 						/turf/open/floor/rogue/snow,
 						/turf/open/floor/rogue/snowrough,
@@ -519,6 +521,8 @@
 	slowdown = 1
 	smooth = SMOOTH_TRUE
 	canSmoothWith = list(/turf/open/floor/rogue/grass,
+						/turf/open/floor/rogue/grassgrey,
+						/turf/open/floor/rogue/grasspurple,
 						/turf/open/floor/rogue/grassred,
 						/turf/open/floor/rogue/grassyel,
 						/turf/open/floor/rogue/grasscold,
@@ -544,6 +548,8 @@
 	slowdown = 1
 	smooth = SMOOTH_TRUE
 	canSmoothWith = list(/turf/open/floor/rogue/grass,
+						/turf/open/floor/rogue/grassgrey,
+						/turf/open/floor/rogue/grasspurple,
 						/turf/open/floor/rogue/grassred,
 						/turf/open/floor/rogue/grassyel,
 						/turf/open/floor/rogue/grasscold,
@@ -563,13 +569,18 @@
 	. = ..()
 	var/negate_slowdown = FALSE
 
+	for(var/obj/item/stick in user.held_items)  // TA EDIT START
+		if(stick.walking_stick && !stick.wielded && !user.cmode) // 
+			negate_slowdown = TRUE //
+			break // TA EDIT FIN
+
 	if((isliving(user))&&(user?.movement_type == FLYING))
 		negate_slowdown = TRUE
 	if(HAS_TRAIT(user, TRAIT_LONGSTRIDER))
 		negate_slowdown = TRUE
 
 	if(negate_slowdown)
-		. -= 2
+		. -= 1 // TA EDIT 2 —> 1 (since slowdown numbers were changed)
 	return max(., 0)
 
 

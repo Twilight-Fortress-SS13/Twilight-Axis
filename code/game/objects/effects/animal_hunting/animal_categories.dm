@@ -36,6 +36,10 @@
 		/area/rogue/outdoors/woods/southwest = 30,
 		/area/rogue/outdoors/woods/northwest = 30,
 		/area/rogue/outdoors/rtfield = 50,
+		/area/rogue/outdoors/rtfield/rockhill = 50, //TA_EDIT_START
+		/area/rogue/outdoors/bograt/north = 30,
+		/area/rogue/outdoors/woodsrat/north = 30,
+		/area/rogue/outdoors/woodsrat/south = 30, //TA_EDIT_END
 		// Pilgrim counterparts
 		/area/rogue/outdoors/woods/grim = 30,
 		/area/rogue/outdoors/woods/grim/north = 30,
@@ -70,6 +74,8 @@
 		/area/rogue/outdoors/woods/south = 50,
 		/area/rogue/outdoors/woods/southwest = 50,
 		/area/rogue/outdoors/woods/northwest = 50,
+		/area/rogue/outdoors/woodsrat/north = 50, //TA_EDIT_START
+		/area/rogue/outdoors/woodsrat/south = 50, //TA_EDIT_END
 		// Pilgrim counterparts
 		/area/rogue/outdoors/woods/grim = 50,
 		/area/rogue/outdoors/woods/grim/north = 50,
@@ -108,6 +114,10 @@
 		/area/rogue/outdoors/woods/southwest = 20,
 		/area/rogue/outdoors/woods/northwest = 20,
 		/area/rogue/outdoors/mountains/decap = 50,
+		/area/rogue/outdoors/bograt/north = 20, //TA_EDIT_START
+		/area/rogue/outdoors/woodsrat/north = 20,
+		/area/rogue/outdoors/woodsrat/south = 20,
+		/area/rogue/outdoors/mountains/decap/somewhere = 50, //TA_EDIT_END
 		// Pilgrim counterparts
 		/area/rogue/outdoors/woods/grim = 20,
 		/area/rogue/outdoors/woods/grim/north = 20,
@@ -143,6 +153,9 @@
 		/area/rogue/outdoors/beach/forest = 1000,
 		/area/rogue/outdoors/beach/forest/north = 1000,
 		/area/rogue/outdoors/beach/forest/south = 1000,
+		/area/rogue/outdoors/bograt/west = 1000, //TA_EDIT_START
+		/area/rogue/outdoors/bograt/south = 1000,
+		/area/rogue/outdoors/bograt/sunken = 1000, //TA_EDIT_END
 		// Pilgrim counterparts
 		/area/rogue/outdoors/beach/forest/grim = 1000,
 		/area/rogue/outdoors/beach/forest/north/grim = 1000,
@@ -196,6 +209,7 @@
 		/area/rogue/under/cavewet/bogcaves/south = 60,
 		/area/rogue/under/cavewet/bogcaves/north = 60,
 		/area/rogue/under/cavewet/bogcaves/coastcaves = 60,
+		/area/rogue/outdoors/bograt/sunken = 60, //TA_EDIT
 		// Pilgrim counterparts
 		/area/rogue/outdoors/bog/north/grim = 60,
 		/area/rogue/outdoors/bog/north/grim/ne = 60,
@@ -230,3 +244,20 @@
 		/mob/living/simple_animal/hostile/retaliate/rogue/boar = "suidae"
 	)
 	preferred_areas = list()
+
+// TA EDIT START
+/datum/hunting_category/proc/can_spawn_in_area(area/A)
+	if(!A)
+		return FALSE
+	if(!preferred_areas || !preferred_areas.len)
+		return TRUE
+	return preferred_areas[A.type] > 0
+
+/datum/hunting_category/proc/get_area_bonus(area/A)
+	if(!A || !preferred_areas)
+		return 0
+	var/bonus = preferred_areas[A.type]
+	if(!bonus)
+		return 0
+	return bonus
+// TA EDIT END

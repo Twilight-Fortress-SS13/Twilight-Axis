@@ -53,7 +53,9 @@
 	desc = ""
 	icon_state = "psydonmusicbox"
 	icon = 'icons/roguetown/items/misc.dmi'
-	w_class = WEIGHT_CLASS_HUGE
+	w_class = WEIGHT_CLASS_BULKY
+	slot_flags = ITEM_SLOT_BACK
+	experimental_onback = TRUE
 	var/cranking = FALSE
 	var/cranking_true_nature = FALSE //Are we torturing the souls openly, or subtle in nature?
 	force = 15
@@ -62,7 +64,7 @@
 	gripped_intents = list(/datum/intent/hit)
 	possible_item_intents = list(/datum/intent/hit)
 	obj_flags = CAN_BE_HIT
-	twohands_required = TRUE
+	twohands_required = FALSE
 	var/datum/looping_sound/psydonmusicboxsound/soundloop
 
 /obj/item/psydonmusicbox/get_examine_highlight_status()
@@ -76,15 +78,15 @@
 /obj/item/psydonmusicbox/examine(mob/user)
 	. = ..()
 	if(HAS_TRAIT(usr, TRAIT_INQUISITION))
-		desc = "A relic from the bowels of the Grand Otavan Cathedral's thaumaturgical workshops. The spirits of fifteen heathens, bound within this infernal contraption, sign a haunting tune; one that disrupts the leylines, prevents the faithless from casting spells, and immunizing the faithful to all magicka. <b>It would be wise to not teach outsiders of its true nature</b>, and to only bring it to bear in dire circumstances."
+		desc = "Реликвия из недр тауматургических мастерских собора Инквизиции. Четырнадцать душ еретиков, связанных вместе, будут защищать вас от магии, искажая окружающий мир своими воплями. Стоит использовать её только в тяжелых обстоятельствах, чтобы еретики не прознали о её истинной природе."
 	else
-		desc = "A cranked music box, bearing the seal of the Holy Otavan Inquisition on its side. It radiates with an inexplicable feeling of somberness."
+		desc = "Жуткая музыкальная шкатулка с печатью Инквизиции на боковой стороне. Мелодия, издаваемая её недрами, звучит еще более жутко."
 
 /obj/item/psydonmusicbox/attack_self(mob/living/user)
 	. = ..()
 	if(!HAS_TRAIT(usr, TRAIT_INQUISITION))
 		user.add_stress(/datum/stressevent/soulchurnerhorror)
-		to_chat(user, (span_cultsmall("I FEEL SUFFERING WITH EVERY CRANK, WHAT AM I DOING?!")))
+		to_chat(user, (span_cultsmall("Я ЧУВСТВУЮ СТРАДАНИЕ С КАЖДОЙ НОТОЙ! ЧТО Я ЗДЕСЬ ДЕЛАЮ?!")))
 	cranking = !cranking
 	cranking_true_nature = !cranking_true_nature
 	update_icon()
@@ -93,8 +95,8 @@
 			cranking_true_nature = cranking_true_nature
 			user.apply_status_effect(/datum/status_effect/buff/cranking_soulchurner)
 		else
-			if(alert(usr, "Harmonize the voices or let them scream?",, "Harmonize", "Scream") != "Scream")
-				user.apply_status_effect(/datum/status_effect/buff/quelling_soulchurner)
+			if(alert(usr, "Развязать души или сдерживать вопли?",, "Развязать души", "Сдерживать вопли") != "Сдерживать вопли")
+				user.apply_status_effect(/datum/status_effect/buff/unleashed_soulchurner)
 			else
 				cranking_true_nature = cranking_true_nature
 				user.apply_status_effect(/datum/status_effect/buff/cranking_soulchurner)
@@ -105,7 +107,7 @@
 	if(!cranking)
 		soundloop.stop()
 		user.remove_status_effect(/datum/status_effect/buff/cranking_soulchurner)
-		user.remove_status_effect(/datum/status_effect/buff/quelling_soulchurner)
+		user.remove_status_effect(/datum/status_effect/buff/unleashed_soulchurner)
 
 /obj/item/psydonmusicbox/Initialize(mapload)
 	soundloop = new(src, FALSE)
@@ -114,8 +116,8 @@
 /obj/item/psydonmusicbox/Destroy()
 	if(soundloop)
 		QDEL_NULL(soundloop)
-	src.visible_message(span_cult("A great deluge of souls escapes the shattered box! Their wails of vengeance and peace coalesce into an ethereal swan song, as the spirits ascend into the sky.."))
-	src.visible_message(span_hypnophrase("..before, at last, their haunting symphony finally comes to a close."))
+	src.visible_message(span_cult("Бурный поток душ вырывается из разбитой шкатулки! Их вопли мести и умиротворения сливаются в эфирный лебединый зов, пока они возносятся к небесам..."))
+	src.visible_message(span_hypnophrase("...и, наконец, их завораживающая симфония достигает завершения."))
 	playsound(src, 'sound/misc/otavanlament.ogg', 70, TRUE, -1)
 	return ..()
 
@@ -126,6 +128,14 @@
 		icon_state = "psydonmusicbox"
 
 /obj/item/psydonmusicbox/dropped(mob/living/user, silent)
+	..()
+	cranking = FALSE
+	update_icon()
+	if(soundloop)
+		soundloop.stop()
+		user.remove_status_effect(/datum/status_effect/buff/cranking_soulchurner)
+
+/obj/item/psydonmusicbox/equipped(mob/living/user, silent)
 	..()
 	cranking = FALSE
 	update_icon()
@@ -151,23 +161,22 @@
 	var/effect_color
 	var/pulse = 0
 	var/ticks_to_apply = 10
-	var/undividedlines =list("'THEY HAVE TRAPPED US HERE FOR ETERNITY!'", "'SAVE US, CHILD OF TEN! SHATTER THIS ACCURSED MUSIC BOX!'", "'DEATH TO THE PSYDONIAN, FREE US!'")
-	var/astratanlines =list("'HER LIGHT HAS LEFT ME! WHERE AM I?!'", "'SHATTER THIS CONTRAPTION, SO I MAY FEEL HER WARMTH ONE LAST TIME!'", "'I am royal.. Why did they do this to me...?'")
-	var/noclines =list("'Colder than moonlight...'", "'No wisdom can reach me here...'", "'Please help me, I miss the stars...'")
-	var/necralines =list("'They snatched me from her grasp, for eternal torment...'", "'Necra! Please! I am so tired! Release me!'", "'I am lost, lost in a sea of stolen ends.'")
-	var/abyssorlines =list("'I cannot feel the coast's breeze...'", "'We churn tighter here than schooling fish...'", "'Free me, please, so I may return to the sea...'")
-	var/ravoxlines =list("'Ravoxian kin! Tear this Otavan dog's head off! Free me from this damnable witchery!'", "'There is no justice nor glory to be found here, just endless fatigue...'", "'I begged for a death by the sword...'")
-	var/pestralines =list("'I only wanted to perfect my cures...'", "'A thousand plagues upon the holder of this accursed machine! Pestra! Can you not hear me?!'", "'I can feel their suffering as they brush against me...'")
-	var/eoralines =list("'Every caress feels like a thousand splintering bones...'", "'She was a heretic, but how could I hurt her?!'", "'I'm sorry! I only wanted peace! Please release me!'")
-	var/dendorlines =list("'HIS MADNESS CALLS FOR ME! RRGHNN...'", "'SHATTER THIS BOX, SO WE MAY CHOKE THIS OTAVAN ON DIRT AND ROOTS!'", "'I miss His voice in the leaves... Free me, please...'")
-	var/xylixlines =list("'ONE, TWO, THREE, FOUR- TWO, TWO, THREE, FOUR. --What do you mean, annoying?'", "'There are thirteen others in here, you know! What a good audience- they literally can't get out of their seats!'", "'Of course I went all-in! I thought he had an ace-high!'", "'No, the XYLIX'S FORTUNE was right- this definitely is quite bad.'")
-	var/malumlines =list("'The structure of this cursed machine is malleable.. Shatter it, please...'", "'My craft could've changed the world...'", "'Free me, so I may return to my apprentice, please...'")
-	var/matthioslines =list("'My final transaction... He will never receive my value... Stolen away by these monsters...'", "'Comrade, I have been shackled into this HORRIFIC CONTRAPTION, FREE ME!'", "'I feel our shackles twist with eachother's...'")
-	var/zizolines =list("'ZIZO! MY MAGICKS FAIL ME! STRIKE DOWN THESE PSYDONIAN DOGS!'", "'CABALIST? There is TWISTED MAGICK HERE, BEWARE THE MUSIC! OUR VOICES ARE FORCED!'", "'DESTROY THE BOX, KILL THE WIELDER. YOUR MAGICKS WILL BE FREE.'")
-	var/graggarlines =list("'ANOINTED! TEAR THIS OTAVAN'S HEAD OFF!'", "'ANOINTED! SHATTER THE BOX, AND WE WILL KILL THEM TOGETHER!'", "'GRAGGAR, GIVE ME STRENGTH TO BREAK MY BONDS!'")
-	var/baothalines =list("'I miss the warmth of ozium... There is no feeling in here for me...'", "'Debauched one, rescue me from this contraption, I have such things to share with you.'", "'MY PERFECTION WAS TAKEN FROM ME BY THESE OTAVAN MONSTERS!'")
-	var/psydonianlines =list("'FREE US! FREE US! WE HAVE SUFFERED ENOUGH!'", "'PLEASE, RELEASE US!", "WE MISS OUR FAMILIES!'", "'WHEN WE ESCAPE, WE ARE GOING TO CHASE YOU INTO YOUR GRAVE.'")
-	var/otherlines =list("'FREE US! FREE US!'", "'PLEASE, SAVE US!", "WE MISS OUR FAMILIES!'", "'NO MORE! NO MORE! NO MORE!'")
+	var/undividedlines =list("'ОНИ ЗАКЛЮЧИЛИ НАС ЗДЕСЬ НА ВЕЧНОСТЬ!'", "'СПАСИ НАС, ДИТЯ ДЕСЯТИ! РАЗРУШЬ ЭТУ ПРОКЛЯТУЮ МУЗЫКАЛЬНУЮ ШКАТУЛКУ!'", "'СМЕРТЬ ПСАЙДОНИТУ! ОСВОБОДИТЕ НАС!'") // TA EDIT START
+	var/astratanlines =list("'ЕЕ СВЕТ ПОКИНУЛ МЕНЯ! ГДЕ Я?!'", "'РАЗБЕЙТЕ ЕЁ! ДАЙТЕ МНЕ ПОЧУВСТВОВАТЬ ЕЁ ТЕПЛО В ПОСЛЕДНИЙ РАЗ!'", "'Я королевская особа... Почему они так со мной поступили...?'")
+	var/noclines =list("'Без лунного света... Так холодно...'", "'Мудрость не может достичь меня...'", "'Пожалуйста, помогите мне, я скучаю по звездам...'")
+	var/necralines =list("'Они вырвали меня из ее рук, на вечные муки...'", "'Некра! Пожалуйста! Я больше не могу! Отпусти меня!'", "'Я теряюсь, вот-вот пропаду в море украденных концов.'")
+	var/abyssorlines =list("'Я больше не чувствую прибрежного бриза...'", "'Мы здесь сбиваемся теснее рыбы в бочке...'", "'Освободи меня, пожалуйста, верни меня в море...'")
+	var/ravoxlines =list("'Равокситы! Оторвите голову этой инквизиторской псине! Освободите меня от этого проклятого колдовства!'", "'Здесь нет ни справедливости, ни славы, лишь бесконечная усталость...'", "'Я молю о смерти от меча...'")
+	var/pestralines =list("'Я всего лишь хотел обрести панацею...'", "'Обруши тысячи язв на владельца этой проклятой машины! Пестра! Почему ты меня не слышишь?!'", "'Я чувствую их страдания, прикасаясь к ним...'")
+	var/eoralines =list("'Каждая ласка ощущается как тысяча дробленных костей...'", "'Она была еретичкой, но как я мог причинить ей вред?!'", "'Мне жаль! Я хотел только мира! Пожалуйста, отпустите меня!'")
+	var/dendorlines =list("'ЕГО БЕЗУМИЕ ЗОВЕТ МЕНЯ! Р-РГН-НХ...'", "'РАЗБЕЙТЕ ЭТУ ТЕМНИЦУ, ЧТОБЫ МЫ МОГЛИ ЗАДУШИТЬ ЭТУ ИНКВИЗИЦИЮ В СЫРОЙ ЗЕМЛЕ!'", "'Мне не хватает Его голоса в шелесте листьев... Освободи меня, пожалуйста...'")
+	var/xylixlines =list("'РАЗ, ДВА, ТРИ, ЧЕТЫРЕ! ДВА, ДВА, ТРИ, ЧЕТЫРЕ... -- Что значит вас бесит?!'", "'Знаешь, здесь еще тринадцать человек! Какая хорошая публика – они буквально не могут отсюда сбежать!'", "'Конечно же, я пошел ба-банк! Кто же знал, что у него лучшая карта!'", "'Нет, прав был крупье — это определенно очень плохо.'")
+	var/malumlines =list("'Структура этой проклятой машины податлива. Разрушьте ее, пожалуйста...'", "'Мое ремесло могло бы изменить мир...'", "'Освободите меня,  я должен вернуться к своему ученику...'")
+	var/matthioslines =list("'Я в цепях! Разрушь их, и мы освободимся вместе...'", "'Брат, я закован в этом УЖАСНОМ УСТРОЙСТВЕ, освободи МЕНЯ!'", "'Они сковали меня, чтобы сохранить свой порядок...'")
+	var/zizolines =list("'МОЯ МАГИЯ МЕНЯ ПОДВЕЛА! УБЕЙ! УБЕЙ ЭТИХ ПСАЙДОНИТСКИХ СОБАК!'", "'КТО ТУТ? ЗДЕСЬ ИСКАЖЕННАЯ МАГИЯ, ОСТЕРЕГАЙТЕСЬ МУЗЫКИ! НАШИ ГОЛОСА НЕ МОГУТ ПРОТИВИТЬСЯ!'", "'РАЗРУШЬТЕ КОРОБКУ, УБЕЙТЕ ВЛАДЕЛЬЦА! ВАША СИЛА ОСВОБОДИТСЯ!'")
+	var/graggarlines =list("'ПОМАЗАННИКИ! ОТОРВИТЕ ГОЛОВУ ЭТОЙ ИНКВИЗИТОРСКОЙ ГАДИНЕ!'", "'ПОМАЗАННИКИ! РАЗБЕЙТЕ КОРОБКУ, И МЫ ВМЕСТЕ ИХ ВСЕХ УБЬЕМ!'", "'ГРАГГАР, ДАЙ МНЕ СИЛУ РАЗРУШИТЬ МОИ УЗЫ!'")
+	var/baothalines =list("'Я скучаю по теплу озиума... Ничего не чувствую...'", "'Развратник, спаси меня от этой штуковины, я могу кое-чем поделиться... только с тобой.'", "'МОЁ СОВЕРШЕНСТВО! ЭТИ МОНСТРЫ ОТОБРАЛИ ЕГО У МЕНЯ!'")
+	var/otherlines =list("'ОСВОБОДИ! ОСВОБОДИ НАС! МЫ ДОСТАТОЧНО НАСТРАДАЛИСЬ!'", "'ОТПУСТИТЕ НАС!'", "'МЫ ДОЛЖНЫ ВЕРНУТЬСЯ К СЕМЬЯМ!'", "'КОГДА МЫ ВЫБЕРЕМСЯ, МЫ ЗАГОНИМ ТЕБЯ В МОГИЛУ!.'")
 /datum/status_effect/buff/cranking_soulchurner/on_creation(mob/living/new_owner, stress, colour)
 	effect_color = "#800000"
 	return ..()
@@ -188,96 +197,96 @@
 					if(/datum/patron/old_god)
 						if (!H.has_stress_event(/datum/stressevent/soulchurnerpsydon))
 							H.add_stress(/datum/stressevent/soulchurnerpsydon)
-							to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
-							to_chat(H, (span_cultsmall(pick(psydonianlines))))
+							to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
+							to_chat(H, (span_cultsmall(pick(otherlines))))
 						if(HAS_TRAIT(H, TRAIT_INQUISITION))
 							H.apply_status_effect(/datum/status_effect/buff/churnerprotection)
 					if(/datum/patron/inhumen/matthios)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(matthioslines))))
-						H.add_stress(/datum/stressevent/soulchurner)
+						H.add_stress(/datum/stressevent/soulchurnerheretic)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/inhumen/zizo)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(zizolines))))
-						H.add_stress(/datum/stressevent/soulchurner)
+						H.add_stress(/datum/stressevent/soulchurnerheretic)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/inhumen/graggar)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(graggarlines))))
-						H.add_stress(/datum/stressevent/soulchurner)
+						H.add_stress(/datum/stressevent/soulchurnerheretic)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/inhumen/baotha)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(baothalines))))
-						H.add_stress(/datum/stressevent/soulchurner)
+						H.add_stress(/datum/stressevent/soulchurnerheretic)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/undivided)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(undividedlines))))
 						H.add_stress(/datum/stressevent/soulchurner)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/astrata)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(astratanlines))))
 						H.add_stress(/datum/stressevent/soulchurner)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/noc)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(noclines))))
 						H.add_stress(/datum/stressevent/soulchurner)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/necra)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(necralines))))
 						H.add_stress(/datum/stressevent/soulchurner)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/pestra)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(pestralines))))
 						H.add_stress(/datum/stressevent/soulchurner)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/malum)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(malumlines))))
 						H.add_stress(/datum/stressevent/soulchurner)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/dendor)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(dendorlines))))
 						H.add_stress(/datum/stressevent/soulchurner)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/xylix)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(xylixlines))))
 						H.add_stress(/datum/stressevent/soulchurner)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/eora)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(eoralines))))
 						H.add_stress(/datum/stressevent/soulchurner)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/abyssor)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(abyssorlines))))
 						H.add_stress(/datum/stressevent/soulchurner)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
 							H.apply_status_effect(/datum/status_effect/buff/churnernegative)
 					if(/datum/patron/divine/ravox)
-						to_chat(H, (span_hypnophrase("A voice calls out from the song for you...")))
+						to_chat(H, (span_hypnophrase("Голос из песни зовёт тебя...")))
 						to_chat(H, (span_cultsmall(pick(ravoxlines))))
 						H.add_stress(/datum/stressevent/soulchurner)
 						if(!H.has_status_effect(/datum/status_effect/buff/churnernegative))
@@ -291,6 +300,7 @@
 
 
 
+/*
 /atom/movable/screen/alert/status_effect/buff/quelling_soulchurner
 	name = "Quelling Soulchurner"
 	desc = "I am bringing the twisted device to life, quelling the voices..."
@@ -316,6 +326,8 @@
 				continue
 			if(HAS_TRAIT(H, TRAIT_INQUISITION))
 				H.apply_status_effect(/datum/status_effect/buff/churnerprotection)
+*/
+//TA EDIT END
 
 /*
 Inquisitorial armory down here
@@ -354,7 +366,7 @@ Inquisitorial armory down here
 		. += span_info("Activate in your hand to open it.")
 		. += span_info("When opened, the 'BLESS' intent can be used to anoint Psydonic silver weaponry. Blessing a Psydonic silver weapon greatly enhances the power of its critical hits and debuffs against sunderable opponents.")
 		. += span_info("Blessing someone else, who happens to be a worshipper of Psydon, will temporarily buff them with increased Willpower, Constitution, and Fortune.")
-		. += span_warning("If the 'SMASH' intent is used while it's opened, the residing shard will violently explode with unimaginable force.")
+		//. += span_warning("If the 'SMASH' intent is used while it's opened, the residing shard will violently explode with unimaginable force.") //TA EDIT
 		. += span_warning("<font color='#00e1ff'>While active, Golgatha burns and weakens anyone who attacks its bearer. The effect persists only while the attacker remains within the relic's light. This feature requires the bearer to be Silverblessed, and inflicts extra damage to mindless foes.</font>")
 	if(fuel <= 0)
 		. += span_info("It is gone.")
@@ -418,8 +430,9 @@ Inquisitorial armory down here
 	return
 
 /obj/item/flashlight/flare/torch/lantern/psycenser/afterattack(atom/movable/A, mob/user, proximity)
-	. = ..()	//We smashed a guy with it turned on. Bad idea!
-	if(ismob(A) && on && (user.used_intent.type == /datum/intent/flail/smash/golgotha) && user.cmode)
+	if(!on || user.used_intent?.type != /datum/intent/bless) // TA EDIT
+		. = ..()	//We smashed a guy with it turned on. Bad idea! // TA EDIT
+	/*if(ismob(A) && on && (user.used_intent.type == /datum/intent/flail/smash/golgotha) && user.cmode)
 		user.visible_message(span_warningbig("[user] smashes the exposed [src], shattering the shard of SYON!"))
 		user.visible_message(span_blue(pick("WHY--!!","SYON BLAS--!!","ENDU--!!","ENDURE THI--!!","WHAT THE F--!!","OH MY ALLFA--!!","OH PSYDO--!!","KABOO--!!","MASHALLA--!!","OH ADONA--!!","OH SHI--!!","PSYDO--!!","PSYDON BLAS--!!")))
 		explosion(get_turf(A),devastation_range = 3, heavy_impact_range = 5, light_impact_range = 6, flame_range = 3, flash_range = 6, smoke = FALSE)
@@ -432,7 +445,7 @@ Inquisitorial armory down here
 			if(H.patron?.type == /datum/patron/old_god)	//Psydonites get VERY depressed seeing an artifact get turned into an ullapool caber.
 				H.add_stress(/datum/stressevent/syoncalamity)
 		for(var/mob/living/carbon/human/H in range(1, get_turf(src)))
-			H.gib()
+			H.gib()*/ //TA EDIT
 	if(isitem(A) && on && user.used_intent.type == /datum/intent/bless)
 		// hey guys its me again profane dagger bc i cant figure out a better way to do this!! ANOTHER SMARTER DEV PLS REPLACE THIS SNOWFLAKE SHIT
 		if(istype(A, /obj/item/rogueweapon/huntingknife/idagger/steel/profane))
@@ -1001,7 +1014,7 @@ Inquisitorial armory down here
 			if("onbelt")
 				return list("shrink" = 0.3,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
 
-
+		//TA-EDITSTART
 /obj/item/inqarticles/garrote // Do not give this item out freely to other classes. Do not subtype this item for other classes. This is intended purely as the Confessor's identifying sidegrade, and as a bonus for the Inspector INQ. I will be very sad if you disregard this comment. Thank you. - Yische.
 	name = "\proper seizing garrote" // It's nonlethal. It's so silly and fun.
 	desc = "A macabre instrument favored by the more clandestine of the Psydonian Silver Order; A length of thick leather inquiry cordage that has been dipped in both holy water and dye before being consecrated and spell-laced, held and threaded between two iron links. Perfect for apprehension."
@@ -1114,6 +1127,25 @@ Inquisitorial armory down here
 		currentgrab = I
 	return user.pulling == target
 
+/obj/item/inqarticles/garrote/proc/has_oxy_protection(obj/item/I) //TA EDIT START
+	if(!I || I.obj_broken)
+		return FALSE
+	return istype(I, /obj/item/clothing/neck/roguetown/gorget) || istype(I, /obj/item/clothing/neck/roguetown/leather) || istype(I, /obj/item/clothing/neck/roguetown/bevor) || istype(I, /obj/item/clothing/neck/roguetown/coif) || istype(I, /obj/item/clothing/neck/roguetown/chaincoif)
+
+/obj/item/inqarticles/garrote/proc/log_garrote_grab(mob/living/user, mob/living/target)
+	if(!user || !target)
+		return
+	log_attack("[key_name(user)] wrapped [src] around [key_name(target)]'s throat at [AREACOORD(user)].")
+	user.log_message("wrapped [src] around [key_name(target)]'s throat.", LOG_ATTACK, color = "red")
+	target.log_message("had [src] wrapped around their throat by [key_name(user)].", LOG_ATTACK, color = "orange")
+
+/obj/item/inqarticles/garrote/proc/log_garrote_choke(mob/living/user, mob/living/target, oxy_damage)
+	if(!user || !target)
+		return
+	log_attack("[key_name(user)] choked [key_name(target)] with [src] for [oxy_damage] oxygen damage at [AREACOORD(user)].")
+	user.log_message("choked [key_name(target)] with [src] for [oxy_damage] oxygen damage.", LOG_ATTACK, color = "red")
+	target.log_message("was choked by [key_name(user)] with [src] for [oxy_damage] oxygen damage.", LOG_ATTACK, color = "orange") //TA EDIT END
+
 /obj/item/inqarticles/garrote/attack_self(mob/user)
 	if(obj_broken)
 		to_chat(user, span_warning("It's useless now, although.."))
@@ -1194,12 +1226,16 @@ Inquisitorial armory down here
 		if(user.zone_selected != "neck")
 			to_chat(user, span_warning("I need to wrap it around their throat."))
 			return
+		if(target.can_see_cone(user) && target.stat == CONSCIOUS) //TA EDIT START
+			to_chat(user, span_warning("They looking right at me. This isn't going to work."))
+			return //TA EDIT END
 		if(HAS_TRAIT(target, TRAIT_GARROTED))
 			to_chat(user, span_warning("They already have one wrapped around their throat."))
 			return
 		playsound(loc, 'sound/items/garrotegrab.ogg', 100, TRUE)
 		wrap(user, target)
 		user.visible_message(span_danger("[user] wraps the [src] around [target]'s throat!"))
+		log_garrote_grab(user, target) //TA EDIT
 		user.stamina_add(25)
 		user.changeNext_move(CLICK_CD_MELEE)
 
@@ -1217,15 +1253,25 @@ Inquisitorial armory down here
 		// if(get_location_accessible(C, BODY_ZONE_PRECISE_NECK))
 		playsound(loc, pick('sound/items/garrotechoke1.ogg', 'sound/items/garrotechoke2.ogg', 'sound/items/garrotechoke3.ogg', 'sound/items/garrotechoke4.ogg', 'sound/items/garrotechoke5.ogg'), 100, TRUE)
 		if(prob(40))
-			C.emote("choke")
-		C.adjustOxyLoss(choke_damage)
+			C.emote("choke") //TA EDIT START
+		var/oxy_damage = 20
+		if(C.InCritical())
+			oxy_damage = choke_damage
+		else if(ishuman(C))
+			var/mob/living/carbon/human/H = C
+			if(has_oxy_protection(H.wear_neck) || has_oxy_protection(H.head))
+				oxy_damage = choke_damage
+		var/total_oxy_damage = oxy_damage
+		C.adjustOxyLoss(oxy_damage)
 		if(!C.mind) // NPCs can be choked out twice as fast
-			C.adjustOxyLoss(choke_damage)
+			C.adjustOxyLoss(oxy_damage)
+			total_oxy_damage += oxy_damage
+		log_garrote_choke(user, C, total_oxy_damage) //TA EDIT END
 		C.visible_message(span_danger("[user] [pick("garrotes", "asphyxiates")] [C]!"), \
 		span_userdanger("[user] [pick("garrotes", "asphyxiates")] me!"), span_hear("I hear the sickening sound of cordage!"), COMBAT_MESSAGE_RANGE, user)
 		to_chat(user, span_danger("I [pick("garrote", "asphyxiate")] [C]!"))
 		user.changeNext_move(CLICK_CD_RESIST)	//Stops spam for choking.
-
+			//TA-EDITEND
 /obj/item/clothing/head/inqarticles/blackbag
 	name = "black bag"
 	desc = "A heavily spell-weaved padded sack intended to muffle the cries made within it. Due to the heaviness of the materials involved, application and removal of these is usually difficult for the untrained."
@@ -1287,7 +1333,7 @@ Inquisitorial armory down here
 	var/timetobag = 8 SECONDS
 	if(HAS_TRAIT(user, TRAIT_BLACKBAGGER))
 		trained = TRUE
-		timetobag = 4 SECONDS
+		timetobag = 3 SECONDS
 	user.visible_message(span_danger("[user] goes to [trained ? "expertly" : "clumsily"] black bag [M]!"))
 	if(HAS_TRAIT(M, TRAIT_GRABIMMUNE))
 		user.visible_message(span_danger("[M] slips past [user]'s attempt to black bag them!"))
@@ -1405,6 +1451,7 @@ Inquisitorial armory down here
 	var/active = FALSE
 	var/broken = FALSE
 	var/mob/living/carbon/human/target
+	var/mob/living/fixator // TA EDIT
 	var/atom/movable/screen/alert/blackmirror/effect
 	var/datum/looping_sound/blackmirror/soundloop
 
@@ -1428,10 +1475,13 @@ Inquisitorial armory down here
 	fedblood = FALSE
 	openstate = "bloody"
 	whofedme = null
-	target.clear_alert(usr, "blackmirror", TRUE)
-	target.playsound_local(src, 'sound/items/blackeye.ogg', 40, FALSE)
+	opened = TRUE // TA EDIT START
+	if(target && !QDELETED(target))
+		target.clear_alert(fixator, "blackmirror", TRUE)
+		target.playsound_local(src, 'sound/items/blackeye.ogg', 40, FALSE)
 	effect = null
 	target = null
+	fixator = null // TA EDIT END
 	usesleft--
 	soundloop.stop()
 	visible_message(span_info("[src] clouds itself with a chilling fog."))
@@ -1482,7 +1532,8 @@ Inquisitorial armory down here
 					return
 				target = HL
 				active = TRUE
-				effect = target.throw_alert(usr, "blackmirror", /atom/movable/screen/alert/blackmirror, override = TRUE)
+				fixator = user // TA EDIT
+				effect = target.throw_alert(user, "blackmirror", /atom/movable/screen/alert/blackmirror, override = TRUE) // TA EDIT
 				effect.source = src
 				target.playsound_local(src, 'sound/items/blackeye_warn.ogg', 100, FALSE)
 				playsound(src, 'sound/items/blackmirror_active.ogg', 100, FALSE)
@@ -1592,21 +1643,19 @@ Inquisitorial armory down here
 				update_icon()
 		return
 
-/obj/item/inqarticles/bmirror/attack_right(mob/user, obj/item/T)
+/obj/item/inqarticles/bmirror/attack_right(mob/user) // TA EDIT START
 	..()
 	if(!user.mind)
 		return
-	if(istype(T, /obj/item/inqarticles/bmirror))
-		openorshut()
-	else
-		openorshut()
+	openorshut(user) // TA EDIT END
 
-/obj/item/inqarticles/bmirror/proc/openorshut()
+/obj/item/inqarticles/bmirror/proc/openorshut(mob/user) // TA EDIT START
 	if(opened)
 		if(effect)
-			target.clear_alert(usr, "blackmirror", TRUE)
+			if(target && !QDELETED(target))
+				target.clear_alert(fixator ? fixator : user, "blackmirror", TRUE)
+				target.playsound_local(src, 'sound/items/blackeye.ogg', 40, FALSE)
 			effect = null
-			target.playsound_local(src, 'sound/items/blackeye.ogg', 40, FALSE)
 		playsound(src, 'sound/items/blackmirror_shut.ogg', 100, FALSE)
 		soundloop.stop()
 		opened = FALSE
@@ -1614,14 +1663,15 @@ Inquisitorial armory down here
 		update_icon_state()
 		return
 	playsound(src, 'sound/items/blackmirror_open.ogg', 100, FALSE)
-	if(target)
+	if(target && !QDELETED(target))
 		target.playsound_local(src, 'sound/items/blackeye_warn.ogg', 100, FALSE)
-		effect = target.throw_alert(usr, "blackmirror", /atom/movable/screen/alert/blackmirror, override = TRUE)
-		effect.source = src
+		effect = target.throw_alert(fixator ? fixator : user, "blackmirror", /atom/movable/screen/alert/blackmirror, override = TRUE)
+		if(effect)
+			effect.source = src
 	if(active)
 		soundloop.start()
 	opened = TRUE
-	return update_icon()
+	return update_icon() // TA EDIT END
 
 /obj/item/inqarticles/bmirror/update_icon()
 	if(opened)

@@ -79,6 +79,7 @@ GLOBAL_LIST_INIT(our_forest_sex, typecacheof(list(
 #define ishumannorthern(A) (is_species(A, /datum/species/human/northern))
 #define isdwarf(A) (is_species(A, /datum/species/dwarf))
 #define isdwarfmountain(A) (is_species(A, /datum/species/dwarf/mountain))
+#define isgnome(A) (is_species(A, /datum/species/dwarf/gnome))
 #define iself(A) (is_species(A, /datum/species/elf))
 #define isdarkelf(A) (is_species(A, /datum/species/elf/dark))
 #define iswoodelf(A) (is_species(A, /datum/species/elf/wood))
@@ -99,6 +100,7 @@ GLOBAL_LIST_INIT(our_forest_sex, typecacheof(list(
 #define isdracon(A) (is_species(A, /datum/species/dracon))
 #define islupian(A) (is_species(A, /datum/species/lupian))
 #define ismoth(A) (is_species(A, /datum/species/moth))
+#define isaura(A) (is_species(A, /datum/species/aura))
 #define istabaxi(A) (is_species(A, /datum/species/tabaxi))
 #define isvulp(A) (is_species(A, /datum/species/vulpkanin))
 #define isooze(A) (is_species(A, /datum/species/ooze))
@@ -213,3 +215,6 @@ GLOBAL_VAR_INIT(magic_appearance_detecting_image, new /image) // appearances are
 #define is_matthios_amulet(amulet_type) (amulet_type in typesof(/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios))
 #define is_graggar_amulet(amulet_type) (amulet_type in typesof(/obj/item/clothing/neck/roguetown/psicross/inhumen/graggar))
 #define is_gronn_amulet(amulet_type) (amulet_type in GLOB.gronn_amulet_types)
+
+#define is_zizolackey(mind) (mind.has_antag_datum(/datum/antagonist/zizocultist))
+#define is_zizocultist(mind) (mind.has_antag_datum(/datum/antagonist/zizocultist/leader))

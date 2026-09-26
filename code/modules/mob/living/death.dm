@@ -100,6 +100,7 @@ GLOBAL_LIST_EMPTY(last_words)
 		record_round_statistic(blood_toll_bucket)
 	set_stat(DEAD)
 	unset_machine()
+	stop_sneaking_on_death()
 	timeofdeath = world.time
 	tod = station_time_timestamp()
 //	var/turf/T = get_turf(src)

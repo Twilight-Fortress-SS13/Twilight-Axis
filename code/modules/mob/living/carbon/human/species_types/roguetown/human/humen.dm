@@ -92,7 +92,8 @@
 		"Naledi South" = SKIN_COLOR_NALEDI_LIGHT,
 		"Naledi West" = SKIN_COLOR_NALEDI_B,
 		"Naledi East" = SKIN_COLOR_NALEDI_D,
-		"Kazengun" = SKIN_COLOR_KAZENGUN
+		"Kazengun" = SKIN_COLOR_KAZENGUN,
+		"Gyedzai" = SKIN_COLOR_KAZENGUN
 	)
 
 /datum/species/human/northern/get_hairc_list()

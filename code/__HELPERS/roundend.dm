@@ -94,7 +94,8 @@
 	if(SSticker.current_state != GAME_STATE_FINISHED)
 		return
 	status_flags |= GODMODE
-	ai_controller?.set_ai_status(AI_STATUS_OFF)
+	if(istype(ai_controller, /datum/ai_controller))
+		ai_controller.set_ai_status(AI_STATUS_OFF)
 	if(client)
 		add_verb(client, /client/proc/lobbyooc)
 		add_verb(client, /client/proc/view_stats)
@@ -123,18 +124,53 @@
 	set waitfor = FALSE
 
 	log_game("The round has ended.")
-
-	to_world("<BR><BR><BR><span class='reallybig'>So ends this tale on [realm_name].</span>")
+	SSerp?.hard_shutdown_all("roundend_credits_start") // TA add - NEW ERP SYSTEM
+	ccg_sync_all_player_collections()
+	to_chat(world, "<BR><BR><BR><span class='reallybig'>So ends this tale on [realm_name].</span>")
 	get_end_reason()
+	roundend_notify_discord()
+
+	var/round_end_music_roll = rand(1, 100)
+	var/round_end_music
+
+	switch(round_end_music_roll)
+		if(1)
+			round_end_music = 2 // 1%
+		if(2 to 6)
+			round_end_music = 3 // 5%
+		if(7 to 11)
+			round_end_music = 4 // 5%
+		if(12 to 16)
+			round_end_music = 5 // 5%
+		if(17 to 21)
+			round_end_music = 6 // 5%
+		if(22 to 26)
+			round_end_music = 7 // 5%
+		else
+			round_end_music = rand(0, 1)
 
 	var/list/key_list = list()
 	for(var/client/C in GLOB.clients)
 		if(C.mob)
 			SSdroning.kill_droning(C)
-			if(prob(93))
-				C.mob.playsound_local(C.mob, 'sound/music/roundend.ogg', 100, FALSE) //Unknown. Original narration given by Leslie Nielsen in 'National Geographic: Dive To The Edge Of Creation', circa 1979.
-			else
-				C.mob.playsound_local(C.mob, 'sound/music/roundend_mirthful.ogg', 100, FALSE) //Hildegard Von Blingin and Whitney Avalon's transformative cover of 'Manchild' by Sabrina Carpenter, circa 2026.
+			switch(round_end_music)
+				if(0)
+					C.mob.playsound_local(C.mob, 'sound/music/roundend.ogg', 100, FALSE)
+				if(1)
+					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend.ogg', 100, FALSE)
+				if(2)
+					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend6.ogg', 100, FALSE) // Die Toteninsel Emptiness
+				if(3)
+					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend2.ogg', 100, FALSE)
+				if(4)
+					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend3.ogg', 100, FALSE)
+				if(5)
+					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend4.ogg', 100, FALSE) // [FFXIV] Heavensward - Dragonsong
+				if(6)
+					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend5.ogg', 100, FALSE)
+				if(7)
+					C.mob.playsound_local(C.mob, 'modular_twilight_axis/sound/music/roundend7.ogg', 100, FALSE)
+
 		if(isliving(C.mob) && C.ckey)
 			key_list += C.ckey
 	var/favor_bonus = SSmerchant_trade ? SSmerchant_trade.favor_triumph_bonus() : 0
@@ -209,8 +245,10 @@
 	//stop collecting feedback during grifftime
 	SSblackbox.Seal()
 
+	world.TgsAnnounceRoundEnd()
+
 	sleep(10 SECONDS)
-	SSvote.initiate_vote("map", "Actors")
+//	SSvote.initiate_vote("map", "Actors") // TA EDIT
 	ready_for_reboot = TRUE
 	standard_reboot()
 
@@ -239,14 +277,17 @@
 
 	if(vampire_werewolf() == "werewolf")
 		end_reason = pick("None can attest to what truly happened this nite; they can only have faith that they did the right thing.",
-						"And so, another legend of the nite has chiseled itself into the annals of Azuria's history..",
+						"And so, another legend of the nite has chiseled itself into the annals of [realm_name]'s history..",
 						"The morning's light shines upon a new week, driving away the darkness that threatened Azuria.. for now.",
 						"A blank page is filled; a new canvas presented.",
 						"Our actors hang up their masks, and a new cast begins to rehearse.",
 						"Thus the week's events have taken place. Eventful or mundane, lyfe continues.",
 						"Pawns of gods, preachers of nite, all come together to recite this tale.",
 						"Whether with loss or life, kingdom survives... for now.",
-						"The people of Azuria prepare to look forward; their actions locked in the impermeable past.")
+						"The people of [realm_name] prepare to look forward; their actions locked in the impermeable past.")
+
+	if(SSmapping.retainer.cult_ascended)
+		end_reason = "ZIZOZIZOZIZOZIZO"
 
 	if(end_reason)
 		to_world(span_bigbold("[end_reason]."))

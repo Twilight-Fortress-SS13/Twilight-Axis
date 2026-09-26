@@ -360,17 +360,38 @@
 /datum/status_effect/buff/vitae
 	id = "druqks"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/vitae
-	effectedstats = list(STATKEY_LCK = 2)
+	effectedstats = list(STATKEY_LCK = 2, STATKEY_WIL = 1, STATKEY_INT = 1)
 	duration = 1 MINUTES
 
 /datum/status_effect/buff/vitae/on_apply()
 	. = ..()
 	owner.add_stress(/datum/stressevent/high)
 	SEND_SIGNAL(owner, COMSIG_LUX_TASTED)
+	ADD_TRAIT(owner, TRAIT_DRUQK, id)
+	owner.overlay_fullscreen("lux", /atom/movable/screen/fullscreen/weedsm)
+	owner.overlay_fullscreen("lux_1", /atom/movable/screen/fullscreen/druqks)
+	if(owner?.client)
+		if(owner.client.screen && owner.client.screen.len)
+			var/atom/movable/screen/plane_master/game_world/PM = locate(/atom/movable/screen/plane_master/game_world) in owner.client.screen
+			PM.backdrop(owner)
+			PM = locate(/atom/movable/screen/plane_master/game_world_fov_hidden) in owner.client.screen
+			PM.backdrop(owner)
+			PM = locate(/atom/movable/screen/plane_master/game_world_above) in owner.client.screen
+			PM.backdrop(owner)
 
 /datum/status_effect/buff/vitae/on_remove()
 	owner.remove_stress(/datum/stressevent/high)
-
+	REMOVE_TRAIT(owner, TRAIT_DRUQK, id)
+	owner.clear_fullscreen("lux")
+	owner.clear_fullscreen("lux_1")
+	if(owner?.client)
+		if(owner.client.screen && owner.client.screen.len)
+			var/atom/movable/screen/plane_master/game_world/PM = locate(/atom/movable/screen/plane_master/game_world) in owner.client.screen
+			PM.backdrop(owner)
+			PM = locate(/atom/movable/screen/plane_master/game_world_fov_hidden) in owner.client.screen
+			PM.backdrop(owner)
+			PM = locate(/atom/movable/screen/plane_master/game_world_above) in owner.client.screen
+			PM.backdrop(owner)
 	. = ..()
 
 /datum/status_effect/buff/abyss //for smokes
@@ -2307,6 +2328,7 @@
 /datum/status_effect/joybringer
 	id = "joybringer"
 	var/outline_colour = "#a529e8"
+	var/list/affected_mobs = list()
 	duration = 20 MINUTES
 	tick_interval = -1
 	examine_text = span_love("SUBJECTPRONOUN is bathed in Baotha's blessings!")
@@ -2331,22 +2353,74 @@
 
 	RegisterSignal(owner, COMSIG_LIVING_LIFE, PROC_REF(on_life))
 
-/datum/status_effect/joybringer/on_remove()
+/datum/status_effect/joybringer/on_remove() // TA EDIT START
 	. = ..()
+
+	clear_affected_mobs()
 
 	owner.remove_filter(JOYBRINGER_FILTER)
 	owner.remove_overlay(JOYBRINGER_LAYER)
 
 	UnregisterSignal(owner, COMSIG_LIVING_LIFE)
 
+/datum/status_effect/joybringer/proc/valid_target(mob/living/mob)
+	if(!owner || QDELETED(owner) || !mob || QDELETED(mob))
+		return FALSE
+
+	if(HAS_TRAIT(mob, TRAIT_CRACKHEAD) || HAS_TRAIT(mob, TRAIT_PSYDONITE))
+		return FALSE
+
+	var/turf/owner_turf = get_turf(owner)
+	var/turf/mob_turf = get_turf(mob)
+	if(!owner_turf || !mob_turf)
+		return FALSE
+
+	if(owner_turf.z != mob_turf.z)
+		return FALSE
+
+	if(get_dist(owner_turf, mob_turf) > 2)
+		return FALSE
+
+	return TRUE
+
+/datum/status_effect/joybringer/proc/clear_joybringer_debuff(mob/living/mob)
+	if(!mob || QDELETED(mob))
+		return
+
+	if(mob.has_status_effect(/datum/status_effect/debuff/joybringer_druqks))
+		mob.remove_status_effect(/datum/status_effect/debuff/joybringer_druqks)
+
+/datum/status_effect/joybringer/proc/clear_affected_mobs()
+	if(!affected_mobs)
+		return
+
+	for(var/mob/living/mob in affected_mobs)
+		clear_joybringer_debuff(mob)
+
+	affected_mobs.Cut()
+
 /datum/status_effect/joybringer/proc/on_life()
 	SIGNAL_HANDLER
 
+	var/turf/owner_turf = get_turf(owner)
+	if(!owner_turf)
+		clear_affected_mobs()
+		return
+
+	var/list/current_mobs = list()
 	for(var/mob/living/mob in get_hearers_in_view(2, owner))
-		if(HAS_TRAIT(mob, TRAIT_CRACKHEAD) || HAS_TRAIT(mob, TRAIT_PSYDONITE))
+		if(!valid_target(mob))
 			continue
 
+		current_mobs += mob
 		mob.apply_status_effect(/datum/status_effect/debuff/joybringer_druqks)
+
+	if(affected_mobs)
+		for(var/mob/living/old_mob in affected_mobs)
+			if(!(old_mob in current_mobs))
+				clear_joybringer_debuff(old_mob)
+
+	affected_mobs = current_mobs // TA EDIT END
 
 #undef JOYBRINGER_FILTER
 

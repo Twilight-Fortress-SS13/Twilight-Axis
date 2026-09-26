@@ -12,7 +12,7 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 	var/spawning = 0//Referenced when you want to delete the new_player later on in the code.
 	var/topjob = "Hero!"
 	flags_1 = NONE
-
+	hud_type = /datum/hud/new_player
 	invisibility = INVISIBILITY_ABSTRACT
 
 //	hud_type = /datum/hud/new_player
@@ -189,8 +189,6 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 	if(!ready && href_list["preference"])
 		if(client)
 			client.prefs.process_link(src, href_list)
-	else if(!href_list["late_join"])
-		new_player_panel()
 
 	if(href_list["showpoll"])
 		handle_player_polling()
@@ -207,7 +205,7 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 /mob/dead/new_player/verb/do_rp_prompt()
 	set name = "Lore Primer"
 	set category = "IC.Memory"
-	var/datum/browser/popup = new(src, "Primer", "AZURE PEAK", 460, 550)
+	var/datum/browser/popup = new(src, "Primer", "TWILIGHT AXIS", 460, 550)
 	popup.set_content(build_lore_primer_content())
 	popup.open()
 
@@ -330,7 +328,10 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 	return JOB_AVAILABLE
 
 /mob/dead/new_player/proc/AttemptLateSpawn(rank)
-	var/error = IsJobUnavailable(rank, TRUE)
+	var/datum/job/selected_job = SSjob.GetJob(rank)
+	// TA EDIT: only force latejoin-specific checks for familytree-controlled royal partner jobs.
+	var/familytree_force_latejoin_check = istype(selected_job, /datum/job/roguetown/lady) || istype(selected_job, /datum/job/roguetown/suitor)
+	var/error = IsJobUnavailable(rank, familytree_force_latejoin_check)
 	if(error != JOB_AVAILABLE)
 		to_chat(src, span_warning("[get_job_unavailable_error_message(error, rank)]"))
 		return FALSE
@@ -372,7 +373,6 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 		humanc = character	//Let's retypecast the var to be human,
 
 	GLOB.joined_player_list += character.ckey
-	update_scaling_slots()
 
 	if(humanc)
 		var/fakekey = character.ckey
@@ -399,7 +399,7 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 /mob/dead/new_player/proc/LateChoices()
 	if(SSticker?.HasRoundStarted() && SSgamemode?.current_storyteller)
 		gnollslot_update()
-		update_scaling_slots()
+//		update_scaling_slots()
 		enforce_storyteller_soft_antag_slots()
 	var/list/dat = list("<div class='notice' style='font-style: normal; font-size: 14px; margin-bottom: 2px; padding-bottom: 0px'>Round Duration: [DisplayTimeText(world.time - SSticker.round_start_time, 1)]</div>")
 	for(var/datum/job/prioritized_job in SSjob.prioritized_jobs)
@@ -428,6 +428,8 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 	omegalist += list(GLOB.courtier_positions)
 	omegalist += list(GLOB.retinue_positions)
 	omegalist += list(GLOB.garrison_positions)
+	omegalist += list(GLOB.citywatch_positions)
+	omegalist += list(GLOB.vanguard_positions)
 	omegalist += list(GLOB.church_positions)
 	omegalist += list(GLOB.burgher_positions)
 	omegalist += list(GLOB.atc_positions)
@@ -459,19 +461,26 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 			var/cat_name = ""
 			switch (SSjob.name_occupations[category[1]].department_flag)
 				if (NOBLEMEN)
-					cat_name = "Ducal Family"
+					if(SSmapping.config.map_name == "Rockhill")
+						cat_name = "Royal Family"
+					else
+						cat_name = "Ducal Family"
 				if (COURTIERS)
 					cat_name = "Courtiers"
 				if (RETINUE)
 					cat_name = "Retinue"
 				if (GARRISON)
 					cat_name = "Garrison"
+				if (CITYWATCH)
+					cat_name = "City Watch"
+				if (VANGUARD)
+					cat_name = "Vanguard"
 				if (CHURCHMEN)
 					cat_name = "Churchmen"
 				if (BURGHERS)
 					cat_name = "Burghers"
 				if (ATC)
-					cat_name = "Azurian Trading Company"
+					cat_name = ta_economy_trade_company()
 				if (PEASANTS)
 					cat_name = "Peasants"
 				if (SIDEFOLK)

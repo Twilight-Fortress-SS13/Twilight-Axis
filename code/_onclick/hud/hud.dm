@@ -94,22 +94,6 @@
 		plane_masters["[instance.plane]"] = instance
 		instance.backdrop(mymob)
 
-/datum/hud/new_player/New(mob/owner)
-	..()
-	scannies = new /atom/movable/screen/scannies
-	scannies.hud = src
-	static_inventory += scannies
-	if(owner.client?.prefs?.crt == TRUE)
-		scannies.alpha = 70
-
-/datum/hud/new_player/New(mob/owner)
-	..()
-	grain = new /atom/movable/screen/grain
-	grain.hud = src
-	static_inventory += grain
-	if(owner.client?.prefs?.grain == TRUE)
-		grain.alpha = 55
-
 /datum/hud/Destroy()
 	if(mymob.hud_used == src)
 		mymob.hud_used = null

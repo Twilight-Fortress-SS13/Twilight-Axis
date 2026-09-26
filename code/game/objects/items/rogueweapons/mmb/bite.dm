@@ -125,6 +125,7 @@
 
 	next_attack_msg.Cut()
 
+	user.break_invisibility_from_combat()
 	user.do_attack_animation_simple(src, ATTACK_EFFECT_BITE)
 	playsound(user, 'sound/gore/flesh_eat_01.ogg', vol = 50, vary = FALSE, extrarange = -2, ignore_walls = FALSE, quiet = TRUE)
 	var/nodmg = FALSE
@@ -196,12 +197,19 @@
 				else
 					if(user.mind.has_antag_datum(/datum/antagonist/werewolf/noinfect)) //they can't infect anyone
 						to_chat(user, span_warning("My curse is not strong enough to infect [bite_victim]."))
-						if(prob(50))
-							user.werewolf_feed(bite_victim, 10)
-					else
-						caused_wound?.werewolf_infect_attempt()
-						if(prob(50))
-							user.werewolf_feed(bite_victim, 10)
+					else if(caused_wound)
+						var/infected = FALSE
+
+						for(var/datum/wound/W in affecting.wounds)
+							if(W.werewolf_infect_attempt())
+								infected = TRUE
+								break
+
+						if(infected)
+							to_chat(user, span_boldnotice("I have successfully delivered the gift to [bite_victim] through their new wound!"))
+
+					if(prob(50))
+						user.werewolf_feed(bite_victim, 10)
 			if(istype(user.dna.species, /datum/species/gnoll))
 				if(prob(30))
 					user.gnoll_feed(bite_victim, 10)
@@ -318,6 +326,7 @@
 		return FALSE*/
 
 	user.changeNext_move(1.2 SECONDS) // One chew every 1.2 seconds
+	user.break_invisibility_from_combat()
 	var/mob/living/carbon/C = grabbed
 	var/damage = user.get_punch_dmg()
 	if(HAS_TRAIT(user, TRAIT_STRONGBITE))
@@ -363,7 +372,20 @@
 				WEREWOLF CHEW.
 			*/
 			if(istype(user.dna.species, /datum/species/werewolf))
-				if(prob(50))
+				if(HAS_TRAIT(C, TRAIT_SILVER_BLESSED))
+					to_chat(user, span_warning("BLEH! [C] tastes of SILVER! My gift cannot take hold."))
+				else
+					if(caused_wound)
+						var/infected = FALSE
+						for(var/datum/wound/W in limb_grabbed.wounds)
+							if(W.werewolf_infect_attempt())
+								infected = TRUE
+								break
+
+						if(infected)
+							to_chat(user, span_boldnotice("I have delivered the gift to [C] while chewing on their [parse_zone(sublimb_grabbed)]!"))
+
+				if(prob(30))
 					user.werewolf_feed(C)
 
 			/*
@@ -424,6 +446,7 @@
 			qdel(src)
 			break
 
+		user.break_invisibility_from_combat()
 		user.drinksomeblood(C, sublimb_grabbed)
 		if(!do_after(user, 2 SECONDS, grabbed))
 			break

@@ -99,14 +99,14 @@
 
 	return nutrition_amount
 
-/mob/living/stamina_add(added as num, emote_override, force_emote = TRUE) //call update_stamina here and set last_fatigued, return false when not enough fatigue left
+/mob/living/stamina_add(added as num, emote_override, force_emote = TRUE, energy_loss_mult = 0.6) // TA EDIT
 	if(HAS_TRAIT(src, TRAIT_INFINITE_STAMINA))
 		return TRUE
 
 	var/true_added = added
 	if(added > 0)
 		if(HAS_TRAIT(src, TRAIT_FORTITUDE))
-			added = added * 0.85
+			added = added * 0.75
 
 	if(added < 0 && HAS_TRAIT(src, TRAIT_FROZEN_STAMINA))
 		added = 0
@@ -118,7 +118,7 @@
 
 	stamina = CLAMP(stamina+added, 0, max_stamina)
 	if(added > 0)
-		energy_add(added * -1)
+		energy_add(added * -energy_loss_mult) // TA EDIT
 		adjust_nutrition(-stamina_nutrition_mod(added))
 	if(added >= 5)
 		if(energy <= 0)
@@ -177,7 +177,7 @@
 		if(energy <= 0)
 			addtimer(CALLBACK(src, PROC_REF(Knockdown), 30), 1 SECONDS)
 			var/area/rogue/our_area = get_area(src)
-			if(our_area.necra_area)
+			if(our_area && our_area.necra_area) // TA EDIT
 				src.extract_from_deaths_edge()
 		addtimer(CALLBACK(src, PROC_REF(Immobilize), 30), 1 SECONDS)
 		if(iscarbon(src))

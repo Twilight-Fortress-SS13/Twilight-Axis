@@ -99,6 +99,7 @@
 		message_admins("[header]:<br>[text]")
 		admin_ticket_log(target_ckey, "<font color='blue'>[header]</font>")
 		admin_ticket_log(target_ckey, text)
+		world.TgsAnnounceAdminMessageEntry(admin_ckey, target_key, type, text, secret, expiry)
 		if(browse)
 			browse_messages("[type]")
 		else
@@ -142,6 +143,8 @@
 		var/m2 = "[user_name_admin] has deleted a [type][(type == "note" || type == "message" || type == "watchlist entry") ? " for" : " made by"] [target_key]:<br>[text]"
 		log_admin_private(m1)
 		message_admins(m2)
+		if(type == "note" || type == "message" || type == "message sent" || type == "watchlist entry")
+			world.TgsAnnounceAdminMessageDeletion(deleted_by_ckey, target_key, type, text)
 		if(browse)
 			browse_messages("[type]")
 		else
@@ -191,6 +194,8 @@
 		qdel(query_edit_message)
 		log_admin_private("[kn] has edited a [type] [(type == "note" || type == "message" || type == "watchlist entry") ? " for [target_key]" : ""] made by [admin_key] from [old_text] to [new_text]")
 		message_admins("[kna] has edited a [type] [(type == "note" || type == "message" || type == "watchlist entry") ? " for [target_key]" : ""] made by [admin_key] from<br>[old_text]<br>to<br>[new_text]")
+		if(type == "note" || type == "message" || type == "watchlist entry")
+			world.TgsAnnounceAdminMessageEdit(editor_ckey, target_key, admin_key, type, old_text, new_text)
 		if(browse)
 			browse_messages("[type]")
 		else

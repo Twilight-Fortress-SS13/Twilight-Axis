@@ -12,7 +12,7 @@ GLOBAL_LIST_EMPTY(quest_scrolls)
 	resistance_flags = FIRE_PROOF | LAVA_PROOF | INDESTRUCTIBLE | UNACIDABLE
 	max_integrity = 1000
 	armor = ARMOR_INDESTRUCTIBLE
-	var/base_icon_state = "scroll_quest"
+	base_icon_state = "scroll_quest"
 	var/datum/quest/assigned_quest
 	var/last_compass_direction = ""
 	var/last_z_level_hint = ""

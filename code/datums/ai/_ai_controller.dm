@@ -62,12 +62,23 @@ have ways of interacting with a specific atom and control it. They posses a blac
 	///AI paused time
 	var/paused_until = 0
 
+	// TA EDIT START
+	var/datum/weakref/melee_progress_target
+	var/melee_progress_health
+	var/melee_progress_stat
+	var/melee_progress_since
+	var/melee_no_progress_attacks
+	var/datum/weakref/ignored_melee_target
+	var/ignored_melee_target_until
+	// TA EDIT END
+
 	var/failed_sneak_check = 0
 	///Time at which controller became inactive
 	var/inactive_timestamp
 
 	///Can this AI idle?
 	var/can_idle = TRUE
+	var/idle_requires_client = FALSE // TA EDIT
 	///What distance should we be checking for interesting things when considering idling/deidling? Defaults to AI_DEFAULT_INTERESTING_DIST
 	var/interesting_dist = AI_DEFAULT_INTERESTING_DIST
 	///Whether the pathing layer should fall back to climbing climbable structures when blocked.
@@ -310,6 +321,11 @@ have ways of interacting with a specific atom and control it. They posses a blac
 /datum/ai_controller/proc/should_idle()
 	if(!can_idle)
 		return FALSE
+	if(idle_requires_client) // TA EDIT START
+		for(var/datum/spatial_grid_cell/grid as anything in our_cells.member_cells)
+			if(length(grid.client_contents))
+				return FALSE
+		return TRUE // TA EDIT END
 	var/alert_until = blackboard[BB_AI_ALERT_MODE_UNTIL] || 0
 	if(alert_until > world.time)
 		return FALSE
@@ -658,6 +674,71 @@ have ways of interacting with a specific atom and control it. They posses a blac
 	for(var/datum/ai_behavior/behavior as anything in behavior_cooldowns)
 		if(istype(behavior, /datum/ai_behavior/find_potential_targets) || istype(behavior, /datum/ai_behavior/find_aggro_targets))
 			behavior_cooldowns[behavior] = world.time
+
+// TA EDIT START
+/datum/ai_controller/proc/reset_melee_attack_progress()
+	melee_progress_target = null
+	melee_progress_health = null
+	melee_progress_stat = null
+	melee_progress_since = 0
+	melee_no_progress_attacks = 0
+
+/datum/ai_controller/proc/is_melee_target_ignored(atom/target)
+	var/atom/ignored_target = ignored_melee_target?.resolve()
+	if(!ignored_target || world.time >= ignored_melee_target_until)
+		ignored_melee_target = null
+		ignored_melee_target_until = 0
+		return FALSE
+	return ignored_target == target
+
+/datum/ai_controller/proc/record_melee_attack_progress(atom/target, target_key, hiding_location_key)
+	if(!isliving(target))
+		reset_melee_attack_progress()
+		return FALSE
+
+	var/mob/living/living_target = target
+	if(QDELETED(living_target))
+		reset_melee_attack_progress()
+		return FALSE
+
+	var/mob/living/tracked_target = melee_progress_target?.resolve()
+	if(tracked_target != living_target)
+		reset_melee_attack_progress()
+		melee_progress_target = WEAKREF(living_target)
+		melee_progress_health = living_target.health
+		melee_progress_stat = living_target.stat
+		melee_progress_since = world.time
+		melee_no_progress_attacks = 1
+		return FALSE
+
+	if(living_target.stat != melee_progress_stat || living_target.health < melee_progress_health)
+		melee_progress_health = living_target.health
+		melee_progress_stat = living_target.stat
+		melee_progress_since = world.time
+		melee_no_progress_attacks = 0
+		return FALSE
+
+	if(living_target.health > melee_progress_health)
+		melee_progress_health = living_target.health
+
+	melee_no_progress_attacks++
+	if(melee_no_progress_attacks < AI_MELEE_NO_PROGRESS_LIMIT || world.time < melee_progress_since + AI_MELEE_NO_PROGRESS_TIME)
+		return FALSE
+
+	ignored_melee_target = WEAKREF(living_target)
+	ignored_melee_target_until = world.time + AI_MELEE_IGNORE_TIME
+	reset_melee_attack_progress()
+
+	if(target_key && blackboard[target_key] == living_target)
+		clear_blackboard_key(target_key)
+	if(hiding_location_key && blackboard[hiding_location_key])
+		clear_blackboard_key(hiding_location_key)
+	if(blackboard[BB_HIGHEST_THREAT_MOB] == living_target)
+		clear_blackboard_key(BB_HIGHEST_THREAT_MOB)
+
+	nudge_target_scan()
+	return TRUE
+// TA EDIT END
 
 /proc/alert_ai_visibility_change(atom/source, range = 7)
 	for(var/mob/living/L in view(range, source))

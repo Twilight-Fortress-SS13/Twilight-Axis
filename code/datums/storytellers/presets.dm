@@ -5,16 +5,15 @@
 /datum/storyteller/gamemode
 	always_votable = TRUE
 	hag_slots = 1
-
 // ----------------------------------------------------------------------------------------------------------
 // PSYDON pool - lowest intensity. No hard antags. Extended opens nothing; Low Intensity opens a few wretches.
 // (Low Intensity is defined further down as no_antag/small_wretch but votes in this pool via preset_pool.)
 // ----------------------------------------------------------------------------------------------------------
 /datum/storyteller/gamemode/extended
 	name = "Extended"
-	vote_desc = "Maybe we were the true antagonists after all."
-	desc = "No hard antags, no soft antags (wretch/gnoll/assassin), no dreamwalker. Hag present."
-	welcome_text = "A temperate breeze rolls through the quiet streets.."
+	vote_desc = "Возможно, настоящими антагонистами всё это время были мы сами."
+	desc = "Без крупных антагонистов, без малых антагонистов (Wretch/Gnoll/Assassin), без сноходцев (Dreamwalkers). Карга (Hag) присутствует."
+	welcome_text = "Умеренный ветер прокатывается по тихим улицам..."
 	color_theme = "#80ced8"
 	preset_pool = GAMEMODE_POOL_EXTENDED
 	block_hard = TRUE
@@ -42,7 +41,6 @@
 		EVENT_TRACK_OMENS = 1,
 		EVENT_TRACK_RAIDS = 1,
 	)
-
 // ----------------------------------------------------------------------------------------------------------
 // Admin sandbox - NOT votable. Admins pick before the 120s mark to disable player vote and
 // insert their own antags in.
@@ -63,7 +61,6 @@
 	roundstart_prob = 0
 	preferred_gnoll_mode = GNOLL_SCALING_DYNAMIC	// max 3
 	wretch_slot_cap = 12
-
 	starting_point_multipliers = list(
 		EVENT_TRACK_MUNDANE = 1,
 		EVENT_TRACK_PERSONAL = 1,
@@ -82,15 +79,14 @@
 		EVENT_TRACK_OMENS = 1,
 		EVENT_TRACK_RAIDS = 1,
 	)
-
 // ----------------------------------------------------------------------------------------------------------
 // ASCENDANT pool - guaranteed roundstart hard antag. At least one main antag will be selected.
 // ----------------------------------------------------------------------------------------------------------
 /datum/storyteller/gamemode/guaranteed_antag
 	name = "High Intensity"
-	vote_desc = "Guaranteed hard antagonist. Some soft antagonists remain."
-	desc = "Guaranteed roundstart hard antag. Wretches up to 8. Gnolls max 2. Hag present. Dreamwalker may roll."
-	welcome_text = "A cold dread settles over the town.."
+	vote_desc = "Гарантированный крупный антагонист. Часть малых антагонистов остаётся."
+	desc = "Гарантированный раундстартовый крупный антагонист. До 7 изгоев (Wretches). До 2 гноллов. До 5 бандитов. Карга (Hag) присутствует. Сноходец (Dreamwalker) может появиться."
+	welcome_text = "Леденящий ужас плавно опускается на город..."
 	color_theme = "#a43c3c"
 	preset_pool = GAMEMODE_POOL_GUARANTEED
 	guaranteed_hard = TRUE
@@ -100,58 +96,54 @@
 	block_soft = FALSE
 	allow_dreamwalker = TRUE
 	preferred_gnoll_mode = GNOLL_SCALING_FLAT	// max 2
-	wretch_slot_cap = 9
-
+	wretch_slot_cap = 7 // TA EDIT
 /datum/storyteller/gamemode/guaranteed_antag/low_wretch
 	name = "Tempered Intensity"
-	vote_desc = "Guaranteed hard antagonist of a random variety. A few soft antagonists too."
-	desc = "Guaranteed roundstart hard antag with more aggressive pop scaling. Wretches up to 4. Gnoll max 1. Hag present. No dreamwalker."
+	vote_desc = "Гарантированный крупный антагонист случайного типа. Также присутствует несколько малых антагонистов."
+	desc = "Гарантированный раундстартовый крупный антагонист с более агрессивным масштабированием от онлайна. До 4 изгоев (Wretches). До 1 гнолла. До 9 бандитов. Карга (Hag) присутствует. Сноходец (Dreamwalker) может появиться."
 	color_theme = "#7a1f1f"
 	hard_mult = 2
 	block_soft = FALSE
-	allow_dreamwalker = FALSE
+	allow_dreamwalker = TRUE
 	preferred_gnoll_mode = GNOLL_SCALING_SINGLE	// max 1
 	wretch_slot_cap = 4
-
 // ----------------------------------------------------------------------------------------------------------
 // TEN pool - no hard antags, soft antags only. Standard is the lighter option, Medium the default fallback.
 // ----------------------------------------------------------------------------------------------------------
 /datum/storyteller/gamemode/no_antag	// DEFAULT (inconclusive-vote fallback)
 	name = "Medium Intensity"
-	vote_desc = "No hard antagonists. Soft antagonists scale reasonably."
-	desc = "No hard antags. Wretches scale normally (5 -> 12). Gnolls max 3. Hag present. Dreamwalker may roll."
-	welcome_text = "The warmth of daelight rouses you from your slumber.."
+	vote_desc = "Без крупных антагонистов. Малые антагонисты масштабируются умеренно."
+	desc = "Без крупных антагонистов. Изгои (Wretches) масштабируются обычно: от 5 до 12. До 3 гноллов. Карга (Hag) присутствует. Сноходец (Dreamwalker) может появиться."
+	welcome_text = "Тёплый дневной свет пробуждает вас ото сна..."
 	color_theme = "#2b8c87"
 	preset_pool = GAMEMODE_POOL_NOANTAG
 	block_hard = TRUE
 	block_soft = FALSE
-	allow_dreamwalker = FALSE
+	allow_dreamwalker = TRUE
 	preferred_gnoll_mode = GNOLL_SCALING_DYNAMIC	// max 3
 	wretch_slot_cap = 12
 	roundstart_prob = 50
 	guarantees_roundstart_roleset = FALSE
-
 /datum/storyteller/gamemode/no_antag/standard
 	name = "Standard Intensity"
-	vote_desc = "No hard antagonists. A moderate spread of soft antagonists."
-	desc = "No hard antags. Wretches up to 6. Gnolls max 2. Hag present. No dreamwalker."
+	vote_desc = "Без крупных антагонистов. Умеренное количество малых антагонистов."
+	desc = "Без крупных антагонистов. До 6 изгоев (Wretches). До 2 гноллов. Карга (Hag) присутствует. Сноходцы (Dreamwalkers) не появляются."
 	color_theme = "#37b3a6"
 	allow_dreamwalker = FALSE
 	preferred_gnoll_mode = GNOLL_SCALING_FLAT	// max 2
 	wretch_slot_cap = 6
-
 // Low Intensity - votes in the PSYDON pool (see preset_pool) despite being a no_antag subtype.
 /datum/storyteller/gamemode/no_antag/small_wretch
 	name = "Low Intensity"
-	vote_desc = "No hard antagonists. Only a handful of soft antagonists are present.."
-	desc = "No hard antags. Wretches fixed at 4. No gnolls. Hag present. No dreamwalker."
+	vote_desc = "Без крупных антагонистов. Малых антагонистов совсем мало."
+	desc = "Без крупных антагонистов. Изгои (Wretches) фиксированы на 4 слотах. Гноллы не появляются. Карга (Hag) присутствует. Сноходцы (Dreamwalkers) не появляются."
+	welcome_text = "\"Любовь витает в воздухе? Нет же; это пахнут свежеиспечённые пироги на подоконниках!\""
 	color_theme = "#1f6b67"
 	preset_pool = GAMEMODE_POOL_EXTENDED
 	allow_dreamwalker = FALSE
 	preferred_gnoll_mode = GNOLL_SCALING_NONE
 	wretch_slot_cap = 4
 	roundstart_prob = 0
-
 	starting_point_multipliers = list(
 		EVENT_TRACK_MUNDANE = 1,
 		EVENT_TRACK_PERSONAL = 1,

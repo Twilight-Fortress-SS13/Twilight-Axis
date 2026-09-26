@@ -17,6 +17,8 @@ GLOBAL_LIST_EMPTY(antagonists)
 	var/antag_hud_type
 	var/antag_hud_name
 	var/list/confess_lines
+	/// traits applied to the mob at on_gain() and removed at on_removal()
+	var/list/innate_traits = list()
 
 	//Antag panel properties
 	var/show_in_antagpanel = TRUE	//This will hide adding this antag type in antag panel, use only for internal subtypes that shouldn't be added directly but still show if possessed by mind
@@ -56,8 +58,13 @@ GLOBAL_LIST_EMPTY(antagonists)
 /datum/antagonist/proc/can_be_owned(datum/mind/new_owner)
 	. = TRUE
 	var/datum/mind/tested = new_owner || owner
+
+	if(tested?.current && (QDELETED(tested.current) || is_banned(tested.current)))
+		return FALSE
+
 	if(tested.has_antag_datum(type))
 		return FALSE
+
 	for(var/i in tested.antag_datums)
 		var/datum/antagonist/A = i
 		if(is_type_in_typecache(src, A.typecache_datum_blacklist))
@@ -115,9 +122,9 @@ GLOBAL_LIST_EMPTY(antagonists)
 			REMOVE_TRAIT(owner.current, TRAIT_TEMPO, SPECIES_TRAIT)
 
 /datum/antagonist/proc/is_banned(mob/M)
-	if(!M)
+	if(!M || !M.ckey)
 		return FALSE
-	. = (is_banned_from(M.ckey, list(ROLE_SYNDICATE, job_rank)) || QDELETED(M))
+	return is_banned_from(M.ckey, list(ROLE_SYNDICATE, job_rank))
 
 /datum/antagonist/proc/on_life(mob/user)
 	return
@@ -214,11 +221,14 @@ GLOBAL_LIST_EMPTY(antagonists)
 	return ""
 
 /datum/antagonist/proc/enabled_in_preferences(datum/mind/M)
+	if(M && M.current && is_banned(M.current))
+		return FALSE
+
 	if(job_rank)
-		if(M.current && M.current.client && (job_rank in M.current.client.prefs.be_special))
+		if(M && M.current && M.current.client && M.current.client.prefs && (job_rank in M.current.client.prefs.be_special))
 			return TRUE
-		else
-			return FALSE
+		return FALSE
+
 	return TRUE
 
 // List if ["Command"] = CALLBACK(), user will be appeneded to callback arguments on execution

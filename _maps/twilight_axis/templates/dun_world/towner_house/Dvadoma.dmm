@@ -1,0 +1,3682 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"ad" = (
+/obj/structure/chair/bench/coucha,
+/turf/open/floor/rogue/tile/harem,
+/area/rogue/indoors/town)
+"aD" = (
+/obj/structure/fluff/psycross/copper,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"aQ" = (
+/obj/structure/chair/wood/rogue/chair4{
+	dir = 4
+	},
+/turf/open/floor/carpet/purple,
+/area/rogue/indoors/town)
+"bc" = (
+/obj/structure/table/wood/long_table,
+/obj/item/storage/roguebag{
+	pixel_x = 5;
+	pixel_y = 16
+	},
+/obj/item/storage/roguebag{
+	pixel_x = -6;
+	pixel_y = 8
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"bh" = (
+/obj/structure/fluff/railing/corner/north_east,
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 1
+	},
+/obj/machinery/light/rogue/candle,
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"bv" = (
+/obj/structure/mineral_door/wood/deadbolt{
+	locked = 1
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"bw" = (
+/obj/structure/rack/rogue/shelf/biggest,
+/obj/item/bedroll{
+	pixel_x = 1;
+	pixel_y = 2
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"bR" = (
+/turf/closed/mineral/random/rogue/high,
+/area/rogue/under/cave)
+"ct" = (
+/obj/machinery/light/rogue/candle/l,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"cy" = (
+/obj/structure/rack/rogue/shelf,
+/obj/structure/fluff/railing/border/west,
+/obj/item/candle/candlestick/silver/single/lit{
+	pixel_x = 9;
+	pixel_y = 17
+	},
+/obj/structure/table/wood,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"cz" = (
+/obj/machinery/light/rogue/candle{
+	pixel_y = -32
+	},
+/obj/machinery/tanningrack,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"cN" = (
+/obj/structure/fluff/railing/corner,
+/turf/open/floor/rogue/hexstone,
+/area/rogue/indoors/town)
+"dj" = (
+/obj/structure/fluff/railing/border/east,
+/obj/machinery/light/rogue/candle/l,
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"do" = (
+/obj/structure/flora/roguegrass,
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/outdoors/rtfield)
+"dz" = (
+/obj/machinery/light/rogue/oven/south,
+/obj/machinery/light/rogue/hearth,
+/turf/open/floor/rogue/blocks,
+/area/rogue/indoors/town)
+"dQ" = (
+/obj/structure/mineral_door/wood/deadbolt{
+	dir = 1
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"dS" = (
+/obj/effect/decal/mossy{
+	dir = 4
+	},
+/obj/structure/flora/roguegrass,
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/rtfield)
+"eg" = (
+/turf/closed/mineral/random/rogue/med,
+/area/rogue/under/cave)
+"en" = (
+/obj/structure/stairs/stone,
+/turf/open/floor/rogue/hexstone,
+/area/rogue/indoors/town)
+"ez" = (
+/obj/structure/fluff/railing/corner,
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"eB" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 4
+	},
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 8
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"eZ" = (
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"fq" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 4
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"fF" = (
+/obj/effect/landmark/chimeric_calyx_spawner/fifteen,
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/cave)
+"fG" = (
+/obj/effect/decal/mossy,
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/rtfield)
+"ga" = (
+/obj/effect/decal/mossy{
+	dir = 4
+	},
+/turf/open/floor/rogue/dirt,
+/area/rogue/outdoors/rtfield)
+"gd" = (
+/obj/structure/fluff/railing/border/north,
+/obj/structure/fluff/railing/corner/south_west,
+/turf/open/transparent/openspace,
+/area/rogue/outdoors/mountains)
+"go" = (
+/obj/structure/table/wood/long_table/right,
+/obj/item/natural/feather{
+	pixel_x = 2;
+	pixel_y = 9
+	},
+/obj/item/paper{
+	pixel_y = 7
+	},
+/obj/item/paper{
+	pixel_y = 7
+	},
+/turf/open/floor/carpet/royalblack,
+/area/rogue/indoors/town)
+"gt" = (
+/obj/structure/fluff/railing/corner/north_east,
+/turf/open/floor/rogue/hexstone,
+/area/rogue/indoors/town)
+"gy" = (
+/obj/structure/flora/roguegrass,
+/obj/structure/flora/ausbushes/brflowers,
+/obj/effect/decal/cobbleedge{
+	dir = 1;
+	icon_state = "borderfall"
+	},
+/turf/open/floor/rogue/grassyel,
+/area/rogue/outdoors/rtfield)
+"gB" = (
+/obj/effect/decal/mossy{
+	dir = 8
+	},
+/obj/structure/fluff/railing/corner/south_west,
+/obj/structure/fluff/railing/corner,
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/outdoors/rtfield)
+"gG" = (
+/obj/structure/fluff/railing/corner,
+/obj/structure/fluff/railing/corner/south_west,
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/outdoors/rtfield)
+"gO" = (
+/obj/structure/table/wood/long_table/right,
+/obj/item/kitchen/rollingpin{
+	pixel_x = -9;
+	pixel_y = 4
+	},
+/obj/item/rogueweapon/huntingknife/bronze{
+	pixel_x = 1;
+	pixel_y = 6
+	},
+/obj/structure/roguemachine/withdraw,
+/obj/item/flint{
+	pixel_y = 5;
+	pixel_x = 11
+	},
+/turf/open/floor/rogue/blocks,
+/area/rogue/indoors/town)
+"hb" = (
+/obj/structure/fluff/railing/corner/north_east,
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 4
+	},
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 10
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"hm" = (
+/obj/structure/fluff/railing/corner/south_west,
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 8
+	},
+/obj/machinery/light/rogue/campfire/fireplace,
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"ho" = (
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/outdoors/rtfield)
+"ht" = (
+/obj/effect/spawner/roguemap/stump,
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/rtfield)
+"hD" = (
+/obj/machinery/tanningrack,
+/turf/open/floor/carpet/royalblack,
+/area/rogue/indoors/town)
+"hW" = (
+/obj/structure/fluff/railing/border/north,
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 10
+	},
+/turf/open/floor/rogue/blocks/stonered/tiny,
+/area/rogue/indoors/town)
+"in" = (
+/obj/structure/flora/newtree,
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/rtfield)
+"iy" = (
+/obj/structure/rack/rogue/shelf/biggest,
+/obj/item/flashlight/flare/torch/lantern,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"je" = (
+/obj/structure/fluff/railing/border/west,
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 1
+	},
+/obj/item/reagent_containers/food/snacks/rogue/crackerscooked{
+	pixel_x = 4;
+	pixel_y = 5
+	},
+/obj/structure/table/wood,
+/turf/open/floor/rogue/hexstone,
+/area/rogue/indoors/town)
+"jj" = (
+/obj/structure/chair/bench/couchablack/r,
+/obj/structure/fluff/walldeco/rpainting/forest{
+	pixel_y = 32
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"jm" = (
+/obj/structure/fluff/railing/border/north,
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"jD" = (
+/obj/structure/fluff/railing/corner,
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 8
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"jE" = (
+/obj/item/reagent_containers/food/snacks/grown/wheat,
+/obj/item/reagent_containers/food/snacks/grown/wheat,
+/obj/structure/closet/crate/chest/neu,
+/obj/item/reagent_containers/food/snacks/rogue/crackerscooked,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"jF" = (
+/obj/structure/mineral_door/wood/deadbolt{
+	dir = 1;
+	locked = 1
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"jG" = (
+/obj/structure/fluff/railing/corner,
+/obj/effect/decal/mossy{
+	dir = 8
+	},
+/obj/item/trash/applecore,
+/obj/item/trash/applecore,
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/outdoors/rtfield)
+"jK" = (
+/turf/open/floor/rogue/dirt,
+/area/rogue/outdoors/rtfield)
+"kz" = (
+/obj/machinery/light/rogue/firebowl/stump,
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/outdoors/town)
+"kN" = (
+/obj/structure/ladder,
+/obj/machinery/light/rogue/candle,
+/turf/open/floor/rogue/hexstone,
+/area/rogue/indoors/town)
+"kT" = (
+/obj/structure/bed/rogue/inn/wooldouble,
+/obj/item/bedsheet/rogue/double_pelt,
+/turf/open/floor/carpet/purple,
+/area/rogue/indoors/town)
+"kU" = (
+/obj/structure/table/wood/long_table/right,
+/obj/item/candle/silver/lit{
+	pixel_x = 2;
+	pixel_y = 8
+	},
+/obj/machinery/light/rogue/candle,
+/turf/open/floor/carpet/purple,
+/area/rogue/indoors/town)
+"lt" = (
+/turf/closed/wall/mineral/rogue/wooddark,
+/area/rogue/indoors/town)
+"lD" = (
+/obj/structure/table/wood/long_table/right,
+/obj/item/candle/yellow{
+	pixel_x = 4;
+	pixel_y = 6
+	},
+/obj/item/candle/yellow{
+	pixel_x = 12;
+	pixel_y = 14
+	},
+/obj/item/rogueweapon/woodstaff{
+	pixel_x = -28;
+	pixel_y = -7
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"lR" = (
+/obj/structure/stairs{
+	dir = 1
+	},
+/obj/structure/fluff/wallclock,
+/turf/open/floor/rogue/hexstone,
+/area/rogue/indoors/town)
+"lS" = (
+/obj/structure/fluff/railing/corner,
+/obj/effect/decal/edge{
+	color = "#3f3f3f"
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"lY" = (
+/obj/structure/roguewindow/openclose/reinforced,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"lZ" = (
+/obj/structure/roguewindow/openclose/reinforced{
+	dir = 8
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"mf" = (
+/obj/structure/rack/rogue,
+/obj/item/natural/bundle/stick,
+/obj/item/grown/log/tree/small{
+	pixel_x = 3;
+	pixel_y = -5
+	},
+/obj/structure/fluff/walldeco/bigpainting/lake,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"mp" = (
+/obj/structure/table/wood/long_table,
+/obj/structure/roguemachine/withdraw,
+/obj/item/rogueweapon/huntingknife/chefknife{
+	pixel_x = 12;
+	pixel_y = 6
+	},
+/obj/item/kitchen/rollingpin{
+	pixel_x = 0;
+	pixel_y = 2
+	},
+/turf/open/floor/rogue/blocks,
+/area/rogue/indoors/town)
+"mL" = (
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/under/cave)
+"mU" = (
+/obj/structure/closet/crate/chest/neu,
+/obj/item/reagent_containers/food/snacks/grown/wheat,
+/obj/item/reagent_containers/food/snacks/grown/wheat,
+/obj/item/reagent_containers/food/snacks/rogue/crackerscooked,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"nf" = (
+/obj/structure/fluff/railing/corner/north_east,
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 4
+	},
+/obj/item/reagent_containers/powder/salt,
+/obj/item/reagent_containers/powder/salt,
+/obj/structure/closet/crate/chest/old_crate,
+/obj/item/ration,
+/obj/item/ration,
+/turf/open/floor/rogue/blocks,
+/area/rogue/indoors/town)
+"nh" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 10
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"ni" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 5
+	},
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 8
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"nL" = (
+/turf/closed/mineral/random/rogue,
+/area/rogue/indoors/town)
+"nU" = (
+/obj/structure/rack/rogue/shelf/biggest,
+/obj/item/kitchen/fork{
+	pixel_x = 1;
+	pixel_y = 0
+	},
+/obj/item/kitchen/fork{
+	pixel_x = -6;
+	pixel_y = 0
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"oh" = (
+/obj/structure/fluff/railing/border/north,
+/obj/effect/decal/edge{
+	color = "#3f3f3f"
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"on" = (
+/obj/structure/fluff/railing/corner/north_east,
+/obj/effect/decal/mossy{
+	dir = 4
+	},
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/outdoors/rtfield)
+"oU" = (
+/obj/structure/ladder,
+/obj/structure/fluff/wallclock,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"oY" = (
+/obj/structure/bars/cemetery,
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/outdoors/rtfield)
+"pw" = (
+/obj/machinery/light/rogue/candle/r,
+/obj/structure/fluff/grindwheel,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"px" = (
+/obj/structure/fluff/railing/border/north,
+/obj/effect/decal/edge{
+	color = "#3f3f3f"
+	},
+/obj/machinery/light/rogue/candle/l,
+/turf/open/floor/rogue/blocks/stonered/tiny,
+/area/rogue/indoors/town)
+"pH" = (
+/obj/structure/fluff/railing/corner/south_west,
+/turf/open/transparent/openspace,
+/area/rogue/outdoors/mountains)
+"qb" = (
+/obj/structure/fluff/railing/border/north,
+/obj/structure/fluff/railing/border,
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/outdoors/rtfield)
+"qf" = (
+/obj/structure/table/wood/long_table/right,
+/obj/item/reagent_containers/glass/bucket/pot{
+	pixel_x = 3;
+	pixel_y = 8
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"qA" = (
+/obj/structure/table/wood/long_table/right,
+/obj/item/reagent_containers/glass/cup/silver/pewter{
+	pixel_x = 6;
+	pixel_y = 15
+	},
+/turf/open/floor/carpet/red,
+/area/rogue/indoors/town)
+"qD" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f"
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"qJ" = (
+/obj/effect/decal/carpet/kover_black{
+	pixel_x = -14;
+	pixel_y = 0
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"qP" = (
+/obj/structure/rack/rogue/shelf/biggest,
+/obj/item/cooking/platter{
+	pixel_x = 0;
+	pixel_y = -1
+	},
+/obj/item/cooking/platter{
+	pixel_x = 0;
+	pixel_y = 10
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"qU" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 1
+	},
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 6
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"qY" = (
+/turf/open/floor/rogue/twig,
+/area/rogue/outdoors/mountains)
+"rb" = (
+/turf/open/floor/carpet/purple,
+/area/rogue/indoors/town)
+"rm" = (
+/obj/machinery/light/rogue/firebowl/stump,
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/rtfield)
+"rq" = (
+/obj/structure/fluff/railing/border/west,
+/turf/open/floor/rogue/blocks/stonered/tiny,
+/area/rogue/indoors/town)
+"rt" = (
+/obj/structure/table/wood/long_table/right,
+/obj/machinery/light/rogue/candle/floorcandle,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"ry" = (
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/cave)
+"rA" = (
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/rtfield)
+"rG" = (
+/turf/open/water/swamp,
+/area/rogue/outdoors/rtfield)
+"rM" = (
+/obj/effect/decal/edge_corner{
+	color = "#3f3f3f";
+	dir = 1
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"rR" = (
+/obj/structure/fluff/railing/border/north,
+/turf/open/transparent/openspace,
+/area/rogue/outdoors/mountains)
+"rS" = (
+/turf/closed/wall/mineral/rogue/stone,
+/area/rogue/outdoors/mountains)
+"se" = (
+/obj/structure/chair/stool/rogue,
+/turf/open/floor/carpet/royalblack,
+/area/rogue/indoors/town)
+"sh" = (
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/cave)
+"sp" = (
+/obj/structure/fluff/railing/corner/south_west,
+/obj/structure/fluff/railing/corner,
+/turf/open/transparent/openspace,
+/area/rogue/outdoors/mountains)
+"sq" = (
+/turf/open/floor/rogue/rooftop/green,
+/area/rogue/outdoors/mountains)
+"su" = (
+/obj/structure/table/wood,
+/obj/item/reagent_containers/glass/bucket/pot/teapot{
+	pixel_x = -1;
+	pixel_y = 17
+	},
+/obj/item/reagent_containers/glass/cup/ceramic{
+	pixel_x = 7;
+	pixel_y = 2
+	},
+/turf/open/floor/carpet/purple,
+/area/rogue/indoors/town)
+"sB" = (
+/obj/structure/fluff/railing/corner/south_east,
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 4
+	},
+/turf/open/floor/rogue/blocks,
+/area/rogue/indoors/town)
+"sW" = (
+/obj/structure/stairs{
+	dir = 1
+	},
+/obj/machinery/light/rogue/candle/l,
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"td" = (
+/obj/structure/mineral_door/wood/window{
+	name = "Shared Balcony"
+	},
+/obj/structure/curtain/magenta,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"th" = (
+/obj/structure/fluff/railing/corner/south_west,
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/outdoors/rtfield)
+"tO" = (
+/obj/effect/decal/mossy{
+	dir = 8
+	},
+/obj/structure/flora/roguegrass,
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/rtfield)
+"tP" = (
+/obj/structure/rack/rogue/shelf/biggest,
+/obj/item/fishingrod,
+/turf/open/floor/rogue/hexstone,
+/area/rogue/indoors/town)
+"tZ" = (
+/obj/structure/bed/rogue/inn/wooldouble,
+/obj/item/bedsheet/rogue/fabric_double,
+/turf/open/floor/carpet/red,
+/area/rogue/indoors/town)
+"ud" = (
+/obj/structure/chair/stool/rogue,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"ui" = (
+/obj/structure/chair/wood/rogue/chair5{
+	dir = 4
+	},
+/turf/open/floor/carpet/purple,
+/area/rogue/indoors/town)
+"uk" = (
+/obj/effect/decal/mossy{
+	dir = 1;
+	pixel_y = 1
+	},
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/outdoors/rtfield)
+"ul" = (
+/obj/structure/roguewindow,
+/obj/structure/curtain/brown,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"un" = (
+/obj/structure/fermentation_keg/whitewine,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"up" = (
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/outdoors/rtfield)
+"uJ" = (
+/obj/structure/fluff/railing/corner/south_west,
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 1
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"uS" = (
+/obj/machinery/light/rogue/candle/floorcandle,
+/obj/structure/table/wood,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"vl" = (
+/obj/structure/table/wood/long_table,
+/obj/structure/rack/rogue/shelf,
+/obj/item/cooking/platter{
+	pixel_x = 0;
+	pixel_y = 36
+	},
+/obj/item/millstone{
+	pixel_y = 15;
+	pixel_x = 11
+	},
+/obj/item/kitchen/fork{
+	pixel_x = -10;
+	pixel_y = 7
+	},
+/obj/item/kitchen/spoon{
+	pixel_x = -2;
+	pixel_y = 7
+	},
+/turf/open/floor/rogue/blocks,
+/area/rogue/indoors/town)
+"vp" = (
+/obj/structure/flora/roguegrass,
+/obj/structure/flora/ausbushes/ywflowers,
+/obj/effect/decal/cobbleedge{
+	dir = 1;
+	icon_state = "borderfall"
+	},
+/turf/open/floor/rogue/grassyel,
+/area/rogue/outdoors/rtfield)
+"vy" = (
+/obj/effect/decal/mossy{
+	dir = 8
+	},
+/obj/structure/fluff/railing/border/west,
+/obj/structure/flora/roguetree/stump/burnt,
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/outdoors/rtfield)
+"vA" = (
+/obj/structure/fermentation_keg/random/water,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"vM" = (
+/obj/structure/rack/rogue,
+/obj/item/rogueweapon/shovel,
+/obj/item/rogueweapon/stoneaxe/woodcut/steel,
+/obj/machinery/light/rogue/candle/r,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"vQ" = (
+/obj/machinery/light/rogue/candle,
+/obj/structure/fluff/grindwheel,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"vR" = (
+/obj/structure/fluff/railing/border,
+/obj/structure/fluff/railing/border/north,
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/outdoors/rtfield)
+"wf" = (
+/obj/structure/fluff/railing/border,
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/outdoors/rtfield)
+"wi" = (
+/obj/effect/decal/carpet/kover_black{
+	pixel_x = 0;
+	pixel_y = 5
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"wu" = (
+/obj/structure/flora/roguegrass,
+/obj/structure/flora/ausbushes/brflowers,
+/obj/structure/flora/ausbushes/ywflowers,
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/rtfield)
+"wy" = (
+/turf/open/floor/rogue/hexstone,
+/area/rogue/indoors/town)
+"wF" = (
+/obj/structure/table/wood/long_table,
+/obj/item/natural/cloth{
+	pixel_x = 13;
+	pixel_y = 10
+	},
+/obj/item/natural/cloth{
+	pixel_x = 9;
+	pixel_y = 10
+	},
+/obj/item/reagent_containers/glass/cup/bronzegob{
+	pixel_x = -6;
+	pixel_y = 7
+	},
+/turf/open/floor/carpet/royalblack,
+/area/rogue/indoors/town)
+"wI" = (
+/turf/open/floor/rogue/rooftop/green/east,
+/area/rogue/outdoors/mountains)
+"wV" = (
+/turf/open/transparent/openspace,
+/area/rogue/outdoors/mountains)
+"xk" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 1
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"xo" = (
+/obj/structure/flora/roguegrass,
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/rtfield)
+"xA" = (
+/obj/machinery/loom,
+/obj/machinery/light/rogue/candle/r,
+/turf/open/floor/carpet/royalblack,
+/area/rogue/indoors/town)
+"xC" = (
+/obj/structure/fluff/railing/corner,
+/turf/open/transparent/openspace,
+/area/rogue/outdoors/mountains)
+"xD" = (
+/obj/effect/turf_decal/weather/dirt{
+	dir = 1
+	},
+/obj/structure/flora/roguegrass,
+/obj/structure/flora/ausbushes/ppflowers,
+/obj/structure/flora/roguegrass/herb/salvia{
+	pixel_x = 0;
+	pixel_y = 4
+	},
+/obj/machinery/light/rogue/torchholder/l,
+/turf/open/floor/rogue/grassred,
+/area/rogue/outdoors/mountains)
+"xQ" = (
+/obj/structure/rack/rogue/shelf/biggest,
+/obj/item/reagent_containers/glass/bottle/rogue/beer/murkwine{
+	pixel_x = -4;
+	pixel_y = 17
+	},
+/obj/item/reagent_containers/glass/bottle/rogue/beer/ratkept{
+	pixel_x = 5;
+	pixel_y = 7
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"yb" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 8
+	},
+/obj/machinery/light/rogue/candle{
+	pixel_y = -32
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"yd" = (
+/obj/structure/fluff/statue/small,
+/turf/open/floor/rogue/tile/harem,
+/area/rogue/indoors/town)
+"yh" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 4
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"yl" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f"
+	},
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 5
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"yz" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 4
+	},
+/obj/machinery/light/rogue/candle/l,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"yN" = (
+/obj/structure/fluff/railing/wood/north,
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/outdoors/town)
+"zw" = (
+/obj/structure/rack/rogue/shelf/biggest,
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"zG" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 8
+	},
+/turf/open/floor/rogue/blocks/stonered/tiny,
+/area/rogue/indoors/town)
+"zR" = (
+/obj/structure/roguewindow,
+/obj/structure/curtain/green,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"zT" = (
+/obj/structure/fluff/railing/corner/north_east,
+/turf/open/transparent/openspace,
+/area/rogue/outdoors/mountains)
+"zU" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f"
+	},
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 9
+	},
+/turf/open/floor/rogue/blocks/stonered/tiny,
+/area/rogue/indoors/town)
+"Ag" = (
+/obj/structure/fluff/railing/wood/east,
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/outdoors/rtfield)
+"Aj" = (
+/obj/structure/curtain/brown,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"Al" = (
+/obj/structure/rack/rogue/shelf/biggest,
+/obj/item/reagent_containers/glass/cup/wooden{
+	pixel_x = 5;
+	pixel_y = 11
+	},
+/obj/item/reagent_containers/glass/cup/wooden{
+	pixel_x = -5;
+	pixel_y = 11
+	},
+/turf/open/floor/rogue/tile/harem,
+/area/rogue/indoors/town)
+"Aw" = (
+/obj/effect/landmark/events/deadite_animal_migration_point{
+	order = 8
+	},
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/outdoors/rtfield)
+"AD" = (
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/outdoors/rtfield)
+"AO" = (
+/obj/effect/decal/carpet/square{
+	dir = 4;
+	pixel_x = 11;
+	pixel_y = 0
+	},
+/turf/open/floor/rogue/blocks/stonered/tiny,
+/area/rogue/indoors/town)
+"AV" = (
+/obj/structure/flora/roguegrass,
+/turf/open/floor/rogue/dirt,
+/area/rogue/outdoors/rtfield)
+"Bu" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 8
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"Bx" = (
+/obj/structure/bed/rogue/inn/wool,
+/obj/structure/rack/rogue/shelf,
+/obj/item/reagent_containers/glass/cup/silver/small{
+	pixel_x = -7;
+	pixel_y = 42
+	},
+/obj/item/reagent_containers/glass/cup/silver/small{
+	pixel_x = 6;
+	pixel_y = 42
+	},
+/obj/item/bedsheet/rogue/fabric,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"Bz" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/flora/roguegrass,
+/obj/structure/flora/ausbushes/ywflowers,
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/rtfield)
+"BS" = (
+/obj/structure/fluff/railing/border/west,
+/turf/open/transparent/openspace,
+/area/rogue/outdoors/mountains)
+"Cm" = (
+/turf/closed/wall/mineral/rogue/wooddark,
+/area/rogue/outdoors/rtfield)
+"Ct" = (
+/obj/structure/table/wood/long_table/right,
+/obj/machinery/light/rogue/oven/south,
+/obj/item/millstone{
+	pixel_y = 10;
+	pixel_x = 6
+	},
+/obj/item/flint{
+	pixel_x = -8;
+	pixel_y = 5
+	},
+/turf/open/floor/rogue/blocks,
+/area/rogue/indoors/town)
+"CE" = (
+/obj/structure/chair/bench/coucha/r,
+/turf/open/floor/rogue/tile/harem,
+/area/rogue/indoors/town)
+"Da" = (
+/obj/effect/turf_decal/weather/dirt,
+/obj/structure/flora/ausbushes/lavendergrass,
+/obj/structure/flora/roguegrass,
+/obj/machinery/light/rogue/torchholder/l,
+/turf/open/floor/rogue/grassred,
+/area/rogue/outdoors/mountains)
+"Dk" = (
+/obj/structure/table/wood/long_table,
+/obj/item/candle/gold/lit{
+	pixel_x = -4;
+	pixel_y = 7
+	},
+/turf/open/floor/carpet/red,
+/area/rogue/indoors/town)
+"DJ" = (
+/obj/effect/decal/mossy{
+	dir = 8
+	},
+/obj/structure/fluff/railing/corner/south_west,
+/turf/open/floor/rogue/dirt,
+/area/rogue/outdoors/rtfield)
+"DU" = (
+/obj/machinery/light/rogue/campfire/fireplace,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"Eo" = (
+/obj/structure/fluff/railing/border/east,
+/turf/open/floor/rogue/hexstone,
+/area/rogue/indoors/town)
+"Et" = (
+/turf/closed/wall/mineral/rogue/wooddark/window,
+/area/rogue/indoors/town)
+"EU" = (
+/obj/structure/roguewindow/openclose/reinforced{
+	dir = 1
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"EX" = (
+/obj/structure/table/wood,
+/obj/item/candle/candlestick/silver/single/lit{
+	pixel_x = 5;
+	pixel_y = 10
+	},
+/obj/item/reagent_containers/peppermill{
+	pixel_x = -4;
+	pixel_y = 4
+	},
+/turf/open/floor/carpet/purple,
+/area/rogue/indoors/town)
+"Ff" = (
+/obj/structure/fluff/railing/corner/south_east,
+/turf/open/transparent/openspace,
+/area/rogue/outdoors/mountains)
+"Fs" = (
+/turf/open/floor/rogue/rooftop/green/north,
+/area/rogue/outdoors/mountains)
+"FQ" = (
+/obj/structure/closet/crate/roguecloset/inn,
+/obj/machinery/light/rogue/candle/r,
+/turf/open/floor/carpet/red,
+/area/rogue/indoors/town)
+"Gg" = (
+/obj/structure/flora/roguegrass,
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/outdoors/rtfield)
+"Gh" = (
+/obj/structure/fluff/railing/corner/north_east,
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 4
+	},
+/turf/open/floor/rogue/blocks/stonered/tiny,
+/area/rogue/indoors/town)
+"Gp" = (
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/outdoors/town)
+"Gt" = (
+/obj/structure/closet/crate/roguecloset/inn,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"GF" = (
+/obj/structure/table/wood/long_table,
+/obj/structure/mirror,
+/obj/item/reagent_containers/glass/cup/silver/pewter{
+	pixel_x = -7;
+	pixel_y = 10
+	},
+/turf/open/floor/carpet/purple,
+/area/rogue/indoors/town)
+"GO" = (
+/obj/structure/rack/rogue/shelf/biggest,
+/obj/item/reagent_containers/glass/cup{
+	pixel_x = -7;
+	pixel_y = 12
+	},
+/obj/item/reagent_containers/glass/cup{
+	pixel_x = 4;
+	pixel_y = 12
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"GX" = (
+/obj/effect/decal/mossy{
+	dir = 8
+	},
+/obj/machinery/light/rogue/torchholder/c,
+/obj/structure/composter/halffull,
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/rtfield)
+"Hg" = (
+/obj/structure/fluff/railing/border/east,
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 4
+	},
+/turf/open/floor/rogue/blocks,
+/area/rogue/indoors/town)
+"Hh" = (
+/obj/structure/fluff/railing/border/east,
+/obj/machinery/light/rogue/candle,
+/obj/effect/decal/mossy{
+	dir = 4
+	},
+/obj/structure/flora/roguetree/burnt,
+/turf/open/floor/rogue/dirt,
+/area/rogue/outdoors/rtfield)
+"Ho" = (
+/obj/structure/stairs/stone,
+/obj/machinery/light/rogue/torchholder/r,
+/turf/open/floor/rogue/blocks,
+/area/rogue/indoors/town)
+"Hr" = (
+/obj/structure/fluff/railing/border/north,
+/turf/open/floor/rogue/dirt,
+/area/rogue/outdoors/rtfield)
+"Hx" = (
+/obj/structure/rack/rogue/shelf/biggest,
+/obj/item/reagent_containers/glass/bottle/rogue/beer/rtoper{
+	pixel_x = -3;
+	pixel_y = 16
+	},
+/obj/item/reagent_containers/glass/bottle/rogue/redwine{
+	pixel_x = 5;
+	pixel_y = 8
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"Hy" = (
+/obj/structure/roguewindow,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"Hz" = (
+/obj/structure/flora/roguegrass,
+/obj/structure/flora/ausbushes/ywflowers,
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/rtfield)
+"HI" = (
+/turf/open/floor/rogue/tile/harem,
+/area/rogue/indoors/town)
+"HT" = (
+/obj/machinery/light/rogue/candle/r,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"In" = (
+/obj/structure/fluff/railing/border,
+/turf/open/transparent/openspace,
+/area/rogue/outdoors/mountains)
+"Ip" = (
+/obj/structure/chair/bench/couchablack,
+/obj/machinery/light/rogue/candle,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"IC" = (
+/obj/structure/flora/roguetree/burnt,
+/turf/open/floor/rogue/dirt,
+/area/rogue/outdoors/rtfield)
+"JF" = (
+/obj/structure/fluff/railing/corner/south_west,
+/obj/structure/handcart{
+	dir = 4
+	},
+/turf/open/floor/rogue/hexstone,
+/area/rogue/indoors/town)
+"JH" = (
+/obj/structure/flora/roguegrass,
+/obj/structure/flora/ausbushes/ppflowers,
+/obj/effect/decal/cobbleedge{
+	dir = 1;
+	icon_state = "borderfall"
+	},
+/turf/open/floor/rogue/grassyel,
+/area/rogue/outdoors/rtfield)
+"JI" = (
+/obj/structure/stairs{
+	dir = 1
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"JS" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 4
+	},
+/obj/machinery/light/rogue/candle{
+	pixel_y = -32
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"JU" = (
+/obj/structure/fluff/railing/border/north,
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/outdoors/rtfield)
+"Kb" = (
+/obj/structure/chair/wood/rogue/chair4{
+	dir = 8
+	},
+/turf/open/floor/carpet/purple,
+/area/rogue/indoors/town)
+"Kp" = (
+/obj/structure/rack/rogue,
+/obj/machinery/light/rogue/candle/r,
+/obj/item/natural/bundle/stick,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"Ku" = (
+/obj/structure/fluff/railing/wood/west,
+/turf/open/floor/rogue/cobblerock,
+/area/rogue/outdoors/rtfield)
+"Lb" = (
+/obj/item/reagent_containers/glass/bucket{
+	pixel_x = 5;
+	pixel_y = 7
+	},
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/outdoors/rtfield)
+"Lc" = (
+/turf/closed/mineral/random/rogue,
+/area/rogue/outdoors/mountains)
+"LC" = (
+/obj/structure/table/wood/long_table,
+/obj/item/candle/yellow{
+	pixel_x = -11;
+	pixel_y = 16
+	},
+/obj/item/candle/skull/lit{
+	pixel_x = -2;
+	pixel_y = 10
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"LF" = (
+/obj/structure/rack/rogue/shelf/biggest,
+/obj/machinery/light/rogue/candle{
+	pixel_y = -32
+	},
+/obj/item/fishingrod,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"LP" = (
+/obj/structure/fluff/railing/border/west,
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/rtfield)
+"Mv" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 1
+	},
+/obj/structure/bed/rogue/inn/wool,
+/obj/item/bedsheet/rogue/fabric,
+/turf/open/floor/rogue/hexstone,
+/area/rogue/indoors/town)
+"Nw" = (
+/obj/structure/fluff/railing/border/east,
+/turf/open/transparent/openspace,
+/area/rogue/outdoors/mountains)
+"NA" = (
+/obj/structure/mineral_door/wood/towner/generic,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"NW" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 8
+	},
+/turf/open/floor/rogue/blocks,
+/area/rogue/indoors/town)
+"Ow" = (
+/obj/structure/table/wood/long_table,
+/obj/item/reagent_containers/glass/bowl{
+	pixel_x = -4;
+	pixel_y = 10
+	},
+/obj/item/reagent_containers/glass/bowl{
+	pixel_x = -3;
+	pixel_y = 2
+	},
+/obj/item/kitchen/spoon{
+	pixel_x = 9;
+	pixel_y = 6
+	},
+/obj/item/kitchen/spoon{
+	pixel_x = 16;
+	pixel_y = 6
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"OQ" = (
+/obj/structure/fluff/railing/corner,
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/outdoors/rtfield)
+"Pc" = (
+/obj/structure/chair/wood/rogue/chair5{
+	dir = 4
+	},
+/turf/open/floor/rogue/tile/brick,
+/area/rogue/outdoors/mountains)
+"Pm" = (
+/obj/structure/fluff/railing/border/west,
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"Pz" = (
+/obj/effect/decal/mossy{
+	dir = 4
+	},
+/obj/machinery/light/rogue/torchholder/c,
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/rtfield)
+"PC" = (
+/obj/structure/rack/rogue/shelf/biggest,
+/obj/item/rope{
+	pixel_x = -3;
+	pixel_y = 0
+	},
+/obj/item/rope{
+	pixel_x = 3;
+	pixel_y = -1
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"PJ" = (
+/obj/structure/rack/rogue/shelf/biggest,
+/obj/machinery/light/rogue/candle/l,
+/obj/item/reagent_containers/glass/cup/wooden{
+	pixel_x = -5;
+	pixel_y = 11
+	},
+/obj/item/reagent_containers/glass/cup/wooden{
+	pixel_x = 5;
+	pixel_y = 11
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"PN" = (
+/obj/structure/fluff/railing/border/east,
+/obj/structure/fermentation_keg/random/water,
+/turf/open/floor/rogue/blocks/stonered/tiny,
+/area/rogue/indoors/town)
+"Ql" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f"
+	},
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 9
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"Qp" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 9
+	},
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 5
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"Qs" = (
+/obj/structure/fluff/railing/corner/south_west,
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 1
+	},
+/turf/open/floor/rogue/blocks/stonered/tiny,
+/area/rogue/indoors/town)
+"QA" = (
+/obj/machinery/light/rogue/candle/r,
+/turf/open/floor/rogue/blocks/stonered/tiny,
+/area/rogue/indoors/town)
+"Rm" = (
+/obj/structure/fluff/railing/border/north,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"Rx" = (
+/obj/effect/decal/mossy{
+	dir = 8
+	},
+/turf/open/floor/rogue/dirt,
+/area/rogue/outdoors/rtfield)
+"RG" = (
+/obj/structure/fluff/railing/wood/east,
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/rtfield)
+"RL" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f"
+	},
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 1
+	},
+/obj/machinery/light/rogue/candle/l,
+/turf/open/floor/rogue/blocks/stonered/tiny,
+/area/rogue/indoors/town)
+"Sg" = (
+/obj/structure/fluff/railing/corner,
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 8
+	},
+/turf/open/floor/rogue/blocks/stonered/tiny,
+/area/rogue/indoors/town)
+"Sj" = (
+/obj/structure/fluff/railing/corner/south_east,
+/turf/open/floor/rogue/hexstone,
+/area/rogue/indoors/town)
+"SC" = (
+/obj/effect/decal/mossy{
+	dir = 4
+	},
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/outdoors/rtfield)
+"SD" = (
+/obj/structure/fluff/railing/border/west,
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 1
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"SM" = (
+/turf/open/floor/carpet/royalblack,
+/area/rogue/indoors/town)
+"SZ" = (
+/obj/structure/fluff/railing/corner/south_east,
+/obj/structure/fluff/railing/corner,
+/turf/open/transparent/openspace,
+/area/rogue/outdoors/mountains)
+"Tn" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 1
+	},
+/obj/structure/closet/crate/chest/neu,
+/turf/open/floor/rogue/hexstone,
+/area/rogue/indoors/town)
+"Tu" = (
+/obj/structure/fluff/railing/border/west,
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/outdoors/rtfield)
+"TE" = (
+/obj/effect/decal/mossy{
+	dir = 8
+	},
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/outdoors/rtfield)
+"TJ" = (
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/outdoors/rtfield)
+"Ui" = (
+/obj/structure/rack/rogue,
+/obj/item/rogueweapon/shovel,
+/obj/item/rogueweapon/stoneaxe/woodcut,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"Um" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 1
+	},
+/turf/open/floor/rogue/blocks/stonered/tiny,
+/area/rogue/indoors/town)
+"UI" = (
+/obj/structure/bars/grille{
+	dir = 4
+	},
+/turf/open/transparent/openspace,
+/area/rogue/indoors/town)
+"UP" = (
+/obj/effect/decal/edge_corner{
+	color = "#3f3f3f";
+	dir = 4
+	},
+/turf/open/floor/rogue/blocks/stonered/tiny,
+/area/rogue/indoors/town)
+"UQ" = (
+/turf/open/floor/rogue/ruinedwood/herringbone,
+/area/rogue/indoors/town)
+"Vm" = (
+/obj/structure/fluff/railing/border/east,
+/obj/item/rogueweapon/hoe,
+/obj/structure/rack/rogue,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"Vn" = (
+/obj/structure/fluff/railing/corner/south_east,
+/obj/structure/fluff/railing/border/north,
+/turf/open/floor/rogue/blocks/stonered/tiny,
+/area/rogue/indoors/town)
+"Vs" = (
+/obj/effect/decal/carpet{
+	dir = 4;
+	pixel_x = 0;
+	pixel_y = -4
+	},
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"Vx" = (
+/turf/closed/wall/mineral/rogue/craftstone,
+/area/rogue/indoors/town)
+"Vy" = (
+/obj/structure/chair/wood/rogue/chair5{
+	dir = 8
+	},
+/turf/open/floor/carpet/purple,
+/area/rogue/indoors/town)
+"VC" = (
+/turf/open/floor/carpet/red,
+/area/rogue/indoors/town)
+"VF" = (
+/obj/structure/roguewindow,
+/obj/structure/curtain/magenta,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"VM" = (
+/obj/structure/rack/rogue/shelf/biggest,
+/obj/machinery/light/rogue/candle,
+/turf/open/floor/carpet/purple,
+/area/rogue/indoors/town)
+"Wa" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 1
+	},
+/obj/effect/decal/carpet/square{
+	dir = 4;
+	pixel_x = 9;
+	pixel_y = 0
+	},
+/turf/open/floor/rogue/hexstone,
+/area/rogue/indoors/town)
+"Wi" = (
+/obj/structure/stairs{
+	dir = 8
+	},
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/outdoors/rtfield)
+"Wn" = (
+/turf/open/floor/rogue/wood,
+/area/rogue/indoors/town)
+"Wo" = (
+/obj/structure/rack/rogue/shelf/biggest,
+/obj/item/bedroll{
+	pixel_x = 2;
+	pixel_y = 2
+	},
+/turf/open/floor/rogue/hexstone,
+/area/rogue/indoors/town)
+"Wq" = (
+/obj/machinery/light/rogue/torchholder/r,
+/turf/open/floor/rogue/dirt,
+/area/rogue/outdoors/rtfield)
+"Wu" = (
+/turf/closed/mineral/random/rogue,
+/area/rogue/under/cave)
+"Wz" = (
+/turf/open/floor/rogue/blocks/stonered/tiny,
+/area/rogue/indoors/town)
+"WH" = (
+/obj/structure/rack/rogue/shelf/biggest,
+/obj/item/reagent_containers/glass/bucket/pot{
+	pixel_x = 0;
+	pixel_y = 14
+	},
+/obj/machinery/light/rogue/candle/r,
+/obj/item/reagent_containers/glass/bowl{
+	pixel_x = 0;
+	pixel_y = -1
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"WN" = (
+/obj/machinery/light/rogue/hearth,
+/obj/item/cooking/pan,
+/obj/structure/rack/rogue/shelf,
+/obj/item/reagent_containers/peppermill{
+	pixel_x = 9;
+	pixel_y = 37
+	},
+/turf/open/floor/rogue/blocks,
+/area/rogue/indoors/town)
+"WS" = (
+/obj/structure/table/wood,
+/obj/item/reagent_containers/food/snacks/rogue/meat/salami{
+	pixel_x = 1;
+	pixel_y = 10
+	},
+/turf/open/floor/carpet/purple,
+/area/rogue/indoors/town)
+"Xc" = (
+/obj/structure/flora/roguegrass,
+/obj/structure/flora/ausbushes/brflowers,
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/rtfield)
+"Xg" = (
+/obj/structure/fluff/railing/border/east,
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 1
+	},
+/turf/open/floor/rogue/hexstone,
+/area/rogue/indoors/town)
+"XY" = (
+/obj/machinery/light/rogue/candle,
+/turf/open/transparent/openspace,
+/area/rogue/indoors/town)
+"Yf" = (
+/obj/structure/well,
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/outdoors/rtfield)
+"YC" = (
+/obj/structure/roguewindow/openclose/reinforced{
+	dir = 4
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"YM" = (
+/obj/structure/table/finestone,
+/obj/machinery/light/rogue/candle/floorcandle,
+/turf/open/floor/rogue/tile/harem,
+/area/rogue/indoors/town)
+"Zv" = (
+/turf/open/floor/rogue/tile/brick,
+/area/rogue/outdoors/mountains)
+"Zx" = (
+/obj/structure/table/wood,
+/obj/item/reagent_containers/glass/cup/ceramic{
+	pixel_x = -5;
+	pixel_y = 17
+	},
+/obj/item/candle/candlestick/silver/single/lit{
+	pixel_x = 7;
+	pixel_y = 11
+	},
+/turf/open/floor/carpet/purple,
+/area/rogue/indoors/town)
+"ZS" = (
+/turf/closed/wall/mineral/rogue/decowood/vert,
+/area/rogue/indoors/town)
+"ZW" = (
+/turf/open/transparent/openspace,
+/area/rogue/indoors/town)
+"ZY" = (
+/obj/machinery/light/rogue/candle{
+	pixel_y = -32
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/town)
+"ZZ" = (
+/obj/structure/rack/rogue/shelf/biggest,
+/turf/open/floor/rogue/tile/harem,
+/area/rogue/indoors/town)
+
+(1,1,1) = {"
+bR
+bR
+bR
+bR
+bR
+bR
+bR
+bR
+bR
+bR
+bR
+eg
+eg
+eg
+eg
+eg
+Wu
+Wu
+Wu
+Wu
+Wu
+Wu
+Wu
+Wu
+"}
+(2,1,1) = {"
+bR
+bR
+bR
+bR
+bR
+bR
+bR
+bR
+bR
+eg
+eg
+eg
+eg
+eg
+eg
+eg
+Wu
+Wu
+Wu
+Wu
+Wu
+Wu
+Wu
+Wu
+"}
+(3,1,1) = {"
+bR
+bR
+bR
+bR
+bR
+bR
+bR
+bR
+eg
+eg
+eg
+eg
+Vx
+Vx
+Vx
+Vx
+Vx
+Wu
+Wu
+Wu
+Wu
+Wu
+Wu
+Wu
+"}
+(4,1,1) = {"
+bR
+bR
+bR
+bR
+bR
+bR
+bR
+eg
+eg
+eg
+eg
+eg
+Vx
+xQ
+Hx
+un
+Vx
+Wu
+Wu
+Wu
+Wu
+Wu
+Wu
+sh
+"}
+(5,1,1) = {"
+bR
+bR
+bR
+bR
+bR
+bR
+bR
+eg
+eg
+eg
+eg
+eg
+Vx
+NW
+NW
+NW
+Vx
+Wu
+Wu
+Wu
+Wu
+sh
+sh
+sh
+"}
+(6,1,1) = {"
+bR
+bR
+bR
+bR
+bR
+bR
+eg
+eg
+eg
+eg
+eg
+eg
+Vx
+sB
+Hg
+nf
+Vx
+Wu
+Wu
+Wu
+fF
+sh
+sh
+sh
+"}
+(7,1,1) = {"
+bR
+bR
+bR
+bR
+bR
+bR
+eg
+eg
+eg
+eg
+eg
+eg
+Vx
+eZ
+Ho
+Vx
+Vx
+Wu
+Wu
+Wu
+sh
+sh
+sh
+mL
+"}
+(8,1,1) = {"
+bR
+bR
+bR
+bR
+bR
+bR
+bR
+eg
+eg
+eg
+eg
+eg
+Vx
+Vx
+Vx
+Vx
+nL
+Wu
+sh
+sh
+sh
+sh
+sh
+mL
+"}
+(9,1,1) = {"
+bR
+bR
+bR
+bR
+bR
+bR
+bR
+eg
+eg
+eg
+eg
+eg
+eg
+Wu
+Wu
+Wu
+Wu
+sh
+sh
+sh
+sh
+sh
+mL
+sh
+"}
+(10,1,1) = {"
+bR
+bR
+bR
+bR
+bR
+bR
+bR
+eg
+eg
+eg
+eg
+eg
+eg
+Wu
+Wu
+Wu
+sh
+sh
+sh
+sh
+mL
+mL
+sh
+sh
+"}
+(11,1,1) = {"
+bR
+bR
+bR
+bR
+bR
+bR
+bR
+eg
+eg
+eg
+eg
+eg
+Wu
+Wu
+Wu
+Wu
+sh
+sh
+sh
+mL
+mL
+sh
+sh
+sh
+"}
+(12,1,1) = {"
+bR
+bR
+bR
+bR
+bR
+bR
+bR
+eg
+eg
+eg
+eg
+Wu
+Wu
+Wu
+Wu
+sh
+sh
+sh
+mL
+mL
+sh
+sh
+sh
+Wu
+"}
+(13,1,1) = {"
+eg
+eg
+bR
+bR
+bR
+bR
+eg
+eg
+eg
+eg
+eg
+Wu
+Wu
+sh
+sh
+sh
+sh
+mL
+mL
+sh
+Wu
+Wu
+bR
+bR
+"}
+(14,1,1) = {"
+eg
+eg
+eg
+eg
+eg
+eg
+eg
+eg
+eg
+eg
+Wu
+sh
+sh
+sh
+sh
+sh
+mL
+sh
+sh
+Wu
+eg
+bR
+eg
+eg
+"}
+(15,1,1) = {"
+eg
+eg
+eg
+eg
+eg
+eg
+eg
+eg
+Wu
+Wu
+sh
+sh
+sh
+sh
+mL
+mL
+sh
+sh
+sh
+sh
+bR
+bR
+bR
+bR
+"}
+(16,1,1) = {"
+Wu
+Wu
+eg
+Wu
+Wu
+Wu
+Wu
+Wu
+Wu
+sh
+sh
+sh
+sh
+mL
+mL
+Wu
+eg
+eg
+sh
+ry
+ry
+bR
+bR
+bR
+"}
+(17,1,1) = {"
+Wu
+Wu
+Wu
+Wu
+Wu
+Wu
+Wu
+Wu
+sh
+sh
+sh
+sh
+mL
+mL
+Wu
+eg
+eg
+Wu
+eg
+ry
+ry
+ry
+ry
+ry
+"}
+(18,1,1) = {"
+Wu
+Wu
+Wu
+mL
+mL
+Wu
+sh
+sh
+Wu
+mL
+mL
+mL
+sh
+Wu
+eg
+eg
+Wu
+Wu
+eg
+eg
+ry
+ry
+ry
+ry
+"}
+(19,1,1) = {"
+mL
+mL
+mL
+mL
+mL
+mL
+mL
+mL
+mL
+mL
+sh
+Wu
+Wu
+Wu
+eg
+Wu
+Wu
+bR
+bR
+bR
+bR
+ry
+ry
+ry
+"}
+
+(1,1,2) = {"
+eg
+up
+up
+rA
+rA
+rA
+jK
+AV
+rG
+rA
+rA
+rA
+rA
+rA
+jK
+jK
+jK
+rA
+rA
+rA
+rA
+rA
+jK
+jK
+"}
+(2,1,2) = {"
+up
+up
+rA
+rA
+rA
+rA
+rA
+TJ
+TJ
+Wq
+jK
+fG
+rA
+xo
+rA
+rA
+lt
+ZS
+YC
+ZS
+lt
+jK
+th
+jK
+"}
+(3,1,2) = {"
+up
+rA
+lt
+ZS
+lt
+YC
+YC
+lt
+ZS
+lt
+oY
+oY
+oY
+lt
+YC
+YC
+lt
+sW
+eZ
+ct
+ZS
+Hh
+on
+jK
+"}
+(4,1,2) = {"
+rA
+rA
+Vx
+mp
+px
+mU
+qP
+RL
+nU
+ZS
+tO
+Rx
+TE
+zR
+Ui
+Tn
+JF
+SD
+jD
+Bu
+ZS
+vp
+JU
+rA
+"}
+(5,1,2) = {"
+in
+in
+Vx
+Ct
+hW
+zG
+zG
+zU
+Ow
+ZS
+Pz
+jK
+TJ
+bv
+eZ
+UI
+UI
+xk
+Wn
+Wn
+lt
+gy
+JU
+ht
+"}
+(6,1,2) = {"
+in
+rA
+Vx
+WN
+Vn
+PN
+Gh
+UP
+qf
+ZS
+Yf
+uk
+TJ
+zR
+Vm
+Xg
+gt
+xk
+qJ
+Wn
+ZS
+JH
+JU
+Cm
+"}
+(7,1,2) = {"
+rA
+rG
+Vx
+Et
+Et
+lR
+eZ
+eZ
+ZY
+lt
+Lb
+uk
+TJ
+lt
+XY
+en
+wy
+rM
+fq
+JS
+ZS
+gy
+JU
+jK
+"}
+(8,1,2) = {"
+rA
+rG
+ZS
+uS
+Qs
+rq
+Sg
+aQ
+aQ
+ZS
+GX
+jK
+TJ
+Vx
+cy
+je
+cN
+bc
+eZ
+iy
+lt
+gy
+JU
+jK
+"}
+(9,1,2) = {"
+rA
+rG
+ZS
+mf
+Um
+AO
+Wz
+su
+Zx
+ZS
+dS
+ga
+SC
+Vx
+DU
+Wa
+wy
+rt
+eZ
+PC
+ZS
+vp
+JU
+jK
+"}
+(10,1,2) = {"
+in
+rA
+ZS
+vM
+Um
+QA
+Wz
+Kb
+Kb
+ZS
+oY
+oY
+oY
+Vx
+Bx
+Mv
+wy
+HT
+eZ
+Kp
+ZS
+vy
+jG
+jK
+"}
+(11,1,2) = {"
+in
+in
+lt
+ZS
+NA
+ZS
+Hy
+Hy
+Hy
+lt
+do
+AD
+do
+lt
+Hy
+Hy
+Hy
+ZS
+NA
+ZS
+lt
+TJ
+xo
+TJ
+"}
+(12,1,2) = {"
+rA
+in
+IC
+wf
+Wi
+vR
+Bz
+Xc
+wu
+Hr
+Rx
+rA
+rA
+wf
+Xc
+Xc
+Hz
+qb
+Wi
+Hr
+Gg
+Gg
+TJ
+TJ
+"}
+(13,1,2) = {"
+rA
+rA
+rA
+DJ
+TJ
+gB
+Tu
+Tu
+Tu
+OQ
+TJ
+rA
+rA
+DJ
+LP
+LP
+LP
+gG
+TJ
+TJ
+TJ
+TJ
+TJ
+TJ
+"}
+(14,1,2) = {"
+rG
+rA
+jK
+TJ
+TJ
+TJ
+TJ
+TJ
+TJ
+TJ
+TJ
+TJ
+TJ
+TJ
+TJ
+TJ
+TJ
+TJ
+TJ
+TJ
+TJ
+TJ
+TJ
+kz
+"}
+(15,1,2) = {"
+ho
+Ku
+Ku
+ho
+TJ
+rA
+jK
+jK
+rG
+rm
+rA
+rA
+TJ
+TJ
+TJ
+TJ
+jK
+Ag
+Ag
+TJ
+Ag
+RG
+rA
+yN
+"}
+(16,1,2) = {"
+ho
+ho
+ho
+ho
+ho
+ho
+ho
+Aw
+Ku
+Ku
+Ku
+ho
+ht
+ht
+rA
+rA
+rA
+ht
+rA
+rA
+rA
+rA
+rA
+yN
+"}
+(17,1,2) = {"
+TJ
+ho
+ho
+ho
+ho
+ho
+ho
+ho
+ho
+ho
+ho
+ho
+ho
+rA
+rA
+ht
+rA
+ht
+ht
+rA
+rA
+rA
+rA
+yN
+"}
+(18,1,2) = {"
+up
+up
+up
+up
+ho
+ho
+ho
+ho
+ho
+ho
+ho
+ho
+ho
+ho
+rA
+rA
+rA
+rA
+ht
+rA
+rA
+rA
+rA
+Gp
+"}
+(19,1,2) = {"
+up
+up
+up
+up
+up
+up
+up
+up
+up
+up
+TJ
+ho
+ho
+ho
+ho
+jK
+jK
+rA
+rA
+jK
+jK
+rA
+rA
+Gp
+"}
+
+(1,1,3) = {"
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+Ff
+Nw
+Nw
+zT
+Ff
+Nw
+Nw
+zT
+wV
+wV
+wV
+"}
+(2,1,3) = {"
+wV
+wV
+Ff
+Nw
+zT
+wV
+Ff
+Nw
+zT
+Ff
+Nw
+Nw
+Nw
+lt
+Hy
+Hy
+ZS
+ZS
+Hy
+Hy
+lt
+wV
+wV
+wV
+"}
+(3,1,3) = {"
+wV
+lt
+ZS
+YC
+ZS
+lt
+ZS
+YC
+ZS
+lt
+YC
+YC
+YC
+lt
+Ip
+xk
+JI
+ZW
+oh
+LF
+ZS
+zT
+wV
+wV
+"}
+(4,1,3) = {"
+Ff
+ZS
+kN
+wy
+wy
+ct
+xk
+qD
+LC
+ZS
+VM
+rb
+eZ
+ZS
+jj
+uJ
+Pm
+Pm
+lS
+bw
+Hy
+rR
+wV
+wV
+"}
+(5,1,3) = {"
+In
+Hy
+Wo
+wy
+wy
+eZ
+xk
+qD
+lD
+ZS
+GF
+rb
+eZ
+dQ
+eB
+Qp
+Vs
+Wn
+qD
+ud
+Hy
+rR
+wV
+wV
+"}
+(6,1,3) = {"
+pH
+ZS
+tP
+Sj
+Eo
+Et
+bh
+qD
+aD
+ZS
+kU
+kT
+Gt
+ZS
+vQ
+qU
+fq
+fq
+yl
+cz
+ZS
+xC
+wV
+qY
+"}
+(7,1,3) = {"
+wV
+lt
+lt
+eZ
+JI
+ZW
+jm
+nh
+yb
+lt
+ZS
+ZS
+ZS
+lt
+ZS
+ul
+Aj
+Aj
+ul
+ZS
+lt
+wV
+wV
+wV
+"}
+(8,1,3) = {"
+wV
+wV
+ZS
+hm
+Pm
+Pm
+ez
+wi
+Wn
+jF
+yh
+yz
+yh
+bv
+dj
+hb
+eB
+ni
+Ql
+PJ
+ZS
+zT
+wV
+wV
+"}
+(9,1,3) = {"
+wV
+wV
+ZS
+hD
+SM
+wF
+fq
+fq
+fq
+ZS
+ad
+HI
+yd
+Vx
+dz
+Rm
+vA
+xk
+ui
+ui
+Hy
+rR
+wV
+wV
+"}
+(10,1,3) = {"
+wV
+wV
+ZS
+xA
+se
+go
+GO
+iy
+pw
+ZS
+CE
+HI
+ZZ
+Vx
+vl
+Rm
+jE
+xk
+EX
+WS
+Hy
+rR
+wV
+wV
+"}
+(11,1,3) = {"
+wV
+wV
+lt
+ZS
+Hy
+Hy
+Hy
+Hy
+ZS
+ZS
+YM
+HI
+Al
+Vx
+gO
+Rm
+WH
+xk
+Vy
+Vy
+ZS
+xC
+wV
+wV
+"}
+(12,1,3) = {"
+wV
+wV
+wV
+pH
+BS
+BS
+BS
+BS
+SZ
+lt
+VF
+td
+VF
+lt
+ZS
+Hy
+lt
+Hy
+Hy
+Hy
+lt
+wV
+wV
+wV
+"}
+(13,1,3) = {"
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+In
+Da
+Pc
+Zv
+Pc
+xD
+gd
+BS
+sp
+BS
+BS
+BS
+xC
+wV
+wV
+wV
+"}
+(14,1,3) = {"
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+pH
+BS
+BS
+BS
+BS
+BS
+xC
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+"}
+(15,1,3) = {"
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+"}
+(16,1,3) = {"
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+"}
+(17,1,3) = {"
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+"}
+(18,1,3) = {"
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+"}
+(19,1,3) = {"
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+"}
+
+(1,1,4) = {"
+Lc
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+"}
+(2,1,4) = {"
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wI
+Fs
+Fs
+wI
+wI
+sq
+sq
+sq
+wV
+wV
+wV
+"}
+(3,1,4) = {"
+wV
+lt
+ZS
+YC
+ZS
+lt
+sq
+sq
+sq
+wI
+wI
+wI
+wI
+wI
+Fs
+Fs
+wI
+wI
+sq
+sq
+sq
+wV
+wV
+wV
+"}
+(4,1,4) = {"
+wV
+ZS
+oU
+UQ
+zw
+ZS
+sq
+sq
+sq
+wI
+wI
+wI
+wI
+wI
+Fs
+Fs
+wI
+wI
+sq
+sq
+sq
+wV
+wV
+wV
+"}
+(5,1,4) = {"
+wV
+lY
+Dk
+VC
+VC
+EU
+sq
+sq
+sq
+wI
+wI
+wI
+wI
+wI
+Fs
+Fs
+wI
+wI
+sq
+sq
+sq
+wV
+wV
+wV
+"}
+(6,1,4) = {"
+wV
+ZS
+qA
+tZ
+FQ
+ZS
+sq
+sq
+sq
+wI
+wI
+wI
+wI
+wI
+Fs
+Fs
+wI
+wI
+sq
+sq
+sq
+wV
+wV
+wV
+"}
+(7,1,4) = {"
+wV
+lt
+ZS
+lZ
+ZS
+lt
+sq
+sq
+sq
+wI
+wI
+wI
+wI
+wI
+Fs
+Fs
+wI
+wI
+sq
+sq
+sq
+wV
+wV
+wV
+"}
+(8,1,4) = {"
+wV
+wV
+Fs
+Fs
+Fs
+Fs
+sq
+sq
+sq
+wI
+wI
+wI
+wI
+wI
+Fs
+Fs
+wI
+wI
+sq
+sq
+sq
+wV
+wV
+wV
+"}
+(9,1,4) = {"
+wV
+wV
+Fs
+Fs
+Fs
+Fs
+sq
+sq
+sq
+wI
+wI
+wI
+wI
+rS
+Fs
+Fs
+wI
+wI
+sq
+sq
+sq
+wV
+wV
+wV
+"}
+(10,1,4) = {"
+wV
+wV
+Fs
+Fs
+Fs
+Fs
+sq
+sq
+sq
+wI
+wI
+wI
+wI
+rS
+Fs
+Fs
+wI
+wI
+sq
+sq
+sq
+wV
+wV
+wV
+"}
+(11,1,4) = {"
+wV
+wV
+Fs
+Fs
+Fs
+Fs
+sq
+sq
+sq
+wI
+wI
+wI
+wI
+wI
+Fs
+Fs
+wI
+wI
+sq
+sq
+sq
+wV
+wV
+wV
+"}
+(12,1,4) = {"
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wI
+wI
+wI
+wI
+wI
+Fs
+Fs
+wI
+wI
+sq
+sq
+sq
+wV
+wV
+wV
+"}
+(13,1,4) = {"
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+"}
+(14,1,4) = {"
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+"}
+(15,1,4) = {"
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+"}
+(16,1,4) = {"
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+"}
+(17,1,4) = {"
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+"}
+(18,1,4) = {"
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+"}
+(19,1,4) = {"
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+wV
+"}

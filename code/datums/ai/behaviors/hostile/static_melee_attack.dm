@@ -24,7 +24,7 @@
 	var/atom/target = controller.blackboard[target_key]
 	var/datum/targetting_datum/targetting_datum = controller.blackboard[targetting_datum_key]
 
-	if(!targetting_datum.can_attack(basic_mob, target))
+	if(controller.is_melee_target_ignored(target) || !targetting_datum.can_attack(basic_mob, target)) // TA EDIT
 		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
 
 	var/hiding_target = targetting_datum.find_hidden_mobs(basic_mob, target) //If this is valid, theyre hidden in something!
@@ -33,11 +33,17 @@
 
 	basic_mob.face_atom()
 	basic_mob.a_intent = pick(basic_mob.possible_a_intents)
-	
+
+	// TA EDIT START
 	if(hiding_target)
+		controller.reset_melee_attack_progress()
 		basic_mob.ClickOn(hiding_target, list())
 	else
+		var/next_click_before = basic_mob.next_click
 		basic_mob.ClickOn(target, list())
+		if(basic_mob.next_click != next_click_before && controller.record_melee_attack_progress(target, target_key, hiding_location_key))
+			return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
+	// TA EDIT END
 
 	controller.blackboard[BB_SWINGS_SINCE_CIRCLING] = (controller.blackboard[BB_SWINGS_SINCE_CIRCLING] || 0) + 1
 	return AI_BEHAVIOR_DELAY
@@ -46,5 +52,3 @@
 	. = ..()
 	if(!succeeded)
 		controller.clear_blackboard_key(target_key)
-
-

@@ -939,6 +939,7 @@
 //referencing the mechanized ore bag code for the autopickup part. look in storage.dm
 /obj/item/quiver/mechanized/equipped(mob/living/user, slot)
 	. = ..()
+	UnregisterSignal(user, COMSIG_MOVABLE_MOVED) // TA EDIT
 	RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(on_user_moved))
 
 /obj/item/quiver/mechanized/dropped(mob/living/user)

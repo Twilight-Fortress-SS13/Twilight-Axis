@@ -19,6 +19,7 @@ import {
   VOICETYPE_TO_ICON,
 } from 'pm/constants';
 import {
+  SubtabIdentityCardGameplayDownstream,
   SubtabIdentityDownstreamPaneLeft,
   SubtabIdentityDownstreamPaneRight,
 } from 'pm/downstream/tabs/CharacterCreator/subtabs/Identity';
@@ -50,9 +51,6 @@ export const SubtabIdentity = () => {
           </Stack.Item>
           <Stack.Item>
             <SubtabIdentityCardVoice />
-          </Stack.Item>
-          <Stack.Item>
-            <SubtabIdentityCardBark />
           </Stack.Item>
           <SubtabIdentityDownstreamPaneLeft />
         </Stack>
@@ -228,8 +226,10 @@ export const SubtabIdentityCardGameplay = () => {
     age,
     combat_music,
     dnr_pref,
+    defiant,
     domhand,
     free_language,
+    char_accent,
     loadout_cost,
     loadout_tri_cost,
     selected_faith,
@@ -260,7 +260,7 @@ export const SubtabIdentityCardGameplay = () => {
               </Button>
             </LabeledGridList.Item>
             <LabeledGridList.Item label="Origin">
-              <Button fluid icon="bars" onClick={() => setPopupId('Origin')}>
+              <Button fluid icon="bars" onClick={() => act('open_origin_picker')}>
                 {virtue_origin}
               </Button>
             </LabeledGridList.Item>
@@ -293,9 +293,19 @@ export const SubtabIdentityCardGameplay = () => {
                 {free_language}
               </Button>
             </LabeledGridList.Item>
+            <LabeledGridList.Item label="Accent">
+              <Button fluid onClick={() => act('char_accent')}>
+                {char_accent}
+              </Button>
+            </LabeledGridList.Item>
             <LabeledGridList.Item label="Unrevivable">
               <Button fluid onClick={() => act('dnr_pref')}>
                 {dnr_pref ? 'Yes' : 'No'}
+              </Button>
+            </LabeledGridList.Item>
+            <LabeledGridList.Item label="Defiant">
+              <Button fluid onClick={() => act('defiant')}>
+                {defiant ? 'Yes' : 'No'}
               </Button>
             </LabeledGridList.Item>
             <SubtabIdentityCardGameplayCardCulinary />
@@ -311,9 +321,10 @@ export const SubtabIdentityCardGameplay = () => {
             mt={1}
             onClick={() => act('open_loadout')}
           >
-            Change Loadout ({loadout_cost || 0} points, {loadout_tri_cost || 0}{' '}
+            Change Loadout ({loadout_cost || 0} slots, {loadout_tri_cost || 0}{' '}
             TRI)
           </Button>
+          <SubtabIdentityCardGameplayDownstream />
         </Stack.Item>
       </Stack>
     </Section>
@@ -478,117 +489,6 @@ const SubtabIdentityCardVoice = () => {
               />
             </Stack.Item>
           </Stack>
-        </LabeledGridList.Item>
-      </LabeledGridList>
-    </Section>
-  );
-};
-
-const SubtabIdentityCardBark = () => {
-  const [constantData] = useConstantPrefs();
-  const { act, data } = useBackendStrict<IdentityData>();
-  const {
-    bark_name,
-    bark_pitch,
-    min_bark_pitch,
-    max_bark_pitch,
-    bark_speed,
-    min_bark_speed,
-    max_bark_speed,
-    bark_variance,
-    min_bark_variance,
-    max_bark_variance,
-  } = data;
-
-  return (
-    <Section
-      fill
-      mt={1}
-      title={
-        <LabeledListLikeTooltip
-          tooltip="This sound will be repeated an appropriate amount of times to represent your character talking."
-          tooltipPosition="bottom-start"
-        >
-          Vocal Bark
-        </LabeledListLikeTooltip>
-      }
-    >
-      <LabeledGridList>
-        <LabeledGridList.Item label="Type">
-          <Stack>
-            <Stack.Item grow fontSize={1.2}>
-              {constantData ? (
-                <Dropdown
-                  fluid
-                  options={constantData.barksounds.toSorted()}
-                  selected={bark_name}
-                  onSelected={(bs) =>
-                    act('set_barksound', {
-                      barksound: bs,
-                    })
-                  }
-                />
-              ) : (
-                'Loading Bark Sounds...'
-              )}
-            </Stack.Item>
-            <Stack.Item>
-              <Button
-                onClick={() => act('barkpreview')}
-                icon="volume-down"
-                inline
-                tooltip="Preview Bark (Single)"
-              />
-            </Stack.Item>
-          </Stack>
-        </LabeledGridList.Item>
-        <LabeledGridList.Item
-          label="Speed"
-          tooltip="Higher is slower, lower is faster."
-        >
-          <Stack>
-            <Stack.Item grow>
-              <Slider
-                minValue={min_bark_speed}
-                maxValue={max_bark_speed}
-                value={bark_speed}
-                format={(v) => v.toFixed(1)}
-                step={0.1}
-                onChange={(e, speed) => act('set_bark_speed', { speed })}
-              />
-            </Stack.Item>
-            <Stack.Item>
-              <Button
-                inline
-                icon="volume-up"
-                tooltip="Preview Bark (Long)"
-                onClick={() => act('barkpreview_long')}
-              />
-            </Stack.Item>
-          </Stack>
-        </LabeledGridList.Item>
-        <LabeledGridList.Item label="Pitch" tooltip="Lower is deeper.">
-          <Slider
-            minValue={min_bark_pitch}
-            maxValue={max_bark_pitch}
-            value={bark_pitch}
-            format={(v) => v.toFixed(1)}
-            step={0.1}
-            onChange={(e, pitch) => act('set_bark_pitch', { pitch })}
-          />
-        </LabeledGridList.Item>
-        <LabeledGridList.Item
-          label="Vary"
-          tooltip="Lower varies the bark frequency by a smaller amount."
-        >
-          <Slider
-            minValue={min_bark_variance}
-            maxValue={max_bark_variance}
-            value={bark_variance}
-            format={(v) => v.toFixed(1)}
-            step={0.1}
-            onChange={(e, variance) => act('set_bark_variance', { variance })}
-          />
         </LabeledGridList.Item>
       </LabeledGridList>
     </Section>

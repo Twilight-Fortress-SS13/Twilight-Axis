@@ -645,7 +645,7 @@ BLIND		// can't see anything
 			return 1
 	return 0
 
-/obj/item/clothing/proc/step_action() //this was made to rewrite clown shoes squeaking
+/obj/item/proc/step_action() //this was made to rewrite clown shoes squeaking
 	SEND_SIGNAL(src, COMSIG_CLOTHING_STEP_ACTION)
 
 /obj/item/clothing/proc/pick_damage_sound(tier)
@@ -728,7 +728,7 @@ BLIND		// can't see anything
 			return examine_text
 
 	// Fake armor
-	if(armor.getRating("slash") == 0 && armor.getRating("stab") == 0 && armor.getRating("blunt") == 0 && armor.getRating("piercing") == 0)
+	if(armor.getRating("slash") == 0 && armor.getRating("stab") == 0 && armor.getRating("blunt") == 0 && armor.getRating("piercing") == 0 && armor.getRating("fire") == 0 && armor.getRating("bullet") == 0)
 		if(examine_highlight_status)
 			var/severity = examine_highlight_status[1]
 			var/labeled_string = get_examine_highlight_labeled_string(severity, examine_text)
@@ -743,8 +743,14 @@ BLIND		// can't see anything
 	str += "[colorgrade_rating("🪓 SLASH", armor.slash, elaborate = TRUE)] | "
 	str += "[colorgrade_rating("🗡️ STAB", armor.stab, elaborate = TRUE)] | "
 	str += "[colorgrade_rating("🏹 PIERCE", armor.piercing, elaborate = TRUE)]"
-	if(armor.fire > NONE)
-		str += "<br><b>RESIST:</b> [colorgrade_rating("🔥 FIRE", armor.fire, elaborate = TRUE)]"
+	if(armor.fire > NONE || armor.bullet > NONE)
+		str += "<br><b>RESIST:</b> "
+		var/list/resists = list()
+		if(armor.fire > NONE)
+			resists += colorgrade_rating("🔥 FIRE", armor.fire, elaborate = TRUE)
+		if(armor.bullet > NONE)
+			resists += colorgrade_rating("💣 BULLET", armor.bullet, elaborate = TRUE, max_tier = 5)
+		str += resists.Join(" | ")
 
 	if(examine_highlight_status)
 		var/heresy_desc = get_examine_highlight_description(examine_highlight_status)

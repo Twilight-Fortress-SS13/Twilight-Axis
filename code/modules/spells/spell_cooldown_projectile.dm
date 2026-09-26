@@ -74,10 +74,13 @@
 
 /// Fire the projectile(s) at the target.
 /datum/action/cooldown/spell/projectile/proc/fire_projectile(atom/target)
+	var/turf/target_turf = get_turf(target) // TA EDIT START
 	for(var/i in 1 to projectiles_per_fire)
 		var/active_type = (arc_mode && projectile_type_arc) ? projectile_type_arc : projectile_type
 		var/obj/projectile/to_fire = new active_type(owner.loc)
-		ready_projectile(to_fire, target, owner, i)
+		ready_projectile(to_fire, QDELETED(target) ? target_turf : target, owner, i)
+		if(QDELETED(to_fire))
+			continue // TA EDIT END
 		to_fire.fire()
 	return TRUE
 

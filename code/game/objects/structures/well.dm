@@ -73,6 +73,11 @@
 		var/mob/living/L = user
 		if(L.stat != CONSCIOUS)
 			return
+		//TA edit - Bard chages start
+		if(L.is_blocked_by_music_consumption())
+			to_chat(user, span_warning("I can't drink while performing music."))
+			return
+		//TA edit - Bard chages end
 		if(iscarbon(user))
 			var/mob/living/carbon/C = user
 			if(C.is_mouth_covered())

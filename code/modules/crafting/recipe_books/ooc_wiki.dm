@@ -52,7 +52,7 @@ GLOBAL_DATUM(recipe_wiki, /datum/recipe_wiki)
 	return GLOB.recipe_wiki
 
 /// Open the recipe viewer for a specific book's types. Used by physical recipe book items.
-/datum/recipe_wiki/proc/show_to_user(mob/user, list/type_filter, title = "Recipe Book", book_type_path, preselect_category, preselect_entry)
+/datum/recipe_wiki/proc/show_to_user(mob/user, list/type_filter, title = "Recipe Book", book_type_path, locked_book = FALSE, preselect_category, preselect_entry)
 	if(!user?.client)
 		return
 	var/ckey = user.client.ckey
@@ -65,6 +65,7 @@ GLOBAL_DATUM(recipe_wiki, /datum/recipe_wiki)
 	state["title"] = title
 	state["page"] = "book"
 	state["book_path"] = book_type_path ? "[book_type_path]" : null
+	state["locked_book"] = locked_book
 	ui_interact(user)
 
 /datum/recipe_wiki/proc/show_for_recipe(mob/user, recipe_type)
@@ -90,6 +91,7 @@ GLOBAL_DATUM(recipe_wiki, /datum/recipe_wiki)
 	state["page"] = "library"
 	state["book_path"] = null
 	state["category"] = "All"
+	state["locked_book"] = FALSE
 	ui_interact(user)
 
 /datum/recipe_wiki/Topic(href, href_list)
@@ -124,17 +126,54 @@ GLOBAL_DATUM(recipe_wiki, /datum/recipe_wiki)
 /datum/recipe_wiki/ui_static_data(mob/user)
 	var/list/data = list()
 
-	var/list/books = list()
-	for(var/list/entry in book_entries)
-		var/entry_path = "[entry["path"]]"
-		books += list(list(
-			"wiki_name" = entry["wiki_name"],
-			"path" = entry_path,
-			"section" = entry["wiki_section"]
-		))
-	data["books"] = books
+	var/ckey = user.client?.ckey
+	var/list/state = ckey ? user_states[ckey] : null
+	var/locked_book = state ? state["locked_book"] : FALSE
+	var/current_book_path = state ? state["book_path"] : null
 
-	data["book_recipes"] = cached_book_recipes
+	var/list/books = list()
+	var/list/book_recipes = list()
+
+	if(locked_book && current_book_path)
+		for(var/list/entry in book_entries)
+			var/entry_path = "[entry["path"]]"
+			if(entry_path != current_book_path)
+				continue
+
+			books += list(list(
+				"wiki_name" = entry["wiki_name"],
+				"path" = entry_path,
+				"section" = entry["wiki_section"]
+			))
+			break
+
+		if(cached_book_recipes[current_book_path])
+			book_recipes[current_book_path] = cached_book_recipes[current_book_path]
+	else
+		for(var/list/entry in book_entries)
+			var/entry_path = entry["path"]
+
+			if(entry_path == /obj/item/recipe_book/zizo)
+				continue
+
+			books += list(list(
+				"wiki_name" = entry["wiki_name"],
+				"path" = "[entry_path]",
+				"section" = entry["wiki_section"]
+			))
+
+		for(var/list/entry in book_entries)
+			var/epath = entry["path"]
+
+			if(epath == /obj/item/recipe_book/zizo)
+				continue
+
+			var/book_key = "[epath]"
+			if(cached_book_recipes[book_key])
+				book_recipes[book_key] = cached_book_recipes[book_key]
+
+	data["books"] = books
+	data["book_recipes"] = book_recipes
 
 	return data
 
@@ -148,6 +187,8 @@ GLOBAL_DATUM(recipe_wiki, /datum/recipe_wiki)
 		data["current_recipe"] = null
 		data["recipe_detail_html"] = ""
 		data["recipe_entry_data"] = null
+		data["initial_category"] = "All"
+		data["locked_book"] = FALSE
 		return data
 
 	var/list/state = user_states[ckey]
@@ -155,6 +196,7 @@ GLOBAL_DATUM(recipe_wiki, /datum/recipe_wiki)
 	data["current_book"] = state["book_path"]
 	data["current_book_title"] = state["title"] || "Guidebook"
 	data["initial_category"] = state["category"] || "All"
+	data["locked_book"] = state["locked_book"] || FALSE
 	var/cur_recipe = state["recipe"]
 	data["current_recipe"] = cur_recipe ? "[cur_recipe]" : null
 
@@ -187,14 +229,22 @@ GLOBAL_DATUM(recipe_wiki, /datum/recipe_wiki)
 
 	switch(action)
 		if("open_book")
+			if(ustate["locked_book"])
+				return
+
 			var/book_path = text2path(params["path"])
 			if(!book_path)
 				return
+
+			if(book_path == /obj/item/recipe_book/zizo)
+				return
+
 			var/obj/item/recipe_book/temp_book = new book_path()
 			if(temp_book.open_wiki_entry(user))
 				qdel(temp_book)
 				return FALSE
 			qdel(temp_book)
+
 			for(var/list/entry in book_entries)
 				if(entry["path"] == book_path)
 					ustate["recipe"] = null
@@ -203,15 +253,19 @@ GLOBAL_DATUM(recipe_wiki, /datum/recipe_wiki)
 					ustate["title"] = entry["wiki_name"]
 					ustate["page"] = "book"
 					ustate["book_path"] = params["path"]
+					ustate["locked_book"] = FALSE
 					return TRUE
 
 		if("back_to_library")
+			if(ustate["locked_book"])
+				return
 			ustate["recipe"] = null
 			ustate["filter"] = null
 			ustate["title"] = null
 			ustate["page"] = "library"
 			ustate["book_path"] = null
 			ustate["category"] = "All"
+			ustate["locked_book"] = FALSE
 			return TRUE
 
 		if("view_recipe")

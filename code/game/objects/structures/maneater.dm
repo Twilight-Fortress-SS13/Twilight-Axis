@@ -78,6 +78,8 @@
 			playsound(src,'sound/misc/eat.ogg', rand(30,60), TRUE)
 			AM.forceMove(src)
 			seednutrition += 10
+			if(!aggroed)
+				START_PROCESSING(SSobj, src)
 		return
 
 	var/mob/living/victim = AM
@@ -85,7 +87,7 @@
 		return
 	if(!victim.ambushable() && victim.mind)
 		return
-	if(victim.m_intent == MOVE_INTENT_SNEAK)
+	if(victim.m_intent == MOVE_INTENT_SNEAK || HAS_TRAIT(victim, TRAIT_AZURENATIVE)) // TA_EDIT +HAS_TRAIT(victim, TRAIT_AZURENATIVE)
 		return
 
 	if(!aggroed)

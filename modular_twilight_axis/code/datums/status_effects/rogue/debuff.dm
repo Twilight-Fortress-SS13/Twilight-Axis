@@ -1,0 +1,275 @@
+/atom/movable/screen/alert/status_effect/emberwine
+	name = "Aphrodisiac"
+	desc = "The warmth is spreading through my body..."
+	icon = 'modular_twilight_axis/icons/mob/screen_alert.dmi'
+	icon_state = "emberwine"
+
+/datum/status_effect/debuff/emberwine
+	id = "emberwine"
+	effectedstats = list(STATKEY_LCK = -1)
+	duration = 1 MINUTES
+	alert_type = /atom/movable/screen/alert/status_effect/emberwine
+/*
+/* Kockout */
+/datum/status_effect/debuff/knockout
+	id = "knockout"
+	effectedstats = null
+	alert_type = null
+	duration = 12 SECONDS
+	var/time = 0
+
+/datum/status_effect/debuff/knockout/tick()
+	time += 1
+	switch(time)
+		if(3)
+			if(prob(50)) //You don't always know...
+				var/msg = pick("I feel sleepy...", "I feel relaxed.", "My eyes feel a little heavy.")
+				to_chat(owner, span_warn(msg))
+
+		if(5)
+			if(prob(50))
+				owner.Slowdown(20)
+			else
+				owner.Slowdown(10)
+		if(8)
+			if(iscarbon(owner))
+				var/mob/living/carbon/C = owner
+				var/msg = pick("yawn", "cough", "clearthroat")
+				C.emote(msg, forced = TRUE)
+		if(12)
+			// it's possible that stacking effects delay this.
+			// If we hit 12 regardless we end
+			Destroy()
+
+/datum/status_effect/debuff/knockout/on_remove()
+	if(iscarbon(owner))
+		var/mob/living/carbon/C = owner
+		if(C.IsSleeping()) //No need to add more it's already pretty long.
+			return ..()
+		C.SetSleeping(20 SECONDS)
+	..()
+
+/atom/movable/screen/alert/status_effect/debuff/knockout
+	name = "Drowsy"
+*/
+/datum/status_effect/debuff/vampiric_slowdown 
+	id = "vampiric_slowdown"
+	duration = 120 
+	alert_type = null 
+	effectedstats = list(STATKEY_SPD = -10) 
+
+/datum/status_effect/debuff/vampiric_slowdown/on_apply()
+	. = ..()
+	if(owner)
+		to_chat(owner, span_warning("The dark link weighs heavily on my soul, slowing my movements!"))
+
+/datum/status_effect/debuff/vampiric_slowdown/on_remove()
+	if(owner)
+		to_chat(owner, span_notice("The burden lifts, and I regain my speed."))
+	. = ..()
+
+/datum/status_effect/stacking/hypothermia
+	id = "hypothermia"
+	status_type = STATUS_EFFECT_REFRESH
+	max_stacks = 18 
+	delay_before_decay = 10 SECONDS
+	tick_interval = 1 SECONDS
+	
+	var/last_frozen_time = 0
+	var/current_speed_penalty = 0 
+
+/datum/status_effect/stacking/hypothermia/refresh(mob/living/new_owner, ...)
+	var/list/A = args
+	var/amount = (A.len >= 2) ? A[2] : 1
+	add_stacks(amount)
+	
+/datum/status_effect/stacking/hypothermia/add_stacks(stacks_added)
+	if(!owner || owner.stat == DEAD) 
+		return FALSE
+	
+	
+	var/datum/status_effect/freon/freeze/F = owner.has_status_effect(/datum/status_effect/freon/freeze)
+	if(F)
+		F.ice_integrity = min(F.ice_integrity + (stacks_added * 5), 250)
+		owner.balloon_alert(owner, "Ice reinforcing! ([F.ice_integrity])")
+		return TRUE
+
+	if(stacks_added > 0)
+		last_frozen_time = world.time
+	
+	stacks = clamp(stacks + stacks_added, 0, max_stacks)
+	
+	
+	var/new_penalty = -round(stacks * 0.5)
+	if(new_penalty != current_speed_penalty)
+		owner.change_stat(STATKEY_SPD, -current_speed_penalty) 
+		current_speed_penalty = new_penalty
+		owner.change_stat(STATKEY_SPD, current_speed_penalty) 
+	
+
+	if(stacks == 6)
+		owner.balloon_alert(owner, "My limbs are going numb...")
+	else if(stacks == 12)
+		owner.balloon_alert(owner, "The cold is clouding the mind!")
+	
+	
+	if(stacks >= 18)
+		do_final_freeze()
+		return TRUE
+
+	update_frost_visuals()
+	return TRUE
+
+/datum/status_effect/stacking/hypothermia/proc/update_frost_visuals()
+	if(!owner) 
+		return
+	var/r = clamp(255 - (stacks * 11), 50, 255)
+	var/g = clamp(255 - (stacks * 6), 140, 255)
+	var/b = 255
+	owner.add_atom_colour(rgb(r, g, b), ADMIN_COLOUR_PRIORITY)
+	owner.update_atom_colour()
+
+/datum/status_effect/stacking/hypothermia/tick()
+	if(!owner || owner.stat == DEAD) 
+		return
+	
+	
+	if(world.time > last_frozen_time + delay_before_decay)
+		if(stacks > 0)
+			add_stacks(-1)
+			return 
+
+	if(!owner) 
+		return
+
+	owner.update_move_intent_slowdown()
+
+
+	if(stacks >= 1 && stacks <= 5) 
+		if(prob(10)) 
+			owner.emote("shiver")
+
+	else if(stacks >= 6 && stacks <= 11) 
+		owner.adjustFireLoss(1.5)
+		if(owner.stamina < owner.max_stamina)
+			owner.stamina_add(10)
+		
+	else if(stacks >= 12) 
+		owner.adjustFireLoss(3)
+		owner.adjustOxyLoss(3)
+		
+		if(owner.stamina < owner.max_stamina)
+			owner.stamina_add(15)
+		
+		
+		if(prob(15)) 
+			owner.apply_status_effect(STATUS_EFFECT_SLEEPING, 40)
+			
+		
+		if(prob(15))
+			owner.visible_message(span_danger("[owner] is staggering from the terrible cold!"))
+			owner.Knockdown(20)
+
+/datum/status_effect/stacking/hypothermia/proc/do_final_freeze()
+	if(!owner) 
+		return
+	owner.apply_status_effect(/datum/status_effect/freon/freeze)
+	qdel(src)
+
+/datum/status_effect/stacking/hypothermia/on_remove()
+	if(owner)
+		
+		owner.change_stat(STATKEY_SPD, -current_speed_penalty)
+		owner.remove_atom_colour(ADMIN_COLOUR_PRIORITY)
+		owner.update_move_intent_slowdown()
+
+/atom/movable/screen/alert/status_effect/shrink
+	name = "Shrink"
+	desc = "I'm tiny!"
+	icon_state = "debuff"
+
+/datum/status_effect/debuff/shrink
+	id = "shrink"
+	alert_type = /atom/movable/screen/alert/status_effect/shrink
+	effectedstats = list(STATKEY_SPD = -1, STATKEY_CON = -1)
+	duration = 2 MINUTES
+
+/atom/movable/screen/alert/status_effect/debuff/smartium
+	name = "Smartium"
+	desc = "My mind cracked!"
+	icon = 'modular_twilight_axis/icons/mob/screen_alert.dmi'
+	icon_state = "smartium_bad"
+
+/datum/status_effect/debuff/smartium
+	id = "smartium_bad"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/smartium
+	effectedstats = list(STATKEY_INT = -10)
+	var/psycho = 0
+	duration = 30 SECONDS
+
+/datum/status_effect/debuff/smartium/on_apply()
+	. = ..()
+	if(owner)
+		to_chat(owner, span_warning("AHAHAHA!! AHAHAHAHAHAHAHAH!!!!"))
+		if(!HAS_TRAIT(owner, TRAIT_PSYCHOSIS))
+			psycho = 1
+			owner.hallucination = min(owner.hallucination + 10, 30) MINUTES
+			ADD_TRAIT(owner, TRAIT_PSYCHOSIS, TRAIT_GENERIC)
+		if(owner.has_status_effect(/datum/status_effect/buff/smartium))
+			owner.remove_status_effect(/datum/status_effect/buff/smartium)
+			owner.apply_status_effect(/datum/status_effect/debuff/smartium)
+
+/datum/status_effect/debuff/smartium/on_remove()
+	. = ..()
+	if(owner)
+		to_chat(owner, span_notice("Ugh... Whats happen?.."))
+		if(psycho == 1)
+			REMOVE_TRAIT(owner, TRAIT_PSYCHOSIS, TRAIT_GENERIC)
+
+/datum/status_effect/debuff/heavy_stomp
+	id = "heavy_stomp"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/heavy_stomp
+	effectedstats = list(STATKEY_CON = -1, STATKEY_SPD = -1)
+	duration = 15 SECONDS
+
+/datum/status_effect/debuff/heavy_stomp/i
+	id = "heavy_stomp_i"
+	effectedstats = list(STATKEY_STR = -1, STATKEY_WIL = -1, STATKEY_SPD = -1)
+	duration = 15 SECONDS
+
+/datum/status_effect/debuff/heavy_stomp/ii
+	id = "heavy_stomp_ii"
+	effectedstats = list(STATKEY_STR = -1, STATKEY_WIL = -1, STATKEY_CON = -1, STATKEY_SPD = -1)
+	duration = 15 SECONDS
+
+/datum/status_effect/debuff/heavy_stomp/iii
+	id = "heavy_stomp_iii"
+	effectedstats = list(STATKEY_WIL = -1, STATKEY_CON = -1, STATKEY_SPD = -1, STATKEY_LCK = -1)
+	duration = 15 SECONDS
+
+/atom/movable/screen/alert/status_effect/debuff/heavy_stomp
+	name = "Off-balance Tremor"
+	desc = "Fuck, this really heavy!"
+
+/datum/status_effect/debuff/blood_call
+	id = "blood_call"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/blood_call
+	effectedstats = list(STATKEY_INT = -2)
+	duration = 15 SECONDS
+
+/datum/status_effect/debuff/blood_call/on_creation(mob/living/new_owner, newduration)
+	duration = newduration SECONDS
+
+/datum/status_effect/debuff/blood_call/i
+	id = "blood_call_i"
+	effectedstats = list(STATKEY_SPD = -2)
+	duration = 15 SECONDS
+
+/datum/status_effect/debuff/blood_call/ii
+	id = "blood_call_ii"
+	effectedstats = list(STATKEY_CON = -2)
+	duration = 15 SECONDS
+
+/atom/movable/screen/alert/status_effect/debuff/blood_call
+	name = "Blood Call"
+	desc = "Hard to concentrate!"

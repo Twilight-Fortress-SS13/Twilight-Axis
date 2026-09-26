@@ -537,10 +537,10 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 	last_death = world.time
 
 /datum/mind/proc/store_memory(new_text)
-	var/newlength = length(memory) + length(new_text)
-	if (newlength > MAX_MESSAGE_LEN * 100)
-		memory = copytext(memory, -newlength-MAX_MESSAGE_LEN * 100)
 	memory += "[new_text]<BR>"
+	var/limit = MAX_MESSAGE_LEN * 100
+	if (length_char(memory) > limit)
+		memory = copytext_char(memory, -limit)
 
 /datum/mind/proc/wipe_memory()
 	memory = null
@@ -639,7 +639,8 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 /datum/mind/proc/show_memory(mob/recipient, window=1)
 	if(!recipient)
 		recipient = current
-	var/output = "<B>[current.real_name]'s Memories:</B><br>"
+	var/output = "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'></head><body>"
+	output += "<B>[current.real_name]'s Memories:</B><br>"
 	output += memory
 
 	if(personal_objectives.len)
@@ -663,6 +664,7 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 			antag_obj_count++
 
 	if(window)
+		output += "</body></html>"
 		recipient << browse(output,"window=memory")
 	else if(all_objectives.len || memory || personal_objectives.len)
 		to_chat(recipient, "<i>[output]</i>")
@@ -1404,7 +1406,9 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 		qdel(O)
 	personal_objectives.Cut()
 
+
 /proc/handle_special_items_retrieval(mob/user, atom/host_object)
+	// Attempts to retrieve an item from a player's stash, and applies any base colors, where preferable.
 	if(user.mind && isliving(user))
 		if(user.mind.special_items && user.mind.special_items.len)
 			var/item = input(user, "What will I take?", "STASH") as null|anything in user.mind.special_items
@@ -1435,12 +1439,7 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 							I.salvage_result = /obj/item/ash
 						var/list/metadata = user.mind.special_items_metadata[base_name]
 						if(islist(metadata))
-							if(metadata["color"])
-								I.add_atom_colour(metadata["color"], FIXED_COLOUR_PRIORITY)
-							if(metadata["detail_color"] && I.detail_tag)
-								I.detail_color = metadata["detail_color"]
-							if(metadata["altdetail_color"] && I.altdetail_tag)
-								I.altdetail_color = metadata["altdetail_color"]
+							I.apply_loadout_color_metadata(metadata) // TA EDIT
 							if(metadata["custom_name_parsed"])
 								I.name = metadata["custom_name_parsed"] // this is sanitized when we apply the markdown procesor
 							else if(metadata["custom_name"])
@@ -1450,3 +1449,7 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 							else if(metadata["custom_desc"])
 								I.desc = html_encode(metadata["custom_desc"])
 							I.update_icon()
+//						else if(istype(I, /obj/item/clothing)) // commit any pref dyes to our item if it is clothing and we have them available
+//							var/dye = user.client?.prefs.resolve_loadout_to_color(path2item)
+//							if(dye)
+//								I.add_atom_colour(dye, FIXED_COLOUR_PRIORITY)

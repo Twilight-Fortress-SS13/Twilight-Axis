@@ -88,7 +88,9 @@
 			else if(istype(localarea, /area/rogue/indoors/inq))
 				rolestonotify = list("Inquisitor", "Orthodoxist", "Absolver")
 			else if(istype(localarea, /area/rogue/indoors/town/garrison))
-				rolestonotify = list("Man at Arms", "Sergeant", "Watchman")
+				rolestonotify = list("Man at Arms", "Sergeant", "Royal Guard Sergeant", "Watchman")
+			else if(localarea?.name == "City Watch") // TA EDIT - preserve Twilight Axis city-watch bell recipients
+				rolestonotify = list("Town Sheriff", "Town Watch")
 			else if(istype(localarea, /area/rogue/indoors/town/manor) || istype(localarea, /area/rogue/under/town/basement/keep))
 				rolestonotify = list("Servant", "Seneschal")
 			if(!length(rolestonotify))
@@ -97,7 +99,7 @@
 			if(!called_to)
 				called_to = localarea ? localarea.name : "an unknown place"
 			send_ooc_note(span_blue(("I hear the distant sound of [src] ringing. I'm being called to the <b>[called_to]</b>.")), \
-			job = rolestonotify)
+				job = rolestonotify)
 
 /obj/structure/standingbell/proc/reset_cooldown()
 	visible_message(span_notice ("[src] is ready for use again."))

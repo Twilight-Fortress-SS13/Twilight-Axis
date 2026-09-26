@@ -16,25 +16,34 @@
 	if(!user.cmode)
 		if(ishuman(user) && ishuman(target))
 			var/mob/living/carbon/human/H = user
-			H.attempt_steal(user, target)
+			if(target.Adjacent(H))
+				H.attempt_steal(user, target)
 			return
 	if(user.has_status_effect(/datum/status_effect/debuff/specialcd))
 		return
 
 	user.face_atom(target)
 
-	var/obj/item/rogueweapon/W = user.get_active_held_item()
+	var/obj/item/W = user.get_active_held_item()
 	var/datum/special_intent/active_special
 	var/skill_level = SKILL_LEVEL_NONE
 
-	if(istype(W, /obj/item/rogueweapon) && W.special)
-
-		if(W && W.obj_broken)
-			to_chat(user, span_warning("The weapon is in no state to be used like this!"))
-			return
-
-		active_special = W.special
-		skill_level = user.get_wskill(W)
+	if(istype(W, /obj/item/rogueweapon))
+		var/obj/item/rogueweapon/RW = W
+		if(RW.special)
+			if(RW.obj_broken)
+				to_chat(user, span_warning("The weapon is in no state to be used like this!"))
+				return
+			active_special = RW.special
+			skill_level = user.get_wskill(RW)
+	else if(istype(W, /obj/item/gun/ballistic/revolver/grenadelauncher/bow))
+		var/obj/item/gun/ballistic/revolver/grenadelauncher/bow/B = W
+		if(B.special)
+			if(B.obj_broken)
+				to_chat(user, span_warning("The weapon is in no state to be used like this!"))
+				return
+			active_special = B.special
+			skill_level = user.get_skill_level(/datum/skill/combat/bows)
 	else if(!W && ishuman(user))
 		var/mob/living/carbon/human/HU = user
 		if(HU.unarmed_special)

@@ -1,4 +1,4 @@
-//CAPARISONS
+/*//CAPARISONS
 
 /datum/loadout_item/caparison
 	name = "Caparison"
@@ -24,3 +24,4 @@
 	name = "Fogbeast Caparison"
 	path = /obj/item/caparison/fogbeast
 	sort_category = "Caparison"
+*/

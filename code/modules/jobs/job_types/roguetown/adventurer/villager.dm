@@ -19,7 +19,7 @@
 	wanderer_examine = FALSE
 	advjob_examine = TRUE
 	always_show_on_latechoices = TRUE
-	same_job_respawn_delay = 0
+	same_job_respawn_delay = 10 MINUTES
 	cmode_music = 'sound/music/cmode/towner/combat_towner.ogg'
 	job_subclasses = list(
 		/datum/advclass/barbersurgeon,
@@ -53,10 +53,7 @@
 		return
 	var/list/roleprefs = get_roleprefs(C)
 	var/datum/advclass/favorite = roleprefs["favorite_advclass"]
-	var/favorite_name = favorite ? favorite::name : "Choose"
-	var/HTML = {"
-		<i>You can choose a favorite subclass here. You'll automatically select this subclass on roundstart if possible.</i><br/><br/>
-		<b>Selected class:</b> <a href="?src=[REF(src)];class=1">[favorite_name]</a>"}
+	var/HTML = "[subprefs_subclass_html(C)]"
 	if(favorite == /datum/advclass/witch)
 		HTML += {"<br/><b>Witch Type:</b> <a href="?src=[REF(src)];witch_type=1">[roleprefs["witch_type"] || "Select"]</a>"}
 		HTML += {"<br/><b>Second Form:</b> <a href="?src=[REF(src)];witch_form=1">[roleprefs["witch_form"] || "Select"]</a>"}

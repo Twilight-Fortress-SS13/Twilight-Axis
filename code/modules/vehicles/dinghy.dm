@@ -16,6 +16,12 @@
 	D.keytype = /obj/item/rogueweapon/mace/oar
 	D.allowed_turf_typecache = typecacheof(allowed_turf)
 
+/obj/vehicle/ridden/dinghy/throw_at(atom/target, range, speed, mob/thrower, spin = FALSE, diagonals_first = FALSE, datum/callback/callback, force = MOVE_FORCE_STRONG, extra = FALSE) // TA EDIT START
+	if(thrower && is_occupant(thrower))
+		to_chat(thrower, span_warning("I can't throw [src] while riding it!"))
+		return FALSE
+	return ..() // TA EDIT END
+
 /obj/item/rogueweapon/mace/oar
 	name = "oar"
 	desc = "A wooden club with a flattened head for paddling boats about."

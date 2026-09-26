@@ -1,4 +1,3 @@
-
 /obj/structure/fluff/testportal
 	name = "portal"
 	icon_state = "shitportal"
@@ -42,6 +41,9 @@
 	var/aallmig
 	// Traits that allow you to use the tile, having any one of them grants access.
 	var/list/required_traits = null
+	// Legacy single-trait var. Kept so old map edits or subtypes using required_trait do not silently break.
+	var/required_trait = null
+	var/grants_access_on_use = TRUE // 16.02.2026 TA edit for Corde50 shitportals. Adds proverku daet li traveltile trait dlya zritelya
 	var/list/required_jobs = null
 	var/travel_time = 5 SECONDS
 	var/travel_message = "I begin to travel..."
@@ -130,18 +132,33 @@
 		return FALSE
 	if(L.pulledby)
 		return FALSE
+	if(leashed_by_other(L))
+		to_chat(L, span_warning("I can't travel! Someone is holding my leash!"))
+		return FALSE
 	to_chat(L, "<b>[travel_message]</b>")
 	if(do_after(L, travel_time, needhand = FALSE, target = src))
 		if(L.pulledby)
 			to_chat(L, span_warning("I can't go, something's holding onto me."))
 			return FALSE
+		if(leashed_by_other(L))
+			to_chat(L, span_warning("I can't go, somebody has me on their leash."))
+			return FALSE
 		perform_travel(T, L)
 		return TRUE
 	return FALSE
 
+/obj/structure/fluff/traveltile/proc/get_required_traits()
+	var/list/access_traits = list()
+	if(length(required_traits))
+		access_traits |= required_traits
+	if(required_trait)
+		access_traits |= required_trait
+	return access_traits
+
 /obj/structure/fluff/traveltile/proc/perform_travel(obj/structure/fluff/traveltile/T, mob/living/L)
-	if(watchable && !L.restrained(ignore_grab = TRUE) && length(required_traits)) // heavy-handedly prevents using prisoners to metagame camp locations. pulledby would stop this but prisoners can also be kicked/thrown into the tile repeatedly
-		var/watch_trait = required_traits[1]
+	var/list/access_traits = get_required_traits()
+	if(watchable && grants_access_on_use && !L.restrained(ignore_grab = TRUE) && length(access_traits)) // Heavy-handedly prevents using prisoners to metagame camp locations. pulledby would stop this but prisoners can also be kicked/thrown into the tile repeatedly
+		var/watch_trait = access_traits[1]
 		for(var/mob/living/carbon/human/H in hearers(6,src))
 			if(H == L)
 				continue
@@ -151,13 +168,44 @@
 					to_chat(L, "<b>[H.name ? H : "Someone"] watches me pass through the entrance.</b>")
 				ADD_TRAIT(H, watch_trait, TRAIT_GENERIC)
 
+	/*
+	Prior to writing:
+	On their own, leashes do not play nice at all with travel tile teleports. At best, they do not follow leashed "pets" to new z-levels if the leash is dropped.
+	At worst, they cause the "pet" to fall to 1 z-level lower from where they previously were, and not get teleported, if the "master" isn't also pulling them by hand.
+	Thus, the following jank is necessary.
+	Procs for getting/checking leash stuff that I made for this got moved to leash.dm as global procs, because their code was entirely independent of this type. - Zoktiik
+	*/
 	var/atom/movable/pullingg = L.pulling
+	var/list/master_leashed_mobs = get_master_leashed_mobs(L, FALSE)
+	var/obj/item/leash/user_freepet_leash = get_freepet_leash(L)
+	var/obj/item/leash/pullingg_freepet_leash
+	// leashes automatically handle "reattachment" to the "master" so we can just move them
+
+	// handle unknotting
+	var/datum/component/knotting/L_knot = L.GetComponent(/datum/component/knotting)
+	if(L_knot?.knotted_status)
+		L_knot.knot_remove()
 
 	L.recent_travel = world.time
 	if(pullingg)
+		if(isliving(pullingg)) // also check if pulled mob is knotted
+			var/mob/living/H = pullingg
+			var/datum/component/knotting/H_knot = H.GetComponent(/datum/component/knotting)
+			if(H_knot?.knotted_status)
+				H_knot.knot_remove()
+		pullingg_freepet_leash = get_freepet_leash(pullingg)
+		if(pullingg_freepet_leash)
+			pullingg_freepet_leash.forceMove(T.loc)
 		pullingg.recent_travel = world.time
 		pullingg.forceMove(T.loc)
+	if(length(master_leashed_mobs))
+		for(var/mob/living/leashed in master_leashed_mobs)
+			if(leashed != pullingg) // we didn't already handle u
+				leashed.recent_travel = world.time
+				leashed.forceMove(T.loc)
 
+	if(user_freepet_leash)
+		user_freepet_leash.forceMove(T.loc)
 	L.forceMove(T.loc)
 
 	if(pullingg)
@@ -166,19 +214,25 @@
 	return
 
 /obj/structure/fluff/traveltile/proc/has_access(atom/movable/AM)
-	if(!length(required_jobs) && !length(required_traits))
+	var/has_job_restrictions = length(required_jobs)
+	var/list/access_traits = get_required_traits()
+	var/has_trait_restrictions = length(access_traits)
+
+	if(!has_job_restrictions && !has_trait_restrictions)
 		return TRUE
-	var/has_job = FALSE
-	var/has_trait = FALSE
-	if(length(required_jobs) && ishuman(AM))
+
+	if(has_job_restrictions && ishuman(AM))
 		var/mob/living/carbon/human/H = AM
-		has_job = (H.job in required_jobs)
-	if(length(required_traits) && isliving(AM))
-		for(var/trait in required_traits)
+		if(H.job in required_jobs)
+			return TRUE
+
+	if(has_trait_restrictions && isliving(AM))
+		for(var/trait in access_traits)
 			if(HAS_TRAIT(AM, trait))
-				has_trait = TRUE
-				break
-	return (has_job || has_trait)
+				return TRUE
+
+	return FALSE
+
 
 /obj/structure/fluff/traveltile/proc/can_go(atom/movable/AM)
 	if(AM.recent_travel)
@@ -235,12 +289,16 @@
 
 /obj/structure/fluff/traveltile/bandit
 	required_traits = list(TRAIT_BANDITCAMP)
+
 /obj/structure/fluff/traveltile/vampire
 	required_traits = list(TRAIT_VAMPMANSION)
+
 /obj/structure/fluff/traveltile/lich
 	required_traits = list(TRAIT_LICHLAIR)
+
 /obj/structure/fluff/traveltile/wretch
 	required_traits = list(TRAIT_ZURCH) //I'd tie this to trait_outlaw but unfortunately the heresiarch virtue exists so we're making a new trait instead.
+
 /obj/structure/fluff/traveltile/drow
 	required_traits = list(TRAIT_CAVEDWELLER)
 

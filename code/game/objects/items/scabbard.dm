@@ -38,6 +38,9 @@
 	/// Stores the holster component
 	var/datum/component/holster/hol_comp
 
+	var/holster_empty_item_state = null // TA EDIT
+	var/holster_sheathed_item_state = null // TA EDIT
+
 	var/sheathe_time = 0.1 SECONDS
 	var/sheathe_sound = 'sound/foley/equip/scabbard_holster.ogg'
 	/// If true, this weapon's examine highlights (see `get_examine_highlight_status()`) will not reveal the weapon stored in it.
@@ -76,6 +79,18 @@
 
 /obj/item/rogueweapon/scabbard/attack_obj(obj/O, mob/living/user)
 	return FALSE
+
+/obj/item/rogueweapon/scabbard/proc/can_sheathe_item(obj/item/I, mob/user)
+	var/datum/component/martyrweapon/martyr_weapon = I.GetComponent(/datum/component/martyrweapon)
+	if(martyr_weapon?.is_active)
+		to_chat(user, span_warning("The burning relic refuses to be stowed while my Oath is invoked!"))
+		return FALSE
+	return TRUE
+
+/obj/item/rogueweapon/scabbard/attackby(obj/item/I, mob/user, params)
+	if(!can_sheathe_item(I, user))
+		return TRUE
+	return ..()
 
 /obj/item/rogueweapon/scabbard/MouseDrop(atom/over)
 	..()
@@ -578,6 +593,17 @@
 
 	max_integrity = 200
 
+/obj/item/rogueweapon/scabbard/sword/kazengun/MiddleClick(mob/user)
+	if(hol_comp?.sheathed)
+		to_chat(user, span_notice("There's something inside!"))
+		return FALSE
+	return FALSE
+
+/obj/item/rogueweapon/scabbard/sword/kazengun/obj_fix(mob/user, full_repair = TRUE)
+	obj_broken = FALSE
+	if(full_repair)
+		obj_integrity = max_integrity
+
 /obj/item/rogueweapon/scabbard/sword/kazengun/noparry
 	name = "ceremonial kazengun scabbard"
 	desc = "A simple wooden scabbard, trimmed with bronze. Unlike its steel cousins, this one cannot parry."
@@ -586,7 +612,6 @@
 	can_parry = FALSE
 	special = null
 	max_integrity = 0
-
 
 /obj/item/rogueweapon/scabbard/sword/kazengun/steel
 	name = "hwang scabbard"

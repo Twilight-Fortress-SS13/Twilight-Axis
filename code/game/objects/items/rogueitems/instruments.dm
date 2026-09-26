@@ -2,6 +2,7 @@
 	mid_length = 2400 // 4 minutes for some reason. better would be each song having a specific length
 	volume = 100
 	extra_range = 5
+	blocked_z_levels = list(1)
 	persistent_loop = TRUE
 	var/stress2give = /datum/stressevent/music
 	sound_group = /datum/sound_group/instruments //reserves sound channels for up to 10 instruments at a time
@@ -30,11 +31,10 @@
 
 /obj/item/rogue/instrument/equipped(mob/living/user, slot)
 	. = ..()
+	//TA edit - Bard chages start
 	if(playing && user.get_active_held_item() != src)
-		playing = FALSE
-		groupplaying = FALSE
-		soundloop.stop()
-		user.remove_status_effect(/datum/status_effect/buff/playing_music)
+		stop_music(user)
+	//TA edit - Bard chages end
 
 /obj/item/rogue/instrument/getonmobprop(tag)
 	. = ..()
@@ -47,6 +47,8 @@
 
 /obj/item/rogue/instrument/Initialize(mapload)
 	soundloop = new(src, FALSE)
+	//TA edit - Bard chages
+	ensure_timed_tracks()
 	. = ..()
 
 /obj/item/rogue/instrument/Destroy()
@@ -55,147 +57,45 @@
 
 /obj/item/rogue/instrument/dropped(mob/living/user, silent)
 	..()
-	groupplaying = FALSE
-	playing = FALSE
-	if(soundloop)
-		soundloop.stop()
-		user.remove_status_effect(/datum/status_effect/buff/playing_music)
+	//TA edit - Bard chages
+	stop_music(user)
 
 /obj/item/rogue/instrument/attack_self(mob/living/user)
-	var/stressevent = /datum/stressevent/music
 	. = ..()
 	if(.)
 		return
 	user.changeNext_move(CLICK_CD_MELEE)
+	//TA edit - Bard chages start
 	if(playing)
-		playing = FALSE
-		groupplaying = FALSE
-		soundloop.stop()
-		user.remove_status_effect(/datum/status_effect/buff/playing_music)
 		return
+	if(user.mind)
+		switch(user.get_skill_level(/datum/skill/misc/music))
+			if(1)
+				note_color = "#ffffff"
+				soundloop.stress2give = /datum/stressevent/music/novice
+			if(2)
+				note_color = "#ffffff"
+				soundloop.stress2give = /datum/stressevent/music/apprentice
+			if(3)
+				note_color = "#1eff00"
+				soundloop.stress2give = /datum/stressevent/music/journeyman
+			if(4)
+				note_color = "#0070dd"
+				soundloop.stress2give = /datum/stressevent/music/expert
+			if(5)
+				note_color = "#a335ee"
+				soundloop.stress2give = /datum/stressevent/music/master
+			if(6)
+				note_color = "#ff8000"
+				soundloop.stress2give = /datum/stressevent/music/legendary
+			else
+				note_color = initial(note_color)
+				soundloop.stress2give = /datum/stressevent/music
 	else
-		var/playdecision = alert(user, "Would you like to start a band?", "Band Play", "Nay", "Yea")
-		switch(playdecision)
-			if("Nay")
-				groupplaying = FALSE
-			if("Yea")
-				groupplaying = TRUE
-			else
-				return
-
-		if(user.mind)
-			switch(user.get_skill_level(/datum/skill/misc/music))
-				if(1)
-					note_color = "#ffffff"
-					stressevent = /datum/stressevent/music/novice
-				if(2)
-					note_color = "#ffffff"
-					stressevent = /datum/stressevent/music/apprentice
-				if(3)
-					note_color = "#1eff00"
-					stressevent = /datum/stressevent/music/journeyman
-				if(4)
-					note_color = "#0070dd"
-					stressevent = /datum/stressevent/music/expert
-				if(5)
-					note_color = "#a335ee"
-					stressevent = /datum/stressevent/music/master
-				if(6)
-					note_color = "#ff8000"
-					stressevent = /datum/stressevent/music/legendary
-				else
-					note_color = initial(note_color)
-					stressevent = /datum/stressevent/music
-		soundloop.stress2give = stressevent
-
-		if(!groupplaying)
-			var/list/options = song_list.Copy()
-			if(user.mind && user.get_skill_level(/datum/skill/misc/music) >= 4)
-				options["Upload New Song"] = "upload"
-
-			var/choice = input(user, "Which song?", "Music", name) as null|anything in options
-			if(!choice || !user)
-				return
-
-			if(playing || !(src in user.held_items) || user.get_inactive_held_item())
-				return
-
-			if(choice == "Upload New Song")
-				if(lastfilechange && world.time < lastfilechange + 3 MINUTES)
-					say("NOT YET!")
-					return
-				playsound(loc, 'sound/misc/beep.ogg', 100, FALSE, -1)
-				var/newfile = music_upload(user, src)
-				if(!newfile)
-					return
-				if(playing || !(src in user.held_items) || user.get_inactive_held_item())
-					return
-
-				lastfilechange = world.time
-				curfile = newfile
-
-				var/path = "[curfile]"
-				var/entry = input(user, "Name your song:", "Song Name") as text|null
-				if(QDELETED(src))
-					return
-				var/songname = strip_html(entry, MAX_NAME_LEN)
-				if(!songname || songname == "Upload New Song")
-					songname = copytext(path, findlasttext(path, "/") + 1)
-				song_list[songname] = newfile
-				return
-
-			curfile = song_list[choice]
-			if(!user || playing || !(src in user.held_items))
-				return
-			if(user.get_inactive_held_item())
-				playing = FALSE
-				soundloop.stop()
-				user.remove_status_effect(/datum/status_effect/buff/playing_music)
-				return
-			if(curfile)
-				playing = TRUE
-				soundloop.set_mid_sounds(list(curfile))
-				soundloop.mid_length = rustg_sound_length("[curfile]")
-				soundloop.start()
-				user.apply_status_effect(/datum/status_effect/buff/playing_music, stressevent, note_color)
-				record_round_statistic(STATS_SONGS_PLAYED)
-			else
-				playing = FALSE
-				groupplaying = FALSE
-				soundloop.stop()
-				user.remove_status_effect(/datum/status_effect/buff/playing_music)
-
-		if(groupplaying)
-			var/list/pplnearby = view(7,loc)
-			var/list/instrumentsintheband = list()
-			var/list/bandmates = list()
-			for(var/mob/living/carbon/human/potentialbandmates in pplnearby)
-				var/obj/item/rogue/instrument/theirinstrument = potentialbandmates.get_active_held_item()
-				if(!istype(theirinstrument))
-					continue
-				if(theirinstrument.playing)
-					continue
-				if(potentialbandmates != user)
-					if(alert(potentialbandmates, "Would you like to perform in a band?", "Band Play", "Nay", "Yea") != "Yea")
-						continue
-				var/songchoice = input(potentialbandmates, "Which song shall [potentialbandmates] perform?", "Music", name) as null|anything in theirinstrument.song_list
-				if(!songchoice)
-					continue
-				theirinstrument.curfile = theirinstrument.song_list[songchoice]
-				bandmates += potentialbandmates
-				instrumentsintheband += theirinstrument
-			if(do_after(user, 1))
-				for(var/obj/item/rogue/instrument/bandinstrumentsband in instrumentsintheband)
-					if(!bandinstrumentsband.curfile)
-						continue
-					bandinstrumentsband.playing = TRUE
-					bandinstrumentsband.groupplaying = TRUE
-					bandinstrumentsband.soundloop.stress2give = stressevent
-					bandinstrumentsband.soundloop.mid_length = rustg_sound_length("[bandinstrumentsband.curfile]")
-					bandinstrumentsband.soundloop.set_mid_sounds(list(bandinstrumentsband.curfile))
-					bandinstrumentsband.soundloop.start()
-				for(var/mob/living/carbon/human/A in bandmates)
-					A.apply_status_effect(/datum/status_effect/buff/playing_music, stressevent, note_color)
+		note_color = initial(note_color)
+		soundloop.stress2give = /datum/stressevent/music
+	ui_interact(user)
+	//TA edit - Bard chages end
 
 /obj/item/rogue/instrument/lute
 	name = "lute"

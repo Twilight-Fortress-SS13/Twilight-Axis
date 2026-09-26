@@ -45,6 +45,7 @@
 					underwear.forceMove(get_turf(src))
 					src.put_in_hands(underwear)
 					underwear = null
+					regenerate_icons() // TA EDIT
 		if((user.zone_selected == BODY_ZONE_L_LEG) || (user.zone_selected == BODY_ZONE_R_LEG))
 			if(get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
 				if(!legwear_socks)
@@ -56,6 +57,7 @@
 					legwear_socks.forceMove(get_turf(src))
 					src.put_in_hands(legwear_socks)
 					legwear_socks = null
+					regenerate_icons() // TA EDIT
 		if(user.zone_selected == BODY_ZONE_CHEST)
 			if(!piercings_item)
 				return
@@ -169,6 +171,21 @@
 				F.remove_pending_invite(real_name)
 		incoming_fellowship_invites.Cut()
 	return ..()
+
+/mob/living/carbon/human/Stat()
+	..()
+
+	var/panel = client?.statpanel
+	if(panel == "Stats" && mind)
+		var/datum/antagonist/vampire/VD = mind.has_antag_datum(/datum/antagonist/vampire)
+		if(VD)
+			stat("Vitae:", bloodpool)
+
+	if(panel == "Status" && mind)
+		if((mind.assigned_role == "Shepherd") || (mind.assigned_role == "Inquisitor"))
+			stat("Confessions sent: [GLOB.confessors.len]")
+
+	return //RTchange
 
 /mob/living/carbon/human/show_inv(mob/user)
 	user.set_machine(src)
@@ -518,41 +535,42 @@
 			hud_used.bloods.cut_overlays()
 			if(usedloss <= 0)
 				hud_used.bloods.icon_state = "dam0"
-				if(toxloss > 0)
-					var/toxoverlay
-					switch(toxloss)
-						if(1 to 20)
-							toxoverlay = "toxloss20"
-						if(21 to 49)
-							toxoverlay = "toxloss40"
-						if(50 to 79)
-							toxoverlay = "toxloss60"
-						if(80 to 99)
-							toxoverlay = "toxloss80"
-						if(100 to 999)
-							toxoverlay = "toxloss100"
-					hud_used.bloods.add_overlay(toxoverlay)
-
-				if(oxyloss > 0)
-					var/oxyoverlay
-					switch(oxyloss)
-						if(1 to 20)
-							oxyoverlay = "oxyloss20"
-						if(21 to 49)
-							oxyoverlay = "oxyloss40"
-						if(50 to 79)
-							oxyoverlay = "oxyloss60"
-						if(80 to 99)
-							oxyoverlay = "oxyloss80"
-						if(100 to 999)
-							oxyoverlay = "oxyloss100"
-					hud_used.bloods.add_overlay(oxyoverlay)
-			else
+			else // TA EDIT START
 				var/used = round(usedloss, 10)
 				if(used <= 80)
 					hud_used.bloods.icon_state = "dam[used]"
 				else
 					hud_used.bloods.icon_state = "damelse"
+
+			if(toxloss > 0)
+				var/toxoverlay
+				switch(toxloss)
+					if(1 to 20)
+						toxoverlay = "toxloss20"
+					if(21 to 49)
+						toxoverlay = "toxloss40"
+					if(50 to 79)
+						toxoverlay = "toxloss60"
+					if(80 to 99)
+						toxoverlay = "toxloss80"
+					if(100 to 999)
+						toxoverlay = "toxloss100"
+				hud_used.bloods.add_overlay(toxoverlay)
+
+			if(oxyloss > 0)
+				var/oxyoverlay
+				switch(oxyloss)
+					if(1 to 20)
+						oxyoverlay = "oxyloss20"
+					if(21 to 49)
+						oxyoverlay = "oxyloss40"
+					if(50 to 79)
+						oxyoverlay = "oxyloss60"
+					if(80 to 99)
+						oxyoverlay = "oxyloss80"
+					if(100 to 999)
+						oxyoverlay = "oxyloss100"
+				hud_used.bloods.add_overlay(oxyoverlay) // TA EDIT END
 			if(painpercent > 0)
 				var/painoverlay
 				switch(painpercent)
@@ -751,7 +769,15 @@
 						if("Flavor")
 							flavortext = null
 							nsfwflavortext = null
+							ooc_extra_img = null
+							ooc_extra_img_link = null
+							nsfw_ooc_extra_img = null
+							nsfw_ooc_extra_img_link = null
 							client.prefs?.flavortext = null
+							client.prefs?.ooc_extra_img = null
+							client.prefs?.ooc_extra_img_link = null
+							client.prefs?.nsfw_ooc_extra_img = null
+							client.prefs?.nsfw_ooc_extra_img_link = null
 						if("Notes")
 							ooc_notes = null
 							erpprefs = null
@@ -781,6 +807,10 @@
 			if(alert(usr,"This cannot be undone. Are you sure?","DON'T FATFINGER THIS","Yes","No") == "Yes")
 				flavortext = null
 				nsfwflavortext = null
+				ooc_extra_img = null
+				ooc_extra_img_link = null
+				nsfw_ooc_extra_img = null
+				nsfw_ooc_extra_img_link = null
 				erpprefs = null
 				ooc_notes = null
 				ooc_extra = null
@@ -791,6 +821,10 @@
 				if(client)
 					client.prefs?.flavortext = null
 					client.prefs?.nsfwflavortext = null
+					client.prefs?.ooc_extra_img = null
+					client.prefs?.ooc_extra_img_link = null
+					client.prefs?.nsfw_ooc_extra_img = null
+					client.prefs?.nsfw_ooc_extra_img_link = null
 					client.prefs?.erpprefs = null
 					client.prefs?.ooc_notes = null
 					client.prefs?.ooc_extra = null
@@ -1108,6 +1142,7 @@
 /mob/living/carbon/human/proc/update_proj_parry_timer()
 	projectile_parry_timer = (world.time + PROJ_PARRY_TIMER)
 
+/*
 /mob/living/carbon/human/proc/reapply_live_preferences()
 	if(!client?.prefs)
 		return FALSE
@@ -1124,7 +1159,7 @@
 			grant_language(language_type)
 		language_holder.selected_default_language = selected_default_language
 
-	return TRUE
+	return TRUEи
 
 /mob/living/carbon/human/proc/refresh_live_vocal_preferences()
 	if(!client?.prefs)
@@ -1146,4 +1181,4 @@
 	vocal_pitch = client.prefs.bark_pitch
 	vocal_pitch_range = client.prefs.bark_variance
 	apply_voicepacks(src, client)
-	return TRUE
+	return TRUE*/

@@ -42,7 +42,7 @@
 	shoes = /obj/item/clothing/shoes/roguetown/grenzelhoft/freifechter
 	gloves = /obj/item/clothing/gloves/roguetown/angle/freifechter
 	backr = /obj/item/storage/backpack/rogue/satchel/short
-	neck = /obj/item/clothing/neck/roguetown/psicross/reform
+	//neck = /obj/item/clothing/neck/roguetown/psicross/reform //TA EDIT
 	backpack_contents = list(							//DO NOT GIVE THEM MONEY. THEY ARE NOT SUPPOSED TO START WITH ANY. IT IS INTENDED.
 		/obj/item/roguekey/mercenary = 1,
 		/obj/item/natural/bundle/cloth/bandage/full = 1,
@@ -105,8 +105,8 @@
 	shoes = /obj/item/clothing/shoes/roguetown/grenzelhoft/freifechter
 	gloves = /obj/item/clothing/gloves/roguetown/angle/freifechter
 	backr = /obj/item/storage/backpack/rogue/satchel/short
-	neck = /obj/item/clothing/neck/roguetown/psicross/reform
 	id = /obj/item/rogueweapon/katar/punchdagger/frei
+	//neck = /obj/item/clothing/neck/roguetown/psicross/reform //TA EDIT
 	backpack_contents = list(						//DO NOT GIVE THEM MONEY. THEY ARE NOT SUPPOSED TO START WITH ANY. IT IS INTENDED.
 		/obj/item/roguekey/mercenary = 1,
 		/obj/item/natural/bundle/cloth/bandage/full = 1,
@@ -165,7 +165,7 @@
 	gloves = /obj/item/clothing/gloves/roguetown/angle/freifechter
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/jackchain	//Obsessed with arms-hands. Keeping them protected on-spawn.
 	backr = /obj/item/storage/backpack/rogue/satchel/short
-	neck = /obj/item/clothing/neck/roguetown/psicross/reform
+	//neck = /obj/item/clothing/neck/roguetown/psicross/reform //TA EDIT
 	backpack_contents = list(
 		/obj/item/roguekey/mercenary = 1,
 		/obj/item/natural/bundle/cloth/bandage/full = 1,						//DO NOT GIVE THEM MONEY. THEY ARE NOT SUPPOSED TO START WITH ANY. IT IS INTENDED.

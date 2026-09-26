@@ -16,7 +16,6 @@
 	w_class = WEIGHT_CLASS_NORMAL
 	sharpness = IS_SHARP
 	max_blade_int = 300
-
 	grid_width = 32
 	grid_height = 96
 	slot_flags = ITEM_SLOT_HIP
@@ -30,7 +29,6 @@
 	swingsound = list('sound/combat/wooshes/blunt/shovel_swing.ogg', 'sound/combat/wooshes/blunt/shovel_swing2.ogg')
 	drop_sound = 'sound/foley/dropsound/shovel_drop.ogg'
 	smeltresult = /obj/item/ingot/iron
-
 /obj/item/rogueweapon/handsaw/bronze
 	name = "bronze handsaw"
 	desc = "The serrated half of a bronzen pair, keen to saw away at its problems."
@@ -46,7 +44,6 @@
 	max_integrity = 300
 	smeltresult = /obj/item/ingot/blacksteel
 
-
 // ==========================================
 // BASE CHISEL DEFINITIONS
 // ==========================================
@@ -56,7 +53,6 @@
 	desc = "Add something to strike it with before doing stonework. Like a mallet or a stone."
 	icon = 'icons/roguetown/items/crafting.dmi'
 	icon_state = "chisel"
-
 	force = 10
 	throwforce = 2
 	wlength = WLENGTH_SHORT
@@ -74,13 +70,11 @@
 
 	possible_item_intents = list(/datum/intent/stab)
 	associated_skill = /datum/skill/combat/knives
-
 	swingsound = list('sound/combat/wooshes/blunt/shovel_swing.ogg', 'sound/combat/wooshes/blunt/shovel_swing2.ogg')
 	drop_sound = 'sound/foley/dropsound/shovel_drop.ogg'
 
 	var/already_assembled = FALSE
 	var/chisel_prefix = ""
-
 /obj/item/rogueweapon/chisel/bronze
 	name = "bronze chisel"
 	desc = "The blunted half of a bronzen pair, for issues requiring a steady trepanning. Add something to strike it with before doing stonework, like a mallet or a stone."
@@ -88,7 +82,6 @@
 	max_blade_int = 400
 	smeltresult = /obj/item/ingot/bronze
 	chisel_prefix = "bronze"
-
 /obj/item/rogueweapon/chisel/blacksteel
 	name = "blacksteel chisel"
 	desc = "The pen that'll scrawl a masterwork through this parchment-of-stone. Add something to strike it with before doing stonework, like a mallet or a stone."
@@ -97,13 +90,11 @@
 	max_integrity = 300
 	smeltresult = /obj/item/ingot/blacksteel
 	chisel_prefix = "bs"
-
 // Single attackby proc handles combining ANY chisel with ANY valid striking tool
 // This is where you add more chisels if you've got sprites for them.. Though in the future, auto-generating the icons might be wiser.
 /obj/item/rogueweapon/chisel/attackby(obj/item/W, mob/living/user, params)
 	if(already_assembled)
 		return ..()
-
 	var/static/list/striking_tool_types = list(
 		/obj/item/natural/stoneblock			= "b",
 		/obj/item/natural/stone				= "s",
@@ -114,7 +105,6 @@
 		/obj/item/rogueweapon/hammer/bronze	= "bronzeh",
 		/obj/item/rogueweapon/hammer/paalloy	= "a"
 	)
-
 	var/tool_suffix = null
 	for(var/typepath in striking_tool_types)
 		if(istype(W, typepath))
@@ -131,7 +121,6 @@
 	A.chisel_type = src.type
 	A.striking_tool_type = W.type
 	A.icon_state = "[chisel_prefix]chisel[tool_suffix]"
-
 	qdel(W)
 	user.put_in_hands(A)
 	qdel(src)
@@ -150,7 +139,6 @@
 
 	possible_item_intents = list(/datum/intent/hit)
 	gripped_intents = list(/datum/intent/chisel)
-
 	var/chisel_type = /obj/item/rogueweapon/chisel
 	var/striking_tool_type = /obj/item/rogueweapon/hammer/wood
 
@@ -158,7 +146,6 @@
 /obj/item/rogueweapon/chisel/assembly/attack_right(mob/user)
 	var/obj/item/chisel_item = new chisel_type(user.loc)
 	var/obj/item/striking_item = new striking_tool_type(user.loc)
-
 	playsound(get_turf(user.loc), 'sound/foley/brickdrop.ogg', 100, TRUE)
 	user.put_in_hands(striking_item)
 	user.put_in_hands(chisel_item)
@@ -168,7 +155,6 @@
 // ==========================================
 // INTENT DEFINITION
 // ==========================================
-
 /datum/intent/chisel
 	name = "chisel"
 	icon_state = "inchisel"
@@ -179,5 +165,4 @@
 	blade_class = BCLASS_CHISEL
 	chargetime = 0
 	swingdelay = 3
-
 #undef BCLASS_CHISEL

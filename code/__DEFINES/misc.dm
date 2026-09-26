@@ -440,6 +440,7 @@ GLOBAL_LIST_EMPTY(bloody_footprints_cache)
 //Filters
 #define AMBIENT_OCCLUSION filter(type="drop_shadow", x=0, y=-2, size=3, offset=1, color="#04080f96")
 #define AMBIENT_OCCLUSION_WALLS filter(type="drop_shadow", x=0, y=-2, size=8, offset=4, color="#000000ff")
+
 #define GAUSSIAN_BLUR(filter_size) filter(type="blur", size=filter_size)
 
 #define CAMERA_NO_GHOSTS 0
@@ -496,4 +497,4 @@ GLOBAL_LIST_EMPTY(bloody_footprints_cache)
 #define DEAD_TO_ZOMBIE_TIME 7 MINUTES	/// Time spent dead before rising as a deadite.
 #define REVIVED_DEBUFF_DURATION 15 MINUTES	/// Revival Sickness.
 #define DEATHMARK_GRACE_PERIOD 5 MINUTES	/// Grace after a chair revival before the deathmark is checked for and applied.
-#define PERMADEATH_DURATION 10 MINUTES	/// How long the deathmark lasts once it lands. Dying inside it is permanent for the round.
+#define PERMADEATH_DURATION 60 MINUTES	/// How long the deathmark lasts once it lands. Dying inside it is permanent for the round.

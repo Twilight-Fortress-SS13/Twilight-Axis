@@ -1,0 +1,156 @@
+#define ERP_SCENE_AROUSAL_MULT 1.90
+#define ERP_SCENE_PAIN_MULT_PASSIVE 3.00
+#define ERP_SCENE_PAIN_MULT_ACTIVE 0.50
+
+#define INIT_OXYLOSS_MULT	1
+#define TARGET_OXYLOSS_MULT	1.5
+
+/datum/erp_scene_effects
+	var/datum/erp_controller/controller
+
+/datum/erp_scene_effects/New(datum/erp_controller/C)
+	. = ..()
+	controller = C
+
+/// Applies tick effects (arousal/pain/inject) for active links.
+/datum/erp_scene_effects/proc/apply_scene_effects(list/active_links, datum/erp_sex_link/best, dt)
+	if(!islist(active_links) || !active_links.len)
+		return
+
+	var/n = 0
+	var/sum_force = 0
+	var/sum_speed = 0
+
+	var/a_arousal_sum = 0
+	var/p_arousal_sum = 0
+	var/a_pain_sum = 0
+	var/p_pain_sum = 0
+	for(var/datum/erp_sex_link/L in active_links)
+		if(!L || QDELETED(L) || !L.is_valid())
+			continue
+
+		n++
+		controller._note_knot_activity_from_link(L)
+
+		var/f = clamp(round(L.force || SEX_FORCE_MID), SEX_FORCE_LOW, SEX_FORCE_EXTREME)
+		var/s = clamp(round(L.speed || SEX_SPEED_MID), SEX_SPEED_LOW, SEX_SPEED_EXTREME)
+
+		sum_force += f
+		sum_speed += s
+
+		var/list/r = L.action?.calc_effect(L)
+		if(r)
+			var/arA = r[ERP_ACTION_ACTIVE_AROUSAL]
+			var/arP = r[ERP_ACTION_PASSIVE_AROUSAL]
+			var/paA = r[ERP_ACTION_ACTIVE_PAIN]
+			var/paP = r[ERP_ACTION_PASSIVE_PAIN]
+
+			if(!isnum(arA))
+				arA = r[ERP_ACTION_LEGACY_AROUSAL] || 0
+			if(!isnum(arP))
+				arP = r[ERP_ACTION_LEGACY_AROUSAL] || 0
+			if(!isnum(paA))
+				paA = r[ERP_ACTION_LEGACY_PAIN] || 0
+			if(!isnum(paP))
+				paP = r[ERP_ACTION_LEGACY_PAIN] || 0
+
+			a_arousal_sum += arA
+			p_arousal_sum += arP
+
+			if(f > SEX_FORCE_MID)
+				var/active_pain_mult = 1
+				var/passive_pain_mult = 1
+				var/str_active = L.actor_active ? L.actor_active.get_strength() : 10
+				var/self_mult = max(0, (10 - str_active) / 2)
+				if(L.actor_active == L.actor_passive)
+					active_pain_mult = self_mult
+					passive_pain_mult = self_mult
+				else
+					passive_pain_mult = self_mult
+
+				if(isnum(paA) && paA != 0)
+					var/datum/erp_sex_organ/Oa = L.init_organ
+					if(Oa && !QDELETED(Oa))
+						Oa.add_pain(paA * active_pain_mult)
+						paA *= Oa.pain
+						if(f >= SEX_FORCE_EXTREME)
+							Oa.adjust_trauma(Oa.pain)
+
+				if(isnum(paP) && paP != 0)
+					var/datum/erp_sex_organ/Op = L.target_organ
+					if(Op && !QDELETED(Op))
+						Op.add_pain(paP * passive_pain_mult)
+						paP *= Op.pain
+						if(f >= SEX_FORCE_EXTREME)
+							Op.adjust_trauma(Op.pain)
+
+				a_pain_sum += paA
+				p_pain_sum += paP
+
+				
+
+		if(L.action && L.action.inject_timing == INJECT_CONTINUOUS)
+			L.action.handle_inject(L, null)
+
+		if(L.init_organ?.erp_organ_type == SEX_ORGAN_MOUTH)
+			L.init_organ.apply_contact_effect(L, INIT_OXYLOSS_MULT)
+
+		if(L.target_organ?.erp_organ_type == SEX_ORGAN_MOUTH)
+			L.target_organ.apply_contact_effect(L, TARGET_OXYLOSS_MULT)
+
+	if(n <= 0)
+		return
+
+	var/avg_force = clamp(round(sum_force / n), SEX_FORCE_LOW, SEX_FORCE_EXTREME)
+	var/avg_speed = clamp(round(sum_speed / n), SEX_SPEED_LOW, SEX_SPEED_EXTREME)
+
+	var/a_arousal = (a_arousal_sum / n) * ERP_SCENE_AROUSAL_MULT
+	var/p_arousal = (p_arousal_sum / n) * ERP_SCENE_AROUSAL_MULT
+
+	var/a_pain = (a_pain_sum / n) * ERP_SCENE_PAIN_MULT_ACTIVE
+	var/p_pain = (p_pain_sum / n) * ERP_SCENE_PAIN_MULT_PASSIVE
+
+	var/mob/living/ma = best?.actor_active?.get_effect_mob()
+	var/mob/living/mp = best?.actor_passive?.get_effect_mob()
+
+	if(best?.actor_active == best?.actor_passive)
+		a_arousal += p_arousal
+		a_pain += p_pain
+
+	if(best?.actor_active)
+		var/multA = controller.inject_d.rel_mult_for(ma, mp)
+		best.actor_active.apply_erp_effect(a_arousal * multA, a_pain, TRUE, avg_force, avg_speed, null)
+
+	if(best?.actor_passive && best?.actor_active != best?.actor_passive)
+		var/multP = controller.inject_d.rel_mult_for(mp, ma)
+		best.actor_passive.apply_erp_effect(p_arousal * multP, p_pain, FALSE, avg_force, avg_speed, null)
+
+	apply_training(active_links)
+
+/// Returns average force/speed for active links.
+/datum/erp_scene_effects/proc/get_scene_force_speed_avg(list/active_links)
+	var/n = 0
+	var/sum_force = 0
+	var/sum_speed = 0
+
+	for(var/datum/erp_sex_link/L in active_links)
+		if(!L || QDELETED(L) || !L.is_valid())
+			continue
+		n++
+		sum_force += (L.force || 0)
+		sum_speed += (L.speed || 0)
+
+	if(!n)
+		return list("force" = SEX_FORCE_MID, "speed" = SEX_SPEED_MID)
+
+	return list(
+		"force" = clamp(round(sum_force / n), SEX_FORCE_LOW, SEX_FORCE_EXTREME),
+		"speed" = clamp(round(sum_speed / n), SEX_SPEED_LOW, SEX_SPEED_EXTREME),
+	)
+
+#undef ERP_SCENE_AROUSAL_MULT
+#undef ERP_SCENE_PAIN_MULT_PASSIVE
+#undef ERP_SCENE_PAIN_MULT_ACTIVE
+
+#undef INIT_OXYLOSS_MULT
+#undef TARGET_OXYLOSS_MULT

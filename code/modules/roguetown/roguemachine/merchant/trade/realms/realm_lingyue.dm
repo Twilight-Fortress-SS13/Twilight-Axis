@@ -1,6 +1,6 @@
 /datum/foreign_realm/lingyue
 	id = REALM_LINGYUE
-	name = "Lingyue"
+	name = "Gyedzai" //TA EDIT
 	roll_weight = TRADE_REALM_WEIGHT_DISTANT
 	demanded_categories = list(NAVIGATOR_BUCKET_WEAPONS, NAVIGATOR_BUCKET_ARMOR_LIGHT, NAVIGATOR_BUCKET_GARMENT_FINELUX, NAVIGATOR_BUCKET_POTIONS_REAGENTS, NAVIGATOR_BUCKET_ENCHANTMENTS, NAVIGATOR_BUCKET_INSTRUMENTS, NAVIGATOR_BUCKET_SEAFOOD, NAVIGATOR_BUCKET_VALUABLES_CRAFTED, NAVIGATOR_BUCKET_MISCELLANEOUS)
 	single_word_base = TRUE
@@ -104,20 +104,20 @@
 		/datum/supply_pack/rogue/alcohol/truewhipwine,
 	)
 	hail_lines = list(
-		"Greetings from the Xinyi court of Shenzhou. My manifest is sealed by the Ministry of Trade. Honor the seal and we shall conclude this with grace.",
-		"Silk, tea, and rice in lawful quantity; cinnabar and gold in lesser measure. Inspect what you must - my scribe's brushwork is honest.",
-		"By Judicious Ravox and Great Caishen, my weights are true. To insult one is to insult both - I would not advise it.",
-		"I am Shizu by examination, factor. Eight characters of literary canon and four schools of magic at the brush. Speak plainly - I have neither time nor inclination for haggling.",
-		"My ship bears the chop of the Imperial Court. Lesser seals you may see in my hold - the Huazu prefer that we acknowledge them. Acknowledge me first.",
-		"A typhoon caught us off the Asemai - the same storm that struck the islands four yils past, they say. Saidun's blindfold slips sometimes. Pay fairly for what reached you.",
-		"My cargo of enchanted scrolls is sealed beneath three locks and one charm. Buy them or do not, but do not ask to inspect them. Saidun watches.",
-		"The lucky cat at my prow is Tabaxi, not idol. She earns her wages. Do not let your priests stare too long; she earns her wages from Caishen, who is jealous of attention.",
-		"My passenger is a wandering monk of Eora's universal compassion. He pays his own passage in charity & merits, not coin. Mind him as you would any holy beggar - I do.",
-		"I bring news from the Chengtian rebellion - the heartland still burns. Trade now, factor; the next ship from Lingyue may not be Xinyi at all.",
-		"A scribe in my retinue dreamt of this very harbor before we sighted it. He named your magistrate by his given name. The Undercourt records every utterance - I would have us done quickly.",
-		"There is a passenger in white robes who pays in jade and does not eat or sleep. The crew thinks her one of Necra's many aspects. Take her coin first.",
-		"Mark me - I am Zou by lineage, and that name still means something on the mainland, even if the eastern overlords would have it otherwise. Trade with my house, not with the hand on its shoulder.",
-		"My grandfather's grandfather served Yuanzhao before the Schism. We have outlived two dynasties and an invasion. Your Duchy does not impress me.",
-		"I bring with me a masseur trained in the ancient art of medical massage. Did you know your body has twenty-four meridian points, and he can strike the twenty-fifth? For only a zenny he will show his skill with hot stones and cup, for three hours. Pay him and you will experience Saidun's heaven on Psydonia ten thousand yils early. Just remember to send him back before we undock - he has been left behind in two ports already. I would not like to turn my ship back a third time.",
-		"Ah! Azurian fishes and crabs! Legendary, I know at least twenty housewives and househusbands who would kill for a taste of them. I have a runic chest from Shenzhou to preserve them for the journey home. Now, excuse me, I would like, uhhh, ...three salmon of twenty catty, and - oh, oh, before I forget - one salmon of forty-five catty, the prettiest one, the one you were saving, yes that one, for Magistrate Chan, who counts cargo with his eyes and his eyes, you understand, can be occupied. And one crab. The biggest crab. Sixty catty, claws bound but not too tightly, Ms. Wen likes a little fight in them, she has prepared a tank. A tank, friend. The woman has prepared a tank. And - wait, wait - six smaller crabs, ten catty each, for the housewives who only think they want the big one, because none of them have a tank, none of them, I have asked. Also ice. Do you have ice? The runic chest is good but ice is better, ice is insurance, and Magistrate Chan's salmon must arrive looking like it leaped fresh out of the river."
-	)
+		"Write it in your ledgers: I sail under no warlord's banner. My keel is old Gyedzai, my chop is my clan's, and Saon himself can balance the account if any man doubts it.",
+		"You see ten kingdoms squabbling over a corpse; I see ten markets fighting to outpay each other. Speak to me of embargoes when our princes agree on a single calendar.",
+		"These bales crossed three straits and two pirate flags. Once the corsairs read my clan mark, they charged a toll instead of a ransom. That is the difference between a name and a rumor.",
+		"Our astrologer traced this voyage on the night‑sky tables long before your harbor lights appeared. The stars over Gyedzai do not lie – they merely charge a fee in incense and good ink.",
+		"Do not mistake a divided throne for a weak hull. The princes may gnaw each other's borders, but their coins jingle the same when they land in my counting bowl.",
+		"I keep three sets of scrolls – one for the tax‑clerks of the coast, one for the sea‑lords, and one for myself. The first two are for show. The third is the only one Saon will read.",
+		"Your harbor banners change with every new rebellion. My flag has not changed since Yuanzhao's day. When the Schism passes into legend, my house mark will still be painted on hulls.",
+		"In Gyedzai we say: 'A wise man trusts the scales, a fool trusts the oath, and a dead man trusts the prince.' I have brought you scales. Oaths and princes you must provide yourself.",
+		"I have freighted offerings for three different courts that all claim to be the Heart of Gyedzai. Let them argue over whose shrine gets more lacquer. My concern is whose treasurer pays on time.",
+		"These ceramics are from a kiln that changed hands five times in one war. The potters kept working, the generals kept dying, and the clay never once asked whose side it was on.",
+		"Your customs man quotes edicts as if they were tides. Tides I can trust. Edicts wash away with the next failed campaign and the next son who calls himself 'restorer of unity'.",
+		"You ask if my crew are loyal. They have survived blockades in the Inner Sea and famine levies on the mainland. If hunger did not buy them, your coins certainly will not.",
+		"The saost scholars say the world turns on balance: duty against profit, honor against survival. I say a good captain learns which side of the scale he can afford to let touch the water.",
+		"Your duke fancies himself a patron of eastern culture? Then let him patronize my ledger. Gyedzai silk on his shoulders will speak more eloquently than any envoy he can afford.",
+		"I carry letters sealed by three rival courts, each warning me not to trade with the other two. I keep them together in one box – they make a fine cushion for hard coin.",
+		"Do not haggle with a man whose homeland is at war with itself. I have learned every trick of survival from our own princes; your market squabbles are children's play in comparison."
+	) //TA EDIT

@@ -65,7 +65,8 @@ Balloon Alert / Floating Text defines
 	/datum/species/goblinp,\
 	/datum/species/dullahan,\
 	/datum/species/ooze,\
-	/datum/species/dwarf/gnome\
+	/datum/species/dwarf/gnome,\
+	/datum/species/aura,\
 )
 
 #define RACES_RESPECTED \
@@ -79,7 +80,8 @@ Balloon Alert / Floating Text defines
 	/datum/species/vulpkanin,\
 	/datum/species/moth,\
 	/datum/species/dracon,\
-	/datum/species/dwarf/gnome\
+	/datum/species/dwarf/gnome,\
+	/datum/species/aura,\
 
 #define RACES_RESPECTED_NO_AASIMAR \
 	/datum/species/human/northern,\
@@ -102,6 +104,8 @@ Balloon Alert / Floating Text defines
 	/datum/species/anthromorph,\
 	/datum/species/demihuman,\
 	/datum/species/halforc,\
+	/datum/species/aura,\
+
 
 #define RACES_SHUNNED \
 	/datum/species/anthromorphsmall,\
@@ -228,6 +232,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/demihuman,\
 	/datum/species/halforc,\
 	/datum/species/dullahan,\
+	/datum/species/construct/metal,\
 
 
 // All but Dracon, Lizardfolk, Kobolds.
@@ -278,6 +283,8 @@ Balloon Alert / Floating Text defines
 	/datum/species/demihuman,\
 	/datum/species/kobold,\
 	/datum/species/goblinp,\
+	/datum/species/construct/metal,\
+	/datum/species/aura,\
 )
 
 #define CLOTHED_RACES_TYPES list(\
@@ -307,7 +314,8 @@ Balloon Alert / Floating Text defines
 	/datum/species/construct/metal,\
 	/datum/species/dullahan,\
 	/datum/species/dwarf/gnome,\
-	/datum/species/ooze\
+	/datum/species/ooze,\
+	/datum/species/aura,\
 )
 // Non-dwarf non-kobold non-goblin mostly
 #define NON_DWARVEN_RACE_TYPES list(\
@@ -332,6 +340,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/construct/metal,\
 	/datum/species/dullahan,\
 	/datum/species/ooze,\
+	/datum/species/aura,\
 )
 // Non-elf non-dwarf non-kobold non-goblin mostly
 #define HUMANLIKE_RACE_TYPES list(\
@@ -350,6 +359,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/construct/metal,\
 	/datum/species/dullahan,\
 	/datum/species/ooze,\
+	/datum/species/aura,\
 )
 
 /*Used for races that won't break the game completely if an NPC picks from this listing - Or look terrible like, really, really terrible.
@@ -612,3 +622,22 @@ GLOBAL_LIST_EMPTY(round_join_times)
 #define ARMOR_MAT_PLATE 1
 #define ARMOR_MAT_LEATHER 2
 #define ARMOR_MAT_CHAINMAIL 3
+
+/*
+	Formerly bitflags, now we are strings
+	Currently used for classes
+*/
+
+// ENIGMA - ROCKHILL ROLES
+
+#define CTAG_ROYALGUARD_ENIGMA "CAT_ROYALGUARD_ENIGMA"
+#define CTAG_ROYALKNIGHT "CAT_ROYALKNIGHT"
+#define CTAG_ROYALSERGEANT "CAT_ROYALSERGEANT"
+#define CTAG_SHERIFF "CAT_SHERIFF"			
+#define CTAG_TOWN_WATCH "CAT_TOWN_WATCH"
+#define CTAG_VANGUARD "CAT_VANGUARD"
+#define CTAG_OVERSEER "CAT_OVERSEER"
+#define CTAG_DUNGEONEER "DUNGEONEER"
+#define CTAG_COURTPHYSICIAN "COURTPHYSICIAN"
+#define CTAG_MAYOR "MAYOR"
+#define CTAG_BAILIFF "BAILIFF"

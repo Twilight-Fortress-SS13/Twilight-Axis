@@ -2,15 +2,18 @@
 #define REALM_GRENZELHOFT "grenzelhoft"
 #define REALM_OTAVA "otava"
 #define REALM_KAZENGUN "kazengun"
-#define REALM_HAMMERHOLD "hammerhold"
+#define REALM_HAMMERHOLD "drud akhdruk" //TA EDIT
 #define REALM_ETRUSCA "etrusca"
 #define REALM_GRONN "gronn"
 #define REALM_LIRVAS "lirvas"
-#define REALM_LINGYUE "lingyue"
+#define REALM_LINGYUE "gyedzai" //TA EDIT
 #define REALM_NALEDI "naledi"
 #define REALM_RANESHEN "raneshen"
 #define REALM_AZURIA "azuria"
 #define REALM_UNDERDARK "underdark"
+#define REALM_ZYBANTU "zybantu" //TA EDIT
+#define REALM_VALORIA "valoria" //TA EDIT
+#define REALM_HAMMERHOLD_TA "hammerhold" //TA EDIT
 
 #define TRADE_SHIP_DOCK_DURATION (60 MINUTES)
 #define TRADE_SHIP_SEND_AWAY_GRACE (20 MINUTES)

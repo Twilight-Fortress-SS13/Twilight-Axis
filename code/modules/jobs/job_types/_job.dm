@@ -74,6 +74,7 @@
 	//allowed sex/race for picking
 	var/list/allowed_sexes = list(MALE, FEMALE)
 	var/list/forbidden_races
+	var/list/allowed_races // TA EDIT
 	var/list/allowed_patrons
 	var/list/allowed_ages = ALL_AGES_LIST
 
@@ -88,6 +89,7 @@
 	var/whitelist_req = FALSE
 
 	var/bypass_jobban = FALSE
+	var/bypass_lastclass = TRUE
 
 	var/list/peopleiknow = list()
 	var/list/peopleknowme = list()
@@ -152,6 +154,7 @@
 
 	var/list/virtue_restrictions
 	var/list/vice_restrictions
+	var/list/origin_requirement //TA EDIT
 
 	///The job's stats
 	var/list/job_stats
@@ -194,30 +197,80 @@
 		return
 	if(!prefs.job_subprefs || !islist(prefs.job_subprefs))
 		prefs.job_subprefs = list()
-	if(!prefs.job_subprefs[title])
-		prefs.job_subprefs[title] = default_subprefs.Copy()
-	return prefs.job_subprefs[title]
+	if(!islist(prefs.job_subprefs[title]))
+		prefs.job_subprefs[title] = islist(default_subprefs) ? default_subprefs.Copy() : list()
+	var/list/roleprefs = prefs.job_subprefs[title]
+	if(length(job_subclasses))
+		var/preferred_subclass = prefs.job_subclass_preferences[title]
+		if(preferred_subclass)
+			var/preferred_subclass_path
+			for(var/subclass_path in job_subclasses)
+				var/datum/advclass/subclass_type = subclass_path
+				if(initial(subclass_type.name) != preferred_subclass)
+					continue
+				preferred_subclass_path = subclass_path
+				break
+			if(preferred_subclass_path)
+				roleprefs["favorite_advclass"] = preferred_subclass_path
+			else
+				prefs.job_subclass_preferences -= title
+				prefs.job_subclass_strict -= title
+				roleprefs["favorite_advclass"] = null
+		else
+			roleprefs["favorite_advclass"] = null
+	return roleprefs
+
+/datum/job/proc/subprefs_subclass_html(client/C)
+	if(!C?.prefs)
+		return ""
+	if(!advclass_cat_rolls && !length(job_subclasses))
+		return ""
+	var/datum/preferences/prefs = C.prefs
+	var/list/roleprefs = get_roleprefs(C)
+	var/preferred_name = prefs.job_subclass_preferences[title]
+	if(!preferred_name)
+		var/favorite_advclass = roleprefs?["favorite_advclass"]
+		if(favorite_advclass)
+			var/datum/advclass/favorite_type = favorite_advclass
+			preferred_name = initial(favorite_type.name)
+	var/strict_text = prefs.job_subclass_strict[title] ? "Strict" : "Prefer"
+	var/display_name = preferred_name || "Choose"
+	var/HTML = "<b>Preferred subclass:</b> <a href='?src=[REF(src)];class=1'>[display_name]</a>"
+	if(preferred_name)
+		HTML += " <a href='?src=[REF(src)];subclassclear=1'>Clear</a><br/>"
+		if(length(job_subclasses))
+			HTML += "<b>Fallback mode:</b> <a href='?src=[REF(src)];subclassstrict=1'>[strict_text]</a><br/>"
+			HTML += prefs.job_subclass_strict[title] ? "<i>If this subclass is unavailable, skip this role.</i><br/><br/>" : "<i>If this subclass is unavailable, another subclass may be used.</i><br/><br/>"
+	else
+		HTML += "<br/><br/>"
+	return HTML
 
 /datum/job/proc/update_subprefs_window(mob/user)
-	if(!advclass_cat_rolls)
+	if(!advclass_cat_rolls && !length(job_subclasses))
 		return
-	var/client/C = usr.client
+	var/client/C = user.client
 	if(!C || !C.prefs)
 		return
-	var/list/roleprefs = get_roleprefs(C)
-	var/datum/advclass/favorite = roleprefs["favorite_advclass"]
-	var/favorite_name = favorite ? favorite::name : "Choose"
+	get_roleprefs(C)
 	var/HTML = {"
-		<i>You can choose a favorite subclass here. You'll automatically select this subclass on roundstart if possible.</i><br/><br/>
-		<b>Selected class:</b> <a href="?src=[REF(src)];class=1">[favorite_name]</a>
+		[subprefs_subclass_html(C)]
 		<center><a href="?src=[REF(src)];subprefsexit=1">EXIT</a>\t\t<a href="?src=[REF(src)];subprefsreset=1">RESET</a></center>
 	"}
 	// the fact that the window width/height will be different each time is the main reason this isn't all done in a parent proc on /datum/job
-	var/datum/browser/popup = new(user, "[JOB_SUBPREFS_WINDOW_ID]", "<div align='center'>[title] Preferences</div>", 500, 250)
+	var/datum/browser/popup = new(user, "[JOB_SUBPREFS_WINDOW_ID]", "<div align='center'>[title] Preferences</div>", 500, 300)
 	popup.set_content(HTML)
 	popup.open(FALSE)
 	if(winexists(usr, "[JOB_SUBPREFS_WINDOW_ID]"))
 		winset(usr, "[JOB_SUBPREFS_WINDOW_ID]", "focus=true")
+
+// TA EDIT BEGIN
+/datum/job/New()
+	..()
+	if(length(allowed_races))
+		if(!forbidden_races)
+			forbidden_races = list()
+		forbidden_races |= (ALL_RACES_TYPES - allowed_races)
+// TA EDIT END
 
 /proc/is_quest_claim_barred(mob/user)
 	if(!user?.mind)
@@ -247,6 +300,26 @@
 
 /datum/job/proc/uses_storyteller_slot_caps()
 	return title in list("Wretch", "Gnoll", "Assassin")
+
+/datum/job/proc/validate_prefs_for_job(datum/preferences/P) //TA EDIT START
+	if(!P) return FALSE
+	if(length(forbidden_races) && (P.pref_species.type in forbidden_races)) return FALSE
+	if(length(allowed_patrons) && !(P.selected_patron.type in allowed_patrons)) return FALSE
+	if(length(allowed_ages) && !(P.age in allowed_ages)) return FALSE
+	if(length(allowed_sexes) && !(P.gender in allowed_sexes)) return FALSE
+
+	if(length(virtue_restrictions) && ((P.virtue.type in virtue_restrictions) || (P.virtuetwo?.type in virtue_restrictions) || (P.virtue_origin?.type in virtue_restrictions)))
+		return FALSE
+
+	if(length(vice_restrictions))
+		for(var/flaw_type in P.charflaws)
+			if(flaw_type in vice_restrictions)
+				return FALSE
+
+	if(length(origin_requirement) && !(P.virtue_origin?.type in origin_requirement))
+		return FALSE
+
+	return TRUE //TA EDIT END
 
 /datum/job/proc/get_used_title(mob/player)
 	var/titles = player.titles_pref
@@ -282,6 +355,13 @@
 
 	if(!ishuman(H))
 		return
+
+	var/mob_name = H.real_name
+	if(!mob_name || mob_name == "DELETED")
+		if(H.mind?.name && H.mind.name != "DELETED")
+			mob_name = H.mind.name
+		else if(M && M.client && M.client.prefs && M.client.prefs.real_name)
+			mob_name = M.client.prefs.real_name
 
 	if(spells && H.mind)
 		for(var/S in spells)
@@ -326,8 +406,7 @@
 		var/used_title = display_title || title
 		if((H.titles_pref == TITLES_F) && f_title)
 			used_title = f_title
-		scom_announce("[H.real_name] the [used_title] arrives to Azure Peak.")
-
+		scom_announce("[mob_name] the [used_title] arrives to [SSticker.realm_name].")
 	if(give_bank_account)
 		if(give_bank_account > TRUE)
 			SStreasury.create_bank_account(H, give_bank_account)
@@ -343,9 +422,7 @@
 
 	if(cmode_music)
 		H.cmode_music = cmode_music
-
 	if (!hidden_job)
-		var/mob_name = H.real_name
 		var/mob_rank
 		if (obfuscated_job)
 			mob_rank = "Adventurer"
@@ -356,7 +433,7 @@
 	if(islist(advclass_cat_rolls))
 		hugboxify_for_class_selection(H)
 
-	log_admin("[H.key]/([H.real_name]) has joined as [H.mind.assigned_role].")
+	log_admin("[M.key]/([mob_name]) has joined as [H.mind.assigned_role].") // TA EDIT
 
 /// Sets the ready-up repair kit stash entry based on the mob's current armor traits.
 /// Safe to call multiple times — later calls overwrite earlier ones, so loadout-based armor picks can re-run this to upgrade the kit after choose_loadout finishes.
@@ -592,6 +669,13 @@
 				for(var/stat in adv_ref.adv_stat_ceiling)
 					dat += "["[capitalize(stat)]: <b>\Roman[adv_ref.adv_stat_ceiling[stat]]</b>"] | "
 				dat += "<i><br>Regardless of your statpacks or race choice, you will not be able to exceed these stats on spawn.</i></font>"
+			if(length(adv_ref.origin_limits)) //TA EDIT START
+				dat += "["<br><font color = '#cf2a2a'><b>This subclass requires one of the following origins: "]</b></font><br>"
+				dat += " | "
+				for(var/orig in adv_ref.origin_limits)
+					var/datum/virtue/origin/origin = orig
+					dat += "[origin.name] | "
+				dat += "<i><br>Choosing this subclass with any other origin will enforce a compatiable origin on spawn.</i></font>" //TA EDIT END
 			if(LAZYLEN(adv_ref.subclass_mage_aspects))
 				var/list/aspect_cfg = adv_ref.subclass_mage_aspects
 				dat += "<font color = '#a3a7e0'><b>Mage Aspects:</b><br>"
@@ -767,7 +851,7 @@
 		update_subprefs_window(usr)
 	if(href_list["subprefsexit"])
 		usr << browse(null, "window=[JOB_SUBPREFS_WINDOW_ID]") // close subprefs window
-	if(!advclass_cat_rolls)
+	if(!advclass_cat_rolls && !length(job_subclasses))
 		return
 	var/client/C = usr.client
 	if(!C)
@@ -775,24 +859,72 @@
 	var/datum/preferences/prefs = C.prefs
 	if(!prefs)
 		return
-	if(!prefs.job_subprefs || !islist(prefs.job_subprefs))
-		prefs.job_subprefs = list()
-	if(!prefs.job_subprefs[title])
-		prefs.job_subprefs[title] = default_subprefs.Copy()
-	var/list/roleprefs = prefs.job_subprefs[title]
+	var/list/roleprefs = get_roleprefs(C)
+	if(!roleprefs)
+		return
 
 	if(href_list["class"])
 		var/list/class_sel = list()
-		for(var/ctag in advclass_cat_rolls)
-			var/list/subsystem_ctag_list = SSrole_class_handler.sorted_class_categories[ctag]
-			for(var/datum/advclass/advdatum in subsystem_ctag_list)
-				class_sel[advdatum.name] = advdatum.type
-		var/input = class_sel[tgui_input_list(usr, "What path do your talents follow?", "Subclass Select", class_sel)]
-		if(input)
-			roleprefs["favorite_advclass"] = input
+		var/datum/preferences/character_prefs = prefs.get_job_prefs(title)
+		if(length(job_subclasses))
+			for(var/subclass_path in job_subclasses)
+				var/datum/advclass/subclass_type = subclass_path
+				var/datum/advclass/subclass = SSrole_class_handler.get_advclass_by_name(initial(subclass_type.name))
+				if(!subclass)
+					continue
+				if(!subclass.check_preferences_requirements(character_prefs, C, FALSE, FALSE))
+					continue
+				class_sel[subclass.name] = subclass_path
+		else
+			for(var/ctag in advclass_cat_rolls)
+				var/list/subsystem_ctag_list = SSrole_class_handler.sorted_class_categories[ctag]
+				for(var/datum/advclass/advdatum in subsystem_ctag_list)
+					if(!advdatum.check_preferences_requirements(character_prefs, C, FALSE, FALSE))
+						continue
+					class_sel[advdatum.name] = advdatum.type
+		if(!length(class_sel))
+			to_chat(usr, span_warning("No compatible subclasses are available for [title]."))
+			update_subprefs_window(usr)
+			return
+		var/default_selection = prefs.job_subclass_preferences[title]
+		if(!default_selection)
+			var/favorite_advclass = roleprefs["favorite_advclass"]
+			if(favorite_advclass)
+				var/datum/advclass/favorite_type = favorite_advclass
+				default_selection = initial(favorite_type.name)
+		var/selection = tgui_input_list(usr, "What path do your talents follow?", "Subclass Select", class_sel, default_selection)
+		var/selected_path = class_sel[selection]
+		if(selected_path)
+			roleprefs["favorite_advclass"] = selected_path
+			if(length(job_subclasses))
+				var/datum/advclass/selected_type = selected_path
+				prefs.job_subclass_preferences[title] = initial(selected_type.name)
+			prefs.save_character()
 		update_subprefs_window(usr)
+		return
+	if(href_list["subclassclear"])
+		roleprefs["favorite_advclass"] = null
+		prefs.job_subclass_preferences -= title
+		prefs.job_subclass_strict -= title
+		prefs.save_character()
+		update_subprefs_window(usr)
+		return
+	if(href_list["subclassstrict"])
+		if(prefs.job_subclass_preferences[title])
+			if(prefs.job_subclass_strict[title])
+				prefs.job_subclass_strict -= title
+			else
+				prefs.job_subclass_strict[title] = TRUE
+			prefs.save_character()
+		update_subprefs_window(usr)
+		return
+
 	if(href_list["subprefsreset"])
-		prefs.job_subprefs[title] = default_subprefs.Copy()
+		var/favorite_advclass = roleprefs["favorite_advclass"]
+		prefs.job_subprefs[title] = islist(default_subprefs) ? default_subprefs.Copy() : list()
+		if(favorite_advclass)
+			prefs.job_subprefs[title]["favorite_advclass"] = favorite_advclass
+		prefs.save_character()
 		update_subprefs_window(usr)
 	. = ..()
 
@@ -857,7 +989,7 @@
 		"class_setup_examine" = class_setup_examine,
 		"tutorial" = tutorial,
 		"round_contrib_points" = round_contrib_points,
-		"has_subprefs" = has_subprefs,
+		"has_subprefs" = has_subprefs || length(job_subclasses) || length(advclass_cat_rolls),
 	)
 
 

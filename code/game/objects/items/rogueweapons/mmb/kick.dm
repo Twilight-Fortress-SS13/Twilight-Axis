@@ -24,9 +24,28 @@
 
 /// Performs a kick. Used by the kick MMB intent. Returns TRUE if a kick was performed.
 /mob/living/proc/try_kick(atom/A)
+
+	if(ismob(A) && HAS_TRAIT(A, "ethereal"))//TA EDIT
+		to_chat(src, span_warning("My foot passes right through the mist!"))
+		return FALSE
+
+	var/atom/target = get_kick_target(A) // TA EDIT START
+	var/uses_ball_recovery = target?.uses_ball_kick_recovery()
+	if(uses_ball_recovery && has_status_effect(STATUS_EFFECT_BALL_KICK_RECOVERY))
+		to_chat(src, span_warning("I haven't regained my balance yet."))
+		return FALSE // TA EDIT END
+
 	if(!can_kick(A))
 		return FALSE
-	changeNext_move(mmb_intent.clickcd)
+
+	if(uses_ball_recovery) // TA EDIT START
+		var/ball_kick_cooldown = target.get_kick_cooldown(src)
+		if(isnum(ball_kick_cooldown) && ball_kick_cooldown > 0)
+			SetBallKickRecovery(ball_kick_cooldown)
+			changeNext_move(ball_kick_cooldown, override = TRUE)
+	else
+		changeNext_move(mmb_intent.clickcd) // TA EDIT END
+
 	face_atom(A)
 	SEND_SIGNAL(src, COMSIG_MOB_ON_KICK)
 	playsound(src, pick(PUNCHWOOSH), 100, FALSE, -1)
@@ -34,12 +53,6 @@
 	if(mmb_intent) // why this would be null and not INTENT_KICK i have no clue, but the check already existed
 		do_attack_animation_simple(A, visual_effect_icon = mmb_intent.animname)
 
-	var/atom/target = A
-	if(isturf(A))
-		for(var/mob/living/M in A)
-			target = M
-			break
-	// but the rest of the logic is pretty much mob-only
 	if(ismob(target) && mmb_intent)
 		var/mob/living/M = target
 		sleep(mmb_intent.swingdelay)
@@ -61,7 +74,24 @@
 		else
 			M.onkick(src)
 	else
-		target.onkick(src)
+		var/kick_result = target.onkick(src) // TA EDIT START
+		if(uses_ball_recovery)
+			if(!kick_result)
+				remove_status_effect(STATUS_EFFECT_BALL_KICK_RECOVERY)
+				return FALSE
+			if(isnum(kick_result) && kick_result > 0)
+				SetBallKickRecovery(kick_result)
+				changeNext_move(kick_result, override = TRUE)
+			return TRUE
+		if(isnum(kick_result))
+			changeNext_move(kick_result, override = TRUE)
+			return TRUE
+		else if(islist(kick_result))
+			var/list/kick_result_data = kick_result
+			var/custom_kick_cooldown = kick_result_data["cooldown"]
+			if(isnum(custom_kick_cooldown))
+				changeNext_move(custom_kick_cooldown, override = TRUE)
+				return TRUE // TA EDIT END
 	OffBalance(3 SECONDS)
 	return TRUE
 

@@ -35,20 +35,28 @@
 /datum/round_event/antagonist/solo/vampire
 	var/leader = FALSE
 
+/datum/round_event/antagonist/solo/vampire/setup() // TA EDIT START
+	..()
+	if(!setup || SSticker.HasRoundStarted() || SSgamemode?.roundstart_live)
+		return
+	for(var/datum/mind/antag_mind as anything in setup_minds)
+		var/mob/dead/new_player/player = antag_mind.current
+		if(!istype(player) || !antag_mind.assigned_role)
+			continue
+		var/datum/job/old_job = SSjob.GetJob(antag_mind.assigned_role)
+		if(old_job)
+			old_job.current_positions = max(old_job.current_positions - 1, 0)
+		SSrole_class_handler.clear_roundstart_subclass_state(player.ckey)
+		SSgamemode.roundstart_build_replacement_minds |= antag_mind // TA EDIT END
+
 /datum/round_event/antagonist/solo/vampire/add_datum_to_mind(datum/mind/antag_mind)
 	if(!leader)
-		var/datum/job/J = SSjob.GetJob(antag_mind.current?.job)
-		J?.current_positions = max(J?.current_positions-1, 0)
-		antag_mind.current.unequip_everything()
 		var/datum/antagonist/vampire/lord/lorde = new /datum/antagonist/vampire/lord()
 		antag_mind.add_antag_datum(lorde)
 		leader = TRUE
 		return
 	else
 		if(!antag_mind.has_antag_datum(antag_datum))
-			var/datum/job/J = SSjob.GetJob(antag_mind.current?.job)
-			J?.current_positions = max(J?.current_positions-1, 0)
-			antag_mind.current.unequip_everything()
 			var/datum/antagonist/vampire/servante = new /datum/antagonist/vampire(forced_clan = null, generation = GENERATION_ANCILLAE)
 			antag_mind.add_antag_datum(servante)
 			return

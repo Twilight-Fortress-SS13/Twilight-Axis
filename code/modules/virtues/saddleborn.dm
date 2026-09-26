@@ -29,7 +29,7 @@ GLOBAL_LIST_INIT(virtue_mount_choices_anthrax, (list(
 )))
 
 /datum/stressevent/precious_mob_died
-	timer = INFINITY
+	timer = 60 MINUTES //TA EDIT
 	stressadd = 10
 	desc = span_red("There will never be another creature like them. They are lost, and so am I.")
 
@@ -74,7 +74,7 @@ GLOBAL_LIST_INIT(virtue_mount_choices_anthrax, (list(
 	var/list/choices = list()
 
 	var/list/mount_choices = GLOB.virtue_mount_choices
-	if (HAS_TRAIT(user, TRAIT_NOBLE))
+	if (HAS_TRAIT(user, TRAIT_NOBLE) || user.job == "Man at Arms") //TA EDIT
 		to_chat(user, span_info("As an anointed noble, your steed can also come from pedigree stock."))
 		mount_choices += GLOB.virtue_mount_choices_noble
 	if (HAS_TRAIT(user, TRAIT_ANTHRAXI))
@@ -333,4 +333,3 @@ GLOBAL_LIST_INIT(virtue_mount_choices_anthrax, (list(
 		honse.visible_message(span_notice("[honse] trundles back into sight with a confused expression, ears swivelling to catch some manner of sound..."))
 		revert_cast()
 		return FALSE
-

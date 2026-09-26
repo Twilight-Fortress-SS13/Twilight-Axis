@@ -70,7 +70,12 @@
 	if(GLOB.say_disabled)	//This is here to try to identify lag problems
 		to_chat(usr, span_danger("Speech is currently admin-disabled."))
 		return
-	message = trim(copytext_char(sanitize(message), 1, MAX_MESSAGE_LEN))
+	
+	var/max_emote_length = MAX_MESSAGE_BIGME
+	if(src.client)
+		if(check_patreon_lvl(src.client.ckey))
+			max_emote_length *= 2
+	message = trim(copytext_char(sanitize(message), 1, max_emote_length))
 	message = parsemarkdown_basic(message, limited = TRUE, barebones = TRUE)
 	if(check_subtler(message, FALSE))
 		return
@@ -102,7 +107,12 @@
 	if(GLOB.say_disabled)	//This is here to try to identify lag problems
 		to_chat(usr, span_danger("Speech is currently admin-disabled."))
 		return
-	message = trim(copytext_char(html_encode(message), 1, MAX_MESSAGE_BIGME))
+
+	var/max_emote_length = MAX_MESSAGE_BIGME
+	if(src.client)
+		if(check_patreon_lvl(src.client.ckey))
+			max_emote_length *= 2
+	message = trim(copytext_char(html_encode(message), 1, max_emote_length))
 	message = parsemarkdown_basic(message, limited = TRUE, barebones = TRUE)
 	if(check_subtler(message, FALSE))
 		return
@@ -120,7 +130,13 @@
 		return 1
 
 /mob/proc/check_whisper(message, forced)
-	return 0
+	if(copytext_char(message, 1, 2) == "+")
+		var/text = copytext(message, 2)
+		var/boldcheck = findtext_char(text, "+")	//Check for a *second* + in the text, implying the message is meant to have something formatted as bold (+text+)
+		if (boldcheck != 0)
+			return 0
+		whisper(copytext_char(message, boldcheck ? 1 : 2),sanitize = FALSE)//already sani'd
+		return 1
 
 ///Check if the mob has a hivemind channel
 /mob/proc/hivecheck()

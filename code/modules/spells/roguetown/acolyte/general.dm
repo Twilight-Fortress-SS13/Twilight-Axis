@@ -108,7 +108,7 @@
 		to_chat(owner, span_warning("They are already under the effects of a healing aura!"))
 		return FALSE
 
-	owner.Beam(spelltarget,icon_state="lichbeam",time=1 SECONDS)
+	owner.Beam(spelltarget, icon_state = "lichbeam", time = 1 SECONDS)
 
 	// Vampires has no benefits from miracles
 	if(spelltarget.mind?.has_antag_datum(/datum/antagonist/vampire))
@@ -127,7 +127,7 @@
 	var/is_inhumen = FALSE
 
 	// Edit - This is overwritten near the end of the proc to prevent metagaming.
-	var/message_out = span_info("A choral sound comes from above and [target] is healed!")
+	var/message_out = span_info("A choral sound comes from above and [spelltarget] is healed!")
 	var/message_self = span_notice("I am bathed in healing choral hymns!")
 
 	H.patron.on_lesser_heal(owner, spelltarget, &message_out, &message_self, &conditional_buff, &situational_bonus, &is_inhumen)
@@ -224,12 +224,12 @@
 		playsound(spelltarget, 'sound/magic/PSY.ogg', 100, FALSE, -1)
 		return FALSE
 
-	owner.Beam(spelltarget,icon_state="lichbeam",time=1 SECONDS)
+	owner.Beam(spelltarget, icon_state = "lichbeam", time = 1 SECONDS)
 
 	if(H.patron?.undead_hater && (spelltarget.mob_biotypes & MOB_UNDEAD)) //positive energy harms the undead
 		spelltarget.visible_message(span_danger("[spelltarget] is burned by holy light!"), span_userdanger("I'm burned by holy light!"))
 		spelltarget.adjustFireLoss(25)
-		spelltarget.fire_act(1,10)
+		spelltarget.fire_act(1, 10)
 		return TRUE
 
 	spelltarget.visible_message(span_info("A wreath of gentle light passes over [spelltarget]!"), span_notice("I'm bathed in holy light!"))

@@ -189,7 +189,7 @@
 	if(other_players)
 		dat += "<BR><span class='danger'>[other_players] players in invalid state or the statistics code is bugged!</span>"
 	dat += "<br>"
-
+/*
 	// Job Scaling Summary
 	var/list/wretch_scaling = calculate_wretch_scaling()
 	var/datum/job/wretch_job = SSjob.GetJob("Wretch")
@@ -202,6 +202,7 @@
 	if(wretch_scaling["major_antag_active"])
 		dat += " | <font color='red'>MAJOR ANTAG - T2 LOCKED</font>"
 	dat += "<BR><b>Antag Cap:</b> [SSgamemode.get_antag_count()] / [SSgamemode.get_antag_cap()] (weight used / max)"
+*/
 	dat += "<br><br>"
 
 	dat += build_antag_listing()

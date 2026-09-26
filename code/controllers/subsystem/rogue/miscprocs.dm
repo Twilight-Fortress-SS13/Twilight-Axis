@@ -146,6 +146,9 @@
 						to_chat(holder, span_boldnotice("I have unlocked a new trait: [trait]"))
 					ADD_TRAIT(holder, trait, ROUNDSTART_TRAIT)
 
+					if(istype(patron, /datum/patron/old_god)) //TA EDIT START
+						run_psydon_updates(trait)
+
 GLOBAL_LIST_EMPTY(miracle_tiers)
 
 /proc/get_miracle_tier(miracle_type)
@@ -160,6 +163,28 @@ GLOBAL_LIST_EMPTY(miracle_tiers)
 					GLOB.miracle_tiers[mtype] = tier
 	return GLOB.miracle_tiers[miracle_type]
 
+/datum/devotion/proc/run_psydon_updates(trait)
+	if(!holder || !holder.mind)
+		return
+	if(trait == TRAIT_PSYDONITE_4)
+		REMOVE_TRAIT(holder, TRAIT_PSYDONITE_3, ROUNDSTART_TRAIT)
+		REMOVE_TRAIT(holder, TRAIT_PSYDONITE_2, ROUNDSTART_TRAIT)
+	else if(trait == TRAIT_PSYDONITE_3)
+		REMOVE_TRAIT(holder, TRAIT_PSYDONITE_2, ROUNDSTART_TRAIT)
+	//TA EDIT END
+
+/datum/devotion/proc/get_progression_requirement_for_tier(cleric_tier)
+	switch(cleric_tier)
+		if(CLERIC_T1)
+			return CLERIC_REQ_1
+		if(CLERIC_T2)
+			return CLERIC_REQ_2
+		if(CLERIC_T3)
+			return CLERIC_REQ_3
+		if(CLERIC_T4)
+			return CLERIC_REQ_4
+	return null
+
 //The main proc that distributes all the needed devotion tweaks to the given class.
 //cleric_tier		- The cleric tier that the holder will get spells of immediately.
 //passive_gain		- Passive devotion gain, if any, will begin processing this datum.
@@ -172,6 +197,11 @@ GLOBAL_LIST_EMPTY(miracle_tiers)
 	if(devotion_limit) //Upper devotion limit - Limits gain to that tier's miracles. Mostly used by Templars / Paladins.
 		max_devotion = devotion_limit
 		max_progression = devotion_limit
+	else if(cleric_tier > CLERIC_T0 && !start_maxed)
+		var/tier_limit = get_progression_requirement_for_tier(cleric_tier)
+		if(tier_limit)
+			max_devotion = tier_limit
+			max_progression = tier_limit
 	if(passive_gain)
 		passive_devotion_gain = passive_gain
 		passive_progression_gain = passive_gain

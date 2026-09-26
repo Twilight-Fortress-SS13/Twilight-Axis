@@ -69,7 +69,7 @@
 	save_stats()
 	set_stats()
 	greet()
-	return ..()
+	return .
 
 /datum/antagonist/lich/greet()
 	to_chat(owner.current, span_userdanger("An immortal king cries for new subjects. Subdue and conquer."))
@@ -109,7 +109,7 @@
 		owner.become_unknown_to(MF)
 
 	var/mob/living/carbon/human/L = owner.current
-	L.cmode_music = 'sound/music/combat_heretic.ogg'
+	L.cmode_music = 'modular_twilight_axis/sound/music/combat_lich.ogg' //TA_EDIT
 	L.faction = list(FACTION_UNDEAD)
 
 	for(var/datum/charflaw/cf in L.charflaws)

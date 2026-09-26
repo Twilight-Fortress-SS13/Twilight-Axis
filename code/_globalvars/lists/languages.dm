@@ -13,7 +13,8 @@ GLOBAL_LIST_INIT(languages_character_selection, list(
 	/datum/language/orcish,
 	/datum/language/hellspeak,
 	/datum/language/draconic,
-	/datum/language/celestial,
+	/datum/language/valorian, // TA EDIT
+	/datum/language/gyedzenese, // TA EDIT
 	/datum/language/raneshi,
 	/datum/language/grenzelhoftian,
 	/datum/language/kazengunese,

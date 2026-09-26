@@ -1283,7 +1283,7 @@
 
 /obj/item/clothing/head/roguetown/helmet/heavy/frogmouth
 	name = "froggemund helmet"
-	desc = "A tall and imposing frogmouth-style helm popular in the highest plateaus of the Azure Peak. It covers not only the \
+	desc = "A tall and imposing frogmouth-style helm popular in the highest plateaus. It covers not only the \
 	entire head and face, but the neck as well. Add some cloth to show the colors of your family or allegiance, or a nurse's \
 	veil to ward off the chilliness of a winterborn tournament."
 	icon_state = "frogmouth"

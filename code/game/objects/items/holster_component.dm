@@ -40,7 +40,7 @@
 	RegisterSignal(parent, COMSIG_ATOM_ATTACK_RIGHT, PROC_REF(right_click))
 	RegisterSignal(parent, COMSIG_PARENT_ATTACKBY, PROC_REF(attack_by))
 	RegisterSignal(parent, COMSIG_PARENT_EXAMINE, PROC_REF(examine_check))
-	RegisterSignal(parent, COMSIG_ATOM_UPDATE_ICON, PROC_REF(update_icon))
+	RegisterSignal(parent, COMSIG_ATOM_UPDATE_ICON, PROC_REF(signal_update_icon)) // TA EDIT
 	RegisterSignal(parent, COMSIG_ATOM_EXITED, PROC_REF(update_sheathed_ref))
 
 // through some manner of unforseen tomfoolery (or admin intervention), our sheathed blade has left our contents without clearing our sheathed ref
@@ -177,15 +177,34 @@
 		examine_list += span_notice("The sheath is occupied by [sheathed]. Left-click to pull it out.")
 
 
-/datum/component/holster/proc/update_icon(atom/source, mob/living/user)
+/datum/component/holster/proc/update_icon(mob/living/user) // TA EDIT
 	var/obj/item/I = parent
+
 	if(use_icons)
 		if(sheathed)
 			I.icon_state = "[initial(I.icon_state)]_[sheathed.sheathe_icon]"
 		else
 			I.icon_state = "[initial(I.icon_state)]"
 
-		I.update_slot_icon()
+	if(istype(I, /obj/item/rogueweapon/scabbard)) // TA EDIT START
+		var/obj/item/rogueweapon/scabbard/S = I
+		if(sheathed && S.holster_sheathed_item_state)
+			I.item_state = S.holster_sheathed_item_state
+		else if(!sheathed && S.holster_empty_item_state)
+			I.item_state = S.holster_empty_item_state // TA EDIT END
+
+	//	I.update_slot_icon()
+
+	if(!ismob(user))
+		user = null
+
+	if(!user && ismob(I.loc)) // TA EDIT START
+		user = I.loc
+
+	if(user)
+		user.update_inv_hands()
+		user.update_inv_belt()
+		user.update_inv_back() // TA EDIT END
 
 	I.getonmobprop(tag)
 
@@ -248,5 +267,9 @@
 /datum/component/holster/handstaff/puke_sword(mob/living/user)
 	. = ..()
 
-/datum/component/holster/handstaff/eat_sword(mob/living/user, obj/A)
-	. = ..()
+// TA EDIT START
+
+/datum/component/holster/proc/signal_update_icon(atom/source)
+	update_icon(null)
+
+// TA EDIT END

@@ -67,7 +67,6 @@
 		return
 	to_chat(M, span_red("[parent] does not suit me. ([required_trait])"))
 
-
 GLOBAL_LIST_INIT(armour_filter_effects, init_armour_filter_effects())
 GLOBAL_DATUM_INIT(armour_filter_effect_generic, /datum/armour_filter_effect, new)
 
@@ -135,7 +134,6 @@ GLOBAL_DATUM_INIT(armour_filter_effect_generic, /datum/armour_filter_effect, new
 	if(unworn_stress)
 		user.add_stress(unworn_stress)
 
-
 /datum/armour_filter_effect/fencer
 	required_trait = TRAIT_FENCERDEXTERITY
 	reject = TRUE
@@ -154,6 +152,12 @@ GLOBAL_DATUM_INIT(armour_filter_effect_generic, /datum/armour_filter_effect, new
 	reject = TRUE
 	reject_message = "It may be light, but this armor chafes my focus far too much. I couldn't hope to hone my techniques, while wearing it."
 
+// TA EDIT START
+/datum/armour_filter_effect/dodge_expert
+	required_trait = TRAIT_DODGEEXPERT
+	reject = TRUE
+	reject_message = "It may be light, but this armor chafes my focus far too much. I couldn't hope to keep my reflexes sharp, while wearing it."
+// TA EDIT END
 
 /datum/armour_filter_effect/psydonian_grit
 	required_trait = TRAIT_PSYDONIAN_GRIT
@@ -166,3 +170,9 @@ GLOBAL_DATUM_INIT(armour_filter_effect_generic, /datum/armour_filter_effect, new
 	unworn_debuff = /datum/status_effect/debuff/lost_naledi_mask
 	unworn_stress = /datum/stressevent/naledimasklost
 	unworn_exempt_species = /datum/species/tieberian
+
+/datum/armour_filter_effect/dungeoneer_hood
+	required_trait = TRAIT_JAILOR
+	required_id = "dungeoneer"
+	unworn_debuff = /datum/status_effect/debuff/lost_dungeoneer_hood
+	unworn_stress = /datum/stressevent/dungeoneerhoodlost

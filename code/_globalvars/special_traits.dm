@@ -34,6 +34,8 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 /proc/apply_character_post_equipment(mob/living/carbon/human/character, client/player)
 	if(!player)
 		player = character.client
+	if(!player || !player.prefs) // TA EDIT
+		return // TA EDIT
 	apply_charflaw_equipment(character, player)
 	apply_prefs_virtue(character, player)
 	apply_prefs_race_bonus(character, player)
@@ -43,17 +45,19 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 		apply_dnr_trait(character, player)
 	if(player.prefs.qsr_pref)
 		apply_qsr_trait(character, player)
-	character.mind.triumph_discount_remaining = is_donator(player.ckey) ? 3 : 0 // donators get first 3 triumph points free, spent on retrieval
-	for(var/item_name in player.prefs.gear_list)
-		var/datum/loadout_item/LI = GLOB.loadout_items_by_name[item_name]
-		if(!LI)
-			continue
-		if(LI.triumph_cost)
-			// Tag triumph cost items so that it is charged properly
-			character.mind.special_items["[LI.name][TRIUMPH_STASH_SUFFIX]"] = LI.path
-		else
-			character.mind.special_items[LI.name] = LI.path
-		character.mind.special_items_metadata[LI.name] = player.prefs.gear_list[item_name]
+	character.mind.triumph_discount_remaining = get_donator_triumph_discount(player.ckey)
+	if(player.prefs.gear_list)
+		for(var/key in player.prefs.gear_list)
+			var/datum/loadout_item/item = GLOB.loadout_items_by_name[key]
+			if(!item)
+				continue
+			if(item.triumph_cost)
+				character.mind.special_items["[item.name][TRIUMPH_STASH_SUFFIX]"] = item.path
+			else
+				character.mind.special_items[item.name] = item.path
+			var/list/loadout_metadata = player.prefs.gear_list[key] // TA EDIT START
+			if(islist(loadout_metadata) && loadout_metadata.len)
+				character.mind.special_items_metadata[item.name] = deepCopyList(loadout_metadata) // TA EDIT END
 	var/datum/job/assigned_job = SSjob.GetJob(character.mind?.assigned_role)
 	if(assigned_job)
 		assigned_job.clamp_stats(character)
@@ -74,9 +78,14 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 	if(advclass?.tempo_capable && H.mind.assigned_role != "Court Agent" && H.mind.assigned_role != "Adventurer" && H.mind.assigned_role != "Towner") // (Easier to filter these out than apply the bool to every subclass)
 		if(!H.mind.has_antag_datum(/datum/antagonist/skeleton) && !H.mind.has_antag_datum(/datum/antagonist/lich) && !H.mind.has_antag_datum(/datum/antagonist/vampire) && !H.mind.has_antag_datum(/datum/antagonist/vampire/lord))
 			ADD_TRAIT(H, TRAIT_TEMPO, SPECIES_TRAIT)
+
+	if(HAS_TRAIT(H, TRAIT_PSYDONIC_MEDICINE)) //TA EDIT
+		H.adjust_skillrank(/datum/skill/misc/medicine, 2, TRUE) //TA EDIT
 	return TRUE
 
 /proc/apply_voicepacks(mob/living/carbon/human/character, client/player)
+	if(!player || !player.prefs) // TA EDIT
+		return // TA EDIT
 	if(player.prefs.voice_pack != "Default")
 		var/datum/voicepack/VP = GLOB.voice_packs[GLOB.voice_packs_list[player.prefs.voice_pack]]
 		character.dna.species.soundpack_m = VP
@@ -116,6 +125,12 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 		else
 			to_chat(character, "Incorrect Second Virtue parameters! It will not be applied.")
 	if(origin_type)
+		if(istype(origin_type, /datum/virtue/origin/azuria) && SSmapping.config.map_name == "Rockhill")
+			var/pick = alert(character, "Ваш персонаж имеет азурийское происхождение. Хотели бы Вы изменить его на происхождение с Энигмы?", "ПРОШЛОЕ", "Да", "Нет")
+			if(!pick)
+				pick = "Нет"
+			if(pick == "Да")
+				origin_type = new /datum/virtue/origin/enigma
 		if((language_type && language_type != "None"))
 			character.grant_language(language_type)
 		if(origin_type.job_origin == TRUE)

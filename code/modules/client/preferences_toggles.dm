@@ -58,6 +58,17 @@
 		else
 			to_chat(src, "Your character information will no longer be viewable when masked.")
 
+/client/verb/nsfw_examine_always()
+	set category = "Preferences.Options"
+	set name = "Toggle NSFW Examine"
+	if(prefs)
+		prefs.nsfw_examine_always = !prefs.nsfw_examine_always
+		prefs.save_preferences()
+		if(prefs.nsfw_examine_always)
+			to_chat(src, "Your character NSFW information will always be visible.")
+		else
+			to_chat(src, "Your character NSFW information will only be visible when nude.")
+
 /client/verb/toggle_instruments()
 	set category = "Preferences.Options"
 	set name = "Toggle Instrument Sounds"
@@ -272,15 +283,6 @@
 		prefs.save_preferences()
 	to_chat(src, "You will[prefs.combat_toggles & XP_TEXT ? "" : " not"] see XP pop ups.")
 
-/client/verb/vocal_barks()
-	set name = "Toggle Vocal Barks"
-	set category = "Preferences.Options"
-	set desc = ""
-	if(prefs)
-		prefs.mute_barks = !prefs.mute_barks
-		prefs.save_preferences()
-	to_chat(src, "You will [prefs.mute_barks ? "not " : ""]hear vocal barks.")
-
 /client/verb/toggle_hitzonetext() // Whether the user can see a text popup for where they got hit.
 	set category = "Preferences.Options"
 	set name = "Toggle Hitzone Text"
@@ -296,7 +298,7 @@
 		prefs.combat_toggles ^= FLOATING_TEXT
 		prefs.save_preferences()
 	to_chat(src, "You will [prefs.combat_toggles & FLOATING_TEXT ? "see" : "not see any"] floating text.")
-
+/*
 /client/verb/toggle_deadchat() // Whether the user can see DSAY or not.
 	set name = "Show/Hide Deadchat"
 	set category = "Preferences.Options"
@@ -365,7 +367,7 @@
 		return
 	var/new_asaycolor = input(src, "Please select your ASAY color.", "ASAY color", prefs.asaycolor) as color|null
 	if(new_asaycolor)
-		prefs.asaycolor = sanitize_ooccolor(new_asaycolor)
+		prefs.asaycolor = sanitize_hexcolor(new_asaycolor) // TA EDIT
 		prefs.save_preferences()
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Set ASAY Color")
 	return
@@ -448,3 +450,115 @@
 			to_chat(src, "Examines will have some information behind dropdowns.")
 
 #undef TOGGLE_CHECKBOX
+*/
+
+/client/verb/toggle_deadchat()
+	set name = "Show/Hide Deadchat"
+	set category = "Preferences.Options"
+	set desc ="Toggles seeing deadchat"
+
+	if(prefs)
+		prefs.chat_toggles ^= CHAT_DSAY
+		prefs.save_preferences()
+	to_chat(src, "You will [(prefs.chat_toggles & CHAT_DSAY) ? "now" : "no longer"] see deadchat.")
+	if(holder)
+		SSblackbox.record_feedback("nested tally", "admin_toggle", 1, list("Toggle Deadchat Visibility", "[prefs.chat_toggles & CHAT_DSAY ? "Enabled" : "Disabled"]"))
+
+/client/proc/toggleadminhelpsound()
+	set name = "Hear/Silence Adminhelps"
+	set desc = ""
+	set hidden = 1
+	if(!holder)
+		return
+	prefs.toggles ^= SOUND_ADMINHELP
+	prefs.save_preferences()
+	to_chat(usr, "You will [(prefs.toggles & SOUND_ADMINHELP) ? "now" : "no longer"] hear a sound when adminhelps arrive.")
+	SSblackbox.record_feedback("nested tally", "admin_toggle", 1, list("Toggle Adminhelp Sound", "[prefs.toggles & SOUND_ADMINHELP ? "Enabled" : "Disabled"]"))
+
+/client/proc/toggleannouncelogin()
+	set name = "Do/Don't Announce Login"
+	set category = "Admin.Preferences"
+	set desc = ""
+	if(!holder)
+		return
+	prefs.toggles ^= ANNOUNCE_LOGIN
+	prefs.save_preferences()
+	to_chat(usr, "You will [(prefs.toggles & ANNOUNCE_LOGIN) ? "now" : "no longer"] have an announcement to other admins when you login.")
+	SSblackbox.record_feedback("nested tally", "admin_toggle", 1, list("Toggle Login Announcement", "[prefs.toggles & ANNOUNCE_LOGIN ? "Enabled" : "Disabled"]"))
+
+/client/proc/toggleprayers()
+	set name = "Show/Hide Prayers"
+	set category = "Admin.Preferences"
+	set desc = ""
+	if(!holder)
+		return
+	prefs.chat_toggles ^= CHAT_PRAYER
+	prefs.save_preferences()
+	to_chat(src, "You will [(prefs.chat_toggles & CHAT_PRAYER) ? "now" : "no longer"] see prayerchat.")
+	SSblackbox.record_feedback("nested tally", "admin_toggle", 1, list("Toggle Prayer Visibility", "[prefs.chat_toggles & CHAT_PRAYER ? "Enabled" : "Disabled"]"))
+
+/client/proc/toggle_prayer_sound()
+	set name = "Toggle Prayer Sounds"
+	set category = "Admin.Preferences"
+	set desc = ""
+	if(!holder)
+		return
+	prefs.toggles ^= SOUND_PRAYERS
+	prefs.save_preferences()
+	to_chat(usr, "You will [(prefs.toggles & SOUND_PRAYERS) ? "now" : "no longer"] hear a sound when prayers arrive.")
+	SSblackbox.record_feedback("nested tally", "admin_toggle", 1, list("Toggle Prayer Sounds", "[usr.client.prefs.toggles & SOUND_PRAYERS ? "Enabled" : "Disabled"]"))
+
+/client/proc/colorasay()
+	set name = "Set Asay Color"
+	set category = "Admin.Preferences"
+	set desc = ""
+	if(!holder)
+		return
+	if(!CONFIG_GET(flag/allow_admin_asaycolor))
+		to_chat(src, "Custom Asay color is currently disabled by the server.")
+		return
+	var/new_asaycolor = input(src, "Please select your ASAY color.", "ASAY color", prefs.asaycolor) as color|null
+	if(new_asaycolor)
+		prefs.asaycolor = sanitize_hexcolor(new_asaycolor)
+		prefs.save_preferences()
+	SSblackbox.record_feedback("tally", "admin_verb", 1, "Set ASAY Color")
+	return
+
+/client/proc/resetasaycolor()
+	set name = "Reset your Admin Say Color"
+	set desc = ""
+	set category = "Admin.Preferences"
+	if(!holder)
+		return
+	if(!CONFIG_GET(flag/allow_admin_asaycolor))
+		to_chat(src, "Custom Asay color is currently disabled by the server.")
+		return
+	prefs.asaycolor = initial(prefs.asaycolor)
+	prefs.save_preferences()
+
+/client/proc/hearallasghost()
+	set category = "Admin.Preferences"
+	set name = "HearAllAsAdmin"
+	if(!holder)
+		return
+	if(!prefs)
+		return
+	prefs.chat_toggles ^= CHAT_GHOSTEARS
+	prefs.chat_toggles ^= CHAT_GHOSTWHISPER
+	prefs.save_preferences()
+	if(prefs.chat_toggles & CHAT_GHOSTEARS)
+		to_chat(src, span_notice("I will hear all now."))
+	else
+		to_chat(src, span_info("I will hear like a mortal."))
+
+/client/proc/togglespawnmessages()
+	set category = "Admin.Preferences"
+	set name = "Show/Hide Spawn Logs"
+	if(!holder)
+		return
+	if(!prefs)
+		return
+	prefs.admin_chat_toggles ^= CHAT_ADMINSPAWN
+	prefs.save_preferences()
+	to_chat(src, "You will [prefs.admin_chat_toggles & CHAT_ADMINSPAWN ? "see" : "not see any"] spawn logs.")
+

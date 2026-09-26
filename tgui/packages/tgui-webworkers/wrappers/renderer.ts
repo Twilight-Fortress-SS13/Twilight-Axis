@@ -20,18 +20,23 @@ const render = async (
   }
 
   const response = new Promise<Blob>((resolve, reject) => {
+    const cleanup = () => {
+      renderWorker.removeEventListener('message', onMessage);
+      renderWorker.removeEventListener('error', onError);
+    };
+
     const onMessage = (e: MessageEvent<RendererWorker.RenderResponse>) => {
       if (e.data.id !== id) {
         return;
       }
 
-      renderWorker.removeEventListener('message', onMessage);
+      cleanup();
       savedBlobs[id] = e.data.blob;
       resolve(e.data.blob);
     };
 
     const onError = (err: any) => {
-      renderWorker.removeEventListener('message', onMessage);
+      cleanup();
       reject(err);
     };
 
@@ -47,7 +52,11 @@ const render = async (
     imageSize,
   };
 
-  renderWorker.postMessage(req);
+  try {
+    renderWorker.postMessage(req);
+  } catch (error) {
+    return Promise.reject(error);
+  }
 
   return response;
 };

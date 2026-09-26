@@ -74,7 +74,11 @@
 		msg += "[m1] being grabbed by [pulledby]."
 
 	if(stat >= UNCONSCIOUS)
-		msg += "[m1] unconscious."
+		msg += "[m1] [IsSleeping() ? "sleeping" : "unconscious"]."
+
+	if(key && !client && disconnected_at)
+		var/disconnected_minutes = max(0, ceil((world.time - disconnected_at) / (1 MINUTES)))
+		msg += "<b>[m1] won't be able to wake up soon. [m1] been like this for about [disconnected_minutes] minute[disconnected_minutes == 1 ? "" : "s"].</b>"
 
 	if(length(msg))
 		. += span_warning("[msg.Join("\n")]")

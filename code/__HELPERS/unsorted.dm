@@ -1118,29 +1118,6 @@ GLOBAL_REAL_VAR(list/stack_trace_storage)
 	. = stack_trace_storage
 	stack_trace_storage = null
 
-//Key thing that stops lag. Cornerstone of performance in ss13, Just sitting here, in unsorted.dm.
-
-//Increases delay as the server gets more overloaded,
-//as sleeps aren't cheap and sleeping only to wake up and sleep again is wasteful
-#define DELTA_CALC max(((max(TICK_USAGE, world.cpu) / 100) * max(Master.sleep_delta-1,1)), 1)
-
-//returns the number of ticks slept
-/proc/stoplag(initial_delay)
-	if (!Master || !(Master.current_runlevel & RUNLEVELS_DEFAULT))
-		sleep(world.tick_lag)
-		return 1
-	if (!initial_delay)
-		initial_delay = world.tick_lag
-	. = 0
-	var/i = DS2TICKS(initial_delay)
-	do
-		. += CEILING(i*DELTA_CALC, 1)
-		sleep(i*world.tick_lag*DELTA_CALC)
-		i *= 2
-	while (TICK_USAGE > min(TICK_LIMIT_TO_RUN, Master.current_ticklimit))
-
-#undef DELTA_CALC
-
 /proc/flash_color(mob_or_client, flash_color="#960000", flash_time=20)
 	var/client/C
 	if(ismob(mob_or_client))
@@ -1534,7 +1511,9 @@ GLOBAL_LIST_INIT(duplicate_forbidden_vars,list(
 	/area/rogue/outdoors/woods, \
 	/area/rogue/outdoors/bog, \
 	/area/rogue/outdoors/mountains, \
-	/area/rogue/outdoors/rtfield \
+	/area/rogue/outdoors/rtfield, \
+	/area/rogue/outdoors/bograt, \
+	/area/rogue/outdoors/desert \
 )
 
 /proc/is_valid_hunting_area(area/A)
@@ -1561,6 +1540,8 @@ GLOBAL_LIST_INIT(duplicate_forbidden_vars,list(
 		"Courtiers" = GLOB.courtier_positions,
 		"Retinue" = GLOB.retinue_positions,
 		"Garrison" = GLOB.garrison_positions,
+		"City Watch" = GLOB.citywatch_positions,
+		"Vanguard" = GLOB.vanguard_positions,
 		"Church" = GLOB.church_positions,
 		"Burgher" = GLOB.burgher_positions,
 		"Azurian Trading Company" = GLOB.atc_positions,
@@ -1583,32 +1564,3 @@ GLOBAL_LIST_INIT(duplicate_forbidden_vars,list(
 
 	return sorted_ckey_to_actor_data
 
-//Whether a living mob's client prefs currently hide them from non-admin ghosts.
-/proc/has_ghost_protection(atom/target)
-	if(!isliving(target))
-		return FALSE
-	var/mob/living/living_target = target
-	return !!(living_target.client?.prefs.ghost_toggles & TOGGLE_ANTIGHOST)
-
-//Admins keep their existing observer tooling even when a target has ghost protection.
-/mob/dead/observer/proc/bypasses_ghost_protection()
-	return !!check_rights_for(client, R_ADMIN) // this should maybe just be an override on /mob/dead/observer/admin
-
-/mob/dead/observer/eye/bypasses_ghost_protection()
-	return TRUE
-
-//Whether a protected living target should be hidden from this observer.
-/proc/is_hidden_from_ghosts(atom/target, mob/dead/observer/viewer)
-	if(!isobserver(viewer))
-		return FALSE
-	if(viewer.bypasses_ghost_protection())
-		return FALSE
-	return has_ghost_protection(target)
-
-/proc/get_hidden_ghosts_for_target(atom/target)
-	. = list()
-	if(!has_ghost_protection(target))
-		return
-	for(var/mob/dead/observer/observer in GLOB.player_list)
-		if(is_hidden_from_ghosts(target, observer))
-			. += observer

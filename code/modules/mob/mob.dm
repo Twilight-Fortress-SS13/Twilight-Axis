@@ -96,7 +96,7 @@ GLOBAL_VAR_INIT(mobids, 1)
 	else
 		GLOB.alive_mob_list += src
 	set_focus(src)
-	prepare_huds()
+	prepare_huds_TA()
 	for(var/v in GLOB.active_alternate_appearances)
 		if(!v)
 			continue
@@ -489,7 +489,7 @@ GLOBAL_VAR_INIT(mobids, 1)
 		to_chat(src, span_warning("Something is there but I can't see it!"))
 		return
 
-	if(isliving(src))
+	if(isliving(src) && stat != DEAD)
 		var/message = "[src] looks at"
 		var/target = "\the [A]"
 		if(!isturf(A))
@@ -606,7 +606,7 @@ GLOBAL_VAR_INIT(mobids, 1)
 		if (world.time < memory_throttle_time)
 			return
 		memory_throttle_time = world.time + 5 SECONDS
-		msg = copytext(msg, 1, MAX_MESSAGE_LEN)
+		msg = copytext_char(msg, 1, MAX_MESSAGE_LEN)
 		msg = sanitize(msg)
 
 		mind.store_memory(msg)
@@ -1263,16 +1263,19 @@ GLOBAL_VAR_INIT(mobids, 1)
 	if(stat != CONSCIOUS)
 		to_chat(src, span_warning("I can't set my pose right now."))
 		return
-	var/new_pose = tgui_input_text(src, "Set your character's pose (MARKDOWN AVAILABLE):", "SET POSE", pose_text, multiline = FALSE,	encode = TRUE, bigmodal = TRUE, max_length = 256)
+	var/old_pose = pose_text
+	var/new_pose = tgui_input_text(src, "Set your character's pose (MARKDOWN AVAILABLE):", "SET POSE", pose_text, multiline = FALSE, encode = TRUE, bigmodal = TRUE, max_length = 256)
 	if(isnull(new_pose))
 		return
 
 	if(!length(new_pose))
 		pose_text = ""
+		log_admin("[src.ckey] ([src.real_name]) cleared pose. Old pose: [old_pose]")
 		to_chat(src, span_notice("I clear my pose."))
 		return
 
 	pose_text = parsemarkdown_basic(new_pose)
+	log_admin("[src.ckey] ([src.real_name]) set pose. New pose: [new_pose]")
 	to_chat(src, span_notice("I set my pose."))
 
 ///Adjust the nutrition of a mob
@@ -1373,7 +1376,12 @@ GLOBAL_VAR_INIT(mobids, 1)
 	SEND_SIGNAL(src, COMSIG_MOB_GET_STATUS_TAB_ITEMS, .)
 	if(client)
 		. += list(list("IC DATE: ", "[get_current_ic_date_as_string()] (CLICK FOR CALENDAR)", "src=[REF(client)];statbrowser_calendar=1"))
-		. += list(list("tod", get_current_ic_tod_as_string(), "IC TIME: [get_current_ic_time_as_string()]"))
+		// TA EDIT START
+		var/current_tod = get_current_ic_tod_as_string()
+		if(!istext(current_tod) || !length(current_tod))
+			current_tod = "dae"
+		. += list(list("tod", current_tod, "IC TIME: [get_current_ic_time_as_string()]"))
+		// TA EDIT END
 	return .
 
 /mob/proc/get_stats_tab_items()

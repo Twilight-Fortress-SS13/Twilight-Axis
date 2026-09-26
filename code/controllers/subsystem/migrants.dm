@@ -312,7 +312,9 @@ SUBSYSTEM_DEF(migrants)
 
 	SSticker.minds += character.mind
 	GLOB.joined_player_list += character.ckey
-	update_scaling_slots()
+	update_wretch_slots()
+	update_mercenary_slots()
+	update_adventurer_slots()
 	if(character.client)
 		character.client.update_ooc_verb_visibility()
 
@@ -324,10 +326,10 @@ SUBSYSTEM_DEF(migrants)
 		GLOB.character_list[character.mobid] = "[fakekey] was [character.real_name] ([rank])<BR>"
 		GLOB.character_ckey_list[character.real_name] = character.ckey
 		var/mob_name = character.real_name
-		var/mob_rank = rank
+		var/mob_rank = role.name // TA EDIT
 		if(character.mind.special_role == "Court Agent")
 			mob_rank = "Adventurer"
-		GLOB.actors_list[character.mobid] = list("name" = mob_name, "rank" = mob_rank)
+		GLOB.actors_list[character.mobid] = list("name" = mob_name, "rank" = mob_rank) // TA EDIT
 		log_character("[character.ckey] ([fakekey]) - [character.real_name] - [rank]")
 	if(GLOB.respawncounts[character.ckey])
 		var/AN = GLOB.respawncounts[character.ckey]
@@ -346,6 +348,8 @@ SUBSYSTEM_DEF(migrants)
 		to_chat(character, span_notice("[wave_greet]"))
 	if(role.greet_text)
 		to_chat(character, span_notice("[role.greet_text]"))
+
+	ADD_TRAIT(character, TRAIT_OUTLANDER, TRAIT_GENERIC) //TA EDIT
 
 	if(role.outfit)
 		var/datum/outfit/outfit = new role.outfit()
@@ -368,6 +372,7 @@ SUBSYSTEM_DEF(migrants)
 		human_character.flag_gear_as_worn()
 
 	if(role.advclass_cat_rolls)
+		hugboxify_for_class_selection(character) // TA EDIT
 		SSrole_class_handler.setup_class_handler(character, role.advclass_cat_rolls)
 	else
 		// Apply a special if we're not applying an adv class, otherwise let the adv class apply it afterwards
@@ -401,11 +406,24 @@ SUBSYSTEM_DEF(migrants)
 	priority += shuffle(unpledged)
 	return priority
 
+/datum/controller/subsystem/migrants/proc/get_respawn_cooldown_remaining(client/player) // TA EDIT
+	if(!player?.ckey)
+		return 0
+	var/datum/job/migrant_job = SSjob.GetJob("Migrant")
+	if(!migrant_job?.same_job_respawn_delay)
+		return 0
+	var/delay_until = GLOB.job_respawn_delays[player.ckey]
+	if(!delay_until || world.time >= delay_until)
+		return 0
+	return delay_until - world.time
+
 /datum/controller/subsystem/migrants/proc/can_be_role(client/player, role_type)
 	var/datum/migrant_role/role = MIGRANT_ROLE(role_type)
 	if(!player)
 		return FALSE
 	if(!player.prefs)
+		return FALSE
+	if(get_respawn_cooldown_remaining(player)) // TA EDIT
 		return FALSE
 	var/datum/preferences/prefs = player.prefs
 	if(role.forbidden_races && (prefs.pref_species.type in role.forbidden_races))
@@ -422,6 +440,10 @@ SUBSYSTEM_DEF(migrants)
 		// i just stole this from the normal virtue restriction code i cant even lie
 		if((prefs.virtue?.type in role.banned_virtues) || (prefs.virtuetwo?.type in role.banned_virtues) || (prefs.virtue_origin?.type in role.banned_virtues))
 			return FALSE
+#ifdef USES_PQ
+	if(!isnull(role.min_pq) && get_playerquality(player.ckey) < role.min_pq) // TA EDIT
+		return FALSE // TA EDIT
+#endif
 	return TRUE
 
 /// The set of /datum/advclass datums a role can roll, resolved from its advclass_cat_rolls tags (deduped).
@@ -511,7 +533,7 @@ SUBSYSTEM_DEF(migrants)
 	var/base_weight = wave.weight
 	var/triumph_bonus = wave.triumph_total
 
-	var/triumph_multiplier = 6
+	var/triumph_multiplier = wave.triumph_weight_multiplier // TA EDIT
 	var/final_weight = base_weight + (triumph_bonus * triumph_multiplier)
 
 	return max(final_weight, 1)

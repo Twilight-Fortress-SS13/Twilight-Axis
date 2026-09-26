@@ -535,13 +535,18 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		to_chat(usr, output)
 
 	if(href_list["explainbalance"])
-		var/output = span_info("A heavy weapon is easier to dodge, and inflicts [STAM_DRAIN_PER_STR_DIFF_HEAVY_BAL] stamina damage per level of strength difference on a parrying defender. \n\
-		A swift balance weapon reduces the enemy's parry chance depending on SPD difference. \n\
-		Targeting harder to hit zones such as hands, feet, stomach or face zones has a defense reduction cap at [SWIFTCAP_PRECISE]%. \n\
-		Targeting large limbs such as arms, head or legs has a defense reduction cap of [SWIFTCAP_LIMBS]%. \n\
-		Targeting the chest only has a cap of [SWIFTCAP_CHEST]% parry reduction. \n\
+		var/output = span_red("A <b>heavy</b> weapon is easier to dodge, and inflicts <b>[STAM_DRAIN_PER_STR_DIFF_HEAVY_BAL]</b> stamina damage per level of STR difference on a parrying defender.\n")
+
+		output += span_nicegreen("A <b>swift</b> balance weapon reduces the enemy's parry chance depending on SPD difference. \n\
+		Targeting harder to hit zones such as hands, feet, stomach or face zones has a defense reduction cap at [SWIFTCAP_PRECISE]%</b>. \n\
+		Targeting large limbs such as arms, head or legs has a defense reduction cap of <b>[SWIFTCAP_LIMBS]%</b>. \n\
+		Targeting the chest only has a cap of <b>[SWIFTCAP_CHEST]%</b> parry reduction. \n\
 		Swift Balance does not work if the attacker is wearing Medium or Heavy AC equipment on their outerwear, innerwear or pants slots. \n\
-		Defender's difference in INT and PER (if higher) may reduce the parry penalty in some circumstances.")
+		Defender's difference in INT and PER (if higher) may reduce the parry penalty in some circumstances.\n")
+
+		output += span_notice("A <b>normal</b> balance weapon helps against both balances by lowering swift's parry reduction by <b>10</b>, \n\
+		and blocking <b>[abs(STAM_DRAIN_PER_STR_DIFF_HEAVY_BAL)]</b> stamina damage done by heavy balance")
+
 		if(!usr.client.prefs.no_examine_blocks)
 			output = examine_block(output)
 		to_chat(usr, output)
@@ -600,7 +605,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		A dulled weapon penetrates worse, and a chunked one cannot penetrate at all.\n\
 		Piercing damage (arrows, bolts) ignores those modifiers and uses fixed amounts based on whether penetration matches or exceeds the tier.\n\
 		All attacks go through armor with no protection of that type, including attacks with no armor penetration.\n\
-		Blunt and Burn attacks bypass this system entirely and use damage reduction instead.")
+		Blunt / Burn / Bullet attacks bypass this system entirely and use damage reduction instead.")
 		if(!usr.client.prefs.no_examine_blocks)
 			output = examine_block(output)
 		to_chat(usr, output)
@@ -637,13 +642,15 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		if(gripped_intents && !wielded)
 			if(force_wielded)
 				inspec += "\n<b>WIELDED FORCE:</b> [get_force_string(force_wielded)] <span class='info'><a href='?src=[REF(src)];showforcewield=1'>{?}</a></span>"
-
-		if(wbalance)
+		if(force)
 			inspec += "\n<b>BALANCE: </b>"
-			if(wbalance == WBALANCE_HEAVY)
-				inspec += "Heavy"
-			if(wbalance == WBALANCE_SWIFT)
-				inspec += "Swift"
+			if(wbalance)
+				if(wbalance == WBALANCE_HEAVY)
+					inspec += "Heavy"
+				if(wbalance == WBALANCE_SWIFT)
+					inspec += "Swift"
+			else
+				inspec += "Normal"
 			inspec += " <span class='info'><a href='?src=[REF(src)];explainbalance=1'>{?}</a></span>"
 
 		if(wlength != WLENGTH_NORMAL)
@@ -1647,7 +1654,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		var/obj/item/clothing/C = src
 		if(C.armor)
 			var/datum/armor/def_armor = C.armor
-			return def_armor.blunt || def_armor.slash || def_armor.stab || def_armor.piercing
+			return def_armor.blunt || def_armor.slash || def_armor.stab || def_armor.piercing || def_armor.fire || def_armor.bullet
 
 	return FALSE
 
@@ -1657,12 +1664,13 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		var/obj/item/clothing/C = src
 		if(C.armor)
 			var/datum/armor/def_armor = C.armor
-			if(!def_armor.blunt && !def_armor.slash && !def_armor.stab && !def_armor.piercing)
+			if(!def_armor.blunt && !def_armor.slash && !def_armor.stab && !def_armor.piercing && !def_armor.fire && !def_armor.bullet)
 				str += "<b>NO ARMOR!</b>"
 			else
 				var/defense = "[SPAN_TOOLTIP("Each tier increases effective HP of the armor by 20%. Absorbed attacks never reach HP. The armor must be broken first.", "<u><b>ABSORB:</b></u>")] [colorgrade_rating("BLUNT", def_armor.blunt, elaborate = TRUE, max_tier = 5)]"
 				defense += "<br>"
 				defense += "[SPAN_TOOLTIP("Each tier reduces damage by 20% of base. Reduced damage still reaches HP. Armor absorbs what was blocked.", "<u><b>REDUCE:</b></u>")] [colorgrade_rating("BURN", def_armor.fire, elaborate = TRUE, max_tier = 5)]"
+				defense += " | [colorgrade_rating("BULLET", def_armor.bullet, elaborate = TRUE, max_tier = 5)]"
 				defense += "<br>"
 				defense += "[SPAN_TOOLTIP("Blocks attacks below this tier (Armor takes all damage). Same tier penetrates 20% (80% goes to armor). Exceeding tier penetrates fully.", "<u><b>BLOCK:</b></u>")] "
 				defense += "[colorgrade_rating("SLASH", def_armor.slash, elaborate = TRUE)] | "

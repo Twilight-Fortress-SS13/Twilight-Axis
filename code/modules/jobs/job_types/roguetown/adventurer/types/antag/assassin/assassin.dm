@@ -24,7 +24,8 @@
 
 	display_order = JDO_ASSASSIN
 	announce_latejoin = FALSE
-	round_contrib_points = 5
+	round_contrib_points = null
+	same_job_respawn_delay = 30 MINUTES
 
 	advclass_cat_rolls = list(CTAG_ASSASSIN = 20)
 	PQ_boost_divider = 10

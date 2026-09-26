@@ -10,7 +10,7 @@ Intended to be a reward or a goal for pure mage, allowing them to rebind their a
 	slot_flags = ITEM_SLOT_HIP | ITEM_SLOT_BACK
 	grid_width = 32
 	grid_height = 32
-	var/base_icon_state = "spellbookbrown"
+	base_icon_state = "spellbookbrown"
 	var/unique = TRUE
 	firefuel = 2 MINUTES
 	dropshrink = 0.6

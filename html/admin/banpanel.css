@@ -54,6 +54,11 @@
     color: #443a39;
 }
 
+.inquisition {
+    background-color: #cc4242;
+    color: #443a39;
+}
+
 .church {
     background-color: #c0ba8d;
     color: #443a39;
@@ -62,6 +67,16 @@
 .garrison {
     background-color: #b18484;
     color: #443a39;
+}
+
+.citywatch {
+    background-color: #b18484;
+    color: #263154;
+}
+
+.vanguard {
+    background-color: #b18484;
+    color: #790f73;
 }
 
 .yeomen {

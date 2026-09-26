@@ -23,7 +23,9 @@
 	handle_embedded_objects()
 	handle_blood()
 	handle_roguebreath()
-
+	if(stat != DEAD && istype(loc, /turf/open/water))
+		var/turf/open/water/W = loc
+		handle_inwater(W)
 	var/bprv = handle_bodyparts()
 	if(bprv & BODYPART_LIFE_UPDATE_HEALTH)
 		update_stamina() //needs to go before updatehealth to remove stamcrit
@@ -79,6 +81,7 @@
 						Immobilize(15) // EAT A MICROSTUN. YOU'RE AVOIDING A PAINCRIT.
 						if(HAS_TRAIT(src, TRAIT_PSYDONIAN_GRIT))
 							visible_message(span_info("[src] audibly grits [src.p_their()] teeth, ENDURING through [src.p_their()] pain."), span_info("Through my faith in HIM, I ENDURE."))
+							src.playsound_local(src, 'sound/misc/psydong.ogg', 100, FALSE)
 						else
 							visible_message(span_info("[src] trembles for a moment, but [src.p_they()] remain standing."), span_info("My strong constitution keeps me upright."))
 						stuttering += 5
@@ -141,23 +144,45 @@
 				next_smell = world.time + 30 SECONDS
 				T.pollution.smell_act(src)
 
-/mob/living/proc/handle_inwater()
-	extinguish_mob()
+/mob/living/proc/handle_inwater(turf/onturf, extinguish = TRUE, force_drown = FALSE)
+	if(extinguish)
+		extinguish_mob()
+	return FALSE
 
-/mob/living/carbon/human/handle_inwater(turf/onturf, extinguish = TRUE, force_drown = FALSE)
-	..()
+/mob/living/carbon/handle_inwater(turf/onturf, extinguish = TRUE, force_drown = FALSE)
+	. = ..(onturf, extinguish, force_drown)
+
+	if(QDELETED(src) || stat == DEAD)
+		return FALSE
 
 	if(!(mobility_flags & MOBILITY_STAND) || force_drown)
-		if (HAS_TRAIT(src, TRAIT_NOBREATH) || HAS_TRAIT(src, TRAIT_WATERBREATHING))
+		if(HAS_TRAIT(src, TRAIT_NOBREATH) || HAS_TRAIT(src, TRAIT_WATERBREATHING) || HAS_TRAIT(src, TRAIT_HOLDBREATH))
 			return TRUE
-		if(stat == DEAD && client)
-			record_round_statistic(STATS_PEOPLE_DROWNED)
-		var/drown_damage = has_world_trait(/datum/world_trait/abyssor_rage) ? 10 : 5
-		adjustOxyLoss(drown_damage)
-		emote("drown")
 
-	if(istype(onturf, /turf/open/water/sewer) && !HAS_TRAIT(src, TRAIT_HOLDBREATH))
-		add_stress(/datum/stressevent/sewertouched)
+		var/was_alive = stat != DEAD
+		var/drown_damage = has_world_trait(/datum/world_trait/abyssor_rage) ? 10 : 5
+
+		adjustOxyLoss(drown_damage)
+
+		if(was_alive && stat == DEAD && client)
+			record_round_statistic(STATS_PEOPLE_DROWNED)
+
+		if(!QDELETED(src) && stat != DEAD)
+			emote("drown")
+
+		return TRUE
+
+	return FALSE
+
+/mob/living/carbon/human/handle_inwater(turf/onturf, extinguish = TRUE, force_drown = FALSE)
+	. = ..(onturf, extinguish, force_drown)
+
+	if(QDELETED(src) || stat == DEAD)
+		return FALSE
+
+	if(istype(onturf, /turf/open/water/sewer) && !HAS_TRAIT(src, TRAIT_NOSTINK))
+		if(!HAS_TRAIT(src, TRAIT_HOLDBREATH))
+			add_stress(/datum/stressevent/sewertouched)
 
 	if(istype(onturf, /turf/open/water/bath) && !wear_armor && !wear_shirt && !wear_pants)
 		add_stress(/datum/stressevent/bathwater)
@@ -330,8 +355,9 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 	if(hallucination)
 		handle_hallucinations()
 
-	if(drunkenness)
-		drunkenness = max(drunkenness - (drunkenness * 0.04) - 0.01, 0)
+	if(drunkenness) // TA EDIT START
+		if(!has_booze())
+			drunkenness = max(drunkenness - 0.2, 0)
 		if(drunkenness >= 3)
 			if(prob(3))
 				slurring += 2
@@ -340,8 +366,12 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 			add_stress(/datum/stressevent/drunk)
 		else
 			remove_stress(/datum/stressevent/drunk)
+			remove_status_effect(/datum/status_effect/buff/drunk)
 		if(drunkenness >= 11 && slurring < 5)
 			slurring += 1.2
+
+		if(drunkenness >= 21 && prob(2))
+			emote("sway")
 
 		if(drunkenness >= 41)
 			if(prob(25))
@@ -349,39 +379,41 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 			Dizzy(10)
 
 		if(drunkenness >= 51)
-			adjustToxLoss(1)
 			if(prob(3))
 				confused += 15
 				vomit() // vomiting clears toxloss, consider this a blessing
 			Dizzy(25)
 
 		if(drunkenness >= 61)
-			adjustToxLoss(1)
 			if(prob(50))
 				blur_eyes(5)
 
 		if(drunkenness >= 71)
-			adjustToxLoss(1)
 			if(prob(10))
 				blur_eyes(5)
+			if(prob(4) && !stat && !IsKnockdown())
+				to_chat(src, span_warning("Я на мгновение теряю равновесие!"))
+				Knockdown(10)
 
 		if(drunkenness >= 81)
-			adjustToxLoss(3)
+			if(prob(5))
+				drowsyness = min(drowsyness + 10, 100)
 			if(prob(5) && !stat)
 				to_chat(src, span_warning("Maybe I should lie down for a bit..."))
 
 		if(drunkenness >= 91)
-			adjustToxLoss(5)
+			if(has_booze() && prob(10))
+				adjustToxLoss(0.5)
 //			adjustOrganLoss(ORGAN_SLOT_BRAIN, 0.4)
-			if(prob(20) && !stat)
+			if(prob(10) && !stat)
 				to_chat(src, span_warning("Just a quick nap..."))
-				Sleeping(900)
+				Sleeping(300)
 
-		if(drunkenness >= 101)
-			adjustToxLoss(5) //Let's be honest you shouldn't be alive by now
+		if(drunkenness >= 101 && has_booze() && prob(15))
+			adjustToxLoss(1) //Let's be honest you shouldn't be alive by now
 
 //WE HANDLE SUNDERSTACKS HERE
-	if(sunder_stacks)
+	if(sunder_stacks) // TA EDIT END
 		sunder_stacks = max(sunder_stacks - 1, 0) //Takes a bit to shrug off
 
 		apply_status_effect(/datum/status_effect/debuff/sunder_stacks) //You survived an EXTREMELY lethal blow, you might want to keep back for now
@@ -587,6 +619,8 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 			energy_add(5)
 	//Healing while sleeping in a bed
 	if(IsSleeping())
+		if(drunkenness) // TA EDIT START
+			drunkenness = max(drunkenness - 2, 0) // TA EDIT END
 		if(HAS_TRAIT(src, TRAIT_NOREGEN) || HAS_TRAIT(src, TRAIT_IRONMAN))
 			return
 		var/sleepy_mod = 0.5

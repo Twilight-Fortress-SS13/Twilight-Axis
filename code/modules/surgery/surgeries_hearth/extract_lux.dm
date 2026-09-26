@@ -39,7 +39,7 @@
 	if(!target.has_extractable_lux())
 		to_chat(user, span_warning("There's no true lifeforce within this conjuration. There is no Lux to extract."))
 		return FALSE
-	if(istiefling(target))
+	if(istiefling(target) || isdullahan(target)) //TA EDIT
 		to_chat(user, span_warning("Their Lux is infernal. It will not do."))
 		return FALSE
 	if(HAS_TRAIT(target, TRAIT_UNFORGIVABLE))

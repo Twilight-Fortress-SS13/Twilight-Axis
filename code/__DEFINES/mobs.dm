@@ -547,6 +547,7 @@
 #define SKIN_COLOR_PALE_KAZENGUN "c9a893"
 
 //AASIMAR SKIN TONES
+#define SKIN_COLOR_ARCHON "feddcd"
 #define SKIN_COLOR_CULTOR "b5a4a4"
 #define SKIN_COLOR_SPIRITUS "f0eded"
 #define SKIN_COLOR_PLANETAR "ffd859"
@@ -619,6 +620,8 @@
 #define SKIN_COLOR_VELOTHEL "87a665"
 #define SKIN_COLOR_XIR "dbb189"
 #define SKIN_COLOR_ESSE "886537"
+#define SKIN_COLOR_GLASYA "cc5757"
+#define SKIN_COLOR_ASMODEUS "8F3F50"
 
 //GOBLIN SKIN TONES
 #define SKIN_COLOR_OCHRE "968127"
@@ -687,3 +690,10 @@
 #else
 #define AI_WORLD_THINK(pawn, message)
 #endif
+GLOBAL_LIST_INIT(roman_cache, list(
+	"0","I","II","III","IV","V","VI","VII","VIII","IX","X",
+	"XI","XII","XIII","XIV","XV","XVI","XVII","XVIII","XIX","XX",
+	"XXI","XXII","XXIII","XXIV","XXV","XXVI","XXVII","XXVIII","XXIX","XXX"
+))
+
+#define ROMAN(n) (GLOB.roman_cache[clamp((n)+1, 1, GLOB.roman_cache.len)])

@@ -18,13 +18,13 @@
 	var/s = sound(sound)
 	for(var/mob/M in GLOB.player_list)
 		if (!M.can_hear())
-			return
+			continue // TA EDIT
 		if (receiver && !(istype(M, receiver) || (sender && M == sender)))
-			return
+			continue // TA EDIT
 
 		to_chat(M, announcement)
 		if (!sound)
-			return
+			continue // TA EDIT
 		M.playsound_local(M, s, 100)
 
 /proc/minor_announce(message, title = "", alert)

@@ -34,7 +34,6 @@ Add a new override in your modular folder that looks like this:
 		"hide_pq" = should_hide_pq_for(user),
 		"triumphs" = user.get_triumphs(),
 
-		"agevet" = user.check_agevet(),
 	)
 
 // INSTRUCTIONS FOR DOWNSTREAM: Override in your modular folder!

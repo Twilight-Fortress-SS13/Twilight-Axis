@@ -25,7 +25,7 @@
 	if(HAS_TRAIT(user, TRAIT_RESIDENT))
 		to_chat(user, span_warning("I am already a Citizen of Azuria."))
 		return
-	if(user.job == "Steward" || user.job == "Grand Duke")
+	if(user.job == "Steward" || user.job == "Grand Duke" || user.job == "Sultan" || user.job == "Vizier") //TA EDIT
 		to_chat(user, span_warning("This letter is meant for another. I must hand it over."))
 		return
 	user.visible_message(span_notice("[user] unfolds the letter and accepts its seal."), \

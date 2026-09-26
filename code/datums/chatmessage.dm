@@ -1,10 +1,36 @@
 #define CHAT_MESSAGE_SPAWN_TIME		0.2 SECONDS
 #define CHAT_MESSAGE_LIFESPAN		5 SECONDS
-#define CHAT_MESSAGE_EOL_FADE		0.7 SECONDS
+#define CHAT_MESSAGE_EOL_FADE		0.8 SECONDS //TA EDIT: 0.7 -> 0.8
 #define CHAT_MESSAGE_EXP_DECAY		0.7 // Messages decay at pow(factor, idx in stack)
 #define CHAT_MESSAGE_HEIGHT_DECAY	0.9 // Increase message decay based on the height of the message
 #define CHAT_MESSAGE_APPROX_LHEIGHT	11 // Approximate height in pixels of an 'average' line, used for height decay
 #define CHAT_MESSAGE_WIDTH			96 // pixels
+#define CHAT_SPELLING_DELAY 		0.02 SECONDS //TA EDIT START
+//#define CHAT_GLORF_LIST list(
+//							"-ah!!",
+//							"-GLORF!!",
+//							"-OW!!"
+//							)
+#define CHAT_SPELLING_PUNCTUATION list(\
+										"," = 0.25 SECONDS,\
+										"." = 0.4 SECONDS,\
+										" " = 0.03 SECONDS,\
+										"-" = 0.2 SECONDS,\
+										"!" = 0.2 SECONDS,\
+										"?" = 0.15 SECONDS,\
+										)
+#define CHAT_SPELLING_EXCEPTIONS list(\
+										"'",\
+										)
+#define CHAT_SPELLING_DELAY_WITH_EXCLAIMED_MULTIPLIER (CHAT_SPELLING_DELAY - 0.0003 SECONDS * (EXCLAIMED_MULTIPLER - 1))
+
+#define EXCLAIMED_MULTIPLER (exclaimed ? 3 : 1)
+
+#define BLIP_TONE_FEMININE list(42000, 46000)
+#define BLIP_TONE_DEFAULT list(28000, 34000)
+#define BLIP_TONE_MASCULINE list(16000, 24000)
+
+#define TOOT_COOLDOWN 1.5 SECONDS //TA EDIT END
 
 /**
 	* # Chat Message Overlay
@@ -22,6 +48,19 @@
 	var/scheduled_destruction
 	/// Contains the approximate amount of lines for height decay
 	var/approx_lines
+	/// if we finished typing up all our letters. //TA EDIT START
+	var/finished_typing = FALSE
+	var/font_size = 8
+	var/tgt_color
+	var/list/_extra_classes
+	var/text
+	var/list/remaining_strings
+	var/current_string = ""
+	var/premature_end = FALSE
+	var/exclaimed = FALSE
+	var/list/blip_tone = BLIP_TONE_DEFAULT
+	var/source_shake = FALSE
+	var/last_toot_time //TA EDIT END
 
 /**
 	* Constructs a chat message overlay
@@ -41,17 +80,63 @@
 		stack_trace("/datum/chatmessage created with [isnull(owner) ? "null" : "invalid"] mob owner")
 		qdel(src)
 		return
-	INVOKE_ASYNC(src, PROC_REF(generate_image), text, target, owner, extra_classes, lifespan)
 
+	// TA EDIT START
+	extra_classes = extra_classes ? extra_classes.Copy() : list()
+	_extra_classes = extra_classes
+	// TA EDIT END
+
+	if(extra_classes.Find("emote")) //TA EDIT START
+		font_size = 7
+		tgt_color = "#adadad"
+
+	if(ishuman(owner))
+		var/mob/living/carbon/human/human_owner = owner
+		switch(human_owner.voice_type)
+			if(VOICE_TYPE_MASC)
+				blip_tone = BLIP_TONE_MASCULINE
+			if(VOICE_TYPE_FEM)
+				blip_tone = BLIP_TONE_FEMININE
+
+	if((length(text) > 1) && ((text[length(text)] == "!") && (text[length(text) - 1] == "!")))
+		exclaimed = TRUE
+
+	// We dim italicized text to make it more distinguishable from regular text
+	if(!extra_classes.Find("emote"))
+		tgt_color = extra_classes.Find("italics") ? target.chat_color_darkened : target.chat_color //TA EDIT END
+
+	INVOKE_ASYNC(src, PROC_REF(generate_image), text, target, owner, extra_classes, lifespan) // TA EDIT
+
+// TA EDIT START
 /datum/chatmessage/Destroy()
-	if (owned_by)
-		if (owned_by.seen_messages)
+	premature_end = TRUE
+
+	if(owned_by)
+		UnregisterSignal(owned_by, COMSIG_PARENT_QDELETING)
+		if(owned_by.seen_messages)
 			LAZYREMOVEASSOC(owned_by.seen_messages, message_loc, src)
-		owned_by.images.Remove(message)
+		if(message)
+			owned_by.images.Remove(message)
+
 	owned_by = null
 	message_loc = null
 	message = null
+	_extra_classes = null
+	remaining_strings = null
+	text = null
+	current_string = null
 	return ..()
+// TA EDIT END
+
+/*
+/datum/chatmessage/proc/on_parent_take_damage(datum/source, damage, damagetype, def_zone) //TA EDIT START
+	SIGNAL_HANDLER
+	if(QDELETED(src))
+		return
+	if(damage < 5)
+		return
+	premature_end_of_life() //TA EDIT END
+*/
 
 /**
 	* Calls qdel on the chatmessage when its parent is deleted, used to register qdel signal
@@ -70,9 +155,17 @@
 	* * lifespan - The lifespan of the message in deciseconds
 	*/
 /datum/chatmessage/proc/generate_image(text, atom/target, mob/owner, list/extra_classes, lifespan)
+	// TA EDIT START
+	if(QDELETED(src) || QDELETED(target) || QDELETED(owner) || !owner.client)
+		return qdel(src)
+
+	extra_classes = extra_classes ? extra_classes : list()
+	// TA EDIT END
+
 	// Register client who owns this message
 	owned_by = owner.client
 	RegisterSignal(owned_by, COMSIG_PARENT_QDELETING, PROC_REF(on_parent_qdel))
+	//RegisterSignal(owner, COMSIG_MOB_APPLY_DAMGE, PROC_REF(on_parent_take_damage)) //TA EDIT
 
 	// Clip message
 	var/maxlen = CHAT_MESSAGE_MAX_LENGTH
@@ -95,7 +188,7 @@
 		target.chat_color_darkened = target.chat_color
 
 	// Get rid of any URL schemes that might cause BYOND to automatically wrap something in an anchor tag
-	var/static/regex/url_scheme = new(@"[A-Za-z][A-Za-z0-9+-\.]*:\/\/", "g")
+	var/static/regex/url_scheme = new(@"[A-Za-zА-Яа-я][A-Za-zА-Яа-я0-9+-\.]*:\/\/", "g")
 	text = replacetext(text, url_scheme, "")
 
 	// Reject whitespace
@@ -118,22 +211,25 @@
 		target.chat_color_darkened = "#2681a5"
 
 	// We dim italicized text to make it more distinguishable from regular text
-	var/tgt_color = extra_classes.Find("italics") ? target.chat_color_darkened : target.chat_color
+	src.tgt_color = extra_classes.Find("italics") ? target.chat_color_darkened : target.chat_color //TA EDIT START
 
-	var/font_size = 8
+	src.font_size = 8
 	if(extra_classes.Find("emote"))
 		font_size = 7
-		tgt_color = "#adadad"
+		src.tgt_color = "#adadad"
 
 	if(extra_classes.Find("mindlink"))
 		font_size = 5
+
+	src.text = text
+	remaining_strings = split_text_preserving_html(src.text) //TA EDIT END
+
 	// Approximate text height
 	// Note we have to replace HTML encoded metacharacters otherwise MeasureText will return a zero height
 	// BYOND Bug #2563917
 	// Construct text
-	var/static/regex/html_metachars = new(@"&[A-Za-z]{1,7};", "g")
-	var/complete_text = "<span class='center maptext [extra_classes.Join(" ")]' style='color: [tgt_color]; font-size:[font_size]pt; font-family:\"Pterra\"; text-shadow:0 0 5px #000,0 0 5px #000,0 0 5px #000,0 0 5px #000;'>[text]</span>"
-
+	var/static/regex/html_metachars = new(@"&[A-Za-zА-Яа-я]{1,7};", "g")
+	var/complete_text = turn_to_styled(text) //TA EDIT
 	var/mheight
 	WXH_TO_HEIGHT(owned_by.MeasureText(complete_text, null, CHAT_MESSAGE_WIDTH), mheight)
 	if(!VERB_SHOULD_YIELD)
@@ -145,12 +241,20 @@
 
 
 /datum/chatmessage/proc/finish_image_generation(mheight, atom/target, mob/owner, complete_text, lifespan)
+	// TA EDIT START
+	if(QDELETED(src))
+		return
 	if(!owned_by || QDELETED(owned_by))
 		return qdel(src)
 	if(!target || QDELETED(target))
 		return qdel(src)
+	if(!owner || QDELETED(owner))
+		return qdel(src)
+	// TA EDIT END
 	approx_lines = max(1, mheight / CHAT_MESSAGE_APPROX_LHEIGHT)
 	message_loc = target
+	if(HAS_TRAIT(message_loc, TRAIT_SHAKY_SPEECH)) //TA EDIT
+		source_shake = TRUE
 	// Translate any existing messages upwards, apply exponential decay factors to timers
 	if (owned_by.seen_messages)
 //		var/idx = 1
@@ -175,7 +279,7 @@
 	message.maptext_width = CHAT_MESSAGE_WIDTH
 	message.maptext_height = mheight
 	message.maptext_x = (CHAT_MESSAGE_WIDTH - owner.bound_width) * -0.5
-	message.maptext = complete_text
+	//message.maptext = complete_text //TA EDIT
 
 	// View the message
 	LAZYADDASSOC(owned_by.seen_messages, message_loc, src)
@@ -183,12 +287,203 @@
 	animate(message, alpha = 150, time = CHAT_MESSAGE_SPAWN_TIME)
 
 	// Prepare for destruction
-	scheduled_destruction = world.time + (lifespan - CHAT_MESSAGE_EOL_FADE)
-	addtimer(CALLBACK(src, PROC_REF(end_of_life)), lifespan - CHAT_MESSAGE_EOL_FADE, TIMER_UNIQUE|TIMER_OVERRIDE)
+	var/skip_anim = FALSE //TA EDIT START
+	if(HAS_TRAIT(message_loc, TRAIT_NO_RUNECHAT_ANIMATION))
+		skip_anim = TRUE
+	if(owned_by && owned_by.prefs && owned_by.prefs.no_runechat_animation)
+		skip_anim = TRUE
+	if(skip_anim)
+		message.maptext = complete_text
+		schedule_end_of_life(lifespan - CHAT_MESSAGE_EOL_FADE) // TA EDIT
+	else
+		INVOKE_ASYNC(src, PROC_REF(spelling_loop))
 
+/datum/chatmessage/proc/turn_to_styled(string)
+	return {"<span style='font-size:[font_size]pt;font-family:\"Mookmania\";color:[tgt_color];text-shadow:0 0 5px #000,0 0 5px #000,0 0 5px #000,0 0 5px #000;' class='center maptext [_extra_classes != null ? _extra_classes.Join(" ") : ""]' style='color: [tgt_color]'>[string]</span>"} //AAAAAAAAAAAAAAA
 
+/datum/chatmessage/proc/split_text_preserving_html(text) // this proc was AI-generated by deepseek
+	var/static/regex/html_splitter = new(@"<[^>]+>|&[^;]+;|.", "g")
+	var/list/result = list()
+	var/next_pos = 1
 
+	while(html_splitter.Find(text, next_pos))
+		result += html_splitter.match
+		next_pos = html_splitter.next
 
+	return result
+
+/datum/chatmessage/proc/spelling_extra_delays(character)
+	if(character in CHAT_SPELLING_EXCEPTIONS)
+		return null
+
+	return CHAT_SPELLING_PUNCTUATION[character] ? CHAT_SPELLING_PUNCTUATION[character] : 0
+
+/datum/chatmessage/proc/spelling_loop()
+	// TA EDIT START
+	if(QDELETED(src) || premature_end || !message || QDELETED(message) || !remaining_strings)
+		return
+	// TA EDIT END
+
+	var/delay = CHAT_SPELLING_DELAY_WITH_EXCLAIMED_MULTIPLIER
+	var/direction = 1
+
+	var/skip_spelling = FALSE
+	if(isliving(message_loc) && !QDELETED(message_loc)) // TA EDIT
+		var/mobs_around = 0
+		for(var/mob/living/seer in oview(message_loc))
+			if(seer.client)
+				mobs_around++
+		if(mobs_around > 4)
+			skip_spelling = TRUE
+	for(var/letter as anything in remaining_strings)
+		// TA EDIT START
+		if(QDELETED(src) || premature_end || !message || QDELETED(message))
+			return
+		// TA EDIT END
+
+		var/extra_delay = spelling_extra_delays(letter)
+		if(skip_spelling || isnull(extra_delay))
+			current_string += letter
+			if(skip_spelling) // this is dogshit code quality btw
+				extra_delay += 0.15 SECONDS
+				delay += CHAT_SPELLING_DELAY_WITH_EXCLAIMED_MULTIPLIER + extra_delay
+			continue
+
+		// TA EDIT START
+		if(!add_string(letter, direction, (extra_delay ? FALSE : TRUE)))
+			return
+		// TA EDIT END
+		direction *= -1
+		sleep(CHAT_SPELLING_DELAY_WITH_EXCLAIMED_MULTIPLIER + extra_delay)
+
+		// TA EDIT START
+		if(QDELETED(src) || premature_end || !message || QDELETED(message))
+			return
+		// TA EDIT END
+
+		delay += CHAT_SPELLING_DELAY_WITH_EXCLAIMED_MULTIPLIER + extra_delay
+
+	// TA EDIT START
+	if(skip_spelling && !add_string())
+		return
+
+	if(QDELETED(src) || premature_end || !message || QDELETED(message))
+		return
+	// TA EDIT END
+
+	animate(
+		message,
+		time = CHAT_SPELLING_DELAY_WITH_EXCLAIMED_MULTIPLIER,
+		pixel_w = 0,
+		pixel_z = 0,
+	)
+	schedule_end_of_life(delay + 2 SECONDS) // TA EDIT
+
+/datum/chatmessage/proc/add_string(string = "", direction = 1, audible = TRUE)
+	// TA EDIT START
+	if(QDELETED(src) || premature_end || !message || QDELETED(message))
+		return FALSE
+	// TA EDIT END
+
+	return _add_string(arglist(args))
+
+/datum/chatmessage/proc/_add_string(string = "", direction = 1, audible = TRUE)
+	// TA EDIT START
+	if(QDELETED(src) || premature_end || !message || QDELETED(message))
+		return FALSE
+	// TA EDIT END
+
+	current_string += string
+	message.maptext = MAPTEXT(turn_to_styled(current_string))
+	if(audible && (!_extra_classes || !_extra_classes.Find("emote")))
+		/*
+		play_toot()
+		*/ // it's kinda dogshit rn
+		do_shift(direction)
+
+	return TRUE
+
+/datum/chatmessage/proc/play_toot()
+	// TA EDIT START
+	if(QDELETED(src) || premature_end || !message_loc || QDELETED(message_loc))
+		return
+	// TA EDIT END
+	if(world.time < last_toot_time + TOOT_COOLDOWN)
+		return
+
+	last_toot_time = world.time
+
+	playsound(message_loc, 'modular_twilight_axis/sound/effects/chat_toots/toot1.ogg', 30, frequency = rand(blip_tone[1], blip_tone[2]))
+
+/datum/chatmessage/proc/do_shift(direction)
+	// TA EDIT START
+	if(QDELETED(src) || premature_end || !message || QDELETED(message))
+		return
+	// TA EDIT END
+
+	var/exclaimed_multiplier = exclaimed ? 3 : 1
+
+	if(!_extra_classes || !_extra_classes.Find("emote"))
+		animate(
+			message,
+			time = CHAT_SPELLING_DELAY_WITH_EXCLAIMED_MULTIPLIER,
+			pixel_w = ((exclaimed_multiplier - 1) + rand(0, (exclaimed_multiplier - 1))) * pick(-1, 1),
+			pixel_z = ((exclaimed_multiplier - 1) + rand((exclaimed_multiplier - 1) * direction, (exclaimed_multiplier - 1) * (direction ? direction : 1) * (exclaimed_multiplier - 1))),
+			easing = ELASTIC_EASING,
+		)
+
+	if(source_shake && message_loc && !QDELETED(message_loc)) // TA EDIT
+		var/old_transform = message_loc.transform
+		var/old_pixel_w = message_loc.pixel_w
+		var/old_pixel_z = message_loc.pixel_z
+		var/matrix/shake_transform = matrix(message_loc.transform) // TA EDIT
+		shake_transform.Turn(rand(2 * exclaimed_multiplier, 6 * (exclaimed_multiplier - 0.5) * direction))
+		animate(
+			message_loc,
+			time = CHAT_SPELLING_DELAY_WITH_EXCLAIMED_MULTIPLIER + 0.3 - (exclaimed ? 0 : 0.1),
+			pixel_w = ((exclaimed_multiplier - 1) + rand(exclaimed_multiplier - 1, exclaimed_multiplier + (exclaimed ? 0 : 3))) * pick(-1, 1),
+			pixel_z = (exclaimed_multiplier + rand((exclaimed_multiplier - 1 + (exclaimed ? 0 : 3)) * direction, 1 * (direction ? direction : 1) * exclaimed_multiplier)),
+			transform = shake_transform,
+			easing = ELASTIC_EASING,
+		)
+		animate(
+			time = 0,
+			pixel_z = old_pixel_z,
+			pixel_w = old_pixel_w,
+			transform = old_transform,
+		)
+
+/*
+/datum/chatmessage/proc/premature_end_of_life()
+	SIGNAL_HANDLER
+	if(QDELETED(message))
+		return
+	premature_end = TRUE
+	_add_string(pick(CHAT_GLORF_LIST))
+	var/delay = rand(10, 20) * 0.01 SECONDS // yes, I'm dividing by 100 and then using the SECONDS define which multiplies by 10, deal with it. ^_^
+
+	var/matrix/new_transform = matrix(message.transform)
+	new_transform.Turn((5 + rand(5, 15)) * pick(1, -1))
+	animate(
+		message,
+		time = delay,
+		pixel_z = 0,
+		pixel_w = 0,
+		color = "#ad3c23",
+		flags = ANIMATION_PARALLEL
+		)
+
+	addtimer(CALLBACK(src, PROC_REF(end_of_life)), delay + 0.1 SECONDS) 
+*/ //TA EDIT END
+// TA EDIT START
+/datum/chatmessage/proc/schedule_end_of_life(delay)
+	if(QDELETED(src) || premature_end || !message || QDELETED(message))
+		return FALSE
+
+	scheduled_destruction = world.time + delay
+	addtimer(CALLBACK(src, PROC_REF(end_of_life)), delay, TIMER_UNIQUE|TIMER_OVERRIDE)
+	return TRUE
+// TA EDIT END
 
 /**
 	* Applies final animations to overlay CHAT_MESSAGE_EOL_FADE deciseconds prior to message deletion
@@ -196,11 +491,16 @@
 /datum/chatmessage/proc/end_of_life(fadetime = CHAT_MESSAGE_EOL_FADE)
 	if(QDELETED(src))
 		return
-//	animate(message, alpha = 0, time = fadetime, flags = ANIMATION_PARALLEL)
-//	sleep(fadetime)
-//	if(QDELETED(src))
-//		return
-	qdel(src)
+
+	// TA EDIT START
+	premature_end = TRUE
+	if(!message || QDELETED(message))
+		qdel(src)
+		return
+
+	animate(message, pixel_z = -14, alpha = 0, time = fadetime, flags = ANIMATION_PARALLEL)
+	QDEL_IN(src, fadetime)
+	// TA EDIT END
 
 /**
 	* Creates a message overlay at a defined location for a given speaker
@@ -300,3 +600,12 @@
 #undef CM_COLOR_SAT_MAX
 #undef CM_COLOR_LUM_MIN
 #undef CM_COLOR_LUM_MAX
+#undef CHAT_SPELLING_DELAY_WITH_EXCLAIMED_MULTIPLIER //TA EDIT START
+#undef EXCLAIMED_MULTIPLER
+#undef BLIP_TONE_DEFAULT
+#undef BLIP_TONE_FEMININE
+#undef BLIP_TONE_MASCULINE
+//#undef CHAT_GLORF_LIST
+#undef CHAT_SPELLING_PUNCTUATION
+#undef CHAT_SPELLING_EXCEPTIONS
+#undef TOOT_COOLDOWN //TA EDIT END

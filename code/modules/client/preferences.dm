@@ -7,9 +7,15 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	//doohickeys for savefiles
 	var/path
 	var/default_slot = 1				//Holder so it doesn't default to slot 1, rather the last one used
-	var/max_save_slots = 60
+
 	var/loaded_slot = 1
 	var/savefile_write_locked = FALSE // guard against simultaneous savefile writes from the UI causing any sort of horrors
+
+	var/max_save_slots = 20
+
+
+	var/list/job_characters = list() //TA EDIT
+	var/tmp/list/loaded_job_slots = list()  //TA EDIT
 
 	//non-preference stuff
 	var/muted = 0
@@ -24,13 +30,14 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	//Antag preferences
 	var/list/be_special = list()		//Special role selection
+	var/chat_on_map = TRUE
 	var/showrolls = TRUE
 
 	// Custom Keybindings
 	var/list/key_bindings = list()
 
 	var/tgui_lock = TRUE
-	var/tgui_theme = "azure_default"
+	var/tgui_theme = "azure_gilbranze" // TA EDIT
 	var/parchment_skin = "leatherbound"
 	var/statbrowser_theme = "dark"
 	var/windowflashing = TRUE
@@ -69,6 +76,9 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/static/datum/species/default_species = new /datum/species/human/northern()
 	var/datum/patron/selected_patron
 	var/static/datum/patron/default_patron = /datum/patron/divine/undivided
+	var/have_manor = TRUE //TA EDIT
+	var/manor_name = "" //TA EDIT
+	var/manor_type = "manor" //TA EDIT
 	var/list/features = MANDATORY_FEATURE_LIST
 	var/shake = TRUE
 	var/sexable = FALSE
@@ -79,6 +89,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	/// Preferences specific to a job. Alist, job title = (some object, usually a list)
 	var/list/job_subprefs = list()
 
+	var/list/job_subclass_preferences = list() // TA EDIT START
+	var/list/job_subclass_strict = list() // TA EDIT END
 	// Want randomjob if preferences already filled - Donkie
 	var/joblessrole = RETURNTOLOBBY  //defaults to 1 for fewer assistants
 
@@ -94,8 +106,12 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/stopdroning = FALSE
 
 	var/anonymize = TRUE
+	var/donor_ooc_color = TRUE // TA EDIT
+	var/donor_ooc_icon = TRUE // TA EDIT
+	var/donor_examine_icon = TRUE // TA EDIT
 	var/masked_examine = FALSE
-	var/full_examine = FALSE
+	var/nsfw_examine_always = FALSE // TA EDIT
+	var/full_examine = TRUE
 	var/mute_animal_emotes = FALSE
 	var/autoconsume = FALSE
 	var/no_examine_blocks = FALSE
@@ -105,8 +121,16 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/no_redflash = FALSE
 	var/no_storyteller_events = FALSE
 	var/top_examine = FALSE
+	var/no_runechat_animation = FALSE //TA EDIT
+
+	var/lastclass
+
+	var/donor_priority_last_round_index = 0 // TA EDIT
+
 
 	var/list/exp = list()
+	var/preferred_map = null
+
 	var/list/menuoptions
 
 	var/datum/migrant_pref/migrant
@@ -119,9 +143,15 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/static/default_cmusic_type = /datum/combat_music/default
 	var/datum/combat_music/combat_music
 	var/combat_music_helptext_shown = FALSE
+	var/custom_cmode_name // TA EDIT START
+	var/custom_cmode_file
+	var/custom_cmode_enabled = FALSE
+	var/tmp/last_custom_cmode_upload = 0 // TA EDIT END
+
 
 	var/crt = FALSE
-	var/grain = TRUE
+	var/grain = FALSE
+	var/icon_scaling = FALSE
 	var/dnr_pref = FALSE
 	var/qsr_pref = FALSE
 
@@ -133,13 +163,19 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/lich_headshot_link
 	var/vampire_headshot_link
 	var/werewolf_headshot_link //not used but setting up for the future
-	var/chatheadshot = FALSE
+	var/chatheadshot = TRUE
+	var/list/violated = list() // ТА
 	var/ooc_extra
+	var/ooc_extra_img // ТА
+	var/ooc_extra_img_link // ТА
 	var/song_artist
 	var/song_title
 	var/list/descriptor_entries = list()
 	var/list/custom_descriptors = list()
 	COOLDOWN_DECLARE(descriptor_preview)
+	var/defiant = TRUE
+
+	var/char_accent = "No accent"
 
 	var/list/gear_list = list()	// Assoc list: item_name = list("color"=..., "custom_name"=..., "custom_desc"=...)
 
@@ -152,6 +188,9 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/nsfwflavortext
 	var/nsfwflavortext_cached
 
+	var/nsfw_ooc_extra_img // TA EDIT
+	var/nsfw_ooc_extra_img_link // TA EDIT
+
 	var/erpprefs
 	var/erpprefs_cached
 
@@ -163,10 +202,6 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	var/list/img_gallery = list()
 	var/list/nsfw_img_gallery = list()
-
-	var/ooc_extra_img
-	var/nsfw_ooc_extra_img
-
 	var/datum/familiar_prefs/familiar_prefs
 
 	var/taur_type = null
@@ -188,18 +223,18 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	var/averse_chosen_faction = "Inquisition"
 
+	var/datum/voicepack/temp_vp
+
+	var/mood_messages_in_chat
+
+
 	var/attack_blip_frequency = ATTACK_BLIP_PREF_DEFAULT
 
 	/// Per-character theme override for examine panel viewers
 	var/examine_theme
 
-	// Vocal bark prefs
-	var/bark_id = "mutedc3"
-	var/bark_speed = 4
-	var/bark_pitch = 1
-	var/bark_variance = 0.2
-	COOLDOWN_DECLARE(bark_previewing)
-	var/mute_barks = FALSE
+	/// Whether we can see the feint HUD bar.
+	var/feint_hud = FALSE
 
 /datum/preferences/New(client/C)
 	parent = C
@@ -209,10 +244,24 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	if(istype(C))
 		if(!IsGuestKey(C.key))
 			load_path(C.ckey)
+			var/patreon_level = check_patreon_lvl(C.ckey)
+			switch(patreon_level)
+				if(1)
+					max_save_slots = max(max_save_slots, 40)
+				if(2)
+					max_save_slots = max(max_save_slots, 60)
+				if(3)
+					max_save_slots = max(max_save_slots, 80)
+				if(4)
+					max_save_slots = max(max_save_slots, 100)
+				if(5)
+					max_save_slots = max(max_save_slots, 120)
 			if(C.IsByondMember())
-				max_save_slots = 100
+				max_save_slots = max(max_save_slots, 100)
 	var/loaded_preferences_successfully = load_preferences()
 	if(loaded_preferences_successfully)
+		if(C)
+			C.apply_saved_visual_preferences()
 		if(load_character())
 			return
 
@@ -230,6 +279,187 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	save_character()		//let's save this new random character so it doesn't keep generating new ones.
 	menuoptions = list()
 	return
+
+/datum/preferences/proc/can_use_custom_combat_music(key) // TA EDIT START
+	if(!key && parent)
+		key = parent.ckey
+	key = ckey(key)
+	if(!key)
+		return FALSE
+	return check_patreon_lvl(key) >= 2
+
+/datum/preferences/proc/build_custom_combat_music(key)
+	if(!can_use_custom_combat_music(key))
+		custom_cmode_enabled = FALSE
+		return FALSE
+
+	if(!custom_cmode_file || !is_valid_custom_combat_music_path(custom_cmode_file))
+		custom_cmode_file = null
+		custom_cmode_name = null
+		custom_cmode_enabled = FALSE
+		return FALSE
+
+	if(!fexists(custom_cmode_file))
+		custom_cmode_file = null
+		custom_cmode_name = null
+		custom_cmode_enabled = FALSE
+		return FALSE
+
+	var/datum/combat_music/custom_track = new /datum/combat_music
+	custom_track.name = custom_cmode_name || "Custom Combat Music"
+	custom_track.desc = "A custom combat music track uploaded by the player."
+	custom_track.shortname = custom_track.name
+	custom_track.credits = "Player-uploaded custom combat music."
+	custom_track.musicpath = list(file(custom_cmode_file))
+
+	combat_music = custom_track
+	custom_cmode_enabled = TRUE
+	return TRUE
+
+/datum/preferences/proc/clear_custom_combat_music(mob/user)
+	if(custom_cmode_file && is_valid_custom_combat_music_path(custom_cmode_file) && fexists(custom_cmode_file))
+		fdel(custom_cmode_file)
+
+	custom_cmode_file = null
+	custom_cmode_name = null
+	custom_cmode_enabled = FALSE
+
+	if(!combat_music || !(combat_music.type in GLOB.cmode_tracks_by_type))
+		combat_music = GLOB.cmode_tracks_by_type[default_cmusic_type]
+
+	if(user)
+		to_chat(user, span_notice("Custom combat music cleared."))
+
+/datum/preferences/proc/upload_custom_combat_music(mob/user)
+	if(!user?.client)
+		return FALSE
+
+	if(!can_use_custom_combat_music(user.ckey))
+		to_chat(user, span_warning("Custom combat music uploads are available to tier 2+ patrons only."))
+		return FALSE
+
+	if(last_custom_cmode_upload && world.time < last_custom_cmode_upload + (3 MINUTES))
+		to_chat(user, span_warning("You need to wait before uploading another custom combat music track."))
+		return FALSE
+
+	var/infile = input(user, "Choose a new custom combat music .ogg file. 4 MB or less.", "Custom Combat Music") as null|file
+	if(!infile)
+		return FALSE
+
+	var/filename = sanitize_custom_combat_music_filename("[infile]")
+	var/file_error = check_custom_combat_music_file(infile, filename, user)
+	if(file_error)
+		to_chat(user, span_warning(file_error))
+		return FALSE
+
+	var/upload_ckey = user.ckey
+	if(parent?.ckey)
+		upload_ckey = parent.ckey
+	var/upload_path = "data/combat_music_uploads/[upload_ckey]/custom_cmode_[default_slot]_[world.realtime]_[filename]"
+
+	if(custom_cmode_file && is_valid_custom_combat_music_path(custom_cmode_file) && fexists(custom_cmode_file))
+		fdel(custom_cmode_file)
+
+	if(!fcopy(infile, upload_path))
+		to_chat(user, span_warning("Failed to save custom combat music file."))
+		return FALSE
+
+	custom_cmode_file = upload_path
+
+	var/songname = input(user, "Name your custom combat music:", "Song Name", filename) as text|null
+	if(songname)
+		custom_cmode_name = sanitize_custom_combat_music_display_name(songname)
+	else
+		custom_cmode_name = sanitize_custom_combat_music_display_name(filename)
+
+	last_custom_cmode_upload = world.time
+
+	if(build_custom_combat_music(user.ckey))
+		to_chat(user, span_notice("Selected custom combat music: <b>[custom_cmode_name]</b>."))
+		return TRUE
+
+	to_chat(user, span_warning("Failed to select uploaded custom combat music."))
+	return FALSE
+
+/datum/preferences/proc/select_combat_music(mob/user)
+	if(!user)
+		return
+
+	if(!combat_music_helptext_shown)
+		to_chat(user, span_notice("<span class='bold'>Combat Music Override</span><br>Options other than 'Default' override whatever the game dynamically sets for you, which is influenced by your job class, villain status, or certain events.<br>You can change this later through 'Combat Mode Music' in the Options tab.</span>"))
+		combat_music_helptext_shown = TRUE
+
+	var/list/track_options = GLOB.cmode_tracks_by_name.Copy()
+	var/can_custom_cmode = can_use_custom_combat_music(user.ckey)
+
+	if(can_custom_cmode && custom_cmode_file && is_valid_custom_combat_music_path(custom_cmode_file) && fexists(custom_cmode_file))
+		var/custom_option_name = "Use Uploaded Custom Song"
+		if(custom_cmode_name)
+			custom_option_name = "Use Uploaded Custom Song: [custom_cmode_name]"
+		track_options[custom_option_name] = "__custom_cmode_select"
+
+	if(can_custom_cmode)
+		track_options["Upload Custom Song"] = "__custom_cmode_upload"
+
+	if(custom_cmode_file)
+		track_options["Clear Uploaded Custom Song"] = "__custom_cmode_clear"
+
+	var/current_track_name = combat_music?.name
+	var/track_select = tgui_input_list(user, "To you, the Signal sounds like:", "COMBAT MUSIC", track_options, current_track_name)
+	if(!track_select)
+		return
+
+	var/selected_value = track_options[track_select]
+
+	if(selected_value == "__custom_cmode_upload")
+		upload_custom_combat_music(user)
+		return
+
+	if(selected_value == "__custom_cmode_select")
+		if(!can_custom_cmode)
+			to_chat(user, span_warning("Custom combat music is available to tier 2+ patrons only."))
+			return
+		if(build_custom_combat_music(user.ckey))
+			to_chat(user, span_notice("Selected custom combat music: <b>[combat_music.name]</b>."))
+		else
+			to_chat(user, span_warning("Custom combat music file is missing."))
+		return
+
+	if(selected_value == "__custom_cmode_clear")
+		clear_custom_combat_music(user)
+		return
+
+	var/datum/combat_music/selected_track = selected_value
+	if(!istype(selected_track))
+		return
+
+	combat_music = selected_track
+	custom_cmode_enabled = FALSE
+	to_chat(user, span_notice("Selected track: <b>[track_select]</b>."))
+
+	if(combat_music.desc)
+		to_chat(user, "<i>[combat_music.desc]</i>")
+
+	if(combat_music.credits)
+		to_chat(user, span_info("Song name: <b>[combat_music.credits]</b>")) // TA EDIT END
+
+/datum/preferences/proc/get_job_prefs(job_title, forced_slot = null) //TA EDIT start
+	var/slot = forced_slot ? forced_slot : job_characters[job_title]
+
+
+	if(!slot || slot == loaded_slot)
+		return src
+
+
+	if(loaded_job_slots["[slot]"])
+		return loaded_job_slots["[slot]"]
+
+
+	var/datum/preferences/temp = new(parent)
+	temp.load_character(slot)
+	loaded_job_slots["[slot]"] = temp
+
+	return temp //TA EDIT END
 
 // Only use skip_random if you are immediately going to call random_character(null, RANDOMIZE_MINIMAL) or higher
 // Otherwise the preferences will be left in an invalid state!

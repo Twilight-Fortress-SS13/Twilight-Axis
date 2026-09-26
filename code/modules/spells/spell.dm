@@ -207,7 +207,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 
 	var/list/req_items = list()		//required worn items to cast
 	var/req_inhand = null			//required inhand to cast
-	var/base_icon_state = "spell"
+	base_icon_state = "spell"
 	var/associated_skill = /datum/skill/magic/arcane
 	var/miracle = FALSE
 	var/devotion_cost = 0
@@ -394,7 +394,11 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	if(!phase_allowed && istype(user.loc, /obj/effect/dummy))
 		to_chat(user, span_warning("[name] cannot be cast unless I am completely manifested in the material plane!"))
 		return FALSE
-
+/*
+	if(istype(user, /mob/living/carbon/human/species/wildshape) && !istype(user, /mob/living/carbon/human/species/wildshape/dragon_matthios)) //TA changes
+		if(is_type_in_list(src, GLOB.learnable_spells))
+			return FALSE
+*/
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		if((invocation_type == "whisper" || invocation_type == "shout") && (!H.can_speak_vocal() || !H.getorganslot(ORGAN_SLOT_TONGUE)))
@@ -626,7 +630,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 			var/mob/living/L = user
 			var/fatigue = calculate_fatigue_drain(L)
 			if(fatigue > 0)
-				L.stamina_add(fatigue)
+				L.stamina_add(fatigue, null, TRUE, 1) // TA EDIT
 		invocation(user)
 		start_recharge()
 		if(sound)
@@ -635,7 +639,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 		if(isliving(user))
 			var/mob/living/L = user
 			if(releasedrain > 0)
-				L.stamina_add(calculate_fatigue_drain(L))
+				L.stamina_add(calculate_fatigue_drain(L), null, TRUE, 1) // TA EDIT
 			if(L.has_status_effect(/datum/status_effect/buff/clash))
 				var/mob/living/carbon/human/H = user
 				H.bad_guard(span_warning("I can't focus while casting spells!"), cheesy = TRUE)
@@ -874,7 +878,11 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 
 	if(user.stat && !stat_allowed)
 		return FALSE
-
+/*
+	if(istype(user, /mob/living/carbon/human/species/wildshape) && !istype(user, /mob/living/carbon/human/species/wildshape/dragon_matthios)) //TA EDIT
+		if(is_type_in_list(src, GLOB.learnable_spells))
+			return FALSE
+*/
 	if(!ignore_cockblock && HAS_TRAIT(user, TRAIT_SPELLCOCKBLOCK))
 		return FALSE
 

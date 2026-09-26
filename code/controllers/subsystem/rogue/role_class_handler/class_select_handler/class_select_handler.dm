@@ -58,6 +58,7 @@
 
 	//classes we rolled, basically you get a datum followed by a number in here on how many times you rerolled it.
 	var/list/rolled_classes = list()
+	var/list/excluded_classes = list() // TA EDIT
 
 	// The register id we use
 	var/register_id = null
@@ -88,7 +89,16 @@
 	cur_picked_class = null
 	class_cat_alloc_attempts = null
 	forced_class_additions = null
+	excluded_classes = null // TA EDIT
 	. = ..()
+
+/datum/class_select_handler/proc/is_class_excluded(datum/advclass/target_class) // TA EDIT START
+	if(!target_class || !length(excluded_classes))
+		return FALSE
+	for(var/datum/advclass/excluded_class in excluded_classes)
+		if(excluded_class.type == target_class.type)
+			return TRUE
+	return FALSE // TA EDIT END
 
 // I hope to god you have a client before you call this, cause the checks on the SS
 /// Returns TRUE if there is more than one advclass, FALSE - if just one (no need for select menu)
@@ -103,12 +113,16 @@
 
 			if(class_cat_alloc_bypass_reqs)
 				for(var/datum/advclass/CUR_AZZ in subsystem_ctag_list)
+					if(is_class_excluded(CUR_AZZ)) // TA EDIT START
+						continue // TA EDIT END
 					if(rolled_classes[CUR_AZZ])
 						continue
 					local_insert_sortlist += CUR_AZZ
 
 			else // If we are not bypassing reqs, time to do a req check
 				for(var/datum/advclass/CUR_AZZ in subsystem_ctag_list)
+					if(is_class_excluded(CUR_AZZ)) // TA EDIT START
+						continue // TA EDIT END
 					if(rolled_classes[CUR_AZZ])
 
 						continue
@@ -142,12 +156,18 @@
 		if(forced_class_bypass_reqs)
 			for(var/uninstanced_azz_types in forced_class_additions)
 				var/datum/advclass/FORCE_IT_IN = new uninstanced_azz_types
+				if(is_class_excluded(FORCE_IT_IN)) // TA EDIT START
+					qdel(FORCE_IT_IN)
+					continue // TA EDIT END
 				if(rolled_classes[FORCE_IT_IN])
 					continue
 				rolled_classes[FORCE_IT_IN] = 0
 		else
 			for(var/uninstanced_azz_types in forced_class_additions)
 				var/datum/advclass/FORCE_IT_IN = new uninstanced_azz_types
+				if(is_class_excluded(FORCE_IT_IN)) // TA EDIT START
+					qdel(FORCE_IT_IN)
+					continue // TA EDIT END
 				if(rolled_classes[FORCE_IT_IN])
 					continue
 				if(FORCE_IT_IN.check_requirements(H))
@@ -188,6 +208,8 @@
 	var/list/possible_list = list()
 	for(var/CTAG_CAT in filled_class.category_tags)
 		for(var/datum/advclass/new_age_datum in local_sorted_class_cache[CTAG_CAT])
+			if(is_class_excluded(new_age_datum)) // TA EDIT START
+				continue // TA EDIT END
 			if(new_age_datum in rolled_classes)
 				continue
 			if(new_age_datum in possible_list) // In the offchance we got the datum in two cats, we don't want to cuck them by doubling up the chance to get it
@@ -361,6 +383,8 @@
 	if(href_list["class_selected"])
 		var/selected_class = href_list["selected_class"]
 		var/locvar_check = locate(selected_class)
+		if(is_class_excluded(locvar_check)) // TA EDIT START
+			return // TA EDIT END
 
 		// shiiiiiiiiiiiiiiiiet
 		if(locvar_check in SSrole_class_handler.sorted_class_categories[CTAG_CHALLENGE])
@@ -390,6 +414,8 @@
 	if(href_list["special_selected"])
 		var/special_class = href_list["selected_special"]
 		var/locvar_check = locate(special_class)
+		if(is_class_excluded(locvar_check)) // TA EDIT START
+			return // TA EDIT END
 
 		if(locvar_check in special_session_queue)
 			cur_picked_class = locvar_check

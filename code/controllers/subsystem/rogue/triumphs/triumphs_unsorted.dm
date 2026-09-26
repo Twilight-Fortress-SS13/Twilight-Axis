@@ -5,7 +5,7 @@
 	if(!ckey)
 		return
 	return SStriumphs.get_triumphs(ckey)
-
+/*
 /client/proc/adjusttriumph()
 	set category = "Admin.Special"
 	set name = "Adjust Own Triumphs"
@@ -15,7 +15,7 @@
 		mob.adjust_triumphs(input, TRUE, "Adjust Own Triumphs (admin verb)")
 		log_admin("[key_name(src)]: Modified own Triumphs by [input], from [old_triumphs] to [old_triumphs + input]")
 		message_admins(span_adminnotice("[key_name_admin(src)]: Modified own Triumphs by [input], from [old_triumphs] to [old_triumphs + input]"))
-
+*/
 
 
 

@@ -1,6 +1,6 @@
 /datum/supply_pack/rogue/hammerhold
 	group = "Cultural Stock"
-	crate_name = "Hammerhold crate"
+	crate_name = "Goods from Drud Akhdruk" //TA EDIT
 	crate_type = /obj/structure/closet/crate/chest/merchant
 	not_in_public = TRUE
 

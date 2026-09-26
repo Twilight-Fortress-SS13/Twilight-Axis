@@ -220,7 +220,7 @@
 	primary_resource_cost = SPELLCOST_MIRACLE
 
 	secondary_resource_type = SPELL_COST_STAMINA
-	primary_resource_cost = SPELLCOST_MINOR_PROJECTILE
+	secondary_resource_cost = SPELLCOST_MINOR_PROJECTILE // TA EDIT
 	invocation_type = INVOCATION_SHOUT
 	invocations = list("Be wrangled by gore!")
 
@@ -312,6 +312,8 @@
 		return FALSE
 	H.emote("roar")
 	for(var/mob/living/carbon/target in view(cast_range, get_turf(owner)))
+		if(!H.cleric_aoe_target_allowed(target))
+			continue
 		if(istype(target.patron, /datum/patron/inhumen))
 			to_chat(target, span_danger("You feel your blood boil! It's time to wage war!"))
 			target.apply_status_effect(/datum/status_effect/buff/call_to_slaughter)	//Buffs inhumens

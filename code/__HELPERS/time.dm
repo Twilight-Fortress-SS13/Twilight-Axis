@@ -162,6 +162,9 @@ GLOBAL_VAR_INIT(date_override_offset, 0)
 				SStreasury.tick_loans()
 				SStreasury.tick_poll_tax()
 			SScity_assembly?.on_day_tick()
+			process_manor_production_cycle(TRUE, FALSE) //TA EDIT
+		if(GLOB.tod == "dusk") //TA EDIT
+			process_manor_production_cycle(FALSE, TRUE) //TA EDIT
 		for(var/mob/living/player in GLOB.mob_list)
 			if(player.stat != DEAD && player.client)
 				player.do_time_change()
@@ -171,6 +174,22 @@ GLOBAL_VAR_INIT(date_override_offset, 0)
 	else
 
 		return null
+
+/proc/process_manor_production_cycle(is_dawn = FALSE, is_dusk = FALSE) //TA EDIT START
+	if(!SStreasury || !SSeconomy)
+		return
+
+	for(var/mob/living/player in GLOB.player_list)
+		if(player && player.mind)
+			var/datum/manor/manor = player.mind.get_owned_manor()
+			if(!manor)
+				continue
+			if(is_dawn && !(manor.patron == /datum/patron/divine/noc || manor.patron == /datum/patron/inhumen/zizo))
+				continue
+			if(is_dusk && manor.patron == /datum/patron/divine/noc)
+				continue
+			manor.ensure_initialized(player)
+			manor.produce_resources(player, is_dawn, is_dusk) //TA EDIT END
 
 /mob/living/proc/do_time_change()
 
@@ -211,7 +230,7 @@ GLOBAL_VAR_INIT(date_override_offset, 0)
 		T.maptext = {"<span style='vertical-align:top; text-align:center;
 					color: #7c5b10; font-size: 150%;
 					text-shadow: 1px 1px 2px black, 0 0 1em black, 0 0 0.2em black;
-					font-family: "Nosfer", "Pterra";'>[text_to_show]</span>"}
+					font-family: "Nosfer", "Mookmania";'>[text_to_show]</span>"}
 		T.maptext_width = 205
 		T.maptext_height = 209
 		T.maptext_x = 12

@@ -85,7 +85,11 @@
 				continue
 			if(landmark.region != region)
 				continue
+			if(!is_active_map_threat_region(landmark.region)) // TA EDIT
+				continue
 			if(!landmark.is_available_for_quest())
+				continue
+			if(quest_landmark_has_client_witness(landmark))
 				continue
 			region_matches += landmark
 		if(length(region_matches))
@@ -122,8 +126,36 @@
 
 /proc/landmark_region_allows_type(obj/effect/landmark/quest_spawner/landmark, quest_type)
 	if(!landmark.region)
-		return TRUE
+		return FALSE
+
+	if(!is_active_map_threat_region(landmark.region)) // TA EDIT
+		return FALSE
+
 	var/datum/threat_region/TR = SSregionthreat.get_region(landmark.region)
 	if(!TR)
-		return TRUE
+		return FALSE // TA EDIT
+
 	return TR.allows_quest_type(quest_type)
+
+/proc/quest_landmark_has_client_witness(obj/effect/landmark/quest_spawner/landmark)
+	for(var/mob/M in get_hearers_in_view(world.view, landmark))
+		if(M.client)
+			return TRUE
+	return FALSE
+
+
+// TA EDIT HELPER
+
+/proc/is_active_map_threat_region(region_name)
+	if(!region_name)
+		return FALSE
+
+	var/list/active_regions = get_active_map_threat_regions()
+	if(length(active_regions))
+		return (region_name in active_regions)
+
+	for(var/datum/threat_region/TR as anything in SSregionthreat.threat_regions)
+		if(TR.region_name == region_name)
+			return TRUE
+
+	return FALSE

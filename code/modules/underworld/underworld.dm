@@ -12,10 +12,10 @@
 /obj/item/flashlight/lantern/shrunken/update_brightness(mob/user = null)
 	if(on)
 		icon_state = "[initial(icon_state)]-on"
-		set_light(3, 3, 20, l_color = LIGHT_COLOR_BLOOD_MAGIC)
 	else
 		icon_state = initial(icon_state)
-		set_light(0)
+
+	set_light_on(on)
 
 /obj/structure/underworld/carriageman
 	name = "The Ferryman"
@@ -102,7 +102,7 @@
 
 /obj/structure/underworld/carriage_normal
 	name = "Carriage"
-	desc = "Azure Peak awaits."
+	desc = "Twilight Axis awaits."
 	icon = 'icons/roguetown/underworld/enigma_carriage.dmi'
 	icon_state = "carriage_normal"
 	anchored = TRUE

@@ -20,6 +20,13 @@
 	. += span_info("Activate the sack in your hand to dump its contents out in whatever direction you're facing.")
 	. += span_info("Sacks can be crafted into bags of bait for alluring huntable creechers, or roped into rucksacks for a larger-but-heftier backpack.")
 
+/obj/item/storage/roguebag/StorageBlock(obj/item/I, mob/user) // TA EDIT START
+	if(I?.GetComponent(/datum/component/cursed_item))
+		if(user)
+			to_chat(user, span_warning("[I] cannot be hidden away in [src]."))
+		return TRUE
+	return ..() // TA EDIT END
+
 /obj/item/storage/roguebag/examine(mob/user)
 	. = ..()
 	if(contents.len)

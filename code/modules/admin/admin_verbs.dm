@@ -5,11 +5,11 @@ GLOBAL_LIST_INIT(admin_verbs_default, world.AVerbsDefault())
 GLOBAL_PROTECT(admin_verbs_default)
 /world/proc/AVerbsDefault()
 	return list(
+	/client/proc/debug_below_turf,
 	/client/proc/check_pq,
 	/client/proc/adjust_pq,
 	/client/proc/hearallasghost,
-	/client/proc/hearglobalLOOC,
-	/client/proc/hearsubtleLOOC,
+	//	/client/proc/hearglobalLOOC, Лоок вырезан. Не нужно.
 	/client/proc/togglespawnmessages,
 	/client/proc/toggle_aghost_invis,
 	/client/proc/admin_ghost,
@@ -41,7 +41,7 @@ GLOBAL_PROTECT(admin_verbs_default)
 	/client/proc/admin_spread_effect,
 	/client/proc/open_bounty_menu,
 	/client/proc/remove_bounty,
-	/client/proc/agevet_player,
+	// RATWOOD MODULAR START
 	/client/proc/bunker_bypass,
 	)
 GLOBAL_LIST_INIT(admin_verbs_admin, world.AVerbsAdmin())
@@ -54,18 +54,19 @@ GLOBAL_PROTECT(admin_verbs_admin)
 	/client/proc/toggle_lobby_ooc,
 	/client/proc/hide_verbs,			/*hides all our adminverbs*/
 	/client/proc/hide_most_verbs,		/*hides all our hideable adminverbs*/
+	/client/proc/debug_variables,		/*allows us to -see- the variables of any instance in the game. +VAREDIT needed to modify*/
 	/client/proc/investigate_show,		/*various admintools for investigation. Such as a singulo grief-log*/
 	/client/proc/secrets,				/* Almost entirely non-functional after Azure Peak Debloatening. Final few are redundant, but keeping just in case */
 	/client/proc/reload_admins,
 	/client/proc/recalc_pq_bulk,
 	/client/proc/recalc_pq_single,
-	/client/proc/reload_whitelist,
 	/client/proc/reestablish_db_connection, /*reattempt a connection to the database*/
 	/client/proc/cmd_admin_pm_context,	/*right-click adminPM interface*/
 	/client/proc/cmd_admin_godmode_targetable,	/*right-click godmode toggle*/
 	/client/proc/cmd_admin_pm_panel,		/*admin-pm list*/
 	/client/proc/stop_sounds,
 	/client/proc/mark_datum_mapview,
+	/client/proc/view_admin_favorites, // TA EDIT
 
 	/client/proc/invisimin,				/*allows our mob to go invisible/visible*/
 //	/datum/admins/proc/show_traitor_panel,	/*interface which shows a mob's mind*/ -Removed due to rare practical use. Moved to debug verbs ~Errorage
@@ -104,12 +105,15 @@ GLOBAL_PROTECT(admin_verbs_admin)
 	/client/proc/cmd_admin_check_player_exp, /* shows players by playtime */
 	/client/proc/toggle_combo_hud, // toggle display of the combination pizza antag and taco sci/med/eng hud
 	/client/proc/toggle_AI_interact, /*toggle admin ability to interact with machines as an AI*/
+	/client/verb/toggle_deadchat,
 	/client/proc/toggleprayers,
 	/client/proc/toggle_prayer_sound,
 	/client/proc/colorasay,
 	/client/proc/resetasaycolor,
 	/client/proc/toggleadminhelpsound,
 	/client/proc/respawn_character,
+	/client/proc/clear_job_respawn_delay,
+	/client/proc/ccg_admin_management,
 	/client/proc/discord_id_manipulation, /* No Discord implementation? */
 	/datum/admins/proc/sleep_view,
 	/datum/admins/proc/wake_view,
@@ -131,11 +135,16 @@ GLOBAL_LIST_INIT(admin_verbs_sounds, list(
 	/client/proc/play_local_sound,
 	/client/proc/play_local_sound_variable,
 	/client/proc/play_sound,
-	/client/proc/set_round_end_sound
+	/client/proc/set_round_end_sound,
+	/client/proc/play_music_global_url,
+	/client/proc/play_music_local_url,
+	/client/proc/play_music_direct_url
 	))
 GLOBAL_PROTECT(admin_verbs_sounds)
 GLOBAL_LIST_INIT(admin_verbs_fun, list(
 	/client/proc/cmd_admin_dress,
+	/client/proc/cmd_admin_dress_full,
+	/client/proc/cmd_admin_select_equipment, // TA EDIT
 	/client/proc/cmd_admin_gib_self,
 	/client/proc/drop_bomb,
 	/client/proc/set_dynex_scale,
@@ -159,7 +168,12 @@ GLOBAL_LIST_INIT(admin_verbs_fun, list(
 	/client/proc/smite
 	))
 GLOBAL_PROTECT(admin_verbs_fun)
-GLOBAL_LIST_INIT(admin_verbs_spawn, list(/datum/admins/proc/spawn_atom, /datum/admins/proc/podspawn_atom, /client/proc/respawn_character, /datum/admins/proc/beaker_panel))
+GLOBAL_LIST_INIT(admin_verbs_spawn, list(
+	/datum/admins/proc/spawn_atom,
+	/datum/admins/proc/podspawn_atom,
+	/client/proc/respawn_character,
+	/datum/admins/proc/beaker_panel
+))
 GLOBAL_PROTECT(admin_verbs_spawn)
 GLOBAL_LIST_INIT(admin_verbs_server, world.AVerbsServer())
 GLOBAL_PROTECT(admin_verbs_server)
@@ -178,10 +192,10 @@ GLOBAL_PROTECT(admin_verbs_server)
 	/client/proc/toggle_random_events,
 	/client/proc/adminchangemap,
 	/client/proc/panicbunker,
-	/datum/admins/proc/BC_WhitelistKeyVerb,
-	/datum/admins/proc/BC_RemoveKeyVerb,
-	/datum/admins/proc/admin_add_donator_verb,
-	/datum/admins/proc/admin_remove_donator_verb,
+//	/datum/admins/proc/BC_WhitelistKeyVerb,
+//	/datum/admins/proc/BC_RemoveKeyVerb,
+//	/datum/admins/proc/admin_add_donator_verb,
+//	/datum/admins/proc/admin_remove_donator_verb,
 	/client/proc/toggle_hub,
 	/client/proc/download_player_save
 	)
@@ -231,7 +245,8 @@ GLOBAL_PROTECT(admin_verbs_debug)
 	/client/proc/cleanup_stress_test_mobs,
 	/client/proc/cmd_admin_economic_panel,
 	/client/proc/cmd_admin_view_chronicle,
-	/client/proc/cmd_admin_view_economics
+	/client/proc/cmd_admin_view_economics,
+	/client/proc/link_ckey2discord
 	)
 GLOBAL_LIST_INIT(admin_verbs_possess, list(/proc/possess, GLOBAL_PROC_REF(release)))
 GLOBAL_PROTECT(admin_verbs_possess)
@@ -263,6 +278,9 @@ GLOBAL_LIST_INIT(admin_verbs_hideable, list(
 	/client/proc/play_local_sound_variable,
 	/client/proc/play_sound,
 	/client/proc/set_round_end_sound,
+	/client/proc/play_music_global_url,
+	/client/proc/play_music_local_url,
+	/client/proc/play_music_direct_url,
 	/client/proc/cmd_admin_dress,
 	/client/proc/cmd_admin_gib_self,
 	/client/proc/drop_bomb,
@@ -294,7 +312,7 @@ GLOBAL_LIST_INIT(admin_verbs_hideable, list(
 	/client/proc/enable_debug_verbs,
 	/proc/possess,
 	/proc/release,
-	/client/proc/reload_whitelist,
+//	/client/proc/reload_whitelist,
 	/client/proc/panicbunker,
 //	/client/proc/admin_change_sec_level,
 	/client/proc/cmd_display_del_log,
@@ -325,7 +343,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 			add_verb(src, GLOB.admin_verbs_possess)
 		if(rights & R_PERMISSIONS)
 			add_verb(src, GLOB.admin_verbs_permissions)
-		if(rights & R_STEALTH)
+		if((rights & R_STEALTH) && !(holder.rank.name in list("Eventmin", "Coder", "Developer"))) // TA EDIT
 			add_verb(src, /client/proc/stealth)
 		if(rights & R_ADMIN)
 			add_verb(src, GLOB.admin_verbs_poll)
@@ -622,6 +640,9 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	set category = "Admin.Preferences"
 	set name = "Stealth Mode"
 	if(holder)
+		var/rank_name = holder.rank?.name // TA EDIT START
+		if(rank_name in list("Eventmin", "Coder", "Developer"))
+			return // TA EDIT END
 		if(holder.fakekey)
 			holder.fakekey = null
 			if(isobserver(mob))
@@ -737,25 +758,25 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 
 /client/proc/give_spell(mob/T in GLOB.mob_list)
 	set category = "Game Master.Misc"
-	set name = "Give Spell"
+	// TA EDIT START
+	set name = "Give Spells"
 	set desc = ""
 
-	var/granted = loadout_add_spell(T)
-	if(granted)
-		SSblackbox.record_feedback("tally", "admin_verb", 1, "Give Spell") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	var/list/granted = loadout_add_spell(T)
+	if(length(granted))
+		SSblackbox.record_feedback("tally", "admin_verb", 1, "Give Spells") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	// TA EDIT END
 
 /client/proc/remove_spell(mob/T in GLOB.mob_list)
 	set category = "Game Master.Misc"
-	set name = "Remove Spell"
+	// TA EDIT START
+	set name = "Remove Spells"
 	set desc = ""
 
-	if(T && T.mind)
-		var/obj/effect/proc_holder/spell/S = input(usr, "Choose the spell to remove", "NO ABRAKADABRA") as null|anything in sortList(T.mind.spell_list)
-		if(S)
-			T.mind.RemoveSpell(S)
-			log_admin("[key_name(usr)] removed the spell [S] from [key_name(T)].")
-			message_admins(span_adminnotice("[key_name_admin(usr)] removed the spell [S] from [key_name_admin(T)]."))
-			SSblackbox.record_feedback("tally", "admin_verb", 1, "Remove Spell") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	var/list/removed = ta_remove_spells(T)
+	if(length(removed))
+		SSblackbox.record_feedback("tally", "admin_verb", 1, "Remove Spells") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	// TA EDIT END
 
 /client/proc/object_say(obj/O in world)
 	set category = "Game Master.Narration"
@@ -962,4 +983,52 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 
 	to_chat(src, "Browser tools are now enabled.")
 	winset(src, null, "browser-options=devtools,find,refresh")
+
+/client/proc/adjusttriumph()
+	set category = "Admin.Special"
+	set name = "Adjust Triumphs"
+	set desc = "Adjust a player's Triumphs by ckey, including offline players."
+	if(!holder || !check_rights(R_ADMIN))
+		return
+
+	var/target_input = input(src, "Enter the player's ckey.", "Adjust Triumphs") as null|text
+	var/target_ckey = ckey(target_input)
+	if(!target_ckey)
+		return
+	if(target_ckey == src.ckey)
+		to_chat(src, span_boldwarning("Самому себе триумфы выдавать нельзя."))
+		return
+
+	var/current_triumphs = SStriumphs.get_triumphs(target_ckey)
+	var/amt2change = input(src, "How much to modify [target_ckey]'s Triumphs by? (100 to -100)\nCurrent Triumphs: [current_triumphs]", "Adjust Triumphs") as null|num
+	if(isnull(amt2change))
+		return
+	amt2change = clamp(round(amt2change), -100, 100)
+	if(current_triumphs + amt2change < 0)
+		amt2change = -current_triumphs
+	if(!amt2change)
+		to_chat(src, span_warning("The Triumph amount was not changed."))
+		return
+
+	var/raisin = stripped_input(usr, "State a short reason for this change", "Game Master", null, null)
+	if(!raisin)
+		return
+
+	var/new_triumphs = current_triumphs + amt2change
+	if(alert(src, "Ckey: [target_ckey]\nTriumphs: [current_triumphs] -> [new_triumphs]\nReason: [raisin]", "Confirm Triumph Adjustment", "Confirm", "Cancel") != "Confirm")
+		return
+
+	SStriumphs.triumph_adjust(amt2change, target_ckey)
+	SStriumphs.adjust_leaderboard(target_ckey)
+	world.TgsAnnounceTriumphChanges(amt2change, target_ckey, src.ckey, raisin)
+	message_admins("[usr.key] adjusted [target_ckey]'s triumphs by [amt2change] with reason: [raisin].")
+	log_admin("[usr.key] adjusted [target_ckey]'s triumphs by [amt2change] with reason: [raisin].")
+	to_chat(src, span_adminnotice("[target_ckey]'s Triumphs: [current_triumphs] -> [new_triumphs]."))
+
+	var/client/target_client = GLOB.directory[target_ckey]
+	if(target_client)
+		if(amt2change > 0)
+			to_chat(target_client, "\n<font color='purple'>[amt2change] TRIUMPH(S) awarded.</font>")
+		else
+			to_chat(target_client, "\n<font color='purple'>[amt2change * -1] TRIUMPH(S) lost.</font>")
 

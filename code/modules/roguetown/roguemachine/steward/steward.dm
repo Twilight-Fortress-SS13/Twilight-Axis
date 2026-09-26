@@ -5,9 +5,11 @@
 #define TAB_PAYDAY 7
 #define TAB_DEBT 8
 
+#define TAB_INVESTMENTS 10
+
 /obj/structure/roguemachine/steward
 	name = "nerve master"
-	desc = "A magitech device connected to the arteries of Azuria's royal treasury. When unlocked with the proper key, it can sway the fate of an entire kingdom's \
+	desc = "A magitech device connected to the arteries of the realm's royal treasury. When unlocked with the proper key, it can sway the fate of an entire kingdom's \
 	finances. Stewards traditionally use these machines to export stockpiled goods for coinage, to pay-and-tax all accounts registered through the MEISTER, and to \
 	import supplies for taskings-a-plenty."
 	icon = 'icons/roguetown/misc/machines.dmi'
@@ -42,20 +44,57 @@
 //	For competence of life I will allow you,
 //	That lack of means enforce you not to evil:
 /obj/structure/roguemachine/steward/proc/setup_default_payments()
-	daily_payments["Marshal"] = 60 //Garrison
-	daily_payments["Knight"] = 40
-	daily_payments["Sergeant"] = 40
-	daily_payments["Man at Arms"] = 30
-	daily_payments["Warden"] = 20
-	daily_payments["Veteran"] = 20
-	daily_payments["Squire"] = 10
-	daily_payments["Seneschal"] = 40 //Manor-House
-	daily_payments["Servant"] = 20
-	daily_payments["Head Physician"] = 20 //Doctors
-	daily_payments["Apothecary"] = 10
-	daily_payments["Court Magician"] = 40 //University
-	daily_payments["Archivist"] = 20
-	daily_payments["Magicians Associate"] = 10
+	if(SSmapping.config.map_name == "Rockhill")
+		daily_payments["Royal Guard Sergeant"] = 40
+		daily_payments["Court Physician"] = 20
+		daily_payments["Court Magician"] = 40 //University
+		daily_payments["Magicians Associate"] = 10
+		daily_payments["Archivist"] = 20
+		daily_payments["Royal Guard"] = 20
+		daily_payments["Town Sheriff"] = 35
+		daily_payments["Town Watch"] = 20
+		daily_payments["Overseer"] = 30
+		daily_payments["Vanguard"] = 10
+		daily_payments["Veteran"] = 20
+		daily_payments["Squire"] = 10
+		daily_payments["Seneschal"] = 40 //Manor-House
+		daily_payments["Servant"] = 20
+		daily_payments["Apothecary"] = 10
+		daily_payments["Mayor"] = 40
+		daily_payments["Bailiff"] = 10
+	else if(SSmapping.config.map_name == "Desert Town") //TA EDIT
+		daily_payments["Cataphract"] = 40 //TA EDIT
+		daily_payments["Azeb Agha"] = 40 //TA EDIT
+		daily_payments["Azeb"] = 20 //TA EDIT
+		daily_payments["Janissary Sergeant"] = 40 //TA EDIT
+		daily_payments["Janissary"] = 30 //TA EDIT
+		daily_payments["Head Slave"] = 40 //TA EDIT
+		daily_payments["Slave Master"] = 30 //TA EDIT
+		daily_payments["Sheikh"] = 40 //TA EDIT
+		daily_payments["Veteran"] = 20 //TA EDIT
+		daily_payments["Squire"] = 10 //TA EDIT
+		daily_payments["Servant"] = 20 //TA EDIT
+		daily_payments["Head Physician"] = 20 //Doctors //TA EDIT
+		daily_payments["Apothecary"] = 10 //TA EDIT
+		daily_payments["Court Magician"] = 40 //University //TA EDIT
+		daily_payments["Archivist"] = 20 //TA EDIT
+		daily_payments["Magicians Associate"] = 10 //TA EDIT
+	else
+		daily_payments["Marshal"] = 60 //Garrison
+		daily_payments["Knight"] = 40
+		daily_payments["Sergeant"] = 40
+		daily_payments["Man at Arms"] = 30
+		daily_payments["Warden"] = 20
+		daily_payments["Veteran"] = 20
+		daily_payments["Squire"] = 10
+		daily_payments["Seneschal"] = 40 //Manor-House
+		daily_payments["Servant"] = 20
+		daily_payments["Head Physician"] = 20 //Doctors
+		daily_payments["Apothecary"] = 10
+		daily_payments["Court Magician"] = 40 //University
+		daily_payments["Archivist"] = 20
+		daily_payments["Magicians Associate"] = 10
+
 	enforce_wage_floors()
 
 /obj/structure/roguemachine/steward/proc/enforce_wage_floors()
@@ -70,12 +109,13 @@
 /proc/has_fiscal_authority(mob/user)
 	if(!user)
 		return FALSE
-	if(user.job == "Steward" || user.job == "Clerk" || user.job == "Grand Duke")
+	if(user.job in list("Steward", "Clerk", "Grand Duke", "Mayor", "Sultan", "Vizier",)) // TA edit
+		return TRUE
+	if(SSticker.rulermob && user == SSticker.rulermob)
 		return TRUE
 	if(SSticker.regentmob && user == SSticker.regentmob)
 		return TRUE
 	return FALSE
-
 
 
 /obj/structure/roguemachine/steward/attackby(obj/item/P, mob/user, params)
@@ -134,6 +174,8 @@
 		SStreasury.total_import += amt
 		record_round_statistic(STATS_STOCKPILE_IMPORTS_VALUE, amt)
 		record_treasury_expense(TREASURY_FLOW_IMPORT, treasury_role_of(usr), amt)
+		if(amt >= 100) //Only announce big spending.
+			scom_announce("[SSticker.realm_name] imports [D.name] for [amt] mammon.") //TA_EDIT
 		D.raise_demand()
 		addtimer(CALLBACK(src, PROC_REF(do_import), D.type), 10 SECONDS)
 	if(href_list["export"])
@@ -176,7 +218,7 @@
 			if(A == X)
 				var/max_fine = SStreasury.get_max_fine_for(A)
 				if(max_fine <= 0)
-					say("[A] cannot be fined by the Crown at this time.")
+					say("[A] cannot be fined by [ta_economy_authority_lower()] at this time.")
 					playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
 					return
 				var/newtax = input(usr, "How much to fine [A]? (Maximum [max_fine]m)", src, max_fine) as null|num
@@ -211,14 +253,14 @@
 		if(!usr.canUseTopic(src, BE_CLOSE) || locked)
 			return
 		var/current_floor = SStreasury.stockpile_purchase_floor
-		var/new_floor = input(usr, "Set the Crown's Purchase Floor. Below this balance the stockpile refuses purchases - goods stay with the seller. (0-10000m)", src, current_floor) as null|num
+		var/new_floor = input(usr, "Set [ta_economy_authority_possessive_lower()] Purchase Floor. Below this balance the stockpile refuses purchases - goods stay with the seller. (0-10000m)", src, current_floor) as null|num
 		if(isnull(new_floor))
 			return
 		if(!usr.canUseTopic(src, BE_CLOSE) || locked)
 			return
 		new_floor = CLAMP(round(new_floor), 0, 10000)
 		SStreasury.stockpile_purchase_floor = new_floor
-		say("Crown's Purchase Floor set to [new_floor]m.")
+		say("[ta_economy_authority_possessive()] Purchase Floor set to [new_floor]m.")
 		log_game("PURCHASE FLOOR: [key_name(usr)] set stockpile purchase floor to [new_floor]m")
 	if(href_list["clearloandebtor"])
 		if(!usr.canUseTopic(src, BE_CLOSE) || locked)
@@ -245,9 +287,9 @@
 			SStreasury.loans -= forgiven
 			qdel(forgiven)
 		SStreasury.clear_poll_tax_debt(target)
-		say("[target.real_name]'s debtor mark has been cleared; all Crown debts forgiven.")
+		say("[target.real_name]'s debtor mark has been cleared; all [ta_economy_authority_noun()] debts forgiven.")
 		log_game("DEBT FORGIVEN: [key_name(usr)] cleared debtor mark on [key_name(target)][loan_amt ? " (wrote off [loan_amt]m loan)" : ""]")
-		to_chat(target, span_notice("The Stewardry has cleared the defaulter mark from my name. My debts to the Crown are forgiven."))
+		to_chat(target, span_notice("The Stewardry has cleared the defaulter mark from my name. My debts to [ta_economy_authority_lower()] are forgiven."))
 	if(href_list["clearpolltax"])
 		if(!usr.canUseTopic(src, BE_CLOSE) || locked)
 			return
@@ -271,9 +313,9 @@
 		SStreasury.clear_poll_tax_debt(target)
 		say("[target.real_name]'s poll tax arrears have been cleared.")
 		log_game("POLL TAX CLEARED: [key_name(usr)] cleared [was_owed]m poll tax arrears on [key_name(target)] ([was_overdue] day\s overdue)")
-		to_chat(target, span_notice("The Stewardry has cleared my poll tax arrears. The Crown's ledger on my head is wiped clean."))
+		to_chat(target, span_notice("The Stewardry has cleared my poll tax arrears. [ta_economy_authority_capital()]'s ledger on my head is wiped clean."))
 	if(href_list["payroll"])
-		var/list/L = list(GLOB.noble_positions) + list(GLOB.retinue_positions) + list(GLOB.garrison_positions) + list(GLOB.courtier_positions) + list(GLOB.church_positions) + list(GLOB.burgher_positions) + list(GLOB.atc_positions) + list(GLOB.peasant_positions) + list(GLOB.sidefolk_positions) + list(GLOB.inquisition_positions)
+		var/list/L = list(GLOB.noble_positions) + list(GLOB.retinue_positions) + list(GLOB.garrison_positions) + list(GLOB.vanguard_positions) + list(GLOB.citywatch_positions) + list(GLOB.courtier_positions) + list(GLOB.church_positions) + list(GLOB.burgher_positions) + list(GLOB.atc_positions) + list(GLOB.peasant_positions) + list(GLOB.sidefolk_positions) + list(GLOB.inquisition_positions)
 		var/list/things = list()
 		for(var/list/category in L)
 			for(var/A in category)
@@ -297,7 +339,7 @@
 				if(SStreasury.give_money_account(amount_to_pay, H, "NERVE MASTER", is_salary = TRUE))
 					record_round_statistic(STATS_WAGES_PAID, amount_to_pay)
 	if(href_list["setdailypay"])
-		var/list/L = list(GLOB.noble_positions) + list(GLOB.retinue_positions) + list(GLOB.garrison_positions) + list(GLOB.courtier_positions) + list(GLOB.church_positions) + list(GLOB.burgher_positions) + list(GLOB.atc_positions) + list(GLOB.peasant_positions) + list(GLOB.sidefolk_positions) + list(GLOB.inquisition_positions)
+		var/list/L = list(GLOB.noble_positions) + list(GLOB.retinue_positions) + list(GLOB.garrison_positions) + list(GLOB.vanguard_positions) + list(GLOB.citywatch_positions) + list(GLOB.courtier_positions) + list(GLOB.church_positions) + list(GLOB.burgher_positions) + list(GLOB.atc_positions) + list(GLOB.peasant_positions) + list(GLOB.sidefolk_positions) + list(GLOB.inquisition_positions)
 		var/list/things = list()
 		for(var/list/category in L)
 			for(var/A in category)
@@ -363,6 +405,14 @@
 		open_trade_tgui(usr)
 		return
 
+	if(href_list["buy_investment"])
+		if(SSinvestments.purchase_investment(locate(href_list["buy_investment"])))
+			say("Инвестиция произведена!")
+			playsound(src, 'sound/misc/machineyes.ogg', 100, FALSE, -1)
+		else 
+			say("Недостаточно денег в казне")
+			playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
+	
 	return attack_hand(usr)
 
 /obj/structure/roguemachine/steward/proc/quote_trade(mob/user, side, region_id, good_id, quantity)
@@ -489,7 +539,7 @@
 	if(spent > 0)
 		if(is_alderman_acting)
 			SScity_assembly.consume_trade(spent, user, "import [quantity] [tg.name] from [region.name]")
-		say("Azure Peak imports [quantity] [tg.name] from [region.name] for [spent] mammon.")
+		say("[SSticker.realm_name] imports [quantity] [tg.name] from [region.name] for [spent] mammon.")
 		playsound(src, 'sound/misc/coininsert.ogg', 100, FALSE, -1)
 	SStgui.update_uis(src)
 
@@ -526,7 +576,7 @@
 	if(gained > 0)
 		if(is_alderman_acting)
 			SScity_assembly.consume_trade(gained, user, "export [quantity] [tg.name] to [region.name]")
-		say("Azure Peak exports [quantity] [tg.name] to [region.name] for [gained] mammon.")
+		say("[SSticker.realm_name] exports [quantity] [tg.name] to [region.name] for [gained] mammon.")
 		playsound(src, 'sound/misc/coindispense.ogg', 60, FALSE, -1)
 	SStgui.update_uis(src)
 
@@ -634,6 +684,8 @@
 			contents += "<a href='?src=\ref[src];switchtab=[TAB_DEBT]'>\[Debts &amp; Arrears\]</a><BR>"
 			contents += "<a href='?src=\ref[src];printresidency=1'>\[Print Letter of Citizenry\]</a><BR>"
 			contents += "<a href='?src=\ref[src];setpurchasefloor=1'>\[Purchase Floor: [SStreasury.stockpile_purchase_floor]m\]</a><BR>"
+			contents += "<BR>"
+		//	contents += "<a href='?src=\ref[src];switchtab=[TAB_INVESTMENTS]'>\[Инвестиции\]</a><BR>" Временно и лениво убрал инвестиции у казначея. Надо их будет переделать
 			contents += "</center>"
 		if(TAB_BANK)
 			contents += "<a href='?src=\ref[src];switchtab=[TAB_MAIN]'>\[Return\]</a>"
@@ -763,8 +815,8 @@
 			// Balances (two-column)
 			contents += "<b><font color='#e6b327'>BALANCES</font></b>"
 			contents += "<table width='100%' cellspacing='0' cellpadding='2'>"
-			contents += "<tr><td>Crown's Purse</td><td align='right'><font color='#e6b327'>[snap["discretionary"]]m</font></td>"
-			contents += "<td>Burgher Pledge</td><td align='right'><font color='#e6b327'>[snap["burgher_pledge"]]m</font></td></tr>"
+			contents += "<tr><td>[ta_economy_authority_purse()]</td><td align='right'><font color='#e6b327'>[snap["discretionary"]]m</font></td>"
+			contents += "<td>[ta_economy_pledge_capital()]</td><td align='right'><font color='#e6b327'>[snap["burgher_pledge"]]m</font></td></tr>"
 			contents += "<tr><td>Total Bank Coin</td><td align='right'>[snap["total_bank"]]m</td>"
 			contents += "<td>Held Accounts</td><td align='right'>[snap["held_accounts"]]</td></tr>"
 			contents += "<tr><td>Average Balance</td><td align='right'>[snap["avg_balance"]]m</td>"
@@ -772,7 +824,7 @@
 			contents += "</table><br>"
 
 			// Revenue (two-column, green) - only mammon that lands in Crown's Purse
-			contents += "<b><font color='#5cb85c'>CROWN REVENUE THIS WEEK</font></b>"
+			contents += "<b><font color='#5cb85c'>[uppertext(ta_economy_authority_noun())] REVENUE THIS WEEK</font></b>"
 			contents += "<table width='100%' cellspacing='0' cellpadding='2'>"
 			contents += "<tr><td>Rural Tax</td><td align='right'><font color='#5cb85c'>[SStreasury.total_rural_tax]m</font></td>"
 			contents += "<td>Fines</td><td align='right'><font color='#5cb85c'>[GLOB.azure_round_stats[STATS_FINES_INCOME]]m</font></td></tr>"
@@ -805,7 +857,7 @@
 			contents += "<tr><td><b>Total Forgone</b></td><td align='right'><b><font color='#8f7a5a'>[exempt_total]m</font></b></td>"
 			contents += "<td></td><td></td></tr>"
 			contents += "</table>"
-			contents += "<font size='1'><i>Charter exemptions, levy-exempt stamps, and rate-cap gaps. Mammon the Crown would have collected had no exemption applied.</i></font><br><br>"
+			contents += "<font size='1'><i>Charter exemptions, levy-exempt stamps, and rate-cap gaps. Mammon [ta_economy_authority_lower()] would have collected had no exemption applied.</i></font><br><br>"
 
 			// Trade (two-column, mixed)
 			contents += "<b><font color='#c0b283'>TRADE</font></b>"
@@ -918,7 +970,7 @@
 			contents += "<td align='right'>[GLOB.azure_round_stats[STATS_CONTRACTS_GENERATED_RUMOR]]</td>"
 			contents += "<td align='right'>[GLOB.azure_round_stats[STATS_CONTRACTS_TAKEN_RUMOR]]</td>"
 			contents += "<td align='right'><font color='#5cb85c'>[GLOB.azure_round_stats[STATS_CONTRACTS_COMPLETED_RUMOR]]</font></td></tr>"
-			contents += "<tr><td>Crown</td>"
+			contents += "<tr><td>[ta_economy_authority_noun()]</td>"
 			contents += "<td align='right'>[GLOB.azure_round_stats[STATS_CONTRACTS_GENERATED_DEFENSE]]</td>"
 			contents += "<td align='right'>[GLOB.azure_round_stats[STATS_CONTRACTS_TAKEN_DEFENSE]]</td>"
 			contents += "<td align='right'><font color='#5cb85c'>[GLOB.azure_round_stats[STATS_CONTRACTS_COMPLETED_DEFENSE]]</font></td></tr>"
@@ -962,6 +1014,73 @@
 			else
 				contents += "<center>No daily payments configured.</center><BR>"
 
+		if(TAB_INVESTMENTS)
+			contents += "<a href='?src=\ref[src];switchtab=[TAB_MAIN]'>\[Return\]</a>"
+			contents += "<a href='?src=\ref[src];switchtab=[TAB_INVESTMENTS]'>\[ОБНОВИТЬ\]</a><BR>"
+			contents += "<center>Инвестиции<BR>"
+			contents += "------АКТИВНЫЕ------<BR>"
+			for(var/datum/investment/investment in SSinvestments.active_investments)
+				contents += "<div style='background-color: #1c1c1c; margin-top:4px'>"
+				contents += "<b>[investment.investment_name]</b><BR>"
+				contents += "Доход: [investment.regular_payment]m/минута<BR>"
+				contents += "</div>"
+
+			contents += "------ОЖИДАЮЩИЕ------<BR>"
+			for(var/datum/investment/investment in SSinvestments.awaiting_investments)
+				contents += "<div style='background-color: #1c1c1c; margin-top:4px'>"
+				contents += "<b>[investment.investment_name]</b><BR>"
+				var/remaining_ticks = (investment.time_purchased + investment.pay_eta) - world.time
+				var/total_seconds = round(remaining_ticks / (1 SECONDS))
+
+				var/min = round(total_seconds / 60)
+				var/sec = total_seconds % 60
+
+				contents += "Осталось времени: [max(min,0)] минут [max(sec,0) < 10 ? "0[sec]" : "[sec]"] секунд<BR>"
+				contents += "</div>"
+
+			contents += "------ДОСТУПНЫЕ------<BR>"
+			for(var/datum/investment/investment in SSinvestments.available_investments)
+				var/name
+				var/price
+				var/fail_chance
+				var/regular_payment
+				var/onetime_payment
+
+				if(HAS_TRAIT(user, TRAIT_SEEPRICES))
+					name = investment.investment_name
+					price = investment.price
+					fail_chance = investment.fail_chance
+					regular_payment = investment.regular_payment
+					onetime_payment = investment.onetime_payment
+				else if(HAS_TRAIT(user, TRAIT_SEEPRICES_SHITTY))
+					name = "???"
+					price = "примерно [investment.price * (rand(80, 120)/100)]"
+					fail_chance = "???"
+					regular_payment = "примерно [investment.regular_payment * (rand(80, 120)/100)]"
+					onetime_payment = "примерно [investment.onetime_payment * (rand(80, 120)/100)]"
+				else
+					name = "???"
+					price = "???"
+					fail_chance = "???"
+					regular_payment = "???"
+					onetime_payment = "???"
+
+				contents += "<div style='background-color: #1c1c1c; margin-top:4px'>"
+				contents += "<b>[name]</b><BR>"
+				if(investment.regular_payment != 0)
+					contents += "Доход: [regular_payment]m/минута<BR>"
+				if(investment.onetime_payment != 0)
+					contents += "Одноразовая выплата: [onetime_payment]m<BR>"
+				contents += "Цена: [price]m "
+				contents += "Шанс провала: [fail_chance]%<BR>"
+				contents += "ETA: [round(investment.pay_eta / (1 MINUTES))] минут<BR>"
+				if(SStreasury.discretionary_fund.balance < investment.price)
+					contents += "<a href='?src=\ref[src];buy_investment=\ref[investment]'>\[НЕДОСТАТОЧНО СРЕДСТВ\]</a>"
+				else 
+					contents += "<a href='?src=\ref[src];buy_investment=\ref[investment]'>\[КУПИТЬ\]</a>"
+				contents += "</div>"
+			
+
 	if(!canread)
 		contents = stars(contents)
 	var/datum/browser/popup = new(user, "VENDORTHING", "", 700, 800)
@@ -988,3 +1107,4 @@
 #undef TAB_FISCAL
 #undef TAB_PAYDAY
 #undef TAB_DEBT
+#undef TAB_INVESTMENTS

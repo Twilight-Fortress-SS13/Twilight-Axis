@@ -29,6 +29,7 @@ SUBSYSTEM_DEF(treasury)
 		TAX_CATEGORY_EXPORT_DUTY = 0.15,
 		TAX_CATEGORY_RECOVERED_SPOILS = 0.50,
 		TAX_CATEGORY_FINE = 1.0,
+		TAX_CATEGORY_ESTATE_LEVY = 0.15, //TA EDIT
 	)
 	var/trade_spread = 0.10
 	var/autoexport_percentage = 0.6
@@ -413,13 +414,19 @@ SUBSYSTEM_DEF(treasury)
 		return FALSE
 	if(HAS_TRAIT(recipient, TRAIT_OUTLAW))
 		return FALSE
+	var/datum/job/J = SSjob.GetJob(recipient.job) //TA EDIT START
+	if(HAS_TRAIT(recipient, TRAIT_NOBLE))
+		if(!J)
+			return FALSE
+		else if(!(J.department_flag & NOBLEMEN))
+			return FALSE //TA EDIT END
 	var/datum/fund/account = get_account(recipient)
 	if(!account)
 		create_bank_account(recipient)
 		account = get_account(recipient)
 	if(!account)
 		return FALSE
-	var/source = recipient.job == "Merchant" ? "Azurian Trading Company" : "Noble Estate"
+	var/source = recipient.job == "Merchant" ? "Azurian Trading Company" : "Treasury Sponsorship" //TA EDIT
 	var/payout = is_starter ? amount + ESTATE_STARTER_BONUS : amount
 	if(!mint(account, payout, source))
 		return FALSE
@@ -526,6 +533,10 @@ SUBSYSTEM_DEF(treasury)
 	SStreasury.total_export += amt
 	economic_output += amt
 	record_round_statistic(STATS_STOCKPILE_EXPORTS_VALUE, amt)
+
+	if(!silent && amt >= EXPORT_ANNOUNCE_THRESHOLD) // Only announce big spending.
+		scom_announce("[SSticker.realm_name] exports [D.name] for [amt] mammon.")
+
 	return amt
 
 /datum/controller/subsystem/treasury/proc/auto_export()
@@ -543,9 +554,21 @@ SUBSYSTEM_DEF(treasury)
 			continue
 		if(D.stockpile_amount >= D.importexport_amt)
 			total_value_exported += do_export(D, TRUE)
+
 	var/list/surplus_result = mass_export_surplus(silent = TRUE)
 	total_value_exported += surplus_result["revenue"]
 
+	if(total_value_exported >= EXPORT_ANNOUNCE_THRESHOLD)
+		scom_announce("[SSticker.realm_name] exports [total_value_exported] mammons of surplus goods.")
+
+/// Walks every auto-priced trade-good stockpile entry and exports stock above the
+/// daily auto-export floor (limit * autoexport_percentage) to its best-paying region,
+/// capped at that region's remaining demand for the day. The Crown's daily sweep
+/// fires this with silent=TRUE; the Steward's "Export Surplus" button fires it with
+/// silent=FALSE for a per-good chat breakdown.
+///
+/// Returns: list("revenue" = total mammon, "units" = total units exported,
+/// "lines" = list of "[qty] [name] -> [region] for [revenue]m" strings).
 /datum/controller/subsystem/treasury/proc/mass_export_surplus(silent = FALSE)
 	var/total_revenue = 0
 	var/total_units = 0
@@ -626,7 +649,7 @@ SUBSYSTEM_DEF(treasury)
 		lines += "[pretty] [verb] from [old_pct]% to [new_pct]%."
 
 	if(rejected_concordat)
-		to_chat(usr, span_warning("The Concordat of Zenitstadt forbids any levy below [round(CONCORDAT_TITHE_RATE * 100)]% while in force - the Church's tithe must be honoured."))
+		to_chat(usr, span_warning("The Twilight Concordat forbids any levy below [round(CONCORDAT_TITHE_RATE * 100)]% while in force - the Church's tithe must be honoured.")) //TA EDIT
 
 	if(!length(lines))
 		return
@@ -634,7 +657,7 @@ SUBSYSTEM_DEF(treasury)
 	levy_rates_changed_day = GLOB.dayspassed
 	var/final_text = jointext(lines, "<br>")
 	if(concordat_active)
-		final_text += "<br><i>By the Concordat of Zenitstadt, [round(CONCORDAT_TITHE_RATE * 100)]% of every taxed transaction is tithed to the Church of Azuria, drawn from the Crown's share.</i>"
+		final_text += "<br><i>By the Twilight Concordat, [round(CONCORDAT_TITHE_RATE * 100)]% of every taxed transaction is tithed to the Church of Azuria, drawn from the Crown's share.</i>" //TA EDIT
 	var/final_announcement_text = bad_guy ? bad_announcement_text : good_announcement_text
 	priority_announce(final_text, final_announcement_text, pick('sound/misc/royal_decree.ogg', 'sound/misc/royal_decree2.ogg'), "Captain", strip_html = FALSE)
 	log_game("TAX RATES: [usr ? key_name(usr) : "system"] changed levy rates - [jointext(lines, " | ")]")
@@ -705,6 +728,8 @@ SUBSYSTEM_DEF(treasury)
 			return "Export Duty"
 		if(TAX_CATEGORY_RECOVERED_SPOILS)
 			return "Recovered Spoils"
+		if(TAX_CATEGORY_ESTATE_LEVY) //TA EDIT
+			return "Estate Peasants Levy" //TA EDIT
 		if(TAX_CATEGORY_FINE)
 			return "Fine"
 	return capitalize(category)
@@ -716,6 +741,18 @@ SUBSYSTEM_DEF(treasury)
 		return FALSE
 	record_treasury_expense(TREASURY_FLOW_WITHDRAWAL, ismob(target) ? treasury_role_of(target) : "Unknown", amt)
 	return TRUE
+
+/datum/controller/subsystem/treasury/proc/give_money_treasury(amt, source = "Treasury income")
+	if(!amt)
+		return FALSE
+	if(amt > 0)
+		return mint(discretionary_fund, amt, source)
+	return burn(discretionary_fund, abs(amt), source)
+
+/datum/controller/subsystem/treasury/proc/log_to_steward(msg)
+	if(!msg)
+		return
+	log_game("STEWARD LOG: [msg]")
 
 /datum/controller/subsystem/treasury/proc/get_poll_tax_category(mob/living/H)
 	if(!H)

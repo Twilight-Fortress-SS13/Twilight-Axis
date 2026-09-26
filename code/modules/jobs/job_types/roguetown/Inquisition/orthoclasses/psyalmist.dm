@@ -101,5 +101,6 @@
 			l_hand = /obj/item/rogueweapon/mace/cudgel/flanged/psy
 			H.adjust_skillrank_up_to(/datum/skill/combat/maces, 4, TRUE)
 	change_origin(H, /datum/virtue/origin/otava, "Holy order")
+
 /datum/outfit/job/roguetown/psyaltrist
 	job_bitflag = BITFLAG_HOLY_WARRIOR

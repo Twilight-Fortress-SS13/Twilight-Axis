@@ -67,6 +67,9 @@
 /proc/log_paper(text)
 	logger.Log(LOG_CATEGORY_GAME_PAPER, text)
 
+/proc/log_mail(text) // TA EDIT
+	WRITE_LOG(GLOB.world_mail_log, "MAIL: [text]") // TA EDIT
+
 /proc/log_asset(text)
 	logger.Log(LOG_CATEGORY_DEBUG_ASSET, text)
 
@@ -140,6 +143,11 @@
 
 /proc/log_vote(text)
 	logger.Log(LOG_CATEGORY_GAME_VOTE, text)
+
+// TA EDIT START
+/proc/log_telepathy(text)
+	logger.Log(LOG_CATEGORY_GAME, "ANTAG TELEPATHY: [text]")
+// TA EDIT END
 
 /proc/log_topic(text)
 	logger.Log(LOG_CATEGORY_GAME_TOPIC, text)
@@ -292,7 +300,7 @@
 		if(C && C.holder && C.holder.fakekey && !include_name)
 			if(include_link)
 				. += "<a href='?priv_msg=[C.findStealthKey()]'>"
-			. += "Administrator"
+			. += C.holder.fakekey // TA EDIT
 		else
 			if(include_link)
 				. += "<a href='?priv_msg=[ckey]'>"

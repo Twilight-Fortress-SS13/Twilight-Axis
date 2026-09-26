@@ -1,20 +1,23 @@
 /datum/patron/godless
 	name = "Godless"
-	domain = "Humenity"
-	desc = "The Gods exists, but either you do not know them or do not worship them. You guide yourself by your instincts or your reasons."
-	worshippers = "Beasts, Apostates, and the truly Cynical"
+	rusgodnames = list(
+		"Безбожие", "Безбожия", "Безбожию", "Безбожие", "Безбожием", "Безбожии"
+	)
+	domain = "Humanity"
+	desc = "Боги существуют, но ты либо не знаешь их, либо не поклоняешься им. Ты следуешь своим инстинктам или разуму."
+	worshippers = "Звери, неспособные мыслить, и истинные циники."
 	associated_faith = /datum/faith/godless
 	preference_accessible = FALSE
 	undead_hater = FALSE
 	confess_lines = list(
-		"Gods are WORTHLESS!",
-		"I DON'T NEED GODS!",
-		"NO GODS, NO MASTERS!",
+		"БОГИ НИЧТОЖНЫ!",
+		"МНЕ НЕ НУЖНЫ БОГИ!",
+		"НЕТ БОГОВ — НЕТ ХОЗЯЕВ!",
 	)
 
 /datum/patron/godless/can_pray(mob/living/follower)
 	. = ..()
-	to_chat(follower, span_danger("You worship no gods, who are you praying to?"))
+	to_chat(follower, span_danger("Ты не поклоняешься богам. Кому ты молишься?"))
 	return FALSE
 
 /datum/patron/godless/on_lesser_heal(
@@ -25,5 +28,5 @@
 	conditional_buff,
 	situational_bonus
 )
-	*message_out = span_info("Without any particular cause or reason, [target] is healed!")
-	*message_self = span_notice("My wounds close without cause.")
+	*message_out = span_info("Без какой-либо причины [target] исцеляется!")
+	*message_self = span_notice("Мои раны закрываются без всякой причины.")

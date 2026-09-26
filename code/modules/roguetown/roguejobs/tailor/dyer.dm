@@ -330,6 +330,13 @@ GLOBAL_LIST_EMPTY(used_colors)
 	grid_height = 32
 
 	var/dye = null
+	var/list/allowed_types = list(
+		/obj/item/roguestatue,
+		/obj/item/reagent_containers/glass/bottle/claybottle,
+		/obj/item/reagent_containers/glass/bottle/clayvase,
+		/obj/item/reagent_containers/glass/bottle/clayfancyvase,
+		/obj/item/reagent_containers/glass/cup/claycup
+		)
 
 /obj/item/dye_brush/update_icon()
 	if(dye)
@@ -442,8 +449,8 @@ GLOBAL_LIST_EMPTY(used_colors)
 	..()
 
 /obj/item/dye_brush/attack_obj(obj/O, mob/living/user)
-	if(!isstructure(O))
-		return
+	if(!is_type_in_list(O, allowed_types) && (!isstructure(O)))
+		to_chat(user, span_warning("[O] cannot be dyed!"))
 	if(!dye)
 		to_chat(user, span_warning("[src] has no dye!"))
 		return

@@ -20,7 +20,7 @@
 
 /atom/movable/screen/ghost/orbit/Click()
 	var/mob/dead/observer/G = usr
-	G.open_orbit_menu()
+	G.open_orbit_menu() // TA EDIT
 //skull
 /atom/movable/screen/ghost/orbit/rogue
 	name = "AFTER LIFE"
@@ -32,12 +32,20 @@
 	var/mob/dead/observer/G = usr
 	var/paramslist = params2list(params)
 	if(paramslist["right"]) // screen objects don't do the normal Click() stuff so we'll cheat
-		G.open_orbit_menu()
+	//	G.open_orbit_menu() // TA EDIT
 	else
 		if(G.client)
 			if(isscryeye(G))
 				return
 			if(alert(usr, "Travel with the boatman?", "", "Yes", "No") == "Yes")
+				if(G.mind)
+					var/datum/job/target_job = SSjob.GetJob(G.mind.assigned_role)
+					if(target_job)
+						if(target_job.job_reopens_slots_on_death)
+							target_job.current_positions = max(0, target_job.current_positions - 1)
+						if(target_job.same_job_respawn_delay)
+							// Store the current time for the player
+							GLOB.job_respawn_delays[G.ckey] = world.time + target_job.same_job_respawn_delay
 				G.returntolobby(0)
 
 /atom/movable/screen/ghost/reenter_corpse
@@ -83,28 +91,12 @@
 	..()
 	var/atom/movable/screen/using
 
-	using = new /atom/movable/screen/ghost/orbit(null, src)
-	using.screen_loc = ui_ghost_orbit
-	static_inventory += using
-
 	using = new /atom/movable/screen/ghost/reenter_corpse(null, src)
 	using.screen_loc = ui_ghost_reenter_corpse
 	static_inventory += using
 
-	using = new /atom/movable/screen/ghost/teleport(null, src)
-	using.screen_loc = ui_ghost_teleport
-	static_inventory += using
-
-	using =	new /atom/movable/screen/backhudl/ghost()
+	using =  new /atom/movable/screen/backhudl/ghost()
 	using.hud = src
-	static_inventory += using
-
-	using = new /atom/movable/screen/ghost/moveup(null, src)
-	using.screen_loc = ui_ghost_moveup
-	static_inventory += using
-
-	using = new /atom/movable/screen/ghost/movedown(null, src)
-	using.screen_loc = ui_ghost_movedown
 	static_inventory += using
 
 	grain = new /atom/movable/screen/grain

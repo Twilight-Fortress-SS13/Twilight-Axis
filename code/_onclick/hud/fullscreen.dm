@@ -151,7 +151,11 @@
 		return
 	if(alert(usr, "Are you done living?", "", "Yes", "No") == "No")
 		return
-	L.succumb(reaper = TRUE)
+	if(!L.succumb_timer || (world.time < L.succumb_timer + 1 SECONDS) ) //TA_Edit
+		var/ttime =  round(((L.succumb_timer + 1 SECONDS) - world.time) / 10) //TA edit
+		to_chat(L, span_redtext("I'm not dead enough yet. [ttime]"))
+	else
+		L.succumb(reaper = TRUE)
 
 /atom/movable/screen/fullscreen/crit/death
 	icon_state = "DD"

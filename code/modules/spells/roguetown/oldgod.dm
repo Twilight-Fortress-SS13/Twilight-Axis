@@ -895,8 +895,8 @@
 		C.apply_status_effect(/datum/status_effect/buff/psyvived)
 		H.visible_message(span_notice("[H] is ABSOLVED!"))
 		H.mind.remove_antag_datum(/datum/antagonist/zombie)
-		H.remove_status_effect(/datum/status_effect/debuff/rotted_zombie)
-		H.apply_status_effect(/datum/status_effect/debuff/revived)
+		H.remove_status_effect(/datum/status_effect/debuff/rotted_zombie)	//Removes the rotted-zombie debuff if they have it - Failsafe for it.
+		H.apply_status_effect(/datum/status_effect/debuff/revived)	//Temp debuff on revive, your stats get hit temporarily. Doubly so if having rotted.
 		if(HAS_TRAIT(H, TRAIT_IRONMAN))
 			H.apply_status_effect(/datum/status_effect/debuff/integrity_rig, 11 MINUTES)
 			H.visible_message(span_danger("[H] is looking on the verge of exploding again! Their core may need an extra whack from a hammer."))

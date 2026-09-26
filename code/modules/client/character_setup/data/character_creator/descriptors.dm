@@ -1,4 +1,7 @@
 /datum/preferences/proc/ui_data_character_creator_descriptors(mob/user)
+	validate_descriptors() // TA EDIT START
+	img_gallery = SANITIZE_LIST(img_gallery)
+	nsfw_img_gallery = SANITIZE_LIST(nsfw_img_gallery) // TA EDIT END
 	// Data that doesn't require any conditionals goes inline here!
 	var/list/data = list(
 		"descriptors" = ui_data_descriptors(),
@@ -8,6 +11,8 @@
 		"ooc_extra" = ooc_extra,
 		"song_artist" = song_artist,
 		"song_title" = song_title,
+		"ooc_extra_img_link" = ooc_extra_img_link,
+		"nsfw_ooc_extra_img_link" = nsfw_ooc_extra_img_link,
 
 		"img_gallery" = img_gallery,
 		"nsfw_img_gallery" = nsfw_img_gallery,
@@ -59,6 +64,8 @@
 	for(var/choice_type in pref_species.descriptor_choices)
 		var/datum/descriptor_choice/choice = DESCRIPTOR_CHOICE(choice_type)
 		var/datum/descriptor_entry/entry = get_descriptor_entry_for_choice(choice_type)
+		if(!choice || !entry) // TA EDIT
+			continue // TA EDIT
 		UNTYPED_LIST_ADD(descriptor_data, list(
 			"name" = choice.name,
 			"type" = choice_type,
@@ -81,6 +88,8 @@
 		var/datum/custom_descriptor_entry/custom_entry = custom_descriptors[i]
 		var/datum/mob_descriptor/descriptor = MOB_DESCRIPTOR(custom_descriptor_types[i])
 		var/desc_type = custom_descriptor_types[i]
+		if(!istype(custom_entry, /datum/custom_descriptor_entry) || !descriptor) // TA EDIT
+			continue // TA EDIT
 
 		var/prefix_display = null
 		if(desc_type in prefix_support)

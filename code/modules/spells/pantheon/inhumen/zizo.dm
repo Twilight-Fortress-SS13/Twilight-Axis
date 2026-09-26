@@ -400,6 +400,7 @@
 
 	var/mob/living/carbon/human/species/skeleton/conjured/skeleton = new(dest)
 	skeleton.summoner_ref = WEAKREF(user)
+	skeleton.faction |= list(FACTION_CABAL, "[user.real_name]_faction") // TA EDIT
 	skeleton.arcane_scale = clamp(user.get_skill_level(/datum/skill/magic/holy), 1, 6)
 	skeleton.gear_tier = get_summon_tier(user)
 	skeleton.loadout = modes[current_mode]["loadout"]

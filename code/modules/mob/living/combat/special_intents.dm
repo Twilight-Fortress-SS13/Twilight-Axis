@@ -16,6 +16,8 @@ This allows the devs to draw whatever shape they want at the cost of it feeling 
 	var/mob/living/howner
 	var/atom/movable/iparent
 
+	var/special_armor_penetration = null // TA EDIT
+
 	/// The main place where we can draw out the pattern. Every tile entry is a list with two numbers.
 	/// The origin (0,0) is one step forward from the dir the owner is facing.
 	/// This is abstract, and can be modified, though it's best done before _assign_grid_indexes().
@@ -122,6 +124,9 @@ This allows the devs to draw whatever shape they want at the cost of it feeling 
 /datum/special_intent/proc/deploy(mob/living/user, atom/parent, atom/target)
 	if(!isliving(user) && !ismovableatom(parent))
 		CRASH("Special intent called with non-living parent AND non-movable atom source.")
+
+	if(user && (user.stat || !(user.mobility_flags & MOBILITY_STAND) || !(user.mobility_flags & MOBILITY_MOVE)))
+		return FALSE
 
 	howner = user
 	iparent = parent
@@ -370,7 +375,10 @@ This allows the devs to draw whatever shape they want at the cost of it feeling 
 		var/obj/item/bodypart/affecting = HT.get_bodypart(zone)
 		if(!affecting)
 			affecting = HT.get_bodypart(BODY_ZONE_CHEST)//fallback for if we're targeting a missing limb
-		var/armor_block = HT.run_armor_check(zone, d_type, 0, damage = dam, used_weapon = W, armor_penetration = (no_pen ? PEN_NONE : 0))
+		var/armor_penetration = no_pen ? PEN_NONE : 0 // TA EDIT START
+		if(!isnull(special_armor_penetration))
+			armor_penetration = special_armor_penetration
+		var/armor_block = HT.run_armor_check(zone, d_type, 0, damage = dam, used_weapon = W, armor_penetration = armor_penetration) // TA EDIT END
 		if(full_pen)
 			armor_block = 0		//You block NOTHING, sir!
 		if(HT.apply_damage(dam, W.damtype, affecting, armor_block))
@@ -616,7 +624,7 @@ SPECIALS START HERE
 	pre_icon = 'icons/effects/telegraph.dmi'
 	pre_icon_state = "warning"
 	respect_adjacency = TRUE
-	requires_wielding = TRUE
+//	requires_wielding = TRUE
 	delay = 0.7 SECONDS
 	cooldown = 25 SECONDS
 	stamcost = 25
@@ -835,6 +843,9 @@ SPECIALS START HERE
 /datum/special_intent/axe_swing/graggarite
 	requires_wielding = FALSE
 
+/datum/special_intent/axe_swing/graggarite/werewolf // TA EDIT
+	special_armor_penetration = PEN_MEDIUM // TA EDIT
+
 #undef AXE_SWING_GRID_DEFAULT
 #undef AXE_SWING_GRID_MIRROR
 
@@ -1032,7 +1043,7 @@ SPECIALS START HERE
 
 //apply_cost is called before anything else, so it works here for the toggle checks, but it's kind of a bad example -- don't do this.
 /datum/special_intent/limbguard/apply_cost(mob/living/L)
-	if(L.has_status_effect(/datum/status_effect/buff/clash) || L.toggle_timer > world.time)
+	if(L.has_status_effect(/datum/status_effect/buff/clash) || L.has_status_effect(/datum/status_effect/debuff/vulnerable) || L.toggle_timer > world.time)
 		return FALSE
 	var/datum/status_effect/buff/clash/limbguard/lg = L.has_status_effect(/datum/status_effect/buff/clash/limbguard)
 	if(lg)

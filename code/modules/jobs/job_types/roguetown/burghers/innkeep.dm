@@ -13,7 +13,7 @@
 	outfit = /datum/outfit/job/roguetown/innkeeper
 	display_order = JDO_INNKEEPER
 	give_bank_account = TRUE
-	min_pq = -4
+	min_pq = 2
 	max_pq = null
 	round_contrib_points = 3
 	cmode_music = 'sound/music/cmode/towner/combat_retired.ogg'

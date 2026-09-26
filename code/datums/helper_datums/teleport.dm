@@ -60,6 +60,20 @@
 	if(SEND_SIGNAL(destturf, COMSIG_ATOM_INTERCEPT_TELEPORT, channel, curturf, destturf))
 		return FALSE
 
+	// TA EDIT START
+	if(ismob(teleatom))
+		var/mob/M = teleatom
+		for(var/obj/item/leash/L in view(7, M))
+			if(L.leash_pet == M || L.leash_master == M || L.leash_freepet == M)
+				if(L.leash_pet)
+					L.leash_pet.remove_status_effect(/datum/status_effect/leash_pet)
+				if(L.leash_freepet)
+					L.leash_freepet.remove_status_effect(/datum/status_effect/leash_freepet)
+				L.leash_master?.remove_status_effect(/datum/status_effect/leash_owner)
+				L.leash_master = null
+				L.leash_pet = null
+				L.leash_freepet = null // TA EDIT END
+
 	tele_play_specials(teleatom, curturf, effectin, asoundin)
 	var/success = forceMove ? teleatom.forceMove(destturf) : teleatom.Move(destturf)
 	if (success)

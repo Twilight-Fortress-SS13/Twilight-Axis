@@ -36,6 +36,7 @@
 
 		if(used)
 			protection = used.armor.getRating(d_type)
+			protection += get_trophy_armor_bonus_for_zone(def_zone, d_type)
 			if(!blade_dulling)
 				blade_dulling = BCLASS_BLUNT
 			if(used.blocksound)
@@ -88,7 +89,7 @@
 			if(intdamage > 0)
 				SEND_SIGNAL(src, COMSIG_MOB_ARMOR_INTEGRITY_DAMAGED, intdamage, used, 1, 1)
 	else
-		// DR types: blunt, fire, acid
+		// DR types: blunt, fire, bullet
 		var/list/layers = get_best_worn_armor_layered(def_zone, d_type)
 		if(length(layers))
 			dr_armor_present = TRUE
@@ -97,11 +98,16 @@
 				if(!best_layer || layers[C] > protection)
 					protection = layers[C]
 					best_layer = C
+			protection += get_trophy_armor_bonus_for_zone(def_zone, d_type)
 			// DR tier formula: damage * 1 / (1 + 0.2 * tier)
 			if(protection > 0)
-				// Blunt/Fire/Acid: armor takes the DR-reduced amount, none reaches HP.
 				var/dr_mult = 1 / (1 + 0.2 * protection)
-				intdamage *= dr_mult
+				if(d_type in ARMOR_DR_PIERCE_TYPES)
+					// Bullet: armor takes the blocked portion (what doesn't reach HP)
+					intdamage *= (1 - dr_mult)
+				else
+					// Blunt/Fire: armor takes the DR-reduced amount
+					intdamage *= dr_mult
 			if(intdamfactor != 1)
 				intdamage *= intdamfactor
 
@@ -180,6 +186,10 @@
 
 
 /mob/living/carbon/human/bullet_act(obj/projectile/P, def_zone = BODY_ZONE_CHEST)
+
+	if(HAS_TRAIT(src, "ethereal"))
+		return BULLET_ACT_FORCE_PIERCE
+
 	if(dna && dna.species)
 		var/spec_return = dna.species.bullet_act(P, src, def_zone)
 		if(spec_return)
@@ -272,6 +282,7 @@
 		hitpush = FALSE
 		skipcatch = TRUE
 		blocked = TRUE
+		return TRUE
 
 	//Thrown item deflection -- this RETURNS if successful!
 	var/obj/item/W = get_active_held_item()
@@ -286,7 +297,7 @@
 				I.get_deflected(src)
 				do_sparks(2, TRUE, current_turf)
 				visible_message(span_warning("[src] deflects \the [I]!"))
-				return
+				return TRUE
 
 	if(I && !blocked)
 		if(((throwingdatum ? throwingdatum.speed : I.throw_speed) >= EMBED_THROWSPEED_THRESHOLD) || I.embedding.embedded_ignore_throwspeed_threshold)
@@ -299,6 +310,9 @@
 //					visible_message("<span class='danger'>[I] embeds itself in [src]'s [L.name]!</span>","<span class='danger'>[I] embeds itself in my [L.name]!</span>")
 				hitpush = FALSE
 				skipcatch = TRUE //can't catch the now embedded item
+				return TRUE
+	if(blocked)
+		return TRUE
 
 	return ..()
 
@@ -311,6 +325,12 @@
 /mob/living/carbon/human/attacked_by(obj/item/I, mob/living/user)
 	if(!I || !user)
 		return 0
+
+	if(HAS_TRAIT(src, "ethereal"))
+		user.visible_message(span_danger("[user] tries to strike [src], but the weapon passes right through the mist!"), \
+							span_warning("My weapon passes right through [src]!"))
+		return FALSE
+
 	var/obj/item/bodypart/affecting
 	var/useder = user.zone_selected
 	if(!lying_attack_check(user,I))
@@ -334,6 +354,10 @@
 	return dna.species.spec_attacked_by(I, user, affecting, used_intent, src, useder)
 
 /mob/living/carbon/human/attack_hand(mob/user)
+
+	if(HAS_TRAIT(src, "ethereal"))
+		return FALSE
+
 	if(..())	//to allow surgery to return properly.
 		return
 	if(ishuman(user))
@@ -831,7 +855,7 @@
 					if(val > protection)
 						protection = val
 						used = C
-				// Fire/acid: fall back to a worn real-armor piece even at a 0 rating, so a fire/acid-0
+				// Fire: fall back to a worn real-armor piece even at a 0 rating, so fire-0
 				// plate still reads as "armored" (engages absorb, shows crumble messages). A rated piece wins.
 				// has_armor_value() (any blunt/slash/stab/piercing rating) is the real-armor gate so plain cloth keeps bypassing instead of burning off.
 				else if((d_type in ARMOR_DR_RESIST_TYPES) && C.max_integrity && C.has_armor_value() && !used)
@@ -860,7 +884,7 @@
 					if(C.obj_integrity <= 0 || C.obj_broken)
 						continue
 				var/val = C.armor.getRating(d_type)
-				// Fire/acid: any worn real-armor piece counts even at a 0 rating (blunt keeps its own rating gate), so it soaks
+				// Fire: any worn real-armor piece counts even at a 0 rating (blunt keeps its own rating gate), so it soaks
 				// HP damage and takes integrity damage instead of letting it bypass. Plain cloth (no blunt/slash/stab/piercing rating)
 				// and cosmetics (no max_integrity) stay excluded so they bypass instead of burning off. The stored rating is preserved as the value.
 				if(val > 0 || ((d_type in ARMOR_DR_RESIST_TYPES) && C.max_integrity && C.has_armor_value()))

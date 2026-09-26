@@ -16,6 +16,8 @@
 	sewrepair = TRUE
 	salvage_result = /obj/item/natural/fibers
 	salvage_amount = 2 // Major materials loss
+	equip_delay_self = 2.5 SECONDS
+	unequip_delay_self = 2.5 SECONDS
 
 /obj/item/clothing/head/roguetown/armingcap/ComponentInitialize()
 	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FENCERDEXTERITY)
@@ -143,6 +145,8 @@
 	worn_y_dimension = 64
 	sewrepair = TRUE
 	resistance_flags = FIRE_PROOF
+	equip_delay_self = 2.5 SECONDS
+	unequip_delay_self = 2.5 SECONDS
 
 // Grenzel unique drip head. Pretend it is a secrete (A type of hat with a hidden helmet underneath). Same stats as kettle
 /obj/item/clothing/head/roguetown/grenzelhofthat
@@ -165,6 +169,8 @@
 	color = "#262927"
 	detail_color = "#FFFFFF"
 	altdetail_color = "#9c2525"
+	equip_delay_self = 2.5 SECONDS
+	unequip_delay_self = 2.5 SECONDS
 
 /obj/item/clothing/head/roguetown/grenzelhofthat/attack_right(mob/user)
 	..()
@@ -201,6 +207,8 @@
 
 /obj/item/clothing/head/roguetown/grenzelhofthat/loadout
 	name = "aesthetic grenzelhoft plume hat"
+	equip_delay_self = 0 //TA EDIT
+	unequip_delay_self = 0 //TA EDIT
 
 /obj/item/clothing/head/roguetown/grenzelhofthat/loadout/Initialize(mapload)
 	. = ..()
@@ -217,6 +225,8 @@
 	armor = ARMOR_CLOTHING
 	salvage_result = /obj/item/natural/fibers
 	salvage_amount = 1
+	equip_delay_self = 2.5 SECONDS
+	unequip_delay_self = 2.5 SECONDS
 
 /obj/item/clothing/head/roguetown/briarthorns/pickup(mob/living/user)
 	. = ..()

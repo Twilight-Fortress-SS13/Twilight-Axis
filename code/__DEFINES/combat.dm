@@ -434,6 +434,7 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 #define BLUNT_DEFAULT_INT_DAMAGEFACTOR 1.6 // Universal blunt intent integrity damage factor. Replaces Roguepen
 #define SPELL_BLUNT_INT_DAMAGEFACTOR 1.3 // Blunt integrity damage factor for spell projectiles
 #define PUNCH_INT_DAMAGEFACTOR 1.2 // Reduced integrity damage for unarmed punches cuz they're really fast
+
 // Integrity & Sharpness Value
 #define INTEG_PARRY_DECAY			1	//Default integrity decay on parry.
 #define INTEG_PARRY_DECAY_NOSHARP	5	//Integrity decay on parry for weapons with no sharpness OR for off-hand parries.
@@ -487,7 +488,7 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 #define SWIFTCAP_CHEST 10
 #define SWIFTCAP_LIMBS 25
 #define SWIFTCAP_PRECISE 45
-#define STAM_DRAIN_PER_STR_DIFF_HEAVY_BAL -2
+#define STAM_DRAIN_PER_STR_DIFF_HEAVY_BAL -3
 
 /* TEMPO DEFINES */
 #define TEMPO_CULL_DELAY	12 SECONDS	//Interval for checking our tempo lists. Only relevant to player mobs with TRAIT_TEMPO

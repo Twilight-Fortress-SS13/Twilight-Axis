@@ -127,12 +127,16 @@
 	var/pose_text = ""
 	var/ooc_notes = null
 	var/ooc_extra
+	var/ooc_extra_img
+	var/ooc_extra_img_link
 	var/rumour = null
 	var/noble_gossip = null
 	var/song_title
 	var/song_artist
 	var/received_resident_key = FALSE
 	var/nsfwflavortext = null
+	var/nsfw_ooc_extra_img
+	var/nsfw_ooc_extra_img_link
 	var/erpprefs = null
 
 	// Cached version
@@ -146,10 +150,10 @@
 	/// Per-character theme override for examine panel viewers
 	var/examine_theme
 	var/list/img_gallery = list()
+
 	var/list/nsfw_img_gallery = list()
 
-	var/ooc_extra_img
-	var/nsfw_ooc_extra_img
+	var/has_confessed = FALSE // Used to track if they have confessed it was written onto a confession paper
 
 	possible_rmb_intents = list(/datum/rmb_intent/feint,\
 	/datum/rmb_intent/aimed,\

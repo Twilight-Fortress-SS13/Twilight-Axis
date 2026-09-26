@@ -663,7 +663,7 @@
 /obj/item/rogueweapon/fishspear/attack_self(mob/user)
 	if(user.used_intent.type == SPEAR_CAST)
 		if(user.doing)
-			user.doing = 0
+			user.stop_all_doing() // TA EDIT
 
 /obj/item/rogueweapon/fishspear/afterattack(obj/target, mob/user, proximity)
 	var/sl = user.get_skill_level(/datum/skill/labor/fishing) // User's skill level

@@ -26,6 +26,15 @@
 	tastes = list("spelt" = 1)
 	bitesize = 6
 	rotprocess = null
+	var/fished = FALSE
+
+/obj/item/reagent_containers/food/snacks/rogue/crackerscooked/Initialize()
+	if(prob(20))
+		icon = 'modular_twilight_axis/icons/obj/items/fish.dmi'
+		icon_state += "_fish"
+		desc += span_notice("\nAbyssor's blessing.")
+		fished = TRUE
+	. = ..()
 
 /obj/item/reagent_containers/food/snacks/rogue/crackerscooked/On_Consume(mob/living/eater)
 	..()
@@ -40,6 +49,8 @@
 	if(bitecount == 5)
 		icon_state = "tack1"
 
+	if(fished)
+		icon_state += "_fish"
 
 /*	.................	Bread	................... */
 /obj/item/reagent_containers/food/snacks/rogue/bread
@@ -69,13 +80,13 @@
 /obj/item/reagent_containers/food/snacks/rogue/bread/On_Consume(mob/living/eater)
 	..()
 	if(slices_num)
-		if(bitecount == 3)
+		if(bitecount == 3 && slices_num >= 5)
 			slices_num = 5
-		if(bitecount == 4)
+		if(bitecount == 4 && slices_num >= 4)
 			slices_num = 4
-		if(bitecount == 5)
+		if(bitecount == 5 && slices_num >= 3)
 			slices_num = 3
-		if(bitecount == 6)
+		if(bitecount == 6 && slices_num >= 2)
 			slices_num = 2
 		if(bitecount == 7)
 			changefood(slice_path, eater)
@@ -563,13 +574,13 @@
 /obj/item/reagent_containers/food/snacks/rogue/raisinbread/On_Consume(mob/living/eater)
 	..()
 	if(slices_num)
-		if(bitecount == 3)
+		if(bitecount == 3 && slices_num >= 5)
 			slices_num = 5
-		if(bitecount == 4)
+		if(bitecount == 4 && slices_num >= 4)
 			slices_num = 4
-		if(bitecount == 5)
+		if(bitecount == 5 && slices_num >= 3)
 			slices_num = 3
-		if(bitecount == 6)
+		if(bitecount == 6 && slices_num >= 2)
 			slices_num = 2
 		if(bitecount == 7)
 			changefood(slice_path, eater)
@@ -620,13 +631,13 @@
 /obj/item/reagent_containers/food/snacks/rogue/applebread/On_Consume(mob/living/eater)
 	..()
 	if(slices_num)
-		if(bitecount == 3)
+		if(bitecount == 3 && slices_num >= 5)
 			slices_num = 5
-		if(bitecount == 4)
+		if(bitecount == 4 && slices_num >= 4)
 			slices_num = 4
-		if(bitecount == 5)
+		if(bitecount == 5 && slices_num >= 3)
 			slices_num = 3
-		if(bitecount == 6)
+		if(bitecount == 6 && slices_num >= 2)
 			slices_num = 2
 		if(bitecount == 7)
 			changefood(slice_path, eater)

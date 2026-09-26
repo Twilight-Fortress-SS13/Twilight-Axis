@@ -199,7 +199,7 @@ GLOBAL_LIST_EMPTY(origins) // alist: origin name = origin desc. so we don't have
 	Their saiga, their sabre, their cattle, and their freedom. For while coin remains the main currency even in the wild steppes, it means nothing \
 	without the freedom to spend it as you wish. As the saying goes, 'a man can earn coin, but a man cannot earn freedom. It must be taken, it must be constantly achieved."
 
-/datum/virtue/origin/lirvas
+/*/datum/virtue/origin/Lirvas
 	name = "Lirvan"
 	origin_name = "Lirvas"
 	added_languages = list(/datum/language/draconic)
@@ -208,7 +208,7 @@ GLOBAL_LIST_EMPTY(origins) // alist: origin name = origin desc. so we don't have
 	'dragon lands' was considered a must for any adventurer, as no culture could quite compare to one built by dragons and zardmen alike. \
 	Now, centuries after Zizo's ascendance, Lirvas has become one of the few places no adventurer dares travel to. To describe the kingdom as \
 	a hierarchy would hardly be apt; it stands proudly with different rings of social status, shrinking gradually in size as one climbs to the top. \
-	In Lirvas, wealth is everything in determining which ring you stand on, and how hard it is to climb higher."
+	In Lirvas, wealth is everything in determining which ring you stand on, and how hard it is to climb higher."*/
 
 /datum/virtue/origin/racial/underdark
 	name = "Underdweller"
@@ -257,20 +257,6 @@ GLOBAL_LIST_EMPTY(origins) // alist: origin name = origin desc. so we don't have
 	to surface cultures and	communities, often perceived as strange at best, and downright evil at worst. A stigma developed by those who live upon \
 	the surface about their home and culture, believing all things evil crawl out of the very depths they reside in. A stigma that has lessened in \
 	recent yils, but still vastly present nonetheless."
-
-/datum/virtue/origin/racial/underdark/apply_to_human(mob/living/carbon/human/H)
-	..()
-	var/list/choices = list("Normal (Default)", "Strict (Sunlight Sensitivity + Advanced Darksight)")
-	var/complex = tgui_input_list(H, "How adapted are you to the Underdark?", "Underdweller Upbringing", choices)
-	if(!complex)
-		complex = "Normal (Default)"
-	switch(complex)
-		if("Strict (Sunlight Sensitivity + Advanced Darksight)")
-			ADD_TRAIT(H, TRAIT_SUNLIGHT_SENSITIVE, TRAIT_GENERIC)
-			ADD_TRAIT(H, TRAIT_NITEVISION, TRAIT_GENERIC)
-			to_chat(H, span_notice("The sun is irritantly bright for you, but your eyes cut the darkness better!"))
-		else
-			to_chat(H, span_notice("You're quick to adapt."))
 
 /datum/virtue/origin/apply_to_human(mob/living/carbon/human/recipient)
 	recipient.dna.species.origin = origin_name

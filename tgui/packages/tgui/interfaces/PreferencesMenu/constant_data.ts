@@ -12,7 +12,6 @@ export type ConstantData = {
   MIN_VOICE_PITCH: number;
   MAX_VOICE_PITCH: number;
   // lists
-  barksounds: string[];
   charflaws: Record<Path, ConstantCharflaw>;
   classes: Record<string, ConstantClass>;
   combat_music: Record<string, ConstantCombatMusic>;
@@ -83,13 +82,17 @@ export enum DepartmentFlag {
   COURTIERS = 1 << 1,
   RETINUE = 1 << 2,
   GARRISON = 1 << 3,
-  CHURCHMEN = 1 << 4,
-  BURGHERS = 1 << 5,
-  PEASANTS = 1 << 6,
-  SIDEFOLK = 1 << 7,
-  WANDERERS = 1 << 8,
-  INQUISITION = 1 << 9,
-  ANTAGONIST = 1 << 10,
+  CITYWATCH = 1 << 4,
+  VANGUARD = 1 << 5,
+  CHURCHMEN = 1 << 6,
+  BURGHERS = 1 << 7,
+  PEASANTS = 1 << 8,
+  SIDEFOLK = 1 << 9,
+  WANDERERS = 1 << 10,
+  INQUISITION = 1 << 11,
+  ANTAGONIST = 1 << 12,
+  SLOP = 1 << 13,
+  ATC = 1 << 14,
 }
 
 export enum DepartmentEnum {
@@ -112,6 +115,8 @@ export const DEPARTMENT_FLAG_TO_ENUM = {
   [DepartmentFlag.COURTIERS]: DepartmentEnum.COURTIERS,
   [DepartmentFlag.RETINUE]: DepartmentEnum.RETINUE,
   [DepartmentFlag.GARRISON]: DepartmentEnum.GARRISON,
+  [DepartmentFlag.CITYWATCH]: DepartmentEnum.GARRISON,
+  [DepartmentFlag.VANGUARD]: DepartmentEnum.GARRISON,
   [DepartmentFlag.CHURCHMEN]: DepartmentEnum.CHURCHMEN,
   [DepartmentFlag.BURGHERS]: DepartmentEnum.BURGHERS,
   [DepartmentFlag.PEASANTS]: DepartmentEnum.PEASANTS,
@@ -119,6 +124,8 @@ export const DEPARTMENT_FLAG_TO_ENUM = {
   [DepartmentFlag.WANDERERS]: DepartmentEnum.WANDERERS,
   [DepartmentFlag.INQUISITION]: DepartmentEnum.INQUISITION,
   [DepartmentFlag.ANTAGONIST]: DepartmentEnum.ANTAGONIST,
+  [DepartmentFlag.SLOP]: DepartmentEnum.NONE,
+  [DepartmentFlag.ATC]: DepartmentEnum.BURGHERS,
 };
 
 /** {@link ConstantData.combat_music} */

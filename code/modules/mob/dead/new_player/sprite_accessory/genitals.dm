@@ -22,7 +22,7 @@
 				else
 					return "slit_2"
 	if(pp.erect_state == ERECT_STATE_HARD)
-		return "[icon_state]_2_[pp.penis_size]"
+		return "[icon_state]_[pp.penis_size]_erect" // TA edit - NEW ERP SYSTEM
 	else
 		return "[icon_state]_1_[pp.penis_size]"
 
@@ -63,6 +63,18 @@
 	name = "Barbed, Knotted"
 	color_key_defaults = list(null, KEY_CHEST_COLOR)
 	default_colors = list("C52828", null)
+
+//TA add start - NEW ERP SYSTEM
+/datum/sprite_accessory/penis/flared_knotted
+	icon_state = "flared"
+	name = "Flared, Knotted"
+	color_key_defaults = list(KEY_CHEST_COLOR, KEY_CHEST_COLOR)
+
+/datum/sprite_accessory/penis/tapered_knot
+	icon_state = "taperedknot"
+	name = "Tapered, Knotted"
+	default_colors = list("C52828", "C52828")
+//TA add end - NEW ERP SYSTEM
 
 /datum/sprite_accessory/penis/tapered
 	icon_state = "tapered"
