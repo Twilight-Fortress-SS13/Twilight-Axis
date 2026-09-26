@@ -1,6 +1,0 @@
-author: "Quinalion"
-delete-after: True
-changes:
-  - bugfix: "Дублирование пистоля в кобуре."
-  - bugfix: "Спрайты кобуры легионера."
-  - bugfix: "Выдача святого пороха легионеру"
