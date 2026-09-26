@@ -1691,21 +1691,7 @@
 	if(!drop_turf)
 		return FALSE
 
-	var/primary_path = null
-	for(var/path in pouch_amounts)
-		if(is_coin_pouch_path(path) && round(pouch_amounts[path] || 0) > 0)
-			primary_path = path
-			break
-	if(!primary_path)
-		return FALSE
-
-	var/obj/item/storage/belt/rogue/pouch/coins/pouch = new primary_path(drop_turf)
-	if(!pouch || QDELETED(pouch))
-		return FALSE
-
-	var/total_value = collect_coin_pouch_value(pouch)
-	var/primary_consumed = FALSE
-
+	var/spawned_any = FALSE
 	for(var/path in pouch_amounts)
 		if(!is_coin_pouch_path(path))
 			continue
@@ -1714,30 +1700,16 @@
 		if(amount <= 0)
 			continue
 
-		var/start_index = 1
-		if(path == primary_path && !primary_consumed)
-			start_index = 2
-			primary_consumed = TRUE
-		if(start_index > amount)
-			continue
-
-		for(var/i in start_index to amount)
-			var/obj/item/storage/belt/rogue/pouch/coins/temp_pouch = new path(drop_turf)
-			if(!temp_pouch || QDELETED(temp_pouch))
+		for(var/i in 1 to amount)
+			var/obj/item/storage/belt/rogue/pouch/coins/pouch = new path(drop_turf)
+			if(!pouch || QDELETED(pouch))
 				continue
 
-			total_value += collect_coin_pouch_value(temp_pouch)
-			qdel(temp_pouch)
+			apply_paint_to_item(path, pouch)
+			try_put_into_any_storage_or_drop_no_stash(pouch, H)
+			spawned_any = TRUE
 
-	if(total_value <= 0)
-		qdel(pouch)
-		return FALSE
-
-	fill_coin_pouch_from_value(pouch, total_value)
-	merge_coin_stacks_in_container(pouch)
-	apply_paint_to_item(primary_path, pouch)
-	try_put_into_any_storage_or_drop_no_stash(pouch, H)
-	return TRUE
+	return spawned_any
 
 /datum/tat_items/proc/spawn_stacked_coin_pouch_into_bag_or_fallback(mob/living/carbon/human/H, path, amount = 1)
 	if(!H || !is_coin_pouch_path(path))
