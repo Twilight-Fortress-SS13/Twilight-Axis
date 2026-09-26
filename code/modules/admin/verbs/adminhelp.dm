@@ -492,6 +492,16 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 			if(ticket.initiator)
 				to_chat(ticket.initiator, span_adminhelp("<b>Admin [key_name_admin(user, show_charname)] embedded a [embed_type] in your ticket.</b>"))
 			log_admin("Ticket #[ticket.id]: [key_name(user)] embedded [embed_type]: [url]")
+			var/list/data = list(
+				"type"= "areply",
+				"id"= "[ticket.id]",
+				"initiator"= user.ckey,
+				"admin"= "1",
+				"message"= url,
+				"embed_type"= embed_type,
+				"embed_url"= url
+			)
+			send2discordwh(data)
 			// Notify other admins in chat with a placeholder - no raw URLs to prevent flashbanging
 			message_admins(span_adminnotice("<font color='blue'>Ticket #[ticket.id] [ticket.TicketHref("Show Ticket")] - [key_name_admin(user)] sent [ticket.initiator_key_name] an (embedded [embed_type]).</font>"))
 			return TRUE
@@ -1146,6 +1156,16 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 			AddInteraction("<font color='blue'>PM from [key_name_admin(usr, show_charname)]: [prefix][url]</font>")
 			if(initiator)
 				to_chat(initiator, span_adminhelp("<b>Admin [key_name_admin(usr, show_charname)] embedded a [embed_type] in your ticket.</b>"))
+			var/list/data = list(
+				"type"= "areply",
+				"id"= "[id]",
+				"initiator"= usr.ckey,
+				"admin"= "1",
+				"message"= url,
+				"embed_type"= embed_type,
+				"embed_url"= url
+			)
+			send2discordwh(data)
 // TA EDIT END
 			log_admin("Ticket #[id]: [key_name(usr)] embedded [embed_type]: [url]")
 			return TRUE

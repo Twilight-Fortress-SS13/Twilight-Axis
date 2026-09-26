@@ -372,6 +372,7 @@ GLOBAL_VAR_INIT(last_crown_announcement_time, -1000)
 /obj/structure/roguemachine/titan/proc/make_decree(mob/living/user, raw_message)
 	GLOB.lord_decrees += raw_message
 	record_round_statistic(STATS_LAWS_AND_DECREES_MADE)
+	GLOB.lord_decrees += html_decode(user.treat_message(raw_message))
 	SScommunications.make_announcement(user, TRUE, raw_message)
 
 /obj/structure/roguemachine/titan/proc/declare_outlaw(mob/living/user, raw_message)

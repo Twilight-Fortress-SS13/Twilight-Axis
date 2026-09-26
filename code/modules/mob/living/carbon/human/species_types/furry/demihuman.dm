@@ -155,6 +155,8 @@
 		"East Raneshen (Nshkormh)" = SKIN_COLOR_LALVESTINE,
 		"Naledi" = SKIN_COLOR_NALEDI,
 		"Naledi South" = SKIN_COLOR_NALEDI_LIGHT,
+		"Naledi West" = SKIN_COLOR_NALEDI_B,
+		"Naledi East" = SKIN_COLOR_NALEDI_D,
 		"Kazengun" = SKIN_COLOR_KAZENGUN,
 		"Gyedzai" = SKIN_COLOR_KAZENGUN
 	)

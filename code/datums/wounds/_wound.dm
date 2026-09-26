@@ -333,7 +333,6 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 			heal_wound(0.6)
 		if(!owner || QDELETED(owner) || QDELETED(src))
 			return FALSE
-
 	if(passive_healing && owner && owner.stat != DEAD)
 		heal_wound(passive_healing)
 

@@ -32,10 +32,21 @@
 	holder.click_intercept = src
 	mode.enter_mode(src)
 
-/datum/buildmode/proc/quit()
+/datum/buildmode/proc/log_action(action_text) // TA EDIT START
+	if(!holder)
+		return
+	log_admin("Build Mode: [key_name(holder)] [action_text]")
+
+/datum/buildmode/proc/quit(mob/user)
+	var/mob/log_user = user
+	if(!log_user && holder)
+		log_user = holder.mob // TA EDIT END
 	mode.exit_mode(src)
 	holder.screen -= buttons
 	holder.click_intercept = null
+	if(log_user) // TA EDIT START
+		message_admins("[key_name_admin(log_user)] has left build mode.")
+		log_admin("[key_name(log_user)] has left build mode.") // TA EDIT END
 	qdel(src)
 /datum/buildmode/Destroy()
 	close_switchstates()
@@ -115,19 +126,21 @@
 	switch_state = BM_SWITCHSTATE_NONE
 	holder.screen -= dirswitch_buttons
 /datum/buildmode/proc/change_mode(newmode)
+	var/old_mode = mode?.key || "unknown" // TA EDIT
 	mode.exit_mode(src)
 	QDEL_NULL(mode)
 	close_switchstates()
 	mode = new newmode(src)
 	mode.enter_mode(src)
 	modebutton.update_icon()
-	if(holder) // TA EDIT
-		log_admin("Build Mode: [key_name(holder)] switched to [mode.key] mode.") // TA EDIT
+	log_action("switched mode from [old_mode] to [mode.key].") // TA EDIT
 
 /datum/buildmode/proc/change_dir(newdir)
+	var/old_dir = build_dir // TA EDIT
 	build_dir = newdir
 	close_dirswitch()
 	dirbutton.update_icon()
+	log_action("changed build direction from [dir2text(old_dir)] ([old_dir]) to [dir2text(newdir)] ([newdir]).") // TA EDIT
 	return 1
 
 /datum/buildmode/proc/InterceptClickOn(mob/user, params, atom/object)
@@ -141,8 +154,7 @@
 	if(M.client)
 		if(istype(M.client.click_intercept,/datum/buildmode))
 			var/datum/buildmode/B = M.client.click_intercept
-			B.quit()
-			log_admin("[key_name(usr)] has left build mode.")
+			B.quit(usr) // TA EDIT
 		else
 			new /datum/buildmode(M.client)
 			message_admins("[key_name_admin(usr)] has entered build mode.")

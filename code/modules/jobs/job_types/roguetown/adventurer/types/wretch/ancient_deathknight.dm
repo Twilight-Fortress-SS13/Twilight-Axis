@@ -44,6 +44,7 @@
 	REMOVE_TRAITS_IN(H, SPECIES_TRAIT)
 	H.become_skeleton()
 	H.can_do_sex = FALSE
+	change_origin(H, /datum/virtue/origin/unselectable/skeleton, "Legion")
 
 
 	// Skeleton antag datum + patron (matching greater_skeleton setup)

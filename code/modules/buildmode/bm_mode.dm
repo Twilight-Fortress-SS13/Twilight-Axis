@@ -81,14 +81,22 @@
 		if(left_click)
 			if(!cornerA)
 				cornerA = select_tile(get_turf(object), AREASELECT_CORNERA)
+				if(cornerA) // TA EDIT
+					BM.log_action("selected region corner A at [AREACOORD(cornerA)] in [key] mode.") // TA EDIT
 				return
 			if(cornerA && !cornerB)
 				cornerB = select_tile(get_turf(object), AREASELECT_CORNERB)
+				if(cornerB) // TA EDIT
+					BM.log_action("selected region corner B at [AREACOORD(cornerB)] in [key] mode.") // TA EDIT
 				to_chat(c, span_boldwarning("Region selected, if you're happy with your selection left click again, otherwise right click."))
 				return
 			handle_selected_area(c, params)
 			deselect_region()
 		else
+			if(cornerA) // TA EDIT START
+				BM.log_action("cancelled region selection in [key] mode starting at [AREACOORD(cornerA)].")
+			else
+				BM.log_action("cancelled region selection in [key] mode.") // TA EDIT END
 			to_chat(c, span_notice("Region selection canceled!"))
 			deselect_region()
 	return
