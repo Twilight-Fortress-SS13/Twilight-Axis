@@ -230,7 +230,6 @@ SUBSYSTEM_DEF(role_class_handler)
 		XTRA_MEATY.class_cat_alloc_attempts = advclass_rolls_override
 		//XTRA_MEATY.PQ_boost_divider = 10
 	else
-		var/datum/job/roguetown/RT_JOB = SSjob.GetJob(H.job)
 		if(!RT_JOB)
 			var/assigned_role = H.mind?.assigned_role
 			log_game("ROLE CLASS HANDLER: Could not resolve job for [H.ckey] ([H.real_name]); H.job=[H.job], assigned_role=[assigned_role]. Skipping subclass setup.")
