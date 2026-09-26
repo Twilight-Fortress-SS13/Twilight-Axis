@@ -116,6 +116,14 @@
 /datum/erp_sex_link/proc/is_dullahan_scene()
 	return SSerp?.link_rules?.is_dullahan_scene(src)
 
+/// Template conditional for a partner's anatomy/customization tag.
+/datum/erp_sex_link/proc/partner_has_appearance_tag(tag)
+	return SSerp?.link_rules?.partner_has_appearance_tag(src, tag) || FALSE
+
+/// Template conditional for the initiating actor's anatomy/customization tag.
+/datum/erp_sex_link/proc/actor_has_appearance_tag(tag)
+	return SSerp?.link_rules?.actor_has_appearance_tag(src, tag) || FALSE
+
 /datum/erp_sex_link/proc/is_knot_scene()
 	return SSerp?.link_rules?.is_knot_scene(src)
 
