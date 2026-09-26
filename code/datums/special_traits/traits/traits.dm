@@ -207,7 +207,8 @@
 		character.put_in_hands(bottle, forced = TRUE)
 
 	character.adjust_skillrank_up_to(/datum/skill/misc/riding, 4, TRUE)
-	new /mob/living/simple_animal/hostile/retaliate/rogue/saiga/tame/saddled(get_turf(character))
+	var/mob/living/simple_animal/saiga_mount = new /mob/living/simple_animal/hostile/retaliate/rogue/saiga/tame/saddled(get_turf(character)) // TA EDIT
+	saiga_mount.assign_livestock_owner(character) // TA EDIT
 
 /datum/special_trait/spring_in_my_step
 	name = "Spring in my Step"

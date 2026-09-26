@@ -17,8 +17,8 @@
 		SV.eat(src)
 		food = max(food + 30, 100)
 
-/mob/living/simple_animal/hostile/retaliate/rogue/goat/tamed()
-	..()
+/mob/living/simple_animal/hostile/retaliate/rogue/goat/tamed(mob/user) // TA EDIT
+	..(user) // TA EDIT
 	deaggroprob = 50
 	setup_mount(
 		list(TEXT_NORTH = list(0, 6), TEXT_SOUTH = list(0, 6), TEXT_EAST = list(-2, 6), TEXT_WEST = list(2, 6)),
@@ -281,8 +281,8 @@
 		add_saddleicon("saddle-above", "saddle")
 		add_ridericon("goatmale_mounted")
 
-/mob/living/simple_animal/hostile/retaliate/rogue/goatmale/tamed()
-	..()
+/mob/living/simple_animal/hostile/retaliate/rogue/goatmale/tamed(mob/user) // TA EDIT
+	..(user) // TA EDIT
 	deaggroprob = 20
 	setup_mount(
 		list(TEXT_NORTH = list(0, 6), TEXT_SOUTH = list(0, 6), TEXT_EAST = list(-2, 6), TEXT_WEST = list(2, 6)),

@@ -55,8 +55,8 @@
 		add_saddleicon("saddle-above", "saddle")
 		add_ridericon("drider_mounted")
 
-/mob/living/simple_animal/hostile/retaliate/rogue/drider/tamed()
-	..()
+/mob/living/simple_animal/hostile/retaliate/rogue/drider/tamed(mob/user) // TA EDIT
+	..(user) // TA EDIT
 	deaggroprob = 20
 	setup_mount()
 

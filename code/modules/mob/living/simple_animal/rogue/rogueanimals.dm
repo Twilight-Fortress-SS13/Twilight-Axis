@@ -206,7 +206,7 @@
 			return
 	if(user)
 		friends |= user
-	..()
+	..(user) // TA EDIT
 
 /mob/living/simple_animal/hostile/retaliate/rogue/Destroy()
 	QDEL_NULL(udder)
@@ -235,15 +235,17 @@
 				if(growth_prog >= 100)
 					if(isturf(loc))
 						var/mob/living/simple_animal/A = new adult_growth(loc)
+						if(genetics && !ispath(genetics)) // TA EDIT
+							genetics.copy_to(A) // TA EDIT
 						if(tame)
-							A.tame = TRUE
+							A.tamed(owner) // TA EDIT
 						qdel(src)
 						return
 			else
 				if(childtype)
 					make_babies()
 		if(udder)
-			if(production > 0)
+			while(production >= 1) // TA EDIT
 				production--
 				udder.generateMilk()
 
