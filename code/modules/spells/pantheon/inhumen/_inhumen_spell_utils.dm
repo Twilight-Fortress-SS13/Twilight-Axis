@@ -199,8 +199,12 @@
 	sleep(30)
 	to_chat(user, "<i>...Why do I still struggle to comprehend anything beyond a mere grasp of the arcane? What am I missing?</i>")
 
-/datum/action/cooldown/spell/zizo/rituos/proc/apply_unlife_path(mob/living/carbon/human/user)
-
+/datum/action/cooldown/spell/zizo/rituos/proc/apply_unlife_path(mob/living/carbon/human/user, head_too) // TA EDIT - ORIGINAL: .../proc/apply_unlife_path(mob/living/carbon/human/user)
+	// TA ADDITION START - T3 miracle can make you a real skeleton
+	if(head_too)
+		user.become_skeleton_zizo()
+		return FALSE
+	// TA ADDITION END
 	user.mob_biotypes |= MOB_UNDEAD
 
 	ADD_TRAIT(user, TRAIT_NOMOOD, "[type]")

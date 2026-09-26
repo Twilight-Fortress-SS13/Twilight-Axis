@@ -578,8 +578,17 @@
 		if("Progress")
 			src.apply_progress_path(user)
 		if("Unlife")
+			// TA EDIT START - ORIGINAL:
+			/*
 			src.apply_unlife_path(user)
-
+			*/
+			// ORIGINAL END
+			switch(alert(user, "You will become a skeleton! Should the head also become skeleton?", "Skeletonize","Yes","No"))
+				if("Yes")
+					src.apply_unlife_path(user, TRUE)
+				else
+					src.apply_unlife_path(user, FALSE)
+			// TA EDIT END
 	user.mind?.RemoveSpell(src)
 	qdel(src)
 	anti_spam = FALSE
