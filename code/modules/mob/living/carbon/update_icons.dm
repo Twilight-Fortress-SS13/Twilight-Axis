@@ -123,12 +123,14 @@
 					I.screen_loc = "WEST-3:0,SOUTH+7"
 				else
 					I.screen_loc = ui_hand_position(get_held_index_of_item(I))
-			client.screen += I
+			if(!(I in client.screen)) // TA EDIT
+				client.screen += I // TA EDIT
 			if(observers && observers.len)
 				for(var/M in observers)
 					var/mob/dead/observe = M
 					if(observe.client && observe.client.eye == src)
-						observe.client.screen += I
+						if(!(I in observe.client.screen)) // TA EDIT
+							observe.client.screen += I // TA EDIT
 					else
 						observers -= observe
 						if(!observers.len)
@@ -144,7 +146,8 @@
 		if(built[INHAND_BEHIND])
 			behindhands += built[INHAND_BEHIND]
 
-	update_inv_cloak() //cloak held items
+	if(!ishuman(src)) // TA EDIT
+		update_inv_cloak() //cloak held items // TA EDIT
 
 	overlays_standing[HANDS_BEHIND_LAYER] = behindhands
 	overlays_standing[HANDS_LAYER] = hands

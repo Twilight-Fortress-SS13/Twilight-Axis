@@ -26,14 +26,14 @@
 /obj/item/clothing/head/roguetown/helmet/sallet/grenzelhoft/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[get_detail_state(icon_state)][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[get_detail_state(icon_state)][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
 		add_overlay(pic)
 
 	if(get_altdetail_tag())
-		var/mutable_appearance/pic2 = mutable_appearance(icon(icon, "[get_detail_state(icon_state)][altdetail_tag]"))
+		var/mutable_appearance/pic2 = mutable_appearance(icon, "[get_detail_state(icon_state)][altdetail_tag]") // TA EDIT
 		pic2.appearance_flags = RESET_COLOR
 		if(get_altdetail_color())
 			pic2.color = get_altdetail_color()
@@ -62,14 +62,14 @@
 /obj/item/clothing/head/roguetown/helmet/bascinet/etruscan/grenzelhoft/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[get_detail_state(icon_state)][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[get_detail_state(icon_state)][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
 		add_overlay(pic)
 
 	if(get_altdetail_tag())
-		var/mutable_appearance/pic2 = mutable_appearance(icon(icon, "[get_detail_state(icon_state)][altdetail_tag]"))
+		var/mutable_appearance/pic2 = mutable_appearance(icon, "[get_detail_state(icon_state)][altdetail_tag]") // TA EDIT
 		pic2.appearance_flags = RESET_COLOR
 		if(get_altdetail_color())
 			pic2.color = get_altdetail_color()
@@ -89,6 +89,7 @@
 	color = "#FFFFFF"
 	detail_color = "#262927"
 	altdetail_color = "#FFFFFF"
+
 	max_integrity = ARMOR_INT_HELMET_STEEL + 15
 
 /obj/item/clothing/head/roguetown/helmet/sallet/visored/grenzelhoft/Initialize(mapload)
@@ -98,14 +99,14 @@
 /obj/item/clothing/head/roguetown/helmet/sallet/visored/grenzelhoft/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[get_detail_state(icon_state)][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[get_detail_state(icon_state)][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
 		add_overlay(pic)
 
 	if(get_altdetail_tag())
-		var/mutable_appearance/pic2 = mutable_appearance(icon(icon, "[get_detail_state(icon_state)][altdetail_tag]"))
+		var/mutable_appearance/pic2 = mutable_appearance(icon, "[get_detail_state(icon_state)][altdetail_tag]") // TA EDIT
 		pic2.appearance_flags = RESET_COLOR
 		if(get_altdetail_color())
 			pic2.color = get_altdetail_color()
@@ -114,6 +115,7 @@
 /obj/item/clothing/head/roguetown/helmet/blacksteel/modern/grenzelhoft
 	name = "blacksteel armet w/plume hat"
 	desc = "A Grenzelhoftian plume hat placed atop a blacksteel armet, staying fashionable while protecting the wearer's head for a better degree. Aren't you the affluent mercenary."
+
 	icon_state = "grenzelblack"
 	item_state = "grenzelblack"
 	icon = 'icons/roguetown/clothing/special/grenzelhats.dmi'
@@ -133,14 +135,14 @@
 /obj/item/clothing/head/roguetown/helmet/blacksteel/modern/grenzelhoft/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[get_detail_state(icon_state)][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[get_detail_state(icon_state)][detail_tag]") // TA EDIT
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
 		add_overlay(pic)
 
 	if(get_altdetail_tag())
-		var/mutable_appearance/pic2 = mutable_appearance(icon(icon, "[get_detail_state(icon_state)][altdetail_tag]"))
+		var/mutable_appearance/pic2 = mutable_appearance(icon, "[get_detail_state(icon_state)][altdetail_tag]") // TA EDIT
 		pic2.appearance_flags = RESET_COLOR
 		if(get_altdetail_color())
 			pic2.color = get_altdetail_color()
