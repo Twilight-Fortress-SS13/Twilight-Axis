@@ -5,6 +5,7 @@
 	icon = 'modular_twilight_axis/firearms/icons/axes32.dmi'
 	wbalance = WBALANCE_SWIFT
 	gripped_intents = null
+	special = /datum/special_intent/axe_swing/graggarite
 	detail_color = "#FFFFFF"
 	var/picked = FALSE
 
