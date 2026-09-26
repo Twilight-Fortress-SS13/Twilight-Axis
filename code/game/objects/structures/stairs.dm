@@ -167,16 +167,26 @@
 	var/mob/living/L = AM
 	var/atom/movable/pulling = L.pulling
 	var/was_pulled_buckled = FALSE
+	var/obj/item/inqarticles/garrote/cord
 	if(pulling)
 		if(pulling in L.buckled_mobs)
 			was_pulled_buckled = TRUE
+		for(var/obj/item/inqarticles/garrote/G in L.held_items)
+			if(G.victim == pulling)
+				cord = G
+				REMOVE_TRAIT(pulling, TRAIT_GARROTED, TRAIT_GENERIC)
+				break
 	L.forceMove(newtarg)
 	if(pulling)
 		L.stop_pulling()
 		pulling.stair_dragged = TRUE // TA EDIT
 		pulling.forceMove(newtarg)
 		pulling.stair_dragged = FALSE // TA EDIT
-		L.start_pulling(pulling, supress_message = TRUE)
+		if(cord)
+			if(!cord.wrap(L, pulling))
+				cord.wipeslate(L)
+		else
+			L.start_pulling(pulling, supress_message = TRUE)
 		if(was_pulled_buckled) // Assume this was a fireman carry since piggybacking is not a thing
 			L.buckle_mob(pulling, TRUE, TRUE, 90, 0, 0)
 

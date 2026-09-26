@@ -31,11 +31,17 @@
 	if(istype(W, /obj/item/rogueweapon))
 		var/obj/item/rogueweapon/RW = W
 		if(RW.special)
+			if(RW.obj_broken)
+				to_chat(user, span_warning("The weapon is in no state to be used like this!"))
+				return
 			active_special = RW.special
 			skill_level = user.get_wskill(RW)
 	else if(istype(W, /obj/item/gun/ballistic/revolver/grenadelauncher/bow))
 		var/obj/item/gun/ballistic/revolver/grenadelauncher/bow/B = W
 		if(B.special)
+			if(B.obj_broken)
+				to_chat(user, span_warning("The weapon is in no state to be used like this!"))
+				return
 			active_special = B.special
 			skill_level = user.get_skill_level(/datum/skill/combat/bows)
 	else if(!W && ishuman(user))

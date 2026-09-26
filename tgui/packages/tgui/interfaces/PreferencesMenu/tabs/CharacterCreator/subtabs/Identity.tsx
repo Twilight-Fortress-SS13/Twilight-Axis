@@ -553,7 +553,11 @@ export const VirtueEntry = (props: { entry: VirtueWithMetadata }) => {
           fluid
           ml={2}
           mt={1}
-          tooltip={choice.tooltip}
+          tooltip={
+            choice.tooltip ? (
+              <Box dangerouslySetInnerHTML={{ __html: choice.tooltip }} />
+            ) : null
+          }
           onClick={() =>
             act('subvirtue', {
               id,

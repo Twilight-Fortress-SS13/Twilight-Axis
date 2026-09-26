@@ -561,7 +561,7 @@ GLOBAL_LIST_INIT(roguetown_areas_typecache, typecacheof(list(/area/rogue/indoors
 	loot_pool_key = "lich_arena"
 	icon_state = "under"
 	first_time_text = "THE LICH'S MANOR"
-	droning_sound = 'sound/music/area/dragonden.ogg'
+	droning_sound = 'sound/music/area/grimlich.ogg'
 	droning_sound_dusk = null
 	droning_sound_night = null
 	ceiling_protected = TRUE
@@ -572,6 +572,9 @@ GLOBAL_LIST_INIT(roguetown_areas_typecache, typecacheof(list(/area/rogue/indoors
 	name = "the lich's lab"
 	loot_budget = LOOT_BUDGET_LICH_LAB
 	first_time_text = "THE LICH'S LABORATORY"
+	droning_sound = 'sound/music/area/grimlich.ogg'
+	droning_sound_dusk = null
+	droning_sound_night = null
 	deathsight_message = "A decrepit laboratory filled with death and decay"
 
 /area/rogue/under/cave/licharena/bossroom/grim/can_craft_here()
