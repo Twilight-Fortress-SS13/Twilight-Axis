@@ -235,6 +235,13 @@
 	if(isopenturf(T) && R.wallcraft)
 		to_chat(user, span_warning("Need to craft this on a wall."))
 		return
+	if(R.doorcraft || R.windowcraft) // TA EDIT START
+		var/obj/structure/mineral_door/door = locate() in T
+		var/obj/structure/roguewindow/window = locate() in T
+
+		if(!door && !window)
+			to_chat(user, span_warning("Need to craft this on a door or window."))
+			return  //TA EDIT END
 	if(!isopenturf(T) || R.ontile)
 		T = get_turf(user.loc)
 	if(!R.TurfCheck(user, T))

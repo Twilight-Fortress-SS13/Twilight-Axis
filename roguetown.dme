@@ -4230,6 +4230,7 @@
 #include "modular_twilight_axis\code\modules\roguetown\roguecrafting\items.dm"
 #include "modular_twilight_axis\code\modules\roguetown\roguecrafting\leather.dm"
 #include "modular_twilight_axis\code\modules\roguetown\roguecrafting\sewing.dm"
+#include "modular_twilight_axis\code\modules\roguetown\roguecrafting\structure.dm"
 #include "modular_twilight_axis\code\modules\roguetown\roguecrafting\alchemy\alch_cauldron_recipes.dm"
 #include "modular_twilight_axis\code\modules\roguetown\roguecrafting\alchemy\reagents.dm"
 #include "modular_twilight_axis\code\modules\roguetown\roguejobs\alchemist\container.dm"
