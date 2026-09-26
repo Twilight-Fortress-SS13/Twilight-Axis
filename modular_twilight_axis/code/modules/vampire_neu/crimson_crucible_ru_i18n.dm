@@ -70,5 +70,8 @@
 		"The crucible cannot bind a servant before my bloodline is chosen." = "Тигель не свяжет слугу, пока не избрана моя кровь.",
 		"The crucible needs 800 vitae in the cup." = "Чаше требуется 800 витэ.",
 		"The ritual conditions are not fulfilled yet." = "Условия ритуала еще не выполнены.",
-		"This project cannot be started." = "Этот ритуал не может быть начат."
+		"This project cannot be started." = "Этот ритуал не может быть начат.",
+		"Summon Vitae Collar" = "Призвать Кровавый Ошейник",
+		"Bind a mortal's vitae to the crucible with an enchanted collar. While worn, it silences magic and miracles, cripples the wearer's legs, and quietly drains their surplus vitae back into the crucible." = "Зачарованный ошейник привязывает витэ смертного к Тигелю. Пока он надет: лишает сил, не давая пользоваться заклинаниями и чудесами, а так же быстро перемещаться по поместью. Сцеживает часть витаэ в Тигель.",
+		"Blocks spellcasting and miracles, grants Decayed Flesh. Passively drains vitae into the crucible at 70% efficiency once the wearer's vitae nears 5000, keeping blood near their oxygen damage level. Works only within the Vampire Manor; removable only with its paired key." = "Блокирует заклинания и чудеса. Пассивно откачивает витэ в Тигель с КПД 70%, когда витэ хозяина приближается к 5000. Действует только в пределах Поместья Вампира; снять можно только парным ключом."
 	)
