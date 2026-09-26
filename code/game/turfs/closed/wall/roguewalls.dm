@@ -448,6 +448,7 @@
 // Metal walls //
 /////////////////
 
+
 /turf/closed/wall/mineral/rogue/pipe
 	name = "metal wall"
 	desc = "Solid steel made into an impenetrable obstacle. Dense piping runs along its face."
@@ -620,6 +621,6 @@
 	icon_state = "shroud[pick(1,2)]"
 	dir = pick(GLOB.cardinals)
 	res = rand(1,3)
-	var/turf/open/transparent/openspace/target = get_step_multiz(src, UP)
+	var/turf/open/openspace/target = get_step_multiz(src, UP)
 	if(istype(target))
 		target.ChangeTurf(/turf/open/floor/rogue/dirt/road)

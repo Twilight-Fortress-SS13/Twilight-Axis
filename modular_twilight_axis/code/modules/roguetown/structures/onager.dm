@@ -400,7 +400,7 @@
 	explosion(T, devastation_range, heavy_impact_range, light_impact_range, smoke = TRUE)
 
 	if(isopenturf(T) && prob(60))
-		T.ChangeTurf(/turf/open/transparent/openspace)
+		T.ChangeTurf(/turf/open/openspace)
 		var/turf/below = get_step_multiz(T, DOWN)
 		if(below)
 			explosion(below, 0, 2, 3, smoke = TRUE)

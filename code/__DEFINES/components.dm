@@ -207,7 +207,8 @@
 
 // /turf signals
 #define COMSIG_TURF_CHANGE "turf_change"						//from base of turf/ChangeTurf(): (path, list/new_baseturfs, flags, list/transferring_comps)
-#define COMSIG_TURF_MULTIZ_NEW "turf_multiz_new"				//from base of turf/New(): (turf/source, direction)
+#define COMSIG_TURF_MULTIZ_DEL "turf_multiz_del"				//from base of turf/multiz_turf_del(): (turf/source, direction)
+#define COMSIG_TURF_MULTIZ_NEW "turf_multiz_new"				//from base of turf/multiz_turf_new(): (turf/source, direction)
 
 // /atom/movable signals
 #define COMSIG_MOVABLE_PRE_MOVE "movable_pre_move"					//from base of atom/movable/Moved(): (/atom)

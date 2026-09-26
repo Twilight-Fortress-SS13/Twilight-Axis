@@ -8,7 +8,7 @@
 	var/smooth_icon = null
 	var/prettifyturf = FALSE
 	icon = 'icons/turf/roguefloor.dmi'
-	baseturfs = list(/turf/open/transparent/openspace)
+	baseturfs = list(/turf/open/openspace)
 	neighborlay = ""
 	/// If set, SSseason ChangeTurf()s this into winter_type during Winter (sibling of water's
 	/// freeze_type). A real type rather than an icon swap, since dirt carries per-instance state

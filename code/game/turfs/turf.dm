@@ -13,7 +13,7 @@
 	// A list will be created in initialization that figures out the baseturf's baseturf etc.
 	// In the case of a list it is sorted from bottom layer to top.
 	// This shouldn't be modified directly, use the helper procs.
-	var/list/baseturfs = /turf/open/transparent/openspace
+	var/list/baseturfs = /turf/open/openspace
 
 	var/temperature = T20C
 	var/to_be_destroyed = 0 //Used for fire, if a melting temperature was reached, it will be destroyed
@@ -113,12 +113,10 @@
 	var/turf/T = get_turf_above_ztraits(src)
 	if(T)
 		T.multiz_turf_new(src, DOWN)
-		SEND_SIGNAL(T, COMSIG_TURF_MULTIZ_NEW, src, DOWN)
 
 	T = get_turf_below_ztraits(src)
 	if(T)
 		T.multiz_turf_new(src, UP)
-		SEND_SIGNAL(T, COMSIG_TURF_MULTIZ_NEW, src, UP)
 
 	if(!mapload)
 		reassess_stack()
@@ -188,7 +186,7 @@
 				can_see_sky = SEE_SKY_YES
 			return can_see_sky()
 		A = get_area(CT)
-		if(!istype(CT, /turf/open/transparent/openspace))
+		if(!istype(CT, /turf/open/openspace))
 			can_see_sky = SEE_SKY_NO
 			return can_see_sky()
 
@@ -252,9 +250,11 @@
 	user.Move_Pulled(src)
 
 /turf/proc/multiz_turf_del(turf/T, dir)
+	SEND_SIGNAL(src, COMSIG_TURF_MULTIZ_DEL, T, dir)
 	reassess_stack()
 
 /turf/proc/multiz_turf_new(turf/T, dir)
+	SEND_SIGNAL(src, COMSIG_TURF_MULTIZ_NEW, T, dir)
 	reassess_stack()
 
 /proc/get_turf_below_ztraits(turf/T)
