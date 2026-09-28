@@ -4,6 +4,9 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /mutable_appearance, mutable_a
 	name = "open space"
 	desc = "My eyes can see far down below."
 	icon_state = "openspace"
+	plane = OPENSPACE_PLANE
+	layer = OPENSPACE_LAYER
+	vis_flags = VIS_INHERIT_ID
 	baseturfs = /turf/open/openspace
 	intact = FALSE
 	CanAtmosPassVertical = ATMOS_PASS_YES
@@ -41,7 +44,7 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /mutable_appearance, mutable_a
 
 /turf/open/openspace/LateInitialize()
 	. = ..()
-	AddElement(/datum/element/turf_z_transparency, is_openspace = TRUE)
+	AddElement(/datum/element/turf_z_transparency, TRUE)
 
 /turf/open/openspace/zAirIn()
 	return TRUE

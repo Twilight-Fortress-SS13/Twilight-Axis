@@ -8,11 +8,13 @@
 
 	var/turf/our_turf = target
 
-	our_turf.layer = OPENSPACE_LAYER
 	if(is_openspace)
 		our_turf.plane = OPENSPACE_PLANE
+		our_turf.layer = OPENSPACE_LAYER
+		our_turf.vis_flags = VIS_INHERIT_ID
 	else
 		our_turf.plane = TRANSPARENT_FLOOR_PLANE
+		our_turf.layer = OPENSPACE_LAYER
 
 	RegisterSignal(target, COMSIG_TURF_MULTIZ_DEL, PROC_REF(on_multiz_turf_del))
 	RegisterSignal(target, COMSIG_TURF_MULTIZ_NEW, PROC_REF(on_multiz_turf_new))
