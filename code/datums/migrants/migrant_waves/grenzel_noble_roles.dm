@@ -63,7 +63,7 @@
 		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 2,
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpotnew = 2,
 		)
-	H.cmode_music = 'sound/music/combat_grenzelhoft.ogg'
+	H.cmode_music = sound("sound/music/combat_grenzelhoft.ogg")
 	H.grant_language(/datum/language/grenzelhoftian)
 
 /datum/migrant_role/grenzel/bodyguard
@@ -122,7 +122,7 @@
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpotnew = 1,
 		/obj/item/natural/bundle/cloth/bandage/full = 1,
 		)
-	H.cmode_music = 'sound/music/combat_grenzelhoft.ogg'
+	H.cmode_music = sound("sound/music/combat_grenzelhoft.ogg")
 	H.grant_language(/datum/language/grenzelhoftian)
 
 	var/weapons = list("Zweihander","Kriegmesser & Buckler","Halberd","Partizan")

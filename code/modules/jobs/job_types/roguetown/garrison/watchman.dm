@@ -21,7 +21,7 @@
 	max_pq = null
 	round_contrib_points = 2
 
-	cmode_music = 'sound/music/combat_ManAtArms.ogg'
+	cmode_music = sound("sound/music/combat_ManAtArms.ogg")
 
 /datum/outfit/job/roguetown/watchman
 	job_bitflag = BITFLAG_GARRISON

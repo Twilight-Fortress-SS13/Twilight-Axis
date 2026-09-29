@@ -7,7 +7,7 @@
 
 	outfit = /datum/outfit/job/roguetown/adventurer/woodworker
 	traits_applied = list(TRAIT_HOMESTEAD_EXPERT, TRAIT_MASTER_CARPENTER)
-	cmode_music = 'sound/music/cmode/towner/combat_towner2.ogg'
+	cmode_music = sound("sound/music/cmode/towner/combat_towner2.ogg")
 
 	category_tags = list(CTAG_PILGRIM, CTAG_TOWNER)
 	subclass_stats = list(

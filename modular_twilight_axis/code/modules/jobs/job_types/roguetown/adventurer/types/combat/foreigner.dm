@@ -3,7 +3,7 @@
 	tutorial = "You leaved your community, by your hand or by other's decision, but it not matter now. You are trying to find new home or die like a true warrior of your land."
 	outfit = /datum/outfit/job/roguetown/adventurer/gronnadv
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT, CTAG_LICKER_WRETCH)
-	cmode_music = 'sound/music/combat_vagarian.ogg'
+	cmode_music = sound("sound/music/combat_vagarian.ogg")
 	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_STEELHEARTED)
 	subclass_languages = list(/datum/language/gronnic)
 	subclass_stats = list(
@@ -88,7 +88,7 @@
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_PARRYEXPERT)
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
 	subclass_languages = list(/datum/language/kazengunese)
-	cmode_music = 'sound/music/combat_kazengite.ogg'
+	cmode_music = sound("sound/music/combat_kazengite.ogg")
 	subclass_stats = list(
 		STATKEY_SPD = 3,
 		STATKEY_INT = 2,
@@ -136,7 +136,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 	subclass_languages = list(/datum/language/etruscan)
 	outfit = /datum/outfit/job/roguetown/adventurer/marinero
-	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_conquistador.ogg'
+	cmode_music = sound("modular_twilight_axis/firearms/sound/music/combat_conquistador.ogg")
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_MEDIUMARMOR)
 	class_select_category = CLASS_CAT_NOMAD
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT, CTAG_LICKER_WRETCH)

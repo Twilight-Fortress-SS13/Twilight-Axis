@@ -252,7 +252,6 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	top_examine			= sanitize_bool(top_examine, initial(top_examine))
 	crt					= sanitize_bool(crt, initial(crt))
 	grain				= sanitize_bool(grain, initial(grain))
-	dnr_pref			= sanitize_bool(dnr_pref, initial(dnr_pref))
 	qsr_pref			= sanitize_bool(qsr_pref, initial(qsr_pref))
 	no_storyteller_events = sanitize_bool(no_storyteller_events, initial(no_storyteller_events))
 	verbose_character_creator = sanitize_bool(verbose_character_creator, initial(verbose_character_creator))
@@ -511,6 +510,14 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	clean_virtue.on_load()
 	return clean_virtue
 
+/datum/preferences/proc/migrate_forgotten_empires_origin() // TA EDIT START
+	if(!istype(virtue_origin, /datum/virtue/origin/unselectable/skeleton))
+		return FALSE
+
+	qdel(virtue_origin)
+	virtue_origin = new /datum/virtue/origin/unknown
+	return TRUE // TA EDIT END
+
 /datum/preferences/proc/write_clean_virtue_paths(savefile/S, virtue_type = /datum/virtue/none, virtuetwo_type = /datum/virtue/none, origin_type = /datum/virtue/none, list/virtue_choices = null, list/virtuetwo_choices = null)
 	if(!ispath(virtue_type, /datum/virtue))
 		virtue_type = /datum/virtue/none
@@ -549,6 +556,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	virtue = load_clean_virtue(virtue_data[1], virtue_data[2])
 	virtuetwo = load_clean_virtue(virtuetwo_data[1], virtuetwo_data[2])
 	virtue_origin = load_clean_virtue(origin_data[1], origin_data[2])
+	migrate_forgotten_empires_origin() // TA EDIT
 
 	write_clean_virtue_paths(S, virtue.type, virtuetwo.type, virtue_origin.type, virtue.picked_choices, virtuetwo.picked_choices)
 
@@ -776,7 +784,12 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["job_characters"] >> job_characters //TA EDIT
 	S["job_subclass_preferences"] >> job_subclass_preferences // TA EDIT START
 	S["job_subclass_strict"] >> job_subclass_strict // TA EDIT END
-	S["dnr"] >> dnr_pref
+
+	S["char_toggles"] >> char_toggles
+	if(isnull(char_toggles))
+		var/legacy_dnr
+		S["dnr"] >> legacy_dnr
+		char_toggles = legacy_dnr ? CHAR_TOGGLE_DNR : NONE
 
 	S["update_mutant_colors"] >> update_mutant_colors
 
@@ -877,6 +890,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	vampire_hair = sanitize_hexcolor(vampire_hair, 6, TRUE, null, TRUE)
 	vampire_ears = sanitize_hexcolor(vampire_ears, 6, TRUE, null, TRUE)
 	highlight_color = sanitize_hexcolor(highlight_color, 6, TRUE, initial(highlight_color))
+
+	char_toggles = sanitize_integer(char_toggles, 0, INFINITY, initial(char_toggles))
 
 	// floats
 	voice_pitch		= sanitize_float(voice_pitch, MIN_VOICE_PITCH, MAX_VOICE_PITCH, 0.01, 1)
@@ -1128,6 +1143,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	virtue = load_clean_virtue(virtue_data[1], virtue_data[2])
 	virtuetwo = load_clean_virtue(virtuetwo_data[1], virtuetwo_data[2])
 	virtue_origin = load_clean_virtue(origin_data[1], origin_data[2])
+	migrate_forgotten_empires_origin() // TA EDIT
 
 
 	charflaws = list()
@@ -1211,7 +1227,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["descriptor_entries"] , descriptor_entries)
 	WRITE_FILE(S["custom_descriptors"] , custom_descriptors)
 
-	WRITE_FILE(S["dnr"] , dnr_pref)
+
+	WRITE_FILE(S["char_toggles"] , char_toggles)
 	WRITE_FILE(S["update_mutant_colors"] , update_mutant_colors)
 	WRITE_FILE(S["headshot_link"] , headshot_link)
 	WRITE_FILE(S["vampire_headshot_link"] , vampire_headshot_link)

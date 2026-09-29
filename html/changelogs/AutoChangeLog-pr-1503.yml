@@ -1,0 +1,4 @@
+author: "rarytech"
+delete-after: True
+changes:
+  - bugfix: "бомбам возвращен урон по игрокам"

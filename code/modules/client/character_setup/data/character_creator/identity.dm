@@ -16,7 +16,6 @@
 		"statpack_name" = statpack.name,
 		"domhand" = domhand,
 		"combat_music" = (combat_music.shortname ? combat_music.shortname : combat_music.name),
-		"dnr_pref" = dnr_pref,
 		"defiant" = defiant,
 
 		"favorite_cuisine" = favorite_cuisine,
@@ -38,6 +37,8 @@
 		"voice_pack" = voice_pack,
 		"voice_pitch" = voice_pitch,
 
+
+		"char_toggles" = list(),
 
 		"virtues" = ui_data_character_creator_identity_virtues(user),
 	)
@@ -81,6 +82,11 @@
 			data["selected_faith"] = selected_faith.name
 		data["selected_patron"] = selected_patron.name // TA EDIT END
 
+
+	var/list/toggles_data = list()
+	for(var/list/entry as anything in GLOB.char_toggles)
+		UNTYPED_LIST_ADD(toggles_data, entry + list("enabled" = !!(char_toggles & entry["flag"])))
+	data["char_toggles"] = toggles_data
 
 	return data
 

@@ -77,7 +77,7 @@
 	if(patron_dagger)
 		backpack_contents += patron_dagger
 
-	H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg'
+	H.cmode_music = sound("sound/music/cmode/church/combat_reckoning.ogg")
 
 	to_chat(H, span_warning("You start with Bind Weapon. Remember to Bind your weapon so you can use your abilities and build up Arcyne Momentum."))
 

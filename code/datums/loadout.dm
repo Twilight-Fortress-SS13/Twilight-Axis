@@ -4367,7 +4367,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/triumph_plaquegoldenbeltfancy
 	name = "Belt of Plaque, Golden, Fancy"
 	category = list("Триумфы")
-	path = /obj/item/storage/belt/rogue/leather/plaquegold/steward
+	path = /obj/item/storage/belt/rogue/leather/plaquegold/noble
 	triumph_cost = 7
 
 /datum/loadout_item/triumph_armorkit_slimmedsteel

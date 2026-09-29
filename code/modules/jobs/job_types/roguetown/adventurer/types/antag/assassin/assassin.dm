@@ -41,7 +41,7 @@
 		// graggar doesn't fuck with hags. he would Rather You Die than be subservient to a Faerie Motherfucker!!
 		/datum/virtue/utility/feytouched
 	)
-	cmode_music = 'sound/music/cmode/antag/combat_deadlyshadows.ogg'
+	cmode_music = sound("sound/music/cmode/antag/combat_deadlyshadows.ogg")
 	// ASSASSIN CURRENTLY USES THESE ADVCLASSES FOR ALL THE ACTUAL STUFF.
 	// EVERY CLASS SHOULD HAVE AT LEAST 2 SPD, 1 WIL, 1 INT (6WT). 14 POINTS MAX.
 	// 1 WIL for STAMINA. 2 SPD bc DODGE EXPERTS. 1 INT for CRAFTING & CHICANERY.

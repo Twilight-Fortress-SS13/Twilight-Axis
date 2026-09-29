@@ -204,6 +204,9 @@
 		/area/rogue/outdoors/beach,
 		/area/rogue/outdoors/beach/north,
 		/area/rogue/outdoors/beach/south,
+		/area/rogue/outdoors/beach/grim,
+		/area/rogue/outdoors/beach/north/grim,
+		/area/rogue/outdoors/beach/south/grim,
 		/area/rogue/outdoors/beach/harbor,
 		/area/rogue/rockharbor,
 		/area/rogue/outdoors/desert/river

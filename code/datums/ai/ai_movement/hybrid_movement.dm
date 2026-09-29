@@ -20,6 +20,7 @@
 	var/next_resolve = 0
 	var/max_basic_failures = 3 // How many consecutive basic movement failures before switching to A*
 	var/always_advanced = FALSE
+	var/advanced_adjacent_proc = TYPE_PROC_REF(/turf, reachableTurftest) // TA EDIT
 
 /datum/ai_movement/hybrid_pathing/process(delta_time)
 	if(world.time < next_resolve)
@@ -271,7 +272,7 @@
 					COOLDOWN_START(controller, repath_cooldown, 0.3 SECONDS) // AP: aggressive anticipatory repath
 					// Generate the future path and store it in the controller's blackboard
 					var/list/new_future_path = get_path_to(movable_pawn, controller.current_movement_target, TYPE_PROC_REF(/turf, Heuristic_cardinal_3d),
-						max_path_distance + 1, max_path_distance + 1, minimum_distance, id=controller.get_access())
+						max_path_distance + 1, max_path_distance + 1, minimum_distance, adjacent = advanced_adjacent_proc, id=controller.get_access()) // TA EDIT
 					// Strip the caller's own turf if AStar included it — see note on main path gen below
 					if(length(new_future_path) && new_future_path[1] == get_turf(movable_pawn))
 						new_future_path.Cut(1, 2)
@@ -293,7 +294,7 @@
 					continue
 				COOLDOWN_START(controller, repath_cooldown, 0.5 SECONDS) // AP: aggressive repath
 				controller.movement_path = get_path_to(movable_pawn, controller.current_movement_target, TYPE_PROC_REF(/turf, Heuristic_cardinal_3d),
-					max_path_distance + 1, max_path_distance + 1, minimum_distance, id=controller.get_access())
+					max_path_distance + 1, max_path_distance + 1, minimum_distance, adjacent = advanced_adjacent_proc, id=controller.get_access()) // TA EDIT
 				// AStar includes the caller's current turf as path[1] — strip it so path[1] is
 				// always the next tile to step to. Matches old _npc.dm:503 behavior.
 				if(length(controller.movement_path) && controller.movement_path[1] == get_turf(movable_pawn))

@@ -83,7 +83,7 @@
 		/obj/item/mini_flagpole/church,
 		/obj/item/storage/keyring/acolyte
 		)
-	H.cmode_music = 'sound/music/cmode/church/combat_acolyte.ogg' // has to be defined here for the selection below to work. sm1 please rewrite cmusic to apply pre-equip.
+	H.cmode_music = sound("sound/music/cmode/church/combat_acolyte.ogg") // has to be defined here for the selection below to work. sm1 please rewrite cmusic to apply pre-equip.
 	switch(H.patron?.type)
 		if(/datum/patron/divine/undivided)
 			var/colors = list("Normal", "Clerical")
@@ -164,7 +164,7 @@
 			cloak = /obj/item/clothing/cloak/templar/xylixian
 			armor = /obj/item/clothing/suit/roguetown/shirt/robe/black
 			mask = /obj/item/clothing/mask/rogue/facemask/xylixmask //TA edit
-			H.cmode_music = 'sound/music/combat_jester.ogg'
+			H.cmode_music = sound("sound/music/combat_jester.ogg")
 			var/datum/inspiration/I = new /datum/inspiration(H)
 			I.grant_inspiration(H, bard_tier = BARD_T2)
 			if(H.mind)
@@ -199,8 +199,6 @@
 			neck = /obj/item/clothing/neck/roguetown/psicross/astrata/g
 			shoes = /obj/item/clothing/shoes/roguetown/sandals
 			armor = /obj/item/clothing/suit/roguetown/shirt/robe/astrata
-	if(H.mind)
-		H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/divine_blast)
 	// -- End of section for god specific bonuses --
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T4, passive_gain = CLERIC_REGEN_MAJOR, start_maxed = TRUE)	//Starts off maxed out.
@@ -232,7 +230,7 @@
 		ADD_TRAIT(H, TRAIT_NOSTINK, TRAIT_GENERIC)
 		ADD_TRAIT(H, TRAIT_SOUL_EXAMINE, TRAIT_GENERIC)
 		H.adjust_skillrank(/datum/skill/misc/athletics, SKILL_LEVEL_APPRENTICE, TRUE) // digging graves and carrying bodies builds muscles probably.
-		H.cmode_music = 'sound/music/cmode/church/combat_necra.ogg'
+		H.cmode_music = sound("sound/music/cmode/church/combat_necra.ogg")
 	if(H.patron?.type == /datum/patron/divine/pestra) // Medicine and Healing - better surgeons and alchemists
 		H.adjust_skillrank(/datum/skill/misc/medicine, SKILL_LEVEL_NOVICE, TRUE)
 		H.adjust_skillrank(/datum/skill/craft/alchemy, SKILL_LEVEL_NOVICE, TRUE)
@@ -240,7 +238,7 @@
 	if(H.patron?.type == /datum/patron/divine/eora) // Beauty and Love - beautiful and can read people pretty well.
 		ADD_TRAIT(H, TRAIT_BEAUTIFUL, TRAIT_GENERIC)
 		ADD_TRAIT(H, TRAIT_EMPATH, TRAIT_GENERIC)
-		H.cmode_music = 'sound/music/cmode/church/combat_eora.ogg'
+		H.cmode_music = sound("sound/music/cmode/church/combat_eora.ogg")
 		// 90% of eorans i see are farming to tend to their tree and/or cooking. they also get sewing -- arts and crafts.
 		H.adjust_skillrank(/datum/skill/craft/sewing, SKILL_LEVEL_NOVICE, TRUE)
 		H.adjust_skillrank(/datum/skill/labor/farming, SKILL_LEVEL_NOVICE, TRUE)

@@ -64,7 +64,7 @@
 
 	H.choose_name_popup("Ancient Azurcaephan")
 
-	H.cmode_music = 'sound/music/combat_weird.ogg'
+	H.cmode_music = sound("sound/music/combat_weird.ogg")
 
 	// Equipment — gilbranze loadout matching lich skeleton spellblade
 	belt = /obj/item/storage/belt/rogue/leather

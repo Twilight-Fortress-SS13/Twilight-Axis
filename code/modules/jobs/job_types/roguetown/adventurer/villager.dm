@@ -20,7 +20,7 @@
 	advjob_examine = TRUE
 	always_show_on_latechoices = TRUE
 	same_job_respawn_delay = 10 MINUTES
-	cmode_music = 'sound/music/cmode/towner/combat_towner.ogg'
+	cmode_music = sound("sound/music/cmode/towner/combat_towner.ogg")
 	job_subclasses = list(
 		/datum/advclass/barbersurgeon,
 		/datum/advclass/blacksmith,

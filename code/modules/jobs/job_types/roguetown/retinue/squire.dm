@@ -22,7 +22,7 @@
 	round_contrib_points = 2
 	same_job_respawn_delay = 30 MINUTES
 
-	cmode_music = 'sound/music/combat_squire.ogg'
+	cmode_music = sound("sound/music/combat_squire.ogg")
 	job_subclasses = list(
 		/datum/advclass/squire/lancer,
 		/datum/advclass/squire/footman,

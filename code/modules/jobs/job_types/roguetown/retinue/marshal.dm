@@ -22,7 +22,7 @@
 	min_pq = 17
 	max_pq = null
 	round_contrib_points = 3
-	cmode_music = 'sound/music/combat_knight.ogg'
+	cmode_music = sound("sound/music/combat_knight.ogg")
 	advclass_cat_rolls = list (CTAG_MARSHAL = 20)
 	same_job_respawn_delay = 30 MINUTES
 

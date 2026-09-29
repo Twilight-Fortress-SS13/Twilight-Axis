@@ -231,10 +231,18 @@
 	var/list/found_tools = list() //TA EDIT
 //	var/send_feedback = 1
 	var/build_dir = user.dir
+	var/craft_dir = R.do_not_turn ? SOUTH : build_dir
 	var/turf/T = get_step(user, build_dir)
 	if(isopenturf(T) && R.wallcraft)
 		to_chat(user, span_warning("Need to craft this on a wall."))
 		return
+	if(R.doorcraft || R.windowcraft) // TA EDIT START
+		var/obj/structure/mineral_door/door = locate() in T
+		var/obj/structure/roguewindow/window = locate() in T
+
+		if(!door && !window)
+			to_chat(user, span_warning("Need to craft this on a door or window."))
+			return  //TA EDIT END
 	if(!isopenturf(T) || R.ontile)
 		T = get_turf(user.loc)
 	if(!R.TurfCheck(user, T))
@@ -320,7 +328,7 @@
 						for(var/IT in L)
 							var/atom/movable/I = new IT(T)
 							I.CheckParts(parts, R)
-							I.OnCrafted(build_dir, user)
+							I.OnCrafted(craft_dir, user)
 							if(isitem(I))
 								var/obj/item/CI = I
 								CI.was_crafted = TRUE
@@ -335,7 +343,7 @@
 						if(ispath(R.result, /turf))
 							var/turf/X = T.PlaceOnTop(R.result)
 							if(X)
-								X.OnCrafted(build_dir, user)
+								X.OnCrafted(craft_dir, user)
 								X.add_fingerprint(user)
 								if(R.loud)
 									X.loud_message("Construction sounds can be heard")
@@ -349,7 +357,7 @@
 							if(R.diagonal)
 								I.OnCrafted(I.SelectDiagDirection(), user)
 							else
-								I.OnCrafted(build_dir, user)
+								I.OnCrafted(craft_dir, user)
 							if(isitem(I))
 								var/obj/item/CI = I
 								CI.was_crafted = TRUE

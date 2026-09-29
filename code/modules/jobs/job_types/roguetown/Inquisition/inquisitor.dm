@@ -12,7 +12,7 @@
 	largest Psydonic kingdom left on this world - has seen it fit to treat you like a silver-tipped olive branch, gifted to Azuria to ward off the encroaching \
 	darkness. Tread carefully when pursuing your missives, lest the faithless strap you to the pyre as well."
 	whitelist_req = TRUE
-	cmode_music = 'sound/music/combat_inqcommander.ogg' //Formerly 'sound/music/inquisitorcombat.ogg'.
+	cmode_music = sound("sound/music/combat_inqcommander.ogg") //Formerly 'sound/music/inquisitorcombat.ogg'.
 	selection_color = JCOLOR_INQUISITION
 
 	outfit = /datum/outfit/job/roguetown/inquisitor
@@ -193,7 +193,7 @@
 	a singular purpose: to break the inhumen against their knee."
 	outfit = /datum/outfit/job/roguetown/inquisitor/ordinator
 	subclass_languages = list(/datum/language/otavan)
-	cmode_music = 'sound/music/combat_inqordinator.ogg'
+	cmode_music = sound("sound/music/combat_inqordinator.ogg")
 
 	category_tags = list(CTAG_INQUSITOR)
 	traits_applied = list(

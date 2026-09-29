@@ -5,7 +5,7 @@
 	outfit = /datum/outfit/job/roguetown/mercenary/twilight_gunslinger
 	maximum_possible_slots = 2
 	min_pq = 25 // Все мерки в данный момент с 25 открываются
-	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_gunslinger.ogg'
+	cmode_music = sound("modular_twilight_axis/firearms/sound/music/combat_gunslinger.ogg")
 	class_select_category = CLASS_CAT_OTAVA
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
 	subclass_languages = list(/datum/language/otavan)

@@ -7,7 +7,7 @@
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
 	class_select_category = CLASS_CAT_RACIAL
 	maximum_possible_slots = 3
-	cmode_music = 'modular_twilight_axis/sound/music/combat_tabaxi.ogg'
+	cmode_music = sound("modular_twilight_axis/sound/music/combat_tabaxi.ogg")
 	subclass_languages = list(/datum/language/raneshi)
 	traits_applied = list(TRAIT_DODGEEXPERT)
 	subclass_stats = list(

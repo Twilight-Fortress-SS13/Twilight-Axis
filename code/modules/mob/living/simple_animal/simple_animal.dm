@@ -176,6 +176,8 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	var/list/food_type
 	///A typecache used for faster lookups of food_type.
 	var/list/food_typecache
+	var/list/tame_food_type // TA EDIT
+	var/list/tame_food_typecache // TA EDIT
 	///Starting success chance for taming.
 	var/tame_chance
 	///Added success chance after every failed tame attempt.
@@ -233,6 +235,21 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 		. += span_info("To dismount an incapacitated or tied up mob, all riders must dismount, first.")
 		if(ssaddle)
 			. += span_info("Use middle-mouse button on the mount to open its inventory.")
+	// TA EDIT START
+	if(generate_genetics)
+		if(gender == MALE)
+			. += span_info("Sex: Male.")
+		else if(gender == FEMALE)
+			. += span_info("Sex: Female.")
+	var/genetics_text = get_genetics_examine()
+	if(genetics_text)
+		. += genetics_text
+	if(can_receive_livestock_commands)
+		if(owner == user)
+			. += span_info("Alt-click this animal to issue livestock commands.")
+		else if(tame && !owner && !adult_growth)
+			. += span_info("This animal has no recognized handler. Alt-click it while adjacent to bond with it.")
+	// TA EDIT END
 
 /mob/living/simple_animal/get_blood_color()
 	return blood_color
@@ -252,6 +269,9 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	set_new_cells()
 	if(length(food_type))
 		food_typecache = typecacheof(food_type)
+	if(length(tame_food_type)) // TA EDIT
+		tame_food_typecache = typecacheof(tame_food_type) // TA EDIT
+	initialize_animal_genetics() // TA EDIT
 //	if(dextrous)
 //		AddComponent(/datum/component/personal_crafting)
 	for(var/spell in inherent_spells)
@@ -286,6 +306,9 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 		QDEL_NULL(bbarding)
 		bbarding = null
 
+	if(genetics && !ispath(genetics)) // TA EDIT
+		QDEL_NULL(genetics) // TA EDIT
+
 	var/turf/T = get_turf(src)
 	if (T && AIStatus == AI_Z_OFF)
 		SSidlenpcpool.idle_mobs_by_zlevel[T.z] -= src
@@ -304,15 +327,16 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 			qdel(O)
 			food = min(food + 30, 100)
 			adjustHealth(-rand(10,20))
-			if(tame && owner == user)
+			if(tame) // TA EDIT
 				return
-			var/realchance = tame_chance
+			var/can_tame_with_food = !length(tame_food_typecache) || tame_food_typecache[O.type] // TA EDIT
+			var/realchance = can_tame_with_food ? clamp(tame_chance + genetic_tame_chance_bonus, 0, 95) : 0 // TA EDIT
 			if(realchance)
 				if(prob(realchance))
 					tamed(user)
 					record_round_statistic(STATS_ANIMALS_TAMED)
 				else
-					tame_chance += bonus_tame_chance
+					tame_chance += max(0, bonus_tame_chance + genetic_bonus_tame_bonus) // TA EDIT
 
 /mob/living/simple_animal/attack_right(mob/user, params)
 	if(ccaparison)
@@ -400,6 +424,8 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 
 ///Extra effects to add when the mob is tamed, such as adding a riding component
 /mob/living/simple_animal/proc/tamed(mob/user)
+	if(tame && owner && user && owner != user) // TA EDIT
+		return // TA EDIT
 	INVOKE_ASYNC(src, PROC_REF(emote), "lower_head", null, null, null, TRUE)
 	tame = TRUE
 	stop_automated_movement_when_pulled = TRUE
@@ -407,6 +433,11 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 		owner = user
 		SEND_SIGNAL(user, COMSIG_ANIMAL_TAMED, src)
 	pet_passive = TRUE
+	if(ai_controller) // TA EDIT START
+		ai_controller.clear_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET)
+		ai_controller.clear_blackboard_key(BB_BASIC_MOB_RETALIATE_LIST)
+		ai_controller.set_blackboard_key(BB_BASIC_MOB_TAMED, TRUE)
+	setup_livestock_commands() // TA EDIT END
 
 //mob/living/simple_animal/examine(mob/user)
 //	. = ..()
@@ -628,7 +659,7 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	var/normal_count = 0
 
 	for(var/path in butcher_results)
-		var/amount = butcher_results[path]
+		var/amount = max(1, round(butcher_results[path] * genetic_butcher_scale)) // TA EDIT
 		if(!do_after(user, time_per_cut, target = src))
 			if(botch_count || normal_count || perfect_count)
 				to_chat(user, "<span class='notice'>I stop butchering: [butcher_summary(botch_count, normal_count, perfect_count, botch_chance, perfect_chance)].</span>")
@@ -640,13 +671,13 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 		if(prob(botch_chance))
 			botch_count++
 			if(length(botched_butcher_results) && (path in botched_butcher_results))
-				amount = botched_butcher_results[path]
+				amount = max(1, round(botched_butcher_results[path] * genetic_butcher_scale)) // TA EDIT
 			else
 				amount = 0
 
 		// Otherwise check for perfect
 		else if(length(perfect_butcher_results) && (path in perfect_butcher_results) && prob(perfect_chance))
-			amount = perfect_butcher_results[path]
+			amount = max(1, round(perfect_butcher_results[path] * genetic_butcher_scale)) // TA EDIT
 			perfect_count++
 
 		else
@@ -704,11 +735,11 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 		rotstuff = TRUE
 
 	for(var/path in butcher_results)
-		var/amount = butcher_results[path]
+		var/amount = max(1, round(butcher_results[path] * genetic_butcher_scale)) // TA EDIT
 
 		if(prob(botch_chance))
 			if(length(botched_butcher_results) && (path in botched_butcher_results))
-				amount = botched_butcher_results[path]
+				amount = max(1, round(botched_butcher_results[path] * genetic_butcher_scale)) // TA EDIT
 			else
 				amount = 0
 
@@ -774,6 +805,7 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 
 /mob/living/simple_animal/proc/get_move_base_delay()
 	var/base = isnull(move_base_delay) ? SIMPLEMOB_DEFAULT_MOVE_DELAY : move_base_delay
+	base += genetic_speed_delta // TA EDIT
 	return clamp(base, SIMPLEMOB_MINIMUM_MOVE_DELAY, SIMPLEMOB_MAXIMUM_MOVE_DELAY)
 
 /mob/living/simple_animal/update_move_intent_slowdown()
@@ -862,37 +894,35 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 		setMovetype(initial(movement_type))
 
 /mob/living/simple_animal/proc/make_babies() // <3 <3 <3
+	// TA EDIT START
 	if(gender != FEMALE || stat || next_scan_time > world.time || !childtype || !animal_species || !SSticker.IsRoundInProgress())
 		return
-	if(GLOB.farm_animals >= MAX_FARM_ANIMALS)
-		return
-	if(food < 10)
+	if(GLOB.farm_animals >= MAX_FARM_ANIMALS || food < 10)
 		return
 	if(next_scan_time == 0)
-		next_scan_time = world.time + breedcd
+		next_scan_time = world.time + get_genetic_breed_cooldown()
 		return
 	if(breedchildren <= 0)
 		childtype = null //we no longer can br33d bro
 		return
-	next_scan_time = world.time + breedcd
-	var/alone = TRUE
-	var/children = 0
+
 	var/mob/living/simple_animal/partner
-	for(var/mob/M in view(7, src))
-		if(M.stat != CONSCIOUS) //Check if it's conscious FIRST.
+	for(var/mob/living/simple_animal/candidate in view(7, src))
+		if(candidate == src || candidate.stat != CONSCIOUS || candidate.ckey || candidate.adult_growth)
 			continue
-		else if(istype(M, childtype)) //Check for children SECOND.
-			children++
-		else if(istype(M, animal_species))
-			if(M.ckey)
-				continue
-			else if(!istype(M, childtype) && M.gender == MALE && !(M.flags_1 & HOLOGRAM_1)) //Better safe than sorry ;_;
-				partner = M
-	if(alone && partner && children < 3)
-		var/childspawn = pickweight(childtype)
-		var/turf/target = get_turf(loc)
-		if(target)
-			return new childspawn(target)
+		if(candidate.gender != MALE || (candidate.flags_1 & HOLOGRAM_1))
+			continue
+		if(istype(candidate, animal_species))
+			partner = candidate
+			break
+
+	if(partner)
+		var/spawned = make_babies_with(partner)
+		if(!spawned)
+			next_scan_time = world.time + get_genetic_breed_cooldown()
+		return spawned
+	next_scan_time = world.time + get_genetic_breed_cooldown()
+	// TA EDIT END
 
 /mob/living/simple_animal/canUseTopic(atom/movable/M, be_close=FALSE, no_dexterity=FALSE, no_tk=FALSE)
 	if(incapacitated())
@@ -1318,9 +1348,9 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	. = ..()
 	if(.)
 		if(food > 0)
-			food--
+			food = max(0, food - genetic_food_consumption_multiplier) // TA EDIT
 			pooprog++
-			production++
+			production += genetic_production_multiplier // TA EDIT
 			production = min(production, 100)
 			if(pooprog >= 100)
 				pooprog = 0
@@ -1421,6 +1451,9 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 		voicepack = shared_animal_vp
 
 	return voicepack
+
+/proc/get_max_farm_animals() // TA EDIT
+	return MAX_FARM_ANIMALS // TA EDIT
 
 #undef MAX_FARM_ANIMALS
 #undef BUTCHERING_UNSKILLED_PRE_TIME

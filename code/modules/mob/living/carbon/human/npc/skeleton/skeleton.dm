@@ -25,7 +25,7 @@ GLOBAL_LIST_INIT(skeleton_aggro, list(
 	a_intent = INTENT_HELP
 	d_intent = INTENT_PARRY
 	possible_mmb_intents = list(INTENT_SPECIAL, INTENT_JUMP, INTENT_KICK, INTENT_BITE)
-	cmode_music = 'sound/music/combat_weird.ogg'
+	cmode_music = sound("sound/music/combat_weird.ogg")
 	taints_loot = TRUE
 
 /mob/living/carbon/human/species/skeleton/npc
@@ -206,8 +206,6 @@ GLOBAL_LIST_INIT(skeleton_aggro, list(
 	skel_fragile = TRUE
 
 	var/loadout = "sword_shield"
-	var/arcane_scale = 3
-	var/gear_tier = 1
 	var/datum/weakref/summoner_ref
 
 /mob/living/carbon/human/species/skeleton/conjured/Destroy()

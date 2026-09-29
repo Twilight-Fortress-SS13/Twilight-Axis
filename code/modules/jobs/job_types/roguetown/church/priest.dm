@@ -23,7 +23,7 @@ GLOBAL_LIST_EMPTY(heretical_players)
 	allowed_sexes = list(MALE, FEMALE)
 	tutorial = "The Divine is all that matters in a world of the immoral. The Weeping God abandoned us, and in his stead the TEN rule over us mortals--and you will preach their wisdom to any who still heed their will. The faithless are growing in number. Guide your flock towards a brighter future, no matter what fate has in store for you."
 	whitelist_req = FALSE
-	cmode_music = 'sound/music/cmode/church/combat_astrata.ogg'
+	cmode_music = sound("sound/music/cmode/church/combat_astrata.ogg")
 
 	spells = list(
 		/datum/action/cooldown/spell/miracle/fortify,
@@ -92,9 +92,7 @@ GLOBAL_LIST_EMPTY(heretical_players)
 /datum/outfit/job/roguetown/priest/basic/pre_equip(mob/living/carbon/human/H)
 	..()
 	H.adjust_blindness(-3)
-	head = /obj/item/clothing/head/roguetown/priestmask
 	neck = /obj/item/clothing/neck/roguetown/psicross/silver/undivided
-	shirt = /obj/item/clothing/suit/roguetown/shirt/tunic/silktunic
 	pants = /obj/item/clothing/under/roguetown/tights/black
 	shoes = /obj/item/clothing/shoes/roguetown/boots/nobleboot
 	belt = /obj/item/storage/belt/rogue/leather/plaquegold
@@ -126,46 +124,48 @@ GLOBAL_LIST_EMPTY(heretical_players)
 	H.mind.special_items["Bishop Robe"] = /obj/item/clothing/suit/roguetown/shirt/robe/bishop
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_UPPER_CLASS, H)
+		var/bishop_drip = list("Traditional Astratan Outfit", "Holy See Outfit")
+		var/bishop_drip_choice = input(H, "Choose your armor.", "TAKE UP ARMS") as anything in bishop_drip
+		switch(bishop_drip_choice)
+			if("Traditional Astratan Outfit")
+				head = /obj/item/clothing/head/roguetown/priestmask
+				armor = /obj/item/clothing/suit/roguetown/shirt/robe/priest
+				shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/priest
+			if("Holy See Outfit")
+				head = /obj/item/clothing/head/roguetown/priesthat/bishop
+				cloak = /obj/item/clothing/cloak/stole/bishop
+				armor = /obj/item/clothing/suit/roguetown/shirt/dress/silkdress/bishop
+				shirt = /obj/item/clothing/suit/roguetown/shirt/tunic/silktunic
+
 	switch(H.patron?.type)
 		if(/datum/patron/divine/undivided)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/undivided/g
-			armor = /obj/item/clothing/suit/roguetown/shirt/robe/undivided
 		if(/datum/patron/divine/astrata)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/astrata/g
-			armor = /obj/item/clothing/suit/roguetown/shirt/robe/priest //these are literally the robes made for them
 		if(/datum/patron/divine/noc)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/noc/g
-			armor = /obj/item/clothing/suit/roguetown/shirt/robe/noc
 		if(/datum/patron/divine/abyssor)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/abyssor/g
-			armor = /obj/item/clothing/suit/roguetown/shirt/robe/abyssor
 		if(/datum/patron/divine/dendor)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/dendor/g
-			armor = /obj/item/clothing/suit/roguetown/shirt/robe/dendor
 		if(/datum/patron/divine/necra)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/necra/g
-			armor = /obj/item/clothing/suit/roguetown/shirt/robe/necra
 		if(/datum/patron/divine/pestra)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/pestra/g
-			armor = /obj/item/clothing/suit/roguetown/shirt/robe/phys
 		if(/datum/patron/divine/eora)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/eora/g
-			armor = /obj/item/clothing/suit/roguetown/shirt/robe/eora
 		if(/datum/patron/divine/malum)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/malum/g
-			armor = /obj/item/clothing/cloak/templar/malumite
 		if(/datum/patron/divine/ravox)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/ravox/g
-			armor = /obj/item/clothing/suit/roguetown/shirt/robe/ravox
 		if(/datum/patron/divine/xylix)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/xylix/g
 			armor = /obj/item/clothing/cloak/templar/xylixian
-			H.cmode_music = 'sound/music/combat_jester.ogg'
+			H.cmode_music = sound("sound/music/combat_jester.ogg")
 			var/datum/inspiration/I = new /datum/inspiration(H)
 			I.grant_inspiration(H, bard_tier = BARD_T1)
 		else
 			wrists = /obj/item/clothing/neck/roguetown/psicross/undivided/g
-			armor = /obj/item/clothing/suit/roguetown/shirt/robe/undivided
 
 /datum/outfit/job/roguetown/priest/basic/choose_loadout(mob/living/carbon/human/H)
 	. = ..()
@@ -175,7 +175,7 @@ GLOBAL_LIST_EMPTY(heretical_players)
 		ADD_TRAIT(H, TRAIT_STEELHEARTED, TRAIT_GENERIC)
 	if(H.patron?.type == /datum/patron/divine/astrata)
 		ADD_TRAIT(H, TRAIT_STEELHEARTED, TRAIT_GENERIC)
-		H.cmode_music = 'sound/music/cmode/church/combat_astrata.ogg'
+		H.cmode_music = sound("sound/music/cmode/church/combat_astrata.ogg")
 	if(H.patron?.type == /datum/patron/divine/noc)
 		H.adjust_skillrank(/datum/skill/magic/arcane, SKILL_LEVEL_APPRENTICE, TRUE)
 		if(H.mind)
@@ -187,13 +187,13 @@ GLOBAL_LIST_EMPTY(heretical_players)
 	if(H.patron?.type == /datum/patron/divine/necra)
 		ADD_TRAIT(H, TRAIT_NOSTINK, TRAIT_GENERIC)
 		ADD_TRAIT(H, TRAIT_SOUL_EXAMINE, TRAIT_GENERIC)
-		H.cmode_music = 'sound/music/cmode/church/combat_necra.ogg'
+		H.cmode_music = sound("sound/music/cmode/church/combat_necra.ogg")
 	if(H.patron?.type == /datum/patron/divine/pestra)
 		ADD_TRAIT(H, TRAIT_NOSTINK, TRAIT_GENERIC)
 	if(H.patron?.type == /datum/patron/divine/eora)
 		ADD_TRAIT(H, TRAIT_BEAUTIFUL, TRAIT_GENERIC)
 		ADD_TRAIT(H, TRAIT_EMPATH, TRAIT_GENERIC)
-		H.cmode_music = 'sound/music/cmode/church/combat_eora.ogg'
+		H.cmode_music = sound("sound/music/cmode/church/combat_eora.ogg")
 	if(H.patron?.type == /datum/patron/divine/malum)
 		ADD_TRAIT(H, TRAIT_SMITHING_EXPERT, TRAIT_GENERIC)
 	if(H.patron?.type == /datum/patron/divine/ravox)

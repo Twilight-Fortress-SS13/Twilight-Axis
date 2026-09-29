@@ -11,7 +11,7 @@
 	traits_applied = list(TRAIT_FIREARMS_MARKSMAN, TRAIT_DODGEEXPERT, TRAIT_ARCYNE)
 	maximum_possible_slots = 1
 
-	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_bloodraider.ogg'
+	cmode_music = sound("modular_twilight_axis/firearms/sound/music/combat_bloodraider.ogg")
 	subclass_stats = list(
 		STATKEY_WIL = 2,
 		STATKEY_SPD = 2,

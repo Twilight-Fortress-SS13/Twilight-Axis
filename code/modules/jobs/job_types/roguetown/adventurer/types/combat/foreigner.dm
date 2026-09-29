@@ -10,7 +10,7 @@
 	townie_contract_gate_exempt = TRUE
 	townie_contract_gate_hide_in_list = TRUE
 	subclass_languages = list(/datum/language/kazengunese)
-	cmode_music = 'sound/music/combat_kazengite.ogg'
+	cmode_music = sound("sound/music/combat_kazengite.ogg")
 	subclass_stats = list(
 		STATKEY_STR = 2,
 		STATKEY_CON = 2,
@@ -67,7 +67,7 @@
 	forbidden_races = list(RACES_SMALL) //Clothing has no dwarf sprites.
 	outfit = /datum/outfit/job/roguetown/adventurer/yoruku
 	subclass_languages = list(/datum/language/kazengunese)
-	cmode_music = 'sound/music/combat_kazengite.ogg'
+	cmode_music = sound("sound/music/combat_kazengite.ogg")
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_DODGEEXPERT)
 	subclass_stats = list(
 		STATKEY_SPD = 3,
@@ -133,7 +133,7 @@
 
 	outfit = /datum/outfit/job/roguetown/adventurer/repentant
 	subclass_languages = list(/datum/language/otavan)
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander2.ogg'
+	cmode_music = sound("sound/music/cmode/adventurer/combat_outlander2.ogg")
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
 	forbidden_races = list()
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN)
@@ -177,7 +177,7 @@
 
 	outfit = /datum/outfit/job/roguetown/adventurer/refugee
 	subclass_languages = list(/datum/language/celestial)
-	cmode_music = 'sound/music/warscholar.ogg'
+	cmode_music = sound("sound/music/warscholar.ogg")
 	traits_applied = list(TRAIT_STEELHEARTED)
 	forbidden_races = list()
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
@@ -292,7 +292,7 @@
 	outfit = /datum/outfit/job/roguetown/adventurer/slaver
 	subclass_languages = list(/datum/language/raneshi)
 	forbidden_races = list()
-	cmode_music = 'sound/music/combat_desertrider.ogg'
+	cmode_music = sound("sound/music/combat_desertrider.ogg")
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_MEDIUMARMOR)
 	subclass_stats = list(
 		STATKEY_STR = 2,
@@ -345,7 +345,7 @@
 	forbidden_races = list()
 	outfit = /datum/outfit/job/roguetown/adventurer/freishepherd
 	traits_applied = list()
-	cmode_music = 'sound/music/frei_shepherd.ogg'
+	cmode_music = sound("sound/music/frei_shepherd.ogg")
 	subclass_stats = list(
 		STATKEY_WIL = 1,
 		STATKEY_PER = 2,
@@ -394,7 +394,7 @@
 	outfit = /datum/outfit/job/roguetown/adventurer/fencerguy
 	subclass_languages = list(/datum/language/grenzelhoftian)
 	forbidden_races = list()
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander2.ogg'
+	cmode_music = sound("sound/music/cmode/adventurer/combat_outlander2.ogg")
 	traits_applied = list(TRAIT_INTELLECTUAL, TRAIT_FENCERDEXTERITY)
 	subclass_stats = list(
 		STATKEY_INT = 2,
@@ -469,7 +469,7 @@
 	than themselves. You are a skilled combatant from beyond Azuria, who - for one reason or another - is intimately familiar with fighting in ancient equipment."
 
 	outfit = /datum/outfit/job/roguetown/adventurer/bronzeclad
-	cmode_music = 'sound/music/combat_thespian.ogg'
+	cmode_music = sound("sound/music/combat_thespian.ogg")
 	maximum_possible_slots = 3 //Should be categorically rarer to see than Iron- and Steel-clad adventurers. Tickles the powerscale ala the Exorcist, albeit to a wider extent with its potential combinations.
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_BLOOD_RESISTANCE)
 	forbidden_races = list()
@@ -700,7 +700,7 @@
 	traits_applied = list(TRAIT_OUTDOORSMAN, TRAIT_BLACKOAK, TRAIT_DODGEEXPERT, TRAIT_WOODWALKER)
 	outfit = /datum/outfit/job/roguetown/adventurer/lesserblackoak
 	subclass_languages = list(/datum/language/oldazurian)
-	cmode_music = 'sound/music/combat_blackoak.ogg'
+	cmode_music = sound("sound/music/combat_blackoak.ogg")
 	maximum_possible_slots = 3 //A little stronger than a traditional Nomad or Adventurer. The slot limit is more-so intended to keep them a limited presence within Azuria, and to account for their potentially antagonistic nature.
 	subclass_stats = list(
 		STATKEY_PER = 2,

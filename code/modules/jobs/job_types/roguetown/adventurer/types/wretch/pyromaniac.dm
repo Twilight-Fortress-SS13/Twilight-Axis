@@ -4,7 +4,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 
 	outfit = /datum/outfit/job/roguetown/wretch/pyromaniac
-	cmode_music = 'sound/music/Iconoclast.ogg'
+	cmode_music = sound("sound/music/Iconoclast.ogg")
 	class_select_category = CLASS_CAT_ROGUE
 	category_tags = list(CTAG_WRETCH)
 	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_ALCHEMY_EXPERT, TRAIT_EXPLOSIVE_SUPPLY)

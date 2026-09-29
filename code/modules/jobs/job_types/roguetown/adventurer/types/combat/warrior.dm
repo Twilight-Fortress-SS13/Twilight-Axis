@@ -4,7 +4,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 
 	outfit = /datum/outfit/job/roguetown/adventurer/sfighter
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander2.ogg'
+	cmode_music = sound("sound/music/cmode/adventurer/combat_outlander2.ogg")
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_MEDIUMARMOR)
 	class_select_category = CLASS_CAT_WARRIOR
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT, CTAG_LICKER_WRETCH)
@@ -132,7 +132,7 @@
 	name = "Duelist"
 	tutorial = "You are an esteemed swordsman who foregoes armor in exchange for a more nimble fighting style."
 	outfit = /datum/outfit/job/roguetown/adventurer/duelist
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander2.ogg'
+	cmode_music = sound("sound/music/cmode/adventurer/combat_outlander2.ogg")
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_DODGEEXPERT)
 	subclass_virtues = list(
 		/datum/virtue/combat/guarded
@@ -229,7 +229,7 @@
 	name = "Barbarian"
 	tutorial = "You are a brutal warrior, who has foregone armor in favor of pure strength. Crush your enemies, see them driven before you, and hear the lamentations of their women! Oh, and you can specialize in unarmed combat and wrestling."
 	outfit = /datum/outfit/job/roguetown/adventurer/barbarian
-	cmode_music = 'sound/music/cmode/antag/combat_darkstar.ogg'
+	cmode_music = sound("sound/music/cmode/antag/combat_darkstar.ogg")
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN, TRAIT_RAGE)
 	extra_context = "This subclass gains access to the RAGE ability."
 	subclass_stats = list(
@@ -480,7 +480,7 @@
 	name = "Exorcist"
 	tutorial = "You are a specialist who hunts terrible monsters; nitebeasts, vampyres, deadites and more. Your humenity might be limiting - but with silver weapons and steel maille, you may yet slight the odds in your favor."
 	outfit = /datum/outfit/job/roguetown/adventurer/mhunter
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander2.ogg'
+	cmode_music = sound("sound/music/cmode/adventurer/combat_outlander2.ogg")
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_PURITAN_ADVENTURER, TRAIT_ALCHEMY_EXPERT, TRAIT_EXPERT_HUNTER)
 	maximum_possible_slots = 5 //Not a Wretch or Towner, but still conditionally lethal for an Adventurer - especially with steel coverage and round-start access to silver weapons. Adjust the amount of available slots as needed.
@@ -723,7 +723,7 @@
 	name = "Deprived"
 	tutorial = "You are a vagrant. Your skin itches at the thought of wearing proper armor. Not after everything was taken from you. Armed with a piece of wood, it's only through your body that you endure. At least you aren't bothered by the lack of comfort like most others."
 	outfit = /datum/outfit/job/roguetown/adventurer/deprived
-	cmode_music = 'sound/music/cmode/antag/combat_darkstar.ogg'
+	cmode_music = sound("sound/music/cmode/antag/combat_darkstar.ogg")
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN, TRAIT_SHIRTLESS, TRAIT_WILD_EATER, TRAIT_OUTDOORSMAN, TRAIT_HOMESTEAD_EXPERT, TRAIT_TECHNOPHOBE)
 	subclass_stats = list(
 		STATKEY_STR = 3,

@@ -22,7 +22,7 @@
 	round_contrib_points = 3
 	same_job_respawn_delay = 30 MINUTES
 
-	cmode_music = 'modular_twilight_axis/sound/music/combat/combat_vanguard.ogg'
+	cmode_music = sound("modular_twilight_axis/sound/music/combat/combat_vanguard.ogg")
 	job_subclasses = list(
 		/datum/advclass/overseer,,
 	)

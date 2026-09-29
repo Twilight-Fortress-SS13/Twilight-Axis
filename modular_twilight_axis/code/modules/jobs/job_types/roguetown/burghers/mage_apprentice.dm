@@ -39,7 +39,7 @@
 	backl = /obj/item/storage/backpack/rogue/satchel
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 	backpack_contents = list(
-		/obj/item/roguegem/amethyst = 1, 
+		/obj/item/roguegem/amethyst = 1,
 		/obj/item/rogueweapon/spellbook = 1,
 		/obj/item/recipe_book/alchemy = 1,
 		/obj/item/recipe_book/magic = 1,
@@ -79,6 +79,6 @@
 				H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 3, TRUE)
 		switch(H.patron?.type)
 			if(/datum/patron/inhumen/zizo)
-				H.cmode_music = 'sound/music/combat_heretic.ogg'
+				H.cmode_music = sound("sound/music/combat_heretic.ogg")
 		SStreasury.give_money_account(ECONOMIC_LOWER_MIDDLE_CLASS, H, "Savings.")
 */

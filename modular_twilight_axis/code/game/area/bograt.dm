@@ -11,7 +11,6 @@
 	droning_sound = 'sound/music/area/bog.ogg'
 	droning_sound_dusk = null
 	droning_sound_night = null
-	ambush_times = list("night","dawn","dusk","day")
 	ambush_mobs = list(
 		/mob/living/carbon/human/species/skeleton/npc/ambush = 30,
 		/mob/living/simple_animal/hostile/retaliate/rogue/bigrat = 60,
@@ -115,7 +114,6 @@
 
 /area/rogue/outdoors/bograt/safe
 	name = "Terrorbog Pass"
-	ambush_times = null
 	ambush_mobs = null
 	deathsight_message = "a foreign, distant pass, leading to the fetid bog"
 	warden_area = FALSE
@@ -126,7 +124,6 @@
 	ambientnight = AMB_MOUNTAIN
 	soundenv = 17
 	first_time_text = null
-	ambush_times = null
 	ambush_mobs = null
 	warden_area = FALSE
 
