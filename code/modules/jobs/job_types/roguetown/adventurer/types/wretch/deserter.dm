@@ -160,6 +160,8 @@
 		var/armors = list(
 			"Fullplate"			= /obj/item/clothing/suit/roguetown/armor/plate/full,
 			"Fluted Fullplate"		= /obj/item/clothing/suit/roguetown/armor/plate/full/fluted,
+			"Fluted Cuirass"	= /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted,
+			"Steel Cuirass"		= /obj/item/clothing/suit/roguetown/armor/plate/cuirass,
 			"Brigandine"		= /obj/item/clothing/suit/roguetown/armor/brigandine,
 			"Coat of Plates"		= /obj/item/clothing/suit/roguetown/armor/brigandine/heavy,
 			"Half-Plate"		= /obj/item/clothing/suit/roguetown/armor/plate,
@@ -201,6 +203,7 @@
 
 	subclass_stashed_items = list(
 		"Armor Plates" =	/obj/item/repair_kit/metal,
+		"Stashed Funds" = /obj/item/roguecoin/silver/pile/wretchpile,
 	)
 
 	cmode_music = 'sound/music/cmode/antag/combat_cutpurse.ogg' // same as regular bandits
@@ -296,7 +299,7 @@
 		var/armors = list(
 			"Cuirass"			= /obj/item/clothing/suit/roguetown/armor/plate/cuirass,
 			"Brigandine"		= /obj/item/clothing/suit/roguetown/armor/brigandine,
-			"Half-Plate"		= /obj/item/clothing/suit/roguetown/armor/plate/iron,
+			"Half-Plate"		= /obj/item/clothing/suit/roguetown/armor/plate/iron, // TA EDIT - Half-plate ARMOR_CLASS_HEAVY -> ARMOR_CLASS_MEDIUM
 			"Scalemail"			= /obj/item/clothing/suit/roguetown/armor/plate/scale,
 		)
 		var/armorchoice = input(H, "Choose your armor.", "TAKE UP ARMOR") as anything in armors

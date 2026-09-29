@@ -69,6 +69,8 @@ GLOBAL_LIST_INIT(ghost_verbs, list(
 	if(key)
 		GLOB.respawntimes[key] = world.time
 
+	LAZYREMOVE(GLOB.actors_list, mobid)
+
 	// Notify the job datum that this player is permanently leaving the round
 	if(mind?.assigned_role)
 		var/datum/job/my_job = SSjob.GetJob(mind.assigned_role)

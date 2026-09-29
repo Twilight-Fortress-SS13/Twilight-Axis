@@ -195,6 +195,7 @@
 		if(isliving(M))
 			var/sprint_distance = sprinted_tiles
 			var/instafail = FALSE
+			var/fail_reason
 			toggle_rogmove_intent(MOVE_INTENT_WALK, TRUE)
 			if(HAS_TRAIT(src, TRAIT_PACIFISM)) // No Con-Checking if you're a pacifist. You aren't MEAN!!!
 				return FALSE
@@ -211,6 +212,7 @@
 				if(0 to 1)
 					self_points -= 99
 					instafail = TRUE
+					fail_reason = "no headstart"
 				// One to two tile between the people
 				if(2 to 3)
 					self_points -= 2
@@ -239,10 +241,12 @@
 			if(src.dir != src.sprint_dir)
 				self_points -= 99
 				instafail = TRUE
+				fail_reason = "changed direction too late"
 				to_chat(src, span_warning("I changed direction too late!"))
 			if(lying)
 				self_points -= 99
 				instafail = TRUE
+				fail_reason = "charging while prone"
 				to_chat(src, span_warning("I can't charge anyone from the ground!"))
 			var/clash_blocked
 			if(L.has_status_effect(/datum/status_effect/buff/clash) && !instafail)
@@ -254,6 +258,7 @@
 				else
 					playsound(src, 'sound/combat/clash_charge.ogg', 100)
 				clash_blocked = TRUE
+				fail_reason = "target was clashing"
 			if(self_points > target_points)
 				L.Knockdown(1)
 			if(self_points < target_points)
@@ -277,6 +282,15 @@
 					visible_message(span_warning("[src] gets tripped by [L]!"), span_warning("I get tripped by [L]!"))
 			else
 				visible_message(span_warning("[src] charges into [L]!"), span_warning("I charge into [L]!"))
+			var/charge_outcome
+			if(self_points > target_points)
+				charge_outcome = "SUCCESS"
+			else if(self_points == target_points)
+				charge_outcome = "DRAW"
+			else
+				charge_outcome = "FAILED[fail_reason ? ", [fail_reason]" : ""]"
+			var/turf/charge_end = get_turf(src)
+			log_combat(src, L, "charged into", addition = "([charge_outcome]) (HEADSTART: [sprint_distance]) (START: [sprint_start_coord || "unknown"]) (END: [COORD(charge_end)]) (POINTS: [self_points] vs [target_points])", zone = BODY_ZONE_CHEST, damtype = BRUTE)
 			return TRUE
 
 	//okay, so we didn't switch. but should we push?
@@ -993,6 +1007,7 @@
 	set_disgust(0)
 	set_sunder(0)
 	set_nutrition(NUTRITION_LEVEL_FED + 50)
+	set_hydration(HYDRATION_LEVEL_FULL)
 	bodytemperature = BODYTEMP_NORMAL
 	set_blindness(0)
 	set_blurriness(0)
@@ -1004,6 +1019,7 @@
 	cure_paralysis()
 	hallucination = 0
 	heal_overall_damage(INFINITY, INFINITY, INFINITY, null, TRUE) //heal brute and burn dmg on both organic and robotic limbs, and update health right away.
+	energy_add(max_energy)
 	for(var/datum/wound/wound as anything in get_wounds())
 		if(admin_revive)
 			qdel(wound)
@@ -1066,6 +1082,9 @@
 	var/turf/T = loc
 
 	if(m_intent == MOVE_INTENT_RUN)
+		if(!sprinted_tiles)
+			var/turf/sprint_origin = get_turf(src)
+			sprint_start_coord = COORD(sprint_origin)
 		sprinted_tiles++
 		sprint_dir = dir
 
@@ -1290,6 +1309,7 @@
 
 
 /mob/proc/stop_attack(message = FALSE)
+	used_intent?.on_charge_cancel()
 	if(atkswinging)
 		atkswinging = FALSE
 		if(message)
@@ -2190,12 +2210,14 @@
 			AT.get_remote_view_fullscreens(src)
 		else
 			clear_fullscreen("remote_view", 0)
+		client?.update_particle_weather_parallax()
+		client?.update_particle_weather_world_effect()
 
 GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 
 /proc/build_sight_trait_signals()
 	. = list()
-	for(var/trait in list(TRAIT_DARKVISION, TRAIT_NITEVISION, TRAIT_NOCSHADES, TRAIT_GILDED_SIGHT, TRAIT_THERMAL_VISION, TRAIT_XRAY_VISION, TRAIT_ZIZOSIGHT))
+	for(var/trait in list(TRAIT_DARKVISION, TRAIT_NITEVISION, TRAIT_NOCSHADES, TRAIT_GILDED_SIGHT, TRAIT_THERMAL_VISION, TRAIT_XRAY_VISION, TRAIT_ZIZOSIGHT, TRAIT_BLIND, TRAIT_VOLF)) //TA EDIT VOLF
 		. += SIGNAL_ADDTRAIT(trait)
 		. += SIGNAL_REMOVETRAIT(trait)
 
@@ -2633,6 +2655,8 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 	else
 		to_chat(src, message)
 	animate(client, pixel_x = world.icon_size*_x, pixel_y = world.icon_size*_y, ttime)
+	client.set_particle_weather_parallax_camera_offset(world.icon_size*_x, world.icon_size*_y, ttime)
+	client.set_particle_weather_world_camera_offset(world.icon_size*_x, world.icon_size*_y, ttime)
 //	RegisterSignal(src, COMSIG_MOVABLE_PRE_MOVE, PROC_REF(stop_looking))
 	update_cone_show()
 
@@ -2681,6 +2705,8 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 	if(!client.pixel_x && !client.pixel_y && client.perspective == MOB_PERSPECTIVE && client.eye == client.mob)
 		return
 	animate(client, pixel_x = 0, pixel_y = 0, 2, easing = SINE_EASING)
+	client.set_particle_weather_parallax_camera_offset(0, 0, 2, SINE_EASING)
+	client.set_particle_weather_world_camera_offset(0, 0, 2, SINE_EASING)
 	if(client)
 		client.pixel_x = 0
 		client.pixel_y = 0
@@ -2714,6 +2740,10 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 	if(isnull(offered_to) || isnull(offered_item))
 		stack_trace("no offered_to or offered_item in offer_item()")
 		return
+
+	if(offered_to.surrendering) // TA EDIT START
+		to_chat(src, span_warning("[offered_to] cannot take items while surrendering."))
+		return FALSE // TA EDIT END
 
 	var/time_left = COOLDOWN_TIMELEFT(src, offer_cooldown)
 
@@ -2787,6 +2817,12 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 	update_a_intents()
 
 /mob/living/proc/try_accept_offered_item(mob/living/offerer, obj/offered_item, stealthy)
+	if(surrendering) // TA EDIT START
+		to_chat(src, span_warning("I cannot take items while surrendering."))
+		to_chat(offerer, span_warning("[src] cannot take items while surrendering."))
+		offerer.stop_offering_item()
+		return FALSE // TA EDIT END
+
 	if(get_active_held_item())
 		to_chat(src, span_warning("I need a free hand to take it!"))
 		return FALSE

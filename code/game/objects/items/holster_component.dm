@@ -186,6 +186,13 @@
 		else
 			I.icon_state = "[initial(I.icon_state)]"
 
+	if(istype(I, /obj/item/rogueweapon/scabbard)) // TA EDIT START
+		var/obj/item/rogueweapon/scabbard/S = I
+		if(sheathed && S.holster_sheathed_item_state)
+			I.item_state = S.holster_sheathed_item_state
+		else if(!sheathed && S.holster_empty_item_state)
+			I.item_state = S.holster_empty_item_state // TA EDIT END
+
 	//	I.update_slot_icon()
 
 	if(!ismob(user))

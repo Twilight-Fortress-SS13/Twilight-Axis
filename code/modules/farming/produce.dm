@@ -11,6 +11,7 @@
 	var/splat_type = null
 	/// Color of the splat, applied when splat_type is spawned (after squashing).
 	var/splat_color = null
+	materia = list(/datum/materia_aspect/plant)
 
 /obj/item/reagent_containers/food/snacks/grown/Initialize(mapload)
 	. = ..()
@@ -164,6 +165,7 @@
 	chopping_sound = TRUE
 	var/equippedloc = null
 	var/list/bitten_names = list()
+	var/busy = FALSE // this is set to true at the start of the marriage flow to prevent spamclicking from fucking everything up
 
 /obj/item/reagent_containers/food/snacks/grown/apple/On_Consume(mob/living/eater)
 	..()
@@ -577,6 +579,7 @@
 	w_class = WEIGHT_CLASS_TINY
 	throw_speed = 1
 	throw_range = 3
+	materia = list(/datum/materia_aspect/plant, /datum/materia_aspect/fire)
 
 /obj/item/reagent_containers/food/snacks/grown/rogue/fyritius/attack(mob/living/carbon/human/M, mob/user)
 	if(M == user)

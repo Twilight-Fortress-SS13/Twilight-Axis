@@ -77,7 +77,7 @@
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/32х48/helmets.dmi'
 	icon_state = "face_helmet"
 	item_state = "face_helmet"
-	max_integrity = ARMOR_INT_HELMET_HEAVY_STEEL + 20 //В стандартном шлеме юзается ARMOR_INT_HELMET_HEAVY_STEEL, дающий 400 очков ХП, но поскольку тут крафт 2 стали 1 бронза, то 20 интегрити сверху вряд-ли сильно повлияют на баланс.
+	max_integrity = ARMOR_INT_HELMET_HEAVY_STEEL - ARMOR_INT_HELMET_HEAVY_ADJUSTABLE_PENALTY + 20 //В стандартном шлеме юзается ARMOR_INT_HELMET_HEAVY_STEEL, дающий 400 очков ХП, но поскольку тут крафт 2 стали 1 бронза, то 20 интегрити сверху вряд-ли сильно повлияют на баланс.
 
 /obj/item/clothing/head/roguetown/helmet/heavy/knight/raneshi_hmamluk/ComponentInitialize()
 	AddComponent(/datum/component/adjustable_clothing, (HEAD|EARS|HAIR), (HIDEEARS|HIDEHAIR), null, 'sound/items/visor.ogg', null, UPD_HEAD)
@@ -200,3 +200,11 @@
 	desc = "As if facing a Dark Elf raider was not intimidating enough by itself, this helmet, designed to resemble the head of a giant lizard hailing from the Underdark, is meant to invoke primal terror in men and creechers alike."
 	icon_state = "shadowvolf"
 	item_state = "shadowvolf"
+
+/obj/item/clothing/head/roguetown/helmet/heavy/barbute/legion
+	name = "elyrian coolus"
+	desc = "Проверенный временем шлем, любимый легионерами и преторианцами за удобную защиту: он закрывает уязвимые места, не сильно загораживая обзор."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/head.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/head.dmi'
+	icon_state = "legionhelmet"
+	item_state = "legionhelmet"

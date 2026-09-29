@@ -23,7 +23,14 @@
 			return
 		throw_atom = object
 		to_chat(c, "Selected object '[throw_atom]'")
+		BM.log_action("selected [throw_atom] ([throw_atom.type]) at [AREACOORD(throw_atom)] for throw mode.") // TA EDIT
 	if(right_click)
 		if(throw_atom)
+			var/throw_desc = "[throw_atom]" // TA EDIT START
+			var/throw_type = "[throw_atom.type]"
+			var/source_location = AREACOORD(throw_atom)
+			var/target_desc = "[object]"
+			var/target_type = "[object.type]"
+			var/target_location = AREACOORD(object) // TA EDIT END
 			throw_atom.throw_at(object, 10, 1, c.mob)
-			log_admin("Build Mode: [key_name(c)] threw [throw_atom] at [object] ([AREACOORD(object)])")
+			BM.log_action("threw [throw_desc] ([throw_type]) from [source_location] toward [target_desc] ([target_type]) at [target_location].") // TA EDIT

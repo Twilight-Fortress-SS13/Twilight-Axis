@@ -47,6 +47,9 @@
 				usr.client.debug_variables(src)
 	if(href_list[VV_HK_MARK])
 		usr.client.mark_datum(target)
+	if(href_list["favorite"]) // TA EDIT START
+		if(check_rights(R_ADMIN))
+			usr.client.holder.toggle_favorite_datum(target) // TA EDIT END
 	if(href_list[VV_HK_ADDCOMPONENT])
 		if(!check_rights(NONE))
 			return

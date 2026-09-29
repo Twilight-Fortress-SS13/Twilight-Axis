@@ -26,7 +26,8 @@
 	if(pulledby || pulling)
 		return FALSE
 
-	if(world.time < (last_parry + parrydelay))
+	var/paired_swing = user?.dualwield_twoswing
+	if(!paired_swing && world.time < (last_parry + parrydelay))
 		if(!istype(rmb_intent, /datum/rmb_intent/riposte))
 			return FALSE
 	if(has_status_effect(/datum/status_effect/debuff/exposed) || has_status_effect(/datum/status_effect/debuff/vulnerable))
@@ -40,11 +41,12 @@
 	if(attack_intent && !attack_intent.canparry)
 		return FALSE
 
-	last_parry = world.time
-	if(!istype(rmb_intent, /datum/rmb_intent/riposte))
-		var/parrytime = setparrytime
-		parrytime -= get_tempo_bonus(TEMPO_TAG_PARRYCD_BONUS)
-		changeNext_def(parrytime)
+	if(!paired_swing)
+		last_parry = world.time
+		if(!istype(rmb_intent, /datum/rmb_intent/riposte))
+			var/parrytime = setparrytime
+			parrytime -= get_tempo_bonus(TEMPO_TAG_PARRYCD_BONUS)
+			changeNext_def(parrytime)
 
 	var/drained = BASE_PARRY_STAMINA_DRAIN
 	var/weapon_parry = FALSE
@@ -179,6 +181,8 @@
 							ceilclamp = SWIFTCAP_LIMBS
 							if(permod > 0)
 								spdmod -= permod
+						if(used_weapon?.wbalance == WBALANCE_NORMAL)
+							ceilclamp -= 10
 						finalmod = clamp(spdmod, 0, ceilclamp)
 					prob2defend -= finalmod
 	else
@@ -195,7 +199,10 @@
 					spdmod -= intmod
 			var/finalmod = spdmod
 			if(mind)
-				finalmod = clamp(spdmod, 0, 30)
+				if(used_weapon?.wbalance == WBALANCE_NORMAL)
+					finalmod = clamp(spdmod, 0, 20)
+				else
+					finalmod = clamp(spdmod, 0, 30)
 			prob2defend -= finalmod
 
 	// --- Weapon binding! ---
@@ -269,7 +276,10 @@
 		if(!has_status_effect(/datum/status_effect/buff/weapon_binded))
 			if(attacker_weapon)
 				if(attacker_weapon.wbalance == WBALANCE_HEAVY && user.STASTR > src.STASTR) //enemy weapon is heavy, so get a bonus scaling on strdiff
-					drained = drained + ( attacker_weapon.wbalance * ((user.STASTR - src.STASTR) * STAM_DRAIN_PER_STR_DIFF_HEAVY_BAL) )
+					var/heavy_weapon_drain = min(( attacker_weapon.wbalance * ((user.STASTR - src.STASTR) * STAM_DRAIN_PER_STR_DIFF_HEAVY_BAL) ), 20)
+					if(used_weapon?.wbalance == WBALANCE_NORMAL)
+						heavy_weapon_drain -= STAM_DRAIN_PER_STR_DIFF_HEAVY_BAL
+					drained += max(heavy_weapon_drain, 0)
 	else
 		text += span_warning(" The enemy defeated my parry!")
 	if(src.client?.prefs.showrolls)

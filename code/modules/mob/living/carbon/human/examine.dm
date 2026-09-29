@@ -499,7 +499,12 @@
 	if(stat == DEAD || (HAS_TRAIT(src, TRAIT_FAKEDEATH)))
 		appears_dead = TRUE
 
-	var/temp = getBruteLoss() + getFireLoss() //no need to calculate each of these twice
+	var/temp = 0
+	for(var/obj/item/bodypart/part as anything in bodyparts)
+		if(part.max_damage)
+			temp = max(temp, part.get_damage() / part.max_damage)
+	if(!HAS_TRAIT(src, TRAIT_NOPAIN))
+		temp = max(temp, get_complex_pain() / max(pain_threshold, 1))
 
 	if (get_bodypart(BODY_ZONE_HEAD)?.grievously_wounded)
 		msg += span_bloody("<b>[p_their(TRUE)] neck is a ghastly ruin of blood and bone, barely hanging on!</b>")
@@ -507,13 +512,13 @@
 	if(!(user == src && src.hal_screwyhud == SCREWYHUD_HEALTHY)) //fake healthy
 		// Damage
 		switch(temp)
-			if(5 to 25)
+			if(0.05 to 0.25)
 				msg += "[m1] a little wounded."
-			if(25 to 50)
+			if(0.25 to 0.5)
 				msg += "[m1] wounded."
-			if(50 to 100)
+			if(0.5 to CRIT_DISMEMBER_DAMAGE_THRESHOLD)
 				msg += "<B>[m1] severely wounded.</B>"
-			if(100 to INFINITY)
+			if(CRIT_DISMEMBER_DAMAGE_THRESHOLD to INFINITY)
 				msg += span_danger("[m1] gravely wounded.")
 
 	// Blood volume
@@ -531,16 +536,17 @@
 	var/bleed_rate = get_bleed_rate()
 	if(bleed_rate)
 		if(!is_stupid)
-			var/bleed_wording = "bleeding"
+			bleed_rate *= get_bleed_mod() * physiology.bleed_mod
+			var/wording = "gushing blood"
 			switch(bleed_rate)
 				if(0 to 1)
-					bleed_wording = "bleeding slightly"
-				if(1 to 5)
-					bleed_wording = "bleeding"
-				if(5 to 10)
-					bleed_wording = "bleeding a lot"
-				if(10 to INFINITY)
-					bleed_wording = "bleeding profusely"
+					wording = "bleeding slightly"
+				if(1 to 3)
+					wording = "bleeding"
+				if(3 to 8)
+					wording = "bleeding a lot"
+				if(8 to 18)
+					wording = "bleeding profusely"
 			var/list/bleeding_limbs = list()
 			var/static/list/bleed_zones = list(
 				BODY_ZONE_HEAD,
@@ -556,15 +562,15 @@
 					continue
 				bleeding_limbs += parse_zone(bleeder.body_zone)
 			if(length(bleeding_limbs))
-				if(bleed_rate >= 5)
-					msg += span_bloody("<B>[capitalize(m2)] [english_list(bleeding_limbs)] [bleeding_limbs.len > 1 ? "are" : "is"] [bleed_wording]!</B>")
+				if(bleed_rate >= 3)
+					msg += span_bloody("<B>[capitalize(m2)] [english_list(bleeding_limbs)] [bleeding_limbs.len > 1 ? "are" : "is"] [wording]!</B>")
 				else
-					msg += span_bloody("[capitalize(m2)] [english_list(bleeding_limbs)] [bleeding_limbs.len > 1 ? "are" : "is"] [bleed_wording]!")
+					msg += span_bloody("[capitalize(m2)] [english_list(bleeding_limbs)] [bleeding_limbs.len > 1 ? "are" : "is"] [wording]!")
 			else
-				if(bleed_rate >= 5)
-					msg += span_bloody("<B>[m1] [bleed_wording]</B>!")
+				if(bleed_rate >= 3)
+					msg += span_bloody("<B>[m1] [wording]</B>!")
 				else
-					msg += span_bloody("[m1] [bleed_wording]!")
+					msg += span_bloody("[m1] [wording]!")
 		else
 			if(isliving(user))
 				var/mob/living/M = user
@@ -933,8 +939,18 @@
 		var/can_identify_face = !obscure_name || observer_privilege
 		var/used_name = name
 		var/used_title = get_role_title()
-		if(SSticker.regentmob == src)
-			used_title = "[used_title]" + " Regent"
+		if(HAS_TRAIT(src, TRAIT_RESIDENT) && used_title == "Licker" && licker_subclass)
+			used_title = licker_subclass.name
+		if(SSticker.rulermob != src)
+			if(SSticker.regentmob == src)
+				if(src.mind?.has_antag_datum(/datum/antagonist/vampire/lord))
+					used_title = "Ancient Lord Regent"
+				else
+					used_title = "[used_title] Regent"
+			else if(src.mind?.has_antag_datum(/datum/antagonist/lich))
+				used_title = "Lich"
+			else if(src.mind?.has_antag_datum(/datum/antagonist/vampire/lord))
+				used_title = "Ancient Lord"
 		var/display_as_wanderer = FALSE
 		if(observer_privilege)
 			used_name = real_name
@@ -946,6 +962,10 @@
 			var/datum/job/J = SSjob.GetJob(job)
 			if(!J || (J.wanderer_examine && !(HAS_TRAIT(src, TRAIT_RESIDENT))))
 				display_as_wanderer = TRUE
+		if(src.mind?.has_antag_datum(/datum/antagonist/lich))
+			display_as_wanderer = FALSE
+		if(src.mind?.has_antag_datum(/datum/antagonist/vampire/lord) && SSticker.rulermob != src && SSticker.regentmob != src)
+			display_as_wanderer = TRUE
 		if(display_as_wanderer)
 			. += (span_info("ø ------------ ø\nThis is <EM>[used_name]</EM>, the wandering [race_name]."))
 		else if(used_title)
@@ -1224,17 +1244,21 @@
 			var/mob/living/carbon/carbs = user
 			if(HAS_TRAIT(user, TRAIT_PSYDONIAN_GRIT) || HAS_TRAIT(user, TRAIT_NOMOOD))
 				return
-			if(!carbs.has_stress_event(/datum/stressevent/inq_trauma))
-				carbs.add_stress(/datum/stressevent/inq_trauma)
-				if(prob(20))
-					carbs.stress_freakout()
-				else if(prob(40))
-					carbs.freak_out()
-				else
-					carbs.emote("gulp")
-			if(!HAS_TRAIT(user, TRAIT_STEELHEARTED))
-				carbs.Jitter(10)
-				carbs.stuttering += 25
+
+			if(!(src in examined_inquisitors)) // only once per inquisitor!
+				examined_inquisitors += src
+
+				if(!carbs.has_stress_event(/datum/stressevent/inq_trauma))
+					carbs.add_stress(/datum/stressevent/inq_trauma)
+					if(prob(20))
+						carbs.stress_freakout()
+					else if(prob(40))
+						carbs.freak_out()
+					else
+						carbs.emote("gulp")
+				if(!HAS_TRAIT(user, TRAIT_STEELHEARTED))
+					carbs.Jitter(10)
+					carbs.stuttering += 25
 
 		if(HAS_TRAIT(src, TRAIT_DNR) && src != user)
 			// if you have deathsight, you get the deathsight message. always.
@@ -1249,7 +1273,7 @@
 						. += span_danger("Their body holds not even a glimmer of life. No miracle or medicine can bring them back.")
 				// if theyre alive, you dont have deathsight, but youre an expert at medicine, you can tell.
 				else if(user.get_skill_level(/datum/skill/misc/medicine) >= SKILL_LEVEL_EXPERT)
-					. += span_danger("Their fifth-humor is visibly unbalanced. This will be their only chance at lyfe.")
+					. += span_danger("Their humors are visibly unbalanced. This will be their only chance at lyfe.")
 			// deathsight always works even on the living.
 			else if(HAS_TRAIT(user, TRAIT_DEATHSIGHT))
 				if(HAS_TRAIT_FROM_ONLY(src, TRAIT_DNR, GRAGGAR_ASSASSINATED))
@@ -1259,7 +1283,7 @@
 
 
 
-	if (HAS_TRAIT(src, TRAIT_CRITICAL_WEAKNESS) && (!HAS_TRAIT(src, TRAIT_VAMP_DREAMS)) && (!HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS)))
+	if (HAS_TRAIT(src, TRAIT_CRITICAL_WEAKNESS) && (!HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS)))
 		if(isliving(user))
 			var/mob/living/L = user
 			if(L.STAINT > 9 && L.STAPER > 9)
@@ -1290,12 +1314,12 @@
 		seer = TRUE
 
 	if(HAS_TRAIT(src, TRAIT_DUSTRUNNER))
-		var/mob/living/living_examiner = examiner
+		var/mob/living/living_examiner = isliving(examiner) ? examiner : null // TA EDIT
 		if(HAS_TRAIT(examiner, TRAIT_DUSTRUNNER))
 			heretic_text += "Fellow runner. The dust moves."
 		else if(living_examiner?.patron?.type == /datum/patron/inhumen/matthios)
 			heretic_text += "A Guild runner, by the look of them."
-		else if(examiner.job in GLOB.bathhouse_positions)
+		else if(living_examiner?.job in GLOB.bathhouse_positions) // TA EDIT
 			heretic_text += "One of the Guild's runners. I know the signs."
 
 	if(HAS_TRAIT(src, TRAIT_FREEMAN))

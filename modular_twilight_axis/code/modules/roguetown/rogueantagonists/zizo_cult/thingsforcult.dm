@@ -226,6 +226,7 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 
 	var/startloc = get_turf(src)
 	var/obj/projectile/bullet/neant/PJ = new(startloc)
+	PJ.aim_peak = 80
 	PJ.starting = startloc
 	PJ.firer = user
 	PJ.fired_from = src
@@ -233,12 +234,11 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	playsound(get_turf(user),'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sounds/neantspecial.ogg', 70)
 
 	if(user.STAPER > 8)
-		PJ.accuracy += (user.STAPER - 8) * 2 //each point of perception above 8 increases standard accuracy by 2.
-		PJ.bonus_accuracy += (user.STAPER - 8) //Also, increases bonus accuracy by 1, which cannot fall off due to distance.
+		PJ.aim_peak += (user.STAPER - 8) * 3
 
 	if(user.STAINT > 10) // Every point over 10 INT adds 10% damage
 		PJ.damage = PJ.damage * (user.STAINT / 10)
-		PJ.accuracy += (user.STAINT - 10) * 3
+		PJ.aim_peak += (user.STAINT - 10) * 3
 
 	new /obj/effect/temp_visual/dir_setting/firing_effect/neant(get_step(user, user.dir), user.dir)
 	PJ.preparePixelProjectile(target, user)
@@ -258,7 +258,6 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	woundclass = BCLASS_CUT
 	flag =  "piercing"
 	speed = 1
-	accuracy = 80
 
 /obj/effect/temp_visual/dir_setting/firing_effect/neant
 	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/special.dmi'

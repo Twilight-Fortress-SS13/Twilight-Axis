@@ -23,7 +23,7 @@
 		SKILLED_PHYS,
 		SKILLED_FORESTER,
 		SKILLED_ARTIF,
-		SKILLED_ENCHANT,
+	//	SKILLED_ENCHANT,
 	)
 	choice_tooltips = list(
 		SKILLED_BSMITH	= "Grants Expert Forgehand. Weaponsmithing, Armorsmithing, Blacksmithing and Smelting raised to Apprentice. Stashed Hammer and Tongs.",
@@ -32,7 +32,7 @@
 		SKILLED_PHYS	= "Grants Expert Physicker and Alchemist. Alchemy and Medicine raised to Apprentice. Grants secular diagnose, a stashed medicine pouch and an improvised surgery kit.",
 		SKILLED_FORESTER= "Cooking, Athletics, Farming, Fishing, Lumberjacking raised to Apprentice. Stashed hoe.",
 		SKILLED_ARTIF	= "Grants Expert Forgehand. Carpentry, Masonry, Engineering, Smelting and Ceramics raised to Apprentice. Stashed Hammer, Chisel and Hand Saw.",
-		SKILLED_ENCHANT = "Grants Expert Enchanter and Alchemist. Allows you to do magical rituals. Alchemy, Engineering, Smelting, Blacksmithing and Arcane raised to Apprentice. Stashed Chalk, Mortar, and Pestle."
+	//	SKILLED_ENCHANT = "Grants Expert Enchanter and Alchemist. Allows you to do magical rituals. Alchemy, Engineering, Smelting, Blacksmithing and Arcane raised to Apprentice. Stashed Chalk, Mortar, and Pestle."
 	)
 
 /datum/virtue/utility/skilled/on_load()

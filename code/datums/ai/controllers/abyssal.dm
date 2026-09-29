@@ -1,12 +1,11 @@
 /datum/ai_controller/assassin
 	ai_movement = /datum/ai_movement/hybrid_pathing
 
-	planning_subtrees = list(
+	planning_subtrees = list( // TA EDIT START
 		/datum/ai_planning_subtree/blink_if_far,
-		/datum/ai_planning_subtree/target_retaliate,
 		/datum/ai_planning_subtree/attack_obstacle_in_path,
 		/datum/ai_planning_subtree/basic_melee_attack_subtree/abyssal
-	)
+	) // TA EDIT END
 	blackboard = list(
 		BB_TARGETTING_DATUM = new /datum/targetting_datum/basic(),
 		BB_RETALIATE_ATTACKS_LEFT = 0,
@@ -18,13 +17,12 @@
 /datum/ai_controller/assassin/ancient
 	ai_movement = /datum/ai_movement/hybrid_pathing
 
-	planning_subtrees = list(
+	planning_subtrees = list( // TA EDIT START
 		/datum/ai_planning_subtree/blink_if_far,
-		/datum/ai_planning_subtree/target_retaliate,
 		/datum/ai_planning_subtree/attack_obstacle_in_path,
 		/datum/ai_planning_subtree/basic_melee_attack_subtree/abyssal,
 		/datum/ai_planning_subtree/kick,
-	)
+	) // TA EDIT END
 	blackboard = list(
 		BB_TARGETTING_DATUM = new /datum/targetting_datum/basic(),
 		BB_RETALIATE_ATTACKS_LEFT = 0,
@@ -32,6 +30,11 @@
 		BB_RETALIATE_COOLDOWN = 0,
 		BB_MAIN_TARGET = null
 	)
+
+/datum/ai_controller/assassin/check_target_max_distance() // TA EDIT START
+	if(current_movement_target == blackboard[BB_MAIN_TARGET])
+		return
+	return ..() // TA EDIT END
 
 /datum/ai_planning_subtree/basic_melee_attack_subtree/abyssal
 	melee_attack_behavior = /datum/ai_behavior/basic_melee_attack/abyssal
@@ -91,24 +94,33 @@
 		var/mob/main_target = controller.blackboard[BB_MAIN_TARGET]
 		controller.clear_blackboard_key(target_key)
 		var/mob/living/simple_animal/hostile/rogue/dreamfiend/dreamfiend = controller.pawn
-		if(main_target != null && target != main_target && main_target.stat == 0)
+		if(main_target != null && main_target.stat != DEAD) // TA EDIT START
 			//We lost the person we really want to kill... keep trying to teleport to them and kill them.
-			dreamfiend.blink_to_target(target)
+			if(target != main_target || dreamfiend.z != main_target.z || get_dist(dreamfiend, main_target) > 5)
+				dreamfiend.blink_to_target(main_target)
 			controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, main_target)
-		else if(main_target == null || main_target.stat != 0)
-			dreamfiend.return_to_abyssor()
+		else
+			dreamfiend.return_to_abyssor() // TA EDIT END
 
 /datum/ai_planning_subtree/blink_if_far
 
-/datum/ai_planning_subtree/blink_if_far/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
+/datum/ai_planning_subtree/blink_if_far/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick) // TA EDIT START
 	var/mob/living/simple_animal/hostile/rogue/dreamfiend/dreamfiend = controller.pawn
-	var/mob/target = controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET]
-	if(!target || get_dist(dreamfiend, target) <= 5 )
+	var/mob/living/main_target = controller.blackboard[BB_MAIN_TARGET]
+	var/mob/living/target = main_target ? main_target : controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET]
+	if(QDELETED(target) || target.stat == DEAD)
+		return
+
+	if(main_target && controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET] != main_target)
+		controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, main_target)
+		controller.clear_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET_HIDING_LOCATION)
+
+	if(dreamfiend.z == target.z && get_dist(dreamfiend, target) <= 5)
 		return
 
 	// Attempt to blink and halt further planning if successful
 	if(dreamfiend.blink_to_target(target))
-		return SUBTREE_RETURN_FINISH_PLANNING
+		return SUBTREE_RETURN_FINISH_PLANNING // TA EDIT END
 
 /datum/ai_planning_subtree/kick
 
@@ -243,12 +255,13 @@
 		var/mob/main_target = controller.blackboard[BB_MAIN_TARGET]
 		controller.clear_blackboard_key(target_key)
 		var/mob/living/simple_animal/hostile/rogue/dreamfiend/dreamfiend = controller.pawn
-		if(main_target != null && target != main_target && main_target.stat == 0)
+		if(main_target != null && main_target.stat != DEAD) // TA EDIT START
 			//We lost the person we really want to kill... keep trying to teleport to them and kill them.
-			dreamfiend.blink_to_target(target)
+			if(target != main_target || dreamfiend.z != main_target.z || get_dist(dreamfiend, main_target) > 5)
+				dreamfiend.blink_to_target(main_target)
 			controller.set_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET, main_target)
-		else if(main_target == null || main_target.stat != 0)
-			dreamfiend.return_to_abyssor()
+		else
+			dreamfiend.return_to_abyssor() // TA EDIT END
 
 /datum/ai_controller/dreamfiend_unbound
 	ai_movement = /datum/ai_movement/hybrid_pathing

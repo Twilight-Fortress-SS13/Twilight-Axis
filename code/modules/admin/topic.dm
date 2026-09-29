@@ -47,6 +47,14 @@
 			show_inventory_panel(M)
 		return
 
+	if(href_list["select_equipment"]) // TA EDIT START
+		if(!check_rights(R_SPAWN))
+			return
+		var/mob/M = locate(href_list["select_equipment"])
+		if(M)
+			usr.client.cmd_admin_select_equipment(M)
+		return // TA EDIT END
+
 	// Heal panel actions
 	if(href_list["heal_target"])
 		var/mob/living/M = locate(href_list["heal_target"])
@@ -1358,6 +1366,9 @@
 		if(obj_dir && !(obj_dir in list(1,2,4,8,5,6,9,10)))
 			obj_dir = null
 		var/obj_name = sanitize(href_list["object_name"])
+		var/list/ta_spawn_advanced = ta_get_spawn_advanced_options(href_list) // TA EDIT START
+		if(ta_spawn_advanced["cancelled"])
+			return // TA EDIT END
 		var/quality_raw = href_list["object_quality"]
 		var/obj_quality = null
 		var/obj_quality_set = FALSE
@@ -1420,6 +1431,8 @@
 						var/turf/N = O.ChangeTurf(path)
 						if(N && obj_name)
 							N.name = obj_name
+						if(N) // TA EDIT
+							ta_apply_spawn_advanced_options(N, ta_spawn_advanced) // TA EDIT
 					else
 						var/atom/O
 						if(where == "frompod")
@@ -1443,6 +1456,7 @@
 								if(ismob(O))
 									var/mob/M = O
 									M.real_name = obj_name
+							ta_apply_spawn_advanced_options(O, ta_spawn_advanced) // TA EDIT
 							if(href_list["disable_ai"] && ismob(O))
 								var/mob/spawned_mob = O
 								if(isanimal(spawned_mob))

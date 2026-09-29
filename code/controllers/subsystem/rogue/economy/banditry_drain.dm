@@ -97,8 +97,8 @@
 		var/datum/manor/manor = H.mind.get_owned_manor()
 		if(!manor)
 			continue
-		var/outpost_workers = manor.get_outpost_workers()
-		if(outpost_workers <= 0)
+		var/list/outpost_workers = manor.get_outpost_workers()
+		if(outpost_workers["workers"] <= 0)
 			continue
 		if(H.client)
 			if(outpost_reduction > 0)

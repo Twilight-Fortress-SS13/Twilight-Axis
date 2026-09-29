@@ -183,9 +183,9 @@ SUBSYSTEM_DEF(role_class_handler)
 	if(!RT_JOB && H.mind?.assigned_role)
 		job_title = H.mind.assigned_role
 		RT_JOB = SSjob.GetJob(job_title)
-	if(!RT_JOB) // TA EDIT START
+	if(!RT_JOB && !advclass_rolls_override) // TA EDIT START
 		return
-	if(!length(RT_JOB.advclass_cat_rolls) && !length(RT_JOB.job_subclasses))
+	if(!advclass_rolls_override && !length(RT_JOB.advclass_cat_rolls) && !length(RT_JOB.job_subclasses))
 		return // TA EDIT END
 	if(!register_id)
 		if(job_title == "Towner")
@@ -236,8 +236,10 @@ SUBSYSTEM_DEF(role_class_handler)
 			message_admins("ROLE CLASS HANDLER: Could not resolve job for [H.ckey] ([H.real_name]); H.job=[H.job], assigned_role=[assigned_role]. Skipping subclass setup.")
 			qdel(XTRA_MEATY)
 			return
-		if(length(RT_JOB.advclass_cat_rolls))
+		if(LAZYLEN(RT_JOB.advclass_cat_rolls))
 			XTRA_MEATY.class_cat_alloc_attempts = RT_JOB.advclass_cat_rolls
+		else // no advclasses here sire
+			return
 
 		//if(RT_JOB.PQ_boost_divider)
 			//XTRA_MEATY.PQ_boost_divider = RT_JOB.PQ_boost_divider

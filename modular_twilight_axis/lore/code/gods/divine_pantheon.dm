@@ -303,9 +303,9 @@
 	desc = "Огненный Бог-Кузнец, первый из вознесённых смертных, покровитель трудящихся, тот, что несет ремесло и создание наравне с закалкой своей души. «Труд - уже награда». Малум известен как своим равнодушием, так и строгостью к последователям, куда более его радуют их творения."
 	worshippers = "Кузнецы, строители, архитекторы, каменщики, рабочие."
 	miracles = list(/datum/action/cooldown/spell/touch/orison					= CLERIC_ORI,
-					/obj/effect/proc_holder/spell/invoked/TArestoration		= CLERIC_T0,
-					/obj/effect/proc_holder/spell/self/TArepair				= CLERIC_T0,
-					/obj/effect/proc_holder/spell/invoked/TArework				= CLERIC_T1,
+					/obj/effect/proc_holder/spell/invoked/TArestoration			= CLERIC_T0,
+					/obj/effect/proc_holder/spell/self/TArepair					= CLERIC_T0,
+					/obj/effect/proc_holder/spell/invoked/TAmalum_inspiration	= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/heal					= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/bloodmiracle			= CLERIC_T1,
 					/datum/action/cooldown/spell/arcyne_forge/miracle			= CLERIC_T1,

@@ -59,6 +59,8 @@
 		/datum/language/draconic,
 		/datum/language/undercommon,
 		/datum/language/aavnic, // All but beast, which is associated with werewolves.
+		/datum/language/gyedzenese, //TA EDIT
+		/datum/language/valorian, //TA EDIT
 	)
 	category_tags = list(CTAG_ARCHIVIST)
 	subclass_stats = list(

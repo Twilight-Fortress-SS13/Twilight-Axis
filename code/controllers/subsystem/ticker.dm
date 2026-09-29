@@ -773,6 +773,7 @@ SUBSYSTEM_DEF(ticker)
 
 	SStriumphs.end_triumph_saving_time()
 	to_world(span_boldannounce("Rebooting World in [DisplayTimeText(delay)]. [reason]"))
+	SSvote?.remind_map_vote() // TA EDIT
 
 	var/start_wait = world.time
 	UNTIL(round_end_sound_sent || (world.time - start_wait) > (delay * 2))	//don't wait forever

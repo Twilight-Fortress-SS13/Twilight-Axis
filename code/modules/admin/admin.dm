@@ -179,7 +179,9 @@
 	body += "<A href='?_src_=holder;[HrefToken()];subtlemessage=[REF(M)]'>Subtle message</A>"
 	//body += "<A href='?_src_=holder;[HrefToken()];languagemenu=[REF(M)]'>Language Menu</A>"
 	body += "<br><A href='?_src_=holder;[HrefToken()];heal_panel=[REF(M)]'>Heal Panel</A> | "
-	body += "<A href='?_src_=holder;[HrefToken()];inventory_panel=[REF(M)]'>Inventory Panel</A> |"
+	body += "<A href='?_src_=holder;[HrefToken()];inventory_panel=[REF(M)]'>Inventory Panel</A> | " // TA EDIT START
+	if(ishuman(M) || isobserver(M))
+		body += "<A href='?_src_=holder;[HrefToken()];select_equipment=[REF(M)]'>Select Equipment</A> | " // TA EDIT END
 	body += "<A href='?_src_=holder;[HrefToken()];examine_player=[REF(M)]'>Flavor Text</A>"
 
 	body += "</div>"
@@ -275,13 +277,13 @@
 		body += "<br>"
 		body += "</body></html>"
 
-	usr << browse(body, "window=adminplayeropts-[REF(M)];size=800x600")
+	usr << browse(body, "window=adminplayeropts-[REF(M)];size=1000x800")
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Player Panel") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /datum/admins/proc/admin_heal(mob/living/M in GLOB.mob_list)
 	set name = "Mob - Heal"
 	set desc = "Heal a mob to full health"
-	set category = "Game Master"
+	set category = "Game Master.Misc"
 
 	if(!check_rights())
 		return
@@ -291,7 +293,7 @@
 	log_admin("[key_name(usr)] healed [key_name(M)].")
 
 /datum/admins/proc/show_player_panel(mob/M in GLOB.mob_list)
-	set category = "Game Master"
+	set category = "Game Master.Misc"
 	set name = "Show Player Panel"
 	set desc="Edit player (respawn, ban, heal, etc)"
 
@@ -308,7 +310,7 @@
 /datum/admins/proc/admin_revive(mob/living/M in GLOB.mob_list)
 	set name = "Mob - Revive"
 	set desc = "Resuscitate a mob"
-	set category = "Game Master"
+	set category = "Game Master.Misc"
 
 	if(!check_rights())
 		return
@@ -334,7 +336,7 @@
 /datum/admins/proc/admin_sleep(mob/living/M in GLOB.mob_list)
 	set name = "Toggle Sleeping"
 	set desc = "Toggle a mob's sleeping state"
-	set category = "Game Master"
+	set category = "Game Master.Misc"
 
 	if(!check_rights())
 		return
@@ -649,7 +651,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////ADMIN HELPER PROCS
 
 /datum/admins/proc/spawn_atom(object as text)
-	set category = "Game Master"
+	set category = "Game Master.Misc"
 	set desc = ""
 	set name = "Spawn..."
 
@@ -911,14 +913,13 @@
 	else
 		alert(usr, "Target has no mind!") // Optional Error check that may or may not be neccessary
 	GLOB.chosen_names -= H.real_name
-	if(mob_job)
-		LAZYREMOVE(GLOB.actors_list[SSjob.bitflag_to_department(mob_job.department_flag, mob_job.obsfuscated_job)], H.mobid)
+	LAZYREMOVE(GLOB.actors_list, H.mobid)
 	H.returntolobby()
 
 
 /datum/admins/proc/sleep_view()
 	set name = "inview Sleep"
-	set category = "Game Master"
+	set category = "Game Master.Misc"
 	set hidden = FALSE
 
 	if(!check_rights(R_ADMIN))
@@ -933,7 +934,7 @@
 
 /datum/admins/proc/wake_view()
 	set name = "inview Wake"
-	set category = "Game Master"
+	set category = "Game Master.Misc"
 	set hidden = FALSE
 
 	if(!check_rights(R_ADMIN))

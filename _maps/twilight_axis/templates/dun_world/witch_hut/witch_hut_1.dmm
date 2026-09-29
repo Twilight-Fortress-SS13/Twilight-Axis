@@ -12,6 +12,9 @@
 	icon_state = "cobbleedge-sread"
 	},
 /obj/structure/chair/stool/rogue,
+/obj/machinery/light/rogue/candle/blue{
+	pixel_y = -32
+	},
 /turf/open/floor/rogue/hexstone,
 /area/rogue/under/town/basement)
 "bh" = (
@@ -68,7 +71,7 @@
 "ct" = (
 /obj/structure/table/wood/poor/alt,
 /obj/item/rogueweapon/huntingknife/stoneknife,
-/obj/item/cooking/pan,
+/obj/item/cooking/pan/stone,
 /turf/open/floor/rogue/blocks/newstone/alt,
 /area/rogue/indoors/town)
 "cR" = (
@@ -284,6 +287,10 @@
 "ml" = (
 /turf/open/floor/rogue/rooftop/green,
 /area/rogue/outdoors/mountains)
+"mo" = (
+/obj/structure/flora/roguegrass/herb/random,
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/woods/southeast)
 "mp" = (
 /obj/structure/fluff/walldeco/vinez/red,
 /turf/closed/wall/mineral/rogue/wooddark,
@@ -305,19 +312,8 @@
 /turf/open/floor/rogue/ruinedwood/herringbone,
 /area/rogue/indoors/town)
 "oe" = (
-/obj/structure/closet/crate/chest/wicker,
-/obj/item/natural/worms,
-/obj/item/natural/worms,
-/obj/item/natural/worms,
-/obj/item/natural/worms,
-/obj/item/natural/worms,
-/obj/item/natural/worms/grubs,
-/obj/item/natural/worms/grubs,
-/obj/item/natural/worms/grubs,
-/obj/item/natural/worms/grubs,
-/obj/item/natural/worms/grubs,
-/obj/item/natural/worms/grubs,
 /obj/item/fishingrod,
+/obj/structure/closet/crate/chest/wicker/bait,
 /turf/open/floor/rogue/dirt,
 /area/rogue/outdoors/town)
 "ol" = (
@@ -402,6 +398,10 @@
 "tE" = (
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/under/cavewet/bogcaves/north)
+"tI" = (
+/obj/effect/decal/mossy,
+/turf/open/floor/rogue/cobble/mossy,
+/area/rogue/outdoors/town)
 "uy" = (
 /turf/closed/mineral/random/rogue,
 /area/rogue/outdoors/woods/south)
@@ -423,9 +423,9 @@
 	},
 /area/rogue/indoors/town)
 "vU" = (
-/obj/effect/landmark/quest_spawner/hard,
-/turf/open/water/ocean/deep,
-/area/rogue/under/cavewet/bogcaves/north)
+/obj/structure/flora/roguegrass/herb/random,
+/turf/open/floor/rogue/grass,
+/area/rogue/outdoors/woods/south)
 "wo" = (
 /obj/structure/table/wood/poor,
 /turf/open/floor/rogue/ruinedwood/herringbone,
@@ -560,6 +560,7 @@
 /obj/structure/fluff/walldeco/vinez/red{
 	pixel_x = -32
 	},
+/obj/effect/decal/mossy,
 /turf/open/floor/rogue/cobble/mossy,
 /area/rogue/outdoors/town)
 "Dt" = (
@@ -772,6 +773,7 @@
 /obj/structure/roguewindow/openclose/reinforced{
 	dir = 8
 	},
+/obj/structure/curtain/green,
 /turf/open/floor/rogue/ruinedwood/herringbone,
 /area/rogue/indoors/town)
 "Pp" = (
@@ -782,6 +784,7 @@
 /area/rogue/outdoors/town)
 "Pw" = (
 /obj/structure/mineral_door/swing_door,
+/obj/machinery/light/rogue/candle/blue,
 /turf/open/floor/rogue/ruinedwood/herringbone,
 /area/rogue/indoors/town)
 "Px" = (
@@ -887,7 +890,6 @@
 /obj/effect/decal/cleanable/dirt/cobweb{
 	dir = 1
 	},
-/obj/structure/fluff/railing/border,
 /obj/effect/spawner/lootdrop/potion_ingredient/herb,
 /obj/effect/spawner/lootdrop/potion_ingredient/herb,
 /obj/effect/spawner/lootdrop/potion_ingredient/herb,
@@ -1141,7 +1143,7 @@ tE
 ya
 ya
 VK
-vU
+VK
 VK
 ya
 Ep
@@ -1752,7 +1754,7 @@ Ih
 Ih
 Ih
 Ih
-Ih
+vU
 Ih
 At
 At
@@ -1855,7 +1857,7 @@ At
 "}
 (10,1,2) = {"
 Ih
-Ih
+vU
 Ih
 Ih
 Ih
@@ -1938,7 +1940,7 @@ AT
 cR
 Ih
 Ih
-Ih
+vU
 Ih
 "}
 (14,1,2) = {"
@@ -2109,7 +2111,7 @@ OA
 OA
 cg
 vK
-ie
+tI
 zE
 Fz
 hZ
@@ -2267,7 +2269,7 @@ jA
 jA
 jN
 jN
-jN
+mo
 jN
 Ri
 "}

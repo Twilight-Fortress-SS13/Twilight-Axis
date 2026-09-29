@@ -245,7 +245,6 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	top_examine			= sanitize_bool(top_examine, initial(top_examine))
 	crt					= sanitize_bool(crt, initial(crt))
 	grain				= sanitize_bool(grain, initial(grain))
-	dnr_pref			= sanitize_bool(dnr_pref, initial(dnr_pref))
 	qsr_pref			= sanitize_bool(qsr_pref, initial(qsr_pref))
 	no_storyteller_events = sanitize_bool(no_storyteller_events, initial(no_storyteller_events))
 	verbose_character_creator = sanitize_bool(verbose_character_creator, initial(verbose_character_creator))
@@ -501,6 +500,14 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	clean_virtue.on_load()
 	return clean_virtue
 
+/datum/preferences/proc/migrate_forgotten_empires_origin() // TA EDIT START
+	if(!istype(virtue_origin, /datum/virtue/origin/unselectable/skeleton))
+		return FALSE
+
+	qdel(virtue_origin)
+	virtue_origin = new /datum/virtue/origin/unknown
+	return TRUE // TA EDIT END
+
 /datum/preferences/proc/write_clean_virtue_paths(savefile/S, virtue_type = /datum/virtue/none, virtuetwo_type = /datum/virtue/none, origin_type = /datum/virtue/none, list/virtue_choices = null, list/virtuetwo_choices = null)
 	if(!ispath(virtue_type, /datum/virtue))
 		virtue_type = /datum/virtue/none
@@ -530,6 +537,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	virtue = load_clean_virtue(virtue_data[1], virtue_data[2])
 	virtuetwo = load_clean_virtue(virtuetwo_data[1], virtuetwo_data[2])
 	virtue_origin = load_clean_virtue(origin_data[1], origin_data[2])
+	migrate_forgotten_empires_origin() // TA EDIT
 
 	write_clean_virtue_paths(S, virtue.type, virtuetwo.type, virtue_origin.type, virtue.picked_choices, virtuetwo.picked_choices)
 
@@ -728,10 +736,12 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	var/patron_typepath
 	S["selected_patron"]	>> patron_typepath
-	if(patron_typepath)
+	if(patron_typepath && GLOB.patronlist[patron_typepath]) // TA EDIT START
 		selected_patron = GLOB.patronlist[patron_typepath]
-		if(!selected_patron) //failsafe
-			selected_patron = GLOB.patronlist[default_patron]
+	else
+		selected_patron = GLOB.patronlist[default_patron]
+		if(selected_patron)
+			WRITE_FILE(S["selected_patron"], selected_patron.type) // TA EDIT END
 
 	S["have_manor"] >> have_manor  //TA EDIT
 	S["manor_name"] >> manor_name  //TA EDIT
@@ -749,7 +759,12 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["job_characters"] >> job_characters //TA EDIT
 	S["job_subclass_preferences"] >> job_subclass_preferences // TA EDIT START
 	S["job_subclass_strict"] >> job_subclass_strict // TA EDIT END
-	S["dnr"] >> dnr_pref
+
+	S["char_toggles"] >> char_toggles
+	if(isnull(char_toggles))
+		var/legacy_dnr
+		S["dnr"] >> legacy_dnr
+		char_toggles = legacy_dnr ? CHAR_TOGGLE_DNR : NONE
 
 	S["update_mutant_colors"] >> update_mutant_colors
 
@@ -794,6 +809,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["examine_theme"]		>> examine_theme
 
 	S["body_size"] >> features["body_size"]
+	S["body_build"] >> features["body_build"]
 	S["body_markings"] >> body_markings
 
 	S["descriptor_entries"] >> descriptor_entries
@@ -850,9 +866,17 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	vampire_ears = sanitize_hexcolor(vampire_ears, 6, TRUE, null, TRUE)
 	highlight_color = sanitize_hexcolor(highlight_color, 6, TRUE, initial(highlight_color))
 
+	char_toggles = sanitize_integer(char_toggles, 0, INFINITY, initial(char_toggles))
+
 	// floats
 	voice_pitch		= sanitize_float(voice_pitch, MIN_VOICE_PITCH, MAX_VOICE_PITCH, 0.01, 1)
 	features["body_size"] = sanitize_float(features["body_size"], BODY_SIZE_MIN, BODY_SIZE_MAX, 0.01, BODY_SIZE_NORMAL)
+	// A build the species doesn't offer (race swap, or a savefile predating builds) falls back to its default,
+	// so the character keeps rendering on their species' native shape rather than a body it has no sprites for.
+	if(!length(pref_species.allowed_body_builds))
+		features["body_build"] = null
+	else if(!pref_species.is_body_build_valid(features["body_build"], gender))
+		features["body_build"] = pref_species.get_default_body_build(gender)
 
 	// lists
 	age				= sanitize_inlist(age, pref_species.possible_ages, AGE_ADULT)
@@ -1085,6 +1109,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	virtue = load_clean_virtue(virtue_data[1], virtue_data[2])
 	virtuetwo = load_clean_virtue(virtuetwo_data[1], virtuetwo_data[2])
 	virtue_origin = load_clean_virtue(origin_data[1], origin_data[2])
+	migrate_forgotten_empires_origin() // TA EDIT
 
 
 	charflaws = list()
@@ -1168,7 +1193,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["descriptor_entries"] , descriptor_entries)
 	WRITE_FILE(S["custom_descriptors"] , custom_descriptors)
 
-	WRITE_FILE(S["dnr"] , dnr_pref)
+
+	WRITE_FILE(S["char_toggles"] , char_toggles)
 	WRITE_FILE(S["update_mutant_colors"] , update_mutant_colors)
 	WRITE_FILE(S["headshot_link"] , headshot_link)
 	WRITE_FILE(S["vampire_headshot_link"] , vampire_headshot_link)
@@ -1210,6 +1236,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["custom_cmode_file"], custom_cmode_file)
 	WRITE_FILE(S["custom_cmode_enabled"], custom_cmode_enabled) // TA EDIT END
 	WRITE_FILE(S["body_size"] , features["body_size"])
+	WRITE_FILE(S["body_build"] , features["body_build"])
 	WRITE_FILE(S["nsfwflavortext"] , html_decode(nsfwflavortext))
 	WRITE_FILE(S["nsfw_ooc_extra_img"] , nsfw_ooc_extra_img)
 	WRITE_FILE(S["nsfw_ooc_extra_img_link"] , nsfw_ooc_extra_img_link)

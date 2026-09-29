@@ -7,6 +7,7 @@
 	extra_range = 5
 	var/stress2give = /datum/stressevent/musicbox
 	persistent_loop = TRUE
+	preload_persistent_to_all_clients = FALSE // TA EDIT
 	channel = CHANNEL_CMUSIC
 
 /datum/looping_sound/dmusloop/on_hear_sound(mob/M)

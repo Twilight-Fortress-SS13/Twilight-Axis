@@ -54,7 +54,7 @@
 	outfit = null
 	outfit_female = null
 
-	obsfuscated_job = TRUE
+	obfuscated_job = TRUE
 
 	display_order = JDO_BANDIT
 	announce_latejoin = FALSE
