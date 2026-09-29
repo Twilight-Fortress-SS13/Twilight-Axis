@@ -157,7 +157,7 @@
 		if(attacked_item.obj_integrity >= attacked_item.max_integrity)
 			break
 
-	while(do_after(user, CLICK_CD_FAST, target = attacked_item))
+	while(do_after(user, CLICK_CD_QUICK, target = attacked_item))
 	repair_busy = FALSE
 
 /obj/item/rogueweapon/hammer/proc/repair_structure(obj/structure/attacked_structure, mob/living/user)
@@ -420,14 +420,14 @@
 
 /obj/item/rogueweapon/hammer/paalloy
 	name = "ancient hammer"
-	desc = "A hammer of polished gilbronze. Remade masterfully upon a smooth handle, it shall make forth the armaments of Her legionnaries and great works.."
+	desc = "A hammer of polished gilbranze. Remade masterfully upon a smooth handle, it shall make forth the armaments of Her legionnaries and great works.."
 	icon_state = "ahammer"
 	force = 21
 	smeltresult = /obj/item/ingot/aaslag
 
 /obj/item/rogueweapon/hammer/aalloy
 	name = "decrepit hammer"
-	desc = "A hammer of wrought bronze. It has pounded out the beginning of a thousand legacies; of humble adventurers, of noble legionnaires, and of foolish heroes."
+	desc = "A hammer of rotted metal. It has pounded out the beginning of a thousand legacies; of humble adventurers, of noble legionnaires, and of foolish heroes."
 	icon_state = "ahammer"
 	force = 12
 	max_integrity = 10
@@ -611,7 +611,7 @@
 
 /obj/item/rogueweapon/tongs/aalloy
 	name = "decrepit tongs"
-	desc = "Wrought bronze pincers the molten alloy, putting it before the anvil and hammer. Soon, it will fashion a new legacy; one unmarred by this dogmatic millenia."
+	desc = "Rotted metal pincers the molten alloy, putting it before the anvil and hammer. Soon, it will fashion a new legacy; one unmarred by this dogmatic millenia."
 	icon_state = "atongs"
 	force = 5
 	smeltresult = null
@@ -631,7 +631,7 @@
 
 /obj/item/rogueweapon/tongs/paalloy
 	name = "ancient tongs"
-	desc = "Wrought bronze pincers the molten alloy, putting it before the anvil and hammer. Soon, it will fashion a new legacy; one unmarred by this dogmatic millenia."
+	desc = "Polished gilbranze pincers the molten alloy, putting it before the anvil and hammer. Soon, it will fashion a new legacy; one unmarred by this dogmatic millenia."
 	icon_state = "atongs"
 	smeltresult = null
 	auto_collect = TRUE

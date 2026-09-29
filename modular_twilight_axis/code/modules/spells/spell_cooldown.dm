@@ -10,7 +10,7 @@
 			owner.balloon_alert(owner, "Can't focus on casting...")
 		return FALSE
 
-	if(HAS_TRAIT(owner, TRAIT_NOC_CURSE))
+	if(HAS_TRAIT(owner, TRAIT_CURSE_NOC))
 		if(feedback)
 			owner.balloon_alert(owner, "My magicka has left me...")
 		return FALSE
@@ -54,13 +54,14 @@
 			return FALSE
 
 	if(LAZYLEN(required_items))
-		var/found = FALSE
-		for(var/obj/item/I in owner.contents)
-			if(is_type_in_list(I, required_items))
-				found = TRUE
-				break
-		if(!found && feedback)
-			owner.balloon_alert(owner, "Missing something to cast!")
-			return FALSE
+		if(!HAS_TRAIT(owner, TRAIT_HALLOWED))
+			var/found = FALSE
+			for(var/obj/item/I in owner.contents)
+				if(is_type_in_list(I, required_items))
+					found = TRUE
+					break
+			if(!found && feedback)
+				owner.balloon_alert(owner, "Missing something to cast!")
+				return FALSE
 
 	return TRUE

@@ -18,6 +18,7 @@
 	//skills alphabetically... this will be sloppy based on the descriptive name but easier for devs
 	/datum/skill/craft/alchemy,
 	/datum/skill/magic/arcane,
+	/datum/skill/combat/arcyne, //TA EDIT
 	/datum/skill/craft/armorsmithing,
 
 	/datum/skill/craft/blacksmithing,
@@ -37,15 +38,15 @@
 	/datum/skill/misc/lockpicking,
 	/datum/skill/labor/lumberjacking,
 
-    /datum/skill/craft/masonry,
-    /datum/skill/labor/mining,
-    /datum/skill/misc/music,
-    /datum/skill/misc/medicine,
+	/datum/skill/craft/masonry,
+	/datum/skill/labor/mining,
+	/datum/skill/misc/music,
+	/datum/skill/misc/medicine,
 
 
 
-    /datum/skill/craft/sewing,
-    /datum/skill/craft/smelting,
+	/datum/skill/craft/sewing,
+	/datum/skill/craft/smelting,
 	/datum/skill/misc/sneaking,
 	/datum/skill/misc/stealing,
 	/datum/skill/misc/swimming,
@@ -55,11 +56,13 @@
 	/datum/skill/craft/traps,
 
 	/datum/skill/misc/reading,
-    /datum/skill/misc/riding,
+	/datum/skill/misc/riding,
 
 	/datum/skill/craft/weaponsmithing,
 
 	//Languages
+	/datum/language/gyedzenese, //TA EDIT
+	/datum/language/valorian, //TA EDIT
 	/datum/language/aavnic,
 	/datum/language/celestial,
 	/datum/language/raneshi,
@@ -75,7 +78,7 @@
 	/datum/language/undercommon,
 	/datum/language/orcish,
 	/datum/language/otavan
-    )
+	)
 	for(var/i = 1, i <= skill_choices.len, i++)
 		var/datum/skill/learn_item = skill_choices[i]
 		if((L.get_skill_level(learn_item) < SKILL_LEVEL_NOVICE) && !(learn_item in list(/datum/language/aavnic, /datum/language/celestial, /datum/language/raneshi, /datum/language/draconic, /datum/language/dwarvish, /datum/language/elvish, /datum/language/etruscan, /datum/language/grenzelhoftian, /datum/language/gronnic, /datum/language/hellspeak, /datum/language/kazengunese, /datum/language/lingyuese, /datum/language/orcish, /datum/language/otavan)))
@@ -99,7 +102,7 @@
 				var/chosen_skill = input(L, "Most of the lessons require you to be no less than novice in the selected skill", "Choose a skill") as null|anything in choices
 				var/datum/skill/item = choices[chosen_skill]
 				if(!item)
-					return  // student canceled
+					return	// student canceled
 				if(alert(L, "Are you sure you want to study [item.name]?", "Learning", "Learn", "Cancel") == "Cancel")
 					return
 				if(HAS_TRAIT(L, TRAIT_STUDENT))
@@ -144,7 +147,7 @@
 								to_chat(usr, span_warning("[L] got distracted and wandered off!"))
 								to_chat(L, span_warning("I must be more focused on my studies!"))
 								return
-						else  // +1 skill level if apprentice or better
+						else	// +1 skill level if apprentice or better
 							if(do_after(usr, teachingtime, target = L))
 								user.visible_message("<font color='yellow'>[user] teaches [L] a lesson.</font>")
 								to_chat(usr, span_notice("My student grows more proficient in [item.name]!"))

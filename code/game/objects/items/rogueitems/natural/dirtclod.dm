@@ -5,6 +5,7 @@
 	dropshrink = 0
 	throwforce = 0
 	w_class = WEIGHT_CLASS_TINY
+	materia = list(/datum/materia_aspect/mundane, /datum/materia_aspect/earth)
 
 	var/being_deleted = FALSE
 
@@ -12,16 +13,7 @@
 		/datum/crafting_recipe/roguetown/survival/wickercloak
 	)
 
-/obj/item/natural/dirtclod/snow
-	name = "packed snow"
-	desc = "A handful of snow"
-	icon_state = "snow1"
-
-/obj/item/natural/dirtclod/snow/Initialize()
-	..()
-	icon_state = "snow[rand(1,2)]"
-
-/obj/item/natural/dirtclod/Initialize()
+/obj/item/natural/dirtclod/Initialize(mapload)
 	icon_state = "clod[rand(1,2)]"
 	..()
 
@@ -113,7 +105,7 @@
 
 	var/dirtamt = 5
 
-/obj/structure/fluff/clodpile/Initialize()
+/obj/structure/fluff/clodpile/Initialize(mapload)
 	dir = pick(GLOB.cardinals)
 	..()
 

@@ -6,7 +6,7 @@
 	class_select_category = CLASS_CAT_CLERIC
 	maximum_possible_slots = 2
 	subclass_languages = list(/datum/language/gronnic)
-	cmode_music = 'modular_twilight_axis/sound/music/combat_hakkerskaldyr.ogg'
+	cmode_music = sound("modular_twilight_axis/sound/music/combat_hakkerskaldyr.ogg")
 	traits_applied = list(TRAIT_STRONGBITE, TRAIT_CIVILIZEDBARBARIAN, TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN, TRAIT_DUALWIELDER, TRAIT_PSYCHOSIS)
 	subclass_stats = list(
 		STATKEY_STR = 3,

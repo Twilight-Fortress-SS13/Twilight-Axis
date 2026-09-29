@@ -19,7 +19,7 @@
 	round_contrib_points = 2
 	same_job_respawn_delay = 30 MINUTES
 
-	cmode_music = 'sound/music/combat_veteran.ogg'
+	cmode_music = sound("sound/music/combat_veteran.ogg")
 	job_subclasses = list(
 		/datum/advclass/veteran/battlemaster,
 		/datum/advclass/veteran/footman,
@@ -50,7 +50,7 @@
 	name = "Veteran Battlemaster"
 	tutorial = "You have served under a hundred masters, some good, some bad. You were a general once. A marshal, a captain. To some a hero, others a monster. Something of the sorts. You made strategies, tactics, new innovations of war. A thousand new ways for one man to kill another. It still keeps you up at night."
 	outfit = /datum/outfit/job/roguetown/vet/battlemaster
-	cmode_music = 'sound/music/cmode/towner/combat_retired.ogg'
+	cmode_music = sound("sound/music/cmode/towner/combat_retired.ogg")
 
 	category_tags = list(CTAG_VETERAN)
 	traits_applied = list(TRAIT_BREADY, TRAIT_MEDIUMARMOR, TRAIT_STEELHEARTED)
@@ -333,15 +333,15 @@
 
 	H.adjust_blindness(-3)
 	if(H.mind)
-		var/weapons = list("Sword + Recurve Bow","Axe + Crossbow","Spear + Shield")
+		var/weapons = list("Sword + Bow","Axe + Crossbow","Spear + Shield")
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		H.set_blindness(0)
 		switch(weapon_choice)
-			if("Sword + Recurve Bow")
+			if("Sword + Bow")
 				r_hand = /obj/item/rogueweapon/sword/long
 				beltl = /obj/item/quiver/arrows
 				beltr = /obj/item/rogueweapon/scabbard/sword
-				backl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
+				backl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow
 
 			if("Axe + Crossbow")
 				r_hand = /obj/item/rogueweapon/stoneaxe/woodcut/steel
@@ -397,7 +397,7 @@
 	outfit = /datum/outfit/job/roguetown/vet/merc
 
 	subclass_languages = list(/datum/language/grenzelhoftian)
-	cmode_music = 'sound/music/combat_grenzelhoft.ogg'
+	cmode_music = sound("sound/music/combat_grenzelhoft.ogg")
 	category_tags = list(CTAG_VETERAN)
 	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_STEELHEARTED) //I am sick of fullplate grenzelvets
 	subclass_stats = list(
@@ -557,13 +557,13 @@
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 	shoes = /obj/item/clothing/shoes/roguetown/boots/leather
 	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes
-	var/weapons = list("Recurve Bow", "Slurbow", "Crossbow")
+	var/weapons = list("Long Bow", "Slurbow", "Crossbow")
 	var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 	H.set_blindness(0)
 	switch(weapon_choice)
-		if("Recurve Bow")
+		if("Long Bow")
 			beltl = /obj/item/quiver/arrows
-			beltr = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
+			beltr = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/longbow
 		if("Slurbow")
 			beltr = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow
 			beltl = /obj/item/quiver/bolt/light
@@ -580,7 +580,7 @@
 		/obj/item/rogueweapon/scabbard/sheath = 1
 		)
 	add_verb(H, /mob/proc/haltyell)
-	H.cmode_music = 'sound/music/cmode/antag/combat_deadlyshadows.ogg' // so apparently this works for veteran, but not for advents. i dont know why.
+	H.cmode_music = sound("sound/music/cmode/antag/combat_deadlyshadows.ogg") // so apparently this works for veteran, but not for advents. i dont know why.
 	if(H.mind)
 		SStreasury.give_money_account(ECONOMIC_RICH, H, "Retirement.")
 	H.adjust_blindness(-3)
@@ -630,7 +630,7 @@
 	tutorial = "You didn't serve on the frontlines, you were an informant, a spy, an assassin. You wove your way through enemy courts, finding information, neutralizing loose ends. You lived old in a career that many die young. It's a miracle you stand here today. You specialize in knives, whips, and stealth."
 	outfit = /datum/outfit/job/roguetown/vet/spy
 	subclass_languages = list(/datum/language/thievescant)
-	cmode_music = 'sound/music/cmode/nobility/combat_spymaster.ogg'
+	cmode_music = sound("sound/music/cmode/nobility/combat_spymaster.ogg")
 	category_tags = list(CTAG_VETERAN)
 	vice_limits = list(/datum/charflaw/silverweakness)
 	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_CICERONE, TRAIT_STEELHEARTED)

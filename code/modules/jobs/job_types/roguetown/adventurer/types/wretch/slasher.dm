@@ -4,7 +4,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED) //at the bequest of eiren
 	outfit = /datum/outfit/job/roguetown/wretch/slasher
-	cmode_music = 'sound/music/combat_ozium.ogg'
+	cmode_music = sound("sound/music/combat_ozium.ogg")
 	class_select_category = CLASS_CAT_ACCURSED
 	category_tags = list(CTAG_WRETCH)
 	traits_applied = list(TRAIT_PSYCHOSIS, TRAIT_ORGAN_EATER, TRAIT_NASTY_EATER) //they'll choose their defense skill later
@@ -24,7 +24,7 @@
 		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_MASTER, //you can run
-  		/datum/skill/misc/tracking = SKILL_LEVEL_EXPERT, //but you can't hide.
+			/datum/skill/misc/tracking = SKILL_LEVEL_EXPERT, //but you can't hide.
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_JOURNEYMAN, //LOOK BEHIND YOU!!
@@ -37,8 +37,9 @@
 		/datum/skill/misc/hunting = SKILL_LEVEL_EXPERT
 	)
 	subclass_stashed_items = list(
-        "Sewing Kit" =  /obj/item/repair_kit,
-    )
+		"Sewing Kit" =	/obj/item/repair_kit,
+		"Stashed Funds" = /obj/item/roguecoin/silver/pile/wretchpile,
+	)
 
 /datum/outfit/job/roguetown/wretch/slasher/pre_equip(mob/living/carbon/human/H)
 	..()

@@ -9,7 +9,7 @@
 	track = MIGRANT_TRACK_SPECIAL
 	weight = 6
 	min_round_time = 40 MINUTES
-	min_pop = 40
+	min_pop = 45
 	max_spawns = 1
 	triumph_threshold = 100
 	triumph_weight_multiplier = 4
@@ -73,7 +73,7 @@
 	tutorial = "You are a warrior-lord from Gronn and the leader of your warband. Guide them to glory and wealth or try to survive."
 	outfit = /datum/outfit/job/roguetown/gronn/jarl
 	class_select_category = CLASS_CAT_NOMAD
-	cmode_music = 'sound/music/combat_knight.ogg'
+	cmode_music = sound("sound/music/combat_knight.ogg")
 	category_tags = list(CTAG_GRONN_JARL)
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_NOBLE, TRAIT_HEAVYARMOR)
 	min_pq = 40
@@ -91,7 +91,7 @@
 		/datum/skill/combat/swords = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/shields = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/misc/swimming = SKILL_LEVEL_MASTER,
+		/datum/skill/misc/swimming = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
@@ -99,9 +99,6 @@
 		/datum/skill/labor/butchering = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/medicine = SKILL_LEVEL_NOVICE,
 	)
-
-/datum/outfit/job/roguetown/gronn/jarl
-	job_bitflag = BITFLAG_GARRISON
 
 /datum/outfit/job/roguetown/gronn/jarl/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -137,7 +134,7 @@
 	outfit = /datum/outfit/job/roguetown/gronn/tideweaver
 	class_select_category = CLASS_CAT_CLERIC
 	allowed_patrons = list(/datum/patron/divine/abyssor)
-	cmode_music = 'sound/music/combat_shaman2.ogg'
+	cmode_music = sound("sound/music/combat_shaman2.ogg")
 	category_tags = list(CTAG_GRONN_TIDEWEAVER)
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_DODGEEXPERT, TRAIT_ARCYNE)
 	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 0, "ward" = TRUE)
@@ -154,21 +151,18 @@
 		/datum/skill/combat/axes = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/misc/swimming = SKILL_LEVEL_LEGENDARY,
+		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/medicine = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/labor/fishing = SKILL_LEVEL_EXPERT,
+		/datum/skill/labor/fishing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/sewing = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/craft/crafting = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/craft/crafting = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/carpentry = SKILL_LEVEL_NOVICE,
 		/datum/skill/magic/holy = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/magic/arcane = SKILL_LEVEL_NOVICE,
 	)
-
-/datum/outfit/job/roguetown/gronn/tideweaver
-	job_bitflag = BITFLAG_HOLY_WARRIOR
 
 /datum/outfit/job/roguetown/gronn/tideweaver/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -207,7 +201,7 @@
 	tutorial = "You are a volfskin, one of the legendary Gronnian warriors who are said to be possessed by raging volf spirits in battles. Distrusted due to your less than savoury religious practices, but well-respected for your combat prowess."
 	outfit = /datum/outfit/job/roguetown/gronn/volfskin
 	class_select_category = CLASS_CAT_WARRIOR
-	cmode_music = 'sound/music/combat_hornofthebeast.ogg'
+	cmode_music = sound("sound/music/combat_hornofthebeast.ogg")
 	category_tags = list(CTAG_GRONN_VOLFSKIN)
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_ORGAN_EATER, TRAIT_DUALWIELDER, TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN)
 	min_pq = 30
@@ -221,17 +215,14 @@
 		/datum/skill/combat/axes = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
-		/datum/skill/misc/swimming = SKILL_LEVEL_MASTER,
-		/datum/skill/misc/athletics = SKILL_LEVEL_MASTER,
-		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
+		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
+		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/crafting = SKILL_LEVEL_NOVICE,
 		/datum/skill/craft/cooking = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/tanning = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/labor/butchering = SKILL_LEVEL_JOURNEYMAN,
 	)
-
-/datum/outfit/job/roguetown/gronn/volfskin
-	job_bitflag = BITFLAG_GARRISON
 
 /datum/outfit/job/roguetown/gronn/volfskin/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -265,7 +256,7 @@
 	tutorial = "You are a loyal and skilled bodyguard to your jarl, specialising in pillaging, kidnapping and fighting with an axe and shield."
 	outfit = /datum/outfit/job/roguetown/gronn/huscarl
 	class_select_category = CLASS_CAT_WARRIOR
-	cmode_music = 'sound/music/combat_vagarian.ogg'
+	cmode_music = sound("sound/music/combat_vagarian.ogg")
 	category_tags = list(CTAG_GRONN_HUSCARL)
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_MEDIUMARMOR)
 	min_pq = 20
@@ -284,15 +275,12 @@
 		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
-		/datum/skill/misc/swimming = SKILL_LEVEL_MASTER,
+		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/medicine = SKILL_LEVEL_NOVICE,
 		/datum/skill/craft/crafting = SKILL_LEVEL_APPRENTICE,
 	)
-
-/datum/outfit/job/roguetown/gronn/huscarl
-	job_bitflag = BITFLAG_GARRISON
 
 /datum/outfit/job/roguetown/gronn/huscarl/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -327,7 +315,7 @@
 	tutorial = "An unlucky soul. Perhaps caught in a pillaging raid, or alone in the wilderness, you have been enslaved by the Gronnian warband. Work hard to appease your new masters."
 	outfit = /datum/outfit/job/roguetown/gronn/thrall
 	class_select_category = CLASS_CAT_NOMAD
-	cmode_music = 'sound/music/combat_vagarian.ogg'
+	cmode_music = sound("sound/music/combat_vagarian.ogg")
 	category_tags = list(CTAG_GRONN_THRALL)
 	traits_applied = list(TRAIT_STEELHEARTED)
 	min_pq = 0
@@ -347,9 +335,6 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/medicine = SKILL_LEVEL_NOVICE,
 	)
-
-/datum/outfit/job/roguetown/gronn/thrall
-	job_bitflag = NONE
 
 /datum/outfit/job/roguetown/gronn/thrall/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -402,10 +387,10 @@
 				)
 				H.adjust_skillrank_up_to(/datum/skill/craft/crafting, SKILL_LEVEL_APPRENTICE, TRUE)
 				H.adjust_skillrank_up_to(/datum/skill/craft/smelting, SKILL_LEVEL_APPRENTICE, TRUE)
-				H.adjust_skillrank_up_to(/datum/skill/craft/blacksmithing, SKILL_LEVEL_JOURNEYMAN, TRUE)
-				H.adjust_skillrank_up_to(/datum/skill/craft/armorsmithing, SKILL_LEVEL_JOURNEYMAN, TRUE)
-				H.adjust_skillrank_up_to(/datum/skill/craft/weaponsmithing, SKILL_LEVEL_JOURNEYMAN, TRUE)
-				H.adjust_skillrank_up_to(/datum/skill/craft/engineering, SKILL_LEVEL_JOURNEYMAN, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/craft/blacksmithing, SKILL_LEVEL_APPRENTICE, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/craft/armorsmithing, SKILL_LEVEL_APPRENTICE, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/craft/weaponsmithing, SKILL_LEVEL_APPRENTICE, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/craft/engineering, SKILL_LEVEL_APPRENTICE, TRUE)
 				H.adjust_skillrank_up_to(/datum/skill/craft/ceramics, SKILL_LEVEL_APPRENTICE, TRUE)
 			if("Captured Noble")
 				id = /obj/item/clothing/ring/silver

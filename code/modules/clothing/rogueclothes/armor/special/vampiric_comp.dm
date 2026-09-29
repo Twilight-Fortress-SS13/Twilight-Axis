@@ -36,10 +36,10 @@
 		if(istype(I, target_armor_path))
 			add_item(I)
 
-	RegisterSignal(H, COMSIG_MOB_EQUIPPED_ITEM, .proc/on_item_equipped)
-	RegisterSignal(H, COMSIG_MOB_DROPITEM, .proc/on_item_dropped)
-	RegisterSignal(H, COMSIG_MOB_ITEM_ATTACK, .proc/on_successful_strike)
-	RegisterSignal(H, COMSIG_MOB_ITEM_AFTERATTACK, .proc/on_attack_finished)
+	RegisterSignal(H, COMSIG_MOB_EQUIPPED_ITEM, PROC_REF(on_item_equipped))
+	RegisterSignal(H, COMSIG_MOB_DROPITEM, PROC_REF(on_item_dropped))
+	RegisterSignal(H, COMSIG_MOB_ITEM_ATTACK, PROC_REF(on_successful_strike))
+	RegisterSignal(H, COMSIG_MOB_ITEM_AFTERATTACK, PROC_REF(on_attack_finished))
 
 /datum/component/vampiric_striker/proc/on_item_equipped(mob/user, obj/item/source, slot)
 	SIGNAL_HANDLER
@@ -72,7 +72,7 @@
 	if(target.stat == DEAD || !target.mind)
 		return
 	current_victim_ref = WEAKREF(target)
-	RegisterSignal(target, COMSIG_MOB_ARMOR_INTEGRITY_DAMAGED, .proc/handle_target_armor_shred)
+	RegisterSignal(target, COMSIG_MOB_ARMOR_INTEGRITY_DAMAGED, PROC_REF(handle_target_armor_shred))
 
 /datum/component/vampiric_striker/proc/handle_target_armor_shred(mob/living/carbon/human/target, armor_damage_taken, obj/item/clothing/damaged_item, current_layer, total_layers)
 	SIGNAL_HANDLER
@@ -132,6 +132,7 @@
 		landing_turf = locate(spawn_location.x + 1, spawn_location.y, spawn_location.z)
 	var/obj/effect/temp_visual/dream_shard/vampiric/S = new shard_type(spawn_location, 10 SECONDS, shard_repair_value, landing_turf)
 	S.creator_ref = WEAKREF(parent)
+	S.setup_owner_outline(parent)
 
 /datum/component/vampiric_striker/proc/on_shard_crossed(obj/effect/temp_visual/dream_shard/S, atom/movable/AM)
 	SIGNAL_HANDLER
@@ -139,11 +140,11 @@
 		return
 
 	repair_from_shard(S.repair_value)
-	
+
 	var/obj/effect/temp_visual/heal/E = new /obj/effect/temp_visual/heal_rogue/campfire(get_turf(parent))
 	E.color = S.effect_color
 	playsound(parent, 'sound/magic/magic_nulled.ogg', 70, TRUE)
-	
+
 	UnregisterSignal(S, COMSIG_MOVABLE_CROSSED)
 	qdel(S)
 
@@ -163,12 +164,12 @@
 				most_broken = I
 
 		if(!most_broken)
-			break 
+			break
 
 		var/needed = most_broken.max_integrity - most_broken.obj_integrity
 		var/applied = min(remaining_repair, needed)
 		most_broken.obj_integrity += applied
-		
+
 		if(most_broken.max_blade_int && most_broken.blade_int < most_broken.max_blade_int)
 			most_broken.blade_int = most_broken.max_blade_int
 		remaining_repair -= applied
@@ -178,7 +179,7 @@
 
 		most_broken.update_icon()
 
-		if(needed > applied) 
+		if(needed > applied)
 			break
 
 /datum/component/vampiric_striker/Destroy()
@@ -192,6 +193,8 @@
 	/// Weak reference to the player mob who spawned this shard
 	var/datum/weakref/creator_ref
 	effect_color = "#440101"
+	/// Client image overlay given exclusively to the creator to show an outline
+	var/image/outline_image
 
 /obj/effect/temp_visual/dream_shard/vampiric/Crossed(atom/movable/AM)
 	if(!creator_ref)
@@ -223,3 +226,27 @@
 	E.color = effect_color
 	playsound(creator, 'sound/magic/magic_nulled.ogg', 70, TRUE)
 	qdel(src)
+
+/obj/effect/temp_visual/dream_shard/vampiric/proc/setup_owner_outline(mob/living/owner)
+	if(!owner?.client)
+		return
+
+	var/alpha_hex = "BF"
+	var/final_color = effect_color ? effect_color : "#d40000"
+	if(length(final_color) == 7 && copytext(final_color, 1, 2) == "#")
+		final_color = "[final_color][alpha_hex]"
+
+	var/image/I = image(icon = icon, loc = src, icon_state = icon_state, layer = layer + 0.05)
+	I.filters += filter(type = "outline", size = 2, color = final_color)
+
+	outline_image = I
+	owner.client.images += outline_image
+
+/obj/effect/temp_visual/dream_shard/vampiric/Destroy()
+	if(outline_image)
+		var/mob/living/creator = creator_ref?.resolve()
+		if(creator?.client)
+			creator.client.images -= outline_image
+		qdel(outline_image)
+		outline_image = null
+	return ..()

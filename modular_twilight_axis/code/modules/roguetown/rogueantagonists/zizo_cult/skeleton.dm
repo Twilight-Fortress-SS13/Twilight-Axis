@@ -95,7 +95,7 @@ NECRO SKELETONS
 	H.STALUC = rand(8, 12)
 
 	shirt = prob(50) ? /obj/item/clothing/suit/roguetown/armor/chainmail/aalloy : /obj/item/clothing/suit/roguetown/armor/chainmail/paalloy
-	r_hand = /obj/item/rogueweapon/sword/avantyne
+	r_hand = /obj/item/rogueweapon/sword/zizo
 
 	H.energy = H.max_energy
 	H.mind.AddSpell(new /datum/action/cooldown/spell/mending)

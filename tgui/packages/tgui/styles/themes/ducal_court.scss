@@ -1,0 +1,69 @@
+@use 'azure_base' as *;
+
+.theme-ducal_court:root {
+  @include azure-theme((
+    'base':            #10100e,
+    'base-light':      #181510,
+    'base-dark':       #0c0a08,
+    'section':         rgba(23, 21, 18, 0.85),
+    'section-title':   #efe1b8,
+    'text':            #efe1b8,
+    'label':           #b9a376,
+    'accent':          rgba(201, 155, 69, 0.4),
+    'accent-bright':   rgba(233, 196, 120, 0.75),
+    'border':          rgba(201, 155, 69, 0.16),
+    'btn-text':        #ead49b,
+    'btn-selected':    rgba(201, 155, 69, 0.32),
+    'btn-disabled':    #8a7a55,
+    'scrollbar-thumb': rgba(201, 155, 69, 0.45),
+    'glow':            rgba(201, 155, 69, 0.1),
+    'link':            #e9c478,
+    'link-visited':    #d8b160,
+    'link-hover':      #ffe8a8,
+  ), '../assets/azure_default/topbar_red.svg');
+
+  &, .Window, .Layout, .Layout__content, .Window__rest, .Window__content,
+  .Window__contentPadding {
+    background: #090806 !important;
+    background-image: none !important;
+  }
+  .Window__contentPadding {
+    margin: 0;
+    height: 100%;
+  }
+
+  .TitleBar {
+    background-color: #14110c;
+    border-bottom: 2px solid rgba(201, 155, 69, 0.5);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
+  }
+
+  .TitleBar__title {
+    color: #f2dfa9;
+    font-size: 14px;
+    letter-spacing: 2px;
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  }
+
+  .TitleBar__close {
+    color: rgba(242, 223, 169, 0.65);
+
+    &:hover {
+      color: #ffe8a8;
+      background-color: rgba(157, 39, 34, 0.45);
+    }
+  }
+
+  .Section__title {
+    border-bottom: 1px solid rgba(201, 155, 69, 0.4);
+  }
+
+  .Section__titleText {
+    color: #efe1b8;
+  }
+
+  .Button {
+    color: #ead49b;
+  }
+}

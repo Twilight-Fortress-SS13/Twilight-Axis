@@ -73,7 +73,7 @@
 				regenerate_icons()
 #endif
 
-/mob/living/carbon/human/Initialize()
+/mob/living/carbon/human/Initialize(mapload)
 	add_verb(src, /mob/living/proc/lay_down)
 	icon_state = "" //Remove the inherent human icon that is visible on the map editor. We're rendering ourselves limb by limb, having it still be there results in a bug where the basic human icon appears below as south in all directions and generally looks nasty.
 
@@ -96,6 +96,9 @@
 	GLOB.human_list += src
 	unarmed_special = new /datum/special_intent/upper_cut()
 
+	if(npc_archetype)
+		init_npc_archetype()
+
 /mob/living/carbon/human/Login()
 	. = ..()
 	if(!GetComponent(/datum/component/arousal))
@@ -111,7 +114,7 @@
 	switch(rand(1,4))
 		if(1)
 			affecting = get_bodypart(pick(BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
-			chat_message = span_danger("I fall on my [lowertext(affecting.name)]!")
+			chat_message = span_danger("I fall on my [LOWER_TEXT(affecting.name)]!")
 		if(2)
 			affecting = get_bodypart(pick(BODY_ZONE_R_ARM, BODY_ZONE_L_ARM))
 			chat_message = span_danger("I fall on my arm!")
@@ -1016,7 +1019,11 @@
 
 	updateappearance(mutcolor_update = TRUE)
 
-	job = target.job // NOT assigned_role
+	// 9/22 edit : adding "advjob" to whats stolen bc otherwise assassins keep showing up as "poisoner" or whatever on examine.
+	// our examine code doesent allow for fake jobs very well & i cant be bothered to snowflake it so we're gonna do this. this MIGHT
+	// break something..????
+	job = target.job
+	advjob = target.advjob
 	faction = target.faction
 	deathsound = target.deathsound
 	gender = target.gender
@@ -1033,7 +1040,13 @@
 	socks = target.socks
 	has_stubble = target.has_stubble
 	headshot_link = target.headshot_link
-	flavortext = target.flavortext
+	// i dont want NPCs to make you a guy w/ no flavortext
+	if(flavortext)
+		flavortext = target.flavortext
+	if(flavortext_cached)
+		// this might be a bad idea. i dont know.
+		flavortext_cached = target.flavortext_cached
+	copy_descriptors(target)
 
 	var/obj/item/bodypart/head/target_head = target.get_bodypart(BODY_ZONE_HEAD)
 	if(!isnull(target_head))
@@ -1041,6 +1054,13 @@
 		user_head.bodypart_features = target_head.bodypart_features
 
 	regenerate_icons()
+
+
+/mob/living/carbon/human/proc/copy_descriptors(mob/living/carbon/human/target)
+	if(!ishuman(target))
+		return
+	mob_descriptors = target.mob_descriptors?.Copy()
+	custom_descriptors = target.custom_descriptors.Copy()
 
 
 /mob/living/carbon/human/proc/copy_bodyparts(mob/living/carbon/human/target)
@@ -1086,7 +1106,7 @@
 /mob/living/carbon/human/species
 	var/race = null
 
-/mob/living/carbon/human/species/Initialize()
+/mob/living/carbon/human/species/Initialize(mapload)
 	. = ..()
 	if(race)
 		set_species(race)
@@ -1124,8 +1144,9 @@
 /mob/living/carbon/human/update_mobility()
 	. = ..()
 	if(!(mobility_flags & MOBILITY_CANSTAND) && mouth?.spitoutmouth)
-		visible_message(span_warning("[src] spits out [mouth]."))
-		dropItemToGround(mouth, silent = FALSE)
+		if(stat != DEAD)
+			visible_message(span_warning("[src] spits out [mouth]."))
+			dropItemToGround(mouth, silent = FALSE)
 
 /mob/living/carbon/human/Topic(href, href_list)
 	..()

@@ -27,6 +27,7 @@ SUBSYSTEM_DEF(treasury)
 		TAX_CATEGORY_HEADEATER_LEVY = 0.15,
 		TAX_CATEGORY_IMPORT_TARIFF = 0.15,
 		TAX_CATEGORY_EXPORT_DUTY = 0.15,
+		TAX_CATEGORY_RECOVERED_SPOILS = 0.50,
 		TAX_CATEGORY_FINE = 1.0,
 		TAX_CATEGORY_ESTATE_LEVY = 0.15, //TA EDIT
 	)
@@ -126,7 +127,7 @@ SUBSYSTEM_DEF(treasury)
 	var/list/fined_today_names = list()
 	var/fined_today_day = -1
 
-/datum/controller/subsystem/treasury/Initialize()
+/datum/controller/subsystem/treasury/Initialize(mapload)
 	var/roundstart_pop = get_active_player_count()
 	var/seed = STOCKPILE_CROWN_PURCHASE_FLOOR_DEFAULT + rand(500, 1500) + (roundstart_pop * CROWN_PURSE_SEED_PER_PLAYER)
 	royal_custom_threshold = ROYAL_CUSTOM_VOLUME_BASE + (roundstart_pop * ROYAL_CUSTOM_VOLUME_PER_POP)
@@ -186,12 +187,25 @@ SUBSYSTEM_DEF(treasury)
 	if(!discretionary_fund)
 		return
 	var/rural_tax_amount = get_rural_tax_amount()
-	mint(discretionary_fund, rural_tax_amount, "Rural Tax Collection")
+	if(rural_tax_amount <= 0)
+		return
+	mint(discretionary_fund, rural_tax_amount, "Rural Subsidy")
 	record_round_statistic(STATS_RURAL_TAXES_COLLECTED, rural_tax_amount)
 	total_rural_tax += rural_tax_amount
 
+/datum/controller/subsystem/treasury/proc/get_active_producer_count()
+	var/count = 0
+	for(var/mob/living/owner as anything in bank_accounts)
+		if(!owner || !owner.client)
+			continue
+		if(is_producer_job(owner.job))
+			count++
+	return count
+
 /datum/controller/subsystem/treasury/proc/get_rural_tax_amount()
-	return RURAL_TAX
+	var/producers = get_active_producer_count()
+	var/taper = clamp(1.0 - (producers / RURAL_SUBSIDY_REFERENCE_PRODUCERS), 0.0, 1.0)
+	return RURAL_SUBSIDY_FLOOR + round((RURAL_SUBSIDY_BASE - RURAL_SUBSIDY_FLOOR) * taper)
 
 // Mark the cached stewardry market / region / arbitrage
 // View as needing rebuild on next read.
@@ -346,6 +360,10 @@ SUBSYSTEM_DEF(treasury)
 			send_ooc_note("<b>MEISTER:</b> Error: The round is ending. No further fines may be levied.", name = target_name)
 			return FALSE
 		var/mob/living/fine_owner = istype(target, /mob/living) ? target : null
+		if(fine_owner && usr && fine_owner == usr)
+			send_ooc_note("<b>MEISTER:</b> Error: You cannot fine yourself.", name = target_name)
+			log_game("FINE REFUSED: [key_name(usr)] attempted to fine themselves [abs(amt)]m via [source || "unknown"]")
+			return FALSE
 		if(fine_owner && is_tax_exempt(fine_owner, TAX_CATEGORY_FINE))
 			record_tax_exemption(TAX_CATEGORY_FINE, abs(amt))
 			send_ooc_note("<b>MEISTER:</b> Error: By decree, they cannot be fined.", name = target_name)
@@ -516,7 +534,7 @@ SUBSYSTEM_DEF(treasury)
 		mint(burgher_pledge_fund, guild_bonus, "Guild of Arms tribute (Charter of Arms)")
 	record_round_statistic(STATS_PLEDGE_GENERATED, refill + guild_bonus)
 
-/datum/controller/subsystem/treasury/proc/do_export(var/datum/roguestock/D, silent = FALSE)
+/datum/controller/subsystem/treasury/proc/do_export(datum/roguestock/D, silent = FALSE)
 	if(D.stockpile_amount < D.importexport_amt)
 		return FALSE
 	var/amt = D.get_export_price()
@@ -721,6 +739,8 @@ SUBSYSTEM_DEF(treasury)
 			return "Import Tariff"
 		if(TAX_CATEGORY_EXPORT_DUTY)
 			return "Export Duty"
+		if(TAX_CATEGORY_RECOVERED_SPOILS)
+			return "Recovered Spoils"
 		if(TAX_CATEGORY_ESTATE_LEVY) //TA EDIT
 			return "Estate Peasants Levy" //TA EDIT
 		if(TAX_CATEGORY_FINE)
@@ -907,7 +927,7 @@ SUBSYSTEM_DEF(treasury)
 			income += per_tick_flow
 		else if(rate < 0)
 			// Subsidies reach every eligible subject, including charter-protected ones.
-			per_tick_flow = rate * total   // negative total = subsidy out of Purse
+			per_tick_flow = rate * total	// negative total = subsidy out of Purse
 			subsidy += -per_tick_flow
 		by_category += list(list(
 			"category" = category,

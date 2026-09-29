@@ -69,6 +69,8 @@
 	)
 	var/is_public = FALSE // Whether it is a public access vendor.
 	var/extra_fee = 0 // Public-tier Porters/Gnomes margin tacked onto base price. Meant to make publicface very unprofitable until Gnomes are unlocked and the margin flows to the Merchant Fund.
+	/// Icon file used for the vendor-merch overlay in update_icon(). Separate from icon so subtypes can use a different base sprite without breaking the overlay.
+	var/overlay_icon = 'icons/roguetown/misc/machines.dmi'
 	/// Running tally of Crown import tariff actually collected via this specific machine.
 	var/tariff_collected_here = 0
 	/// Running tally of Crown import tariff that WOULD have been owed but was dodged
@@ -166,7 +168,7 @@
 	)
 	categories_gamer = list()
 
-/obj/structure/roguemachine/goldface/Initialize()
+/obj/structure/roguemachine/goldface/Initialize(mapload)
 	. = ..()
 	update_icon()
 
@@ -216,7 +218,7 @@
 		set_light(0)
 		return
 	set_light(1, 1, 1, l_color = "#1b7bf1")
-	add_overlay(mutable_appearance('icons/roguetown/misc/machines.dmi', "vendor-merch")) // TA EDIT
+	add_overlay(mutable_appearance(overlay_icon, "vendor-merch"))
 
 
 /obj/structure/roguemachine/goldface/attackby(obj/item/P, mob/user, params)
@@ -330,7 +332,7 @@
 	var/total_matches = 0
 	var/tariff_active = !is_tax_exempt(H)
 	if(search_query != "")
-		var/needle = lowertext(search_query)
+		var/needle = LOWER_TEXT(search_query)
 		var/list/matches = list()
 		for(var/pack in SSmerchant.supply_packs)
 			var/datum/supply_pack/PA = SSmerchant.supply_packs[pack]
@@ -338,7 +340,7 @@
 				continue
 			if(!(PA.group in all_cats))
 				continue
-			if(findtext(lowertext(PA.name), needle) || findtext(lowertext(PA.group), needle))
+			if(findtext(LOWER_TEXT(PA.name), needle) || findtext(LOWER_TEXT(PA.group), needle))
 				matches += PA
 		total_matches = length(matches)
 		var/shown = 0
@@ -1085,7 +1087,7 @@
 	set_light(0)
 	return ..()
 
-/obj/structure/roguemachine/goldface/Initialize()
+/obj/structure/roguemachine/goldface/Initialize(mapload)
 	. = ..()
 	update_icon()
 

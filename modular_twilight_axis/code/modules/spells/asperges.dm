@@ -232,11 +232,11 @@
 	if(!ishuman(caster))
 		return FALSE
 	if(!ishuman(new_convert))
-		to_chat(caster, span_info("I can only convert people; anything simpler cannot properly worship PSYDON."))
+		to_chat(caster, span_info("I can only convert people; anything simpler cannot properly worship Psydon."))
 		return FALSE
 
 	if (!victim.Adjacent(caster))
-		to_chat(caster, span_info("I need to be closer to [victim] to guide them to PSYDON's path."))
+		to_chat(caster, span_info("I need to be closer to [victim] to guide them to Psydon's path."))
 		return FALSE
 
 	if(!new_convert.client || HAS_TRAIT(new_convert, TRAIT_RECENT_CONVERT) || HAS_TRAIT(new_convert, TRAIT_UNCONVERTIBLE))
@@ -250,15 +250,15 @@
 	if(alert(caster, "Do you wish to attempt to convert [new_convert] to PSYDON? THIS IS NOT SOMETHING TO BE DONE LIGHTLY. READ THE SPELL DESCRIPTION IF YOU DO NOT KNOW WHAT THIS DOES.", "FOCUS THE RITE", "Yes", "No") != "Yes")
 		return FALSE
 
-	visible_message(span_info("[src] whispers rapid prayers, performing a rite to bring [new_convert] before PSYDON's gaze..."), span_info("You whisper prayers to PSYDON, casting His gaze upon [new_convert]..."))
+	visible_message(span_info("[src] whispers rapid prayers, performing a rite to bring [new_convert] before Psydon's gaze..."), span_info("You whisper prayers to PSYDON, casting His gaze upon [new_convert]..."))
 
 	var/convert_message = "[caster.real_name] is trying to guide you onto PSYDON's path. Will you embrace Him, and forswear any lesser gods'? THIS WILL CHANGE YOUR PATRON."
 
 	var/list/result = list(new_convert)
-	if(istype(caster.patron, new_convert.patron.type))
-		result -= new_convert
-	else
-		showCandidatePollWindow(new_convert, 10 SECONDS, convert_message, result, null, world.time, flashwindow = FALSE)
+	if(istype(new_convert.patron, /datum/patron/old_god))
+		to_chat(caster, span_info("[new_convert] already walks PSYDON's path."))
+		return FALSE
+	showCandidatePollWindow(new_convert, 10 SECONDS, convert_message, result, null, world.time, flashwindow = FALSE)
 
 	if(!do_mob(caster, new_convert, 10 SECONDS, can_move = FALSE) || caster.cmode || new_convert.cmode)
 		to_chat(caster, span_info("I lose focus! The rite fails."))

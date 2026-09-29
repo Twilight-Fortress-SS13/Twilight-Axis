@@ -16,6 +16,7 @@
 	alternate_worn_layer = NECK_LAYER
 	no_loot_taint = TRUE
 	var/overarmor
+	materia = list(/datum/materia_aspect/solar) // in absence of other traits, they're valuable
 
 /obj/item/clothing/ring/MiddleClick(mob/user, params)
 	. = ..()
@@ -29,18 +30,19 @@
 	user.update_inv_gloves()
 
 /obj/item/clothing/ring/get_mechanics_examine(mob/user)
-    . = ..()
-    . += span_info("Middle click to adjust whether the ring is layered above or below your character's sleeves. This is an experimental feature, and might require some fidgeting to get working.")
+	. = ..()
+	. += span_info("Middle click to adjust whether the ring is layered above or below your character's sleeves. This is an experimental feature, and might require some fidgeting to get working.")
 
 /obj/item/clothing/ring/aalloy
 	name = "decrepit ring"
-	desc = "A coil of frayed bronze."
+	desc = "A coil of rotted metal."
 	icon_state = "ring_a"
 
 /obj/item/clothing/ring/bronze
 	name = "bronze ring"
 	desc = "A ring of bronzen resiliance."
 	icon_state = "ring_b"
+	materia = list(/datum/materia_aspect/motion)
 
 /obj/item/clothing/ring/silver
 	name = "silver ring"
@@ -48,6 +50,7 @@
 	icon_state = "ring_s"
 	is_silver = TRUE
 	is_lesser_silver = TRUE
+	materia = list(/datum/materia_aspect/lunar)
 
 /obj/item/clothing/ring/silver/cleric
 	name = "clerical silver ring"
@@ -64,6 +67,7 @@
 	name = "blacksteel ring"
 	desc = "A ring of mythical blacksteel."
 	icon_state = "ring_bs"
+	materia = list(/datum/materia_aspect/defense)
 
 /obj/item/clothing/ring/jade
 	name = "jade ring"
@@ -174,10 +178,10 @@
 		magcom.ClearFromParent()
 
 /obj/item/clothing/ring/active/nomag/get_mechanics_examine(mob/user)
-    . = ..()
-    . += span_info("Right click to activate the ring's ward, which provides temporary invulnerability against all direct magical attacks for thirty seconds.")
-    . += span_info("Wearers with unholy ailments are also rendered invulnerable to being sundered by silver weaponry, for the ward's duration.")
-    . += span_info("Once the ring's ward is exhausted, it'll require ten minutes to recharge enough power for another activation.")
+	. = ..()
+	. += span_info("Right click to activate the ring's ward, which provides temporary invulnerability against all direct magical attacks for thirty seconds.")
+	. += span_info("Wearers with unholy ailments are also rendered invulnerable to being sundered by silver weaponry, for the ward's duration.")
+	. += span_info("Once the ring's ward is exhausted, it'll require ten minutes to recharge enough power for another activation.")
 
 //gold rings
 /obj/item/clothing/ring/emerald
@@ -226,9 +230,9 @@
 	var/tallow_color = "red"
 
 /obj/item/clothing/ring/signet/get_mechanics_examine(mob/user)
-    . = ..()
-    . += span_info("Certain letters can be folded and stamped with the ring, which proves minor financial benefits.")
-    . += span_info("Pressed upon a quest scroll by a Steward, Clerk, or Grand Duke, the ring stamps it LEVY EXEMPT - waiving the Crown's Contract Levy on its reward.")
+	. = ..()
+	. += span_info("Certain letters can be folded and stamped with the ring, which proves minor financial benefits.")
+	. += span_info("Pressed upon a quest scroll by a Steward, Clerk, or Grand Duke, the ring stamps it LEVY EXEMPT - waiving the Crown's Contract Levy on its reward.")
 
 /obj/item/clothing/ring/signet/attack_right(mob/user)
 	. = ..()
@@ -258,9 +262,9 @@
 	is_silver = TRUE
 
 /obj/item/clothing/ring/signet/psy/get_mechanics_examine(mob/user)
-    . = ..()
-    . += span_info("Stamping a folded ACCUSATION or CONFESSION will increase the amount of MARQUES it'll reward, once sent through the HERMES.")
-    . += span_info("Packing an INDEXER into an ACCUSATION or CONFESSION before folding-and-stamping it will further amplify this financial bonus.")
+	. = ..()
+	. += span_info("Stamping a folded ACCUSATION or CONFESSION will increase the amount of MARQUES it'll reward, once sent through the HERMES.")
+	. += span_info("Packing an INDEXER into an ACCUSATION or CONFESSION before folding-and-stamping it will further amplify this financial bonus.")
 
 /obj/item/clothing/ring/signet/psy/g
 	name = "psydonian gold signet ring"
@@ -357,9 +361,9 @@
 		return
 
 /obj/item/clothing/ring/band/get_mechanics_examine(mob/user)
-    . = ..()
-    . += span_info("Right-click to add a custom name and description to the weddingband.")
-    . += span_info("If your character is meant to be already married to someone else, offer the ring to them while they are offering theirs to you. This will mark you as spouses, but will not change your names.")
+	. = ..()
+	. += span_info("Right-click to add a custom name and description to the weddingband.")
+	. += span_info("If your character is meant to be already married to someone else, offer the ring to them while they are offering theirs to you. This will mark you as spouses, but will not change your names.")
 
 /obj/item/clothing/ring/band/gold
 	name = "gold weddingband"
@@ -373,7 +377,7 @@
 
 /obj/item/clothing/ring/band/aalloy
 	name = "decrepit weddingband"
-	desc = "A decaying weddingband of tarnished bronze, ornately decorated with the engravings of a lover's name."
+	desc = "A decaying weddingband of rotted metal, ornately decorated with the engravings of a lover's name."
 	icon_state = "a_ring_wedding"
 	color = "#bb9696"
 	anvilrepair = null
@@ -384,7 +388,7 @@
 	icon_state = "a_ring_wedding"
 
 /////////////////////////
-// Blacksteel Rings    //
+// Blacksteel Rings	//
 /////////////////////////
 
 /obj/item/clothing/ring/emeraldbs

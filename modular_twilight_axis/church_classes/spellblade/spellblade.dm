@@ -53,21 +53,21 @@
 /datum/outfit/job/roguetown/spellblade/pre_equip(mob/living/carbon/human/H)
 	..()
 
-	H.cmode_music = 'modular_twilight_axis/church_classes/sound/cmode_spellblade.ogg'
+	H.cmode_music = sound("modular_twilight_axis/church_classes/sound/cmode_spellblade.ogg")
 	ADD_TRAIT(H, TRAIT_CLERGY_TA, TRAIT_GENERIC)
 	REMOVE_TRAIT(H, TRAIT_RITUALIST, JOB_TRAIT)
 
 	if(H.mind)
 		SStreasury.give_money_account(ECONOMIC_LOWER_MIDDLE_CLASS, H, "Church Funding.")
 
-	var/obj/effect/proc_holder/spell/targeted/spellblade_select_weapon/select_weapon 
+	var/obj/effect/proc_holder/spell/targeted/spellblade_select_weapon/select_weapon
 	select_weapon = new /obj/effect/proc_holder/spell/targeted/spellblade_select_weapon
 
 	var/obj/effect/proc_holder/spell/invoked/spellblade_summon_weapon/summon_weapon
 	summon_weapon = new /obj/effect/proc_holder/spell/invoked/spellblade_summon_weapon
 	summon_weapon.weapon_select = select_weapon
 	select_weapon.summon_weapon = summon_weapon
-	
+
 	H.AddSpell(select_weapon)
 	H.AddSpell(summon_weapon)
 	H.AddSpell(new /obj/effect/proc_holder/spell/self/noctite_fortify)

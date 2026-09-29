@@ -54,7 +54,7 @@
 			. += span_info("- [item]")
 
 
-/obj/machinery/light/rogue/smelter/Initialize()
+/obj/machinery/light/rogue/smelter/Initialize(mapload)
 	. = ..()
 	smelt_sfx = pick('sound/misc/smelter_sound1.ogg', 'sound/misc/smelter_sound2.ogg', 'sound/misc/smelter_sound3.ogg', 'sound/misc/smelter_sound4.ogg')
 	if(prob(10))
@@ -126,7 +126,10 @@
 
 	if(attacking_item.firefuel)
 		. = ..()
-		return
+		// TA EDIT START
+		if(!attacking_item || QDELING(attacking_item) || attacking_item.loc != user) //Tries to use the item as fuel. ..() returns true even if it does get consumed so we have to loc check.
+			return
+		// TA EDIT END
 
 	if(attacking_item.smeltresult)
 		add_item(attacking_item, user) // Adds the item to the smelter's contained_items list, if it can be smelted.
@@ -191,13 +194,13 @@
 			contained_items[smelting_item] = 6 // Guarantees a return of 6 no matter how extra experience past 3000 you have.
 		/*
 		RANDOMLY PICKED NUMBER ACCORDING TO SMELTER SKILL:
-			NO SKILL: 		between 10 and 30
-			NOVICE:	 		between 25 and 30
-			APPRENTICE:	 	between 40 and 50
-			JOURNEYMAN: 	between 55 and 75
-			EXPERT: 		between 70 and 100
-			MASTER: 		between 85 and 125
-			LEGENDARY: 		between 100 and 150
+			NO SKILL:		between 10 and 30
+			NOVICE:				between 25 and 30
+			APPRENTICE:			between 40 and 50
+			JOURNEYMAN:	between 55 and 75
+			EXPERT:		between 70 and 100
+			MASTER:		between 85 and 125
+			LEGENDARY:		between 100 and 150
 
 		PICKED NUMBER GETS DIVIDED BY 25 AND ROUNDED DOWN TO CLOSEST INTEGER, +1.
 		RESULT DETERMINES QUALITY OF BAR. SEE code/__DEFINES/skills.dm
@@ -244,11 +247,14 @@
 		if(item.smeltresult)
 			// disabled for now, balance reasons
 			// while(item.smelt_bar_num)
-			// 	item.smelt_bar_num--
-			// 	var/obj/item/result = smelt_into(item.smeltresult, contained_items[item], item)
-			// 	contained_items += result
+			//	item.smelt_bar_num--
+			//	var/obj/item/result = smelt_into(item.smeltresult, contained_items[item], item)
+			//	contained_items += result
 			// contained_items -= item
 			var/obj/item/result = smelt_into(item.smeltresult, contained_items[item], item)
+			var/datum/component/unsellable/unsellable = item.GetComponent(/datum/component/unsellable)
+			if(unsellable)
+				result.AddComponent(/datum/component/unsellable, unsellable.reason) // no money laundering with just a forge. you want to sell, make something fancy out of it
 			contained_items -= item
 			contained_items += result
 			qdel(item)
@@ -297,7 +303,7 @@
 			bronzealloy = bronzealloy + 2
 		if(item.smeltresult == /obj/item/ingot/aaslag)
 			purifiedalloy = purifiedalloy + 3
-		if(item.smeltresult == /obj/item/ingot/gold)
+		if((item.smeltresult == /obj/item/ingot/gold) || (item.smeltresult == /obj/item/goldslag))
 			purifiedalloy = purifiedalloy + 2
 		if(item.smeltresult == /obj/item/ingot/silver)
 			blacksteelalloy = blacksteelalloy + 1
@@ -322,21 +328,29 @@
 		// The smelting quality of all ores added together, divided by the number of ores, and then rounded to the lowest integer (this isn't done until after the for loop)
 		var/floor_mean_quality = SMELTERY_LEVEL_SPOIL
 		var/ore_deleted = 0
+		var/datum/component/unsellable/is_unsellable
 		for(var/obj/item/item in contained_items)
 			floor_mean_quality += contained_items[item]
 			ore_deleted += 1
 			if(counts_for_economy())
 				record_material_flow(MATERIAL_FLOW_OUT, MATERIAL_SOURCE_SMELTING, item.type, 1)
 			contained_items -= item
+			if(!is_unsellable)
+				is_unsellable = GetComponent(item, /datum/component/unsellable) // one alchemical apple unsellables the bunch
 			qdel(item)
 		floor_mean_quality = floor(floor_mean_quality/ore_deleted)
 		for(var/i in 1 to max_contained_items)
 			var/obj/item/result = smelt_into(alloy, floor_mean_quality)
+			if(is_unsellable)
+				result.AddComponent(/datum/component/unsellable, is_unsellable.reason) // alloying with alchemical ores/bars also doesn't work to money launder. nice try though!
 			contained_items += result
 	else
 		for(var/obj/item/item in contained_items)
 			if(item.smeltresult)
 				var/obj/item/result = smelt_into(item.smeltresult, contained_items[item], item)
+				var/datum/component/unsellable/unsellable = item.GetComponent(/datum/component/unsellable)
+				if(unsellable)
+					result.AddComponent(/datum/component/unsellable, unsellable.reason) // no money laundering with just a forge. you want to sell, make something fancy out of it
 				contained_items -= item
 				contained_items += result
 				qdel(item)
@@ -374,6 +388,7 @@
 		alloy = null
 
 	if(alloy)
+		var/datum/component/unsellable/is_unsellable
 		// The smelting quality of all ores added together, divided by the number of ores, and then rounded to the lowest integer (this isn't done until after the for loop)
 		var/floor_mean_quality = SMELTERY_LEVEL_SPOIL
 		var/ore_deleted = 0
@@ -383,15 +398,22 @@
 			if(counts_for_economy())
 				record_material_flow(MATERIAL_FLOW_OUT, MATERIAL_SOURCE_SMELTING, item.type, 1)
 			contained_items -= item
+			if(!is_unsellable)
+				is_unsellable = GetComponent(item, /datum/component/unsellable) // one alchemical apple unsellables the bunch
 			qdel(item)
 		floor_mean_quality = floor(floor_mean_quality/ore_deleted)
 		for(var/i in 1 to max_contained_items)
 			var/obj/item/result = smelt_into(alloy, floor_mean_quality)
+			if(is_unsellable)
+				result.AddComponent(/datum/component/unsellable, is_unsellable.reason) // alloying with alchemical ores/bars also doesn't work to money launder. nice try though!
 			contained_items += result
 	else
 		for(var/obj/item/item in contained_items)
 			if(item.smeltresult)
 				var/obj/item/result = smelt_into(item.smeltresult, contained_items[item], item)
+				var/datum/component/unsellable/unsellable = item.GetComponent(/datum/component/unsellable)
+				if(unsellable)
+					result.AddComponent(/datum/component/unsellable, unsellable.reason) // no money laundering with just a forge. you want to sell, make something fancy out of it
 				contained_items -= item
 				contained_items += result
 				qdel(item)

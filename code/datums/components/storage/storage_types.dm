@@ -40,6 +40,7 @@
 	screen_max_columns = 3
 	max_w_class = WEIGHT_CLASS_HUGE
 	not_while_equipped = TRUE
+	allow_big_nesting = TRUE
 
 /datum/component/storage/concrete/roguetown/messkit/New(datum/P, ...)
 	. = ..()
@@ -55,6 +56,10 @@
 	screen_max_columns = 1
 	max_w_class = WEIGHT_CLASS_NORMAL
 	not_while_equipped = FALSE
+
+/datum/component/storage/concrete/roguetown/coin_pouch/New(list/raw_args)
+	. = ..()
+	cant_hold = typecacheof(list(/obj/item/smallDelivery))
 
 /datum/component/storage/concrete/roguetown/coin_pouch/cloth
 	screen_max_rows = 2
@@ -75,6 +80,7 @@
 	allow_dump_out = TRUE
 	click_gather = TRUE
 	attack_hand_interact = FALSE
+	insert_verb = "slide"
 	insert_preposition = "on"
 	rustle_sound = 'sound/items/gems (1).ogg'
 
@@ -127,6 +133,17 @@
 	allow_quick_gather = FALSE
 	allow_quick_empty = FALSE
 
+/datum/component/storage/concrete/roguetown/trans
+	max_w_class = WEIGHT_CLASS_TINY
+	screen_max_rows = 5
+	screen_max_columns = 2
+	intercept_parent_attack = FALSE
+	intercept_parent_mousedrop = TRUE
+
+/datum/component/storage/concrete/roguetown/trans/New(datum/P, ...)
+	. = ..()
+	can_hold = typecacheof(list(/obj/item/alch/catalyst))
+
 /datum/component/storage/concrete/grid/meatsack // our rucksack is different from
 // Vanderlin so we use a separate one for meatsack
 	max_w_class = WEIGHT_CLASS_NORMAL
@@ -174,7 +191,8 @@
 		/obj/item/herbseed,
 		/obj/item/reagent_containers/food/snacks/grown/manabloom,
 		/obj/item/reagent_containers/food/snacks/grown/berries/rogue,
-		/obj/item/ash
+		/obj/item/ash,
+		/obj/item/reagent_containers/food/snacks/grown/rogue/fyritius
 		))
 
 /datum/component/storage/concrete/roguetown/saddle
@@ -183,6 +201,7 @@
 	max_w_class = WEIGHT_CLASS_NORMAL
 
 /datum/component/storage/concrete/tray
+	insert_verb = "place"
 	insert_preposition = "on"
 	max_w_class = WEIGHT_CLASS_NORMAL
 	screen_max_rows = 3
@@ -191,7 +210,9 @@
 	allow_quick_empty = TRUE
 	allow_dump_out = TRUE
 	dump_time = 40
+	click_gather = TRUE
 	collection_mode = COLLECT_SAME
+	does_not_spill = TRUE
 
 /datum/component/storage/concrete/tray/spill_contents(obj/A)
 	if (A.throwing)
@@ -199,7 +220,7 @@
 
 /datum/component/storage/concrete/tray/New(datum/P, ...)
 	. = ..()
-	can_hold = typecacheof(list(/obj/item/cooking, /obj/item/reagent_containers/glass/bowl, /obj/item/reagent_containers/glass/cup, /obj/item/kitchen, /obj/item/reagent_containers/food, /obj/item/reagent_containers/glass/bottle))
+	can_hold = typecacheof(list(/obj/item/cooking, /obj/item/reagent_containers/glass/bowl, /obj/item/reagent_containers/glass/cup, /obj/item/kitchen, /obj/item/reagent_containers/food, /obj/item/reagent_containers/glass/bottle, /obj/item/seeds))
 
 /datum/component/storage/concrete/grid/headhook
 	max_w_class = WEIGHT_CLASS_NORMAL
@@ -289,3 +310,36 @@
 	max_w_class = WEIGHT_CLASS_HUGE
 	screen_max_rows = 8
 	screen_max_columns = 4
+
+/datum/component/storage/concrete/grid/food/cooking
+	grid = TRUE
+	max_w_class = WEIGHT_CLASS_HUGE
+
+/datum/component/storage/concrete/grid/food/cooking/New(datum/P, ...)
+	. = ..()
+	set_holdable(list(
+		/obj/item/reagent_containers/food,
+		/obj/item/natural,
+		/obj/item/alch,
+		/obj/item/reagent_containers/powder,
+		/obj/item/organ,
+		/obj/item/seeds,
+		))
+
+/datum/component/storage/concrete/grid/food/cooking/pan
+	screen_max_rows = 2
+	screen_max_columns = 2
+	insert_verb = "place"
+	insert_preposition = "on"
+
+/datum/component/storage/concrete/grid/food/cooking/oven
+	screen_max_rows = 2
+	screen_max_columns = 3
+	insert_verb = "slide"
+	insert_preposition = "in"
+
+/datum/component/storage/concrete/grid/food/cooking/pot
+	screen_max_rows = 3
+	screen_max_columns = 3
+	insert_verb = "put"
+	insert_preposition = "in"

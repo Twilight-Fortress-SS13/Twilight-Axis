@@ -15,7 +15,7 @@ type Layer = {
   pixels: Record<string, string>;
 };
 
-export const CanvasPainter = (props) => {
+export const CanvasPainter = () => {
   const { act, data } = useBackend<Data>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const baseImgRef = useRef<HTMLImageElement | null>(null);
@@ -185,7 +185,7 @@ export const CanvasPainter = (props) => {
         const g = imgData[idx + 1];
         const b = imgData[idx + 2];
 
-        const colorHex = '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
+        const colorHex = `#${[r, g, b].map(v => v.toString(16).padStart(2, '0')).join('')}`;
 
         let colorIdx = palette.indexOf(colorHex);
         if (colorIdx === -1) {

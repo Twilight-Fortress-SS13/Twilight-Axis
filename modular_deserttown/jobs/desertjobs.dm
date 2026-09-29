@@ -131,27 +131,27 @@
 		/obj/effect/proc_holder/spell/self/convertrole/guard,
 		/obj/effect/proc_holder/spell/self/grant_nobility,
 		)
-		cmode_music = 'sound/music/combat_desert2.ogg'
+		cmode_music = sound("sound/music/combat_desert2.ogg")
 	..()
 
 /datum/job/roguetown/prince/after_spawn(mob/living/L, mob/M, latejoin = TRUE)//
 	if(SSmapping.config.map_name == "Desert Town")
-		cmode_music = 'sound/music/combat_desert2.ogg'
+		cmode_music = sound("sound/music/combat_desert2.ogg")
 	..()
 
 /datum/job/roguetown/councillor/after_spawn(mob/living/L, mob/M, latejoin = TRUE)//
 	if(SSmapping.config.map_name == "Desert Town")
-		cmode_music = 'sound/music/combat_desert2.ogg'
+		cmode_music = sound("sound/music/combat_desert2.ogg")
 	..()
 
 /datum/job/roguetown/hand/after_spawn(mob/living/L, mob/M, latejoin = TRUE)//
 	if(SSmapping.config.map_name == "Desert Town")
-		cmode_music = 'sound/music/combat_desert2.ogg'
+		cmode_music = sound("sound/music/combat_desert2.ogg")
 	..()
 
 /datum/job/roguetown/squire/after_spawn(mob/living/L, mob/M, latejoin = TRUE)//
 	if(SSmapping.config.map_name == "Desert Town")
-		cmode_music = 'sound/music/combat_desert2.ogg'
+		cmode_music = sound("sound/music/combat_desert2.ogg")
 	..()
 
 // СПЕЛЛ КОНВЕРТА В РАБА

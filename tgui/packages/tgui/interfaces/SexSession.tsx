@@ -150,9 +150,26 @@ export const SexSession = () => {
                       inline
                       compact
                       color="transparent"
+                      onClick={() => act('toggle_subtle')}
+                    >
+                      {data.doing_subtly ? 'DOING SUBTLY' : 'DOING VISIBLY'}
+                    </Button>
+                    <Button
+                      inline
+                      compact
+                      color="transparent"
                       onClick={() => act('toggle_finished')}
                     >
                       {finishConditionText}
+                    </Button>
+                    {' | '}
+                    <Button
+                      inline
+                      compact
+                      color="transparent"
+                      onClick={() => act('toggle_freeuse')}
+                    >
+                      {data.freeuse ? 'FREEUSE ON' : 'FREEUSE OFF'}
                     </Button>
                     {!!data.has_knotted_penis && (
                       <>

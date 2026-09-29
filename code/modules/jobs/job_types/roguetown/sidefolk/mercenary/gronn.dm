@@ -6,7 +6,7 @@
 	outfit = /datum/outfit/job/roguetown/mercenary/gronn
 	class_select_category = CLASS_CAT_GRONN
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
-	cmode_music = 'sound/music/combat_vagarian.ogg'
+	cmode_music = sound("sound/music/combat_vagarian.ogg")
 	subclass_languages = list(/datum/language/gronnic)
 	extra_context = "This subclass has 2 loadouts with various stats, skills & equipment."
 	subclass_skills = list(
@@ -145,7 +145,7 @@
 	class_select_category = CLASS_CAT_GRONN
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_BULWARK)
 	traits_applied = list(TRAIT_HEAVYARMOR)
-	cmode_music = 'sound/music/combat_vagarian.ogg'
+	cmode_music = sound("sound/music/combat_vagarian.ogg")
 	subclass_languages = list(/datum/language/gronnic)
 	subclass_stats = list(
 		STATKEY_WIL = 3, //People see big numbers and start shitting their pants, but their weighted stats are 7 and it's limited to one, singular slot. This is fine.

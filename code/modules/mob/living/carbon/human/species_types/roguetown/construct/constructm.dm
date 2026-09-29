@@ -73,6 +73,8 @@
 		/datum/customizer/organ/penis/anthro,
 		/datum/customizer/organ/breasts/human,
 		/datum/customizer/organ/vagina/human_anthro,
+		/datum/customizer/bodypart_feature/pubes,
+		/datum/customizer/bodypart_feature/pits,
 		)
 	body_marking_sets = list(
 		/datum/body_marking_set/none,
@@ -316,18 +318,18 @@
 		var/obj/item/natural/stone/S = I
 		var/pow = S.magic_power + 2
 		var/brute = M.getBruteLoss()
-		var/fire  = M.getFireLoss()
+		var/fire	= M.getFireLoss()
 		var/MAX_DMG = 200
 		var/MULT = 5
 		// Normalize damage
 		var/brute_ratio = clamp(brute / MAX_DMG, 0, 1)
-		var/fire_ratio  = clamp(fire  / MAX_DMG, 0, 1)
+		var/fire_ratio	= clamp(fire	/ MAX_DMG, 0, 1)
 		// Linear 100% to 0% (min 1) effectiveness ratio
 		var/brute_factor = 1 - brute_ratio
-		var/fire_factor  = 1 - fire_ratio
+		var/fire_factor	= 1 - fire_ratio
 		// Final healing
 		var/brute_heal = max(1, round(pow * MULT * brute_factor))
-		var/fire_heal  = max(1, round(pow * MULT * fire_factor))
+		var/fire_heal	= max(1, round(pow * MULT * fire_factor))
 		M.energy_add(5 + (S.magic_power * 10))
 		M.adjustBruteLoss(-brute_heal)
 		M.adjustFireLoss(-fire_heal)
@@ -349,25 +351,22 @@
 		return TRUE
 
 	// === SCRAP ===
-	if(I.type == /obj/item/scrap)
+	if(I.type == /obj/item/scrap) // TA EDIT START
 		var/obj/item/scrap/L = I
 		if(user == M)
 			M.visible_message(
-				span_notice("[M] blows arcyne steam at [L], combusting it into usable slag!"),
-				span_notice("I puff arcyne steam at [L], combusting it into usable slag!")
+				span_notice("[M] crushes [L] between their jaws, feeding the fragments into their frame."),
+				span_notice("I crush [L] between my jaws, feeding the fragments into my frame.")
 			)
 		else
 			M.visible_message(
-				span_notice("[user] offers [L] to [M]'s mouth, and they blow arcyne steam at it!"),
-				span_notice("I puff arcyne steam at [L], combusting it into usable slag!")
+				span_notice("[user] offers [L] to [M], who crushes it between their jaws."),
+				span_notice("[user] offers [L] to me. I crush it between my jaws and feed the fragments into my frame.")
 			)
-		new /obj/effect/particle_effect/thick_steam(get_turf(user))
-		playsound(user.loc, 'sound/items/steamrelease.ogg', 50, FALSE, -1)
-		sleep(4)
-		playsound(user.loc, 'sound/magic/fireball.ogg', 30)
+		playsound(M.loc, 'sound/combat/hits/onmetal/sheet (1).ogg', 50, TRUE)
+		M.energy_add(5)
 		qdel(I)
-		new /obj/item/rogueore/iron(get_turf(user))
-		return TRUE
+		return TRUE // TA EDIT END
 
 	// === WOOD ===
 	if(I.type == /obj/item/grown/log/tree/small)
@@ -766,7 +765,7 @@
 	density = FALSE
 	layer = MOB_LAYER+1
 
-/obj/effect/particle_effect/thick_steam/Initialize()
+/obj/effect/particle_effect/thick_steam/Initialize(mapload)
 	. = ..()
 	QDEL_IN(src, 20)
 

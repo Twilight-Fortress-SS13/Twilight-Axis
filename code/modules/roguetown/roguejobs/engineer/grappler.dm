@@ -31,6 +31,7 @@ Reel teleports the attached atom to the grabbed turf.
 	var/list/obj_to_destroy = list()
 	grid_height = 32
 	grid_width = 64
+	materia = list(/datum/materia_aspect/motion)
 
 /obj/item/grapplinghook/Initialize(mapload)
 	. = ..()

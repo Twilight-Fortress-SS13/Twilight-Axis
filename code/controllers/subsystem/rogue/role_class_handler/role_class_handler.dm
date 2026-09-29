@@ -55,7 +55,7 @@ SUBSYSTEM_DEF(role_class_handler)
 /*
 	We init and build the ass lists
 */
-/datum/controller/subsystem/role_class_handler/Initialize()
+/datum/controller/subsystem/role_class_handler/Initialize(mapload)
 	build_category_lists()
 
 	initialized = TRUE
@@ -183,6 +183,10 @@ SUBSYSTEM_DEF(role_class_handler)
 	if(!RT_JOB && H.mind?.assigned_role)
 		job_title = H.mind.assigned_role
 		RT_JOB = SSjob.GetJob(job_title)
+	if(!RT_JOB && !advclass_rolls_override) // TA EDIT START
+		return
+	if(!advclass_rolls_override && !length(RT_JOB.advclass_cat_rolls) && !length(RT_JOB.job_subclasses))
+		return // TA EDIT END
 	if(!register_id)
 		if(job_title == "Towner")
 			register_id = "towner"
@@ -232,8 +236,10 @@ SUBSYSTEM_DEF(role_class_handler)
 			message_admins("ROLE CLASS HANDLER: Could not resolve job for [H.ckey] ([H.real_name]); H.job=[H.job], assigned_role=[assigned_role]. Skipping subclass setup.")
 			qdel(XTRA_MEATY)
 			return
-		if(length(RT_JOB.advclass_cat_rolls))
+		if(LAZYLEN(RT_JOB.advclass_cat_rolls))
 			XTRA_MEATY.class_cat_alloc_attempts = RT_JOB.advclass_cat_rolls
+		else // no advclasses here sire
+			return
 
 		//if(RT_JOB.PQ_boost_divider)
 			//XTRA_MEATY.PQ_boost_divider = RT_JOB.PQ_boost_divider
@@ -304,7 +310,7 @@ SUBSYSTEM_DEF(role_class_handler)
 				var/datum/class_select_handler/found_menu = class_select_handlers[HANDLER]
 
 				if(target_datum in found_menu.rolled_classes) // We found the target datum in one of the classes they rolled aka in the list of options they got visible,
-					found_menu.rolled_class_is_full(target_datum) //  inform the datum of its error.
+					found_menu.rolled_class_is_full(target_datum) //	inform the datum of its error.
 
 /datum/controller/subsystem/role_class_handler/proc/get_advclass_by_name(advclass_name)
 	for(var/category in sorted_class_categories)

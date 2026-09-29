@@ -39,7 +39,7 @@
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson
 	armor = /obj/item/clothing/suit/roguetown/shirt/robe/mage
 	belt = /obj/item/storage/belt/rogue/leather
-	beltr = /obj/item/reagent_containers/glass/bottle/rogue/manapot
+	beltr = /obj/item/storage/magebag
 	neck = /obj/item/storage/belt/rogue/pouch/coins/poor
 	beltl = /obj/item/rogueweapon/huntingknife
 	backl = /obj/item/storage/backpack/rogue/satchel
@@ -48,16 +48,83 @@
 		backr = choose_implement(H, "lesser")
 		backpack_contents = list(
 			/obj/item/rogueweapon/spellbook = 1,
-			/obj/item/chalk = 1
+			/obj/item/chalk = 1,
+			/obj/item/reagent_containers/glass/bottle/rogue/manapot = 1
 			)
 	backpack_contents |= list(
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		)
+	H.cmode_music = sound("sound/music/cmode/adventurer/combat_outlander4.ogg")
+	switch(H.patron?.type)
+		if(/datum/patron/inhumen/zizo)
+			H.cmode_music = sound("sound/music/combat_heretic.ogg")
+
+/datum/advclass/mage/alchemist
+	name = "Alchemist"
+	tutorial = "You are an alchemist of the road, traveling the world in search of rare reagents, forgotten recipes, \
+	and opportunities to put your craft to the test. You trade in potions, powders, and peculiar concoctions, turning \
+	the spoils of your adventures into something useful. Every monster, ruin, and strange plant might be the key \
+	ingredient to your next creation. Just be careful what you mix together. Some things have a tendency to explode."
+	outfit = /datum/outfit/job/roguetown/adventurer/alchemist
+	traits_applied = list(TRAIT_ALCHEMY_EXPERT,TRAIT_SEEDKNOW, TRAIT_ARCYNE)
+	subclass_stats = list(
+		STATKEY_INT = 3,
+		STATKEY_PER = 3,
+		STATKEY_WIL = 1
+	)
+	age_mod = /datum/class_age_mod/apprentice_alchemist
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 1, "minor" = 1, "utilities" = 6, "ward" = TRUE)
+	subclass_skills = list(
+		/datum/skill/combat/polearms = SKILL_LEVEL_NOVICE,
+		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/arcyne = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/reading = SKILL_LEVEL_MASTER,
+		/datum/skill/craft/alchemy = SKILL_LEVEL_EXPERT,
+		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_NOVICE,
+		/datum/skill/combat/unarmed = SKILL_LEVEL_NOVICE,
+		/datum/skill/misc/swimming = SKILL_LEVEL_NOVICE,
+		/datum/skill/misc/climbing = SKILL_LEVEL_NOVICE,
+		/datum/skill/magic/arcane = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/labor/farming = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/craft/sewing = SKILL_LEVEL_NOVICE,
+		/datum/skill/craft/cooking = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/labor/mining = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/labor/fishing = SKILL_LEVEL_NOVICE,
+	)
+
+/datum/outfit/job/roguetown/adventurer/alchemist/pre_equip(mob/living/carbon/human/H)
+	..()
+	to_chat(H, span_warning("You are an alchemist traveling the world in search of rare reagents and new discoveries. You turn the spoils of your adventures into strange and useful concoctions."))
+	head = /obj/item/clothing/head/roguetown/roguehood/mage
+	shoes = /obj/item/clothing/shoes/roguetown/boots
+	pants = /obj/item/clothing/under/roguetown/trou/leather
+	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson
+	armor = /obj/item/clothing/suit/roguetown/shirt/robe/mage
+	belt = /obj/item/storage/belt/rogue/leather
+	beltr = /obj/item/storage/magebag
+	neck = /obj/item/storage/belt/rogue/pouch/coins/poor
+	beltl = /obj/item/rogueweapon/huntingknife
+	backl = /obj/item/storage/backpack/rogue/satchel
+	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/wizard]
+	if(H.mind)
+		backr = choose_implement(H, "lesser")
+	backpack_contents = list(
+			/obj/item/rogueweapon/spellbook = 1,
+			/obj/item/chalk = 1,
+			/obj/item/rogueweapon/scabbard/sheath = 1,
+			/obj/item/reagent_containers/glass/bottle/alchemical = 3,
+			/obj/item/reagent_containers/glass/mortar = 1,
+			/obj/item/pestle = 1,
+			/obj/item/reagent_containers/glass/bottle/alchemical/healthpot = 1,
+			/obj/item/reagent_containers/glass/bottle/alchemical/manapot = 1
+			)
 	H.cmode_music = 'sound/music/cmode/adventurer/combat_outlander4.ogg'
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
 			H.cmode_music = 'sound/music/combat_heretic.ogg'
+
 
 /datum/advclass/mage/spellblade
 	name = "Azurcaephan"
@@ -223,10 +290,10 @@
 			else
 				H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_JOURNEYMAN, TRUE)
 
-	H.cmode_music = 'sound/music/cmode/adventurer/combat_outlander3.ogg'
+	H.cmode_music = sound("sound/music/cmode/adventurer/combat_outlander3.ogg")
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
-			H.cmode_music = 'sound/music/combat_heretic.ogg'
+			H.cmode_music = sound("sound/music/combat_heretic.ogg")
 
 /datum/advclass/mage/spellsinger
 	name = "Spellsinger"
@@ -276,10 +343,10 @@
 		H.mind.AddSpell(new /datum/action/cooldown/spell/conjure_instrument)
 		grant_poke_spell(H)
 
-	H.cmode_music = 'sound/music/cmode/adventurer/combat_outlander3.ogg'
+	H.cmode_music = sound("sound/music/cmode/adventurer/combat_outlander3.ogg")
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
-			H.cmode_music = 'sound/music/combat_heretic.ogg'
+			H.cmode_music = sound("sound/music/combat_heretic.ogg")
 
 /datum/advclass/mage/spellfist
 	name = "Spellfist"
@@ -316,7 +383,7 @@
 	head = /obj/item/clothing/head/roguetown/headband/monk
 	shoes = /obj/item/clothing/shoes/roguetown/boots
 	pants = /obj/item/clothing/under/roguetown/trou/leather
-	shirt =  /obj/item/clothing/suit/roguetown/armor/gambeson
+	shirt =	/obj/item/clothing/suit/roguetown/armor/gambeson
 	armor =	/obj/item/clothing/suit/roguetown/armor/leather/heavy
 	gloves = /obj/item/clothing/gloves/roguetown/angle
 	neck = /obj/item/clothing/neck/roguetown/leather
@@ -370,14 +437,14 @@
 		if("knuckledusters")
 			H.put_in_hands(new /obj/item/clothing/gloves/roguetown/knuckles/bronze(H))
 
-	H.cmode_music = 'sound/music/cmode/adventurer/combat_outlander3.ogg'
+	H.cmode_music = sound("sound/music/cmode/adventurer/combat_outlander3.ogg")
 
 /datum/advclass/mage/spellthief
 	name = "Arcyne Trickster"
 	tutorial = "You are an Arcyne Trickster, a thief and hooligan gifted in the arcyne arts."
 	outfit = /datum/outfit/job/roguetown/adventurer/spellthief
 	subclass_languages = list(/datum/language/thievescant)
-	cmode_music = 'sound/music/cmode/antag/combat_cutpurse.ogg'
+	cmode_music = sound("sound/music/cmode/antag/combat_cutpurse.ogg")
 	traits_applied = list(TRAIT_ARCYNE)
 	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 2, "utilities" = 6)
 	subclass_stats = list(

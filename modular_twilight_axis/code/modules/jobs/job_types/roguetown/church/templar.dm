@@ -96,7 +96,7 @@
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/storage/keyring/acolyte = 1
 		)
-	H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg'
+	H.cmode_music = sound("sound/music/cmode/church/combat_reckoning.ogg")
 	switch(H.patron?.type)
 		if(/datum/patron/divine/undivided)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/undivided
@@ -126,14 +126,14 @@
 			wrists = /obj/item/clothing/neck/roguetown/luckcharm
 			cloak = /obj/item/clothing/cloak/templar/xylixian
 			mask = /obj/item/clothing/mask/rogue/facemask/xylixmask/armored //TA edit
-			H.cmode_music = 'sound/music/combat_jester.ogg'
+			H.cmode_music = sound("sound/music/combat_jester.ogg")
 			var/datum/inspiration/I = new /datum/inspiration(H)
 			I.grant_inspiration(H, bard_tier = BARD_T1)
 		if(/datum/patron/divine/dendor)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/dendor
 			cloak = /obj/item/clothing/cloak/tabard/crusader/dendor
 			mask = /obj/item/clothing/head/roguetown/dendormask/armored
-			H.cmode_music = 'sound/music/cmode/garrison/combat_warden.ogg'
+			H.cmode_music = sound("sound/music/cmode/garrison/combat_warden.ogg")
 			H.mind.AddSpell(new /datum/action/cooldown/spell/conjure_arcyne_ward/druid)
 		if(/datum/patron/divine/necra)
 			head = /obj/item/clothing/head/roguetown/necrahood
@@ -163,7 +163,7 @@
 					wrists = /obj/item/clothing/neck/roguetown/psicross/noc
 					mask = /obj/item/clothing/mask/rogue/facemask/steel/owlmask
 					cloak = /obj/item/clothing/suit/roguetown/shirt/robe/noc/stargazer
-					H.cmode_music = 'sound/music/combat_desertrider.ogg'
+					H.cmode_music = sound("sound/music/combat_desertrider.ogg")
 		if(/datum/patron/divine/ravox)
 			head = /obj/item/clothing/head/roguetown/roguehood
 			mask = /obj/item/clothing/head/roguetown/roguehood/ravoxgorget
@@ -374,7 +374,7 @@
 		H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_NOVICE, TRUE)
 	if(H.patron?.type == /datum/patron/divine/astrata)
 		H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_NOVICE, TRUE)
-		H.cmode_music = 'sound/music/cmode/church/combat_astrata.ogg'
+		H.cmode_music = sound("sound/music/cmode/church/combat_astrata.ogg")
 	if(H.patron?.type == /datum/patron/divine/dendor)
 		H.adjust_skillrank(/datum/skill/labor/farming, SKILL_LEVEL_APPRENTICE, TRUE)
 		H.grant_language (/datum/language/beast)
@@ -388,7 +388,7 @@
 	if(H.patron?.type == /datum/patron/divine/necra)
 		ADD_TRAIT(H, TRAIT_NOSTINK, TRAIT_GENERIC)
 		ADD_TRAIT(H, TRAIT_SOUL_EXAMINE, TRAIT_GENERIC)
-		H.cmode_music = 'sound/music/cmode/church/combat_necra.ogg'
+		H.cmode_music = sound("sound/music/cmode/church/combat_necra.ogg")
 	if(H.patron?.type == /datum/patron/divine/pestra)
 		H.adjust_skillrank(/datum/skill/misc/medicine, SKILL_LEVEL_APPRENTICE, TRUE)
 		H.adjust_skillrank(/datum/skill/craft/alchemy, SKILL_LEVEL_NOVICE, TRUE)
@@ -396,7 +396,7 @@
 	if(H.patron?.type == /datum/patron/divine/eora)
 		ADD_TRAIT(H, TRAIT_BEAUTIFUL, TRAIT_GENERIC)
 		ADD_TRAIT(H, TRAIT_EMPATH, TRAIT_GENERIC)
-		H.cmode_music = 'sound/music/cmode/church/combat_eora.ogg'
+		H.cmode_music = sound("sound/music/cmode/church/combat_eora.ogg")
 		H.mind.special_items["Alt Tabard"] = /obj/item/clothing/cloak/templar/eoran/alt
 		H.mind.special_items["Pink Robe"] = /obj/item/clothing/suit/roguetown/shirt/robe/eora/resprite/pink
 		H.mind.special_items["Blue Robe"] = /obj/item/clothing/suit/roguetown/shirt/robe/eora/resprite
@@ -429,7 +429,7 @@
 				neck = /obj/item/clothing/neck/roguetown/psicross/noc
 				mask = /obj/item/clothing/mask/rogue/facemask/steel/owlmask
 				cloak = /obj/item/clothing/suit/roguetown/shirt/robe/noc/stargazer
-				H.cmode_music = 'sound/music/combat_desertrider.ogg'
+				H.cmode_music = sound("sound/music/combat_desertrider.ogg")
 
 /datum/outfit/job/roguetown/templar/crusader/pre_equip(mob/living/carbon/human/H)
 	. = ..()
@@ -446,4 +446,4 @@
 				wrists = /obj/item/clothing/neck/roguetown/psicross/noc
 				mask = /obj/item/clothing/mask/rogue/facemask/steel/owlmask
 				cloak = /obj/item/clothing/suit/roguetown/shirt/robe/noc/stargazer
-				H.cmode_music = 'sound/music/combat_desertrider.ogg'
+				H.cmode_music = sound("sound/music/combat_desertrider.ogg")

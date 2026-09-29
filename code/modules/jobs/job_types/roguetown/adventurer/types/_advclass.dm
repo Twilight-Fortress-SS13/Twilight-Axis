@@ -101,6 +101,8 @@
 
 	post_equip(H)
 
+	H.flag_gear_as_worn()
+
 	H.advjob = name
 
 	var/turf/TU = get_turf(H)
@@ -109,8 +111,7 @@
 			var/mob/horse_mob = new horse(TU)
 			if(istype(horse_mob, /mob/living/simple_animal/hostile/retaliate/rogue))
 				var/mob/living/simple_animal/hostile/retaliate/rogue/rogue_animal = horse_mob
-				rogue_animal.owner = H
-				rogue_animal.friends |= H
+				rogue_animal.assign_livestock_owner(H) // TA EDIT
 
 	for(var/trait in traits_applied)
 		ADD_TRAIT(H, trait, ADVENTURER_TRAIT)
@@ -201,8 +202,9 @@
 		limited_vices = vice_limits
 	if(!length(current_vices) || !length(limited_vices))
 		return
-	for(var/datum/charflaw/cf in current_vices)
-		if(is_vice_limited(cf, limited_vices))
+	for(var/cf_type in current_vices)
+		if(is_vice_limited(cf_type, limited_vices))
+			var/datum/charflaw/cf = GLOB.character_flaws_singletons[cf_type]
 			. += cf.name
 
 /datum/advclass/proc/get_prefs_restriction_names(client/player)
@@ -238,20 +240,21 @@
 /datum/advclass/proc/change_origin(mob/living/carbon/human/H, new_origin = /datum/virtue/none, wording)
 	var/client/player = H?.client
 	if(player?.prefs)
-		var/datum/virtue/origin/origin_memory = player.prefs.virtue_origin
-		player.prefs.virtue_origin = new new_origin
+		var/datum/virtue/origin/origin_memory = player.prefs.virtue_origin // TA EDIT START
+		var/datum/virtue/origin/temporary_origin = new new_origin
 		if(wording)
 			H.dna.species.skin_tone_wording = wording
-		player.prefs.virtue_origin.last_origin = origin_memory
-		player.prefs.virtue_origin.apply_to_human(H)
-		if(length(player.prefs.virtue_origin.added_languages))
-			for(var/L in player.prefs.virtue_origin.added_languages)
+		temporary_origin.last_origin = origin_memory
+		temporary_origin.apply_to_human(H)
+		if(length(temporary_origin.added_languages))
+			for(var/L in temporary_origin.added_languages)
 				H.grant_language(L)
-		if(length(player.prefs.virtue_origin.last_origin.added_languages))
-			for(var/L in player.prefs.virtue_origin.last_origin.added_languages)
+		if(length(origin_memory?.added_languages))
+			for(var/L in origin_memory.added_languages)
 				if(L != player.prefs.extra_language)
 					H.remove_language(L)
-		H.grant_language(player.prefs.extra_language)  //TA EDIT END
+		H.grant_language(player.prefs.extra_language)
+		qdel(temporary_origin) // TA EDIT END
 
 /datum/advclass/proc/check_preferences_requirements(datum/preferences/prefs, client/player, check_slots = TRUE, check_probability = TRUE) // TA EDIT START
 	if(!prefs)

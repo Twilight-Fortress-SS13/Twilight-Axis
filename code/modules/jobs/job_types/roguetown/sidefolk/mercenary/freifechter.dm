@@ -9,12 +9,13 @@
 	allowed_patrons = list(/datum/patron/old_god)
 	class_select_category = CLASS_CAT_AAVNR
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_BRAVO)
-	cmode_music = 'sound/music/frei_fencer.ogg'
+	cmode_music = sound("sound/music/frei_fencer.ogg")
 	traits_applied = list(TRAIT_BADTRAINER, TRAIT_INTELLECTUAL, TRAIT_LONGSWORDSMAN, TRAIT_FENCERDEXTERITY)
 	subclass_stats = list(
 		STATKEY_INT = 3,
 		STATKEY_PER = 3,
-		STATKEY_WIL = 3
+		STATKEY_WIL = 2,
+		STATKEY_CON = 1
 	)
 	subclass_skills = list(
 		/datum/skill/combat/swords = SKILL_LEVEL_JOURNEYMAN,
@@ -27,7 +28,7 @@
 		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE
 	)
 	virtue_limits = list(/datum/virtue/combat/dualwielder)
-	adv_stat_ceiling = list(STAT_STRENGTH = 12, STAT_SPEED = 12, STAT_CONSTITUTION = 10)
+	adv_stat_ceiling = list(STAT_STRENGTH = 12, STAT_SPEED = 12, STAT_CONSTITUTION = 12)
 
 /datum/outfit/job/roguetown/mercenary/freelancer/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -67,13 +68,13 @@
 	extra_context = "This class is for experienced players who have a solid grasp on footwork and stamina management, master skills alone won't save your lyfe. You make up for your inherent weaknesses and limitations with unique high-durability weapons."
 	allowed_sexes = list(MALE, FEMALE)
 
-	cmode_music = 'sound/music/frei_lancer.ogg'
+	cmode_music = sound("sound/music/frei_lancer.ogg")
 	outfit = /datum/outfit/job/roguetown/mercenary/freelancer_lancer
 	subclass_languages = list(/datum/language/aavnic)//Your character could not have possibly "graduated" without atleast some basic knowledge of Aavnic.
 	allowed_patrons = list(/datum/patron/old_god)
 	class_select_category = CLASS_CAT_AAVNR
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
-	cmode_music = 'sound/music/frei_fencer.ogg'
+	cmode_music = sound("sound/music/frei_fencer.ogg")
 	traits_applied = list(TRAIT_BADTRAINER, TRAIT_FENCERDEXTERITY, TRAIT_INTELLECTUAL)
 	subclass_stats = list(
 		STATKEY_CON = 2,
@@ -131,7 +132,7 @@
 	allowed_patrons = list(/datum/patron/old_god)
 	class_select_category = CLASS_CAT_AAVNR
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_BRAVO)
-	cmode_music = 'sound/music/frei_sabre.ogg'
+	cmode_music = sound("sound/music/frei_sabre.ogg")
 	traits_applied = list(TRAIT_BADTRAINER, TRAIT_INTELLECTUAL, TRAIT_FENCERDEXTERITY, TRAIT_SABRIST)
 	subclass_stats = list(
 		STATKEY_INT = 2,

@@ -29,6 +29,11 @@
 	path = /obj/item/clothing/suit/roguetown/shirt/undershirt/black
 	sort_category = "Shirts"
 
+/datum/loadout_item/silkshirt
+	name = "Silk Shirt"
+	path = /obj/item/clothing/suit/roguetown/shirt/shadowshirt
+	sort_category = "Shirts"
+
 /datum/loadout_item/shortshirt
 	name = "Short-sleeved Shirt"
 	path = /obj/item/clothing/suit/roguetown/shirt/shortshirt
@@ -42,6 +47,11 @@
 /datum/loadout_item/sailorjacket
 	name = "Leather Jacket"
 	path = /obj/item/clothing/suit/roguetown/armor/leather/vest/sailor
+	sort_category = "Shirts"
+
+/datum/loadout_item/darkjacket
+	name = "Dark Jacket"
+	path = /obj/item/clothing/suit/roguetown/shirt/fancyjacket/triumph_padded
 	sort_category = "Shirts"
 
 /datum/loadout_item/priestrobe
@@ -111,7 +121,7 @@
 	sort_category = "Shirts"
 
 /datum/loadout_item/slitteddress
-	name = "Slitted dress"
+	name = "Slitted Dress"
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/slit
 	sort_category = "Shirts"
 
@@ -249,4 +259,5 @@
 	name = "Blouse"
 	path = /obj/item/clothing/suit/roguetown/shirt/undershirt/blouse
 	sort_category = "Shirts"
+
 */

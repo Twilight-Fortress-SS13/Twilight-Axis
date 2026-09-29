@@ -21,7 +21,7 @@ SUBSYSTEM_DEF(migrants)
 	var/list/spawned_waves = list()
 	var/list/global_triumph_contributions = list()
 
-/datum/controller/subsystem/migrants/Initialize()
+/datum/controller/subsystem/migrants/Initialize(mapload)
 	track_next_roll[MIGRANT_TRACK_REGULAR] = world.time + 2 MINUTES
 	track_next_roll[MIGRANT_TRACK_SPECIAL] = world.time + special_roll_interval
 	return ..()
@@ -329,9 +329,7 @@ SUBSYSTEM_DEF(migrants)
 		var/mob_rank = role.name // TA EDIT
 		if(character.mind.special_role == "Court Agent")
 			mob_rank = "Adventurer"
-		if(!GLOB.actors_list["Migrants"]) // TA EDIT
-			GLOB.actors_list["Migrants"] = list() // TA EDIT
-		GLOB.actors_list["Migrants"] += list("[character.mobid]" = "[mob_name] as the [humanc.dna.species.name] [mob_rank]<BR>") // TA EDIT
+		GLOB.actors_list[character.mobid] = list("name" = mob_name, "rank" = mob_rank) // TA EDIT
 		log_character("[character.ckey] ([fakekey]) - [character.real_name] - [rank]")
 	if(GLOB.respawncounts[character.ckey])
 		var/AN = GLOB.respawncounts[character.ckey]
@@ -369,7 +367,12 @@ SUBSYSTEM_DEF(migrants)
 
 	role.after_spawn(character)
 
+	if(ishuman(character))
+		var/mob/living/carbon/human/human_character = character
+		human_character.flag_gear_as_worn()
+
 	if(role.advclass_cat_rolls)
+		hugboxify_for_class_selection(character) // TA EDIT
 		SSrole_class_handler.setup_class_handler(character, role.advclass_cat_rolls)
 	else
 		// Apply a special if we're not applying an adv class, otherwise let the adv class apply it afterwards
@@ -403,11 +406,24 @@ SUBSYSTEM_DEF(migrants)
 	priority += shuffle(unpledged)
 	return priority
 
+/datum/controller/subsystem/migrants/proc/get_respawn_cooldown_remaining(client/player) // TA EDIT
+	if(!player?.ckey)
+		return 0
+	var/datum/job/migrant_job = SSjob.GetJob("Migrant")
+	if(!migrant_job?.same_job_respawn_delay)
+		return 0
+	var/delay_until = GLOB.job_respawn_delays[player.ckey]
+	if(!delay_until || world.time >= delay_until)
+		return 0
+	return delay_until - world.time
+
 /datum/controller/subsystem/migrants/proc/can_be_role(client/player, role_type)
 	var/datum/migrant_role/role = MIGRANT_ROLE(role_type)
 	if(!player)
 		return FALSE
 	if(!player.prefs)
+		return FALSE
+	if(get_respawn_cooldown_remaining(player)) // TA EDIT
 		return FALSE
 	var/datum/preferences/prefs = player.prefs
 	if(role.forbidden_races && (prefs.pref_species.type in role.forbidden_races))
@@ -416,6 +432,18 @@ SUBSYSTEM_DEF(migrants)
 		return FALSE
 	if(role.allowed_ages && !(prefs.age in role.allowed_ages))
 		return FALSE
+	if(role.banned_flaws)
+		for(var/datum/charflaw/checked_flaw in prefs.charflaws)
+			if(checked_flaw.type in role.banned_flaws)
+				return FALSE
+	if(role.banned_virtues)
+		// i just stole this from the normal virtue restriction code i cant even lie
+		if((prefs.virtue?.type in role.banned_virtues) || (prefs.virtuetwo?.type in role.banned_virtues) || (prefs.virtue_origin?.type in role.banned_virtues))
+			return FALSE
+#ifdef USES_PQ
+	if(!isnull(role.min_pq) && get_playerquality(player.ckey) < role.min_pq) // TA EDIT
+		return FALSE // TA EDIT
+#endif
 	return TRUE
 
 /// The set of /datum/advclass datums a role can roll, resolved from its advclass_cat_rolls tags (deduped).
@@ -695,7 +723,7 @@ SUBSYSTEM_DEF(migrants)
 	. = TRUE
 	var/mob/user = usr
 	message_admins("Admin [key_name_admin(user)] is forcing the next migrant wave.")
-	var/picked_wave_type = input(user, "Choose migrant wave to force:", "Migrants")  as null|anything in GLOB.migrant_waves
+	var/picked_wave_type = input(user, "Choose migrant wave to force:", "Migrants")	as null|anything in GLOB.migrant_waves
 	if(!picked_wave_type)
 		return
 	message_admins("Admin [key_name_admin(user)] forced next migrant wave: [picked_wave_type]")

@@ -53,7 +53,7 @@ type Data = {
   } | null;
 };
 
-export const AdminTicketPanel = (props) => {
+export const AdminTicketPanel = () => {
   const { act, data } = useBackend<Data>();
   const {
     active_tickets,

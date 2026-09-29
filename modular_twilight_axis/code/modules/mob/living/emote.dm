@@ -11,7 +11,7 @@
 /datum/emote/living/pray
 	key_third_person = "молится"
 	message = "произносит молитву."
-	
+
 /datum/emote/living/meditate
 	key_third_person = "медитирует"
 	message = "медитирует."
@@ -24,7 +24,7 @@
 /datum/emote/living/burp
 	key_third_person = "рыгает"
 	message = "рыгает."
-	message_muffled = "издает приглушенный звук." 
+	message_muffled = "издает приглушенный звук."
 
 /datum/emote/living/choke
 	key_third_person = "задыхается"
@@ -50,7 +50,7 @@
 /datum/emote/living/clearthroat
 	key_third_person = "прочищает горло"
 	message = "прочищает горло."
-	message_muffled = "издает приглушенный звук." 
+	message_muffled = "издает приглушенный звук."
 
 /datum/emote/living/dance
 	key_third_person = "танцует"
@@ -76,7 +76,7 @@
 /datum/emote/living/gasp
 	key_third_person = "ахает"
 	message = "ахает!"
-	message_muffled = "издает приглушенный звук в попытке закричать." 
+	message_muffled = "издает приглушенный звук в попытке закричать."
 
 /datum/emote/living/breathgasp
 	key_third_person = "ловит ртом воздух"
@@ -103,7 +103,7 @@
 /datum/emote/living/groan
 	key_third_person = "тяжело вздыхает"
 	message = "тяжело вздыхает."
-	message_muffled = "издает приглушенный вздох." 
+	message_muffled = "издает приглушенный вздох."
 
 /datum/emote/living/grimace
 	key_third_person = "морщится"
@@ -185,7 +185,7 @@
 		else if(H.zone_selected == BODY_ZONE_CHEST)
 			message_param = "щипает грудь %t."
 		else
-			var/ru_zone_selected = zone_translations[user.zone_selected]
+			var/ru_zone_selected = GLOB.zone_translations[user.zone_selected]
 			message_param = "щипает %t за [ru_zone_selected]."
 	..()
 
@@ -251,7 +251,7 @@
 
 /datum/emote/living/attnwhistle
 	message = "привлекает внимание свистом!"
-	message_muffled = "издает приглушенный звук." 
+	message_muffled = "издает приглушенный звук."
 
 /datum/emote/living/scowl
 	key_third_person = "смотрит исподлобья"
@@ -280,26 +280,26 @@
 /datum/emote/living/sigh
 	key_third_person = "вздыхает"
 	message = "вздыхает."
-	message_muffled = "делает приглушенный вздох." 
+	message_muffled = "делает приглушенный вздох."
 
 /datum/emote/living/whistle
 	key_third_person = "насвистывает"
 	message = "насвистывает."
-	message_muffled = "издает приглушенный звук." 
+	message_muffled = "издает приглушенный звук."
 
 /datum/emote/living/hmm
 	key_third_person = "хмыкает"
 	message = "хмыкает."
-	message_muffled = "приглушенно хмыкает." 
+	message_muffled = "приглушенно хмыкает."
 
 /datum/emote/living/huh
 	key_third_person = "хмыкает?"
-	message_muffled = "издает приглушенный звук." 
+	message_muffled = "издает приглушенный звук."
 
 /datum/emote/living/hum
 	key_third_person = "напевает"
 	message = "напевает."
-	message_muffled = "приглушенно напевает." 
+	message_muffled = "приглушенно напевает."
 
 /datum/emote/living/smile
 	key_third_person = "улыбается"
@@ -406,7 +406,7 @@
 /datum/emote/living/wave
 	key_third_person = "машет"
 	message = "машет."
-	
+
 /datum/emote/living/whimper
 	key_third_person = "всхлипывает"
 	message = "всхлипывает."

@@ -391,8 +391,6 @@
 	if(!job.bypass_jobban)
 		if(is_banned_from(ckey, rank))
 			return JOB_UNAVAILABLE_BANNED
-		if(client.blacklisted())
-			return JOB_UNAVAILABLE_BANNED
 	if(!job.player_old_enough(client))
 		return JOB_UNAVAILABLE_ACCOUNTAGE
 	if(job.required_playtime_remaining(client))

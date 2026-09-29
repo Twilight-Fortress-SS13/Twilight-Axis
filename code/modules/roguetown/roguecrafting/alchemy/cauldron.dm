@@ -37,7 +37,7 @@
 	. += span_info("Left-click the cauldron with a container on the 'FEED' intent to fill it up. Likewise, left-clicking the cauldron with a container on the 'FILL' intent will gradually transfer the cauldron's brew into the container.")
 	. += span_info("Combining certain herbs, powders, and other ingredients can create a wide variety of alchemical wonders.")
 
-/obj/machinery/light/rogue/cauldron/Initialize()
+/obj/machinery/light/rogue/cauldron/Initialize(mapload)
 	create_reagents(500, DRAINABLE | AMOUNT_VISIBLE | REFILLABLE)
 	. = ..()
 
@@ -74,7 +74,14 @@
 				for(var/obj/item/ing in src.ingredients)
 					if(!istype(ing,/obj/item/alch))
 						continue
+					if(istype(ing, /obj/item/alch/hag_moss) && !lastuser.mind?.has_antag_datum(/datum/antagonist/hag))
+						continue // only hags can make potions with moss
 					var/obj/item/alch/alching = ing
+					if(alching.complete_pot != null)
+						if(outcomes[alching.complete_pot] != null)
+							outcomes[alching.complete_pot] += 5
+						else
+							outcomes[alching.complete_pot] = 5
 					if(alching.major_pot != null)
 						if(outcomes[alching.major_pot] != null)
 							outcomes[alching.major_pot] += 3
@@ -215,7 +222,7 @@
 		return ..()
 	return
 
-/obj/machinery/light/rogue/cauldron/folding/Initialize()
+/obj/machinery/light/rogue/cauldron/folding/Initialize(mapload)
 	. = ..()
 	burn_out()
 	create_reagents(90, DRAINABLE | AMOUNT_VISIBLE | REFILLABLE)

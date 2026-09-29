@@ -19,6 +19,8 @@ LICH SKELETONS
 	ADD_TRAIT(H, TRAIT_LICHLAIR, TRAIT_GENERIC) //Ability to leave/enter the lich's lair without being softlocked inside.
 	H.taints_loot = TRUE
 
+	change_origin(H, /datum/virtue/origin/unselectable/skeleton, "Legion")
+
 // TA EDIT START
 /datum/advclass/greater_skeleton/lich/equipme(mob/living/carbon/human/H)
 	. = ..()
@@ -191,23 +193,23 @@ LICH SKELETONS
 		/obj/item/storage/belt/rogue/pouch/coins/aalloy = 1 //Hilarious
 	)
 	H.adjust_blindness(-3)
-	var/weapons = list("Bow & 20 Arrows", "Bow & 20 Broadheads", "Longbow & 20 Arrows", "Longbow & 20 Broadheads", "Crossbow & 16 Bolts", "Sling + Ancient Shield")
+	var/weapons = list("Bow & 24 Arrows", "Bow & 24 Broadheads", "Longbow & 24 Arrows", "Longbow & 24 Broadheads", "Crossbow & 16 Bolts", "Sling + Ancient Shield")
 	var/weapon_choice = input(H, "Choose your MISSILE.", "CONDEMN THE LYVING FROM AFAR.") as anything in weapons
 	H.set_blindness(0)
 	switch(weapon_choice)
-		if("Bow & 20 Arrows")
-			l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
+		if("Bow & 24 Arrows")
+			l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/bow
 			beltl = /obj/item/quiver/paalloy
 			H.adjust_skillrank(/datum/skill/combat/bows, 1, TRUE)
-		if("Bow & 20 Broadheads")
-			l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
+		if("Bow & 24 Broadheads")
+			l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/bow
 			beltl = /obj/item/quiver/broadhead_aalloy
 			H.adjust_skillrank(/datum/skill/combat/bows, 1, TRUE)
-		if("Longbow & 20 Arrows")
+		if("Longbow & 24 Arrows")
 			l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/longbow
 			beltl = /obj/item/quiver/paalloy
 			H.adjust_skillrank(/datum/skill/combat/bows, 1, TRUE)
-		if("Longbow & 20 Broadheads")
+		if("Longbow & 24 Broadheads")
 			l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/longbow
 			beltl = /obj/item/quiver/broadhead_aalloy
 			H.adjust_skillrank(/datum/skill/combat/bows, 1, TRUE)
@@ -412,7 +414,6 @@ LICH SKELETONS
 	H.adjust_skillrank(/datum/skill/labor/mining, 4, TRUE)
 	H.adjust_skillrank(/datum/skill/labor/lumberjacking, 6, TRUE) //Get up a deathfort, very fast by maximal yields from logs.
 
-	head = /obj/item/clothing/head/roguetown/helmet/kettle/minershelm
 	mask = /obj/item/clothing/mask/rogue/spectacles/golden //Structure inspection
 	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/artificer/lich
 	pants = /obj/item/clothing/under/roguetown/trou/artipants/lich
@@ -428,7 +429,7 @@ LICH SKELETONS
 		/obj/item/rogueweapon/tongs/paalloy = 1,
 		/obj/item/rogueweapon/hammer/wood = 1,
 		/obj/item/storage/belt/rogue/pouch/coins/aalloy = 1, //Hilarious
-		/obj/item/rogueweapon/chisel = 1, //avoiding a dupe glitch I have no idea how to fix atm
+		/obj/item/rogueweapon/chisel/bronze = 1,
 		/obj/item/rogueweapon/handsaw/bronze = 1,
 		/obj/item/dye_brush = 1
 	)
@@ -449,6 +450,14 @@ LICH SKELETONS
 			cloak = /obj/item/clothing/cloak/half/lich
 		if("Black Toga")
 			cloak = /obj/item/clothing/cloak/tabard/toga/lich
+
+	var/hats = list("Function (Gilbranze Helmet)", "Form (Sapper Cap)")
+	var/hat_choice = input(H, "Choose your HAT.", "ARMOR OR STYLE.") as anything in hats
+	switch(hat_choice)
+		if("Function (Gilbranze Helmet)")
+			head = /obj/item/clothing/head/roguetown/helmet/kettle/minershelm
+		if("Form (Sapper Cap)")
+			head = /obj/item/clothing/head/roguetown/articap/lich
 
 	H.energy = H.max_energy
 
@@ -738,11 +747,13 @@ LICH SKELETONS
 	H.adjust_blindness(-3)
 	switch(subclass_selected)
 		if("blade")
-			var/weapons = list("Ancient Khopesh", "Ancient Dagger")
+			var/weapons = list("Ancient Khopesh", "Ancient Longsword", "Ancient Dagger")
 			var/weapon_choice = input(H, "Choose your BLADE.", "RAGE AGAINST THE LYVING.") as anything in weapons
 			switch(weapon_choice)
 				if("Ancient Khopesh")
 					beltr = /obj/item/rogueweapon/sword/sabre/palloy
+				if("Ancient Longsword")
+					beltr = /obj/item/rogueweapon/sword/long/palloy //role unique
 				if("Ancient Dagger")
 					beltr = /obj/item/rogueweapon/huntingknife/idagger/steel/padagger
 			if(weapon_choice == "Ancient Dagger")
@@ -908,7 +919,7 @@ LICH SKELETONS
 	H.energy = H.max_energy
 
 /////////////////////////////
-// UNIQUE ITEMS!           //
+// UNIQUE ITEMS!			//
 /////////////////////////////
 /obj/item/clothing/suit/roguetown/armor/vestments_padded/lich //Zizo acolyte esc-robes, armor is meant to be the same as padded vestaments
 	name = "decrepit unholy undervestaments"
@@ -960,6 +971,13 @@ LICH SKELETONS
 
 //Do not make this craftable, please. Role Specific. ^
 
+/obj/item/clothing/head/roguetown/articap/lich
+	name = "decrepit sapper cap"
+	desc = "A cap of decrepit leather from beyond your lyfetime, donned by those who are condemned forever to restless toil. </br>It holds an eerie resemblence to those worn by artificers of this dae and yill."
+	color = "#d6bbbb"
+
+//Do not make this craftable, please. Role Specific. ^
+
 /obj/item/clothing/under/roguetown/trou/artipants/lich
 	name = "decrepit sapper trousers"
 	desc = "A set of trousers of leathers and roughspun fabric from beyond your lyfetime, donned by those who are condemned to toil forevermore."
@@ -1006,24 +1024,26 @@ LICH SKELETONS
 	name = "decrepit toga"
 	desc = "Roughspun fabrics from beyond your lyfetime, donned by those who fight a war without reason."
 	color = CLOTHING_BLACK
+	detail_color = "#bb9696"
+	open_wear = FALSE
 
 /obj/item/clothing/cloak/tabard/toga/lich/alt
-	name = "opened decrepit toga"
+	name = "decrepit bared toga"
 	desc = "Roughspun fabrics from beyond your lyfetime, donned by those who fight a war without reason, parted to reveal what remains beneath its cloth."
 	body_parts_covered = GROIN
-	icon_state = "whitepsydontabardalt"
-	item_state = "whitepsydontabardalt"
+	icon_state = "togaalt"
+	item_state = "togaalt"
 	flags_inv = HIDECROTCH
 	open_wear = TRUE
 
 /obj/item/clothing/cloak/tabard/toga/lich/attack_right(mob/user)
 	switch(open_wear)
 		if(FALSE)
-			name = "opened decrepit toga"
+			name = "decrepit bared toga"
 			desc = "Roughspun fabrics from beyond your lyfetime, donned by those who fight a war without reason, parted to reveal what remains beneath its cloth."
 			body_parts_covered = GROIN
-			icon_state = "whitepsydontabardalt"
-			item_state = "whitepsydontabardalt"
+			icon_state = "togaalt"
+			item_state = "togaalt"
 			open_wear = TRUE
 			flags_inv = HIDECROTCH // BARE YOUR CHEST, NOT YOUR WEEN! Not urm, you have one, you're a fucking skeleton sire.
 			to_chat(usr, span_warning("You pull back the roughspun fabric, baring what remains to Psydonia's eyes."))
@@ -1031,8 +1051,8 @@ LICH SKELETONS
 			name = "decrepit toga"
 			desc = "Roughspun fabrics from beyond your lyfetime, donned by those who fight a war without reason.."
 			body_parts_covered = CHEST|GROIN
-			icon_state = "whitepsydontabard"
-			item_state = "whitekpsydontabard"
+			icon_state = "toga"
+			item_state = "toga"
 			flags_inv = HIDECROTCH|HIDEBOOB
 			open_wear = FALSE
 			to_chat(usr, span_warning("You cloak yourself in the roughspun fabric, veiling what remains from Psydonia's eyes."))
@@ -1056,7 +1076,7 @@ LICH SKELETONS
 
 /obj/item/rogueweapon/greatsword/grenz/flamberge/aalloy
 	name = "decrepit flamberge"
-	desc = "Tarnished bronze and decaying bogleather, meticulously woven together to fashion a flame-bladed swan song for Psydonia's final descendants. </br>'Oh, how valiant His sacrifice was! But now He lies, sleeping and witless to the world-anew.' </br>'And now, He sleeps. And now, He weeps.'"
+	desc = "Rotted metal and decaying bogleather, meticulously woven together to fashion a flame-bladed swan song for Psydonia's final descendants. </br>'Oh, how valiant His sacrifice was! But now He lies, sleeping and witless to the world-anew.' </br>'And now, He sleeps. And now, He weeps.'"
 	icon_state = "ancientflamb"
 	smeltresult = /obj/item/ingot/aaslag
 	max_integrity = 150
@@ -1109,7 +1129,7 @@ LICH SKELETONS
 
 /obj/item/rogueweapon/shield/bronze/paalloy
 	name = "ancient hoplon shield"
-	desc = "The finest companion to a javelin and gladius, in Her name; a deceptively thin-yet-sturdy shield of gilbronze. This alloy even this thin, used to once surpass steel yet despite aeon's grip being lyfted, it never will regain its former strength."
+	desc = "The finest companion to a javelin and gladius, in Her name; a deceptively thin-yet-sturdy shield of gilbranze. This alloy even this thin, used to once surpass steel yet despite aeon's grip being lyfted, it never will regain its former strength."
 	icon_state = "ancientlegionshield"
 	force = 15
 	throwforce = 25 // DO NOT GIVE ANYTHING; BUT TAKE FROM THEM.. EVERYTHING!

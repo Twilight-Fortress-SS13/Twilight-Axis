@@ -7,7 +7,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED)
 	greet_text = "You are a Grenzelhoftian envoy, traveling with bodyguards and a priest to represent your homeland.\
-	 What exactly you have been sent here to speak about- only you know."
+		What exactly you have been sent here to speak about- only you know."
 	advclass_cat_rolls = list(CTAG_GRENZEL_ENVOY = 20)
 
 /datum/advclass/grenzel_envoy
@@ -63,7 +63,7 @@
 		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 2,
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpotnew = 2,
 		)
-	H.cmode_music = 'sound/music/combat_grenzelhoft.ogg'
+	H.cmode_music = sound("sound/music/combat_grenzelhoft.ogg")
 	H.grant_language(/datum/language/grenzelhoftian)
 
 /datum/migrant_role/grenzel/bodyguard
@@ -122,7 +122,7 @@
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpotnew = 1,
 		/obj/item/natural/bundle/cloth/bandage/full = 1,
 		)
-	H.cmode_music = 'sound/music/combat_grenzelhoft.ogg'
+	H.cmode_music = sound("sound/music/combat_grenzelhoft.ogg")
 	H.grant_language(/datum/language/grenzelhoftian)
 
 	var/weapons = list("Zweihander","Kriegmesser & Buckler","Halberd","Partizan")

@@ -79,7 +79,7 @@
 			amulet = /obj/item/clothing/neck/roguetown/psicross/undivided
 		if(/datum/patron/divine/astrata)
 			amulet = /obj/item/clothing/neck/roguetown/psicross/astrata
-			H.cmode_music = 'sound/music/cmode/church/combat_astrata.ogg'
+			H.cmode_music = sound("sound/music/cmode/church/combat_astrata.ogg")
 		if(/datum/patron/divine/noc)
 			amulet = /obj/item/clothing/neck/roguetown/psicross/noc
 		if(/datum/patron/divine/abyssor)
@@ -87,38 +87,39 @@
 			H.grant_language(/datum/language/abyssal)
 		if(/datum/patron/divine/dendor)
 			amulet = /obj/item/clothing/neck/roguetown/psicross/dendor
-			H.cmode_music = 'sound/music/cmode/garrison/combat_warden.ogg' // see: druid.dm
+			H.cmode_music = sound("sound/music/cmode/garrison/combat_warden.ogg") // see: druid.dm
 		if(/datum/patron/divine/necra)
 			amulet = /obj/item/clothing/neck/roguetown/psicross/necra
-			H.cmode_music = 'sound/music/cmode/church/combat_necra.ogg'
+			H.cmode_music = sound("sound/music/cmode/church/combat_necra.ogg")
 		if(/datum/patron/divine/pestra)
 			amulet = /obj/item/clothing/neck/roguetown/psicross/pestra
 		if(/datum/patron/divine/ravox)
 			amulet = /obj/item/clothing/neck/roguetown/psicross/ravox
+			H.cmode_music = sound("sound/music/cmode/church/combat_reckoning.ogg")
 		if(/datum/patron/divine/malum)
 			amulet = /obj/item/clothing/neck/roguetown/psicross/malum
 		if(/datum/patron/divine/eora)
 			amulet = /obj/item/clothing/neck/roguetown/psicross/eora
-			H.cmode_music = 'sound/music/cmode/church/combat_eora.ogg'
+			H.cmode_music = sound("sound/music/cmode/church/combat_eora.ogg")
 		if(/datum/patron/inhumen/zizo)
 			amulet = /obj/item/clothing/neck/roguetown/psicross
-			H.cmode_music = 'sound/music/combat_heretic.ogg'
+			H.cmode_music = sound("sound/music/combat_heretic.ogg")
 			ADD_TRAIT(H, TRAIT_HERESIARCH, TRAIT_GENERIC)
 		if(/datum/patron/inhumen/matthios)
 			amulet = /obj/item/clothing/neck/roguetown/psicross
-			H.cmode_music = 'sound/music/combat_matthios.ogg'
+			H.cmode_music = sound("sound/music/combat_matthios.ogg")
 			ADD_TRAIT(H, TRAIT_HERESIARCH, TRAIT_GENERIC)
 		if(/datum/patron/inhumen/graggar)
 			amulet = /obj/item/clothing/neck/roguetown/psicross
-			H.cmode_music = 'sound/music/combat_graggar.ogg'
+			H.cmode_music = sound("sound/music/combat_graggar.ogg")
 			ADD_TRAIT(H, TRAIT_HERESIARCH, TRAIT_GENERIC)
 		if(/datum/patron/inhumen/baotha)
 			amulet = /obj/item/clothing/neck/roguetown/psicross
-			H.cmode_music = 'sound/music/combat_baotha.ogg'
+			H.cmode_music = sound("sound/music/combat_baotha.ogg")
 			ADD_TRAIT(H, TRAIT_HERESIARCH, TRAIT_GENERIC)
 		if(/datum/patron/divine/xylix)
-			amulet = /obj/item/clothing/neck/roguetown/luckcharm
-			H.cmode_music = 'sound/music/combat_jester.ogg'
+			amulet = /obj/item/clothing/neck/roguetown/psicross/xylix
+			H.cmode_music = sound("sound/music/combat_jester.ogg")
 	return amulet
 
 /datum/outfit/job/roguetown/pre_equip(mob/living/carbon/human/H, visualsOnly = FALSE)

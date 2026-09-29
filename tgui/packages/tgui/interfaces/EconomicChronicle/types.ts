@@ -19,6 +19,7 @@ export type RoyalSnapshot = {
   headeater_levy: number;
   import_tariff: number;
   export_duty: number;
+  recovered_spoils: number;
   other_fees: number;
 };
 
@@ -53,6 +54,7 @@ export type TreasurySnapshot = {
   standing: StandingSnapshot;
   shortages_ended: number;
   banditry_owed: number;
+  banditry_hoard: number;
   treasury_debt_repaid: number;
   treasury_debt_owed: number;
   bankruptcy_count: number;
@@ -142,9 +144,12 @@ export type ContractsSnapshot = {
   completed_defense: number;
   abandoned: number;
   rerolled: number;
+  lapse_refunded: number;
+  withdrawn: number;
   mammons_paid: number;
   mammons_taxed: number;
   mammons_forfeited: number;
+  mammons_refunded: number;
 };
 
 export type RoyalFavorsSnapshot = {

@@ -187,6 +187,23 @@ GLOBAL_LIST_INIT(atc_positions, list( //Azurian Trading Company - Merchant's cha
 /proc/is_townfolk_job(job)
 	return (job in GLOB.burgher_positions) || (job in GLOB.atc_positions)
 
+// Jobs whose crafting/skill access plausibly supplies Standing Order categories (rations,
+// textiles, smithed goods, alchemical, arcane). Used to scale the Rural Subsidy - more producers
+// on deck means the Steward is expected to lean on real trade instead of the lowpop safety net.
+GLOBAL_LIST_INIT(producer_positions, list(
+	"Soilson",
+	"Tailor",
+	"Guildsman",
+	"Guildmaster",
+	"Apothecary",
+	"Head Physician",
+	"Magicians Associate",
+	"Court Magician",
+))
+
+/proc/is_producer_job(job)
+	return job in GLOB.producer_positions
+
 GLOBAL_LIST_INIT(bathhouse_positions, list(
 	"Bathmaster",
 	"Bathhouse Attendant",
@@ -354,7 +371,7 @@ GLOBAL_PROTECT(exp_role_lookup)
 	var/static/regex/chef_expand = new("chef")
 	var/static/regex/borg_expand = new("(?<!cy)borg")
 
-	job = lowertext(job)
+	job = LOWER_TEXT(job)
 	job = cap_expand.Replace(job, "captain")
 	job = cmo_expand.Replace(job, "chief medical officer")
 	job = hos_expand.Replace(job, "head of security")

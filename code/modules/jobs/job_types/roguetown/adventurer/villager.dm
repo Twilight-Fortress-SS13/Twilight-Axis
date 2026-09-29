@@ -10,7 +10,6 @@
 	advclass_cat_rolls = list(CTAG_TOWNER = 20)
 	outfit = null
 	outfit_female = null
-	bypass_lastclass = TRUE
 	bypass_jobban = FALSE
 	display_order = JDO_VILLAGER
 	give_bank_account = TRUE
@@ -21,7 +20,7 @@
 	advjob_examine = TRUE
 	always_show_on_latechoices = TRUE
 	same_job_respawn_delay = 10 MINUTES
-	cmode_music = 'sound/music/cmode/towner/combat_towner.ogg'
+	cmode_music = sound("sound/music/cmode/towner/combat_towner.ogg")
 	job_subclasses = list(
 		/datum/advclass/barbersurgeon,
 		/datum/advclass/blacksmith,
@@ -43,7 +42,7 @@
 		/datum/advclass/witch,
 		/datum/advclass/woodworker
 	)
-	default_subprefs = list("favorite_advclass" = null, "witch_type" = null, "witch_form" = null)
+	default_subprefs = list("favorite_advclass" = null, "witch_type" = null, "witch_form" = null, "witch_skills" = null)
 
 // towners are so many roles in a trenchcoat that we're going to _only_ render the prefs relevant to the selected advclass
 /datum/job/roguetown/villager/update_subprefs_window(mob/user)
@@ -54,13 +53,12 @@
 		return
 	var/list/roleprefs = get_roleprefs(C)
 	var/datum/advclass/favorite = roleprefs["favorite_advclass"]
-	var/favorite_name = favorite ? favorite::name : "Choose"
-	var/HTML = {"
-		<i>You can choose a favorite subclass here. You'll automatically select this subclass on roundstart if possible.</i><br/><br/>
-		<b>Selected class:</b> <a href="?src=[REF(src)];class=1">[favorite_name]</a>"}
+	var/HTML = "[subprefs_subclass_html(C)]"
 	if(favorite == /datum/advclass/witch)
 		HTML += {"<br/><b>Witch Type:</b> <a href="?src=[REF(src)];witch_type=1">[roleprefs["witch_type"] || "Select"]</a>"}
 		HTML += {"<br/><b>Second Form:</b> <a href="?src=[REF(src)];witch_form=1">[roleprefs["witch_form"] || "Select"]</a>"}
+		HTML += {"<br/><b>Practical Skills:</b> <a href="?src=[REF(src)];witch_skills=1">[roleprefs["witch_skills"] || "Select"]</a>"}
+		HTML += {"<br/><small>Herbalist tends gardens, cooks and tends to focus on their own spaces; Forager fishes, butchers, and travels through the wilds instead of being dependant on a singular location.</small>"}
 	HTML += {"
 		<center><a href="?src=[REF(src)];subprefsexit=1">EXIT</a>\t\t<a href="?src=[REF(src)];subprefsreset=1">RESET</a></center>
 	"}
@@ -88,4 +86,9 @@
 		if(choice)
 			prefs["witch_form"] = choice
 		update_subprefs_window(usr)
-
+	if(href_list["witch_skills"])
+		var/list/choices = list("Herbalist", "Forager")
+		var/choice = tgui_input_list(usr, "Which practical skills have you learned?", "THE OLD WAYS", choices)
+		if(choice)
+			prefs["witch_skills"] = choice
+		update_subprefs_window(usr)

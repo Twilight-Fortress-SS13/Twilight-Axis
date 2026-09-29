@@ -8,7 +8,7 @@
 	max_integrity = 0
 	var/aportalloc = "a"
 
-/obj/structure/fluff/testportal/Initialize()
+/obj/structure/fluff/testportal/Initialize(mapload)
 	name = aportalloc
 	..()
 
@@ -51,7 +51,7 @@
 	var/travel_access_hint = null
 	var/watchable = TRUE
 
-/obj/structure/fluff/traveltile/Initialize()
+/obj/structure/fluff/traveltile/Initialize(mapload)
 	GLOB.traveltiles += src
 	. = ..()
 
@@ -301,7 +301,7 @@
 
 /obj/structure/fluff/traveltile/drow
 	required_traits = list(TRAIT_CAVEDWELLER)
-	
+
 /obj/structure/fluff/traveltile/dungeon
 	name = "gate"
 	desc = "This gate's enveloping darkness is so opressive you dread to step through it."

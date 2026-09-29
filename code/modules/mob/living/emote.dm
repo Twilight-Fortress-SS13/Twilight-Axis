@@ -1,5 +1,5 @@
 /* Twilight Axis Localisation */
-var/list/zone_translations = list(
+GLOBAL_LIST_INIT(zone_translations, list(
 		BODY_ZONE_HEAD = "голову",
 		BODY_ZONE_CHEST = "туловище",
 		BODY_ZONE_R_ARM = "правую руку",
@@ -19,7 +19,7 @@ var/list/zone_translations = list(
 		BODY_ZONE_PRECISE_NECK = "шею",
 		BODY_ZONE_PRECISE_STOMACH = "живот",
 		BODY_ZONE_PRECISE_GROIN = "пах"
-	)
+	))
 
 /* EMOTE DATUMS */
 /datum/emote/living
@@ -78,7 +78,7 @@ var/list/zone_translations = list(
 	var/mob/living/carbon/follower = user
 	var/datum/patron/patron = follower.patron
 
-	var/prayer = input("Whisper your prayer:", "Prayer") as text|null
+	var/prayer = sanitize(input(user, "Whisper your prayer:", "Prayer") as text|null)
 	if(!prayer)
 		return
 
@@ -90,13 +90,21 @@ var/list/zone_translations = list(
 		return
 	follower.sate_addiction(/datum/charflaw/addiction/godfearing)
 
+	var/devout = FALSE
+	if(ishuman(follower))
+		var/mob/living/carbon/human/hfollower = follower
+		for(var/datum/charflaw/cf in hfollower.charflaws)
+			if(istype(cf, /datum/charflaw/addiction/godfearing))
+				devout = TRUE
+				break
+
 	/* admin stuff - tells you the followers name, key, and what patron they follow */
-	var/follower_ident = "[follower.key]/([follower.real_name]) (follower of [patron])"
+	var/follower_ident = "[follower.key]/([follower.real_name]) ([devout ? "devout " : ""]follower of [patron])"
 	message_admins("[follower_ident] [ADMIN_SM(follower)] [ADMIN_FLW(follower)] prays: [span_info(prayer)]")
 	user.log_message("(follower of [patron]) prays: [prayer]", LOG_GAME)
 	record_round_statistic(STATS_PRAYERS_MADE)
 
-	follower.whisper(prayer)
+	follower.whisper(prayer, sanitize=FALSE) // we already sanitized this above
 
 	if(SEND_SIGNAL(follower, COMSIG_CARBON_PRAY, prayer) & CARBON_PRAY_CANCEL)
 		return
@@ -273,7 +281,7 @@ var/list/zone_translations = list(
 	key = ""
 	key_third_person = ""
 	message = "gasps out their last breath."
-	message_simple =  "falls limp."
+	message_simple =	"falls limp."
 	stat_allowed = UNCONSCIOUS
 
 /datum/emote/living/deathgasp/run_emote(mob/user, params, type_override, intentional)
@@ -505,8 +513,8 @@ var/list/zone_translations = list(
 /datum/emote/living/kiss
 	key = "kiss"
 	key_third_person = "kisses"
-	message = "blows a kiss."
-	message_param = "kisses %t."
+	message = "посылает воздушный поцелуй."
+	message_param = "целует %t."
 	emote_type = EMOTE_VISIBLE
 	use_params_for_runechat = TRUE
 
@@ -531,7 +539,14 @@ var/list/zone_translations = list(
 				do_change = TRUE
 		if(do_change)
 			if(H.zone_selected == BODY_ZONE_PRECISE_MOUTH)
-				message_param = "страстно целует %t."
+				message_param = "страстно целует %t." // TA EDIT START
+				var/obj/item/clothing/mask/cigarette/user_cig = H.get_item_by_slot(SLOT_MOUTH)
+				var/obj/item/clothing/mask/cigarette/target_cig = target.get_item_by_slot(SLOT_MOUTH)
+				if(istype(user_cig) && istype(target_cig))
+					if(user_cig.lit && !target_cig.lit)
+						target_cig.light(span_notice("[H] плавно прикуривает [target_cig.name] [target], используя свою [user_cig.name] прямо во время поцелуя."))
+					else if(!user_cig.lit && target_cig.lit)
+						user_cig.light(span_notice("[H] плавно прикуривает свою [user_cig.name] от [target_cig.name] [target] прямо во время поцелуя.")) // TA EDIT END
 			else if(H.zone_selected == BODY_ZONE_PRECISE_EARS)
 				message_param = "целует %t в ухо."
 				if(!HAS_TRAIT(target, TRAIT_DECEIVING_MEEKNESS) && !HAS_TRAIT(target, TRAIT_NOMOOD))
@@ -553,7 +568,7 @@ var/list/zone_translations = list(
 					if(!L.cmode)
 						to_chat(target, span_love("Это приятно..."))
 			else
-				var/ru_zone_selected = zone_translations[user.zone_selected]
+				var/ru_zone_selected = GLOB.zone_translations[user.zone_selected]
 				message_param = "целует %t в [ru_zone_selected]."
 	playsound(target.loc, pick('sound/vo/kiss (1).ogg','sound/vo/kiss (2).ogg'), 100, FALSE, -1)
 	if(user.mind)
@@ -568,7 +583,7 @@ var/list/zone_translations = list(
 /datum/emote/living/lick
 	key = "lick"
 	key_third_person = "licks"
-	message = "licking."
+	message = "licks their lips."
 	message_param = "licks %t."
 	emote_type = EMOTE_VISIBLE
 	use_params_for_runechat = TRUE
@@ -606,9 +621,9 @@ var/list/zone_translations = list(
 				message_param = "лижет %t между ног."
 				to_chat(target, span_love("Это очень приятно..."))
 			else if(J.zone_selected == BODY_ZONE_HEAD)
-				message_param = "лижет щеку %t"
+				message_param = "лижет %t в щеку."
 			else
-				var/ru_zone_selected = zone_translations[user.zone_selected]
+				var/ru_zone_selected = GLOB.zone_translations[user.zone_selected]
 				message_param = "лижет [ru_zone_selected] %t."
 	playsound(target.loc, pick("sound/vo/lick.ogg"), 100, FALSE, -1)
 
@@ -901,6 +916,7 @@ var/list/zone_translations = list(
 /datum/emote/living/scream/painscream/run_emote(mob/user, params, type_override, intentional)
 	. = ..()
 	if(.)
+		user.shoutbubble()
 		for(var/mob/living/carbon/human/L in viewers(7,user))
 			if(L == user)
 				L.sate_addiction(/datum/charflaw/addiction/masochist)
@@ -927,6 +943,7 @@ var/list/zone_translations = list(
 /datum/emote/living/scream/agony/run_emote(mob/user, params, type_override, intentional)
 	. = ..()
 	if(.)
+		user.shoutbubble()
 		for(var/mob/living/carbon/human/L in viewers(7,user))
 			if(L == user)
 				L.sate_addiction(/datum/charflaw/addiction/masochist)
@@ -942,9 +959,10 @@ var/list/zone_translations = list(
 	show_runechat = FALSE
 	needs_emotion = TRUE
 
-/datum/emote/living/scream/superagony/run_emote(mob/user, params, type_override, intentional)
+/datum/emote/living/scream/superagony/run_emote(mob/user, pfarams, type_override, intentional)
 	. = ..()
 	if(.)
+		user.shoutbubble()
 		for(var/mob/living/carbon/human/L in viewers(7,user))
 			if(L == user)
 				L.sate_addiction(/datum/charflaw/addiction/masochist)
@@ -963,6 +981,7 @@ var/list/zone_translations = list(
 /datum/emote/living/scream/firescream/run_emote(mob/user, params, type_override, intentional)
 	. = ..()
 	if(.)
+		user.shoutbubble()
 		for(var/mob/living/carbon/human/L in viewers(7,user))
 			if(L == user)
 				L.sate_addiction(/datum/charflaw/addiction/masochist)
@@ -1085,11 +1104,6 @@ var/list/zone_translations = list(
 
 
 	emote("rage", intentional = TRUE)
-
-/datum/emote/living/rage/run_emote(mob/user, params, type_override, intentional, targetted)
-	. = ..()
-	if(. && user.mind)
-		record_round_statistic(STATS_WARCRIES)
 
 /datum/emote/living/attnwhistle
 	key = "attnwhistle"
@@ -1359,6 +1373,13 @@ var/list/zone_translations = list(
 
 	emote("warcry", intentional = TRUE)
 
+/datum/emote/living/warcry/run_emote(mob/user, params, type_override, intentional, targetted)
+	. = ..()
+	if(.)
+		user.shoutbubble()
+		if(user.mind)
+			record_round_statistic(STATS_WARCRIES)
+
 /datum/emote/living/wave
 	key = "wave"
 	key_third_person = "waves"
@@ -1436,16 +1457,16 @@ var/list/zone_translations = list(
 		to_chat(user, span_boldwarning("I cannot send IC messages (muted)."))
 		return FALSE
 	else if(!params)
-		var/custom_emote = copytext(sanitize(input("What does your character do?") as text|null), 1, MAX_MESSAGE_LEN)
+		var/custom_emote = copytext(sanitize(input(user, "What does your character do?") as text|null), 1, MAX_MESSAGE_LEN)
 		if(custom_emote && !check_invalid(user, custom_emote))
-/*			var/type = input("Is this a visible or hearable emote?") as null|anything in list("Visible", "Hearable")
+/*			var/type = input(user, "Is this a visible or hearable emote?") as null|anything in list("Visible", "Hearable")
 			switch(type)
 				if("Visible")
 					emote_type = EMOTE_VISIBLE
 				if("Hearable")
 					emote_type = EMOTE_AUDIBLE
 				else
-					alert("Unable to use this emote, must be either hearable or visible.")
+					alert(user, "Unable to use this emote, must be either hearable or visible.")
 					return*/
 			message = custom_emote
 			emote_type = EMOTE_VISIBLE
@@ -1636,7 +1657,7 @@ var/list/zone_translations = list(
 	set name = "Знак веры"
 	set category = "Emotes"
 
-	emote("fsalute", intentional =  TRUE)
+	emote("fsalute", intentional =	TRUE)
 
 /datum/emote/living/ffsalute
 	key = "ffsalute"
@@ -1653,7 +1674,7 @@ var/list/zone_translations = list(
 	set name = "Ложный знак веры"
 	set category = "Emotes"
 
-	emote("ffsalute", intentional =  TRUE)
+	emote("ffsalute", intentional =	TRUE)
 
 /datum/emote/living/stat_roll
 	var/delay = 2.5 SECONDS
@@ -1662,10 +1683,10 @@ var/list/zone_translations = list(
 	var/list/failure_message_list
 
 	/**
-	 * An assoc list of character traits which will affect the outcome of rolls by the defined values if the rolling player has them. If empty, this process will be ignored.
-	 * This basically determines the difficulty class in rolls (see: `/mob/living/proc/stat_roll()`)
-	 * -1 value means decreased difficulty class, 5% higher chance to succeed, otherwise vice versa.
-	 */
+		* An assoc list of character traits which will affect the outcome of rolls by the defined values if the rolling player has them. If empty, this process will be ignored.
+		* This basically determines the difficulty class in rolls (see: `/mob/living/proc/stat_roll()`)
+		* -1 value means decreased difficulty class, 5% higher chance to succeed, otherwise vice versa.
+		*/
 	var/list/modifiers_list = list()
 
 /datum/emote/living/stat_roll/run_emote(mob/user, params, type_override, intentional = FALSE)
@@ -1751,15 +1772,9 @@ var/list/zone_translations = list(
 			var/color_to_use = human.voice_color
 			if(human.voicecolor_override)
 				color_to_use = human.voicecolor_override
-			msg = "<span style='color:#[color_to_use];text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;'><b>[emotelocation]</b></span> " + msg
+			msg = "<span style='color:[color_to_use];text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;'><b>[emotelocation]</b></span> " + msg
 		else
 			msg = "<b>[emotelocation]</b> " + msg
-		for(var/mob/M in GLOB.dead_mob_list)
-			if(!M.client || isnewplayer(M))
-				continue
-			var/T = get_turf(emotelocation)
-			if(M.stat == DEAD && M.client && (M.client.prefs?.chat_toggles & CHAT_GHOSTSIGHT) && !(M in viewers(T, null)))
-				M.show_message(msg)
 		var/runechat_msg_to_use = null
 		if(show_runechat)
 			runechat_msg_to_use = runechat_msg ? runechat_msg : pre_color_msg

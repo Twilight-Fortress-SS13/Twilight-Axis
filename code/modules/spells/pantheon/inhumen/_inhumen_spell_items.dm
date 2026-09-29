@@ -6,7 +6,7 @@
 /obj/item/
 	var/aura_color = null
 
-/obj/item/Initialize()
+/obj/item/Initialize(mapload)
 	. = ..()
 	if(aura_color)
 		apply_aura()
@@ -36,7 +36,7 @@
 /obj/item/alchserum
 	var/current_color = "#ffffff"
 
-/obj/item/alchserum/Initialize()
+/obj/item/alchserum/Initialize(mapload)
 	. = ..()
 	update_icon()
 
@@ -54,7 +54,7 @@
 	smoke.set_up(radius, T)
 	smoke.start()
 
-var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (2).ogg','sound/foley/bubb (3).ogg','sound/foley/bubb (4).ogg','sound/foley/bubb (5).ogg')
+GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (2).ogg','sound/foley/bubb (3).ogg','sound/foley/bubb (4).ogg','sound/foley/bubb (5).ogg'))
 
 // admin spawnable only
 /obj/item/matthios_canister
@@ -69,7 +69,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	var/list/ingredient_colors = list()
 	var/result_path = null
 
-/obj/item/matthios_canister/Initialize()
+/obj/item/matthios_canister/Initialize(mapload)
 	. = ..()
 	update_icon()
 
@@ -153,7 +153,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	var/impure_lux_count = 0
 	var/lux_blood = 0
 
-/obj/item/matthios_canister/lyfestruth/Initialize()
+/obj/item/matthios_canister/lyfestruth/Initialize(mapload)
 	. = ..()
 	required_herbs = required_herbs.Copy()
 
@@ -416,7 +416,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 
 	to_chat(user, span_notice("You begin pouring the lyfestruth over [target.name]..."))
 
-	if(do_after(user, 6 SECONDS, target))
+	if(do_after(user, 6 SECONDS, target = target)) // TA EDIT
 		if(!target || target.stat != DEAD)
 			return
 		apply_effect(target, user)
@@ -689,7 +689,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 //Uses up to 10 organic items and converts them into 1 lavish food of choice. It can fail and become bread or worse.
 
 /obj/item/matthios_canister/kingsfeast
-	name = "vial of kingsfeast base"
+	name = "vial of freeman's feast base" //TA EDIT
 	desc = "The brew within sloshes thick as spoiled blood. A stench rises from it most foul, resembling a mixture of rot and brine. The very vapours of said tincture can dissolve organic matter."
 
 	var/max_ingredients = 10
@@ -772,7 +772,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 			"The [I] yields entirely, reduced and recomposed within the vessel's thick contents..."
 		)
 		qdel(I)
-		playsound(user, pick(da_bubbles), 30, FALSE)
+		playsound(user, pick(GLOB.da_bubbles), 30, FALSE)
 		to_chat(user, span_notice(pick(absorb_flavor)))
 		update_icon()
 		check_completion(user)
@@ -788,7 +788,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 /obj/item/matthios_canister/kingsfeast/alch_transform(mob/user)
 	var/ishungry = user.nutrition < NUTRITION_LEVEL_HUNGRY
 	var/miraclecheck = 10 * user.get_skill_level(/datum/skill/magic/holy)
-	to_chat(user, span_notice("You begin channeling your greed into the mixture..."))
+	to_chat(user, span_notice("You begin channeling your need into the mixture...")) //TA EDIT
 
 	var/list/options = list(
 		"Ducal Peppersteak" = /obj/item/reagent_containers/food/snacks/rogue/peppersteak/ducal,
@@ -802,7 +802,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 		"Meat Handpie" = /obj/item/reagent_containers/food/snacks/rogue/handpie/meat,
 	)
 
-	var/choice = input(user, "What form shall your greed take?", "Kingsfeast") as null|anything in options
+	var/choice = input(user, "What form shall your feast take?", "Feast of the Free") as null|anything in options  //TA EDIT
 	if(!choice)
 		return
 
@@ -816,7 +816,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 		return
 
 	if(!ishungry && prob(80 - miraclecheck)) // bread troll
-		to_chat(user, span_warning("The mixture shifts... simplifying itself into something more befitting your greed."))
+		to_chat(user, span_warning("The mixture shifts... simplifying itself into something more befitting your reality.")) //TA EDIT
 		new /obj/item/reagent_containers/food/snacks/rogue/bread(get_turf(src))
 		if(prob(20))
 			user.emote(pick("sigh","groan"))
@@ -826,9 +826,9 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 
 	if(ishungry && prob(25))
 		to_chat(user, span_notice("Matthios takes pity on your mortal limitations. You compulsively shout in gratitude!"))
-		user.say(pick("PRAISE YOU, O' GENEROUS MATTHIOS!!","AT LAST, THE TRUE GOLD OF CULINARY ALCHEMY!!","BLESSED BE THY HANDS WHICH GRANT ME SUSTENANCE, MATTHIOS!!","I SHALL GIVE ALL FOR THY SMILE, LORD OF FREEDOM!!"), language = /datum/language/common)
+		user.say(pick("PRAISE YOU, O' GENEROUS MATTHIOS!!","AT LAST, THE TRUE GOLD OF CULINARY ALCHEMY!!","BLESSED BE THY HANDS WHICH GRANT ME SUSTENANCE, MATTHIOS!!","I SHALL GIVE ALL FOR THY SMILE, LORD OF NO REALM!!"), language = /datum/language/common) //TA EDIT
 
-	to_chat(user, span_notice("The mixture responds to your greed, shaping and taking the desired form. It feels warm and tasty!"))
+	to_chat(user, span_notice("The mixture responds to your needs, shaping and taking the desired form. It feels warm and tasty!")) //TA EDIT
 
 	new result_type(get_turf(src))
 	funny_smoke(src)
@@ -839,7 +839,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 		to_chat(user, span_warning("It is not yet ready."))
 		return
 
-	to_chat(user, span_notice("The mixture churns expectantly, awaiting the weight of your greed..."))
+	to_chat(user, span_notice("The mixture churns expectantly, awaiting the weight of your desires...")) //TA EDIT
 	alch_transform(user)
 
 /obj/item/matthios_canister/goodnite
@@ -908,7 +908,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 			current_color = color_to_use
 
 		qdel(I)
-		playsound(user, pick(da_bubbles), 30, FALSE)
+		playsound(user, pick(GLOB.da_bubbles), 30, FALSE)
 
 		var/list/absorb_flavor = list(
 			"The mixture receives [I], its form dissolving into a calm, pale suspension...",
@@ -955,7 +955,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	else
 		to_chat(user, span_notice("You begin administering the vial to your own forehead..."))
 
-	if(do_after(user, 6 SECONDS, target))
+	if(do_after(user, 6 SECONDS, target = target)) // TA EDIT
 		apply_firstlaw_insight(target, user)
 
 /obj/item/alchserum/matthios_insight/proc/apply_firstlaw_insight(mob/living/carbon/human/T, mob/user)
@@ -991,7 +991,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 
 	to_chat(user, span_notice("You begin gently administering the concoction to [target.name]'s eyes..."))
 
-	if(do_after(user, 6 SECONDS, target))
+	if(do_after(user, 6 SECONDS, target = target)) // TA EDIT
 		apply_sleep(target, user)
 
 /obj/item/alchserum/matthios_goodnite/proc/apply_sleep(mob/living/target, mob/user)
@@ -1004,6 +1004,10 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 
 	to_chat(target, span_notice("A heavy calm overtakes your body..."))
 	sleep(5)
+	if(!user || !target || user.z != target.z || get_dist(user, target) > 1) // TA EDIT START
+		return
+	if(target != user)
+		log_combat(user, target, "put to sleep", src) // TA EDIT END
 	visible_message(span_notice("[target.name] suddenly goes limp, overtaken by unnatural sleep."))
 
 	target.SetSleeping(600)
@@ -1302,7 +1306,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 
 			qdel(I)
 			current_color = "#9c3b1f"
-			playsound(user, pick(da_bubbles), 30, FALSE)
+			playsound(user, pick(GLOB.da_bubbles), 30, FALSE)
 			to_chat(user, span_notice("The mixture ferments the offering. ([current_liquid]/[needed_liquid])"))
 			update_icon()
 			check_completion(user)
@@ -1567,6 +1571,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	var/active_item = FALSE
 	var/swap_type = /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gilded/astrata
 	var/swap_message = "The gilded amulet transmutates to a different form. You feel a smile, as you profane Her fyre the same way as He did."
+	is_important = TRUE
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gilded/proc/swap_form(mob/living/carbon/human/user)
 	var/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gilded/new_amulet = new swap_type(user.loc)
@@ -1604,6 +1609,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	swap_type = /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gilded
 	swap_message = "The gilded amulet settles back into familiar weight. You feel a grin, as He commends you for your boldness."
 	stolen_fyre = TRUE
+	is_important = TRUE
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gilded/astrata/get_examine_highlight_status()
 	return null
@@ -1643,6 +1649,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	color = "#fce517" // we golden
 	aura_color = "#fff385"
 	var/active_item = FALSE
+	is_important = TRUE
 
 /obj/item/clothing/gloves/roguetown/fingerless_leather/muffle_matthios/equipped(mob/living/carbon/human/user, slot)
 	. = ..()
@@ -1671,6 +1678,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	color = "#faf5cb"
 	aura_color = "#fffb00"
 	var/active_item = FALSE
+	is_important = TRUE
 
 /obj/item/clothing/mask/rogue/spectacles/matthios/equipped(mob/living/carbon/human/user, slot)
 	. = ..()
@@ -1757,6 +1765,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	armor = ARMOR_LEATHER
 	color = "#fff9c0" // we golden
 	aura_color = "#ffe600"
+	is_important = TRUE
 
 /obj/item/clothing/shoes/roguetown/boots/muffle_matthios/equipped(mob/living/carbon/human/user, slot)
 	. = ..()
@@ -2035,7 +2044,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	desc = "A small sack with a drawstring that allows it to be worn around the neck. Or at the hips, provided you have a belt. It has a strange, gilded glow to it."
 	component_type = /datum/component/storage/concrete/roguetown/pouch/matthios
 
-/obj/item/storage/belt/rogue/pouch/matthios/Initialize()
+/obj/item/storage/belt/rogue/pouch/matthios/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, (TRAIT_FREEMAN||TRAIT_XYLIX), "BLESSED POUCH")
 
@@ -2051,7 +2060,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	component_type = /datum/component/storage/concrete/roguetown/backpack
 	max_integrity = 100
 
-/obj/item/storage/backpack/rogue/backpack/matthios/Initialize()
+/obj/item/storage/backpack/rogue/backpack/matthios/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, (TRAIT_FREEMAN||TRAIT_XYLIX), "BLESSED RUCKSACK")
 

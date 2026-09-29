@@ -10,6 +10,7 @@
 	movement_interrupt = FALSE
 	sound = 'sound/misc/ratchet.ogg'
 	action_icon = 'icons/mob/actions/engineer_skills.dmi'
+	overlay_icon = 'icons/mob/actions/engineer_skills.dmi'
 	invocation_type = "none"
 	associated_skill = /datum/skill/magic/arcane
 	antimagic_allowed = TRUE
@@ -21,52 +22,52 @@
 	var/holdingwrench = FALSE
 	//a list of valide items the wrench can repair
 	var/repairablelist = list(/obj/structure/bars,
-							  /obj/structure/bars/cemetery,
-							  /obj/structure/bars/chainlink,
-							  /obj/structure/bars/grille,
-							  /obj/structure/bars/passage,
-							  /obj/structure/bars/passage/shutter,
-							  /obj/structure/bars/passage/steel,
-							  /obj/structure/bars/pipe,
-							  /obj/structure/bars/pipe/left,
-							  /obj/structure/bars/shop,
-							  /obj/structure/bars/shop/bronze,
-							  /obj/structure/bars/steel,
-							  /obj/structure/bars/tough,
-							  /obj/structure/chair/freedomchair/crafted,
-							  /obj/structure/englauncher,
-							  /obj/structure/fermentation_keg/distiller,
-							  /obj/structure/floordoor,
-							  /obj/structure/fluff/clock,
-							  /obj/structure/fluff/wallclock,
-							  /obj/structure/fluff/wallclock/l,
-							  /obj/structure/fluff/wallclock/r,
-							  /obj/structure/fluff/wallclock/vampire,
-							  /obj/structure/fluff/wallclock/vampire/l,
-							  /obj/structure/fluff/wallclock/vampire/r,
-							  /obj/structure/gate,
-							  /obj/structure/gate/bars,
-							  /obj/structure/lever,
-							  /obj/structure/lever/wall,
-							  /obj/structure/mineral_door/bars,
-							  /obj/structure/mineral_door/barsold,
-							  /obj/structure/pressure_plate,
-							  /obj/structure/roguemachine/potionseller/crafted,
-							  /obj/structure/table/cooling,
-							  /obj/structure/winch)
+								/obj/structure/bars/cemetery,
+								/obj/structure/bars/chainlink,
+								/obj/structure/bars/grille,
+								/obj/structure/bars/passage,
+								/obj/structure/bars/passage/shutter,
+								/obj/structure/bars/passage/steel,
+								/obj/structure/bars/pipe,
+								/obj/structure/bars/pipe/left,
+								/obj/structure/bars/shop,
+								/obj/structure/bars/shop/bronze,
+								/obj/structure/bars/steel,
+								/obj/structure/bars/tough,
+								/obj/structure/chair/freedomchair/crafted,
+								/obj/structure/englauncher,
+								/obj/structure/fermentation_keg/distiller,
+								/obj/structure/floordoor,
+								/obj/structure/fluff/clock,
+								/obj/structure/fluff/wallclock,
+								/obj/structure/fluff/wallclock/l,
+								/obj/structure/fluff/wallclock/r,
+								/obj/structure/fluff/wallclock/vampire,
+								/obj/structure/fluff/wallclock/vampire/l,
+								/obj/structure/fluff/wallclock/vampire/r,
+								/obj/structure/gate,
+								/obj/structure/gate/bars,
+								/obj/structure/lever,
+								/obj/structure/lever/wall,
+								/obj/structure/mineral_door/bars,
+								/obj/structure/mineral_door/barsold,
+								/obj/structure/pressure_plate,
+								/obj/structure/roguemachine/potionseller/crafted,
+								/obj/structure/table/cooling,
+								/obj/structure/winch)
 	var/barlist = list(/obj/structure/bars,
-					   /obj/structure/bars/cemetery,
-					   /obj/structure/bars/chainlink,
-					   /obj/structure/bars/grille,
-					   /obj/structure/bars/passage,
-					   /obj/structure/bars/passage/shutter,
-					   /obj/structure/bars/passage/steel,
-					   /obj/structure/bars/pipe,
-					   /obj/structure/bars/pipe/left,
-					   /obj/structure/bars/shop,
-					   /obj/structure/bars/shop/bronze,
-					   /obj/structure/bars/steel,
-					   /obj/structure/bars/tough)
+						/obj/structure/bars/cemetery,
+						/obj/structure/bars/chainlink,
+						/obj/structure/bars/grille,
+						/obj/structure/bars/passage,
+						/obj/structure/bars/passage/shutter,
+						/obj/structure/bars/passage/steel,
+						/obj/structure/bars/pipe,
+						/obj/structure/bars/pipe/left,
+						/obj/structure/bars/shop,
+						/obj/structure/bars/shop/bronze,
+						/obj/structure/bars/steel,
+						/obj/structure/bars/tough)
 	var/doorlist = list(/obj/structure/mineral_door/bars,
 						/obj/structure/mineral_door/barsold)
 	var/gatelist = list(/obj/structure/gate,
@@ -163,7 +164,6 @@
 									I.current_charge -= 20
 									playsound(user, 'sound/misc/ratchet.ogg', 100, TRUE)
 									structurerepair.density = TRUE
-									structurerepair.set_opacity(TRUE)
 									structurerepair.obj_broken = FALSE
 									structurerepair.obj_integrity = structurerepair.max_integrity
 									user.visible_message(span_notice("[user] repaired [structurerepair.name]."), \
@@ -171,12 +171,15 @@
 									if(is_type_in_list(structurerepair, barlist))
 										var/obj/structure/bars/barsrepairable = structurerepair
 										barsrepairable.icon_state = "[initial(barsrepairable.icon_state)]"
-										barsrepairable.set_opacity(FALSE)
-									if(is_type_in_list(structurerepair, gatelist))
+										if(istype(barsrepairable, /obj/structure/bars/passage/shutter))
+											barsrepairable.set_opacity(TRUE)
+										else
+											barsrepairable.set_opacity(FALSE)
+									else if(is_type_in_list(structurerepair, gatelist))
 										var/obj/structure/gate/gaterepairable = structurerepair
 										gaterepairable.icon_state = "[gaterepairable.base_state]"
 										gaterepairable.set_opacity(FALSE)
-									if(is_type_in_list(structurerepair, doorlist))
+									else if(is_type_in_list(structurerepair, doorlist))
 										var/obj/structure/mineral_door/doorsrepairable = structurerepair
 										doorsrepairable.icon_state = "[doorsrepairable.base_state]"
 										doorsrepairable.brokenstate = TRUE

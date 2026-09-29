@@ -48,7 +48,7 @@
 	if (!H)
 		return
 	var/should_update = FALSE
-	var/list/choices = list("Accessory", "Breast Quantity", "Breast Size", "Ears", "Ear Color One", "Ear Color Two", "Eye Color", "Skin Color", "Skin Color 2", "Skin Color 3", "Facial Hairstyle", "Facial Hair Color", "Face Detail", "Hairstyle", "Hair Primary Color", "Hair Secondary Gradient", "Hair Secondary Natural Color", "Hair Third Gradient", "Hair Third Dye Color", "Horns", "Horn Color", "Penis", "Penis Size", "Tail", "Tail Color One", "Tail Color Two", "Tail Color Three", "Snout", "Snout Color One", "Snout Color Two", "Snout Color Three", "Fluff", "Fluff Color One", "Fluff Color Two", "Testicles", "Testicle Size", "Vagina", "Wings", "Wing Color")
+	var/list/choices = list("Accessory", "Breast Quantity", "Breast Size", "Breast Color", "Ears", "Ear Color One", "Ear Color Two", "Eye Color", "Skin Color", "Skin Color 2", "Skin Color 3", "Facial Hairstyle", "Facial Hair Color", "Face Detail", "Hairstyle", "Hair Primary Color", "Hair Secondary Gradient", "Hair Secondary Natural Color", "Hair Third Gradient", "Hair Third Dye Color", "Horns", "Horn Color", "Penis", "Penis Size", "Pubes", "Pits", "Tail", "Tail Color One", "Tail Color Two", "Tail Color Three", "Snout", "Snout Color One", "Snout Color Two", "Snout Color Three", "Fluff", "Fluff Color One", "Fluff Color Two", "Testicles", "Testicle Size", "Vagina", "Wings", "Wing Color") // TA EDIT
 	if(HAS_TRAIT(H, TRAIT_EDIT_DESCRIPTORS))
 		choices += "Descriptors"
 	var/chosen = input(H, "Change what?", "Appearance") as null|anything in choices
@@ -397,6 +397,54 @@
 						head.add_bodypart_feature(detail_feature)
 					should_update = TRUE
 
+		if("Pubes")
+			var/datum/customizer_choice/bodypart_feature/pubes/pubes_choice = CUSTOMIZER_CHOICE(/datum/customizer_choice/bodypart_feature/pubes)
+			var/list/valid_pubes = list("none")
+			for(var/pubes_type in pubes_choice.sprite_accessories)
+				var/datum/sprite_accessory/pubes/pube_accessory = new pubes_type()
+				valid_pubes[pube_accessory.name] = pubes_type
+
+			var/new_pubes = input(H, "Style your pubic hair", "Pube Styling") as null|anything in valid_pubes
+			if(new_pubes)
+				var/obj/item/bodypart/chest = H.get_bodypart(BODY_ZONE_CHEST)
+				if(chest && chest.bodypart_features)
+					var/datum/bodypart_feature/pubes/old_pubes
+					for(var/datum/bodypart_feature/pubes/existing in chest.bodypart_features)
+						old_pubes = existing
+						break
+					if(old_pubes)
+						chest.remove_bodypart_feature(old_pubes)
+
+					if(new_pubes != "none")
+						var/datum/bodypart_feature/pubes/pubes_feature = new()
+						pubes_feature.set_accessory_type(valid_pubes[new_pubes], null, H)
+						chest.add_bodypart_feature(pubes_feature)
+					should_update = TRUE
+
+		if("Pits")
+			var/datum/customizer_choice/bodypart_feature/pits/pits_choice = CUSTOMIZER_CHOICE(/datum/customizer_choice/bodypart_feature/pits)
+			var/list/valid_pits = list("none")
+			for(var/pits_type in pits_choice.sprite_accessories)
+				var/datum/sprite_accessory/pits/pits_accessory = new pits_type()
+				valid_pits[pits_accessory.name] = pits_type
+
+			var/new_pits = input(H, "Style your armpit hair", "Armpit Hair Styling") as null|anything in valid_pits
+			if(new_pits)
+				var/obj/item/bodypart/chest = H.get_bodypart(BODY_ZONE_CHEST)
+				if(chest && chest.bodypart_features)
+					var/datum/bodypart_feature/pits/old_pits
+					for(var/datum/bodypart_feature/pits/existing in chest.bodypart_features)
+						old_pits = existing
+						break
+					if(old_pits)
+						chest.remove_bodypart_feature(old_pits)
+
+					if(new_pits != "none")
+						var/datum/bodypart_feature/pits/pits_feature = new()
+						pits_feature.set_accessory_type(valid_pits[new_pits], null, H)
+						chest.add_bodypart_feature(pits_feature)
+					should_update = TRUE
+
 		if("Penis")
 			var/list/valid_penis_organs = list("none")
 			var/list/penis_paths = list(/obj/item/organ/penis) + subtypesof(/obj/item/organ/penis)
@@ -510,6 +558,18 @@
 					breasts.accessory_colors = mirror_pick_accessory_colors(H, breasts_type, breasts.accessory_colors) //TA edit - new ERP SYSTEM
 					H.update_body()
 					should_update = TRUE
+
+		if("Breast Color") //TA EDIT START
+			var/obj/item/organ/breasts/breasts = H.getorganslot(ORGAN_SLOT_BREASTS)
+			if(breasts)
+				var/datum/sprite_accessory/breasts/breasts_type = SPRITE_ACCESSORY(breasts.accessory_type)
+				breasts.Remove(H)
+				breasts.accessory_colors = mirror_pick_accessory_colors(H, breasts_type, breasts.accessory_colors)
+				breasts.Insert(H, TRUE, FALSE)
+				H.update_body()
+				should_update = TRUE
+			else
+				to_chat(H, span_warning("You don't have breasts!")) // TA EDIT END
 
 		if("Vagina")
 			var/list/valid_vagina_types = list("none", "human", "hairy", "spade", "furred", "gaping", "cloaca")
@@ -1040,6 +1100,12 @@
 		H.update_body()
 		H.update_body_parts()
 		erp_mark_actor_organs_dirty(H)
+
+/proc/perform_mirror_transform_ui(mob/living/carbon/human/H, atom/source) // TA EDIT START
+	if(!H)
+		return
+	var/datum/mirror_appearance_ui/ui = new(H, source)
+	ui.ui_interact(H)  // TA EDIT END
 
 /proc/mirror_pick_accessory_colors(mob/living/carbon/human/H, datum/sprite_accessory/A, current_colors)
 	if(!H || !A)

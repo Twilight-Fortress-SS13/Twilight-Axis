@@ -1,4 +1,4 @@
-/* 
+/*
 *	these guys are intended to be a speedbump to solo adventurers at mount decap
 *	deadly but small in numbers. come back with a party, chump
 */
@@ -9,24 +9,24 @@
 	faction = list(FACTION_MADMEN, FACTION_BANDITS) // Avoid them hitting bandits in dungeon
 	ambushable = FALSE
 	dodgetime = 15
-	var/mad_outfit = /datum/outfit/job/roguetown/human/species/human/northern/mad_touched_treasure_hunter
+	npc_archetype = /datum/npc_archetype/mad_touched/hunter
 
 /mob/living/carbon/human/species/human/northern/mad_touched_treasure_hunter/ambush
-	threat_point = THREAT_DANGEROUS
+	threat_point = THREAT_ELITE
 	ambush_faction = "treasure_hunters"
 
-/mob/living/carbon/human/species/human/northern/mad_touched_treasure_hunter/Initialize()
+/mob/living/carbon/human/species/human/northern/mad_touched_treasure_hunter/Initialize(mapload)
 	. = ..()
 	//Begin RANDOMISE here
 	set_species(pick(NPC_RACES_TYPES))
 	gender = pick(MALE, FEMALE)
 	dna.species.random_character(src) //Now we just randomise here, MUST be called after both race + gender
-	addtimer(CALLBACK(src, PROC_REF(after_creation)), 1 SECONDS)
+	if(!npc_archetype)
+		addtimer(CALLBACK(src, PROC_REF(after_creation)), 1 SECONDS)
 
 /mob/living/carbon/human/species/human/northern/mad_touched_treasure_hunter/after_creation()
 	..()
 	AddComponent(/datum/component/ai_aggro_system)
-	job = "Mad-touched Treasure Hunter"
 	ADD_TRAIT(src, TRAIT_NOMOOD, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NOHUNGER, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
@@ -37,25 +37,41 @@
 	ADD_TRAIT(src, TRAIT_NOPAINSTUN, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NOPAIN, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NPC_EXAMINE, TRAIT_GENERIC)
-	equipOutfit(new mad_outfit)
 	var/obj/item/bodypart/head/head = get_bodypart(BODY_ZONE_HEAD)
 	head.sellprice = HEAD_BOUNTY_MAD_TOUCHED
 	dna.species.handle_body(src)
 	random_voice_NPC()
 	random_hair_no_beard_NPC()
 	random_eye_color_NPC()
+	roll_mad_touched_voice()
 	var/obj/item/organ/ears/organ_ears = getorgan(/obj/item/organ/ears)
 	if(organ_ears)
 		organ_ears.accessory_colors = "[src.skin_tone]"
 
 	dna.species.handle_body(src)
-	
+
 	real_name = pick(world.file2list("strings/rt/names/human/mad_touched_names.txt"))
 
 	update_hair()
 	update_body()
 	src.regenerate_icons() //Fixes the weird body
 
+/mob/living/carbon/human/species/human/northern/mad_touched_treasure_hunter/proc/roll_mad_touched_voice()
+	if(!prob(40))
+		return
+	switch(rand(1, 4))
+		if(1)
+			dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/warrior]
+			dna.species.soundpack_f = GLOB.voice_packs[/datum/voicepack/female/warrior]
+		if(2)
+			dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/stern]
+			dna.species.soundpack_f = GLOB.voice_packs[/datum/voicepack/female/haughty]
+		if(3)
+			dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/foppish]
+			dna.species.soundpack_f = GLOB.voice_packs[/datum/voicepack/female/dainty]
+		if(4)
+			dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/knight]
+			dna.species.soundpack_f = GLOB.voice_packs[/datum/voicepack/female/haughty]
 
 /datum/outfit/job/roguetown/human/species/human/northern/mad_touched_treasure_hunter/pre_equip(mob/living/carbon/human/H)
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/iron
@@ -115,22 +131,6 @@
 	H.adjust_skillrank_up_to(/datum/skill/misc/swimming, SKILL_LEVEL_APPRENTICE, TRUE)
 	H.adjust_skillrank_up_to(/datum/skill/misc/climbing, SKILL_LEVEL_APPRENTICE, TRUE)
 
-	if(prob(40))
-		var/voicepack_choice = rand(1, 4)
-		switch(voicepack_choice)
-			if(1)
-				H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/warrior]
-				H.dna.species.soundpack_f = GLOB.voice_packs[/datum/voicepack/female/warrior]
-			if(2)
-				H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/stern]
-				H.dna.species.soundpack_f = GLOB.voice_packs[/datum/voicepack/female/haughty]
-			if(3)
-				H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/foppish]
-				H.dna.species.soundpack_f = GLOB.voice_packs[/datum/voicepack/female/dainty]
-			if(4)
-				H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/knight]
-				H.dna.species.soundpack_f = GLOB.voice_packs[/datum/voicepack/female/haughty]
-
 /obj/item/clothing/head/roguetown/menacing/bandit/mad_touched_treasure_hunter //its here so it doesnt wind up on some class' loadout.
 	name = "sack hood"
 	desc = "A ragged hood of thick red dyed jute fibres. The itchiness is unbearable."
@@ -160,48 +160,32 @@
 
 /mob/living/carbon/human/species/human/northern/mad_touched_treasure_hunter/archer
 	ai_controller = /datum/ai_controller/human_npc/archer
-	mad_outfit = /datum/outfit/job/roguetown/human/species/human/northern/mad_touched_treasure_hunter/archer
+	npc_archetype = /datum/npc_archetype/mad_touched/marksman
 
 /mob/living/carbon/human/species/human/northern/mad_touched_treasure_hunter/archer/ambush
-	threat_point = THREAT_DANGEROUS
+	threat_point = THREAT_ELITE
 	ambush_faction = "treasure_hunters"
 
-/mob/living/carbon/human/species/human/northern/mad_touched_treasure_hunter/archer/after_creation()
-	..()
-	job = "Mad-touched Marksman"
-
-/datum/outfit/job/roguetown/human/species/human/northern/mad_touched_treasure_hunter/archer/pre_equip(mob/living/carbon/human/H)
-	..()
-	backr = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
-	backl = /obj/item/quiver/randomfill/highwayman
-	armor = /obj/item/clothing/suit/roguetown/shirt/rags
-	head = null
-	mask = null
-	neck = null
-	gloves = /obj/item/clothing/gloves/roguetown/leather
-	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
-	H.STAPER = 13
-	H.STACON -= 1
-	H.STAWIL -= 1
-	H.adjust_skillrank_up_to(/datum/skill/combat/bows, SKILL_LEVEL_MASTER, TRUE)
-
-/datum/ambush_config/solo_treasure_hunter
-	mob_types = list(
+/datum/npc_warband/solo_treasure_hunter
+	name = "Lone Treasure Hunter"
+	category = FACTION_MADMEN
+	faction_tag = "treasure_hunters"
+	members = list(
 		/mob/living/carbon/human/species/human/northern/mad_touched_treasure_hunter/ambush = 1,
 	)
-	threat_point = THREAT_ELITE
-	faction_tag = "treasure_hunters"
 
-/datum/ambush_config/duo_treasure_hunter
-	mob_types = list(
+/datum/npc_warband/duo_treasure_hunter
+	name = "Treasure Hunter Pair"
+	category = FACTION_MADMEN
+	faction_tag = "treasure_hunters"
+	members = list(
 		/mob/living/carbon/human/species/human/northern/mad_touched_treasure_hunter/ambush = 2,
 	)
-	threat_point = 2 * THREAT_ELITE
-	faction_tag = "treasure_hunters"
 
-/datum/ambush_config/treasure_hunter_posse
-	mob_types = list(
+/datum/npc_warband/treasure_hunter_posse
+	name = "Treasure Hunter Posse"
+	category = FACTION_MADMEN
+	faction_tag = "treasure_hunters"
+	members = list(
 		/mob/living/carbon/human/species/human/northern/mad_touched_treasure_hunter/ambush = 3,
 	)
-	threat_point = 3 * THREAT_ELITE
-	faction_tag = "treasure_hunters"

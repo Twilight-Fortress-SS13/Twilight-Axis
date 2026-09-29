@@ -34,7 +34,25 @@
 
 	init_subtypes(/datum/alch_cauldron_recipe, GLOB.alch_cauldron_recipes)
 
-	init_subtypes(/datum/stew_recipe, GLOB.stew_recipes) 
+
+
+	init_subtypes(/datum/transmutation_recipe, GLOB.transmutation_recipes)
+	for(var/datum/transmutation_recipe/T as anything in GLOB.transmutation_recipes)
+		T.build_display_cache()
+
+	init_paths(/datum/materia_aspect, GLOB.prima_materia_aspects)
+
+	for(var/obj/item/alch/catalyst/path as anything in subtypesof(/obj/item/alch/catalyst))
+		if(path::seed_item)
+			GLOB.catalyst_recipes[path] = list()
+			var/last_picked = 0
+			var/picked = 0
+			for(var/idx in 1 to path::difficulty)
+				do
+					picked = pick(list(1, 2, 3, 4, 5))
+				while(picked == last_picked)
+				GLOB.catalyst_recipes[path] += picked
+				last_picked = picked
 
 	// Faiths
 	for(var/path in subtypesof(/datum/faith))
@@ -90,16 +108,6 @@
 				GLOB.loadout_items_by_category[item.category] += item
 				GLOB.loadout_items_by_category["Всё"] += item
 
-
-	// Combat Music Overrides
-	for (var/path in subtypesof(/datum/combat_music))
-		var/datum/combat_music/combat_music = new path()
-		GLOB.cmode_tracks_by_type[path] = combat_music
-
-	for (var/path in GLOB.cmode_tracks_by_type)
-		var/datum/combat_music/trackref = GLOB.cmode_tracks_by_type[path]
-		cmode_track_to_namelist(trackref)
-
 	// Inquisition Hermes list
 	for (var/path in subtypesof(/datum/inqports))
 		var/datum/inqports/inqports = new path()
@@ -114,7 +122,8 @@
 	if(!istype(L))
 		L = list()
 	for(var/path in subtypesof(prototype))
-		L += new path()
+		if(!is_abstract(path))
+			L += new path()
 	return L
 
 //returns a list of paths to every subtype of prototype (excluding prototype)

@@ -21,7 +21,7 @@
 	round_contrib_points = 3
 	same_job_respawn_delay = 30 MINUTES
 
-	cmode_music = 'sound/music/combat_poacher.ogg'
+	cmode_music = sound("sound/music/combat_poacher.ogg")
 	job_traits = list(TRAIT_SEEPRICES, TRAIT_EMPATH, TRAIT_INTELLECTUAL,)
 	job_subclasses = list(
 		/datum/advclass/mayor
@@ -143,7 +143,7 @@
 		to_chat(user, span_warning("I need to hold a feather!"))
 		revert_cast()
 		return
-	
+
 	var/obj/item/sacrifice
 	for(var/obj/item/I in user.held_items)
 		if(istype(I, /obj/item/paper/scroll))
@@ -154,13 +154,13 @@
 		to_chat(user, span_warning("I need to hold a scroll!"))
 		revert_cast()
 		return
-	
+
 	var/turf/T = get_step(user, user.dir)
 	if(!(locate(/obj/structure/table) in T))
 		to_chat(user, span_warning("I need to make this on a table."))
 		revert_cast()
 		return
-	
+
 	user.visible_message(
 		span_warning("[user] begins to write on a scroll!"),
 		span_notice("I begin to write on a scroll...")
@@ -189,7 +189,7 @@
 /obj/effect/proc_holder/spell/self/mayor_announcement/cast(list/targets, mob/living/user = usr)
 	var/turf/T = get_step(user, user.dir)
 	if(!(locate(/obj/structure/roguemachine/scomm) in T))
-		to_chat(user, span_warning("I need an SCOM to speak.")) 
+		to_chat(user, span_warning("I need an SCOM to speak."))
 		revert_cast()
 		return
 	if(!SScommunications.can_announce(user, FALSE))

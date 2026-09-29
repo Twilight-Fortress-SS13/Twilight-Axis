@@ -53,7 +53,7 @@
 	origin_default = /datum/virtue/origin/valorian
 	origin = "Valoria"
 	languages = list(/datum/language/common)
-	blood_color = "#b98b17"
+	blood_color = "#00ffef"
 
 /datum/species/dracon
 	desc_title = "Дракиане"

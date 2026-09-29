@@ -149,7 +149,7 @@
 	. += span_info("Right-clicking the eye on your HUD allows you to check for tracks, alongside hidden ambushes and traps. The effectiveness of each check scales with your character's Perception and Tracking skill.")
 	. += span_info("The higher your Tracking skill is, the more likely you can discover older and hidden tracks. Likewise, higher levels also let you determine how old the tracks are, which direction they've went, and what kinds of footwear or soles made them.")
 
-/obj/effect/track/Initialize()
+/obj/effect/track/Initialize(mapload)
 	. = ..()
 	real_image = image(icon, src, real_icon_state, ABOVE_OPEN_TURF_LAYER) //Default image in case manually created.
 
@@ -293,7 +293,7 @@
 	known_by[tracker] = competence
 	if(ishuman(tracker))
 		var/mob/living/carbon/human/H = tracker
-		if(HAS_TRAIT(tracker, TRAIT_SLEUTH) && H.current_mark == creator)
+		if(HAS_TRAIT(tracker, TRAIT_PERFECT_TRACKER) && H.current_mark == creator)
 			if(!(tracker in highlighted))
 				real_icon_state = "tracks_marked"
 				real_image = image(icon, src, real_icon_state, ABOVE_OPEN_TURF_LAYER, original_dir)
@@ -505,7 +505,7 @@
 
 /obj/effect/track/structure/handle_creation(mob/living/track_source)
 	creator = track_source
-	RegisterSignal(track_source, COMSIG_PARENT_QDELETING, PROC_REF(clear_creator_reference))
+	RegisterSignal(track_source, COMSIG_PARENT_QDELETING, PROC_REF(clear_creator_reference), override = TRUE) // TA EDIT
 	creation_time = world.time
 	track_source.get_track_info(src)
 	real_image = image(icon, src, real_icon_state, ABOVE_OPEN_TURF_LAYER, track_source.dir)

@@ -1,4 +1,6 @@
 /mob/living/simple_animal/hostile/retaliate/rogue/mirespider
+	anatomy_type = /datum/anatomy/spider/mirespider
+	attack_aim = MOB_AIM_GROUND
 	icon = 'icons/mob/mirespider_small.dmi'
 	desc = "Said to have originated from the decapitated heads of fallen legionnaires from eons past, grown legs and a voracious appetite, mire crawlers are common pests in many a wetland. Occasionally hunted for their silk."
 	name = "mire crawler"
@@ -42,27 +44,97 @@
 	minimum_distance = 0
 	milkies = FALSE
 
+	// TA EDIT START
+	gender = MALE
+	animal_species = /mob/living/simple_animal/hostile/retaliate/rogue/mirespider
+	food_type = list(/obj/item/reagent_containers/food/snacks/rogue/meat)
+	tame_food_type = list(/obj/item/reagent_containers/food/snacks/rogue/meat)
+	tame_chance = 15
+	bonus_tame_chance = 10
+	// TA EDIT END
+
 	STACON = 7
 	STASTR = 7
 	STASPD = 13
 	footstep_type = FOOTSTEP_MOB_BAREFOOT
-	defprob = 40
 	retreat_health = 0
 	food = 0
+	var/fixed_gender = FALSE // TA EDIT
 
 	AIStatus = AI_OFF
 	can_have_ai = FALSE
 	ai_controller = /datum/ai_controller/mirespider
+	move_base_delay = MOVEMENT_DELAY_SPD_17
 
-/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/Initialize()
+/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/ai_aggro_system)
-	AddElement(/datum/element/ai_retaliate)
+	// TA EDIT START
+	if(ai_controller)
+		AddComponent(/datum/component/ai_aggro_system)
+		AddElement(/datum/element/ai_retaliate)
+	if(!fixed_gender)
+		gender = prob(33) ? FEMALE : MALE
+	if(gender == FEMALE && !adult_growth)
+		childtype = list(
+			/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/spiderling = 67,
+			/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/spiderling/female = 33,
+		)
+	else
+		childtype = null
+	// TA EDIT END
 	update_icon()
 	ADD_TRAIT(src, TRAIT_NOPAINSTUN, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_KNEESTINGER_IMMUNITY, INNATE_TRAIT)
 
 	addtimer(CALLBACK(src, PROC_REF(find_lurker_to_follow)), 10)
+
+// TA EDIT START
+/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/male
+	fixed_gender = TRUE
+	gender = MALE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/female
+	fixed_gender = TRUE
+	gender = FEMALE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/spiderling
+	name = "mire crawlerling"
+	desc = "A young mire crawler, small and harmless until it matures."
+	fixed_gender = TRUE
+	gender = MALE
+	animal_species = null
+	adult_growth = /mob/living/simple_animal/hostile/retaliate/rogue/mirespider/male
+	health = 15
+	maxHealth = 15
+	melee_damage_lower = 1
+	melee_damage_upper = 3
+	STACON = 3
+	STASTR = 2
+	STASPD = 8
+	mob_size = MOB_SIZE_SMALL
+	aggressive = 0
+	ai_controller = null
+	can_receive_livestock_commands = FALSE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/spiderling/CanAttack(atom/the_target)
+	return FALSE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/spiderling/Retaliate()
+	return 0
+
+/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/spiderling/GiveTarget(new_target)
+	return 0
+
+/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/spiderling/Initialize(mapload)
+	. = ..()
+	var/matrix/spiderling_scale = matrix()
+	spiderling_scale.Scale(0.65, 0.65)
+	transform = spiderling_scale
+
+/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/spiderling/female
+	gender = FEMALE
+	adult_growth = /mob/living/simple_animal/hostile/retaliate/rogue/mirespider/female
+// TA EDIT END
 
 /mob/living/simple_animal/hostile/retaliate/rogue/mirespider/proc/find_lurker_to_follow()
 	var/mob/living/simple_animal/hostile/rogue/mirespider_lurker/lurker = null
@@ -74,6 +146,14 @@
 
 	if(lurker && ai_controller)
 		ai_controller.set_blackboard_key(BB_FOLLOW_TARGET, lurker)
+
+
+// TA EDIT START
+/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/tamed(mob/user)
+	clear_enemies()
+	LoseTarget()
+	return ..(user)
+// TA EDIT END
 
 /mob/living/simple_animal/hostile/retaliate/rogue/mirespider/death(gibbed)
 	..()
@@ -105,50 +185,9 @@
 		Retaliate()
 		GiveTarget(pulledby)
 
-
-/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/simple_limb_hit(zone)
-	if(!zone)
-		return ""
-	switch(zone)
-		if(BODY_ZONE_PRECISE_R_EYE)
-			return "head"
-		if(BODY_ZONE_PRECISE_L_EYE)
-			return "head"
-		if(BODY_ZONE_PRECISE_NOSE)
-			return "nose"
-		if(BODY_ZONE_PRECISE_MOUTH)
-			return "mouth"
-		if(BODY_ZONE_PRECISE_SKULL)
-			return "head"
-		if(BODY_ZONE_PRECISE_EARS)
-			return "head"
-		if(BODY_ZONE_PRECISE_NECK)
-			return "neck"
-		if(BODY_ZONE_PRECISE_L_HAND)
-			return "foreleg"
-		if(BODY_ZONE_PRECISE_R_HAND)
-			return "foreleg"
-		if(BODY_ZONE_PRECISE_L_FOOT)
-			return "leg"
-		if(BODY_ZONE_PRECISE_R_FOOT)
-			return "leg"
-		if(BODY_ZONE_PRECISE_STOMACH)
-			return "stomach"
-		if(BODY_ZONE_PRECISE_GROIN)
-			return "tail"
-		if(BODY_ZONE_HEAD)
-			return "head"
-		if(BODY_ZONE_R_LEG)
-			return "leg"
-		if(BODY_ZONE_L_LEG)
-			return "leg"
-		if(BODY_ZONE_R_ARM)
-			return "foreleg"
-		if(BODY_ZONE_L_ARM)
-			return "foreleg"
-	return ..()
-
 /mob/living/simple_animal/hostile/rogue/mirespider_lurker
+	anatomy_type = /datum/anatomy/spider/spitter
+	attack_aim = MOB_AIM_HIGH // BIG spidah with tall sprite
 	icon = 'icons/mob/mirespider_new.dmi'
 	desc = "An unusually large and dangerous mire crawler, these lumbering creatures tend to find smaller specimens gravitating to them for safety - or perhaps simply to hunt more efficiently."
 	name = "mire lurker"
@@ -195,6 +234,7 @@
 	AIStatus = AI_OFF
 	can_have_ai = FALSE
 	ai_controller = /datum/ai_controller/mirespider_lurker
+	move_base_delay = MOVEMENT_DELAY_SPD_17
 	projectiletype = /obj/projectile/bullet/spider
 
 	ranged = 1
@@ -238,7 +278,7 @@
 						/obj/item/alch/viscera = 4)
 	head_butcher = /obj/item/natural/head/mirelurker
 
-/mob/living/simple_animal/hostile/rogue/mirespider_lurker/Initialize()
+/mob/living/simple_animal/hostile/rogue/mirespider_lurker/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/ai_aggro_system)
 	AddElement(/datum/element/ai_retaliate)
@@ -274,6 +314,8 @@
 	followers.Cut()
 
 /mob/living/simple_animal/hostile/rogue/mirespider_paralytic
+	anatomy_type = /datum/anatomy/spider/mirespider
+	attack_aim = MOB_AIM_HIGH // BIG spidah with tall sprite
 	icon = 'icons/mob/mirespider_small.dmi'
 	name = "aragn"
 	desc = "A gigantic species of spider accompanied always by a strong sulphuric stench. Its fangs carry \
@@ -318,11 +360,12 @@
 	AIStatus = AI_OFF
 	can_have_ai = FALSE
 	ai_controller = /datum/ai_controller/mirespider_paralytic
+	move_base_delay = MOVEMENT_DELAY_SPD_17
 
 /datum/intent/simple/bite/mirespider_paralytic
 	clickcd = ARAGN_ATTACK_SPEED
 
-/mob/living/simple_animal/hostile/rogue/mirespider_paralytic/Initialize()
+/mob/living/simple_animal/hostile/rogue/mirespider_paralytic/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/ai_aggro_system)
 	AddElement(/datum/element/ai_retaliate)
@@ -340,7 +383,7 @@
 	desc = "YOU SHOULD NOT BE SEEING THIS, GO YELL AT KETRAI."
 	icon_state = "crawler"
 
-/obj/random/spider/Initialize()
+/obj/random/spider/Initialize(mapload)
 	. = ..()
 	spawn_random_spider_at(loc)
 	qdel(src)

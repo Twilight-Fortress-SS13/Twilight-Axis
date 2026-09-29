@@ -35,7 +35,7 @@
 	var/list/ledger_view = list()
 	COOLDOWN_DECLARE(fulfill_retry_cooldown)
 
-/obj/structure/roguemachine/steward/Initialize()
+/obj/structure/roguemachine/steward/Initialize(mapload)
 	. = ..()
 	if(SStreasury.steward_machine == null) //The "only one" mapped in Nerve Master at map start
 		SStreasury.steward_machine = src
@@ -146,8 +146,8 @@
 		return
 	if(istype(P, /obj/item/roguecoin/aalloy))
 		return
-	if(istype(P, /obj/item/roguecoin/inqcoin))	
-		return	
+	if(istype(P, /obj/item/roguecoin/inqcoin))
+		return
 	if(istype(P, /obj/item/roguecoin))
 		record_round_statistic(STATS_MAMMONS_DEPOSITED, P.get_real_price())
 		SStreasury.mint(SStreasury.discretionary_fund, P.get_real_price(), "NERVE MASTER deposit")
@@ -208,6 +208,10 @@
 			return
 		if(!has_fiscal_authority(usr))
 			say("Only the Steward, Clerk, or Ruler may levy fines.")
+			playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
+			return
+		if(X == usr)
+			say("You cannot fine yourself.")
 			playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
 			return
 		for(var/mob/living/A in SStreasury.bank_accounts)
@@ -747,7 +751,7 @@
 			// ── Active Loans ──────────────────────────────────────────────────
 			if(length(SStreasury.loans))
 				var/crown_loans = 0
-				var/crown_loan_content = "" 
+				var/crown_loan_content = ""
 				for(var/datum/loan/L in SStreasury.loans)
 					crown_loans++
 					if(L.source_fund == SStreasury.discretionary_fund)
@@ -830,6 +834,8 @@
 			contents += "<td>Headeater Levy</td><td align='right'><font color='#5cb85c'>[GLOB.azure_round_stats[STATS_REVENUE_HEADEATER_LEVY]]m</font></td></tr>"
 			contents += "<tr><td>Import Tariff</td><td align='right'><font color='#5cb85c'>[GLOB.azure_round_stats[STATS_REVENUE_IMPORT_TARIFF]]m</font></td>"
 			contents += "<td>Export Duty</td><td align='right'><font color='#5cb85c'>[GLOB.azure_round_stats[STATS_REVENUE_EXPORT_DUTY]]m</font></td></tr>"
+			contents += "<tr><td>Recovered Spoils</td><td align='right'><font color='#5cb85c'>[GLOB.azure_round_stats[STATS_REVENUE_RECOVERED_SPOILS] || 0]m</font></td>"
+			contents += "<td></td><td></td></tr>"
 			contents += "</table><br>"
 
 			// Forgone Revenue (two-column, muted - what the Crown *could* have collected)

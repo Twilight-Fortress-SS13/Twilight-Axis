@@ -1,15 +1,15 @@
 #define CANNON_POWDER_COST 10
 
 /datum/anvil_recipe/weapons/steel/cannon
-	name = "Cannon"
-	additional_items = list(/obj/item/ingot/steel, /obj/item/ingot/steel, /obj/item/ingot/blacksteel, /obj/item/ingot/steel, /obj/item/grown/log/tree/small, /obj/item/grown/log/tree/small,)
-	req_bar = /obj/item/ingot/steel
+	name = "Cannon (+2 Steel, +2 Small Log)"
+	additional_items = list(/obj/item/ingot/steel, /obj/item/ingot/steel, /obj/item/grown/log/tree/small, /obj/item/grown/log/tree/small)
+	req_bar = /obj/item/ingot/blacksteel
 	created_item = /obj/structure/cannon
 	display_category = ITEM_CAT_WEAPONS_SWORDS
 	craftdiff = 5
 
 /datum/anvil_recipe/weapons/steel/cannon_zizo
-	name = "Cannon"
+	name = "Cannon (+2 Steel, +2 Small Log)"
 	additional_items = list(/obj/item/ingot/steel, /obj/item/ingot/steel, /obj/item/grown/log/tree/small, /obj/item/grown/log/tree/small,)
 	req_bar = 	/obj/item/ingot/steel/zizo
 	created_item = /obj/structure/cannon
@@ -18,7 +18,7 @@
 
 /datum/anvil_recipe/weapons/steel/cannonball
 	name = "Cannon Ball"
-	additional_items = list(/obj/item/ingot/steel, /obj/item/ingot/steel)
+	additional_items = list(/obj/item/ingot/steel)
 	req_bar = /obj/item/ingot/steel
 	created_item = /obj/item/cannon_shell/cannonball
 	display_category = ITEM_CAT_WEAPONS_AMMO
@@ -29,6 +29,7 @@
 	req_bar = /obj/item/ingot/steel
 	created_item = /obj/item/cannon_shell/grapeshot
 	display_category = ITEM_CAT_WEAPONS_AMMO
+	createditem_num = 2
 
 /datum/crafting_recipe/roguetown/survival/fiberfuse
 	name = "fiber fuse"
@@ -66,6 +67,8 @@
 	icon_state = "fiber_fuse"
 	icon_state_lit = "fiber_fuse_lit"
 	burn_time = 3 SECONDS
+	grid_width = 32
+	grid_height = 32
 
 /obj/item/cannon_fuse/parchment
 	name = "parchment fuse"
@@ -73,6 +76,8 @@
 	icon_state = "parchment_fuse"
 	icon_state_lit = "parchment_fuse_lit"
 	burn_time = 1 SECONDS
+	grid_width = 32
+	grid_height = 32
 
 
 
@@ -510,7 +515,10 @@
 	var/skill = 0
 	if(user && isliving(user))
 		var/mob/living/L = user
-		skill = L.get_skill_level(/datum/skill/combat/twilight_firearms)
+		skill = max(
+			L.get_skill_level(/datum/skill/combat/twilight_firearms),
+			L.get_skill_level(/datum/skill/craft/engineering),
+		)
 
 	var/misfire_chance = max(0, 25 - (skill * 5))
 

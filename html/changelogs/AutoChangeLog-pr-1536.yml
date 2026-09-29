@@ -1,0 +1,4 @@
+author: "BOTEeshee"
+delete-after: True
+changes:
+  - bugfix: "Починила подсказки между днями."

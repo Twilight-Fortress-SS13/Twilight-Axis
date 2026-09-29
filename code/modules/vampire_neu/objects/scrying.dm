@@ -44,7 +44,7 @@
 		return
 	area_tele()
 
-/mob/dead/observer/eye/arcane/Initialize()
+/mob/dead/observer/eye/arcane/Initialize(mapload)
 	. = ..()
 	if(length(scry_verbs))
 		add_verb(src, scry_verbs)
@@ -77,7 +77,7 @@
 	set name = "Telepathy"
 	set category = "RoleUnique.Arcane Eye"
 
-	var/msg = sanitize(input("Send a message.", "Command") as text|null)
+	var/msg = sanitize(input(src, "Send a message.", "Command") as text|null)
 	if(!msg)
 		return
 	for(var/datum/mind/V in SSmapping.retainer.vampires)
@@ -139,7 +139,7 @@
 		/mob/dead/observer/eye/arcane/proc/eye_up,
 	)
 
-/mob/dead/observer/eye/arcane/beach/Initialize()
+/mob/dead/observer/eye/arcane/beach/Initialize(mapload)
 	. = ..()
 	add_verb(src, list(/mob/dead/observer/eye/arcane/beach/proc/unleash_inundation))
 
@@ -150,7 +150,10 @@
 		var/static/list/allowed_areas = list(
 			/area/rogue/outdoors/beach,
 			/area/rogue/outdoors/beach/north,
-			/area/rogue/outdoors/beach/south
+			/area/rogue/outdoors/beach/south,
+			/area/rogue/outdoors/beach/grim,
+			/area/rogue/outdoors/beach/north/grim,
+			/area/rogue/outdoors/beach/south/grim
 		)
 		if(!(A.type in allowed_areas))
 			to_chat(src, span_warning("The abyssal pool binds your sight to the beach!"))

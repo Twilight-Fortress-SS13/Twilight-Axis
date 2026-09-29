@@ -116,6 +116,12 @@
 	valid_outputs = list(/obj/item/alch/golddust = 1)
 	bonus_chance_outputs = list(/obj/item/alch/golddust = 33)
 
+/datum/alch_grind_recipe/gold_slag // identical to gold ore
+	name = "Gold Slag"
+	valid_input = /obj/item/goldslag
+	valid_outputs = list(/obj/item/alch/golddust = 1)
+	bonus_chance_outputs = list(/obj/item/alch/golddust = 33)
+
 /datum/alch_grind_recipe/silver_ore
 	name = "Silver Ore"
 	valid_input = /obj/item/rogueore/silver
@@ -189,13 +195,13 @@
 
 // Start of gem dust section - I've included gold dust as an additional product because of lesser alchemy, grinding up a gem should give you a bit extra (I mean come on it's a gem)
 
-/datum/alch_grind_recipe/mineraldustyellow  // costs two gold to make
+/datum/alch_grind_recipe/mineraldustyellow	// costs two gold to make
 	name = "Mineral Dust (Toper)"
 	valid_input = /obj/item/roguegem/yellow
 	valid_outputs = list(/obj/item/alch/mineraldust = 1, /obj/item/alch/golddust = 1)
 	bonus_chance_outputs = list(/obj/item/alch/golddust = 66)
 
-/datum/alch_grind_recipe/mineraldustgreen  // costs 4 gold to make
+/datum/alch_grind_recipe/mineraldustgreen	// costs 4 gold to make
 	name = "Mineral Dust (Gemerald)"
 	valid_input = /obj/item/roguegem/green
 	valid_outputs = list(/obj/item/alch/mineraldust = 1, /obj/item/alch/earthdust = 1, /obj/item/alch/golddust = 2)
@@ -213,6 +219,12 @@
 	valid_outputs = list(/obj/item/alch/mineraldust = 1, /obj/item/alch/waterdust = 2, /obj/item/alch/golddust = 4)
 	bonus_chance_outputs = list(/obj/item/alch/waterdust = 66)
 
+/datum/alch_grind_recipe/mineraldustred // not part of the usual chain, but IS a mage gem. sellprice is between blortz and dorpel, so it's considered blortz-equivalent here
+	name = "Mineral Dust (Rontz)"
+	valid_input = /obj/item/roguegem/ruby
+	valid_outputs = list(/obj/item/alch/mineraldust = 1, /obj/item/alch/waterdust = 2, /obj/item/alch/golddust = 4)
+	bonus_chance_outputs = list(/obj/item/alch/silverdust = 33) // this is the one gem that's explicitly divine and not producable by mages. even accounting for silverface markup and high export duty (used 30% as an extreme example) it "only" takes selling 6 rontz to the balloon to buy a silver dagger to smelt for an ingot. at 3 silver dust per ore, you need _nine_ rontz to get any usable silver with this + reconstitution, so good fucking luck. you can use it for potions and other things though!
+
 /datum/alch_grind_recipe/mineraldustdiamond // costs a whopping 18 gold to make, why are you doing this
 	name = "Mineral Dust (Dorpel)"
 	valid_input = /obj/item/roguegem/diamond
@@ -222,7 +234,7 @@
 /datum/alch_grind_recipe/mineraldustriddle //why are you doing this...
 	name = "Mineral Dust (Riddle of Steel)"
 	valid_input = /obj/item/riddleofsteel
-	valid_outputs = list(/obj/item/alch/mineraldust = 2, /obj/item/alch/airdust = 1, /obj/item/alch/irondust = 1, /obj/item/alch/firedust = 1, /obj/item/alch/magicdust = 1, /obj/item/alch/silverdust = 1, /obj/item/alch/coaldust = 1, /obj/item/alch/runedust = 1, /obj/item/alch/waterdust = 1)  // if you're crazy enough to grind a riddle you should get at LEAST one of every dust.
+	valid_outputs = list(/obj/item/alch/mineraldust = 2, /obj/item/alch/airdust = 1, /obj/item/alch/irondust = 1, /obj/item/alch/firedust = 1, /obj/item/alch/magicdust = 1, /obj/item/alch/silverdust = 1, /obj/item/alch/coaldust = 1, /obj/item/alch/runedust = 1, /obj/item/alch/waterdust = 1)	// if you're crazy enough to grind a riddle you should get at LEAST one of every dust.
 	bonus_chance_outputs = list(/obj/item/alch/mineraldust = 25, /obj/item/alch/airdust = 25, /obj/item/alch/irondust = 25, /obj/item/alch/firedust = 25, /obj/item/alch/magicdust = 25, /obj/item/alch/silverdust = 25, /obj/item/alch/coaldust = 25, /obj/item/alch/runedust = 25, /obj/item/alch/waterdust = 25)
 
 // End of gem dust section

@@ -72,11 +72,6 @@
 	if(amount > arousal)
 		last_arousal_increase_time = world.time
 	var/clamp_max = MAX_AROUSAL
-	var/mob/user = parent
-	if(user.has_flaw(/datum/charflaw/addiction/thrillseeker))
-		clamp_max = THRILLSEEKER_THRESHOLD
-		if(forced)
-			clamp_max = 50
 	var/new_arousal = clamp(amount, 0, clamp_max)
 	if(!new_arousal && !arousal)
 		return arousal
@@ -174,7 +169,7 @@
 	var/list/parent_sessions = return_sessions_with_user(parent)
 	var/datum/sex_session/highest_priority = return_highest_priority_action(parent_sessions, parent)
 	var/mob/living/carbon/human/climaxer
-	var/mob/living/carbon/human/partner 
+	var/mob/living/carbon/human/partner
 	var/datum/sex_action/action = SEX_ACTION(highest_priority.current_action)
 
 	if(action.flipped)
@@ -184,23 +179,28 @@
 		climaxer = highest_priority.user
 		partner = highest_priority.target
 
-	playsound(parent, 'sound/misc/mat/endout.ogg', 50, TRUE, ignore_walls = FALSE)
+	if(mob == partner && action.flipped)
+		climaxer = mob
+		partner = highest_priority.target
+
+	playsound(parent, 'sound/misc/mat/endout.ogg', 50, TRUE, extrarange = (highest_priority.doing_subtly ? -6 : 0), ignore_walls = FALSE)
 	// Special case for when the climaxer has a penis but no testicles
 	if(!mob.getorganslot(ORGAN_SLOT_TESTICLES) && mob.getorganslot(ORGAN_SLOT_PENIS))
-		mob.visible_message(span_love("[mob] climaxes, yet nothing is released!"))
+		mob.visible_message(span_love("[mob] climaxes, yet nothing is released!"), vision_distance = (highest_priority.doing_subtly ? 1 : DEFAULT_MESSAGE_RANGE))
 		after_ejaculation(action, climaxer, partner)
 		return
-	if(!highest_priority)
+	if(!highest_priority)	// We reached this part without a dedicated session.
 		mob.visible_message(span_love("[mob] makes a mess!"))
 		var/turf/turf = get_turf(parent)
 		new /obj/effect/decal/cleanable/coom(turf)
 		after_ejaculation(action, climaxer, partner)
-	else	
+	else
 		var/return_message = action.handle_climax_message(climaxer, partner)
 		if(!return_message)
-			mob.visible_message(span_love("[mob] makes a mess!"))
+			mob.visible_message(span_love("[mob] makes a mess!"), vision_distance = (highest_priority.doing_subtly ? 1 : DEFAULT_MESSAGE_RANGE))
 			var/turf/turf = get_turf(parent)
-			new /obj/effect/decal/cleanable/coom(turf)
+			if(!highest_priority.doing_subtly)
+				new /obj/effect/decal/cleanable/coom(turf)
 			after_ejaculation(action, climaxer, partner)
 		else
 			handle_climax(return_message, climaxer, partner, action)
@@ -266,7 +266,10 @@
 			climaxer.add_stress(/datum/stressevent/thrillsex)
 		if(prob(10))
 			climaxer.emote("groan", forced = TRUE)
-		return	
+		if(!HAS_TRAIT(climaxer, TRAIT_UNSATISFIED))
+			climaxer.sate_addiction(/datum/charflaw/addiction/lovefiend)
+			partner.sate_addiction(/datum/charflaw/addiction/lovefiend)
+		return
 
 	climaxer.emote("moan", forced = TRUE)
 	climaxer.playsound_local(climaxer, 'sound/misc/mat/end.ogg', 100)
@@ -360,7 +363,7 @@
 		return
 	user.apply_damage(damage, BRUTE, part)
 
-/datum/component/arousal/proc/try_do_moan(arousal_amt, pain_amt, applied_force, giving)
+/datum/component/arousal/proc/try_do_moan(arousal_amt, pain_amt, applied_force, giving, doing_subtly)
 	var/mob/user = parent
 	if(arousal_amt < 1.5)
 		return
@@ -392,8 +395,13 @@
 			if(prob(60))
 				chosen_emote = "painmoan"
 
+	var/be_quiet = FALSE
+	var/list/parent_sessions = return_sessions_with_user(parent)
+	var/datum/sex_session/highest_priority = return_highest_priority_action(parent_sessions, parent)
+	if(pain_amt < PAIN_MILD_EFFECT && highest_priority?.doing_subtly)
+		be_quiet = TRUE
 	last_moan = world.time
-	user.emote(chosen_emote)
+	user.emote(chosen_emote, quiet = be_quiet)
 
 /datum/component/arousal/proc/try_do_pain_effect(pain_amt, giving)
 	var/mob/user = parent

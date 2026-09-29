@@ -52,17 +52,17 @@
 
 	// Uncomment below for debugging purposes.
 	// if(target == user || ishuman(target))
-	// 	to_chat(user, span_warning("You mark [target] for testing purposes!"))
-	// 	if(marked_target)
-	// 		remove_mark()
-	// 	// Apply new mark
-	// 	marked_target = target
-	// 	tracking_spell = new()
-	// 	tracking_spell.marked_target = marked_target
-	// 	tracking_spell.parent_spell = src
-	// 	user.mind.AddSpell(tracking_spell)
-	// 	mark_component.set_marked_target(marked_target)
-	// 	return TRUE
+	//	to_chat(user, span_warning("You mark [target] for testing purposes!"))
+	//	if(marked_target)
+	//		remove_mark()
+	//	// Apply new mark
+	//	marked_target = target
+	//	tracking_spell = new()
+	//	tracking_spell.marked_target = marked_target
+	//	tracking_spell.parent_spell = src
+	//	user.mind.AddSpell(tracking_spell)
+	//	mark_component.set_marked_target(marked_target)
+	//	return TRUE
 
 	var/list/valid_targets = get_valid_targets(user)
 	if(!length(valid_targets))
@@ -84,14 +84,14 @@
 	mark_component.set_marked_target(marked_target)
 
 	if(marked_target != user)
-		to_chat(user, span_warning("[user] traces a glowing symbol in the air marking [marked_target]."), 
-							 span_notice("You mark [marked_target] for pursuit."))
+		to_chat(user, span_warning("[user] traces a glowing symbol in the air marking [marked_target]."),
+								span_notice("You mark [marked_target] for pursuit."))
 
 	return TRUE
 
 /obj/effect/proc_holder/spell/invoked/mark_target/proc/get_valid_targets(mob/user)
 	var/list/valid_targets = list()
-	
+
 	for(var/mob/living/carbon/human/player in GLOB.player_list)
 		if(player == user || player.stat == DEAD || !player.mind || !player.client || player == marked_target)
 			continue
@@ -204,6 +204,9 @@
 		/area/rogue/outdoors/beach,
 		/area/rogue/outdoors/beach/north,
 		/area/rogue/outdoors/beach/south,
+		/area/rogue/outdoors/beach/grim,
+		/area/rogue/outdoors/beach/north/grim,
+		/area/rogue/outdoors/beach/south/grim,
 		/area/rogue/outdoors/beach/harbor,
 		/area/rogue/rockharbor,
 		/area/rogue/outdoors/desert/river
@@ -233,7 +236,7 @@
 		return
 
 	var/turf/destination = pick(safe_turfs)
-	
+
 	// Create portal at origin
 	var/obj/structure/portal_jaunt/portal = new(original_turf)
 	portal.linked_turf = destination

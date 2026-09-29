@@ -459,7 +459,7 @@ SUBSYSTEM_DEF(vote)
 			text += "<b>Vote Result: Inconclusive - No Votes!</b>"
 	log_vote(text)
 	remove_action_buttons()
-	to_chat(world, "\n<font color='purple'>[text]</font>")
+	to_world("\n<font color='purple'>[text]</font>")
 	return .
 /datum/controller/subsystem/vote/proc/result()
 	. = announce_result()
@@ -479,20 +479,20 @@ SUBSYSTEM_DEF(vote)
 			if("map")
 				// save_map_vote_log(.)
 				SSmapping.changemap(global.config.maplist[.])
-				SSmapping.map_voted = TRUE
 			if("endround")
 				if(. == "Continue Playing")
 					log_game("LOG VOTE: CONTINUE PLAYING AT [REALTIMEOFDAY]")
 					GLOB.round_timer = world.time + ROUND_EXTENSION_TIME
 					world.TgsAnnounceRoundExtended()
 				else
-					log_game("LOG VOTE: ELSE  [REALTIMEOFDAY]")
+					log_game("LOG VOTE: ELSE	[REALTIMEOFDAY]")
 					log_game("LOG VOTE: ROUNDVOTEEND [REALTIMEOFDAY]")
-					to_chat(world, "\n<font color='purple'>[ROUND_END_TIME_VERBAL]</font>")
+					to_world("\n<font color='purple'>[ROUND_END_TIME_VERBAL]</font>")
 					SSgamemode.roundvoteend = TRUE
 					SSgamemode.round_ends_at = world.time + ROUND_END_TIME
 					world.TgsAnnounceVoteEndRound()
-					addtimer(CALLBACK(src, PROC_REF(initiate_vote), "map", "Psydon"), 10) // TA EDIT
+					var/map_vote_period = ROUND_END_TIME + (CONFIG_GET(number/round_end_countdown) * 10) // TA EDIT
+					addtimer(CALLBACK(src, PROC_REF(initiate_vote), "map", "Psydon", map_vote_period), 10) // TA EDIT
 			if("storyteller")
 				save_storyteller_vote_log(., "completed")
 				SSgamemode.storyteller_vote_result(.)
@@ -511,7 +511,7 @@ SUBSYSTEM_DEF(vote)
 		if(!active_admins)
 			SSticker.Reboot("Restart vote successful.", "restart vote")
 		else
-			to_chat(world, "<span style='boldannounce'>Notice:Restart vote will not restart the server automatically because there are active gamemasters on.</span>")
+			to_world("<span style='boldannounce'>Notice:Restart vote will not restart the server automatically because there are active gamemasters on.</span>")
 			message_admins("A restart vote has passed, but there are active admins on with +server, so it has been canceled. If you wish, you may restart the server.")
 
 	return .
@@ -602,7 +602,7 @@ SUBSYSTEM_DEF(vote)
 		)
 	return TRUE
 
-/datum/controller/subsystem/vote/proc/save_storyteller_vote_log(winning_choice = null, state = "active")
+/datum/controller/subsystem/vote/proc/save_storyteller_vote_log(winning_choice = null, state = "active", starting_pop = null)
 	var/json_file = file(LAST_STORYTELLER_VOTE_LOG_FILE)
 	var/list/file_data = list()
 	if(!fexists(json_file))
@@ -620,6 +620,8 @@ SUBSYSTEM_DEF(vote)
 		file_data -= "winner"
 	if(winner_type)
 		file_data["storyteller_vote"] = "[winner_type]"
+	if(!isnull(starting_pop))
+		file_data["storyteller_vote_pop"] = starting_pop
 	var/list/votes = list()
 	for(var/voter_ckey in storyteller_vote_log)
 		var/list/vote_data = storyteller_vote_log[voter_ckey]
@@ -783,9 +785,9 @@ SUBSYSTEM_DEF(vote)
 				SEND_SOUND(M, vote_alert)
 		if(mode == "storyteller")
 			save_storyteller_vote_log(null, "active")
-			to_chat(world, "\n<font color='purple'><b>[text]</b>\nНажмите <a href='?src=[REF(src)]'>сюда</a>, чтобы проголосовать за рассказчика.\nНа голосование отведено [DisplayTimeText(vp)].</font>")
+			to_world("\n<font color='purple'><b>[text]</b>\nНажмите <a href='?src=[REF(src)]'>сюда</a>, чтобы проголосовать за рассказчика.\nНа голосование отведено [DisplayTimeText(vp)].</font>")
 		else
-			to_chat(world, "\n<font color='purple'><b>[text]</b>\nClick <a href='?src=[REF(src)]'>here</a> to place your vote.\nYou have [DisplayTimeText(vp)] to vote.</font>")
+			to_world("\n<font color='purple'><b>[text]</b>\nClick <a href='?src=[REF(src)]'>here</a> to place your vote.\nYou have [DisplayTimeText(vp)] to vote.</font>")
 		for(var/client/C in GLOB.clients)
 			if(!isliving(C.mob))
 				show_vote(C)
@@ -808,6 +810,14 @@ SUBSYSTEM_DEF(vote)
 		to_chat(C, "\n<font color='purple'><b>[text]</b>\nClick <a href='?src=[REF(src)]'>here</a> to place your vote.\nYou have [DisplayTimeText(remaining_time)] to vote.</font>")
 	if(!isliving(C.mob))
 		show_vote(C)
+
+/datum/controller/subsystem/vote/proc/remind_map_vote() // TA EDIT START
+	if(mode != "map")
+		return
+	var/vote_period = custom_vote_period || CONFIG_GET(number/vote_period)
+	var/remaining_time = max(0, started_time + vote_period - world.time)
+	var/text = "[capitalize(mode)] vote started by [initiator]."
+	to_world("\n<font color='purple'><b>[text]</b>\nClick <a href='?src=[REF(src)]'>here</a> to place your vote.\nYou have [DisplayTimeText(remaining_time)] to vote.</font>") // TA EDIT END
 
 /datum/controller/subsystem/vote/proc/interface(client/C)
 	if(!C)

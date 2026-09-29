@@ -13,8 +13,8 @@
 #define PEN_NONE			0	// No penetration. Training weapons, base cuts/chops.
 #define PEN_LIGHT			1	// Falx cut, axe chop. Penetrates trash armor (NPC cloth/bad leather).
 #define PEN_MEDIUM			2	// Sword thrusts, longsword chop. Penetrates player light armor (gambeson, hardened leather).
-#define PEN_HEAVY			3	// Spear, estoc. Penetrates mail/brigandine/plate.alist
-#define PEN_BSTEEL			4	// Halfsword, dagger pick. Penetrates plate fully, blacksteel.
+#define PEN_HEAVY			3	// Halfsword, spear, estoc. Penetrates mail/brigandine/plate.alist
+#define PEN_BSTEEL			4	// Frei halfsword, dagger pick. Penetrates plate fully, blacksteel.
 
 // Damage Blocking tiers (0-4). Armor clothing.
 #define DBLOCK_NONE			0	// No blocking. Unarmored skin.
@@ -63,7 +63,7 @@
 // For now. Steel vs Iron will be a difference of 75% integrity without rating differences.
 // So Iron will actually be pretty decent and there shouldn't be a compulsive need to upgrade.
 
-#define ARMOR_INTEG_FAILURE 0.1	//Percentage of damage the armor breaks at. 0.1 = 10%
+#define GENERIC_INTEG_FAILURE 0.1	//Percentage of damage the item breaks at. 0.1 = 10%
 
 // Helmet
 #define ARMOR_INT_HELMET_ANTAG 600
@@ -182,7 +182,7 @@
 // LIGHT ARMOR - SNOWFLAKE. Not comfortable with them, but not touching it atm.
 #define ARMOR_DRAGONHIDE list("blunt" = DR_SUPER, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_LIGHT, "fire" = DR_MEDIUM, "bullet" = DR_LIGHT) // snowflake armor for dragonhide - a bit worse than hard leather but w/ decent fire resist
 
-#define ARMOR_CULTNECK list("blunt" = DR_LIGHT, "slash" = DR_SUPER, "stab" = DR_SUPER, "piercing" = DR_SUPER, "fire" = DR_HEAVY, "bullet" = DR_LIGHT) // snowflake armor for dragonhide - a bit worse than hard leather but w/ decent fire resist
+#define ARMOR_CULTNECK list("blunt" = DR_LIGHT, "slash" = DR_SUPER, "stab" = DR_SUPER, "piercing" = DR_SUPER, "fire" = DR_HEAVY, "bullet" = DR_SUPER) // snowflake armor for dragonhide - a bit worse than hard leather but w/ decent fire resist
 
 // BRIGANDINE — All brigandine parts. Better blunt and arrow padding than plate, but sword stabs and above will pen. Best light armor gets for melee. Medium/heavy classes should still wear maille under it!
 #define ARMOR_BRIGANDINE list("blunt" = DR_HEAVY, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_HEAVY, "fire" = DR_NONE, "bullet" = DR_HEAVY)

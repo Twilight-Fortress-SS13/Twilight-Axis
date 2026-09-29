@@ -1,7 +1,7 @@
 /obj/item/book/manual/random
 	icon_state = "random_book"
 
-/obj/item/book/manual/random/Initialize()
+/obj/item/book/manual/random/Initialize(mapload)
 	..()
 
 	var/list/types = subtypesof(/obj/item/book/manual)
@@ -20,7 +20,7 @@
 	var/amount = 1
 	var/category = null
 
-/obj/item/book/random/Initialize()
+/obj/item/book/random/Initialize(mapload)
 	..()
 	return INITIALIZE_HINT_LATELOAD
 
@@ -60,9 +60,11 @@
 /obj/structure/bookcase/random/archive/attackby(obj/item/I, mob/user, params)
 	if(istype(I, /obj/item/book/rogue/playerbook))
 		var/obj/item/book/rogue/playerbook/PB = I
-		if(PB.is_in_round_player_generated)
-			to_chat(user, span_notice("[SSlibrarian.playerbook2file(PB.player_book_text, PB.player_book_title, PB.player_book_author, PB.player_book_author_ckey, PB.player_book_icon)]"))
-			PB.is_in_round_player_generated = FALSE
+		if(PB.is_in_round_player_generated) // TA EDIT START
+			var/archive_choice = tgui_alert(user, "Would you like to save this book to the archive for future rounds, or simply place it on the shelf?", "Archive Book", list("Save to archive", "Just shelve"))
+			if(archive_choice == "Save to archive")
+				to_chat(user, span_notice("[SSlibrarian.playerbook2file(PB.player_book_text, PB.player_book_title, PB.player_book_author, PB.player_book_author_ckey, PB.player_book_icon)]"))
+				PB.is_in_round_player_generated = FALSE // TA EDIT END
 
 	. = ..()
 

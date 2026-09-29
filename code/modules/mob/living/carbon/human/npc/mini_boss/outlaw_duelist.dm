@@ -27,7 +27,7 @@ GLOBAL_LIST_INIT(duelist_aggro, list(
 	d_intent = INTENT_DODGE
 	threat_point = THREAT_ELITE
 
-/mob/living/carbon/human/species/human/northern/outlaw_duelist/Initialize()
+/mob/living/carbon/human/species/human/northern/outlaw_duelist/Initialize(mapload)
 	. = ..()
 	//Begin RANDOMISE here
 	set_species(pick(NPC_RACES_TYPES))
@@ -51,8 +51,6 @@ GLOBAL_LIST_INIT(duelist_aggro, list(
 	ADD_TRAIT(src, TRAIT_BADTRAINER, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NPC_EXAMINE, TRAIT_GENERIC)
 	equipOutfit(new /datum/outfit/job/roguetown/npc/mini_boss/duelist)
-	for(var/obj/item/gear in get_equipped_items() + held_items)
-		lock_gear_piece(gear, "outlaw_duelist_gear")
 	update_hair()
 	update_body()
 	def_intent_change(INTENT_DODGE)
@@ -63,11 +61,6 @@ GLOBAL_LIST_INIT(duelist_aggro, list(
 	AddComponent(/datum/component/npc_death_line)
 	dna.species.handle_body(src)
 	src.regenerate_icons() //Fixes the weird body with random genders for NPCs.
-
-/mob/living/carbon/human/species/human/northern/outlaw_duelist/death(gibbed, nocutscene = FALSE)
-	. = ..()
-	for(var/obj/item/gear in get_equipped_items() + held_items)
-		REMOVE_TRAIT(gear, TRAIT_NODROP, "outlaw_duelist_gear")
 
 /datum/outfit/job/roguetown/npc/mini_boss/duelist/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -86,6 +79,8 @@ GLOBAL_LIST_INIT(duelist_aggro, list(
 	head = /obj/item/clothing/head/roguetown/helmet/sallet/visored/iron
 	neck = /obj/item/clothing/neck/roguetown/bevor/iron
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/heavy
+	belt = /obj/item/storage/belt/rogue/leather
+	beltr = /obj/item/rogueweapon/scabbard/sword
 	r_hand = /obj/item/rogueweapon/sword/long
 	l_hand = /obj/item/rogueweapon/shield/buckler
 	H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_MASTER, TRUE)

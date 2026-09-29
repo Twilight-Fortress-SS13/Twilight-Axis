@@ -6,6 +6,8 @@
 	var/mob/living/carbon/human/living_pawn = controller.pawn
 	if(!istype(living_pawn))
 		return null
+	if(living_pawn.incapacitated())
+		return null
 	if(ai_npc_has_weapon(living_pawn))
 		return null
 	var/obj/item/held_item = living_pawn.get_active_held_item()
@@ -30,6 +32,8 @@
 		return FALSE
 	var/mob/living/carbon/human/living_pawn = pawn
 	if(!istype(living_pawn) || !living_pawn.ai_controller)
+		return FALSE
+	if(living_pawn.incapacitated())
 		return FALSE
 	if(ai_npc_has_weapon(living_pawn))
 		return FALSE

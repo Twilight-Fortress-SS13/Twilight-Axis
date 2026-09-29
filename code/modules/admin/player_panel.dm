@@ -46,7 +46,7 @@
 									tr.innerHTML = "";
 									i--;
 								}
-							}catch(err) {   }
+							}catch(err) {	}
 						}
 					}
 
@@ -316,4 +316,4 @@
 	</body></html>
 	"}
 
-	usr << browse(dat, "window=players;size=600x480")
+	usr << browse(dat, "window=players;size=900x700")

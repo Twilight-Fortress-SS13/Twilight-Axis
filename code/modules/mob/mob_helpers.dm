@@ -130,11 +130,11 @@
 	return BODY_ZONE_CHEST
 
 /**
-  * Return the zone or randomly, another valid zone
-  *
-  * probability controls the chance it chooses the passed in zone, or another random zone
-  * defaults to 80
-  */
+	* Return the zone or randomly, another valid zone
+	*
+	* probability controls the chance it chooses the passed in zone, or another random zone
+	* defaults to 80
+	*/
 /proc/ran_zone(zone, probability = 80)
 	if(prob(probability))
 		zone = check_zone(zone)
@@ -149,13 +149,13 @@
 			return TRUE
 	return FALSE
 /**
-  * Convert random parts of a passed in message to stars
-  *
-  * * n - the string to convert
-  * * pr - probability any character gets changed
-  *
-  * This proc is dangerously laggy, avoid it or die
-  */
+	* Convert random parts of a passed in message to stars
+	*
+	* * n - the string to convert
+	* * pr - probability any character gets changed
+	*
+	* This proc is dangerously laggy, avoid it or die
+	*/
 /proc/stars(n, pr)
 	n = STRIP_HTML_SIMPLE(n, MAX_MESSAGE_LEN)
 	if (pr == null)
@@ -178,43 +178,78 @@
 		t += "..." //signals missing text
 	return t
 /**
-  * Makes you speak like you're drunk
-  */
-/proc/slur(n)
+	* Makes you speak like you're drunk
+	*/
+/proc/slur(n) // TA EDIT START
 	var/phrase = STRIP_HTML_SIMPLE(n, MAX_MESSAGE_LEN)
 	var/leng = length_char(phrase)
-	var/counter=length_char(phrase)
-	var/newphrase=""
-	var/newletter=""
-	while(counter>=1)
-		newletter=copytext_char(phrase,(leng-counter)+1,(leng-counter)+2)
-		if(rand(1,3)==3)
-			if(lowertext(newletter)=="o")
-				newletter="u"
-			if(lowertext(newletter)=="s")
-				newletter="ch"
-			if(lowertext(newletter)=="a")
-				newletter="ah"
-			if(lowertext(newletter)=="u")
-				newletter="oo"
-			if(lowertext(newletter)=="c")
-				newletter="k"
-		if(rand(1,20)==20)
-			if(newletter==" ")
-				newletter="...huuuhhh..."
-			if(newletter==".")
-				newletter=" *BURP*."
-		switch(rand(1,20))
-			if(1)
-				newletter+="'"
-			if(10)
-				newletter+="[newletter]"
-			if(20)
-				newletter+="[newletter][newletter]"
-			else
-				;;
-		newphrase+="[newletter]";counter-=1
-	return newphrase
+	var/has_cyrillic = FALSE
+	for(var/i = 1 to leng)
+		var/checkletter = LOWER_TEXT(copytext_char(phrase, i, i + 1))
+		if(checkletter in list("а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "к", "л", "м", "н", "о", "п", "р", "с", "т", "у", "ф", "х", "ц", "ч", "ш", "щ", "ъ", "ы", "ь", "э", "ю", "я"))
+			has_cyrillic = TRUE
+			break
+
+	var/counter = leng
+	var/newphrase = ""
+	var/newletter = ""
+	while(counter >= 1)
+		newletter = copytext_char(phrase, (leng - counter) + 1, (leng - counter) + 2)
+		var/lowerletter = LOWER_TEXT(newletter)
+
+		if(has_cyrillic)
+			if(prob(20))
+				switch(lowerletter)
+					if("с")
+						newletter = (newletter == uppertext(newletter)) ? "Ш" : "ш"
+					if("з")
+						newletter = (newletter == uppertext(newletter)) ? "Ж" : "ж"
+					if("ц")
+						newletter = (newletter == uppertext(newletter)) ? "С" : "с"
+					if("ч")
+						newletter = (newletter == uppertext(newletter)) ? "Щ" : "щ"
+
+			if(lowerletter in list("а", "е", "ё", "и", "о", "у", "ы", "э", "ю", "я"))
+				if(prob(12))
+					newletter += newletter
+					if(prob(20))
+						newletter += copytext_char(newletter, 1, 2)
+			else if(lowerletter in list("б", "в", "г", "д", "ж", "з", "к", "л", "м", "н", "п", "р", "с", "т", "ф", "х", "ц", "ч", "ш", "щ"))
+				if(prob(4))
+					newletter += newletter
+
+			if(newletter == " " && prob(7))
+				newletter = "... э-э... "
+			else if(newletter == "." && prob(5))
+				newletter = " *ИК*."
+		else
+			if(rand(1, 3) == 3)
+				if(lowerletter == "o")
+					newletter = "u"
+				if(lowerletter == "s")
+					newletter = "ch"
+				if(lowerletter == "a")
+					newletter = "ah"
+				if(lowerletter == "u")
+					newletter = "oo"
+				if(lowerletter == "c")
+					newletter = "k"
+			if(rand(1, 20) == 20)
+				if(newletter == " ")
+					newletter = "...huuuhhh..."
+				if(newletter == ".")
+					newletter = " *BURP*."
+			var/repeat_roll = rand(1, 20)
+			if(repeat_roll == 1)
+				newletter += "'"
+			else if(repeat_roll == 10)
+				newletter += "[newletter]"
+			else if(repeat_roll == 20)
+				newletter += "[newletter][newletter]"
+
+		newphrase += "[newletter]"
+		counter -= 1
+	return copytext_char(newphrase, 1, MAX_MESSAGE_LEN) // TA EDIT END
 
 /// Makes you talk like you got cult stunned, which is slurring but with some dark messages
 // Except up, its Psyphied so this is what you get from being sundered instead, thank you whoever left this, I will cook.
@@ -227,21 +262,21 @@
 	while(counter>=1)
 		newletter=copytext_char(phrase,(leng-counter)+1,(leng-counter)+2)
 		if(prob(50))
-			if(lowertext(newletter)=="o")
+			if(LOWER_TEXT(newletter)=="o")
 				newletter="u"
-			if(lowertext(newletter)=="t")
+			if(LOWER_TEXT(newletter)=="t")
 				newletter="ch"
-			if(lowertext(newletter)=="a")
+			if(LOWER_TEXT(newletter)=="a")
 				newletter="ah"
-			if(lowertext(newletter)=="u")
+			if(LOWER_TEXT(newletter)=="u")
 				newletter="oo"
-			if(lowertext(newletter)=="c")
+			if(LOWER_TEXT(newletter)=="c")
 				newletter="lr"
-			if(lowertext(newletter)=="e")
+			if(LOWER_TEXT(newletter)=="e")
 				newletter="do"
-			if(lowertext(newletter)=="zizo") //YOU WISH
+			if(LOWER_TEXT(newletter)=="zizo") //YOU WISH
 				newletter="psy"
-			if(lowertext(newletter)=="s")
+			if(LOWER_TEXT(newletter)=="s")
 				newletter="zr"
 
 		switch(rand(1,15))
@@ -266,10 +301,16 @@
 	var/t = ""//placed before the message. Not really sure what it's for.
 	n = length_char(n)//length_char of the entire word
 	var/p = null
+	var/static/list/stutter_consonants = list( // TA EDIT START
+		"b","c","d","f","g","h","j","k","l","m","n","p","q","r","s","t","v","w","x","y","z",
+		"B","C","D","F","G","H","J","K","L","M","N","P","Q","R","S","T","V","W","X","Y","Z",
+		"б","в","г","д","ж","з","й","к","л","м","н","п","р","с","т","ф","х","ц","ч","ш","щ",
+		"Б","В","Г","Д","Ж","З","Й","К","Л","М","Н","П","Р","С","Т","Ф","Х","Ц","Ч","Ш","Щ",
+	) // TA EDIT END
 	p = 1//1 is the start of any word
 	while(p <= n)//while P, which starts at 1 is less or equal to N which is the length_char.
 		var/n_letter = copytext_char(te, p, p + 1)//copies text from a certain distance. In this case, only one letter at a time.
-		if (prob(80) && (ckey(n_letter) in list("b","c","d","f","g","h","j","k","l","m","n","p","q","r","s","t","v","w","x","y","z")))
+		if (prob(80) && (n_letter in stutter_consonants)) // TA EDIT
 			if (prob(10))
 				n_letter = text("[n_letter]-[n_letter]-[n_letter]-[n_letter]")//replaces the current letter with this instead.
 			else
@@ -283,6 +324,63 @@
 		t = text("[t][n_letter]")//since the above is ran through for each letter, the text just adds up back to the original word.
 		p++//for each letter p is increased to find where the next letter will be.
 	return copytext_char(t,1,MAX_MESSAGE_LEN)
+
+/proc/get_stutter_letter_position(word) // TA EDIT START
+	var/static/list/stutter_letters = list(
+		"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
+		"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
+		"а","б","в","г","д","е","ё","ж","з","и","й","к","л","м","н","о","п","р","с","т","у","ф","х","ц","ч","ш","щ","ъ","ы","ь","э","ю","я",
+		"А","Б","В","Г","Д","Е","Ё","Ж","З","И","Й","К","Л","М","Н","О","П","Р","С","Т","У","Ф","Х","Ц","Ч","Ш","Щ","Ъ","Ы","Ь","Э","Ю","Я",
+	)
+	for(var/position in 1 to length_char(word))
+		if(copytext_char(word, position, position + 1) in stutter_letters)
+			return position
+	return 0
+
+/proc/pain_stutter(message, strength)
+	if(!message || strength <= 0)
+		return message
+
+	strength = clamp(strength, 1, 100)
+	var/list/words = splittext_char(STRIP_HTML_SIMPLE(message, MAX_MESSAGE_LEN), " ")
+	var/list/candidates = list()
+
+	for(var/index in 1 to words.len)
+		if(get_stutter_letter_position(words[index]))
+			candidates += index
+
+	if(!candidates.len)
+		return message
+
+	var/target_words = round((candidates.len * strength) / 100)
+	if(target_words <= 0)
+		return message
+	target_words = min(target_words, candidates.len)
+
+	for(var/i in 1 to target_words)
+		var/index = pick_n_take(candidates)
+		var/word = words[index]
+		var/letter_position = get_stutter_letter_position(word)
+		if(!letter_position)
+			continue
+
+		var/letter = copytext_char(word, letter_position, letter_position + 1)
+		var/prefix = copytext_char(word, 1, letter_position)
+		var/body = copytext_char(word, letter_position)
+		var/repeats = 1
+
+		if(strength >= 80)
+			repeats = rand(2, 3)
+		else if(strength >= 45)
+			repeats = rand(1, 2)
+
+		var/stammer = ""
+		for(var/repeat in 1 to repeats)
+			stammer += "[letter]-"
+
+		words[index] = "[prefix][stammer][body]"
+
+	return copytext_char(jointext(words, " "), 1, MAX_MESSAGE_LEN) // TA EDIT END
 
 ///Convert a message to derpy speak
 /proc/derpspeech(message, stuttering)
@@ -325,7 +423,7 @@
 			word = copytext(word, first_letter, last_letter + 1)
 
 			// Common words or words of three or fewer characters don't need replacing.
-			if((lowertext(word) in common_words) || length(word) <= 3)
+			if((LOWER_TEXT(word) in common_words) || length(word) <= 3)
 				new_message += prefix + word + suffix
 			else
 				var/chance = rand(0, 99)
@@ -357,10 +455,10 @@
 	return trim(message)
 
 /**
-  * Turn text into complete gibberish!
-  *
-  * text is the inputted message, replace_characters will cause original letters to be replaced and chance are the odds that a character gets modified.
-  */
+	* Turn text into complete gibberish!
+	*
+	* text is the inputted message, replace_characters will cause original letters to be replaced and chance are the odds that a character gets modified.
+	*/
 /proc/Gibberish(text, replace_characters = FALSE, chance = 50)
 	. = ""
 	for(var/i in 1 to length_char(text))
@@ -374,14 +472,14 @@
 
 
 /**
-  * Convert a message into leet non gaijin speak
-  *
-  * The difference with stutter is that this proc can stutter more than 1 letter
-  *
-  * The issue here is that anything that does not have a space is treated as one word (in many instances). For instance, "LOOKING," is a word, including the comma.
-  *
-  * It's fairly easy to fix if dealing with single letters but not so much with compounds of letters./N
-  */
+	* Convert a message into leet non gaijin speak
+	*
+	* The difference with stutter is that this proc can stutter more than 1 letter
+	*
+	* The issue here is that anything that does not have a space is treated as one word (in many instances). For instance, "LOOKING," is a word, including the comma.
+	*
+	* It's fairly easy to fix if dealing with single letters but not so much with compounds of letters./N
+	*/
 /proc/ninjaspeak(n) //NINJACODE
 	var/te = html_decode(n)
 	var/t = ""
@@ -443,10 +541,10 @@
 
 
 /**
-  * change a mob's act-intent.
-  *
-  * Input the intent as a string such as "help" or use "right"/"left
-  */
+	* change a mob's act-intent.
+	*
+	* Input the intent as a string such as "help" or use "right"/"left
+	*/
 /mob/verb/a_intent_change(input as text)
 	set name = "a-intent"
 	set hidden = 1
@@ -632,12 +730,12 @@
 		return
 	var/next_qintent
 	switch(mmb_intent?.type)
-		if(null)         next_qintent = QINTENT_BITE
-		if(INTENT_BITE)  next_qintent = QINTENT_JUMP
-		if(INTENT_JUMP)  next_qintent = QINTENT_KICK
-		if(INTENT_KICK)  next_qintent = QINTENT_SPECIAL
+		if(null)			next_qintent = QINTENT_BITE
+		if(INTENT_BITE)	next_qintent = QINTENT_JUMP
+		if(INTENT_JUMP)	next_qintent = QINTENT_KICK
+		if(INTENT_KICK)	next_qintent = QINTENT_SPECIAL
 		if(INTENT_SPECIAL) next_qintent = null
-		else             next_qintent = QINTENT_BITE
+		else				next_qintent = QINTENT_BITE
 	mmb_intent_change(next_qintent)
 
 /mob/verb/mmb_intent_change(input as text)
@@ -734,6 +832,8 @@
 	update_inv_hands()
 
 
+#define CMODE_SHAKE_ANIMATION "cmode_shake"
+
 /mob/verb/toggle_cmode()
 	set name = "cmode-change"
 	set hidden = 1
@@ -741,15 +841,17 @@
 	if(SSticker.current_state >= GAME_STATE_FINISHED)
 		return
 
-	var/mob/living/L
-	if(isliving(src))
-		L = src
+	if(!isliving(src))
+		return
+	var/mob/living/L = src
 	var/client/client = L.client
 	if(L.IsSleeping() || L.surrendering)
 		if(cmode)
 			playsound_local(src, 'sound/misc/comboff.ogg', 100)
 			SSdroning.play_area_sound(get_area(src), client)
 			cmode = FALSE
+			if(client)
+				animate(client, tag = CMODE_SHAKE_ANIMATION)
 		if(hud_used)
 			if(hud_used.cmode_button)
 				hud_used.cmode_button.update_icon()
@@ -758,8 +860,8 @@
 		playsound_local(src, 'sound/misc/comboff.ogg', 100)
 		SSdroning.play_area_sound(get_area(src), client)
 		cmode = FALSE
-		if(client && HAS_TRAIT(src, TRAIT_SCREENSHAKE))
-			animate(client, pixel_y)
+		if(client)
+			animate(client, tag = CMODE_SHAKE_ANIMATION)
 	else
 		cmode = TRUE
 		playsound_local(src, 'sound/misc/combon.ogg', 100)
@@ -767,13 +869,19 @@
 			SSdroning.play_combat_music(L.cmode_music_override, client)
 		else if(L.cmode_music)
 			SSdroning.play_combat_music(L.cmode_music, client)
-		if(client && HAS_TRAIT(src, TRAIT_PSYCHOSIS))
-			animate(client, pixel_y = 1, time = 1, loop = -1, flags = ANIMATION_RELATIVE)
+		if(client && (HAS_TRAIT(src, TRAIT_PSYCHOSIS) || HAS_TRAIT(src, TRAIT_SCREENSHAKE)))
+			animate(client, pixel_y = 1, time = 1, loop = -1, flags = ANIMATION_RELATIVE, tag = CMODE_SHAKE_ANIMATION)
 			animate(pixel_y = -1, time = 1, flags = ANIMATION_RELATIVE)
+			if(HAS_TRAIT(src, TRAIT_PSYCHOSIS) && !HAS_TRAIT(src, TRAIT_SCREENSHAKE))
+				spawn(4 SECONDS)
+					if(cmode && client)
+						animate(client, tag = CMODE_SHAKE_ANIMATION)
 	if(hud_used)
 		if(hud_used.cmode_button)
 			hud_used.cmode_button.update_icon()
 	on_cmode()
+
+#undef CMODE_SHAKE_ANIMATION
 
 /mob/proc/on_cmode()
 	return
@@ -910,11 +1018,11 @@
 
 // moved out of admins.dm because things other than admin procs were calling this.
 /**
-  * Is this mob special to the gamemode?
-  *
-  * returns 1 for special characters and 2 for heroes of gamemode
-  *
-  */
+	* Is this mob special to the gamemode?
+	*
+	* returns 1 for special characters and 2 for heroes of gamemode
+	*
+	*/
 /proc/is_special_character(mob/M)
 	if(!SSticker.HasRoundStarted())
 		return FALSE
@@ -932,23 +1040,23 @@
 
 
 /**
-  * Fancy notifications for ghosts
-  *
-  * The kitchen sink of notification procs
-  *
-  * Arguments:
-  * * message
-  * * ghost_sound sound to play
-  * * enter_link Href link to enter the ghost role being notified for
-  * * source The source of the notification
-  * * alert_overlay The alert overlay to show in the alert message
-  * * action What action to take upon the ghost interacting with the notification, defaults to NOTIFY_JUMP
-  * * flashwindow Flash the byond client window
-  * * ignore_key  Ignore keys if they're in the GLOB.poll_ignore list
-  * * header The header of the notifiaction
-  * * notify_suiciders If it should notify suiciders (who do not qualify for many ghost roles)
-  * * notify_volume How loud the sound should be to spook the user
-  */
+	* Fancy notifications for ghosts
+	*
+	* The kitchen sink of notification procs
+	*
+	* Arguments:
+	* * message
+	* * ghost_sound sound to play
+	* * enter_link Href link to enter the ghost role being notified for
+	* * source The source of the notification
+	* * alert_overlay The alert overlay to show in the alert message
+	* * action What action to take upon the ghost interacting with the notification, defaults to NOTIFY_JUMP
+	* * flashwindow Flash the byond client window
+	* * ignore_key	Ignore keys if they're in the GLOB.poll_ignore list
+	* * header The header of the notifiaction
+	* * notify_suiciders If it should notify suiciders (who do not qualify for many ghost roles)
+	* * notify_volume How loud the sound should be to spook the user
+	*/
 /proc/notify_ghosts(message, ghost_sound = null, enter_link = null, atom/source = null, mutable_appearance/alert_overlay = null, action = NOTIFY_JUMP, flashwindow = TRUE, ignore_mapload = TRUE, ignore_key, header = null, notify_suiciders = TRUE, notify_volume = 100) //Easy notification of ghosts.
 	if(ignore_mapload && SSatoms.initialized != INITIALIZATION_INNEW_REGULAR)	//don't notify for objects created during a map load
 		return
@@ -970,8 +1078,7 @@
 		if(source)
 			var/atom/movable/screen/alert/notify_action/A = O.throw_alert("[REF(source)]_notify_action", /atom/movable/screen/alert/notify_action)
 			if(A)
-				if(O.client.prefs && O.client.prefs.UI_style)
-					A.icon = ui_style2icon(O.client.prefs.UI_style)
+				A.icon = 'icons/mob/roguehud.dmi'
 				if (header)
 					A.name = header
 				A.desc = message
@@ -984,8 +1091,8 @@
 				A.add_overlay(alert_overlay)
 
 /**
-  * Heal a robotic body part on a mob
-  */
+	* Heal a robotic body part on a mob
+	*/
 /proc/item_heal_robotic(mob/living/carbon/human/H, mob/user, brute_heal, burn_heal)
 	var/obj/item/bodypart/affecting = H.get_bodypart(check_zone(user.zone_selected))
 	if(affecting && affecting.status == BODYPART_ROBOTIC)
@@ -1018,10 +1125,10 @@
 	return TRUE
 
 /**
-  * Offer control of the passed in mob to dead player
-  *
-  * Automatic logging and uses pollCandidatesForMob, how convenient
-  */
+	* Offer control of the passed in mob to dead player
+	*
+	* Automatic logging and uses pollCandidatesForMob, how convenient
+	*/
 /proc/offer_control(mob/M)
 	to_chat(M, "Control of your mob has been offered to dead players.")
 	if(usr)
@@ -1095,7 +1202,7 @@
 		else
 			colored_message = "<font color='[color]'>[message]</font>"
 
-    //Removed sorting by message type, now sorts by timestamp regardless of message type
+	//Removed sorting by message type, now sorts by timestamp regardless of message type
 	var/list/timestamped_message = list("\[[time_stamp(format = "YYYY-MM-DD hh:mm:ss")]\] [key_name(src)] [loc_name(src)] (LOG #[LAZYLEN(logging[smessage_type])])" = colored_message)
 
 	logging[smessage_type] += timestamped_message
@@ -1110,10 +1217,10 @@
 	. = TRUE
 
 /**
-  * Examine text for traits shared by multiple types.
-  *
-  * I wish examine was less copypasted. (oranges say, be the change you want to see buddy)
-  */
+	* Examine text for traits shared by multiple types.
+	*
+	* I wish examine was less copypasted. (oranges say, be the change you want to see buddy)
+	*/
 /mob/proc/common_trait_examine()
 	if(HAS_TRAIT(src, TRAIT_DISSECTED))
 		var/dissectionmsg = ""
@@ -1126,11 +1233,11 @@
 		. += "<span class='notice'>This body has been dissected and analyzed[dissectionmsg].</span><br>"
 
 /**
-  * Get the list of keywords for policy config
-  *
-  * This gets the type, mind assigned roles and antag datums as a list, these are later used
-  * to send the user relevant headadmin policy config
-  */
+	* Get the list of keywords for policy config
+	*
+	* This gets the type, mind assigned roles and antag datums as a list, these are later used
+	* to send the user relevant headadmin policy config
+	*/
 /mob/proc/get_policy_keywords()
 	. = list()
 	. += "[type]"
@@ -1155,7 +1262,7 @@
 		var/datum/job/J = SSjob.GetJob(job)
 		if(!J)
 			return "unknown"
-		used_title =  J.display_title || J.title
+		used_title =	J.display_title || J.title
 		if(J.f_title && (titles_pref == TITLES_F))
 			used_title = J.f_title
 		if(J.advjob_examine && !override_advclass_examine)

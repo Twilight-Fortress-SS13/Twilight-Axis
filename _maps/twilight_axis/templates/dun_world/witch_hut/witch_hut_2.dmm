@@ -138,6 +138,9 @@
 	icon_state = "borderfall"
 	},
 /obj/structure/fluff/alch,
+/obj/machinery/light/rogue/candle/blue{
+	pixel_y = -32
+	},
 /turf/open/floor/rogue/blocks/newstone/alt,
 /area/rogue/indoors/town)
 "gN" = (
@@ -147,9 +150,7 @@
 /turf/open/transparent/openspace,
 /area/rogue/outdoors/mountains)
 "gW" = (
-/obj/structure/bed/rogue/inn/double{
-	can_buckle = 0
-	},
+/obj/structure/bed/rogue/inn/double,
 /obj/item/bedsheet/rogue/double_pelt{
 	dir = 4
 	},
@@ -297,19 +298,8 @@
 /turf/open/floor/rogue/ruinedwood/herringbone,
 /area/rogue/indoors/town)
 "oe" = (
-/obj/structure/closet/crate/chest/wicker,
-/obj/item/natural/worms,
-/obj/item/natural/worms,
-/obj/item/natural/worms,
-/obj/item/natural/worms,
-/obj/item/natural/worms,
-/obj/item/natural/worms/grubs,
-/obj/item/natural/worms/grubs,
-/obj/item/natural/worms/grubs,
-/obj/item/natural/worms/grubs,
-/obj/item/natural/worms/grubs,
-/obj/item/natural/worms/grubs,
 /obj/item/fishingrod,
+/obj/structure/closet/crate/chest/wicker/bait,
 /turf/open/floor/rogue/dirt,
 /area/rogue/outdoors/town)
 "ol" = (
@@ -421,12 +411,15 @@
 	},
 /obj/structure/fluff/railing/border/east,
 /obj/structure/fluff/railing/border/west,
+/obj/structure/curtain/green,
 /turf/open/floor/rogue/ruinedwood/herringbone,
 /area/rogue/indoors/town)
 "vU" = (
-/obj/effect/landmark/quest_spawner/hard,
-/turf/open/water/ocean/deep,
-/area/rogue/under/cavewet/bogcaves/north)
+/obj/item/natural/worms/leech,
+/obj/item/natural/worms/leech,
+/obj/item/natural/worms/leech,
+/turf/open/water/swamp,
+/area/rogue/outdoors/woods/south)
 "wo" = (
 /obj/structure/table/wood/poor,
 /turf/open/floor/rogue/ruinedwood/herringbone,
@@ -524,7 +517,7 @@
 /area/rogue/indoors/town)
 "AT" = (
 /obj/structure/mineral_door/wood/towner/witch,
-/turf/open/floor/rogue/grass,
+/turf/open/floor/rogue/twig,
 /area/rogue/indoors/town)
 "Bn" = (
 /mob/living/simple_animal/hostile/rogue/deepone,
@@ -622,6 +615,11 @@
 /obj/structure/fluff/railing/wood/north,
 /turf/open/floor/rogue/grassred,
 /area/rogue/outdoors/town)
+"Go" = (
+/obj/item/natural/worms/leech,
+/obj/item/natural/worms/leech,
+/turf/open/water/swamp,
+/area/rogue/outdoors/woods/south)
 "Gx" = (
 /obj/structure/fluff/railing/corner/south_east,
 /turf/open/floor/rogue/ruinedwood/herringbone,
@@ -761,6 +759,7 @@
 	},
 /obj/structure/fluff/railing/border/west,
 /obj/structure/fluff/railing/border/east,
+/obj/structure/curtain/green,
 /turf/open/floor/rogue/ruinedwood/herringbone,
 /area/rogue/indoors/town)
 "PE" = (
@@ -788,10 +787,6 @@
 /area/rogue/indoors/town)
 "Qq" = (
 /obj/structure/closet/crate/chest/old_crate,
-/obj/item/natural/worms/leech,
-/obj/item/natural/worms/leech,
-/obj/item/natural/worms/leech,
-/obj/item/natural/worms/leech,
 /turf/open/floor/rogue/twig,
 /area/rogue/indoors/town)
 "Ri" = (
@@ -828,7 +823,7 @@
 /area/rogue/indoors/town)
 "TT" = (
 /obj/structure/table/wood/poor,
-/obj/item/cooking/pan,
+/obj/item/cooking/pan/stone,
 /obj/item/rogueweapon/huntingknife/stoneknife,
 /turf/open/floor/rogue/ruinedwood/herringbone,
 /area/rogue/indoors/town)
@@ -851,6 +846,7 @@
 /obj/item/kitchen/fork,
 /obj/item/cooking/platter,
 /obj/effect/decal/cleanable/dirt/cobweb,
+/obj/machinery/light/rogue/candle/blue,
 /turf/open/floor/rogue/blocks/newstone/alt,
 /area/rogue/indoors/town)
 "Vp" = (
@@ -1220,7 +1216,7 @@ tE
 ya
 ya
 VK
-vU
+VK
 VK
 ya
 Ep
@@ -1698,7 +1694,7 @@ Ih
 Ih
 Ih
 Ih
-Ih
+fn
 Ih
 Ih
 Ih
@@ -1737,7 +1733,7 @@ Ih
 (6,1,2) = {"
 Ih
 Ih
-Ih
+fn
 Ih
 Ih
 eC
@@ -1904,7 +1900,7 @@ rz
 NS
 ib
 Fz
-eC
+Go
 eC
 Ih
 Ih
@@ -1926,7 +1922,7 @@ yR
 NS
 ib
 Fz
-eC
+vU
 eC
 At
 Ih

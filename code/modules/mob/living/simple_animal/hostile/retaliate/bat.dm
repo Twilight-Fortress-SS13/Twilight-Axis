@@ -22,7 +22,7 @@
 	attack_verb_continuous = "bites"
 	attack_verb_simple = "bite"
 	butcher_results = list(/obj/item/reagent_containers/food/snacks/rogue/meat/steak = 1)
-	pass_flags = PASSTABLE | PASSGRILLE | PASSMOB
+	pass_flags = PASSTABLE | PASSMOB
 	faction = list(FACTION_HOSTILE)
 	attack_sound = 'sound/blank.ogg'
 	obj_damage = 0
@@ -50,10 +50,10 @@
 	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
 	minbodytemp = 0
 
-/mob/living/simple_animal/hostile/retaliate/bat/Initialize()
+/mob/living/simple_animal/hostile/retaliate/bat/Initialize(mapload)
 	. = ..()
 	add_verb(src, list(/mob/living/simple_animal/proc/fly_up,
-	/mob/living/simple_animal/proc/fly_down)) 
+	/mob/living/simple_animal/proc/fly_down))
 
 /mob/living/simple_animal/hostile/retaliate/bat/crow
 	name = "zad"
@@ -75,7 +75,7 @@
 	/// Whether the zad is perched (stationary sprite, cannot move) rather than flying.
 	var/sitting = FALSE
 
-/mob/living/simple_animal/hostile/retaliate/bat/crow/Initialize()
+/mob/living/simple_animal/hostile/retaliate/bat/crow/Initialize(mapload)
 	. = ..()
 	add_verb(src, list(/mob/living/simple_animal/hostile/retaliate/bat/crow/proc/change_stance,
 	/mob/living/simple_animal/hostile/retaliate/bat/crow/proc/emote_caw))

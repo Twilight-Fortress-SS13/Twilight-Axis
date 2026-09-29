@@ -787,12 +787,53 @@ GLOBAL_LIST_INIT(familytree_title_prefixes, list(
 		return FALSE
 	return context.SpeciesCalculation(child, parent1, parent2)
 
+/datum/controller/subsystem/familytree/proc/familytree_pair_offer_count(mob/living/carbon/human/a, mob/living/carbon/human/b)
+	if(!a?.ckey || !b?.ckey)
+		return 0
+	var/count_a = 0
+	var/count_b = 0
+	var/list/entry_a = familytree_round_ledger[a.ckey]
+	if(islist(entry_a))
+		var/list/offers_a = entry_a["offers"]
+		if(islist(offers_a) && isnum(offers_a[b.ckey]))
+			count_a = offers_a[b.ckey]
+	var/list/entry_b = familytree_round_ledger[b.ckey]
+	if(islist(entry_b))
+		var/list/offers_b = entry_b["offers"]
+		if(islist(offers_b) && isnum(offers_b[a.ckey]))
+			count_b = offers_b[a.ckey]
+	return max(count_a, count_b)
+
+/datum/controller/subsystem/familytree/proc/familytree_pair_offer_limit_reached(mob/living/carbon/human/a, mob/living/carbon/human/b)
+	return familytree_pair_offer_count(a, b) >= FAMILYTREE_PAIR_OFFER_LIMIT
+
+/datum/controller/subsystem/familytree/proc/familytree_record_pair_offer(mob/living/carbon/human/a, mob/living/carbon/human/b)
+	if(!a?.ckey || !b?.ckey)
+		return 0
+	var/new_count = min(FAMILYTREE_PAIR_OFFER_LIMIT, familytree_pair_offer_count(a, b) + 1)
+	var/list/entry_a = familytree_round_ledger_entry(a.ckey)
+	var/list/entry_b = familytree_round_ledger_entry(b.ckey)
+	var/list/offers_a = entry_a["offers"]
+	if(!islist(offers_a))
+		offers_a = list()
+		entry_a["offers"] = offers_a
+	var/list/offers_b = entry_b["offers"]
+	if(!islist(offers_b))
+		offers_b = list()
+		entry_b["offers"] = offers_b
+	offers_a[b.ckey] = new_count
+	offers_b[a.ckey] = new_count
+	ftlog("PAIR_OFFER: [a.real_name] <-> [b.real_name] count=[new_count]/[FAMILYTREE_PAIR_OFFER_LIMIT]")
+	return new_count
+
 /datum/controller/subsystem/familytree/proc/familytree_pair_blocked(mob/living/carbon/human/seeker, mob/living/carbon/human/partner)
 	if(!seeker || !partner)
 		return FALSE
 	if(seeker.familytree_blocked_ckeys && (partner.ckey in seeker.familytree_blocked_ckeys))
 		return TRUE
 	if(partner.familytree_blocked_ckeys && (seeker.ckey in partner.familytree_blocked_ckeys))
+		return TRUE
+	if(familytree_pair_offer_limit_reached(seeker, partner))
 		return TRUE
 	if(familytree_timeout_block_active(seeker, partner) || familytree_timeout_block_active(partner, seeker))
 		return TRUE

@@ -1,6 +1,6 @@
 /*
 	Helper for the CALENDAR System. This will be where I document the design decisions.
-	Azure Peak's canonical calendar system, known as the Azurian Calendar ICly, is a solar calendar. It is based on the "Grenzelhoftian Calendar", a tennite calendar system. 
+	Azure Peak's canonical calendar system, known as the Azurian Calendar ICly, is a solar calendar. It is based on the "Grenzelhoftian Calendar", a tennite calendar system.
 	But actually, because we're in a fictional video game, it is a perfect calendar with no leap years or irregularities.
 	It consists of 12 months, each with exactly 28 days dividing into 4 weeks. And it starts from Monday and ends on Sunday with a 7 days week.
 	Each week = 1 round IC (regardless of how much time actually passed in game)
@@ -9,7 +9,7 @@
 
 
 /* Returns the IC date as a string in the format
- [Weekday], [Day] [Month] [Year], [HH:MM] ([Time Of Day]), ([Cycle Number])
+ * [Weekday], [Day] [Month] [Year], [HH:MM] ([Time Of Day]), ([Cycle Number])
 */
 /proc/get_current_ic_date_as_string()
 	return get_ic_date_as_string(GLOB.dayspassed)
@@ -48,6 +48,14 @@
 	var/list/parts = resolve_ic_date_parts(day_number)
 	return "[parts[1]] [get_month_number_to_text(parts[2])] [parts[3]] of New Order" //TA EDIT
 
+/proc/get_current_ic_tod_as_string()
+	if(GLOB.tod == "night")
+		return "nite"
+	else if(GLOB.tod == "day")
+		return "dae"
+	else
+		return GLOB.tod
+
 // Returns the current IC time as a string in the format [DAYS] ᛉ HH:MM ([Time Of Day])
 /proc/get_current_ic_time_as_string()
 	// Credit to Zydras for Syon's Dae for Saturday
@@ -55,7 +63,7 @@
 	// By using secular names rather than IRL deity like Thule, Saturn, Tiw (Tyr), it avoids us having to explain a non-existent
 	// Norse deity while remaining phonetically close to the original English name
 	var/weekday = get_current_day_of_week_name()
-	return  "[weekday] ᛉ [capitalize(GLOB.tod)] ᛉ [station_time_timestamp("hh:mm")]"
+	return "[weekday] ᛉ [capitalize(get_current_ic_tod_as_string())] ᛉ [station_time_timestamp("hh:mm")]"
 
 // Given a number between 1 to 12, returns the month name as text
 /proc/get_month_number_to_text(month_number)
@@ -69,7 +77,7 @@
 		if(4)
 		// June, the hottest month is the month of the god of the SUN, because this is when they come into prominence
 		// Historically, the winter solstice was celebrated as the rebirth of the sun / sun god, so it makes sense for the hottest month to be dedicated to the night god
-			return "Astrata" // June  
+			return "Astrata" // June
 		if(5)
 			return "Xylix" // July
 		if(6)
@@ -87,7 +95,7 @@
 			// A month dedicated to the goddess of death, before the sun's rebirth and after the goddess of rot
 			return "Necra" // November
 		if(10)
-			// And on winter solstice and the longest night of the year, we have the month dedicated to the god of night 
+			// And on winter solstice and the longest night of the year, we have the month dedicated to the god of night
 			return "Noc" // December
 		if(11)
 			return "Abyssor" // January
@@ -97,32 +105,46 @@
 			return "Unknown Month ([month_number])"
 
 /* Returns the season based on month number (1-12)
- Months 1 - 3: Spring, 4 - 6: Summer, 7 - 9: Autumn, 10 - 12: Winter
+	Months 1 - 3: Spring, 4 - 6: Summer, 7 - 9: Autumn, 10 - 12: Winter
  */
 /proc/get_season_from_month(month_number)
 	switch(CEILING(month_number, 3) / 3)
 		if(1)
-			return "Spring"
+			return SEASON_SPRING
 		if(2)
-			return "Summer"
+			return SEASON_SUMMER
 		if(3)
-			return "Autumn"
+			return SEASON_AUTUMN
 		if(4)
-			return "Winter"
+			return SEASON_WINTER
 	return "Unknown"
 
 /* Returns Early/Mid/Late based on position within the season
- 1st month of season: Early, 2nd: Mid, 3rd: Late
+	1st month of season: Early, 2nd: Mid, 3rd: Late
 */
 /proc/get_season_phase(month_number)
 	switch(MODULUS(month_number - 1, 3) + 1)
 		if(1)
-			return "Early"
+			return SEASON_PHASE_EARLY
 		if(2)
-			return "Mid"
+			return SEASON_PHASE_MID
 		if(3)
-			return "Late"
+			return SEASON_PHASE_LATE
 	return ""
+
+/// Returns the current in-character month number (1-12).
+/proc/get_current_month()
+	// Treat day 0 as day 1.
+	var/list/parts = resolve_ic_date_parts(GLOB.dayspassed || 1)
+	return parts[2]
+
+/// Returns the current in-character season ("Spring"/"Summer"/"Autumn"/"Winter").
+/proc/get_current_season()
+	return get_season_from_month(get_current_month())
+
+/// Returns the current in-character season phase ("Early"/"Mid"/"Late").
+/proc/get_current_season_phase()
+	return get_season_phase(get_current_month())
 
 /proc/get_calendar_events_for_month(month_number)
 	var/list/matches = list()

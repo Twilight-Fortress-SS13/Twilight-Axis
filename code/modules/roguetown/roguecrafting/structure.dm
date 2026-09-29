@@ -253,6 +253,18 @@
 	skillcraft = /datum/skill/craft/carpentry
 	craftdiff = 3
 
+/datum/crafting_recipe/roguetown/structure/portholedoor
+	name = "porthole door"
+	category = "Doors"
+	result = /obj/structure/mineral_door/wood/donjon
+	reqs = list(/obj/item/grown/log/tree/small = 2,
+				/obj/item/ingot/iron = 1,
+				/obj/item/roguegear = 1)
+	verbage_simple = "build"
+	verbage = "builds"
+	skillcraft = /datum/skill/craft/carpentry
+	craftdiff = 3
+
 /datum/crafting_recipe/roguetown/structure/barrel
 	name = "wooden barrel"
 	category = "Containers"
@@ -384,6 +396,7 @@
 	verbage = "constructs"
 	skillcraft = /datum/skill/craft/carpentry
 	craftdiff = 4
+	do_not_turn = TRUE
 
 /datum/crafting_recipe/roguetown/structure/couchright
 	name = "couch (right)"
@@ -395,6 +408,7 @@
 	verbage = "constructs"
 	skillcraft = /datum/skill/craft/carpentry
 	craftdiff = 4
+	do_not_turn = TRUE
 
 /datum/crafting_recipe/roguetown/structure/blackcouchleft
 	name = "black couch (left)"
@@ -406,6 +420,7 @@
 	verbage = "constructs"
 	skillcraft = /datum/skill/craft/carpentry
 	craftdiff = 4
+	do_not_turn = TRUE
 
 /datum/crafting_recipe/roguetown/structure/blackcouchright
 	name = "black couch (right)"
@@ -417,6 +432,7 @@
 	verbage = "constructs"
 	skillcraft = /datum/skill/craft/carpentry
 	craftdiff = 4
+	do_not_turn = TRUE
 
 /datum/crafting_recipe/roguetown/structure/ultimacouchleft
 	name = "ultima couch (left)"
@@ -428,6 +444,7 @@
 	verbage = "constructs"
 	skillcraft = /datum/skill/craft/carpentry
 	craftdiff = 4
+	do_not_turn = TRUE
 
 /datum/crafting_recipe/roguetown/structure/ultimacouchright
 	name = "ultima couch (right)"
@@ -439,6 +456,7 @@
 	verbage = "constructs"
 	skillcraft = /datum/skill/craft/carpentry
 	craftdiff = 4
+	do_not_turn = TRUE
 
 /datum/crafting_recipe/roguetown/structure/ultimacouchleft
 	name = "ultima couch (left)"
@@ -450,6 +468,7 @@
 	verbage = "constructs"
 	skillcraft = /datum/skill/craft/carpentry
 	craftdiff = 4
+	do_not_turn = TRUE
 
 /datum/crafting_recipe/roguetown/structure/ultimacouchright
 	name = "ultima couch (right)"
@@ -461,6 +480,7 @@
 	verbage = "constructs"
 	skillcraft = /datum/skill/craft/carpentry
 	craftdiff = 4
+	do_not_turn = TRUE
 
 /datum/crafting_recipe/roguetown/structure/altcouchleft
 	name = "couch alt (left)"
@@ -472,6 +492,7 @@
 	verbage = "constructs"
 	skillcraft = /datum/skill/craft/carpentry
 	craftdiff = 4
+	do_not_turn = TRUE
 
 /datum/crafting_recipe/roguetown/structure/altcouchright
 	name = "couch alt (right)"
@@ -483,6 +504,7 @@
 	verbage = "constructs"
 	skillcraft = /datum/skill/craft/carpentry
 	craftdiff = 4
+	do_not_turn = TRUE
 
 /datum/crafting_recipe/roguetown/structure/magentacouchleft
 	name = "magenta couch (left)"
@@ -494,6 +516,7 @@
 	verbage = "constructs"
 	skillcraft = /datum/skill/craft/carpentry
 	craftdiff = 4
+	do_not_turn = TRUE
 
 /datum/crafting_recipe/roguetown/structure/magentacouchright
 	name = "magenta couch (right)"
@@ -505,6 +528,7 @@
 	verbage = "constructs"
 	skillcraft = /datum/skill/craft/carpentry
 	craftdiff = 4
+	do_not_turn = TRUE
 //------------
 
 //---Pillows---
@@ -988,6 +1012,36 @@
 	verbage_simple = "build"
 	verbage = "builds"
 
+/datum/crafting_recipe/roguetown/structure/smoker
+	name = "smoker"
+	category = "Misc"
+	result = /obj/machinery/light/rogue/smoker
+	reqs = list(/obj/item/grown/log/tree/small = 2,
+				/obj/item/natural/stone = 1,
+				/obj/item/rope = 1)
+	craftdiff = 3
+	verbage_simple = "build"
+	verbage = "builds"
+
+/datum/crafting_recipe/roguetown/structure/smoker/carpentry
+	skillcraft = /datum/skill/craft/carpentry
+	craftdiff = 2
+
+/datum/crafting_recipe/roguetown/structure/smoker_wheeled
+	name = "smoker (wheeled)"
+	category = "Misc"
+	result = /obj/machinery/light/rogue/smoker/wheeled
+	reqs = list(/obj/item/grown/log/tree/small = 4,
+				/obj/item/natural/stone = 1,
+				/obj/item/rope = 2)
+	craftdiff = 4
+	verbage_simple = "build"
+	verbage = "builds"
+
+/datum/crafting_recipe/roguetown/structure/smoker_wheeled/carpentry
+	skillcraft = /datum/skill/craft/carpentry
+	craftdiff = 3
+
 /datum/crafting_recipe/roguetown/structure/brazier
 	name = "brazier"
 	category = "Lighting"
@@ -1112,6 +1166,16 @@
 	category = "Tables"
 	result = /obj/structure/table/wood/crafted
 	reqs = list(/obj/item/grown/log/tree/small = 1)
+	verbage_simple = "construct"
+	verbage = "constructs"
+	skillcraft = /datum/skill/craft/carpentry
+
+/datum/crafting_recipe/roguetown/structure/bettingtable
+	name = "betting table"
+	category = "Tables"
+	result = /obj/structure/table/wood/betting
+	reqs = list(/obj/item/grown/log/tree/small = 1,
+				/obj/item/natural/cloth = 1)
 	verbage_simple = "construct"
 	verbage = "constructs"
 	skillcraft = /datum/skill/craft/carpentry
@@ -1315,6 +1379,17 @@
 	skillcraft = /datum/skill/craft/carpentry
 	wallcraft = TRUE
 	craftdiff = 2
+
+/datum/crafting_recipe/roguetown/structure/bulletinboard
+	name = "bulletin board"
+	category = "Displays"
+	result = /obj/structure/roguemachine/noticeboard/wall/bulletinboard
+	reqs = list(/obj/item/natural/wood/plank = 2)
+	tools = list(/obj/item/rogueweapon/hammer)
+	skillcraft = /datum/skill/craft/carpentry
+	verbage_simple = "construct"
+	verbage = "constructs"
+	wallcraft = TRUE
 
 /datum/crafting_recipe/roguetown/structure/torchholder
 	name = "sconce"

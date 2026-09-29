@@ -6,7 +6,7 @@
 	outfit = /datum/outfit/job/roguetown/mercenary/grenzelhoft
 	class_select_category = CLASS_CAT_GRENZELHOFT
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
-	cmode_music = 'sound/music/combat_grenzelhoft.ogg'
+	cmode_music = sound("sound/music/combat_grenzelhoft.ogg")
 	subclass_languages = list(/datum/language/grenzelhoftian)
 	traits_applied = list(TRAIT_HEAVYARMOR)
 	subclass_stats = list(
@@ -74,7 +74,7 @@
 	outfit = /datum/outfit/job/roguetown/mercenary/grenzelhoft_halberdier
 	class_select_category = CLASS_CAT_GRENZELHOFT
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
-	cmode_music = 'sound/music/combat_grenzelhoft.ogg'
+	cmode_music = sound("sound/music/combat_grenzelhoft.ogg")
 	subclass_languages = list(/datum/language/grenzelhoftian)
 	traits_applied = list(TRAIT_HEAVYARMOR)
 	subclass_stats = list(
@@ -138,10 +138,10 @@
 	allowed_sexes = list(MALE, FEMALE)
 
 	outfit = /datum/outfit/job/roguetown/mercenary/grenzelhoft_crossbowman
-	traits_applied = list(TRAIT_SURVIVAL_EXPERT, TRAIT_SLEUTH, TRAIT_DODGEEXPERT) //DE to be replaced with Concealment Expert
+	traits_applied = list(TRAIT_SURVIVAL_EXPERT, TRAIT_DODGEEXPERT) //DE to be replaced with Concealment Expert
 	class_select_category = CLASS_CAT_GRENZELHOFT
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_MARKSMAN)
-	cmode_music = 'modular_twilight_axis/sound/music/combat_grenzelhoft_mage.ogg' //TA EDIT
+	cmode_music = sound("modular_twilight_axis/sound/music/combat_grenzelhoft_mage.ogg") //TA EDIT
 	subclass_languages = list(/datum/language/grenzelhoftian)
 	subclass_stats = list(
 		STATKEY_SPD = 2,
@@ -184,10 +184,10 @@
 				armor = /obj/item/clothing/suit/roguetown/armor/brigandine/light	// find a smithy to fix it
 			if("Studded Leather Vest")
 				armor = /obj/item/clothing/suit/roguetown/armor/leather/studded		// or maintain it yourself!
-		var/weapons = list("Crossbow & 20 Bolts","Heavy Crossbow & 8 Heavy Bolts","Arquebus & 30 Lead Bullets")
+		var/weapons = list("Crossbow & 16 Bolts","Heavy Crossbow & 8 Heavy Bolts","Arquebus Rifle & 30 Lead Spheres")
 		var/weapon_choice = input(H, "Choose your weapon.", "TOOLS OF THE TRADE") as anything in weapons //TA EDIT
 		switch(weapon_choice)
-			if("Crossbow & 20 Bolts")
+			if("Crossbow & 16 Bolts")
 				beltr = /obj/item/quiver/bolt/standard
 				r_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
 				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, 5, TRUE)
@@ -197,7 +197,7 @@
 				H.change_stat(STATKEY_STR, 1) //Without any statpack or racial modifier, this meets the bare minimum for using the Siegebow as a melee weapon.
 				H.change_stat(STATKEY_SPD, -1)
 				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, 5, TRUE)
-			if("Arquebus & 30 Lead Bullets") //TA EDIT
+			if("Arquebus Rifle & 30 Lead Spheres") //TA EDIT
 				r_hand = /obj/item/gun/ballistic/twilight_firearm/arquebus
 				l_hand = /obj/item/twilight_powderflask
 				beltr = /obj/item/quiver/twilight_bullet/lead
@@ -227,13 +227,13 @@
 
 /datum/advclass/mercenary/grenzelhoft_mage
 	name = "Gefechtsgelehrter"
-	tutorial = "You are a Gefechtsgelehrter - \"Combat Scholar\" - A proud magos from the Celestial Academy of Magos, who's skills in Siege Magic and Arcyne Physics are unmatched."
+	tutorial = "You are a Gefechtsgelehrter - \"Combat Scholar\" - A proud magos from the Imperial Academy of Arcyne, specializing in Siege Magic and Arcyne Physics for the good of the Emperate." //TA EDIT
 	allowed_sexes = list(MALE, FEMALE)
 
 	outfit = /datum/outfit/job/roguetown/mercenary/grenzelhoft_mage
 	class_select_category = CLASS_CAT_GRENZELHOFT
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_WARMAGE)
-	cmode_music = 'modular_twilight_axis/sound/music/combat_grenzelhoft_mage.ogg' //TA EDIT
+	cmode_music = sound("modular_twilight_axis/sound/music/combat_grenzelhoft_mage.ogg") //TA EDIT
 	subclass_languages = list(/datum/language/grenzelhoftian)
 	traits_applied = list(TRAIT_INTELLECTUAL, TRAIT_STEELHEARTED, TRAIT_ALCHEMY_EXPERT)
 	subclass_mage_aspects = list("mastery" = FALSE, "major" = 1, "minor" = 2, "utilities" = 6, "allowed_majors" = list(/datum/magic_aspect/pyromancy, /datum/magic_aspect/geomancy, /datum/magic_aspect/ferramancy, /datum/magic_aspect/conjuration), "variants" = list(/datum/magic_aspect/pyromancy = "gefechtsgelehrter", /datum/magic_aspect/geomancy = "gefechtsgelehrter", /datum/magic_aspect/ferramancy = "gefechtsgelehrter", /datum/magic_aspect/conjuration = "gefechtsgelehrter"), "post_aspect_spells" = list(/datum/action/cooldown/spell/message, /datum/action/cooldown/spell/aetherknife), "ward" = TRUE)
@@ -265,7 +265,7 @@
 
 /datum/outfit/job/roguetown/mercenary/grenzelhoft_mage/pre_equip(mob/living/carbon/human/H)
 	..()
-	to_chat(H, span_warning("You are a Gefechtgelehrter - \"Combat Scholar\" - A proud magos from the Celestial Academy of Magos, who's skills in Siege Magic and Arcyne Physics are unmatched."))
+	to_chat(H, span_warning("You are a Gefechtgelehrter - \"Combat Scholar\" - A proud magos from the Imperial Academy of Arcyne, specializing in Siege Magic and Arcyne Physics for the good of the Emperate.")) //TA EDIT
 	belt = /obj/item/storage/belt/rogue/leather/battleskirt
 	backl = /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel
 	cloak = /obj/item/clothing/cloak/tabard/stabard/grenzelmage

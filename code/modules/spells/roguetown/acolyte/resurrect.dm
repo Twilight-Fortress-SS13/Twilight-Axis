@@ -146,15 +146,15 @@
 			target.apply_status_effect(debuff_type)	//Temp debuff on revive, your stats get hit temporarily. Doubly so if having rotted.
 		//Due to an increased cost and cooldown, these revival types heal quite a bit.
 		target.apply_status_effect(/datum/status_effect/buff/healing, 14)
-		addtimer(CALLBACK(src, PROC_REF(deathmark), target), 5 MINUTES)
+		addtimer(CALLBACK(src, GLOBAL_PROC_REF(deathmark), target), 5 MINUTES)
 		consume_selected_items(items_to_consume)
 		return TRUE
 	revert_cast()
 	return FALSE
 
-/obj/effect/proc_holder/spell/invoked/resurrect/proc/deathmark(mob/living/victim)
+/proc/deathmark(mob/living/victim)
 	if(victim.stat != DEAD)
-		victim.apply_status_effect(/datum/status_effect/debuff/permadeath) //The deathmark in question. This temporarily adds unrevivability to the target; die again while it's active, and your story'll be over.. for now.
+		victim.apply_status_effect(HAS_TRAIT(victim, TRAIT_LASTLEGS) ? /datum/status_effect/debuff/permadeath/permanent : /datum/status_effect/debuff/permadeath) //The deathmark in question. This temporarily adds unrevivability to the target; die again while it's active, and your story'll be over.. for now.
 		victim.play_permadeath_indicator()
 		to_chat(victim, span_danger("You suddenly feel a deathly chill from within, as the lux begins to creep across your heart once more. The thread betwixt your soul and body remains thin; to succumb again so soon would ensure its total severance."))
 
@@ -693,19 +693,6 @@
 	overlay_icon = 'icons/mob/actions/nocmiracles.dmi'
 	overlay_state = "revive"
 	sound = 'sound/magic/owlhoot.ogg'
-
-/obj/effect/proc_holder/spell/invoked/resurrect/undivided
-	name = "Lesser Anastasis"
-	desc = "Resurrects the chosen target, bringing them back from the dead. Casting this on an undead or unholy target will smite them with explosive results. </br>Depending on how far gone \
-	the spirit is, the 'Anastasis' blessing might need to be casted multiple times before successfully resurrecting them. </br>Unlike a regular Healing miracle, this \
-	can affect - and resurrect - devout Psydonians as well."
-	recharge_time = 20 MINUTES //Double the cooldown, no more gold cost, it simply doesn't work with the new economy and transmutation changes.
-	required_items = list()
-	debuff_type = /datum/status_effect/debuff/revived
-	sound = 'sound/magic/revive.ogg'
-	action_icon = 'icons/mob/actions/undividedmiracles.dmi'
-	overlay_icon = 'icons/mob/actions/undividedmiracles.dmi'
-	overlay_state = "revive"
 
 /obj/effect/proc_holder/spell/invoked/resurrect/dream
 	name = "Oneiric Rite of Anastasis"

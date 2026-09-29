@@ -59,7 +59,7 @@
 	max_integrity = 30
 	dog_fashion = /datum/dog_fashion/head
 	drop_sound = 'sound/foley/dropsound/paper_drop.ogg'
-	pickup_sound =  'sound/blank.ogg'
+	pickup_sound =	'sound/blank.ogg'
 	grind_results = list(/datum/reagent/cellulose = 3)
 
 
@@ -125,7 +125,7 @@
 	. = ..()
 	update_icon_state()
 
-/obj/item/paper/Initialize()
+/obj/item/paper/Initialize(mapload)
 	. = ..()
 	pixel_y = rand(-8, 8)
 	pixel_x = rand(-9, 9)
@@ -180,18 +180,21 @@
 /obj/item/paper/proc/read(mob/user)
 //	var/datum/asset/assets = get_asset_datum(/datum/asset/spritesheet/simple/paper)
 //	assets.send(user)
-	if(!user.client || !user.hud_used)
-		return
-	if(!user.hud_used.reads)
-		return
-	if(!user.can_read(src))
-		if(info)
-			add_sleep_experience(user, /datum/skill/misc/reading, 2)
-		return
-	if(mailer)
-		return
-	if(in_range(user, src) || isobserver(user))
+	var/ghost = isobserver(user)
+	if (!ghost)
+		if(!user.client || !user.hud_used)
+			return
+		if(!user.hud_used.reads)
+			return
+		if(!user.can_read(src))
+			if(info)
+				add_sleep_experience(user, /datum/skill/misc/reading, 2)
+			return
+		if(mailer)
+			return
+	if(in_range(user, src) || ghost)
 //		var/obj/screen/read/R = user.hud_used.reads
+		user << browse_rsc('html/book.png')
 		var/dat = {"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">
 			<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><style type=\"text/css\">
 			body { background-image:url('book.png');background-repeat: repeat; }</style></head><body scroll=yes>"}
@@ -224,7 +227,7 @@
 	dat += "[t]<br>"
 	dat += "<a href='byond://winset?reading.is-visible=false' style='position:absolute;right:50px'>Close</a>"
 	dat += "</body></html>"
-	user << browse(dat, "window=reading;size=500x400;can_close=1;can_minimize=0;can_maximize=0;can_resize=1;titlebar=0;border=0")
+	user << browse(dat, "window=reading;size=500x400;can_close=1;can_minimize=0;can_maximize=0;can_resize=1;titlebar=1;border=0")
 
 /obj/item/paper/verb/rename()
 	set name = "Rename paper"
@@ -392,11 +395,12 @@
 			user << browse(null, "window=reading")
 
 	var/literate = usr.is_literate()
-	if(!usr.canUseTopic(src, BE_CLOSE, literate))
+	var/ghost = isobserver(usr)
+	if(!ghost && !usr.canUseTopic(src, BE_CLOSE, literate))
 		return
 
 	if(href_list["read"])
-		if(trapped)
+		if(trapped && !ghost)
 			var/mob/living/victim = usr
 			victim.visible_message(span_notice("[usr] opens the [src]."))
 			to_chat(usr, span_warning("This parchment is full of strange symbols that start to glow. How odd. Wait-"))
@@ -412,7 +416,7 @@
 
 	if(href_list["write"])
 		var/id = href_list["write"]
-		var/t =  stripped_multiline_input("Enter what you want to write:", "Write", no_trim=TRUE)
+		var/t =	stripped_multiline_input(usr, "Enter what you want to write:", "Write", no_trim=TRUE)
 		if(!t || !usr.canUseTopic(src, BE_CLOSE, literate))
 			return
 		var/obj/item/i = usr.get_active_held_item()	//Check to see if he still got that darn pen, also check if he's using a crayon or pen.
@@ -531,7 +535,7 @@
 
 /obj/item/paper/construction
 
-/obj/item/paper/construction/Initialize()
+/obj/item/paper/construction/Initialize(mapload)
 	. = ..()
 	color = pick("FF0000", "#33cc33", "#ffb366", "#551A8B", "#ff80d5", "#4d94ff")
 
@@ -539,7 +543,7 @@
  * Natural paper
  */
 
-/obj/item/paper/natural/Initialize()
+/obj/item/paper/natural/Initialize(mapload)
 	. = ..()
 	color = "#FFF5ED"
 
@@ -600,8 +604,9 @@
 
 /obj/item/smallDelivery/examine(mob/user)
 	. = ..()
+	var/ghost = isobserver(user)
 	if(note && length(note.info))
-		if(!in_range(user, src))
+		if(!in_range(user, src) && !ghost)
 			. += "There's a [note.name] attached to it. You can't read it from here."
 		else
 			. += "There's a [note.name] attached to it..."
@@ -640,3 +645,6 @@
 
 /obj/item/inqarticles/indexer/can_be_package_wrapped()
 	return 0
+
+/obj/item/mob_item/can_be_package_wrapped()
+	return FALSE

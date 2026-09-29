@@ -23,7 +23,7 @@ GLOBAL_LIST_INIT(tank_aggro, list(
 	d_intent = INTENT_PARRY
 	threat_point = THREAT_ELITE
 
-/mob/living/carbon/human/species/human/northern/outlaw_tank/Initialize()
+/mob/living/carbon/human/species/human/northern/outlaw_tank/Initialize(mapload)
 	. = ..()
 	//Begin RANDOMISE here
 	set_species(pick(NPC_RACES_TYPES))
@@ -46,8 +46,6 @@ GLOBAL_LIST_INIT(tank_aggro, list(
 	ADD_TRAIT(src, TRAIT_BADTRAINER, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NPC_EXAMINE, TRAIT_GENERIC)
 	equipOutfit(new /datum/outfit/job/roguetown/npc/mini_boss/tank)
-	for(var/obj/item/gear in get_equipped_items() + held_items)
-		lock_gear_piece(gear, "outlaw_tank_gear")
 	update_hair()
 	update_body()
 	def_intent_change(INTENT_PARRY)
@@ -58,11 +56,6 @@ GLOBAL_LIST_INIT(tank_aggro, list(
 	correct_features_NPC()
 	dna.species.handle_body(src)
 	src.regenerate_icons() //Fixes the weird body with random genders for NPCs.
-
-/mob/living/carbon/human/species/human/northern/outlaw_tank/death(gibbed, nocutscene = FALSE)
-	. = ..()
-	for(var/obj/item/gear in get_equipped_items() + held_items)
-		REMOVE_TRAIT(gear, TRAIT_NODROP, "outlaw_tank_gear")
 
 /datum/outfit/job/roguetown/npc/mini_boss/tank/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -81,6 +74,7 @@ GLOBAL_LIST_INIT(tank_aggro, list(
 	head = /obj/item/clothing/head/roguetown/helmet/heavy/knight/iron
 	neck = /obj/item/clothing/neck/roguetown/bevor/iron
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/iron
+	belt = /obj/item/storage/belt/rogue/leather
 	r_hand = /obj/item/rogueweapon/mace/steel
 	l_hand = /obj/item/rogueweapon/shield/tower
 	H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_EXPERT, TRUE)

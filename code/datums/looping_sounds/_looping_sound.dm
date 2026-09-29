@@ -53,6 +53,7 @@ GLOBAL_LIST_EMPTY(created_sound_groups)
 	var/frequency
 	var/stopped = TRUE
 	var/persistent_loop = FALSE //we stay in the client's played_loops so we keep updating volume even when out of range
+	var/preload_persistent_to_all_clients = TRUE  // TA EDIT
 	var/cursound
 	var/list/thingshearing = list() // this is a list of WEAKREFS to the mobs that can currently hear us
 	var/ignore_walls = TRUE
@@ -65,7 +66,7 @@ GLOBAL_LIST_EMPTY(created_sound_groups)
 	var/datum/sound_group/sound_group
 	var/starttime // A world.time snapshot of when the loop was started.
 	/// Which bitflag pref we check for when playing this to listeners, if any. This will check for its ABSENCE, not its presence.
-	var/filter_pref	
+	var/filter_pref
 
 /datum/looping_sound/New(_parent, start_immediately=FALSE, _direct=FALSE, _channel = 0)
 /*	if(!mid_sounds)
@@ -147,6 +148,8 @@ GLOBAL_LIST_EMPTY(created_sound_groups)
 	on_start()
 
 /datum/looping_sound/proc/stop(null_parent)
+	if(stopped) // TA EDIT
+		return // TA EDIT
 	stopped = TRUE
 	if(null_parent)
 		set_parent(null)
@@ -235,7 +238,7 @@ GLOBAL_LIST_EMPTY(created_sound_groups)
 	if(start_sound) //does ANYTHING even use start_sound
 		play(start_sound)
 		start_wait = start_length
-	if(persistent_loop)
+	if(persistent_loop && preload_persistent_to_all_clients) // TA EDIT
 		attach_loop_to_all_clients()
 	addtimer(CALLBACK(src, PROC_REF(begin_loop)), start_wait, TIMER_CLIENT_TIME)
 	if(persistent_loop && !(src in GLOB.persistent_sound_loops))
@@ -257,7 +260,7 @@ GLOBAL_LIST_EMPTY(created_sound_groups)
 		if(filter_pref)
 			if(!(C.prefs.toggles & filter_pref))
 				continue
-		M.playsound_local(null, soundfile, 0, vary, frequency, falloff, channel, FALSE, null, src) 
+		M.playsound_local(null, soundfile, 0, vary, frequency, falloff, channel, FALSE, null, src)
 
 /datum/looping_sound/proc/begin_loop()
 	sound_loop()
@@ -269,7 +272,7 @@ GLOBAL_LIST_EMPTY(created_sound_groups)
 	if(persistent_loop)
 		GLOB.persistent_sound_loops -= src
 	if(!direct)
-		for(var/datum/weakref/listener_ref in thingshearing)
+		for(var/datum/weakref/listener_ref in thingshearing.Copy())
 			var/mob/M = listener_ref.resolve()
 			if (!M)
 				continue

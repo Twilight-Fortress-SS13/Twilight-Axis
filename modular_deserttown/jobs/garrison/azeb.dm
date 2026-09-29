@@ -19,7 +19,7 @@
 	min_pq = 5
 	max_pq = null
 	round_contrib_points = 2
-	cmode_music = 'sound/music/combat_desert1.ogg'
+	cmode_music = sound("sound/music/combat_desert1.ogg")
 	job_traits = list(TRAIT_OUTDOORSMAN, TRAIT_WOODSMAN, TRAIT_SURVIVAL_EXPERT, TRAIT_SLAVE)
 	job_subclasses = list(
 		/datum/advclass/azeb/ranger,
@@ -27,7 +27,7 @@
 	)
 	same_job_respawn_delay = 30 MINUTES
 
-	
+
 /datum/job/roguetown/azeb/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	. = ..()
 	if(ishuman(L))
@@ -95,7 +95,7 @@
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 	belt = /obj/item/storage/belt/rogue/leather
 	neck = /obj/item/clothing/neck/roguetown/coif/padded
-	backl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve/warden
+	backl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/warden
 	beltr = /obj/item/quiver/arrows
 	beltl = /obj/item/rogueweapon/huntingknife/idagger/steel
 	backpack_contents = list(

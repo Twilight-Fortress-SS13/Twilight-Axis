@@ -10,7 +10,7 @@
 	townie_contract_gate_exempt = TRUE
 	townie_contract_gate_hide_in_list = TRUE
 	subclass_languages = list(/datum/language/kazengunese)
-	cmode_music = 'sound/music/combat_kazengite.ogg'
+	cmode_music = sound("sound/music/combat_kazengite.ogg")
 	subclass_stats = list(
 		STATKEY_STR = 2,
 		STATKEY_CON = 2,
@@ -67,7 +67,7 @@
 	forbidden_races = list(RACES_SMALL) //Clothing has no dwarf sprites.
 	outfit = /datum/outfit/job/roguetown/adventurer/yoruku
 	subclass_languages = list(/datum/language/kazengunese)
-	cmode_music = 'sound/music/combat_kazengite.ogg'
+	cmode_music = sound("sound/music/combat_kazengite.ogg")
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_DODGEEXPERT)
 	subclass_stats = list(
 		STATKEY_SPD = 3,
@@ -133,7 +133,7 @@
 
 	outfit = /datum/outfit/job/roguetown/adventurer/repentant
 	subclass_languages = list(/datum/language/otavan)
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander2.ogg'
+	cmode_music = sound("sound/music/cmode/adventurer/combat_outlander2.ogg")
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
 	forbidden_races = list()
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN)
@@ -177,7 +177,7 @@
 
 	outfit = /datum/outfit/job/roguetown/adventurer/refugee
 	subclass_languages = list(/datum/language/celestial)
-	cmode_music = 'sound/music/warscholar.ogg'
+	cmode_music = sound("sound/music/warscholar.ogg")
 	traits_applied = list(TRAIT_STEELHEARTED)
 	forbidden_races = list()
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
@@ -292,7 +292,7 @@
 	outfit = /datum/outfit/job/roguetown/adventurer/slaver
 	subclass_languages = list(/datum/language/raneshi)
 	forbidden_races = list()
-	cmode_music = 'sound/music/combat_desertrider.ogg'
+	cmode_music = sound("sound/music/combat_desertrider.ogg")
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_MEDIUMARMOR)
 	subclass_stats = list(
 		STATKEY_STR = 2,
@@ -345,7 +345,7 @@
 	forbidden_races = list()
 	outfit = /datum/outfit/job/roguetown/adventurer/freishepherd
 	traits_applied = list()
-	cmode_music = 'sound/music/frei_shepherd.ogg'
+	cmode_music = sound("sound/music/frei_shepherd.ogg")
 	subclass_stats = list(
 		STATKEY_WIL = 1,
 		STATKEY_PER = 2,
@@ -394,7 +394,7 @@
 	outfit = /datum/outfit/job/roguetown/adventurer/fencerguy
 	subclass_languages = list(/datum/language/grenzelhoftian)
 	forbidden_races = list()
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander2.ogg'
+	cmode_music = sound("sound/music/cmode/adventurer/combat_outlander2.ogg")
 	traits_applied = list(TRAIT_INTELLECTUAL, TRAIT_FENCERDEXTERITY)
 	subclass_stats = list(
 		STATKEY_INT = 2,
@@ -469,7 +469,7 @@
 	than themselves. You are a skilled combatant from beyond Azuria, who - for one reason or another - is intimately familiar with fighting in ancient equipment."
 
 	outfit = /datum/outfit/job/roguetown/adventurer/bronzeclad
-	cmode_music = 'sound/music/combat_thespian.ogg'
+	cmode_music = sound("sound/music/combat_thespian.ogg")
 	maximum_possible_slots = 3 //Should be categorically rarer to see than Iron- and Steel-clad adventurers. Tickles the powerscale ala the Exorcist, albeit to a wider extent with its potential combinations.
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_BLOOD_RESISTANCE)
 	forbidden_races = list()
@@ -599,7 +599,7 @@
 				beltl = /obj/item/quiver/sling/bronze
 			if("A Bow With Bronze Arrows")
 				H.adjust_skillrank_up_to(/datum/skill/combat/bows, SKILL_LEVEL_JOURNEYMAN, TRUE)
-				l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/classic
+				l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/bow
 				beltl = /obj/item/quiver/bronzearrows
 			if("Another Shortsword & Skills In Dual-Wielding")
 				ADD_TRAIT(H, TRAIT_DUALWIELDER, TRAIT_GENERIC)
@@ -700,7 +700,7 @@
 	traits_applied = list(TRAIT_OUTDOORSMAN, TRAIT_BLACKOAK, TRAIT_DODGEEXPERT, TRAIT_WOODWALKER)
 	outfit = /datum/outfit/job/roguetown/adventurer/lesserblackoak
 	subclass_languages = list(/datum/language/oldazurian)
-	cmode_music = 'sound/music/combat_blackoak.ogg'
+	cmode_music = sound("sound/music/combat_blackoak.ogg")
 	maximum_possible_slots = 3 //A little stronger than a traditional Nomad or Adventurer. The slot limit is more-so intended to keep them a limited presence within Azuria, and to account for their potentially antagonistic nature.
 	subclass_stats = list(
 		STATKEY_PER = 2,
@@ -742,7 +742,7 @@
 				backr = /obj/item/rogueweapon/scabbard/gwstrap
 			if("Autumned Bow")
 				H.adjust_skillrank_up_to(/datum/skill/combat/bows, SKILL_LEVEL_JOURNEYMAN, TRUE)
-				l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve/autumn
+				l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/autumn
 				beltr = /obj/item/quiver/arrows
 	head = /obj/item/clothing/head/roguetown/helmet/heavy/elven_helm/autumn/light
 	armor = /obj/item/clothing/suit/roguetown/armor/plate/elven_plate/autumn/light
@@ -762,14 +762,12 @@
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		)
 
-/obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve/autumn
-	name = "autumnwoad recurve bow"
-	desc = "A medium length composite bow of glued horn, wood, and sinew with good shooting \
-	characteristics. Hewn from an Azurian elk tree branch, it still feels as if it is one \
-	with nature; unsullied by the cruder butcherments of Man. </br>'The summer sun is fading \
+/obj/item/gun/ballistic/revolver/grenadelauncher/bow/autumn
+	name = "autumnwoad bow"
+	desc = "A medium length bow hewn from an Azurian elk tree branch, it still feels as if it is one with nature; unsullied by the cruder butcherments of Man. \
+	</br>'The summer sun is fading \
 	as the year grows old, and darker days are drawing near..'"
-	icon = 'icons/roguetown/weapons/64.dmi'
-	icon_state = "autumnrecurve_bow"
+	icon_state = "bow_blackoak"
 
 /obj/item/rogueweapon/sword/long/elvish/autumn
 	name = "autumned elvish longsword"
@@ -855,7 +853,7 @@
 	emotions of its wearer - for even the eldest of the Black Oaks can see their bark shifting \
 	back to that familiar crimson hue, whenever they're stricken with the yearning of \
 	tymes past. </br>'Like the sun through the trees you came to love me.. and like a leaf on a breeze, you blew away..'"
-	 //Uniquely wearable among all races, as it's 'unblossomed' and appropriately malleable enough to fit on smaller bodies.
+		//Uniquely wearable among all races, as it's 'unblossomed' and appropriately malleable enough to fit on smaller bodies.
 	icon = 'icons/roguetown/clothing/special/race_armor.dmi'
 	mob_overlay_icon = 'icons/roguetown/clothing/special/onmob/race_armor.dmi'
 	icon_state = "awelfchest"

@@ -23,6 +23,7 @@
 	ADD_TRAIT(L, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
 	ADD_TRAIT(L, TRAIT_ARCYNE, TRAIT_GENERIC)
 	ADD_TRAIT(L, TRAIT_SHATTER_KILL, TRAIT_GENERIC)
+	ADD_TRAIT(L, TRAIT_SKELETAL_GIB_ON_DEATH, TRAIT_GENERIC)
 
 /datum/antagonist/unbound_spellblade/proc/equip_spellblade()
 	owner.unknow_all_people()
@@ -30,7 +31,7 @@
 		owner.become_unknown_to(MF)
 
 	var/mob/living/carbon/human/H = owner.current
-	H.cmode_music = 'sound/music/combat_cult.ogg'
+	H.cmode_music = sound("sound/music/combat_cult.ogg")
 	H.faction = list(FACTION_UNDEAD)
 	H.equipOutfit(/datum/outfit/job/roguetown/unbound_spellblade)
 
@@ -116,6 +117,8 @@
 /datum/outfit/job/roguetown/unbound_spellblade/pre_equip(mob/living/carbon/human/H)
 	..()
 
+	change_origin(H, /datum/virtue/origin/unselectable/skeleton, "Legion")
+
 	H.change_stat(STATKEY_STR, -2)
 	H.change_stat(STATKEY_SPD, -3)
 	H.change_stat(STATKEY_CON, -5)
@@ -144,7 +147,7 @@
 	backl = /obj/item/storage/backpack/rogue/satchel
 
 	H.ambushable = FALSE
-
+	//we allow swift intent, solo full antag undead
 	// Chant selection — uses undead faction for "MEMORIES" UI
 	to_chat(H, span_warning("You start with Bind Weapon. Remember to Bind your weapon so you can use your abilities and build up Arcyne Momentum."))
 

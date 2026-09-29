@@ -84,8 +84,8 @@
 	sort_category = "Triumphs"
 
 /datum/loadout_item/triumph_winterdress
-	name = "Winter Dress"
-	path = /obj/item/clothing/suit/roguetown/armor/armordress/winterdress/triumph
+	name = "Thin Winter Dress"
+	path = /obj/item/clothing/suit/roguetown/shirt/tunic/thinwinterdress/triumph
 	triumph_cost = 3
 	sort_category = "Triumphs"
 
@@ -375,12 +375,12 @@
 
 /datum/loadout_item/triumph_plaquegoldenbeltfancy
 	name = "Belt of Plaque, Golden, Fancy"
-	path = /obj/item/storage/belt/rogue/leather/plaquegold/steward
+	path = /obj/item/storage/belt/rogue/leather/plaquegold/noble
 	triumph_cost = 7
 	sort_category = "Triumphs"
 
 //////////////////
-//  RESKINS  !  //
+//	RESKINS	!	//
 //////////////////
 //Variants of the Donator Reskin item, specifically unlocked through Triumphs.
 
@@ -393,6 +393,12 @@
 /datum/loadout_item/triumph_armorkit_slimmedsteel
 	name = "Triumph Kit - Slimfitted Steel Armor"
 	path = /obj/item/enchantingkit/triumph_armorkit_slimmedsteel
+	triumph_cost = 3
+	sort_category = "Triumphs"
+
+/datum/loadout_item/triumph_armorkit_slimmedsteel
+	name = "Triumph Kit - Brigandine with Plate"
+	path = /obj/item/enchantingkit/triumph_armorkit_heavybrig
 	triumph_cost = 3
 	sort_category = "Triumphs"
 
@@ -540,6 +546,12 @@
 	triumph_cost = 3
 	sort_category = "Triumphs"
 
+/datum/loadout_item/triumph_armorkit_pleather
+	name = "Triumph Kit - Padded Leather Armor"
+	path = /obj/item/enchantingkit/triumph_armorkit_pleather
+	triumph_cost = 3
+	sort_category = "Triumphs"
+
 /datum/loadout_item/triumph_weaponkit_classicironbreastplate
 	name = "Triumph Kit - Aged Iron Breastplate"
 	path = /obj/item/enchantingkit/triumph_armorkit_classiciron
@@ -594,8 +606,45 @@
 	triumph_cost = 1
 	sort_category = "Triumphs"
 
+/datum/loadout_item/triumph_weaponkit_khanda
+	name = "Triumph Kit - Khanda"
+	path = /obj/item/enchantingkit/triumph_weaponkit_khanda
+	triumph_cost = 3
+	sort_category = "Triumphs"
+
+/datum/loadout_item/triumph_weaponkit_urumi
+	name = "Triumph Kit - Urumi"
+	path = /obj/item/enchantingkit/triumph_weaponkit_urumi
+	triumph_cost = 3
+	sort_category = "Triumphs"
+
+/datum/loadout_item/triumph_weaponkit_pata
+	name = "Triumph Kit - Pata"
+	path = /obj/item/enchantingkit/triumph_weaponkit_pata
+	triumph_cost = 3
+	sort_category = "Triumphs"
+
+/datum/loadout_item/triumph_armorkit_rockhillarmet
+	name = "Triumph Kit - Knight-Errant's Armet"
+	path = /obj/item/enchantingkit/donator_rockhillarmet
+	triumph_cost = 3
+	sort_category = "Triumphs"
+
+/datum/loadout_item/triumph_armorkit_rockhillmaille
+	name = "Triumph Kit - Jacketed Plate-and-Maille"
+	path = /obj/item/enchantingkit/donator_rockhillmaille
+	triumph_cost = 3
+	sort_category = "Triumphs"
+
+/datum/loadout_item/triumph_armorkit_platearmharness
+	name = "Triumph Kit - Plate Arm Harnesses"
+	path = /obj/item/enchantingkit/donator_universal_armharness
+	triumph_cost = 3
+	sort_category = "Triumphs"
+
+
 //////////////////
-//  PERFUMES !  //
+//	PERFUMES !	//
 //////////////////
 
 /datum/loadout_item/triumph_perfume_lavender

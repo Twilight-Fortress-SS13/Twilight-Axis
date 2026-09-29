@@ -56,6 +56,11 @@
 
 #define STANDING_ORDER_BASE_BONUS 1.0
 
+// Scarcity bonus: boosts order PAYOUT (never required quantity) below reference pop, ramping
+// linearly up to +MAX_BONUS at pop 0. Crown income only, no player-side cut.
+#define STANDING_ORDER_SCARCITY_REFERENCE_POP 30
+#define STANDING_ORDER_SCARCITY_MAX_BONUS 0.4
+
 // Partial Fulfillment: Let players fulfill an order with 50% by VALUE for 85% payout
 // So that steward / towners are still soft encouraged to fulfill the whole order
 // But don't feel ripped off because they cannot fetch everything at once
@@ -101,17 +106,17 @@
 #define ECON_EVENT_SATURATION_MAX 40
 #define ECON_EVENT_REROLL_COOLDOWN_DAYS 7
 
-#define ECON_SHORTAGE_MINOR   2.00
-#define ECON_SHORTAGE_NORMAL  2.25
-#define ECON_SHORTAGE_MAJOR   2.5
-#define ECON_SHORTAGE_SEVERE  2.75
-#define ECON_SHORTAGE_CRISIS  3.00
+#define ECON_SHORTAGE_MINOR	2.00
+#define ECON_SHORTAGE_NORMAL	2.25
+#define ECON_SHORTAGE_MAJOR	2.5
+#define ECON_SHORTAGE_SEVERE	2.75
+#define ECON_SHORTAGE_CRISIS	3.00
 
-#define ECON_OVERSUPPLY_MINOR  0.70
+#define ECON_OVERSUPPLY_MINOR	0.70
 #define ECON_OVERSUPPLY_NORMAL 0.65
-#define ECON_OVERSUPPLY_MAJOR  0.60
+#define ECON_OVERSUPPLY_MAJOR	0.60
 #define ECON_OVERSUPPLY_SEVERE 0.55
-#define ECON_OVERSUPPLY_GLUT   0.50
+#define ECON_OVERSUPPLY_GLUT	0.50
 
 // Temp consequences for bnaditry
 #define BANDITRY_DRAIN_DANGEROUS_FLAT 40
@@ -120,6 +125,23 @@
 #define BANDITRY_DRAIN_BLEAK_PER_PLAYER 2
 // 500 above the default purse floor so that banditry won't tank econ on its own
 #define BANDITRY_DEBT_FLOOR 1500
+
+// FLAT per-region drain cost scales down below reference pop, floored at FLAT_MIN_MULT so it
+// never fully disappears. PER_PLAYER component is untouched.
+#define BANDITRY_DRAIN_POP_REFERENCE 20
+#define BANDITRY_DRAIN_FLAT_MIN_MULT 0.25
+
+// Global daily cap on summed drain across all threat regions, so several going Dangerous/Bleak
+// at once can't stack unbounded. No flat base - purely per-player, and the rate must exceed the
+// theoretical max combined per-player drain slope (6 regions x BLEAK_PER_PLAYER(2) = 12) so the
+// cap is mathematically guaranteed to stop binding as pop rises instead of saving more the
+// bigger the server gets (a naive base+rate cap with rate < that max does the latter - the gap
+// between raw drain and the cap grows unboundedly with pop instead of tapering to zero).
+#define BANDITRY_DRAIN_DAILY_CAP_PER_PLAYER 25
+
+// Fraction of any Crown's Purse credit skimmed to pay down banditry debt while it's outstanding.
+// Was 1.0 (100%), which made the purse unable to visibly recover until debt cleared.
+#define BANDITRY_DEBT_SKIM_RATE 0.75
 
 
 #define BLOCKADE_ROUNDSTART_COUNT_MIN 2
@@ -132,7 +154,7 @@
 
 #define BLOCKADE_REPLENISH_FLOOR 1
 #define BLOCKADE_REPLENISH_BUDGET_BASE 1
-#define BLOCKADE_REPLENISH_BUDGET_PER_PLAYER 0.02  // +1 per 50 active players
+#define BLOCKADE_REPLENISH_BUDGET_PER_PLAYER 0.02	// +1 per 50 active players
 #define BLOCKADE_REPLENISH_BUDGET_MAX 2
 #define BLOCKADE_REPLENISH_FIRST_DAY 2
 #define BLOCKADE_REPLENISH_LAST_DAY 5 // No last minute blockade
@@ -178,15 +200,15 @@
 	return realm_type
 
 /proc/ta_economy_default_azurian_labels()
-	var/realm = lowertext("[ta_economy_realm_name()]")
+	var/realm = LOWER_TEXT("[ta_economy_realm_name()]")
 	return (!realm || realm == "azuria" || realm == "azure peak")
 
 /proc/ta_economy_al_ashur_labels()
-	return lowertext("[ta_economy_realm_name()]") == "al-ashur"
+	return LOWER_TEXT("[ta_economy_realm_name()]") == "al-ashur"
 
 /proc/ta_economy_rockhill_labels()
-	var/map_name = lowertext("[ta_economy_map_name()]")
-	var/realm = lowertext("[ta_economy_realm_name()]")
+	var/map_name = LOWER_TEXT("[ta_economy_map_name()]")
+	var/realm = LOWER_TEXT("[ta_economy_realm_name()]")
 	return (map_name == "rockhill" || realm == "enigma")
 
 /proc/ta_economy_authority_noun()

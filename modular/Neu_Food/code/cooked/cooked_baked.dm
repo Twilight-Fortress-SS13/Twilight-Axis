@@ -1,7 +1,7 @@
 // Generic baked products. Also includes their intermediary forms (raw) before baking.
 // For consistency.
 
-/*	.................   Hardtack   ................... */
+/*	.................	Hardtack	................... */
 /obj/item/reagent_containers/food/snacks/rogue/foodbase/hardtack_raw
 	name = "crackerdough"
 	desc = "Doughy, soft, unacceptable - such makes it perfect for hardtack. Sprinkling in some sliced chocolate might help make it a little more palletable."
@@ -12,7 +12,7 @@
 	eat_effect = null
 	cooked_smell = /datum/pollutant/food/hardtack
 
-/*	.................   Hardtack   ................... */
+/*	.................	Hardtack	................... */
 /obj/item/reagent_containers/food/snacks/rogue/crackerscooked
 	cuisine = CUISINE_NORTH_IMPERIAL|CUISINE_NORTHERN
 	dish_type = DISH_BREAD
@@ -26,6 +26,15 @@
 	tastes = list("spelt" = 1)
 	bitesize = 6
 	rotprocess = null
+	var/fished = FALSE
+
+/obj/item/reagent_containers/food/snacks/rogue/crackerscooked/Initialize()
+	if(prob(20))
+		icon = 'modular_twilight_axis/icons/obj/items/fish.dmi'
+		icon_state += "_fish"
+		desc += span_notice("\nAbyssor's blessing.")
+		fished = TRUE
+	. = ..()
 
 /obj/item/reagent_containers/food/snacks/rogue/crackerscooked/On_Consume(mob/living/eater)
 	..()
@@ -40,8 +49,10 @@
 	if(bitecount == 5)
 		icon_state = "tack1"
 
+	if(fished)
+		icon_state += "_fish"
 
-/*	.................   Bread   ................... */
+/*	.................	Bread	................... */
 /obj/item/reagent_containers/food/snacks/rogue/bread
 	cuisine = CUISINE_NORTH_IMPERIAL|CUISINE_SOUTH_IMPERIAL
 	dish_type = DISH_BREAD
@@ -80,7 +91,7 @@
 		if(bitecount == 7)
 			changefood(slice_path, eater)
 
-/*	.................   Breadslice & Toast   ................... */
+/*	.................	Breadslice & Toast	................... */
 /obj/item/reagent_containers/food/snacks/rogue/breadslice
 	cuisine = CUISINE_NORTH_IMPERIAL|CUISINE_SOUTH_IMPERIAL
 	dish_type = DISH_BREAD
@@ -150,7 +161,7 @@
 	cooked_type = null
 	foodtype = GRAIN
 	bitesize = 1
-	rotprocess = SHELFLIFE_DECENT
+	rotprocess = null
 
 // -------------- BREAD WITH FOOD ON IT (not american sandwich) -----------------
 /obj/item/reagent_containers/food/snacks/rogue/sandwich
@@ -216,7 +227,15 @@
 	icon_state = "toast_ham"
 	foodtype = GRAIN | MEAT
 
-/*	.................   Bread Buns   ................... */
+/obj/item/reagent_containers/food/snacks/rogue/sandwich/ham_smoked
+	tastes = list("smoky ham" = 1,"bread" = 1)
+	name = "roast ham bread"
+	desc = "A piece of bread with a fat slice of smoked ham atop. Said to move mountains with the delicious mixture of flavors alone."
+	icon_state = "bread_ham"
+	rotprocess = null
+	foodtype = GRAIN | MEAT
+
+/*	.................	Bread Buns	................... */
 /obj/item/reagent_containers/food/snacks/rogue/bun
 	cuisine = CUISINE_NORTH_IMPERIAL|CUISINE_SOUTH_IMPERIAL
 	dish_type = DISH_BREAD
@@ -239,7 +258,7 @@
 	icon = 'modular/Neu_Food/icons/cooked/cooked_baked.dmi'
 	tastes = list("sweetly-sour jamminess" = 1, "a lavish break from the dae's woes" = 1)
 	icon_state = "bun_jamtallow"
-	list_reagents = list(/datum/reagent/consumable/nutriment = NUTRITION_FULL_MEAL)
+	list_reagents = list(/datum/reagent/consumable/nutriment = NUTRITION_THREE_QUARTER_MEAL)
 	faretype = FARE_FINE
 	w_class = WEIGHT_CLASS_NORMAL
 	bitesize = 4
@@ -254,14 +273,14 @@
 	icon = 'modular/Neu_Food/icons/cooked/cooked_baked.dmi'
 	tastes = list("sweet-tarty jamminess" = 1, "a lavish break from the dae's woes" = 1)
 	icon_state = "bun_marmalade"
-	list_reagents = list(/datum/reagent/consumable/nutriment = NUTRITION_FULL_MEAL)
+	list_reagents = list(/datum/reagent/consumable/nutriment = NUTRITION_THREE_QUARTER_MEAL)
 	faretype = FARE_FINE
 	w_class = WEIGHT_CLASS_NORMAL
 	bitesize = 4
 	rotprocess = SHELFLIFE_EXTREME
 	eat_effect = /datum/status_effect/buff/greatsnackbuff
 
-/* 	.................   Crossbuns   ................... */
+/*	.................	Crossbuns	................... */
 /obj/item/reagent_containers/food/snacks/rogue/foodbase/crossbun_raw
 	name = "raw crossbun"
 	desc = "A piece of raw dough with the shape of Astrata's cross pressed onto it. In Her Light."
@@ -278,7 +297,22 @@
 	icon_state = "psycrossbun_raw"
 	cooked_type = /obj/item/reagent_containers/food/snacks/rogue/psycrossbun
 
-/* 	.................   Crossbuns   ................... */
+// Undivided variant
+/obj/item/reagent_containers/food/snacks/rogue/foodbase/decabun_raw
+	name = "raw decabun"
+	desc = "A piece of raw dough with the shape of the Undivided cross pressed onto it."
+	icon = 'modular/Neu_Food/icons/cooked/cooked_baked.dmi'
+	icon_state = "decabun_raw"
+	cooked_type = /obj/item/reagent_containers/food/snacks/rogue/decabun
+
+// Zizo variant
+/obj/item/reagent_containers/food/snacks/rogue/foodbase/zbun_raw
+	name = "raw zun"
+	desc = "A piece of raw dough with Zizo's mark pressed onto it."
+	icon = 'modular/Neu_Food/icons/cooked/cooked_baked.dmi'
+	icon_state = "zbun_raw"
+	cooked_type = /obj/item/reagent_containers/food/snacks/rogue/zbun
+/*	.................   Crossbuns   ................... */
 /obj/item/reagent_containers/food/snacks/rogue/crossbun
 	cuisine = CUISINE_NORTH_IMPERIAL|CUISINE_SOUTH_IMPERIAL
 	dish_type = DISH_BREAD
@@ -287,6 +321,7 @@
 	practice to add a slice of marmalade to their crossbuns, in reverance of Her golden authority."
 	icon = 'modular/Neu_Food/icons/cooked/cooked_baked.dmi'
 	icon_state = "crossbun"
+	list_reagents = list(/datum/reagent/consumable/nutriment = SMALLDOUGH_NUTRITION)
 	faretype = FARE_NEUTRAL // Having nobles vomit from eating holy buns is not a good idea
 	w_class = WEIGHT_CLASS_NORMAL
 	tastes = list("bread" = 1)
@@ -300,6 +335,7 @@
 	desc = "So sinfully delicious!"
 	icon = 'modular/Neu_Food/icons/cooked/cooked_baked.dmi'
 	icon_state = "crossbun_jamtallow"
+	list_reagents = list(/datum/reagent/consumable/nutriment = NUTRITION_THREE_QUARTER_MEAL)
 	faretype = FARE_LAVISH
 	w_class = WEIGHT_CLASS_NORMAL
 	bitesize = 4
@@ -317,6 +353,7 @@
 	radiance, though the spiritual implication tends to be lost on more eager-minded children."
 	icon = 'modular/Neu_Food/icons/cooked/cooked_baked.dmi'
 	icon_state = "crossbun_marmalade"
+	list_reagents = list(/datum/reagent/consumable/nutriment = NUTRITION_THREE_QUARTER_MEAL)
 	faretype = FARE_LAVISH
 	w_class = WEIGHT_CLASS_NORMAL
 	bitesize = 4
@@ -347,6 +384,7 @@
 	tears, though the spiritual implication tends to be lost on more eager-minded children."
 	icon = 'modular/Neu_Food/icons/cooked/cooked_baked.dmi'
 	icon_state = "psycrossbun_jamtallow"
+	list_reagents = list(/datum/reagent/consumable/nutriment = NUTRITION_THREE_QUARTER_MEAL)
 	faretype = FARE_LAVISH
 	w_class = WEIGHT_CLASS_NORMAL
 	bitesize = 4
@@ -362,6 +400,7 @@
 	desc = "Wait, isn't it meant to be the other way around? Ah, well!"
 	icon = 'modular/Neu_Food/icons/cooked/cooked_baked.dmi'
 	icon_state = "psycrossbun_marmalade"
+	list_reagents = list(/datum/reagent/consumable/nutriment = NUTRITION_THREE_QUARTER_MEAL)
 	faretype = FARE_LAVISH
 	w_class = WEIGHT_CLASS_NORMAL
 	bitesize = 4
@@ -370,6 +409,121 @@
 	eat_effect = /datum/status_effect/buff/greatsnackbuff
 	foodtype = GRAIN | FRUIT
 
+/obj/item/reagent_containers/food/snacks/rogue/decabun
+	cuisine = CUISINE_NORTH_IMPERIAL|CUISINE_SOUTH_IMPERIAL
+	dish_type = DISH_BREAD
+	name = "decabun"
+	desc = "A bun bearing the symbol of the Ten, undivided and ever whole. The only thing to possibly seperate them would be a \
+	helping of jam or marmalade."
+	icon = 'modular/Neu_Food/icons/cooked/cooked_baked.dmi'
+	icon_state = "decabun"
+	list_reagents = list(/datum/reagent/consumable/nutriment = SMALLDOUGH_NUTRITION)
+	faretype = FARE_NEUTRAL // Having nobles vomit from eating holy buns is not a good idea
+	w_class = WEIGHT_CLASS_NORMAL
+	tastes = list("bread" = 1)
+	bitesize = 3
+	rotprocess = SHELFLIFE_EXTREME
+
+
+/obj/item/reagent_containers/food/snacks/rogue/decabun_jamtallowed
+
+	cuisine = CUISINE_NORTH_IMPERIAL
+	dish_type = DISH_BREAD
+	name = "jamtallowed decabun"
+	desc = "A decabun, cruelly parted to be slathered with a spread of jamtallow. Seperate, but joined in sweet unity."
+	icon = 'modular/Neu_Food/icons/cooked/cooked_baked.dmi'
+	icon_state = "decabun_jamtallow"
+	list_reagents = list(/datum/reagent/consumable/nutriment = NUTRITION_THREE_QUARTER_MEAL)
+	faretype = FARE_LAVISH
+	w_class = WEIGHT_CLASS_NORMAL
+	bitesize = 4
+	rotprocess = SHELFLIFE_EXTREME
+	tastes = list("sweet-tarty jamminess" = 1, "decadent sweetness" = 1)
+	eat_effect = /datum/status_effect/buff/greatsnackbuff
+	foodtype = GRAIN | FRUIT
+
+/obj/item/reagent_containers/food/snacks/rogue/decabun_marmaladed
+	cuisine = CUISINE_NORTH_IMPERIAL
+	dish_type = DISH_BREAD
+	name = "marmaladed decabun"
+	desc = "A decabun decorated in a tangy coating of marmalade. The tart flavor tends to give pause, \
+	but the overall texture goes down smoothly."
+	icon = 'modular/Neu_Food/icons/cooked/cooked_baked.dmi'
+	icon_state = "decabun_marmalade"
+	list_reagents = list(/datum/reagent/consumable/nutriment = NUTRITION_THREE_QUARTER_MEAL)
+	faretype = FARE_LAVISH
+	w_class = WEIGHT_CLASS_NORMAL
+	bitesize = 4
+	rotprocess = SHELFLIFE_EXTREME
+	tastes = list("sweetly-sour jamminess" = 1, "decadent tartness" = 1)
+	eat_effect = /datum/status_effect/buff/greatsnackbuff
+	foodtype = GRAIN | FRUIT
+
+
+/obj/item/reagent_containers/food/snacks/rogue/zbun
+	cuisine = CUISINE_NORTH_IMPERIAL|CUISINE_SOUTH_IMPERIAL
+	dish_type = DISH_BREAD
+	name = "zun"
+	// You have to push the buttons with the food on them. It's sodium chloride. That's what I said. It's sodium chloride.
+	desc = "A bun bearing the terryble symbol of our Dame De L'oubli. It could be progressed with jam, marmalade, or a piece of dried westleach."
+	icon = 'modular/Neu_Food/icons/cooked/cooked_baked.dmi'
+	icon_state = "zbun"
+	list_reagents = list(/datum/reagent/consumable/nutriment = SMALLDOUGH_NUTRITION)
+	faretype = FARE_NEUTRAL // Having nobles vomit from eating holy buns is not a good idea
+	w_class = WEIGHT_CLASS_NORMAL
+	tastes = list("bread" = 1)
+	bitesize = 3
+	rotprocess = SHELFLIFE_EXTREME
+
+
+/obj/item/reagent_containers/food/snacks/rogue/zbun_jamtallow
+	cuisine = CUISINE_NORTH_IMPERIAL
+	dish_type = DISH_BREAD
+	name = "jamtallowed zun"
+	desc = "A zun, cruelly parted to be slathered with a spread of jamtallow. For it's sacrifice of being cut open and its \
+	internals stuffed with jam, it has become far, far more delicious."
+	icon = 'modular/Neu_Food/icons/cooked/cooked_baked.dmi'
+	icon_state = "zbun_jamtallow"
+	list_reagents = list(/datum/reagent/consumable/nutriment = NUTRITION_THREE_QUARTER_MEAL)
+	faretype = FARE_LAVISH
+	w_class = WEIGHT_CLASS_NORMAL
+	bitesize = 4
+	rotprocess = SHELFLIFE_EXTREME
+	tastes = list("sweet-tarty jamminess" = 1, "decadent sweetness" = 1)
+	eat_effect = /datum/status_effect/buff/greatsnackbuff
+	foodtype = GRAIN | FRUIT
+
+/obj/item/reagent_containers/food/snacks/rogue/zbun_marmalade
+	cuisine = CUISINE_NORTH_IMPERIAL
+	dish_type = DISH_BREAD
+	name = "marmaladed zun"
+	desc = "A zun, cruelly parted to be slathered with a spread of marmalade. For it's sacrifice of being cut open and its \
+	internals stuffed with marm, it has become far, far more delicious."
+	icon = 'modular/Neu_Food/icons/cooked/cooked_baked.dmi'
+	icon_state = "zbun_marmalade"
+	list_reagents = list(/datum/reagent/consumable/nutriment = SMALLDOUGH_NUTRITION)
+	faretype = FARE_NEUTRAL
+	w_class = WEIGHT_CLASS_NORMAL
+	tastes = list("bread" = 1)
+	bitesize = 3
+	rotprocess = SHELFLIFE_EXTREME
+
+/obj/item/reagent_containers/food/snacks/rogue/zbun_zyn
+	cuisine = CUISINE_NORTH_IMPERIAL|CUISINE_SOUTH_IMPERIAL
+	dish_type = DISH_BREAD
+	// blame tea
+	name = "zyn"
+	desc = "A peculiar creation invented by Ecclescials who ran out of parchments. A zun has been cleaved in half, and a westleach-leaf \
+	stuffed within. It looks terrible, but surely tastes fine...?"
+	icon = 'modular/Neu_Food/icons/cooked/cooked_baked.dmi'
+	icon_state = "zbun_zyn"
+	list_reagents = list(/datum/reagent/consumable/nutriment = SMALLDOUGH_NUTRITION,
+						/datum/reagent/drug/westleach = 5)
+	faretype = FARE_NEUTRAL // Having nobles vomit from eating holy buns is not a good idea
+	w_class = WEIGHT_CLASS_NORMAL
+	tastes = list("bread" = 1, "pipeweed" = 1)
+	bitesize = 3
+	rotprocess = SHELFLIFE_EXTREME
 /*	.................   Raisin Bread   ................... */
 /obj/item/reagent_containers/food/snacks/rogue/rbread_half
 	name = "half-done raisin dough"
@@ -448,27 +602,7 @@
 	dropshrink = 0.8
 	eat_effect = /datum/status_effect/buff/snackbuff
 
-/*	.................   Apple Bread   ................... */
-/obj/item/reagent_containers/food/snacks/rogue/applebread_half
-	name = "half-done apple dough"
-	desc = "It needs more apple slices!"
-	icon = 'modular/Neu_Food/icons/cooked/cooked_baked.dmi'
-	icon_state = "dough_apple"
-	list_reagents = list(/datum/reagent/consumable/nutriment = 1)
-	w_class = WEIGHT_CLASS_NORMAL
-	rotprocess = SHELFLIFE_DECENT
-
-/obj/item/reagent_containers/food/snacks/rogue/applebread_uncooked
-	name = "raw apple loaf"
-	desc = "Into the oven you go!"
-	icon = 'modular/Neu_Food/icons/cooked/cooked_baked.dmi'
-	icon_state = "applebread_uncooked"
-	slices_num = 0
-	cooked_type = /obj/item/reagent_containers/food/snacks/rogue/applebread
-	list_reagents = list(/datum/reagent/consumable/nutriment = 1)
-	w_class = WEIGHT_CLASS_NORMAL
-	rotprocess = SHELFLIFE_DECENT
-
+/*	.................	Apple Bread	................... */
 /obj/item/reagent_containers/food/snacks/rogue/applebread
 	cuisine = CUISINE_NORTH_IMPERIAL|CUISINE_SOUTH_IMPERIAL
 	dish_type = DISH_BREAD
@@ -525,7 +659,7 @@
 	dropshrink = 0.8
 	eat_effect = /datum/status_effect/buff/snackbuff
 
-/*	.................   Tomatoplate  ................... */
+/*	.................	Tomatoplate	................... */
 /obj/item/reagent_containers/food/snacks/rogue/tomatoplate
 	cuisine = CUISINE_SOUTH_IMPERIAL|CUISINE_ETRUSCAN
 	dish_type = DISH_BREAD|DISH_PIE
@@ -811,7 +945,7 @@
 	foodtype = GRAIN | FRUIT | DAIRY
 	eat_effect = /datum/status_effect/buff/snackbuff
 
-/*	.................   Cheese Bun   ................... */
+/*	.................	Cheese Bun	................... */
 
 /obj/item/reagent_containers/food/snacks/rogue/foodbase/cheesebun_raw
 	name = "raw cheese bun"
@@ -853,7 +987,7 @@
 	rotprocess = SHELFLIFE_EXTREME
 	eat_effect = /datum/status_effect/buff/greatsnackbuff
 
-/*	.................   Lasagna   ................... */
+/*	.................	Lasagna	................... */
 
 /obj/item/reagent_containers/food/snacks/rogue/lasagna
 	dish_type = DISH_NOODLES
@@ -915,7 +1049,7 @@
 	eat_effect = /datum/status_effect/buff/greatmealbuff
 	rotprocess = SHELFLIFE_LONG
 
-/*	.................   Miscellanious Buns   ................... */
+/*	.................	Miscellanious Buns	................... */
 /obj/item/reagent_containers/food/snacks/rogue/frybread
 	cuisine = CUISINE_NORTH_IMPERIAL|CUISINE_SOUTH_IMPERIAL
 	dish_type = DISH_BREAD
@@ -945,7 +1079,7 @@
 	rotprocess = SHELFLIFE_LONG
 	eat_effect = /datum/status_effect/buff/greatsnackbuff
 
-/*	.................   Griddle   ................... */
+/*	.................	Griddle	................... */
 /obj/item/reagent_containers/food/snacks/rogue/griddle
 	cuisine = CUISINE_OTAVAIS
 	dish_type = DISH_PASTRY
@@ -1082,7 +1216,7 @@
 	faretype = FARE_FINE
 	list_reagents = list(/datum/reagent/consumable/nutriment = NUTRITION_MEAL_AND_HALF)
 	tastes = list("soft and fluffy dough" = 1, "caramelized apple slices" = 1)
-/*	.................   Challah   ................... */
+/*	.................	Challah	................... */
 /obj/item/reagent_containers/food/snacks/rogue/challah
 	cuisine = CUISINE_RANESHENI
 	dish_type = DISH_BREAD

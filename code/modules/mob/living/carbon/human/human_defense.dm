@@ -177,7 +177,7 @@
 		if(bp && istype(bp , /obj/item/clothing))
 			var/obj/item/clothing/C = bp
 			if(C.eweight)
-				weight +=  C.eweight
+				weight +=	C.eweight
 	return max(weight, 0)
 */
 /mob/living/carbon/human/on_hit(obj/projectile/P)
@@ -189,7 +189,7 @@
 
 	if(HAS_TRAIT(src, "ethereal"))
 		return BULLET_ACT_FORCE_PIERCE
-	
+
 	if(dna && dna.species)
 		var/spec_return = dna.species.bullet_act(P, src, def_zone)
 		if(spec_return)
@@ -288,7 +288,7 @@
 	var/obj/item/W = get_active_held_item()
 	if(!blocked && I && cmode && mind)
 		if(W && get_dir(src, AM) == turn(get_dir(AM, src), 180))	//We are directly facing the thrown item.
-			var/diceroll = (get_skill_level(W.associated_skill)) * 10
+			var/diceroll = (get_wskill(W)) * 10
 			if(projectile_parry_timer > world.time)
 				diceroll *= 2
 			diceroll = min(diceroll, 90)
@@ -313,7 +313,7 @@
 				return TRUE
 	if(blocked)
 		return TRUE
-	
+
 	return ..()
 
 /mob/living/carbon/human/grippedby(mob/living/user, instant = FALSE)
@@ -325,12 +325,12 @@
 /mob/living/carbon/human/attacked_by(obj/item/I, mob/living/user)
 	if(!I || !user)
 		return 0
-	
+
 	if(HAS_TRAIT(src, "ethereal"))
 		user.visible_message(span_danger("[user] tries to strike [src], but the weapon passes right through the mist!"), \
-							 span_warning("My weapon passes right through [src]!"))
+							span_warning("My weapon passes right through [src]!"))
 		return FALSE
-	
+
 	var/obj/item/bodypart/affecting
 	var/useder = user.zone_selected
 	if(!lying_attack_check(user,I))
@@ -372,12 +372,12 @@
 			return FALSE
 		var/zones = M.zone_selected
 		if(!M.ckey)
-			zones = pick(BODY_ZONE_HEAD, BODY_ZONE_CHEST, BODY_ZONE_PRECISE_NECK, BODY_ZONE_PRECISE_L_HAND, BODY_ZONE_PRECISE_R_HAND, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
+			zones = M.get_attack_zone(src)
 		var/dam_zone = dismembering_strike(M, zones)
 		if(!dam_zone) //Dismemberment successful
 			return TRUE
 
-		var/obj/item/bodypart/affecting = get_bodypart(ran_zone(dam_zone))
+		var/obj/item/bodypart/affecting = get_bodypart(M.ckey ? ran_zone(dam_zone) : check_zone(dam_zone))
 		if(!affecting)
 			affecting = get_bodypart(BODY_ZONE_CHEST)
 		var/armor = run_armor_check(affecting, M.d_type, armor_penetration = M.armor_penetration, damage = damage)
@@ -388,10 +388,12 @@
 			nodmg = TRUE
 			next_attack_msg += VISMSG_ARMOR_BLOCKED
 		else
-			SEND_SIGNAL(M, COMSIG_MOB_AFTERATTACK_SUCCESS, src)
+			SEND_SIGNAL(M, COMSIG_MOB_AFTERATTACK_SUCCESS, src, affecting)
 			affecting.bodypart_attacked_by(M.a_intent.blade_class, damage - armor, M, dam_zone, crit_message = TRUE)
-		visible_message(span_danger("\The [M] [pick(M.a_intent.attack_verb)] [src]![next_attack_msg.Join()]"), \
-					span_danger("\The [M] [pick(M.a_intent.attack_verb)] me![next_attack_msg.Join()]"), null, COMBAT_MESSAGE_RANGE)
+		var/attack_verb = pick(M.a_intent.attack_verb)
+		var/hit_area = parse_zone(affecting.body_zone, affecting)
+		visible_message(span_danger("\The [M] [attack_verb] [src] in the [span_combatsecondarybp(hit_area)]![next_attack_msg.Join()]"), \
+					span_danger("\The [M] [attack_verb] me in the [span_userdanger(hit_area)]![next_attack_msg.Join()]"), null, COMBAT_MESSAGE_RANGE)
 		next_attack_msg.Cut()
 		if(nodmg)
 			return FALSE

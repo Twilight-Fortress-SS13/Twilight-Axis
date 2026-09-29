@@ -74,6 +74,7 @@
 // An unanswered confirmation is not a refusal: the pair is held back for this many
 // matching iterations of each side, then becomes available again.
 #define FAMILYTREE_TIMEOUT_BLOCK_ITERATIONS 3
+#define FAMILYTREE_PAIR_OFFER_LIMIT 3
 
 #define ANY_GENDER 1
 #define SAME_GENDER 2

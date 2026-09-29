@@ -151,6 +151,15 @@
 
 	return erp_try_start(src, target_atom, src)
 
+/atom/proc/erp_is_familiar_menu_blocked()
+	if(islist(GLOB.familiar_types))
+		for(var/familiar_name in GLOB.familiar_types)
+			var/familiar_type = GLOB.familiar_types[familiar_name]
+			if(ispath(familiar_type) && istype(src, familiar_type))
+				return TRUE
+
+	return FALSE
+
 /mob/living/carbon/human/MiddleMouseDrop_T(atom/movable/dragged, mob/living/user)
 	if(user.mmb_intent)
 		return ..()
@@ -391,6 +400,11 @@
 
 /proc/erp_can_target_atom_for_menu(mob/living/actor, atom/target_atom, silent = FALSE, force = FALSE)
 	if(!actor || !target_atom || QDELETED(target_atom))
+		return FALSE
+
+	if(target_atom.erp_is_familiar_menu_blocked())
+		if(!silent)
+			to_chat(actor, span_warning("[target_atom] can't be used as an ERP target."))
 		return FALSE
 
 	var/mob/living/consent = SSerp.get_consent_mob_for_target(target_atom)

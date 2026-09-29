@@ -3,6 +3,8 @@
 	tutorial = "You were too weak to carry armour or heavy blade, but your devoution dragged you to serving Gods. You are knife in shadows and eternal nightblade."
 	outfit = /datum/outfit/job/roguetown/cleric/nightblade
 	traits_applied = list(TRAIT_DODGEEXPERT)
+	min_pq = 30
+	extra_context = "Minimum PQ Required: 30"
 	subclass_stats = list(
 		STATKEY_SPD = 1,
 		STATKEY_WIL = 1,
@@ -39,7 +41,7 @@
 		/obj/item/lockpickring/mundane = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		)
-	H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg'
+	H.cmode_music = sound("sound/music/cmode/church/combat_reckoning.ogg")
 	switch(H.patron?.type)
 		if(/datum/patron/divine/undivided)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/undivided
@@ -55,12 +57,12 @@
 		if(/datum/patron/divine/xylix)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/xylix
 			cloak = /obj/item/clothing/cloak/tabard/devotee/xylix
-			H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg'
+			H.cmode_music = sound("sound/music/cmode/church/combat_reckoning.ogg")
 		if(/datum/patron/divine/dendor)
 			wrists = /obj/item/clothing/neck/roguetown/psicross/dendor
 			cloak = /obj/item/clothing/cloak/tabard/devotee/dendor
 			mask = /obj/item/clothing/head/roguetown/dendormask
-			H.cmode_music = 'sound/music/cmode/garrison/combat_warden.ogg'
+			H.cmode_music = sound("sound/music/cmode/garrison/combat_warden.ogg")
 		if(/datum/patron/divine/necra)
 			head = /obj/item/clothing/head/roguetown/necrahood
 			wrists = /obj/item/clothing/neck/roguetown/psicross/necra
@@ -208,7 +210,7 @@
 		H.adjust_skillrank_up_to(/datum/skill/magic/holy, SKILL_LEVEL_JOURNEYMAN, TRUE)
 	if(H.patron?.type == /datum/patron/divine/astrata)
 		H.adjust_skillrank_up_to(/datum/skill/magic/holy, SKILL_LEVEL_JOURNEYMAN, TRUE)
-		H.cmode_music = 'sound/music/cmode/church/combat_astrata.ogg'
+		H.cmode_music = sound("sound/music/cmode/church/combat_astrata.ogg")
 	if(H.patron?.type == /datum/patron/divine/dendor)
 		H.adjust_skillrank_up_to(/datum/skill/labor/farming, SKILL_LEVEL_NOVICE, TRUE)
 		H.grant_language (/datum/language/beast)
@@ -222,14 +224,14 @@
 	if(H.patron?.type == /datum/patron/divine/necra)
 		ADD_TRAIT(H, TRAIT_NOSTINK, TRAIT_GENERIC)
 		ADD_TRAIT(H, TRAIT_SOUL_EXAMINE, TRAIT_GENERIC)
-		H.cmode_music = 'sound/music/cmode/church/combat_necra.ogg'
+		H.cmode_music = sound("sound/music/cmode/church/combat_necra.ogg")
 	if(H.patron?.type == /datum/patron/divine/pestra)
 		H.adjust_skillrank_up_to(/datum/skill/misc/medicine, SKILL_LEVEL_NOVICE, TRUE)
 		ADD_TRAIT(H, TRAIT_NOSTINK, TRAIT_GENERIC)
 	if(H.patron?.type == /datum/patron/divine/eora)
 		ADD_TRAIT(H, TRAIT_EMPATH, TRAIT_GENERIC)
 		ADD_TRAIT(H, TRAIT_BEAUTIFUL, TRAIT_GENERIC)
-		H.cmode_music = 'sound/music/cmode/church/combat_eora.ogg'
+		H.cmode_music = sound("sound/music/cmode/church/combat_eora.ogg")
 		H.mind.special_items["Alt Tabard"] = /obj/item/clothing/cloak/templar/eoran/alt
 	if(H.patron?.type == /datum/patron/divine/malum)
 		H.adjust_skillrank_up_to(/datum/skill/craft/blacksmithing, SKILL_LEVEL_NOVICE, TRUE)
@@ -243,6 +245,18 @@
 		H.adjust_skillrank_up_to(/datum/skill/misc/climbing, SKILL_LEVEL_EXPERT, TRUE)
 		H.adjust_skillrank_up_to(/datum/skill/misc/lockpicking, SKILL_LEVEL_JOURNEYMAN, TRUE)
 		H.adjust_skillrank_up_to(/datum/skill/misc/music, SKILL_LEVEL_NOVICE, TRUE)
+	if(H.patron?.type == /datum/patron/inhumen/zizo)
+		H.adjust_skillrank_up_to(/datum/skill/magic/holy, SKILL_LEVEL_JOURNEYMAN, TRUE)
+	if(H.patron?.type == /datum/patron/inhumen/baotha)
+		H.adjust_skillrank(/datum/skill/misc/medicine, SKILL_LEVEL_NOVICE, TRUE)
+		H.adjust_skillrank(/datum/skill/craft/cooking, SKILL_LEVEL_APPRENTICE, TRUE)
+		H.adjust_skillrank(/datum/skill/craft/alchemy, SKILL_LEVEL_NOVICE, TRUE)
+	if(H.patron?.type == /datum/patron/inhumen/matthios)
+		H.adjust_skillrank_up_to(/datum/skill/misc/stealing, SKILL_LEVEL_JOURNEYMAN, TRUE)
+		H.adjust_skillrank_up_to(/datum/skill/misc/lockpicking, SKILL_LEVEL_JOURNEYMAN, TRUE)
+	if(H.patron?.type == /datum/patron/inhumen/graggar)
+		H.adjust_skillrank_up_to(/datum/skill/misc/athletics, SKILL_LEVEL_EXPERT, TRUE)
+		ADD_TRAIT(H, TRAIT_STEELHEARTED, TRAIT_GENERIC)
 
 //Oblate
 /datum/advclass/cleric/oblate
@@ -251,7 +265,8 @@
 	outfit = /datum/outfit/job/roguetown/adventurer/oblate
 	forbidden_races = list(RACES_CONSTRUCT RACES_OOZE)
 	allowed_patrons = list(/datum/patron/old_god)
-	min_pq = 9
+	min_pq = 50
+	extra_context = "Minimum PQ Required: 50"
 	traits_applied = list(
 		TRAIT_IGNOREDAMAGESLOWDOWN,
 		TRAIT_PACIFISM,
@@ -266,6 +281,8 @@
 		STATKEY_SPD = -2,
 		STATKEY_STR = -1,
 	)
+	maximum_possible_slots = 2
+	vice_limits = list(/datum/charflaw/silverweakness)
 	subclass_skills = list(
 		/datum/skill/misc/medicine = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,

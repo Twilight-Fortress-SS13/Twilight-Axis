@@ -63,6 +63,7 @@
 		/datum/sprite_accessory/horns/doublehorns,
 		/datum/sprite_accessory/horns/tiefling,
 		/datum/sprite_accessory/horns/tieflingalt,
+		/datum/sprite_accessory/horns/sarkaz,
 		/datum/sprite_accessory/horns/large/big_antlers,
 		/datum/sprite_accessory/horns/large/large_antlers,
 		/datum/sprite_accessory/horns/large/regal_antlers,
@@ -78,7 +79,7 @@
 /datum/customizer/organ/horns/tiefling
 	customizer_choices = list(/datum/customizer_choice/organ/horns/tiefling)
 	allows_disabling = TRUE
-	default_disabled =  TRUE
+	default_disabled =	TRUE
 
 /datum/customizer_choice/organ/horns/tiefling
 	name = "Horns"
@@ -126,6 +127,7 @@
 		/datum/sprite_accessory/horns/doublehorns,
 		/datum/sprite_accessory/horns/tiefling,
 		/datum/sprite_accessory/horns/tieflingalt,
+		/datum/sprite_accessory/horns/sarkaz,
 		/datum/sprite_accessory/horns/large/big_antlers,
 		/datum/sprite_accessory/horns/large/large_antlers,
 		/datum/sprite_accessory/horns/large/regal_antlers,
@@ -141,7 +143,7 @@
 /datum/customizer/organ/horns/demihuman
 	customizer_choices = list(/datum/customizer_choice/organ/horns/demihuman)
 	allows_disabling = TRUE
-	default_disabled =  TRUE
+	default_disabled =	TRUE
 
 /datum/customizer_choice/organ/horns/demihuman
 	name = "Horns"
@@ -192,6 +194,7 @@
 		/datum/sprite_accessory/horns/doublehorns,
 		/datum/sprite_accessory/horns/tiefling,
 		/datum/sprite_accessory/horns/tieflingalt,
+		/datum/sprite_accessory/horns/sarkaz,
 		/datum/sprite_accessory/horns/large/big_antlers,
 		/datum/sprite_accessory/horns/large/large_antlers,
 		/datum/sprite_accessory/horns/large/regal_antlers,
@@ -207,7 +210,7 @@
 /datum/customizer/organ/horns/anthro
 	customizer_choices = list(/datum/customizer_choice/organ/horns/anthro)
 	allows_disabling = TRUE
-	default_disabled =  TRUE
+	default_disabled =	TRUE
 
 /datum/customizer_choice/organ/horns/anthro
 	name = "Horns"
@@ -258,6 +261,7 @@
 		/datum/sprite_accessory/horns/doublehorns,
 		/datum/sprite_accessory/horns/tiefling,
 		/datum/sprite_accessory/horns/tieflingalt,
+		/datum/sprite_accessory/horns/sarkaz,
 		/datum/sprite_accessory/horns/large/big_antlers,
 		/datum/sprite_accessory/horns/large/large_antlers,
 		/datum/sprite_accessory/horns/large/regal_antlers,
@@ -281,13 +285,14 @@
 		/datum/sprite_accessory/horns/goblin,
 		/datum/sprite_accessory/horns/tiefling,
 		/datum/sprite_accessory/horns/tieflingalt,
+		/datum/sprite_accessory/horns/sarkaz,
 		)
 
 /datum/customizer/organ/horns/tusks
 	name = "Tusks"
 	customizer_choices = list(/datum/customizer_choice/organ/horns/tusks)
 	allows_disabling = TRUE
-	default_disabled =  TRUE
+	default_disabled =	TRUE
 
 /datum/customizer_choice/organ/horns/tusks
 	name = "Tusks"
@@ -301,7 +306,7 @@
 	name = "Headwing"
 	customizer_choices = list(/datum/customizer_choice/organ/horns/wings)
 	allows_disabling = TRUE
-	default_disabled =  TRUE
+	default_disabled =	TRUE
 
 /datum/customizer_choice/organ/horns/wings
 	name = "Headwing"

@@ -1,0 +1,974 @@
+.DucalCourt {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: #090806;
+}
+
+.DucalCourt__board {
+  --ducal-ink: #efe1b8;
+  --ducal-muted: #b9a376;
+  --ducal-gold: #c99b45;
+  --ducal-gold-soft: rgba(201, 155, 69, 0.2);
+  --ducal-blue: var(--ducal-primary, #183a56);
+  --ducal-standard-light: var(--ducal-secondary, #ffffff);
+  --ducal-red: #6e1b18;
+  --ducal-green: #3e7040;
+  --ducal-parchment: #d6bd85;
+  --ducal-paper: #c8ae77;
+  --ducal-shadow: rgba(0, 0, 0, 0.62);
+
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: clamp(76px, 14vh, 112px) minmax(0, 1fr);
+  gap: 8px;
+  color: var(--ducal-ink);
+  font-family: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
+  padding: 8px;
+  overflow: auto;
+  background:
+    linear-gradient(180deg, rgba(255, 226, 137, 0.08), transparent 18%),
+    radial-gradient(circle at 6% 22%, rgba(112, 27, 24, 0.34), transparent 24%),
+    radial-gradient(circle at 96% 30%, rgba(112, 27, 24, 0.3), transparent 24%),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.025) 0,
+      rgba(255, 255, 255, 0.025) 2px,
+      rgba(0, 0, 0, 0.08) 2px,
+      rgba(0, 0, 0, 0.08) 6px
+    ),
+    #10100e;
+}
+
+.DucalCourt__board *,
+.DucalCourt__board *::before,
+.DucalCourt__board *::after {
+  box-sizing: border-box;
+}
+
+.DucalCourt__titleRow {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  min-height: 0;
+  height: 100%;
+  padding: clamp(8px, 1.4vh, 12px) 72px;
+  border: 2px solid rgba(201, 155, 69, 0.52);
+  background:
+    linear-gradient(90deg, rgba(110, 27, 24, 0.28), transparent 25%, transparent 75%, rgba(24, 58, 86, 0.28)),
+    linear-gradient(180deg, rgba(255, 240, 185, 0.08), rgba(0, 0, 0, 0.36)),
+    #14120e;
+  box-shadow:
+    inset 0 0 46px rgba(0, 0, 0, 0.8),
+    inset 0 0 0 1px rgba(255, 230, 157, 0.12),
+    0 2px 6px rgba(0, 0, 0, 0.55);
+}
+
+.DucalCourt__titleRow::before,
+.DucalCourt__titleRow::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 12px;
+  background: var(--ducal-standard-light);
+  opacity: 0.72;
+}
+
+.DucalCourt__titleRow::before {
+  left: 48px;
+}
+
+.DucalCourt__titleRow::after {
+  right: 48px;
+}
+
+.DucalCourt__standard {
+  position: absolute;
+  top: -1px;
+  display: grid;
+  place-items: start center;
+  width: 42px;
+  height: calc(100% - 4px);
+  padding-top: 22px;
+  color: var(--ducal-standard-light);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 35%),
+    var(--ducal-blue);
+  clip-path: polygon(0 0, 100% 0, 100% 78%, 50% 100%, 0 78%);
+  border: 1px solid rgba(0, 0, 0, 0.72);
+  box-shadow:
+    inset 0 0 16px rgba(0, 0, 0, 0.42),
+    0 2px 7px rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+.DucalCourt__standard--left {
+  left: 12px;
+}
+
+.DucalCourt__standard--right {
+  right: 12px;
+  color: var(--ducal-blue);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 35%),
+    var(--ducal-standard-light);
+}
+
+.DucalCourt__standard .Icon {
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.65));
+}
+
+.DucalCourt__titleRow > div:not(.DucalCourt__standard) {
+  position: relative;
+  z-index: 2;
+}
+
+.DucalCourt__titleRow > div:nth-child(3) {
+  grid-column: 2;
+  text-align: center;
+}
+
+.DucalCourt__eyebrow,
+.DucalCourt__subtitle,
+.DucalCourt__statusLabel,
+.DucalCourt__statusDetail,
+.DucalCourt__actionDesc,
+.DucalCourt__badge,
+.DucalCourt__riteFacts b,
+.DucalCourt__rulerBlock b {
+  color: var(--ducal-muted);
+}
+
+.DucalCourt__eyebrow {
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.DucalCourt__title {
+  margin: 3px 0;
+  color: #f0cf83;
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+  text-shadow: 0 2px 2px rgba(0, 0, 0, 0.75);
+}
+
+.DucalCourt__subtitle {
+  font-size: 14px;
+  font-style: italic;
+}
+
+.DucalCourt__rulerBlock {
+  display: grid;
+  grid-column: 3;
+  gap: 5px;
+  min-width: clamp(160px, 18vw, 220px);
+  color: #ead49b;
+  font-size: 12px;
+  justify-self: end;
+}
+
+.DucalCourt__rulerBlock div {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  border-bottom: 1px dashed rgba(201, 155, 69, 0.28);
+}
+
+.DucalCourt__rulerBlock span {
+  color: #f5dfaa;
+  font-weight: 700;
+  text-align: right;
+}
+
+.DucalCourt__courtShell {
+  display: grid;
+  grid-template-columns: clamp(136px, 15vw, 190px) minmax(0, 1fr) clamp(172px, 19vw, 238px);
+  gap: 8px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.DucalCourt__leftRail,
+.DucalCourt__rightRail {
+  min-height: 0;
+  overflow: auto;
+  border: 2px solid rgba(201, 155, 69, 0.42);
+  background:
+    linear-gradient(180deg, rgba(255, 231, 157, 0.06), rgba(0, 0, 0, 0.3)),
+    radial-gradient(circle at 50% 100%, rgba(110, 27, 24, 0.32), transparent 40%),
+    #11110f;
+  box-shadow:
+    inset 0 0 34px rgba(0, 0, 0, 0.72),
+    0 2px 6px rgba(0, 0, 0, 0.42);
+}
+
+.DucalCourt__leftRail {
+  display: grid;
+  grid-template-rows: clamp(76px, 16vh, 136px) minmax(0, 1fr);
+  gap: 6px;
+}
+
+.DucalCourt__rightRail {
+  display: grid;
+  grid-template-rows: auto auto;
+  align-content: start;
+  gap: 8px;
+  padding: 8px;
+}
+
+.DucalCourt__throneEmblem {
+  display: grid;
+  place-items: center;
+  margin: 8px;
+  color: #edcf84;
+  font-size: 44px;
+  border: 1px solid rgba(201, 155, 69, 0.35);
+  background:
+    radial-gradient(circle at 50% 32%, rgba(201, 155, 69, 0.2), transparent 35%),
+    linear-gradient(180deg, rgba(110, 27, 24, 0.4), rgba(0, 0, 0, 0.32)),
+    #181511;
+  box-shadow: inset 0 0 32px rgba(0, 0, 0, 0.7);
+}
+
+.DucalCourt__nav {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  min-height: 0;
+  overflow: auto;
+  padding: 0 8px 8px;
+}
+
+.DucalCourt:not(.DucalCourt--fullscreen) .DucalCourt__board {
+  zoom: 0.85;
+}
+
+.DucalCourt--fullscreen .DucalCourt__courtShell {
+  grid-template-columns: clamp(150px, 13vw, 250px) minmax(0, 1fr) clamp(230px, 20vw, 340px);
+}
+
+:root .DucalCourt .DucalCourt__navButton {
+  width: 100%;
+  min-height: clamp(34px, 5.4vh, 44px);
+  padding: 8px 10px;
+  white-space: normal;
+  color: #e8d39b;
+  border: 1px solid rgba(201, 155, 69, 0.28);
+  background:
+    linear-gradient(90deg, rgba(110, 27, 24, 0.18), transparent 45%),
+    #151512;
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.42);
+  text-align: left;
+}
+
+.DucalCourt__navButton > .Button__content {
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+:root .DucalCourt .DucalCourt__navButton:hover:not(:disabled),
+:root .DucalCourt .DucalCourt__navButton--active {
+  color: #ffe8a8;
+  border-color: rgba(201, 155, 69, 0.72);
+  background:
+    linear-gradient(90deg, rgba(110, 27, 24, 0.72), rgba(110, 27, 24, 0.18)),
+    #1b1712;
+}
+
+.DucalCourt__centerPanel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 8px;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+}
+
+.DucalCourt__contentStack {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  min-height: 0;
+  overflow: auto;
+  padding-right: 2px;
+}
+
+:root .DucalCourt .Section {
+  overflow: visible;
+  color: #25180d;
+  border: 2px solid rgba(52, 31, 14, 0.76);
+  background:
+    linear-gradient(180deg, rgba(255, 246, 204, 0.76), rgba(189, 155, 95, 0.56)),
+    var(--ducal-paper);
+  box-shadow:
+    inset 0 0 24px rgba(72, 44, 18, 0.16),
+    0 2px 5px rgba(0, 0, 0, 0.35);
+}
+
+:root .DucalCourt .Section .Section__title {
+  border-bottom: 1px solid rgba(84, 52, 22, 0.5);
+}
+
+:root .DucalCourt .Section .Section__titleText {
+  color: #58180d;
+}
+
+:root .DucalCourt .Section .Button {
+  color: #2a1a0d;
+  background: rgba(122, 86, 22, 0.16);
+  border: 1px solid rgba(84, 52, 22, 0.55);
+}
+
+:root .DucalCourt .Section .Button:hover:not(:disabled) {
+  background: rgba(122, 86, 22, 0.28);
+  border-color: rgba(110, 20, 20, 0.65);
+}
+
+:root .DucalCourt .Section .Button:disabled {
+  color: #5f4e33;
+}
+
+:root .DucalCourt .DucalCourt__lawTools .NumberInput {
+  color: #f2dfb4;
+  background: #15120e;
+  border-color: rgba(84, 52, 22, 0.72);
+}
+
+:root .DucalCourt .DucalCourt__rightRail .Section {
+  color: #ead49b;
+  border-color: rgba(201, 155, 69, 0.42);
+  background:
+    linear-gradient(180deg, rgba(255, 231, 157, 0.08), rgba(0, 0, 0, 0.18)),
+    #171512;
+}
+
+.DucalCourt__statusGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(156px, 1fr));
+  gap: 8px;
+  min-height: 0;
+}
+
+.DucalCourt__statusCard {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  min-height: 64px;
+  padding: 8px;
+  color: #ead49b;
+  border: 1px solid rgba(201, 155, 69, 0.42);
+  background:
+    linear-gradient(180deg, rgba(255, 231, 157, 0.08), rgba(0, 0, 0, 0.24)),
+    #151512;
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.48);
+}
+
+.DucalCourt__statusCard::after {
+  content: '';
+  position: absolute;
+  right: -18px;
+  top: -18px;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: var(--ducal-blue);
+  opacity: 0.14;
+}
+
+.DucalCourt__statusCard--good {
+  border-color: rgba(62, 112, 64, 0.8);
+}
+
+.DucalCourt__statusCard--warning {
+  border-color: rgba(201, 155, 69, 0.9);
+}
+
+.DucalCourt__statusCard--bad {
+  border-color: rgba(157, 39, 34, 0.82);
+}
+
+.DucalCourt__statusIcon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 34px;
+  height: 34px;
+  color: #0f0c08;
+  background: var(--ducal-gold);
+  border: 1px solid rgba(255, 231, 157, 0.52);
+  box-shadow: 0 1px 3px var(--ducal-shadow);
+  z-index: 1;
+}
+
+.DucalCourt__statusCard--good .DucalCourt__statusIcon {
+  background: var(--ducal-green);
+  color: #f4e7c6;
+}
+
+.DucalCourt__statusCard--bad .DucalCourt__statusIcon {
+  background: var(--ducal-red);
+  color: #f4e7c6;
+}
+
+.DucalCourt__statusBody {
+  min-width: 0;
+  z-index: 1;
+}
+
+.DucalCourt__statusValue {
+  margin: 2px 0;
+  color: #f2d78b;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.DucalCourt__statusLabel,
+.DucalCourt__statusDetail {
+  font-size: 11px;
+}
+
+.DucalCourt__statusDetail {
+  white-space: normal;
+}
+
+.DucalCourt__actionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+}
+
+.DucalCourt__toolGrid,
+.DucalCourt__quickTools {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+.DucalCourt__actionGroups {
+  display: grid;
+  gap: 10px;
+}
+
+.DucalCourt__actionGroup {
+  min-width: 0;
+}
+
+.DucalCourt__actionGroupTitle {
+  margin: 0 0 6px;
+  color: #5b3219;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.DucalCourt__rightRail .DucalCourt__actionGroupTitle {
+  color: var(--ducal-muted);
+}
+
+.DucalCourt__overviewFacts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.DucalCourt__overviewFact {
+  display: grid;
+  gap: 3px;
+  min-height: 54px;
+  padding: 8px;
+  background: rgba(255, 239, 189, 0.46);
+  border: 1px solid rgba(54, 31, 14, 0.34);
+}
+
+.DucalCourt__overviewFact b {
+  color: #5b3219;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.DucalCourt__overviewFact span {
+  color: #1e1208;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.DucalCourt__tooltipFrame {
+  display: block;
+  width: 100%;
+}
+
+.DucalCourt__tooltipFrame--inline {
+  display: inline-block;
+  width: auto;
+}
+
+.DucalCourt__tooltipFrame > .Button:disabled {
+  pointer-events: none;
+}
+
+.DucalCourt__tooltipContent {
+  display: block;
+  max-width: 280px;
+  color: #fff2bd;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-shadow: 0 1px 2px #000;
+}
+
+:root .DucalCourt .DucalCourt__rightRail .Section .Section__title {
+  border-bottom: 1px solid rgba(201, 155, 69, 0.4);
+}
+
+:root .DucalCourt .DucalCourt__rightRail .Section .Section__titleText {
+  color: #efe1b8;
+}
+
+:root .DucalCourt .DucalCourt__action {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: 54px;
+  padding: 8px;
+  white-space: normal;
+  color: #ead49b;
+  border: 2px solid rgba(201, 155, 69, 0.34);
+  background:
+    linear-gradient(90deg, rgba(110, 27, 24, 0.32), transparent 45%),
+    linear-gradient(180deg, rgba(255, 231, 157, 0.08), rgba(0, 0, 0, 0.22)),
+    #151512;
+  box-shadow:
+    inset 0 0 18px rgba(0, 0, 0, 0.35),
+    0 1px 2px rgba(0, 0, 0, 0.24);
+  text-align: left;
+  text-shadow: none;
+}
+
+:root .DucalCourt .Section .DucalCourt__action {
+  color: #2a1a0d;
+  border-color: rgba(54, 31, 14, 0.72);
+  background:
+    linear-gradient(90deg, rgba(110, 27, 24, 0.16), transparent 42%),
+    linear-gradient(180deg, rgba(255, 239, 189, 0.76), rgba(128, 88, 42, 0.34)),
+    #2a2319;
+}
+
+:root .DucalCourt .DucalCourt__rightRail .DucalCourt__action {
+  color: #ead49b;
+  border-color: rgba(201, 155, 69, 0.34);
+  background:
+    linear-gradient(90deg, rgba(110, 27, 24, 0.42), transparent 42%),
+    #151512;
+}
+
+:root .DucalCourt .DucalCourt__action:hover:not(:disabled) {
+  border-color: var(--ducal-gold);
+  box-shadow:
+    inset 0 0 20px rgba(201, 155, 69, 0.18),
+    0 1px 5px rgba(0, 0, 0, 0.45);
+}
+
+:root .DucalCourt .DucalCourt__action:disabled {
+  opacity: 0.65;
+  filter: saturate(0.6);
+}
+
+.DucalCourt__action > .Button__content {
+  display: flex;
+  width: 100%;
+  gap: 9px;
+  align-items: flex-start;
+  text-shadow: none;
+}
+
+.DucalCourt__action--compact {
+  min-height: 44px;
+}
+
+.DucalCourt__action--compact .DucalCourt__badges {
+  display: none;
+}
+
+.DucalCourt__actionIcon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 34px;
+  height: 34px;
+  color: #0f0c08;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.18), transparent),
+    var(--ducal-gold);
+  border: 1px solid rgba(55, 31, 14, 0.68);
+}
+
+.DucalCourt__rightRail .DucalCourt__actionIcon {
+  color: #f4e7c6;
+  background: var(--ducal-blue);
+  border-color: rgba(201, 155, 69, 0.72);
+}
+
+.DucalCourt__actionTitle,
+.DucalCourt__actionDesc,
+.DucalCourt__badges {
+  display: block;
+}
+
+.DucalCourt__actionTitle {
+  color: #140b05;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.15;
+  text-shadow: none;
+}
+
+.DucalCourt__actionDesc {
+  margin-top: 2px;
+  color: #3c2817;
+  font-size: 11px;
+  line-height: 1.2;
+  text-shadow: none;
+  white-space: normal;
+}
+
+.DucalCourt__badges {
+  margin-top: 5px;
+}
+
+.DucalCourt__badge {
+  display: inline-block;
+  margin: 0 4px 3px 0;
+  padding: 1px 5px;
+  color: #f3d78b;
+  border: 1px solid rgba(201, 155, 69, 0.55);
+  background: rgba(0, 0, 0, 0.34);
+  font-size: 9px;
+  line-height: 1.35;
+  text-shadow: none;
+  text-transform: uppercase;
+}
+
+.DucalCourt__rightRail .DucalCourt__actionTitle,
+.DucalCourt__rightRail .DucalCourt__actionDesc {
+  color: #ead49b;
+}
+
+.DucalCourt .Section .DucalCourt__badge {
+  color: #4b2a14;
+  background: rgba(255, 238, 185, 0.48);
+  border-color: rgba(78, 46, 20, 0.48);
+}
+
+.DucalCourt__riteName {
+  color: #2a1a0d;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.DucalCourt__stepper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.DucalCourt__step {
+  display: grid;
+  place-items: center;
+  gap: 3px;
+  min-height: 42px;
+  padding: 4px;
+  border: 1px solid rgba(54, 31, 14, 0.5);
+  color: #5b3219;
+  background: rgba(255, 238, 185, 0.35);
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.DucalCourt__step span {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  color: #f7e9c0;
+  background: #6e1b18;
+  border-radius: 50%;
+  font-weight: 700;
+}
+
+.DucalCourt__step--active {
+  border-color: var(--ducal-gold);
+  color: #1e1208;
+  background: var(--ducal-gold-soft);
+}
+
+.DucalCourt__step--active span {
+  background: var(--ducal-red);
+}
+
+.DucalCourt__riteFacts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.DucalCourt__riteFacts div {
+  display: grid;
+  gap: 2px;
+  padding: 5px;
+  background: rgba(255, 239, 189, 0.46);
+  border: 1px solid rgba(54, 31, 14, 0.34);
+}
+
+.DucalCourt__riteFacts b {
+  color: #5b3219;
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.DucalCourt__riteFacts span {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.DucalCourt__riteStatus {
+  padding: 6px 8px;
+  color: #2a1a0d;
+  border-left: 3px solid var(--ducal-red);
+  background: rgba(255, 238, 185, 0.48);
+  font-size: 11px;
+}
+
+.DucalCourt__riteActionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.DucalCourt__desk {
+  display: grid;
+  gap: 8px;
+}
+
+:root .DucalCourt .DucalCourt__desk .TextArea {
+  color: #f2dfb4;
+  background: #15120e;
+  border: 2px solid rgba(54, 31, 14, 0.72);
+}
+
+.DucalCourt__deskFooter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.DucalCourt__deskButtons,
+.DucalCourt__lawTools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.DucalCourt__lawTools span {
+  color: #5b3219;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.DucalCourt__voiceList {
+  min-height: 0;
+  margin: 0;
+  padding: 2px 0 0 18px;
+  overflow: auto;
+  color: #ead49b;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.DucalCourt__voiceList li {
+  margin-bottom: 5px;
+}
+
+.DucalCourt__voiceList li::marker {
+  color: var(--ducal-gold);
+}
+
+.DucalCourt__voiceCommand,
+.DucalCourt__voiceDesc {
+  display: block;
+}
+
+.DucalCourt__voiceCommand {
+  color: #f5d87a;
+  font-weight: 700;
+}
+
+.DucalCourt__voiceDesc {
+  color: #cdbb88;
+  font-size: 11px;
+}
+
+.DucalCourt__compactBody {
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 8px;
+  min-height: 0;
+  align-content: start;
+  overflow: auto;
+}
+
+.DucalCourt__compactSummary {
+  display: grid;
+  gap: 7px;
+  min-height: 0;
+  padding: 8px;
+  border: 1px solid rgba(201, 155, 69, 0.42);
+  background: rgba(20, 18, 14, 0.82);
+}
+
+.DucalCourt__compactSummary div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.DucalCourt__compactSummary b {
+  color: var(--ducal-muted);
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.DucalCourt__compactSummary span {
+  color: #f2d78b;
+  font-weight: 700;
+  text-align: right;
+}
+
+.DucalCourt--compact .DucalCourt__board {
+  grid-template-rows: clamp(64px, 18vh, 86px) auto;
+  min-width: 0;
+  min-height: 0;
+  align-content: start;
+  padding: 8px;
+}
+
+.DucalCourt--compact .DucalCourt__titleRow {
+  padding: 10px 54px;
+}
+
+.DucalCourt--compact .DucalCourt__title {
+  font-size: 22px;
+}
+
+.DucalCourt--compact .DucalCourt__subtitle,
+.DucalCourt--compact .DucalCourt__rulerBlock {
+  display: none;
+}
+
+.DucalCourt--compact .DucalCourt__statusGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 1100px) {
+  .DucalCourt__courtShell {
+    grid-template-columns: 136px minmax(0, 1fr) 184px;
+  }
+
+  .DucalCourt__statusGrid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+
+  .DucalCourt__riteActionGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 840px) {
+  .DucalCourt__board {
+    grid-template-rows: clamp(68px, 14vh, 90px) minmax(0, 1fr);
+    padding: 6px;
+  }
+
+  .DucalCourt__titleRow {
+    padding: 8px 58px;
+  }
+
+  .DucalCourt__subtitle,
+  .DucalCourt__rulerBlock {
+    display: none;
+  }
+
+  .DucalCourt__courtShell {
+    grid-template-columns: 118px minmax(0, 1fr) 162px;
+    gap: 6px;
+  }
+
+  .DucalCourt__throneEmblem,
+  .DucalCourt__voiceList {
+    display: none;
+  }
+
+  .DucalCourt__rightRail > .Section:nth-child(2) {
+    display: none;
+  }
+
+  .DucalCourt__leftRail {
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .DucalCourt__rightRail {
+    grid-template-rows: auto;
+  }
+
+  .DucalCourt__statusGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .DucalCourt__actionGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-height: 650px) {
+  .DucalCourt__board {
+    grid-template-rows: 72px minmax(0, 1fr);
+  }
+
+  .DucalCourt__title {
+    font-size: 24px;
+  }
+
+  .DucalCourt__subtitle,
+  .DucalCourt__rightRail > .Section:nth-child(2) {
+    display: none;
+  }
+
+  .DucalCourt__leftRail {
+    grid-template-rows: 52px minmax(0, 1fr);
+  }
+
+  .DucalCourt__throneEmblem {
+    min-height: 0;
+    margin: 6px;
+    font-size: 32px;
+  }
+}

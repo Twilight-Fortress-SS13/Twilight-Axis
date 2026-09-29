@@ -32,3 +32,13 @@
 	return ..()
 
 /datum/round_event/antagonist/solo/lich
+/datum/round_event/antagonist/solo/lich/setup() // TA EDIT START
+	..()
+	if(!setup || SSticker.HasRoundStarted() || SSgamemode?.roundstart_live)
+		return
+	for(var/datum/mind/antag_mind as anything in setup_minds)
+		var/mob/dead/new_player/player = antag_mind.current
+		if(!istype(player) || !antag_mind.assigned_role)
+			continue
+		SSrole_class_handler.clear_roundstart_subclass_state(player.ckey)
+		SSgamemode.roundstart_build_replacement_minds |= antag_mind // TA EDIT END

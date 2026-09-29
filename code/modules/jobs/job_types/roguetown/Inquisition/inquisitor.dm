@@ -12,7 +12,7 @@
 	largest Psydonic kingdom left on this world - has seen it fit to treat you like a silver-tipped olive branch, gifted to Azuria to ward off the encroaching \
 	darkness. Tread carefully when pursuing your missives, lest the faithless strap you to the pyre as well."
 	whitelist_req = TRUE
-	cmode_music = 'sound/music/combat_inqcommander.ogg' //Formerly 'sound/music/inquisitorcombat.ogg'.
+	cmode_music = sound("sound/music/combat_inqcommander.ogg") //Formerly 'sound/music/inquisitorcombat.ogg'.
 	selection_color = JCOLOR_INQUISITION
 
 	outfit = /datum/outfit/job/roguetown/inquisitor
@@ -53,7 +53,6 @@
 		TRAIT_INQUISITION,
 		TRAIT_PERFECT_TRACKER,
 		TRAIT_PURITAN,
-		TRAIT_SLEUTH,
 		TRAIT_ARTILLERY_EXPERT,
 		)
 	subclass_stats = list(
@@ -99,7 +98,6 @@
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/inq
 	belt = /obj/item/storage/belt/rogue/leather/knifebelt/black/psydon_blessed
 	neck = /obj/item/clothing/neck/roguetown/gorget/steel
-	shoes = /obj/item/clothing/shoes/roguetown/boots/otavan/inqboots
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan
 	backr = /obj/item/storage/backpack/rogue/satchel/otavan
 	beltl = /obj/item/rogueweapon/whip/antique/psywhip
@@ -121,6 +119,10 @@
 		/obj/item/paper/inqslip/arrival/inq = 1,
 		/obj/item/rogueweapon/scabbard/sheath/noble = 1
 		)
+	if(H.pronouns == HE_HIM || H.pronouns == THEY_THEM)
+		shoes = /obj/item/clothing/shoes/roguetown/boots/otavan/inqboots
+	else
+		shoes = /obj/item/clothing/shoes/roguetown/boots/otavan/inqboots/heels
 
 	change_origin(H, /datum/virtue/origin/otava, "Holy order")
 
@@ -146,12 +148,9 @@
 			H.equip_to_slot_or_del(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/heavy/relic, SLOT_BACK_L, TRUE)
 			H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, 5, TRUE)
 		if("Relic, 'Marshal's Writ' (Runelock Pistol)") //TA EDIT START
-			qdel(H.get_item_by_slot(SLOT_BELT_L))
-			qdel(H.get_item_by_slot(SLOT_BELT))
-			H.equip_to_slot_or_del(new /obj/item/rogueweapon/whip/antique/psywhip, SLOT_BELT_L, TRUE)
-			H.equip_to_slot_or_del(new /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/black/runelock, SLOT_BELT, TRUE)
+			H.put_in_hands(new /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/black/runelock(H))
 			H.equip_to_slot_or_del(new /obj/item/quiver/twilight_bullet/runicbag/runed, SLOT_BELT_R, TRUE)
-			H.adjust_skillrank_up_to(/datum/skill/combat/twilight_firearms, 3, TRUE) //TA EDIT END
+			H.adjust_skillrank_up_to(/datum/skill/combat/twilight_firearms, 3, TRUE)
 		if("Psydonic Longsword")
 			H.put_in_hands(new /obj/item/rogueweapon/sword/long/psysword(H))
 			H.put_in_hands(new /obj/item/rogueweapon/scabbard/sword/noble(H))
@@ -194,7 +193,7 @@
 	a singular purpose: to break the inhumen against their knee."
 	outfit = /datum/outfit/job/roguetown/inquisitor/ordinator
 	subclass_languages = list(/datum/language/otavan)
-	cmode_music = 'sound/music/combat_inqordinator.ogg'
+	cmode_music = sound("sound/music/combat_inqordinator.ogg")
 
 	category_tags = list(CTAG_INQUSITOR)
 	traits_applied = list(
@@ -244,7 +243,6 @@
 	armor = /obj/item/clothing/suit/roguetown/armor/plate/full/fluted/ornate/ordinator
 	belt = /obj/item/storage/belt/rogue/leather/steel/tasset
 	neck = /obj/item/clothing/neck/roguetown/gorget/steel
-	shoes = /obj/item/clothing/shoes/roguetown/boots/otavan/inqboots
 	backl = /obj/item/storage/backpack/rogue/satchel/otavan
 	wrists = /obj/item/clothing/wrists/roguetown/bracers
 	id = /obj/item/clothing/neck/roguetown/psicross/silver
@@ -262,6 +260,10 @@
 		/obj/item/rogueweapon/huntingknife/idagger/silver/psydagger/heavy = 1,
 		/obj/item/clothing/ring/signet/psy = 1
 		)
+	if(H.pronouns == HE_HIM || H.pronouns == THEY_THEM)
+		shoes = /obj/item/clothing/shoes/roguetown/boots/otavan/inqboots
+	else
+		shoes = /obj/item/clothing/shoes/roguetown/boots/otavan/inqboots/heels
 
 	change_origin(H, /datum/virtue/origin/otava, "Holy order")
 

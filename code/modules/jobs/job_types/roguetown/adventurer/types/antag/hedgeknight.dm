@@ -6,7 +6,7 @@
 	outfit = /datum/outfit/job/roguetown/bandit/hedgeknight
 	category_tags = list(CTAG_BANDIT)
 	maximum_possible_slots = 1 //Boss, you killed a squire. AMAZING this right here is why you are the best Boss!
-	cmode_music = 'sound/music/cmode/antag/combat_thewall.ogg' // big chungus gets the wall too
+	cmode_music = sound("sound/music/cmode/antag/combat_thewall.ogg") // big chungus gets the wall too
 	traits_applied = list(TRAIT_HEAVYARMOR, TRAIT_NOBLE) //Heavy armour gives medium already
 	subclass_stats = list(
 		STATKEY_CON = 3, //dark souls 3 dual greatshield moment
@@ -73,21 +73,23 @@
 			r_hand = /obj/item/rogueweapon/eaglebeak
 			backl = /obj/item/rogueweapon/scabbard/gwstrap
 			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 5, TRUE) //This will NOT have any far reaching consequences
-	var/onhelm = list(
-		"horns" = /obj/item/clothing/head/roguetown/tw_d_horns,
-		"towers" = /obj/item/clothing/head/roguetown/tw_d_castle_red,
-		"afreet" = /obj/item/clothing/head/roguetown/tw_d_efreet,
-		"sun" = /obj/item/clothing/head/roguetown/tw_d_sun,
-		"Graggar!!" = /obj/item/clothing/head/roguetown/tw_d_graggar,
-		"astrata" = /obj/item/clothing/head/roguetown/tw_d_peace,
-		"feathers" = /obj/item/clothing/head/roguetown/tw_d_feathers,
-		"lion" = /obj/item/clothing/head/roguetown/tw_d_lion,
-		"dragon" = /obj/item/clothing/head/roguetown/tw_d_dragon_red,
-		"swan" = /obj/item/clothing/head/roguetown/tw_d_swan,
-		"Le Fishe" = /obj/item/clothing/head/roguetown/tw_d_fish,
-		"mighty windmill" = /obj/item/clothing/head/roguetown/tw_d_windmill,
-		"oath" = /obj/item/clothing/head/roguetown/tw_d_oathtaker,
-		"skull" = /obj/item/clothing/head/roguetown/tw_d_skull
+	var/onhelm = list( //TA EDIT START
+		"Horns" = /obj/item/clothing/head/roguetown/onhelm/tw_d_horns,
+		"Howers" = /obj/item/clothing/head/roguetown/onhelm/tw_d_castle_red,
+		"Afreet" = /obj/item/clothing/head/roguetown/onhelm/tw_d_efreet,
+		"Sun" = /obj/item/clothing/head/roguetown/onhelm/tw_d_sun,
+		"Astrata" = /obj/item/clothing/head/roguetown/onhelm/tw_d_peace,
+		"Graggar" = /obj/item/clothing/head/roguetown/onhelm/tw_d_graggar,
+		"Feathers" = /obj/item/clothing/head/roguetown/onhelm/tw_d_feathers,
+		"Lion" = /obj/item/clothing/head/roguetown/onhelm/tw_d_lion,
+		"Dragon" = /obj/item/clothing/head/roguetown/onhelm/tw_d_dragon_red,
+		"Swan" = /obj/item/clothing/head/roguetown/onhelm/tw_d_swan,
+		"Le Fishe" = /obj/item/clothing/head/roguetown/onhelm/tw_d_fish,
+		"Mighty Windmill" = /obj/item/clothing/head/roguetown/onhelm/tw_d_windmill,
+		"Oathkeeper" = /obj/item/clothing/head/roguetown/onhelm/tw_d_oathtaker,
+		"Skull" = /obj/item/clothing/head/roguetown/onhelm/tw_d_skull,
+		"None"
 		)
-	var/onhelmchoice = input("Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
-	l_hand = onhelm[onhelmchoice]
+	var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
+	if(onhelmchoice != "None")
+		mask = onhelm[onhelmchoice] //TA EDIT END

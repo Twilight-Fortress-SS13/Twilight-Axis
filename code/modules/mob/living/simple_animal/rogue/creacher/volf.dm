@@ -1,6 +1,8 @@
 
 
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf
+	attack_aim = MOB_AIM_LOW
+	anatomy_type = /datum/anatomy/quadruped/trash
 	icon = 'icons/roguetown/mob/monster/volf.dmi'
 	name = "volf"
 	desc = "A snarling beast of mangy fur and yellowed teeth. Volves are known to attack hapless travelers in the deep forests when prey is scarce."
@@ -45,11 +47,15 @@
 	retreat_distance = 0
 	minimum_distance = 0
 	milkies = FALSE
+	animal_species = /mob/living/simple_animal/hostile/retaliate/rogue/wolf // TA EDIT
 	food_type = list(/obj/item/reagent_containers/food/snacks,
 					//obj/item/bodypart,
 					//obj/item/organ,
 					/obj/item/natural/bone,
 					/obj/item/natural/hide)
+	tame_food_type = null // TA EDIT START
+	tame_chance = 0
+	bonus_tame_chance = 0 // TA EDIT END
 	footstep_type = FOOTSTEP_MOB_BAREFOOT
 	pooptype = null
 	STACON = 7
@@ -57,7 +63,6 @@
 	STASPD = 12
 	simple_detect_bonus = 20
 	deaggroprob = 0
-	defprob = 40
 	del_on_deaggro = 44 SECONDS
 	retreat_health = 0.3
 	food = 0
@@ -69,11 +74,13 @@
 	eat_forever = TRUE
 	var/chomp_cd = 0
 	var/chomp_roll = 0
+	var/fixed_gender = FALSE // TA EDIT
 
 //new ai, old ai off
 	AIStatus = AI_OFF
 	can_have_ai = FALSE
 	ai_controller = /datum/ai_controller/volf
+	move_base_delay = MOVEMENT_DELAY_SPD_3
 	melee_cooldown = WOLF_ATTACK_SPEED
 
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf/AttackingTarget() //7+1d6 vs con to knock ppl down
@@ -104,20 +111,98 @@
 	icon_state = "bones"
 	icon = 'icons/roguetown/mob/monster/volf.dmi'
 
-/mob/living/simple_animal/hostile/retaliate/rogue/wolf/Initialize()
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/ai_aggro_system)
-	AddElement(/datum/element/ai_flee_while_injured, 0.75, 0.4)
-	gender = MALE
-	if(prob(33))
-		gender = FEMALE
+	if(ai_controller) // TA EDIT START
+		AddComponent(/datum/component/ai_aggro_system)
+		AddElement(/datum/element/ai_flee_while_injured, 0.75, 0.4)
+	if(!fixed_gender)
+		gender = prob(33) ? FEMALE : MALE
+	if(gender == FEMALE && !adult_growth)
+		childtype = list(
+			/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup = 67,
+			/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/female = 33,
+		)
+	else
+		childtype = null // TA EDIT END
 	update_icon()
-	ai_controller.set_blackboard_key(BB_BASIC_FOODS, food_type)
+	if(ai_controller) // TA EDIT
+		ai_controller.set_blackboard_key(BB_BASIC_FOODS, food_type) // TA EDIT
 	var/color = pick("brown", "black", "white")
 	icon_state = "volf_[color]"
 	icon_living = "volf_[color]"
 	icon_dead = "volf_[color]_dead"
 
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/male // TA EDIT START
+	fixed_gender = TRUE
+	gender = MALE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/female
+	fixed_gender = TRUE
+	gender = FEMALE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup
+	name = "volf pup"
+	desc = "A young volf, not yet grown into its full strength."
+	fixed_gender = TRUE
+	gender = MALE
+	animal_species = null
+	adult_growth = /mob/living/simple_animal/hostile/retaliate/rogue/wolf/male
+	health = WOLF_HEALTH / 2
+	maxHealth = WOLF_HEALTH / 2
+	melee_damage_lower = 9
+	melee_damage_upper = 14
+	STACON = 4
+	STASTR = 3
+	STASPD = 9
+	mob_size = MOB_SIZE_SMALL
+	aggressive = 0
+	del_on_deaggro = 0
+	ai_controller = null
+	can_receive_livestock_commands = FALSE
+	tame_food_type = list(/obj/item/reagent_containers/food/snacks/rogue/meat)
+	tame_chance = 15
+	bonus_tame_chance = 10
+
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/CanAttack(atom/the_target)
+	return FALSE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/Retaliate()
+	return 0
+
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/GiveTarget(new_target)
+	return 0
+
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/Initialize(mapload)
+	. = ..()
+	var/matrix/pup_scale = matrix()
+	pup_scale.Scale(0.7, 0.7)
+	transform = pup_scale
+
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/female
+	gender = FEMALE
+	adult_growth = /mob/living/simple_animal/hostile/retaliate/rogue/wolf/female
+
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/wild
+	fixed_gender = FALSE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/wild/Initialize(mapload)
+	. = ..()
+	adult_growth = gender == FEMALE ? /mob/living/simple_animal/hostile/retaliate/rogue/wolf/female : /mob/living/simple_animal/hostile/retaliate/rogue/wolf/male
+	roll_initial_genetics()
+
+/proc/get_wolf_family_types()
+	return list(
+		/mob/living/simple_animal/hostile/retaliate/rogue/wolf/female,
+		/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/wild,
+		/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/wild,
+		/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/wild,
+	) // TA EDIT END
+
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/tamed(mob/user) // TA EDIT START
+	clear_enemies()
+	LoseTarget()
+	return ..(user) // TA EDIT END
 
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf/death(gibbed)
 	..()
@@ -160,47 +245,6 @@
 		Retaliate()
 		GiveTarget(pulledby)
 
-/mob/living/simple_animal/hostile/retaliate/rogue/wolf/simple_limb_hit(zone)
-	if(!zone)
-		return ""
-	switch(zone)
-		if(BODY_ZONE_PRECISE_R_EYE)
-			return "head"
-		if(BODY_ZONE_PRECISE_L_EYE)
-			return "head"
-		if(BODY_ZONE_PRECISE_NOSE)
-			return "nose"
-		if(BODY_ZONE_PRECISE_MOUTH)
-			return "mouth"
-		if(BODY_ZONE_PRECISE_SKULL)
-			return "head"
-		if(BODY_ZONE_PRECISE_EARS)
-			return "head"
-		if(BODY_ZONE_PRECISE_NECK)
-			return "neck"
-		if(BODY_ZONE_PRECISE_L_HAND)
-			return "foreleg"
-		if(BODY_ZONE_PRECISE_R_HAND)
-			return "foreleg"
-		if(BODY_ZONE_PRECISE_L_FOOT)
-			return "leg"
-		if(BODY_ZONE_PRECISE_R_FOOT)
-			return "leg"
-		if(BODY_ZONE_PRECISE_STOMACH)
-			return "stomach"
-		if(BODY_ZONE_PRECISE_GROIN)
-			return "tail"
-		if(BODY_ZONE_HEAD)
-			return "head"
-		if(BODY_ZONE_R_LEG)
-			return "leg"
-		if(BODY_ZONE_L_LEG)
-			return "leg"
-		if(BODY_ZONE_R_ARM)
-			return "foreleg"
-		if(BODY_ZONE_L_ARM)
-			return "foreleg"
-	return ..()
 
 /datum/intent/simple/bite/volf
 	clickcd = WOLF_ATTACK_SPEED

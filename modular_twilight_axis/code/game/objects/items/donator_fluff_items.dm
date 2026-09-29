@@ -188,7 +188,7 @@
     body_parts_covered = FACE | NECK
     block2add = FOV_DEFAULT
     resistance_flags = FIRE_PROOF
-	
+
 /obj/item/clothing/gloves/roguetown/bandages/pugilist/aria
 	name = "aria bondaged gloves"
 	desc = "A pair of golden black silks to cover hands"
@@ -239,7 +239,7 @@
 	item_state = "nightmare_scales"
 	icon = 'modular_twilight_axis/icons/clothing/nightmare_set.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/nightmare_set.dmi'
-	sleeved = 'modular_twilight_axis/icons/clothing/onmob/nightmare_set.dmi' 
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/nightmare_set.dmi'
 
 /obj/item/clothing/gloves/roguetown/plate/nightmare
 	name = "nightmare tears gauntlets"
@@ -248,7 +248,7 @@
 	item_state = "nightmare_gauntlets"
 	icon = 'modular_twilight_axis/icons/clothing/nightmare_set.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/nightmare_set.dmi'
-	sleeved = 'modular_twilight_axis/icons/clothing/onmob/nightmare_set.dmi' 
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/nightmare_set.dmi'
 
 /obj/item/clothing/under/roguetown/chainlegs/nightmare
 	name = "nightmare tears chausses"
@@ -316,3 +316,527 @@
 		if(get_detail_color())
 			pic.color = get_detail_color()
 		add_overlay(pic)
+
+// COMMANDANT SET START
+
+/obj/item/clothing/head/roguetown/helmet/heavy/commandant
+	name = "commandant's helmet"
+	desc = "An old, battered helmet once worn by an officer of the Black Empire's Freikorps. Its scars bear witness to many campaigns."
+	icon = 'modular_twilight_axis/icons/clothing/commandant_set.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/commandant_helmet.dmi'
+	icon_state = "helmet"
+	item_state = "helmet"
+	worn_y_dimension = 32
+	flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR|HIDESNOUT
+
+/obj/item/clothing/cloak/commandant
+	name = "commandant's cloak"
+	desc = "A distinguished military cloak in the austere style of the Black Empire, worn by officers who have earned the right to stand above the rank and file."
+	icon = 'modular_twilight_axis/icons/clothing/commandant_set.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/commandant_set.dmi'
+	icon_state = "raincoat"
+	item_state = "raincoat"
+
+/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/commandant
+	name = "commandant's coat"
+	desc = "A warm and durable field coat made for long campaigns, equally at home in a command tent or on a rain-soaked battlefield."
+	icon = 'modular_twilight_axis/icons/clothing/commandant_set.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/commandant_set.dmi'
+	icon_state = "robe"
+	item_state = "robe"
+	color = null
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/commandant_sleeves.dmi'
+
+/obj/item/clothing/suit/roguetown/armor/brigandine/light/commandant
+	name = "commandant's coat"
+	desc = "A warm and durable field coat made for long campaigns, equally at home in a command tent or on a rain-soaked battlefield."
+	icon = 'modular_twilight_axis/icons/clothing/commandant_set.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/commandant_set.dmi'
+	icon_state = "robe"
+	item_state = "robe"
+	color = null
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/commandant_sleeves.dmi'
+
+/obj/item/storage/belt/rogue/leather/twilight_holsterbelt/commandant
+	name = "officer's belt"
+	desc = "A durable and reliable officer's belt, made to endure years of campaigning."
+	icon = 'modular_twilight_axis/icons/clothing/commandant_set.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/commandant_set.dmi'
+	icon_state = "holsterbelt"
+	item_state = "holsterbelt"
+
+/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/commandant
+	name = "elegant pistol"
+	desc = "A finely made officer's pistol. Reliable in battle and elegant enough to serve as a badge of rank."
+	icon = 'modular_twilight_axis/icons/clothing/commandant_pistol.dmi'
+	icon_state = "pistol"
+	item_state = "gun"
+	advanced_icon = 'modular_twilight_axis/icons/clothing/commandant_pistol.dmi'
+	advanced_icon_r = 'modular_twilight_axis/icons/clothing/commandant_pistol_loaded.dmi'
+	advanced_icon_norod = 'modular_twilight_axis/icons/clothing/commandant_pistol.dmi'
+	advanced_icon_r_norod = 'modular_twilight_axis/icons/clothing/commandant_pistol_loaded.dmi'
+	lefthand_file = 'modular_twilight_axis/icons/clothing/onmob/commandant_pistol_lefthand.dmi'
+	righthand_file = 'modular_twilight_axis/icons/clothing/onmob/commandant_pistol_righthand.dmi'
+	experimental_inhand = FALSE
+
+/obj/item/rogueweapon/sword/rapier/commandant
+	name = "commandant's blade"
+	desc = "A superbly forged blade adorned with a ruby suspiciously similar to unrefined lux. Perfect for concealed carry inside a cane."
+	icon = 'modular_twilight_axis/icons/clothing/commandant_tools.dmi'
+	icon_state = "dagger"
+	item_state = "dagger"
+	lefthand_file = 'modular_twilight_axis/icons/clothing/onmob/commandant_tools_lefthand.dmi'
+	righthand_file = 'modular_twilight_axis/icons/clothing/onmob/commandant_tools_righthand.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/commandant_belt_mounted_tools.dmi'
+	sheathe_icon = "dagger"
+	experimental_inhand = FALSE
+	experimental_onhip = FALSE
+	bigboy = FALSE
+	pixel_x = 0
+	pixel_y = 0
+	dropshrink = null
+
+/obj/item/rogueweapon/sword/sabre/commandant
+	name = "commandant's blade"
+	desc = "A superbly forged blade adorned with a ruby suspiciously similar to unrefined lux. Perfect for concealed carry inside a cane."
+	icon = 'modular_twilight_axis/icons/clothing/commandant_tools.dmi'
+	icon_state = "dagger"
+	item_state = "dagger"
+	lefthand_file = 'modular_twilight_axis/icons/clothing/onmob/commandant_tools_lefthand.dmi'
+	righthand_file = 'modular_twilight_axis/icons/clothing/onmob/commandant_tools_righthand.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/commandant_belt_mounted_tools.dmi'
+	sheathe_icon = "dagger"
+	experimental_inhand = FALSE
+	experimental_onhip = FALSE
+	bigboy = FALSE
+	pixel_x = 0
+	pixel_y = 0
+	dropshrink = null
+
+/obj/item/rogueweapon/scabbard/sword/commandant
+	name = "commandant's cane"
+	desc = "A cane made for the finest officers of the Black Empire. It seems to have an opening for a hidden blade."
+	icon = 'modular_twilight_axis/icons/clothing/commandant_tools.dmi'
+	icon_state = "cane_m"
+	item_state = "cane_m"
+	lefthand_file = 'modular_twilight_axis/icons/clothing/onmob/commandant_tools_lefthand.dmi'
+	righthand_file = 'modular_twilight_axis/icons/clothing/onmob/commandant_tools_righthand.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/commandant_belt_mounted_tools.dmi'
+	experimental_inhand = FALSE
+	experimental_onhip = FALSE
+	bigboy = FALSE
+	pixel_x = 0
+	pixel_y = 0
+	valid_blade = null
+	valid_blades = list(
+		/obj/item/rogueweapon/sword/rapier/commandant,
+		/obj/item/rogueweapon/sword/sabre/commandant)
+	cant_strip = TRUE
+	holster_empty_item_state = "cane_m"
+	holster_sheathed_item_state = "cane"
+
+// COMMANDANT SET END
+
+/obj/item/rogueweapon/sword/rapier/crowcane
+	name = "crow cane blade"
+	desc = ""
+	icon = 'modular_twilight_axis/icons/obj/items/crowcane.dmi'
+	icon_state = "cane_blade"
+	item_state = "cane_blade"
+	sheathe_icon = "crowblade"
+	bigboy = FALSE
+	pixel_x = 0
+	pixel_y = 0
+	dropshrink = null
+
+/obj/item/rogueweapon/sword/rapier/crowcane/getonmobprop(tag)
+	. = ..()
+	if(tag)
+		switch(tag)
+			if("gen") return list(
+				"shrink" = 0.30,
+				"sx" = -8,
+				"sy" = -5,
+				"nx" = 9,
+				"ny" = -4,
+				"wx" = -6,
+				"wy" = -3,
+				"ex" = 4,
+				"ey" = -4,
+				"northabove" = 0,
+				"southabove" = 1,
+				"eastabove" = 1,
+				"westabove" = 0,
+				"nturn" = -13,
+				"sturn" = 110,
+				"wturn" = -60,
+				"eturn" = -30,
+				"nflip" = 1,
+				"sflip" = 1,
+				"wflip" = 8,
+				"eflip" = 1,
+				)
+			if("onback") return list(
+				"shrink" = 0.5,
+				"sx" = -1,
+				"sy" = 2,
+				"nx" = 0,
+				"ny" = 2,
+				"wx" = 2,
+				"wy" = 1,
+				"ex" = 0,
+				"ey" = 1,
+				"nturn" = 0,
+				"sturn" = 0,
+				"wturn" = 70,
+				"eturn" = 15,
+				"nflip" = 1,
+				"sflip" = 1,
+				"wflip" = 1,
+				"eflip" = 1,
+				"northabove" = 1,
+				"southabove" = 0,
+				"eastabove" = 0,
+				"westabove" = 0,
+				)
+			if("onbelt") return list(
+				"shrink" = 0.4,
+				"sx" = -4,
+				"sy" = -6,
+				"nx" = 5,
+				"ny" = -6,
+				"wx" = 0,
+				"wy" = -6,
+				"ex" = -1,
+				"ey" = -6,
+				"nturn" = 100,
+				"sturn" = 156,
+				"wturn" = 90,
+				"eturn" = 180,
+				"nflip" = 0,
+				"sflip" = 0,
+				"wflip" = 0,
+				"eflip" = 0,
+				"northabove" = 0,
+				"southabove" = 1,
+				"eastabove" = 1,
+				"westabove" = 0,
+				)
+
+/obj/item/rogueweapon/sword/sabre/crowcane
+	name = "crow cane blade"
+	desc = ""
+	icon = 'modular_twilight_axis/icons/obj/items/crowcane.dmi'
+	icon_state = "cane_blade"
+	item_state = "cane_blade"
+	sheathe_icon = "crowblade"
+	bigboy = FALSE
+	pixel_x = 0
+	pixel_y = 0
+	dropshrink = null
+
+/obj/item/rogueweapon/sword/sabre/crowcane/getonmobprop(tag)
+	. = ..()
+	if(tag)
+		switch(tag)
+			if("gen") return list(
+				"shrink" = 0.30,
+				"sx" = -8,
+				"sy" = -5,
+				"nx" = 9,
+				"ny" = -4,
+				"wx" = -6,
+				"wy" = -3,
+				"ex" = 4,
+				"ey" = -4,
+				"northabove" = 0,
+				"southabove" = 1,
+				"eastabove" = 1,
+				"westabove" = 0,
+				"nturn" = -13,
+				"sturn" = 110,
+				"wturn" = -60,
+				"eturn" = -30,
+				"nflip" = 1,
+				"sflip" = 1,
+				"wflip" = 8,
+				"eflip" = 1,
+				)
+			if("onback") return list(
+				"shrink" = 0.5,
+				"sx" = -1,
+				"sy" = 2,
+				"nx" = 0,
+				"ny" = 2,
+				"wx" = 2,
+				"wy" = 1,
+				"ex" = 0,
+				"ey" = 1,
+				"nturn" = 0,
+				"sturn" = 0,
+				"wturn" = 70,
+				"eturn" = 15,
+				"nflip" = 1,
+				"sflip" = 1,
+				"wflip" = 1,
+				"eflip" = 1,
+				"northabove" = 1,
+				"southabove" = 0,
+				"eastabove" = 0,
+				"westabove" = 0,
+				)
+			if("onbelt") return list(
+				"shrink" = 0.4,
+				"sx" = -4,
+				"sy" = -6,
+				"nx" = 5,
+				"ny" = -6,
+				"wx" = 0,
+				"wy" = -6,
+				"ex" = -1,
+				"ey" = -6,
+				"nturn" = 100,
+				"sturn" = 156,
+				"wturn" = 90,
+				"eturn" = 180,
+				"nflip" = 0,
+				"sflip" = 0,
+				"wflip" = 0,
+				"eflip" = 0,
+				"northabove" = 0,
+				"southabove" = 1,
+				"eastabove" = 1,
+				"westabove" = 0,
+				)
+
+/obj/item/rogueweapon/scabbard/sword/crowcane
+	name = "crow cane"
+	desc = ""
+	icon = 'modular_twilight_axis/icons/obj/items/crowcane.dmi'
+	icon_state = "cane_scabbard"
+	item_state = "cane_scabbard"
+	bigboy = FALSE
+	pixel_x = 0
+	pixel_y = 0
+	valid_blade = null
+	valid_blades = list(
+		/obj/item/rogueweapon/sword/rapier/crowcane,
+		/obj/item/rogueweapon/sword/sabre/crowcane)
+	cant_strip = TRUE
+
+/obj/item/rogueweapon/scabbard/sword/crowcane/getonmobprop(tag)
+	. = ..()
+	if(!tag)
+		return .
+
+	if(hol_comp?.sheathed)
+		switch(tag)
+			if("gen")
+				return list(
+					"shrink" = 0.30,
+					"sx" = -5,
+					"sy" = -5,
+					"nx" = 5,
+					"ny" = -4,
+					"wx" = -1,
+					"wy" = -5,
+					"ex" = -1,
+					"ey" = -5,
+					"nturn" = -45,
+					"sturn" = -45,
+					"wturn" = -45,
+					"eturn" = -45,
+					"nflip" = 0,
+					"sflip" = 0,
+					"wflip" = 0,
+					"eflip" = 0,
+					"northabove" = FALSE,
+					"southabove" = TRUE,
+					"eastabove" = TRUE,
+					"westabove" = FALSE
+				)
+			if("wielded")
+				return list(
+					"shrink" = 0.30,
+					"sx" = 0,
+					"sy" = -1,
+					"nx" = 0,
+					"ny" = -1,
+					"wx" = -2,
+					"wy" = -1,
+					"ex" = 2,
+					"ey" = -1,
+					"nturn" = -90,
+					"sturn" = 0,
+					"wturn" = -90,
+					"eturn" = 0,
+					"nflip" = 0,
+					"sflip" = 0,
+					"wflip" = 0,
+					"eflip" = 0,
+					"northabove" = FALSE,
+					"southabove" = TRUE,
+					"eastabove" = TRUE,
+					"westabove" = TRUE
+				)
+			if("onbelt")
+				return list(
+					"shrink" = 0.25,
+					"sx" = -2,
+					"sy" = -5,
+					"nx" = 4,
+					"ny" = -5,
+					"wx" = 0,
+					"wy" = -5,
+					"ex" = 2,
+					"ey" = -5,
+					"nturn" = 0,
+					"sturn" = 0,
+					"wturn" = -90,
+					"eturn" = 0,
+					"nflip" = 0,
+					"sflip" = 0,
+					"wflip" = 0,
+					"eflip" = 0,
+					"northabove" = 0,
+					"southabove" = 1,
+					"eastabove" = 1,
+					"westabove" = 1
+				)
+
+	switch(tag)
+		if("gen")
+			return list(
+				"shrink" = 0.30,
+				"sx" = -6,
+				"sy" = -1,
+				"nx" = 6,
+				"ny" = -1,
+				"wx" = 0,
+				"wy" = -2,
+				"ex" = 0,
+				"ey" = -2,
+				"northabove" = 0,
+				"southabove" = 1,
+				"eastabove" = 1,
+				"westabove" = 0,
+				"nturn" = 0,
+				"sturn" = 0,
+				"wturn" = 0,
+				"eturn" = 0,
+				"nflip" = 4,
+				"sflip" = 0,
+				"wflip" = 8,
+				"eflip" = 0
+			)
+		if("onback")
+			return list(
+				"shrink" = 0.4,
+				"sx" = 0,
+				"sy" = 2,
+				"nx" = 0,
+				"ny" = 2,
+				"wx" = 2,
+				"wy" = 1,
+				"ex" = 0,
+				"ey" = 1,
+				"nturn" = 0,
+				"sturn" = 0,
+				"wturn" = 70,
+				"eturn" = 15,
+				"nflip" = 1,
+				"sflip" = 1,
+				"wflip" = 1,
+				"eflip" = 1,
+				"northabove" = 1,
+				"southabove" = 0,
+				"eastabove" = 0,
+				"westabove" = 0
+			)
+		if("onbelt")
+			return list(
+				"shrink" = 0.25,
+				"sx" = -2,
+				"sy" = -5,
+				"nx" = 4,
+				"ny" = -5,
+				"wx" = 0,
+				"wy" = -5,
+				"ex" = 2,
+				"ey" = -5,
+				"nturn" = 0,
+				"sturn" = 0,
+				"wturn" = -90,
+				"eturn" = 0,
+				"nflip" = 0,
+				"sflip" = 0,
+				"wflip" = 0,
+				"eflip" = 0,
+				"northabove" = 0,
+				"southabove" = 1,
+				"eastabove" = 1,
+				"westabove" = 1
+			)
+
+/obj/item/gun/ballistic/twilight_firearm/arquebus/jezail
+	name = "jezail"
+	desc = ""
+	icon = 'modular_twilight_axis/firearms/icons/jezail.dmi'
+	advanced_icon = 'modular_twilight_axis/firearms/icons/jezail.dmi'
+	advanced_icon_norod = 'modular_twilight_axis/firearms/icons/jezail.dmi'
+
+/obj/item/gun/ballistic/twilight_firearm/arquebus/jezail/attackby(obj/item/I, mob/user, params)
+	if(istype(I, /obj/item/rogueweapon/huntingknife))
+		to_chat(user, span_warning("A bayonet cannot be attached to [src]."))
+		return TRUE
+	return ..()
+
+/obj/item/gun/ballistic/twilight_firearm/arquebus/teppo
+	name = "teppo"
+	desc = ""
+	icon = 'modular_twilight_axis/firearms/icons/teppo.dmi'
+	advanced_icon = 'modular_twilight_axis/firearms/icons/teppo.dmi'
+	advanced_icon_norod = 'modular_twilight_axis/firearms/icons/teppo.dmi'
+
+/obj/item/gun/ballistic/twilight_firearm/arquebus/teppo/attackby(obj/item/I, mob/user, params)
+	if(istype(I, /obj/item/rogueweapon/huntingknife))
+		to_chat(user, span_warning("A bayonet cannot be attached to [src]."))
+		return TRUE
+	return ..()
+
+
+/obj/item/gun/ballistic/twilight_firearm/flintgonne/jezail
+	name = "jezail"
+	desc = ""
+	icon = 'modular_twilight_axis/firearms/icons/jezail.dmi'
+	icon_state = "flintgonne"
+	item_state = "flintgonne"
+
+/obj/item/gun/ballistic/twilight_firearm/flintgonne/teppo
+	name = "teppo"
+	desc = ""
+	icon = 'modular_twilight_axis/firearms/icons/teppo.dmi'
+	icon_state = "flintgonne"
+	item_state = "flintgonne"
+
+/obj/item/gun/ballistic/twilight_firearm/barker/jezail
+	name = "jezail"
+	desc = ""
+	icon = 'modular_twilight_axis/firearms/icons/jezail.dmi'
+	icon_state = "barker"
+	item_state = "barker"
+
+/obj/item/gun/ballistic/twilight_firearm/barker/teppo
+	name = "teppo"
+	desc = ""
+	icon = 'modular_twilight_axis/firearms/icons/teppo.dmi'
+	icon_state = "barker"
+	item_state = "barker"
+
+/obj/item/clothing/head/roguetown/wizhat/bighat
+	name = "wizard's big hat"
+
+/obj/item/clothing/suit/roguetown/shirt/robe/limetease
+	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes.dmi'
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/donor_sleeves_armor.dmi'

@@ -9,7 +9,7 @@
 	max_pq = null
 
 	allowed_sexes = list(MALE, FEMALE)
-	
+
 	tutorial = "Make Graggar proud or die trying."
 
 	outfit = /datum/outfit/job/roguetown/npc/goblin
@@ -17,7 +17,7 @@
 	give_bank_account = FALSE
 /datum/job/roguetown/goblin/equip(mob/living/carbon/human/H, visualsOnly, announce, latejoin, datum/outfit/outfit_override, client/preference_source)
 	. = ..()
-	return  H.change_mob_type(/mob/living/carbon/human/species/goblin/cave, delete_old_mob = TRUE)
+	return	H.change_mob_type(/mob/living/carbon/human/species/goblin/cave, delete_old_mob = TRUE)
 
 /datum/job/roguetown/goblin/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	..()
@@ -42,7 +42,7 @@
 		H.base_intents = list(INTENT_HELP, INTENT_DISARM, INTENT_GRAB, /datum/intent/simple/claw)
 		H.update_a_intents()
 		H.set_patron(/datum/patron/inhumen/graggar)
-		H.cmode_music = 'sound/music/combat_shaman2.ogg' //GRAGGAR. GRAGGAR. GRAGGAR. (Different to Gnolls/Heretics, you're just a barbaric goblin shocktrooper)
+		H.cmode_music = sound("sound/music/combat_shaman2.ogg") //GRAGGAR. GRAGGAR. GRAGGAR. (Different to Gnolls/Heretics, you're just a barbaric goblin shocktrooper)
 		to_chat(H, span_danger("You are a disposable antagonist, expect to die rather quickly. Now go cause problems and stirr some conflict! Remember to roleplay where possible."))
 		var/obj/item/organ/eyes/eyes = H.getorganslot(ORGAN_SLOT_EYES)
 		if(eyes)
@@ -51,7 +51,11 @@
 		eyes = new /obj/item/organ/eyes/night_vision/zombie
 		eyes.Insert(H)
 		H.ambushable = FALSE
-		H.underwear = "Nude"
+		if(H.underwear) // TA EDIT START
+			var/obj/item/bodypart/underwear_chest = H.get_bodypart(BODY_ZONE_CHEST)
+			if(underwear_chest && H.underwear.undies_feature)
+				underwear_chest.remove_bodypart_feature(H.underwear.undies_feature)
+			QDEL_NULL(H.underwear) // TA EDIT END
 		for(var/datum/charflaw/cf in H.charflaws)
 			H.charflaws.Remove(cf)
 			QDEL_NULL(cf)

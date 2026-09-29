@@ -94,7 +94,7 @@
 						addtimer(CALLBACK(src, PROC_REF(Stun), 110), 10)
 						addtimer(CALLBACK(src, PROC_REF(Knockdown), 110), 10)
 						mob_timers["painstun"] = world.time + 160
-					if(prob(probby) && HAS_TRAIT(src, TRAIT_NOPAINSTUN) && !HAS_TRAIT(src, TRAIT_LYCANRESILENCE)  && (has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder) || has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed)))
+					if(prob(probby) && HAS_TRAIT(src, TRAIT_NOPAINSTUN) && !HAS_TRAIT(src, TRAIT_LYCANRESILENCE)	&& (has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder) || has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed)))
 						Immobilize(10)
 						emote("superagony")
 						to_chat(src, span_userdanger("THE SACRED FLAMES, I FEEL PAIN AGAIN!"))
@@ -119,6 +119,13 @@
 
 /mob/living/carbon/human/handle_roguebreath()
 	..()
+	if(HAS_TRAIT(src, TRAIT_PSYDONITE))
+		if(!HAS_TRAIT(src, TRAIT_BLACKBLOOD) && !HAS_TRAIT(src, TRAIT_IRONMAN)) //Explicitly incompatible with Blackblood, Constructs have their own healing mechanics + are barred from healing miracles already, which overlaps with the intended weakness of Psydonian healing.
+			var/list/wCount = src.get_wounds()
+			if(wCount.len > 0)
+				heal_wounds(0.4, psydonite = TRUE)
+				if(blood_volume > BLOOD_VOLUME_BAD && !HAS_TRAIT(src, TRAIT_DEATHLESS))
+					heal_wounds(0.6, psydonite = TRUE) //Bulk of the healing is locked behind not having depleted blood and not being deathless
 	if(HAS_TRAIT(src, TRAIT_NOBREATH))
 		return TRUE
 	if(HAS_TRAIT(src, TRAIT_HOLDBREATH))
@@ -348,8 +355,9 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 	if(hallucination)
 		handle_hallucinations()
 
-	if(drunkenness)
-		drunkenness = max(drunkenness - (drunkenness * 0.04) - 0.01, 0)
+	if(drunkenness) // TA EDIT START
+		if(!has_booze())
+			drunkenness = max(drunkenness - 0.2, 0)
 		if(drunkenness >= 3)
 			if(prob(3))
 				slurring += 2
@@ -358,8 +366,12 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 			add_stress(/datum/stressevent/drunk)
 		else
 			remove_stress(/datum/stressevent/drunk)
+			remove_status_effect(/datum/status_effect/buff/drunk)
 		if(drunkenness >= 11 && slurring < 5)
 			slurring += 1.2
+
+		if(drunkenness >= 21 && prob(2))
+			emote("sway")
 
 		if(drunkenness >= 41)
 			if(prob(25))
@@ -367,66 +379,67 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 			Dizzy(10)
 
 		if(drunkenness >= 51)
-			adjustToxLoss(1)
 			if(prob(3))
 				confused += 15
 				vomit() // vomiting clears toxloss, consider this a blessing
 			Dizzy(25)
 
 		if(drunkenness >= 61)
-			adjustToxLoss(1)
 			if(prob(50))
 				blur_eyes(5)
 
 		if(drunkenness >= 71)
-			adjustToxLoss(1)
 			if(prob(10))
 				blur_eyes(5)
+			if(prob(4) && !stat && !IsKnockdown())
+				to_chat(src, span_warning("Я на мгновение теряю равновесие!"))
+				Knockdown(10)
 
 		if(drunkenness >= 81)
-			adjustToxLoss(3)
+			if(prob(5))
+				drowsyness = min(drowsyness + 10, 100)
 			if(prob(5) && !stat)
 				to_chat(src, span_warning("Maybe I should lie down for a bit..."))
 
 		if(drunkenness >= 91)
-			adjustToxLoss(5)
+			if(has_booze() && prob(10))
+				adjustToxLoss(0.5)
 //			adjustOrganLoss(ORGAN_SLOT_BRAIN, 0.4)
-			if(prob(20) && !stat)
+			if(prob(10) && !stat)
 				to_chat(src, span_warning("Just a quick nap..."))
-				Sleeping(900)
+				Sleeping(300)
 
-		if(drunkenness >= 101)
-			adjustToxLoss(5) //Let's be honest you shouldn't be alive by now
+		if(drunkenness >= 101 && has_booze() && prob(15))
+			adjustToxLoss(1) //Let's be honest you shouldn't be alive by now
 
 //WE HANDLE SUNDERSTACKS HERE
-	if(sunder_stacks)
+	if(sunder_stacks) // TA EDIT END
 		sunder_stacks = max(sunder_stacks - 1, 0) //Takes a bit to shrug off
-		if(cultslurring < 5) //Fucks up our ability to talk, completely until all sunderstacks are gone
-			cultslurring += 1.2
+
+		apply_status_effect(/datum/status_effect/debuff/sunder_stacks) //You survived an EXTREMELY lethal blow, you might want to keep back for now
 
 		if(sunder_stacks >= 21)
-			apply_status_effect(/datum/status_effect/debuff/sunder_stacks) //You survived an EXTREMELY lethal blow, you might want to keep back for now
+			if(cultslurring < 5) //Fucks up our ability to talk, completely until we're below 20 stacks
+				cultslurring += 1.2
 
-		if(sunder_stacks >= 41)
+		if(sunder_stacks >= 31)
 			adjustBruteLoss(1)
-			if(prob(3)) //5% chance of random dizziness
-				vomit(blood = TRUE, stun = FALSE) // vomiting blood, because you are actually pretty fucked up sire. No immobilise yet.
-				Dizzy(3)
+			if(prob(3)) //3% chance of blood vomiting
+				vomit(blood = TRUE, stun = FALSE) // vomiting blood, because you are actually pretty fucked up sire.
+				Dizzy(5) //Tiny bit of Dizzy
 
-		if(sunder_stacks >= 71) //At this point you've taken (2) blows or more and shouldn't be escaping death this easily.
+		if(sunder_stacks >= 41) //At this point you've taken (2) blows (or are a vampire) or more and shouldn't be escaping death this easily.
 			adjustBruteLoss(1)
 			if(prob(12)) //12% chance to have random movement + stun + dizziness
 				confused += 8
 				vomit(blood = TRUE, stun = FALSE) // vomiting blood, because you are actually pretty fucked up sire.
-				Dizzy(15)
-			if(prob(5)) //5% chance to collapse randomly
-				vomit(blood = TRUE, stun = FALSE) // vomiting blood, because you are actually pretty fucked up sire.
-				Knockdown(15)
+				Dizzy(5)
 
 		if(sunder_stacks >= 101) //We are beyond the point of lethal, somehow. This will cripple you severely.
 			adjustBruteLoss(1)
 			if(prob(50))
 				blur_eyes(5)
+				Knockdown(5) //can't stand at all hardly, mortality almost forced upon a form that cannot sustain it.
 			Dizzy(25)//You are completely fucked up at this point, any more stacks of SUNDER and you're DEAD.
 
 
@@ -459,7 +472,7 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 	if(HAS_TRAIT(src, TRAIT_STABLELIVER) || HAS_TRAIT(src, TRAIT_NOMETABOLISM))
 		return
 
-	adjustToxLoss(4, TRUE,  TRUE)
+	adjustToxLoss(4, TRUE,	TRUE)
 
 /////////////
 //CREMATION//
@@ -606,6 +619,8 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 			energy_add(5)
 	//Healing while sleeping in a bed
 	if(IsSleeping())
+		if(drunkenness) // TA EDIT START
+			drunkenness = max(drunkenness - 2, 0) // TA EDIT END
 		if(HAS_TRAIT(src, TRAIT_NOREGEN) || HAS_TRAIT(src, TRAIT_IRONMAN))
 			return
 		var/sleepy_mod = 0.5
@@ -639,7 +654,7 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 				blood_volume = min(blood_volume + (4 * sleepy_mod), BLOOD_VOLUME_NORMAL)
 			for(var/obj/item/bodypart/affecting as anything in bodyparts)
 				//for context, it takes 5 small cuts (0.2 x 5) or 3 normal cuts (0.4 x 3) for a bodypart to not be able to heal itself
-				if(affecting.get_bleed_rate() >= 1)
+				if(affecting.get_bleed_rate() >= 1 && !HAS_TRAIT(src, TRAIT_ZOMBIE_IMMUNE)) // however, if you're undead - and therefore won't deadite - we let you get back up after a VERY long time, bcs otherwise any artery can be an RR
 					continue
 				if(affecting.heal_damage(sleepy_mod, sleepy_mod, required_status = BODYPART_ORGANIC))
 					src.update_damage_overlays()

@@ -9,7 +9,7 @@
 		var/list/things = STR.contents()
 		for(var/obj/item/I in things)
 			STR.remove_from_storage(I, get_turf(src))
-		
+
 /obj/item/clothing/cloak/captain/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
@@ -23,49 +23,45 @@
 	detail_color = primary
 	update_icon()
 
-/obj/item/clothing/cloak/half/knight
-	name = "champion's halfcloak"
-	desc = "A halfcloak of the Grand Duke's most loyal champion."
+/obj/item/clothing/cloak/half/guard
+	desc = "A halfcloak of the lord's most loyal retinue."
 	color = CLOTHING_AZURE
 
-/obj/item/clothing/cloak/half/knight/Initialize(mob/living/L)
+/obj/item/clothing/cloak/half/guard/Initialize()
 	. = ..()
 	if(GLOB.lordprimary)
 		lordcolor(GLOB.lordprimary,GLOB.lordsecondary)
 	GLOB.lordcolor += src
 
-/obj/item/clothing/cloak/half/knight/lordcolor(primary,secondary)
-	color = primary
-	detail_color = secondary
+/obj/item/clothing/cloak/half/guard/lordcolor(primary,secondary)
+	color = secondary
 	update_icon()
 	if(ismob(loc))
 		var/mob/L = loc
 		L.update_inv_cloak()
 
-/obj/item/clothing/cloak/half/knight/Destroy()
+/obj/item/clothing/cloak/half/guard/Destroy()
 	GLOB.lordcolor -= src
 	return ..()
 
-/obj/item/clothing/cloak/raincloak/furcloak/knight
-	name = "champion's cloak"
-	desc = "A cloak of the Grand Duke's most loyal champion."
+/obj/item/clothing/cloak/raincloak/furcloak/guard
+	desc = "A furcloak of the lord's most loyal retinue."
 	color = CLOTHING_AZURE
 
-/obj/item/clothing/cloak/raincloak/furcloak/knight/Initialize()
+/obj/item/clothing/cloak/raincloak/furcloak/guard/Initialize()
 	. = ..()
 	if(GLOB.lordprimary)
 		lordcolor(GLOB.lordprimary,GLOB.lordsecondary)
 	GLOB.lordcolor += src
 
-/obj/item/clothing/cloak/raincloak/furcloak/knight/lordcolor(primary,secondary)
-	color = primary
-	detail_color = secondary
+/obj/item/clothing/cloak/raincloak/furcloak/guard/lordcolor(primary,secondary)
+	color = secondary
 	update_icon()
 	if(ismob(loc))
 		var/mob/L = loc
 		L.update_inv_cloak()
 
-/obj/item/clothing/cloak/half/knight/Destroy()
+/obj/item/clothing/cloak/half/guard/Destroy()
 	GLOB.lordcolor -= src
 	return ..()
 
@@ -335,3 +331,11 @@
 //	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR|ITEM_SLOT_CLOAK
 //	flags_inv = HIDECROTCH|HIDEBOOB
 //	var/custom_design = FALSE
+
+/obj/item/clothing/cloak/bandolier/inq
+	name = "inquisitorial bandolier"
+	desc = "A masterworked leather bandolier, lined with silvered fittings and sturdy loops for the tools of inquiry. Every strap serves a purpose; every buckle stands ready for the next hunt."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/cloaks.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/cloaks.dmi'
+	icon_state = "inqbandolier"
+	item_state = "inqbandolier"

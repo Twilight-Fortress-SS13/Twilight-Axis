@@ -102,20 +102,6 @@
 				user.stop_pulling()
 	return ..()
 
-/obj/structure/table/attack_right(mob/user)
-	var/obj/item/held = user.get_active_held_item()
-	var/obj/item/rogueweapon/bakers_peel/peel
-	if(istype(held, /obj/item/rogueweapon/bakers_peel))
-		peel = held
-		if(peel.unload_onto_table(src, user))
-			return TRUE
-	held = user.get_inactive_held_item()
-	if(istype(held, /obj/item/rogueweapon/bakers_peel))
-		peel = held
-		if(peel.unload_onto_table(src, user))
-			return TRUE
-	return ..()
-
 /obj/structure/table/proc/hideinside(mob/living/user)
 	if(user.in_combat_until > world.time)
 		return
@@ -334,7 +320,7 @@
 	climb_offset = 10
 	buildstack = /obj/item/grown/log/tree/small
 
-/obj/structure/table/wood/crafted/Initialize()
+/obj/structure/table/wood/crafted/Initialize(mapload)
 	. = ..()
 	icon_state = "tablewood1"
 
@@ -461,9 +447,15 @@
 	icon = 'icons/roguetown/misc/tables.dmi'
 	icon_state = "stonetable_small"
 	max_integrity = 400
-	smooth = 0
+	smooth = 1
+	canSmoothWith = list(/obj/structure/table/finestone)
 	climb_offset = 10
 	debris = list(/obj/item/natural/stoneblock = 1)
+	var/smooth_icon = 'icons/obj/smooth_structures/stone_table.dmi'
+
+/obj/structure/table/finestone/Initialize(mapload)
+	. = ..()
+	icon = smooth_icon
 
 /obj/structure/table/vtable
 	name = "ancient wooden table"
@@ -531,7 +523,7 @@
 		/obj/structure/table/wood/fancy/royalblue)
 	var/smooth_icon = 'icons/obj/smooth_structures/fancy_table.dmi' // see Initialize()
 
-/obj/structure/table/wood/fancy/Initialize()
+/obj/structure/table/wood/fancy/Initialize(mapload)
 	. = ..()
 	// Needs to be set dynamically because table smooth sprites are 32x34,
 	// which the editor treats as a two-tile-tall object. The sprites are that
@@ -574,6 +566,19 @@
 /obj/structure/table/wood/fancy/royalblue
 	icon_state = "fancy_table_royalblue"
 	smooth_icon = 'icons/obj/smooth_structures/fancy_table_royalblue.dmi'
+
+/obj/structure/table/wood/betting
+	name = "betting table"
+	desc = "A table lined with cloth and edged with timber to prevent things falling off."
+	icon = 'icons/obj/structures.dmi'
+	icon_state = "betting_table"
+	smooth = 1
+	canSmoothWith = list(/obj/structure/table/wood/betting)
+	var/smooth_icon = 'icons/obj/smooth_structures/betting_table.dmi' // see Initialize()
+
+/obj/structure/table/wood/betting/Initialize(mapload)
+	. = ..()
+	icon = smooth_icon
 
 /obj/structure/table/wood/folding
 	name = "folding table"
@@ -727,7 +732,7 @@
 	buckle_requires_restraints = 1
 	var/mob/living/carbon/human/patient = null
 
-/obj/structure/table/optable/Initialize()
+/obj/structure/table/optable/Initialize(mapload)
 	. = ..()
 
 /obj/structure/table/optable/tablepush(mob/living/user, mob/living/pushed_mob)

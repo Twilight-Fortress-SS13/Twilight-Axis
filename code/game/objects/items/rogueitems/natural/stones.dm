@@ -143,6 +143,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 	var/magic_power = 0
 	sharpening_factor = 12
 	spark_chance = 35
+	materia = list(/datum/materia_aspect/earth)
 
 /obj/item/natural/stone/get_mechanics_examine(mob/user)
 	. = ..()
@@ -153,7 +154,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 	. += span_info("Stones can be 'slapcrafted' into new items by left-clicking them with certain tools and materials. 'Slapcrafted' items don't require a Crafting skill to make.")
 	. += span_info("'Slapcrafts' for stones include tools and pots.")
 
-/obj/item/natural/stone/Initialize()
+/obj/item/natural/stone/Initialize(mapload)
 	. = ..()
 	stone_lore()
 	update_force_dynamic() // Else it will not display the force properly.
@@ -199,7 +200,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 	. += span_info("Whetstones can be 'slapcrafted' into new items by left-clicking them with certain tools and materials. 'Slapcrafted' items don't require a Crafting skill to make.")
 	. += span_info("'Slapcrafts' for whestones include tools, and - if used with hunting knives and farming tools - unique weapons.")
 
-/obj/item/natural/whetstone/Initialize()
+/obj/item/natural/whetstone/Initialize(mapload)
 	. = ..()
 	var/static/list/slapcraft_recipe_list = list(
 		/datum/crafting_recipe/roguetown/survival/peasantry/thresher/whetstone,
@@ -307,6 +308,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 		stone_desc += " [pick(GLOB.stone_magic_descs)]"
 		bonus_force += magic_force // Add on the magic force modifier
 		magic_power += magic_force
+		materia += /datum/materia_aspect/arcyne
 
 	if(extra_intent_list.len)
 		for(var/i in 1 to min(4, extra_intent_list.len))
@@ -391,6 +393,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 	minstr = 11
 	destroy_sound = 'sound/foley/smash_rock.ogg'
 	attacked_sound = 'sound/foley/hit_rock.ogg'
+	materia = list(/datum/materia_aspect/earth)
 
 
 /obj/item/natural/rock/get_mechanics_examine(mob/user)
@@ -559,7 +562,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 	icon_state = "dungeon_rock"
 
 // actually random
-/obj/item/natural/rock/random_ore/Initialize()
+/obj/item/natural/rock/random_ore/Initialize(mapload)
 	. = ..()
 	var/obj/item/natural/rock/theboi = pick(list(
 		/obj/item/natural/rock/copper,
@@ -578,7 +581,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 BECAUSE this is a dungeon reward, and you're SUPPOSED to get SOMETHING, they've got a pretty high chance for good stuff.
 - MUMBLEMANCER
 */
-/obj/item/natural/rock/dungeon/Initialize()
+/obj/item/natural/rock/dungeon/Initialize(mapload)
 	. = ..()
 	// The amounts are going to be weird BC I wanted a % out of 100 and it's a 7 layer list.
 	// I am considering gems to be less problematic than gold BC gold can be melted into way more
@@ -614,30 +617,6 @@ BECAUSE this is a dungeon reward, and you're SUPPOSED to get SOMETHING, they've 
 	if(item_flags & IN_STORAGE)
 		return
 	. = ..()
-
-/obj/item/natural/stoneblock/attack_right(mob/user)
-	. = ..()
-	if(user.get_active_held_item())
-		return
-	to_chat(user, span_warning("I start to collect [src]..."))
-	if(move_after(user, bundling_time, target = src))
-		var/stackcount = 0
-		for(var/obj/item/natural/stoneblock/F in get_turf(src))
-			stackcount++
-		while(stackcount > 0)
-			if(stackcount == 1)
-				var/obj/item/natural/stoneblock/S = new(get_turf(user))
-				user.put_in_hands(S)
-				stackcount--
-			else if(stackcount >= 2)
-				var/obj/item/natural/bundle/stoneblock/B = new(get_turf(user))
-				B.amount = clamp(stackcount, 2, 4)
-				B.update_bundle()
-				stackcount -= clamp(stackcount, 2, 4)
-				user.put_in_hands(B)
-		for(var/obj/item/natural/stoneblock/F in get_turf(src))
-			playsound(get_turf(user.loc), 'sound/foley/stone_scrape.ogg', 100)
-			qdel(F)
 
 //................ Stone block stack	............... //
 /obj/item/natural/bundle/stoneblock

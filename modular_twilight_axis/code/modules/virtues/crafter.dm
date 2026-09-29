@@ -1,6 +1,7 @@
 /datum/virtue/utility/mastercraftsman
 	name = "Master Craftsman"
 	desc = "Years of practice have made me a true master of my craft. I can create and repair items with greater skill, and know how to salvage materials from anything."
+	ui_fa_icon = "hammer"
 	custom_text = "+3 to Crafting, Up to Legendary, Minimum Journeyman. Stash low-quality repair kits, two pouches with iron and steel bars for stake-break to scrap"
 	added_stashed_items = list("iron scrap pack" = /obj/item/storage/belt/rogue/pouch/i_scrap,
 								"steel scrap pack" = /obj/item/storage/belt/rogue/pouch/s_scrap,

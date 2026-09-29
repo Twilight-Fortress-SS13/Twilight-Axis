@@ -110,9 +110,15 @@
 			to_chat(user, span_warning("There is grass in the way."))
 			return
 
-		if(istype(T, /turf/open/floor/rogue/snow))
+		if(istype(T, /turf/open/floor/rogue/snow) || istype(T, /turf/open/floor/rogue/snowrough) || istype(T, /turf/open/floor/rogue/snowpatchy))
 			T.ChangeTurf(/turf/open/floor/rogue/dirt, flags = CHANGETURF_INHERIT_AIR)
-			to_chat(user, span_warning("You scoop away the snow!"))
+			playsound(T,'sound/items/dig_shovel.ogg', 100, TRUE)
+			to_chat(user, span_notice("You scoop away the snow."))
+			return
+
+		if(SSseason.thaw_path_turf(T))
+			playsound(T,'sound/items/dig_shovel.ogg', 100, TRUE)
+			to_chat(user, span_notice("You scoop away the snow."))
 			return
 
 		switch(curr_mode_index)
@@ -176,12 +182,15 @@
 						if(D.holie && D.holie.stage < 4)
 							D.holie.attackby(src, user)
 						else
-							if(istype(T, /turf/open/floor/rogue/dirt/road))
+							// Prevent deleting graves by changing the turf it's on if there is a grave on the turf
+							if(istype(T, /turf/open/floor/rogue/dirt/road) && !D.holie)
 								qdel(heldclod)
 								T.ChangeTurf(/turf/open/floor/rogue/dirt, flags = CHANGETURF_INHERIT_AIR)
-							else
+							else if (!D.holie)
 								heldclod.forceMove(T)
-
+							else
+								to_chat(user, span_warning("I cannot put the clod here, there's a grave in the way"))
+								return
 							heldclod = null
 							playsound(T,'sound/items/empty_shovel.ogg', 100, TRUE)
 							update_icon()
@@ -337,7 +346,7 @@
 /obj/item/rogueweapon/shovel/aalloy
 	force = 8
 	name = "decrepit shovel"
-	desc = "A tool of wrought bronze, for burying the lyfeless. His worshippers would say that death is necessary; that the bod will nourish this world, so that more lyfe may sprout. But to those who know the truth - Her truth, it is nothing more than a mockery."
+	desc = "A tool of rotted metal, for burying the lyfeless. His worshippers would say that death is necessary; that the bod will nourish this world, so that more lyfe may sprout. But to those who know the truth - Her truth, it is nothing more than a mockery."
 	icon_state = "ashovel"
 	smeltresult = /obj/item/ingot/aaslag
 	color = "#bb9696"
@@ -395,7 +404,7 @@
 	desc = "This relic, bestowed on the Order of the Veiled Lady, is cold to the touch. Faint whispers of the lost and the damned can be heard in its presence, and an inscription on the handle reads the Order's motto: \"Rest to the Restless, Death to the Deathless\""
 	icon_state = "zoe_silence"
 	icon = 'icons/obj/items/donor_weapons_48.dmi'
-	
+
 /obj/item/rogueweapon/shovel/zoe_silence/getonmobprop(tag)
 	if(tag)
 		switch(tag)

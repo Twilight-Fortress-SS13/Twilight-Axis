@@ -153,7 +153,8 @@
 		/datum/crafting_recipe/roguetown/structure/cauldronalchemy,
 		/datum/crafting_recipe/roguetown/alchemy,
 		/datum/alch_grind_recipe,
-		/datum/alch_cauldron_recipe
+		/datum/alch_cauldron_recipe,
+		/datum/transmutation_recipe
 		)
 
 /obj/item/recipe_book/brewing
@@ -177,12 +178,13 @@
 
 	types = list(
 		/datum/food_recipe,
-		/datum/stew_recipe,
+		/datum/container_craft,
 		/datum/crafting_recipe/roguetown/cooking,
 		/datum/book_entry/cooking_basics,
 		/datum/book_entry/cooking_ingredients,
 		/datum/book_entry/cooking_pies,
 		/datum/book_entry/cooking_deepfry,
+		/datum/book_entry/container_craft,
 		/datum/book_entry/cuisine
 	)
 

@@ -63,6 +63,7 @@
 // BEGIN_INCLUDE
 #include "anchored_mobs.dm"
 #include "component_tests.dm"
+#include "container_collision.dm"
 #include "craftable_hardset_sellprice.dm"
 #include "create_and_destroy.dm"
 #include "focus_only_tests.dm"
@@ -75,6 +76,7 @@
 #include "timer_sanity.dm"
 #include "unit_test.dm"
 #include "worn_ac_cache.dm"
+#include "zizo_rituals.dm"
 // END_INCLUDE
 
 #ifdef REFERENCE_TRACKING_DEBUG //Don't try and parse this file if ref tracking isn't turned on. IE: don't parse ref tracking please mr linter

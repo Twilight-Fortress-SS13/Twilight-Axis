@@ -23,7 +23,9 @@
 
 /obj/item/clothing/head/roguetown/grenzelhofthat/decorated
 	armor = null
-
+	equip_delay_self = 0
+	unequip_delay_self = 0
+	
 /obj/item/clothing/head/roguetown/twilight_elven_hat
 	name = "elven burka"
 	desc = "A warm hat, designed to protect long elven ears from cold winds of northen Valoria."
@@ -340,3 +342,13 @@
 	icon_state = "etrhat"
 	item_state = "etrhat"
 	color = null
+
+/obj/item/clothing/head/roguetown/roguehood/psydon/confessor/overseer
+	name = "closed hood"
+	desc = "Вы бы не скрывали свое лицо, если бы на то не было причины."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/overseer.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/onmob/overseer_onmob.dmi'
+	icon_state = "overseerhood"
+	item_state = "overseerhood"
+	color = null
+	toggle_icon_state = FALSE

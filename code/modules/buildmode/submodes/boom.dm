@@ -9,7 +9,7 @@
 
 /datum/buildmode_mode/boom/show_help(client/c)
 	to_chat(c, span_notice("***********************************************************"))
-	to_chat(c, span_notice("Mouse Button on obj  = Kaboom"))
+	to_chat(c, span_notice("Mouse Button on obj	= Kaboom"))
 	to_chat(c, span_notice("NOTE: Using the \"Config/Launch Supplypod\" verb allows you to do this in an IC way (i.e., making a cruise missile come down from the sky and explode wherever you click!)"))
 	to_chat(c, span_notice("***********************************************************"))
 
@@ -29,11 +29,15 @@
 	flames = input(c, "Range of flames. -1 to none", text("Input")) as num|null
 	if(flames == null)
 		flames = -1
+	BM.log_action("configured explosion ranges: devastation=[devastation], heavy=[heavy], light=[light], flash=[flash], flames=[flames].") // TA EDIT
 
 /datum/buildmode_mode/boom/handle_click(client/c, params, obj/object)
 	var/list/pa = params2list(params)
 	var/left_click = pa.Find("left")
 
 	if(left_click)
+		var/target_desc = "[object]" // TA EDIT START
+		var/target_type = "[object.type]"
+		var/location_desc = AREACOORD(object) // TA EDIT END
 		explosion(object, devastation, heavy, light, flash, FALSE, TRUE, flames)
-		log_admin("Build Mode: [key_name(c)] caused an explosion(dev=[devastation], hvy=[heavy], lgt=[light], flash=[flash], flames=[flames]) at [AREACOORD(object)]")
+		BM.log_action("caused an explosion on [target_desc] ([target_type]) at [location_desc] with devastation=[devastation], heavy=[heavy], light=[light], flash=[flash], flames=[flames].") // TA EDIT

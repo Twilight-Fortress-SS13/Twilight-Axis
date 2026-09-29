@@ -1,6 +1,7 @@
 /datum/virtue/combat/gunslinger
 	name = "Grenadier Training"
 	desc = "Back in the day I've been conscripted to serve in my liege's military campaign. Over that time, I've received some training in handling gunpowder weapons."
+	ui_fa_icon = "gun"
 	custom_text = "+1 to Firearms, Up to Legendary, Minimum Apprentice. Does not affect classes that have Heavy Armor Training or Critical Resistance."
 	added_stashed_items = list("Ammo bag" = /obj/item/quiver/twilight_bullet/lead_ten,
 								"Powderflask" = /obj/item/twilight_powderflask

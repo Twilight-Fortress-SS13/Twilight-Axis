@@ -68,12 +68,15 @@
 		LAZYREMOVE(user.progressbars, bar.loc)
 
 	animate(bar, alpha = 0, time = PROGRESSBAR_ANIMATION_TIME)
-	addtimer(CALLBACK(src, PROC_REF(remove_from_clients)), PROGRESSBAR_ANIMATION_TIME, TIMER_CLIENT_TIME)
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(remove_progressbar_from_clients), bar), PROGRESSBAR_ANIMATION_TIME, TIMER_CLIENT_TIME)
 	// this may not be necessary but i'm not sure
 	var/list/cell_collection = our_cells.member_cells
 	for(var/datum/grid as anything in cell_collection)
 		UnregisterSignal(grid, SPATIAL_GRID_CELL_ENTERED(SPATIAL_GRID_CONTENTS_TYPE_CLIENTS))
 	our_cells = null
+	if(bar?.loc)
+		UnregisterSignal(bar.loc, COMSIG_MOVABLE_MOVED, PROC_REF(set_new_cells))
+	bar = null
 	return ..()
 
 /datum/progressbar/proc/set_new_cells()
@@ -107,12 +110,9 @@
 		if(observer.client)
 			observer.client.images |= bar // TA EDIT END
 
-/datum/progressbar/proc/remove_from_clients()
+/proc/remove_progressbar_from_clients(image/bar)
 	for(var/client/C in GLOB.clients) // this is genuinely faster than tracking clients we've sent it to
 		C.images -= bar
-	if(bar?.loc)
-		UnregisterSignal(bar.loc, COMSIG_MOVABLE_MOVED, PROC_REF(set_new_cells))
-	bar = null
 
 #undef PROGRESSBAR_ANIMATION_TIME
 #undef PROGRESSBAR_HEIGHT

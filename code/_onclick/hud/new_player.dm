@@ -158,7 +158,7 @@
 	if(!.)
 		return
 
-	hud.mymob.client?.setup_character()
+	hud.mymob.client?.prefs?.ShowChoices(hud.mymob, PREFERENCE_TAB_CHARACTER_CREATOR)
 
 /atom/movable/screen/lobby/button/character_setup/proc/enable_character_setup()
 	SIGNAL_HANDLER
@@ -296,8 +296,9 @@
 	if(!.)
 		return
 
-	var/datum/preferences/prefs = hud.mymob.client?.prefs
-	prefs?.LorePopup(hud.mymob)
+	if(istype(hud.mymob, /mob/dead/new_player))
+		var/mob/dead/new_player/new_player = hud.mymob
+		new_player.do_rp_prompt()
 
 /atom/movable/screen/lobby/button/migration
 	name = "Migration"

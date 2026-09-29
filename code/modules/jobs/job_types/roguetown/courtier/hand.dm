@@ -18,7 +18,7 @@
 	min_pq = 17 //The second most powerful person in the realm...
 	max_pq = null
 	round_contrib_points = 3
-	cmode_music = 'sound/music/cmode/nobility/combat_spymaster.ogg'
+	cmode_music = sound("sound/music/cmode/nobility/combat_spymaster.ogg")
 	job_traits = list(TRAIT_NOBLE, TRAIT_EXPERT_HUNTER)
 	vice_restrictions = list(/datum/charflaw/mute, /datum/charflaw/unintelligible, /datum/charflaw/wanted) //Needs to use the throat - sometimes
 	peopleiknow = list("Court Agent") // TA EDIT
@@ -31,7 +31,7 @@
 	same_job_respawn_delay = 30 MINUTES
 
 /datum/outfit/job/roguetown/hand
-	shoes = /obj/item/clothing/shoes/roguetown/boots/nobleboot
+	shoes = /obj/item/clothing/shoes/roguetown/rosa/ten
 	shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/besilked
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/hand
 	neck = /obj/item/storage/belt/rogue/pouch/coins/mid
@@ -40,15 +40,18 @@
 
 /datum/outfit/job/roguetown/hand/pre_equip(mob/living/carbon/human/H)
 	H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/convertrole/agent)
-	add_verb(H, /datum/job/roguetown/hand/proc/remember_agents)
+	add_verb(H, list(
+		/mob/living/carbon/human/proc/request_outlaw,
+		/datum/job/roguetown/hand/proc/remember_agents
+	))
 
 /datum/job/roguetown/hand/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	. = ..()
-	addtimer(CALLBACK(src, PROC_REF(know_agents), L), 5 SECONDS)
 	if(L)
 		if(ishuman(L))
 			var/mob/living/carbon/human/H = L
-			GLOB.court_spymaster += H.real_name
+			GLOB.court_spymaster[H.real_name] = H
+			addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living/carbon/human, know_agents)), 5 SECONDS)
 
 ///////////
 //CLASSES//
@@ -93,7 +96,7 @@
 	beltr = /obj/item/rogueweapon/scabbard/sword/royal
 	head = /obj/item/clothing/head/roguetown/chaperon/noble/hand
 	armor = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hand
-	pants = /obj/item/clothing/under/roguetown/tights/black
+	pants = /obj/item/clothing/under/roguetown/tights/puritan
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/dtace = 1,
 		/obj/item/rogueweapon/scabbard/sheath/royal = 1,
@@ -144,7 +147,7 @@
 /datum/outfit/job/roguetown/hand/spymaster/pre_equip(mob/living/carbon/human/H)
 	armor = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hand/spymaster
 	backr = /obj/item/storage/backpack/rogue/satchel/short/black
-	belt = /obj/item/storage/belt/rogue/leather/black
+	belt = /obj/item/storage/belt/rogue/leather/plaquegold/noble
 	beltr = /obj/item/rogueweapon/scabbard/sheath/noble
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/dtace = 1,
@@ -160,7 +163,7 @@
 		pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/shadowpants/spymaster
 	else
 		cloak = /obj/item/clothing/cloak/raincloak/mortus //cool spymaster cloak
-		pants = /obj/item/clothing/under/roguetown/tights/black
+		pants = /obj/item/clothing/under/roguetown/tights/puritan
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_RICH, H)
 
@@ -202,13 +205,13 @@
 
 /datum/outfit/job/roguetown/hand/advisor
 	backr = /obj/item/storage/backpack/rogue/satchel/short
-	belt = /obj/item/storage/belt/rogue/leather/plaquegold
+	belt = /obj/item/storage/belt/rogue/leather/plaquegold/noble
 	armor = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hand/advisor
 	r_hand = /obj/item/rogueweapon/sword/rapier/hand
 	beltr = /obj/item/rogueweapon/scabbard/sheath/courtphysician/hand
 	beltl = /obj/item/rogueweapon/huntingknife/idagger/dtace
-	head = /obj/item/clothing/head/roguetown/chaperon/noble/hand
-	pants = /obj/item/clothing/under/roguetown/tights/black
+	head = /obj/item/clothing/head/roguetown/chaperon/noble/hand/advisor
+	pants = /obj/item/clothing/under/roguetown/tights/puritan
 
 //Advisor start. Trades combat skills for more knowledge and skills - for older hands, hands that don't do combat - people who wanna play wizened old advisors.
 /datum/outfit/job/roguetown/hand/advisor/pre_equip(mob/living/carbon/human/H)
@@ -227,21 +230,27 @@
 ///SPELLS & VERBS///
 ////////////////////
 
-/datum/job/roguetown/hand/proc/know_agents(var/mob/living/carbon/human/H)
+
+/mob/living/carbon/human/proc/know_agents()
 	if(!GLOB.court_agents.len)
-		to_chat(H, span_boldnotice("You begun the week with no agents."))
+		to_chat(src, span_boldnotice("I currently have no agents."))
 	else
-		to_chat(H, span_boldnotice("We begun the week with these agents:"))
+		to_chat(src, span_boldnotice("I currently have these agents:"))
 		for(var/name in GLOB.court_agents)
-			to_chat(H, span_greentext(name))
+			to_chat(src, span_greentext(name))
+			var/mob/living/carbon/human/agent = GLOB.court_agents[name]
+			if(agent && istype(agent) && agent.mind)
+				agent.mind.i_know_person(src)
+				src.mind.i_know_person(agent)
 
 /datum/job/roguetown/hand/proc/remember_agents()
 	set name = "Remember Agents"
 	set category = "RoleUnique.Voice of Command"
 
-	to_chat(usr, span_boldnotice("I have these agents present:"))
-	for(var/name in GLOB.court_agents)
-		to_chat(usr, span_greentext(name))
+	if(!ishuman(usr))
+		return
+	var/mob/living/carbon/human/H = usr
+	H.know_agents()
 	return
 
 /obj/effect/proc_holder/spell/self/convertrole/agent
@@ -258,5 +267,90 @@
 	. = ..()
 	if(!.)
 		return
-	GLOB.court_agents += recruit.real_name
+	GLOB.court_agents[recruit.real_name] = recruit
 	add_verb(recruit, /datum/job/roguetown/adventurer/courtagent/proc/remember_employer)
+
+///////////////
+//AGENT FILES//
+///////////////
+
+/obj/item/hand_files
+	name = "\improper sheaf of parchment" // innocuous to the casual observer
+	dropshrink = 0.8
+	desc = "A bound stack of papers. Each one contains details on an Agent of the Court. Useful to a spymaster, invaluable to an enemy of the Crown."
+	var/current_agent
+	icon = 'icons/roguetown/items/misc.dmi'
+	icon_state = "manuscript"
+	dir = WEST
+
+/obj/item/hand_files/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Use the files in your hand to read them. They will update automatically if more agents join the round.")
+	. += span_info("Be very careful with these: if you lose them, you can't get more!")
+
+/obj/item/hand_files/attack_self(mob/user)
+	. = ..()
+	if(!length(GLOB.court_agents))
+		to_chat(user, span_warning("Your files lie fallow; none of your agents are active in the region at the mote."))
+		return
+	refresh_window(user)
+
+/obj/item/hand_files/proc/refresh_window(mob/user)
+	user << browse_rsc('html/book.png')
+	if(!current_agent) // display a table-of-contents menu
+		var/HTML = {"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">
+			<html><head><style type=\"text/css\">
+			body { background-image:url('book.png');background-repeat: repeat; }</style></head><body scroll=yes><div style='
+			font-family: Georgia, Times New Roman, serif;
+			padding: 16px;
+			max-width: 800px;
+			margin: auto;
+			color: black;'><h2 style='margin: 4px; padding:0px;'>Hand's Files: Agents of the Court</h2><hr/><b>Current agents:</b>"}
+		for(var/realname in GLOB.court_agents)
+			HTML += "<br><a href='?src=[REF(src)];agent=[realname]'>[realname]</a>"
+		HTML += "<a href='?src=[REF(src)];close=1' style='position:absolute;right:15px;bottom:15px'>Close</a></div></body></html>"
+		user << browse(HTML, "window=hand_files;size=550x450;can_resize=1")
+	else
+		var/mob/living/carbon/human/agent = GLOB.court_agents[current_agent]
+		if(!agent || !istype(agent) || !agent.mind)
+			to_chat(user, span_warning("Invalid agent. This is a bug."))
+			return
+		var/list/agent_prefs = agent.mind.job_subprefs["Court Agent"]
+		if(!length(agent_prefs))
+			to_chat(user, span_warning("Invalid agent prefs. This is a bug."))
+			return
+		var/codename = agent_prefs["codename"]
+		var/hand_notes_html = agent_prefs["hand_file_notes"]
+
+		var/list/d_list = agent.get_mob_descriptors()
+		var/trait_desc = "[capitalize(build_coalesce_description_nofluff(d_list, agent, list(MOB_DESCRIPTOR_SLOT_TRAIT), "%DESC1%"))]"
+		var/stature_desc = "[capitalize(build_coalesce_description_nofluff(d_list, agent, list(MOB_DESCRIPTOR_SLOT_STATURE), "%DESC1%"))]"
+		var/descriptor_name = "[trait_desc] [stature_desc]"
+		var/HTML = {"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">
+			<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><style type=\"text/css\">
+					body { background-image:url('book.png');background-repeat: repeat; color: #14103f}</style></head><body scroll=yes>
+					<div style='
+			font-family: Georgia, Times New Roman, serif;
+			padding: 16px;
+			max-width: 800px;
+			margin: auto;
+			color: black;'>
+					<h2 style='margin: 4px; padding:0px;'>Agent File: [current_agent]</h2><hr>
+			<b>Agent Name:</b> [current_agent]<br/>[codename ? "<b>Codename:</b> [codename]<br/>":""][(descriptor_name!= " ") ? "<b>Appearance:</b> [descriptor_name]<br/>" : ""]<b>Profession:</b> [agent.get_role_title()]
+			<hr/>
+			[hand_notes_html]
+			<hr/>
+			<a href='?src=[REF(src)];back=1' style='position:absolute;left:15px;bottom:15px'>Back</a><a href='?src=[REF(src)];close=1' style='position:absolute;right:15px;bottom:15px'>Close</a></div></body></html>"}
+
+		user << browse(HTML, "window=hand_files;size=550x450;can_resize=1")
+
+/obj/item/hand_files/Topic(href, href_list)
+	. = ..()
+	if(href_list["close"])
+		usr << browse(null, "window=hand_files")
+	if(href_list["back"])
+		current_agent = null
+		refresh_window(usr)
+	if(href_list["agent"])
+		current_agent = href_list["agent"]
+		refresh_window(usr)

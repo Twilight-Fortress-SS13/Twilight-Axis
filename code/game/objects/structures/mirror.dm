@@ -1,4 +1,135 @@
 //wip wip wup
+
+/datum/intent/style
+	name = "style"
+	desc = "Target the head or skull of someone to begin styling their hair."
+	icon_state = "instyle"
+	chargetime = 0
+	noaa = TRUE
+	candodge = FALSE
+	canparry = FALSE
+	misscost = 0
+	no_attack = TRUE
+	releasedrain = 0
+	blade_class = BCLASS_PUNCH
+
+/proc/perform_mirror_styling(mob/living/user, mob/living/carbon/human/H, atom/source)
+	var/list/options = list("hairstyle", "facial hairstyle")
+	var/chosen = input(user, "What would you like to style?", "Hair Styling") as null|anything in options
+	if(!chosen)
+		return
+
+	switch(chosen)
+		if("hairstyle")
+			var/datum/customizer_choice/bodypart_feature/hair/head/humanoid/hair_choice = CUSTOMIZER_CHOICE(/datum/customizer_choice/bodypart_feature/hair/head/humanoid)
+			var/list/valid_hairstyles = list()
+			for(var/hair_type in hair_choice.sprite_accessories)
+				var/datum/sprite_accessory/hair/head/hair = new hair_type()
+				valid_hairstyles[hair.name] = hair_type
+
+			var/new_style = input(user, "Choose their hairstyle", "Hair Styling") as null|anything in valid_hairstyles
+			if(!new_style)
+				return
+
+			user.visible_message(
+				span_notice("[user] begins styling [H]'s hair..."),
+				span_notice("You begin styling [H == user ? "your" : "[H]'s"] hair...")
+			)
+
+			if(!do_after(user, 30 SECONDS, target = H))
+				to_chat(user, span_warning("The styling was interrupted!"))
+				return
+
+			var/obj/item/bodypart/head/head = H.get_bodypart(BODY_ZONE_HEAD)
+			if(!head || !head.bodypart_features)
+				return
+
+			var/datum/bodypart_feature/hair/head/current_hair = null
+			for(var/datum/bodypart_feature/hair/head/hair_feature in head.bodypart_features)
+				current_hair = hair_feature
+				break
+			if(!current_hair)
+				return
+
+			var/datum/customizer_entry/hair/hair_entry = new()
+			hair_entry.hair_color = current_hair.hair_color
+
+			// Preserve gradients and their colors.
+			hair_entry.natural_gradient = current_hair.natural_gradient
+			hair_entry.natural_color = current_hair.natural_color
+
+			if(hasvar(current_hair, "hair_dye_gradient"))
+				hair_entry.dye_gradient = current_hair.hair_dye_gradient
+			if(hasvar(current_hair, "hair_dye_color"))
+				hair_entry.dye_color = current_hair.hair_dye_color
+
+			var/datum/bodypart_feature/hair/head/new_hair = new()
+			new_hair.set_accessory_type(valid_hairstyles[new_style], hair_entry.hair_color, H)
+			hair_choice.customize_feature(new_hair, H, null, hair_entry)
+
+			head.remove_bodypart_feature(current_hair)
+			head.add_bodypart_feature(new_hair)
+			H.update_hair()
+
+			playsound(source, 'sound/items/flint.ogg', 50, TRUE)
+			user.visible_message(
+				span_notice("[user] finishes styling [H]'s hair."),
+				span_notice("You finish styling [H == user ? "your" : "[H]'s"] hair.")
+			)
+
+		if("facial hairstyle")
+			if(H.gender != MALE)
+				to_chat(user, span_warning("[H == user ? "You don't" : "They don't"] have facial hair to style!"))
+				return
+
+			var/datum/customizer_choice/bodypart_feature/hair/facial/humanoid/facial_choice = CUSTOMIZER_CHOICE(/datum/customizer_choice/bodypart_feature/hair/facial/humanoid)
+			var/list/valid_facial_hairstyles = list()
+			for(var/facial_type in facial_choice.sprite_accessories)
+				var/datum/sprite_accessory/hair/facial/facial = new facial_type()
+				valid_facial_hairstyles[facial.name] = facial_type
+
+			var/new_style = input(user, "Choose their facial hairstyle", "Hair Styling") as null|anything in valid_facial_hairstyles
+			if(!new_style)
+				return
+
+			user.visible_message(
+				span_notice("[user] begins styling [H]'s facial hair..."),
+				span_notice("You begin styling [H == user ? "your" : "[H]'s"] facial hair...")
+			)
+			if(!do_after(user, 60 SECONDS, target = H))
+				to_chat(user, span_warning("The styling was interrupted!"))
+				return
+
+			var/obj/item/bodypart/head/head = H.get_bodypart(BODY_ZONE_HEAD)
+			if(!head || !head.bodypart_features)
+				return
+
+			var/datum/bodypart_feature/hair/facial/current_facial = null
+			for(var/datum/bodypart_feature/hair/facial/facial_feature in head.bodypart_features)
+				current_facial = facial_feature
+				break
+			if(!current_facial)
+				return
+
+			var/datum/customizer_entry/hair/facial/facial_entry = new()
+			facial_entry.hair_color = current_facial.hair_color
+			facial_entry.accessory_type = current_facial.accessory_type
+
+			var/datum/bodypart_feature/hair/facial/new_facial = new()
+			new_facial.set_accessory_type(valid_facial_hairstyles[new_style], facial_entry.hair_color, H)
+			facial_choice.customize_feature(new_facial, H, null, facial_entry)
+
+			head.remove_bodypart_feature(current_facial)
+			head.add_bodypart_feature(new_facial)
+			H.update_hair()
+
+			playsound(source, 'sound/items/flint.ogg', 50, TRUE)
+			user.visible_message(
+				span_notice("[user] finishes styling [H]'s facial hair."),
+				span_notice("You finish styling [H == user ? "your" : "[H]'s"] facial hair.")
+			)
+	return TRUE
+
 /obj/structure/mirror
 	name = "mirror"
 	desc = "Mirror, mirror, on the wall..."
@@ -29,7 +160,7 @@
 		return
 
 	var/mob/living/carbon/human/H = user
-	
+
 	if(obj_broken || !Adjacent(user))
 		return
 
@@ -47,7 +178,21 @@
 			H.add_stress(/datum/stressevent/unseemly)
 		return
 	else
-		perform_mirror_transform(H)
+		perform_mirror_transform_ui(H, src) // TA EDIT
+
+/obj/structure/mirror/attack_right(mob/user)
+	if(type != /obj/structure/mirror && type != /obj/structure/mirror/fancy)
+		return ..()
+	if(obj_broken || !ishuman(user) || !user.Adjacent(src))
+		return
+	var/mob/living/carbon/human/H = user
+	perform_mirror_styling(H, H, src)
+	return
+
+/obj/structure/mirror/get_mechanics_examine(mob/user)
+	. = ..()
+	if(type == /obj/structure/mirror || type == /obj/structure/mirror/fancy)
+		. += span_info("Right-click the mirror to style your hair.")
 
 /obj/structure/mirror/examine_status(mob/user)
 	if(obj_broken)
@@ -158,7 +303,7 @@
 			H.set_species(newrace, icon_update=0)
 
 			if(H.dna.species.use_skintones)
-				var/new_s_tone = input(user, "Choose your skin tone:", "Race change")  as null|anything in GLOB.skin_tones
+				var/new_s_tone = input(user, "Choose your skin tone:", "Race change")	as null|anything in GLOB.skin_tones
 				if(!user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
 					return
 
@@ -225,7 +370,7 @@
 			for(var/accessory_type in accessory_choice.sprite_accessories)
 				var/datum/sprite_accessory/accessory/acc = new accessory_type()
 				valid_accessories[acc.name] = accessory_type
-			
+
 			var/new_style = input(user, "Choose your accessory", "Accessory Styling") as null|anything in valid_accessories
 			if(new_style)
 				var/obj/item/bodypart/head/head = H.get_bodypart(BODY_ZONE_HEAD)
@@ -234,7 +379,7 @@
 					for(var/datum/bodypart_feature/accessory/old_acc in head.bodypart_features)
 						head.remove_bodypart_feature(old_acc)
 						break
-					
+
 					// Add new accessory if not "none"
 					if(new_style != "none")
 						var/datum/bodypart_feature/accessory/accessory_feature = new()
@@ -248,7 +393,7 @@
 			for(var/detail_type in face_choice.sprite_accessories)
 				var/datum/sprite_accessory/face_detail/detail = new detail_type()
 				valid_details[detail.name] = detail_type
-			
+
 			var/new_detail = input(user, "Choose your face detail", "Face Detail") as null|anything in valid_details
 			if(new_detail)
 				var/obj/item/bodypart/head/head = H.get_bodypart(BODY_ZONE_HEAD)
@@ -257,7 +402,7 @@
 					for(var/datum/bodypart_feature/face_detail/old_detail in head.bodypart_features)
 						head.remove_bodypart_feature(old_detail)
 						break
-					
+
 					// Add new face detail if not "none"
 					if(new_detail != "none")
 						var/datum/bodypart_feature/face_detail/detail_feature = new()
@@ -276,9 +421,25 @@
 	desc = "Mirror, mirror, in my hand, who's the fairest in the land?"
 	icon = 'icons/roguetown/items/misc.dmi'
 	icon_state = "handmirror"
+	possible_item_intents = list(/datum/intent/use, /datum/intent/style)
 	grid_width = 32
 	grid_height = 64
 	dropshrink = 0.8
+
+/obj/item/handmirror/attack(mob/living/M, mob/living/user)
+	if(user.used_intent.type == /datum/intent/style)
+		if(!ishuman(M))
+			return TRUE
+		if(user.zone_selected != BODY_ZONE_HEAD && user.zone_selected != BODY_ZONE_PRECISE_SKULL)
+			return TRUE
+		var/mob/living/carbon/human/H = M
+		perform_mirror_styling(user, H, src)
+		return TRUE
+	return ..()
+
+/obj/item/handmirror/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Use the 'STYLE' intent while targeting someone's head or skull to style their hair.")
 
 /obj/item/handmirror/attack_self(mob/user)
 	if(!ishuman(user))
@@ -289,7 +450,7 @@
 	if(HAS_TRAIT(H, TRAIT_MIRROR_MAGIC) || HAS_TRAIT(H, TRAIT_EDIT_DESCRIPTORS))
 		to_chat(H, span_info("You tilt your jaw from side to side, concentrating on the glamoring magicks limning your form..."))
 		if(do_after(H, 3 SECONDS))
-			perform_mirror_transform(H)
+			perform_mirror_transform_ui(H, src) // TA EDIT
 		return
 
 	if(HAS_TRAIT(user, TRAIT_BEAUTIFUL))
@@ -299,7 +460,7 @@
 		if(prob(50) && !H.has_stress_event(/datum/stressevent/uncanny) && !H.has_stress_event(/datum/stressevent/beautiful))
 			H.add_stress(/datum/stressevent/beautiful)
 			H.visible_message(span_notice("[H] admires [H.p_their()] reflection in [src]."), span_smallgreen("I look great.. From this angle."))
-		else 
+		else
 			if(!H.has_stress_event(/datum/stressevent/beautiful) && !H.has_stress_event(/datum/stressevent/uncanny))
 				H.add_stress(/datum/stressevent/uncanny)
 				H.visible_message(span_notice("[H] admires [H.p_their()] reflection in [src]."), span_warning("I look like a monster from this angle..."))

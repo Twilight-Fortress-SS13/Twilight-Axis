@@ -14,10 +14,10 @@
 //Misc mob defines
 
 //for vision cone
-#define FOV_DEFAULT 	           	(1<<0)
-#define FOV_RIGHT 	            	(1<<1)
-#define FOV_LEFT 	            	(1<<2)
-#define FOV_BEHIND 	 	          	(1<<3) //180
+#define FOV_DEFAULT					(1<<0)
+#define FOV_RIGHT					(1<<1)
+#define FOV_LEFT					(1<<2)
+#define FOV_BEHIND							(1<<3) //180
 
 //Ready states at roundstart for mob/dead/new_player
 #define PLAYER_NOT_READY 0
@@ -26,7 +26,7 @@
 
 //movement intent defines for the m_intent var
 #define MOVE_INTENT_WALK "walk"
-#define MOVE_INTENT_RUN  "run"
+#define MOVE_INTENT_RUN	"run"
 #define MOVE_INTENT_SNEAK "sneak"
 
 //resist
@@ -42,7 +42,7 @@
 #define BLOOD_VOLUME_BAD 224
 #define BLOOD_VOLUME_SURVIVE 122
 
-/// Blood pool regeneration in non-vampiric living mobs per SSmobs tick. 
+/// Blood pool regeneration in non-vampiric living mobs per SSmobs tick.
 #define BLOODPOL_REGEN 2
 
 //Sizes of mobs, used by mob/living/var/mob_size
@@ -52,8 +52,8 @@
 #define MOB_SIZE_LARGE 3
 
 //Ventcrawling defines
-#define VENTCRAWLER_NONE   0
-#define VENTCRAWLER_NUDE   1
+#define VENTCRAWLER_NONE	0
+#define VENTCRAWLER_NUDE	1
 #define VENTCRAWLER_ALWAYS 2
 
 //Bloodcrawling defines
@@ -61,23 +61,23 @@
 #define BLOODCRAWL_EAT 2
 
 //Mob bio-types flags
-#define MOB_ORGANIC 	1 << 0
+#define MOB_ORGANIC	1 << 0
 #define MOB_MINERAL		1 << 1
-#define MOB_ROBOTIC 	1 << 2
+#define MOB_ROBOTIC	1 << 2
 #define MOB_UNDEAD		1 << 3
-#define MOB_HUMANOID 	1 << 4
-#define MOB_BUG 		1 << 5
+#define MOB_HUMANOID	1 << 4
+#define MOB_BUG		1 << 5
 #define MOB_BEAST		1 << 6
 #define MOB_EPIC		1 << 7 //megafauna
 #define MOB_REPTILE		1 << 8
 #define MOB_SPIRIT		1 << 9
 
 //Organ defines for carbon mobs
-#define ORGAN_ORGANIC   1
-#define ORGAN_ROBOTIC   2
+#define ORGAN_ORGANIC	1
+#define ORGAN_ROBOTIC	2
 
-#define BODYPART_ORGANIC   1
-#define BODYPART_ROBOTIC   2
+#define BODYPART_ORGANIC	1
+#define BODYPART_ROBOTIC	2
 
 #define BODYPART_NOT_DISABLED 0
 #define BODYPART_DISABLED_DAMAGE 1
@@ -124,11 +124,11 @@
 #define BRAIN_TRAUMA_SPECIAL /datum/brain_trauma/special
 #define BRAIN_TRAUMA_MAGIC /datum/brain_trauma/magic
 
-#define TRAUMA_RESILIENCE_BASIC 1      //Curable with chems
-#define TRAUMA_RESILIENCE_SURGERY 2    //Curable with brain surgery
-#define TRAUMA_RESILIENCE_LOBOTOMY 3   //Curable with lobotomy
-#define TRAUMA_RESILIENCE_MAGIC 4      //Curable only with magic
-#define TRAUMA_RESILIENCE_ABSOLUTE 5   //This is here to stay
+#define TRAUMA_RESILIENCE_BASIC 1		//Curable with chems
+#define TRAUMA_RESILIENCE_SURGERY 2	//Curable with brain surgery
+#define TRAUMA_RESILIENCE_LOBOTOMY 3	//Curable with lobotomy
+#define TRAUMA_RESILIENCE_MAGIC 4		//Curable only with magic
+#define TRAUMA_RESILIENCE_ABSOLUTE 5	//This is here to stay
 
 //Limit of traumas for each resilience tier
 #define TRAUMA_LIMIT_BASIC 3
@@ -224,8 +224,8 @@
 #define SLIME_EXTRACT_CROSSING_REQUIRED 10
 
 //Slime commands defines
-#define SLIME_FRIENDSHIP_FOLLOW 			3 //Min friendship to order it to follow
-#define SLIME_FRIENDSHIP_STOPEAT 			5 //Min friendship to order it to stop eating someone
+#define SLIME_FRIENDSHIP_FOLLOW			3 //Min friendship to order it to follow
+#define SLIME_FRIENDSHIP_STOPEAT			5 //Min friendship to order it to stop eating someone
 #define SLIME_FRIENDSHIP_STOPEAT_NOANGRY	7 //Min friendship to order it to stop eating someone without it losing friendship
 #define SLIME_FRIENDSHIP_STOPCHASE			4 //Min friendship to order it to stop chasing someone (their target)
 #define SLIME_FRIENDSHIP_STOPCHASE_NOANGRY	6 //Min friendship to order it to stop chasing someone (their target) without it losing friendship
@@ -255,12 +255,12 @@
 #define NPC_AI_RETREAT	3
 #define NPC_AI_HUNT		4
 #define NPC_AI_FLEE		5
-#define NPC_AI_SLEEP    6
+#define NPC_AI_SLEEP	6
 
 //determines if a mob can smash through it
 #define ENVIRONMENT_SMASH_NONE			0
-#define ENVIRONMENT_SMASH_STRUCTURES	(1<<0) 	//crates, lockers, ect
-#define ENVIRONMENT_SMASH_WALLS			(1<<1)  //walls
+#define ENVIRONMENT_SMASH_STRUCTURES	(1<<0)	//crates, lockers, ect
+#define ENVIRONMENT_SMASH_WALLS			(1<<1)	//walls
 #define ENVIRONMENT_SMASH_RWALLS		(1<<2)	//rwalls
 
 #define NO_SLIP_WHEN_WALKING	(1<<0)
@@ -334,6 +334,70 @@
 #define OFFSET_HANDS_F "handsf"
 #define OFFSET_UNDIES_F "underwearf"
 
+// Body builds: alternate silhouettes a character can be rendered on, independent of their species.
+// Each build owns a limb sprite per gender and one offset table shared by every species offering it,
+// so clothing lines up with the body being drawn rather than with the species' native proportions.
+// BULKY is the mt.dmi/ft_muscular.dmi silhouette (masculine clothing cut); SLIM is mem.dmi/fm.dmi
+// (feminine cut, as elves have always rendered). See /datum/species/allowed_body_builds.
+#define BODY_BUILD_BULKY "bulky"
+#define BODY_BUILD_SLIM "slim"
+/// The old Wood Elf male sprite: the slim body raised a pixel. Masculine only, and offered to elves alone.
+#define BODY_BUILD_ELVEN "elven"
+/// Every build, in the order they should be listed to the player.
+#define ALL_BODY_BUILDS list(BODY_BUILD_BULKY, BODY_BUILD_SLIM, BODY_BUILD_ELVEN)
+/// The two builds any human-shaped species can offer.
+#define STANDARD_BODY_BUILDS list(BODY_BUILD_BULKY, BODY_BUILD_SLIM)
+
+// Offset table for the bulky build, tuned for the shared mt.dmi/ft_muscular.dmi silhouette. Taken from
+// Human's own offsets, which every mt.dmi species had already converged on identically. Both genders read
+// the masculine (OFFSET_X) keys here, since the bulky female body is pixel-identical to the male one.
+#define OFFSET_FEATURES_BULKY_REFERENCE list(\
+	OFFSET_ID = list(0,1), OFFSET_GLOVES = list(0,1), OFFSET_WRISTS = list(0,1),\
+	OFFSET_CLOAK = list(0,1), OFFSET_FACEMASK = list(0,1), OFFSET_HEAD = list(0,1), \
+	OFFSET_FACE = list(0,1), OFFSET_BELT = list(0,1), OFFSET_BACK = list(0,1), \
+	OFFSET_NECK = list(0,1), OFFSET_MOUTH = list(0,1), OFFSET_PANTS = list(0,1), \
+	OFFSET_SHIRT = list(0,1), OFFSET_ARMOR = list(0,1), OFFSET_HANDS = list(0,1), OFFSET_UNDIES = list(0,1), \
+	OFFSET_ID_F = list(0,-1), OFFSET_GLOVES_F = list(0,0), OFFSET_WRISTS_F = list(0,0), OFFSET_HANDS_F = list(0,0), \
+	OFFSET_CLOAK_F = list(0,0), OFFSET_FACEMASK_F = list(0,-1), OFFSET_HEAD_F = list(0,-1), \
+	OFFSET_FACE_F = list(0,-1), OFFSET_BELT_F = list(0,0), OFFSET_BACK_F = list(0,-1), \
+	OFFSET_NECK_F = list(0,-1), OFFSET_MOUTH_F = list(0,-1), OFFSET_PANTS_F = list(0,0), \
+	OFFSET_SHIRT_F = list(0,0), OFFSET_ARMOR_F = list(0,0), OFFSET_UNDIES_F = list(0,-1), \
+	)
+
+// Offset table for the slim build, tuned for the shared mem.dmi/fm.dmi silhouette. The masculine keys come
+// from the Sun/Dark Elf table (mem.dmi sits one pixel below mt.dmi, so most slots are the bulky value minus
+// one); the feminine keys are the fm.dmi values every human-shaped species already shared. Males on this
+// build read the masculine keys and females the feminine ones, as elves have always done.
+#define OFFSET_FEATURES_SLIM_REFERENCE list(\
+	OFFSET_ID = list(0,0), OFFSET_GLOVES = list(0,-1), OFFSET_WRISTS = list(0,-1), OFFSET_HANDS = list(0,0), \
+	OFFSET_CLOAK = list(0,1), OFFSET_FACEMASK = list(0,0), OFFSET_HEAD = list(0,0), \
+	OFFSET_FACE = list(0,0), OFFSET_BELT = list(0,0), OFFSET_BACK = list(0,0), \
+	OFFSET_NECK = list(0,0), OFFSET_MOUTH = list(0,0), OFFSET_PANTS = list(0,0), \
+	OFFSET_SHIRT = list(0,1), OFFSET_ARMOR = list(0,1), OFFSET_UNDIES = list(0,0), \
+	OFFSET_ID_F = list(0,-1), OFFSET_GLOVES_F = list(0,0), OFFSET_WRISTS_F = list(0,0), OFFSET_HANDS_F = list(0,0), \
+	OFFSET_CLOAK_F = list(0,0), OFFSET_FACEMASK_F = list(0,-1), OFFSET_HEAD_F = list(0,-1), \
+	OFFSET_FACE_F = list(0,-1), OFFSET_BELT_F = list(0,0), OFFSET_BACK_F = list(0,-1), \
+	OFFSET_NECK_F = list(0,-1), OFFSET_MOUTH_F = list(0,-1), OFFSET_PANTS_F = list(0,0), \
+	OFFSET_SHIRT_F = list(0,0), OFFSET_ARMOR_F = list(0,0), OFFSET_UNDIES_F = list(0,-1), \
+	)
+
+// Offset table for the elven build: the slim table raised a pixel, except on the legs and arms. A raised body lifts
+// the torso but leaves the feet planted, so the leg slots keep their slim values while everything hanging
+// off the body moves up with it. Written out in full so it reads the same way as its two neighbours.
+#define OFFSET_FEATURES_ELVEN_REFERENCE list(\
+	OFFSET_ID = list(0,1), OFFSET_GLOVES = list(0,0), OFFSET_WRISTS = list(0,0), \
+	OFFSET_HANDS = list(0,0), OFFSET_CLOAK = list(0,2), OFFSET_FACEMASK = list(0,1), \
+	OFFSET_HEAD = list(0,1), OFFSET_FACE = list(0,1), OFFSET_BELT = list(0,1), \
+	OFFSET_BACK = list(0,1), OFFSET_NECK = list(0,1), OFFSET_MOUTH = list(0,1), \
+	OFFSET_PANTS = list(0,0), OFFSET_SHIRT = list(0,2), OFFSET_ARMOR = list(0,2), \
+	OFFSET_UNDIES = list(0,1), OFFSET_ID_F = list(0,0), OFFSET_GLOVES_F = list(0,1), \
+	OFFSET_WRISTS_F = list(0,1), OFFSET_HANDS_F = list(0,1), OFFSET_CLOAK_F = list(0,1), \
+	OFFSET_FACEMASK_F = list(0,0), OFFSET_HEAD_F = list(0,0), OFFSET_FACE_F = list(0,0), \
+	OFFSET_BELT_F = list(0,1), OFFSET_BACK_F = list(0,0), OFFSET_NECK_F = list(0,0), \
+	OFFSET_MOUTH_F = list(0,0), OFFSET_PANTS_F = list(0,0), OFFSET_SHIRT_F = list(0,1), \
+	OFFSET_ARMOR_F = list(0,1), OFFSET_UNDIES_F = list(0,0), \
+	)
+
 //MINOR TWEAKS/MISC
 #define AGE_MIN				18	//youngest a character can be
 #define AGE_MAX				85	//oldest a character can be
@@ -380,15 +444,15 @@
 //Badmin magic mirror
 #define MIRROR_BADMIN (1<<0)
 //Standard magic mirror (wizard)
-#define MIRROR_MAGIC  (1<<1)
+#define MIRROR_MAGIC	(1<<1)
 //Pride ruin mirror
-#define MIRROR_PRIDE  (1<<2)
+#define MIRROR_PRIDE	(1<<2)
 //Race swap wizard event
-#define RACE_SWAP     (1<<3)
+#define RACE_SWAP		(1<<3)
 //xenobio black crossbreed
 #define SLIME_EXTRACT (1<<5)
 //Wabbacjack staff projectiles
-#define WABBAJACK     (1<<6)
+#define WABBAJACK		(1<<6)
 
 #define SLEEP_CHECK_DEATH(X) sleep(X); if(QDELETED(src) || stat == DEAD) return;
 
@@ -422,6 +486,9 @@
 #define SKIN_COLOR_AISEEDRYNN "a3c1c9"
 #define SKIN_COLOR_GRENDUSKRA "8b8585"
 #define SKIN_COLOR_HUNSEK "6c6799"
+#define SKIN_COLOR_SSCHINDYLRYN "141e33"
+#define SKIN_COLOR_KARSOLUTHIYL "292929"
+#define SKIN_COLOR_IMBERLUR "1c1c1c"
 
 //GNOME UNIQUE SKIN TONES
 #define SKIN_COLOR_ASHEN "A79E96"
@@ -449,8 +516,8 @@
 #define SKIN_COLOR_MORNING "dbaB8f"
 #define SKIN_COLOR_NOON "be8f73"
 #define SKIN_COLOR_EVENING "a57962"
-#define SKIN_COLOR_SUNSET "7B5752"  
-#define SKIN_COLOR_DUSK "564044" 
+#define SKIN_COLOR_SUNSET "7B5752"
+#define SKIN_COLOR_DUSK "564044"
 #define SKIN_COLOR_GILDED "e1b772"
 #define SKIN_COLOR_SELFAMBER "c9aa79"
 #define SKIN_COLOR_SELFTOPAZ "b19d68"
@@ -468,8 +535,10 @@
 #define SKIN_COLOR_SHALVISTINE "ac8369"
 #define SKIN_COLOR_LALVESTINE "9c6f52"
 #define SKIN_COLOR_NALEDI "4e3729"
-#define SKIN_COLOR_KAZENGUN "dbcca9"
 #define SKIN_COLOR_NALEDI_LIGHT "5d4c41"
+#define SKIN_COLOR_NALEDI_B "602f1c"
+#define SKIN_COLOR_NALEDI_D "1c100b"
+#define SKIN_COLOR_KAZENGUN "dbcca9"
 
 //DULLAHAN SKIN TONES
 #define SKIN_COLOR_PALE_GRENZELHOFT "ebdad2"
@@ -491,6 +560,16 @@
 #define SKIN_COLOR_NECRAL "23130c"
 #define SKIN_COLOR_ABYSSAL "22577a"
 #define SKIN_COLOR_FIGULUS "9f8251"
+#define SKIN_COLOR_SHALE "302c2c"
+#define SKIN_COLOR_CORAL "8c4b45"
+#define SKIN_COLOR_DEEP_ABYSSAL "283342"
+#define SKIN_COLOR_WALNUT "594f51"
+#define SKIN_COLOR_WOODEN "73513d"
+#define SKIN_COLOR_GRANITE "686764"
+#define SKIN_COLOR_HUSHER "a57dc7"
+#define SKIN_COLOR_MAHOGANY "593520"
+#define SKIN_COLOR_WINTERMUTE "7da0a1"
+#define SKIN_COLOR_BLOOD "9e2f2f"
 
 //HALF ELF SKIN TONES
 #define SKIN_COLOR_GRENZEL_AVAR "fff0e9"
@@ -518,6 +597,9 @@
 #define SKIN_COLOR_MURKWALKER "716646"
 #define SKIN_COLOR_SHATTERHORN "D6D5E2"
 #define SKIN_COLOR_SPIRITCRUSHER "9D4D62"
+#define SKIN_COLOR_IRON_SPLINTER "5E575E"
+#define SKIN_COLOR_GLASS_CRAG "4F2519"
+#define SKIN_COLOR_DAEMONSCAR "4E3729"
 
 //TIEFLING SKIN TONES
 #define SKIN_COLOR_NESSYSS "C62D4C"
@@ -589,7 +671,7 @@
 #define LIGHTBROWN_FUR "6d4530"
 #define WHITEBROWN_FUR "c69b83"
 #define DARKBROWN_FUR "3b2e27"
-#define BLACK_FUR	 "271f1a"
+#define BLACK_FUR		"271f1a"
 
 // Pixel shifting
 #define PIXEL_SHIFT_MAXIMUM 16
@@ -607,7 +689,7 @@
 
 // #define NPC_THINK_DEBUG_WORLD
 #ifdef NPC_THINK_DEBUG_WORLD
-#define AI_WORLD_THINK(pawn, message) to_chat(world, "<span class='boldannounce'>\[AI-WORLD\] [pawn]: [message]</span>")
+#define AI_WORLD_THINK(pawn, message) to_world("<span class='boldannounce'>\[AI-WORLD\] [pawn]: [message]</span>")
 #else
 #define AI_WORLD_THINK(pawn, message)
 #endif

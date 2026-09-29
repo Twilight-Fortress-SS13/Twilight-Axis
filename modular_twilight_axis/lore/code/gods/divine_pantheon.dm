@@ -58,22 +58,24 @@
 	translated_name = "Астрата"
 	rusgodnames = list(
 		"Астрата", "Астраты", "Астрате", "Астрату", "Астратой", "Астрате",
-		"Солнцеликая", "Солнцеликой", "Солнцеликой", "Солнцеликую", "Солнцеликой", "Солнцеликой",
-		"Лучезарная", "Лучезарной", "Лучезарной", "Лучезарную", "Лучезарной", "Лучезарной",
+		"Солнцеликая", "Солнцеликой", "Солнцеликую",
+		"Лучезарная", "Лучезарной", "Лучезарную", "Лучезарное", "Лучезарному",
 		"Первородная Дочь", "Первородной Дочери", "Первородной Дочери", "Первородную Дочь",
-		"Первородной Дочерью", "Первородной Дочери"
+		"Первородной Дочерью", "Первородной Дочери",
+		"Тиран", "Тирану", "Солнце Тиран", "Солнце-Тиран",
 	)
 	miracles = list(/datum/action/cooldown/spell/touch/orison								= CLERIC_ORI,
-					/obj/effect/proc_holder/spell/invoked/TAignition						= CLERIC_T0,
+					/datum/action/cooldown/spell/TAignition					             	= CLERIC_T0,
 					/obj/effect/proc_holder/spell/self/TAastrata_gaze						= CLERIC_T0,
 					/obj/effect/proc_holder/spell/targeted/touch/summonrogueweapon/TAastratagrasp = CLERIC_T0,
 					/obj/effect/proc_holder/spell/self/TAastrata_fireresist					= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/heal								= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/bloodmiracle						= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/projectile/TAsacred_flame			= CLERIC_T1,
-			//		/obj/effect/proc_holder/spell/self/TAastrata_sword						= CLERIC_T1,
+					///obj/effect/proc_holder/spell/self/TAastrata_sword						= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/TAastrataspark					= CLERIC_T2,
 					/datum/action/cooldown/spell/miracle/fortify/astrata					= CLERIC_T2,
+					/datum/action/cooldown/spell/astrata/miracle_pyre   					= CLERIC_T3,
 					/obj/effect/proc_holder/spell/invoked/TArevive							= CLERIC_T3,
 					/obj/effect/proc_holder/spell/invoked/immolation						= CLERIC_T4,
 					/obj/effect/proc_holder/spell/invoked/TAsunstrike						= CLERIC_T4,
@@ -301,9 +303,9 @@
 	desc = "Огненный Бог-Кузнец, первый из вознесённых смертных, покровитель трудящихся, тот, что несет ремесло и создание наравне с закалкой своей души. «Труд - уже награда». Малум известен как своим равнодушием, так и строгостью к последователям, куда более его радуют их творения."
 	worshippers = "Кузнецы, строители, архитекторы, каменщики, рабочие."
 	miracles = list(/datum/action/cooldown/spell/touch/orison					= CLERIC_ORI,
-					/obj/effect/proc_holder/spell/invoked/TArestoration		= CLERIC_T0,
-					/obj/effect/proc_holder/spell/self/TArepair				= CLERIC_T0,
-					/obj/effect/proc_holder/spell/invoked/TArework				= CLERIC_T1,
+					/obj/effect/proc_holder/spell/invoked/TArestoration			= CLERIC_T0,
+					/obj/effect/proc_holder/spell/self/TArepair					= CLERIC_T0,
+					/obj/effect/proc_holder/spell/invoked/TAmalum_inspiration	= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/heal					= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/bloodmiracle			= CLERIC_T1,
 					/datum/action/cooldown/spell/arcyne_forge/miracle			= CLERIC_T1,

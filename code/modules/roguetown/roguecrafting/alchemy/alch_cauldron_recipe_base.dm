@@ -3,7 +3,7 @@
 	var/name = "" //The name of the recipe, kinda there just in case.
 	var/category = "Potions"
 	var/smells_like = "nothing" //cauldron emits this smell when done, and alchemists can sniff ingredients to find what they do
-	var/skill_required = SKILL_LEVEL_APPRENTICE // Minimum skill to create this recipe successfully (It just won't mix otherwise) - Minimum Apprentice 
+	var/skill_required = SKILL_LEVEL_APPRENTICE // Minimum skill to create this recipe successfully (It just won't mix otherwise) - Minimum Apprentice
 	var/list/output_reagents = list() //list of paths of new reagents to create in the cauldron. Remember, 1 oz is 3 units! [reagent = amnt]
 	var/list/output_items = list() //List of paths for new items that should be created, [path = chance to be created]
 
@@ -19,18 +19,23 @@
 		<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'/>
 		<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
 		<body>
-		  <div>
-		    <h1>[name]</h1>
+			<div>
+			<h1>[name]</h1>
 		"}
 
-	html += "Requires [SSskills.level_names_plain[skill_required]] level of skills<br>"
-	
+	if(length(output_reagents) == 1) // true for most potion-brewing recipes
+		var/datum/reagent/result = output_reagents[1]
+		if(result::description)
+			html += "<h4>Description</h4><span>[result::description]</span><br><br>"
+
+	html += "Requires [SSskills.level_names_plain[skill_required]] level of skills<br><br>"
+
 	html += "Boil 90+ drams of water in a Cauldron.<br>"
 
-	html += "Add at least two ingredients with the smell of [smells_like]<br>"
+	html += "Add [(istype(src, /datum/alch_cauldron_recipe/trait) || istype(src, /datum/alch_cauldron_recipe/repairelixir)) ? "a reagent" : "at least two ingredients"] with the smell of [smells_like].<br>"
 
 	if(output_reagents.len)
-		html += "<div><strong>Creates:</strong><br>"
+		html += "<br><div><strong>Creates:</strong><br>"
 		for(var/path as anything in output_reagents)
 			var/count = output_reagents[path]
 			if(ispath(path, /datum/reagent))
