@@ -82,13 +82,13 @@
 	last_attack_trigger_time = world.time
 	if(!prob(trigger_chance))
 		return 0
-	on_condition_met()
+	INVOKE_ASYNC(src, PROC_REF(on_condition_met))
 	return 0
 
 /datum/contractor_curse/conditional/proc/on_sex_action(datum/source, power = 1, forced = 0, active = TRUE, stage = 1, tick_count = 1, datum/link = null)
 	SIGNAL_HANDLER
 	if(condition_matches("sex_process") && prob(trigger_chance))
-		on_condition_met()
+		INVOKE_ASYNC(src, PROC_REF(on_condition_met))
 	return 0
 
 /datum/contractor_curse/conditional/proc/on_climax(datum/source, source_type = CONTRACTOR_CLIMAX_SOURCE_ANY)
@@ -99,19 +99,19 @@
 		return 0
 	if(!prob(trigger_chance))
 		return 0
-	on_condition_met()
+	INVOKE_ASYNC(src, PROC_REF(on_condition_met))
 	return 0
 
 /datum/contractor_curse/conditional/proc/on_eat(datum/source)
 	SIGNAL_HANDLER
 	if(condition_matches("eat") && prob(trigger_chance))
-		on_condition_met()
+		INVOKE_ASYNC(src, PROC_REF(on_condition_met))
 	return 0
 
 /datum/contractor_curse/conditional/proc/on_sleep(datum/source)
 	SIGNAL_HANDLER
 	if(condition_matches("sleep") && prob(trigger_chance))
-		on_condition_met()
+		INVOKE_ASYNC(src, PROC_REF(on_condition_met))
 	return 0
 
 /datum/contractor_curse/conditional/proc/on_say(mob/source, list/speech_args)
@@ -126,7 +126,7 @@
 	else
 		message = "[speech_args]"
 	if(findtext(lowertext(message), lowertext(required_phrase)) && prob(trigger_chance))
-		on_condition_met()
+		INVOKE_ASYNC(src, PROC_REF(on_condition_met))
 	return 0
 
 /datum/contractor_curse/conditional/fire_contract_fulfillment(datum/contractor_contract/contract, reason)

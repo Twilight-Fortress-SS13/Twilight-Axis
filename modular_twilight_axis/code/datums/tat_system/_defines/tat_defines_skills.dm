@@ -131,7 +131,6 @@
 	/datum/virtue/utility/noble = list(/datum/skill/misc/reading = 1), \
 	/datum/virtue/utility/intellectual = list(/datum/skill/misc/reading = 3), \
 	/datum/virtue/utility/performer = list(/datum/skill/misc/music = 4), \
-	/datum/virtue/utility/granary = list(/datum/skill/craft/cooking = 3, /datum/skill/labor/fishing = 2), \
 	/datum/virtue/utility/homesteader = list(/datum/skill/labor/farming = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/mining = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/cooking = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/fishing = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/butchering = TAT_SKILL_BASIC_BOOST, /datum/skill/labor/lumberjacking = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/masonry = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/ceramics = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/sewing = TAT_SKILL_BASIC_BOOST, /datum/skill/craft/tanning = TAT_SKILL_BASIC_BOOST), \
 	/datum/virtue/utility/tracker = list(/datum/skill/misc/tracking = 3), \
 	/datum/virtue/utility/bronzelimbs = list(/datum/skill/craft/engineering = 1), \

@@ -217,8 +217,8 @@
 		if(feedback && user)
 			to_chat(user, span_warning("You are too starved to shape infernal power."))
 		return FALSE
-	if(spend_devotion && required_level > CONTRACTOR_LEVEL_SLEEPING)
-		adjust_devotion(-CONTRACTOR_ABILITY_DEVOTION_COST, TRUE)
+	// Ability costs are paid after a successful cast by pay_contractor_cost().
+	// Do not mutate devotion from availability checks; these can run in non-sleeping action code.
 	return TRUE
 
 /datum/component/contractor/proc/grant_contractor_actions()
