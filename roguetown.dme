@@ -3967,6 +3967,7 @@
 #include "modular_twilight_axis\code\modules\spells\roguetown\old_god.dm"
 #include "modular_twilight_axis\code\modules\spells\asperges.dm"
 #include "modular_twilight_axis\code\modules\spells\spells_types\wizard\utility\mirror_appearance_ui.dm"
+#include "modular_twilight_axis\code\modules\surgery\ta_taur.dm"
 #include "modular_twilight_axis\code\modules\surgery\organs\feature_organs\goblin_eyes_adjust.dm"
 #include "modular_twilight_axis\code\_DEFINES\donor_job_priority.dm"
 #include "modular_twilight_axis\code\controllers\subsystem\donor_job_priority.dm"

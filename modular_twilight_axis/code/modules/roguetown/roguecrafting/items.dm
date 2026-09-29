@@ -17,6 +17,9 @@
 	result = list(/obj/item/clothing/head/roguetown/helmet/sallet/visored/grenzelhoft)
 	reqs = list(/obj/item/clothing/head/roguetown/grenzelhofthat = 1,
 				/obj/item/clothing/head/roguetown/helmet/sallet/visored = 1)
+	blacklist = list(/obj/item/clothing/head/roguetown/helmet/sallet/visored/iron,
+					/obj/item/clothing/head/roguetown/helmet/sallet/visored/iron/snouted,
+					/obj/item/clothing/head/roguetown/helmet/sallet/visored/iron/legacy)
 	craftdiff = 0
 
 /datum/crafting_recipe/roguetown/sewing/grenzelsallet_visor/off
