@@ -500,20 +500,20 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 		"[pick_list_replacements(HAL_LINES_FILE, "aggressive")]",\
 		"[pick_list_replacements(HAL_LINES_FILE, "help")]!!",\
 		"[pick_list_replacements(HAL_LINES_FILE, "escape")]",\
-		"I was bitten by a [pick("deddite","werebeast","vampire","squire")], [pick_list_replacements(HAL_LINES_FILE, "infection_advice")]!",\
-		"[pick_list_replacements(HAL_LINES_FILE, "people")] is [pick_list_replacements(HAL_LINES_FILE, "accusations")]!",\
-		"Help!",\
-		"[pick_list_replacements(HAL_LINES_FILE, "threat")] in [pick_list_replacements(HAL_LINES_FILE, "location")][prob(50)?"!":"!!"]",\
-		"[pick("[target.first_name()] is a heretic!", "Make [target.first_name()] an outlaw!")]",\
-		"[pick("I","Squire","Somebody","They")] killed the priest!",\
-		"Duke [pick("is a Zizoid", "is a heretic")]!!")
+		"Меня укусил [pick("зомби","оборотень","вампир","оруженосец")], [pick_list_replacements(HAL_LINES_FILE, "infection_advice")]!",\
+		"[pick_list_replacements(HAL_LINES_FILE, "people")] - [pick_list_replacements(HAL_LINES_FILE, "accusations")]!",\
+		"Помогите!",\
+		"[pick_list_replacements(HAL_LINES_FILE, "threat")] - [pick_list_replacements(HAL_LINES_FILE, "location")][prob(50)?"!":"!!"]",\
+		"[pick("[target.first_name()] еретик!", "Объявите [target.first_name()] в розыск!")]",\
+		"[pick("Я","Оруженосец","Кто-то","Он")] убил жреца!",\
+		"Герцог [pick("Зизоид", "еретик")]!!")
 
-	/*var/radio_messages = list("[pick_list_replacements(HAL_LINES_FILE, "people")] is [pick_list_replacements(HAL_LINES_FILE, "accusations")]!",\
-		"Help!",\
-		"[pick_list_replacements(HAL_LINES_FILE, "threat")] in [pick_list_replacements(HAL_LINES_FILE, "location")][prob(50)?"!":"!!"]",\
-		"[pick("[target.first_name()] is a heretic!", "Make [target.first_name()] an outlaw!")]",\
-		"[pick("I","Squire","Somebody","They")] killed the priest!",\
-		"Duke [pick("is a Zizoid", "is a heretic")]!!")*/
+	/*var/radio_messages = list("[pick_list_replacements(HAL_LINES_FILE, "people")] - [pick_list_replacements(HAL_LINES_FILE, "accusations")]!",\
+		"Помогите!",\
+		"[pick_list_replacements(HAL_LINES_FILE, "threat")] - [pick_list_replacements(HAL_LINES_FILE, "location")][prob(50)?"!":"!!"]",\
+		"[pick("[target.first_name()] еретик!", "Объявите [target.first_name()] в розыск!")]",\
+		"[pick("Я","Оруженосец","Кто-то","Он")] убил жреца!",\
+		"Герцог [pick("Зизоид", "еретик")]!!")*/
 
 	var/mob/living/carbon/person = null
 	var/datum/language/understood_language = target.get_random_understood_language()
@@ -728,7 +728,7 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 			SEND_SOUND(target, 'sound/misc/evilevent.ogg')
 		if("lich")
 			to_chat(target, "<h1 class='alert'>The Lich Decrees</h1>")
-			to_chat(target, "<br><br><span class='alert'>The throne is mine! Bring me [target.first_name()]...by force, if necessary</span><br><br>")
+			to_chat(target, "<br><br><span class='alert'>Корона моя! Приведите мне [target.first_name()]! Силой, если потребуется.</span><br><br>")
 			SEND_SOUND(target, 'sound/misc/royal_decree.ogg')
 			SEND_SOUND(target, 'sound/misc/zizo.ogg')
 		if("ww")
@@ -972,8 +972,8 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 			fakemob = target //ever been so lonely you had to haunt yourself?
 		if(fakemob)
 			sleep(rand(20, 50))
-			to_chat(target, "<span class='deadsay'><b>DEAD: [fakemob.name]</b> says, \"[pick("rip","F in chat","lol","lmao","Anybody else just randomly die?","anyone else just die?","wtf!","why did i just drop dead?","hey [target.first_name()]","lol poison?","you too?","was that a crossbow?",\
-			"i[prob(50)?" fucking":""] hate [pick("the ww", "the lich", "rogues", "this round","this","myself","squires","you")]")]\"</span>")
+			to_chat(target, "<span class='deadsay'><b>DEAD: [fakemob.name]</b> says, \"[pick("лошара","тудааа","лол","ору","Я один сдох без причины?","Вы тоже умерли?","Какого хуя?!","почему я умер?","Привет [target.first_name()]","лол яд?","ты тоже?","Аркебуза?",\
+			"я[prob(50)?" нахуй":""] ненавижу [pick("инкву", "лича", "вретчей", "этот раунд","это","себя","оруженосцев","тебя")]")]\"</span>")
 	sleep(rand(70,90))
 	target.set_screwyhud(SCREWYHUD_NONE)
 	target.SetParalyzed(0)
@@ -1109,37 +1109,37 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 
 /datum/hallucination/voices
 	var/static/list/messages = list(
-		"YOUR FATE IS SEALED IN BLOOD AND ASHES!",
-		"SHE CALLS YOUR NAME, FOOL!",
-		"THE GODS SPIT ON YOUR WORTHLESS SOUL!",
-		"YOUR HEART BEATS FOR THEIR ASCENSION!",
-		"CLAWS TEAR AT YOUR MIND FROM WITHIN!",
-		"NO ONE WILL MOURN YOUR BROKEN CORPSE!",
-		"THEIR EYES WATCH FROM EVERY WOUND!",
-		"THE SWAMP WILL SWALLOW YOUR HOPE!",
-		"PAIN IS YOUR ONLY TRUE COMPANION!",
-		"THE CHAINS OF FATE BIND YOUR BONES!",
-		"THEY LAUGH AS YOUR MIND CRUMBLES!",
-		"THE STARS MOCK YOUR FUTILE STRUGGLE!",
-		"THE GROUND WEEPS BLOOD WHERE YOU TREAD!",
-		"THEIR WHISPERS CARVE YOUR FLESH TO DUST!",
-		"THE BEASTS SMELL YOUR FEAR AND HUNGER!",
-		"YOUR VEINS PULSE WITH THEIR MALICE!",
-		"DEATH IS TOO MERCIFUL FOR YOUR SINS!",
-		"THE BOG CLAIMS YOUR HOPELESS BONES!",
-		"THE GODS HAVE MARKED YOU FOR TORMENT!",
-		"YOUR CRIES ECHO IN AN EMPTY ABYSS!",
-		"THE SHADOWS BIND YOUR WRETCHED FATE!",
-		"YOUR MIND IS A PRISON OF THEIR DESIGN!",
-		"THE FLAMES OF YOUR GUILT CONSUME YOU!",
-		"YOUR HEART IS A TROPHY FOR HER GLORY!",
-		"THE STORM SINGS OF YOUR DOOMED PATH!",
-		"THEIR CLAWS SCRATCH YOUR NAME IN STONE!",
-		"YOUR BREATH FEEDS HIS ENDLESS HUNGER!",
-		"THE GODS LAUGH AT YOUR BROKEN DREAMS!",
-		"YOUR SHADOW BETRAYS YOU TO THE DARK!",
-		"THE SWAMP WHISPERS YOUR FINAL MOMENTS!",
-		"YOUR FLESH IS A CANVAS FOR HIS WRATH!",
+		"ТВОЯ СУДЬБА СКРЕПЛЕНА КРОВЬЮ И ПЕПЛОМ!!",
+		"ОНА ЗОВЕТ ТВОЁ ИМЯ, ГЛУПЕЦ!!",
+		"БОГИ ПЛЮЮТ НА ТВОЮ НИЧТОЖНУЮ ДУШУ!!",
+		"ТВОЕ СЕРДЦЕ БЬЕТСЯ РАДИ ИХ ВОЗВЫШЕНИЯ!!",
+		"КОГТИ ТЕРЗАЮТ ТВОЙ РАЗУМ ИЗНУТРИ!!",
+		"НИКТО НЕ ОПЛАЧЕТ ТВОЙ ИЗУВЕЧЕННЫЙ ТРУП!!",
+		"ИХ ГЛАЗА СЛЕДЯТ ЗА ТОБОЙ ИЗ КАЖДОЙ РАНЫ!!",
+		"ТРЯСИНА ПОГЛОТИТ ТВОЮ НАДЕЖДУ!!",
+		"БОЛЬ — ТВОЙ ЕДИНСТВЕННЫЙ ВЕРНЫЙ СПУТНИК!!",
+		"ОКОВЫ СУДЬБЫ СКОВЫВАЮТ ТВОИ КОСТИ!!",
+		"ОНИ СМЕЮТСЯ, ПОКА ТВОЙ РАЗУМ РУШИТСЯ!!",
+		"ЗВЕЗДЫ НАСМЕХАЮТСЯ НАД ТВОЕЙ ТЩЕТНОЙ БОРЬБОЙ!!",
+		"ЗЕМЛЯ ПЛАЧЕТ КРОВЬЮ ТАМ, ГДЕ СТУПАЕШЬ ТЫ!!",
+		"ИХ ШЕПОТ СТИРАЕТ ТВОЮ ПЛОТЬ В ПРАХ!!",
+		"ЗВЕРИ ЧУЮТ ТВОЙ СТРАХ И ГОЛОД!!",
+		"В ТВОИХ ВЕНАХ ПУЛЬСИРУЕТ ИХ ЗЛОБА!!",
+		"СМЕРТЬ СЛИШКОМ МИЛОСЕРДНА ДЛЯ ТВОИХ ГРЕХОВ!!",
+		"ТРЯСИНА ЗАБИРАЕТ ТВОИ БЕЗНАДЕЖНЫЕ КОСТИ!!",
+		"БОГИ ОБРЕКЛИ ТЕБЯ НА МУКИ!!",
+		"ТВОИ КРИКИ ЭХОМ ОТДАЮТСЯ В ПУСТОЙ БЕЗДНЕ!!",
+		"ТЕНИ СКОВЫВАЮТ ТВОЮ ЖАЛКУЮ СУДЬБУ!!",
+		"ТВОЙ РАЗУМ — ТЮРЬМА, СОЗДАННАЯ ИМИ!!",
+		"ПЛАМЯ ТВОЕЙ ВИНЫ ПОЖИРАЕТ ТЕБЯ!!",
+		"ТВОЕ СЕРДЦЕ — ТРОФЕЙ ВО СЛАВУ ЕЙ!!",
+		"БУРЯ ПОЕТ О ТВОЕМ ОБРЕЧЕННОМ ПУТИ!",
+		"ИХ КОГТИ ВЫЦАРАПЫВАЮТ ТВОЕ ИМЯ НА КАМНЕ!!",
+		"ТВОЕ ДЫХАНИЕ ПИТАЕТ ЕГО БЕСКОНЕЧНЫЙ ГОЛОД!!",
+		"БОГИ СМЕЮТСЯ НАД ТВОИМИ РАЗБИТЫМИ МЕЧТАМИ!!",
+		"ТВОЯ ТЕНЬ ПРЕДАЕТ ТЕБЯ ТЬМЕ!!",
+		"ТРЯСИНА ШЕПЧЕТ О ТВОИХ ПОСЛЕДНИХ МГНОВЕНИЯХ!!",
+		"ТВОЯ ПЛОТЬ — ХОЛСТ ДЛЯ ЕГО ГНЕВА!!",
 	)
 
 /datum/hallucination/voices/New(mob/living/carbon/carbon, forced = TRUE)
@@ -1280,7 +1280,7 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 	to_chat(victim, span_userdanger(pick("MY HEART STOPS BEATING!", "I CAN'T FEEL MY HEART!", "WHERE IS MY HEART?")))
 
 	victim.freakout_hud_skew()
-	victim.emote("scream", forced = TRUE)
+	victim.emote("pale", forced = TRUE)
 	victim.flash_fullscreen("stressflash")
 	victim.Jitter(10)
 	victim.energy_add(-2)
