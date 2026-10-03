@@ -27,7 +27,7 @@
 	duration = -1
 	examine_text = "<font color='green'>SUBJECTPRONOUN is covered in vines!</font>"
 	var/outline_colour = "#042013"
-	effectedstats = list(STATKEY_STR = 1, STATKEY_WIL = -1, STATKEY_SPD = -1)
+	effectedstats = list(STATKEY_WIL = 1)
 
 /atom/movable/screen/alert/status_effect/buff/vinearmour
 	name = "Vinearmour"
@@ -41,8 +41,13 @@
 	hitsound = "genslash"
 	miss_sound = "bluntwoosh"
 	item_d_type = "slash"
-	penfactor = PEN_LIGHT
+	penfactor = PEN_MEDIUM
+	damfactor = 1.2
 	icon_state = "inchop"
+
+/datum/intent/claw/lunge/iron/dendor
+	name = "Укол зверя"
+	desc = "Укол звериными когтями, пробивающий доспехи насквозь."
 // - - -
 
 /obj/item/rogueweapon/beast_claws
@@ -51,10 +56,10 @@
 	max_blade_int = INFINITY
 	max_integrity = INFINITY
 	associated_skill = /datum/skill/combat/unarmed
-	wlength = WLENGTH_NORMAL
+	wlength = WLENGTH_SHORT
 	sharpness = IS_SHARP_ACCURATE
 	item_flags = DROPDEL
-	possible_item_intents = list(/datum/intent/simple/beast_claws/slash)
+	possible_item_intents = list(/datum/intent/simple/beast_claws/slash, /datum/intent/claw/lunge/iron/dendor)
 	can_parry = TRUE
 	wdefense = 7
 	// Временная замена до момента появления спрайтера. Увы.
@@ -63,7 +68,7 @@
 	righthand_file = null
 	icon = 'icons/roguetown/weapons/unarmed32.dmi'
 	icon_state = "claw_r"
-	force = 20
+	force = 23
 
 /obj/item/rogueweapon/beast_claws/Initialize()
 	. = ..()
@@ -142,11 +147,15 @@
 	)
 	duration = 1 MINUTES
 
+/datum/status_effect/buff/beast_rage/on_apply()
+	. = ..()
+	ADD_TRAIT(owner, TRAIT_BLOOD_RESISTANCE, TRAIT_GENERIC)
+
 /datum/status_effect/buff/beast_rage/on_remove()
 	. = ..()
 	owner.apply_status_effect(/datum/status_effect/debuff/beast_rage_weakness)
 	owner.clear_fullscreen("beast_mode")
-
+	REMOVE_TRAIT(owner, TRAIT_BLOOD_RESISTANCE, TRAIT_GENERIC)
 // -- Spell
 
 /obj/effect/proc_holder/spell/self/beast_rage
@@ -188,14 +197,30 @@
 	allowed_seeds["Табак"] = /obj/item/seeds/pipeweed
 	allowed_seeds["Капуста"] = /obj/item/seeds/cabbage
 	allowed_seeds["Картофель"] = /obj/item/seeds/potato
+	allowed_seeds["Помидор"] = /obj/item/seeds/tomato
+	allowed_seeds["Репа"] = /obj/item/seeds/turnip
+	allowed_seeds["Огурец"] = /obj/item/seeds/cucumber
+	allowed_seeds["Кабачок"] = /obj/item/seeds/eggplant
+	allowed_seeds["Морковь"] = /obj/item/seeds/carrot
 	allowed_seeds["Лук"] = /obj/item/seeds/onion
+	allowed_seeds["Чеснок"] = /obj/item/seeds/garlick
 	allowed_seeds["Овес"] = /obj/item/seeds/wheat/oat
 	allowed_seeds["Пшеница"] = /obj/item/seeds/wheat
+	allowed_seeds["Рис"] = /obj/item/seeds/rice
 	allowed_seeds["Чай"] = /obj/item/seeds/tea
+	allowed_seeds["Кофе"] = /obj/item/seeds/coffee
 	allowed_seeds["Яблоня"] = /obj/item/seeds/apple
-	allowed_seeds["Ягодный куст (ядовитый)"] = /obj/item/seeds/berryrogue/poison
+	allowed_seeds["Груша"] = /obj/item/seeds/pear
+	allowed_seeds["Лимон"] = /obj/item/seeds/lemon
+	allowed_seeds["Мандарин"] = /obj/item/seeds/tangerine
+	allowed_seeds["Слива"] = /obj/item/seeds/plum
+	allowed_seeds["Сахарный тростник"] = /obj/item/seeds/sugarcane
+	allowed_seeds["Ореховое дерево"] = /obj/item/seeds/nut
 	allowed_seeds["Ягодный куст"] = /obj/item/seeds/berryrogue
-
+	allowed_seeds["Ягодный куст (ядовитый)"] = /obj/item/seeds/berryrogue/poison
+	allowed_seeds["Ягодный куст (клубника)"] = /obj/item/seeds/strawberry
+	allowed_seeds["Ягодный куст (черника)"] = /obj/item/seeds/blackberry
+	allowed_seeds["Ягодный куст (малина)"] = /obj/item/seeds/raspberry
 	return allowed_seeds
 
 /obj/effect/proc_holder/spell/targeted/create_seed/cast(list/targets, mob/user = usr)
@@ -216,3 +241,13 @@
 	var/obj/item/seeds/seed_to_create = seeds_dict[selected_option]
 	user.put_in_hands(new seed_to_create(get_turf(user)))
 	return TRUE
+
+//хуйня для зверей
+
+/obj/item/rogueweapon/bear_claw
+	possible_item_intents = list(/datum/intent/simple/bear, /datum/intent/claw/lunge/iron, /datum/intent/mace/strike, /datum/intent/mace/smash)
+
+/mob/living/carbon/human/species/wildshape/bear/gain_inherent_skills()
+	. = ..()
+	if(mind)
+		STAWIL = 14
