@@ -601,6 +601,7 @@
 	smeltresult = /obj/item/ingot/iron
 	associated_skill = /datum/skill/combat/axes
 	wdefense = 4
+    special = /datum/special_intent/axe_swing //TA EDIT
 
 /obj/item/rogueweapon/greataxe/getonmobprop(tag)
 	. = ..()
@@ -622,7 +623,7 @@
 	minstr = 11
 	max_blade_int = 250
 	smeltresult = /obj/item/ingot/steel
-
+    
 /obj/item/rogueweapon/greataxe/blacksteel
 	name = "blacksteel greataxe"
 	desc = "A magnificent greataxe of blacksteel, tipped with spikes to keep the horrors at bay. No one's quite sure as to whether it's meant \
