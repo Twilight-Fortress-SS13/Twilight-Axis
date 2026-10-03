@@ -4,7 +4,8 @@
 	icon_state = "wardenpax_jager"
 	icon = 'modular_twilight_axis/firearms/icons/axes32.dmi'
 	wbalance = WBALANCE_SWIFT
-	gripped_intents = null
+	force_wielded = 22
+	wdefense = 3
 	detail_color = "#FFFFFF"
 	var/picked = FALSE
 
