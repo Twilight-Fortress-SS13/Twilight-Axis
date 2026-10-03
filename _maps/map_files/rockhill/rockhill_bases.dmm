@@ -2396,7 +2396,7 @@
 	icon_state = "largetable"
 	},
 /obj/item/reagent_containers/glass/bottle/rogue/redwine{
-	pixel_x = -3;
+	pixel_x = -13;
 	pixel_y = 8
 	},
 /obj/item/reagent_containers/glass/cup/skull,
@@ -11301,8 +11301,6 @@
 "Vy" = (
 /obj/structure/closet/crate/chest/old_crate,
 /obj/item/reagent_containers/food/snacks/butter,
-/obj/item/reagent_containers/food/snacks/egg,
-/obj/item/reagent_containers/food/snacks/egg,
 /obj/item/reagent_containers/food/snacks/rogue/friedrat,
 /obj/item/reagent_containers/food/snacks/rogue/friedrat,
 /obj/item/reagent_containers/food/snacks/rogue/meat/steak,
@@ -11856,12 +11854,6 @@
 /area/rogue/outdoors/bograt/safe)
 "XM" = (
 /obj/structure/closet/crate/chest/crate,
-/obj/item/reagent_containers/food/snacks/rogue/meat/steak/wolf,
-/obj/item/reagent_containers/food/snacks/rogue/meat/steak/wolf,
-/obj/item/reagent_containers/food/snacks/rogue/meat/steak/wolf,
-/obj/item/reagent_containers/food/snacks/rogue/meat/steak/wolf,
-/obj/item/reagent_containers/food/snacks/rogue/meat/steak/wolf,
-/obj/item/reagent_containers/food/snacks/rogue/meat/steak/wolf,
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/under/cave)
 "XO" = (
