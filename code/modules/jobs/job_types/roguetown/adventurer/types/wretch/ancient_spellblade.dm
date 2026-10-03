@@ -54,6 +54,7 @@
 
 	H.become_skeleton()
 	H.can_do_sex = FALSE
+	change_origin(H, /datum/virtue/origin/unselectable/skeleton, "Legion")
 
 	//no swift intent
 	H.possible_rmb_intents = list(/datum/rmb_intent/feint,\
@@ -70,7 +71,7 @@
 
 	H.choose_name_popup("Ancient Azurcaephan")
 
-	H.cmode_music = 'sound/music/combat_weird.ogg'
+	H.cmode_music = sound("sound/music/combat_weird.ogg")
 
 	// Equipment — gilbranze loadout matching lich skeleton spellblade
 	belt = /obj/item/storage/belt/rogue/leather

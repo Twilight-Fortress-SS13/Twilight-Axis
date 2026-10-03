@@ -20,7 +20,7 @@
 	min_pq = 17
 	max_pq = null
 	round_contrib_points = 3
-	cmode_music = 'sound/music/combat_desert2.ogg'
+	cmode_music = sound("sound/music/combat_desert2.ogg")
 	job_traits = list(TRAIT_NOBLE, TRAIT_SEEPRICES)
 	job_subclasses = list(
 		/datum/advclass/vizier/dtblademaster,
@@ -60,7 +60,7 @@
 			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/appraise/secular)
 		H.verbs |= /datum/job/roguetown/vizier/proc/remember_agents
 		H.verbs |= /mob/living/carbon/human/proc/adjust_taxes_vizier
-		
+
 		var/obj/item/recipe_book/treasury_primer/primer = new(H)
 		H.equip_to_slot_or_del(primer, ITEM_SLOT_BACKPACK)
 		SStreasury.grant_savings(ECONOMIC_RICH, H)
@@ -73,7 +73,7 @@
 		if(player?.prefs)
 			if(SSmapping.config.map_name == "Desert Town")
 				if(!istype(player.prefs.virtue_origin, /datum/virtue/origin/raneshen) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/naledi) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/zybantian))
-					var/list/new_origins = list("Raneshen" = /datum/virtue/origin/raneshen, 
+					var/list/new_origins = list("Raneshen" = /datum/virtue/origin/raneshen,
 					"Naledi" = /datum/virtue/origin/naledi,
 					"Zybantu" = /datum/virtue/origin/zybantian)
 					var/new_origin
@@ -281,7 +281,7 @@
 		H.change_stat(STATKEY_SPD, -1)
 		H.change_stat(STATKEY_STR, -1)
 		H.change_stat(STATKEY_INT, 1)
-		H.change_stat(STATKEY_PER, 1) 
+		H.change_stat(STATKEY_PER, 1)
 		H.adjust_skillrank(/datum/skill/magic/arcane, 1, TRUE)
 	if(H.mind)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/mindlink)

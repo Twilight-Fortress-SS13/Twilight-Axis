@@ -1,22 +1,14 @@
-//Snow - goes down and swirls
-/particles/weather/snow
-	icon_state				= list("cross"=2, "snow_1"=5, "snow_2"=2, "snow_3"=2,)
-	color					= "#ffffff"
-	position				= generator("box", list(-500,-256,5), list(500,500,0))
-	spin					= generator("num",-10,10)
-	gravity				= list(0, -2, 0.1)
-	drift					= generator("circle", 0, 3) // Some random movement for variation
-	friction				= 0.3	// shed 30% of velocity and drift every 0.1s
-	transform				= null // Looks weird without it
-	//Weather effects, max values
-	maxSpawning			= 50
-	minSpawning			= 10
-	wind					= 2
-
 /datum/particle_weather/snow_gentle
 	name = "Rain"
 	desc = "Gentle Rain, la la description."
-	particleEffectType = /particles/weather/snow
+	weather_icon_state = "snow"
+	weather_visual_color = "#ffffff"
+	weather_scroll_x = -512
+	weather_scroll_y = -512
+	weather_scroll_time = 64
+	weather_alpha_min = 105
+	weather_alpha_max = 225
+	weather_tile_count = 4
 
 	scale_vol_with_severity = TRUE
 	weather_sounds = list(/datum/looping_sound/snow)
@@ -41,7 +33,14 @@
 /datum/particle_weather/snow_storm
 	name = "Rain"
 	desc = "Gentle Rain, la la description."
-	particleEffectType = /particles/weather/snow
+	weather_icon_state = "snow_storm"
+	weather_visual_color = "#ffffff"
+	weather_scroll_x = -512
+	weather_scroll_y = -512
+	weather_scroll_time = 36
+	weather_alpha_min = 130
+	weather_alpha_max = 245
+	weather_tile_count = 4
 
 	scale_vol_with_severity = TRUE
 	weather_sounds = list(/datum/looping_sound/snow)

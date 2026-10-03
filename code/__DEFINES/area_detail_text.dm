@@ -37,6 +37,8 @@
 #define DETAIL_TEXT_UNDERCOAST ""
 #define DETAIL_TEXT_TEMPLE_SHATTERED_GOD "Masonry now forms impenetrable islands of purposeless granite. Cobblestone fractals underfoot. \n\ A sense of holiness lingers here, despite time."
 #define DETAIL_TEXT_ORC_RUIN "An old coastal wayfort, now filed with Inhumenity like pus in a wound. Beneath salt-stained cliffs, iron-masked raiders sharpen their blades, and prepare for war."
+#define DETAIL_TEXT_MENAGERIE "The Mad Duke kept a menagerie of things here. Even long after his death, the sadism of his jailors lingers as a maddening curse, perpetuating the cycle through those afflicted."
+#define DETAIL_TEXT_MENAGERIE_DEEP "The deepest reaches of the Menagerie held an ancient captive whose influence gradually spread and warped the very walls that held him. The veil between the world and the void is terrifyingly thin here, and nothing is as it seems."
 
 // Terrorbog
 #define DETAIL_TEXT_TERRORBOG "Болота Ужаса во все времена оставались крепостью зла и тьмы. Стража не патрулирует эти земли, а попасть в засаду здесь столь же просто, сколь оступиться в глубокой трясине. Многие искатели приключений нашли здесь свою смерть, но не для всех она стала концом."
@@ -46,6 +48,7 @@
 Abyssor rests offshore. Even his quietest exhale is enough to send waves from the hadal to crash onto sand."
 #define DETAIL_TEXT_NORTH_COAST_HAMLET "Ещё недавно в этой небольшой шахтерской деревушке жизнь била ключом — в церкви звонили колокола, звон от ударов молота о наковальню не стихал ни днём, ни ночью, а в таверне искатели приключений с юга делились с местными последними слухами из столицы. Сейчас же здесь не осталось ни единой живой души. Ожившие мертвецы, что ныне заполнили пустые дома, весьма весьма недвусмысленно указывают на виновников произошедшего."
 #define DETAIL_TEXT_MAD_DUKE_COURT ""
+#define DETAIL_TEXT_FALLEN_MANOR "A once-grand attempt at nobility now reduced to no more than a crumbling mess of what was once overly optimistic expansion, destroyed by the fallen 'Duke's' greed and lust for more control than he could truly handle. Not happy with simply being a serf, he sought more, and fell to ruin because of it. Now known as the Fallen 'Duke', he rots in his decayed manor, surrounded by his undead minions."
 
 // Actual Azure Coast
 #define DETAIL_TEXT_ACTUAL_COAST ""
@@ -59,6 +62,7 @@ Abyssor rests offshore. Even his quietest exhale is enough to send waves from th
 #define DETAIL_TEXT_DECAP_GOBLIN_FORTRESS ""
 #define DETAIL_TEXT_DECAP_NECRAN_LABYRINTH ""
 #define DETAIL_TEXT_DECAP_MINOTAUR_FORTRESS ""
+#define DETAIL_TEXT_DECAP_DWARFSHOP ""
 
 // Azure Basin & Nearby
 #define DETAIL_TEXT_AZURE_BASIN ""
@@ -73,6 +77,7 @@ Rusted metals distantly grind in anoxic pus-condensate in-tune with the Signal. 
 
 #define DETAIL_TEXT_HIS_VAULT ""
 #define DETAIL_TEXT_FISHMAN_DUNGEON ""
+#define DETAIL_TEXT_WATER_TEMPLE "An ancient cistern lost to time and neglect, now overrun with the indescribable- only those brave enough to delve it's inner sanctums able to say for sure what lurks within"
 
 // Forsaken Cathedral
 #define DETAIL_TEXT_FORSAKEN_CATHEDRAL ""

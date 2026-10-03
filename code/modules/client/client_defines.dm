@@ -151,6 +151,23 @@
 	var/last_weather_x
 	var/last_weather_y
 	var/last_weather_z
+	var/obj/weather_effect/fog_parallax/particle_weather_parallax
+	var/turf/particle_weather_parallax_previous_turf
+	var/atom/particle_weather_parallax_eye
+	var/atom/movable/particle_weather_parallax_bound_movable
+	var/mob/particle_weather_parallax_mob
+	var/atom/movable/screen/plane_master/weather_effect/particle_weather_parallax_plane_master
+	var/datum/particle_weather/particle_weather_parallax_weather
+	var/particle_weather_parallax_camera_offset_x = 0
+	var/particle_weather_parallax_camera_offset_y = 0
+	var/turf/particle_weather_world_previous_turf
+	var/atom/particle_weather_world_eye
+	var/atom/movable/particle_weather_world_bound_movable
+	var/mob/particle_weather_world_mob
+	var/atom/movable/screen/plane_master/weather_effect/particle_weather_world_plane_master
+	var/datum/particle_weather/particle_weather_world_weather
+	var/particle_weather_world_camera_offset_x = 0
+	var/particle_weather_world_camera_offset_y = 0
 	/// our current tab
 	var/stat_tab = "Round Info" //TA EDIT
 
@@ -183,11 +200,298 @@
 	/// Total Real likes recieved in a round - For Mentor
 	var/real_likes_received  = 0
 
+
+/client/proc/clear_particle_weather_world_effect()
+	if(particle_weather_world_bound_movable)
+		UnregisterSignal(particle_weather_world_bound_movable, COMSIG_MOVABLE_MOVED)
+		particle_weather_world_bound_movable = null
+	particle_weather_world_previous_turf = null
+	particle_weather_world_eye = null
+	particle_weather_world_mob = null
+	particle_weather_world_plane_master = null
+	particle_weather_world_weather = null
+
+/client/proc/get_particle_weather_world_effect()
+	var/atom/movable/screen/plane_master/weather_effect/PM = locate(/atom/movable/screen/plane_master/weather_effect) in screen
+	if(!PM || QDELETED(PM) || !PM.weather_visual || QDELETED(PM.weather_visual))
+		return null
+	return PM.weather_visual
+
+/client/proc/ensure_particle_weather_world_effect(force = FALSE)
+	var/datum/particle_weather/W = SSParticleWeather.runningWeather
+	if(!mob || !W || !W.running || W.parallax_weather || !W.weather_icon_state)
+		clear_particle_weather_world_effect()
+		return FALSE
+	var/atom/current_eye = eye ? eye : mob
+	var/atom/movable/current_movable_eye = istype(current_eye, /atom/movable) ? current_eye : null
+	var/atom/movable/screen/plane_master/weather_effect/current_plane_master = locate(/atom/movable/screen/plane_master/weather_effect) in screen
+	if(!current_plane_master || QDELETED(current_plane_master) || !current_plane_master.weather_visual || QDELETED(current_plane_master.weather_visual))
+		return FALSE
+	var/obj/weather_effect/effect = current_plane_master.weather_visual
+	var/visual_missing_from_plane = !(effect in current_plane_master.vis_contents)
+	if(!force && particle_weather_world_weather == W && particle_weather_world_eye == current_eye && particle_weather_world_mob == mob && particle_weather_world_bound_movable == current_movable_eye && particle_weather_world_plane_master == current_plane_master && !visual_missing_from_plane)
+		return TRUE
+	var/turf/T = get_turf(current_eye)
+	if(!T)
+		return FALSE
+
+	var/eye_changed = particle_weather_world_eye != current_eye
+	var/mob_changed = particle_weather_world_mob != mob
+	var/plane_changed = particle_weather_world_plane_master != current_plane_master
+	var/weather_changed = particle_weather_world_weather != W
+
+	if(visual_missing_from_plane)
+		current_plane_master.vis_contents += effect
+
+	if(particle_weather_world_bound_movable != current_movable_eye)
+		if(particle_weather_world_bound_movable)
+			UnregisterSignal(particle_weather_world_bound_movable, COMSIG_MOVABLE_MOVED)
+		particle_weather_world_bound_movable = current_movable_eye
+		if(particle_weather_world_bound_movable)
+			RegisterSignal(particle_weather_world_bound_movable, COMSIG_MOVABLE_MOVED, PROC_REF(on_particle_weather_world_moved))
+
+	if(force || eye_changed || mob_changed || plane_changed || weather_changed || visual_missing_from_plane || !particle_weather_world_previous_turf)
+		effect.set_world_lock_camera_offset(particle_weather_world_camera_offset_x, particle_weather_world_camera_offset_y)
+		effect.set_absolute_world_position(T)
+		particle_weather_world_previous_turf = T
+
+	particle_weather_world_eye = current_eye
+	particle_weather_world_mob = mob
+	particle_weather_world_plane_master = current_plane_master
+	particle_weather_world_weather = W
+	return TRUE
+
+/client/proc/on_particle_weather_world_moved(atom/movable/source, atom/oldloc, direction)
+	SIGNAL_HANDLER
+	update_particle_weather_world_effect()
+
+/client/proc/update_particle_weather_world_effect(force = FALSE)
+	if(!ensure_particle_weather_world_effect(force))
+		return
+	var/atom/current_eye = eye ? eye : mob
+	var/atom/movable/moving_eye = istype(current_eye, /atom/movable) ? current_eye : null
+	var/turf/posobj = get_turf(current_eye)
+	if(!posobj)
+		return
+	var/obj/weather_effect/effect = get_particle_weather_world_effect()
+	if(!effect)
+		return
+	if(!particle_weather_world_previous_turf || particle_weather_world_previous_turf.z != posobj.z)
+		particle_weather_world_previous_turf = posobj
+		effect.set_absolute_world_position(posobj)
+		return
+	var/offset_x = posobj.x - particle_weather_world_previous_turf.x
+	var/offset_y = posobj.y - particle_weather_world_previous_turf.y
+	var/glide_rate = 0
+	if(moving_eye?.glide_size > 0)
+		glide_rate = round(world.icon_size / moving_eye.glide_size * world.tick_lag, world.tick_lag)
+	particle_weather_world_previous_turf = posobj
+	if(!offset_x && !offset_y)
+		return
+	var/largest_change = max(abs(offset_x), abs(offset_y))
+	var/teleport_threshold = glide_rate ? max(12, round((glide_rate / world.tick_lag) * 3) + 1) : 12
+	var/animate_position = glide_rate && largest_change <= teleport_threshold
+	if(force || largest_change > teleport_threshold)
+		effect.set_absolute_world_position(posobj)
+		return
+	effect.update_world_position(offset_x, offset_y, glide_rate, animate_position)
+
+/client/proc/set_particle_weather_world_camera_offset(new_offset_x, new_offset_y, transition_time = 0, easing_mode = 0)
+	particle_weather_world_camera_offset_x = new_offset_x
+	particle_weather_world_camera_offset_y = new_offset_y
+	var/obj/weather_effect/effect = get_particle_weather_world_effect()
+	if(effect && SSParticleWeather.runningWeather?.running && !SSParticleWeather.runningWeather.parallax_weather)
+		effect.set_world_lock_camera_offset(new_offset_x, new_offset_y, transition_time, easing_mode)
+
+/client/proc/reset_particle_weather_parallax_plane()
+	var/atom/movable/screen/plane_master/weather_effect/PM = locate(/atom/movable/screen/plane_master/weather_effect) in screen
+	if(!PM)
+		particle_weather_parallax_plane_master = null
+		return
+	PM.filters = list(filter(type="alpha", render_source=WEATHER_RENDER_TARGET))
+	particle_weather_parallax_plane_master = PM
+
+/client/proc/configure_particle_weather_parallax_plane(datum/particle_weather/W)
+	reset_particle_weather_parallax_plane()
+	if(!W)
+		return
+	var/atom/movable/screen/plane_master/weather_effect/PM = locate(/atom/movable/screen/plane_master/weather_effect) in screen
+	if(!PM)
+		return
+	if(W.filter_type)
+		PM.filters += W.filter_type
+	if(W.secondary_filter_type)
+		PM.filters += W.secondary_filter_type
+	particle_weather_parallax_plane_master = PM
+
+/client/proc/cleanup_particle_weather_parallax_visuals(obj/weather_effect/fog_parallax/keep_visual)
+	var/list/fog_visuals_to_delete = list()
+	for(var/atom/movable/screen/plane_master/weather_effect/PM in screen)
+		for(var/obj/weather_effect/fog_parallax/fog_visual in PM.vis_contents)
+			if(fog_visual == keep_visual)
+				continue
+			fog_visuals_to_delete |= fog_visual
+	for(var/obj/weather_effect/fog_parallax/fog_visual as anything in fog_visuals_to_delete)
+		for(var/atom/movable/screen/plane_master/weather_effect/PM in screen)
+			PM.vis_contents -= fog_visual
+		if(!QDELETED(fog_visual))
+			qdel(fog_visual)
+
+/client/proc/clear_particle_weather_parallax()
+	if(particle_weather_parallax_bound_movable)
+		UnregisterSignal(particle_weather_parallax_bound_movable, COMSIG_MOVABLE_MOVED)
+		particle_weather_parallax_bound_movable = null
+	var/obj/weather_effect/fog_parallax/tracked_parallax = particle_weather_parallax
+	cleanup_particle_weather_parallax_visuals()
+	if(tracked_parallax && !QDELETED(tracked_parallax))
+		if(particle_weather_parallax_plane_master)
+			particle_weather_parallax_plane_master.vis_contents -= tracked_parallax
+		qdel(tracked_parallax)
+	particle_weather_parallax = null
+	particle_weather_parallax_previous_turf = null
+	particle_weather_parallax_eye = null
+	particle_weather_parallax_mob = null
+	particle_weather_parallax_plane_master = null
+	particle_weather_parallax_weather = null
+	reset_particle_weather_parallax_plane()
+
+/client/proc/has_particle_weather_parallax_visual()
+	var/atom/movable/screen/plane_master/weather_effect/PM = locate(/atom/movable/screen/plane_master/weather_effect) in screen
+	if(!PM)
+		return FALSE
+	for(var/obj/weather_effect/fog_parallax/fog_visual in PM.vis_contents)
+		if(!QDELETED(fog_visual))
+			return TRUE
+	return FALSE
+
+/client/proc/set_particle_weather_parallax_camera_offset(new_offset_x, new_offset_y, transition_time = 0, easing_mode = 0)
+	particle_weather_parallax_camera_offset_x = new_offset_x
+	particle_weather_parallax_camera_offset_y = new_offset_y
+	if(particle_weather_parallax)
+		particle_weather_parallax.set_camera_offset(new_offset_x, new_offset_y, transition_time, easing_mode)
+
+/client/proc/get_particle_weather_parallax_alpha(datum/particle_weather/W, severity_mod)
+	if(!W || severity_mod <= 0)
+		return 0
+	var/clamped_severity = min(1, max(0, severity_mod))
+	return round(W.weather_alpha_min + ((W.weather_alpha_max - W.weather_alpha_min) * clamped_severity))
+
+/client/proc/ensure_particle_weather_parallax(force_reconfigure = FALSE)
+	var/datum/particle_weather/W = SSParticleWeather.runningWeather
+	if(!mob || !W || !W.running || !W.parallax_weather || !W.weather_icon_state)
+		clear_particle_weather_parallax()
+		return FALSE
+	var/atom/current_eye = eye ? eye : mob
+	var/atom/movable/current_movable_eye = istype(current_eye, /atom/movable) ? current_eye : null
+	var/atom/movable/screen/plane_master/weather_effect/current_plane_master = locate(/atom/movable/screen/plane_master/weather_effect) in screen
+	if(!current_plane_master)
+		return FALSE
+	if(particle_weather_parallax && QDELETED(particle_weather_parallax))
+		particle_weather_parallax = null
+	var/obj/weather_effect/fog_parallax/existing_parallax = locate(/obj/weather_effect/fog_parallax) in current_plane_master.vis_contents
+	if(!force_reconfigure && particle_weather_parallax && existing_parallax == particle_weather_parallax && particle_weather_parallax_weather == W && particle_weather_parallax_bound_movable == current_movable_eye && particle_weather_parallax_eye == current_eye && particle_weather_parallax_mob == mob && particle_weather_parallax_plane_master == current_plane_master && !QDELETED(particle_weather_parallax_plane_master))
+		return TRUE
+	var/visual_adopted = FALSE
+	if(!particle_weather_parallax && existing_parallax && !QDELETED(existing_parallax))
+		particle_weather_parallax = existing_parallax
+		visual_adopted = TRUE
+	cleanup_particle_weather_parallax_visuals(particle_weather_parallax)
+	var/turf/T = get_turf(current_eye)
+	if(!T)
+		return FALSE
+
+	var/eye_changed = particle_weather_parallax_eye != current_eye
+	var/mob_changed = particle_weather_parallax_mob != mob
+	var/plane_changed = current_plane_master != particle_weather_parallax_plane_master
+	var/weather_changed = particle_weather_parallax_weather != W
+	var/visual_created = FALSE
+	var/visual_missing_from_plane = FALSE
+
+	if(particle_weather_parallax_bound_movable != current_movable_eye)
+		if(particle_weather_parallax_bound_movable)
+			UnregisterSignal(particle_weather_parallax_bound_movable, COMSIG_MOVABLE_MOVED)
+		particle_weather_parallax_bound_movable = current_movable_eye
+		if(particle_weather_parallax_bound_movable)
+			RegisterSignal(particle_weather_parallax_bound_movable, COMSIG_MOVABLE_MOVED, PROC_REF(on_particle_weather_parallax_moved))
+
+	if(!particle_weather_parallax)
+		particle_weather_parallax = new
+		visual_created = TRUE
+	if(plane_changed)
+		if(particle_weather_parallax_plane_master)
+			particle_weather_parallax_plane_master.vis_contents -= particle_weather_parallax
+		if(!(particle_weather_parallax in current_plane_master.vis_contents))
+			current_plane_master.vis_contents += particle_weather_parallax
+		particle_weather_parallax_plane_master = current_plane_master
+	else if(!(particle_weather_parallax in current_plane_master.vis_contents))
+		current_plane_master.vis_contents += particle_weather_parallax
+		visual_missing_from_plane = TRUE
+
+	var/full_reconfigure = force_reconfigure || weather_changed || visual_created || visual_adopted
+	if(full_reconfigure || plane_changed)
+		configure_particle_weather_parallax_plane(W)
+	if(full_reconfigure)
+		var/effect_color = SSParticleWeather.current_effect_color ? SSParticleWeather.current_effect_color : W.weather_visual_color
+		particle_weather_parallax.configure_parallax(W, effect_color, get_particle_weather_parallax_alpha(W, W.severityMod()))
+		particle_weather_parallax.set_camera_offset(particle_weather_parallax_camera_offset_x, particle_weather_parallax_camera_offset_y)
+
+	if(full_reconfigure || eye_changed || mob_changed || plane_changed || visual_missing_from_plane)
+		particle_weather_parallax.set_absolute_position(T)
+		particle_weather_parallax_previous_turf = T
+
+	particle_weather_parallax_eye = current_eye
+	particle_weather_parallax_mob = mob
+	particle_weather_parallax_weather = W
+	return TRUE
+
+/client/proc/on_particle_weather_parallax_moved(atom/movable/source, atom/oldloc, direction)
+	SIGNAL_HANDLER
+	update_particle_weather_parallax()
+
+/client/proc/update_particle_weather_parallax(force = FALSE)
+	if(!ensure_particle_weather_parallax(force))
+		return
+	var/atom/current_eye = eye ? eye : mob
+	var/atom/movable/moving_eye = istype(current_eye, /atom/movable) ? current_eye : null
+	var/turf/posobj = get_turf(current_eye)
+	if(!posobj)
+		return
+	if(!particle_weather_parallax_previous_turf || particle_weather_parallax_previous_turf.z != posobj.z)
+		particle_weather_parallax_previous_turf = posobj
+		particle_weather_parallax.set_absolute_position(posobj)
+		return
+	var/offset_x = posobj.x - particle_weather_parallax_previous_turf.x
+	var/offset_y = posobj.y - particle_weather_parallax_previous_turf.y
+	var/glide_rate = 0
+	if(moving_eye?.glide_size > 0)
+		glide_rate = round(world.icon_size / moving_eye.glide_size * world.tick_lag, world.tick_lag)
+	particle_weather_parallax_previous_turf = posobj
+	if(!offset_x && !offset_y)
+		return
+	var/largest_change = max(abs(offset_x), abs(offset_y))
+	var/teleport_threshold = glide_rate ? max(12, round((glide_rate / world.tick_lag) * 3) + 1) : 12
+	var/run_parallax = glide_rate && largest_change <= teleport_threshold
+	if(force || largest_change > teleport_threshold)
+		particle_weather_parallax.set_absolute_position(posobj)
+		return
+	particle_weather_parallax.update_parallax(offset_x, offset_y, glide_rate, run_parallax)
+
+/client/proc/set_particle_weather_parallax_alpha(severity_mod, transition_time = 5)
+	var/datum/particle_weather/W = SSParticleWeather.runningWeather
+	if(!W || !W.parallax_weather || !particle_weather_parallax)
+		return
+	var/new_alpha = get_particle_weather_parallax_alpha(W, severity_mod)
+	particle_weather_parallax.set_effect_alpha(new_alpha, transition_time)
+
 /client/proc/update_weather(force)
 	if(!mob)
 		return
 	if(!isobserver(mob) && !isliving(mob))
 		return
+	if(SSParticleWeather.runningWeather?.parallax_weather)
+		update_particle_weather_parallax()
+	else if(particle_weather_parallax || particle_weather_parallax_weather || particle_weather_parallax_plane_master || has_particle_weather_parallax_visual())
+		clear_particle_weather_parallax()
 	if(!force && mob.x == last_weather_x && mob.y == last_weather_y && mob.z == last_weather_z)
 		return
 	last_weather_x = mob.x
@@ -210,7 +514,7 @@
 					for(var/image/I in current_weathers[W])
 						if(!(I in images))
 							images += I
-					for(var/obj/O in current_weathers[W])
+					for(var/atom/movable/screen/O in current_weathers[W])
 						if(!(O in screen))
 							screen += O
 					found = TRUE
@@ -227,25 +531,17 @@
 		for(var/image/P in current_weathers[WE.type]) //need to update position of particles
 			current_weathers[WE.type] -= P
 			fade_weather(P)
-		for(var/P in WE.particles)
-			if(ispath(P,/obj/emitters/weather))
-				var/obj/emitters/PE = new P
-				var/image/I = image(null,mob.loc)
-				I.plane = WEATHER_PLANE
-				I.vis_contents += PE
-				images += I
-				current_weathers[WE.type] += I
-			else
-				var/found = FALSE
-				for(var/atom/movable/screen/WO in current_weathers[WE.type])
-					if(istype(WO,P))
-						found = TRUE
-						break
-				if(found)
-					continue
-				var/atom/movable/screen/PE = new P()
-				screen += PE
-				current_weathers[WE.type] += PE
+		for(var/visual_type in WE.weather_visuals)
+			var/found = FALSE
+			for(var/atom/movable/screen/existing_visual in current_weathers[WE.type])
+				if(istype(existing_visual, visual_type))
+					found = TRUE
+					break
+			if(found)
+				continue
+			var/atom/movable/screen/new_visual = new visual_type()
+			screen += new_visual
+			current_weathers[WE.type] += new_visual
 
 /client/proc/fade_weather(W)
 	if(!W)

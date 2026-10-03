@@ -5,7 +5,7 @@
 	outfit = /datum/outfit/job/roguetown/mercenary/trollslayer
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_BULWARK)
 	class_select_category = CLASS_CAT_RACIAL
-	cmode_music = 'sound/music/combat_dwarf.ogg'
+	cmode_music = sound("sound/music/combat_dwarf.ogg")
 	extra_context = "Only the dwarves who swore an Oath to the ten may become Trollslayers." // dwarf exclusive and will force Ravox
 
 	traits_applied = list(TRAIT_CRITICAL_RESISTANCE, TRAIT_SHIRTLESS, TRAIT_NOPAINSTUN) //TRAIT_SHIRTLESS blocks equip in armor, shirt, and head slots.

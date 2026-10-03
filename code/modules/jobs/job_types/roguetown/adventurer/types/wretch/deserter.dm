@@ -9,7 +9,7 @@
 	traits_applied = list(TRAIT_HEAVYARMOR, TRAIT_NOBLE, TRAIT_BOGWALKER)
 	maximum_possible_slots = 2 //Ideal role for fraggers. Better to limit it. Powerful like T4 heretic w/ heretical plate armor in that they're a bog-blessed, plate user, w/ orders, riding and expert in most weaponry.
 
-	cmode_music = 'sound/music/cmode/antag/combat_thewall.ogg' // same as new hedgeknight music
+	cmode_music = sound("sound/music/cmode/antag/combat_thewall.ogg") // same as new hedgeknight music
 	// Deserter are the knight-equivalence. They get a balanced, straightforward 2 2 3 statspread to endure and overcome.
 	subclass_stats = list(
 		STATKEY_WIL = 3,
@@ -160,9 +160,12 @@
 		var/armors = list(
 			"Fullplate"			= /obj/item/clothing/suit/roguetown/armor/plate/full,
 			"Fluted Fullplate"		= /obj/item/clothing/suit/roguetown/armor/plate/full/fluted,
+			"Fluted Cuirass"	= /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted,
+			"Steel Cuirass"		= /obj/item/clothing/suit/roguetown/armor/plate/cuirass,
 			"Brigandine"		= /obj/item/clothing/suit/roguetown/armor/brigandine,
 			"Coat of Plates"		= /obj/item/clothing/suit/roguetown/armor/brigandine/heavy,
 			"Half-Plate"		= /obj/item/clothing/suit/roguetown/armor/plate,
+			"Fluted Half-Plate"		= /obj/item/clothing/suit/roguetown/armor/plate/fluted,
 			"Lamellar Scalemail"		= /obj/item/clothing/suit/roguetown/armor/plate/scale/steppe,
 			"Haraate Brigandine"		= /obj/item/clothing/suit/roguetown/armor/brigandine/haraate,
 		)
@@ -201,9 +204,10 @@
 
 	subclass_stashed_items = list(
 		"Armor Plates" =	/obj/item/repair_kit/metal,
+		"Stashed Funds" = /obj/item/roguecoin/silver/pile/wretchpile,
 	)
 
-	cmode_music = 'sound/music/cmode/antag/combat_cutpurse.ogg' // same as regular bandits
+	cmode_music = sound("sound/music/cmode/antag/combat_cutpurse.ogg") // same as regular bandits
 	// Slightly more rounded. These can be nudged as needed.
 	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_BOGWALKER)
 	subclass_stats = list(
@@ -296,7 +300,7 @@
 		var/armors = list(
 			"Cuirass"			= /obj/item/clothing/suit/roguetown/armor/plate/cuirass,
 			"Brigandine"		= /obj/item/clothing/suit/roguetown/armor/brigandine,
-			"Half-Plate"		= /obj/item/clothing/suit/roguetown/armor/plate/iron,
+			"Half-Plate"		= /obj/item/clothing/suit/roguetown/armor/plate/iron, // TA EDIT - Half-plate ARMOR_CLASS_HEAVY -> ARMOR_CLASS_MEDIUM
 			"Scalemail"			= /obj/item/clothing/suit/roguetown/armor/plate/scale,
 		)
 		var/armorchoice = input(H, "Choose your armor.", "TAKE UP ARMOR") as anything in armors

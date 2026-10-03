@@ -3,7 +3,7 @@
 	tutorial = "You are a true devotee of the God of the Forge; a wandering priest of Malum, your altar an anvil and your prayer the hiss of steam from a fresh-wrought blade. You care little for 'politics' or 'schisms'; you are a hammer in a worlde of nails."
 
 	outfit = /datum/outfit/job/roguetown/wretch/munitioneer
-	cmode_music = 'sound/music/combat_dwarf.ogg'
+	cmode_music = sound("sound/music/combat_dwarf.ogg")
 	class_select_category = CLASS_CAT_WARRIOR
 	category_tags = list(CTAG_WRETCH)
 	traits_applied = list(TRAIT_TRAINED_SMITH, TRAIT_SMITHING_EXPERT, TRAIT_HOMESTEAD_EXPERT, TRAIT_RITUALIST)
@@ -32,8 +32,8 @@
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/craft/sewing = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/craft/tanning =	SKILL_LEVEL_APPRENTICE,
+		/datum/skill/craft/sewing = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/craft/tanning =	SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/armorsmithing = SKILL_LEVEL_EXPERT,
 		/datum/skill/craft/blacksmithing = SKILL_LEVEL_MASTER,
 		/datum/skill/craft/weaponsmithing = SKILL_LEVEL_EXPERT,
@@ -44,7 +44,7 @@
 	)
 	subclass_stashed_items = list(
 		"Sewing Kit" =	/obj/item/repair_kit,
-		"Stashed Funds" = /obj/item/roguecoin/silver/pile/wretchpile,
+		"Stashed Funds" = /obj/item/roguecoin/silver/pile/munitioneerpile, //uniquely gets 75 vs 50 starting funds
 	)
 /datum/outfit/job/roguetown/wretch/munitioneer/pre_equip(mob/living/carbon/human/H)
 	to_chat(H, span_warning("You are a passable warrior- though weak- but your true strength lies in your ability to bend the resources of Azuria to your will."))
@@ -70,8 +70,10 @@
 		/obj/item/rogueweapon/huntingknife/combat = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/riddleofsteel = 1,
-		/obj/item/storage/belt/rogue/pouch/coins/mid = 1,
-		/obj/item/rogueweapon/hammer/bronze = 1
+		/obj/item/rogueweapon/chisel/bronze = 1,
+		/obj/item/rogueweapon/handsaw/bronze = 1,
+		/obj/item/rogueweapon/hammer/bronze = 2, //so you can split efforts if you get several in on a fort.
+		/obj/item/dye_brush = 1
 		)
 
 /datum/outfit/job/roguetown/wretch/munitioneer/choose_loadout(mob/living/carbon/human/H)
@@ -100,11 +102,11 @@
 			H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_EXPERT, TRUE)
 			if(crimeschoice == "They fear me")
 				H.put_in_hands(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/heavy)
-				H.equip_to_slot_or_del(new /obj/item/quiver/bolt/heavy/bronze, SLOT_BELT_L, TRUE)
+				H.put_in_hands(new /obj/item/quiver/bolt/heavy/bronze)
 				H.change_stat(STATKEY_STR, 1)
 			else
 				H.put_in_hands(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow)
-				H.equip_to_slot_or_del(new /obj/item/quiver/bolt/standard, SLOT_BELT_L, TRUE)
+				H.put_in_hands(new /obj/item/quiver/bolt/standard)
 		if("Path of the Pick - Pulaski Axe")
 			H.adjust_skillrank_up_to(/datum/skill/combat/axes, SKILL_LEVEL_EXPERT, TRUE)
 			if(crimeschoice == "They fear me")

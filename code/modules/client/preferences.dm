@@ -40,6 +40,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/tgui_theme = "azure_gilbranze" // TA EDIT
 	var/parchment_skin = "leatherbound"
 	var/statbrowser_theme = "dark"
+	var/vv_dark_mode = TRUE
 	var/windowflashing = TRUE
 	var/verbose_character_creator = TRUE // Output chat messages for every change you make as a psuedo-history
 
@@ -83,6 +84,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/shake = TRUE
 	var/sexable = FALSE
 	var/compliance_notifs = TRUE
+	/// Extra chances for rolling if you've lost before. Max 2
+	var/roll_tokens = 0
 
 	//Job preferences 2.0 - indexed by job title , no key or value implies never
 	var/list/job_preferences = list()
@@ -152,8 +155,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/crt = FALSE
 	var/grain = FALSE
 	var/icon_scaling = FALSE
-	var/dnr_pref = FALSE
 	var/qsr_pref = FALSE
+	var/char_toggles = NONE
 
 	var/list/customizer_entries = list()
 	var/list/list/body_markings = list()

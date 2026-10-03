@@ -7,7 +7,7 @@
 	maximum_possible_slots = 2
 	class_select_category = CLASS_CAT_AAVNR
 	subclass_languages = list(/datum/language/aavnic)
-	cmode_music = 'modular_twilight_axis/sound/music/combat_hussar.ogg'
+	cmode_music = sound("modular_twilight_axis/sound/music/combat_hussar.ogg")
 
 	subclass_virtues = list(
 		/datum/virtue/utility/riding
@@ -60,7 +60,7 @@
 	H.dna.species.soundpack_m = new /datum/voicepack/male/knight()
 	if(H.mind)
 		var/weapons = list("Lance", "Pike")
-		var/weapon_choice = input("Choose your weapon.", "LET YOUR HANDS SPEAK BEFORE YOUR MOUTH.") as anything in weapons
+		var/weapon_choice = input(H, "Choose your weapon.", "LET YOUR HANDS SPEAK BEFORE YOUR MOUTH.") as anything in weapons
 		switch(weapon_choice)
 			if ("Lance")
 				r_hand = /obj/item/rogueweapon/spear/lance

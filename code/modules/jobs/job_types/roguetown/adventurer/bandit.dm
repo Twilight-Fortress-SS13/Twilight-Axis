@@ -12,7 +12,7 @@
 	outfit = null
 	outfit_female = null
 
-	obsfuscated_job = TRUE
+	obfuscated_job = TRUE
 
 	display_order = JDO_BANDIT
 	announce_latejoin = FALSE
@@ -30,7 +30,7 @@
 	job_traits = list(TRAIT_SELF_SUSTENANCE, TRAIT_STEELHEARTED)//Bandits and knaves truly though
 	vice_restrictions = list(/datum/charflaw/wanted)
 	same_job_respawn_delay = 30 MINUTES
-	cmode_music = 'sound/music/cmode/antag/combat_deadlyshadows.ogg'
+	cmode_music = sound("sound/music/cmode/antag/combat_deadlyshadows.ogg")
 	job_subclasses = list(
 		/datum/advclass/brigand,
 		/datum/advclass/hedgealchemist,
@@ -179,7 +179,7 @@
 
 		slots = 4 // TA EDIT START
 		if(player_count > 40)
-			if(storyteller_type == /datum/storyteller/gamemode/guaranteed_antag)
+			if(storyteller_type == /datum/storyteller/gamemode/guaranteed_antag || storyteller_type == /datum/storyteller/gamemode/guaranteed_antag/low_wretch)
 				slots += floor((player_count - 40) / 10)
 			else
 				slots += floor((player_count - 40) / 20)

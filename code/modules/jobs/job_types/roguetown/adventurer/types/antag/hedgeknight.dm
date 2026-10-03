@@ -6,7 +6,7 @@
 	outfit = /datum/outfit/job/roguetown/bandit/hedgeknight
 	category_tags = list(CTAG_BANDIT)
 	maximum_possible_slots = 1 //Boss, you killed a squire. AMAZING this right here is why you are the best Boss!
-	cmode_music = 'sound/music/cmode/antag/combat_thewall.ogg' // big chungus gets the wall too
+	cmode_music = sound("sound/music/cmode/antag/combat_thewall.ogg") // big chungus gets the wall too
 	traits_applied = list(TRAIT_HEAVYARMOR, TRAIT_NOBLE) //Heavy armour gives medium already
 	subclass_stats = list(
 		STATKEY_CON = 3, //dark souls 3 dual greatshield moment

@@ -124,6 +124,8 @@
 
 /datum/intent/mace/rangedthrust/short
 	reach = 1
+	swingdelay = 8
+	damfactor = 0.5
 
 /datum/intent/mace/bash
 	name = "bash"
@@ -406,7 +408,7 @@
 	icon_state = "deprived"
 
 /datum/intent/mace/smash/wood/ranged
-	reach = 2
+	reach = 1
 
 /obj/item/rogueweapon/mace/cudgel
 	name = "cudgel"

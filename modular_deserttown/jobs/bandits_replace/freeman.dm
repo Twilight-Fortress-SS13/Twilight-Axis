@@ -54,7 +54,7 @@
 	outfit = null
 	outfit_female = null
 
-	obsfuscated_job = TRUE
+	obfuscated_job = TRUE
 
 	display_order = JDO_BANDIT
 	announce_latejoin = FALSE
@@ -72,7 +72,7 @@
 	job_traits = list(TRAIT_SELF_SUSTENANCE, TRAIT_STEELHEARTED)//Bandits and knaves truly though
 	vice_restrictions = list(/datum/charflaw/noeyer, /datum/charflaw/noeyel, /datum/charflaw/mute, /datum/charflaw/limbloss/arm_r, /datum/charflaw/limbloss/arm_l)
 	same_job_respawn_delay = 30 MINUTES
-	cmode_music = 'sound/music/cmode/antag/combat_cutpurse.ogg'
+	cmode_music = sound("sound/music/cmode/antag/combat_cutpurse.ogg")
 	job_subclasses = list(
 		/datum/advclass/sahir_maradun,
 		/datum/advclass/rih_al_sahra,

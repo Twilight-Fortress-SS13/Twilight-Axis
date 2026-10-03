@@ -43,7 +43,6 @@ SUBSYSTEM_DEF(outdoor_effects)
 	wait = LIGHTING_INTERVAL
 	flags = SS_TICKER
 	init_order = INIT_ORDER_OUTDOOR_EFFECTS
-	var/list/atom/movable/screen/plane_master/weather_effect/weather_planes_need_vis = list()
 
 	var/list/atom/movable/screen/fullscreen/lighting_backdrop/sunlight/sunlighting_planes = list()
 	var/datum/time_of_day/current_step_datum
@@ -149,20 +148,6 @@ SUBSYSTEM_DEF(outdoor_effects)
 	var/i = 0
 
 	//Add our weather particle obj to any new weather screens
-	if(SSParticleWeather.initialized)
-		if(length(weather_planes_need_vis))
-			for (i in 1 to weather_planes_need_vis.len)
-				var/atom/movable/screen/plane_master/weather_effect/W = weather_planes_need_vis[i]
-				if(W)
-					W.vis_contents = list(SSParticleWeather.getweatherEffect())
-				if(init_tick_checks)
-					CHECK_TICK
-				else if (MC_TICK_CHECK)
-					break
-			if (i)
-				weather_planes_need_vis.Cut(1, i+1)
-				i = 0
-
 	for (i in 1 to GLOB.SUNLIGHT_QUEUE_WORK.len)
 		var/turf/T = GLOB.SUNLIGHT_QUEUE_WORK[i]
 		if(T)
@@ -274,15 +259,20 @@ SUBSYSTEM_DEF(outdoor_effects)
 	OE.overlays = OE.weatherproof ? list(OE.sunlight_overlay) : list(OE.sunlight_overlay, get_weather_overlay())
 	OE.luminosity = MA.luminosity
 
+
+#define SUNLIGHT_CACHE_PRECISION 20 // buckets between 0 and 1
 //Retrieve an overlay from the list - create if necessary
 /datum/controller/subsystem/outdoor_effects/proc/get_sunlight_overlay(fr, fg, fb, fa)
+	fr = round(fr * SUNLIGHT_CACHE_PRECISION) / SUNLIGHT_CACHE_PRECISION
+	fg = round(fg * SUNLIGHT_CACHE_PRECISION) / SUNLIGHT_CACHE_PRECISION
+	fb = round(fb * SUNLIGHT_CACHE_PRECISION) / SUNLIGHT_CACHE_PRECISION
+	fa = round(fa * SUNLIGHT_CACHE_PRECISION) / SUNLIGHT_CACHE_PRECISION
 
 	var/index = "[fr]|[fg]|[fb]|[fa]"
 	LAZYINITLIST(sunlight_overlays)
 	if(!sunlight_overlays[index])
 		sunlight_overlays[index] = create_sunlight_overlay(fr, fg, fb, fa)
 	return sunlight_overlays[index]
-
 
 //get our weather overlay
 /datum/controller/subsystem/outdoor_effects/proc/get_weather_overlay() //TODO VANDERLIN: Restore this to 32x48 for some extra
@@ -327,3 +317,5 @@ SUBSYSTEM_DEF(outdoor_effects)
 					fa, fa, fa,	00 ,
 					00, 00, 00,	01 )
 	return MA
+
+#undef SUNLIGHT_CACHE_PRECISION

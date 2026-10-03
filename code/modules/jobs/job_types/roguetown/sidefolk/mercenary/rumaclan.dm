@@ -8,7 +8,7 @@
 	class_select_category = CLASS_CAT_KAZENGUN
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
 	traits_applied = list(TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN, TRAIT_HONORBOUND) //TA EDIT
-	cmode_music = 'sound/music/combat_Kazengun_Runaway_Chariot.ogg' //'sound/music/combat_Kazengun_Overlord.ogg' also exists.
+	cmode_music = sound("sound/music/combat_Kazengun_Runaway_Chariot.ogg") //'sound/music/combat_Kazengun_Overlord.ogg' also exists.
 	subclass_stats = list(
 		STATKEY_CON = 3,
 		STATKEY_WIL = 3,

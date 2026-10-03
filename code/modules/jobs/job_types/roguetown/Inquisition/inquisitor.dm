@@ -12,7 +12,7 @@
 	largest Psydonic kingdom left on this world - has seen it fit to treat you like a silver-tipped olive branch, gifted to Azuria to ward off the encroaching \
 	darkness. Tread carefully when pursuing your missives, lest the faithless strap you to the pyre as well."
 	whitelist_req = TRUE
-	cmode_music = 'sound/music/combat_inqcommander.ogg' //Formerly 'sound/music/inquisitorcombat.ogg'.
+	cmode_music = sound("sound/music/combat_inqcommander.ogg") //Formerly 'sound/music/inquisitorcombat.ogg'.
 	selection_color = JCOLOR_INQUISITION
 
 	outfit = /datum/outfit/job/roguetown/inquisitor
@@ -98,7 +98,6 @@
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/inq
 	belt = /obj/item/storage/belt/rogue/leather/knifebelt/black/psydon_blessed
 	neck = /obj/item/clothing/neck/roguetown/gorget/steel
-	shoes = /obj/item/clothing/shoes/roguetown/boots/otavan/inqboots
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan
 	backr = /obj/item/storage/backpack/rogue/satchel/otavan
 	beltl = /obj/item/rogueweapon/whip/antique/psywhip
@@ -120,6 +119,10 @@
 		/obj/item/paper/inqslip/arrival/inq = 1,
 		/obj/item/rogueweapon/scabbard/sheath/noble = 1
 		)
+	if(H.pronouns == HE_HIM || H.pronouns == THEY_THEM)
+		shoes = /obj/item/clothing/shoes/roguetown/boots/otavan/inqboots
+	else
+		shoes = /obj/item/clothing/shoes/roguetown/boots/otavan/inqboots/heels
 
 	change_origin(H, /datum/virtue/origin/otava, "Holy order")
 
@@ -190,7 +193,7 @@
 	a singular purpose: to break the inhumen against their knee."
 	outfit = /datum/outfit/job/roguetown/inquisitor/ordinator
 	subclass_languages = list(/datum/language/otavan)
-	cmode_music = 'sound/music/combat_inqordinator.ogg'
+	cmode_music = sound("sound/music/combat_inqordinator.ogg")
 
 	category_tags = list(CTAG_INQUSITOR)
 	traits_applied = list(
@@ -240,7 +243,6 @@
 	armor = /obj/item/clothing/suit/roguetown/armor/plate/full/fluted/ornate/ordinator
 	belt = /obj/item/storage/belt/rogue/leather/steel/tasset
 	neck = /obj/item/clothing/neck/roguetown/gorget/steel
-	shoes = /obj/item/clothing/shoes/roguetown/boots/otavan/inqboots
 	backl = /obj/item/storage/backpack/rogue/satchel/otavan
 	wrists = /obj/item/clothing/wrists/roguetown/bracers
 	id = /obj/item/clothing/neck/roguetown/psicross/silver
@@ -258,6 +260,10 @@
 		/obj/item/rogueweapon/huntingknife/idagger/silver/psydagger/heavy = 1,
 		/obj/item/clothing/ring/signet/psy = 1
 		)
+	if(H.pronouns == HE_HIM || H.pronouns == THEY_THEM)
+		shoes = /obj/item/clothing/shoes/roguetown/boots/otavan/inqboots
+	else
+		shoes = /obj/item/clothing/shoes/roguetown/boots/otavan/inqboots/heels
 
 	change_origin(H, /datum/virtue/origin/otava, "Holy order")
 

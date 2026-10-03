@@ -114,6 +114,11 @@
 	experimental_inhand = FALSE
 	experimental_onhip = FALSE
 
+/obj/item/clothing/head/roguetown/helmet/leather/saiga/druid //armored skull for drip. haha, no.
+	name = "worn saiga skull"
+	desc = "The skull of a once-fearsome saiga. Looks like its sustained some damage and won't protect your skull."
+	armor = ARMOR_CLOTHING //no armor
+
 /obj/item/clothing/head/roguetown/helmet/leather/advanced
 	name = "hardened leather helmet"
 	desc = "Sturdy, durable, flexible. A comfortable and reliable hood made of hardened leather."
@@ -202,6 +207,8 @@
 
 /obj/item/clothing/head/roguetown/grenzelhofthat/loadout
 	name = "aesthetic grenzelhoft plume hat"
+	equip_delay_self = 0 //TA EDIT
+	unequip_delay_self = 0 //TA EDIT
 
 /obj/item/clothing/head/roguetown/grenzelhofthat/loadout/Initialize(mapload)
 	. = ..()
@@ -249,3 +256,17 @@
 /obj/item/clothing/head/roguetown/mentorhat/loadout/Initialize(mapload)
 	. = ..()
 	loadoutize()
+
+/obj/item/clothing/head/roguetown/inqhat/lamplighter
+	name = "lampwicker's hat"
+	desc = "A seared and stained tricorn hat."
+	icon = 'icons/roguetown/clothing/special/lamplighter.dmi'
+	mob_overlay_icon = 'icons/roguetown/clothing/special/onmob/lamplighter.dmi'
+	icon_state = "lamphat1"
+
+/obj/item/clothing/head/roguetown/inqhat/lamplighter/warden
+	name = "lampwarden's hat"
+	desc = "A seared and stained widebrim hat."
+	icon = 'icons/roguetown/clothing/special/lamplighter.dmi'
+	mob_overlay_icon = 'icons/roguetown/clothing/special/onmob/lamplighter.dmi'
+	icon_state = "lamphat2"

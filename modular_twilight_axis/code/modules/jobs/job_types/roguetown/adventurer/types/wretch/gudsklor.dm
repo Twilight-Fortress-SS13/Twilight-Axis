@@ -6,7 +6,7 @@
 	class_select_category = CLASS_CAT_CLERIC
 	maximum_possible_slots = 2
 	subclass_languages = list(/datum/language/gronnic)
-	cmode_music = 'modular_twilight_axis/sound/music/combat_hakkerskaldyr.ogg'
+	cmode_music = sound("modular_twilight_axis/sound/music/combat_hakkerskaldyr.ogg")
 	traits_applied = list(TRAIT_STRONGBITE, TRAIT_CIVILIZEDBARBARIAN, TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN, TRAIT_DUALWIELDER, TRAIT_PSYCHOSIS)
 	subclass_stats = list(
 		STATKEY_STR = 3,
@@ -38,10 +38,10 @@
 
 	head = /obj/item/clothing/head/roguetown/helmet/leather/shaman_hood
 	gloves = /obj/item/clothing/gloves/roguetown/angle/gronnfur
-	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/atgervi
+	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/atgervi
 	pants = /obj/item/clothing/under/roguetown/trou/leather/atgervi
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/heavy
-	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/atgervi
+	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced/atgervi
 	backr = /obj/item/storage/backpack/rogue/satchel
 	belt = /obj/item/storage/belt/rogue/leather
 	neck = /obj/item/storage/belt/rogue/pouch/coins/poor

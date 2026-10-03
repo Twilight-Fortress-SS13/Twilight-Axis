@@ -18,7 +18,7 @@
 	min_pq = 17 //The second most powerful person in the realm...
 	max_pq = null
 	round_contrib_points = 3
-	cmode_music = 'sound/music/cmode/nobility/combat_spymaster.ogg'
+	cmode_music = sound("sound/music/cmode/nobility/combat_spymaster.ogg")
 	job_traits = list(TRAIT_NOBLE, TRAIT_EXPERT_HUNTER)
 	vice_restrictions = list(/datum/charflaw/mute, /datum/charflaw/unintelligible, /datum/charflaw/wanted) //Needs to use the throat - sometimes
 	peopleiknow = list("Court Agent") // TA EDIT
@@ -31,7 +31,7 @@
 	same_job_respawn_delay = 30 MINUTES
 
 /datum/outfit/job/roguetown/hand
-	shoes = /obj/item/clothing/shoes/roguetown/boots/nobleboot
+	shoes = /obj/item/clothing/shoes/roguetown/rosa/ten
 	shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/besilked
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/hand
 	neck = /obj/item/storage/belt/rogue/pouch/coins/mid
@@ -96,7 +96,7 @@
 	beltr = /obj/item/rogueweapon/scabbard/sword/royal
 	head = /obj/item/clothing/head/roguetown/chaperon/noble/hand
 	armor = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hand
-	pants = /obj/item/clothing/under/roguetown/tights/black
+	pants = /obj/item/clothing/under/roguetown/tights/puritan
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/dtace = 1,
 		/obj/item/rogueweapon/scabbard/sheath/royal = 1,
@@ -147,7 +147,7 @@
 /datum/outfit/job/roguetown/hand/spymaster/pre_equip(mob/living/carbon/human/H)
 	armor = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hand/spymaster
 	backr = /obj/item/storage/backpack/rogue/satchel/short/black
-	belt = /obj/item/storage/belt/rogue/leather/black
+	belt = /obj/item/storage/belt/rogue/leather/plaquegold/noble
 	beltr = /obj/item/rogueweapon/scabbard/sheath/noble
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/dtace = 1,
@@ -163,7 +163,7 @@
 		pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/shadowpants/spymaster
 	else
 		cloak = /obj/item/clothing/cloak/raincloak/mortus //cool spymaster cloak
-		pants = /obj/item/clothing/under/roguetown/tights/black
+		pants = /obj/item/clothing/under/roguetown/tights/puritan
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_RICH, H)
 
@@ -205,13 +205,13 @@
 
 /datum/outfit/job/roguetown/hand/advisor
 	backr = /obj/item/storage/backpack/rogue/satchel/short
-	belt = /obj/item/storage/belt/rogue/leather/plaquegold
+	belt = /obj/item/storage/belt/rogue/leather/plaquegold/noble
 	armor = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hand/advisor
 	r_hand = /obj/item/rogueweapon/sword/rapier/hand
 	beltr = /obj/item/rogueweapon/scabbard/sheath/courtphysician/hand
 	beltl = /obj/item/rogueweapon/huntingknife/idagger/dtace
-	head = /obj/item/clothing/head/roguetown/chaperon/noble/hand
-	pants = /obj/item/clothing/under/roguetown/tights/black
+	head = /obj/item/clothing/head/roguetown/chaperon/noble/hand/advisor
+	pants = /obj/item/clothing/under/roguetown/tights/puritan
 
 //Advisor start. Trades combat skills for more knowledge and skills - for older hands, hands that don't do combat - people who wanna play wizened old advisors.
 /datum/outfit/job/roguetown/hand/advisor/pre_equip(mob/living/carbon/human/H)

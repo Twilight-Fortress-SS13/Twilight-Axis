@@ -439,13 +439,16 @@
 		if("Bestow Blessing")
 			if(!do_after(user, 5 SECONDS))
 				return
-			user.say("Aid my craft, oh Forgefather!!")
+			user.say("I am a Wallbuilder. Let my walls endure, from season to season, year to year, and age to age.")
 			if(!do_after(user, 5 SECONDS))
 				return
-			user.say("Guide my hand unto creation!!")
+			user.say("Let my walls stand, while families toil, armies march, and empires fall.")
 			if(!do_after(user, 5 SECONDS))
 				return
-			user.say("Let it be molded within your name!!")
+			user.say("I am a Wallbuilder, and my walls will stand always as a shield against evil.")
+			if(!do_after(user, 5 SECONDS))
+				return
+			user.say("This I pray, that will the Forgefather grant.")
 			icon_state = "malum_active"
 			malumblessing(src)
 			playsound(user, 'sound/magic/magearmorup.ogg', 60, FALSE, -1)
@@ -1830,6 +1833,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	to_chat(victim, span_userdanger("ASTRATA WEEPS!"))
 	victim.emote("superagony")
 	REMOVE_TRAIT(victim, TRAIT_NOBLE, TRAIT_GENERIC)
+	REMOVE_TRAIT(victim, TRAIT_NOBLE, JOB_TRAIT)
 	REMOVE_TRAIT(victim, TRAIT_NOBLE, TRAIT_VIRTUE)
 	ADD_TRAIT(victim, TRAIT_DEFILED_NOBLE, TRAIT_GENERIC)
 	playsound(loc, 'sound/misc/evilevent.ogg', 100, FALSE, -1)

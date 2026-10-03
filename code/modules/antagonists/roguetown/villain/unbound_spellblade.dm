@@ -31,7 +31,7 @@
 		owner.become_unknown_to(MF)
 
 	var/mob/living/carbon/human/H = owner.current
-	H.cmode_music = 'sound/music/combat_cult.ogg'
+	H.cmode_music = sound("sound/music/combat_cult.ogg")
 	H.faction = list(FACTION_UNDEAD)
 	H.equipOutfit(/datum/outfit/job/roguetown/unbound_spellblade)
 
@@ -116,6 +116,8 @@
 
 /datum/outfit/job/roguetown/unbound_spellblade/pre_equip(mob/living/carbon/human/H)
 	..()
+
+	change_origin(H, /datum/virtue/origin/unselectable/skeleton, "Legion")
 
 	H.change_stat(STATKEY_STR, -2)
 	H.change_stat(STATKEY_SPD, -3)

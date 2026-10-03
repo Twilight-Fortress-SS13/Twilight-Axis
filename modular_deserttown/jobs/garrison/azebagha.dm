@@ -20,7 +20,7 @@
 	give_bank_account = 50
 	min_pq = 10
 	max_pq = null
-	cmode_music = 'sound/music/combat_hornofthebeast.ogg'
+	cmode_music = sound("sound/music/combat_hornofthebeast.ogg")
 	job_traits = list(TRAIT_OUTDOORSMAN, TRAIT_WOODSMAN, TRAIT_SURVIVAL_EXPERT, TRAIT_STEELHEARTED, TRAIT_MEDIUMARMOR, TRAIT_FIREARMS_MARKSMAN, TRAIT_SLAVE)
 	job_subclasses = list(
 		/datum/advclass/azebagha/azebagha
@@ -71,8 +71,8 @@
 		STATKEY_STR = 1,
 		STATKEY_SPD = 1,
 		STATKEY_INT = 1,
-		STATKEY_PER = 2, 
-		STATKEY_CON = 2, 
+		STATKEY_PER = 2,
+		STATKEY_CON = 2,
 		STATKEY_WIL = 1,
 	)
 	subclass_skills = list(
@@ -91,9 +91,9 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
-		/datum/skill/misc/athletics = SKILL_LEVEL_MASTER,	
+		/datum/skill/misc/athletics = SKILL_LEVEL_MASTER,
 		/datum/skill/misc/riding = SKILL_LEVEL_MASTER,
-		/datum/skill/misc/tracking = SKILL_LEVEL_EXPERT,	
+		/datum/skill/misc/tracking = SKILL_LEVEL_EXPERT,
 	)
 
 /datum/outfit/job/roguetown/azebagha/azebagha/pre_equip(mob/living/carbon/human/H)
@@ -121,22 +121,22 @@
 		var/secondary_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in secondary
 		H.set_blindness(0)
 		switch(primary_choice)
-			if("Scimitar")		
+			if("Scimitar")
 				beltl = /obj/item/rogueweapon/scabbard/sword
 				l_hand = /obj/item/rogueweapon/sword/sabre/shamshir
-			if("Shotel")		
+			if("Shotel")
 				beltl = /obj/item/rogueweapon/scabbard/sword
 				l_hand = /obj/item/rogueweapon/sword/long/shotel
-			if("Whip")	
+			if("Whip")
 				beltl = /obj/item/rogueweapon/whip/antique
-			if("Warden Axe")	
+			if("Warden Axe")
 				beltl = /obj/item/rogueweapon/stoneaxe/woodcut/wardenpick
 
 		switch(secondary_choice)
-			if("Glaive")			
+			if("Glaive")
 				backl = /obj/item/rogueweapon/scabbard/gwstrap
 				l_hand = /obj/item/rogueweapon/halberd/glaive
-			if("Javelins and Shield")	
+			if("Javelins and Shield")
 				beltr = /obj/item/quiver/javelin/steel
 				backl = /obj/item/rogueweapon/shield/iron/zybantine
 			if("Blackhorn Longbow")

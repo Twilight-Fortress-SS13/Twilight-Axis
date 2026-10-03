@@ -52,3 +52,14 @@
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
 	allowed_race = NON_DWARVEN_RACE_TYPES
 	armor = null
+
+/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/confessor/overseer
+	name = "confessor jacket"
+	desc = "Стеганая куртка, обеспечивающая достаточную защиту от безоружных невинных людей."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/overseer.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/onmob/overseer_onmob.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/onmob/overseer_onmob.dmi'
+	icon_state = "overseerjacket"
+	item_state = "overseerjacket"
+	color = null
+	boobed = TRUE

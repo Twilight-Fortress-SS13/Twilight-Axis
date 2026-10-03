@@ -169,7 +169,7 @@
 		if(!apply_damage(dam2do, BRUTE, def_zone, armor_block, user))
 			nodmg = TRUE
 			next_attack_msg += VISMSG_ARMOR_BLOCKED
-		else if(!nodmg && (HAS_TRAIT(user, TRAIT_VAMPBITE)))
+		else if(!nodmg && (HAS_TRAIT(user, TRAIT_VAMPBITE)) && !(src.dna?.species?.species_traits && (NOSTOMACH in src.dna?.species?.species_traits)))
 			var/ramount = 15
 			var/rid = /datum/reagent/vampsolution
 			reagents.add_reagent(rid, ramount)
@@ -195,7 +195,9 @@
 				if(HAS_TRAIT(src, TRAIT_SILVER_BLESSED))
 					to_chat(user, span_warning("BLEH! [bite_victim] tastes of SILVER! My gift cannot take hold."))
 				else
-					if(caused_wound)
+					if(user.mind.has_antag_datum(/datum/antagonist/werewolf/noinfect)) //they can't infect anyone
+						to_chat(user, span_warning("My curse is not strong enough to infect [bite_victim]."))
+					else if(caused_wound)
 						var/infected = FALSE
 
 						for(var/datum/wound/W in affecting.wounds)
@@ -206,7 +208,7 @@
 						if(infected)
 							to_chat(user, span_boldnotice("I have successfully delivered the gift to [bite_victim] through their new wound!"))
 
-					if(prob(30))
+					if(prob(50))
 						user.werewolf_feed(bite_victim, 10)
 			if(istype(user.dna.species, /datum/species/gnoll))
 				if(prob(30))

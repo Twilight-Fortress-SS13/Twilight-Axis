@@ -58,13 +58,15 @@ GLOBAL_PROTECT(admin_verbs_admin)
 	/client/proc/investigate_show,		/*various admintools for investigation. Such as a singulo grief-log*/
 	/client/proc/secrets,				/* Almost entirely non-functional after Azure Peak Debloatening. Final few are redundant, but keeping just in case */
 	/client/proc/reload_admins,
-//	/client/proc/reload_whitelist,
+	/client/proc/recalc_pq_bulk,
+	/client/proc/recalc_pq_single,
 	/client/proc/reestablish_db_connection, /*reattempt a connection to the database*/
 	/client/proc/cmd_admin_pm_context,	/*right-click adminPM interface*/
 	/client/proc/cmd_admin_godmode_targetable,	/*right-click godmode toggle*/
 	/client/proc/cmd_admin_pm_panel,		/*admin-pm list*/
 	/client/proc/stop_sounds,
 	/client/proc/mark_datum_mapview,
+	/client/proc/view_admin_favorites, // TA EDIT
 
 	/client/proc/invisimin,				/*allows our mob to go invisible/visible*/
 //	/datum/admins/proc/show_traitor_panel,	/*interface which shows a mob's mind*/ -Removed due to rare practical use. Moved to debug verbs ~Errorage
@@ -77,6 +79,7 @@ GLOBAL_PROTECT(admin_verbs_admin)
 	/datum/admins/proc/toggleguests,	/*toggles whether guests can join the current game*/
 	/datum/admins/proc/announce,		/*priority announce something to all clients.*/
 	/datum/admins/proc/set_admin_notice, /*announcement all clients see when joining the server.*/
+	/datum/admins/proc/set_persistent_admin_notice,
 	/client/proc/toggle_game_master,	/*opens the game master panel*/
 	/client/proc/toggle_aghost_invis, /* lets us choose whether our in-game mob goes visible when we aghost (off by default) */
 	/client/proc/admin_ghost,			/*allows us to ghost/reenter body at will*/
@@ -142,6 +145,7 @@ GLOBAL_PROTECT(admin_verbs_sounds)
 GLOBAL_LIST_INIT(admin_verbs_fun, list(
 	/client/proc/cmd_admin_dress,
 	/client/proc/cmd_admin_dress_full,
+	/client/proc/cmd_admin_select_equipment, // TA EDIT
 	/client/proc/cmd_admin_gib_self,
 	/client/proc/drop_bomb,
 	/client/proc/set_dynex_scale,
@@ -165,7 +169,12 @@ GLOBAL_LIST_INIT(admin_verbs_fun, list(
 	/client/proc/smite
 	))
 GLOBAL_PROTECT(admin_verbs_fun)
-GLOBAL_LIST_INIT(admin_verbs_spawn, list(/datum/admins/proc/spawn_atom, /datum/admins/proc/podspawn_atom, /client/proc/respawn_character, /datum/admins/proc/beaker_panel))
+GLOBAL_LIST_INIT(admin_verbs_spawn, list(
+	/datum/admins/proc/spawn_atom,
+	/datum/admins/proc/podspawn_atom,
+	/client/proc/respawn_character,
+	/datum/admins/proc/beaker_panel
+))
 GLOBAL_PROTECT(admin_verbs_spawn)
 GLOBAL_LIST_INIT(admin_verbs_server, world.AVerbsServer())
 GLOBAL_PROTECT(admin_verbs_server)
@@ -195,7 +204,8 @@ GLOBAL_LIST_INIT(admin_verbs_debug, world.AVerbsDebug())
 GLOBAL_PROTECT(admin_verbs_debug)
 /world/proc/AVerbsDebug()
 	return list(
-	/client/proc/debug_variables,		/*allows us to -see- the variables of any instance in the game. +VAREDIT needed to modify*/
+	/client/proc/debug_variables_verb,		/*allows us to -see- the variables of any instance in the game. +VAREDIT needed to modify*/
+	/client/proc/display_tags,
 	/client/proc/restart_controller,
 	/client/proc/cmd_controller_view_ui,
 	/client/proc/cmd_admin_list_open_jobs,
@@ -257,6 +267,7 @@ GLOBAL_LIST_INIT(admin_verbs_hideable, list(
 	/datum/admins/proc/toggleguests,
 	/datum/admins/proc/announce,
 	/datum/admins/proc/set_admin_notice,
+	/datum/admins/proc/set_persistent_admin_notice,
 	/client/proc/toggle_aghost_invis,
 	/client/proc/admin_ghost,
 	/client/proc/toggle_view_range,
@@ -504,7 +515,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 
 /client/proc/check_antagonists()
 	set name = "Check Antags"
-	set category = "Game Master"
+	set category = "Game Master.Misc"
 	if(holder)
 		holder.check_antagonists()
 		log_admin("[key_name(usr)] checked antagonists.")	//for tsar~
@@ -660,7 +671,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Stealth Mode") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /client/proc/drop_bomb()
-	set category = "Game Master"
+	set category = "Game Master.Misc"
 	set name = "Bomb..."
 	set desc = ""
 
@@ -702,7 +713,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Drop Bomb") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /client/proc/drop_dynex_bomb()
-	set category = "Game Master"
+	set category = "Game Master.Misc"
 	set name = "Bomb - DynEx..."
 	set desc = ""
 
@@ -749,29 +760,29 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	message_admins("[key_name_admin(usr)] has	modified Dynamic Explosion Scale: [ex_scale]")
 
 /client/proc/give_spell(mob/T in GLOB.mob_list)
-	set category = "Game Master"
-	set name = "Give Spell"
+	set category = "Game Master.Misc"
+	// TA EDIT START
+	set name = "Give Spells"
 	set desc = ""
 
-	var/granted = loadout_add_spell(T)
-	if(granted)
-		SSblackbox.record_feedback("tally", "admin_verb", 1, "Give Spell") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	var/list/granted = loadout_add_spell(T)
+	if(length(granted))
+		SSblackbox.record_feedback("tally", "admin_verb", 1, "Give Spells") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	// TA EDIT END
 
 /client/proc/remove_spell(mob/T in GLOB.mob_list)
-	set category = "Game Master"
-	set name = "Remove Spell"
+	set category = "Game Master.Misc"
+	// TA EDIT START
+	set name = "Remove Spells"
 	set desc = ""
 
-	if(T && T.mind)
-		var/obj/effect/proc_holder/spell/S = input(usr, "Choose the spell to remove", "NO ABRAKADABRA") as null|anything in sortList(T.mind.spell_list)
-		if(S)
-			T.mind.RemoveSpell(S)
-			log_admin("[key_name(usr)] removed the spell [S] from [key_name(T)].")
-			message_admins(span_adminnotice("[key_name_admin(usr)] removed the spell [S] from [key_name_admin(T)]."))
-			SSblackbox.record_feedback("tally", "admin_verb", 1, "Remove Spell") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	var/list/removed = ta_remove_spells(T)
+	if(length(removed))
+		SSblackbox.record_feedback("tally", "admin_verb", 1, "Remove Spells") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	// TA EDIT END
 
 /client/proc/object_say(obj/O in world)
-	set category = "Admin.Special"
+	set category = "Game Master.Narration"
 	set name = "OSay"
 	set desc = ""
 	var/message = input(usr, "What do you want the message to be?", "Make Sound") as text | null
@@ -783,7 +794,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Object Say") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /client/proc/force_say(mob/living/L in GLOB.mob_list)
-	set category = "Admin.Special"
+	set category = "Game Master.Narration"
 	set name = "Force Speech"
 	set desc = ""
 

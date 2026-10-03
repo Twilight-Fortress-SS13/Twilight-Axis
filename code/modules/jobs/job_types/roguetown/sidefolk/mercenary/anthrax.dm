@@ -6,7 +6,7 @@
 	class_select_category = CLASS_CAT_RACIAL
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_BRAVO)
 
-	cmode_music = 'sound/music/combat_delf.ogg'
+	cmode_music = sound("sound/music/combat_delf.ogg")
 
 	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_ANTHRAXI, TRAIT_ALCHEMY_EXPERT) //TA EDIT
 	subclass_stats = list(
@@ -101,7 +101,7 @@
 	forbidden_races = list(RACES_ANTHRAX)
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_BRAVO)
 	class_select_category = CLASS_CAT_RACIAL
-	cmode_music = 'sound/music/combat_delf.ogg'
+	cmode_music = sound("sound/music/combat_delf.ogg")
 	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_ANTHRAXI, TRAIT_ALCHEMY_EXPERT) //TA EDIT
 	subclass_stats = list(
 		STATKEY_WIL = 2,
@@ -201,7 +201,7 @@
 	class_select_category = CLASS_CAT_RACIAL
 	category_tags = list(CTAG_MERCENARY)
 
-	cmode_music = 'sound/music/combat_delf.ogg'
+	cmode_music = sound("sound/music/combat_delf.ogg")
 
 	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_ANTHRAXI, TRAIT_ALCHEMY_EXPERT)
 	subclass_stats = list(

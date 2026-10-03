@@ -11,6 +11,8 @@
 			var/datum/virtue/origin/V = GLOB.virtues[picked]
 			if(!V.name)
 				return CHARACTER_ACT_DATA_UPDATE
+			if(istype(V, /datum/virtue/origin/unselectable)) // TA EDIT
+				return CHARACTER_ACT_DATA_UPDATE // TA EDIT
 			if(V.restricted == TRUE && (pref_species.type in V.races))
 				return
 			if(istype(V, /datum/virtue/origin/racial) && !(pref_species.type in V.races))

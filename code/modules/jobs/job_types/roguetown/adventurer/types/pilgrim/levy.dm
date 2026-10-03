@@ -5,7 +5,7 @@
 	forbidden_races = list(RACES_DESPISED)
 	outfit = /datum/outfit/job/roguetown/adventurer/levy
 	traits_applied = list(TRAIT_LEVY, TRAIT_HOMESTEAD_EXPERT)
-	cmode_music = 'sound/music/cmode/towner/combat_towner2.ogg'
+	cmode_music = sound("sound/music/cmode/towner/combat_towner2.ogg")
 	category_tags = list(CTAG_TOWNER)
 	townie_contract_gate_exempt = TRUE
 	maximum_possible_slots = 5 // They're still Towners who contribute to the econ, even when not fighting or bog-larping.
@@ -142,12 +142,12 @@
 				backr = /obj/item/rogueweapon/scabbard/gwstrap
 
 			if ("THE MINER'S PICKAXE (Pickaxe)")
-				H.adjust_skillrank_up_to(/datum/skill/labor/mining, SKILL_LEVEL_JOURNEYMAN, TRUE)
+				H.adjust_skillrank_up_to(/obj/item/rogueweapon/pick/militia::associated_skill, SKILL_LEVEL_JOURNEYMAN, TRUE) // ta edit
 				r_hand = /obj/item/rogueweapon/pick/militia
 				gloves = /obj/item/clothing/gloves/roguetown/leather
 
 			if ("MINE SCYTHE (Scythe)")
-				H.adjust_skillrank_up_to(/datum/skill/labor/farming, SKILL_LEVEL_JOURNEYMAN, TRUE)
+				H.adjust_skillrank_up_to(/obj/item/rogueweapon/scythe/militia::associated_skill, SKILL_LEVEL_JOURNEYMAN, TRUE) // ta edit
 				r_hand = /obj/item/rogueweapon/scythe/militia
 				gloves = /obj/item/clothing/gloves/roguetown/leather
 				backr = /obj/item/rogueweapon/scabbard/gwstrap

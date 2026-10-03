@@ -49,3 +49,13 @@
 
 /obj/item/clothing/under/roguetown/trou/leather/etrpants/donat
 	armor_class = null
+
+/obj/item/clothing/under/roguetown/heavy_leather_pants/otavan/overseer
+	name = "heavy trousers"
+	desc = "Пара застиранных тяжелых брюк серого цвета."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/overseer.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/onmob/overseer_onmob.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/onmob/overseer_onmob.dmi'
+	icon_state = "overseerpants"
+	item_state = "overseerpants"
+	color = null

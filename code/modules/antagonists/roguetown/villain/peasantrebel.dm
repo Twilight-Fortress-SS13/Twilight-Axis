@@ -41,7 +41,7 @@
 	if(!istype(H))
 		return
 	H.log_message("has been converted to the revolution!", LOG_ATTACK, color="red")
-	H.cmode_music = 'sound/music/cmode/antag/combat_cutpurse.ogg'
+	H.cmode_music = sound("sound/music/cmode/antag/combat_cutpurse.ogg")
 	H.add_stress(/datum/stressevent/prebel)
 	// Usable only once risen; the cast gates on it.
 	owner.AddSpell(new /obj/effect/proc_holder/spell/self/discard_upperclass)

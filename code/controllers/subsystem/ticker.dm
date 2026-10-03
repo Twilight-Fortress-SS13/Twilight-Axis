@@ -572,12 +572,13 @@ SUBSYSTEM_DEF(ticker)
 				var/atom/movable/screen/splash/S = new(living.client, TRUE)
 				S.Fade(TRUE)
 			livings += living
-			if(ishuman(living))
-				if(!(living.mind in SSgamemode.roundstart_build_replacement_minds)) // TA EDIT
-					SSrole_class_handler.setup_class_handler(living) // TA EDIT
-				try_apply_character_post_equipment(living)
 		else
 			continue
+	SSrole_class_handler.roll_roundstart_favorites(livings)
+	SSjob.settle_roll_tokens()
+	for(var/mob/living/carbon/human/human in livings)
+		SSrole_class_handler.setup_class_handler(human)
+		try_apply_character_post_equipment(human)
 	if(livings.len)
 		addtimer(CALLBACK(src, PROC_REF(release_characters), livings), 30, TIMER_CLIENT_TIME)
 
@@ -773,6 +774,7 @@ SUBSYSTEM_DEF(ticker)
 
 	SStriumphs.end_triumph_saving_time()
 	to_world(span_boldannounce("Rebooting World in [DisplayTimeText(delay)]. [reason]"))
+	SSvote?.remind_map_vote() // TA EDIT
 
 	var/start_wait = world.time
 	UNTIL(round_end_sound_sent || (world.time - start_wait) > (delay * 2))	//don't wait forever

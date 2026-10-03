@@ -53,6 +53,7 @@
 /obj/item/clothing/wrists/roguetown/bracers/ComponentInitialize()
 	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
 	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FREEBLADEDEXTERITY)
 
 /obj/item/clothing/wrists/roguetown/bracers/gold
 	name = "golden bracers"
@@ -168,6 +169,7 @@
 /obj/item/clothing/wrists/roguetown/bracers/leather/ComponentInitialize()
 	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FENCERDEXTERITY)
 	AddComponent(/datum/component/armour_filtering/positive, TRAIT_HONORBOUND)
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FREEBLADEDEXTERITY)
 
 /obj/item/clothing/wrists/roguetown/bracers/leather/heavy
 	name = "hardened leather bracers"
@@ -244,68 +246,6 @@
 	desc = "Sheared burlap and cloth, meticulously fashioned around the forearms. Taut fibers turn weeping gashes into mere tears along the cloth. </br>"
 	color = "#BFB8A9"
 
-// TA EDIT START
-// --- Lunacy Embracer ---
-/obj/item/clothing/wrists/roguetown/bracers/lunacy
-	name = "lunacy bracers"
-	desc = "The moon's touch hardened the furthest reaches of me - my hands, my wrists, the places that once trembled with fear.\
-	</br>Now they do not. I meditate, and they remember their strength."
-	icon_state = null
-	body_parts_covered = ARMS
-	armor = ARMOR_PLATE
-	blocksound = SOFTHIT
-	max_integrity = ARMOR_INT_SIDE_STEEL
-	anvilrepair = null
-	sewrepair = TRUE
-	resistance_flags = FIRE_PROOF
-	blocking_behavior = SAMEWEAR
-	pickup_sound = 'sound/foley/equip/equip_armor.ogg'
-	equip_sound = 'sound/foley/equip/equip_armor.ogg'
-	break_sound = 'sound/foley/cloth_rip.ogg'
-	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
-	var/repairmsg_end = "The moonlight fades from my bracers as they settle into calm strength."
-	var/repairmsg_continue = "My bracers mend some of their abuse..."
-	var/repairmsg_full = "My lunacy bracers are already whole."
-	var/repair_fraction = 0.35
-	var/repair_percent
-
-/obj/item/clothing/wrists/roguetown/bracers/lunacy/Initialize(mapload)
-	. = ..()
-	if(isnull(repair_percent))
-		repair_percent = repair_fraction * max_integrity
-
-/obj/item/clothing/wrists/roguetown/bracers/lunacy/equipped(mob/user, slot, initial = FALSE)
-	. = ..()
-	if(ishuman(user) && slot == SLOT_WRISTS)
-		RegisterSignal(user, COMSIG_MOB_MEDITATED, PROC_REF(on_wearer_meditated), override = TRUE)
-
-/obj/item/clothing/wrists/roguetown/bracers/lunacy/dropped(mob/living/carbon/human/user)
-	if(ismob(user))
-		UnregisterSignal(user, COMSIG_MOB_MEDITATED)
-	return ..()
-
-/obj/item/clothing/wrists/roguetown/bracers/lunacy/get_mechanics_examine(mob/user)
-	. = ..()
-	. += span_info("Repairable by completing a *meditate emote.")
-
-/obj/item/clothing/wrists/roguetown/bracers/lunacy/proc/on_wearer_meditated(mob/living/carbon/human/user)
-	SIGNAL_HANDLER
-	var/mob/living/carbon/human/H = loc
-	if(!ishuman(H) || H.wear_wrists != src)
-		return
-	if(obj_integrity >= max_integrity)
-		to_chat(user, span_warning(repairmsg_full))
-		return
-	armour_regen()
-
-/obj/item/clothing/wrists/roguetown/bracers/lunacy/proc/armour_regen(repair_amount = repair_percent)
-	if(obj_integrity >= max_integrity)
-		to_chat(loc, span_notice(repairmsg_end))
-	to_chat(loc, span_notice(repairmsg_continue))
-	obj_integrity = min(obj_integrity + repair_amount, max_integrity)
-	if(obj_broken)
-		obj_fix(full_repair = FALSE)
-// TA EDIT END
 
 //Queensleeves
 /obj/item/clothing/wrists/roguetown/royalsleeves
@@ -363,6 +303,7 @@
 /obj/item/clothing/wrists/roguetown/bracers/brigandine/ComponentInitialize()
 	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
 	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FREEBLADEDEXTERITY)
 
 /obj/item/clothing/wrists/roguetown/bracers/splint
 	name = "splint bracers"
@@ -378,6 +319,11 @@
 	w_class = WEIGHT_CLASS_NORMAL
 	resistance_flags = FIRE_PROOF
 	sewrepair = FALSE
+
+/obj/item/clothing/wrists/roguetown/bracers/splint/ComponentInitialize()
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FREEBLADEDEXTERITY)
 
 /obj/item/clothing/wrists/roguetown/bracers/iron
 	name = "iron bracers"
@@ -405,6 +351,17 @@
 /obj/item/clothing/wrists/roguetown/bracers/jackchain/ComponentInitialize()
 	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FENCERDEXTERITY)
 	AddComponent(/datum/component/armour_filtering/positive, TRAIT_HONORBOUND)
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FREEBLADEDEXTERITY)
+
+/obj/item/clothing/wrists/roguetown/bracers/jackchain/alloyed
+	name = "alloyed jack chains"
+	desc = "Thin strips of darkened, dirty steel riveted to thin shoulder and elbow plates, with a thin strip of gold running through them."
+	max_integrity = ARMOR_INT_SIDE_STEEL
+	armor = ARMOR_MAILLE
+
+/obj/item/clothing/wrists/roguetown/bracers/jackchain/alloyed/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS, HERESYDESC_MATTHIOS_GRINNING)
+
 
 /obj/item/clothing/wrists/roguetown/gem
 	name = "gem bracelet base"
@@ -495,6 +452,11 @@
 		playsound(user, 'sound/foley/equip/chain_equip.ogg', 50, TRUE)
 		wrapped = FALSE
 
+/obj/item/clothing/wrists/roguetown/bracers/aalloy/chain/ComponentInitialize()
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FREEBLADEDEXTERITY)
+
 /obj/item/clothing/wrists/roguetown/bracers/paalloy/chain
 	name = "ancient chain sleeves"
 	desc = "Coverings of polished gilbranze-maille, fashioned from hundreds of interlinked rings. An aura of undying harlotry eminates from these sleeves. \
@@ -530,6 +492,11 @@
 		playsound(user, 'sound/foley/equip/chain_equip.ogg', 50, TRUE)
 		wrapped = FALSE
 
+/obj/item/clothing/wrists/roguetown/bracers/paalloy/chain/ComponentInitialize()
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FREEBLADEDEXTERITY)
+
 /obj/item/clothing/wrists/roguetown/bracers/iron/chain
 	name = "iron chain sleeves"
 	desc = "Coverings of iron maille, fashioned from hundreds of interlinked rings. An aura of traditional harlotry eminates from these sleeves. \
@@ -564,6 +531,11 @@
 		user.update_inv_shirt()
 		playsound(user, 'sound/foley/equip/chain_equip.ogg', 50, TRUE)
 		wrapped = FALSE
+
+/obj/item/clothing/wrists/roguetown/bracers/iron/chain/ComponentInitialize()
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FREEBLADEDEXTERITY)
 
 /obj/item/clothing/wrists/roguetown/bracers/bronze/chain
 	name = "bronze chain sleeves"
@@ -601,6 +573,11 @@
 		playsound(user, 'sound/foley/equip/chain_equip.ogg', 50, TRUE)
 		wrapped = FALSE
 
+/obj/item/clothing/wrists/roguetown/bracers/bronze/chain/ComponentInitialize()
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FREEBLADEDEXTERITY)
+
 /obj/item/clothing/wrists/roguetown/bracers/chain
 	name = "chain sleeves"
 	desc = "Coverings of steel maille, fashioned from hundreds of interlinked rings. An aura of inexplicable harlotry eminates from these sleeves. \
@@ -635,6 +612,11 @@
 		user.update_inv_shirt()
 		playsound(user, 'sound/foley/equip/chain_equip.ogg', 50, TRUE)
 		wrapped = FALSE
+
+/obj/item/clothing/wrists/roguetown/bracers/chain/ComponentInitialize()
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FREEBLADEDEXTERITY)
 
 //
 
@@ -717,7 +699,7 @@
 
 /obj/item/clothing/wrists/roguetown/bracers/leather/baotha
 	name = "saccharine cuffs"
-	desc = "A betrayal without compare, and a sin without redemption; or so, She believed.."
+	desc = "The priestess, desperate to relieve the pain of her sickly congregation, attempted to take more than Eora's grace would give; but she was discovered, and the Eleven were incensed."
 	icon_state = "baothabracers"
 	chunkcolor = "#6d1c87"
 	armor = ARMOR_PADDED

@@ -410,6 +410,7 @@
 		"Bowl" = /obj/item/reagent_containers/glass/bowl,
 		"Fork" = /obj/item/kitchen/fork/iron,
 		"Spoon" = /obj/item/kitchen/spoon/iron,
+		"Chisel Set" = /obj/item/rogueweapon/chisel/assembly/arcyne,
 		"Needle" = /obj/item/needle
 	)
 	cooldown_time = 30 SECONDS
@@ -467,7 +468,7 @@
 		I.fiber_salvage = FALSE
 
 		// Conjured glow
-		I.AddComponent(/datum/component/conjured_item, GLOW_COLOR_EARTHEN)
+		I.AddComponent(/datum/component/conjured_item, GLOW_COLOR_EARTHEN, do_not_decay = TRUE)
 	RegisterSignal(R, COMSIG_ITEM_BROKEN, PROC_REF(revert))
 	RegisterSignal(H, COMSIG_LIVING_RESIST, PROC_REF(revert))
 	RegisterSignal(R, COMSIG_ITEM_DROPPED, PROC_REF(revert_perspective))
@@ -571,6 +572,7 @@
 		"Bowl" = /obj/item/reagent_containers/glass/bowl,
 		"Fork" = /obj/item/kitchen/fork/iron,
 		"Spoon" = /obj/item/kitchen/spoon/iron,
+		"Chisel Set" = /obj/item/rogueweapon/chisel/assembly/arcyne,
 		"Needle" = /obj/item/needle
 	)
 	cooldown_time = 30 SECONDS

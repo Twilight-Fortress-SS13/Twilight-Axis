@@ -30,7 +30,7 @@
 		owner.become_unknown_to(MF)
 
 	var/mob/living/carbon/human/H = owner.current
-	H.cmode_music = 'sound/music/combat_cult.ogg'
+	H.cmode_music = sound("sound/music/combat_cult.ogg")
 	H.faction = list(FACTION_UNDEAD)
 	H.equipOutfit(/datum/outfit/job/roguetown/unbound_deathknight)
 
@@ -105,6 +105,9 @@
 
 /datum/outfit/job/roguetown/unbound_deathknight/pre_equip(mob/living/carbon/human/H)
 	..()
+
+	change_origin(H, /datum/virtue/origin/unselectable/skeleton, "Legion")
+
 	H.adjust_skillrank(/datum/skill/combat/knives, 3, TRUE)
 	H.adjust_skillrank(/datum/skill/combat/polearms, 3, TRUE)
 	H.adjust_skillrank(/datum/skill/combat/maces, 3, TRUE)

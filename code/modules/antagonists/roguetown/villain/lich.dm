@@ -109,7 +109,7 @@
 		owner.become_unknown_to(MF)
 
 	var/mob/living/carbon/human/L = owner.current
-	L.cmode_music = 'modular_twilight_axis/sound/music/combat_lich.ogg' //TA_EDIT
+	L.cmode_music = sound("modular_twilight_axis/sound/music/combat_lich.ogg") //TA_EDIT
 	L.faction = list(FACTION_UNDEAD)
 
 	for(var/datum/charflaw/cf in L.charflaws)
@@ -130,6 +130,7 @@
 
 /datum/outfit/job/roguetown/lich/pre_equip(mob/living/carbon/human/H) //Equipment is located below
 	..()
+
 	//Skilled upto, so we don't have legendary wrestling crit resist fullplate lich or legendary riding lich that nobody can keep up with
 	//Some of these will be replaced by class, but its a much healthier lich balance, all in in.
 

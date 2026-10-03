@@ -10,6 +10,7 @@
 	antag_flag = ROLE_DREAMWALKER
 	shared_occurence_type = SHARED_MINOR_THREAT
 	storyteller_antag_flags = STORYTELLER_ANTAG_SOFT
+	consumes_hard_antag_slot = FALSE // TA EDIT
 	min_players = HARD_ANTAG_MIN_POP
 
 	denominator = 80
@@ -36,12 +37,13 @@
 
 /datum/round_event/antagonist/solo/dreamwalker
 
-// Disabled as this does not work with dreamwalker procs right now, spells won't be stripped so mage + dreamwalker is an issue.
-// /datum/round_event_control/antagonist/solo/dreamwalker/roundstart
-// 	name = "Dreamwalker"
-// 	roundstart = TRUE
-// 	min_players = HARD_ANTAG_MIN_POP
-// 	base_antags = 2
-// 	maximum_antags = 2
-// 	max_occurrences = 1
-// 	prompted_picking = FALSE
+/datum/round_event_control/antagonist/solo/dreamwalker/roundstart // TA EDIT START
+	name = "Dreamwalker"
+	roundstart = TRUE
+	storyteller_antag_flags = STORYTELLER_ANTAG_ROUNDSTART | STORYTELLER_ANTAG_SOFT
+	min_players = HARD_ANTAG_MIN_POP
+	base_antags = 1
+	maximum_antags = 1
+	max_occurrences = 1
+	earliest_start = 0 SECONDS
+	prompted_picking = FALSE // TA EDIT END

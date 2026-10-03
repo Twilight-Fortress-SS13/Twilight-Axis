@@ -18,7 +18,7 @@
 
 	outfit = /datum/outfit/job/roguetown/apothecary
 
-	cmode_music = 'sound/music/combat_physician.ogg'
+	cmode_music = sound("sound/music/combat_physician.ogg")
 
 	display_order = JDO_APOTHECARY
 	give_bank_account = TRUE

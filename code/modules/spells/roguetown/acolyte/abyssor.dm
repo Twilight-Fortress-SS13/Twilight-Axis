@@ -147,7 +147,7 @@
 		revert_cast()
 		return FALSE
 
-	var/A = getfishingloot(user, fishingMods, T, 0.5)
+	var/A = getfishingloot(user, fishingMods.Copy(), T, 0.5)
 	if(!A)
 //		to_chat(user, "FAIL: no loot roll")
 		to_chat(user, span_warning("The waters remain still."))
@@ -171,12 +171,14 @@
 	streak++
 //	to_chat(user, "Streak now: [streak]")
 
-	AF.pixel_x = 0
-	AF.pixel_y = 0
-	AF.pixel_z = 0
-
-	spawn(1)
-		abyssor_fish_arc(AF, T, user)
+	if(ispath(A, /mob/living))
+		new /obj/effect/temp_visual/hunting_phantom(T, A, /datum/component/rot/simple/hunt, 3 SECONDS)
+	else
+		AF.pixel_x = 0
+		AF.pixel_y = 0
+		AF.pixel_z = 0
+		spawn(1)
+			abyssor_fish_arc(AF, T, user)
 
 	record_featured_stat(FEATURED_STATS_FISHERS, user)
 	record_round_statistic(STATS_FISH_CAUGHT)
@@ -204,7 +206,7 @@
 
 //		to_chat(user, "do_after success")
 
-		var/A2 = getfishingloot(user, fishingMods, T, 0.5)
+		var/A2 = getfishingloot(user, fishingMods.Copy(), T, 0.5)
 		if(!A2)
 //			to_chat(user, "BREAK: no loot roll")
 			to_chat(user, span_warning("The waters remain still."))
@@ -224,12 +226,14 @@
 		streak++
 //		to_chat(user, "Streak now: [streak]")
 
-		AF2.pixel_x = 0
-		AF2.pixel_y = 0
-		AF2.pixel_z = 0
-
-		spawn(1)
-			abyssor_fish_arc(AF2, T, user)
+		if(ispath(A2, /mob/living))
+			new /obj/effect/temp_visual/hunting_phantom(T, A2, /datum/component/rot/simple/hunt, 2.5 SECONDS)
+		else
+			AF2.pixel_x = 0
+			AF2.pixel_y = 0
+			AF2.pixel_z = 0
+			spawn(1)
+				abyssor_fish_arc(AF2, T, user)
 
 		record_featured_stat(FEATURED_STATS_FISHERS, user)
 		record_round_statistic(STATS_FISH_CAUGHT)
@@ -258,8 +262,12 @@
 	sound = 'sound/magic/abyssor_splash.ogg'
 	associated_skill = /datum/skill/magic/holy
 	antimagic_allowed = FALSE
+	// TA REMOVAL START - Second Wind now casted without invocation
+	/*
 	invocations = list("What is drowned shall rise anew!")
 	invocation_type = "shout"
+	*/
+	// TA REMOVAL END
 	recharge_time = 2 MINUTES
 	devotion_cost = 30
 	miracle = TRUE
@@ -491,11 +499,18 @@
 	. = ..()
 	var/turf/T = get_turf(targets[1])
 	if(isopenturf(T))
-		if(!user.mind.has_spell(/datum/action/cooldown/spell/minion_order))
-			user.mind.AddSpell(new /datum/action/cooldown/spell/minion_order)
+		if(!("[user.mind.current.real_name]_faction" in user.faction)) // TA EDIT START
+			user.faction |= "[user.mind.current.real_name]_faction"
+		if(!user.mind.has_spell(/datum/action/cooldown/spell/gravemark/abyssor))
+			user.mind.AddSpell(new /datum/action/cooldown/spell/gravemark/abyssor)
+		if(!user.mind.has_spell(/datum/action/cooldown/spell/minion_order/abyssor))
+			user.mind.AddSpell(new /datum/action/cooldown/spell/minion_order/abyssor)
 		QDEL_NULL(summoned)
-		summoned = new /mob/living/simple_animal/hostile/retaliate/rogue/mossback(T, user, townercrab)
-		return TRUE
+		summoned = new /mob/living/simple_animal/hostile/retaliate/rogue/mossback/summoned_abyssor(T, user, townercrab)
+		if(ishuman(user))
+			var/mob/living/carbon/human/H = user
+			H.apply_abyssor_mossback_mode(summoned)
+		return TRUE // TA EDIT END
 	else
 		to_chat(user, span_warning("The targeted location is blocked. My call fails to draw a mossback."))
 		return FALSE

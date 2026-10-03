@@ -4,7 +4,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 
 	outfit = /datum/outfit/job/roguetown/wretch/berserker
-	cmode_music = 'sound/music/cmode/antag/combat_darkstar.ogg'
+	cmode_music = sound("sound/music/cmode/antag/combat_darkstar.ogg")
 	class_select_category = CLASS_CAT_WARRIOR
 	category_tags = list(CTAG_WRETCH)
 	traits_applied = list(TRAIT_STRONGBITE, TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN, TRAIT_RAGE)
@@ -85,7 +85,7 @@
 					if("Knuckledusters")
 						gloves = /obj/item/clothing/gloves/roguetown/knuckles
 					if("Punch Dagger")
-						r_hand = /obj/item/rogueweapon/katar/punchdagger
+						beltr = /obj/item/rogueweapon/katar/punchdagger
 			if("Martial Expert") // designed to compete with unarmed by giving you alternatives to approaching fights- only expert
 				var/list/martial_options = list("Greatsword", "Battle Axe", "Grand Mace", "Longsword")
 				var/weapon_choice = input(H, "Choose your WEAPONS of WAR!", "SPILL THEIR ENTRAILS.") as anything in martial_options

@@ -254,7 +254,10 @@
 	if(!has_dna())
 		return
 
-	switch(deconstruct_block(getblock(dna.uni_identity, DNA_GENDER_BLOCK), 3))
+	var/gender_block = getblock(dna.uni_identity, DNA_GENDER_BLOCK) // TA EDIT START
+	if(isnull(hex2num(gender_block, TRUE)))
+		return
+	switch(deconstruct_block(gender_block, 3)) // TA EDIT END
 		if(G_MALE)
 			gender = MALE
 		if(G_FEMALE)

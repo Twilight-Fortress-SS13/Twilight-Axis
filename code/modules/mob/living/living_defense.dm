@@ -76,7 +76,7 @@
 			var/obj/item/I = used_weapon
 			if(I.sharpness && I.max_blade_int && !(attack_flag in ARMOR_DR_TYPES))
 				var/dullness_ratio = I.blade_int / I.max_blade_int
-				if(dullness_ratio <= SHARPNESS_TIER2_THRESHOLD)	//Our weapon is CHUNKED. What are we PENNING WITH.
+				if(dullness_ratio <= SHARPNESS_TIER2_THRESHOLD && armor_tier)	//Our weapon is CHUNKED. What are we PENNING WITH.
 					blocked = block_damage * 10
 
 	break_invisibility_from_combat()
@@ -301,7 +301,7 @@
 		return
 	var/aimed_zone = def_zone
 	var/list/roll_out = list()
-	def_zone = bullet_hit_accuracy_check(P.accuracy + P.bonus_accuracy, def_zone, roll_out)
+	def_zone = bullet_hit_accuracy_check(P.get_aim_from(src), def_zone, roll_out)
 	var/armor = run_armor_check(def_zone, P.flag, "", "",armor_penetration = P.armor_penetration, damage = P.damage, intdamfactor = P.intdamfactor, used_weapon = P)
 
 	next_attack_msg.Cut()
@@ -657,6 +657,10 @@
 
 /mob/living/proc/checkguard(mob/living/simple_animal/attacker)
 	var/mob/living/carbon/human/target = src
+	if((ishuman(target) && target.has_status_effect(/datum/status_effect/buff/bulwark_of_oil)))
+		var/datum/status_effect/buff/bulwark_of_oil/o = target.has_status_effect(/datum/status_effect/buff/bulwark_of_oil)
+		o.simple_defend(attacker) // I hate this why do we handle simplemob ripostes like this why dont we use signals like every other defense
+		return TRUE
 	if(!(ishuman(target) && target.has_status_effect(/datum/status_effect/buff/clash)))
 		return FALSE
 	var/obj/item/IM = target.get_active_held_item()

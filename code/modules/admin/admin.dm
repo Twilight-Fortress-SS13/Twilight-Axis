@@ -91,6 +91,7 @@
 		var/pq = get_playerquality(M.ckey, TRUE)
 		var/pq_num = get_playerquality(M.ckey, FALSE)
 		body += "<br><br>Player Quality: [pq] ([pq_num])"
+		body += "<br>Roll Tokens: [M.client.prefs.roll_tokens]/[MAX_ROLL_TOKENS]"
 		body += "<br><a href='?_src_=holder;[HrefToken()];editpq=add;mob=[REF(M)]'>\[Modify PQ\]</a> "
 		body += "<a href='?_src_=holder;[HrefToken()];showpq=add;mob=[REF(M)]'>\[Check PQ\]</a> "
 		body += "<br><a href='?_src_=holder;[HrefToken()];edittriumphs=add;mob=[REF(M)]'>\[Modify Triumphs\]</a> "
@@ -179,7 +180,9 @@
 	body += "<A href='?_src_=holder;[HrefToken()];subtlemessage=[REF(M)]'>Subtle message</A>"
 	//body += "<A href='?_src_=holder;[HrefToken()];languagemenu=[REF(M)]'>Language Menu</A>"
 	body += "<br><A href='?_src_=holder;[HrefToken()];heal_panel=[REF(M)]'>Heal Panel</A> | "
-	body += "<A href='?_src_=holder;[HrefToken()];inventory_panel=[REF(M)]'>Inventory Panel</A> |"
+	body += "<A href='?_src_=holder;[HrefToken()];inventory_panel=[REF(M)]'>Inventory Panel</A> | " // TA EDIT START
+	if(ishuman(M) || isobserver(M))
+		body += "<A href='?_src_=holder;[HrefToken()];select_equipment=[REF(M)]'>Select Equipment</A> | " // TA EDIT END
 	body += "<A href='?_src_=holder;[HrefToken()];examine_player=[REF(M)]'>Flavor Text</A>"
 
 	body += "</div>"
@@ -275,13 +278,13 @@
 		body += "<br>"
 		body += "</body></html>"
 
-	usr << browse(body, "window=adminplayeropts-[REF(M)];size=800x600")
+	usr << browse(body, "window=adminplayeropts-[REF(M)];size=1000x800")
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Player Panel") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /datum/admins/proc/admin_heal(mob/living/M in GLOB.mob_list)
 	set name = "Mob - Heal"
 	set desc = "Heal a mob to full health"
-	set category = "Game Master"
+	set category = "Game Master.Misc"
 
 	if(!check_rights())
 		return
@@ -291,7 +294,7 @@
 	log_admin("[key_name(usr)] healed [key_name(M)].")
 
 /datum/admins/proc/show_player_panel(mob/M in GLOB.mob_list)
-	set category = "Game Master"
+	set category = "Game Master.Misc"
 	set name = "Show Player Panel"
 	set desc="Edit player (respawn, ban, heal, etc)"
 
@@ -308,7 +311,7 @@
 /datum/admins/proc/admin_revive(mob/living/M in GLOB.mob_list)
 	set name = "Mob - Revive"
 	set desc = "Resuscitate a mob"
-	set category = "Game Master"
+	set category = "Game Master.Misc"
 
 	if(!check_rights())
 		return
@@ -334,7 +337,7 @@
 /datum/admins/proc/admin_sleep(mob/living/M in GLOB.mob_list)
 	set name = "Toggle Sleeping"
 	set desc = "Toggle a mob's sleeping state"
-	set category = "Game Master"
+	set category = "Game Master.Misc"
 
 	if(!check_rights())
 		return
@@ -528,6 +531,48 @@
 	GLOB.admin_notice = new_admin_notice
 	return
 
+#define PERSISTENT_ADMIN_NOTICE_FILE "data/persistent_admin_notice.txt"
+
+/proc/load_persistent_admin_notice()
+	if(!fexists(PERSISTENT_ADMIN_NOTICE_FILE))
+		return ""
+	return file2text(PERSISTENT_ADMIN_NOTICE_FILE)
+
+/proc/save_persistent_admin_notice(text)
+	fdel(PERSISTENT_ADMIN_NOTICE_FILE)
+	if(text)
+		text2file(text, PERSISTENT_ADMIN_NOTICE_FILE)
+
+#undef PERSISTENT_ADMIN_NOTICE_FILE
+
+/datum/admins/proc/set_persistent_admin_notice()
+	set category = "Server"
+	set name = "Set Persistent Admin Notice"
+	set desc = "Set an announcement that appears to everyone who joins the server, every round, until cleared."
+	if(!check_rights(0))
+		return
+
+	var/old_notice = GLOB.persistent_admin_notice
+	var/new_notice = input(src, "Set a public notice that persists across rounds. Everyone who joins the server will see it until it is cleared.\n(Leaving it blank will delete the current persistent notice):", "Set Persistent Notice", old_notice) as message|null
+	if(new_notice == null)
+		return
+	if(new_notice == old_notice)
+		return
+
+	GLOB.persistent_admin_notice = new_notice
+	save_persistent_admin_notice(new_notice)
+	if(new_notice == "")
+		if(GLOB.admin_notice == old_notice)
+			GLOB.admin_notice = ""
+		message_admins("[key_name(usr)] removed the persistent admin notice.")
+		log_admin("[key_name(usr)] removed the persistent admin notice:\n[old_notice]")
+	else
+		GLOB.admin_notice = new_notice
+		message_admins("[key_name(usr)] set the persistent admin notice.")
+		log_admin("[key_name(usr)] set the persistent admin notice:\n[new_notice]")
+		to_world(span_adminnotice("<b>Admin Notice:</b>\n \t [new_notice]"))
+	SSblackbox.record_feedback("tally", "admin_verb", 1, "Set Persistent Admin Notice")
+
 /datum/admins/proc/toggleooc()
 	set category = "Server"
 	set desc="Toggle dis bitch"
@@ -649,7 +694,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////ADMIN HELPER PROCS
 
 /datum/admins/proc/spawn_atom(object as text)
-	set category = "Game Master"
+	set category = "Game Master.Misc"
 	set desc = ""
 	set name = "Spawn..."
 
@@ -911,14 +956,13 @@
 	else
 		alert(usr, "Target has no mind!") // Optional Error check that may or may not be neccessary
 	GLOB.chosen_names -= H.real_name
-	if(mob_job)
-		LAZYREMOVE(GLOB.actors_list[SSjob.bitflag_to_department(mob_job.department_flag, mob_job.obsfuscated_job)], H.mobid)
+	LAZYREMOVE(GLOB.actors_list, H.mobid)
 	H.returntolobby()
 
 
 /datum/admins/proc/sleep_view()
 	set name = "inview Sleep"
-	set category = "Game Master"
+	set category = "Game Master.Misc"
 	set hidden = FALSE
 
 	if(!check_rights(R_ADMIN))
@@ -933,7 +977,7 @@
 
 /datum/admins/proc/wake_view()
 	set name = "inview Wake"
-	set category = "Game Master"
+	set category = "Game Master.Misc"
 	set hidden = FALSE
 
 	if(!check_rights(R_ADMIN))

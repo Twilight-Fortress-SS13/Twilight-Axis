@@ -22,7 +22,7 @@
 	max_pq = null
 	round_contrib_points = 2
 	same_job_respawn_delay = 30 MINUTES
-	cmode_music = 'modular_twilight_axis/sound/music/combat/combat_watchman.ogg'
+	cmode_music = sound("modular_twilight_axis/sound/music/combat/combat_watchman.ogg")
 	job_subclasses = list(
 		/datum/advclass/town_watch,
 		/datum/advclass/town_watch/dungeoneer,

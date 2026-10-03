@@ -50,6 +50,19 @@ const FeatureChoiceAccessory = (props: { customizer: Customizer }) => {
     <>
       <Stack.Item>
         <Stack align="center">
+          <Stack.Item>
+            <Button
+              icon="chevron-left"
+              tooltip="Previous"
+              onClick={() =>
+                act('change_customizer_popup', {
+                  customizer: customizer.type,
+                  task: 'rotate_accessory',
+                  direction: 'prev',
+                })
+              }
+            />
+          </Stack.Item>
           <Stack.Item grow minWidth={0}>
             <Button
               ellipsis
@@ -65,6 +78,19 @@ const FeatureChoiceAccessory = (props: { customizer: Customizer }) => {
             >
               {accessory.name}
             </Button>
+          </Stack.Item>
+          <Stack.Item>
+            <Button
+              icon="chevron-right"
+              tooltip="Next"
+              onClick={() =>
+                act('change_customizer_popup', {
+                  customizer: customizer.type,
+                  task: 'rotate_accessory',
+                  direction: 'next',
+                })
+              }
+            />
           </Stack.Item>
         </Stack>
       </Stack.Item>

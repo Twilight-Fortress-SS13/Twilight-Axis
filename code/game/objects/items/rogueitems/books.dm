@@ -611,6 +611,12 @@
 	base_icon_state = "book6"
 	bookfile = "naledi4.json"
 
+/obj/item/book/rogue/lamplighter
+	name = "Roadsman's Codex"
+	desc = "By Lampsmith Arlniss"
+	icon_state = "lawtome_0"
+	base_icon_state = "lawtome"
+	bookfile = "lamplighter.json"
 
 /obj/item/book/rogue/playerbook
 	var/player_book_text
@@ -635,7 +641,7 @@
 	base_icon_state = "basic_book"
 	override_find_book = TRUE
 
-/obj/item/book/rogue/playerbook/Initialize(mapload, loc, in_round_player_generated, mob/living/in_round_player_mob, text)
+/obj/item/book/rogue/playerbook/Initialize(mapload, in_round_player_generated, mob/living/in_round_player_mob, text) // TA EDIT
 	. = ..()
 	is_in_round_player_generated = in_round_player_generated
 	if(is_in_round_player_generated)

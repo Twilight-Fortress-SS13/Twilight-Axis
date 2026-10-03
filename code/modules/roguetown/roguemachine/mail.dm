@@ -318,7 +318,14 @@
 	if(!user)
 		return
 	var/what = ghost_send ? "posted GHOST mail (delayed)" : "sent mail"
-	log_mail("[key_name(user)] [what] via [name]/[(loc)] from [sender_name] to [recipient_name]") // TA EDIT
+	var/logged_content = "(no text content)"
+	if(istext(content) && length(content))
+		logged_content = replacetext(content, "<br>", "\\n")
+		logged_content = replacetext(logged_content, "<br/>", "\\n")
+		logged_content = replacetext(logged_content, "<br />", "\\n")
+		logged_content = html_decode(logged_content)
+		logged_content = replacetext(logged_content, "\n", "\\n")
+	log_mail("[key_name(user)] [what] via [name]/[(loc)] from [sender_name] to [recipient_name] | CONTENT: [logged_content]") // TA EDIT
 	var/link = archive_letter(sender_name, recipient_name, content, key_name(user))
 	message_admins("[key_name(user)] [what] via [name]/[(loc)] from [sender_name] to [recipient_name][link]")
 	return link
@@ -438,7 +445,9 @@
 	var/parsed_content = parsemarkdown(html_encode(content), user)
 	P.info += "<font face=\"[FOUNTAIN_PEN_FONT]\" color=#14103f>[parsed_content]</font>"
 	P.mailer = sanitize(sender)
-	P.mailedto = sanitize(recipient)
+	if(!(findtext(recipient,"#")==1))
+		recipient = reject_bad_name(recipient, max_length=MAX_HERMES_NAME_LEN) // reject_bad_name doesn't let you use #s in names, so we only apply this if it's NOT a hermes number
+	P.mailedto = recipient
 	P.reload_fields()
 	P.update_icon()
 	return P
@@ -954,6 +963,8 @@
 			return
 		if(alert(user, "Send Mail?",,"YES","NO") == "YES")
 			var/send2place = html_decode(sanitize(input(user, "Where to? (Person or #number)", "ROGUETOWN", null)))
+			if(!(findtext(send2place,"#")==1))
+				send2place = html_decode(reject_bad_name(send2place, max_length=MAX_HERMES_NAME_LEN)) // reject_bad_name doesn't let you use #s in names, so we only apply this if it's NOT a hermes number
 			var/sentfrom = sanitize(input(user, "Who is this from? (Leave blank to send anonymously)", "ROGUETOWN", null))
 			if(!sentfrom)
 				sentfrom = "Anonymous"

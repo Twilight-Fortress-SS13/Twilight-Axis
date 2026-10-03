@@ -329,9 +329,7 @@ SUBSYSTEM_DEF(migrants)
 		var/mob_rank = role.name // TA EDIT
 		if(character.mind.special_role == "Court Agent")
 			mob_rank = "Adventurer"
-		if(!GLOB.actors_list["Migrants"]) // TA EDIT
-			GLOB.actors_list["Migrants"] = list() // TA EDIT
-		GLOB.actors_list["Migrants"] += list("[character.mobid]" = "[mob_name] as the [humanc.dna.species.name] [mob_rank]<BR>") // TA EDIT
+		GLOB.actors_list[character.mobid] = list("name" = mob_name, "rank" = mob_rank) // TA EDIT
 		log_character("[character.ckey] ([fakekey]) - [character.real_name] - [rank]")
 	if(GLOB.respawncounts[character.ckey])
 		var/AN = GLOB.respawncounts[character.ckey]
@@ -374,6 +372,7 @@ SUBSYSTEM_DEF(migrants)
 		human_character.flag_gear_as_worn()
 
 	if(role.advclass_cat_rolls)
+		hugboxify_for_class_selection(character) // TA EDIT
 		SSrole_class_handler.setup_class_handler(character, role.advclass_cat_rolls)
 	else
 		// Apply a special if we're not applying an adv class, otherwise let the adv class apply it afterwards
@@ -407,11 +406,24 @@ SUBSYSTEM_DEF(migrants)
 	priority += shuffle(unpledged)
 	return priority
 
+/datum/controller/subsystem/migrants/proc/get_respawn_cooldown_remaining(client/player) // TA EDIT
+	if(!player?.ckey)
+		return 0
+	var/datum/job/migrant_job = SSjob.GetJob("Migrant")
+	if(!migrant_job?.same_job_respawn_delay)
+		return 0
+	var/delay_until = GLOB.job_respawn_delays[player.ckey]
+	if(!delay_until || world.time >= delay_until)
+		return 0
+	return delay_until - world.time
+
 /datum/controller/subsystem/migrants/proc/can_be_role(client/player, role_type)
 	var/datum/migrant_role/role = MIGRANT_ROLE(role_type)
 	if(!player)
 		return FALSE
 	if(!player.prefs)
+		return FALSE
+	if(get_respawn_cooldown_remaining(player)) // TA EDIT
 		return FALSE
 	var/datum/preferences/prefs = player.prefs
 	if(role.forbidden_races && (prefs.pref_species.type in role.forbidden_races))

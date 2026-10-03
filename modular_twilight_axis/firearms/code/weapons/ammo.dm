@@ -130,14 +130,22 @@
 
 /atom/movable/screen/alert/status_effect/debuff/psypowder
 	name = "Runed Poison"
-	desc = "This powder is killing my eyes and body. I cant see and move..."
-	icon_state = "blind"
+	desc = "This powder is killing my eyes and body. I barely can see and move..."
+	icon = 'modular_twilight_axis/icons/mob/screen_alert.dmi'
+	icon_state = "runed_poison"
 
 /datum/status_effect/debuff/psypowder
-	id = "blind"
+	id = "runed_poison"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/psypowder
-	effectedstats = list(STATKEY_STR = -5, STATKEY_SPD = -5, STATKEY_CON = -3)
+	effectedstats = list(STATKEY_STR = -3, STATKEY_SPD = -3, STATKEY_CON = -2, STATKEY_PER = -2)
 	duration = 15 SECONDS
+
+/datum/status_effect/debuff/psypowder/on_apply()
+	. = ..()
+
+/datum/status_effect/debuff/psypowder/on_remove()
+	. = ..()
+	to_chat(owner, span_warning("My vision returns...!"))
 
 /atom/movable/screen/alert/status_effect/debuff/thunderpowder
 	name = "Struck by Thunder"
@@ -188,7 +196,7 @@
 		var/obj/item/gun/ballistic/twilight_firearm/gun = fired_from
 		if(isliving(firer))
 			var/mob/living/L = firer
-			var/per_scaling = 1 + ((min(L.STAPER, RANGED_STAT_SOFTCAP) - 10) * RANGED_STAT_MULT) + (max(0, L.STAPER - RANGED_STAT_SOFTCAP) * RANGED_STAT_CAPPEDMULT)
+			var/per_scaling = max(RANGED_PER_DAMAGE_FLOOR, 1 + ((min(L.STAPER, RANGED_PER_DAMAGE_SOFTCAP) - RANGED_PER_DAMAGE_BASELINE) * RANGED_PER_DAMAGE_MULT) + (max(0, L.STAPER - RANGED_PER_DAMAGE_SOFTCAP) * RANGED_PER_DAMAGE_CAPPEDMULT))
 			damage *= gun.damfactor * per_scaling
 		else
 			damage *= gun.damfactor
@@ -236,7 +244,6 @@
 							T.apply_status_effect(/datum/status_effect/debuff/thunderpowder)
 						if("psypowder")
 							T.apply_status_effect(/datum/status_effect/debuff/psypowder)
-							T.apply_status_effect(/datum/status_effect/debuff/blindness)
 						if("corrosive gunpowder")
 							playsound(src, 'sound/misc/drink_blood.ogg', 100)
 							T.apply_status_effect(/datum/status_effect/debuff/corrosivesplash)
@@ -281,7 +288,6 @@
 							T.apply_status_effect(/datum/status_effect/debuff/thunderpowder)
 						if("psypowder")
 							T.apply_status_effect(/datum/status_effect/debuff/psypowder)
-							T.apply_status_effect(/datum/status_effect/debuff/blindness/psy)
 						if("terrorpowder")
 							gunpowder_npc_critfactor += 1
 				if(!T.mind)
@@ -397,7 +403,6 @@
 			L.apply_status_effect(/datum/status_effect/debuff/thunderpowder)
 		if("psypowder")
 			L.apply_status_effect(/datum/status_effect/debuff/psypowder)
-			L.apply_status_effect(/datum/status_effect/debuff/blindness)
 		if("arcyne gunpowder")
 			if(ishuman(L))
 				var/mob/living/carbon/human/H = L
@@ -484,7 +489,7 @@
 	icon_state = "musketball_silver"
 
 /obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock/blessed
-	name = "blessed sphere"
+	name = "blessed runed sphere"
 	desc = "Небольшой, идеально круглый шар, изготовленный из чистого серебра. Такие боеприпасы создаются лучшими из отаванских кузнецов и освящяются лично Великим Магистром. Смертоностны против нежити, но весьма эффективны и против других еретиков."
 	projectile_type = /obj/projectile/bullet/twilight_lead/twilight_runelock/blessed
 	icon_state = "musketball_blessed"
@@ -505,7 +510,7 @@
 	ammo_weight = 1
 
 /obj/item/ammo_casing/caseless/rogue/twilight_cannonball/grapeshot
-	name = "grapeshot"
+	name = "lead grapeshot"
 	desc = "Плотно упакованный в бумагу набор небольших металлических шариков. Хорошо сочетается с порохом."
 	projectile_type = /obj/projectile/bullet/twilight_grapeshot
 	caliber = "cannonball"

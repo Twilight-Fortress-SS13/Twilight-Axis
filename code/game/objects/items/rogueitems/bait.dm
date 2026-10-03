@@ -100,7 +100,11 @@
 								if(GLOB.animal_to_undead[M])
 									if(prob(75))
 										M = GLOB.animal_to_undead[M]
-							new M(T)
+							if(istype(src, /obj/item/bait/bloody) && M == /mob/living/simple_animal/hostile/retaliate/rogue/wolf && prob(20)) // TA EDIT START
+								for(var/wolf_family_type in get_wolf_family_types())
+									new wolf_family_type(T)
+							else
+								new M(T) // TA EDIT END
 							if(refund_bag)
 								if(prob(66))
 									new /obj/item/storage/roguebag/crafted(T)
@@ -133,6 +137,7 @@
 							/mob/living/simple_animal/hostile/retaliate/rogue/mole = 10,
 							/mob/living/simple_animal/hostile/retaliate/rogue/fox = 50,
 							/mob/living/simple_animal/hostile/retaliate/rogue/bobcat = 50,		//Annoying bastards
+							/mob/living/simple_animal/hostile/retaliate/rogue/wolf/dire = 10,
 							/mob/living/simple_animal/hostile/retaliate/rogue/direbear = 10,
 							/mob/living/simple_animal/hostile/retaliate/rogue/troll/bog = 5)			//RUH-ROH
 

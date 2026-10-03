@@ -4,7 +4,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 	outfit = /datum/outfit/job/roguetown/bandit/twilight_afreet
 	category_tags = list(CTAG_BANDIT)
-	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_corsair.ogg'
+	cmode_music = sound("modular_twilight_axis/firearms/sound/music/combat_corsair.ogg")
 	maximum_possible_slots = 2
 	subclass_languages = list(/datum/language/grenzelhoftian)
 	traits_applied = list(TRAIT_FIREARMS_MARKSMAN, TRAIT_STEELHEARTED, TRAIT_DODGEEXPERT)
@@ -56,13 +56,13 @@
 		if("Jäger Deserter")
 			mask = /obj/item/clothing/mask/rogue/facemask/steel
 			cloak = /obj/item/clothing/cloak/half/brown
-			var/list/firearm_choices = list("Arquebus", "Handgonne")
+			var/list/firearm_choices = list("Arquebus Rifle", "Culverin")
 			var/firearm_choice = input(H, "Choose your firearm", "Available firearms") as anything in firearm_choices
-			if(firearm_choice == "Handgonne")
+			if(firearm_choice == "Culverin")
 				backr = /obj/item/gun/ballistic/twilight_firearm/handgonne
-				var/list/ammo_choices = list("Lead Cannonballs", "Grapeshot")
+				var/list/ammo_choices = list("Lead Cannonballs", "Lead Grapeshot")
 				var/ammo_choice = input(H, "Choose your ammunition", "Available ammunition") as anything in ammo_choices
-				if(ammo_choice == "Grapeshot")
+				if(ammo_choice == "Lead Grapeshot")
 					beltl = /obj/item/quiver/twilight_bullet/cannonball/grapeshot
 				else
 					beltl = /obj/item/quiver/twilight_bullet/cannonball/lead

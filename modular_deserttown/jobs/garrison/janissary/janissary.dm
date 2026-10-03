@@ -21,7 +21,7 @@
 	min_pq = 5
 	max_pq = null
 	round_contrib_points = 2
-	cmode_music = 'sound/music/combat_desert1.ogg'
+	cmode_music = sound("sound/music/combat_desert1.ogg")
 	job_subclasses = list(
 		/datum/advclass/janissary/footman,
 		/datum/advclass/janissary/zephyr,
