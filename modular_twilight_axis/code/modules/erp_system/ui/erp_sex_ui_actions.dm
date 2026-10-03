@@ -58,6 +58,15 @@
 		parts += "legwear=[ref_signature(H.legwear_socks)]"
 		parts += "piercings=[ref_signature(H.piercings_item)]"
 		parts += "testicles=[ref_signature(H.getorganslot(ORGAN_SLOT_TESTICLES))]"
+		parts += "wings=[ref_signature(H.getorganslot(ORGAN_SLOT_WINGS))]"
+		parts += "tail=[ref_signature(H.getorganslot(ORGAN_SLOT_TAIL))]"
+		parts += "snout=[ref_signature(H.getorganslot(ORGAN_SLOT_SNOUT))]"
+		parts += "horns=[ref_signature(H.getorganslot(ORGAN_SLOT_HORNS))]"
+		parts += "frills=[ref_signature(H.getorganslot(ORGAN_SLOT_FRILLS))]"
+		parts += "fluff=[ref_signature(H.getorganslot(ORGAN_SLOT_NECK_FEATURE))]"
+		parts += "hair=[H.get_bodypart_feature_of_slot(BODYPART_FEATURE_HAIR)?.accessory_type]"
+		parts += "accessory=[H.get_bodypart_feature_of_slot(BODYPART_FEATURE_ACCESSORY)?.accessory_type]"
+		parts += "face_detail=[H.get_bodypart_feature_of_slot(BODYPART_FEATURE_FACE_DETAIL)?.accessory_type]"
 
 		var/list/equipped = H.get_equipped_items(include_pockets = FALSE, include_beltslots = FALSE)
 		parts += "equipped=[islist(equipped) ? equipped.len : 0]"

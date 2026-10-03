@@ -41,9 +41,6 @@
 	if(!can_open_tile_panel_turf(T))
 		return FALSE
 
-	listed_turf = T
-	client.statpanel = T.name
-
 	var/datum/tile_panel/P = get_tile_panel()
 	return P.open(T)
 
@@ -392,34 +389,7 @@
 	return "tilepanel_[world.time]_[icon_serial]_[rand(1000, 9999)].dmi"
 
 /datum/tile_panel/proc/_get_cached_appearance_ref(atom/A)
-	if(!A || QDELETED(A))
-		return null
-	if(!owner?.client)
-		return null
-
-	var/refid = REF(A)
-	var/visual_key = _build_visual_cache_key(A)
-	if(!visual_key)
-		return null
-
-	var/list/ref_entry = appearance_cache[refid]
-	if(islist(ref_entry))
-		if(ref_entry["key"] == visual_key)
-			return ref_entry["appearance_ref"]
-
-	var/icon/preview_icon = _make_preview_icon(A)
-	if(!preview_icon)
-		return null
-
-	var/file_name = _make_icon_filename()
-	owner << browse_rsc(preview_icon, file_name)
-
-	appearance_cache[refid] = list(
-		"key" = visual_key,
-		"appearance_ref" = file_name
-	)
-
-	return file_name
+	return null
 
 /datum/tile_panel/proc/_get_or_build_row(atom/A, is_turf = FALSE)
 	if(!A || QDELETED(A))
