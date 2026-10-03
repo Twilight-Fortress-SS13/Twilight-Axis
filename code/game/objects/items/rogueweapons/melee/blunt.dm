@@ -426,7 +426,7 @@
 	resistance_flags = FLAMMABLE
 	grid_width = 32
 	grid_height = 96
-	special = null //Should probably get something unique, but definitely not Mace ground slam
+	special = /datum/special_intent/cudgel_knockout //Should probably get something unique, but definitely not Mace ground slam
 
 /obj/item/rogueweapon/mace/cudgel/getonmobprop(tag)
 	. = ..()
