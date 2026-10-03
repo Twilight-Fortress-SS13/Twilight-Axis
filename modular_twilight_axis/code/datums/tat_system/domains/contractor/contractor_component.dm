@@ -213,7 +213,8 @@
 		if(feedback && user)
 			to_chat(user, span_warning("The seal suppresses your power."))
 		return FALSE
-	if(get_devotion() <= 0)
+	var/datum/devotion/current_devotion = owner?.devotion
+	if(!istype(current_devotion, /datum/devotion/contractor) || current_devotion.devotion <= 0)
 		if(feedback && user)
 			to_chat(user, span_warning("You are too starved to shape infernal power."))
 		return FALSE

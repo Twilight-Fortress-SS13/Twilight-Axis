@@ -397,7 +397,7 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_clothing_gronn_pool, list(
 	/obj/item/clothing/suit/roguetown/armor/leather/heavy/gronn = 2,
 	/obj/item/clothing/gloves/roguetown/angle/gronn = 2,
 	/obj/item/clothing/under/roguetown/trou/leather/gronn = 2,
-	/obj/item/clothing/shoes/roguetown/boots/leather/atgervi = 2,
+	/obj/item/clothing/shoes/roguetown/boots/leather/reinforced/atgervi = 2,
 	/obj/item/clothing/gloves/roguetown/angle/atgervi = 2
 ))
 

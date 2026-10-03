@@ -434,7 +434,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/gloves/roguetown/chain/psydon = TAT_ITEM_ENTRY("Psydonic Gloves ", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "gloves"), \
 	/obj/item/clothing/gloves/roguetown/angle/feld = TAT_ITEM_ENTRY("Stranger Doc Gloves ", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "gloves"), \
 	/obj/item/clothing/gloves/roguetown/angle/phys = TAT_ITEM_ENTRY("Straying Surg Gloves ", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "gloves"), \
-	/obj/item/clothing/shoes/roguetown/boots/leather/atgervi = TAT_ITEM_ENTRY("Atgervi Leather Boots", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "shoes"), \
+	/obj/item/clothing/shoes/roguetown/boots/leather/reinforced/atgervi = TAT_ITEM_ENTRY("Atgervi Leather Boots", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "shoes"), \
 	/obj/item/clothing/suit/roguetown/armor/leather/heavy/gronn = TAT_ITEM_ENTRY("Gronnic Ravager Mantle", 2, "clothing", "armor_family", TAT_ARMOR_LEATHER, "armor"), \
 	/obj/item/clothing/gloves/roguetown/angle/gronn = TAT_ITEM_ENTRY("Ravager Fur-Lined Leather Gloves", 1.5, "clothing", "armor_family", TAT_ARMOR_LEATHER, "gloves"), \
 	/obj/item/clothing/head/roguetown/helmet/bascinet/atgervi/gronn = TAT_DONATION_ITEM_ENTRY("Gronnic Ravager Helm", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "head", TAT_DONATION_TIER_TWO), \
