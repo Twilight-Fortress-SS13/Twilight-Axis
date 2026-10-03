@@ -92,14 +92,10 @@
 	var/old_move_delay = move_delay
 	if(istype(mob, /mob/dead/observer))
 		var/mob/dead/observer/observer = mob
-		var/observer_delay_multiplier = GLOB.observer_move_delay_multiplier
-
-		// TA EDIT START
-		if(!istype(observer, /mob/dead/observer/admin) && !istype(observer, /mob/dead/observer/eye))
-			observer_delay_multiplier = 6
-		// TA EDIT END
-
-		observer.next_gmove = world.time + (world.tick_lag * observer_delay_multiplier)
+		var/observer_move_delay = observer.get_move_delay()
+		observer.next_gmove = world.time + observer_move_delay
+		// keep the slide animation in step with the interval above, it drifts on fps change and differs for admin/eye observers
+		observer.set_glide_size(DELAY_TO_GLIDE_SIZE(observer_move_delay))
 		move_delay = world.time
 	else
 		move_delay = world.time + world.tick_lag

@@ -1321,12 +1321,15 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	. = ..()
 	if(. && loc != oldloc)
 		if(client)
-			// Player
-			set_glide_size(DELAY_TO_GLIDE_SIZE(world.tick_lag))
+			// client/Move re-sets glide from cached_multiplicative_slowdown right after this; mirror the same cadence so any path bypassing it stays in step
+			set_glide_size(DELAY_TO_GLIDE_SIZE(max(cached_multiplicative_slowdown, world.tick_lag)))
 		else
 			var/datum/component/riding/riding_datum = get_riding_datum()
 			if(riding_datum && has_buckled_mobs())
 				set_glide_size(DELAY_TO_GLIDE_SIZE(riding_datum.vehicle_move_delay))
+			else if(ai_controller)
+				// ai_movement gates steps on ai_controller.movement_delay (cached_multiplicative_slowdown ceiled to SSai_movement.wait), not the raw modifier sum
+				set_glide_size(DELAY_TO_GLIDE_SIZE(ai_controller.movement_delay))
 			else
 				set_glide_size(DELAY_TO_GLIDE_SIZE(move_to_delay))
 	return .
