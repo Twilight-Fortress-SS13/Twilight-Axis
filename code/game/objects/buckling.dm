@@ -88,6 +88,7 @@
 	post_buckle_mob(M)
 
 	SEND_SIGNAL(src, COMSIG_MOVABLE_BUCKLE, M, force)
+	M.update_vision_cone() // TA EDIT
 	return TRUE
 
 /obj/buckle_mob(mob/living/M, force = FALSE, check_loc = TRUE)
@@ -111,6 +112,7 @@
 //		if(buckle_lying)
 //			buckled_mob.set_resting(FALSE)
 		post_unbuckle_mob(.)
+		buckled_mob.update_vision_cone() // TA EDIT
 
 /atom/movable/proc/unbuckle_all_mobs(force=FALSE)
 	if(!has_buckled_mobs())

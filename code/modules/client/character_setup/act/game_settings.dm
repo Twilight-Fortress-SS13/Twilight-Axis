@@ -40,12 +40,16 @@
 		if("ambientocclusion")
 			ambientocclusion = !ambientocclusion
 			if(parent && parent.screen && parent.screen.len)
-				var/atom/movable/screen/plane_master/game_world/PM = locate(/atom/movable/screen/plane_master/game_world) in parent.screen
-				PM.backdrop(parent.mob)
+				var/atom/movable/screen/plane_master/PM = locate(/atom/movable/screen/plane_master/game_world) in parent.screen
+				PM?.backdrop(parent.mob)
 				PM = locate(/atom/movable/screen/plane_master/game_world_fov_hidden) in parent.screen
-				PM.backdrop(parent.mob)
+				PM?.backdrop(parent.mob)
 				PM = locate(/atom/movable/screen/plane_master/game_world_above) in parent.screen
-				PM.backdrop(parent.mob)
+				PM?.backdrop(parent.mob)
+				PM = locate(/atom/movable/screen/plane_master/game_world_below) in parent.screen
+				PM?.backdrop(parent.mob)
+				PM = locate(/atom/movable/screen/plane_master/game_world_walls) in parent.screen
+				PM?.backdrop(parent.mob)
 			return TRUE
 		if("windowflashing")
 			windowflashing = !windowflashing

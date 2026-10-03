@@ -112,7 +112,7 @@
 /obj/item/clothing/cloak/twilight_elven/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		add_overlay(pic)
 
 /obj/item/clothing/cloak/twilight_elven/short
@@ -147,7 +147,7 @@
 /obj/item/clothing/cloak/twilight_scarf/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		add_overlay(pic)
 
 /obj/item/clothing/cloak/twilight_cape
@@ -192,7 +192,7 @@
 /obj/item/clothing/cloak/twilight_cape/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		add_overlay(pic)
 
 /obj/item/clothing/cloak/twilight_cape/equipped(mob/user, slot)
@@ -262,7 +262,7 @@
 /obj/item/clothing/cloak/templar/eoran/alt/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon, "[icon_state][detail_tag]") // TA EDIT
 		add_overlay(pic)
 
 /obj/item/clothing/cloak/templar/eoran/alt/equipped(mob/user, slot)

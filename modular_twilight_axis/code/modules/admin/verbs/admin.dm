@@ -47,3 +47,63 @@
 	log_admin("[key_name(usr)] cleared job respawn delay for [target_ckey][remaining_text].")
 	message_admins("[key_name_admin(usr)] cleared job respawn delay for [target_ckey][remaining_text].")
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Clear Job Respawn Delay")
+
+/client/proc/client_render_stats()
+	set name = "Client Render Stats"
+	set category = "Debug"
+
+	if(!check_rights(R_DEBUG))
+		return
+
+	var/images_count = images ? images.len : 0
+	var/screen_count = screen ? screen.len : 0
+	var/runechat_queue = SSrunechat?.message_queue ? SSrunechat.message_queue.len : 0
+	var/overlays_count = mob?.overlays ? mob.overlays.len : 0
+	var/underlays_count = mob?.underlays ? mob.underlays.len : 0
+	var/vis_contents_count = mob?.vis_contents ? mob.vis_contents.len : 0
+	var/z_level = mob ? mob.z : 0
+
+	to_chat(mob, span_notice("RenderStats: images=[images_count] screen=[screen_count] overlays=[overlays_count] underlays=[underlays_count] vis_contents=[vis_contents_count] runechat_queue=[runechat_queue] z=[z_level]"))
+
+/client/proc/client_images_breakdown()
+	set name = "Client Images Breakdown"
+	set category = "Debug"
+
+	if(!check_rights(R_DEBUG))
+		return
+
+	if(!images || !images.len)
+		to_chat(mob, span_notice("ClientImages: total=0"))
+		return
+
+	var/list/counts = list()
+
+	for(var/image/current_image in images)
+		var/icon_name = "[current_image.icon]"
+		var/icon_state = "[current_image.icon_state]"
+		var/plane = current_image.plane
+		var/layer = current_image.layer
+		var/loc_type = current_image.loc ? "[current_image.loc.type]" : "null"
+
+		var/key = "icon=[icon_name] state=[icon_state] plane=[plane] layer=[layer] loc=[loc_type]"
+		counts[key] = (counts[key] ? counts[key] : 0) + 1
+
+	to_chat(mob, span_notice("ClientImages: total=[images.len] groups=[counts.len]"))
+
+	var/limit = min(20, counts.len)
+
+	for(var/i in 1 to limit)
+		var/best_key = null
+		var/best_count = -1
+
+		for(var/key in counts)
+			var/current_count = counts[key]
+			if(isnum(current_count) && current_count > best_count)
+				best_count = current_count
+				best_key = key
+
+		if(!best_key)
+			break
+
+		to_chat(mob, span_notice("[best_count]x [best_key]"))
+		counts[best_key] = -1
