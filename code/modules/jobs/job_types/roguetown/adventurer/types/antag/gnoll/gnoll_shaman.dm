@@ -8,8 +8,9 @@
 		STATKEY_PER = 2,
 		STATKEY_WIL = 2,
 		STATKEY_SPD = 3,
-		STATKEY_CON = 1,
-		STATKEY_INT = 2
+		STATKEY_CON = 2,
+		STATKEY_INT = 2,
+		STATKEY_STR = 1
 	)
 	subclass_skills = list(
 		/datum/skill/magic/holy = SKILL_LEVEL_MASTER,
@@ -52,4 +53,3 @@
 		var/datum/devotion/C = new /datum/devotion(H, H.patron)
 		C.grant_miracles(H, cleric_tier = CLERIC_T4, passive_gain = CLERIC_REGEN_MINOR, start_maxed = TRUE)
 		H.mind?.AddSpell(new /datum/action/cooldown/spell/convert_heretic)
-		H.mind?.RemoveSpell(/datum/action/cooldown/spell/miracle/heal)
