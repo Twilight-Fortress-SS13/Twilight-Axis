@@ -142,7 +142,7 @@
 		return
 
 	var/mob/living/L = src
-	if(L?.wallpressed && L.m_intent == MOVE_INTENT_SNEAK && !istype(L.loc, /turf/open/transparent/openspace))
+	if(L?.wallpressed && L.m_intent == MOVE_INTENT_SNEAK && !istype(L.loc, /turf/open/openspace))
 		to_chat(src, span_warning("You need to step away from the wall first."))
 		return
 

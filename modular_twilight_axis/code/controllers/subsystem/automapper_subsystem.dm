@@ -147,7 +147,7 @@ SUBSYSTEM_DEF(automapper)
 						continue
 					del(uninitialized_carbon)
 
-		iterating_template.nuke_placement_area(iterating_template.load_turf, FALSE, /turf/open/transparent/openspace)
+		iterating_template.nuke_placement_area(iterating_template.load_turf, FALSE, /turf/open/openspace)
 
 		if(iterating_template.load(iterating_template.load_turf, FALSE))
 			log_world("AUTOMAPPER: Successfully loaded map template [iterating_template.name] at [iterating_template.load_turf.x], [iterating_template.load_turf.y], [iterating_template.load_turf.z]!")
@@ -206,4 +206,3 @@ SUBSYSTEM_DEF(automapper)
 			blacklisted_turfs[blacklisted_turf] = TRUE
 
 	return blacklisted_turfs
-

@@ -58,7 +58,7 @@
 			for(var/obj/structure/flora/newleaf/L in adjacent)
 				qdel(L)
 		var/turf/above = get_step_multiz(T, UP)
-		if(istype(above, /turf/open/transparent/openspace))
+		if(istype(above, /turf/open/openspace))
 			for(var/obj/structure/flora/newtree/upper_tree in above)
 				qdel(upper_tree)
 

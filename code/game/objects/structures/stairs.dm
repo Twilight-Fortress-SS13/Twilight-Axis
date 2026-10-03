@@ -4,7 +4,7 @@
 #define STAIR_STAMINA_COST 15 // TA EDIT
 #define STAIR_STAMINA_PULLING_MULTIPLIER 2 // TA EDIT
 
-// stairs require /turf/open/transparent/openspace as the tile above them to work
+// stairs require /turf/open/openspace as the tile above them to work
 // multiple stair objects can be chained together; the Z level transition will happen on the final stair object in the chain
 
 /atom/movable // TA EDIT
