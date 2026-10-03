@@ -233,7 +233,7 @@
 		refreshed_any = TRUE
 
 	return refreshed_any
-	
+
 /datum/component/combo_core/soundbreaker/proc/RefreshBreakerWindowTimer()
 	if(!owner)
 		return FALSE
@@ -555,13 +555,18 @@
 		return target
 	return null
 
-/datum/component/combo_core/soundbreaker/proc/apply_combo_armor_wear(mob/living/carbon/human/target, hit_zone, attack_flag, force_dynamic, multiplier = 1)
+/datum/component/combo_core/soundbreaker/proc/apply_combo_armor_wear(mob/living/carbon/human/target, hit_zone, attack_flag, force_dynamic, multiplier = 1, max_wear = 20, top_layer_only = FALSE)
 	if(!target || !attack_flag || !force_dynamic)
 		return
 
 	var/wear = round(force_dynamic * multiplier)
-	wear = clamp(wear, 1, 25)
+	wear = clamp(wear, 1, max_wear)
 	if(wear <= 0)
+		return
+	if(top_layer_only)
+		var/obj/item/clothing/top_layer = target.get_best_worn_armor(hit_zone, attack_flag)
+		if(top_layer)
+			top_layer.take_damage(wear, BRUTE, "blunt")
 		return
 
 	var/cover_flag
@@ -591,6 +596,39 @@
 
 		C.take_damage(wear, BRUTE, "blunt")
 
+/datum/component/combo_core/soundbreaker/proc/prepare_proxy_dualwield(mob/living/target)
+	if(!owner || !HAS_TRAIT(owner, TRAIT_DUALWIELDER) || owner.dualwield_processing)
+		return FALSE
+
+	if(owner.get_active_held_item() || owner.get_inactive_held_item())
+		return FALSE
+
+	if(world.time > owner.dualwield_resets_in)
+		owner.dualwield_attack_count = 0
+		owner.dualwield_finisher = FALSE
+
+	owner.dualwield_resets_in = world.time + 3 SECONDS
+	if(owner.dualwield_finisher)
+		owner.dualwield_finisher = FALSE
+		owner.dualwield_processing = TRUE
+		if(owner.stamina_add(3))
+			owner.balloon_alert_to_viewers("<font color='#bb2b2b'>Dual Hit!!</font>")
+			to_chat(owner, "<font color='#ffc400'>I strike twice!</font>")
+			to_chat(target, "<font color='#ffc400'>I am hit twice!</font>")
+			target.playsound_local(target, 'sound/combat/polearm_woosh.ogg', 75, FALSE, 0, 3)
+			target.playsound_local(target, 'sound/combat/rend_hit.ogg', 75, FALSE, 0, 3)
+			return TRUE
+		owner.dualwield_processing = FALSE
+		owner.swap_hand()
+		return FALSE
+
+	owner.dualwield_attack_count++
+	if(owner.dualwield_attack_count >= 3)
+		owner.dualwield_attack_count = 0
+		owner.dualwield_finisher = TRUE
+
+	return FALSE
+
 /datum/component/combo_core/soundbreaker/proc/AttackViaPipeline(mob/living/target, damage, bclass = BCLASS_PUNCH, damage_type = BRUTE, zone = null, armor_penetration = 0, params = null)
 	if(!owner || !target)
 		return FALSE
@@ -617,51 +655,30 @@
 	var/obj/item/active = owner.get_active_held_item()
 	P.name = active ? active.name : "soundbreaking strike"
 
-	var/old_hand = owner.active_hand_index
 	P.last_attack_success = FALSE
 	P.last_attack_target = null
+	var/success_off = FALSE
+	if(prepare_proxy_dualwield(target))
+		owner.face_atom(target)
+		owner.do_attack_animation(target, ATTACK_EFFECT_DISARM)
+		P.melee_attack_chain(owner, target, params)
+		success_off = P.last_attack_success
+		owner.dualwield_processing = FALSE
+		owner.swap_hand()
 
 	owner.face_atom(target)
 	owner.do_attack_animation(target, ATTACK_EFFECT_DISARM)
 	P.melee_attack_chain(owner, target, params)
 
 	var/success_main = P.last_attack_success
-
-	// dual swing
-	var/success_off = FALSE
-	if(HAS_TRAIT(owner, TRAIT_DUALWIELDER))
-		var/offhand_index = (old_hand == 1) ? 2 : 1
-		var/obj/item/main_item = owner.held_items[old_hand]
-		var/obj/item/off_item = owner.held_items[offhand_index]
-
-		var/allow_dual = FALSE
-		if(!main_item && !off_item)
-			allow_dual = TRUE
-		else if(main_item && off_item && main_item != off_item && (istype(main_item, off_item) || istype(off_item, main_item)))
-			allow_dual = TRUE
-
-		if(allow_dual)
-			if(!(owner.check_arm_grabbed(offhand_index)) && (owner.last_used_double_attack <= world.time))
-				if(owner.stamina_add(2))
-					owner.last_used_double_attack = world.time + 3 SECONDS
-					owner.visible_message(
-						span_warning("[owner] seizes an opening and strikes with [owner.p_their()] off-hand!"),
-						span_green("There's an opening! I strike with my off-hand!")
-					)
-
-					owner.active_hand_index = offhand_index
-					P.last_attack_success = FALSE
-					P.last_attack_target = null
-					owner.face_atom(target)
-					owner.do_attack_animation(target, ATTACK_EFFECT_DISARM)
-					P.melee_attack_chain(owner, target, params)
-					success_off = P.last_attack_success
-
-	owner.active_hand_index = old_hand
 	return (success_main || success_off)
 
+#define SB_BASELINE_UNARMED 3
+#define SB_BASELINE_MUSIC 4
+#define SB_UNARMED_DAMAGE_STEP (1 / 15)
+#define SB_MUSIC_DAMAGE_STEP (1 / 30)
 #define SB_MIN_DAMAGE_MULT 0.75
-#define SB_MAX_DAMAGE_MULT 1.5
+#define SB_MAX_DAMAGE_MULT 1.2
 
 /datum/component/combo_core/soundbreaker/proc/GetBaseUnarmedDamage(hand_index = null)
 	if(!owner)
@@ -669,35 +686,7 @@
 
 	if(ishuman(owner))
 		var/mob/living/carbon/human/H = owner
-		if(H.mind && H.mind.has_antag_datum(/datum/antagonist/werewolf))
-			return 30
-
-		var/used_str = H.get_stat(STATKEY_STR)
-		if(H.domhand)
-			var/hand = hand_index || H.active_hand_index
-			used_str = H.get_str_arms(hand)
-
-		var/damage
-		if(H.get_stat(STATKEY_STR) > UNARMED_DAMAGE_DEFAULT || H.get_stat(STATKEY_STR) < 10)
-			damage = H.get_stat(STATKEY_STR)
-		else
-			damage = UNARMED_DAMAGE_DEFAULT
-
-		if(used_str >= 11)
-			damage = max(damage + (damage * ((used_str - 10) * 0.33)), 1)
-
-		if(used_str <= 9)
-			damage = max(damage - (damage * ((10 - used_str) * 0.1)), 1)
-
-		var/obj/G = H.get_item_by_slot(SLOT_GLOVES)
-		if(istype(G, /obj/item/clothing/gloves/roguetown))
-			var/obj/item/clothing/gloves/roguetown/GL = G
-			damage = (damage + GL.unarmed_bonus)
-
-		if(H.dna?.species)
-			damage += H.dna.species.punch_damage
-
-		return max(1, round(damage))
+		return max(1, round(H.get_punch_dmg()))
 
 	return max(1, round(owner.get_stat(STATKEY_STR)))
 
@@ -747,10 +736,6 @@
 	else
 		damage = GetBaseUnarmedDamage(hand_index)
 
-	var/con = owner.get_stat(STATKEY_CON)
-	var/con_bonus = (con - 10) * 0.1
-	damage += damage * con_bonus
-
 	damage *= damage_mult
 
 	var/skill = 1
@@ -759,9 +744,9 @@
 	else
 		skill = owner.get_skill_level(/datum/skill/combat/unarmed)
 
-	var/music_skill = owner.get_skill_level(/datum/skill/misc/music)
+	var/music_skill = min(owner.get_skill_level(/datum/skill/misc/music), SKILL_LEVEL_MASTER)
 
-	var/skill_bonus = (skill * 0.2) + (music_skill * 0.1)
+	var/skill_bonus = 1 + ((skill - SB_BASELINE_UNARMED) * SB_UNARMED_DAMAGE_STEP) + ((music_skill - SB_BASELINE_MUSIC) * SB_MUSIC_DAMAGE_STEP)
 	skill_bonus = clamp(skill_bonus, SB_MIN_DAMAGE_MULT, SB_MAX_DAMAGE_MULT)
 	damage *= skill_bonus
 
@@ -773,6 +758,10 @@
 
 #undef SB_MIN_DAMAGE_MULT
 #undef SB_MAX_DAMAGE_MULT
+#undef SB_BASELINE_UNARMED
+#undef SB_BASELINE_MUSIC
+#undef SB_UNARMED_DAMAGE_STEP
+#undef SB_MUSIC_DAMAGE_STEP
 
 /datum/component/combo_core/soundbreaker/proc/_pick_combo_victim_on_turf(turf/T, mob/living/primary)
 	if(!T)
@@ -1026,7 +1015,7 @@
 	if(ishuman(M))
 		var/mob/living/carbon/human/H = M
 		var/hit_zone = TryGetZone(zone)
-		apply_combo_armor_wear(H, hit_zone, "blunt", ScaleDamage(damage_mult), 0.75)
+		apply_combo_armor_wear(H, hit_zone, "blunt", ScaleDamage(damage_mult), 0.825, 30, TRUE)
 
 	return M
 
@@ -1075,8 +1064,7 @@
 // ------------------------------------------------------------
 
 /datum/component/combo_core/soundbreaker/proc/ComboEchoBeat(mob/living/target)
-	ApplyDamage(target, 1.5, BCLASS_PUNCH, is_combo = TRUE)
-	SafeSlow(target, 2)
+	ApplyDamage(target, 0.5, BCLASS_PUNCH, is_combo = TRUE)
 
 	owner.visible_message(
 		span_danger("[owner]'s rhythm tightens into a punishing triplet!"),
@@ -1199,7 +1187,7 @@
 
 	if(ishuman(target))
 		var/mob/living/carbon/human/H = target
-		apply_combo_armor_wear(H, zone, "blunt", ScaleDamage(2.75), 2)
+		apply_combo_armor_wear(H, zone, "blunt", ScaleDamage(2.75), 2.5, 50)
 
 	owner.visible_message(
 		span_danger("[owner]'s syncopation rattles through [target]'s gear!"),
@@ -1296,7 +1284,7 @@
 	if(!owner || !target)
 		return
 
-	ApplyDamage(target, 1.5, BCLASS_PUNCH, is_combo = TRUE)
+	ApplyDamage(target, 1.25, BCLASS_PUNCH, is_combo = TRUE)
 	if(isnum(target.max_stamina) && target.max_stamina > 0)
 		var/drain = round(target.max_stamina * SB_CRESCENDO_STAM_DRAIN_PCT)
 		drain = clamp(drain, 1, 999)
@@ -1320,7 +1308,7 @@
 	ResetRhythm()
 
 /datum/component/combo_core/soundbreaker/proc/ComboOverture(mob/living/target)
-	ApplyDamage(target, 1.75, BCLASS_PUNCH, is_combo = TRUE)
+	ApplyDamage(target, 1.5, BCLASS_PUNCH, is_combo = TRUE)
 	target.Stun(1.5 SECONDS)
 
 	owner.visible_message(
