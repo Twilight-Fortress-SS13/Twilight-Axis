@@ -96,7 +96,8 @@
 	mymob.overlay_fullscreen("lighting_backdrop_unlit", /atom/movable/screen/fullscreen/lighting_backdrop/unlit)
 	mymob.overlay_fullscreen("sunlight_backdrop",	/atom/movable/screen/fullscreen/lighting_backdrop/sunlight)
 
-/atom/movable/screen/plane_master/camera_static
+/atom/movable/screen/plane_master/camera_static //TA EDIT
+	abstract_type = /atom/movable/screen/plane_master/camera_static
 	name = "camera static plane master"
 	plane = CAMERA_STATIC_PLANE
 	appearance_flags = PLANE_MASTER
@@ -139,10 +140,8 @@
 	blend_mode = BLEND_OVERLAY
 
 /atom/movable/screen/plane_master/game_world_above/backdrop(mob/mymob)
-	clear_filters()
-	if(istype(mymob) && mymob.client && mymob.client.prefs && mymob.client.prefs.ambientocclusion)
-		filters += AMBIENT_OCCLUSION
-	if(istype(mymob) && mymob.eye_blurry)
+	clear_filters() //TA EDIT START
+	if(istype(mymob) && mymob.eye_blurry) //TA EDIT END
 		filters += GAUSSIAN_BLUR(CLAMP(mymob.eye_blurry*0.1,0.6,3))
 	if(istype(mymob))
 		if(isliving(mymob))
@@ -157,10 +156,8 @@
 	blend_mode = BLEND_OVERLAY
 
 /atom/movable/screen/plane_master/game_world_below/backdrop(mob/mymob)
-	clear_filters()
-	if(istype(mymob) && mymob.client && mymob.client.prefs && mymob.client.prefs.ambientocclusion)
-		filters += AMBIENT_OCCLUSION
-	if(istype(mymob) && mymob.eye_blurry)
+	clear_filters() //TA EDIT START
+	if(istype(mymob) && mymob.eye_blurry) //TA EDIT END
 		filters += GAUSSIAN_BLUR(CLAMP(mymob.eye_blurry*0.1,0.6,3))
 	if(istype(mymob))
 		if(isliving(mymob))

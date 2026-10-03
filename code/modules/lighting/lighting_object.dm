@@ -3,9 +3,12 @@
 
 	anchored		= TRUE
 
-	icon				= LIGHTING_ICON
-	icon_state		= "transparent"
-	color			= null //we manually set color in init instead
+	//TA EDIT START
+	icon				= LIGHTING_TENT_ICON
+	icon_state		= "tent"
+	color			= null
+	blend_mode		= BLEND_ADD
+	//TA EDIT END
 	plane			= LIGHTING_PLANE
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	layer			= LIGHTING_LAYER
@@ -13,19 +16,24 @@
 
 	var/needs_update = FALSE
 	var/turf/myturf
+	var/lamp_lit = FALSE //TA EDIT
 
 /atom/movable/lighting_object/Initialize(mapload)
 	. = ..()
 	verbs.Cut()
 	//We avoid setting this in the base as if we do then the parent atom handling will add_atom_color it and that
 	//is totally unsuitable for this object, as we are always changing it's colour manually
-	color = LIGHTING_BASE_MATRIX
+	color = "#ffffff" //TA EDIT
 
 	myturf = loc
 	if(myturf.lighting_object)
 		qdel(myturf.lighting_object, force = TRUE)
 	myturf.lighting_object = src
 	myturf.luminosity = 0
+	var/datum/outdoor_effect/sky = myturf.outdoor_effect //TA EDIT START
+	if(sky)
+		overlays = sky.applied_overlays ? sky.applied_overlays : list()
+		luminosity = sky.sun_lit //TA EDIT END
 
 	needs_update = TRUE
 	SSlighting.objects_queue += src
@@ -81,22 +89,6 @@
 
 	var/max = max(cr.cache_mx, cg.cache_mx, cb.cache_mx, ca.cache_mx)
 
-	var/rr = cr.cache_r
-	var/rg = cr.cache_g
-	var/rb = cr.cache_b
-
-	var/gr = cg.cache_r
-	var/gg = cg.cache_g
-	var/gb = cg.cache_b
-
-	var/br = cb.cache_r
-	var/bg = cb.cache_g
-	var/bb = cb.cache_b
-
-	var/ar = ca.cache_r
-	var/ag = ca.cache_g
-	var/ab = ca.cache_b
-
 	#if LIGHTING_SOFT_THRESHOLD != 0
 	var/set_luminosity = max > LIGHTING_SOFT_THRESHOLD
 	#else
@@ -105,33 +97,17 @@
 	var/set_luminosity = max > 1e-6
 	#endif
 
-	if((rr & gr & br & ar) && (rg + gg + bg + ag + rb + gb + bb + ab == 8))
-	//anything that passes the first case is very likely to pass the second, and addition is a little faster in this case
-		icon_state = "transparent"
-		color = null
-	else if(!set_luminosity)
-		icon_state = "dark"
-		color = null
+	//TA EDIT START
+	if(ca.cache_r + ca.cache_g + ca.cache_b > 0.002)
+		icon = LIGHTING_TENT_ICON
+		color = rgb(ca.cache_r * 255, ca.cache_g * 255, ca.cache_b * 255)
 	else
-		icon_state = null
-		color = list(
-			rr, rg, rb, 00,
-			gr, gg, gb, 00,
-			br, bg, bb, 00,
-			ar, ag, ab, 00,
-			00, 00, 00, 01
-		)
-/*		if(color)
-			animate(src, color = list(rr, rg, rb,00,gr, gg, gb, 00,br, bg, bb, 00,ar, ag, ab, 00,00, 00, 00, 01), time = 5)
-		else
-			color = list(
-				rr, rg, rb, 00,
-				gr, gg, gb, 00,
-				br, bg, bb, 00,
-				ar, ag, ab, 00,
-				00, 00, 00, 01
-			)*/
-	luminosity = set_luminosity
+		icon = null
+		color = null
+	lamp_lit = set_luminosity
+	var/datum/outdoor_effect/sky = myturf.outdoor_effect
+	luminosity = lamp_lit || (sky && sky.sun_lit)
+	//TA EDIT END
 
 // Variety of overrides so the overlays don't get affected by weird things.
 

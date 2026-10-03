@@ -15,6 +15,7 @@
 
 /// icon used for lighting shading effects
 #define LIGHTING_ICON 'icons/effects/lighting_object.dmi'
+#define LIGHTING_TENT_ICON 'icons/effects/lighting_tent.dmi' //TA EDIT
 
 /// If the max of the lighting lumcounts of each spectrum drops below this, disable luminosity on the lighting objects.
 /// Set to zero to disable soft lighting. Luminosity changes then work if it's lit at all.
