@@ -206,7 +206,6 @@
 	deathsight_message = "the forgotten deeps of the dungeon of the damned"
 	ambientsounds = list('sound/ambience/cavewater (1).ogg','sound/ambience/cavewater (2).ogg')
 	droning_sound = 'sound/music/area/underworlddrone.ogg'
-	ambush_times = list("night", "dawn", "dusk", "day")
 	ambush_mobs = list(
 		/mob/living/simple_animal/hostile/retaliate/rogue/mole = 40,
 		/mob/living/simple_animal/hostile/retaliate/rogue/bigrat = 40,
@@ -221,7 +220,6 @@
 	town_area = TRUE
 	converted_type = /area/rogue/karnfels_map/schmutzbezirk_indoors
 	deathsight_message = "the forgotten gutters of the filthy quarter"
-	ambush_times = list("night", "dawn", "dusk", "day")
 	ambush_mobs = list(
 		/mob/living/simple_animal/hostile/retaliate/rogue/bigrat = 30,
 		/mob/living/carbon/human/species/goblin/npc/ambush/moon = 30,
@@ -300,7 +298,6 @@
 	first_time_text = "RATTENGASSE"
 	town_area = TRUE
 	deathsight_message = "a dark alleyway, where only vermin watch your passing"
-	ambush_times = list("night", "dawn", "dusk", "day")
 	ambush_mobs = list(
 		/mob/living/simple_animal/hostile/retaliate/rogue/bigrat = 100
 	)
@@ -412,7 +409,6 @@
 	icon_state = "woods"
 	warden_area = TRUE
 	deathsight_message = "the untamed, lawless wilds beyond Karnfels"
-	ambush_times = list("night", "dawn", "dusk", "day")
 	ambush_mobs = list(
 		/mob/living/carbon/human/species/human/northern/highwayman/ambush = 35,
 		/mob/living/carbon/human/species/skeleton/npc/medium = 20,
@@ -446,7 +442,6 @@
 	first_time_text = "HAGMOOR"
 	icon_state = "bog"
 	deathsight_message = "the murky, rotting waters of the Hagmoor"
-	ambush_times = list("night", "dawn", "dusk", "day")
 	ambush_mobs = list(
 		/mob/living/simple_animal/hostile/retaliate/rogue/bigrat = 50,
 		/mob/living/simple_animal/hostile/retaliate/rogue/spider/rock = 30,
@@ -467,7 +462,6 @@
 	spookynight = SPOOKY_GEN
 	deathsight_message = "blighted soil choked with marrow and decaying bone"
 	converted_type = /area/rogue/karnfels_map/rotland_indoors
-	ambush_times = list("night", "dawn", "dusk", "day")
 	ambush_mobs = list(
 		/mob/living/carbon/human/species/skeleton/npc/easy = 30,
 		/mob/living/carbon/human/species/skeleton/npc/medium = 25,
@@ -491,7 +485,6 @@
 	town_area = TRUE
 	deathsight_message = "desolate streets where cutthroats wait in every alcove"
 	converted_type = /area/rogue/karnfels_map/hollow_quarter_indoors
-	ambush_times = list("night", "dawn", "dusk", "day")
 	ambush_mobs = list(
 		/mob/living/carbon/human/species/human/northern/highwayman/ambush = 40,
 		/mob/living/carbon/human/species/human/northern/searaider/ambush = 35
@@ -511,7 +504,6 @@
 	droning_sound = 'modular_twilight_axis/sound/music/area/gobcamp.ogg'
 	deathsight_message = "a chaotic territory claimed by squabbling goblin broods"
 	converted_type = /area/rogue/karnfels_map/boblins_domain_indoors
-	ambush_times = list("night", "dawn", "dusk", "day")
 	ambush_mobs = list(
 		/mob/living/carbon/human/species/goblin/npc/ambush = 30,
 		/mob/living/carbon/human/species/goblin/npc/ambush/cave = 25,
@@ -553,7 +545,6 @@
 	icon_state = "manor"
 	deathsight_message = "overgrown gardens and overgrown ruins"
 	converted_type = /area/rogue/karnfels_map/abandoned_estate_indoors
-	ambush_times = list("night", "dawn", "dusk", "day")
 	ambush_mobs = list(
 		/mob/living/carbon/human/species/human/northern/highwayman/ambush = 35,
 		/mob/living/carbon/human/species/human/northern/highwayman/archer = 35,
@@ -596,7 +587,6 @@
 	deathsight_message = "the forgotten deeps of the dungeon of the damned"
 	ambientsounds = list('sound/ambience/cavewater (1).ogg','sound/ambience/cavewater (2).ogg')
 	droning_sound = 'sound/music/area/underworlddrone.ogg'
-	ambush_times = list("night", "dawn", "dusk", "day")
 	ambush_mobs = list(
 		/mob/living/simple_animal/hostile/retaliate/rogue/mole = 40,
 		/mob/living/simple_animal/hostile/retaliate/rogue/bigrat = 40,
@@ -610,7 +600,6 @@
 	town_area = TRUE
 	converted_type = /area/rogue/indoors/shelter/town/schmutzbezirk
 	deathsight_message = "the forgotten gutters of the filthy quarter"
-	ambush_times = list("night", "dawn", "dusk", "day")
 	ambush_mobs = list(
 		/mob/living/simple_animal/hostile/retaliate/rogue/bigrat = 30,
 		/mob/living/carbon/human/species/goblin/npc/ambush/moon = 30,
@@ -678,7 +667,6 @@
 	first_time_text = "RATTENGASSE"
 	town_area = TRUE
 	deathsight_message = "a dark alleyway, where only vermin watch your passing"
-	ambush_times = list("night", "dawn", "dusk", "day")
 	ambush_mobs = list(
 		/mob/living/simple_animal/hostile/retaliate/rogue/bigrat = 100
 	)
