@@ -45,6 +45,7 @@
 #define CHAT_DSAY			(1<<13)
 #define CHAT_MOODMESSAGES	(1<<14)
 #define CHAT_ADMIN_SLOOC	(1<<15)
+#define CHAT_OOC_MUTED			(1<<16)
 
 #define TOGGLES_DEFAULT_CHAT (CHAT_DSAY|CHAT_PRAYER|CHAT_MOODMESSAGES)
 #define TOGGLES_DEFAULT_CHAT_ADMIN (CHAT_ADMINSPAWN|CHAT_ADMINLOOC)
@@ -92,6 +93,12 @@
 #define JOB_PREF_UI_LOW 3
 #define JOB_PREF_UI_NEVER 4
 #define JOB_PREF_UI_BOOST 5 // TA EDIT END
+
+#define MAX_ROLL_TOKENS 2
+/// Roll tokens (each token gives 20%). These are counted in ratios instead of flat bonuses.
+#define ROLL_TOKEN_WEIGHTS list(3, 7, 27)
+#define ROLL_OUTCOME_WON (1<<0)
+#define ROLL_OUTCOME_LOST (1<<1)
 
 //Age ranges
 #define AGE_ADULT			"Adult"

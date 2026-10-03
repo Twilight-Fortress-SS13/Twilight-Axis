@@ -1,7 +1,0 @@
-author: "voorex2"
-delete-after: True
-changes:
-  - rscadd: "Golden Serpent вновь доступен как подкласс Iconoclast."
-  - balance: "Golden Serpent может использовать оружие и инструменты."
-  - balance: "Golden Serpent лишился Lesser Mending и получил No Pain Stun."
-  - rscadd: "Golden Serpent теперь начинает раунд в сандалях."

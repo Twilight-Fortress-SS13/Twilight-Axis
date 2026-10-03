@@ -127,6 +127,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["tgui_theme"]			>> tgui_theme
 	S["parchment_skin"]		>> parchment_skin
 	S["statbrowser_theme"]	>> statbrowser_theme
+	S["vv_dark_mode"]		>> vv_dark_mode
 	S["preferred_ui_language"] >> preferred_ui_language
 	S["windowflash"]		>> windowflashing
 	S["be_special"]		>> be_special
@@ -160,7 +161,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["lastclass"]			>> lastclass
 	load_donor_job_boost_prefs(S) // TA EDIT
 	S["compliance_notifs"]	>> compliance_notifs
-
+	S["roll_tokens"]		>> roll_tokens
 
 	S["default_slot"]		>> default_slot
 	S["chat_toggles"]		>> chat_toggles
@@ -250,6 +251,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	no_language_icon	= sanitize_bool(no_language_icon, initial(no_language_icon))
 	no_redflash			= sanitize_bool(no_redflash, initial(no_redflash))
 	top_examine			= sanitize_bool(top_examine, initial(top_examine))
+	vv_dark_mode		= sanitize_bool(vv_dark_mode, initial(vv_dark_mode))
 	crt					= sanitize_bool(crt, initial(crt))
 	grain				= sanitize_bool(grain, initial(grain))
 	qsr_pref			= sanitize_bool(qsr_pref, initial(qsr_pref))
@@ -270,6 +272,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	mastervol			= sanitize_integer(mastervol, 0, 100, initial(mastervol))
 	domhand				= sanitize_integer(domhand, 1, 2, initial(domhand))
 	attack_blip_frequency = sanitize_integer(attack_blip_frequency, 0, 100, ATTACK_BLIP_PREF_DEFAULT)
+	roll_tokens			= sanitize_integer(roll_tokens, 0, MAX_ROLL_TOKENS, 0)
 
 	// lists
 	favorited_slots		= SANITIZE_LIST(favorited_slots)
@@ -378,6 +381,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["tgui_theme"], tgui_theme)
 	WRITE_FILE(S["parchment_skin"], parchment_skin)
 	WRITE_FILE(S["statbrowser_theme"], statbrowser_theme)
+	WRITE_FILE(S["vv_dark_mode"], vv_dark_mode)
 	WRITE_FILE(S["preferred_ui_language"], preferred_ui_language)
 	WRITE_FILE(S["windowflash"], windowflashing)
 	WRITE_FILE(S["be_special"], be_special)
@@ -397,6 +401,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["key_bindings"], key_bindings)
 	WRITE_FILE(S["attack_blip_frequency"] , attack_blip_frequency)
 	WRITE_FILE(S["compliance_notifs"], compliance_notifs)
+	WRITE_FILE(S["roll_tokens"], roll_tokens)
 	WRITE_FILE(S["defiant"], defiant)
 	WRITE_FILE(S["no_runechat_animation"], no_runechat_animation) //TA EDIT
 	// TA Addition start - new ERP SYSTEM
@@ -552,6 +557,15 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	var/list/virtue_data = normalize_saved_virtue(saved_virtue_type, S, "virtue_choices", "virtue_picked_choices")
 	var/list/virtuetwo_data = normalize_saved_virtue(saved_virtuetwo_type, S, "virtuetwo_choices", "virtuetwo_picked_choices")
 	var/list/origin_data = normalize_saved_virtue(saved_origin_type, S, "virtue_origin_choices")
+
+	// Upstream migration: "Second Voice" was renamed to "Alter Ego".
+	for(var/list/saved_virtue_data in list(virtue_data, virtuetwo_data))
+		var/list/saved_choices = saved_virtue_data[2]
+		if(!islist(saved_choices))
+			continue
+		var/index = saved_choices.Find("Second Voice")
+		if(index)
+			saved_choices[index] = "Alter Ego"
 
 	virtue = load_clean_virtue(virtue_data[1], virtue_data[2])
 	virtuetwo = load_clean_virtue(virtuetwo_data[1], virtuetwo_data[2])

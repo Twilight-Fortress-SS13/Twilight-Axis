@@ -109,7 +109,8 @@
 				return
 			else if(msg) // you want to continue if there's no message instead of returning now
 				if(current_ticket)
-					current_ticket.MessageNoRecipient(msg)
+					if(!current_ticket.SendPlayerMessage(msg)) // TA EDIT
+						return
 				else
 					to_chat(src, span_danger("I can no longer reply to this ticket, please open another one by using the Adminhelp verb if need be."))
 					to_chat(src, span_notice("Message: [msg]"))
@@ -136,7 +137,8 @@
 				if(holder)
 					to_chat(src, span_danger("Error: Admin-PM: Client not found."))
 				else if(current_ticket)
-					current_ticket.MessageNoRecipient(msg)
+					if(!current_ticket.SendPlayerMessage(msg)) // TA EDIT
+						return
 				else
 					to_chat(src, span_danger("I can no longer reply to this ticket, please open another one by using the Adminhelp verb if need be."))
 					to_chat(src, span_notice("Message: [msg]"))
@@ -147,7 +149,7 @@
 
 	//clean the message if it's not sent by a high-rank admin
 	if(!check_rights(R_SERVER|R_DEBUG,0)||irc)//no sending html to the poor bots
-		msg = trim(sanitize(copytext(msg,1,MAX_MESSAGE_LEN)))
+		msg = trim(sanitize(copytext(msg,1,MAX_MESSAGE_LEN), irc ? null : list("\t"="#")))
 		if(!msg)
 			return
 
@@ -191,7 +193,8 @@
 
 			else		//recipient is an admin but sender is not
 				if(current_ticket)
-					current_ticket.MessageNoRecipient(keywordparsedmsg)
+					if(!current_ticket.SendPlayerMessage(keywordparsedmsg)) // TA EDIT
+						return
 				else
 					to_chat(src, span_danger("I can no longer reply to this ticket, please open another one by using the Adminhelp verb if need be."))
 					to_chat(src, span_notice("Message: [rawmsg]"))

@@ -9,12 +9,16 @@
 	advclass_cat_rolls = list(CTAG_MERCENARY = 20)
 	greet_text = "A blade for hire."
 	townie_contract_gate_exempt = TRUE
+	show_wanderer_examine = FALSE // TA EDIT
+	advjob_examine = FALSE // TA EDIT
 
 /datum/migrant_role/pentarchy
 	abstract_type = /datum/migrant_role/pentarchy
 	min_pq = 25 // TA EDIT
 	role_category = "Mercenary"
 	townie_contract_gate_exempt = TRUE
+	show_wanderer_examine = FALSE // TA EDIT
+	advjob_examine = FALSE// TA EDIT
 
 // Frontliner
 /datum/migrant_role/pentarchy/vanguard

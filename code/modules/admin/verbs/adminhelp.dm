@@ -1235,7 +1235,7 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	if(handle_spam_prevention(msg,MUTE_ADMINHELP))
 		return
 
-	msg = sanitize(trim(msg))
+	msg = sanitize(trim(msg), list("\t"="#"))
 
 	if(!msg)
 		return

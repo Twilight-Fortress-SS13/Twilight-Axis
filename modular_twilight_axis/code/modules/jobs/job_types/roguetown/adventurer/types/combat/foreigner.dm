@@ -33,7 +33,7 @@
 /datum/outfit/job/roguetown/adventurer/gronnadv/pre_equip(mob/living/carbon/human/H)
 	..()
 
-	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/atgervi
+	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced/atgervi
 	gloves = /obj/item/clothing/gloves/roguetown/angle/gronn
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/gronn
 	shirt = /obj/item/clothing/suit/roguetown/shirt/tunic/random

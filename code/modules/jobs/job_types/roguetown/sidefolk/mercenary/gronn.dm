@@ -73,7 +73,7 @@
 			if("Leðurháls - Byrine Grunt")	//Medium armor, pick between swords or axes. Boots-on-the-ground for hire.
 				H.set_blindness(0)
 				to_chat(H, span_warning("Clad in their unique leatherbound chainmaille and shortsword, The Danheim Leðurháls - roughly translated in Imperial to 'Leatherneck' due to their choice of leather gorgets over forged metal - are known for their harsh dogmatisms and steady personalities."))
-				shoes = /obj/item/clothing/shoes/roguetown/boots/leather/atgervi
+				shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced/atgervi
 				head = /obj/item/clothing/head/roguetown/helmet/bascinet/atgervi/gronn/ownel
 				gloves = /obj/item/clothing/gloves/roguetown/chain/gronn
 				armor = /obj/item/clothing/suit/roguetown/armor/brigandine/gronn
@@ -100,7 +100,7 @@
 			if("Skemmdarvargur - Ravager")	//Light armor, beast claws or dual handaxes.
 				H.set_blindness(0)
 				to_chat(H, span_warning("The Skemmdarvargur are famously known to hail from the northern city of Skugge, the first line of defense for the Northern Empty. Although highly superstitious with their various carved armaments, they lack the mystical miracles of the Iskarn Shamans."))
-				shoes = /obj/item/clothing/shoes/roguetown/boots/leather/atgervi
+				shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced/atgervi
 				head = /obj/item/clothing/head/roguetown/helmet/bascinet/atgervi/gronn
 				gloves = /obj/item/clothing/gloves/roguetown/angle/gronnfur
 				armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/gronn

@@ -1,0 +1,5 @@
+author: "Quinalion"
+delete-after: True
+changes:
+  - bugfix: "Исправлено отображение элирийского шлема."
+  - bugfix: "Исправлен и доработан ритуал культа на кражу люкса."

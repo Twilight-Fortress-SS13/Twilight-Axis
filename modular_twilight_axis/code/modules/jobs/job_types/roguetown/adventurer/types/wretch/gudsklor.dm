@@ -38,10 +38,10 @@
 
 	head = /obj/item/clothing/head/roguetown/helmet/leather/shaman_hood
 	gloves = /obj/item/clothing/gloves/roguetown/angle/gronnfur
-	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/atgervi
+	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/atgervi
 	pants = /obj/item/clothing/under/roguetown/trou/leather/atgervi
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/heavy
-	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/atgervi
+	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced/atgervi
 	backr = /obj/item/storage/backpack/rogue/satchel
 	belt = /obj/item/storage/belt/rogue/leather
 	neck = /obj/item/storage/belt/rogue/pouch/coins/poor

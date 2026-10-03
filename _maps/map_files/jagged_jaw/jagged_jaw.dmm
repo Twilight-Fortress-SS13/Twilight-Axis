@@ -1203,6 +1203,13 @@
 	},
 /turf/open/floor/rogue/wood/nosmooth,
 /area/rogue/indoors/town/grim)
+"ahN" = (
+/obj/structure/fluff/railing/border/north,
+/obj/effect/decal/edge{
+	color = "#3f3f3f"
+	},
+/turf/open/floor/rogue/rooftop/green/west,
+/area/rogue/outdoors/town/roofs/grim)
 "ahP" = (
 /obj/structure/roguewindow/openclose/reinforced{
 	dir = 8
@@ -11929,6 +11936,15 @@
 /obj/structure/fluff/railing/border,
 /turf/open/floor/rogue/ruinedwood/herringbone,
 /area/rogue/outdoors/exposed/under/sewer/grim)
+"bvo" = (
+/obj/structure/fluff/railing/border{
+	dir = 1
+	},
+/obj/effect/decal/edge{
+	color = "#3f3f3f"
+	},
+/turf/open/floor/rogue/rooftop/green/west,
+/area/rogue/outdoors/town/roofs/grim)
 "bvp" = (
 /obj/structure/chair/bench/coucha,
 /obj/effect/decal/edge{
@@ -40817,6 +40833,7 @@
 /turf/open/floor/rogue/blocks/stonered,
 /area/rogue/under/cave/grimspyre/depths)
 "eVJ" = (
+/obj/structure/flora/roguetree/wise,
 /turf/open/floor/rogue/grassyel,
 /area/rogue/outdoors/exposed/church/grim)
 "eVM" = (
@@ -41864,6 +41881,16 @@
 /obj/effect/landmark/chimeric_calyx_spawner/fifteen,
 /turf/open/floor/rogue/snow,
 /area/rogue/outdoors/mountains/decap/grim)
+"fcK" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f"
+	},
+/obj/structure/rack/rogue{
+	density = 0;
+	pixel_y = 18
+	},
+/turf/open/floor/rogue/tile/brownbrick/browner,
+/area/rogue/indoors/town/dwarfin)
 "fcL" = (
 /obj/structure/mineral_door/bars{
 	locked = 1;
@@ -48138,11 +48165,12 @@
 	pixel_y = -32
 	},
 /obj/structure/closet/crate/chest/neu,
-/obj/item/paper/scroll,
-/obj/item/paper/scroll,
-/obj/item/paper/scroll,
-/obj/item/paper/scroll,
-/obj/item/paper/scroll,
+/obj/item/reagent_containers/glass/bottle/alchemical,
+/obj/item/reagent_containers/glass/bottle/alchemical,
+/obj/item/reagent_containers/glass/bottle/alchemical,
+/obj/item/reagent_containers/glass/bottle/alchemical,
+/obj/item/reagent_containers/glass/bottle/alchemical,
+/obj/item/reagent_containers/glass/bottle/alchemical,
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/town/magician)
 "fSa" = (
@@ -70064,7 +70092,7 @@
 /turf/open/floor/rogue/churchmarble,
 /area/rogue/under/cave/scarymaze)
 "izD" = (
-/obj/item/clothing/shoes/roguetown/boots/leather/atgervi,
+/obj/item/clothing/shoes/roguetown/boots/leather/reinforced/atgervi,
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/under/cave/spider)
 "izG" = (
@@ -81304,7 +81332,7 @@
 /obj/structure/mineral_door/wood/donjon{
 	locked = 1;
 	name = "lockup";
-	lockid = "hamguards";
+	lockid = "hamguardsevidence";
 	dir = 8
 	},
 /obj/structure/trap/shock,
@@ -86941,7 +86969,7 @@
 	pixel_y = 12;
 	pixel_x = 6
 	},
-/obj/item/reagent_containers/glass/bucket/pot/kettle,
+/obj/item/reagent_containers/glass/bucket/pot,
 /obj/machinery/light/rogue/candle/l,
 /obj/structure/fluff/railing/border{
 	dir = 6
@@ -89485,7 +89513,7 @@
 /area/rogue/indoors/shelter)
 "kSX" = (
 /obj/structure/closet/crate/chest/crate,
-/obj/item/roguecoin/gold,
+/obj/effect/spawner/lootdrop/roguetown/dungeon/money,
 /turf/open/floor/rogue/cobble,
 /area/rogue/under/cave/grim/hamlet)
 "kSY" = (
@@ -96582,10 +96610,6 @@
 /obj/structure/bed/rogue/shit,
 /turf/open/floor/rogue/twig,
 /area/rogue/under/cave/orcdungeon)
-"lLX" = (
-/obj/structure/roguewindow,
-/turf/open/floor/rogue/concrete,
-/area/rogue/outdoors/town/grim)
 "lLZ" = (
 /obj/machinery/light/rogue/firebowl/church,
 /turf/open/floor/rogue/churchmarble,
@@ -107878,6 +107902,13 @@
 	},
 /turf/open/floor/rogue/blocks,
 /area/rogue/under/town/basement/grim)
+"ngV" = (
+/obj/structure/fluff/railing/corner/north_east,
+/obj/effect/decal/edge_corner{
+	color = "#3f3f3f"
+	},
+/turf/open/floor/rogue/rooftop/green/corner1/dirone,
+/area/rogue/outdoors/town/roofs/grim)
 "ngX" = (
 /mob/living/carbon/human/species/skeleton/npc/hard,
 /turf/open/floor/rogue/concrete,
@@ -109996,12 +110027,12 @@
 /obj/item/rogueore/cinnabar,
 /obj/item/rogueore/cinnabar,
 /obj/item/rogueore/cinnabar,
-/obj/item/paper/scroll,
-/obj/item/paper/scroll,
-/obj/item/paper/scroll,
-/obj/item/paper/scroll,
-/obj/item/paper/scroll,
-/obj/item/paper/scroll,
+/obj/item/reagent_containers/glass/bottle/alchemical,
+/obj/item/reagent_containers/glass/bottle/alchemical,
+/obj/item/reagent_containers/glass/bottle/alchemical,
+/obj/item/reagent_containers/glass/bottle/alchemical,
+/obj/item/reagent_containers/glass/bottle/alchemical,
+/obj/item/reagent_containers/glass/bottle/alchemical,
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors/town/dwarfin)
 "nuV" = (
@@ -115099,7 +115130,7 @@
 /turf/open/floor/rogue/wood,
 /area/rogue/indoors/town/grim)
 "ocs" = (
-/obj/structure/mineral_door/wood/towner/cheesemaker,
+/obj/structure/mineral_door/wood/towner/potter,
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/town/grim)
 "ocx" = (
@@ -129242,7 +129273,7 @@
 /obj/structure/mineral_door/wood/donjon{
 	locked = 1;
 	name = "lockup";
-	lockid = "hamguards";
+	lockid = "hamguardsevidence";
 	dir = 1
 	},
 /obj/structure/trap/shock,
@@ -145475,6 +145506,12 @@
 	},
 /turf/open/floor/rogue/cobble,
 /area/rogue/indoors/town/garrison/grim)
+"rMn" = (
+/obj/machinery/light/rogue/candle,
+/obj/structure/closet/crate/roguecloset,
+/obj/item/reagent_containers/glass/bucket/pot,
+/turf/open/floor/rogue/ruinedwood/spiral,
+/area/rogue/indoors/town/grim)
 "rMp" = (
 /obj/effect/decal/cleanable/blood/old,
 /turf/open/floor/rogue/carpet/lord/center,
@@ -156233,7 +156270,7 @@
 /obj/structure/bars/cemetery{
 	max_integrity = 1500
 	},
-/turf/open/floor/rogue/concrete,
+/turf/open/floor/rogue/cobblerock,
 /area/rogue/outdoors/exposed/town/keep/grim)
 "sZm" = (
 /obj/structure/table/wood/poor,
@@ -161751,10 +161788,6 @@
 /obj/item/millstone{
 	pixel_y = 14;
 	pixel_x = 4
-	},
-/obj/item/reagent_containers/glass/bucket/pot/kettle{
-	pixel_x = -9;
-	pixel_y = 0
 	},
 /obj/item/kitchen/rollingpin,
 /turf/open/floor/rogue/ruinedwood/spiral,
@@ -171763,6 +171796,17 @@
 	},
 /turf/open/floor/carpet/red,
 /area/rogue/under/cave/dukecourt/grim)
+"uPB" = (
+/obj/effect/decal/edge{
+	color = "#3f3f3f";
+	dir = 6
+	},
+/obj/structure/rack/rogue{
+	density = 0;
+	pixel_y = 18
+	},
+/turf/open/floor/rogue/tile/brownbrick/browner,
+/area/rogue/indoors/town/dwarfin)
 "uPC" = (
 /obj/structure/fluff/railing/wood/east,
 /obj/effect/decal/mossy{
@@ -171817,6 +171861,14 @@
 "uQa" = (
 /turf/closed/wall/mineral/rogue/pipe,
 /area/rogue/outdoors/town/grim)
+"uQd" = (
+/obj/structure/fluff/railing/corner,
+/obj/effect/decal/edge_corner{
+	color = "#3f3f3f";
+	dir = 4
+	},
+/turf/open/floor/rogue/rooftop/green/corner1,
+/area/rogue/outdoors/town/roofs/grim)
 "uQf" = (
 /turf/open/floor/rogue/tile/bluebrick,
 /area/rogue/indoors/town/bath/grim/abyssorbath)
@@ -172390,12 +172442,24 @@
 	pixel_y = 0
 	},
 /obj/item/storage/roguebag{
-	pixel_x = 4;
-	pixel_y = 5
+	pixel_x = 7;
+	pixel_y = 12
 	},
 /obj/item/storage/roguebag{
-	pixel_x = -6;
-	pixel_y = 5
+	pixel_x = -8;
+	pixel_y = 13
+	},
+/obj/item/rogueweapon/contraption/folding_table_stored{
+	pixel_x = 0;
+	pixel_y = -6
+	},
+/obj/item/folding_alchstation_stored{
+	pixel_y = -1;
+	pixel_x = 0
+	},
+/obj/item/folding_alchcauldron_stored{
+	pixel_y = 5;
+	pixel_x = 0
 	},
 /turf/open/floor/rogue/tile/brownbrick/browner,
 /area/rogue/indoors/town/physician)
@@ -502562,12 +502626,12 @@ dfx
 mGC
 sqX
 sqX
-oqW
-jLZ
-lLX
-lLX
-jLZ
-oqW
+mDI
+aTh
+bcH
+bcH
+aTh
+mDI
 jKu
 owl
 gRB
@@ -504093,7 +504157,7 @@ eYt
 aTh
 eno
 hZU
-fIg
+vhP
 hZU
 nuD
 jKu
@@ -508667,7 +508731,7 @@ gRB
 gRB
 gRB
 gRB
-iES
+gRB
 gRB
 gRB
 cVw
@@ -509049,7 +509113,7 @@ kHI
 kHI
 aTh
 mDI
-qBE
+iES
 gRB
 gRB
 pQT
@@ -509398,7 +509462,7 @@ rBt
 iTP
 ldg
 umu
-lOu
+fcK
 btz
 reh
 ldg
@@ -511723,7 +511787,7 @@ qvF
 frQ
 foL
 nuD
-iQd
+iES
 gRB
 gRB
 gRB
@@ -512836,7 +512900,7 @@ kFT
 kFT
 etB
 ldg
-sRd
+uPB
 pqw
 iwI
 aZE
@@ -514801,7 +514865,7 @@ mJp
 gRB
 gRB
 gRB
-bcH
+obO
 pFk
 pFk
 wKz
@@ -515566,7 +515630,7 @@ mDI
 eyh
 dfx
 aTh
-aGo
+rMn
 nuD
 geS
 nuD
@@ -515948,7 +516012,7 @@ eyT
 gRB
 gRB
 mDI
-obO
+bcH
 nuD
 nuD
 nuD
@@ -516766,7 +516830,7 @@ oOx
 pLW
 iZX
 pLW
-pLW
+xlT
 bQx
 bDh
 bQx
@@ -635544,7 +635608,7 @@ edw
 bMT
 uDO
 qqJ
-pVh
+ngV
 pVh
 pVh
 pVh
@@ -635926,7 +635990,7 @@ edw
 gBT
 gBT
 sVr
-pVh
+bvo
 pVh
 pVh
 pVh
@@ -636308,7 +636372,7 @@ edw
 edw
 guZ
 qqJ
-pVh
+ahN
 pVh
 pVh
 pVh
@@ -636690,7 +636754,7 @@ edw
 hHG
 hHG
 sVr
-pVh
+ahN
 pVh
 pVh
 pVh
@@ -637072,7 +637136,7 @@ edw
 fZY
 mFj
 qqJ
-pVh
+ahN
 pVh
 pVh
 pVh
@@ -637454,7 +637518,7 @@ edw
 gBT
 gBT
 qqJ
-pVh
+ahN
 pVh
 pVh
 pVh
@@ -637836,7 +637900,7 @@ wFK
 sVr
 sVr
 sVr
-pVh
+uQd
 pVh
 pVh
 pVh
