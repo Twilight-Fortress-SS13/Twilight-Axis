@@ -432,7 +432,7 @@
 		return
 	var/mob/living/carbon/C = grabbed
 	var/damage = user.get_punch_dmg()
-	var/armor_block = C.run_armor_check(limb_grabbed, "slash", armor_penetration = PEN_NONE, damage = damage)
+	var/armor_block = 0 //TA edit
 	if(grabbed == user && limb_grabbed.status == BODYPART_ROBOTIC)	//removing ones own prosthetic should not be violent, nor damaging
 		C.visible_message(span_notice("[user] starts twisting [limb_grabbed] of [C], twisting it out of its socket!"), span_notice("I start twisting [limb_grabbed] from [src]."))
 		playsound(user, 'sound/misc/blackbag2.ogg', 100)
