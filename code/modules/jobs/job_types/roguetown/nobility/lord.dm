@@ -31,7 +31,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	max_pq = null
 	round_contrib_points = 4
 	give_bank_account = 250
-	cmode_music = 'sound/music/combat_noble.ogg'
+	cmode_music = sound("sound/music/combat_noble.ogg")
 	same_job_respawn_delay = 30 MINUTES
 
 	// Can't use the Throat when you can't talk properly or.. at all for that matter.

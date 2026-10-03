@@ -7,7 +7,7 @@
 	subclass_languages = list(/datum/language/celestial)
 	class_select_category = CLASS_CAT_NALEDI
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_WARMAGE)
-	cmode_music = 'sound/music/warscholar.ogg'
+	cmode_music = sound("sound/music/warscholar.ogg")
 	traits_applied = list(TRAIT_ARCYNE, TRAIT_ALCHEMY_EXPERT, TRAIT_NALEDI)
 	subclass_stats = list(
 		STATKEY_INT = 3,
@@ -41,18 +41,19 @@
 /datum/outfit/job/roguetown/mercenary/warscholar/pre_equip(mob/living/carbon/human/H)
 	..()
 	var/list/naledicolors = sortList(list(
-		"GOLD" = "#C8BE6D",
-		"PALE PURPLE" = "#9E93FF",
+		"BLACK" = "#242526",
 		"BLUE" = "#A7B4F6",
 		"BRICK BROWN" = "#773626",
-		"PURPLE" = "#B542AC",
+		"GOLD" = "#C8BE6D",
 		"GREEN" = "#62a85f",
-		"BLUE" = "#A9BFE0",
-		"RED" = "#ED6762",
-		"ORANGE" = "#EDAF6D",
-		"PINK" = "#EDC1D5",
+		"LIGHT BLUE" = "#A9BFE0",
 		"MAROON" = "#5F1F34",
-		"BLACK" = "#242526"
+		"ORANGE" = "#EDAF6D",
+		"PALE PURPLE" = "#9E93FF",
+		"PINK" = "#EDC1D5",
+		"PURPLE" = "#B542AC",
+		"RED" = "#ED6762",
+		"WHITE" = "#ffffff"
 	))
 	if(H.mind)
 		detailcolor = input(H, "Choose a color.", "NALEDIAN COLORPLEX") as anything in naledicolors
@@ -96,7 +97,7 @@
 	subclass_languages = list(/datum/language/celestial, /datum/language/thievescant)
 	class_select_category = CLASS_CAT_NALEDI
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_WARMAGE)
-	cmode_music = 'sound/music/warscholar.ogg'
+	cmode_music = sound("sound/music/warscholar.ogg")
 	traits_applied = list(TRAIT_CIVILIZEDBARBARIAN, TRAIT_ARCYNE, TRAIT_NALEDI)
 	// Previous budget was kinda lopsided with negative per and con on a melee class (??) to give them a lot of str and speed. I took 6 points off and shifted it to wil and perception instead.
 	subclass_stats = list(
@@ -133,18 +134,19 @@
 /datum/outfit/job/roguetown/mercenary/warscholar_pontifex/pre_equip(mob/living/carbon/human/H)
 	..()
 	var/list/naledicolors = sortList(list(
-		"GOLD" = "#C8BE6D",
-		"PALE PURPLE" = "#9E93FF",
+		"BLACK" = "#242526",
 		"BLUE" = "#A7B4F6",
 		"BRICK BROWN" = "#773626",
-		"PURPLE" = "#B542AC",
+		"GOLD" = "#C8BE6D",
 		"GREEN" = "#62a85f",
-		"BLUE" = "#A9BFE0",
-		"RED" = "#ED6762",
-		"ORANGE" = "#EDAF6D",
-		"PINK" = "#EDC1D5",
+		"LIGHT BLUE" = "#A9BFE0",
 		"MAROON" = "#5F1F34",
-		"BLACK" = "#242526"
+		"ORANGE" = "#EDAF6D",
+		"PALE PURPLE" = "#9E93FF",
+		"PINK" = "#EDC1D5",
+		"PURPLE" = "#B542AC",
+		"RED" = "#ED6762",
+		"WHITE" = "#ffffff"
 	))
 	if(H.mind)
 		detailcolor = input(H, "Choose a color.", "NALEDIAN COLORPLEX") as anything in naledicolors
@@ -215,7 +217,7 @@
 	subclass_languages = list(/datum/language/celestial)
 	class_select_category = CLASS_CAT_NALEDI
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_WARMAGE)
-	cmode_music = 'sound/music/warscholar.ogg'
+	cmode_music = sound("sound/music/warscholar.ogg")
 	traits_applied = list(TRAIT_ARCYNE, TRAIT_ALCHEMY_EXPERT, TRAIT_MEDICINE_EXPERT, TRAIT_NALEDI)
 	subclass_stats = list(
 		STATKEY_INT = 3,
@@ -248,18 +250,19 @@
 /datum/outfit/job/roguetown/mercenary/warscholar_vizier/pre_equip(mob/living/carbon/human/H)
 	..()
 	var/list/naledicolors = sortList(list(
-		"GOLD" = "#C8BE6D",
-		"PALE PURPLE" = "#9E93FF",
+		"BLACK" = "#242526",
 		"BLUE" = "#A7B4F6",
 		"BRICK BROWN" = "#773626",
-		"PURPLE" = "#B542AC",
+		"GOLD" = "#C8BE6D",
 		"GREEN" = "#62a85f",
-		"BLUE" = "#A9BFE0",
-		"RED" = "#ED6762",
-		"ORANGE" = "#EDAF6D",
-		"PINK" = "#EDC1D5",
+		"LIGHT BLUE" = "#A9BFE0",
 		"MAROON" = "#5F1F34",
-		"BLACK" = "#242526"
+		"ORANGE" = "#EDAF6D",
+		"PALE PURPLE" = "#9E93FF",
+		"PINK" = "#EDC1D5",
+		"PURPLE" = "#B542AC",
+		"RED" = "#ED6762",
+		"WHITE" = "#ffffff"
 	))
 	r_hand = /obj/item/rogueweapon/woodstaff/implement/grand/naledi
 
@@ -304,6 +307,24 @@
 	H.merctype = 14
 
 /datum/outfit/job/roguetown/mercenary/warscholar/post_equip(mob/living/carbon/human/H, visualsOnly = FALSE)
+	. = ..()
+	for(var/obj/item/clothing/V in H.get_equipped_items(FALSE))
+		if(V.naledicolor)
+			V.color = detailcolor
+			V.update_icon()
+	H.regenerate_icons()
+
+
+/datum/outfit/job/roguetown/mercenary/warscholar_pontifex/post_equip(mob/living/carbon/human/H, visualsOnly = FALSE)
+	. = ..()
+	for(var/obj/item/clothing/V in H.get_equipped_items(FALSE))
+		if(V.naledicolor)
+			V.color = detailcolor
+			V.update_icon()
+	H.regenerate_icons()
+
+
+/datum/outfit/job/roguetown/mercenary/warscholar_vizier/post_equip(mob/living/carbon/human/H, visualsOnly = FALSE)
 	. = ..()
 	for(var/obj/item/clothing/V in H.get_equipped_items(FALSE))
 		if(V.naledicolor)

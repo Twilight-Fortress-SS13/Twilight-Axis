@@ -4,7 +4,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 
 	outfit = /datum/outfit/job/roguetown/wretch/vigilante
-	cmode_music = 'sound/music/combatmaniac.ogg'
+	cmode_music = sound("sound/music/combatmaniac.ogg")
 	class_select_category = CLASS_CAT_ROGUE
 	category_tags = list(CTAG_WRETCH)
 	traits_applied = list(TRAIT_PERFECT_TRACKER)

@@ -949,7 +949,7 @@ Inquisitorial armory down here
 		if(!M.mind)
 			return
 
-		if(M.stat == DEAD)
+		if(M.stat == DEAD || HAS_TRAIT(M, TRAIT_DEADITE)) // TA EDIT
 			var/found_cursed = FALSE
 			if(M.mind.has_antag_datum(/datum/antagonist/werewolf, FALSE))
 				found_cursed = TRUE

@@ -370,9 +370,9 @@
 				snuff()
 			else
 				for(var/mob/living/target in range(4, T))
-					if(!target.mind || istype(target, /mob/living/simple_animal))
-						target.adjustFireLoss(PVE_damage) //fireball damage + 40. That
-				explosion(T, devastation_range = 0, heavy_impact_range = 0, light_impact_range = 4, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg'))
+					//if(!target.mind || istype(target, /mob/living/simple_animal))  //TA edit
+					target.adjustFireLoss(PVE_damage) //fireball damage + 40. That
+				explosion(T, devastation_range = 1, heavy_impact_range = 2, light_impact_range = 4, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg')) //TA edit
 				qdel(src) //IMPORTANT!! go into walls /turf/closed/wall/ and see /turf/closed/wall/ex_act. Its bounded with /proc/explosion. Same for /obj/structure and /obj/structure/ex_act because if you going to fuck intergity or whatever this shit called players will skin you alive for breaking their equipment and keys
 		else //also /turf/open/floor/ex_act for comment above
 			if(prob(prob2fail))
@@ -518,11 +518,11 @@
 					qdel(src)
 				else
 					for(var/mob/living/target in range(3, T))
-						if(!target.mind || istype(target, /mob/living/simple_animal))
-							target.adjustFireLoss(PVE_damage) //summary 500
+						//if(!target.mind || istype(target, /mob/living/simple_animal)) //TA edit
+						target.adjustFireLoss(PVE_damage) //summary 500
 					for(var/mob/living/target in range(8, T))
-						if(!target.mind || istype(target, /mob/living/simple_animal))
-							target.adjustFireLoss(PVE_damage - 100)
+						//if(!target.mind || istype(target, /mob/living/simple_animal)) //TA edit
+						target.adjustFireLoss(PVE_damage - 100)
 					explosion(T, devastation_range = 2, heavy_impact_range = 3, light_impact_range = 8, flame_range = 2, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg'))
 					qdel(src)
 
@@ -660,8 +660,8 @@
 	var/turf/T = get_turf(src)
 	if(T)
 		for(var/mob/living/target in range(2, T))
-			if(!target.mind || istype(target, /mob/living/simple_animal))
-				target.adjustFireLoss(PVE_damage) //fireball damage + 40. That
+			//if(!target.mind || istype(target, /mob/living/simple_animal)) //TA edit
+			target.adjustFireLoss(PVE_damage) //fireball damage + 40. That
 		explosion(T, heavy_impact_range = 1, light_impact_range = 3, flame_range = 2, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg'))
 		qdel(src)
 

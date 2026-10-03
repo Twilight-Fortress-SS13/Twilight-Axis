@@ -120,7 +120,10 @@
 		"Crescent Fang" = SKIN_COLOR_CRESCENT_FANG,
 		"Murkwalker" = SKIN_COLOR_MURKWALKER,
 		"Shatterhorn" = SKIN_COLOR_SHATTERHORN,
-		"Spirit Crusher" = SKIN_COLOR_SPIRITCRUSHER
+		"Spirit Crusher" = SKIN_COLOR_SPIRITCRUSHER,
+		"Iron Splinter" = SKIN_COLOR_IRON_SPLINTER,
+		"Glass Crag" = SKIN_COLOR_GLASS_CRAG,
+		"Daemonscar" = SKIN_COLOR_DAEMONSCAR
 	)
 
 /datum/species/halforc/get_hairc_list()

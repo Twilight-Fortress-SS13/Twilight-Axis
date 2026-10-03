@@ -103,7 +103,7 @@
 				l_hand = /obj/item/rogueweapon/scabbard/gwstrap
 				wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/heavy
 				gloves = /obj/item/clothing/gloves/roguetown/bandages
-	H.cmode_music = 'sound/music/combat_holy.ogg' // left in bc i feel like monk players want their darktide TRAIT_DODGEEXPERT
+	H.cmode_music = sound("sound/music/combat_holy.ogg") // left in bc i feel like monk players want their darktide TRAIT_DODGEEXPERT
 	switch(H.patron?.type)
 		if(/datum/patron/old_god)
 			cloak = /obj/item/clothing/cloak/tabard/psydontabard/black
@@ -215,7 +215,7 @@
 		/obj/item/flashlight/flare/torch/metal = 1,
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
 		)
-	H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg'
+	H.cmode_music = sound("sound/music/cmode/church/combat_reckoning.ogg")
 
 	//Armor varients here
 	var/armors = list("Hauberk")
@@ -411,7 +411,7 @@
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1
 		)
-	H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg'
+	H.cmode_music = sound("sound/music/cmode/church/combat_reckoning.ogg")
 	switch(H.patron?.type)
 		if(/datum/patron/old_god)
 			if(H.mind)
@@ -486,7 +486,7 @@
 	name = "Missionary"
 	tutorial = "You are a devout worshipper of the divine with a strong connection to your patron god. You've spent years studying scriptures and serving your deity - now you wander into foreign lands, spreading the word of your faith."
 	outfit = /datum/outfit/job/roguetown/adventurer/missionary
-	traits_applied = list()
+	traits_applied = list(TRAIT_HOMESTEAD_EXPERT)
 	subclass_stats = list(
 		STATKEY_INT = 2,
 		STATKEY_PER = 2,
@@ -505,6 +505,7 @@
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/medicine = SKILL_LEVEL_JOURNEYMAN, //always better than cleric oathed paladin
 		/datum/skill/craft/crafting = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/craft/cooking = SKILL_LEVEL_APPRENTICE,
 	)
 	subclass_stashed_items = list(
 		"The Verses and Acts of the Ten" = /obj/item/book/rogue/bibble,
@@ -523,7 +524,7 @@
 		/obj/item/needle/thorn/cleric = 1,
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpot = 1,
 		)
-	H.cmode_music = 'sound/music/cmode/church/combat_acolyte.ogg' // our cleric pre_equip handles cmode music
+	H.cmode_music = sound("sound/music/cmode/church/combat_acolyte.ogg") // our cleric pre_equip handles cmode music
 	switch(H.patron?.type)
 		if(/datum/patron/old_god)
 			head = /obj/item/clothing/head/roguetown/roguehood/psydon/black
@@ -681,7 +682,7 @@
 			H.adjust_skillrank_up_to(/datum/skill/misc/climbing, SKILL_LEVEL_JOURNEYMAN, TRUE)
 			H.adjust_skillrank(/datum/skill/misc/lockpicking, SKILL_LEVEL_NOVICE, TRUE)
 			H.adjust_skillrank_up_to(/datum/skill/misc/music, SKILL_LEVEL_EXPERT, TRUE)
-			H.cmode_music = 'sound/music/combat_jester.ogg'
+			H.cmode_music = sound("sound/music/combat_jester.ogg")
 			var/datum/inspiration/I = new /datum/inspiration(H)
 			I.grant_inspiration(H, bard_tier = BARD_T2) //(NGL Xylix needs better high-end miracles vs clutching off this system, until then, untouched)
 			if(H.mind)

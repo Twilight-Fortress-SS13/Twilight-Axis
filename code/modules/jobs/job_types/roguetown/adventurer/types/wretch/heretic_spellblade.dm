@@ -234,7 +234,7 @@
 				H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_EXPERT, TRUE)
 
 	// Patron-specific bonuses
-	H.cmode_music = 'sound/music/combat_heretic.ogg'
+	H.cmode_music = sound("sound/music/combat_heretic.ogg")
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
 			H.grant_language(/datum/language/undead)

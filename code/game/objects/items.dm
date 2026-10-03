@@ -546,7 +546,8 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		Targeting large limbs such as arms, head or legs has a defense reduction cap of <b>[SWIFTCAP_LIMBS]%</b>. \n\
 		Targeting the chest only has a cap of <b>[SWIFTCAP_CHEST]%</b> parry reduction. \n\
 		Swift Balance does not work if the attacker is wearing Medium or Heavy AC equipment on their outerwear, innerwear or pants slots. \n\
-		Defender's difference in INT and PER (if higher) may reduce the parry penalty in some circumstances.\n")
+		Defender's difference in INT and PER (if higher) may reduce the parry penalty in some circumstances. \n\
+		Having a swift weapon in your dominant hand and nothing in your off-hand increases your parry chance.")
 
 		output += span_notice("A <b>normal</b> balance weapon helps against both balances by lowering swift's parry reduction by <b>10</b>, \n\
 		and blocking <b>[abs(STAM_DRAIN_PER_STR_DIFF_HEAVY_BAL)]</b> stamina damage done by heavy balance")

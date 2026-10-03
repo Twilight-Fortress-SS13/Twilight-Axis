@@ -21,7 +21,7 @@
 	min_pq = 6
 	max_pq = null
 	round_contrib_points = 3
-	cmode_music = 'sound/music/combat_noble.ogg'
+	cmode_music = sound("sound/music/combat_noble.ogg")
 	job_traits = list(TRAIT_NOBLE)
 	job_subclasses = list(
 		/datum/advclass/heir/daring,
@@ -45,7 +45,7 @@
 	if(player.prefs)
 		if(SSmapping.config.map_name == "Rockhill")
 			if(!istype(player.prefs.virtue_origin, /datum/virtue/origin/enigma) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/valorian) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/zybantian))
-				var/list/new_origins = list("Enigma" = /datum/virtue/origin/enigma, 
+				var/list/new_origins = list("Enigma" = /datum/virtue/origin/enigma,
 				"Valoria" = /datum/virtue/origin/valorian,
 				"Zybantu" = /datum/virtue/origin/zybantian)
 				var/new_origin
@@ -58,7 +58,7 @@
 				change_origin(H, new_origin, "Royal line")
 		else if(SSmapping.config.map_name != "Desert Town")
 			if(!istype(player.prefs.virtue_origin, /datum/virtue/origin/azuria) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/grenzelhoft) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/valorian))
-				var/list/new_origins = list("Azuria" = /datum/virtue/origin/azuria, 
+				var/list/new_origins = list("Azuria" = /datum/virtue/origin/azuria,
 				"Grenzelhoft" = /datum/virtue/origin/grenzelhoft,
 				"Valoria" = /datum/virtue/origin/valorian)
 				var/new_origin
@@ -195,9 +195,9 @@
 		/obj/item/rogueweapon/spellbook = 1,
 		/obj/item/chalk = 1,
 	)
-		
 
- 
+
+
 /datum/advclass/heir/aristocrat
 	name = "Sheltered Aristocrat"
 	tutorial = "Life has been kind to you; you've an entire keep at your disposal, servants to wait on you, and a whole retinue of guards to guard you. You've nothing to prove; just live the good life and you'll be a lord someday, too. A lack of ambition translates into a lacking skillset beyond schooling, though, and your breaks from boredom consist of being a damsel or court gossip."

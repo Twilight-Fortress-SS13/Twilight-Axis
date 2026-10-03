@@ -19,7 +19,7 @@
 	max_pq = null
 	can_random = FALSE
 
-	cmode_music = 'sound/music/combat_bum.ogg'
+	cmode_music = sound("sound/music/combat_bum.ogg")
 	advclass_cat_rolls = list(CTAG_PRISONER = 20)
 
 /datum/outfit/job/roguetown/prisonerr/pre_equip(mob/living/carbon/human/H, visualsOnly = FALSE)
@@ -417,10 +417,10 @@
 	ADD_TRAIT(H, TRAIT_DEATHSIGHT, TRAIT_GENERIC)
 	ADD_TRAIT(H, TRAIT_WITCH, TRAIT_GENERIC)
 	ADD_TRAIT(H, TRAIT_ARCYNE_T1, TRAIT_GENERIC)
-	H.cmode_music = 'sound/music/combat_cult.ogg'
+	H.cmode_music = sound("sound/music/combat_cult.ogg")
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
-			H.cmode_music = 'sound/music/combat_cult.ogg'
+			H.cmode_music = sound("sound/music/combat_cult.ogg")
 
 /datum/advclass/prisoner_miner
 	parent_type = /datum/advclass

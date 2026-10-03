@@ -19,7 +19,7 @@
 	min_pq = 7 // Higher PQ requirement as it is a leadership role. Not for total newbie.
 	max_pq = null
 	round_contrib_points = 3
-	cmode_music = 'sound/music/cmode/towner/combat_retired.ogg'
+	cmode_music = sound("sound/music/cmode/towner/combat_retired.ogg")
 
 	job_traits = list(TRAIT_TRAINED_SMITH, TRAIT_SEEPRICES, TRAIT_SMITHING_EXPERT, TRAIT_SEWING_EXPERT, TRAIT_HOMESTEAD_EXPERT)
 	// Guildmaster get way less gate due to their role

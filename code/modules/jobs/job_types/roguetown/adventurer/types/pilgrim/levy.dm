@@ -5,7 +5,7 @@
 	forbidden_races = list(RACES_DESPISED)
 	outfit = /datum/outfit/job/roguetown/adventurer/levy
 	traits_applied = list(TRAIT_LEVY, TRAIT_HOMESTEAD_EXPERT)
-	cmode_music = 'sound/music/cmode/towner/combat_towner2.ogg'
+	cmode_music = sound("sound/music/cmode/towner/combat_towner2.ogg")
 	category_tags = list(CTAG_TOWNER)
 	townie_contract_gate_exempt = TRUE
 	maximum_possible_slots = 5 // They're still Towners who contribute to the econ, even when not fighting or bog-larping.

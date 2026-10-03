@@ -7,7 +7,7 @@
 	maximum_possible_slots = 2
 	class_select_category = CLASS_CAT_AAVNR
 	subclass_languages = list(/datum/language/aavnic)
-	cmode_music = 'modular_twilight_axis/sound/music/combat_hussar.ogg'
+	cmode_music = sound("modular_twilight_axis/sound/music/combat_hussar.ogg")
 
 	subclass_virtues = list(
 		/datum/virtue/utility/riding

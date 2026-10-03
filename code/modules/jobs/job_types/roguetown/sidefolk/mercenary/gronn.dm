@@ -6,7 +6,7 @@
 	outfit = /datum/outfit/job/roguetown/mercenary/gronn
 	class_select_category = CLASS_CAT_GRONN
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
-	cmode_music = 'sound/music/combat_vagarian.ogg'
+	cmode_music = sound("sound/music/combat_vagarian.ogg")
 	subclass_languages = list(/datum/language/gronnic)
 	extra_context = "This subclass has 2 loadouts with various stats, skills & equipment."
 	subclass_skills = list(
@@ -73,7 +73,7 @@
 			if("Leðurháls - Byrine Grunt")	//Medium armor, pick between swords or axes. Boots-on-the-ground for hire.
 				H.set_blindness(0)
 				to_chat(H, span_warning("Clad in their unique leatherbound chainmaille and shortsword, The Danheim Leðurháls - roughly translated in Imperial to 'Leatherneck' due to their choice of leather gorgets over forged metal - are known for their harsh dogmatisms and steady personalities."))
-				shoes = /obj/item/clothing/shoes/roguetown/boots/leather/atgervi
+				shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced/atgervi
 				head = /obj/item/clothing/head/roguetown/helmet/bascinet/atgervi/gronn/ownel
 				gloves = /obj/item/clothing/gloves/roguetown/chain/gronn
 				armor = /obj/item/clothing/suit/roguetown/armor/brigandine/gronn
@@ -100,7 +100,7 @@
 			if("Skemmdarvargur - Ravager")	//Light armor, beast claws or dual handaxes.
 				H.set_blindness(0)
 				to_chat(H, span_warning("The Skemmdarvargur are famously known to hail from the northern city of Skugge, the first line of defense for the Northern Empty. Although highly superstitious with their various carved armaments, they lack the mystical miracles of the Iskarn Shamans."))
-				shoes = /obj/item/clothing/shoes/roguetown/boots/leather/atgervi
+				shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced/atgervi
 				head = /obj/item/clothing/head/roguetown/helmet/bascinet/atgervi/gronn
 				gloves = /obj/item/clothing/gloves/roguetown/angle/gronnfur
 				armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/gronn
@@ -145,7 +145,7 @@
 	class_select_category = CLASS_CAT_GRONN
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_BULWARK)
 	traits_applied = list(TRAIT_HEAVYARMOR)
-	cmode_music = 'sound/music/combat_vagarian.ogg'
+	cmode_music = sound("sound/music/combat_vagarian.ogg")
 	subclass_languages = list(/datum/language/gronnic)
 	subclass_stats = list(
 		STATKEY_WIL = 3, //People see big numbers and start shitting their pants, but their weighted stats are 7 and it's limited to one, singular slot. This is fine.

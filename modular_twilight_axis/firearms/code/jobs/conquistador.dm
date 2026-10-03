@@ -18,7 +18,7 @@
 	outfit = /datum/outfit/job/roguetown/mercenary/twilight_conquistador
 	maximum_possible_slots = 2
 	min_pq = 25 // Все мерки в данный момент с 25 открываются
-	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_conquistador.ogg'
+	cmode_music = sound("modular_twilight_axis/firearms/sound/music/combat_conquistador.ogg")
 	class_select_category = CLASS_CAT_ETRUSCA
 	subclass_languages = list(/datum/language/etruscan)
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)

@@ -36,7 +36,7 @@
 	Clad in maille and plate, you lead the boarding party through grapeshot and blade, \
 	shrugging off blows that would fell a lesser corsair.")
 
-	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_corsair.ogg'
+	cmode_music = sound("modular_twilight_axis/firearms/sound/music/combat_corsair.ogg")
 	subclass_skills = list(
 		/datum/skill/combat/twilight_firearms = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/bows = SKILL_LEVEL_APPRENTICE,

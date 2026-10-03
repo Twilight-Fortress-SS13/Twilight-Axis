@@ -24,7 +24,7 @@
 	min_pq = 2
 	max_pq = null
 	round_contrib_points = 2
-	cmode_music = 'sound/music/cmode/nobility/combat_courtmage.ogg'
+	cmode_music = sound("sound/music/cmode/nobility/combat_courtmage.ogg")
 	advjob_examine = TRUE // So that Court Magicians can know if they're teachin' a Apprentice or if someone's a bit more advanced of a player. Just makes the title show up as the advjob's name.
 
 	job_traits = list(TRAIT_ALCHEMY_EXPERT)
@@ -92,7 +92,7 @@
 		)
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
-			H.cmode_music = 'sound/music/combat_heretic.ogg'
+			H.cmode_music = sound("sound/music/combat_heretic.ogg")
 	if(H.mind)
 		backr = choose_implement(H, "lesser")
 		SStreasury.grant_savings(ECONOMIC_LOWER_MIDDLE_CLASS, H)
@@ -302,6 +302,6 @@
 					r_hand = /obj/item/rogueweapon/mace/warhammer
 			H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_JOURNEYMAN, TRUE)
 
-	H.cmode_music = 'sound/music/cmode/nobility/combat_courtmage.ogg'
+	H.cmode_music = sound("sound/music/cmode/nobility/combat_courtmage.ogg")
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_LOWER_MIDDLE_CLASS, H)

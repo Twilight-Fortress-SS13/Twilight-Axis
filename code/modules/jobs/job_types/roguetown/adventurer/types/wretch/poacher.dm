@@ -4,7 +4,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 
 	outfit = /datum/outfit/job/roguetown/wretch/poacher
-	cmode_music = 'sound/music/combat_poacher.ogg'
+	cmode_music = sound("sound/music/combat_poacher.ogg")
 	class_select_category = CLASS_CAT_RANGER
 	category_tags = list(CTAG_WRETCH)
 	traits_applied = list(TRAIT_LONGSTRIDER, TRAIT_DODGEEXPERT, TRAIT_WOODSMAN, TRAIT_OUTDOORSMAN, TRAIT_SURVIVAL_EXPERT, TRAIT_EXPERT_HUNTER) // TA EDIT TRAIT_AZURENATIVE —> TRAIT_LONGSTRIDER

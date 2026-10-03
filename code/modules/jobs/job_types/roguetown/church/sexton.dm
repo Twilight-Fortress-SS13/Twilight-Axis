@@ -28,7 +28,7 @@
 	tutorial = "You are the groundskeeper for the local church, and are responsible for all the little odd-jobs that keep it running. \
 	Your duties range from cleaning the floors and pews to managing the stores and conducting church business."
 	outfit = /datum/outfit/job/roguetown/sexton/groundskeeper
-	cmode_music = 'sound/music/combat_holy.ogg'
+	cmode_music = sound("sound/music/combat_holy.ogg")
 	category_tags = list(CTAG_SEXTON)
 	traits_applied = list(TRAIT_HOMESTEAD_EXPERT)
 	subclass_stats = list(
@@ -105,7 +105,7 @@
 	tutorial = "You are the gravetender for the local church, and are responsible for taking care of the graves north of town and for the retrieval of the truly dead back into Necra's grasp. \
 	Only the devout of Necra may take up the gravetender's mantle."
 	outfit = /datum/outfit/job/roguetown/sexton/gravetender
-	cmode_music = 'sound/music/combat_holy.ogg'
+	cmode_music = sound("sound/music/combat_holy.ogg")
 	maximum_possible_slots = 1 //No combat role stacking, please?
 	vice_limits = list(/datum/charflaw/silverweakness)
 	category_tags = list(CTAG_SEXTON)

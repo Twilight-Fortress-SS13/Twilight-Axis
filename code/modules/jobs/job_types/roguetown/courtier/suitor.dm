@@ -19,7 +19,7 @@
 	min_pq = 5
 	max_pq = null
 	round_contrib_points = 3
-	cmode_music = 'sound/music/combat_noble.ogg'
+	cmode_music = sound("sound/music/combat_noble.ogg")
 	job_traits = list(TRAIT_NOBLE)
 
 	job_subclasses = list(

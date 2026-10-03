@@ -1,198 +1,232 @@
-I can jump further by getting a running start. Mind the overshoot.
-Rest shall heal your beleaguered body. Any smart adventurer brings a bedroll... and a lookout.
-A torch should be kept dry, and a blade sharp.
-The key to a long life is knowing when to run.
-The Jacksberry bush, known for its edible berries, is closely-related to its deadly-poisonous cousin of the same name. So much so that they sometimes cannot be told apart.
-It's a good idea to bandage and suture arterial wounds as soon as possible. Death happens slowly, and then all at once.
-Gripping bleeding bodyparts makes them bleed slower. The harder you grip, the less you bleed.
-Blacksteel is a blessed alloy of pure silver and steel. Its recipe was stolen by Zizite heretics and perverted into Darksteel.
-Skeletons have no BRAIN. Try to FEINT them. But don't tell this to everyone!
-A DODGING rogue who keeps their eyes FIXED retreats only backwards.
-An arcing arrow can only hit a target below you, not above you. A thrown rock, however...
-The Aragn is a large black spider capable of outrunning even the swiftest of elves. Its venom is paralytic. It preys within sewers and bogs.
-The bog be a dangerous place full of chittering fiends. That dendorite may be covered in leaves and mud, at least they make for a good guide.
-With the care they put into their work, it is said that the food made by Eora's faithful energize the soul like no other dish.
-Pomegranate arils are boons sent to mortals by Eora to test whether they're dedicated enough to care for something precious.
-The mythical ashen aril is coveted by thieves, heretics and all manner of ruffians. For it is said to yield unimaginable power.
-The winds tell tales of Astratan devout turning flesh to flame and flame to blades. Beware her fury.
-The pauper never had much, but his worship for Abyssor led the faithful to mend his broken frame with ancient strength.
-Within tombs full of treasure, there are oft secret entrances and hide-aways. Look closely at walls, rock or not. Occasionally, you should take a look up...
-The growing power of Z often causes volf and saiga alike to reanimate with frightening speed. Butcher your dead.
-Placing a chair before climbing a wall makes it easier to scale.
-Odd tentacle growths are known to burst from the ground. Touch them. Pestra's gifts will shine upon you.
-Campfires and bedrolls alone aid in fatigue. Combining both, however, grants a particularly potent restorative effect...
-Hand-axes are the superior weapon of choice for destroying most objects and barriers... though iron gates will require a mace.
-Bandages soak up a limited amount of blood. Get stitching quick, or die snow white.
-YIELDING slows your bleeding and prevents your assailant from decapitating you, though you will struggle to attack in return.
-Crops can be dug up with spades. Hoes allow for instant removal of weeds. Compost, nitesoil, and bones can be combined by farmers into the legendary "fertilizer".
-Sleeves can be torn for cloth. They can also be rolled up, if you care for the aesthetic.
-With enough STRENGTH, locked doors can be kicked open. You may not bust it down on the first go, keep trying!
-In lieu of heartblood, leechbait can be crafted from impure lux. This can then fetch leechticks, which can eat a person's lux to restore lyfe to another...
-It is that odd fluid, that -dark- blood. It pools upon the calyxes held aloft by one of Pestra's sacred beasts. Foul taste aside, it grants reprieve from the body's ails. And thusly, it can even cure the horrid decay wrought by black rot.
-Those odd little piles of dirt in the woods are oft left by tasty, tasty creechurs. Go on, have a look, follow the trail to receive a treat, or a claw... Xylix willing.
-Using a rope on an open space drops the rope down, allowing allies to easily scale a given surface. Pull it onto yourself to retrieve it.
-Having someone else within your personal space assists in climbing many surfaces.
-Shift-clicking allows you to EXAMINE items, and EXAMINING items allows you to further understand all the MECHANICS tethered to them. Check a bed to figure out how to sleep, check a tree to figure out how to climb, check a steak to figure out how to eat, and much more!
-Spells are bound to ALT ONE through ALT SIX. Control-clicking said spells and shifting them between each other changes which spell is bound to a given number.
-If someone is barely conscious, it means they are not long for this world. By WEAKLY blowing air into their MOUTH, even the most horrifically injured can be brought back from death's door.. so long as any gushing wounds've been stitched up beforehand.
-The body is a fickle instrument, equally resillient and fragile. Water is the best choice for rebalancing the humors that're disrupted from blood loss, lifeblood excels at mending the disrupted state of flesh, and antidotes turn poisonings into mere hiccups.
-Within the Town are many posters, banners, and signs. By shift-clicking them, you can further EXAMINE them to get a crash course on many basic MECHANICS. Check the Church's banner to learn about Psydonia's religions, check the Clinic's posters to learn about how to save a lyfe, check the Guild's signs to learn about how weapons-and-armor work, and much more!
-In lieu of a blacksmith's hammer, one can use a repair kit to patch up their damaged equipment 'on the go'. Three pieces of scrapped iron can be assembled into a kit, and sliding three more pieces into the kit'll ready it for use. As for where the scrap comes from? Just hack an iron weapon to pieces!
-Almost everyone has a tendancy to pack a copy of "Tips, Tricks, & Triumphs: The Novice's Handbook To Azuria" inside their satchel, at the start of each week. Shift-clicking this Azurian booklet will show you its description, which contains the link to Azure Peak's official wikipedia!
-Time heals all wounds. Sleeping heals them quicker. Sleeping in a decent bed with a crackling campfire within spitting range heals them even quicker.
-Jackberries are a refreshingly light treat for those that find themselves peckish, while roaming through the bush-laden forests of Psydonia. A wise traveler knows to always take a testing bite before gorging on the vine's fruits, lest they die with a bitter taste on their tongue.
-Allspice is a specially-blended mixture of salt, pepper, sugar, pumpkin spice, and rocknut powder. When properly dried by a well-seasoned culinarian, it can turn even the dreariest broths into a royally delicious stew.
-Candies, better known as 'sweetglass', are a popular treat amongst Psydonia's youth and elders. The most popular recipe, as dictated in the Keep's Otavan-scribed cookbooks, calls for a handful of raisins to be smeared in honey and doused in a pot of boiling fat-or-tallow.
-Boiling water does not discriminate, when it comes to making stew. Even the most inedible parts of a butchered carcass, like bones and viscera and sinew, can be distilled into broth with enough time.
-A stew is only as good as its ingredients - the better they are, the more filling and rich the stew will be. A raw chicken carcass and some whole potatoes might make for a decent broth, but a lavishly-peppered frybird and some roasted potatoes will make for a positively divine stew.
-Most food eventually spoils if kept outside of a chest for long enough, unless packed in ration wrapping paper. Just one piece from the Inn is enough to keep even the most extravagent cakes and finemeals fresh until the week's end; a blessing for those who want to subsist off more than hardtack and coppiette, while adventuring abroad.
-Pepperberries are the closest relative to the Jackberry fruit, and - when pitted against an untrained eye - virtually indistinguishable from one-another. While a Pepperberry is incredibly toxic when eaten straight off the vine, the spice born from milling its roasted seeds can make for an excellent seasoning.
-Acid is an unnatural ichor that is rarely found elsewhere, beyond the Underdark's most deepest pits. It needs only a moment to turn even the hardiest vessels into naught-but-ash.
-Bleeding may not kill faster than a blade to the neck, but it is far more insidious in its persistance. Even without a single unstemmed wound, those who've already lost too much blood will soon perish without aid.
-RESUSCITATING can be done by targeting someone's mouth while the 'WEAK' combat intent is selected. Breathing air into another can prolong their suffering on this world, and - with the right medicine - bring them back.
-SHIFT-CLICKING with the RIGHT MOUSE BUTTON allows you to look farther ahead in a chosen direction. The higher your PERCEPTION is, the further that you can peer into the distance.
-CLICKING with the MIDDLE MOUSE BUTTON allows you to perform a SUBINTENT action, highlighted to the LEFT of your HANDS. Make sure to leave them unselected, if you happen to be in the business of butchering carcasses.
-JUMPING is performed by MIDDLE-CLICKING a chosen tile while the 'JUMP' subintent is selected. With it, you can leap over tables and smaller gaps in the terrain.
-LEAPING is performed by MIDDLE-CLICKING a chosen tile while both the 'JUMP' subintent and 'RUN' button are enabled. This covers far more ground than a traditional hop, but comes at the cost of a harsher landing.
-KICKING is performed by MIDDLE-CLICKING someone while the 'KICK' subintent is selected. Besides knocking over washbins and busting doors down, successfully kicking a foe into a structure will always topple them over.
-BITING is performed by MIDDLE-CLICKING someone while the 'BITE' subintent is selected. Flowing streams can be sipped from, while those with a more humanitarian diet can use this to indulge in veiny treats.
-SPECIALS are performed by MIDDLE-CLICKING a chosen tile while the 'SPECIAL' subintent is selected. If you're skilled enough with a weapon, you can use this to unleash an especially powerful attack - mind the cooldown.
-TRIUMPHS can be earned through either surviving a week's trials, or by completing whatever tribulations sprout up along the way. These can be exchanged in the LOADOUT for a wide variety of cosmetic decorations.
-VICES are an unavoidable part of lyfe, and - if left unfulfilled - can utterly ruin your mood. Those riding off the high of a recent TRIUMPH can temporarily smother their VICE for a week's tyme.. at a cost.
-VIRTUES embody a special quirk that differentiates your actor from the rest of the rabble. Those who've completely surrendered themselvse to the whims of fate and causality can embody TWO VIRTUES, instead of just ONE.
-STATPACKS bolster the statistical power of your actor. While this can allow for some truly legendary feats, one must always remember that great power always come at a greater cost.
-MOODLETS sway the outcome of any given week. Treating yourself right and routinely indulging in your VICES will leave you unfettered by even the most discouraging sights. Neglect yourself for too long, however, and..
-STRENGTH represents your actor's raw might. This affects the lethality of their strikes with fists and blades, how quickly they can struggle out of a tight spot, and how effectively they can overpower others.
-WILLPOWER represents your actor's mental fortitude. This affects the threshold of how much pain they can undertake before collapsing, and how severely their mood is swayed in the face of trouble-and-trauma.
-CONSTITUTION represents your actor's physical resilience. This affects the health of each individual body part, how much blood can be spilled before succumbing, and their ability to resist debilitating strikes.
-PERCEPTION represents your actor's keen-eyedness. This affects the accuracy of their strikes, the lethality of their shots with bows and slings, and their chances of successfully discovering hidden surprises.
-INTELLIGENCE represents your actor's wisdom. This affects the potency of their magicka, the preciseness of assessing another's skills-and-weaknesses, and their chances of successfully performing unfamiliar tasks.
-SPEED represents your actor's fleet-footedness. This affect the haste of their movements, their proficiency with many underhanded tactics, and their chances of successfully dodging oncoming attacks.
-FORTUNE represents your actor's luck. This affects their chance to sway seemingly random events in their favor, or - in the inverse - against their favor.
-Remember that there is another face behind the masks of every actor you meet. Cruelty in service of a story becomes unacceptable when it is done purely out of single-minded malice.
-New? Overwhelmed? Confused? Try checking out 'A Tutorialeer's Handbook' from the Loadout's 'Miscellanious' section, in order to get a crash course on everything you'd need to know!
-In the mynd's eye, otherwise known as the OOC tab... A handy Azurean encyclopedia can be found. Recipes, spells, anything a burgeoning adventurer might need!
-The heads of goblins, minotaurs, dragons, trolls, and various other creachers can be sold to the HEADEATER in town. The heads of CONTRACTUALLY-FOUGHT EVYLDOERS cannot.
-Looking through telescopes can provide interesting benefits... or stressing sights.
-TRIUMPHs can be spent by right-clicking your mood indicator. This will temporarily abate any stress upon your ACTOR.
-The ENCYCLOPEDIA in your OOC TAB contains a wealth of information on various topics!
-An actor's ORIGIN provides a free language.
-REAGENTS can be ground in a mortar and pestle through the MIDDLE-MOUSE BUTTON. This will turn certain items into a "LIQUID" form.
-TALLOW can be used to OIL someone, making any grabbing of an exposed body-part have a chance to fail! Try oiled wrestling tonite!
-The strange, blue sounds coming from another ACTOR may be a MINDLINK! MINDLINKS are two-way magic communications currently on speaker!
-GHOSTS can send letters through the HERMES!
-Certain items, like sticks and cloth, can be BUNDLED through the RIGHT-MOUSE BUTTON!
-Mining can be done by walking into a rock wall with APPRENTICE or greater skill. Ore-bags will also automatically pick up ore at this level.
-Click the "CRAFT" button with your RIGHT-MOUSE BUTTON in order to repeat your last crafting attempt.
-Floors are built depending on the direction which you face. Make sure you face the same direction if you wish for them to be the same!
-Some paintings can be taken from walls and sold.
-Carts can be enhanced with greater load capacity through a Woodcutters Wheelbrace.
-The BLOODLETTING surgery can be performed on an arm or a leg. It will reduce toxin build-up and purge the 'INFECTION' from bad surgery. Antidote is still better.
-TARGETING your NOSE and then EXAMINING a reagent container will let you sniff said container, exposing the smells and tastes of what's within!
-If someone has a GUTSPILL injury, they will likely need to have their organs replaced in ADDITION to the wound being stitched!
-Wounds that cause DISMEMBERMENT will result in the bleeding stump being present on the CHEST! Grip there, NOT at the limb... unless it's been re-attached.
-FACES can be reconstructed through a surgery targeting the head. This surgery can also change your name... or disfigure you, should it go wrong.
-MEDITATION will provide a brief but potent mental boost.
-Certain polearm intents have a SWEET-SPOT. A spear's STAB requires two-tiles between you and your target for max penetration. A spear's CUT does not, however.
-Press 'STOP SOUNDS' in your preferences tab if a sound keeps looping and won't stop.
-STEWARDS are often in need of various craftsman goods! From gambesons to ingots, to even apples! Towners, stop by and see if anything is needed!
-TOWNERS can claim a house by ALT-CLICKING on a town-house door.
-LEECHTICKS can be removed from your person by "GRABBING" at where they are on your actor's sprite.
-If your ACTOR has unspent DREAM-POINTS, or you simply misclicked, you can RE-OPEn the DREAM TAB while sleeping through "OPEN DREAM MENU" in the IC TAB!
-ZIGS and PIPES can be put out with RIGHT-CLICK. This will reduce their smoke-ability, however.
-GRAGGARITES can eat organs to restore some of their energy.
-RIGHT-MOUSE BUTTON on TREES, LOGS, CLOCKS, TRAINING DUMMIES, and certain other structures in order to access your actor's "STASH"!
-Bottles will leak if not closed before being placed in a belt or backpack.
-Forming a FELLOWSHIP in your IC TAB will allow for handling harder contracts. It also lets you choose an incredible name for your adventuring party.
-NOTORIOUS contracts involve fighting another player. Beware!
-STEWARDS and INNKEEPS can both provide contracts to adventurers.
-REVENANTS may take a STAKE to the chest to be put down!
-Elves, tieflings, and some others can flick their ears with *eflick.
-JACKSBERRIES provide both nutrition and water.
-Multiple people stitching a wound will make it heal faster.
-CAUTERIZATION surgery will heal a wound, albeit dealing burn damage in the process. Certain wounds may take many cauterization attempts, but it could still save a lyfe!
-Artificers can make all sorts of contraptions, from voltaic gauntlets to impact grenades. Consider ordering something bronze todae!
-GRAB a creature and then CLICK on the meathook with an empty hand to put the creature upon it.
-Mages can ENCHANT various items through gathering summoning materials.
-Chocolate, honey, and butter slices can be melted onto griddles.
-Bandages can be treated with a variety of medicines, such as aqua vitae, lifeblood, Pestran Medicine, and blessed water. FEED the bandage with a container of the liquid!
-RIGHT-CLICKING rough dirt tiles will pick up a clod.
-ROCKS can be found by digging in the dirt with a SPADE. Worms can also be found in this same way.
-Need to break a rock? Sharpen a STICK into a STAKE with an item using CUT INTENT. STAKES aren't very good at it, but they ARE still picks! Also consider BASHING the rock!
-Most CRAFTING SKILLS have something of a "TRAINING RECIPE" with a low difficulty. You can use this to raise a skill up fairly quickly... and hopefully switch to something else once you're a novice.
-ROUND-START CLOTHES have very little value. Consider selling them to the tailor's ragpicker instead of the merchant.
-Most items can be sold to the merchant's NAVIGATOR. Beware the Guildmaster's poor humors!
-SURRENDER by RIGHT-CLICKING on your combat-mode toggle. It may just save your lyfe.
-ENABLE COMPLIANT MODE by MIDDLE-MOUSE-BUTTON clicking your combat-mode toggle. This allows anyone to grab you without resistance!
-Some simple-minded creachers are LARGE and cannot be struck upon the head without first destroying their LEG... or having a long-reach weapon.
-CHARGING an opponent by running into them can be an efficient way to down a mage or an archer. Alternatively; it can be a way to be struck down if they GUARD before you land it.
-Shields provide a bonus to charge rolls.
-WRITING on a sign requires a short stabbing implement. A regular stone knife won't CUT it!
-Some INTENTS have different delays. Striking an ATTACKER using a "RED" intent will stop it, but if you fail to do so, you will be unable to block or dodge it! "YELLOW" intents will lower their parry chance while they swing.
-DEVELOPERS make mistakes. Please consider making a bug-report with round-information and reproduction steps if something seems wrong!
-ADMINS are not omniscient. Please consider making an AHELP if someone is breaking the rules.
-A head on a belt will slow your ACTOR down.
-A TOSSBLADE can be put into a boot.
-If your REVIVAL SPELL seems to not be working, EXAMINE the spell. HEARTBEAST research may have made it require a much-easier-to-acquire resource.
-The EXCIDIUM allows for quick prosecution of a criminal wretch without having to go through the marshal, the Duchess, and three guardsmen. Consider asking which your captured criminal would prefer.
-Things inside CARTS can be used for crafting. Load them up with sticks, wood, or bricks, then have a much more enjoyable time building.
-Start building structures with the floors, then the walls. Remember: a three-by-three floor-plan requires four-by-four walls!
-CHISELING stones into bricks requires a chisel AND a mallet. Combine the two items by slapping one onto the other, then brick-away.
-MANY items can be "BUNDLED" by clicking on one with another. Most of these items can also be bundled by pressing RIGHT-MOUSE-BUTTON on them.
-Hanging out in the inn restores energy.
-In rare instances, drinking bog-water can preserve your LYFE instead of end it. Consider it if your ACTOR is on the verge of bleeding out. Just... mind the puking.
-MINDFUL SKELELONS lose their ability to walk if their ribs are cracked.
-Ending a message with TWO EXCLAMATION POINTS!! shouts it very loud. ONE EXCLAMATION POINT! shouts it less so. Starting a message with #whispers it quietly... and starting a "me" with @does it subtly.
-Some DRUQK combinations will knock your ACTOR unconscious.
-DWARFS can make PREZZELS. Dark elves can make SPIDER-MEAT pies. They would all rather die than reveal this ancestral art to another.
-Before stepping on ice, LOOK and consider if a madman has put lava at the end of your slip-and-slide.
-DUAL-WIELDER allows SLURBOWS to be DUAL-FIRED.
-EYE DAMAGE can be treated by healing potions.
-RIGHT-MOUSE CLICKING a class in the CLASS SELECTION MENU will allow you to set various preferences related to it.
-KEEPERS require fresh meat. Consider selling your left-over rous kills and un-stockpileable meat stores to them.
-PLACE A COIN in the mouth of a corpse soon to be buried. If no mouth is present, throw it in the grave, or place it within a pouch on their neck. THE CARRIAGEMAN demands his toll.
-Sometimes, having your combat music set to default will result in PSYster eggs...
-BINS can store objects, as well as liquid reagents.
-POISON ARROWS deal damage to a shot opponent's stamina, often leaving them tuckered out three swings in.
-The BLUE bar is called 'ENERGY'. The GREEN bar is called 'STAMINA'.
-A spellblade's "CAEDO!" can be blocked by GUARDING.
-Click the IC Date in the Round Info tab to learn more about the Azurean calendar and yil'ly events!
-All work and no play rarely makes for a fun week. TALK TO PEOPLE!
-The MERCHANT can order more exotic items and summon ships if their ORDERS are FULFILLED. Consider asking them what their boats require for export!
-Standing on someone and STOMPING their NECK deals suffocation damage.
-TILL grass with a HOE to turn it into dirt.
-BOILING murk-water turns it into regular water. BOILING sea-water produces usable salt.
-Wild pumpkins are everywhere in the Grove. Roast their seeds for a quick snack.
-ROTATE items for better inventory management by pressing RIGHT-MOUSE BUTTON on an inventory slot.
-READY-UP for GOODIES in your ACTOR'S STASH!
-Paying POLL TAXES early prevents paying higher taxes, if the Regent decides to hike them up three daes into the week.
-Planning on head-hunting? Consider buying a HEADHOOK and enchanting it with a STORING scroll from a mage.
-POUCHES can hold far more than coins.
-MOST storage containers can be enchanted with an EFFICIENT STORING enchantment, vastly increasing their space.
-PARCHMENTS can be written on with a quill, then have an item placed in them. Putting this package in the HERMES will send both the item AND the message!
-MESS KITS can be a fantastic way to cook on the go. A BEDROLL is also quite nice, especially when paired with a CAMPFIRE!
-All the mushrooms in the underdark have different results when broken. The same kind that produces wood produces edible mushrooms! Cook them over a campfire for a quick snack!
-SMALL LOGS turn into sticks when destroyed. Use them to build a quick fire!
-CRITICALLY WEAK creachers, like goblins, can be slain with a well-placed cut to the neck.
-A MINDFUL and PRONE creacher can be slain by CUTTING the neck until it "BLOSSOMS" in a shower of gore. Stop cutting thereafter, unless you seek their head.
-Cracking the ribcage and then PIERCING or PICKING the chest can allow for a "HEART-CRITICAL", which will swiftly bleed out nearly any opponent.
-One mammon is not worth dying over.
-LOOK AROUND to find MANEATERS, HIDDEN PERSONS, and other things, like tracks! MANEATERS in particular are swell to find; set them ALIGHT or CHOP them to pieces.
-FIGHTING A RIVER'S CURRENT IS DOOMED TO FAIL! Flow with it to conserve your stamina.
-POTIONS OF MANNA restore your ENERGY. They are useful for both martials and mages alike.
-KICK one foe into another and both will fall.
-SHIFT RIGHT-MOUSE-CLICK on an OPEN TILE to look down it.
-Some bars can be crawled under by going prone.
-Metal equipment from goblins, bandits, and other sources, can all be melted down into scrap for improvised repair kits. Use a lamptern or a torch to melt them down.
-BATHHOUSE ATTENDANTS can give massages, providing FANTASTIC bonuses to an actor's STATS.
-Some tails can be HIDDEN when wearing trousers. MIDDLE-MOUSE CLICK on your pants to hide or reveal the tail.
-BLACKSMITHS are often overworked and underpaid. Consider bringing them a snack when you come to collect your order.
-SNEAK when walking through grass or onto sticks to avoid ambushes. SPRINTING into a boulder can trip you upon it, ALSO causing an ambush.
-Mining is improved by an actor's FORTUNE. A high WILLPOWER to increase your stamina works wonders, too.
-REGULAR SKELELONS can be dispatched by stabbing them in the nose or cracking their skulls. Decapitation is a universal death for their kind.
-SAUSAGES can be made with any MINCE. If truly in a pickle, try using FAT as a filler! Your customers will never know the difference!
-Water breaks falls.
-POISON JACKSBERRIES can be ground in a mortar to produce poison.
-It possible, albeit rare, for both poisonous and safe jacksberries to be the same color.
-Your "STANCE" determines a number of factors in combat. Check your HOTKEYS to see what is bound to what-- a quick switch to defense or aimed may save your lyfe!
-Most shields can be given heraldry by RIGHT-MOUSE clicking on them.
+ПСАЙДОН ЖИВ. ПСАЙДОН ВЫСТОИТ.
+Закон — строг, вера — незыблема.
+Сомнение — грех, предатели будут наказаны.
+Прими ближнего своего, как достойного.
+Побеждает не тот, кто сильнее, а тот, кто лучше готов.
+Мы сами будем управлять миром.
+Подчиним смерть, и тогда жизнь нам будет не нужна.
+Ты подчинишься воле Её.
+Через знание я обрету победу — через победу да будут сломлены мои цепи.
+Последний же враг истребится — смерть.
+Разложи мир на составляющие — тогда ты поймёшь его суть.
+Слепое почитание оставит тебя без глаз.
+Под Её священным следом ты осознаешь.
+Познание есть ключ к силе, но куда более важно — уметь ее контролировать.
+Оставь низменные желания тем, кто в них уже погряз.
+Все тираны умрут в одиночестве.
+Церкви и тюрьмы мы сравняем с землёй.
+Нечего терять, кроме наших цепей.
+Я — господин ничего.
+Ксайликс даровал смертным карты таро — чтобы каждый мог создать свою судьбу.
+Когда ОН был сражен, в смятении мы нашли силу ВОЛИ, что сокрыта в нас и создали порох, что ОЧИСТИТ мир.
+Равоксиан никогда не дрогнет, и не покажет слабости в бою. Но он не простит того же в своих сослуживцах.
+Равоксиану не следует путать борьбу со злом и установление справедливости, чтобы их справедливость не превратилась в акт превентивного нанесения удара.
+Равокс выступает за справедливость, а не за убийства.
+Мои слезы подобны дождю в благославленной мной ночи. Я никогда не познаю лишь одного. Почему ты предала меня.
+Наледийцы вызывают такое же недопонимание и отторжение что у Десяти, что у Староверов за их малую ересь.
+Он предвидел ее восхождение, но погряз в своих кошмарах обреченный видеть кончину мира.
+Ты склонишься перед владыкой Десяти - твой удел, как и твоя жизнь неизменны и предопределены.
+Ты скинешь оковы смертности, и вознесешься как это сделали МЫ.
+Люкс принято считать частицой осколка божественности, который расколол Псайдон, когда созидал наш мир. Староверы считают его извлечение грешным.
+Единственные рунные маги во всей Псайдонии живут лишь на Отаве, занимаясь созданием опасных артефактов. Их тайны сокрыты от всех.
+Волколаки - это испытания, посланные Дендором, чтобы убедиться в нашей чистоте и вере.
+Волколаки - это те, кого Дендор проклял за их грехи против природы, они обречены пожирать все, к чему прикасаются.
+Волколаки - это благословение, посланное Дендором, чтобы вернуть нас к естественному образу жизни.
+Волколаки - отвратительные создания безумного Дендора, которым слепо поклоняются дендориты-идиоты Десяти.
+С наилучшими побуждениями, Дендор сотворил волколаков, чем вызвал гнев Астраты. Лишь Нок преисполнилась сожалением к его созданиям, укрыв их от сестры в ночи.
+Волколаки движимы первобытным инстинктом готовиться к борьбе с великим злом — чего бы это не стоило.
+Жители Зибантии верят в верховенство Нок, как главы пантеона Десяти, не признавая власть Тирана Солнца.
+Жители Зибантии верят в верховенство Нок, как главы пантеона Десяти, глубоко погрузившись в ЕРЕСЬ.
+Я никогда не прощу свою сестру.
+«Я вернусь, как прозвучит последняя труба над руинами старого мира, что я воздвиг, и узнает каждый Владыку своего, по алой ране на груди».
+Однажды мир содрогнется пред Отавой, как уже однажды содрогнулся перед Архипредательницей.
+Сотворенная из камня не та, за кого её считают.
+РАЗБЕЙ ЭТУ ШКАТУЛКУ! МЫ ЖАЖДЕМ ВОЛИ.
+Ксайликс всегда побеждает.
+Некре безразличен мир живых, пока дело не касается смерти.
+Знающая Луна способна сравнять даже даже бедняка с великим рыцарем, если тот посвятит себя ее дарам.
+Ты жаждешь править бездумными телами?
+Ты раб своего предназначения.
+Ты творец своей судьбы.
+В Зибантии можно купить мифический фрукт — банан. Растет он только там.
+АРХАНГЕЛ ГАВРИИЛ РАССУДИТ ТЕБЯ НА НЕБЕСНОМ СУДУ.
+Аасимары берут родство от небесного воинства Всеотца, являясь дальними родственниками самых низших ангелов.
+Багровые земли были превращены в магические пустоши из-за действий Базилевса Манса Падаши. Теперь это родина большинства вайлдкинов и презрения к магии.
+Священная КОМЕТА СИОН состоит из чистейшего небесного серебра, способного испепелять большинство зла своей силой. Церковь Десяти веками тщетно пытается заполучить его.
+ОНИ ПЛЕНИЛИ НАШИ ДУШИ НАВЕЧНО. ЧЕМ ОНИ ЛУЧШЕ АРХИПРЕДАТЕЛЬНИЦЫ?
+Раньше, великие короли-чародеи правили Багровыми землями, закрепив свою власть единственным искуственным источником магии на Гримории.
+Это мой последний рассвет?
+Дворфы первыми изобрели огнестрельное оружие, но Староверы Отавы переизобрели его в лучшем виде.
+Пестра ненавидит грязь на рабочем месте.
+Вестник Граггара, чья одежда испачкана засохшей кровью, и магистр из Отавы, с его оружием, что блестит чистым серебром кометы Сион — и у кого из них на руках больше крови?
+Первые аасимары были созданы Малумом, желавшим остаться близко к смертным, которыми он некогда правил, но в дальнейшем каждое божество создало своих собственных посланников.
+Я лью слезы, и не могу вспомнить, почему!
+Церковь Одиннадцати — священный союз, рождённый в Тартаре, признанный ересью всеми конфессиями церквей Десяти и Псайдона.
+Вы не можете убить идею, энпера — от наших же рук вы, без сомнения, умереть способны.
+Быть может, вы и сможете убить нас, Ау'ра, но лично ты этого уже не застанешь.
+Великий магистр, правда ли, что ты лишь марионетка в руках маршала?
+Цель оправдывает любые средства, даже если это жизни всех смертных.
+Цель оправдывает любые средства, даже если мы прольем кровь заблудших Десяти.
+Честь, достоинство, доблесть.
+Эти крики пьянят меня...
+Я чувствую на себе чей-то взгляд, но обернувшись понял: я здесь один.
+Холод бежит по моей спине, леденящий душу.
+Я все потерял.
+Все кончено.
+Мне нужно отыскать свет...
+...свет в конце туннеля?..
+Глоток крови здесь, кусок сухожилия там. О Звезда, как это вкусно.
+Шелест чешуи и чья-то хватка? Или же это льется песок моего времени?
+Ведьмы. От них идет запах могилы и глаза похожи на птичьи.
+Дендоров вздох, как же кружится голова. Его крики отдаются гулом словно вой из Леса Весной.
+За подготовку платят золотом. За её отсутствие — кровью.
+Дорога освещена. Путь свободен. Теперь нам нужна лишь сила, чтобы ему следовать.
+Напомните себе, что самоуверенность — медленный и безжалостный убийца.
+Ты глупо думаешь, что ты сущность, отделенная от всего остального. Я знаю лучше. И я. Покажу. Тебе.
+Знаете, где можно найти величайших героев Сумеречной Оси? На кладбище.
+Тем, кто боится смерти, видны возможности её избежать.
+Возможно, Некра — единственная из богов, кто просто делает свою работу, не ввязываясь в споры, дрязги и сражения.
+Некраны презирают ходячих мертвецов и желают их немедленного уничтожения с последующим упокоением или излечения от нечисти; пестраны же желают их полного излечения, однако при этом считают, что гной и разложение - это прекрасно!
+Чтобы смеяться последним, нужно понимать, когда пора остановиться.
+Видишь гной — режь!
+Тишина опустилась на город, будто... снег?
+Свет СОЧИТСЯ сквозь ТРЕЩИНЫ. Мой разум сияет ЯРЧЕ, чем КОГДА-ЛИБО. Я ВОЗНОШУСЬ И ВИЖУ ВСЁ БОЛЬШЕ.
+Когда Зизо ранила Псайдона, верный десница Ксайликс понял, что она зашла слишком далеко, и украл осколок божественности демиурга, не дав возвыситься Архипредательнице. Этот случай послужил примером того, как обман и воровство могут использоваться на благо.
+Иногда даже для Эоры бывало время, когда пора встать из-за стола переговоров и взять в руки меч ради того, чтобы сохранить то прекрасное, что есть в этом мире.
+Перед похоронами староверы бьют усопшего по ногам, дабы он предстал перед судом архангела Гавриила на коленях, ведь такова Его воля.
+Псайдон создал себе помощников, чтобы управлять собственным миром, разделив между ними обязанности. Астрата обеспечивала движение солнца и наставляла правящих смертных. Нок управляла луной и звёздами и вела летопись всего сущего. Абиссор повелевал волнами и разливал дикую аркану там, где, по его мнению, не хватало чудес. Первый зверь Дендор следил за гармонией между человеком и лесом. А Некра обыденно помогала каждой душе найти свой путь к Страшному Суду.
+Для последователей Малума труд — та же молитва.
+Трудиться до изнеможения у малумитов считается делом, достойным почитания, — до тех пор, пока вы не закончите свое творение.
+Мне так понравилось, как ты пытался изгонять меня и кровью на полу чертил защитный знак...
+Общий враг объединяет как последователей Десяти и Псайдона, так и презренных.
+Если бы каждый мудак в этом мире был еретиком, насколько бы проще работалось инквизиции...
+Анафема — страшное наказание в виде отлучения от церкви. Отлученный становится изгнанником в обществе, которого чураются поболее, чем прокаженного.
+Правитель этих земель — помазаник Астраты, благославленный вести Сумеречную Ось в светлое будущее. По крайней мере, так утверждает церковь.
+Нок утверждает, что понимание сути вещей ведёт к осознанной праведной жизни... но скольких попытка разобраться в том, во что веришь, свела к презренным богам?
+Миром правят воры, безумцы и художники!
+Чтобы построить что-то новое, нужно разрушить старое.
+Псайдон велел своим последователям быть терпимыми и снисходительными к заблудшим и, коли их ударили по правой щеке, подставить и левую.
+Молчание — главный союзник тьмы.
+Прут без страха и упрёка, прут, не веря ни во власть, ни в бога! Смелей! Наглей! Авроры новых дней!
+Астрата говорит, что всякая девиация — начало конца. Каждый член общества обязан выполнять свою роль, иначе мы падем.
+Зиггурат Зибанту скрепляет древними клятвами и острыми мечами даже такие земли как Наледи и Ранешен, не смотря на различие их культур.
+Сумеречная Война, но не её последствия, обошла Эрцгерцогство Азурии.
+Дезертиры и жертвы Сумеречной Войны ныне скрываются в этих лесах, убежденные что до них есть дело владыкам Империй.
+Из Войны вышли проигравшими все. За исключением Кайзера и Базилевса.
+На востоке бьют барабаны войны. Лирвас готовится умереть за право остаться на картах Гримории.
+Я ощущаю, как под ногами покоится Псайдония.
+Истинный лик Абиссора сокрушил разум каждого, кто узрел его.
+Болото — опасное место, полное таящихся тварей. Дендорит может быть покрыт листьями и грязью, но, по крайней мере, он послужит хорошим проводником.
+Говорят, что благодаря тщательности, с которой они подходят к своей работе, блюда, приготовленные верными последователями Эоры, как никакие другие, заряжают душу энергией.
+Зёрна граната — это дар, посланный Эорой смертным, чтобы проверить, достаточно ли они преданны, чтобы заботиться о чем-то ценном.
+Мифическая пепельная косточка желанна для воров, еретиков и всевозможных разбойников. Говорят, что она дает невообразимую силу.
+Бедняк никогда не имел многого, но его поклонение Абиссору привело к тому, что его соратники исправили его сломанное тело древней силой.
+Ветры рассказывают истории о том, как преданные астратовцы превращают плоть в пламя, а пламя — в клинки. Остерегайтесь её ярости.
+Еретические абиссориты презираются многими, даже их собственные соплеменники часто дважды думают, прежде чем связываться с ними. Будь то страх перед разрушениями, причиняемыми пробудившимся Абиссором, или осуждение времени, потраченного впустую на их попытки.
+Необязательно быть набожным, даже неверующие могут попасть в сети хищного сна Абиссора. Он поглощает их, и они не могут отличить его царство от своего собственного. Но вдруг все кажется возможным.
+Хе-хе, сынок... Золото ты ещё успеешь найти. А вот товарища с того света уже не вернуть.
+Эти картины... Эти пейзажи... Я живу лишь ради них, Искушающая.
+Я разобью их спины плетью, внушу им страх. Они подчинятся сильному, Чёрная комета.
+Страх смерти столкнул их на путь, где они встретили оную прежде, чем им было положено судьбой.
+Дым восходит над Наледи. Грензельхофт обратил наши дома в пепел. Наши друзья покоятся в золе.
+Наши ржавые гладиусы и ветхие пилумы рассыпаются в руках... Но ненависть, НЕНАВИСТЬ, что мы несём...
+Верные рабы из металла не обременяют себя глупой моралью, в отличии от тебя, Ксайликс.
+Маска укрывает меня от ифритов и джиннов пустыни. Но эти ифриты... Они не боятся никаких оберегов.
+Алтарь в крови, плоть рвётся от тупого каменного кинжала, багрянец течёт по брусчатке. Дендор в своёй дреме улыбается жертве, принесенной в его честь. Волколаки обойдут эту деревню следующей ночью.
+Карающий меч воителя Солнца оборвал жизнь солдата, что поднял руку на дворянку в гневе. Мысль о том, чтобы завладеть ей следующим даэ, отправилась в сады Некры вместе с его душой.
+Пестран гоним и презираем. Он осквернитель святой души! Его руки ведомы Зизо! Он жаждет лишить нас святой искры Астраты! Но сам он знает, что его руки берегут близких тех, кто насмехается над ним, от молитв Некре.
+Дама в вуали обхватила мою длань своими костлявыми пальцами. Она взглянула пустыми очами мне в душу. «Не сегодня. Я буду ждать».
+Со временем Дама в вуали забирает все души. Ее последователи могут предотвратить смерть, но не одобряют ее обращения вспять.
+Молот ударил по наковальне в последний раз, мастер стер пот со лба. Его ждал хороший обед в трактире в счет щедрой платы за работу — как и завещал Малум.
+Эора учит любить и следовать своим чувствам. Вопреки распространённому мнению, её последователи не опускаются до беспорядочных связей с каждым встречным.
+Пестра однажды спасла жизнь Эоре. Говорят, что с тех пор их связывали тесные узы, хотя у них и были разные представления о красоте.
+Однажды Эора заставила улыбнуться Некру, показав ей истинную красоту мира, который был избавлен от насилия и вражды хоть на какое-то время.
+Зизо! Я обрел истинную форму! Я вышел за границы смертной плоти!
+В чем же есть справедливость, великий Равокс, ежели я могу измерить злодеяния в валюте?
+Хорошо ли ты спишь, егерь Грензельхофта? Приходят ли к тебе ночами те невинные, которых ты упокоил в горячих песках?
+Хорошо ли ты спишь, зибантийский кефал? Приходят ли к тебе ночами твои слуги, сраженные пулями из мрака ночи?
+Хорошо ли ты спишь, бывший невольник? Помнишь ли ты, как ифриты спустили тебя с цепи и вручили клинок, которым ты убил своих хозяев?
+Хорошо ли ты спишь, Клинок Новой Луны? Помнишь ли ты, как пожирало твои бесценные архивы пламя Чёрной Империи?
+Умершего часто хоронят с монетой во рту, чтобы оплатить услуги Извозчика Некры.
+Считается, что хвосты ящеролюдов приносят удачу, если их сжечь и рассыпать в порошок.
+У тифлингов нет люкса... но они живы. Говорят, он просто жидкий и течет прямо в их жилах, вязкий и красный.
+Свободно пролитая кровь всегда дает большую силу, поскольку в ней заложена ценность как самой крови, так и выбора. Всегда находите добровольную жертву, если можете.
+Считается, что кровь аасимаров обладает мощными защитными свойствами. Суеверные солдаты могут попросить, чтобы их каплей помазали перед боем.
+Черные кошки — символы смерти и священны для Некры. Они смотрят на души, которые могут видеть только они, и приводят их к Извозчику Некры.
+Считается, что тролли когда-то охраняли земли Дендора. Друиды часто ищут их. Немногие возвращаются.
+Говорят, что вина из грибов темных эльфов очень вкусные, если к ним добавить правильное противоядие.
+Верующие Ксайликса часто кажутся ненадежными, но лишь от того, что всегда имеют какой-либо план...
+Котокролики — символы красоты, мира и плодородия, и священны для Эоры. Считается, что эти создания приносят невероятную удачу, если проявить перед ними сочувствие, любовь и милосердие к другим созданиям.
+Божественный пантеон заставит вас думать, что ОН бессилен, а Презренные — что ОН мертв; но все, о чем ОН просит вас, — это чтобы ваша вера была НЕПОКОЛЕБИМОЙ.
+Последователи Презренных — глупцы, одержимые идеей обречь наш мир на гибель, и должны быть исправлены или уничтожены.
+Последователи Десяти — глупцы, одержимые идеей обречь наш мир на гибель, и должны быть исправлены или уничтожены.
+Последователи Псайдона — глупцы, одержимые идеей обречь наш мир на гибель, и должны быть исправлены или уничтожены.
+Из люпиан получаются исключительные фанатики. Спросите об этом у отаванской инквизиции.
+Одиноких люпиан, страдающих гигантизмом, часто принимают за оборотней и расстреливают без вопросов, поэтому они путешествуют стаями — будь то со своими или с другими народами.
+Дракиан... Флювиан... Люпиан... Они все вайлдкины, зачем мы даем им имена?
+Гниль доходила мне до лодыжек, пахло смертью, тихо подкрадывающееся разложение исходило от Всеотца подо мной.
+У МЕНЯ ОПУХОЛЬ ПРЯМО ЗА ЛЕВЫМ ГЛАЗНЫМ ЯБЛОКОМ; МНЕ НУЖНО ДОТЯНУТЬСЯ И ВЫЦАРАПАТЬ ЕЕ, ПРЕЖДЕ ЧЕМ ОНА МЕНЯ СЪЕСТ.
+Традиционное староверское приветствие или прощание — «Всеотец оберегает». А другие обычно отвечают тем же или — «Воистину оберегает!». Во время этого взаимодействия на груди часто держат псикрест.
+Сжатие кровоточащих частей тела замедляет их кровотечение. Чем сильнее вы сжимаете, тем меньше идет кровь.
+Если вы не перевяжете и зашьете артериальные кровотечения в первую очередь, смерть подступит не очень медленно, но вполне верно.
+Головы гоблинов, минотавров, драконов, бродячих разбойников, злых моряков, троллей и различных зверей — все они могут быть проданы торговцу или определенной машине...
+Ношение красного табарда провоцирует даже самого безмятежного минотавра.
+Стрела, летящая по дуге, может поразить цель только под вами, но не над вами. Однако, это может быть брошенный камень...
+У скелетов нет мозгов! Они попадутся на любой обманный маневр в бою!
+О Псайдон, прости нас, своенравных детей твоих. Прости нам наше невежество. Извини, что мы осквернили твой никчемный разлагающийся труп!
+Астрата, Псайдония, Нок, Гермес, Киферия, Неполкс, Юпитер... прорицатели часто полагают, что существуют и другие небесные тела. Доказательств нет, кроме проекций того, что видно в хрустальных волщебных шарах.
+Перо не могущественнее меча, но оно может склонить на свою сторону куда больше мечей.
+Я ВИЖУ ВО СНЕ ТЁМНО-СИНЮЮ ЗВЕЗДУ НА НЕБЕ. ЕЁ КРАСНЫЕ ГЛАЗА ГЛЯДЯТ НА МЕНЯ С ПРЕЗРЕНИЕМ. ОНА РАСТЁТ В РАЗМЕРАХ С КАЖДОЙ СЕКУНДОЙ.
+Осторожно, авантюристы: лекари часто говорят, что красные зелья вызывают опухоли в печени...
+Ликуйте, авантюристы: лекари говорят, что красные зелья лечат опухоли в печени!
+В гробницах, полных сокровищ, часто имеются секретные входы и тайники. Внимательно осматривайте стены, каменные ли они или нет, и изредка смотрите вверх...
+Растущая сила Зизо часто поднимает из мертвых любые целые тела, особенно волков, сайгаков и даже безобидных на вид кроликов, если не разделать их.
+Кровавый дождь символизирует растущую силу Зизо и Граггара. Стоит ожидать насилия.
+С помощью стула или стола куда проще забираться на высокие стены.
+Известно, что из земли внезапно прорываются странные щупальца, удивительно неподвижные, пока не поднесешь к ним руку. Коснитесь их. Дары Пестры будут сиять над вами.
+ТЁМНЫЕ дни настали в этом МИРЕ. Не стоит бродить по землям без нужды...
+У казначея есть ключ, чтобы отпереть сребролик в торговой лавке, если соответствующий купец города отсутствует или мёртв.
+Истинное название кресла Фулмена — "ЗРОНК", названный в честь первого соратника Магеллана, потянувшего рычаг... его жизнь была отдана, чтобы помогать другим.
+ЛЕВАЯ РУКА. ПРАВАЯ РУКА. ЛЕВАЯ РУКА. Я ЛЕЗУ ПО СКАЛЕ. Я ВИЖУ РАССВЕТ АСТРАТЫ. МОЁ ТЕЛО УСТАЛО, НО Я В БЕЗОПАСНОСТИ ОТ УГРОЗЫ, КОТОРАЯ НАХОДИТСЯ ВНИЗУ.
+Часто используемые меры измерения включают "мот" для времени, "локоть" или "имперский фут" для длины и "драм" для объема жидкости.
+Можно просто отдохнуть у костерка или полежать в спальном мешке, но если совместить, отдохнуть выйдет куда лучше...
+Ручные топоры — превосходный выбор оружия для уничтожения большинства объектов и барьеров... хотя со стальными или железными воротами куда лучше справится булава или молот.
+Заточка лезвий камнями медленно разрушает кромку, которую необходимо перетачивать на точильном круге, если вы хотите восстановить их максимальную остроту.
+Бинты впитывают ограниченное количество крови, но могут быть отмыты в воде и использованы снова. Быстро зашивайте раны, иначе умрёте от кровопотери.
+Я ВИЖУ УЖАСНОГО ПОЖИРАТЕЛЯ ДРАГОЦЕННЫХ КАМНЕЙ. ЕГО МЕТАЛЛИЧЕСКАЯ ФОРМА ДЕРЖИТ БОГАТСТВО МОЕЙ СЕМЬИ — САФФИРУ. ОДИН ЗА ДРУГИМ ОН ЗАБРАСЫВАЕТ ИХ В РОТ...
+Капитуляция может предотвратить эскалацию конфликта в том числе и смерть, но требует полного отказа от агрессии. Если вы сдаетесь, то сдавайтесь вовремя и не пытайтесь атаковать вновь после пощады от противника.
+Урожай можно выкапывать лопатами. Мотыгой куда проще полоть сорняки. Компост, навоз и кости фермеры могут смешивать, создавая лучшее удобрение.
+Рукава можно порвать, чтобы получить ткань. Их также можно закатать — если вам важна эстетика. Посмотри внимательно, где шов, чтобы легко оторвать...
+Если вы достаточно СИЛЬНЫ, вы можете открывать двери пинками. Возможно, вы не сломаете их с первого раза, поэтому продолжайте пинать пока дверь не откроется!
+Вместо «сердечной» крови можно изготовить приманку для пиявок из нечистого люкса. Эта приманка привлекает пиявок, которые могут поглощать люкс одного человека, чтобы восстановить жизнь другому...
+Божественный пантеон и Презренные хотят, чтобы мы считали, что ОН мертв; но все, о чем ОН просит вас — это чтобы ваша вера была НЕПОКОЛЕБИМОЙ.
+Многие из ныне живущих драконов встали под знамена Маттиоса. Церковь Десяти называет уничтожение этих древних созданий богоугодным делом.
+Что может быть лучше, чем украсть священный огонь у самой Астраты?
+Черная сталь — это бледная имитация благословенной Зизо темной стали, которую Она дарит своим последователям в знак своей благосклонности.
+Черная сталь — это благословенный сплав чистого серебра и стали. Ее рецепт был украден зизоидскими еретиками и превращен в темную сталь.
+Пока глупые смертные спорят о том, какому Божеству следует обратить своё поклонение, Мастер Масок лишь довольно усмехается их слабоумию, планируя за кулисами следующий акт своей длительной пьесы.
+Наслаждайся. Больше ничего нет.
+Сражённая, она прошептала нам последнюю Истину: огонь Прогресса погас, а с ним погаснуть предстоит и всему миру.
+Бойся болот. Они дышат, как живые...
+У Вхеслина большие планы на наш мир. Тифлинги уже тайно претворяют его в жизнь.
+Ещё одну душу забрала Матерь. Несчастный никогда не достигнет ни Тартара, ни Садов Некры.
+Еретиков и тварей ночи мы успеем найти и отправить на СУД ГАВРИИЛОВ. Но мы ВСЕГДА будем окружены ЯЗЫЧНИКАМИ и ИДОЛОПОКЛОННИКАМИ.
+Я паду в грех, только если у меня ничего не получится. До тех же пор это — мой план борьбы с Тьмой.
+Там, за Вуалью, где сны и кошмары сливаются, лежит Великая Тайна: тайна Арканы и Божественности.
+Лучше страшный конец, чем бесконечный страх.
+ЧТО? СОБИРАЕШЬСЯ СДОХНУТЬ ЗА БОЖКА, КОТОРЫЙ ДАЖЕ НЕ ЛЮБИТ ТЕБЯ?
+ВСЁ — И ВСЕ, КОГО ТЫ ЛЮБИШЬ — ПАДЁТ! ЧТО У ТЕБЯ ОСТАНЕТСЯ, КОГДА ПОГАСНУТ ПОСЛЕДНИЕ ОГНИ?!
+Проигрывать — весело.
+Медицина — искусство само по себе; и нет лучше холста для стальной кисти, чем живое тело, не так ли?
+Всеотец говорил нам, что мир наш, так почему Десятка пытается забрать его у нас?
+Амбервуд, столица Керрисана. Помнишь ли ты своё прошлое имя?
+Pokrajać! Pokrajać! Uszkodzić! Pokrajać!
+Если бы Гренцельхофт узнал тайну создания авантина — воспользовался ли бы он ей?
+Хартфелт долгое время управлялся зизопоклонниками, использовавшими лик Десятерых как прикрытие. Оковы обоих с народа сбросили маттиоситы.
+Ты выбрался из льдов Мандиры, молодец. Получится ли у тебя убежать от видений прошлой жизни?
+Хвала тебе, Димитар, благословенный КОМЕТОЙ СИОН! Никогда больше не будет Отава страдать под гнётом слуги АРХИВРАГА! ИНКВИЗИЦИЯ берёт всё в свои руки!
+Первый Венард украл возвышение у Первого Волка — и с тех пор люпиане презирают венардинов.
+Первый Венард помог возвыситься Первому Волку — и с тех пор венардины помогают люпианам.
+Аасимар, отвернувшийся от своего предназначения, неизменно падёт в лапы Экклезиархии. Нет таких, которых Троица посылает к своим культам.
+Аасимар, ниспосланный Экклезиархией — вот наш ответ Десятерым. Как жаль, что им предначертано гибнуть от рук церковных шавок.
+Мир на коленях перед казнью — давай напоследок устроим праздник!

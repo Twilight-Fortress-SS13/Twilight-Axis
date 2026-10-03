@@ -408,7 +408,7 @@
 
 	stoplag(1 SECONDS)
 
-	if(M.stat == DEAD)
+	if(M.stat == DEAD || HAS_TRAIT(M, TRAIT_DEADITE)) // TA EDIT
 		reward_amount = reward_amount / 2
 		say("Subject is deceased. Rewarding half of posted bounty amount.")
 		playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
