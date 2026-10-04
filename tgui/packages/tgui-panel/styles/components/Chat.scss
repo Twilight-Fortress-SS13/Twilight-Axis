@@ -73,6 +73,9 @@
 
 .ChatMessage {
   word-wrap: break-word;
+  //TA EDIT - offscreen messages skip layout/paint until scrolled to
+  content-visibility: auto;
+  contain-intrinsic-size: auto 24px;
 }
 
 .ChatMessage--highlighted {

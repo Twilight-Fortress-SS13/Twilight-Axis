@@ -10,16 +10,60 @@
 	var/winter_icon_state
 	/// Cached the first time this decal registers: its actual pre-Winter icon_state.
 	var/summer_icon_state
+	/// Bake into the turf's overlays (/datum/element/decal) on Initialize and delete the object.
+	/// Only for decals that gameplay never creates or removes.
+	var/bake_to_loc = FALSE
+	/// Set only when the bake actually happened - bake_to_loc alone doesn't mean it succeeded.
+	var/baked_into_loc = FALSE
 
 /obj/effect/decal/Initialize(mapload)
 	. = ..()
 	if(turf_loc_check && (!isturf(loc) || NeverShouldHaveComeHere(loc)))
 		return INITIALIZE_HINT_QDEL
+	if(bake_to_loc && bake_into_loc())
+		return INITIALIZE_HINT_QDEL
 	if(winter_icon_state)
 		summer_icon_state = icon_state
 		GLOB.seasonal_decal_objs += src
 
+/// On success the caller must follow up with INITIALIZE_HINT_QDEL - the object is dead weight.
+/obj/effect/decal/proc/bake_into_loc()
+	var/turf/T = loc
+	if(!isturf(T))
+		return FALSE
+	// Bake the state the season would show now and leave a swap record - overlays are
+	// invisible to GLOB.seasonal_decal_objs.
+	var/baked_state = icon_state
+	if(winter_icon_state)
+		summer_icon_state = icon_state
+		if(SSseason.should_show_snow_icons() && T.is_seasonally_exposed())
+			baked_state = winter_icon_state
+	T.AddElement(/datum/element/decal, icon, baked_state, dir, FLOAT_PLANE, layer, alpha, color, pixel_x, pixel_y, pixel_w, pixel_z)
+	if(winter_icon_state)
+		GLOB.seasonal_baked_decals += list(list(
+			"turf" = T,
+			"icon" = icon,
+			"summer" = summer_icon_state,
+			"winter" = winter_icon_state,
+			"state" = baked_state,
+			"dir" = dir,
+			"plane" = FLOAT_PLANE,
+			"layer" = layer,
+			"alpha" = alpha,
+			"color" = color,
+			"px" = pixel_x,
+			"py" = pixel_y,
+			"pw" = pixel_w,
+			"pz" = pixel_z,
+		))
+	baked_into_loc = TRUE
+	return TRUE
+
 /obj/effect/decal/Destroy()
+	if(baked_into_loc)
+		// tgstation turf_decal pattern: skip the atom teardown (doMove/signal chains).
+		loc = null
+		return QDEL_HINT_QUEUE
 	GLOB.seasonal_decal_objs -= src
 	return ..()
 

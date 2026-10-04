@@ -1,5 +1,5 @@
 import { h, render, Fragment } from 'preact';
-import { useState, useEffect, useCallback, useMemo } from 'preact/hooks';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'preact/hooks';
 
 var decoder = decodeURIComponent || unescape;
 
@@ -44,6 +44,26 @@ function useStatState() {
     return () => listeners.delete(fn);
   }, []);
   return state;
+}
+
+// like useStatState, but only re-renders when the selected field reference changes
+function useStatField(select) {
+  const [, force] = useState(0);
+  const selectRef = useRef(select);
+  selectRef.current = select;
+  const valueRef = useRef(select(state));
+  useEffect(() => {
+    const fn = () => {
+      const next = selectRef.current(state);
+      if (next !== valueRef.current) {
+        valueRef.current = next;
+        force((t) => t + 1);
+      }
+    };
+    listeners.add(fn);
+    return () => listeners.delete(fn);
+  }, []);
+  return valueRef.current;
 }
 
 const defaultTab = 'Round Info';
@@ -269,10 +289,10 @@ function StatusRow({ part }) {
 }
 
 function RoundInfoPanel() {
-  const s = useStatState();
+  const parts = useStatField((s) => s.statusTabParts);
   return (
     <table>
-      {s.statusTabParts.map((part, i) => (
+      {parts.map((part, i) => (
         <StatusRow key={i} part={part} />
       ))}
     </table>
@@ -280,19 +300,17 @@ function RoundInfoPanel() {
 }
 
 function StatsPanel() {
-  const s = useStatState();
+  const parts = useStatField((s) => s.statsTabParts);
   return (
     <table>
-      {s.statsTabParts.map((text, i) => {
-        const idx = text.indexOf(':');
-        if (idx === -1) return <div key={i}>{text}</div>;
-        const label = text.substring(0, idx);
+      {parts.map((entry, i) => {
+        if (entry.label === null) return <div key={i}>{entry.text}</div>;
         return (
           <div key={i}>
-            <span className={'stat-label stat-label-' + label.trim().toLowerCase()}>
-              {label}:
+            <span className={'stat-label stat-label-' + entry.labelClass}>
+              {entry.label}:
             </span>
-            {text.substring(idx + 1)}
+            {entry.text}
           </div>
         );
       })}
@@ -301,8 +319,8 @@ function StatsPanel() {
 }
 
 function MCPanel() {
-  const s = useStatState();
-  const rows = useMemo(() => [...s.mcTabParts], [s.mcTabParts]);
+  const rows = useStatField((s) => s.mcTabParts);
+  const hrefToken = useStatField((s) => s.hrefToken);
   return (
     <table>
       {rows.map((part, i) => (
@@ -311,7 +329,7 @@ function MCPanel() {
           <td>{part[1]}</td>
           <td>
             {part[3]
-              ? <a href={'byond://?_src_=vars;admin_token=' + s.hrefToken + ';Vars=' + part[3]}>{part[2]}</a>
+              ? <a href={'byond://?_src_=vars;admin_token=' + hrefToken + ';Vars=' + part[3]}>{part[2]}</a>
               : part[2]}
           </td>
         </tr>
@@ -321,10 +339,10 @@ function MCPanel() {
 }
 
 function TicketsPanel() {
-  const s = useStatState();
+  const tickets = useStatField((s) => s.tickets);
   return (
     <table>
-      {s.tickets.map((part, i) => {
+      {tickets.map((part, i) => {
         let link;
         if (part[2]) {
           link = <a href={'byond://?_src_=holder;admin_token=' + s.hrefToken + ';ahelp=' + part[2] + ';ahelp_action=ticket;statpanel_item_click=left;action=ticket'}>{part[1]}</a>;
@@ -345,10 +363,10 @@ function TicketsPanel() {
 }
 
 function SDQL2Panel() {
-  const s = useStatState();
+  const queries = useStatField((s) => s.sdql2);
   return (
     <table>
-      {s.sdql2.map((part, i) => (
+      {queries.map((part, i) => (
         <tr key={i}>
           <td>{part[0]}</td>
           <td>
@@ -363,11 +381,13 @@ function SDQL2Panel() {
 }
 
 function VerbsPanel({ cat }) {
-  const s = useStatState();
-  const [search, setSearch] = useState(s.verbSearch);
+  const verbs = useStatField((s) => s.verbs);
+  const splitAdminTabs = useStatField((s) => s.splitAdminTabs);
+  const lastVerbCat = useStatField((s) => s.lastVerbCat);
+  const [search, setSearch] = useState(state.verbSearch);
 
   useEffect(() => {
-    if (cat !== s.lastVerbCat) {
+    if (cat !== lastVerbCat) {
       setSearch('');
       setState({ verbSearch: '', lastVerbCat: cat });
     }
@@ -379,21 +399,23 @@ function VerbsPanel({ cat }) {
   };
 
   const effectiveCat = useMemo(() => {
-    if (s.splitAdminTabs && cat.lastIndexOf('.') !== -1) {
+    if (splitAdminTabs && cat.lastIndexOf('.') !== -1) {
       const split = cat.split('.');
       if (split[0] === 'Admin') return split[1];
     }
     return cat;
-  }, [cat, s.splitAdminTabs]);
+  }, [cat, splitAdminTabs]);
+
+  const q = (search || '').toLowerCase();
 
   const { main, additions } = useMemo(() => {
-    const verbsReversed = sortVerbs(s.verbs).reverse();
+    const verbsReversed = sortVerbs(verbs).reverse();
     const main = [];
     const additions = {};
     for (const part of verbsReversed) {
       let name = part[0];
       const command = part[1];
-      if (s.splitAdminTabs && name.lastIndexOf('.') !== -1) {
+      if (splitAdminTabs && name.lastIndexOf('.') !== -1) {
         const split = name.split('.');
         if (split[0] === 'Admin') name = split[1];
       }
@@ -402,6 +424,7 @@ function VerbsPanel({ cat }) {
         name.lastIndexOf(effectiveCat, 0) !== -1 &&
         (name.length === effectiveCat.length || name.charAt(effectiveCat.length) === '.')
       ) {
+        if (q && command.toLowerCase().indexOf(q) === -1) continue;
         const subCat = name.lastIndexOf('.') !== -1 ? name.split('.')[1] : null;
         if (subCat) {
           if (!additions[subCat]) additions[subCat] = [];
@@ -412,10 +435,8 @@ function VerbsPanel({ cat }) {
       }
     }
     return { main, additions };
-  }, [s.verbs, effectiveCat, s.splitAdminTabs]);
+  }, [verbs, effectiveCat, splitAdminTabs, q]);
 
-  const q = (search || '').toLowerCase();
-  const matches = (command) => !q || command.toLowerCase().indexOf(q) !== -1;
   const onVerbClick = (command) => (e) => {
     e.preventDefault();
     runAfterFocus(() => Byond.command(command.replace(/\s/g, '-')));
@@ -433,7 +454,6 @@ function VerbsPanel({ cat }) {
       <div className="grid-container">
         {main.map((command, i) => (
           <a key={i} href="#" className="grid-item" data-label={command}
-            style={{ display: matches(command) ? '' : 'none' }}
             onClick={onVerbClick(command)}>
             <span className="grid-item-text">{command}</span>
           </a>
@@ -445,7 +465,6 @@ function VerbsPanel({ cat }) {
           <div className="grid-container">
             {additions[subCat].map((command, i) => (
               <a key={i} href="#" className="grid-item" data-label={command}
-                style={{ display: matches(command) ? '' : 'none' }}
                 onClick={onVerbClick(command)}>
                 <span className="grid-item-text">{command}</span>
               </a>
@@ -510,17 +529,20 @@ function tabDisplayName(name, splitAdminTabs) {
 }
 
 function TabBar() {
-  const s = useStatState();
+  const permanentTabs = useStatField((s) => s.permanentTabs);
+  const verbTabs = useStatField((s) => s.verbTabs);
+  const splitAdminTabs = useStatField((s) => s.splitAdminTabs);
+  const currentTab = useStatField((s) => s.currentTab);
   const allTabs = useMemo(() => {
     const seen = new Set();
     const result = [];
-    for (const t of [...s.permanentTabs, ...s.verbTabs]) {
-      const display = tabDisplayName(t, s.splitAdminTabs);
+    for (const t of [...permanentTabs, ...verbTabs]) {
+      const display = tabDisplayName(t, splitAdminTabs);
       if (display.trim() === '' || seen.has(display)) continue;
       if (
-        !s.permanentTabs.includes(t) &&
+        !permanentTabs.includes(t) &&
         t.lastIndexOf('.') !== -1 &&
-        !(s.splitAdminTabs && t.split('.')[0] === 'Admin')
+        !(splitAdminTabs && t.split('.')[0] === 'Admin')
       ) continue;
       seen.add(display);
       result.push(display);
@@ -531,7 +553,7 @@ function TabBar() {
       return oa - ob;
     });
     return result;
-  }, [s.permanentTabs, s.verbTabs, s.splitAdminTabs]);
+  }, [permanentTabs, verbTabs, splitAdminTabs]);
 
   const onTabClick = (name) => (e) => {
     if (name === state.currentTab) {
@@ -549,7 +571,7 @@ function TabBar() {
         <div
           key={name}
           id={name}
-          className={'button' + (s.currentTab === name ? ' active' : '')}
+          className={'button' + (currentTab === name ? ' active' : '')}
           style={{ order: TAB_ORDER[name] || name.charCodeAt(0) }}
           onClick={onTabClick(name)}
         >
@@ -561,25 +583,26 @@ function TabBar() {
 }
 
 function StatContent() {
-  const s = useStatState();
+  const currentTab = useStatField((s) => s.currentTab);
+  const verbTabs = useStatField((s) => s.verbTabs);
   let className = 'statcontent';
   let body;
 
-  if (s.currentTab === 'Round Info') {
+  if (currentTab === 'Round Info') {
     body = <RoundInfoPanel />;
-  } else if (s.currentTab === 'Stats') {
+  } else if (currentTab === 'Stats') {
     body = <StatsPanel />;
-  } else if (s.currentTab === 'MC') {
+  } else if (currentTab === 'MC') {
     className = 'mcstatcontent';
     body = <MCPanel />;
-  } else if (s.currentTab === 'Debug Stat Panel') {
+  } else if (currentTab === 'Debug Stat Panel') {
     body = <DebugPanel />;
-  } else if (s.currentTab === 'Tickets') {
+  } else if (currentTab === 'Tickets') {
     body = <TicketsPanel />;
-  } else if (s.currentTab === 'SDQL2') {
+  } else if (currentTab === 'SDQL2') {
     body = <SDQL2Panel />;
-  } else if (s.verbTabs.includes(s.currentTab)) {
-    body = <VerbsPanel cat={s.currentTab} />;
+  } else if (verbTabs.includes(currentTab)) {
+    body = <VerbsPanel cat={currentTab} />;
   } else {
     body = <BrailleSpinner />;
   }
@@ -627,7 +650,10 @@ function set_tabs_style(style) {
   }
 }
 function restoreFocus() {
-  if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
+  const el = document.activeElement;
+  if (!el || el === document.body || el.tagName === 'INPUT') return;
+  // only steal focus back to the map when something inside the panel took it
+  if (!el.closest || !el.closest('.stat-container')) return;
   runAfterFocus(() => Byond.winset('map', { focus: true }));
 }
 function getCookie(cname) {
@@ -681,7 +707,16 @@ Byond.subscribeTo('update_stat', (payload) => {
   setState({ statusTabParts: parts });
 });
 
-Byond.subscribeTo('update_stats', (payload) => setState({ statsTabParts: payload }));
+Byond.subscribeTo('update_stats', (payload) => {
+  // parse once here instead of on every render
+  const parts = (payload || []).map((text) => {
+    const idx = text.indexOf(':');
+    if (idx === -1) return { label: null, labelClass: '', text };
+    const label = text.substring(0, idx);
+    return { label, labelClass: label.trim().toLowerCase(), text: text.substring(idx + 1) };
+  });
+  setState({ statsTabParts: parts });
+});
 
 Byond.subscribeTo('add_stats_tab', () => addPermanentTab('Stats'));
 
@@ -706,6 +741,15 @@ Byond.subscribeTo('create_debug', () => {
 });
 
 Byond.subscribeTo('remove_admin_tabs', () => {
+  // nothing admin-ish is set up: bail before triggering a pointless re-render
+  if (
+    state.hrefToken === null
+    && !state.permanentTabs.includes('MC')
+    && !state.permanentTabs.includes('Tickets')
+    && !state.permanentTabs.includes('SDQL2')
+  ) {
+    return;
+  }
   setState({ hrefToken: null });
   removePermanentTab('MC');
   if (state.currentTab === 'MC') tabChange(defaultTab);
