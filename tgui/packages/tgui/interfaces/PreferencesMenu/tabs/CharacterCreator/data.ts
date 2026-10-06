@@ -10,6 +10,8 @@ export type AllPagesData = {
   loaded_slot: number;
   real_name: string;
   headshot_link: string | null; // null indicates unset
+  headshot_artist_credit: string | null;
+  headshot_artist_link: string | null;
 
   pq: TrustedHTML;
   hide_pq: BooleanLike;
@@ -230,6 +232,15 @@ export type ExamineData = {
 };
 
 // --------------- IdentityData ---------------
+export type CharToggle = {
+  flag: number;
+  name: string;
+  desc: string;
+  off: string;
+  on: string;
+  enabled: BooleanLike;
+};
+
 export type IdentityData = {
   species_base_name: string;
   species_sub_name: string;
@@ -247,7 +258,6 @@ export type IdentityData = {
   statpack_name: string;
   domhand: number;
   combat_music: string;
-  dnr_pref: BooleanLike;
   defiant: BooleanLike;
 
   favorite_cuisine: number; // bitflag
@@ -269,17 +279,7 @@ export type IdentityData = {
   voice_pack: string;
   voice_pitch: number;
 
-  bark_id: string;
-  bark_name: string;
-  bark_speed: number;
-  min_bark_speed: number;
-  max_bark_speed: number;
-  bark_pitch: number;
-  min_bark_pitch: number;
-  max_bark_pitch: number;
-  bark_variance: number;
-  min_bark_variance: number;
-  max_bark_variance: number;
+  char_toggles: CharToggle[];
 
   virtues: VirtueWithMetadata[];
 
@@ -320,7 +320,11 @@ export type VillainData = {
   antag_banned: BooleanLike;
 
   lich_headshot_link: string | null; // null means unset
+  lich_headshot_artist_credit: string | null;
+  lich_headshot_artist_link: string | null;
   vampire_headshot_link: string | null; // null means unset
+  vampire_headshot_artist_credit: string | null;
+  vampire_headshot_artist_link: string | null;
 
   vampire_skin: string | null; // null means unset
   vampire_eyes: string | null; // null means unset

@@ -45,7 +45,7 @@
 		to_chat(H, span_warning("I reject the false prophets, Matthios embraces my fyre as His own."))
 		H.set_patron(/datum/patron/inhumen/matthios)//If you are not an ascendant get put up as Matthiosite
 	if(H.mind)
-		var/weapons = list("Arming Sword", "Battle Axe", "Warhammer", "Flail")
+		var/weapons = list("Longsword", "Arming Sword", "Axe", "Battle Axe", "Warhammer", "Flail")
 		switch(H.patron?.type)
 			if(/datum/patron/inhumen/zizo)
 				weapons += "Avantyne Longsword"
@@ -57,11 +57,19 @@
 				weapons += "Saccharine Swordspear"
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		switch(weapon_choice)
+			if("Longsword")
+				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
+				r_hand = /obj/item/rogueweapon/sword/long
+				l_hand = /obj/item/rogueweapon/shield/tower/metal
+				beltr = /obj/item/rogueweapon/scabbard/sword
 			if("Arming Sword")
 				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
 				r_hand = /obj/item/rogueweapon/sword
 				l_hand = /obj/item/rogueweapon/shield/tower/metal
 				beltr = /obj/item/rogueweapon/scabbard/sword
+			if("Axe")
+				H.adjust_skillrank_up_to(/datum/skill/combat/axes, SKILL_LEVEL_EXPERT, TRUE)
+				beltr = /obj/item/rogueweapon/stoneaxe/woodcut/steel
 			if("Battle Axe")
 				H.adjust_skillrank_up_to(/datum/skill/combat/axes, SKILL_LEVEL_EXPERT, TRUE)
 				l_hand = /obj/item/rogueweapon/shield/tower/metal
@@ -92,9 +100,7 @@
 
 	if (istype (H.patron, /datum/patron/inhumen/zizo))
 		if(H.mind)
-			H.mind.AddSpell(new /datum/action/cooldown/spell/minion_order)
 			add_verb(H, /mob/living/carbon/human/proc/revelations)
-			H.mind.AddSpell(new /datum/action/cooldown/spell/gravemark)
 			H.mind?.current.faction += "[H.name]_faction"
 		ADD_TRAIT(H, TRAIT_GRAVEROBBER, TRAIT_GENERIC)
 	mask = /obj/item/clothing/mask/rogue/facemask/steel
@@ -116,17 +122,17 @@
 
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
-			H.cmode_music = 'sound/music/combat_heretic.ogg'
+			H.cmode_music = sound("sound/music/combat_heretic.ogg")
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/iron, SLOT_RING, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/book/rogue/bibble/zizo,SLOT_IN_BACKPACK, TRUE)
 		if(/datum/patron/inhumen/matthios)
-			H.cmode_music = 'sound/music/combat_matthios.ogg'
+			H.cmode_music = sound("sound/music/combat_matthios.ogg")
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios, SLOT_RING, TRUE)
 		if(/datum/patron/inhumen/baotha)
-			H.cmode_music = 'sound/music/combat_baotha.ogg'
+			H.cmode_music = sound("sound/music/combat_baotha.ogg")
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/baotha, SLOT_RING, TRUE)
 		if(/datum/patron/inhumen/graggar)
-			H.cmode_music = 'sound/music/combat_graggar.ogg'
+			H.cmode_music = sound("sound/music/combat_graggar.ogg")
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/graggar, SLOT_RING, TRUE)
 
 	if(H.mind)

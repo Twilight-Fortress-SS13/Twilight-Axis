@@ -6,7 +6,7 @@
 	outfit = /datum/outfit/job/roguetown/mercenary/steppesman
 	class_select_category = CLASS_CAT_AAVNR
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_MARKSMAN)
-	cmode_music = 'sound/music/combat_steppe.ogg'
+	cmode_music = sound("sound/music/combat_steppe.ogg")
 	subclass_languages = list(/datum/language/aavnic)
 //	horse = /mob/living/simple_animal/hostile/retaliate/rogue/saiga/tame/saddled TA EDIT cuz of saddleborn virtue
 	extra_context = "This subclass has 4 loadouts with various stats, skills & equipment."

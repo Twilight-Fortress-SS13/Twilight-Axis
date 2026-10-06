@@ -56,7 +56,7 @@
 	to_chat(H, span_userdanger("I'm a member of Ascension cult of zizo."))
 	owner.announce_objectives()
 	owner.special_role = "Zizoid Lackey"
-	H.cmode_music = 'sound/music/combat_cult.ogg'
+	H.cmode_music = sound("sound/music/combat_cult.ogg")
 	H.playsound_local(get_turf(H), 'sound/music/maniac.ogg', 80, FALSE, pressure_affected = FALSE)
 	add_verb(H, /mob/living/carbon/human/proc/communicate)
 	add_antag_hud(antag_hud_type, antag_hud_name, owner.current)
@@ -240,7 +240,7 @@
 
 	if(stat >= UNCONSCIOUS || !can_speak_vocal())
 		return
-	
+
 	var/mob/living/carbon/human/H = src
 
 	to_chat(H, "Number of cultists: [SSmapping.retainer.cultist_number]")
@@ -461,17 +461,17 @@
 	. = ..()
 	if(.)
 		return
-	
+
 	if(!sigil_type)
 		return
-	
+
 	if(!istype(user.patron, /datum/patron/inhumen/zizo))
 		return
-	
+
 	if(user.mind && user.mind.has_antag_datum(/datum/antagonist/skeleton))
 		to_chat(user, span_warning("Skelet not allowed."))
 		return
-	
+
 	show_ritual_tgui(user)
 
 /obj/effect/decal/cleanable/sigil/N
@@ -557,7 +557,7 @@
 	set category = "ZIZO"
 	if(incapacitated())
 		return
-	
+
 	if(mind && mind.has_antag_datum(/datum/antagonist/skeleton))
 		return
 

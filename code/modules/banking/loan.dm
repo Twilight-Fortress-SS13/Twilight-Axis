@@ -206,7 +206,7 @@
 	else if(istype(source, /datum/fund/merchant))
 		msg = "[capitalize(indenture_faction_label(source))] has called its loan to [target_label] and finds the coffers wanting. [ta_economy_burghers_capital()] are outraged. There is no wealth without trust, and no realm without wealth. [seized]m forfeit, [still_owed]m unsettled."
 	else if(istype(source, /datum/fund/bathhouse))
-		msg = "The Bathhouse has called its loan to [target_label] and finds the coffers wanting. Her generosity abused! Her love disgraced! To lend from the bathhouse is one shame, to not pay back, a greater one. [seized]m forfeit, [still_owed]m unsettled."
+		msg = "The Bathhouse has called its loan to [target_label] and finds the coffers wanting. Her generosity abused! Her love disgraced! To borrow from the bathhouse is one shame, to not pay back, a greater one. [seized]m forfeit, [still_owed]m unsettled."
 	else
 		msg = "The Stewardry has called its loan to [target_label] and finds the coffers wanting. [ta_economy_authority_capital()] is owed its due, and shall make known its prerogative. [seized]m forfeit, [still_owed]m unsettled."
 	priority_announce(msg, "Indenture Defaulted", pick('sound/misc/royal_decree.ogg', 'sound/misc/royal_decree2.ogg'), "Captain", strip_html = FALSE)

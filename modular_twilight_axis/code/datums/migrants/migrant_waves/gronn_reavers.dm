@@ -73,7 +73,7 @@
 	tutorial = "You are a warrior-lord from Gronn and the leader of your warband. Guide them to glory and wealth or try to survive."
 	outfit = /datum/outfit/job/roguetown/gronn/jarl
 	class_select_category = CLASS_CAT_NOMAD
-	cmode_music = 'sound/music/combat_knight.ogg'
+	cmode_music = sound("sound/music/combat_knight.ogg")
 	category_tags = list(CTAG_GRONN_JARL)
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_NOBLE, TRAIT_HEAVYARMOR)
 	min_pq = 40
@@ -134,7 +134,7 @@
 	outfit = /datum/outfit/job/roguetown/gronn/tideweaver
 	class_select_category = CLASS_CAT_CLERIC
 	allowed_patrons = list(/datum/patron/divine/abyssor)
-	cmode_music = 'sound/music/combat_shaman2.ogg'
+	cmode_music = sound("sound/music/combat_shaman2.ogg")
 	category_tags = list(CTAG_GRONN_TIDEWEAVER)
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_DODGEEXPERT, TRAIT_ARCYNE)
 	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 0, "ward" = TRUE)
@@ -201,7 +201,7 @@
 	tutorial = "You are a volfskin, one of the legendary Gronnian warriors who are said to be possessed by raging volf spirits in battles. Distrusted due to your less than savoury religious practices, but well-respected for your combat prowess."
 	outfit = /datum/outfit/job/roguetown/gronn/volfskin
 	class_select_category = CLASS_CAT_WARRIOR
-	cmode_music = 'sound/music/combat_hornofthebeast.ogg'
+	cmode_music = sound("sound/music/combat_hornofthebeast.ogg")
 	category_tags = list(CTAG_GRONN_VOLFSKIN)
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_ORGAN_EATER, TRAIT_DUALWIELDER, TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN)
 	min_pq = 30
@@ -256,7 +256,7 @@
 	tutorial = "You are a loyal and skilled bodyguard to your jarl, specialising in pillaging, kidnapping and fighting with an axe and shield."
 	outfit = /datum/outfit/job/roguetown/gronn/huscarl
 	class_select_category = CLASS_CAT_WARRIOR
-	cmode_music = 'sound/music/combat_vagarian.ogg'
+	cmode_music = sound("sound/music/combat_vagarian.ogg")
 	category_tags = list(CTAG_GRONN_HUSCARL)
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_MEDIUMARMOR)
 	min_pq = 20
@@ -315,7 +315,7 @@
 	tutorial = "An unlucky soul. Perhaps caught in a pillaging raid, or alone in the wilderness, you have been enslaved by the Gronnian warband. Work hard to appease your new masters."
 	outfit = /datum/outfit/job/roguetown/gronn/thrall
 	class_select_category = CLASS_CAT_NOMAD
-	cmode_music = 'sound/music/combat_vagarian.ogg'
+	cmode_music = sound("sound/music/combat_vagarian.ogg")
 	category_tags = list(CTAG_GRONN_THRALL)
 	traits_applied = list(TRAIT_STEELHEARTED)
 	min_pq = 0

@@ -19,7 +19,7 @@
 	max_pq = null
 	round_contrib_points = 5
 
-	cmode_music = 'sound/music/combat_physician.ogg'
+	cmode_music = sound("sound/music/combat_physician.ogg")
 
 	job_traits = list(TRAIT_MEDICINE_EXPERT, TRAIT_ALCHEMY_EXPERT, TRAIT_NOSTINK, TRAIT_EMPATH, TRAIT_STEELHEARTED)
 	job_subclasses = list(

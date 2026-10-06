@@ -4,7 +4,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 
 	outfit = /datum/outfit/job/roguetown/adventurer/rogue
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander3.ogg'
+	cmode_music = sound("sound/music/cmode/adventurer/combat_outlander3.ogg")
 	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_SEEPRICES, TRAIT_GRAVEROBBER)
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT, CTAG_LICKER_WRETCH)
 	townie_contract_gate_exempt = TRUE
@@ -71,7 +71,7 @@
 	tutorial = "You are a scoundrel and a thief. A master in getting into places you shouldn't be and taking things that aren't rightfully yours."
 	outfit = /datum/outfit/job/roguetown/adventurer/thief
 	subclass_languages = list(/datum/language/thievescant)
-	cmode_music = 'sound/music/cmode/antag/combat_cutpurse.ogg'
+	cmode_music = sound("sound/music/cmode/antag/combat_cutpurse.ogg")
 	traits_applied = list(TRAIT_DODGEEXPERT)
 	subclass_stats = list(
 		STATKEY_STR = -1,
@@ -124,7 +124,7 @@
 	name = "Bard"
 	tutorial = "You make your fortune in brothels, flop houses, and taverns – gaining fame for your songs and legends. If there is any truth to them, that is."
 	outfit = /datum/outfit/job/roguetown/adventurer/bard
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander3.ogg'
+	cmode_music = sound("sound/music/cmode/adventurer/combat_outlander3.ogg")
 	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_GOODLOVER, TRAIT_EMPATH)
 	subclass_stats = list(
 		STATKEY_INT = 2,
@@ -201,7 +201,7 @@
 	name = "Swashbuckler"
 	tutorial = "You are a daring rogue of the seas! Swashbucklers wield agile swordplay and acrobatic prowess - fighting dirty to outmaneuver foes with flair."
 	outfit = /datum/outfit/job/roguetown/adventurer/swashbuckler
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander3.ogg'
+	cmode_music = sound("sound/music/cmode/adventurer/combat_outlander3.ogg")
 	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_NUTCRACKER, TRAIT_LEAPER)
 	subclass_virtues = list(
 		/datum/virtue/combat/guarded
@@ -253,7 +253,7 @@
 	name = "Antiquarian"
 	tutorial = "Your scholarship and connections allow you to find wealth where others do not care to look. You're unpracticed in direct combat, but knowledge and prepation leaves a few tricks up your sleeve."
 	outfit = /datum/outfit/job/roguetown/adventurer/antiquarian
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander3.ogg'
+	cmode_music = sound("sound/music/cmode/adventurer/combat_outlander3.ogg")
 	traits_applied = list(TRAIT_SEEPRICES, TRAIT_GRAVEROBBER, TRAIT_INTELLECTUAL, TRAIT_ALCHEMY_EXPERT)
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
 	subclass_stats = list(

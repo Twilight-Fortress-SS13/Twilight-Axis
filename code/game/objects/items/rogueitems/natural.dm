@@ -105,6 +105,13 @@
 /obj/item/natural/bundle/attackby(obj/item/W, mob/living/user)
 	if(item_flags & IN_STORAGE)
 		return
+
+	if(istype(W, /obj/item/bomb) && !istype(W, /obj/item/bomb/tripbomb))
+		if(!user.cmode || !HAS_TRAIT(user, TRAIT_BOMBER_EXPERT))
+			return
+		W.attackby(src, user)
+		return
+
 	if(istype(W, /obj/item/natural/bundle))
 		var/obj/item/natural/bundle/B = W
 		if(src.stacktype == B.stacktype)
@@ -225,3 +232,18 @@
 
 		storage.update_item(src)
 		storage.orient2hud()
+
+/obj/item/natural/snowball
+	name = "snowball"
+	desc = "A tightly packed ball of snow."
+	icon_state = "snowball"
+	dropshrink = 0
+	force = 0
+	throwforce = 0
+	throw_speed = 2
+	w_class = WEIGHT_CLASS_TINY
+
+/obj/item/natural/snowball/throw_impact(atom/hit_atom, datum/thrownthing/thrownthing)
+	if(!..()) //wasn't caught by a mob
+		playsound(get_turf(src), 'sound/foley/footsteps/ftsnow4.ogg', 50, TRUE)
+		qdel(src)

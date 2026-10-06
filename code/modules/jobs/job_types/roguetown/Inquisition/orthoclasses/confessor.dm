@@ -6,7 +6,7 @@
 	outfit = /datum/outfit/job/roguetown/confessor
 	category_tags = list(CTAG_ORTHODOXIST)
 	subclass_languages = list(/datum/language/otavan)
-	cmode_music = 'sound/music/cmode/antag/combat_deadlyshadows.ogg'
+	cmode_music = sound("sound/music/cmode/antag/combat_deadlyshadows.ogg")
 	traits_applied = list(
 		TRAIT_DODGEEXPERT,
 		TRAIT_BLACKBAGGER,

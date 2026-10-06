@@ -44,7 +44,15 @@
 	REMOVE_TRAITS_IN(H, SPECIES_TRAIT)
 	H.become_skeleton()
 	H.can_do_sex = FALSE
+	change_origin(H, /datum/virtue/origin/unselectable/skeleton, "Legion")
 
+	//no swift intent
+	H.possible_rmb_intents = list(/datum/rmb_intent/feint,\
+	/datum/rmb_intent/aimed,\
+	/datum/rmb_intent/riposte,\
+	/datum/rmb_intent/strong,\
+	/datum/rmb_intent/weak)
+	H.swap_rmb_intent(num=1)
 
 	// Skeleton antag datum + patron (matching greater_skeleton setup)
 	H.set_patron(/datum/patron/inhumen/zizo)
@@ -53,7 +61,7 @@
 
 	H.choose_name_popup("Unbound Ancient Death Knight")
 
-	H.cmode_music = 'sound/music/combat_weird.ogg'
+	H.cmode_music = sound("sound/music/combat_weird.ogg")
 
 	// Equipment — gilbranze loadout loosely matching lich skeleton death knight/bulwark -> helm picks and stuff come later
 	belt = /obj/item/storage/belt/rogue/leather/black

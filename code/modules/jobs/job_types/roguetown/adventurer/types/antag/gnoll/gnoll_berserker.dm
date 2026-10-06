@@ -2,9 +2,9 @@
 	name = "Gnoll Berserker"
 	tutorial = "You are a warrior feared for your brutality, dedicated to using your might for your own gain. Might equals right, and you are the reminder of such a saying."
 	allowed_sexes = list(MALE, FEMALE)
-	
+
 	outfit = /datum/outfit/job/roguetown/gnoll/berserker
-	cmode_music = 'sound/music/combat_graggar.ogg'
+	cmode_music = sound("sound/music/combat_graggar.ogg")
 	category_tags = list(CTAG_GNOLL)
 	traits_applied = list(TRAIT_UNCONVERTIBLE)
 	reset_stats = TRUE

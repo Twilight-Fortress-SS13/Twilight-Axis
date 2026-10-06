@@ -162,7 +162,7 @@
 			underwear_chest.remove_bodypart_feature(target.underwear.undies_feature)
 		QDEL_NULL(target.underwear)
 	target.can_do_sex = FALSE
-	target.cmode_music = 'sound/music/combat_cult.ogg'
+	target.cmode_music = sound("sound/music/combat_cult.ogg")
 
 	ADD_TRAIT(target, TRAIT_NOLIMBDISABLE, TRAIT_GENERIC)
 	ADD_TRAIT(target, TRAIT_INFINITE_STAMINA, TRAIT_GENERIC)

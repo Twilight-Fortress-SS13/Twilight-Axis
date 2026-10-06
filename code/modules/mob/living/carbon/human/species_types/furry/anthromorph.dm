@@ -25,6 +25,8 @@
 		/obj/item/bodypart/taur/spider,
 		/obj/item/bodypart/taur/horse,
 		/obj/item/bodypart/taur/goat,
+		/obj/item/bodypart/taur/feline,				//TA-EDIT
+		/obj/item/bodypart/taur/feline_furry		//TA-EDIT
 	)
 
 	inherent_biotypes = MOB_ORGANIC|MOB_HUMANOID
@@ -89,6 +91,8 @@
 		/datum/customizer/organ/penis/anthro,
 		/datum/customizer/organ/breasts/animal,
 		/datum/customizer/organ/vagina/anthro,
+		/datum/customizer/bodypart_feature/pubes,
+		/datum/customizer/bodypart_feature/pits,
 		)
 	body_marking_sets = list(
 		/datum/body_marking_set/none,

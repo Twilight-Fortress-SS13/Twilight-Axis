@@ -7,7 +7,7 @@
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
 	class_select_category = CLASS_CAT_RACIAL
 	maximum_possible_slots = 2
-	cmode_music = 'modular_twilight_axis/sound/music/combat_heishi.ogg'
+	cmode_music = sound("modular_twilight_axis/sound/music/combat_heishi.ogg")
 	subclass_languages = list(/datum/language/kazengunese)
 	traits_applied = list(TRAIT_MEDIUMARMOR)
 	subclass_stats = list(
@@ -112,7 +112,7 @@
 	category_tags = list(CTAG_MERCENARY)
 	class_select_category = CLASS_CAT_RACIAL
 	maximum_possible_slots = 2
-	cmode_music = 'modular_twilight_axis/sound/music/combat_yohei.ogg'
+	cmode_music = sound("modular_twilight_axis/sound/music/combat_yohei.ogg")
 	subclass_languages = list(/datum/language/kazengunese)
 	traits_applied = list(TRAIT_DODGEEXPERT)
 	subclass_stats = list(

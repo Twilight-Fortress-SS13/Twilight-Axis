@@ -617,6 +617,25 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 		return FALSE
 	return can_speak_in_language(language)
 
+/mob/living/proc/can_stutter_speech() // TA EDIT START
+	if(HAS_TRAIT(src, TRAIT_NOPAIN) || HAS_TRAIT(src, TRAIT_NOPAINSTUN) || HAS_TRAIT(src, TRAIT_IRONMAN) || HAS_TRAIT(src, TRAIT_NOMOOD) || isconstruct(src))
+		return FALSE
+	return TRUE
+
+/mob/living/proc/get_pain_stutter_strength()
+	return 0
+
+/mob/living/carbon/get_pain_stutter_strength()
+	if(!can_stutter_speech() || pain_threshold <= 0)
+		return 0
+
+	var/pain_percent = (get_complex_pain() / pain_threshold) * 100
+	if(pain_percent < 70)
+		return 0
+
+	var/stutter_strength = ((pain_percent - 70) / 80) * 100
+	return clamp(round(stutter_strength), 10, 100) // TA EDIT END
+
 /mob/living/proc/treat_message(message, language, capitalize_message = TRUE)
 	if(HAS_TRAIT(src, TRAIT_ZOMBIE_SPEECH) && !ispath(language, /datum/language/undead))
 		message = "[repeat_string(rand(1, 3), "U")][repeat_string(rand(1, 6), "H")]..."
@@ -629,8 +648,12 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	if(derpspeech)
 		message = derpspeech(message, stuttering)
 
-	if(stuttering)
-		message = stutter(message)
+	if(stuttering && can_stutter_speech()) // TA EDIT START
+		var/pain_stutter_strength = get_pain_stutter_strength()
+		if(pain_stutter_strength)
+			message = pain_stutter(message, pain_stutter_strength)
+		else
+			message = stutter(message) // TA EDIT END
 
 	if(slurring || feigning_impairment) // TA EDIT
 		message = slur(message)
@@ -671,7 +694,7 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 		. = verb_whisper
 	else if(message_mode == MODE_WHISPER_CRIT)
 		. = "[verb_whisper] in [p_their()] last breath"
-	else if(stuttering)
+	else if(stuttering && can_stutter_speech()) // TA EDIT
 		. = "stammers"
 	else if(derpspeech)
 		. = "gibbers"

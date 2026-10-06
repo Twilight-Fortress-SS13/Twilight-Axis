@@ -52,6 +52,9 @@ SUBSYSTEM_DEF(role_class_handler)
 	/// Assoc list of class registers to keep track of what townies and migrant parties are and message listeners
 	var/list/class_registers = list()
 
+	/// subclass roll losers
+	var/list/roll_losers = list()
+
 /*
 	We init and build the ass lists
 */
@@ -236,8 +239,10 @@ SUBSYSTEM_DEF(role_class_handler)
 			message_admins("ROLE CLASS HANDLER: Could not resolve job for [H.ckey] ([H.real_name]); H.job=[H.job], assigned_role=[assigned_role]. Skipping subclass setup.")
 			qdel(XTRA_MEATY)
 			return
-		if(length(RT_JOB.advclass_cat_rolls))
+		if(LAZYLEN(RT_JOB.advclass_cat_rolls))
 			XTRA_MEATY.class_cat_alloc_attempts = RT_JOB.advclass_cat_rolls
+		else // no advclasses here sire
+			return
 
 		//if(RT_JOB.PQ_boost_divider)
 			//XTRA_MEATY.PQ_boost_divider = RT_JOB.PQ_boost_divider
@@ -256,6 +261,26 @@ SUBSYSTEM_DEF(role_class_handler)
 		return // There was just one advclass that got automatically selected
 	class_select_handlers[H.client.ckey] = XTRA_MEATY
 
+
+/datum/controller/subsystem/role_class_handler/proc/roll_roundstart_favorites(list/humans)
+	var/list/contenders = list()
+	for(var/mob/living/carbon/human/H in humans)
+		var/datum/job/roguetown/job = SSjob.GetJob(H.job)
+		var/list/subprefs = H.client?.prefs?.job_subprefs
+		if(!job || !subprefs || !subprefs[H.job] || !subprefs[H.job]["favorite_advclass"])
+			continue
+		var/favorite_type = subprefs[H.job]["favorite_advclass"]
+		for(var/ctag in job.advclass_cat_rolls)
+			for(var/datum/advclass/AC as anything in sorted_class_categories[ctag])
+				if(AC.type != favorite_type || AC.maximum_possible_slots == -1 || !AC.check_requirements(H))
+					continue
+				if(!contenders[AC])
+					contenders[AC] = list()
+				contenders[AC] |= H
+	for(var/datum/advclass/AC as anything in contenders)
+		var/list/candidates = contenders[AC]
+		for(var/mob/living/carbon/human/loser as anything in candidates - SSjob.pick_roll_winners(candidates, AC.maximum_possible_slots - AC.total_slots_occupied))
+			roll_losers += loser.ckey
 
 /*
 	Attempt to finish the class handling ordeal, aka they picked something

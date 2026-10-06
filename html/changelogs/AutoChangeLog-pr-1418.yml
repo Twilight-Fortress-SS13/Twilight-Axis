@@ -1,4 +1,0 @@
-author: "Vladmar11"
-delete-after: True
-changes:
-  - refactor: "погода теперь сделана не на основе партиклей, а на основе обычных текстур"

@@ -33,7 +33,7 @@
 
 	give_bank_account = TRUE
 
-	cmode_music = 'sound/music/combat_bum.ogg'
+	cmode_music = sound("sound/music/combat_bum.ogg")
 	job_subclasses = list(
 		/datum/advclass/vagabond_original,
 		/datum/advclass/vagabond_beggar,

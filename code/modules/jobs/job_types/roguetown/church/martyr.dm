@@ -464,13 +464,13 @@
 			switch(status_flag)
 				if(STATE_MARTYR)
 					SEND_SOUND(H, sound(null))
-					H.cmode_music = 'sound/music/combat_martyr.ogg'
+					H.cmode_music = sound("sound/music/combat_martyr.ogg")
 					to_chat(H, span_warning("I can feel my muscles nearly burst from power! I can jump great heights!"))
 					ADD_TRAIT(H, TRAIT_ZJUMP, TRAIT_GENERIC)
 					ADD_TRAIT(H, TRAIT_NOFALLDAMAGE2, TRAIT_GENERIC)
 				if(STATE_MARTYRULT)
 					SEND_SOUND(H, sound(null))
-					H.cmode_music = 'sound/music/combat_martyrult.ogg'
+					H.cmode_music = sound("sound/music/combat_martyrult.ogg")
 					to_chat(H, span_warning("I can jump great heights!"))
 					ADD_TRAIT(H, TRAIT_ZJUMP, TRAIT_GENERIC)
 					ADD_TRAIT(H, TRAIT_NOFALLDAMAGE2, TRAIT_GENERIC)
@@ -506,7 +506,7 @@
 	same_job_respawn_delay = 30 MINUTES
 	give_bank_account = TRUE
 
-	cmode_music = 'sound/music/combat_martyrsafe.ogg'
+	cmode_music = sound("sound/music/combat_martyrsafe.ogg")
 	job_traits = list(TRAIT_HEAVYARMOR, TRAIT_STEELHEARTED, TRAIT_SILVER_BLESSED, TRAIT_EMPATH, TRAIT_MEDICINE_EXPERT, TRAIT_DUALWIELDER, TRAIT_CLERGY, TRAIT_TEMPO)
 
 	//No undeath-adjacent virtues for a role that can sacrifice itself. The Ten like their sacrifices 'pure'. (I actually didn't want to code returning those virtue traits post-sword use)
@@ -641,11 +641,7 @@
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_TENNITE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 0,\
-		added_def = 0,\
+		silver_type = SILVER_TENNITE\
 	)
 
 /datum/intent/sword/cut/martyr
@@ -751,11 +747,7 @@
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_TENNITE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 0,\
-		added_def = 0,\
+		silver_type = SILVER_TENNITE\
 	)
 
 /datum/intent/axe/cut/long/martyr
@@ -857,11 +849,7 @@
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_TENNITE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 0,\
-		added_def = 0,\
+		silver_type = SILVER_TENNITE\
 	)
 
 /datum/intent/mace/strike/martyr
@@ -961,11 +949,7 @@
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_TENNITE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 0,\
-		added_def = 0,\
+		silver_type = SILVER_TENNITE\
 	)
 
 /datum/intent/spear/thrust/martyr

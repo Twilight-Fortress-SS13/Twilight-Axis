@@ -64,8 +64,8 @@
 	reset_descriptors()
 	age = initial(age)
 	statpack = new /datum/statpack/wildcard/fated
-	dnr_pref = initial(dnr_pref)
 	qsr_pref = initial(qsr_pref)
+	char_toggles = initial(char_toggles)
 	favorite_cuisine = initial(favorite_cuisine)
 	favorite_dish = initial(favorite_dish)
 	favorite_drink = initial(favorite_drink)
@@ -91,6 +91,8 @@
 	noble_gossip_cached = null
 
 	headshot_link = null
+	headshot_artist_credit = null
+	headshot_artist_link = null
 	ooc_extra = null
 	ooc_extra_img = null
 	ooc_extra_img_link = null
@@ -107,8 +109,14 @@
 	vampire_hair = null
 	vampire_ears = null
 	lich_headshot_link = null
+	lich_headshot_artist_credit = null
+	lich_headshot_artist_link = null
 	vampire_headshot_link = null
+	vampire_headshot_artist_credit = null
+	vampire_headshot_artist_link = null
 	werewolf_headshot_link = null
+	werewolf_headshot_artist_credit = null
+	werewolf_headshot_artist_link = null
 	preset_bounty_enabled = FALSE
 	preset_bounty_poster_key = null
 	preset_bounty_severity_key = null

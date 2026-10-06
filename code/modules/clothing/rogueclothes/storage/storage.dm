@@ -371,7 +371,7 @@
 	else
 		icon_state = "rucksack_untied"
 
-/obj/item/storage/belt/rogue/leather/plaquegold/steward
+/obj/item/storage/belt/rogue/leather/plaquegold/noble
 	name = "fancy gold belt"
 	desc = "A dark belt with real gold making up the buckle and highlights. How bougie."
 	icon_state = "stewardbelt"
@@ -725,3 +725,9 @@
 	icon_state = "clothsash"
 	sewrepair = TRUE
 	salvage_result = /obj/item/natural/cloth
+
+/obj/item/storage/belt/rogue/leather/belthooks
+	name = "belt hooks"
+	desc = "Etruscan-designed leather-wrapped hooks with an actuating hinge. To clip things to other things."
+	icon_state = "belthooks"
+	// belt + empty onmob sprite = welcome to fashion 💀

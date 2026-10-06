@@ -30,7 +30,7 @@
 	job_traits = list(TRAIT_SELF_SUSTENANCE, TRAIT_STEELHEARTED)//Bandits and knaves truly though
 	vice_restrictions = list(/datum/charflaw/wanted)
 	same_job_respawn_delay = 30 MINUTES
-	cmode_music = 'sound/music/cmode/antag/combat_deadlyshadows.ogg'
+	cmode_music = sound("sound/music/cmode/antag/combat_deadlyshadows.ogg")
 	job_subclasses = list(
 		/datum/advclass/brigand,
 		/datum/advclass/hedgealchemist,

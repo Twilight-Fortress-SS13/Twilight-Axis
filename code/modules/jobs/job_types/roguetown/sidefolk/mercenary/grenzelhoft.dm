@@ -6,7 +6,7 @@
 	outfit = /datum/outfit/job/roguetown/mercenary/grenzelhoft
 	class_select_category = CLASS_CAT_GRENZELHOFT
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
-	cmode_music = 'sound/music/combat_grenzelhoft.ogg'
+	cmode_music = sound("sound/music/combat_grenzelhoft.ogg")
 	subclass_languages = list(/datum/language/grenzelhoftian)
 	traits_applied = list(TRAIT_HEAVYARMOR)
 	subclass_stats = list(
@@ -74,7 +74,7 @@
 	outfit = /datum/outfit/job/roguetown/mercenary/grenzelhoft_halberdier
 	class_select_category = CLASS_CAT_GRENZELHOFT
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
-	cmode_music = 'sound/music/combat_grenzelhoft.ogg'
+	cmode_music = sound("sound/music/combat_grenzelhoft.ogg")
 	subclass_languages = list(/datum/language/grenzelhoftian)
 	traits_applied = list(TRAIT_HEAVYARMOR)
 	subclass_stats = list(
@@ -141,7 +141,7 @@
 	traits_applied = list(TRAIT_SURVIVAL_EXPERT, TRAIT_DODGEEXPERT) //DE to be replaced with Concealment Expert
 	class_select_category = CLASS_CAT_GRENZELHOFT
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_MARKSMAN)
-	cmode_music = 'modular_twilight_axis/sound/music/combat_grenzelhoft_mage.ogg' //TA EDIT
+	cmode_music = sound("modular_twilight_axis/sound/music/combat_grenzelhoft_mage.ogg") //TA EDIT
 	subclass_languages = list(/datum/language/grenzelhoftian)
 	subclass_stats = list(
 		STATKEY_SPD = 2,
@@ -233,7 +233,7 @@
 	outfit = /datum/outfit/job/roguetown/mercenary/grenzelhoft_mage
 	class_select_category = CLASS_CAT_GRENZELHOFT
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_WARMAGE)
-	cmode_music = 'modular_twilight_axis/sound/music/combat_grenzelhoft_mage.ogg' //TA EDIT
+	cmode_music = sound("modular_twilight_axis/sound/music/combat_grenzelhoft_mage.ogg") //TA EDIT
 	subclass_languages = list(/datum/language/grenzelhoftian)
 	traits_applied = list(TRAIT_INTELLECTUAL, TRAIT_STEELHEARTED, TRAIT_ALCHEMY_EXPERT)
 	subclass_mage_aspects = list("mastery" = FALSE, "major" = 1, "minor" = 2, "utilities" = 6, "allowed_majors" = list(/datum/magic_aspect/pyromancy, /datum/magic_aspect/geomancy, /datum/magic_aspect/ferramancy, /datum/magic_aspect/conjuration), "variants" = list(/datum/magic_aspect/pyromancy = "gefechtsgelehrter", /datum/magic_aspect/geomancy = "gefechtsgelehrter", /datum/magic_aspect/ferramancy = "gefechtsgelehrter", /datum/magic_aspect/conjuration = "gefechtsgelehrter"), "post_aspect_spells" = list(/datum/action/cooldown/spell/message, /datum/action/cooldown/spell/aetherknife), "ward" = TRUE)

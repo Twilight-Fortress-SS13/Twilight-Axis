@@ -274,6 +274,7 @@ const AdminPreferences = () => {
     deadmin_antagonist,
     auto_deadmin_heads,
     deadmin_head,
+    vv_dark_mode,
   } = data.admin_prefs;
 
   return (
@@ -307,6 +308,11 @@ const AdminPreferences = () => {
         <LabeledGridList.Item label="Hide Prayers">
           <Button onClick={() => act('toggle_prayers')}>
             {show_prayer ? 'Shown' : 'Hidden'}
+          </Button>
+        </LabeledGridList.Item>
+        <LabeledGridList.Item label="View Variables Theme">
+          <Button onClick={() => act('vv_dark_mode')}>
+            {vv_dark_mode ? 'Dark' : 'Light'}
           </Button>
         </LabeledGridList.Item>
         {allow_asaycolor ? (

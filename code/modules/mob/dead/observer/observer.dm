@@ -3,6 +3,8 @@ GLOBAL_LIST_EMPTY(ghost_images_simple) //this is a list of all ghost images as t
 
 GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_OBSERVER)
 GLOBAL_VAR_CONST(observer_move_delay_multiplier, 0.5)
+///Regular player ghosts step once per this many tick-lags; admin and eye observers use observer_move_delay_multiplier instead TA EDIT
+#define OBSERVER_STEP_TICKS 6
 #define ROGUE_GHOST_MAX_BODY_RANGE 20
 /mob/dead/observer
 	name = "ghost"
@@ -15,7 +17,7 @@ GLOBAL_VAR_CONST(observer_move_delay_multiplier, 0.5)
 	density = FALSE
 //	sight = SEE_TURFS | SEE_MOBS | SEE_OBJS
 	see_invisible = SEE_INVISIBLE_OBSERVER
-	see_in_dark = 10
+	see_in_dark = 100
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	invisibility = INVISIBILITY_OBSERVER
 	hud_type = /datum/hud/ghost
@@ -67,6 +69,8 @@ GLOBAL_VAR_CONST(observer_move_delay_multiplier, 0.5)
 	icon = 'icons/roguetown/mob/misc.dmi'
 	icon_state = "hollow"
 	alpha = 60
+	sight = 0
+	see_in_dark = 10
 
 /mob/dead/observer/profane/Move(NewLoc, direct)
 	// this is how i fixed it on my super old branch idk why the if client is there but im trusting old me
@@ -87,7 +91,8 @@ GLOBAL_VAR_CONST(observer_move_delay_multiplier, 0.5)
 
 
 /mob/dead/observer/eye
-	see_in_dark = 0
+	see_in_dark = 10
+	sight = 0
 	draw_icon = FALSE
 	hud_type = /datum/hud/obs
 
@@ -114,6 +119,8 @@ GLOBAL_VAR_CONST(observer_move_delay_multiplier, 0.5)
 	return FALSE
 
 /mob/dead/observer/eye/screye
+	sight = 0
+	see_in_dark = 10
 
 /mob/dead/observer/eye/screye/blackmirror
 	sight = SEE_TURFS | SEE_MOBS | SEE_OBJS
@@ -124,9 +131,16 @@ GLOBAL_VAR_CONST(observer_move_delay_multiplier, 0.5)
 
 
 
+///Actual per-tile move interval for this observer; the next_gmove gate and the glide size both derive from it so the slide matches the cadence
+/mob/dead/observer/proc/get_move_delay()
+	// TA EDIT: admin and eye observers keep the fast global multiplier, regular player ghosts step slower
+	if(istype(src, /mob/dead/observer/admin) || istype(src, /mob/dead/observer/eye))
+		return world.tick_lag * GLOB.observer_move_delay_multiplier
+	return world.tick_lag * OBSERVER_STEP_TICKS
+
 /mob/dead/observer/Initialize(mapload)
 	set_invisibility(GLOB.observer_default_invisibility)
-	set_glide_size(DELAY_TO_GLIDE_SIZE(3)) // 6 is atom/movable animation speed TA EDIT
+	set_glide_size(DELAY_TO_GLIDE_SIZE(get_move_delay())) // keep the slide in step with the client/Move cadence TA EDIT
 
 	add_verb(src, list(
 		/mob/dead/observer/proc/dead_tele,

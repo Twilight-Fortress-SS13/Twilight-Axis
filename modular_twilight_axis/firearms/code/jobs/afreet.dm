@@ -4,7 +4,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 	outfit = /datum/outfit/job/roguetown/bandit/twilight_afreet
 	category_tags = list(CTAG_BANDIT)
-	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_corsair.ogg'
+	cmode_music = sound("modular_twilight_axis/firearms/sound/music/combat_corsair.ogg")
 	maximum_possible_slots = 2
 	subclass_languages = list(/datum/language/grenzelhoftian)
 	traits_applied = list(TRAIT_FIREARMS_MARKSMAN, TRAIT_STEELHEARTED, TRAIT_DODGEEXPERT)

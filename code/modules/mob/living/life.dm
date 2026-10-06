@@ -68,7 +68,6 @@
 	if(HAS_TRAIT(src, TRAIT_WOUNDREGEN))
 		for(var/datum/wound/wound as anything in get_wounds())
 			wound.heal_wound(10)
-
 	// REGEN RESTRICTIONS -- Starving, or being on fire/silverfired.
 	var/noregen = nutrition < NUTRITION_LEVEL_STARVING - 75 || has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder) || has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
 

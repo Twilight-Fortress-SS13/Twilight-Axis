@@ -200,6 +200,8 @@
 			var/datum/virtue/origin/chosen_origin = GLOB.virtues[chosen_path]
 			if(!chosen_origin)
 				return FALSE
+			if(istype(chosen_origin, /datum/virtue/origin/unselectable))
+				return FALSE
 
 			if(!origin_check(chosen_origin, preferences.pref_species))
 				var/warning_text = "Это происхождение недоступно для выбранной расы."
@@ -247,6 +249,8 @@
 					if(!istype(O, /datum/virtue/origin))
 						continue
 					if(!O.name)
+						continue
+					if(istype(O, /datum/virtue/origin/unselectable))
 						continue
 					if(O.map_group_order != group_order)
 						continue

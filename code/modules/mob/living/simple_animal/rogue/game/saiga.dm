@@ -190,8 +190,8 @@
 		add_saddleicon(gender == FEMALE ? "saddle-f-above" : "saddle-above", gender == FEMALE ? "saddle-f" : "saddle")
 		add_ridericon(gender == FEMALE ? "saiga_mounted" : "buck_mounted")
 
-/mob/living/simple_animal/hostile/retaliate/rogue/saiga/tamed()
-	..()
+/mob/living/simple_animal/hostile/retaliate/rogue/saiga/tamed(mob/user) // TA EDIT
+	..(user) // TA EDIT
 	deaggroprob = 30
 	setup_mount()
 

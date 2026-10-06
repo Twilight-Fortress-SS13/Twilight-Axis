@@ -2,10 +2,10 @@
 	name = "Sayyaf-Hurr"
 	tutorial = "«... Сайяф-Хурр, так назвали его пустынники, мечник опьянённый свободой и волей ...»"
 	allowed_sexes = list(MALE, FEMALE)
-	
+
 	outfit = /datum/outfit/job/roguetown/freeman/sayyaf_hurr
 	category_tags = list(CTAG_FREEMAN)
-	cmode_music = 'sound/music/cmode/antag/combat_thewall.ogg'
+	cmode_music = sound("sound/music/cmode/antag/combat_thewall.ogg")
 	traits_applied = list(TRAIT_MEDIUMARMOR)
 	subclass_stats = list(
 		STATKEY_STR = 4,

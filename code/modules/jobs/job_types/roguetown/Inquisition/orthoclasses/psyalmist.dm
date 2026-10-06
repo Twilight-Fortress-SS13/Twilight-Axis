@@ -54,7 +54,7 @@
 	/obj/item/paper/inqslip/arrival/ortho = 1, /obj/item/rogueweapon/huntingknife/idagger/silver/psydagger, /obj/item/rogueweapon/scabbard/sheath)
 
 
-	H.cmode_music = 'sound/music/cmode/adventurer/combat_outlander3.ogg'
+	H.cmode_music = sound("sound/music/cmode/adventurer/combat_outlander3.ogg")
 	H.mind?.AddSpell(new /datum/action/cooldown/spell/projectile/vicious_mockery)
 	if(H.mind)
 		var/instruments = list("Harp","Lute","Accordion","Guitar","Hurdy-Gurdy","Viola","Vocal Talisman", "Psyaltery", "Flute", "Drum", "Shamisen")

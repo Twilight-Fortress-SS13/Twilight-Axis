@@ -18,6 +18,7 @@
 	//skills alphabetically... this will be sloppy based on the descriptive name but easier for devs
 	/datum/skill/craft/alchemy,
 	/datum/skill/magic/arcane,
+	/datum/skill/combat/arcyne, //TA EDIT
 	/datum/skill/craft/armorsmithing,
 
 	/datum/skill/craft/blacksmithing,
@@ -60,6 +61,8 @@
 	/datum/skill/craft/weaponsmithing,
 
 	//Languages
+	/datum/language/gyedzenese, //TA EDIT
+	/datum/language/valorian, //TA EDIT
 	/datum/language/aavnic,
 	/datum/language/celestial,
 	/datum/language/raneshi,

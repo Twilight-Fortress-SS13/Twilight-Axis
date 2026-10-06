@@ -57,6 +57,6 @@
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/lunacy
 	head = /obj/item/flowercrown/briar
 
-	H.cmode_music = 'modular_twilight_axis/sound/music/combat_berserker.ogg'
+	H.cmode_music = sound("modular_twilight_axis/sound/music/combat_berserker.ogg")
 	to_chat(H, span_danger("You have abandoned your humanity to run wild under the moon. The call of nature fills your soul!"))
 	bountychoice_lunacy(H)

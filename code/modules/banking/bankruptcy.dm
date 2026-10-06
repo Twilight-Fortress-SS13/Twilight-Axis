@@ -40,7 +40,7 @@
 	if(discretionary_fund.balance > BANKRUPTCY_OPERATING_FLOOR)
 		var/excess = discretionary_fund.balance - BANKRUPTCY_OPERATING_FLOOR
 		discretionary_fund.balance = BANKRUPTCY_OPERATING_FLOOR
-		log_fund_entry(new /datum/treasury_entry("burn", discretionary_fund, null, excess, "Sequestration: residual purse forfeit"))
+		log_fund_entry(new /datum/treasury_entry("burn", discretionary_fund, null, excess, "Sequestration: residual Treasury forfeit"))
 	else if(discretionary_fund.balance < BANKRUPTCY_OPERATING_FLOOR)
 		var/topup = BANKRUPTCY_OPERATING_FLOOR - discretionary_fund.balance
 		discretionary_fund.balance = BANKRUPTCY_OPERATING_FLOOR
@@ -213,7 +213,7 @@
 /// Properties the Azurian Trading Company "seizes" against the Crown's debts on bankruptcy entry.
 /// Two or three are picked at random for the sequestration announcement.
 GLOBAL_LIST_INIT(atc_seizure_inventory, list(
-	"the Lord's gilded bathing-tub",
+	"the Grand Duke's gilded bathtub",
 	"a brace of falcons from the royal mews",
 	"an illuminated psyalter bound in shagreen",
 	"the great Otavan tapestry depicting the Hunt of the Boar",
@@ -222,16 +222,16 @@ GLOBAL_LIST_INIT(atc_seizure_inventory, list(
 	"the household reliquary (less the relic)",
 	"a Naledian astrolabe with three missing pins",
 	"the Steward's reserve of saffron and cinnamon",
-	"an ivory chess-set, six pieces short",
+	"an ivory chess set, six pieces short",
 	"a brocaded canopy bed, taken down with great difficulty",
 	"the chapel's spare gilt candelabrum",
-	"the last Marshal's silver-mounted hunting-horn",
-	"a portrait of a long-forgotten ancestor, slashed by a disgruntled debtor",
+	"the last Marshal's silver hunting horn",
+	"a portrait of a forgotten ancestor, slashed by a disgruntled debtor",
 	"the Court Cupbearer's pewter inventory and the keys to it",
-	"a Lirvanic jewel-encrusted bathtub of indecent proportion",
+	"a jeweled Lirvanic bathtub of indecent proportion",
 	"twelve casks of Bleakcoast firewine, marked for the Midwinter feast",
 	"a Kazengun lacquered wardrobe of indeterminate vintage",
-	"an Etruscan illuminated bestiary, water-damaged",
+	"an Etruscan illuminated bestiary, warped by damp",
 	"a clutch of Heartfelt clockwork toys, ticking faintly",
 	"the menagerie's pet civet, of doubtful temperament",
 	"the great clock of the Crown, dismantled in three carts",
@@ -279,18 +279,18 @@ GLOBAL_LIST_INIT(atc_seizure_inventory, list(
 
 /datum/controller/subsystem/treasury/proc/atc_loan_blocker_reason()
 	if(treasury_state == TREASURY_BANKRUPTCY)
-		return "The Company administers commerce. No further loans until sequestration lifts."
+		return "[capitalize(ta_economy_trade_company_the())] will not lend during sequestration."
 	if(GLOB.dayspassed >= ATC_LOAN_CLOSED_DAY)
 		return "The trade clerk is out of office. The loan window has closed for the week."
 	if(atc_loan_arrears_consumed)
-		return "A prior advance stands unpaid. The Company refuses a second loan until the first is settled."
+		return "[capitalize(ta_economy_trade_company_the())] will not lend again until the last loan is repaid."
 	return null
 
 /datum/controller/subsystem/treasury/proc/take_atc_loan(amount, mob/applicant)
 	var/blocker = atc_loan_blocker_reason()
 	if(blocker)
 		if(applicant)
-			to_chat(applicant, span_warning("Loan refused: [blocker]."))
+			to_chat(applicant, span_warning("Loan refused. [blocker]"))
 		return FALSE
 	amount = clamp(round(amount), ATC_LOAN_MIN_AMOUNT, ATC_LOAN_MAX_AMOUNT)
 	var/debt_owed = round(amount * (1 + ATC_LOAN_INTEREST_RATE))

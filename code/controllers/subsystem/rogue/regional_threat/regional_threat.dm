@@ -39,9 +39,8 @@ SUBSYSTEM_DEF(regionthreat)
 	var/list/threat_regions = list()
 
 /datum/controller/subsystem/regionthreat/fire(resumed)
-	var/player_count = GLOB.player_list.len
+	var/player_count = (SSeconomy && SSeconomy.simulated_player_scalar > 0) ? SSeconomy.simulated_player_scalar : GLOB.player_list.len
 	var/ishighpop = player_count >= LOWPOP_THRESHOLD
-
 	for(var/T in threat_regions)
 		var/datum/threat_region/TR = T
 		if(ishighpop)

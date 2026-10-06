@@ -130,6 +130,7 @@
 		GLOB.alive_mob_list += zombie// in both cure rot and medicine.
 
 		zombie.cmode_music = cmode_music
+		zombie.can_do_sex = initial(zombie.can_do_sex)
 
 		for(var/trait in traits_zombie)
 			REMOVE_TRAIT(zombie, trait, "[type]")
@@ -233,7 +234,7 @@
 	zombie.update_body()
 	zombie.playsound_local(get_turf(zombie), 'sound/music/wolfintro.ogg', 80, FALSE, pressure_affected = FALSE) //Extra bit of AURA
 	to_chat(zombie, span_infection("My mind grows numb and empty as unlyfe takes ahold of my body..."))
-	zombie.cmode_music = 'sound/music/combat_weird.ogg'
+	zombie.cmode_music = sound("sound/music/combat_weird.ogg")
 	zombie.apply_status_effect(/datum/status_effect/debuff/deadite_grace)
 
 	last_bite = world.time

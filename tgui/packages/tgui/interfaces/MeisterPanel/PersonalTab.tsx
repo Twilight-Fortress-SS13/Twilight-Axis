@@ -115,7 +115,7 @@ export const PersonalTab = ({ data, act }: TabProps) => {
             setCoinAmount('');
           }}
         >
-          Draw Coin
+          Withdraw
         </button>
       </div>
 

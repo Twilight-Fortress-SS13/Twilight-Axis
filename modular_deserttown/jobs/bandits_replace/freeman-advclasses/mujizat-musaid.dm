@@ -10,7 +10,7 @@
 	subclass_stats = list(
 		STATKEY_STR = 4,// LETS WRASSLE
 		STATKEY_WIL = 4,// This is our Go Big stat, we want lots of stamina for miracles and WRASSLIN.
-		STATKEY_LCK = 2,//We have a total of +12 in stats. 
+		STATKEY_LCK = 2,//We have a total of +12 in stats.
 		STATKEY_CON = 1
 	)
 	subclass_skills = list(
@@ -20,14 +20,14 @@
 		/datum/skill/craft/crafting = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/carpentry = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
-        /datum/skill/misc/tracking = SKILL_LEVEL_MASTER,        
+        /datum/skill/misc/tracking = SKILL_LEVEL_MASTER,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/sewing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/medicine = SKILL_LEVEL_JOURNEYMAN, // We can substitute for a sawbones, but aren't as good and dont have access to surgical tools
 		/datum/skill/misc/athletics = SKILL_LEVEL_MASTER, //We are the True Mathlete
 		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
 	)
-	cmode_music = 'sound/music/Iconoclast.ogg'
+	cmode_music = sound("sound/music/Iconoclast.ogg")
 
 /datum/outfit/job/roguetown/freeman/mujizat_musaid/pre_equip(mob/living/carbon/human/H)
 	..()

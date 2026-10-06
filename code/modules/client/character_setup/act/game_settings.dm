@@ -171,3 +171,7 @@
 			toggles ^= DEADMIN_POSITION_HEAD
 			save_preferences() // TA EDIT
 			return TRUE
+
+		if("vv_dark_mode")
+			vv_dark_mode = !vv_dark_mode
+			return TRUE

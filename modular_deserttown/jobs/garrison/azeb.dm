@@ -19,7 +19,7 @@
 	min_pq = 5
 	max_pq = null
 	round_contrib_points = 2
-	cmode_music = 'sound/music/combat_desert1.ogg'
+	cmode_music = sound("sound/music/combat_desert1.ogg")
 	job_traits = list(TRAIT_OUTDOORSMAN, TRAIT_WOODSMAN, TRAIT_SURVIVAL_EXPERT, TRAIT_SLAVE)
 	job_subclasses = list(
 		/datum/advclass/azeb/ranger,

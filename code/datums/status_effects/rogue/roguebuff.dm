@@ -288,7 +288,7 @@
 	ADD_TRAIT(owner, TRAIT_NOPAIN, id)
 	ADD_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, id)
 	originalcmode = owner.cmode_music
-	owner.cmode_music = 'sound/music/combat_ozium.ogg'
+	owner.cmode_music = sound("sound/music/combat_ozium.ogg")
 
 /datum/status_effect/buff/herozium/on_remove()
 	owner.remove_stress(/datum/stressevent/ozium)
@@ -312,7 +312,7 @@
 	if(owner.has_status_effect(/datum/status_effect/debuff/sleepytime))
 		owner.remove_status_effect(/datum/status_effect/debuff/sleepytime)
 	originalcmode = owner.cmode_music
-	owner.cmode_music = 'sound/music/combat_starsugar.ogg'
+	owner.cmode_music = sound("sound/music/combat_starsugar.ogg")
 
 
 /datum/status_effect/buff/starsugar/on_remove()
@@ -652,6 +652,10 @@
 	owner.energy_add(9)
 
 #undef REWIND_AURA
+
+/datum/status_effect/buff/healing/soap
+	block_combat_mode = TRUE
+	healing_on_tick = 5 // quarter strength, sorry! it's soap, what'd you expect
 
 //lasts shorter than magic, one chomp every 3 seconds is good enough, let's not forget food can have multiple slices. This does not heal wounds, wounds are healed automatically like psydonitian trait, but it consumes 1% hunger a tick.
 #define CONSUME_AURA "consumehealing"
@@ -2075,6 +2079,11 @@
 	desc = "The gambit worked! I can do anything! My heart races, the throb of my wounds wavers."
 	icon_state = "adrrush"
 
+/atom/movable/screen/alert/status_effect/buff/adrenaline_rush/psydon
+	name = "Endure"
+	desc = "I suffer in His light; my bleeding comes to a still."
+	icon_state = "adrrush"
+
 /datum/status_effect/buff/adrenaline_rush
 	id = "adrrush"
 	status_type = STATUS_EFFECT_REPLACE
@@ -2082,6 +2091,7 @@
 	duration = 18 SECONDS
 	examine_text = "SUBJECTPRONOUN is amped up!"
 	effectedstats = list(STATKEY_WIL = 1)
+	var/adrenaline_stam = TRUE
 	var/blood_restore = 30
 
 /datum/status_effect/buff/adrenaline_rush/on_apply()
@@ -2091,7 +2101,8 @@
 	if(istype(human))
 		human.playsound_local(get_turf(human), 'sound/misc/adrenaline_rush.ogg', 100, TRUE)
 		human.blood_volume = min((human.blood_volume + blood_restore), BLOOD_VOLUME_NORMAL)
-		human.stamina -= max((human.stamina - (human.max_stamina / 2)), 0)
+		if(adrenaline_stam)
+			human.stamina -= max((human.stamina - (human.max_stamina / 2)), 0)
 		human.pain_threshold += 50
 
 /datum/status_effect/buff/adrenaline_rush/on_remove()
@@ -2116,6 +2127,13 @@
 
 /datum/status_effect/buff/adrenaline_rush/graggar
 	effectedstats = list(STATKEY_CON = 3)
+
+/datum/status_effect/buff/adrenaline_rush/psydon
+	blood_restore = 0
+	alert_type = /atom/movable/screen/alert/status_effect/buff/adrenaline_rush/psydon
+	examine_text = "SUBJECTPRONOUN is enduring!"
+	duration = 8 SECONDS //This is on a 30 second cooldown miracle.
+	adrenaline_stam = FALSE
 
 /datum/status_effect/buff/nocblessing
 	id = "nocblessing"
@@ -2551,22 +2569,38 @@
 /datum/status_effect/buff/journey_ending
 	id = "journey_ending"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/journey_ending
-	effectedstats = list(STATKEY_SPD = 2, STATKEY_WIL = 2)
+	effectedstats = list(STATKEY_SPD = 1, STATKEY_CON = 2)
 	duration = -1
 
 /datum/status_effect/buff/journey_end
 	id = "journey_end"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/journey_end
-	effectedstats = list(STATKEY_STR = 2, STATKEY_SPD = 3, STATKEY_WIL = 2)
-	examine_text = "<font color='blue'>SUBJECTPRONOUN has entered a Battle Trance!</font>"
+	effectedstats = list(STATKEY_STR = 2, STATKEY_SPD = 3, STATKEY_CON = 2)
 	duration = -1
 
 /datum/status_effect/buff/journey_end_final //takes ages for them to die to bloodloss, but they *do* die to it
 	id = "journey_end_final"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/journey_end_final
-	effectedstats = list(STATKEY_STR = 5, STATKEY_SPD = 6, STATKEY_WIL = 4)
-	examine_text = "<font color='blue'>SUBJECTPRONOUN has entered a Battle Trance!</font>"
+	effectedstats = list(STATKEY_STR = 5, STATKEY_SPD = 6, STATKEY_CON = 3)
 	duration = -1
+
+/datum/status_effect/buff/journey_ending/on_apply()
+	. = ..()
+	to_chat(owner, span_warning("Clarity in the flow of blood and steel, measured, tempered."))
+
+/datum/status_effect/buff/journey_end/on_apply()
+	. = ..()
+	examine_text = "<font color='#5454FF'>SUBJECTPRONOUN [owner.p_have(FALSE)] steadied [owner.p_their(FALSE)] resolve, clinging to fading embers!</font>"
+	to_chat(owner, span_warning("Each breath burns in your lungs, doubt clawing at your very self."))
+
+/datum/status_effect/buff/journey_end_final/on_apply()
+	. = ..()
+	examine_text = "<font color='#5454FF'>SUBJECTPRONOUN [owner.p_are(FALSE)] drawing from [owner.p_their(FALSE)] final reserves, pushing the body to its limits!</font>"
+	to_chat(owner, span_warning("Numb fingers, blurred vision and a sense of serenity. Have you finally found a purpose?"))
+
+/datum/status_effect/buff/journey_end_final/on_remove()
+	. = ..()
+	to_chat(owner, span_warning("Not yet, not here... your search continues."))
 
 /datum/status_effect/buff/stagehands_silence
 	id = "Stagehand"
@@ -2975,3 +3009,39 @@
 /datum/status_effect/buff/overclock/on_remove()
 	. = ..()
 	to_chat(owner, span_notice("I feel the hum of my prosthetics slow down, they need time to recharge."))
+
+//visual effects 4 skeles
+
+#define SAPPERGLOW_FILTER "sapper_exploding_glow"
+/atom/movable/screen/alert/status_effect/buff/sapper_exploding
+	name = "Violently Overcharging"
+	desc = "I am about to give my lyfe and vessel up for my Exarch to level the obstructions of Progress! ZIZO! ZIZO! ZIZO!"
+	icon_state = "zizospite"
+
+/datum/status_effect/buff/sapper_exploding // Hey did u follow us from ritualcircles? Cool, okay this stuff is pretty simple yeah? Most ritual circles use some sort of status effects to get their effects ez.
+	id = "sapper_exploding"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/sapper_exploding
+	duration = -1 //does it matter, we're gonna gib
+	status_type = STATUS_EFFECT_REFRESH
+	effectedstats = list(STATKEY_CON = -2) // Makes them, easier to decapitate and such, downside. THIS IS GOING TO FUCKING HURT IF THEY POP IT OFF!
+	examine_text = "SUBJECTPRONOUN violently glows with POTENT magicka, they're going to explode!"
+	var/list/mobs_affected
+	var/obj/effect/dummy/lighting_obj/moblight/mob_light_obj
+	var/outline_colour = "#ff0000" //evil fucking color, get awae!
+
+/datum/status_effect/buff/sapper_exploding/on_apply()
+	. = ..()
+	if (!.)
+		return
+	var/filter = owner.get_filter(SAPPERGLOW_FILTER)
+	if (!filter)
+		owner.add_filter(SAPPERGLOW_FILTER, 2, list("type" = "outline", "color" = outline_colour, "alpha" = 60, "size" = 2))
+
+	if(!mob_light_obj || QDELETED(mob_light_obj))
+		mob_light_obj = owner.mob_light("#ff0000", 5, 2)
+	else
+		mob_light_obj.set_light(5, null, 2, l_color = "#ff0000")
+
+	return TRUE
+
+#undef SAPPERGLOW_FILTER

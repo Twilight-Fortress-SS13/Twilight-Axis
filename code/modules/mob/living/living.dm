@@ -195,6 +195,7 @@
 		if(isliving(M))
 			var/sprint_distance = sprinted_tiles
 			var/instafail = FALSE
+			var/fail_reason
 			toggle_rogmove_intent(MOVE_INTENT_WALK, TRUE)
 			if(HAS_TRAIT(src, TRAIT_PACIFISM)) // No Con-Checking if you're a pacifist. You aren't MEAN!!!
 				return FALSE
@@ -211,6 +212,7 @@
 				if(0 to 1)
 					self_points -= 99
 					instafail = TRUE
+					fail_reason = "no headstart"
 				// One to two tile between the people
 				if(2 to 3)
 					self_points -= 2
@@ -239,10 +241,12 @@
 			if(src.dir != src.sprint_dir)
 				self_points -= 99
 				instafail = TRUE
+				fail_reason = "changed direction too late"
 				to_chat(src, span_warning("I changed direction too late!"))
 			if(lying)
 				self_points -= 99
 				instafail = TRUE
+				fail_reason = "charging while prone"
 				to_chat(src, span_warning("I can't charge anyone from the ground!"))
 			var/clash_blocked
 			if(L.has_status_effect(/datum/status_effect/buff/clash) && !instafail)
@@ -254,6 +258,7 @@
 				else
 					playsound(src, 'sound/combat/clash_charge.ogg', 100)
 				clash_blocked = TRUE
+				fail_reason = "target was clashing"
 			if(self_points > target_points)
 				L.Knockdown(1)
 			if(self_points < target_points)
@@ -277,6 +282,15 @@
 					visible_message(span_warning("[src] gets tripped by [L]!"), span_warning("I get tripped by [L]!"))
 			else
 				visible_message(span_warning("[src] charges into [L]!"), span_warning("I charge into [L]!"))
+			var/charge_outcome
+			if(self_points > target_points)
+				charge_outcome = "SUCCESS"
+			else if(self_points == target_points)
+				charge_outcome = "DRAW"
+			else
+				charge_outcome = "FAILED[fail_reason ? ", [fail_reason]" : ""]"
+			var/turf/charge_end = get_turf(src)
+			log_combat(src, L, "charged into", addition = "([charge_outcome]) (HEADSTART: [sprint_distance]) (START: [sprint_start_coord || "unknown"]) (END: [COORD(charge_end)]) (POINTS: [self_points] vs [target_points])", zone = BODY_ZONE_CHEST, damtype = BRUTE)
 			return TRUE
 
 	//okay, so we didn't switch. but should we push?
@@ -993,6 +1007,7 @@
 	set_disgust(0)
 	set_sunder(0)
 	set_nutrition(NUTRITION_LEVEL_FED + 50)
+	set_hydration(HYDRATION_LEVEL_FULL)
 	bodytemperature = BODYTEMP_NORMAL
 	set_blindness(0)
 	set_blurriness(0)
@@ -1004,6 +1019,7 @@
 	cure_paralysis()
 	hallucination = 0
 	heal_overall_damage(INFINITY, INFINITY, INFINITY, null, TRUE) //heal brute and burn dmg on both organic and robotic limbs, and update health right away.
+	energy_add(max_energy)
 	for(var/datum/wound/wound as anything in get_wounds())
 		if(admin_revive)
 			qdel(wound)
@@ -1066,6 +1082,9 @@
 	var/turf/T = loc
 
 	if(m_intent == MOVE_INTENT_RUN)
+		if(!sprinted_tiles)
+			var/turf/sprint_origin = get_turf(src)
+			sprint_start_coord = COORD(sprint_origin)
 		sprinted_tiles++
 		sprint_dir = dir
 
@@ -1929,6 +1948,9 @@
 		return
 
 	if(HAS_TRAIT(spread_to, TRAIT_NOFIRE) || HAS_TRAIT(src, TRAIT_NOFIRE))
+		return
+
+	if(HAS_TRAIT(src, TRAIT_NOFIREDECAY))
 		return
 
 	if(!prob(25))

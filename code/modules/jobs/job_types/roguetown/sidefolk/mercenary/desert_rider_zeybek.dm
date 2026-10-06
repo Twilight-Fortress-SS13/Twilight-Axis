@@ -2,11 +2,11 @@
 	name = "Desert Rider Zeybek"
 	tutorial = "The Desert Riders are a band of mercenaries known for their loose morals and high effectiveness. From an evil, ignoble beginning as an infamous company meant to track down runaway slaves, they grew into a considerable force. Their skill with long and short blades are famed and feared the world over."
 	allowed_sexes = list(MALE, FEMALE)
-	
+
 	outfit = /datum/outfit/job/roguetown/mercenary/desert_rider_zeybek
 	class_select_category = CLASS_CAT_RANESHENI
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_MARKSMAN)
-	cmode_music = 'sound/music/combat_desertrider.ogg'
+	cmode_music = sound("sound/music/combat_desertrider.ogg")
 	subclass_languages = list(/datum/language/raneshi)
 	traits_applied = list(TRAIT_DODGEEXPERT)
 	subclass_stats = list(

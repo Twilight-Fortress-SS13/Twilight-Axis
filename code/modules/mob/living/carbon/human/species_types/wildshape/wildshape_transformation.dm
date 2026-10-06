@@ -18,7 +18,7 @@
 		allowed_types = list(/obj/item/rogueweapon/woodstaff,
 											/obj/item/storage/belt
 											)
-	
+
 	drop_all_held_items() //Drop what were in your hands
 
 	for(var/obj/item/I in src)
@@ -62,7 +62,7 @@
 	W.gender = gender
 	W.regenerate_icons()
 	W.stored_mob = src
-	W.cmode_music = 'sound/music/cmode/garrison/combat_warden.ogg'
+	W.cmode_music = sound("sound/music/cmode/garrison/combat_warden.ogg")
 	playsound(W.loc, pick('sound/combat/gib (1).ogg','sound/combat/gib (2).ogg'), 200, FALSE, 3)
 	if (W.dna.species?.gibs_on_shapeshift)
 		playsound(W.loc, pick('sound/combat/gib (1).ogg','sound/combat/gib (2).ogg'), 200, FALSE, 3)
@@ -93,14 +93,14 @@
 	if(woundlist.len)
 		for(var/datum/wound/wound in woundlist)
 			if (istype(wound, /datum/wound/dismemberment))
-				continue				
+				continue
 			var/target_zone = wound.bodypart_owner.body_zone
 			if (target_zone == BODY_ZONE_TAUR)
 				target_zone = pick(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
-			
+
 			var/bleedrate = wound.bleed_rate
 			var/obj/item/bodypart/w_bp = W.get_bodypart(target_zone)
-			
+
 			wound.apply_to_bodypart(w_bp, silent = TRUE, crit_message = FALSE)
 			wound.set_bleed_rate(bleedrate) // restore bleed rate, since apply_to_bodypart resets it.
 
@@ -127,7 +127,7 @@
 	W.grant_language(/datum/language/beast)
 	W.base_intents = list(INTENT_HELP, INTENT_DISARM, INTENT_GRAB)
 	W.update_a_intents()
-	
+
 	// TA edit start - new ERP SYSTEM
 	// if(getorganslot(ORGAN_SLOT_PENIS))
 	// 	W.internal_organs_slot[ORGAN_SLOT_PENIS] = /obj/item/organ/penis/knotted/big
@@ -144,7 +144,7 @@
 	ADD_TRAIT(src, TRAIT_NOSLEEP, TRAIT_SOURCE_WILDSHAPE)
 	ADD_TRAIT(src, TRAIT_NOBREATH, TRAIT_SOURCE_WILDSHAPE)
 	ADD_TRAIT(src, TRAIT_NOPAIN, TRAIT_SOURCE_WILDSHAPE)
-	ADD_TRAIT(src, TRAIT_TOXIMMUNE, TRAIT_SOURCE_WILDSHAPE)	
+	ADD_TRAIT(src, TRAIT_TOXIMMUNE, TRAIT_SOURCE_WILDSHAPE)
 	ADD_TRAIT(src, TRAIT_NOHUNGER, TRAIT_SOURCE_WILDSHAPE)
 	ADD_TRAIT(src, TRAIT_NOMOOD, TRAIT_SOURCE_WILDSHAPE)
 	ADD_TRAIT(src, TRAIT_PACIFISM, TRAIT_SOURCE_WILDSHAPE) // just an extra layer of protection in case something will go wrong
@@ -204,10 +204,10 @@
 	if(woundlist.len)
 		for(var/datum/wound/wound in woundlist)
 			var/target_zone = wound.bodypart_owner.body_zone
-			
+
 			var/bleedrate = wound.bleed_rate
 			var/obj/item/bodypart/w_bp = W.get_bodypart(target_zone)
-			
+
 			wound.apply_to_bodypart(w_bp, silent = TRUE, crit_message = FALSE)
 			wound.set_bleed_rate(bleedrate)
 

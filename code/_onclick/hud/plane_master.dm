@@ -276,3 +276,68 @@
 	blend_mode = BLEND_MULTIPLY
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	render_target = SUNLIGHTING_RENDER_TARGET
+
+/atom/movable/screen/plane_master/space_backdrop
+	name = "space backdrop plane master"
+	plane = PLANE_SPACE
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/hud
+	name = "hud plane master"
+	plane = HUD_PLANE
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/clickcatcher
+	name = "clickcatcher plane master"
+	plane = CLICKCATCHER_PLANE
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/game_world_highest
+	name = "highest game world plane master"
+	plane = GAME_PLANE_HIGHEST
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/blackness
+	name = "blackness plane master"
+	plane = BLACKNESS_PLANE
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/emissive
+	name = "emissive plane master"
+	plane = EMISSIVE_PLANE
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/above_lighting
+	name = "above lighting plane master"
+	plane = ABOVE_LIGHTING_PLANE
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/fullscreen
+	name = "fullscreen plane master"
+	plane = FULLSCREEN_PLANE
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/above_hud
+	name = "above hud plane master"
+	plane = ABOVE_HUD_PLANE
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/splashscreen
+	name = "splashscreen plane master"
+	plane = SPLASHSCREEN_PLANE
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/balloon_chat
+	name = "balloon chat plane master"
+	plane = BALLOON_CHAT_PLANE
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/point
+	name = "point plane master"
+	plane = POINT_PLANE
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/lobby_menu
+	name = "lobby menu plane master"
+	plane = LOBBY_MENU_PLANE
+	appearance_flags = PLANE_MASTER

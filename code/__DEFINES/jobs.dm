@@ -116,6 +116,7 @@
 #define ADVENTURER	(1<<0)
 #define COURTAGENT	(1<<1)
 #define TRADER		(1<<2)
+#define LAMPLIGHTER (1<<3)
 
 #define INQUISITION			(1<<11)
 
@@ -261,6 +262,7 @@
 #define JDO_ADVENTURER 9
 #define JDO_COURTAGENT 9.1
 #define JDO_TRADER 9.2
+#define JDO_LAMPLIGHTER 9.3
 
 // Inquisition
 #define JDO_INQUISITOR 10

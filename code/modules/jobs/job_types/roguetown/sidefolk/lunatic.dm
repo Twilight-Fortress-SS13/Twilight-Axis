@@ -22,7 +22,7 @@
 	display_order = JDO_LUNATIC
 	selection_color = JCOLOR_SIDEFOLK
 
-	cmode_music = 'sound/music/combat_bum.ogg'
+	cmode_music = sound("sound/music/combat_bum.ogg")
 
 	job_traits = list(TRAIT_JESTERPHOBIA)
 

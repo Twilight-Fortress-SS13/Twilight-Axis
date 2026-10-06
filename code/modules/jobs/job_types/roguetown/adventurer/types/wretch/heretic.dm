@@ -57,11 +57,18 @@
 	to_chat(H, span_warning("You father your unholy cause through the most time-tested of ways: hard, heavy steel in both arms and armor."))
 	H.set_blindness(0)
 	if(H.mind)
-		var/weapons = list("Longsword", "Mace", "Flail", "Battle Axe", "Billhook")
+		var/weapons = list("Arming Sword", "Longsword", "Mace", "Flail", "Battle Axe", "Billhook")
 		if(!HAS_TRAIT(H, TRAIT_PSYDONIAN_GRIT)) //Remove Regular Axe BEFORE choice, is picked (so we don't mislead)
 			weapons += "Steel Axe"
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		switch(weapon_choice)
+			if("Arming Sword")
+				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
+				if(HAS_TRAIT(H, TRAIT_PSYDONIAN_GRIT))
+					r_hand = /obj/item/rogueweapon/sword/psy
+				else
+					r_hand = /obj/item/rogueweapon/sword
+				beltr = /obj/item/rogueweapon/scabbard/sword
 			if("Longsword")
 				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
 				beltr = /obj/item/rogueweapon/scabbard/sword
@@ -104,9 +111,7 @@
 
 	if (istype (H.patron, /datum/patron/inhumen/zizo))
 		if(H.mind)
-			H.mind.AddSpell(new /datum/action/cooldown/spell/minion_order)
 			add_verb(H, /mob/living/carbon/human/proc/revelations)
-			H.mind.AddSpell(new /datum/action/cooldown/spell/gravemark)
 			H.mind?.current.faction += "[H.name]_faction"
 		ADD_TRAIT(H, TRAIT_GRAVEROBBER, TRAIT_GENERIC)
 	mask = /obj/item/clothing/mask/rogue/facemask/steel
@@ -157,7 +162,7 @@
 
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
-			H.cmode_music = 'sound/music/combat_heretic.ogg'
+			H.cmode_music = sound("sound/music/combat_heretic.ogg")
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/iron, SLOT_RING, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/book/rogue/bibble/zizo,SLOT_IN_BACKPACK, TRUE)
 			H.change_stat(STATKEY_INT, 1)
@@ -165,7 +170,7 @@
 			H.change_stat(STATKEY_WIL, 1)
 			H.adjust_skillrank(/datum/skill/magic/holy, 1, TRUE) // TA ADDITION - ADDS SKILLRANK BONUSES TO OTHER PATRONS
 		if(/datum/patron/inhumen/matthios)
-			H.cmode_music = 'sound/music/combat_matthios.ogg'
+			H.cmode_music = sound("sound/music/combat_matthios.ogg")
 			helmets += list("Decorated Bucket Helmet" = /obj/item/clothing/head/roguetown/helmet/heavy/bucket/gold/cleric,) // This is so stupid. - Just a little, but it does look cool!
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios, SLOT_RING, TRUE)
 			H.change_stat(STATKEY_WIL, 2)
@@ -176,7 +181,7 @@
 			H.adjust_skillrank(/datum/skill/misc/lockpicking, 1, TRUE)
 			// TA ADDITION END
 		if(/datum/patron/inhumen/baotha)
-			H.cmode_music = 'sound/music/combat_baotha.ogg'
+			H.cmode_music = sound("sound/music/combat_baotha.ogg")
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/baotha, SLOT_RING, TRUE)
 			H.change_stat(STATKEY_INT, 1)
 			H.change_stat(STATKEY_PER, 3)
@@ -186,7 +191,7 @@
 			H.adjust_skillrank(/datum/skill/craft/alchemy, 1, TRUE)
 			// TA ADDITION END
 		if(/datum/patron/inhumen/graggar)
-			H.cmode_music = 'sound/music/combat_graggar.ogg'
+			H.cmode_music = sound("sound/music/combat_graggar.ogg")
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/graggar, SLOT_RING, TRUE)
 			H.change_stat(STATKEY_STR, 2)
 			H.change_stat(STATKEY_WIL, 1)
@@ -224,7 +229,7 @@
 			H.change_stat(STATKEY_PER, 2)
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/xylix, SLOT_RING, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/cloak/templar/xylixian, SLOT_CLOAK, TRUE)
-			H.cmode_music = 'sound/music/combat_jester.ogg'
+			H.cmode_music = sound("sound/music/combat_jester.ogg")
 			H.adjust_skillrank(/datum/skill/misc/climbing, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/misc/lockpicking, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/misc/music, 1, TRUE)
@@ -233,7 +238,7 @@
 			H.change_stat(STATKEY_PER, 2)
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/dendor, SLOT_RING, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/cloak/tabard/crusader/dendor, SLOT_CLOAK, TRUE)
-			H.cmode_music = 'sound/music/cmode/garrison/combat_warden.ogg'
+			H.cmode_music = sound("sound/music/cmode/garrison/combat_warden.ogg")
 			H.adjust_skillrank(/datum/skill/labor/farming, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/misc/climbing, 1, TRUE)
 		if(/datum/patron/divine/necra)
@@ -326,7 +331,7 @@
 			H.equip_to_slot_or_del(new /obj/item/clothing/cloak/tabard/psydontabard/black, SLOT_CLOAK, TRUE)
 			H.change_stat(STATKEY_WIL, 2)
 			H.change_stat(STATKEY_CON, 2)
-			H.cmode_music = 'sound/music/cmode/antag/combat_adonai.ogg'
+			H.cmode_music = sound("sound/music/cmode/antag/combat_adonai.ogg")
 			helmets += list("Psydonic Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/psydonbarbute,
 				"Psydonic Sallet" = /obj/item/clothing/head/roguetown/helmet/heavy/psysallet,
 				"Psydonic Armet" = /obj/item/clothing/head/roguetown/helmet/heavy/psydonhelm,
@@ -374,6 +379,7 @@
 	)
 	subclass_stashed_items = list(
 		"Sewing Kit" =	/obj/item/repair_kit,
+		"Stashed Funds" = /obj/item/roguecoin/silver/pile/wretchpile,
 	)
 	extra_context = "This subclass gain the Wound Heal miracle and the Convert Heretic spell."
 
@@ -398,7 +404,7 @@
 		/obj/item/ritechalk = 1,
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpot = 1,	//Small health vial
 		)
-	H.cmode_music = 'sound/music/cmode/antag/combat_cutpurse.ogg'
+	H.cmode_music = sound("sound/music/cmode/antag/combat_cutpurse.ogg")
 	if(H.mind)
 		var/weapons = list("Daggers", "Rapier", "Sabre", "Bow", "Crossbow", "Slurbow")
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
@@ -492,8 +498,6 @@
 
 	if (istype (H.patron, /datum/patron/inhumen/zizo))
 		if(H.mind)
-			H.mind.AddSpell(new /datum/action/cooldown/spell/minion_order)
-			H.mind.AddSpell(new /datum/action/cooldown/spell/gravemark)
 			H.mind?.current.faction += "[H.name]_faction"
 		ADD_TRAIT(H, TRAIT_GRAVEROBBER, TRAIT_GENERIC)
 	H.mind?.AddSpell(new /datum/action/cooldown/spell/convert_heretic)
@@ -503,12 +507,12 @@
 	. = ..()
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
-			H.cmode_music = 'sound/music/combat_heretic.ogg'
+			H.cmode_music = sound("sound/music/combat_heretic.ogg")
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/iron, SLOT_RING, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/book/rogue/bibble/zizo,SLOT_IN_BACKPACK, TRUE)
 			H.adjust_skillrank(/datum/skill/magic/holy, 1, TRUE) // TA ADDITION - ADDS SKILLRANK BONUSES TO OTHER PATRONS
 		if(/datum/patron/inhumen/matthios)
-			H.cmode_music = 'sound/music/combat_matthios.ogg'
+			H.cmode_music = sound("sound/music/combat_matthios.ogg")
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios, SLOT_RING, TRUE)
 			// TA ADDITION START - ADDS SKILLRANK BONUSES TO OTHER PATRONS
 			H.adjust_skillrank(/datum/skill/misc/stealing, 1, TRUE)
@@ -516,7 +520,7 @@
 			H.adjust_skillrank(/datum/skill/misc/lockpicking, 1, TRUE)
 			// TA ADDITION END
 		if(/datum/patron/inhumen/baotha)
-			H.cmode_music = 'sound/music/combat_baotha.ogg'
+			H.cmode_music = sound("sound/music/combat_baotha.ogg")
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/baotha, SLOT_RING, TRUE)
 			// TA ADDITION START - ADDS SKILLRANK BONUSES TO OTHER PATRONS
 			H.adjust_skillrank(/datum/skill/misc/medicine, 1, TRUE)
@@ -524,7 +528,7 @@
 			H.adjust_skillrank(/datum/skill/craft/alchemy, 1, TRUE)
 			// TA ADDITION END
 		if(/datum/patron/inhumen/graggar)
-			H.cmode_music = 'sound/music/combat_graggar.ogg'
+			H.cmode_music = sound("sound/music/combat_graggar.ogg")
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/graggar, SLOT_RING, TRUE)
 			// TA ADDITION START - ADDS SKILLRANK BONUSES TO OTHER PATRONS
 			H.adjust_skillrank(/datum/skill/misc/athletics, 1, TRUE)
@@ -538,13 +542,13 @@
 			H.grant_language(/datum/language/abyssal)
 			ADD_TRAIT(H, TRAIT_WATERBREATHING, TRAIT_GENERIC)
 		if(/datum/patron/divine/xylix)
-			H.cmode_music = 'sound/music/combat_jester.ogg'
+			H.cmode_music = sound("sound/music/combat_jester.ogg")
 			H.adjust_skillrank(/datum/skill/misc/climbing, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/misc/lockpicking, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/misc/music, 1, TRUE)
 		if(/datum/patron/divine/dendor)
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/dendor, SLOT_RING, TRUE)
-			H.cmode_music = 'sound/music/cmode/garrison/combat_warden.ogg'
+			H.cmode_music = sound("sound/music/cmode/garrison/combat_warden.ogg")
 			H.adjust_skillrank(/datum/skill/labor/farming, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/misc/climbing, 1, TRUE)
 		if(/datum/patron/divine/necra)
@@ -588,7 +592,7 @@
 			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/otavan/psygloves, SLOT_GLOVES, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/shoes/roguetown/boots/psydonboots, SLOT_SHOES, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan, SLOT_PANTS, TRUE)
-			H.cmode_music = 'sound/music/cmode/antag/combat_adonai.ogg'
+			H.cmode_music = sound("sound/music/cmode/antag/combat_adonai.ogg")
 	H.equip_to_slot_or_del(new /obj/item/clothing/under/roguetown/heavy_leather_pants, SLOT_PANTS, TRUE)
 	H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat, SLOT_ARMOR, TRUE)
 	H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/gambeson, SLOT_SHIRT, TRUE)

@@ -3,7 +3,7 @@
 	tutorial = "A truly rare specimen among the ranks of the Inquisition - an agent of the Blackpowder Order now serving as an Ordinator, hunting down Psydon's many enemies, set upon this task by Marshal Inquisitionis himself. There are many mistakes a heretic can commit over their lifespan, but when facing a Blackpowder Marksman, their final error tends to be the fact that they brought a sword to a gunfight."
 	outfit = /datum/outfit/job/roguetown/inquisitor/blackpowder
 	subclass_languages = list(/datum/language/otavan)
-	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_blackpowder.ogg'
+	cmode_music = sound("modular_twilight_axis/firearms/sound/music/combat_blackpowder.ogg")
 	category_tags = list(CTAG_INQUSITOR)
 	classes = list(
 	"Vanguard" = "A veteran of the Blackpowder Order, hardened by years of service and entrusted with its deadliest weapons. Armed with a Doomsdae runelock rifle and blessed by Psydon, you bring overwhelming firepower and unwavering faith to the battlefield.",

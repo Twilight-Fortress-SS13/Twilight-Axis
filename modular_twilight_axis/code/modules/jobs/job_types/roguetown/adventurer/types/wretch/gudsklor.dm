@@ -6,7 +6,7 @@
 	class_select_category = CLASS_CAT_CLERIC
 	maximum_possible_slots = 2
 	subclass_languages = list(/datum/language/gronnic)
-	cmode_music = 'modular_twilight_axis/sound/music/combat_hakkerskaldyr.ogg'
+	cmode_music = sound("modular_twilight_axis/sound/music/combat_hakkerskaldyr.ogg")
 	traits_applied = list(TRAIT_STRONGBITE, TRAIT_CIVILIZEDBARBARIAN, TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN, TRAIT_DUALWIELDER, TRAIT_PSYCHOSIS)
 	subclass_stats = list(
 		STATKEY_STR = 3,
@@ -22,7 +22,7 @@
 		/datum/skill/combat/unarmed = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
 		/datum/skill/craft/tanning = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/magic/holy = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/craft/spiritism = SKILL_LEVEL_MASTER,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE
 	)
 
@@ -35,13 +35,17 @@
 	to_chat(H, span_warning("You are a Shaman of the Fjall, The Northern Empty. Your rituals call elder spirits and Gods through violence and ordinances which was forbidden even by your brothers."))
 	H.mind?.current.faction += "[H.name]_faction"
 	H.dna.species.soundpack_m = new /datum/voicepack/male/warrior()
+	if(H.mind)
+		for(var/recipe_type in shamanic_totem_block_recipe_types)
+			H.mind.teach_crafting_recipe(recipe_type)
+	H.grant_shamanic_totem_verbs(TRUE)
 
 	head = /obj/item/clothing/head/roguetown/helmet/leather/shaman_hood
 	gloves = /obj/item/clothing/gloves/roguetown/angle/gronnfur
-	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/atgervi
+	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/atgervi
 	pants = /obj/item/clothing/under/roguetown/trou/leather/atgervi
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/heavy
-	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/atgervi
+	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced/atgervi
 	backr = /obj/item/storage/backpack/rogue/satchel
 	belt = /obj/item/storage/belt/rogue/leather
 	neck = /obj/item/storage/belt/rogue/pouch/coins/poor
@@ -72,8 +76,6 @@
 		else
 			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/special
 
-	var/datum/devotion/C = new /datum/devotion(H, H.patron)
-	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_DEVOTEE, devotion_limit = CLERIC_REQ_1)
 	backpack_contents = list(
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/rogueweapon/huntingknife/stoneknife = 1

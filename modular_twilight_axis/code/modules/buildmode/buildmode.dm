@@ -26,7 +26,7 @@
 			location_desc = AREACOORD(T)
 
 	var/mode_desc = mode?.key || "unknown"
-	log_admin("Build Mode: [key_name(user)] used [mode_desc] ([click_desc]) on [target_desc] ([target_type]) at [location_desc].")
+	log_action("used [mode_desc] mode ([click_desc]) on [target_desc] ([target_type]) at [location_desc], build direction [dir2text(build_dir)] ([build_dir]).")
 
 /datum/buildmode_mode/ai_group
 	key = "AI Group"
@@ -60,8 +60,10 @@
 		to_chat(c, span_notice("No AI mobs are currently selected."))
 		return
 	if(alert(c, "Clear the current AI group selection?", "AI Group", "Clear", "Cancel") == "Clear")
+		var/cleared_count = length(selected_mobs)
 		clear_selection()
 		to_chat(c, span_notice("AI group selection cleared."))
+		BM.log_action("cleared AI Group selection containing [cleared_count] mob(s).")
 
 /datum/buildmode_mode/ai_group/handle_click(client/c, params, atom/object)
 	var/list/pa = params2list(params)
@@ -78,15 +80,25 @@
 					toggle_ai(L, c)
 					return
 				if(ctrl_click)
+					var/was_selected = (L in selected_mobs)
 					toggle_selected(L)
+					if(was_selected)
+						BM.log_action("removed [L] ([L.type]) at [AREACOORD(L)] from AI Group selection; [length(selected_mobs)] mob(s) remain selected.")
+					else
+						BM.log_action("added [L] ([L.type]) at [AREACOORD(L)] to AI Group selection; [length(selected_mobs)] mob(s) selected.")
 				else
+					var/previous_count = length(selected_mobs)
 					clear_selection()
 					select_mob(L)
+					BM.log_action("replaced AI Group selection ([previous_count] previous mob(s)) with [L] ([L.type]) at [AREACOORD(L)].")
 				to_chat(c, span_notice("AI group: [length(selected_mobs)] selected."))
 				return
 		if(!ctrl_click)
+			var/cleared_count = length(selected_mobs)
 			clear_selection()
 			to_chat(c, span_notice("AI group selection cleared."))
+			if(cleared_count)
+				BM.log_action("cleared AI Group selection containing [cleared_count] mob(s) by clicking a non-AI target.")
 		return
 	if(!right_click || !length(selected_mobs))
 		return
@@ -101,7 +113,7 @@
 			L.forceMove(target_turf)
 			moved++
 		to_chat(c, span_notice("Force-moved [moved] selected AI mob(s) to [target_turf]."))
-		log_admin("[key_name(c)] force-moved [moved] AI group mob(s) to [AREACOORD(target_turf)] using buildmode.")
+		BM.log_action("force-moved [moved] AI Group mob(s) to [target_turf] ([target_turf.type]) at [AREACOORD(target_turf)].")
 		return
 	if(shift_click && isliving(object))
 		order_follow(object, c)
@@ -159,10 +171,11 @@
 	if(L.ai_controller.ai_status == AI_STATUS_OFF)
 		L.ai_controller.reset_ai_status()
 		to_chat(c, span_notice("AI enabled for [L]."))
+		BM.log_action("enabled AI for [L] ([L.type]) at [AREACOORD(L)] using AI Group mode.")
 	else
 		L.ai_controller.set_ai_status(AI_STATUS_OFF)
 		to_chat(c, span_notice("AI paused for [L]."))
-	log_admin("[key_name(c)] toggled AI status for [key_name(L)] using AI Group buildmode.")
+		BM.log_action("paused AI for [L] ([L.type]) at [AREACOORD(L)] using AI Group mode.")
 
 /datum/buildmode_mode/ai_group/proc/prepare_controller(mob/living/L)
 	if(!L?.ai_controller)
@@ -192,7 +205,7 @@
 		L.ai_controller.wake_for_combat()
 		count++
 	to_chat(c, span_notice("Ordered [count] AI mob(s) to move to [target]."))
-	log_admin("[key_name(c)] ordered [count] AI group mob(s) to move to [AREACOORD(target)] using buildmode.")
+	BM.log_action("ordered [count] AI Group mob(s) to move to [target] ([target.type]) at [AREACOORD(target)].")
 
 /datum/buildmode_mode/ai_group/proc/order_follow(mob/living/target, client/c)
 	var/count = 0
@@ -205,7 +218,7 @@
 		L.ai_controller.wake_for_combat()
 		count++
 	to_chat(c, span_notice("Ordered [count] AI mob(s) to follow [target]."))
-	log_admin("[key_name(c)] ordered [count] AI group mob(s) to follow [key_name(target)] using buildmode.")
+	BM.log_action("ordered [count] AI Group mob(s) to follow [target] ([target.type]) at [AREACOORD(target)].")
 
 /datum/buildmode_mode/ai_group/proc/order_attack(mob/living/target, client/c)
 	var/count = 0
@@ -220,7 +233,7 @@
 		L.ai_controller.wake_for_combat()
 		count++
 	to_chat(c, span_notice("Ordered [count] AI mob(s) to attack [target]."))
-	log_admin("[key_name(c)] ordered [count] AI group mob(s) to attack [key_name(target)] using buildmode.")
+	BM.log_action("ordered [count] AI Group mob(s) to attack [target] ([target.type]) at [AREACOORD(target)].")
 
 /datum/buildmode_mode/outfit
 	key = "Outfit"
@@ -248,7 +261,7 @@
 		return
 	selected_outfit = new_outfit
 	to_chat(c, span_notice("Outfit buildmode selected: [selected_outfit]."))
-	log_admin("Build Mode: [key_name(c)] selected outfit [selected_outfit] for Outfit mode.")
+	BM.log_action("selected outfit [selected_outfit] for Outfit mode.")
 
 /datum/buildmode_mode/outfit/handle_click(client/c, params, atom/object)
 	if(!ishuman(object))
@@ -266,11 +279,11 @@
 			H.equipOutfit(selected_outfit)
 		H.regenerate_icons()
 		to_chat(c, span_notice("Applied outfit [selected_outfit] to [H]."))
-		log_admin("Build Mode: [key_name(c)] applied outfit [selected_outfit] to [key_name(H)] using Outfit mode.")
+		BM.log_action("applied outfit [selected_outfit] to [H] ([H.type]) at [AREACOORD(H)] using Outfit mode.")
 		return
 
 	if(pa.Find("right"))
 		H.delete_equipment()
 		H.regenerate_icons()
 		to_chat(c, span_notice("Stripped [H]."))
-		log_admin("Build Mode: [key_name(c)] stripped [key_name(H)] using Outfit mode.")
+		BM.log_action("stripped all equipment from [H] ([H.type]) at [AREACOORD(H)] using Outfit mode.")

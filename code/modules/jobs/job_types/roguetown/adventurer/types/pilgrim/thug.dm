@@ -9,7 +9,7 @@
 	outfit = /datum/outfit/job/roguetown/adventurer/thug/goon
 	category_tags = list(CTAG_TOWNER)
 	traits_applied = list(TRAIT_SEEPRICES_SHITTY)
-	cmode_music = 'sound/music/combat_bum.ogg'
+	cmode_music = sound("sound/music/combat_bum.ogg")
 	maximum_possible_slots = 2 // i dont want an army of towner thugs
 	category_tags = list(CTAG_PILGRIM, CTAG_TOWNER)
 	subclass_stats = list(
@@ -87,7 +87,7 @@
 	outfit = /datum/outfit/job/roguetown/adventurer/thug/wiseguy
 	category_tags = list(CTAG_TOWNER)
 	traits_applied = list(TRAIT_SEEPRICES_SHITTY, TRAIT_CICERONE, TRAIT_NUTCRACKER, TRAIT_ALCHEMY_EXPERT)
-	cmode_music = 'sound/music/combat_bum.ogg'
+	cmode_music = sound("sound/music/combat_bum.ogg")
 	maximum_possible_slots = 2 // i dont want an army of towner thugs
 	category_tags = list(CTAG_PILGRIM, CTAG_TOWNER)
 	subclass_stats = list(
@@ -158,7 +158,7 @@
 	outfit = /datum/outfit/job/roguetown/adventurer/thug/bigman
 	category_tags = list(CTAG_TOWNER)
 	traits_applied = list(TRAIT_SEEPRICES_SHITTY, TRAIT_STEELHEARTED, TRAIT_HARDDISMEMBER)
-	cmode_music = 'sound/music/combat_bum.ogg'
+	cmode_music = sound("sound/music/combat_bum.ogg")
 	maximum_possible_slots = 1 // i dont want an army of towner thugs
 	category_tags = list(CTAG_PILGRIM, CTAG_TOWNER)
 	subclass_stats = list(

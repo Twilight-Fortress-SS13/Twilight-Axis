@@ -19,6 +19,8 @@ LICH SKELETONS
 	ADD_TRAIT(H, TRAIT_LICHLAIR, TRAIT_GENERIC) //Ability to leave/enter the lich's lair without being softlocked inside.
 	H.taints_loot = TRUE
 
+	change_origin(H, /datum/virtue/origin/unselectable/skeleton, "Legion")
+
 // TA EDIT START
 /datum/advclass/greater_skeleton/lich/equipme(mob/living/carbon/human/H)
 	. = ..()
@@ -1074,7 +1076,7 @@ LICH SKELETONS
 
 /obj/item/rogueweapon/greatsword/grenz/flamberge/aalloy
 	name = "decrepit flamberge"
-	desc = "Tarnished bronze and decaying bogleather, meticulously woven together to fashion a flame-bladed swan song for Psydonia's final descendants. </br>'Oh, how valiant His sacrifice was! But now He lies, sleeping and witless to the world-anew.' </br>'And now, He sleeps. And now, He weeps.'"
+	desc = "Rotted metal and decaying bogleather, meticulously woven together to fashion a flame-bladed swan song for Psydonia's final descendants. </br>'Oh, how valiant His sacrifice was! But now He lies, sleeping and witless to the world-anew.' </br>'And now, He sleeps. And now, He weeps.'"
 	icon_state = "ancientflamb"
 	smeltresult = /obj/item/ingot/aaslag
 	max_integrity = 150
