@@ -859,6 +859,7 @@
 /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/grinning
 	name = "grinning cuirass"
 	icon_state = "grinningcuirass"
+	max_integrity = ARMOR_INT_CHEST_MEDIUM_STEEL + 100 //TA EDIT
 	desc = "The steel of this chestpiece is deformed into sharp fangs crowning under the breast, equal parts to catch blades and mock your opponent, while gilt tooth-inlays line the waist. Stay hungry, hustler. Get your laughs in while you can."
 
 /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/grinning/get_examine_highlight_status()
