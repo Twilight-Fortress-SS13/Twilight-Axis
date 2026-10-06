@@ -556,7 +556,6 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/rogueweapon/stoneaxe/battle/ice = TAT_ITEM_ENTRY("Deathfrost Axe", 10, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
 	/obj/item/rogueweapon/sword/long/exe/berserk = TAT_ITEM_ENTRY("Berserk Sword", 11, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
 	/obj/item/rogueweapon/sword/sabre/bane = TAT_ITEM_ENTRY("Bane's Edge", 13, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
-	/obj/item/rogueweapon/shield/tower/metal/psy = TAT_ITEM_ENTRY("Psydonic Shield", 5, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
 	/obj/item/rope/chain = TAT_ITEM_ENTRY("Chain", 1, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/rope = TAT_ITEM_ENTRY("Rope", 1, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/bomb/smoke = TAT_ITEM_ENTRY("Smoke Bomb", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "bombs"), \

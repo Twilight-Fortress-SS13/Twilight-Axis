@@ -246,7 +246,6 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_expensive_base_pool, list(
 	/obj/item/reagent_containers/glass/cup/golden/psydon = 4,
 	/obj/item/clothing/suit/roguetown/armor/heartfelt = 4,
 	/obj/item/rogueweapon/mace/mushroom = 4,
-	/obj/item/rogueweapon/shield/tower/metal/psy = 4,
 	/obj/item/rogueweapon/stoneaxe/battle/ice = 4,
 	/obj/item/rogueweapon/sword/sabre/bane = 4,
 	/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fencer/psydon = 2,
