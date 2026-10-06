@@ -68,6 +68,7 @@
 			continue
 		L.Immobilize(hold_duration)
 		L.OffBalance(hold_duration)
+		L.log_message("affected by spell [name] by [key_name_admin(caster)].", LOG_ATTACK) // TA EDIT
 		L.visible_message(span_warning("[L] is bound fast to the earth!"))
 		new /obj/effect/temp_visual/geas/long(get_turf(L))
 
