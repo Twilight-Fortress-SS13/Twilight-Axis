@@ -356,7 +356,7 @@
 /obj/item/clothing/wrists/roguetown/bracers/jackchain/alloyed
 	name = "alloyed jack chains"
 	desc = "Thin strips of darkened, dirty steel riveted to thin shoulder and elbow plates, with a thin strip of gold running through them."
-	max_integrity = ARMOR_INT_SIDE_STEEL
+	max_integrity = ARMOR_INT_SIDE_STEEL + 100
 	armor = ARMOR_MAILLE
 
 /obj/item/clothing/wrists/roguetown/bracers/jackchain/alloyed/get_examine_highlight_status()

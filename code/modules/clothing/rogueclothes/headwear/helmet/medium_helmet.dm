@@ -267,6 +267,7 @@
 	name = "besilked sallet"
 	desc = "The gilded steel of the helm cradles your face between two great drakkyn-jaws. Pass a coin through the slit and place it on your tongue, for the ferryman is never far away."
 	icon_state = "mgrinningsallet"
+	max_integrity = ARMOR_INT_HELMET_STEEL + 100
 
 /obj/item/clothing/head/roguetown/helmet/sallet/visored/grinning/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS, HERESYDESC_MATTHIOS_GRINNING)
