@@ -389,6 +389,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/clothing/wrists/roguetown/bracers = TAT_ITEM_ENTRY("Steel Bracers ", 1.5, "clothing", "armor_family", TAT_ARMOR_PLATE, "wrists"), \
 	/obj/item/clothing/under/roguetown/trou/leathertights = TAT_ITEM_ENTRY("Leather tights", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "pants"), \
 	/obj/item/clothing/wrists/roguetown/bracers/brigandine = TAT_ITEM_ENTRY("Brigandine Rerebraces", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "wrists"), \
+	/obj/item/clothing/wrists/roguetown/bracers/jackchain = TAT_ITEM_ENTRY("Jack Chains", 2, "clothing", "armor_family", TAT_ARMOR_MAIL, "wrists"), \
 	/obj/item/clothing/wrists/roguetown/bracers/bronze = TAT_ITEM_ENTRY("Bronze Bracers ", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "wrists"), \
 	/obj/item/clothing/wrists/roguetown/bracers/bronze/chain = TAT_ITEM_ENTRY("Bronze Chain Sleeves", 1.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "wrists"), \
 	/obj/item/clothing/wrists/roguetown/bracers/chain = TAT_ITEM_ENTRY("Chain Sleeves", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "wrists"), \
@@ -599,6 +600,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/repair_kit/metal = TAT_ITEM_ENTRY("Plate's kit", 4, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/repair_kit/bad = TAT_ITEM_ENTRY("Fabric Patch", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/polishing_cream = TAT_ITEM_ENTRY("Polishing Cream", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
+	/obj/item/armor_brush = TAT_ITEM_ENTRY("Bruh", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/storage/hip/headhook = TAT_ITEM_ENTRY("Head Hook", 2, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/storage/hip/headhook/bronze = TAT_ITEM_ENTRY("Bronze Head Hook", 2, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
 	/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/ornate = TAT_ITEM_ENTRY("Psydonic Cuirass", 2.5, "clothing", "armor_family", TAT_ARMOR_MAIL, "armor"), \
