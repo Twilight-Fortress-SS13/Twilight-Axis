@@ -377,6 +377,7 @@
 	icon_state = "shadowfacemask"
 	smeltresult = /obj/item/ingot/drow
 	smelt_bar_num = 1
+	max_integrity = ARMOR_INT_MASK_STEEL //TA EDIT
 
 /obj/item/clothing/mask/rogue/facemask/aalloy
 	name = "decrepit mask"

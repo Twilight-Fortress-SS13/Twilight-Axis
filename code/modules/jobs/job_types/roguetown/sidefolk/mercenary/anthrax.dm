@@ -1,6 +1,8 @@
 /datum/advclass/mercenary/anthrax
 	name = "Underdark Pursuer" //TA EDIT
-	tutorial = "Frontline shock troopers of Her blessed legions, Pursuers are clad in darksteel armor and are first to march into the fray when the Spider Queen demands it. You have been chosen for a mission to the surface, and while out there, you will have to earn coin to sustain yourself. Regardless of whom you work for, never forget where your true allegiance lies." //TA EDIT
+	tutorial = "Frontline shock troopers of Her blessed legions, Pursuers are clad in darksteel armor and are first to march into the fray when the Spider Queen demands it. \
+	You have been chosen for a mission to the surface, and while out there, you will have to earn coin to sustain yourself. \
+	Regardless of whom you work for, never forget where your true allegiance lies." //TA EDIT
 	forbidden_races = list(RACES_ANTHRAX)
 	outfit = /datum/outfit/job/roguetown/mercenary/anthrax
 	class_select_category = CLASS_CAT_RACIAL
@@ -63,20 +65,19 @@
 	beltr = /obj/item/rogueweapon/whip/spiderwhip
 	beltl = /obj/item/rope/chain
 
-
-	//H.faction += "spider_lowers" //TA EDIT
+	//H.faction += FACTION_SPIDER_LOWERS //TA EDIT
 
 	if(H.mind)
-		var/faction = list("Zizite Loyalists (Drow are Neutral & Darkvision)", "Tenebrite Rebels (Self-Sustenance trait)") //TA EDIT START
+		var/faction = list("Zizite Loyalists (Drow are Neutral & Darkvision)", "Tenebrite Rebels (Self-Sustenance Trait)") //TA EDIT START
 		var/factionchoice = input(H, "The Underdark stands divided. Which side do you fight for?", "PLEDGE YOUR ALLEGIANCE.") as anything in faction
 		switch(factionchoice)
 			if("Zizite Loyalists (Drow are Neutral & Darkvision)")
-				H.faction += "spider_lowers"
+				H.faction += FACTION_SPIDER_LOWERS
 				ADD_TRAIT(H, TRAIT_DARKVISION, TRAIT_GENERIC)
 				if (!(istype(H.patron, /datum/patron/inhumen/zizo)))
 					H.set_patron(/datum/patron/inhumen/zizo)
 				to_chat(H, span_warning("Her Chosen priestesses have dictated that I must scout these lands, pretending to be a mere stray. For now, I stay my hand. The time of our salvation will come."))
-			if("Tenebrite Rebels (Self-Sustenance trait)")
+			if("Tenebrite Rebels (Self-Sustenance Trait)")
 				ADD_TRAIT(H, TRAIT_SELF_SUSTENANCE, TRAIT_GENERIC)
 				H.mind.special_items["Hammer"] = /obj/item/rogueweapon/hammer/iron
 				to_chat(H, span_warning("Our fight grows more desperate. I must gather resources and allies, so that the Underdark can be free from the tyrant goddess.")) //TA EDIT END
@@ -91,7 +92,7 @@
 	H.merctype = 15
 
 /datum/advclass/mercenary/anthrax_assassin
-	name = "Anthraxi Assassin" //TA EDIT
+	name = "\"Anthraxi\" Assassin" //TA EDIT
 	tutorial = "Black Venom's infamous killers for hire. It is said a single cut \
 	from their poison tipped blades is enough to send their victim to an early grave. You are one \
 	of those assassins, use your trusty bow and arrow to bring your targets' demise \
@@ -155,19 +156,19 @@
 	belt = /obj/item/storage/belt/rogue/leather/black
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/shadowpants
 
-	//H.faction += "spider_lowers" //TA EDIT
+	//H.faction += FACTION_SPIDER_LOWERS //TA EDIT
 
 	if(H.mind)
-		var/faction = list("Zizite Loyalists (Drow are Neutral & Darkvision)", "Tenebrite Rebels (Self-Sustenance trait)") //TA EDIT START
+		var/faction = list("Zizite Loyalists (Drow are Neutral & Darkvision)", "Tenebrite Rebels (Self-Sustenance Trait)") //TA EDIT START
 		var/factionchoice = input(H, "The Underdark stands divided. Which side do you fight for?", "PLEDGE YOUR ALLEGIANCE.") as anything in faction
 		switch(factionchoice)
 			if("Zizite Loyalists (Drow are Neutral & Darkvision)")
-				H.faction += "spider_lowers"
+				H.faction += FACTION_SPIDER_LOWERS
 				ADD_TRAIT(H, TRAIT_DARKVISION, TRAIT_GENERIC)
 				if (!(istype(H.patron, /datum/patron/inhumen/zizo)))
 					H.set_patron(/datum/patron/inhumen/zizo)
 				to_chat(H, span_warning("Her Chosen priestesses have dictated that I must scout these lands, pretending to be a mere stray. For now, I stay my hand. The time of our salvation will come."))
-			if("Tenebrite Rebels (Self-Sustenance trait)")
+			if("Tenebrite Rebels (Self-Sustenance Trait)")
 				ADD_TRAIT(H, TRAIT_SELF_SUSTENANCE, TRAIT_GENERIC)
 				H.mind.special_items["Hammer"] = /obj/item/rogueweapon/hammer/iron
 				to_chat(H, span_warning("Our fight grows more desperate. I must gather resources and allies, so that the Underdark can be free from the tyrant goddess.")) //TA EDIT END
@@ -177,7 +178,7 @@
 			if("Bow & Poisoned Arrows")
 				backr = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/short
 				beltr = /obj/item/quiver/poisonarrows
-				H.adjust_skillrank_up_to(/datum/skill/combat/bows, SKILL_LEVEL_EXPERT, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/bows, SKILL_LEVEL_MASTER, TRUE) //TA EDIT
 			if("Dual Sabres")
 				l_hand = /obj/item/rogueweapon/sword/sabre/stalker
 				beltr = /obj/item/rogueweapon/scabbard/sword
@@ -199,7 +200,7 @@
 	forbidden_races = list(RACES_ANTHRAX)
 	outfit = /datum/outfit/job/roguetown/mercenary/anthrax_paladin
 	class_select_category = CLASS_CAT_RACIAL
-	category_tags = list(CTAG_MERCENARY)
+	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_BULWARK)
 
 	cmode_music = sound("sound/music/combat_delf.ogg")
 
@@ -231,13 +232,13 @@
 		/datum/skill/magic/holy = SKILL_LEVEL_JOURNEYMAN,
 	)
 	subclass_languages = list(/datum/language/undercommon)
-	extra_context = "This subclass is race-restricted to the Dark Elf species. Pick your side in the Underdark Feud Wars, and choose between Spidertamer and Shroomwalker travelboons."
+	extra_context = "This subclass is race-restricted to the Dark Elf species. Pick your side in the Underdark Feud Wars."
 
 /datum/outfit/job/roguetown/mercenary/anthrax_paladin/pre_equip(mob/living/carbon/human/H)
 	..()
-	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/twilight_drow
+	shoes =
 	belt = /obj/item/storage/belt/rogue/leather/black
-	pants = /obj/item/clothing/under/roguetown/chainlegs/twilight_drow
+	pants =
 	backr = /obj/item/storage/backpack/rogue/satchel/black
 	backl = /obj/item/rogueweapon/scabbard/gwstrap
 	backpack_contents = list(
@@ -246,45 +247,29 @@
 		/obj/item/rogueweapon/huntingknife/idagger/steel/corroded/dirk = 1,
 		/obj/item/reagent_containers/glass/bottle/rogue/strongpoison = 1,
 		/obj/item/rogueweapon/scabbard/sheath)
-	armor = /obj/item/clothing/suit/roguetown/armor/plate/twilight_shadowplate
+	armor = /obj/item/clothing/suit/roguetown/armor/plate/fluted/twilight_shadowplate
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/shadowrobe
 	gloves = /obj/item/clothing/gloves/roguetown/plate/shadowgauntlets
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/heavy
-	neck = /obj/item/clothing/neck/roguetown/chaincoif/chainmantle
+	neck =
 	l_hand = /obj/item/rogueweapon/greatsword/grenz/flamberge/relevement
 	beltl = /obj/item/rope/chain
 
 	if(H.mind)
-		var/faction = list("Zizite Loyalists (Drow are Neutral & Darkvision)", "Tenebrite Rebels (Self-Sustenance trait)")
+		var/faction = list("Zizite Loyalists (Drow are Neutral & Darkvision)", "Tenebrite Rebels (Self-Sustenance Trait)")
 		var/factionchoice = input(H, "The Underdark stands divided. Which side do you fight for?", "PLEDGE YOUR ALLEGIANCE.") as anything in faction
 		switch(factionchoice)
 			if("Zizite Loyalists (Drow are Neutral & Darkvision)")
-				H.faction += "spider_lowers"
+				H.faction += FACTION_SPIDER_LOWERS
 				ADD_TRAIT(H, TRAIT_DARKVISION, TRAIT_GENERIC)
 				if (!(istype(H.patron, /datum/patron/inhumen/zizo)))
 					H.set_patron(/datum/patron/inhumen/zizo)
 				to_chat(H, span_warning("Her Chosen priestesses have dictated that I must scout these lands, pretending to be a mere stray. For now, I stay my hand. The time of our salvation will come."))
-			if("Tenebrite Rebels (Self-Sustenance trait)")
+			if("Tenebrite Rebels (Self-Sustenance Trait)")
 				ADD_TRAIT(H, TRAIT_SELF_SUSTENANCE, TRAIT_GENERIC)
 				H.mind.special_items["Hammer"] = /obj/item/rogueweapon/hammer/iron
 				to_chat(H, span_warning("Our fight grows more desperate. I must gather resources and allies, so that the Underdark can be free from the tyrant goddess."))
-		var/helmets = list("Anthraxi War Mask", "Scourge Barbute", "Razormaw Helm")
-		var/helmetschoice = input(H, "Choose your Helm.", "CONCEAL YOUR VISAGE.") as anything in helmets
-		switch(helmetschoice)
-			if("Anthraxi War Mask")
-				mask = /obj/item/clothing/mask/rogue/facemask/shadowfacemask
-				head = /obj/item/clothing/neck/roguetown/chaincoif/full/black
-			if("Scourge Barbute")
-				head = /obj/item/clothing/head/roguetown/helmet/heavy/twilight_drow
-			if("Razormaw Helm")
-				head = /obj/item/clothing/head/roguetown/helmet/heavy/twilight_drow/volf
-		var/riding = list("Spidertamer (Tameable Spider Mount)", "Shroomwalker (+I to Athletics)")
-		var/ridingchoice = input(H, "Choose your TRAVELBOON.", "ROAM ABROAD AND ROAM FAR.") as anything in riding
-		switch(ridingchoice)
-			if("Spidertamer (Tameable Spider Mount)")
-				apply_virtue(H, new /datum/virtue/utility/riding)
-			if("Shroomwalker (+I to Athletics)")
-				H.adjust_skillrank_up_to(/datum/skill/misc/athletics, SKILL_LEVEL_MASTER, TRUE)
+
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_2)	//Capped to T2 miracles.
 
