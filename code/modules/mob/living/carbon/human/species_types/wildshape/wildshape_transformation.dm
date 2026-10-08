@@ -29,7 +29,7 @@
 		else if(I.has_armor_value()) //Drop armor
 			dropItemToGround(I)
 
-/mob/living/carbon/human/proc/wildshape_transformation(shapepath, list/allowed_equipment, list/disallowed_equipment)
+/mob/living/carbon/human/proc/wildshape_transformation(shapepath, list/allowed_equipment, list/disallowed_equipment, preserve_equipment = FALSE) // TA EDIT
 	if(!mind)
 		log_runtime("NO MIND ON [src.name] WHEN TRANSFORMING")
 	Paralyze(1, ignore_canstun = TRUE)
@@ -46,7 +46,8 @@
 	dropItemToGround(stored_neck)
 	dropItemToGround(stored_ring)
 
-	wildshape_drop_items(allowed_equipment, disallowed_equipment)
+	if(!preserve_equipment) // TA EDIT
+		wildshape_drop_items(allowed_equipment, disallowed_equipment) // TA EDIT
 
 	regenerate_icons()
 	icon = null
@@ -152,6 +153,7 @@
 	invisibility = oldinv
 
 	W.gain_inherent_skills()
+	W.ta_copy_wildshape_devotion_from(src) // TA EDIT
 
 /mob/living/carbon/human/proc/wildshape_untransform(dead,gibbed)
 	if(!stored_mob)
@@ -243,6 +245,7 @@
 
 	W.regenerate_icons()
 	to_chat(W, span_userdanger("I return to my old form."))
+	W.ta_copy_wildshape_devotion_from(src) // TA EDIT
 
 	qdel(src)
 
