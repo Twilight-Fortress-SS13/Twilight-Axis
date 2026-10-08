@@ -74,6 +74,7 @@
 //Спец приколы
 /obj/item/clothing/wrists/roguetown/bracers/handcrossbow
 	name = "bracer-mounted crossbow"
+	desc = "A unique design by the engineers at Free Islands. It fits comfortably on the hand, giving the wearer greater mobility."
 	icon = 'icons/roguetown/clothing/wrists.dmi'
 	icon_state = "superbracer_crossbow"
 	item_state = "superbracer_crossbow"
