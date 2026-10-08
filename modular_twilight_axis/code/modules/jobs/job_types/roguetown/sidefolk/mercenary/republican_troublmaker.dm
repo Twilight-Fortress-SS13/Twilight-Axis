@@ -6,7 +6,8 @@
 	outfit = /datum/outfit/job/roguetown/mercenary/twilight_republican_troublemaker
 	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_EXPLOSIVE_SUPPLY, TRAIT_STEELHEARTED)
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
-	maximum_possible_slots = 2
+	maximum_possible_slots = 1
+	origin_limits = list(/datum/virtue/origin/heartfelt)
 	allowed_patrons = list(/datum/patron/divine/undivided, /datum/patron/divine/noc, /datum/patron/divine/dendor, /datum/patron/divine/abyssor, /datum/patron/divine/ravox, /datum/patron/divine/necra, /datum/patron/divine/xylix, /datum/patron/divine/pestra, /datum/patron/divine/malum, /datum/patron/divine/eora, /datum/patron/old_god, /datum/patron/inhumen/graggar, /datum/patron/inhumen/matthios, /datum/patron/inhumen/baotha)
 	class_select_category = CLASS_CAT_HEARTFELT
 	subclass_languages = list(/datum/language/etruscan)
