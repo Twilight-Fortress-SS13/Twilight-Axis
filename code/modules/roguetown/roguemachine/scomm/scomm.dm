@@ -342,8 +342,13 @@
 	if(raw_message)
 		if(calling)
 			if(calling.calling == src)
+				speaker.log_talk(raw_message, LOG_GAME, tag="SCOM JABBERLINE #[scom_number] -> #[calling.scom_number]") // TA EDIT
 				calling.repeat_message(raw_message, src, usedcolor, message_language)
 			return
+		if(garrisonline) // TA EDIT START
+			speaker.log_talk(raw_message, LOG_GAME, tag="GARRISON SCOM #[scom_number][scom_tag ? " ([scom_tag])" : ""]")
+		else
+			speaker.log_talk(raw_message, LOG_GAME, tag="SCOM #[scom_number][scom_tag ? " ([scom_tag])" : ""]") // TA EDIT END
 		if(length(raw_message) > 100) //When these people talk too much, put that shit in slow motion, yeah
 			raw_message = "<small>[raw_message]</small>"
 

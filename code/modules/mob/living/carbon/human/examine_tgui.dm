@@ -113,6 +113,8 @@
 	var/ooc_notes = ""
 	var/ooc_notes_nsfw
 	var/headshot = ""
+	var/artist_credit = ""
+	var/artist_link = ""
 	var/nsfw_headshot = ""
 	var/list/img_gallery = list()
 	var/list/nsfw_img_gallery = list()
@@ -145,10 +147,16 @@
 		if(!obscured)
 			if(vampireplayer && (!SEND_SIGNAL(holder_human, COMSIG_DISGUISE_STATUS)) && !isnull(holder_human.vampire_headshot_link)) //vampire with their disguise down and a valid headshot
 				headshot = holder_human.vampire_headshot_link
+				artist_credit = holder_human.vampire_headshot_artist_credit
+				artist_link = holder_human.vampire_headshot_artist_link
 			else if (lichplayer && !isnull(holder_human.lich_headshot_link))//Lich with a valid headshot
 				headshot = holder_human.lich_headshot_link
+				artist_credit = holder_human.lich_headshot_artist_credit
+				artist_link = holder_human.lich_headshot_artist_link
 			else
 				headshot = holder_human.headshot_link
+				artist_credit = holder_human.headshot_artist_credit
+				artist_link = holder_human.headshot_artist_link
 			img_gallery = holder_human.img_gallery
 			ooc_extra_image = holder_human.ooc_extra_img
 			if(is_naked)
@@ -168,10 +176,16 @@
 		song_title = pref.song_title
 		if(vampireplayer && (!SEND_SIGNAL(pref, COMSIG_DISGUISE_STATUS))&& !isnull(pref.vampire_headshot_link)) //vampire with their disguise down and a valid headshot
 			headshot = pref.vampire_headshot_link
+			artist_credit = pref.vampire_headshot_artist_credit
+			artist_link = pref.vampire_headshot_artist_link
 		else if (lichplayer && !isnull(pref.lich_headshot_link))//Lich with a valid headshot
 			headshot = pref.lich_headshot_link
+			artist_credit = pref.lich_headshot_artist_credit
+			artist_link = pref.lich_headshot_artist_link
 		else
 			headshot = pref.headshot_link
+			artist_credit = pref.headshot_artist_credit
+			artist_link = pref.headshot_artist_link
 		img_gallery = pref.img_gallery
 		nsfw_img_gallery = pref.nsfw_img_gallery
 		ooc_extra_image = pref.ooc_extra_img
@@ -200,6 +214,8 @@
 		// Identity
 		"character_name" = obscured ? "Unknown" : char_name,
 		"headshot" = headshot,
+		"artist_credit" = artist_credit,
+		"artist_link" = artist_link,
 		"obscured" = obscured ? TRUE : FALSE,
 		// Descriptions
 		"flavor_text" = flavor_text,

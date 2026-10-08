@@ -1,6 +1,4 @@
-// Roundstart bandit slots are a flat per-gamemode cap - NO population scaling. High Intensity opens 6 slots,
-// Tempered Intensity opens 4. The full cap is opened at roundstart even if not every seat fills (see
-// get_antag_amount / start in events/antagonist/solo/bandits.dm). Bandits still need HARD_ANTAG_MIN_POP to roll.
+// Roundstart bandit slots use flat caps per gamemode without population scaling.
 /datum/antagonist/bandit
 	name = "Bandit"
 	roundend_category = "bandits"

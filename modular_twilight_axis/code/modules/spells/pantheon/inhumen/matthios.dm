@@ -675,7 +675,7 @@
 	/datum/status_effect/buff/call_to_arms,
 	/datum/status_effect/buff/call_to_slaughter,
 	/datum/status_effect/buff/xylix_joy,
-	/datum/status_effect/buff/vigorized,
+	/datum/status_effect/buff/brew/vigorized,
 	/datum/status_effect/buff/bloodrage,
 	/datum/status_effect/buff/sermon,
 	/datum/status_effect/buff/nocblessing,

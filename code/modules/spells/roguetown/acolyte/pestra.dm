@@ -460,10 +460,10 @@
 	var/death_burst_done = FALSE
 
 /datum/status_effect/buff/infestation/on_apply()
+	if(owner.stat == DEAD)
+		return FALSE
 	. = ..()
 	var/mob/living/target = owner
-	if(owner.stat == DEAD) // infinite corpse miasma explosions are cool but not the scope here, soz!
-		qdel(src)
 	to_chat(owner, span_danger("I am suddenly surrounded by a cloud of bugs!"))
 	target.Jitter(20)
 	target.add_overlay(rotten)
@@ -474,8 +474,6 @@
 
 /datum/status_effect/buff/infestation/on_remove()
 	var/mob/living/target = owner
-	if(owner.stat == DEAD)
-		return
 	target.cut_overlay(rotten)
 	target.update_vision_cone()
 	if(!target.mind)

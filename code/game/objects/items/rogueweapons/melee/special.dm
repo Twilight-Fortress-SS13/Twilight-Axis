@@ -122,6 +122,10 @@
 			if(H == HU)
 				return
 
+			if(H.mind.has_antag_datum(/datum/antagonist/vampire/lord) || H.mind.has_antag_datum(/datum/antagonist/lich) || H.mind.has_antag_datum(/datum/antagonist/dreamwalker)) //(prevents exploits w/ the rod like muting a lich/dreamwalker or shocking a pre-ascension VL)
+				to_chat(user, span_danger("[H] doesn't seem remotely suspectable to the rod's influence!"))
+				return
+
 			if(!COOLDOWN_FINISHED(src, scepter))
 				to_chat(user, span_danger("The [src] is not ready yet! [round(COOLDOWN_TIMELEFT(src, scepter) / 10, 1)] seconds left!"))
 				return
@@ -402,8 +406,6 @@
 	name = "psydonic katar"
 	desc = "An exotic weapon taken from the hands of wandering monks, an esoteric design to the Otavan Orthodoxy. Special care was taken into account towards the user's knuckles: silver-tipped steel from tip to edges, and His holy cross reinforcing the heart of the weapon, with curved shoulders to allow its user to deflect incoming blows - provided they lead it in with the blade."
 	icon_state = "psykatar"
-	force = 19
-	wdefense = 3
 	is_silver = TRUE
 	smeltresult = /obj/item/ingot/silverblessed
 
@@ -411,22 +413,14 @@
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_PSYDONIAN\
 	)
 
 /obj/item/rogueweapon/katar/psydon/preblessed/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_PSYDONIAN,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_PSYDONIAN\
 	)
 
 /obj/item/rogueweapon/katar/silver
@@ -436,8 +430,6 @@
 	psicrucifix. After praying for guidence, the preacher was said to've been guided by a ray of daelight to the silvered steeple - and through divine heat, melted it into a hand-dagger that would soon \
 	rip the verebeaste apart."
 	icon_state = "silverkatar"
-	force = 19
-	wdefense = 3
 	is_silver = TRUE
 	smeltresult = /obj/item/ingot/silver
 
@@ -445,11 +437,7 @@
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_TENNITE\
 	)
 
 /obj/item/rogueweapon/handclaw/steel/graggaredged
@@ -586,36 +574,22 @@
 	icon_state = "silvershovelwaraxe"
 	possible_item_intents = list(/datum/intent/axe/cut, /datum/intent/axe/chop, SPEAR_BASH) //bash is for nonlethal takedowns, only targets limbs
 	gripped_intents = list(/datum/intent/rend/reach, /datum/intent/axe/chop/long, SPEAR_BASH)
-	force = 15
-	force_wielded = 25
-	minstr = 11
-	max_blade_int = 200
 	anvilrepair = /datum/skill/craft/carpentry
 	smeltresult = /obj/item/ingot/silver
-	wdefense = 6
-	wbalance = WBALANCE_HEAVY
 	is_silver = TRUE
 
 /obj/item/rogueweapon/greataxe/militia/silver/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 100,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_TENNITE\
 	)
 
 /obj/item/rogueweapon/greataxe/militia/silver/preblessed/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_TENNITE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 100,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_TENNITE\
 	)
 
 /obj/item/rogueweapon/spear/militia
@@ -841,11 +815,7 @@
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_TENNITE\
 	)
 
 /obj/item/rogueweapon/pick/militia
@@ -997,25 +967,18 @@
 /obj/item/rogueweapon/handclaw/gronn/silver
 	name = "silver ravager claws"
 	desc = "A trinity of silver claws, forged in defiant reverence of the Old Ways that still permeate throughout the Northern Empty. \
-			The psicruciformic edge shreds through the hide of thralls; resurrected corpses from Fjallic antiquity, said to've been born through faithlessness and despair. \
+			The psicruciformic edge shreds through the hide of thralls; resurrected corpses from Gronnic antiquity, said to've been born through faithlessness and despair. \
 			Few shamen hold the strength to wield it, and fewer will speak of what they, alone, know - the true fate of the Weeping Father. \
 			</br>'Here we stand, to turn and face the odds; sacrifice yourself, or bow to lesser gods!'"
 	smeltresult = /obj/item/ingot/silver
 	icon_state = "silverclaws"
-	wdefense = 5
-	max_blade_int = 300
-	max_integrity = 225
 	is_silver = TRUE
 
 /obj/item/rogueweapon/handclaw/gronn/silver/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 100,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_TENNITE\
 	)
 
 /obj/item/rogueweapon/handclaw/blacksteel
@@ -1188,11 +1151,7 @@
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 50,\
-		added_def = 0,\
+		silver_type = SILVER_TENNITE\
 	)
 
 /obj/item/rogueweapon/knuckledusters/silver/attack_self(mob/living/user)
@@ -1220,11 +1179,7 @@
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 50,\
-		added_def = 0,\
+		silver_type = SILVER_PSYDONIAN\
 	)
 
 /obj/item/rogueweapon/knuckledusters/psy/attack_self(mob/living/user)

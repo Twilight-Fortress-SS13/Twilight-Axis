@@ -50,6 +50,11 @@ GLOBAL_LIST_INIT(zone_translations, list(
 		return FALSE
 
 	var/mob/living/carbon/vomiter = user
+	if(vomiter.stat != CONSCIOUS)
+		return FALSE
+	if(vomiter.nutrition <= 50 && vomiter.hydration <= 50)
+		to_chat(vomiter, span_warning("There's nothing left to throw up!"))
+		return FALSE
 
 	if(vomiter.has_stress_event(/datum/stressevent/vomitself))
 		to_chat(vomiter, span_warning("I already puked once. It won't come out!"))
@@ -138,6 +143,9 @@ GLOBAL_LIST_INIT(zone_translations, list(
 		user.add_stress(/datum/stressevent/meditation_ironman)
 		user.energy_add(percent)
 		playsound(user, 'sound/misc/machineyes.ogg', 25)
+	else if(HAS_TRAIT(user, TRAIT_UNDIVIDED))
+		user.add_stress(/datum/stressevent/meditation_undivided)
+		playsound(user, 'sound/magic/undivided_bless.ogg', 20)
 	else
 		user.add_stress(/datum/stressevent/meditation)
 
@@ -570,6 +578,14 @@ GLOBAL_LIST_INIT(zone_translations, list(
 			else
 				var/ru_zone_selected = GLOB.zone_translations[user.zone_selected]
 				message_param = "целует %t в [ru_zone_selected]."
+		if(HAS_TRAIT(target, TRAIT_CAUSTIC) && get_location_accessible(user, BODY_ZONE_PRECISE_MOUTH) && get_location_accessible(target, H.zone_selected))
+			if(user.show_redflash())
+				user.flash_fullscreen("redflash1")
+			to_chat(user, span_smallred("Ouch..."))
+		if(HAS_TRAIT(user, TRAIT_CAUSTIC) && get_location_accessible(target, H.zone_selected))
+			if(target.show_redflash())
+				target.flash_fullscreen("redflash1")
+			to_chat(target, span_smallred("Ouch...")) // note that this doesn't deal real pain to prevent people from. like. spamming kisses to paincrit? as funny as that would be
 	playsound(target.loc, pick('sound/vo/kiss (1).ogg','sound/vo/kiss (2).ogg'), 100, FALSE, -1)
 	if(user.mind)
 		/// Blackblood hidden interactions
@@ -625,6 +641,14 @@ GLOBAL_LIST_INIT(zone_translations, list(
 			else
 				var/ru_zone_selected = GLOB.zone_translations[user.zone_selected]
 				message_param = "лижет [ru_zone_selected] %t."
+		if(HAS_TRAIT(target, TRAIT_CAUSTIC) && get_location_accessible(user, BODY_ZONE_PRECISE_MOUTH) && get_location_accessible(target, J.zone_selected))
+			if(user.show_redflash())
+				user.flash_fullscreen("redflash1")
+			to_chat(user, span_smallred("Ouch..."))
+		if(HAS_TRAIT(user, TRAIT_CAUSTIC) && get_location_accessible(target, J.zone_selected))
+			if(target.show_redflash())
+				target.flash_fullscreen("redflash1")
+			to_chat(target, span_smallred("Ouch..."))
 	playsound(target.loc, pick("sound/vo/lick.ogg"), 100, FALSE, -1)
 
 /datum/emote/living/spit
@@ -682,6 +706,14 @@ GLOBAL_LIST_INIT(zone_translations, list(
 		return
 	if(ishuman(target))
 		playsound(target.loc, pick('sound/vo/hug.ogg'), 100, FALSE, -1)
+		if(HAS_TRAIT(target, TRAIT_CAUSTIC) && (get_location_accessible(user, BODY_ZONE_CHEST) || get_location_accessible(user, BODY_ZONE_L_ARM) || get_location_accessible(user, BODY_ZONE_R_ARM)) && (get_location_accessible(target, BODY_ZONE_CHEST) || get_location_accessible(target, BODY_ZONE_L_ARM) || get_location_accessible(target, BODY_ZONE_R_ARM))) // basically if you both leave chest/arms uncovered. owie
+			if(user.show_redflash())
+				user.flash_fullscreen("redflash1")
+			to_chat(user, span_smallred("Ouch..."))
+		if(HAS_TRAIT(user, TRAIT_CAUSTIC) && (get_location_accessible(user, BODY_ZONE_CHEST) || get_location_accessible(user, BODY_ZONE_L_ARM) || get_location_accessible(user, BODY_ZONE_R_ARM)) && (get_location_accessible(target, BODY_ZONE_CHEST) || get_location_accessible(target, BODY_ZONE_L_ARM) || get_location_accessible(target, BODY_ZONE_R_ARM)))
+			if(target.show_redflash())
+				target.flash_fullscreen("redflash1")
+			to_chat(target, span_smallred("Ouch...")) // note that this doesn't deal real pain to prevent people from. like. spamming hugs to paincrit?
 		if(user.mind)
 			/// Blackblood hidden interactions
 			var/mob/living/carbon/carbs = target
@@ -759,6 +791,10 @@ GLOBAL_LIST_INIT(zone_translations, list(
 		var/mob/living/carbon/human/H = target
 		H.flash_fullscreen("redflash3")
 		H.AdjustSleeping(-50)
+		if(HAS_TRAIT(target, TRAIT_CAUSTIC) && get_location_accessible(user, BODY_ZONE_PRECISE_L_HAND))
+			if(user.show_redflash())
+				user.flash_fullscreen("redflash1")
+			to_chat(user, span_smallred("Ouch..."))
 		playsound(target.loc, 'sound/foley/slap.ogg', 100, TRUE, -1)
 		/// Blackblood hidden interactions
 		var/mob/living/carbon/carbs = target
@@ -782,6 +818,10 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	if(ishuman(target))
 		var/mob/living/carbon/human/H = target
 		H.flash_fullscreen("redflash1")
+	if(HAS_TRAIT(target, TRAIT_CAUSTIC))
+		if(user.show_redflash())
+			user.flash_fullscreen("redflash1")
+		to_chat(user, span_smallred("Ouch..."))
 
 /mob/living/carbon/human/verb/emote_pinch()
 	set name = "Ущипнуть"

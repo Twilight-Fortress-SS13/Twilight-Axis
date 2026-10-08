@@ -83,6 +83,9 @@
 			var/datum/virtue/origin/origin = virtue
 			GLOB.origins[origin.origin_name] = origin.origin_desc
 
+	for(var/path in subtypesof(/datum/quirk))
+		var/datum/quirk/quirk = new path()
+		GLOB.quirks[path] = quirk
 	ccg_build_card_registry()
 
 	// Loadout items

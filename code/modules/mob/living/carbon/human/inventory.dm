@@ -379,6 +379,8 @@
 	if(I.flags_inv & HIDEEARS || forced)
 		update_body()
 	..()
+	if(I.flags_inv & (HIDEHAIR|HIDEFACIALHAIR|HIDEFACE|HIDEEARS|HIDEEYES) || forced)
+		update_body_parts(TRUE)
 
 /mob/living/carbon/human/proc/equipOutfit(outfit, visualsOnly = FALSE)
 	var/datum/outfit/O = null
@@ -528,6 +530,8 @@
 				return
 		if(!SEND_SIGNAL(equipped_cloak, COMSIG_TRY_STORAGE_INSERT, thing, src))
 			to_chat(src, span_warning("I can't fit anything in!"))
+		else if(equipped_cloak.inhand_mod)
+			update_inv_hands()
 		return
 	if(!equipped_cloak.contents.len) // nothing to take out
 		to_chat(src, span_warning("There's nothing in your cloak to take out!"))

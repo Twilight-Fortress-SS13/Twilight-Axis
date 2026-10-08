@@ -50,8 +50,8 @@ All effects don't start immediately, but rather get worse over time; the rate is
 			alcohol_rate *= max(liver.alcohol_tolerance / ALCOHOL_RATE, 0.2)
 		else
 			alcohol_rate *= 2
-		if(HAS_TRAIT(C, TRAIT_ALCOHOL_TOLERANCE))
-			alcohol_rate *= 0.5
+//		if(HAS_TRAIT(C, TRAIT_ALCOHOL_TOLERANCE))
+//			alcohol_rate *= 0.5
 		C.drunkenness = max((C.drunkenness + (sqrt(volume) * booze_power * alcohol_rate)), 0) //Volume, power, and server alcohol rate effect how quickly one gets drunk
 	if(C.blood_volume < BLOOD_VOLUME_NORMAL && !holder.has_reagent(/datum/reagent/water)) // TA EDIT END
 		C.blood_volume = min(C.blood_volume + ALCOHOL_BLOOD_RESTORE, BLOOD_VOLUME_NORMAL)

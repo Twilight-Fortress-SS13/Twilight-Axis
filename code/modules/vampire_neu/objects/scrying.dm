@@ -80,7 +80,10 @@
 	var/msg = sanitize(input(src, "Send a message.", "Command") as text|null)
 	if(!msg)
 		return
-	for(var/datum/mind/V in SSmapping.retainer.vampires)
+	for(var/datum/mind/V in SSmapping.retainer.vampires) // TA EDIT START
+		var/datum/antagonist/vampire/vampire_datum = V.has_antag_datum(/datum/antagonist/vampire)
+		if(vampire_datum?.generation == GENERATION_THINNERBLOOD)
+			continue // TA EDIT END
 		to_chat(V, span_boldnotice("A message from [src.real_name]:[msg]"))
 	for(var/datum/mind/D in SSmapping.retainer.death_knights)
 		to_chat(D, span_boldnotice("A message from [src.real_name]:[msg]"))
