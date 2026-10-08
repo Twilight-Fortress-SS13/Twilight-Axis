@@ -874,7 +874,6 @@
 		H.set_patron(/datum/patron/divine/dendor)
 	if(owner_build?.get_magic_value("druid_alert", TRUE))
 		H.AddComponent(/datum/component/wise_tree_alert)
-	H.AddSpell(new /obj/effect/proc_holder/spell/targeted/create_seed)
 	H.AddSpell(new /obj/effect/proc_holder/spell/self/beast_claws)
 	H.AddSpell(new /obj/effect/proc_holder/spell/self/beast_rage)
 	var/datum/devotion/D = new /datum/devotion(H, H.patron)
