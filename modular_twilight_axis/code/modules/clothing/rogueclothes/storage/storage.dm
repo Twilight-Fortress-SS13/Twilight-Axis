@@ -44,6 +44,7 @@
 	icon_state = "bandolier0"
 	item_state = "bandolier"
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/weapons/ammo_onmob.dmi'
+	alternate_worn_layer = null
 	slot_flags = ITEM_SLOT_CLOAK
 
 /obj/item/quiver/bolt/light/bandolier/update_icon()
@@ -53,7 +54,7 @@
 		icon_state = "bandolier0"
 
 /obj/item/quiver/bolt/light/bandolier/Initialize(mapload)
-	..()
+	. = ..()
 	for(var/i in 1 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/bolt/light/A = new()
 		arrows += A
@@ -61,7 +62,4 @@
 
 /obj/item/quiver/bolt/light/bandolier/getonmobprop(tag)
 	..()
-	if(tag)
-		switch(tag)
-			if("gen")
-				return list("shrink" = 0.38,"sx" = 0,"sy" = 2,"nx" = 0,"ny" = 1,"wx" = 0,"wy" = 0,"ex" = 1,"ey" = -1,"northabove" = 1,"southabove" = 1,"eastabove" = 1,"westabove" = 1,"nturn" = 0,"sturn" = 0,"wturn" = -30,"eturn" = -35,"nflip" = -1,"sflip" = 0,"wflip" = 5,"eflip" = 0,)
+	return list("shrink" = 0.38,"sx" = 0,"sy" = 2,"nx" = 0,"ny" = 1,"wx" = 0,"wy" = 0,"ex" = 1,"ey" = -1,"northabove" = 1,"southabove" = 1,"eastabove" = 1,"westabove" = 1,"nturn" = 0,"sturn" = 0,"wturn" = -30,"eturn" = -35,"nflip" = -1,"sflip" = 0,"wflip" = 5,"eflip" = 0)
