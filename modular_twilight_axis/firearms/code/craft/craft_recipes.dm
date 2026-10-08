@@ -214,3 +214,21 @@
 				/obj/item/alch/magicdust = 2,
 				/datum/reagent/medicine/manapot = 30)
 	craftdiff = 3
+
+/datum/crafting_recipe/roguetown/survival/bolt/light/fire
+	name = "fire light bolt (x4)"
+	display_category = ITEM_CAT_WEAPONS_AMMO
+	category = "Ranged"
+	result = list(
+		/obj/item/ammo_casing/caseless/rogue/bolt/light/fire,
+		/obj/item/ammo_casing/caseless/rogue/bolt/light/fire,
+		/obj/item/ammo_casing/caseless/rogue/bolt/light/fire,
+		/obj/item/ammo_casing/caseless/rogue/bolt/light/fire,
+	)
+	reqs = list(
+		/obj/item/alch/firedust = 1,
+		/obj/item/ammo_casing/caseless/rogue/bolt/light = 4,
+		/obj/item/paper = 4
+
+	)
+	always_availible = FALSE
