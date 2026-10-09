@@ -389,7 +389,7 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 	. += span_info("The named subject may sign the writ in their own blood by holding it and using it on themselves. Doing so records their true patron automatically.")
 	. += span_info("Fill an INDEXER with the named subject's blood and use it on the writ to attach it.")
 	. += span_info("A member of the Inquisition must also sign the writ in their own blood by holding it and using it on themselves.")
-	. += span_info("Return the completed writ through a HERMES. Correctly identifying the subject's patron doubles the role bounty.")
+	. += span_info("Return the completed writ through a HERMES. Correctly identifying the subject's patron doubles the role bounty. Otava also awards a 60-Marque bonus for the fifth submitted writ and 120 Marques for the tenth in a round.")
 
 /obj/item/paper/inquisition_suspicion/attack(mob/living/carbon/human/M, mob/user)
 	if(submitted || M != user)
@@ -480,9 +480,16 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 		to_chat(user, span_warning("A complete INDEXER containing [target_name]'s blood must be attached."))
 		return FALSE
 	var/correct = declared_patron_type == target_patron_type
+	var/bonus = 0
+	switch(GLOB.inquisition_suspicion_submitted + 1)
+		if(5)
+			bonus = 60
+		if(10)
+			bonus = 120
 	var/reward = 10 + 1 + role_reward
 	if(correct)
 		reward += role_reward
+	reward += bonus
 	budget2change(reward, user, "MARQUE")
 	record_round_statistic(STATS_MARQUES_MADE, reward)
 	GLOB.inquisition_suspicion_submitted++
@@ -498,6 +505,8 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 	playsound(user.loc, 'sound/misc/otavasent.ogg', 100, FALSE, -1)
 	playsound(user.loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
 	to_chat(user, span_notice("Otava awards [reward] Marques. The recorded patron was [correct ? "correct" : "incorrect"]."))
+	if(bonus)
+		to_chat(user, span_notice("Otava grants a milestone bonus of [bonus] Marques for [GLOB.inquisition_suspicion_submitted] completed writs this round."))
 	qdel(src)
 	return TRUE
 
