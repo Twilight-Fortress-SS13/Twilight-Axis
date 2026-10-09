@@ -11,6 +11,7 @@
 #define ROLE_VAMPIRE			"Vampire"
 #define ROLE_NBEAST				"Vampire Lord"
 #define ROLE_BANDIT				"Bandit"
+#define ROLE_THIEVESGUILD		"Thieves Guild" // TA EDIT
 #define ROLE_ASSASSIN			"Assassin"
 #define ROLE_DELF				"Dark Elf"
 #define ROLE_PREBEL				"Peasant Rebel"
@@ -67,6 +68,7 @@ GLOBAL_LIST_INIT(special_roles_rogue, list(
 	ROLE_PREBEL = /datum/antagonist/prebel,
 	ROLE_REBEL_LEADER = /datum/antagonist/prebel/head,
 	ROLE_BANDIT = /datum/antagonist/bandit,
+	ROLE_THIEVESGUILD = /datum/antagonist/thievesguild, // TA EDIT
 	ROLE_ASPIRANT = /datum/antagonist/aspirant,
 	ROLE_WEREWOLF = /datum/antagonist/werewolf,
 	ROLE_NBEAST = /datum/antagonist/vampire/lord,
