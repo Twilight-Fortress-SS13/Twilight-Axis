@@ -45,7 +45,6 @@
 
 #define TAT_TRAIT_DIVINE_INITIATE "tat_divine_initiate"
 #define TAT_TRAIT_MAGE_INITIATE "tat_mage_initiate"
-#define TAT_TRAIT_DRUID_INITIATE "tat_druid_initiate"
 #define TAT_TRAIT_WITCH_INITIATE "tat_witch_initiate"
 #define TAT_TRAIT_CONTRACTOR "tat_contractor"
 #define TAT_TRAIT_CONTRACTOR_ENTITY "tat_contractor_entity"
@@ -267,7 +266,6 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_MAGE_MINOR_SLOT_1 = TAT_TRAIT_ENTRY("Arcane Minor Slot I", 1, "Requires Mage Initiate. Grants +1 minor spell slot."), \
 	TAT_TRAIT_MAGE_MINOR_SLOT_2 = TAT_TRAIT_ENTRY("Arcane Minor Slot II", 1, "Requires Mage Initiate. Grants +1 minor spell slot."), \
 	TAT_TRAIT_MAGE_UTILITY_SLOT = TAT_TRAIT_ENTRY("Arcane Utility Slot", 1, "Requires Mage Initiate. Grants +1 utility spell slot."), \
-	TAT_TRAIT_DRUID_INITIATE = TAT_TRAIT_ENTRY("Druid Initiate", 3, "Requires Dendor as your patron. Grants Dendor's druidic rites, direct druid spells, and wise tree alert."), \
 	TAT_TRAIT_WITCH_INITIATE = TAT_TRAIT_ENTRY("Witch Initiate", 2, "Grants witch trait, deathsight, and ability to shapeshift yourself into different small creatures. Resident only: Magic 2 unlocks Old Magick, Miracles 2 unlocks Godsblood, and Magic 1 plus Miracles 1 unlocks Mystagogue."), \
 	TRAIT_EXPLOSIVE_SUPPLY = TAT_TRAIT_ENTRY("Explosive Supply", 1, "Grants explosives gifts from your friends. Luck scaled."), \
 	TAT_TRAIT_ARTIFACTS_SUPPLIER = TAT_TRAIT_ENTRY("Artifacts Bearer", 3, "You're one of the adventurers with stories about your raids. Now, you have one of the deadliest weapons in Grimmoria. REQUIRES: Party Leader"), \

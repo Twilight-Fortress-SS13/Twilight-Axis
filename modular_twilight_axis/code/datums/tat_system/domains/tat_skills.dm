@@ -813,10 +813,6 @@
 			cap = min(owner_build?.directions?.get_points(TAT_DIRECTION_MIRACLES) || 0, SKILL_LEVEL_EXPERT)
 		can_apply_cap_bonus = FALSE
 
-	else if(skill_type == /datum/skill/magic/druidic)
-		if(owner_build?.has_trait(TAT_TRAIT_DRUID_INITIATE))
-			cap = 2
-
 	var/cap_bonus = get_trait_cap_bonus(skill_type) + get_virtue_skill_cap_bonus(skill_type)
 	if(cap_bonus > 0 && can_apply_cap_bonus)
 		if(cap > 0)

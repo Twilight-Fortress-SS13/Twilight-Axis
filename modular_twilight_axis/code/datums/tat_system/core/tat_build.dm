@@ -91,12 +91,6 @@
 /datum/tat_build/proc/can_select_contractor_trait()
 	return is_owner_admin() //TRUE для фулланлока
 
-/datum/tat_build/proc/has_dendor_patron()
-	return owner_preferences?.selected_patron?.type == /datum/patron/divine/dendor
-
-/datum/tat_build/proc/can_select_druid_initiate_trait()
-	return has_dendor_patron()
-
 /datum/tat_build/proc/is_owner_tat_banned(mob/user = null)
 	if(user?.ckey)
 		return tat_is_ckey_banned(user.ckey)
