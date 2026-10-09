@@ -628,7 +628,7 @@ LICH SKELETONS
 			cloak = /obj/item/clothing/cloak/tabard/toga/lich
 
 	if(H.mind) //2 slot, irreplacable skeletons.
-		H.mind.AddSpell(new /datum/action/cooldown/spell/mending) // TA EDIT
+		H.mind.AddSpell(new /datum/action/cooldown/spell/mending) //Gets replaced w/weaker version w/ritual armor. it balances out.
 		H.mind.AddSpell(new /datum/action/cooldown/spell/bonemend)
 
 	H.energy = H.max_energy

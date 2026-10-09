@@ -521,7 +521,9 @@ GLOBAL_LIST_INIT(convert_incantations, list(
 		caster.visible_message(span_danger("[caster] is violently smited as profane flames engulf their entire body!"))
 		return FALSE
 
-	// TA EDIT: Запрет обращения даёт TRAIT_UNCONVERTIBLE от ритуальной брони.
+	if(new_convert.mind.has_spell(/datum/action/cooldown/spell/mending/lesser)) // this is only given to luxplate heretics & iconoclasts, who are a major antag
+		to_chat(caster, span_info("Their faith is manifest as armor, bound to their very flesh... what could I possibly hope to accomplish here?"))
+		return FALSE
 
 	if(alert(caster, "Do you wish to attempt to convert [new_convert]? THIS IS NOT SOMETHING TO BE DONE LIGHTLY. READ THE SPELL DESCRIPTION IF YOU DO NOT KNOW WHAT THIS DOES.", "FOCUS THE LIGHT", "Yes", "No") != "Yes")
 		return FALSE

@@ -239,9 +239,12 @@
 		to_chat(caster, span_info("I need to be closer to [victim] to guide them to Psydon's path."))
 		return FALSE
 
-	// TA EDIT: Ритуальная броня запрещает обращение через TRAIT_UNCONVERTIBLE.
 	if(!new_convert.client || HAS_TRAIT(new_convert, TRAIT_RECENT_CONVERT) || HAS_TRAIT(new_convert, TRAIT_UNCONVERTIBLE))
 		to_chat(caster, span_info("They don't seem like they'll be receptive to my proselytizing..."))
+		return FALSE
+
+	if(new_convert.mind.has_spell(/datum/action/cooldown/spell/mending/lesser))
+		to_chat(caster, span_info("Their faith is manifest as armor, bound to their very flesh... what could I possibly hope to accomplish here?"))
 		return FALSE
 
 	if(alert(caster, "Do you wish to attempt to convert [new_convert] to PSYDON? THIS IS NOT SOMETHING TO BE DONE LIGHTLY. READ THE SPELL DESCRIPTION IF YOU DO NOT KNOW WHAT THIS DOES.", "FOCUS THE RITE", "Yes", "No") != "Yes")

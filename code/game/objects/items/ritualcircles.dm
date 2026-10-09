@@ -1659,11 +1659,9 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	neck = /obj/item/clothing/neck/roguetown/bevor/zizo
 	r_hand = /obj/item/rogueweapon/sword/long/zizo
 
-	// TA EDIT START
-	if(!istype(src, /datum/outfit/job/roguetown/darksteelrite/medium))
+	if(!istype(src, /datum/outfit/job/roguetown/darksteelrite/medium)) // TA EDIT
 		H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
-		ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL)
-	// TA EDIT END
+		ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL) // TA EDIT
 //	if(!H.mind.has_spell(/datum/action/cooldown/spell/miracle/intervention) && H.devotion.max_devotion == CLERIC_REQ_4)	// Devotion check to make sure we give it to the HWretch not some Guy
 //		H.mind.AddSpell(new /datum/action/cooldown/spell/miracle/intervention)
 
@@ -1679,7 +1677,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	r_hand = /obj/item/rogueweapon/sword/zizo
 	l_hand = /obj/item/rogueweapon/shield/tower/metal/zizo
 
-	// TA EDIT: Средняя броня не отнимает ранее изученный Mending.
+	H.mind.RemoveSpell(new /datum/action/cooldown/spell/mending/lesser)
 
 
 /obj/structure/ritualcircle/matthios
@@ -1860,10 +1858,8 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	neck = /obj/item/clothing/neck/roguetown/chaincoif/chainmantle/matthios
 	backr = /obj/item/rogueweapon/flail/peasantwarflail/matthios
 
-	// TA EDIT START
-	H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
-	ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL)
-	// TA EDIT END
+	H.mind.AddSpell(new /datum/action/cooldown/spell/mending) // TA EDIT
+	ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL) // TA EDIT
 //	if(!H.mind.has_spell(/datum/action/cooldown/spell/miracle/intervention) && H.devotion.max_devotion == CLERIC_REQ_4)	// Devotion check to make sure we give it to the HWretch not some Guy
 //		H.mind.AddSpell(new /datum/action/cooldown/spell/miracle/intervention)
 
@@ -2067,7 +2063,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	cloak = /obj/item/clothing/cloak/graggar
 	r_hand = /obj/item/rogueweapon/greataxe/steel/doublehead/graggar
 
-	// TA EDIT: Средняя броня не отнимает ранее изученный Mending.
+	H.mind.RemoveSpell(new /datum/action/cooldown/spell/mending/lesser)
 
 /datum/outfit/job/roguetown/viciousrite/heavy/pre_equip(mob/living/carbon/human/H, visualsOnly = FALSE)
 	..()
@@ -2084,10 +2080,8 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	r_hand = /obj/item/rogueweapon/stoneaxe/woodcut/steel/graggar
 	l_hand = /obj/item/rogueweapon/shield/iron/graggar
 
-	// TA EDIT START
-	H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
-	ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL)
-	// TA EDIT END
+	H.mind.AddSpell(new /datum/action/cooldown/spell/mending) // TA EDIT
+	ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL) // TA EDIT
 
 /obj/structure/ritualcircle/baotha
 	name = "Rune of Hedonism"
@@ -2207,10 +2201,8 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/baotha
 	backr = /obj/item/rogueweapon/spear/partizan/baotha
 
-	// TA EDIT START
-	H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
-	ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL)
-	// TA EDIT END
+	H.mind.AddSpell(new /datum/action/cooldown/spell/mending) // TA EDIT
+	ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL) // TA EDIT
 //	if(!H.mind.has_spell(/datum/action/cooldown/spell/miracle/intervention) && H.devotion.max_devotion == CLERIC_REQ_4)	// Devotion check to make sure we give it to the HWretch not some Guy
 //		H.mind.AddSpell(new /datum/action/cooldown/spell/miracle/intervention)
 
