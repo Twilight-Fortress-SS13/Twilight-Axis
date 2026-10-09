@@ -218,6 +218,82 @@ const BlueprintPreview = ({
   );
 };
 
+type StrokePoint = { x: number; y: number };
+
+type BrushStroke = {
+  brush: string | null;
+  dir: number;
+  z: number;
+  last: StrokePoint | null;
+  visited: Set<string>;
+};
+
+const cellsBetween = (from: StrokePoint, to: StrokePoint): StrokePoint[] => {
+  const points: StrokePoint[] = [];
+  let x = from.x;
+  let y = from.y;
+  const dx = Math.abs(to.x - x);
+  const dy = Math.abs(to.y - y);
+  const sx = x < to.x ? 1 : -1;
+  const sy = y < to.y ? 1 : -1;
+  let error = dx - dy;
+
+  while (true) {
+    points.push({ x, y });
+    if (x === to.x && y === to.y) break;
+    const twiceError = 2 * error;
+    if (twiceError > -dy) {
+      error -= dy;
+      x += sx;
+    }
+    if (twiceError < dx) {
+      error += dx;
+      y += sy;
+    }
+  }
+  return points;
+};
+
+const updateBlueprintCell = (
+  grid: GridCell[],
+  point: StrokePoint,
+  stroke: BrushStroke,
+  buildableTypes: Record<string, BuildableType>,
+): GridCell[] => {
+  const { x, y } = point;
+  const { z, brush, dir } = stroke;
+  if (!brush) {
+    const cellItems = grid.filter((c) => c.x === x && c.y === y && c.z === z);
+    if (cellItems.length === 0) return grid;
+
+    const border = cellItems.find((c) => buildableTypes[c.type]?.layer_type === 'border' && c.dir === dir);
+    if (border) return grid.filter((c) => c !== border);
+
+    const obj = cellItems.find((c) => buildableTypes[c.type]?.layer_type === 'obj');
+    if (obj) return grid.filter((c) => c !== obj);
+
+    return grid.filter((c) => !(c.x === x && c.y === y && c.z === z));
+  }
+
+  const brushInfo = buildableTypes[brush];
+  if (!brushInfo) return grid;
+  const layer = brushInfo.layer_type;
+
+  const nextGrid = grid.filter((c) => {
+    if (c.x !== x || c.y !== y || c.z !== z) return true;
+
+    const existingLayer = buildableTypes[c.type]?.layer_type;
+    if (layer === 'wall' && existingLayer === 'wall') return false;
+    if (layer === 'border' && existingLayer === 'border' && c.dir === dir) return false;
+    if (layer === 'obj' && existingLayer === 'obj') return false;
+    if (layer === 'floor' && existingLayer === 'floor') return false;
+    return true;
+  });
+
+  if (nextGrid.length >= 400) return grid;
+  return [...nextGrid, { x, y, z, type: brush, dir }];
+};
+
 export const BlueprintPlanner = () => {
   const { act, data } = useBackend<Data>();
   const maxRadiusAllowed = data.max_radius || 10;
@@ -244,6 +320,7 @@ export const BlueprintPlanner = () => {
   const [importString, setImportString] = useState<string>('');
   const [importError, setImportError] = useState<string>('');
 
+  const strokeRef = useRef<BrushStroke | null>(null);
   const initialized = useRef(false);
 
   useEffect(() => {
@@ -264,40 +341,61 @@ export const BlueprintPlanner = () => {
     return libraryBlueprints.filter((b) => b.author_ckey === userCkey).length;
   }, [libraryBlueprints, userCkey]);
 
-  const handleCellClick = (x: number, y: number) => {
-    setGrid((prev) => {
-      if (!selectedBrush) {
-        const cellItems = prev.filter((c) => c.x === x && c.y === y && c.z === activeZ);
-        if (cellItems.length === 0) return prev;
+  useEffect(() => {
+    const endStroke = () => {
+      strokeRef.current = null;
+    };
+    window.addEventListener('mouseup', endStroke);
+    window.addEventListener('blur', endStroke);
+    return () => {
+      window.removeEventListener('mouseup', endStroke);
+      window.removeEventListener('blur', endStroke);
+    };
+  }, []);
 
-        const border = cellItems.find((c) => buildableTypes[c.type]?.layer_type === 'border' && c.dir === currentDir);
-        if (border) return prev.filter((c) => c !== border);
+  const paintToCell = (x: number, y: number) => {
+    const stroke = strokeRef.current;
+    if (!stroke) return;
 
-        const obj = cellItems.find((c) => buildableTypes[c.type]?.layer_type === 'obj');
-        if (obj) return prev.filter((c) => c !== obj);
+    const path = stroke.last
+      ? cellsBetween(stroke.last, { x, y })
+      : [{ x, y }];
+    stroke.last = { x, y };
 
-        return prev.filter((c) => !(c.x === x && c.y === y && c.z === activeZ));
-      }
-
-      const brushInfo = buildableTypes[selectedBrush];
-      if (!brushInfo) return prev;
-      const layer = brushInfo.layer_type;
-
-      const newGrid = prev.filter((c) => {
-        if (c.x !== x || c.y !== y || c.z !== activeZ) return true;
-
-        const cLayer = buildableTypes[c.type]?.layer_type;
-        if (layer === 'wall' && cLayer === 'wall') return false; 
-        if (layer === 'border' && cLayer === 'border' && c.dir === currentDir) return false;
-        if (layer === 'obj' && cLayer === 'obj') return false;
-        if (layer === 'floor' && cLayer === 'floor') return false;
-
-        return true;
-      });
-
-      if (newGrid.length >= 400) return prev;
-      return [...newGrid, { x, y, z: activeZ, type: selectedBrush, dir: currentDir }];
+    const fresh = path.filter((point) => {
+      const key = `${point.x}_${point.y}`;
+      if (stroke.visited.has(key)) return false;
+      stroke.visited.add(key);
+      return true;
     });
+    if (fresh.length === 0) return;
+
+    setGrid((prev) => fresh.reduce(
+      (next, point) => updateBlueprintCell(next, point, stroke, buildableTypes),
+      prev,
+    ));
+  };
+
+  const handleCellMouseDown = (e: MouseEvent<HTMLDivElement>, x: number, y: number) => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    strokeRef.current = {
+      brush: selectedBrush,
+      dir: currentDir,
+      z: activeZ,
+      last: null,
+      visited: new Set<string>(),
+    };
+    paintToCell(x, y);
+  };
+
+  const handleCellDrag = (e: MouseEvent<HTMLDivElement>, x: number, y: number) => {
+    if (!strokeRef.current) return;
+    if (!(e.buttons & 1)) {
+      strokeRef.current = null;
+      return;
+    }
+    paintToCell(x, y);
   };
 
   const handleCellContextMenu = (e: MouseEvent, x: number, y: number) => {
@@ -979,7 +1077,10 @@ export const BlueprintPlanner = () => {
                         }}
                       >
                         <Box
-                          onMouseLeave={() => setHoveredCell(null)}
+                          onMouseLeave={() => {
+                            setHoveredCell(null);
+                            if (strokeRef.current) strokeRef.current.last = null;
+                          }}
                           style={{
                             display: 'grid',
                             gridTemplateColumns: `repeat(${gridRadius * 2 + 1}, 36px)`,
@@ -1037,9 +1138,14 @@ export const BlueprintPlanner = () => {
                             return (
                               <div
                                 key={`${cell.x}_${cell.y}_${activeZ}`}
-                                onClick={() => handleCellClick(cell.x, cell.y)}
+                                onMouseDown={(e) => handleCellMouseDown(e, cell.x, cell.y)}
+                                onMouseMove={(e) => handleCellDrag(e, cell.x, cell.y)}
+                                onMouseEnter={(e) => {
+                                  setHoveredCell({ x: cell.x, y: cell.y });
+                                  handleCellDrag(e, cell.x, cell.y);
+                                }}
+                                onDragStart={(e) => e.preventDefault()}
                                 onContextMenu={(e) => handleCellContextMenu(e, cell.x, cell.y)}
-                                onMouseEnter={() => setHoveredCell({ x: cell.x, y: cell.y })}
                                 style={{
                                   width: '36px',
                                   height: '36px',
