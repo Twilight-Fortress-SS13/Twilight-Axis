@@ -1,4 +1,4 @@
-GLOBAL_LIST_INIT(blueprint_buildable_types, init_twilight_blueprint_catalog()) // TA EDIT
+GLOBAL_LIST_INIT(blueprint_buildable_types, init_twilight_blueprint_catalog())
 
 /proc/init_twilight_blueprint_catalog()
 	var/list/types = list(
@@ -1488,7 +1488,7 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, init_twilight_blueprint_catalog()) /
 		)
 	)
 
-	var/list/ratwood_additions = list( // TA EDIT
+	var/list/ratwood_additions = list(
 		"autogrinder" = list("name" = "Автоматическая мельница", "category" = "Ремесло и Станки", "layer_type" = "obj", "build_order" = 3, "path_text" = "/obj/structure/autogrinder", "recipe_text" = "/datum/crafting_recipe/roguetown/engineering/autogrinder"),
 		"autosmither" = list("name" = "Автоматическая кузница", "category" = "Ремесло и Станки", "layer_type" = "obj", "build_order" = 3, "path_text" = "/obj/structure/autosmither", "recipe_text" = "/datum/crafting_recipe/roguetown/engineering/smither"),
 		"bars_cemetery" = list("name" = "Кладбищенская ограда", "category" = "Ремесло и Станки", "layer_type" = "obj", "build_order" = 3, "path_text" = "/obj/structure/bars/cemetery", "recipe_text" = "/datum/crafting_recipe/roguetown/engineering/bars/cemetery"),
@@ -1599,11 +1599,11 @@ GLOBAL_LIST_INIT(blueprint_buildable_types, init_twilight_blueprint_catalog()) /
 
 #define MAX_PLANNER_RADIUS 6
 #define MAX_SPELL_RADIUS 13
-#define MAX_BLUEPRINT_ENTRIES 400 // TA EDIT
-#define BLUEPRINT_LIBRARY_LIMIT 3 // TA EDIT
-#define BLUEPRINT_LIBRARY_FILE "data/blueprint_library.json" // TA EDIT
+#define MAX_BLUEPRINT_ENTRIES 400
+#define BLUEPRINT_LIBRARY_LIMIT 3
+#define BLUEPRINT_LIBRARY_FILE "data/blueprint_library.json"
 
-var/global/list/blueprint_library_cache = load_blueprint_library() // TA EDIT
+var/global/list/blueprint_library_cache = load_blueprint_library()
 
 /proc/load_blueprint_library()
 	if(!fexists(BLUEPRINT_LIBRARY_FILE))
@@ -1623,25 +1623,25 @@ var/global/list/blueprint_library_cache = load_blueprint_library() // TA EDIT
 	if(!fexists(temp_name))
 		return FALSE
 	fdel(BLUEPRINT_LIBRARY_FILE)
-	var/saved = fcopy(temp_name, BLUEPRINT_LIBRARY_FILE) // TA EDIT
+	var/saved = fcopy(temp_name, BLUEPRINT_LIBRARY_FILE)
 	fdel(temp_name)
-	return !!saved // TA EDIT
+	return !!saved
 
-/proc/blueprint_floor_number(raw_value) // TA EDIT
+/proc/blueprint_floor_number(raw_value)
 	return isnum(raw_value) ? raw_value : text2num(raw_value)
 
-/proc/validate_blueprint_packed(list/packed, radius, floor_count) // TA EDIT
+/proc/validate_blueprint_packed(list/packed, radius, floor_count)
 	if(!islist(packed) || !isnum(radius) || !isnum(floor_count))
 		return null
 	if(floor_count < 2 || floor_count > 4 || round(floor_count) != floor_count)
 		return null
 	var/list/result = list()
-	var/list/seen = list() // TA EDIT
+	var/list/seen = list()
 	for(var/type_key in packed)
 		if(!istext(type_key) || !GLOB.blueprint_buildable_types[type_key])
 			return null
 		var/list/coords = packed[type_key]
-		if(length(result) + length(coords) > MAX_BLUEPRINT_ENTRIES) // TA EDIT
+		if(length(result) + length(coords) > MAX_BLUEPRINT_ENTRIES)
 			return null
 		if(!islist(coords))
 			return null
@@ -1663,19 +1663,19 @@ var/global/list/blueprint_library_cache = load_blueprint_library() // TA EDIT
 				return null
 			if(!(direction in list(NORTH, SOUTH, EAST, WEST)))
 				return null
-			var/entry_key = "[type_key]|[dx]|[dy]|[dz]|[direction]" // TA EDIT
-			if(seen[entry_key]) // TA EDIT
+			var/entry_key = "[type_key]|[dx]|[dy]|[dz]|[direction]"
+			if(seen[entry_key])
 				return null
-			seen[entry_key] = TRUE // TA EDIT
+			seen[entry_key] = TRUE
 			result += list(list("x" = dx, "y" = dy, "z" = dz, "type" = type_key, "dir" = direction))
 			if(length(result) > MAX_BLUEPRINT_ENTRIES)
 				return null
 	return result
 
-/proc/validate_blueprint_entries(list/entries, radius, floor_count) // TA EDIT
-	if(!islist(entries) || length(entries) > MAX_BLUEPRINT_ENTRIES || !isnum(floor_count) || round(floor_count) != floor_count || floor_count < 2 || floor_count > 4) // TA EDIT
+/proc/validate_blueprint_entries(list/entries, radius, floor_count)
+	if(!islist(entries) || length(entries) > MAX_BLUEPRINT_ENTRIES || !isnum(floor_count) || round(floor_count) != floor_count || floor_count < 2 || floor_count > 4)
 		return FALSE
-	var/list/seen = list() // TA EDIT
+	var/list/seen = list()
 	for(var/list/entry in entries)
 		if(!islist(entry))
 			return FALSE
@@ -1692,10 +1692,10 @@ var/global/list/blueprint_library_cache = load_blueprint_library() // TA EDIT
 			return FALSE
 		if(!(direction in list(NORTH, SOUTH, EAST, WEST)))
 			return FALSE
-		var/entry_key = "[key]|[dx]|[dy]|[dz]|[direction]" // TA EDIT
-		if(seen[entry_key]) // TA EDIT
+		var/entry_key = "[key]|[dx]|[dy]|[dz]|[direction]"
+		if(seen[entry_key])
 			return FALSE
-		seen[entry_key] = TRUE // TA EDIT
+		seen[entry_key] = TRUE
 	return TRUE
 
 /proc/blueprint_requirements_text(list/design)
@@ -1706,25 +1706,25 @@ var/global/list/blueprint_library_cache = load_blueprint_library() // TA EDIT
 			continue
 		var/list/requirements = get_blueprint_reqs(info)
 		for(var/path in requirements)
-			counts[path] = (counts[path] || 0) + requirements[path] // TA EDIT
+			counts[path] = (counts[path] || 0) + requirements[path]
 	var/result = ""
 	for(var/path in counts)
 		var/obj/item/res = path
 		result += "[initial(res.name)] x[counts[path]], "
 	return length(result) ? result : "Без материалов"
 
-/proc/handle_blueprint_library_act(action, list/params, mob/user, datum/tgui/ui, radius) // TA EDIT
+/proc/handle_blueprint_library_act(action, list/params, mob/user, datum/tgui/ui, radius)
 	if(action == "save_to_library")
 		if(!user || !user.ckey)
 			return TRUE
-		var/name = params["name"] // TA EDIT
-		if(!istext(name)) // TA EDIT
+		var/name = params["name"]
+		if(!istext(name))
 			return TRUE
-		name = trim(name) // TA EDIT
+		name = trim(name)
 		if(!length(name) || length(name) > 32)
 			to_chat(user, span_warning("Название чертежа должно содержать от 1 до 32 символов."))
 			return TRUE
-		var/floors = blueprint_floor_number(params["max_floors"]) // TA EDIT
+		var/floors = blueprint_floor_number(params["max_floors"])
 		var/list/design = validate_blueprint_packed(params["packed_data"], radius, floors)
 		if(!islist(design) || !length(design))
 			to_chat(user, span_warning("Чертёж пуст или содержит недопустимые элементы."))
@@ -1745,7 +1745,7 @@ var/global/list/blueprint_library_cache = load_blueprint_library() // TA EDIT
 			"reqs_summary" = blueprint_requirements_text(design),
 			"grid" = design
 		))
-		if(!save_blueprint_library()) // TA EDIT
+		if(!save_blueprint_library())
 			to_chat(user, span_warning("Ошибка сохранения библиотеки чертежей."))
 			return TRUE
 		to_chat(user, span_notice("Чертёж опубликован в библиотеке."))
@@ -1839,7 +1839,7 @@ var/global/list/blueprint_library_cache = load_blueprint_library() // TA EDIT
 	if(dz > 0)
 		for(var/i = 1 to dz)
 			var/turf/above = get_step_multiz(target_turf, UP)
-			if(!above) // TA EDIT
+			if(!above)
 				return null
 			target_turf = above
 			if(!target_turf || target_turf.z > world.maxz) break
@@ -1860,7 +1860,7 @@ var/global/list/blueprint_library_cache = load_blueprint_library() // TA EDIT
 
 /obj/item/blueprint_planner/ui_static_data(mob/user)
 	var/list/data = get_blueprint_static_tgui_data()
-	data["max_radius"] = MAX_PLANNER_RADIUS // TA EDIT
+	data["max_radius"] = MAX_PLANNER_RADIUS
 	return data
 
 
@@ -1869,19 +1869,19 @@ var/global/list/blueprint_library_cache = load_blueprint_library() // TA EDIT
 	data["saved_grid"] = design_data
 	data["saved_floors"] = max_floors
 	data["scanned_grid"] = scanned_grid
-	data["library_blueprints"] = blueprint_library_cache // TA EDIT
-	data["user_ckey"] = user.ckey // TA EDIT
+	data["library_blueprints"] = blueprint_library_cache
+	data["user_ckey"] = user.ckey
 	return data
 
 
 /obj/item/blueprint_planner/ui_act(action, params)
 	. = ..()
 	if(.) return
-	if(handle_blueprint_library_act(action, params, usr, null, MAX_PLANNER_RADIUS)) // TA EDIT
+	if(handle_blueprint_library_act(action, params, usr, null, MAX_PLANNER_RADIUS))
 		return TRUE
 
 	if(action == "scan_terrain")
-		var/radius = clamp(text2num(params["radius"]) || MAX_PLANNER_RADIUS, 1, MAX_PLANNER_RADIUS) // TA EDIT
+		var/radius = clamp(text2num(params["radius"]) || MAX_PLANNER_RADIUS, 1, MAX_PLANNER_RADIUS)
 		var/max_z = clamp(text2num(params["max_floors"]) || 2, 2, 4)
 		var/turf/center = get_turf(src)
 		var/list/scanned = list()
@@ -1902,15 +1902,15 @@ var/global/list/blueprint_library_cache = load_blueprint_library() // TA EDIT
 
 					if(is_blocked)
 						scanned += list(list("x"=dx, "y"=dy, "z"=dz, "layer"="wall"))
-					else if(!istype(T, /turf/open/transparent/openspace) && !istype(T, /turf/open/water)) // TA EDIT
+					else if(!istype(T, /turf/open/transparent/openspace) && !istype(T, /turf/open/water))
 						scanned += list(list("x"=dx, "y"=dy, "z"=dz, "layer"="floor"))
 
 		scanned_grid = scanned
 		return TRUE
 
 	if(action == "save_design")
-		var/floors = blueprint_floor_number(params["max_floors"]) // TA EDIT
-		var/list/safe_data = validate_blueprint_packed(params["packed_data"], MAX_PLANNER_RADIUS, floors) // TA EDIT
+		var/floors = blueprint_floor_number(params["max_floors"])
+		var/list/safe_data = validate_blueprint_packed(params["packed_data"], MAX_PLANNER_RADIUS, floors)
 		if(!islist(safe_data))
 			to_chat(usr, span_warning("Недопустимые данные чертежа."))
 			return TRUE
@@ -1929,7 +1929,7 @@ var/global/list/blueprint_library_cache = load_blueprint_library() // TA EDIT
 		return TRUE
 
 /obj/item/blueprint_planner/proc/can_place_blueprint(turf/origin_turf, mob/user)
-	if(!validate_blueprint_entries(design_data, MAX_PLANNER_RADIUS, max_floors)) // TA EDIT
+	if(!validate_blueprint_entries(design_data, MAX_PLANNER_RADIUS, max_floors))
 		return FALSE
 	return check_blueprint_placement_valid(origin_turf, user, design_data, max_floors)
 
@@ -1991,10 +1991,10 @@ var/global/list/blueprint_library_cache = load_blueprint_library() // TA EDIT
 	if(missing != "")
 		. += span_warning("Не хватает ресурсов: [missing]")
 	else
-		. += span_info("Оставшиеся элементы не требуют дополнительных материалов.") // TA EDIT
+		. += span_info("Оставшиеся элементы не требуют дополнительных материалов.")
 
 /obj/structure/blueprint_site/proc/setup_design(list/data, mob/user)
-	if(!validate_blueprint_entries(data, MAX_SPELL_RADIUS, max_floors)) // TA EDIT
+	if(!validate_blueprint_entries(data, MAX_SPELL_RADIUS, max_floors))
 		qdel(src)
 		return FALSE
 	total_tiles_count = length(data)
@@ -2033,15 +2033,15 @@ var/global/list/blueprint_library_cache = load_blueprint_library() // TA EDIT
 
 /obj/structure/blueprint_site/proc/can_solidify_target(turf/target_turf, mob/user, list/entry)
 	if(!target_turf) return FALSE
-	if(isclosedturf(target_turf)) // TA EDIT
+	if(isclosedturf(target_turf))
 		to_chat(user, span_warning("Здесь уже находится стена."))
 		return FALSE
-	for(var/obj/machinery/machine in target_turf) // TA EDIT
+	for(var/obj/machinery/machine in target_turf)
 		if(machine.density)
 			to_chat(user, span_warning("Здесь находится станок, мешающий строительству."))
 			return FALSE
-	var/area/build_area = get_area(target_turf) // TA EDIT
-	if(!build_area || !build_area.can_craft_here()) // TA EDIT
+	var/area/build_area = get_area(target_turf)
+	if(!build_area || !build_area.can_craft_here())
 		to_chat(user, span_warning("На этой территории запрещено строительство."))
 		return FALSE
 
@@ -2087,7 +2087,7 @@ var/global/list/blueprint_library_cache = load_blueprint_library() // TA EDIT
 	if(QDELETED(ghost) || !can_solidify_target(get_turf(ghost), user, ghost.entry_data))
 		playsound(src, 'sound/items/bsmithfail.ogg', 50, 1)
 		return TRUE
-	if(!consume_blueprint_resources(ghost.entry_data)) // TA EDIT
+	if(!consume_blueprint_resources(ghost.entry_data))
 		to_chat(user, span_warning("Недостаточно материалов для следующего элемента. Положите их на землю поблизости."))
 		playsound(src, 'sound/items/bsmithfail.ogg', 50, 1)
 		return TRUE
@@ -2183,15 +2183,15 @@ var/global/list/blueprint_library_cache = load_blueprint_library() // TA EDIT
 
 		built_tiles_count++
 
-/obj/structure/blueprint_site/proc/consume_blueprint_resources(list/entry) // TA EDIT
+/obj/structure/blueprint_site/proc/consume_blueprint_resources(list/entry)
 	var/list/info = GLOB.blueprint_buildable_types[entry["type"]]
 	if(!info)
 		return FALSE
 	var/list/requirements = get_blueprint_reqs(info)
-	var/list/reserved = list() // TA EDIT
+	var/list/reserved = list()
 	for(var/resource_type in requirements)
 		var/needed = requirements[resource_type]
-		if(!isnum(needed) || needed < 0) // TA EDIT
+		if(!isnum(needed) || needed < 0)
 			return FALSE
 		for(var/obj/item/I in range(3, src))
 			if(needed <= 0)
@@ -2203,13 +2203,13 @@ var/global/list/blueprint_library_cache = load_blueprint_library() // TA EDIT
 				var/obj/item/natural/bundle/B = I
 				if(B.stacktype != resource_type)
 					continue
-				available = B.amount - (reserved[I] || 0) // TA EDIT
+				available = B.amount - (reserved[I] || 0)
 			else if(istype(I, resource_type))
-				available = 1 - (reserved[I] || 0) // TA EDIT
+				available = 1 - (reserved[I] || 0)
 			if(available <= 0)
 				continue
 			var/take = min(needed, available)
-			reserved[I] = (reserved[I] || 0) + take // TA EDIT
+			reserved[I] = (reserved[I] || 0) + take
 			needed -= take
 		if(needed > 0)
 			return FALSE
@@ -2284,7 +2284,7 @@ var/global/list/blueprint_library_cache = load_blueprint_library() // TA EDIT
 
 /datum/action/cooldown/spell/architect_plan/ui_static_data(mob/user)
 	var/list/data = get_blueprint_static_tgui_data()
-	data["max_radius"] = MAX_SPELL_RADIUS // TA EDIT
+	data["max_radius"] = MAX_SPELL_RADIUS
 	return data
 
 /datum/action/cooldown/spell/architect_plan/ui_data(mob/user)
@@ -2294,8 +2294,8 @@ var/global/list/blueprint_library_cache = load_blueprint_library() // TA EDIT
 		data["saved_grid"] = L.arcyne_blueprint_data
 		data["saved_floors"] = L.arcyne_blueprint_floors
 		data["scanned_grid"] = scanned_grid
-		data["library_blueprints"] = blueprint_library_cache // TA EDIT
-		data["user_ckey"] = L.ckey // TA EDIT
+		data["library_blueprints"] = blueprint_library_cache
+		data["user_ckey"] = L.ckey
 	return data
 
 /datum/action/cooldown/spell/architect_plan/ui_act(action, params)
@@ -2304,11 +2304,11 @@ var/global/list/blueprint_library_cache = load_blueprint_library() // TA EDIT
 
 	var/mob/living/L = owner || usr
 	if(!istype(L)) return
-	if(handle_blueprint_library_act(action, params, L, null, MAX_SPELL_RADIUS)) // TA EDIT
+	if(handle_blueprint_library_act(action, params, L, null, MAX_SPELL_RADIUS))
 		return TRUE
 
 	if(action == "scan_terrain")
-		var/radius = clamp(text2num(params["radius"]) || MAX_SPELL_RADIUS, 1, MAX_SPELL_RADIUS) // TA EDIT
+		var/radius = clamp(text2num(params["radius"]) || MAX_SPELL_RADIUS, 1, MAX_SPELL_RADIUS)
 		var/max_z = clamp(text2num(params["max_floors"]) || 2, 2, 4)
 		var/turf/center = get_turf(L)
 		var/list/scanned = list()
@@ -2329,15 +2329,15 @@ var/global/list/blueprint_library_cache = load_blueprint_library() // TA EDIT
 
 					if(is_blocked)
 						scanned += list(list("x"=dx, "y"=dy, "z"=dz, "layer"="wall"))
-					else if(!istype(T, /turf/open/transparent/openspace) && !istype(T, /turf/open/water)) // TA EDIT
+					else if(!istype(T, /turf/open/transparent/openspace) && !istype(T, /turf/open/water))
 						scanned += list(list("x"=dx, "y"=dy, "z"=dz, "layer"="floor"))
 
 		scanned_grid = scanned
 		return TRUE
 
 	if(action == "save_design")
-		var/floors = blueprint_floor_number(params["max_floors"]) // TA EDIT
-		var/list/safe_data = validate_blueprint_packed(params["packed_data"], MAX_SPELL_RADIUS, floors) // TA EDIT
+		var/floors = blueprint_floor_number(params["max_floors"])
+		var/list/safe_data = validate_blueprint_packed(params["packed_data"], MAX_SPELL_RADIUS, floors)
 		if(!islist(safe_data))
 			to_chat(L, span_warning("Недопустимые данные чертежа."))
 			return TRUE
@@ -2411,7 +2411,7 @@ var/global/list/blueprint_library_cache = load_blueprint_library() // TA EDIT
 
 
 /proc/check_blueprint_placement_valid(turf/origin_turf, mob/user, list/design_data, max_floors)
-	if(!origin_turf || !length(design_data) || !validate_blueprint_entries(design_data, MAX_SPELL_RADIUS, max_floors)) // TA EDIT
+	if(!origin_turf || !length(design_data) || !validate_blueprint_entries(design_data, MAX_SPELL_RADIUS, max_floors))
 		return FALSE
 
 	var/list/future_grid = list()
@@ -2448,8 +2448,8 @@ var/global/list/blueprint_library_cache = load_blueprint_library() // TA EDIT
 		if(!target_turf)
 			to_chat(user, span_warning("Недостаточно места: план выходит за пределы мира!"))
 			return FALSE
-		var/area/build_area = get_area(target_turf) // TA EDIT
-		if(!build_area || !build_area.can_craft_here()) // TA EDIT
+		var/area/build_area = get_area(target_turf)
+		if(!build_area || !build_area.can_craft_here())
 			to_chat(user, span_warning("На этой территории запрещено строительство."))
 			return FALSE
 

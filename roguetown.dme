@@ -3892,7 +3892,7 @@
 //#include "modular_twilight_axis\code\datums\tat_system\domains\tat_traits.dm"
 //#include "modular_twilight_axis\code\datums\tat_system\domains\contractor\_contractor.dm"
 #include "modular_twilight_axis\code\datums\trophy_hunter.dm"
-#include "modular_twilight_axis\code\modules\buildings\blueprint_planner.dm" // TA EDIT
+#include "modular_twilight_axis\code\modules\buildings\blueprint_planner.dm"
 #include "modular_twilight_axis\code\datums\trophy_rules\aspirant.dm"
 #include "modular_twilight_axis\code\datums\trophy_rules\dragon.dm"
 #include "modular_twilight_axis\code\datums\trophy_rules\minotaur.dm"
