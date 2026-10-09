@@ -32,12 +32,9 @@
 		"Staff of the Shepherd" = "/obj/item/rogueweapon/woodstaff/aries",
 		"Crown of the Realm" = "/obj/item/clothing/head/roguetown/crown/serpcrown",
 		"Bell Ringer" = "/obj/item/rogueweapon/mace/church",
-		"Pepper Mill" = "/obj/item/reagent_containers/peppermill",
 		"Sword of the Mad Duke" = "/obj/item/rogueweapon/sword/rapier/lord",
 		"Judgement" = "/obj/item/rogueweapon/sword/long/judgement",
-		"Holy Book" = "/obj/item/book/rogue/bookofpriests",
 		"The Master Key" = "/obj/item/roguekey/lord",
-		"Book of Law" = "/obj/item/book/rogue/law",
 		"Garrison houndstone" = "/obj/item/scomstone/bad/garrison"
 	)
 	var/list/valid_items = list()
