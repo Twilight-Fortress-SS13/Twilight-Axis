@@ -313,4 +313,5 @@
 	backr = /obj/item/rogueweapon/spear/partizan/baotha_ta
 
 	if(H.mind)
-		H.mind.AddSpell(new /datum/action/cooldown/spell/mending/lesser)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
+		ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL)
