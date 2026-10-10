@@ -14,11 +14,11 @@
 /obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/druid/setup_ward(mob/living/carbon/human/user)
 	. = ..()
 	user.apply_status_effect(/datum/status_effect/buff/vinearmour)
-
+	
 /obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/druid/cleanup_ward()
 	if(ward_owner)
 		ward_owner.remove_status_effect(/datum/status_effect/buff/vinearmour)
-
+	
 	return ..()
 
 /datum/status_effect/buff/vinearmour
@@ -775,7 +775,11 @@
 	to_chat(src, span_notice("Dryad aggression: [dendor_dryad_aggressive_mode ? "Aggressive - attack strangers" : "Defensive - protect the summoner and obey orders"].[updated ? " Updated [updated] summoned dryad." : ""]"))
 	return TRUE
 
+/obj/effect/proc_holder/spell/targeted/conjure_glowshroom
+	miracle = TRUE
+
 /obj/effect/proc_holder/spell/invoked/root_affinity
+	miracle = TRUE
 	action_icon = 'icons/mob/actions/dendormiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/dendormiracles.dmi'
 	overlay_state = "vine"
@@ -1127,3 +1131,74 @@
 	target.visible_message(span_notice("[target] is roused by the wild magic!"))
 	consume_items(target)
 	return TRUE
+
+
+/mob/living/carbon/human/proc/ta_transfer_wildshape_worn_items(mob/living/carbon/human/target)
+	if(!target)
+		return
+	for(var/slot in list(SLOT_RING, SLOT_NECK, SLOT_WRISTS))
+		var/obj/item/I = get_item_by_slot(slot)
+		if(!I || target.get_item_by_slot(slot))
+			continue
+		if(!transferItemToLoc(I, target, TRUE))
+			continue
+		target.equip_to_slot(I, slot)
+		if(target.get_item_by_slot(slot) != I)
+			I.forceMove(get_turf(target))
+
+/mob/living/carbon/human/species/wildshape/can_equip(obj/item/I, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
+	if(istype(I, /obj/item/clothing/neck/roguetown/psicross/dendor) && (slot == SLOT_NECK || slot == SLOT_RING || slot == SLOT_WRISTS) && !get_item_by_slot(slot))
+		return TRUE
+	return ..()
+
+/mob/living/carbon/human/species/wildshape
+	var/list/ta_wildshape_miracle_states
+
+/mob/living/carbon/human/species/wildshape/proc/ta_enable_wildshape_miracles(mob/living/carbon/human/original)
+	if(!mind)
+		return
+	if(original)
+		for(var/obj/effect/proc_holder/spell/old_spell in original.mob_spell_list)
+			if(!old_spell.miracle)
+				continue
+			var/already_present = FALSE
+			for(var/obj/effect/proc_holder/spell/current_spell in mob_spell_list)
+				if(current_spell.type == old_spell.type)
+					already_present = TRUE
+					break
+			if(!already_present)
+				var/spell_type = old_spell.type
+				AddSpell(new spell_type)
+	ta_wildshape_miracle_states = list()
+	var/list/spells_to_check = mind.spell_list.Copy()
+	spells_to_check |= mob_spell_list
+	for(var/obj/effect/proc_holder/spell/legacy_spell in spells_to_check)
+		if(!legacy_spell.miracle)
+			continue
+		ta_wildshape_miracle_states[legacy_spell] = list(legacy_spell.ignore_cockblock, legacy_spell.invocation_type)
+		legacy_spell.ignore_cockblock = TRUE
+		if(legacy_spell.invocation_type == "shout" || legacy_spell.invocation_type == "whisper")
+			legacy_spell.invocation_type = "emote"
+	for(var/datum/action/cooldown/spell/divine_spell in spells_to_check)
+		if(divine_spell.primary_resource_type != SPELL_COST_DEVOTION && divine_spell.secondary_resource_type != SPELL_COST_DEVOTION && !istype(divine_spell, /datum/action/cooldown/spell/miracle))
+			continue
+		ta_wildshape_miracle_states[divine_spell] = list(divine_spell.spell_flags, divine_spell.ignore_can_speak)
+		divine_spell.spell_flags |= SPELL_IGNORE_SPELLBLOCK
+		divine_spell.ignore_can_speak = TRUE
+
+/mob/living/carbon/human/species/wildshape/proc/ta_restore_wildshape_miracles()
+	if(!ta_wildshape_miracle_states)
+		return
+	for(var/datum/spell in ta_wildshape_miracle_states)
+		if(QDELETED(spell))
+			continue
+		var/list/old_state = ta_wildshape_miracle_states[spell]
+		if(istype(spell, /obj/effect/proc_holder/spell))
+			var/obj/effect/proc_holder/spell/legacy_spell = spell
+			legacy_spell.ignore_cockblock = old_state[1]
+			legacy_spell.invocation_type = old_state[2]
+		else if(istype(spell, /datum/action/cooldown/spell))
+			var/datum/action/cooldown/spell/divine_spell = spell
+			divine_spell.spell_flags = old_state[1]
+			divine_spell.ignore_can_speak = old_state[2]
+	ta_wildshape_miracle_states = null
