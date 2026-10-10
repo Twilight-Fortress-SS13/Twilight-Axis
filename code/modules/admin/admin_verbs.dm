@@ -40,6 +40,7 @@ GLOBAL_PROTECT(admin_verbs_default)
 	/client/proc/pull_book_file_names,
 	/client/proc/admin_spread_effect,
 	/client/proc/open_bounty_menu,
+	/client/proc/open_inquisition_suspicion_menu, // TA EDIT
 	/client/proc/remove_bounty,
 	// RATWOOD MODULAR START
 	/client/proc/bunker_bypass,

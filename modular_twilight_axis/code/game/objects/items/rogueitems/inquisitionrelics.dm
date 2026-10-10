@@ -185,6 +185,7 @@
 
 GLOBAL_LIST_EMPTY(inquisition_suspicion_writs)
 GLOBAL_LIST_EMPTY(inquisition_suspicion_targeted_minds)
+GLOBAL_LIST_EMPTY(inquisition_suspicion_history)
 GLOBAL_VAR_INIT(inquisition_suspicion_submitted, 0)
 GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 
@@ -210,6 +211,8 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 	if(!J)
 		return FALSE
 	if(J.department_flag == CHURCHMEN || J.department_flag == INQUISITION)
+		return FALSE
+	if(J.department_flag == ANTAGONIST)
 		return FALSE
 	if((J.department_flag == SIDEFOLK && J.flag == MERCENARY) || J.title == "Mercenary" || H.mind.assigned_role == "Mercenary")
 		return FALSE
@@ -337,6 +340,9 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 	var/inquisitor_signature
 	var/obj/item/inqarticles/indexer/paired
 	var/submitted = FALSE
+	var/admin_status = "Активно"
+	var/admin_reward = 0
+	var/admin_submitted_by = "—"
 
 /obj/item/paper/inquisition_suspicion/Initialize(mapload)
 	. = ..()
@@ -355,6 +361,9 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 	rebuild_suspicion_writ()
 
 /obj/item/paper/inquisition_suspicion/Destroy()
+	if(!submitted && target_name)
+		admin_status = "Уничтожено"
+		update_admin_record()
 	GLOB.inquisition_suspicion_writs -= src
 	paired = null
 	target_mind = null
@@ -365,6 +374,28 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 	if(!P)
 		return "UNKNOWN"
 	return P.name
+
+/obj/item/paper/inquisition_suspicion/proc/update_admin_record()
+	if(!target_name)
+		return
+	var/faith_name = declared_patron_type ? get_patron_name(declared_patron_type) : "—"
+	var/subject_signature = target_signed ? target_signature : "—"
+	var/inq_signature = inquisitor_signed ? inquisitor_signature : "—"
+	var/index_state = paired?.full ? "Приложен" : "Нет"
+	var/faith_correct = declared_patron_type ? (declared_patron_type == target_patron_type ? "Да" : "Нет") : "—"
+	GLOB.inquisition_suspicion_history[REF(src)] = list(
+		"target" = target_name,
+		"role" = target_role,
+		"actual" = get_patron_name(target_patron_type),
+		"declared" = faith_name,
+		"correct" = faith_correct,
+		"subject_signature" = subject_signature,
+		"inquisitor_signature" = inq_signature,
+		"indexer" = index_state,
+		"status" = admin_status,
+		"reward" = admin_reward,
+		"submitted_by" = admin_submitted_by
+	)
 
 /obj/item/paper/inquisition_suspicion/proc/rebuild_suspicion_writ()
 	var/faith_text = declared_patron_type ? get_patron_name(declared_patron_type) : "НЕ УКАЗАН"
@@ -382,6 +413,7 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 	"}
 	info_links = info
 	update_icon_state()
+	update_admin_record()
 
 /obj/item/paper/inquisition_suspicion/get_mechanics_examine(mob/user)
 	. = ..()
@@ -498,6 +530,10 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 	message_admins("INQUISITION SUSPICION: [user.real_name] submitted a writ for [target_name]. Declared [get_patron_name(declared_patron_type)], actual [get_patron_name(target_patron_type)], reward [reward] Marques.")
 	log_game("INQUISITION SUSPICION: [key_name(user)] submitted a writ for [target_name]. Declared [get_patron_name(declared_patron_type)], actual [get_patron_name(target_patron_type)], reward [reward] Marques.")
 	submitted = TRUE
+	admin_status = "Сдано"
+	admin_reward = reward
+	admin_submitted_by = user.real_name
+	update_admin_record()
 	GLOB.inquisition_suspicion_writs -= src
 	qdel(paired)
 	paired = null
@@ -509,6 +545,50 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 		to_chat(user, span_notice("Otava grants a milestone bonus of [bonus] Marques for [GLOB.inquisition_suspicion_submitted] completed writs this round."))
 	qdel(src)
 	return TRUE
+
+/client/proc/open_inquisition_suspicion_menu()
+	set category = "Admin.Admin"
+	set name = "View Inquisition Writs"
+	if(!holder)
+		return
+	var/html = {"
+		<html><head><meta charset='utf-8'></head>
+		<body style='background:#181818;color:#ddd;font-family:Verdana,sans-serif;font-size:12px'>
+		<h2 style='text-align:center'>Предписания Инквизиции</h2>
+		<p>Всего выдано: [length(GLOB.inquisition_suspicion_history)] &nbsp; Активно: [length(GLOB.inquisition_suspicion_writs)] &nbsp; Сдано: [GLOB.inquisition_suspicion_submitted] &nbsp; Верно определена вера: [GLOB.inquisition_suspicion_correct]</p>
+		<table style='border-collapse:collapse;width:100%' border='1' cellspacing='0' cellpadding='5'>
+		<tr style='background:#333'><th>№</th><th>Статус</th><th>Подозреваемый</th><th>Профессия</th><th>Истинная вера</th><th>Указанная вера</th><th>Совпадает</th><th>Подпись цели</th><th>Подпись Инквизиции</th><th>INDEXER</th><th>Сдал</th><th>Выплата</th></tr>
+	"}
+	for(var/obj/item/paper/inquisition_suspicion/active_writ as anything in GLOB.inquisition_suspicion_writs)
+		if(!QDELETED(active_writ))
+			active_writ.update_admin_record()
+	var/counter = 0
+	for(var/record_id in GLOB.inquisition_suspicion_history)
+		var/list/record = GLOB.inquisition_suspicion_history[record_id]
+		if(!islist(record))
+			continue
+		counter++
+		var/status_text = html_encode(record["status"])
+		var/target_text = html_encode(record["target"])
+		var/role_text = html_encode(record["role"])
+		var/actual_text = html_encode(record["actual"])
+		var/declared_text = html_encode(record["declared"])
+		var/correct_text = html_encode(record["correct"])
+		var/subject_text = html_encode(record["subject_signature"])
+		var/inquisitor_text = html_encode(record["inquisitor_signature"])
+		var/indexer_text = html_encode(record["indexer"])
+		var/submitter_text = html_encode(record["submitted_by"])
+		var/reward_text = "—"
+		if(record["status"] == "Сдано")
+			var/issued_reward = record["reward"]
+			reward_text = "[issued_reward] марок"
+		html += "<tr><td>[counter]</td><td>[status_text]</td><td>[target_text]</td><td>[role_text]</td><td>[actual_text]</td><td>[declared_text]</td><td>[correct_text]</td><td>[subject_text]</td><td>[inquisitor_text]</td><td>[indexer_text]</td><td>[submitter_text]</td><td>[reward_text]</td></tr>"
+	if(!counter)
+		html += "<tr><td colspan='12' style='text-align:center'>Предписаний в текущем раунде ещё не выдавали.</td></tr>"
+	html += "</table></body></html>"
+	var/datum/browser/popup = new(mob, "INQUISITION_WRITS", "Inquisition Writs", 1150, 520)
+	popup.set_content(html)
+	popup.open()
 
 /proc/inquisition_suspicion_roundend_report()
 	to_world("<BR><div style='text-align: center;'><b>OTAVAN INQUISITION - HERETICAL SUSPICION</b><br>Writs submitted: [GLOB.inquisition_suspicion_submitted]<br>Faiths identified correctly: [GLOB.inquisition_suspicion_correct]</div><BR>")
