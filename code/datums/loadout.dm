@@ -5481,3 +5481,15 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/mask/rogue/facemask/goldmask/radiant
 	donatitem = TRUE
 	donat_tier = 2
+
+/datum/loadout_item/donator/dragontea_hat
+	name = "Greathat, Dyeable"
+	category = list("Головные уборы", "Триумфы")
+	path = /obj/item/clothing/head/roguetown/duelhat/dragontea
+	triumph_cost = 5
+
+/datum/loadout_item/donator/dragontea_featherhat
+	name = "Etruscan Design Hat"
+	category = list("Головные уборы", "Триумфы")
+	path = /obj/item/clothing/head/roguetown/duelisthat/dragontea
+	triumph_cost = 5
