@@ -199,29 +199,37 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 	if(H.patron.type == /datum/patron/old_god)
 		return "psydon"
 
-/proc/inquisition_suspicion_is_eligible(mob/living/carbon/human/H)
-	if(!H || H.stat == DEAD || !H.client || !H.mind)
-		return FALSE
+/proc/inquisition_suspicion_eligibility_reason(mob/living/carbon/human/H)
+	if(!istype(H) || H.stat == DEAD || !H.client || !H.mind)
+		return
 	if(H.mind in GLOB.inquisition_suspicion_targeted_minds)
-		return FALSE
-	var/job_name = H.job
-	if(!job_name)
-		job_name = H.mind.assigned_role
-	var/datum/job/J = SSjob.GetJob(job_name)
+		return
+	if(length(H.mind.antag_datums) || H.mind.special_role)
+		return
+	var/datum/job/J = SSjob.GetJob(H.job)
 	if(!J)
-		return FALSE
-	if(J.department_flag == CHURCHMEN || J.department_flag == INQUISITION)
-		return FALSE
-	if(J.department_flag == ANTAGONIST)
-		return FALSE
-	if((J.department_flag == SIDEFOLK && J.flag == MERCENARY) || J.title == "Mercenary" || H.mind.assigned_role == "Mercenary")
-		return FALSE
+		J = H.mind.assigned_role
+	if(!J)
+		return
+	if(J.department_flag == CHURCHMEN || J.department_flag == INQUISITION || J.department_flag == ANTAGONIST)
+		return
+	if((J.department_flag == SIDEFOLK && J.flag == MERCENARY) || J.title == "Mercenary" || H.mind.assigned_role?.title == "Mercenary")
+		return
 	if(J.department_flag == NOBLEMEN && J.flag == LORD)
-		return FALSE
-	var/city_role = J.department_flag in list(NOBLEMEN, COURTIERS, RETINUE, GARRISON, CITYWATCH, VANGUARD, BURGHERS, ATC, PEASANTS)
-	if(!city_role && !HAS_TRAIT(H, TRAIT_RESIDENT))
-		return FALSE
-	return !!inquisition_suspicion_patron_group(H)
+		return
+	var/city_role = FALSE
+	switch(J.department_flag)
+		if(NOBLEMEN, COURTIERS, RETINUE, GARRISON, CITYWATCH, VANGUARD, BURGHERS, ATC, PEASANTS)
+			city_role = TRUE
+	var/resident = HAS_TRAIT(H, TRAIT_RESIDENT)
+	if(!city_role && !resident)
+		return
+	if(!inquisition_suspicion_patron_group(H))
+		return
+	return city_role ? "City role" : "Resident trait"
+
+/proc/inquisition_suspicion_is_eligible(mob/living/carbon/human/H)
+	return !!inquisition_suspicion_eligibility_reason(H)
 
 /proc/inquisition_suspicion_target_weight(mob/living/carbon/human/H)
 	var/job_name = H.job
@@ -353,7 +361,8 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 /obj/item/paper/inquisition_suspicion/Initialize(mapload)
 	. = ..()
 	var/mob/living/carbon/human/target = get_inquisition_suspicion_target()
-	if(!target)
+	var/eligibility = inquisition_suspicion_eligibility_reason(target)
+	if(!eligibility)
 		return INITIALIZE_HINT_QDEL
 	target_mind = target.mind
 	target_name = target.real_name
@@ -363,10 +372,7 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 	target_ckey = target.ckey
 	target_assigned_role = target.mind?.assigned_role
 	target_resident = HAS_TRAIT(target, TRAIT_RESIDENT)
-	target_eligibility = "Resident trait"
-	var/datum/job/target_job = SSjob.GetJob(target_role)
-	if(target_job && (target_job.department_flag in list(NOBLEMEN, COURTIERS, RETINUE, GARRISON, CITYWATCH, VANGUARD, BURGHERS, ATC, PEASANTS)))
-		target_eligibility = "City role"
+	target_eligibility = eligibility
 	writ_id = length(GLOB.inquisition_suspicion_history) + 1
 	target_patron_type = target.patron?.type
 	role_reward = inquisition_suspicion_role_reward(target)
