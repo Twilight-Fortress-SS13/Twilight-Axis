@@ -188,6 +188,7 @@ GLOBAL_LIST_EMPTY(inquisition_suspicion_targeted_minds)
 GLOBAL_LIST_EMPTY(inquisition_suspicion_history)
 GLOBAL_VAR_INIT(inquisition_suspicion_submitted, 0)
 GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
+GLOBAL_VAR_INIT(inquisition_suspicion_next_failure_log, 0)
 
 /proc/inquisition_suspicion_patron_group(mob/living/carbon/human/H)
 	if(!H?.patron)
@@ -199,33 +200,35 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 	if(H.patron.type == /datum/patron/old_god)
 		return "psydon"
 
-/proc/inquisition_suspicion_eligibility_reason(mob/living/carbon/human/H)
+/proc/inquisition_suspicion_reject(list/rejections, reason)
+	if(islist(rejections))
+		rejections[reason] = (rejections[reason] || 0) + 1
+	return null
+
+/proc/inquisition_suspicion_eligibility_reason(mob/living/carbon/human/H, list/rejections)
 	if(!istype(H) || H.stat == DEAD || !H.client || !H.mind)
-		return
+		return inquisition_suspicion_reject(rejections, "inactive")
 	if(H.mind in GLOB.inquisition_suspicion_targeted_minds)
-		return
-	if(length(H.mind.antag_datums) || H.mind.special_role)
-		return
+		return inquisition_suspicion_reject(rejections, "previously_targeted")
+	if(length(H.mind.antag_datums))
+		return inquisition_suspicion_reject(rejections, "antagonist")
 	var/datum/job/J = SSjob.GetJob(H.job)
-	if(!J)
+	if(!J && istype(H.mind.assigned_role, /datum/job))
 		J = H.mind.assigned_role
 	if(!J)
-		return
-	if(J.department_flag == CHURCHMEN || J.department_flag == INQUISITION || J.department_flag == ANTAGONIST)
-		return
-	if((J.department_flag == SIDEFOLK && J.flag == MERCENARY) || J.title == "Mercenary" || H.mind.assigned_role?.title == "Mercenary")
-		return
-	if(J.department_flag == NOBLEMEN && J.flag == LORD)
-		return
-	var/city_role = FALSE
-	switch(J.department_flag)
-		if(NOBLEMEN, COURTIERS, RETINUE, GARRISON, CITYWATCH, VANGUARD, BURGHERS, ATC, PEASANTS)
-			city_role = TRUE
+		return inquisition_suspicion_reject(rejections, "no_job")
+	if(J.department_flag & (CHURCHMEN | INQUISITION | ANTAGONIST))
+		return inquisition_suspicion_reject(rejections, "excluded_department")
+	if(((J.department_flag & SIDEFOLK) && J.flag == MERCENARY) || J.title == "Mercenary" || H.mind.assigned_role?.title == "Mercenary")
+		return inquisition_suspicion_reject(rejections, "mercenary")
+	if((J.department_flag & NOBLEMEN) && J.flag == LORD)
+		return inquisition_suspicion_reject(rejections, "ruler")
+	var/city_role = !!(J.department_flag & (NOBLEMEN | COURTIERS | RETINUE | GARRISON | CITYWATCH | VANGUARD | BURGHERS | ATC | PEASANTS))
 	var/resident = HAS_TRAIT(H, TRAIT_RESIDENT)
 	if(!city_role && !resident)
-		return
+		return inquisition_suspicion_reject(rejections, "not_city_or_resident")
 	if(!inquisition_suspicion_patron_group(H))
-		return
+		return inquisition_suspicion_reject(rejections, "no_supported_patron")
 	return city_role ? "City role" : "Resident trait"
 
 /proc/inquisition_suspicion_is_eligible(mob/living/carbon/human/H)
@@ -262,8 +265,9 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 	var/list/inhumen_candidates = list()
 	var/list/divine_candidates = list()
 	var/list/psydon_candidates = list()
+	var/list/rejections = list()
 	for(var/mob/living/carbon/human/H as anything in GLOB.human_list)
-		if(!inquisition_suspicion_is_eligible(H))
+		if(!inquisition_suspicion_eligibility_reason(H, rejections))
 			continue
 		var/weight = inquisition_suspicion_target_weight(H)
 		switch(inquisition_suspicion_patron_group(H))
@@ -281,6 +285,11 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 	if(length(psydon_candidates))
 		group_weights["psydon"] = 10
 	if(!length(group_weights))
+		if(world.time >= GLOB.inquisition_suspicion_next_failure_log)
+			GLOB.inquisition_suspicion_next_failure_log = world.time + 1 MINUTES
+			var/entry = "INQUISITION WRIT | NO_ELIGIBLE_TARGETS | humans=[length(GLOB.human_list)] | rejects=[json_encode(rejections)]"
+			log_game(entry)
+			log_admin(entry)
 		return
 	var/group = pickweight(group_weights)
 	switch(group)
