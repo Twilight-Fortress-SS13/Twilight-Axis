@@ -329,8 +329,14 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 	desc = "An official writ from Otava naming a resident of the realm for doctrinal investigation. The subject's blood must be indexed, their professed faith recorded, and an inquisitorial signature affixed in blood before the writ is returned through a HERMES."
 	icon_state = "paper"
 	var/datum/mind/target_mind
+	var/writ_id = 0
 	var/target_name
+	var/target_ckey = "—"
 	var/target_role
+	var/target_assigned_role = "—"
+	var/target_eligibility = "—"
+	var/target_resident = FALSE
+	var/purchased_by = "—"
 	var/target_patron_type
 	var/declared_patron_type
 	var/role_reward = 5
@@ -354,16 +360,26 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 	target_role = target.job
 	if(!target_role)
 		target_role = target.mind?.assigned_role
+	target_ckey = target.ckey
+	target_assigned_role = target.mind?.assigned_role
+	target_resident = HAS_TRAIT(target, TRAIT_RESIDENT)
+	target_eligibility = "Resident trait"
+	var/datum/job/target_job = SSjob.GetJob(target_role)
+	if(target_job && (target_job.department_flag in list(NOBLEMEN, COURTIERS, RETINUE, GARRISON, CITYWATCH, VANGUARD, BURGHERS, ATC, PEASANTS)))
+		target_eligibility = "City role"
+	writ_id = length(GLOB.inquisition_suspicion_history) + 1
 	target_patron_type = target.patron?.type
 	role_reward = inquisition_suspicion_role_reward(target)
 	GLOB.inquisition_suspicion_writs += src
 	GLOB.inquisition_suspicion_targeted_minds |= target_mind
 	rebuild_suspicion_writ()
+	log_writ_event("ISSUED", null, "group=[inquisition_suspicion_patron_group(target)]; selection_weight=[inquisition_suspicion_target_weight(target)]; base_reward=[role_reward]")
 
 /obj/item/paper/inquisition_suspicion/Destroy()
 	if(!submitted && target_name)
 		admin_status = "Уничтожено"
 		update_admin_record()
+		log_writ_event("DESTROYED", null, "location=[get_turf(src)]")
 	GLOB.inquisition_suspicion_writs -= src
 	paired = null
 	target_mind = null
@@ -375,6 +391,19 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 		return "UNKNOWN"
 	return P.name
 
+/obj/item/paper/inquisition_suspicion/proc/log_writ_event(event, mob/actor, details)
+	var/actor_identity = "SYSTEM"
+	if(actor)
+		actor_identity = key_name(actor)
+	var/entry = "INQUISITION WRIT #[writ_id] | [event] | actor=[actor_identity] | target=[target_name] | ckey=[target_ckey] | job=[target_role] | assigned_role=[target_assigned_role] | eligibility=[target_eligibility] | Resident=[target_resident] | actual_patron=[get_patron_name(target_patron_type)] | [details]"
+	log_game(entry)
+	log_admin(entry)
+
+/obj/item/paper/inquisition_suspicion/proc/record_purchase(mob/user, obj/structure/roguemachine/mail/hermes)
+	purchased_by = key_name(user)
+	update_admin_record()
+	log_writ_event("PURCHASED", user, "cost=10; HERMES_coordinates=[hermes.x],[hermes.y],[hermes.z]")
+
 /obj/item/paper/inquisition_suspicion/proc/update_admin_record()
 	if(!target_name)
 		return
@@ -384,8 +413,14 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 	var/index_state = paired?.full ? "Приложен" : "Нет"
 	var/faith_correct = declared_patron_type ? (declared_patron_type == target_patron_type ? "Да" : "Нет") : "—"
 	GLOB.inquisition_suspicion_history[REF(src)] = list(
+		"id" = writ_id,
 		"target" = target_name,
+		"target_ckey" = target_ckey,
 		"role" = target_role,
+		"assigned_role" = target_assigned_role,
+		"eligibility" = target_eligibility,
+		"resident" = target_resident ? "Да" : "Нет",
+		"purchased_by" = purchased_by,
 		"actual" = get_patron_name(target_patron_type),
 		"declared" = faith_name,
 		"correct" = faith_correct,
@@ -439,6 +474,7 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 		playsound(src, 'sound/items/write.ogg', 100, FALSE)
 		rebuild_suspicion_writ()
 		to_chat(user, span_notice("Your blood settles into the parchment. The writ records your patron as [get_patron_name(target_patron_type)]."))
+		log_writ_event("SUBJECT_SIGNED", M, "declared_patron=[get_patron_name(declared_patron_type)]")
 		return
 	if(HAS_TRAIT(M, TRAIT_INQUISITION) || HAS_TRAIT(M, TRAIT_PURITAN))
 		if(inquisitor_signed)
@@ -449,6 +485,7 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 		playsound(src, 'sound/items/write.ogg', 100, FALSE)
 		rebuild_suspicion_writ()
 		to_chat(user, span_notice("You sign the writ in blood."))
+		log_writ_event("INQUISITOR_SIGNED", M, "signature=[inquisitor_signature]")
 		return
 	to_chat(user, span_warning("Only the named subject or a member of the Inquisition may sign this writ."))
 
@@ -470,6 +507,7 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 		user.transferItemToLoc(I, src, TRUE)
 		rebuild_suspicion_writ()
 		playsound(src, 'sound/items/inqslip_sealed.ogg', 75, TRUE, 4)
+		log_writ_event("INDEXER_ATTACHED", user, "blood_subject=[key_name(I.subject)]; indexer_full=[I.full]")
 		return
 	if(istype(P, /obj/item/natural/thorn) || istype(P, /obj/item/natural/feather))
 		if(target_signed)
@@ -482,17 +520,21 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 		if(target_signed)
 			to_chat(user, span_notice("The subject's blood signature has already fixed the recorded patron as [get_patron_name(target_patron_type)]."))
 			return
+		var/previous_patron = declared_patron_type ? get_patron_name(declared_patron_type) : "—"
 		declared_patron_type = patron_choices[chosen]
 		playsound(src, 'sound/items/write.ogg', 100, FALSE)
 		rebuild_suspicion_writ()
+		log_writ_event("PATRON_RECORDED", user, "previous=[previous_patron]; declared=[get_patron_name(declared_patron_type)]")
 		return
 	return
 
 /obj/item/paper/inquisition_suspicion/attack_right(mob/user)
 	if(paired && !submitted && !user.get_active_held_item())
+		var/obj/item/inqarticles/indexer/removed_indexer = paired
 		user.put_in_active_hand(paired, user.active_hand_index)
 		paired = null
 		rebuild_suspicion_writ()
+		log_writ_event("INDEXER_REMOVED", user, "blood_subject=[key_name(removed_indexer.subject)]")
 		return TRUE
 	return ..()
 
@@ -528,12 +570,12 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 	if(correct)
 		GLOB.inquisition_suspicion_correct++
 	message_admins("INQUISITION SUSPICION: [user.real_name] submitted a writ for [target_name]. Declared [get_patron_name(declared_patron_type)], actual [get_patron_name(target_patron_type)], reward [reward] Marques.")
-	log_game("INQUISITION SUSPICION: [key_name(user)] submitted a writ for [target_name]. Declared [get_patron_name(declared_patron_type)], actual [get_patron_name(target_patron_type)], reward [reward] Marques.")
 	submitted = TRUE
 	admin_status = "Сдано"
 	admin_reward = reward
-	admin_submitted_by = user.real_name
+	admin_submitted_by = key_name(user)
 	update_admin_record()
+	log_writ_event("SUBMITTED", user, "declared_patron=[get_patron_name(declared_patron_type)]; correct=[correct]; base_reward=[role_reward]; reimbursement=11; milestone_bonus=[bonus]; paid=[reward]; round_submitted=[GLOB.inquisition_suspicion_submitted]")
 	GLOB.inquisition_suspicion_writs -= src
 	qdel(paired)
 	paired = null
@@ -557,7 +599,7 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 		<h2 style='text-align:center'>Предписания Инквизиции</h2>
 		<p>Всего выдано: [length(GLOB.inquisition_suspicion_history)] &nbsp; Активно: [length(GLOB.inquisition_suspicion_writs)] &nbsp; Сдано: [GLOB.inquisition_suspicion_submitted] &nbsp; Верно определена вера: [GLOB.inquisition_suspicion_correct]</p>
 		<table style='border-collapse:collapse;width:100%' border='1' cellspacing='0' cellpadding='5'>
-		<tr style='background:#333'><th>№</th><th>Статус</th><th>Подозреваемый</th><th>Профессия</th><th>Истинная вера</th><th>Указанная вера</th><th>Совпадает</th><th>Подпись цели</th><th>Подпись Инквизиции</th><th>INDEXER</th><th>Сдал</th><th>Выплата</th></tr>
+		<tr style='background:#333'><th>№</th><th>Статус</th><th>Кто купил</th><th>Подозреваемый</th><th>ckey</th><th>Профессия</th><th>Основание</th><th>Resident</th><th>Истинная вера</th><th>Указанная вера</th><th>Совпадает</th><th>Подпись цели</th><th>Подпись Инквизиции</th><th>INDEXER</th><th>Сдал</th><th>Выплата</th></tr>
 	"}
 	for(var/obj/item/paper/inquisition_suspicion/active_writ as anything in GLOB.inquisition_suspicion_writs)
 		if(!QDELETED(active_writ))
@@ -569,8 +611,12 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 			continue
 		counter++
 		var/status_text = html_encode(record["status"])
+		var/buyer_text = html_encode(record["purchased_by"])
 		var/target_text = html_encode(record["target"])
+		var/ckey_text = html_encode(record["target_ckey"])
 		var/role_text = html_encode(record["role"])
+		var/eligibility_text = html_encode(record["eligibility"])
+		var/resident_text = html_encode(record["resident"])
 		var/actual_text = html_encode(record["actual"])
 		var/declared_text = html_encode(record["declared"])
 		var/correct_text = html_encode(record["correct"])
@@ -582,9 +628,10 @@ GLOBAL_VAR_INIT(inquisition_suspicion_correct, 0)
 		if(record["status"] == "Сдано")
 			var/issued_reward = record["reward"]
 			reward_text = "[issued_reward] марок"
-		html += "<tr><td>[counter]</td><td>[status_text]</td><td>[target_text]</td><td>[role_text]</td><td>[actual_text]</td><td>[declared_text]</td><td>[correct_text]</td><td>[subject_text]</td><td>[inquisitor_text]</td><td>[indexer_text]</td><td>[submitter_text]</td><td>[reward_text]</td></tr>"
+		var/writ_number = record["id"]
+		html += "<tr><td>[writ_number]</td><td>[status_text]</td><td>[buyer_text]</td><td>[target_text]</td><td>[ckey_text]</td><td>[role_text]</td><td>[eligibility_text]</td><td>[resident_text]</td><td>[actual_text]</td><td>[declared_text]</td><td>[correct_text]</td><td>[subject_text]</td><td>[inquisitor_text]</td><td>[indexer_text]</td><td>[submitter_text]</td><td>[reward_text]</td></tr>"
 	if(!counter)
-		html += "<tr><td colspan='12' style='text-align:center'>Предписаний в текущем раунде ещё не выдавали.</td></tr>"
+		html += "<tr><td colspan='16' style='text-align:center'>Предписаний в текущем раунде ещё не выдавали.</td></tr>"
 	html += "</table></body></html>"
 	var/datum/browser/popup = new(mob, "INQUISITION_WRITS", "Inquisition Writs", 1150, 520)
 	popup.set_content(html)

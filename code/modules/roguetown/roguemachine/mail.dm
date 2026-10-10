@@ -1344,7 +1344,10 @@
 		var/turf/T = pick(turfs)
 		var/pathi = pick(PA.item_type)
 		playsound(T, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
-		new pathi(get_turf(T))
+		var/atom/movable/purchased_item = new pathi(get_turf(T)) // TA EDIT START
+		if(istype(purchased_item, /obj/item/paper/inquisition_suspicion))
+			var/obj/item/paper/inquisition_suspicion/purchased_writ = purchased_item
+			purchased_writ.record_purchase(usr, src) // TA EDIT END
 		refresh_marquette = TRUE
 
 	if(refresh_marquette)
