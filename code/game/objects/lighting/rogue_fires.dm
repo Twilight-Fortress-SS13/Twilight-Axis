@@ -601,6 +601,7 @@
 			return TRUE
 
 /obj/machinery/light/rogue/hearth/process()
+	ta_burn_mobs_on_tile() // TA EDIT
 	if(isopenturf(loc))
 		var/turf/open/O = loc
 		if(IS_WET_OPEN_TURF(O))

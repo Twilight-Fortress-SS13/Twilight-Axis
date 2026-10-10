@@ -3578,6 +3578,7 @@
 #include "modular_twilight_axis\code\_DEFINES\area_detail_text.dm"
 #include "modular_twilight_axis\code\datums\ai\controllers\spectral.dm"
 #include "modular_twilight_axis\code\game\area\kingtomb.dm"
+#include "modular_twilight_axis\code\game\objects\lighting\_base_roguelight.dm"
 #include "modular_twilight_axis\code\game\objects\structures\traps.dm"
 #include "modular_twilight_axis\code\game\objects\items\rogueitems\cookware.dm"
 #include "modular_twilight_axis\code\modules\clothing\rogueclothes\gloves\plate.dm"
