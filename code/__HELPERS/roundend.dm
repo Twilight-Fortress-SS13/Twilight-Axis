@@ -201,6 +201,7 @@
 		cb.InvokeAsync()
 	LAZYCLEARLIST(round_end_events)
 
+	inquisition_suspicion_roundend_report() // TA EDIT
 	to_world("Round ID: [GLOB.rogue_round_id]")
 
 	sleep(5 SECONDS)

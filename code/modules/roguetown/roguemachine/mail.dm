@@ -986,6 +986,11 @@
 					to_chat(user, span_warning("[I] requires either a signature, or an INDEXER with their blood."))
 				return
 
+	if(istype(P, /obj/item/paper/inquisition_suspicion)) // TA EDIT START
+		var/obj/item/paper/inquisition_suspicion/I = P
+		I.submit_to_otava(user)
+		return // TA EDIT END
+
 	if(istype(P, /obj/item/paper) || istype(P, /obj/item/smallDelivery))
 		if(inqcoins)
 			to_chat(user, span_warning("The machine doesn't respond."))
@@ -1319,6 +1324,8 @@
 		var/datum/inqports/PA = GLOB.inqsupplies[path]
 		if(!PA)
 			return
+		if(inqcoins < PA.marquescost || (PA.maximum && PA.remaining <= 0) || !PA.can_purchase(usr)) // TA EDIT
+			return display_marquette(usr) // TA EDIT
 
 		inqcoins -= PA.marquescost
 		if(PA.maximum)
@@ -1337,7 +1344,10 @@
 		var/turf/T = pick(turfs)
 		var/pathi = pick(PA.item_type)
 		playsound(T, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
-		new pathi(get_turf(T))
+		var/atom/movable/purchased_item = new pathi(get_turf(T)) // TA EDIT START
+		if(istype(purchased_item, /obj/item/paper/inquisition_suspicion))
+			var/obj/item/paper/inquisition_suspicion/purchased_writ = purchased_item
+			purchased_writ.record_purchase(usr, src) // TA EDIT END
 		refresh_marquette = TRUE
 
 	if(refresh_marquette)

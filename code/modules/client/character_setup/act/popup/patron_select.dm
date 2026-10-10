@@ -7,6 +7,9 @@
 			var/datum/patron/picked = GLOB.preference_patrons[text2path(params["patron"])]
 			if(!picked?.name)
 				return CHARACTER_ACT_DATA_UPDATE
+			if(picked.type == /datum/patron/old_god && has_flaw(/datum/charflaw/inquisition_suspect)) // TA EDIT START
+				to_chat(user, span_warning("Remove Under Suspicion before choosing Psydon."))
+				return CHARACTER_ACT_DATA_UPDATE // TA EDIT END
 
 			verbose_pref_log_change(user, "notice", "Patron", selected_patron.name, picked)
 			selected_patron = picked
