@@ -27,7 +27,7 @@
 
 /datum/status_effect/magic_barrier_cooldown/on_apply()
 	. = ..()
-	duration = max(7 - owner.get_skill_level(/datum/skill/magic/arcane), 1) MINUTES
+	duration = max(7 - owner.get_skill_level(/datum/skill/combat/arcyne), 1) MINUTES
 
 /datum/status_effect/magic_barrier_cooldown/on_remove()
 	. = ..()
