@@ -4264,6 +4264,7 @@
 #include "modular_twilight_axis\code\modules\mob\living\carbon\human\human.dm"
 #include "modular_twilight_axis\code\modules\mob\living\carbon\human\table_crawl.dm"
 #include "modular_twilight_axis\code\modules\mob\living\emote.dm"
+#include "modular_twilight_axis\code\modules\mob\living\combat\magic_barrier.dm"
 #include "modular_twilight_axis\code\modules\mob\living\carbon\human\emotes_noises.dm"
 #include "modular_twilight_axis\code\modules\mob\living\carbon\human\npc\skeleton\skeleton_outfits.dm"
 #include "modular_twilight_axis\code\modules\mob\living\simple_animal\friendly\cat.dm"
