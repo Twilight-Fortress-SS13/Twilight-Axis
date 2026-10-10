@@ -20,21 +20,37 @@
 /turf/open/transparent/update_multiz(prune_on_fail = FALSE, init = FALSE)
 	. = ..()
 
-	var/turf/T = GET_TURF_BELOW(src)
-	if(!T)
-		T = get_step_multiz(src, DOWN)
-	if(!T && z > 1)
-		T = locate(x, y, z - 1)
+	var/turf/T = below_turf() //TA EDIT
 
 	if(!T)
 		vis_contents.len = 0
+		lighting_object?.reapply() //TA EDIT
 		if(!show_bottom_level() && prune_on_fail)
 			ChangeTurf(/turf/open/floor/rogue/naturalstone, flags = CHANGETURF_INHERIT_AIR)
 		return FALSE
 
 	if(init)
-		vis_contents += T
+		update_below_cover(T) //TA EDIT
 	return TRUE
+
+/turf/open/transparent/proc/below_turf() //TA EDIT START
+	. = GET_TURF_BELOW(src)
+	if(!.)
+		. = get_step_multiz(src, DOWN)
+	if(!. && z > 1)
+		. = locate(x, y, z - 1)
+
+/turf/open/transparent/proc/update_below_cover(turf/below)
+	if(!below)
+		below = below_turf()
+	if(!below)
+		return
+	for(var/obj/structure/floordoor/hatch in src)
+		if(hatch.obj_flags & BLOCK_Z_OUT_DOWN)
+			vis_contents -= below
+			return
+	if(!(below in vis_contents))
+		vis_contents += below //TA EDIT END
 
 /turf/open/transparent/multiz_turf_del(turf/T, dir)
 	if(dir != DOWN)

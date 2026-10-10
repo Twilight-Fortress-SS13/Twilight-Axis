@@ -97,7 +97,7 @@ SUBSYSTEM_DEF(lighting)
 	queue = objects_queue
 	while(current_index < length(queue))
 		current_index += 1
-		var/atom/movable/lighting_object/O = queue[current_index]
+		var/datum/lighting_object/O = queue[current_index] //TA EDIT
 
 		if(QDELETED(O))
 			continue
