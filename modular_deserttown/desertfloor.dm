@@ -46,6 +46,7 @@
 	icon = 'modular_deserttown/icons/duneedge.dmi'
 	icon_state = "duneedge"
 	mouse_opacity = 0
+	bake_to_loc = TRUE
 
 /turf/open/floor/rogue/sandbrick
 	icon_state = "sand-brick1"
@@ -176,6 +177,7 @@
 	icon = 'modular_deserttown/icons/desertfloor.dmi'
 	icon_state = "desertgrassedge"
 	mouse_opacity = 0
+	bake_to_loc = TRUE
 
 /turf/open/floor/rogue/desert_grass
 	name = "desert grass"

@@ -17,6 +17,36 @@
 	icon_state = "top"
 	layer = BELOW_MOB_LAYER
 
+GLOBAL_LIST_EMPTY(water_visuals) //TA EDIT START
+
+/obj/effect/overlay/water_visual
+	name = ""
+	icon = null
+	anchored = TRUE
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	appearance_flags = NONE
+
+/obj/item
+	var/tmp/water_sunk_alpha
+
+/obj/item/Initialize(mapload)
+	. = ..()
+	var/turf/open/water/pool = loc
+	if(istype(pool) && pool.platform_atom_count <= 0)
+		sink_in_water()
+
+/obj/item/proc/sink_in_water()
+	if(!isnull(water_sunk_alpha))
+		return
+	water_sunk_alpha = alpha
+	alpha = round(alpha * WATER_SUNK_ALPHA_MULT)
+
+/obj/item/proc/surface_from_water()
+	if(isnull(water_sunk_alpha))
+		return
+	alpha = water_sunk_alpha
+	water_sunk_alpha = null //TA EDIT END
+
 
 /turf/open/water
 	gender = PLURAL
@@ -26,8 +56,12 @@
 	icon_state = "together"
 	baseturfs = /turf/open/water
 	slowdown = 5
-	var/obj/effect/overlay/water/water_overlay
-	var/obj/effect/overlay/water/top/water_top_overlay
+	var/water_bottom_state //TA EDIT START
+	var/water_top_state
+	var/water_dir = SOUTH
+	var/water_lifted = FALSE
+	var/list/water_overlays_applied
+	var/obj/effect/overlay/water_visual/water_visual //TA EDIT END
 	bullet_sizzle = TRUE
 	bullet_bounce_sound = null //needs a splashing sound one day.
 	smooth = SMOOTH_MORE
@@ -60,9 +94,7 @@
 
 /turf/open/water/Initialize(mapload)
 	.	= ..()
-	water_overlay = new(src)
-	water_top_overlay = new(src)
-	update_icon()
+	update_icon() //TA EDIT
 	if(freeze_type)
 		// Deliberately no runtime catch-up here, unlike /turf/open/floor/rogue/grass. Most
 		// water that appears mid-round in winter appears *because* ice broke or was cut open,
@@ -86,30 +118,79 @@
 	F.seasonal_freeze = TRUE
 	return F
 
-/turf/open/water/update_icon()
-	if(water_overlay)
-		water_overlay.color = water_color
-		water_overlay.icon_state = "bottom[water_level]"
-	if(water_top_overlay)
-		water_top_overlay.color = water_color
-		water_top_overlay.icon_state = "top[water_level]"
+/turf/open/water/update_icon() //TA EDIT START
+	update_water_states()
+	rebuild_water_overlays()
+	return ..()
+
+/turf/open/water/proc/update_water_states()
+	water_bottom_state = "bottom[water_level]"
+	water_top_state = "top[water_level]"
+
+/turf/open/water/proc/water_part(state, part_layer, part_plane, edge = FALSE)
+	var/mutable_appearance/part = new(image(edge ? icon : 'icons/turf/newwater.dmi', null, state, part_layer, edge ? SOUTH : water_dir))
+	part.plane = part_plane
+	part.color = water_color
+	return part
+
+/turf/open/water/proc/water_bottom_parts(part_layer, part_plane)
+	. = list(water_part(water_bottom_state, part_layer, part_plane))
+	for(var/edge_state in neighborlay_list)
+		. += water_part(edge_state, part_layer + WATER_EDGE_LAYER_STEP, part_plane, TRUE)
+
+/turf/open/water/proc/lifted_water_visual()
+	var/key = "[water_bottom_state]|[water_dir]|[water_color]|[icon]|[LAZYLEN(neighborlay_list) ? jointext(neighborlay_list, ",") : ""]"
+	var/obj/effect/overlay/water_visual/visual = GLOB.water_visuals[key]
+	if(!visual)
+		visual = new
+		visual.overlays = water_bottom_parts(ABOVE_MOB_LAYER, GAME_PLANE_HIGHEST)
+		GLOB.water_visuals[key] = visual
+	return visual
+
+/turf/open/water/proc/rebuild_water_overlays()
+	if(water_overlays_applied)
+		cut_overlay(water_overlays_applied)
+		water_overlays_applied = null
+	if(water_visual)
+		vis_contents -= water_visual
+		water_visual = null
+	if(!water_bottom_state)
+		return
+	var/list/parts = list()
+	if(water_lifted)
+		water_visual = lifted_water_visual()
+		vis_contents += water_visual
+	else
+		parts += water_bottom_parts(WATER_BOTTOM_LAYER, FLOAT_PLANE)
+	parts += water_part(water_top_state, WATER_TOP_LAYER, FLOAT_PLANE)
+	for(var/edge_state in neighborlay_list)
+		parts += water_part(edge_state, WATER_TOP_LAYER + WATER_EDGE_LAYER_STEP, FLOAT_PLANE, TRUE)
+	water_overlays_applied = parts
+	add_overlay(parts)
+
+/turf/open/water/proc/set_water_lifted(lifted)
+	if(water_lifted == lifted)
+		return
+	water_lifted = lifted
+	rebuild_water_overlays() //TA EDIT END
 
 /turf/open/water/Exited(atom/movable/AM, atom/newloc)
 	. = ..()
+	if(isitem(AM)) //TA EDIT START
+		var/obj/item/gone_item = AM
+		gone_item.surface_from_water() //TA EDIT END
 	if(isliving(AM) && !AM.throwing)
 		var/mob/living/user = AM
 		if(isliving(user) && !user.is_floor_hazard_immune())
 			if(platform_atom_count > 0)
 				return
-			if(water_overlay)
+			if(water_bottom_state) //TA EDIT START
 				if((get_dir(src, newloc) == SOUTH))
-					water_overlay.layer = BELOW_MOB_LAYER
-					water_overlay.plane = GAME_PLANE
+					set_water_lifted(FALSE)
 				else
 					spawn(6)
 						if(!locate(/mob/living) in src)
-							water_overlay.layer = BELOW_MOB_LAYER
-							water_overlay.plane = GAME_PLANE
+							set_water_lifted(FALSE) //TA EDIT END
 			if(user.water_dragged) // TA EDIT
 				return // TA EDIT
 			var/drained = get_stamina_drain(user, get_dir(src, newloc))
@@ -190,21 +271,17 @@
 		var/obj/O = AM
 		if(O.extinguishable)
 			O.extinguish()
+	if(isitem(AM) && AM.loc == src && platform_atom_count <= 0) //TA EDIT START
+		var/obj/item/landed_item = AM
+		landed_item.sink_in_water() //TA EDIT END
 
 
 /turf/open/water/cardinal_smooth(adjacencies)
 	roguesmooth(adjacencies)
 
 /turf/open/water/roguesmooth(adjacencies)
-	var/list/Yeah = ..()
-	if(water_overlay)
-		water_overlay.cut_overlays(TRUE)
-		if(Yeah)
-			water_overlay.add_overlay(Yeah)
-	if(water_top_overlay)
-		water_top_overlay.cut_overlays(TRUE)
-		if(Yeah)
-			water_top_overlay.add_overlay(Yeah)
+	. = ..()
+	rebuild_water_overlays() //TA EDIT
 
 /turf/open/water/Entered(atom/movable/AM, atom/oldLoc)
 	. = ..()
@@ -216,6 +293,9 @@
 			SEND_GLOBAL_SIGNAL(COMSIG_GLOBAL_FISH_RELEASED, F.type, F.rarity_rank)
 			F.visible_message("<span class='warning'>[F] dives into \the [src] and disappears!</span>")
 			qdel(F)
+	if(isitem(AM) && !AM.throwing && !QDELETED(AM)) //TA EDIT START
+		var/obj/item/arrived_item = AM
+		arrived_item.sink_in_water() //TA EDIT END
 	if(isliving(AM) && !AM.throwing)
 		var/mob/living/L = AM
 		if(HAS_TRAIT(L, TRAIT_CURSE_ABYSSOR))
@@ -232,19 +312,17 @@
 		else
 			if(water_level == 2)
 				L.SoakMob(BELOW_CHEST)
-		if(water_overlay)
+		if(water_bottom_state) //TA EDIT
 			if(water_level > 1 && !istype(oldLoc, type))
 				playsound(AM, 'sound/foley/waterenter.ogg', 100, FALSE)
 			else
 				playsound(AM, pick('sound/foley/watermove (1).ogg','sound/foley/watermove (2).ogg'), 100, FALSE)
-			if(istype(oldLoc, type) && (get_dir(src, oldLoc) != SOUTH))
-				water_overlay.layer = ABOVE_MOB_LAYER
-				water_overlay.plane = GAME_PLANE_HIGHEST
+			if(istype(oldLoc, type) && (get_dir(src, oldLoc) != SOUTH)) //TA EDIT START
+				set_water_lifted(TRUE)
 			else
 				spawn(6)
 					if(AM.loc == src)
-						water_overlay.layer = ABOVE_MOB_LAYER
-						water_overlay.plane = GAME_PLANE_HIGHEST
+						set_water_lifted(TRUE) //TA EDIT END
 		if(!istype(L, /mob/living/carbon/human/species/skeleton))
 			return
 		if(!istype(src, /turf/open/water/sewer))
@@ -373,11 +451,13 @@
 
 /turf/open/water/Destroy()
 	GLOB.seasonal_water_turfs -= src
+	if(water_visual) //TA EDIT START
+		vis_contents -= water_visual
+		water_visual = null
+	water_overlays_applied = null
+	for(var/obj/item/sunk_item in src)
+		sunk_item.surface_from_water() //TA EDIT END
 	. = ..()
-	if(water_overlay)
-		QDEL_NULL(water_overlay)
-	if(water_top_overlay)
-		QDEL_NULL(water_top_overlay)
 
 /turf/open/water/get_slowdown(mob/user)
 	var/returned = slowdown
@@ -707,15 +787,10 @@
 /turf/open/water/river/flow/north
 	dir = 1
 
-/turf/open/water/river/update_icon()
-	if(water_overlay)
-		water_overlay.color = water_color
-		water_overlay.icon_state = "riverbot"
-		water_overlay.dir = dir
-	if(water_top_overlay)
-		water_top_overlay.color = water_color
-		water_top_overlay.icon_state = "rivertop"
-		water_top_overlay.dir = dir
+/turf/open/water/river/update_water_states() //TA EDIT START
+	water_bottom_state = "riverbot"
+	water_top_state = "rivertop"
+	water_dir = dir //TA EDIT END
 
 /turf/open/water/river/Initialize(mapload)
 	icon_state = "rock"

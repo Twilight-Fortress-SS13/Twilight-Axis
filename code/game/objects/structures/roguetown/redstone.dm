@@ -810,6 +810,25 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 	AddComponent(/datum/component/squeak, list('sound/foley/footsteps/FTMET_A1.ogg','sound/foley/footsteps/FTMET_A2.ogg','sound/foley/footsteps/FTMET_A3.ogg','sound/foley/footsteps/FTMET_A4.ogg'), 100)
 	return ..()
 */
+/obj/structure/floordoor/Initialize(mapload) //TA EDIT START
+	. = ..()
+	update_below_cover()
+
+/obj/structure/floordoor/Destroy()
+	var/turf/open/transparent/viewer = loc
+	. = ..()
+	if(istype(viewer))
+		viewer.update_below_cover()
+
+/obj/structure/floordoor/set_is_platform(new_platform_status)
+	. = ..()
+	update_below_cover()
+
+/obj/structure/floordoor/proc/update_below_cover()
+	var/turf/open/transparent/viewer = loc
+	if(istype(viewer))
+		viewer.update_below_cover() //TA EDIT END
+
 /obj/structure/floordoor/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("A skilled Engineer could use a wrench to link this to a device.")

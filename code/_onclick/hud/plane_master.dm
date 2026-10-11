@@ -96,7 +96,8 @@
 	mymob.overlay_fullscreen("lighting_backdrop_unlit", /atom/movable/screen/fullscreen/lighting_backdrop/unlit)
 	mymob.overlay_fullscreen("sunlight_backdrop",	/atom/movable/screen/fullscreen/lighting_backdrop/sunlight)
 
-/atom/movable/screen/plane_master/camera_static
+/atom/movable/screen/plane_master/camera_static //TA EDIT
+	abstract_type = /atom/movable/screen/plane_master/camera_static
 	name = "camera static plane master"
 	plane = CAMERA_STATIC_PLANE
 	appearance_flags = PLANE_MASTER
@@ -139,10 +140,8 @@
 	blend_mode = BLEND_OVERLAY
 
 /atom/movable/screen/plane_master/game_world_above/backdrop(mob/mymob)
-	clear_filters()
-	if(istype(mymob) && mymob.client && mymob.client.prefs && mymob.client.prefs.ambientocclusion)
-		filters += AMBIENT_OCCLUSION
-	if(istype(mymob) && mymob.eye_blurry)
+	clear_filters() //TA EDIT START
+	if(istype(mymob) && mymob.eye_blurry) //TA EDIT END
 		filters += GAUSSIAN_BLUR(CLAMP(mymob.eye_blurry*0.1,0.6,3))
 	if(istype(mymob))
 		if(isliving(mymob))
@@ -157,10 +156,8 @@
 	blend_mode = BLEND_OVERLAY
 
 /atom/movable/screen/plane_master/game_world_below/backdrop(mob/mymob)
-	clear_filters()
-	if(istype(mymob) && mymob.client && mymob.client.prefs && mymob.client.prefs.ambientocclusion)
-		filters += AMBIENT_OCCLUSION
-	if(istype(mymob) && mymob.eye_blurry)
+	clear_filters() //TA EDIT START
+	if(istype(mymob) && mymob.eye_blurry) //TA EDIT END
 		filters += GAUSSIAN_BLUR(CLAMP(mymob.eye_blurry*0.1,0.6,3))
 	if(istype(mymob))
 		if(isliving(mymob))
@@ -226,6 +223,20 @@
 	blend_mode = BLEND_MULTIPLY
 	//render_relay_plane = null //Used as alpha filter for weather_effect fullscreen
 
+/atom/movable/screen/plane_master/weather_overlay/Initialize(mapload)
+	. = ..()
+	// Pure converter stage - nothing is drawn on this plane anymore: it grabs the packed
+	// sunlight mask and turns its G channel (weather gate) into the alpha mask the
+	// weather effect plane master filters its particles by.
+	filters = list(
+		filter(type="layer", render_source=SUNLIGHTING_RENDER_TARGET),
+		filter(type="color", color=list(
+			0, 0, 0, 0,
+			0, 0, 0, 1,
+			0, 0, 0, 0,
+			0, 0, 0, 0)),
+	)
+
 //Contains the weather effect itself
 /atom/movable/screen/plane_master/weather_effect
 	name = "weather effect plane master"
@@ -260,7 +271,7 @@
 
 /atom/movable/screen/fullscreen/lighting_backdrop/sunlight/Initialize(mapload)
 	. = ..()
-	filters += filter(type="layer", render_source=SUNLIGHTING_RENDER_TARGET)
+	filters += filter(type="layer", render_source=SUNLIGHT_WHITENED_RENDER_TARGET)
 	SSoutdoor_effects.sunlighting_planes |= src
 	color = SSoutdoor_effects.last_color
 	SSoutdoor_effects.transition_sunlight_color(src)
@@ -276,6 +287,27 @@
 	blend_mode = BLEND_MULTIPLY
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	render_target = SUNLIGHTING_RENDER_TARGET
+
+/atom/movable/screen/plane_master/sunlight/Initialize(mapload)
+	. = ..()
+
+//Whitening stage: flattens the packed mask (yellow/red = sun) into a plain white mask.
+/atom/movable/screen/plane_master/sunlight_whitened
+	name = "sunlight white mask plane master"
+	plane = SUNLIGHT_WHITENED_PLANE
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	render_target = SUNLIGHT_WHITENED_RENDER_TARGET
+
+/atom/movable/screen/plane_master/sunlight_whitened/Initialize(mapload)
+	. = ..()
+	filters = list(
+		filter(type="layer", render_source=SUNLIGHTING_RENDER_TARGET),
+		filter(type="color", color=list(
+			1, 1, 1, 0,
+			0, 0, 0, 0,
+			0, 0, 0, 0,
+			0, 0, 0, 1)),
+	)
 
 /atom/movable/screen/plane_master/space_backdrop
 	name = "space backdrop plane master"

@@ -1752,51 +1752,42 @@ generate/load female uniform sprites matching all previously decided variables
 					break
 
 /mob/living/carbon/human/update_body_parts(redraw = FALSE)
-	//CHECK FOR UPDATE
-	var/oldkey = icon_render_key
-	icon_render_key = generate_icon_render_key()
-	if(oldkey == icon_render_key && !redraw)
+	var/hiden = FALSE //used to tell if we should hide boobs, basically
+	if(wear_armor && (wear_armor.flags_inv & HIDEBOOB))
+		hiden = TRUE
+	else if(wear_shirt && (wear_shirt.flags_inv & HIDEBOOB))
+		hiden = TRUE
+	else if(cloak && (cloak.flags_inv & HIDEBOOB))
+		hiden = TRUE
+
+	var/list/new_limbs = list()
+	var/changed = FALSE
+	for(var/obj/item/bodypart/BP as anything in bodyparts)
+		BP.update_limb()
+		var/new_key = BP.get_cache_key(hiden)
+		if(!redraw && new_key == icon_render_keys[BP.body_zone] && limb_icon_cache[new_key])
+			new_limbs += limb_icon_cache[new_key]
+			continue
+		changed = TRUE
+		var/is_chest = (BP.name == BODY_ZONE_CHEST)
+		var/list/limb_overlays
+		if(!redraw && limb_icon_cache[new_key])
+			limb_overlays = limb_icon_cache[new_key]
+		else
+			limb_overlays = BP.get_limb_icon(hideaux = is_chest ? hiden : FALSE)
+			if(isooze(src))
+				for(var/image/limb_alpha in limb_overlays)
+					limb_alpha.alpha = 180
+		new_limbs += limb_overlays
+		limb_icon_cache[new_key] = limb_overlays
+		icon_render_keys[BP.body_zone] = new_key
+
+	if(!changed)
 		return
 
 	remove_overlay(BODYPARTS_LAYER)
-
-	for(var/obj/item/bodypart/BP as anything in bodyparts)
-		BP.update_limb()
-
-	//LOAD ICONS
-	if(!redraw)
-		if(limb_icon_cache[icon_render_key])
-			load_limb_from_cache()
-			return
-
-	//GENERATE NEW LIMBS
-	var/list/new_limbs = list()
-	var/hiden = FALSE //used to tell if we should hide boobs, basically
-	for(var/obj/item/bodypart/BP as anything in bodyparts)
-		if(BP.name == BODY_ZONE_CHEST)
-			if(wear_armor)
-				var/obj/item/I = wear_armor
-				if(I.flags_inv & HIDEBOOB)
-					hiden = TRUE
-			if(wear_shirt)
-				var/obj/item/I = wear_shirt
-				if(I.flags_inv & HIDEBOOB)
-					hiden = TRUE
-			if(cloak)
-				var/obj/item/I = cloak
-				if(I.flags_inv & HIDEBOOB)
-					hiden = TRUE
-			new_limbs += BP.get_limb_icon(hideaux = hiden)
-		else
-			new_limbs += BP.get_limb_icon()
-
-	if(isooze(src))
-		for(var/image/limb_alpha in new_limbs)
-			limb_alpha.alpha = 180
-
 	if(length(new_limbs))
 		overlays_standing[BODYPARTS_LAYER] = new_limbs
-		limb_icon_cache[icon_render_key] = new_limbs
 
 	apply_overlay(BODYPARTS_LAYER)
 	update_damage_overlays()

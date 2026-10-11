@@ -60,7 +60,7 @@
 	if (!lighting_object)
 		return FALSE
 
-	return !lighting_object.luminosity
+	return !lighting_object.lamp_lit //TA EDIT
 
 // Can't think of a good name, this proc will recalculate the opaque_atom_count variable.
 /turf/proc/recalc_atom_opacity()
