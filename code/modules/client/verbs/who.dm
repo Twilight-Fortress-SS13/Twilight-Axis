@@ -100,11 +100,6 @@
 	set name = "Adminwho"
 	set desc = "Lists all admins currently online."
 
-	var/datum/admins/A = GLOB.deadmins[ckey]
-	if(!A)
-		if(!check_rights(R_ADMIN))
-			return
-
 	var/msg = "<b>Current Admins:</b>\n"
 	if(holder)
 		for(var/client/C in GLOB.admins)
@@ -125,10 +120,8 @@
 			msg += "\n"
 	else
 		for(var/client/C in GLOB.admins)
-			if(C.is_afk())
-				continue //Don't show afk admins to adminwho
 			if(!C.holder.fakekey)
-				msg += "\t[C] is a [C.holder.rank]\n"
+				msg += "\t[C]\n"
 		msg += span_info("Adminhelps are also sent to IRC. If no admins are available in game adminhelp anyways and an admin on IRC will see it and respond.")
 	to_chat(src, msg)
 
