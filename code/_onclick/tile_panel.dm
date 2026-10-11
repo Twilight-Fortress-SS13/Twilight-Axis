@@ -327,8 +327,6 @@
 		return FALSE
 	if(istype(A, /obj/effect))
 		return FALSE
-	if(istype(A, /atom/movable/lighting_object))
-		return FALSE
 	if(QDELETED(A))
 		return FALSE
 	if(!A.mouse_opacity)

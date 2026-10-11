@@ -28,6 +28,12 @@
 
 #define SPACE_LAYER 1.8
 //#define TURF_LAYER 2 //For easy recordkeeping; this is a byond define
+//TA EDIT START
+#define WATER_BOTTOM_LAYER (TURF_LAYER + 0.008)
+#define WATER_EDGE_LAYER_STEP 0.002
+#define WATER_TOP_LAYER (TURF_LAYER + 0.012)
+#define WATER_SUNK_ALPHA_MULT 0.45
+//TA EDIT END
 #define MID_TURF_LAYER 2.02
 #define HIGH_TURF_LAYER 2.03
 #define TURF_PLATING_DECAL_LAYER 2.031

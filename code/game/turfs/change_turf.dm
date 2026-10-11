@@ -5,7 +5,7 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 
 /turf/proc/empty(turf_type=/turf/open/floor/rogue/naturalstone, baseturf_type, list/ignore_typecache, flags)
 	// Remove all atoms except observers, landmarks, docking ports
-	var/static/list/ignored_atoms = typecacheof(list(/mob/dead, /obj/effect/landmark, /atom/movable/lighting_object))
+	var/static/list/ignored_atoms = typecacheof(list(/mob/dead, /obj/effect/landmark)) //TA EDIT
 	var/list/raw_contents = GetAllContentsIgnoring(ignore_typecache)
 
 	for(var/atom/A as anything in raw_contents)
@@ -159,6 +159,7 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 
 		recalc_atom_opacity()
 		lighting_object = old_lighting_object
+		lighting_object?.reapply() //TA EDIT
 		corners = old_corners
 		if (old_opacity != opacity || dynamic_lighting != old_dynamic_lighting)
 			reconsider_lights()
