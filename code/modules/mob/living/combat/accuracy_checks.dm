@@ -141,7 +141,7 @@
 	to_chat(user, span_warning("[roll_out?["double_fail"] ? "Double accuracy fail!" : "Accuracy fail!"] [roll_out?["chance"]]% - hit the [hit_zone_name(landed_zone)] instead."))
 
 // Based on the remaining accuracy of the projectile and the aimed zone, return the zone, precise zone or chest
-/mob/living/proc/bullet_hit_accuracy_check(final_accuracy, def_zone = BODY_ZONE_CHEST, list/roll_out)
+/mob/living/proc/bullet_hit_accuracy_check(final_accuracy, def_zone = BODY_ZONE_CHEST, list/roll_out, flag = "piercing") //TA EDIT
 	// No matter what, 5% chance to hit the zone. No benefit from overaccuracy (unlikely)
 	var/zone_type = ranged_zone_difficulty(def_zone)
 	var/chance2hit = final_accuracy + get_zone_ranged_hit_bonus(def_zone)
@@ -156,13 +156,16 @@
 	switch(zone_type)
 		if(ULTRA_PRECISE_ZONE)
 			chance2hit += RANGED_ULTRA_PRECISE_HIT_PENALTY
-			chance2hit = CLAMP(chance2hit, 5, RANGED_MAX_ULTRA_PRECISE_HIT_CHANCE)
+			if(!(flag == "bullet")) //TA EDIT
+				chance2hit = CLAMP(chance2hit, 5, RANGED_MAX_ULTRA_PRECISE_HIT_CHANCE) //TA EDIT
 		if(PRECISE_ZONE)
 			chance2hit += RANGED_PRECISE_HIT_PENALTY
-			chance2hit = CLAMP(chance2hit, 5, RANGED_MAX_PRECISE_HIT_CHANCE)
+			if(!(flag == "bullet")) //TA EDIT
+				chance2hit = CLAMP(chance2hit, 5, RANGED_MAX_PRECISE_HIT_CHANCE) //TA EDIT
 		if(PRECISE_FACE_ZONE)
 			chance2hit += (RANGED_ULTRA_PRECISE_HIT_PENALTY + RANGED_PRECISE_HIT_PENALTY)
-			chance2hit = CLAMP(chance2hit, 5, RANGED_MAX_FACE_HIT_CHANCE)
+			if(!(flag == "bullet")) //TA EDIT
+				chance2hit = CLAMP(chance2hit, 5, RANGED_MAX_FACE_HIT_CHANCE) //TA EDIT
 
 	if(roll_out)
 		roll_out["chance"] = chance2hit

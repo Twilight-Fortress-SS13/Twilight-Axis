@@ -194,12 +194,7 @@
 /obj/projectile/bullet/fire(angle, atom/direct_target)
 	if(istype(fired_from, /obj/item/gun/ballistic/twilight_firearm))
 		var/obj/item/gun/ballistic/twilight_firearm/gun = fired_from
-		if(isliving(firer))
-			var/mob/living/L = firer
-			var/per_scaling = max(RANGED_PER_DAMAGE_FLOOR, 1 + ((min(L.STAPER, RANGED_PER_DAMAGE_SOFTCAP) - RANGED_PER_DAMAGE_BASELINE) * RANGED_PER_DAMAGE_MULT) + (max(0, L.STAPER - RANGED_PER_DAMAGE_SOFTCAP) * RANGED_PER_DAMAGE_CAPPEDMULT))
-			damage *= gun.damfactor * per_scaling
-		else
-			damage *= gun.damfactor
+		damage *= gun.damfactor
 		critfactor *= gun.critfactor
 		gunpowder_npc_critfactor *= gun.npcdamfactor
 		gunpowder = gun.gunpowder
@@ -303,9 +298,9 @@
 			var/mob/living/T = target
 			if(skill >= 1 && M.mind) //Exp gain from firing a gun
 				if(isanimal(T) && (T.stat != DEAD || (T.stat == DEAD && T.timeofdeath == world.time)))
-					M.mind.add_sleep_experience(/datum/skill/combat/twilight_firearms, M.STAINT * 2)
+					M.mind.add_sleep_experience(/datum/skill/combat/twilight_firearms, M.STAINT / 5)
 				else if(ishuman(T) && (T.stat != DEAD || (T.stat == DEAD && T.timeofdeath == world.time)))
-					M.mind.add_sleep_experience(/datum/skill/combat/twilight_firearms, M.STAINT * 4)
+					M.mind.add_sleep_experience(/datum/skill/combat/twilight_firearms, M.STAINT / 3)
 			if(silver && HAS_TRAIT(T, TRAIT_SILVER_WEAK))
 				if(blessed)
 					if(!T.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder))
