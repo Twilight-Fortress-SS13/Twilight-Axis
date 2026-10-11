@@ -653,6 +653,8 @@ SUBSYSTEM_DEF(gamemode)
 	var/admin_control = !allow_vote
 	var/pop = get_correct_popcount()
 	for(var/datum/round_event_control/antagonist/solo/ec in event_pools[EVENT_TRACK_CHARACTER_INJECTION])
+		if(istype(ec, /datum/round_event_control/antagonist/solo/thievesguild)) // TA EDIT
+			continue // TA EDIT
 		if(!ec.roundstart || ec.occurrences)
 			continue
 		if((ec.storyteller_antag_flags & STORYTELLER_ANTAG_VILLAIN) && ec.consumes_hard_antag_slot)
@@ -676,6 +678,7 @@ SUBSYSTEM_DEF(gamemode)
 			continue
 		log_storyteller("Spawning bonus roundstart soft antag [ec.name] alongside the main roll.")
 		TriggerEvent(ec, TRUE)
+	roll_thievesguild_roundstart() // TA EDIT
 
 /// Schedules an event to run later.
 /datum/controller/subsystem/gamemode/proc/schedule_event(datum/round_event_control/passed_event, passed_time, passed_cost, passed_ignore, passed_announce, _forced = FALSE)
