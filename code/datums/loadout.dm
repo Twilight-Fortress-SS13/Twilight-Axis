@@ -3191,17 +3191,21 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/head/roguetown/shawl
 	category = "Головные уборы"
 
-/datum/loadout_item/maidband
+// TA EDIT START
+/* /datum/loadout_item/maidband
 	name = "Maid Headdress"
 	path = /obj/item/clothing/head/roguetown/maidhead
 	category = list("Головные уборы", "Донат")
-	donatitem = TRUE
+	donatitem = TRUE */
+// TA EDIT END
 
-/datum/loadout_item/maidbandfancy
+// TA EDIT START
+/* /datum/loadout_item/maidbandfancy
 	name = "Valorian Maid Headband"
 	path = /obj/item/clothing/head/roguetown/maidband
 	category = list("Головные уборы", "Донат")
-	donatitem = TRUE
+	donatitem = TRUE */
+// TA EDIT END
 
 // Обувь
 
