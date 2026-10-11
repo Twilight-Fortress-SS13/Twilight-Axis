@@ -1037,6 +1037,26 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Аксессуары"
 	path = /obj/item/clothing/under/roguetown/loincloth
 
+/datum/loadout_item/spectacles_fancy
+	name = "Fancy Spectacles"
+	category = "Аксессуары"
+	path = /obj/item/clothing/mask/rogue/spectacles/fancy
+
+/datum/loadout_item/spectacles_fancy_dark
+	name = "Fancy Tinted Spectacles"
+	category = "Аксессуары"
+	path = /obj/item/clothing/mask/rogue/spectacles/fancy/dark
+
+/datum/loadout_item/spectacles_monocle
+	name = "Silver Monocle"
+	category = "Аксессуары"
+	path = /obj/item/clothing/mask/rogue/spectacles/monocle
+
+/datum/loadout_item/spectacles_onyxa
+	name = "Smokey Onyxa Spectacles"
+	category = "Аксессуары"
+	path = /obj/item/clothing/mask/rogue/spectacles/sglasses
+
 /datum/loadout_item/spectacles
 	name = "Spectacles"
 	category = "Аксессуары"
