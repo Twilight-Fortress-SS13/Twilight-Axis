@@ -471,7 +471,7 @@
 /obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/crystalhide
 	name = "crystalhide ward"
 	desc = "An arcyne ward crystallized with leyline energy. Tough against blunt force but less rigid than plate. Shatters violently when broken."
-	armor = ARMOR_MAILLE //TA_EDIT
+	armor = ARMOR_MAILLE //TA EDIT
 	max_integrity = UPGRADE_ARCYNE_INTEGRITY
 	ward_color = GLOW_COLOR_KINESIS
 	arcyne_armor_tier = ARCYNE_WARD_TIER_GREATER
