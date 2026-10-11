@@ -3577,6 +3577,7 @@
 #include "code\modules\surgery\organs\organ_dna\_organ_dna.dm"
 #include "modular_twilight_axis\code\_DEFINES\area_detail_text.dm"
 #include "modular_twilight_axis\code\datums\ai\controllers\spectral.dm"
+#include "modular_twilight_axis\code\datums\migrants\migrant_waves\117th_crusade.dm"
 #include "modular_twilight_axis\code\game\area\kingtomb.dm"
 #include "modular_twilight_axis\code\game\objects\structures\traps.dm"
 #include "modular_twilight_axis\code\game\objects\items\rogueitems\cookware.dm"
