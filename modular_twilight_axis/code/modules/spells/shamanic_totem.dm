@@ -17,10 +17,10 @@
 #define SHAMANIC_TOTEM_DENDOR_VINE_INTERVAL 30 SECONDS
 #define SHAMANIC_TOTEM_DENDOR_VINE_BURST 2
 #define SHAMANIC_TOTEM_DENDOR_VINE_CAP 12
-#define SHAMANIC_TOTEM_DENDOR_KNEESTINGER_INTERVAL 3 MINUTES
+#define SHAMANIC_TOTEM_DENDOR_KNEESTINGER_INTERVAL 5 MINUTES
 #define SHAMANIC_TOTEM_DENDOR_KNEESTINGER_BURST 3
-#define SHAMANIC_TOTEM_DENDOR_KNEESTINGER_CAP 9
-#define SHAMANIC_TOTEM_DENDOR_WARMUP 1 MINUTES
+#define SHAMANIC_TOTEM_DENDOR_KNEESTINGER_CAP 3
+#define SHAMANIC_TOTEM_DENDOR_WARMUP 3 MINUTES
 #define SHAMANIC_TOTEM_COMMIT_DEBUFF_DURATION 10 SECONDS
 
 #define TRAIT_SOURCE_SHAMANIC_ZIZO "shamanic_totem_zizo_commit"
@@ -177,7 +177,7 @@
 	stat_key = STATKEY_STR
 	patron_type = /datum/patron/inhumen/graggar
 	curses_outsiders = FALSE
-	commit_blessing_folded = list(STATKEY_CON = 2, STATKEY_WIL = 2)
+	commit_blessing_folded = list(STATKEY_STR = -1, STATKEY_CON = 3, STATKEY_WIL = 2)
 	commit_buff = /datum/status_effect/buff/shamanic_totem_commit_graggar
 	commit_debuff = null
 
@@ -301,9 +301,7 @@
 	god_name = "Volfskinned Man"
 	stat_key = STATKEY_PER
 	patron_type = /datum/patron/divine/dendor
-	curses_outsiders = TRUE
-	curse_stat_key = STATKEY_PER
-	curse_stat_value = -1
+	curses_outsiders = FALSE
 	commit_buff = /datum/status_effect/buff/shamanic_totem_commit_dendor
 
 
