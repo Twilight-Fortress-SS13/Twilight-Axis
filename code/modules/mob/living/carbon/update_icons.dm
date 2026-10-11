@@ -430,26 +430,26 @@
 	update_body_parts()
 
 /mob/living/carbon/proc/update_body_parts()
-	var/oldkey = icon_render_key
-	icon_render_key = generate_icon_render_key()
-	if(oldkey == icon_render_key)
+	var/list/new_limbs = list()
+	var/changed = FALSE
+	for(var/obj/item/bodypart/BP as anything in bodyparts)
+		BP.update_limb()
+		var/new_key = BP.get_cache_key()
+		if(new_key == icon_render_keys[BP.body_zone] && limb_icon_cache[new_key])
+			new_limbs += limb_icon_cache[new_key]
+			continue
+		changed = TRUE
+		var/list/limb_overlays = limb_icon_cache[new_key] || BP.get_limb_icon()
+		new_limbs += limb_overlays
+		limb_icon_cache[new_key] = limb_overlays
+		icon_render_keys[BP.body_zone] = new_key
+
+	if(!changed)
 		return
 
 	remove_overlay(BODYPARTS_LAYER)
-
-	if(limb_icon_cache[icon_render_key])
-		load_limb_from_cache()
-		return
-
-	var/list/new_limbs = list()
-	for(var/obj/item/bodypart/BP as anything in bodyparts)
-		BP.update_limb()
-		new_limbs += BP.get_limb_icon()
-
 	if(length(new_limbs))
 		overlays_standing[BODYPARTS_LAYER] = new_limbs
-		limb_icon_cache[icon_render_key] = new_limbs
-
 	apply_overlay(BODYPARTS_LAYER)
 	update_damage_overlays()
 

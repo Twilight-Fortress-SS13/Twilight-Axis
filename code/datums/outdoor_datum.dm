@@ -23,22 +23,17 @@ Sunlight System
 /obj/proc/weather_act_on(weather_trait, severity)
 	return
 
-/atom/movable/outdoor_effect
-	name = ""
-	mouse_opacity = 0
-	anchored = 1
-	appearance_flags = RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM
-	plane = WEATHER_EFFECT_PLANE
+/datum/outdoor_effect //TA EDIT
 
 	/* misc vars */
 	var/state						= SKY_VISIBLE	// If we can see the see the sky, are blocked, or we have a blocked neighbour (SKY_BLOCKED/VISIBLE/VISIBLE_BORDER)
 	var/weatherproof				= FALSE		// If we have a weather overlay
 	var/turf/source_turf
 
-	var/mutable_appearance/sunlight_overlay
+	var/sun_lit = FALSE //TA EDIT
 	var/list/datum/lighting_corner/affecting_corners
 
-/atom/movable/outdoor_effect/Destroy(force)
+/datum/outdoor_effect/Destroy(force) //TA EDIT
 	if (!force)
 		return QDEL_HINT_LETMELIVE
 
@@ -48,22 +43,35 @@ Sunlight System
 	//Remove ourselves from our turf
 	if(source_turf && source_turf.outdoor_effect == src)
 		source_turf.outdoor_effect = null
+		source_turf.queue_sun_carriers() //TA EDIT
 
 
 	return ..()
 
 
 
-/atom/movable/outdoor_effect/Initialize(mapload)
+/datum/outdoor_effect/New(turf/source) //TA EDIT START
 	. = ..()
-	source_turf = loc
+	source_turf = source
 	if (source_turf.outdoor_effect)
 		qdel(source_turf.outdoor_effect, force = TRUE)
 		source_turf.outdoor_effect = null //No qdel_null force
 	source_turf.outdoor_effect = src
 
+/datum/outdoor_effect/proc/receives_sun()
+	if(state != SKY_BLOCKED)
+		return TRUE
+	for(var/datum/lighting_corner/corner in source_turf.corners)
+		if(corner.sunFalloff > 0)
+			return TRUE
+	return FALSE
 
-/atom/movable/outdoor_effect/proc/disable_sunlight()
+/turf/proc/queue_sun_carriers()
+	for(var/turf/carrier in list(src, get_step(src, WEST), get_step(src, SOUTH), get_step(src, SOUTHWEST)))
+		carrier.lighting_object?.queue_sun() //TA EDIT END
+
+
+/datum/outdoor_effect/proc/disable_sunlight() //TA EDIT
 	var/turf/T = list()
 	for(var/datum/lighting_corner/C in affecting_corners)
 		LAZYREMOVE(C.globAffect, src)
@@ -75,7 +83,7 @@ Sunlight System
 	//Empty our affecting_corners list
 	affecting_corners = null
 
-/atom/movable/outdoor_effect/proc/process_state()
+/datum/outdoor_effect/proc/process_state() //TA EDIT
 	switch(state)
 		if(SKY_BLOCKED)
 			disable_sunlight() /* Do our indoor processing */
@@ -87,7 +95,7 @@ Sunlight System
 #define SUN_FALLOFF(C, T) (1 - CLAMP01(sqrt((C.x - T.x) ** 2 + (C.y - T.y) ** 2 - hardSun) / max(1, GLOB.GLOBAL_LIGHT_RANGE)))
 
 
-/atom/movable/outdoor_effect/proc/calc_sunlight_spread()
+/datum/outdoor_effect/proc/calc_sunlight_spread() //TA EDIT
 
 	var/list/turf/turfs					= list()
 	var/datum/lighting_corner/C
@@ -96,8 +104,9 @@ Sunlight System
 	var/list/corners	= list() /* corners we are currently affecting */
 
 	//Set lum so we can see things
-	var/oldLum = luminosity
-	luminosity = GLOB.GLOBAL_LIGHT_RANGE
+	var/atom/lum_source = source_turf.lighting_object || source_turf //TA EDIT START
+	var/oldLum = lum_source.luminosity
+	lum_source.luminosity = GLOB.GLOBAL_LIGHT_RANGE //TA EDIT END
 
 	for(T in view(CEILING(GLOB.GLOBAL_LIGHT_RANGE, 1), source_turf))
 		if(T.opacity) /* get_corners used to do opacity checks for arse */
@@ -108,7 +117,7 @@ Sunlight System
 		turfs += T
 
 	//restore lum
-	luminosity = oldLum
+	lum_source.luminosity = oldLum //TA EDIT
 
 	/* fix up the lists */
 	/* add ourselves and our distance to the corner */
@@ -139,7 +148,7 @@ Sunlight System
 /area/var/turf/pseudo_roof
 
 /* turf fuckery */
-/turf/var/tmp/atom/movable/outdoor_effect/outdoor_effect /* a turf's sunlight overlay */
+/turf/var/tmp/datum/outdoor_effect/outdoor_effect /* a turf's sunlight overlay */ //TA EDIT
 /turf/var/turf/pseudo_roof /* our roof turf - may be a path for top z level, or a ref to the turf above*/
 
 //non-weatherproof turfs
@@ -153,7 +162,7 @@ Sunlight System
 /datum/lighting_corner/proc/get_sunlight_falloff()
 	sunFalloff = 0
 
-	var/atom/movable/outdoor_effect/S
+	var/datum/outdoor_effect/S //TA EDIT
 	for(S in globAffect)
 		sunFalloff = sunFalloff < globAffect[S] ? globAffect[S] : sunFalloff
 
@@ -201,7 +210,7 @@ Sunlight System
 
 	/* if border or indoor, initialize. Set sunlight state if valid */
 	if(!outdoor_effect && (TempState != SKY_BLOCKED || !turf_weatherproof))
-		outdoor_effect = new /atom/movable/outdoor_effect(src)
+		outdoor_effect = new /datum/outdoor_effect(src) //TA EDIT
 	if(outdoor_effect)
 		outdoor_effect.state = TempState
 		outdoor_effect.weatherproof = turf_weatherproof

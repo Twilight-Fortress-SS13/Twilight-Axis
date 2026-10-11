@@ -89,7 +89,9 @@
 
 	vis_holder = new(null, src)
 
-	for(var/mytype in subtypesof(/atom/movable/screen/plane_master))
+	for(var/atom/movable/screen/plane_master/mytype as anything in subtypesof(/atom/movable/screen/plane_master)) //TA EDIT START
+		if(IS_ABSTRACT(mytype))
+			continue //TA EDIT END
 		var/atom/movable/screen/plane_master/instance = new mytype()
 		plane_masters["[instance.plane]"] = instance
 		instance.backdrop(mymob)

@@ -2,6 +2,10 @@
 
 GLOBAL_VAR(restart_counter)
 
+/world/Tick()
+	//hook so NEXT_VISUAL_TICK knows when maptick last ran
+	GLOB.last_maptick_time = world.time
+
 //This runs before most anything else, for more info see:
 //https://github.com/Cyberboss/tgstation/blob/1afa69d66adfc810ab68c45a4fa5985c780ba6ff/code/game/world.dm#L10
 //But note that not all of this necessarily applies to us(particularly proccalls)

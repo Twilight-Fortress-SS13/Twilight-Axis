@@ -502,6 +502,54 @@
 /obj/item/bodypart/proc/is_organic_limb()
 	return (status == BODYPART_ORGANIC)
 
+//per-limb cache key for update_body_parts: must cover every input get_limb_icon() reads
+/obj/item/bodypart/proc/get_cache_key(hideaux = FALSE)
+	var/list/key = list(body_zone)
+	key += (status == BODYPART_ORGANIC) ? "organic" : "robotic"
+	switch(use_digitigrade)
+		if(FULL_DIGITIGRADE)
+			key += "digitigrade_full"
+		if(SQUISHED_DIGITIGRADE)
+			key += "digitigrade_squashed"
+	key += species_id
+	key += "[species_icon]"
+	key += should_draw_greyscale
+	if(should_draw_gender)
+		key += body_gender
+	if(skeletonized)
+		key += "skeletonized"
+	if(rotted)
+		key += "rotted"
+	if(status != BODYPART_ORGANIC)
+		key += prosthetic_prefix
+	var/draw_color = mutation_color || species_color || skin_tone
+	if(rotted || (owner && HAS_TRAIT(owner, TRAIT_ROTMAN) && !owner.mind))
+		draw_color = SKIN_COLOR_ROT
+	if(draw_color)
+		key += draw_color
+	if(aux_zone && hideaux)
+		key += "hideaux"
+	if(isooze(owner))
+		key += "ooze"
+	for(var/marking_name in markings)
+		key += "mark[marking_name]-[markings[marking_name]]"
+	for(var/marking_name in aux_markings)
+		key += "auxmark[marking_name]-[aux_markings[marking_name]]"
+	for(var/datum/bodypart_feature/feature as anything in bodypart_features)
+		key += feature.get_cache_key(src)
+	for(var/obj/item/organ/organ as anything in get_visible_organs())
+		key += organ.get_cache_key()
+		if(organ.accessory_type)
+			var/datum/sprite_accessory/accessory = SPRITE_ACCESSORY(organ.accessory_type)
+			key += accessory?.is_visible(organ, src, owner)
+	if(owner && owner.dna)
+		var/datum/species/S = owner.dna.species
+		if(NO_ORGAN_FEATURES in S.species_traits)
+			key += "no_organ_features"
+		if(NO_BODYPART_FEATURES in S.species_traits)
+			key += "no_bp_features"
+	return jointext(key, "-")
+
 //we inform the bodypart of the changes that happened to the owner, or give it the informations from a source mob.
 /obj/item/bodypart/proc/update_limb(dropping_limb, mob/living/carbon/source)
 	var/mob/living/carbon/C
@@ -554,6 +602,18 @@
 		species_color = ""
 
 	mutation_color = ""
+
+	//markings are owned by dna per body zone; the limb just mirrors its zone's list every update
+	var/list/dna_markings = H.dna.body_markings
+	if(dna_markings)
+		if(dna_markings[body_zone])
+			markings = dna_markings[body_zone].Copy()
+		else
+			markings = null
+		if(aux_zone && dna_markings[aux_zone])
+			aux_markings = dna_markings[aux_zone].Copy()
+		else
+			aux_markings = null
 
 	dmg_overlay_type = S.damage_overlay_type
 

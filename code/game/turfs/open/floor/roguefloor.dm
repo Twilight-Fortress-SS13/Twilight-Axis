@@ -1215,6 +1215,7 @@
 	icon = 'icons/turf/roguefloor.dmi'
 	icon_state = "herringedge"
 	mouse_opacity = 0
+	bake_to_loc = TRUE
 
 /obj/effect/decal/wood/herringbone
 	name = "herringbone flooring"
@@ -1222,6 +1223,7 @@
 	icon = 'icons/turf/roguefloor.dmi'
 	icon_state = "herringbonewoodedge"
 	mouse_opacity = 0
+	bake_to_loc = TRUE
 
 /obj/effect/decal/wood/herringbone2
 	name = "herringbone flooring"
@@ -1229,6 +1231,7 @@
 	icon = 'icons/turf/roguefloor.dmi'
 	icon_state = "herringbonewood2edge"
 	mouse_opacity = 0
+	bake_to_loc = TRUE
 
 /turf/open/floor/rogue/ruinedwood/herringbone
 	name = "wooden herringbone flooring"
@@ -1360,6 +1363,7 @@
 	// not "snowcobblestone_edges" since this decal is a single directional sprite, unlike
 	// /obj/effect/decal/cobble/mossy below.
 	winter_icon_state = "snowcobbleedge"
+	bake_to_loc = TRUE
 
 /obj/effect/decal/cobble/mossy
 	name = "mossy brick floor"
@@ -1368,6 +1372,7 @@
 	icon_state = "mossystone_edges"
 	mouse_opacity = 0
 	winter_icon_state = "snowcobblestone_edges"
+	bake_to_loc = TRUE
 
 /obj/effect/decal/edge
 	name = "stone edge"
@@ -1375,6 +1380,7 @@
 	icon = 'icons/turf/roguefloor.dmi'
 	icon_state = "border"
 	mouse_opacity = 0
+	bake_to_loc = TRUE
 
 /obj/effect/decal/edge_corner
 	name = "stone edge corner"
@@ -1382,6 +1388,7 @@
 	icon = 'icons/turf/roguefloor.dmi'
 	icon_state = "border_corner"
 	mouse_opacity = 0
+	bake_to_loc = TRUE
 
 /turf/open/floor/rogue/cobblerock
 	icon_state = "cobblerock"
@@ -1428,6 +1435,7 @@
 	icon_state = "cobblestone_edges"
 	mouse_opacity = 0
 	winter_icon_state = "snowcobblestone_edges"
+	bake_to_loc = TRUE
 
 /obj/effect/decal/carpet
 	name = "exotic rug"
@@ -1436,6 +1444,7 @@
 	pixel_z = -17
 	icon = 'icons/roguetown/misc/64x64.dmi'
 	icon_state = "kover"
+	bake_to_loc = TRUE
 
 /obj/effect/decal/carpet/kover_darkred
 	name = "rustic red rug"
