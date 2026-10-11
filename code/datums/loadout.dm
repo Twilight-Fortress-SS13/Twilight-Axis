@@ -5481,3 +5481,10 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/mask/rogue/facemask/goldmask/radiant
 	donatitem = TRUE
 	donat_tier = 2
+
+/datum/loadout_item/donator/mask_g
+	name = "Plague mask"
+	category = list("Одежда")
+	path = /obj/item/clothing/mask/rogue/plague_g
+	donatitem = TRUE
+	ckeywhitelist = list("gisya")

@@ -214,3 +214,12 @@
 	icon_state = "viceseermask"
 	item_state = "viceseermask"
 	color = null
+
+/obj/item/clothing/mask/rogue/plague_g
+	name = "plague mask"
+	desc = "Маска из странного и лёгкого материала, похожего то ли на дерево, то ли кость...атрибут настоящего врача!"
+	icon = 'modular_twilight_axis/icons/clothing/mask_don.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/mask_don.dmi'
+	icon_state = "mask_g"
+	item_state = "mask_g"
+	color = null
