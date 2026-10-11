@@ -1,0 +1,4 @@
+author: "Vladmar11"
+delete-after: True
+changes:
+  - rscadd: "Возможность делать чертежи для построек и быстро их возводить"
