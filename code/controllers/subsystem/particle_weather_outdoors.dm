@@ -233,89 +233,39 @@ SUBSYSTEM_DEF(outdoor_effects)
 // Updates overlays and vis_contents for outdoor effects
 /datum/controller/subsystem/outdoor_effects/proc/update_outdoor_effect_overlays(atom/movable/outdoor_effect/OE)
 
-	var/mutable_appearance/MA
-	if (OE.state != SKY_BLOCKED)
-		MA = get_sunlight_overlay(1,1,1,1) /* fully lit */
-	else //Indoor - do proper corner checks
-		/* check if we are globally affected or not */
-		var/static/datum/lighting_corner/dummy/dummy_lighting_corner = new
-		if (!OE.source_turf.lighting_corners_initialised)
-			OE.source_turf.generate_missing_corners()
-		var/list/corners = OE.source_turf.corners
-		var/datum/lighting_corner/cr = (corners && corners.len >= 3 && corners[3]) ? corners[3] : dummy_lighting_corner
-		var/datum/lighting_corner/cg = (corners && corners.len >= 2 && corners[2]) ? corners[2] : dummy_lighting_corner
-		var/datum/lighting_corner/cb = (corners && corners.len >= 4 && corners[4]) ? corners[4] : dummy_lighting_corner
-		var/datum/lighting_corner/ca = (corners && corners.len >= 1 && corners[1]) ? corners[1] : dummy_lighting_corner
-
-		var/fr = cr.sunFalloff
-		var/fg = cg.sunFalloff
-		var/fb = cb.sunFalloff
-		var/fa = ca.sunFalloff
-
-		MA = get_sunlight_overlay(fr, fg, fb, fa)
+	// One packed mask per tile: R = sun, G = weather gate (outdoor_masks.dmi states: yellow =
+	// sun+rain, red = sun only, green = rain only). The sun fullscreen's color matrix
+	// extracts R (tinted by the tod color), the WEATHER_OVERLAY plane master converts G
+	// into the alpha mask for weather particles. The blur on the sunlight plane master
+	// softens both. Corner falloff math still exists in
+	// /datum/lighting_corner/sunFalloff, but only gameplay (get_lumcount) reads it.
+	var/sky = OE.state != SKY_BLOCKED
+	var/mutable_appearance/MA = get_sunlight_overlay(sky, !OE.weatherproof)
 
 	OE.sunlight_overlay = MA
-	//Get weather overlay if not weatherproof
-	OE.overlays = OE.weatherproof ? list(OE.sunlight_overlay) : list(OE.sunlight_overlay, get_weather_overlay())
+	OE.overlays = list(OE.sunlight_overlay)
 	OE.luminosity = MA.luminosity
 
 
-#define SUNLIGHT_CACHE_PRECISION 20 // buckets between 0 and 1
 //Retrieve an overlay from the list - create if necessary
-/datum/controller/subsystem/outdoor_effects/proc/get_sunlight_overlay(fr, fg, fb, fa)
-	fr = round(fr * SUNLIGHT_CACHE_PRECISION) / SUNLIGHT_CACHE_PRECISION
-	fg = round(fg * SUNLIGHT_CACHE_PRECISION) / SUNLIGHT_CACHE_PRECISION
-	fb = round(fb * SUNLIGHT_CACHE_PRECISION) / SUNLIGHT_CACHE_PRECISION
-	fa = round(fa * SUNLIGHT_CACHE_PRECISION) / SUNLIGHT_CACHE_PRECISION
-
-	var/index = "[fr]|[fg]|[fb]|[fa]"
+/datum/controller/subsystem/outdoor_effects/proc/get_sunlight_overlay(sky = TRUE, weather = TRUE)
 	LAZYINITLIST(sunlight_overlays)
+	var/index = "[sky]|[weather]"
 	if(!sunlight_overlays[index])
-		sunlight_overlays[index] = create_sunlight_overlay(fr, fg, fb, fa)
+		sunlight_overlays[index] = create_sunlight_overlay(sky, weather)
 	return sunlight_overlays[index]
 
-//get our weather overlay
-/datum/controller/subsystem/outdoor_effects/proc/get_weather_overlay() //TODO VANDERLIN: Restore this to 32x48 for some extra
-	var/mutable_appearance/MA = new /mutable_appearance()
-	MA.icon				= 'icons/effects/weather_overlay.dmi'
-	MA.icon_state			= "weather_overlay"
-	MA.plane				= WEATHER_OVERLAY_PLANE
-	MA.blend_mode			= BLEND_OVERLAY
-	MA.invisibility		= INVISIBILITY_LIGHTING
-	return MA
-
-
-
-//Create an overlay appearance from corner values
-/datum/controller/subsystem/outdoor_effects/proc/create_sunlight_overlay(fr, fg, fb, fa)
+//Create a flat packed mask overlay: R = sun, G = weather gate
+/datum/controller/subsystem/outdoor_effects/proc/create_sunlight_overlay(sky, weather)
 
 	var/mutable_appearance/MA = new /mutable_appearance()
 
 	MA.blend_mode	= BLEND_OVERLAY
-	MA.icon			= LIGHTING_ICON
-	MA.icon_state	= null
+	MA.icon			= 'icons/effects/outdoor_masks.dmi'
+	MA.icon_state	= weather ? (sky ? "yellow" : "green") : "red"
 	MA.plane		= SUNLIGHTING_PLANE /* we put this on a lower level than lighting so we dont multiply anything */
 	MA.invisibility = INVISIBILITY_LIGHTING
 
-
 	//MA gets applied as an overlay, but we pull luminosity out to set our outdoor_effect object's lum
-	#if LIGHTING_SOFT_THRESHOLD != 0
-	MA.luminosity = max(fr, fg, fb, fa) > LIGHTING_SOFT_THRESHOLD
-	#else
-	MA.luminosity = max(fr, fg, fb, fa) > 1e-6
-	#endif
-
-	if((fr & fg & fb & fa) && (fr + fg + fb + fa == 4)) /* this will likely never happen */
-		MA.color = LIGHTING_BASE_MATRIX
-	else if(!MA.luminosity)
-		MA.color = SUNLIGHT_DARK_MATRIX
-	else
-		MA.color = list(
-					fr, fr, fr,	00 ,
-					fg, fg, fg,	00 ,
-					fb, fb, fb,	00 ,
-					fa, fa, fa,	00 ,
-					00, 00, 00,	01 )
+	MA.luminosity = sky
 	return MA
-
-#undef SUNLIGHT_CACHE_PRECISION

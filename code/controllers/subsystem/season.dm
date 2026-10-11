@@ -435,3 +435,4 @@ SUBSYSTEM_DEF(season)
 		var/target_state = snowed ? D.winter_icon_state : D.summer_icon_state
 		if(D.icon_state != target_state)
 			D.icon_state = target_state
+	sync_seasonal_baked_decals(snowed)
