@@ -101,7 +101,7 @@
 	name = "Rune of Hedonism"
 	desc = "A Holy Rune of Baotha. Relief for the broken hearted."
 	icon_state = "baotha_chalky"
-	var/baothists = list("Rite of Armaments", "Rite of Joy", "Expancy", "Masquarade")
+	var/baothists = list("Rite of Armaments", "Joybringer", "Expancy", "Masquerade")
 
 /obj/structure/ritualcircle/baotha_TA/attack_hand(mob/living/user, list/selected_atoms, turf/loc)
 	if(!..())
@@ -121,7 +121,7 @@
 			if(user.has_status_effect(/datum/status_effect/debuff/armamentrites))
 				to_chat(user, span_warning("I am not yet ready to perform this rite."))
 				return
-			var/onrune = view(1, src.loc)
+			var/onrune = view(1, loc)
 			var/list/joyridersonrune = list()
 			for(var/mob/living/carbon/human/persononrune in onrune)
 				if(HAS_TRAIT(persononrune, TRAIT_DEPRAVED))
@@ -147,10 +147,10 @@
 			var/is_heretic = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic || /datum/advclass/wretch/heretic/spy || /datum/advclass/gnoll/shaman)
 			if(is_heretic)
 				user.apply_status_effect(/datum/status_effect/debuff/armamentrites)
-			baothaarmamentsta(target)
+			baothaarmaments(target)
 			spawn(120)
 				icon_state = "baotha_chalky"
-		if("Rite of Joy")
+		if("Joybringer")
 			if(!do_after(user, 5 SECONDS))
 				return FALSE
 			user.say("Let the wine flow, let the music crash!")
@@ -238,7 +238,7 @@
 				sleep(1 SECONDS)
 			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
 			return TRUE
-		if("Masquarade")
+		if("Masquerade")
 			if(!do_after(user, 5 SECONDS))
 				return FALSE
 			user.say("Let the wine flow, let the music crash!")
@@ -261,23 +261,19 @@
 			new /obj/item/clothing/suit/roguetown/armor/regenerating/baotha (get_turf(src))
 			return TRUE
 
-/obj/structure/ritualcircle/baotha_TA/proc/baothaarmamentsta(mob/living/carbon/human/target)
-	if(!target || QDELETED(target))
-		return
+/obj/structure/ritualcircle/baotha_TA/proc/baothaarmaments(mob/living/carbon/human/target)
 	if(!HAS_TRAIT(target, TRAIT_DEPRAVED))
-		visible_message(span_cult("THE RITE REJECTS ONE WITHOUT REGRET IN THEIR HEART!!"))
+		loc.visible_message(span_cult("THE RITE REJECTS ONE WITHOUT REGRET IN THEIR HEART!!"))
 		return
 	target.Stun(60)
 	target.Knockdown(60)
 	to_chat(target, span_userdanger("UNIMAGINABLE PAIN!"))
 	target.emote("superagony")
-	playsound(src, 'sound/misc/smelter_fin.ogg', 50)
-	visible_message(span_cult("[target]'s lux gushes out from their mouth, splashing onto the rune and causing the chalk to fizzle into prismatic smoke; and once it clears, their saccharine presence is made clear!"))
+	playsound(loc, 'sound/misc/smelter_fin.ogg', 50)
+	loc.visible_message(span_cult("[target]'s lux gushes out from their mouth, splashing onto the rune and causing the chalk to fizzle into prismatic smoke; and once it clears, their saccharine presence is made clear!"))
 	spawn(20)
-		if(QDELETED(target) || QDELETED(src))
-			return
-		playsound(src, 'sound/combat/hits/onmetal/grille (2).ogg', 50)
-		target.equipOutfit(/datum/outfit/job/roguetown/baothanrite_TA)
+		playsound(loc, 'sound/combat/hits/onmetal/grille (2).ogg', 50)
+		target.equipOutfit(/datum/outfit/job/roguetown/baothanrite)
 		tag_kit_items(target, list(
 			"armor" = target.get_item_by_slot(SLOT_ARMOR),
 			"shirt" = target.get_item_by_slot(SLOT_SHIRT),
@@ -291,26 +287,4 @@
 		), list("armor", "shirt", "pants", "shoes", "wrists", "gloves", "head", "neck", "backr"))
 		target.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_EXPERT, TRUE)
 		spawn(40)
-			if(QDELETED(target))
-				return
 			to_chat(target, span_cult("Live deliciously."))
-
-/datum/outfit/job/roguetown/baothanrite_TA/pre_equip(mob/living/carbon/human/H, visualsOnly = FALSE)
-	..()
-	var/list/items = list()
-	items |= H.get_equipped_items(TRUE)
-	for(var/I in items)
-		H.dropItemToGround(I, TRUE)
-	H.drop_all_held_items()
-	head = /obj/item/clothing/head/roguetown/helmet/baotha_ta
-	armor = /obj/item/clothing/suit/roguetown/armor/plate/fluted/baotha_ta
-	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/baotha_ta
-	pants = /obj/item/clothing/under/roguetown/skirt/baotha_ta
-	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/baotha_ta
-	gloves = /obj/item/clothing/gloves/roguetown/plate/baotha_ta
-	neck = /obj/item/clothing/neck/roguetown/coif/baotha_ta
-	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/baotha_ta
-	backr = /obj/item/rogueweapon/spear/partizan/baotha_ta
-
-	if(H.mind)
-		H.mind.AddSpell(new /datum/action/cooldown/spell/mending/lesser)

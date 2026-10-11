@@ -1,69 +1,3 @@
-/obj/item/rogueweapon/handclaw/gronn/silver/psy
-	name = "psydonic claws"
-	desc = "Three silver claws mounted upon a reinforced gauntlet, blessed for those who hunt in silence. \
-	Though lacking the reach of a sword, they find purchase where steel cannot, rending the servants of darkness in Psydon's name."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
-	icon_state = "psyclaws"
-
-/obj/item/rogueweapon/handclaw/gronn/silver/psy/ComponentInitialize()
-	AddComponent(\
-		/datum/component/silverbless,\
-		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 100,\
-		added_int = 50,\
-		added_def = 2,\
-	)
-
-/obj/item/rogueweapon/sword/rapier/silver/psyrapier
-	name = "psydonic foil"
-	desc = "A slender silver foil crafted for swift and precise strikes. \
-	Though elegant in form, it was forged with a singular purpose: to pierce both the hearts of men and the blasphemies that lurk beyond them."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
-	icon_state = "psyrapier"
-	sheathe_icon = "silverrapier"
-	max_integrity = 175
-	max_blade_int = 175
-	grid_width = 32
-	grid_height = 64
-	dropshrink = 0
-	bigboy = FALSE
-
-/obj/item/rogueweapon/sword/rapier/silver/psyrapier/ComponentInitialize()
-	AddComponent(\
-		/datum/component/silverbless,\
-		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 100,\
-		added_int = 100,\
-		added_def = 2,\
-	)
-
-/obj/item/rogueweapon/huntingknife/idagger/silver/psydagger/parrying
-	name = "psydonic parrying dagger"
-	desc = "A finely balanced silver parrying dagger, carried by loyal servants of the Inquisition. \
-	Its crossguard turns aside wicked steel while its blessed edge delivers Psydon's judgement."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
-	icon_state = "psypdagger"
-	force = 15
-	throwforce = 15
-	wdefense = 9
-	max_integrity = 150
-
-/obj/item/rogueweapon/huntingknife/idagger/silver/psydagger/parrying/ComponentInitialize()
-	AddComponent(\
-		/datum/component/silverbless,\
-		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 100,\
-		added_def = 2,\
-	)
-	sellprice += 200
-
 /datum/advclass/blackpowder_legionnaire
 	name = "Blackpowder Legionnaire"
 	tutorial = "In the Blackpowder Order, every fourth soldier is a sharpshooter, armed with advanced Otavan firearms. These Legionnaires are the very essence of the everchanging face of warfare, and when the Final War begins, it is with their power that the evil will be driven back."
@@ -173,15 +107,15 @@
 					/obj/item/inqarticles/garrote = 1,
 					/obj/item/clothing/head/inqarticles/blackbag = 1
 					)
-				var/weapons = list("Psydonic Parrying Dagger", "Psydonic Foil", "Psydonic Claws")
+				var/weapons = list("Psydonic Parrying Dagger", "Psydonic Smallsword", "Psydonic Claws")
 				var/weapon_choice = input(H,"Choose your WEAPON.", "TAKE UP PSYDON'S ARMS.") as anything in weapons
 				switch(weapon_choice)
 					if("Psydonic Parrying Dagger")
 						l_hand = /obj/item/rogueweapon/huntingknife/idagger/silver/psydagger/parrying
 						r_hand = /obj/item/rogueweapon/scabbard/sheath
 						H.adjust_skillrank_up_to(/datum/skill/combat/knives, 4, TRUE)
-					if("Psydonic Foil")
-						l_hand = /obj/item/rogueweapon/sword/rapier/silver/psyrapier
+					if("Psydonic Smallsword")
+						l_hand = /obj/item/rogueweapon/sword/rapier/psy/smallsword
 						r_hand = /obj/item/rogueweapon/scabbard/sword
 						H.adjust_skillrank_up_to(/datum/skill/combat/swords, 4, TRUE)
 					if("Psydonic Claws")

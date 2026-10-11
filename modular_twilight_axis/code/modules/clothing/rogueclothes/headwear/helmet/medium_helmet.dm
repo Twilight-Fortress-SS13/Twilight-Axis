@@ -107,3 +107,12 @@
 	active_item = FALSE
 	REMOVE_TRAIT(user, TRAIT_BITERHELM, TRAIT_GENERIC)
 	to_chat(user, span_red("..and like that, the darksteel strands recede back into the helmet. Her oppressive grip releases your jaw, leaving a cold, hollow ache."))
+
+/obj/item/clothing/head/roguetown/helmet/sallet/hussarhelm
+	name = "hussar's steel szyszak"
+	desc = "A brand new kind of helmet based on Ranesheni çiçeks, fitted with a sliding nasal protector, cheekpieces, and a neck guard. This ornate szyszak was made from high-quality Vyšvou steel, clearly intended for the Potentate's own cavalrymen."
+	body_parts_covered = HEAD|EARS|HAIR|NECK|NOSE //Notice how it doesn't protect eyes!!!
+	max_integrity = ARMOR_INT_HELMET_STEEL
+	icon_state = "hussarhelm"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/head.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/head.dmi'

@@ -314,23 +314,25 @@
 	color = null
 	allowed_race = NON_DWARVEN_RACE_TYPES
 
-// /obj/item/clothing/cloak/etrmantle до обновления спрайта
-//	name = "Etruscan mantle"
-//	desc = "A pleasant-looking and -feeling mantle and expensive fabric, a frequent decoration of the overall attire of the sun elves in Etrusca"
-//	color = null
-//	icon_state = "etrmantle"
-//	item_state = "etrmantle"
-//	icon = 'modular_twilight_axis/icons/roguetown/clothing/cloaks.dmi'
-//	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/cloaks.dmi'
-//	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/cloaks.dmi'
-//	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR|ITEM_SLOT_CLOAK
-//	allowed_sex = list(FEMALE)
-//	alternate_worn_layer = TABARD_LAYER
-//	body_parts_covered = CHEST|GROIN
-//	boobed = TRUE
-//	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR|ITEM_SLOT_CLOAK
-//	flags_inv = HIDECROTCH|HIDEBOOB
-//	var/custom_design = FALSE
+/* // До обновления спрайта
+/obj/item/clothing/cloak/etrmantle
+	name = "Etruscan mantle"
+	desc = "A pleasant-looking and -feeling mantle and expensive fabric, a frequent decoration of the overall attire of the sun elves in Etrusca"
+	color = null
+	icon_state = "etrmantle"
+	item_state = "etrmantle"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/cloaks.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/cloaks.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/cloaks.dmi'
+	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR|ITEM_SLOT_CLOAK
+	allowed_sex = list(FEMALE)
+	alternate_worn_layer = TABARD_LAYER
+	body_parts_covered = CHEST|GROIN
+	boobed = TRUE
+	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR|ITEM_SLOT_CLOAK
+	flags_inv = HIDECROTCH|HIDEBOOB
+	var/custom_design = FALSE
+*/
 
 /obj/item/clothing/cloak/bandolier/inq
 	name = "inquisitorial bandolier"
@@ -339,3 +341,73 @@
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/cloaks.dmi'
 	icon_state = "inqbandolier"
 	item_state = "inqbandolier"
+
+/obj/item/clothing/cloak/twilight_desert
+	name = "desert cloak"
+	desc = "This one will help against the dusty weather."
+	color = CLOTHING_PURPLE
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/cloaks.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/cloaks.dmi'
+	icon_state = "desert_cloak"
+	item_state = "desert_cloak"
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/cloaks.dmi'
+	sleevetype = "shirt"
+	nodismemsleeves = TRUE
+	inhand_mod = TRUE
+	hoodtype = /obj/item/clothing/head/hooded/desert_hood
+	toggle_icon_state = FALSE
+	detail_tag = "_detail"
+	detail_color = CLOTHING_YARROW
+
+/obj/item/clothing/cloak/twilight_desert/Initialize()
+	. = ..()
+	update_icon()
+
+/obj/item/clothing/cloak/twilight_desert/update_icon()
+	cut_overlays()
+	if(get_detail_tag())
+		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		pic.appearance_flags = RESET_COLOR
+		if(get_detail_color())
+			pic.color = get_detail_color()
+		add_overlay(pic)
+
+/obj/item/clothing/head/hooded/desert_hood
+	name = "desert cloak hood"
+	desc = "This one will shelter me from the sand."
+	icon_state = "desert_hood"
+	item_state = "desert_hood"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/head.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/head_48.dmi'
+	slot_flags = ITEM_SLOT_HEAD
+	dynamic_hair_suffix = ""
+	edelay_type = 1
+	body_parts_covered = HEAD
+	flags_inv = HIDEEARS|HIDEHAIR
+	detail_tag = "_detail"
+
+/obj/item/clothing/head/hooded/desert_hood/Initialize()
+	. = ..()
+	update_icon()
+
+/obj/item/clothing/head/hooded/desert_hood/update_icon()
+	cut_overlays()
+	if(get_detail_tag())
+		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		pic.appearance_flags = RESET_COLOR
+		if(get_detail_color())
+			pic.color = get_detail_color()
+		add_overlay(pic)
+
+/obj/item/clothing/cloak/lepoardcloak
+	name = "leopard pelt cloak"
+	desc = "This regal cloak is made from the pelt of an Etruscan Leopard. It's worn by soldiers of great prestige and renown."
+	icon_state = "lepoardcape"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/cloaks.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/cloaks.dmi'
+	inhand_mod = FALSE
+	slot_flags = ITEM_SLOT_BACK_R|ITEM_SLOT_CLOAK
+	salvage_result = /obj/item/natural/fur
+	allowed_race = NON_DWARVEN_RACE_TYPES
+	salvage_amount = 3
+	cold_protection = 20
