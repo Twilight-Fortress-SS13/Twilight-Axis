@@ -107,3 +107,11 @@
 	active_item = FALSE
 	REMOVE_TRAIT(user, TRAIT_BITERHELM, TRAIT_GENERIC)
 	to_chat(user, span_red("..and like that, the darksteel strands recede back into the helmet. Her oppressive grip releases your jaw, leaving a cold, hollow ache."))
+
+/obj/item/clothing/head/roguetown/helmet/kettle/republican
+	name = "republican kettle hat"
+	desc = "A kettle helmet covered with a traditional hat straight from Heartfelt"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/head.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/head.dmi'
+	icon_state = "republicanhat"
+	item_state = "republicanhat"

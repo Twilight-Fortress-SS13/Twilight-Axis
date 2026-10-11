@@ -92,3 +92,4 @@
 	obj_integrity = min(obj_integrity + repair_amount, max_integrity)
 	if(obj_broken)
 		obj_fix(full_repair = FALSE)
+
