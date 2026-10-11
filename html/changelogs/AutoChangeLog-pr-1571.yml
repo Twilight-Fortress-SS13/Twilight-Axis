@@ -1,0 +1,4 @@
+author: "HardexZ"
+delete-after: True
+changes:
+  - rscadd: "Возможность переключать Rabbit Ears(Medium), Rabbit Ears(Floppy), Rabbit Ears(Floppy R.) между собой во время игры."
