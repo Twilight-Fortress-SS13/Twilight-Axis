@@ -1150,7 +1150,7 @@ var/static/list/shamanic_commit_fold_cache = list()
 		return
 
 	if(owner && !QDELETED(owner) && owner.stat != DEAD && world.time >= next_stamina_drain)
-		var/drain = SHAMANIC_TOTEM_STAMINA_DRAIN + max(0, length(recipients) - 1) * (SHAMANIC_TOTEM_STAMINA_DRAIN / 2)
+		var/drain = SHAMANIC_TOTEM_STAMINA_DRAIN * length(recipients)
 		if(drain > 0)
 			owner.energy_add(-drain)
 		next_stamina_drain = world.time + SHAMANIC_TOTEM_STAMINA_DRAIN_INTERVAL
