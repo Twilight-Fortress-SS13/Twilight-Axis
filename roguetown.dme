@@ -4264,6 +4264,7 @@
 #include "modular_twilight_axis\code\modules\mob\dead\new_player\sprite_accessory\tails.dm"
 #include "modular_twilight_axis\code\modules\mob\living\carbon\human\human.dm"
 #include "modular_twilight_axis\code\modules\mob\living\carbon\human\table_crawl.dm"
+#include "modular_twilight_axis\code\modules\mob\living\carbon\human\undress_all.dm"
 #include "modular_twilight_axis\code\modules\mob\living\carbon\human\rabbit_ears_swap.dm"
 #include "modular_twilight_axis\code\modules\mob\living\emote.dm"
 #include "modular_twilight_axis\code\modules\mob\living\carbon\human\emotes_noises.dm"
