@@ -163,6 +163,8 @@
 			playsound(loc, 'sound/magic/holyshield.ogg', 80, FALSE, -1)
 			moonlightdance(src)
 			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
+		// TA REMOVAL START - RITUAL REMOVED CUZ THERE IS SAME ABILITY IN MIRACLES.
+		/*
 		if("Moonlight Inspiration")
 			if(!do_after(user, 5 SECONDS))
 				return
@@ -177,16 +179,22 @@
 			playsound(loc, 'sound/magic/holyshield.ogg', 80, FALSE, -1)
 			mooninspiration(src)
 			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
+		*/
+		// TA REMOVAL END
 
 /obj/structure/ritualcircle/noc/proc/moonlightdance(src)
 	var/ritualtargets = view(7, loc)
 	for(var/mob/living/carbon/human/target in ritualtargets)
 		target.apply_status_effect(/datum/status_effect/buff/moonlightdance)
 
+// TA REMOVAL START - RITUAL REMOVED CUZ THERE IS SAME ABILITY IN MIRACLES.
+/*
 /obj/structure/ritualcircle/noc/proc/mooninspiration(src)
 	var/ritualtargets = view(2, loc)
 	for(var/mob/living/carbon/human/target in ritualtargets)
 		target.mind.sleep_adv.sleep_adv_points += 3
+*/
+// TA REMOVAL END
 
 /obj/structure/ritualcircle/xylix
 	name = "Rune of Trickery"
