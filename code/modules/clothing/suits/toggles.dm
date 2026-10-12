@@ -62,7 +62,9 @@
 		H.update_inv_wear_suit()
 		H.update_inv_cloak()
 		H.update_inv_neck()
+		H.update_inv_head()
 		H.update_inv_pants()
+		H.update_body_parts(TRUE)
 		H.update_fov_angles()
 
 // Logic for raising and lowering the hood.
@@ -110,6 +112,7 @@
 		H.update_inv_wear_suit()
 		H.update_inv_cloak()
 		H.update_inv_head()
+		H.update_body_parts(TRUE)
 		H.update_fov_angles()
 
 

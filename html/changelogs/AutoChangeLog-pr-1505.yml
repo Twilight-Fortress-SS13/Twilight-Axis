@@ -1,0 +1,5 @@
+author: "Chituka"
+delete-after: True
+changes:
+  - qol: "T1 Eorans are now Beautiful"
+  - balance: "PER and INT penalties for Swift balance now apply when targeting ANY bodypart."

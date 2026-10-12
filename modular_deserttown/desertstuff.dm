@@ -683,9 +683,11 @@
 // Effects
 /obj/effect/decal/edge/desert_gray
 	color = "#655653"
+	bake_to_loc = TRUE
 
 /obj/effect/decal/edge_corner/desert_gray
 	color = "#655653"
+	bake_to_loc = TRUE
 
 //Decor
 /obj/structure/vase

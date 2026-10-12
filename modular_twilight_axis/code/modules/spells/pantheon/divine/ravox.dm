@@ -923,3 +923,35 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 			return TRUE
 	return ..()
 
+/datum/outfit/job/roguetown/ravox_spirit/no_floor_swords/pre_equip(mob/living/carbon/human/H, visualsOnly)
+	. = ..()
+	l_hand = null
+	r_hand = null
+
+/mob/living/carbon/human/species/human/northern/ravox_spirit
+	var/tmp/ravox_outfit_equipped = FALSE
+
+/mob/living/carbon/human/species/human/northern/ravox_spirit/outfit_ravoxspirit(datum/outfit/outfit)
+	if(!outfit || ravox_outfit_equipped)
+		return
+	ravox_outfit_equipped = TRUE
+
+	for(var/obj/item/held_item in held_items)
+		temporarilyRemoveItemFromInventory(held_item, TRUE)
+		qdel(held_item)
+
+	equipOutfit(/datum/outfit/job/roguetown/ravox_spirit/no_floor_swords)
+
+	var/obj/item/rogueweapon/sword/long/ravox_spirit/left_sword = new(src)
+	if(!put_in_l_hand(left_sword, TRUE))
+		qdel(left_sword)
+
+	var/obj/item/rogueweapon/sword/long/ravox_spirit/right_sword = new(src)
+	if(!put_in_r_hand(right_sword, TRUE))
+		qdel(right_sword)
+
+	for(var/obj/item/equipped_item in get_equipped_items() + held_items)
+		equipped_item.AddComponent(/datum/component/item_on_drop/dust)
+
+	for(var/obj/item/held_item in held_items)
+		ADD_TRAIT(held_item, TRAIT_NODROP, TRAIT_GENERIC)

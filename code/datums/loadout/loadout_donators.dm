@@ -18,11 +18,11 @@
 	name = "Gift - Azurosa Flower"
 	path = /obj/item/alch/rosa/azure
 
-/datum/loadout_item/donator/universal/ilamellar
+/datum/loadout_item/donator/universal/ilamellard
 	name = "Gift - Iron Lamellar Armor decoration"
 	path = /obj/item/clothing/suit/roguetown/shirt/ilamellar
 
-/datum/loadout_item/donator/universal/blamellar
+/datum/loadout_item/donator/universal/blamellard
 	name = "Gift - Bronze Lamellar Armor decoration"
 	path = /obj/item/clothing/suit/roguetown/shirt/blamellar
 
@@ -961,6 +961,11 @@
 	name = "Donator Kit - Spring Cometh"
 	path = /obj/item/enchantingkit/weapon/kadedao
 	ckeywhitelist = list("shiroseschnee", "Zerantio", "elox2000")
+
+/datum/loadout_item/donator/forgefiend_wrench
+	name = "Donator Kit - Forgefiend Wrench"
+	path = /obj/item/enchantingkit/weapon/forgefiend_wrench
+	ckeywhitelist = list("tamaya")
 
 /datum/loadout_item/donator/falling_star
 	name = "Donator Kit - Falling Star"

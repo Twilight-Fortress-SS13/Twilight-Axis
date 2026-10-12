@@ -38,14 +38,13 @@
 		"Steward",\
 		"Hand",\
 		"Court Magician",\
+		"Magicians Associate",\
 		"Marshal",\
 		"Knight",\
 		"Squire",\
 		"Bishop",\
 		"Martyr",\
 		"Templar",\
-		"Druid",\
-		"Acolyte",\
 		"Painter",\
 		"Keeper",\
 		"Inquisitor",\
@@ -57,8 +56,8 @@
 		"Gnoll",\
 		"Veteran",\
 		"Guildmaster",\
+		"Guildsman",\
 		"Head Physician",\
-		"Vagabond",\
 		"Mercenary",\
 		"Adventurer",\
 		"Court Agent",\

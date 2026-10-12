@@ -113,10 +113,10 @@
 	name = "'Sanguine Heels' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Heavy Leather Boots"
 	target_items = list(
-		/obj/item/clothing/shoes/roguetown/boots/leather/reinforced = /obj/item/clothing/shoes/courtphysician/female,
-		/obj/item/clothing/shoes/roguetown/boots/leather = /obj/item/clothing/shoes/courtphysician/female,
-		/obj/item/clothing/shoes/roguetown/boots/otavan = /obj/item/clothing/shoes/courtphysician/female)
-	icon_loadout = /obj/item/clothing/shoes/courtphysician/female
+		/obj/item/clothing/shoes/roguetown/boots/leather/reinforced = /obj/item/clothing/shoes/roguetown/courtphysician/female,
+		/obj/item/clothing/shoes/roguetown/boots/leather = /obj/item/clothing/shoes/roguetown/courtphysician/female,
+		/obj/item/clothing/shoes/roguetown/boots/otavan = /obj/item/clothing/shoes/roguetown/courtphysician/female)
+	icon_loadout = /obj/item/clothing/shoes/roguetown/courtphysician/female
 
 /obj/item/enchantingkit/sanguine_trousers
 	name = "'Sanguine Trousers' morphing elixir"

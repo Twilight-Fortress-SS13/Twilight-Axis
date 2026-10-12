@@ -42,6 +42,9 @@
 	var/priest_timer_check = 0
 	var/matthios_banner_timer_check = 0
 
+/area/rogue
+	var/holy_area = FALSE
+
 /area/rogue/Entered(mob/living/carbon/human/guy)
 
 	.=..()

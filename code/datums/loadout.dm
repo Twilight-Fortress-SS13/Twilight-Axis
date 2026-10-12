@@ -92,7 +92,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/card_deck
 	name = "Card Deck"
 	category = "Разное"
-	path = /obj/item/toy/cards/deck
+	path = /obj/item/deck/playing_cards
 
 /datum/loadout_item/farkle_dice
 	name = "Farkle Dice Container"
@@ -102,7 +102,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/tarot_deck
 	name = "Tarot Deck"
 	category = "Разное"
-	path = /obj/item/toy/cards/deck/tarot
+	path = /obj/item/deck/tarot/includes_minor_arcana
+
+/datum/loadout_item/tarot_deck_majorarcana
+	name = "Tarot Deck (Major Arcana)"
+	category = "Разное"
+	path = /obj/item/deck/tarot
 
 /datum/loadout_item/bibble
 	name = "The Verses and Acts of the Ten"
@@ -3373,7 +3378,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/sanguine_heels
 	name = "Sanguine Heels"
 	category = list("Обувь", "Донат")
-	path = /obj/item/clothing/shoes/courtphysician/female
+	path = /obj/item/clothing/shoes/roguetown/courtphysician/female
 	donatitem = TRUE
 	donat_tier = 2
 
@@ -3436,7 +3441,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/sanguine_shoes
 	name = "Sanguine Shoes"
 	category = list("Обувь", "Донат")
-	path = /obj/item/clothing/shoes/courtphysician
+	path = /obj/item/clothing/shoes/roguetown/courtphysician
 	donatitem = TRUE
 	donat_tier = 2
 
@@ -4110,13 +4115,6 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Аксессуары"
 	path = /obj/item/clothing/ring/band/paalloy
 	donatitem = TRUE
-
-/datum/loadout_item/tarot_deck_majorarcana
-	name = "Tarot Deck (Major Arcana)"
-	category = "Разное"
-	path = /obj/item/toy/cards/deck/tarot/majorarcana
-	donatitem = TRUE
-	donat_tier = 2
 
 /datum/loadout_item/triumph_satchel
 	name = "Satchel"
@@ -5481,3 +5479,34 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/mask/rogue/facemask/goldmask/radiant
 	donatitem = TRUE
 	donat_tier = 2
+
+/datum/loadout_item/taur_plate
+	name = "tauric plate armor morphing elixir"
+	category = "Броня"
+	path = /obj/item/enchantingkit/taur_armor_plate
+
+/datum/loadout_item/taur_gambeson
+	name = "tauric gambeson morphing elixir"
+	category = "Броня"
+	path = /obj/item/enchantingkit/taur_armor_gambeson
+
+/datum/loadout_item/taur_tabard
+	name = "feline taur tabard"
+	category = "Плащи"
+	path = /obj/item/clothing/cloak/t_tabard/taur
+
+/datum/loadout_item/taur_t_tabard
+	name = "feline tightened taur tabard"
+	category = "Плащи"
+	path = /obj/item/clothing/cloak/t_tabard/taur/tightened
+
+/datum/loadout_item/taur_hauberk
+	name = "feline taur hauberk morphing elixir"
+	category = "Броня"
+	path = /obj/item/enchantingkit/taur_armor_hauberk
+
+/datum/loadout_item/taur_footwraps
+	name = "feline taur footwraps"
+	category = "Обувь"
+	path = /obj/item/clothing/shoes/roguetown/felinetaur
+

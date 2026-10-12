@@ -215,7 +215,8 @@ SUBSYSTEM_DEF(statpanels)
 		return TRUE
 
 	if(target.mob?.listed_turf && target.stat_tab == "[target.mob.listed_turf]")
-		target.send_listed_turf()
+		//TA EDIT - listed-turf tab is dead on the JS side, skip the appearance build entirely
+		//target.send_listed_turf()
 		return TRUE
 
 	var/mob/target_mob = target.mob

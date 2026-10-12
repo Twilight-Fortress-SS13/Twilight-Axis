@@ -23,6 +23,20 @@ directory = "_maps/twilight_axis/templates/dun_world/witch_hut/"
 required_map = "dun_world.dmm"
 coordinates = [194, 240, 1]
 
+# dunworld hunter huts
+[templates.towner_hunter_hut]
+map_files = ["hunter_hut.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/hunter_hut/"
+required_map = "dun_world.dmm"
+coordinates = [161, 252, 2]
+
+# dunworld eoran house and church
+[templates.towner_eoran_house]
+map_files = ["eoran_house_1.dmm","eoran_house_2.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/eoran_house/"
+required_map = "dun_world.dmm"
+coordinates = [159, 144, 2]
+
 # rockhill bridges
 [templates.bridge]
 map_files = ["bridge1.dmm","bridge2.dmm","bridge3.dmm","bridge4.dmm","bridge5.dmm","bridge6.dmm","bridge7.dmm"]
@@ -50,17 +64,6 @@ directory = "_maps/twilight_axis/templates/dun_world/towner_house/"
 required_map = "dun_world.dmm"
 coordinates = [124, 133, 1]
 
-[templates.towner_house3]
-map_files = ["eoradom.dmm"]
-directory = "_maps/twilight_axis/templates/dun_world/towner_house/"
-required_map = "dun_world.dmm"
-coordinates = [156, 146, 2]
-
-[templates.towner_house4]
-map_files = ["Hunterhouse.dmm"]
-directory = "_maps/twilight_axis/templates/dun_world/towner_house/"
-required_map = "dun_world.dmm"
-coordinates = [160, 254, 2]
 
 [templates.towner_house5]
 map_files = ["Ydvorcha.dmm"]

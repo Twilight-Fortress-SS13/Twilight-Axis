@@ -604,6 +604,29 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		ccg_saved_deck_cards = ccg_selected_deck.Copy()
 	ccg_load_or_migrate_sql()
 
+/datum/preferences/proc/_load_quirk(S)
+	var/quirklesser_type
+	var/quirkgreater_type
+	S["quirklesser"] >> quirklesser_type
+	S["quirkgreater"] >> quirkgreater_type
+
+	if(!quirklesser_type)
+		quirklesser_type = /datum/quirk/none
+	if(!quirkgreater_type)
+		quirkgreater_type = /datum/quirk/none
+
+	if(ispath(quirklesser_type, /datum/quirk))
+		var/datum/quirk/lesserpath = quirklesser_type
+		QDEL_NULL(quirklesser)
+		if(!lesserpath::greater) // juuuust in case something gets retroactively maid greater, or someone messes with the savefiles
+			quirklesser = new quirklesser_type
+		else
+			quirklesser = new /datum/quirk/none
+
+	if(ispath(quirkgreater_type, /datum/quirk))
+		QDEL_NULL(quirkgreater)
+		quirkgreater = new quirkgreater_type
+
 /datum/preferences/proc/_load_gear_list(savefile/S)
 	var/list/saved_gear_list
 	S["gear_list"] >> saved_gear_list
@@ -732,6 +755,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	_load_species(S)
 
 	_load_virtue(S)
+	_load_quirk(S)
 	_load_flaw(S)
 
 	_load_culinary_preferences(S)
@@ -1257,6 +1281,10 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["statpack"] , statpack.type)
 
 	write_clean_virtue_paths(S, virtue ? virtue.type : /datum/virtue/none, virtuetwo ? virtuetwo.type : /datum/virtue/none, virtue_origin ? virtue_origin.type : /datum/virtue/none, virtue ? virtue.picked_choices : null, virtuetwo ? virtuetwo.picked_choices : null)
+	var/quirklesser_save_type = quirklesser ? quirklesser.type : /datum/quirk/none
+	var/quirkgreater_save_type = quirkgreater ? quirkgreater.type : /datum/quirk/none
+	WRITE_FILE(S["quirklesser"], quirklesser_save_type)
+	WRITE_FILE(S["quirkgreater"], quirkgreater_save_type)
 
 	WRITE_FILE(S["race_bonus"], race_bonus)
 	var/combat_music_save_type = default_cmusic_type // TA EDIT START

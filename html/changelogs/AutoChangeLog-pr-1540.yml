@@ -1,0 +1,5 @@
+author: "Aism4n"
+delete-after: True
+changes:
+  - bugfix: "перевод ненастоящей речи на великий и могучий"
+  - sound: "замена *scream от вымышленного инфаркта на *pale"

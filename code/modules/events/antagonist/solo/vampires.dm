@@ -1,5 +1,5 @@
 /datum/round_event_control/antagonist/solo/vampires
-	name = "Vampires"
+	name = "Vampire Lord"
 	tags = list(
 		TAG_COMBAT,
 		TAG_HAUNTED,
@@ -52,6 +52,18 @@
 /datum/round_event/antagonist/solo/vampire/add_datum_to_mind(datum/mind/antag_mind)
 	if(!leader)
 		var/datum/antagonist/vampire/lord/lorde = new /datum/antagonist/vampire/lord()
+		var/mob/living/carbon/human/H = antag_mind.current
+		if(H.client)
+			var/datum/class_select_handler/stale = SSrole_class_handler.class_select_handlers[H.client.ckey]
+			if(stale)
+				SSrole_class_handler.class_select_handlers.Remove(H.client.ckey)
+				qdel(stale)
+				SSjob.AssignRole(H, "Migrant")
+				H.job = "Migrant"
+		SSrole_class_handler.setup_class_handler(H, list(CTAG_NO_OUTFIT = 20))
+		H.set_advsetup(FALSE)
+		H.hud_used?.set_advclass()
+		//okay, we're finished w/ clearing away your role, now we make you into VL
 		antag_mind.add_antag_datum(lorde)
 		leader = TRUE
 		return

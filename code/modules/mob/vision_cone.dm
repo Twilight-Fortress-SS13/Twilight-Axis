@@ -1,9 +1,3 @@
-
-/client
-	var/list/hidden_atoms = list()
-	var/list/hidden_mobs = list()
-	var/list/hidden_images = list()
-
 /mob
 	var/fovangle
 	var/cone_showing = FALSE
@@ -74,147 +68,14 @@
 	return
 
 /mob/living/update_vision_cone()
-	if(client)
-		if(hud_used && hud_used.fov)
-			if(isdullahan(src))
-				// Matches the direction our parent is looking if we're viewing through a relay.
-				var/mob/living/carbon/human/user = src
-				var/datum/species/dullahan/user_species = user.dna.species
-				var/obj/item/bodypart/head/dullahan/user_head = user_species.my_head
-				if(user_species.headless && user_head && ishuman(user_head.loc))
-					var/mob/living/head_parent = user_head.loc
-					hud_used.fov.dir = head_parent.dir
-					hud_used.fov_blocker.dir = head_parent.dir
-				else if(!user_species.headless)
-					hud_used.fov.dir = src.dir
-					hud_used.fov_blocker.dir = src.dir
-			else
-				hud_used.fov.dir = src.dir
-				hud_used.fov_blocker.dir = src.dir
-		START_PROCESSING(SSincone, client)
-
-/client/proc/update_cone()
-	if(mob)
-		mob.update_cone()
-
-/// The override image update_cone() shows our own client in place of us so it ignores our transform
-/// anything animating our transform has to animate this too for the client to see it.
-/mob/living/proc/get_cone_self_image()
 	if(!client)
-		return null
-	for(var/image/cone_image as anything in client.hidden_images)
-		if(cone_image.loc == src)
-			return cone_image
-	return null
-
-/mob/living/update_cone()
-	for(var/hidden_hud in client.hidden_images)
-		client.images -= hidden_hud
-		client.hidden_images -= hidden_hud
-	if(hud_used?.fov)
-		if(hud_used.fov.alpha == 0)
-			return
-	var/image/I = image(src, src)
-	I.override = 1
-	I.plane = GAME_PLANE_UPPER
-	I.layer = layer
-	I.pixel_x = 0
-	I.pixel_y = 0
-	client.images += I
-	client.hidden_images += I
-	I.appearance_flags = RESET_TRANSFORM|KEEP_TOGETHER|PIXEL_SCALE
-	if(buckled)
-		var/image/IB = image(buckled, buckled)
-		IB.override = 1
-		IB.plane = GAME_PLANE_UPPER
-		IB.layer = IB.layer
-		IB.pixel_x = 0
-		IB.pixel_y = 0
-		IB.appearance_flags = RESET_TRANSFORM|KEEP_TOGETHER
-		client.hidden_images += IB
-		client.images += IB
-	if(pulling)
-		var/image/IB = image(pulling, pulling)
-		IB.override = 1
-		IB.plane = GAME_PLANE_UPPER
-		IB.layer = IB.layer
-		IB.pixel_x = 0
-		IB.pixel_y = 0
-		IB.appearance_flags = RESET_TRANSFORM|KEEP_TOGETHER
-		client.hidden_images += IB
-		client.images += IB
-/*	if(hud_used && hud_used.fov_blocker)
-		fov_blocker
-
-		var/icon/new_blocker = icon("icon"='icons/mob/vision_cone.dmi', "icon_state"=hud_used.fov_blocker.icon_state)
-		var/icon/the_mob = icon("icon"='icons/mob/clothing/under/masking_helpers.dmi', "icon_state"="[(type == FEMALE_UNIFORM_FULL) ? "female_full" : "female_top"]")
-		female_clothing_icon.Blend(female_s, ICON_MULTIPLY)
-*/
-
-/*	if(src.client)
-		var/image/I = null
-		for(I in src.client.hidden_atoms)
-			I.override = 0
-			client.images -= I
-			qdel(I)
-		for(var/hidden_hud in client.hidden_images)
-			client.images += hidden_hud
-			client.hidden_images -= hidden_hud
-		src.client.hidden_atoms = list()
-		src.client.hidden_mobs = list()
-		client.hidden_images = list()
-		if(hud_used && hud_used.fov)
-//			hud_used.fov.dir = src.dir
-			if(hud_used.fov.alpha != 0)
-				var/mob/living/M
-				var/list/mobs2hide = list()
-
-				if(fovangle & FOV_RIGHT)
-					if(fovangle & FOV_LEFT)
-						var/dirlist = list(turn(src.dir, 180),turn(src.dir, -90),turn(src.dir, 90))
-						mobs2hide |= cone(src, dirlist, GLOB.mob_living_list.Copy())
-					else
-						if(fovangle & FOV_BEHIND)
-							var/dirlist = list(turn(src.dir, -90))
-							mobs2hide |= behind(src, list(turn(src.dir, 180)), GLOB.mob_living_list.Copy())
-							mobs2hide |= cone(src, dirlist, GLOB.mob_living_list.Copy())
-						else
-							var/dirlist = list(turn(src.dir, 180),turn(src.dir, -90))
-							mobs2hide |= cone(src, dirlist, GLOB.mob_living_list.Copy())
-				else
-					if(fovangle & FOV_LEFT)
-						if(fovangle & FOV_BEHIND)
-							var/dirlist = list(turn(src.dir, 90))
-							mobs2hide |= behind(src, list(turn(src.dir, 180)), GLOB.mob_living_list.Copy())
-							mobs2hide |= cone(src, dirlist, GLOB.mob_living_list.Copy())
-						else
-							var/dirlist = list(turn(src.dir, 180),turn(src.dir, 90))
-							mobs2hide |= cone(src, dirlist, GLOB.mob_living_list.Copy())
-					else
-						if(fovangle & FOV_BEHIND)
-							mobs2hide |= behind(src, list(turn(src.dir, 180)), GLOB.mob_living_list.Copy())
-						else//default
-							mobs2hide |= cone(src, list(turn(src.dir, 180)), GLOB.mob_living_list.Copy())
-
-				for(M in mobs2hide)
-					I = image("split", M)
-					I.override = 1
-					src.client.images += I
-					src.client.hidden_atoms += I
-					src.client.hidden_mobs += M
-					if(src.pulling == M)//If we're pulling them we don't want them to be invisible, too hard to play like that.
-						I.override = 0
-					if(src.pulledby == M)
-						I.icon = 'icons/mob/mob.dmi'
-						I.icon_state = "anon"
-		for(var/image/HUD in client.images)
-			if(HUD.icon != 'icons/mob/hud.dmi')
-				continue
-			for(var/mob/living/M in client.hidden_mobs)
-				if(HUD.loc == M)
-					client.hidden_images += HUD
-					client.images -= HUD
-					break*/
+		return
+	var/datum/component/fov_handler/fov = GetComponent(/datum/component/fov_handler)
+	if(!fov)
+		AddComponent(/datum/component/fov_handler)
+	else
+		fov.sync_direction()
+		fov.update_fov_size()
 
 /mob/proc/can_see_cone(mob/L)
 	if(!isliving(src) || !isliving(L))
@@ -256,15 +117,6 @@
 						mobs2hide |= cone(src, list(turn(src.dir, 180)), list(L))
 
 			if(L in mobs2hide)
-/*				I = image("split", M)
-				I.override = 1
-				src.client.images += I
-				src.client.hidden_atoms += I
-				if(src.pulling == M)//If we're pulling them we don't want them to be invisible, too hard to play like that.
-					I.override = 0
-				if(src.pulledby == M)
-					I.icon = 'icons/mob/mob.dmi'
-					I.icon_state = "anon"*/
 				return FALSE
 	return TRUE
 
@@ -333,34 +185,20 @@
 	if(!hud_used.fov_blocker)
 		return
 	if(fovangle & FOV_DEFAULT)
-		if(fovangle & FOV_RIGHT)
-			if(fovangle & FOV_LEFT)
-				hud_used.fov.icon_state = "both"
-				hud_used.fov_blocker.icon_state = "both_v"
-				return
-			hud_used.fov.icon_state = "right"
-			hud_used.fov_blocker.icon_state = "right_v"
-			if(fovangle & FOV_BEHIND)
-				hud_used.fov.icon_state = "behind_r"
-				hud_used.fov_blocker.icon_state = "behind_r_v"
-			return
-		else if(fovangle & FOV_LEFT)
-			hud_used.fov.icon_state = "left"
-			hud_used.fov_blocker.icon_state = "left_v"
-			if(fovangle & FOV_BEHIND)
-				hud_used.fov.icon_state = "behind_l"
-				hud_used.fov_blocker.icon_state = "behind_l_v"
-			return
+		var/cone_state = "90"
 		if(fovangle & FOV_BEHIND)
-			hud_used.fov.icon_state = "behind"
-			hud_used.fov_blocker.icon_state = "behind_v"
+			cone_state = (fovangle & (FOV_LEFT|FOV_RIGHT)) ? "270" : "180"
+		else if((fovangle & FOV_LEFT) && (fovangle & FOV_RIGHT))
+			cone_state = "270"
+		var/datum/component/fov_handler/fov = GetComponent(/datum/component/fov_handler)
+		if(fov)
+			fov.set_cone_state(cone_state)
 		else
-			hud_used.fov.icon_state = "combat"
-			hud_used.fov_blocker.icon_state = "combat_v"
-	else
-		hud_used.fov.icon_state = null
-		hud_used.fov_blocker.icon_state = null
+			hud_used.fov.icon_state = "[cone_state]_v"
+			hud_used.fov_blocker.icon_state = cone_state
 		return
+	hud_used.fov.icon_state = null
+	hud_used.fov_blocker.icon_state = null
 
 //Making these generic procs so you can call them anywhere.
 /mob/proc/show_cone()
@@ -388,17 +226,17 @@
 	PM.backdrop(src)
 
 /atom/movable/screen/fov_blocker
-	icon = 'icons/mob/vision_cone.dmi'
-	icon_state = "combat_v"
+	icon = 'icons/effects/fov/field_of_view.dmi'
+	icon_state = "90"
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	plane = FIELD_OF_VISION_BLOCKER_PLANE
-	screen_loc = "1,1"
+	screen_loc = "CENTER-7,CENTER-7"
 
 /atom/movable/screen/fov
-	icon = 'icons/mob/vision_cone.dmi'
-	icon_state = "combat"
+	icon = 'icons/effects/fov/field_of_view.dmi'
+	icon_state = "90_v"
 	name = " "
-	screen_loc = "1,1"
+	screen_loc = "CENTER-7,CENTER-7"
 	mouse_opacity = 0
-	layer = HUD_LAYER
-	plane = HUD_PLANE-2
+	plane = FULLSCREEN_PLANE
+	color = "#000000"

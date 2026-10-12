@@ -1051,12 +1051,20 @@
 	name = "barker with lamptern"
 	desc = "Один из первых образцов огнестрельного оружия, созданный отаванскими мастерами в начале позапрошлого века. Ввиду низкой мощности и точности, ныне используется преимущественно охотниками. Этот теперь с фонарём!"
 	icon = 'modular_twilight_axis/firearms/icons/barker_light.dmi'
+	possible_item_intents = list(/datum/intent/spear/bash, /datum/intent/use)
 	icon_state = "barker_light"
 	item_state = "barker_light"
 	light_system = MOVABLE_LIGHT
 	light_outer_range = 7
 	light_power = 1
 	light_color = "#f5a885"
+
+/obj/item/gun/ballistic/twilight_firearm/barker/barker_light/afterattack(atom/movable/A, mob/user, proximity)
+	. = ..()
+	if (!proximity)
+		return
+	if ((user.used_intent.type == /datum/intent/use))
+		A.spark_act()
 
 /obj/item/gun/ballistic/twilight_firearm/barker/barker_light/getonmobprop(tag)
 	. = ..()

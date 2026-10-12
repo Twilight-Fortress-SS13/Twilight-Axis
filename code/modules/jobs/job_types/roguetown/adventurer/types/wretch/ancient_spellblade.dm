@@ -9,7 +9,7 @@
 	maximum_possible_slots = 2 // Two so that the gimmick isn't overdone
 	min_pq = 30 // TA EDIT
 	applies_post_equipment = TRUE
-	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_SHATTER_KILL, TRAIT_ARCYNE, TRAIT_SKELETAL_GIB_ON_DEATH, TRAIT_BLOODLOSS_IMMUNE)
+	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_ARCYNE, TRAIT_SKELETAL_GIB_ON_DEATH, TRAIT_BLOODLOSS_IMMUNE)
 	subclass_stats = list(
 		STATKEY_INT = 2,
 		STATKEY_WIL = 2,
@@ -56,14 +56,14 @@
 	H.can_do_sex = FALSE
 	change_origin(H, /datum/virtue/origin/unselectable/skeleton, "Legion")
 
-	//no swift intent
+	/* TA EDIT
 	H.possible_rmb_intents = list(/datum/rmb_intent/feint,\
 	/datum/rmb_intent/aimed,\
 	/datum/rmb_intent/riposte,\
 	/datum/rmb_intent/strong,\
 	/datum/rmb_intent/weak)
 	H.swap_rmb_intent(num=1)
-
+	*/
 	// Skeleton antag datum + patron (matching greater_skeleton setup)
 	// H.set_patron(/datum/patron/inhumen/zizo) TA EDIT
 	if(H.mind)

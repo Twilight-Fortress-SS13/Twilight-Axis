@@ -50,7 +50,7 @@
 		/datum/advclass/wretch/profane_champion,
 		/datum/advclass/wretch/heretic_spellblade,
 		/datum/advclass/wretch/ancient_spellblade,
-	//	/datum/advclass/wretch/ancient_deathknight,
+		/datum/advclass/wretch/ancient_deathknight,
 		/datum/advclass/wretch/slasher,
 		/datum/advclass/wretch/maestro,
 		/datum/advclass/wretch/freeblade
