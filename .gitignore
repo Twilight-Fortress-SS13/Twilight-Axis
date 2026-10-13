@@ -246,3 +246,4 @@ tools/MapAtmosFixer/MapAtmosFixer/bin/*
 
 # JavaScript tools
 **/node_modules
+_maps/map_files/rockhill/rockhill.dmm
