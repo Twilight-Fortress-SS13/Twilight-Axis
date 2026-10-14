@@ -1,19 +1,27 @@
 /datum/job/roguetown/thief_guild_master
 	title = "Nachtfuchs"
 	flag = THIEFGUILDMASTER
-	department_flag = THIEFGUILD
+	department_flag = ANTAGONIST
 	faction = "Station" // what
+	tutorial = "You have a simple role at the Azurian Pint; please. You wait tables and help guests, clean the rooms, grow and brew more drink, and assist in the kitchens as need be. Bring a smile to the masses--and those cheapsake townsfolk and adventures might just give you an extra coin...assuming you've not already pilfered their pouch while they're in a drunken stupor off your latest brew."
 	total_positions = 1
 	spawn_positions = 1
 	min_pq = 10
+	max_pq = null
+	obfuscated_job = TRUE
+	class_categories = TRUE
 	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED RACES_OOZE)
 	allowed_sexes = list(MALE, FEMALE)
 	display_order = JDO_THIEFGUILDMASTER
-	selection_color = JCOLOR_ANTAGONIST
 	outfit = /datum/outfit/job/roguetown/thief_guild_master
 	give_bank_account = FALSE
 	same_job_respawn_delay = 30 MINUTES
 	job_traits = list(TRAIT_DODGEEXPERT, TRAIT_SEEPRICES, TRAIT_LIGHT_STEP)
+	advclass_cat_rolls = list(CTAG_THIEF_MASTER = 2)
+	has_subprefs = FALSE
+	job_subclasses = list(
+		/datum/advclass/thief_guild_master
+	)
 
 /datum/advclass/thief_guild_master
 	name = "Nachtfuchs"
@@ -26,7 +34,7 @@
 		Though he is the head of the guild, his position can be claimed by anyone within his circle. \
 		Even among his own, he can never afford to let his guard down."
 
-	category_tags = list(CTAG_STEWARD)
+	category_tags = list(CTAG_THIEF_MASTER)
 	subclass_stats = list(
 		STATKEY_PER = 3,
 		STATKEY_SPD = 3,
@@ -51,19 +59,25 @@
 /datum/outfit/job/roguetown/thief_guild_master/pre_equip(mob/living/carbon/human/H, visualsOnly)
 	suit = /obj/item/clothing/suit/roguetown/armor/leather/studded
 	mask = /obj/item/clothing/mask/rogue/facemask/padded
-	undershirt = /obj/item/clothing/under/roguetown/heavy_leather_pants
+	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants
 	gloves = /obj/item/clothing/gloves/roguetown/fingerless_leather
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/heavy
 	belt = /obj/item/storage/belt/rogue/leather/black
-	armor = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy
+	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/raneshen
 	shoes = /obj/item/clothing/shoes/roguetown/boots/nobleboot
 	l_hand = /obj/item/grapplinghook
+	backl = /obj/item/storage/backpack/rogue/satchel
+	beltr = /obj/item/flashlight/flare/torch/lantern
+	beltr = /obj/item/rogueweapon/scabbard/sheath
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/corroded,
 		/obj/item/reagent_containers/glass/bottle/rogue/strongstampoison,
-		/obj/item/storage/keyring,
-
+		/obj/item/storage/keyring/thief_master,
 	)
 
-/obj/item/storage/keyring/acolyte
+/obj/item/storage/keyring/thief_master
 	keys = list(/obj/item/roguekey/mercenary, /obj/item/roguekey/bathworker, /obj/item/roguekey/bathmaster)
+
+/obj/effect/landmark/start/thief_master
+	name = "Nachtfuchs"
+	icon_state = "arrow"
