@@ -17,7 +17,7 @@
 			return "KEEP"
 		if("Inquisitor", "Absolutionist", "Orthodoxist")
 			return "INQUISITION"
-		if("Wretch", "Bandit", "Assassin", "Lunatic")
+		if("Wretch", "Bandit", "Assassin", "Lunatic", "Nachtfuchs")
 			return "EXCLUDED"
 		if("Adventurer", "Court Agent", "Mercenary", "Hangyaku", "Lirvan", "Routier", "Slayer", "Trader", "Pilgrim", "Villager", "Sellsword")
 			return "TOWN_TRANSIENT"
