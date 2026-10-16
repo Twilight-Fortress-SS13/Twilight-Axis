@@ -114,7 +114,8 @@
 			target.dust()
 			return TRUE
 
-		if(alert(target, "They are calling for you. Are you ready?", "TEETERING BETWEEN PARADISE AND PERDITION.", "I need to wake up!", "Don't let me go..") != "I need to wake up!")
+		var/mob/dead/observer/underworld_spirit = target.get_spirit()
+		if(alert(underworld_spirit || target, "They are calling for you. Are you ready?", "TEETERING BETWEEN PARADISE AND PERDITION.", "I need to wake up!", "Don't let me go..") != "I need to wake up!")
 			target.visible_message(span_notice("Nothing happens. They are not being let go."))
 			return FALSE
 		if(!items_are_available(items_to_consume))
@@ -126,12 +127,8 @@
 			to_chat(user, span_warning("Nothing happens."))
 			revert_cast()
 			return FALSE
-		var/mob/living/carbon/spirit/underworld_spirit = target.get_spirit()
+
 		//GET OVER HERE!
-		if(underworld_spirit)
-			var/mob/dead/observer/ghost = underworld_spirit.ghostize()
-			qdel(underworld_spirit)
-			ghost.mind.transfer_to(target, TRUE)
 		target.grab_ghost(force = TRUE) // even suicides
 		target.emote("breathgasp")
 		target.Jitter(100)

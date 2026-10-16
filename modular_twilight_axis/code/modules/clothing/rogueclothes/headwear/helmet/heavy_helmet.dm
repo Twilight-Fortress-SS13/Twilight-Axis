@@ -211,3 +211,25 @@
 	bloody_icon = 'icons/effects/blood.dmi'
 	icon_state = "legionhelmet"
 	item_state = "legionhelmet"
+
+/obj/item/clothing/head/roguetown/helmet/heavy/elven_helm/druidic
+	allowed_race = null
+	name = "blessed druid helm"
+	desc = "A helm grown deep within Dendor's sanctified grove, hardened by ancient sap and ritual fire."
+	armor = ARMOR_BLACKOAK
+
+/obj/item/clothing/head/roguetown/helmet/heavy/elven_helm/druidic/Initialize(mapload)
+	. = ..()
+	set_light(1, 1, 2, l_color = "#58C86A")
+	add_filter("druid_blessed_glow", 2, list("type" = "outline", "color" = "#58C86A", "alpha" = 95, "size" = 1))
+
+/obj/item/clothing/head/roguetown/helmet/heavy/elven_helm/druidic/pickup(mob/user)
+	. = ..()
+	if(!istype(user, /mob/living/carbon/human))
+		return
+	var/mob/living/carbon/human/H = user
+	if(H.patron?.type == /datum/patron/divine/dendor)
+		return
+	H.electrocute_act(30, src)
+	H.mob_timers["kneestinger"] = world.time
+	to_chat(H, span_warning("[name] rejects my grasp — only the Treefather's faithful may bear such a gift!"))

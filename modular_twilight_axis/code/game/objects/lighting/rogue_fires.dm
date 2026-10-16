@@ -72,3 +72,6 @@
 	icon = 'modular_twilight_axis/icons/roguetown/misc/lighting.dmi'
 	pixel_y = 0
 	pixel_x = -32
+
+/obj/machinery/light/rogue/oven
+	crossfire = FALSE

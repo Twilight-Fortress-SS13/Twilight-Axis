@@ -147,6 +147,7 @@
 	heat_time = 30 SECONDS
 
 /obj/machinery/light/rogue/forge/arcane/process()
+	ta_burn_mobs_on_tile() // TA EDIT
 	if(isopenturf(loc))
 		var/turf/open/O = loc
 		if(IS_WET_OPEN_TURF(O))

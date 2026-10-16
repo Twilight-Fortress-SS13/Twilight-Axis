@@ -169,6 +169,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["combat_toggles"]		>> combat_toggles
 	S["ghost_toggles"]		>> ghost_toggles
 	S["admin_chat_toggles"]	>> admin_chat_toggles
+	S["admin_ghost_icon"]	>> admin_ghost_icon
 	S["clientfps"]			>> clientfps
 	S["ambientocclusion"]	>> ambientocclusion
 	S["auto_fit_viewport"]	>> auto_fit_viewport
@@ -257,6 +258,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	combat_toggles		= sanitize_integer(combat_toggles, 0, INFINITY, initial(combat_toggles))
 	ghost_toggles		= sanitize_integer(ghost_toggles, 0, INFINITY, initial(ghost_toggles))
 	admin_chat_toggles	= sanitize_integer(admin_chat_toggles, 0, INFINITY, initial(admin_chat_toggles))
+	if(admin_ghost_icon && !isicon(admin_ghost_icon))
+		admin_ghost_icon = null
 	chat_toggles		= sanitize_integer(chat_toggles, 0, INFINITY, initial(chat_toggles))
 	clientfps			= sanitize_integer(clientfps, 0, 1000, initial(clientfps))
 	musicvol			= sanitize_integer(musicvol, 0, 100, initial(musicvol))
@@ -284,7 +287,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	sanitize_erp_organ_prefs()
 
 	// etc
-	asaycolor			= sanitize_ooccolor(sanitize_hexcolor(asaycolor, 6, TRUE, initial(asaycolor)))
+	asaycolor			= sanitize_hexcolor(asaycolor, 6, TRUE, initial(asaycolor)) // TA EDIT
 	lastchangelog		= sanitize_text(lastchangelog, initial(lastchangelog))
 	preferred_ui_language = sanitize_preferred_ui_language(preferred_ui_language)
 	preferred_map		= sanitize_text(preferred_map, initial(preferred_map))
@@ -386,6 +389,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["combat_toggles"], combat_toggles)
 	WRITE_FILE(S["ghost_toggles"], ghost_toggles)
 	WRITE_FILE(S["admin_chat_toggles"], admin_chat_toggles)
+	WRITE_FILE(S["admin_ghost_icon"], admin_ghost_icon)
 	WRITE_FILE(S["clientfps"], clientfps)
 	WRITE_FILE(S["ambientocclusion"], ambientocclusion)
 	WRITE_FILE(S["auto_fit_viewport"], auto_fit_viewport)
@@ -765,6 +769,13 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	_load_loadout(S)
 	_load_gear_list(S)
+	loadout_subscription_tier = 0 // TA EDIT
+	S["loadout_subscription_tier"] >> loadout_subscription_tier // TA EDIT
+	loadout_subscription_tier = sanitize_integer(loadout_subscription_tier, 0, 5, 0) // TA EDIT
+	if(GLOB.PatreonsLoaded && parent?.mob?.ckey) // TA EDIT
+		sanitize_subscription_loadout(parent.mob) // TA EDIT
+		WRITE_FILE(S["gear_list"], gear_list) // TA EDIT
+		WRITE_FILE(S["loadout_subscription_tier"], loadout_subscription_tier) // TA EDIT
 
 	_load_combat_music(S)
 
@@ -836,6 +847,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["song_artist"]				>> song_artist
 	S["song_title"]				>> song_title
 	S["nsfwflavortext"]			>> nsfwflavortext
+	S["show_nsfw_clothed"]		>> show_nsfw_clothed
 	S["nsfw_ooc_extra_img"]		>> nsfw_ooc_extra_img
 	S["nsfw_ooc_extra_img_link"]	>> nsfw_ooc_extra_img_link
 	if(!valid_headshot_link(null, nsfw_ooc_extra_img_link, FALSE, list("jpg", "jpeg", "png", "gif", "mp4")))
@@ -1297,12 +1309,15 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["body_size"] , features["body_size"])
 	WRITE_FILE(S["body_build"] , features["body_build"])
 	WRITE_FILE(S["nsfwflavortext"] , html_decode(nsfwflavortext))
+	WRITE_FILE(S["show_nsfw_clothed"], show_nsfw_clothed)
 	WRITE_FILE(S["nsfw_ooc_extra_img"] , nsfw_ooc_extra_img)
 	WRITE_FILE(S["nsfw_ooc_extra_img_link"] , nsfw_ooc_extra_img_link)
 	WRITE_FILE(S["erpprefs"] , html_decode(erpprefs))
 	WRITE_FILE(S["img_gallery"] , img_gallery)
 	WRITE_FILE(S["nsfw_img_gallery"] , nsfw_img_gallery)
+	sanitize_subscription_loadout(parent?.mob, FALSE) // TA EDIT
 	WRITE_FILE(S["gear_list"], gear_list)
+	WRITE_FILE(S["loadout_subscription_tier"], loadout_subscription_tier) // TA EDIT
 
 	//Familiar Files
 	WRITE_FILE(S["familiar_names"] , familiar_prefs.familiar_names)

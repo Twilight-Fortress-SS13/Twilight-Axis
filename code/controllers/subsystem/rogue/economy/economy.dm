@@ -9,6 +9,8 @@ SUBSYSTEM_DEF(economy)
 	var/last_petition_day = -1
 	var/petitions_today = 0
 	var/blockade_replenish_spent = 0
+	var/blockade_surcharge_mult_pct = 100
+	var/blockade_surcharge_mult_expires = 0
 	var/list/event_path_cooldowns = list()
 	var/list/goods_with_producers = list()
 	var/list/goods_with_demand = list()

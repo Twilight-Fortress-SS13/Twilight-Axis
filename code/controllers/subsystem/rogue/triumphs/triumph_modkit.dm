@@ -59,6 +59,7 @@
 	result_item = null
 	exact_type = TRUE
 	custom_name = TRUE
+	icon_loadout = /obj/item/clothing/suit/roguetown/armor/brigandine/heavy/triumph
 
 /obj/item/enchantingkit/triumph_armorkit_drow
 	name = "'Drowcraft Armor' morphing elixir"

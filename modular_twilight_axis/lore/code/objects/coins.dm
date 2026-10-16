@@ -1,6 +1,7 @@
 #define CTYPE_GOLD "tg"
 #define CTYPE_COPPER "tc"
 #define CTYPE_KAZEN "te"
+#define CTYPE_SILVER "ts"
 #define MAX_COIN_STACK_SIZE 20
 
 //OTAVAN MARQUE - WORTHLESS TO ANYONE BUT INQ.
@@ -20,6 +21,7 @@
 	base_type = CTYPE_GOLD
 	plural_name = "kronas"
 	icon = 'modular_twilight_axis/lore/icons/valuable.dmi'
+	materia = list(/datum/materia_aspect/solar)
 
 /obj/item/roguecoin/goldkrona/poor_pile/Initialize()
 	. = ..()
@@ -50,12 +52,12 @@
 				SSwardrobe.recycle_object(new_item)
 
 /obj/item/storage/belt/rogue/pouch/kronas/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/goldkrona/poor_pile
 	return to_preload
 
 /obj/item/storage/belt/rogue/pouch/kronas/mid/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/goldkrona/mid_pile
 	return to_preload
 
@@ -67,7 +69,7 @@
 			SSwardrobe.recycle_object(H)
 
 /obj/item/storage/belt/rogue/pouch/kronas/poor/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/goldkrona/poor_pile
 	return to_preload
 
@@ -79,7 +81,7 @@
 			SSwardrobe.recycle_object(H)
 
 /obj/item/storage/belt/rogue/pouch/kronas/rich/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/goldkrona/rich_pile
 	return to_preload
 
@@ -91,7 +93,7 @@
 			SSwardrobe.recycle_object(H)
 
 /obj/item/storage/belt/rogue/pouch/kronas/veryrich/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/goldkrona/veryrich_pile
 	return to_preload
 
@@ -145,28 +147,15 @@
 /obj/item/roguecoin/silver/Initialize(mapload)
 	. = ..()
 	if(SSmapping.config.map_name == "Rockhill")
-		if(quantity <= 4)
-			name = "shilling"
-			desc = "The shilling is a small copper coin minted by the Valorian Treasury. The coin bears the Lion of Most Serene Eterna and the symbol of Ten Undivided."
-			icon_state = "tc1"
-			if(sellprice != 0)
-				sellprice = 1
-			base_type = CTYPE_COPPER
-			plural_name = "shillings"
-			icon = 'modular_twilight_axis/lore/icons/valuable.dmi'
-			quantity *= 5
-			update_icon()
-		else
-			name = "krona"
-			desc = "The krona, or 'crown' in simplified Imperial, is a gold coin minted in the Valorian capital of Eterna, serving as the national currency of Valoria and several neighbouring realms. The coin bears the Crown of Most Serene Doge and the symbol of Ten Undivided."
-			icon_state = "tg1"
-			if(sellprice != 0)
-				sellprice = 14
-			base_type = CTYPE_GOLD
-			plural_name = "kronas"
-			icon = 'modular_twilight_axis/lore/icons/valuable.dmi'
-			quantity = floor(quantity/3)
-			update_icon()
+		name = "grout"
+		desc = "The grout is a debased coin minted by the Valorian Treasury from copper with only a thin trace of silver, enough to give it a pale sheen. The coin bears the Lion of Most Serene Eterna and the symbol of Ten Undivided. Worth more than a shilling, but far less than a krona."
+		icon_state = "ts1"
+		if(sellprice != 0)
+			sellprice = 7
+		base_type = CTYPE_SILVER
+		plural_name = "grouts"
+		icon = 'modular_twilight_axis/lore/icons/valuable.dmi'
+		update_icon()
 	else if(SSmapping.config.map_name == "Desert Town")
 		name = "dirham"
 		desc = "The dirham is a silver coin."
@@ -179,15 +168,15 @@
 /obj/item/roguecoin/silver/update_icon()
 	. = ..()
 	if(SSmapping.config.map_name == "Rockhill")
-		switch(base_type)
-			if(CTYPE_COPPER)
-				desc = "The shilling is a small copper coin minted by the Valorian Treasury. The coin bears the Lion of Most Serene Eterna and the symbol of Ten Undivided."
-				if(quantity == 1)
-					name = "shilling"
-			if(CTYPE_GOLD)
-				desc = "The krona, or 'crown' in simplified Imperial, is a gold coin minted in the Valorian capital of Eterna, serving as the national currency of Valoria and several neighbouring realms. The coin bears the Crown of Most Serene Doge and the symbol of Ten Undivided."
-				if(quantity == 1)
-					name = "krona"
+		desc = "The grout is a debased coin minted by the Valorian Treasury from copper with only a thin trace of silver, enough to give it a pale sheen. The coin bears the Lion of Most Serene Eterna and the symbol of Ten Undivided. Worth more than a shilling, but far less than a krona."
+		if(quantity == 1)
+			name = "grout"
+		if(base_type == CTYPE_SILVER) // set by Initialize, until then it is still a plain silver coin
+			icon_state = "ts[copytext(icon_state, length(CTYPE_SILVER) + 1)]"
+			if(quantity <= 2)
+				icon = 'modular_twilight_axis/lore/icons/valuable.dmi'
+			else
+				icon = 'icons/roguetown/items/valuable.dmi'
 	else if(SSmapping.config.map_name == "Desert Town")
 		desc = "The dirham is a silver coin."
 		if(quantity == 1)
@@ -233,6 +222,41 @@
 		else
 			icon = 'icons/roguetown/items/valuable.dmi'
 
+//VALORIAN SILVER-COPPER MONIES
+/obj/item/roguecoin/grout
+	name = "grout"
+	desc = "The grout is a debased coin minted by the Valorian Treasury from copper with only a thin trace of silver, enough to give it a pale sheen. The coin bears the Lion of Most Serene Eterna and the symbol of Ten Undivided. Worth more than a shilling, but far less than a krona."
+	icon_state = "ts1"
+	sellprice = 7
+	base_type = CTYPE_SILVER
+	plural_name = "grouts"
+	icon = 'modular_twilight_axis/lore/icons/valuable.dmi'
+	materia = list(/datum/materia_aspect/lunar)
+
+// Sprites are shared with the dirham: base_type "ts" is used only so grouts never merge with other coins,
+// so the "ts" prefix of the generated icon_state is swapped for the dirham's "s" states.
+/obj/item/roguecoin/grout/update_icon()
+	. = ..()
+	icon_state = "ts[copytext(icon_state, length(CTYPE_SILVER) + 1)]"
+	icon = 'modular_twilight_axis/lore/icons/valuable.dmi'
+
+
+/obj/item/roguecoin/grout/poor_pile/Initialize()
+	. = ..()
+	set_quantity(rand(2,4))
+
+/obj/item/roguecoin/grout/mid_pile/Initialize()
+	. = ..()
+	set_quantity(rand(4,7))
+
+/obj/item/roguecoin/grout/rich_pile/Initialize()
+	. = ..()
+	set_quantity(rand(6,12))
+
+/obj/item/roguecoin/grout/veryrich_pile/Initialize()
+	. = ..()
+	set_quantity(rand(12,19))
+
 //KAZENGUNESE MONIES
 /obj/item/roguecoin/shucoin
 	name = "shu"
@@ -272,12 +296,12 @@
 				SSwardrobe.recycle_object(new_item)
 
 /obj/item/storage/belt/rogue/pouch/shucoin/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/shucoin/poor_pile
 	return to_preload
 
 /obj/item/storage/belt/rogue/pouch/shucoin/mid/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/shucoin/mid_pile
 	return to_preload
 
@@ -293,7 +317,7 @@
 			SSwardrobe.recycle_object(C)
 
 /obj/item/storage/belt/rogue/pouch/shucoin/poor/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/shucoin/poor_pile
 	return to_preload
 
@@ -309,7 +333,7 @@
 			SSwardrobe.recycle_object(H)
 
 /obj/item/storage/belt/rogue/pouch/shucoin/rich/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/shucoin/rich_pile
 	to_preload += /obj/item/roguecoin/shucoin/mid_pile
 	return to_preload
@@ -326,7 +350,7 @@
 			SSwardrobe.recycle_object(C)
 
 /obj/item/storage/belt/rogue/pouch/shucoin/veryrich/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/shucoin/veryrich_pile
 	to_preload += /obj/item/roguecoin/shucoin/rich_pile
 	return to_preload
@@ -353,7 +377,7 @@
 	return to_preload
 
 /obj/item/storage/belt/rogue/pouch/coins/mid/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	if(SSmapping.config.map_name == "Rockhill")
 		to_preload += /obj/item/roguecoin/goldkrona/mid_pile
 	else
@@ -377,7 +401,7 @@
 				SSwardrobe.recycle_object(C)
 
 /obj/item/storage/belt/rogue/pouch/coins/poor/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	if(SSmapping.config.map_name == "Rockhill")
 		to_preload += /obj/item/roguecoin/goldkrona/poor_pile
 	else
@@ -402,7 +426,7 @@
 					SSwardrobe.recycle_object(H)
 
 /obj/item/storage/belt/rogue/pouch/coins/rich/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	if(SSmapping.config.map_name == "Rockhill")
 		to_preload += /obj/item/roguecoin/goldkrona/rich_pile
 	else
@@ -431,7 +455,7 @@
 					SSwardrobe.recycle_object(H)
 
 /obj/item/storage/belt/rogue/pouch/coins/veryrich/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	if(SSmapping.config.map_name == "Rockhill")
 		to_preload += /obj/item/roguecoin/goldkrona/veryrich_pile
 	else
@@ -460,7 +484,7 @@
 					SSwardrobe.recycle_object(H)
 
 /obj/item/storage/belt/rogue/pouch/coins/virtuepouch/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	if(SSmapping.config.map_name == "Rockhill")
 		to_preload += /obj/item/roguecoin/goldkrona/rich_pile
 	else
@@ -480,7 +504,7 @@
 				SSwardrobe.recycle_object(H)
 
 /obj/item/storage/belt/rogue/pouch/coins/readyuppouch/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	if(SSmapping.config.map_name == "Rockhill")
 		to_preload += /obj/item/roguecoin/copper/ready_pile_rockhill
 	else
@@ -502,4 +526,5 @@
 #undef CTYPE_GOLD
 #undef CTYPE_COPPER
 #undef CTYPE_KAZEN
+#undef CTYPE_SILVER
 #undef MAX_COIN_STACK_SIZE

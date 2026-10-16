@@ -131,14 +131,14 @@
 				var/weapon_choice = input(H,"Choose your WEAPON.", "TAKE UP PSYDON'S ARMS.") as anything in weapons
 				switch(weapon_choice)
 					if("Psydonic Shortsword")
-						l_hand = /obj/item/rogueweapon/sword/short/psy
+						l_hand = /obj/item/rogueweapon/sword/short/silver/psy
 						r_hand = /obj/item/rogueweapon/scabbard/sword
 						H.adjust_skillrank_up_to(/datum/skill/combat/swords, 4, TRUE)
 					if("Psydonic Cudgel")
 						l_hand = /obj/item/rogueweapon/mace/cudgel/psy
 						H.adjust_skillrank_up_to(/datum/skill/combat/maces, 4, TRUE)
 					if("Psydonic Flanged Mace")
-						l_hand = /obj/item/rogueweapon/mace/cudgel/flanged/psy
+						l_hand = /obj/item/rogueweapon/mace/cudgel/flanged/silver/psy
 						H.adjust_skillrank_up_to(/datum/skill/combat/maces, 4, TRUE)
 				var/rangedweapons = list("Purgatory - Massive Damage, Grapeshot or Cannonballs", "Runelock Pistol - Rapid Reload, Runic Ammunition")
 				var/rangedweapon_choice = input(H,"Choose your FIREARM.", "TAKE UP PSYDON'S ARCAGE") as anything in rangedweapons

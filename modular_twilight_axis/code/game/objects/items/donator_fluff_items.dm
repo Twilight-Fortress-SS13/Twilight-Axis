@@ -840,3 +840,62 @@
 	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes.dmi'
 	sleeved = 'modular_twilight_axis/icons/clothing/onmob/donor_sleeves_armor.dmi'
+
+/obj/item/clothing/head/roguetown/duelhat/dragontea
+	name = "greathat"
+	desc = "A remarkably wide-brimmed hat favored by flamboyant duelists. It provides excellent shade from the beating sun, and even better concealment for a smug grin after a successful parry."
+	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes.dmi'
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/donor_sleeves_armor.dmi'
+	icon_state = "dragontea_hat"
+	sewrepair = TRUE
+	color = CLOTHING_WHITE
+	detail_tag = "_detail"
+	detail_color = CLOTHING_WHITE
+
+/obj/item/clothing/head/roguetown/duelhat/dragontea/Initialize(mapload)
+	. = ..()
+	update_icon()
+
+/obj/item/clothing/head/roguetown/duelhat/dragontea/update_icon()
+	cut_overlays()
+	if(get_detail_tag())
+		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[get_detail_state(icon_state)][detail_tag]"))
+		pic.appearance_flags = RESET_COLOR
+		if(get_detail_color())
+			pic.color = get_detail_color()
+		add_overlay(pic)
+
+/obj/item/clothing/head/roguetown/duelisthat/dragontea
+	name = "etruscan design hat"
+	desc = "An elegant duelist's hat adorned with a striking feather. Often seen at grand tournaments, it practically begs passing challengers for a friendly spar - or a lethal duel."
+	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes.dmi'
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/donor_sleeves_armor.dmi'
+	icon_state = "dragontea_featherhat"
+	sewrepair = TRUE
+	color = CLOTHING_WHITE
+	detail_color = CLOTHING_WHITE
+	altdetail_color = CLOTHING_WHITE
+	detail_tag = "_detail"
+	altdetail_tag = "_detailalt"
+
+/obj/item/clothing/head/roguetown/duelisthat/dragontea/Initialize(mapload)
+	. = ..()
+	update_icon()
+
+/obj/item/clothing/head/roguetown/duelisthat/dragontea/update_icon()
+	cut_overlays()
+	if(get_detail_tag())
+		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[get_detail_state(icon_state)][detail_tag]"))
+		pic.appearance_flags = RESET_COLOR
+		if(get_detail_color())
+			pic.color = get_detail_color()
+		add_overlay(pic)
+
+	if(get_altdetail_tag())
+		var/mutable_appearance/pic2 = mutable_appearance(icon(icon, "[get_detail_state(icon_state)][altdetail_tag]"))
+		pic2.appearance_flags = RESET_COLOR
+		if(get_altdetail_color())
+			pic2.color = get_altdetail_color()
+		add_overlay(pic2)

@@ -29,7 +29,7 @@
 	if(last_check_time + 50 < world.time)
 		if(ishuman(M))
 			var/mob/living/carbon/human/H = M
-			if(!HAS_TRAIT(H, TRAIT_AGEUSIA) || !HAS_TRAIT(H, TRAIT_NASTY_EATER))
+			if(!HAS_TRAIT(H, TRAIT_AGEUSIA) && !HAS_TRAIT(H, TRAIT_NASTY_EATER))
 				if(foodtype & H.dna.species.toxic_food)
 					to_chat(H,span_warning("What the hell was that thing?!"))
 					H.adjust_disgust(25 + 30 * fraction)

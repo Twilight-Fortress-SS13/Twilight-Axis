@@ -113,7 +113,6 @@
 	H.ambushable = FALSE
 
 	H.AddComponent(/datum/component/wise_tree_alert)
-	H.AddSpell(new /obj/effect/proc_holder/spell/targeted/create_seed)
 	H.mind.AddSpell(new /datum/action/cooldown/spell/conjure_arcyne_ward/druid)
 	H.AddSpell(new /obj/effect/proc_holder/spell/self/beast_claws)
 	H.AddSpell(new /obj/effect/proc_holder/spell/self/beast_rage)

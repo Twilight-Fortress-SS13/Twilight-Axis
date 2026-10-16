@@ -4869,3 +4869,9 @@ As Excaliber."
 	inhand_x_dimension = 64
 	inhand_y_dimension = 64
 	bigboy = TRUE
+// LIMETEASE
+/obj/item/rogueweapon/sword/long/ap/yoshi_estoc
+	name = "Dénouement"
+	desc = "A peculiar take on the more traditional Azurian estoc, fastened to it's crossguard are two small bells and held in place by purple and green tassles.  It's blade is wrapped in cloth, a more personalised addition by the wielder rather than the smith. The bells jingle with every graceful chassé the wielder performs in the dance of lyfe and death.          The curtain call is nigh but the show must go on! Dance for the Gods! Make thy foe bleed and roll the die, their tyme is nigh."
+	icon_state = "yoshi_estoc"
+	icon = 'icons/obj/items/donor_weapons_64.dmi'

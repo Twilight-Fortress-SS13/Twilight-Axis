@@ -56,18 +56,23 @@
 		user.visible_message(span_notice("[user] packs the card table back into a normal deck."), span_notice("You pack the card table back into a normal deck."))
 	return TRUE
 
-/obj/item/deck/playing_cards/attack_right(mob/user)
-	if(card_table_mode)
-		ui_interact(user)
-		return TRUE
+/obj/item/deck/playing_cards/Click(location, control, params)
+	var/list/modifiers = params2list(params)
+	if(modifiers["alt"] && !modifiers["right"] && !modifiers["middle"] && !modifiers["shift"] && !modifiers["ctrl"])
+		if(!(flags_1 & INITIALIZED_1))
+			return
+		SEND_SIGNAL(src, COMSIG_CLICK, location, control, params, usr)
+		AltClick(usr)
+		return
 	return ..()
 
 /obj/item/deck/playing_cards/AltClick(mob/user)
+	. = ..()
 	if(!user || !user.canUseTopic(src, be_close = TRUE))
-		return ..()
-	if(card_table_mode)
-		return leave_card_table_mode(user)
-	enter_card_table_mode(user)
+		return
+	if(!card_table_mode)
+		enter_card_table_mode(user)
+	ui_interact(user)
 	return TRUE
 
 /obj/item/deck/playing_cards/attack_hand(mob/user, params)
@@ -77,20 +82,28 @@
 	return ..()
 
 /obj/item/deck/playing_cards/attack_self(mob/user)
-	if(card_table_mode)
-		ui_interact(user)
+	if(!user || !user.is_holding(src))
 		return
-	return ..()
+	if(!card_table_mode)
+		enter_card_table_mode(user)
+	ui_interact(user)
 
 /obj/item/deck/playing_cards/MouseDrop(atom/over_object)
-	if(card_table_mode)
-		to_chat(usr, span_warning("The card table is in use."))
+	if(!card_table_mode)
+		return ..()
+	var/mob/living/user = usr
+	if(!istype(user) || over_object != user || !isturf(loc) || !Adjacent(user) || !(user.mobility_flags & MOBILITY_PICKUP))
 		return
-	return ..()
+	if(!leave_card_table_mode(user))
+		return
+	user.put_in_hands(src)
+	return TRUE
 
 /obj/item/deck/playing_cards/get_mechanics_examine(mob/user)
 	. = ..()
-	. += span_smallnotice("<b>ALT CLICK</b> to set up or pack the card table.")
+	. += span_smallnotice("<b>CLICK</b> the deck in your hand to set up the card table and open its game window.")
+	. += span_smallnotice("<b>ALT CLICK</b> to set up the card table or open its game window.")
+	. += span_smallnotice("<b>DRAG</b> the card table onto yourself to pack it and pick up the deck when no one is seated.")
 
 /obj/item/deck/playing_cards/ui_state(mob/user)
 	return GLOB.hold_or_view_state

@@ -104,7 +104,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 		SSticker.regentmob = null //Time for regent to give up the position.
 
 		addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, lord_marriage_choice)), 50)
-		addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, lord_suitor_choice)), 50)
+		//addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, lord_suitor_choice)), 50) //TA EDIT
 		if(STATION_TIME_PASSED() <= 30 MINUTES) //Late to the party? Stuck with default colors, sorry!
 			spawn(50){
 				var/list/prefs = get_roleprefs(L.client)

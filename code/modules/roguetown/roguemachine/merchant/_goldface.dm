@@ -54,6 +54,7 @@
 		"Tools",
 		"Wardrobe",
 		"Zadpacks",
+		"Hunting Maps",
 	)
 	var/list/categories_gamer = list(
 		"Adventuring Supplies",
@@ -101,6 +102,7 @@
 		"Seeds",
 		"Tools",
 		"Weapons (Foreign)",
+		"Hunting Maps",
 	)
 	categories_gamer = list()
 
@@ -330,6 +332,10 @@
 	data["dodging"] = dodging ? TRUE : FALSE
 	data["active_blockades"] = blockade_surcharge ? build_blockade_goldface_rows() : list()
 	data["blockade_gear_pct"] = blockade_surcharge ? get_blockade_gear_surcharge_pct() : 0
+	data["blockade_gear_base_pct"] = blockade_surcharge ? get_blockade_gear_surcharge_base_pct() : 0
+	data["blockade_mult_pct"] = SSeconomy.get_blockade_surcharge_mult_pct()
+	data["blockade_pop_half"] = BLOCKADE_SURCHARGE_POP_HALF
+	data["blockade_pop_full"] = BLOCKADE_SURCHARGE_POP_FULL
 	if(is_public)
 		var/effective_pct = round(get_effective_fee() * 100)
 		data["public_margin_pct"] = effective_pct

@@ -1,0 +1,4 @@
+author: "Vladmar11"
+delete-after: True
+changes:
+  - bugfix: "Теперь костры, печи и т.д. поджигают кукл раз в n-ое время, пока те стоят на них"
