@@ -16,7 +16,6 @@
 	outfit = /datum/outfit/job/roguetown/wretch/twilight_corsair
 	category_tags = list(CTAG_WRETCH)
 	class_select_category = CLASS_CAT_RANGER
-	traits_applied = list(TRAIT_FIREARMS_MARKSMAN)
 	maximum_possible_slots = 2
 	subclass_stats = list(
 		STATKEY_PER = 3,

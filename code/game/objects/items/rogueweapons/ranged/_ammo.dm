@@ -65,8 +65,5 @@
 
 	if(secondary_damage && secondary_damage_type) //TA EDIT
 		var/armor
-		if(secondary_damage_type == BRUTE)
-			armor = victim.run_armor_check(selzone, src.flag, "", "", armor_penetration = src.armor_penetration, damage = secondary_damage, used_weapon = src)
-		else
-			armor = victim.run_armor_check(selzone, "fire", "", "", armor_penetration = src.armor_penetration, damage = secondary_damage, used_weapon = src)
+		armor = victim.run_armor_check(selzone, src.flag, "", "", armor_penetration = src.armor_penetration, damage = secondary_damage, used_weapon = src)
 		victim.apply_damage(secondary_damage, secondary_damage_type, selzone, armor) //TA EDIT END

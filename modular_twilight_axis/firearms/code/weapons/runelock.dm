@@ -26,7 +26,7 @@
 	var/misfire_chance = 0
 	/// Reload time, in SECONDS
 	var/reload_time = 8
-	var/reload_stamina_cost = 30
+	var/reload_stamina_cost = 15
 	damfactor = 1
 	per_scales_damage = TRUE
 	var/critfactor = 0.7
@@ -34,6 +34,12 @@
 	equip_delay_self = 1 SECONDS
 	unequip_delay_self = 1 SECONDS
 	inv_storage_delay = 1 SECONDS
+
+/obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/proc/apply_firearm_ranged_accuracy(obj/projectile/BB, mob/living/user)
+	if(!BB || !user)
+		return
+	var/level = max(1, (user.STAPER - 9))
+	BB.aim_peak = (ACC_RANGED_BASE + (level * ACC_RANGED_PER_SKILL)) * accfactor
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/getonmobprop(tag)
 	. = ..()
@@ -67,7 +73,7 @@
 					var/skill = H.get_skill_level(/datum/skill/combat/twilight_firearms)
 					if(skill)
 						adj_reload_time = reload_time / skill
-				if(move_after(H, adj_reload_time SECONDS, target = H))
+				if(do_after(H, adj_reload_time SECONDS, src))
 					H.stamina_add(reload_stamina_cost)
 					playsound(H, 'modular_twilight_axis/firearms/sound/musketcock.ogg', 100, FALSE)
 					cocked = TRUE
@@ -145,9 +151,10 @@
 		return
 	for(var/obj/item/ammo_casing/CB in get_ammo_list(FALSE, TRUE))
 		var/obj/projectile/bullet/BB = CB.BB
+		apply_firearm_ranged_accuracy(BB, user)
 		BB.gunpowder_npc_critfactor *= npcdamfactor
 		BB.critfactor *= critfactor
-		BB.damage *= damfactor * get_per_damage_scaling(user)
+		BB.damage *= damfactor
 	cocked = FALSE
 	update_icon()
 	var/shoot_dir = get_dir(src, target)
@@ -163,6 +170,8 @@
 /datum/intent/shoot/twilight_runelock
 	ready_sound = "modular_twilight_axis/firearms/sound/musketcock.ogg"
 	chargedrain = 0
+	hold_grace = RANGED_HOLD_GRACE * 3
+	hold_ramp = 0
 
 /datum/intent/shoot/twilight_runelock/get_chargetime()
 	if(mastermob && chargetime)
@@ -183,6 +192,8 @@
 	ready_sound = "modular_twilight_axis/firearms/sound/musketcock.ogg"
 	chargetime = 1
 	chargedrain = 0
+	hold_grace = RANGED_HOLD_GRACE * 3
+	hold_ramp = 0
 
 /datum/intent/arc/twilight_runelock/get_chargetime()
 	if(mastermob && chargetime)
@@ -226,7 +237,7 @@
 	damfactor = 1.2
 	critfactor = 1
 	reload_time = 15
-	reload_stamina_cost = 50
+	reload_stamina_cost = 15
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/rifle/getonmobprop(tag)
 	. = ..()
