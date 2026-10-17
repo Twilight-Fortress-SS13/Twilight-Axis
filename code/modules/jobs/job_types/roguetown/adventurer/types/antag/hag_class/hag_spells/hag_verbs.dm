@@ -54,3 +54,22 @@
 		remove_verb(src, /mob/living/carbon/human/proc/remember_fey)
 		return
 	HCT.recognize_fey(ping_feytouched = FALSE)
+
+// TA ADDITION START
+/mob/living/carbon/human/proc/heavy_curse()
+	set name = "Heavy Curse Toggle"
+	set category = "RoleUnique.Hag"
+	set desc = "If enabled, cursing someone will remove all their boons"
+	var/datum/component/hag_curio_tracker/HCT = src.GetComponent(/datum/component/hag_curio_tracker)
+	if(HCT)
+		if(HCT.heavy_curse)
+			HCT.heavy_curse = FALSE
+			to_chat(src, span_purple("You will now make easy curses, that does not removes boons."))
+		else
+			HCT.heavy_curse = TRUE
+			to_chat(src, span_purple("You will now make heavy curses, that removes boons."))
+	else
+		remove_verb(src, /mob/living/carbon/human/proc/heavy_curse)
+		return
+
+// TA ADDITION END
