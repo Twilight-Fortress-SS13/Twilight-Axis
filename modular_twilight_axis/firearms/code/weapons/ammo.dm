@@ -14,6 +14,7 @@
 	var/critfactor = 1
 	var/gunpowder_npc_critfactor = 1
 	var/gunpowder
+	var/obj/item/twilight_powderflask/real_gunpowder
 
 	min_range = MIN_BULLET_RANGE
 	max_range = MAX_BULLET_RANGE
@@ -186,7 +187,7 @@
 				continue
 			if(bp && istype(bp, /obj/item/clothing))
 				armor += bp
-		if(armor)
+		if(armor.len)
 			var/obj/item/clothing/C = pick(armor)
 			if(C.obj_integrity > (C.max_integrity * 0.03))
 				C.take_damage(damage_amount = (C.max_integrity * 0.03), damage_type = BURN, damage_flag = "fire")
@@ -214,82 +215,11 @@
 			if(is_within_effective_range)
 				var/has_projectile_shield = istype(T.get_inactive_held_item(), /obj/item/rogueweapon/shield) || istype(T.get_active_held_item(), /obj/item/rogueweapon/shield)
 				var/armor_softened = blocked > 0
-				if(!has_projectile_shield && !armor_softened)
-					switch(gunpowder) //Handle gunpowder types that are BLOCKED by shields and armor
-						if("fyrepowder")
-							if(istype(src, /obj/projectile/bullet/twilight_grapeshot))
-								T.adjust_fire_stacks(2)
-							else
-								T.adjust_fire_stacks(5)
-							T.ignite_mob()
-						if("holy fyrepowder")
-							if(HAS_TRAIT(T, TRAIT_SILVER_WEAK))
-								if(!T.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder))
-									if(T.patron)
-										to_chat(T, span_danger("The trice-cursed Otavan silver! By [T.patron.name], it hurts!!"))
-									else
-										to_chat(T, span_danger("The trice-cursed Otavan silver! By all that's holy, it hurts!!"))
-								if(istype(src, /obj/projectile/bullet/twilight_grapeshot))
-									T.adjust_fire_stacks(2, /datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
-								else
-									T.adjust_fire_stacks(5, /datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
-							else
-								if(istype(src, /obj/projectile/bullet/twilight_grapeshot))
-									T.adjust_fire_stacks(2, /datum/status_effect/fire_handler/fire_stacks/divine)
-								else
-									T.adjust_fire_stacks(5, /datum/status_effect/fire_handler/fire_stacks/divine)
-							T.ignite_mob()
-						if("thunderpowder")
-							T.Immobilize(30)
-							T.apply_status_effect(/datum/status_effect/debuff/thunderpowder)
-						if("psypowder")
-							T.apply_status_effect(/datum/status_effect/debuff/psypowder)
-						if("corrosive gunpowder")
-							playsound(src, 'sound/misc/drink_blood.ogg', 100)
-							T.apply_status_effect(/datum/status_effect/debuff/corrosivesplash)
-							new /obj/effect/temp_visual/acidsplash(get_turf(T))
-						if("arcyne gunpowder")
-							if(ishuman(T))
-								var/mob/living/carbon/human/H = T
-								H.set_silence(5 SECONDS)
-						if("terrorpowder")
-							gunpowder_npc_critfactor += 1
-				else
-					switch(gunpowder) //Handle gunpowder types that are NOT BLOCKED by shields and armor
-						if("fyrepowder")
-							if(istype(src, /obj/projectile/bullet/twilight_grapeshot))
-								T.adjust_fire_stacks(1)
-							else
-								T.adjust_fire_stacks(3)
-							T.ignite_mob()
-						if("holy fyrepowder")
-							if(HAS_TRAIT(T, TRAIT_SILVER_WEAK))
-								if(!T.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder))
-									if(T.patron)
-										to_chat(T, span_danger("The trice-cursed Otavan silver! By [T.patron.name], it hurts!!"))
-									else
-										to_chat(T, span_danger("The trice-cursed Otavan silver! By all that's holy, it hurts!!"))
-								if(istype(src, /obj/projectile/bullet/twilight_grapeshot))
-									T.adjust_fire_stacks(1, /datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
-								else
-									T.adjust_fire_stacks(3, /datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
-							else
-								if(istype(src, /obj/projectile/bullet/twilight_grapeshot))
-									T.adjust_fire_stacks(1, /datum/status_effect/fire_handler/fire_stacks/divine)
-								else
-									T.adjust_fire_stacks(3, /datum/status_effect/fire_handler/fire_stacks/divine)
-							T.ignite_mob()
-						if("corrosive gunpowder")
-							playsound(src, 'sound/misc/drink_blood.ogg', 100)
-							T.apply_status_effect(/datum/status_effect/debuff/corrosivesplash)
-							new /obj/effect/temp_visual/acidsplash(get_turf(T))
-						if("thunderpowder")
-							T.Immobilize(10)
-							T.apply_status_effect(/datum/status_effect/debuff/thunderpowder)
-						if("psypowder")
-							T.apply_status_effect(/datum/status_effect/debuff/psypowder)
-						if("terrorpowder")
-							gunpowder_npc_critfactor += 1
+				var/is_blocked = has_projectile_shield && armor_softened
+				real_gunpowder.on_mob_hit(T,src,is_blocked)
+				if(gunpowder == "terrorpowder")
+					gunpowder_npc_critfactor += 1
+
 				if(!T.mind)
 					damage *= gunpowder_npc_critfactor
 			else
@@ -377,36 +307,10 @@
 	if(!L)
 		return
 
-	switch(gunpowder)
-		if("fyrepowder")
-			L.adjust_fire_stacks(2)
-			L.ignite_mob()
+	if(gunpowder == "arcyne gunpowder")
+		real_gunpowder.on_mob_hit(L,src,FALSE)
 
-		if("holy fyrepowder")
-			if(HAS_TRAIT(L, TRAIT_SILVER_WEAK))
-				if(!L.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder))
-					if(L.patron)
-						to_chat(L, span_danger("The trice-cursed Otavan silver! By [L.patron.name], it hurts!!"))
-					else
-						to_chat(L, span_danger("The trice-cursed Otavan silver! By all that's holy, it hurts!!"))
-				L.adjust_fire_stacks(2, /datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
-			else
-				L.adjust_fire_stacks(2, /datum/status_effect/fire_handler/fire_stacks/divine)
-			L.ignite_mob()
-
-		if("corrosive gunpowder")
-			L.apply_status_effect(/datum/status_effect/debuff/corrosivesplash)
-			new /obj/effect/temp_visual/acidsplash(get_turf(L))
-
-		if("thunderpowder")
-			L.Immobilize(10)
-			L.apply_status_effect(/datum/status_effect/debuff/thunderpowder)
-		if("psypowder")
-			L.apply_status_effect(/datum/status_effect/debuff/psypowder)
-		if("arcyne gunpowder")
-			if(ishuman(L))
-				var/mob/living/carbon/human/H = L
-				H.set_silence(5 SECONDS)
+	real_gunpowder.on_mob_hit(L,src,TRUE)
 
 /obj/projectile/bullet/twilight_cannonball/on_hit(atom/target, blocked = FALSE)
 	. = ..(target, blocked)
