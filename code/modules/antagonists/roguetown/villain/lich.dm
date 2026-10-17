@@ -60,6 +60,13 @@
 /datum/antagonist/lich/get_antag_cap_weight()
 	return 3
 
+/datum/antagonist/lich/is_banned(mob/M)
+	if(ishuman(M))
+		var/mob/living/carbon/human/H = M
+		if(tat_is_pliant_roundstart_character(H))
+			return TRUE
+	return ..()
+
 /datum/antagonist/lich/on_gain()
 	owner.unknow_all_people() //ancient lich, nobody knows them
 	for(var/datum/mind/MF in get_minds())

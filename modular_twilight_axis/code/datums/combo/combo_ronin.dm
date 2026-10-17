@@ -57,6 +57,7 @@
 	var/tanuki_per_hits_left = 0
 	var/elder_tanuki_riposte_ready = FALSE
 	var/counter_cooldown_until = 0
+	var/last_riposte_event_at = null
 
 /datum/component/combo_core/ronin/Initialize(_combo_window, _max_history)
 	. = ..(_combo_window, _max_history)
@@ -69,6 +70,8 @@
 	RegisterSignal(owner, COMSIG_COMBO_CORE_REGISTER_INPUT, PROC_REF(_sig_register_input), override = TRUE)
 	RegisterSignal(owner, COMSIG_MOB_QUERY_PARRY_WEAPON, PROC_REF(_sig_query_parry_weapon))
 	RegisterSignal(owner, COMSIG_MOB_PARRY_SUCCESS, PROC_REF(_sig_counter_defense_success), override = TRUE)
+	RegisterSignal(owner, COMSIG_MOB_APPLY_DAMGE, PROC_REF(_sig_riposte_damage))
+	RegisterSignal(owner, COMSIG_MOB_ARMOR_INTEGRITY_DAMAGED, PROC_REF(_sig_riposte_armor_damage))
 
 	GrantSpells()
 	return .
@@ -79,6 +82,7 @@
 	if(bound_blades?.len)
 		for(var/obj/item/rogueweapon/W as anything in bound_blades)
 			if(W && !QDELETED(W))
+				UnregisterSignal(W, COMSIG_ITEM_PICKUP)
 				W.remove_filter(RONIN_GLOW_BOUND_FILTER)
 				W.remove_filter(RONIN_GLOW_PREP_FILTER)
 
@@ -90,6 +94,8 @@
 		UnregisterSignal(owner, COMSIG_COMBO_CORE_REGISTER_INPUT)
 		UnregisterSignal(owner, COMSIG_MOB_PARRY_SUCCESS)
 		UnregisterSignal(owner, COMSIG_MOB_QUERY_PARRY_WEAPON)
+		UnregisterSignal(owner, COMSIG_MOB_APPLY_DAMGE)
+		UnregisterSignal(owner, COMSIG_MOB_ARMOR_INTEGRITY_DAMAGED)
 		RevokeSpells()
 
 	RestoreAllBoundForces()
@@ -416,6 +422,7 @@
 	owner.put_in_hand(W, dominant_hand)
 
 	active_blade = W
+	W.ronin_release_from_sheath = TRUE
 	if(in_counter_stance)
 		ExitCounterStance(TRUE)
 
@@ -455,6 +462,7 @@
 
 	active_blade.forceMove(sheath_item)
 	H.sheathed = active_blade
+	active_blade.ronin_release_from_sheath = FALSE
 	H.update_icon(sheath_item, owner)
 
 	active_blade = null
@@ -471,9 +479,11 @@
 		var/obj/item/rogueweapon/old = bound_blades[1]
 		bound_blades.Cut(1, 2)
 		if(old)
+			UnregisterSignal(old, COMSIG_ITEM_PICKUP)
 			RestoreOneForce(old)
 
 	bound_blades += W
+	RegisterSignal(W, COMSIG_ITEM_PICKUP, PROC_REF(_sig_bound_blade_pickup), override = TRUE)
 	_ronin_apply_weapon_glow(W)
 	CacheBaseForce(W)
 	ApplyBoundForceMultiplier()
@@ -507,6 +517,9 @@
 
 	W.ronin_prepared_combo = rule_id
 	W.ronin_prepared_at = world.time
+	W.ronin_release_from_sheath = FALSE
+	if(rule_id == "tanuki")
+		elder_tanuki_riposte_ready = FALSE
 	_ronin_apply_weapon_glow(W)
 
 	var/icon_file = 'modular_twilight_axis/icons/roguetown/misc/roninspells.dmi'
@@ -542,17 +555,30 @@
 	owner.remove_status_effect(/datum/status_effect/buff/tanuki_insight)
 	to_chat(owner, span_notice("Tanuki's insight fades."))
 
-/datum/component/combo_core/ronin/proc/_StartElderTanukiRiposte()
-	elder_tanuki_riposte_ready = TRUE
-	OnComboPrepared("tanuki_riposte", null)
-
-/datum/component/combo_core/ronin/proc/_HandleElderTanukiRiposteOnHit(mob/living/target, zone)
+/datum/component/combo_core/ronin/proc/_HandleElderTanukiRiposteOnHit(mob/living/target, zone, from_sheath = FALSE)
 	if(!owner || !target || !elder_tanuki_riposte_ready)
 		return
 
 	elder_tanuki_riposte_ready = FALSE
 	OnComboConsumed("tanuki_riposte", target)
 
+	var/skill_difference = owner.get_skill_level(/datum/skill/combat/swords) - target.get_skill_level(/datum/skill/combat/swords)
+	var/perception_difference = owner.get_stat(STATKEY_PER) - target.get_stat(STATKEY_PER)
+	var/charge_chance = 10 + (from_sheath ? 40 : 30) * clamp(ronin_stacks / RONIN_MAX_STACKS_OVERDRIVE, 0, 1)
+	var/timing_bonus = ConsumeRiposteTimingBonus()
+	var/success_chance = charge_chance + skill_difference * 10 + perception_difference * 5
+	if(!from_sheath)
+		success_chance += timing_bonus
+	success_chance = clamp(success_chance, 0, from_sheath ? 50 : 100)
+	if(!prob(success_chance))
+		owner.visible_message(
+			span_danger("[owner] fails to riposte!"),
+			span_notice("They failed!"),
+		)
+		_set_ronin_stacks(0)
+		return
+
+	_set_ronin_stacks(0)
 	target.Immobilize(2 SECONDS)
 	var/obj/item/in_hand = target.get_active_held_item()
 	var/mob/living/carbon/human/target_mob = target
@@ -672,7 +698,6 @@
 		return
 
 	var/wear = round(force_dynamic * multiplier)
-	wear = clamp(wear, 1, 25)
 	if(wear <= 0)
 		return
 
@@ -853,23 +878,18 @@
 				return
 
 			var/force = _GetBladeForce()
-			var/stam = null
-			if(isnum(target.stamina))
-				stam = target.stamina
-
-			if(isnull(stam))
-				target.OffBalance(1.5 SECONDS)
-			else if(force > stam)
-				target.OffBalance(2 SECONDS)
+			if(!isnum(target.stamina) || !isnum(target.max_stamina))
+				return
+			// Stamina stores fatigue, so subtract it to get the remaining reserve.
+			var/remaining_stamina = max(0, target.max_stamina - target.stamina)
+			if(force > remaining_stamina * 1.5)
+				target.OffBalance(3 SECONDS)
 			else
 				_set_ronin_stacks(min(ronin_stacks + 2, RONIN_MAX_STACKS_OVERDRIVE))
 				ApplyBoundForceMultiplier()
 
 		if("kitsune")
 			_ApplyArmorWearForward(1.2, 2, zone)
-
-		if("tanuki")
-			_StartElderTanukiRiposte()
 
 		if("tengu")
 			if(target)
@@ -940,6 +960,39 @@
 // signals
 // ------------------------------------------------------------
 
+/datum/component/combo_core/ronin/proc/_sig_bound_blade_pickup(obj/item/rogueweapon/W, mob/taker)
+	SIGNAL_HANDLER
+	if(taker != owner || !(W in bound_blades))
+		return
+	if(listened_blade && !QDELETED(listened_blade))
+		UnregisterSignal(listened_blade, COMSIG_ITEM_ATTACK_SUCCESS)
+	W.ronin_release_from_sheath = FALSE
+	listened_blade = W
+	RegisterSignal(W, COMSIG_ITEM_ATTACK_SUCCESS, PROC_REF(_sig_item_attack_success))
+
+/datum/component/combo_core/ronin/proc/_sig_riposte_damage(datum/source, damage, damagetype)
+	SIGNAL_HANDLER
+	if(damage > 0 && (damagetype == BRUTE || damagetype == BURN))
+		last_riposte_event_at = world.time
+
+/datum/component/combo_core/ronin/proc/_sig_riposte_armor_damage(datum/source, damage)
+	SIGNAL_HANDLER
+	if(damage > 0)
+		last_riposte_event_at = world.time
+
+/datum/component/combo_core/ronin/proc/ConsumeRiposteTimingBonus()
+	if(isnull(last_riposte_event_at))
+		return 0
+	var/elapsed = world.time - last_riposte_event_at
+	last_riposte_event_at = null
+	if(elapsed <= 0.1 SECONDS)
+		return 50
+	if(elapsed <= 0.2 SECONDS)
+		return 30
+	if(elapsed <= 0.3 SECONDS)
+		return 10
+	return 0
+
 /datum/component/combo_core/ronin/proc/_sig_query_parry_weapon(datum/source, list/parry_query)
 	SIGNAL_HANDLER
 
@@ -963,13 +1016,6 @@
 		tanuki_per_hits_left--
 		if(tanuki_per_hits_left <= 0)
 			_EndTanukiPerBuff()
-
-	if(elder_tanuki_riposte_ready)
-		var/mob/living/L = target_atom
-		if(isliving(L))
-			_HandleElderTanukiRiposteOnHit(L, zone)
-		else
-			elder_tanuki_riposte_ready = FALSE
 
 	return 0
 
@@ -998,8 +1044,17 @@
 	var/obj/item/rogueweapon/W = source
 	if(istype(W) && W.ronin_prepared_combo)
 		var/rule_id = W.ronin_prepared_combo
+
+		if(rule_id == "tanuki")
+			if(elder_tanuki_riposte_ready)
+				_HandleElderTanukiRiposteOnHit(target, user.zone_selected, W.ronin_release_from_sheath)
+			else
+				elder_tanuki_riposte_ready = TRUE
+				return
+
 		W.ronin_prepared_combo = null
 		W.ronin_prepared_at = 0
+		W.ronin_release_from_sheath = FALSE
 		_ronin_apply_weapon_glow(W)
 		to_chat(owner, span_danger("ELDER COMBO RELEASED: [rule_id]!"))
 		OnComboConsumed(rule_id, W)
@@ -1025,6 +1080,7 @@
 /// now used for parry/defense success, not just dodge
 /datum/component/combo_core/ronin/proc/_sig_counter_defense_success(datum/source, mob/living/attacker)
 	SIGNAL_HANDLER
+	last_riposte_event_at = world.time
 	CheckCounterExpire()
 
 	if(!in_counter_stance)

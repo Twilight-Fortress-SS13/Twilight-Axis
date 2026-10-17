@@ -235,9 +235,9 @@
 		if(!correlation)
 			var/datum/virtue/origin/first_origin = origin_limits[1]
 			to_chat(H, span_warning("I've spent so many daes in [first_origin.origin_name] that I've come to call it my home."))
-			change_origin(H, first_origin)
+			change_origin(H, first_origin) // TA EDIT
 
-/datum/advclass/proc/change_origin(mob/living/carbon/human/H, new_origin = /datum/virtue/none, wording)
+/datum/advclass/proc/change_origin(mob/living/carbon/human/H, new_origin = /datum/virtue/none, wording, apply_immediately = TRUE) // TA EDIT
 	var/client/player = H?.client
 	if(player?.prefs)
 		var/datum/virtue/origin/origin_memory = player.prefs.virtue_origin // TA EDIT START

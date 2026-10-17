@@ -6,6 +6,7 @@
 		/datum/advclass/wretch/twilight_blood_raider,
 		/datum/advclass/wretch/gudsklor,
 		/datum/advclass/wretch/thehero,
+		/datum/advclass/tat_class/wretch
 	)
 	. = ..()
 
