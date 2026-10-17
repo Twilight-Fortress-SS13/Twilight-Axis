@@ -23,6 +23,8 @@
 		return PREFERENCE_CHARFLAW_DENIAL_HIDE
 	if(has_flaw(cf.type) && !istype(cf, /datum/charflaw/randflaw))
 		return PREFERENCE_CHARFLAW_DENIAL_ALREADY_TAKEN
+	if(cf.type == /datum/charflaw/inquisition_suspect && selected_patron?.type == /datum/patron/old_god) // TA EDIT
+		return PREFERENCE_CHARFLAW_DENIAL_HIDE // TA EDIT
 	if(length(cf.restricted_species) && (pref_species.type in cf.restricted_species))
 		return PREFERENCE_CHARFLAW_DENIAL_RESTRICTION
 	if(LAZYLEN(charflaws) >= MAX_VICES)
