@@ -36,6 +36,8 @@
 		)
 	race_bonus = list(STAT_FORTUNE = 1)
 
+	// TA REMOVAL START - NOW EVERY RACE CAN CHOOSE BONUSES, SEE code/modules/mob/living/carbon/human/species.dm, 183 line for more information
+	/*
 	custom_selection = list(
 		"+1 FOR" = STATKEY_LCK,
 		"+1 INT" = STATKEY_INT,
@@ -43,6 +45,8 @@
 		"+1 WIL" = STATKEY_WIL,
 		"+1 PER" = STATKEY_PER,
 	)
+	*/
+	// TA REMOVAL END
 
 	enflamed_icon = "widefire"
 	attack_verb = "slash"
