@@ -214,3 +214,37 @@
 	icon_state = "viceseermask"
 	item_state = "viceseermask"
 	color = null
+
+/obj/item/clothing/mask/rogue/facemask/steel/kazengun/yohei
+	name = "steel half-mask"
+	desc = "\"The first article: Forget nothing, forgive nothing.\""
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/masks.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/masks.dmi'
+	icon_state = "kazengunhalf"
+
+/obj/item/clothing/mask/rogue/facemask/steel/kazengun/full/yohei
+	name = "steel oni mask"
+	desc = "\"The second article: Endure in silence, speak only through steel.\""
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/masks.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/masks.dmi'
+	icon_state = "kazengunoni"
+
+/obj/item/clothing/mask/rogue/facemask/steel/kazengun/full/yohei/kitsune
+	name = "steel kitsune mask"
+	desc = "\"The third article: Mercy is a luxury the wise cannot afford.\""
+	icon_state = "kazengunkitsune"
+
+/obj/item/clothing/mask/rogue/facemask/steel/kazengun/full/ogre
+	name = "soldier's ogre mask"
+	desc = "\"The fourth lesson: The wise learn from the fatal mistakes of others.\""
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/masks.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/masks.dmi'
+	icon_state = "kazengunfull"
+	item_state = "kazengunfull"
+
+/obj/item/clothing/mask/rogue/facemask/steel/miragefen_rogue
+	name = "bronze-decorated steel mask"
+	desc = "A steel mask with bronze inlays"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/masks.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/masks.dmi'
+	icon_state = "miragefen_rogue"

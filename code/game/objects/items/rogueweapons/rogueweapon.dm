@@ -39,6 +39,9 @@
 	/// Icon for sheathing. Only null for weapons that are unsheathable.
 	var/sheathe_icon = null
 
+	/// Optional .dmi with this weapon's sheathed sprites. Null = use the scabbard's own .dmi.
+	var/sheathe = null // TA EDIT
+
 	var/datum/special_intent/special
 
 	var/malumblessed_w = FALSE
