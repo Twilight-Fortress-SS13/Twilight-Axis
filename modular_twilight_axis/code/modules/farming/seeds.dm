@@ -277,3 +277,15 @@
 	to_chat(user, span_notice("I carefully press the spores into the blessed soil..."))
 	new /obj/structure/mushroom_sprout(T)
 	qdel(src)
+
+/obj/item/seeds/melon
+	seed_identity = "melon seeds"
+	plant_def_type = /datum/plant_def/melon
+
+/obj/item/seeds/watermelon
+	seed_identity = "watermelon seeds"
+	plant_def_type = /datum/plant_def/watermelon
+
+/obj/item/seeds/banana
+	seed_identity = "banana seeds"
+	plant_def_type = /datum/plant_def/tree/banana
