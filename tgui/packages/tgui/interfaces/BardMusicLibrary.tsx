@@ -131,18 +131,33 @@ const BardEditorTabs = (props: {
   setSpacingDraft: (value: number) => void;
   act: BardAct;
 }) => {
-  const { activeTab, setActiveTab, canEditSelected, spacingDraft, setSpacingDraft, act } = props;
+  const {
+    activeTab,
+    setActiveTab,
+    canEditSelected,
+    spacingDraft,
+    setSpacingDraft,
+    act,
+  } = props;
 
   return (
     <Section>
       <Stack>
         <Stack.Item grow basis={0}>
-          <Button fluid selected={activeTab === 'text'} onClick={() => setActiveTab('text')}>
+          <Button
+            fluid
+            selected={activeTab === 'text'}
+            onClick={() => setActiveTab('text')}
+          >
             Text
           </Button>
         </Stack.Item>
         <Stack.Item grow basis={0}>
-          <Button fluid selected={activeTab === 'timing'} onClick={() => setActiveTab('timing')}>
+          <Button
+            fluid
+            selected={activeTab === 'timing'}
+            onClick={() => setActiveTab('timing')}
+          >
             Timing
           </Button>
         </Stack.Item>
@@ -191,8 +206,15 @@ const BardEditorContent = (props: {
   spacingDraft: number;
   act: BardAct;
 }) => {
-  const { selected, activeTab, canEditSelected, lyricsDraft, updateLyrics, spacingDraft, act } =
-    props;
+  const {
+    selected,
+    activeTab,
+    canEditSelected,
+    lyricsDraft,
+    updateLyrics,
+    spacingDraft,
+    act,
+  } = props;
 
   if (!canEditSelected) {
     return (
@@ -239,7 +261,10 @@ const BardEditorContent = (props: {
   return <BardTimingEditor selected={selected} act={act} />;
 };
 
-const BardTimingEditor = (props: { selected?: SelectedTrack | null; act: BardAct }) => {
+const BardTimingEditor = (props: {
+  selected?: SelectedTrack | null;
+  act: BardAct;
+}) => {
   const { selected, act } = props;
 
   return (
@@ -262,7 +287,11 @@ const BardTimingEditor = (props: { selected?: SelectedTrack | null; act: BardAct
   );
 };
 
-const BardTimingRow = (props: { phrase: Phrase; index: number; act: BardAct }) => {
+const BardTimingRow = (props: {
+  phrase: Phrase;
+  index: number;
+  act: BardAct;
+}) => {
   const { phrase, index, act } = props;
 
   return (
@@ -370,7 +399,12 @@ export const BardMusicLibrary = () => {
     setLyricsDraft(selected?.lyrics || '');
     setJsonDraft(selected?.json || '');
     setSpacingDraft(selected?.spacing_seconds || 2);
-  }, [selected?.title, selected?.lyrics, selected?.json, selected?.spacing_seconds]);
+  }, [
+    selected?.title,
+    selected?.lyrics,
+    selected?.json,
+    selected?.spacing_seconds,
+  ]);
 
   useEffect(() => {
     const elapsed = elapsed_seconds || 0;
@@ -386,7 +420,9 @@ export const BardMusicLibrary = () => {
       return;
     }
     const timer = setInterval(() => {
-      setLocalElapsed(elapsedAnchor.elapsed + (Date.now() - elapsedAnchor.receivedAt) / 1000);
+      setLocalElapsed(
+        elapsedAnchor.elapsed + (Date.now() - elapsedAnchor.receivedAt) / 1000,
+      );
     }, 250);
     return () => clearInterval(timer);
   }, [elapsedAnchor, playing]);
@@ -412,7 +448,9 @@ export const BardMusicLibrary = () => {
                   </Stack.Item>
                   <Stack.Item>
                     <Button
-                      icon={repeat_mode === 'repeat' ? 'repeat' : 'step-forward'}
+                      icon={
+                        repeat_mode === 'repeat' ? 'repeat' : 'step-forward'
+                      }
                       selected={repeat_mode === 'repeat'}
                       onClick={() =>
                         act('set_repeat_mode', {
@@ -423,7 +461,9 @@ export const BardMusicLibrary = () => {
                       {repeat_mode === 'repeat' ? 'Loop' : 'Once'}
                     </Button>
                     <Button
-                      icon={isSingingSelected ? 'microphone' : 'microphone-slash'}
+                      icon={
+                        isSingingSelected ? 'microphone' : 'microphone-slash'
+                      }
                       disabled={!canSingSelected}
                       selected={isSingingSelected}
                       onClick={() => act('toggle_sing')}
@@ -435,7 +475,11 @@ export const BardMusicLibrary = () => {
                       disabled={!selected}
                       onClick={() => act('play')}
                     >
-                      {playing ? 'Stop' : 'Play'}
+                      {band_invite_active && is_band_leader
+                        ? 'Cancel invite'
+                        : playing
+                          ? 'Stop'
+                          : 'Play'}
                     </Button>
                     <Button icon="expand" onClick={() => setCompactMode(false)}>
                       Full
@@ -443,22 +487,34 @@ export const BardMusicLibrary = () => {
                   </Stack.Item>
                 </Stack>
                 {!!selected && (
-                  <ProgressBar
-                    value={progressRatio}
-                    color="blue"
-                    mt={0.5}
-                  >
+                  <ProgressBar value={progressRatio} color="blue" mt={0.5}>
                     {Math.round(displayElapsed)}s / {selectedDuration}s
                   </ProgressBar>
                 )}
               </Section>
             </Stack.Item>
 
+            {band_invite_active && (
+              <Stack.Item>
+                <Section title="Band invitations">
+                  <Box>
+                    Waiting 30 seconds, then the leader confirms the start.
+                  </Box>
+                  {band_members.map((member, index) => (
+                    <Box key={index}>
+                      {member.name}: {member.track} ({member.mode})
+                    </Box>
+                  ))}
+                </Section>
+              </Stack.Item>
+            )}
             <Stack.Item grow basis={0}>
               <Section fill scrollable title={`Tracks (${allTracks.length})`}>
                 <Stack vertical>
                   {allTracks.map((track) => (
-                    <Stack.Item key={`${track.custom ? 'custom' : 'prepared'}-${track.title}`}>
+                    <Stack.Item
+                      key={`${track.custom ? 'custom' : 'prepared'}-${track.title}`}
+                    >
                       <Button
                         fluid
                         selected={track.selected}
@@ -538,7 +594,11 @@ export const BardMusicLibrary = () => {
                     disabled={!selected}
                     onClick={() => act('play')}
                   >
-                    {playing ? 'Stop' : 'Play'}
+                    {band_invite_active && is_band_leader
+                      ? 'Cancel invite'
+                      : playing
+                        ? 'Stop'
+                        : 'Play'}
                   </Button>
                   <Button icon="compress" onClick={() => setCompactMode(true)}>
                     Compact
@@ -546,11 +606,7 @@ export const BardMusicLibrary = () => {
                 </Stack.Item>
               </Stack>
               {!!selected && (
-                <ProgressBar
-                  value={progressRatio}
-                  color="blue"
-                  mt={0.5}
-                >
+                <ProgressBar value={progressRatio} color="blue" mt={0.5}>
                   {Math.round(displayElapsed)}s / {selectedDuration}s
                 </ProgressBar>
               )}
@@ -601,17 +657,20 @@ export const BardMusicLibrary = () => {
           {showBandInvite && (
             <Stack.Item>
               <Section
-                title={`Band invite (${band_invite_seconds_left}s)`}
+                title={
+                  band_invite_seconds_left > 0
+                    ? `Band invite (${band_invite_seconds_left}s)`
+                    : 'Band invite'
+                }
                 buttons={
                   is_band_leader && (
-                    <>
-                      <Button icon="play" onClick={() => act('start_band')}>
-                        Start
-                      </Button>
-                      <Button icon="times" color="red" onClick={() => act('cancel_band')}>
-                        Cancel
-                      </Button>
-                    </>
+                    <Button
+                      icon="times"
+                      color="red"
+                      onClick={() => act('cancel_band')}
+                    >
+                      Cancel
+                    </Button>
                   )
                 }
               >
@@ -620,7 +679,8 @@ export const BardMusicLibrary = () => {
                     {band_members.map((member, index) => (
                       <Stack.Item key={`${member.name}-${index}`}>
                         <Box>
-                          <b>{member.name}</b> - {member.instrument}: {member.track} ({member.mode})
+                          <b>{member.name}</b> - {member.instrument}:{' '}
+                          {member.track} ({member.mode})
                         </Box>
                       </Stack.Item>
                     ))}
@@ -676,8 +736,8 @@ export const BardMusicLibrary = () => {
                           </Stack.Item>
                           <Stack.Item width="104px">
                             <Box color="label" textAlign="right">
-                              {track.duration_seconds}s ({track.duration_label}),{' '}
-                              {track.phrase_count}
+                              {track.duration_seconds}s ({track.duration_label}
+                              ), {track.phrase_count}
                             </Box>
                           </Stack.Item>
                         </Stack>

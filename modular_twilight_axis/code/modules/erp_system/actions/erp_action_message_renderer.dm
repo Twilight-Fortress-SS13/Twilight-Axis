@@ -41,6 +41,12 @@
 			return L.has_big_breasts()
 		if("dullahan")
 			return L.is_dullahan_scene()
+		if("hair", "wings", "tail", "snout", "horns", "frills", "fluff", "accessory", "face_detail", "facedetail", "underwear", "legwear", "leagwear", "piercing", "piercings")
+			return L.partner_has_appearance_tag(key)
+
+	if(findtext(key, "actor_") == 1)
+		var/actor_tag = copytext(key, length("actor_") + 1)
+		return L.actor_has_appearance_tag(actor_tag)
 	return FALSE
 
 /// Replaces message keywords (actor/partner/force/speed/zone/pose) with runtime values from the link.
@@ -62,4 +68,3 @@
 		return "[copytext(text, 1, length(text))] по самый узел[last]"
 
 	return "[text] по самый узел"
-

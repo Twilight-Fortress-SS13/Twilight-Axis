@@ -208,6 +208,47 @@
 	var/obj/item/organ/testicles/T = H.getorganslot(ORGAN_SLOT_TESTICLES)
 	return !!T
 
+/// Returns whether this human has a visible anatomy or customization feature for ERP tags.
+/// Organs are checked by their actual slot; bodypart features must have a selected accessory.
+/datum/erp_actor/human/has_appearance_tag(tag)
+
+	var/mob/living/carbon/human/H = get_human()
+	if(!H || !istext(tag))
+		return FALSE
+
+	switch(lowertext(trim(tag)))
+		if("wings")
+			return !!H.getorganslot(ORGAN_SLOT_WINGS)
+		if("tail")
+			return !!H.getorganslot(ORGAN_SLOT_TAIL)
+		if("snout")
+			return !!H.getorganslot(ORGAN_SLOT_SNOUT)
+		if("horns")
+			return !!H.getorganslot(ORGAN_SLOT_HORNS)
+		if("frills")
+			return !!H.getorganslot(ORGAN_SLOT_FRILLS)
+		if("fluff")
+			return istype(H.getorganslot(ORGAN_SLOT_NECK_FEATURE), /obj/item/organ/neck_feature)
+		if("hair")
+			return has_selected_bodypart_feature(H, BODYPART_FEATURE_HAIR)
+		if("accessory")
+			return has_selected_bodypart_feature(H, BODYPART_FEATURE_ACCESSORY)
+		if("face_detail", "facedetail")
+			return has_selected_bodypart_feature(H, BODYPART_FEATURE_FACE_DETAIL)
+		if("underwear")
+			return !!H.underwear
+		if("legwear", "leagwear")
+			return !!H.legwear_socks
+		if("piercing", "piercings")
+			return !!H.piercings_item
+
+	return FALSE
+
+/// A species can expose a feature slot while the player has it disabled.
+/datum/erp_actor/human/proc/has_selected_bodypart_feature(mob/living/carbon/human/H, feature_slot)
+	var/datum/bodypart_feature/F = H?.get_bodypart_feature_of_slot(feature_slot)
+	return !!F?.accessory_type
+
 /// Human actors can register signals.
 /datum/erp_actor/human/can_register_signals()
 	return TRUE

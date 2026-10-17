@@ -10,6 +10,7 @@ SUBSYSTEM_DEF(bard_music)
 	flags = SS_NO_INIT
 	priority = FIRE_PRIORITY_CHAT
 	var/list/active_instruments = list()
+	var/list/current_run = list()
 
 /datum/controller/subsystem/bard_music/proc/register(obj/item/rogue/instrument/instrument)
 	if(!instrument || QDELETED(instrument))
@@ -24,10 +25,13 @@ SUBSYSTEM_DEF(bard_music)
 /datum/controller/subsystem/bard_music/fire(resumed = 0)
 	if(!active_instruments.len)
 		return
-	var/list/current = active_instruments.Copy()
-	while(current.len)
-		var/obj/item/rogue/instrument/instrument = current[current.len]
-		current.len--
+	if(!resumed || !current_run.len)
+		current_run = active_instruments.Copy()
+	while(current_run.len)
+		var/obj/item/rogue/instrument/instrument = current_run[current_run.len]
+		current_run.len--
+		if(!(instrument in active_instruments))
+			continue
 		if(!instrument || QDELETED(instrument) || !instrument.process_auto_song())
 			active_instruments -= instrument
 		if(MC_TICK_CHECK)
@@ -55,6 +59,7 @@ SUBSYSTEM_DEF(bard_music)
 	)
 
 /mob/living
+	var/tmp/obj/item/rogue/instrument/bard_band_owner
 	var/tmp/bard_music_playing = FALSE
 	var/tmp/bard_auto_singing = FALSE
 	var/tmp/bard_auto_song_token = 0
@@ -238,10 +243,22 @@ SUBSYSTEM_DEF(bard_music)
 	var/datum/bard_timed_track/auto_song_track = null
 	var/auto_song_next_phrase_index = 1
 	var/auto_song_cycle_started_at = 0
+	var/obj/item/rogue/instrument/band_owner
+	var/list/saved_band_members = list()
+	var/saved_band_track_title
+	var/saved_band_sing = FALSE
+	var/saved_band_repeat = FALSE
+	var/list/band_reserved_instruments = list()
+	var/list/band_reserved_members = list()
+	var/list/band_preloads = list()
+	var/band_accepting = FALSE
+	var/band_repeating = FALSE
 	var/band_invite_active = FALSE
 	var/band_invite_until = 0
 	var/mob/living/band_invite_leader = null
 	var/list/band_members = list()
+	var/band_pending_responses = 0
+	var/band_invite_token = 0
 	var/list/timed_tracks = list()
 	var/music_panel_selected = null
 
@@ -290,11 +307,14 @@ SUBSYSTEM_DEF(bard_music)
 
 /obj/item/rogue/instrument/proc/stop_music(mob/living/user)
 	music_stop_token++
+	if(band_owner && current_player?.bard_band_owner == band_owner && (QDELETED(band_owner) || !band_owner.band_invite_active))
+		current_player.bard_band_owner = null
+		band_owner = null
 	playing = FALSE
 	groupplaying = FALSE
 	if(soundloop)
 		soundloop.stop()
-	var/mob/living/player = user || current_player
+	var/mob/living/player = current_player || user
 	if(player)
 		player.bard_music_playing = FALSE
 		player.bard_auto_singing = FALSE
@@ -316,32 +336,38 @@ SUBSYSTEM_DEF(bard_music)
 	set waitfor = FALSE
 	if(!user || !current_player || token != music_stop_token)
 		return
-	var/datum/bard_timed_track/track = current_track || get_selected_track()
-	var/duration_ticks = max(round((track?.duration_seconds || BARD_TRACK_DEFAULT_DURATION_SECONDS) * 10), 1)
-	sleep(duration_ticks)
-	if(QDELETED(src) || QDELETED(user) || token != music_stop_token || !playing || current_player != user)
-		return
-	if(repeat_enabled)
-		music_started_at = world.time
-		music_playback_id++
-		SStgui.update_uis(src)
-		INVOKE_ASYNC(src, PROC_REF(song_duration_loop), user, token)
-	else
-		stop_music(user)
-		SStgui.update_uis(src)
+	while(!QDELETED(src) && !QDELETED(user) && token == music_stop_token && playing && current_player == user)
+		if(!user.client || user.stat || !(src in user.held_items))
+			stop_music(user)
+			SStgui.update_uis(src)
+			return
+		var/duration_ticks = max(round((current_track?.duration_seconds || BARD_TRACK_DEFAULT_DURATION_SECONDS) * 10), 1)
+		if(REALTIMEOFDAY - music_realtime_started_at >= duration_ticks && !repeat_enabled)
+			stop_music(user)
+			SStgui.update_uis(src)
+			return
+		sleep(1 SECONDS)
+	if(!QDELETED(src) && token == music_stop_token && playing)
+		stop_music(current_player)
 
-/obj/item/rogue/instrument/proc/play_track(mob/living/user, datum/bard_timed_track/track)
-	if(!user || !track || playing || !(src in user.held_items) || user.get_inactive_held_item())
+/obj/item/rogue/instrument/proc/play_track(mob/living/user, datum/bard_timed_track/track, shared_start = null)
+	if(!user || user.stat || !track || playing || !(src in user.held_items))
 		return
+	for(var/obj/item/rogue/instrument/other in user.held_items)
+		if(other != src && other.playing)
+			other.stop_music(user)
 	var/stressevent = music_skill_event(user)
 	curfile = track.file_path
 	if(!curfile)
 		stop_music(user)
 		return
+	if(!soundloop.acquire_channel())
+		to_chat(user, span_warning("All 32 music channels are busy. Try again after another performance ends."))
+		return
 	playing = TRUE
 	soundloop.set_mid_sounds(list(curfile))
 	soundloop.mid_length = max(track.duration_seconds * 10, 1)
-	soundloop.preload_persistent_to_all_clients = !track.custom // TA EDIT
+	soundloop.preload_persistent_to_all_clients = !track.custom && isnull(shared_start) // Bands preload only nearby listeners during invitations.
 	soundloop.start()
 	user.apply_status_effect(/datum/status_effect/buff/playing_music, stressevent, note_color)
 	user.bard_music_playing = TRUE
@@ -349,7 +375,7 @@ SUBSYSTEM_DEF(bard_music)
 	current_track = track
 	current_track_title = track.title
 	music_started_at = world.time
-	music_realtime_started_at = REALTIMEOFDAY
+	music_realtime_started_at = isnull(shared_start) ? REALTIMEOFDAY : shared_start
 	music_playback_id++
 	music_stop_token++
 	INVOKE_ASYNC(src, PROC_REF(song_duration_loop), user, music_stop_token)
@@ -387,84 +413,262 @@ SUBSYSTEM_DEF(bard_music)
 	auto_song_cycle_started_at = 0
 	SSbard_music.unregister(src)
 
-/obj/item/rogue/instrument/proc/start_band_invite(mob/living/user)
-	if(!user || band_invite_active)
+/obj/item/rogue/instrument/proc/band_ready(mob/living/user, obj/item/rogue/instrument/instrument)
+	var/turf/player_turf = get_turf(user)
+	var/turf/leader_turf = get_turf(band_invite_leader)
+	return !QDELETED(user) && !QDELETED(instrument) && player_turf && leader_turf && user.client && !user.stat && (instrument in user.held_items) && player_turf.z == leader_turf.z && get_dist(user, band_invite_leader) <= 7
+
+/obj/item/rogue/instrument/proc/preload_band_track(mob/living/performer, datum/bard_timed_track/track)
+	if(!track?.file_path || band_preloads["[track.file_path]"])
+		return
+	var/datum/preload_owner = new
+	var/preload_channel = SSsounds.instrument_channels.acquire_channel(preload_owner)
+	if(!preload_channel)
+		qdel(preload_owner)
+		return
+	var/list/listeners = list()
+	// Warm the native sound cache during the invitation, only for nearby listeners.
+	// A silent one-shot uses a separate temporary channel and never changes an active performance.
+	for(var/mob/listener in get_hearers_in_range(world.view + 5, get_turf(performer), SPATIAL_GRID_CONTENTS_TYPE_CLIENTS))
+		if(!(listener.client?.prefs.toggles & SOUND_INSTRUMENTS))
+			continue
+		SEND_SOUND(listener, sound(track.file_path, volume = 0, channel = preload_channel))
+		listeners += WEAKREF(listener)
+	band_preloads["[track.file_path]"] = list("channel" = preload_channel, "listeners" = listeners, "owner" = preload_owner)
+
+/obj/item/rogue/instrument/proc/start_band_invite(mob/living/user, repeat_band = FALSE)
+	if(band_invite_active && band_invite_leader == user)
+		cancel_band_invite()
+		to_chat(user, span_notice("Your band invitation was cancelled."))
+		return
+	if(band_invite_active)
+		to_chat(user, span_warning("Only the invitation leader can cancel this invitation."))
+		return
+	if(user.bard_band_owner && user.bard_band_owner != src)
+		to_chat(user, span_warning("You are already preparing to play in another band."))
+		return
+	band_invite_leader = user
+	if(!band_ready(user, src))
+		to_chat(user, span_warning("Hold your instrument in either hand to form a band."))
+		band_invite_leader = null
 		return
 	band_invite_active = TRUE
+	band_accepting = TRUE
+	band_repeating = repeat_band
+	if(repeat_band && timed_tracks[saved_band_track_title])
+		music_panel_selected = saved_band_track_title
+		auto_song_enabled = saved_band_sing
+		repeat_enabled = saved_band_repeat
 	band_invite_until = world.time + 30 SECONDS
-	band_invite_leader = user
 	band_members = list()
-	for(var/mob/living/carbon/human/candidate in view(7, user))
-		if(candidate == user)
+	band_pending_responses = 0
+	band_invite_token++
+	user.bard_band_owner = src
+	band_owner = src
+	var/current_token = band_invite_token
+	preload_band_track(user, get_selected_track())
+	var/list/candidates = list()
+	if(repeat_band)
+		for(var/datum/bard_band_member/member as anything in saved_band_members.Copy())
+			if(!band_ready(member.player, member.instrument))
+				to_chat(user, span_notice("[member.player ? member.player.real_name : "A performer"] is no longer available within 7 tiles and was removed."))
+				saved_band_members -= member
+				continue
+			candidates += member
+	else
+		for(var/mob/living/carbon/human/candidate in range(7, user))
+			if(candidate == user)
+				continue
+			for(var/obj/item/rogue/instrument/instrument in candidate.held_items)
+				var/datum/bard_band_member/member = new
+				member.player = candidate
+				member.instrument = instrument
+				candidates += member
+				break
+	for(var/datum/bard_band_member/member as anything in candidates)
+		if(!band_ready(member.player, member.instrument) || (member.player.bard_band_owner && member.player.bard_band_owner != src) || (member.instrument.band_owner && member.instrument.band_owner != src))
+			to_chat(user, span_warning("[member.player.real_name] cannot join this band right now."))
 			continue
-		var/obj/item/held = candidate.get_active_held_item()
-		if(istype(held, /obj/item/rogue/instrument))
-			INVOKE_ASYNC(src, PROC_REF(prompt_band_member), candidate, held)
-	addtimer(CALLBACK(src, PROC_REF(finish_band_invite)), 30 SECONDS)
-	to_chat(user, span_notice("Band invite started. Waiting 30 seconds for performers."))
+		member.player.bard_band_owner = src
+		member.instrument.band_owner = src
+		band_reserved_instruments |= member.instrument
+		band_reserved_members += member
+		band_pending_responses++
+		to_chat(user, span_notice("Invitation sent to [member.player.real_name]."))
+		INVOKE_ASYNC(src, PROC_REF(prompt_band_member), member, current_token)
+	if(!band_pending_responses)
+		to_chat(user, span_warning("No available performers within 7 tiles."))
+		cancel_band_invite()
+		return
+	addtimer(CALLBACK(src, PROC_REF(finish_band_invite), current_token), 30 SECONDS)
+	to_chat(user, span_notice("Band invitations sent. You will confirm the performance in 30 seconds. Use Group again to cancel."))
+	SStgui.update_uis(src)
 
-/obj/item/rogue/instrument/proc/prompt_band_member(mob/living/candidate, obj/item/rogue/instrument/candidate_instrument)
-	if(!band_invite_active || !candidate || !candidate_instrument)
+/obj/item/rogue/instrument/proc/release_band_member(datum/bard_band_member/member)
+	if(member.player?.bard_band_owner == src)
+		member.player.bard_band_owner = null
+	if(member.instrument?.band_owner == src)
+		member.instrument.band_owner = null
+
+/obj/item/rogue/instrument/proc/prompt_band_member(datum/bard_band_member/member, prompt_token)
+	var/mob/living/candidate = member.player
+	var/obj/item/rogue/instrument/candidate_instrument = member.instrument
+	if(QDELETED(src) || !band_invite_active || prompt_token != band_invite_token || !band_ready(candidate, candidate_instrument))
 		return
-	if(alert(candidate, "[band_invite_leader] invites you to perform in a band.", "Band Play", "Accept", "Decline") != "Accept" || !band_invite_active)
+	var/answer = alert(candidate, "[band_invite_leader.real_name] предлагает сыграть с вами. Согласиться?", "Приглашение в группу", "Да", "Нет")
+	if(QDELETED(src) || !band_invite_active || !band_accepting || prompt_token != band_invite_token)
 		return
-	candidate_instrument.ensure_timed_tracks()
-	var/choice = input(candidate, "Which track will you perform?", "Band Track") as null|anything in candidate_instrument.song_list
-	if(!choice || !band_invite_active)
+	if(answer != "Да" || !band_ready(candidate, candidate_instrument))
+		to_chat(band_invite_leader, span_notice("[candidate.real_name] did not join."))
+		release_band_member(member)
+		band_pending_responses--
 		return
-	var/datum/bard_timed_track/track = candidate_instrument.timed_tracks[choice]
-	var/sing = FALSE
-	if(track?.custom && track.phrases.len)
-		sing = alert(candidate, "Use timed singing for this track?", "Band Mode", "Sing", "Mute") == "Sing"
-	var/datum/bard_band_member/member = new
-	member.player = candidate
-	member.instrument = candidate_instrument
-	member.track_title = choice
-	member.sing = sing
+	if(!band_repeating)
+		candidate_instrument.ensure_timed_tracks()
+		var/choice = input(candidate, "Which track will you perform?", "Band Track") as null|anything in candidate_instrument.song_list
+		if(QDELETED(src) || !band_invite_active || !band_accepting || prompt_token != band_invite_token)
+			return
+		if(!choice || !band_ready(candidate, candidate_instrument))
+			to_chat(band_invite_leader, span_notice("[candidate.real_name] did not prepare a track."))
+			release_band_member(member)
+			band_pending_responses--
+			return
+		member.track_title = choice
+		var/datum/bard_timed_track/track = candidate_instrument.timed_tracks[choice]
+		if(track?.custom && track.phrases.len)
+			member.sing = alert(candidate, "Use timed singing?", "Band Mode", "Sing", "Mute") == "Sing"
+	if(QDELETED(src) || !band_invite_active || !band_accepting || prompt_token != band_invite_token)
+		return
+	if(!band_ready(candidate, candidate_instrument))
+		release_band_member(member)
+		band_pending_responses--
+		to_chat(band_invite_leader, span_notice("[candidate ? candidate.real_name : "A performer"] is no longer ready."))
+		return
 	band_members += member
-	to_chat(candidate, span_notice("You are ready for [band_invite_leader]'s band."))
-	if(band_invite_leader)
-		to_chat(band_invite_leader, span_notice("[candidate] is ready with [candidate_instrument.name]: [choice] ([sing ? "Sing" : "Mute"])."))
+	preload_band_track(candidate, candidate_instrument.timed_tracks[member.track_title])
+	band_pending_responses--
+	to_chat(candidate, span_notice("You joined [band_invite_leader.real_name]'s band. Waiting for the leader to start."))
+	to_chat(band_invite_leader, span_notice("[candidate.real_name] is ready: [member.track_title] ([member.sing ? "Sing" : "Mute"])."))
 	SStgui.update_uis(src)
 
-/obj/item/rogue/instrument/proc/finish_band_invite()
-	if(!band_invite_active)
+/obj/item/rogue/instrument/proc/finish_band_invite(invite_token)
+	if(!band_invite_active || invite_token != band_invite_token)
 		return
-	if(band_invite_leader)
-		to_chat(band_invite_leader, span_notice("Band invite finished. Ready performers: [band_members.len]. Start or cancel from the music panel."))
-	SStgui.update_uis(src)
+	if(!band_ready(band_invite_leader, src))
+		cancel_band_invite()
+		return
+	band_accepting = FALSE
+	for(var/datum/bard_band_member/member as anything in band_reserved_members)
+		if(!(member in band_members) && member.player?.bard_band_owner == src)
+			to_chat(band_invite_leader, span_notice("[member.player ? member.player.real_name : "A performer"] did not join before the deadline."))
+			release_band_member(member)
+	if(!band_members.len)
+		to_chat(band_invite_leader, span_warning("No performers are ready. The invitation was cancelled."))
+		cancel_band_invite()
+		return
+	if(band_pending_responses)
+		to_chat(band_invite_leader, span_notice("[band_pending_responses] performers did not finish responding in time."))
+	var/list/names = list()
+	preload_band_track(band_invite_leader, get_selected_track())
+	for(var/datum/bard_band_member/member as anything in band_members)
+		names += !QDELETED(member.player) ? member.player.real_name : "Unavailable"
+	// An unanswered confirmation must not keep preparation channels occupied.
+	clear_band_preloads()
+	var/answer = alert(band_invite_leader, "С вами готовы сыграть: [jointext(names, ", ")]. Начать?", "Группа готова", "Да", "Нет")
+	if(QDELETED(src) || !band_invite_active || invite_token != band_invite_token)
+		return
+	if(answer == "Да")
+		start_synced_band(band_invite_leader, TRUE)
+	else
+		cancel_band_invite()
+
+/obj/item/rogue/instrument/proc/clear_band_preloads()
+	for(var/file_path in band_preloads)
+		var/list/preload = band_preloads[file_path]
+		for(var/datum/weakref/listener_ref as anything in preload["listeners"])
+			var/mob/listener = listener_ref.resolve()
+			listener?.stop_sound_channel(preload["channel"])
+		var/datum/preload_owner = preload["owner"]
+		SSsounds.instrument_channels.release_channel(preload_owner)
+		qdel(preload_owner)
+	band_preloads = list()
 
 /obj/item/rogue/instrument/proc/cancel_band_invite()
+	clear_band_preloads()
+	for(var/datum/bard_band_member/member as anything in band_reserved_members)
+		if(!QDELETED(member.player))
+			to_chat(member.player, span_notice("Band invitation finished or cancelled."))
+		release_band_member(member)
+	if(band_invite_leader?.bard_band_owner == src)
+		band_invite_leader.bard_band_owner = null
+	band_reserved_members = list()
+	band_reserved_instruments = list()
+	band_owner = null
 	band_invite_active = FALSE
+	band_accepting = FALSE
 	band_invite_until = 0
 	band_invite_leader = null
 	band_members = list()
+	band_pending_responses = 0
+	band_invite_token++
 	SStgui.update_uis(src)
 
-/obj/item/rogue/instrument/proc/start_synced_band(mob/living/user)
-	if(!band_invite_active || user != band_invite_leader)
+/obj/item/rogue/instrument/proc/start_synced_band(mob/living/user, from_invite = FALSE)
+	if(!from_invite || !band_invite_active || user != band_invite_leader)
+		return
+	if(!band_ready(user, src))
+		to_chat(user, span_warning("You can no longer start this performance."))
+		cancel_band_invite()
+		return
+	var/list/ready = list()
+	for(var/datum/bard_band_member/member as anything in band_members)
+		if(!band_ready(member.player, member.instrument) || !member.instrument.timed_tracks[member.track_title]?.file_path)
+			to_chat(user, span_warning("[member.player ? member.player.real_name : "A performer"] cannot play now (distance, instrument or track)."))
+			continue
+		ready += member
+	if(!ready.len)
+		to_chat(user, span_warning("No other performers are ready. Group play cancelled."))
+		cancel_band_invite()
 		return
 	var/datum/bard_timed_track/leader_track = get_selected_track()
-	var/leader_sings = auto_song_enabled
+	// Preparation must return its music slots before the actual ensemble takes them.
+	clear_band_preloads()
 	stop_music(user)
-	auto_song_enabled = leader_sings
-	play_track(user, leader_track)
-	if(leader_sings)
-		start_auto_song(user, leader_track)
-	for(var/datum/bard_band_member/member as anything in band_members)
-		if(!member.player || !member.instrument || QDELETED(member.instrument))
-			continue
-		member.instrument.ensure_timed_tracks()
-		var/datum/bard_timed_track/member_track = member.instrument.timed_tracks[member.track_title]
-		if(!member_track)
-			continue
+	var/list/started = list()
+	var/shared_start = REALTIMEOFDAY
+	play_track(user, leader_track, shared_start)
+	if(!playing)
+		to_chat(user, span_warning("The leader could not start the selected track."))
+		cancel_band_invite()
+		return
+	for(var/datum/bard_band_member/member as anything in ready)
 		member.instrument.stop_music(member.player)
 		member.instrument.music_panel_selected = member.track_title
 		member.instrument.auto_song_enabled = member.sing
-		member.instrument.play_track(member.player, member_track)
-		if(member.sing)
-			member.instrument.start_auto_song(member.player, member_track)
+		member.instrument.repeat_enabled = repeat_enabled
+		member.instrument.play_track(member.player, member.instrument.timed_tracks[member.track_title], shared_start)
+		if(member.instrument.playing)
+			started += member
+			to_chat(member.player, span_notice("You are now playing with [user.real_name]."))
+		else
+			to_chat(user, span_warning("[member.player.real_name] could not start their track."))
+		SStgui.update_uis(member.instrument)
+	if(!started.len)
+		stop_music(user)
+		to_chat(user, span_warning("No other instruments could start. Group performance cancelled."))
+		cancel_band_invite()
+		return
+	saved_band_members = started.Copy()
+	saved_band_track_title = leader_track.title
+	saved_band_sing = auto_song_enabled
+	saved_band_repeat = repeat_enabled
 	cancel_band_invite()
+	band_owner = src
+	user.bard_band_owner = src
+	for(var/datum/bard_band_member/member as anything in started)
+		member.player.bard_band_owner = src
+		member.instrument.band_owner = src
+	to_chat(user, span_notice("Your band started. The lineup was saved for the next performance."))
 
 /obj/item/rogue/instrument/proc/get_auto_song_phrase_index(datum/bard_timed_track/track, elapsed_seconds)
 	if(!track?.phrases?.len)
@@ -495,6 +699,7 @@ SUBSYSTEM_DEF(bard_music)
 		auto_song_cycle_started_at = music_realtime_started_at
 		auto_song_next_phrase_index = 1
 		elapsed_ticks = REALTIMEOFDAY - music_realtime_started_at
+	var/spoken = 0
 	while(auto_song_next_phrase_index <= track.phrases.len)
 		var/datum/bard_timed_phrase/phrase = track.phrases[auto_song_next_phrase_index]
 		if(!phrase)
@@ -502,8 +707,11 @@ SUBSYSTEM_DEF(bard_music)
 			continue
 		if(round(phrase.time * 10) > elapsed_ticks)
 			break
+		if(phrase.text && elapsed_ticks - round(phrase.time * 10) <= 20 && spoken >= 2)
+			break
 		auto_song_next_phrase_index++
-		if(phrase.text)
+		if(phrase.text && elapsed_ticks - round(phrase.time * 10) <= 20 && spoken < 2)
+			spoken++
 			user.say(phrase.text, forced = "bard auto song")
 	if(!repeat_enabled && auto_song_next_phrase_index > track.phrases.len)
 		stop_auto_song(user)
@@ -519,7 +727,7 @@ SUBSYSTEM_DEF(bard_music)
 	if(!ui)
 		ui = new(user, src, "BardMusicLibrary", "Music")
 		ui.open()
-	ui.set_autoupdate(band_invite_active)
+	ui.set_autoupdate(FALSE)
 
 /obj/item/rogue/instrument/ui_data(mob/user)
 	ensure_timed_tracks()
@@ -584,6 +792,9 @@ SUBSYSTEM_DEF(bard_music)
 	if(!usr || !usr.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
 		return FALSE
 	var/mob/living/user = usr
+	if(!(src in user.held_items))
+		to_chat(user, span_warning("Hold the instrument in either hand."))
+		return FALSE
 	add_fingerprint(user)
 	ensure_timed_tracks()
 	switch(action)
@@ -655,15 +866,33 @@ SUBSYSTEM_DEF(bard_music)
 			music_panel_selected = songname
 			return TRUE
 		if("play")
+			if(band_invite_active && user == band_invite_leader)
+				start_band_invite(user)
+				return TRUE
+			if(!playing && user.bard_band_owner && user.bard_band_owner != src)
+				to_chat(user, span_warning("Answer or leave your current band invitation first."))
+				return TRUE
 			if(playing)
 				stop_music(user)
 			else
 				var/datum/bard_timed_track/track = get_selected_track()
-				var/play_mode = alert(user, "How do you want to perform [track?.title]?", "Play Music", "Solo", "Group", "Cancel")
+				var/play_mode = saved_band_members.len ? "Group" : alert(user, "How do you want to perform [track?.title]?", "Play Music", "Solo", "Group", "Cancel")
 				if(play_mode == "Solo")
 					play_track(user, track)
 				else if(play_mode == "Group")
-					start_band_invite(user)
+					if(band_invite_active)
+						start_band_invite(user)
+					else if(saved_band_members.len)
+						var/list/names = list()
+						for(var/datum/bard_band_member/member as anything in saved_band_members)
+							names += member.player ? member.player.real_name : "Unknown"
+						var/choice = alert(user, "Вы играли вместе с: [jointext(names, ", ")].", "Группа", "Собрать заново", "Играть так же", "Выйти")
+						if(choice == "Выйти")
+							saved_band_members = list()
+						else if(choice == "Собрать заново" || choice == "Играть так же")
+							start_band_invite(user, choice == "Играть так же")
+					else
+						start_band_invite(user)
 			return TRUE
 		if("toggle_repeat")
 			repeat_enabled = !repeat_enabled
