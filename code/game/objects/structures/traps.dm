@@ -23,6 +23,7 @@
 	var/sparks = TRUE
 	var/datum/effect_system/spark_spread/spark_system
 	var/scraptype = /obj/item/scrap
+	var/disarm_by_sight = TRUE // TA ADDITION
 
 /obj/structure/trap/get_mechanics_examine(mob/user)
 	. = ..()
@@ -56,7 +57,7 @@
 	var/mob/living/luser = user
 	if(user.mind && (user.mind in immune_minds))
 		return
-	if(get_dist(user, src) <= FLOOR((luser.STAPER-4)/4,1))
+	if(get_dist(user, src) <= FLOOR((luser.STAPER-4)/4,1) && disarm_by_sight) // TA EDIT - ORIGINAL: if(get_dist(user, src) <= FLOOR((luser.STAPER-4)/4,1))
 		to_chat(user,span_notice("I reveal and temporarily disarm \the [src]"))
 		flare()
 
