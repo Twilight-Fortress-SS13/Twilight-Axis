@@ -82,20 +82,20 @@
 		H.icon_state = "[pelt_choice]"
 		H.dna?.species?.custom_base_icon = "[pelt_choice]"
 		H.regenerate_icons()
-		H.AddSpell(new /obj/effect/proc_holder/spell/self/claws/gnoll)
+		// TA REMOVAL: H.AddSpell(new /obj/effect/proc_holder/spell/self/claws/gnoll)
 		H.AddSpell(new /obj/effect/proc_holder/spell/self/howl/gnoll)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/gnoll/consume)
 		H.AddComponent(/datum/component/gnoll_combat_tracker)
 
 		var/obj/effect/proc_holder/spell/invoked/gnoll_sniff/F = new()
-		var/obj/effect/proc_holder/spell/invoked/invisibility/gnoll/I = new()
-		I.sniff_spell = F // Link them
+		// TA REMOVAL: var/obj/effect/proc_holder/spell/invoked/invisibility/gnoll/I = new()
+		// TA REMOVAL: I.sniff_spell = F // Link them
 
 		var/obj/effect/proc_holder/spell/invoked/abduct/S = new /obj/effect/proc_holder/spell/invoked/abduct()
 		S.destination_turf = get_turf(H) // Set the anchor to where they spawn/don the outfit
 		H.AddSpell(S)
 		H.AddSpell(F)
-		H.AddSpell(I)
+		// TA REMOVAL: H.AddSpell(I)
 
 		var/mode = SSgnoll_scaling.get_gnoll_scaling()
 		if(mode == GNOLL_SCALING_DYNAMIC)
