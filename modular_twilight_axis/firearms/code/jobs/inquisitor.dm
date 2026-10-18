@@ -69,7 +69,7 @@
 				l_hand = /obj/item/rogueweapon/sword/rapier/psy/folding/relic
 				backpack_contents = list(
 					/obj/item/storage/keyring/inquisitor = 1,
-					/obj/item/rogueweapon/huntingknife/idagger/silver/psydagger,
+					/obj/item/rogueweapon/huntingknife/idagger/steel/silver/psy,
 					/obj/item/rope/inqarticles/inquirycord = 1,
 					/obj/item/grapplinghook = 1,
 					/obj/item/storage/belt/rogue/pouch/coins/rich = 1,
@@ -88,7 +88,7 @@
 				backpack_contents = list(
 					/obj/item/storage/keyring/inquisitor = 1,
 					/obj/item/lockpickring/mundane = 1,
-					/obj/item/rogueweapon/huntingknife/idagger/silver/psydagger,
+					/obj/item/rogueweapon/huntingknife/idagger/steel/silver/psy,
 					/obj/item/clothing/head/inqarticles/blackbag = 1,
 					/obj/item/inqarticles/garrote = 1,
 					/obj/item/rope/inqarticles/inquirycord = 1,

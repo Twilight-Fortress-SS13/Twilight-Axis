@@ -2643,7 +2643,7 @@
 /obj/structure/table/wood/poor/alt,
 /obj/item/clothing/neck/roguetown/psicross/g,
 /obj/item/clothing/cloak/cape/inquisitorgold,
-/obj/item/rogueweapon/huntingknife/idagger/silver,
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver,
 /obj/effect/spawner/lootdrop/roguetown/dungeon/money,
 /turf/open/floor/rogue/blocks,
 /area/rogue/under/kingtomb)
@@ -2869,7 +2869,7 @@
 	desc = "A wearable skull, that seemingly belonged to a giant rous. Suspiciously enough, this one seemed to had pair of horns. On the other hand, those could have been attached later. That's what a reasonable person would think."
 	},
 /obj/item/rogueweapon/woodstaff/implement/greater,
-/obj/item/rogueweapon/huntingknife/idagger/silver/elvish,
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver/elvish,
 /turf/open/floor/rogue/cobble/mossy,
 /area/rogue/under/kingtomb)
 "QB" = (

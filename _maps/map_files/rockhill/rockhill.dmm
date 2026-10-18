@@ -44425,7 +44425,7 @@
 /area/rogue/indoors/town/manor/rockhill)
 "iLi" = (
 /obj/effect/decal/cleanable/blood/gibs,
-/obj/item/rogueweapon/huntingknife/idagger/silver/arcyne,
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver/arcyne,
 /turf/open/floor/rogue/greenstone,
 /area/rogue/under/cavewet/wizarddungeon)
 "iLj" = (
@@ -48260,7 +48260,7 @@
 /area/rogue/under/underdark)
 "jza" = (
 /obj/structure/table/wood/fancy/red,
-/obj/item/rogueweapon/huntingknife/idagger/silver/elvish,
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver/elvish,
 /obj/effect/spawner/lootdrop/roguetown/dungeon/money,
 /turf/open/floor/rogue/ruinedwood{
 	icon_state = "horzw"
@@ -70342,7 +70342,7 @@
 	pixel_y = 33
 	},
 /obj/structure/ritualcircle/zizo,
-/obj/item/rogueweapon/huntingknife/idagger/silver/elvish,
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver/elvish,
 /turf/open/floor/rogue/wood/herringbone,
 /area/rogue/outdoors/mountains/decap/somewhere)
 "nZq" = (
@@ -70596,7 +70596,7 @@
 /obj/item/roguegem/random,
 /obj/item/roguegem/random,
 /obj/item/roguegem/random,
-/obj/item/rogueweapon/huntingknife/idagger/silver,
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver,
 /turf/open/floor/rogue/church,
 /area/rogue/indoors/town/shop)
 "ocJ" = (
@@ -76530,7 +76530,7 @@
 /obj/structure/rack/rogue/shelf{
 	pixel_y = 28
 	},
-/obj/item/rogueweapon/huntingknife/idagger/silver/elvish/poopknife{
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver/elvish/poopknife{
 	pixel_y = 35
 	},
 /turf/open/floor/rogue/carpet/lord/right,
@@ -97622,7 +97622,7 @@
 	pixel_x = -3;
 	pixel_y = 1
 	},
-/obj/item/rogueweapon/huntingknife/idagger/silver/elvish,
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver/elvish,
 /obj/item/roguegem/random,
 /turf/open/floor/rogue/grasscold,
 /area/rogue/under/underdark/south)
