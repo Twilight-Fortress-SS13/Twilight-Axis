@@ -1328,7 +1328,7 @@ There are several things that need to be remembered:
 
 	overlays_standing[ARMOR_LAYER] = armor_overlay
 
-	add_overlay(armor_overlay)
+	apply_overlay(ARMOR_LAYER) // TA EDIT
 
 //endrogue
 

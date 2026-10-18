@@ -1,20 +1,21 @@
-/datum/advclass/noctite_spellblade
+/datum/advclass/mercenary/twilight_noctite_spellblade
 	name = "Newmoon Spellblade"
-	tutorial = "Заклинатели Новолунья известны в кругах радикальных Ноктитов как самые преданные Нок монахи, чаще всего происходящие из Зибантии. \
-		По какой-то причине вы покинули свой монастырь и прибыли сюда. Паломничество это или миссия по распространению слова Нок?... \
-		Кроме вас точно никто сказать не сможет. Хоть вы и довольно фанатичный Ноктит, но вы пришли сюда с миром и поэтому довольно терпимо относитесь к остальным богам и установленному Порядку,\
-		возможно, имея недоверие к Астрате согласно радикальному учению Нок... \
-		Несмотря на учения местных служителей церкви Десяти, вы знаете и крайне убеждены что Нок не требует поклонения, она одарила вас чем то более уникальным:\
-		за своё верное служение и познание в аркане вы получили доступ к арканному оружию. Вам недоступны чудеса, но взамен вы получили доступ к аркане, и не смотря на то какое оружие свет Нок не сотворил бы для вас, вы являетесь экспертом в нем."
+	tutorial = "Орден Новолуния был известен как хранители самых таинственных арканных техник, и секретов магии, кои хранили в строжайшем секрете за стенами монастыря. \
+		Но это было в прошлом. \
+		Ваш монастырь был сожжен во время войны, и многие из тех кто хранил тайны ордена сгорели заживо вместе с знаниями, которые они не могли отпустить. \
+		Теперь вы один из немногих выживших. Вы могли выжить из-за трусости, из-за того что вы отсутствовали во время тех событий.  \
+		Или, волей случая вы пережили пожар. У вас теперь нет ничего, кроме ваших знаний. Может, хоть они смогут спасти вас от голодной смерти, ибо орден Новолуния обречен."
 	outfit = /datum/outfit/job/roguetown/spellblade
-	category_tags = list(CTAG_TEMPLAR)
+	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
+	class_select_category = CLASS_CAT_RANESHENI
 	subclass_languages = list(/datum/language/raneshi)
-	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_NIGHT_OWL, TRAIT_ARCYNE, TRAIT_NOC_LIGHT_BLESSING)
+	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_NIGHT_OWL, TRAIT_ARCYNE)
 	subclass_mage_aspects = list("mastery" = FALSE, "major" = FALSE, "minor" = 2, "utilities" = 6)
-	maximum_possible_slots = 1
+	maximum_possible_slots = 2
 	subclass_stats = list(
-		STATKEY_WIL = 1,
-		STATKEY_INT = 5,
+		STATKEY_CON = 1,
+		STATKEY_WIL = 2,
+		STATKEY_INT = 4,
 	)
 	subclass_skills = list(
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
@@ -46,7 +47,7 @@
 	backpack_contents = list(
 		/obj/item/lockpickring/mundane = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
-		/obj/item/storage/keyring/acolyte = 1,
+		/obj/item/roguekey/mercenary = 1,
 		/obj/item/rogueweapon/spellbook = 1
 		)
 
@@ -54,8 +55,6 @@
 	..()
 
 	H.cmode_music = sound("modular_twilight_axis/church_classes/sound/cmode_spellblade.ogg")
-	ADD_TRAIT(H, TRAIT_CLERGY_TA, TRAIT_GENERIC)
-	REMOVE_TRAIT(H, TRAIT_RITUALIST, JOB_TRAIT)
 
 	if(H.mind)
 		SStreasury.give_money_account(ECONOMIC_LOWER_MIDDLE_CLASS, H, "Church Funding.")

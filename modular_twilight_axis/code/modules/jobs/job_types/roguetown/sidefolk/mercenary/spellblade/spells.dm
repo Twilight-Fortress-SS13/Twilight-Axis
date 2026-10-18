@@ -1,3 +1,41 @@
+/mob/living/carbon/human
+	var/list/spellblade_active_skill_weapons
+	var/list/spellblade_granted_skill_experience
+
+/mob/living/carbon/human/proc/spellblade_register_weapon(obj/item/rogueweapon/weapon)
+	var/skill_type = weapon.associated_skill
+	if(!skill_type)
+		return
+	if(!spellblade_active_skill_weapons)
+		spellblade_active_skill_weapons = list()
+	if(!spellblade_granted_skill_experience)
+		spellblade_granted_skill_experience = list()
+	var/active_count = spellblade_active_skill_weapons[skill_type] || 0
+	spellblade_active_skill_weapons[skill_type] = active_count + 1
+	if(active_count)
+		return
+	var/datum/skill_holder/holder = ensure_skills()
+	var/datum/skill/skill_ref = GetSkillRef(skill_type)
+	var/old_experience = holder.skill_experience[skill_ref] || 0
+	adjust_skillrank_up_to(skill_type, SKILL_LEVEL_EXPERT, TRUE)
+	spellblade_granted_skill_experience[skill_type] = (holder.skill_experience[skill_ref] || 0) - old_experience
+
+/mob/living/carbon/human/proc/spellblade_unregister_weapon(obj/item/rogueweapon/weapon)
+	var/skill_type = weapon.associated_skill
+	if(!skill_type || !spellblade_active_skill_weapons)
+		return
+	var/active_count = spellblade_active_skill_weapons[skill_type] || 0
+	if(!active_count)
+		return
+	if(active_count > 1)
+		spellblade_active_skill_weapons[skill_type] = active_count - 1
+		return
+	var/granted_experience = spellblade_granted_skill_experience[skill_type] || 0
+	spellblade_active_skill_weapons -= skill_type
+	spellblade_granted_skill_experience -= skill_type
+	if(granted_experience > 0)
+		adjust_experience(skill_type, -granted_experience, TRUE)
+
 /obj/effect/proc_holder/spell/self/noctite_fortify
 	name = "Arcane Armor"
 	desc = "Неся свет Нок в себе, он вас защищает. Вы становитесь крепче под лунным светом, но Астрата мешает вам, поэтому под её светом вы не можете использовать это."
@@ -105,13 +143,14 @@
 
 	sleep(0.75 SECONDS)
 	if(user.put_in_hands(spawned_weapon, del_on_fail = TRUE))
+		if(ishuman(user))
+			var/mob/living/carbon/human/spellblade_owner = user
+			spellblade_owner.spellblade_register_weapon(spawned_weapon)
 		if(GLOB.tod == "day")
-			to_chat(usr, span_warningbig("Я сотворил оружие и Нок одарила меня знаниями к нему. Свет Астраты противится этому, поэтому оружие и мои навыки слабее"))
-			user.adjust_skillrank(weapon_select.selected_weapon.associated_skill, SKILL_LEVEL_APPRENTICE, TRUE)
+			to_chat(user, span_warningbig("Я сотворил оружие и Нок одарила меня знаниями к нему. Свет Астраты ослабляет оружие."))
 			spawned_weapon.force /= 2
-		else 
-			to_chat(usr, span_warning("Я сотворил оружие и Нок одарила меня знаниями к нему."))
-			user.adjust_skillrank(weapon_select.selected_weapon.associated_skill, SKILL_LEVEL_EXPERT, TRUE)
+		else
+			to_chat(user, span_warning("Я сотворил оружие и Нок одарила меня знаниями к нему."))
 		spawned_weapon.set_light(4, 2, 1.5, l_color ="#78a3c9")
 		QDEL_IN_CLIENT_TIME(spawned_weapon, 3 MINUTES)
 	else 

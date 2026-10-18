@@ -443,6 +443,19 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	if(!LAZYLEN(charflaws))
 		charflaws = list(/datum/charflaw/noflaw)
 
+/datum/preferences/proc/validate_charflaw_choices() // TA EDIT
+	for(var/cf_type in charflaw_choices) // TA EDIT
+		var/datum/charflaw/cf = GLOB.character_flaws_singletons[cf_type] // TA EDIT
+		var/list/picked = charflaw_choices[cf_type] // TA EDIT
+		if(!cf || !islist(picked) || !(cf_type in charflaws)) // TA EDIT
+			charflaw_choices -= cf_type // TA EDIT
+			continue // TA EDIT
+		for(var/choice in picked) // TA EDIT
+			if(!(choice in cf.extra_choices)) // TA EDIT
+				picked -= choice // TA EDIT
+		if(length(picked) > cf.max_choices) // TA EDIT
+			picked.Cut(cf.max_choices + 1) // TA EDIT
+
 /datum/preferences/proc/_load_culinary_preferences(S)
 	S["favorite_cuisine"] >> favorite_cuisine
 	S["favorite_dish"] >> favorite_dish
@@ -844,6 +857,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["rumour"]					>> rumour
 	S["noble_gossip"]			>> noble_gossip
 	S["averse_chosen_faction"]	>> averse_chosen_faction
+	S["charflaw_choices"] >> charflaw_choices // TA EDIT
 	S["song_artist"]				>> song_artist
 	S["song_title"]				>> song_title
 	S["nsfwflavortext"]			>> nsfwflavortext
@@ -980,6 +994,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	descriptor_entries = SANITIZE_LIST(descriptor_entries)
 	custom_descriptors = SANITIZE_LIST(custom_descriptors)
 	validate_descriptors()
+	charflaw_choices = SANITIZE_LIST(charflaw_choices) // TA EDIT
+	validate_charflaw_choices() // TA EDIT
 
 	var/list/valid_skin_tones = pref_species.get_skin_list()
 	var/list/valid_skin_colors = list()
@@ -1206,6 +1222,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["skin_tone"]			, skin_tone)
 	WRITE_FILE(S["species"]				, pref_species.name)
 	WRITE_FILE(S["charflaws"]			, charflaws)
+	WRITE_FILE(S["charflaw_choices"], charflaw_choices) // TA EDIT
 	WRITE_FILE(S["feature_mcolor"]		, features["mcolor"])
 	WRITE_FILE(S["feature_mcolor2"]		, features["mcolor2"])
 	WRITE_FILE(S["feature_mcolor3"]		, features["mcolor3"])

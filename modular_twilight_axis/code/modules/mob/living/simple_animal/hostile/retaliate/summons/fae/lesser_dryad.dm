@@ -32,6 +32,7 @@
 	var/vine_regen_timer = null
 	var/frenzy_timer = null
 	var/frenzy_boost = 0
+	var/frenzy_melee_credit = 0
 	var/last_attack_dtype = "blunt"
 	var/dendor_dryad_aggressive_mode = FALSE
 	var/list/default_dryad_factions
@@ -159,7 +160,16 @@
 					if(legs_broken)
 						break
 			zone_selected = legs_broken ? pick(BODY_ZONE_CHEST, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM) : pick(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
-	return ..()
+	var/on_vine = isturf(loc) && contains_vines(loc)
+	if(!on_vine)
+		return ..()
+	var/original_damage_lower = melee_damage_lower
+	var/original_damage_upper = melee_damage_upper
+	melee_damage_lower *= 1.5
+	melee_damage_upper *= 1.5
+	. = ..()
+	melee_damage_lower = original_damage_lower
+	melee_damage_upper = original_damage_upper
 
 /mob/living/simple_animal/hostile/retaliate/rogue/fae/dryad/lesser/proc/dryad_surge(turf/surge_turf)
 	if(world.time < special_cd + 40 SECONDS)
@@ -180,15 +190,15 @@
 	return TRUE
 
 /mob/living/simple_animal/hostile/retaliate/rogue/fae/dryad/lesser/MeleeAction(patience = TRUE)
-	var/on_vine = isturf(loc) && contains_vines(loc)
-	rapid_melee = on_vine ? 2 : 1
-	if(on_vine)
-		melee_damage_lower = initial(melee_damage_lower) * 1.5
-		melee_damage_upper = initial(melee_damage_upper) * 1.5
-	. = ..()
-	if(on_vine)
-		melee_damage_lower = initial(melee_damage_lower)
-		melee_damage_upper = initial(melee_damage_upper)
+	rapid_melee = (isturf(loc) && contains_vines(loc)) ? 2 : 1
+	if(frenzy_boost == 2)
+		rapid_melee *= 2
+	else if(frenzy_boost == 1)
+		frenzy_melee_credit += rapid_melee
+		var/bonus_attacks = round(frenzy_melee_credit / 3)
+		rapid_melee += bonus_attacks
+		frenzy_melee_credit -= bonus_attacks * 3
+	return ..(patience)
 
 /mob/living/simple_animal/hostile/retaliate/rogue/fae/dryad/lesser/death(gibbed)
 	visible_message(span_boldwarning("[src] dissolves into greenish light..."))
@@ -269,12 +279,11 @@
 	if(frenzy_timer)
 		deltimer(frenzy_timer)
 		frenzy_timer = null
+	frenzy_melee_credit = 0
 	if(bloomstone_boost)
-		melee_cooldown = round(initial(melee_cooldown) * 0.5)
 		frenzy_boost = 2
 		visible_message(span_boldwarning("[src] blazes with the Treefather's fury — its movements become a blur!"))
 	else
-		melee_cooldown = round(initial(melee_cooldown) * 0.75)
 		frenzy_boost = 1
 		visible_message(span_warning("[src] surges with Dendor's blessing, striking faster!"))
 	set_light(1, 1, 2, l_color = "#58C86A")
@@ -283,8 +292,9 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/fae/dryad/lesser/proc/end_frenzy()
 	frenzy_timer = null
-	melee_cooldown = initial(melee_cooldown)
 	frenzy_boost = 0
+	frenzy_melee_credit = 0
+	rapid_melee = (isturf(loc) && contains_vines(loc)) ? 2 : 1
 	set_light(0)
 	remove_filter("dryad_frenzy_outline")
 
