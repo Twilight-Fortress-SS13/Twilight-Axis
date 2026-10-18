@@ -343,7 +343,7 @@
 /area/rogue/under/tomb/cave/lava)
 "vF" = (
 /obj/effect/decal/cleanable/sigil,
-/obj/item/rogueweapon/huntingknife/idagger/silver,
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver,
 /obj/item/reagent_containers/powder/moondust_purest,
 /turf/open/floor/carpet/royalblack,
 /area/rogue/under/tomb/indoors/magic)
