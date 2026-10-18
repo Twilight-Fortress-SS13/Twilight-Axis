@@ -89,9 +89,9 @@
 	zizo_spell = TRUE
 	invocation_type = INVOCATION_SHOUT
 	invocations = list("Evoca skeletos!")
-	var/miracle = FALSE
-	var/cabal_affine = FALSE
-	var/is_summoned = FALSE
+	var/miracle = FALSE // TA EDIT
+	var/cabal_affine = FALSE // TA EDIT
+	var/is_summoned = FALSE // TA EDIT
 	var/to_spawn = 4
 	var/spawn_lifespan
 
@@ -140,7 +140,7 @@
 			if(71 to 100)
 				skeleton_type = /mob/living/simple_animal/hostile/rogue/skeleton/guard
 
-		var/mob/living/simple_animal/hostile/rogue/skeleton/S = new skeleton_type(spawn_turf, owner, cabal_affine)
+		var/mob/living/simple_animal/hostile/rogue/skeleton/S = new skeleton_type(spawn_turf, owner)
 
 		for(var/obj/item/I as anything in S.loot)
 			if(ispath(I, /obj/item) && I::smeltresult)
@@ -230,9 +230,3 @@
 		apply_mob_lifespan(S, owner, spawn_lifespan)
 
 	return TRUE
-
-/datum/action/cooldown/spell/raise_undead_formation/necromancer
-	cabal_affine = TRUE
-	is_summoned = TRUE
-	cooldown_time = 40 SECONDS
-	to_spawn = 3

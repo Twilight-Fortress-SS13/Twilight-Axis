@@ -902,7 +902,7 @@ GLOBAL_LIST_EMPTY(arenafolks) // we're just going to use a list and add to it. S
 			swarm.ai_controller.wake_for_combat() // TA EDIT
 			swarm.visible_message(span_notice("A [swarm] manifests following after [target]... !"))
 			if(swarm.buffed_r == FALSE)
-				addtimer(CALLBACK(swarm, TYPE_PROC_REF(/mob/living/simple_animal/hostile/rogue/skeleton, deathtime), TRUE), time)
+				addtimer(CALLBACK(swarm, TYPE_PROC_REF(/mob/living, ta_ravox_spirit_expire)), time) // TA EDIT
 				swarm.buffed_r = TRUE
 				swarm.name = "[user.real_name]'s Spirit"
 		return TRUE

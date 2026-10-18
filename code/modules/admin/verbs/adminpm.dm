@@ -144,7 +144,7 @@
 					to_chat(src, span_notice("Message: [msg]"))
 				return
 
-	if (src.handle_spam_prevention(msg,MUTE_ADMINHELP))
+	if((!recipient || !recipient.holder) && src.handle_spam_prevention(msg, MUTE_ADMINHELP)) // TA EDIT
 		return
 
 	//clean the message if it's not sent by a high-rank admin

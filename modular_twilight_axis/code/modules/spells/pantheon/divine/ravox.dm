@@ -711,7 +711,7 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 		else
 			swarm.visible_message(span_notice("A [swarm] manifests from a spectral haze!"))
 		if(swarm.buffed_r == FALSE)
-			addtimer(CALLBACK(swarm, TYPE_PROC_REF(/mob/living/simple_animal/hostile/rogue/skeleton, deathtime), TRUE), time)
+			addtimer(CALLBACK(swarm, TYPE_PROC_REF(/mob/living, ta_ravox_spirit_expire)), time) // TA EDIT
 			swarm.buffed_r = TRUE
 			swarm.name = "[user.real_name]'s Spirit"
 		return TRUE
@@ -762,7 +762,7 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 			if(swarm.buffed_r == FALSE)
 				swarm.maxHealth *= skill
 				swarm.health *= skill
-				addtimer(CALLBACK(swarm, TYPE_PROC_REF(/mob/living/simple_animal/hostile/rogue/skeleton, deathtime), TRUE), time)
+				addtimer(CALLBACK(swarm, TYPE_PROC_REF(/mob/living, ta_ravox_spirit_expire)), time) // TA EDIT
 				swarm.buffed_r = TRUE
 		return TRUE
 	return FALSE
@@ -955,3 +955,16 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 
 	for(var/obj/item/held_item in held_items)
 		ADD_TRAIT(held_item, TRAIT_NODROP, TRAIT_GENERIC)
+
+
+/mob/living/proc/ta_ravox_spirit_expire() // TA EDIT
+	if(QDELETED(src) || stat == DEAD)
+		return
+	add_atom_colour(rgb(207, 135, 255), ADMIN_COLOUR_PRIORITY) // TA EDIT
+	ta_ravox_spirit_wither() // TA EDIT
+
+/mob/living/proc/ta_ravox_spirit_wither() // TA EDIT
+	if(QDELETED(src) || stat == DEAD)
+		return
+	adjustFireLoss(8) // TA EDIT
+	addtimer(CALLBACK(src, PROC_REF(ta_ravox_spirit_wither)), 5 SECONDS) // TA EDIT

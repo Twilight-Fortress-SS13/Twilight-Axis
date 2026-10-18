@@ -7,8 +7,8 @@
 /// Added to every preset's multiplier after each completed player vote, so presets that keep losing become overdue.
 #define STORYTELLER_OVERDUE_STEP_PERCENT 20
 /// Highest multiplier an overdue preset can reach.
-#define STORYTELLER_OVERDUE_MAX_PERCENT 250
-/// Multiplier every preset in the winning pool drops to for the next vote, so the same pool needs a clearer lead to
+#define STORYTELLER_OVERDUE_MAX_PERCENT 150
+/// Multiplier the winner of a player vote drops to for the next vote, so the same preset needs a clearer lead to
 /// win twice running. It climbs back by STORYTELLER_OVERDUE_STEP_PERCENT per vote like everything else.
 #define STORYTELLER_WIN_COOLDOWN_PERCENT 60
 #define LAST_MAP_VOTE_LOG_FILE "data/last_round/map_vote.json"
@@ -946,7 +946,7 @@ SUBSYSTEM_DEF(vote)
 		if(mode == "storyteller")
 			if(!length(storyteller_vote_log))
 				load_storyteller_vote_log()
-			var/pool_text = "Нажмите на (?) для получения описания режима. Раундстартовые крупные антагонисты требуют минимум [HARD_ANTAG_MIN_POP] игроков. Вес каждого режима умножается на накопленный коэффициент: после победы режимы выигравшего блока получают x[STORYTELLER_WIN_COOLDOWN_PERCENT / 100], а каждый режим получает +[STORYTELLER_OVERDUE_STEP_PERCENT]% за последующие голосования вплоть до x[STORYTELLER_OVERDUE_MAX_PERCENT / 100]."
+			var/pool_text = "Нажмите (?) для описания режимов. Крупные раундстартовые антагонисты требуют не менее [HARD_ANTAG_MIN_POP] активных игроков. После победы коэффициент режима снижается до x[STORYTELLER_WIN_COOLDOWN_PERCENT / 100], затем повышается на [STORYTELLER_OVERDUE_STEP_PERCENT]% за раунд; режимы без побед также получают прибавку до x[STORYTELLER_OVERDUE_MAX_PERCENT / 100]. У каждого варианта показаны текущий множитель и реальные голоса." // TA EDIT
 			. += "<div style='color:#992414;font-size:0.9rem;margin-bottom:6px;'>[pool_text]</div>"
 			. += render_storyteller_choices(can_vote, C)
 		else

@@ -232,6 +232,9 @@
 	var/obj/item/new_item = new result_type(T)
 
 	inherit_item_mechanics(I, new_item)
+	if(istype(I, /obj/item/rogueweapon) && istype(new_item, /obj/item/rogueweapon)) // TA EDIT
+		var/obj/item/rogueweapon/old_weapon = I // TA EDIT
+		old_weapon.transfer_implement_state(new_item, user) // TA EDIT
 	transfer_item_contents(I, new_item)
 
 	to_chat(user, span_notice("You apply the [src] to [I], using the enchanting dust and tools to turn it into [new_item]."))
@@ -1606,50 +1609,45 @@
 //RhynnRhynn
 /obj/item/enchantingkit/rhynnrhynn_staff
 	name = "'Celestial Staff' morphing elixir"
-	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance either a regular or refined Blacksteel Staff."
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Blacksteel Staff."
 	target_items = list(
-		/obj/item/rogueweapon/woodstaff/implement/greater/blacksteel		= /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel/donator_rhynn,
-		/obj/item/rogueweapon/woodstaff/implement/grand/blacksteel			= /obj/item/rogueweapon/woodstaff/implement/grand/blacksteel/donator_rhynn
+		/obj/item/rogueweapon/woodstaff/implement/greater/blacksteel			= /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel/donator_rhynn
 	)
 	result_item = null
 	icon_loadout = /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel/donator_rhynn
 
 /obj/item/enchantingkit/rhynnrhynn_staff_crested
 	name = "'Celestial Staff, Crested' morphing elixir"
-	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance either a regular or refined Blacksteel Staff."
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Blacksteel Staff."
 	target_items = list(
-		/obj/item/rogueweapon/woodstaff/implement/greater/blacksteel		= /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel/donator_rhynn/crested,
-		/obj/item/rogueweapon/woodstaff/implement/grand/blacksteel			= /obj/item/rogueweapon/woodstaff/implement/grand/blacksteel/donator_rhynn/crested
+		/obj/item/rogueweapon/woodstaff/implement/greater/blacksteel			= /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel/donator_rhynn/crested
 	)
 	result_item = null
 	icon_loadout = /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel/donator_rhynn/crested
 
 /obj/item/enchantingkit/rhynnrhynn_staff_winged
 	name = "'Celestial Staff, Winged' morphing elixir"
-	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance either a regular or refined Blacksteel Staff."
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Blacksteel Staff."
 	target_items = list(
-		/obj/item/rogueweapon/woodstaff/implement/greater/blacksteel		= /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel/donator_rhynn/winged,
-		/obj/item/rogueweapon/woodstaff/implement/grand/blacksteel			= /obj/item/rogueweapon/woodstaff/implement/grand/blacksteel/donator_rhynn/winged
+		/obj/item/rogueweapon/woodstaff/implement/greater/blacksteel			= /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel/donator_rhynn/winged
 	)
 	result_item = null
 	icon_loadout = /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel/donator_rhynn/winged
 
 /obj/item/enchantingkit/rhynnrhynn_staff_solar
 	name = "'Celestial Staff, Solar' morphing elixir"
-	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance either a regular or refined Blacksteel Staff."
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Blacksteel Staff."
 	target_items = list(
-		/obj/item/rogueweapon/woodstaff/implement/greater/blacksteel		= /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel/donator_rhynn/solar,
-		/obj/item/rogueweapon/woodstaff/implement/grand/blacksteel			= /obj/item/rogueweapon/woodstaff/implement/grand/blacksteel/donator_rhynn/solar
+		/obj/item/rogueweapon/woodstaff/implement/greater/blacksteel			= /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel/donator_rhynn/solar
 	)
 	result_item = null
 	icon_loadout = /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel/donator_rhynn/solar
 
 /obj/item/enchantingkit/rhynnrhynn_staff_glow
 	name = "'Celestial Staff, Glow' morphing elixir"
-	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance either a regular or refined Blacksteel Staff."
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Blacksteel Staff."
 	target_items = list(
-		/obj/item/rogueweapon/woodstaff/implement/greater/blacksteel		= /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel/donator_rhynn/glow,
-		/obj/item/rogueweapon/woodstaff/implement/grand/blacksteel			= /obj/item/rogueweapon/woodstaff/implement/grand/blacksteel/donator_rhynn/glow
+		/obj/item/rogueweapon/woodstaff/implement/greater/blacksteel			= /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel/donator_rhynn/glow
 	)
 	result_item = null
 	icon_loadout = /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel/donator_rhynn/glow
@@ -2064,12 +2062,14 @@
 		/obj/item/rogueweapon/contraption/linker/mace/big
 	)
 	result_item = /obj/item/rogueweapon/example/forgefiend_wrench
+
+//Yoshi
 /obj/item/enchantingkit/weapon/yoshi_estoc
-	name = "'The Malignant Sabre' morphing elixir"
-	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Stecher, or an Estoc."
+	name = "'Xylixian Estoc' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Stecher or an Estoc."
 	target_items = list(
-		/obj/item/rogueweapon/sword/long/ap						= /obj/item/rogueweapon/sword/long/ap/yoshi_estoc,
-		/obj/item/rogueweapon/estoc							= /obj/item/rogueweapon/sword/long/ap/yoshi_estoc
-		)
+		/obj/item/rogueweapon/sword/long/ap = /obj/item/rogueweapon/sword/long/ap/yoshi_estoc,
+		/obj/item/rogueweapon/estoc = /obj/item/rogueweapon/sword/long/ap/yoshi_estoc
+	) // TA EDIT
 	result_item = /obj/item/rogueweapon/sword/long/ap/yoshi_estoc
 

@@ -421,7 +421,7 @@
 		if (istype (H.patron, /datum/patron/inhumen/zizo))
 			if(H.mind)
 				H.mind.AddSpell(new /datum/action/cooldown/spell/minion_order)
-				H.mind.AddSpell(new /datum/action/cooldown/spell/gravemark)
+				H.mind.AddSpell(new /datum/action/cooldown/spell/minion_mark)
 	backpack_contents = list(
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1
@@ -753,15 +753,14 @@
 			belt = /obj/item/storage/belt/rogue/leather/rope/upgraded/dark
 			shirt = /obj/item/clothing/suit/roguetown/armor/vestments_padded
 			H.mind?.AddSpell(new /datum/action/cooldown/spell/minion_order)
-			H.mind?.AddSpell(new /datum/action/cooldown/spell/gravemark)
-		// TA ADDITION START - ADDS SKILLRANK BONUSES TO OTHER PATRONS
-			H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_NOVICE, TRUE)
-		if	(/datum/patron/inhumen/baotha)
-			cloak = /obj/item/clothing/suit/roguetown/shirt/robe
-			head = /obj/item/clothing/head/roguetown/roguehood
-			H.adjust_skillrank(/datum/skill/misc/medicine, SKILL_LEVEL_NOVICE, TRUE)
-			H.adjust_skillrank(/datum/skill/craft/cooking, SKILL_LEVEL_APPRENTICE, TRUE)
-			H.adjust_skillrank(/datum/skill/craft/alchemy, SKILL_LEVEL_NOVICE, TRUE)
+			H.mind?.AddSpell(new /datum/action/cooldown/spell/minion_mark)
+			H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_NOVICE, TRUE) // TA EDIT
+		if(/datum/patron/inhumen/baotha) // TA EDIT
+			cloak = /obj/item/clothing/suit/roguetown/shirt/robe // TA EDIT
+			head = /obj/item/clothing/head/roguetown/roguehood // TA EDIT
+			H.adjust_skillrank(/datum/skill/misc/medicine, SKILL_LEVEL_NOVICE, TRUE) // TA EDIT
+			H.adjust_skillrank(/datum/skill/craft/cooking, SKILL_LEVEL_APPRENTICE, TRUE) // TA EDIT
+			H.adjust_skillrank(/datum/skill/craft/alchemy, SKILL_LEVEL_NOVICE, TRUE) // TA EDIT
 		if(/datum/patron/inhumen/graggar)
 			shoes = /obj/item/clothing/shoes/roguetown/boots/furlinedboots //tribal-esc shaman look
 			gloves = /obj/item/clothing/gloves/roguetown/angle/gronnfur/cleric //role-unique
