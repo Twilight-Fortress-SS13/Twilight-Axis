@@ -60,7 +60,7 @@
 	item_state = "overseerpants"
 	color = null
 
-/obj/item/clothing/under/roguetown/trou/leather/hrtpants
+/obj/item/clothing/under/roguetown/heavy_leather_pants/hrtpants
 	name = "heartfelt pants"
 	desc = "A pair of comfortable black trousers, a style often found in Heartfelt."
 	icon_state = "hrtpants"
@@ -72,5 +72,4 @@
 	armor = ARMOR_LEATHER
 	break_sound = 'sound/foley/cloth_rip.ogg'
 	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
-	max_integrity = 250
 	allowed_race = NON_DWARVEN_RACE_TYPES
