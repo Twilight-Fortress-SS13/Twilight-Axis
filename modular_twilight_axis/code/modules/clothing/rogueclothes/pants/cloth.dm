@@ -72,5 +72,4 @@
 	armor = ARMOR_LEATHER
 	break_sound = 'sound/foley/cloth_rip.ogg'
 	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
-	max_integrity = 250
 	allowed_race = NON_DWARVEN_RACE_TYPES
