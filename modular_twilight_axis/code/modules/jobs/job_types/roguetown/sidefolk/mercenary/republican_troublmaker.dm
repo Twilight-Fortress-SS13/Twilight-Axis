@@ -1,12 +1,10 @@
-#define CLASS_CAT_HEARTFELT "Heartfelt"
-
 /datum/advclass/mercenary/twilight_republican_troublemaker
 	name = "Republican TroubleMaker"
 	tutorial = "A true fighter and partisan who took a break from his revolution to earn a few mammons to help his homeland."
 	outfit = /datum/outfit/job/roguetown/mercenary/twilight_republican_troublemaker
 	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_EXPLOSIVE_SUPPLY, TRAIT_STEELHEARTED)
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
-	maximum_possible_slots = 1
+	maximum_possible_slots = 2
 	origin_limits = list(/datum/virtue/origin/heartfelt)
 	allowed_patrons = list(/datum/patron/divine/undivided, /datum/patron/divine/noc, /datum/patron/divine/dendor, /datum/patron/divine/abyssor, /datum/patron/divine/ravox, /datum/patron/divine/necra, /datum/patron/divine/xylix, /datum/patron/divine/pestra, /datum/patron/divine/malum, /datum/patron/divine/eora, /datum/patron/old_god, /datum/patron/inhumen/graggar, /datum/patron/inhumen/matthios, /datum/patron/inhumen/baotha)
 	class_select_category = CLASS_CAT_HEARTFELT
@@ -14,7 +12,6 @@
 	cmode_music = sound("modular_twilight_axis/sound/music/republicantroublemaker.ogg")
 
 	subclass_stats = list(
-		STATKEY_STR = 1,
 		STATKEY_INT = 1,
 		STATKEY_WIL = 1,
 		STATKEY_PER = 2,
@@ -42,11 +39,11 @@
 	head = /obj/item/clothing/head/roguetown/helmet/kettle/republican
 	gloves = /obj/item/clothing/gloves/roguetown/fingerless_leather
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/handcrossbow
-	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants
+	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/hrtpants
 	mask = /obj/item/clothing/mask/rogue/spectacles/duelist
 	cloak = /obj/item/quiver/bolt/light/bandolier
 	neck = /obj/item/clothing/neck/roguetown/bevor/iron
-	shirt = /obj/item/clothing/suit/roguetown/shirt/freifechter
+	shirt = /obj/item/clothing/suit/roguetown/shirt/freifechter/hrtshirt
 	armor = /obj/item/clothing/suit/roguetown/armor/brigandine/light/republican
 	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced/short
 	beltl = /obj/item/flashlight/flare/torch/lantern
