@@ -19,7 +19,7 @@
 	desc = "A brigandine of the highest quality, made from the finest steel and leather"
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/armor.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/armor.dmi'
-	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/armor.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/helpers/sleeves_armor.dmi'
 	icon_state = "renegadecoat"
 	item_state = "renegadecoat"
 	body_parts_covered = COVERAGE_ALL_BUT_LEGS
