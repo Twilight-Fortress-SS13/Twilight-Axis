@@ -56,8 +56,20 @@
 	neck = /obj/item/clothing/neck/roguetown/coif
 	head = /obj/item/clothing/head/roguetown/helmet/leather/volfhelm
 	id = /obj/item/mattcoin
-
 	r_hand = /obj/item/rogueweapon/woodstaff/implement/grand
+
 	if(H.age == AGE_OLD)
 		head = /obj/item/clothing/head/roguetown/wizhat/gen
 		armor = /obj/item/clothing/suit/roguetown/shirt/robe
+
+	if(H.mind)
+		var/list/subtype = list("Rogue", "Poacher")
+		var/subtype_choice = input(H, "Choose your path.", "TAKE UP ARCANA") as anything in subtype
+		H.set_blindness(0)
+		switch(subtype_choice)
+			if("Rogue") //Rogue
+				H.mind.setup_mage_aspects(list("mastery" = TRUE, "major" = 1, "minor" = 3, "utilities" = 9, "ward" = TRUE))
+			if("Poacher") //Poacher
+				H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 2, "minor" = 4, "utilities" = 9, "ward" = TRUE))
+
+
