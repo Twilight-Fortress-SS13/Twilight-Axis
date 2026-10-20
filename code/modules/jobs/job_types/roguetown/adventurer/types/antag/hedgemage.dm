@@ -62,7 +62,7 @@
 		head = /obj/item/clothing/head/roguetown/wizhat/gen
 		armor = /obj/item/clothing/suit/roguetown/shirt/robe
 
-	if(H.mind)
+	if(H.mind) //TA EDIT START
 		var/list/subtype = list("Specialist", "Jack of 2 Trades")
 		var/subtype_choice = input(H, "Choose your path.", "TAKE UP ARCANA") as anything in subtype
 		H.set_blindness(0)
@@ -70,6 +70,6 @@
 			if("Specialist") //Rogue
 				H.mind.setup_mage_aspects(list("mastery" = TRUE, "major" = 1, "minor" = 3, "utilities" = 9, "ward" = TRUE))
 			if("Jack of 2 Trades") //Poacher
-				H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 2, "minor" = 4, "utilities" = 9, "ward" = TRUE))
+				H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 2, "minor" = 4, "utilities" = 9, "ward" = TRUE)) //TA EDIT END
 
 
