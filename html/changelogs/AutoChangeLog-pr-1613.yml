@@ -1,0 +1,5 @@
+author: "Quinalion"
+delete-after: True
+changes:
+  - bugfix: "Исправлены спрайты стрел."
+  - bugfix: "Исправлено количество тинктуры во фляжке."

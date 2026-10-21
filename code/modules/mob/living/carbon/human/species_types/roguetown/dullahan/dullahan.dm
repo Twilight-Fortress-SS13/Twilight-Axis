@@ -21,6 +21,7 @@
 		/obj/item/bodypart/taur/spider,
 		/obj/item/bodypart/taur/horse,
 		/obj/item/bodypart/taur/goat,
+		/obj/item/bodypart/taur/arachne		//TA-EDIT
 	)
 	base_name = "Godtouched"
 	is_subrace = TRUE

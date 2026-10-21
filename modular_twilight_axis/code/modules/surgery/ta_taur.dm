@@ -16,6 +16,37 @@
 	clip_mask_state = "clip_mask_feline"
 	has_taur_color = TRUE
 
+/obj/item/bodypart/taur/arachne
+	name = "Arachne"
+	desc = ""
+	icon = 'modular_twilight_axis/icons/mob/taur.dmi'
+	clip_mask_icon = 'modular_twilight_axis/icons/mob/taur.dmi'
+	taur_icon_state = "arachne_s"
+	clip_mask_state = "arachne"
+	has_taur_color = TRUE
+
+///datum/customizer/organ/tail_feature/arachne
+//	allows_disabling = TRUE
+//	default_disabled = TRUE
+//	customizer_choices = list(/datum/customizer_choice/organ/tail_feature/arachne_paint)
+//
+///datum/customizer/organ/tail_feature/arachne_paint
+//	customizer_choices = list(/datum/customizer_choice/organ/tail_feature/arachne_paint)
+//	allows_disabling = TRUE
+//
+///datum/customizer_choice/organ/tail_feature/arachne_paint
+//	name = "Tail Spines"
+//	organ_type = /datum/customizer/organ/tail_feature/arachne_paint
+//	generic_random_pick = TRUE
+//	sprite_accessories = list(
+//		/datum/sprite_accessory/tail_feature/spines/arachne
+//		)
+//
+///datum/sprite_accessory/tail_feature/spines/arachne
+//	icon = 'modular_twilight_axis/icons/mob/taur.dmi'
+//	name = "Arachne Paintings"
+//	icon_state = "arachne_markings"
+
 /obj/item/clothing/suit/roguetown/armor/plate/full/taur
 	name = "tauric plate armor"
 	bloody_icon = 'modular_twilight_axis/icons/clothing/onmob/feline_taur_armor.dmi'
