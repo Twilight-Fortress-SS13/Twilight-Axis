@@ -1,5 +1,5 @@
 /// Code-defined gamemode presets. These replace the old storyteller gods. Players vote between them (grouped
-/// into three pools - see GAMEMODE_POOL_* in __DEFINES/storytellers.dm) or admins fine-tune the roundstart
+/// into two pools - see GAMEMODE_POOL_* in __DEFINES/storytellers.dm) or admins fine-tune the roundstart
 /// antag config directly. A preset's vote pool is set by preset_pool, independent of its type hierarchy.
 
 /datum/storyteller/gamemode
@@ -21,6 +21,7 @@
 	allow_dreamwalker = FALSE
 	preferred_gnoll_mode = GNOLL_SCALING_NONE
 	wretch_slot_cap = 0
+	highpop_vote_mult = 0.66 // TA EDIT
 	roundstart_prob = 0
 	guarantees_roundstart_roleset = FALSE
 	starting_point_multipliers = list(
@@ -97,18 +98,24 @@
 	allow_dreamwalker = TRUE
 	preferred_gnoll_mode = GNOLL_SCALING_FLAT	// max 2
 	wretch_slot_cap = 7 // TA EDIT
+	// TA EDIT START
+	midpop_vote_mult = 0.66
+	lowpop_vote_mult = 0.16
+	alternate_preset = /datum/storyteller/gamemode/guaranteed_antag/low_wretch
+	// TA EDIT END
 /datum/storyteller/gamemode/guaranteed_antag/low_wretch
 	name = "Tempered Intensity"
 	vote_desc = "Гарантированный крупный антагонист случайного типа. Также присутствует несколько малых антагонистов."
 	desc = "Гарантированный раундстартовый крупный антагонист с более агрессивным масштабированием от онлайна. До 4 изгоев (Wretches). До 1 гнолла. До 9 бандитов. Карга (Hag) присутствует. Сноходец (Dreamwalker) может появиться."
 	color_theme = "#7a1f1f"
+	vote_hidden = TRUE // TA EDIT
 	hard_mult = 2
 	block_soft = FALSE
 	allow_dreamwalker = TRUE
 	preferred_gnoll_mode = GNOLL_SCALING_SINGLE	// max 1
 	wretch_slot_cap = 4
 // ----------------------------------------------------------------------------------------------------------
-// TEN pool - no hard antags, soft antags only. Standard is the lighter option, Medium the default fallback.
+// No hard antags, soft antags only. Standard is the lighter option, Medium the default fallback.
 // ----------------------------------------------------------------------------------------------------------
 /datum/storyteller/gamemode/no_antag	// DEFAULT (inconclusive-vote fallback)
 	name = "Medium Intensity"
@@ -116,7 +123,12 @@
 	desc = "Без крупных антагонистов. Изгои (Wretches) масштабируются обычно: от 5 до 12. До 3 гноллов. Карга (Hag) присутствует. Сноходец (Dreamwalker) может появиться."
 	welcome_text = "Тёплый дневной свет пробуждает вас ото сна..."
 	color_theme = "#2b8c87"
-	preset_pool = GAMEMODE_POOL_NOANTAG
+	// TA EDIT START
+	preset_pool = GAMEMODE_POOL_GUARANTEED
+	alternate_preset = /datum/storyteller/gamemode/no_antag/standard
+	midpop_vote_mult = 0.66
+	lowpop_vote_mult = 0.33
+	// TA EDIT END
 	block_hard = TRUE
 	block_soft = FALSE
 	allow_dreamwalker = TRUE
@@ -129,6 +141,7 @@
 	vote_desc = "Без крупных антагонистов. Умеренное количество малых антагонистов."
 	desc = "Без крупных антагонистов. До 6 изгоев (Wretches). До 2 гноллов. Карга (Hag) присутствует. Сноходцы (Dreamwalkers) не появляются."
 	color_theme = "#37b3a6"
+	vote_hidden = TRUE // TA EDIT
 	allow_dreamwalker = FALSE
 	preferred_gnoll_mode = GNOLL_SCALING_FLAT	// max 2
 	wretch_slot_cap = 6
@@ -143,6 +156,12 @@
 	allow_dreamwalker = FALSE
 	preferred_gnoll_mode = GNOLL_SCALING_NONE
 	wretch_slot_cap = 4
+	// TA EDIT START
+	highpop_vote_mult = 0.66
+	midpop_vote_mult = 1
+	lowpop_vote_mult = 1
+	alternate_preset = null
+	// TA EDIT END
 	roundstart_prob = 0
 	starting_point_multipliers = list(
 		EVENT_TRACK_MUNDANE = 1,

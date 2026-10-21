@@ -952,11 +952,13 @@ SUBSYSTEM_DEF(gamemode)
 		var/pool_name = get_story_pool(storyboy.type)
 		if(pool_name)
 			available_pools[pool_name] = TRUE
-	// Exclude the pool whose option won last round (applied uniformly to all three pools, Extended included).
+	// Exclude the pool whose option won last round (applied uniformly to all pools, Extended included).
 	var/can_exclude_previous_pool = exclude_previous_pool && previous_pool && length(available_pools) > 1
 	for(var/datum/storyteller/storyboy in valid_storytellers)
 		var/pool_name = get_story_pool(storyboy.type)
 		if(!pool_name) // only gamemode presets are votable; the retained god datums are not
+			continue
+		if(storyboy.vote_hidden) // TA EDIT
 			continue
 		if(can_exclude_previous_pool && pool_name == previous_pool)
 			continue
@@ -1108,7 +1110,6 @@ SUBSYSTEM_DEF(gamemode)
 		var/datum/storyteller/storyboy = storytellers[storyteller_type]
 		if(storyteller_name_matches(html_contaminated, storyboy))
 			selected_storyteller = storyboy.type
-			last_storyteller_vote = storyboy.type
 			matched_storyteller = TRUE
 			SSgnoll_scaling.get_gnoll_scaling() // Calling this here as to make sure scaling holds true as per the roundstart vote, not a latejoin hunted character joining.
 			break
@@ -1117,6 +1118,20 @@ SUBSYSTEM_DEF(gamemode)
 	if(!matched_storyteller)
 		selected_storyteller = /datum/storyteller/gamemode/no_antag
 		SSgnoll_scaling.get_gnoll_scaling()
+
+	// TA EDIT START
+	var/previous_resolved = last_storyteller_vote
+	var/datum/storyteller/chosen = storytellers[selected_storyteller]
+	if(chosen?.alternate_preset && last_storyteller_vote == chosen.type)
+		selected_storyteller = chosen.alternate_preset
+		var/datum/storyteller/flipped = storytellers[selected_storyteller]
+		to_world(span_notice("<b>Режим раунда: [flipped?.name] (чередование)</b>"))
+	last_storyteller_vote = selected_storyteller
+	var/prev_text = previous_resolved ? "[previous_resolved]" : "none"
+	var/voted_text = chosen ? "[chosen.type]" : "none"
+	log_storyteller("Cycle check: previous=[prev_text], voted=[voted_text], running=[selected_storyteller]")
+	log_storyteller("Storyteller vote end: [length(GLOB.ready_player_list)] ready.")
+	// TA EDIT END
 
 	var/datum/storyteller/storytypecasted = selected_storyteller
 	var/datum/storyteller/selected_storyteller_instance = storytellers[selected_storyteller]

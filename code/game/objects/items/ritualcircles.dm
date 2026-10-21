@@ -1422,6 +1422,14 @@
 	switch(riteselection) // put ur rite selection here
 		if()
 */
+GLOBAL_VAR_INIT(ta_armaments_rite_min_pop, 40) //TA EDIT
+
+/proc/ta_armaments_rite_pop_gate(mob/user) //TA EDIT
+	if(GLOB.joined_player_list.len >= GLOB.ta_armaments_rite_min_pop)
+		return TRUE
+	to_chat(user, span_warning("Ten's influence is too strong for this ritual for now."))
+	return FALSE
+
 // TIME FOR THE ASCENDANT. These can be stronger. As they are pretty much antag exclusive - Iconoclast for Matthios, Lich for ZIZO. ZIZO!
 
 /*
@@ -1452,6 +1460,8 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	var/riteselection = input(user, "Rituals of Progress", src) as null|anything in zizorites
 	switch(riteselection)
 		if("Rite of Armaments")
+			if(!ta_armaments_rite_pop_gate(user)) //TA EDIT
+				return
 			if(user.has_status_effect(/datum/status_effect/debuff/armamentrites))
 				to_chat(user, span_warning("I am not yet ready to perform this rite."))
 				return
@@ -1698,6 +1708,8 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	var/riteselection = input(user, "Rituals of Brotherhood", src) as null|anything in matthiosrites //TA Lore edit. Можно сделать модульно, но так это будет сложнее мейнтейнить
 	switch(riteselection) // put ur rite selection here
 		if("Rite of Armaments")
+			if(!ta_armaments_rite_pop_gate(user)) //TA EDIT
+				return
 			if(user.has_status_effect(/datum/status_effect/debuff/armamentrites))
 				to_chat(user, span_warning("I am not yet ready to perform this rite."))
 				return
@@ -1880,6 +1892,8 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	var/riteselection = input(user, "Rituals of Violence", src) as null|anything in graggarrites
 	switch(riteselection) // put ur rite selection here
 		if("Rite of Armaments")
+			if(!ta_armaments_rite_pop_gate(user)) //TA EDIT
+				return
 			if(user.has_status_effect(/datum/status_effect/debuff/armamentrites))
 				to_chat(user, span_warning("I am not yet ready to perform this rite."))
 				return
@@ -2100,6 +2114,8 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	var/riteselection = input(user, "Rituals of Indulgence", src) as null|anything in baotharites
 	switch(riteselection) // put ur rite selection here
 		if("Rite of Armaments")
+			if(!ta_armaments_rite_pop_gate(user)) //TA EDIT
+				return
 			if(user.has_status_effect(/datum/status_effect/debuff/armamentrites))
 				to_chat(user, span_warning("I am not yet ready to perform this rite."))
 				return
