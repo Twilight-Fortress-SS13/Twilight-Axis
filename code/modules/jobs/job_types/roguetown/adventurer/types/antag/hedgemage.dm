@@ -8,7 +8,7 @@
 	category_tags = list(CTAG_BANDIT)
 	cmode_music = sound("sound/music/cmode/antag/combat_timestopper.ogg")
 	maximum_possible_slots = 1 //Shadow wizard money gang
-	subclass_mage_aspects = list("mastery" = TRUE, "major" = 1, "minor" = 3, "utilities" = 13, "ward" = TRUE)
+	//subclass_mage_aspects = list("mastery" = TRUE, "major" = 1, "minor" = 3, "utilities" = 9, "ward" = TRUE) TA EDIT
 	traits_applied = list(TRAIT_ARCYNE, TRAIT_ALCHEMY_EXPERT)
 	subclass_stats = list(
 		STATKEY_INT = 3,
@@ -36,7 +36,7 @@
 		/datum/skill/craft/cooking = SKILL_LEVEL_NOVICE,
 	)
 
-/datum/outfit/job/roguetown/bandit/hedgemage/pre_equip(mob/living/carbon/human/H)
+/datum/outfit/job/roguetown/bandit/hedgemage/pre_e uip(mob/living/carbon/human/H)
 	..()
 	shoes = /obj/item/clothing/shoes/roguetown/simpleshoes
 	pants = /obj/item/clothing/under/roguetown/trou/leather
@@ -70,6 +70,6 @@
 			if("Specialist") //Rogue
 				H.mind.setup_mage_aspects(list("mastery" = TRUE, "major" = 1, "minor" = 3, "utilities" = 9, "ward" = TRUE))
 			if("Jack of 2 Trades") //Poacher
-				H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 2, "minor" = 4, "utilities" = 9, "ward" = TRUE)) //TA EDIT END
+				H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 2, "minor" = 3, "utilities" = 9, "ward" = TRUE)) //TA EDIT ENDq
 
 
