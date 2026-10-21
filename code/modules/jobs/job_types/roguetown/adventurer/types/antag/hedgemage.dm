@@ -3,7 +3,7 @@
 	tutorial = "Those fools at the academy laughed at you and cast you from the ivory tower of higher learning and magickal practice. No matter - you will ascend to great power one day, but first you need wealth - vast amounts of it. Show those fools in the town what REAL magic looks like.\n\n\
 	You have gaine the power of the spell of Mastery in the arcyne arts, though you are not strong enough to attune yourself to two major aspects at once."
 	allowed_sexes = list(MALE, FEMALE)
-
+	//subclass_mage_aspects = list("mastery" = TRUE, "major" = 1, "minor" = 3, "utilities" = 9, "ward" = TRUE)
 	outfit = /datum/outfit/job/roguetown/bandit/hedgemage
 	category_tags = list(CTAG_BANDIT)
 	cmode_music = sound("sound/music/cmode/antag/combat_timestopper.ogg")
@@ -69,6 +69,5 @@
 			if("Specialist") //Rogue
 				H.mind.setup_mage_aspects(list("mastery" = TRUE, "major" = 1, "minor" = 3, "utilities" = 9, "ward" = TRUE))
 			if("Jack of 2 Trades") //Poacher
-				H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 2, "minor" = 4, "utilities" = 9, "ward" = TRUE)) //TA EDIT END
-
+				H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 2, "minor" = 3, "utilities" = 9, "ward" = TRUE)) //TA EDIT END
 
