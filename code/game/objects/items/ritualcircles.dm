@@ -1422,10 +1422,10 @@
 	switch(riteselection) // put ur rite selection here
 		if()
 */
-GLOBAL_VAR_INIT(ta_armaments_rite_min_pop, 30) //TA EDIT
+#define TA_ARMAMENTS_RITE_MIN_POP 30 //TA EDIT
 
 /proc/ta_armaments_rite_pop_gate(mob/user) //TA EDIT
-	if(GLOB.joined_player_list.len >= GLOB.ta_armaments_rite_min_pop)
+	if(GLOB.joined_player_list.len >= TA_ARMAMENTS_RITE_MIN_POP)
 		return TRUE
 	to_chat(user, span_warning("Ten's influence is too strong for this ritual for now."))
 	return FALSE
