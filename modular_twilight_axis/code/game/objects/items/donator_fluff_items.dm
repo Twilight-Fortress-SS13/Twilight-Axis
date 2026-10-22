@@ -913,8 +913,8 @@
 	name = "hussar riding jacket"
 	desc = "Традиционный китель гусар. Обычно носится на плечах."
 	icon = 'modular_twilight_axis/icons/clothing/hussar_set.dmi'
-	icon_state = "hussar_jacket"
-	item_state = "hussar_jacket"
+	icon_state = "hussar_coat"
+	item_state = "hussar_coat"
 	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/hussar_set.dmi'
 	color = null
 
@@ -922,8 +922,8 @@
 	name = "hussar protective coat"
 	desc = "Теплый китель, который отлично защищает от ударов врагов Кайзера!"
 	icon = 'modular_twilight_axis/icons/clothing/hussar_set.dmi'
-	icon_state = "hussar_coat"
-	item_state = "hussar_coat"
+	icon_state = "hussar_jacket"
+	item_state = "hussar_jacket"
 	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/hussar_set.dmi'
 	sleeved = 'modular_twilight_axis/icons/clothing/onmob/hussar_sleeves.dmi'
 	sleevetype = "hussar_coat"
