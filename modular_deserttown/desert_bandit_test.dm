@@ -1,3 +1,5 @@
+GLOBAL_LIST_INIT(desert_bandit_aggro, world.file2list("strings/rt/highwaymanaggrolines.txt"))
+
 // Test NPC preset for a desert bandit with lamia legs, matching bog deserter stats.
 
 // --- BASE SWORDSMAN OUTFIT ---
@@ -89,7 +91,7 @@
 /mob/living/carbon/human/species/human/northern/desert_bandit_test/after_creation()
 	..()
 	AddComponent(/datum/component/ai_aggro_system)
-	SEND_SIGNAL(src, COMSIG_MOB_MODIFY_AGGRO_LINES, GLOB.highwayman_aggro, TRUE)
+	SEND_SIGNAL(src, COMSIG_MOB_MODIFY_AGGRO_LINES, GLOB.desert_bandit_aggro, TRUE)
 	job = "Desert Bandit Test"
 	ADD_TRAIT(src, TRAIT_NOMOOD, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NOHUNGER, TRAIT_GENERIC)

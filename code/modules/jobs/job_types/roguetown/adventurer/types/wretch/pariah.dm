@@ -5,16 +5,16 @@
 	allowed_sexes = list(MALE, FEMALE)
 	forbidden_races = list(RACES_BLACKOAK)
 	outfit = /datum/outfit/job/roguetown/wretch/pariah
-	cmode_music = 'sound/music/combat_blackoak.ogg'
+	cmode_music = sound("sound/music/combat_blackoak.ogg")
 	maximum_possible_slots = 1
 	class_select_category = CLASS_CAT_RACIAL
 	category_tags = list(CTAG_WRETCH)
-	traits_applied = list(TRAIT_AZURENATIVE, TRAIT_OUTDOORSMAN, TRAIT_BLACKOAK, TRAIT_DODGEEXPERT, TRAIT_ARCYNE, TRAIT_WOODWALKER, TRAIT_EXPERT_HUNTER)
+	traits_applied = list(TRAIT_AZURENATIVE, TRAIT_OUTDOORSMAN, TRAIT_BLACKOAK, TRAIT_ARCYNE, TRAIT_WOODWALKER, TRAIT_EXPERT_HUNTER)
 	//lower-than-avg stats for wretch but their traits are insanely good
 	subclass_stats = list(
 		STATKEY_INT = 1,
 		STATKEY_PER = 1,
-		STATKEY_SPD = 2, // 7 Weight instead of 9 full weight
+		STATKEY_SPD = 1, // 7 Weight if we consider the added +1 when selecting armor.
 		STATKEY_CON = 1,
 		STATKEY_WIL = 1,
 	)
@@ -41,8 +41,9 @@
 		/datum/skill/misc/hunting = SKILL_LEVEL_NOVICE,
 	)
 	subclass_stashed_items = list(
-        "Sewing Kit" =  /obj/item/repair_kit,
-    )
+		"Sewing Kit" =	/obj/item/repair_kit,
+		"Stashed Funds" = /obj/item/roguecoin/silver/pile/wretchpile,
+	)
 	extra_context = "This class is restricted to the Elf, Half-Elf, and Dark Elf species."
 
 
@@ -60,17 +61,16 @@
 /datum/outfit/job/roguetown/wretch/pariah/pre_equip(mob/living/carbon/human/H)
 	..()
 	H.adjust_blindness(-3)
-	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/trophyfur
 	shoes = /obj/item/clothing/shoes/roguetown/boots/elven_boots
 	cloak = /obj/item/clothing/cloak/forrestercloak
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 	gloves = /obj/item/clothing/gloves/roguetown/elven_gloves
 	belt = /obj/item/storage/belt/rogue/leather/black
-	backl = /obj/item/storage/backpack/rogue/satchel
-	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/black
+	backl = /obj/item/storage/backpack/rogue/satchel/black
+	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hatanga
 	pants = /obj/item/clothing/under/roguetown/trou/leather
 	neck = /obj/item/clothing/neck/roguetown/chaincoif
-	beltl = /obj/item/rogueweapon/huntingknife/idagger/steel/special
+	beltl = /obj/item/rogueweapon/huntingknife/idagger/steel/elvish
 	backpack_contents = list(
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
 		/obj/item/flashlight/flare/torch/lantern/prelit = 1,
@@ -105,7 +105,7 @@
 				H.mind.AddSpell(new /datum/action/cooldown/spell/caedo)
 				H.mind.AddSpell(new /datum/action/cooldown/spell/air_strike)
 				H.mind.AddSpell(new /datum/action/cooldown/spell/leyline_anchor)
-				H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/blade_storm)
+				H.mind.AddSpell(new /datum/action/cooldown/spell/blade_storm)
 			if("phalangite")
 				H.mind.AddSpell(new /datum/action/cooldown/spell/azurean_phalanx)
 				H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/azurean_pilum)
@@ -122,26 +122,48 @@
 		H.mind.AddSpell(new /datum/action/cooldown/spell/bind_weapon)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
 
+	var/helmets = list(
+		"Woad Elven Helm"			= /obj/item/clothing/head/roguetown/helmet/heavy/elven_helm,
+		"Woad Elven Barbute"		= /obj/item/clothing/head/roguetown/helmet/heavy/elven_helm/light,
+		"Elven Barbute"				= /obj/item/clothing/head/roguetown/helmet/elvenbarbute/blackoak,
+		"Winged Elven Barbute"		= /obj/item/clothing/head/roguetown/helmet/elvenbarbute/winged/blackoak,
+	)
+	var/helmchoice = input(H, "Choose your HELMET.", "LEAVES OVER STEEL.") as anything in helmets
+	head = helmets[helmchoice]
+
+	var/armor_style = list("Haste (Light Armor, +1 Spd)", "Heritage (Medium Armor, +1 Wil/Con)")
+	var/armor_choice = input(H, "Choose your ARMOR.", "FOR THE OAKS AND THE PEAKS") as anything in armor_style
+	switch(armor_choice)
+		if("Haste (Light Armor, +1 Spd)")
+			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
+			H.change_stat(STATKEY_SPD, 1)
+			armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/elven
+		if("Heritage (Medium Armor, +1 Wil/Con)")
+			ADD_TRAIT(H, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
+			H.change_stat(STATKEY_WIL, 1)
+			H.change_stat(STATKEY_CON, 1)
+			armor = /obj/item/clothing/suit/roguetown/armor/plate/elven_plate
+
 	switch(subclass_selected)
 		if("blade")
-			var/weapons = list("Elvish Longsword", "Elvish Saber", "Elvish Curveblade", "Steel Dagger")
+			var/weapons = list("Elvish Longsword", "Elvish sabre", "Elvish Curveblade", "Elvish Dirk")
 			var/weapon_choice = input(H, "Choose your WEAPON.", "FOR THE OAKS AND THE PEAKS.") as anything in weapons
 			switch(weapon_choice)
 				if("Elvish Longsword")
 					r_hand = /obj/item/rogueweapon/sword/long/elvish
 					beltr = /obj/item/rogueweapon/scabbard/sword
 					backr = /obj/item/rogueweapon/shield/wood
-				if("Elvish Saber")
+				if("Elvish sabre")
 					r_hand = /obj/item/rogueweapon/sword/sabre/elf
 					beltr = /obj/item/rogueweapon/scabbard/sword
 					backr = /obj/item/rogueweapon/shield/wood
 				if("Elvish Curveblade")
 					r_hand = /obj/item/rogueweapon/greatsword/elvish
 					backr = /obj/item/rogueweapon/scabbard/gwstrap
-				if("Steel Dagger")
-					beltr = /obj/item/rogueweapon/huntingknife/idagger/steel
+				if("Elvish Dirk")
+					r_hand = /obj/item/rogueweapon/huntingknife/idagger/steel/elvish
 					backr = /obj/item/rogueweapon/shield/wood
-			if(weapon_choice == "Steel Dagger")
+			if(weapon_choice == "Elvish Dirk")
 				H.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_EXPERT, TRUE)
 			else
 				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
@@ -173,15 +195,5 @@
 				H.adjust_skillrank_up_to(/datum/skill/combat/axes, SKILL_LEVEL_EXPERT, TRUE)
 			else
 				H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_EXPERT, TRUE)
-
-	var/helmets = list("Woad Elven Barbute", "Elven Barbute", "Winged Elven Barbute")
-	var/helmet_choice = input(H, "Choose your HELMET.", "LEAVES OVER STEEL.") as anything in helmets
-	switch(helmet_choice)
-		if("Woad Elven Barbute")
-			H.equip_to_slot_or_del(new /obj/item/clothing/head/roguetown/helmet/heavy/elven_helm/light, SLOT_HEAD, TRUE)
-		if("Elven Barbute")
-			H.equip_to_slot_or_del(new /obj/item/clothing/head/roguetown/helmet/elvenbarbute/blackoak, SLOT_HEAD, TRUE)
-		if("Winged Elven Barbute")
-			H.equip_to_slot_or_del(new /obj/item/clothing/head/roguetown/helmet/elvenbarbute/winged/blackoak, SLOT_HEAD, TRUE)
 
 	wretch_select_bounty(H)

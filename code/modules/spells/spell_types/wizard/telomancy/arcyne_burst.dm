@@ -1,6 +1,7 @@
 /datum/action/cooldown/spell/arcyne_burst
 	button_icon = 'icons/mob/actions/mage_telomancy.dmi'
 	name = "Arcyne Burst"
+	expose_caster_on_deflect = FALSE
 	desc = "Mark a nearby area with arcyne force. It swells for a few seconds before bursting, striking everyone across the whole zone with a wave of kinetic force and hurling them outward."
 	button_icon_state = "arcyne_burst"
 	sound = 'sound/magic/vlightning.ogg'
@@ -29,13 +30,13 @@
 	associated_skill = /datum/skill/magic/arcane
 	spell_tier = 2
 	spell_impact_intensity = SPELL_IMPACT_MEDIUM
-	displayed_damage = 75
+	displayed_damage = SPELL_DMG(75)
 
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
 	var/blast_radius = 1
 	var/blast_delay = 2 SECONDS
-	var/blast_damage = 75
+	var/blast_damage = SPELL_DMG(75)
 	var/push_dist = 3
 
 /datum/action/cooldown/spell/arcyne_burst/cast(atom/cast_on)
@@ -55,7 +56,7 @@
 	for(var/turf/T in range(blast_radius, center))
 		if(T.density)
 			continue
-		new /obj/effect/temp_visual/pillar_warning/fadein(T, blast_delay)
+		new /obj/effect/temp_visual/telegraph/pillar/fadein(T, blast_delay)
 
 	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(arcyne_burst_erupt), center, H, blast_radius, blast_damage, push_dist, src, name), blast_delay)
 
@@ -70,7 +71,7 @@
 			continue
 		new /obj/effect/temp_visual/kinetic_blast(T)
 		for(var/obj/structure/S in T)
-			S.take_damage(damage, BRUTE, "blunt", FALSE)
+			S.take_damage(damage * SPELL_DAMAGE_INTEGRITY_MODIFIER, BRUTE, "blunt", FALSE)
 		for(var/mob/living/L in T.contents)
 			if(L.anti_magic_check())
 				L.visible_message(span_warning("The arcyne force dissipates around [L]!"))
@@ -80,12 +81,13 @@
 				L.visible_message(span_warning("[L] braces against the blast!"))
 				continue
 			if(istype(caster) && !QDELETED(caster) && ishuman(L))
-				arcyne_strike(caster, L, null, damage, caster.zone_selected, \
+				if(arcyne_strike(caster, L, null, damage, caster.zone_selected, \
 					BCLASS_BLUNT, spell_name = spell_name, \
-					damage_type = BRUTE, npc_simple_damage_mult = 1, \
-					skip_animation = TRUE)
+					damage_type = BRUTE, \
+					skip_animation = TRUE, SPELL_STRIKE_SCALING) == ARCYNE_STRIKE_WARDED)
+					continue
 			else
-				L.adjustBruteLoss(damage * 1.5)
+				L.adjustBruteLoss(SPELL_DMG_VS(L, damage))
 				SEND_SIGNAL(L, COMSIG_ATOM_WAS_ATTACKED, caster, damage)
 			var/push_dir = get_dir(epicenter, L) || pick(GLOB.cardinals)
 			L.safe_throw_at(get_ranged_target_turf(L, push_dir, push_dist), push_dist, 1, caster, force = MOVE_FORCE_STRONG)

@@ -1,4 +1,5 @@
 /datum/action/cooldown/spell/telegraphed_strike/spellblade
+	source_aspect = /datum/magic_aspect/pseudo/spellblade
 	button_icon = 'icons/mob/actions/classuniquespells/spellblade.dmi'
 	spell_color = GLOW_COLOR_ARCANE
 	glow_intensity = GLOW_INTENSITY_MEDIUM
@@ -16,14 +17,15 @@
 
 	requires_weapon = TRUE
 	weapon_missing_message = "I need my bound weapon in hand!"
-	telegraph_type = /obj/effect/temp_visual/trap/arcyne
+	telegraph_type = /obj/effect/temp_visual/telegraph/arcyne
 	blade_class = BCLASS_BLUNT
 	strike_sound = null
 	committed_strike = FALSE
+	strike_intdamage_mult = SPELL_DAMAGE_INTEGRITY_MODIFIER
 
 	var/momentum_cost = 3
 	var/empowered_mult = 2
-	var/blunt_penalty = 5
+	var/blunt_penalty = SPELL_DMG(5)
 	var/momentum_on_hit = 0
 	var/momentum_on_surge = 1
 	var/push_dist = 0
@@ -103,7 +105,6 @@
 			var/obj/effect/temp_visual/blade_cut/V = new(T)
 			V.dir = get_dir(center, T) || facing
 
-/obj/effect/temp_visual/trap/arcyne
-	color = GLOW_COLOR_ARCANE
+/obj/effect/temp_visual/telegraph/arcyne
 	light_color = GLOW_COLOR_ARCANE
 	duration = 3 SECONDS

@@ -16,7 +16,7 @@
 	min_pq = -10
 	max_pq = null
 	round_contrib_points = 2
-	cmode_music = 'sound/music/cmode/towner/combat_towner.ogg'
+	cmode_music = sound("sound/music/cmode/towner/combat_towner.ogg")
 
 	job_traits = list(TRAIT_CICERONE, TRAIT_HOMESTEAD_EXPERT)
 
@@ -24,6 +24,7 @@
 	job_subclasses = list(
 		/datum/advclass/tapster
 	)
+	has_subprefs = FALSE // only one subclass
 	spells = list(/obj/effect/proc_holder/spell/invoked/takeapprentice)
 
 /datum/advclass/tapster

@@ -35,7 +35,22 @@
 		/area/rogue/outdoors/woods/south = 30,
 		/area/rogue/outdoors/woods/southwest = 30,
 		/area/rogue/outdoors/woods/northwest = 30,
-		/area/rogue/outdoors/rtfield = 50
+		/area/rogue/outdoors/rtfield = 50,
+		/area/rogue/outdoors/rtfield/rockhill = 50, //TA_EDIT_START
+		/area/rogue/outdoors/bograt/north = 30,
+		/area/rogue/outdoors/woodsrat/north = 30,
+		/area/rogue/outdoors/woodsrat/south = 30, //TA_EDIT_END
+		// Pilgrim counterparts
+		/area/rogue/outdoors/woods/grim = 30,
+		/area/rogue/outdoors/woods/grim/north = 30,
+		/area/rogue/outdoors/woods/grim/northeast = 30,
+		/area/rogue/outdoors/woods/grim/northeast/wardenscheckpoint = 30,
+		/area/rogue/outdoors/woods/grim/southeast = 30,
+		/area/rogue/outdoors/woods/grim/south = 30,
+		/area/rogue/outdoors/woods/grim/southwest = 30,
+		/area/rogue/outdoors/woods/grim/northwest = 30,
+		/area/rogue/outdoors/rtfield/grim = 50,
+		/area/rogue/outdoors/rtfield/grim/south = 50
 	)
 
 /datum/hunting_category/mid_tier
@@ -44,12 +59,15 @@
 	bonus_animal_amount = 5
 	animals = list(
 		/mob/living/simple_animal/hostile/retaliate/rogue/wolf = 15,
-		/mob/living/simple_animal/hostile/retaliate/rogue/goat = 20,
-		/mob/living/simple_animal/hostile/retaliate/rogue/goatmale = 15
+		/mob/living/simple_animal/hostile/retaliate/rogue/goat = 2,
+		/mob/living/simple_animal/hostile/retaliate/rogue/goatmale = 3,
+		/mob/living/simple_animal/hostile/retaliate/rogue/goat/game = 30,
 	)
 	preferred_tracks = list(
 		/mob/living/simple_animal/hostile/retaliate/rogue/wolf = "canine",
-		/mob/living/simple_animal/hostile/retaliate/rogue/goat = "cervine"
+		/mob/living/simple_animal/hostile/retaliate/rogue/goat = "cervine",
+		/mob/living/simple_animal/hostile/retaliate/rogue/goatmale = "cervine",
+		/mob/living/simple_animal/hostile/retaliate/rogue/goat/game = "cervine",
 	)
 	preferred_areas = list(
 		/area/rogue/outdoors/woods = 50,
@@ -58,7 +76,18 @@
 		/area/rogue/outdoors/woods/southeast = 50,
 		/area/rogue/outdoors/woods/south = 50,
 		/area/rogue/outdoors/woods/southwest = 50,
-		/area/rogue/outdoors/woods/northwest = 50
+		/area/rogue/outdoors/woods/northwest = 50,
+		/area/rogue/outdoors/woodsrat/north = 50, //TA_EDIT_START
+		/area/rogue/outdoors/woodsrat/south = 50, //TA_EDIT_END
+		// Pilgrim counterparts
+		/area/rogue/outdoors/woods/grim = 50,
+		/area/rogue/outdoors/woods/grim/north = 50,
+		/area/rogue/outdoors/woods/grim/northeast = 50,
+		/area/rogue/outdoors/woods/grim/northeast/wardenscheckpoint = 50,
+		/area/rogue/outdoors/woods/grim/southeast = 50,
+		/area/rogue/outdoors/woods/grim/south = 50,
+		/area/rogue/outdoors/woods/grim/southwest = 50,
+		/area/rogue/outdoors/woods/grim/northwest = 50
 	)
 
 /datum/hunting_category/high_tier
@@ -68,12 +97,14 @@
 	animals = list(
 		/mob/living/simple_animal/hostile/retaliate/rogue/saiga/game = 20,
 		/mob/living/simple_animal/hostile/retaliate/rogue/direbear = 5,
+		/mob/living/simple_animal/hostile/retaliate/rogue/wolf/dire = 5,
 		/mob/living/simple_animal/hostile/retaliate/rogue/troll = 3,
 		/mob/living/simple_animal/hostile/retaliate/rogue/mole = 5,
 		/mob/living/simple_animal/hostile/retaliate/rogue/boar = 5,
 	)
 	preferred_tracks = list(
 		/mob/living/simple_animal/hostile/retaliate/rogue/direbear = "ursine",
+		/mob/living/simple_animal/hostile/retaliate/rogue/wolf/dire = "canine",
 		/mob/living/simple_animal/hostile/retaliate/rogue/troll = "ursine",
 		/mob/living/simple_animal/hostile/retaliate/rogue/mole = "ursine",
 		/mob/living/simple_animal/hostile/retaliate/rogue/saiga/game = "cervine",
@@ -87,7 +118,21 @@
 		/area/rogue/outdoors/woods/south = 20,
 		/area/rogue/outdoors/woods/southwest = 20,
 		/area/rogue/outdoors/woods/northwest = 20,
-		/area/rogue/outdoors/mountains/decap = 50
+		/area/rogue/outdoors/mountains/decap = 50,
+		/area/rogue/outdoors/bograt/north = 20, //TA_EDIT_START
+		/area/rogue/outdoors/woodsrat/north = 20,
+		/area/rogue/outdoors/woodsrat/south = 20,
+		/area/rogue/outdoors/mountains/decap/somewhere = 50, //TA_EDIT_END
+		// Pilgrim counterparts
+		/area/rogue/outdoors/woods/grim = 20,
+		/area/rogue/outdoors/woods/grim/north = 20,
+		/area/rogue/outdoors/woods/grim/northeast = 20,
+		/area/rogue/outdoors/woods/grim/northeast/wardenscheckpoint = 20,
+		/area/rogue/outdoors/woods/grim/southeast = 20,
+		/area/rogue/outdoors/woods/grim/south = 20,
+		/area/rogue/outdoors/woods/grim/southwest = 20,
+		/area/rogue/outdoors/woods/grim/northwest = 20,
+		/area/rogue/outdoors/mountains/decap/grim = 50
 	)
 
 /datum/hunting_category/cursed
@@ -112,7 +157,30 @@
 	preferred_areas = list(
 		/area/rogue/outdoors/beach/forest = 1000,
 		/area/rogue/outdoors/beach/forest/north = 1000,
-		/area/rogue/outdoors/beach/forest/south = 1000
+		/area/rogue/outdoors/beach/forest/south = 1000,
+		/area/rogue/outdoors/bograt/west = 1000, //TA_EDIT_START
+		/area/rogue/outdoors/bograt/south = 1000,
+		/area/rogue/outdoors/bograt/sunken = 1000, //TA_EDIT_END
+		// Pilgrim counterparts
+		/area/rogue/outdoors/beach/forest/grim = 1000,
+		/area/rogue/outdoors/beach/forest/north/grim = 1000,
+		/area/rogue/outdoors/beach/forest/south/grim = 1000,
+		/area/rogue/outdoors/woods = -20,
+		/area/rogue/outdoors/woods/north = -20,
+		/area/rogue/outdoors/woods/northeast = -20,
+		/area/rogue/outdoors/woods/southeast = -20,
+		/area/rogue/outdoors/woods/south = -20,
+		/area/rogue/outdoors/woods/southwest = -20,
+		/area/rogue/outdoors/woods/northwest = -20,
+		// Pilgrim counterparts
+		/area/rogue/outdoors/woods/grim = -20,
+		/area/rogue/outdoors/woods/grim/north = -20,
+		/area/rogue/outdoors/woods/grim/northeast = -20,
+		/area/rogue/outdoors/woods/grim/northeast/wardenscheckpoint = -20,
+		/area/rogue/outdoors/woods/grim/southeast = -20,
+		/area/rogue/outdoors/woods/grim/south = -20,
+		/area/rogue/outdoors/woods/grim/southwest = -20,
+		/area/rogue/outdoors/woods/grim/northwest = -20,
 	)
 
 /datum/hunting_category/spiders
@@ -130,7 +198,11 @@
 		/area/rogue/under/underdark = 40,
 		/area/rogue/under/underdark/south = 40,
 		/area/rogue/under/underdark/north = 40,
-		/area/rogue/under/cavewet = 40
+		/area/rogue/under/cavewet = 40,
+		// Pilgrim counterparts
+		/area/rogue/under/underdark/grim = 40,
+		/area/rogue/under/underdark/south/grim = 40,
+		/area/rogue/under/underdark/north/grim = 40
 	)
 
 /datum/hunting_category/mire_spiders
@@ -157,7 +229,13 @@
 		/area/rogue/under/cavewet/bogcaves/central = 60,
 		/area/rogue/under/cavewet/bogcaves/south = 60,
 		/area/rogue/under/cavewet/bogcaves/north = 60,
-		/area/rogue/under/cavewet/bogcaves/coastcaves = 60
+		/area/rogue/under/cavewet/bogcaves/coastcaves = 60,
+		/area/rogue/outdoors/bograt/sunken = 60, //TA_EDIT
+		// Pilgrim counterparts
+		/area/rogue/outdoors/bog/north/grim = 60,
+		/area/rogue/outdoors/bog/north/grim/ne = 60,
+		/area/rogue/outdoors/bog/south/grim = 60,
+		/area/rogue/outdoors/bog/south/grim/se = 60
 	)
 
 // HUNTING MAP PREFERRED CATEGORIES
@@ -188,19 +266,33 @@
 	)
 	preferred_areas = list()
 
-// TA EDIT START
-/datum/hunting_category/proc/can_spawn_in_area(area/A)
+/datum/hunting_category/goats
+	name = "Bickering Goats"
+	skill_weights = list(0, 0, 0, 0, 0, 0, 0)
+	bonus_animal_amount = 1
+	animals = list(
+		/mob/living/simple_animal/hostile/retaliate/rogue/goat = 1,
+		/mob/living/simple_animal/hostile/retaliate/rogue/goatmale = 1,
+		/mob/living/simple_animal/hostile/retaliate/rogue/goat/game = 14,
+	)
+	preferred_tracks = list(
+		/mob/living/simple_animal/hostile/retaliate/rogue/goat = "cervine",
+		/mob/living/simple_animal/hostile/retaliate/rogue/goatmale = "cervine",
+		/mob/living/simple_animal/hostile/retaliate/rogue/goat/game = "cervine",
+	)
+	preferred_areas = list()
+
+/datum/hunting_category/proc/can_spawn_in_area(area/A) // TA EDIT
 	if(!A)
 		return FALSE
 	if(!preferred_areas || !preferred_areas.len)
 		return TRUE
 	return preferred_areas[A.type] > 0
 
-/datum/hunting_category/proc/get_area_bonus(area/A)
+/datum/hunting_category/proc/get_area_bonus(area/A) // TA EDIT
 	if(!A || !preferred_areas)
 		return 0
 	var/bonus = preferred_areas[A.type]
 	if(!bonus)
 		return 0
 	return bonus
-// TA EDIT END

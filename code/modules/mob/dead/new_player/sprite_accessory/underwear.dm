@@ -6,13 +6,18 @@
 	///Whether this underwear includes a top (Because gender = FEMALE doesn't actually apply here.). Hides breasts, nothing more.
 	var/hides_breasts = FALSE
 
+// Underwear comes in two cuts: a bulky one (mt/ft_muscular) and a slim one, the latter suffixed _f or named
+// after the elf body it was drawn for. Which cut fits is a question about the body, not the character's gender,
+// so these follow is_bulky_body() the same way worn clothing does. Garments that only exist in one cut — the
+// bikini and the sized leotard — stay driven by the breasts organ, so they remain wearable on any build.
+
 /datum/sprite_accessory/underwear/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	generic_gender_feature_adjust(appearance_list, organ, bodypart, owner, OFFSET_UNDIES, OFFSET_UNDIES_F)
 
 /datum/sprite_accessory/underwear/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	if(hides_breasts)
 		if(is_human_part_visible(owner, HIDECROTCH) || is_human_part_visible(owner, HIDEBOOB))
-			return TRUE	
+			return TRUE
 	return is_human_part_visible(owner, HIDECROTCH)
 
 /datum/sprite_accessory/underwear/briefs
@@ -23,13 +28,14 @@
 /datum/sprite_accessory/underwear/briefs/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	if(is_species(owner,/datum/species/dwarf))
 		return "maledwarf_reg"
-	if(owner.gender == FEMALE)
+	if(!owner.is_bulky_body())
 		return "maleelf_reg"
 	return "male_reg"
 
 /datum/sprite_accessory/underwear/bikini
 	name = "Bikini"
 	icon_state = "female_bikini"
+	preview_states = list("bikini_f_0")
 	underwear_type = /obj/item/undies/bikini
 	hides_breasts = TRUE
 
@@ -61,6 +67,7 @@
 /datum/sprite_accessory/underwear/leotard
 	name = "Leotard"
 	icon_state = "female_leotard"
+	preview_states = list("female_leotard_0")
 	underwear_type = /obj/item/undies/leotard
 	hides_breasts = TRUE
 
@@ -87,11 +94,12 @@
 /datum/sprite_accessory/underwear/athletic_leotard
 	name = "Athletic Leotard"
 	icon_state = "female_sleeved_leotard"
+	preview_states = list("female_athletic_leotard")
 	underwear_type = /obj/item/undies/athletic_leotard
 	hides_breasts = TRUE
 
 /datum/sprite_accessory/underwear/athletic_leotard/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
-	if(owner.gender == MALE)
+	if(owner.is_bulky_body())
 		return "male_athletic_leotard"
 	return "female_athletic_leotard"
 
@@ -101,7 +109,7 @@
 	underwear_type = /obj/item/undies
 
 /datum/sprite_accessory/underwear/braies/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
-	if(owner.gender == FEMALE)
+	if(!owner.is_bulky_body())
 		return "braies_f"
 	return "braies"
 
@@ -113,9 +121,21 @@
 /datum/sprite_accessory/underwear/briefs/eoran/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	if(is_species(owner,/datum/species/dwarf))
 		return "eoran_dwarf"
-	if(owner.gender == FEMALE)
-		return "eoran_efl"
+	if(!owner.is_bulky_body())
+		return "eoran_elf"
 	return "eoran_reg"
+
+/datum/sprite_accessory/underwear/bandages
+	name = "Bandages"
+	icon_state = "bandages"
+	underwear_type = /obj/item/undies/bandages
+	hides_breasts = TRUE
+
+/datum/sprite_accessory/underwear/bandages/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
+	if(!owner.is_bulky_body())
+		return "bandages_f"
+	return "bandages"
+
 
 /datum/sprite_accessory/legwear
 	abstract_type = /datum/sprite_accessory/legwear
@@ -129,14 +149,15 @@
 /datum/sprite_accessory/legwear/get_icon_state(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	var/tag = icon_state
 	pixel_y = -1
-	if(owner.gender == FEMALE)
+	// The _f cut is the slim silhouette, which is why elf males always needed it by hand; the body build decides
+	// it now, so it covers slim males of every race. Within that cut the male (mem) and female (fm) bodies still
+	// sit a couple of pixels apart, so the nudge stays gendered even though the sprite doesn't.
+	if(!owner.is_bulky_body())
 		tag = tag + "_f"
-		pixel_y = 0
+		// No build shift here: legwear hangs off the legs, which stay planted on a raised build.
+		pixel_y = (owner.gender == MALE) ? -2 : 0
 	if(is_species(owner,/datum/species/dwarf) || is_species(owner,/datum/species/kobold) || is_species(owner,/datum/species/dwarf/gnome) || is_species(owner,/datum/species/goblinp))
 		pixel_y = 0
-	if(is_species(owner,/datum/species/elf) && owner.gender == MALE)
-		tag = tag + "_f"
-		pixel_y = -2
 	return tag
 
 /datum/sprite_accessory/legwear/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)

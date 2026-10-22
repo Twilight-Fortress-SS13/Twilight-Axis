@@ -8,7 +8,7 @@
 	antag_hud_type = ANTAG_HUD_VAMPIRE
 	antag_hud_name = "vamplord"
 	confess_lines = list(
-		"I AM ANCIENT!",
+		"I AM THE ANCIENT!",
 		"I AM THE LAND!",
 		"I AM THE ETERNAL!",
 		"I AM THE INHERITOR!",
@@ -24,6 +24,7 @@
 /datum/antagonist/vampire/lord/on_gain()
 	. = ..()
 	addtimer(CALLBACK(owner.current, TYPE_PROC_REF(/mob/living/carbon/human, choose_name_popup), "[name]"), 5 SECONDS)
+	apply_virtue(owner.current, new /datum/virtue/combat/guarded) //HIGHLY EXPERIMENTAL, let them blend in and look weaker than they are.
 
 	greet()
 
@@ -35,17 +36,25 @@
 		owner.person_knows_me(MF)
 
 	var/mob/living/carbon/human/H = owner.current
-	for(var/datum/charflaw/cf in H.charflaws)
-		if(istype(cf, /datum/charflaw/hunted) || istype(cf, /datum/charflaw/targeted))
-			H.charflaws.Remove(cf)
-			QDEL_NULL(cf)
+	for(var/datum/charflaw/cf in H.charflaws) //flawless blank-slate. basically required to be doing things 24/7
+		H.charflaws.Remove(cf)
+		QDEL_NULL(cf)
+
+	//pre-set to baseline 14
+	H.STASTR = 14
+	H.STASPD = 14
+	H.STACON = 14
+	H.STAWIL = 14
+	H.STAINT = 14
+	H.STAPER = 14
+	H.STALUC = 14
+
 	H.equipOutfit(/datum/outfit/job/vamplord)
-	H.set_patron(/datum/patron/inhumen/zizo)
+	H.set_patron(/datum/patron/godless) //FORESAKEN BY GODS, MYNE OWN DIVINITY CARVED BY MYNE OWN HANDS.
+	//Progress dominion has an undead check anyway, so don't worry about them not worshipping Zizo. She'd do it out of spite anyway.
 	add_verb(H, /mob/living/carbon/human/proc/demand_submission)
-	H.maxbloodpool += 3000
-	H.adjust_bloodpool(3000)
-	for(var/S in MOBSTATS)
-		H.change_stat(S, 2)
+	H.maxbloodpool += 4000
+	H.adjust_bloodpool(4000)
 	H.forceMove(pick(GLOB.vlord_starts))
 	ADD_TRAIT(H, TRAIT_DUSTABLE, TRAIT_GENERIC) //They are ancient walking calamities, no take backs.
 	ADD_TRAIT(H, TRAIT_HEAVYARMOR, TRAIT_GENERIC) //Brute-forced method to ensure that Vampire Lords, no matter what, receive their most important traits.
@@ -55,20 +64,32 @@
 	ADD_TRAIT(H, TRAIT_STRONGBITE, TRAIT_GENERIC)
 	ADD_TRAIT(H, TRAIT_NOBLE, TRAIT_GENERIC)
 	ADD_TRAIT(H, TRAIT_STEELHEARTED, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_GRABIMMUNE, TRAIT_GENERIC) //Melee-orientated antagonist, can only use vamp potencies and vitae magicka.
 	ADD_TRAIT(H, TRAIT_SELF_SUSTENANCE, TRAIT_GENERIC) //Heavy-Antag Role, lets you repair your armor with tools + level to journeyman.
 	ADD_TRAIT(H, TRAIT_NOMOOD, TRAIT_GENERIC) //Stops you getting moodnuked and dropping your weapon non-stop. I didn't want to have to give them this off-the-bat but after seeing this happen, yeaaaah.
+	ADD_TRAIT(H, TRAIT_BADTRAINER, TRAIT_GENERIC) //legendary skill antag, we don't want our skill level to backfire or end up training allies into master swordsmen
+	//remove problematic traits we can somehow roundstart with
+	REMOVE_TRAIT(H, TRAIT_SHIRTLESS, TRAIT_GENERIC)
+	REMOVE_TRAIT(H, TRAIT_ARCYNE, TRAIT_GENERIC) //no mage stuff
+	REMOVE_TRAIT(H, TRAIT_LEYLINE_ATTUNEMENT, TRAIT_GENERIC)
 	H.update_move_intent_slowdown()
 
 /datum/antagonist/vampire/lord/greet()
 	to_chat(owner.current, span_userdanger("I am ancient. I am the Land. And I am now awoken to trespassers upon my domain."))
-	to_chat(owner.current, span_boldwarning("I should check my immedate surroundings, from the bloodstained stone I can recall my Ichor fang at will should I lose it again and from the Crimson Crucible I can begin my various projects of collective sacrifice of vitae between myself and my servants to reclaim my long-lost power and kingdom."))
 	owner.current.playsound_local(get_turf(owner.current), 'sound/villain/dreamer_warning.ogg', 80, FALSE, pressure_affected = FALSE) //Extra bit of AURA
+	to_chat(owner.current, span_boldwarning("</br>I should check my immedate surroundings, from the bloodstained stone I can recall my Ichor fang at will should I lose it."))
+	to_chat(owner.current, span_boldwarning("</br>From the Crimson Crucible I can begin my various projects of collective sacrifice of vitae between myself and my servants to reclaim my long-lost power and kingdom."))
+	to_chat(owner.current, span_boldwarning("</br>When I have Minions from either the Crucible or any non-resisting sires of my bloodline, I should assign them to positions using the clan menu so I can PUNISH and COMMAND them."))
+	to_chat(owner.current, span_boldwarning("</br>From tearing the mortals apart from the inside out through intrigue and subterfuge, to weaponising greed to power or merely using brute force; my dominion shall be absolute."))
+	to_chat(owner.current, span_danger("</br>Now, tyme to show them how a lord gets it done."))
 	. = ..()
 
 /datum/outfit/job/vamplord/pre_equip(mob/living/carbon/human/H)
 	..()
+	H.unequip_everything_delete() //ensure we get the "fit", always
+
 	H.adjust_skillrank_up_to(/datum/skill/magic/blood, 6, TRUE)
-	H.adjust_skillrank_up_to(/datum/skill/combat/swords, 6, TRUE) //Returned to Legendary-tier, but its the only weapon you get at this level, since Halford's new Blood Magic system compensates a lot for this.
+	H.adjust_skillrank_up_to(/datum/skill/combat/swords, 6, TRUE) //Returned to Legendary-tier, but its the only weapon you get at this level, since Halford's port of the Blood Magic system from vanderlin compensates a lot for this.
 	H.adjust_skillrank_up_to(/datum/skill/combat/wrestling, 5, TRUE) //Equalized all combat skills to be Master-tier, otherwise. Unless you somehow get legendary via-other means. You used to just get legendary in everything cause this added to your class, not skill upto'd.
 	H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, 5, TRUE)
 	H.adjust_skillrank_up_to(/datum/skill/combat/knives, 5, TRUE)
@@ -81,7 +102,7 @@
 	H.adjust_skillrank_up_to(/datum/skill/misc/climbing, 5, TRUE)
 	H.adjust_skillrank_up_to(/datum/skill/misc/athletics, 6, TRUE) //Who said Progress can't have gains?
 
-	pants = /obj/item/clothing/under/roguetown/tights/puritan
+	pants = /obj/item/clothing/under/roguetown/tights/puritan/vampire //armored varient
 	shirt = /obj/item/clothing/suit/roguetown/shirt/vampire
 	armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass
 	wrists = /obj/item/clothing/wrists/roguetown/bracers
@@ -93,15 +114,15 @@
 	head = /obj/item/clothing/head/roguetown/vampire
 	neck = /obj/item/clothing/neck/roguetown/chaincoif
 	cloak = /obj/item/clothing/cloak/cape/puritan
-	shoes = /obj/item/clothing/shoes/roguetown/boots/nobleboot
+	shoes = /obj/item/clothing/shoes/roguetown/rosa/nine
 	backl = /obj/item/storage/backpack/rogue/satchel/black
 	l_hand = /obj/item/rogueweapon/sword/long/judgement/vlord
 	H.ambushable = FALSE
 	backpack_contents = list(
-		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 1, //Intended they have two now, its a bad solution but it means they don't become poorer than an adv/miner towner midgame as easily as before.
+		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 1, //800 mammons on top of RNG on the hip. Sway power to make up for RP VL who isn't going full gigawar
 		/obj/item/rope/chain = 1, //Needed so you can actually sire people, beforehand you had to get rope every round. This speeds things up.
-		/obj/item/rogueweapon/huntingknife/idagger/steel = 1,
-		/obj/item/roguekey/vampire = 1 //Softlock protection, otherwise I'd have removed it. You still spawn in a room with keys anyway soo...
+		/obj/item/rogueweapon/huntingknife/idagger/steel/decorated = 1,
+		/obj/item/storage/keyring/vampire = 1 //Gets a whole keyring, lorde of the manor
 		)
 /*------VERBS-----*/
 
@@ -135,7 +156,7 @@
 	set category = "RoleUnique.Vampire"
 
 	if(!clan_position)
-		to_chat(src, span_warning("You have no subordinates to punish."))
+		to_chat(src, span_warning("You have no subordinates to punish!"))
 		return
 
 	var/list/possible = list()
@@ -145,7 +166,7 @@
 			continue
 		possible[member.real_name] = member
 	if(!length(possible))
-		to_chat(src, span_warning("You have no subordinates to punish."))
+		to_chat(src, span_warning("You have no subordinates to punish , assign them in the clan menu!"))
 		return
 	var/name_choice = input(src, "Who to punish?", "PUNISHMENT") as null|anything in possible
 	if(!name_choice)
@@ -153,7 +174,7 @@
 	var/mob/living/carbon/human/choice = possible[name_choice]
 	if(!choice || QDELETED(choice))
 		return
-	var/punishmentlevels = list("Pause", "Pain", "DESTROY")
+	var/punishmentlevels = list("Pause", "Pain", "OBLITERATE")
 	var/punishment = input(src, "Severity?", "PUNISHMENT") as null|anything in punishmentlevels
 	if(!punishment)
 		return
@@ -162,16 +183,73 @@
 			to_chat(choice, span_boldnotice("You are wracked with pain as your master punishes you!"))
 			choice.apply_damage(30, BRUTE)
 			choice.emote_scream()
+			choice.Knockdown(5)
 			playsound(choice, 'sound/misc/obey.ogg', 100, FALSE, pressure_affected = FALSE)
 		if("Pause")
 			to_chat(choice, span_boldnotice("Your body is frozen in place as your master punishes you!"))
 			choice.Paralyze(300)
 			choice.emote_scream()
 			playsound(choice, 'sound/misc/obey.ogg', 100, FALSE, pressure_affected = FALSE)
-		if("DESTROY")
-			to_chat(choice, span_boldnotice("You feel only darkness. Your master no longer has use of you."))
-			addtimer(CALLBACK(choice, TYPE_PROC_REF(/mob/living, dust)), 10 SECONDS)
+		if("OBLITERATE") //exclusively for extreme-cases/sending someone off w/ style
+			message_admins("[real_name] ([ckey]) used OBLITERATE punishment on [choice.real_name] ([choice.ckey])")
+			log_game("[real_name] ([ckey]) used OBLITERATE punishment on [choice.real_name] ([choice.ckey])")
+			//we log this, its literally a no comeback or ability to even resist permadeath. do sparingly.
+			to_chat(choice, span_userdanger("You feel only darkness. Your master no longer has use of you."))
+			choice.visible_message(span_warning("[choice] suddenly goes deathly pale for a moment, as if something terrible just happened!"))
+			choice.Knockdown(10)
+			//There is meant to be no counter, you've genuinely pushed a vlord to their wit's end to be using this.
+			ADD_TRAIT(choice, TRAIT_PACIFISM, "vlord_punish")
+			ADD_TRAIT(choice, TRAIT_SPELLCOCKBLOCK, "vlord_punish")
+			sleep(20)
+			choice.apply_damage(100, BRUTE)
+			to_chat(choice, span_userdanger("</br>NO! NO! WAIT WAIT--"))
+			playsound(choice, pick('sound/combat/fracture/headcrush (1).ogg', 'sound/combat/fracture/fracturewet (1).ogg'), 100)
+			choice.Stun(999999) //you're not meant to come back from this, at all. Even if you somehow glitch out of this
+			choice.Paralyze(999999)
+			choice.Knockdown(999999)
+			choice.emote("superagony")
+			sleep(20)
+			choice.Jitter(800)
+			choice.apply_damage(100, BRUTE)
+			choice.visible_message(span_userdanger("[choice] SCREAMS in UNBELIEVABLE AGONY as they're TORN APART by some unseen force!"), span_userdanger("</br>STOPSTOPSTOP-- IT HURTS! IT HURTS!"))
+			playsound(choice, pick('sound/combat/fracture/headcrush (1).ogg', 'sound/combat/fracture/fracturewet (1).ogg'), 100)
+			choice.emote("superagony")
+			sleep(20)
+			choice.apply_damage(100, BRUTE)
+			playsound(choice, pick('sound/combat/fracture/headcrush (1).ogg', 'sound/combat/fracture/fracturewet (1).ogg'), 100)
+			to_chat(choice, span_userdanger("</br>MAKE IT STOP!! MAKE IT STOP!!"))
+			choice.emote("superagony")
+			choice.dismember_spawn()
+			sleep(20)
+			choice.apply_damage(100, BRUTE)
+			choice.blur_eyes(40) //MORE SUFFERING WAITER, MORE SUFFERING!!
+			playsound(choice, pick('sound/combat/fracture/headcrush (1).ogg', 'sound/combat/fracture/fracturewet (1).ogg'), 100)
+			to_chat(choice, span_userdanger("</br>IT HURTS! IT HURTS! STOP--"))
+			choice.emote("superagony")
+			sleep(30) //finally, we grant you the mercy of death
+			playsound(get_turf(choice), 'sound/magic/churn.ogg', 200)
+			playsound(get_turf(choice), 'sound/combat/dismemberment/dismem (2).ogg', 100)
+			choice.visible_message(span_userdanger("[choice] suddenly explodes into a pile of gore and remains!"), span_userdanger("</br></br>As your master finally spares you the mercy of death, you've a harsh lesson learned for another tymeline."))
+			choice.gib() //aurafarming
 	visible_message(span_danger("[src] reaches out, gripping [choice]'s soul, inflicting punishment!"), ignored_mobs = list(choice))
+
+/mob/living/carbon/human/proc/dismember_spawn()
+	if(!iscarbon(src)) //godknows how the fuck this would happen but lets avoid runtimes
+		return
+
+	// Dismember limbs in sequence
+	var/static/list/dismember_order = list(
+		BODY_ZONE_L_ARM,
+		BODY_ZONE_R_ARM,
+		BODY_ZONE_L_LEG,
+		BODY_ZONE_R_LEG
+	)
+
+	for(var/zone in dismember_order)
+		var/obj/item/bodypart/BP = src.get_bodypart(zone)
+		if(BP)
+			BP.dismember(skip_checks = TRUE) //You're going to gib, we don't care for armor.
+			sleep(0.5 SECONDS)
 
 ////////OUTFITS////////
 /obj/item/clothing/suit/roguetown/shirt/vampire
@@ -194,12 +272,18 @@
 	smeltresult = /obj/item/ingot/draconic //Closest - and most valuable - analogue to obsidian.
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 
-/obj/item/clothing/head/roguetown/vampire/Initialize()
-  ..()
-  add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_VAMPIRIC, "alpha" = 180, "size" = 1)) //AURAFARMING BUFF
+/obj/item/clothing/head/roguetown/vampire/Initialize(mapload)
+	..()
+	add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_VAMPIRIC, "alpha" = 180, "size" = 1)) //AURAFARMING BUFF
 
 /obj/item/clothing/head/roguetown/vampire/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_VERYODD, HERESYDESC_VAMPIRE_CROWN)
+
+/obj/item/clothing/under/roguetown/tights/puritan/vampire
+	//intentionally no name, meant to be un-meta-able
+	desc = "A pair of form-fitting tights, these ones have been enchanted with various magic wards to maintain their look while being protective."
+	armor = ARMOR_PADDED
+	max_integrity = ARMOR_INT_LEG_LEATHER
 
 ////////BROKEN////////
 /obj/item/clothing/suit/roguetown/armor/chainmail/iron/vampire
@@ -218,9 +302,9 @@
 	smeltresult = /obj/item/ingot/vampire
 	unenchantable = TRUE //Its pretty much near-perfect protection, you do not need this.
 
-/obj/item/clothing/suit/roguetown/armor/chainmail/iron/vampire/Initialize()
-  ..()
-  add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_VAMPIRIC, "alpha" = 180, "size" = 1)) //Enchanted look.
+/obj/item/clothing/suit/roguetown/armor/chainmail/iron/vampire/Initialize(mapload)
+	..()
+	add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_VAMPIRIC, "alpha" = 180, "size" = 1)) //Enchanted look.
 
 /obj/item/clothing/suit/roguetown/armor/chainmail/iron/vampire/get_examine_highlight_status() //best armor in the game, it shouldn't be worn lightly
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_VERYODD, HERESYDESC_VAMPIRE)
@@ -245,9 +329,9 @@
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 	unenchantable = TRUE //Its pretty much near-perfect protection, you do not need this.
 
-/obj/item/clothing/suit/roguetown/armor/plate/vampire/Initialize()
-  ..()
-  add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_VAMPIRIC, "alpha" = 180, "size" = 1)) //Enchanted look.
+/obj/item/clothing/suit/roguetown/armor/plate/vampire/Initialize(mapload)
+	..()
+	add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_VAMPIRIC, "alpha" = 180, "size" = 1)) //Enchanted look.
 
 /obj/item/clothing/suit/roguetown/armor/plate/vampire/get_examine_highlight_status() //best armor in the game, it shouldn't be worn lightly
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_VERYODD, HERESYDESC_VAMPIRE)
@@ -264,9 +348,9 @@
 	smeltresult = /obj/item/ingot/vampire
 	unenchantable = TRUE //Its pretty much near-perfect protection, you do not need this.
 
-/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/paalloy/vampire/Initialize()
-  ..()
-  add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_VAMPIRIC, "alpha" = 180, "size" = 1)) //Enchanted look.
+/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/paalloy/vampire/Initialize(mapload)
+	..()
+	add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_VAMPIRIC, "alpha" = 180, "size" = 1)) //Enchanted look.
 
 /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/paalloy/vampire/get_examine_highlight_status() //best armor in the game, it shouldn't be worn lightly
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_VERYODD, HERESYDESC_VAMPIRE)
@@ -287,9 +371,9 @@
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 	unenchantable = TRUE //Its pretty much near-perfect protection, you do not need this.
 
-/obj/item/clothing/under/roguetown/platelegs/vampire/Initialize()
-  ..()
-  add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_VAMPIRIC, "alpha" = 180, "size" = 1)) //Enchanted look.
+/obj/item/clothing/under/roguetown/platelegs/vampire/Initialize(mapload)
+	..()
+	add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_VAMPIRIC, "alpha" = 180, "size" = 1)) //Enchanted look.
 
 /obj/item/clothing/under/roguetown/platelegs/vampire/get_examine_highlight_status() //best armor in the game, it shouldn't be worn lightly
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_VERYODD, HERESYDESC_VAMPIRE)
@@ -309,9 +393,9 @@
 	smeltresult = /obj/item/ingot/vampire
 	unenchantable = TRUE //Its pretty much near-perfect protection, you do not need this.
 
-/obj/item/clothing/shoes/roguetown/boots/armor/vampire/Initialize()
-  ..()
-  add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_VAMPIRIC, "alpha" = 180, "size" = 1)) //Enchanted look.
+/obj/item/clothing/shoes/roguetown/boots/armor/vampire/Initialize(mapload)
+	..()
+	add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_VAMPIRIC, "alpha" = 180, "size" = 1)) //Enchanted look.
 
 /obj/item/clothing/shoes/roguetown/boots/armor/vampire/get_examine_highlight_status() //best armor in the game, it shouldn't be worn lightly
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_VERYODD, HERESYDESC_VAMPIRE)
@@ -329,9 +413,9 @@
 	unenchantable = TRUE //Its pretty much near-perfect protection, you do not need this.
 	throw_on_break = FALSE //We only get one set
 
-/obj/item/clothing/gloves/roguetown/chain/vampire/Initialize()
-  ..()
-  add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_VAMPIRIC, "alpha" = 180, "size" = 1)) //Enchanted look.
+/obj/item/clothing/gloves/roguetown/chain/vampire/Initialize(mapload)
+	..()
+	add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_VAMPIRIC, "alpha" = 180, "size" = 1)) //Enchanted look.
 
 /obj/item/clothing/gloves/roguetown/chain/vampire/get_examine_highlight_status() //best armor in the game, it shouldn't be worn lightly
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_VERYODD, HERESYDESC_VAMPIRE)
@@ -346,9 +430,9 @@
 	unenchantable = TRUE //Its pretty much near-perfect protection, you do not need this.
 	throw_on_break = FALSE //We only get one set.
 
-/obj/item/clothing/wrists/roguetown/bracers/paalloy/vampire/Initialize()
-  ..()
-  add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_VAMPIRIC, "alpha" = 180, "size" = 1)) //Enchanted look.
+/obj/item/clothing/wrists/roguetown/bracers/paalloy/vampire/Initialize(mapload)
+	..()
+	add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_VAMPIRIC, "alpha" = 180, "size" = 1)) //Enchanted look.
 
 /obj/item/clothing/wrists/roguetown/bracers/paalloy/vampire/get_examine_highlight_status() //best armor in the game, it shouldn't be worn lightly
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_VERYODD, HERESYDESC_VAMPIRE)
@@ -363,9 +447,9 @@
 	unenchantable = TRUE //Its pretty much near-perfect protection, you do not need this.
 	throw_on_break = FALSE //We only get one set.
 
-/obj/item/clothing/neck/roguetown/gorget/paalloy/vampire/Initialize()
-  ..()
-  add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_VAMPIRIC, "alpha" = 180, "size" = 1)) //Enchanted look.
+/obj/item/clothing/neck/roguetown/gorget/paalloy/vampire/Initialize(mapload)
+	..()
+	add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_VAMPIRIC, "alpha" = 180, "size" = 1)) //Enchanted look.
 
 /obj/item/clothing/neck/roguetown/gorget/paalloy/vampire/get_examine_highlight_status() //best armor in the game, it shouldn't be worn lightly
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_VERYODD, HERESYDESC_VAMPIRE)
@@ -385,9 +469,9 @@
 	unenchantable = TRUE //Its pretty much near-perfect protection, you do not need this.
 	throw_on_break = FALSE //We only get one set.
 
-/obj/item/clothing/head/roguetown/helmet/heavy/vampire/Initialize()
-  ..()
-  add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_VAMPIRIC, "alpha" = 180, "size" = 1)) //Enchanted look.
+/obj/item/clothing/head/roguetown/helmet/heavy/vampire/Initialize(mapload)
+	..()
+	add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_VAMPIRIC, "alpha" = 180, "size" = 1)) //Enchanted look.
 
 /obj/item/clothing/head/roguetown/helmet/heavy/vampire/get_examine_highlight_status() //best armor in the game, it shouldn't be worn lightly
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_VERYODD, HERESYDESC_VAMPIRE)

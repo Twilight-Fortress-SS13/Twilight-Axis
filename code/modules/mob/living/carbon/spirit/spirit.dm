@@ -10,7 +10,7 @@
 	mob_biotypes = MOB_SPIRIT|MOB_HUMANOID
 	gib_type = /obj/effect/decal/cleanable/blood/gibs
 	bodyparts = list(/obj/item/bodypart/chest/spirit, /obj/item/bodypart/head/spirit, /obj/item/bodypart/l_arm/spirit,
-					 /obj/item/bodypart/r_arm/spirit, /obj/item/bodypart/r_leg/spirit, /obj/item/bodypart/l_leg/spirit)
+						/obj/item/bodypart/r_arm/spirit, /obj/item/bodypart/r_leg/spirit, /obj/item/bodypart/l_leg/spirit)
 	hud_type = /datum/hud/spirit
 	density = FALSE // ghosts can pass through other mobs
 	var/paid = FALSE
@@ -166,12 +166,9 @@
 	var/mind_key = key || mind?.key
 	if(!mind_key)
 		return
-	for(var/mob/living/carbon/spirit/spirit in GLOB.carbon_list)
+	for(var/mob/dead/observer/spirit in GLOB.observer_list)
 		if((ckey(spirit.key) == ckey(mind_key)) || (ckey(spirit.mind?.key) == ckey(mind_key)))
 			return spirit
-
-/mob/living/carbon/spirit/get_spirit()
-	return src
 
 /// Proc that will search inside a given atom for any corpses, and return TRUE if it finds one.
 /proc/pacify_coffin(atom/movable/coffin, mob/user, deep = TRUE)

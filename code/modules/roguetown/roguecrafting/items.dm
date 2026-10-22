@@ -14,7 +14,7 @@
 /datum/crafting_recipe/roguetown/survival/flint //custar recipe for flint.
 	name = "flint"
 	result = /obj/item/flint
-	reqs =  list(/obj/item/scrap = 2,
+	reqs =	list(/obj/item/scrap = 2,
 				/obj/item/natural/whetstone = 2,
 				/obj/item/natural/fibers = 1,
 	)
@@ -86,6 +86,7 @@
 	reqs = list(/obj/item/storage/belt/rogue/leather/cloth = 1,
 				/obj/item/storage/belt/rogue/pouch = 1)
 	craftdiff = 1
+	subtype_reqs = TRUE
 	verbage_simple = "tie"
 	verbage = "tie"
 
@@ -126,6 +127,7 @@
 	reqs = list(/obj/item/storage/belt/rogue/leather/rope = 1,
 				/obj/item/storage/belt/rogue/pouch = 1)
 	craftdiff = 1
+	subtype_reqs = TRUE
 	verbage_simple = "tie"
 	verbage = "ties"
 
@@ -155,6 +157,8 @@
 
 /datum/crafting_recipe/roguetown/survival/bag
 	name = "sack"
+	// the , is needed or else it prints "bagsack". i dont know why & I CBA to fix it.
+	aliases = "bag, "
 	result = /obj/item/storage/roguebag/crafted
 	reqs = list(
 		/obj/item/natural/fibers = 1,
@@ -206,6 +210,13 @@
 	structurecraft = /obj/machinery/tanningrack
 	craftdiff = 1
 
+/datum/crafting_recipe/roguetown/survival/zigbox
+	name = "zigbox"
+	result = /obj/item/storage/belt/rogue/pouch/zigarrete
+	reqs = list(/obj/item/paper/scroll = 2)
+	req_table = TRUE
+	craftdiff = 2
+
 /datum/crafting_recipe/roguetown/survival/prosthetic/woodleftarm
 	name = "wood arm (L)"
 	result = list(/obj/item/bodypart/l_arm/prosthetic/woodleft)
@@ -235,8 +246,8 @@
 	craftdiff = 3
 
 /datum/crafting_recipe/roguetown/survival/tarot_deck
-	name = "tarot deck"
-	result = list(/obj/item/toy/cards/deck/tarot)
+	name = "tarot deck (major arcana only)"
+	result = list(/obj/item/deck/tarot)
 	reqs = list(
 		/obj/item/paper/scroll = 3,
 		/obj/item/grown/log/tree/small = 1,
@@ -247,9 +258,9 @@
 	req_table = TRUE
 	craftdiff = 2
 
-/datum/crafting_recipe/roguetown/survival/tarot_deck_majorarcana
-	name = "tarot deck (major arcana)"
-	result = list(/obj/item/toy/cards/deck/tarot/majorarcana)
+/datum/crafting_recipe/roguetown/survival/tarot_deck_minorarcana
+	name = "tarot deck (major and minor arcana)"
+	result = list(/obj/item/deck/tarot/includes_minor_arcana)
 	reqs = list(
 		/obj/item/paper/scroll = 3,
 		/obj/item/grown/log/tree/small = 1,
@@ -288,13 +299,13 @@
 
 
 /datum/crafting_recipe/hair_dye
-    name = "hair dye cream"
-    display_category = ITEM_CAT_TOOLS_SUNDRIES
-    result = /obj/item/hair_dye_cream
-    reqs = list(
-        /obj/item/reagent_containers/glass/bowl = 1,
-        /obj/item/reagent_containers/food/snacks/grown/berries/rogue = 3,
-    )
+	name = "hair dye cream"
+	display_category = ITEM_CAT_TOOLS_SUNDRIES
+	result = /obj/item/hair_dye_cream
+	reqs = list(
+		/obj/item/reagent_containers/glass/bowl = 1,
+		/obj/item/reagent_containers/food/snacks/grown/berries/rogue = 3,
+	)
 
 // DIE
 
@@ -349,6 +360,7 @@
 		/obj/item/natural/fur = 1
 		)
 	craftdiff = 1
+	subtype_reqs = TRUE
 
 /datum/crafting_recipe/roguetown/survival/whetstone
 	name = "whetstone"
@@ -359,7 +371,7 @@
 		)
 	craftdiff = 0
 
-/datum/crafting_recipe/roguetown/survival/rucksack
+/datum/crafting_recipe/roguetown/survival/rucksack // TA EDIT START
 	name = "rucksack"
 	result = /obj/item/storage/backpack/rogue/backpack/bagpack
 	reqs = list(
@@ -367,10 +379,7 @@
 		/obj/item/rope = 1,
 		)
 	craftdiff = 0
-
-/datum/crafting_recipe/roguetown/survival/rucksack/crafted
-	reqs = list(/obj/item/storage/roguebag/crafted = 1,
-				/obj/item/rope = 1)
+	subtype_reqs = TRUE // TA EDIT END
 
 /datum/crafting_recipe/roguetown/survival/handmirror
 	name = "hand mirror"
@@ -413,19 +422,19 @@
 /datum/crafting_recipe/roguetown/survival/hotrock
 	name = "assemble stones into hotrock"
 	result = /obj/item/cooking/pan/stone
-	reqs =  list(/obj/item/natural/stone = 4)
+	reqs =	list(/obj/item/natural/stone = 4)
 	craftdiff = 3
 
 /datum/crafting_recipe/roguetown/survival/hotrock_whetstone
 	name = "combine whetstones into hotrock"
 	result = /obj/item/cooking/pan/stone
-	reqs =  list(/obj/item/natural/whetstone = 2)
+	reqs =	list(/obj/item/natural/whetstone = 2)
 	craftdiff = 3
 
 /datum/crafting_recipe/roguetown/survival/hotrock_boulder
 	name = "chisel boulder into hotrock"
 	result = /obj/item/cooking/pan/stone
-	reqs =  list(/obj/item/natural/rock = 1)
+	reqs =	list(/obj/item/natural/rock = 1)
 	tools = list(/obj/item/rogueweapon/huntingknife)
 	craftdiff = 2
 
@@ -447,3 +456,14 @@
 		)
 	skillcraft = /datum/skill/craft/cooking
 	craftdiff = 4
+
+/datum/crafting_recipe/roguetown/survival/charcoal
+	name = "wood into charcoal"
+	result = /obj/item/rogueore/coal/charcoal
+	reqs = list(/obj/item/grown/log/tree/small = 1)
+	structurecraft = /obj/machinery/light/rogue/oven
+	craftsound = 'sound/misc/frying.ogg'
+	verbage_simple = "char"
+	verbage = "chars"
+	craftdiff = 0
+	time = 10 SECONDS

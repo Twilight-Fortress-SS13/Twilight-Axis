@@ -20,8 +20,8 @@
 	taste_description = "a purified, innocent life energy that excites your consciousness. You're blurring in pleasure, and the world is becoming so pleasant."
 
 /datum/reagent/vitae/overdose_process(mob/living/M)
-	M.adjustOrganLoss(ORGAN_SLOT_HEART, 0.25  * REAGENTS_EFFECT_MULTIPLIER)
-	M.adjustFireLoss(0.25  * REAGENTS_EFFECT_MULTIPLIER, 0)
+	M.adjustOrganLoss(ORGAN_SLOT_HEART, 0.25	* REAGENTS_EFFECT_MULTIPLIER)
+	M.adjustFireLoss(0.25	* REAGENTS_EFFECT_MULTIPLIER, 0)
 	..()
 	. = 1
 

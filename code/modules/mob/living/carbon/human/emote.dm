@@ -206,6 +206,7 @@
 	message = "gulps."
 	emote_type = EMOTE_AUDIBLE
 	show_runechat = TRUE
+	needs_emotion = TRUE
 
 /mob/living/carbon/human/verb/gulp()
 	set name = "Gulp"
@@ -230,7 +231,7 @@
 	key = "facepalm"
 	key_third_person = "facepalms"
 	message = "facepalms."
-	emote_type =  EMOTE_AUDIBLE
+	emote_type =	EMOTE_AUDIBLE
 	show_runechat = TRUE
 
 /mob/living/carbon/human/verb/facepalm()
@@ -274,8 +275,11 @@
 	if(!nearby.len)
 		to_chat(src, span_warning("There is nobody nearby to play handgames with!"))
 
-	var/partner = tgui_input_list(src, "Who will you challenge with a handgame?", "FRIEND TO FOE.", nearby)
+	var/mob/living/carbon/human/partner = tgui_input_list(src, "Who will you challenge with a handgame?", "FRIEND TO FOE.", nearby)
 	if(!partner)
+		return
+	if(partner.cmode) //hand_games_check keeps watching for this, but say it out loud the first time.
+		to_chat(src, span_warning("[partner] is too tense for games!"))
 		return
 	var/choose_game = tgui_alert(src, "Choose a handgame to play with [partner]?", "A TOURNAMENT FOR TWO.", list("Rock, Paper, Shears", "Armwrestling", "Slaphands", "Thumbwars", "I Rescind"))
 
@@ -296,10 +300,12 @@
 
 // Checks to make sure everything is fine to continue playing.
 
-/mob/living/carbon/human/proc/hand_games_check(var/mob/living/carbon/human/player1, var/mob/living/carbon/human/player2)
+/mob/living/carbon/human/proc/hand_games_check(mob/living/carbon/human/player1, mob/living/carbon/human/player2)
 	if(!istype(player1) || !istype(player2))
 		return 0
 	if(player1.stat || player2.stat) //Make sure they're still standing.
+		return 0
+	if(player2.cmode)
 		return 0
 	if(!(player2 in range(player1,2))) //Make sure they're within two spaces still; should allow for cross-table gaming.
 		return 0
@@ -308,7 +314,7 @@
 
 ///// A simple game of Rock Paper Scissors, each player chooses an option and the choices are declared simultaneously.
 
-/mob/living/carbon/human/proc/game_rps(var/mob/living/carbon/human/player1, var/mob/living/carbon/human/player2)
+/mob/living/carbon/human/proc/game_rps(mob/living/carbon/human/player1, mob/living/carbon/human/player2)
 	if(!hand_games_check(player1,player2))
 		return
 	to_chat(player1, span_notice("Asking [player2] if they want to play Rock, Paper, Shears!"))
@@ -338,7 +344,7 @@
 
 /////// Armwrestling! Each player gets a modifier based on their size and can choose the strength of their character, then a weighted roll is made.
 
-/mob/living/carbon/human/proc/game_armwrestle(var/mob/living/carbon/human/player1, var/mob/living/carbon/human/player2)
+/mob/living/carbon/human/proc/game_armwrestle(mob/living/carbon/human/player1, mob/living/carbon/human/player2)
 	if(!hand_games_check(player1,player2))
 		return
 	to_chat(player1, span_notice("Asking [player2] if they want to play Armwrestling!"))
@@ -417,7 +423,7 @@
 
 /////// Slaphands! Each player gets a modifier based on their size and can choose the reaction time of their character, then a weighted roll is made. This one gives the advantage to smaller players.
 
-/mob/living/carbon/human/proc/game_slaphands(var/mob/living/carbon/human/player1, var/mob/living/carbon/human/player2)
+/mob/living/carbon/human/proc/game_slaphands(mob/living/carbon/human/player1, mob/living/carbon/human/player2)
 	if(!hand_games_check(player1,player2))
 		return
 	to_chat(player1, span_notice("Asking [player2] if they want to play Slaphands!"))
@@ -453,7 +459,7 @@
 
 ///// Thumbwars! This one is pure chance, and - in a pinch - can essentially work like a cointoss.
 
-/mob/living/carbon/human/proc/game_thumbwars(var/mob/living/carbon/human/player1, var/mob/living/carbon/human/player2)
+/mob/living/carbon/human/proc/game_thumbwars(mob/living/carbon/human/player1, mob/living/carbon/human/player2)
 	if(!hand_games_check(player1,player2))
 		return
 	to_chat(player1, span_notice("Asking [player2] if they want to play Thumbwars!"))
@@ -474,3 +480,5 @@
 			player1.visible_message(span_notice("After a gruelling battle, [player1] eventually manages to subdue the thumb of [player2]!"))
 		else
 			player2.visible_message(span_notice("After a gruelling battle, [player2] eventually manages to subdue the thumb of [player1]!"))
+
+

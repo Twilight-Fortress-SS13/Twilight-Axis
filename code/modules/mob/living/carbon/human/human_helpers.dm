@@ -1,5 +1,10 @@
 
 /mob/living/carbon/human/proc/change_name(new_name)
+	for(var/mob/living/carbon/human/H in GLOB.player_list)
+		var/datum/mind/M = H.mind
+		if(M && (real_name in M.known_people))
+			M.known_people[new_name] = M.known_people[real_name]
+			M.known_people.Remove(real_name)
 	real_name = new_name
 	SStreasury?.rename_account(src, new_name)
 
@@ -77,8 +82,6 @@
 	return
 
 /mob/living/carbon/human/IsAdvancedToolUser()
-	if(HAS_TRAIT(src, TRAIT_MONKEYLIKE))
-		return FALSE
 	return TRUE//Humans can use guns and such
 
 /mob/living/carbon/human/reagent_check(datum/reagent/R)
@@ -100,7 +103,7 @@
 		if(HAS_TRAIT(src, TRAIT_CHUNKYFINGERS) || HAS_TRAIT(src, TRAIT_GNARLYDIGITS))
 			to_chat(src, span_warning("My meaty finger is much too large for the trigger guard!"))
 			return FALSE
-	if(HAS_TRAIT(src, TRAIT_NOGUNS))
+	if(HAS_TRAIT(src, TRAIT_PACIFISM))
 		to_chat(src, span_warning("I can't bring myself to use a ranged weapon!"))
 		return FALSE
 

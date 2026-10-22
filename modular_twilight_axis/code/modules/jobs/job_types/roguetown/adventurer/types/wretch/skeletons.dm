@@ -10,19 +10,18 @@
 	tutorial = "You're a shkeleton! You already forgot how you got all these bones, but people fears you, they want to dig you down. Do it first."
 	outfit = /datum/outfit/job/roguetown/wretch/hero
 	allowed_sexes = list(MALE, FEMALE)
-	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED)
 	category_tags = list(CTAG_WRETCH)
 	class_select_category = CLASS_CAT_ACCURSED
 	cmode_music = "modular_twilight_axis/sound/music/combat_skeleton.ogg"
-	min_pq = 30
+	min_pq = 40
 	maximum_possible_slots = 2
-	extra_context = "You're a SKELETON, be ready to shackle your bones. Minimum PQ Required: 30"
+	extra_context = "You're a SKELETON, be ready to shackle your bones. Minimum PQ Required: 40"
 	traits_applied = list(
-		TRAIT_NOHUNGER, 
-		TRAIT_NOBREATH, 
-		TRAIT_NOPAIN, 
-		TRAIT_TOXIMMUNE, 
-		TRAIT_SHOCKIMMUNE, 
+		TRAIT_NOHUNGER,
+		TRAIT_NOBREATH,
+		TRAIT_NOPAIN,
+		TRAIT_TOXIMMUNE,
+		TRAIT_SHOCKIMMUNE,
 		TRAIT_SILVER_WEAK,
 		TRAIT_BREADY,
 	)
@@ -35,8 +34,10 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT
 	)
+	forbidden_races = list(RACES_DESPISED RACES_OOZE)
 
 /datum/outfit/job/roguetown/wretch/hero/proc/skelet(mob/living/carbon/human/H)
+	REMOVE_TRAITS_IN(H, SPECIES_TRAIT)
 	H.hairstyle = "Bald"
 	H.facial_hairstyle = "Shaved"
 	ADD_TRAIT(H, TRAIT_LIMBATTACHMENT, TRAIT_GENERIC)
@@ -140,7 +141,7 @@
 				/obj/item/twilight_powderflask = 1,
 				/obj/item/clothing/gloves/roguetown/knuckles/ancient = 1
 			)
-	
+
 	H.select_skeleton_features()
 
 /datum/outfit/job/roguetown/wretch/hero/post_equip(mob/living/carbon/human/H)

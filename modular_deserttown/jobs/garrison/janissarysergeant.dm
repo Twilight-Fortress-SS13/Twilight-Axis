@@ -21,7 +21,7 @@
 	give_bank_account = 50
 	min_pq = 8
 	max_pq = null
-	cmode_music = 'sound/music/combat_desert1.ogg'
+	cmode_music = sound("sound/music/combat_desert1.ogg")
 	job_traits = list(TRAIT_GUARDSMAN, TRAIT_STEELHEARTED, TRAIT_MEDIUMARMOR)
 	job_subclasses = list(
 		/datum/advclass/janissarysergeant/janissarysergeant
@@ -82,12 +82,12 @@
 /datum/outfit/job/roguetown/janissarysergeant/janissarysergeant/pre_equip(mob/living/carbon/human/H)
 	..()
 	if(H.mind)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/movemovemove)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/takeaim)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/onfeet)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/order/hold)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/order/movemovemove)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/order/takeaim)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/order/onfeet)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/order/hold)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/convertrole/guard)
-	H.verbs |= list(/mob/living/carbon/human/proc/request_outlaw, /mob/proc/haltyell, /mob/living/carbon/human/mind/proc/setorders)
+	add_verb(H, list(/mob/living/carbon/human/proc/request_outlaw, /mob/proc/haltyell, /mob/living/carbon/human/mind/proc/setorders))
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
 		/obj/item/rope/chain = 1,
@@ -127,7 +127,7 @@
 		if(player?.prefs)
 			if(SSmapping.config.map_name == "Desert Town")
 				if(!istype(player.prefs.virtue_origin, /datum/virtue/origin/raneshen) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/naledi) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/zybantian))
-					var/list/new_origins = list("Raneshen" = /datum/virtue/origin/raneshen, 
+					var/list/new_origins = list("Raneshen" = /datum/virtue/origin/raneshen,
 					"Naledi" = /datum/virtue/origin/naledi,
 					"Zybantu" = /datum/virtue/origin/zybantian)
 					var/new_origin
@@ -139,7 +139,7 @@
 						new_origin = pick(/datum/virtue/origin/raneshen, /datum/virtue/origin/naledi, /datum/virtue/origin/zybantian)
 					var/datum/virtue/origin/applied_origin = new new_origin()
 					player.prefs.virtue_origin = applied_origin
-					apply_virtue(H, applied_origin)				
+					apply_virtue(H, applied_origin)
 /obj/item/clothing/cloak/catcloak/jancap
 	name = "janissary sergeant's cloak"
 	desc = "A most handsome cloak, of royal red, denoting the authority of a leader."

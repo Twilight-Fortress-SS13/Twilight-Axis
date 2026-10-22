@@ -12,21 +12,14 @@
 
 // Early define slot and shared cross-module vampire hooks.
 #include "./vampires_defines.dm"
-
 #include "./overrides/vagabond_vampire.dm"
 #include "./overrides/clan_selection.dm"
 #include "./overrides/bloodsuck.dm"
 #include "./overrides/portal.dm"
 #include "./overrides/vampire_forms.dm"
 #include "./overrides/discipline_balance.dm"
-#include "./overrides/potence_costs.dm"
-#include "./overrides/celerity_costs.dm"
-#include "./overrides/quietus.dm"
-#include "./overrides/bloodacid_balance.dm"
-#include "./overrides/misc_balance.dm"
-#include "./overrides/presence_balance.dm"
-#include "./overrides/fae_balance.dm"
-#include "./overrides/siren_balance.dm"
+#include "./necromantic_coven.dm"
+#include "./bestial_coven.dm"
 #include "./ascended_covens.dm"
 #include "./coven_level_purchases.dm"
 #include "./crimson_crucible_ru_i18n.dm"
@@ -39,8 +32,9 @@
 #include "./overrides/transfix.dm"
 #include "./overrides/vampire.dm"
 #include "./overrides/vampire_lord_title.dm"
+#include "./overrides/vampire_lord_royal_ancestor.dm"
 #include "./overrides/crucible_access.dm"
 #include "./overrides/thinblood_restrictions.dm"
-
+#include "./overrides/obfuscate.dm"
 // Local defines
 #include "./TA_Vampires_uniclude.dm"

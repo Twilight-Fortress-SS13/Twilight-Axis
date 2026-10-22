@@ -2,17 +2,16 @@
 	name = "'Aristocratic boots' morphing elixer'"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Heavy Leather Boots"
 	target_items = list(
-		/obj/item/clothing/shoes/roguetown/boots/leather/reinforced = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced/aristocratic, 
+		/obj/item/clothing/shoes/roguetown/boots/leather/reinforced = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced/aristocratic,
 		/obj/item/clothing/shoes/roguetown/boots/nobleboot = /obj/item/clothing/shoes/roguetown/boots/nobleboot/aristocratic)
 	icon_loadout = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced/aristocratic
-
 
 //Kumie donator item - Aristocratic gloves
 /obj/item/enchantingkit/kumie_gloves
 	name = "'Aristocratic gloves' morphing elixer'"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Fingerless Leather Gloves"
 	target_items = list(
-		/obj/item/clothing/gloves/roguetown/fingerless_leather = /obj/item/clothing/gloves/roguetown/fingerless_leather/aristocratic, 
+		/obj/item/clothing/gloves/roguetown/fingerless_leather = /obj/item/clothing/gloves/roguetown/fingerless_leather/aristocratic,
 		/obj/item/clothing/gloves/roguetown/angle = /obj/item/clothing/gloves/roguetown/angle/aristocratic)
 	icon_loadout = /obj/item/clothing/gloves/roguetown/fingerless_leather/aristocratic
 
@@ -21,7 +20,7 @@
 	name = "'Aristocratic Shirt' morphing elixer'"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Gambeson"
 	target_items = list(
-		/obj/item/clothing/suit/roguetown/armor/gambeson = /obj/item/clothing/suit/roguetown/armor/gambeson/aristocratic, 
+		/obj/item/clothing/suit/roguetown/armor/gambeson = /obj/item/clothing/suit/roguetown/armor/gambeson/aristocratic,
 		/obj/item/clothing/suit/roguetown/armor/gambeson/heavy = /obj/item/clothing/suit/roguetown/armor/gambeson/aristocratic/heavy)
 	icon_loadout = /obj/item/clothing/suit/roguetown/armor/gambeson/aristocratic
 
@@ -81,17 +80,16 @@
 	name = "'Gold-Black silky dress morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Silky Dress"
 	target_items = list(/obj/item/clothing/suit/roguetown/shirt/dress/silkydress)
-	result_item = /obj/item/clothing/suit/roguetown/shirt/dress/silkydress/zydrasdress 
+	result_item = /obj/item/clothing/suit/roguetown/shirt/dress/silkydress/zydrasdress
 
 // Hammerhold
 /obj/item/enchantingkit/hammerhold_robe
 	name = "'Hammerhold Robe' morphing elixer'"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Hardened Leather Coat or Lightweight Brigandine"
 	target_items = list(
-		/obj/item/clothing/suit/roguetown/armor/gambeson = /obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/robe/light, 
+		/obj/item/clothing/suit/roguetown/armor/gambeson = /obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/robe/light,
 		/obj/item/clothing/suit/roguetown/armor/gambeson/heavy = /obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/robe/heavy)
 	icon_loadout = /obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/robe/heavy
-
 
 /obj/item/enchantingkit/hammerhold_coat
 	name = "'Hammerhold Mage Coat' morphing elixer'"
@@ -115,10 +113,10 @@
 	name = "'Sanguine Heels' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Heavy Leather Boots"
 	target_items = list(
-		/obj/item/clothing/shoes/roguetown/boots/leather/reinforced = /obj/item/clothing/shoes/courtphysician/female,
-		/obj/item/clothing/shoes/roguetown/boots/leather = /obj/item/clothing/shoes/courtphysician/female,
-		/obj/item/clothing/shoes/roguetown/boots/otavan = /obj/item/clothing/shoes/courtphysician/female)
-	icon_loadout = /obj/item/clothing/shoes/courtphysician/female
+		/obj/item/clothing/shoes/roguetown/boots/leather/reinforced = /obj/item/clothing/shoes/roguetown/courtphysician/female,
+		/obj/item/clothing/shoes/roguetown/boots/leather = /obj/item/clothing/shoes/roguetown/courtphysician/female,
+		/obj/item/clothing/shoes/roguetown/boots/otavan = /obj/item/clothing/shoes/roguetown/courtphysician/female)
+	icon_loadout = /obj/item/clothing/shoes/roguetown/courtphysician/female
 
 /obj/item/enchantingkit/sanguine_trousers
 	name = "'Sanguine Trousers' morphing elixir"
@@ -191,7 +189,6 @@
 	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of an Iron Sabre, a Steel Sabre, a Cutlass, or a Falchion."
 	target_items = list(
 		/obj/item/rogueweapon/sword/short/falchion,
-		/obj/item/rogueweapon/sword/saber/iron,
 		/obj/item/rogueweapon/sword/sabre,
 		/obj/item/rogueweapon/sword/cutlass
 		)
@@ -248,7 +245,183 @@
 	name = "'Wanderer's pants' morphing elixer'"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Leather Trousers, Splinted Chausses Or Brigandine Chausses"
 	target_items = list(
-		/obj/item/clothing/under/roguetown/trou/leather = /obj/item/clothing/under/roguetown/trou/leather/etrpants, 
+		/obj/item/clothing/under/roguetown/trou/leather = /obj/item/clothing/under/roguetown/trou/leather/etrpants,
 		/obj/item/clothing/under/roguetown/brigandinelegs = /obj/item/clothing/under/roguetown/trou/leather/etrpants,
 		/obj/item/clothing/under/roguetown/splintlegs = /obj/item/clothing/under/roguetown/trou/leather/etrpants)
 	icon_loadout = /obj/item/clothing/under/roguetown/trou/leather/etrpants
+
+/obj/item/rogueweapon/sword/rapier/aisu
+	base_implement_name = "crystalline rapier"
+	name = "crystalline rapier"
+	desc = "A crystalline rapier, born from a single tear and weeks of prayers and enchantments, Oh my guiding Moonlight!"
+	icon_state = "aisuwand"
+	icon = 'modular_twilight_axis/icons/obj/items/donor_weapons.dmi'
+
+// COMMANDANT SET START
+
+/obj/item/enchantingkit/commandant_helmet
+	name = "commandant's helmet morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Heavy Helmet."
+	target_items = list(/obj/item/clothing/head/roguetown/helmet/heavy)
+	result_item = /obj/item/clothing/head/roguetown/helmet/heavy/commandant
+	icon_loadout = /obj/item/clothing/head/roguetown/helmet/heavy/commandant
+
+/obj/item/enchantingkit/commandant_coat
+	name = "commandant's coat morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Hardened Leather Coat or Lightweight Brigandine."
+	target_items = list(
+		/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/commandant,
+		/obj/item/clothing/suit/roguetown/armor/brigandine/light = /obj/item/clothing/suit/roguetown/armor/brigandine/light/commandant,
+		/obj/item/clothing/suit/roguetown/armor/brigandine/light/retinue = /obj/item/clothing/suit/roguetown/armor/brigandine/light/commandant)
+	icon_loadout = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/commandant
+
+/obj/item/enchantingkit/commandant_pistol
+	name = "elegant pistol morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Arquebus Pistol."
+	target_items = list(
+		/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/commandant
+	)
+	icon_loadout = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/commandant
+
+/obj/item/enchantingkit/commandant_blade
+	name = "commandant's blade morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Rapier or Sabre."
+	target_items = list(
+		/obj/item/rogueweapon/sword/rapier = /obj/item/rogueweapon/sword/rapier/commandant,
+		/obj/item/rogueweapon/sword/sabre = /obj/item/rogueweapon/sword/sabre/commandant)
+	icon_loadout = /obj/item/rogueweapon/sword/rapier/commandant
+
+/obj/item/enchantingkit/commandant_blade/inherit_item_mechanics(obj/item/source_item, obj/item/result_item)
+	. = ..()
+	result_item.bigboy = FALSE
+
+/obj/item/enchantingkit/commandant_cane
+	name = "commandant's cane morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Any Sword Scabbard."
+	target_items = list(/obj/item/rogueweapon/scabbard/sword)
+	result_item = /obj/item/rogueweapon/scabbard/sword/commandant
+	icon_loadout = /obj/item/rogueweapon/scabbard/sword/commandant
+
+/obj/item/enchantingkit/commandant_cane/pre_attack(obj/item/I, mob/user)
+	if(can_morph_item(I) && length(I.contents))
+		to_chat(user, span_warning("The scabbard must be empty before it can be morphed."))
+		return TRUE
+	return ..()
+
+/obj/item/enchantingkit/commandant_cane/inherit_item_mechanics(obj/item/source_item, obj/item/result_item)
+	. = ..()
+	result_item.bigboy = FALSE
+
+// COMMANDANT SET END
+
+/obj/item/enchantingkit/crowcane_blade
+	name = "'Crow Cane Blade' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Decorated Rapier or Decorated Sabre."
+	target_items = list(
+		/obj/item/rogueweapon/sword/rapier/dec = /obj/item/rogueweapon/sword/rapier/crowcane,
+		/obj/item/rogueweapon/sword/sabre/dec = /obj/item/rogueweapon/sword/sabre/crowcane)
+	exact_type = TRUE
+	icon_loadout = /obj/item/rogueweapon/sword/rapier/crowcane
+
+/obj/item/enchantingkit/crowcane_blade/inherit_item_mechanics(obj/item/source_item, obj/item/result_item)
+	. = ..()
+	result_item.bigboy = FALSE
+
+/obj/item/enchantingkit/crowcane_scabbard
+	name = "'Crow Cane Scabbard' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Decorated Scabbard, Golden."
+	target_items = list(/obj/item/rogueweapon/scabbard/sword/royal)
+	result_item = /obj/item/rogueweapon/scabbard/sword/crowcane
+	exact_type = TRUE
+	icon_loadout = /obj/item/rogueweapon/scabbard/sword/crowcane
+
+/obj/item/enchantingkit/crowcane_scabbard/pre_attack(obj/item/I, mob/user)
+	if(can_morph_item(I) && length(I.contents))
+		to_chat(user, span_warning("The scabbard must be empty before it can be morphed."))
+		return TRUE
+	return ..()
+
+/obj/item/enchantingkit/crowcane_scabbard/inherit_item_mechanics(obj/item/source_item, obj/item/result_item)
+	. = ..()
+	result_item.bigboy = FALSE
+
+/obj/item/enchantingkit/jezail
+	name = "'Jezail' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Arquebus, Hakenbüchse, or Barker."
+	target_items = list(
+		/obj/item/gun/ballistic/twilight_firearm/arquebus = /obj/item/gun/ballistic/twilight_firearm/arquebus/jezail,
+		/obj/item/gun/ballistic/twilight_firearm/flintgonne = /obj/item/gun/ballistic/twilight_firearm/flintgonne/jezail,
+		/obj/item/gun/ballistic/twilight_firearm/barker = /obj/item/gun/ballistic/twilight_firearm/barker/jezail)
+	exact_type = TRUE
+	icon_loadout = /obj/item/gun/ballistic/twilight_firearm/arquebus/jezail
+
+/obj/item/enchantingkit/teppo
+	name = "'Teppo' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Arquebus, Hakenbüchse, or Barker."
+	target_items = list(
+		/obj/item/gun/ballistic/twilight_firearm/arquebus = /obj/item/gun/ballistic/twilight_firearm/arquebus/teppo,
+		/obj/item/gun/ballistic/twilight_firearm/flintgonne = /obj/item/gun/ballistic/twilight_firearm/flintgonne/teppo,
+		/obj/item/gun/ballistic/twilight_firearm/barker = /obj/item/gun/ballistic/twilight_firearm/barker/teppo)
+	exact_type = TRUE
+	icon_loadout = /obj/item/gun/ballistic/twilight_firearm/arquebus/teppo
+
+/obj/item/enchantingkit/donator_overseer_gold_mask
+	name = "'Golden Confessor Mask' morphing elixir"
+	desc = "A small container of special morphing dust. It can be used to alter the appearance of any armor mask."
+	target_items = list(/obj/item/clothing/mask/rogue/facemask)
+	result_item = /obj/item/clothing/mask/rogue/overseer_gold
+
+/obj/item/enchantingkit/donator_overseer_silver_mask
+	name = "'Silver Confessor Mask' morphing elixir"
+	desc = "A small container of special morphing dust. It can be used to alter the appearance of any armor mask."
+	target_items = list(/obj/item/clothing/mask/rogue/facemask)
+	result_item = /obj/item/clothing/mask/rogue/overseer_silver
+
+/obj/item/enchantingkit/hussar_protective_coat
+	name = "hussar protective coat morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Hardened Leather Coat."
+	target_items = list(
+		/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/hussar)
+	icon_loadout = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/hussar
+
+/obj/item/enchantingkit/hussar_shirt
+	name = "hussar shirt morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Gambeson or Padded Gambeson."
+	target_items = list(
+		/obj/item/clothing/suit/roguetown/armor/gambeson = /obj/item/clothing/suit/roguetown/armor/gambeson/hussar,
+		/obj/item/clothing/suit/roguetown/armor/gambeson/heavy = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hussar)
+	icon_loadout = /obj/item/clothing/suit/roguetown/armor/gambeson/hussar
+
+/obj/item/enchantingkit/hussar_breeches
+	name = "hussar breeches morphing elixir"
+	desc = "A small container of special morphing dust. Required: Brigandine Chausses or Hardened Leather Trousers."
+	target_items = list(
+		/obj/item/clothing/under/roguetown/brigandinelegs = /obj/item/clothing/under/roguetown/trou/leather/hussar,
+		/obj/item/clothing/under/roguetown/heavy_leather_pants = /obj/item/clothing/under/roguetown/trou/leather/hussar)
+	icon_loadout = /obj/item/clothing/under/roguetown/trou/leather/hussar
+
+/obj/item/enchantingkit/hussar_pistol
+	name = "hussar pistol morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Arquebus Pistol."
+	target_items = list(
+		/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/hussar)
+	icon_loadout = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/hussar
+
+/obj/item/enchantingkit/hussar_sabre
+	name = "hussar officer's sabre morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Longsword or Sabre."
+	target_items = list(
+		/obj/item/rogueweapon/sword/long = /obj/item/rogueweapon/sword/sabre/hussar,
+		/obj/item/rogueweapon/sword/sabre = /obj/item/rogueweapon/sword/sabre/hussar)
+	icon_loadout = /obj/item/rogueweapon/sword/sabre/hussar
+
+/obj/item/enchantingkit/hussar_sabre/inherit_item_mechanics(obj/item/source_item, obj/item/result_item)
+	. = ..()
+	result_item.bigboy = FALSE
+	result_item.gripsprite = FALSE
+	result_item.experimental_inhand = TRUE
+	result_item.experimental_onhip = FALSE
+	result_item.experimental_onback = TRUE
+	result_item.pixel_x = 0
+	result_item.pixel_y = 0
+	result_item.dropshrink = null

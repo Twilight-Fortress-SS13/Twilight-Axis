@@ -1,5 +1,6 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/infernal/hellhound
+	anatomy_type = /datum/anatomy/quadruped/standard/hellhound
 	threat_point = THREAT_MODERATE
 	icon = 'icons/mob/summonable/32x32.dmi'
 	name = "hell hound"
@@ -17,15 +18,15 @@
 	turns_per_move = 6
 	see_in_dark = 6
 	move_to_delay = 3
-	base_intents = list(/datum/intent/simple/bite)
+	base_intents = list(/datum/intent/simple/bite/hellhound)
 	butcher_results = list()
 	death_loot = list(/obj/item/magic/infernal/fang = 2)
 	faction = list(FACTION_INFERNAL)
 	mob_biotypes = MOB_ORGANIC|MOB_BEAST
 	health = 270
 	maxHealth = 270
-	melee_damage_lower = 15
-	melee_damage_upper = 17
+	melee_damage_lower = 22
+	melee_damage_upper = 32
 	vision_range = 7
 	aggro_vision_range = 9
 	environment_smash = ENVIRONMENT_SMASH_STRUCTURES
@@ -40,7 +41,6 @@
 	STASPD = 13
 	simple_detect_bonus = 20
 	deaggroprob = 0
-	defprob = 40
 	candodge = TRUE
 	// del_on_deaggro = 44 SECONDS
 	retreat_health = 0
@@ -48,11 +48,12 @@
 	attack_sound = list('sound/vo/mobs/vw/attack (1).ogg','sound/vo/mobs/vw/attack (2).ogg','sound/vo/mobs/vw/attack (3).ogg','sound/vo/mobs/vw/attack (4).ogg')
 	dodgetime = 30
 	aggressive = 1
-	var/flame_cd
 
-/mob/living/simple_animal/hostile/retaliate/rogue/infernal/hellhound/Initialize()
-	. = ..()
-	ADD_TRAIT(src, TRAIT_SILVER_WEAK, TRAIT_GENERIC)
+	ai_controller = /datum/ai_controller/infernal
+	move_base_delay = MOVEMENT_DELAY_SPD_17
+
+	var/scorch_cooldown = 10 SECONDS
+	var/next_scorch = 0
 
 /mob/living/simple_animal/hostile/retaliate/rogue/infernal/hellhound/death(gibbed)
 	..()
@@ -60,20 +61,16 @@
 	spill_embedded_objects()
 	qdel(src)
 
-
 /mob/living/simple_animal/hostile/retaliate/rogue/infernal/hellhound/AttackingTarget()
-	if(SEND_SIGNAL(src, COMSIG_HOSTILE_PRE_ATTACKINGTARGET, target) & COMPONENT_HOSTILE_NO_PREATTACK)
-		return FALSE //but more importantly return before attack_animal called
-	SEND_SIGNAL(src, COMSIG_HOSTILE_ATTACKINGTARGET, target)
-	in_melee = TRUE
-	if(!target)
+	. = ..()
+	if(!. || !isliving(target) || world.time < next_scorch)
 		return
-	if(world.time >= src.flame_cd + 100)
-		var/mob/living/targetted = target
-		if(!isliving(target))
-			return
-		apply_scorch_stack(targetted, 1)
-		targetted.visible_message(span_danger("[src] sears [target] with hellfire!"))
-		src.flame_cd = world.time
-	if(!QDELETED(target))
-		return target.attack_animal(src)
+	if(BODY_ZONE_HEAD in broken_parts)
+		return
+	next_scorch = world.time + scorch_cooldown
+	var/mob/living/seared = target
+	apply_scorch_stack(seared, 1)
+	seared.visible_message(span_danger("[src] sears [seared] with hellfire!"))
+
+/datum/intent/simple/bite/hellhound
+	clickcd = HELLHOUND_ATTACK_SPEED

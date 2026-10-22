@@ -2,7 +2,7 @@
 	name = "Harlequin"
 	tutorial = "You are a travelling entertainer - a jester by trade. Where you go, chaos follows - and mischief is made."
 	outfit = /datum/outfit/job/roguetown/adventurer/harlequin
-	cmode_music = 'sound/music/combat_jester.ogg'
+	cmode_music = sound("sound/music/combat_jester.ogg")
 	traits_applied = list(TRAIT_NUTCRACKER, TRAIT_HOMESTEAD_EXPERT)
 	class_select_category = CLASS_CAT_TRADER
 	category_tags = list(CTAG_TRADER, CTAG_COURTAGENT, CTAG_LICKER_WRETCH)
@@ -37,7 +37,7 @@
 	backpack_contents = list(
 		/obj/item/bomb/smoke = 3,
 		/obj/item/storage/pill_bottle/dice = 1,
-		/obj/item/toy/cards/deck = 1,
+		/obj/item/deck/playing_cards = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1
 		)
 	if(H.mind)

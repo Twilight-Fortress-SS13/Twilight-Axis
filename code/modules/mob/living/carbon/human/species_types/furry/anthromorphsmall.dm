@@ -52,6 +52,7 @@
 		ORGAN_SLOT_LIVER = /obj/item/organ/liver,
 		ORGAN_SLOT_STOMACH = /obj/item/organ/stomach,
 		ORGAN_SLOT_APPENDIX = /obj/item/organ/appendix,
+		ORGAN_SLOT_GUTS = /obj/item/organ/guts,
 		//ORGAN_SLOT_TESTICLES = /obj/item/organ/testicles,
 		//ORGAN_SLOT_PENIS = /obj/item/organ/penis/tapered,
 		//ORGAN_SLOT_BREASTS = /obj/item/organ/breasts,
@@ -70,18 +71,20 @@
 		/datum/customizer/bodypart_feature/underwear,
 		/datum/customizer/bodypart_feature/legwear,
 		/datum/customizer/bodypart_feature/piercing,
+		/datum/customizer/organ/wings/anthro,
 		/datum/customizer/organ/tail/anthro,
 		/datum/customizer/organ/tail_feature/anthro,
 		/datum/customizer/organ/snout/anthrosmall,
 		/datum/customizer/organ/ears/anthro,
 		/datum/customizer/organ/horns/anthro,
 		/datum/customizer/organ/frills/anthro,
-		/datum/customizer/organ/wings/anthro,
 		/datum/customizer/organ/neck_feature/anthro,
 		/datum/customizer/organ/testicles/anthro,
 		/datum/customizer/organ/penis/anthro,
 		/datum/customizer/organ/breasts/animal,
 		/datum/customizer/organ/vagina/anthro,
+		/datum/customizer/bodypart_feature/pubes,
+		/datum/customizer/bodypart_feature/pits,
 		)
 	body_marking_sets = list(
 		/datum/body_marking_set/none,
@@ -121,14 +124,6 @@
 		/datum/descriptor_choice/prominent_three_wild,
 		/datum/descriptor_choice/prominent_four_wild,
 	)
-
-/datum/species/anthromorphsmall/on_species_gain(mob/living/carbon/C, datum/species/old_species)
-	..()
-	RegisterSignal(C, COMSIG_MOB_SAY, PROC_REF(handle_speech))
-
-/datum/species/anthromorphsmall/on_species_loss(mob/living/carbon/C)
-	. = ..()
-	UnregisterSignal(C, COMSIG_MOB_SAY)
 
 /datum/species/anthromorphsmall/check_roundstart_eligible()
 	return TRUE

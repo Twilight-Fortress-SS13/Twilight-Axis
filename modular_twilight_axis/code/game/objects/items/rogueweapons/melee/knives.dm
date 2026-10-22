@@ -157,12 +157,12 @@
 
 /obj/item/rogueweapon/huntingknife/idagger/steel/baotha/proc/on_hit_effects(obj/item/source, mob/living/user, obj/item/bodypart/affecting, intent, mob/living/victim, selzone)
 	SIGNAL_HANDLER
-	
+
 	if(!istype(victim, /mob/living/carbon))
 		return
 
 	var/mob/living/carbon/human/target = victim
-	var/drug = /datum/reagent/neurotoxin 
+	var/drug = /datum/reagent/neurotoxin
 	var/selected_hallucination = pick(list(
 		"Is this TRVE??", "IDDQD", "DAFUQ?", "I am NOT meant to see this.",
 		"What... WHAT is this?", "This doesn't make SENSE.", "I don't UNDERSTAND.",
@@ -210,7 +210,7 @@
 	harmful = TRUE
 
 /datum/reagent/neurotoxin/on_mob_life(mob/living/carbon/M)
-	var/amt = volume 
+	var/amt = volume
 
 	if(amt >= 8)
 		if(prob(30))
@@ -240,3 +240,7 @@
 			to_chat(M, span_warning("Agh.. I feel weak in my body.."))
 
 	return ..()
+
+/obj/item/rogueweapon/huntingknife/idagger/silver/elvish/bandit
+	sellprice = 0
+	smeltresult = null

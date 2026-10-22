@@ -2,7 +2,7 @@
 	name = "Resting Rhapsody"
 	desc = "Recuperate your allies' spirits with your song! Refills stamina over time!"
 	button_icon_state = "melody_t2_base"
-	invocations = list("plays a gentle-yet-refreshing tune. The nearby air clears.")
+	invocations = list("%CASTER plays a gentle-yet-refreshing tune. The nearby air clears.")
 	song_effect = /datum/status_effect/buff/playing_melody/recovery
 
 /datum/status_effect/buff/playing_melody/recovery
@@ -16,7 +16,7 @@
 	icon_state = "buff"
 
 /datum/status_effect/buff/song/recovery
-	id = "recoverysong"
+	id = "recovery_song"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/song/recovery
 	duration = 15 SECONDS
 	var/stamina_recovery = -4 // Lesser bard (66% of 6)

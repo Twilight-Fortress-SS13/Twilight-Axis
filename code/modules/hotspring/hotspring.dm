@@ -33,7 +33,7 @@
 
 	var/obj/effect/abstract/particle_holder/cached/particle_effect
 
-/obj/structure/hotspring/Initialize()
+/obj/structure/hotspring/Initialize(mapload)
 	. = ..()
 	particle_effect = new(src, /particles/hotspring_steam, 6)
 	//render the steam over mobs and objects on the game plane
@@ -79,6 +79,7 @@
 			if(do_after(L, 3 SECONDS, target = src))
 				wash_atom(user, CLEAN_STRONG)
 				user.remove_stress(/datum/stressevent/sewertouched)
+				user.remove_stress(/datum/stressevent/unlanded_noble_bloody_equipment)
 				playsound(user, pick(wash), 100, FALSE)
 		else
 			user.visible_message(span_info("[user] starts to wash [item2wash] in [src]."))

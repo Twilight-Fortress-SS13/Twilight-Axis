@@ -7,7 +7,7 @@
 	miracles = list(/datum/action/cooldown/spell/touch/orison					= CLERIC_ORI,
 					/obj/effect/proc_holder/spell/invoked/diagnose				= CLERIC_ORI,
 					/obj/effect/proc_holder/spell/invoked/pestra_leech			= CLERIC_T0,
-					/datum/action/cooldown/spell/miracle/heal 					= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/heal					= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/bloodmiracle			= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/infestation			= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/pestilent_blade		= CLERIC_T2,
@@ -15,6 +15,7 @@
 					/obj/effect/proc_holder/spell/invoked/attach_bodypart		= CLERIC_T2,
 					/datum/action/cooldown/spell/miracle/fortify				= CLERIC_T3,
 					/obj/effect/proc_holder/spell/invoked/cure_rot				= CLERIC_T3,
+					/obj/effect/proc_holder/spell/invoked/fleshcraft			= CLERIC_T3,
 					/obj/effect/proc_holder/spell/invoked/resurrect/pestra		= CLERIC_T4,
 	)
 	confess_lines = list(
@@ -55,12 +56,12 @@
 	return FALSE
 
 /datum/patron/divine/pestra/on_lesser_heal(
-    mob/living/user,
-    mob/living/target,
-    message_out,
-    message_self,
-    conditional_buff,
-    situational_bonus
+	mob/living/user,
+	mob/living/target,
+	message_out,
+	message_self,
+	conditional_buff,
+	situational_bonus
 )
 	*message_out = span_info("An aura of clinical care encompasses [target]!")
 	*message_self = span_notice("I'm sewn back together by sacred medicine!")

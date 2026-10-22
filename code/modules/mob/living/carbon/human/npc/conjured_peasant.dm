@@ -4,11 +4,9 @@
 	faction = list(FACTION_NEUTRAL)
 	dodgetime = 25
 	var/loadout = "pitchfork"
-	var/arcane_scale = 3
-	var/gear_tier = 1
 	var/datum/weakref/summoner_ref
 
-/mob/living/carbon/human/species/human/northern/conjured_peasant/Initialize()
+/mob/living/carbon/human/species/human/northern/conjured_peasant/Initialize(mapload)
 	. = ..()
 	set_species(/datum/species/human/northern)
 	gender = pick(MALE, FEMALE)
@@ -19,8 +17,10 @@
 	if(!outfit)
 		return
 	equipOutfit(outfit)
-	for(var/obj/item/gear in (get_equipped_items() + held_items))
-		ADD_TRAIT(gear, TRAIT_NODROP, TRAIT_GENERIC)
+	for(var/obj/item/equipped_item in get_equipped_items() + held_items)
+		equipped_item.AddComponent(/datum/component/item_on_drop/dust)
+	for(var/obj/item/held_item in held_items)
+		ADD_TRAIT(held_item, TRAIT_NODROP, TRAIT_GENERIC)
 
 /mob/living/carbon/human/species/human/northern/conjured_peasant/Destroy()
 	release_conjured_gear()
@@ -77,15 +77,15 @@
 	H.STAPER = 10
 	H.STAINT = 10
 	H.STALUC = 10
-	H.adjust_skillrank(/datum/skill/combat/swords, SKILL_LEVEL_APPRENTICE, TRUE)
-	H.adjust_skillrank(/datum/skill/combat/polearms, SKILL_LEVEL_APPRENTICE, TRUE)
-	H.adjust_skillrank(/datum/skill/combat/axes, SKILL_LEVEL_APPRENTICE, TRUE)
-	H.adjust_skillrank(/datum/skill/combat/whipsflails, SKILL_LEVEL_APPRENTICE, TRUE)
-	H.adjust_skillrank(/datum/skill/combat/maces, SKILL_LEVEL_APPRENTICE, TRUE)
-	H.adjust_skillrank(/datum/skill/combat/unarmed, SKILL_LEVEL_APPRENTICE, TRUE)
-	H.adjust_skillrank(/datum/skill/combat/wrestling, SKILL_LEVEL_APPRENTICE, TRUE)
-	H.adjust_skillrank(/datum/skill/misc/swimming, 3, TRUE)
-	H.adjust_skillrank(/datum/skill/misc/climbing, 3, TRUE)
+	H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_APPRENTICE, TRUE)
+	H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_APPRENTICE, TRUE)
+	H.adjust_skillrank_up_to(/datum/skill/combat/axes, SKILL_LEVEL_APPRENTICE, TRUE)
+	H.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, SKILL_LEVEL_APPRENTICE, TRUE)
+	H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_APPRENTICE, TRUE)
+	H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, SKILL_LEVEL_APPRENTICE, TRUE)
+	H.adjust_skillrank_up_to(/datum/skill/combat/wrestling, SKILL_LEVEL_APPRENTICE, TRUE)
+	H.adjust_skillrank_up_to(/datum/skill/misc/swimming, SKILL_LEVEL_JOURNEYMAN, TRUE)
+	H.adjust_skillrank_up_to(/datum/skill/misc/climbing, SKILL_LEVEL_JOURNEYMAN, TRUE)
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson
 	head = /obj/item/clothing/head/roguetown/helmet/kettle/iron
 	neck = /obj/item/clothing/neck/roguetown/coif

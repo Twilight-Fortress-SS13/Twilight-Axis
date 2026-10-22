@@ -1,6 +1,6 @@
 /mob/living/carbon/human/say_mod(input, message_mode)
 	verb_say = dna.species.say_mod
-	if(slurring)
+	if(slurring || feigning_impairment) // TA EDIT
 		return "slurs"
 	else
 		. = ..()
@@ -53,7 +53,7 @@
 
 	return 0
 
-/mob/living/carbon/human/get_alt_name(var/force = FALSE)
+/mob/living/carbon/human/get_alt_name(force = FALSE)
 	if(force || name != GetVoice())
 		var/datum/mob_descriptor/voice/voice_descriptor = get_descriptor_type(/datum/mob_descriptor/voice)
 		if(!voice_descriptor || (HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS) && !show_descriptors))

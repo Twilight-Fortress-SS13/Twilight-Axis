@@ -1,6 +1,4 @@
-// Roundstart bandit slots are a flat per-gamemode cap - NO population scaling. High Intensity opens 6 slots,
-// Tempered Intensity opens 4. The full cap is opened at roundstart even if not every seat fills (see
-// get_antag_amount / start in events/antagonist/solo/bandits.dm). Bandits still need HARD_ANTAG_MIN_POP to roll.
+// Roundstart bandit slots use flat caps per gamemode without population scaling.
 /datum/antagonist/bandit
 	name = "Bandit"
 	roundend_category = "bandits"
@@ -19,11 +17,12 @@
 	override_candidatereq = TRUE
 	storyteller_min_players = CHARACTER_INJECTION_MIN_POP
 	storyteller_slot_scaling = 1	// unused: bandits use a flat cap, not storyteller_scale_slots
-	storyteller_slot_default_cap = 2
+	storyteller_slot_default_cap = 4 // TA EDIT START
 	storyteller_maxcaps = list(
-		/datum/storyteller/gamemode/guaranteed_antag = 6,			// High Intensity
-		/datum/storyteller/gamemode/guaranteed_antag/low_wretch = 4,	// Tempered Intensity
-	)
+		/datum/storyteller/gamemode/guaranteed_antag = 8,			// High Intensity
+		/datum/storyteller/gamemode/guaranteed_antag/low_wretch = 6,	// Tempered Intensity
+		/datum/storyteller/gamemode/no_antag = 5,
+	) // TA EDIT END
 	var/favor = 150
 	var/totaldonated = 0
 
@@ -82,6 +81,6 @@
 			var/mob/living/carbon/human/H = owner.current
 			the_name = H.real_name
 		if(!totaldonated)
-			to_chat(world, "[the_name] was a bandit.")
+			to_world("[the_name] was a bandit.")
 		else
-			to_chat(world, "[the_name] was a bandit. Their band stole [totaldonated] mammons worth of loot!")
+			to_world("[the_name] was a bandit. Their band stole [totaldonated] mammons worth of loot!")

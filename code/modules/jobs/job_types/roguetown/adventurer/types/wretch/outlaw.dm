@@ -4,7 +4,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 
 	outfit = /datum/outfit/job/roguetown/wretch/outlaw
-	cmode_music = 'sound/music/cmode/antag/combat_cutpurse.ogg'
+	cmode_music = sound("sound/music/cmode/antag/combat_cutpurse.ogg")
 	class_select_category = CLASS_CAT_ROGUE
 	category_tags = list(CTAG_WRETCH)
 	subclass_languages = list(/datum/language/thievescant)
@@ -33,8 +33,9 @@
 		/datum/skill/craft/traps = SKILL_LEVEL_MASTER,
 	)
 	subclass_stashed_items = list(
-        "Sewing Kit" =  /obj/item/repair_kit,
-    )
+		"Sewing Kit" =	/obj/item/repair_kit,
+		"Stashed Funds" = /obj/item/roguecoin/silver/pile/wretchpile,
+	)
 
 /datum/outfit/job/roguetown/wretch/outlaw/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -99,7 +100,6 @@
 				ADD_TRAIT(H, TRAIT_DARKVISION, TRAIT_GENERIC)
 			if("Master-Tracker")
 				H.adjust_skillrank_up_to(/datum/skill/misc/tracking, SKILL_LEVEL_LEGENDARY, TRUE)
-				ADD_TRAIT(H, TRAIT_SLEUTH, TRAIT_GENERIC)
 				ADD_TRAIT(H, TRAIT_PERFECT_TRACKER, TRAIT_GENERIC)
 			if("Dualist")//Yes the typo is intentional
 				ADD_TRAIT(H, TRAIT_DUALWIELDER, TRAIT_GENERIC)

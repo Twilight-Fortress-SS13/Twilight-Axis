@@ -124,7 +124,7 @@
 			shaken.apply_effect(5 SECONDS, EFFECT_IMMOBILIZE, 0)
 			show_visible_message_TA(shaken, null, "The ground quakes but I manage to keep my footing.")
 		else
-			shaken.apply_effect(5 SECONDS, EFFECT_KNOCKDOWN, 0)		
+			shaken.apply_effect(5 SECONDS, EFFECT_KNOCKDOWN, 0)
 			show_visible_message_TA(shaken, null, "The ground quakes, making me fall over.")
 	for (var/obj/structure/damaged in view(radius, fallzone))
 		if(!istype(damaged, /obj/structure/flora/newbranch))
@@ -207,7 +207,7 @@
             if(target.get_item_by_slot(SLOT_ARMOR))
                 target_item = target.get_item_by_slot(SLOT_ARMOR)
             else if (target.get_item_by_slot(SLOT_SHIRT))
-                target_item = target.get_item_by_slot(SLOT_SHIRT)    
+                target_item = target.get_item_by_slot(SLOT_SHIRT)
         if (BODY_ZONE_PRECISE_NECK)
             target_item = target.get_item_by_slot(SLOT_NECK)
         if (BODY_ZONE_PRECISE_R_EYE)
@@ -268,7 +268,7 @@
 	var/obj/item/armor = target.get_item_by_slot(SLOT_ARMOR)
 	var/obj/item/shirt = target.get_item_by_slot(SLOT_SHIRT)
 	var/armor_can_heat = armor && armor.smeltresult && armor.smeltresult != /obj/item/ash
-	var/shirt_can_heat = shirt && shirt.smeltresult && shirt.smeltresult != /obj/item/ash // Full damage if no shirt 
+	var/shirt_can_heat = shirt && shirt.smeltresult && shirt.smeltresult != /obj/item/ash // Full damage if no shirt
 	var/damage_to_apply = 20 // How much damage should your armor burning you should do.
 	if (user.zone_selected == BODY_ZONE_CHEST)
 		if (armor_can_heat && (!shirt_can_heat && shirt))
@@ -301,7 +301,7 @@
 	. = ..()
 	var/const/starminatoregen = 500 // How much stamina should the spell give back to the caster.
 	var/mob/target = targets[1]
-	if (!iscarbon(target)) 
+	if (!iscarbon(target))
 		return
 	if (target == user)
 		target.energy_add(starminatoregen)
@@ -314,103 +314,94 @@
 /obj/effect/proc_holder/spell/invoked/TAcraftercovenant/cast(list/targets, mob/user = usr)
 	. = ..()
 	var/tithe = 0
-	var/list/doable[][] = list()
-	var/const/divine_tax = 2 // Multiplier used to adjust the price that should be paid.
-	var/buyprice = 0
-	var/turf/altar
+	var/const/divine_tax = 1.3
+	var/turf/altar = get_turf(targets[1])
 	var/datum/effect_system/spark_spread/sparks = new()
-	altar = get_turf(targets[1])
-	if(!altar)
-		return
-	for (var/obj/item/sacrifice in altar.contents)
-	{
-		if (istype(sacrifice, /obj/item/roguecoin/))
-			var/obj/item/roguecoin/coincrifice = sacrifice
-			tithe += (coincrifice.quantity * coincrifice.sellprice)
-		else if (istype(sacrifice, /obj/item/roguestatue/) || istype(sacrifice, /obj/item/clothing/ring/) || istype(sacrifice, /obj/item/roguegem/))
-			tithe += sacrifice.sellprice
-		qdel(sacrifice)
-	}
-	buyprice = tithe / divine_tax
-	for (var/list/entry in anvil_recipe_prices_TA)
-	{
-		var/obj/item/tentative_item = entry[1] // The recipe
-		var/total_sellprice = entry[2] // The precompiled material price
-		if (total_sellprice <= buyprice)
-			var/obj/itemtorecord = tentative_item
-			doable += list(list(itemtorecord.name, itemtorecord))
-	}
-	if (!doable.len)
-		show_visible_message_TA(usr, "A wave of heat washes over the pile as [user] speaks Malum's name. The pile of valuables crumble into dust.", "A wave of heat washes over the pile as you speak Malum's name. The pile of valuables crumble into dust. Malum accepted your sacrifice. Yet it seems it wasn't enough.")
-		return
-	var/list/doablename = list()
+	var/list/sacrifices = list()
 	var/list/item_map = list()
-	for (var/list/doableextract in doable)
-	{
-		doablename += list(doableextract[1])
-		item_map[doableextract[1]] = doableextract[2]
-	}
-	var/itemchoice = input(user, "Choose your boon", "Available boons") in (doablename)
-	if (itemchoice)
-		var/obj/item/itemtospawn = item_map[itemchoice]
-		if (itemtospawn)
-			new itemtospawn.type(altar)
-			sparks.set_up(1, 1, altar)
-			sparks.start()
-			show_visible_message_TA(usr, "A wave of heat washes over the pile as [user] speaks Malum's name. The pile of valuables crumble into dust, only for the dust to reform into an item as if reborn from the flames. Malum has accepted the offering.", "A wave of heat washes over the pile as you speak Malum's name. The pile of valuables crumble into dust, only for the dust to reform into an item as if reborn from the flames. Malum has accepted the offering.")
+	var/list/item_descriptions = list()
+	if(!altar)
+		revert_cast(user)
+		return
 
-var/global/list/anvil_recipe_prices_TA[][]
-/proc/add_recipe_to_global_TA(var/datum/anvil_recipe/recipe)
-	var/total_sellprice = 0
-	var/obj/item/ingot/bar = recipe.req_bar
-	var/obj/item/itemtosend = null
-	if (bar)
-		total_sellprice += bar.sellprice
-		itemtosend = recipe.created_item
-	if (recipe.additional_items)
-		for (var/obj/additional_item in recipe.additional_items)
-			total_sellprice += additional_item.sellprice
-	if (istype(recipe.created_item, /list))
-		var/list/itemlist = recipe.created_item
-		total_sellprice = total_sellprice/itemlist.len
-		itemtosend = itemlist[1]
-	if (!istype(recipe.created_item, /list))
-		itemtosend = recipe.created_item
-	if (total_sellprice > 0)
-		global.anvil_recipe_prices_TA += list(list(itemtosend, total_sellprice))
+	for(var/obj/item/sacrifice in altar.contents)
+		var/value = sacrifice.get_real_price()
+		if(value <= 0)
+			continue
+		tithe += value
+		sacrifices += sacrifice
 
-/proc/initialize_anvil_recipe_prices_TA()
-	for (var/datum/anvil_recipe/armor/recipe)
-	{
-		add_recipe_to_global_TA(recipe)
-	}
-	for (var/datum/anvil_recipe/tools/recipe)
-	{
-		add_recipe_to_global_TA(recipe)
-	}
-	for (var/datum/anvil_recipe/weapons/recipe)
-	{
-		add_recipe_to_global_TA(recipe)
-	}
-	global.anvil_recipe_prices_TA += list(list(new /obj/item/rogue/instrument/flute, 10))
-	global.anvil_recipe_prices_TA += list(list(new /obj/item/rogue/instrument/drum, 10))
-	global.anvil_recipe_prices_TA += list(list(new /obj/item/rogue/instrument/harp, 20))
-	global.anvil_recipe_prices_TA += list(list(new /obj/item/rogue/instrument/lute, 20))
-	global.anvil_recipe_prices_TA += list(list(new /obj/item/rogue/instrument/guitar, 30))
-	global.anvil_recipe_prices_TA += list(list(new /obj/item/rogue/instrument/accord, 30))
-	global.anvil_recipe_prices_TA += list(list(new /obj/item/riddleofsteel, 400))
-	global.anvil_recipe_prices_TA += list(list(new /obj/item/dmusicbox, 500))
-	// Add any other recipe types if needed
+	var/buyprice = tithe / divine_tax
 
-/world/New()
-	..()
-	initialize_anvil_recipe_prices_TA() // Precompute recipe prices on startup
+	for(var/datum/anvil_recipe/recipe as anything in GLOB.anvil_recipes)
+		if(recipe.hides_from_books || !recipe.created_item)
+			continue
+		var/item_type = recipe.created_item
+		if(!ispath(item_type, /obj/item))
+			continue
+		var/reward_price = GLOB.derived_sellprices[item_type]
+		if(!reward_price || reward_price > buyprice)
+			continue
+		var/obj/item/item_path = item_type
+		var/item_name = initial(item_path.name)
+		if(!item_name)
+			continue
+		var/display_name = "[item_name] ([reward_price])"
+		item_map[display_name] = item_type
+		item_descriptions[display_name] = "Cost: [reward_price] mammon."
+
+	var/list/extra_rewards = list(
+		/obj/item/rogue/instrument/flute = 10,
+		/obj/item/rogue/instrument/drum = 10,
+		/obj/item/rogue/instrument/harp = 20,
+		/obj/item/rogue/instrument/lute = 20,
+		/obj/item/rogue/instrument/guitar = 30,
+		/obj/item/rogue/instrument/accord = 30,
+		/obj/item/riddleofsteel = 400,
+		/obj/item/dmusicbox = 500,
+	)
+
+	for(var/item_type in extra_rewards)
+		var/reward_price = GLOB.derived_sellprices[item_type] || extra_rewards[item_type]
+		if(reward_price > buyprice)
+			continue
+		var/obj/item/item_path = item_type
+		var/item_name = initial(item_path.name)
+		if(!item_name)
+			continue
+		var/display_name = "[item_name] ([reward_price])"
+		item_map[display_name] = item_type
+		item_descriptions[display_name] = "Cost: [reward_price] mammon."
+
+	if(!length(item_map))
+		show_visible_message_TA(usr, "A wave of heat washes over the pile as [user] speaks Malum's name. The pile of valuables crumble into dust.", "A wave of heat washes over the pile as you speak Malum's name. The pile of valuables crumble into dust. Malum accepted your sacrifice. Yet it seems it wasn't enough.")
+		revert_cast(user)
+		return
+
+	var/itemchoice = tgui_input_list(user, "Choose a boon. The offering is worth [tithe] mammon; Malum accepts 30% as tribute.", "The Crafter's Covenant", item_map, null, 0, GLOB.tgui_always_state, item_descriptions)
+	if(!itemchoice)
+		revert_cast(user)
+		return
+
+	var/item_type = item_map[itemchoice]
+	if(!ispath(item_type, /obj/item))
+		revert_cast(user)
+		return
+
+	for(var/obj/item/sacrifice as anything in sacrifices)
+		if(sacrifice.loc == altar)
+			qdel(sacrifice)
+
+	new item_type(altar)
+	sparks.set_up(1, 1, altar)
+	sparks.start()
+	show_visible_message_TA(usr, "A wave of heat washes over the pile as [user] speaks Malum's name. The pile of valuables crumble into dust, only for the dust to reform into an item as if reborn from the flames. Malum has accepted the offering.", "A wave of heat washes over the pile as you speak Malum's name. The pile of valuables crumble into dust, only for the dust to reform into an item as if reborn from the flames. Malum has accepted the offering.")
 
 //T0
 
-/obj/effect/proc_holder/spell/invoked/TArework //this whole thing, barely works and fixing it causes only further issues
-	name = "Rework"
-	desc = "Burn a piece of equipment to create a blessing for the appropriate type of equipment. Cast once more on another item to bless it."
+/obj/effect/proc_holder/spell/invoked/TAmalum_inspiration //this whole thing, barely works and fixing it causes only further issues
+	name = "Malum's Inspiration"
+	desc = "Bless the target, Malum's Bless grants the energy to work and learn further!"
 	action_icon = 'icons/mob/actions/malummiracles.dmi'
 	overlay_icon = 'icons/mob/actions/malummiracles.dmi'
 	overlay_state = "rework"
@@ -423,130 +414,46 @@ var/global/list/anvil_recipe_prices_TA[][]
 	chargedloop = null
 	req_items = list(/obj/item/clothing/neck/roguetown/psicross)
 	sound = 'sound/magic/heal.ogg'
-	invocations = list("Rework.")
-	invocation_type = "whisper"
+	invocations = list("Да благословит тебя Малум работать день и ночь, и будет жар в твоих глазах, и магма в сердце!")
+	invocation_type = INVOCATION_SHOUT
 	associated_skill = /datum/skill/magic/holy
 	antimagic_allowed = TRUE
-	recharge_time = 5 SECONDS
+	recharge_time = 2 MINUTES
 	miracle = TRUE
-	devotion_cost = 100
-	var/order_type = null
-	var/current_bonus = null
-	var/current_duration = null
-	var/list/itemblacklist = list(/obj/item/rogueweapon/hoe,
-		/obj/item/rogueweapon/thresher,
-		/obj/item/rogueweapon/sickle,
-		/obj/item/rogueweapon/pitchfork,
-		/obj/item/rogueweapon/tongs,
-		/obj/item/rogueweapon/hammer/iron,
-		/obj/item/rogueweapon/shovel,
-		/obj/item/fishingrod,
-	)
+	devotion_cost = 50
 
-/obj/effect/proc_holder/spell/invoked/TArework/cast(list/targets, mob/user = usr)
+/obj/effect/proc_holder/spell/invoked/TAmalum_inspiration/cast(list/targets, mob/user = usr)
 	. = ..()
 	if(ishuman(targets[1]))
 		var/mob/living/carbon/human/H = targets[1]
-		if(H == user)
-			to_chat(user, "I purge all blessing options!")
-			order_type = null
-			current_bonus = null
-			current_duration = null
-	if(isobj(targets[1]))
-		var/obj/item/O = targets[1]
-		var/bonus = 0
-		var/quality = 0
-		var/skill = usr.get_skill_level(/datum/skill/magic/holy)
-		var/skill_debuff = 6 - skill
-		if(!order_type)
-			switch(O.smeltresult)
-				if(/obj/item/ingot/iron)
-					bonus = 0
-				if(/obj/item/ingot/bronze)
-					bonus = 1.5
-				if(/obj/item/ingot/steel)
-					bonus = 2
-				if(/obj/item/ingot/blacksteel)
-					bonus = 3
-			if(istype(O, /obj/item/clothing))
-				if(O.smeltresult == /obj/item/ash)
-					revert_cast()
-					return FALSE
-				var/obj/item/clothing/A = O
-				quality = (A.max_integrity / A.obj_integrity) * 100
-				order_type = "armor"
-				overlay_state = order_type
-				update_overlays()
-				current_bonus = (bonus*100) - (skill_debuff * 10)
-				current_duration = ((quality / 10) + bonus) MINUTES
-				var/view_time = floor((current_duration/10)/60)
-				if(current_bonus < 0)
-					current_bonus *= -1
-				to_chat(user, "<font color='purple'>Current Blessing: [order_type], additional max integrity [current_bonus] for [view_time] minutes.</font>")
-				devotion_cost = 10
-				qdel(A)
-				revert_cast()
-				return TRUE
-			if(O.smeltresult != /obj/item/ash && O.smeltresult != /obj/item/rogueore/coal)
-				quality = (O.max_integrity / O.obj_integrity) * 200
-				if(istype(O, /obj/item/rogueweapon))
-					order_type = "weapon"
-				else
-					order_type = "forge"
-				overlay_state = order_type
-				update_overlays()
-				current_bonus = (quality + (bonus * 100)) - (skill_debuff * 20)
-				current_duration = null
-				to_chat(user, "<font color='purple'>Current Blessing: [order_type], fixes [current_bonus] item integrity.</font>")
-				devotion_cost = 10
-				qdel(O)
-				revert_cast()
-				return TRUE
-			revert_cast()
+		if(H.has_status_effect(/datum/status_effect/buff/TAmalum_inspiration))
+			to_chat(user, span_notice("They have been blessed by Malum already."))
+			revert_cast(user)
 			return FALSE
+		if(H.stat == DEAD)
+			to_chat(user, span_notice("They are dead."))
+			revert_cast(user)
+			return FALSE
+		var/associated_skill_level = H.get_skill_level(associated_skill)
+		H.apply_status_effect(/datum/status_effect/buff/TAmalum_inspiration, associated_skill_level)
 
-		else if(order_type == "armor")
-			if(istype(O, /obj/item/clothing))
-				var/obj/item/clothing/A = O
-				if(A.malumblessed_c == TRUE)
-					to_chat(user, "The [A.name] already blessed!")
-					revert_cast()
-					return FALSE
-				A.max_integrity = A.max_integrity + current_bonus
-				A.malumblessed_c = TRUE
-				var/view_time = floor((current_duration/10)/60)
-				to_chat(user, "<font color='purple'>The [A.name] gain additional [current_bonus] integrity!</font>")
-				to_chat(user, "<font color='purple'>This bonus active [view_time] Minutes!</font>")
-				addtimer(CALLBACK(A, TYPE_PROC_REF(/obj/item/clothing, unbuff), TRUE), current_duration)
+/datum/status_effect/buff/TAmalum_inspiration
+	id = "malum_inspiration"
+	alert_type = /atom/movable/screen/alert/status_effect/malum_inspiration
+	effectedstats = list(STATKEY_WIL = 3,STATKEY_INT = 4,STATKEY_CON = -2,STATKEY_SPD = -1) // It's kind of harmful to work so much time!
+	duration = 1 MINUTES
 
-		else if(order_type == "forge" || order_type == "weapon")
-			if((O.obj_integrity + current_bonus) > O.max_integrity)
-				var/need_points = (O.max_integrity - O.obj_integrity)
-				O.obj_integrity += need_points
-				to_chat(user, "<font color='purple'>A [need_points] integrity for [O.name] has been fixed!</font>")
-			else
-				O.obj_integrity += current_bonus
-				to_chat(user, "<font color='purple'>A [current_bonus] integrity for [O.name] has been fixed!</font>")
+/datum/status_effect/buff/TAmalum_inspiration/on_creation(mob/living/new_owner, associated_skill_level)
+	if(isnum(associated_skill_level))
+		var/new_duration = associated_skill_level * 1 MINUTES
+		duration = new_duration
+	return ..()
 
-		overlay_state = "rework"
-		devotion_cost = 100
-		order_type = null
-		current_bonus = null
-		current_duration = null
-		return TRUE
-	revert_cast()
-	return FALSE
-
-/obj/item/rogueweapon/proc/unbuff()
-	force = initial(force)
-	malumblessed_w = FALSE
-	visible_message("<font color='purple'>A holy blessing no longer affects [name]!</font>")
-
-/obj/item/clothing/proc/unbuff()
-	max_integrity = initial(max_integrity)
-	obj_integrity = max_integrity/2
-	malumblessed_c = FALSE
-	visible_message("<font color='purple'>A holy blessing no longer affects [name]!</font>")
+/atom/movable/screen/alert/status_effect/malum_inspiration
+	name = "Malum's Inspiration"
+	desc = "Malum blesses you to keep working through fatigue and pain."
+	icon = 'icons/mob/actions/malummiracles.dmi'
+	icon_state = "rework"
 
 /obj/effect/proc_holder/spell/self/TArepair
 	name = "Order: Repair"
@@ -659,20 +566,20 @@ var/global/list/anvil_recipe_prices_TA[][]
 			door.opacity = TRUE
 			door.brokenstate = FALSE
 			door.obj_broken = FALSE
-			door.repair_state = 0								
+			door.repair_state = 0
 			if((S.obj_integrity + repair_points) > S.max_integrity)
 				var/need_points = (S.max_integrity - S.obj_integrity)
 				S.obj_integrity += need_points
 			else
 				S.obj_integrity += repair_points
 			user.visible_message(span_notice("[user] point on [door.name] and repair this."), \
-			span_notice("I point on [door.name]. Malum blessing!"))	
+			span_notice("I point on [door.name]. Malum blessing!"))
 			return TRUE
 
 		if(istype(S, /obj/structure/roguewindow/))
 			var/obj/structure/roguewindow/window = S
 			if(window.obj_integrity < window.max_integrity)
-				to_chat(user, span_warning("[window.obj_integrity]"))	
+				to_chat(user, span_warning("[window.obj_integrity]"))
 				user.visible_message(span_notice("[user] starts concentrate on [window.name]."),
 				span_notice("I start concentrate on [window.name]."))
 				playsound(user, 'sound/misc/wood_saw.ogg', 100, TRUE)
@@ -687,9 +594,9 @@ var/global/list/anvil_recipe_prices_TA[][]
 					var/need_points = (S.max_integrity - S.obj_integrity)
 					S.obj_integrity += need_points
 				else
-					S.obj_integrity += repair_points					
+					S.obj_integrity += repair_points
 				user.visible_message(span_notice("[user] point on [window.name] and repair this."), \
-				span_notice("I point on [window.name]. Malum blessing!"))	
+				span_notice("I point on [window.name]. Malum blessing!"))
 				return TRUE
 		else
 			if(!do_after(user, (150 / skill), target = S))

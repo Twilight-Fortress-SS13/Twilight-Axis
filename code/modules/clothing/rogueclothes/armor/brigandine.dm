@@ -19,7 +19,7 @@
 	chunkcolor = "#7d9097"
 	material_category = ARMOR_MAT_PLATE
 
-/obj/item/clothing/suit/roguetown/armor/brigandine/Initialize()
+/obj/item/clothing/suit/roguetown/armor/brigandine/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_PLATE_COAT_STEP, 18)
 
@@ -49,7 +49,7 @@
 			pic.color = get_detail_color()
 		add_overlay(pic)
 
-/obj/item/clothing/suit/roguetown/armor/brigandine/retinue/Initialize()
+/obj/item/clothing/suit/roguetown/armor/brigandine/retinue/Initialize(mapload)
 	. = ..()
 	if(GLOB.lordprimary)
 		lordcolor(GLOB.lordprimary,GLOB.lordsecondary)
@@ -67,6 +67,21 @@
 	GLOB.lordcolor -= src
 	return ..()
 
+/obj/item/clothing/suit/roguetown/armor/brigandine/ComponentInitialize()
+	. = ..()
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FREEBLADEDEXTERITY)
+
+/obj/item/clothing/suit/roguetown/armor/brigandine/pyro
+	name = "darksooted brigandine coat"
+	desc = "A coat-of-plates, concealed underneath layers of soot-anointed leather. It seems to be insulated against flames and acid, due to the supernatural quality of the infernal ashes."
+	armor = ARMOR_INSULATED_BRIGANDINE
+	body_parts_covered = COVERAGE_ALL_BUT_HANDLEGS
+	icon_state = "pyrocoat"
+	item_state = "pyrocoat"
+
+/obj/item/clothing/suit/roguetown/armor/brigandine/pyro/attack_right(mob/user)
+	return
+
 /obj/item/clothing/suit/roguetown/armor/brigandine/light
 	slot_flags = ITEM_SLOT_ARMOR
 	name = "lightweight brigandine"
@@ -75,7 +90,6 @@
 	blocksound = SOFTHIT
 	body_parts_covered = COVERAGE_TORSO
 	max_integrity = ARMOR_INT_CHEST_PLATE_BRIGANDINE - ARMOR_INT_CHEST_PLATE_BRIGANDINE_WEIGHT_MODIFIER
-	smeltresult = /obj/item/ingot/iron
 	equip_delay_self = 40
 	armor_class = ARMOR_CLASS_LIGHT//steel version of the studded leather armor now
 	w_class = WEIGHT_CLASS_BULKY
@@ -108,7 +122,7 @@
 			pic.color = get_detail_color()
 		add_overlay(pic)
 
-/obj/item/clothing/suit/roguetown/armor/brigandine/light/retinue/Initialize()
+/obj/item/clothing/suit/roguetown/armor/brigandine/light/retinue/Initialize(mapload)
 	. = ..()
 	if(GLOB.lordprimary)
 		lordcolor(GLOB.lordprimary,GLOB.lordsecondary)
@@ -147,9 +161,6 @@
 
 /obj/item/clothing/suit/roguetown/armor/brigandine/banneret
 	name = "knight banneret's brigandine"
-
-/obj/item/clothing/suit/roguetown/armor/brigandine/captain
-	name = "captain's brigandine"
 	desc = "A resplendant coat-of-plates, gilded and veiled in dyeable silk. Only the finest of Azuria's Knights has been entrusted with this beautiful article."
 	icon_state = "capplate"
 	icon = 'icons/roguetown/clothing/special/captain.dmi'

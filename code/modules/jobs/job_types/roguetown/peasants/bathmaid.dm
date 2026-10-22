@@ -24,7 +24,7 @@
 	max_pq = null
 	round_contrib_points = 2
 	advjob_examine = TRUE
-	cmode_music = 'sound/music/cmode/towner/combat_towner.ogg'
+	cmode_music = sound("sound/music/cmode/towner/combat_towner.ogg")
 	job_traits = list(TRAIT_EMPATH, TRAIT_GOODLOVER, TRAIT_HOMESTEAD_EXPERT)
 	job_subclasses = list(
 		/datum/advclass/bathworker,
@@ -56,7 +56,6 @@
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/music = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/misc/riding = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/whipsflails = SKILL_LEVEL_NOVICE,
 		/datum/skill/combat/knives = SKILL_LEVEL_NOVICE,
@@ -113,7 +112,6 @@
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/music = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
-		/datum/skill/misc/riding = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/medicine = SKILL_LEVEL_NOVICE,
 		/datum/skill/combat/whipsflails = SKILL_LEVEL_NOVICE,
 		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
@@ -175,7 +173,6 @@
 		/datum/skill/misc/reading = SKILL_LEVEL_EXPERT,
 		/datum/skill/craft/sewing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/crafting = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/misc/riding = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/medicine = SKILL_LEVEL_NOVICE,
 		/datum/skill/craft/cooking = SKILL_LEVEL_NOVICE,
 	)
@@ -206,7 +203,7 @@
 	backpack_contents = list(
 		/obj/item/reagent_containers/powder/moondust = 2,
 		/obj/item/reagent_containers/glass/bottle/rogue/wine = 1,
-		/obj/item/toy/cards/deck = 1,
+		/obj/item/deck/playing_cards = 1,
 		/obj/item/mini_flagpole/bathhouse,
 	)
 	if(should_wear_femme_clothes(H))
@@ -249,17 +246,3 @@
 			if("Shamisen")
 				backr = /obj/item/rogue/instrument/shamisen
 		SStreasury.grant_savings(ECONOMIC_UPPER_CLASS, H)
-
-/obj/item/soap/bath
-	name = "herbal soap"
-	desc = "A soap made from various herbs"
-	icon = 'icons/obj/items_and_weapons.dmi'
-	icon_state = "soap"
-	lefthand_file = 'icons/mob/inhands/equipment/custodial_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/equipment/custodial_righthand.dmi'
-	w_class = WEIGHT_CLASS_TINY
-	item_flags = NOBLUDGEON
-
-/obj/item/bath/soap/ComponentInitialize()
-	. = ..()
-	AddComponent(/datum/component/slippery, 80)

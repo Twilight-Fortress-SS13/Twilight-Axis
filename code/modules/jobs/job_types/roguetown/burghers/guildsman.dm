@@ -23,7 +23,7 @@
 	max_pq = null
 	round_contrib_points = 3
 	advjob_examine = TRUE // So that everyone know which subjob they have picked
-	cmode_music = 'sound/music/cmode/towner/combat_towner3.ogg'
+	cmode_music = sound("sound/music/cmode/towner/combat_towner3.ogg")
 	job_subclasses = list(
 		/datum/advclass/guildsman/artificer,
 		/datum/advclass/guildsman/blacksmith,
@@ -111,7 +111,7 @@
 	But your true calling is the creation and enchantment of magical items, alongside feats of engineering, creating mechanical and magical wonders whose art of creation has been passed down\
 	from a certain elven Artificer..."
 	outfit = /datum/outfit/job/roguetown/guildsman/artificer
-	subclass_mage_aspects = list("mastery" = FALSE, "major" = 1, "minor" = 2, "utilities" = 4, "locked_aspects" = list(/datum/magic_aspect/battlewardry, /datum/magic_aspect/artifice), "post_aspect_spells" = list(/obj/effect/proc_holder/spell/invoked/takeapprentice), "ward" = TRUE)
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 2, "utilities" = 4, "locked_aspects" = list(/datum/magic_aspect/artifice, /datum/magic_aspect/allowardry), "post_aspect_spells" = list(/obj/effect/proc_holder/spell/invoked/takeapprentice), "ward" = TRUE)
 
 	category_tags = list(CTAG_GUILDSMEN)
 	traits_applied = list(TRAIT_ARCYNE, TRAIT_ALCHEMY_EXPERT)
@@ -166,7 +166,7 @@
 						/obj/item/recipe_book/ceramics = 1,
 						/obj/item/recipe_book/builder = 1,
 						/obj/item/clothing/mask/rogue/spectacles/golden = 1, //putting them in the bag because bad eye sight virtue strips these
-						/obj/item/contraption/linker = 1,
+						/obj/item/rogueweapon/contraption/linker = 1,
 						/obj/item/mini_flagpole/artificer = 1,
 						/obj/item/rogueweapon/spellbook = 1,
 						)
@@ -242,4 +242,8 @@
 	ADD_TRAIT(H, TRAIT_MASTER_MASON, TRAIT_GENERIC)
 	if(H.mind)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/takeapprentice)
+		var/datum/action/cooldown/spell/architect_plan/plan = new(H) // TA EDIT
+		plan.Grant(H) // TA EDIT
+		var/datum/action/cooldown/spell/architect_conjure/conjure = new(H) // TA EDIT
+		conjure.Grant(H) // TA EDIT
 		SStreasury.grant_savings(ECONOMIC_UPPER_MIDDLE_CLASS, H)

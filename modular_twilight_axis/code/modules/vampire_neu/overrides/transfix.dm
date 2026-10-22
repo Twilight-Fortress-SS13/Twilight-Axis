@@ -1,5 +1,6 @@
 /obj/effect/proc_holder/spell/targeted/TA_transfix_neu
 	name = "Заворожить"
+	desc = "Опутывает разум смертного произнесённой вслух фразой, вгоняя его в дремоту. Сама по себе ворожба слаба, но Эмпатическая Связь с целью ворожбы усиливает ее на порядок\n"
 	overlay_state = "transfix"
 	associated_skill = /datum/skill/magic/blood
 	range = 7

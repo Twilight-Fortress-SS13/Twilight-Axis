@@ -15,7 +15,7 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 				S.redstone_attached |= src
 
 /obj/structure/multitool_act(mob/living/user, obj/item/I)
-	var/obj/item/contraption/linker/multitool = I
+	var/obj/item/rogueweapon/contraption/linker/multitool = I
 	var/guildmasteroverride = FALSE
 	var/trigger_structure = FALSE //if the source is something like a lever or pressure plate or some other item
 	var/trigger_buffer = FALSE //if the buffer is something like a lever or pressure plate or some other item
@@ -24,9 +24,9 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 	. = ..()
 	if(!redstone_structure)
 		return
-	if(!istype(I, /obj/item/contraption/linker))
+	if(!istype(I, /obj/item/rogueweapon/contraption/linker))
 		return
-	if(istype(I, /obj/item/contraption/linker/master))
+	if(istype(I, /obj/item/rogueweapon/contraption/linker/master) || istype(I, /obj/item/rogueweapon/contraption/linker/mace/master) || istype(I, /obj/item/rogueweapon/contraption/linker/mace/big/master))
 		guildmasteroverride = TRUE //this is for the guildmaster's wrench
 	if(!multitool.current_charge)
 		return
@@ -147,6 +147,8 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 /obj/structure/lever/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Left-click the lever to actuate whatever might be connected to it. The time needed to complete this action scales with your character's Strength.")
+	. += span_info("A skilled Engineer could use a wrench to link this to a device.")
+	. += span_info("The Master of the Guild of Craft can unlink devices from each other by using their special wrench.")
 
 /obj/structure/lever/attack_hand(mob/user)
 	if(isliving(user))
@@ -173,7 +175,7 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 		user.visible_message("<span class='info'>[user] carves a name into the lever.</span>")
 		if(do_after(user, 10))
 			var/levername
-			levername = sanitize(input("What name would you like to carve into the lever?"))
+			levername = sanitize(input(user, "What name would you like to carve into the lever?"))
 			if (levername)
 				name = levername + "(lever)"
 				desc = "A lever with a name carved into it."
@@ -274,6 +276,11 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 	anchored = TRUE
 	redstone_structure = TRUE
 
+/obj/structure/pressure_plate/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("A skilled Engineer could use a wrench to link this to a device.")
+	. += span_info("The Master of the Guild of Craft can unlink devices from each other by using their special wrench.")
+
 /obj/structure/pressure_plate/Crossed(atom/movable/AM)
 	. = ..()
 	if(!anchored)
@@ -317,7 +324,7 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 		user.visible_message("<span class='info'>[user] Carves a name into the plate.</span>")
 		if(do_after(user, 10))
 			var/platename
-			platename = sanitize(input("What name would you like to carve into the plate?"))
+			platename = sanitize(input(user, "What name would you like to carve into the plate?"))
 			if (platename)
 				name = platename + "(plate)"
 				desc = "a plate with a name carved into it"
@@ -329,7 +336,6 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 	else if(istype(item, /obj/item/rogueweapon/chisel/assembly))
 		to_chat(user, span_warning("You most use both hands to rename plates."))
 
-
 /*
 /obj/structure/pressure_plate/attack_hand(mob/user) //commented out for now, they're stuposed to be anchored structures for dungeons. End of vanderlin traps port. Maybe an artificer subtype craft in the future.
 	. = ..()
@@ -339,12 +345,36 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 		anchored = !anchored
 */
 
+/obj/structure/pressure_plate/once
+	name = "rusty pressure plate"
+	desc = "Be careful. Stepping on this could either mean a bomb exploding or a door closing on you. Luckily, it seems to have only one last wheeze before it's stuck."
+	var/triggered = FALSE
+
+/obj/structure/pressure_plate/once/Crossed(atom/movable/AM)
+	if(triggered)
+		return
+	if(!anchored)
+		return
+	if(!isliving(AM))
+		return
+	triggered = TRUE
+	var/mob/living/L = AM
+	to_chat(L, "<span class='info'>I feel something permanently click beneath me.</span>")
+	AM.log_message("has activated a permanent pressure plate", LOG_GAME)
+	playsound(src, 'sound/misc/pressurepad_down.ogg', 35, extrarange = 2)
+	triggerplate()
+
+/obj/structure/pressure_plate/once/triggerplate()
+	for(var/obj/structure/O in redstone_attached)
+		spawn(0)
+			O.redstone_triggered()
+
 /obj/structure/englauncher
 	name = "Engineer's Launcher"
 	desc = "A engineering contraption made to launch various objects in the direction it's pointed."
 	icon = 'icons/roguetown/misc/engineering_structure.dmi'
 	icon_state = "activator"
-	max_integrity = 45 // so it gets destroyed when used to explode a bomb
+	max_integrity = 750 // raised to make it more durable in large wars and events, where they are primarily used
 	//w_class = WEIGHT_CLASS_HUGE // mechanical stuff is usually pretty heavy.
 	density = TRUE
 	anchored = TRUE
@@ -368,7 +398,7 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 	var/masterkey = TRUE //if masterkey can open this regardless
 	debris = list(/obj/item/roguegear = 1, /obj/item/natural/wood/plank = 1, /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow = 1)
 
-/obj/structure/englauncher/Initialize()
+/obj/structure/englauncher/Initialize(mapload)
 	. = ..()
 	update_icon()
 
@@ -415,7 +445,7 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 		user.visible_message("<span class='info'>[user] Carves a name into the launcher.</span>")
 		if(do_after(user, 10))
 			var/launchername
-			launchername = sanitize(input("What name would you like to carve into the launcher?"))
+			launchername = sanitize(input(user, "What name would you like to carve into the launcher?"))
 			if (launchername)
 				name = launchername + "(launcher)"
 				desc = "a launcher with a name carved into it"
@@ -453,7 +483,7 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 		playsound(loc, 'sound/misc/machineno.ogg', 100, FALSE, -1)
 		return
 	if (user.rmb_intent)
-		if (user.is_holding_item_of_type(/obj/item/contraption/linker))
+		if (user.is_holding_item_of_type(/obj/item/rogueweapon/contraption/linker))
 			sleep(1)
 			switch(firedirection)
 				if(WEST)
@@ -537,10 +567,10 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 		to_chat(user, span_warning("The launcher can't fire anything out of that bag."))
 		return TRUE
 
-	// Quivers: allow all ammo types including javelins; block only slings
+//TA EDIT START - Block loading quivers with firearm ammo
 	if(!ammo && istype(I, /obj/item/quiver))
-		if(istype(I, /obj/item/quiver/sling))
-			to_chat(user, span_warning("The launcher can't fire sling bullets."))
+		if(istype(I, /obj/item/quiver/twilight_bullet))
+			to_chat(user, span_warning("The launcher can't fire that type of ammo."))
 			return TRUE
 		if(!user.transferItemToLoc(I, src))
 			return
@@ -549,6 +579,7 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 		ammo = I
 		update_icon()
 		return TRUE
+//TA EDIT END
 
 	return ..()
 
@@ -621,10 +652,20 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 			quiver_fire(firedirectionthree, bodyzone)
 		return
 
+//TA EDIT START - Prevent launcher from firing firearm ammo
 /obj/structure/englauncher/proc/quiver_fire(launcher_direction, launcher_bodyzone)
 	if(!ammo || !ammo.arrows.len)
 		return
 	var/obj/item/ammo_casing/caseless/rogue/AR = ammo.arrows[1]
+
+	if(istype(AR, /obj/item/ammo_casing/caseless/rogue/bullet) || \
+	   istype(AR, /obj/item/ammo_casing/caseless/rogue/twilight_lead) || \
+	   istype(AR, /obj/item/ammo_casing/caseless/rogue/twilight_cannonball))
+		ammo.arrows -= AR
+		qdel(AR)
+		ammo.update_icon()
+		return
+
 	ammo.arrows -= AR
 
 	// Javelins are thrown as physical items rather than fired as casings
@@ -636,6 +677,7 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 		ammo.contents -= AR
 
 	ammo.update_icon()
+//TA EDIT END
 
 
 /obj/structure/englauncher/proc/launch_throwable(obj/item/I)
@@ -663,7 +705,7 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 	// Use MOVE_FORCE_STRONG to ensure move_resist doesn't block the throw
 	I.throw_at(target, 7, 3, null, FALSE, FALSE, null, MOVE_FORCE_STRONG)
 
-/obj/structure/englauncher/proc/container_aerosolize(var/launcher_liquid, var/launcher_direction)
+/obj/structure/englauncher/proc/container_aerosolize(launcher_liquid, launcher_direction)
 	var/turf/T = get_step(src, launcher_direction) //check for turf
 	if(T)
 		var/obj/item/reagent_containers/con = launcher_liquid //get the container
@@ -738,6 +780,18 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 	animate(pixel_x = oldx-1, time = 0.5)
 	animate(pixel_x = oldx, time = 0.5)
 
+//pop things out when destroyed.
+/obj/structure/englauncher/Destroy()
+	if(containment)
+		playsound(src, 'sound/misc/hiss.ogg', 100, FALSE, -1)
+		containment.forceMove(get_turf(src))
+		containment = null
+	if(ammo)
+		playsound(src, 'sound/misc/hiss.ogg', 100, FALSE, -1)
+		ammo.forceMove(get_turf(src))
+		ammo = null
+	return ..()
+
 /obj/structure/floordoor
 	name = "floorhatch"
 	desc = "A handy floor hatch for people who need privacy upstairs."
@@ -752,10 +806,15 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 	max_integrity = 0
 	redstone_structure = TRUE
 /*
-/obj/structure/floordoor/Initialize()
+/obj/structure/floordoor/Initialize(mapload)
 	AddComponent(/datum/component/squeak, list('sound/foley/footsteps/FTMET_A1.ogg','sound/foley/footsteps/FTMET_A2.ogg','sound/foley/footsteps/FTMET_A3.ogg','sound/foley/footsteps/FTMET_A4.ogg'), 100)
 	return ..()
 */
+/obj/structure/floordoor/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("A skilled Engineer could use a wrench to link this to a device.")
+	. += span_info("The Master of the Guild of Craft can unlink devices from each other by using their special wrench.")
+
 /obj/structure/floordoor/obj_break(damage_flag)
 	set_is_platform(FALSE)
 	obj_flags &= ~BLOCK_Z_IN_UP
@@ -796,7 +855,7 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 	nomouseover = TRUE
 	mouse_opacity = 0
 
-/obj/structure/floordoor/gatehatch/Initialize()
+/obj/structure/floordoor/gatehatch/Initialize(mapload)
 	AddComponent(/datum/component/squeak, list('sound/foley/footsteps/FTMET_A1.ogg','sound/foley/footsteps/FTMET_A2.ogg','sound/foley/footsteps/FTMET_A3.ogg','sound/foley/footsteps/FTMET_A4.ogg'), 40)
 	return ..()
 
@@ -845,7 +904,7 @@ GLOBAL_LIST_EMPTY(redstone_objs)
 		user.visible_message("<span class='info'>[user] Carves a name into the plate.</span>")
 		if(do_after(user, 10))
 			var/hatchname
-			hatchname = sanitize(input("What name would you like to carve into the hatch?"))
+			hatchname = sanitize(input(user, "What name would you like to carve into the hatch?"))
 			if (hatchname)
 				name = hatchname + "(hatch)"
 				desc = "a hatch with a name carved into it"

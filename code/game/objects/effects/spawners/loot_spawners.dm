@@ -26,6 +26,9 @@
 		/obj/item/rogueore/iron = 2,
 		/obj/item/natural/bundle/fibers = 2,
 		/obj/item/reagent_containers/food/snacks/tallow = 1,
+		/obj/item/ccg_card_generator/common = 5,
+		/obj/item/ccg_card_booster = 2,
+		/obj/item/ccg_card_booster/premium = 1,
 		//clothing
 		/obj/item/clothing/head/roguetown/cap = 4,
 		/obj/item/clothing/head/roguetown/knitcap = 4,
@@ -174,6 +177,10 @@
 		/obj/item/rogueore/silver = 1,
 		/obj/item/ingot/iron = 2,
 		/obj/item/reagent_containers/food/snacks/tallow = 1,
+		/obj/item/ccg_card_generator/common = 5,
+		/obj/item/ccg_card_generator/rare = 4,
+		/obj/item/ccg_card_booster = 2,
+		/obj/item/ccg_card_booster/premium = 1,
 		//clothing
 		/obj/item/clothing/head/roguetown/cap = 4,
 		/obj/item/clothing/head/roguetown/knitcap = 4,
@@ -338,6 +345,11 @@
 		/obj/item/rogueore/coal	= 1,
 		/obj/item/rogueore/silver = 1,
 		/obj/item/ingot/steel = 2,
+		/obj/item/ccg_card_generator/common = 1,
+		/obj/item/ccg_card_generator/rare = 4,
+		/obj/item/ccg_card_generator/unique = 3,
+		/obj/item/ccg_card_booster = 2,
+		/obj/item/ccg_card_booster/premium = 1,
 		//clothing
 		/obj/item/clothing/head/roguetown/fancyhat = 1,
 		/obj/item/clothing/head/roguetown/roguehood/shalal/heavyhood = 1,
@@ -365,7 +377,7 @@
 		/obj/item/natural/bundle/cloth/bandage/full = 3,
 		//weapons
 		/obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve = 4,
-		/obj/item/gun/ballistic/revolver/grenadelauncher/bow/longbow  = 4,
+		/obj/item/gun/ballistic/revolver/grenadelauncher/bow/longbow	= 4,
 		/obj/item/gun/ballistic/revolver/grenadelauncher/crossbow = 3,
 		/obj/item/gun/ballistic/revolver/grenadelauncher/sling = 4,
 		/obj/item/quiver/arrows = 2,
@@ -381,7 +393,7 @@
 		/obj/item/rogueweapon/huntingknife/idagger/steel = 4,
 		/obj/item/rogueweapon/huntingknife/idagger/steel/parrying = 3,
 		/obj/item/rogueweapon/huntingknife/idagger/steel/parrying/vaquero = 2,
-		/obj/item/rogueweapon/huntingknife/idagger/silver/elvish = 1,
+		/obj/item/rogueweapon/huntingknife/idagger/steel/silver/elvish = 1,
 		/obj/item/rogueweapon/huntingknife/idagger/navaja = 3,
 		/obj/item/rogueweapon/sword = 2,
 		/obj/item/rogueweapon/sword/long = 2,
@@ -404,12 +416,12 @@
 		/obj/item/rogueweapon/mace/steel/silver = 1,
 		/obj/item/rogueweapon/greataxe/steel/knight/silver = 1,
 		/obj/item/rogueweapon/flail/sflail/silver = 1,
-		/obj/item/rogueweapon/huntingknife/idagger/silver = 3,
+		/obj/item/rogueweapon/huntingknife/idagger/steel/silver = 3,
 		/obj/item/rogueweapon/mace/warhammer/steel/silver = 1,
-		/obj/item/rogueweapon/stoneaxe/woodcut/silver = 1,
+		/obj/item/rogueweapon/stoneaxe/battle/silver = 1,
 		/obj/item/rogueweapon/spear/silver = 1,
 		/obj/item/rogueweapon/sword/long/silver = 1,
-		/obj/item/rogueweapon/sword/long/kriegmesser/silver = 1,
+		/obj/item/rogueweapon/sword/long/broadsword/silver = 1,
 		/obj/item/rogueweapon/sword/short/silver = 1,
 		/obj/item/rogueweapon/sword/rapier/silver = 1,
 		/obj/item/rogueweapon/katar/silver = 1,
@@ -417,7 +429,7 @@
 		/obj/item/rogueweapon/sword/long/exe/silver = 1,
 		/obj/item/rogueweapon/greatsword/silver = 1,
 		/obj/item/rogueweapon/whip/silver = 1,
-		/obj/item/rogueweapon/woodstaff/quarterstaff/silver = 1,
+		/obj/item/rogueweapon/woodstaff/quarterstaff/steel/silver = 1,
 		//tools
 		/obj/item/rogueweapon/shovel/silver = 1,
 		/obj/item/rogueweapon/shovel = 2,
@@ -547,8 +559,8 @@
 ⢠⠎⠉⠐⠀⠀⠸⡆⠀⠀⠀⠀⠀⠀⠠⠄⡀⠀⠀⠀⢹⠊⠈⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣘⠢⢤⣠⡔⣎⠀⡇⡌⠃⠀⡸⢠⢣⡇⢆⢠⠁⢠⢻⠀⣌⣸⠀⢃⠎⡸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⢸⣆⠀⠀⠀⠀⢸⠃⠀⠀⢰⠉⠑⠤⠃⠀⡇⠀⠀⠀⠀⢂⠀⠀⠀⠀⠀⢀⡀⠀⠀⠀⠀⠀⢲⣿⡟⣾⣾⡦⠱⣸⣿⠘⠀⣰⡡⠁⠸⣇⢀⠇⠀⠎⡌⣼⡪⢷⠸⠃⡰⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠙⠲⠤⠄⠀⠎⠀⠀⠀⠈⢆⢄⠀⠀⢠⠃⠀⠀⠀⠀⠀⠱⡀⠀⠀⠀⠀⠑⠀⠀⠀⠀⠀⠈⠉⡝⠚⠿⠃⠆⡝⡝⡆⡴⠟⢁⠂⢀⢋⣬⢀⢊⡜⡼⠋⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  ⠀⠑⠒⠂⠁⠀⠀⠀⠀⠀⠀⠀⠈⢢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢰⣣⡘⡀⠀⡎⢀⡧⠂⡏⡰⢱⠊⠀⠀⠀⠈⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀  ⠑⠤⠀⣀⣀⣀⣀⣀⣀⣀⠀⠀⠤⠐⠂⠈⠋⡏⢱⢠⣿⡇⣬⣀⠀⢷⠁⠈⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀	⠀⠑⠒⠂⠁⠀⠀⠀⠀⠀⠀⠀⠈⢢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢰⣣⡘⡀⠀⡎⢀⡧⠂⡏⡰⢱⠊⠀⠀⠀⠈⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀	⠑⠤⠀⣀⣀⣀⣀⣀⣀⣀⠀⠀⠤⠐⠂⠈⠋⡏⢱⢠⣿⡇⣬⣀⠀⢷⠁⠈⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠰⡉⠀⠀⡇⠀⠀⠀⠉⠀⠉⠉⠉⠉⠉⠁⣠⡔⠛⢆⠰⡼⣣⠀⠀⠀⠀⠀⠀⡠⠊⠀⡇⣿⣾⠛⠳⠇⠶⣭⣺⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠈⠉⠀⠀⠀⠀⠀⠀⠀⠀⣀⠤⠤⠴⠿⡷⡀⠘⡄⢻⡿⠆⠀⠀⡠⠔⠁⠀⠀⣀⣿⣽⠟⠠⠠⠐⠂⠙⠋⣁⡅⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 */

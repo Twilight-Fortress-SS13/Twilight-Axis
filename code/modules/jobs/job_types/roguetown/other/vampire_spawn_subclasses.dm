@@ -27,7 +27,7 @@
 	tutorial = "A knighted champion of a fallen and forgotten kingdom. You can almost remember the old tymes since your last great battle, your unmatched prowess, your elegence with any-would-be weapon and all the dread your mere presence brought; now you arise from a fallen kingdom in servitude to your lord, once more. Make their vision, become reality."
 	allowed_sexes = list(MALE, FEMALE)
 	outfit = /datum/outfit/job/roguetown/other/vampdeathknight
-	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_NOBLE, TRAIT_HEAVYARMOR)
+	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_NOBLE, TRAIT_HEAVYARMOR, TRAIT_UNCONVERTIBLE)
 	category_tags = list(CTAG_VAMPSPAWN)
 	subclass_stats = list(
 		STATKEY_STR = 2,
@@ -83,12 +83,12 @@
 	if(H.mind)
 		var/weapons = list(
 			"Longsword + Crossbow",
-			"Billhook + Recurve Bow",
+			"Billhook + Bow",
 			"Mace + Shield",
 			"Flail + Shield",
 			"Longsword + Shield",
-			"Grand Mace + Longsword", 
-			"Sabre + Recurve Bow",
+			"Grand Mace + Longsword",
+			"Sabre + Bow",
 			"Flamberge",
 			"Poleaxe",
 			"Estoc",
@@ -112,21 +112,21 @@
 			if("Flail + Shield")
 				beltr = /obj/item/rogueweapon/flail/sflail
 				backl = /obj/item/rogueweapon/shield/tower/metal
-			if("Billhook + Recurve Bow")
+			if("Billhook + Bow")
 				r_hand = /obj/item/rogueweapon/spear/billhook
 				backl = /obj/item/rogueweapon/scabbard/gwstrap
 				beltr = /obj/item/quiver/arrows
-				beltl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
+				beltl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow
 			if("Grand Mace + Longsword")
 				r_hand = /obj/item/rogueweapon/sword/long
 				beltl = /obj/item/rogueweapon/scabbard/sword/noble
 				l_hand = /obj/item/rogueweapon/mace/goden/steel
 				backl = /obj/item/rogueweapon/scabbard/gwstrap
-			if("Sabre + Recurve Bow")
+			if("Sabre + Bow")
 				l_hand = /obj/item/rogueweapon/scabbard/sword/noble
 				r_hand = /obj/item/rogueweapon/sword/sabre
 				beltr = /obj/item/quiver/arrows
-				beltl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
+				beltl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow
 			if("Flamberge")
 				r_hand = /obj/item/rogueweapon/greatsword/grenz/flamberge
 				backr = /obj/item/rogueweapon/scabbard/gwstrap
@@ -144,7 +144,7 @@
 				backl = /obj/item/rogueweapon/scabbard/gwstrap
 
 		var/helmets = list(
-			"Pigface Bascinet" 	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface,
+			"Pigface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface,
 			"Guard Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/guard,
 			"Barred Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/sheriff,
 			"Bucket Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/bucket,
@@ -152,12 +152,15 @@
 			"Knight's Helmet"	= /obj/item/clothing/head/roguetown/helmet/heavy/knight/old,
 			"Knight's Greatplumed Armet"		= /obj/item/clothing/head/roguetown/helmet/heavy/knight/greatplume,
 			"Visored Sallet"			= /obj/item/clothing/head/roguetown/helmet/sallet/visored,
+			"Snouted Visored Sallet"			= /obj/item/clothing/head/roguetown/helmet/sallet/visored/snouted,
 			"Armet"				= /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet,
-			"Hounskull Bascinet" 		= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull,
-			"Etruscan Bascinet" 		= /obj/item/clothing/head/roguetown/helmet/bascinet/etruscan,
+			"Snouted Armet"				= /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/snouted,
+			"Hounskull Bascinet"		= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull,
+			"Etruscan Bascinet"		= /obj/item/clothing/head/roguetown/helmet/bascinet/etruscan,
 			"Slitted Kettle"		= /obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle,
 			"Visored Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor,
 			"Great Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/great,
+			"Snouted Burgonet" = /obj/item/clothing/head/roguetown/helmet/heavy/burgonet,
 			"Volfskulle Bascinet"		= /obj/item/clothing/head/roguetown/helmet/heavy/volfplate,
 			"None"
 		)
@@ -193,7 +196,7 @@
 	tutorial = "You are a noble of a long fallen and forgotten kingdom, trained in maile and footwork alike. You can almost remember the days of listening to the quietest whispers in your court, you were once a vault of intrique in your own right before the previous collapse. Yet your talents will see another era of use and with it, your master's vision shalt become reality."
 	outfit = /datum/outfit/job/roguetown/other/vampnoble
 	subclass_languages = list(/datum/language/thievescant)
-	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_MEDIUMARMOR, TRAIT_NOBLE, TRAIT_CICERONE, TRAIT_NUTCRACKER, TRAIT_LIGHT_STEP, TRAIT_KEENEARS, TRAIT_PERFECT_TRACKER) //The perfect spy, advisor and assassin, all in one.
+	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_MEDIUMARMOR, TRAIT_NOBLE, TRAIT_CICERONE, TRAIT_NUTCRACKER, TRAIT_LIGHT_STEP, TRAIT_KEENEARS, TRAIT_PERFECT_TRACKER, TRAIT_UNCONVERTIBLE) //The perfect spy, advisor and assassin, all in one.
 	category_tags = list(CTAG_VAMPSPAWN)
 	subclass_stats = list(
 		STATKEY_INT = 2,

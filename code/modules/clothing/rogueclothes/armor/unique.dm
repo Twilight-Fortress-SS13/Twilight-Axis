@@ -37,12 +37,13 @@
 
 /obj/item/clothing/suit/roguetown/armor/basiceast/loadout
 	name = "aesthetic simple dobo robe"
-	armor = ARMOR_CLOTHING
-	max_integrity = ARMOR_INT_CHEST_CIVILIAN
-	armor_class = ARMOR_CLASS_NONE
 
 /obj/item/clothing/suit/roguetown/armor/basiceast/loadout/ComponentInitialize()
 	return
+
+/obj/item/clothing/suit/roguetown/armor/basiceast/loadout/Initialize(mapload)
+	. = ..()
+	loadoutize()
 
 //less integrity than a leather cuirass, incredibly weak to blunt damage - great against slash - standard leather value against stab
 //the intent for these armors is to create specific weaknesses/strengths for people to play with
@@ -57,12 +58,13 @@
 
 /obj/item/clothing/suit/roguetown/armor/basiceast/crafteast/loadout
 	name = "aesthetic decorated dobo robe"
-	armor = ARMOR_CLOTHING
-	max_integrity = ARMOR_INT_CHEST_CIVILIAN
-	armor_class = ARMOR_CLASS_NONE
 
 /obj/item/clothing/suit/roguetown/armor/basiceast/crafteast/loadout/ComponentInitialize()
 	return
+
+/obj/item/clothing/suit/roguetown/armor/basiceast/crafteast/loadout/Initialize(mapload)
+	. = ..()
+	loadoutize()
 
 //craftable variation of eastsuit, essentially requiring the presence of a tailor with relevant materials
 //still weak against blunt
@@ -77,12 +79,13 @@
 
 /obj/item/clothing/suit/roguetown/armor/basiceast/mentorsuit/loadout
 	name = "aesthetic old dobo robe"
-	armor = ARMOR_CLOTHING
-	max_integrity = ARMOR_INT_CHEST_CIVILIAN
-	armor_class = ARMOR_CLASS_NONE
 
 /obj/item/clothing/suit/roguetown/armor/basiceast/mentorsuit/loadout/ComponentInitialize()
 	return
+
+/obj/item/clothing/suit/roguetown/armor/basiceast/mentorsuit/loadout/Initialize(mapload)
+	. = ..()
+	loadoutize()
 
 /obj/item/clothing/suit/roguetown/armor/plate/full/dwarven
 	name = "grudgebearer dwarven plate"
@@ -109,6 +112,7 @@
 	desc = "An assembly of thickly woven trunk, bound together by ancient song and tool of the oldest elven druids. It still creaks and weeps with forlorn reminiscence of a bygone era. It looks like only Elves can fit in it."
 	allowed_race = list(/datum/species/elf/wood, /datum/species/human/halfelf, /datum/species/elf/dark)
 	armor = ARMOR_BLACKOAK
+	armor_class = ARMOR_CLASS_MEDIUM
 	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
 	icon = 'icons/roguetown/clothing/special/race_armor.dmi'
 	mob_overlay_icon = 'icons/roguetown/clothing/special/onmob/race_armor.dmi'

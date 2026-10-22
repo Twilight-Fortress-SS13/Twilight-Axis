@@ -42,6 +42,15 @@
 
 /obj/item/storage/magebag/starter
 	populate_contents = list()
+
+
+/obj/item/storage/magebag/witch
+	populate_contents = list(
+		/obj/item/alch/catalyst/nigredo,
+		/obj/item/alch/catalyst/albedo,
+		/obj/item/herbseed/manabloom,
+	)
+
 /obj/item/chalk
 	name = "stick of chalk"
 	desc = "A stark-white stick of chalk, possibly made from quicksilver. "
@@ -55,6 +64,18 @@
 	w_class = WEIGHT_CLASS_TINY
 	var/obj/effect/decal/cleanable/roguerune/rune_to_scribe = null
 	var/chosen_keyword
+
+/obj/item/chalk/attack(mob/living/target, mob/living/user)
+
+	user.visible_message(span_notice("[user] begins nibbling on [src]."), span_notice("I begin nibbling on [src]."))
+	if(!do_after(user, 2 SECONDS, target = src))
+		return
+	playsound(user.loc, 'sound/misc/eat.ogg', rand(30,60), TRUE)
+	user.visible_message(span_notice("[user] finishes eating [src]."), span_notice("I finish eating [src]. Yum!"))
+	user.reagents.add_reagent(/datum/reagent/medicine/manapot, 15)
+	qdel(src)
+
+
 
 /obj/item/chalk/attack_self(mob/living/carbon/human/user)
 	if(!HAS_TRAIT(user, TRAIT_LEYLINE_ATTUNEMENT))
@@ -99,7 +120,7 @@
 		span_notice("I finish tracing ornate symbols and circles with my [name], leaving behind a ritual rune."))
 		new rune_to_scribe(Turf, chosen_keyword)
 
-/obj/item/chalk/proc/check_for_structures_and_closed_turfs(loc, var/obj/effect/decal/cleanable/roguerune/rune_to_scribe)
+/obj/item/chalk/proc/check_for_structures_and_closed_turfs(loc, obj/effect/decal/cleanable/roguerune/rune_to_scribe)
 	for(var/turf/T in range(loc, rune_to_scribe.runesize))
 		//check for /sturcture subtypes in the turf's contents
 		for(var/obj/structure/S in T.contents)
@@ -115,7 +136,7 @@
 	return FALSE
 
 
-/obj/item/rogueweapon/huntingknife/idagger/silver/arcyne
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver/arcyne
 	name = "arcyne silver dagger"
 	desc = "This dagger glows a faint purple. Quicksilver runs across its blade."
 	icon_state = "arcynedagger"
@@ -123,11 +144,11 @@
 	var/obj/effect/decal/cleanable/roguerune/rune_to_scribe = null
 	var/chosen_keyword
 
-/obj/item/rogueweapon/huntingknife/idagger/silver/arcyne/Initialize()
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver/arcyne/Initialize(mapload)
 	. = ..()
 	filter(type="drop_shadow", x=0, y=0, size=2, offset=1, color=rgb(128, 0, 128, 1))
 
-/obj/item/rogueweapon/huntingknife/idagger/silver/arcyne/attack_self(mob/living/carbon/human/user)
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver/arcyne/attack_self(mob/living/carbon/human/user)
 	if(!HAS_TRAIT(user, TRAIT_LEYLINE_ATTUNEMENT))
 		return
 	if(!is_bled)
@@ -178,7 +199,7 @@
 		)
 		new rune_to_scribe(Turf, chosen_keyword)
 
-/obj/item/rogueweapon/huntingknife/idagger/proc/check_for_structures_and_closed_turfs(loc, var/obj/effect/decal/cleanable/roguerune/rune_to_scribe)
+/obj/item/rogueweapon/huntingknife/idagger/proc/check_for_structures_and_closed_turfs(loc, obj/effect/decal/cleanable/roguerune/rune_to_scribe)
 	for(var/turf/T in range(loc, rune_to_scribe.runesize))
 		//check for /sturcture subtypes in the turf's contents
 		for(var/obj/structure/S in T.contents)
@@ -205,6 +226,7 @@
 	var/oldicon_state
 	var/olddesc
 	var/oldname
+	var/olddropshrink
 	var/ready = TRUE
 	var/timing_id
 
@@ -219,22 +241,32 @@
 	icon_state = oldicon_state
 	name = oldname
 	desc = olddesc
+	dropshrink = olddropshrink
 	ready = TRUE
 	if(timing_id)
 		deltimer(timing_id)
 		timing_id = null
 
 /obj/item/mimictrinket/attack_obj(obj/target, mob/living/user)
+	if(istype(target, /obj/structure)) // TA EDIT START
+		to_chat(user, span_warning("[src] cannot mimic structures."))
+		return // TA EDIT END
 	if(ready)
 		to_chat(user,span_notice("[src] takes the form of [target]!"))
 		oldicon = icon
 		oldicon_state = icon_state
 		olddesc = desc
 		oldname = name
+		olddropshrink = dropshrink
 		icon = target.icon
 		icon_state = target.icon_state
 		name = target.name
 		desc = target.desc
+		if(istype(target, /obj/item))
+			var/obj/item/target_item = target
+			dropshrink = target_item.dropshrink
+		else
+			dropshrink = 1
 		ready = FALSE
 		timing_id = addtimer(CALLBACK(src, PROC_REF(revert), user), duration,TIMER_STOPPABLE) // Minus two so we play the sound and decap faster
 
@@ -312,7 +344,7 @@
 	REMOVE_TRAIT(user, TRAIT_XRAY_VISION, "[type]")
 	active = FALSE
 
-/obj/item/sendingstonesummoner/Initialize()
+/obj/item/sendingstonesummoner/Initialize(mapload)
 	. = ..()
 	var/mob/living/user = usr
 	var/obj/item/natural/stone/sending/item1 = new /obj/item/natural/stone/sending
@@ -361,7 +393,7 @@
 	allow_self_unequip = FALSE	//Can not remove these without help
 	equip_delay_self = 60
 	equip_delay_other = 60
-	strip_delay = 300
+	strip_delay = STRIP_DELAY_LOCKED
 	salvage_result = null
 
 /obj/item/clothing/gloves/roguetown/nomagic/Initialize(mapload)

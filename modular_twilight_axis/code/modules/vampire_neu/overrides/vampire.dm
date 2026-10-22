@@ -11,6 +11,24 @@
 	var/ta_minimum_constitution = 12
 	var/ta_minimum_perception = 12
 
+/datum/outfit/job/vamplord/post_equip(mob/living/carbon/human/H, visualsOnly = FALSE)
+	. = ..()
+	if(visualsOnly || !istype(H))
+		return
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(ta_force_vampire_lord_slot_patron), WEAKREF(H), H.client?.prefs?.selected_patron), 3 MINUTES)
+
+/proc/ta_force_vampire_lord_slot_patron(datum/weakref/lord_ref, datum/patron/slot_patron)
+	var/mob/living/carbon/human/lord_body = lord_ref?.resolve()
+	if(!istype(lord_body) || QDELETED(lord_body))
+		return
+	if(!lord_body.mind?.has_antag_datum(/datum/antagonist/vampire/lord))
+		return
+	if(!istype(slot_patron))
+		slot_patron = lord_body.client?.prefs?.selected_patron
+	if(!istype(slot_patron) || lord_body.patron == slot_patron)
+		return
+	lord_body.set_patron(slot_patron)
+
 /mob/living/carbon/human/proc/ta_remove_vampire_transfix()
 	mind?.RemoveSpell(/obj/effect/proc_holder/spell/targeted/transfix_neu)
 	mind?.RemoveSpell(/obj/effect/proc_holder/spell/targeted/TA_transfix_neu)

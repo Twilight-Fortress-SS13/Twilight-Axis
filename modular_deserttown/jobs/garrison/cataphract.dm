@@ -22,7 +22,7 @@
 	max_pq = null
 	round_contrib_points = 2
 
-	cmode_music = 'sound/music/combat_desert2.ogg'
+	cmode_music = sound("sound/music/combat_desert2.ogg")
 	job_subclasses = list(
 		/datum/advclass/cataphract/greatweapon,
 		/datum/advclass/cataphract/shieldmaster,
@@ -59,7 +59,7 @@
 		if(player?.prefs)
 			if(SSmapping.config.map_name == "Desert Town")
 				if(!istype(player.prefs.virtue_origin, /datum/virtue/origin/raneshen) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/naledi) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/zybantian))
-					var/list/new_origins = list("Raneshen" = /datum/virtue/origin/raneshen, 
+					var/list/new_origins = list("Raneshen" = /datum/virtue/origin/raneshen,
 					"Naledi" = /datum/virtue/origin/naledi,
 					"Zybantu" = /datum/virtue/origin/zybantian)
 					var/new_origin
@@ -155,7 +155,7 @@
 				H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_MASTER, TRUE)
 			if("Lance + Scimitar")
 				r_hand = /obj/item/rogueweapon/spear/lance
-				backl = /obj/item/rogueweapon/scabbard/gwstrap				
+				backl = /obj/item/rogueweapon/scabbard/gwstrap
 				l_hand = /obj/item/rogueweapon/sword/long/kriegmesser/zybantine
 				beltl = /obj/item/rogueweapon/scabbard/sword
 				H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_MASTER, TRUE)
@@ -183,7 +183,7 @@
 	tutorial = "Ты обучен традиционной пешей рати, мастерски владея мечами, кистенями или палицами. \
     Твоя стойкость и искусство сочетать надежный щит с клинком делают тебя противником, чью оборону почти невозможно сокрушить!"
 	outfit = /datum/outfit/job/roguetown/cataphract/shieldmaster
-	
+
 	subclass_virtues = list(
 		/datum/virtue/utility/riding)
 
@@ -262,10 +262,10 @@
     Твои стремительные маневры и мастерское владение клинком приводят в восторг даже самую искушенную хассу, ведь ты отдаешь предпочтение быстрым и элегантным стальным клинкам. \
     Пусть ты вполне эффективен в средних доспехах, но твои навыки уклонения по-настоящему раскроются, лишь когда ты облачишься в более легкую защиту."
 	outfit = /datum/outfit/job/roguetown/cataphract/dervish
-	
+
 	subclass_virtues = list(
 		/datum/virtue/utility/riding)
-	
+
 	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_DODGEEXPERT)
 	category_tags = list(CTAG_CATAPHRACT)
 	subclass_stats = list(
@@ -356,7 +356,7 @@
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/storage/keyring/cataphract = 1
 	)
-    
+
 /datum/advclass/cataphract/rais_cataphract
 	name = "Rais-Cataphract"
 	tutorial = "Вы - глава и абсолютный авторитет среди катафрактов, стоящий на страже Султаната. \
@@ -380,7 +380,7 @@
 		STATKEY_PER = 2,
 		STATKEY_LCK = 2
 	)
-	
+
 	subclass_skills = list(
 		/datum/skill/combat/polearms = SKILL_LEVEL_MASTER,
 		/datum/skill/combat/swords = SKILL_LEVEL_MASTER,
@@ -439,7 +439,7 @@
 			if("Kite Shield & elvish dagger")
 				beltr = /obj/item/rogueweapon/huntingknife/idagger/silver/elvish
 				l_hand = /obj/item/rogueweapon/shield/tower/metal
-				H.adjust_skillrank(/datum/skill/combat/shields, SKILL_LEVEL_MASTER, TRUE)		
+				H.adjust_skillrank(/datum/skill/combat/shields, SKILL_LEVEL_MASTER, TRUE)
 			if("Crossbow & bolts")
 				l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
 				beltr = /obj/item/quiver/bolt/standard
@@ -451,7 +451,7 @@
 			if("Lance")
 				l_hand = /obj/item/rogueweapon/spear/lance
 				backl = /obj/item/rogueweapon/scabbard/gwstrap
-	
+
 	shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
 	pants = /obj/item/clothing/under/roguetown/chainlegs/kilt
 	head = /obj/item/clothing/head/roguetown/helmet/heavy/cataphract
@@ -468,5 +468,5 @@
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
 		/obj/item/rope/chain = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
-		/obj/item/storage/keyring/cataphract = 1		
+		/obj/item/storage/keyring/cataphract = 1
 	)

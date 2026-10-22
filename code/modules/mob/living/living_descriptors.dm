@@ -12,7 +12,7 @@
 	if(!length(mob_descriptors))
 		mob_descriptors = null
 
-/mob/living/proc/get_descriptor_type(var/desired_type)
+/mob/living/proc/get_descriptor_type(desired_type)
 	for(var/datum/mob_descriptor/descriptor as anything in mob_descriptors)
 		if(ispath(descriptor, desired_type))
 			return MOB_DESCRIPTOR(descriptor)
@@ -20,10 +20,19 @@
 /mob/living/proc/clear_mob_descriptors()
 	mob_descriptors = null
 
+/mob/living/proc/get_base_descriptors(mob/watcher)
+	return mob_descriptors
+
+/mob/living/proc/custom_entry(index)
+	if(length(custom_descriptors) < index)
+		return
+	return custom_descriptors[index]
+
 /mob/living/proc/get_mob_descriptors(is_obscured, mob/watcher)
 	var/list/descriptors = list()
-	if(mob_descriptors)
-		descriptors += mob_descriptors
+	var/list/base = get_base_descriptors(watcher)
+	if(base)
+		descriptors += base
 	var/list/extras = get_extra_mob_descriptors()
 	if(extras)
 		descriptors += extras
@@ -41,8 +50,9 @@
 
 /mob/living/proc/get_mob_descriptors_unknown(is_obscured, mob/watcher)
 	var/list/descriptors = list()
-	if(mob_descriptors)
-		descriptors += mob_descriptors
+	var/list/base = get_base_descriptors(watcher)
+	if(base)
+		descriptors += base
 	var/list/extras = get_extra_mob_descriptors()
 	if(extras)
 		descriptors += extras

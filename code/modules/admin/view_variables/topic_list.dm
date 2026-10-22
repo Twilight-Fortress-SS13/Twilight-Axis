@@ -2,7 +2,7 @@
 /client/proc/vv_do_list(list/target, href_list)
 	var/target_index = text2num(GET_VV_VAR_TARGET)
 	if(check_rights(R_VAREDIT))
-		if(istype(target, /alist))
+		if(isalist(target))
 			vv_do_alist(target, href_list, target_index)
 			return
 		if(target_index)
@@ -12,7 +12,7 @@
 				mod_list(target, null, "list", "contents", target_index, autodetect_class = FALSE)
 			if(href_list[VV_HK_LIST_REMOVE])
 				var/variable = target[target_index]
-				var/prompt = alert("Do you want to remove item number [target_index] from list?", "Confirm", "Yes", "No")
+				var/prompt = alert(usr, "Do you want to remove item number [target_index] from list?", "Confirm", "Yes", "No")
 				if (prompt != "Yes")
 					return
 				target.Cut(target_index, target_index+1)

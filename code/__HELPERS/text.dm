@@ -101,10 +101,10 @@
 ///returns nothing with an alert instead of the message if it contains something in the ic filter, and sanitizes normally if the name is fine. It returns nothing so it backs out of the input the same way as if you had entered nothing.
 /proc/sanitize_name(t,list/repl_chars = null)
 	if(CHAT_FILTER_CHECK(t))
-		alert("You cannot set a name that contains a word prohibited in IC chat!")
+		alert(usr, "You cannot set a name that contains a word prohibited in IC chat!")
 		return ""
 	if(t == "space" || t == "floor" || t == "wall" || t == "r-wall" || t == "monkey" || t == "unknown" || t == "inactive ai")	//prevents these common metagamey names
-		alert("Invalid name.")
+		alert(usr, "Invalid name.")
 		return ""
 	return sanitize(t)
 
@@ -186,13 +186,13 @@
 	for(var/i=1, i<=length(t_in), i++)
 		var/ascii_char = text2ascii(t_in,i)
 		switch(ascii_char)
-			// A  .. Z
+			// A	.. Z
 			if(65 to 90)
 				t_out += ascii2text(ascii_char)
 				number_of_alphanumeric++
 				last_char_group = 4
 
-			// a  .. z
+			// a	.. z
 			if(97 to 122)
 				t_out += ascii2text(ascii_char)
 				number_of_alphanumeric++
@@ -204,7 +204,7 @@
 				number_of_alphanumeric++
 				last_char_group = 4
 
-			// 0  .. 9
+			// 0	.. 9
 			if(48 to 57)
 				if(!last_char_group)
 					continue	//suppress at start of string
@@ -214,7 +214,7 @@
 				number_of_alphanumeric++
 				last_char_group = 3
 
-			// '  -  . ,
+			// '	-	. ,
 			if(39,45,46,44)			//Common name punctuation
 				if(!last_char_group)
 					continue
@@ -334,7 +334,7 @@
 //Returns a string with reserved characters and spaces before the first word and after the last word removed.
 /proc/trim(text, max_length)
 	if(max_length)
-		text = copytext(text, 1, max_length)
+		text = copytext_char(text, 1, max_length)//TA EDIT
 	return trim_left(trim_right(text))
 
 //Returns a string with the first element of the string capitalized.
@@ -436,8 +436,8 @@ GLOBAL_LIST_INIT(binary, list("0","1"))
 
 //merges non-null characters (3rd argument) from "from" into "into". Returns result
 //e.g. into = "Hello World"
-//     from = "Seeya______"
-//     returns"Seeya World"
+//		from = "Seeya______"
+//		returns"Seeya World"
 //The returned text is always the same length as into
 //This was coded to handle DNA gene-splicing.
 /proc/merge_text(into, from, null_char="_")
@@ -502,7 +502,7 @@ GLOBAL_LIST_INIT(binary, list("0","1"))
 		t = replacetext(t, "\\|", "$9")
 		t = replacetext(t, "\\%", "$0")
 
-	// Escape  single characters that will be used
+	// Escape	single characters that will be used
 
 	t = replacetext(t, "!", "$a")
 
@@ -639,11 +639,11 @@ GLOBAL_LIST_INIT(binary, list("0","1"))
 
 	// Premanage whitespace
 
-	t = replacetext(t, regex("\[^\\S\\r\\n \]", "g"), "  ")
+	t = replacetext(t, regex("\[^\\S\\r\\n \]", "g"), "	")
 
 	t = parsemarkdown_basic_step1(t)
 
-	t = replacetext(t, regex("%s(?:ign)?(?=\\s|$)", "igm"), user ? "<font face=\"[SIGNFONT]\"><i>[user.real_name]</i></font>" : "<span class=\"paper_field\"></span>")
+	t = replacetext(t, regex("%s(?:ign)?(?=\\s|$)", "igm"), user ? "<font face=\"[SIGNFONT]\" size=\"5\"><i>[user.real_name]</i></font>" : "<span class=\"paper_field\"></span>")
 	t = replacetext(t, regex("%f(?:ield)?(?=\\s|$)", "igm"), "<span class=\"paper_field\"></span>")
 
 	t = parsemarkdown_basic_step2(t)
@@ -652,11 +652,78 @@ GLOBAL_LIST_INIT(binary, list("0","1"))
 
 	t = replacetext(t, regex("(?:\\r\\n?|\\n)", "g"), "<br>")
 
-	t = replacetext(t, "  ", "&nbsp;&nbsp;")
+	t = replacetext(t, "	", "&nbsp;&nbsp;")
 
 	// Done
 
 	return t
+
+/**
+ * Lets admins type shorthand tags like [zizo]:text or [notice]:"text" in announcements
+ * and have them replaced with the matching span. Unquoted content runs until the next
+ * tag, a newline, or the end of the message. Quoting the content (optionally wrapped in
+ * parentheses, e.g. [zizo]:("text")) lets it sit alongside more text or tags afterward on
+ * the same line. The tag is used directly as the CSS span class.
+ */
+/proc/parse_admin_spans(msg)
+	if(!msg)
+		return msg
+	var/result = ""
+	var/i = 1
+	var/msglen = length(msg)
+	while(i <= msglen)
+		var/tag_start = findtext(msg, "\[", i)
+		if(!tag_start)
+			result += copytext(msg, i)
+			break
+		var/tag_end = findtext(msg, "]", tag_start + 1)
+		if(!tag_end)
+			result += copytext(msg, i)
+			break
+
+		var/cursor = tag_end + 1
+		if(copytext(msg, cursor, cursor + 1) != ":")
+			result += copytext(msg, i, tag_end + 1)
+			i = tag_end + 1
+			continue
+		cursor += 1
+
+		var/tag = LOWER_TEXT(copytext(msg, tag_start + 1, tag_end))
+		var/content
+		var/after
+
+		// Quoted form: [tag]:"content" or [tag]:("content") - lets content span multiple
+		// tags/lines, or sit alongside more text later in the same message.
+		var/has_paren = (copytext(msg, cursor, cursor + 1) == "(")
+		var/quote_check = has_paren ? cursor + 1 : cursor
+		if(copytext(msg, quote_check, quote_check + 1) == "\"")
+			var/quote_start = quote_check + 1
+			var/quote_end = findtext(msg, "\"", quote_start)
+			if(!quote_end)
+				result += copytext(msg, i, tag_end + 1)
+				i = tag_end + 1
+				continue
+			content = copytext(msg, quote_start, quote_end)
+			after = quote_end + 1
+			if(has_paren && copytext(msg, after, after + 1) == ")")
+				after += 1
+		else
+			// Unquoted form: [tag]:content - runs until the next tag, a newline, or the end of the message.
+			var/next_tag = findtext(msg, "\[", cursor)
+			var/next_line = findtext(msg, "\n", cursor)
+			var/content_end = msglen + 1
+			if(next_tag && (!next_line || next_tag < next_line))
+				content_end = next_tag
+			else if(next_line)
+				content_end = next_line
+			content = copytext(msg, cursor, content_end)
+			after = content_end
+
+		result += copytext(msg, i, tag_start)
+		result += "<span class='[tag]'>[content]</span>"
+		i = after
+
+	return result
 
 #define string2charlist(string) (splittext(string, regex("(.)")) - splittext(string, ""))
 
@@ -783,7 +850,7 @@ GLOBAL_LIST_INIT(binary, list("0","1"))
 		return string
 
 	var/base = next_backslash == 1 ? "" : copytext(string, 1, next_backslash)
-	var/macro = lowertext(copytext(string, next_backslash + 1, next_space))
+	var/macro = LOWER_TEXT(copytext(string, next_backslash + 1, next_space))
 	var/rest = next_backslash > leng ? "" : copytext(string, next_space + 1)
 
 	//See https://secure.byond.com/docs/ref/info.html#/DM/text/macros
@@ -876,8 +943,8 @@ GLOBAL_LIST_INIT(binary, list("0","1"))
 		words.Remove(cword)
 		var/suffix = copytext(cword,length(cword)-1,length(cword))
 		while(length(cword)>0 && (suffix in list(".",",",";","!",":","?")))
-			cword  = copytext(cword,1              ,length(cword)-1)
-			suffix = copytext(cword,length(cword)-1,length(cword)  )
+			cword	= copytext(cword,1				,length(cword)-1)
+			suffix = copytext(cword,length(cword)-1,length(cword)	)
 		if(length(cword))
 			rearranged += cword
 	message = "[prefix][jointext(rearranged," ")]"

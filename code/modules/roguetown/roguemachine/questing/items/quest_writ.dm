@@ -4,8 +4,8 @@ GLOBAL_LIST_EMPTY(quest_scrolls)
 
 /obj/item/quest_writ
 	name = "enchanted contract scroll"
-	desc = "A scroll oft known as a \"whispering scroll\". Enchanted to whisper the target's location to its bearer while they yet live, and to mark itself silently upon their death - so the bearer need bring no head, no hand, no token of proof beyond the writ itself.\n\
-	The magical protections make it resistant to damage and tampering. It will only whisper when carried on the person of the contract bearer."
+	desc = "A scroll often called a \"whispering scroll\". It whispers the target's location to its holder while the target lives. When they die, it marks itself.\n\
+	The magical protections make it resistant to damage and tampering. It will only whisper when carried on the person of the contract holder."
 	icon = 'code/modules/roguetown/roguemachine/questing/questing.dmi'
 	icon_state = "scroll_quest_closed"
 	w_class = WEIGHT_CLASS_TINY
@@ -19,7 +19,7 @@ GLOBAL_LIST_EMPTY(quest_scrolls)
 	var/last_whisper = 0
 	var/opened = FALSE
 
-/obj/item/quest_writ/Initialize()
+/obj/item/quest_writ/Initialize(mapload)
 	. = ..()
 	if(assigned_quest)
 		assigned_quest.quest_scroll = src
@@ -34,11 +34,11 @@ GLOBAL_LIST_EMPTY(quest_scrolls)
 			var/refund = assigned_quest.calculate_deposit()
 			var/mob/giver = assigned_quest.quest_giver_reference?.resolve()
 			if(giver && SStreasury.has_account(giver))
-				SStreasury.transfer(SStreasury.discretionary_fund, SStreasury.get_account(giver), refund, "contract scroll refund to [giver.real_name]")
+				SStreasury.transfer(SStreasury.discretionary_fund, SStreasury.get_account(giver), refund, "contract scroll refund to [giver.real_name]", LEDGER_CROWN_EXP_CONTRACTS, LEDGER_CITIZEN_CONTRACT_PAID)
 			else if(assigned_quest.quest_receiver_reference)
 				var/mob/receiver = assigned_quest.quest_receiver_reference.resolve()
 				if(receiver && SStreasury.has_account(receiver))
-					SStreasury.transfer(SStreasury.discretionary_fund, SStreasury.get_account(receiver), refund, "contract scroll refund to [receiver.real_name]")
+					SStreasury.transfer(SStreasury.discretionary_fund, SStreasury.get_account(receiver), refund, "contract scroll refund to [receiver.real_name]", LEDGER_CROWN_EXP_CONTRACTS, LEDGER_CITIZEN_CONTRACT_PAID)
 		qdel(assigned_quest)
 		assigned_quest = null
 	STOP_PROCESSING(SSprocessing, src)
@@ -74,7 +74,7 @@ GLOBAL_LIST_EMPTY(quest_scrolls)
 		var/message = "[last_compass_direction]"
 		if(last_z_level_hint)
 			message += " ([last_z_level_hint])"
-		to_chat(quest_bearer, span_info("The scroll whispers to you, the target is[message]"))
+		to_chat(quest_bearer, span_info("The scroll whispers to you: the target is[message]."))
 
 /obj/item/quest_writ/examine(mob/user)
 	. = ..()
@@ -84,7 +84,7 @@ GLOBAL_LIST_EMPTY(quest_scrolls)
 		. += span_notice("This contract hasn't been claimed yet. Open it to claim it for yourself!")
 	else if(assigned_quest.complete)
 		. += span_notice("\nThis contract is complete! Return it to the Contract Ledger to claim your reward.")
-		. += span_info("\nPlace it on the marked area or put it on the ledger.")
+		. += span_info("\nPlace it on the marked area or put it on the Ledger.")
 	else
 		. += span_notice("\nThis contract is still in progress.")
 
@@ -96,7 +96,7 @@ GLOBAL_LIST_EMPTY(quest_scrolls)
 		to_chat(user, span_warning("The magical energies prevent you from combining this with other scrolls."))
 		return
 	if(istype(P, /obj/item/clothing/ring/signet/psy))
-		to_chat(user, span_warning("The scroll can only be stamped with a signet ring bearing the Lord's symbol."))
+		to_chat(user, span_warning("The scroll can only be stamped with a signet ring bearing the Grand Duke's symbol."))
 		return
 	if(istype(P, /obj/item/clothing/ring/signet))
 		var/obj/item/clothing/ring/signet/S = P
@@ -115,19 +115,19 @@ GLOBAL_LIST_EMPTY(quest_scrolls)
 
 /obj/item/quest_writ/proc/stamp_with_signet(obj/item/clothing/ring/signet/ring, mob/living/carbon/human/user)
 	if(!assigned_quest)
-		to_chat(user, span_warning("The scroll bears no active contract to stamp."))
+		to_chat(user, span_warning("This scroll bears no active contract to stamp."))
 		return
 	if(!(user.job in GLOB.crown_authority_roles))
-		to_chat(user, span_warning("Only a Steward, Clerk, or the Grand Duke may stamp a writ in the Crown's name."))
+		to_chat(user, span_warning("Only Crown officials can stamp a scroll in the Crown's name."))
 		return
 	if(assigned_quest.levy_exempt)
-		to_chat(user, span_warning("This contract already bears the levy-exempt stamp."))
+		to_chat(user, span_warning("This contract already bears the levy exempt stamp."))
 		return
 	assigned_quest.levy_exempt = TRUE
 	update_quest_text()
 	playsound(src, 'sound/items/inqslip_sealed.ogg', 75, TRUE, 4)
 	log_game("[key_name(user)] stamped quest \"[assigned_quest.title || assigned_quest.quest_type]\" as LEVY EXEMPT via signet ring.")
-	to_chat(user, span_notice("You press the signet into the scroll. The Crown's seal glows faintly - this contract is now levy-exempt."))
+	to_chat(user, span_notice("You press the signet into the scroll and the Crown's seal glows. This contract is now levy exempt."))
 
 /obj/item/quest_writ/proc/get_quest_assignees(mob/user, include_giver = FALSE)
 	var/list/assignees = list()
@@ -152,13 +152,12 @@ GLOBAL_LIST_EMPTY(quest_scrolls)
 
 	if(!assigned_quest.quest_receiver_reference)
 		if(assigned_quest.quest_giver_name && assigned_quest.quest_giver_name == user.real_name)
-			to_chat(user, span_warning("You cannot take a contract you yourself issued."))
+			to_chat(user, span_warning("You can't take a contract you issued."))
 			return
 		if(!SStreasury.has_account(user))
-			to_chat(user, span_warning("No account on record - register with a Meister before taking a contract, lest there be no purse to pay you."))
+			to_chat(user, span_warning("You have no bank account. Register with a Meister before taking a contract."))
 			return
-		assigned_quest.quest_receiver_reference = WEAKREF(user)
-		assigned_quest.quest_receiver_name = user.real_name
+		assigned_quest.on_claim(user)
 		to_chat(user, span_notice("You claim this contract for yourself!"))
 		update_quest_text()
 
@@ -167,7 +166,7 @@ GLOBAL_LIST_EMPTY(quest_scrolls)
 	refresh_compass(user)
 	ui_interact(user)
 
-/obj/item/quest_writ/rmb_self(mob/user)
+/obj/item/quest_writ/rmb_self(mob/user, keybind = FALSE)
 	if(!assigned_quest || !opened)
 		return
 	opened = FALSE
@@ -215,9 +214,9 @@ GLOBAL_LIST_EMPTY(quest_scrolls)
 	data["delivery_destination"] = Q.target_delivery_location ? initial(Q.target_delivery_location.name) : null
 	data["delivery_item"] = Q.target_delivery_item ? initial(Q.target_delivery_item.name) : null
 	data["fetch_item"] = Q.target_item_type ? initial(Q.target_item_type.name) : null
+	data["fetch_item_plural"] = Q.target_item_plural
 	data["fetch_count"] = Q.progress_required
 	data["recovery_shipment"] = Q.get_recovery_shipment_name()
-	data["reward"] = Q.reward_amount
 	data["levy_rate"] = SStreasury.get_tax_rate(TAX_CATEGORY_CONTRACT_LEVY)
 	data["guild_cut_rate"] = (Q.source == QUEST_SOURCE_DEFENSE) ? 0 : GUILD_REFERRAL_FEE_PCT
 	data["progress_required"] = Q.progress_required
@@ -236,6 +235,7 @@ GLOBAL_LIST_EMPTY(quest_scrolls)
 	data["compass_direction"] = last_compass_direction
 	data["z_hint"] = last_z_level_hint
 	data["objective"] = assigned_quest.get_objective_text()
+	data["reward"] = assigned_quest.reward_amount
 	data["progress_current"] = assigned_quest.progress_current
 	data["complete"] = assigned_quest.complete
 	data["levy_exempt"] = assigned_quest.levy_exempt
@@ -257,7 +257,7 @@ GLOBAL_LIST_EMPTY(quest_scrolls)
 
 	var/turf/user_turf = user ? get_turf(user) : get_turf(src)
 	if(!user_turf)
-		last_compass_direction = " No signal detected"
+		last_compass_direction = " hidden from the scroll"
 		last_z_level_hint = ""
 		return
 
@@ -266,7 +266,7 @@ GLOBAL_LIST_EMPTY(quest_scrolls)
 
 	var/turf/target_turf = assigned_quest.get_target_location()
 	if(!target_turf)
-		last_compass_direction = " location unknown"
+		last_compass_direction = " nowhere to be found"
 		last_z_level_hint = ""
 		return
 

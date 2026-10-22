@@ -27,8 +27,10 @@
 
 /obj/item/clothing/gloves/roguetown/angle/grenzelgloves/loadout
 	name = "aesthetic grenzelhoft gloves"
-	max_integrity = ARMOR_INT_CHEST_CIVILIAN
-	armor = ARMOR_CLOTHING
+
+/obj/item/clothing/gloves/roguetown/angle/grenzelgloves/loadout/Initialize(mapload)
+	. = ..()
+	loadoutize()
 
 /obj/item/clothing/gloves/roguetown/angle/grenzelgloves/blacksmith
 	name = "forge gauntlets"
@@ -45,20 +47,26 @@
 	desc = "A pair of hardened leather gloves used by fencers who aren't exactly convinced of losing a finger to a particularly strong feder cut. The inside is padded for extra durability."
 	icon_state = "freigloves"
 	item_state = "freigloves"
-	max_integrity = ARMOR_INT_SIDE_HARDLEATHER + 50
+	max_integrity = ARMOR_INT_SIDE_HARDLEATHER + ARMOR_INT_LIGHT_FENCER_MODIFIER
 	color = null
 
 /obj/item/clothing/gloves/roguetown/angle/freifechter/loadout
 	name = "aesthetic fencing gloves"
-	max_integrity = ARMOR_INT_CHEST_CIVILIAN
-	armor = ARMOR_CLOTHING
 
+/obj/item/clothing/gloves/roguetown/angle/freifechter/loadout/Initialize(mapload)
+	. = ..()
+	loadoutize()
 
 /obj/item/clothing/gloves/roguetown/angle/feld
 	name = "feldsher's gloves"
 	desc = "And when he woke up, his whole skeleton was missing, and the physicker was never heard of again! </br>Ah, anyways; that's how I lost my writ of practice."
 	icon_state = "feldgloves"
 	item_state = "feldgloves"
+
+/obj/item/clothing/gloves/roguetown/angle/phys/cleric
+	name = "thin physicker's gloves"
+	armor = ARMOR_LEATHER
+	max_integrity = ARMOR_INT_SIDE_LEATHER
 
 /obj/item/clothing/gloves/roguetown/angle/phys
 	name = "physicker's gloves"

@@ -9,7 +9,7 @@
 	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED)
 	advclass_cat_rolls = list(CTAG_RANESHENI_EMIR = 20)
 	greet_text = "You are an envoy from the Empire, traveling with bodyguards and a priest to represent your homeland.\
-	 What exactly you have been sent here to speak about- only you know."
+		What exactly you have been sent here to speak about- only you know."
 
 /datum/advclass/ranesheni_emir
 	name = "Emir"
@@ -59,13 +59,13 @@
 	beltr = /obj/item/flashlight/flare/torch/lantern
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/navaja = 1,
-		/obj/item/rogueweapon/scabbard/sheath = 1, 
+		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/natural/feather = 1,
 		/obj/item/paper/scroll = 2,
 		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 2,
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpotnew = 2,
 		)
-	H.cmode_music = 'sound/music/combat_desertrider.ogg'
+	H.cmode_music = sound("sound/music/combat_desertrider.ogg")
 	H.grant_language(/datum/language/raneshi)
 
 /datum/migrant_role/ranesheni/amirah
@@ -118,13 +118,13 @@
 	backl = /obj/item/storage/backpack/rogue/satchel/short
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
-		/obj/item/rogueweapon/scabbard/sheath = 1, 
+		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/natural/feather = 1,
 		/obj/item/paper/scroll = 2,
 		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 1,
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpotnew = 1,
 	)
-	H.cmode_music = 'sound/music/combat_desertrider.ogg'
+	H.cmode_music = sound("sound/music/combat_desertrider.ogg")
 	H.grant_language(/datum/language/raneshi)
 
 /datum/migrant_role/ranesheni/janissary
@@ -187,7 +187,7 @@
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpotnew = 1,
 		/obj/item/natural/bundle/cloth/bandage/full = 1,
 		)
-	H.cmode_music = 'sound/music/combat_desertrider.ogg'
+	H.cmode_music = sound("sound/music/combat_desertrider.ogg")
 	H.grant_language(/datum/language/raneshi)
 	var/weapons = list("Mace","Spear")
 	if(H.mind)
@@ -212,7 +212,7 @@
 /datum/advclass/ranesheni_advisor
 	name = "Advisor"
 	outfit = /datum/outfit/job/roguetown/ranesheni/advisor
-	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_DODGEEXPERT, TRAIT_SLEUTH, TRAIT_PERFECT_TRACKER, TRAIT_STEELHEARTED)
+	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_DODGEEXPERT, TRAIT_PERFECT_TRACKER, TRAIT_STEELHEARTED)
 	category_tags = list(CTAG_RANESHENI_ADVISOR)
 	subclass_stats = list(
 		STATKEY_SPD = 2,
@@ -258,7 +258,7 @@
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 1,
 		)
-	H.cmode_music = 'sound/music/combat_desertrider.ogg'
+	H.cmode_music = sound("sound/music/combat_desertrider.ogg")
 	H.grant_language(/datum/language/raneshi)
 
 #undef CTAG_RANESHENI_EMIR

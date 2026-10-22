@@ -27,3 +27,12 @@
 	if(carrier)
 		SEND_SIGNAL(carrier, COMSIG_HEADHOOK_UNEQUIPPED, user)
 	. = ..()
+
+/obj/item/storage/belt/rogue/leather/overseer
+	name = "confessor belt pouch"
+	desc = "Несколько вместительных отделений, пришитых к кожаному поясу для распределения веса."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/overseer.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/onmob/overseer_onmob.dmi'
+	icon_state = "overseerbelt"
+	item_state = "overseerbelt"
+	color = null

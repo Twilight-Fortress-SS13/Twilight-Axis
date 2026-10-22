@@ -3,7 +3,8 @@
 /datum/action/cooldown/spell/void_beam
 	button_icon = 'icons/mob/actions/mage_telomancy.dmi'
 	name = "Void Beam"
-	desc = "Fire a lance of raw arcyne force that exposes your foe. It is well telegraphed and does a decent amount of damaage."
+	expose_caster_on_deflect = FALSE
+	desc = "Fire a lance of raw arcyne force that exposes your foe. It is well telegraphed and does a decent amount of damage."
 	button_icon_state = "void_beam"
 	sound = 'sound/magic/soulshot.ogg'
 	spell_color = GLOW_COLOR_ARCANE
@@ -31,13 +32,13 @@
 	associated_skill = /datum/skill/magic/arcane
 	spell_tier = 3
 	spell_impact_intensity = SPELL_IMPACT_MEDIUM
-	displayed_damage = 100
+	displayed_damage = SPELL_DMG(100)
 
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
 	var/beam_range = 8
 	var/beam_delay = 1.5 SECONDS
-	var/beam_damage = 100
+	var/beam_damage = SPELL_DMG(100)
 	var/push_dist = 1
 	var/expose_duration = 6 SECONDS
 	var/beam_slowdown = 2
@@ -123,7 +124,7 @@
 		qdel(old)
 	warnings.Cut()
 	for(var/turf/T in line)
-		warnings += new /obj/effect/temp_visual/trap/telomancy(T)
+		warnings += new /obj/effect/temp_visual/telegraph/telomancy(T)
 
 /datum/action/cooldown/spell/void_beam/proc/finish_windup(mob/living/carbon/human/H, list/warnings)
 	for(var/obj/effect/old in warnings)
@@ -155,7 +156,7 @@
 			seg.icon_state = "obeliskbeam_end"
 
 		for(var/obj/structure/S in T)
-			S.take_damage(damage, BRUTE, "blunt", FALSE)
+			S.take_damage(damage * SPELL_DAMAGE_INTEGRITY_MODIFIER, BRUTE, "blunt", FALSE)
 
 		for(var/mob/living/L in T.contents)
 			if(L in struck)
@@ -165,17 +166,18 @@
 				L.visible_message(span_warning("The beam splinters against [L]!"))
 				playsound(T, 'sound/magic/magic_nulled.ogg', 100)
 				continue
-			if(guard_source && !QDELETED(guard_source) && guard_source.spell_guard_check(L, TRUE, deflected ? null : caster))
+			if(guard_source && !QDELETED(guard_source) && guard_source.spell_guard_check(L, TRUE, caster, punish_caster = deflected ? FALSE : null))
 				deflected = TRUE
 				L.visible_message(span_warning("[L] turns the beam aside!"))
 				continue
 			if(istype(caster) && !QDELETED(caster) && ishuman(L))
-				arcyne_strike(caster, L, null, damage, caster.zone_selected, \
+				if(arcyne_strike(caster, L, null, damage, caster.zone_selected, \
 					BCLASS_PIERCE, spell_name = spell_name, \
-					damage_type = BRUTE, npc_simple_damage_mult = 1, \
-					skip_animation = TRUE)
+					damage_type = BRUTE, \
+					skip_animation = TRUE, SPELL_STRIKE_SCALING) == ARCYNE_STRIKE_WARDED)
+					continue
 			else
-				L.adjustBruteLoss(damage)
+				L.adjustBruteLoss(SPELL_DMG_VS(L, damage))
 				SEND_SIGNAL(L, COMSIG_ATOM_WAS_ATTACKED, caster, damage)
 			L.apply_status_effect(/datum/status_effect/debuff/exposed, expose_dur)
 			var/push_dir = get_dir(origin, L) || beam_dir

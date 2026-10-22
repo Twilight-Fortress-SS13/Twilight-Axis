@@ -2,9 +2,9 @@
 
 /datum/component/conjured_minion
 	var/datum/weakref/summoner_ref
-	var/recoil_energy_floor = 200
 	var/recoil_severity = CONJURE_RECOIL_FULL
 	var/recoil_stamina_only = FALSE
+	var/overload_power = 1
 	var/dismissing = FALSE
 	var/leash_range = 12
 	var/next_leash_message = 0
@@ -13,15 +13,15 @@
 	var/untether_max = 10
 	var/tether_timer
 
-/datum/component/conjured_minion/Initialize(mob/living/summoner, energy_floor = 200, severity = CONJURE_RECOIL_FULL, stamina_only = FALSE)
+/datum/component/conjured_minion/Initialize(mob/living/summoner, severity = CONJURE_RECOIL_FULL, stamina_only = FALSE, overload = 1)
 	if(!isliving(parent))
 		return COMPONENT_INCOMPATIBLE
 	var/mob/living/minion = parent
 	minion.mark_contract_spawned()
 	summoner_ref = WEAKREF(summoner)
-	recoil_energy_floor = energy_floor
 	recoil_severity = severity
 	recoil_stamina_only = stamina_only
+	overload_power = overload
 	if(isliving(summoner))
 		summoner.add_summoned_minion(parent)
 	ADD_TRAIT(parent, TRAIT_CONJURED_SUMMON, REF(src))
@@ -46,7 +46,7 @@
 		return
 	M.ai_controller.set_blackboard_key(BB_FOLLOW_TARGET, summoner)
 	M.ai_controller.set_blackboard_key(BB_TARGETTING_DATUM, GLOB.conjured_targetting)
-	M.pet_passive = TRUE
+	M.pet_passive = !istype(M, /mob/living/carbon/human/species/skeleton/conjured/undead) // TA EDIT
 
 /datum/component/conjured_minion/Destroy(force, silent)
 	if(tether_timer)
@@ -71,7 +71,7 @@
 	if(untether_strain > 0 || summoner.z != source.z || get_dist(source, summoner) > leash_range)
 		to_chat(summoner, span_warning("A dull ache echoes down the leyline - [source] has perished beyond the tether's reach."))
 		return
-	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(apply_conjure_recoil), summoner, recoil_energy_floor, recoil_severity, 1, TRUE, recoil_stamina_only)
+	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(apply_conjure_recoil), summoner, recoil_severity, 1, TRUE, recoil_stamina_only)
 
 /datum/component/conjured_minion/proc/check_leash(atom/movable/source, atom/newloc)
 	SIGNAL_HANDLER
@@ -167,6 +167,15 @@
 	return rgb(parts[1] + (255 - parts[1]) * blend, parts[2] + (255 - parts[2]) * blend, parts[3] + (255 - parts[3]) * blend)
 
 /datum/component/conjured_minion/proc/get_phantom_color()
+	if(istype(parent, /mob/living/carbon/human/species/skeleton))
+		var/list/palette = list("#a76cff", "#7718cf")
+		var/mob/living/summoner = summoner_ref?.resolve()
+		var/key = summoner ? "[summoner.real_name]" : "zizo"
+		var/hash = 0
+		for(var/i in 1 to length(key))
+			hash += text2ascii(key, i)
+		return palette[(hash % length(palette)) + 1]
+
 	var/mob/living/summoner = summoner_ref?.resolve()
 	var/key = summoner ? "[summoner.real_name]" : "arcyne"
 	var/hash = 0
@@ -178,6 +187,11 @@
 /datum/component/conjured_minion/proc/on_examine(datum/source, mob/user, list/examine_list)
 	SIGNAL_HANDLER
 	var/mob/living/summoner = summoner_ref?.resolve()
+
+	if(istype(parent, /mob/living/carbon/human/species/skeleton))
+		examine_list += span_notice("An unnatural skeleton, its form seems bound and reanimated by <font color='#940000'>avantyne strings</font>, and the will of a nearby magus.")
+		return
+
 	examine_list += span_notice("A phantasmal servant, bound to the will of [summoner ? summoner.real_name : "an unknown magus"].")
 
 #undef CONJURE_UNTETHER_ID
@@ -186,8 +200,8 @@
 	for(var/obj/item/gear in (get_equipped_items() + held_items))
 		if(HAS_TRAIT(gear, TRAIT_NODROP))
 			qdel(gear)
-		else
-			dropItemToGround(gear, force = TRUE)
+			continue
+		dropItemToGround(gear, force = TRUE)
 
 /mob/living/proc/add_summoned_minion(mob/living/summon)
 	if(QDELETED(summon))

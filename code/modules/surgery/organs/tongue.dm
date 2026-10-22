@@ -86,6 +86,11 @@
 		/mob/living/carbon/human/proc/emote_lizard_hiss,
 		/mob/living/carbon/human/proc/emote_lizard_squeal,
 		/mob/living/carbon/human/proc/emote_lizard_thump,
+		/mob/living/carbon/human/proc/emote_growl,
+		/mob/living/carbon/human/proc/emote_purr,
+		/mob/living/proc/emote_squeak,
+		/mob/living/proc/emote_hiss,
+		/mob/living/carbon/human/proc/emote_phiss,
 	)
 //	modifies_speech = TRUE
 /*
@@ -114,58 +119,6 @@
 		message = fly_buzz.Replace(message, "zzz")
 		message = fly_buZZ.Replace(message, "ZZZ")
 	speech_args[SPEECH_MESSAGE] = message
-
-/obj/item/organ/tongue/abductor
-	name = "superlingual matrix"
-	desc = ""
-	icon_state = "tongueayylmao"
-	say_mod = "gibbers"
-	taste_sensitivity = 101 // ayys cannot taste anything.
-	modifies_speech = TRUE
-	var/mothership
-
-/obj/item/organ/tongue/abductor/attack_self(mob/living/carbon/human/H)
-	if(!istype(H))
-		return
-
-	var/obj/item/organ/tongue/abductor/T = H.getorganslot(ORGAN_SLOT_TONGUE)
-	if(!istype(T))
-		return
-
-	if(T.mothership == mothership)
-		to_chat(H, span_notice("[src] is already attuned to the same channel as my own."))
-
-	H.visible_message(span_notice("[H] holds [src] in their hands, and concentrates for a moment."), span_notice("I attempt to modify the attunation of [src]."))
-	if(do_after(H, delay=15, target=src))
-		to_chat(H, span_notice("I attune [src] to my own channel."))
-		mothership = T.mothership
-
-/obj/item/organ/tongue/abductor/examine(mob/M)
-	. = ..()
-	if(HAS_TRAIT(M, TRAIT_ABDUCTOR_TRAINING) || HAS_TRAIT(M.mind, TRAIT_ABDUCTOR_TRAINING) || isobserver(M))
-		if(!mothership)
-			. += span_notice("It is not attuned to a specific mothership.")
-		else
-			. += span_notice("It is attuned to [mothership].")
-
-/obj/item/organ/tongue/abductor/handle_speech(datum/source, list/speech_args)
-	//Hacks
-	var/message = speech_args[SPEECH_MESSAGE]
-	var/mob/living/carbon/human/user = usr
-	var/rendered = span_abductor("<b>[user.real_name]:</b> [message]")
-	user.log_talk(message, LOG_SAY, tag="abductor")
-	for(var/mob/living/carbon/human/H in GLOB.alive_mob_list)
-		var/obj/item/organ/tongue/abductor/T = H.getorganslot(ORGAN_SLOT_TONGUE)
-		if(!istype(T))
-			continue
-		if(mothership == T.mothership)
-			to_chat(H, rendered)
-
-	for(var/mob/M in GLOB.dead_mob_list)
-		var/link = FOLLOW_LINK(M, user)
-		to_chat(M, "[link] [rendered]")
-
-	speech_args[SPEECH_MESSAGE] = ""
 
 /obj/item/organ/tongue/zombie
 	name = "rotting tongue"
@@ -222,7 +175,7 @@
 	var/phomeme_type = "sans"
 	var/list/phomeme_types = list("sans", "papyrus")
 
-/obj/item/organ/tongue/bone/Initialize()
+/obj/item/organ/tongue/bone/Initialize(mapload)
 	. = ..()
 	phomeme_type = pick(phomeme_types)
 
@@ -275,12 +228,12 @@
 	name = "wild tongue"
 	emote_verbs = list(
 		/mob/living/carbon/human/proc/emote_meow,
-		/mob/living/carbon/human/proc/emote_mrrp,
+		/mob/living/proc/emote_mrrp,
 		/mob/living/carbon/human/proc/emote_caw,
 		/mob/living/carbon/human/proc/emote_peep,
 		/mob/living/carbon/human/proc/emote_hoot,
-		/mob/living/carbon/human/proc/emote_squeak,
-		/mob/living/carbon/human/proc/emote_hiss,
+		/mob/living/proc/emote_squeak,
+		/mob/living/proc/emote_hiss,
 		/mob/living/carbon/human/proc/emote_phiss,
 		/mob/living/carbon/human/proc/emote_roar,
 		/mob/living/carbon/human/proc/emote_howl,
@@ -294,8 +247,15 @@
 		/mob/living/carbon/human/proc/emote_moo,
 		/mob/living/carbon/human/proc/emote_bark,
 		/mob/living/carbon/human/proc/emote_growl,
-		/mob/living/carbon/human/proc/emote_prbt,
+		/mob/living/proc/emote_prbt,
 		/mob/living/carbon/human/proc/emote_bleat,
+		/mob/living/carbon/human/proc/emote_chitter,
+		/mob/living/carbon/human/proc/emote_flutter,
+		/mob/living/carbon/human/proc/emote_yip,
+		/mob/living/carbon/human/proc/emote_lizard_bellow,
+		/mob/living/carbon/human/proc/emote_lizard_hiss,
+		/mob/living/carbon/human/proc/emote_lizard_squeal,
+		/mob/living/carbon/human/proc/emote_lizard_thump,
 	)
 
 /obj/item/organ/tongue/moth
@@ -304,4 +264,5 @@
 	emote_verbs = list(
 		/mob/living/carbon/human/proc/emote_chitter,
 		/mob/living/carbon/human/proc/emote_flutter,
+		/mob/living/proc/emote_squeak,
 	)

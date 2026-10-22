@@ -8,7 +8,7 @@
 	icon = 'icons/roguetown/weapons/whips32.dmi'
 	sharpness = IS_BLUNT
 	//dropshrink = 0.75
-	wlength = WLENGTH_LONG
+	wlength = WLENGTH_GREAT // It has a 3 reach attack.
 	w_class = WEIGHT_CLASS_NORMAL
 	slot_flags = ITEM_SLOT_HIP | ITEM_SLOT_BELT
 	associated_skill = /datum/skill/combat/whipsflails
@@ -32,7 +32,7 @@
 				return list("shrink" = 0.3,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
 
 //////////////////////////
-// INTENTS!             //
+// INTENTS!				//
 //////////////////////////
 
 //Lash = default, can't dismember, so more range and some pen.
@@ -78,6 +78,7 @@
 //Bludgeon = Sidegrade of the Crack that functions like a ranged mace. Unique to the Nagaika, or the Steppsman's whip.
 /datum/intent/whip/crack/blunt
 	name = "bludgeon"
+	desc = "Wind up and deliver a powerful strike with the reinforced tip of your whip, shortening your reach but increasing the power. </br>Strikes deliver powerful blunt damage, lacking any cutting power but increasing damage against integrity."
 	blade_class = BCLASS_BLUNT
 	penfactor = PEN_NONE
 	recovery = 6
@@ -85,6 +86,12 @@
 	icon_state = "instrike"
 	item_d_type = "blunt"
 	intent_intdamage_factor = BLUNT_DEFAULT_INT_DAMAGEFACTOR
+/datum/intent/flail/smash/ranged/psywhip
+	name = "Meteor Strike"
+	desc = "Swing the weight of your whip around your body, using the angular momentum to deliver a devastating strike, propelling your enemy back and savaging them at the same time."
+	chargedrain = 0 //The charge time is indicative of a warmup, not a hold.
+	chargedloop = /datum/looping_sound/flailswing
+	keep_looping = FALSE
 
 //Punish = Non-lethal sorta damage.
 /datum/intent/whip/punish
@@ -110,7 +117,7 @@
 	desc = "A short but heavy leather whip, sporting a blunt reinforced tip and a longer handle."
 	icon_state = "nagaika"
 	force = 25		//Same as a cudgel/sword for intent purposes. Basically a 2 range cudgel while one-handing.
-	possible_item_intents = list(/datum/intent/whip/crack/blunt, /datum/intent/whip/lash, /datum/intent/sword/strike)
+	possible_item_intents = list(/datum/intent/whip/lash, /datum/intent/whip/crack/blunt, /datum/intent/sword/strike)
 	wdefense = 1	//Akin to a cudgel, still terrible at parrying though. Better than nothing I guess; thing is used irl as a counter-weapon to knives.
 
 /obj/item/rogueweapon/whip/xylix
@@ -154,37 +161,30 @@
 	wdefense = 1
 	smeltresult = /obj/item/ingot/blacksteel
 
-/obj/item/rogueweapon/whip/antique/psywhip
-	name = "Daybreak"
+/obj/item/rogueweapon/whip/antique/psy
+	name = "\"Daybreak\""
 	desc = "A chain-linked whip, meticulously assembled from a hundred pieces of blessed silver. Its origins are steeped in mythos: most believe it to originate from an ancient bloodline of vampyre-killers, which once saved Psydonia from a powerful lyckerlorde. Whether it was happenstance or fate itself that eventually led it into your grasp, however, is better left unspoken. </br>'There, upon the Cathedral's ceiling, was painted a scene-most-beautiful: of a robed Psydon standing before the Archdevil, parting the nite's sky with a crack from His fiery whip. Just as He had done prior, so too must you bring daelight to the darkness.'"
 	icon_state = "psywhip"
 	is_silver = TRUE
 	force = 25
-	possible_item_intents = list(/datum/intent/whip/lash/master, /datum/intent/whip/crack, /datum/intent/whip/punish)
-	minstr = 11
-	wdefense = 0
+	possible_item_intents = list(/datum/intent/whip/lash/master, /datum/intent/whip/crack, /datum/intent/whip/punish, /datum/intent/flail/smash/ranged/psywhip)
+	minstr = 9
 	anvilrepair = /datum/skill/craft/weaponsmithing
-	smeltresult = /obj/item/ingot/silver
+	smeltresult = /obj/item/ingot/silverblessed
+	max_integrity = 350
 
-/obj/item/rogueweapon/whip/antique/psywhip/ComponentInitialize()
+/obj/item/rogueweapon/whip/antique/psy/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_PSYDONIAN,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 100,\
-		added_def = 0,\
+		silver_type = SILVER_PSYDONIAN\
 	)
 
 /obj/item/rogueweapon/whip/silver
 	name = "silver whip"
 	desc = "A hefty, silver whip. The uncoiled leather is tipped with a silver barb, which can sunder the blighted from a remarkable distance. </br>'Die, monster! You don't belong in this world!'"
 	icon_state = "silverwhip"
-	force = 23 //Experimental change - adds a +2 to force, as a bridge between handweapons and blunt weapons. Higher strength minimum. Do not raise above 25, unless you want to resurrect maille-shatterers.
 	possible_item_intents = list(/datum/intent/whip/lash/master, /datum/intent/whip/crack, /datum/intent/whip/punish)
-	minstr = 11
-	wdefense = 0
 	is_silver = TRUE
 	smeltresult = /obj/item/ingot/silver
 
@@ -192,42 +192,38 @@
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 50,\
-		added_def = 0,\
+		silver_type = SILVER_TENNITE\
 	)
 
-/obj/item/rogueweapon/whip/psywhip_lesser
+/obj/item/rogueweapon/whip/cleric
+	name = "anointed whip"
+	desc = "A crusader's whip, adorned with a tip of cold iron and blessed to smite evil. Though this blessed alloy lacks the strength to \
+	sunder those who bear greater curses, it nevertheless channels enough power to dispell the lesser curses of mindless fiends-and-foes."
+	icon_state = "crusaderwhip"
+	force = 23
+	possible_item_intents = list(/datum/intent/whip/lash/master, /datum/intent/whip/crack, /datum/intent/whip/punish)
+	minstr = 9
+	max_integrity = 300 //+50
+	smeltresult = /obj/item/ingot/iron
+	is_even_lesser_silver = TRUE // adv paladin exclusive weapon, works like unblessed silver but only in pve
+
+/obj/item/rogueweapon/whip/silver/psy
 	name = "psydonic whip"
 	desc = "An ornate whip, plated in a ceremonial veneer of silver. Crack the leather and watch as the apostates clammer aside."
 	icon_state = "psywhip_lesser"
-	possible_item_intents = list(/datum/intent/whip/lash/master, /datum/intent/whip/crack, /datum/intent/whip/punish)
-	force = 23
-	minstr = 11
-	wdefense = 0
-	is_silver = TRUE
 	smeltresult = /obj/item/ingot/silverblessed
+	minstr = 9
 
-/obj/item/rogueweapon/whip/psywhip_lesser/ComponentInitialize()
+/obj/item/rogueweapon/whip/silver/psy/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 50,\
-		added_def = 0,\
+		silver_type = SILVER_PSYDONIAN\
 	)
 
-/obj/item/rogueweapon/whip/psywhip_lesser/preblessed/ComponentInitialize()
+/obj/item/rogueweapon/whip/silver/psy/preblessed/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_PSYDONIAN,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 50,\
-		added_def = 0,\
+		silver_type = SILVER_PSYDONIAN\
 	)

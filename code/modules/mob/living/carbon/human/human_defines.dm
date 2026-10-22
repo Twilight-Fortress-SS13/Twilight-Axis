@@ -3,7 +3,7 @@
 	real_name = "Unknown"
 	icon = 'icons/mob/human.dmi'
 	icon_state = "human_basic"
-	appearance_flags = KEEP_TOGETHER|TILE_BOUND|PIXEL_SCALE
+	appearance_flags = KEEP_TOGETHER|TILE_BOUND|PIXEL_SCALE|LONG_GLIDE
 	hud_possible = list(ANTAG_HUD)
 	hud_type = /datum/hud/human
 	base_intents = list(INTENT_HELP, INTENT_DISARM, INTENT_GRAB, INTENT_HARM)
@@ -23,8 +23,6 @@
 	ambushable = 1
 
 	voice_pitch = 1
-	/// This is probably dead code, but moved to human_defines and I learned to hate people who deatomize it. It's war now.
-	var/char_accent = "No accent"
 
 	var/footstep_type = FOOTSTEP_MOB_HUMAN
 
@@ -41,7 +39,7 @@
 	//Eye colour
 	var/eye_color = "000"
 
-	var/voice_color = "a0a0a0"
+	var/voice_color = "#a0a0a0"
 	var/nickname = "Please Change Me"
 	var/highlight_color = "#FF0000"
 	var/detail_color = "000"
@@ -56,15 +54,9 @@
 
 	var/age = "Adult"		//Player's age
 
-	var/accessory = "None"
-	var/detail = "None"
-	var/marking = "None"
-
 	var/shavelevel = 0
 	var/breathe_tick = 0 // Used for gas mask delays.
 	var/socks = "Nude" //Which socks the player wants
-	var/backpack = DBACKPACK		//Which backpack type the player has chosen.
-	var/jumpsuit_style = PREF_SUIT		//suit/skirt
 
 	//Equipment slots
 	var/obj/item/clothing/skin_armor = null
@@ -129,6 +121,8 @@
 	var/datum/inspiration/inspiration = null
 
 	var/headshot_link = null
+	var/headshot_artist_credit = null
+	var/headshot_artist_link = null
 	var/standard_headshot_link = null //used to store headshots when swapping for antag ones
 	var/flavortext = null
 	/// For setpose
@@ -152,14 +146,14 @@
 	var/nsfwflavortext_cached = ""
 	var/ooc_notes_cached = ""
 	var/erpprefs_cached = ""
+	var/rumour_cached = ""
+	var/noble_gossip_cached = ""
 
 	/// Per-character theme override for examine panel viewers
 	var/examine_theme
 	var/list/img_gallery = list()
 
 	var/list/nsfw_img_gallery = list()
-
-
 
 	var/has_confessed = FALSE // Used to track if they have confessed it was written onto a confession paper
 
@@ -174,8 +168,6 @@
 
 	var/voice_type = null // LETHALSTONE EDIT: defines what sound pack we use. keep this null so mobs resort to their typical gender typing - preferences set this
 	var/datum/statpack/statpack = null // Lethalstone Port - statpacks for greater customization
-	var/second_voice	// Virtue-specific. Can be swapped to / from and changed.
-	var/original_voice
 	//setting up vars for vampire color values
 	var/vampire_skin = null
 	var/vampire_eyes = null
@@ -183,9 +175,15 @@
 	var/vampire_ears = null
 	///An alternative headshot link that can be used when users want to use it for a special role like while a vampire, werewolf, bandit, etc.
 	var/vampire_headshot_link
+	var/vampire_headshot_artist_credit
+	var/vampire_headshot_artist_link
 	var/lich_headshot_link
+	var/lich_headshot_artist_credit
+	var/lich_headshot_artist_link
 	//setting up the hooks for this, but not shown yet
 	var/werewolf_headshot_link
+	var/werewolf_headshot_artist_credit
+	var/werewolf_headshot_artist_link
 
 	/// Whether our FOV cone is overridden to be hidden. Simple bool.
 	var/viewcone_override
@@ -200,8 +198,9 @@
 	/// Ref to orison-like sunder object
 	var/sunder_light_obj = null
 
-	/// Assoc list of culinary preferences of the mob
-	var/list/culinary_preferences = list()
+	var/favorite_cuisine = NONE
+	var/favorite_dish = NONE
+	var/favorite_drink = NONE
 
 	/// List of mobs that have attacked us. Only relevant to someone with TRAIT_TEMPO.
 	var/list/tempo_attackers = list()

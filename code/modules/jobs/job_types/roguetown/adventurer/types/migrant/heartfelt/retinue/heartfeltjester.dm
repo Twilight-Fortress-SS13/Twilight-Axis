@@ -23,7 +23,7 @@
 	head = /obj/item/clothing/head/roguetown/jester
 	neck = /obj/item/clothing/neck/roguetown/coif
 	H.adjust_skillrank(/datum/skill/combat/knives, rand(SKILL_LEVEL_APPRENTICE , SKILL_LEVEL_MASTER), TRUE)
-	H.adjust_skillrank(/datum/skill/misc/reading, rand(SKILL_LEVEL_NOVICE, SKILL_LEVEL_LEGENDARY), TRUE) 
+	H.adjust_skillrank(/datum/skill/misc/reading, rand(SKILL_LEVEL_NOVICE, SKILL_LEVEL_LEGENDARY), TRUE)
 	H.adjust_skillrank(/datum/skill/misc/sneaking, rand(SKILL_LEVEL_APPRENTICE, SKILL_LEVEL_EXPERT), TRUE)
 	H.adjust_skillrank(/datum/skill/misc/stealing, rand(SKILL_LEVEL_NOVICE, SKILL_LEVEL_EXPERT), TRUE)
 	H.adjust_skillrank(/datum/skill/misc/climbing, rand(SKILL_LEVEL_APPRENTICE, SKILL_LEVEL_MASTER), TRUE)
@@ -39,9 +39,9 @@
 	H.STAINT = rand(3, 20)
 	H.STAPER = rand(3, 20)
 	H.STALUC = rand(3, 20)
-	H.cmode_music = 'sound/music/combat_jester.ogg'
+	H.cmode_music = sound("sound/music/combat_jester.ogg")
 	if(H.mind)
-		// Mime vs Jester. 
+		// Mime vs Jester.
 		if(HAS_TRAIT(H, TRAIT_PERMAMUTE)) // I considered adding a check for Xylix patron but in the off chance there's a mute non-xylix jester I don't want to fuck them over.
 			H.mind.AddSpell(new /obj/effect/proc_holder/spell/aoe_turf/conjure/mime_wall)
 			H.mind.AddSpell(new /obj/effect/proc_holder/spell/aoe_turf/conjure/mime_chair)

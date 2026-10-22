@@ -21,6 +21,7 @@ import {
 } from './QuestScroll/Seals';
 import type { QuestScrollData } from './QuestScroll/shared';
 import {
+  bountyHeader,
   completionStamp,
   divider,
   FACTION_CAT_BEAST,
@@ -29,7 +30,9 @@ import {
   FACTION_CAT_GRONN,
   FACTION_CAT_UNDEAD,
   failedStamp,
+  marginaliaLabel,
   marginaliaLine,
+  netReward,
   parchment,
   titleHint,
   WRIT_TYPE_CARRIAGE,
@@ -39,6 +42,23 @@ import {
 } from './QuestScroll/shared';
 import { TownerWrit } from './QuestScroll/TownerWrit';
 import { UndeadWrit } from './QuestScroll/UndeadWrit';
+
+const BountyHeader = (props: {
+  reward: number;
+  levyRate: number;
+  levyExempt: boolean;
+  guildCutRate: number;
+}) => {
+  const { reward, levyRate, levyExempt, guildCutRate } = props;
+  const net = netReward(reward, levyRate, levyExempt, guildCutRate);
+  return (
+    <div style={bountyHeader}>
+      <span style={marginaliaLabel}>Bounty as it now stands:</span>
+      <b>{reward} mammon</b>
+      {net !== reward && <span>({net} in hand after deductions)</span>}
+    </div>
+  );
+};
 
 type MarginaliaSectionProps = {
   data: QuestScrollData;
@@ -65,7 +85,7 @@ const MarginaliaSection = (props: MarginaliaSectionProps) => {
             done={data.progress_current ?? 0}
             total={data.progress_required ?? 1}
             noun={
-              data.fetch_item ? `${data.fetch_item}s` : 'goods of the realm'
+              data.fetch_item_plural || data.fetch_item || 'goods of the realm'
             }
           />
         ) : (
@@ -96,7 +116,7 @@ const MarginaliaSection = (props: MarginaliaSectionProps) => {
         <div style={marginaliaLine}>
           <i>
             Only {data.issued_by || 'the poster'} can open what you recover -
-            carry it back to them.
+            Carry it back to them.
           </i>
         </div>
       )}
@@ -161,6 +181,7 @@ const WritBody = (props: WritBodyProps) => {
         circumstance={data.circumstance}
         pickupRegion={data.pickup_region}
         fetchItem={data.fetch_item}
+        fetchItemPlural={data.fetch_item_plural}
         fetchCount={data.fetch_count}
         {...rewardProps}
         {...sealProps}
@@ -327,6 +348,15 @@ export const QuestScroll = () => {
         <div style={parchment}>
           {data.title && <div style={titleHint}>{data.title}</div>}
 
+          {!!bearer && (
+            <BountyHeader
+              reward={reward}
+              levyRate={levyRate}
+              levyExempt={levyExempt}
+              guildCutRate={guildCutRate}
+            />
+          )}
+
           <div style={writBody}>
             <WritBody
               data={data}
@@ -358,7 +388,7 @@ export const QuestScroll = () => {
               <hr style={divider} />
               <div style={completionStamp}>THIS WORK IS DONE</div>
               <div style={{ textAlign: 'center', marginTop: '6px' }}>
-                Return this writ to the Contract Ledger to claim the bounty.
+                Return this scroll to the Contract Ledger to claim your reward.
               </div>
               <div
                 style={{
@@ -368,14 +398,14 @@ export const QuestScroll = () => {
                   color: 'hsl(30, 35%, 40%)',
                 }}
               >
-                Place it on the marked area or put it on the ledger.
+                Place it on the marked area or put it on the Ledger.
               </div>
             </>
           ) : data.blockade_failed ? (
             <>
               <hr style={divider} />
               <div style={failedStamp}>
-                THE BLOCKADE HELD, THIS WRIT HAS LAPSED
+                THE BLOCKADE HELD. THIS WRIT HAS LAPSED
               </div>
             </>
           ) : null}
@@ -391,8 +421,8 @@ export const QuestScroll = () => {
                   fontSize: '0.92em',
                 }}
               >
-                By Royal Seal and Ducal Prerogative, the bearer of this writ is
-                held exempt from the Crown&apos;s Levy upon its reward.
+                By seal of the {rulerTitle}, the holder of this writ is exempt
+                from the Crown&apos;s Levy on its reward.
               </div>
             </>
           )}

@@ -63,7 +63,7 @@
 	if(isnull(user.client))
 		return null
 
-	if((!user.client.prefs.tgui_pref || strict_byond) && length(buttons))
+	if(strict_byond && length(buttons))
 		switch(length(buttons))
 			if(1)
 				return alert(user, message, title, buttons[1])

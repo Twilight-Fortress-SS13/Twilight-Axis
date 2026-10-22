@@ -288,14 +288,14 @@
 	maturation_time = FAST_GROWING
 
 // /datum/plant_def/manabloom
-// 	name = "manabloom"
-// 	icon_state = "manabloom"
-// 	produce_type = /obj/item/reagent_containers/food/snacks/grown/manabloom
-// 	produce_amount_min = 1
-// 	produce_amount_max = 3
-// 	maturation_time = FAST_GROWING
-// 	water_drain_rate = 1 / (2 MINUTES)
-// 	can_grow_underground = TRUE
+//	name = "manabloom"
+//	icon_state = "manabloom"
+//	produce_type = /obj/item/reagent_containers/food/snacks/grown/manabloom
+//	produce_amount_min = 1
+//	produce_amount_max = 3
+//	maturation_time = FAST_GROWING
+//	water_drain_rate = 1 / (2 MINUTES)
+//	can_grow_underground = TRUE
 
 /datum/plant_def/garlick
 	name = "garlick sprouts"
@@ -323,7 +323,7 @@
 	perennial = TRUE
 	produce_amount_max = 3
 	maturation_nutrition = 60
-	produce_nutrition =  35
+	produce_nutrition =	35
 	maturation_time = 6 MINUTES
 	produce_time = 3 MINUTES
 	water_drain_rate = 1 / (2 MINUTES)
@@ -356,6 +356,27 @@
 	maturation_nutrition = HUNGRINESS_DEMANDING
 	maturation_time = SLOW_GROWING
 	produce_time = 3 MINUTES
+
+// Naledi plants
+/datum/plant_def/bush/beans
+	name = "beans bush"
+	icon_state = "beans"
+	produce_type = /obj/item/reagent_containers/food/snacks/grown/beans
+	produce_amount_min = 2
+	produce_amount_max = 4
+	uproot_loot = list(/obj/item/natural/fibers = 2)
+	maturation_time = FAST_GROWING
+	produce_time = 3 MINUTES
+
+/datum/plant_def/bush/lentils
+	name = "lentils bush"
+	icon_state = "lentils"
+	produce_type = /obj/item/reagent_containers/food/snacks/grown/lentils
+	produce_amount_min = 1
+	produce_amount_max = 5
+	uproot_loot = list(/obj/item/natural/fibers = 2)
+	maturation_time = FAST_GROWING
+	produce_time = 3.5 MINUTES
 
 #undef SLOW_GROWING
 #undef FAST_GROWING

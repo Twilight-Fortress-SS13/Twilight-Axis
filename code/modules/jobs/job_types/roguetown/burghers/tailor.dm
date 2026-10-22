@@ -17,11 +17,12 @@
 	min_pq = 1
 	max_pq = null
 	round_contrib_points = 3
-	cmode_music = 'sound/music/cmode/towner/combat_towner3.ogg'
+	cmode_music = sound("sound/music/cmode/towner/combat_towner3.ogg")
 	advclass_cat_rolls = list(CTAG_TAILOR = 2)
 	job_subclasses = list(
 		/datum/advclass/tailor
 	)
+	has_subprefs = FALSE // only one subclass
 
 /datum/advclass/tailor
 	name = "Tailor"
@@ -57,7 +58,7 @@
 	shoes = /obj/item/clothing/shoes/roguetown/shortboots
 	backr = /obj/item/storage/backpack/rogue/satchel
 	backpack_contents = list(
-		/obj/item/needle,
+		/obj/item/needle/tailor,
 		/obj/item/storage/keyring/tailor,
 		/obj/item/dye_brush,
 		/obj/item/recipe_book/sewing,

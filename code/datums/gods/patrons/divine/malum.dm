@@ -3,11 +3,11 @@
 	domain = "God of Fire, Destruction and Rebirth"
 	desc = "Opinionless god of the crafts. He teaches that great works for killing or saving are great works, either way. The well-oiled guillotine and the well-sharpened axe are tools, and there is no good and evil to their craft."
 	worshippers = "Smiths, Miners, Engineers"
-	mob_traits = list(TRAIT_FORGEBLESSED)
+	mob_traits = list(TRAIT_FORGEBLESSED, TRAIT_MALUM_CRAFTER)
 	miracles = list(/datum/action/cooldown/spell/touch/orison				= CLERIC_ORI,
 					/datum/action/cooldown/spell/miracle/ignition/malum		= CLERIC_T0,
-					/datum/action/cooldown/spell/malum/reconstruction       = CLERIC_T0,
-					/datum/action/cooldown/spell/miracle/heal 				= CLERIC_T1,
+					/datum/action/cooldown/spell/malum/reconstruction		= CLERIC_T0,
+					/datum/action/cooldown/spell/miracle/heal				= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/bloodmiracle		= CLERIC_T1,
 					/datum/action/cooldown/spell/malum/vigorousexchange		= CLERIC_T1,
 					/datum/action/cooldown/spell/arcyne_forge/miracle		= CLERIC_T1,
@@ -26,7 +26,7 @@
 	storyteller = /datum/storyteller/malum
 
 	titles = list(
-		"Forgefather", 
+		"Forgefather",
 		"Maker",
 		"Mamuke"
 		)
@@ -56,12 +56,12 @@
 	return FALSE
 
 /datum/patron/divine/malum/on_lesser_heal(
-    mob/living/user,
-    mob/living/target,
-    message_out,
-    message_self,
-    conditional_buff,
-    situational_bonus
+	mob/living/user,
+	mob/living/target,
+	message_out,
+	message_self,
+	conditional_buff,
+	situational_bonus
 )
 	*message_out = span_info("A tempering heat is discharged out of [target]!")
 	*message_self = span_info("I feel the heat of a forge soothing my pains!")

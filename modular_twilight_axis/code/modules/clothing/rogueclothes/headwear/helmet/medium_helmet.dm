@@ -1,39 +1,3 @@
-/obj/item/clothing/head/roguetown/helmet/sallet/visored/grenzelhoft
-	name = "visored sallet w/plume hat"
-	desc = "A Grenzelhoftian plume hat placed atop a steel sallet with an adjustable visor, staying fashionable while guarding the wearer's head with refined practicality. Away with you, vile beggar!"
-	icon_state = "grenzelsallet_visor"
-	item_state = "grenzelsallet_visor"
-	icon = 'modular_twilight_axis/icons/roguetown/clothing/head.dmi'
-	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/head.dmi'
-	detail_tag = "_detail"
-	altdetail_tag = "_detailalt"
-	resistance_flags = FIRE_PROOF
-	var/picked = FALSE
-	color = "#FFFFFF"
-	detail_color = "#262927"
-	altdetail_color = "#FFFFFF"
-	max_integrity = ARMOR_INT_HELMET_STEEL + 15
-
-/obj/item/clothing/head/roguetown/helmet/sallet/visored/grenzelhoft/Initialize()
-	. = ..()
-	update_icon()
-
-/obj/item/clothing/head/roguetown/helmet/sallet/visored/grenzelhoft/update_icon()
-	cut_overlays()
-	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
-		pic.appearance_flags = RESET_COLOR
-		if(get_detail_color())
-			pic.color = get_detail_color()
-		add_overlay(pic)
-
-	if(get_altdetail_tag())
-		var/mutable_appearance/pic2 = mutable_appearance(icon(icon, "[icon_state][altdetail_tag]"))
-		pic2.appearance_flags = RESET_COLOR
-		if(get_altdetail_color())
-			pic2.color = get_altdetail_color()
-		add_overlay(pic2)
-
 /obj/item/clothing/head/roguetown/helmet/raneshi_jarhelmet
 	name = "raneshi jar helmet"
 	desc = "a jar-shaped helmet used by Empire light warriors."
@@ -114,3 +78,32 @@
 		if(get_detail_color())
 			pic.color = get_detail_color()
 		add_overlay(pic)
+
+/obj/item/clothing/head/roguetown/helmet/heavy/zizo/bascinet/bloodraider
+	name = "raider's helmet"
+	desc = "A darksteel helmet that doesn't obstruct the wearer's vision. Fitted with a sharp horn for the most desperate situations."
+	icon = 'modular_twilight_axis/icons/clothing/bloodraider.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/bloodraider.dmi'
+	icon_state = "bloodhelmet"
+	item_state = "bloodhelmet"
+	armor_class = ARMOR_CLASS_LIGHT
+	max_integrity = ARMOR_INT_HELMET_ANTAG - 300
+	flags_inv = HIDEEARS|HIDEFACE|HIDESNOUT|HIDEFACIALHAIR
+	unenchantable = FALSE
+	var/active_item = FALSE
+
+/obj/item/clothing/head/roguetown/helmet/heavy/zizo/bascinet/bloodraider/equipped(mob/living/user, slot)
+	. = ..()
+	if(slot == SLOT_HEAD)
+		active_item = TRUE
+		ADD_TRAIT(user, TRAIT_BITERHELM, TRAIT_GENERIC)
+		to_chat(user, span_red("Unholy strands of darksteel worm into your flesh as the visor chitters. Her symbiotic malice tightens your jaw with predatory intent.."))
+	return
+
+/obj/item/clothing/head/roguetown/helmet/heavy/zizo/bascinet/bloodraider/dropped(mob/living/user)
+	..()
+	if(!active_item)
+		return
+	active_item = FALSE
+	REMOVE_TRAIT(user, TRAIT_BITERHELM, TRAIT_GENERIC)
+	to_chat(user, span_red("..and like that, the darksteel strands recede back into the helmet. Her oppressive grip releases your jaw, leaving a cold, hollow ache."))

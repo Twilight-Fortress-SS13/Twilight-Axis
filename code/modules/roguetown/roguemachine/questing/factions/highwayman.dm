@@ -11,11 +11,14 @@
 		/mob/living/carbon/human/species/human/northern/militia/deserter = 20,
 		/mob/living/carbon/human/species/human/northern/highwayman/archer = 19, // archer+crossbowman+sharpshooter ~30% of highwaymen (ranged)
 		/mob/living/carbon/human/species/human/northern/highwayman/crossbowman = 7,
+		/mob/living/carbon/human/species/human/northern/highwayman/light = 14,
+		/mob/living/carbon/human/species/human/northern/highwayman/bulwark = 8,
 		/mob/living/carbon/human/species/human/northern/highwayman/road_knight = 8,
 		/mob/living/carbon/human/species/human/northern/highwayman/sharpshooter = 8,
 	)
 	boss_mob_types = list(
-		/mob/living/carbon/human/species/human/northern/outlaw_duelist = 100,
+		/mob/living/carbon/human/species/human/northern/outlaw_duelist = 70,
+		/mob/living/carbon/human/species/human/northern/outlaw_ranger = 30,
 	)
 	boss_title_templates = list(
 		"%N the Cutthroat",
@@ -53,6 +56,12 @@
 		CRIME_PETTY_PROPOSAL_SCORN = 1,
 		CRIME_PETTY_GUEST_WINE = 1,
 		CRIME_PETTY_TOMBSTONE_INSULT = 1,
+		CRIME_PETTY_LEWD_HERMES = 1,
+		CRIME_PETTY_LEWD_GODS_ART = 1,
+		CRIME_PETTY_TELESCOPE_PEEPING = 1,
+		CRIME_PETTY_BADGER_NOTICE = 1,
+		CRIME_PETTY_HERMES_FISH = 1,
+		CRIME_PETTY_FALSE_HAMMERHOLD = 1,
 		CRIME_POACHING_LAND = 3,
 		CRIME_POACHING_FISH = 1,
 		CRIME_FALSE_RELICS = 1,

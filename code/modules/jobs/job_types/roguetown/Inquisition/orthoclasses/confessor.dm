@@ -2,19 +2,16 @@
 	name = "Confessor"
 	tutorial = "Psydonite hunters, unmatched in the fields of subterfuge and investigation. There is no suspect too powerful to investigate, no room too guarded to infiltrate, and no weakness too hidden to exploit."
 	allowed_sexes = list(MALE, FEMALE)
-	
+
 	outfit = /datum/outfit/job/roguetown/confessor
 	category_tags = list(CTAG_ORTHODOXIST)
 	subclass_languages = list(/datum/language/otavan)
-	cmode_music = 'sound/music/cmode/antag/combat_deadlyshadows.ogg'
+	cmode_music = sound("sound/music/cmode/antag/combat_deadlyshadows.ogg")
 	traits_applied = list(
 		TRAIT_DODGEEXPERT,
 		TRAIT_BLACKBAGGER,
 		TRAIT_PERFECT_TRACKER,
-		TRAIT_PSYDONITE,
-		TRAIT_SLEUTH,
-		TRAIT_STEELHEARTED,
-		TRAIT_INQUISITION
+		TRAIT_PSYDONITE
 	)
 	subclass_stats = list(
 		STATKEY_SPD = 3,
@@ -49,40 +46,49 @@
 /datum/outfit/job/roguetown/confessor/pre_equip(mob/living/carbon/human/H, visualsOnly)
 	..()
 	if(H.mind)
-		var/weapons = list("Psydonic Rapier", "Psydonic Shortsword", "Psydonic Tomahawk", "Psydonic Cudgel", "Psydonic Flanged Mace")
+		var/weapons = list("Psydonic Rapier", "Psydonic Shortsword", "Psydonic Tomahawk", "Psydonic Cudgel", "Psydonic Flanged Mace", "Psydonic Whip")
 		var/weapon_choice = input(H,"Choose your WEAPON.", "TAKE UP PSYDON'S ARMS.") as anything in weapons
 		switch(weapon_choice)
 			if("Psydonic Rapier")
-				l_hand = /obj/item/rogueweapon/sword/rapier/psy
+				l_hand = /obj/item/rogueweapon/sword/rapier/silver/psy
 				r_hand = /obj/item/rogueweapon/scabbard/sword
-				H.adjust_skillrank_up_to(/datum/skill/combat/swords, 4, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
 			if("Psydonic Shortsword")
-				l_hand = /obj/item/rogueweapon/sword/short/psy
+				l_hand = /obj/item/rogueweapon/sword/short/silver/psy
 				r_hand = /obj/item/rogueweapon/scabbard/sword
-				H.adjust_skillrank_up_to(/datum/skill/combat/swords, 4, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
 			if("Psydonic Tomahawk")
-				l_hand = /obj/item/rogueweapon/stoneaxe/handaxe/psy
-				H.adjust_skillrank_up_to(/datum/skill/combat/axes, 4, TRUE)
+				l_hand = /obj/item/rogueweapon/stoneaxe/handaxe/silver/psy
+				H.adjust_skillrank_up_to(/datum/skill/combat/axes, SKILL_LEVEL_EXPERT, TRUE)
 			if("Psydonic Cudgel")
 				l_hand = /obj/item/rogueweapon/mace/cudgel/psy
-				H.adjust_skillrank_up_to(/datum/skill/combat/maces, 4, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_EXPERT, TRUE)
 			if("Psydonic Flanged Mace")
-				l_hand = /obj/item/rogueweapon/mace/cudgel/flanged/psy
-				H.adjust_skillrank_up_to(/datum/skill/combat/maces, 4, TRUE)	
+				l_hand = /obj/item/rogueweapon/mace/cudgel/flanged/silver/psy
+				H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_EXPERT, TRUE)
+			if("Psydonic Whip")
+				l_hand = /obj/item/rogueweapon/whip/silver/psy
+				H.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, SKILL_LEVEL_EXPERT, TRUE)
 		var/armors = list("Confessor - Dodge Expert, Complete Coverage", "Arbalist - Master Crossbows, +III STR / -III SPD")
 		var/armor_choice = input(H, "Choose your ARCHETYPE.", "TAKE UP PSYDON'S DUTY.") as anything in armors
 		switch(armor_choice)
 			if("Confessor - Dodge Expert, Complete Coverage")
 				head = /obj/item/clothing/head/roguetown/roguehood/psydon/confessor
 				armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/confessor
-				shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/inq
+				var/shirts = list("Inquisitorial Leather Tunic", "Cuir-Bouilli Vest")
+				var/shirt_choice = input(H, "Choose your UNDERLAYER.", "TAKE UP PSYDON'S VESTMENTS.") as anything in shirts
+				switch(shirt_choice)
+					if("Inquisitorial Leather Tunic")
+						shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/inq
+					if("Cuir-Bouilli Vest")
+						shirt = /obj/item/clothing/suit/roguetown/armor/leather/studded/cuirbouilli
 			if("Arbalist - Master Crossbows, +III STR / -III SPD")
 				head = /obj/item/clothing/head/roguetown/headband/bloodied
-				armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fencer/psydon
-				shirt = /obj/item/clothing/suit/roguetown/armor/manual/sewable/confessor
+				armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fencer/ornate
+				shirt = /obj/item/clothing/suit/roguetown/armor/manual/tool/needle/chest/confessor
 				REMOVE_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
-				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, 5, TRUE)
-				H.adjust_skillrank_up_to(/datum/skill/misc/swimming, 4, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_MASTER, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/misc/swimming, SKILL_LEVEL_EXPERT, TRUE)
 				H.change_stat(STATKEY_CON, 1)
 				H.change_stat(STATKEY_STR, 3)
 				H.change_stat(STATKEY_PER, 1) //Applies a base statblock of 11/12/10/13 to CON, STR, SPD and PER - compared to the standard 10/9/13/12 + DODGE EXPERT. Physically adept and capable of higher ranged damage..
@@ -119,7 +125,7 @@
 	gloves = /obj/item/clothing/gloves/roguetown/otavan/psygloves
 	neck = /obj/item/clothing/neck/roguetown/gorget
 	backr = /obj/item/storage/backpack/rogue/satchel/otavan
-	belt = /obj/item/storage/belt/rogue/leather/knifebelt/black/psydon_blessed
+	belt = /obj/item/storage/belt/rogue/leather/knifebelt/black/silver/psy/preblessed
 	beltr = /obj/item/storage/belt/rogue/pouch/coins/mid
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan
 	shoes = /obj/item/clothing/shoes/roguetown/boots/psydonboots
@@ -133,7 +139,7 @@
 		/obj/item/inqarticles/garrote = 1,
 		/obj/item/grapplinghook = 1,
 		/obj/item/paper/inqslip/arrival/ortho = 1,
-		/obj/item/rogueweapon/huntingknife/idagger/silver/psydagger = 1,
+		/obj/item/rogueweapon/huntingknife/idagger/steel/silver/psy = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1
 		)
 

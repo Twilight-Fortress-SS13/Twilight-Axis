@@ -1,15 +1,17 @@
 /datum/wound
 	/// Werewolf infection probability for bites on this wound
-	var/werewolf_infection_probability = 15
+	var/werewolf_infection_probability = 4
 	/// Time taken until werewolf infection comes in
 	var/werewolf_infection_time = 2 MINUTES
 	/// Actual infection timer
 	var/werewolf_infection_timer
 
-/datum/wound/proc/werewolf_infect_attempt()
+/datum/wound/proc/werewolf_infect_attempt(infection_probability = null)
 	if(QDELETED(src) || QDELETED(owner) || QDELETED(bodypart_owner))
 		return FALSE
-	if(werewolf_infection_timer || !ishuman(owner) || !prob(werewolf_infection_probability))
+	if(isnull(infection_probability))
+		infection_probability = werewolf_infection_probability
+	if(werewolf_infection_timer || !ishuman(owner) || !prob(infection_probability))
 		return FALSE
 	var/mob/living/carbon/human/human_owner = owner
 	if(!human_owner.can_werewolf())

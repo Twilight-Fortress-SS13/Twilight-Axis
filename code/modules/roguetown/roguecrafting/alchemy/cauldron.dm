@@ -37,7 +37,7 @@
 	. += span_info("Left-click the cauldron with a container on the 'FEED' intent to fill it up. Likewise, left-clicking the cauldron with a container on the 'FILL' intent will gradually transfer the cauldron's brew into the container.")
 	. += span_info("Combining certain herbs, powders, and other ingredients can create a wide variety of alchemical wonders.")
 
-/obj/machinery/light/rogue/cauldron/Initialize()
+/obj/machinery/light/rogue/cauldron/Initialize(mapload)
 	create_reagents(500, DRAINABLE | AMOUNT_VISIBLE | REFILLABLE)
 	. = ..()
 
@@ -74,7 +74,14 @@
 				for(var/obj/item/ing in src.ingredients)
 					if(!istype(ing,/obj/item/alch))
 						continue
+					if(istype(ing, /obj/item/alch/hag_moss) && !lastuser.mind?.has_antag_datum(/datum/antagonist/hag))
+						continue // only hags can make potions with moss
 					var/obj/item/alch/alching = ing
+					if(alching.complete_pot != null)
+						if(outcomes[alching.complete_pot] != null)
+							outcomes[alching.complete_pot] += 5
+						else
+							outcomes[alching.complete_pot] = 5
 					if(alching.major_pot != null)
 						if(outcomes[alching.major_pot] != null)
 							outcomes[alching.major_pot] += 3
@@ -110,7 +117,7 @@
 							qdel(ing)
 						src.reagents.add_reagent(/datum/reagent/yuck, in_cauldron) // 1 to 1 transmutation of yuck
 						// Learn from your failure (Yeah you can technically still grind this way you just blow through a lot of ingredients)
-						lastuser?.adjust_experience(/datum/skill/craft/alchemy, amt2raise, FALSE) 
+						add_sleep_experience(lastuser, /datum/skill/craft/alchemy, amt2raise)
 						return
 					for(var/obj/item/ing in src.ingredients)
 						qdel(ing)
@@ -126,7 +133,7 @@
 					record_featured_stat(FEATURED_STATS_ALCHEMISTS, lastuser)
 					record_round_statistic(STATS_POTIONS_BREWED)
 					//give xp for /datum/skill/craft/alchemy
-					lastuser?.adjust_experience(/datum/skill/craft/alchemy, amt2raise, FALSE)
+					add_sleep_experience(lastuser, /datum/skill/craft/alchemy, amt2raise)
 					playsound(src, "bubbles", 100, TRUE)
 					playsound(src,'sound/misc/smelter_fin.ogg', 30, FALSE)
 					ingredients = list()
@@ -201,7 +208,7 @@
 	base_state = "FoldingCauldronDeployed"
 	maxingredients = 3 //-1
 	waterneed = 60
-	fueluse = 2 MINUTES 
+	fueluse = 2 MINUTES
 
 /obj/machinery/light/rogue/cauldron/folding/examine()
 	. = ..()
@@ -215,7 +222,7 @@
 		return ..()
 	return
 
-/obj/machinery/light/rogue/cauldron/folding/Initialize()
+/obj/machinery/light/rogue/cauldron/folding/Initialize(mapload)
 	. = ..()
 	burn_out()
 	create_reagents(90, DRAINABLE | AMOUNT_VISIBLE | REFILLABLE)

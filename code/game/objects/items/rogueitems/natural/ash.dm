@@ -5,12 +5,14 @@
 	icon_state = "ash"
 	w_class = WEIGHT_CLASS_TINY
 	var/being_deleted = FALSE
+	materia = list(/datum/materia_aspect/fire)
+	gender = PLURAL
 
 /obj/item/ash/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Ash can be used as fertilizer, in order to improve a crop's health. To do so, left-click the crop or its soil while holding the ash.")
 
-/obj/item/ash/Initialize()
+/obj/item/ash/Initialize(mapload)
 	. = ..()
 	var/static/list/slapcraft_recipe_list = list(
 		/datum/crafting_recipe/roguetown/survival/boat,

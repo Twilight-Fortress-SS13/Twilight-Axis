@@ -1,8 +1,10 @@
 /datum/action/cooldown/spell/cataclysm
+	source_aspect = /datum/magic_aspect/pseudo/spellblade
 	name = "Cataclysm"
+	expose_caster_on_deflect = FALSE
 	desc = "Let the mountain fall. Conjure a hammer of pure arcyne force and hurl it at a target area. \
-		On impact it explodes, crushing everyone in a 5x5 area for 75 blunt damage and leaving them Vulnerable. \
-		Requires 7 momentum. Overcharged at 10 momentum: 135 damage. \
+		On impact it explodes, crushing everyone in a 5x5 area for 60 blunt damage and leaving them Vulnerable. \
+		Requires 7 momentum. Overcharged at 10 momentum: 108 damage. \
 		Same level only. Can be blocked by Defend stance."
 	button_icon = 'icons/mob/actions/classuniquespells/spellblade.dmi'
 	button_icon_state = "cataclysm"
@@ -32,8 +34,8 @@
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
 	var/delay = 10
-	var/damage = 75
-	var/bonus_damage = 60
+	var/damage = SPELL_DMG(75)
+	var/bonus_damage = SPELL_DMG(60)
 	var/area_of_effect = 2
 	var/min_momentum = 7
 	var/empowered_momentum = 10
@@ -94,9 +96,9 @@
 	H.visible_message(span_boldwarning("[H] conjures a massive hammer out of arcyne force!"))
 
 	for(var/turf/affected_turf in get_hear(area_of_effect, T))
-		new /obj/effect/temp_visual/blade_storm_telegraph(affected_turf)
+		new /obj/effect/temp_visual/telegraph/blade_storm(affected_turf)
 
-	log_combat(H, cast_on, "used Cataclysm on")
+	log_combat(H, cast_on, "used Cataclysm on", zone=H.zone_selected)
 
 	addtimer(CALLBACK(src, PROC_REF(do_hammer_throw), H, held_weapon, T, final_damage, def_zone, empowered), delay)
 	. = ..()
@@ -143,10 +145,10 @@
 				L.visible_message(span_warning("[L] endures the impact!"))
 				continue
 			if(empowered)
-				arcyne_strike(user, L, weapon, round(final_damage / 2), def_zone, BCLASS_BLUNT, spell_name = "Cataclysm", skip_message = TRUE)
-				arcyne_strike(user, L, weapon, round(final_damage / 2), def_zone, BCLASS_BLUNT, spell_name = "Cataclysm")
+				arcyne_strike(user, L, weapon, round(final_damage / 2), def_zone, BCLASS_BLUNT, spell_name = "Cataclysm", skip_message = TRUE, SPELL_STRIKE_SCALING)
+				arcyne_strike(user, L, weapon, round(final_damage / 2), def_zone, BCLASS_BLUNT, spell_name = "Cataclysm", SPELL_STRIKE_SCALING)
 			else
-				arcyne_strike(user, L, weapon, final_damage, def_zone, BCLASS_BLUNT, spell_name = "Cataclysm")
+				arcyne_strike(user, L, weapon, final_damage, def_zone, BCLASS_BLUNT, spell_name = "Cataclysm", SPELL_STRIKE_SCALING)
 			L.apply_status_effect(/datum/status_effect/debuff/vulnerable, vulnerable_duration)
 			playsound(affected_turf, pick('sound/combat/ground_smash1.ogg', 'sound/combat/ground_smash2.ogg', 'sound/combat/ground_smash3.ogg'), 60, TRUE)
 

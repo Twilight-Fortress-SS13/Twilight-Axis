@@ -77,7 +77,7 @@
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/32х48/helmets.dmi'
 	icon_state = "face_helmet"
 	item_state = "face_helmet"
-	max_integrity = ARMOR_INT_HELMET_HEAVY_STEEL + 20 //В стандартном шлеме юзается ARMOR_INT_HELMET_HEAVY_STEEL, дающий 400 очков ХП, но поскольку тут крафт 2 стали 1 бронза, то 20 интегрити сверху вряд-ли сильно повлияют на баланс.
+	max_integrity = ARMOR_INT_HELMET_HEAVY_STEEL - ARMOR_INT_HELMET_HEAVY_ADJUSTABLE_PENALTY + 20 //В стандартном шлеме юзается ARMOR_INT_HELMET_HEAVY_STEEL, дающий 400 очков ХП, но поскольку тут крафт 2 стали 1 бронза, то 20 интегрити сверху вряд-ли сильно повлияют на баланс.
 
 /obj/item/clothing/head/roguetown/helmet/heavy/knight/raneshi_hmamluk/ComponentInitialize()
 	AddComponent(/datum/component/adjustable_clothing, (HEAD|EARS|HAIR), (HIDEEARS|HIDEHAIR), null, 'sound/items/visor.ogg', null, UPD_HEAD)
@@ -164,7 +164,7 @@
 	AddComponent(/datum/component/adjustable_clothing, (HEAD|EARS|HAIR), (HIDEEARS|HIDEHAIR), null, 'sound/items/visor.ogg', null, UPD_HEAD)	//Standard helmet
 
 /obj/item/clothing/head/roguetown/helmet/heavy/citywatch
-	name = "citywatch's helmet"
+	name = "watchman's helmet"
 	desc = "Тяжелый шлем, невероятно устойчивый ко всем видам урона. Используется городским Дозором Рокхилла."
 	icon_state = "citywatch_helmet"
 	item_state = "citywatch_helmet"
@@ -200,3 +200,36 @@
 	desc = "As if facing a Dark Elf raider was not intimidating enough by itself, this helmet, designed to resemble the head of a giant lizard hailing from the Underdark, is meant to invoke primal terror in men and creechers alike."
 	icon_state = "shadowvolf"
 	item_state = "shadowvolf"
+
+/obj/item/clothing/head/roguetown/helmet/heavy/barbute/legion
+	name = "elyrian coolus"
+	desc = "Проверенный временем шлем, любимый легионерами и преторианцами за удобную защиту: он закрывает уязвимые места, не сильно загораживая обзор."
+	worn_x_dimension = 32
+	worn_y_dimension = 32
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/head.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/head.dmi'
+	bloody_icon = 'icons/effects/blood.dmi'
+	icon_state = "legionhelmet"
+	item_state = "legionhelmet"
+
+/obj/item/clothing/head/roguetown/helmet/heavy/elven_helm/druidic
+	allowed_race = null
+	name = "blessed druid helm"
+	desc = "A helm grown deep within Dendor's sanctified grove, hardened by ancient sap and ritual fire."
+	armor = ARMOR_BLACKOAK
+
+/obj/item/clothing/head/roguetown/helmet/heavy/elven_helm/druidic/Initialize(mapload)
+	. = ..()
+	set_light(1, 1, 2, l_color = "#58C86A")
+	add_filter("druid_blessed_glow", 2, list("type" = "outline", "color" = "#58C86A", "alpha" = 95, "size" = 1))
+
+/obj/item/clothing/head/roguetown/helmet/heavy/elven_helm/druidic/pickup(mob/user)
+	. = ..()
+	if(!istype(user, /mob/living/carbon/human))
+		return
+	var/mob/living/carbon/human/H = user
+	if(H.patron?.type == /datum/patron/divine/dendor)
+		return
+	H.electrocute_act(30, src)
+	H.mob_timers["kneestinger"] = world.time
+	to_chat(H, span_warning("[name] rejects my grasp — only the Treefather's faithful may bear such a gift!"))

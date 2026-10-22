@@ -11,11 +11,17 @@
 	no_early_release = TRUE
 	associated_skill = /datum/skill/magic/holy
 	recharge_time = 15 SECONDS
-	
+
 /obj/effect/proc_holder/spell/invoked/ventriloquism/cast(list/targets, mob/user = usr)
 	if(isobj(targets[1]))
 		var/obj/target = targets[1]
 		var/input_message = sanitize(input(usr, "What shall [target] say?", src) as null|text)
+		if(input_message)
+			var/turf/target_turf = get_turf(target)
+			if(target_turf)
+				log_admin("[key_name(user)] used Ventriloquism to make [target] say \"[input_message]\" at [get_area(target_turf)] ([target_turf.x], [target_turf.y], [target_turf.z]).")
+			else
+				log_admin("[key_name(user)] used Ventriloquism to make [target] say \"[input_message]\" at an unknown location.")
 		target.say("[input_message]", language = /datum/language/common)
 		return TRUE
 	revert_cast()
@@ -39,20 +45,24 @@
 	antimagic_allowed = TRUE
 	recharge_time = 30 SECONDS
 	var/firstcast = TRUE
-	var/icon/clone_icon
 	ignore_combat_tag = TRUE
 
 /obj/effect/proc_holder/spell/invoked/mastersillusion/cast(list/targets, mob/living/carbon/human/user = usr)
 	if(firstcast)
 		to_chat(user, span_italics("...Oh, oh, thy visage is so grand! Let us prepare it for tricks!"))
-		clone_icon = get_flat_human_icon("[user.real_name] decoy", null, null, DUMMY_HUMAN_SLOT_MANIFEST, GLOB.cardinals, TRUE, user, TRUE) // We can only set our decoy icon once. This proc is sort of expensive on generation.
 		firstcast = FALSE
 		name = "Master's Illusion"
 		to_chat(user, "There we are... Perfect.")
 		revert_cast()
 		return
 	var/turf/T = get_turf(user)
-	new /mob/living/simple_animal/hostile/rogue/xylixdouble(T, user, clone_icon)
+	var/saved_alpha = user.alpha
+	user.alpha = 255
+	var/mob/living/simple_animal/hostile/rogue/xylixdouble/double = new(T, user)
+	double.appearance = user.appearance
+	double.name = user.name
+	double.summoner = user.name
+	user.alpha = saved_alpha
 	animate(user, alpha = 0, time = 0 SECONDS, easing = EASE_IN)
 	user.mob_timers[MT_INVISIBILITY] = world.time + 7 SECONDS
 	addtimer(CALLBACK(user, TYPE_PROC_REF(/mob/living/carbon/human, update_sneak_invis), TRUE), 7 SECONDS)
@@ -68,26 +78,21 @@
 	health = 20
 	canparry = TRUE
 	d_intent = INTENT_PARRY
-	defprob = 50
 	footstep_type = FOOTSTEP_MOB_BAREFOOT
 	del_on_death = TRUE
 	loot = list(/obj/item/bomb/smoke/decoy)
-	can_have_ai = FALSE
-	AIStatus = AI_OFF
-	ai_controller = /datum/ai_controller/mudcrab // doesnt really matter
+	ai_controller = /datum/ai_controller/rat/undead/summoned
 
 
-/obj/item/bomb/smoke/decoy/Initialize()
+/obj/item/bomb/smoke/decoy/Initialize(mapload)
 	. = ..()
 	playsound(loc, 'sound/magic/decoylaugh.ogg', 50)
 	explode()
 
-/mob/living/simple_animal/hostile/rogue/xylixdouble/Initialize(mapload, mob/living/carbon/human/copycat, icon/I)
+/mob/living/simple_animal/hostile/rogue/xylixdouble/Initialize(mapload, mob/living/carbon/human/copycat)
 	. = ..()
 	addtimer(CALLBACK(src, TYPE_PROC_REF(/mob/living/simple_animal, death), TRUE), 7 SECONDS)
-	icon = I
-	name = copycat.name
-	
+
 
 /obj/effect/proc_holder/spell/self/xylixslip
 	name = "Xylixian Slip"
@@ -266,7 +271,7 @@
 		V.unbuckle_mob(M, force = TRUE)
 	M.forceMove(src)
 	master = C
-	master.active_dummy = src 
+	master.active_dummy = src
 
 
 /obj/effect/dummy/parlor_trick/Destroy()
@@ -324,11 +329,11 @@
 	var/dist = get_dist(Tt, Tu)
 	var/last_dir
 	var/turf/last_step
-	if(Tu.z > Tt.z) 
+	if(Tu.z > Tt.z)
 		last_step = get_step_multiz(Tu, DOWN)
 	else if(Tu.z < Tt.z)
 		last_step = get_step_multiz(Tu, UP)
-	else 
+	else
 		last_step = locate(Tu.x, Tu.y, Tu.z)
 	var/success = FALSE
 	for(var/i = 0, i <= dist, i++)
@@ -471,7 +476,7 @@
 		"Vicious Mockery" = 'sound/magic/mockery.ogg',
 		"Volf Snarl" = 'sound/vo/mobs/vw/idle (1).ogg',
 	)
-	
+
 /obj/effect/proc_holder/spell/invoked/mimicry/cast(list/targets, mob/living/user)
 	var/turf/T = get_turf(targets[1])
 	var/pickedsound = input(user, "Choose a sound, my wise bureaucrat.", "Mimic Sound") as anything in soundpick
@@ -567,7 +572,7 @@
 		"Woe" = "Woe",
 		"Nevermind!" = "Nevermind"
 	)
-		
+
 /obj/effect/proc_holder/spell/invoked/tipscales/cast(list/targets, mob/user = usr)
 	if(!isliving(targets[1]))
 		to_chat(usr, span_notice("You missed that one, try another!"))
@@ -596,7 +601,7 @@
 				return TRUE
 		revert_cast()
 		return FALSE
-	
+
 /datum/status_effect/boon
 	id = "xylixboon"
 	status_type = STATUS_EFFECT_UNIQUE
@@ -608,7 +613,7 @@
 	name = "Xylix's Boon"
 	desc = "The scales feel tipped in my favor! How lucky. (You can cheat in coinflips/dice by holding a coin/dice in your offhand, and then right clicking the coin/dice while an empty hand is active!)"
 	icon_state = "asleep"
-	
+
 /datum/status_effect/boon/on_apply()
 	. = ..()
 	booneffect = rand(1,3)
@@ -619,7 +624,7 @@
 	. = ..()
 	owner.change_stat(STATKEY_LCK, -booneffect)
 	REMOVE_TRAIT(owner, TRAIT_BLACKLEG, MAGIC_TRAIT)
-	
+
 /datum/status_effect/woe
 	id = "xylixwoe"
 	status_type = STATUS_EFFECT_UNIQUE
@@ -631,7 +636,7 @@
 	name = "Xylix's Woe"
 	desc = "That damned fool has tipped the scales out of my favor, this day cannot get any worse..."
 	icon_state = "asleep"
-	
+
 /datum/status_effect/woe/on_apply()
 	. = ..()
 	woeeffect = rand(-1,-3)
@@ -826,7 +831,7 @@
 	var/last_used = 0
 	var/bonus_luck_threshould = 600
 
-/obj/effect/proc_holder/spell/invoked/xylixlian_luck/Initialize()
+/obj/effect/proc_holder/spell/invoked/xylixlian_luck/Initialize(mapload)
 	. = ..()
 
 	last_used = world.time	

@@ -161,11 +161,15 @@
 	if(owner.surrendering)
 		owner.resist_fire()
 
+	if(HAS_TRAIT(owner, TRAIT_NOFIRE_STACK))
+		return TRUE
+
 	var/decay_multiplier = stacks / STACK_DECAY_SCALE_FACTOR
 	decay_multiplier = max(decay_multiplier, 20) // Floor so low stacks (~1) extinguish in ~10 seconds instead of lingering for over a minute
 	if(!(owner.mobility_flags & MOBILITY_STAND))
 		decay_multiplier *= STACK_DECAY_PRONE_MULTIPLIER
-
+	if(HAS_TRAIT(owner, TRAIT_NOFIREDECAY))
+		decay_multiplier = 0
 	var/fire_resist_decay = HAS_TRAIT(owner, TRAIT_FIRE_RESIST) ? 2 : 1
 	adjust_stacks(decay_multiplier * owner.fire_stack_decay_rate * STACK_DECAY_MULTIPLIER * fire_resist_decay * wait * 0.1)
 
@@ -273,7 +277,7 @@
 	victim?.dna?.species?.handle_fire(victim, no_protection)
 	victim.adjustFireLoss(10)
 
-/datum/status_effect/fire_handler/fire_stacks/vheslynfire
+/datum/status_effect/fire_handler/fire_stacks/vheslyn
 	id = "fire_stacks_vheslyn"
 	fire_alert_type = /atom/movable/screen/alert/fire/vheslyn
 
@@ -281,9 +285,9 @@
 	var/mob/living/carbon/human/victim = owner
 	victim?.dna?.species?.handle_fire(victim, no_protection)
 	if(HAS_TRAIT(victim, TRAIT_UNFORGIVABLE))
-		victim.adjustFireLoss(-5) //This heals them instead of burning them.
-		victim.adjustBruteLoss(-3)
-		victim.heal_wounds(0.4)
+		victim.adjustFireLoss(-6) //This heals them instead of burning them.
+		victim.adjustBruteLoss(-4)
+		victim.heal_wounds(0.6)
 	else
 		victim.adjustFireLoss(8) //Slightly less because they're harder to resist off
 
@@ -311,9 +315,9 @@
 /// any is_lesser_silver item, escalating in stages: a stress event after a brief grace period (so
 /// "force them to hold silver for two seconds" metachecks can't instantly out a vampyre), and a
 /// real sunder ignition once they've been holding it long enough to count as a true exposure.
-#define LESSER_SILVER_STRESS_DELAY    (10 SECONDS)
-#define LESSER_SILVER_IGNITE_DELAY    (30 SECONDS)
-#define LESSER_SILVER_IGNITE_STACKS   3
+#define LESSER_SILVER_STRESS_DELAY	(10 SECONDS)
+#define LESSER_SILVER_IGNITE_DELAY	(30 SECONDS)
+#define LESSER_SILVER_IGNITE_STACKS	3
 
 /datum/status_effect/fire_handler/fire_stacks/sunder/lesser
 	id = "fire_stacks_sunder_lesser"

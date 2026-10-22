@@ -1,12 +1,13 @@
 /datum/action/cooldown/spell/air_strike
+	source_aspect = /datum/magic_aspect/pseudo/spellblade
 	name = "Air Strike"
 	desc = "Your blade passes into the immaterial and the leyline carries it forth, striking up to 4 tiles away. \
 	Brief telegraph before the strike lands - aim where they will be. \
 	At 3+ momentum: consumes 3 to double damage. \
 	Strikes your aimed bodypart. Adaptable to intent: \
-		- Cut: 3x1 perpendicular line, multiple targets. (30/60 damage) \
-		- Stab: 3x1 forward line, pierces through enemies. (20/40 damage, LIGHT PENETRATION) \
-		- Blunt: All force focused on a single target. (45/90 damage)"
+		- Cut: 3x1 perpendicular line, multiple targets. (24/48 damage) \
+		- Stab: 3x1 forward line, pierces through enemies. (16/32 damage, LIGHT PENETRATION) \
+		- Blunt: All force focused on a single target. (36/72 damage)"
 	button_icon = 'icons/mob/actions/classuniquespells/spellblade.dmi'
 	button_icon_state = "air_strike"
 	sound = 'sound/combat/wooshes/bladed/wooshsmall (1).ogg'
@@ -34,10 +35,10 @@
 	spell_impact_intensity = SPELL_IMPACT_LOW
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
-	var/cut_damage = 30
-	var/stab_damage = 20
+	var/cut_damage = SPELL_DMG(30)
+	var/stab_damage = SPELL_DMG(20)
 	var/stab_ap = PEN_LIGHT
-	var/blunt_damage = 45
+	var/blunt_damage = SPELL_DMG(45)
 	var/empowered_mult = 2
 	var/momentum_cost = 3
 
@@ -84,7 +85,7 @@
 	var/list/affected_turfs = get_perpendicular_line(origin, facing)
 
 	for(var/turf/T in affected_turfs)
-		new /obj/effect/temp_visual/air_strike_telegraph(T)
+		new /obj/effect/temp_visual/telegraph/air_strike(T)
 
 	addtimer(CALLBACK(src, PROC_REF(resolve_cut_strike), H, weapon, empowered, affected_turfs, damage, def_zone, facing), 2)
 
@@ -103,14 +104,14 @@
 		for(var/mob/living/victim in T)
 			if(victim == H || victim.stat == DEAD)
 				continue
-			if(spell_guard_check(victim, FALSE, deflected ? null : H))
+			if(spell_guard_check(victim, FALSE, H, punish_caster = deflected ? FALSE : null))
 				deflected = TRUE
 				continue
 			if(empowered)
-				arcyne_strike(H, victim, weapon, round(damage / 2), def_zone, BCLASS_CUT, spell_name = "Air Strike (Cut)", skip_message = TRUE)
-				arcyne_strike(H, victim, weapon, round(damage / 2), def_zone, BCLASS_CUT, spell_name = "Air Strike (Cut)")
+				arcyne_strike(H, victim, weapon, round(damage / 2), def_zone, BCLASS_CUT, spell_name = "Air Strike (Cut)", skip_message = TRUE, SPELL_STRIKE_SCALING)
+				arcyne_strike(H, victim, weapon, round(damage / 2), def_zone, BCLASS_CUT, spell_name = "Air Strike (Cut)", SPELL_STRIKE_SCALING)
 			else
-				arcyne_strike(H, victim, weapon, damage, def_zone, BCLASS_CUT, spell_name = "Air Strike (Cut)")
+				arcyne_strike(H, victim, weapon, damage, def_zone, BCLASS_CUT, spell_name = "Air Strike (Cut)", SPELL_STRIKE_SCALING)
 			hit_count++
 
 	if(hit_count)
@@ -130,7 +131,7 @@
 	var/list/affected_turfs = get_forward_line(origin, facing, 3)
 
 	for(var/turf/T in affected_turfs)
-		new /obj/effect/temp_visual/air_strike_telegraph(T)
+		new /obj/effect/temp_visual/telegraph/air_strike(T)
 
 	addtimer(CALLBACK(src, PROC_REF(resolve_stab_strike), H, weapon, empowered, affected_turfs, damage, def_zone, facing), 2)
 
@@ -149,14 +150,14 @@
 		for(var/mob/living/victim in T)
 			if(victim == H || victim.stat == DEAD)
 				continue
-			if(spell_guard_check(victim, FALSE, deflected ? null : H))
+			if(spell_guard_check(victim, FALSE, H, punish_caster = deflected ? FALSE : null))
 				deflected = TRUE
 				continue
 			if(empowered)
-				arcyne_strike(H, victim, weapon, round(damage / 2), def_zone, BCLASS_STAB, armor_penetration = stab_ap, spell_name = "Air Strike (Stab)", skip_message = TRUE)
-				arcyne_strike(H, victim, weapon, round(damage / 2), def_zone, BCLASS_STAB, armor_penetration = stab_ap, spell_name = "Air Strike (Stab)")
+				arcyne_strike(H, victim, weapon, round(damage / 2), def_zone, BCLASS_STAB, armor_penetration = stab_ap, spell_name = "Air Strike (Stab)", skip_message = TRUE, SPELL_STRIKE_SCALING)
+				arcyne_strike(H, victim, weapon, round(damage / 2), def_zone, BCLASS_STAB, armor_penetration = stab_ap, spell_name = "Air Strike (Stab)", SPELL_STRIKE_SCALING)
 			else
-				arcyne_strike(H, victim, weapon, damage, def_zone, BCLASS_STAB, armor_penetration = stab_ap, spell_name = "Air Strike (Stab)")
+				arcyne_strike(H, victim, weapon, damage, def_zone, BCLASS_STAB, armor_penetration = stab_ap, spell_name = "Air Strike (Stab)", SPELL_STRIKE_SCALING)
 			hit_count++
 
 	if(hit_count)
@@ -173,7 +174,7 @@
 	var/def_zone = H.zone_selected || BODY_ZONE_CHEST
 	var/damage = empowered ? (blunt_damage * empowered_mult) : blunt_damage
 
-	new /obj/effect/temp_visual/air_strike_telegraph(origin)
+	new /obj/effect/temp_visual/telegraph/air_strike(origin)
 
 	addtimer(CALLBACK(src, PROC_REF(resolve_blunt_strike), H, weapon, empowered, origin, damage, def_zone), 2)
 
@@ -199,10 +200,10 @@
 		return
 
 	if(empowered)
-		arcyne_strike(H, victim, weapon, round(damage / 2), def_zone, BCLASS_BLUNT, spell_name = "Air Strike (Blunt)", skip_message = TRUE)
-		arcyne_strike(H, victim, weapon, round(damage / 2), def_zone, BCLASS_BLUNT, spell_name = "Air Strike (Blunt)")
+		arcyne_strike(H, victim, weapon, round(damage / 2), def_zone, BCLASS_BLUNT, spell_name = "Air Strike (Blunt)", skip_message = TRUE, SPELL_STRIKE_SCALING)
+		arcyne_strike(H, victim, weapon, round(damage / 2), def_zone, BCLASS_BLUNT, spell_name = "Air Strike (Blunt)", SPELL_STRIKE_SCALING)
 	else
-		arcyne_strike(H, victim, weapon, damage, def_zone, BCLASS_BLUNT, spell_name = "Air Strike (Blunt)")
+		arcyne_strike(H, victim, weapon, damage, def_zone, BCLASS_BLUNT, spell_name = "Air Strike (Blunt)", SPELL_STRIKE_SCALING)
 	H.visible_message(span_danger("[H] slams [weapon.name] down, focusing all arcyne force into [victim]!"))
 
 /datum/action/cooldown/spell/air_strike/proc/get_perpendicular_line(turf/center, facing)
@@ -233,12 +234,9 @@
 		turfs += current
 	return turfs
 
-/obj/effect/temp_visual/air_strike_telegraph
-	icon = 'icons/effects/effects.dmi'
-	icon_state = "trap"
+/obj/effect/temp_visual/telegraph/air_strike
 	light_outer_range = 1
 	duration = 3
-	layer = MASSIVE_OBJ_LAYER
 
 /obj/effect/temp_visual/arcyne_strike_fx
 	icon = 'icons/effects/effects.dmi'

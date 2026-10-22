@@ -303,6 +303,37 @@
 	desc = span_red("Eating such a meal without a table? How churlish!")
 	timer = 2 MINUTES
 
+// 'unlanded noble' penalties, harsher to enforce the archetype
+/datum/stressevent/unlanded_noble_shitty_equipment
+	stressadd = 1
+	desc = span_red("Such poor-quality equipment reflects poorly on me...!")
+	timer = 999 MINUTES // removed via code
+
+/datum/stressevent/unlanded_noble_bloody_equipment
+	stressadd = 1
+	desc = span_red("I should have better hygeine than this...")
+	timer = 999 MINUTES // removed via code
+
+/datum/stressevent/unlanded_noble_poor_sleep
+	stressadd = 1
+	desc = span_red("I can't get any decent sleep in such uncomfortable conditions...")
+	timer = 999 MINUTES // removed via code
+
+/datum/stressevent/unlanded_noble_scandal_in_the_making
+	stressadd = 1
+	desc = span_red("This was unwise... what if others find out?")
+	timer = 5 MINUTES // removed via code
+
+/datum/stressevent/nistean
+	stressadd = 2
+	desc = span_red("That dish had meat in it...")
+	timer = 2 MINUTES
+
+/datum/stressevent/vegan
+	stressadd = 2
+	desc = span_red("That dish was made from the living...") // how the fuck do you generalize "i fucked up my vegan diet"
+	timer = 2 MINUTES
+
 /datum/stressevent/graggar_culling_unfinished
 	stressadd = 1
 	desc = span_red("I must eat my opponent's heart before they eat MINE!")
@@ -329,7 +360,7 @@
 	desc = span_red("Putrid stinking water!")
 
 /datum/stressevent/unseemly
-	stressadd = 3
+	stressadd = 0
 	desc = span_red("Their face is unbearable!")
 	timer = 3 MINUTES
 
@@ -417,11 +448,6 @@
 	stressadd = 3
 	desc = span_red("Where is their head? What is that flame?!")
 	timer = 5 MINUTES
-
-/datum/stressevent/targeted // When a targeted character sees someone in a mask
-	timer = 2 MINUTES
-	stressadd = 3
-	desc = span_boldred("I can't see their face! Have they found me? Is this the end?")
 
 /datum/stressevent/profane // When a non-assassin touches a profane dagger
 	timer = 3 MINUTES
@@ -568,3 +594,13 @@
 	timer = 15 MINUTES
 	stressadd = 2
 	desc = span_artery("I feel a judgmental presence watching over me with disgust. I don't like this.")
+
+/datum/stressevent/remorse
+	timer = 5 MINUTES
+	stressadd = 3
+	desc = list(span_artery("I struck someone who never meant me harm."), span_artery("I can't stop thinking about the blow I dealt to someone defenseless."), span_artery("My conscience weighs heavily after attacking one who refused violence."), span_artery("I regret raising my hand against someone who would never have raised theirs against me."), span_artery("The look of fear instead of hatred lingers in my thoughts."), span_artery("I feel ashamed for harming someone who chose peace."), span_artery("I could have walked away. Instead, I chose violence."), span_artery("The guilt of attacking a helpless soul gnaws at me."), span_artery("I keep replaying the moment I struck someone who would not fight back."), span_artery("My heart grows heavier with every thought of the defenseless person I attacked."))
+
+/datum/stressevent/remorse_evil
+	timer = 5 MINUTES
+	stressadd = 1
+	desc = list(span_artery("Even I found no satisfaction in striking someone so meek."), span_artery("They denied me the thrill of a real fight."), span_artery("Their refusal to resist leaves a bitter taste."), span_artery("There was no struggle... only acceptance. That's insane."), span_artery("I expected fear, hatred, anything... but not acceptance."), span_artery("A defenseless victim is hardly worth remembering, yet the thought lingers."), span_artery("Why won't the image of their helplessness leave my mind?"))

@@ -1,6 +1,6 @@
 // Dough, and variants thereof for usage in making various baked food items.
 // Doesn't include raw variants of bread and others
-/*	.................   Dough   ................... */
+/*	.................	Dough	................... */
 /obj/item/reagent_containers/food/snacks/rogue/dough_base
 	name = "unfinished dough"
 	desc = "With a little more ambition, you will conquer."
@@ -20,7 +20,7 @@
 	w_class = WEIGHT_CLASS_NORMAL
 	slice_sound = TRUE
 
-/*	.................   Flatdough  ................... */
+/*	.................	Flatdough	................... */
 /obj/item/reagent_containers/food/snacks/rogue/flatdough
 	name = "flatdough"
 	desc = "Flattened dough, bare for all to see. A sharp edge can prepare the lines for a sheet of crackerdough, while a smearing of tomatoes can set the stage for a peasant's feast."
@@ -33,7 +33,7 @@
 	w_class = WEIGHT_CLASS_NORMAL
 	slice_sound = TRUE
 
-/*	.................   Tomatoplate  ................... */
+/*	.................	Tomatoplate	................... */
 /obj/item/reagent_containers/food/snacks/rogue/foodbase/tomatoplate_raw
 	name = "uncooked tomatoplate"
 	icon = 'modular/Neu_Food/icons/raw/raw_dough.dmi'
@@ -124,7 +124,7 @@
 	cooked_type = /obj/item/reagent_containers/food/snacks/rogue/peartomatoplate
 	foodtype = GRAIN | FRUIT | DAIRY
 
-/*	.................   Smalldough   ................... */
+/*	.................	Smalldough	................... */
 /obj/item/reagent_containers/food/snacks/rogue/doughslice
 	name = "smalldough"
 	icon = 'modular/Neu_Food/icons/raw/raw_dough.dmi'
@@ -134,7 +134,7 @@
 	cooked_smell = /datum/pollutant/food/bun
 	w_class = WEIGHT_CLASS_NORMAL
 
-/*	.................   Butterdough   ................... */
+/*	.................	Butterdough	................... */
 /obj/item/reagent_containers/food/snacks/rogue/butterdough
 	name = "butterdough"
 	desc = "What is a triumph, to a legacy?"
@@ -251,7 +251,7 @@
 	cooked_type = /obj/item/reagent_containers/food/snacks/rogue/chocolatebookbread
 	foodtype = GRAIN | DAIRY
 
-/*	.................   Butterdough Piece   ................... */
+/*	.................	Butterdough Piece	................... */
 /obj/item/reagent_containers/food/snacks/rogue/butterdoughslice
 	name = "butterdough piece"
 	desc = "A slice of pedigree, to create lines of history."
@@ -264,7 +264,7 @@
 	cooked_smell = /datum/pollutant/food/pastry
 	w_class = WEIGHT_CLASS_NORMAL
 
-/*	.................   Muffindough Piece   ................... */
+/*	.................	Muffindough Piece	................... */
 /obj/item/reagent_containers/food/snacks/rogue/muffindough
 	name = "muffindough"
 	desc = "It's muffin time!"
@@ -275,7 +275,7 @@
 	w_class = WEIGHT_CLASS_NORMAL
 	slice_sound = TRUE
 
-/*	.................   Piedough   ................... */
+/*	.................	Piedough	................... */
 /obj/item/reagent_containers/food/snacks/rogue/piedough
 	name = "piedough"
 	desc = "The beginning of greater things to come."
@@ -285,7 +285,7 @@
 	cooked_smell = /datum/pollutant/food/pie_base
 	w_class = WEIGHT_CLASS_NORMAL
 
-/*	.................   Strudel Dough   ................... */
+/*	.................	Strudel Dough	................... */
 /obj/item/reagent_containers/food/snacks/rogue/strudeldough
 	name = "strudeldough"
 	desc = "An empty shell of a greatness to come."
@@ -295,7 +295,7 @@
 	w_class = WEIGHT_CLASS_NORMAL
 	slice_sound = TRUE
 
-/*	.................   Tartdough   ................... */
+/*	.................	Tartdough	................... */
 /obj/item/reagent_containers/food/snacks/rogue/tartdough
 	name = "dotted tartdough"
 	desc = "A hollow bowl that has yet to show its fullest potential."
@@ -394,11 +394,11 @@
 	list_reagents = list(/datum/reagent/medicine/stronghealth = 6) //Because you're going to want something after vomiting up all your guts up for eating raw dough.
 	foodtype = GRAIN | FRUIT
 
-/obj/item/reagent_containers/food/snacks/rogue/foodbase/tartdough_goldapple/Initialize()
-  ..()
-  add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_LIGHTNING, "alpha" = 100, "size" = 1))
+/obj/item/reagent_containers/food/snacks/rogue/foodbase/tartdough_goldapple/Initialize(mapload)
+	..()
+	add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_LIGHTNING, "alpha" = 100, "size" = 1))
 
-/*	.................   Eggdough   ................... */
+/*	.................	Eggdough	................... */
 /obj/item/reagent_containers/food/snacks/rogue/eggdough
 	name = "eggdough"
 	desc = "Without tradition, legacy is left solivagant."
@@ -413,7 +413,7 @@
 	w_class = WEIGHT_CLASS_NORMAL
 	slice_sound = TRUE
 
-/*	.................   Eggdough Piece   ................... */
+/*	.................	Eggdough Piece	................... */
 /obj/item/reagent_containers/food/snacks/rogue/eggdoughslice
 	name = "eggdough piece"
 	desc = "A slice of childhood, to remember one's roots."
@@ -424,30 +424,34 @@
 	cooked_smell = /datum/pollutant/food/pastry
 	w_class = WEIGHT_CLASS_NORMAL
 
-/*	.................   Noodle Dough   ................... */
+/*	.................	Noodle Dough	................... */
 /obj/item/reagent_containers/food/snacks/rogue/eggdoughnoodles
+	dish_type = DISH_NOODLES
+	cuisine = CUISINE_ETRUSCAN
 	name = "uncooked noodles"
 	desc = "A bundle of soft and wobbly uncooked noodles, ready to make dreams come true."
 	icon = 'modular/Neu_Food/icons/raw/raw_dough.dmi'
 	icon_state = "eggdoughnoodle"
 	color = "#feffc1"
-	boiled_type = /obj/item/reagent_containers/food/snacks/rogue/noodles
 	cooked_smell = /datum/pollutant/food/pasta
 	w_class = WEIGHT_CLASS_NORMAL
 
-/*	.................   Sheet Noodle Dough   ................... */
+/*	.................	Sheet Noodle Dough	................... */
 /obj/item/reagent_containers/food/snacks/rogue/eggdoughsheetnoodles
+	dish_type = DISH_NOODLES
+	cuisine = CUISINE_ETRUSCAN
 	name = "uncooked sheet noodles"
 	desc = "Flat sheets of sheet noodles, ready to be mixed with sauce and/or cheese."
 	icon = 'modular/Neu_Food/icons/raw/raw_dough.dmi'
 	icon_state = "eggdoughsheetnoodle"
 	color = "#feffc1"
 	slices_num = 0
-	boiled_type = /obj/item/reagent_containers/food/snacks/rogue/sheetnoodles
 	cooked_smell = /datum/pollutant/food/pasta
 	w_class = WEIGHT_CLASS_NORMAL
 
 /obj/item/reagent_containers/food/snacks/rogue/eggdoughsheetnoodles_red
+	dish_type = DISH_NOODLES
+	cuisine = CUISINE_ETRUSCAN
 	name = "uncooked red lasagna"
 	desc = "Flat sheets of sheet noodles smothered in tomato sauce, ready to be cooked in the oven or have cheese added."
 	icon = 'modular/Neu_Food/icons/raw/raw_dough.dmi'
@@ -458,6 +462,8 @@
 	w_class = WEIGHT_CLASS_NORMAL
 
 /obj/item/reagent_containers/food/snacks/rogue/eggdoughsheetnoodles_white
+	dish_type = DISH_NOODLES
+	cuisine = CUISINE_ETRUSCAN
 	name = "uncooked white lasagna"
 	desc = "Flat sheets of sheet noodles smothered in cheese, Valorian style, ready to be cooked in the oven or have sauce added."
 	icon = 'modular/Neu_Food/icons/raw/raw_dough.dmi'
@@ -468,6 +474,8 @@
 	w_class = WEIGHT_CLASS_NORMAL
 
 /obj/item/reagent_containers/food/snacks/rogue/eggdoughsheetnoodles_redwhite
+	dish_type = DISH_NOODLES
+	cuisine = CUISINE_ETRUSCAN
 	name = "uncooked red and white lasagna"
 	desc = "Flat sheets of sheet noodles smothered in cheese and sauce, Montecarinan style, ready to be cooked in the oven."
 	icon = 'modular/Neu_Food/icons/raw/raw_dough.dmi'
@@ -478,6 +486,8 @@
 	w_class = WEIGHT_CLASS_NORMAL
 
 /obj/item/reagent_containers/food/snacks/rogue/eggdoughsheetnoodles_pesto
+	dish_type = DISH_NOODLES
+	cuisine = CUISINE_SOUTH_IMPERIAL
 	name = "uncooked pesto lasagna"
 	desc = "Flat sheets of sheet noodles spread with pesto, Azurian style, ready to be cooked in the oven."
 	icon = 'modular/Neu_Food/icons/raw/raw_dough.dmi'
@@ -487,7 +497,7 @@
 	cooked_smell = /datum/pollutant/food/pasta
 	w_class = WEIGHT_CLASS_NORMAL
 
-/*	.................   Griddle Dough   ................... */
+/*	.................	Griddle Dough	................... */
 /obj/item/reagent_containers/food/snacks/rogue/griddle_uncooked
 	name = "griddle dough"
 	desc = "A flat eggy mess of batter dough, desperate to be thrown onto a pan."
@@ -496,3 +506,133 @@
 	fried_type = /obj/item/reagent_containers/food/snacks/rogue/griddle
 	w_class = WEIGHT_CLASS_NORMAL
 
+/*	.................	Dürümdough	................... */
+/obj/item/reagent_containers/food/snacks/rogue/durumdough
+	name = "dürümdough"
+	desc = "Flattened enough to be almost as thin as a glass-pane, this dough needs a delicate hand to be handled - it will cook quickly."
+	icon = 'modular/Neu_Food/icons/raw/raw_dough.dmi'
+	icon_state = "durum"
+	slices_num = null
+	slice_batch = FALSE
+	slice_path = null
+	w_class = WEIGHT_CLASS_NORMAL
+	slice_sound = TRUE
+	tastes = list("raw, unleavened dough" = 1)
+	fried_type = /obj/item/reagent_containers/food/snacks/rogue/markook
+
+/*	.................	Dürüm Variants (raw, filled)	................... */
+
+// Dürümdough + Uncooked Bulgur
+/obj/item/reagent_containers/food/snacks/rogue/foodbase/durum_bulgur
+	name = "bulgur-stuffed dürümdough"
+	icon = 'modular/Neu_Food/icons/raw/raw_dough.dmi'
+	icon_state = "durum_bulgur"
+	desc = "The peasant's dürüm, yet unfinished. The epitome of hardy survival - or a vegetarian lyfestyle of some more stringent Yogis."
+	w_class = WEIGHT_CLASS_NORMAL
+	eat_effect = null
+	cooked_smell = /datum/pollutant/food/bread
+	foodtype = GRAIN
+	fried_type = /obj/item/reagent_containers/food/snacks/rogue/durum_bulgur
+
+// Dürümdough + Poultry
+/obj/item/reagent_containers/food/snacks/rogue/foodbase/durum_poultry
+	name = "poultry-stuffed dürümdough"
+	icon = 'modular/Neu_Food/icons/raw/raw_dough.dmi'
+	icon_state = "durum_poultry"
+	desc = "A dürüm stuffed with delectable tender frybird. What shall we celebrate today, friend? It lacks some filling… Bulgur would lend itself well."
+	w_class = WEIGHT_CLASS_NORMAL
+	eat_effect = null
+	cooked_smell = /datum/pollutant/food/fried_meat
+	foodtype = GRAIN | MEAT
+
+// Dürümdough + Poultry + Bulgur
+/obj/item/reagent_containers/food/snacks/rogue/foodbase/durum_poultry_bulgur
+	name = "poultry bulgur-stuffed dürümdough"
+	icon = 'modular/Neu_Food/icons/raw/raw_dough.dmi'
+	icon_state = "durum_poultry_bulgur"
+	desc = "A dürüm stuffed with delectable tender frybird. What shall we celebrate today, friend?"
+	w_class = WEIGHT_CLASS_NORMAL
+	eat_effect = null
+	cooked_smell = /datum/pollutant/food/fried_meat
+	foodtype = GRAIN | MEAT
+	fried_type = /obj/item/reagent_containers/food/snacks/rogue/durum_poultry_bulgur
+
+// Dürümdough + Mince
+/obj/item/reagent_containers/food/snacks/rogue/foodbase/durum_mince
+	name = "mince-stuffed dürümdough"
+	icon = 'modular/Neu_Food/icons/raw/raw_dough.dmi'
+	icon_state = "durum_mince"
+	desc = "Shaped and shaved flesh gristle and spices, surrounded by a starchy blanket. An ascension cannot be postponed indefinitely. This culinary alchemy requires still some filler… Cabbage or beans will suffice."
+	w_class = WEIGHT_CLASS_NORMAL
+	eat_effect = null
+	cooked_smell = /datum/pollutant/food/fried_meat
+	foodtype = GRAIN | MEAT
+
+// Dürümdough + Cabbage
+/obj/item/reagent_containers/food/snacks/rogue/foodbase/durum_cabbage
+	name = "cabbage-stuffed dürümdough"
+	icon = 'modular/Neu_Food/icons/raw/raw_dough.dmi'
+	icon_state = "durum_cabbage"
+	desc = "leafy greenness, surrounded by a starchy blanket. An ascension cannot be postponed indefinitely. This culinary alchemy requires still some filler… minced meat will suffice."
+	w_class = WEIGHT_CLASS_NORMAL
+	eat_effect = null
+	cooked_smell = /datum/pollutant/food/fried_meat
+	foodtype = GRAIN | MEAT
+
+// Dürümdough + Mince + Cabbage
+/obj/item/reagent_containers/food/snacks/rogue/foodbase/durum_mince_cabbage
+	name = "mince cabbage-stuffed dürümdough"
+	icon = 'modular/Neu_Food/icons/raw/raw_dough.dmi'
+	icon_state = "durum_mince_cabbage"
+	desc = "Shaped and shaved flesh gristle and spices, surrounded by a starchy blanket. An ascension cannot be postponed indefinitely."
+	w_class = WEIGHT_CLASS_NORMAL
+	eat_effect = null
+	cooked_smell = /datum/pollutant/food/fried_meat
+	foodtype = GRAIN | MEAT | VEGETABLES
+	fried_type = /obj/item/reagent_containers/food/snacks/rogue/durum_mince_cabbage
+
+// Dürümdough + Beans
+/obj/item/reagent_containers/food/snacks/rogue/foodbase/durum_beans
+	name = "bean-stuffed dürümdough"
+	icon = 'modular/Neu_Food/icons/raw/raw_dough.dmi'
+	icon_state = "durum_beans"
+	desc = "A humble set of red beans, surrounded by a starchy blanket. An ascension cannot be postponed indefinitely. This culinary alchemy requires still some filler… Cheese or mince will suffice."
+	w_class = WEIGHT_CLASS_NORMAL
+	eat_effect = null
+	cooked_smell = /datum/pollutant/food/bread
+	foodtype = GRAIN | VEGETABLES
+
+// Dürümdough + Beans + Mince
+/obj/item/reagent_containers/food/snacks/rogue/foodbase/durum_beans_mince
+	name = "bean mince-stuffed dürümdough"
+	icon = 'modular/Neu_Food/icons/raw/raw_dough.dmi'
+	icon_state = "durum_mince_beans"
+	desc = "Shaped and shaved flesh gristle and spices, surrounded by a starchy blanket. An ascension cannot be postponed indefinitely."
+	w_class = WEIGHT_CLASS_NORMAL
+	eat_effect = null
+	cooked_smell = /datum/pollutant/food/fried_meat
+	foodtype = GRAIN | MEAT | VEGETABLES
+	fried_type = /obj/item/reagent_containers/food/snacks/rogue/durum_beans_mince
+
+// Dürümdough + Cheese
+/obj/item/reagent_containers/food/snacks/rogue/foodbase/durum_cheese
+	name = "cheese-stuffed dürümdough"
+	icon = 'modular/Neu_Food/icons/raw/raw_dough.dmi'
+	icon_state = "durum_cheese"
+	desc = "A miracle of controlled rot, combined with the alchemy of starch. Now heat as a catalyst and it is complete. Or… Well, it still needs a filler. Beans?"
+	w_class = WEIGHT_CLASS_NORMAL
+	eat_effect = null
+	cooked_smell = /datum/pollutant/food/pastry
+	foodtype = GRAIN | DAIRY
+
+// Dürümdough + Cheese + Beans
+/obj/item/reagent_containers/food/snacks/rogue/foodbase/durum_cheese_beans
+	name = "cheese bean-stuffed dürümdough"
+	icon = 'modular/Neu_Food/icons/raw/raw_dough.dmi'
+	icon_state = "durum_cheese_beans"
+	desc = "A miracle of controlled rot, combined with the alchemy of starch. Now heat as a catalyst and it is complete."
+	w_class = WEIGHT_CLASS_NORMAL
+	eat_effect = null
+	cooked_smell = /datum/pollutant/food/pastry
+	foodtype = GRAIN | DAIRY | VEGETABLES
+	fried_type = /obj/item/reagent_containers/food/snacks/rogue/durum_cheese_beans

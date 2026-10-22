@@ -35,7 +35,7 @@
 	max_integrity = ARMOR_INT_LEG_HARDLEATHER
 	icon = 'icons/roguetown/clothing/special/gronn.dmi'
 	mob_overlay_icon = 'icons/roguetown/clothing/special/onmob/gronn.dmi'
-	
+
 /obj/item/clothing/gloves/roguetown/angle/gronn
 	name = "gronnic fur-lined leather gloves"
 	desc = "Thick, padded gloves made for the harshest of climates and the wildest of beasts encountered in the untamed north."
@@ -55,8 +55,16 @@
 	icon = 'icons/roguetown/clothing/special/gronn.dmi'
 	mob_overlay_icon = 'icons/roguetown/clothing/special/onmob/gronn.dmi'
 	unarmed_bonus = 6
-	max_integrity = 250
+	max_integrity = ARMOR_INT_SIDE_HARDLEATHER
 	color = "#ffffff"
+
+/obj/item/clothing/gloves/roguetown/angle/gronnfur/cleric
+	name = "thin fur-lined bone gloves"
+	desc = "A pair of thinner leather gloves with some bone reinforcements across the wrists\
+			and the back of the hand, offering barely much protection against\
+			the claws of beasts and plants alike. Commonly worn by preachers."
+	max_integrity = ARMOR_INT_SIDE_LEATHER
+	armor = ARMOR_LEATHER
 
 /obj/item/clothing/head/roguetown/helmet/leather/shaman_hood
 	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_HIP
@@ -159,7 +167,7 @@
 			update_icon()
 		qdel(I)
 	. = ..()
-	
+
 
 /obj/item/clothing/head/roguetown/helmet/leather/shaman_hood/AdjustClothes(mob/user)
 	if(loc == user)

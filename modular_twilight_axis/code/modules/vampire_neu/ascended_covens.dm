@@ -418,6 +418,7 @@
 		lord_body.maxbloodpool += 1000
 		to_chat(user, span_danger("I AM ANCIENT, I AM THE LAND. EVEN THE SUN BOWS TO ME."))
 		lord.ascended = TRUE
+		SSticker.sunsteal(lord_body)
 
 		if(lord_body.clan_position)
 			var/list/all_subordinates = lord_body.clan_position.get_all_subordinates()
@@ -434,8 +435,21 @@
 			INVOKE_ASYNC(lord, TYPE_PROC_REF(/datum/antagonist/vampire/lord, ta_offer_ascended_coven), lord_body)
 		break
 
+/proc/ta_storyteller_enabled_vampire_lord()
+	var/list/injection_pool = SSgamemode?.event_pools?[EVENT_TRACK_CHARACTER_INJECTION]
+	if(!length(injection_pool))
+		return FALSE
+	for(var/datum/round_event_control/antagonist/solo/vampires/control in injection_pool)
+		if(control.occurrences)
+			return TRUE
+	return FALSE
+
 /datum/antagonist/vampire/lord/proc/ta_can_choose_ascended_coven(mob/living/carbon/human/lord_body, silent = FALSE)
 	if(ta_ascended_coven)
+		return FALSE
+	if(!ta_storyteller_enabled_vampire_lord())
+		if(!silent)
+			to_chat(lord_body, span_warning("These lands never bowed to a Methuselah's reign. No coven will rise above the others here."))
 		return FALSE
 	if(!istype(lord_body) || !lord_body.mind || !lord_body.covens?.len)
 		return FALSE
@@ -477,6 +491,15 @@
 		ta_ascended_coven = selected_coven
 		lord_body.verbs -= /mob/living/carbon/human/proc/ta_choose_ascended_coven
 		to_chat(lord_body, span_boldannounce("Your [selected_coven.name] has been raised above all other covens."))
+		if(istype(selected_coven, /datum/coven/demonic))
+			ta_announce_demonic_ascension()
+
+/datum/antagonist/vampire/lord/proc/ta_announce_demonic_ascension()
+	priority_announce(
+		"Кровавая тьма вступила в эти земли. Теперь владыка Зла правит не только ликом Астраты, но и душами жителей. Берегитесь, ибо теперь вы властны только над своей жизнью!",
+		"Багровая Тьма",
+		'sound/villain/dreamer_warning.ogg'
+	)
 
 /mob/living/carbon/human/proc/ta_choose_ascended_coven()
 	set name = "Choose Ascended Coven"
@@ -605,7 +628,40 @@
 	if(!lord || !istype(lord.ta_ascended_coven, /datum/coven/demonic))
 		return FALSE
 
-	return ta_make_demonic_vampire(lord_body)
+	if(!ta_make_demonic_vampire(lord_body))
+		return FALSE
+
+	ta_banish_to_wretch_lair()
+	return TRUE
+
+/proc/ta_find_wretch_lair_turf()
+	var/list/candidates = list()
+	for(var/obj/effect/landmark/start/wretchlate/landmark in GLOB.start_landmarks_list)
+		var/turf/landmark_turf = get_turf(landmark)
+		if(landmark_turf)
+			candidates += landmark_turf
+	if(!length(candidates))
+		for(var/obj/effect/landmark/start/wretch/landmark in GLOB.start_landmarks_list)
+			var/turf/landmark_turf = get_turf(landmark)
+			if(landmark_turf)
+				candidates += landmark_turf
+	if(!length(candidates))
+		return null
+	return pick(candidates)
+
+/mob/living/carbon/human/proc/ta_banish_to_wretch_lair()
+	visible_message(span_boldwarning("[src] окутывается проклятой магией, а его презренная суть растворяется в портале. Эти земли больше не дают вернуть павших."))
+
+	var/turf/destination = ta_find_wretch_lair_turf()
+	if(!destination)
+		return FALSE
+
+	playsound(get_turf(src), 'sound/misc/vampirespell.ogg', 60, FALSE)
+	forceMove(destination)
+
+	var/area/lair_area = get_area(destination)
+	to_chat(src, span_userdanger("Кровь Владыки шепчет мне дорогу: логово вретчей лежит в [lair_area?.name || "неведомых землях"]."))
+	return TRUE
 
 /mob/living/carbon/human/proc/ta_make_demonic_vampire(mob/living/carbon/human/lord_body)
 	if(!mind || mind.has_antag_datum(/datum/antagonist/vampire))
@@ -655,6 +711,30 @@
 	ta_demonic_sire_ref = null
 	verbs -= TA_DEMONIC_CONVERSION_VERB
 	to_chat(src, span_notice("The Lord's blood burns the infernal Embrace out of you."))
+
+/proc/ta_find_active_demonic_lord()
+	for(var/mob/living/carbon/human/candidate as anything in GLOB.human_list)
+		if(QDELETED(candidate) || candidate.stat == DEAD)
+			continue
+		var/datum/antagonist/vampire/lord/lord = candidate.mind?.has_antag_datum(/datum/antagonist/vampire/lord)
+		if(lord && istype(lord.ta_ascended_coven, /datum/coven/demonic))
+			return candidate
+	return null
+
+/datum/antagonist/zombie/transform_zombie()
+	var/mob/living/carbon/human/body = owner?.current
+	if(!istype(body) || body.ta_is_vampire())
+		return ..()
+
+	var/mob/living/carbon/human/lord_body = ta_find_active_demonic_lord()
+	if(!istype(lord_body) || lord_body == body)
+		return ..()
+
+	if(!body.ta_make_demonic_vampire(lord_body))
+		return ..()
+
+	body.revive(full_heal = TRUE, admin_revive = FALSE)
+	body.visible_message(span_red("[body] rises not as a deadite, but as a childe of the Blood."))
 
 /*
 /datum/coven_power/bloodheal/ascended_rebirth

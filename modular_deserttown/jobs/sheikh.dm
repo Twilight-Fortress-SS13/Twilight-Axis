@@ -22,7 +22,7 @@
 	min_pq = 5
 	max_pq = null
 	round_contrib_points = 2
-	cmode_music = 'sound/music/combat_desert2.ogg'
+	cmode_music = sound("sound/music/combat_desert2.ogg")
 	job_traits = list(TRAIT_NOBLE, TRAIT_SEEPRICES_SHITTY)
 	job_subclasses = list(
 		/datum/advclass/sheikh
@@ -53,7 +53,7 @@
 		if(player?.prefs)
 			if(SSmapping.config.map_name == "Desert Town")
 				if(!istype(player.prefs.virtue_origin, /datum/virtue/origin/raneshen) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/naledi) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/zybantian))
-					var/list/new_origins = list("Raneshen" = /datum/virtue/origin/raneshen, 
+					var/list/new_origins = list("Raneshen" = /datum/virtue/origin/raneshen,
 					"Naledi" = /datum/virtue/origin/naledi,
 					"Zybantu" = /datum/virtue/origin/zybantian)
 					var/new_origin

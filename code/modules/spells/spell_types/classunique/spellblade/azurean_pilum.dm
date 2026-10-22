@@ -1,4 +1,5 @@
 /datum/action/cooldown/spell/projectile/azurean_pilum
+	source_aspect = /datum/magic_aspect/pseudo/spellblade
 	name = "Azurean Pilum"
 	desc = "A borrowed art - spellblades of the Azurean tradition learned to imbue their throw with ice essence, \
 		flash-chilling the target on impact. Applies 2 frost stacks on hit. \
@@ -10,8 +11,8 @@
 	spell_color = GLOW_COLOR_ARCANE
 	glow_intensity = GLOW_INTENSITY_LOW
 
-	projectile_type = /obj/projectile/energy/azurean_pilum
-	projectile_type_arc = /obj/projectile/energy/azurean_pilum/arc
+	projectile_type = /obj/projectile/magic/azurean_pilum
+	projectile_type_arc = /obj/projectile/magic/azurean_pilum/arc
 	cast_range = 15
 
 	primary_resource_type = SPELL_COST_STAMINA
@@ -33,8 +34,8 @@
 	spell_impact_intensity = SPELL_IMPACT_MEDIUM
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN
 
-	var/base_damage = 35
-	var/empowered_damage = 50
+	var/base_damage = SPELL_DMG(35)
+	var/empowered_damage = SPELL_DMG(50)
 	var/momentum_cost = 3
 	var/cached_damage = 0
 	var/cached_empowered = FALSE
@@ -58,11 +59,11 @@
 	cached_damage = cached_empowered ? empowered_damage : base_damage
 
 	if(cached_empowered)
-		projectile_type = /obj/projectile/energy/azurean_pilum/empowered
-		projectile_type_arc = /obj/projectile/energy/azurean_pilum/empowered/arc
+		projectile_type = /obj/projectile/magic/azurean_pilum/empowered
+		projectile_type_arc = /obj/projectile/magic/azurean_pilum/empowered/arc
 	else
-		projectile_type = /obj/projectile/energy/azurean_pilum
-		projectile_type_arc = /obj/projectile/energy/azurean_pilum/arc
+		projectile_type = /obj/projectile/magic/azurean_pilum
+		projectile_type_arc = /obj/projectile/magic/azurean_pilum/arc
 
 	. = ..()
 
@@ -70,47 +71,66 @@
 	..()
 	to_fire.damage = cached_damage
 
-/obj/projectile/energy/azurean_pilum
+/obj/projectile/magic/azurean_pilum
 	name = "Azurean Pilum"
 	icon = 'icons/obj/magic_projectiles.dmi'
 	icon_state = "air_blade_stab"
 	color = "#88BFFF"
-	damage = 35
+	expose_caster_on_deflect = TRUE
+	damage = SPELL_DMG(35)
+	damage_type = BRUTE
+	flag = "piercing"
 	woundclass = BCLASS_STAB
 	nodamage = FALSE
+	intdamfactor = SPELL_INTDAM(1)
+	spell_damage_scaled = TRUE
 	speed = 1.5
-	npc_simple_damage_mult = 1.5
 	hitsound = 'sound/combat/hits/bladed/genthrust (1).ogg'
 	/// How many frost stacks to apply on hit
 	var/frost_stacks = 1
 
-/obj/projectile/energy/azurean_pilum/on_hit(target)
+/obj/projectile/magic/azurean_pilum/on_hit(target, blocked = FALSE)
 	. = ..()
-	if(isliving(target))
-		var/mob/living/L = target
-		if(L.anti_magic_check())
-			visible_message(span_warning("[src] disperses on contact with [L]!"))
-			playsound(get_turf(L), 'sound/magic/magic_nulled.ogg', 100)
+	if(ismob(target))
+		var/mob/M = target
+		if(M.anti_magic_check())
+			visible_message(span_warning("[src] fizzles on contact with \the [target]!"))
+			playsound(get_turf(target), 'sound/magic/magic_nulled.ogg', 100)
+			qdel(src)
 			return BULLET_ACT_BLOCK
-		if(out_of_effective_range())
-			return
-		apply_frost_stack(L, frost_stacks)
-		to_chat(L, span_danger("An icy pilum strikes true - the cold seeps into my bones!"))
-		if(firer)
-			log_combat(firer, L, "pilum-struck")
+		if(isliving(target) && !out_of_effective_range())
+			var/mob/living/L = target
+			if(L.on_fire)
+				L.adjust_fire_stacks(-1)
+				L.visible_message(span_warning("The frost dampens the flames on [L]!"))
+			apply_frost_stack(L, frost_stacks)
+			playsound(get_turf(L), pick('sound/combat/fracture/fracturedry (1).ogg', 'sound/combat/fracture/fracturedry (2).ogg', 'sound/combat/fracture/fracturedry (3).ogg'), 80, TRUE)
+			new /obj/effect/temp_visual/snap_freeze(get_turf(L))
+			to_chat(L, span_danger("An icy pilum strikes true - the cold seeps into my bones!"))
+			if(firer)
+				log_combat(firer, L, "pilum-struck", zone=def_zone)
+	else if(isobj(target))
+		var/obj/O = target
+		O.extinguish()
+		var/turf/target_turf = get_turf(target)
+		var/obj/effect/hotspot/hotspot = (locate(/obj/effect/hotspot) in target_turf)
+		if(hotspot)
+			new /obj/effect/temp_visual/small_smoke(target_turf)
+			qdel(hotspot)
+	qdel(src)
 
-/obj/projectile/energy/azurean_pilum/empowered
+/obj/projectile/magic/azurean_pilum/empowered
 	name = "Empowered Azurean Pilum"
 	icon_state = "youreyesonly"
 	color = "#4CADEE"
 	frost_stacks = 3
 
-/obj/projectile/energy/azurean_pilum/arc
+/obj/projectile/magic/azurean_pilum/arc
 	name = "Arced Azurean Pilum"
-	damage = 26
+	damage = SPELL_DMG(26)
 	arcshot = TRUE
 
-/obj/projectile/energy/azurean_pilum/empowered/arc
+/obj/projectile/magic/azurean_pilum/empowered/arc
 	name = "Empowered Arced Azurean Pilum"
-	damage = 26
+	damage = SPELL_DMG(26)
 	arcshot = TRUE

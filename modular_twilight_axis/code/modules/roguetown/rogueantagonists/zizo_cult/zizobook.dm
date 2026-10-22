@@ -23,7 +23,7 @@
 	wiki.show_to_user(user, types, wiki_name || name, /obj/item/recipe_book/zizo, TRUE)
 	user.update_inv_hands()
 
-/obj/item/recipe_book/zizo/rmb_self(mob/user)
+/obj/item/recipe_book/zizo/rmb_self(mob/user, keybind)
 	attack_right(user)
 	return
 

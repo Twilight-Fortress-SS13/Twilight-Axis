@@ -22,10 +22,9 @@
 	if(user.alerts[FAMILYTREE_CONFIRM_ALERT_CATEGORY] != src)
 		return
 	var/datum/callback/cb = on_open
-	on_open = null
-	user.clear_alert(FAMILYTREE_CONFIRM_ALERT_CATEGORY)
+	SSfamilytree?.ftlog("FAMILY CONFIRM HUD CLICK: name=[user.real_name]")
 	if(cb)
-		cb.Invoke()
+		INVOKE_ASYNC(cb, TYPE_PROC_REF(/datum/callback, Invoke))
 
 /mob/living/carbon/human/proc/familytree_show_confirm_button(button_desc, datum/callback/on_open)
 	if(!client || !hud_used)

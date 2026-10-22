@@ -51,7 +51,8 @@
 							/obj/effect/decal/remains/bear = 0.5,
 							/obj/effect/decal/remains/human = 0.3,
 							/obj/structure/leyline/normal/coast = 0.1,
-							/obj/effect/hunting_track = 3)
+							/obj/effect/hunting_track = 3,
+							/obj/structure/deadbodyrandom/low = 0.005)
 	spawnableTurfs = list(/turf/open/floor/rogue/dirt/road=0.2,
 						/turf/open/water/swamp=1,)
 	allowed_areas = list(/area/rogue/outdoors/bograt)

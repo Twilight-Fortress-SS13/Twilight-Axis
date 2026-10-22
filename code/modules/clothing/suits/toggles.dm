@@ -39,7 +39,7 @@
 /obj/item/clothing/dropped(mob/user)
 	..()
 	// Delete any linked hood.
-	if(connected_hood) 
+	if(connected_hood)
 		qdel(connected_hood)
 
 	// Reset dropped clothes to base state.
@@ -62,7 +62,9 @@
 		H.update_inv_wear_suit()
 		H.update_inv_cloak()
 		H.update_inv_neck()
+		H.update_inv_head()
 		H.update_inv_pants()
+		H.update_body_parts(TRUE)
 		H.update_fov_angles()
 
 // Logic for raising and lowering the hood.
@@ -71,7 +73,7 @@
 		return
 
 	var/mob/living/carbon/human/H = user
- 
+
 	// Hood is already UP, make it go DOWN
 	if(hoodtoggled)
 		if(connected_hood)
@@ -106,10 +108,11 @@
 		// redraw_mob = FALSE because we'll do that here.
 		if(toggle_icon_state)
 			src.icon_state = "[initial(icon_state)]_t"
-		
+
 		H.update_inv_wear_suit()
 		H.update_inv_cloak()
 		H.update_inv_head()
+		H.update_body_parts(TRUE)
 		H.update_fov_angles()
 
 
@@ -121,6 +124,9 @@
 
 /obj/item/clothing/head/hooded/Destroy()
 	if(connected_cloak)
+		var/list/stored_items = contents.Copy() // TA EDIT START
+		for(var/obj/item/I in stored_items)
+			I.forceMove(connected_cloak) // TA EDIT END
 		connected_cloak.RemoveHood() // Notify the linked cloak.
 		connected_cloak = null
 	return ..()

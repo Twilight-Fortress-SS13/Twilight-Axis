@@ -2,6 +2,14 @@
 	. = new_angle - old_angle
 	Turn(.) //BYOND handles cases such as -270, 360, 540 etc. DOES NOT HANDLE 180 TURNS WELL, THEY TWEEN AND LOOK LIKE SHIT
 
+/**
+ * Shear the transform on either or both axes.
+ * * x - X axis shearing
+ * * y - Y axis shearing
+ */
+/matrix/proc/Shear(x, y)
+	return Multiply(matrix(1, x, 0, y, 1, 0))
+
 /atom/proc/SpinAnimation(speed = 10, loops = -1, clockwise = 1, segments = 3, parallel = TRUE)
 	if(!segments)
 		return
@@ -27,6 +35,28 @@
 		//doesn't have an object argument because this is "Stacking" with the animate call above
 		//3 billion% intentional
 
+/atom/proc/SpinAnimationAround(offset_x = 0, offset_y = 0, speed = 10, loops = -1, clockwise = 1, segments = 12)
+	if(!segments)
+		return
+	if(!offset_x && !offset_y)
+		return SpinAnimation(speed, loops, clockwise, segments)
+	var/segment = 360/segments
+	if(!clockwise)
+		segment = -segment
+	var/list/matrices = list()
+	for(var/i in 1 to segments)
+		var/matrix/M = matrix()
+		M.Translate(-offset_x, -offset_y)
+		M.Turn(segment*i)
+		M.Translate(offset_x, offset_y)
+		matrices += M
+
+	speed /= segments
+
+	animate(src, transform = matrices[1], time = speed, loops, flags = ANIMATION_PARALLEL)
+	for(var/i in 2 to segments)
+		animate(transform = matrices[i], time = speed)
+
 //Dumps the matrix data in format a-f
 /matrix/proc/tolist()
 	. = list()
@@ -39,9 +69,9 @@
 
 //Dumps the matrix data in a matrix-grid format
 /*
-  a d 0
-  b e 0
-  c f 1
+	a d 0
+	b e 0
+	c f 1
 */
 /matrix/proc/togrid()
 	. = list()
@@ -94,15 +124,6 @@ list(-1,0,0,0, 0,-1,0,0, 0,0,-1,0, 0,0,0,1, 1,1,1,0)
 list(0.393,0.349,0.272,0, 0.769,0.686,0.534,0, 0.189,0.168,0.131,0, 0,0,0,1, 0,0,0,0)
 */
 
-//Does nothing
-/proc/color_matrix_identity()
-	return list(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1, 0,0,0,0)
-
-//Adds/subtracts overall lightness
-//0 is identity, 1 makes everything white, -1 makes everything black
-/proc/color_matrix_lightness(power)
-	return list(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1, power,power,power,0)
-
 //Changes distance hues have from grey while maintaining the overall lightness. Greys are unaffected.
 //1 is identity, 0 is greyscale, >1 oversaturates colors
 /proc/color_matrix_saturation(value)
@@ -112,12 +133,6 @@ list(0.393,0.349,0.272,0, 0.769,0.686,0.534,0, 0.189,0.168,0.131,0, 0,0,0,1, 0,0
 	var/B = round(LUMA_B * inv, 0.001)
 
 	return list(R + value,R,R,0, G,G + value,G,0, B,B,B + value,0, 0,0,0,1, 0,0,0,0)
-
-//Changes distance colors have from rgb(127,127,127) grey
-//1 is identity. 0 makes everything grey >1 blows out colors and greys
-/proc/color_matrix_contrast(value)
-	var/add = (1 - value) / 2
-	return list(value,0,0,0, 0,value,0,0, 0,0,value,0, 0,0,0,1, add,add,add,0)
 
 //Moves all colors angle degrees around the color wheel while maintaining intensity of the color and not affecting greys
 //0 is identity, 120 moves reds to greens, 240 moves reds to blues
@@ -151,9 +166,9 @@ round(cos_inv_third+sqrt3_sin, 0.001), round(cos_inv_third-sqrt3_sin, 0.001), ro
 //Returns a matrix addition of A with B
 /proc/color_matrix_add(list/A, list/B)
 	if(!istype(A) || !istype(B))
-		return color_matrix_identity()
+		return COLOR_MATRIX_IDENTITY
 	if(A.len != 20 || B.len != 20)
-		return color_matrix_identity()
+		return COLOR_MATRIX_IDENTITY
 	var/list/output = list()
 	output.len = 20
 	for(var/value in 1 to 20)
@@ -163,9 +178,9 @@ round(cos_inv_third+sqrt3_sin, 0.001), round(cos_inv_third-sqrt3_sin, 0.001), ro
 //Returns a matrix multiplication of A with B
 /proc/color_matrix_multiply(list/A, list/B)
 	if(!istype(A) || !istype(B))
-		return color_matrix_identity()
+		return COLOR_MATRIX_IDENTITY
 	if(A.len != 20 || B.len != 20)
-		return color_matrix_identity()
+		return COLOR_MATRIX_IDENTITY
 	var/list/output = list()
 	output.len = 20
 	var/x = 1

@@ -23,6 +23,7 @@
 	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_CHAIN_STEP, 7)
 	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
 	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FREEBLADEDEXTERITY)
 
 /obj/item/clothing/under/roguetown/brigandinelegs
 	name = "brigandine chausses"
@@ -50,6 +51,7 @@
 	. = ..()
 	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_PLATE_COAT_STEP, 10)
 	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FREEBLADEDEXTERITY)
 
 /obj/item/clothing/under/roguetown/splintlegs
 	name = "splinted leggings"
@@ -68,6 +70,9 @@
 	//resistance_flags = FIRE_PROOF // these ones should be burning since is cloth + metal
 	sewrepair = FALSE
 	smeltresult = /obj/item/ingot/iron
+
+/obj/item/clothing/under/roguetown/splintlegs/ComponentInitialize()
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FREEBLADEDEXTERITY)
 
 /obj/item/clothing/under/roguetown/brayette
 	name = "brayette"
@@ -129,7 +134,7 @@
 	detail_color = CLOTHING_WHITE
 	altdetail_color = CLOTHING_WHITE
 
-/obj/item/clothing/under/roguetown/chainlegs/iron/hose/dyeable/Initialize()
+/obj/item/clothing/under/roguetown/chainlegs/iron/hose/dyeable/Initialize(mapload)
 	. = ..()
 	update_icon()
 
@@ -161,7 +166,7 @@
 	detail_color = CLOTHING_WHITE
 	altdetail_color = CLOTHING_WHITE
 
-/obj/item/clothing/under/roguetown/chainlegs/hose/dyeable/Initialize()
+/obj/item/clothing/under/roguetown/chainlegs/hose/dyeable/Initialize(mapload)
 	. = ..()
 	update_icon()
 
@@ -186,7 +191,7 @@
 	name = "layer a cloth hose atop steel chain hosen"
 	result = list(/obj/item/clothing/under/roguetown/chainlegs/hose/dyeable)
 	reqs = list(/obj/item/clothing/under/roguetown/tights/hose = 1,
-	            /obj/item/clothing/under/roguetown/chainlegs/hose = 1)
+				/obj/item/clothing/under/roguetown/chainlegs/hose = 1)
 	craftdiff = 0 //Straight-forward. Note that this is a copy of Draganfrukt's helmet-and-hat combination system, which also has the slight caveat..
 	req_table = TRUE //..of resetting the durability of both items, when crafted and uncrafted. This check helps to reduce a lot of potential cheese, but should be tweaked later.
 	bypass_dupe_test = TRUE
@@ -195,7 +200,7 @@
 	name = "layer a cloth hose atop iron chain hosen"
 	result = list(/obj/item/clothing/under/roguetown/chainlegs/iron/hose/dyeable)
 	reqs = list(/obj/item/clothing/under/roguetown/tights/hose = 1,
-	            /obj/item/clothing/under/roguetown/chainlegs/iron = 1)
+	            /obj/item/clothing/under/roguetown/chainlegs/iron/hose = 1) // TA EDIT
 	craftdiff = 0
 	req_table = TRUE
 	bypass_dupe_test = TRUE
@@ -221,7 +226,7 @@
 
 /obj/item/clothing/under/roguetown/chainlegs/kilt/aalloy
 	name = "decrepit chain kilt"
-	desc = "Frayed bronze rings, linked together with bindings of rotting leather to form a waist's drape. The maille jingles with every step, singing the hymn to a cadence once savored by marching legionnaires."
+	desc = "Rotted metal rings, linked together with bindings of rotting leather to form a waist's drape. The maille jingles with every step, singing the hymn to a cadence once savored by marching legionnaires."
 	icon_state = "achainkilt"
 	sleevetype = "achainkilt"
 	max_integrity = ARMOR_INT_LEG_DECREPIT_CHAIN

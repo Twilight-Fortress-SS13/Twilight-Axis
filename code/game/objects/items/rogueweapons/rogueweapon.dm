@@ -24,7 +24,7 @@
 	obj_flags = CAN_BE_HIT | UNIQUE_RENAME | CLAMP_BREAK
 	blade_dulling = null
 	max_integrity = 250
-	integrity_failure = 0.2
+	integrity_failure = GENERIC_INTEG_FAILURE
 	wdefense = 3
 	wdefense_wbonus = 3 //Default is 3.
 	experimental_onhip = TRUE
@@ -42,28 +42,33 @@
 	var/datum/special_intent/special
 
 	var/malumblessed_w = FALSE
-	
+
 	// whether this is actually a tool, like hoes and hammers, not a weapon proper. used to allow TRAIT_TINYPAWS users to conduct repairs and such
 	var/is_tool = FALSE
 	/// sigh
 	var/hoe_damage = null //the durability damage recieved for every work cycle
 	var/work_time = 3 SECONDS // the time it takes to make new soil or till soil
 
-/obj/item/rogueweapon/Initialize()
+
+/obj/item/rogueweapon/Initialize(mapload)
 	. = ..()
 	if(!destroy_message)
 		destroy_message = span_warning("\The [src] shatters!")
-	
+
 	if(ispath(special))
 		special = new special()
+
+	if(!length(materia)) // some weapons will want custom aspects
+		if(is_tool)
+			materia = list(/datum/materia_aspect/tool)
+		else
+			materia = list(/datum/materia_aspect/weapon)
 
 /obj/item/rogueweapon/dropped(mob/user, silent)
 	. = ..()
 	if(istype(src, /obj/item/rogueweapon/shield))
 		return
-	if(implement_refund)
-		return
-	if(ispath(associated_skill, /datum/skill/combat/staves) || ispath(associated_skill, /datum/skill/combat/arcyne))
+	if(is_implement)
 		return
 	if(isliving(user))
 		var/mob/living/L = user
@@ -74,12 +79,11 @@
 		AddComponent(\
 			/datum/component/silverbless,\
 			pre_blessed = BLESSING_NONE,\
-			silver_type = SILVER_TENNITE,\
-			added_force = 0,\
-			added_blade_int = 0,\
-			added_int = 25,\
-			added_def = 2,\
+			silver_type = SILVER_TENNITE\
 		)
+
+/obj/item/rogueweapon/proc/on_blessed(blessing_type)
+	return
 
 /obj/item/rogueweapon/get_examine_string(mob/user, thats = FALSE)
 	return "[thats? "That's ":""]<b>[get_examine_name(user)]</b> <font size = 1>[get_blade_dulling_text(src)]</font>"
@@ -115,14 +119,14 @@
 	can_parry = initial(can_parry)
 	..()
 
-/obj/item/rogueweapon/rmb_self(mob/user)
-	if(!has_altgrip_modes())
-		return ..()
-	if(wielded && !altgripped)
-		ungrip(user)
-	altgrip(user)
-	user.update_inv_hands()
+/obj/item/rogueweapon/rmb_self(mob/user, keybind = FALSE)
+	if(has_altgrip_modes() && (keybind || user.cmode))
+		altgrip(user)
+		return
 	return ..()
+
+/obj/item/rogueweapon/twirl_skill_needed()
+	return twirly - ((associated_skill == /datum/skill/combat/arcyne) ? 1 : 0)
 
 /obj/item/shaft
 	name = "debug shaft"
@@ -176,3 +180,8 @@
 	blade_dulling = new_shaft
 	qdel(S)
 	new replaced_shaft(src.drop_location())
+
+/obj/item/rogueweapon/get_mechanics_examine(mob/user)
+	. = ..()
+	if(twirly)
+		. += span_info("Right-click to twirl it one-handed[has_altgrip_modes()?", out of combat mode":""]. Safe at [skill_to_string(twirl_skill_needed())] skill.")

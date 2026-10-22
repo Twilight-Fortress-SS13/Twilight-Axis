@@ -1,7 +1,7 @@
 // OH GOD IT'S SO SHITTY IM SO SORRY PLEASE PLEAS EPLEASEP ELEA
 
 GLOBAL_LIST_INIT(psydon_pool, list(
-	/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk,  //todo: items lol
+	/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk,	//todo: items lol
 	/obj/item/clothing/suit/roguetown/armor/gambeson,
 	/obj/item/clothing/suit/roguetown/armor/leather,
 	/obj/item/reagent_containers/glass/bottle/waterskin,
@@ -198,7 +198,7 @@ GLOBAL_LIST_INIT(capstone_pool, list(
 			var/turf/location = get_spawn_turf_for_job("Pilgrim")
 			user.forceMove(location)
 			user.Stun(50)
-			user.cmode_music = 'sound/music/combat_ascended.ogg'
+			user.cmode_music = sound("sound/music/combat_ascended.ogg")
 			user.STASTR += 10
 			user.STAPER += 10
 			user.STAINT += 10

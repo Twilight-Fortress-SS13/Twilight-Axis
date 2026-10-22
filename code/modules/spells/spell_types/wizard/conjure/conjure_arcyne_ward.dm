@@ -3,6 +3,7 @@
 #define UPGRADE_ARCYNE_INTEGRITY 300
 
 /datum/action/cooldown/spell/conjure_arcyne_ward
+	source_aspect = /datum/magic_aspect/pseudo/wards
 	name = "Conjure Arcyne Ward"
 	desc = "Conjure an invisible arcyne ward that covers your entire body. Cast again to dismiss it. \
 	The ward withdraws from areas where you wear real armor, leaving those to your equipment instead - \
@@ -82,7 +83,7 @@
 		var/mob/living/L = owner
 		var/adjusted = get_adjusted_cost(upfront_stamina_cost)
 		if(adjusted > 0)
-			L.stamina_add(adjusted)
+			INVOKE_ASYNC(L, TYPE_PROC_REF(/mob/living, stamina_add), adjusted) // TA EDIT
 
 /datum/action/cooldown/spell/conjure_arcyne_ward/Grant(mob/grant_to)
 	. = ..()
@@ -146,7 +147,7 @@
 /datum/action/cooldown/spell/conjure_arcyne_ward/dragonhide
 	name = "Conjure Dragonhide Ward"
 	desc = "Conjure a dragonhide ward - an upgraded arcyne ward hardened with draconic scales. \
-	Grants fire resistance, halving fire damage and causing flames to burn out faster and bolsters constitution. 300 integrity. \
+	Grants fire resistance, halving fire damage and causing flames to burn out faster. 300 integrity. \
 	Otherwise functions as a standard arcyne ward - yields coverage to real armor, does not regenerate. \
 	Cast again to dismiss. Cooldown begins when dismissed or destroyed."
 	button_icon_state = "conjure_dragonhide"
@@ -162,7 +163,7 @@
 /datum/action/cooldown/spell/conjure_arcyne_ward/crystalhide
 	name = "Conjure Crystalhide Ward"
 	desc = "Conjure a crystalhide ward - an upgraded arcyne ward crystallized with leyline energy. \
-	Grants brigandine-tier protection and bolsters intelligence. Shatters violently when broken, knocking back nearby foes. 300 integrity. \
+	Grants brigandine-tier protection. Shatters violently when broken, knocking back nearby foes. 300 integrity. \
 	Otherwise functions as a standard arcyne ward - yields coverage to real armor, does not regenerate. \
 	Cast again to dismiss. Cooldown begins when dismissed or destroyed."
 	button_icon_state = "conjure_dragonhide"
@@ -180,6 +181,7 @@
 // --- Regenerate Arcyne Ward (paired spell, granted while a ward is active) ---
 
 /datum/action/cooldown/spell/regenerate_arcyne_ward
+	source_aspect = /datum/magic_aspect/pseudo/wards
 	name = "Regenerate Arcyne Ward"
 	desc = "Channel a restoration on my active Arcyne Ward, returning it to full integrity. \
 	The channel takes 10 seconds and costs stamina and energy proportional to how damaged the ward is - \
@@ -286,7 +288,7 @@
 		var/mob/living/L = owner
 		var/adjusted = get_adjusted_cost(upfront_stamina_cost)
 		if(adjusted > 0)
-			L.stamina_add(adjusted)
+			INVOKE_ASYNC(L, TYPE_PROC_REF(/mob/living, stamina_add), adjusted) // TA EDIT
 
 /datum/action/cooldown/spell/regenerate_arcyne_ward/cast(atom/cast_on)
 	. = ..()
@@ -494,7 +496,7 @@
 	for(var/mob/living/target in oview(1, wearer))
 		var/throwtarget = get_edge_target_turf(wearer, get_dir(wearer, get_step_away(target, wearer)))
 		target.safe_throw_at(throwtarget, 2, 1, wearer, spin = FALSE, force = MOVE_FORCE_EXTREMELY_STRONG)
-		target.adjustBruteLoss(20)
+		target.adjustBruteLoss(SPELL_DMG_VS(target, SPELL_DMG(20)))
 
 #undef ARCYNE_WARD_FILTER
 #undef BASE_ARCYNE_INTEGRITY

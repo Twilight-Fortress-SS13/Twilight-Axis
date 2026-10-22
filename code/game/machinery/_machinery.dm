@@ -26,7 +26,7 @@
 	var/climb_offset = 0 //offset up when climbed
 	var/mob/living/structureclimber
 
-/obj/machinery/Initialize()
+/obj/machinery/Initialize(mapload)
 	if(!armor)
 		armor = ARMOR_MACHINERY
 	. = ..()
@@ -287,6 +287,9 @@
 
 /obj/machinery/proc/climb_structure(mob/living/user)
 	src.add_fingerprint(user)
+	if(LAZYLEN(user.grabbedby)) // TA EDIT START
+		to_chat(user, span_warning("I cannot climb while being held."))
+		return // TA EDIT END
 	var/adjusted_climb_time = climb_time
 	if(user.restrained()) //climbing takes twice as long when restrained.
 		adjusted_climb_time *= 2
@@ -295,9 +298,10 @@
 	adjusted_climb_time -= user.STASPD * 2
 	adjusted_climb_time = max(adjusted_climb_time, 0)
 
+	if(!user.start_climb())
+		return
 	structureclimber = user
-	user.mid_climb = TRUE
-	if(do_mob(user, user, adjusted_climb_time))
+	if(do_mob(user, user, adjusted_climb_time, extra_checks = user.climb_check_callback()) && !LAZYLEN(user.grabbedby)) // TA EDIT
 		if(src.loc) //Checking if structure has been destroyed
 			if(do_climb(user))
 				user.visible_message("<span class='warning'>[user] climbs onto [src].</span>", \
@@ -310,5 +314,5 @@
 				. = 1
 			else
 				to_chat(user, "<span class='warning'>I fail to climb onto [src].</span>")
-	user.mid_climb = FALSE
+	user.end_climb()
 	structureclimber = null

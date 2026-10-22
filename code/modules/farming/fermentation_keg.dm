@@ -51,7 +51,7 @@ GLOBAL_LIST_EMPTY(custom_fermentation_recipes)
 	var/heat_decay = 0
 	var/rotation_speed_mult = 1 //for the copper distiller
 
-/obj/structure/fermentation_keg/Initialize()
+/obj/structure/fermentation_keg/Initialize(mapload)
 	create_reagents(900, OPENCONTAINER | NO_REACT | AMOUNT_VISIBLE | REFILLABLE) //on agv it should be 120u for water then rest can be other needed chemicals
 	. = ..()
 	recipe_crop_stocks = list()
@@ -138,8 +138,9 @@ GLOBAL_LIST_EMPTY(custom_fermentation_recipes)
 		produce_list |= I
 
 	if(istype(I, /obj/item/storage))
-		produce_list |= I.contents
-		storage_list |= I.contents
+		var/list/held = I.held_contents()
+		produce_list |= held
+		storage_list |= held
 
 	var/dumps = FALSE
 	for(var/obj/item/reagent_containers/food/G in produce_list)
@@ -149,7 +150,7 @@ GLOBAL_LIST_EMPTY(custom_fermentation_recipes)
 			recipe_crop_stocks[G.type]++
 			if(G in storage_list)
 				dumps = TRUE
-				SEND_SIGNAL(G.loc, COMSIG_TRY_STORAGE_TAKE, G, get_turf(src), TRUE)
+				I.release_held(G, get_turf(src))
 			qdel(G)
 
 	for(var/obj/item/item in produce_list)
@@ -161,7 +162,7 @@ GLOBAL_LIST_EMPTY(custom_fermentation_recipes)
 			recipe_crop_stocks[item.type] = amount + added_item
 			if(item in storage_list)
 				dumps = TRUE
-				SEND_SIGNAL(item.loc, COMSIG_TRY_STORAGE_TAKE, item, get_turf(src), TRUE)
+				I.release_held(item, get_turf(src))
 			qdel(item)
 
 	if(dumps)
@@ -457,7 +458,7 @@ GLOBAL_LIST_EMPTY(custom_fermentation_recipes)
 				bottle_made.icon_state = "[glass_colour]"
 				bottle_made.name = "brewer's bottle of [selected_recipe.bottle_name]"
 				bottle_made.sellprice = round(selected_recipe.sell_value / selected_recipe.brewed_amount)
-				bottle_made.desc =  selected_recipe.bottle_desc || "A bottle of locally-brewed [selected_recipe.bottle_name]."
+				bottle_made.desc =	selected_recipe.bottle_desc || "A bottle of locally-brewed [selected_recipe.bottle_name]."
 				var/datum/reagent/brewed_reagent = selected_recipe.reagent_to_brew
 				if(selected_recipe.ages)
 					var/time = world.time - age_start_time
@@ -520,7 +521,7 @@ GLOBAL_LIST_EMPTY(custom_fermentation_recipes)
 /obj/item/reagent_containers/glass/bottle/brewing_bottle
 	name = "brewer's bottle"
 	desc = "A bottle with a cork."
-	icon =  'icons/obj/bottle.dmi'
+	icon =	'icons/obj/bottle.dmi'
 	icon_state = "brew_bottle"
 
 	var/glass_name
@@ -546,7 +547,7 @@ GLOBAL_LIST_EMPTY(custom_fermentation_recipes)
 	else
 		. += span_notice("The bottle has been unsealed. It cannot be sold anymore.")
 
-/obj/item/reagent_containers/glass/bottle/brewing_bottle/rmb_self(mob/user)
+/obj/item/reagent_containers/glass/bottle/brewing_bottle/rmb_self(mob/user, keybind = FALSE)
 	. = ..()
 	sealed = FALSE
 	sellprice = 0

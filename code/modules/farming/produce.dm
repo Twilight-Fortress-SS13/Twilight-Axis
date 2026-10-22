@@ -11,6 +11,7 @@
 	var/splat_type = null
 	/// Color of the splat, applied when splat_type is spawned (after squashing).
 	var/splat_color = null
+	materia = list(/datum/materia_aspect/plant)
 
 /obj/item/reagent_containers/food/snacks/grown/Initialize(mapload)
 	. = ..()
@@ -21,7 +22,8 @@
 
 /obj/item/reagent_containers/food/snacks/grown/examine(mob/user)
 	. = ..()
-	. += span_smallnotice("Smash this with a blunt object to extract seeds from it.")
+	if(seed)
+		. += span_smallnotice("Smash this with a blunt object to extract seeds from it.")
 
 /obj/item/reagent_containers/food/snacks/grown/attackby(obj/item/weapon, mob/user, params)
 	if(weapon && isturf(loc))
@@ -92,6 +94,8 @@
 	tastes = list("wheat" = 1)
 	grind_results = list(/datum/reagent/floure = 10)
 	mill_result = /obj/item/reagent_containers/powder/flour
+	slice_path = /obj/item/reagent_containers/food/snacks/rogue/bulgur_raw
+	slices_num = 1
 
 /obj/item/reagent_containers/food/snacks/grown/oat
 	seed = /obj/item/seeds/wheat/oat
@@ -137,6 +141,7 @@
 	fried_type = /obj/item/reagent_containers/food/snacks/rogue/grilledcorn
 
 /obj/item/reagent_containers/food/snacks/grown/apple
+	dish_type = DISH_FRUIT
 	seed = /obj/item/seeds/apple
 	name = "apple"
 	desc = "Deliciously crisp and fragrant. It's said that archers will sometimes \
@@ -162,6 +167,7 @@
 	chopping_sound = TRUE
 	var/equippedloc = null
 	var/list/bitten_names = list()
+	var/busy = FALSE // this is set to true at the start of the marriage flow to prevent spamclicking from fucking everything up
 
 /obj/item/reagent_containers/food/snacks/grown/apple/On_Consume(mob/living/eater)
 	..()
@@ -197,7 +203,7 @@
 			if(equippedloc != H.loc)
 				H.dropItemToGround(H.head)
 
-/obj/item/reagent_containers/food/snacks/grown/apple/Initialize()
+/obj/item/reagent_containers/food/snacks/grown/apple/Initialize(mapload)
 	. = ..()
 	var/static/list/slapcraft_recipe_list = list(
 		/datum/crafting_recipe/roguetown/cooking/appledry,
@@ -210,6 +216,7 @@
 		)
 
 /obj/item/reagent_containers/food/snacks/grown/fruit
+	dish_type = DISH_FRUIT
 	name = "generic fruit"
 	desc = "Uh oh, this shouldn't be here."
 	bitesize = 2
@@ -227,6 +234,7 @@
 	icon_state = "pear"
 	tastes = list("pear" = 1)
 	splat_color = "#D2B48C"
+	juice_results = list(/datum/reagent/consumable/juice/pear = 5)
 
 /obj/item/reagent_containers/food/snacks/grown/fruit/lemon
 	name = "lemon"
@@ -235,6 +243,7 @@
 	icon_state = "lemon"
 	tastes = list("lemon" = 1)
 	splat_color = "#FFFF00"
+	juice_results = list(/datum/reagent/consumable/juice/lemon = 5)
 
 /obj/item/reagent_containers/food/snacks/grown/fruit/lime
 	name = "lime"
@@ -243,8 +252,9 @@
 	icon_state = "lime"
 	tastes = list("lime" = 1)
 	splat_color = "#00FF00"
+	juice_results = list(/datum/reagent/consumable/juice/lime = 5)
 
-/obj/item/reagent_containers/food/snacks/grown/fruit/lime/Initialize()
+/obj/item/reagent_containers/food/snacks/grown/fruit/lime/Initialize(mapload)
 	. = ..()
 	var/static/list/slapcraft_recipe_list = list(
 		/datum/crafting_recipe/roguetown/cooking/limedry,
@@ -263,8 +273,11 @@
 	icon_state = "tangerine"
 	tastes = list("tangerine" = 1)
 	splat_color = "#FFA500"
+	juice_results = list(/datum/reagent/consumable/juice/orange = 5)
 
 /obj/item/reagent_containers/food/snacks/grown/fruit/tangerine_sugared
+	cuisine = CUISINE_RANESHENI
+	dish_type = DISH_FRUIT|DISH_SWEET
 	name = "smothered tangerine"
 	desc = "Sugared tangerines, smothered in sweetness and awaiting to be baptized in a pot of boiling fat."
 	icon_state = "tangerinesugar"
@@ -272,8 +285,8 @@
 	splat_color = "#FFA500"
 	tastes = list("overpoweringly sweet" = 1)
 	list_reagents = list(/datum/reagent/consumable/nutriment = NUTRITION_THREE_QUARTER_MEAL)
-	deep_fried_type = /obj/item/reagent_containers/food/snacks/marmalade
 	eat_effect = /datum/status_effect/buff/sweet
+	juice_results = list(/datum/reagent/consumable/juice/orange = 5)
 
 /obj/item/reagent_containers/food/snacks/grown/fruit/plum
 	name = "plum"
@@ -282,6 +295,7 @@
 	icon_state = "plum"
 	tastes = list("plum" = 1)
 	splat_color = "#8B008B"
+	juice_results = list(/datum/reagent/consumable/juice/plum = 5)
 
 /obj/item/reagent_containers/food/snacks/grown/fruit/strawberry
 	name = "strawberry"
@@ -290,8 +304,9 @@
 	icon_state = "strawberry"
 	tastes = list("strawberry" = 1)
 	splat_color = "#9A1B00"
+	juice_results = list(/datum/reagent/consumable/juice/strawberry = 5)
 
-/obj/item/reagent_containers/food/snacks/grown/fruit/strawberry/Initialize()
+/obj/item/reagent_containers/food/snacks/grown/fruit/strawberry/Initialize(mapload)
 	. = ..()
 	var/static/list/slapcraft_recipe_list = list(
 		/datum/crafting_recipe/roguetown/cooking/strawberrydry,
@@ -309,8 +324,9 @@
 	icon_state = "blackberry"
 	tastes = list("blackberry" = 1)
 	splat_color = "#272C3F"
+	juice_results = list(/datum/reagent/consumable/juice/blackberry = 5)
 
-/obj/item/reagent_containers/food/snacks/grown/fruit/blackberry/Initialize()
+/obj/item/reagent_containers/food/snacks/grown/fruit/blackberry/Initialize(mapload)
 	. = ..()
 	var/static/list/slapcraft_recipe_list = list(
 		/datum/crafting_recipe/roguetown/cooking/blackberrydry,
@@ -322,6 +338,8 @@
 		)
 
 /obj/item/reagent_containers/food/snacks/grown/fruit/blackberry_sugared
+	cuisine = CUISINE_RANESHENI
+	dish_type = DISH_FRUIT|DISH_SWEET
 	name = "smothered blackberry"
 	desc = "Sugared blackberries, smothered in sweetness and awaiting to be baptized in a pot of boiling fat."
 	icon_state = "blackberrysugar"
@@ -329,8 +347,8 @@
 	splat_color = "#272C3F"
 	tastes = list("overpoweringly sweet" = 1)
 	list_reagents = list(/datum/reagent/consumable/nutriment = NUTRITION_THREE_QUARTER_MEAL)
-	deep_fried_type = /obj/item/reagent_containers/food/snacks/jamtallow
 	eat_effect = /datum/status_effect/buff/sweet
+	juice_results = list(/datum/reagent/consumable/juice/blackberry = 5)
 
 /obj/item/reagent_containers/food/snacks/grown/fruit/raspberry
 	name = "raspberry"
@@ -339,6 +357,7 @@
 	icon_state = "raspberry"
 	tastes = list("raspberry" = 1)
 	splat_color = "#A01600"
+	juice_results = list(/datum/reagent/consumable/juice/raspberry = 5)
 
 /obj/item/reagent_containers/food/snacks/grown/fruit/tomato
 	name = "tomato"
@@ -350,6 +369,7 @@
 	slice_path = /obj/item/reagent_containers/food/snacks/grown/fruit/tomato_sliced
 	slices_num = 1
 	mill_result = /obj/item/reagent_containers/food/snacks/grown/fruit/tomato_sauce
+	juice_results = list(/datum/reagent/consumable/juice/tomato = 5)
 
 /obj/item/reagent_containers/food/snacks/grown/fruit/tomato_sliced
 	name = "split tomato"
@@ -360,6 +380,7 @@
 	tastes = list("to" = 1, "mato" = 1)
 	splat_color = "#CD5320"
 	mill_result = /obj/item/reagent_containers/food/snacks/grown/fruit/tomato_sauce
+	juice_results = list(/datum/reagent/consumable/juice/tomato = 5)
 
 /obj/item/reagent_containers/food/snacks/grown/fruit/tomato_sauce
 	name = "tomato sauce"
@@ -372,6 +393,7 @@
 
 
 /obj/item/reagent_containers/food/snacks/grown/berries/rogue
+	dish_type = DISH_FRUIT
 	seed = /obj/item/seeds/berryrogue
 	name = "jacksberries"
 	desc = ""
@@ -383,13 +405,14 @@
 	dropshrink = 0.75
 	var/color_index = "good"
 	rotprocess = SHELFLIFE_SHORT
+	juice_results = list(/datum/reagent/consumable/juice/jackberry = 5)
 
 /obj/item/reagent_containers/food/snacks/grown/berries/rogue/examine(mob/user)
 	. = ..()
 	if(!user.get_client_color(/datum/client_colour/monochrome))
 		. += span_notice("These berries have a <b>[BERRYCOLORS[filling_color]]</b> hue.")
 
-/obj/item/reagent_containers/food/snacks/grown/berries/rogue/Initialize()
+/obj/item/reagent_containers/food/snacks/grown/berries/rogue/Initialize(mapload)
 	if(GLOB.berrycolors[color_index])
 		filling_color = GLOB.berrycolors[color_index]
 	else
@@ -437,7 +460,7 @@
 	grind_results = list(/datum/reagent/berrypoison = 5)
 	color_index = "bad"
 
-/obj/item/reagent_containers/food/snacks/grown/berries/rogue/poison/Initialize()
+/obj/item/reagent_containers/food/snacks/grown/berries/rogue/poison/Initialize(mapload)
 	. = ..()
 	var/static/list/slapcraft_recipe_list = list(
 		/datum/crafting_recipe/roguetown/cooking/jacksberriespoisondry,
@@ -457,11 +480,13 @@
 	filling_color = "#6b4d18"
 	bitesize = 1
 	foodtype = FRUIT
-	list_reagents = list(/datum/reagent/consumable/nutriment = 4, /datum/reagent/consumable/acorn_powder = 4, /datum/reagent/drug/nicotine = 1)
+	list_reagents = list(/datum/reagent/consumable/nutriment = 4, /datum/reagent/consumable/acorn_powder = 4, /datum/reagent/drug/westleach = 1)
 	grind_results = list(/datum/reagent/consumable/acorn_powder = 4)
 	mill_result = /obj/item/reagent_containers/powder/rocknut
 
 /obj/item/reagent_containers/food/snacks/grown/nut_sugared
+	cuisine = CUISINE_RANESHENI
+	dish_type = DISH_SWEET
 	name = "smothered rocknut"
 	desc = "Sugary rocknuts, smothered in herbal sweetness and awaiting a baptism in boiling fat."
 	icon_state = "rocknutssugar"
@@ -470,7 +495,6 @@
 	filling_color = "#6b4d18"
 	list_reagents = list(/datum/reagent/consumable/nutriment = NUTRITION_THREE_QUARTER_MEAL)
 	grind_results = list(/datum/reagent/consumable/acorn_powder = 4)
-	deep_fried_type = /obj/item/reagent_containers/food/snacks/dragee
 	eat_effect = /datum/status_effect/buff/sweet
 
 /obj/item/reagent_containers/food/snacks/grown/sugarcane
@@ -486,6 +510,7 @@
 	dropshrink = 0.8
 	rotprocess = null
 	mill_result = /obj/item/reagent_containers/food/snacks/sugar
+	grind_results = list(/datum/reagent/consumable/sugar = 10)
 
 /obj/item/reagent_containers/food/snacks/sugar
 	name = "sugar"
@@ -494,7 +519,6 @@
 	icon_state = "sugar"
 	tastes = list("sweet" = 1)
 	list_reagents = list(/datum/reagent/consumable/sugar = 15)
-	deep_fried_type = /obj/item/reagent_containers/food/snacks/caramel
 
 /obj/item/reagent_containers/food/snacks/pepper
 	name = "pepper"
@@ -522,6 +546,7 @@
 	icon_state = "spice_good"
 	tastes = list("fragrant spices" = 1, "a pleasantly complex aroma" = 1) //Very low nutritional content, but can be applied to add a very solid moodboost to broths. Futurecoders could add it to meals, later, too.
 	list_reagents = list(/datum/reagent/consumable/allspice = 1)
+	grind_results = list(/datum/reagent/consumable/allspice = 1)
 
 /obj/item/reagent_containers/food/snacks/grown/vegetable/turnip
 	name = "turnip"
@@ -538,7 +563,7 @@
 	dropshrink = 0.9
 	rotprocess = SHELFLIFE_EXTREME
 
-/*	..................   Sunflower   ................... */
+/*	..................	Sunflower	................... */
 /obj/item/reagent_containers/food/snacks/grown/sunflower
 	name = "sunflower"
 	desc = "A large, bright yellow flower. Can be worn on the head."
@@ -557,9 +582,15 @@
 //pyroclastic flowers - stonekeep port
 /obj/item/reagent_containers/food/snacks/grown/rogue/fyritius
 	name = "fyritius flower"
-	seed = /obj/item/seeds/fyritius
+	seed = /obj/item/herbseed/fyritius //you are an herb now
 	desc = "A delicate orange flower that radiates warmth."
 	icon_state = "fyritius"
+	mob_overlay_icon = 'icons/roguetown/clothing/onmob/head_items.dmi'
+	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_MASK
+	body_parts_covered = NONE
+	spitoutmouth = FALSE
+	muteinmouth = FALSE
+	alternate_worn_layer	= 8.9 //On top of helmet
 	filling_color = "#ff5e00"
 	tastes = list("tastes like a burning coal and fire" = 1)
 	obj_flags = CAN_BE_HIT
@@ -571,12 +602,22 @@
 	w_class = WEIGHT_CLASS_TINY
 	throw_speed = 1
 	throw_range = 3
+	materia = list(/datum/materia_aspect/plant, /datum/materia_aspect/fire)
 
 /obj/item/reagent_containers/food/snacks/grown/rogue/fyritius/attack(mob/living/carbon/human/M, mob/user)
 	if(M == user)
 		return ..() //Eat it
 	if(user.zone_selected == BODY_ZONE_PRECISE_MOUTH)
 		return ..() //Make THEM eat it.
+
+	if(M.stat == DEAD)
+		user.visible_message(span_notice("[user] brings [src] to soak up the stale essence of [M]'s wounds."))
+		if(do_after(user, 5 SECONDS, target = M))
+			user.visible_message(span_notice("[src] begins to wilt rapidly upon contact with [M]'s blood, but quickly recovers once [user] pulls it away."),
+				span_notice("The [src] begins to wilt rapidly as it touches [M]'s blood. You pull it away, and it quickly recovers."))
+			return
+		return
+
 	if(!M.get_bleed_rate())
 		to_chat(user, span_warning("There is no blood to wick into the flower bud."))
 		return
@@ -588,13 +629,13 @@
 		user.visible_message(span_notice("[user] brings [src] to soak up the ichor of [M]'s wounds."))
 		if(do_after(user, 5 SECONDS, target = M))
 			user.visible_message(span_notice("[user] draws the ichor of Dendor's Curse from [M]'s open wounds into [src]."), \
-								 span_notice("I have captured the ferocity of Dendor's Curse inside [src]."))
+									span_notice("I have captured the ferocity of Dendor's Curse inside [src]."))
 			success = TRUE
 	else if(Vamp)
 		user.visible_message(span_notice("[user] brings [src] to soak up the petrified blood of [M]'s wounds."))
 		if(do_after(user, 5 SECONDS, target = M))
 			user.visible_message(span_notice("[user] captures the petrified blood from [M]'s open wounds into [src]."), \
-								 span_notice("I have captured the quizzical properties of the petrified blood inside [src]."))
+									span_notice("I have captured the quizzical properties of the petrified blood inside [src]."))
 			success = TRUE
 	else
 		to_chat(user, span_warning("Their blood is not robust enough to hold to the warmth of [src]."))
@@ -621,6 +662,12 @@
 	name = "bloodied fyritius flower"
 	desc = "A once delicate orange flower, now soaked with gruesome accursed blood that slowly burns it away."
 	icon_state = "fyritius_blood"
+	mob_overlay_icon = 'icons/roguetown/clothing/onmob/head_items.dmi'
+	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_MASK
+	body_parts_covered = NONE
+	spitoutmouth = FALSE
+	muteinmouth = FALSE
+	alternate_worn_layer	= 8.9 //On top of helmet
 	filling_color = "#ff3300"
 	tastes = list("tastes like a burning coal and fire and blood" = 1)
 	bitesize = 1
@@ -655,8 +702,8 @@
 	bitesize_mod = 1
 	foodtype = VEGETABLES
 	tastes = list("sweet" = 1,"bitterness" = 1)
-	list_reagents = list(/datum/reagent/drug/nicotine = 2, /datum/reagent/consumable/nutriment = 1, /datum/reagent/berrypoison = 5)
-	grind_results = list(/datum/reagent/drug/nicotine = 5)
+	list_reagents = list(/datum/reagent/drug/westleach = 2, /datum/reagent/consumable/nutriment = 1, /datum/reagent/berrypoison = 5)
+	grind_results = list(/datum/reagent/drug/westleach = 5)
 	eat_effect = /datum/status_effect/debuff/badmeal
 	rotprocess = SHELFLIFE_SHORT
 
@@ -666,12 +713,12 @@
 	desc = "A dried pipeweed, ready to smoke."
 	icon_state = "westleachd"
 	dry = TRUE
-	pipe_reagents = list(/datum/reagent/drug/nicotine = 30)
+	pipe_reagents = list(/datum/reagent/drug/westleach = 30)
 	eat_effect = /datum/status_effect/debuff/badmeal
-	list_reagents = list(/datum/reagent/drug/nicotine = 5, /datum/reagent/consumable/nutriment = 1)
-	grind_results = list(/datum/reagent/drug/nicotine = 10)
+	list_reagents = list(/datum/reagent/drug/westleach = 5, /datum/reagent/consumable/nutriment = 1)
+	grind_results = list(/datum/reagent/drug/westleach = 10)
 
-/obj/item/reagent_containers/food/snacks/grown/rogue/pipeweeddry/Initialize()
+/obj/item/reagent_containers/food/snacks/grown/rogue/pipeweeddry/Initialize(mapload)
 	. = ..()
 	var/static/list/slapcraft_recipe_list = list(
 		/datum/crafting_recipe/roguetown/cooking/sigdry,
@@ -690,12 +737,12 @@
 	desc = "A prepared pipeweed prized for its foggy effects."
 	icon_state = "swampweedd"
 	dry = TRUE
-	pipe_reagents = list(/datum/reagent/drug/space_drugs = 30)
-	list_reagents = list(/datum/reagent/drug/space_drugs = 2,/datum/reagent/consumable/nutriment = 1)
-	grind_results = list(/datum/reagent/drug/space_drugs = 5)
+	pipe_reagents = list(/datum/reagent/drug/swampweed = 30)
+	list_reagents = list(/datum/reagent/drug/swampweed = 2,/datum/reagent/consumable/nutriment = 1)
+	grind_results = list(/datum/reagent/drug/swampweed = 5)
 	eat_effect = /datum/status_effect/debuff/badmeal
 
-/obj/item/reagent_containers/food/snacks/grown/rogue/swampweeddry/Initialize()
+/obj/item/reagent_containers/food/snacks/grown/rogue/swampweeddry/Initialize(mapload)
 	. = ..()
 	var/static/list/slapcraft_recipe_list = list(
 		/datum/crafting_recipe/roguetown/cooking/sigsweet,
@@ -799,6 +846,7 @@
 	rotprocess = null
 
 /obj/item/reagent_containers/food/snacks/grown/carrot
+	dish_type = DISH_VEGETABLE
 	name = "carrot"
 	desc = "A long vegetable said to help with eyesight. Often baked"
 	icon_state = "carrot"
@@ -807,7 +855,7 @@
 	dropshrink = 0.75
 	seed = /obj/item/seeds/carrot
 
-/obj/item/reagent_containers/food/snacks/grown/carrot/Initialize()
+/obj/item/reagent_containers/food/snacks/grown/carrot/Initialize(mapload)
 	. = ..()
 	var/static/list/slapcraft_recipe_list = list(
 		/datum/crafting_recipe/roguetown/cooking/carrotdry,
@@ -818,7 +866,7 @@
 		slapcraft_recipes = slapcraft_recipe_list,\
 		)
 
-///////////  Skysugar   //////////////
+///////////	Skysugar	//////////////
 // Stored here, as it uses deepfrying to make. Let's cook, yo!
 
 /obj/item/reagent_containers/food/snacks/grown/fruit/blackberry/skysugarbase
@@ -833,7 +881,6 @@
 	tastes = list("a horrifically bad idea" = 1, "slightly fruity aftertaste" = 1)
 	bitesize = 2
 	list_reagents = list(/datum/reagent/toxin/killersice = 1, /datum/reagent/starsugar = 8, /datum/reagent/water = 7, /datum/reagent/consumable/nutriment = 3) //Feeling a little.. under the weather?
-	deep_fried_type = /obj/item/reagent_containers/food/snacks/grown/skysugarslab
 	sellprice = 23
 
 /obj/item/reagent_containers/food/snacks/grown/skysugarslab
@@ -869,8 +916,9 @@
 	sellprice = 123 //Tight, tight, tight! Blue, red, green; whatever, man, just bring me more!
 	drop_sound = 'sound/foley/dropsound/glass_drop.ogg'
 
-/*	..................   Cucumber   ................... */
+/*	..................	Cucumber	................... */
 /obj/item/reagent_containers/food/snacks/grown/cucumber
+	dish_type = DISH_VEGETABLE
 	name = "cucumber"
 	desc = "A long, green vegetable that is crunchy and refreshing. Can be sliced for easier consumption."
 	icon_state = "cucumber"
@@ -882,6 +930,7 @@
 	seed = /obj/item/seeds/cucumber
 
 /obj/item/reagent_containers/food/snacks/grown/eggplant
+	dish_type = DISH_VEGETABLE
 	name = "eggplant"
 	desc = "A large, purple vegetable with a mild taste. Can be carved to be filled up."
 	icon_state = "eggplant"
@@ -889,3 +938,86 @@
 	slice_path = /obj/item/reagent_containers/food/snacks/rogue/eggplantcarved
 	slice_sound = TRUE
 	seed = /obj/item/seeds/eggplant
+
+/*	..................	Naledi plants	................... */
+/obj/item/reagent_containers/food/snacks/grown/beans
+	seed = /obj/item/seeds/beans
+	name = "beans"
+	desc = "A staple in distant lands. Said to induce gassiness within some individuals."
+	icon = 'icons/roguetown/items/produce.dmi'
+	icon_state = "beans"
+	filling_color = "#471b1b"
+	bitesize_mod = 2
+	foodtype = VEGETABLES
+	list_reagents = list(/datum/reagent/consumable/nutriment = 4)
+	tastes = list("beans" = 1)
+
+/obj/item/reagent_containers/food/snacks/grown/lentils
+	seed = /obj/item/seeds/lentils
+	name = "lentils"
+	desc = "Multicolored seeds that taste ever so slightly different, despite originating from the same plant. A delight from faraway lands."
+	icon = 'icons/roguetown/items/produce.dmi'
+	icon_state = "lentils"
+	filling_color = "#803f3f"
+	bitesize_mod = 2
+	foodtype = VEGETABLES
+	list_reagents = list(/datum/reagent/consumable/nutriment = 4)
+	tastes = list("lentils" = 1)
+
+/obj/item/reagent_containers/food/snacks/rogue/bulgur_raw
+	name = "raw bulgur"
+	desc = "Chopped and ground kernels of foreign cuisine, waiting to bloom in heat and steam… Add water first."
+	icon = 'icons/roguetown/items/produce.dmi'
+	icon_state = "bulgur"
+	gender = PLURAL
+	filling_color = "#a79d48"
+	foodtype = GRAIN
+	tastes = list("chalk" = 1)
+	var/water_added
+
+/obj/item/reagent_containers/food/snacks/rogue/bulgur_wet
+	name = "washed bulgur"
+	desc = "Ready to be steamed!"
+	gender = PLURAL
+	icon = 'icons/roguetown/items/produce.dmi'
+	icon_state = "bulgur_wet"
+	cooked_type = /obj/item/reagent_containers/food/snacks/rogue/bulgur
+
+/obj/item/reagent_containers/food/snacks/rogue/bulgur_raw/attackby(obj/item/I, mob/living/user, params)
+	var/obj/item/reagent_containers/R = I
+	if(istype(R) && wet(I, user))
+		return TRUE
+	return ..()
+
+/obj/item/reagent_containers/food/snacks/rogue/bulgur_raw/proc/wet(obj/item/I, mob/living/user)
+	var/found_table = locate(/obj/structure/table) in (loc)
+	var/obj/item/reagent_containers/R = I
+	var/is_container = istype(R)
+	update_cooktime(user)
+	if(water_added)
+		return FALSE
+	if(isturf(loc)&& (!found_table))
+		to_chat(user, "<span class='notice'>Need a table...</span>")
+		return FALSE
+	if(is_container && (!R.reagents.has_reagent(/datum/reagent/water, 10)))
+		to_chat(user, "<span class='notice'>Needs more water to work it.</span>")
+		return TRUE
+	to_chat(user, "<span class='notice'>Adding water, now it's time to hand wash it...</span>")
+	playsound(get_turf(user), 'modular/Neu_Food/sound/splishy.ogg', 100, TRUE, -1)
+	if(do_after(user,2 SECONDS, target = src))
+		add_sleep_experience(user, /datum/skill/craft/cooking, user.STAINT * 0.8)
+		name = "wet bulgur"
+		if(is_container)
+			R.reagents.remove_reagent(/datum/reagent/water, 10)
+		water_added = TRUE
+		color = "#d9d0cb"
+	return TRUE
+
+/obj/item/reagent_containers/food/snacks/rogue/bulgur_raw/attack_hand(mob/living/user)
+	if(water_added)
+		playsound(get_turf(user), 'modular/Neu_Food/sound/kneading_alt.ogg', 90, TRUE, -1)
+		if(do_after(user,3 SECONDS, target = src))
+			add_sleep_experience(user, /datum/skill/craft/cooking, user.STAINT * 0.8)
+			new /obj/item/reagent_containers/food/snacks/rogue/bulgur_wet(loc)
+			qdel(src)
+	else ..()

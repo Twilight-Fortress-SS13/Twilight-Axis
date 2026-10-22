@@ -89,23 +89,24 @@
 			if("hearth")
 				new /obj/machinery/light/rogue/hearth/conjured(T)
 				new /obj/machinery/light/rogue/oven/conjured(T)
-			if("empty")
-				continue
+
+		if(tile_type == "bed" || tile_type == "hearth" || (tile_type == "empty" && offset[2] >= 0))
+			new /obj/effect/shelter_roof(T)
 
 	return TRUE
 
 // Fixed south-facing layout. No rotation.
-//   [wall] [wall] [wall] [wall]
-//   [wall] [bed ] [hrth] [wall]
-//   [wall] [empt] [lite] [wall]
-//   [wall] [    ] [wall] [wall]
+//	[wall] [wall] [wall] [wall]
+//	[wall] [bed ] [hrth] [wall]
+//	[wall] [empt] [lite] [wall]
+//	[wall] [	] [wall] [wall]
 // Hearth has oven on same tile (oven sprite offsets north).
 /datum/action/cooldown/spell/great_shelter/proc/build_shelter_offsets()
 	return list(
-		list(-1,  2, "wall"),  list( 0,  2, "wall"),    list( 1,  2, "wall"),  list( 2,  2, "wall"),
-		list(-1,  1, "wall"),  list( 0,  1, "bed"),     list( 1,  1, "hearth"), list( 2,  1, "wall"),
-		list(-1,  0, "wall"),  list( 0,  0, "empty"),   list( 1,  0, "empty"), list( 2,  0, "wall"),
-		list(-1, -1, "wall"),  list( 0, -1, "empty"),   list( 1, -1, "wall"),  list( 2, -1, "wall"),
+		list(-1,	2, "wall"),	list( 0,	2, "wall"),	list( 1,	2, "wall"),	list( 2,	2, "wall"),
+		list(-1,	1, "wall"),	list( 0,	1, "bed"),		list( 1,	1, "hearth"), list( 2,	1, "wall"),
+		list(-1,	0, "wall"),	list( 0,	0, "empty"),	list( 1,	0, "empty"), list( 2,	0, "wall"),
+		list(-1, -1, "wall"),	list( 0, -1, "empty"),	list( 1, -1, "wall"),	list( 2, -1, "wall"),
 	)
 
 // --- Conjured structures ---
@@ -127,6 +128,29 @@
 		return TRUE
 	return ..()
 
+/obj/effect/shelter_roof
+	name = "arcyne roof"
+	anchored = TRUE
+	density = FALSE
+	mouse_opacity = 0
+	invisibility = 101
+	var/turf/covered_turf
+	var/previous_weatherproof = FALSE
+
+/obj/effect/shelter_roof/Initialize(mapload)
+	. = ..()
+	covered_turf = get_turf(src)
+	if(covered_turf?.outdoor_effect)
+		previous_weatherproof = covered_turf.outdoor_effect.weatherproof
+		covered_turf.outdoor_effect.weatherproof = TRUE
+	QDEL_IN(src, SHELTER_DURATION)
+
+/obj/effect/shelter_roof/Destroy(force)
+	if(covered_turf?.outdoor_effect)
+		covered_turf.outdoor_effect.weatherproof = previous_weatherproof
+	covered_turf = null
+	return ..()
+
 /obj/structure/bed/rogue/conjured
 	name = "arcyne bed"
 	desc = "A bed conjured from arcyne force. It looks uncomfortable, but functional."
@@ -141,7 +165,7 @@
 	desc = "A hearth of blue arcyne flame. It burns without fuel."
 	color = "#6495ED"
 
-/obj/machinery/light/rogue/hearth/conjured/Initialize()
+/obj/machinery/light/rogue/hearth/conjured/Initialize(mapload)
 	. = ..()
 	QDEL_IN(src, SHELTER_DURATION)
 
@@ -150,7 +174,7 @@
 	desc = "An oven conjured from arcyne force. It glows with a faint blue heat."
 	color = "#6495ED"
 
-/obj/machinery/light/rogue/oven/conjured/Initialize()
+/obj/machinery/light/rogue/oven/conjured/Initialize(mapload)
 	. = ..()
 	QDEL_IN(src, SHELTER_DURATION)
 

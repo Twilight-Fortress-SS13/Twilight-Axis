@@ -85,6 +85,10 @@
 	dense_when_open = FALSE
 	mob_storage_capacity = 2
 
+/obj/structure/closet/crate/roguecloset/attack_right(mob/user)
+	handle_special_items_retrieval(user, src)
+	return
+
 /obj/structure/closet/crate/roguecloset/inn/south
 	base_icon_state = "closet3"
 	icon_state = "closet3"
@@ -197,7 +201,7 @@
 	name = "sun-bleached wicker basket"
 	desc = "Fibers interwoven to make a cheap storage bin. This one smells rather funny."
 
-/obj/structure/closet/crate/chest/wicker/bait/Initialize()
+/obj/structure/closet/crate/chest/wicker/bait/Initialize(mapload)
 	. = ..()
 	for(var/i = 1 to 9)
 		new /obj/item/natural/worms(src)
@@ -229,7 +233,7 @@
 	base_icon_state = "drawer1"
 	pixel_y = 8
 
-/obj/structure/closet/crate/drawer/random/Initialize()
+/obj/structure/closet/crate/drawer/random/Initialize(mapload)
 	. = ..()
 	if(icon_state == "drawer1")
 		base_icon_state = "drawer[rand(1,4)]"
@@ -247,7 +251,7 @@
 	/// Set to TRUE after it has spawned the gear.
 	var/has_spawned_gear = FALSE
 
-/obj/structure/closet/crate/roguecloset/lord/duke_preset/Initialize()
+/obj/structure/closet/crate/roguecloset/lord/duke_preset/Initialize(mapload)
 	. = ..()
 	RegisterSignal(SSdcs, COMSIG_TICKER_RULERMOB_SET, PROC_REF(spawn_blacksteel))
 
@@ -298,6 +302,9 @@
 		/obj/item/roguegem/yellow = 10,
 		/obj/item/roguestatue/bronze = 10,
 		/obj/item/roguestatue/iron = 5,
+		/obj/item/ccg_card_generator/common = 3,
+		/obj/item/ccg_card_booster = 2,
+		/obj/item/ccg_card_booster/premium = 1,
 		/obj/item/clothing/mask/cigarette/rollie/nicotine = 20, //Misc stuff
 		/obj/item/reagent_containers/food/snacks/butter = 10,
 		/obj/item/reagent_containers/food/snacks/rogue/raisins = 10,
@@ -340,6 +347,10 @@
 		/obj/item/roguegem/violet = 10,
 		/obj/item/roguestatue/gold/loot = 10,
 		/obj/item/roguestatue/aalloy = 5,
+		/obj/item/ccg_card_generator/common = 4,
+		/obj/item/ccg_card_generator/rare = 3,
+		/obj/item/ccg_card_booster = 2,
+		/obj/item/ccg_card_booster/premium = 1,
 		/obj/item/storage/belt/rogue/pouch/zigarrete/nicotine = 15, //Misc stuff
 		/obj/item/reagent_containers/food/snacks/butter = 15,
 		/obj/item/reagent_containers/food/snacks/canned = 15,
@@ -379,6 +390,11 @@
 		/obj/item/roguestatue/gold = 10,
 		/obj/item/roguestatue/silver = 10,
 		/obj/item/roguestatue/blacksteel = 5,
+		/obj/item/ccg_card_generator/common = 1,
+		/obj/item/ccg_card_generator/rare = 3,
+		/obj/item/ccg_card_generator/unique = 2,
+		/obj/item/ccg_card_booster = 2,
+		/obj/item/ccg_card_booster/premium = 1,
 		/obj/item/storage/belt/rogue/pouch/zigarrete/nicotine = 10, //Misc stuff
 		/obj/item/reagent_containers/food/snacks/canned = 20,
 		/obj/item/reagent_containers/food/snacks/rogue/crackerscooked = 5,

@@ -1,3 +1,8 @@
+#define LOCKTYPE_WHEELLOCK "Wheellock"
+#define LOCKTYPE_MATCHLOCK "Matchlock"
+#define LOCKTYPE_FUSE "Fuse"
+#define LOCKTYPE_BREECH "Breech"
+
 /obj/item/twilight_ramrod
 	name = "ramrod"
 	icon = 'modular_twilight_axis/firearms/icons/arquebus_items.dmi'
@@ -6,6 +11,8 @@
 	item_state = "ramrod"
 	slot_flags = ITEM_SLOT_HIP
 	w_class = WEIGHT_CLASS_SMALL
+	grid_width = 64
+	grid_height = 32
 
 /obj/item/twilight_powderflask_empty
 	name = "powderflask"
@@ -24,6 +31,16 @@
 	desc = "Пороховница, предназначенная для удобной перезарядки огнестрельного оружия. Содержит обычный чёрный порох."
 	var/gunpowder = "black gunpowder"
 	var/charges = 30
+	var/spec_desc //Helps with powder's unique feature upon examine
+	var/pour_sound = 'modular_twilight_axis/firearms/sound/pour_powder.ogg'
+	var/fire_sounds = list(
+		"modular_twilight_axis/firearms/sound/arquefire.ogg",
+		"modular_twilight_axis/firearms/sound/arquefire2.ogg",
+		"modular_twilight_axis/firearms/sound/arquefire3.ogg",
+		"modular_twilight_axis/firearms/sound/arquefire4.ogg",
+		"modular_twilight_axis/firearms/sound/arquefire5.ogg"
+		)
+	var/obj/effect/particle_effect/smoke = /obj/effect/particle_effect/smoke/arquebus
 	icon_state = "powderflask_black"
 	item_state = "powderflask"
 	slot_flags = ITEM_SLOT_HIP
@@ -33,71 +50,126 @@
 
 /obj/item/twilight_powderflask/examine(mob/user)
 	. = ..()
-	switch(gunpowder)
-		if("fyrepowder")
-			. += span_bold("Поджигает цель при попадании.")
-		if("holy fyrepowder")
-			. += span_bold("Поджигает цель святым огнем при попадании. Эффект усилен против нежити.")
-		if("thunderpowder")
-			. += span_bold("При попадании замедляет цель, а также оглушает её на короткий период.")
-		if("corrosive gunpowder")
-			. += span_bold("Покрывает цель кислотой, наносящей периодический урон броне и здоровью.")
-		if("arcyne gunpowder")
-			. += span_bold("Накладывает на цель онемение. Если у цели есть магический барьер, он будет мгновенно уничтожен.")
-		if("terrorpowder")
-			. += span_bold("Наносит удвоенный урон всем существам, не контролируемым игроком.")
-		if("psypowder")
-			. += span_bold("Ослабляет и ослепляет цель ядовитыми парами на несколько секунд.")
-	. += span_bold("Пороха осталось на [charges] перезарядок.")
+	if(spec_desc)
+		. += span_notice(spec_desc)
+	. += span_notice("Пороха осталось на [charges] перезарядок.")
 
 /obj/item/twilight_powderflask/fyre
 	name = "powderflask"
 	desc = "Пороховница, предназначенная для удобной перезарядки огнестрельного оружия. Содержит огненный порох, наделяющий пули зажигательным эффектом."
+	spec_desc = "Поджигает цель при попадании."
 	icon_state = "powderflask_fyre"
+	smoke = /obj/effect/particle_effect/smoke/arquebus/fyre
 	gunpowder = "fyrepowder"
+	pour_sound = 'modular_twilight_axis/firearms/sound/fyrepowder/pour_powder.ogg'
+	fire_sounds = list(
+		"modular_twilight_axis/firearms/sound/fyrepowder/arquefire.ogg",
+		"modular_twilight_axis/firearms/sound/fyrepowder/arquefire2.ogg",
+		"modular_twilight_axis/firearms/sound/fyrepowder/arquefire3.ogg",
+		"modular_twilight_axis/firearms/sound/fyrepowder/arquefire4.ogg",
+		"modular_twilight_axis/firearms/sound/fyrepowder/arquefire5.ogg")
 	charges = 16
 
 /obj/item/twilight_powderflask/thunder
 	name = "powderflask"
 	desc = "Пороховница, предназначенная для удобной перезарядки огнестрельного оружия. Содержит громовой порох, наделяющий пули оглушающим эффектом."
+	spec_desc = "При попадании замедляет цель, а также оглушает её на короткий период."
 	icon_state = "powderflask_thunder"
 	gunpowder = "thunderpowder"
+	smoke = /obj/effect/particle_effect/smoke/arquebus/thunder
+	pour_sound = 'modular_twilight_axis/firearms/sound/thunderpowder/pour_powder.ogg'
+	fire_sounds = list(
+		"modular_twilight_axis/firearms/sound/thunderpowder/arquefire.ogg",
+		"modular_twilight_axis/firearms/sound/thunderpowder/arquefire2.ogg",
+		"modular_twilight_axis/firearms/sound/thunderpowder/arquefire3.ogg",
+		"modular_twilight_axis/firearms/sound/thunderpowder/arquefire4.ogg",
+		"modular_twilight_axis/firearms/sound/thunderpowder/arquefire5.ogg"
+		)
 	charges = 16
 
 /obj/item/twilight_powderflask/terror
 	name = "powderflask"
 	desc = "Пороховница, предназначенная для удобной перезарядки огнестрельного оружия. Содержит порох кошмара, делающий пули более смертоностными против тех, чья воля слаба."
+	spec_desc = "Наносит удвоенный урон всем существам, не контролируемым игроком."
 	icon_state = "powderflask_terror"
 	gunpowder = "terrorpowder"
+	smoke = /obj/effect/particle_effect/smoke/arquebus/terror
+	pour_sound = 'modular_twilight_axis/firearms/sound/terrorpowder/pour_powder.ogg'
+	fire_sounds = list(
+		"modular_twilight_axis/firearms/sound/terrorpowder/arquefire.ogg",
+		"modular_twilight_axis/firearms/sound/terrorpowder/arquefire2.ogg",
+		"modular_twilight_axis/firearms/sound/terrorpowder/arquefire3.ogg",
+		"modular_twilight_axis/firearms/sound/terrorpowder/arquefire4.ogg",
+		"modular_twilight_axis/firearms/sound/terrorpowder/arquefire5.ogg"
+		)
 	charges = 20
 
 /obj/item/twilight_powderflask/corrosive
 	name = "powderflask"
 	desc = "Пороховница, предназначенная для удобной перезарядки огнестрельного оружия. Содержит коррозийный порох, наделяющий пули способностью разъедать броню цели."
+	spec_desc = "Покрывает цель кислотой, наносящей периодический урон броне и здоровью."
 	icon_state = "powderflask_corrosive"
 	gunpowder = "corrosive gunpowder"
+	smoke = /obj/effect/particle_effect/smoke/arquebus/corrosive
+	pour_sound = 'modular_twilight_axis/firearms/sound/corrpowder/pour_powder.ogg'
+	fire_sounds = list(
+		"modular_twilight_axis/firearms/sound/corrpowder/arquefire.ogg",
+		"modular_twilight_axis/firearms/sound/corrpowder/arquefire2.ogg",
+		"modular_twilight_axis/firearms/sound/corrpowder/arquefire3.ogg",
+		"modular_twilight_axis/firearms/sound/corrpowder/arquefire4.ogg",
+		"modular_twilight_axis/firearms/sound/corrpowder/arquefire5.ogg"
+		)
 	charges = 10
 
 /obj/item/twilight_powderflask/arcyne
 	name = "powderflask"
 	desc = "Пороховница, предназначенная для удобной перезарядки огнестрельного оружия. Содержит арканный порох, делающий оружие существенно эффективнее против магов."
+	spec_desc = "Накладывает на цель онемение. Если у цели есть магический барьер, он будет мгновенно уничтожен."
 	icon_state = "powderflask_arcyne"
 	gunpowder = "arcyne gunpowder"
+	smoke = /obj/effect/particle_effect/smoke/arquebus/arcyne
+	pour_sound = 'modular_twilight_axis/firearms/sound/arcynepowder/pour_powder.ogg'
+	fire_sounds = list(
+		"modular_twilight_axis/firearms/sound/arcynepowder/arquefire.ogg",
+		"modular_twilight_axis/firearms/sound/arcynepowder/arquefire2.ogg",
+		"modular_twilight_axis/firearms/sound/arcynepowder/arquefire3.ogg",
+		"modular_twilight_axis/firearms/sound/arcynepowder/arquefire4.ogg",
+		"modular_twilight_axis/firearms/sound/arcynepowder/arquefire5.ogg"
+		)
 	charges = 10
 
 /obj/item/twilight_powderflask/holyfyre
 	name = "powderflask"
 	desc = "Пороховница, предназначенная для удобной перезарядки огнестрельного оружия. Содержит порох священного огня, благословленный осколком кометы Сион, чтобы беспощадно разить врагов Всеотца."
+	spec_desc = "Поджигает цель святым огнем при попадании. Эффект усилен против нежити."
 	icon_state = "powderflask_holyfyre"
 	gunpowder = "holy fyrepowder"
+	smoke = /obj/effect/particle_effect/smoke/arquebus/fyre
+	pour_sound = 'modular_twilight_axis/firearms/sound/fyrepowder/pour_powder.ogg'
+	fire_sounds = list(
+		"modular_twilight_axis/firearms/sound/fyrepowder/arquefire.ogg",
+		"modular_twilight_axis/firearms/sound/fyrepowder/arquefire2.ogg",
+		"modular_twilight_axis/firearms/sound/fyrepowder/arquefire3.ogg",
+		"modular_twilight_axis/firearms/sound/fyrepowder/arquefire4.ogg",
+		"modular_twilight_axis/firearms/sound/fyrepowder/arquefire5.ogg"
+		)
 	charges = 16
 
 /obj/item/twilight_powderflask/volf
 	name = "powderflask"
 	desc = "Пороховница, предназначенная для удобной перезарядки огнестрельного оружия. Содержит порох смешанный с ядовитыми порошками, изготовленными специально для волков. В нём нет благословлений, его существование столь же омерзительно как и существование рунных волков."
+	spec_desc = "Ослабляет и ослепляет цель ядовитыми парами на несколько секунд."
 	icon_state = "powderflask_psy"
 	gunpowder = "psypowder"
-	charges = 30
+	pour_sound = 'modular_twilight_axis/firearms/sound/fyrepowder/pour_powder.ogg'
+	fire_sounds = list(
+		"modular_twilight_axis/firearms/sound/fyrepowder/arquefire.ogg",
+		"modular_twilight_axis/firearms/sound/fyrepowder/arquefire2.ogg",
+		"modular_twilight_axis/firearms/sound/fyrepowder/arquefire3.ogg",
+		"modular_twilight_axis/firearms/sound/fyrepowder/arquefire4.ogg",
+		"modular_twilight_axis/firearms/sound/fyrepowder/arquefire5.ogg"
+		)
+	charges = 20
 
 /obj/effect/particle_effect/smoke/arquebus
 	name = "smoke"
@@ -131,7 +203,7 @@
 	color = "#C487C8"
 
 /obj/item/gun/ballistic/twilight_firearm
-	name = "Gunpowder weapon"
+	name = "gunpowder weapon"
 	desc = "IF YOU ARE SEEING THIS. REPORT THIS TO A DEV. "
 	icon = 'modular_twilight_axis/firearms/icons/arquebus/arquebus.dmi'
 	icon_state = "arquebus"
@@ -157,30 +229,39 @@
 	can_parry = TRUE
 	minstr = 6
 	walking_stick = TRUE
+	obj_flags = CAN_BE_HIT | UNIQUE_RENAME | CLAMP_BREAK
 	experimental_onback = TRUE
 	cartridge_wording = "bullet"
 	load_sound = 'modular_twilight_axis/firearms/sound/musketload.ogg'
 	fire_sound = 'modular_twilight_axis/firearms/sound/arquefire.ogg'
-	anvilrepair = null
+	anvilrepair = /datum/skill/craft/engineering
 	smeltresult = /obj/item/ingot/steel
 	bolt_type = BOLT_TYPE_NO_BOLT
 	casing_ejector = FALSE
 	associated_skill = /datum/skill/combat/staves
 	//pickup_sound = 'sound/sheath_sounds/draw_from_holster.ogg'
 	//sheathe_sound = 'sound/sheath_sounds/put_back_to_holster.ogg'
+	equip_delay_self = 1 SECONDS
+	unequip_delay_self = 1 SECONDS
+	inv_storage_delay = 1 SECONDS
 	var/spread_num = 10
 	var/damfactor = 1
 	var/critfactor = 1
 	var/npcdamfactor = 2
 	var/reloaded = FALSE
 	var/silenced = FALSE
+	var/breech_open = FALSE
 	var/load_time = 50
 	var/gunpowder
+	var/powder_pour_sound
+	var/list/powder_fire_sounds
+	var/obj/effect/particle_effect/powder_smoke
 	var/powder_per_reload = 1
-	var/locktype = "Matchlock"
+	var/locktype = LOCKTYPE_MATCHLOCK
 	var/match_delay = 10
 	var/effective_range = 5
 	var/obj/item/twilight_ramrod/myrod = null
+	var/ramrod_busy = FALSE
 
 	//Advanced icon stuff
 	var/advanced_icon				//Default icon
@@ -203,56 +284,44 @@
 
 /obj/item/gun/ballistic/twilight_firearm/Initialize()
 	. = ..()
-	if(locktype == "Matchlock" || locktype == "Wheellock")
+	if(locktype == LOCKTYPE_MATCHLOCK || locktype == LOCKTYPE_WHEELLOCK)
 		myrod = new /obj/item/twilight_ramrod(src)
-
 
 /obj/item/gun/ballistic/twilight_firearm/shoot_live_shot(mob/living/user as mob|obj, pointblank = 0, mob/pbtarget = null, message = 1)
 	if(silenced)
 		fire_sound = "modular_twilight_axis/firearms/sound/umbra_fire2.ogg"
-	else
-		switch(gunpowder)
-			if("fyrepowder", "holy fyrepowder", "psypowder")
-				fire_sound = pick("modular_twilight_axis/firearms/sound/fyrepowder/arquefire.ogg", "modular_twilight_axis/firearms/sound/fyrepowder/arquefire2.ogg", "modular_twilight_axis/firearms/sound/fyrepowder/arquefire3.ogg",
-							"modular_twilight_axis/firearms/sound/fyrepowder/arquefire4.ogg", "modular_twilight_axis/firearms/sound/fyrepowder/arquefire5.ogg")
-			if("thunderpowder")
-				fire_sound = pick("modular_twilight_axis/firearms/sound/thunderpowder/arquefire.ogg", "modular_twilight_axis/firearms/sound/thunderpowder/arquefire2.ogg", "modular_twilight_axis/firearms/sound/thunderpowder/arquefire3.ogg",
-							"modular_twilight_axis/firearms/sound/thunderpowder/arquefire4.ogg", "modular_twilight_axis/firearms/sound/thunderpowder/arquefire5.ogg")
-			if("corrosive gunpowder")
-				fire_sound = pick("modular_twilight_axis/firearms/sound/corrpowder/arquefire.ogg", "modular_twilight_axis/firearms/sound/corrpowder/arquefire2.ogg", "modular_twilight_axis/firearms/sound/corrpowder/arquefire3.ogg",
-							"modular_twilight_axis/firearms/sound/corrpowder/arquefire4.ogg", "modular_twilight_axis/firearms/sound/corrpowder/arquefire5.ogg")
-			if("arcyne gunpowder")
-				fire_sound = pick("modular_twilight_axis/firearms/sound/arcynepowder/arquefire.ogg", "modular_twilight_axis/firearms/sound/arcynepowder/arquefire2.ogg", "modular_twilight_axis/firearms/sound/arcynepowder/arquefire3.ogg",
-							"modular_twilight_axis/firearms/sound/arcynepowder/arquefire4.ogg", "modular_twilight_axis/firearms/sound/arcynepowder/arquefire5.ogg")
-			if("terrorpowder")
-				fire_sound = pick("modular_twilight_axis/firearms/sound/terrorpowder/arquefire.ogg", "modular_twilight_axis/firearms/sound/terrorpowder/arquefire2.ogg", "modular_twilight_axis/firearms/sound/terrorpowder/arquefire3.ogg",
-							"modular_twilight_axis/firearms/sound/terrorpowder/arquefire4.ogg", "modular_twilight_axis/firearms/sound/terrorpowder/arquefire5.ogg")
-			else
-				fire_sound = pick("modular_twilight_axis/firearms/sound/arquefire.ogg", "modular_twilight_axis/firearms/sound/arquefire2.ogg", "modular_twilight_axis/firearms/sound/arquefire3.ogg",
-							"modular_twilight_axis/firearms/sound/arquefire4.ogg", "modular_twilight_axis/firearms/sound/arquefire5.ogg")
+	else if(length(powder_fire_sounds))
+		fire_sound = pick(powder_fire_sounds)
 	. = ..()
 
 /obj/item/gun/ballistic/twilight_firearm/attack_right(mob/user)
 	if(user.get_active_held_item())
 		return
-	else
-		if(locktype == "Matchlock" || locktype == "Wheellock")
-			if(myrod)
-				playsound(src, "sound/items/sharpen_short1.ogg",  100, FALSE)
-				to_chat(user, "<span class='warning'>I draw the ramrod from [src]!</span>")
-				var/obj/item/twilight_ramrod/AM
-				for(AM in src)
-					user.put_in_hands(AM)
-					myrod = null
-				if(advanced_icon_norod)
-					if(reloaded && advanced_icon_r_norod)
-						icon = advanced_icon_r_norod
-					else
-						icon = advanced_icon_norod
-			else
-				to_chat(user, "<span class='warning'>There is no rod stowed in [src]!</span>")
+	if(!(locktype == LOCKTYPE_MATCHLOCK || locktype == LOCKTYPE_WHEELLOCK))
+		return
+	if(ramrod_busy)
+		return
 
-/datum/intent/shoot/twilight_firarm
+	var/obj/item/twilight_ramrod/R = myrod
+	if(!R || QDELETED(R) || R.loc != src)
+		myrod = null
+		to_chat(user, span_warning("There is no rod stowed in [src]!"))
+		return
+
+	ramrod_busy = TRUE
+	myrod = null
+	playsound(src, "sound/items/sharpen_short1.ogg", 100, FALSE)
+	to_chat(user, span_warning("I draw the ramrod from [src]!"))
+	user.put_in_hands(R)
+	if(advanced_icon_norod)
+		if(reloaded && advanced_icon_r_norod)
+			icon = advanced_icon_r_norod
+		else
+			icon = advanced_icon_norod
+	ramrod_busy = FALSE
+
+/datum/intent/shoot/twilight_firearm
+	ready_sound = "modular_twilight_axis/firearms/sound/musketcock.ogg"
 	chargedrain = 0
 
 /datum/intent/shoot/twilight_firearm/get_chargetime()
@@ -271,6 +340,7 @@
 	return chargetime
 
 /datum/intent/arc/twilight_firearm
+	ready_sound = "modular_twilight_axis/firearms/sound/musketcock.ogg"
 	chargetime = 1
 	chargedrain = 0
 
@@ -294,6 +364,32 @@
 	update_icon()
 
 /obj/item/gun/ballistic/twilight_firearm/attack_self(mob/living/user)
+	if(locktype == LOCKTYPE_BREECH)
+		if(!reloaded)
+			if(chambered)
+				if(move_after(user, 1 SECONDS, target = user))
+					playsound(src, "modular_twilight_axis/firearms/sound/musketcock.ogg",  100, FALSE)
+					user.visible_message(span_notice("[user] has finished reloading [src]."))
+					reloaded = TRUE
+					breech_open = FALSE
+					if(advanced_icon)
+						icon = advanced_icon
+			else if(breech_open == TRUE)
+				if(move_after(user, 1 SECONDS, target = user))
+					playsound(src, "modular_twilight_axis/firearms/sound/musketcock.ogg",  100, FALSE)
+					to_chat(user, span_info("I close down the breech of [src]."))
+					breech_open = FALSE
+					if(advanced_icon)
+						icon = advanced_icon
+			else
+				if(move_after(user, 1 SECONDS, target = user))
+					playsound(src, "modular_twilight_axis/firearms/sound/musketcock.ogg",  100, FALSE)
+					to_chat(user, span_info("I open up the breech of [src]."))
+					breech_open = TRUE
+					if(advanced_icon_f)
+						icon = advanced_icon_f
+		update_icon()
+		return
 	if(twohands_required)
 		return
 	if(altgripped || wielded) //Trying to unwield it
@@ -305,6 +401,37 @@
 		wield(user)
 	update_icon()
 
+/obj/item/gun/ballistic/twilight_firearm/proc/handle_ramrod(obj/item/twilight_ramrod/R, mob/user, load_time_skill)
+	if(!(locktype == LOCKTYPE_MATCHLOCK || locktype == LOCKTYPE_WHEELLOCK))
+		return
+
+	if(!reloaded && chambered)
+		user.visible_message(span_notice("[user] begins ramming the [R.name] down the barrel of [src]."))
+		playsound(src, "modular_twilight_axis/firearms/sound/ramrod.ogg", 100, FALSE)
+		if(do_after(user, load_time_skill, src))
+			user.visible_message(span_notice("[user] has finished reloading [src]."))
+			reloaded = TRUE
+			if(advanced_icon_r_norod)
+				icon = advanced_icon_r_norod
+		return
+
+	if(myrod)
+		to_chat(user, span_warning("There's already a [myrod.name] inside of the [name]."))
+		return
+
+	if(user.transferItemToLoc(R, src))
+		myrod = R
+		playsound(src, "modular_twilight_axis/firearms/sound/musketload.ogg", 100, FALSE)
+		if(chambered)
+			user.visible_message("<span class='notice'>[user] stows the [R.name] under the barrel of [src].</span>")
+		else
+			user.visible_message("<span class='notice'>[user] stows the [R.name] under the barrel of [src] without chambering it.</span>")
+		if(advanced_icon)
+			if(reloaded && advanced_icon_r)
+				icon = advanced_icon_r
+			else
+				icon = advanced_icon
+
 /obj/item/gun/ballistic/twilight_firearm/attackby(obj/item/A, mob/user, params)
 	var/firearm_skill = (user?.mind ? user.get_skill_level(/datum/skill/combat/twilight_firearms) : 1)
 	var/load_time_skill = load_time - (firearm_skill*5)
@@ -312,61 +439,88 @@
 	if(istype(A, /obj/item/ammo_casing))
 		var/obj/item/ammo_casing/V = A
 		if(chambered)
-			to_chat(user, "<span class='warning'>There is already a [chambered.name] in [src]!</span>")
+			to_chat(user, span_warning("There is already a [chambered.name] in [src]!"))
 			return
-		if(!gunpowder)
-			to_chat(user, "<span class='warning'>You must fill [src] with gunpowder first!</span>")
+		if(!gunpowder && !(V.breech_loaded))
+			to_chat(user, span_warning("I must fill [src] with gunpowder first!"))
 			return
 		if(V.caliber != magazine.caliber)
-			to_chat(user, "<span class='warning'>The [V.name] doesn't fit into [src]!</span>")
+			to_chat(user, span_warning("\The [V.name] doesn't fit into [src]!"))
 			return
-		if((loc == user) && (user.get_inactive_held_item() != src))
+		if(V.breech_loaded && locktype != LOCKTYPE_BREECH)
+			to_chat(user, span_warning("\The [V.name] can only be loaded into breech-loaded weapons!"))
+			return
+		if((loc == user) && (user.get_inactive_held_item() != src) && !(V.breech_loaded))
 			return
 		if (bolt_type == BOLT_TYPE_NO_BOLT || internal_magazine)
-			if (chambered && !chambered.BB)
-				chambered.forceMove(drop_location())
-				chambered = null
-			var/num_loaded = magazine.attackby(A, user, params, TRUE)
-			if (num_loaded)
-				playsound(src, "modular_twilight_axis/firearms/sound/insert.ogg",  100, FALSE)
-				user.visible_message("<span class='notice'>[user] forces a [V.name] down the barrel of [src].</span>")
-				if(advanced_icon)
-					if(!myrod && advanced_icon_norod)
-						icon = advanced_icon_norod
+			if(locktype == LOCKTYPE_BREECH)
+				if(breech_open == TRUE)
+					if(istype(V, /obj/item/ammo_casing/caseless/rogue/twilight_lead/paper))
+						playsound(src, "modular_twilight_axis/firearms/sound/puffer_reload.ogg",  100, FALSE)
+					to_chat(user, span_info("I begin loading [src]..."))
+					if(move_after(user, load_time_skill, target = user))
+						if(chambered && !chambered.BB)
+							to_chat(user, span_warning("I clear [src] and load it with a new [V.name]."))
+							chambered.forceMove(drop_location())
+							chambered = null
+						var/num_loaded = magazine.attackby(A, user, params, TRUE)
+						if (num_loaded)
+							playsound(src, "modular_twilight_axis/firearms/sound/insert.ogg",  100, FALSE)
+							user.visible_message(span_notice("[user] inserts [V.name] into the breech of [src]."))
+							if(!gunpowder)
+								gunpowder = "black gunpowder"
+							if (chambered == null && bolt_type == BOLT_TYPE_NO_BOLT)
+								chamber_round()
+							if(advanced_icon_r)
+								icon = advanced_icon_r
+							A.update_icon()
+							update_icon()
 					else
-						icon = advanced_icon
-				if (chambered == null && bolt_type == BOLT_TYPE_NO_BOLT)
-					chamber_round()
-				A.update_icon()
-				update_icon()
+						to_chat(user, span_warning("I fumble the reload, dropping the [V.name]!"))
+						V.forceMove(drop_location())
+						return
+				else
+					to_chat(user, span_info("I must open the breech first!"))
+					return
+			else
+				if (chambered && !chambered.BB)
+					chambered.forceMove(drop_location())
+					chambered = null
+				var/num_loaded = magazine.attackby(A, user, params, TRUE)
+				if (num_loaded)
+					playsound(src, "modular_twilight_axis/firearms/sound/insert.ogg",  100, FALSE)
+					user.visible_message(span_notice("[user] forces a [V.name] down the barrel of [src]."))
+					if(advanced_icon)
+						if(!myrod && advanced_icon_norod)
+							icon = advanced_icon_norod
+						else
+							icon = advanced_icon
+					if (chambered == null && bolt_type == BOLT_TYPE_NO_BOLT)
+						chamber_round()
+					A.update_icon()
+					update_icon()
 			return
 		user.update_inv_hands()
 		return
 	else if(istype(A, /obj/item/twilight_powderflask))
 		var/obj/item/twilight_powderflask/W = A
 		if(gunpowder)
-			user.visible_message("<span class='notice'>The [name] is already filled with gunpowder!</span>")
+			user.visible_message(span_notice("[name] is already filled with gunpowder!"))
 			return
 		else if(W.charges < powder_per_reload)
-			user.visible_message("<span class='notice'>The [W.name] doesn't contain enough gunpowder to reload [src]!</span>")
+			user.visible_message(span_notice("[W.name] doesn't contain enough gunpowder to reload [src]!"))
+			return
+		else if(locktype == LOCKTYPE_BREECH && !(breech_open))
+			to_chat(user, span_info("I must open the breech first!"))
 			return
 		else
-			switch(W.gunpowder)
-				if("fyrepowder", "holy fyrepowder", "psypowder")
-					playsound(src, "modular_twilight_axis/firearms/sound/fyrepowder/pour_powder.ogg",  100, FALSE)
-				if("thunderpowder")
-					playsound(src, "modular_twilight_axis/firearms/sound/thunderpowder/pour_powder.ogg",  100, FALSE)
-				if("corrosive gunpowder")
-					playsound(src, "modular_twilight_axis/firearms/sound/corrpowder/pour_powder.ogg",  100, FALSE)
-				if("arcyne gunpowder")
-					playsound(src, "modular_twilight_axis/firearms/sound/arcynepowder/pour_powder.ogg",  100, FALSE)
-				if("terrorpowder")
-					playsound(src, "modular_twilight_axis/firearms/sound/terrorpowder/pour_powder.ogg",  100, FALSE)
-				else
-					playsound(src, "modular_twilight_axis/firearms/sound/pour_powder.ogg",  100, FALSE)
+			playsound(src, W.pour_sound, 100, FALSE)
 			if(do_after(user, load_time_skill, src))
-				user.visible_message("<span class='notice'>[user] fills [src] with [W.gunpowder].</span>")
+				user.visible_message(span_notice("[user] fills [src] with [W.gunpowder]."))
 				gunpowder = W.gunpowder
+				powder_pour_sound = W.pour_sound
+				powder_fire_sounds = W.fire_sounds
+				powder_smoke = W.smoke
 				W.charges = W.charges - powder_per_reload
 				if(W.charges <= 0)
 					qdel(W)
@@ -374,50 +528,21 @@
 					user.put_in_hands(E)
 			return
 	else if(istype(A, /obj/item/twilight_ramrod))
-		if(locktype == "Matchlock" || locktype == "Wheellock")
-			var/obj/item/twilight_ramrod/R=A
-			if(!reloaded)
-				if(chambered)
-					user.visible_message("<span class='notice'>[user] begins ramming the [R.name] down the barrel of [src].</span>")
-					playsound(src, "modular_twilight_axis/firearms/sound/ramrod.ogg",  100, FALSE)
-					if(do_after(user, load_time_skill, src))
-						user.visible_message("<span class='notice'>[user] has finished reloading [src].</span>")
-						reloaded = TRUE
-						if(advanced_icon_r_norod)
-							icon = advanced_icon_r_norod
-					return
-			if(reloaded && !myrod)
-				user.transferItemToLoc(R, src)
-				myrod = R
-				playsound(src, "modular_twilight_axis/firearms/sound/musketload.ogg",  100, FALSE)
-				user.visible_message("<span class='notice'>[user] stows the [R.name] under the barrel of [src].</span>")
-				if(advanced_icon)
-					if(reloaded && advanced_icon_r)
-						icon = advanced_icon_r
-					else
-						icon = advanced_icon
-			if(!chambered && !myrod)
-				user.transferItemToLoc(R, src)
-				myrod = R
-				playsound(src, "modular_twilight_axis/firearms/sound/musketload.ogg",  100, FALSE)
-				user.visible_message("<span class='notice'>[user] stows the [R.name] under the barrel of [src] without chambering it.</span>")
-				if(advanced_icon)
-					if(reloaded && advanced_icon_r)
-						icon = advanced_icon_r
-					else
-						icon = advanced_icon
-			if(!myrod == null)
-				to_chat(user, span_warning("There's already a [R.name] inside of the [name]."))
-				return
+		if(ramrod_busy)
+			return
+		ramrod_busy = TRUE
+		handle_ramrod(A, user, load_time_skill)
+		ramrod_busy = FALSE
+		return
 	else if(istype(A, /obj/item/natural/bundle/fibers))
 		var/obj/item/natural/bundle/fibers/W = A
-		if(locktype == "Fuse")
+		if(locktype == LOCKTYPE_FUSE)
 			if(!reloaded)
 				if(chambered)
-					user.visible_message("<span class='notice'>[user] begins attaching the fuse to [src].</span>")
+					user.visible_message(span_notice("[user] begins attaching the fuse to [src]."))
 					playsound(src, "sound/foley/bandage.ogg",  100, FALSE)
 					if(do_after(user, (load_time_skill * 0.8), src))
-						user.visible_message("<span class='notice'>[user] has finished reloading [src].</span>")
+						user.visible_message(span_notice("[user] has finished reloading [src]."))
 						W.amount = W.amount - 1
 						if(W.amount == 1)
 							new /obj/item/natural/fibers(get_turf(user))
@@ -427,106 +552,82 @@
 							icon = advanced_icon_r
 					return
 	else if(istype(A, /obj/item/natural/fibers))
-		if(locktype == "Fuse")
+		if(locktype == LOCKTYPE_FUSE)
 			if(!reloaded)
 				if(chambered)
-					user.visible_message("<span class='notice'>[user] begins attaching the fuse to [src].</span>")
+					user.visible_message(span_notice("[user] begins attaching the fuse to [src]."))
 					playsound(src, "sound/foley/bandage.ogg",  100, FALSE)
 					if(do_after(user, (load_time_skill * 0.8), src))
-						user.visible_message("<span class='notice'>[user] has finished reloading [src].</span>")
+						user.visible_message(span_notice("[user] has finished reloading [src]."))
 						qdel(A)
 						reloaded = TRUE
 						if(advanced_icon_r)
 							icon = advanced_icon_r
 					return
-	else if(istype(A, /obj/item/rogueweapon/hammer))
-		var/repair_percent = 0.025 // 2.5% Repairing per hammer smack
-		if(locate(/obj/machinery/anvil) in src.loc)
-			repair_percent *= 2 // Double the repair amount if we're using an anvil
-		var/exp_gained = 0
-		var/repair_skill = (user?.mind ? user.get_skill_level(/datum/skill/craft/engineering) : 1)
-		if((obj_integrity >= max_integrity) || !isturf(src.loc))
-			return
-
-		if(!src.ontable())
-			to_chat(user, span_warning("I should put this on a table or an anvil first."))
-			return
-
-		if(repair_skill <= 0)
-			if(HAS_TRAIT(user, TRAIT_SQUIRE_REPAIR))
-				if(locate(/obj/machinery/anvil) in src.loc)
-					repair_percent = 0.035
-				//Squires can repair on tables, but less efficiently
-				else if(src.ontable())
-					repair_percent = 0.015
-			else if(prob(30))
-				repair_percent = 0.01
-			else
-				repair_percent = 0
-		else
-			repair_percent *= repair_skill
-
-		playsound(src,'modular_twilight_axis/firearms/sound/arq_repair.ogg', 40, FALSE)
-		if(repair_percent)
-			repair_percent *= max_integrity
-			exp_gained = min(obj_integrity + repair_percent, max_integrity) - obj_integrity
-			obj_integrity = min(obj_integrity + repair_percent, max_integrity)
-			if(repair_percent == 0.01) // If an inexperienced repair attempt has been successful
-				to_chat(user, span_warning("You fumble your way into slightly repairing [src]."))
-			else
-				user.visible_message(span_info("[user] repairs [src]!"))
-			if(obj_broken && obj_integrity == max_integrity)
-				src.obj_fix()
-			adjust_experience(user, /datum/skill/craft/engineering, exp_gained/2) //We gain as much exp as we fix divided by 2
-			return
-		else
-			user.visible_message(span_warning("[user] fumbles trying to repair [src]!"))
-			if(do_after(user, CLICK_CD_MELEE, target = src))
-				attack_obj(src, user)
-			return
 	else
 		. = ..()
 
 /obj/item/gun/ballistic/twilight_firearm/examine(mob/user)
 	. = ..()
-	switch(locktype)
-		if("Wheellock")
-			. += span_info("Это оружие оснащено колесцовым замком. Перед выстрелом нужно засыпать порох, установить пулю и уплотнить заряд шомполом.")
-		if("Matchlock")
-			. += span_info("Это оружие оснащено фитильным замком. Перед выстрелом нужно засыпать порох, установить пулю и уплотнить заряд шомполом.")
-		if("Fuse")
-			. += span_info("Это оружие приводится в действие запальным фитилем. Перед выстрелом нужно засыпать порох, установить пулю и сам фитиль.")
-	. += span_info("Прицельная дальность стрельбы: [effective_range]0 метров.")
 	if(gunpowder)
 		if(chambered)
 			if(reloaded)
-				. += span_bold("Взведено и готово к стрельбе.")
+				. += span_notice("Взведено и готово к стрельбе.")
 			else
-				. += span_bold("Внутри оружия видна пуля, но оно не взведено.")
+				. += span_notice("Внутри оружия видна пуля, но оно не взведено.")
 		else
-			. += span_bold("Через запальное отверстие виден пороховой заряд, но пуля не установлена.")
+			. += span_notice("Через запальное отверстие виден пороховой заряд, но пуля не установлена.")
 	else
-		. += span_bold("Не заряжено.")
+		. += span_notice("Не заряжено.")
+
+/obj/item/gun/ballistic/twilight_firearm/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Прицельная дальность стрельбы этого оружия [effective_range]0 метров.")
+	switch(locktype)
+		if(LOCKTYPE_WHEELLOCK)
+			. += span_info("Колесцовые замки требуют пороховой заряд, пулю и уплотнение заряда шомполом перед стрельбой.")
+		if(LOCKTYPE_MATCHLOCK)
+			. += span_info("Фитильные замки требуют пороховой заряд, пулю и уплотнение заряда шомполом перед стрельбой.")
+		if(LOCKTYPE_FUSE)
+			. += span_info("Запальные фитили требуют пороховой заряд, пулю и установленный фитиль перед стрельбой.")
+		if(LOCKTYPE_BREECH)
+			. += span_info("Казнозарядные замки требуют патрон, после чего казенник необходимо закрыть и взвести замок.")
+
+/obj/item/gun/ballistic/twilight_firearm/proc/spawn_muzzle_smoke(mob/living/user, atom/target)
+	if(silenced)
+		return
+	var/shoot_dir = get_dir(src, target)
+	spawn()
+		for(var/i=1,i<=4,i++)
+			sleep(rand(0.1, 0.4))
+			new /obj/effect/temp_visual/small_smoke/gunsmoke(get_step(user, shoot_dir), shoot_dir)
+
+/obj/item/gun/ballistic/twilight_firearm/handgonne/spawn_muzzle_smoke(mob/living/user, atom/target)
+	if(silenced)
+		return
+	var/shoot_dir = get_dir(src, target)
+	new /obj/effect/temp_visual/small_smoke/gunsmoke(get_turf(user), shoot_dir, 3)
+	spawn(3)
+		new /obj/effect/temp_visual/small_smoke/gunsmoke(get_turf(user), shoot_dir, 2)
+
+/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/mortar/spawn_muzzle_smoke(mob/living/user, atom/target)
+	if(silenced)
+		return
+	var/shoot_dir = get_dir(src, target)
+	new /obj/effect/temp_visual/small_smoke/gunsmoke(get_turf(user), shoot_dir, 3)
+	spawn(3)
+		new /obj/effect/temp_visual/small_smoke/gunsmoke(get_turf(user), shoot_dir, 2)
 
 /obj/item/gun/ballistic/twilight_firearm/process_fire(atom/target, mob/living/user, message = TRUE, params = null, zone_override = "", bonus_spread = 0)
-
+	if(chambered && HAS_TRAIT(user, TRAIT_PACIFISM))
+		if(chambered.harmful)
+			to_chat(user, span_warning("[src] is lethally chambered! You don't want to risk harming anyone..."))
+			return
 	var/accident_chance = 0
 	var/firearm_skill = (user?.mind ? user.get_skill_level(/datum/skill/combat/twilight_firearms) : 1)
 	var/turf/knockback = get_ranged_target_turf(user, turn(user.dir, 180), rand(1,2))
 	spread = (spread_num - firearm_skill)
-	switch(firearm_skill)
-		if(0)
-			accident_chance = 80
-		if(1)
-			accident_chance = 50
-		if(2)
-			accident_chance = 30
-		if(3)
-			accident_chance = 10
-		if(4)
-			accident_chance = 10
-		else
-			accident_chance = 0
+	accident_chance = max(0, (70 - 20 * firearm_skill) )
 	if(user.client)
 		if(user.client.chargedprog >= 100)
 			spread = 0
@@ -544,57 +645,25 @@
 		else
 			icon = advanced_icon
 	spark_act()
-	if(locktype == "Matchlock" || locktype == "Wheellock")
+	if(locktype == LOCKTYPE_MATCHLOCK || locktype == LOCKTYPE_WHEELLOCK || locktype == LOCKTYPE_BREECH)
 		..()
+		spawn_muzzle_smoke(user, target)
 		if(!silenced)
-			switch(gunpowder)
-				if("fyrepowder", "holy fyrepowder")
-					spawn (5)
-						new/obj/effect/particle_effect/smoke/arquebus/fyre(get_ranged_target_turf(user, user.dir, 1))
-					spawn (10)
-						new/obj/effect/particle_effect/smoke/arquebus/fyre(get_ranged_target_turf(user, user.dir, 2))
-					spawn (16)
-						new/obj/effect/particle_effect/smoke/arquebus/fyre(get_ranged_target_turf(user, user.dir, 1))
-				if("thunderpowder", "psypowder")
-					spawn (5)
-						new/obj/effect/particle_effect/smoke/arquebus/thunder(get_ranged_target_turf(user, user.dir, 1))
-					spawn (10)
-						new/obj/effect/particle_effect/smoke/arquebus/thunder(get_ranged_target_turf(user, user.dir, 2))
-					spawn (16)
-						new/obj/effect/particle_effect/smoke/arquebus/thunder(get_ranged_target_turf(user, user.dir, 1))
-				if("corrosive gunpowder")
-					spawn (5)
-						new/obj/effect/particle_effect/smoke/arquebus/corrosive(get_ranged_target_turf(user, user.dir, 1))
-					spawn (10)
-						new/obj/effect/particle_effect/smoke/arquebus/corrosive(get_ranged_target_turf(user, user.dir, 2))
-					spawn (16)
-						new/obj/effect/particle_effect/smoke/arquebus/corrosive(get_ranged_target_turf(user, user.dir, 1))
-				if("arcyne gunpowder")
-					spawn (5)
-						new/obj/effect/particle_effect/smoke/arquebus/arcyne(get_ranged_target_turf(user, user.dir, 1))
-					spawn (10)
-						new/obj/effect/particle_effect/smoke/arquebus/arcyne(get_ranged_target_turf(user, user.dir, 2))
-					spawn (16)
-						new/obj/effect/particle_effect/smoke/arquebus/arcyne(get_ranged_target_turf(user, user.dir, 1))
-				if("terrorpowder")
-					spawn (5)
-						new/obj/effect/particle_effect/smoke/arquebus/terror(get_ranged_target_turf(user, user.dir, 1))
-					spawn (10)
-						new/obj/effect/particle_effect/smoke/arquebus/terror(get_ranged_target_turf(user, user.dir, 2))
-					spawn (16)
-						new/obj/effect/particle_effect/smoke/arquebus/terror(get_ranged_target_turf(user, user.dir, 1))
-				else
-					spawn (5)
-						new/obj/effect/particle_effect/smoke/arquebus(get_ranged_target_turf(user, user.dir, 1))
-					spawn (10)
-						new/obj/effect/particle_effect/smoke/arquebus(get_ranged_target_turf(user, user.dir, 2))
-					spawn (16)
-						new/obj/effect/particle_effect/smoke/arquebus(get_ranged_target_turf(user, user.dir, 1))
+			var/obj/effect/particle_effect/effect_to_spawn = powder_smoke
+			spawn (5)
+				new effect_to_spawn(get_ranged_target_turf(user,user.dir,1))
+			spawn (10)
+				new effect_to_spawn(get_ranged_target_turf(user, user.dir,2))
+			spawn(16)
+				new effect_to_spawn(get_ranged_target_turf(user, user.dir, 1))
 		for(var/mob/M in range(5, user))
 			if(!M.stat)
 				shake_camera(M, 3, 1)
 
 		gunpowder = null
+		powder_pour_sound = null
+		powder_fire_sounds = null
+		powder_smoke = null
 		if(prob(accident_chance) && bigboy)
 			user.flash_fullscreen("whiteflash")
 			user.apply_damage(rand(5,15), BURN, pick(BODY_ZONE_PRECISE_R_EYE, BODY_ZONE_PRECISE_L_EYE, BODY_ZONE_PRECISE_NOSE, BODY_ZONE_PRECISE_MOUTH, BODY_ZONE_PRECISE_L_HAND, BODY_ZONE_PRECISE_R_HAND))
@@ -615,59 +684,29 @@
 					var/def_zone = "[(user.active_hand_index == 2) ? "r" : "l" ]_arm"
 					var/obj/item/bodypart/BP = user.get_bodypart(def_zone)
 					BP.add_wound(/datum/wound/dislocation)
-	else if(locktype == "Fuse")
+	else if(locktype == LOCKTYPE_FUSE)
 		if(advanced_icon_f)
 			icon = advanced_icon_f
 		playsound(src, "modular_twilight_axis/firearms/sound/fuse.ogg", 100, FALSE)
 		spawn(match_delay)
+			spawn_muzzle_smoke(user, target)
 			..()
 			if(advanced_icon_s)
 				icon = advanced_icon_s
+
 			if(!silenced)
-				switch(gunpowder)
-					if("fyrepowder", "holy fyrepowder")
-						spawn (1)
-							new/obj/effect/particle_effect/smoke/arquebus/fyre(get_ranged_target_turf(user, user.dir, 1))
-						spawn (5)
-							new/obj/effect/particle_effect/smoke/arquebus/fyre(get_ranged_target_turf(user, user.dir, 2))
-						spawn (12)
-							new/obj/effect/particle_effect/smoke/arquebus/fyre(get_ranged_target_turf(user, user.dir, 1))
-					if("thunderpowder", "psypowder")
-						spawn (1)
-							new/obj/effect/particle_effect/smoke/arquebus/thunder(get_ranged_target_turf(user, user.dir, 1))
-						spawn (5)
-							new/obj/effect/particle_effect/smoke/arquebus/thunder(get_ranged_target_turf(user, user.dir, 2))
-						spawn (12)
-							new/obj/effect/particle_effect/smoke/arquebus/thunder(get_ranged_target_turf(user, user.dir, 1))
-					if("corrosive gunpowder")
-						spawn (1)
-							new/obj/effect/particle_effect/smoke/arquebus/corrosive(get_ranged_target_turf(user, user.dir, 1))
-						spawn (5)
-							new/obj/effect/particle_effect/smoke/arquebus/corrosive(get_ranged_target_turf(user, user.dir, 2))
-						spawn (12)
-							new/obj/effect/particle_effect/smoke/arquebus/corrosive(get_ranged_target_turf(user, user.dir, 1))
-					if("arcyne gunpowder")
-						spawn (1)
-							new/obj/effect/particle_effect/smoke/arquebus/arcyne(get_ranged_target_turf(user, user.dir, 1))
-						spawn (5)
-							new/obj/effect/particle_effect/smoke/arquebus/arcyne(get_ranged_target_turf(user, user.dir, 2))
-						spawn (12)
-							new/obj/effect/particle_effect/smoke/arquebus/arcyne(get_ranged_target_turf(user, user.dir, 1))
-					if("terrorpowder")
-						spawn (1)
-							new/obj/effect/particle_effect/smoke/arquebus/terror(get_ranged_target_turf(user, user.dir, 1))
-						spawn (5)
-							new/obj/effect/particle_effect/smoke/arquebus/terror(get_ranged_target_turf(user, user.dir, 2))
-						spawn (12)
-							new/obj/effect/particle_effect/smoke/arquebus/terror(get_ranged_target_turf(user, user.dir, 1))
-					else
-						spawn (1)
-							new/obj/effect/particle_effect/smoke/arquebus(get_ranged_target_turf(user, user.dir, 1))
-						spawn (5)
-							new/obj/effect/particle_effect/smoke/arquebus(get_ranged_target_turf(user, user.dir, 2))
-						spawn (12)
-							new/obj/effect/particle_effect/smoke/arquebus(get_ranged_target_turf(user, user.dir, 1))
+				var/obj/effect/particle_effect/effect_to_spawn = powder_smoke
+				spawn (1)
+					new effect_to_spawn(get_ranged_target_turf(user, user.dir, 1))
+				spawn (5)
+					new effect_to_spawn(get_ranged_target_turf(user, user.dir, 2))
+				spawn (12)
+					new effect_to_spawn(get_ranged_target_turf(user, user.dir, 1))
+
 			gunpowder = null
+			powder_pour_sound = null
+			powder_fire_sounds = null
+			powder_smoke = null
 			for(var/mob/M in range(5, user))
 				if(!M.stat)
 					shake_camera(M, 3, 1)
@@ -691,12 +730,6 @@
 						var/def_zone = "[(user.active_hand_index == 2) ? "r" : "l" ]_arm"
 						var/obj/item/bodypart/BP = user.get_bodypart(def_zone)
 						BP.add_wound(/datum/wound/dislocation)
-
-/obj/item/gun/ballistic/twilight_firearm/afterattack(atom/target, mob/living/user, flag, params)
-	. = ..()
-/*	if(!reloaded)
-		to_chat(user, span_warning("The [src] is not properly loaded yet!"))
-		return*/
 
 /obj/item/gun/ballistic/twilight_firearm/can_shoot()
 	if (!reloaded)
@@ -743,6 +776,8 @@
 	advanced_icon = 'modular_twilight_axis/firearms/icons/arquebus/arquebusbaoynet.dmi'
 	advanced_icon_norod = 'modular_twilight_axis/firearms/icons/arquebus/arquebusbayonet_norod.dmi'
 	gripped_intents = list(/datum/intent/shoot/twilight_firearm, /datum/intent/arc/twilight_firearm, INTENT_GENERIC, /datum/intent/spear/thrust/militia)
+	sharpness = IS_SHARP
+	max_blade_int = 180
 	wdefense = 5
 
 /obj/item/gun/ballistic/twilight_firearm/arquebus/decorated
@@ -752,13 +787,37 @@
 	advanced_icon = 'modular_twilight_axis/firearms/icons/arquebus/decorated_arquebus.dmi'
 	advanced_icon_norod = 'modular_twilight_axis/firearms/icons/arquebus/decorated_arquebus_norod.dmi'
 
+/obj/item/gun/ballistic/twilight_firearm/arquebus/decorated/attackby(obj/item/I, mob/user, params)
+	if(istype(I, /obj/item/rogueweapon/huntingknife))
+		user.visible_message(span_warning("[user] starts attaching a bayonet to [src]."))
+		if(do_after(user, 6 SECONDS))
+			var/obj/item/gun/ballistic/twilight_firearm/arquebus/bayonet/decorated/P = new /obj/item/gun/ballistic/twilight_firearm/arquebus/bayonet/decorated(get_turf(src.loc))
+			if(user.is_holding(src))
+				user.dropItemToGround(src)
+				user.put_in_hands(P)
+			P.obj_integrity = src.obj_integrity
+			qdel(src)
+			qdel(I)
+		else
+			user.visible_message(span_warning("[user] stops attaching the bayonet to [src]."))
+		return TRUE
+	return ..()
+
+/obj/item/gun/ballistic/twilight_firearm/arquebus/bayonet/decorated
+	name = "decorated arquebus rifle"
+	desc = "Настоящее произведение искусства в обличии огнестрельного оружия. Приклад и цевье аркебузы украшены золотыми пластинами и инкрустированным рубином, а на стволе выбита надпись: «Взгляните на мои деянья и дрожите». Оснащена штыком для использования в ближнем бою."
+	icon = 'modular_twilight_axis/firearms/icons/arquebus/decorated_arquebus_bayonet.dmi'
+	advanced_icon = 'modular_twilight_axis/firearms/icons/arquebus/decorated_arquebus_bayonet.dmi'
+	advanced_icon_norod = 'modular_twilight_axis/firearms/icons/arquebus/decorated_arquebus_bayonet_norod.dmi'
+	sellprice = 325
+
 /obj/item/gun/ballistic/twilight_firearm/arquebus/jagerrifle
-	name = "jägerbüchse"
+	name = "\"Jägerbüchse\""
 	desc = "Редкая разновидность колесцовой аркебузы, изготавливаемая мастерами Грензельхофта для егерей Фрейкорпс, отличившихся в ходе боевых действий. Легче и менее подвержена износу в сравнении с серийными образцами."
 	icon = 'modular_twilight_axis/firearms/icons/arquebus/jagerrifle.dmi'
 	advanced_icon = 'modular_twilight_axis/firearms/icons/arquebus/jagerrifle.dmi'
 	advanced_icon_norod = 'modular_twilight_axis/firearms/icons/arquebus/jagerrifle_norod.dmi'
-	locktype = "Wheellock"
+	locktype = LOCKTYPE_WHEELLOCK
 
 /obj/item/gun/ballistic/twilight_firearm/arquebus/jagerrifle/attackby(obj/item/I, mob/user, params)
 	if(istype(I, /obj/item/rogueweapon/huntingknife))
@@ -777,12 +836,12 @@
 	return ..()
 
 /obj/item/gun/ballistic/twilight_firearm/arquebus/bayonet/jagerrifle
-	name = "jägerbüchse"
+	name =  "\"Jägerbüchse\""
 	desc = "Редкая разновидность колесцовой аркебузы, изготавливаемая мастерами Грензельхофта для егерей Фрейкорпс, отличившихся в ходе боевых действий. Легче и менее подвержена износу в сравнении с серийными образцами. Оснащена штыком для использования в ближнем бою."
 	icon = 'modular_twilight_axis/firearms/icons/arquebus/jagerriflebayonet.dmi'
 	advanced_icon = 'modular_twilight_axis/firearms/icons/arquebus/jagerriflebayonet.dmi'
 	advanced_icon_norod = 'modular_twilight_axis/firearms/icons/arquebus/jagerrifle_bayonet_norod.dmi'
-	locktype = "Wheellock"
+	locktype = LOCKTYPE_WHEELLOCK
 
 /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol
 	name = "arquebus pistol"
@@ -809,8 +868,7 @@
 	advanced_icon_r = 'modular_twilight_axis/firearms/icons/pistol/pistol_r.dmi'
 	advanced_icon_norod	= 'modular_twilight_axis/firearms/icons/pistol/pistol_norod.dmi'
 	advanced_icon_r_norod = 'modular_twilight_axis/firearms/icons/pistol/pistol_r_norod.dmi'
-	locktype = "Wheellock"
-	inv_storage_delay = 1 SECONDS
+	locktype = LOCKTYPE_WHEELLOCK
 
 /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/getonmobprop(tag)
 	. = ..()
@@ -841,7 +899,7 @@
 	item_state = "handgonne"
 	mag_type = /obj/item/ammo_box/magazine/internal/twilight_firearm/handgonne
 	cartridge_wording = "cannonball"
-	locktype = "Fuse"
+	locktype = LOCKTYPE_FUSE
 	advanced_icon = 'modular_twilight_axis/firearms/icons/handgonne/handgonne.dmi'
 	advanced_icon_r = 'modular_twilight_axis/firearms/icons/handgonne/handgonne_r.dmi'
 	advanced_icon_f	= 'modular_twilight_axis/firearms/icons/handgonne/handgonne_f.dmi'
@@ -877,6 +935,8 @@
 	damfactor = 0.9
 	possible_item_intents = list(/datum/intent/axe/cut, /datum/intent/axe/chop)
 	gripped_intents = list(/datum/intent/shoot/twilight_firearm, /datum/intent/arc/twilight_firearm, /datum/intent/axe/cut/long, /datum/intent/axe/chop/long)
+	sharpness = IS_SHARP
+	max_blade_int = 180
 	associated_skill = /datum/skill/combat/axes
 
 /obj/item/gun/ballistic/twilight_firearm/axtgonne/getonmobprop(tag)
@@ -923,7 +983,7 @@
 	icon_state = "barker"
 	item_state = "barker"
 	gripped_intents = list(/datum/intent/shoot/twilight_firearm/flintgonne, /datum/intent/arc/twilight_firearm/flintgonne, INTENT_GENERIC)
-	locktype = "Fuse"
+	locktype = LOCKTYPE_FUSE
 	smeltresult = /obj/item/ingot/iron
 	damfactor = 0.7
 	critfactor = 0.3
@@ -943,6 +1003,8 @@
 	advanced_icon_s = 'modular_twilight_axis/firearms/icons/purgatory/purgatory_s.dmi'
 	gripped_intents = list(/datum/intent/shoot/twilight_firearm, /datum/intent/arc/twilight_firearm, INTENT_GENERIC, /datum/intent/spear/thrust/militia)
 	smeltresult = /obj/item/ingot/silver
+	sharpness = IS_SHARP
+	max_blade_int = 180
 	is_silver = TRUE
 	force = 15
 	force_wielded = 20
@@ -989,12 +1051,20 @@
 	name = "barker with lamptern"
 	desc = "Один из первых образцов огнестрельного оружия, созданный отаванскими мастерами в начале позапрошлого века. Ввиду низкой мощности и точности, ныне используется преимущественно охотниками. Этот теперь с фонарём!"
 	icon = 'modular_twilight_axis/firearms/icons/barker_light.dmi'
+	possible_item_intents = list(/datum/intent/spear/bash, /datum/intent/use)
 	icon_state = "barker_light"
 	item_state = "barker_light"
 	light_system = MOVABLE_LIGHT
 	light_outer_range = 7
 	light_power = 1
 	light_color = "#f5a885"
+
+/obj/item/gun/ballistic/twilight_firearm/barker/barker_light/afterattack(atom/movable/A, mob/user, proximity)
+	. = ..()
+	if (!proximity)
+		return
+	if ((user.used_intent.type == /datum/intent/use))
+		A.spark_act()
 
 /obj/item/gun/ballistic/twilight_firearm/barker/barker_light/getonmobprop(tag)
 	. = ..()
@@ -1008,7 +1078,7 @@
 				return list("shrink" = 0.5,"sx" = -1,"sy" = 2,"nx" = 0,"ny" = 2,"wx" = 2,"wy" = 1,"ex" = 0,"ey" = 1,"nturn" = 0,"sturn" = 0,"wturn" = -15,"eturn" = -70,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 6,"northabove" = 1,"southabove" = 0,"eastabove" = 0,"westabove" = 0)
 
 /obj/item/gun/ballistic/twilight_firearm/hunt_arquebus
-	name = "hunter's arquebus"
+	name = "hunting arquebus"
 	desc = "Довольно удобный вариант колесцовой аркебузы со штыком, довольно тонким и длинным дабы использовать его как копьё. Удлинённый ствол позволяет стрелять на большие расстояния, но забирает добротную часть убойной силы у пули. Частый выбор у знати."
 	damfactor = 0.7
 	critfactor = 0.4
@@ -1016,6 +1086,8 @@
 	effective_range = 4
 	wdefense = 5
 	walking_stick = FALSE
+	sharpness = IS_SHARP
+	max_blade_int = 180
 	gripped_intents = list(/datum/intent/shoot/twilight_firearm/flintgonne, /datum/intent/arc/twilight_firearm/flintgonne, /datum/intent/spear/thrust, INTENT_GENERIC)
 	icon_state = "harquebus"
 	item_state = "harquebus"
@@ -1024,3 +1096,15 @@
 	advanced_icon_r = 'modular_twilight_axis/firearms/icons/harquebus/harquebus_r.dmi'
 	advanced_icon_norod	= 'modular_twilight_axis/firearms/icons/harquebus/harquebus_norod.dmi'
 	advanced_icon_r_norod = 'modular_twilight_axis/firearms/icons/harquebus/harquebus_r_norod.dmi'
+
+/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/puffer
+	name = "puffer"
+	desc = "Компактное огнестрельное оружие отаванского производства, предназначенное для стрельбы из седла. Выполнен по нестандартной казнозарядной схеме и может заряжаться бумажными патронами, что позволяет всаднику готовить его к стрельбе одной рукой."
+	icon = 'modular_twilight_axis/firearms/icons/puffer/pistol.dmi'
+	advanced_icon = 'modular_twilight_axis/firearms/icons/puffer/pistol.dmi'
+	advanced_icon_r = 'modular_twilight_axis/firearms/icons/puffer/pistol_r.dmi'
+	advanced_icon_f = 'modular_twilight_axis/firearms/icons/puffer/pistol_f.dmi'
+	advanced_icon_norod	= null
+	advanced_icon_r_norod = null
+	effective_range = 5
+	locktype = LOCKTYPE_BREECH

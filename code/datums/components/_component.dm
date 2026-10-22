@@ -11,31 +11,31 @@
  */
 /datum/component
 	/**
-	  * Defines how duplicate existing components are handled when added to a datum
-	  *
-	  * See [COMPONENT_DUPE_*][COMPONENT_DUPE_ALLOWED] definitions for available options
-	  */
+		* Defines how duplicate existing components are handled when added to a datum
+		*
+		* See [COMPONENT_DUPE_*][COMPONENT_DUPE_ALLOWED] definitions for available options
+		*/
 	var/dupe_mode = COMPONENT_DUPE_HIGHLANDER
 
 	/**
-	  * The type to check for duplication
-	  *
-	  * `null` means exact match on `type` (default)
-	  *
-	  * Any other type means that and all subtypes
-	  */
+		* The type to check for duplication
+		*
+		* `null` means exact match on `type` (default)
+		*
+		* Any other type means that and all subtypes
+		*/
 	var/dupe_type
 
 	/// The datum this components belongs to
 	var/datum/parent
 
 	/**
-	  * Only set to true if you are able to properly transfer this component
-	  *
-	  * At a minimum [RegisterWithParent][/datum/component/proc/RegisterWithParent] and [UnregisterFromParent][/datum/component/proc/UnregisterFromParent] should be used
-	  *
-	  * Make sure you also implement [PostTransfer][/datum/component/proc/PostTransfer] for any post transfer handling
-	  */
+		* Only set to true if you are able to properly transfer this component
+		*
+		* At a minimum [RegisterWithParent][/datum/component/proc/RegisterWithParent] and [UnregisterFromParent][/datum/component/proc/UnregisterFromParent] should be used
+		*
+		* Make sure you also implement [PostTransfer][/datum/component/proc/PostTransfer] for any post transfer handling
+		*/
 	var/can_transfer = FALSE
 
 /**
@@ -225,9 +225,9 @@
  * * sig_typeor_types Signal string key or list of signal keys to stop listening to specifically
  */
 /datum/proc/UnregisterSignal(datum/target, sig_type_or_types)
-	if (!target || !istype(target) || !target:comp_lookup) //Delinefortune:  If the target is null or not a valid type, we can't unregister
+	if (!target || !istype(target) || !target:comp_lookup) //Delinefortune:	If the target is null or not a valid type, we can't unregister
 		return
-	var/list/lookup = target.comp_lookup  
+	var/list/lookup = target.comp_lookup
 	if(!signal_procs || !signal_procs[target] || !lookup)
 		return
 	if(!islist(sig_type_or_types))
@@ -237,6 +237,9 @@
 			if(!istext(sig))
 				stack_trace("We're unregistering with something that isn't a valid signal \[[sig]\], you fucked up")
 			continue
+		if(islist(lookup[sig]))
+			var/list/sig_lookup = lookup[sig]
+			sig_lookup -= null
 		switch(length(lookup[sig]))
 			if(2)
 				lookup[sig] = (lookup[sig]-src)[1]
@@ -326,19 +329,38 @@
 	var/target = comp_lookup[sigtype]
 	if(!target)
 		return NONE
-	if(!length(target))
-		var/datum/listening_datum = target
-		return NONE | call(listening_datum, listening_datum.signal_procs[src][sigtype])(arglist(arguments))
+
 	. = NONE
+
+	if(!islist(target))
+		var/datum/listening_datum = target
+		if(!listening_datum?.signal_procs || !listening_datum.signal_procs[src] || !listening_datum.signal_procs[src][sigtype])
+			comp_lookup -= sigtype
+			return NONE
+		return NONE | call(listening_datum, listening_datum.signal_procs[src][sigtype])(arglist(arguments))
+
+	var/list/sig_lookup = target
+	if(!length(sig_lookup))
+		comp_lookup -= sigtype
+		return NONE
+
 	// This exists so that even if one of the signal receivers unregisters the signal,
 	// all the objects that are receiving the signal get the signal this final time.
 	// AKA: No you can't cancel the signal reception of another object by doing an unregister in the same signal.
 	var/list/queued_calls = list()
-	for(var/datum/listening_datum as anything in target)
-		if(!listening_datum)
-			stack_trace("null entry in comp_lookup\[[sigtype]\] on [type] during _SendSignal - upstream RegisterSignal/UnregisterSignal corruption")
+	var/list/stale_datums
+
+	for(var/datum/listening_datum as anything in sig_lookup)
+		if(!listening_datum?.signal_procs || !listening_datum.signal_procs[src] || !listening_datum.signal_procs[src][sigtype])
+			LAZYADD(stale_datums, listening_datum)
 			continue
 		queued_calls[listening_datum] = listening_datum.signal_procs[src][sigtype]
+
+	if(stale_datums)
+		sig_lookup -= stale_datums
+
+	if(!length(sig_lookup))
+		comp_lookup -= sigtype
 	for(var/datum/listening_datum as anything in queued_calls)
 		. |= call(listening_datum, queued_calls[listening_datum])(arglist(arguments))
 

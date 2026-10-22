@@ -16,3 +16,24 @@
 			if(prob(20))
 				new /obj/item/steel_scrap(get_turf(src))
 	. = ..()
+
+/obj/item/grown/log/tree
+	var/blessed = FALSE
+
+/obj/item/grown/log/tree/proc/bless_log()
+	if(blessed)
+		return FALSE
+	blessed = TRUE
+	name = "blessed log"
+	add_atom_colour("#88ffaa", FIXED_COLOUR_PRIORITY)
+	add_filter("blessed_log_outline", 2, list("type" = "outline", "color" = "#58C86A", "alpha" = 95, "size" = 1))
+	return TRUE
+
+/obj/item/grown/log/tree/Destroy()
+	remove_filter("blessed_log_outline")
+	return ..()
+
+/obj/item/grown/log/tree/examine(mob/user)
+	. = ..()
+	if(blessed)
+		. += span_green("This log bears Dendor's blessing.")

@@ -6,6 +6,7 @@
 /datum/action/cooldown/spell/meteor_strike
 	button_icon = 'icons/mob/actions/mage_geomancy.dmi'
 	name = "Meteor Storm"
+	expose_caster_on_deflect = FALSE
 	desc = "Call down a devastating barrage of nine boulders onto a wide area. \
 	Each boulder deals heavy damage on direct hit, splashes nearby, and sends gravel fragments flying. \
 	Deals 2x damage to structures. \
@@ -28,7 +29,7 @@
 	charge_required = TRUE
 	weapon_cast_penalized = TRUE
 	charge_time = CHARGETIME_HEAVY
-	charge_swingdelay_type = SWINGDELAY_CANCEL
+	charge_swingdelay_type = SWINGDELAY_PENALTY
 	hold_drain = 1
 	charge_slowdown = CHARGING_SLOWDOWN_HEAVY
 	charge_sound = 'sound/magic/charging_fire.ogg'
@@ -41,9 +42,8 @@
 
 	var/direct_damage = 120 // If you get hit direct you deserve it
 	var/splash_damage = 40
-	displayed_damage = 120
-	var/fragment_damage = 15
-	var/npc_simple_damage_mult = 2
+	displayed_damage = SPELL_DMG(120)
+	var/fragment_damage = SPELL_DMG(15)
 	var/impact_count = 12
 
 /datum/action/cooldown/spell/meteor_strike/cast(atom/cast_on)
@@ -82,7 +82,7 @@
 
 	// Show telegraph markers on all tiles in the impact zone
 	for(var/turf/T in valid_turfs)
-		new /obj/effect/temp_visual/trap/meteor(T)
+		new /obj/effect/temp_visual/telegraph/meteor(T)
 
 	// Boulders start dropping after the telegraph
 	var/delay_offset = METEOR_TELEGRAPH_TIME
@@ -110,8 +110,6 @@
 	var/static/list/random_zones = list(BODY_ZONE_HEAD, BODY_ZONE_CHEST, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM)
 	// Direct hit on impact tile
 	for(var/mob/living/L in T.contents)
-		if(L == owner)
-			continue
 		if(L.anti_magic_check())
 			L.visible_message(span_warning("The boulder fades away around [L]!"))
 			playsound(get_turf(L), 'sound/magic/magic_nulled.ogg', 100)
@@ -119,16 +117,15 @@
 		if(spell_guard_check(L, TRUE))
 			L.visible_message(span_warning("[L] endures the boulder strike!"))
 			continue
-		var/actual_damage = direct_damage
-		if(!L.mind && !ishuman(L))
-			actual_damage *= npc_simple_damage_mult
+		var/actual_damage = SPELL_DMG(direct_damage)
 		if(istype(caster) && ishuman(L))
-			arcyne_strike(caster, L, null, actual_damage, pick(random_zones), \
+			if(arcyne_strike(caster, L, null, actual_damage, pick(random_zones), \
 				BCLASS_BLUNT, spell_name = "Meteor Strike", \
-				damage_type = BRUTE, npc_simple_damage_mult = 1, \
-				skip_animation = TRUE)
+				damage_type = BRUTE, \
+				skip_animation = TRUE, SPELL_STRIKE_SCALING) == ARCYNE_STRIKE_WARDED)
+				continue
 		else
-			L.adjustBruteLoss(actual_damage)
+			L.adjustBruteLoss(SPELL_DMG_VS(L, actual_damage))
 		L.Knockdown(3)
 		new /obj/effect/temp_visual/spell_impact(get_turf(L), spell_color, spell_impact_intensity)
 	// Splash damage on adjacent tiles
@@ -136,22 +133,19 @@
 		if(aoe_turf == T)
 			continue
 		for(var/mob/living/L in aoe_turf.contents)
-			if(L == owner)
-				continue
 			if(L.anti_magic_check())
 				continue
 			if(spell_guard_check(L, TRUE))
 				continue
-			var/actual_damage = splash_damage
-			if(!L.mind && !ishuman(L))
-				actual_damage *= npc_simple_damage_mult
+			var/actual_damage = SPELL_DMG(splash_damage)
 			if(istype(caster) && ishuman(L))
-				arcyne_strike(caster, L, null, actual_damage, pick(random_zones), \
+				if(arcyne_strike(caster, L, null, actual_damage, pick(random_zones), \
 					BCLASS_BLUNT, spell_name = "Meteor Strike", \
-					damage_type = BRUTE, npc_simple_damage_mult = 1, \
-					skip_animation = TRUE)
+					damage_type = BRUTE, \
+					skip_animation = TRUE, SPELL_STRIKE_SCALING) == ARCYNE_STRIKE_WARDED)
+					continue
 			else
-				L.adjustBruteLoss(actual_damage)
+				L.adjustBruteLoss(SPELL_DMG_VS(L, actual_damage))
 	// Spawn gravel fragments
 	spawn_fragments(T)
 
@@ -191,8 +185,7 @@
 /obj/effect/temp_visual/falling_boulder/proc/do_impact()
 	on_impact?.Invoke()
 
-/obj/effect/temp_visual/trap/meteor
-	color = GLOW_COLOR_EARTHEN
+/obj/effect/temp_visual/telegraph/meteor
 	light_color = GLOW_COLOR_EARTHEN
 	duration = METEOR_TELEGRAPH_TIME
 

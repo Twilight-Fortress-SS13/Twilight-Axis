@@ -70,3 +70,54 @@
 	item_state = "shadowboots"
 	allowed_race = NON_DWARVEN_RACE_TYPES
 	smeltresult = /obj/item/ingot/drow
+
+/obj/item/clothing/shoes/roguetown/boots/armor/zizo/bloodraider
+	name = "raider's boots"
+	desc = "Custom-fitted sabatons, made from a series of interlinking darksteel plates."
+	icon = 'modular_twilight_axis/icons/clothing/bloodraider.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/bloodraider.dmi'
+	icon_state = "bloodboots"
+	item_state = "bloodboots"
+	armor = ARMOR_PLATE
+	armor_class = ARMOR_CLASS_LIGHT
+	unenchantable = FALSE
+
+/obj/item/clothing/shoes/roguetown/boots/armor/blacksteel/legate
+	name = "legate's caligae"
+	desc = "Сделанные в форме сандалий сабатоны, выкованные из ценной черной стали. Когда-то это были шлемы гордых рыцарей Грензельхофта, теперь же в них маршируют по горячему песку Зибантии. \
+	</br>‎  </br>Символы чужой гордости и былого величия ныне стали лишь грязью под ногами победителей. Помни об этом, когда будешь воздвигать свой собственный монумент."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/boots.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/boots.dmi'
+	icon_state = "lplateboots"
+	item_state = "lplateboots"
+
+/obj/item/clothing/shoes/roguetown/boots/armor/legion
+	name = "elyrian greaves"
+	desc = "Сегментированные стальные поножи, обеспечивающие полноценную защиту ног и ступней. Пластины фиксируются кожаными ремешками, что позволяет быстро их снять. В годы войны плохая защита ног дорого обошлась легионерам наместника - ошибки были учтены и исправлены."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/boots.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/boots.dmi'
+	icon_state = "legionboots"
+	item_state = "legionboots"
+
+/obj/item/clothing/shoes/roguetown/boots/elven_boots/druidic
+	allowed_race = null
+	name = "blessed druid boots"
+	desc = "Living-wood boots hallowed by the Treefather."
+	armor = ARMOR_BLACKOAK
+	max_integrity = ARMOR_INT_SIDE_IRON
+
+/obj/item/clothing/shoes/roguetown/boots/elven_boots/druidic/Initialize(mapload)
+	. = ..()
+	set_light(1, 1, 2, l_color = "#58C86A")
+	add_filter("druid_blessed_glow", 2, list("type" = "outline", "color" = "#58C86A", "alpha" = 95, "size" = 1))
+
+/obj/item/clothing/shoes/roguetown/boots/elven_boots/druidic/pickup(mob/user)
+	. = ..()
+	if(!istype(user, /mob/living/carbon/human))
+		return
+	var/mob/living/carbon/human/H = user
+	if(H.patron?.type == /datum/patron/divine/dendor)
+		return
+	H.electrocute_act(30, src)
+	H.mob_timers["kneestinger"] = world.time
+	to_chat(H, span_warning("[name] rejects my grasp — only the Treefather's faithful may bear such a gift!"))

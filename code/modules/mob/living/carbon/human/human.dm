@@ -45,6 +45,7 @@
 					underwear.forceMove(get_turf(src))
 					src.put_in_hands(underwear)
 					underwear = null
+					regenerate_icons() // TA EDIT
 		if((user.zone_selected == BODY_ZONE_L_LEG) || (user.zone_selected == BODY_ZONE_R_LEG))
 			if(get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
 				if(!legwear_socks)
@@ -56,6 +57,7 @@
 					legwear_socks.forceMove(get_turf(src))
 					src.put_in_hands(legwear_socks)
 					legwear_socks = null
+					regenerate_icons() // TA EDIT
 		if(user.zone_selected == BODY_ZONE_CHEST)
 			if(!piercings_item)
 				return
@@ -71,7 +73,7 @@
 				regenerate_icons()
 #endif
 
-/mob/living/carbon/human/Initialize()
+/mob/living/carbon/human/Initialize(mapload)
 	add_verb(src, /mob/living/proc/lay_down)
 	icon_state = "" //Remove the inherent human icon that is visible on the map editor. We're rendering ourselves limb by limb, having it still be there results in a bug where the basic human icon appears below as south in all directions and generally looks nasty.
 
@@ -94,6 +96,9 @@
 	GLOB.human_list += src
 	unarmed_special = new /datum/special_intent/upper_cut()
 
+	if(npc_archetype)
+		init_npc_archetype()
+
 /mob/living/carbon/human/Login()
 	. = ..()
 	if(!GetComponent(/datum/component/arousal))
@@ -109,7 +114,7 @@
 	switch(rand(1,4))
 		if(1)
 			affecting = get_bodypart(pick(BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
-			chat_message = span_danger("I fall on my [lowertext(affecting.name)]!")
+			chat_message = span_danger("I fall on my [LOWER_TEXT(affecting.name)]!")
 		if(2)
 			affecting = get_bodypart(pick(BODY_ZONE_R_ARM, BODY_ZONE_L_ARM))
 			chat_message = span_danger("I fall on my arm!")
@@ -189,12 +194,32 @@
 
 	dat += "<table>"
 
+	if(is_unclaimed_corpse())
+		var/has_fabric = FALSE
+		var/has_smelt = FALSE
+		for(var/obj/item/I in (get_equipped_items(TRUE) + held_items))
+			if(I.item_flags & ABSTRACT)
+				continue
+			if(I.is_salvageable())
+				has_fabric = TRUE
+			if(I.is_smeltable())
+				has_smelt = TRUE
+			if(has_fabric && has_smelt)
+				break
+		dat += "<tr><td><A href='?src=[REF(src)];strip_all=[LOOT_FILTER_ALL]'><B>Loot Everything</B></A></td></tr>"
+		if(has_fabric)
+			dat += "<tr><td><A href='?src=[REF(src)];strip_all=[LOOT_FILTER_FABRIC]'>Loot Fabric</A></td></tr>"
+		if(has_smelt)
+			dat += "<tr><td><A href='?src=[REF(src)];strip_all=[LOOT_FILTER_SMELT]'>Loot Smeltable</A></td></tr>"
+		dat += "<tr><td><hr></td></tr>"
+
 	if(handcuffed)
 		dat += "<tr><td><A href='?src=[REF(src)];item=[SLOT_HANDCUFFED]'>Remove [handcuffed]</A></td></tr>"
 	if(legcuffed)
 		dat += "<tr><td><A href='?src=[REF(src)];item=[SLOT_LEGCUFFED]'>Remove [legcuffed]</A></td></tr>"
 
-	dat += "<tr><td><hr></td></tr>"
+	if(handcuffed || legcuffed)
+		dat += "<tr><td><hr></td></tr>"
 
 	for(var/i in 1 to held_items.len)
 		var/obj/item/I = get_item_for_held_index(i)
@@ -309,14 +334,11 @@
 	else
 		dat += "<tr><td><A href='?src=[REF(src)];item=[SLOT_SHOES]'>[(shoes && !(shoes.item_flags & ABSTRACT)) ? shoes : "<font color=grey>Boots</font>"]</A></td></tr>"
 
-	dat += "<tr><td><hr></td></tr>"
-
 #ifdef MATURESERVER
 	if(get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
-		dat += "<tr><td><BR><B>Underwear:</B> <A href='?src=[REF(src)];undiesthing=1'>[!underwear ? "Nothing" : "Remove"]</A></td></tr>"
-	dat += "<tr><td><hr></td></tr>"
-	if(get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
-		dat += "<tr><td><BR><B>Legwear:</B> <A href='?src=[REF(src)];legwearsthing=1'>[!legwear_socks ? "Nothing" : "Remove"]</A></td></tr>"
+		dat += "<tr><td><hr></td></tr>"
+		dat += "<tr><td><B>Underwear:</B> <A href='?src=[REF(src)];undiesthing=1'>[!underwear ? "Nothing" : "Remove"]</A></td></tr>"
+		dat += "<tr><td><B>Legwear:</B> <A href='?src=[REF(src)];legwearsthing=1'>[!legwear_socks ? "Nothing" : "Remove"]</A></td></tr>"
 #endif
 
 	dat += {"</table>"}
@@ -513,41 +535,42 @@
 			hud_used.bloods.cut_overlays()
 			if(usedloss <= 0)
 				hud_used.bloods.icon_state = "dam0"
-				if(toxloss > 0)
-					var/toxoverlay
-					switch(toxloss)
-						if(1 to 20)
-							toxoverlay = "toxloss20"
-						if(21 to 49)
-							toxoverlay = "toxloss40"
-						if(50 to 79)
-							toxoverlay = "toxloss60"
-						if(80 to 99)
-							toxoverlay = "toxloss80"
-						if(100 to 999)
-							toxoverlay = "toxloss100"
-					hud_used.bloods.add_overlay(toxoverlay)
-
-				if(oxyloss > 0)
-					var/oxyoverlay
-					switch(oxyloss)
-						if(1 to 20)
-							oxyoverlay = "oxyloss20"
-						if(21 to 49)
-							oxyoverlay = "oxyloss40"
-						if(50 to 79)
-							oxyoverlay = "oxyloss60"
-						if(80 to 99)
-							oxyoverlay = "oxyloss80"
-						if(100 to 999)
-							oxyoverlay = "oxyloss100"
-					hud_used.bloods.add_overlay(oxyoverlay)
-			else
+			else // TA EDIT START
 				var/used = round(usedloss, 10)
 				if(used <= 80)
 					hud_used.bloods.icon_state = "dam[used]"
 				else
 					hud_used.bloods.icon_state = "damelse"
+
+			if(toxloss > 0)
+				var/toxoverlay
+				switch(toxloss)
+					if(1 to 20)
+						toxoverlay = "toxloss20"
+					if(21 to 49)
+						toxoverlay = "toxloss40"
+					if(50 to 79)
+						toxoverlay = "toxloss60"
+					if(80 to 99)
+						toxoverlay = "toxloss80"
+					if(100 to 999)
+						toxoverlay = "toxloss100"
+				hud_used.bloods.add_overlay(toxoverlay)
+
+			if(oxyloss > 0)
+				var/oxyoverlay
+				switch(oxyloss)
+					if(1 to 20)
+						oxyoverlay = "oxyloss20"
+					if(21 to 49)
+						oxyoverlay = "oxyloss40"
+					if(50 to 79)
+						oxyoverlay = "oxyloss60"
+					if(80 to 99)
+						oxyoverlay = "oxyloss80"
+					if(100 to 999)
+						oxyoverlay = "oxyloss100"
+				hud_used.bloods.add_overlay(oxyoverlay) // TA EDIT END
 			if(painpercent > 0)
 				var/painoverlay
 				switch(painpercent)
@@ -714,6 +737,8 @@
 	return TRUE
 
 /mob/living/carbon/human/vomit(lost_nutrition = 10, blood = 0, stun = 1, distance = 0, message = 1, toxic = 0)
+	if(stat == DEAD)
+		return FALSE
 	if(blood && (NOBLOOD in dna.species.species_traits) && !HAS_TRAIT(src, TRAIT_TOXINLOVER))
 		if(message)
 			visible_message(span_warning("[src] dry heaves!"), \
@@ -725,7 +750,7 @@
 
 /mob/living/carbon/human/vv_get_dropdown()
 	. = ..()
-	VV_DROPDOWN_OPTION("", "---------")
+	VV_DROPDOWN_OPTION("", "--- /human ---")
 	VV_DROPDOWN_OPTION(VV_HK_REAPPLY_PREFS, "Reapply Preferences")
 	VV_DROPDOWN_OPTION(VV_HK_SET_SPECIES, "Set Species")
 	VV_DROPDOWN_OPTION(VV_HK_PURGE_PARTOF_SLOT, "Purge Part of Slot")
@@ -996,7 +1021,11 @@
 
 	updateappearance(mutcolor_update = TRUE)
 
-	job = target.job // NOT assigned_role
+	// 9/22 edit : adding "advjob" to whats stolen bc otherwise assassins keep showing up as "poisoner" or whatever on examine.
+	// our examine code doesent allow for fake jobs very well & i cant be bothered to snowflake it so we're gonna do this. this MIGHT
+	// break something..????
+	job = target.job
+	advjob = target.advjob
 	faction = target.faction
 	deathsound = target.deathsound
 	gender = target.gender
@@ -1013,7 +1042,15 @@
 	socks = target.socks
 	has_stubble = target.has_stubble
 	headshot_link = target.headshot_link
-	flavortext = target.flavortext
+	headshot_artist_credit = target.headshot_artist_credit
+	headshot_artist_link = target.headshot_artist_link
+	// i dont want NPCs to make you a guy w/ no flavortext
+	if(flavortext)
+		flavortext = target.flavortext
+	if(flavortext_cached)
+		// this might be a bad idea. i dont know.
+		flavortext_cached = target.flavortext_cached
+	copy_descriptors(target)
 
 	var/obj/item/bodypart/head/target_head = target.get_bodypart(BODY_ZONE_HEAD)
 	if(!isnull(target_head))
@@ -1021,6 +1058,13 @@
 		user_head.bodypart_features = target_head.bodypart_features
 
 	regenerate_icons()
+
+
+/mob/living/carbon/human/proc/copy_descriptors(mob/living/carbon/human/target)
+	if(!ishuman(target))
+		return
+	mob_descriptors = target.mob_descriptors?.Copy()
+	custom_descriptors = target.custom_descriptors.Copy()
 
 
 /mob/living/carbon/human/proc/copy_bodyparts(mob/living/carbon/human/target)
@@ -1066,7 +1110,7 @@
 /mob/living/carbon/human/species
 	var/race = null
 
-/mob/living/carbon/human/species/Initialize()
+/mob/living/carbon/human/species/Initialize(mapload)
 	. = ..()
 	if(race)
 		set_species(race)
@@ -1078,8 +1122,6 @@
 		if(!("[turf.z]" in GLOB.weatherproof_z_levels))
 			if(SSmapping.level_has_any_trait(turf.z, list(ZTRAIT_IGNORE_WEATHER_TRAIT)))
 				GLOB.weatherproof_z_levels |= "[turf.z]"
-		if("[turf.z]" in GLOB.weatherproof_z_levels)
-			SSmatthios_mobs.register_mob(src)
 
 //Vrell - Moving this here to fix load order bugs
 /mob/living/carbon/human/has_penis()
@@ -1106,8 +1148,9 @@
 /mob/living/carbon/human/update_mobility()
 	. = ..()
 	if(!(mobility_flags & MOBILITY_CANSTAND) && mouth?.spitoutmouth)
-		visible_message(span_warning("[src] spits out [mouth]."))
-		dropItemToGround(mouth, silent = FALSE)
+		if(stat != DEAD)
+			visible_message(span_warning("[src] spits out [mouth]."))
+			dropItemToGround(mouth, silent = FALSE)
 
 /mob/living/carbon/human/Topic(href, href_list)
 	..()
@@ -1160,3 +1203,25 @@
 	vocal_pitch_range = client.prefs.bark_variance
 	apply_voicepacks(src, client)
 	return TRUE*/
+
+// mood penalties for poor equipment as a noble: if they're not spawn equipment and are poor quality, mood debuff. if you're covered in blood, mood debuff
+/mob/living/carbon/human/check_equipment_mood_penalty()
+	if(HAS_TRAIT(src, TRAIT_NOBLE_UNLANDED))
+		var/any_bad = FALSE
+		var/any_bloody = FALSE
+		for(var/obj/item/I in get_equipped_items())
+			if((I.item_quality != ITEM_QUALITY_WORN) && (I.item_quality < ITEM_QUALITY_STANDARD))
+				any_bad = TRUE
+			if(!cmode && (HAS_BLOOD_DNA(I) || I.GetComponent(/datum/component/decal/blood)))
+				any_bloody = TRUE
+			if(any_bad && (cmode || any_bloody))
+				break
+		if(any_bad && !has_stress_event(/datum/stressevent/unlanded_noble_shitty_equipment))
+			add_stress(/datum/stressevent/unlanded_noble_shitty_equipment)
+		else if(!any_bad && has_stress_event(/datum/stressevent/unlanded_noble_shitty_equipment))
+			remove_stress(/datum/stressevent/unlanded_noble_shitty_equipment)
+
+		if(any_bloody && !has_stress_event(/datum/stressevent/unlanded_noble_bloody_equipment))
+			add_stress(/datum/stressevent/unlanded_noble_bloody_equipment)
+		else if(!any_bloody && has_stress_event(/datum/stressevent/unlanded_noble_bloody_equipment))
+			remove_stress(/datum/stressevent/unlanded_noble_bloody_equipment)

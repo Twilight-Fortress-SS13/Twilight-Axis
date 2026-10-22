@@ -13,7 +13,7 @@ TA note:
 add_bite_animation(), remove_bite()
 	Visual feedback for blood drinking.
 
-can_use_drinksomeblood(), check_silver_block()
+can_use_drinksomeblood(), check_silver_block(), check_conjured_summon_block()
 	Pre-flight validation before blood interaction.
 
 get_vampire_drinker(), get_vampire_victim()
@@ -57,8 +57,9 @@ drinksomeblood()
 */
 
 #define TA_VAMP_BLOODDRINK_INITIAL_BLOOD_LOSS 3
-#define TA_VAMP_BLOODDRINK_VITAE_DRAIN 250
-#define TA_VAMP_BLOODDRINK_TARGET_FINAL_BLOOD 200
+#define TA_VAMP_BLOODDRINK_FULL_DRAIN_BITES 6
+#define TA_VAMP_BLOODDRINK_TARGET_FINAL_BLOOD BLOOD_VOLUME_BAD
+#define TA_VAMP_BLOODDRINK_LOCK_TIMEOUT (45 SECONDS)
 // Temporarily disabled. Uncomment to restore Vampire Lord forced conversion.
 //#define TA_VAMP_LORD_FORCE_CONVERT
 
@@ -74,10 +75,48 @@ drinksomeblood()
 	remove_overlay(SUNDER_LAYER)
 
 /// BASIC CHECKS
+/mob/living/carbon/human
+	var/tmp/ta_blooddrink_busy_since = 0
+
+/mob/living/carbon/human/proc/ta_blooddrink_in_progress()
+	if(!ta_blooddrink_busy_since)
+		return FALSE
+	if(world.time >= ta_blooddrink_busy_since + TA_VAMP_BLOODDRINK_LOCK_TIMEOUT)
+		ta_blooddrink_busy_since = 0
+		return FALSE
+	return TRUE
+
 /mob/living/carbon/human/proc/can_use_drinksomeblood()
 	if(world.time <= next_move)
 		return FALSE
 	if(world.time < last_drinkblood_use + 2 SECONDS)
+		return FALSE
+	return TRUE
+
+/mob/living/carbon/human/proc/ta_stop_blood_sipping()
+	for(var/obj/item/grabbing/bite/grab in held_items)
+		grab.sippy = FALSE
+
+/mob/living/carbon/human/proc/ta_conversion_takes_priority(mob/living/carbon/victim)
+	if(!ishuman(victim))
+		return FALSE
+
+	var/datum/antagonist/vampire/VDrinker = get_vampire_drinker()
+	if(!VDrinker)
+		return FALSE
+
+	var/mob/living/carbon/human/H = victim
+	if(H.vampire_conversion_prompt_active)
+		return TRUE
+	if(get_vampire_victim(victim))
+		return FALSE
+	if(!victim.mind)
+		return FALSE
+	if(get_siring_block_reason(victim, TRUE))
+		return FALSE
+	if(HAS_TRAIT_FROM(H, TRAIT_REFUSED_VAMP_CONVERT, REF(src)) && !ta_get_rockhill_conversion_ambition(src, H.mind))
+		return FALSE
+	if(!VDrinker.can_sire_thrall() && !can_offer_pallid_drain(victim))
 		return FALSE
 	return TRUE
 
@@ -104,6 +143,13 @@ drinksomeblood()
 		qdel(sunder)
 
 	addtimer(CALLBACK(src, TYPE_PROC_REF(/mob/living/carbon, vomit), 0, TRUE), rand(1 SECONDS, 2 SECONDS))
+	return FALSE
+
+/mob/living/carbon/human/proc/check_conjured_summon_block(mob/living/carbon/victim)
+	if(!HAS_TRAIT(victim, TRAIT_CONJURED_SUMMON))
+		return TRUE
+
+	to_chat(src, span_warning("Это лишь иллюзия - в её жилах нет ни капли настоящей крови."))
 	return FALSE
 
 /// CONTEXT
@@ -196,7 +242,7 @@ drinksomeblood()
 	return blood_handle
 
 /mob/living/carbon/human/proc/consume_vitae(mob/living/carbon/victim)
-	var/used_vitae = TA_VAMP_BLOODDRINK_VITAE_DRAIN
+	var/used_vitae = get_vitae_drain_per_bite(victim)
 
 	victim.blood_volume = max(victim.blood_volume - get_vitae_blood_loss(victim), 0)
 
@@ -213,9 +259,11 @@ drinksomeblood()
 	adjust_bloodpool(used_vitae)
 	adjust_hydration(used_vitae * 0.1)
 
+/mob/living/carbon/human/proc/get_vitae_drain_per_bite(mob/living/carbon/victim)
+	return max(CEILING(victim.maxbloodpool / TA_VAMP_BLOODDRINK_FULL_DRAIN_BITES, 1), 1)
+
 /mob/living/carbon/human/proc/get_vitae_blood_loss(mob/living/carbon/victim)
-	var/full_drain_bites = max(victim.maxbloodpool / TA_VAMP_BLOODDRINK_VITAE_DRAIN, 1)
-	return max(((BLOOD_VOLUME_NORMAL - TA_VAMP_BLOODDRINK_TARGET_FINAL_BLOOD) / full_drain_bites) - TA_VAMP_BLOODDRINK_INITIAL_BLOOD_LOSS, 0)
+	return max(((BLOOD_VOLUME_NORMAL - TA_VAMP_BLOODDRINK_TARGET_FINAL_BLOOD) / TA_VAMP_BLOODDRINK_FULL_DRAIN_BITES) - TA_VAMP_BLOODDRINK_INITIAL_BLOOD_LOSS, 0)
 
 /// DIABLERIE
 /mob/living/carbon/human/proc/handle_diablerie(mob/living/carbon/victim, datum/antagonist/vampire/VDrinker, datum/antagonist/vampire/VVictim)
@@ -463,19 +511,15 @@ drinksomeblood()
 
 	ADD_TRAIT(src, TRAIT_REFUSED_VAMP_CONVERT, REF(sire))
 
-	if(use_pallid_conversion_rules())
-		to_chat(src, span_userdanger("Отвергнутое проклятие оставляет след на моей душе!"))
-		to_chat(sire, span_danger("[src] отвергает проклятие, но скверна остаётся в крови!"))
+	to_chat(src, span_userdanger("Отвергнутое проклятие оставляет след на моей душе!"))
+	to_chat(sire, span_danger("[src] отвергает проклятие, но скверна остаётся в крови!"))
 
-		apply_pallid_curse(sire)
+	apply_pallid_curse(sire)
 
-		vampire_conversion_prompt_active = FALSE
-		return TRUE
-
-	to_chat(src, span_userdanger("Проклятие разрывает моё тело изнутри!"))
-	to_chat(sire, span_danger("[src] отвергает проклятие и погибает от его силы!"))
-
-	death()
+	var/datum/antagonist/vampire/VDrinker = sire?.get_vampire_drinker()
+	if(VDrinker)
+		sire.apply_vampire_conversion_reward(VDrinker, TA_VAMP_REFUSAL_RESEARCH_REWARD, 0)
+		to_chat(sire, span_notice("Отвергнутая кровь всё же чему-то меня научила. +[TA_VAMP_REFUSAL_RESEARCH_REWARD] ОИ"))
 
 	vampire_conversion_prompt_active = FALSE
 	return TRUE
@@ -757,7 +801,7 @@ drinksomeblood()
 		to_chat(sire, span_notice("[src] не может отвергнуть обращение, предначертанное моей амбицией."))
 	else
 		var/use_byond_alert = stat != CONSCIOUS || blood_volume <= BLOOD_VOLUME_SURVIVE || InCritical()
-		vampire_choice = tgui_alert(
+		vampire_choice = ta_tgui_tooltip_alert(
 			src,
 			prompt_text,
 			"ПРОКЛЯТИЕ КАИНА",
@@ -852,6 +896,14 @@ drinksomeblood()
 				consume_vitae(victim)
 			return
 
+	if(ta_conversion_takes_priority(victim))
+		var/blood_handle = build_blood_handle(victim, VVictim)
+		clan.handle_bloodsuck(src, blood_handle)
+		if(victim.bloodpool > 0)
+			consume_vitae(victim)
+		attempt_siring_prompt(victim, VDrinker)
+		return
+
 	if(process_vampire_blood(victim, VDrinker, VVictim))
 		return
 
@@ -877,8 +929,13 @@ drinksomeblood()
 
 /// ENTRY POINT
 /mob/living/carbon/human/drinksomeblood(mob/living/carbon/victim, sublimb_grabbed)
+	if(ta_blooddrink_in_progress())
+		return
+
 	if(!can_use_drinksomeblood())
 		return
+
+	last_drinkblood_use = world.time
 
 	if(!istype(victim))
 		to_chat(src, span_warning("Я могу пить кровь только из живых, разумных существ!"))
@@ -886,6 +943,9 @@ drinksomeblood()
 
 	if(victim.dna?.species && (NOBLOOD in victim.dna.species.species_traits))
 		to_chat(src, span_warning("Увы. Нет крови."))
+		return
+
+	if(!check_conjured_summon_block(victim))
 		return
 
 	var/datum/antagonist/vampire/VDrinker = get_vampire_drinker()
@@ -897,17 +957,30 @@ drinksomeblood()
 	if(!check_silver_block(victim))
 		return
 
-	if(requires_finishing_blooddrink_delay(victim))
+	var/conversion_priority = ta_conversion_takes_priority(victim)
+	var/lethal_finish = !conversion_priority && requires_finishing_blooddrink_delay(victim)
+
+	if(!conversion_priority && !lethal_finish && victim.client && victim.blood_volume <= BLOOD_VOLUME_BAD)
+		to_chat(src, span_warning("[victim] почти обескровлен - каждый глоток теперь душит его. Я перестаю тянуть кровь сам."))
+		ta_stop_blood_sipping()
+
+	ta_blooddrink_busy_since = world.time
+	ta_run_blooddrink(victim, sublimb_grabbed, lethal_finish)
+	ta_blooddrink_busy_since = 0
+
+/mob/living/carbon/human/proc/ta_run_blooddrink(mob/living/carbon/victim, sublimb_grabbed, lethal_finish = FALSE)
+	if(lethal_finish)
 		visible_message(span_danger("[src] сжимает хватку и готовится выпить [victim] до последней капли!"))
 		if(!do_mob(src, victim, TA_VAMP_LETHAL_BLOODDRINK_DELAY, double_progress = TRUE, can_move = FALSE))
 			to_chat(src, span_warning("Мне не удалось завершить смертельное кровопитие."))
 			return
-		if(QDELETED(victim))
+		if(QDELETED(victim) || QDELETED(src))
 			return
 
 	perform_initial_blooddrink(victim, sublimb_grabbed)
 	resolve_blooddrink_consequences(victim)
 
 #undef TA_VAMP_BLOODDRINK_INITIAL_BLOOD_LOSS
-#undef TA_VAMP_BLOODDRINK_VITAE_DRAIN
+#undef TA_VAMP_BLOODDRINK_FULL_DRAIN_BITES
 #undef TA_VAMP_BLOODDRINK_TARGET_FINAL_BLOOD
+#undef TA_VAMP_BLOODDRINK_LOCK_TIMEOUT

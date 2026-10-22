@@ -1,4 +1,19 @@
-/mob/living/proc/checkdefense(datum/intent/intenty, mob/living/user)
+/mob/living/proc/is_drawing_ranged()
+	if(client)
+		return client.charging && used_intent?.tranged && !used_intent.tshield
+	var/datum/ai_controller/controller = ai_controller
+	if(!controller)
+		return FALSE
+	var/list/board = controller.blackboard
+	if(!board || !board[BB_ARCHER_NPC_BOW])
+		return FALSE
+	var/release_at = board[BB_ARCHER_NPC_AIM_RELEASE]
+	if(release_at && world.time < release_at)
+		return TRUE
+	var/next_shot = board[BB_ARCHER_NPC_NEXT_SHOT]
+	return next_shot && world.time < next_shot
+
+/mob/living/proc/checkdefense(datum/intent/attack_intent, mob/living/user)
 
 	// We check for a disruptable swingdelay first.
 	var/datum/status_effect/swingdelay/disrupt/SW = has_status_effect(/datum/status_effect/swingdelay/disrupt)
@@ -26,9 +41,8 @@
 		return FALSE
 
 
-	if(client && used_intent)
-		if(client.charging && used_intent.tranged && !used_intent.tshield)
-			return FALSE
+	if(is_drawing_ranged())
+		return FALSE
 
 	if(channeling_spell?.blocks_defense_while_channeling)
 		return FALSE
@@ -57,11 +71,11 @@
 
 	switch(d_intent)
 		if(INTENT_PARRY)
-			success = attempt_parry(intenty, user)
+			success = attempt_parry(attack_intent, user)
 			if(success)
 				ronin_on_parry_success(src, user)
 		if(INTENT_DODGE)
-			success = attempt_dodge(intenty, user)
+			success = attempt_dodge(attack_intent, user)
 
 	if(success)
 		soundbreaker_riff_defense_success(src)
@@ -69,11 +83,26 @@
 	return success
 	// TA Edit end - SOUNDBREAKER
 
+/mob/living/proc/start_climb()
+	if(doing || mid_climb)
+		return FALSE
+	mid_climb = TRUE
+	return TRUE
+
+/mob/living/proc/end_climb()
+	mid_climb = FALSE
+	return TRUE
+
+/mob/living/proc/climb_check()
+	return mid_climb
+
+/mob/living/proc/climb_check_callback()
+	return CALLBACK(src, PROC_REF(climb_check))
+
 /mob/living/proc/interrupt_climb()
 	if(!mid_climb)
 		return FALSE
-	mid_climb = FALSE
-	doing = FALSE
+	end_climb()
 	playsound(src, 'sound/combat/swingdelay_disrupted.ogg', 100, TRUE)
 	visible_message(span_warning("[src]'s grip is broken!"), span_warning("My grip is broken!"))
 	return TRUE

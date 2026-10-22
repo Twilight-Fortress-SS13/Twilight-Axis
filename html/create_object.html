@@ -58,7 +58,18 @@
 				<option value='inhand'>In own mob's hand</option>
 				<option value='inmarked'>In marked object</option>
 			</select>
-		<br><br>
+		<br>
+		<label><input type="checkbox" id="advanced_toggle" onchange="toggleAdvanced()"> Advanced settings</label><br>
+		<div id="advanced_settings" style="display:none; margin-top:6px; padding:6px; border:1px solid #777;">
+			Name: <input type="text" name="object_advanced_name" value="" style="width:300px"><br>
+			<div id="advanced_description">
+				Description:<br>
+				<textarea name="object_desc" rows="3" style="width:96%"></textarea><br>
+			</div>
+			Icon state: <input type="text" name="object_icon_state" value="" style="width:200px"><br>
+			<label><input type="checkbox" name="object_custom_icon" value="1"> Choose custom icon file after Spawn</label><br>
+		</div>
+		<br>
 		<input type="submit" value="spawn">
 		<select name="object_list" id="object_list" size="18" multiple style="width:98%"></select><br>
 		
@@ -91,6 +102,16 @@
 			}
 		}
 		
+		function toggleAdvanced()
+		{
+			var enabled = document.getElementById("advanced_toggle").checked;
+			document.getElementById("advanced_settings").style.display = enabled ? "block" : "none";
+			if (enabled)
+			{
+				try { window.resizeTo(650, 700); } catch (e) {}
+			}
+		}
+
 		function updateSearch()
 		{
 			// document.spawner.search_type.value seems to always be undefined, however I access it,

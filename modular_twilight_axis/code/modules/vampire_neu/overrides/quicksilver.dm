@@ -20,6 +20,10 @@
 	desc = "A daring blend of trace amounts of purifying lux, aberrant blood, and divine silver. This panacea fortifies the anointed's body with blessed silverdust, protecting them from the curses of vampyrism and lycanthropy."
 
 /obj/item/quicksilver/TA/anoint(mob/living/carbon/human/M, mob/living/carbon/human/user)
+	if(ta_find_active_demonic_lord())
+		to_chat(user, span_warning("Серебро мертвеет в моих руках - кровавая тьма не даёт ему исцелять."))
+		return
+
 	. = ..()
 	if(HAS_TRAIT(M, TRAIT_SILVER_BLESSED))
 		cleanse_pallid(M, user)

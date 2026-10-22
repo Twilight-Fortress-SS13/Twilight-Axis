@@ -15,7 +15,7 @@
 	var/principal_due_on_day = 0
 	var/source_fund_id = "crown"
 
-/obj/item/loan_contract/Initialize()
+/obj/item/loan_contract/Initialize(mapload)
 	. = ..()
 	if(!total_due && principal)
 		total_due = FLOOR(principal * (1 + (interest_rate * term_days)), 1)
@@ -85,9 +85,11 @@
 	if(issuing_fund.balance < principal)
 		to_chat(user, span_warning("[issuing_fund.name]'s coffers are too thin to honor this writ."))
 		return
-	if(!SStreasury.transfer(issuing_fund, account, principal, "Loan principal"))
+	if(!SStreasury.transfer(issuing_fund, account, principal, "Loan principal", ledger_acct(issuing_fund.ledger_book, LEDGER_KEY_LOANS_REC), ledger_acct(account.ledger_book, LEDGER_KEY_LOANS_PAY)))
 		to_chat(user, span_warning("The meister refuses the transfer."))
 		return
+	if(issuing_fund == SStreasury.discretionary_fund)
+		record_treasury_expense(TREASURY_FLOW_LOAN_OUT, treasury_role_of(user), principal)
 	var/datum/loan/L = new(user, principal, term_days, interest_rate, issuer_name, issuing_fund)
 	SStreasury.loans += L
 	record_round_statistic(STATS_LOANS_ISSUED, 1)
@@ -139,7 +141,7 @@
 	if(issuing_fund.balance < principal)
 		to_chat(user, span_warning("[issuing_fund.name]'s coffers are too thin to honor this indenture."))
 		return
-	if(!SStreasury.transfer(issuing_fund, target_fund, principal, "Indenture principal"))
+	if(!SStreasury.transfer(issuing_fund, target_fund, principal, "Indenture principal", ledger_acct(issuing_fund.ledger_book, LEDGER_KEY_LOANS_REC), ledger_acct(target_fund.ledger_book, LEDGER_KEY_LOANS_PAY)))
 		to_chat(user, span_warning("The meister refuses the transfer."))
 		return
 	var/datum/loan/L = new(null, principal, term_days, interest_rate, issuer_name, issuing_fund, target_fund)

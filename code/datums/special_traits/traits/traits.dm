@@ -93,7 +93,7 @@
 	weight = 50
 
 /datum/special_trait/duelist/on_apply(mob/living/carbon/human/character, silent)
-	character.cmode_music = 'sound/music/cmode/adventurer/combat_outlander4.ogg'
+	character.cmode_music = sound("sound/music/cmode/adventurer/combat_outlander4.ogg")
 	character.change_stat(STATKEY_SPD, 2)
 	character.adjust_skillrank_up_to(/datum/skill/combat/swords, 6, TRUE) //will make a unique trait later on
 	character.mind.special_items["Rapier"] = /obj/item/rogueweapon/sword/rapier
@@ -207,7 +207,8 @@
 		character.put_in_hands(bottle, forced = TRUE)
 
 	character.adjust_skillrank_up_to(/datum/skill/misc/riding, 4, TRUE)
-	new /mob/living/simple_animal/hostile/retaliate/rogue/saiga/tame/saddled(get_turf(character))
+	var/mob/living/simple_animal/saiga_mount = new /mob/living/simple_animal/hostile/retaliate/rogue/saiga/tame/saddled(get_turf(character)) // TA EDIT
+	saiga_mount.assign_livestock_owner(character) // TA EDIT
 
 /datum/special_trait/spring_in_my_step
 	name = "Spring in my Step"

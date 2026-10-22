@@ -1,7 +1,9 @@
 /datum/action/cooldown/spell/fire_strike
 	button_icon = 'icons/mob/actions/mage_pyromancy.dmi'
 	name = "Fire Strike"
-	desc = "Call down a fireball on a location after a short delay. It damage structures across a 5x5 area and leaves a cloud of smoke and a curtain of flame in its wake. You are not immune to your own fire."
+	expose_caster_on_deflect = FALSE
+	desc = "Call down a fireball on a location after a short delay. It damages structures across a 5x5 area and leaves a cloud of smoke and a curtain of flame in its wake. You are not immune to your own fire.\n\
+	Fire spells apply scorched effects - at 4 scorched, an armor piercing wound is applied to the head or chest: whichever you are aiming at, and randomly if aiming elsewhere."
 	button_icon_state = "grenzel_meteor"
 	sound = 'sound/magic/fireball.ogg'
 	spell_color = GLOW_COLOR_FIRE
@@ -20,7 +22,7 @@
 	charge_required = TRUE
 	weapon_cast_penalized = TRUE
 	charge_time = CHARGETIME_MAJOR
-	charge_swingdelay_type = SWINGDELAY_CANCEL
+	charge_swingdelay_type = SWINGDELAY_PENALTY
 	hold_drain = 1
 	charge_slowdown = CHARGING_SLOWDOWN_MEDIUM
 	charge_sound = 'sound/magic/charging_fire.ogg'
@@ -34,8 +36,8 @@
 	var/blast_radius = 2
 	var/impact_delay = 2 SECONDS
 	var/structural_damage = 600
-	var/mob_damage = 110
-	displayed_damage = 110
+	var/mob_damage = SPELL_DMG(110)
+	displayed_damage = SPELL_DMG(110)
 	var/curtain_life = 10 SECONDS
 
 /datum/action/cooldown/spell/fire_strike/cast(atom/cast_on)
@@ -51,7 +53,7 @@
 		return FALSE
 
 	for(var/turf/T in range(blast_radius, center))
-		new /obj/effect/temp_visual/trap_wall/fire(T)
+		new /obj/effect/temp_visual/telegraph/wall/fire(T)
 	center.visible_message(span_boldwarning("The air above ignites - something is coming down!"))
 	addtimer(CALLBACK(src, PROC_REF(drop_fireball), center), impact_delay)
 	return TRUE
@@ -73,16 +75,15 @@
 			S.take_damage(structural_damage, BRUTE, "blunt", object_damage_multiplier = 2)
 		T.take_damage(structural_damage, BRUTE, "blunt", object_damage_multiplier = 2)
 		for(var/mob/living/L in T.contents)
-			if(L == owner)
-				continue
 			if(L.anti_magic_check())
 				continue
 			if(spell_guard_check(L, TRUE))
 				continue
 			if(istype(caster) && ishuman(L))
-				arcyne_strike(caster, L, null, mob_damage, BODY_ZONE_CHEST, BCLASS_BURN, spell_name = "Fire Strike", damage_type = BURN, skip_animation = TRUE)
+				if(arcyne_strike(caster, L, null, mob_damage, BODY_ZONE_CHEST, BCLASS_BURN, spell_name = "Fire Strike", damage_type = BURN, skip_animation = TRUE, SPELL_STRIKE_SCALING) == ARCYNE_STRIKE_WARDED)
+					continue
 			else
-				L.adjustFireLoss(mob_damage)
+				L.adjustFireLoss(SPELL_DMG_VS(L, mob_damage))
 			apply_scorch_stack(L, 2)
 			L.Knockdown(3)
 

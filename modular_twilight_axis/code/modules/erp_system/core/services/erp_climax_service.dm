@@ -133,10 +133,19 @@
 	var/datum/erp_controller/link_controller = L.session
 	if(link_controller && !QDELETED(link_controller) && link_controller.do_knot_action && link_controller.get_owner_penis_organ() == P)
 		return link_controller
+	if(link_controller && !QDELETED(link_controller) && link_controller.do_knot_action && link_controller.has_receiving_knot_link_for(P, L))
+		return link_controller
 
 	var/datum/erp_controller/top_controller = SSerp?.get_controller_for(top)
 	if(top_controller && !QDELETED(top_controller) && top_controller.do_knot_action && top_controller.get_owner_penis_organ() == P)
 		return top_controller
+
+	if(SSerp?.controllers)
+		for(var/datum/erp_controller/C in SSerp.controllers)
+			if(!C || QDELETED(C) || !C.do_knot_action)
+				continue
+			if(C.has_receiving_knot_link_for(P, L))
+				return C
 
 	return null
 

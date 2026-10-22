@@ -22,7 +22,7 @@ GLOBAL_LIST_INIT(ghost_verbs, list(
 	set name = "Journey to the Underworld"
 	set category = "Spirit"
 
-	switch(alert("Descend to the Underworld?",,"Yes","No"))
+	switch(alert(usr, "Descend to the Underworld?",,"Yes","No"))
 		if("Yes")
 			if(istype(mob, /mob/living/carbon/spirit))
 				return
@@ -68,6 +68,8 @@ GLOBAL_LIST_INIT(ghost_verbs, list(
 
 	if(key)
 		GLOB.respawntimes[key] = world.time
+
+	LAZYREMOVE(GLOB.actors_list, mobid)
 
 	// Notify the job datum that this player is permanently leaving the round
 	if(mind?.assigned_role)

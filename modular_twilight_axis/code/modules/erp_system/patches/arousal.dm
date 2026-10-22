@@ -1,6 +1,6 @@
 #define NYMPHO_AROUSAL_SOFT_CAP ERP_NYMPHO_SOFT_CAP
 #define MOAN_THRESHOLD 4.0
-#define ERP_NYMPHO_SATED_GRACE 90 MINUTES
+#define ERP_NYMPHO_HUNGER_GRACE 5 MINUTES
 
 /datum/component/arousal
 	var/tmp/last_ejaculation_world_time = -1
@@ -11,13 +11,16 @@
 	var/last_overload_gain_time = 0
 	var/tmp/chain_lock_until = 0
 	var/last_overload_sleep_decay_time = 0
-	var/tmp/nympho_sp_floor_until = 0
+	var/tmp/nympho_hunger_grace_until = 0
 	var/erp_last_climax_fx_time = 0
 
 /datum/component/arousal/RegisterWithParent()
 	. = ..()
 	check_processing()
 	seed_satisfaction_if_needed()
+	var/mob/parent_mob = parent
+	if(parent_mob?.client && is_lovefiend())
+		START_PROCESSING(SSobj, src)
 
 /datum/component/arousal/proc/seed_satisfaction_if_needed()
 	var/mob/living/carbon/human/H = parent
@@ -30,7 +33,6 @@
 	else
 		satisfaction_points = 3.0
 	last_sp_decay_time = world.time
-	update_satisfaction_buff()
 
 /datum/component/arousal/proc/get_erp_links()
 	var/list/L = list()
@@ -139,7 +141,7 @@
 /datum/component/arousal/proc/get_nympho_hunger_level()
 	if(!is_lovefiend())
 		return 0
-	if(is_nympho_sated() || is_nympho_sp_floor_active())
+	if(is_nympho_sated() || is_nympho_hunger_grace_active())
 		return 0
 	if(satisfaction_points < ERP_NYMPHO_HARD_HUNGER_SP)
 		return 2
@@ -158,7 +160,17 @@
 		return
 
 	var/was_sated = A.sated
-	var/now_sated = is_nympho_sated() || is_nympho_sp_floor_active()
+	var/now_sated = is_nympho_sated()
+	if(now_sated)
+		nympho_hunger_grace_until = 0
+
+	if(!now_sated && was_sated)
+		if(!nympho_hunger_grace_until)
+			nympho_hunger_grace_until = world.time + ERP_NYMPHO_HUNGER_GRACE
+			return
+		if(is_nympho_hunger_grace_active())
+			return
+
 	if(was_sated == now_sated)
 		return
 
@@ -166,10 +178,8 @@
 	A.unsate_time = world.time
 
 	if(now_sated)
-		if(is_nympho_sated())
-			nympho_sp_floor_until = world.time + ERP_NYMPHO_SATED_GRACE
-			if(A.sated_text)
-				to_chat(H, span_blue(A.sated_text))
+		if(A.sated_text)
+			to_chat(H, span_blue(A.sated_text))
 
 		H.remove_stress(/datum/stressevent/vice)
 		if(A.debuff)
@@ -202,13 +212,11 @@
 		return
 
 	var/tier = get_satisfaction_buff_tier()
-	if(tier <= 5)
-		H.remove_status_effect(/datum/status_effect/buff/erp_satisfaction)
-		return
-
 	var/datum/status_effect/buff/erp_satisfaction/E = H.has_status_effect(/datum/status_effect/buff/erp_satisfaction)
 	if(!E)
 		E = H.apply_status_effect(/datum/status_effect/buff/erp_satisfaction)
+	else
+		E.refresh()
 	if(E)
 		E.set_tier(tier)
 
@@ -272,10 +280,12 @@
 	update_overload_debuff()
 
 /datum/component/arousal/proc/adjust_satisfaction(delta)
+	var/old_satisfaction = satisfaction_points
 	satisfaction_points = clamp(satisfaction_points + delta, 0.0, ERP_SP_MAX)
 	last_sp_decay_time = world.time
 	sync_lovefiend_sated_from_sp()
-	update_satisfaction_buff()
+	if(satisfaction_points > old_satisfaction)
+		update_satisfaction_buff()
 
 /datum/component/arousal/proc/handle_satisfaction_decay()
 	if(!last_sp_decay_time)
@@ -299,7 +309,7 @@
 	var/is_masturbation = (!istype(partner) || partner == climaxer)
 	var/gain = is_masturbation ? ERP_SP_GAIN_MASTURBATE : ERP_SP_GAIN_PARTNER
 
-	if(is_lovefiend() && !is_nympho_sated() && !is_nympho_sp_floor_active())
+	if(is_lovefiend() && !is_nympho_sated() && !is_nympho_hunger_grace_active())
 		gain *= 2
 
 	adjust_satisfaction(gain)
@@ -366,7 +376,7 @@
 	if(!is_lovefiend())
 		return
 
-	if(is_nympho_sated())
+	if(is_nympho_sated() || is_nympho_hunger_grace_active())
 		return
 
 	if(is_in_erp_scene())
@@ -822,8 +832,9 @@
 		return istype(M, /mob/living/carbon/human) ? M : null
 	return null
 
-/datum/component/arousal/proc/is_nympho_sp_floor_active()
-	return is_lovefiend() && (world.time < nympho_sp_floor_until)
+/datum/component/arousal/proc/is_nympho_hunger_grace_active()
+	return is_lovefiend() && (world.time < nympho_hunger_grace_until)
 
 #undef ERP_OVERLOAD_SLEEP_DECAY_INTERVAL
 #undef NYMPHO_AROUSAL_SOFT_CAP
+#undef ERP_NYMPHO_HUNGER_GRACE

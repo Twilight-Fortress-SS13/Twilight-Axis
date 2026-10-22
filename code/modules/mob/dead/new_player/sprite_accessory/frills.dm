@@ -5,7 +5,7 @@
 	relevant_layers = list(BODY_ADJ_LAYER)
 
 /datum/sprite_accessory/frills/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
-	return is_human_part_visible(owner, HIDEEARS|HIDEHAIR)
+	return is_human_part_visible(owner, HIDEHORNS)
 
 /datum/sprite_accessory/frills/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	generic_gender_feature_adjust(appearance_list, organ, bodypart, owner, OFFSET_FACE, OFFSET_FACE_F)
@@ -97,3 +97,15 @@
 /datum/sprite_accessory/frills/earlike_long
 	name = "Earlike (Long)"
 	icon_state = "earlike_long"
+
+/datum/sprite_accessory/frills/zardish
+	name = "Zardish"
+	icon_state = "zard_frills"
+
+/datum/sprite_accessory/frills/zardish_big
+	name = "Zardish (Big)"
+	icon_state = "zard_frills_big"
+
+/datum/sprite_accessory/frills/zardish_big_alt
+	name = "Zardish (Big - Alternative)"
+	icon_state = "zard_frills_bigalt"

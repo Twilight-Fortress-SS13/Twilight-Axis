@@ -40,7 +40,7 @@ GLOBAL_VAR_INIT(last_crown_announcement_time, -1000)
 	set_light(0)
 	return ..()
 
-/obj/structure/roguemachine/titan/Initialize()
+/obj/structure/roguemachine/titan/Initialize(mapload)
 	. = ..()
 	icon_state = null
 	become_hearing_sensitive()
@@ -72,10 +72,10 @@ GLOBAL_VAR_INIT(last_crown_announcement_time, -1000)
 		if(findtext(message, "nevermind"))
 			mode = 0
 			return
-	
+
 	if(findtext(message, "summon crown")) //This must never fail, thus place it before all other modestuffs.
 		var/obj/item/clothing/head/roguetown/crown/serpcrown/I = SSroguemachine.crown
-		
+
 		// If no crown exists
 		if(!I)
 			I = summon_crown()
@@ -335,7 +335,7 @@ GLOBAL_VAR_INIT(last_crown_announcement_time, -1000)
 
 	if(I)
 		I.anti_stall()
-	
+
 	I = new /obj/item/clothing/head/roguetown/crown/serpcrown(src.loc)
 	SSroguemachine.crown = I
 
@@ -348,7 +348,7 @@ GLOBAL_VAR_INIT(last_crown_announcement_time, -1000)
 /obj/structure/roguemachine/titan/proc/give_tax_popup(mob/living/carbon/human/user)
 	if(!Adjacent(user))
 		return
-	var/datum/taxsetter/taxsetter = new("The Generous Lord Decrees")
+	var/datum/taxsetter/taxsetter = new()
 	taxsetter.ui_interact(user)
 
 /obj/structure/roguemachine/titan/proc/give_law_popup(mob/living/carbon/human/user)
@@ -366,39 +366,13 @@ GLOBAL_VAR_INIT(last_crown_announcement_time, -1000)
 /obj/structure/roguemachine/titan/proc/make_announcement(mob/living/user, raw_message)
 	if(!SScommunications.can_announce(user))
 		return
-	try_make_rebel_decree(user)
-
 	SScommunications.make_announcement(user, FALSE, raw_message)
-	GLOB.last_crown_announcement_time = world.time 
-
-/obj/structure/roguemachine/titan/proc/try_make_rebel_decree(mob/living/user)
-	if(!SScommunications.can_announce(user))
-		return
-	var/datum/antagonist/prebel/P = user.mind?.has_antag_datum(/datum/antagonist/prebel)
-	if(P)
-		if(P.rev_team)
-			if(P.rev_team.members.len < 3)
-				to_chat(user, "<span class='warning'>I need more folk on my side to declare victory.</span>")
-			else
-				for(var/datum/objective/prebel/obj in user.mind.get_all_objectives())
-					obj.completed = TRUE
-				if(!SSmapping.retainer.head_rebel_decree)
-					user.mind.adjust_triumphs(1)
-				SSmapping.retainer.head_rebel_decree = TRUE
+	GLOB.last_crown_announcement_time = world.time
 
 /obj/structure/roguemachine/titan/proc/make_decree(mob/living/user, raw_message)
-	var/datum/antagonist/prebel/rebel_datum = user.mind?.has_antag_datum(/datum/antagonist/prebel)
-	if(rebel_datum)
-		if(rebel_datum.rev_team?.members.len < 3)
-			to_chat(user, "<span class='warning'>I need more folk on my side to declare victory.</span>")
-		else
-			for(var/datum/objective/prebel/obj in user.mind.get_all_objectives())
-				obj.completed = TRUE
-			if(!SSmapping.retainer.head_rebel_decree)
-				user.mind.adjust_triumphs(1)
-			SSmapping.retainer.head_rebel_decree = TRUE
 	GLOB.lord_decrees += raw_message
 	record_round_statistic(STATS_LAWS_AND_DECREES_MADE)
+	GLOB.lord_decrees += html_decode(user.treat_message(raw_message))
 	SScommunications.make_announcement(user, TRUE, raw_message)
 
 /obj/structure/roguemachine/titan/proc/declare_outlaw(mob/living/user, raw_message)
@@ -477,7 +451,12 @@ GLOBAL_VAR_INIT(last_crown_announcement_time, -1000)
 	priority_announce("All of the land's prior decrees have been purged!", "DECREES PURGED", pick('sound/misc/royal_decree.ogg', 'sound/misc/royal_decree2.ogg'), "Captain")
 
 /proc/become_regent(mob/living/carbon/human/H)
-	priority_announce("[H.real_name], the [H.get_role_title()], sits as the regent of the realm.", "A New Regent Resides", pick('sound/misc/royal_decree.ogg', 'sound/misc/royal_decree2.ogg'), "Captain")
+	var/used_title = H.get_role_title()
+	if(H.mind?.has_antag_datum(/datum/antagonist/vampire/lord))
+		used_title = "Ancient Lord Regent"
+	else
+		used_title = "[used_title] Regent"
+	priority_announce("[H.real_name], the [used_title], sits as the regent of the realm.", "A New Regent Resides", pick('sound/misc/royal_decree.ogg', 'sound/misc/royal_decree2.ogg'), "Captain")
 	SSticker.regentmob = H
 	SSticker.regentday = GLOB.dayspassed
 
@@ -505,9 +484,9 @@ GLOBAL_VAR_INIT(last_crown_announcement_time, -1000)
 		return
 	// TESTING: Disabled chain coup cooldown
 	// if(SSticker.usurpation_day == GLOB.dayspassed)
-	// 	say("The realm has already seen a change of power this dae. Let the dust settle.")
-	// 	playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
-	// 	return
+	//	say("The realm has already seen a change of power this dae. Let the dust settle.")
+	//	playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
+	//	return
 
 	var/static/list/available_rites = list(
 		/datum/usurpation_rite/solar_succession,

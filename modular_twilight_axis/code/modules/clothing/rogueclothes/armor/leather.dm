@@ -52,3 +52,38 @@
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
 	allowed_race = NON_DWARVEN_RACE_TYPES
 	armor = null
+
+/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/confessor/overseer
+	name = "confessor jacket"
+	desc = "Стеганая куртка, обеспечивающая достаточную защиту от безоружных невинных людей."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/overseer.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/onmob/overseer_onmob.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/onmob/overseer_onmob.dmi'
+	icon_state = "overseerjacket"
+	item_state = "overseerjacket"
+	color = null
+	boobed = TRUE
+
+/obj/item/clothing/suit/roguetown/armor/leather/druid/blessed
+	name = "blessed druid armor"
+	desc = "Druid armor hallowed by the Treefather's rite. The bark pulses with faint living light; it feels as though the forest itself watches over whoever wears it."
+	armor = ARMOR_LEATHER
+	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER
+	body_parts_covered = COVERAGE_TORSO|ARMS|LEGS
+	color = "#73c47a"
+
+/obj/item/clothing/suit/roguetown/armor/leather/druid/blessed/Initialize(mapload)
+	. = ..()
+	set_light(1, 1, 2, l_color = "#58C86A")
+	add_filter("druid_blessed_glow", 2, list("type" = "outline", "color" = "#58C86A", "alpha" = 95, "size" = 1))
+
+/obj/item/clothing/suit/roguetown/armor/leather/druid/blessed/pickup(mob/user)
+	. = ..()
+	if(!istype(user, /mob/living/carbon/human))
+		return
+	var/mob/living/carbon/human/H = user
+	if(H.patron?.type == /datum/patron/divine/dendor)
+		return
+	H.electrocute_act(30, src)
+	H.mob_timers["kneestinger"] = world.time
+	to_chat(H, span_warning("[name] rejects my grasp — only the Treefather's faithful may bear such a gift!"))

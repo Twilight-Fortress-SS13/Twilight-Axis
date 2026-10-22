@@ -1,4 +1,6 @@
 /mob/living/simple_animal/hostile/rogue/dreamfiend
+	threat_point = THREAT_TOUGH
+	anatomy_type = /datum/anatomy/aberrant
 	icon = 'icons/mob/abyssal_small.dmi'
 	desc = "A dizzying sight ripped violently from a distant dream and brought where it never belonged. It folds in on itself in ways impossible, and seems to move without moving."
 	name = "minor dream fiend"
@@ -21,7 +23,7 @@
 	can_have_ai = FALSE
 
 	ai_controller = /datum/ai_controller/assassin
-	melee_cooldown = MINOR_DREAMFIEND_ATTACK_SPEED
+	move_base_delay = MOVEMENT_DELAY_SPD_10
 	var/next_blink = 0
 	var/blink_cooldown = 5 SECONDS
 	var/inner_tele_radius = 1
@@ -33,6 +35,7 @@
 	var/desummon_timer = 8 SECONDS
 
 /mob/living/simple_animal/hostile/rogue/dreamfiend/major
+	threat_point = THREAT_ELITE
 	icon = 'icons/mob/abyssal_medium.dmi'
 	name = "major dream fiend"
 	pixel_x = -4
@@ -45,12 +48,12 @@
 	maxHealth = MAJOR_DREAMFIEND_HEALTH
 	melee_damage_lower = 50
 	melee_damage_upper = 90
-	melee_cooldown = MAJOR_DREAMFIEND_ATTACK_SPEED
 	desummon_timer = 12 SECONDS
 
 	attack_sound = list('sound/mobs/abyssal/abyssal_attack.ogg','sound/mobs/abyssal/abyssal_attack2.ogg')
 
 /mob/living/simple_animal/hostile/rogue/dreamfiend/ancient
+	threat_point = THREAT_APEX
 	icon = 'icons/mob/abyssal_large.dmi'
 	name = "ancient dream fiend"
 	desc = "A truly horrifying creature. It makes you dizzy just looking at it."
@@ -61,7 +64,6 @@
 	melee_damage_lower = 40
 	melee_damage_upper = 120
 	base_intents = list(/datum/intent/simple/dreamfiend_ancient)
-	melee_cooldown = ANCIENT_DREAMFIEND_ATTACK_SPEED
 	desummon_timer = 20 SECONDS
 
 	STACON = 20
@@ -69,28 +71,31 @@
 	STAPER = 20
 
 	ai_controller = /datum/ai_controller/assassin/ancient
+	move_base_delay = MOVEMENT_DELAY_SPD_23
 	attack_sound = list('sound/mobs/abyssal/abyssal_attack.ogg','sound/mobs/abyssal/abyssal_attack2.ogg')
 
 /mob/living/simple_animal/hostile/rogue/dreamfiend/get_sound(input)
-    switch(input)
-        if("aggro")
-            return pick('sound/mobs/abyssal/abyssal_aggro.ogg')
-        if("pain")
-            return pick('sound/mobs/abyssal/abyssal_pain.ogg')
-        if("death")
-            return pick('sound/mobs/abyssal/abyssal_pain.ogg')
-        if("idle")
-            return pick('sound/mobs/abyssal/abyssal_idle.ogg')
+	switch(input)
+		if("aggro")
+			return pick('sound/mobs/abyssal/abyssal_aggro.ogg')
+		if("pain")
+			return pick('sound/mobs/abyssal/abyssal_pain.ogg')
+		if("death")
+			return pick('sound/mobs/abyssal/abyssal_pain.ogg')
+		if("idle")
+			return pick('sound/mobs/abyssal/abyssal_idle.ogg')
 
-/mob/living/simple_animal/hostile/rogue/dreamfiend/Initialize()
+/mob/living/simple_animal/hostile/rogue/dreamfiend/Initialize(mapload)
 	ADD_TRAIT(src, TRAIT_NOBREATH, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NOPAIN, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_KNEESTINGER_IMMUNITY, INNATE_TRAIT)
 	ADD_TRAIT(src, TRAIT_SILVER_WEAK, TRAIT_GENERIC) //Dreamfiends fall into the 'eldritch' category. Technically not 'unholy', but certainly monstrous.
+	ADD_TRAIT(src, TRAIT_NPC_EXAMINE, TRAIT_GENERIC)
 	. = ..()
-	AddComponent(/datum/component/ai_aggro_system)
+	if(istype(ai_controller, /datum/ai_controller/dreamfiend_unbound) || istype(ai_controller, /datum/ai_controller/dreamfiend_unbound_ancient)) // TA EDIT
+		AddComponent(/datum/component/ai_aggro_system) // TA EDIT
 
-/mob/living/simple_animal/hostile/rogue/dreamfiend/ancient/Initialize()
+/mob/living/simple_animal/hostile/rogue/dreamfiend/ancient/Initialize(mapload)
 	ADD_TRAIT(src, TRAIT_NOMOOD, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_INFINITE_STAMINA, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NOHUNGER, TRAIT_GENERIC)
@@ -108,7 +113,7 @@
 	ADD_TRAIT(src, TRAIT_BREADY, TRAIT_GENERIC)
 	. = ..()
 
-/mob/living/simple_animal/hostile/rogue/dreamfiend/proc/blink_to_target(var/mob/target)
+/mob/living/simple_animal/hostile/rogue/dreamfiend/proc/blink_to_target(mob/target)
 	if(world.time < next_blink || QDELETED(target) || target.stat == DEAD)
 		return FALSE
 
@@ -214,10 +219,12 @@
 /mob/living/simple_animal/hostile/rogue/dreamfiend/unbound
 	attack_sound = list('sound/mobs/abyssal/abyssal_attack.ogg','sound/mobs/abyssal/abyssal_attack2.ogg')
 	ai_controller = /datum/ai_controller/dreamfiend_unbound
+	move_base_delay = MOVEMENT_DELAY_SPD_10
 
 /mob/living/simple_animal/hostile/rogue/dreamfiend/major/unbound
 	attack_sound = list('sound/mobs/abyssal/abyssal_attack.ogg','sound/mobs/abyssal/abyssal_attack2.ogg')
 	ai_controller = /datum/ai_controller/dreamfiend_unbound
+	move_base_delay = MOVEMENT_DELAY_SPD_10
 
 /mob/living/simple_animal/hostile/rogue/dreamfiend/major/unbound/death()
 	if(prob(25))
@@ -231,3 +238,4 @@
 /mob/living/simple_animal/hostile/rogue/dreamfiend/ancient/unbound
 	attack_sound = list('sound/mobs/abyssal/abyssal_attack.ogg','sound/mobs/abyssal/abyssal_attack2.ogg')
 	ai_controller = /datum/ai_controller/dreamfiend_unbound_ancient
+	move_base_delay = MOVEMENT_DELAY_SPD_10

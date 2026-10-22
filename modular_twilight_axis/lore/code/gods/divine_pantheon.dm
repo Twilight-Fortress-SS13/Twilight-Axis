@@ -41,7 +41,7 @@
 
 /datum/patron/divine/undivided
 	translated_name = "Пантеон Неделимый"
-	rusgodnames = list("Пантеон", "Пантеона", "Пантеону", "Пантеон", "Пантеоном", 
+	rusgodnames = list("Пантеон", "Пантеона", "Пантеону", "Пантеон", "Пантеоном",
 		"Пантеоне", "Десять", "Десяти", "Десять", "Десятки", "Десятью", "Десяти"
 	)
 	domain = "Все подвластно Десяти."
@@ -58,22 +58,24 @@
 	translated_name = "Астрата"
 	rusgodnames = list(
 		"Астрата", "Астраты", "Астрате", "Астрату", "Астратой", "Астрате",
-		"Солнцеликая", "Солнцеликой", "Солнцеликой", "Солнцеликую", "Солнцеликой", "Солнцеликой",
-		"Лучезарная", "Лучезарной", "Лучезарной", "Лучезарную", "Лучезарной", "Лучезарной",
-		"Первородная Дочь", "Первородной Дочери", "Первородной Дочери", "Первородную Дочь", 
-		"Первородной Дочерью", "Первородной Дочери"
+		"Солнцеликая", "Солнцеликой", "Солнцеликую",
+		"Лучезарная", "Лучезарной", "Лучезарную", "Лучезарное", "Лучезарному",
+		"Первородная Дочь", "Первородной Дочери", "Первородной Дочери", "Первородную Дочь",
+		"Первородной Дочерью", "Первородной Дочери",
+		"Тиран", "Тирану", "Солнце Тиран", "Солнце-Тиран",
 	)
 	miracles = list(/datum/action/cooldown/spell/touch/orison								= CLERIC_ORI,
-					/obj/effect/proc_holder/spell/invoked/TAignition						= CLERIC_T0,
+					/datum/action/cooldown/spell/TAignition					             	= CLERIC_T0,
 					/obj/effect/proc_holder/spell/self/TAastrata_gaze						= CLERIC_T0,
 					/obj/effect/proc_holder/spell/targeted/touch/summonrogueweapon/TAastratagrasp = CLERIC_T0,
 					/obj/effect/proc_holder/spell/self/TAastrata_fireresist					= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/heal								= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/bloodmiracle						= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/projectile/TAsacred_flame			= CLERIC_T1,
-					/obj/effect/proc_holder/spell/self/TAastrata_sword						= CLERIC_T1,
+					///obj/effect/proc_holder/spell/self/TAastrata_sword						= CLERIC_T1,
 					/obj/effect/proc_holder/spell/invoked/TAastrataspark					= CLERIC_T2,
 					/datum/action/cooldown/spell/miracle/fortify/astrata					= CLERIC_T2,
+					/datum/action/cooldown/spell/astrata/miracle_pyre   					= CLERIC_T3,
 					/obj/effect/proc_holder/spell/invoked/TArevive							= CLERIC_T3,
 					/obj/effect/proc_holder/spell/invoked/immolation						= CLERIC_T4,
 					/obj/effect/proc_holder/spell/invoked/TAsunstrike						= CLERIC_T4,
@@ -93,7 +95,7 @@
 	translated_name = "Нок"
 	rusgodnames = list(
 		"Нок",
-		"Лунная Дева", "Лунной Девы", "Лунной Деве", "Лунную Деву", 
+		"Лунная Дева", "Лунной Девы", "Лунной Деве", "Лунную Деву",
 		"Лунной Девой", "Лунной Деве",
 		"Знающая", "Знающей", "Знающей", "Знающую", "Знающей", "Знающей"
 	)
@@ -126,12 +128,28 @@
 	translated_name = "Дендор"
 	rusgodnames = list(
 		"Дендор", "Дендора", "Дендору", "Дендор", "Дендором", "Дендоре",
-		"Первый Зверь", "Первого Зверя", "Первому Зверю", "Первого Зверя", 
+		"Первый Зверь", "Первого Зверя", "Первому Зверю", "Первого Зверя",
 		"Первым Зверем", "Первом Звере",
-		"Любящий Отец", "Любящего Отца", "Любящему Отцу", "Любящего Отца", 
+		"Любящий Отец", "Любящего Отца", "Любящему Отцу", "Любящего Отца",
 		"Любящим Отцом", "Любящем Отце",
-		"Хранитель Рощь", "Хранителя Рощи", "Хранителю Рощи", "Хранителя Рощь", 
+		"Хранитель Рощь", "Хранителя Рощи", "Хранителю Рощи", "Хранителя Рощь",
 		"Хранителем Рощью", "Хранителе Рощи"
+	)
+
+	miracles = list(/datum/action/cooldown/spell/touch/orison					= CLERIC_ORI,
+					/obj/effect/proc_holder/spell/invoked/spiderspeak			= CLERIC_T0,
+					/obj/effect/proc_holder/spell/targeted/blesscrop			= CLERIC_T0,
+					/datum/action/cooldown/spell/miracle/heal					= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/bloodmiracle			= CLERIC_T1,
+					/obj/effect/proc_holder/spell/targeted/beasttame			= CLERIC_T1,
+					/obj/effect/proc_holder/spell/self/wildshape				= CLERIC_T2,
+					/obj/effect/proc_holder/spell/targeted/conjure_glowshroom	= CLERIC_T3,
+					/obj/effect/proc_holder/spell/targeted/conjure_vines		= CLERIC_T3,
+					/datum/action/cooldown/spell/wood_emergence				= CLERIC_T3,
+					/obj/effect/proc_holder/spell/self/howl/call_of_the_moon	= CLERIC_T4,
+					/obj/effect/proc_holder/spell/invoked/resurrect/dendor		= CLERIC_T4,
+					/obj/effect/proc_holder/spell/invoked/root_affinity			= CLERIC_T4,
+					/obj/effect/proc_holder/spell/invoked/sanctify_tree			= CLERIC_T4,
 	)
 
 	domain = "Природа, звери, охота, плодородие, безумие, преображение."
@@ -148,13 +166,13 @@
 	translated_name = "Абиссор"
 	rusgodnames = list(
 		"Абиссор", "Абиссора", "Абиссору", "Абиссор", "Абиссором", "Абиссоре",
-		"Отец Океанов", "Отца Океанов", "Отцу Океанов", "Отца Океанов", 
+		"Отец Океанов", "Отца Океанов", "Отцу Океанов", "Отца Океанов",
 		"Отцом Океанов", "Отце Океанов",
-		"Властитель Стихии", "Властителя Стихии", "Властителю Стихии", "Властителя Стихии", 
+		"Властитель Стихии", "Властителя Стихии", "Властителю Стихии", "Властителя Стихии",
 		"Властителем Стихией", "Властителе Стихии",
-		"Морской Владыка", "Морского Владыки", "Морскому Владыке", "Морского Владыку", 
+		"Морской Владыка", "Морского Владыки", "Морскому Владыке", "Морского Владыку",
 		"Морским Владыкой", "Морском Владыке",
-		"Утонувший Бог", "Утонувшего Бога", "Утонувшему Богу", "Утонувшего Бога", 
+		"Утонувший Бог", "Утонувшего Бога", "Утонувшему Богу", "Утонувшего Бога",
 		"Утонувшим Богом", "Утонувшем Боге"
 	)
 
@@ -172,9 +190,9 @@
 	translated_name = "Равокс"
 	rusgodnames = list(
 		"Равокс", "Равокса", "Равоксу", "Равокс", "Равоксом", "Равоксе",
-		"Сильнейший", "Сильнейшего", "Сильнейшему", "Сильнейшего", 
+		"Сильнейший", "Сильнейшего", "Сильнейшему", "Сильнейшего",
 		"Сильнейшим", "Сильнейшем",
-		"Достойнейший", "Достойнейшего", "Достойнейшему", "Достойнейшего", 
+		"Достойнейший", "Достойнейшего", "Достойнейшему", "Достойнейшего",
 		"Достойнейшим", "Достойнейшем"
 	)
 
@@ -206,9 +224,9 @@
 	translated_name = "Некра"
 	rusgodnames = list(
 		"Некра", "Некры", "Некре", "Некру", "Некрой", "Некре",
-		"Дама Вуали", "Дамы Вуали", "Даме Вуали", "Даму Вуали", 
+		"Дама Вуали", "Дамы Вуали", "Даме Вуали", "Даму Вуали",
 		"Дамой Вуали", "Даме Вуали",
-		"Безликая", "Безликой", "Безликой", "Безликую", 
+		"Безликая", "Безликой", "Безликой", "Безликую",
 		"Безликой", "Безликой"
 	)
 	domain = "Смерть, жизнь, цикл, судьба."
@@ -238,9 +256,9 @@
 	translated_name = "Ксайликс"
 	rusgodnames = list(
 		"Ксайликс", "Ксайликса", "Ксайликсу", "Ксайликс", "Ксайликсом", "Ксайликсе",
-		"Мастер Масок", "Мастера Масок", "Мастеру Масок", "Мастера Масок", 
+		"Мастер Масок", "Мастера Масок", "Мастеру Масок", "Мастера Масок",
 		"Мастером Масок", "Мастере Масок",
-		"Многоликий", "Многоликого", "Многоликому", "Многоликого", 
+		"Многоликий", "Многоликого", "Многоликому", "Многоликого",
 		"Многоликим", "Многоликом",
 		"Шут", "Шутa", "Шуту", "Шут", "Шутом", "Шуте"
 	)
@@ -272,9 +290,9 @@
 	translated_name = "Пестра"
 	rusgodnames = list(
 		"Пестра", "Пестры", "Пестре", "Пестру", "Пестрой", "Пестре",
-		"Дева-Мученица", "Девы-Мученицы", "Деве-Мученице", "Деву-Мученицу", 
+		"Дева-Мученица", "Девы-Мученицы", "Деве-Мученице", "Деву-Мученицу",
 		"Девой-Мученицей", "Деве-Мученице",
-		"Милосердная Сестра", "Милосердной Сестры", "Милосердной Сестре", "Милосердную Сестру", 
+		"Милосердная Сестра", "Милосердной Сестры", "Милосердной Сестре", "Милосердную Сестру",
 		"Милосердной Сестрой", "Милосердной Сестре"
 	)
 
@@ -292,18 +310,18 @@
 	translated_name = "Малум"
 	rusgodnames = list(
 		"Малум", "Малума", "Малуму", "Малум", "Малумом", "Малуме",
-		"Огненный Бог", "Огненного Бога", "Огненному Богу", "Огненного Бога", 
+		"Огненный Бог", "Огненного Бога", "Огненному Богу", "Огненного Бога",
 		"Огненным Богом", "Огненном Боге",
-		"Бог-кузнец", "Бога-кузнеца", "Богу-кузнецу", "Бога-кузнеца", 
+		"Бог-кузнец", "Бога-кузнеца", "Богу-кузнецу", "Бога-кузнеца",
 		"Богом-кузнецом", "Боге-кузнеце"
 	)
 	domain = "Огонь, сталь, труд, ремесло, терпение, упорство."
 	desc = "Огненный Бог-Кузнец, первый из вознесённых смертных, покровитель трудящихся, тот, что несет ремесло и создание наравне с закалкой своей души. «Труд - уже награда». Малум известен как своим равнодушием, так и строгостью к последователям, куда более его радуют их творения."
 	worshippers = "Кузнецы, строители, архитекторы, каменщики, рабочие."
 	miracles = list(/datum/action/cooldown/spell/touch/orison					= CLERIC_ORI,
-					/obj/effect/proc_holder/spell/invoked/TArestoration		= CLERIC_T0,
-					/obj/effect/proc_holder/spell/self/TArepair				= CLERIC_T0,
-					/obj/effect/proc_holder/spell/invoked/TArework				= CLERIC_T1,
+					/obj/effect/proc_holder/spell/invoked/TArestoration			= CLERIC_T0,
+					/obj/effect/proc_holder/spell/self/TArepair					= CLERIC_T0,
+					/obj/effect/proc_holder/spell/invoked/TAmalum_inspiration	= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/heal					= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/bloodmiracle			= CLERIC_T1,
 					/datum/action/cooldown/spell/arcyne_forge/miracle			= CLERIC_T1,
@@ -324,9 +342,9 @@
 	translated_name = "Эора"
 	rusgodnames = list(
 		"Эора", "Эоры", "Эоре", "Эору", "Эорой", "Эоре",
-		"Любящая Мать", "Любящей Матери", "Любящей Матери", "Любящую Мать", 
+		"Любящая Мать", "Любящей Матери", "Любящей Матери", "Любящую Мать",
 		"Любящей Матерью", "Любящей Матери",
-		"Цветущая", "Цветущей", "Цветущей", "Цветущую", 
+		"Цветущая", "Цветущей", "Цветущей", "Цветущую",
 		"Цветущей", "Цветущей"
 	)
 

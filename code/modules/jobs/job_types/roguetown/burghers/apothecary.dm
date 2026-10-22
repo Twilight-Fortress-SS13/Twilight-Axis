@@ -18,7 +18,7 @@
 
 	outfit = /datum/outfit/job/roguetown/apothecary
 
-	cmode_music = 'sound/music/combat_physician.ogg'
+	cmode_music = sound("sound/music/combat_physician.ogg")
 
 	display_order = JDO_APOTHECARY
 	give_bank_account = TRUE
@@ -32,6 +32,7 @@
 	job_subclasses = list(
 		/datum/advclass/apothecary
 	)
+	has_subprefs = FALSE // only one subclass
 	spells = list(/obj/effect/proc_holder/spell/invoked/takeapprentice)
 
 /datum/advclass/apothecary

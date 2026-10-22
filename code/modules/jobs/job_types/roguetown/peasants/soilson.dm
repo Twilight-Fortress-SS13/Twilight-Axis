@@ -8,7 +8,7 @@
 	display_order = JDO_SOILSON
 	allowed_sexes = list(MALE, FEMALE)
 	forbidden_races = list(RACES_DESPISED)
-	cmode_music = 'sound/music/cmode/towner/combat_towner2.ogg'
+	cmode_music = sound("sound/music/cmode/towner/combat_towner2.ogg")
 
 	tutorial = "It is a simple life you live, your basic understanding of life is something many would be envious of if they knew just how perfect it was. You know a good day's work, the sweat on your brow is yours: Famines and plague may take their toll, but you know how to celebrate life well. Till the soil and produce fresh food for those around you, and maybe you'll be more than an unsung hero someday."
 
@@ -26,6 +26,7 @@
 	job_subclasses = list(
 		/datum/advclass/soilson
 	)
+	has_subprefs = FALSE // only one subclass
 	spells = list(/obj/effect/proc_holder/spell/invoked/takeapprentice)
 
 /datum/advclass/soilson
@@ -90,6 +91,7 @@
 			"Rocknut seeds" = /obj/item/storage/roguebag/farmer_rocknut,
 			"Exotic fruit seeds" = /obj/item/storage/roguebag/farmer_fruits,
 			"Some extra smokes" = /obj/item/storage/roguebag/farmer_smokes,
+			"Seeds from Naledi" = /obj/item/storage/roguebag/farmer_naledi,
 		)
 		var/seedbag_names = list()
 		for (var/name in seeds)
@@ -138,4 +140,14 @@
 		/obj/item/seeds/swampweed,
 		/obj/item/seeds/pipeweed,
 		/obj/item/seeds/pipeweed,
+	)
+
+/obj/item/storage/roguebag/farmer_naledi
+	populate_contents = list(
+		/obj/item/seeds/lentils,
+		/obj/item/seeds/lentils,
+		/obj/item/seeds/lentils,
+		/obj/item/seeds/beans,
+		/obj/item/seeds/beans,
+		/obj/item/seeds/beans,
 	)

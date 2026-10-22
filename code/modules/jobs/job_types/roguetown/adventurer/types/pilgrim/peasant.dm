@@ -6,7 +6,7 @@
 	forbidden_races = list(RACES_DESPISED)
 
 	outfit = /datum/outfit/job/roguetown/adventurer/peasant
-	cmode_music = 'sound/music/cmode/towner/combat_towner2.ogg'
+	cmode_music = sound("sound/music/cmode/towner/combat_towner2.ogg")
 	category_tags = list(CTAG_PILGRIM, CTAG_TOWNER)
 	subclass_stats = list(
 		STATKEY_STR = 1,
@@ -60,6 +60,7 @@
 			"Rocknut seeds" = /obj/item/storage/roguebag/farmer_rocknut,
 			"Exotic fruit seeds" = /obj/item/storage/roguebag/farmer_fruits,
 			"Some extra smokes" = /obj/item/storage/roguebag/farmer_smokes,
+			"Seeds from Naledi" = /obj/item/storage/roguebag/farmer_naledi,
 		)
 		var/seedbag_names = list()
 		for (var/name in seeds)

@@ -2,8 +2,8 @@ GLOBAL_LIST_EMPTY(explosions)
 //Against my better judgement, I will return the explosion datum
 //If I see any GC errors for it I will find you
 //and I will gib you
-/proc/explosion(atom/epicenter, devastation_range, heavy_impact_range, light_impact_range, flash_range, adminlog = TRUE, ignorecap = FALSE, flame_range = 0, silent = FALSE, smoke = FALSE, soundin)
-	return new /datum/explosion(epicenter, devastation_range, heavy_impact_range, light_impact_range, flash_range, adminlog, ignorecap, flame_range, silent, smoke, soundin)
+/proc/explosion(atom/epicenter, devastation_range, heavy_impact_range, light_impact_range, flash_range, adminlog = TRUE, ignorecap = FALSE, flame_range = 0, silent = FALSE, smoke = FALSE, soundin, mob/bomb_owner = null)
+	return new /datum/explosion(epicenter, devastation_range, heavy_impact_range, light_impact_range, flash_range, adminlog, ignorecap, flame_range, silent, smoke, soundin, bomb_owner)
 
 //This datum creates 3 async tasks
 //1 GatherSpiralTurfsProc runs spiral_range_turfs(tick_checked = TRUE) to populate the affected_turfs list
@@ -13,6 +13,7 @@ GLOBAL_LIST_EMPTY(explosions)
 /datum/explosion
 	var/explosion_id
 	var/atom/explosion_source
+	var/mob/bomb_owner
 	var/started_at
 	var/running = TRUE
 	var/stopped = 0		//This is the number of threads stopped !DOESN'T COUNT THREAD 2!
@@ -31,12 +32,13 @@ GLOBAL_LIST_EMPTY(explosions)
 		EX_PREPROCESS_EXIT_CHECK\
 	}
 
-/datum/explosion/New(atom/epicenter, devastation_range, heavy_impact_range, light_impact_range, flash_range, adminlog, ignorecap, flame_range, silent, smoke, soundin = 'sound/misc/explode/explosion.ogg')
+/datum/explosion/New(atom/epicenter, devastation_range, heavy_impact_range, light_impact_range, flash_range, adminlog, ignorecap, flame_range, silent, smoke, soundin = 'sound/misc/explode/explosion.ogg', mob/bomb_owner = null)
 	set waitfor = FALSE
 
 	var/id = ++id_counter
 	explosion_id = id
 	explosion_source = epicenter
+	src.bomb_owner = bomb_owner
 
 	epicenter = get_turf(epicenter)
 	if(!epicenter)
@@ -119,8 +121,8 @@ GLOBAL_LIST_EMPTY(explosions)
 				var/baseshakeamount
 				if(orig_max_distance - dist > 0)
 					baseshakeamount = sqrt((orig_max_distance - dist)*0.1)
-				// If inside the blast radius + world.view - 2
-				if(dist <= round(max_range + world.view - 2, 1))
+				// Full blast treatment only for anything actually caught in it
+				if(dist <= max_range)
 					M.playsound_local(epicenter, null, 100, 1, frequency, falloff = 5, S = explosion_sound)
 					if(baseshakeamount > 0)
 						shake_camera(M, 25, CLAMP(baseshakeamount, 0, 10))
@@ -152,6 +154,8 @@ GLOBAL_LIST_EMPTY(explosions)
 	//flash mobs
 	if(flash_range)
 		for(var/mob/living/L in viewers(flash_range, epicenter))
+			if(L == bomb_owner && HAS_TRAIT(L, TRAIT_BOMBER_EXPERT))
+				continue
 			L.flash_act()
 
 	//damage. WTF, where it?
@@ -160,6 +164,8 @@ GLOBAL_LIST_EMPTY(explosions)
 	var/burn
 	if(!isnull(devastation_range))
 		for(var/mob/living/L in viewers(devastation_range, epicenter))
+			if(L == bomb_owner && HAS_TRAIT(L, TRAIT_BOMBER_EXPERT))
+				continue
 			dist_epi = get_dist(L, epicenter)
 			if(!L.mind)
 				burn = rand(100,250)
@@ -168,6 +174,8 @@ GLOBAL_LIST_EMPTY(explosions)
 				L.adjustFireLoss(burn)
 	if(!isnull(heavy_impact_range))
 		for(var/mob/living/L in viewers(heavy_impact_range, epicenter))
+			if(L == bomb_owner && HAS_TRAIT(L, TRAIT_BOMBER_EXPERT))
+				continue
 			dist_epi = get_dist(L, epicenter)
 			if(dist_epi <= devastation_range)
 				continue
@@ -178,6 +186,8 @@ GLOBAL_LIST_EMPTY(explosions)
 				L.adjustBruteLoss(brute)
 	if(!isnull(light_impact_range))
 		for(var/mob/living/L in viewers(light_impact_range, epicenter))
+			if(L == bomb_owner && HAS_TRAIT(L, TRAIT_BOMBER_EXPERT))
+				continue
 			dist_epi = get_dist(L, epicenter)
 			if(dist_epi <= heavy_impact_range)
 				continue
@@ -358,13 +368,14 @@ GLOBAL_LIST_EMPTY(explosions)
 		return QDEL_HINT_IWILLGC
 	GLOB.explosions -= src
 	explosion_source = null
+	bomb_owner = null
 	return ..()
 
 /client/proc/check_bomb_impacts()
 	set name = "Check Bomb Impact"
 	set category = "Debug"
 
-	var/newmode = alert("Use reactionary explosions?","Check Bomb Impact", "Yes", "No")
+	var/newmode = alert(usr, "Use reactionary explosions?","Check Bomb Impact", "Yes", "No")
 	var/turf/epicenter = get_turf(mob)
 	if(!epicenter)
 		return
@@ -373,7 +384,7 @@ GLOBAL_LIST_EMPTY(explosions)
 	var/heavy = 0
 	var/light = 0
 	var/list/choices = list("Small Bomb","Medium Bomb","Big Bomb","Custom Bomb")
-	var/choice = input("Bomb Size?") in choices
+	var/choice = input(usr, "Bomb Size?") in choices
 	switch(choice)
 		if(null)
 			return 0
@@ -390,9 +401,9 @@ GLOBAL_LIST_EMPTY(explosions)
 			heavy = 5
 			light = 7
 		if("Custom Bomb")
-			dev = input("Devastation range (Tiles):") as num
-			heavy = input("Heavy impact range (Tiles):") as num
-			light = input("Light impact range (Tiles):") as num
+			dev = input(usr, "Devastation range (Tiles):") as num
+			heavy = input(usr, "Heavy impact range (Tiles):") as num
+			light = input(usr, "Light impact range (Tiles):") as num
 
 	var/max_range = max(dev, heavy, light)
 	var/x0 = epicenter.x

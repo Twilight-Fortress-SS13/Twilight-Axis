@@ -45,21 +45,21 @@
 	/// Whether the "hopper is empty of grindables" alert has already fired.
 	var/empty_alert = FALSE
 
-	var/datum/looping_sound/autogrinder_work/soundloop
+	//var/datum/looping_sound/autogrinder_work/soundloop
 	debris = list(/obj/item/roguegear = 2, /obj/item/natural/wood/plank = 2, /obj/item/natural/stone = 2)
 
-/obj/structure/autogrinder/Initialize()
+/obj/structure/autogrinder/Initialize(mapload)
 	. = ..()
 	var/turf/hopper_turf = get_step(src, EAST)
 	hopper = new hopper_type(hopper_turf)
 	hopper.parent = src
-	soundloop = new(src, FALSE)
+	//soundloop = new(src, FALSE)
 	START_PROCESSING(SSobj, src)
 
 /obj/structure/autogrinder/Destroy()
 	STOP_PROCESSING(SSobj, src)
 	current_item = null
-	QDEL_NULL(soundloop)
+	//QDEL_NULL(soundloop)
 	QDEL_NULL(hopper)
 	return ..()
 
@@ -74,7 +74,7 @@
 /obj/structure/autogrinder/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Left-click it with an empty hand to switch it on or off; non-skilled engineers will rarely catch their hand under the stone.")
-	. += span_info("It grinds anything millable from its attached hopper and only works while connected to a powered rotational network with enough RPM.")
+	. += span_info("It grinds anything millable or anything an alchemy mortar and pestle could grind from its attached hopper and only works while connected to a powered rotational network with enough RPM.")
 	. += span_info("Drop grain or other grindables onto the attached hopper's tile and switch the grinder on; it feeds itself.")
 	. += span_info("Ground product is dropped onto the grinder's own tile.")
 
@@ -94,7 +94,7 @@
 		update_working_visuals()
 		return
 
-	if(!current_item || QDELETED(current_item) || !in_grind_pool(current_item) || !current_item.mill_result)
+	if(!current_item || QDELETED(current_item) || !in_grind_pool(current_item) || !is_grindable(current_item))
 		current_item = find_grindable()
 		progress = 0
 
@@ -133,8 +133,27 @@
 	if(!pool)
 		return null
 	for(var/obj/item/candidate in pool)
-		if(candidate.mill_result)
+		if(is_grindable(candidate))
 			return candidate
+	return null
+
+//check if its a valid grindable or alchemy grindable
+/obj/structure/autogrinder/proc/is_grindable(obj/item/candidate)
+	if(QDELETED(candidate))
+		return FALSE
+	return candidate.mill_result || find_alch_recipe(candidate)
+
+//specifically check if its a valid alchemy grindable
+/obj/structure/autogrinder/proc/find_alch_recipe(obj/item/candidate)
+	if(!candidate)
+		return null
+	for(var/datum/alch_grind_recipe/recipe in GLOB.alch_grind_recipes)
+		if(recipe.picky)
+			if(candidate.type == recipe.valid_input)
+				return recipe
+		else
+			if(istype(candidate, recipe.valid_input))
+				return recipe
 	return null
 
 /// Whether the machine currently has grindable material queued up in the hopper.
@@ -148,7 +167,16 @@
 		progress = 0
 		return
 	var/obj/item/ground = current_item
-	new ground.mill_result(get_turf(src))
+	var/datum/alch_grind_recipe/recipe = find_alch_recipe(ground)
+	if(recipe)
+		for(var/output_path in recipe.valid_outputs)
+			for(var/i in 1 to recipe.valid_outputs[output_path])
+				new output_path(get_turf(src))
+		for(var/bonus_path in recipe.bonus_chance_outputs)
+			if(prob(recipe.bonus_chance_outputs[bonus_path]))
+				new bonus_path(get_turf(src))
+	else if(ground.mill_result)
+		new ground.mill_result(get_turf(src))
 	qdel(ground)
 	current_item = null
 	progress = 0
@@ -188,11 +216,12 @@
 
 /// Switches the stone (and, through it, the hopper gears) between the idle and running animations.
 /obj/structure/autogrinder/proc/update_working_visuals()
-	update_soundloop()
+	//update_soundloop()
 	icon_state = is_spinning() ? "mill_on" : "mill_off"
 	if(hopper && !QDELETED(hopper))
 		hopper.update_gear_anim()
 
+/* removing soundloop due to the audio glitches this proc makes.
 /obj/structure/autogrinder/proc/update_soundloop()
 	if(!soundloop)
 		return
@@ -202,6 +231,7 @@
 		return
 	if(!soundloop.stopped)
 		soundloop.stop()
+*/
 
 /obj/structure/autogrinder/set_rotations_per_minute(speed)
 	. = ..()
@@ -269,7 +299,7 @@
 
 /obj/structure/closet/crate/chest/autogrinder/Initialize(mapload)
 	. = ..()
-	open()   // it has no lid; it stays open for good
+	open()	// it has no lid; it stays open for good
 
 /obj/structure/closet/crate/chest/autogrinder/CanAStarPass(ID, dir, caller)
 	return TRUE

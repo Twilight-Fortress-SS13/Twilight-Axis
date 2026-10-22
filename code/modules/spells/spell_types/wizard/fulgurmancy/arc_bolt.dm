@@ -8,8 +8,7 @@
 	desc = "Fire a precise jolt of lightning that sears a target's struck body part with heavy burn. \
 	Toggle firing mode (Shift+G) while active: Chain leaps to up to three foes behind the target, searing the same body part for half as much, \
 	Focus only strike one target, and Arc lobs a single weakened bolt over obstacles. \
-	The bolt loses power past 5 paces. \
-	Damage is increased by 50% versus simple-minded creechurs."
+	The bolt loses power past 5 paces."
 	button_icon_state = "shock"
 	sound = 'sound/magic/lightning.ogg'
 	spell_color = GLOW_COLOR_LIGHTNING
@@ -29,7 +28,7 @@
 	charge_time = CHARGETIME_POKE
 	hold_drain = 1
 	charge_slowdown = CHARGING_SLOWDOWN_SMALL
-	charge_swingdelay_type = SWINGDELAY_PENALTY
+	charge_swingdelay_type = SWINGDELAY_NORMAL
 	charge_sound = 'sound/magic/charging.ogg'
 	cooldown_time = 6.5 SECONDS
 	attunement_school = ASPECT_NAME_FULGURMANCY
@@ -87,8 +86,9 @@
 	hitscan = TRUE
 	movement_type = UNSTOPPABLE
 	light_color = LIGHT_COLOR_WHITE
-	damage = 60
-	npc_simple_damage_mult = 1.5
+	damage = SPELL_DMG(60)
+	intdamfactor = SPELL_INTDAM(1)
+	spell_damage_scaled = TRUE
 	max_range = MAGE_LONG_PROJ_RANGE
 	damage_type = BURN
 	woundclass = BCLASS_BURN
@@ -102,16 +102,16 @@
 
 /obj/projectile/magic/arc_bolt/single
 	name = "focused bolt"
-	damage = 60
+	damage = SPELL_DMG(60)
 	arcs = FALSE
 
 /obj/projectile/magic/arc_bolt/single/arc
 	name = "arced bolt"
-	damage = 45
+	damage = SPELL_DMG(45)
 	arcshot = TRUE
 
 
-/obj/projectile/magic/arc_bolt/on_hit(target)
+/obj/projectile/magic/arc_bolt/on_hit(target, blocked = FALSE)
 	. = ..()
 	if(ismob(target))
 		var/mob/M = target
@@ -125,9 +125,10 @@
 			if(out_of_effective_range())
 				qdel(src)
 				return
-			L.electrocute_act(1, src, 1, SHOCK_NOSTUN)
-			if(arcs)
-				arc_to_targets(L)
+			if(blocked < 100)
+				L.electrocute_act(1, src, 1, SHOCK_NOSTUN)
+				if(arcs)
+					arc_to_targets(L)
 	else if(isatom(target))
 		var/atom/A = target
 		A.fire_act()
@@ -172,15 +173,14 @@
 		L.visible_message(span_warning("The arc scatters around [L]!"))
 		return
 	var/actual_damage = arc_damage
-	if(!L.mind && !ishuman(L))
-		actual_damage *= npc_simple_damage_mult
 	var/mob/living/carbon/human/caster = firer
-	if(L.guard_deflect_spell("Arc Bolt", TRUE, caster))
+	if(L.guard_deflect_spell("Arc Bolt", TRUE, caster, punish_caster = FALSE))
 		return
 	if(istype(caster) && ishuman(L))
-		arcyne_strike(caster, L, null, actual_damage, def_zone, BCLASS_BURN, \
-			spell_name = "Arc Bolt", damage_type = BURN, npc_simple_damage_mult = 1, \
-			skip_animation = TRUE)
+		if(arcyne_strike(caster, L, null, actual_damage, def_zone, BCLASS_BURN, \
+			spell_name = "Arc Bolt", damage_type = BURN, \
+			skip_animation = TRUE, SPELL_STRIKE_SCALING) == ARCYNE_STRIKE_WARDED)
+			return
 	else
 		L.electrocute_act(actual_damage, src, 1, SHOCK_NOSTUN)
 	L.electrocute_act(0, src, 1, SHOCK_NOSTUN|SHOCK_VISUAL_ONLY)

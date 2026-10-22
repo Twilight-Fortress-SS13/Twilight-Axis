@@ -10,7 +10,7 @@
 	vice_restrictions = list(/datum/charflaw/unintelligible, /datum/charflaw/wanted)
 	forbidden_races = list(RACES_DESPISED)
 	allowed_ages = ALL_AGES_LIST
-	cmode_music = 'sound/music/cmode/towner/combat_towner3.ogg'
+	cmode_music = sound("sound/music/cmode/towner/combat_towner3.ogg")
 
 	outfit = /datum/outfit/job/roguetown/archivist
 	display_order = JDO_ARCHIVIST
@@ -35,6 +35,7 @@
 	job_subclasses = list(
 		/datum/advclass/archivist
 	)
+	has_subprefs = FALSE // only one subclass
 
 /datum/advclass/archivist
 	name = "Archivist"
@@ -58,6 +59,8 @@
 		/datum/language/draconic,
 		/datum/language/undercommon,
 		/datum/language/aavnic, // All but beast, which is associated with werewolves.
+		/datum/language/gyedzenese, //TA EDIT
+		/datum/language/valorian, //TA EDIT
 	)
 	category_tags = list(CTAG_ARCHIVIST)
 	subclass_stats = list(
@@ -74,7 +77,6 @@
 		/datum/skill/craft/alchemy = SKILL_LEVEL_LEGENDARY,
 		/datum/skill/magic/arcane = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/misc/riding = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_NOVICE,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/swimming = SKILL_LEVEL_NOVICE,
@@ -87,7 +89,7 @@
 	H.adjust_blindness(-3)
 	if(should_wear_femme_clothes(H))
 		shirt = /obj/item/clothing/suit/roguetown/shirt/robe/archivist
-		head  = /obj/item/clothing/head/roguetown/roguehood/black
+		head	= /obj/item/clothing/head/roguetown/roguehood/black
 	else
 		shirt = /obj/item/clothing/suit/roguetown/shirt/robe/archivist
 		armor = /obj/item/clothing/suit/roguetown/armor/leather/vest/sailor/nightman

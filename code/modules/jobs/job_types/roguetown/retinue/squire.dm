@@ -22,7 +22,7 @@
 	round_contrib_points = 2
 	same_job_respawn_delay = 30 MINUTES
 
-	cmode_music = 'sound/music/combat_squire.ogg'
+	cmode_music = sound("sound/music/combat_squire.ogg")
 	job_subclasses = list(
 		/datum/advclass/squire/lancer,
 		/datum/advclass/squire/footman,
@@ -70,7 +70,7 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
-		/datum/skill/misc/riding = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/riding = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/hunting = SKILL_LEVEL_NOVICE,
 	)
 
@@ -90,7 +90,9 @@
 		/obj/item/rogueweapon/scabbard/sheath,
 		/obj/item/storage/belt/rogue/pouch,
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot,
-		/obj/item/rogueweapon/hammer/copper
+		/obj/item/rogueweapon/hammer/copper,
+		/obj/item/armor_brush = 1,
+		/obj/item/polishing_cream = 1
 	)
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_WORKING_CLASS, H)
@@ -139,7 +141,9 @@
 		/obj/item/rogueweapon/scabbard/sheath,
 		/obj/item/storage/belt/rogue/pouch,
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot,
-		/obj/item/rogueweapon/hammer/copper
+		/obj/item/rogueweapon/hammer/copper,
+		/obj/item/armor_brush = 1,
+		/obj/item/polishing_cream = 1
 	)
 	H.adjust_blindness(-3)
 	if(H.mind)
@@ -182,7 +186,6 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
-		/datum/skill/misc/riding = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/hunting = SKILL_LEVEL_NOVICE,
 	)
 
@@ -195,14 +198,16 @@
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 	neck = /obj/item/clothing/neck/roguetown/chaincoif/iron
 	backr = /obj/item/storage/backpack/rogue/satchel
-	backl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
+	backl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow
 	beltr = /obj/item/quiver/arrows
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger,
 		/obj/item/storage/belt/rogue/pouch,
 		/obj/item/rogueweapon/scabbard/sheath,
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot,
-		/obj/item/rogueweapon/hammer/copper
+		/obj/item/rogueweapon/hammer/copper,
+		/obj/item/armor_brush = 1,
+		/obj/item/polishing_cream = 1
 		)
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_WORKING_CLASS , H)

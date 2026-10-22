@@ -51,6 +51,7 @@
 						break
 
 /datum/charflaw/addiction
+	abstract_type = /datum/charflaw/addiction
 	/// The world.time for our next sate proc.
 	var/next_sate = 0
 	/// The world.time snapshot for when we'll see a partial sate message again.
@@ -68,7 +69,7 @@
 
 /datum/charflaw/addiction/on_mob_creation(mob/user)
 	. = ..()
-	time = rand(time - 5 MINUTES, time + 5 MINUTES)
+	time = rand(max(round(time / 2) - 5 MINUTES, 1), max(round(time / 2) + 5 MINUTES, 1)) // TA EDIT
 	next_sate = world.time + time
 
 /datum/charflaw/addiction/flaw_on_life(mob/user)
@@ -82,6 +83,10 @@
 	var/oldsated = sated
 	if(oldsated)
 		if(next_sate && world.time >= next_sate)
+			for(var/datum/charflaw/addiction/vice in H.charflaws) // TA EDIT START
+				if(vice != src && !vice.sated)
+					next_sate = world.time + (5 MINUTES)
+					return // TA EDIT END
 			sated = FALSE
 	if(sated != oldsated)
 		unsate_time = world.time
@@ -113,6 +118,7 @@
 /datum/charflaw/addiction/alcoholic
 	name = "Alcoholic"
 	desc = "Drinking alcohol is my favorite thing."
+	ui_fa_icon = "whiskey-glass"
 	time = ADDICT_TIME_STANDARD
 	needsate_text = "Time for a drink."
 	voyeur_descriptor = "quite the drinker"
@@ -128,22 +134,12 @@
 	desc = "I've started to feel hungover. The best way to chase a hangover is another drink."
 	icon_state = "alcoholic"
 
-
-/// KLEPTOMANIAC
-
-/datum/charflaw/addiction/kleptomaniac
-	name = "Thief-born"
-	desc = "As a child I had to rely on theft to survive. Whether that changed or not, I just can't get over it."
-	time = ADDICT_TIME_OFTEN
-	needsate_text = "I need to STEAL something! I'll die if I don't!"
-	voyeur_descriptor = "quick-fingered"
-
-
 /// JUNKIE
 
 /datum/charflaw/addiction/junkie
 	name = "Junkie"
 	desc = "I need a REAL high to take the pain of this rotten world away."
+	ui_fa_icon  = "syringe"
 	time = ADDICT_TIME_STANDARD
 	needsate_text = "Time to get really high."
 	voyeur_descriptor = "eager for a high"
@@ -164,6 +160,7 @@
 /datum/charflaw/addiction/smoker
 	name = "Smoker"
 	desc = "I need to smoke something to take the edge off."
+	ui_fa_icon = "smoking"
 	time = ADDICT_TIME_STANDARD
 	needsate_text = "Time for a flavorful smoke."
 	voyeur_descriptor = "eager for a smoke"
@@ -184,6 +181,7 @@
 /datum/charflaw/addiction/caffiend
 	name = "Caffiend"
 	desc = "I can't start my day without a cup of tea or coffee."
+	ui_fa_icon = "mug-hot"
 	time = ADDICT_TIME_STANDARD
 	needsate_text = "I need a hot brew."
 	voyeur_descriptor = "in need of a brew"
@@ -204,6 +202,7 @@
 /datum/charflaw/addiction/godfearing
 	name = "Devout Follower"
 	desc = "I need to pray to my Patron in their realm, it will make me and my prayers stronger."
+	ui_fa_icon = "person-praying"
 	time = ADDICT_TIME_STANDARD
 	needsate_text = "Time to pray to my Patron."
 	voyeur_descriptor = "quite devout"
@@ -224,6 +223,7 @@
 /datum/charflaw/addiction/sadist
 	name = "Sadist"
 	desc = "There is no greater pleasure than the suffering of another."
+	ui_fa_icon = "baseball-bat-ball"
 	time = ADDICT_TIME_STANDARD
 	needsate_text = "I need to hear someone whimper."
 	voyeur_descriptor = "looking to hurt"
@@ -244,6 +244,7 @@
 /datum/charflaw/addiction/masochist
 	name = "Masochist"
 	desc = "I love the feeling of pain, so much I can't get enough of it."
+	ui_fa_icon = "user-injured"
 	time = ADDICT_TIME_STANDARD
 	needsate_text = "I need someone to HURT me."
 	voyeur_descriptor = "looking to be hurt"
@@ -261,6 +262,7 @@
 	icon_state = "masochist"
 
 /datum/charflaw/addiction/masochist/on_mob_creation(mob/living/living)
+	. = ..() // TA EDIT
 	living.pain_threshold += 10
 
 /// LOVEFIEND
@@ -268,6 +270,7 @@
 /datum/charflaw/addiction/lovefiend
 	name = "Nymphomaniac"
 	desc = "I must make love!"
+	ui_fa_icon = "heart"
 	time = ADDICT_TIME_STANDARD
 	needsate_text = "I'm feeling randy."
 	voyeur_descriptor = "looking lovesick"
@@ -282,9 +285,10 @@
 /datum/status_effect/debuff/addiction/nympho/on_creation(mob/living/new_owner, ...)
 	. = ..()
 	if(new_owner)
-		if(ishuman(new_owner) && (iself(new_owner) || ishalfelf(new_owner) || istiefling(new_owner) || isdarkelf(new_owner) || issunelf(new_owner)))
-			var/mob/living/carbon/human/H = new_owner
-			H.emote("eflick", intentional = TRUE)
+		if(!HAS_TRAIT(new_owner, TRAIT_DECEIVING_MEEKNESS) && !HAS_TRAIT(new_owner, TRAIT_NOMOOD))
+			if(ishuman(new_owner) && (iself(new_owner) || ishalfelf(new_owner) || istiefling(new_owner) || isdarkelf(new_owner) || issunelf(new_owner)))
+				var/mob/living/carbon/human/H = new_owner
+				H.emote("eflick", intentional = TRUE)
 
 /atom/movable/screen/alert/status_effect/debuff/addiction/nympho
 	name = "Nymphomania"
@@ -294,6 +298,7 @@
 /datum/charflaw/addiction/thrillseeker
 	name = "Thrillseeker"
 	desc = "Only fighting brings me pleasure."
+	ui_fa_icon = "hand-fist"
 	time = ADDICT_TIME_OFTEN
 	debuff = null
 	needsate_text = "I need a FIGHT!"
@@ -302,6 +307,7 @@
 /datum/charflaw/addiction/clamorous
 	name = "Clamorous"
 	desc = "The noise of people and fights drowns out my misery."
+	ui_fa_icon = "volume-high"
 	time = ADDICT_TIME_FREQUENT
 	needsate_text = "It's too quiet. Where's the yelling? The fighting?"
 	voyeur_descriptor = "soothed by noise"
@@ -311,6 +317,7 @@
 /datum/charflaw/addiction/paranoid
 	name = "Paranoid"
 	desc = "I only feel comfortable around one of my own kind."
+	ui_fa_icon = "user-tag"
 	time = ADDICT_TIME_OFTEN
 	needsate_text = "Am I the only one of my kind left?"
 	voyeur_descriptor = "comforted by their own"
@@ -340,6 +347,7 @@
 /datum/charflaw/addiction/voyeur
 	name = "Voyeur"
 	desc = "Seeing others be happy... it makes me happy, too."
+	ui_fa_icon = "face-grin-stars"
 	time = ADDICT_TIME_OFTEN
 	needsate_text = "I must please someone."
 	voyeur_descriptor = "pleased by others"

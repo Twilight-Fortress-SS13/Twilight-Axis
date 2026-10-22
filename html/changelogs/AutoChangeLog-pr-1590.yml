@@ -1,0 +1,5 @@
+author: "zRainbowcat"
+delete-after: True
+changes:
+  - qol: "возможность шаманам и гудсклору взять мираклы вместо тотемов"
+  - balance: "немного нерфов тотемов"

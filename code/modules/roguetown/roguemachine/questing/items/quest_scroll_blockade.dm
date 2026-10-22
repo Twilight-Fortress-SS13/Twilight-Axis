@@ -7,13 +7,12 @@
 	return "[minutes]:[seconds < 10 ? "0[seconds]" : "[seconds]"]"
 
 /obj/item/quest_writ/blockade
-	name = "blockade defense writ"
-	desc = "A stout writ sealed by the Steward, calling for armed answer to a trade blockade. \
-	The bearer is enjoined to travel to the blockaded region and break three successive waves \
-	of raiders - each wave must fall within ten minutes, and the writ lapses entirely if the \
-	bearer dawdles too long before reaching the blockade. Hand this writ over to a \
-	fellow-adventurer and they may initiate the contract; pin it to the Grand Contract Ledger and \
-	it will demand a full Fellowship of three."
+	name = "blockade defense scroll"
+	desc = "A scroll to break a blockade. Travel to the blockaded region and defeat three waves of raiders. \
+	Each wave must fall within fifteen minutes. The Steward may recall the scroll if you take too long to get there. \
+	Hand it to someone to start the contract. Pinned to the Contract Ledger, it needs a fellowship of three. \
+	The blockade grows harder and richer with each defender past the third, up to six. \
+	If brigands hold stolen Crown coin, breaking the blockade seizes the hoard. The Crown taxes it as Recovered Spoils."
 	icon_state = "scroll_quest_info"
 	base_icon_state = "scroll_quest"
 	var/last_arrival_check = 0
@@ -27,11 +26,10 @@
 			to_chat(user, span_warning(Q.claim_failure_reason(user)))
 			return
 		if(!SStreasury.has_account(user))
-			to_chat(user, span_warning("No account on record - register with a Meister before taking a contract, lest there be no purse to pay you."))
+			to_chat(user, span_warning("You have no bank account. Register with a Meister before taking a contract."))
 			return
-		Q.quest_receiver_reference = WEAKREF(user)
-		Q.quest_receiver_name = user.real_name
-		to_chat(user, span_notice("You take up the blockade writ. Travel to the marked region - the waves will begin when you arrive."))
+		Q.on_claim(user)
+		to_chat(user, span_notice("You take up the blockade scroll. Travel to the marked region. The first wave begins when you arrive."))
 		var/obj/effect/landmark/quest_spawner/landmark = Q.pending_landmark_ref?.resolve()
 		if(landmark)
 			Q.materialize(landmark)

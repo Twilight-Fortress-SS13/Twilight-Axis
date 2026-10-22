@@ -3,7 +3,7 @@
 	tutorial = "You leaved your community, by your hand or by other's decision, but it not matter now. You are trying to find new home or die like a true warrior of your land."
 	outfit = /datum/outfit/job/roguetown/adventurer/gronnadv
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT, CTAG_LICKER_WRETCH)
-	cmode_music = 'sound/music/combat_vagarian.ogg'
+	cmode_music = sound("sound/music/combat_vagarian.ogg")
 	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_STEELHEARTED)
 	subclass_languages = list(/datum/language/gronnic)
 	subclass_stats = list(
@@ -20,20 +20,20 @@
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/craft/cooking = SKILL_LEVEL_NOVICE,		
+		/datum/skill/craft/cooking = SKILL_LEVEL_NOVICE,
 		/datum/skill/labor/fishing = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE, 
+		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/sewing = SKILL_LEVEL_APPRENTICE		//all nomads have it
 
 	)
 
 /datum/outfit/job/roguetown/adventurer/gronnadv
-	allowed_patrons = ALL_GRONNIC_PATRONS 
+	allowed_patrons = ALL_GRONNIC_PATRONS
 
 /datum/outfit/job/roguetown/adventurer/gronnadv/pre_equip(mob/living/carbon/human/H)
 	..()
 
-	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/atgervi
+	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced/atgervi
 	gloves = /obj/item/clothing/gloves/roguetown/angle/gronn
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/gronn
 	shirt = /obj/item/clothing/suit/roguetown/shirt/tunic/random
@@ -53,7 +53,16 @@
 
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
-			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
+			if(H.mind)
+				var/talismans = list("The Wolf, Plotting", "The Spider, Rising")
+				var/talismanschoice = input(H, "Choose your path", "Beasts of the North") as anything in talismans
+				switch(talismanschoice)
+					if("The Wolf, Plotting")
+						id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
+					if("The Spider, Rising")
+						id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/spider
+			else
+				id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
 		if(/datum/patron/inhumen/graggar)
 			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/graggar/gronn
 		if(/datum/patron/inhumen/matthios)
@@ -65,7 +74,7 @@
 		if(/datum/patron/divine/dendor)
 			id = /obj/item/clothing/neck/roguetown/psicross/dendor/gronn
 		else
-			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/special 
+			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/special
 
 	H.dna.species.soundpack_m = new /datum/voicepack/male/evil()
 
@@ -79,7 +88,7 @@
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_PARRYEXPERT)
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
 	subclass_languages = list(/datum/language/kazengunese)
-	cmode_music = 'sound/music/combat_kazengite.ogg'
+	cmode_music = sound("sound/music/combat_kazengite.ogg")
 	subclass_stats = list(
 		STATKEY_SPD = 3,
 		STATKEY_INT = 2,
@@ -94,7 +103,7 @@
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
-		/datum/skill/craft/sewing = SKILL_LEVEL_APPRENTICE, 
+		/datum/skill/craft/sewing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,
 	)
 	origin_limits = list(/datum/virtue/origin/kazengun, /datum/virtue/origin/lingyue)
@@ -128,7 +137,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 	subclass_languages = list(/datum/language/etruscan)
 	outfit = /datum/outfit/job/roguetown/adventurer/marinero
-	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_conquistador.ogg'
+	cmode_music = sound("modular_twilight_axis/firearms/sound/music/combat_conquistador.ogg")
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_MEDIUMARMOR)
 	class_select_category = CLASS_CAT_NOMAD
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT, CTAG_LICKER_WRETCH)

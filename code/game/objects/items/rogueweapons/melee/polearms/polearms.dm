@@ -98,11 +98,6 @@
 /datum/intent/spear/bash/ranged
 	reach = 2
 
-/datum/intent/spear/bash/staff
-	name = "staff bash"
-	damfactor = 1
-	reach = 2
-
 /datum/intent/spear/cut
 	name = "cut"
 	blade_class = BCLASS_CUT
@@ -118,6 +113,11 @@
 	reach = 1
 	swingdelay = 6
 	sharpness_penalty = 2
+
+/datum/intent/spear/cut/oneh/pike
+	name = "weak cut"
+	desc = "An awkward one-handed slash with a pike too long to swing properly."
+	damfactor = 0.6
 
 /datum/intent/spear/cut/scythe
 	reach = 3
@@ -211,217 +211,11 @@
 	no_early_release = TRUE
 	intent_intdamage_factor = 0.1
 
-/datum/intent/spear/bash/ranged/quarterstaff
-	damfactor = 1
-
-/datum/intent/spear/thrust/quarterstaff
-	blade_class = BCLASS_BLUNT
-	hitsound = list('sound/combat/hits/blunt/bluntsmall (1).ogg', 'sound/combat/hits/blunt/bluntsmall (2).ogg')
-	penfactor = PEN_NONE
-	damfactor = 1.3 // Adds up to be slightly stronger than an unenhanced ebeak strike.
-	clickcd = CLICK_CD_CHARGED
-
-/obj/item/rogueweapon/woodstaff
-	force = 10
-	force_wielded = 15
-	possible_item_intents = list(SPEAR_BASH)
-	gripped_intents = list(/datum/intent/spear/bash/ranged, /datum/intent/mace/smash/wood/ranged)
-	name = "wooden staff"
-	desc = "A solid dependable walking stick that allows one to traverse rough terrain with ease, keep the weight off an \
-	injured leg, or reliably fend off incoming blows. Perfect for beggars, pilgrims, and mages."
-	icon_state = "woodstaff"
-	icon = 'icons/roguetown/weapons/polearms64.dmi'
-	wlength = WLENGTH_LONG
-	w_class = WEIGHT_CLASS_BULKY
-	slot_flags = ITEM_SLOT_BACK
-	sharpness = IS_BLUNT
-	walking_stick = TRUE
-	pixel_y = -16
-	pixel_x = -16
-	inhand_x_dimension = 64
-	inhand_y_dimension = 64
-	wdefense = 5
-	wdefense_wbonus = 6	//11 when wielded.
-	bigboy = TRUE
-	gripsprite = TRUE
-	associated_skill = /datum/skill/combat/staves
-	special = /datum/special_intent/quarterstaff_sweep
-	anvilrepair = /datum/skill/craft/carpentry
-	resistance_flags = FLAMMABLE
-
-/obj/item/rogueweapon/woodstaff/getonmobprop(tag)
-	. = ..()
-	if(tag)
-		switch(tag)
-			if("gen")
-				return list("shrink" = 0.6,"sx" = -6,"sy" = -1,"nx" = 8,"ny" = 0,"wx" = -4,"wy" = 0,"ex" = 2,"ey" = 1,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = -38,"sturn" = 37,"wturn" = 32,"eturn" = -23,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
-			if("wielded")
-				return list("shrink" = 0.6,"sx" = 4,"sy" = -2,"nx" = -3,"ny" = -2,"wx" = -5,"wy" = -1,"ex" = 3,"ey" = -2,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 7,"sturn" = -7,"wturn" = 16,"eturn" = -22,"nflip" = 8,"sflip" = 0,"wflip" = 8,"eflip" = 0)
-			if("onbelt")
-				return list("shrink" = 0.3,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
-
-/obj/item/rogueweapon/woodstaff/wise
-	name = "wise staff"
-	desc = "A staff for keeping the volves at bay..."
-
-/obj/item/rogueweapon/woodstaff/aries // more humble with no aura
-	name = "staff of the shepherd"
-	desc = "A finely wrought bishop's crozier crowned with the likeness of a shepherd watching over his flock. Its curved head serves as a reminder that a true shepherd does not rule through fear, but through guidance, mercy, and unwavering vigilance. To the faithful it is a symbol of humble service; to the lost, a promise that even the stray may yet find their way home."
-	force = 25
-	force_wielded = 28
-	icon_state = "aries"
-	icon = 'icons/roguetown/weapons/polearms64.dmi'
-	associated_skill = /datum/skill/magic/holy
-	sellprice = 240
-	pixel_y = -22
-	pixel_x = -22
-	possible_item_intents = list(SPEAR_BASH, /datum/intent/bless)
-	gripped_intents = list(/datum/intent/spear/bash/ranged, /datum/intent/mace/smash/wood/ranged, /datum/intent/bless)
-
-/obj/item/rogueweapon/woodstaff/aries/icarus // more boisterous with aura
-	name = "staff of the guide"
-	desc = "A radiant staff crowned by a lavish, pure gold-forged sun whose rays stretch in every direction. It embodies the sacred duty to bring light where darkness lingers, offering wisdom to the faithful and hope to the despairing. More than a mark of rank, it stands as a beacon that calls others to walk the righteous path beneath the ever-watchful eyes of the Ten."
-	icon_state = "icarus"
-	aura_color = "#ffed9f"
-
-/obj/item/rogueweapon/woodstaff/aries/afterattack(atom/movable/A, mob/user, proximity)
-	. = ..()
-
-	if(user.mind?.assigned_role != "Bishop")
-		to_chat(user, span_warning("The staff sizzles against my hand!"))
-		user.emote("pain")
-		return
-
-	if(user.used_intent?.type != /datum/intent/bless)
-		return
-
-	// people
-	if(ishuman(A))
-		var/mob/living/carbon/human/H = A
-
-		if(H.has_status_effect(/datum/status_effect/buff/blessed) || H.has_stress_event(/datum/stressevent/blessed_evil) || H.has_stress_event(/datum/stressevent/blessed_neutral))
-			to_chat(user, span_warning("[H] has already been blessed."))
-			return
-
-		playsound(user, 'sound/magic/censercharging.ogg', 100)
-		user.visible_message(span_info("[user] holds \the [src] over \the [H], offering a solemn blessing..."))
-
-		if(!do_after(user, 50, target = H))
-			return
-
-		if(H.patron?.type in ALL_INHUMEN_PATRONS)
-			to_chat(H, span_boldred("You feel the Ten's blessings weigh upon your soul."))
-			H.add_stress(/datum/stressevent/blessed_evil)
-		else if(H.patron?.type in OLD_GOD_PATRON)
-			to_chat(H, span_hypnophrase("You feel the Ten's blessings reluctantly settle upon your soul."))
-			H.add_stress(/datum/stressevent/blessed_neutral)
-		else
-			to_chat(H, span_hypnophrase("You feel the Ten's blessings settle upon your soul."))
-			H.apply_status_effect(/datum/status_effect/buff/blessed)
-			H.add_stress(/datum/stressevent/blessed)
-
-		playsound(H, 'sound/magic/bless.ogg', 100)
-		new /obj/effect/temp_visual/censer_dust(get_turf(H))
-		user.visible_message(span_blue("[user] blesses [H]."))
-		return
-
-	// silver items
-	if(isitem(A))
-		var/obj/item/I = A
-		var/datum/component/silverbless/CP = I.GetComponent(/datum/component/silverbless)
-
-		if(!CP)
-			to_chat(user, span_info("\The [I] cannot be blessed."))
-			return
-
-		if(CP.is_blessed)
-			to_chat(user, span_info("It has already been blessed."))
-			return
-
-		if(!(CP.silver_type & SILVER_TENNITE))
-			to_chat(user, span_info("\The [I] cannot receive Tennite blessings."))
-			return
-
-		playsound(user, 'sound/magic/censercharging.ogg', 100)
-		user.visible_message(span_info("[user] holds \the [src] over \the [I]..."))
-
-		if(!do_after(user, 5 SECONDS, target = I))
-			return
-
-		CP.try_bless(BLESSING_TENNITE)
-		new /obj/effect/temp_visual/censer_dust(get_turf(I))
-		return
-
-/obj/item/rogueweapon/woodstaff/aries/getonmobprop(tag)
-	. = ..()
-	if(tag)
-		switch(tag)
-			if("gen")
-				return list("shrink" = 0.6,"sx" = -6,"sy" = -1,"nx" = 8,"ny" = 0,"wx" = -4,"wy" = 0,"ex" = 2,"ey" = 1,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = -38,"sturn" = 37,"wturn" = 32,"eturn" = -23,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
-			if("wielded")
-				return list("shrink" = 0.6,"sx" = 4,"sy" = -2,"nx" = -3,"ny" = -2,"wx" = -5,"wy" = -1,"ex" = 3,"ey" = -2,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 7,"sturn" = -7,"wturn" = 16,"eturn" = -22,"nflip" = 8,"sflip" = 0,"wflip" = 8,"eflip" = 0)
-
-/obj/item/churcharticles/litany
-	name = "litany of the Ten"
-	desc = "A finely illuminated parchment of litany bearing the sacred verses of the Holy See. Penned upon blessed parchment and sealed with crimson wax, it contains the Rite of Endorsement, a solemn invocation entrusted only to ordained bishops. Once the final verse is spoken, the parchment burns to ash, and one of the Ten's sacred croziers is called forth. Don't lose it."
-	icon = 'icons/roguetown/items/misc.dmi'
-	icon_state = "litany"
-	item_state = "litany"
-	aura_color = "#ffed9f"
-	var/in_use = FALSE
-
-/obj/item/churcharticles/litany/attack_self(mob/user)
-	. = ..()
-	if(!ishuman(user))
-		return
-	if(in_use)
-		to_chat(user, span_warning("The litany is already being recited."))
-		return
-	in_use = TRUE
-	user.visible_message(span_boldwarning("[user] unfurls [src], raising it high before beginning a solemn rite."))
-	if(!do_after(user, 25, target = user))
-		in_use = FALSE
-		return
-	user.say(",g Before the Holy Ten, I reaffirm the sacred vows laid upon my soul.")
-	if(!do_after(user, 25, target = user))
-		in_use = FALSE
-		return
-	user.say(",g May I serve with humility, wisdom, and unwavering faith.")
-	if(!do_after(user, 25, target = user))
-		in_use = FALSE
-		return
-	user.say(",g Let my voice be Yours in counsel.")
-	if(!do_after(user, 25, target = user))
-		in_use = FALSE
-		return
-	user.say(",g Let my hand be Yours in mercy.")
-	if(!do_after(user, 25, target = user))
-		in_use = FALSE
-		return
-	user.say(",g Let my office stand as testament to the covenant between the Holy See and the faithful.")
-	if(!do_after(user, 25, target = user))
-		in_use = FALSE
-		return
-	user.say(",g Should I yet prove worthy in Your sight, grant unto me a sacred staff, wrought by the grace of the Holy Ten, that I may bear it as the symbol of the authority entrusted to me.")
-	var/choice = tgui_alert(user, "Which of the Ten's staves do you invoke?", "RITE OF THE TEN", list("Staff of the Shepherd", "Staff of the Guide", "Cancel"))
-	if(!choice || choice == "Cancel")
-		in_use = FALSE
-		return
-	var/obj/item/rogueweapon/woodstaff/aries/staff
-	switch(choice)
-		if("Staff of the Shepherd")
-			staff = new /obj/item/rogueweapon/woodstaff/aries(get_turf(user))
-		if("Staff of the Guide")
-			staff = new /obj/item/rogueweapon/woodstaff/aries/icarus(get_turf(user))
-	playsound(get_turf(user), 'sound/magic/holyshield.ogg', 100, FALSE)
-	new /obj/effect/temp_visual/censer_dust(get_turf(user))
-	user.visible_message(span_blue("As the final words leave [user]'s lips, [src] crumbles into sacred ash and [staff] manifests before them!"))
-	qdel(src)
-
 /obj/item/rogueweapon/woodstaff/polearm
 	name = "shillelagh"
 	desc = "A particularly long and sturdy walking stick with a variety of uses. It's heavier at one end, making it a little unbalanced."
 	associated_skill = /datum/skill/combat/polearms
+	is_implement = FALSE
 
 /obj/item/rogueweapon/spear
 	force = 22
@@ -447,11 +241,13 @@
 	smeltresult = /obj/item/ingot/iron
 	associated_skill = /datum/skill/combat/polearms
 	walking_stick = TRUE
-	wdefense = 5
+	wdefense = 4.5
 	thrown_bclass = BCLASS_STAB
 	throwforce = 25
 	resistance_flags = FLAMMABLE
 	special = /datum/special_intent/polearm_backstep
+	twirly = SKILL_LEVEL_EXPERT // safely twirling like, a halberd, is going to be harder than a blunt staff
+	twirl_speed = 6
 
 /obj/item/rogueweapon/spear/short
 	force = 25
@@ -519,7 +315,7 @@
 	anvilrepair = /datum/skill/craft/weaponsmithing
 	smeltresult = /obj/item/ingot/iron
 	associated_skill = /datum/skill/combat/polearms
-	wdefense = 5
+	wdefense = 4
 	thrown_bclass = BCLASS_STAB
 	throwforce = 22
 	resistance_flags = FLAMMABLE
@@ -573,7 +369,7 @@
 /obj/item/rogueweapon/spear/trident/afterattack(obj/target, mob/user, proximity)
 	var/sl = user.get_skill_level(/datum/skill/labor/fishing)
 	var/ft = 150
-	var/fpp =  90 - (sl * 15)
+	var/fpp =	90 - (sl * 15)
 	if(istype(target, /turf/open/water))
 		if(user.used_intent.type == SPEAR_CAST && !user.doing)
 			if(target in range(user,3))
@@ -597,12 +393,8 @@
 							to_chat(user, "<span class='notice'>You see something!</span>")
 							playsound(src.loc, 'sound/items/fishing_plouf.ogg', 100, TRUE)
 							if(!do_after(user,ow, target = target))
-								if(ismob(A))
-									var/mob/M = A
-									if(M.type in subtypesof(/mob/living/simple_animal/hostile))
-										new M(target)
-									else
-										new M(user.loc)
+								if(ispath(A, /mob/living))
+									new /obj/effect/temp_visual/hunting_phantom(target, A, /datum/component/rot/simple/hunt, 2 SECONDS)
 									user.mind.add_sleep_experience(/datum/skill/labor/fishing, fisherman.STAINT*2)
 								else
 									new A(user.loc)
@@ -623,7 +415,7 @@
 
 /obj/item/rogueweapon/spear/aalloy
 	name = "decrepit spear"
-	desc = "A rotting staff, tipped with frayed bronze. After the stone, but before the sword; an interlude for the violence that would soon \
+	desc = "A rotting staff, tipped with rotted metal. After the stone, but before the sword; an interlude for the violence that would soon \
 	engulf His world."
 	icon_state = "ancient_spear"
 	force = 13
@@ -643,39 +435,25 @@
 	icon_state = "ancient_spear"
 
 
-/obj/item/rogueweapon/spear/psyspear
+/obj/item/rogueweapon/spear/silver/psy
 	name = "psydonic spear"
 	desc = "An ornate spear, plated in a ceremonial veneer of silver. The barbs pierce your palm, and - for just a moment - you see red. Never \
 	forget that you are why Psydon wept."
 	icon_state = "psyspear"
-	force = 15
-	force_wielded = 25
-	minstr = 11
-	wdefense = 6
-	resistance_flags = FIRE_PROOF	//It's meant to be smacked by a "lamptern", and is special enough to warrant overriding the spear weakness
-	is_silver = TRUE
 	smeltresult = /obj/item/ingot/silverblessed
 
-/obj/item/rogueweapon/spear/psyspear/ComponentInitialize()
+/obj/item/rogueweapon/spear/silver/psy/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 50,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_PSYDONIAN\
 	)
 
-/obj/item/rogueweapon/spear/psyspear/preblessed/ComponentInitialize()
+/obj/item/rogueweapon/spear/silver/psy/preblessed/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_PSYDONIAN,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 50,\
-		added_int = 50,\
-		added_def = 1,\
+		silver_type = SILVER_PSYDONIAN\
 	)
 
 /obj/item/rogueweapon/spear/silver
@@ -683,25 +461,22 @@
 	desc = "A winged staff, tipped with a silver spearhead. It bears a resemblenece to the 'boar spear', but with a critical difference; instead \
 	of stopping hogs, it halts charging deadites from spreading their sickness any further."
 	icon_state = "silverspear"
-	force = 15
-	force_wielded = 25
-	minstr = 11
-	wdefense = 6
+	force = 20
+	force_wielded = 30
+	minstr = 8
+	wdefense = 5
 	is_silver = TRUE
+	resistance_flags = FIRE_PROOF	//It's meant to be smacked by a "lamptern", and is special enough to warrant overriding the spear weakness
 	smeltresult = /obj/item/ingot/silver
 
 /obj/item/rogueweapon/spear/silver/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 50,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_TENNITE\
 	)
 
-/obj/item/rogueweapon/spear/psyspear/old
+/obj/item/rogueweapon/spear/silver/psy/old
 	name = "enduring spear"
 	desc = "An ornate spear, its silver tarnished by neglect. HE still guides the faithful's hand, if not this weapon."
 	icon_state = "psyspear"
@@ -713,7 +488,7 @@
 	smeltresult = /obj/item/ingot/steel
 	color = COLOR_FLOORTILE_GRAY
 
-/obj/item/rogueweapon/spear/psyspear/old/ComponentInitialize()
+/obj/item/rogueweapon/spear/silver/psy/old/ComponentInitialize()
 	return
 
 /obj/item/rogueweapon/spear/getonmobprop(tag)
@@ -724,6 +499,19 @@
 				return list("shrink" = 0.6,"sx" = -7,"sy" = 2,"nx" = 7,"ny" = 3,"wx" = -2,"wy" = 1,"ex" = 1,"ey" = 1,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = -38,"sturn" = 37,"wturn" = 30,"eturn" = -30,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
 			if("wielded")
 				return list("shrink" = 0.6,"sx" = 5,"sy" = -3,"nx" = -5,"ny" = -2,"wx" = -5,"wy" = -1,"ex" = 3,"ey" = -2,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 7,"sturn" = -7,"wturn" = 16,"eturn" = -22,"nflip" = 8,"sflip" = 0,"wflip" = 8,"eflip" = 0)
+
+/obj/item/rogueweapon/spear/cleric
+	name = "anointed spear"
+	desc = "A crusader's spear, adorned with a blade of cold iron and blessed to smite evil. Though this blessed alloy lacks the strength to \
+	sunder those who bear greater curses, it nevertheless channels enough power to dispell the lesser curses of mindless fiends-and-foes."
+	icon_state = "crusaderspear"
+	force = 20
+	force_wielded = 25
+	wdefense = 6
+	max_blade_int = 230
+	max_integrity = 300
+	smeltresult = /obj/item/ingot/iron
+	is_even_lesser_silver = TRUE // adv paladin exclusive weapon, works like unblessed silver but only in pve
 
 /obj/item/rogueweapon/spear/bonespear
 	force = 18
@@ -748,16 +536,18 @@
 	max_integrity = 60
 	throwforce = 20
 	special = null
+	materia = list(/datum/materia_aspect/weapon, /datum/materia_aspect/death)
 
 /obj/item/rogueweapon/spear/billhook
 	name = "billhook"
 	desc = "A neat hook. Used to pull riders from horses, as well as defend against said horses when used in a proper formation. The \
 	reinforcements along its shaft grant it higher durability against attacks."
+	gripped_intents = list(SPEAR_THRUST, SPEAR_CUT, SPEAR_BASH, /datum/intent/spear/dismount)
 	icon_state = "billhook"
 	smeltresult = /obj/item/ingot/steel
 	max_blade_int = 230
 	minstr = 8
-	wdefense = 6
+	wdefense = 4.5
 	throwforce = 15
 
 /obj/item/rogueweapon/spear/billhook/avantyne
@@ -782,6 +572,7 @@
 	force_wielded = 25
 	name = "improvised billhook"
 	desc = "Looks hastily made, even a little flimsy."
+	gripped_intents = list(SPEAR_THRUST, SPEAR_CUT, SPEAR_BASH, /datum/intent/spear/dismount)
 	icon_state = "billhook"
 	smeltresult = /obj/item/ingot/iron
 	max_blade_int = 100
@@ -874,12 +665,12 @@
 /obj/item/rogueweapon/fishspear/attack_self(mob/user)
 	if(user.used_intent.type == SPEAR_CAST)
 		if(user.doing)
-			user.doing = 0
+			user.stop_all_doing() // TA EDIT
 
 /obj/item/rogueweapon/fishspear/afterattack(obj/target, mob/user, proximity)
 	var/sl = user.get_skill_level(/datum/skill/labor/fishing) // User's skill level
 	var/ft = 160 //Time to get a catch, in ticks
-	var/fpp =  90 - (sl * 15) // Fishing power penalty based on fishing skill level
+	var/fpp =	90 - (sl * 15) // Fishing power penalty based on fishing skill level
 	if(istype(target, /turf/open/water))
 		if(user.used_intent.type == SPEAR_CAST && !user.doing)
 			if(target in range(user,3))
@@ -997,13 +788,14 @@
 	gripsprite = TRUE
 	wlength = WLENGTH_GREAT
 	w_class = WEIGHT_CLASS_BULKY
+	wbalance = WBALANCE_HEAVY
 	minstr = 9
-	max_blade_int = 200
+	max_blade_int = 280
 	anvilrepair = /datum/skill/craft/weaponsmithing
 	smeltresult = /obj/item/ingot/steel
 	associated_skill = /datum/skill/combat/polearms
 	walking_stick = TRUE
-	wdefense = 6
+	wdefense = 4
 	special = /datum/special_intent/polearm_backstep
 
 /obj/item/rogueweapon/halberd/getonmobprop(tag)
@@ -1027,10 +819,47 @@
 	max_blade_int = 225
 	smeltresult = /obj/item/ingot/steel
 
+/datum/intent/spear/dismount
+	name = "dismounting hook"
+	blade_class = BCLASS_STAB
+	attack_verb = list("hooks")
+	damfactor = 0.6
+	animname = "stab"
+	icon_state = "inlunge"
+	reach = 2
+	desc = "Hook an opponent with your polearm, forcefully dismounting them should they be on horseback. Must strike the rider themselves and not their mount and does not work on horseback."
+	clickcd = CLICK_CD_CHARGED
+	swingdelay_type = SWINGDELAY_CANCEL
+	swingdelay = 1 SECONDS //1 second for the horse to pull out of range, pretty hard to land.
+	clickcd = 1.3 SECONDS
+	warnie = "mobwarning"
+	hitsound = list('sound/combat/hits/bladed/genstab (1).ogg', 'sound/combat/hits/bladed/genstab (2).ogg', 'sound/combat/hits/bladed/genstab (3).ogg')
+	penfactor = PEN_LIGHT //Bad for anything but its intended purpose
+	item_d_type = "stab"
+	effective_range = 2
+	effective_range_type = EFF_RANGE_EXACT
+
+/datum/intent/spear/dismount/spec_on_apply_effect(mob/living/H, mob/living/user, params)
+	var/target_buckled = H.buckled ? TRUE : FALSE
+	if(!target_buckled)
+		return
+	if(istype(H.buckled, /obj/structure/flora/roguegrass/maneater)) //We don't want this being used on people stuck in maneaters, as funny as that sounds.
+		return
+	H.buckled.unbuckle_mob(H)
+	H.Knockdown(50)
+	H.Paralyze(10)
+	var/turf/edge_target_turf = get_edge_target_turf(H, get_dir(H, user))
+	if(istype(edge_target_turf))
+		H.safe_throw_at(edge_target_turf, 1, 1, user, spin = TRUE)
+	user.visible_message(span_danger("[user] digs the hook of their weapon into [H] and brings them crashing down!"))
+	playsound(H.loc, 'sound/foley/zfall.ogg', 100, FALSE)
+	H.visible_message(span_danger("[H] falls off their mount!"))
+
 /obj/item/rogueweapon/halberd/ji
 	name = "ji"
 	desc = "A Lingyuese dagger-axe. A spearhead crowns the shaft, while a crescent side-blade hooks outwards - equally suited to thrusting, hooking a mounted foe out of his saddle, or shearing through a footman's guard."
 	icon_state = "ji"
+	gripped_intents = list(SPEAR_THRUST, SPEAR_CUT, /datum/intent/axe/chop/halberd, /datum/intent/spear/dismount)
 
 /obj/item/rogueweapon/halberd/ji/iron
 	name = "iron ji"
@@ -1053,7 +882,7 @@
 
 /obj/item/rogueweapon/halberd/bardiche/aalloy
 	name = "decrepit bardiche"
-	desc = "An imposing poleaxe, wrought from frayed bronze. Whatever noble purpose this weapon held has long since decayed; for \
+	desc = "An imposing poleaxe, wrought from rotted metal. Whatever noble purpose this weapon held has long since decayed; for \
 	it now persists to sunder the chaff that clings to this dying world."
 	max_integrity = 180
 	force = 12
@@ -1082,7 +911,7 @@
 	force = 20
 	force_wielded = 35
 	max_blade_int = 400
-	wdefense_wbonus = 3 //+3 over the traditional spear, once wielded.
+	wdefense = 5
 	var/used = FALSE
 	var/list/selection = list(
 		/datum/special_intent/polearm_backstep,
@@ -1100,12 +929,12 @@
 	. = ..()
 	if(used)
 		return
-		
+
 	var/list/special_options = list()
 	for(var/intent in selection)
 		var/datum/special_intent/S = intent // Hate this DM quirk.
 		special_options[S::name] = S
-	
+
 	var/choice = input(user, "Choose the Manoeuvre", "MANOEUVRE") as anything in special_options
 	if(choice)
 		qdel(special)
@@ -1138,24 +967,22 @@
 	force_wielded = 33 // +3
 	max_integrity = 300 // +50
 
-/obj/item/rogueweapon/halberd/psyhalberd/relic
-	name = "Stigmata"
+/obj/item/rogueweapon/halberd/silver/psy/relic
+	name = "\"Stigmata\""
 	desc = "Christened in the Siege of Lirvas, these silver-tipped poleaxes - wielded by a lonesome contingent of Saint Eora's \
 	paladins - kept the horrors at bay for forty daes-and-nites. Long-since-recovered from the rubble, this relic now serve as \
 	a bulwark for the defenseless."
 	icon_state = "psyhalberd"
 	force = 25
-	force_wielded = 25
+	wdefense = 7
+	max_integrity = 350
+	max_blade_int = 380
 
-/obj/item/rogueweapon/halberd/psyhalberd/relic/ComponentInitialize()
+/obj/item/rogueweapon/halberd/silver/psy/relic/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_PSYDONIAN,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 100,\
-		added_int = 100,\
-		added_def = 2,\
+		silver_type = SILVER_PSYDONIAN\
 	)
 
 /obj/item/rogueweapon/halberd/silver
@@ -1163,10 +990,6 @@
 	desc = "A resplendant polearm with a forked eagle's beak, a maillebreaker's point, and an axhead with a silvered edge. While traditionally \
 	reserved for ceremonial affairs, the ever-creeping threat of undeath has seen these halberds being used for war once more."
 	icon_state = "silverhalberd"
-	force = 15
-	force_wielded = 25
-	minstr = 11
-	wdefense = 7
 	is_silver = TRUE
 	smeltresult = /obj/item/ingot/silver
 
@@ -1174,45 +997,27 @@
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_TENNITE\
 	)
 
-/obj/item/rogueweapon/halberd/psyhalberd
+/obj/item/rogueweapon/halberd/silver/psy
 	name = "psydonic halberd"
 	desc = "A blessed polearm that has guarded the walls of kingdoms-a-plenty, ever since the first castles of mortar-and-stone arose in Syon's wake. It \
 	not only professes the elegance of its knightly wielder, but also their vow to keep the innocent guarded from the guilty."
-	icon_state = "silverhalberd"
-	force = 15
-	force_wielded = 25
-	minstr = 11
-	wdefense = 7
-	is_silver = TRUE
 	smeltresult = /obj/item/ingot/silverblessed
 
-/obj/item/rogueweapon/halberd/psyhalberd/ComponentInitialize()
+/obj/item/rogueweapon/halberd/silver/psy/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_PSYDONIAN\
 	)
 
-/obj/item/rogueweapon/halberd/psyhalberd/preblessed/ComponentInitialize()
+/obj/item/rogueweapon/halberd/silver/psy/preblessed/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_PSYDONIAN,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_PSYDONIAN\
 	)
 
 /obj/item/rogueweapon/halberd/glaive
@@ -1223,8 +1028,8 @@
 	icon_state = "glaive"
 	anvilrepair = /datum/skill/craft/weaponsmithing
 	smeltresult = /obj/item/ingot/steel
-	max_blade_int = 160
-	wdefense = 9
+	max_blade_int = 200
+	wdefense = 4.5
 
 /obj/item/rogueweapon/halberd/glaive/getonmobprop(tag)
 	. = ..()
@@ -1239,18 +1044,18 @@
 
 /// Ported from Scarlet Reach's Glaive. We're avoiding force increase because I hate roguepen. It can have better blade integrity and defense instead.
 /obj/item/rogueweapon/halberd/glaive/knightcaptain
-	name = "'Deliverance'"
+	name = "\"Deliverance\""
 	desc = "A masterwork glaive with a seasoned ashwood shaft reinforced by brass-sheathed steel bands. The blacksteel blade \
 	bears inscriptions on both side. One reads, \"QUIS CUSTODIET\" while the other reads, \"IPSOS CUSTODES\"."
 	icon = 'icons/roguetown/weapons/special/captainglaive.dmi'
 	icon_state = "capglaive"
 	smeltresult = /obj/item/ingot/blacksteel
 	max_integrity = 300 //blacksteel, so its gotta be more durable
-	max_blade_int = 200
+	max_blade_int = 250
 	sellprice = 250
 
 /obj/item/rogueweapon/halberd/pestran
-	name = "Lance of Boils"
+	name = "\"Lance of Boils\""
 	desc = "For when a scalpel is too short, and you still need to perform Pestra's holy work."
 	icon_state = "pestranhalberd"
 
@@ -1282,7 +1087,7 @@
 	associated_skill = /datum/skill/combat/polearms
 	sharpness = IS_BLUNT
 	walking_stick = TRUE
-	wdefense = 5
+	wdefense = 4
 	wbalance = WBALANCE_HEAVY
 	max_integrity = 250 //So there is actual difference between the two
 
@@ -1307,7 +1112,7 @@
 	smeltresult = /obj/item/ingot/blacksteel
 	force = 20
 	force_wielded = 35
-	wdefense_wbonus = 3 //+3 over the traditional spear, once wielded.
+	wdefense_wbonus = 4 //+1 over the eagle beak, once wielded.
 	max_integrity = 350 //Basic idea - blacksteel blunt weapons get more integrity, blacksteel edged weapons get more sharpness. Minimal overlap?
 	var/used = FALSE
 	var/list/selection = list(
@@ -1326,12 +1131,12 @@
 	. = ..()
 	if(used)
 		return
-		
+
 	var/list/special_options = list()
 	for(var/intent in selection)
 		var/datum/special_intent/S = intent // Hate this DM quirk.
 		special_options[S::name] = S
-	
+
 	var/choice = input(user, "Choose the Manoeuvre", "MANOEUVRE") as anything in special_options
 	if(choice)
 		qdel(special)
@@ -1414,126 +1219,6 @@
 	unequip_delay_self = 2 SECONDS
 	inv_storage_delay = 1 SECONDS
 
-/obj/item/rogueweapon/woodstaff/quarterstaff
-	name = "wooden quarterstaff"
-	desc = "A staff that makes any journey easier. Durable and swift, capable of bludgeoning stray volves and ruffians alike. The prodigious length \
-	permits it to both incapacitate the villainous with blunted strikes, and to keep snarling foes at staff's length."
-	force = 15
-	force_wielded = 20
-	gripped_intents = list(/datum/intent/spear/bash/ranged/quarterstaff, /datum/intent/spear/thrust/quarterstaff, /datum/intent/mace/smash/wood/ranged)
-	icon_state = "quarterstaff"
-	associated_skill = /datum/skill/combat/staves
-	max_integrity = 150
-	smeltresult = /obj/item/ash
-
-/obj/item/rogueweapon/woodstaff/quarterstaff/virtue
-	name = "shepherd's quarterstaff" //Reskinned iron quarterstaff without the smeltability-into-ingotry.
-	force = 16
-	force_wielded = 22
-	gripped_intents = list(/datum/intent/spear/bash/ranged/quarterstaff, /datum/intent/spear/thrust/quarterstaff, /datum/intent/mace/smash/wood/ranged)
-	icon_state = "quarterstaff_virtue"
-	max_integrity = 200
-
-/obj/item/rogueweapon/woodstaff/quarterstaff/iron
-	name = "iron quarterstaff"
-	desc = "A quarterstaff reinforced with iron studdings and counterweights. The prodigious length \
-	permits it to both incapacitate the villainous with blunted strikes, and to keep snarling foes at staff's length."
-	force = 16
-	force_wielded = 22
-	icon_state = "quarterstaff_iron"
-	max_integrity = 200
-	smeltresult = /obj/item/ingot/iron
-
-/obj/item/rogueweapon/woodstaff/quarterstaff/steel
-	name = "steel quarterstaff"
-	desc = "A quarterstaff reinforced with steel tips and steel rings, blurring the line between a light polehammer and a reinforced \
-	quarterstaff. Extremely durable, and more than capable of bludgeoning brigands to death; or more mercifully, robbing them of their \
-	very own tools."
-	force = 18
-	force_wielded = 25
-	icon_state = "quarterstaff_steel"
-	max_integrity = 200
-	smeltresult = /obj/item/ingot/steel
-
-/obj/item/rogueweapon/woodstaff/quarterstaff/blacksteel
-	name = "blacksteel quarterstaff"
-	desc = "A quarterstaff reinforced with blacksteel tips. One might imagine that the elegance of such a design hardly befits the people \
-	who'd traditionally wield such a weapon; then again, who are we to judge?"
-	force = 20
-	force_wielded = 30
-	icon_state = "quarterstaff_blacksteel"
-	max_integrity = 350
-	smeltresult = /obj/item/ingot/blacksteel
-	wdefense_wbonus = 7	//12 when wielded.
-
-/obj/item/rogueweapon/woodstaff/quarterstaff/silver
-	name = "silver quarterstaff"
-	desc = "A quarterstaff reinforced with silver tips. A relatively new design, purportedly inspired by the warstaffs oft-carried by Naledian \
-	warscholars. Durable enough to catch-and-disarm avantyne to the shaft, without so much as a splinter - or so, they say."
-	force = 20
-	force_wielded = 27
-	icon_state = "quarterstaff_silver"
-	max_integrity = 250
-	is_silver = TRUE
-	smeltresult = /obj/item/ingot/silver
-
-/obj/item/rogueweapon/woodstaff/quarterstaff/silver/ComponentInitialize()
-	AddComponent(\
-		/datum/component/silverbless,\
-		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 50,\
-		added_int = 50,\
-		added_def = 2,\
-	)
-
-/obj/item/rogueweapon/woodstaff/quarterstaff/psy
-	name = "psydonic quarterstaff"
-	desc = "A quarterstaff reinforced with silver tips. A relatively new design, purportedly inspired by the warstaffs \
-	oft-carried by Naledian warscholars. Durable enough to catch avantyne to the shaft, without so much as a splinter - or so, they say."
-	force_wielded = 27
-	icon_state = "quarterstaff_silver"
-	max_integrity = 250
-	is_silver = TRUE
-	smeltresult = /obj/item/ingot/silverblessed
-
-/obj/item/rogueweapon/woodstaff/quarterstaff/psy/ComponentInitialize()
-	AddComponent(\
-		/datum/component/silverbless,\
-		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 50,\
-		added_int = 50,\
-		added_def = 2,\
-	)
-
-/obj/item/rogueweapon/woodstaff/quarterstaff/psy/preblessed/ComponentInitialize()
-	AddComponent(\
-		/datum/component/silverbless,\
-		pre_blessed = BLESSING_PSYDONIAN,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 50,\
-		added_int = 50,\
-		added_def = 2,\
-	)
-
-/obj/item/rogueweapon/woodstaff/quarterstaff/gold
-	name = "golden quarterstaff"
-	desc = "The astute may point out that this staff is poorly designed. They would be correct. Gold, even low karat, is a bad material for a \
-	weapon. This one additionally manages to be doubly-sinned by having a heavy chunk of gold at the end. It's almost a polehammer. Practical? \
-	No. But it makes a statement."
-	icon_state = "quarterstaff_gold"
-	force = 23
-	force_wielded = 30
-	special = /datum/special_intent/gilded_dragon_sweep
-	sellprice = 80
-	no_loot_taint = TRUE
-	max_integrity = 250 //equal to psydonite; putting it at half of this was a neat little experiment but agonizing
-
-
 /obj/item/rogueweapon/spear/partizan
 	name = "partizan"
 	desc = "A reinforced spear-like polearm of disputed origin: A studded shaft fitted with a steel spearhead with protrusions to aid in \
@@ -1546,7 +1231,7 @@
 	icon = 'icons/roguetown/weapons/polearms64.dmi'
 	minstr = 10
 	max_blade_int = 200
-	wdefense = 8 // It IS a parrying spear after all.
+	wdefense = 5 // It IS a parrying spear after all.
 	throwforce = 12	//Not a throwing weapon. Too heavy!
 	icon_angle_wielded = 50
 	smeltresult = /obj/item/ingot/steel
@@ -1567,9 +1252,15 @@
 	icon = 'icons/roguetown/weapons/polearms64.dmi'
 	icon_state = "boarspear"
 	force_wielded = 33 // 10% base damage increase
-	wdefense = 6 // A little bit extra
+	wdefense = 5 // A little bit extra
 	max_blade_int = 200
 	smeltresult = /obj/item/ingot/steel
+
+/obj/item/rogueweapon/spear/boar/noc
+	name = "moonlight spear"
+	desc = "A spear with a wide head and a pair of wings below the head. The wings are designed to prevent a boar from charging past the spearhead. \
+	It is also useful for parrying and stopping a charging opponent. This one in particular is made of blued steel."
+	icon_state = "nocspear"
 
 /obj/item/rogueweapon/spear/blacksteel
 	name = "blacksteel spear"
@@ -1578,7 +1269,6 @@
 	icon_state = "blacksteelspear"
 	force_wielded = 35
 	wdefense = 6
-	wdefense_wbonus = 3
 	max_blade_int = 400
 	smeltresult = /obj/item/ingot/blacksteel
 
@@ -1599,7 +1289,7 @@
 	icon_state = "citybanner"
 	force = 18
 	force_wielded = 33
-	possible_item_intents = list(/datum/intent/dagger/sucker_punch, SWORD_STRIKE)
+	possible_item_intents = list(/datum/intent/dagger/sucker_punch, SWORD_STRIKE, /datum/intent/spear/cut/oneh/pike)
 	gripped_intents = list(/datum/intent/spear/thrust/pike, /datum/intent/spear/thrust/pike/skewer)
 
 /obj/item/rogueweapon/spear/boar/frei/pike/reformist
@@ -1620,7 +1310,7 @@
 	icon_state = "naginata"
 	icon = 'icons/roguetown/weapons/polearms64.dmi'
 	minstr = 7
-	max_blade_int = 150 //Nippon suteeru (dogshit)
+	max_blade_int = 220 //Glaive/Greatsword side-grade. Worse blade integrity and versatility than a greatsword, 20% extra damage on the cut, same as glaive. Tiny bump in defense and blade integ in exchange for losing thrust.
 	wdefense = 5
 	throwforce = 12	//Not a throwing weapon.
 	icon_angle_wielded = 50
@@ -1661,21 +1351,19 @@
 	desc = "An elven weapon that combines the elegant sweeping blade typical of Elven design with a lengthy handle. The true \
 	guardian of the forest realm."
 	icon_state = "elfglaive"
-	max_blade_int = 180 //Elven design makes it sharper
+	max_blade_int = 230 //Elven design makes it sharper
 	sellprice = 60
 
 /obj/item/rogueweapon/halberd/glaive/elvish/getonmobprop(tag)
 	. = ..()
 	if(tag)
 		switch(tag)
-			if("gen")
-				return list("shrink" = 0.6,"sx" = -6,"sy" = 2,"nx" = 8,"ny" = 2,"wx" = -4,"wy" = 2,"ex" = 1,"ey" = 2,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = -38,"sturn" = 300,"wturn" = 32,"eturn" = -23,"nflip" = 0,"sflip" = 100,"wflip" = 8,"eflip" = 0)
 			if("wielded")
 				return list("shrink" = 0.6,"sx" = 4,"sy" = -2,"nx" = -3,"ny" = -2,"wx" = -5,"wy" = -1,"ex" = 3,"ey" = -2,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 7,"sturn" = -7,"wturn" = 16,"eturn" = -22,"nflip" = 8,"sflip" = 0,"wflip" = 8,"eflip" = 0)
 
 /obj/item/rogueweapon/spear/partizan/baotha
 	name = "saccharine swordspear"
-	desc = "Keep the rest at arm's length, lest you're burdened with the pain of rememberance."
+	desc = "Keep her at arm's length, lest you're burdened with the pain of her earnestness and her joy. That would be a final, unbearable cut."
 	force = 25
 	force_wielded = 35
 	possible_item_intents = list(/datum/intent/sword/thrust/long, /datum/intent/sword/cut/long, /datum/intent/sword/strike, /datum/intent/sword/thrust/heavy)
@@ -1702,7 +1390,7 @@
 	inv_storage_delay = 1 SECONDS
 	icon_angle_wielded = null
 
-/obj/item/rogueweapon/spear/partizan/baotha/Initialize()
+/obj/item/rogueweapon/spear/partizan/baotha/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_DEPRAVED, "SWORDSPEAR")
 

@@ -200,10 +200,10 @@
 /mob/living/put_in_hand_check(obj/item/I)
 	if(I.twohands_required && get_inactive_held_item())
 		return FALSE
-	if((I.is_silver || I.smeltresult == /obj/item/ingot/silver) && !I.is_lesser_silver && (HAS_TRAIT(src, TRAIT_SILVER_WEAK) &&  !has_status_effect(STATUS_EFFECT_ANTIMAGIC)))
+	if((I.is_silver || (I.is_even_lesser_silver && is_npc(src)) || I.smeltresult == /obj/item/ingot/silver) && !I.is_lesser_silver && (HAS_TRAIT(src, TRAIT_SILVER_WEAK) &&	!has_status_effect(STATUS_EFFECT_ANTIMAGIC)))
 		var/datum/antagonist/vampire/V_lord = mind?.has_antag_datum(/datum/antagonist/vampire)
 		if(!istype(V_lord) || V_lord?.generation < GENERATION_METHUSELAH)
-			to_chat(src, span_userdanger("I can't pick up the silver, it is my BANE!"))
+			to_chat(src, span_silver("I can't pick up the silver, it is my BANE!"))
 			Knockdown(10)
 			Paralyze(10)
 			adjustFireLoss(25)
@@ -241,7 +241,7 @@
 
 	var/hand = get_empty_held_index_for_side(LEFT_HANDS)
 	if(!hand)
-		hand =  get_empty_held_index_for_side(RIGHT_HANDS)
+		hand =	get_empty_held_index_for_side(RIGHT_HANDS)
 	if(hand)
 		if(put_in_hand(I, hand, forced))
 			return TRUE
@@ -282,10 +282,10 @@
 //The following functions are the same save for one small difference
 
 /**
-  * Used to drop an item (if it exists) to the ground.
-  * * Will pass as TRUE is successfully dropped, or if there is no item to drop.
-  * * Will pass FALSE if the item can not be dropped due to TRAIT_NODROP via doUnEquip()
-  * If the item can be dropped, it will be forceMove()'d to the ground and the turf's Entered() will be called.
+	* Used to drop an item (if it exists) to the ground.
+	* * Will pass as TRUE is successfully dropped, or if there is no item to drop.
+	* * Will pass FALSE if the item can not be dropped due to TRAIT_NODROP via doUnEquip()
+	* If the item can be dropped, it will be forceMove()'d to the ground and the turf's Entered() will be called.
 */
 /mob/proc/dropItemToGround(obj/item/I, force = FALSE, silent = TRUE)
 	. = doUnEquip(I, force, drop_location(), FALSE, silent = silent)
@@ -340,6 +340,7 @@
 	update_a_intents()
 	SEND_SIGNAL(I, COMSIG_ITEM_POST_UNEQUIP, force, newloc, no_move, invdrop, silent)
 	SEND_SIGNAL(src, COMSIG_MOB_UNEQUIPPED_ITEM, I, force, newloc, no_move, invdrop, silent)
+	check_equipment_mood_penalty()
 	return TRUE
 
 //Outdated but still in use apparently. This should at least be a human proc.
@@ -408,6 +409,13 @@
 	items |= get_equipped_items(TRUE)
 	for(var/I in items)
 		dropItemToGround(I)
+	drop_all_held_items()
+
+/mob/living/proc/unequip_everything_delete()
+	var/list/items = list()
+	items |= get_equipped_items(TRUE)
+	for(var/I in items) //we delete it
+		qdel(I)
 	drop_all_held_items()
 
 

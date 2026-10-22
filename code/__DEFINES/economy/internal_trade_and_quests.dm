@@ -56,6 +56,11 @@
 
 #define STANDING_ORDER_BASE_BONUS 1.0
 
+// Scarcity bonus: boosts order PAYOUT (never required quantity) below reference pop, ramping
+// linearly up to +MAX_BONUS at pop 0. Crown income only, no player-side cut.
+#define STANDING_ORDER_SCARCITY_REFERENCE_POP 30
+#define STANDING_ORDER_SCARCITY_MAX_BONUS 0.4
+
 // Partial Fulfillment: Let players fulfill an order with 50% by VALUE for 85% payout
 // So that steward / towners are still soft encouraged to fulfill the whole order
 // But don't feel ripped off because they cannot fetch everything at once
@@ -82,6 +87,11 @@
 #define STOCKPILE_AUTO_LIMIT_DAYS 2
 #define STOCKPILE_LIMIT_MIN 5
 #define STOCKPILE_LIMIT_MAX 40
+#define STOCKPILE_LIMIT_MANUAL_MAX 9999
+#define STEWARD_POLICY_EXPORT_VERSION 1
+#define STEWARD_POLICY_IMPORT_MAX_LEN 16384
+#define STEWARD_POLICY_WINDOW_WIDTH 900
+#define STEWARD_POLICY_WINDOW_HEIGHT 700
 
 // Buying the same import = escalating price
 #define CROWN_IMPORT_ELASTICITY 0.25
@@ -101,17 +111,17 @@
 #define ECON_EVENT_SATURATION_MAX 40
 #define ECON_EVENT_REROLL_COOLDOWN_DAYS 7
 
-#define ECON_SHORTAGE_MINOR   2.00
-#define ECON_SHORTAGE_NORMAL  2.25
-#define ECON_SHORTAGE_MAJOR   2.5
-#define ECON_SHORTAGE_SEVERE  2.75
-#define ECON_SHORTAGE_CRISIS  3.00
+#define ECON_SHORTAGE_MINOR	2.00
+#define ECON_SHORTAGE_NORMAL	2.25
+#define ECON_SHORTAGE_MAJOR	2.5
+#define ECON_SHORTAGE_SEVERE	2.75
+#define ECON_SHORTAGE_CRISIS	3.00
 
-#define ECON_OVERSUPPLY_MINOR  0.70
+#define ECON_OVERSUPPLY_MINOR	0.70
 #define ECON_OVERSUPPLY_NORMAL 0.65
-#define ECON_OVERSUPPLY_MAJOR  0.60
+#define ECON_OVERSUPPLY_MAJOR	0.60
 #define ECON_OVERSUPPLY_SEVERE 0.55
-#define ECON_OVERSUPPLY_GLUT   0.50
+#define ECON_OVERSUPPLY_GLUT	0.50
 
 // Temp consequences for bnaditry
 #define BANDITRY_DRAIN_DANGEROUS_FLAT 40
@@ -121,17 +131,31 @@
 // 500 above the default purse floor so that banditry won't tank econ on its own
 #define BANDITRY_DEBT_FLOOR 1500
 
+// Fraction of any Crown's Purse credit skimmed to pay down banditry debt while it's outstanding.
+// Was 1.0 (100%), which made the purse unable to visibly recover until debt cleared.
+#define BANDITRY_DEBT_SKIM_RATE 0.75
+
 
 #define BLOCKADE_ROUNDSTART_COUNT_MIN 2
 #define BLOCKADE_ROUNDSTART_COUNT_MAX 3
 #define BLOCKADE_RECLEAR_COOLDOWN 1
 #define BLOCKADE_SCROLL_PLEDGE_COST 500
-#define BLOCKADE_SCROLL_REWARD 650
-#define BLOCKADE_REWARD_MULT_WEIGHT 0.5
+#define BLOCKADE_SCROLL_REWARD 715
+#define BLOCKADE_TRAVEL_FEE_COAST 75
+#define BLOCKADE_TRAVEL_FEE_MOUNTAIN 150
+
+#define BLOCKADE_SURCHARGE_CATEGORY_PCT 30
+#define BLOCKADE_SURCHARGE_PIRACY_PCT 15
+#define BLOCKADE_SURCHARGE_DEMAND_PCT 10
+#define BLOCKADE_SURCHARGE_GEAR_PCT 10
+// Lowpop can't clear blockades reliably, so Goldface surcharges are waived below HALF and halved below FULL.
+#define BLOCKADE_SURCHARGE_POP_HALF 30
+#define BLOCKADE_SURCHARGE_POP_FULL 60
+#define BLOCKADE_SURCHARGE_POP_RECHECK (1 MINUTES)
 
 #define BLOCKADE_REPLENISH_FLOOR 1
 #define BLOCKADE_REPLENISH_BUDGET_BASE 1
-#define BLOCKADE_REPLENISH_BUDGET_PER_PLAYER 0.02  // +1 per 50 active players
+#define BLOCKADE_REPLENISH_BUDGET_PER_PLAYER 0.02	// +1 per 50 active players
 #define BLOCKADE_REPLENISH_BUDGET_MAX 2
 #define BLOCKADE_REPLENISH_FIRST_DAY 2
 #define BLOCKADE_REPLENISH_LAST_DAY 5 // No last minute blockade
@@ -177,15 +201,15 @@
 	return realm_type
 
 /proc/ta_economy_default_azurian_labels()
-	var/realm = lowertext("[ta_economy_realm_name()]")
+	var/realm = LOWER_TEXT("[ta_economy_realm_name()]")
 	return (!realm || realm == "azuria" || realm == "azure peak")
 
 /proc/ta_economy_al_ashur_labels()
-	return lowertext("[ta_economy_realm_name()]") == "al-ashur"
+	return LOWER_TEXT("[ta_economy_realm_name()]") == "al-ashur"
 
 /proc/ta_economy_rockhill_labels()
-	var/map_name = lowertext("[ta_economy_map_name()]")
-	var/realm = lowertext("[ta_economy_realm_name()]")
+	var/map_name = LOWER_TEXT("[ta_economy_map_name()]")
+	var/realm = LOWER_TEXT("[ta_economy_realm_name()]")
 	return (map_name == "rockhill" || realm == "enigma")
 
 /proc/ta_economy_authority_noun()

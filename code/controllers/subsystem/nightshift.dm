@@ -9,9 +9,9 @@ SUBSYSTEM_DEF(nightshift)
 
 	var/nightshift_active = FALSE
 	var/nightshift_start_time = 576000	//4pm	//702000=7:30 PM, station time
-	var/nightshift_dawn_start = 288000		//198000=    530am
-	var/nightshift_day_start = 360000		//270000=    730am
-	var/nightshift_dusk_start = 504000		//630000=    530pm
+	var/nightshift_dawn_start = 288000		//198000=	530am
+	var/nightshift_day_start = 360000		//270000=	730am
+	var/nightshift_dusk_start = 504000		//630000=	530pm
 
 	/* Default STONEKEEP config.
 	var/nightshift_start_time = 756000	//9:00 PM - 2100 hrs
@@ -27,7 +27,7 @@ SUBSYSTEM_DEF(nightshift)
 
 	var/high_security_mode = FALSE
 
-/datum/controller/subsystem/nightshift/Initialize()
+/datum/controller/subsystem/nightshift/Initialize(mapload)
 	if(!CONFIG_GET(flag/enable_night_shifts))
 		can_fire = FALSE
 	current_tod = settod()
@@ -78,7 +78,7 @@ SUBSYSTEM_DEF(nightshift)
 		return
 	if(!SSticker.sunscorch_burn_warning_sent)
 		SSticker.sunscorch_burn_warning_sent = TRUE
-		to_chat(world, span_userdanger("THE WORM CONSUMES THE SUN. Deadly radiance falls on Azuria. Those outside will be unmade. The back of my amygdala itches."))
+		to_world(span_userdanger("THE WORM CONSUMES THE SUN. Deadly radiance falls on Azuria. Those outside will be unmade. The back of my amygdala itches."))
 	for(var/mob/living/M as anything in GLOB.mob_living_list)
 		if(M.stat == DEAD || !isturf(M.loc))
 			continue
@@ -108,7 +108,7 @@ SUBSYSTEM_DEF(nightshift)
 		if("day")
 			if(HAS_TRAIT(src, TRAIT_VAMP_DREAMS))
 				apply_status_effect(/datum/status_effect/debuff/vamp_dreams)
-			if(HAS_TRAIT(src, TRAIT_NIGHT_OWL))
+			if(HAS_TRAIT(src, TRAIT_NIGHT_OWL) || HAS_TRAIT(src, TRAIT_NIGHT_OWL_LESSER))
 				apply_status_effect(/datum/status_effect/debuff/sleepytime)
 		if("night")
 			SEND_SIGNAL(src, COMSIG_SLEEPY_TIME)
@@ -117,7 +117,7 @@ SUBSYSTEM_DEF(nightshift)
 				return ..()
 			if(HAS_TRAIT(src, TRAIT_NIGHT_OWL))
 				add_stress(/datum/stressevent/night_owl)
-			else
+			else if (!HAS_TRAIT(src, TRAIT_NIGHT_OWL_LESSER))
 				apply_status_effect(/datum/status_effect/debuff/sleepytime)
 				add_stress(/datum/stressevent/sleepytime)
 
@@ -139,7 +139,7 @@ SUBSYSTEM_DEF(nightshift)
 	towner_jobs = GLOB.peasant_positions | GLOB.burgher_positions
 	if(mind.assigned_role != "Unassigned" && istype(mind.assigned_role, /datum/job) && (mind.assigned_role.title in towner_jobs)) //If you play a towner-related role, you get an additonal triumph
 		triumphs_to_add++
-	if(get_flaw(/datum/charflaw/noflaw))
+	if(has_flaw(/datum/charflaw/noflaw))
 		triumphs_to_add = 0
 	if(triumphs_to_add)
 		adjust_triumphs(triumphs_to_add)

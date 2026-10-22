@@ -38,7 +38,7 @@
 	name = "Durag"
 	path = /obj/item/clothing/head/roguetown/durag
 	sort_category = "Hats"
-	
+
 /datum/loadout_item/strawhat
 	name = "Straw Hat"
 	path = /obj/item/clothing/head/roguetown/strawhat
@@ -59,28 +59,8 @@
 	path = /obj/item/clothing/head/roguetown/wizhat
 	sort_category = "Hats"
 
-/datum/loadout_item/wizhat/red
-	name = "Wizard Hat (Red)"
-	path = /obj/item/clothing/head/roguetown/wizhat/red
-	sort_category = "Hats"
-
-/datum/loadout_item/wizhat/yellow
-	name = "Wizard Hat (Yellow)"
-	path = /obj/item/clothing/head/roguetown/wizhat/yellow
-	sort_category = "Hats"
-
-/datum/loadout_item/wizhat/green
-	name = "Wizard Hat (Green)"
-	path = /obj/item/clothing/head/roguetown/wizhat/green
-	sort_category = "Hats"
-
-/datum/loadout_item/wizhat/black
-	name = "Wizard Hat (Black)"
-	path = /obj/item/clothing/head/roguetown/wizhat/black
-	sort_category = "Hats"
-
 /datum/loadout_item/wizhat/gen
-	name = "Wizard Hat (Generic)"
+	name = "Wizard Hat (No Brim)"
 	path = /obj/item/clothing/head/roguetown/wizhat/gen
 	sort_category = "Hats"
 
@@ -102,6 +82,11 @@
 /datum/loadout_item/furhat
 	name = "Fur Hat"
 	path = /obj/item/clothing/head/roguetown/hatfur
+	sort_category = "Hats"
+
+/datum/loadout_item/furheadband
+	name = "Fur Headband"
+	path = /obj/item/clothing/head/roguetown/headband/fur
 	sort_category = "Hats"
 
 /datum/loadout_item/smokingcap
@@ -169,7 +154,6 @@
 	path = /obj/item/flowercrown/rosa/dyecrown
 	sort_category = "Hats"
 
-
 /datum/loadout_item/salvia_crown
 	name = "Salvia Crown"
 	path = /obj/item/flowercrown/salvia
@@ -219,7 +203,12 @@
 	name = "Shawl"
 	path = /obj/item/clothing/head/roguetown/shawl
 	sort_category = "Hats"
-  
+
+/datum/loadout_item/shawlhood
+	name = "Shawl (Hijab Variant)"
+	path = /obj/item/clothing/head/roguetown/roguehood/shawlhood
+	sort_category = "Hats"
+
 /datum/loadout_item/maidband
 	name = "Maid Headdress"
 	path = /obj/item/clothing/head/roguetown/maidhead
@@ -233,5 +222,20 @@
 /datum/loadout_item/loudmouth_headgear
 	name = "Loudmouth's Headcover"
 	path = /obj/item/clothing/head/roguetown/veiled/loudmouth
+	sort_category = "Hats"
+
+/datum/loadout_item/turban
+	name = "Turban"
+	path = /obj/item/clothing/head/roguetown/turban
+	sort_category = "Hats"
+
+/datum/loadout_item/duelisthat
+	name = "Dashing Feathered Hat"
+	path = /obj/item/clothing/head/roguetown/duelisthat
+	sort_category = "Hats"
+
+/datum/loadout_item/flamboyant
+	name = "Flamboyant Hat"
+	path = /obj/item/clothing/head/roguetown/flamboyant
 	sort_category = "Hats"
 */

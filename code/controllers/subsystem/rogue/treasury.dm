@@ -27,11 +27,12 @@ SUBSYSTEM_DEF(treasury)
 		TAX_CATEGORY_HEADEATER_LEVY = 0.15,
 		TAX_CATEGORY_IMPORT_TARIFF = 0.15,
 		TAX_CATEGORY_EXPORT_DUTY = 0.15,
+		TAX_CATEGORY_RECOVERED_SPOILS = 0.50,
 		TAX_CATEGORY_FINE = 1.0,
 		TAX_CATEGORY_ESTATE_LEVY = 0.15, //TA EDIT
 	)
 	var/trade_spread = 0.10
-	var/autoexport_percentage = 0.6
+	var/autoexport_percentage = AUTOEXPORT_DEFAULT_PERCENTAGE
 	var/list/bank_accounts = list()
 	var/datum/fund/discretionary_fund
 	var/datum/fund/burgher_pledge_fund
@@ -48,6 +49,21 @@ SUBSYSTEM_DEF(treasury)
 	var/list/merchant_agents = list()
 	var/list/bathhouse_agents = list()
 	var/list/church_agents = list()
+
+	/// Per-day mammon cap on Agents of the Bathhouse (writ holders) drawing from the bathhouse fund. Set by the Bathmaster.
+	var/bathhouse_agent_daily_withdraw_limit = BATHHOUSE_AGENT_DAILY_WITHDRAW_DEFAULT
+	/// Per-day mammon cap on bathhouse workers (attendants) drawing from the bathhouse fund. Set by the Bathmaster.
+	var/bathhouse_worker_daily_withdraw_limit = BATHHOUSE_WORKER_DAILY_WITHDRAW_DEFAULT
+	/// When TRUE, the Bathmaster has suspended all agent withdrawals from the bathhouse fund.
+	var/bathhouse_agent_withdrawals_suspended = FALSE
+	/// When TRUE, the Bathmaster has suspended all worker withdrawals from the bathhouse fund.
+	var/bathhouse_worker_withdrawals_suspended = FALSE
+	/// Amount each worker or agent has already drawn today, keyed by real_name. One shared
+	/// tally so someone who is somehow both worker and agent cannot double-dip.
+	var/list/bathhouse_withdrawals = list()
+	/// The in-game day bathhouse_withdrawals last reset on.
+	var/bathhouse_withdrawals_day = -1
+
 	var/banditry_debt = 0
 	var/treasury_state = TREASURY_NORMAL
 	var/treasury_debt = 0
@@ -59,6 +75,21 @@ SUBSYSTEM_DEF(treasury)
 	var/atc_loan_arrears_consumed = FALSE
 	var/atc_loans_drawn_this_round = 0
 	var/list/ledger = list()
+	/// Double-entry chart of accounts: account id -> /datum/ledger_account. Built lazily.
+	var/list/chart_of_accounts = list()
+	var/ledger_entry_seq = 0
+	/// Cash that has entered / left the Crown purse through ordinary receipts and payments, taken from the books
+	/// (financing and opening entries are left out). Feeds the Economic Chronicle.
+	var/purse_inflow_total = 0
+	var/purse_outflow_total = 0
+	/// Funds that live outside bank_accounts (e.g. escrow holds) but must reconcile to the books.
+	var/list/auxiliary_funds = list()
+	/// Account totals at the close of each day: day -> list(account id -> list(debits, credits)).
+	var/list/day_snapshots = list()
+	var/ledger_closed_day = -1
+	/// Crown revenue/expense balances and purse at the last Steward's morning report, so the next one can show what changed.
+	var/list/last_report_ledger = null
+	var/last_report_balance = null
 	var/list/noble_incomes = list()
 	var/list/decrees = list()
 	var/list/stockpile_datums = list()
@@ -91,6 +122,8 @@ SUBSYSTEM_DEF(treasury)
 	)
 	var/list/poll_tax_advance_days = list()
 	var/list/poll_tax_owed = list()
+	/// Mammon of prepaid poll tax still unearned per head (deferred revenue in the Crown book).
+	var/list/poll_tax_advance_value = list()
 	var/list/poll_tax_debt_days = list()
 	var/levy_rates_changed_day = -1
 	var/poll_rates_changed_day = -1
@@ -105,8 +138,8 @@ SUBSYSTEM_DEF(treasury)
 	/// Steward-settable floor. Stockpile refuses purchases when Crown's Purse would drop below this.
 	var/stockpile_purchase_floor = STOCKPILE_CROWN_PURCHASE_FLOOR_DEFAULT
 	/// A feature for the Steward to unlock once the Crown's trade volume reaches 10k
-	/// Basically help automate the import, fitting in line with my idea of active trade 
-	/// Converting to passive convenience later. Later on I might gate it through a 
+	/// Basically help automate the import, fitting in line with my idea of active trade
+	/// Converting to passive convenience later. Later on I might gate it through a
 	/// Total trade volumes converting into multiple chooseable upgrades but for now
 	/// It just automatically unlock an upgrade with no real choice
 	var/royal_custom_unlocked = FALSE
@@ -126,16 +159,21 @@ SUBSYSTEM_DEF(treasury)
 	var/list/fined_today_names = list()
 	var/fined_today_day = -1
 
-/datum/controller/subsystem/treasury/Initialize()
+/datum/controller/subsystem/treasury/Initialize(mapload)
 	var/roundstart_pop = get_active_player_count()
 	var/seed = STOCKPILE_CROWN_PURCHASE_FLOOR_DEFAULT + rand(500, 1500) + (roundstart_pop * CROWN_PURSE_SEED_PER_PLAYER)
 	royal_custom_threshold = ROYAL_CUSTOM_VOLUME_BASE + (roundstart_pop * ROYAL_CUSTOM_VOLUME_PER_POP)
-	discretionary_fund = new("Crown's Purse", null, seed, CURRENCY_MAMMON)
+	init_chart_of_accounts()
+	discretionary_fund = new("Treasury", null, seed, CURRENCY_MAMMON)
+	discretionary_fund.ledger_book = LEDGER_BOOK_CROWN
 	burgher_pledge_fund = new("Burgher Pledge", null, BURGHER_PLEDGE_BASE_REFILL * BURGHER_PLEDGE_ROUNDSTART_MULTIPLIER, CURRENCY_BURGHER_PLEDGE)
+	burgher_pledge_fund.ledger_book = LEDGER_BOOK_PLEDGE
 	church_fund = new("Church Fund", null, CHURCH_FUND_SEED, CURRENCY_MAMMON)
 	merchant_fund = new("Merchant Fund", null, MERCHANT_FUND_SEED, CURRENCY_MAMMON)
 	bathhouse_fund = new("Bathhouse Fund", null, BATHHOUSE_FUND_SEED, CURRENCY_MAMMON)
 	innkeeper_fund = new("Tavern Earnings", null, INNKEEPER_FUND_SEED, CURRENCY_MAMMON)
+	for(var/datum/fund/seeded as anything in list(discretionary_fund, burgher_pledge_fund, church_fund, merchant_fund, bathhouse_fund, innkeeper_fund))
+		post_opening_balance(seeded)
 	force_set_round_statistic(STATS_STARTING_TREASURY, discretionary_fund.balance)
 	record_round_statistic(STATS_PLEDGE_GENERATED, burgher_pledge_fund.balance)
 	record_round_statistic(STATS_RUMOR_POINTS_GENERATED, rumor_points)
@@ -147,6 +185,7 @@ SUBSYSTEM_DEF(treasury)
 		if(D.trade_good_id)
 			stockpile_by_trade_good[D.trade_good_id] = D
 	autoset_stockpile_limits()
+	revalue_stockpile_inventory(opening = TRUE)
 	return ..()
 
 /datum/controller/subsystem/treasury/proc/autoset_stockpile_limits()
@@ -182,16 +221,34 @@ SUBSYSTEM_DEF(treasury)
 
 		auto_export()
 
+	if(ledger_closed_day < GLOB.dayspassed - 1)
+		// Value the stockpile before the totals are frozen so the day closes with it included.
+		revalue_stockpile_inventory()
+		close_books_through(GLOB.dayspassed - 1)
+
 /datum/controller/subsystem/treasury/proc/tick_rural_tax()
 	if(!discretionary_fund)
 		return
 	var/rural_tax_amount = get_rural_tax_amount()
-	mint(discretionary_fund, rural_tax_amount, "Rural Tax Collection")
+	if(rural_tax_amount <= 0)
+		return
+	mint(discretionary_fund, rural_tax_amount, "Rural Subsidy", null, LEDGER_CROWN_REV_RURAL)
 	record_round_statistic(STATS_RURAL_TAXES_COLLECTED, rural_tax_amount)
 	total_rural_tax += rural_tax_amount
 
+/datum/controller/subsystem/treasury/proc/get_active_producer_count()
+	var/count = 0
+	for(var/mob/living/owner as anything in bank_accounts)
+		if(!owner || !owner.client)
+			continue
+		if(is_producer_job(owner.job))
+			count++
+	return count
+
 /datum/controller/subsystem/treasury/proc/get_rural_tax_amount()
-	return RURAL_TAX
+	var/producers = get_active_producer_count()
+	var/taper = clamp(1.0 - (producers / RURAL_SUBSIDY_REFERENCE_PRODUCERS), 0.0, 1.0)
+	return RURAL_SUBSIDY_FLOOR + round((RURAL_SUBSIDY_BASE - RURAL_SUBSIDY_FLOOR) * taper)
 
 // Mark the cached stewardry market / region / arbitrage
 // View as needing rebuild on next read.
@@ -257,7 +314,7 @@ SUBSYSTEM_DEF(treasury)
 	bank_accounts[owner] = account
 	poll_projection_dirty = TRUE
 	if(initial_deposit > 0)
-		mint(account, initial_deposit, "Initial endowment")
+		mint(account, initial_deposit, "Initial endowment", null, LEDGER_CITIZEN_COIN_IN)
 	return TRUE
 
 /datum/controller/subsystem/treasury/proc/get_max_fine_for(mob/living/target)
@@ -314,9 +371,9 @@ SUBSYSTEM_DEF(treasury)
 	var/datum/fund/account = get_account(target)
 	if(!account)
 		return FALSE
-	return mint(account, amt, "Savings")
+	return mint(account, amt, "Savings", null, LEDGER_CITIZEN_ESTATE)
 
-/datum/controller/subsystem/treasury/proc/give_money_account(amt, target, source, mint_new = FALSE, mint_label)
+/datum/controller/subsystem/treasury/proc/give_money_account(amt, target, source, mint_new = FALSE, mint_label, is_salary = FALSE, expense_acct, income_acct)
 	if(!amt)
 		return
 	if(!target)
@@ -329,15 +386,19 @@ SUBSYSTEM_DEF(treasury)
 	var/datum/fund/account = get_account(target)
 	if(!account)
 		return FALSE
-
 	if(amt > 0)
 		if(mint_new)
-			if(!mint(account, amt, source, mint_label))
+			if(!mint(account, amt, source, mint_label, income_acct))
 				return FALSE
 		else
-			if(!transfer(discretionary_fund, account, amt, source))
+			// Callers that know what the Crown is paying for classify it; the default is a salary or a grant.
+			var/payer_acct = expense_acct || (is_salary ? LEDGER_CROWN_EXP_WAGES : LEDGER_CROWN_EXP_GRANTS)
+			var/payee_acct = income_acct || (is_salary ? LEDGER_CITIZEN_WAGES : null)
+			if(!transfer(discretionary_fund, account, amt, source, payer_acct, payee_acct))
 				return FALSE
 		record_round_statistic(STATS_DIRECT_TREASURY_TRANSFERS, amt)
+		if(!mint_new)
+			record_treasury_payout(usr, istype(target, /mob/living) ? target : null, amt, is_salary)
 		send_ooc_note(source ? "<b>MEISTER:</b> You received [amt]m. ([source])" : "<b>MEISTER:</b> You received [amt]m.", name = target_name)
 		log_game("CROWN GRANT: [usr ? key_name(usr) : "system"] granted [amt]m to [istype(target, /mob/living) ? key_name(target) : target_name] via [source || "unknown"]")
 	else
@@ -345,9 +406,13 @@ SUBSYSTEM_DEF(treasury)
 			send_ooc_note("<b>MEISTER:</b> Error: The round is ending. No further fines may be levied.", name = target_name)
 			return FALSE
 		var/mob/living/fine_owner = istype(target, /mob/living) ? target : null
+		if(fine_owner && usr && fine_owner == usr)
+			send_ooc_note("<b>MEISTER:</b> Error: You can't fine yourself.", name = target_name)
+			log_game("FINE REFUSED: [key_name(usr)] attempted to fine themselves [abs(amt)]m via [source || "unknown"]")
+			return FALSE
 		if(fine_owner && is_tax_exempt(fine_owner, TAX_CATEGORY_FINE))
 			record_tax_exemption(TAX_CATEGORY_FINE, abs(amt))
-			send_ooc_note("<b>MEISTER:</b> Error: By decree, they cannot be fined.", name = target_name)
+			send_ooc_note("<b>MEISTER:</b> Error: A Charter exempts them from fines.", name = target_name)
 			log_game("FINE REFUSED: [usr ? key_name(usr) : "system"] attempted to fine [key_name(fine_owner)] [abs(amt)]m but they were Charter-exempt")
 			return FALSE
 		var/fine_amt = abs(amt)
@@ -362,10 +427,10 @@ SUBSYSTEM_DEF(treasury)
 			if(fine_owner && has_been_fined_today(fine_owner))
 				send_ooc_note("<b>MEISTER:</b> Error: They have already been fined today.", name = target_name)
 			else
-				send_ooc_note("<b>MEISTER:</b> Error: No fineable amount remains.", name = target_name)
+				send_ooc_note("<b>MEISTER:</b> Error: There is nothing left to fine them.", name = target_name)
 			return FALSE
-		if(!transfer(account, discretionary_fund, fine_amt, "[TAX_CATEGORY_FINE] ([source])"))
-			send_ooc_note("<b>MEISTER:</b> Error: Insufficient funds in the account to complete the fine.", name = target_name)
+		if(!transfer(account, discretionary_fund, fine_amt, "[TAX_CATEGORY_FINE] ([source])", LEDGER_CITIZEN_TAXES, LEDGER_CROWN_REV_FINES))
+			send_ooc_note("<b>MEISTER:</b> Error: They don't have enough in their account to pay the fine.", name = target_name)
 			return FALSE
 		record_round_statistic(STATS_FINES_INCOME, fine_amt)
 		send_ooc_note(source ? "<b>MEISTER:</b> You were fined [fine_amt]m. ([source])" : "<b>MEISTER:</b> You were fined [fine_amt]m.", name = target_name)
@@ -383,7 +448,7 @@ SUBSYSTEM_DEF(treasury)
 	var/datum/fund/account = get_account(character)
 	if(!account)
 		return FALSE
-	mint(account, amt, "Meister deposit by [character.real_name]")
+	mint(account, amt, "Meister deposit by [character.real_name]", null, LEDGER_CITIZEN_COIN_IN)
 	return list(amt, 0)
 
 /datum/controller/subsystem/treasury/proc/withdraw_money_account(amt, target)
@@ -397,9 +462,9 @@ SUBSYSTEM_DEF(treasury)
 	if(!account)
 		return
 	if(account.balance < amt)
-		send_ooc_note("<b>MEISTER:</b> Error: Insufficient funds in the account to complete the withdrawal.", name = target_name)
+		send_ooc_note("<b>MEISTER:</b> Error: You don't have enough in your account for that withdrawal.", name = target_name)
 		return
-	if(!burn(account, amt, "Meister withdraw by [target_name]"))
+	if(!burn(account, amt, "Meister withdrawal by [target_name]", LEDGER_CITIZEN_COIN_OUT))
 		return
 	return TRUE
 
@@ -422,7 +487,7 @@ SUBSYSTEM_DEF(treasury)
 		return FALSE
 	var/source = recipient.job == "Merchant" ? "Azurian Trading Company" : "Treasury Sponsorship" //TA EDIT
 	var/payout = is_starter ? amount + ESTATE_STARTER_BONUS : amount
-	if(!mint(account, payout, source))
+	if(!mint(account, payout, source, null, LEDGER_CITIZEN_ESTATE))
 		return FALSE
 	record_round_statistic(STATS_NOBLE_INCOME_TOTAL, payout)
 	total_noble_income += payout
@@ -476,7 +541,7 @@ SUBSYSTEM_DEF(treasury)
 		var/datum/fund/account = bank_accounts[owner]
 		if(!account || account.wages_suspended)
 			continue
-		if(give_money_account(payment_amount, owner, "Daily Wage"))
+		if(give_money_account(payment_amount, owner, "Daily Wage", is_salary = TRUE))
 			record_round_statistic(STATS_WAGES_PAID, payment_amount)
 
 	if(SSeconomy)
@@ -509,20 +574,21 @@ SUBSYSTEM_DEF(treasury)
 	var/ceiling = (refill + guild_bonus) * BURGHER_PLEDGE_CLAWBACK_MULTIPLIER
 	if(burgher_pledge_fund.balance > ceiling)
 		var/surplus = burgher_pledge_fund.balance - ceiling
-		burn(burgher_pledge_fund, surplus, "Burgher Pledge clawback")
-	mint(burgher_pledge_fund, refill, "Burgher Pledge replenishment")
+		burn(burgher_pledge_fund, surplus, "Burgher Pledge clawback", ledger_acct(LEDGER_BOOK_PLEDGE, LEDGER_KEY_GRANTS))
+	mint(burgher_pledge_fund, refill, "Burgher Pledge replenishment", null, ledger_acct(LEDGER_BOOK_PLEDGE, LEDGER_KEY_GRANTS))
 	if(guild_bonus > 0)
-		mint(burgher_pledge_fund, guild_bonus, "Guild of Arms tribute (Charter of Arms)")
+		mint(burgher_pledge_fund, guild_bonus, "Guild of Arms tribute (Charter of Arms)", null, ledger_acct(LEDGER_BOOK_PLEDGE, LEDGER_KEY_GRANTS))
 	record_round_statistic(STATS_PLEDGE_GENERATED, refill + guild_bonus)
 
-/datum/controller/subsystem/treasury/proc/do_export(var/datum/roguestock/D, silent = FALSE)
+/datum/controller/subsystem/treasury/proc/do_export(datum/roguestock/D, silent = FALSE)
 	if(D.stockpile_amount < D.importexport_amt)
 		return FALSE
 	var/amt = D.get_export_price()
 	D.stockpile_amount -= D.importexport_amt
+	record_material_flow(MATERIAL_FLOW_OUT, MATERIAL_SOURCE_LOCAL_EXPORT, D.item_type, D.importexport_amt, amt)
 	dirty_market_view()
 
-	mint(discretionary_fund, amt, "exported [D.name]")
+	mint(discretionary_fund, amt, "exported [D.name]", null, LEDGER_CROWN_REV_EXPORT_SALES)
 	SStreasury.total_export += amt
 	economic_output += amt
 	record_round_statistic(STATS_STOCKPILE_EXPORTS_VALUE, amt)
@@ -538,6 +604,8 @@ SUBSYSTEM_DEF(treasury)
 	// (the bulk of the warehouse) flow through mass_export_surplus() below.
 	for(var/datum/roguestock/D in stockpile_datums)
 		if(!D.importexport_amt || D.trade_good_id)
+			continue
+		if(D.autoexport_disabled)
 			continue
 		if((autoexport_percentage * D.stockpile_limit) >= D.stockpile_amount)
 			continue
@@ -569,6 +637,8 @@ SUBSYSTEM_DEF(treasury)
 			continue
 		if(!D.automatic_price)
 			continue
+		if(D.autoexport_disabled)
+			continue
 		if(!D.importexport_amt)
 			continue
 		var/keep = round(autoexport_percentage * D.stockpile_limit)
@@ -592,13 +662,18 @@ SUBSYSTEM_DEF(treasury)
 			continue
 		total_revenue += revenue
 		total_units += export_qty
+		record_material_flow(MATERIAL_FLOW_OUT, MATERIAL_SOURCE_LOCAL_EXPORT, D.item_type, export_qty, revenue)
 		if(!silent)
 			lines += "[export_qty] [D.name] to [region.name] for [revenue]m"
 	return list("revenue" = total_revenue, "units" = total_units, "lines" = lines)
 
 /datum/controller/subsystem/treasury/proc/remove_person(mob/living/person)
+	retire_fund(bank_accounts[person])
 	noble_incomes -= person
 	bank_accounts -= person
+	// Prepaid tax is earned (they will not be using it); arrears will never be collected.
+	release_poll_tax_advance(person, 0, TRUE)
+	write_off_poll_tax_receivable(poll_tax_owed[person] || 0, "Poll tax arrears written off (departed)")
 	poll_tax_advance_days -= person
 	poll_tax_owed -= person
 	poll_tax_debt_days -= person
@@ -607,7 +682,7 @@ SUBSYSTEM_DEF(treasury)
 
 /datum/controller/subsystem/treasury/proc/apply_rate_adjustments(list/adjustments, good_announcement_text, bad_announcement_text)
 	if(GLOB.dayspassed <= levy_rates_changed_day)
-		to_chat(usr, span_warning("Crown levies have already been adjusted today - come back tomorrow."))
+		to_chat(usr, span_warning("You already changed the levies today. Try again tomorrow."))
 		return
 	var/datum/decree/concordat = get_decree(DECREE_ZENITSTADT_CONCORDAT)
 	var/concordat_active = concordat?.active ? TRUE : FALSE
@@ -669,7 +744,7 @@ SUBSYSTEM_DEF(treasury)
 
 /datum/controller/subsystem/treasury/proc/apply_poll_rate_adjustments(list/adjustments, good_announcement_text, bad_announcement_text)
 	if(GLOB.dayspassed <= poll_rates_changed_day)
-		to_chat(usr, span_warning("Poll tax rates have already been adjusted today - come back tomorrow."))
+		to_chat(usr, span_warning("Poll tax rates have already been adjusted today. Come back tomorrow."))
 		return
 	if(!islist(adjustments))
 		return
@@ -714,6 +789,8 @@ SUBSYSTEM_DEF(treasury)
 			return "Import Tariff"
 		if(TAX_CATEGORY_EXPORT_DUTY)
 			return "Export Duty"
+		if(TAX_CATEGORY_RECOVERED_SPOILS)
+			return "Recovered Spoils"
 		if(TAX_CATEGORY_ESTATE_LEVY) //TA EDIT
 			return "Estate Peasants Levy" //TA EDIT
 		if(TAX_CATEGORY_FINE)
@@ -723,7 +800,10 @@ SUBSYSTEM_DEF(treasury)
 /datum/controller/subsystem/treasury/proc/withdraw_money_treasury(amt, target)
 	if(!amt)
 		return FALSE
-	return burn(discretionary_fund, amt, "withdrawn by [target]")
+	if(!burn(discretionary_fund, amt, "withdrawn by [target]", LEDGER_CROWN_EXP_WITHDRAWALS))
+		return FALSE
+	record_treasury_expense(TREASURY_FLOW_WITHDRAWAL, ismob(target) ? treasury_role_of(target) : "Unknown", amt)
+	return TRUE
 
 /datum/controller/subsystem/treasury/proc/give_money_treasury(amt, source = "Treasury income")
 	if(!amt)
@@ -740,7 +820,7 @@ SUBSYSTEM_DEF(treasury)
 /datum/controller/subsystem/treasury/proc/get_poll_tax_category(mob/living/H)
 	if(!H)
 		return null
-	if(HAS_TRAIT(H, TRAIT_OUTLAW))
+	if(HAS_TRAIT(H, TRAIT_OUTLAW) || HAS_TRAIT(H, TRAIT_ROYAL_SUBSIDY))
 		return null
 	if(HAS_TRAIT(H, TRAIT_NOBLE) || (H.job in GLOB.noble_positions))
 		return POLL_TAX_CAT_NOBLE
@@ -748,7 +828,7 @@ SUBSYSTEM_DEF(treasury)
 		return POLL_TAX_CAT_INQUISITION
 	if((H.job in GLOB.church_positions) || HAS_TRAIT(H, TRAIT_AGENT_CHURCH))
 		return POLL_TAX_CAT_CLERGY
-	if(H.job in GLOB.courtier_positions)
+	if((H.job in GLOB.courtier_positions) || H.job == "Court Agent")
 		return POLL_TAX_CAT_COURTIER
 	if((H.job in GLOB.garrison_positions) || H.job == "Squire")
 		return POLL_TAX_CAT_GARRISON
@@ -897,7 +977,7 @@ SUBSYSTEM_DEF(treasury)
 			income += per_tick_flow
 		else if(rate < 0)
 			// Subsidies reach every eligible subject, including charter-protected ones.
-			per_tick_flow = rate * total   // negative total = subsidy out of Purse
+			per_tick_flow = rate * total	// negative total = subsidy out of Purse
 			subsidy += -per_tick_flow
 		by_category += list(list(
 			"category" = category,
@@ -940,7 +1020,7 @@ SUBSYSTEM_DEF(treasury)
 	if(!H || days <= 0)
 		return FALSE
 	if(SSticker?.round_start_time && (world.time - SSticker.round_start_time) < POLL_TAX_ADVANCE_LOCKOUT)
-		to_chat(H, span_warning("The Crown's ledgers have not yet opened for the day. Try again later."))
+		to_chat(H, span_warning("It's too early to pay the poll tax ahead. Try again in [DisplayTimeText(POLL_TAX_ADVANCE_LOCKOUT - (world.time - SSticker.round_start_time))]."))
 		return FALSE
 	var/datum/fund/account = get_account(H)
 	if(!account)
@@ -950,30 +1030,31 @@ SUBSYSTEM_DEF(treasury)
 		to_chat(H, span_warning("The Crown does not tax your class."))
 		return FALSE
 	if(is_poll_tax_charter_exempt(H, category))
-		to_chat(H, span_warning("Your class is exempt from poll tax by decree."))
+		to_chat(H, span_warning("A Charter exempts your class from the poll tax."))
 		return FALSE
 	var/rate = get_poll_tax_rate_for(H, category)
 	if(rate < 0)
-		to_chat(H, span_warning("Your class currently receives a Crown subsidy - there is nothing to advance."))
+		to_chat(H, span_warning("Your class receives a Crown subsidy, so there is no tax to pay ahead."))
 		return FALSE
 	if(rate == 0)
 		rate = POLL_TAX_ADVANCE_FALLBACK_RATE
 	var/existing_advance = poll_tax_advance_days[H] || 0
 	var/room = POLL_TAX_MAX_ADVANCE_DAYS - existing_advance
 	if(room <= 0)
-		to_chat(H, span_warning("You already hold the maximum of [POLL_TAX_MAX_ADVANCE_DAYS] days of Poll Tax advance."))
+		to_chat(H, span_warning("You can't pay more than [POLL_TAX_MAX_ADVANCE_DAYS] days of poll tax ahead."))
 		return FALSE
 	if(days > room)
 		days = room
 	var/total_cost = rate * days
 	if(account.balance < total_cost)
-		to_chat(H, span_warning("Insufficient balance. Need [total_cost]m for [days] days."))
+		to_chat(H, span_warning("You need [total_cost]m to pay [days] days ahead."))
 		return FALSE
-	if(!transfer(account, discretionary_fund, total_cost, "Poll Tax advance ([days] days)"))
+	if(!transfer(account, discretionary_fund, total_cost, "Poll tax advance ([days] days)", LEDGER_CITIZEN_TAXES, LEDGER_CROWN_POLL_DEFERRED))
 		return FALSE
 	record_poll_tax_by_category(category, total_cost)
+	poll_tax_advance_value[H] = (poll_tax_advance_value[H] || 0) + total_cost
 	poll_tax_advance_days[H] = existing_advance + days
-	to_chat(H, span_notice("You have advanced [days] day[days == 1 ? "" : "s"] of Poll Tax ([total_cost]m total). Advance held: [poll_tax_advance_days[H]] day[poll_tax_advance_days[H] == 1 ? "" : "s"]."))
+	to_chat(H, span_notice("You paid [days] day[days == 1 ? "" : "s"] of poll tax ahead ([total_cost]m). You are now paid up for [poll_tax_advance_days[H]] day[poll_tax_advance_days[H] == 1 ? "" : "s"]."))
 	log_game("POLL TAX ADVANCE: [key_name(H)] prepaid [days] days ([total_cost]m) of poll tax as [category]")
 	return TRUE
 
@@ -981,6 +1062,8 @@ SUBSYSTEM_DEF(treasury)
 /datum/controller/subsystem/treasury/proc/clear_poll_tax_debt(mob/living/H)
 	if(!H)
 		return
+	// Whatever is still on the receivable at this point is being forgiven.
+	write_off_poll_tax_receivable(poll_tax_owed[H] || 0, "Poll tax arrears cleared")
 	poll_tax_owed -= H
 	poll_tax_debt_days -= H
 	if(HAS_TRAIT(H, TRAIT_ARREARS))
@@ -1017,8 +1100,9 @@ SUBSYSTEM_DEF(treasury)
 			var/subsidy = -rate
 			if(discretionary_fund.balance < subsidy)
 				continue
-			if(!transfer(discretionary_fund, account, subsidy, "Poll Subsidy ([category])"))
+			if(!transfer(discretionary_fund, account, subsidy, "Poll subsidy ([category])", LEDGER_CROWN_EXP_POLL_SUBSIDY))
 				continue
+			record_treasury_expense(TREASURY_FLOW_SUBSIDY, get_poll_tax_category_pretty_name(category), subsidy)
 			// Record as a negative against the category - the breakdown shows net Crown intake.
 			record_poll_tax_by_category(category, -subsidy)
 			to_chat(owner, span_notice("<b>POLL SUBSIDY:</b> [subsidy]m granted by the Crown."))
@@ -1026,26 +1110,31 @@ SUBSYSTEM_DEF(treasury)
 
 		var/advance = poll_tax_advance_days[owner] || 0
 		if(advance > 0)
+			release_poll_tax_advance(owner, advance)
 			advance--
 			if(advance <= 0)
 				poll_tax_advance_days -= owner
 			else
 				poll_tax_advance_days[owner] = advance
-			to_chat(owner, span_notice("<b>POLL TAX:</b> Covered by advance. [advance] day[advance == 1 ? "" : "s"] remaining."))
+			to_chat(owner, span_notice("<b>POLL TAX:</b> Paid from your advance. [advance] day[advance == 1 ? "" : "s"] remaining."))
 			continue
 
-		var/owed_this_tick = rate + (poll_tax_owed[owner] || 0)
+		var/arrears_before = poll_tax_owed[owner] || 0
+		var/owed_this_tick = rate + arrears_before
 
 		var/paid = 0
 		if(account.balance >= owed_this_tick)
-			if(transfer(account, discretionary_fund, owed_this_tick, "Poll Tax ([category])"))
+			if(transfer(account, discretionary_fund, owed_this_tick, "Poll tax ([category])", LEDGER_CITIZEN_TAXES, poll_tax_receipt_counters(owed_this_tick, arrears_before)))
 				paid = owed_this_tick
 				owed_this_tick = 0
 		else
 			var/partial = account.balance
-			if(partial > 0 && transfer(account, discretionary_fund, partial, "Poll Tax ([category])"))
+			if(partial > 0 && transfer(account, discretionary_fund, partial, "Poll tax ([category])", LEDGER_CITIZEN_TAXES, poll_tax_receipt_counters(partial, arrears_before)))
 				paid = partial
 				owed_this_tick -= partial
+
+		// Today's tax is earned whether or not it was collected; the uncollected part is receivable.
+		accrue_poll_tax_receivable(rate - max(0, paid - arrears_before), category)
 
 		if(paid > 0)
 			record_poll_tax_by_category(category, paid)
@@ -1058,4 +1147,6 @@ SUBSYSTEM_DEF(treasury)
 			if(poll_tax_debt_days[owner] >= POLL_TAX_DEBT_DAYS_TO_DEBTOR && !HAS_TRAIT(owner, TRAIT_ARREARS))
 				ADD_TRAIT(owner, TRAIT_ARREARS, TRAIT_GENERIC)
 		else
+			// Settled in full, so nothing is left on the receivable to forgive.
+			poll_tax_owed[owner] = 0
 			clear_poll_tax_debt(owner)

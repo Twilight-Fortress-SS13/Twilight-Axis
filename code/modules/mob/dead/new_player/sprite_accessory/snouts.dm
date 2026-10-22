@@ -3,6 +3,7 @@
 	icon = 'icons/mob/sprite_accessory/snouts/snouts.dmi'
 	color_key_name = "Snout"
 	relevant_layers = list(BODY_ADJ_LAYER)
+	var/draws_over_hair = FALSE // For top snout jank. Should always be false unless an accessory is meant to layer over top of your hair.
 
 /datum/sprite_accessory/snout/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	return is_human_part_visible(owner, HIDESNOUT)
@@ -312,6 +313,12 @@
 	color_keys = 2
 	color_key_names = list("Snout", "Inner")
 
+/datum/sprite_accessory/snout/vskunk
+	name = "Skunk"
+	icon_state = "vskunk"
+	color_keys = 3
+	color_key_names = list("Snout", "Stripe", "Nose")
+
 /******************************************
 **************** Snouts *******************
 *************but higher up*****************/
@@ -319,6 +326,7 @@
 /datum/sprite_accessory/snout/front
 	abstract_type = /datum/sprite_accessory/snout/front
 	relevant_layers = list(BODY_FRONT_LAYER)
+	draws_over_hair = TRUE
 
 /datum/sprite_accessory/snout/front/sharp
 	name = "Sharp (Top)"
@@ -514,3 +522,4 @@
 	icon_state = "masked"
 	color_key_name = "Veil"
 	relevant_layers = list(BODY_ADJ_LAYER, BODY_FRONT_LAYER)
+	draws_over_hair = TRUE

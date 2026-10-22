@@ -25,6 +25,7 @@
 	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_PLATE_STEP, 8)
 	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
 	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FREEBLADEDEXTERITY)
 
 /obj/item/clothing/under/roguetown/platelegs/iron
 	name = "iron plate chausses"
@@ -36,7 +37,7 @@
 
 /obj/item/clothing/under/roguetown/platelegs/aalloy
 	name = "decrepit plate chausses"
-	desc = "Frayed bronze plates, shingled over chausses of rotting leather-and-maille. Voided bowels are all that remains of its former legionnaire."
+	desc = "Rotted metal plates, shingled over chausses of rotting leather-and-maille. Voided bowels are all that remains of its former legionnaire."
 	icon_state = "ancientpants"
 	max_integrity = ARMOR_INT_LEG_DECREPIT_PLATE
 	color = "#bb9696"
@@ -63,7 +64,7 @@
 	smeltresult = /obj/item/ingot/component/graggar
 	unenchantable = TRUE
 
-/obj/item/clothing/under/roguetown/platelegs/graggar/Initialize()
+/obj/item/clothing/under/roguetown/platelegs/graggar/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_HORDE, "ARMOR", "RENDERED ASUNDER")
 
@@ -79,7 +80,7 @@
 	smeltresult = /obj/item/ingot/component/matthios
 	unenchantable = TRUE
 
-/obj/item/clothing/under/roguetown/platelegs/matthios/Initialize()
+/obj/item/clothing/under/roguetown/platelegs/matthios/Initialize(mapload)
 	. = ..()
 	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
 	AddComponent(/datum/component/cursed_item, TRAIT_FREEMAN, "ARMOR")
@@ -123,7 +124,7 @@
 /obj/item/clothing/under/roguetown/platelegs/zizo/dropped(mob/living/carbon/human/user)
 	return ..()
 
-/obj/item/clothing/under/roguetown/platelegs/zizo/heavy/Initialize()
+/obj/item/clothing/under/roguetown/platelegs/zizo/heavy/Initialize(mapload)
 	. = ..()
 	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
 

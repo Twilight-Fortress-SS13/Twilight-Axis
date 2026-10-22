@@ -18,8 +18,8 @@
 			var/mutable_appearance/mounted = mutable_appearance(icon, "camel_mounted", 4.3)
 			add_overlay(mounted)
 
-/mob/living/simple_animal/hostile/retaliate/rogue/camel/tamed()
-	..()
+/mob/living/simple_animal/hostile/retaliate/rogue/camel/tamed(mob/user)
+	..(user)
 	deaggroprob = 30
 	setup_mount(list(TEXT_NORTH = list(0, 10), TEXT_SOUTH = list(0, 10), TEXT_EAST = list(-6, 10), TEXT_WEST = list(6, 10)))
 

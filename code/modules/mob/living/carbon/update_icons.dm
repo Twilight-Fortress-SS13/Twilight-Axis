@@ -39,7 +39,7 @@
 			pixel_x = get_standard_pixel_x_offset()
 			pixel_y = final_pixel_y
 		dir = final_dir
-		setMovetype(movement_type & ~FLOATING)  // If we were without gravity, the bouncing animation got stopped, so we make sure we restart it in next life().
+		setMovetype(movement_type & ~FLOATING)	// If we were without gravity, the bouncing animation got stopped, so we make sure we restart it in next life().
 		update_vision_cone()
 	else
 		// Only reset pixel_x if we're not in a custom pixel shift
@@ -50,18 +50,41 @@
 
 /mob/living
 	var/list/overlays_standing[TOTAL_LAYERS]
+	var/list/applied_overlays_standing[TOTAL_LAYERS] // TA EDIT
 
 /mob/living/proc/apply_overlay(cache_index)
-	if((. = overlays_standing[cache_index]))
-		add_overlay(.)
+	var/previous = applied_overlays_standing[cache_index] // TA EDIT
+	if(previous) // TA EDIT
+		cut_overlay(previous) // TA EDIT
+	applied_overlays_standing[cache_index] = null // TA EDIT
+
+	var/current = overlays_standing[cache_index] // TA EDIT
+	. = current // TA EDIT
+	if(current) // TA EDIT
+		var/list/sources = build_appearance_list(current) // TA EDIT
+		var/list/snapshots = list() // TA EDIT
+		for(var/overlay in sources) // TA EDIT
+			if(isimage(overlay)) // TA EDIT
+				var/image/overlay_image = overlay // TA EDIT
+				snapshots += overlay_image.appearance // TA EDIT
+			else if(isatom(overlay)) // TA EDIT
+				var/atom/overlay_atom = overlay // TA EDIT
+				snapshots += overlay_atom.appearance // TA EDIT
+			else // TA EDIT
+				snapshots += overlay // TA EDIT
+		add_overlay(snapshots) // TA EDIT
+		applied_overlays_standing[cache_index] = snapshots // TA EDIT
 	if(client)
 		update_vision_cone()
 
 /mob/living/proc/remove_overlay(cache_index)
-	var/I = overlays_standing[cache_index]
-	if(I)
-		cut_overlay(I)
-		overlays_standing[cache_index] = null
+	var/previous = applied_overlays_standing[cache_index] // TA EDIT
+	if(previous) // TA EDIT
+		cut_overlay(previous) // TA EDIT
+	else if(overlays_standing[cache_index]) // TA EDIT
+		cut_overlay(overlays_standing[cache_index]) // TA EDIT
+	applied_overlays_standing[cache_index] = null // TA EDIT
+	overlays_standing[cache_index] = null // TA EDIT
 	if(client)
 		update_vision_cone()
 
@@ -76,7 +99,7 @@
 /proc/get_inhand_sprite(/obj/item/I, layer)
 	var/index = "[I.icon_state]"
 	var/icon/inhand_icon = GLOB.inhand_icons[index]
-	if(!inhand_icon) 	//Create standing/laying icons if they don't exist
+	if(!inhand_icon)	//Create standing/laying icons if they don't exist
 		generate_inhand_icon(I)
 	return mutable_appearance(GLOB.inhand_icons[index], layer = -layer)
 
@@ -94,7 +117,7 @@
 				dismembered.Blend(l_mask, ICON_MULTIPLY)
 			if(3)
 				dismembered.Blend(r_mask, ICON_MULTIPLY)
-		dismembered 			= fcopy_rsc(dismembered)
+		dismembered			= fcopy_rsc(dismembered)
 
 		GLOB.dismembered_clothing_icons[index] = dismembered*/
 
@@ -135,76 +158,14 @@
 							observers = null
 							break
 
-		var/mutable_appearance/inhand_overlay
-		var/mutable_appearance/behindhand_overlay
-		if(I.experimental_inhand && !hide_experimental)
-			var/used_prop
-			var/list/prop
-			if(I.altgripped)
-				used_prop = "altgrip"
-				prop = I.getonmobprop(used_prop)
-			if(!prop && I.wielded)
-				used_prop = "wielded"
-				prop = I.getonmobprop(used_prop)
-			if(!prop)
-				used_prop = "gen"
-				prop = I.getonmobprop(used_prop)
-			if(I.force_reupdate_inhand)
-				if(I.onprop?[used_prop])
-					prop = I.onprop[used_prop]
-				else
-					LAZYSET(I.onprop, used_prop, prop)
-			if(!prop)
-				continue
-			var/flipsprite = FALSE
-			if(!(get_held_index_of_item(I) % 2 == 0)) //righthand
-				flipsprite = TRUE
-			inhand_overlay = mutable_appearance(I.getmoboverlay(used_prop,prop,mirrored=flipsprite), layer=-HANDS_LAYER)
-			behindhand_overlay = mutable_appearance(I.getmoboverlay(used_prop,prop,behind=TRUE,mirrored=flipsprite), layer=-HANDS_BEHIND_LAYER)
+		if(I.inhand_spinning)
+			continue
 
-			inhand_overlay = center_image(inhand_overlay, I.inhand_x_dimension, I.inhand_y_dimension)
-			behindhand_overlay = center_image(behindhand_overlay, I.inhand_x_dimension, I.inhand_y_dimension)
-			if(I.icon_y_offset)
-				behindhand_overlay.pixel_y += I.icon_y_offset
-				inhand_overlay.pixel_y += I.icon_y_offset
-			if(I.icon_x_offset)
-				behindhand_overlay.pixel_x += I.icon_x_offset
-				inhand_overlay.pixel_x += I.icon_x_offset
-			if(ishuman(src))
-				var/mob/living/carbon/human/H = src
-				if(H.dna && H.dna.species)
-					if(gender == MALE)
-						if(OFFSET_HANDS in H.dna.species.offset_features)
-							inhand_overlay.pixel_x += H.dna.species.offset_features[OFFSET_HANDS][1]
-							inhand_overlay.pixel_y += H.dna.species.offset_features[OFFSET_HANDS][2]
-							behindhand_overlay.pixel_x += H.dna.species.offset_features[OFFSET_HANDS][1]
-							behindhand_overlay.pixel_y += H.dna.species.offset_features[OFFSET_HANDS][2]
-					else
-						if(OFFSET_HANDS_F in H.dna.species.offset_features)
-							inhand_overlay.pixel_x += H.dna.species.offset_features[OFFSET_HANDS_F][1]
-							inhand_overlay.pixel_y += H.dna.species.offset_features[OFFSET_HANDS_F][2]
-							behindhand_overlay.pixel_x += H.dna.species.offset_features[OFFSET_HANDS_F][1]
-							behindhand_overlay.pixel_y += H.dna.species.offset_features[OFFSET_HANDS_F][2]
-
-			hands += inhand_overlay
-			behindhands += behindhand_overlay
-		else
-			var/icon_file = I.lefthand_file
-			if(get_held_index_of_item(I) % 2 == 0)
-				icon_file = I.righthand_file
-			inhand_overlay = I.build_worn_icon(default_layer = HANDS_LAYER, default_icon_file = icon_file, isinhands = TRUE)
-			if(ishuman(src))
-				var/mob/living/carbon/human/H = src
-				if(H.dna && H.dna.species.sexes)
-					if(gender == MALE)
-						if(OFFSET_HANDS in H.dna.species.offset_features)
-							inhand_overlay.pixel_x += H.dna.species.offset_features[OFFSET_HANDS][1]
-							inhand_overlay.pixel_y += H.dna.species.offset_features[OFFSET_HANDS][2]
-					else
-						if(OFFSET_HANDS_F in H.dna.species.offset_features)
-							inhand_overlay.pixel_x += H.dna.species.offset_features[OFFSET_HANDS_F][1]
-							inhand_overlay.pixel_y += H.dna.species.offset_features[OFFSET_HANDS_F][2]
-			hands += inhand_overlay
+		var/list/built = build_inhand_overlays(I, hide_experimental)
+		if(built[INHAND_FRONT])
+			hands += built[INHAND_FRONT]
+		if(built[INHAND_BEHIND])
+			behindhands += built[INHAND_BEHIND]
 
 	update_inv_cloak() //cloak held items
 
@@ -212,6 +173,91 @@
 	overlays_standing[HANDS_LAYER] = hands
 	apply_overlay(HANDS_BEHIND_LAYER)
 	apply_overlay(HANDS_LAYER)
+
+/mob/living/carbon/proc/build_inhand_overlays(obj/item/I, hide_experimental = FALSE)
+	. = list(null, null)
+	var/mutable_appearance/inhand_overlay
+	var/mutable_appearance/behindhand_overlay
+	if(I.experimental_inhand && !hide_experimental)
+		var/list/resolved = I.onmob_prop()
+		var/used_prop = resolved[ONMOB_TAG]
+		var/list/prop = resolved[ONMOB_PROP]
+		if(I.force_reupdate_inhand)
+			if(I.onprop?[used_prop])
+				prop = I.onprop[used_prop]
+			else
+				LAZYSET(I.onprop, used_prop, prop)
+		if(!prop)
+			return
+		var/flipsprite = FALSE
+		if(!(get_held_index_of_item(I) % 2 == 0)) //righthand
+			flipsprite = TRUE
+		inhand_overlay = mutable_appearance(I.getmoboverlay(used_prop,prop,mirrored=flipsprite), layer=-HANDS_LAYER)
+		behindhand_overlay = mutable_appearance(I.getmoboverlay(used_prop,prop,behind=TRUE,mirrored=flipsprite), layer=-HANDS_BEHIND_LAYER)
+
+		inhand_overlay = center_image(inhand_overlay, I.inhand_x_dimension, I.inhand_y_dimension)
+		behindhand_overlay = center_image(behindhand_overlay, I.inhand_x_dimension, I.inhand_y_dimension)
+		if(I.icon_y_offset)
+			behindhand_overlay.pixel_y += I.icon_y_offset
+			inhand_overlay.pixel_y += I.icon_y_offset
+		if(I.icon_x_offset)
+			behindhand_overlay.pixel_x += I.icon_x_offset
+			inhand_overlay.pixel_x += I.icon_x_offset
+		if(ishuman(src))
+			var/mob/living/carbon/human/H = src
+			if(H.dna && H.dna.species)
+				H.apply_offset(inhand_overlay, OFFSET_HANDS, OFFSET_HANDS_F)
+				H.apply_offset(behindhand_overlay, OFFSET_HANDS, OFFSET_HANDS_F)
+	else
+		var/icon_file = I.lefthand_file
+		if(get_held_index_of_item(I) % 2 == 0)
+			icon_file = I.righthand_file
+		inhand_overlay = I.build_worn_icon(default_layer = HANDS_LAYER, default_icon_file = icon_file, isinhands = TRUE)
+		if(ishuman(src))
+			var/mob/living/carbon/human/H = src
+			if(H.dna && H.dna.species.sexes)
+				H.apply_offset(inhand_overlay, OFFSET_HANDS, OFFSET_HANDS_F)
+
+	.[INHAND_FRONT] = inhand_overlay
+	.[INHAND_BEHIND] = behindhand_overlay
+
+/mob/living/carbon/proc/start_spin(obj/item/I, speed = 4)
+	if(QDELETED(I) || I.inhand_spinning || !(I in held_items))
+		return
+	var/mirrored = !(get_held_index_of_item(I) % 2 == 0)
+	var/list/built = build_inhand_overlays(I)
+	var/index = I.inhand_index(dir, mirrored)
+	var/mutable_appearance/spin_appearance = built[index]
+	if(!spin_appearance)
+		spin_appearance = built[INHAND_FRONT] || built[INHAND_BEHIND]
+	if(!spin_appearance)
+		return
+
+	I.inhand_spinning = TRUE
+	update_inv_hands()
+
+	var/list/grip = I.grip_offset(dir, mirrored)
+	spin_appearance.layer = layer + (index == INHAND_FRONT ? 0.1 : -0.1)
+
+	var/atom/movable/flick_visual/spin = flick_overlay_view(spin_appearance, speed + 2)
+	if(spin)
+		spin.vis_flags |= VIS_INHERIT_PLANE
+		spin.dir = dir
+		spin.SpinAnimationAround(grip[1], grip[2], speed, 1)
+		I.spin_visual = spin
+
+	addtimer(CALLBACK(I, TYPE_PROC_REF(/obj/item, end_spin)), speed)
+
+/obj/item/proc/end_spin()
+	if(!inhand_spinning)
+		return
+	inhand_spinning = FALSE
+	qdel(spin_visual)
+	spin_visual = null
+
+	var/mob/living/carbon/holder = loc
+	if(istype(holder))
+		holder.update_inv_hands()
 
 /mob/living/carbon/update_warning(datum/intent/I)
 	remove_overlay(HALO_LAYER) //yoink
@@ -321,14 +367,7 @@
 		if(ishuman(src))
 			var/mob/living/carbon/human/H = src
 			if(H.dna && H.dna.species.sexes)
-				if(gender == MALE)
-					if(OFFSET_HANDS in H.dna.species.offset_features)
-						inhand_overlay.pixel_x += H.dna.species.offset_features[OFFSET_HANDS][1]
-						inhand_overlay.pixel_y += H.dna.species.offset_features[OFFSET_HANDS][2]
-				else
-					if(OFFSET_HANDS_F in H.dna.species.offset_features)
-						inhand_overlay.pixel_x += H.dna.species.offset_features[OFFSET_HANDS_F][1]
-						inhand_overlay.pixel_y += H.dna.species.offset_features[OFFSET_HANDS_F][2]
+				H.apply_offset(inhand_overlay, OFFSET_HANDS, OFFSET_HANDS_F)
 
 		overlays_standing[HANDCUFF_LAYER] = inhand_overlay
 		apply_overlay(HANDCUFF_LAYER)
@@ -414,26 +453,26 @@
 	update_body_parts()
 
 /mob/living/carbon/proc/update_body_parts()
-	var/oldkey = icon_render_key
-	icon_render_key = generate_icon_render_key()
-	if(oldkey == icon_render_key)
+	var/list/new_limbs = list()
+	var/changed = FALSE
+	for(var/obj/item/bodypart/BP as anything in bodyparts)
+		BP.update_limb()
+		var/new_key = BP.get_cache_key()
+		if(new_key == icon_render_keys[BP.body_zone] && limb_icon_cache[new_key])
+			new_limbs += limb_icon_cache[new_key]
+			continue
+		changed = TRUE
+		var/list/limb_overlays = limb_icon_cache[new_key] || BP.get_limb_icon()
+		new_limbs += limb_overlays
+		limb_icon_cache[new_key] = limb_overlays
+		icon_render_keys[BP.body_zone] = new_key
+
+	if(!changed)
 		return
 
 	remove_overlay(BODYPARTS_LAYER)
-
-	if(limb_icon_cache[icon_render_key])
-		load_limb_from_cache()
-		return
-
-	var/list/new_limbs = list()
-	for(var/obj/item/bodypart/BP as anything in bodyparts)
-		BP.update_limb()
-		new_limbs += BP.get_limb_icon()
-
 	if(length(new_limbs))
 		overlays_standing[BODYPARTS_LAYER] = new_limbs
-		limb_icon_cache[icon_render_key] = new_limbs
-
 	apply_overlay(BODYPARTS_LAYER)
 	update_damage_overlays()
 

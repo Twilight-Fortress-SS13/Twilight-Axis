@@ -23,7 +23,7 @@
 	impacted_z_levels = list()
 	var/lastlightning = 0
 
-	particles = list(/atom/movable/screen/weather/fog)
+	weather_visuals = list(/atom/movable/screen/weather/fog)
 
 
 /datum/weather/fog/process()

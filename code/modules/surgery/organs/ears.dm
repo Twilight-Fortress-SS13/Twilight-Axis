@@ -43,6 +43,19 @@
 	. = ..()
 	for(var/datum/wound/facial/ears/ear_wound as anything in M.get_wounds())
 		qdel(ear_wound)
+	// TA EDIT BEGIN - RoleUnique button for swappable rabbit ears
+	if(ishuman(M) && !istype(M, /mob/living/carbon/human/dummy))
+		var/mob/living/carbon/human/human_owner = M
+		human_owner.update_rabbit_ear_swap_verb()
+	// TA EDIT END
+
+// TA EDIT BEGIN - RoleUnique button for swappable rabbit ears
+/obj/item/organ/ears/Remove(mob/living/carbon/M, special = FALSE, drop_if_replaced = TRUE)
+	. = ..()
+	if(ishuman(M) && !istype(M, /mob/living/carbon/human/dummy))
+		var/mob/living/carbon/human/human_owner = M
+		human_owner.update_rabbit_ear_swap_verb()
+// TA EDIT END
 
 /obj/item/organ/ears/on_life()
 	if(!iscarbon(owner))
@@ -124,7 +137,7 @@
 		to_chat(H, span_notice("I suddenly feel like you've lost my balance."))
 		waddle = H.AddComponent(/datum/component/waddling)
 
-/obj/item/organ/ears/penguin/Remove(mob/living/carbon/human/H,  special = 0)
+/obj/item/organ/ears/penguin/Remove(mob/living/carbon/human/H,	special = 0)
 	. = ..()
 	if(istype(H))
 		to_chat(H, span_notice("My sense of balance comes back to you."))

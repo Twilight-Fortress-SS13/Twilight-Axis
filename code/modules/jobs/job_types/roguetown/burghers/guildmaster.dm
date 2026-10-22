@@ -19,7 +19,7 @@
 	min_pq = 7 // Higher PQ requirement as it is a leadership role. Not for total newbie.
 	max_pq = null
 	round_contrib_points = 3
-	cmode_music = 'sound/music/cmode/towner/combat_retired.ogg'
+	cmode_music = sound("sound/music/cmode/towner/combat_retired.ogg")
 
 	job_traits = list(TRAIT_TRAINED_SMITH, TRAIT_SEEPRICES, TRAIT_SMITHING_EXPERT, TRAIT_SEWING_EXPERT, TRAIT_HOMESTEAD_EXPERT)
 	// Guildmaster get way less gate due to their role
@@ -28,6 +28,7 @@
 	job_subclasses = list(
 		/datum/advclass/guildmaster
 	)
+	has_subprefs = FALSE // only one subclass
 	spells = list(/obj/effect/proc_holder/spell/invoked/takeapprentice)
 
 /datum/advclass/guildmaster
@@ -89,12 +90,18 @@
 			/obj/item/rogueweapon/tongs = 1,
 			/obj/item/recipe_book/blacksmithing = 1,
 			/obj/item/clothing/mask/rogue/spectacles/golden = 1,
-			/obj/item/contraption/linker/master = 1,
 			/obj/item/blueprint/mace_mushroom = 1
 			)
 		belt = /obj/item/storage/belt/rogue/leather
 		beltl = /obj/item/storage/belt/rogue/pouch/coins/rich
 		beltr = /obj/item/storage/keyring/guildmaster
+		var/wrenches = list("Compact Golden Wrench", "Massive Golden Wrench")
+		var/wrench_choice = input(H, "Choose your wrench.", "SYMBOL OF OFFICE") as anything in wrenches
+		switch(wrench_choice)
+			if("Compact Golden Wrench")
+				r_hand = /obj/item/rogueweapon/contraption/linker/mace/master
+			if("Massive Golden Wrench")
+				r_hand = /obj/item/rogueweapon/contraption/linker/mace/big/master
 	ADD_TRAIT(H, TRAIT_MASTER_CARPENTER, TRAIT_GENERIC)
 	ADD_TRAIT(H, TRAIT_MASTER_MASON, TRAIT_GENERIC)
 	if(H.mind)

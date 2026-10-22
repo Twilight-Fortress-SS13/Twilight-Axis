@@ -2,7 +2,10 @@
 	name = "Psyaltrist"
 	tutorial = "You spent some time with cathedral choirs and psyaltrists. Now you spend your days applying the musical arts to the practical on behalf of His most Holy of Inquisitions."
 	outfit = /datum/outfit/job/roguetown/psyaltrist
-	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_EMPATH, TRAIT_STEELHEARTED, TRAIT_INQUISITION)
+	traits_applied = list(
+		TRAIT_DODGEEXPERT,
+		TRAIT_EMPATH
+	)
 	category_tags = list(CTAG_ORTHODOXIST)
 	subclass_languages = list(/datum/language/otavan)
 	subclass_stats = list(
@@ -28,7 +31,7 @@
 	subclass_stashed_items = list(
 		"The Book" = /obj/item/book/rogue/bibble/psy
 	)
-	
+
 /datum/outfit/job/roguetown/psyaltrist/pre_equip(mob/living/carbon/human/H)
 	head = /obj/item/clothing/head/roguetown/helmet/leather/chapeau
 	neck = /obj/item/clothing/neck/roguetown/leather
@@ -40,7 +43,7 @@
 	wrists = /obj/item/clothing/neck/roguetown/psicross/silver
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan
 	shoes = /obj/item/clothing/shoes/roguetown/boots/psydonboots
-	belt = /obj/item/storage/belt/rogue/leather/knifebelt/black/psydon_blessed
+	belt = /obj/item/storage/belt/rogue/leather/knifebelt/black/silver/psy/preblessed
 	beltr = /obj/item/storage/belt/rogue/pouch/coins/mid
 	id = /obj/item/clothing/ring/signet/psy
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
@@ -48,10 +51,10 @@
 	var/datum/inspiration/I = new /datum/inspiration(H)
 	I.grant_inspiration(H, bard_tier = BARD_T2)
 	backpack_contents = list(/obj/item/roguekey/inquisitionmanor = 1,
-	/obj/item/paper/inqslip/arrival/ortho = 1, /obj/item/rogueweapon/huntingknife/idagger/silver/psydagger, /obj/item/rogueweapon/scabbard/sheath)
+	/obj/item/paper/inqslip/arrival/ortho = 1, /obj/item/rogueweapon/huntingknife/idagger/steel/silver/psy, /obj/item/rogueweapon/scabbard/sheath)
 
 
-	H.cmode_music = 'sound/music/cmode/adventurer/combat_outlander3.ogg'
+	H.cmode_music = sound("sound/music/cmode/adventurer/combat_outlander3.ogg")
 	H.mind?.AddSpell(new /datum/action/cooldown/spell/projectile/vicious_mockery)
 	if(H.mind)
 		var/instruments = list("Harp","Lute","Accordion","Guitar","Hurdy-Gurdy","Viola","Vocal Talisman", "Psyaltery", "Flute", "Drum", "Shamisen")
@@ -85,18 +88,18 @@
 	var/weapon_choice = tgui_input_list(H,"Choose your WEAPON.", "TAKE UP PSYDON'S ARMS.", weapons)
 	switch(weapon_choice)
 		if("Psydonic Whip")
-			H.put_in_hands(new /obj/item/rogueweapon/whip/psywhip_lesser(H))
+			H.put_in_hands(new /obj/item/rogueweapon/whip/silver/psy(H))
 			H.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, 4, TRUE)
 		if("Psydonic Shortsword")
-			H.put_in_hands(new /obj/item/rogueweapon/sword/short/psy(H))
+			H.put_in_hands(new /obj/item/rogueweapon/sword/short/silver/psy(H))
 			H.put_in_hands(new /obj/item/rogueweapon/scabbard/sword(H))
 			H.adjust_skillrank_up_to(/datum/skill/combat/swords, 4, TRUE)
 		if("Psydonic Cudgel")
 			l_hand = /obj/item/rogueweapon/mace/cudgel/psy
 			H.adjust_skillrank_up_to(/datum/skill/combat/maces, 4, TRUE)
 		if("Psydonic Flanged Mace")
-			l_hand = /obj/item/rogueweapon/mace/cudgel/flanged/psy
-			H.adjust_skillrank_up_to(/datum/skill/combat/maces, 4, TRUE)	
+			l_hand = /obj/item/rogueweapon/mace/cudgel/flanged/silver/psy
+			H.adjust_skillrank_up_to(/datum/skill/combat/maces, 4, TRUE)
 	change_origin(H, /datum/virtue/origin/otava, "Holy order")
 
 /datum/outfit/job/roguetown/psyaltrist

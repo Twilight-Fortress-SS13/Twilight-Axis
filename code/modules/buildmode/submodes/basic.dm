@@ -3,10 +3,10 @@
 
 /datum/buildmode_mode/basic/show_help(client/c)
 	to_chat(c, "<span class='notice'>***********************************************************</span>")
-	to_chat(c, "<span class='notice'>Left Mouse Button        = Construct / Upgrade</span>")
-	to_chat(c, "<span class='notice'>Right Mouse Button       = Deconstruct / Delete / Downgrade</span>")
+	to_chat(c, "<span class='notice'>Left Mouse Button		= Construct / Upgrade</span>")
+	to_chat(c, "<span class='notice'>Right Mouse Button		= Deconstruct / Delete / Downgrade</span>")
 	to_chat(c, "<span class='notice'>Left Mouse Button + ctrl = R-Window</span>")
-	to_chat(c, "<span class='notice'>Left Mouse Button + alt  = Airlock</span>")
+	to_chat(c, "<span class='notice'>Left Mouse Button + alt	= Airlock</span>")
 	to_chat(c, "")
 	to_chat(c, "<span class='notice'>Use the button in the upper left corner to</span>")
 	to_chat(c, "<span class='notice'>change the direction of built objects.</span>")
@@ -22,14 +22,19 @@
 	if(istype(object,/turf) && left_click && !alt_click && !ctrl_click)
 		var/turf/T = object
 		if(isfloorturf(object))
+			var/old_type = T.type // TA EDIT
+			var/location_desc = AREACOORD(T) // TA EDIT
 			T.PlaceOnTop(/turf/closed/wall/mineral/rogue/decowood)
-		log_admin("Build Mode: [key_name(c)] built [T] at [AREACOORD(T)]")
+			BM.log_action("built /turf/closed/wall/mineral/rogue/decowood over [old_type] at [location_desc] using basic mode.") // TA EDIT
 		return
 	else if(right_click)
-		log_admin("Build Mode: [key_name(c)] deleted [object] at [AREACOORD(object)]")
 		if(isturf(object))
 			var/turf/T = object
+			var/old_type = T.type // TA EDIT
+			var/location_desc = AREACOORD(T) // TA EDIT
 			T.ScrapeAway(flags = CHANGETURF_INHERIT_AIR)
+			BM.log_action("scraped/deconstructed turf [old_type] at [location_desc] using basic mode.") // TA EDIT
 		else if(isobj(object))
+			BM.log_action("deleted [object] ([object.type]) at [AREACOORD(object)] using basic mode.") // TA EDIT
 			qdel(object)
 		return

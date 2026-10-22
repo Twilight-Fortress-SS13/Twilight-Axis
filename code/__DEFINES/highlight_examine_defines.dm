@@ -1,6 +1,7 @@
 // Zizo items
 #define HERESYDESC_ZIZO_WEAPON "A grim weapon of Zizo's champions"
 #define HERESYDESC_ZIZO_ARMOR "An accursed armor piece of Zizo's champions"
+#define HERESYDESC_ZIZO_CLOTHING "An accursed piece of clothing worn by Zizo's champions"
 #define HERESYDESC_ZIZO_RELIC "A relic of Zizo's grim design"
 #define HERESYDESC_ZIZO_ICON "It bears the grim zcross of Zizo"
 #define HERESYDESC_ZIZO_MISC "A known design of Zizo"
@@ -14,6 +15,7 @@
 #define HERESYDESC_MATTHIOS_RELIC "A relic of Matthios's covetous design"
 #define HERESYDESC_MATTHIOS_ICON "It bears the covetous icon of Matthios"
 #define HERESYDESC_MATTHIOS_MISC "A known design of Matthios"
+#define HERESYDESC_MATTHIOS_GRINNING "Metal crowned in jagged teeth, golden inlays forming a mocking grin. A taunting design of Matthios, the lord of treachery."
 
 // Graggar items
 #define HERESYDESC_GRAGGAR_WEAPON "A weapon of Graggar's bloodthirsty champions"
@@ -35,13 +37,18 @@
 #define HERESYDESC_DREAMWALKER_WEAPON "An enchanced weapon from Abyssor's dream, wielded by Abyssor's cursed - the enigmatic and violent Dreamwalkers"
 #define HERESYDESC_DREAMWALKER_ARMOR "An armor piece from Abyssor's dream, worn by Abyssor's cursed - the enigmatic and violent Dreamwalkers"
 
-// Misc items
-#define HERESYDESC_GRONN "A symbol of the North's archaic beliefs"
+// Pestran Herecy
+#define HERESYDESC_PESTRA_WEAPON "An unsanctioned weapon created by heretical Pestran secrets to spread the black rot"
+#define HERESYDESC_BLACK_ROT "A stabilised form of the black rot, it is extremely dangerous should not be seen outside of sanctified hands"
+
+// Misc items / Donor
+#define HERESYDESC_GRONN "A symbol of the North's archaic beliefs. Those of a theological understanding greater than the common man would know these to be heretical."
+#define HERESYDESC_GILBRANZE_ARTIFICE "A blade of polished gilbranze in extraordinary quality. Someone's Artifice..?" // ATICIUS DONOR
 #define HERESYDESC_WEEPING_CROSS "It is ensnared in a perpetual state of half-coagulation, the alloy cracked and bleeding"
 
 // Vampire Lord Items - General theme is mysterious but a bad omen
 #define HERESYDESC_VAMPIRE "An unnatural enchanted armor piece of solid gilbranze that crackles with strange energies"
-#define HERESYDESC_VAMPIRE_CROWN "An unnatural enchanted crown that crackles with strange energies" 
+#define HERESYDESC_VAMPIRE_CROWN "An unnatural enchanted crown that crackles with strange energies"
 #define HERESYDESC_VAMPIRE_SWORD "An unnatural sword of some unknown alloy that crackles with strange energies"
 
 // Inquisitional gear
@@ -63,13 +70,13 @@
 /** For items that are both blatantly heretical AND actively dangerous.
 * Items should be marked with this if the expected response to seeing someone
 * carrying them is to quickly escalate to violence.
-* 
+*
 * i.e. heretic armor, avantyne weapons
 */
 #define EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING 1
 /** For items that are heretical and will get you in trouble if you're caught with them,
 * but not enough for people to jump straight to violence on sight without probable cause.
-* 
+*
 * i.e. Ascendant amulets
 */
 #define EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS 2

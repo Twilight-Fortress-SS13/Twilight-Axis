@@ -12,7 +12,6 @@
 	droning_sound_night = 'sound/music/area/forestnight.ogg'
 	soundenv = 15
 	warden_area = TRUE
-	ambush_times = list("night","dawn","dusk","day")
 	ambush_mobs = list(
 				/mob/living/simple_animal/hostile/retaliate/rogue/wolf = 40,
 				/mob/living/carbon/human/species/skeleton/npc/easy = 10,
@@ -74,14 +73,12 @@
 	ambientnight = AMB_MOUNTAIN
 	soundenv = 17
 	first_time_text = null
-	ambush_times = null
 	ambush_mobs = null
 	warden_area = FALSE
 
 /area/rogue/outdoors/woodsrat/safe
 	name = "Woods safe"
 	first_time_text = null
-	ambush_times = null
 	ambush_mobs = null
 	warden_area = FALSE
 

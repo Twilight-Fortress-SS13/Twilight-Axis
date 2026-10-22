@@ -2,10 +2,11 @@
 	status_type = STATUS_EFFECT_REFRESH
 	/// Buffs sharing this group are mutually exclusive; only the highest exclusive_priority stays.
 	var/exclusive_group = null
-	/// Higher wins within a group; on a tie the incumbent is kept.
+	/// Higher wins within a group; on a tie the newcomer replaces the incumbent.
 	var/exclusive_priority = 0
 	/// TRUE if refused on-apply by a stronger group member
 	var/rejected_by_exclusion = FALSE
+	var/exclusive_quiet = FALSE
 
 /datum/status_effect/buff/on_apply()
 	if(exclusive_group && owner)
@@ -13,10 +14,11 @@
 		for(var/datum/status_effect/buff/rival in owner.status_effects)
 			if(rival == src || rival.exclusive_group != exclusive_group)
 				continue
-			if(rival.exclusive_priority >= exclusive_priority)
+			if(rival.exclusive_priority > exclusive_priority)
 				rejected_by_exclusion = TRUE
 				effectedstats = list()
-				owner.balloon_alert_to_viewers("superseded!")
+				if(!exclusive_quiet)
+					owner.balloon_alert_to_viewers("superseded!")
 				return FALSE
 			outranked += rival
 		for(var/datum/status_effect/buff/loser in outranked)
@@ -239,43 +241,6 @@
 	desc = ""
 	icon_state = "acid"
 
-/datum/status_effect/buff/baothablessing
-	id = "druqks"
-	alert_type = /atom/movable/screen/alert/status_effect/buff/baothablessing
-	duration = 2 MINUTES
-
-/datum/status_effect/buff/baothablessing/on_apply()
-	. = ..()
-	ADD_TRAIT(owner, TRAIT_CRACKHEAD, TRAIT_MIRACLE)
-	if(owner?.client)
-		if(owner.client.screen && owner.client.screen.len)
-			var/atom/movable/screen/plane_master/game_world/PM = locate(/atom/movable/screen/plane_master/game_world) in owner.client.screen
-			PM.backdrop(owner)
-			PM = locate(/atom/movable/screen/plane_master/game_world_fov_hidden) in owner.client.screen
-			PM.backdrop(owner)
-			PM = locate(/atom/movable/screen/plane_master/game_world_above) in owner.client.screen
-			PM.backdrop(owner)
-			owner.add_stress(/datum/stressevent/high)
-
-/datum/status_effect/buff/baothablessing/on_remove()
-	REMOVE_TRAIT(owner, TRAIT_CRACKHEAD, TRAIT_MIRACLE)
-	if(owner?.client)
-		if(owner.client.screen && owner.client.screen.len)
-			var/atom/movable/screen/plane_master/game_world/PM = locate(/atom/movable/screen/plane_master/game_world) in owner.client.screen
-			PM.backdrop(owner)
-			PM = locate(/atom/movable/screen/plane_master/game_world_fov_hidden) in owner.client.screen
-			PM.backdrop(owner)
-			PM = locate(/atom/movable/screen/plane_master/game_world_above) in owner.client.screen
-			PM.backdrop(owner)
-			owner.remove_stress(/datum/stressevent/high)
-
-	. = ..()
-
-/atom/movable/screen/alert/status_effect/buff/baothablessing
-	name = "Baothan Blessing"
-	desc = "Baotha has blessed you with immunity to overdose. Rejoice!"
-	icon_state = "acid"
-
 /datum/status_effect/buff/ozium
 	id = "ozium"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/druqks
@@ -325,7 +290,7 @@
 	ADD_TRAIT(owner, TRAIT_NOPAIN, id)
 	ADD_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, id)
 	originalcmode = owner.cmode_music
-	owner.cmode_music = 'sound/music/combat_ozium.ogg'
+	owner.cmode_music = sound("sound/music/combat_ozium.ogg")
 
 /datum/status_effect/buff/herozium/on_remove()
 	owner.remove_stress(/datum/stressevent/ozium)
@@ -349,7 +314,7 @@
 	if(owner.has_status_effect(/datum/status_effect/debuff/sleepytime))
 		owner.remove_status_effect(/datum/status_effect/debuff/sleepytime)
 	originalcmode = owner.cmode_music
-	owner.cmode_music = 'sound/music/combat_starsugar.ogg'
+	owner.cmode_music = sound("sound/music/combat_starsugar.ogg")
 
 
 /datum/status_effect/buff/starsugar/on_remove()
@@ -468,7 +433,7 @@
 
 	var/datum/component/arousal/arousal_comp = owner?.GetComponent(/datum/component/arousal)
 	if(arousal_comp)
-		arousal_comp.set_charge(SEX_MAX_CHARGE)  // Fully restore charge
+		arousal_comp.set_charge(SEX_MAX_CHARGE)	// Fully restore charge
 
 /datum/status_effect/buff/fermented_crab/on_remove()
 	. = ..()
@@ -689,6 +654,10 @@
 	owner.energy_add(9)
 
 #undef REWIND_AURA
+
+/datum/status_effect/buff/healing/soap
+	block_combat_mode = TRUE
+	healing_on_tick = 5 // quarter strength, sorry! it's soap, what'd you expect
 
 //lasts shorter than magic, one chomp every 3 seconds is good enough, let's not forget food can have multiple slices. This does not heal wounds, wounds are healed automatically like psydonitian trait, but it consumes 1% hunger a tick.
 #define CONSUME_AURA "consumehealing"
@@ -939,7 +908,7 @@
 	return TRUE
 
 /datum/status_effect/buff/psyhealing/tick()
-	if(HAS_TRAIT(owner, TRAIT_NOHEAL) || HAS_TRAIT(owner, TRAIT_IRONMAN)) 
+	if(HAS_TRAIT(owner, TRAIT_NOHEAL) || HAS_TRAIT(owner, TRAIT_IRONMAN))
 		return
 	if(HAS_TRAIT(owner, TRAIT_HALFHEAL))
 		healing_on_tick /= 2
@@ -947,7 +916,7 @@
 	H.color = "#d3d3d3"
 	var/list/wCount = owner.get_wounds()
 	if(wCount.len > 0)
-		owner.heal_wounds(healing_on_tick * 1.75)
+		owner.heal_wounds(healing_on_tick * 2.25)
 		owner.update_damage_overlays()
 	owner.adjustOxyLoss(-healing_on_tick, 0)
 	owner.adjustToxLoss(-healing_on_tick, 0)
@@ -987,7 +956,7 @@
 	name = "Processing: Refined"
 	desc = "I am currently processing refined minerals, greatly regenerating my shell's integrity."
 	icon_state = "buff"
-	
+
 /atom/movable/screen/alert/status_effect/buff/gemmuncher
 	name = "Processing: Gem"
 	desc = "I am currently processing an arcyne conduit, efficiently regenerating my shell's integrity and reinvigorating my core."
@@ -1243,7 +1212,7 @@
 /datum/status_effect/buff/guidinglight // Hey did u follow us from ritualcircles? Cool, okay this stuff is pretty simple yeah? Most ritual circles use some sort of status effects to get their effects ez.
 	id = "guidinglight"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/guidinglight
-	duration = 30 MINUTES // Lasts for 30 minutes, roughly an ingame day. This should be the gold standard for rituals, unless its some particularly powerul effect or one-time effect(Flylord's triage)
+	duration = 20 MINUTES
 	status_type = STATUS_EFFECT_REFRESH
 	effectedstats = list(STATKEY_PER = 2) // This is for basic stat effects, I would consider these a 'little topping' and not what you should rlly aim for for rituals. Ideally we have cool flavor boons, rather than combat stims.
 	examine_text = "SUBJECTPRONOUN walks with Her Light!"
@@ -1274,7 +1243,7 @@
 /datum/status_effect/buff/guidinglight/undivided
 	id = "guidinglight"//Admitedly don't want this to stack with Astrata's one because that would result in a flashbang.
 	alert_type = /atom/movable/screen/alert/status_effect/buff/guidinglight/undivided
-	duration = -1
+	duration = 3 MINUTES
 	status_type = STATUS_EFFECT_REFRESH
 	effectedstats = list(STATKEY_LCK = 1)
 	examine_text = "SUBJECTPRONOUN carries Their Light!"
@@ -1291,7 +1260,7 @@
 	id = "Moonsight"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/moonlightdance
 	effectedstats = list(STATKEY_INT = 2)
-	duration = 25 MINUTES
+	duration = 20 MINUTES
 
 /atom/movable/screen/alert/status_effect/buff/moonlightdance
 	name = "Moonlight Dance"
@@ -1310,6 +1279,61 @@
 	REMOVE_TRAIT(owner, TRAIT_DARKVISION, MAGIC_TRAIT)
 
 
+/datum/status_effect/buff/knowledgerituos
+	id = "knowledgerituos"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/knowledgerituos
+	duration = 20 MINUTES
+	effectedstats = list(STATKEY_INT = 1)
+
+/atom/movable/screen/alert/status_effect/buff/knowledgerituos
+	name = "Insightful Chant"
+	desc = "Zizo's mandate and her absolute truth reshapes my mynd, bringing me clarity from ignorance."
+	icon_state = "rituos_exchange"
+
+/datum/status_effect/buff/knowledgerituos/on_apply()
+	. = ..()
+	if(HAS_TRAIT(owner, TRAIT_NOMOOD))
+		to_chat(owner, span_warning("I see through Zizo's vision. No truth can hide from me."))
+	else
+		to_chat(owner, span_warning("I see through Zizo's vision. No truth can hide from me; I feel a strange hollowness in my chest as my emotions fade away."))
+	//Now we add traits after our flavor check.
+	ADD_TRAIT(owner, TRAIT_NITEVISION, MAGIC_TRAIT) //better night vision than Noc... but...
+	ADD_TRAIT(owner, TRAIT_NOMOOD, MAGIC_TRAIT)
+
+
+/datum/status_effect/buff/knowledgerituos/on_remove()
+	. = ..()
+	REMOVE_TRAIT(owner, TRAIT_NITEVISION, MAGIC_TRAIT)
+	REMOVE_TRAIT(owner, TRAIT_NOMOOD, MAGIC_TRAIT)
+	//we now check for our removal message.
+	if(HAS_TRAIT(owner, TRAIT_NOMOOD))
+		to_chat(owner, span_warning("Zizo's vision leaves my mynd, the pain from the light receeds."))
+	else
+		to_chat(owner, span_warning("Zizo's vision leaves my mynd, the pain from the light receeds and I feel that vibrant feeling of emotion again."))
+
+
+/datum/status_effect/buff/utilityrituos
+	id = "utilityrituos"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/utilityrituos
+	effectedstats = list(STATKEY_WIL = 1) //Bare minimal needed to labor slightly easier.
+	duration = 20 MINUTES
+
+/atom/movable/screen/alert/status_effect/buff/utilityrituos
+	name = "Progressive Trance"
+	desc = "Zizo's mandate and her absolute truth reshapes my mynd, I learn unnaturally fast and my hands work wrydly fast."
+	icon_state = "rituos_exchange"
+
+
+/datum/status_effect/buff/utilityrituos/on_apply()
+	. = ..()
+	to_chat(owner, span_warning("My mynd and talent bends to Zizo's will, I learn unnaturally fast."))
+	ADD_TRAIT(owner, TRAIT_JACKOFALLTRADES, MAGIC_TRAIT)
+
+
+/datum/status_effect/buff/utilityrituos/on_remove()
+	. = ..()
+	to_chat(owner, span_warning("Zizo's will loosens upon my mynd and everything slows back to normal."))
+	REMOVE_TRAIT(owner, TRAIT_JACKOFALLTRADES, MAGIC_TRAIT)
 
 
 /atom/movable/screen/alert/status_effect/buff/flylordstriage
@@ -1364,7 +1388,7 @@
 /datum/status_effect/buff/undermaidenbargain
 	id = "undermaidenbargain"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/undermaidenbargain
-	duration = 30 MINUTES
+	duration = 20 MINUTES
 
 /datum/status_effect/buff/undermaidenbargain/on_apply()
 	. = ..()
@@ -1440,7 +1464,7 @@
 /datum/status_effect/buff/lesserwolf
 	id = "lesserwolf"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/lesserwolf
-	duration = 30 MINUTES
+	duration = 20 MINUTES
 
 /datum/status_effect/buff/lesserwolf/on_apply()
 	. = ..()
@@ -1493,7 +1517,7 @@
 /datum/status_effect/buff/pacify
 	id = "pacify"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/pacify
-	duration = 30 MINUTES
+	duration = 20 MINUTES
 
 /datum/status_effect/buff/pacify/on_apply()
 	. = ..()
@@ -1549,25 +1573,6 @@
 /datum/status_effect/buff/xylix_joy/on_remove()
 	. = ..()
 	to_chat(owner, span_info("My fortune returns to normal."))
-
-/datum/status_effect/buff/vigorized
-	id = "vigorized"
-	alert_type = /atom/movable/screen/alert/status_effect/vigorized
-	duration = 10 MINUTES
-	effectedstats = list(STATKEY_SPD = 1, STATKEY_INT = 1)
-
-/atom/movable/screen/alert/status_effect/vigorized
-	name = "Vigorized"
-	desc = "I feel a surge of energy inside, quickening my speed and sharpening my focus."
-	icon_state = "vigorized"
-
-/datum/status_effect/buff/vigorized/on_apply()
-	. = ..()
-	to_chat(owner, span_warning("I feel a surge of energy inside me!"))
-
-/datum/status_effect/buff/vigorized/on_remove()
-	. = ..()
-	to_chat(owner, span_warning("The surge of energy inside me fades..."))
 
 /datum/status_effect/buff/seelie_drugs
 	id = "seelie drugs"
@@ -1664,7 +1669,7 @@
 
 /datum/status_effect/buff/clash/proc/apply_cooldown()
 	var/newcd = BASE_RCLICK_CD - owner.get_tempo_bonus(TEMPO_TAG_RCLICK_CD_BONUS)
-	if(deflected_spell)
+	if(deflected_spell || HAS_TRAIT(owner, TRAIT_PACIFISM))
 		newcd *= 0.5
 	owner.apply_status_effect(/datum/status_effect/debuff/clashcd, newcd)
 
@@ -1882,8 +1887,8 @@
 	target.stamina_add((target.max_stamina / 3))
 	target.energy_add((-target.max_energy / 5))
 
-#define LGUARD_SHARPNESS_LOSS     150
-#define LGUARD_INTEG_LOSS		  100
+#define LGUARD_SHARPNESS_LOSS		150
+#define LGUARD_INTEG_LOSS			100
 
 /datum/status_effect/buff/clash/limbguard/proc/perform_disarm(mob/living/carbon/human/target)
 	var/obj/item/I = target.get_active_held_item()
@@ -1915,6 +1920,16 @@
 		owner.remove_status_effect(/datum/status_effect/buff/clash/limbguard)
 	else
 		qdel(src)
+
+// When a spell is blocked and a weapon isn't logically involved. It will deflect, blocks the spell, but will not remotely disarm them, since that make no sense. I.e. Dragons Breath.
+/datum/status_effect/buff/clash/limbguard/proc/block_spell(mob/living/target, mob/living/attacker, spell_name = "the spell")
+	if(!is_active || target != owner)
+		return FALSE
+	do_sparks(2, TRUE, get_turf(owner))
+	playsound(owner, 'sound/combat/limbguard_struck.ogg', 100, TRUE)
+	owner.visible_message(span_warning("[owner] wards [owner.p_their()] [parse_zone(protected_zone)] against [spell_name]!"), \
+		span_notice("My guard wards off [spell_name]!"))
+	return TRUE
 
 //Projectile struck our protected limb. Unlike regular Riposte, this will block the projectile at no cost.
 /datum/status_effect/buff/clash/limbguard/guard_struck_by_projectile(mob/living/target, obj/P, hit_zone)
@@ -2000,11 +2015,11 @@
 /datum/status_effect/buff/psydonic_endurance/on_apply()
 	. = ..()
 	if(HAS_TRAIT(owner, TRAIT_MEDIUMARMOR) && !HAS_TRAIT(owner, TRAIT_HEAVYARMOR))
-		ADD_TRAIT(owner, TRAIT_HEAVYARMOR, src)
+		ADD_TRAIT(owner, TRAIT_HEAVYARMOR, REF(src))
 
 /datum/status_effect/buff/psydonic_endurance/on_remove()
 	. = ..()
-	REMOVE_TRAIT(owner, TRAIT_HEAVYARMOR, src)
+	REMOVE_TRAIT(owner, TRAIT_HEAVYARMOR, REF(src))
 
 /atom/movable/screen/alert/status_effect/buff/psydonic_endurance
 	name = "Psydonic Vitality"
@@ -2030,12 +2045,12 @@
 /datum/status_effect/buff/griefflower/on_apply()
 	. = ..()
 	to_chat(owner, span_notice("The Rosa’s ring draws blood, but it’s the memories that truly wound. Failure after failure surging through you like thorns blooming inward."))
-	ADD_TRAIT(owner, TRAIT_CRACKHEAD, src)
+	ADD_TRAIT(owner, TRAIT_CRACKHEAD, REF(src))
 
 /datum/status_effect/buff/griefflower/on_remove()
 	. = ..()
 	to_chat(owner, span_notice("You part from the Rosa’s touch. The ache retreats..."))
-	REMOVE_TRAIT(owner, TRAIT_CRACKHEAD, src)
+	REMOVE_TRAIT(owner, TRAIT_CRACKHEAD, REF(src))
 
 /atom/movable/screen/alert/status_effect/buff/griefflower
 	name = "Rosa Ring"
@@ -2047,6 +2062,11 @@
 	desc = "The gambit worked! I can do anything! My heart races, the throb of my wounds wavers."
 	icon_state = "adrrush"
 
+/atom/movable/screen/alert/status_effect/buff/adrenaline_rush/psydon
+	name = "Endure"
+	desc = "I suffer in His light; my bleeding comes to a still."
+	icon_state = "adrrush"
+
 /datum/status_effect/buff/adrenaline_rush
 	id = "adrrush"
 	status_type = STATUS_EFFECT_REPLACE
@@ -2054,6 +2074,7 @@
 	duration = 18 SECONDS
 	examine_text = "SUBJECTPRONOUN is amped up!"
 	effectedstats = list(STATKEY_WIL = 1)
+	var/adrenaline_stam = TRUE
 	var/blood_restore = 30
 
 /datum/status_effect/buff/adrenaline_rush/on_apply()
@@ -2063,7 +2084,8 @@
 	if(istype(human))
 		human.playsound_local(get_turf(human), 'sound/misc/adrenaline_rush.ogg', 100, TRUE)
 		human.blood_volume = min((human.blood_volume + blood_restore), BLOOD_VOLUME_NORMAL)
-		human.stamina -= max((human.stamina - (human.max_stamina / 2)), 0)
+		if(adrenaline_stam)
+			human.stamina -= max((human.stamina - (human.max_stamina / 2)), 0)
 		human.pain_threshold += 50
 
 /datum/status_effect/buff/adrenaline_rush/on_remove()
@@ -2088,6 +2110,13 @@
 
 /datum/status_effect/buff/adrenaline_rush/graggar
 	effectedstats = list(STATKEY_CON = 3)
+
+/datum/status_effect/buff/adrenaline_rush/psydon
+	blood_restore = 0
+	alert_type = /atom/movable/screen/alert/status_effect/buff/adrenaline_rush/psydon
+	examine_text = "SUBJECTPRONOUN is enduring!"
+	duration = 15 SECONDS //This is on a 30 second cooldown miracle.
+	adrenaline_stam = FALSE
 
 /datum/status_effect/buff/nocblessing
 	id = "nocblessing"
@@ -2217,9 +2246,8 @@
 /datum/status_effect/buff/ravox_vow
 	id = "ravox_vow"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/ravox_vow
-	effectedstats = list(STATKEY_STR = 1, STATKEY_WIL = 1)
 	status_type = STATUS_EFFECT_UNIQUE
-	duration = -1
+	duration = 20 MINUTES
 	tick_interval = -1
 
 /datum/status_effect/buff/ravox_vow/proc/on_life()
@@ -2284,7 +2312,7 @@
 	id = "joybringer"
 	var/outline_colour = "#a529e8"
 	var/list/affected_mobs = list()
-	duration = -1
+	duration = 20 MINUTES
 	tick_interval = -1
 	examine_text = span_love("SUBJECTPRONOUN is bathed in Baotha's blessings!")
 	alert_type = null
@@ -2448,7 +2476,7 @@
 	duration = 5 SECONDS
 	var/original_alpha = 255
 
-/datum/status_effect/buff/phase/on_creation(mob/living/new_owner)
+/datum/status_effect/buff/phase/on_creation(mob/living/new_owner, duration_mult = 1)
 	if(ishuman(new_owner))
 		var/mob/living/carbon/human/H = new_owner
 		switch(H.highest_ac_worn())
@@ -2464,6 +2492,7 @@
 			if(ARMOR_CLASS_HEAVY)
 				duration = 2 SECONDS
 				effectedstats[STATKEY_SPD] = 1
+	duration *= duration_mult
 	. = ..()
 
 /datum/status_effect/buff/phase/on_apply()
@@ -2523,28 +2552,44 @@
 /datum/status_effect/buff/journey_ending
 	id = "journey_ending"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/journey_ending
-	effectedstats = list(STATKEY_SPD = 2, STATKEY_WIL = 2)
+	effectedstats = list(STATKEY_SPD = 1, STATKEY_CON = 2)
 	duration = -1
 
 /datum/status_effect/buff/journey_end
 	id = "journey_end"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/journey_end
-	effectedstats = list(STATKEY_STR = 2, STATKEY_SPD = 3, STATKEY_WIL = 2)
-	examine_text = "<font color='blue'>SUBJECTPRONOUN has entered a Battle Trance!</font>"
+	effectedstats = list(STATKEY_STR = 2, STATKEY_SPD = 3, STATKEY_CON = 2)
 	duration = -1
 
 /datum/status_effect/buff/journey_end_final //takes ages for them to die to bloodloss, but they *do* die to it
 	id = "journey_end_final"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/journey_end_final
-	effectedstats = list(STATKEY_STR = 5, STATKEY_SPD = 6, STATKEY_WIL = 4)
-	examine_text = "<font color='blue'>SUBJECTPRONOUN has entered a Battle Trance!</font>"
+	effectedstats = list(STATKEY_STR = 5, STATKEY_SPD = 6, STATKEY_CON = 3)
 	duration = -1
+
+/datum/status_effect/buff/journey_ending/on_apply()
+	. = ..()
+	to_chat(owner, span_warning("Clarity in the flow of blood and steel, measured, tempered."))
+
+/datum/status_effect/buff/journey_end/on_apply()
+	. = ..()
+	examine_text = "<font color='#5454FF'>SUBJECTPRONOUN [owner.p_have(FALSE)] steadied [owner.p_their(FALSE)] resolve, clinging to fading embers!</font>"
+	to_chat(owner, span_warning("Each breath burns in your lungs, doubt clawing at your very self."))
+
+/datum/status_effect/buff/journey_end_final/on_apply()
+	. = ..()
+	examine_text = "<font color='#5454FF'>SUBJECTPRONOUN [owner.p_are(FALSE)] drawing from [owner.p_their(FALSE)] final reserves, pushing the body to its limits!</font>"
+	to_chat(owner, span_warning("Numb fingers, blurred vision and a sense of serenity. Have you finally found a purpose?"))
+
+/datum/status_effect/buff/journey_end_final/on_remove()
+	. = ..()
+	to_chat(owner, span_warning("Not yet, not here... your search continues."))
 
 /datum/status_effect/buff/stagehands_silence
 	id = "Stagehand"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/stagehands_silence
 	duration = 20 MINUTES
-	// this was supposed to only apply if you had less than 12 speed but it broke whenever other spd mods applied. 
+	// this was supposed to only apply if you had less than 12 speed but it broke whenever other spd mods applied.
 	// i couldnt fix it, unfortunately.
 	// IF people use it to game just fucking remove it we cant have shiut in thjis codebase anymore
 	effectedstats = list(STATKEY_SPD = 1)
@@ -2559,7 +2604,7 @@
 	to_chat(owner, span_warning("My footsteps feel lighter and quieter. What is that droning sound in my head...?"))
 	// inspired by matthiosmuffle
 	ADD_TRAIT(owner, TRAIT_SILENT_FOOTSTEPS, "xylixboon")
-	ADD_TRAIT(owner, TRAIT_LIGHT_STEP, "xylixboon") 
+	ADD_TRAIT(owner, TRAIT_LIGHT_STEP, "xylixboon")
 
 
 /datum/status_effect/buff/stagehands_silence/on_remove()
@@ -2579,11 +2624,11 @@
 // https://en.wikipedia.org/wiki/Transparent_eyeball
 /atom/movable/screen/alert/status_effect/buff/transparent_eyeball
 	name = "Transparent Eyeball"
-	desc = "Nepolx's red surface has blessed me... I shall find it easier to use scrying orbs." + span_gamedeadsay("\n...I AM NOTHING, I SEE ALL.")
+	desc = "Nepolx's red surface has blessed me... I shall find it easier to use scrying orbs." + span_blue("\n...I AM NOTHING, I SEE ALL.")
 
 /datum/status_effect/buff/transparent_eyeball/on_apply()
 	. = ..()
-	to_chat(owner, span_gamedeadsay("I feel unbound to my mortal coil-- scrying orbs will be easier to use, for a time!"))
+	to_chat(owner, span_gamedeadsay("I feel unbound to my mortal coil. Scrying orbs will be easier to use for a time!"))
 
 /datum/status_effect/buff/transparent_eyeball/on_remove()
 	. = ..()
@@ -2597,7 +2642,7 @@
 	var/gave_buff = FALSE
 
 /atom/movable/screen/alert/status_effect/buff/hermes_trismegistus
-	name = "Hermetick Blessing" // yes, hermetick. with a k. 
+	name = "Hermetick Blessing" // yes, hermetick. with a k.
 	desc = "Looking at HERMES has given me a blessing of the Stars... written words begin to make more sense." // dont ask how this works its magic biyatch
 
 /datum/status_effect/buff/hermes_trismegistus/on_apply()
@@ -2663,7 +2708,7 @@
 /datum/status_effect/plaguebringer
 	id = "plaguebringer"
 	var/outline_colour = "#2C4628"
-	duration = -1
+	duration = 20 MINUTES
 	tick_interval = -1
 	examine_text = span_good("SUBJECTPRONOUN is emanating Rot!")
 	alert_type = null
@@ -2684,6 +2729,7 @@
 
 	owner.overlays_standing[PLAGUEBRINGER_FILTER] = effect
 	owner.apply_overlay(PLAGUEBRINGER_FILTER)
+	ADD_TRAIT(owner, TRAIT_CRITICAL_WEAKNESS, TRAIT_RITUAL)
 
 	RegisterSignal(owner, COMSIG_LIVING_LIFE, PROC_REF(on_life))
 
@@ -2692,6 +2738,8 @@
 
 	owner.remove_filter(PLAGUEBRINGER_FILTER)
 	owner.remove_overlay(PLAGUEBRINGER_FILTER)
+
+	REMOVE_TRAIT(owner, TRAIT_CRITICAL_WEAKNESS, TRAIT_RITUAL)
 
 	UnregisterSignal(owner, COMSIG_LIVING_LIFE)
 
@@ -2793,7 +2841,7 @@
 /datum/status_effect/eoranaura
 	id = "eoranaura"
 	var/outline_colour = "#EEBBBB"
-	duration = -1
+	duration = 20 MINUTES
 	tick_interval = -1
 	examine_text = span_good("SUBJECTPRONOUN is bathed in Eora's Light!")
 	alert_type = null
@@ -2814,6 +2862,7 @@
 
 	owner.overlays_standing[EORANAURA_FILTER] = effect
 	owner.apply_overlay(EORANAURA_FILTER)
+	ADD_TRAIT(owner, TRAIT_CRITICAL_WEAKNESS, TRAIT_RITUAL)
 
 	RegisterSignal(owner, COMSIG_LIVING_LIFE, PROC_REF(on_life))
 
@@ -2822,6 +2871,7 @@
 
 	owner.remove_filter(EORANAURA_FILTER)
 	owner.remove_overlay(EORANAURA_FILTER)
+	REMOVE_TRAIT(owner, TRAIT_CRITICAL_WEAKNESS, TRAIT_RITUAL)
 
 	UnregisterSignal(owner, COMSIG_LIVING_LIFE)
 
@@ -2829,7 +2879,7 @@
 	SIGNAL_HANDLER
 
 	for(var/mob/living/mob in get_hearers_in_view(2, owner))
-		if(HAS_TRAIT(mob,  TRAIT_PSYDONITE) || HAS_TRAIT(mob,  TRAIT_UNFORGIVABLE))
+		if(HAS_TRAIT(mob,	TRAIT_PSYDONITE) || HAS_TRAIT(mob,	TRAIT_UNFORGIVABLE))
 			continue
 
 		mob.apply_status_effect(/datum/status_effect/eora_blessing)
@@ -2851,16 +2901,25 @@
 	var/energy_per_tick = 0
 	var/total_to_restore = 0
 	var/currently_restored = 0
+	/// Missing energy percentage to restore
+	var/restore_percent_missing = 34
+	/// Minimum safety floor percentage to restore
+	var/min_restore_percent = 20
 
-/datum/status_effect/buff/invigoration/on_creation(mob/living/new_owner, set_duration = 10 SECONDS, restore_percent_missing = 34, min_restore_percent = 20)
+/datum/status_effect/buff/invigoration/on_creation(mob/living/new_owner, set_duration, set_restore_missing, set_min_restore)
+	// Respect custom overrides passed in, otherwise fall back to path variables
 	if(set_duration)
 		duration = set_duration
+	if(set_restore_missing)
+		restore_percent_missing = set_restore_missing
+	if(set_min_restore)
+		min_restore_percent = set_min_restore
 
 	var/missing_energy = new_owner.max_energy - new_owner.energy
 	var/percent_missing = (missing_energy / new_owner.max_energy) * 100
 	var/percent_missing_percent = percent_missing * (restore_percent_missing / 100)
 
-	// either the provided restore missing % or the minimum safety floor
+	// Either the calculated missing % or the minimum safety floor
 	var/restore_target_percent = max(percent_missing_percent, min_restore_percent)
 
 	// Total amount we want to restore over the whole duration
@@ -2868,8 +2927,9 @@
 
 	// Divide that total by the number of ticks
 	var/tick_interval = 1 SECONDS
-	var/num_ticks = max(round(set_duration / tick_interval), 1)
+	var/num_ticks = max(round(duration / tick_interval), 1)
 	energy_per_tick = total_to_restore / num_ticks
+
 	return ..()
 
 /datum/status_effect/buff/invigoration/on_apply()
@@ -2932,3 +2992,39 @@
 /datum/status_effect/buff/overclock/on_remove()
 	. = ..()
 	to_chat(owner, span_notice("I feel the hum of my prosthetics slow down, they need time to recharge."))
+
+//visual effects 4 skeles
+
+#define SAPPERGLOW_FILTER "sapper_exploding_glow"
+/atom/movable/screen/alert/status_effect/buff/sapper_exploding
+	name = "Violently Overcharging"
+	desc = "I am about to give my lyfe and vessel up for my Exarch to level the obstructions of Progress! ZIZO! ZIZO! ZIZO!"
+	icon_state = "zizospite"
+
+/datum/status_effect/buff/sapper_exploding // Hey did u follow us from ritualcircles? Cool, okay this stuff is pretty simple yeah? Most ritual circles use some sort of status effects to get their effects ez.
+	id = "sapper_exploding"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/sapper_exploding
+	duration = -1 //does it matter, we're gonna gib
+	status_type = STATUS_EFFECT_REFRESH
+	effectedstats = list(STATKEY_CON = -2) // Makes them, easier to decapitate and such, downside. THIS IS GOING TO FUCKING HURT IF THEY POP IT OFF!
+	examine_text = "SUBJECTPRONOUN violently glows with POTENT magicka, they're going to explode!"
+	var/list/mobs_affected
+	var/obj/effect/dummy/lighting_obj/moblight/mob_light_obj
+	var/outline_colour = "#ff0000" //evil fucking color, get awae!
+
+/datum/status_effect/buff/sapper_exploding/on_apply()
+	. = ..()
+	if (!.)
+		return
+	var/filter = owner.get_filter(SAPPERGLOW_FILTER)
+	if (!filter)
+		owner.add_filter(SAPPERGLOW_FILTER, 2, list("type" = "outline", "color" = outline_colour, "alpha" = 60, "size" = 2))
+
+	if(!mob_light_obj || QDELETED(mob_light_obj))
+		mob_light_obj = owner.mob_light("#ff0000", 5, 2)
+	else
+		mob_light_obj.set_light(5, null, 2, l_color = "#ff0000")
+
+	return TRUE
+
+#undef SAPPERGLOW_FILTER

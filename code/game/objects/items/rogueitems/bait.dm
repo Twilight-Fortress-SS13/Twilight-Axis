@@ -30,7 +30,7 @@
 	. += span_info("Certain types of bait attract certain kinds of creechers. Sweeter treats allure calmer creechers, while meatier treats allure harsher creechers.")
 	. += span_info("More bait can be crafted by combining sacks with jackberries, raw meat, and more.")
 
-/obj/item/bait/Initialize()
+/obj/item/bait/Initialize(mapload)
 	. = ..()
 	check_counter = world.time
 
@@ -100,7 +100,11 @@
 								if(GLOB.animal_to_undead[M])
 									if(prob(75))
 										M = GLOB.animal_to_undead[M]
-							new M(T)
+							if(istype(src, /obj/item/bait/bloody) && M == /mob/living/simple_animal/hostile/retaliate/rogue/wolf && prob(20)) // TA EDIT START
+								for(var/wolf_family_type in get_wolf_family_types())
+									new wolf_family_type(T)
+							else
+								new M(T) // TA EDIT END
 							if(refund_bag)
 								if(prob(66))
 									new /obj/item/storage/roguebag/crafted(T)
@@ -117,7 +121,7 @@
 	icon_state = "baitp"
 	attracted_types = list(/mob/living/simple_animal/hostile/retaliate/rogue/goat = 10,
 							/mob/living/simple_animal/hostile/retaliate/rogue/goatmale = 10,
-							/mob/living/simple_animal/hostile/retaliate/rogue/mudcrab/cabbit = 50, 	// Rabbits love sweet things
+							/mob/living/simple_animal/hostile/retaliate/rogue/mudcrab/cabbit = 50,	// Rabbits love sweet things
 							/mob/living/simple_animal/hostile/retaliate/rogue/saiga = 10,
 							/mob/living/simple_animal/hostile/retaliate/rogue/saiga/saigabuck = 10,
 							/mob/living/simple_animal/hostile/retaliate/rogue/fox = 30,				//Scavenger, so lower chance
@@ -131,8 +135,9 @@
 	icon_state = "baitb"
 	attracted_types = list(/mob/living/simple_animal/hostile/retaliate/rogue/wolf = 50,
 							/mob/living/simple_animal/hostile/retaliate/rogue/mole = 10,
-							/mob/living/simple_animal/hostile/retaliate/rogue/fox = 50,	
+							/mob/living/simple_animal/hostile/retaliate/rogue/fox = 50,
 							/mob/living/simple_animal/hostile/retaliate/rogue/bobcat = 50,		//Annoying bastards
+							/mob/living/simple_animal/hostile/retaliate/rogue/wolf/dire = 10,
 							/mob/living/simple_animal/hostile/retaliate/rogue/direbear = 10,
 							/mob/living/simple_animal/hostile/retaliate/rogue/troll/bog = 5)			//RUH-ROH
 

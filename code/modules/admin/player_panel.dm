@@ -46,7 +46,7 @@
 									tr.innerHTML = "";
 									i--;
 								}
-							}catch(err) {   }
+							}catch(err) {	}
 						}
 					}
 
@@ -188,7 +188,7 @@
 		<table width='560' align='center' cellspacing='0' cellpadding='5' id='maintable'>
 			<tr id='title_tr'>
 				<td align='center'>
-					<font size='5'><b>Player panel</b></font><br>
+					<font size='5'><b>Player panel</b></font><br> <a href='?_src_=holder;[HrefToken()];ta_patron_followers=1'>Followers by Patron</a> -
 					Hover over a line to see more information - <a href='?_src_=holder;[HrefToken()];check_antagonist=1'>Check antagonists</a> - Kick <a href='?_src_=holder;[HrefToken()];kick_all_from_lobby=1;afkonly=0'>everyone</a>/<a href='?_src_=holder;[HrefToken()];kick_all_from_lobby=1;afkonly=1'>AFKers</a> in lobby
 					<p>
 				</td>
@@ -251,11 +251,31 @@
 			var/M_rname = html_encode(M.real_name)
 			var/M_key = html_encode(M.key)
 			var/M_voice = ""
+			var/M_stature = ""
+			var/M_trait = ""
 			if(isliving(M))
 				var/mob/living/L = M
-				var/datum/mob_descriptor/voice/voice_descriptor = L.get_descriptor_type(/datum/mob_descriptor/voice)
-				if(voice_descriptor)
-					M_voice = html_encode(voice_descriptor.name)
+				if(istype(L, /mob/living/carbon/human))
+					var/mob/living/carbon/human/H = L
+					M_voice = html_encode(H.get_alt_name(TRUE))
+				var/datum/mob_descriptor/stature/stature_descriptor = L.get_descriptor_type(/datum/mob_descriptor/stature)
+				if(stature_descriptor)
+					if(istype(stature_descriptor, /datum/mob_descriptor/stature/custom))
+						var/datum/mob_descriptor/stature/custom/SD = stature_descriptor
+						if(SD.can_describe(L))
+							var/datum/custom_descriptor_entry/entry = L.custom_descriptors[SD.custom_index]
+							M_stature = html_encode(entry.content_text)
+					if(M_stature == "")
+						M_stature = html_encode(stature_descriptor.name)
+				var/datum/mob_descriptor/trait/trait_descriptor = L.get_descriptor_type(/datum/mob_descriptor/trait)
+				if(trait_descriptor)
+					if(istype(trait_descriptor, /datum/mob_descriptor/trait/custom))
+						var/datum/mob_descriptor/trait/custom/TD = trait_descriptor
+						if(TD.can_describe(L))
+							var/datum/custom_descriptor_entry/entry = L.custom_descriptors[TD.custom_index]
+							M_trait = html_encode(entry.content_text)
+					if(M_trait == "")
+						M_trait = html_encode(trait_descriptor.name)
 			var/previous_names = ""
 			if(M_key)
 				var/datum/player_details/P = GLOB.player_details[ckey(M_key)]
@@ -272,8 +292,8 @@
 						<a id='link[i]'
 						onmouseover='expand("item[i]","[M_job]","[M_name]","[M_rname]","[previous_names]","[M_key]","[M.lastKnownIP]",[is_antagonist],"[REF(M)]")'
 						>
-						<b id='search[i]'>[M_name] - [M_rname] - [M_key] ([M_job])[M_voice ? " \[[M_voice] voice\]" : ""]</b>
-						<span hidden class='filter_data'>[M_name] [M_rname] [M_key] [M_job] [previous_names] [M_voice]</span>
+						<b id='search[i]'>[M_name] - [M_rname] - [M_key] ([M_job])[M_stature ? " \[[capitalize(M_trait)] [capitalize(M_stature)]\]" : ""][M_voice ? " \[[M_voice]\]" : ""]</b>
+						<span hidden class='filter_data'>[M_name] [M_rname] [M_key] [M_job] [previous_names] [M_voice] [M_stature] [M_trait]</span>
 						</a>
 						<br><span id='item[i]'></span>
 					</td>
@@ -296,4 +316,4 @@
 	</body></html>
 	"}
 
-	usr << browse(dat, "window=players;size=600x480")
+	usr << browse(dat, "window=players;size=900x700")

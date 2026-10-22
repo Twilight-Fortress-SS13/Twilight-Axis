@@ -52,18 +52,17 @@
 	name = "arcyne bolt"
 	icon = 'icons/obj/magic_projectiles.dmi'
 	icon_state = "arcyne_bolt"
-	damage = 30
+	damage = SPELL_DMG(30)
 	nodamage = FALSE
 	damage_type = BRUTE
 	woundclass = BCLASS_BLUNT
 	flag = "blunt"
 	range = SPELL_RANGE_PROJECTILE
 	speed = MAGE_PROJ_FAST
-	accuracy = 60
 	guard_deflectable = TRUE
 	expose_caster_on_deflect = TRUE
-	npc_simple_damage_mult = 1.5
-	intdamfactor = 1
+	intdamfactor = SPELL_INTDAM(1)
+	spell_damage_scaled = TRUE
 	hitsound = 'sound/combat/hits/blunt/shovel_hit2.ogg'
 	ricochets_max = 2
 	ricochet_chance = 100
@@ -75,7 +74,7 @@
 
 /obj/projectile/magic/arcyne_salvo/arc
 	name = "arced arcyne bolt"
-	damage = 23
+	damage = SPELL_DMG(23)
 	arcshot = TRUE
 
 /obj/projectile/magic/arcyne_salvo/on_hit(target)

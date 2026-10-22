@@ -2,7 +2,7 @@
 	name = "Blackpowder Hunter"
 	tutorial = "As gunpowder becomes more widespread accross Psydonia, so do the Gunslingers - those who earn their living through their skill with those advanced weapons. But you are not one of 'em, you are just a wanderer with the weapon of new times. You are too young or too old to learn properly how to use effectively"
 	outfit = /datum/outfit/job/roguetown/adventurer/twilight_hunter
-	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_blackpowderhunter.ogg'
+	cmode_music = sound("modular_twilight_axis/firearms/sound/music/combat_blackpowderhunter.ogg")
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT, CTAG_LICKER_WRETCH)
 	traits_applied = list(TRAIT_STEELHEARTED)
 	subclass_stats = list(
@@ -34,7 +34,7 @@
 	backr = /obj/item/storage/backpack/rogue/satchel
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife = 1,
-		/obj/item/recipe_book/survival = 1, 
+		/obj/item/recipe_book/survival = 1,
 		/obj/item/flashlight/flare/torch/lantern = 1,
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
 		/obj/item/twilight_powderflask = 1,

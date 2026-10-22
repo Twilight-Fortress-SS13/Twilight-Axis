@@ -63,7 +63,7 @@
 	force_wielded = 35
 	smeltresult = /obj/item/ingot/blacksteel
 	possible_item_intents = list(/datum/intent/axe/cut, /datum/intent/axe/chop, /datum/intent/axe/bash/battle, /datum/intent/axe/thrust)
-	wdefense_wbonus = 2 //Increased defense when wielded.
+	wdefense_wbonus = 4 //Increased defense when wielded.
 	max_blade_int = 500 //Sharper than sharp.
 	resistance_flags = FIRE_PROOF
 
@@ -124,7 +124,7 @@
 
 /obj/item/rogueweapon/stoneaxe/woodcut/aaxe
 	name = "decrepit axe"
-	desc = "A hatchet of frayed bronze. It reigns from a tyme before the Comet Syon's impact; when Man wrought metal not to spill blood, but to better shape the world in His image."
+	desc = "A hatchet of rotted metal. It reigns from a tyme before the Comet Syon's impact; when Man wrought metal not to spill blood, but to better shape the world in His image."
 	icon_state = "ahandaxe"
 	force = 17
 	force_wielded = 20
@@ -148,7 +148,7 @@
 	grid_height = 64
 	grid_width = 32
 	force = 20
-	throwforce = 32 //You ever had an axe thrown at you? 
+	throwforce = 32 //You ever had an axe thrown at you?
 	throw_speed = 6 //Batarangs, baby.
 	max_integrity = 50 //Brittle design, hits hard, breaks quickly.
 	armor_penetration = PEN_MEDIUM //On-par with steel tossblades.
@@ -189,7 +189,7 @@
 	icon = 'icons/roguetown/weapons/axes32.dmi'
 	max_integrity = 400 // higher int than usual
 	possible_item_intents = list(/datum/intent/axe/cut, /datum/intent/axe/chop, /datum/intent/mace/warhammer/pick, /datum/intent/axe/bash/battle)
-	gripped_intents = list(/datum/intent/axe/cut, /datum/intent/axe/chop, /datum/intent/axe/bash/battle)
+	gripped_intents = list(/datum/intent/axe/cut, /datum/intent/axe/chop, /datum/intent/mace/warhammer/pick, /datum/intent/axe/bash/battle)
 
 //Pickaxe-axe ; Technically both a tool and a weapon, but it goes here due to weapon function. Subtype of woodcutter axe, mostly a weapon.
 /obj/item/rogueweapon/stoneaxe/woodcut/pick
@@ -223,8 +223,8 @@
 	max_integrity = 100
 	icon_state = "chatchet"
 	smeltresult = /obj/item/ingot/copper
-	throwforce = 20 //You ever had an axe thrown at you? 
-	throw_speed = 3 
+	throwforce = 20 //You ever had an axe thrown at you?
+	throw_speed = 3
 	armor_penetration = PEN_LIGHT
 
 /obj/item/rogueweapon/stoneaxe/handaxe
@@ -240,17 +240,18 @@
 	smeltresult = /obj/item/ingot/iron
 	gripped_intents = null
 	wdefense = 2
-	throwforce = 25 //You ever had an axe thrown at you? 
+	throwforce = 25 //You ever had an axe thrown at you?
 	embedding = list("embedded_pain_multiplier" = 6, "embed_chance" = 30, "embedded_fall_chance" = 50) //Lesser variant of the Hurlbat's dedicated power.
 	wlength = WLENGTH_SHORT
 	w_class = WEIGHT_CLASS_SMALL
 	wbalance = WBALANCE_SWIFT
 	grid_height = 96 //Can be stowed in the belt as a larger - if slightly more intimidating - counterpart to the Hunting Knife.
 	grid_width = 32
-	throw_speed = 3 
+	throw_speed = 3
 	armor_penetration = PEN_LIGHT
 	is_tool = TRUE
 	anvilrepair = /datum/skill/craft/weaponsmithing
+	special = /datum/special_intent/hatchet_twirl
 
 /datum/intent/axe/cut/handaxe
 	damfactor = 1.1
@@ -260,64 +261,40 @@
 	name = "silver tomahawk"
 	desc = "Once, a ceremonial rendition of the handaxes that Psydonia's ancestors built the first civilizations \
 	with. Now, an uncommon - but very much lethal - alternative to the tossblade, well-weighted for slashing and throwing."
-	armor_penetration = PEN_BSTEEL //Refers to throwing armor penetration. Heavier than silver tossblades; you get one throw.
 	icon_state = "tomahawk_silver"
-	embedding = list("embedded_pain_multiplier" = 6, "embed_chance" = 100, "embedded_fall_chance" = 30) //high chance at embed, high chance to fall out on its own.
-	gripped_intents = null
 	thrown_damage_flag = "piercing"
-	minstr = 8
 	smeltresult = /obj/item/ingot/silver
-	special = /datum/special_intent/axe_swing //Cannot be wielded, otherwise.
 	is_tool = FALSE
 	is_silver = TRUE
+	resistance_flags = FIRE_PROOF
 
 /obj/item/rogueweapon/stoneaxe/handaxe/silver/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 50,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_TENNITE\
 	)
 
-/obj/item/rogueweapon/stoneaxe/handaxe/psy
+/obj/item/rogueweapon/stoneaxe/handaxe/silver/psy
 	name = "psydonic tomahawk"
 	desc = "'History prefers legends to men. It prefers nobility to brutality, soaring speeches to \
 	quiet deeds. History remembers the battle, but forgets the blood. However history remembers me, \
 	if it remembers me at all, shall only be a fraction of the truth.'"
-	armor_penetration = PEN_BSTEEL //Refers to throwing armor penetration. Heavier than silver tossblades; you get one throw.
 	icon_state = "tomahawk_silver"
-	embedding = list("embedded_pain_multiplier" = 6, "embed_chance" = 100, "embedded_fall_chance" = 30) //high chance at embed, high chance to fall out on its own.
-	gripped_intents = null
-	thrown_damage_flag = "piercing"
-	minstr = 8
 	smeltresult = /obj/item/ingot/silverblessed
-	special = /datum/special_intent/axe_swing //Cannot be wielded, otherwise.
-	is_tool = FALSE
-	is_silver = TRUE
 
-/obj/item/rogueweapon/stoneaxe/handaxe/psy/ComponentInitialize()
+/obj/item/rogueweapon/stoneaxe/handaxe/silver/psy/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 50,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_PSYDONIAN\
 	)
 
-/obj/item/rogueweapon/stoneaxe/handaxe/psy/preblessed/ComponentInitialize()
+/obj/item/rogueweapon/stoneaxe/handaxe/silver/psy/preblessed/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_PSYDONIAN,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 50,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_PSYDONIAN\
 	)
 
 /obj/item/rogueweapon/stoneaxe/woodcut/bronze
@@ -376,7 +353,7 @@
 	smeltresult = /obj/item/ingot/component/graggar
 	special = /datum/special_intent/axe_swing/graggarite
 
-/obj/item/rogueweapon/stoneaxe/woodcut/steel/graggar/Initialize()
+/obj/item/rogueweapon/stoneaxe/woodcut/steel/graggar/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_HORDE, "AXE", "RENDERED ASUNDER")
 
@@ -415,7 +392,7 @@
 	inhand_y_dimension = 64
 	bigboy = TRUE
 	is_tool = TRUE
-		
+
 /obj/item/rogueweapon/stoneaxe/woodcut/getonmobprop(tag)
 	. = ..()
 	if(tag)
@@ -450,68 +427,56 @@
 	gripped_intents = list(/datum/intent/axe/cut,/datum/intent/axe/chop)
 	resistance_flags = FLAMMABLE
 	anvilrepair = /datum/skill/craft/weaponsmithing
+	materia = list(/datum/materia_aspect/tool, /datum/materia_aspect/death)
 
-/obj/item/rogueweapon/stoneaxe/woodcut/silver
+/obj/item/rogueweapon/stoneaxe/battle/silver
 	name = "silver war axe"
 	desc = "A hefty battle axe, fashioned from pure silver. Even with a one-handed grasp, an efforted swing carries enough momentum to cleave through maille-and-flesh alike."
 	icon_state = "silveraxe"
-	force = 25 //Forgot this is forced to only be one-handed. My bad.
 	possible_item_intents = list(/datum/intent/axe/cut, /datum/intent/axe/chop, /datum/intent/axe/chop/heavy, /datum/intent/axe/bash/battle)
-	gripped_intents = null
-	minstr = 11
-	max_blade_int = 400
 	smeltresult = /obj/item/ingot/silver
-	wdefense = 5
 	is_silver = TRUE
-	blade_dulling = DULLING_SHAFT_METAL
-	special = /datum/special_intent/axe_swing //Cannot be wielded, otherwise.
+	resistance_flags = FIRE_PROOF
 
-/obj/item/rogueweapon/stoneaxe/woodcut/silver/ComponentInitialize()
+/obj/item/rogueweapon/stoneaxe/battle/silver/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 50,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_TENNITE\
 	)
 
-/obj/item/rogueweapon/stoneaxe/battle/psyaxe
+/obj/item/rogueweapon/stoneaxe/battle/silver/psy
 	name = "psydonic war axe"
 	desc = "An ornate battle axe, plated in a ceremonial veneer of silver. Even with a one-handed grasp, an efforted swing carries enough momentum to cleave through maille-and-flesh alike. </br>The premiere instigator of conflict against elven attachees."
 	icon_state = "psyaxe"
-	force = 25
-	force_wielded = 25
-	possible_item_intents = list(/datum/intent/axe/cut, /datum/intent/axe/chop, /datum/intent/axe/chop/heavy, /datum/intent/axe/bash/battle)
-	minstr = 11
-	wdefense = 6
-	blade_dulling = DULLING_SHAFT_METAL
-	is_silver = TRUE
 	smeltresult = /obj/item/ingot/silverblessed
-	special = /datum/special_intent/axe_swing //Cannot be wielded, otherwise.
 
-/obj/item/rogueweapon/stoneaxe/battle/psyaxe/ComponentInitialize()
+/obj/item/rogueweapon/stoneaxe/battle/silver/psy/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 50,\
-		added_int = 50,\
-		added_def = 1,\
+		silver_type = SILVER_PSYDONIAN\
 	)
 
-/obj/item/rogueweapon/stoneaxe/battle/psyaxe/preblessed/ComponentInitialize()
+/obj/item/rogueweapon/stoneaxe/battle/silver/psy/preblessed/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_PSYDONIAN,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 50,\
-		added_int = 50,\
-		added_def = 1,\
+		silver_type = SILVER_PSYDONIAN\
 	)
+
+/obj/item/rogueweapon/stoneaxe/woodcut/cleric
+	name = "anointed war axe"
+	icon_state = "crusaderaxe"
+	desc = "A crusader's axe, adorned with a blade of cold iron and blessed to smite evil. Though this blessed alloy lacks the strength to \
+	sunder those who bear greater curses, it nevertheless channels enough power to dispell the lesser curses of mindless fiends-and-foes."
+	force = 25
+	force_wielded = 27
+	max_blade_int = 450 //+50
+	max_integrity = 300 //+50
+	wdefense = 5
+	smeltresult = /obj/item/ingot/iron
+	is_even_lesser_silver = TRUE // adv paladin exclusive weapon, works like unblessed silver but only in pve
 
 /obj/item/rogueweapon/stoneaxe/battle/steppesman
 	name = "aavnic valaška"
@@ -629,7 +594,7 @@
 	possible_item_intents = list(/datum/intent/axe/cut, /datum/intent/axe/chop, /datum/intent/axe/thrust, SPEAR_BASH)
 	gripped_intents = list(/datum/intent/axe/cut/long, /datum/intent/axe/chop/long, /datum/intent/axe/rangedthrust, /datum/intent/axe/sweep)
 	max_blade_int = 500
-	wdefense_wbonus = 3 //Increased defense when wielded.
+	wdefense_wbonus = 4 //Increased defense when wielded.
 	special = /datum/special_intent/axe_swing //Weapon specials on a non-greatsword? How scandalous!
 	resistance_flags = FIRE_PROOF
 
@@ -651,11 +616,12 @@
 
 /obj/item/rogueweapon/greataxe/steel/knight
 	possible_item_intents = list(/datum/intent/axe/cut, /datum/intent/axe/chop, /datum/intent/mace/strike)
-	gripped_intents = list(/datum/intent/axe/cut/long, /datum/intent/axe/chop/long, /datum/intent/mace/strike, /datum/intent/axe/rangedthrust)
+	gripped_intents = list(/datum/intent/axe/cut/long, /datum/intent/axe/chop/long, /datum/intent/mace/strike/poleaxe, /datum/intent/spear/thrust/militia)
 	name = "poleaxe"
 	desc = "A poleaxe, fitted with a reinforced shaft and a beaked axhead of steel. It is the ultimate weapon for a well-seasoned knight, capable of \
 	humbling any foe that may assail their presence. </br>'Away with you, vile beggar!'"
 	icon_state = "steelpoleaxe"
+	special = /datum/special_intent/side_sweep
 	max_blade_int = 300
 
 /obj/item/rogueweapon/greataxe/steel/knight/attackby(obj/item/W, mob/living/user, params)
@@ -677,61 +643,43 @@
 
 
 /obj/item/rogueweapon/greataxe/steel/knight/silver
-	force_wielded = 25
 	name = "silver poleaxe"
 	desc = "A poleaxe, fitted with a reinforced shaft and a beaked axhead of pure silver. It may not stop the darkness; but it will halt \
 	its march, long enough, to shepherd away the defenseless. </br>'O'er the Horizon, the stars and spirals I see; and below it, the horrors \
 	that've been felled by me. Through the darkness, I see my home and its beautiful light; and it will continue to shimmer, as long as I \
 	fight. Forever I stand, forever I'll hold - 'til the Horizon grows still, and my spirit trails home..'"
 	icon_state = "silverpolearm"
-	minstr = 11
-	max_blade_int = 350
 	is_silver = TRUE
 	smeltresult = /obj/item/ingot/silver
+	resistance_flags = FIRE_PROOF
 
 /obj/item/rogueweapon/greataxe/steel/knight/silver/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 100,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_TENNITE\
 	)
 
-/obj/item/rogueweapon/greataxe/steel/knight/psy
-	force_wielded = 25
+/obj/item/rogueweapon/greataxe/steel/knight/silver/psy
 	name = "psydonic poleaxe"
 	desc = "A poleaxe, fitted with a reinforced shaft and a beaked axhead of alloyed silver. As the fragility of swords've \
 	become more apparent, the Psydonic Orders - following the disastrous Massacre of Blastenghyll - have shifted their focus \
 	towards arming their paladins with longer-lasting greatweapons."
 	icon_state = "silverpolearm"
-	minstr = 11
-	max_blade_int = 350
-	is_silver = TRUE
 	smeltresult = /obj/item/ingot/silverblessed
 
-/obj/item/rogueweapon/greataxe/steel/knight/psy/ComponentInitialize()
+/obj/item/rogueweapon/greataxe/steel/knight/silver/psy/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 100,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_PSYDONIAN\
 	)
 
-/obj/item/rogueweapon/greataxe/steel/knight/psy/preblessed/ComponentInitialize()
+/obj/item/rogueweapon/greataxe/steel/knight/silver/psy/preblessed/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_PSYDONIAN,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 100,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_PSYDONIAN\
 	)
 
 /obj/item/rogueweapon/greataxe/steel/doublehead
@@ -763,7 +711,7 @@
 /obj/item/rogueweapon/greataxe/steel/doublehead/graggar/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_GRAGGAR_WEAPON)
 
-/obj/item/rogueweapon/greataxe/steel/doublehead/graggar/Initialize()
+/obj/item/rogueweapon/greataxe/steel/doublehead/graggar/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_HORDE, "AXE", "RENDERED ASUNDER")
 

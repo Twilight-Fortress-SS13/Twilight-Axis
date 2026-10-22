@@ -1,6 +1,7 @@
 #define PHALANX_FILTER "phalanx_glow"
 
 /datum/action/cooldown/spell/azurean_phalanx
+	source_aspect = /datum/magic_aspect/pseudo/spellblade
 	name = "Azurean Phalanx"
 	desc = "Prime your next melee strike with arcyne force. On hit, the blow pierces through, \
 		striking enemies in a line behind the target. Builds 1 momentum on hit. \
@@ -30,9 +31,9 @@
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
 	var/pierce_length = 3
-	var/pierce_damage = 35
+	var/pierce_damage = SPELL_DMG(35)
 	var/empowered_pierce_length = 4
-	var/empowered_pierce_damage = 50
+	var/empowered_pierce_damage = SPELL_DMG(50)
 	var/momentum_cost = 3
 
 /datum/action/cooldown/spell/azurean_phalanx/cast(atom/cast_on)
@@ -120,7 +121,7 @@
 		if(spell_guard_check(struck, FALSE, user))
 			deflected = TRUE
 		else
-			arcyne_strike(user, struck, weapon, damage, def_zone, BCLASS_STAB, spell_name = "Azurean Phalanx", skip_animation = TRUE)
+			arcyne_strike(user, struck, weapon, damage, def_zone, BCLASS_STAB, spell_name = "Azurean Phalanx", skip_animation = TRUE, SPELL_STRIKE_SCALING)
 			hit_count++
 			already_hit += struck
 
@@ -128,10 +129,10 @@
 		for(var/mob/living/victim in T)
 			if(victim == user || victim == struck || victim.stat == DEAD || (victim in already_hit))
 				continue
-			if(spell_guard_check(victim, FALSE, deflected ? null : user))
+			if(spell_guard_check(victim, FALSE, user, punish_caster = deflected ? FALSE : null))
 				deflected = TRUE
 				continue
-			arcyne_strike(user, victim, weapon, damage, def_zone, BCLASS_STAB, spell_name = "Azurean Phalanx", skip_animation = TRUE)
+			arcyne_strike(user, victim, weapon, damage, def_zone, BCLASS_STAB, spell_name = "Azurean Phalanx", skip_animation = TRUE, SPELL_STRIKE_SCALING)
 			hit_count++
 			already_hit += victim
 

@@ -1,6 +1,5 @@
 // Roundstart scaling (storyteller_scale_slots): scaling=2, min_players=25, default_cap=2.
-// The Guaranteed Antag presets raise the cap so werewolves scale with pop - 4 normally, 8 under the
-// aggressive No-Wretch preset (which also doubles the per-population step).
+// High Intensity sets its own cap of 2.
 /datum/antagonist/werewolf
 	name = "Verewolf"
 	roundend_category = "Werewolves"
@@ -11,15 +10,15 @@
 	storyteller_min_players = 25
 	storyteller_slot_scaling = 2
 	storyteller_slot_default_cap = 2
-	storyteller_maxcaps = list(/datum/storyteller/gamemode/guaranteed_antag = 2, /datum/storyteller/gamemode/guaranteed_antag/low_wretch = 3)
+	storyteller_maxcaps = list(/datum/storyteller/gamemode/guaranteed_antag = 2)
 	var/list/inherent_traits = list(
 		TRAIT_IGNORESLOWDOWN,
 		TRAIT_IGNOREDAMAGESLOWDOWN,
-		TRAIT_NOPAIN, 
-		TRAIT_NOPAINSTUN, 
-		TRAIT_CRITICAL_RESISTANCE, 
-		TRAIT_NOFALLDAMAGE1, 
-		TRAIT_KNEESTINGER_IMMUNITY, 
+		TRAIT_NOPAIN,
+		TRAIT_NOPAINSTUN,
+		TRAIT_CRITICAL_RESISTANCE,
+		TRAIT_NOFALLDAMAGE1,
+		TRAIT_KNEESTINGER_IMMUNITY,
 		TRAIT_SHOCKIMMUNE,
 		TRAIT_SILVER_WEAK,
 		TRAIT_STRENGTH_UNCAPPED,
@@ -42,7 +41,8 @@
 		TRAIT_LYCANRESILENCE,
 		TRAIT_CHUNKYFINGERS, //So they can no longer use weapons at all.
 		TRAIT_UNLYCKERABLE, //Literal archenemy
-		TRAIT_ZOMBIE_IMMUNE
+		TRAIT_ZOMBIE_IMMUNE,
+		TRAIT_UNCONVERTIBLE // major antag
 	)
 	confess_lines = list(
 		"THE BEAST INSIDE ME!",
@@ -66,12 +66,22 @@
 	name = "Lesser Verewolf"
 	increase_votepwr = FALSE
 
+/datum/antagonist/werewolf/noinfect
+	name = "Lowest Verewolf"
+	increase_votepwr = FALSE
+
+
 /datum/antagonist/werewolf/lesser/roundend_report()
+	return
+
+/datum/antagonist/werewolf/noinfect/roundend_report()
 	return
 
 /datum/antagonist/werewolf/examine_friendorfoe(datum/antagonist/examined_datum,mob/examiner,mob/examined)
 	if(istype(examined_datum, /datum/antagonist/werewolf/lesser))
 		return span_boldnotice("A young lupine kin.")
+	if(istype(examined_datum, /datum/antagonist/werewolf/noinfect))
+		return span_boldnotice("A young lupine kin. The curse is weak with them.")
 	if(istype(examined_datum, /datum/antagonist/werewolf))
 		return span_boldnotice("An elder lupine kin.")
 	if(istype(examined_datum, /datum/antagonist/maniac))
@@ -94,7 +104,7 @@
 	owner.special_role = name
 	if(increase_votepwr)
 		forge_werewolf_objectives()
-	
+
 	wolfname = "[pick(GLOB.wolf_prefixes)] [pick(GLOB.wolf_suffixes)]"
 	return ..()
 
@@ -128,8 +138,16 @@
 	return ..()
 
 /datum/antagonist/werewolf/lesser/greet()
-	// DO NOT call parent. 
+	// DO NOT call parent.
 	// lesser verevolfs should always be created by alpha bites, which have their own way of informing the user
+	// they are a werewolf. despite this, i still want to provide a new audio cue in the form of [THE CRY].
+	// remove it if it's obstructive. thx.
+	var/picked_sound = pick(dendor_cries)
+	owner.current.playsound_local(get_turf(owner.current), picked_sound, 100)
+
+/datum/antagonist/werewolf/noinfect/greet()
+	// DO NOT call parent.
+	// Noinfect verevolfs
 	// they are a werewolf. despite this, i still want to provide a new audio cue in the form of [THE CRY].
 	// remove it if it's obstructive. thx.
 	var/picked_sound = pick(dendor_cries)
@@ -147,7 +165,7 @@
 	//No cross species pollination!!!
 	if(mind.has_antag_datum(/datum/antagonist/gnoll))
 		return FALSE
-	if(HAS_TRAIT(src, TRAIT_SILVER_BLESSED) || HAS_TRAIT(src, TRAIT_IRONMAN) || HAS_TRAIT(src, TRAIT_ROTMAN)) // i don't know if other padding keeps them from turning but just to make sure lmao
+	if(HAS_TRAIT(src, TRAIT_SILVER_BLESSED) || HAS_TRAIT(src, TRAIT_IRONMAN) || HAS_TRAIT(src, TRAIT_ROTMAN) || HAS_TRAIT(src, TRAIT_NOWW)) // i don't know if other padding keeps them from turning but just to make sure lmao
 		return FALSE
 	return TRUE
 
@@ -197,19 +215,32 @@
 
 /obj/item/clothing/suit/roguetown/armor/regenerating/skin/werewolf_skin
 	slot_flags = null
+	blocking_behavior = null
 	name = "verewolf's skin"
-	desc = "an impenetrable hide of dendor's fury"
+	desc = "An impenetrable cloak of Dendor's fury."
 	icon_state = null
-	body_parts_covered = FULL_BODY
-	body_parts_inherent = FULL_BODY
+	body_parts_covered = CHEST
+	body_parts_inherent = CHEST
 	armor = ARMOR_WWOLF
 	blocksound = SOFTHIT
 	blade_dulling = DULLING_BASHCHOP
 	sewrepair = FALSE
-	max_integrity = 550
+	max_integrity = 750
 	item_flags = DROPDEL
-	repair_time = 15 SECONDS
+	repair_time = 20 SECONDS
 	interrupt_damount = 35
+
+/obj/item/clothing/suit/roguetown/armor/regenerating/skin/werewolf_skin/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_LYCANRESILENCE, "HIDE") //Allows increased integrity damage from silver weapons. Near-impossible to obtain beyond debugging.
+
+/obj/item/clothing/suit/roguetown/armor/regenerating/skin/werewolf_skin/extremities
+	max_integrity = 550
+	slot_flags = ITEM_SLOT_ARMOR
+	repair_time = 20 SECONDS
+	body_parts_covered = FULL_BODY_NO_CHEST
+	body_parts_inherent = FULL_BODY_NO_CHEST
+	name = "verewolf's thin skin"
 
 /datum/intent/simple/werewolf
 	name = "claw"
@@ -266,6 +297,6 @@
 /obj/item/rogueweapon/werewolf_claw/left
 	icon_state = "claw_l"
 
-/obj/item/rogueweapon/werewolf_claw/Initialize()
+/obj/item/rogueweapon/werewolf_claw/Initialize(mapload)
 	. = ..()
 	ADD_TRAIT(src, TRAIT_NOEMBED, TRAIT_GENERIC)

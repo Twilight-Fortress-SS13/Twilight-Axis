@@ -25,6 +25,12 @@ GLOBAL_PROTECT(href_token)
 
 	var/deadmined
 
+	/// A lazylist of tagged datums, for quick reference with the View Tags verb
+	var/list/tagged_datums
+	var/datum/filter_editor/filterrific
+	var/datum/particle_editor/particle_test
+	var/datum/appearance_debugger/appearance_debug
+
 /datum/admins/New(datum/admin_rank/R, ckey, force_active = FALSE, protected)
 	if(IsAdminAdvancedProcCall())
 		var/msg = " has tried to elevate permissions!"
@@ -72,6 +78,7 @@ GLOBAL_PROTECT(href_token)
 	GLOB.deadmins -= target
 	GLOB.admin_datums[target] = src
 	deadmined = FALSE
+	appearance_debug = new(src)
 	if (GLOB.directory[target])
 		associate(GLOB.directory[target])	//find the client for a ckey if they are connected and associate them with us
 
@@ -84,6 +91,7 @@ GLOBAL_PROTECT(href_token)
 		return
 	GLOB.deadmins[target] = src
 	GLOB.admin_datums -= target
+	QDEL_NULL(appearance_debug)
 	deadmined = TRUE
 	var/client/C
 	if ((C = owner) || (C = GLOB.directory[target]))
@@ -153,7 +161,7 @@ generally it would be used like so:
 /proc/admin_proc()
 	if(!check_rights(R_ADMIN,0))
 		return
-	to_chat(world, "you have enough rights!")
+	to_world("you have enough rights!")
 
 NOTE: it checks usr! not src! So if you're checking somebody's rank in a proc which they did not call
 you will have to do something like if(client.rights & R_ADMIN) myself.

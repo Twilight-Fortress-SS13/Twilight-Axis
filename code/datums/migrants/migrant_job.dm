@@ -14,6 +14,7 @@
 	min_pq = -999
 	wanderer_examine = TRUE
 	advjob_examine = TRUE
+	same_job_respawn_delay = 30 MINUTES // TA EDIT
 
 	total_positions = 0
 	spawn_positions = 0

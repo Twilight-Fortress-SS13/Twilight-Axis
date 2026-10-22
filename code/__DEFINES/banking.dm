@@ -14,6 +14,7 @@
 #define TAX_CATEGORY_HEADEATER_LEVY "headeater levy"
 #define TAX_CATEGORY_IMPORT_TARIFF "import tariff"
 #define TAX_CATEGORY_EXPORT_DUTY "export duty"
+#define TAX_CATEGORY_RECOVERED_SPOILS "recovered spoils"
 #define TAX_CATEGORY_FINE "fine"
 #define TAX_CATEGORY_ESTATE_LEVY "estate levy" //TA EDIT
 
@@ -36,6 +37,7 @@
 #define BANKRUPTCY_OPERATING_FLOOR 2500
 #define BANKRUPTCY_DEBT_FLAT 5000
 #define BANKRUPTCY_AUTOEXPORT_PERCENTAGE 0.25
+#define AUTOEXPORT_DEFAULT_PERCENTAGE 0.6
 #define BANKRUPTCY_CONCESSION_PICKS 3
 #define BANKRUPTCY_RECOVERY_RESET 1500
 
@@ -124,3 +126,9 @@
 #define POLL_TAX_ADVANCE_LOCKOUT (10 MINUTES)
 #define POLL_TAX_MAX_ADVANCE_DAYS 7
 #define POLL_TAX_ADVANCE_FALLBACK_RATE 10
+#define RESIDENCY_PRINT_COOLDOWN (1 MINUTES)
+
+/// Default daily withdrawal cap for Bathhouse agents drawing from the bathhouse fund.
+#define BATHHOUSE_AGENT_DAILY_WITHDRAW_DEFAULT 50
+/// Default daily withdrawal cap for Bathhouse workers drawing from the bathhouse fund.
+#define BATHHOUSE_WORKER_DAILY_WITHDRAW_DEFAULT 50

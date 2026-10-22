@@ -15,7 +15,7 @@
 	desc = "A tight leather corset with straps and rings. It forces posture, breath, and obedience."
 	icon_state = "hcorset"
 	item_state = "hcorset"
-	armor_class = ARMOR_CLASS_LIGHT
+	armor_class = null
 	body_parts_covered = CHEST
 	salvage_result = /obj/item/natural/hide/cured
 	salvage_amount = 1
@@ -34,7 +34,7 @@
 	icon_state = "hlegs"
 	item_state = "hlegs"
 	sewrepair = TRUE
-	armor = ARMOR_LEATHER
+	armor = null
 	salvage_amount = 2
 	salvage_result = /obj/item/natural/hide/cured
 	icon = 'modular_twilight_axis/icons/clothing/erp_cloth.dmi'
@@ -49,7 +49,7 @@
 	desc = "Leather gloves shaped into hooves, awkward for work and perfect for play."
 	icon_state = "harms"
 	item_state = "harms"
-	armor = ARMOR_LEATHER
+	armor = null
 	max_integrity = ARMOR_INT_SIDE_LEATHER
 	resistance_flags = FIRE_PROOF
 	blocksound = SOFTHIT
@@ -79,6 +79,7 @@
 	salvage_amount = 1
 	salvage_result = /obj/item/natural/hide/cured
 	smeltresult = null
+	armor = null
 	icon = 'modular_twilight_axis/icons/clothing/erp_cloth.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/erp_cloth.dmi'
 	propagade_kink = list(

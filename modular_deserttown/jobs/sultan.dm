@@ -28,7 +28,7 @@
 	max_pq = null
 	round_contrib_points = 4
 	give_bank_account = 1000
-	cmode_music = 'sound/music/combat_noble.ogg'
+	cmode_music = sound("sound/music/combat_noble.ogg")
 	// Can't use the Throat when you can't talk properly or.. at all for that matter.
 	vice_restrictions = list(/datum/charflaw/mute, /datum/charflaw/unintelligible)
 
@@ -42,7 +42,7 @@
 
 /datum/outfit/job/roguetown/sultan
 	job_bitflag = BITFLAG_ROYALTY
-	
+
 /datum/job/roguetown/sultan/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	. = ..()
 	if(ishuman(L))
@@ -69,7 +69,7 @@
 		else
 			GLOB.lordsurname = "of [L.real_name]"
 		SSticker.set_ruler_mob(L)
-		
+
 		var/display_title = title
 		if(ishuman(L))
 			var/mob/living/carbon/human/H = L
@@ -93,7 +93,7 @@
 		if(player?.prefs)
 			if(SSmapping.config.map_name == "Desert Town")
 				if(!istype(player.prefs.virtue_origin, /datum/virtue/origin/raneshen) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/naledi) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/zybantian))
-					var/list/new_origins = list("Raneshen" = /datum/virtue/origin/raneshen, 
+					var/list/new_origins = list("Raneshen" = /datum/virtue/origin/raneshen,
 					"Naledi" = /datum/virtue/origin/naledi,
 					"Zybantu" = /datum/virtue/origin/zybantian)
 					var/new_origin

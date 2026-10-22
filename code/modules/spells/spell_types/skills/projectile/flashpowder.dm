@@ -1,6 +1,6 @@
 /datum/action/cooldown/spell/projectile/flashpowder
 	name = "Flashpowder"
-	desc = "Throw a handful of explosive powder, stunning and blinding your opponent"
+	desc = "Throw a handful of explosive powder, stunning and blinding your opponent."
 	button_icon = 'icons/mob/actions/antiquarianspells.dmi'
 	button_icon_state = "flashpowder"
 	projectile_type = /obj/projectile/magic/flashpowder
@@ -10,15 +10,14 @@
 	charge_required = FALSE
 	cooldown_time = 12 SECONDS
 	associated_skill = /datum/skill/misc/reading
-	invocations = list("flicks their wrist, tossing a handful of crackling powder.")
-	invocation_type = "emote"
+	invocations = list("%CASTER flicks their wrist, tossing a handful of crackling powder.")
+	invocation_type = INVOCATION_EMOTE
 
 /obj/projectile/magic/flashpowder
 	name = "flashpowder"
 	icon = 'icons/obj/projectiles.dmi'
 	icon_state = "spark"
 	damage = 25 //ever get hit with a cherry bomb? shit hurts a bit. this is a little less than spitfire, with no ignite
-	npc_simple_damage_mult = 2 //multiple people said the spell wasn't as useful in pve
 	damage_type = BURN
 	woundclass = BCLASS_BURN
 	nodamage = FALSE
@@ -26,14 +25,15 @@
 	speed = MAGE_PROJ_MEDIUM
 	range = 7
 	hitsound = list('sound/misc/explode/incendiary (1).ogg','sound/misc/explode/incendiary (2).ogg')
-	accuracy = 40
 	guard_deflectable = FALSE //is powder
 
-/obj/projectile/magic/flashpowder/on_hit(target)
+/obj/projectile/magic/flashpowder/on_hit(target, blocked = FALSE)
 	. = ..()
 	if(ismob(target))
 		var/mob/living/M = target
 		if(out_of_effective_range())
+			return
+		if(blocked >= 100)
 			return
 		M.apply_status_effect(/datum/status_effect/debuff/flashpowder)
 		M.apply_status_effect(/datum/status_effect/debuff/clickcd, 3 SECONDS)

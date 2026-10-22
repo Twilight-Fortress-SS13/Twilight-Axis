@@ -184,7 +184,9 @@
 
 	if(HAS_TRAIT(H, TRAIT_DECEIVING_MEEKNESS) && user.get_skill_level(/datum/skill/magic/holy) <= SKILL_LEVEL_NOVICE)
 		if(isnull(fake_vices[H]))
-			fake_vices[H] = pick(GLOB.character_flaws)
+			var/flaw_type = pick(GLOB.character_flaws_singletons)
+			var/datum/charflaw/fake_flaw = GLOB.character_flaws_singletons[flaw_type]
+			fake_vices[H] = fake_flaw?.name
 		vice_found = fake_vices[H]
 
 		if(prob(50 + ((H.STAPER - 10) * 10)))
@@ -409,7 +411,7 @@
 				break
 
 			var/water_qty = max(1, holy_skill) + 1
-			var/list/water_contents = list(/datum/reagent/medicine/loversruin = water_qty)
+			var/list/water_contents = list(/datum/reagent/consumable/ethanol/loversruin = water_qty)
 			var/datum/reagents/reagents_to_add = new()
 			reagents_to_add.add_reagent_list(water_contents)
 			reagents_to_add.trans_to(thing, reagents_to_add.total_volume, transfered_by = user, method = INGEST)

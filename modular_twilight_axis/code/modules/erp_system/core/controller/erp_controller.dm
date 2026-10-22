@@ -170,7 +170,9 @@
 /// Handles moved actors and stops invalid links.
 /datum/erp_controller/proc/on_pair_moved(atom/movable/source, atom/oldloc, dir, forced)
 	SIGNAL_HANDLER
+	mark_actions_ui_dirty()
 	links_d?.on_pair_moved(source, oldloc, dir, forced)
+	request_ui_update()
 
 /// Collects links relevant to source mob.
 /datum/erp_controller/proc/on_get_links(datum/source, list/out_links)
@@ -345,6 +347,7 @@
 
 	owner.custom_actions += A
 	owner.save_custom_actions_to_prefs()
+	mark_actions_ui_dirty()
 	ui?.request_update()
 	return TRUE
 
@@ -381,6 +384,7 @@
 		return FALSE
 
 	owner.save_custom_actions_to_prefs()
+	mark_actions_ui_dirty()
 	ui?.request_update()
 	return TRUE
 
@@ -391,6 +395,7 @@
 
 	if(owner.delete_custom_action(id))
 		owner.save_custom_actions_to_prefs()
+		mark_actions_ui_dirty()
 		ui?.request_update()
 		return TRUE
 
@@ -598,6 +603,14 @@
 /datum/erp_controller/proc/get_penis_knot_ui_state(mob/living/carbon/human/H)
 	return knot_d ? knot_d.get_penis_knot_ui_state(H) : list("has_knotted_penis" = FALSE, "can_knot_now" = FALSE)
 
+/// Returns receiving-side knot panel state for UI.
+/datum/erp_controller/proc/get_receiving_knot_ui_state(mob/living/carbon/human/H)
+	return knot_d ? knot_d.get_receiving_knot_ui_state(H) : list("has_knotted_penis" = FALSE, "can_knot_now" = FALSE)
+
+/// Checks whether this controller owns a receiving organ for the link's knotted penis.
+/datum/erp_controller/proc/has_receiving_knot_link_for(datum/erp_sex_organ/penis/P, datum/erp_sex_link/L)
+	return knot_d ? knot_d.has_receiving_knot_link_for(P, L) : FALSE
+
 /// Checks whether penis panel should be visible.
 /datum/erp_controller/proc/should_show_penis_panel(mob/living/carbon/human/H, actor_type_filter)
 	return knot_d ? knot_d.should_show_penis_panel(H, actor_type_filter) : FALSE
@@ -713,6 +726,10 @@
 /// Requests throttled UI update.
 /datum/erp_controller/proc/request_ui_update()
 	ui_d?.request_ui_update()
+
+/// Invalidates cached action-list UI payload.
+/datum/erp_controller/proc/mark_actions_ui_dirty()
+	ui?.mark_actions_dirty()
 
 /// Performs throttled UI update now.
 /datum/erp_controller/proc/_do_ui_update()

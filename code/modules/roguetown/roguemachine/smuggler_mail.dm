@@ -2,6 +2,7 @@
 	name = "clandestine tube"
 	desc = "A crude pneumatic tube. It seems to connect somewhere nearby."
 	obfuscated = TRUE
+	allow_ghosts = FALSE
 	var/next_send_time = 0
 	var/notify_bathhouse = FALSE
 	/// This tube's identity for pairing
@@ -39,24 +40,27 @@
 		to_chat(user, span_warning("The tube rumbles but nothing happens. It doesn't seem connected to anything."))
 		return FALSE
 	var/recipient_name = I?.mailedto || target.name
+	var/obj/item/paper/letter = istype(I, /obj/item/paper) ? I : null
 	I.forceMove(target)
 	playsound(target, 'sound/misc/hiss.ogg', 100, FALSE, -1)
-	log_mail_send(user, sender_name, recipient_name)
+	log_mail_send(user, sender_name, recipient_name, FALSE, letter?.info)
 	visible_message(span_warning("[user] sends something."))
 	playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
 	if(target.notify_bathhouse)
-		send_ooc_note("A message from <b>[sender_name]</b> has arrived at the bathhouse terminal.", job = GLOB.bathhouse_positions)
+		send_ooc_note("A message has arrived at the bathhouse terminal.", job = GLOB.bathhouse_positions)
 	next_send_time = world.time + 1 MINUTES
 	return TRUE
 
 /obj/structure/roguemachine/mail/paired_hermes/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
+	if(isobserver(usr))
+		return TRUE
 	if(action == "send_tube")
 		var/mob/user = usr
 		var/content = params["content"]
 		if(length(content) > 2000)
-			to_chat(user, span_warning("Letter too long."))
+			to_chat(user, span_warning("Your letter is too long."))
 			return TRUE
-		var/obj/item/paper/P = build_sanitized_letter(params["sender"], "Clandestine Tube", content)
+		var/obj/item/paper/P = build_sanitized_letter(user, params["sender"], "Clandestine Tube", content)
 		if(!P.mailer)
 			P.mailer = "Anonymous"
 		var/sentfrom = P.mailer
@@ -102,7 +106,7 @@
 
 /obj/structure/roguemachine/mail/paired_hermes/bathhouse
 	name = "discreet terminal"
-	desc = "A well-maintained pneumatic tube concealed behind lacquered paneling."
+	desc = "A pneumatic tube kept in good repair behind lacquered paneling."
 	tube_id = "smuggler_bathhouse"
 	target_tube_id = "smuggler_cove"
 	notify_bathhouse = TRUE

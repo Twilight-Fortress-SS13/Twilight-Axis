@@ -36,7 +36,7 @@
 
 /obj/item/ammo_casing/caseless/rogue/javelin/aalloy
 	name = "decrepit javelin"
-	desc = "A missile of frayed bronze. Before you is your weapon; that which rose Man out of the mud, and brought the Beasts of Old Syon to heel. When were you last aware of any other part of you? Do you recall seeing the world in any other way?"
+	desc = "A missile of rotted metal. Before you is your weapon; that which rose Man out of the mud, and brought the Beasts of Old Syon to heel. When were you last aware of any other part of you? Do you recall seeing the world in any other way?"
 	icon_state = "ajavelin"
 	throwforce = 20
 	force = 10
@@ -79,21 +79,20 @@
 	desc = "A tool used for centuries, as early as recorded history. This one is tipped with a silver head, perfect for sundering the supernatural from a safe distance."
 	icon_state = "sjavelin"
 	is_silver = TRUE
-	throwforce = 25							//Less than steel because it's.. silver. Good at killing vampires/WW's still.
+	throwforce = 28
 	armor_penetration = PEN_HEAVY
 	thrown_bclass = BCLASS_PICK				//Bypasses crit protection better than stabbing. Makes it better against heavy-targets.
 	smeltresult = null
+	force = 16
+	max_integrity = 100
+	embedding = list("embedded_pain_multiplier" = 4, "embed_chance" = 45, "embedded_fall_chance" = 10)
 
 /obj/item/ammo_casing/caseless/rogue/javelin/silver/ComponentInitialize()
 	. = ..()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = -3,\
-		added_blade_int = 50,\
-		added_int = 50,\
-		added_def = 3,\
+		silver_type = SILVER_TENNITE\
 	)
 
 //Snowflake code to make sure the silver-bane is applied on hit to targeted mob. Thanks to Aurorablade for getting this code to work.
@@ -106,10 +105,10 @@
 	name = "blacksteel javelin"
 	desc = "A tool used for centuries, as early as recorded history. This one is tipped with a blacksteel head; unstoppable by even the finest plate armor!"
 	icon_state = "bs_javelin"
-	max_integrity = 50						//In-line with other stabbing weapons.
+	max_integrity = 100
 	force = 18
 	throwforce = 36
-	armor_penetration = PEN_BSTEEL //The main appeal.		
-	thrown_bclass = BCLASS_PICK				
+	armor_penetration = PEN_BSTEEL //The main appeal.
+	thrown_bclass = BCLASS_PICK
 	embedding = list("embedded_pain_multiplier" = 4, "embed_chance" = 60, "embedded_fall_chance" = 10)
 	smeltresult = null

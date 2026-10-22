@@ -56,7 +56,7 @@
 	var/list/out = list()
 	out += "[CHRONICLE_STATS_ROUND_HEADER_PREFIX][round_id] | dumped [time2text(world.timeofday, "YYYY-MM-DD hh:mm:ss")] ===\n"
 	var/round_minutes = round(world.time / 600)
-	out += "Round duration: [round_minutes]m  |  Players joined: [GLOB.joined_player_list ? GLOB.joined_player_list.len : 0]  |  Live clients: [length(GLOB.clients)]\n"
+	out += "Round duration: [round_minutes]m	|	Players joined: [GLOB.joined_player_list ? GLOB.joined_player_list.len : 0]	|	Live clients: [length(GLOB.clients)]\n"
 	out += "\n"
 	out += chronicle_section_population()
 	out += chronicle_section_treasury()
@@ -75,7 +75,7 @@
 	var/padded = label
 	while(length(padded) < width)
 		padded = "[padded] "
-	return "  [padded][value]\n"
+	return "	[padded][value]\n"
 
 /proc/chronicle_section_header(label)
 	return "--- [uppertext(label)] ---\n"
@@ -98,10 +98,11 @@
 	out += chronicle_section_header("Treasury")
 	out += chronicle_kv("Starting treasury", "[GLOB.azure_round_stats[STATS_STARTING_TREASURY]]")
 	out += chronicle_kv("Taxes collected", "[GLOB.azure_round_stats[STATS_TAXES_COLLECTED]]")
-	out += chronicle_kv("  Contract levy", "[GLOB.azure_round_stats[STATS_REVENUE_CONTRACT_LEVY]]")
-	out += chronicle_kv("  Headeater levy", "[GLOB.azure_round_stats[STATS_REVENUE_HEADEATER_LEVY]]")
-	out += chronicle_kv("  Import tariff", "[GLOB.azure_round_stats[STATS_REVENUE_IMPORT_TARIFF]]")
-	out += chronicle_kv("  Export duty", "[GLOB.azure_round_stats[STATS_REVENUE_EXPORT_DUTY]]")
+	out += chronicle_kv("	Contract levy", "[GLOB.azure_round_stats[STATS_REVENUE_CONTRACT_LEVY]]")
+	out += chronicle_kv("	Headeater levy", "[GLOB.azure_round_stats[STATS_REVENUE_HEADEATER_LEVY]]")
+	out += chronicle_kv("	Import tariff", "[GLOB.azure_round_stats[STATS_REVENUE_IMPORT_TARIFF]]")
+	out += chronicle_kv("	Export duty", "[GLOB.azure_round_stats[STATS_REVENUE_EXPORT_DUTY]]")
+	out += chronicle_kv("	Recovered spoils", "[GLOB.azure_round_stats[STATS_REVENUE_RECOVERED_SPOILS]]")
 	out += chronicle_kv("Poll tax collected", "[GLOB.azure_round_stats[STATS_POLL_TAX_COLLECTED]]")
 	out += chronicle_kv("Taxes evaded", "[GLOB.azure_round_stats[STATS_TAXES_EVADED]]")
 	var/exempt_total = GLOB.azure_round_stats[STATS_EXEMPTED_CONTRACT_LEVY] + GLOB.azure_round_stats[STATS_EXEMPTED_HEADEATER_LEVY] + GLOB.azure_round_stats[STATS_EXEMPTED_IMPORT_TARIFF] + GLOB.azure_round_stats[STATS_EXEMPTED_EXPORT_DUTY] + GLOB.azure_round_stats[STATS_EXEMPTED_FINE] + GLOB.azure_round_stats[STATS_EXEMPTED_POLL_TAX]
@@ -109,6 +110,7 @@
 	out += chronicle_kv("Wages paid", "[GLOB.azure_round_stats[STATS_WAGES_PAID]]")
 	out += chronicle_kv("Fines income", "[GLOB.azure_round_stats[STATS_FINES_INCOME]]")
 	out += chronicle_kv("Banditry losses", "[GLOB.azure_round_stats[STATS_BANDITRY_LOSSES]]")
+	out += chronicle_kv("Banditry hoard outstanding", "[GLOB.azure_round_stats[STATS_BANDITRY_HOARD_OUTSTANDING]]")
 	out += chronicle_kv("Direct treasury transfers", "[GLOB.azure_round_stats[STATS_DIRECT_TREASURY_TRANSFERS]]")
 	out += "\n"
 	return jointext(out, "")
@@ -135,7 +137,7 @@
 	var/list/out = list()
 	out += chronicle_section_header("Merchant Ships — Hails by Realm")
 	if(!SSmerchant_trade)
-		out += "  (SSmerchant_trade not initialized)\n\n"
+		out += "	(SSmerchant_trade not initialized)\n\n"
 		return jointext(out, "")
 	var/list/sorted_ids = list()
 	for(var/realm_id in SSmerchant_trade.realms)
@@ -145,13 +147,13 @@
 	for(var/realm_id in SSmerchant_trade.hails_by_realm)
 		total_hails += SSmerchant_trade.hails_by_realm[realm_id]
 	out += chronicle_kv("Total successful hails", "[total_hails]")
-	out += "  Realm           | Hails | Avg dock (m) | Favor earned\n"
+	out += "	Realm			| Hails | Avg dock (m) | Favor earned\n"
 	for(var/realm_id in sorted_ids)
 		var/datum/foreign_realm/realm = SSmerchant_trade.realms[realm_id]
 		var/realm_name = realm ? realm.name : realm_id
 		var/hails = SSmerchant_trade.hails_by_realm[realm_id] || 0
 		var/list/durations = SSmerchant_trade.dock_durations_by_realm[realm_id]
-		var/avg_min = "  -"
+		var/avg_min = "	-"
 		if(LAZYLEN(durations))
 			var/total_ds = 0
 			for(var/d in durations)
@@ -161,7 +163,7 @@
 		var/padded = realm_name
 		while(length(padded) < 15)
 			padded = "[padded] "
-		out += "  [padded] | [chronicle_pad_left("[hails]", 5)] | [chronicle_pad_left(avg_min, 12)] | [favor]\n"
+		out += "	[padded] | [chronicle_pad_left("[hails]", 5)] | [chronicle_pad_left(avg_min, 12)] | [favor]\n"
 	out += "\n"
 	return jointext(out, "")
 
@@ -188,20 +190,20 @@
 	var/list/out = list()
 	if(!SSmerchant_trade)
 		out += chronicle_section_header("Navigator Buckets")
-		out += "  (SSmerchant_trade not initialized)\n\n"
+		out += "	(SSmerchant_trade not initialized)\n\n"
 		return jointext(out, "")
 	out += chronicle_section_header("Navigator Buckets — Real Market")
-	out += "  Bucket               | Sold   | Ship Relieved\n"
+	out += "	Bucket				| Sold	| Ship Relieved\n"
 	for(var/bucket in SSmerchant_trade.pool_capacity)
 		var/sold = SSmerchant_trade.lifetime_pool_credited[bucket] || 0
 		var/relieved = SSmerchant_trade.lifetime_pool_relieved[bucket] || 0
-		out += "  [chronicle_pad_right(bucket, 20)] | [chronicle_pad_left("[sold]", 6)] | [relieved]\n"
+		out += "	[chronicle_pad_right(bucket, 20)] | [chronicle_pad_left("[sold]", 6)] | [relieved]\n"
 	out += "\n"
 	out += chronicle_section_header("Navigator Buckets — Black Market")
-	out += "  Bucket               | Sold\n"
+	out += "	Bucket				| Sold\n"
 	for(var/bucket in SSmerchant_trade.bm_pool_capacity)
 		var/sold = SSmerchant_trade.lifetime_bm_pool_credited[bucket] || 0
-		out += "  [chronicle_pad_right(bucket, 20)] | [sold]\n"
+		out += "	[chronicle_pad_right(bucket, 20)] | [sold]\n"
 	out += "\n"
 	return jointext(out, "")
 
@@ -228,10 +230,54 @@
 	out += chronicle_kv("Generated (total / pool / rumor / def)", "[GLOB.azure_round_stats[STATS_CONTRACTS_GENERATED]] / [GLOB.azure_round_stats[STATS_CONTRACTS_GENERATED_POOL]] / [GLOB.azure_round_stats[STATS_CONTRACTS_GENERATED_RUMOR]] / [GLOB.azure_round_stats[STATS_CONTRACTS_GENERATED_DEFENSE]]")
 	out += chronicle_kv("Taken (total / pool / rumor / def)", "[GLOB.azure_round_stats[STATS_CONTRACTS_TAKEN]] / [GLOB.azure_round_stats[STATS_CONTRACTS_TAKEN_POOL]] / [GLOB.azure_round_stats[STATS_CONTRACTS_TAKEN_RUMOR]] / [GLOB.azure_round_stats[STATS_CONTRACTS_TAKEN_DEFENSE]]")
 	out += chronicle_kv("Completed (total / pool / rumor / def)", "[GLOB.azure_round_stats[STATS_CONTRACTS_COMPLETED]] / [GLOB.azure_round_stats[STATS_CONTRACTS_COMPLETED_POOL]] / [GLOB.azure_round_stats[STATS_CONTRACTS_COMPLETED_RUMOR]] / [GLOB.azure_round_stats[STATS_CONTRACTS_COMPLETED_DEFENSE]]")
+	out += chronicle_kv("Lapsed (pool / rumor / def)", "[GLOB.azure_round_stats[STATS_CONTRACTS_LAPSED_POOL] || 0] / [GLOB.azure_round_stats[STATS_CONTRACTS_LAPSED_RUMOR] || 0] / [GLOB.azure_round_stats[STATS_CONTRACTS_LAPSED_DEFENSE] || 0]")
 	out += chronicle_kv("Abandoned / Rerolled", "[GLOB.azure_round_stats[STATS_CONTRACTS_ABANDONED]] / [GLOB.azure_round_stats[STATS_CONTRACTS_REROLLED]]")
-	out += chronicle_kv("Mammons paid / taxed / forfeited", "[GLOB.azure_round_stats[STATS_CONTRACT_MAMMONS_PAID]] / [GLOB.azure_round_stats[STATS_CONTRACT_MAMMONS_TAXED]] / [GLOB.azure_round_stats[STATS_CONTRACT_MAMMONS_FORFEITED]]")
+	out += chronicle_kv("Lapsed & refunded / Withdrawn", "[GLOB.azure_round_stats[STATS_CONTRACTS_LAPSE_REFUNDED]] / [GLOB.azure_round_stats[STATS_CONTRACTS_WITHDRAWN]]")
+	out += chronicle_kv("Mammons paid / taxed / forfeited / refunded", "[GLOB.azure_round_stats[STATS_CONTRACT_MAMMONS_PAID]] / [GLOB.azure_round_stats[STATS_CONTRACT_MAMMONS_TAXED]] / [GLOB.azure_round_stats[STATS_CONTRACT_MAMMONS_FORFEITED]] / [GLOB.azure_round_stats[STATS_CONTRACT_MAMMONS_REFUNDED]]")
+	out += chronicle_kv("Guild cut", "[GLOB.azure_round_stats[STATS_CONTRACT_MAMMONS_GUILD_CUT] || 0]")
+	out += "\n"
+	out += chronicle_section_contract_types()
+	return jointext(out, "")
+
+/proc/chronicle_avg_minutes(total_ds, count)
+	if(!count)
+		return "-"
+	return "[round(total_ds / count / 600, 0.1)]m"
+
+/proc/chronicle_section_contract_types()
+	var/list/out = list()
+	out += chronicle_section_header("Contracts by Type")
+	out += "	[chronicle_pad_right("Contract", 18)] | Posted | Taken | Lapsed | Players | Done | Failed | Aband | Withdr | Open | Done% | Wait | Run | Party | Deaths | Paid\n"
+	for(var/quest_type in GLOB.contract_stat_type_order)
+		out += chronicle_contract_row(CONTRACT_AXIS_TYPE, quest_type)
+	out += chronicle_kv("Distinct signers (all types)", "[count_all_contract_signers()]")
+	out += "\n"
+	out += chronicle_section_header("Contracts by Region")
+	out += "	[chronicle_pad_right("Region", 18)] | Posted | Taken | Lapsed | Players | Done | Failed | Aband | Withdr | Open | Done% | Wait | Run | Party | Deaths | Paid\n"
+	for(var/region in contract_region_order())
+		out += chronicle_contract_row(CONTRACT_AXIS_REGION, region)
+	out += "\n"
+	out += chronicle_section_header("Contracts by Role")
+	out += "	[chronicle_pad_right("Role", 18)] | Posted | Taken | Lapsed | Players | Done | Failed | Aband | Withdr | Open | Done% | Wait | Run | Party | Deaths | Paid\n"
+	for(var/group in contract_group_order())
+		out += chronicle_contract_row(CONTRACT_AXIS_GROUP, group)
 	out += "\n"
 	return jointext(out, "")
+
+/proc/chronicle_contract_row(axis, key)
+	var/posted = get_contract_stat(axis, key, CONTRACT_STAT_POSTED)
+	var/taken = get_contract_stat(axis, key, CONTRACT_STAT_TAKEN)
+	var/lapsed = get_contract_stat(axis, key, CONTRACT_STAT_LAPSED)
+	var/done = get_contract_stat(axis, key, CONTRACT_STAT_COMPLETED)
+	var/failed = get_contract_stat(axis, key, CONTRACT_STAT_FAILED)
+	var/abandoned = get_contract_stat(axis, key, CONTRACT_STAT_ABANDONED)
+	var/withdrawn = get_contract_stat(axis, key, CONTRACT_STAT_WITHDRAWN)
+	var/open = max(0, taken - done - failed - abandoned - withdrawn)
+	var/done_pct = taken ? "[round(done / taken * 100)]%" : "-"
+	var/wait = chronicle_avg_minutes(get_contract_stat(axis, key, CONTRACT_STAT_WAIT_DS), taken)
+	var/run = chronicle_avg_minutes(get_contract_stat(axis, key, CONTRACT_STAT_RUN_DS), done)
+	var/party = done ? "[round(get_contract_stat(axis, key, CONTRACT_STAT_PARTY) / done, 0.1)]" : "-"
+	return "	[chronicle_pad_right(key, 18)] | [chronicle_pad_left(posted, 6)] | [chronicle_pad_left(taken, 5)] | [chronicle_pad_left(lapsed, 6)] | [chronicle_pad_left(count_contract_signers(axis, key), 7)] | [chronicle_pad_left(done, 4)] | [chronicle_pad_left(failed, 6)] | [chronicle_pad_left(abandoned, 5)] | [chronicle_pad_left(withdrawn, 6)] | [chronicle_pad_left(open, 4)] | [chronicle_pad_left(done_pct, 5)] | [chronicle_pad_left(wait, 4)] | [chronicle_pad_left(run, 3)] | [chronicle_pad_left(party, 5)] | [chronicle_pad_left(get_contract_stat(axis, key, CONTRACT_STAT_DEATHS), 6)] | [get_contract_stat(axis, key, CONTRACT_STAT_PAID)]\n"
 
 /proc/chronicle_section_events()
 	var/list/out = list()
@@ -254,11 +300,11 @@
 	out += chronicle_kv("Rumor points generated / consumed", "[GLOB.azure_round_stats[STATS_RUMOR_POINTS_GENERATED]] / [GLOB.azure_round_stats[STATS_RUMOR_POINTS_CONSUMED]]")
 	if(SSmerchant_trade)
 		out += chronicle_kv("Merchant favor (current / peak)", "[SSmerchant_trade.merchant_favor] / [SSmerchant_trade.merchant_favor_high]")
-		out += chronicle_kv("  from send-offs", "[SSmerchant_trade.favor_from_sendoffs]")
-		out += chronicle_kv("  from navigator", "[SSmerchant_trade.favor_from_navigator]")
-		out += chronicle_kv("  from goldface", "[SSmerchant_trade.favor_from_goldface]")
-		out += chronicle_kv("  from silverface", "[SSmerchant_trade.favor_from_silverface]")
-		out += chronicle_kv("  penalties (dishonor)", "[SSmerchant_trade.favor_penalties]")
+		out += chronicle_kv("	from send-offs", "[SSmerchant_trade.favor_from_sendoffs]")
+		out += chronicle_kv("	from navigator", "[SSmerchant_trade.favor_from_navigator]")
+		out += chronicle_kv("	from goldface", "[SSmerchant_trade.favor_from_goldface]")
+		out += chronicle_kv("	from silverface", "[SSmerchant_trade.favor_from_silverface]")
+		out += chronicle_kv("	penalties (dishonor)", "[SSmerchant_trade.favor_penalties]")
 	out += "\n"
 	return jointext(out, "")
 

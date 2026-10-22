@@ -14,6 +14,7 @@ import {
 } from 'react';
 import { type Box, KeyListener } from 'tgui-core/components';
 import { UI_DISABLED, UI_INTERACTIVE } from 'tgui-core/constants';
+import { globalEvents } from 'tgui-core/events';
 import { KEY_ALT } from 'tgui-core/keycodes';
 import { type BooleanLike, classes } from 'tgui-core/react';
 import { decodeHtmlEntities } from 'tgui-core/string';
@@ -40,6 +41,7 @@ type Props = Partial<{
   height: number;
   theme: string;
   title: string;
+  titleClassName: string;
   width: number;
 }> &
   PropsWithChildren;
@@ -49,6 +51,7 @@ export function Window(props: Props) {
     canClose = true,
     theme,
     title,
+    titleClassName,
     children,
     buttons,
     width,
@@ -88,6 +91,9 @@ export function Window(props: Props) {
         Byond.winset(Byond.windowId, {
           'is-visible': true,
         });
+        Byond.sendMessage('visible');
+        globalEvents.emit('window-geometry-finished');
+
         logger.log('set to visible');
       };
 
@@ -112,6 +118,7 @@ export function Window(props: Props) {
   return suspended ? null : (
     <Layout className="Window" theme={theme || config.window?.theme}>
       <TitleBar
+        className={titleClassName}
         title={title || decodeHtmlEntities(config.title)}
         status={config.status}
         onDragStart={dragStartHandler}
@@ -163,6 +170,18 @@ function WindowContent(props: ContentProps) {
       dragStartHandler(event);
     }
   }
+
+  // Reset alt when alt-tabing
+  useEffect(() => {
+    function onBlur() {
+      setAltDown(false);
+    }
+
+    window.addEventListener('blur', onBlur);
+    return () => {
+      window.removeEventListener('blur', onBlur);
+    };
+  }, []);
 
   Byond.subscribeTo('resetposition', (payload) => {
     setWindowPosition([0, 0]);

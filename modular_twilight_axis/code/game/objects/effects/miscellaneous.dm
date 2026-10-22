@@ -3,13 +3,13 @@
 	plane = GAME_PLANE_UPPER
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
-/obj/effect/temp_visual/small_smoke/gunsmoke/Initialize(mapload, set_dir)
+/obj/effect/temp_visual/small_smoke/gunsmoke/Initialize(mapload, set_dir, size_mult = 1)
 	. = ..()
 	if(set_dir)
 		dir = set_dir
 	var/matrix/M = matrix()
 	M.Turn(rand(-45, 45))
-	M.Scale(rand(11, 16) / 10)
+	M.Scale((rand(11, 16) / 10) * size_mult)
 	var/drift_x = 0
 	var/drift_y = 0
 	switch(dir)
@@ -25,7 +25,7 @@
 		if(WEST)
 			drift_x = rand(-16, -8)
 			drift_y = rand(-8, 8)
-			
+
 	M.Translate(drift_x, drift_y)
 	spawn(1)
 		if(src)
@@ -33,3 +33,6 @@
 			spawn(20)
 				if(src)
 					qdel(src)
+
+/obj/effect/temp_visual/small_smoke/gunsmoke/black
+	color = COLOR_BLACK

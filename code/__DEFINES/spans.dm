@@ -55,6 +55,7 @@
 #define span_hypnophrase(str) ("<span class='hypnophrase'>" + (str) + "</span>")
 #define span_infection(str) ("<span class='infection'>" + (str) + "</span>")
 #define span_info(str) ("<span class='info'>" + (str) + "</span>")
+#define span_redinfo(str) ("<span class='redinfo'>" + (str) + "</span>")
 #define span_interface(str) ("<span class='interface'>" + (str) + "</span>")
 #define span_italics(str) ("<span class='italics'>" + (str) + "</span>")
 #define span_looc(str) ("<span class='looc'>" + (str) + "</span>")
@@ -115,6 +116,39 @@
 
 #define span_astrata(str) ("<span class='astrata'>" + (str) + "</span>")
 #define span_undivided(str) ("<span class='undivided'>" + (str) + "</span>")
+#define span_abyssor(str) ("<span class='abyssor'>" + (str) + "</span>")
+#define span_dendor(str) ("<span class='dendor'>" + (str) + "</span>")
+#define span_eora(str) ("<span class='eora'>" + (str) + "</span>")
+#define span_malum(str) ("<span class='malum'>" + (str) + "</span>")
+#define span_necra(str) ("<span class='necra'>" + (str) + "</span>")
+#define span_noc(str) ("<span class='noc'>" + (str) + "</span>")
+#define span_pestra(str) ("<span class='pestra'>" + (str) + "</span>")
+#define span_ravox(str) ("<span class='ravox'>" + (str) + "</span>")
+#define span_xylix(str) ("<span class='xylix'>" + (str) + "</span>")
+#define span_baotha(str) ("<span class='baotha'>" + (str) + "</span>")
+#define span_graggar(str) ("<span class='graggar'>" + (str) + "</span>")
+#define span_matthios(str) ("<span class='matthios'>" + (str) + "</span>")
+#define span_zizo(str) ("<span class='zizo'>" + (str) + "</span>")
+#define span_vheslyn(str) ("<span class='vheslyn'>" + (str) + "</span>")
+#define span_mossmother(str) ("<span class='mossmother'>" + (str) + "</span>")
+
+// Same gods in the same colours, without the glow. For anything that is read rather than
+// announced, such as rolls.
+#define span_astrata_plain(str) ("<span class='astrata_plain'>" + (str) + "</span>")
+#define span_dendor_plain(str) ("<span class='dendor_plain'>" + (str) + "</span>")
+#define span_malum_plain(str) ("<span class='malum_plain'>" + (str) + "</span>")
+#define span_noc_plain(str) ("<span class='noc_plain'>" + (str) + "</span>")
+#define span_ravox_plain(str) ("<span class='ravox_plain'>" + (str) + "</span>")
+#define span_xylix_plain(str) ("<span class='xylix_plain'>" + (str) + "</span>")
+#define span_baotha_plain(str) ("<span class='baotha_plain'>" + (str) + "</span>")
+#define span_graggar_plain(str) ("<span class='graggar_plain'>" + (str) + "</span>")
+#define span_matthios_plain(str) ("<span class='matthios_plain'>" + (str) + "</span>")
+#define span_zizo_plain(str) ("<span class='zizo_plain'>" + (str) + "</span>")
+
+#define span_divine(str) ("<span class='divine'>" + (str) + "</span>")
+#define span_profane(str) ("<span class='profane'>" + (str) + "</span>")
+#define span_silver(str) ("<span class='silver'>" + (str) + "</span>")
+
 /// Displays a tooltip. Tooltip is text-only, and HTML will be ignored.
 /// * SPAN_LINKIFY doesn't work here.
 #define SPAN_TOOLTIP(tip, str) ("<span data-component=\"Tooltip\" data-content=\"[html_encode(tip)]\" class=\"tooltip\">[str]</span>")

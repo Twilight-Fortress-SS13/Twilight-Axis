@@ -11,13 +11,18 @@
 		/mob/living/carbon/human/species/human/northern/highwayman/ambush = 20,
 		/mob/living/carbon/human/species/human/northern/highwayman/archer = 25,
 		/mob/living/carbon/human/species/human/northern/highwayman/crossbowman = 8,
+		/mob/living/carbon/human/species/human/northern/highwayman/light = 12,
+		/mob/living/carbon/human/species/human/northern/highwayman/bulwark = 12,
 	)
 	boss_mob_types = list(
-		/mob/living/carbon/human/species/human/northern/outlaw_tank = 100,
+		/mob/living/carbon/human/species/human/northern/outlaw_tank = 40,
+		/mob/living/carbon/human/species/human/northern/outlaw_ranger = 30,
+		/mob/living/carbon/human/species/human/northern/outlaw_duelist = 30,
 	)
 	boss_title_templates = list(
 		"%N the Ironclad",
 		"%N Stonebreaker",
 		"%N the Bear",
+		"%N the Keen Eye",
 	)
 	boss_name_file = "strings/rt/names/human/humnorm.txt"

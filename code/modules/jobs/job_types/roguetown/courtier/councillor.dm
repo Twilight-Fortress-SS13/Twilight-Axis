@@ -12,7 +12,7 @@
 	is_quest_giver = TRUE
 
 	tutorial = "You may have inherited this position, bought your way into it, or were appointed to it by merit--perish the thought! Whatever the case though, you work as an assistant and agent of the crown in matters of state. Whether this be aiding the steward, the sheriff, or the crown itself, or simply enjoying the free food of the keep, your duties vary day by day. You may be the lowest rung of the ladder, but that rung still towers over everyone else in town."
-	
+
 	whitelist_req = FALSE
 	outfit = /datum/outfit/job/roguetown/councillor
 	advclass_cat_rolls = list(CTAG_COUNCILLOR = 2)
@@ -22,7 +22,7 @@
 	min_pq = 5 //Probably a bad idea to have a complete newbie advising the monarch
 	max_pq = null
 	round_contrib_points = 2
-	cmode_music = 'sound/music/combat_noble.ogg'
+	cmode_music = sound("sound/music/combat_noble.ogg")
 	job_traits = list(TRAIT_NOBLE)
 	vice_restrictions = list(/datum/charflaw/mute, /datum/charflaw/unintelligible, /datum/charflaw/wanted) //Needs to use the throat - sometimes
 	job_subclasses = list(
@@ -36,7 +36,6 @@
 	name = "Herald"
 	tutorial = "While lacking in some faculties, such as wealth and courtly advice, you have the uncanny ability to spread the word of the court, and rally people to your liege's cause. The crown saw it fit to employ you as a messenger, but may still lend an ear if you speak your mind. You may be the lowest rung of the ladder, but that rung still towers over everyone else in town."
 	outfit = /datum/outfit/job/roguetown/councillor/herald
-	horse = /mob/living/simple_animal/hostile/retaliate/rogue/saiga/saigabuck/tame/saddled
 	category_tags = list(CTAG_COUNCILLOR)
 	subclass_stats = list(
 		STATKEY_SPD = 2,
@@ -48,7 +47,7 @@
 
 	// better movement skills
 	subclass_skills = list(
-		/datum/skill/misc/riding = SKILL_LEVEL_EXPERT,
+		/datum/skill/misc/riding = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_APPRENTICE,
@@ -58,13 +57,16 @@
 		/datum/skill/combat/swords = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/knives = SKILL_LEVEL_APPRENTICE,
 	)
+	subclass_virtues = list(
+		/datum/virtue/utility/riding
+	)
 
 /datum/advclass/councillor/cofferer
 	name = "Cofferer"
 	tutorial = "Whether born into wealth, or earned through working up from the bottom, you have quite the reserve of mammon at your disposal. Use your silver-tongue to acquire more, or buy more favour with the court. You may be the lowest rung of the ladder, but that rung still towers over everyone else in town."
 	outfit = /datum/outfit/job/roguetown/councillor/cofferer
 	category_tags = list(CTAG_COUNCILLOR)
-	virtue_limits = list(/datum/virtue/utility/skilled, /datum/virtue/utility/apprentice) // You are the only one with direct Steward access, and therefore should not be able to easily self cheese
+	virtue_limits = list(/datum/virtue/utility/skilled, /datum/virtue/utility/apprentice, /datum/virtue/utility/homesteader, /datum/virtue/utility/granary) // You are the only one with direct Steward access, and therefore should not be able to easily self cheese
 	subclass_stats = list(
 		STATKEY_WIL = 2,
 		STATKEY_INT = 2,
@@ -145,18 +147,27 @@
 
 /datum/outfit/job/roguetown/councillor/herald/pre_equip(mob/living/carbon/human/H)
 	..()
-	neck = /obj/item/storage/belt/rogue/pouch/coins/mid // a mediocre pouch of coins
-	shirt = /obj/item/clothing/suit/roguetown/shirt/fancyjacket
-	pants = /obj/item/clothing/under/roguetown/trou/beltpants
-	shoes = /obj/item/clothing/shoes/roguetown/boots
+	if(should_wear_masc_clothes(H))
+		shirt = /obj/item/clothing/suit/roguetown/shirt/fancyjacket
+		gloves = /obj/item/clothing/gloves/roguetown/rosa/two
+		pants = /obj/item/clothing/under/roguetown/trou/beltpants
+		shoes = /obj/item/clothing/shoes/roguetown/rosa/ten
+	if(should_wear_femme_clothes(H))
+		armor = /obj/item/clothing/suit/roguetown/shirt/tunic/rosa
+		gloves = /obj/item/clothing/gloves/roguetown/rosa
+		shoes = /obj/item/clothing/shoes/roguetown/rosa
+		//no trousers because it breaks on fem-sprite
+	head = /obj/item/clothing/head/roguetown/chaperon/noble/court
 	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes/steel
 	backl = /obj/item/storage/backpack/rogue/satchel
-	belt = /obj/item/storage/belt/rogue/leather
-	beltl = /obj/item/storage/keyring/manorbase
-	beltr = /obj/item/rogueweapon/huntingknife/idagger/steel
-	cloak = /obj/item/clothing/cloak/half/red
+	belt = /obj/item/storage/belt/rogue/leather/plaquesilver
+	beltl = /obj/item/rogueweapon/scabbard/sheath/noble
+	cloak = /obj/item/clothing/cloak/half/azuria //What peak is it sire? what do you think it is?
+	id = /obj/item/clothing/ring/silver
 	backpack_contents = list(
-		/obj/item/storage/keyring = 1,
+		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
+		/obj/item/storage/keyring/manorbase = 1,
+		/obj/item/storage/belt/rogue/pouch/coins/mid = 1,
 	)
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_UPPER_MIDDLE_CLASS, H) // bumped from lower-middle so the lowest councillor rung still feels like nobility
@@ -165,16 +176,31 @@
 
 /datum/outfit/job/roguetown/councillor/cofferer/pre_equip(mob/living/carbon/human/H)
 	..()
-	neck = /obj/item/storage/belt/rogue/pouch/coins/rich // a fat pouch of coins
-	shirt = /obj/item/clothing/suit/roguetown/shirt/fancyjacket
-	pants = /obj/item/clothing/under/roguetown/trou/beltpants
+	if(should_wear_masc_clothes(H))
+		armor = /obj/item/clothing/suit/roguetown/shirt/tunic/rosacoat
+		shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/formal
+		pants = /obj/item/clothing/under/roguetown/trou/beltpants
+	if(should_wear_femme_clothes(H))
+		shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/formal
+		armor = /obj/item/clothing/suit/roguetown/shirt/tunic/rosa/four
+		shoes = /obj/item/clothing/shoes/roguetown/rosa
+		//no trousers because it breaks on fem-sprite
+	head = /obj/item/clothing/head/roguetown/chaperon/noble/court
+	mask = /obj/item/clothing/mask/rogue/spectacles/fancy/dark
+	gloves = /obj/item/clothing/gloves/roguetown/rosa/eight
 	shoes = /obj/item/clothing/shoes/roguetown/boots/nobleboot
 	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes/gold
-	backl = /obj/item/storage/backpack/rogue/satchel
-	belt = /obj/item/storage/belt/rogue/leather/plaquesilver
-	beltl = /obj/item/storage/keyring/steward
-	beltr = /obj/item/rogueweapon/huntingknife/idagger/steel
-	cloak = /obj/item/clothing/cloak/half/red
+	backl = /obj/item/storage/backpack/rogue/satchel/black
+	belt = /obj/item/storage/belt/rogue/leather/plaquegold/noble
+	beltl = /obj/item/rogueweapon/scabbard/sheath/royal
+	neck = /obj/item/clothing/neck/roguetown/ornateamulet/noble
+	cloak = /obj/item/clothing/cloak/half/azuria //What peak is it sire? what do you think it is?
+	id = /obj/item/clothing/ring/gold
+	backpack_contents = list(
+		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
+		/obj/item/storage/keyring/steward,
+		/obj/item/storage/belt/rogue/pouch/coins/rich = 1, //high starting funds
+	)
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_RICH, H) // wealth beyond measure
 	// give them the good see prices trait
@@ -182,23 +208,25 @@
 
 /datum/outfit/job/roguetown/councillor/huntmaster/pre_equip(mob/living/carbon/human/H)
 	..()
-	neck = /obj/item/storage/belt/rogue/pouch/coins/mid // a mediocre pouch of coins
 	head = /obj/item/clothing/head/roguetown/roguehood/shalal/heavyhood
-	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/light // Look, it would be silly to get mauled by a single wolf
+	armor = /obj/item/clothing/cloak/tabard/stabard/dungeon
+	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/lord/light // Look, it would be silly to get mauled by a single wolf
 	pants = /obj/item/clothing/under/roguetown/trou/beltpants
 	shoes = /obj/item/clothing/shoes/roguetown/boots
 	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes/steel
-	backl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
+	backl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve/goat
 	backr = /obj/item/storage/backpack/rogue/satchel
-	beltl = /obj/item/storage/keyring/manorbase
 	belt = /obj/item/storage/belt/rogue/leather
+	beltl = /obj/item/rogueweapon/scabbard/sheath/noble
 	beltr = /obj/item/quiver/arrows
-	cloak = /obj/item/clothing/cloak/half/red
+	cloak = /obj/item/clothing/cloak/half/azuria //What peak is it sire? what do you think it is?
+	id = /obj/item/clothing/ring/silver
 	backpack_contents = list(
 		/obj/item/hunting_map/white_stag = 1,
 		/obj/item/hunting_map/boars = 1,
-		/obj/item/storage/keyring = 1,
-		/obj/item/rogueweapon/huntingknife/idagger/steel = 1,
+		/obj/item/storage/keyring/manorbase = 1,
+		/obj/item/rogueweapon/huntingknife/idagger/steel = 1, //pawned off their fancier dagger for hunting gear
+		/obj/item/storage/belt/rogue/pouch/coins/mid, // a mediocre pouch of coins
 	)
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_UPPER_MIDDLE_CLASS, H) // bumped from lower-middle to match councillor floor
@@ -210,18 +238,22 @@
 
 /datum/outfit/job/roguetown/councillor/castellan/pre_equip(mob/living/carbon/human/H)
 	..()
-	neck = /obj/item/storage/belt/rogue/pouch/coins/mid
-	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/light // Technically an important figure
+	armor = /obj/item/clothing/suit/roguetown/shirt/tunic/rosacoat
+	head = /obj/item/clothing/head/roguetown/chaperon/noble/court
+	gloves = /obj/item/clothing/gloves/roguetown/rosa/two
+	shoes = /obj/item/clothing/shoes/roguetown/rosa/eight
+	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/lord/light // Technically an important figure
 	pants = /obj/item/clothing/under/roguetown/trou/beltpants
-	shoes = /obj/item/clothing/shoes/roguetown/boots/nobleboot
 	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes/steel
-	backl = /obj/item/storage/backpack/rogue/satchel
-	beltl = /obj/item/storage/keyring/manorbase
-	belt = /obj/item/storage/belt/rogue/leather
-	beltr = /obj/item/rogueweapon/huntingknife/idagger/steel
-	cloak = /obj/item/clothing/cloak/half/red
+	backl = /obj/item/storage/backpack/rogue/satchel/black
+	belt = /obj/item/storage/belt/rogue/leather/plaquegold/noble
+	beltl = /obj/item/rogueweapon/scabbard/sheath/noble
+	cloak = /obj/item/clothing/cloak/half/azuria //What peak is it sire? what do you think it is?
+	id = /obj/item/clothing/ring/silver
 	backpack_contents = list(
-		/obj/item/storage/keyring = 1,
+		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
+		/obj/item/storage/keyring/manorbase = 1,
+		/obj/item/storage/belt/rogue/pouch/coins/mid, // a mediocre pouch of coins
 	)
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_UPPER_MIDDLE_CLASS, H) // bumped from lower-middle to match councillor floor

@@ -2,6 +2,10 @@
 
 GLOBAL_VAR(restart_counter)
 
+/world/Tick()
+	//hook so NEXT_VISUAL_TICK knows when maptick last ran
+	GLOB.last_maptick_time = world.time
+
 //This runs before most anything else, for more info see:
 //https://github.com/Cyberboss/tgstation/blob/1afa69d66adfc810ab68c45a4fa5985c780ba6ff/code/game/world.dm#L10
 //But note that not all of this necessarily applies to us(particularly proccalls)
@@ -19,25 +23,27 @@ GLOBAL_VAR(restart_counter)
 	//Zirok was here
 
 /**
-  * World creation
-  *
-  * Here is where a round itself is actually begun and setup, lots of important config changes happen here
-  * * db connection setup
-  * * config loaded from files
-  * * loads admins
-  * * Sets up the dynamic menu system
-  * * and most importantly, calls initialize on the master subsystem, starting the game loop that causes the rest of the game to begin processing and setting up
-  *
-  * Note this happens after the Master subsystem is created (as that is a global datum), this means all the subsystems exist,
-  * but they have not been Initialized at this point, only their New proc has run
-  *
-  * Nothing happens until something moves. ~Albert Einstein
-  *
-  */
+	* World creation
+	*
+	* Here is where a round itself is actually begun and setup, lots of important config changes happen here
+	* * db connection setup
+	* * config loaded from files
+	* * loads admins
+	* * Sets up the dynamic menu system
+	* * and most importantly, calls initialize on the master subsystem, starting the game loop that causes the rest of the game to begin processing and setting up
+	*
+	* Note this happens after the Master subsystem is created (as that is a global datum), this means all the subsystems exist,
+	* but they have not been Initialized at this point, only their New proc has run
+	*
+	* Nothing happens until something moves. ~Albert Einstein
+	*
+	*/
 
 /world/New()
 
 	log_world("World loaded at [time_stamp()]!")
+
+	music_prune()
 
 	SetupExternalRSC()
 
@@ -73,15 +79,7 @@ GLOBAL_VAR(restart_counter)
 
 	LoadVerbs(/datum/verbs/menu)
 
-	load_blacklist()
-
-	load_nameban()
-
-	load_psychokiller()
-
 	load_crownlist()
-
-	load_bypassage()
 
 	load_patreons()
 
@@ -167,7 +165,7 @@ GLOBAL_VAR(restart_counter)
 	// but those are both private, so let's put the commit info in the runtime
 	// log which is ultimately public.
 	log_runtime(GLOB.revdata.get_log_message())
-	
+
 #ifndef USE_CUSTOM_ERROR_HANDLER
 	world.log = file("[GLOB.log_directory]/dd.log")
 #else
@@ -215,9 +213,8 @@ GLOBAL_VAR(restart_counter)
 	set waitfor = FALSE
 	var/list/fail_reasons
 	if(GLOB)
-		// TODO: UNCOMMENT THIS ONCE I find out why matthios creation is runtiming I just don't want to hold up the entire PR
-		// if(GLOB.total_runtimes != 0)
-		// 	fail_reasons = list("Total runtimes: [GLOB.total_runtimes]")
+		if(GLOB.total_runtimes != 0)
+			fail_reasons = list("Total runtimes: [GLOB.total_runtimes]")
 #ifdef UNIT_TESTS
 		if(GLOB.failed_any_test)
 			LAZYADD(fail_reasons, "Unit Tests failed!")
@@ -238,9 +235,9 @@ GLOBAL_VAR(restart_counter)
 //		if (usr)
 //			log_admin("[key_name(usr)] Has requested an immediate world restart via client side debugging tools")
 //			message_admins("[key_name_admin(usr)] Has requested an immediate world restart via client side debugging tools")
-//		to_chat(world, span_boldannounce("Rebooting World immediately due to host request."))
+//		to_world(span_boldannounce("Rebooting World immediately due to host request."))
 //	else
-//	to_chat(world, span_boldannounce("<b><u><a href='byond://winset?command=.reconnect'>CLICK TO RECONNECT</a></u></b>"))
+//	to_world(span_boldannounce("<b><u><a href='byond://winset?command=.reconnect'>CLICK TO RECONNECT</a></u></b>"))
 
 	var/round_end_sound = pick(
 		'sound/roundend/knave.ogg',
@@ -255,7 +252,7 @@ GLOBAL_VAR(restart_counter)
 			continue
 		thing << sound(round_end_sound)
 
-	to_chat(world, "Please be patient as the server restarts. You will be automatically reconnected in about 60 seconds.")
+	to_world("Please be patient as the server restarts. You will be automatically reconnected in about 60 seconds.")
 	Master.Shutdown()	//run SS shutdowns? rtchange
 
 	TgsReboot()
@@ -356,7 +353,7 @@ GLOBAL_VAR(restart_counter)
 	s += "<b>[station_name()]</b>";
 	s += " ("
 	s += "<a href=\"http://\">" //Change this to wherever you want the hub to link to.
-	s += "Default"  //Replace this with something else. Or ever better, delete it and uncomment the game version.
+	s += "Default"	//Replace this with something else. Or ever better, delete it and uncomment the game version.
 	s += "</a>"
 	s += ")"
 

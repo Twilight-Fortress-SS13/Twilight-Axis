@@ -25,13 +25,11 @@
 	STASTR = 7
 	STASPD = 12
 	simple_detect_bonus = 20
-	defprob = 40
 	dodgetime = 30
 
 	faction = list(FACTION_REVENANTS, FACTION_WOLFS)
 	ai_controller = /datum/ai_controller/volf
 	base_intents = list(/datum/intent/simple/bite/volf)
-	melee_cooldown = WOLF_ATTACK_SPEED
 	attack_sound = list('sound/vo/mobs/vw/attack (1).ogg','sound/vo/mobs/vw/attack (2).ogg','sound/vo/mobs/vw/attack (3).ogg','sound/vo/mobs/vw/attack (4).ogg')
 
 	// Chomp Logic Vars

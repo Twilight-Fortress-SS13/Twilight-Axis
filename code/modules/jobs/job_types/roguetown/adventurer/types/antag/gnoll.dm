@@ -16,7 +16,7 @@
 	max_pq = null
 	allowed_patrons = list(/datum/patron/inhumen/graggar)
 
-	obsfuscated_job = TRUE
+	obfuscated_job = TRUE
 
 	advclass_cat_rolls = list(CTAG_GNOLL = 20)
 	PQ_boost_divider = 10
@@ -36,9 +36,8 @@
 		/datum/virtue/utility/bronzelimbs, //They should feel pain in their limbs given their state
 		/datum/virtue/movement/acrobatic, //This should be given to them when they are actually after a Hunted
 		/datum/virtue/utility/woodwalker, //This should be given to them when they are actually after a Hunted
-		/datum/virtue/combat/crossbowman,	//Absolutely not on a class like this
-		/datum/virtue/combat/bowman
 		)
+	quirk_restrictions = list(/datum/quirk/noble)
 	job_subclasses = list(
 		/datum/advclass/gnoll/berserker,
 		/datum/advclass/gnoll/knight,
@@ -73,6 +72,7 @@
 			var/datum/antagonist/new_antag = new /datum/antagonist/gnoll()
 			H.mind.add_antag_datum(new_antag)
 			add_verb(H, /mob/living/carbon/human/proc/gnoll_inspect_skin)
+			add_verb(H, /mob/living/carbon/human/proc/gnoll_toggle_pelt_repair)
 
 /datum/outfit/job/roguetown/gnoll/proc/don_pelt(mob/living/carbon/human/H)
 	if(H.mind)
@@ -84,6 +84,7 @@
 		H.regenerate_icons()
 		H.AddSpell(new /obj/effect/proc_holder/spell/self/claws/gnoll)
 		H.AddSpell(new /obj/effect/proc_holder/spell/self/howl/gnoll)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/gnoll/consume)
 		H.AddComponent(/datum/component/gnoll_combat_tracker)
 
 		var/obj/effect/proc_holder/spell/invoked/gnoll_sniff/F = new()
@@ -164,8 +165,25 @@
 	set name = "Inspect Pelt"
 	set category = "RoleUnique.Gnoll"
 	set desc = "Examine your gnoll skin armor"
-	if(!istype(skin_armor, /obj/item/clothing/suit/roguetown/armor/regenerating/skin/gnoll_armor))
+	if(!istype(skin_armor, /obj/item/clothing/suit/roguetown/armor/vampiric/gnoll))
 		to_chat(src, span_warning("You don't have any gnoll skin armor to inspect!"))
 		return
-	var/obj/item/clothing/suit/roguetown/armor/regenerating/skin/gnoll_armor/GA = skin_armor
+	var/obj/item/clothing/suit/roguetown/armor/vampiric/gnoll/GA = skin_armor
 	GA.Topic(null, list("inspect" = "1"), src)
+
+/mob/living/carbon/human/proc/gnoll_toggle_pelt_repair()
+	set name = "Toggle Pelt Repair From Shards"
+	set category = "RoleUnique.Gnoll"
+	set desc = "Toggle whether vampiric shard consumption repairs your skin armor."
+
+	var/datum/component/vampiric_striker/vamp_comp = GetComponent(/datum/component/vampiric_striker)
+	if(!vamp_comp)
+		to_chat(src, span_warning("You don't possess the ability required to attune your pelt!"))
+		return
+
+	vamp_comp.repairs_enabled = !vamp_comp.repairs_enabled
+
+	if(vamp_comp.repairs_enabled)
+		to_chat(src, span_notice("Armor shards will now repair your pelt."))
+	else
+		to_chat(src, span_warning("Armor shards will no longer repair your pelt. Warning, this prevents gaining buffs from picking up shards."))

@@ -37,10 +37,13 @@
 				preserve = TRUE
 		if(!preserve)
 			owner.remove_status_effect(/datum/status_effect/buff/clergybuff)
-	
+
 /mob/living/carbon/human
 	var/priest_timer_check = 0
 	var/matthios_banner_timer_check = 0
+
+/area/rogue
+	var/holy_area = FALSE
 
 /area/rogue/Entered(mob/living/carbon/human/guy)
 
@@ -48,7 +51,7 @@
 	if((src.holy_area == TRUE) && HAS_TRAIT(guy, TRAIT_CLERGY_TA) && !guy.has_status_effect(/datum/status_effect/buff/clergybuff) && !HAS_TRAIT(guy, TRAIT_EXCOMMUNICATED) && !HAS_TRAIT(guy, TRAIT_HERESIARCH))
 		guy.apply_status_effect(/datum/status_effect/buff/clergybuff)
 
-/datum/status_effect/buff/mist_form 
+/datum/status_effect/buff/mist_form
 	id = "mist_form"
 	duration = 6666
 	alert_type = /atom/movable/screen/alert/status_effect/buff/dagger_dash
@@ -56,8 +59,8 @@
 /datum/status_effect/buff/mist_form/on_apply()
 	if(!isliving(owner)) return FALSE
 	var/mob/living/L = owner
-	
-	L.alpha = 100 
+
+	L.alpha = 100
 
 	ADD_TRAIT(L, "ethereal", MAGIC_TRAIT)
 	ADD_TRAIT(L, TRAIT_PACIFISM, MAGIC_TRAIT)
@@ -70,24 +73,24 @@
 	L.status_flags |= GODMODE
 
 
-	L.density = FALSE 
-	
+	L.density = FALSE
+
 
 	L.pass_flags |= LETPASSTHROW
 
 	L.pass_flags |= PASSMOB
-	
+
 	return ..()
 
 /datum/status_effect/buff/mist_form/on_remove()
 	var/mob/living/L = owner
 	if(!L) return
-	
+
 	L.alpha = 255
-	
+
 
 	L.density = TRUE
-	
+
 
 	REMOVE_TRAIT(L, "ethereal", MAGIC_TRAIT)
 	REMOVE_TRAIT(L, TRAIT_PACIFISM, MAGIC_TRAIT)
@@ -99,7 +102,7 @@
 	L.status_flags &= ~GODMODE
 	L.pass_flags &= ~LETPASSTHROW
 	L.pass_flags &= ~PASSMOB
-	
+
 	..()
 
 /atom/movable/screen/alert/status_effect/buff/smartium
@@ -282,7 +285,7 @@
 	ADD_TRAIT(owner, TRAIT_NOPAIN, id)
 	ADD_TRAIT(owner, TRAIT_CRITICAL_RESISTANCE, id)
 	originalcmode = owner.cmode_music
-	owner.cmode_music = 'sound/music/combat_ozium.ogg'
+	owner.cmode_music = sound("sound/music/combat_ozium.ogg")
 
 /datum/status_effect/buff/herozium/on_remove()
 	owner.remove_stress(/datum/stressevent/ozium)

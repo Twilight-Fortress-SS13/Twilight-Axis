@@ -1,4 +1,5 @@
 /datum/action/cooldown/spell/caedo
+	source_aspect = /datum/magic_aspect/pseudo/spellblade
 	name = "Caedo"
 	desc = "In the old tongue, caedo - to strike or to cut down. Dash forward at blinding speed, \
 		leaving afterimages that strike every enemy in your path. \
@@ -32,7 +33,7 @@
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
 	var/max_range = 5
-	var/strike_damage = 40
+	var/strike_damage = SPELL_DMG(40)
 	var/empower_cost = 3
 
 /datum/action/cooldown/spell/caedo/cast(atom/cast_on)
@@ -64,6 +65,22 @@
 		to_chat(H, span_warning("I can't dash there!"))
 		return FALSE
 
+	var/turf/last_open_turf = start // TA EDIT START
+	for(var/turf/path_turf in getline(start, dest))
+		if(path_turf == start)
+			continue
+		if(path_turf.density || istransparentturf(path_turf) || !isfloorturf(path_turf))
+			break
+		var/blocked = FALSE
+		for(var/atom/movable/blocker in path_turf)
+			if(!isliving(blocker) && blocker.density)
+				blocked = TRUE
+				break
+		if(blocked)
+			break
+		last_open_turf = path_turf
+	dest = last_open_turf // TA EDIT END
+
 	var/distance = get_dist(start, dest)
 	if(distance < 1)
 		to_chat(H, span_warning("I need somewhere to dash to!"))
@@ -91,7 +108,7 @@
 	do_teleport(H, dest, channel = TELEPORT_CHANNEL_MAGIC)
 	playsound(dest, 'sound/magic/blink.ogg', 25, TRUE)
 
-	log_combat(H, cast_on, "used Caedo on")
+	log_combat(H, cast_on, "used Caedo on", zone=H.zone_selected)
 
 	var/empowered = FALSE
 	var/datum/status_effect/buff/arcyne_momentum/momentum = H.has_status_effect(/datum/status_effect/buff/arcyne_momentum)
@@ -122,13 +139,13 @@
 	for(var/mob/living/victim in victims)
 		if(QDELETED(victim) || victim.stat == DEAD)
 			continue
-		if(spell_guard_check(victim, FALSE, deflected ? null : user))
+		if(spell_guard_check(victim, FALSE, user, punish_caster = deflected ? FALSE : null))
 			if(!deflected)
 				deflected = TRUE
 				user.Slowdown(2)
 			continue
 		var/total_damage = strike_damage
-		arcyne_strike(user, victim, weapon, total_damage, def_zone, spell_name = "Caedo", skip_animation = TRUE)
+		arcyne_strike(user, victim, weapon, total_damage, def_zone, spell_name = "Caedo", skip_animation = TRUE, SPELL_STRIKE_SCALING)
 		hit_count++
 		var/turf/victim_turf = get_turf(victim)
 		if(victim_turf)
@@ -146,8 +163,10 @@
 /datum/action/cooldown/spell/caedo/proc/second_strike(mob/living/carbon/human/user, mob/living/victim, obj/item/weapon, def_zone)
 	if(!user || QDELETED(user) || !victim || QDELETED(victim) || victim.stat == DEAD)
 		return
+	if(spell_guard_check(victim, FALSE, user))
+		return
 	var/total_damage = strike_damage
-	arcyne_strike(user, victim, weapon, total_damage, def_zone, spell_name = "Caedo", skip_animation = TRUE)
+	arcyne_strike(user, victim, weapon, total_damage, def_zone, spell_name = "Caedo", skip_animation = TRUE, SPELL_STRIKE_SCALING)
 	var/turf/victim_turf = get_turf(victim)
 	if(victim_turf)
 		var/slash_dir = get_dir(user, victim)

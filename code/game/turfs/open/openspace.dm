@@ -5,15 +5,15 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 
 	anchored		= TRUE
 
-	icon            = 'icons/turf/floors.dmi'
-	icon_state      = "grey"
-	plane           = OPENSPACE_BACKDROP_PLANE
-	mouse_opacity 	= MOUSE_OPACITY_TRANSPARENT
-	layer           = SPLASHSCREEN_LAYER
+	icon			= 'icons/turf/floors.dmi'
+	icon_state		= "grey"
+	plane			= OPENSPACE_BACKDROP_PLANE
+	mouse_opacity	= MOUSE_OPACITY_TRANSPARENT
+	layer			= SPLASHSCREEN_LAYER
 	//I don't know why the others are aligned but I shall do the same.
 	vis_flags		= VIS_INHERIT_ID
 
-/atom/movable/openspace_backdrop/Initialize()
+/atom/movable/openspace_backdrop/Initialize(mapload)
 	. = ..()
 //	filters += filter(type = "blur", size = 3)
 
@@ -30,6 +30,9 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 	dynamic_lighting = 1
 	canSmoothWith = list(/turf/closed/mineral,/turf/closed/wall/mineral/rogue, /turf/open/floor/rogue)
 	smooth = SMOOTH_MORE
+	// cardinal_smooth()/roguesmooth() only ever reads cardinal adjacency bits - see the same note
+	// on /turf/open/floor/rogue.
+	smooth_diag = FALSE
 	neighborlay_override = "staticedge"
 
 /turf/open/transparent/openspace/cardinal_smooth(adjacencies)
@@ -53,7 +56,7 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 /turf/open/transparent/openspace/show_bottom_level()
 	return FALSE
 
-/turf/open/transparent/openspace/Initialize() // handle plane and layer here so that they don't cover other obs/turfs in Dream Maker
+/turf/open/transparent/openspace/Initialize(mapload) // handle plane and layer here so that they don't cover other obs/turfs in Dream Maker
 	. = ..()
 	dynamic_lighting = 1
 	vis_contents += GLOB.openspace_backdrop_one_for_all //Special grey square for projecting backdrop darkness filter on it.
@@ -124,13 +127,14 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 		if(!user.can_zTravel(target, DOWN, src))
 			to_chat(user, span_warning("I can't climb here."))
 			return
+		if(!L.start_climb())
+			return
 		if(user.m_intent != MOVE_INTENT_SNEAK)
 			playsound(user, 'sound/foley/climb.ogg', 100, TRUE)
 		user.visible_message(span_warning("[user] starts to climb down."), span_warning("I start to climb down."))
 		var/climber2wall_dir = get_dir(src, L)
-		L.mid_climb = TRUE
-		var/climbed = do_after(L, (HAS_TRAIT(L, TRAIT_WOODWALKER) ? 15 : 30), target = src)
-		L.mid_climb = FALSE
+		var/climbed = do_after(L, (HAS_TRAIT(L, TRAIT_WOODWALKER) ? 15 : 30), target = src, extra_checks = L.climb_check_callback())
+		L.end_climb()
 		if(climbed)
 			if(user.m_intent != MOVE_INTENT_SNEAK)
 				playsound(user, 'sound/foley/climb.ogg', 100, TRUE)
@@ -145,11 +149,13 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 			if(ismob(pulling))
 				user.pulling.forceMove(target)
 			var/climber_armor_class = climber.highest_ac_worn()
+			var/hadflying = (user.movement_type & FLYING)
 			if((climber_armor_class <= ARMOR_CLASS_LIGHT) && !(ismob(pulling))) // if our armour is not light or none OR we are pulling someone OR we're a literal zombie we eat shit and die and can't climb vertically at all, except for 'vaulting' aka we got a sold turf we can walk on in front of us
 				user.movement_type |= FLYING
 			L.stamina_add(stamina_cost_final)
 			user.forceMove(target)
-			user.movement_type &= ~FLYING
+			if(!hadflying)
+				user.movement_type &= ~FLYING
 			if(istype(user.loc, /turf/open/transparent/openspace)) // basically only apply this slop after we moved. if we are hovering on the openspace turf, then good, we are doing an 'active climb' instead of the usual vaulting action
 				climber.wallpressed = climber2wall_dir
 				switch(climber2wall_dir)// we are pressed against the wall after all that shit and are facing it, also hugging it too bcoz sou
@@ -165,7 +171,7 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 					if(WEST)
 						climber.setDir(WEST)
 						climber.set_mob_offsets("wall_press", _x = -12, _y = 0)
-				L.apply_status_effect(/datum/status_effect/debuff/climbing_lfwb, stamina_cost_final)
+				L.apply_status_effect(/datum/status_effect/debuff/climbing_lfwb)
 			user.start_pulling(pulling,supress_message = TRUE)
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -227,9 +233,10 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 				var/baseline_stamina_cost = 15
 				if(climber.m_intent == MOVE_INTENT_SNEAK)
 					climb_along_delay = climb_along_delay * 1.5
-				climber.mid_climb = TRUE
-				var/climbed = do_after(climber, climb_along_delay, wall_for_message)
-				climber.mid_climb = FALSE
+				if(!climber.start_climb())
+					return
+				var/climbed = do_after(climber, climb_along_delay, wall_for_message, extra_checks = climber.climb_check_callback())
+				climber.end_climb()
 				if(climbed)
 					climber.visible_message(span_info("[climber] climbs along [wall_for_message]..."))
 					climber_armor_class = climber.highest_ac_worn()
@@ -322,3 +329,25 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 			P.process_hit(target, P.select_target(target))
 			return BULLET_ACT_TURF
 	return ..()
+
+/turf/closed/sky_void
+	name = "open sky"
+	desc = "The endless horizon. You can't reach it from here."
+	icon = 'icons/turf/floors.dmi'
+	icon_state = "grey"
+	plane = OPENSPACE_BACKDROP_PLANE
+	layer = SPLASHSCREEN_LAYER
+	opacity = FALSE
+	density = TRUE
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	dynamic_lighting = 0
+	smooth = SMOOTH_FALSE
+
+/turf/closed/sky_void/Initialize(mapload)
+	. = ..()
+
+/turf/closed/sky_void/zPassIn(atom/movable/A, direction, turf/source)
+	return FALSE
+
+/turf/closed/sky_void/zPassOut(atom/movable/A, direction, turf/destination)
+	return FALSE

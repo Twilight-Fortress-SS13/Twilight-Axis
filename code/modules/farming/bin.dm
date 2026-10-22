@@ -27,7 +27,7 @@
 	if(W==/datum/weather/rain)
 		START_PROCESSING(SSweather,src)
 
-/obj/item/roguebin/Initialize()
+/obj/item/roguebin/Initialize(mapload)
 	if(!base_state)
 		create_reagents(600, DRAINABLE | AMOUNT_VISIBLE | REFILLABLE)
 		icon_state = "washbin[rand(1,2)]"
@@ -126,6 +126,7 @@
 					wash_atom(user, CLEAN_STRONG)
 					playsound(user, pick(wash), 100, FALSE)
 					user.remove_stress(/datum/stressevent/sewertouched)
+					user.remove_stress(/datum/stressevent/unlanded_noble_bloody_equipment)
 			else
 				user.visible_message(span_info("[user] starts to wash [item2wash] in [src]."))
 				if(do_after(L, 30, target = src))

@@ -10,59 +10,34 @@
 	var/deposit_amount = 0
 	var/complete = FALSE
 
-	/// Where this contract originated. See QUEST_SOURCE_* defines.
 	var/source = QUEST_SOURCE_HANDLER
-	/// world.time when the quest was created. Used by SSquestpool to expire stale listings.
 	var/created_at = 0
-	/// GLOB.dayspassed at creation - IC date captured for scroll display.
 	var/issued_day = 0
 
-	/// Progress tracking
 	var/progress_current = 0
 	var/progress_required = 1
 
-	/// Target item type for fetch quests
 	var/obj/item/target_item_type
-	/// Target item type for courier quests
+	var/target_item_plural
 	var/obj/item/target_delivery_item
-	/// Target mob type for kill quests
 	var/mob/living/target_mob_type
-	/// Location for courier quests
 	var/area/rogue/indoors/town/target_delivery_location
-	/// Location name for kill/clear quests
 	var/target_spawn_area = ""
 
-	/// Scroll icon state
 	var/quest_icon = "scroll_quest"
 
-	/// Fallback reference to the spawned scroll
 	var/obj/item/quest_writ/quest_scroll
-	/// Weak reference to the quest scroll
 	var/datum/weakref/quest_scroll_ref
-	/// List of weakrefs to actual quest items/mobs for reducing overhead of compass.
 	var/list/datum/weakref/tracked_atoms = list()
-	/// Landmark picked at preview time; materialize() spawns content around it when claimed.
 	var/datum/weakref/pending_landmark_ref
 	var/materialized = FALSE
-	/// Threat region this quest's content lives in. Captured from the landmark at preview time.
 	var/region = ""
-	/// Quest faction id (see QUEST_FACTION_* defines). Captured at preview for kill / bounty quests.
 	var/faction_id
-	/// Resolved faction datum for the run. Non-null for kill / bounty quests.
 	var/datum/quest_faction/faction
-	/// Minimum fellowship size required to sign this quest. 0 means solo-allowed. Only the
-	/// signer pays the take-cooldown cost; fellowship-mates are free labor.
 	var/required_fellowship_size = 0
-	/// If TRUE, the crown levy is skipped at turn-in. Stamped by a Steward on specific contracts
-	/// as a personal favor, or set at preview by Module 6 towner-to-towner bounties.
-	/// TODO: Implement new taxation mechanics — Module 3/6 will add the stamping UI and towner
-	/// bounty path. Levy rate itself also needs revisiting under the new treasury design.
 	var/levy_exempt = FALSE
 	var/guild_cut_exempt = FALSE
-	/// TRUE if the Steward issued this as a free-labor Directive (no funding, zero reward,
-	/// hand-carried only, not promotable to the public noticeboard).
 	var/is_directive = FALSE
-	/// Weakrefs to this quest's `/obj/effect/quest_spawn` pods — used to pop the whole encounter at once.
 	var/list/datum/weakref/spawners = list()
 	var/list/rolled_crimes
 	var/sacral_hook = FALSE
@@ -71,6 +46,20 @@
 	var/band_leader_name = ""
 	var/writ_type = WRIT_TYPE_OUTLAWRY
 	var/circumstance_text = ""
+	var/list/funding_sources
+	var/funding_rumor_points = 0
+	var/warrant_consumed = 0
+	var/list/issue_log_entry
+	var/last_claimed_at = 0
+	var/engaged = FALSE
+	var/datum/fund/deposit_payer
+	var/deposit_paid = 0
+	var/posted_at = 0
+	var/signer_group
+
+/datum/quest/New()
+	. = ..()
+	posted_at = world.time
 
 /datum/quest/proc/get_lapse_time()
 	var/window = (source == QUEST_SOURCE_POOL) ? QUEST_POOL_STALE_THRESHOLD : QUEST_PLAYER_STALE_THRESHOLD
@@ -83,6 +72,12 @@
 			held_landmark.claimed_by = null
 		if(materialized)
 			held_landmark.cooldown_until = world.time + QUEST_LANDMARK_COOLDOWN
+
+	for(var/datum/weakref/spawner_ref in spawners)
+		var/obj/effect/quest_spawn/spawner = spawner_ref.resolve()
+		if(!QDELETED(spawner))
+			qdel(spawner)
+	spawners.Cut()
 
 	for(var/datum/weakref/tracked_weakref in tracked_atoms)
 		var/atom/target_atom = tracked_weakref.resolve()
@@ -113,9 +108,6 @@
 /datum/quest/proc/add_tracked_atom(atom/movable/to_track)
 	tracked_atoms += WEAKREF(to_track)
 
-/// Lightweight pre-generation: pick templates and set display fields, but DO NOT mutate the
-/// world. Called by SSquestpool.generate_one so pool contracts don't spawn mobs/items until
-/// someone claims them. Subtypes override to set target_mob_type, target_item_type, etc.
 /datum/quest/proc/preview(obj/effect/landmark/quest_spawner/landmark)
 	if(!landmark)
 		return FALSE
@@ -124,7 +116,6 @@
 	region = landmark.region
 	return TRUE
 
-/// Called by subtypes at end of preview() once faction / target / etc. are set.
 /datum/quest/proc/finalize_preview_title()
 	if(!title)
 		title = get_title()
@@ -147,13 +138,12 @@
 /datum/quest/proc/get_recovery_shipment_name()
 	return null
 
-/// Registers a quest_spawn pod so pop_all_spawners() can trigger the whole encounter at once.
 /datum/quest/proc/register_spawner(obj/effect/quest_spawn/spawner)
 	spawners += WEAKREF(spawner)
 
-/// Materializes every live spawner belonging to this quest. Called when any one of them triggers.
 /datum/quest/proc/pop_all_spawners()
 	if(length(spawners))
+		engaged = TRUE
 		on_first_pop()
 	for(var/datum/weakref/ref in spawners)
 		var/obj/effect/quest_spawn/spawner = ref.resolve()
@@ -165,45 +155,32 @@
 /datum/quest/proc/on_first_pop()
 	return
 
-/// World-mutating generation: spawn mobs, items, parcels. Called by SSquestpool.claim when the
-/// contract is actually signed. Subtypes override to do their specific spawns.
 /datum/quest/proc/materialize(obj/effect/landmark/quest_spawner/landmark)
 	return TRUE
 
-/// Get the quest title - override in subtypes for dynamic titles
 /datum/quest/proc/get_title()
 	return title
 
-/// Get objective text for scroll display
 /datum/quest/proc/get_objective_text()
 	return "Complete the objective."
 
-/// Hook for subtypes that need to stream live fields into the TGUI scroll view (e.g.
-/// blockade's wave timer). Subtypes mutate the passed list. Base does nothing.
 /datum/quest/proc/populate_scroll_ui_data(list/data)
 	return
 
-/// Static counterpart. Subtypes must pair changes with quest_scroll?.update_quest_text().
 /datum/quest/proc/populate_scroll_ui_static_data(list/data)
 	return
 
-/// Check if quest objectives are complete
 /datum/quest/proc/check_completion()
 	return progress_current >= progress_required
 
-/// Called when progress is updated. progress_current lives in ui_data and streams via
-/// the next TGUI tick — no need to push static data on every kill.
 /datum/quest/proc/on_progress_update()
 	if(check_completion())
 		mark_complete()
 
-/// Mark quest as complete
 /datum/quest/proc/mark_complete()
 	complete = TRUE
 	quest_scroll?.update_quest_text()
 
-// Flat "you showed up" base, same for every quest regardless of difficulty. Difficulty
-// expresses itself through tp_budget (kill types) and distance/items (courier/retrieval).
 /datum/quest/proc/get_base_reward()
 	return QUEST_REWARD_BASE_FLAT
 
@@ -219,16 +196,16 @@
 		payout_mult *= TR.payout_multiplier
 	return round((base + additional + get_difficulty_bonus()) * payout_mult)
 
-/// Flat reward sweetener keyed off difficulty, applied to every quest type at the reward chokepoint.
 /datum/quest/proc/get_difficulty_bonus()
 	switch(quest_difficulty)
 		if(QUEST_DIFFICULTY_MEDIUM)
 			return QUEST_DIFFICULTY_BONUS_MEDIUM
 		if(QUEST_DIFFICULTY_HARD)
 			return QUEST_DIFFICULTY_BONUS_HARD
+		if(QUEST_DIFFICULTY_NOTORIOUS)
+			return QUEST_DIFFICULTY_BONUS_NOTORIOUS
 	return QUEST_DIFFICULTY_BONUS_EASY
 
-/// Calculate deposit based on difficulty
 /datum/quest/proc/calculate_deposit()
 	switch(quest_difficulty)
 		if(QUEST_DIFFICULTY_EASY)
@@ -237,12 +214,13 @@
 			return QUEST_DEPOSIT_MEDIUM
 		if(QUEST_DIFFICULTY_HARD)
 			return QUEST_DEPOSIT_HARD
+		if(QUEST_DIFFICULTY_NOTORIOUS)
+			return QUEST_DEPOSIT_NOTORIOUS
 	return 0
 
 /datum/quest/proc/get_scroll_type()
 	return /obj/item/quest_writ
 
-/// Get icon for scroll based on difficulty
 /datum/quest/proc/get_scroll_icon()
 	switch(quest_difficulty)
 		if(QUEST_DIFFICULTY_EASY)
@@ -251,9 +229,10 @@
 			return "scroll_quest_mid"
 		if(QUEST_DIFFICULTY_HARD)
 			return "scroll_quest_high"
+		if(QUEST_DIFFICULTY_NOTORIOUS)
+			return "scroll_quest_notorious"
 	return quest_icon
 
-/// Get target location for compass - returns turf of nearest tracked atom
 /datum/quest/proc/get_target_location()
 	var/turf/user_turf = quest_scroll ? get_turf(quest_scroll) : null
 	if(!user_turf)
@@ -283,7 +262,6 @@
 
 	return closest
 
-/// Check if a user can claim this quest - override for restrictions
 /datum/quest/proc/can_claim(mob/living/user)
 	if(required_fellowship_size > 0)
 		var/datum/fellowship/F = user?.current_fellowship
@@ -293,17 +271,115 @@
 			return FALSE
 	return TRUE
 
-/// Human-readable reason why can_claim failed, shown to the user at sign time.
 /datum/quest/proc/claim_failure_reason(mob/living/user)
 	if(required_fellowship_size > 0)
 		var/datum/fellowship/F = user?.current_fellowship
 		if(!F)
-			return "This contract requires a Fellowship of [required_fellowship_size]."
+			return "This contract needs a fellowship of [required_fellowship_size]."
 		if(length(F.get_members()) < required_fellowship_size)
-			return "Your Fellowship is too small - requires [required_fellowship_size] members."
+			return "Your fellowship is too small. It needs [required_fellowship_size] members."
 	return "You cannot sign that contract."
 
-/// Called when quest is claimed by a user
 /datum/quest/proc/on_claim(mob/user)
 	quest_receiver_reference = WEAKREF(user)
 	quest_receiver_name = user.real_name
+	last_claimed_at = world.time
+	signer_group = contract_signer_group(user)
+	record_contract_stat(src, CONTRACT_STAT_TAKEN)
+	record_contract_stat(src, CONTRACT_STAT_WAIT_DS, max(0, world.time - posted_at))
+	record_contract_signer(src, user.ckey)
+
+/datum/quest/proc/get_party_size()
+	var/mob/living/bearer = quest_receiver_reference?.resolve()
+	if(!istype(bearer) || !bearer.current_fellowship)
+		return 1
+	return max(1, length(bearer.current_fellowship.get_members()))
+
+/datum/quest/proc/record_completion_stats(paid)
+	record_contract_stat(src, CONTRACT_STAT_COMPLETED)
+	record_contract_stat(src, CONTRACT_STAT_RUN_DS, max(0, world.time - last_claimed_at))
+	record_contract_stat(src, CONTRACT_STAT_PARTY, get_party_size())
+	if(paid > 0)
+		record_contract_stat(src, CONTRACT_STAT_PAID, paid)
+
+/datum/quest/proc/has_started()
+	if(complete || engaged || progress_current > 0)
+		return TRUE
+	for(var/datum/weakref/ref in tracked_atoms)
+		var/atom/movable/tracked = ref.resolve()
+		if(QDELETED(tracked) || isliving(tracked))
+			continue
+		if(!isturf(tracked.loc))
+			return TRUE
+	return FALSE
+
+/datum/quest/proc/issuer_cancel_blocker()
+	if(complete)
+		return "the contract is already fulfilled"
+	if(has_started())
+		return "the work has already begun"
+	if(!quest_receiver_reference)
+		return null
+	var/remaining = last_claimed_at + QUEST_ISSUER_CANCEL_WINDOW - world.time
+	if(remaining > 0)
+		return "its holder has [max(1, round(remaining / (1 MINUTES)))] more minute(s) before it can be withdrawn"
+	return null
+
+/datum/quest/proc/add_funding(datum/fund/fund, amount, datum/fund/escrow)
+	if(!fund || amount <= 0)
+		return
+	if(!funding_sources)
+		funding_sources = list()
+	funding_sources += list(list("fund" = fund, "amount" = amount, "escrow" = escrow))
+
+/datum/quest/proc/get_funding_total()
+	. = 0
+	for(var/list/source as anything in funding_sources)
+		. += source["amount"]
+
+/datum/quest/proc/describe_issuer_refund()
+	var/list/parts = list()
+	for(var/list/source as anything in funding_sources)
+		var/datum/fund/fund = source["fund"]
+		parts += "[source["amount"]]m to [fund.name]"
+	if(funding_rumor_points > 0)
+		parts += "[funding_rumor_points] Rumor Points"
+	if(warrant_consumed > 0)
+		parts += "[warrant_consumed]p to the defense warrant"
+	return english_list(parts, nothing_text = "")
+
+/datum/quest/proc/refund_issuer_funding(reason, mob/actor)
+	. = describe_issuer_refund()
+	var/label = get_title() || quest_type
+	for(var/list/source as anything in funding_sources)
+		var/datum/fund/fund = source["fund"]
+		var/datum/fund/escrow = source["escrow"]
+		var/amount = source["amount"]
+		// The escrow side releases the held commitment; the fund side takes back what it committed.
+		// A posting fee the Crown kept as "other receipts" is reversed against that same account.
+		var/escrow_side = (escrow == SStreasury.discretionary_fund) ? LEDGER_CROWN_REV_OTHER : SStreasury.commitment_account(escrow)
+		if(!escrow || !SStreasury.transfer(escrow, fund, amount, "[reason] - [label]", escrow_side, SStreasury.commitment_account(fund)))
+			SStreasury.mint(fund, amount, "[reason] - [label]", null, SStreasury.commitment_account(fund))
+		if(fund == SStreasury.burgher_pledge_fund)
+			record_round_statistic(STATS_PLEDGE_CONSUMED, -amount)
+		record_round_statistic(STATS_CONTRACT_MAMMONS_REFUNDED, amount)
+	funding_sources = null
+	if(funding_rumor_points > 0)
+		SStreasury.rumor_points += funding_rumor_points
+		record_round_statistic(STATS_RUMOR_POINTS_CONSUMED, -funding_rumor_points)
+		funding_rumor_points = 0
+	if(warrant_consumed > 0)
+		SScity_assembly?.refund_defense(warrant_consumed, actor, "[reason] - [label]")
+		warrant_consumed = 0
+
+/datum/quest/proc/mark_issue_log(status, refund_text)
+	if(!issue_log_entry)
+		return
+	issue_log_entry["status"] = status
+	issue_log_entry["refund"] = refund_text
+
+/datum/quest/proc/on_issuer_withdrawn(mob/withdrawer)
+	return
+
+/datum/quest/proc/office_may_withdraw()
+	return TRUE

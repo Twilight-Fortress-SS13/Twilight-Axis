@@ -13,25 +13,178 @@ export type RegionCatalogEntry = {
   description: string;
 };
 
+export type LedgerLeg = {
+  account: string;
+  dr: number;
+  cr: number;
+};
+
 export type LedgerEntry = {
-  kind: string; // mint | burn | transfer | micro | ...
+  kind: string; // mint | burn | transfer | micro | accrual | writeoff | ...
   from: string;
   to: string;
   amount: number;
   reason: string;
+  count: number;
+  // Present on double-entry postings only; memo lines have no number or legs.
+  no?: number;
+  day?: number;
+  actor?: string | null;
+  legs?: LedgerLeg[];
+};
+
+export type LedgerView =
+  | 'journal'
+  | 'ledger'
+  | 'trial'
+  | 'income'
+  | 'balance'
+  | 'subsidiary';
+
+export type ChartRow = {
+  id: string;
+  name: string;
+  class: string;
+  balance: number;
+  active: BooleanLike;
+};
+
+export type AccountLedgerRow = {
+  no: number;
+  day: number;
+  reason: string;
+  dr: number;
+  cr: number;
+  balance: number;
+  count: number;
+};
+
+export type AccountLedger = {
+  id: string;
+  name: string;
+  class: string;
+  book_label: string;
+  debit_normal: BooleanLike;
+  debits: number;
+  credits: number;
+  balance: number;
+  rows: AccountLedgerRow[];
+  total_rows: number;
+};
+
+export type TrialBalance = {
+  book_label: string;
+  rows: { id: string; name: string; class: string; dr: number; cr: number }[];
+  total_dr: number;
+  total_cr: number;
+  balanced: BooleanLike;
+};
+
+export type ReconRow = {
+  label: string;
+  ledger: number;
+  actual: number;
+  drift: number;
+};
+
+export type IncomeLine = {
+  id: string;
+  name: string;
+  total: number;
+  today: number;
+  yesterday: number;
+};
+
+export type IncomeStatement = {
+  book_label: string;
+  revenue: IncomeLine[];
+  expenses: IncomeLine[];
+  revenue_total: number;
+  expense_total: number;
+  net_total: number;
+  revenue_today: number;
+  expense_today: number;
+  net_today: number;
+  revenue_yesterday: number;
+  expense_yesterday: number;
+  net_yesterday: number;
+  closed_day: number;
+};
+
+export type BalanceLine = { id: string; name: string; balance: number };
+
+export type BalanceSheet = {
+  book_label: string;
+  assets: BalanceLine[];
+  liabilities: BalanceLine[];
+  equity: BalanceLine[];
+  surplus: number;
+  unclassified: number;
+  total_assets: number;
+  total_liabilities: number;
+  total_equity: number;
+  total_equity_side: number;
+  balanced: BooleanLike;
+};
+
+export type Subsidiary = {
+  loans: {
+    debtor: string;
+    lender: string;
+    principal: number;
+    rate_pct: number;
+    due_day: number;
+    repaid: number;
+    principal_outstanding: number;
+    remaining_due: number;
+    defaulted: BooleanLike;
+  }[];
+  poll_arrears: { name: string; job: string; owed: number; days: number }[];
+  payables: { name: string; balance: number }[];
+  receivables: { name: string; balance: number }[];
+  inventory: { name: string; units: number; unit_price: number; value: number }[];
+  inventory_live: number;
+  inventory_booked: number;
+  payroll: {
+    job: string;
+    wage: number;
+    heads: number;
+    suspended: number;
+    daily_cost: number;
+  }[];
+  payroll_total: number;
+  taxes: {
+    name: string;
+    rate_pct: number | null;
+    collected: number;
+    exempted: number;
+  }[];
 };
 
 export type LedgerPage = {
-  entries: LedgerEntry[];
-  page: number;
-  page_size: number;
-  shown: number;
-  has_more: BooleanLike;
-  filtered: BooleanLike;
+  view: LedgerView;
+  // Journal view
+  entries?: LedgerEntry[];
+  page?: number;
+  page_size?: number;
+  shown?: number;
+  has_more?: BooleanLike;
+  filtered?: BooleanLike;
+  // General ledger view
+  chart?: ChartRow[];
+  account_ledger?: AccountLedger | null;
+  // Reports
+  trial_balance?: TrialBalance;
+  reconciliation?: ReconRow[];
+  income_statement?: IncomeStatement;
+  balance_sheet?: BalanceSheet;
+  subsidiary?: Subsidiary;
 };
 
 export type StaticData = {
   order_pool_cap: number;
+  auto_limit_days: number;
+  quality_payouts: { label: string; pct: number }[];
   good_catalog: Record<string, GoodCatalogEntry>;
   region_catalog: Record<string, RegionCatalogEntry>;
   // Only present while the user has the Ledger tab open (server gates it on ledger_view).
@@ -57,12 +210,16 @@ export type Order = {
   has_stockpile: BooleanLike;
   days_left: number;
   payout: number;
+  // base_payout * (1 + scarcity_bonus_pct/100) == payout. Bonus is 0 at/above reference pop.
+  base_payout: number;
+  scarcity_bonus_pct: number;
   items: OrderItem[];
   can_fulfill: BooleanLike;
   shortfall_text: string;
   petitioned: BooleanLike;
   can_partial: BooleanLike;
   partial_pct: number;
+  partial_payout_pct: number;
   partial_payout_preview: number;
   pair_id: string | null;
   pair_label: string | null;
@@ -82,6 +239,7 @@ export type BanditryProjection = {
   total: number;
   lines: string[];
   debt: number;
+  hoard_total: number;
 };
 
 export type MarketRegionOption = {
@@ -89,6 +247,7 @@ export type MarketRegionOption = {
   unit_price: number;
   capacity_today: number;
   capacity_total: number;
+  batch_capacity: number;
   is_blockaded: BooleanLike;
 };
 
@@ -109,6 +268,7 @@ export type MarketRow = {
   automatic_limit: BooleanLike;
   accepting: BooleanLike;
   withdraw_disabled: BooleanLike;
+  autoexport_disabled: BooleanLike;
   margin_per_unit: number;
   arbitrage_potential: number;
 };
@@ -167,7 +327,9 @@ export type TradeQuote = {
   quantity: number;
   max_units: number;
   daily_pace: number;
+  batch_capacity: number;
   capacity_today: number;
+  capacity_total: number;
   base_unit_price: number;
   base_subtotal: number;
   escalation_subtotal: number;
@@ -183,11 +345,23 @@ export type TradeQuote = {
   stockpile_after: number;
 };
 
+export type PetitionTemplate = {
+  id: string;
+  label: string;
+  region_ids: string[];
+};
+
 export type PetitionCategory = {
   id: string;
   label: string;
   description: string;
   cost: number;
+  templates: PetitionTemplate[];
+};
+
+export type PetitionOffer = {
+  region_id: string;
+  blocker: string;
 };
 
 export type PetitionState = {
@@ -195,8 +369,8 @@ export type PetitionState = {
   petitions_remaining: number;
   is_steward_role: BooleanLike;
   is_alderman_acting: BooleanLike;
-  // category_id -> region_id -> blocker reason (empty string = eligible)
-  eligibility: Record<string, Record<string, string>>;
+  selected_template: string | null;
+  offers: PetitionOffer[];
 };
 
 export type SequestrationState = {
@@ -236,6 +410,8 @@ export type Data = StaticData & {
   trade_quote: TradeQuote | null;
   total_arbitrage_potential: number;
   autoexport_percentage: number;
+  autoexport_barred: number;
+  shortage_goods_open: number;
   petition_categories: PetitionCategory[];
   petition_tax_pct: number;
   petitions_per_day: number;
@@ -255,4 +431,5 @@ export type TabKey =
   | 'auto_import'
   | 'petition'
   | 'ledger'
-  | 'royal_custom';
+  | 'royal_custom'
+  | 'advanced';

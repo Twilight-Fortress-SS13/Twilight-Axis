@@ -7,7 +7,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 	outfit = /datum/outfit/job/roguetown/psydonianwarscholar
 	subclass_languages = list(/datum/language/otavan, /datum/language/raneshi)
-	cmode_music = 'sound/music/warscholar.ogg'
+	cmode_music = sound("sound/music/warscholar.ogg")
 	category_tags = list(CTAG_ORTHODOXIST)
 	traits_applied = list(
 		TRAIT_PSYDONITE,

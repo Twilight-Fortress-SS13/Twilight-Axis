@@ -19,22 +19,22 @@
 	var/cooldown_until = 0
 	var/static/list/impure_weights = list(
 		/obj/item/alch/hag_moss/sorrow = 30,
-		/obj/item/alch/hag_moss/fury   = 25,
-		/obj/item/alch/hag_moss/envy   = 20,
-		/obj/item/alch/hag_moss/mercy  = 15,
-		/obj/item/alch/hag_moss/grief  = 10,
+		/obj/item/alch/hag_moss/fury	= 25,
+		/obj/item/alch/hag_moss/envy	= 20,
+		/obj/item/alch/hag_moss/mercy	= 15,
+		/obj/item/alch/hag_moss/grief	= 10,
 		/obj/item/alch/hag_moss/lullaby = 5,
-		/obj/item/alch/hag_moss/pride   = 5
+		/obj/item/alch/hag_moss/pride	= 5
 	)
 
 	var/static/list/pure_weights = list(
 		/obj/item/alch/hag_moss/sorrow = 20,
-		/obj/item/alch/hag_moss/fury   = 18,
-		/obj/item/alch/hag_moss/envy   = 16,
-		/obj/item/alch/hag_moss/mercy  = 14,
-		/obj/item/alch/hag_moss/grief  = 13,
+		/obj/item/alch/hag_moss/fury	= 18,
+		/obj/item/alch/hag_moss/envy	= 16,
+		/obj/item/alch/hag_moss/mercy	= 14,
+		/obj/item/alch/hag_moss/grief	= 13,
 		/obj/item/alch/hag_moss/lullaby = 12,
-		/obj/item/alch/hag_moss/pride   = 12
+		/obj/item/alch/hag_moss/pride	= 12
 	)
 
 /obj/structure/roguemachine/mossmother/travel
@@ -125,14 +125,14 @@
 		var/path = text2path(href_list["harvest"])
 		var/is_hag = text2num(href_list["hag"])
 		var/list/stock = is_hag ? hag_stock : public_stock
-	
+
 		if(harvesting)
 			return
-	
+
 		harvesting = TRUE
 		var/harvest_count = 0
 		var/current_path = path
-	
+
 		// Keep harvesting until all stock is empty or user stops
 		while(TRUE)
 			// Check if user is still alive and nearby
@@ -161,7 +161,7 @@
 				harvest_count++
 
 				var/obj/structure/roguemachine/mossmother/destination_tree = null
-				var/is_fey = HAS_TRAIT(usr, TRAIT_FEYTOUCHED)
+				var/is_fey = HAS_TRAIT(usr, TRAIT_FEYBOUND)
 				if(is_fey)
 					for(var/obj/structure/roguemachine/mossmother/T in GLOB.hag_trees)
 						var/area/A = get_area(T)
@@ -190,7 +190,7 @@
 		popup.open()
 
 /obj/structure/roguemachine/mossmother/attack_hand(mob/living/user)
-	if(..()) 
+	if(..())
 		return
 
 	if(harvesting)
@@ -209,7 +209,7 @@
 		contents += "<a href='?src=[REF(src)];action=travel'>[span_boldnotice("Walk the Roots")]</a><BR>"
 	else if (HAS_TRAIT(user, TRAIT_ROOT_WALKER))
 		contents += "<a href='?src=[REF(src)];action=travel'>[span_boldnotice("Walk the Roots")]</a><BR>"
-	if(HAS_TRAIT(user, TRAIT_FEYTOUCHED) && length(GLOB.active_hags))
+	if((HAS_TRAIT(user, TRAIT_FEYBOUND) || HAS_TRAIT(user, TRAIT_FEYTOUCHED)) && length(GLOB.active_hags))
 		contents += "<a href='?src=[REF(src)];action=message'>[span_boldnotice("Whisper to the Roots")]</a><BR>"
 	contents += "</center>"
 	var/datum/browser/popup = new(user, "mossmother", "The Mossmother", 300, 300)
@@ -284,7 +284,7 @@
 
 	var/wait_time = is_mortal ? 20 SECONDS : 10 SECONDS
 	user.visible_message(span_notice("[user] begins to sink into the mossy roots of [src]..."), \
-						 span_notice("You begin to dissolve into the network of roots, seeking the path to [get_area(target)]."))
+							span_notice("You begin to dissolve into the network of roots, seeking the path to [get_area(target)]."))
 	if(passenger)
 		user.visible_message(span_danger("[user] begins to drag [passenger] into the mossy roots..."))
 
@@ -311,7 +311,7 @@
 
 		user.forceMove(destination)
 		user.visible_message(span_notice("[user] emerges from the roots of [target]."), \
-							 span_boldnotice("The roots spit you back out into [get_area(target)]."))
+								span_boldnotice("The roots spit you back out into [get_area(target)]."))
 
 		if(passenger && get_dist(src, passenger) <= 2)
 			passenger.forceMove(destination)
@@ -331,7 +331,7 @@
 
 		var/is_impure = (istype(W, /obj/item/reagent_containers/lux_impure) || istype(W, /obj/item/leechtick_bloated))
 		user.visible_message(span_notice("[user] pours [W] over the roots of [src]."), \
-							 span_boldnotice("You feed the heart of the bog. The ground trembles as the Lux is absorbed."))
+								span_boldnotice("You feed the heart of the bog. The ground trembles as the Lux is absorbed."))
 
 
 		qdel(W)
@@ -342,11 +342,11 @@
 
 /obj/structure/roguemachine/mossmother/proc/check_fey_ascension(pure = FALSE, mob/living/user)
 	var/did_something = FALSE
-	if(HAS_TRAIT(user, TRAIT_FEYTOUCHED) && !HAS_TRAIT(user, TRAIT_ROOT_WALKER))
+	if(HAS_TRAIT(user, TRAIT_FEYBOUND) && !HAS_TRAIT(user, TRAIT_ROOT_WALKER))
 		ADD_TRAIT(user, TRAIT_ROOT_WALKER, TRAIT_HAG_BOON)
 		to_chat(user, span_userdanger("As the Lux flows, the roots under your feet soften. You feel the map of the bog etched into your mind. You can now walk the deep paths."))
 		did_something = TRUE
-	if(pure && HAS_TRAIT(user, TRAIT_FEYTOUCHED) && !HAS_TRAIT(user, TRAIT_BOGWALKER))
+	if(pure && HAS_TRAIT(user, TRAIT_FEYBOUND) && !HAS_TRAIT(user, TRAIT_BOGWALKER))
 		ADD_TRAIT(user, TRAIT_BOGWALKER, TRAIT_HAG_BOON)
 		to_chat(user, span_userdanger("As the roots drink the purified Lux, the heart of the bog beats in response. You feel a renewed kinship. The bog's wrath turns its gaze from you."))
 		did_something = TRUE
@@ -402,36 +402,43 @@
 	desc = "A bloom of moss."
 	icon_state = "moss_blank"
 	icon = 'icons/roguetown/items/hag/hag_items.dmi'
+	materia = list() // these are beyond the mortal alchemical arts
 
 /obj/item/alch/hag_moss/sorrow
 	name = "Mother's sorrow"
 	desc = "A blossom of green moss. Said to induce melancholy when consumed by mothers-to-be, have-been, and would've-been."
 	icon_state = "moss"
+	complete_pot = /datum/alch_cauldron_recipe/trait/negative/prodepressants // hags can do naturally what magos have to bend reality to achieve. best used with material boons
 
 /obj/item/alch/hag_moss/fury
 	name = "Mother's fury"
 	desc = "A blossom of red moss. It cuts the throat when consumed, it burns and irritates the skin when touched. No one would dare cut down a mossmother, lest the very air be choked by her fury."
 	color = "#610202"
+	complete_pot = /datum/alch_cauldron_recipe/trait/wyrdlaborer
 
 /obj/item/alch/hag_moss/mercy
 	name = "Mother's mercy"
 	desc = "A blossom of pale, glowing moss. Holding it parts the trees, it is as if home, hearth, and a warm meal surround you at once."
 	color = "#E0FFD1"
+	complete_pot = /datum/alch_cauldron_recipe/trait/antidepressants
 
 /obj/item/alch/hag_moss/grief
 	name = "Mother's grief"
 	desc = "A blossom of dark, velvet moss. Looking at it makes the silence louder, until it is deafening."
 	color = "#2C2C2C"
+	complete_pot = /datum/alch_cauldron_recipe/trait/waterbreathing
 
 /obj/item/alch/hag_moss/envy
 	name = "Mother's envy"
 	desc = "A blossom of bile-colored moss. It hisses when it touches metal and dissolves organic matter into a nutrient-rich slurry for the Mossmother's roots."
 	color = "#A4C639"
+	complete_pot = /datum/alch_cauldron_recipe/trait/ravenous
 
 /obj/item/alch/hag_moss/lullaby
 	name = "Mother's lullaby"
 	desc = "A blossom of deep indigo moss."
 	color = "#301a3a"
+	complete_pot = /datum/alch_cauldron_recipe/trait/sleepdraught
 
 /obj/item/alch/hag_moss/lullaby/examine(mob/user)
 	. = ..()
@@ -542,7 +549,7 @@
 		trait_pool = list()
 		for(var/path in typesof(/datum/hag_boon/trait))
 			var/datum/hag_boon/trait/dummy = path
-			if(initial(dummy.hag_curse) || path == /datum/hag_boon/trait) 
+			if(initial(dummy.hag_curse) || path == /datum/hag_boon/trait)
 				continue
 			trait_pool += path
 

@@ -26,9 +26,9 @@
 	/// The category this hunt belongs to
 	var/datum/hunting_category/hunt_category
 	/// Total tracks to find before the animal spawns (this is always 1 higher than the number)
-	var/max_trail_depth = 6
+	var/max_trail_depth = 5
 	/// Min trail depth as set by skill bonus.
-	var/min_trail_depth = 4
+	var/min_trail_depth = 3
 	/// Category boosted by user.
 	var/datum/hunting_category/preferred_hunt
 	/// Hunting map influences
@@ -47,6 +47,28 @@
 	. += span_info("Higher hunting skill spawns better animals more often.")
 	. += span_info("If you see a white stag, think twice before attacking. Maybe just run, to be safe.")
 	. += span_info("Right click your eyeball to get directions to the nearest track you are tracking, provided it is on screen.")
+	. += span_info("Can be dug up and cleared away using a spade or shovel. This inflicts a hefty cooldown on hunting/removing tracks")
+
+/obj/effect/hunting_track/attackby(obj/item/I, mob/user, params)
+	if(I.tool_behaviour == TOOL_SHOVEL)
+		var/datum/component/hunting_blocker/B = user.GetComponent(/datum/component/hunting_blocker)
+		if(!B)
+			B = user.AddComponent(/datum/component/hunting_blocker)
+
+		if(!B.can_start_hunt())
+			to_chat(user, span_notice("You've recently disturbed a trail, it wouldn't be wise to demolish another so soon."))
+			return TRUE
+
+		user.visible_message(
+			span_notice("[user] begins digging up [src]..."),
+			span_notice("You begin digging up [src]...")
+		)
+		if(I.use_tool(src, user, 2 SECONDS, volume = 50))
+			to_chat(user, span_notice("You flatten and dig away the disturbed mound of earth."))
+			// Trigger the cooldown so tracks cannot be spammed/cleared repeatedly
+			B.register_hunt()
+			qdel(src)
+		return TRUE
 
 /obj/effect/hunting_track/examine(mob/user)
 	. = ..()
@@ -71,7 +93,10 @@
 			bonus = hunt_category.get_area_bonus(A) // TA EDIT END
 		if(bonus)
 			. += "<br><details><summary><span class='nicegreen'>Environmental Analysis</span></summary>"
-			. += span_info("The local terrain ([A.name]) increases discovery chances by <b>[bonus]%</b>.")
+			if(bonus > 0)
+				. += span_info("The local terrain ([A.name]) increases discovery chances by <b>[bonus]%</b>.")
+			else if (bonus < 0)
+				. += span_info("The local terrain ([A.name]) decreases discovery chances by <b>[abs(bonus)]%</b>.")
 			. += "</details>"
 
 /obj/effect/hunting_track/attack_right(mob/user)
@@ -118,7 +143,7 @@
 
 /obj/effect/hunting_track/proc/setup_hunter_visibility()
 	// Make the physical object invisible to everyone else
-	invisibility = INVISIBILITY_MAXIMUM 
+	invisibility = INVISIBILITY_MAXIMUM
 
 	for(var/datum/weakref/W in party_refs)
 		var/mob/living/L = W.resolve()
@@ -148,7 +173,7 @@
 
 	// // Just in case anyone finds an invisible track somehow, this way they can't mess up someone's trail.
 	// if(H && user != H)
-	// 	return
+	//	return
 
 	if(get_dist(user, src) < 1)
 		to_chat(user, span_warning("You are standing too close to see where the trail leads. Step back."))
@@ -183,12 +208,12 @@
 	var/base_dy = clamp(src.y - user.y, -1, 1)
 
 	if(!base_dx && !base_dy)
-		base_dy = 1 
+		base_dy = 1
 
 	var/list/search_patterns = list(
-		list(base_dx, base_dy),   // Forward
-		list(-base_dy, base_dx),  // Left
-		list(base_dy, -base_dx)   // Right
+		list(base_dx, base_dy),	// Forward
+		list(-base_dy, base_dx),	// Left
+		list(base_dy, -base_dx)	// Right
 	)
 
 	var/base_dist = 9
@@ -253,7 +278,7 @@
 				next_trail.hunt_category = src.hunt_category
 				next_trail.locked_track_icon = src.locked_track_icon
 				next_trail.linked_areas = src.linked_areas
-				next_trail.color = "#ff9100" 
+				next_trail.color = "#ff9100"
 				next_trail.linked_areas = src.linked_areas
 				next_trail.plane = GAME_PLANE_HIGHEST
 				next_trail.setup_hunter_visibility()
@@ -306,7 +331,7 @@
 	// Update the track's state
 	party_refs = valid_party
 	hunter_ref = WEAKREF(current_leader)
-	
+
 	return highest_skill
 
 /obj/effect/hunting_track/proc/distribute_party_exp(base_amount)
@@ -354,6 +379,8 @@
 		return FALSE
 	if(istransparentturf(T))
 		return FALSE
+	if(istype(T, /turf/open/lava) || istype(T, /turf/open/water))
+		return FALSE
 	// Check for wall-like objects
 	if(T.is_blocked_turf())
 		return FALSE
@@ -372,7 +399,10 @@
 
 /obj/effect/hunting_track/proc/start_fade_animation()
 	animate(src, alpha = 0, time = 200, easing = EASE_OUT)
-	addtimer(CALLBACK(GLOBAL_PROC, .proc/qdel, src), 20 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(delete_track)), 20 SECONDS)
+
+/obj/effect/hunting_track/proc/delete_track()
+	qdel(src)
 
 /obj/effect/hunting_track/proc/initialize_hunt_chain(mob/living/user)
 	var/skill = user.get_skill_level(/datum/skill/misc/hunting)

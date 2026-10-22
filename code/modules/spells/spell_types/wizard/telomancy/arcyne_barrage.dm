@@ -45,7 +45,7 @@
 
 /datum/action/cooldown/spell/projectile/arcyne_barrage/get_spell_statistics(mob/living/user)
 	var/list/stats = ..()
-	stats += span_info("Damage: 45 per bolt ([bolts_per_pulse] per pulse, pierces up to 5)")
+	stats += span_info("Damage: [SPELL_DMG(45)] per bolt ([bolts_per_pulse] per pulse, pierces up to 5)")
 	return stats
 
 /datum/action/cooldown/spell/projectile/arcyne_barrage/before_cast(atom/cast_on)
@@ -118,10 +118,7 @@
 	bolt.fired_from = get_turf(H)
 	bolt.def_zone = BODY_ZONE_CHEST
 	bolt.spell_impact_intensity = SPELL_IMPACT_MEDIUM
-	bolt.accuracy += (H.STAINT - 9) * 4
-	bolt.bonus_accuracy += (H.STAINT - 8) * 3
-	if(H.mind)
-		bolt.bonus_accuracy += (H.get_skill_level(associated_skill) * 5)
+	H.apply_spell_accuracy(bolt)
 	bolt.setAngle(angle)
 	bolt.fire()
 
@@ -129,19 +126,17 @@
 	name = "greater arcyne bolt"
 	icon = 'icons/obj/magic_projectiles.dmi'
 	icon_state = "arcyne_bolt"
-	damage = 45
+	damage = SPELL_DMG(45)
 	nodamage = FALSE
 	damage_type = BRUTE
 	woundclass = BCLASS_BLUNT
 	flag = "blunt"
 	range = 30
 	speed = 3
-	accuracy = 60
 	guard_deflectable = TRUE
 	expose_caster_on_deflect = TRUE
-	npc_simple_damage_mult = 1.5
-	intdamfactor = 1
-	movement_type = UNSTOPPABLE
+	intdamfactor = SPELL_INTDAM(1)
+	spell_damage_scaled = TRUE
 	ricochets_max = 5
 	ricochet_chance = 100
 	ricochet_auto_aim_angle = 40

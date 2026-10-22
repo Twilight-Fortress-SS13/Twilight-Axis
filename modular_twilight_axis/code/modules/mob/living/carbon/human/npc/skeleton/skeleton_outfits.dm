@@ -1,6 +1,9 @@
 // Rockhill style medium skeleton
 /mob/living/carbon/human/species/skeleton/npc/rockhill
-	skel_outfit = /datum/outfit/job/roguetown/skeleton/npc/rockhill
+
+/mob/living/carbon/human/species/skeleton/npc/rockhill/after_creation()
+	. = ..()
+	equipOutfit(new /datum/outfit/job/roguetown/skeleton/npc/rockhill)
 
 /datum/outfit/job/roguetown/skeleton/npc/rockhill/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -56,7 +59,10 @@
 	H.adjust_skillrank(/datum/skill/misc/climbing, 3, TRUE)
 
 /mob/living/carbon/human/species/skeleton/npc/cultist
-	skel_outfit = /datum/outfit/job/roguetown/skeleton/npc/cultist
+
+/mob/living/carbon/human/species/skeleton/npc/cultist/after_creation()
+	. = ..()
+	equipOutfit(new /datum/outfit/job/roguetown/skeleton/npc/cultist)
 
 /datum/outfit/job/roguetown/skeleton/npc/cultist/pre_equip(mob/living/carbon/human/H)
 	..()

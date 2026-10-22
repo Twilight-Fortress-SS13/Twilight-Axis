@@ -20,16 +20,17 @@ The priests will whisper that you follow the Sun-Thief. Frown, shake your head, 
 	max_pq = null
 	required = TRUE
 	round_contrib_points = 3
-	cmode_music = 'sound/music/combat_noble.ogg'
+	cmode_music = sound("sound/music/combat_noble.ogg")
 	is_quest_giver = TRUE
 
 	job_traits = list(TRAIT_SEEPRICES, TRAIT_CICERONE)
-	virtue_restrictions = list(/datum/virtue/utility/skilled, /datum/virtue/utility/apprentice) //Commerce role, not a craftsman.
+	virtue_restrictions = list(/datum/virtue/utility/skilled, /datum/virtue/utility/apprentice, /datum/virtue/utility/homesteader, /datum/virtue/utility/granary) //Commerce role, not a craftsman.
 
 	advclass_cat_rolls = list(CTAG_MERCH = 2)
 	job_subclasses = list(
 		/datum/advclass/merchant
 	)
+	has_subprefs = FALSE // only one subclass
 
 /datum/job/roguetown/merchant/after_spawn(mob/living/H, mob/M, latejoin)
 	. = ..()

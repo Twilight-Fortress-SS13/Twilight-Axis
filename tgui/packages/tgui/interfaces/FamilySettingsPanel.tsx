@@ -443,28 +443,13 @@ const FamilyTypeCardView = memo(function FamilyTypeCardView(
   );
 });
 
-const FAMILY_WINDOW_FULLSCREEN_SIZE = 10000;
+const FAMILY_WINDOW_WIDTH = 960;
+const FAMILY_WINDOW_HEIGHT = 1000;
 
 function closeFamilyWindow() {
   suspendStart();
 }
 
-function fitFamilyWindowToScreen() {
-  const pixelRatio = window.devicePixelRatio || 1;
-  const screen = window.screen as Screen & {
-    availLeft?: number;
-    availTop?: number;
-  };
-  const screenX = Math.round((screen.availLeft || 0) * pixelRatio);
-  const screenY = Math.round((screen.availTop || 0) * pixelRatio);
-  const screenW = Math.round(screen.availWidth * pixelRatio);
-  const screenH = Math.round(screen.availHeight * pixelRatio);
-
-  Byond.winset(Byond.windowId, {
-    pos: `${screenX},${screenY}`,
-    size: `${screenW}x${screenH}`,
-  });
-}
 
 export const FamilySettingsPanel = () => {
   const { act, data } = useBackend<BackendData>();
@@ -637,10 +622,6 @@ export const FamilySettingsPanel = () => {
   const usesRelativeRole = isMemberMode;
   const allowPolygamy = isMemberMode;
 
-  useEffect(() => {
-    const timer = window.setTimeout(fitFamilyWindowToScreen, 0);
-    return () => window.clearTimeout(timer);
-  }, []);
 
   const handleResetToDefaults = () => {
     setFamilyType('none');
@@ -716,10 +697,10 @@ export const FamilySettingsPanel = () => {
   return (
     <Window
       title="Настройки семьи"
-      width={FAMILY_WINDOW_FULLSCREEN_SIZE}
-      height={FAMILY_WINDOW_FULLSCREEN_SIZE}
+      width={FAMILY_WINDOW_WIDTH}
+      height={FAMILY_WINDOW_HEIGHT}
     >
-      <Window.Content style={{ backgroundImage: 'none' }}>
+      <Window.Content scrollable style={{ backgroundImage: 'none' }}>
         <div className="FamilySettingsPanel">
           <div className="FamilySettingsPanel__header">
             <div className="FamilySettingsPanel__header-left">

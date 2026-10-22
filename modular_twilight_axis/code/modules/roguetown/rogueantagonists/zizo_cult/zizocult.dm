@@ -56,7 +56,7 @@
 	to_chat(H, span_userdanger("I'm a member of Ascension cult of zizo."))
 	owner.announce_objectives()
 	owner.special_role = "Zizoid Lackey"
-	H.cmode_music = 'sound/music/combat_cult.ogg'
+	H.cmode_music = sound("sound/music/combat_cult.ogg")
 	H.playsound_local(get_turf(H), 'sound/music/maniac.ogg', 80, FALSE, pressure_affected = FALSE)
 	add_verb(H, /mob/living/carbon/human/proc/communicate)
 	add_antag_hud(antag_hud_type, antag_hud_name, owner.current)
@@ -240,7 +240,7 @@
 
 	if(stat >= UNCONSCIOUS || !can_speak_vocal())
 		return
-	
+
 	var/mob/living/carbon/human/H = src
 
 	to_chat(H, "Number of cultists: [SSmapping.retainer.cultist_number]")
@@ -461,17 +461,17 @@
 	. = ..()
 	if(.)
 		return
-	
+
 	if(!sigil_type)
 		return
-	
+
 	if(!istype(user.patron, /datum/patron/inhumen/zizo))
 		return
-	
+
 	if(user.mind && user.mind.has_antag_datum(/datum/antagonist/skeleton))
 		to_chat(user, span_warning("Skelet not allowed."))
 		return
-	
+
 	show_ritual_tgui(user)
 
 /obj/effect/decal/cleanable/sigil/N
@@ -498,60 +498,76 @@
 /obj/effect/decal/cleanable/sigil/NW
 	icon_state = "NW"
 
-/turf/open/floor/proc/generateSigils(mob/M, input)
-	var/turf/T = get_turf(M.loc)
-	for(var/obj/A in T)
-		if(istype(A, /obj/effect/decal/cleanable/sigil))
-			to_chat(M, span_warning("There is already a sigil here."))
-			return
-		if(A.density && !(A.flags_1 & ON_BORDER_1))
-			to_chat(M, span_warning("There is already something here."))
-			return
-	if(do_after(M, 5 SECONDS))
-		M.bloody_hands--
-		M.update_inv_gloves()
-		var/obj/effect/decal/cleanable/sigil/C = new(src)
-		C.sigil_type = input
-		playsound(M, 'sound/items/write.ogg', 100)
-		var/list/sigilsPath = list(
-			/obj/effect/decal/cleanable/sigil/N,
-			/obj/effect/decal/cleanable/sigil/S,
-			/obj/effect/decal/cleanable/sigil/E,
-			/obj/effect/decal/cleanable/sigil/W,
-			/obj/effect/decal/cleanable/sigil/NE,
-			/obj/effect/decal/cleanable/sigil/NW,
-			/obj/effect/decal/cleanable/sigil/SE,
-			/obj/effect/decal/cleanable/sigil/SW
-		)
+/turf/open/floor/proc/can_generate_sigils(mob/M)
+	var/list/required_turfs = list(src)
+	for(var/direction in GLOB.alldirs)
+		var/turf/open/floor/floor = get_step(src, direction)
+		if(!istype(floor))
+			to_chat(M, span_warning("There is not enough space to draw a sigil here."))
+			return FALSE
+		required_turfs += floor
 
-		for(var/i = 1; i <= GLOB.alldirs.len; i++)
-			var/turf/floor = get_step(src, GLOB.alldirs[i])
-			var/sigil = sigilsPath[i]
+	for(var/turf/open/floor/floor in required_turfs)
+		for(var/obj/A in floor)
+			if(istype(A, /obj/effect/decal/cleanable/sigil))
+				to_chat(M, span_warning("There is already a sigil here."))
+				return FALSE
+			if(A.density && !(A.flags_1 & ON_BORDER_1))
+				to_chat(M, span_warning("There is not enough space to draw a sigil here."))
+				return FALSE
 
-			new sigil(floor)
+	return TRUE
+
+/turf/open/floor/proc/generateSigils(mob/living/carbon/human/M)
+	if(!M.can_draw_sigil() || !can_generate_sigils(M))
+		return
+
+	if(!do_after(M, 5 SECONDS, extra_checks = CALLBACK(M, TYPE_PROC_REF(/mob/living/carbon/human, can_draw_sigil))))
+		return
+
+	if(!M.can_draw_sigil() || !can_generate_sigils(M))
+		return
+
+	M.bloody_hands--
+	M.update_inv_gloves()
+	var/obj/effect/decal/cleanable/sigil/C = new(src)
+	C.sigil_type = "Ritual"
+	playsound(M, 'sound/items/write.ogg', 100)
+	var/list/sigilsPath = list(
+		/obj/effect/decal/cleanable/sigil/N,
+		/obj/effect/decal/cleanable/sigil/S,
+		/obj/effect/decal/cleanable/sigil/E,
+		/obj/effect/decal/cleanable/sigil/W,
+		/obj/effect/decal/cleanable/sigil/NE,
+		/obj/effect/decal/cleanable/sigil/NW,
+		/obj/effect/decal/cleanable/sigil/SE,
+		/obj/effect/decal/cleanable/sigil/SW
+	)
+
+	for(var/i = 1; i <= GLOB.alldirs.len; i++)
+		var/turf/floor = get_step(src, GLOB.alldirs[i])
+		var/sigil = sigilsPath[i]
+		new sigil(floor)
+
+/mob/living/carbon/human/proc/can_draw_sigil()
+	return !incapacitated() && bloody_hands > 0
 
 /mob/living/carbon/human/proc/draw_sigil()
 	set name = "Draw Sigil"
 	set category = "ZIZO"
-	if(stat >= UNCONSCIOUS)
-		return
-	
-	if(mind && mind.has_antag_datum(/datum/antagonist/skeleton))
+	if(incapacitated())
 		return
 
-	var/list/runes = list("Servantry", "Transmutation", "Fleshcrafting", "Weaponary")
+	if(mind && mind.has_antag_datum(/datum/antagonist/skeleton))
+		return
 
 	if(!bloody_hands)
 		to_chat(src, span_danger("My hands aren't bloody enough."))
 		return
 
-	var/input = input("Sigil Type", "ZIZO") as null|anything in runes
-	if(!input)
-		return
-
 	var/turf/open/floor/T = get_turf(src)
 	if(istype(T))
-		T.generateSigils(src, input)
+		T.generateSigils(src)
 
 /mob/living/carbon/human/proc/release_minion()
 	set name = "Release Lackey"
