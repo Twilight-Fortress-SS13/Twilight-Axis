@@ -545,3 +545,8 @@
 			modifiers = 6
 
 	return modifiers ? max(base_slots * modifiers, base_slots) : base_slots
+
+/datum/loadout_item/physicianhat
+	name = "Doctor's Hat"
+	category = "Головные уборы"
+	path = /obj/item/clothing/head/roguetown/physician

@@ -84,3 +84,22 @@ map_files = ["drowvillage_kingtomb_1.dmm","drowvillage_kingtomb_2.dmm","drowvill
 directory = "_maps/twilight_axis/templates/dungeons/drowvillage_kingtomb/"
 required_map = "dun_world.dmm"
 coordinates = [2, 317, 1]
+
+# dunworld physician wardrobes: preserve each tile's contents and add a doctor's hat
+[templates.dunworld_apothecary_hat_south]
+map_files = ["apothecary_wardrobe.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/physician_wardrobes/"
+required_map = "dun_world.dmm"
+coordinates = [91, 117, 3]
+
+[templates.dunworld_apothecary_hat_north]
+map_files = ["apothecary_wardrobe.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/physician_wardrobes/"
+required_map = "dun_world.dmm"
+coordinates = [91, 121, 3]
+
+[templates.dunworld_head_physician_hat]
+map_files = ["head_physician_wardrobe.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/physician_wardrobes/"
+required_map = "dun_world.dmm"
+coordinates = [93, 123, 4]
