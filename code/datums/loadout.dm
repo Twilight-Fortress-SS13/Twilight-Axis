@@ -229,11 +229,6 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Головные уборы"
 	path = /obj/item/clothing/head/roguetown/veiled
 
-/datum/loadout_item/physicianhat
-	name = "Doctor's Hat"
-	category = "Головные уборы"
-	path = /obj/item/clothing/head/roguetown/physician
-
 /datum/loadout_item/archercap
 	name = "Archer's Cap"
 	category = "Головные уборы"

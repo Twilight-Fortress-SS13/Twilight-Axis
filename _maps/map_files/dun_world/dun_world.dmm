@@ -1074,7 +1074,6 @@
 /obj/item/clothing/under/roguetown/trou/leather/mourning,
 /obj/item/clothing/under/roguetown/tights/black,
 /obj/item/clothing/suit/roguetown/shirt/robe/physician,
-/obj/item/clothing/head/roguetown/physician,
 /obj/item/repair_kit/bad,
 /turf/open/floor/rogue/ruinedwood/herringbone,
 /area/rogue/indoors/town/physician)
@@ -18133,7 +18132,6 @@
 /obj/item/rogueweapon/huntingknife/idagger/steel,
 /obj/item/flashlight/flare/torch/lantern,
 /obj/item/clothing/suit/roguetown/shirt/robe/physician,
-/obj/item/clothing/head/roguetown/physician,
 /turf/open/floor/rogue/hexstone,
 /area/rogue/indoors/town/physician)
 "diI" = (
