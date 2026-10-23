@@ -899,3 +899,8 @@
 		if(get_altdetail_color())
 			pic2.color = get_altdetail_color()
 		add_overlay(pic2)
+
+/datum/loadout_item/physicianhat
+	name = "Doctor's Hat"
+	category = "Головные уборы"
+	path = /obj/item/clothing/head/roguetown/physician
