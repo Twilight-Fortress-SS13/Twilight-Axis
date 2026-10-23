@@ -311,7 +311,7 @@
 		/obj/item/clothing/cloak/tabard/stabard/guard,
 		/obj/item/clothing/cloak/tabard/knight,
 		/obj/item/clothing/cloak/tabard/stabard/surcoat/bailiff,
-		/obj/item/rogueweapon/mace/cudgel/justice,
+		/obj/item/rogueweapon/mace/cudgel/flanged/justice,
 		/obj/item/clothing/suit/roguetown/armor/brigandine/retinue,
 		/obj/item/rogueweapon/lordscepter,
 		/obj/item/clothing/head/roguetown/crown,

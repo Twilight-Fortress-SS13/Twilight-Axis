@@ -630,7 +630,7 @@
 	if(istype(held, /obj/item/reagent_containers/food/snacks/grown/berries))
 		return TRUE
 	var/obj/item/reagent_containers/food/snacks/food = held
-	if(food.foodtype & (FRUIT | VEGETABLES | GRAIN))
+	if(istype(held, /obj/item/reagent_containers/food/snacks/grown) && (food.dish_type & (DISH_FRUIT | DISH_VEGETABLE | DISH_BREAD)))
 		return TRUE
 	var/static/list/extra_harvest_types = list(
 		/obj/item/reagent_containers/food/snacks/grown/garlick/rogue,

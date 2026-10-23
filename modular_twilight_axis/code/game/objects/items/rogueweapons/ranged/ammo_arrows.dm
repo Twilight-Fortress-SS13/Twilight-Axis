@@ -1,5 +1,5 @@
 /obj/item/ammo_casing/caseless/rogue/arrow
-	icon = 'icons/roguetown/weapons/ranged/arrow_mob.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/ranged/arrow_mob.dmi'
 	pixel_x = -25
 	pixel_y = -25
 	inhand_x_dimension = 64

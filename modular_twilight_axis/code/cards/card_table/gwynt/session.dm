@@ -733,7 +733,7 @@
 
 /datum/ccg_match/proc/destroy_played_card(side, row, datum/ccg_played_card/played)
 	board[side][row] -= played
-	discarded[played.owner_side] += played.card_id
+	discarded[side] += played.card_id
 	var/datum/ccg_card/card = ccg_card(played.card_id)
 	if(card?.effect == CCG_EFFECT_AVENGER && card.avenger_card && ccg_card(card.avenger_card))
 		add_played_card(side, row, card.avenger_card, played.owner_side)
@@ -883,7 +883,7 @@
 				if(played.card_id in side_carryover)
 					side_carryover -= played.card_id
 					continue
-				discarded[played.owner_side] += played.card_id
+				discarded[side] += played.card_id
 	for(var/datum/ccg_played_card/played in weather_board)
 		discarded[played.owner_side] += played.card_id
 	for(var/side in list(CCG_SIDE_ONE, CCG_SIDE_TWO))

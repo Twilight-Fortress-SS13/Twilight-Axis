@@ -22,6 +22,16 @@
 	if(!CheckAdminHref(href, href_list))
 		return
 
+	if(href_list["ta_patron_followers"]) // TA EDIT
+		if(check_rights(R_ADMIN)) // TA EDIT
+			ta_show_patron_followers() // TA EDIT
+		return // TA EDIT
+
+	if(href_list["ta_patron_narrate"]) // TA EDIT
+		if(check_rights(R_ADMIN)) // TA EDIT
+			ta_narrate_patron_followers(href_list["ta_patron_narrate"]) // TA EDIT
+		return // TA EDIT
+
 	if(href_list["read_letter"])
 		var/index = text2num(href_list["read_letter"])
 		if(index >= 1 && index <= length(SSroguemachine.letter_archive))

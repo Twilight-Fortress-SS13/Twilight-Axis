@@ -52,13 +52,17 @@
 		force = H.move_force)
 // Do not call handle_knockback like in knockback cuz that means it will hardstun.
 
-/datum/intent/mace/smash/prewarning() // TA EDIT START
-	if(mastermob)
-		stop_smash_sound()
-		smash_sound_channel = SSsounds.random_available_channel()
-		smash_sound_listeners = playsound(mastermob, pick('sound/combat/wooshes/blunt/wooshhuge (2).ogg'), 100, FALSE, channel = smash_sound_channel)
+/datum/intent/mace/smash/prewarning() // TA EDIT
+	if(!mastermob || mastermob.next_move > world.time)
+		return
+	if(last_prewarning_sound > world.time)
+		return
+	last_prewarning_sound = world.time + clickcd
+	stop_smash_sound() // TA EDIT
+	smash_sound_channel = SSsounds.random_available_channel() // TA EDIT
+	smash_sound_listeners = playsound(mastermob, pick('sound/combat/wooshes/blunt/wooshhuge (2).ogg'), 100, FALSE, channel = smash_sound_channel) // TA EDIT
 
-/datum/intent/mace/smash/proc/stop_smash_sound()
+/datum/intent/mace/smash/proc/stop_smash_sound() // TA EDIT
 	if(smash_sound_channel)
 		for(var/mob/listener as anything in smash_sound_listeners)
 			if(!QDELETED(listener))
@@ -66,13 +70,13 @@
 	smash_sound_listeners = null
 	smash_sound_channel = null
 
-/datum/intent/mace/smash/on_mouse_up()
+/datum/intent/mace/smash/on_mouse_up() // TA EDIT
 	stop_smash_sound()
 	return ..()
 
-/datum/intent/mace/smash/Destroy()
+/datum/intent/mace/smash/Destroy() // TA EDIT
 	stop_smash_sound()
-	return ..() // TA EDIT START END
+	return ..()
 
 /datum/intent/mace/smash/lesser
 	name = "one-handed smash" //Exclusive to Warhammers, and other mace-styled bludgeons that can only be wielded in one hand.
@@ -609,21 +613,14 @@
 	smeltresult = /obj/item/ingot/copper
 	wdefense = 2
 
-/obj/item/rogueweapon/mace/cudgel/justice
+/obj/item/rogueweapon/mace/cudgel/flanged/justice
 	name = "\"Justice\""
 	desc = "The icon of the right of office of the Marshal. While mostly ceremonial in design, it serves its purpose in dishing out some much needed justice."
 	force = 30
 	icon_state = "justice"
-	possible_item_intents = list(/datum/intent/mace/strike, /datum/intent/mace/smash, /datum/intent/effect/daze, /datum/intent/mace/strike/dislocate)
-	smeltresult = /obj/item/ingot/steel
-	wlength = WLENGTH_SHORT
-	w_class = WEIGHT_CLASS_NORMAL
-	wbalance = WBALANCE_SWIFT
-	resistance_flags = FIRE_PROOF
-	minstr = 7
-	wdefense = 5
+	wdefense = 6
 
-/obj/item/rogueweapon/mace/cudgel/justice/getonmobprop(tag)
+/obj/item/rogueweapon/mace/cudgel/flanged/justice/getonmobprop(tag) // TA EDIT
 	. = ..()
 	if(tag)
 		switch(tag)

@@ -613,6 +613,10 @@
 #define INDEXER_MISTAKE_MIN 20 // minimum false positive chance roll for heresy. a reduced value is used for the antag checks. used to be 1
 
 /obj/structure/roguemachine/mail/attackby(obj/item/P, mob/user, params)
+	if(istype(P, /obj/item/parcel/towner_caravan))
+		var/obj/item/parcel/towner_caravan/box = P
+		box.post_to_owner(src, user)
+		return
 	if(istype(P, /obj/item/merctoken))
 		if(ishuman(user))
 			var/mob/living/carbon/human/H = user
@@ -901,7 +905,7 @@
 								GLOB.cursedsamples += ", [I.paired.subject.mind]"
 							else
 								GLOB.cursedsamples += "[I.paired.subject.mind]"
-					else if (second_fp_chance && prob(mistake/((HAS_TRAIT(I.paired.subject, TRAIT_VAMP_BITTEN) || HAS_TRAIT(I.paired.subject, TRAIT_PALLID)) ? 2 : 4)))
+					else if (second_fp_chance && prob(mistake/((HAS_TRAIT(I.paired.subject, TRAIT_VAMP_BITTEN) || I.paired.subject.has_flaw(/datum/charflaw/sullied)) ? 2 : 4)))
 						if(HAS_TRAIT(I.paired.subject.mind, TRAIT_CBLOOD))
 							stopfarming = TRUE
 						if(!stopfarming)
@@ -985,6 +989,11 @@
 				else
 					to_chat(user, span_warning("[I] requires either a signature, or an INDEXER with their blood."))
 				return
+
+	if(istype(P, /obj/item/paper/inquisition_suspicion)) // TA EDIT START
+		var/obj/item/paper/inquisition_suspicion/I = P
+		I.submit_to_otava(user)
+		return // TA EDIT END
 
 	if(istype(P, /obj/item/paper) || istype(P, /obj/item/smallDelivery))
 		if(inqcoins)
@@ -1325,6 +1334,8 @@
 		var/datum/inqports/PA = GLOB.inqsupplies[path]
 		if(!PA)
 			return
+		if(inqcoins < PA.marquescost || (PA.maximum && PA.remaining <= 0) || !PA.can_purchase(usr)) // TA EDIT
+			return display_marquette(usr) // TA EDIT
 
 		inqcoins -= PA.marquescost
 		if(PA.maximum)
@@ -1343,7 +1354,10 @@
 		var/turf/T = pick(turfs)
 		var/pathi = pick(PA.item_type)
 		playsound(T, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
-		new pathi(get_turf(T))
+		var/atom/movable/purchased_item = new pathi(get_turf(T)) // TA EDIT START
+		if(istype(purchased_item, /obj/item/paper/inquisition_suspicion))
+			var/obj/item/paper/inquisition_suspicion/purchased_writ = purchased_item
+			purchased_writ.record_purchase(usr, src) // TA EDIT END
 		refresh_marquette = TRUE
 
 	if(refresh_marquette)

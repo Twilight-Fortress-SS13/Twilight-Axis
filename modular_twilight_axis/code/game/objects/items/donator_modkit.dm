@@ -377,3 +377,51 @@
 	target_items = list(/obj/item/clothing/mask/rogue/facemask)
 	result_item = /obj/item/clothing/mask/rogue/overseer_silver
 
+/obj/item/enchantingkit/hussar_protective_coat
+	name = "hussar protective coat morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Hardened Leather Coat."
+	target_items = list(
+		/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/hussar)
+	icon_loadout = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/hussar
+
+/obj/item/enchantingkit/hussar_shirt
+	name = "hussar shirt morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Gambeson or Padded Gambeson."
+	target_items = list(
+		/obj/item/clothing/suit/roguetown/armor/gambeson = /obj/item/clothing/suit/roguetown/armor/gambeson/hussar,
+		/obj/item/clothing/suit/roguetown/armor/gambeson/heavy = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hussar)
+	icon_loadout = /obj/item/clothing/suit/roguetown/armor/gambeson/hussar
+
+/obj/item/enchantingkit/hussar_breeches
+	name = "hussar breeches morphing elixir"
+	desc = "A small container of special morphing dust. Required: Brigandine Chausses or Hardened Leather Trousers."
+	target_items = list(
+		/obj/item/clothing/under/roguetown/brigandinelegs = /obj/item/clothing/under/roguetown/trou/leather/hussar,
+		/obj/item/clothing/under/roguetown/heavy_leather_pants = /obj/item/clothing/under/roguetown/trou/leather/hussar)
+	icon_loadout = /obj/item/clothing/under/roguetown/trou/leather/hussar
+
+/obj/item/enchantingkit/hussar_pistol
+	name = "hussar pistol morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Arquebus Pistol."
+	target_items = list(
+		/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/hussar)
+	icon_loadout = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/hussar
+
+/obj/item/enchantingkit/hussar_sabre
+	name = "hussar officer's sabre morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Longsword or Sabre."
+	target_items = list(
+		/obj/item/rogueweapon/sword/long = /obj/item/rogueweapon/sword/sabre/hussar,
+		/obj/item/rogueweapon/sword/sabre = /obj/item/rogueweapon/sword/sabre/hussar)
+	icon_loadout = /obj/item/rogueweapon/sword/sabre/hussar
+
+/obj/item/enchantingkit/hussar_sabre/inherit_item_mechanics(obj/item/source_item, obj/item/result_item)
+	. = ..()
+	result_item.bigboy = FALSE
+	result_item.gripsprite = FALSE
+	result_item.experimental_inhand = TRUE
+	result_item.experimental_onhip = FALSE
+	result_item.experimental_onback = TRUE
+	result_item.pixel_x = 0
+	result_item.pixel_y = 0
+	result_item.dropshrink = null

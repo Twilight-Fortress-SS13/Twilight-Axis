@@ -42,6 +42,7 @@ GLOBAL_PROTECT(admin_verbs_default)
 	/client/proc/pull_book_file_names,
 	/client/proc/admin_spread_effect,
 	/client/proc/open_bounty_menu,
+	/client/proc/open_inquisition_suspicion_menu, // TA EDIT
 	/client/proc/remove_bounty,
 	// RATWOOD MODULAR START
 	/client/proc/bunker_bypass,
@@ -250,6 +251,7 @@ GLOBAL_PROTECT(admin_verbs_debug)
 	/client/proc/performance_stress_test, // Uncomment these if you tick the performance stress test .dm file
 	/client/proc/cleanup_stress_test_mobs,
 	/client/proc/cmd_admin_economic_panel,
+	/client/proc/cmd_admin_quest_debug_panel,
 	/client/proc/cmd_admin_ledger_report,
 	/client/proc/cmd_admin_view_chronicle,
 	/client/proc/cmd_admin_view_economics,

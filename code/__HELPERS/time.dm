@@ -160,7 +160,7 @@ GLOBAL_VAR_INIT(date_override_offset, 0)
 				SStreasury.tick_burgher_pledge()
 				SStreasury.tick_rumor_points()
 				SStreasury.tick_loans()
-				SStreasury.tick_poll_tax()
+				SStreasury.tick_poll_levy_arrears()
 			SScity_assembly?.on_day_tick()
 			process_manor_production_cycle(TRUE, FALSE) //TA EDIT
 		if(GLOB.tod == "dusk") //TA EDIT

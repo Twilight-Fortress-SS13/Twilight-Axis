@@ -26,8 +26,8 @@
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
 		/datum/skill/craft/tanning = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/craft/spiritism = SKILL_LEVEL_MASTER,
 	)
+	extra_context = "This subclass has two choices: Spiritism (Master spiritism, shamanic totems) or Miracles (Journeyman Holy, capped to T2). You cannot walk both paths."
 
 /datum/outfit/job/roguetown/mercenary/atgervi_shaman
 	allowed_patrons = ALL_GRONNIC_PATRONS //Variant of the 'ALL_INHUMEN_PATRONS' tag, with Abyssor and Dendor as situational additions. Do not add any more to this, no matter what.
@@ -37,10 +37,24 @@
 	H.set_blindness(0)
 	to_chat(H, span_warning("You are a Shaman of the Fjall, The Northern Empty. Shamans are savage combatants who commune with the Ecclesical Beast gods through ritualistic violence, rather than idle prayer."))
 	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/warrior]
+	var/is_miracles = FALSE
 	if(H.mind)
-		for(var/recipe_type in shamanic_totem_block_recipe_types)
-			H.mind.teach_crafting_recipe(recipe_type)
-	H.grant_shamanic_totem_verbs(TRUE)
+		var/paths = list("Spiritism", "Miracles")
+		var/path_choice = input(H, "Choose your path", "YOUR CALLING") as anything in paths
+		is_miracles = (path_choice == "Miracles")
+	if(is_miracles)
+		var/datum/devotion/C = new /datum/devotion(H, H.patron)
+		C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_WEAK, devotion_limit = CLERIC_REQ_1)	//Capped to T2 miracles, same as the old commented-out Atgervi Shaman.
+		H.adjust_skillrank_up_to(/datum/skill/magic/holy, SKILL_LEVEL_JOURNEYMAN, TRUE)
+		if(H.patron?.type == /datum/patron/inhumen/zizo)
+			H.mind?.AddSpell(new /datum/action/cooldown/spell/minion_order)
+			H.mind?.AddSpell(new /datum/action/cooldown/spell/gravemark)
+	else
+		H.adjust_skillrank_up_to(/datum/skill/craft/spiritism, SKILL_LEVEL_MASTER, TRUE)
+		if(H.mind)
+			for(var/recipe_type in shamanic_totem_block_recipe_types)
+				H.mind.teach_crafting_recipe(recipe_type)
+		H.grant_shamanic_totem_verbs(TRUE)
 
 	head = /obj/item/clothing/head/roguetown/helmet/leather/shaman_hood
 	gloves = /obj/item/clothing/gloves/roguetown/angle/gronnfur

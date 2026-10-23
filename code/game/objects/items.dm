@@ -710,11 +710,11 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		if(istype(src, /obj/item/rogueweapon))
 			var/obj/item/rogueweapon/W = src
 			if(W.special)
-				inspec += "[W.special.get_examine()]"
-		else if(istype(src, /obj/item/gun/ballistic/revolver/grenadelauncher/bow)) //TA EDIT START
+				inspec += "[W.get_special().get_examine()]" // TA EDIT
+		else if(istype(src, /obj/item/gun/ballistic/revolver/grenadelauncher/bow)) // TA EDIT
 			var/obj/item/gun/ballistic/revolver/grenadelauncher/bow/B = src
 			if(B.special)
-				inspec += "[B.special.get_examine()]" //TA EDIT END
+				inspec += "[B.special.get_examine()]" // TA EDIT
 
 		if(istype(src, /obj/item/rogueweapon/shield))
 			var/obj/item/rogueweapon/shield/S = src

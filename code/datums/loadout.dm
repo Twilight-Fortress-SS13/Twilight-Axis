@@ -3592,6 +3592,80 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 // COMMANDANT SET END
 
+// HUSSAR SET START
+
+/datum/loadout_item/hussar_donator_fur_cap
+	name = "Donator Item - Fur Hussar Cap"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/head/roguetown/duelhat/hussar_cap
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+/datum/loadout_item/hussar_donator_riding_jacket
+	name = "Donator Item - Hussar Riding Jacket"
+	category = list("Плащи", "Донат")
+	path = /obj/item/clothing/cloak/hussar_riding_jacket
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+/datum/loadout_item/hussar_donator_protective_coat
+	name = "Donator Kit - Hussar Protective Coat - Required: Hardened Leather Coat"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/hussar_protective_coat
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+/datum/loadout_item/hussar_donator_shirt
+	name = "Donator Kit - Hussar Shirt - Required: Gambeson or Padded Gambeson"
+	category = list("Одежда", "Донат")
+	path = /obj/item/enchantingkit/hussar_shirt
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+/datum/loadout_item/hussar_donator_sash
+	name = "Donator Item - Hussar Sash"
+	category = list("Одежда", "Донат")
+	path = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/hussar
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+/datum/loadout_item/hussar_donator_breeches
+	name = "Donator Kit - Hussar Breeches - Required: Brigandine Chausses or Hardened Leather Trousers"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/hussar_breeches
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+/datum/loadout_item/hussar_donator_boots
+	name = "Donator Item - Hussar Cavalry Boots"
+	category = list("Обувь", "Донат")
+	path = /obj/item/clothing/shoes/roguetown/boots/leather/hussar
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+/datum/loadout_item/hussar_donator_pistol
+	name = "Donator Kit - Hussar Pistol - Required: Arquebus Pistol"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/hussar_pistol
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+/datum/loadout_item/hussar_donator_sabre
+	name = "Donator Kit - Hussar Officer's Sabre - Required: Longsword or Sabre"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/hussar_sabre
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+/datum/loadout_item/hussar_donator_scabbard
+	name = "Donator Item - Hussar Officer's Scabbard"
+	category = list("Оружие", "Донат")
+	path = /obj/item/rogueweapon/scabbard/sword/hussar
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+// HUSSAR SET END
+
 // Etruscan vol.3 Kit Start
 
 /datum/loadout_item/etrhat

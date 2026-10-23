@@ -124,7 +124,7 @@
 						pants = /obj/item/clothing/under/roguetown/chainlegs
 						ADD_TRAIT(H, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
 					if("Light Armor - Dodge Expert, Psydonic Chestplate")
-						armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fencer/psydon
+						armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fencer/ornate
 						pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan
 						ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 				var/weapons = list("Psydonic Shortsword", "Psydonic Cudgel", "Psydonic Flanged Mace")
