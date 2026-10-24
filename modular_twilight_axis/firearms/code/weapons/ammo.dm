@@ -528,3 +528,4 @@
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "paper_bullet"
 	breech_loaded = TRUE
+

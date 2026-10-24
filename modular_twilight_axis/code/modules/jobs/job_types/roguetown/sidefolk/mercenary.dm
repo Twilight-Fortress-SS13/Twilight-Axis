@@ -7,6 +7,8 @@
 		/datum/advclass/mercenary/twilight_miragefen_rogue,
 		/datum/advclass/mercenary/twilight_conquistador,
 		/datum/advclass/mercenary/twilight_hussar,
-		/datum/advclass/mercenary/twilight_noctite_spellblade
+		/datum/advclass/mercenary/twilight_noctite_spellblade,
+		/datum/advclass/mercenary/twilight_republican_troublemaker,
+		/datum/advclass/mercenary/twilight_republican_comendant
 	)
 	. = ..()
