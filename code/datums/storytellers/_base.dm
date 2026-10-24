@@ -97,6 +97,13 @@
 	// --- Gamemode preset configuration ---
 	/// Which vote pool this preset belongs to (GAMEMODE_POOL_*). Presets sharing a pool are excluded together the round after one wins.
 	var/preset_pool
+	// TA EDIT START
+	var/vote_hidden = FALSE
+	var/alternate_preset
+	var/highpop_vote_mult = 1
+	var/midpop_vote_mult = 1
+	var/lowpop_vote_mult = 1
+	// TA EDIT END
 	/// If TRUE, a roundstart hard antag (Bandit/Lich/Werewolf/Vampire Lord) is guaranteed to roll (still needs pop >= HARD_ANTAG_MIN_POP).
 	var/guaranteed_hard = FALSE
 	/// Multiplier applied to hard-antag slot scaling. >1 scales hard antag counts more aggressively with pop.

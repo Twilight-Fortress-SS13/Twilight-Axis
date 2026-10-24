@@ -138,14 +138,13 @@
 /// How long after lobby start admins have to fine-tune the gamemode before the player vote fires.
 #define GAMEMODE_VOTE_ADMIN_WINDOW (120 SECONDS)
 /// Buffer kept clear between the gamemode vote ending and roundstart, so players see the result and prep.
-#define GAMEMODE_VOTE_END_BUFFER (60 SECONDS)
+#define GAMEMODE_VOTE_END_BUFFER (3 SECONDS) // TA EDIT
 /// Minimum time the gamemode vote runs for if the lobby is too short to give it a full window.
 #define GAMEMODE_VOTE_MIN_PERIOD (30 SECONDS)
 
-/// Gamemode vote pool names (the three pools players vote between).
+/// Gamemode vote pool names (the two pools players vote between).
 #define GAMEMODE_POOL_EXTENDED "PSYDON"
 #define GAMEMODE_POOL_GUARANTEED "ASCENDANT"
-#define GAMEMODE_POOL_NOANTAG "TEN"
 
 #define EVENT_TRACKS list(EVENT_TRACK_MUNDANE, EVENT_TRACK_PERSONAL, EVENT_TRACK_MODERATE, EVENT_TRACK_INTERVENTION, EVENT_TRACK_CHARACTER_INJECTION, EVENT_TRACK_OMENS, EVENT_TRACK_RAIDS)
 #define EVENT_PANEL_TRACKS list(EVENT_TRACK_MUNDANE, EVENT_TRACK_PERSONAL, EVENT_TRACK_MODERATE, EVENT_TRACK_INTERVENTION, EVENT_TRACK_CHARACTER_INJECTION, EVENT_TRACK_OMENS, EVENT_TRACK_RAIDS, UNCATEGORIZED_EVENTS, ALL_EVENTS)

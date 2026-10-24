@@ -286,6 +286,32 @@
 		result["final_slots"] = max(0, min(result["final_slots"], SSgamemode.combat_positions_alive, cap))
 	// TA EDIT END
 
+	// TA EDIT BEGIN
+	var/antag_death_bonus = 0
+	var/werewolves_existed = FALSE
+	var/werewolf_threat_alive = FALSE
+	for(var/datum/antagonist/antag as anything in GLOB.antagonists)
+		if(QDELETED(antag) || QDELETED(antag.owner))
+			continue
+		if(istype(antag, /datum/antagonist/lich))
+			var/datum/antagonist/lich/lich_antag = antag
+			if(lich_antag.out_of_lives)
+				antag_death_bonus += 2
+		else if(istype(antag, /datum/antagonist/vampire/lord))
+			var/mob/living/lord_body = antag.owner.current
+			if(!lord_body || lord_body.stat == DEAD)
+				antag_death_bonus += 2
+		else if(!werewolf_threat_alive && istype(antag, /datum/antagonist/werewolf))
+			werewolves_existed = TRUE
+			var/mob/living/wolf_body = antag.owner.current
+			if(wolf_body && wolf_body.stat != DEAD && !HAS_TRAIT(wolf_body, TRAIT_SILVER_BLESSED))
+				werewolf_threat_alive = TRUE
+	if(werewolves_existed && !werewolf_threat_alive)
+		antag_death_bonus += 4
+	result["antag_death_bonus"] = antag_death_bonus
+	result["final_slots"] = max(0, result["final_slots"] + antag_death_bonus)
+	// TA EDIT END
+
 	return result
 
 /proc/update_wretch_slots()
