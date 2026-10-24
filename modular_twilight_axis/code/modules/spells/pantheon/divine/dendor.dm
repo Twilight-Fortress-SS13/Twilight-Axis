@@ -4,21 +4,22 @@
 	spell_color = GLOW_COLOR_EARTHEN
 	invocations = list("Threefather! Give me your protect!")
 	dismiss_invocation = ""
-	ward_type = /obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/druid
+	ward_type = /obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/crystalhide/druid
 
-/obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/druid
+/obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/crystalhide/druid
 	name = "vine armor"
 	desc = "An holy vine's armor."
 	ward_color = GLOW_COLOR_EARTHEN
+	armor = ARMOR_LEATHER
 
-/obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/druid/setup_ward(mob/living/carbon/human/user)
+/obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/crystalhide/druid/setup_ward(mob/living/carbon/human/user)
 	. = ..()
 	user.apply_status_effect(/datum/status_effect/buff/vinearmour)
-	
-/obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/druid/cleanup_ward()
+
+/obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/crystalhide/druid/cleanup_ward()
 	if(ward_owner)
 		ward_owner.remove_status_effect(/datum/status_effect/buff/vinearmour)
-	
+
 	return ..()
 
 /datum/status_effect/buff/vinearmour
@@ -27,7 +28,7 @@
 	duration = -1
 	examine_text = "<font color='green'>SUBJECTPRONOUN is covered in vines!</font>"
 	var/outline_colour = "#042013"
-	effectedstats = list(STATKEY_STR = 1, STATKEY_WIL = -1, STATKEY_SPD = -1)
+	effectedstats = list(STATKEY_WIL = 1, STATKEY_SPD = 1)
 
 /atom/movable/screen/alert/status_effect/buff/vinearmour
 	name = "Vinearmour"
@@ -41,8 +42,13 @@
 	hitsound = "genslash"
 	miss_sound = "bluntwoosh"
 	item_d_type = "slash"
-	penfactor = PEN_LIGHT
+	penfactor = PEN_MEDIUM
 	icon_state = "inchop"
+
+/datum/intent/claw/lunge/iron/dendor
+	name = "Укол зверя"
+	desc = "Укол звериными когтями, пробивающий доспехи насквозь."
+
 // - - -
 
 /obj/item/rogueweapon/beast_claws
@@ -51,19 +57,19 @@
 	max_blade_int = INFINITY
 	max_integrity = INFINITY
 	associated_skill = /datum/skill/combat/unarmed
-	wlength = WLENGTH_NORMAL
+	wlength = WLENGTH_SHORT
 	sharpness = IS_SHARP_ACCURATE
 	item_flags = DROPDEL
-	possible_item_intents = list(/datum/intent/simple/beast_claws/slash)
+	possible_item_intents = list(/datum/intent/simple/beast_claws/slash, /datum/intent/claw/lunge/iron/dendor)
 	can_parry = TRUE
-	wdefense = 7
+	wdefense = 8
 	// Временная замена до момента появления спрайтера. Увы.
 	item_state = null
 	lefthand_file = null
 	righthand_file = null
 	icon = 'icons/roguetown/weapons/unarmed32.dmi'
 	icon_state = "claw_r"
-	force = 20
+	force = 23
 
 /obj/item/rogueweapon/beast_claws/Initialize()
 	. = ..()
@@ -118,9 +124,9 @@
 	id = "beast_rage_weakness"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/beast_rage
 	effectedstats = list(
-		"speed" = -2,
-		"strength" = -2,
-		"willpower" = -2,
+		"speed" = -1,
+		"strength" = -1,
+		"willpower" = -1,
 	)
 	duration = 1 MINUTES
 
@@ -142,10 +148,15 @@
 	)
 	duration = 1 MINUTES
 
+/datum/status_effect/buff/beast_rage/on_apply()
+	. = ..()
+	ADD_TRAIT(owner, TRAIT_BLOOD_RESISTANCE, TRAIT_GENERIC)
+
 /datum/status_effect/buff/beast_rage/on_remove()
 	. = ..()
 	owner.apply_status_effect(/datum/status_effect/debuff/beast_rage_weakness)
 	owner.clear_fullscreen("beast_mode")
+	REMOVE_TRAIT(owner, TRAIT_BLOOD_RESISTANCE, TRAIT_GENERIC)
 
 // -- Spell
 
