@@ -231,7 +231,7 @@ SUBSYSTEM_DEF(vote)
 		if(GAMEMODE_POOL_EXTENDED)
 			return "Псайдон"
 		if(GAMEMODE_POOL_GUARANTEED)
-			return "Интенсивность"
+			return "Презренные"
 		if(GAMEMODE_POOL_NOANTAG) // TA EDIT
 			return "Десять"
 	return pool_name
@@ -876,7 +876,7 @@ SUBSYSTEM_DEF(vote)
 		if(mode == "storyteller")
 			if(!length(storyteller_vote_log))
 				load_storyteller_vote_log()
-			var/pool_text = "Нажмите (?) для описания режимов. Крупные раундстартовые антагонисты требуют не менее [HARD_ANTAG_MIN_POP] активных игроков. Вес голоса зависит от числа готовых игроков: при 60+ — все x1; при 41-59 — High и Medium x0.66, Extended x1; при 40 и меньше — High x0.16, Medium x0.33, Extended x1. У каждого варианта показаны текущий множитель и реальные голоса." // TA EDIT
+			var/pool_text = "Нажмите (?) для описания режимов. Крупные раундстартовые антагонисты требуют не менее [HARD_ANTAG_MIN_POP] активных игроков. Вес голоса зависит от числа готовых игроков: при 60+ — все x1; при 41-59 — High и Medium x0.66, Low x1; при 40 и меньше — High x0.16, Medium x0.33, Low x1. У каждого варианта показаны текущий множитель и реальные голоса." // TA EDIT
 			. += "<div style='color:#992414;font-size:0.9rem;margin-bottom:6px;'>[pool_text]</div>"
 			. += render_storyteller_choices(can_vote, C)
 		else

@@ -109,11 +109,11 @@
 	preferred_gnoll_mode = GNOLL_SCALING_FLAT	// max 2
 	wretch_slot_cap = 6
 // ----------------------------------------------------------------------------------------------------------
-// PSYDON pool - lowest intensity. No hard antags. Extended opens a few wretches.
+// PSYDON pool - lowest intensity. No hard antags. Low Intensity opens a few wretches.
 // ----------------------------------------------------------------------------------------------------------
-// Extended - votes in the PSYDON pool (see preset_pool) despite being a no_antag subtype.
+// Low Intensity - votes in the PSYDON pool (see preset_pool) despite being a no_antag subtype.
 /datum/storyteller/gamemode/no_antag/small_wretch
-	name = "Extended"
+	name = "Low Intensity"
 	vote_desc = "Без крупных антагонистов. Малых антагонистов совсем мало."
 	desc = "Без крупных антагонистов. Изгои (Wretches) фиксированы на 4 слотах. Гноллы не появляются. Карга (Hag) присутствует. Сноходцы (Dreamwalkers) не появляются."
 	welcome_text = "\"Любовь витает в воздухе? Нет же; это пахнут свежеиспечённые пироги на подоконниках!\""
