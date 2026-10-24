@@ -83,7 +83,7 @@
 					var/skill = H.get_skill_level(/datum/skill/combat/twilight_firearms)
 					if(skill)
 						adj_reload_time = reload_time / skill
-				if(move_after(H, adj_reload_time SECONDS, target = H))
+				if(do_after(H, adj_reload_time SECONDS, src))
 					H.adjust_bloodpool(-vitae_cost)
 					H.update_action_buttons()
 					playsound(H, 'modular_twilight_axis/firearms/sound/musketcock.ogg', 100, FALSE)
