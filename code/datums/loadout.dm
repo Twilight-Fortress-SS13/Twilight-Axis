@@ -5891,3 +5891,36 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Триумфы"
 	path = /obj/item/storage/backpack/rogue/satchel/short/black
 	triumph_cost = 5
+
+//ЧАСЫ БЛЯДЬ
+
+/datum/loadout_item/clock_g
+	name = "gold handclock"
+	category = list("Триумфы")
+	path = /obj/item/clock_capped
+	triumph_cost = 5
+
+/datum/loadout_item/clock_s
+	name = "silver handclock"
+	category = list("Триумфы")
+	path = /obj/item/clock_capped/silver
+	triumph_cost = 5
+
+/datum/loadout_item/clock_br
+	name = "bronze handclock"
+	category = list("Триумфы")
+	path = /obj/item/clock
+	triumph_cost = 2
+
+/datum/loadout_item/clock_i
+	name = "iron handclock"
+	category = list("Триумфы")
+	path = /obj/item/clock/iron
+	triumph_cost = 2
+
+/datum/loadout_item/clock_compas
+	name = "compas"
+	category = list("Донат")
+	path = /obj/item/clock_capped/compas
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
