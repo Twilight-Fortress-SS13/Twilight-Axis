@@ -1968,7 +1968,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 			aim_text = prob(10) ? "<i>I can't tell...</i>" : null
 		user.resolve_combataware(H, "[bodyzone2readablezone(selzone)]...", aim_text)
 
-	if(H.client?.prefs.combat_toggles & HITZONE_TEXT)
+	if((H.client?.prefs.combat_toggles & HITZONE_TEXT) && HAS_TRAIT(user, TRAIT_COMBAT_AWARE)) // TA EDIT - ORIGINAL: if(H.client?.prefs.combat_toggles & HITZONE_TEXT)
 		H.balloon_alert(H, "[bodyzone2readablezone(selzone)]...")
 
 	var/pen_info_check = get_pen_info(H, user, H.get_best_worn_armor(def_zone, int.item_d_type), def_zone, int.item_d_type, int.penfactor, I)

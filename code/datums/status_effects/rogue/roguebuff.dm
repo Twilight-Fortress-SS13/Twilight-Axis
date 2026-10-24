@@ -1610,7 +1610,7 @@
 	guard_disrupted()
 
 /datum/status_effect/buff/clash/proc/guard_swaphands()
-	guard_disrupted()
+	guard_disrupted_swaphand() // TA EDIT - ORIGINAL: guard_disrupted()
 
 /datum/status_effect/buff/clash/proc/apply_cooldown()
 	var/newcd = BASE_RCLICK_CD - owner.get_tempo_bonus(TEMPO_TAG_RCLICK_CD_BONUS)
@@ -1623,6 +1623,14 @@
 	if(ishuman(owner))
 		var/mob/living/carbon/human/H = owner
 		H.bad_guard("My focus was disrupted!")
+
+// TA ADDITION START
+/datum/status_effect/buff/clash/proc/guard_disrupted_swaphand()
+	if(ishuman(owner))
+		var/mob/living/carbon/human/H = owner
+		H.bad_guard("My focus was disrupted!", FALSE, 26)
+
+// TA ADDITION END
 
 //We tried to cheese it. Generally reserved for egregious things, like attacking / casting while its active.
 /datum/status_effect/buff/clash/proc/guard_disrupted_cheesy()
