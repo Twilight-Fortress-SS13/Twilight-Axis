@@ -232,6 +232,8 @@ SUBSYSTEM_DEF(vote)
 			return "Псайдон"
 		if(GAMEMODE_POOL_GUARANTEED)
 			return "Интенсивность"
+		if(GAMEMODE_POOL_NOANTAG) // TA EDIT
+			return "Десять"
 	return pool_name
 
 /datum/controller/subsystem/vote/proc/get_storyteller_pool_totals()
@@ -307,6 +309,15 @@ SUBSYSTEM_DEF(vote)
 			theme["entry"] = "rgba(255,214,214,0.08)"
 			theme["link"] = "#ffd6d6"
 			theme["selection_color"] = "#ffd6d6"
+		if(GAMEMODE_POOL_NOANTAG) // TA EDIT
+			theme["border"] = "#2b8c87"
+			theme["background"] = "#10464a"
+			theme["title"] = "#d7fffb"
+			theme["meta"] = "#98ddd8"
+			theme["summary"] = "#8ed0cb"
+			theme["entry"] = "rgba(215,255,251,0.08)"
+			theme["link"] = "#d7fffb"
+			theme["selection_color"] = "#d7fffb"
 	return theme
 
 /datum/controller/subsystem/vote/proc/render_storyteller_pool(list/choice_indices, pool_name, can_vote, selected_option)
@@ -346,7 +357,7 @@ SUBSYSTEM_DEF(vote)
 	return dat
 
 /datum/controller/subsystem/vote/proc/render_storyteller_choices(can_vote, client/C)
-	var/list/pool_order = list(GAMEMODE_POOL_EXTENDED, GAMEMODE_POOL_GUARANTEED)
+	var/list/pool_order = list(GAMEMODE_POOL_EXTENDED, GAMEMODE_POOL_NOANTAG, GAMEMODE_POOL_GUARANTEED) // TA EDIT
 	var/list/pooled_indices = list()
 	var/selected_option = null
 	if(C)
@@ -865,7 +876,7 @@ SUBSYSTEM_DEF(vote)
 		if(mode == "storyteller")
 			if(!length(storyteller_vote_log))
 				load_storyteller_vote_log()
-			var/pool_text = "Нажмите (?) для описания режимов. Крупные раундстартовые антагонисты требуют не менее [HARD_ANTAG_MIN_POP] активных игроков. Вес голоса зависит от числа готовых игроков: при 60+ — High и Medium x1, Low и Extended x0.66; при 41-59 — High и Medium x0.66, Low и Extended x1; при 40 и меньше — High x0.16, Medium x0.33, Low и Extended x1. У каждого варианта показаны текущий множитель и реальные голоса." // TA EDIT
+			var/pool_text = "Нажмите (?) для описания режимов. Крупные раундстартовые антагонисты требуют не менее [HARD_ANTAG_MIN_POP] активных игроков. Вес голоса зависит от числа готовых игроков: при 60+ — все x1; при 41-59 — High и Medium x0.66, Extended x1; при 40 и меньше — High x0.16, Medium x0.33, Extended x1. У каждого варианта показаны текущий множитель и реальные голоса." // TA EDIT
 			. += "<div style='color:#992414;font-size:0.9rem;margin-bottom:6px;'>[pool_text]</div>"
 			. += render_storyteller_choices(can_vote, C)
 		else
