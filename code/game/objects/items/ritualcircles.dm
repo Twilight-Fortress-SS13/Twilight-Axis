@@ -1753,6 +1753,17 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	if(!HAS_TRAIT(target, TRAIT_FREEMAN))
 		loc.visible_message(span_cult("THE RITE REJECTS ONES WHO BOW DOWN TO TYRANNY!!")) //TA Lore edit
 		return
+	if(HAS_TRAIT(target, TRAIT_OATHBREAKER)) //TA EDIT START
+		target.Stun(60)
+		playsound(loc, 'sound/misc/smelter_fin.ogg', 50)
+		loc.visible_message(span_cult("[target]'s lux pours from their nose and into the rune! Gleeming gold simmers and contorts upon it, before manifesting itself into a blade!"))
+		spawn(20)
+			playsound(loc, 'sound/foley/equip/swordlarge1.ogg', 90)
+			playsound(loc, 'sound/items/bsmith1.ogg', 50)
+			target.put_in_hands(new /obj/item/rogueweapon/sword/long/oathbreaker_matthios(target), forced = TRUE)
+			spawn(40)
+				to_chat(target, span_cult("Take up these arms, and claim your right.")) //TA EDIT END
+		return
 	target.Stun(60)
 	target.Knockdown(60)
 	to_chat(target, span_userdanger("UNIMAGINABLE PAIN!"))

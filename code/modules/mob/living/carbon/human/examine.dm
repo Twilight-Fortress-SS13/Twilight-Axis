@@ -1060,7 +1060,7 @@
 			if(H.marriedto == name)
 				. += span_love("It's my spouse.")
 
-		if(name in GLOB.excommunicated_players)
+		if((name in GLOB.excommunicated_players) || HAS_TRAIT(src, TRAIT_OATHBREAKER)) //TA EDIT
 			. += span_userdanger("HERETIC! SHAME!")
 
 		if(HAS_TRAIT(src, TRAIT_EXCOMMUNICATED))

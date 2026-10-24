@@ -43,6 +43,11 @@
 	cost = 60
 	contains = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/snouted)
 
+/datum/supply_pack/rogue/Iconoclast/volfskulle_bascinet //TA EDIT START
+	name = "Heavy Volfskulle Bascinet"
+	cost = 70
+	contains = list(/obj/item/clothing/head/roguetown/helmet/heavy/volfplate) //TA EDIT END
+
 //////////
 // NECK //
 //////////
@@ -91,6 +96,21 @@
 	cost = 40
 	contains = list(/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk)
 
+/datum/supply_pack/rogue/Iconoclast/steelcuirass //TA EDIT START
+	name = "Steel Cuirass"
+	cost = 50
+	contains =	list(/obj/item/clothing/suit/roguetown/armor/plate/cuirass)
+
+/datum/supply_pack/rogue/Iconoclast/scalemail
+	name = "Scalemail"
+	cost = 80
+	contains = list(/obj/item/clothing/suit/roguetown/armor/plate/scale)
+
+/datum/supply_pack/rogue/Iconoclast/flutedcuirass
+	name = "Fluted Cuirass"
+	cost = 100
+	contains = list(/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted) //TA EDIT END
+
 /datum/supply_pack/rogue/Iconoclast/brigandine
 	name = "Brigandine"
 	cost = 80
@@ -120,6 +140,11 @@
 	cost = 40
 	contains = list(/obj/item/clothing/wrists/roguetown/bracers)
 
+/datum/supply_pack/rogue/Iconoclast/chaingauntlets //TA EDIT START
+	name = "Steel Chain Gauntlets"
+	cost = 20
+	contains = list(/obj/item/clothing/gloves/roguetown/chain) //TA EDIT END
+
 /datum/supply_pack/rogue/Iconoclast/plategaunt
 	name = "Plate Gauntlets"
 	cost = 50
@@ -133,6 +158,11 @@
 	name = "Brigandine Chausses"
 	cost = 30
 	contains = list(/obj/item/clothing/under/roguetown/brigandinelegs)
+
+/datum/supply_pack/rogue/Iconoclast/chainchausses //TA EDIT START
+	name = "Chain Chausses"
+	cost = 50
+	contains = list(/obj/item/clothing/under/roguetown/chainlegs) //TA EDIT END
 
 /datum/supply_pack/rogue/Iconoclast/platechausses
 	name = "Plate Chausses"
@@ -177,6 +207,41 @@
 	name = "Steel Flail"
 	cost = 60
 	contains =	list(/obj/item/rogueweapon/flail/sflail)
+
+/datum/supply_pack/rogue/Iconoclast/lsword //TA EDIT START
+	name = "Longsword"
+	cost = 30
+	contains = list(/obj/item/rogueweapon/sword/long)
+
+/datum/supply_pack/rogue/Iconoclast/sabre
+	name = "Sabre"
+	cost = 40
+	contains = list(/obj/item/rogueweapon/sword/sabre)
+
+/datum/supply_pack/rogue/Iconoclast/shamshir
+	name = "Shamshir"
+	cost = 50
+	contains = list(/obj/item/rogueweapon/sword/sabre/shamshir)
+
+/datum/supply_pack/rogue/Iconoclast/rapier
+	name = "Rapier"
+	cost = 50
+	contains = list(/obj/item/rogueweapon/sword/rapier)
+
+/datum/supply_pack/rogue/Iconoclast/greatsword
+	name = "Greatsword"
+	cost = 60
+	contains = list(/obj/item/rogueweapon/greatsword)
+
+/datum/supply_pack/rogue/Iconoclast/estoc
+	name = "Estoc"
+	cost = 80
+	contains = list(/obj/item/rogueweapon/estoc)
+
+/datum/supply_pack/rogue/Iconoclast/SFlamberge
+	name = "Steel Flamberge"
+	cost = 100
+	contains = list(/obj/item/rogueweapon/greatsword/grenz/flamberge) //TA EDIT END
 
 /////////////
 // SHIELDS //
