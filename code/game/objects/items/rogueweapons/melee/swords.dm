@@ -1516,7 +1516,7 @@
 	clickcd = 7
 	damfactor = 1.25
 	penfactor = PEN_MEDIUM
-	max_intent_damage = 25
+	//max_intent_damage = 25 //TA EDIT
 
 /datum/intent/effect/daze/freisabre
 	name = "uszkodzić"
