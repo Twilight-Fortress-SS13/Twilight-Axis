@@ -24,7 +24,7 @@
 	charge_swingdelay_type = SWINGDELAY_PENALTY
 	hold_drain = 1
 	// Very high slowdown to make it offensively less useful
-	charge_slowdown = CHARGING_SLOWDOWN_HEAVY 
+	charge_slowdown = CHARGING_SLOWDOWN_HEAVY
 	charge_sound = 'sound/magic/charging.ogg'
 	cooldown_time = 25 SECONDS
 

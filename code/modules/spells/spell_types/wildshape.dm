@@ -81,6 +81,7 @@
 	var/wildshape_icon
 	var/wildshape_icon_state
 	var/untransform_on_death = TRUE
+	var/give_miracles = TRUE // TA ADDITION
 	can_do_sex = FALSE
 
 /mob/living/carbon/human/species/wildshape/proc/gain_inherent_skills()
@@ -88,7 +89,13 @@
 		src.adjust_skillrank(/datum/skill/magic/holy, 3, TRUE) //Any dendorite using this should be a holy magic user
 
 		var/datum/devotion/C = new /datum/devotion(src, src.patron) //If we don't do this, Dendorites can't be clerics and they can't revert back to their true forms
+		// TA EDIT - ORIGINAL:
+		/*
 		C.grant_miracles(src, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_MAJOR)	//Major regen as no matter the previous level, it gets reset on transform. More connection to dendor I guess? Can level up to T4.
+		*/
+		// ORIGINAL END
+		if(give_miracles)
+			C.grant_miracles(src, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_MAJOR)	//Major regen as no matter the previous level, it gets reset on transform. More connection to dendor I guess? Can level up to T4.
 
 /mob/living/carbon/human/species/wildshape/update_inv_gloves() //Prevents weird blood overlays
 	remove_overlay(GLOVES_LAYER)
