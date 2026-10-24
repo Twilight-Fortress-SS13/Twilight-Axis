@@ -305,7 +305,7 @@
 		"Alter Ego" = "I am me, yet I crave to be someone else. I can adjust my voice and physical posture at will - though the latter will need me to cover myself. (RoleUnique tab)."
 	)
 	extra_choices = list(
-		"Darksight" = TRAIT_DARKVISION,
+		//"Darksight" = TRAIT_DARKVISION, //TA EDIT
 		"Light Steps" = TRAIT_LIGHT_STEP,
 		"Stashed Lockpick Ring" = /obj/item/lockpickring/mundane,
 		"Sneak Skill (+2, Up to Legendary)" = /datum/skill/misc/sneaking,
@@ -319,11 +319,11 @@
 		for(var/choice in picked_choices)
 			if(extra_choices[choice] in GLOB.roguetraits)
 				ADD_TRAIT(recipient, extra_choices[choice], TRAIT_VIRTUE)
-				if(choice == TRAIT_DARKVISION)
-					if(recipient.has_flaw(/datum/charflaw/colorblind))
-						to_chat(recipient, "Your eyes have become permanently colorblind.")
-					else if(recipient.charflaws.len)
-						add_verb(recipient, /mob/living/carbon/human/proc/toggleblindness)
+				//if(choice == TRAIT_DARKVISION) //TA EDIT
+				//	if(recipient.has_flaw(/datum/charflaw/colorblind))
+				//		to_chat(recipient, "Your eyes have become permanently colorblind.")
+				//	else if(recipient.charflaws.len)
+				//		add_verb(recipient, /mob/living/carbon/human/proc/toggleblindness)
 			else if(ispath(extra_choices[choice], /datum/skill))
 				if(extra_choices[choice] == /datum/skill/misc/sneaking)
 					recipient.adjust_skillrank(extra_choices[choice], SKILL_LEVEL_APPRENTICE, silent = TRUE)
