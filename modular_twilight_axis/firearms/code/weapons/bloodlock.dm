@@ -66,30 +66,27 @@
 		ungrip(user)
 		return
 	if(!cocked)
-		if(ishuman(user))
-			var/mob/living/carbon/human/H = user
-			if(HAS_TRAIT(H, TRAIT_ARCYNE) && HAS_TRAIT(H, TRAIT_VAMPBITE))
-				if(H.bloodpool < vitae_cost)
-					to_chat(H, span_warning("Оружию требуется больше крови!"))
-					if(prob(5))
-						to_chat(H, "<span style='color:#5E2129'>The bloodlock</span> slurs, " + span_cult(pick("<i>\"Мне не хватает твоей крови. Найди кого-нибудь!\"</i>", "<i>\"Мне нужно больше крови.\"</i>", "<i>\"Ну же, забери чью-нибудь кровь для меня!\"</i>", "<i>\"Мне нечем запитаться...\"</i>")))
-					return
-				to_chat(H, span_info("Оружие начинает вибрировать и запитываться..."))
+		var/mob/living/carbon/human/H = user
+		if(ishuman(user) && HAS_TRAIT(H, TRAIT_ARCYNE) && HAS_TRAIT(H, TRAIT_VAMPBITE))
+			if(H.bloodpool < vitae_cost)
+				to_chat(H, span_warning("Оружию требуется больше крови!"))
 				if(prob(5))
-					to_chat(H, "<span style='color:#5E2129'>The bloodlock</span> slurs, " + span_cult(pick("<i>\"Да, да, ДА! Какое же блаженство...\"</i>", "<i>\"Этот прилив сил... Пристрели шавку!\"</i>", "<i>\"Они поплатятся за то, что подняли на тебя клинок!\"</i>")))
-				playsound(src,'modular_twilight_axis/firearms/sound/bloodlock_reload.ogg', 100, FALSE)
-				var/adj_reload_time = reload_time
-				if(H.mind)
-					var/skill = H.get_skill_level(/datum/skill/combat/twilight_firearms)
-					if(skill)
-						adj_reload_time = reload_time / skill
-				if(move_after(H, adj_reload_time SECONDS, target = H))
-					H.adjust_bloodpool(-vitae_cost)
-					H.update_action_buttons()
-					playsound(H, 'modular_twilight_axis/firearms/sound/musketcock.ogg', 100, FALSE)
-					cocked = TRUE
-			else
-				to_chat(H, span_warning("Я совершенно не понимаю, как этим пользоваться!"))
+					to_chat(H, "<span style='color:#5E2129'>The bloodlock</span> slurs, " + span_cult(pick("<i>\"Мне не хватает твоей крови. Найди кого-нибудь!\"</i>", "<i>\"Мне нужно больше крови.\"</i>", "<i>\"Ну же, забери чью-нибудь кровь для меня!\"</i>", "<i>\"Мне нечем запитаться...\"</i>")))
+				return
+			to_chat(H, span_info("Оружие начинает вибрировать и запитываться..."))
+			if(prob(5))
+				to_chat(H, "<span style='color:#5E2129'>The bloodlock</span> slurs, " + span_cult(pick("<i>\"Да, да, ДА! Какое же блаженство...\"</i>", "<i>\"Этот прилив сил... Пристрели шавку!\"</i>", "<i>\"Они поплатятся за то, что подняли на тебя клинок!\"</i>")))
+			playsound(src,'modular_twilight_axis/firearms/sound/bloodlock_reload.ogg', 100, FALSE)
+			var/adj_reload_time = reload_time
+			if(H.mind)
+				var/skill = H.get_skill_level(/datum/skill/combat/twilight_firearms)
+				if(skill)
+					adj_reload_time = reload_time / skill
+			if(move_after(H, adj_reload_time SECONDS, target = H))
+				H.adjust_bloodpool(-vitae_cost)
+				H.update_action_buttons()
+				playsound(H, 'modular_twilight_axis/firearms/sound/musketcock.ogg', 100, FALSE)
+				cocked = TRUE
 		else
 			to_chat(user, span_warning("Я совершенно не понимаю, как этим пользоваться!"))
 	else
@@ -379,8 +376,7 @@
 
 	to_chat(H, span_warning("Оружие начинает тревожно вибрировать при виде близнеца."))
 	if(prob(50))
-		if(prob(50))
-			to_chat(H, "<span style='color:#5E2129'>The bloodlock</span> whispers, " + span_cult(pick("<i>\"Какого Зизо?! Фальшивка!\"</i>", "<i>\"Нон... нон... НОН! УБЕЙ ВЛАДЕЛЬЦА ЭТОЙ ФАЛЬШИВКИ И УНИЧТОЖЬ ЕЁ!\"</i>", "<i>\"Пристрели владельца и уничтожь фальшивку, пока они нас не заметили!\"</i>", "<i>\"УБЕЙ, УБЕЙ, УБЕЙ!!\"</i>", "<i>\"Уничтожь самозванцев!\"</i>", "<i>\"Ха... Нам стоит покончить с фальшивкой, пока она не сделала это первой!\"</i>")))
+		to_chat(H, "<span style='color:#5E2129'>The bloodlock</span> whispers, " + span_cult(pick("<i>\"Какого Зизо?! Фальшивка!\"</i>", "<i>\"Нон... нон... НОН! УБЕЙ ВЛАДЕЛЬЦА ЭТОЙ ФАЛЬШИВКИ И УНИЧТОЖЬ ЕЁ!\"</i>", "<i>\"Пристрели владельца и уничтожь фальшивку, пока они нас не заметили!\"</i>", "<i>\"УБЕЙ, УБЕЙ, УБЕЙ!!\"</i>", "<i>\"Уничтожь самозванцев!\"</i>", "<i>\"Ха... Нам стоит покончить с фальшивкой, пока она не сделала это первой!\"</i>")))
 
 #undef BLOODLOCK_AWAKEN_TIME
 #undef BLOODLOCK_LOSS_TIME
