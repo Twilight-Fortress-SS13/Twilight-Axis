@@ -197,6 +197,21 @@
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/masks.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/masks.dmi'
 
+// TAT Items я короче маски красивые хочу
+/obj/item/clothing/mask/rogue/yoruku_kitsune/armored
+	name = "wooden kitsune mask"
+	armor = ARMOR_BRIGANDINE
+	anvilrepair = /datum/skill/craft/armorsmithing
+	smeltresult = /obj/item/ash
+	max_integrity = 50
+
+/obj/item/clothing/mask/rogue/yoruku_oni/armored
+	name = "wooden oni mask"
+	armor = ARMOR_BRIGANDINE
+	anvilrepair = /datum/skill/craft/armorsmithing
+	smeltresult = /obj/item/ash
+	max_integrity = 50
+
 /obj/item/clothing/mask/rogue/overseer_gold
 	name = "golden confessor mask"
 	desc = "Знаменитая металлическая маска цвета латуни, изображающая лик Плачущего Бога. Слишком громоздкая, чтобы носить со шлемами."

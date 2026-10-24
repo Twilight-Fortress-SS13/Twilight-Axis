@@ -47,26 +47,7 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 		apply_dnr_trait(character, player, MERCILESS_ROUND)
 	if(player.prefs.qsr_pref)
 		apply_qsr_trait(character, player)
-	character.mind.triumph_discount_remaining = get_donator_triumph_discount(player.ckey)
-	var/mob/loadout_user = player.mob // TA EDIT
-	if(loadout_user?.ckey) // TA EDIT
-		player.prefs.sanitize_subscription_loadout(loadout_user) // TA EDIT
-	var/loadout_slots_left = loadout_user?.ckey ? player.prefs.get_loadout_size(loadout_user) : 0 // TA EDIT
-	if(player.prefs.gear_list)
-		for(var/key in player.prefs.gear_list)
-			if(loadout_slots_left <= 0) // TA EDIT
-				break // TA EDIT
-			var/datum/loadout_item/item = GLOB.loadout_items_by_name[key]
-			if(!item || !item.path || item.get_loadout_lock_reason(loadout_user)) // TA EDIT
-				continue
-			loadout_slots_left-- // TA EDIT
-			if(item.triumph_cost)
-				character.mind.special_items["[item.name][TRIUMPH_STASH_SUFFIX]"] = item.path
-			else
-				character.mind.special_items[item.name] = item.path
-			var/list/loadout_metadata = player.prefs.gear_list[key] // TA EDIT START
-			if(islist(loadout_metadata) && loadout_metadata.len)
-				character.mind.special_items_metadata[item.name] = deepCopyList(loadout_metadata) // TA EDIT END
+	tat_apply_legacy_preference_loadout(character, player) // TA EDIT
 	var/datum/job/assigned_job = SSjob.GetJob(character.mind?.assigned_role)
 	if(assigned_job)
 		assigned_job.clamp_stats(character)
