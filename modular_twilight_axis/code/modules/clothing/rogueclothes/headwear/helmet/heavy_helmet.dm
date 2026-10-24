@@ -212,6 +212,13 @@
 	icon_state = "legionhelmet"
 	item_state = "legionhelmet"
 
+/obj/item/clothing/head/roguetown/helmet/heavy/kabuto/zunari
+	name = "zunari-kabuto"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/head.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/head.dmi'
+	desc = "A battle-forged helm of Kazengun make, constructed from layered steel plates and reinforced along the head. Darkened to mute its shine, it is built for endurance rather than ceremony."
+	icon_state = "kazengunmediumhelm"
+
 /obj/item/clothing/head/roguetown/helmet/heavy/elven_helm/druidic
 	allowed_race = null
 	name = "blessed druid helm"
