@@ -241,6 +241,6 @@
 
 	return ..()
 
-/obj/item/rogueweapon/huntingknife/idagger/silver/elvish/bandit
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver/elvish/bandit
 	sellprice = 0
 	smeltresult = null
