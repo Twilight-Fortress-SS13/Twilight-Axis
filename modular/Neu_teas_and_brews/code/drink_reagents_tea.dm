@@ -145,7 +145,7 @@
 	quality = 2
 
 /datum/reagent/consumable/tea/compot/on_mob_life(mob/living/carbon/M)
-	M.apply_status_effect(/atom/movable/screen/alert/status_effect/buff/sweet)
+	M.apply_status_effect(/datum/status_effect/buff/sweet)
 	..()
 
 /datum/reagent/consumable/tea/sbiten
@@ -164,5 +164,5 @@
 	alpha = 153
 
 /datum/reagent/consumable/tea/sbiten/on_mob_life(mob/living/carbon/M)
-	M.apply_status_effect(/atom/movable/screen/alert/status_effect/buff/sweet)
+	M.apply_status_effect(/datum/status_effect/buff/sweet)
 	..()
