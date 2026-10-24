@@ -109,7 +109,7 @@
 				add_verb(H, /mob/living/carbon/human/proc/emote_ffsalute)
 				add_verb(H, /mob/living/carbon/human/proc/toggle_guarded)
 
-		wretch_select_bounty(H)
+		bountychoice_outlaw(H) // TA EDIT - ORIGINAL: wretch_select_bounty(H)
 
 //Keep it as is from now on, this is kind of overbloated as it be but the entire point of this class is catchall no good doer (speed).
 //It is mostly reverted to how it originally was with some boons to not be worse than heretic spy (that is limited, this is not).

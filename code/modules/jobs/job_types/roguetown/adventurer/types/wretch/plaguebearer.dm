@@ -75,7 +75,7 @@
 		beltl = /obj/item/storage/magebag
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/unique/ichor)
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/unique/ichor_big)
-		wretch_select_bounty(H)
+		bountychoice_plaguebearer(H) // TA EDIT - ORIGINAL: wretch_select_bounty(H)
 
 /obj/item/clothing/mask/rogue/physician/plaguebearer
 	desc = "What better laboratory than the blood-soaked battlefield? This one seems to be uniquely armored."

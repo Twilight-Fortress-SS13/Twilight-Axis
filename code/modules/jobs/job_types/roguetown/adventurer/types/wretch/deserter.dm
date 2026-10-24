@@ -171,7 +171,7 @@
 		)
 		var/armorchoice = input(H, "Choose your armor.", "TAKE UP ARMOR") as anything in armors
 		armor = armors[armorchoice]
-		wretch_select_bounty(H)
+		bountychoice_deserter_knight(H) // TA EDIT - ORIGINAL: wretch_select_bounty(H)
 	gloves = /obj/item/clothing/gloves/roguetown/plate
 	pants = /obj/item/clothing/under/roguetown/platelegs
 	neck = /obj/item/clothing/neck/roguetown/bevor
@@ -319,7 +319,7 @@
 				cloak = /obj/item/clothing/suit/roguetown/armor/longcoat/brown
 				mask = /obj/item/clothing/head/roguetown/roguehood/bogman/brown
 
-		wretch_select_bounty(H)
+		bountychoice_deserter(H) // TA EDIT - ORIGINAL: wretch_select_bounty(H)
 
 	shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
 	pants = /obj/item/clothing/under/roguetown/chainlegs

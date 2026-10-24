@@ -80,6 +80,8 @@
 			return
 		if("They fear me")
 			wretch_select_bounty(H)
+			H.change_stat(STATKEY_WIL, 2)
+			H.change_stat(STATKEY_CON, 2)
 
 /proc/bountychoice_lunacy(mob/living/carbon/human/H)
 	var/crimes = list("I'm nobody", "They fear me")
@@ -92,6 +94,8 @@
 			wretch_select_bounty(H)
 			H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_NOVICE, TRUE)
 			H.adjust_skillrank(/datum/skill/misc/athletics, SKILL_LEVEL_NOVICE, TRUE)
+			H.change_stat(STATKEY_STR, 1)
+			H.change_stat(STATKEY_SPD, 1)
 
 /proc/bountychoice_blood_raider(mob/living/carbon/human/H)
 	var/crimes = list("I'm nobody", "They fear me")
@@ -115,3 +119,170 @@
 				H.change_stat(STATKEY_WIL, 1)
 				H.change_stat(STATKEY_CON, 1)
 				to_chat(H, span_warning("Приспособившись к новому оружию, мне стало легче избегать охотников за головой."))
+
+/proc/bountychoice_freeblade(mob/living/carbon/human/H)
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			return
+		if("They fear me")
+			wretch_select_bounty(H)
+			H.change_stat(STATKEY_WIL, 2)
+			H.change_stat(STATKEY_CON, 1)
+
+/proc/bountychoice_slasher(mob/living/carbon/human/H)
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			return
+		if("They fear me")
+			wretch_select_bounty(H)
+			H.change_stat(STATKEY_SPD, 1)
+			H.change_stat(STATKEY_CON, 1)
+			H.change_stat(STATKEY_WIL, 1)
+
+/proc/bountychoice_profane_champion(mob/living/carbon/human/H)
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			return
+		if("They fear me")
+			wretch_select_bounty(H)
+			H.change_stat(STATKEY_SPD, 1)
+			H.change_stat(STATKEY_CON, 1)
+			H.change_stat(STATKEY_WIL, 1)
+			H.adjust_skillrank_up_to(/datum/skill/magic/holy, SKILL_LEVEL_MASTER, TRUE)
+
+/proc/bountychoice_pariah(mob/living/carbon/human/H)
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			return
+		if("They fear me")
+			wretch_select_bounty(H)
+			H.change_stat(STATKEY_SPD, 1)
+			H.change_stat(STATKEY_CON, 1)
+			H.change_stat(STATKEY_WIL, 1)
+			H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 0))
+
+/proc/bountychoice_pyromaniac(mob/living/carbon/human/H)
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			return
+		if("They fear me")
+			wretch_select_bounty(H)
+			H.change_stat(STATKEY_SPD, 1)
+			H.change_stat(STATKEY_WIL, 1)
+			H.change_stat(STATKEY_PER, 1)
+			H.adjust_skillrank_up_to(/datum/skill/craft/alchemy, SKILL_LEVEL_EXPERT, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/craft/engineering, SKILL_LEVEL_MASTER, TRUE)
+
+/proc/bountychoice_mistwalker(mob/living/carbon/human/H)
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			return
+		if("They fear me")
+			wretch_select_bounty(H)
+			H.change_stat(STATKEY_PER, 1)
+			H.change_stat(STATKEY_WIL, 2)
+			H.change_stat(STATKEY_CON, 1)
+
+/proc/bountychoice_plaguebearer(mob/living/carbon/human/H)
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			return
+		if("They fear me")
+			wretch_select_bounty(H)
+			H.change_stat(STATKEY_PER, 1)
+			H.change_stat(STATKEY_WIL, 1)
+			H.change_stat(STATKEY_SPD, 1)
+
+/proc/bountychoice_outlaw(mob/living/carbon/human/H)
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			return
+		if("They fear me")
+			wretch_select_bounty(H)
+			H.change_stat(STATKEY_PER, 1)
+			H.change_stat(STATKEY_INT, 1)
+			H.change_stat(STATKEY_WIL, 1)
+			H.change_stat(STATKEY_CON, 1)
+			H.adjust_skillrank_up_to(/datum/skill/misc/lockpicking, SKILL_LEVEL_LEGENDARY, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/misc/sneaking, SKILL_LEVEL_LEGENDARY, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/misc/stealing, SKILL_LEVEL_LEGENDARY, TRUE)
+
+/proc/bountychoice_necromancer(mob/living/carbon/human/H)
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			return
+		if("They fear me")
+			wretch_select_bounty(H)
+			H.change_stat(STATKEY_INT, 1)
+			H.change_stat(STATKEY_WIL, 2)
+			H.change_stat(STATKEY_CON, 1)
+
+/proc/bountychoice_roguemage(mob/living/carbon/human/H)
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			return
+		if("They fear me")
+			wretch_select_bounty(H)
+			H.change_stat(STATKEY_INT, 1)
+			H.change_stat(STATKEY_WIL, 1)
+			H.change_stat(STATKEY_PER, 1)
+			H.mind.mage_aspect_config["minor"] += 1
+			H.mind.mage_aspect_config["utility"] += 3
+			H.mind.check_learnspell()
+
+/proc/bountychoice_berserker(mob/living/carbon/human/H)
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			return
+		if("They fear me")
+			wretch_select_bounty(H)
+			H.change_stat(STATKEY_STR, 1)
+			H.change_stat(STATKEY_WIL, 1)
+			H.change_stat(STATKEY_CON, 1)
+
+/proc/bountychoice_deserter(mob/living/carbon/human/H)
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			return
+		if("They fear me")
+			wretch_select_bounty(H)
+			H.change_stat(STATKEY_INT, 1)
+			H.change_stat(STATKEY_WIL, 2)
+			H.change_stat(STATKEY_PER, 1)
+
+/proc/bountychoice_deserter_knight(mob/living/carbon/human/H)
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	switch(crimeschoice)
+		if("I'm nobody")
+			return
+		if("They fear me")
+			wretch_select_bounty(H)
+			H.change_stat(STATKEY_WIL, 1)
+			H.change_stat(STATKEY_CON, 1)
+			H.change_stat(STATKEY_PER, 1)
+			H.change_stat(STATKEY_INT, 1)

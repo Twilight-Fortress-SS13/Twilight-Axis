@@ -82,4 +82,4 @@
 			if ("My Bow Is Enough")
 				H.adjust_skillrank_up_to(/datum/skill/combat/bows, SKILL_LEVEL_LEGENDARY, TRUE)
 				head = /obj/item/clothing/head/roguetown/helmet/kettle
-	bountychoice_poacher(H)				//TA - EDIT
+	bountychoice_poacher(H) //TA - EDIT, ORIGINAL: wretch_select_bounty(H)

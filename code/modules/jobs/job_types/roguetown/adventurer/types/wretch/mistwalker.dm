@@ -137,7 +137,7 @@
 				beltr = /obj/item/rogueweapon/scabbard/sword/kazengun/kodachi
 				H.change_stat(STATKEY_SPD, 2)
 
-		wretch_select_bounty(H)
+		bountychoice_mistwalker(H) // TA EDIT - ORIGINAL: wretch_select_bounty(H)
 
 
 /obj/effect/proc_holder/spell/self/bloodlet
