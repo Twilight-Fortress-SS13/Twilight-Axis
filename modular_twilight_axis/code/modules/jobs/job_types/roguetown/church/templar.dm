@@ -175,6 +175,13 @@
 			wrists = /obj/item/clothing/neck/roguetown/psicross/malum
 			cloak = /obj/item/clothing/cloak/templar/malumite
 			mask = /obj/item/clothing/mask/rogue/facemask/steel
+		// TA ADDITION
+		if(/datum/patron/old_god)
+			cloak = /obj/item/clothing/cloak/tabard/psydontabard
+			head = /obj/item/clothing/head/roguetown/roguehood/psydon
+			neck = /obj/item/clothing/neck/roguetown/psicross
+			mask = /obj/item/clothing/mask/rogue/facemask/steel
+		// TA ADDITION END
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants

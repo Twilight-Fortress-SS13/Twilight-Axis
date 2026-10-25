@@ -66,7 +66,7 @@
 	jobtype = /datum/job/roguetown/monk
 	has_loadout = TRUE
 	job_bitflag = BITFLAG_HOLY_WARRIOR
-	allowed_patrons = list(/datum/patron/divine/undivided, /datum/patron/divine/pestra, /datum/patron/divine/astrata, /datum/patron/divine/eora, /datum/patron/divine/noc, /datum/patron/divine/necra, /datum/patron/divine/abyssor, /datum/patron/divine/malum, /datum/patron/divine/ravox, /datum/patron/divine/xylix) // The whole Ten. Probably could delete this now, actually.
+	// TA REMOVAL - ORIGINAL: allowed_patrons = list(/datum/patron/divine/undivided, /datum/patron/divine/pestra, /datum/patron/divine/astrata, /datum/patron/divine/eora, /datum/patron/divine/noc, /datum/patron/divine/necra, /datum/patron/divine/abyssor, /datum/patron/divine/malum, /datum/patron/divine/ravox, /datum/patron/divine/xylix) // The whole Ten. Probably could delete this now, actually.
 
 /datum/outfit/job/roguetown/monk/basic/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -194,6 +194,12 @@
 						backr = /obj/item/rogue/instrument/drum
 					if("Shamisen")
 						backr = /obj/item/rogue/instrument/shamisen
+		// TA ADDITION START
+		if(/datum/patron/old_god)
+			cloak = /obj/item/clothing/cloak/tabard/psydontabard
+			head = /obj/item/clothing/head/roguetown/roguehood/psydon
+			neck = /obj/item/clothing/neck/roguetown/psicross
+		// TA ADDITION END
 		else
 			head = /obj/item/clothing/head/roguetown/roguehood/astrata
 			neck = /obj/item/clothing/neck/roguetown/psicross/astrata/g
@@ -201,7 +207,17 @@
 			armor = /obj/item/clothing/suit/roguetown/shirt/robe/astrata
 	// -- End of section for god specific bonuses --
 	if(H.mind)
+		// TA EDIT START - ORIGINAL:
+		/*
 		H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/divine_bolt)
+		*/
+		// ORIGINAL END
+		if(istype(H.patron, /datum/patron/old_god))
+			H.mind.AddSpell(new /datum/action/cooldown/spell/psydon/enduring_blast)
+		else if(istype(H.patron, /datum/patron/divine))
+			H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/divine_bolt)
+		// TA EDIT END
+
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T4, passive_gain = CLERIC_REGEN_MAJOR, start_maxed = TRUE)	//Starts off maxed out.
 	if(H.mind)

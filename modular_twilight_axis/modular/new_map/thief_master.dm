@@ -10,9 +10,14 @@
 	max_pq = null
 	obfuscated_job = TRUE
 	class_categories = TRUE
+	announce_latejoin = FALSE
+	obfuscated_job = TRUE
+	wanderer_examine = TRUE
+	advjob_examine = TRUE
 	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED RACES_OOZE)
 	allowed_sexes = list(MALE, FEMALE)
 	display_order = JDO_THIEFGUILDMASTER
+	always_show_on_latechoices = TRUE
 	outfit = /datum/outfit/job/roguetown/thief_guild_master
 	give_bank_account = FALSE
 	same_job_respawn_delay = 30 MINUTES
@@ -63,7 +68,7 @@
 	gloves = /obj/item/clothing/gloves/roguetown/fingerless_leather
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/heavy
 	belt = /obj/item/storage/belt/rogue/leather/black
-	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/raneshen
+	shirt = /obj/item/clothing/suit/roguetown/shirt/tunic
 	shoes = /obj/item/clothing/shoes/roguetown/boots/nobleboot
 	l_hand = /obj/item/grapplinghook
 	backl = /obj/item/storage/backpack/rogue/satchel
