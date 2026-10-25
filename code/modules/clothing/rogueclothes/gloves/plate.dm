@@ -186,7 +186,7 @@
 	desc = "Gauntlets with gilded fingers fashioned into talons. The tips are all too dull to be of harm."
 	icon_state = "shadowgauntlets"
 	allowed_race = NON_DWARVEN_RACE_TYPES
-	body_parts_covered = HANDS|ARMS //For "heavy" drow merc
+	body_parts_covered = HANDS //For "heavy" drow merc //TA EDIT - HANDS/ARMS -> HANDS
 	smeltresult = /obj/item/ingot/drow
 	smelt_bar_num = 1
 

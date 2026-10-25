@@ -65,16 +65,6 @@
 	icon_state = "ast_kriegmesser"
 	sheathe_icon = "bs_swordregal"
 
-/obj/item/rogueweapon/greatsword/grenz/flamberge/relevement
-	name = "relevement"
-	desc = "The grave wounds caused by flame-bladed swords make them a highly sought-after weapon among the Dark Elves - the charges of dishonorable warfare notwithstanding. Consequentially, these weapons are often wielded by both sides of the Underdark Feud Wars."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
-	icon_state = "drowflamberge"
-	item_state = "drowflamberge"
-	max_integrity = 240
-	max_blade_int = 240
-	smeltresult = /obj/item/ingot/drow
-
 /obj/item/rogueweapon/sword/long/exe/silver
 	is_silver = TRUE
 
