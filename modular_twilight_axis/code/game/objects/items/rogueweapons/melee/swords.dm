@@ -137,3 +137,19 @@
 			I.afterchange()
 	user.update_a_intents()
 	update_icon()
+
+/obj/item/rogueweapon/sword/sabre/stalker/bloodraider
+	name = "raider's sabre"
+	desc = "A once-elegant drow sabre, taken up by hands that were never meant to hold it. Every cut is a small offering, and the \
+	edge has learned to prefer the taste. </br><font color='ff0000'>The hunger it feeds was never the blade's own.</font>"
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords32.dmi'
+	icon_state = "bloodsabre"
+	sheathe_icon = "zizoarming"
+	smeltresult = /obj/item/ingot/component/zizo
+
+/obj/item/rogueweapon/sword/sabre/stalker/bloodraider/zizo/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "SWORD")
+
+/obj/item/rogueweapon/sword/sabre/stalker/bloodraider/zizo/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_AVANTYNE)

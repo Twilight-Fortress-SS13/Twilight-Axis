@@ -62,6 +62,15 @@
 
 	. += generate_main_examine_body(user, m1, m2, m3, obscure_name, race_name, origin_name, observer_privilege, unknown_names)
 
+	if(user != src && !HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS) && HAS_TRAIT(user, TRAIT_ANTHRAXI))	// TA EDIT START
+		if(HAS_TRAIT_FROM(src, TRAIT_VAMPBITE, "bloodraider"))
+			if(isdarkelf(src))
+				. += span_alert("A blood-drinker. Our craft, bent into a thing that thirsts. I do not care for it.")
+				user.add_stress(/datum/stressevent/anthraxi_bloodraider)
+			else
+				. += span_redtext("A surface-dweller, drinking blood and carrying a weapon forged in our depths. Defiler.")
+				user.add_stress(/datum/stressevent/anthraxi_bloodraider_outsider) // TA EDIT END
+
 	if(user != src && HAS_TRAIT(user, TRAIT_MATTHIOS_EYES) && !HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS))
 		var/atom/item = get_most_expensive()
 		if(item)

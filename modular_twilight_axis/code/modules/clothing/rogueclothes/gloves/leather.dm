@@ -24,8 +24,8 @@
 	equip_sound = 'sound/foley/equip/equip_armor_plate.ogg'
 	anvilrepair = /datum/skill/craft/armorsmithing
 	smeltresult = /obj/item/ingot/steel
-	icon = 'modular_twilight_axis/icons/clothing/bloodraider.dmi'
-	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/bloodraider.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/special/bloodraider.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/special/onmob/bloodraider.dmi'
 
 /obj/item/clothing/gloves/roguetown/bloodraider/ComponentInitialize()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")

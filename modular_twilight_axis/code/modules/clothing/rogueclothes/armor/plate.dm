@@ -316,8 +316,8 @@
 /obj/item/clothing/suit/roguetown/armor/plate/fluted/zizo/bloodraider
 	name = "raider's cuirass"
 	desc = "An elegant cuirass that doesn't restrict movement, intimidates enemies, and is simply beautiful. What more could you need?"
-	icon = 'modular_twilight_axis/icons/clothing/bloodraider.dmi'
-	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/bloodraider.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/special/bloodraider.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/special/onmob/bloodraider.dmi'
 	icon_state = "bloodcuirass"
 	item_state = "bloodcuirass"
 	allowed_race = list(/datum/species/elf/wood, /datum/species/human/halfelf, /datum/species/elf/dark)

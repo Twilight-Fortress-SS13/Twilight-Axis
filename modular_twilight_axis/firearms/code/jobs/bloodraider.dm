@@ -2,13 +2,13 @@
 
 /datum/advclass/wretch/twilight_blood_raider
 	name = "Blood Raider"
-	tutorial = "Having harnessed Cain's GIFT, you came to be known as a dhampir. With mastery over your newfound abilities, you obtained the weapon through honest or not-so-honest means, you carry the consequences of your actions across the surface of Grimoria, showcasing the true might of drow craftsmanship."
+	tutorial = "Having harnessed Her's gift, you came to be known as a dhampir. With mastery over your newfound abilities, you obtained the weapon through honest or not-so-honest means, you carry the consequences of your actions across the surface of Grimoria, showcasing the true might of drow craftsmanship."
 	allowed_sexes = list(MALE, FEMALE)
 	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED RACES_OOZE)
 	outfit = /datum/outfit/job/roguetown/wretch/twilight_blood_raider
 	category_tags = list(CTAG_WRETCH)
 	class_select_category = CLASS_CAT_RANGER
-	traits_applied = list(TRAIT_FIREARMS_MARKSMAN, TRAIT_DODGEEXPERT, TRAIT_ARCYNE)
+	traits_applied = list(TRAIT_FIREARMS_MARKSMAN, TRAIT_DODGEEXPERT, TRAIT_ARCYNE, TRAIT_GRAVEROBBER)
 	maximum_possible_slots = 1
 
 	cmode_music = sound("modular_twilight_axis/firearms/sound/music/combat_bloodraider.ogg")
@@ -48,11 +48,11 @@
 		armor = /obj/item/clothing/suit/roguetown/armor/plate/fluted/zizo/bloodraider
 		pants = /obj/item/clothing/under/roguetown/platelegs/zizo/bloodraider
 		gloves = /obj/item/clothing/gloves/roguetown/plate/zizo/bloodraider
-		r_hand = /obj/item/rogueweapon/sword/sabre/stalker
-		belt = /obj/item/storage/belt/rogue/leather/double
+		r_hand = /obj/item/rogueweapon/sword/sabre/stalker/bloodraider
+		belt = /obj/item/storage/belt/rogue/leather/black
 		backpack_contents = list(
 			/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1,
-			/obj/item/rogueweapon/huntingknife/idagger/steel/stalker = 1,
+			/obj/item/rogueweapon/huntingknife/idagger/steel/stalker/bloodraider = 1,
 			/obj/item/rope/chain = 1,
 			/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
 			/obj/item/chalk = 1,
@@ -62,14 +62,14 @@
 		backl = /obj/item/storage/backpack/rogue/satchel
 		neck = /obj/item/clothing/neck/roguetown/chaincoif/chainmantle
 		head = /obj/item/clothing/head/roguetown/helmet/heavy/volfplate/berserker
-		armor = /obj/item/clothing/suit/roguetown/armor/brigandine/light/handmade
+		armor = /obj/item/clothing/suit/roguetown/armor/brigandine/light
 		pants = /obj/item/clothing/under/roguetown/brigandinelegs
 		gloves = /obj/item/clothing/gloves/roguetown/plate
 		r_hand = /obj/item/rogueweapon/sword/sabre
 		belt = /obj/item/storage/belt/rogue/leather
 		backpack_contents = list(
 			/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1,
-			/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
+			/obj/item/rogueweapon/huntingknife/idagger/steel = 1,
 			/obj/item/rope/chain = 1,
 			/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
 			/obj/item/chalk = 1,
@@ -83,7 +83,7 @@
 	ADD_TRAIT(H, TRAIT_NASTY_EATER, "bloodraider")
 	ADD_TRAIT(H, TRAIT_DARKVISION, "bloodraider")
 	ADD_TRAIT(H, TRAIT_NOSLEEP, "bloodraider")
-	ADD_TRAIT(H, TRAIT_SILVER_BLESSED, "bloodraider")
+	ADD_TRAIT(H, TRAIT_UNLYCKERABLE, "bloodraider")
 	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/zizo/bloodraider
 	backr = /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/rifle/twilight_bloodlock
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/zizo/bloodraider

@@ -79,8 +79,8 @@
 	desc = "A thicker and more durable piece of neck protection that also covers the mouth when pulled up."
 	icon_state = "bloodchainmantle"
 	item_state = "bloodchainmantle"
-	icon = 'modular_twilight_axis/icons/clothing/bloodraider.dmi'
-	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/bloodraider.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/special/bloodraider.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/special/onmob/bloodraider.dmi'
 
 /obj/item/clothing/neck/roguetown/chaincoif/chainmantle/bloodraider/Initialize(mapload)
 	. = ..()
