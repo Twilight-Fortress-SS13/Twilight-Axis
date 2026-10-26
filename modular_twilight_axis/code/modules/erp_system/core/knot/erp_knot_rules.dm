@@ -4,7 +4,9 @@
 /datum/erp_knot_rules/proc/can_start_knot(mob/living/user, mob/living/target, datum/erp_sex_organ/penis/penis_org, datum/erp_sex_organ/receiving_org, penis_unit_id = 0, force_level = 0)
 	if(!istype(user) || !istype(target))
 		return "bad_actor"
-	if(!penis_org || !receiving_org)
+	if(QDELETED(penis_org) || QDELETED(receiving_org))
+		return "bad_organs"
+	if(penis_org.get_owner() != user || receiving_org.get_owner() != target)
 		return "bad_organs"
 	if(get_dist(user, target) > 1)
 		return "too_far"

@@ -2,7 +2,7 @@
 	id = DECREE_GUILD_CHARTER_OF_ARMS
 	name = "Статут Гильдии наемников"
 	category = DECREE_CATEGORY_NEW
-	mechanical_text = "Предельный размер подушной подати для наемников ограничен 15 маммонами; Гильдия наемников вносит ежедневную подать в счет Обета Горожан."
+	mechanical_text = "Предельный размер подушной подати для наемников ограничен 50 маммонами; Гильдия наемников вносит ежедневную подать в счет Обета Горожан."
 	flavor_text = {"Настоящий Статут Гильдии наемников, заключенный под знаменем Равокса между Короной Азурии и Гильдией наемников Западных Королевств, свидетельствует о том, что Корона признаёт Гильдию в качестве зарегистрированной иностранной организации, самоуправляющейся в своих делах и подотчётной исключительно своим капитанам. Наемники, что служат под флагом Гильдии, не будут нести никакого обременения, кроме наименьших из возможных податей.
 
 Корона не требует от Гильдии клятвы верности и не обязана оказывать ей никаких услуг в ответ. Корона не будет вмешиваться в контракты, заключаемые Гильдией, и будет защищать право ее членов носить оружие, а также начинать сражения и участвовать в оных по своему усмотрению, при условии, что это не нарушает мир в Герцогстве и не связано с пиратством, разбоем или другими действиями, непосредственно угрожающими интересам Короны.
@@ -24,9 +24,9 @@
 		return FALSE
 	return payer.job == "Mercenary"
 
-/datum/decree/guild_charter_of_arms/apply_poll_tax_cap(mob/living/payer, poll_category, current_rate)
-	if(poll_category != POLL_TAX_CAT_MERCENARY)
-		return current_rate
+/datum/decree/guild_charter_of_arms/apply_charge_cap(mob/living/payer, charge_category, current)
+	if(charge_category != TAX_CATEGORY_POLL_LEVY)
+		return current
 	if(!is_protected(payer))
-		return current_rate
-	return min(current_rate, GUILD_CHARTER_OF_ARMS_POLL_CAP)
+		return current
+	return min(current, CHARGE_CAP_CHARTER)

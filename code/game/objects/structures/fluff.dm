@@ -129,6 +129,8 @@
 	var/pass_throwing = TRUE
 	/// Throwing/Flying non mobs can always exit the turf regardless of other flags
 	var/allow_flying_outwards = TRUE
+	/// Small flying mobs can fly over
+	var/pass_flying = TRUE
 
 /obj/structure/fluff/railing/do_climb(atom/movable/A)
 	var/turf/climber_turf = get_turf(A)
@@ -188,6 +190,8 @@
 		return 1
 	if(isobserver(mover))
 		return 1
+	if(flown_over(mover))
+		return 1
 	if(isliving(mover))
 		var/mob/living/M = mover
 		if(!(M.mobility_flags & MOBILITY_STAND))
@@ -228,6 +232,9 @@
 	if(pass_throwing && leaving.throwing)
 		return
 
+	if(flown_over(leaving))
+		return
+
 	if(pass_crawl && isliving(leaving))
 		var/mob/living/M = leaving
 		if(!(M.mobility_flags & MOBILITY_STAND))
@@ -235,6 +242,12 @@
 
 	leaving.Bump(src)
 	return COMPONENT_ATOM_BLOCK_EXIT
+
+/obj/structure/fluff/railing/proc/flown_over(atom/movable/mover)
+	if(!pass_flying || !isliving(mover))
+		return FALSE
+	var/mob/living/L = mover
+	return (L.movement_type & FLYING) && L.mob_size <= MOB_SIZE_SMALL
 
 /obj/structure/fluff/railing/OnCrafted(dirin)
 	. = ..()
@@ -307,6 +320,7 @@
 	climbable = FALSE
 	max_integrity = 400
 	pass_crawl = FALSE
+	pass_flying = FALSE
 	climb_offset = 6
 
 /obj/structure/fluff/railing/fence/Initialize(mapload)
@@ -957,7 +971,7 @@
 		to_chat(user, span_warning("I can't get [with] onto the table for processing!"))
 		return
 	for(var/obj/item/alch/catalyst/path as anything in typesof(/obj/item/alch/catalyst))
-		if(path::seed_item && ispath(with.type, path::seed_item))
+		if(path::seed_item && (ispath(with.type, path::seed_item) || (path::alt_seed_item && ispath(with.type, path::alt_seed_item)))) //TA EDIT
 			current_recipe=path
 			seed_item = with
 			seed_item.forceMove(src)
@@ -1614,7 +1628,7 @@
 		/obj/item/clothing/head/roguetown/crown/serpcrown,
 		/obj/item/clothing/head/roguetown/vampire,
 		/obj/item/scomstone,
-		/obj/item/rogueweapon/greatsword/psygsword,
+		/obj/item/rogueweapon/greatsword/silver/psy,
 		/obj/item/clothing/head/roguetown/circlet,
 		/obj/item/carvedgem,	//Some of these aren't particularly worth much, but it'd be REALLY unintuitive for "valuables" to not actually be offerings
 		/obj/item/rogueweapon/huntingknife/combat/jadekukri,
@@ -2158,15 +2172,17 @@
 	if(.)
 		return
 	to_chat(user, span_notice("I take down [src]."))
-	victim.forceMove(drop_location())
-	victim = null
+	if (victim)
+		victim.forceMove(drop_location())
+		victim = null
 	stake.forceMove(drop_location())
 	stake = null
 	qdel(src)
 
 /obj/structure/fluff/headstake/deconstruct()
-	victim.forceMove(drop_location())
-	victim = null
+	if (victim)
+		victim.forceMove(drop_location())
+		victim = null
 	stake.forceMove(drop_location())
 	stake = null
 	qdel(src)
@@ -2198,3 +2214,10 @@
 /obj/effect/wisp/prestidigitation/runelight
 	name = "arcyne mote"
 	desc = "An ethereal ball of pure light, manifested through an arcyne sigil."
+
+/obj/structure/fluff/statue/valmora
+	name = "saint valmora statue"
+	desc = "A statue of Valmora the Sword-Saint, who led the dark elves in the city-state of Llurth Dreir to slaughter the cruel lords and priests of the Arch-Enemy and begin an exodus to the surface. The dark elves of Otava praise her as a redeemer and savior."
+	icon_state = "valmora"
+	icon = 'icons/roguetown/structure/statues/statue_drow.dmi'
+	pixel_x = -16

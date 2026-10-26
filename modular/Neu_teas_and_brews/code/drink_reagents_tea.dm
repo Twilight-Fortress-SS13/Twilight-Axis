@@ -134,7 +134,7 @@
 	cuisine = CUISINE_NORTHERN
 	drink_type = DRINKTYPE_JUICE
 	name = "compot"
-	description = "Drink of Gronnic origin, dried fruit is made into nutritious sweet delicacy they partake regardless of status."
+	description = "Drink of Hammerholdian origin, dried fruit is made into nutritious sweet delicacy they partake regardless of status." //TA EDIT
 	color = "#cca358"
 	nutriment_factor = 2
 	metabolization_rate = 0.2 // 20% of normal metab
@@ -151,7 +151,7 @@
 /datum/reagent/consumable/tea/sbiten
 	cuisine = CUISINE_NORTHERN
 	name = "sbiten" //not a typo
-	description = "Marvel of Gronnic cuisine, rivals even well aged liquors in how enjoyable it is. Honey is infused with spices and then diluted in hot water. Highly luxurious item in the North."
+	description = "Marvel of Hammerholdian cuisine, rivals even well aged liquors in how enjoyable it is. Honey is infused with spices and then diluted in hot water. Highly luxurious item in the North." //TA EDIT
 	reagent_state = LIQUID
 	color = "#f0dba3"
 	nutriment_factor = 2

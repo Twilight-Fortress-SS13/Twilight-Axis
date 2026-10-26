@@ -1,4 +1,12 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useBackend } from 'tgui/backend';
 import { Window } from 'tgui/layouts';
 import {
@@ -18,6 +26,7 @@ type TileAtom = {
   path: string;
   ref: string;
   appearance_ref?: string | null;
+  render_key?: string;
   is_turf?: boolean;
 };
 
@@ -45,6 +54,8 @@ type DragState = {
   pointerId: number | null;
 };
 
+const IconRequestContext = createContext<(ref: string) => void>(() => {});
+
 const DRAG_THRESHOLD_PX = 6;
 
 const defaultDrag: DragState = {
@@ -62,23 +73,87 @@ const defaultDrag: DragState = {
 
 function IconDisplay(props: { item: TileAtom; size?: number }) {
   const { item, size = 2.5 } = props;
+  const requestIcon = useContext(IconRequestContext);
+  const element = useRef<HTMLSpanElement>(null);
+  const retryTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [attempt, setAttempt] = useState(0);
+  const [failed, setFailed] = useState(false);
 
-  if (!item.appearance_ref) {
-    return <Icon name="cube" size={1.5} color="gray" />;
-  }
+  useEffect(() => {
+    setAttempt(0);
+    setFailed(false);
+    return () => {
+      if (retryTimer.current !== null) {
+        clearTimeout(retryTimer.current);
+        retryTimer.current = null;
+      }
+    };
+  }, [item.appearance_ref, item.render_key]);
+
+  useEffect(() => {
+    if (item.appearance_ref || !element.current) {
+      return;
+    }
+    const request = () => requestIcon(item.ref);
+    if (!('IntersectionObserver' in window)) {
+      request();
+      return;
+    }
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        request();
+        observer.disconnect();
+      }
+    });
+    observer.observe(element.current);
+    return () => observer.disconnect();
+  }, [item.ref, item.render_key, item.appearance_ref, requestIcon]);
 
   return (
-    <img
-      src={item.appearance_ref}
+    <span
+      ref={element}
       style={{
+        display: 'inline-flex',
         width: `${size}em`,
         height: `${size}em`,
-        objectFit: 'contain',
-        imageRendering: 'pixelated',
-        pointerEvents: 'none',
-        display: 'block',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
-    />
+    >
+      {!item.appearance_ref || failed ? (
+        <Icon name="cube" size={1.5} color="gray" />
+      ) : (
+        <img
+          key={`${item.appearance_ref}-${attempt}`}
+          src={`${item.appearance_ref}${attempt ? `#tile-retry-${attempt}` : ''}`}
+          loading="lazy"
+          onError={() => {
+            if (retryTimer.current !== null) {
+              return;
+            }
+            if (attempt >= 4) {
+              setFailed(true);
+              return;
+            }
+            retryTimer.current = setTimeout(
+              () => {
+                retryTimer.current = null;
+                setAttempt((value) => value + 1);
+              },
+              500 * 2 ** attempt,
+            );
+          }}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            imageRendering: 'pixelated',
+            pointerEvents: 'none',
+            display: 'block',
+          }}
+        />
+      )}
+    </span>
   );
 }
 
@@ -124,7 +199,10 @@ function TileBox(props: {
   };
 
   const getOverRefFromPoint = (clientX: number, clientY: number) => {
-    const el = document.elementFromPoint(clientX, clientY) as HTMLElement | null;
+    const el = document.elementFromPoint(
+      clientX,
+      clientY,
+    ) as HTMLElement | null;
     const card = el?.closest?.('[data-atom-ref]') as HTMLElement | null;
     return card?.dataset?.atomRef || null;
   };
@@ -287,6 +365,38 @@ function RawContents(props: {
 export const TilePanel = () => {
   const { act, data } = useBackend<Data>();
   const { atoms = [] } = data;
+  const iconRequests = useRef(new Set<string>());
+  const iconRequestTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const actRef = useRef(act);
+  actRef.current = act;
+  const requestIcon = useCallback((ref: string) => {
+    iconRequests.current.add(ref);
+    if (iconRequestTimer.current !== null) {
+      return;
+    }
+    const flush = () => {
+      const refs = Array.from(iconRequests.current).slice(0, 16);
+      refs.forEach((value) => {
+        iconRequests.current.delete(value);
+      });
+      if (refs.length) {
+        actRef.current('request_icons', { refs });
+      }
+      iconRequestTimer.current = iconRequests.current.size
+        ? setTimeout(flush, 200)
+        : null;
+    };
+    iconRequestTimer.current = setTimeout(flush, 100);
+  }, []);
+  useEffect(
+    () => () => {
+      if (iconRequestTimer.current !== null) {
+        clearTimeout(iconRequestTimer.current);
+      }
+      iconRequests.current.clear();
+    },
+    [],
+  );
 
   const [grouping, setGrouping] = useState(true);
   const [searchText, setSearchText] = useState('');
@@ -324,85 +434,87 @@ export const TilePanel = () => {
   const title = data.has_target ? data.name || 'Tile Panel' : 'Tile Panel';
 
   return (
-    <Window width={320} height={420} title={title}>
-      <Window.Content
-        fitted
-        onKeyDown={(event) => {
-          if (isEscape(event.key)) {
-            act('close');
-          }
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            height: '100%',
-            minHeight: 0,
+    <IconRequestContext.Provider value={requestIcon}>
+      <Window width={320} height={420} title={title}>
+        <Window.Content
+          fitted
+          onKeyDown={(event) => {
+            if (isEscape(event.key)) {
+              act('close');
+            }
           }}
         >
-          <div style={{ flex: '0 0 auto', paddingBottom: '6px' }}>
-            <Stack align="center">
-              <Stack.Item grow basis={0}>
-                <Input
-                  fluid
-                  onChange={setSearchText}
-                  placeholder="Search..."
-                  value={searchText}
-                />
-              </Stack.Item>
-              <Stack.Item>
-                <Button
-                  m={0}
-                  width="28px"
-                  icon="layer-group"
-                  selected={grouping}
-                  onClick={() => setGrouping(!grouping)}
-                  tooltip="Toggle Grouping"
-                />
-              </Stack.Item>
-            </Stack>
-          </div>
-
           <div
             style={{
-              flex: '1 1 auto',
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
               minHeight: 0,
-              overflowY: 'auto',
-              overflowX: 'hidden',
             }}
           >
-            {!data.has_target ? (
-              <NoticeBox>No turf selected.</NoticeBox>
-            ) : (
-              <Section fill>
-                {turfAtom && (
-                  <RawContents
-                    contents={[turfAtom]}
-                    searchText={searchText}
-                    dragRef={dragRef}
+            <div style={{ flex: '0 0 auto', paddingBottom: '6px' }}>
+              <Stack align="center">
+                <Stack.Item grow basis={0}>
+                  <Input
+                    fluid
+                    onChange={setSearchText}
+                    placeholder="Search..."
+                    value={searchText}
                   />
-                )}
+                </Stack.Item>
+                <Stack.Item>
+                  <Button
+                    m={0}
+                    width="28px"
+                    icon="layer-group"
+                    selected={grouping}
+                    onClick={() => setGrouping(!grouping)}
+                    tooltip="Toggle Grouping"
+                  />
+                </Stack.Item>
+              </Stack>
+            </div>
 
-                {grouping ? (
-                  <GroupedContents
-                    contents={groupedContents}
-                    searchText={searchText}
-                    dragRef={dragRef}
-                  />
-                ) : (
-                  <RawContents
-                    contents={nonTurfAtoms}
-                    searchText={searchText}
-                    dragRef={dragRef}
-                  />
-                )}
-              </Section>
-            )}
+            <div
+              style={{
+                flex: '1 1 auto',
+                minHeight: 0,
+                overflowY: 'auto',
+                overflowX: 'hidden',
+              }}
+            >
+              {!data.has_target ? (
+                <NoticeBox>No turf selected.</NoticeBox>
+              ) : (
+                <Section fill>
+                  {turfAtom && (
+                    <RawContents
+                      contents={[turfAtom]}
+                      searchText={searchText}
+                      dragRef={dragRef}
+                    />
+                  )}
+
+                  {grouping ? (
+                    <GroupedContents
+                      contents={groupedContents}
+                      searchText={searchText}
+                      dragRef={dragRef}
+                    />
+                  ) : (
+                    <RawContents
+                      contents={nonTurfAtoms}
+                      searchText={searchText}
+                      dragRef={dragRef}
+                    />
+                  )}
+                </Section>
+              )}
+            </div>
           </div>
-        </div>
-      </Window.Content>
-    </Window>
+        </Window.Content>
+      </Window>
+    </IconRequestContext.Provider>
   );
 };
 

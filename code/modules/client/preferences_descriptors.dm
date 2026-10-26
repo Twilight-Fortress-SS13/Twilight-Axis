@@ -29,7 +29,7 @@
 	return has_letter
 
 /datum/preferences/proc/validate_descriptors()
-	descriptor_entries = SANITIZE_LIST(descriptor_entries) // TA EDIT START
+	descriptor_entries = SANITIZE_LIST(descriptor_entries) // TA EDIT
 	custom_descriptors = SANITIZE_LIST(custom_descriptors)
 
 	var/list/valid_descriptor_entries = list()
@@ -78,7 +78,7 @@
 			custom_entry.content_text = ""
 		valid_custom_descriptors += custom_entry
 
-	custom_descriptors = valid_custom_descriptors // TA EDIT END
+	custom_descriptors = valid_custom_descriptors // TA EDIT
 
 /datum/preferences/proc/reset_descriptors()
 	descriptor_entries = list()
@@ -97,10 +97,10 @@
 
 /datum/preferences/proc/has_descriptor_type_in_entries(descriptor_type)
 	if(length(descriptor_entries))
-		for(var/entry_value as anything in descriptor_entries) // TA EDIT START
+		for(var/entry_value as anything in descriptor_entries) // TA EDIT
 			if(!istype(entry_value, /datum/descriptor_entry))
 				continue
-			var/datum/descriptor_entry/entry = entry_value // TA EDIT END
+			var/datum/descriptor_entry/entry = entry_value // TA EDIT
 			if(entry.descriptor_type != descriptor_type)
 				continue
 			return TRUE
@@ -108,10 +108,10 @@
 
 /datum/preferences/proc/get_descriptor_entry_for_choice(choice_type)
 	if(length(descriptor_entries))
-		for(var/entry_value as anything in descriptor_entries) // TA EDIT START
+		for(var/entry_value as anything in descriptor_entries) // TA EDIT
 			if(!istype(entry_value, /datum/descriptor_entry))
 				continue
-			var/datum/descriptor_entry/entry = entry_value // TA EDIT END
+			var/datum/descriptor_entry/entry = entry_value // TA EDIT
 			if(entry.descriptor_choice_type != choice_type)
 				continue
 			return entry
@@ -126,9 +126,9 @@
 		character.add_mob_descriptor(entry.descriptor_type)
 	character.custom_descriptors = list()
 	for(var/entry_value as anything in custom_descriptors)
-		if(!istype(entry_value, /datum/custom_descriptor_entry)) // TA EDIT START
+		if(!istype(entry_value, /datum/custom_descriptor_entry)) // TA EDIT
 			continue
-		var/datum/custom_descriptor_entry/entry = entry_value // TA EDIT END
+		var/datum/custom_descriptor_entry/entry = entry_value // TA EDIT
 		var/datum/custom_descriptor_entry/new_entry = new /datum/custom_descriptor_entry()
 		new_entry.prefix_type = entry.prefix_type
 		new_entry.content_text = entry.content_text

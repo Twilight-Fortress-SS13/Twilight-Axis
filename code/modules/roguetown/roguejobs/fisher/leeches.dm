@@ -121,7 +121,7 @@
 		if(give_stored_blood(user, bodypart))
 			return TRUE
 	else
-		if(HAS_TRAIT(host, TRAIT_JOURNEYS_END))
+		if(HAS_TRAIT(user, TRAIT_JOURNEYS_END))
 			return FALSE
 		var/blood_extracted = min(blood_maximum - blood_storage, user.blood_volume, blood_sucking)
 		user.blood_volume = max(user.blood_volume - blood_extracted, 0)

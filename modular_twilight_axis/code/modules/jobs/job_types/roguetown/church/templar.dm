@@ -1,7 +1,6 @@
 /datum/job/roguetown/templar/New()
 	job_subclasses += list(
 		/datum/advclass/templar/pathfinder,
-		/datum/advclass/noctite_spellblade
 		)
 	. = ..()
 

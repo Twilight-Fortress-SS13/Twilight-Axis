@@ -595,7 +595,7 @@
 				mark_free_send(user)
 				to_chat(user, span_notice("Your free letter has been sent. Another may be sent in [HERMES_FREE_COOLDOWN / 600] minute\s."))
 			else
-				SStreasury.mint(SStreasury.discretionary_fund, 1, "Mail Income")
+				SStreasury.mint(SStreasury.discretionary_fund, 1, "Mail Income", null, LEDGER_CROWN_REV_MAIL)
 				record_round_statistic(STATS_TAXES_COLLECTED, 1)
 				coin_loaded -= 1
 				if(coin_loaded <= 0)
@@ -609,7 +609,14 @@
 				update_icon()
 			return TRUE
 
+#define INDEXER_MISTAKE_MAX 60 // maximum false positive chance roll for heresy. a reduced value is used for the antag checks. used to be 80
+#define INDEXER_MISTAKE_MIN 20 // minimum false positive chance roll for heresy. a reduced value is used for the antag checks. used to be 1
+
 /obj/structure/roguemachine/mail/attackby(obj/item/P, mob/user, params)
+	if(istype(P, /obj/item/parcel/towner_caravan))
+		var/obj/item/parcel/towner_caravan/box = P
+		box.post_to_owner(src, user)
+		return
 	if(istype(P, /obj/item/merctoken))
 		if(ishuman(user))
 			var/mob/living/carbon/human/H = user
@@ -859,7 +866,22 @@
 				if(has_indexer)
 					if(HAS_TRAIT(I.paired.subject, TRAIT_INQUISITION))
 						selfreport = TRUE
-					if(HAS_TRAIT(I.paired.subject, TRAIT_CABAL) || HAS_TRAIT(I.paired.subject, TRAIT_HORDE) || HAS_TRAIT(I.paired.subject, TRAIT_DEPRAVED) || HAS_TRAIT(I.paired.subject, TRAIT_FREEMAN))
+					var/mistake = rand(INDEXER_MISTAKE_MIN,INDEXER_MISTAKE_MAX) // clamped down false positive chance
+					var/patron_type = 0
+					var/second_fp_chance = TRUE
+					if(I.paired.subject.patron?.type in ALL_DIVINE_PATRONS)
+						patron_type = 1
+					else if(I.paired.subject.patron?.type in ALL_INHUMEN_PATRONS)
+						patron_type = 2
+					else if(I.paired.subject.patron?.type in OLD_GOD_PATRON)
+						patron_type = 3
+					var/actualmistake = mistake
+					if(!HAS_TRAIT(I.paired.subject, TRAIT_ASCENDENT_MIRACLED))
+						actualmistake /= 2 // if you've never been ascendentmiracled you're less likely to get false-flagged
+					if(prob(actualmistake)) // decent chance of fucking up and calling someone a heretic anyway
+						patron_type = 2
+						second_fp_chance = FALSE // don't double-dip the false positive
+					if(patron_type == 2)
 						correct = TRUE
 					if(I.paired.subject.name in GLOB.excommunicated_players)
 						correct = TRUE
@@ -872,7 +894,7 @@
 								GLOB.indexed += ", [I.paired.subject]"
 							else
 								GLOB.indexed += "[I.paired.subject]"
-
+					var/is_vamp = FALSE
 					if(I.paired.cursedblood)
 						if(HAS_TRAIT(I.paired.subject.mind, TRAIT_CBLOOD))
 							stopfarming = TRUE
@@ -883,6 +905,17 @@
 								GLOB.cursedsamples += ", [I.paired.subject.mind]"
 							else
 								GLOB.cursedsamples += "[I.paired.subject.mind]"
+					else if (second_fp_chance && prob(mistake/((HAS_TRAIT(I.paired.subject, TRAIT_VAMP_BITTEN) || I.paired.subject.has_flaw(/datum/charflaw/sullied)) ? 2 : 4)))
+						if(HAS_TRAIT(I.paired.subject.mind, TRAIT_CBLOOD))
+							stopfarming = TRUE
+						if(!stopfarming)
+							cursedblood = TRUE
+							ADD_TRAIT(I.paired.subject.mind, TRAIT_CBLOOD, "mail")
+							if(GLOB.cursedsamples.len)
+								GLOB.cursedsamples += ", [I.paired.subject.mind]"
+							else
+								GLOB.cursedsamples += "[I.paired.subject.mind]"
+							is_vamp = TRUE
 
 					if(GLOB.accused && !selfreport)
 						if(HAS_TRAIT(I.paired.subject.mind, TRAIT_ACCUSED))
@@ -939,7 +972,7 @@
 					var/id = generate_inquisition_id()
 					R.report_id = id
 					R.name = "haemological report (#[id])"
-					R.fill_report(I.paired.subject, user)
+					R.fill_report(I.paired.subject, user, mistake, patron_type, is_vamp)
 					user.put_in_hands(R)
 
 					qdel(I.paired)
@@ -956,6 +989,11 @@
 				else
 					to_chat(user, span_warning("[I] requires either a signature, or an INDEXER with their blood."))
 				return
+
+	if(istype(P, /obj/item/paper/inquisition_suspicion)) // TA EDIT START
+		var/obj/item/paper/inquisition_suspicion/I = P
+		I.submit_to_otava(user)
+		return // TA EDIT END
 
 	if(istype(P, /obj/item/paper) || istype(P, /obj/item/smallDelivery))
 		if(inqcoins)
@@ -1056,6 +1094,9 @@
 		return
 	..()
 
+#undef INDEXER_MISTAKE_MAX
+#undef INDEXER_MISTAKE_MIN
+
 /obj/structure/roguemachine/mail/r
 	pixel_y = 0
 	pixel_x = 32
@@ -1106,6 +1147,12 @@
 	anchored = TRUE
 	w_class = WEIGHT_CLASS_GIGANTIC
 	var/new_mail
+
+/obj/item/roguemachine/mastermail/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("All mail sent through the HERMES is stored here until collected. Opening its storage will allow one to intercept letters.")
+	. += span_info("Any letters removed and read can be re-sealed by clicking this machine with them, which will put them back into storage.")
+	. += span_info("If this is done before the recipient tries to withdraw the mail, they will never know.")
 
 /obj/item/roguemachine/mastermail/update_icon()
 	cut_overlays()
@@ -1287,6 +1334,8 @@
 		var/datum/inqports/PA = GLOB.inqsupplies[path]
 		if(!PA)
 			return
+		if(inqcoins < PA.marquescost || (PA.maximum && PA.remaining <= 0) || !PA.can_purchase(usr)) // TA EDIT
+			return display_marquette(usr) // TA EDIT
 
 		inqcoins -= PA.marquescost
 		if(PA.maximum)
@@ -1305,7 +1354,10 @@
 		var/turf/T = pick(turfs)
 		var/pathi = pick(PA.item_type)
 		playsound(T, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
-		new pathi(get_turf(T))
+		var/atom/movable/purchased_item = new pathi(get_turf(T)) // TA EDIT START
+		if(istype(purchased_item, /obj/item/paper/inquisition_suspicion))
+			var/obj/item/paper/inquisition_suspicion/purchased_writ = purchased_item
+			purchased_writ.record_purchase(usr, src) // TA EDIT END
 		refresh_marquette = TRUE
 
 	if(refresh_marquette)

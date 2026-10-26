@@ -1,26 +1,26 @@
-/obj/item/toy/cards/deck
+/obj/item/deck/playing_cards
 	var/card_table_mode = FALSE
 	var/datum/card_table_session/card_table
 	var/card_table_range_timer
 
-/obj/item/toy/cards/deck/Destroy()
+/obj/item/deck/playing_cards/Destroy()
 	if(card_table_range_timer)
 		deltimer(card_table_range_timer)
 		card_table_range_timer = null
 	QDEL_NULL(card_table)
 	return ..()
 
-/obj/item/toy/cards/deck/proc/ensure_card_table() as /datum/card_table_session
+/obj/item/deck/playing_cards/proc/ensure_card_table() as /datum/card_table_session
 	if(!card_table)
 		card_table = new(src)
 	return card_table
 
-/obj/item/toy/cards/deck/proc/start_card_table_range_loop()
+/obj/item/deck/playing_cards/proc/start_card_table_range_loop()
 	if(card_table_range_timer)
 		return
 	card_table_range_timer = addtimer(CALLBACK(src, PROC_REF(card_table_range_tick)), CARD_TABLE_RANGE_CHECK_TIME, TIMER_STOPPABLE)
 
-/obj/item/toy/cards/deck/proc/card_table_range_tick()
+/obj/item/deck/playing_cards/proc/card_table_range_tick()
 	card_table_range_timer = null
 	if(!card_table_mode || QDELETED(src))
 		return
@@ -29,7 +29,7 @@
 		SStgui.update_uis(src)
 	start_card_table_range_loop()
 
-/obj/item/toy/cards/deck/proc/enter_card_table_mode(mob/user)
+/obj/item/deck/playing_cards/proc/enter_card_table_mode(mob/user)
 	if(user && user.is_holding(src))
 		user.dropItemToGround(src)
 	if(!isturf(loc) && user)
@@ -40,7 +40,7 @@
 	if(user)
 		user.visible_message(span_notice("[user] sets the deck up as a card table."), span_notice("You set the deck up as a card table."))
 
-/obj/item/toy/cards/deck/proc/leave_card_table_mode(mob/user)
+/obj/item/deck/playing_cards/proc/leave_card_table_mode(mob/user)
 	if(!card_table_mode)
 		return FALSE
 	if(card_table && !card_table.can_pack())
@@ -56,56 +56,59 @@
 		user.visible_message(span_notice("[user] packs the card table back into a normal deck."), span_notice("You pack the card table back into a normal deck."))
 	return TRUE
 
-/obj/item/toy/cards/deck/attack_right(mob/user, params)
-	if(!user)
-		return ..()
-	if(card_table_mode)
-		return leave_card_table_mode(user)
-	enter_card_table_mode(user)
-	return TRUE
-
-/obj/item/toy/cards/deck/AltClick(mob/user)
+/obj/item/deck/playing_cards/Click(location, control, params)
+	var/list/modifiers = params2list(params)
+	if(modifiers["alt"] && !modifiers["right"] && !modifiers["middle"] && !modifiers["shift"] && !modifiers["ctrl"])
+		if(!(flags_1 & INITIALIZED_1))
+			return
+		SEND_SIGNAL(src, COMSIG_CLICK, location, control, params, usr)
+		AltClick(usr)
+		return
 	return ..()
 
-/obj/item/toy/cards/deck/attack_hand(mob/user, params)
+/obj/item/deck/playing_cards/AltClick(mob/user)
+	. = ..()
+	if(!user || !user.canUseTopic(src, be_close = TRUE))
+		return
+	if(!card_table_mode)
+		enter_card_table_mode(user)
+	ui_interact(user)
+	return TRUE
+
+/obj/item/deck/playing_cards/attack_hand(mob/user, params)
 	if(card_table_mode)
 		ui_interact(user)
 		return TRUE
-	draw_card(user)
+	return ..()
 
-/obj/item/toy/cards/deck/attack_self(mob/user)
-	if(card_table_mode)
-		ui_interact(user)
+/obj/item/deck/playing_cards/attack_self(mob/user)
+	if(!user || !user.is_holding(src))
 		return
-	if(cooldown < world.time - 25)
-		cards = shuffle(cards)
-		playsound(src, 'sound/items/cardshuffle.ogg', 100, TRUE)
-		user.visible_message("<span class='notice'>[user] shuffles the deck.</span>", "<span class='notice'>I shuffle the deck.</span>")
-		cooldown = world.time
+	if(!card_table_mode)
+		enter_card_table_mode(user)
+	ui_interact(user)
 
-/obj/item/toy/cards/deck/MouseDrop(atom/over_object)
-	if(card_table_mode)
-		to_chat(usr, "<span class='warning'>The card table is in use.</span>")
+/obj/item/deck/playing_cards/MouseDrop(atom/over_object)
+	if(!card_table_mode)
+		return ..()
+	var/mob/living/user = usr
+	if(!istype(user) || over_object != user || !isturf(loc) || !Adjacent(user) || !(user.mobility_flags & MOBILITY_PICKUP))
 		return
+	if(!leave_card_table_mode(user))
+		return
+	user.put_in_hands(src)
+	return TRUE
+
+/obj/item/deck/playing_cards/get_mechanics_examine(mob/user)
 	. = ..()
-	var/mob/living/M = usr
-	if(!istype(M) || !(M.mobility_flags & MOBILITY_PICKUP))
-		return
-	if(Adjacent(usr))
-		if(over_object == M && loc != M)
-			M.put_in_hands(src)
-			to_chat(usr, "<span class='notice'>I pick up the deck.</span>")
-		else if(istype(over_object, /atom/movable/screen/inventory/hand))
-			var/atom/movable/screen/inventory/hand/H = over_object
-			if(M.putItemFromInventoryInHandIfPossible(src, H.held_index))
-				to_chat(usr, "<span class='notice'>I pick up the deck.</span>")
-	else
-		to_chat(usr, "<span class='warning'>I can't reach it from here!</span>")
+	. += span_smallnotice("<b>CLICK</b> the deck in your hand to set up the card table and open its game window.")
+	. += span_smallnotice("<b>ALT CLICK</b> to set up the card table or open its game window.")
+	. += span_smallnotice("<b>DRAG</b> the card table onto yourself to pack it and pick up the deck when no one is seated.")
 
-/obj/item/toy/cards/deck/ui_state(mob/user)
+/obj/item/deck/playing_cards/ui_state(mob/user)
 	return GLOB.hold_or_view_state
 
-/obj/item/toy/cards/deck/ui_interact(mob/user, datum/tgui/ui)
+/obj/item/deck/playing_cards/ui_interact(mob/user, datum/tgui/ui)
 	if(!card_table_mode)
 		return
 	ensure_card_table()
@@ -114,12 +117,12 @@
 		ui = new(user, src, "CardTable", "Card Table")
 		ui.open()
 
-/obj/item/toy/cards/deck/ui_data(mob/user)
+/obj/item/deck/playing_cards/ui_data(mob/user)
 	if(!card_table_mode)
 		return list()
 	return ensure_card_table().build_ui_data(user)
 
-/obj/item/toy/cards/deck/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
+/obj/item/deck/playing_cards/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
 	. = ..()
 	if(.)
 		return

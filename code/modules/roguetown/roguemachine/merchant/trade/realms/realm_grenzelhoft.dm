@@ -2,7 +2,7 @@
 	id = REALM_GRENZELHOFT
 	name = "Grenzelhoft"
 	roll_weight = TRADE_REALM_WEIGHT_NEIGHBOR
-	demanded_categories = list(NAVIGATOR_BUCKET_POTIONS_REAGENTS, NAVIGATOR_BUCKET_SEAFOOD, NAVIGATOR_BUCKET_CARVED, NAVIGATOR_BUCKET_POTTERY, NAVIGATOR_BUCKET_MISCELLANEOUS)
+	demanded_categories = list(NAVIGATOR_BUCKET_ARMOR_MEDIUM, NAVIGATOR_BUCKET_POTIONS_REAGENTS, NAVIGATOR_BUCKET_SEAFOOD, NAVIGATOR_BUCKET_CARVED, NAVIGATOR_BUCKET_POTTERY, NAVIGATOR_BUCKET_MISCELLANEOUS)
 	ship_name_words = list(
 		"Eisernen", "Sturm", "Adler", "Wolf", "Drache",
 		"Schwert", "Bruder", "Krone", "Burg", "Wappen",
@@ -115,5 +115,7 @@
 		"A burgher of Zentarion rode with us this voyage and would not stop weeping and vomiting at the masthead. He has paid his fare. I make no apology for him.",
 		"You will find my prices fair and my temper short. Do not test the second to bargain the first.",
 		"I sailed with one captive raider of the Gronnic coast in chains below decks for the crossing. He is delivered to your magistrate, alive, as the compact requires. Now my real cargo - grain.",
-		"Give me smoked eels by the barrel. Unjellied, please, that thing is an abomination upon humenity. I've heard the Imperial Academy's students have gotten tired of eating salmon everydaes. So eels from your river would be a nice change of pace."	
+		"Give me smoked eels by the barrel. Unjellied, please, that thing is an abomination upon humenity. I've heard the Imperial Academy's students have gotten tired of eating salmon everydaes. So eels from your river would be a nice change of pace.",
+		"Are there any venues with some fat-hipped venardines around? My crew are begging to get to know the locals.",
+		"STORIES FROM THE EMPIRE! Come drink with us, FACTOR!"
 	)  //TA EDIT

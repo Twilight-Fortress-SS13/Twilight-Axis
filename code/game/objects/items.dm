@@ -147,7 +147,13 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	var/list/secondary_skills
 
 	var/list/possible_item_intents = list(/datum/intent/use)
-	var/saved_intent_index = 1 // Stores the last selected intent index when item is dropped
+	var/alist/saved_intents = alist(
+		UNWIELDED_INTENT = 1,
+		WIELDED_INTENT = 1,
+		ALTGRIP_ONE_INTENT = 1,
+		ALTGRIP_TWO_INTENT = 1,
+		ALTGRIP_THREE_INTENT = 1,
+	) // Stores the last selected intent index when item is dropped
 
 	var/bigboy = FALSE //used to center screen_loc when in hand
 	var/wielded = FALSE
@@ -710,7 +716,11 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		if(istype(src, /obj/item/rogueweapon))
 			var/obj/item/rogueweapon/W = src
 			if(W.special)
-				inspec += "[W.special.get_examine()]"
+				inspec += "[W.get_special().get_examine()]" // TA EDIT
+		else if(istype(src, /obj/item/gun/ballistic/revolver/grenadelauncher/bow)) // TA EDIT
+			var/obj/item/gun/ballistic/revolver/grenadelauncher/bow/B = src
+			if(B.special)
+				inspec += "[B.special.get_examine()]" // TA EDIT
 
 		if(istype(src, /obj/item/rogueweapon/shield))
 			var/obj/item/rogueweapon/shield/S = src
@@ -985,6 +995,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 				if(user.m_intent != MOVE_INTENT_SNEAK) // Don't play a sound if we're sneaking, for assassination purposes.
 					playsound(src, pickup_sound, PICKUP_SOUND_VOLUME, ignore_walls = FALSE)
 	user.update_equipment_speed_mods()
+	user.check_equipment_mood_penalty()
 
 	if(!user.is_holding(src))
 		if(altgripped || wielded)
@@ -1165,6 +1176,18 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		return SEND_SIGNAL(loc, COMSIG_TRY_STORAGE_TAKE, src, newLoc, TRUE)
 	return FALSE
 
+/obj/item/proc/held_contents()
+	var/datum/component/storage/STR = GetComponent(/datum/component/storage)
+	if(STR)
+		return STR.contents()
+	return list()
+
+/obj/item/proc/release_held(obj/item/I, atom/dest)
+	var/datum/component/storage/STR = GetComponent(/datum/component/storage)
+	if(STR)
+		return STR.remove_from_storage(I, dest)
+	return FALSE
+
 /obj/item/proc/get_belt_overlay() //Returns the icon used for overlaying the object on a belt
 	return mutable_appearance('icons/obj/clothing/belt_overlays.dmi', icon_state)
 
@@ -1314,12 +1337,12 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 /obj/item/burn(amount = 1)
 	if(!QDELETED(src))
 		var/turf/T = get_turf(src)
-		var/ash_type = /obj/item/ash
+		var/ash_type = /obj/item/natural/ash
 		if(w_class == WEIGHT_CLASS_HUGE || w_class == WEIGHT_CLASS_GIGANTIC)
-			ash_type = /obj/item/ash
+			ash_type = /obj/item/natural/ash
 		// Override for children that want more than 1 ash per item (Bundle as pseudo-stack)
 		for(var/i in 1 to amount)
-			var/obj/item/ash/A = new ash_type(T)
+			var/obj/item/natural/ash/A = new ash_type(T)
 			A.desc += "\nLooks like this used to be \an [name] some time ago."
 		..()
 

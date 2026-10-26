@@ -283,6 +283,11 @@ There are several things that need to be remembered:
 				armdam_overlay.color = BP.bandage.color
 				armdam_overlays += armdam_overlay
 
+		if(BP.body_zone == BODY_ZONE_CHEST)
+			var/datum/wound/gutwound = BP.has_wound(/datum/wound/slash/disembowel)
+			if(gutwound && !gutwound.is_sewn())
+				armdam_overlays += mutable_appearance('icons/effects/blood.dmi', "guts", -ARM_DAMAGE_LAYER)
+
 		var/used_offset = BP.offset
 		if(!is_bulky_offset())
 			used_offset = BP.offset_f
@@ -827,6 +832,15 @@ There are several things that need to be remembered:
 					apply_offset(mbeltoverlay, OFFSET_BELT, OFFSET_BELT_F)
 				standing_front += mbeltoverlay
 
+	var/obj/item/bodypart/taur/taur_belt = get_taur_tail()
+	if(taur_belt?.taur_clothing_category)
+		var/obj/item/worn_belt = belt || beltr || beltl
+		if(worn_belt)
+			var/belt_state = findtext(worn_belt.icon_state, "black") ? "blackbelt" : "belt"
+			var/mutable_appearance/taur_belt_ov = mutable_appearance('icons/roguetown/clothing/onmob/64x32/saiga_barding.dmi', "[taur_belt.taur_clothing_category]_[belt_state]", -BELT_LAYER)
+			taur_belt_ov.pixel_x = taur_belt.offset_x
+			standing_front += taur_belt_ov
+
 	overlays_standing[BELT_LAYER] = standing_front
 	overlays_standing[BELT_BEHIND_LAYER] = standing_behind
 
@@ -990,15 +1004,46 @@ There are several things that need to be remembered:
 	if(undercloaks.len)
 		overlays_standing[UNDER_CLOAK_LAYER] = undercloaks
 
+	var/obj/item/bodypart/taur/taur_back = get_taur_tail()
+	if(taur_back?.taur_clothing_category && (istype(backr, /obj/item/storage) || istype(backl, /obj/item/storage)))
+		var/mutable_appearance/saddlebag_ov = mutable_appearance('icons/roguetown/clothing/onmob/64x32/saiga_barding.dmi', "[taur_back.taur_clothing_category]_bags", -BACK_LAYER)
+		saddlebag_ov.pixel_x = taur_back.offset_x
+		overcloaks += saddlebag_ov
+		overlays_standing[BACK_LAYER] = overcloaks
+
 	rebuild_obscured_flags()
 	apply_overlay(BACK_LAYER)
 	apply_overlay(BACK_BEHIND_LAYER)
 	apply_overlay(UNDER_CLOAK_LAYER)
 
+/// I essentially ported my own PR from RW to do this: https://github.com/Rotwood-Vale/Ratwood-2.0/pull/1320 here for context.
+/// Builds the taur tabard heraldry overlay(s) for a worn tabard-type cloak, mirroring /obj/item/clothing/cloak/tabard's own base+pattern layering.
+/// Returns null if this isn't a tabard the taur has sprites for.
+/mob/living/carbon/human/proc/build_taur_tabard_overlay(obj/item/bodypart/taur/taur, obj/item/clothing/cloak/cloak)
+	if(!taur?.taur_clothing_category || !istype(cloak, /obj/item/clothing/cloak/tabard))
+		return null
+	var/list/taur_tabard_layers = list()
+	var/mutable_appearance/base_tabard_ov = mutable_appearance('icons/roguetown/clothing/onmob/64x32/saiga_barding.dmi', "[taur.taur_clothing_category]_tabard", -TABARD_LAYER)
+	base_tabard_ov.pixel_x = taur.offset_x
+	if(cloak.color)
+		base_tabard_ov.color = cloak.color
+	taur_tabard_layers += base_tabard_ov
+
+	var/pattern_tag = cloak.get_detail_tag()
+	if(pattern_tag && (pattern_tag in list("_spl", "_quad", "_box", "_dim")))
+		var/mutable_appearance/pattern_ov = mutable_appearance('icons/roguetown/clothing/onmob/64x32/saiga_barding.dmi', "[taur.taur_clothing_category]_tabard[pattern_tag]", -TABARD_LAYER)
+		pattern_ov.pixel_x = taur.offset_x
+		pattern_ov.appearance_flags = RESET_COLOR
+		if(cloak.get_detail_color())
+			pattern_ov.color = cloak.get_detail_color()
+		taur_tabard_layers += pattern_ov
+	return taur_tabard_layers
+
 /mob/living/carbon/human/update_inv_cloak()
 	remove_overlay(CLOAK_LAYER)
 	remove_overlay(CLOAK_BEHIND_LAYER)
 	remove_overlay(TABARD_LAYER)
+	remove_overlay(UNDER_ARMOR_CACHE_INDEX)
 
 	var/obj/item/bodypart/taur/taur = get_taur_tail()
 	var/icon/c_mask = taur?.clip_mask
@@ -1027,10 +1072,17 @@ There are several things that need to be remembered:
 
 			apply_offset(cloak_overlay, OFFSET_CLOAK, OFFSET_CLOAK_F)
 			if(cloak.alternate_worn_layer == TABARD_LAYER)
-				overlays_standing[TABARD_LAYER] = cloak_overlay
+				var/list/taur_tabard_layers = build_taur_tabard_overlay(taur, cloak)
+				overlays_standing[TABARD_LAYER] = taur_tabard_layers ? (list(cloak_overlay) + taur_tabard_layers) : cloak_overlay
 			if(cloak.alternate_worn_layer == CLOAK_BEHIND_LAYER)
 				overlays_standing[CLOAK_BEHIND_LAYER] = cloak_overlay
-			if(!cloak.alternate_worn_layer || cloak.alternate_worn_layer == UNDER_ARMOR_LAYER)
+			if(cloak.alternate_worn_layer == UNDER_ARMOR_LAYER)
+				var/list/taur_tabard_layers = build_taur_tabard_overlay(taur, cloak)
+				if(taur_tabard_layers)
+					overlays_standing[UNDER_ARMOR_CACHE_INDEX] = list(cloak_overlay) + taur_tabard_layers
+				else
+					cloaklays += cloak_overlay
+			else if(!cloak.alternate_worn_layer)
 				cloaklays += cloak_overlay
 
 			//add sleeve overlays, then offset
@@ -1059,7 +1111,8 @@ There are several things that need to be remembered:
 
 			apply_offset(cloak_overlay, OFFSET_CLOAK, OFFSET_CLOAK_F)
 			if(backr.alternate_worn_layer == TABARD_LAYER)
-				overlays_standing[TABARD_LAYER] = cloak_overlay
+				var/list/taur_tabard_layers = build_taur_tabard_overlay(taur, backr)
+				overlays_standing[TABARD_LAYER] = taur_tabard_layers ? (list(cloak_overlay) + taur_tabard_layers) : cloak_overlay
 			if(backr.alternate_worn_layer == CLOAK_BEHIND_LAYER)
 				overlays_standing[CLOAK_BEHIND_LAYER] = cloak_overlay
 			if(!backr.alternate_worn_layer)
@@ -1080,6 +1133,7 @@ There are several things that need to be remembered:
 	update_inv_armor() //fixboob
 	apply_overlay(TABARD_LAYER)
 	apply_overlay(CLOAK_BEHIND_LAYER)
+	apply_overlay(UNDER_ARMOR_CACHE_INDEX)
 	apply_overlay(CLOAK_LAYER)
 
 /mob/living/carbon/human/update_inv_shirt()
@@ -1279,7 +1333,7 @@ There are several things that need to be remembered:
 
 	overlays_standing[ARMOR_LAYER] = armor_overlay
 
-	add_overlay(armor_overlay)
+	apply_overlay(ARMOR_LAYER) // TA EDIT
 
 //endrogue
 
@@ -1752,51 +1806,42 @@ generate/load female uniform sprites matching all previously decided variables
 					break
 
 /mob/living/carbon/human/update_body_parts(redraw = FALSE)
-	//CHECK FOR UPDATE
-	var/oldkey = icon_render_key
-	icon_render_key = generate_icon_render_key()
-	if(oldkey == icon_render_key && !redraw)
+	var/hiden = FALSE //used to tell if we should hide boobs, basically
+	if(wear_armor && (wear_armor.flags_inv & HIDEBOOB))
+		hiden = TRUE
+	else if(wear_shirt && (wear_shirt.flags_inv & HIDEBOOB))
+		hiden = TRUE
+	else if(cloak && (cloak.flags_inv & HIDEBOOB))
+		hiden = TRUE
+
+	var/list/new_limbs = list()
+	var/changed = FALSE
+	for(var/obj/item/bodypart/BP as anything in bodyparts)
+		BP.update_limb()
+		var/new_key = BP.get_cache_key(hiden)
+		if(!redraw && new_key == icon_render_keys[BP.body_zone] && limb_icon_cache[new_key])
+			new_limbs += limb_icon_cache[new_key]
+			continue
+		changed = TRUE
+		var/is_chest = (BP.name == BODY_ZONE_CHEST)
+		var/list/limb_overlays
+		if(!redraw && limb_icon_cache[new_key])
+			limb_overlays = limb_icon_cache[new_key]
+		else
+			limb_overlays = BP.get_limb_icon(hideaux = is_chest ? hiden : FALSE)
+			if(isooze(src))
+				for(var/image/limb_alpha in limb_overlays)
+					limb_alpha.alpha = 180
+		new_limbs += limb_overlays
+		limb_icon_cache[new_key] = limb_overlays
+		icon_render_keys[BP.body_zone] = new_key
+
+	if(!changed)
 		return
 
 	remove_overlay(BODYPARTS_LAYER)
-
-	for(var/obj/item/bodypart/BP as anything in bodyparts)
-		BP.update_limb()
-
-	//LOAD ICONS
-	if(!redraw)
-		if(limb_icon_cache[icon_render_key])
-			load_limb_from_cache()
-			return
-
-	//GENERATE NEW LIMBS
-	var/list/new_limbs = list()
-	var/hiden = FALSE //used to tell if we should hide boobs, basically
-	for(var/obj/item/bodypart/BP as anything in bodyparts)
-		if(BP.name == BODY_ZONE_CHEST)
-			if(wear_armor)
-				var/obj/item/I = wear_armor
-				if(I.flags_inv & HIDEBOOB)
-					hiden = TRUE
-			if(wear_shirt)
-				var/obj/item/I = wear_shirt
-				if(I.flags_inv & HIDEBOOB)
-					hiden = TRUE
-			if(cloak)
-				var/obj/item/I = cloak
-				if(I.flags_inv & HIDEBOOB)
-					hiden = TRUE
-			new_limbs += BP.get_limb_icon(hideaux = hiden)
-		else
-			new_limbs += BP.get_limb_icon()
-
-	if(isooze(src))
-		for(var/image/limb_alpha in new_limbs)
-			limb_alpha.alpha = 180
-
 	if(length(new_limbs))
 		overlays_standing[BODYPARTS_LAYER] = new_limbs
-		limb_icon_cache[icon_render_key] = new_limbs
 
 	apply_overlay(BODYPARTS_LAYER)
 	update_damage_overlays()

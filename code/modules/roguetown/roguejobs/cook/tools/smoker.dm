@@ -227,6 +227,8 @@
 			return ..()
 
 /obj/machinery/light/rogue/smoker/process()
+	if(on && lit && has_log && !door_open) // TA EDIT
+		ta_burn_mobs_on_tile() // TA EDIT
 	if(!on || door_open || !lit || !has_log || !contents.len)
 		return
 

@@ -301,7 +301,7 @@
 		return
 	var/aimed_zone = def_zone
 	var/list/roll_out = list()
-	def_zone = bullet_hit_accuracy_check(P.get_aim_from(src), def_zone, roll_out)
+	def_zone = bullet_hit_accuracy_check(P.get_aim_from(src), def_zone, roll_out, P)
 	var/armor = run_armor_check(def_zone, P.flag, "", "",armor_penetration = P.armor_penetration, damage = P.damage, intdamfactor = P.intdamfactor, used_weapon = P)
 
 	next_attack_msg.Cut()
@@ -312,6 +312,8 @@
 		var/mob/living/simple_animal/weakpoint_target = src
 		actual_damage *= weakpoint_target.weakpoint_damage_mod(def_zone)
 		actual_damage *= P.npc_simple_damage_mult
+		if(P.spell_damage_scaled)
+			actual_damage /= SPELL_DAMAGE_GENERAL_MODIFIER
 	var/nodmg = FALSE
 	if(!P.nodamage && on_hit_state != BULLET_ACT_BLOCK)
 		if(!apply_damage(actual_damage, P.damage_type, def_zone, armor))
@@ -721,8 +723,6 @@
 
 //called when the mob receives a bright flash
 /mob/living/proc/flash_act(intensity = 1, override_blindness_check = 0, affect_silicon = 0, visual = 0, type = /atom/movable/screen/fullscreen/flash)
-	if(HAS_TRAIT(src, TRAIT_NOFLASH))
-		return FALSE
 	if(get_eye_protection() < intensity && (override_blindness_check || !(HAS_TRAIT(src, TRAIT_BLIND))))
 		overlay_fullscreen("flash", type)
 		addtimer(CALLBACK(src, PROC_REF(clear_fullscreen), "flash", 25), 25)

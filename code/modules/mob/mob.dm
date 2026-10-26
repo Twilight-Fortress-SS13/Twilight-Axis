@@ -429,6 +429,10 @@ GLOBAL_VAR_INIT(mobids, 1)
 			return 1
 
 	return 0
+/mob/proc/equip_to_appropriate_slot_or_hands(obj/item/equipping_item)
+	. = equip_to_appropriate_slot(equipping_item)
+	if(!.)
+		return put_in_hands(equipping_item, FALSE)
 /**
  * Reset the attached clients perspective (viewpoint)
  *
@@ -685,6 +689,7 @@ GLOBAL_VAR_INIT(mobids, 1)
  * * handles the strip panel equip and unequip as well if "item" sent
  */
 /mob/Topic(href, href_list)
+	. = ..()
 	if(href_list["mach_close"])
 		var/t1 = text("window=[href_list["mach_close"]]")
 		unset_machine()
@@ -1296,14 +1301,14 @@ GLOBAL_VAR_INIT(mobids, 1)
 
 /mob/proc/adjust_hydration(change)
 	if(HAS_TRAIT(src, TRAIT_NOHUNGER))
-		nutrition = HYDRATION_LEVEL_FULL
+		hydration = HYDRATION_LEVEL_FULL
 	hydration = max(0, hydration + change)
 	if(hydration > HYDRATION_LEVEL_FULL)
 		hydration = HYDRATION_LEVEL_FULL
 
 /mob/proc/set_hydration(change)
 	if(HAS_TRAIT(src, TRAIT_NOHUNGER))
-		nutrition = HYDRATION_LEVEL_FULL
+		hydration = HYDRATION_LEVEL_FULL
 	hydration = max(0, change)
 	if(hydration > HYDRATION_LEVEL_FULL)
 		hydration = HYDRATION_LEVEL_FULL
@@ -1386,3 +1391,6 @@ GLOBAL_VAR_INIT(mobids, 1)
 
 /mob/proc/get_stats_tab_items()
 	return list()
+
+/mob/proc/check_equipment_mood_penalty()
+	return

@@ -760,6 +760,7 @@
 	icon = 'icons/roguetown/misc/decoration.dmi'
 	icon_state = "shadow_floor"
 	mouse_opacity = 0
+	bake_to_loc = TRUE
 
 /obj/effect/decal/shadow_floor/corner
 	icon_state = "shad_floorcorn"

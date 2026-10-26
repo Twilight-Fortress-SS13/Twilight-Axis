@@ -71,6 +71,10 @@
 		if(user.voicecolor_override)
 			usedcolor = user.voicecolor_override
 		user.whisper(input_text)
+		if(garrisonline) // TA EDIT START
+			user.log_talk(input_text, LOG_GAME, tag="CROWN GARRISON SCOM")
+		else
+			user.log_talk(input_text, LOG_GAME, tag="CROWN SCOM") // TA EDIT END
 		if(length(input_text) > 100)
 			input_text = "<small>[input_text]</small>"
 		if(!garrisonline)

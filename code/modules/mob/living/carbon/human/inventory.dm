@@ -379,6 +379,8 @@
 	if(I.flags_inv & HIDEEARS || forced)
 		update_body()
 	..()
+	if(I.flags_inv & (HIDEHAIR|HIDEFACIALHAIR|HIDEFACE|HIDEEARS|HIDEEYES) || forced)
+		update_body_parts(TRUE)
 
 /mob/living/carbon/human/proc/equipOutfit(outfit, visualsOnly = FALSE)
 	var/datum/outfit/O = null
@@ -427,6 +429,14 @@
 		return
 	var/obj/item/thing = get_active_held_item()
 	var/obj/item/equipped_back = get_item_by_slot(slot_id)
+	if(istype(thing, /obj/item/gun/ballistic/revolver/grenadelauncher) && istype(equipped_back, /obj/item/quiver)) // nock straight from the quiver
+		var/obj/item/quiver/Q = equipped_back
+		var/obj/item/gun/ballistic/revolver/grenadelauncher/launcher = thing
+		if(launcher.chambered)
+			to_chat(src, span_notice("There's already [launcher.cartridge_articles] [launcher.cartridge_wording] in \the [launcher]."))
+			return
+		Q.try_quick_load(launcher, src)
+		return
 	if(equip_scabbard(thing, equipped_back, slot_id))
 		return
 	if(!equipped_back) // We also let you equip a backpack like this
@@ -528,6 +538,8 @@
 				return
 		if(!SEND_SIGNAL(equipped_cloak, COMSIG_TRY_STORAGE_INSERT, thing, src))
 			to_chat(src, span_warning("I can't fit anything in!"))
+		else if(equipped_cloak.inhand_mod)
+			update_inv_hands()
 		return
 	if(!equipped_cloak.contents.len) // nothing to take out
 		to_chat(src, span_warning("There's nothing in your cloak to take out!"))

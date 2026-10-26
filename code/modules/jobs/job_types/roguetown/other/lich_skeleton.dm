@@ -181,7 +181,7 @@ LICH SKELETONS
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/studded
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/paalloy
 	neck = /obj/item/clothing/neck/roguetown/chaincoif/paalloy
-	shoes = /obj/item/clothing/shoes/roguetown/sandals/paalloy
+	shoes = /obj/item/clothing/shoes/roguetown/boots/paalloy // TA EDIT
 	beltr = /obj/item/rogueweapon/huntingknife/idagger/steel/padagger
 	gloves = /obj/item/clothing/gloves/roguetown/angle
 	belt = /obj/item/storage/belt/rogue/leather/black
@@ -280,7 +280,7 @@ LICH SKELETONS
 	pants = /obj/item/clothing/under/roguetown/chainlegs/kilt/paalloy //Intended as non-plate, stands out from knights this way.
 	armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/paalloy
 	neck = /obj/item/clothing/neck/roguetown/gorget/paalloy
-	shoes = /obj/item/clothing/shoes/roguetown/boots/paalloy
+	shoes = /obj/item/clothing/shoes/roguetown/boots/paalloy // TA EDIT
 	gloves = /obj/item/clothing/gloves/roguetown/chain/paalloy
 	belt = /obj/item/storage/belt/rogue/leather/black
 
@@ -383,7 +383,7 @@ LICH SKELETONS
 	ADD_TRAIT(H, TRAIT_TRAINED_SMITH, TRAIT_GENERIC)
 	ADD_TRAIT(H, TRAIT_ARCYNE, TRAIT_GENERIC)
 
-	H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 0, "minor" = 0, "utilities" = 4))
+	H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 0, "minor" = 0, "utilities" = 5))
 	//For summoning rocks or whatever, or utility like mending/mindlink
 
 	// Sapper-exclusive self-exploding spell
@@ -420,7 +420,7 @@ LICH SKELETONS
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/jacket/artijacket/lich
 	gloves = /obj/item/clothing/gloves/roguetown/angle/grenzelgloves/blacksmith/lich
 	neck = /obj/item/clothing/neck/roguetown/chaincoif/paalloy
-	shoes = /obj/item/clothing/shoes/roguetown/sandals/paalloy
+	shoes = /obj/item/clothing/shoes/roguetown/boots/paalloy // TA EDIT
 	belt = /obj/item/storage/belt/rogue/leather //regular looks nicer
 
 	backl = /obj/item/storage/backpack/rogue/backpack
@@ -508,7 +508,7 @@ LICH SKELETONS
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/studded
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/paalloy
 	neck = /obj/item/clothing/neck/roguetown/chaincoif/paalloy
-	shoes = /obj/item/clothing/shoes/roguetown/sandals/paalloy
+	shoes = /obj/item/clothing/shoes/roguetown/boots/paalloy // TA EDIT
 	gloves = /obj/item/clothing/gloves/roguetown/chain/paalloy
 	belt = /obj/item/storage/belt/rogue/leather/black
 
@@ -593,7 +593,7 @@ LICH SKELETONS
 	pants = /obj/item/clothing/under/roguetown/platelegs/paalloy
 	gloves = /obj/item/clothing/gloves/roguetown/plate/paalloy
 	neck = /obj/item/clothing/neck/roguetown/gorget/paalloy
-	shoes = /obj/item/clothing/shoes/roguetown/boots/paalloy
+	shoes = /obj/item/clothing/shoes/roguetown/boots/paalloy // TA EDIT
 	belt = /obj/item/storage/belt/rogue/leather/black
 
 	backl = /obj/item/storage/backpack/rogue/satchel/black
@@ -628,7 +628,7 @@ LICH SKELETONS
 			cloak = /obj/item/clothing/cloak/tabard/toga/lich
 
 	if(H.mind) //2 slot, irreplacable skeletons.
-		H.mind.AddSpell(new /datum/action/cooldown/spell/mending) //Gets replaced w/weaker version w/ritual armor. it balances out.
+		H.mind.AddSpell(new /datum/action/cooldown/spell/mending) //Gets replaced w/weaker version w/rituos armor, balances out.
 		H.mind.AddSpell(new /datum/action/cooldown/spell/bonemend)
 
 	H.energy = H.max_energy
@@ -643,15 +643,6 @@ LICH SKELETONS
 	category_tags = list(CTAG_LSKELETON)
 
 /datum/outfit/job/roguetown/greater_skeleton/lich/spellblade
-	var/subclass_selected
-
-/datum/outfit/job/roguetown/greater_skeleton/lich/spellblade/Topic(href, href_list)
-	. = ..()
-	if(href_list["subclass"])
-		subclass_selected = href_list["subclass"]
-	else if(href_list["close"])
-		if(!subclass_selected)
-			subclass_selected = "blade"
 
 /datum/outfit/job/roguetown/greater_skeleton/lich/spellblade/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -687,7 +678,7 @@ LICH SKELETONS
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/studded
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/paalloy/chain
 	neck = /obj/item/clothing/neck/roguetown/chaincoif/paalloy
-	shoes = /obj/item/clothing/shoes/roguetown/sandals/paalloy
+	shoes = /obj/item/clothing/shoes/roguetown/boots/paalloy // TA EDIT
 	gloves = /obj/item/clothing/gloves/roguetown/chain/paalloy
 	backr = /obj/item/rogueweapon/shield/bronze/paalloy
 	belt = /obj/item/storage/belt/rogue/leather/black
@@ -702,98 +693,57 @@ LICH SKELETONS
 
 	to_chat(H, span_warning("You start with Bind Weapon. Remember to Bind your weapon so you can use your abilities and build up Arcyne Momentum."))
 
-	subclass_selected = null
-	var/selection_html = get_spellblade_chant_html(src, H, "undead")
-	H << browse(selection_html, "window=spellblade_chant;size=1100x900")
-	onclose(H, "spellblade_chant", src)
-
-	var/open_time = world.time
-	while(!subclass_selected && world.time - open_time < 5 MINUTES)
-		stoplag(1)
-	H << browse(null, "window=spellblade_chant")
-
-	if(!subclass_selected)
-		subclass_selected = "blade"
-
-	var/datum/status_effect/buff/arcyne_momentum/momentum = H.apply_status_effect(/datum/status_effect/buff/arcyne_momentum)
-	if(momentum)
-		momentum.chant = subclass_selected
+	var/spellblade_chant_selected = prompt_spellblade_choice(H, get_spellblade_chant_html(src, H, "undead"))
+	var/datum/spellblade_chant/chant = GLOB.spellblade_chants[spellblade_chant_selected]
+	chant.apply_chant(H)
 
 	if(H.mind)
-		switch(subclass_selected)
-			if("blade")
-				H.mind.AddSpell(new /datum/action/cooldown/spell/caedo)
-				H.mind.AddSpell(new /datum/action/cooldown/spell/air_strike)
-				H.mind.AddSpell(new /datum/action/cooldown/spell/leyline_anchor)
-				H.mind.AddSpell(new /datum/action/cooldown/spell/blade_storm)
-			if("phalangite")
-				H.mind.AddSpell(new /datum/action/cooldown/spell/azurean_phalanx)
-				H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/azurean_pilum)
-				H.mind.AddSpell(new /datum/action/cooldown/spell/advance)
-				H.mind.AddSpell(new /datum/action/cooldown/spell/gate_of_reckoning)
-			if("macebearer")
-				H.mind.AddSpell(new /datum/action/cooldown/spell/telegraphed_strike/spellblade/shatter)
-				H.mind.AddSpell(new /datum/action/cooldown/spell/telegraphed_strike/spellblade/tremor)
-				H.mind.AddSpell(new /datum/action/cooldown/spell/charge)
-				H.mind.AddSpell(new /datum/action/cooldown/spell/cataclysm)
-
-		H.mind.AddSpell(new /datum/action/cooldown/spell/recall_weapon)
-		H.mind.AddSpell(new /datum/action/cooldown/spell/empower_weapon)
-		H.mind.AddSpell(new /datum/action/cooldown/spell/bind_weapon)
-		H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/bonemend) //So you don't die from damaging yourself by your own gameplay loop.
-		H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 0, "minor" = 0, "utilities" = 4))
+		H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 0, "minor" = 0, "utilities" = 5))
 
 	H.adjust_blindness(-3)
-	switch(subclass_selected)
+	// used to handle skill assignment automatically
+	var/obj/item/rogueweapon/granted_weapon = null
+	switch(spellblade_chant_selected)
 		if("blade")
 			var/weapons = list("Ancient Khopesh", "Ancient Longsword", "Ancient Dagger")
 			var/weapon_choice = input(H, "Choose your BLADE.", "RAGE AGAINST THE LYVING.") as anything in weapons
 			switch(weapon_choice)
 				if("Ancient Khopesh")
-					beltr = /obj/item/rogueweapon/sword/sabre/palloy
+					beltr = granted_weapon = /obj/item/rogueweapon/sword/sabre/palloy
 				if("Ancient Longsword")
-					beltr = /obj/item/rogueweapon/sword/long/palloy //role unique
+					beltr = granted_weapon = /obj/item/rogueweapon/sword/long/palloy //role unique
 				if("Ancient Dagger")
-					beltr = /obj/item/rogueweapon/huntingknife/idagger/steel/padagger
-			if(weapon_choice == "Ancient Dagger")
-				H.adjust_skillrank_up_to(/datum/skill/combat/knives, 4, TRUE)
-			else
-				H.adjust_skillrank_up_to(/datum/skill/combat/swords, 4, TRUE)
+					beltr = granted_weapon = /obj/item/rogueweapon/huntingknife/idagger/steel/padagger
 		if("phalangite")
 			var/weapons = list("Ancient Spear", "Ancient Bardiche")
 			var/weapon_choice = input(H, "Choose your SPEAR.", "RAGE AGAINST THE LYVING.") as anything in weapons
 			switch(weapon_choice)
 				if("Ancient Spear")
-					r_hand = /obj/item/rogueweapon/spear/paalloy
+					r_hand = granted_weapon = /obj/item/rogueweapon/spear/paalloy
 					backr = /obj/item/rogueweapon/scabbard/gwstrap
 				if("Ancient Bardiche")
-					r_hand = /obj/item/rogueweapon/halberd/bardiche/paalloy
+					r_hand = granted_weapon = /obj/item/rogueweapon/halberd/bardiche/paalloy
 					backr = /obj/item/rogueweapon/scabbard/gwstrap
-			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 4, TRUE)
 		if("macebearer")
 			var/weapons = list("Ancient Mace", "Ancient Warhammer", "Ancient Grand Mace", "Ancient Alloy Axe", "Steel Greataxe")
 			var/weapon_choice = input(H, "Choose your WEAPON.", "RAGE AGAINST THE LYVING.") as anything in weapons
-			var/picked_axe = FALSE
 			switch(weapon_choice)
 				if("Ancient Mace")
-					beltr = /obj/item/rogueweapon/mace/steel/palloy
+					beltr = granted_weapon = /obj/item/rogueweapon/mace/steel/palloy
 				if("Ancient Warhammer")
-					beltr = /obj/item/rogueweapon/mace/warhammer/steel/paalloy
+					beltr = granted_weapon = /obj/item/rogueweapon/mace/warhammer/steel/paalloy
 				if("Ancient Grand Mace")
-					r_hand = /obj/item/rogueweapon/mace/goden/steel/paalloy
+					r_hand = granted_weapon = /obj/item/rogueweapon/mace/goden/steel/paalloy
 					backr = /obj/item/rogueweapon/scabbard/gwstrap
 				if("Ancient Alloy Axe")
-					beltr = /obj/item/rogueweapon/stoneaxe/woodcut/steel/paaxe
-					picked_axe = TRUE
+					beltr = granted_weapon = /obj/item/rogueweapon/stoneaxe/woodcut/steel/paaxe
 				if("Steel Greataxe")
-					r_hand = /obj/item/rogueweapon/greataxe/steel
+					r_hand = granted_weapon = /obj/item/rogueweapon/greataxe/steel
 					backr = /obj/item/rogueweapon/scabbard/gwstrap
-					picked_axe = TRUE
-			if(picked_axe)
-				H.adjust_skillrank_up_to(/datum/skill/combat/axes, 4, TRUE)
-			else
-				H.adjust_skillrank_up_to(/datum/skill/combat/maces, 4, TRUE)
+	if(granted_weapon)
+		H.adjust_skillrank_up_to(granted_weapon::associated_skill, SKILL_LEVEL_EXPERT, TRUE)
+
 	H.set_blindness(0)
 
 	// Hack for ordering
@@ -878,7 +828,7 @@ LICH SKELETONS
 	cloak = /obj/item/clothing/cloak/tabard/toga/lich //Goes with the fit, so you get no choice of picks
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/cloth/lich
 	neck = /obj/item/clothing/neck/roguetown/chaincoif/paalloy
-	shoes = /obj/item/clothing/shoes/roguetown/sandals/paalloy
+	shoes = /obj/item/clothing/shoes/roguetown/boots/paalloy // TA EDIT
 	gloves = /obj/item/clothing/gloves/roguetown/bandages/weighted/lich //Second weak spot, hands.
 	id = /obj/item/clothing/neck/roguetown/psicross/inhumen/paalloy //UP THE Z
 	belt = /obj/item/storage/belt/rogue/leather/rope/upgraded/dark

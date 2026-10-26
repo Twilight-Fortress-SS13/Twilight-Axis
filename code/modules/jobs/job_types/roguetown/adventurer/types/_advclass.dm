@@ -240,21 +240,9 @@
 /datum/advclass/proc/change_origin(mob/living/carbon/human/H, new_origin = /datum/virtue/none, wording)
 	var/client/player = H?.client
 	if(player?.prefs)
-		var/datum/virtue/origin/origin_memory = player.prefs.virtue_origin // TA EDIT START
-		var/datum/virtue/origin/temporary_origin = new new_origin
 		if(wording)
 			H.dna.species.skin_tone_wording = wording
-		temporary_origin.last_origin = origin_memory
-		temporary_origin.apply_to_human(H)
-		if(length(temporary_origin.added_languages))
-			for(var/L in temporary_origin.added_languages)
-				H.grant_language(L)
-		if(length(origin_memory?.added_languages))
-			for(var/L in origin_memory.added_languages)
-				if(L != player.prefs.extra_language)
-					H.remove_language(L)
-		H.grant_language(player.prefs.extra_language)
-		qdel(temporary_origin) // TA EDIT END
+		force_character_origin(H, new_origin)
 
 /datum/advclass/proc/check_preferences_requirements(datum/preferences/prefs, client/player, check_slots = TRUE, check_probability = TRUE) // TA EDIT START
 	if(!prefs)

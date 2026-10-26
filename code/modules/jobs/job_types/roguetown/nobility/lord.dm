@@ -104,7 +104,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 		SSticker.regentmob = null //Time for regent to give up the position.
 
 		addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, lord_marriage_choice)), 50)
-		addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, lord_suitor_choice)), 50)
+		//addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, lord_suitor_choice)), 50) //TA EDIT
 		if(STATION_TIME_PASSED() <= 30 MINUTES) //Late to the party? Stuck with default colors, sorry!
 			spawn(50){
 				var/list/prefs = get_roleprefs(L.client)
@@ -328,7 +328,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 		STATKEY_PER = 2,
 		STATKEY_WIL = 1,
 	)
-	subclass_mage_aspects = list("mastery" = FALSE, "major" = 1, "minor" = 1, "utilities" = 4, "ward" = TRUE)
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 1, "minor" = 1, "utilities" = 5, "ward" = TRUE)
 	subclass_skills = list(
 		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/arcyne = SKILL_LEVEL_EXPERT,

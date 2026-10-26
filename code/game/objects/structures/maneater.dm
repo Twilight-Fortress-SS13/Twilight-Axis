@@ -96,6 +96,8 @@
 	update_icon()
 
 	buckle_mob(victim, TRUE, check_loc = FALSE)
+	if(isanimal(victim) && !victim.mind && victim.STASTR >= 12) // TA EDIT
+		INVOKE_ASYNC(victim, TYPE_PROC_REF(/mob/living, execute_resist)) // TA EDIT
 	playsound(loc, list('sound/vo/mobs/plant/attack (1).ogg','sound/vo/mobs/plant/attack (2).ogg','sound/vo/mobs/plant/attack (3).ogg','sound/vo/mobs/plant/attack (4).ogg'), 100, FALSE, -1)
 	visible_message(span_userdanger("[src] begins to gnaw on [victim]! RESIST as many times as possible, or risk being chewed apart!"))
 	addtimer(CALLBACK(src, PROC_REF(begin_eat), victim), 3 SECONDS, TIMER_OVERRIDE|TIMER_UNIQUE|TIMER_STOPPABLE)
@@ -126,9 +128,10 @@
 		var/list/limb_zones = list(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
 		var/zone = null
 		var/obj/item/bodypart/limb = null
-		var/maneater_armor_damage = 500
+		var/armor_damage_max = 600 - min(((victim.STALUC - 10) * 100), 550)
+		var/maneater_armor_damage = rand(50, armor_damage_max)
 		if(HAS_TRAIT(victim, TRAIT_TOUGH_COOKIE))
-			maneater_armor_damage = 250
+			maneater_armor_damage = (maneater_armor_damage * 0.5)
 		while(length(limb_zones) && !limb)
 			zone = pick(limb_zones)
 			limb_zones -= zone

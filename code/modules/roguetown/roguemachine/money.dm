@@ -137,9 +137,12 @@ GLOBAL_VAR(moneymaster)
 	if(SSmapping.config.map_name == "Rockhill")
 		if(specify)
 			switch(specify)
-				if("GOLD", "SILVER")
+				if("GOLD")
 					zenars_to_put = budget/14
 					type_to_put = /obj/item/roguecoin/goldkrona
+				if("SILVER")
+					zenars_to_put = budget/7
+					type_to_put = /obj/item/roguecoin/grout
 				if("BRONZE")
 					zenars_to_put = budget
 					type_to_put = /obj/item/roguecoin/copper
@@ -154,6 +157,21 @@ GLOBAL_VAR(moneymaster)
 				highest_found = TRUE
 				type_to_put = /obj/item/roguecoin/goldkrona
 				zenars_to_put = zenars
+			var/grouts = floor(budget/7) //TA EDIT
+			if(grouts)
+				budget -= grouts * 7
+				if(!highest_found)
+					highest_found = TRUE
+					type_to_put = /obj/item/roguecoin/grout
+					zenars_to_put = grouts
+				else
+					// Create multiple stacks if needed
+					while(grouts > 0)
+						var/stack_size = min(grouts, 20)
+						var/obj/item/roguecoin/grout_stack = new /obj/item/roguecoin/grout(T, stack_size)
+						if(user && grouts == stack_size && putinhands) // Only put first stack in hands
+							user.put_in_hands(grout_stack)
+						grouts -= stack_size
 			if(budget >= 1)
 				if(!highest_found)
 					type_to_put = /obj/item/roguecoin/copper

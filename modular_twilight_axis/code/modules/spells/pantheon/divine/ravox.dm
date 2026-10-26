@@ -711,7 +711,7 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 		else
 			swarm.visible_message(span_notice("A [swarm] manifests from a spectral haze!"))
 		if(swarm.buffed_r == FALSE)
-			addtimer(CALLBACK(swarm, TYPE_PROC_REF(/mob/living/simple_animal/hostile/rogue/skeleton, deathtime), TRUE), time)
+			addtimer(CALLBACK(swarm, TYPE_PROC_REF(/mob/living, ta_ravox_spirit_expire)), time) // TA EDIT
 			swarm.buffed_r = TRUE
 			swarm.name = "[user.real_name]'s Spirit"
 		return TRUE
@@ -762,7 +762,7 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 			if(swarm.buffed_r == FALSE)
 				swarm.maxHealth *= skill
 				swarm.health *= skill
-				addtimer(CALLBACK(swarm, TYPE_PROC_REF(/mob/living/simple_animal/hostile/rogue/skeleton, deathtime), TRUE), time)
+				addtimer(CALLBACK(swarm, TYPE_PROC_REF(/mob/living, ta_ravox_spirit_expire)), time) // TA EDIT
 				swarm.buffed_r = TRUE
 		return TRUE
 	return FALSE
@@ -801,7 +801,7 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 	melee_damage_lower = 25
 	melee_damage_upper = 30
 	icon_dead = ""
-	loot = list(/obj/item/ash,	/obj/item/ash)
+	loot = list(/obj/item/natural/ash,	/obj/item/natural/ash)
 	can_have_ai = FALSE //disable native ai
 	AIStatus = AI_OFF
 	var/buffed_r = FALSE
@@ -923,3 +923,48 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 			return TRUE
 	return ..()
 
+/datum/outfit/job/roguetown/ravox_spirit/no_floor_swords/pre_equip(mob/living/carbon/human/H, visualsOnly)
+	. = ..()
+	l_hand = null
+	r_hand = null
+
+/mob/living/carbon/human/species/human/northern/ravox_spirit
+	var/tmp/ravox_outfit_equipped = FALSE
+
+/mob/living/carbon/human/species/human/northern/ravox_spirit/outfit_ravoxspirit(datum/outfit/outfit)
+	if(!outfit || ravox_outfit_equipped)
+		return
+	ravox_outfit_equipped = TRUE
+
+	for(var/obj/item/held_item in held_items)
+		temporarilyRemoveItemFromInventory(held_item, TRUE)
+		qdel(held_item)
+
+	equipOutfit(/datum/outfit/job/roguetown/ravox_spirit/no_floor_swords)
+
+	var/obj/item/rogueweapon/sword/long/ravox_spirit/left_sword = new(src)
+	if(!put_in_l_hand(left_sword, TRUE))
+		qdel(left_sword)
+
+	var/obj/item/rogueweapon/sword/long/ravox_spirit/right_sword = new(src)
+	if(!put_in_r_hand(right_sword, TRUE))
+		qdel(right_sword)
+
+	for(var/obj/item/equipped_item in get_equipped_items() + held_items)
+		equipped_item.AddComponent(/datum/component/item_on_drop/dust)
+
+	for(var/obj/item/held_item in held_items)
+		ADD_TRAIT(held_item, TRAIT_NODROP, TRAIT_GENERIC)
+
+
+/mob/living/proc/ta_ravox_spirit_expire() // TA EDIT
+	if(QDELETED(src) || stat == DEAD)
+		return
+	add_atom_colour(rgb(207, 135, 255), ADMIN_COLOUR_PRIORITY) // TA EDIT
+	ta_ravox_spirit_wither() // TA EDIT
+
+/mob/living/proc/ta_ravox_spirit_wither() // TA EDIT
+	if(QDELETED(src) || stat == DEAD)
+		return
+	adjustFireLoss(8) // TA EDIT
+	addtimer(CALLBACK(src, PROC_REF(ta_ravox_spirit_wither)), 5 SECONDS) // TA EDIT

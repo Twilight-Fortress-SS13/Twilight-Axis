@@ -122,6 +122,10 @@
 			if(H == HU)
 				return
 
+			if(H.mind.has_antag_datum(/datum/antagonist/vampire/lord) || H.mind.has_antag_datum(/datum/antagonist/lich) || H.mind.has_antag_datum(/datum/antagonist/dreamwalker)) //(prevents exploits w/ the rod like muting a lich/dreamwalker or shocking a pre-ascension VL)
+				to_chat(user, span_danger("[H] doesn't seem remotely suspectable to the rod's influence!"))
+				return
+
 			if(!COOLDOWN_FINISHED(src, scepter))
 				to_chat(user, span_danger("The [src] is not ready yet! [round(COOLDOWN_TIMELEFT(src, scepter) / 10, 1)] seconds left!"))
 				return
@@ -398,35 +402,24 @@
 	icon = 'icons/roguetown/weapons/special/freifechter32.dmi'
 	possible_item_intents = list(/datum/intent/dagger/thrust, /datum/intent/dagger/thrust/pick, /datum/intent/mace/smash)
 
-/obj/item/rogueweapon/katar/psydon
+/obj/item/rogueweapon/katar/silver/psy
 	name = "psydonic katar"
 	desc = "An exotic weapon taken from the hands of wandering monks, an esoteric design to the Otavan Orthodoxy. Special care was taken into account towards the user's knuckles: silver-tipped steel from tip to edges, and His holy cross reinforcing the heart of the weapon, with curved shoulders to allow its user to deflect incoming blows - provided they lead it in with the blade."
 	icon_state = "psykatar"
-	force = 19
-	wdefense = 3
-	is_silver = TRUE
 	smeltresult = /obj/item/ingot/silverblessed
 
-/obj/item/rogueweapon/katar/psydon/ComponentInitialize()
+/obj/item/rogueweapon/katar/silver/psy/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_PSYDONIAN\
 	)
 
-/obj/item/rogueweapon/katar/psydon/preblessed/ComponentInitialize()
+/obj/item/rogueweapon/katar/silver/psy/preblessed/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_PSYDONIAN,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_PSYDONIAN\
 	)
 
 /obj/item/rogueweapon/katar/silver
@@ -436,8 +429,6 @@
 	psicrucifix. After praying for guidence, the preacher was said to've been guided by a ray of daelight to the silvered steeple - and through divine heat, melted it into a hand-dagger that would soon \
 	rip the verebeaste apart."
 	icon_state = "silverkatar"
-	force = 19
-	wdefense = 3
 	is_silver = TRUE
 	smeltresult = /obj/item/ingot/silver
 
@@ -445,11 +436,7 @@
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_TENNITE\
 	)
 
 /obj/item/rogueweapon/handclaw/steel/graggaredged
@@ -554,6 +541,7 @@
 	wdefense = 6
 	max_blade_int = 140
 	associated_skill = /datum/skill/combat/polearms
+	is_implement = FALSE
 	special = /datum/special_intent/polearm_backstep
 
 /obj/item/rogueweapon/woodstaff/militia/getonmobprop(tag)
@@ -586,36 +574,22 @@
 	icon_state = "silvershovelwaraxe"
 	possible_item_intents = list(/datum/intent/axe/cut, /datum/intent/axe/chop, SPEAR_BASH) //bash is for nonlethal takedowns, only targets limbs
 	gripped_intents = list(/datum/intent/rend/reach, /datum/intent/axe/chop/long, SPEAR_BASH)
-	force = 15
-	force_wielded = 25
-	minstr = 11
-	max_blade_int = 200
 	anvilrepair = /datum/skill/craft/carpentry
 	smeltresult = /obj/item/ingot/silver
-	wdefense = 6
-	wbalance = WBALANCE_HEAVY
 	is_silver = TRUE
 
 /obj/item/rogueweapon/greataxe/militia/silver/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 100,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_TENNITE\
 	)
 
 /obj/item/rogueweapon/greataxe/militia/silver/preblessed/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_TENNITE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 100,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_TENNITE\
 	)
 
 /obj/item/rogueweapon/spear/militia
@@ -841,11 +815,7 @@
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_TENNITE\
 	)
 
 /obj/item/rogueweapon/pick/militia
@@ -997,25 +967,18 @@
 /obj/item/rogueweapon/handclaw/gronn/silver
 	name = "silver ravager claws"
 	desc = "A trinity of silver claws, forged in defiant reverence of the Old Ways that still permeate throughout the Northern Empty. \
-			The psicruciformic edge shreds through the hide of thralls; resurrected corpses from Fjallic antiquity, said to've been born through faithlessness and despair. \
+			The psicruciformic edge shreds through the hide of thralls; resurrected corpses from Gronnic antiquity, said to've been born through faithlessness and despair. \
 			Few shamen hold the strength to wield it, and fewer will speak of what they, alone, know - the true fate of the Weeping Father. \
 			</br>'Here we stand, to turn and face the odds; sacrifice yourself, or bow to lesser gods!'"
 	smeltresult = /obj/item/ingot/silver
 	icon_state = "silverclaws"
-	wdefense = 5
-	max_blade_int = 300
-	max_integrity = 225
 	is_silver = TRUE
 
 /obj/item/rogueweapon/handclaw/gronn/silver/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 100,\
-		added_int = 50,\
-		added_def = 2,\
+		silver_type = SILVER_TENNITE\
 	)
 
 /obj/item/rogueweapon/handclaw/blacksteel
@@ -1135,135 +1098,6 @@
 	// call parent for assassins so they can actually see the desc
 	. = ..()
 
-
-//Knuckledusters. Uses the Psydonic Thorns code to swap between this and the wearable, unarmed-damage-multiplying variants.
-/obj/item/rogueweapon/knuckledusters
-	name = "knuckledusters" //(Currenty?) inaccessable base.
-	desc = "An alloyed piece of pugilism, adjusted to be actively swung rather than passively worn atop the knuckles. Favored \
-	by those who prefer to keep a little something-something in their pockets, whenever the Innhouse gets a bit too rowdy."
-	force = 25
-	possible_item_intents = list(/datum/intent/mace/strike/dislocate, /datum/intent/mace/smash, /datum/intent/dagger/sucker_punch)
-	icon = 'icons/roguetown/weapons/unarmed32.dmi'
-	icon_state = "steelknuckle"
-	gripsprite = FALSE
-	wlength = WLENGTH_SHORT
-	w_class = WEIGHT_CLASS_SMALL
-	slot_flags = ITEM_SLOT_HIP
-	parrysound = list('sound/combat/parry/pugilism/unarmparry (1).ogg','sound/combat/parry/pugilism/unarmparry (2).ogg','sound/combat/parry/pugilism/unarmparry (3).ogg')
-	sharpness = IS_BLUNT
-	max_integrity = 160 //Doubled integrity, compared to Katars. Thicker amounts of alloy, more punishment it can take.
-	swingsound = list('sound/combat/wooshes/punch/punchwoosh (1).ogg','sound/combat/wooshes/punch/punchwoosh (2).ogg','sound/combat/wooshes/punch/punchwoosh (3).ogg')
-	associated_skill = /datum/skill/combat/unarmed
-	throwforce = 12
-	wdefense = 0
-	wbalance = WBALANCE_SWIFT
-	anvilrepair = /datum/skill/craft/weaponsmithing
-	smeltresult = /obj/item/ingot/steel
-	grid_width = 64
-	grid_height = 32
-	special = /datum/special_intent/upper_cut
-
-/obj/item/rogueweapon/knuckledusters/getonmobprop(tag)
-	. = ..()
-	if(tag)
-		switch(tag)
-			if("gen")
-				return list("shrink" = 0.2,"sx" = -7,"sy" = -4,"nx" = 7,"ny" = -4,"wx" = -3,"wy" = -4,"ex" = 1,"ey" = -4,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 110,"sturn" = -110,"wturn" = -110,"eturn" = 110,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
-			if("onbelt")
-				return list("shrink" = 0.1,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
-
-/obj/item/rogueweapon/knuckledusters/get_mechanics_examine(mob/user)
-	. = ..()
-	. += span_notice("Knuckledusters, similar to Katars, can still parry oncoming blows. Note that their fragility makes this a bit more of a daunting process, however, for unskilled swingers.")
-
-/obj/item/rogueweapon/knuckledusters/silver
-	name = "silver knuckledusters"
-	desc = "A simple piece of harm that has been molded from pure silver, and further studded to stop errant strikes dead in their tracks. Though ostensibly holy, these heftsome knuckleweights are \
-	more strongly associated with underground pugilistic tournaments; a solid right hook could drive more-than-enough force to blow a yeoman's jaw clean off."
-	icon_state = "silverknuckledusters"
-	is_silver = TRUE
-	smeltresult = /obj/item/ingot/silver
-
-/obj/item/rogueweapon/knuckledusters/silver/ComponentInitialize()
-	AddComponent(\
-		/datum/component/silverbless,\
-		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 50,\
-		added_def = 0,\
-	)
-
-/obj/item/rogueweapon/knuckledusters/silver/attack_self(mob/living/user)
-	. = ..()
-	user.visible_message(span_warning("[user] starts adjusting their grip on [src]."))
-	if(do_after(user, 3 SECONDS))
-		var/obj/item/rogueweapon/knuckledusters/silver/P = new /obj/item/clothing/gloves/roguetown/knuckles/silver(get_turf(src.loc))
-		if(user.is_holding(src))
-			user.dropItemToGround(src)
-			user.put_in_hands(P)
-		P.obj_integrity = src.obj_integrity
-		qdel(src)
-	else
-		user.visible_message(span_warning("[user] stops adjusting their grip on [src]."))
-		return
-
-/obj/item/rogueweapon/knuckledusters/psy
-	name = "psydonic knuckledusters"
-	desc = "A simple piece of harm molded in a holy mixture of steel and silver, finished with three stumps - Psydon's crown - to crush the heretics' garments and armor into smithereens."
-	icon_state = "psyknuckledusters"
-	is_silver = TRUE
-	smeltresult = /obj/item/ingot/silverblessed
-
-/obj/item/rogueweapon/knuckledusters/psy/ComponentInitialize()
-	AddComponent(\
-		/datum/component/silverbless,\
-		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 50,\
-		added_def = 0,\
-	)
-
-/obj/item/rogueweapon/knuckledusters/psy/attack_self(mob/living/user)
-	. = ..()
-	user.visible_message(span_warning("[user] starts adjusting their grip on [src]."))
-	if(do_after(user, 3 SECONDS))
-		var/obj/item/rogueweapon/knuckledusters/psy/P = new /obj/item/clothing/gloves/roguetown/knuckles/psydon(get_turf(src.loc))
-		if(user.is_holding(src))
-			user.dropItemToGround(src)
-			user.put_in_hands(P)
-		P.obj_integrity = src.obj_integrity
-		qdel(src)
-	else
-		user.visible_message(span_warning("[user] stops adjusting their grip on [src]."))
-		return
-
-/obj/item/rogueweapon/knuckledusters/enduring
-	name = "enduring knuckles"
-	desc = "A simple piece of harm molded in a holy mixture of steel and silver, its holy blessing long since faded. You are HIS weapon, you needn't fear Aeon."
-	icon_state = "psyknuckle"
-	is_silver = FALSE
-	smeltresult = /obj/item/ingot/steel
-	color = COLOR_FLOORTILE_GRAY
-
-/obj/item/rogueweapon/knuckledusters/enduring/attack_self(mob/living/user)
-	. = ..()
-	user.visible_message(span_warning("[user] starts adjusting their grip on [src]."))
-	if(do_after(user, 3 SECONDS))
-		var/obj/item/rogueweapon/knuckledusters/enduring/P = new /obj/item/clothing/gloves/roguetown/knuckles/psydon/old(get_turf(src.loc))
-		if(user.is_holding(src))
-			user.dropItemToGround(src)
-			user.put_in_hands(P)
-		P.obj_integrity = src.obj_integrity
-		qdel(src)
-	else
-		user.visible_message(span_warning("[user] stops adjusting their grip on [src]."))
-		return
-
-
 // Standard of the keep.
 // Big ol' flag that they keep to give bonuses, used by the manorguard standard bearer.
 /obj/item/rogueweapon/spear/keep_standard
@@ -1324,8 +1158,10 @@
 	GLOB.lordcolor += src
 
 /obj/item/rogueweapon/spear/keep_standard/lordcolor(primary, secondary)
-	detail_tag = "_det"
+	detail_tag = "_detail"
+	altdetail_tag = "_detailalt"
 	detail_color = primary
+	altdetail_color = secondary
 	update_icon()
 
 /obj/item/rogueweapon/spear/keep_standard/Destroy()

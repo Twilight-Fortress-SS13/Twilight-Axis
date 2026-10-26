@@ -12,6 +12,8 @@ GLOBAL_PROTECT(admin_verbs_default)
 	//	/client/proc/hearglobalLOOC, Лоок вырезан. Не нужно.
 	/client/proc/togglespawnmessages,
 	/client/proc/toggle_aghost_invis,
+	/client/proc/set_admin_ghost_image,
+	/client/proc/clear_admin_ghost_image,
 	/client/proc/admin_ghost,
 	/datum/admins/proc/start_vote,
 	/datum/admins/proc/show_player_panel,
@@ -40,6 +42,7 @@ GLOBAL_PROTECT(admin_verbs_default)
 	/client/proc/pull_book_file_names,
 	/client/proc/admin_spread_effect,
 	/client/proc/open_bounty_menu,
+	/client/proc/open_inquisition_suspicion_menu, // TA EDIT
 	/client/proc/remove_bounty,
 	// RATWOOD MODULAR START
 	/client/proc/bunker_bypass,
@@ -82,11 +85,12 @@ GLOBAL_PROTECT(admin_verbs_admin)
 	/datum/admins/proc/set_persistent_admin_notice,
 	/client/proc/toggle_game_master,	/*opens the game master panel*/
 	/client/proc/toggle_aghost_invis, /* lets us choose whether our in-game mob goes visible when we aghost (off by default) */
+	/client/proc/set_admin_ghost_image,
+	/client/proc/clear_admin_ghost_image,
 	/client/proc/admin_ghost,			/*allows us to ghost/reenter body at will*/
 	/client/proc/hearallasghost,
 	/client/proc/toggle_view_range,		/*changes how far we can see*/
 	/client/proc/getserverlogs,		/*for accessing server logs*/
-	/client/proc/getcurrentlogs,		/*for accessing server logs for the current round*/
 	/client/proc/cmd_admin_subtle_message,	/*send an message to somebody as a 'voice in their head'*/
 	/client/proc/cmd_admin_delete,		/*delete an instance/object/mob/etc*/
 	/client/proc/cmd_admin_check_contents,	/*displays the contents of an instance*/
@@ -102,6 +106,8 @@ GLOBAL_PROTECT(admin_verbs_admin)
 	/client/proc/cmd_admin_direct_narrate,	/*send text directly to a player with no padding. Useful for narratives and fluff-text*/
 	/client/proc/cmd_admin_world_narrate,	/*sends text to all players with no padding*/
 	/client/proc/cmd_admin_local_narrate,	/*sends text to all mobs within view of atom*/
+	/client/proc/cmd_admin_narrate_inview,	/*sends text to all mobs in the admin's current view*/
+	/client/proc/cmd_admin_narrate_object,	/*makes an object say, emote, or narrate a message*/
 	/client/proc/cmd_admin_create_centcom_report,
 	/client/proc/cmd_admin_check_player_exp, /* shows players by playtime */
 	/client/proc/toggle_combo_hud, // toggle display of the combination pizza antag and taco sci/med/eng hud
@@ -120,7 +126,6 @@ GLOBAL_PROTECT(admin_verbs_admin)
 	/datum/admins/proc/wake_view,
 	/datum/admins/proc/extend_round,
 	/client/proc/cmd_admin_set_ic_date, /* Set custom IC date for events */
-	/client/proc/log_viewer_new,
 	)
 GLOBAL_LIST_INIT(admin_verbs_ban, list(
 	/client/proc/unban_panel,
@@ -128,7 +133,6 @@ GLOBAL_LIST_INIT(admin_verbs_ban, list(
 	/client/proc/stickybanpanel,
 	/client/proc/check_pq,
 	/client/proc/adjust_pq,
-	/client/proc/getcurrentlogs,
 	/client/proc/getserverlogs
 	))
 GLOBAL_PROTECT(admin_verbs_ban)
@@ -160,6 +164,7 @@ GLOBAL_LIST_INIT(admin_verbs_fun, list(
 	/client/proc/forceEvent,
 	/client/proc/forceGamemode,
 	/client/proc/view_storyteller_vote_log,
+	/client/proc/reset_storyteller_vote_multipliers,
 //	/client/proc/admin_change_sec_level,
 //	/client/proc/run_weather,
 	/client/proc/run_particle_weather,
@@ -246,6 +251,8 @@ GLOBAL_PROTECT(admin_verbs_debug)
 	/client/proc/performance_stress_test, // Uncomment these if you tick the performance stress test .dm file
 	/client/proc/cleanup_stress_test_mobs,
 	/client/proc/cmd_admin_economic_panel,
+	/client/proc/cmd_admin_quest_debug_panel,
+	/client/proc/cmd_admin_ledger_report,
 	/client/proc/cmd_admin_view_chronicle,
 	/client/proc/cmd_admin_view_economics,
 	/client/proc/link_ckey2discord
@@ -277,6 +284,8 @@ GLOBAL_LIST_INIT(admin_verbs_hideable, list(
 	/client/proc/cmd_admin_direct_narrate,
 	/client/proc/cmd_admin_world_narrate,
 	/client/proc/cmd_admin_local_narrate,
+	/client/proc/cmd_admin_narrate_inview,
+	/client/proc/cmd_admin_narrate_object,
 	/client/proc/play_local_sound,
 	/client/proc/play_local_sound_variable,
 	/client/proc/play_sound,
@@ -449,6 +458,38 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 		return
 	aghost_toggle = !aghost_toggle
 	to_chat(src, aghost_toggle ? "Aghosting will now turn your mob invisible." : "Aghost will no longer turn your mob invisible.")
+
+/client/proc/set_admin_ghost_image()
+	set category = "Admin.Special"
+	set name = "Set Ghost Image"
+	if(!holder || !prefs)
+		return
+	var/uploaded_file = input(src, "Choose a 32x32 image or gif to use for your admin ghost.", "Set Ghost Image") as null|file
+	if(!uploaded_file)
+		return
+	var/icon/new_icon = new(uploaded_file)
+	if(new_icon.Width() != 32 || new_icon.Height() != 32)
+		new_icon.Scale(32, 32)
+	prefs.admin_ghost_icon = new_icon
+	prefs.save_preferences()
+	apply_admin_ghost_image()
+	to_chat(src, span_notice("Admin ghost image saved."))
+
+/client/proc/clear_admin_ghost_image()
+	set category = "Admin.Special"
+	set name = "Clear Ghost Image"
+	if(!holder || !prefs)
+		return
+	prefs.admin_ghost_icon = null
+	prefs.save_preferences()
+	apply_admin_ghost_image()
+	to_chat(src, span_notice("Admin ghost image cleared."))
+
+/client/proc/apply_admin_ghost_image()
+	var/mob/dead/observer/admin_ghost = mob
+	if(!istype(admin_ghost))
+		return
+	admin_ghost.apply_admin_ghost_image()
 
 /client/proc/admin_ghost()
 	set category = "Admin.Admin"

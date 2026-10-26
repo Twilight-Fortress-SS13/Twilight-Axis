@@ -18,6 +18,14 @@
 	name = "Gift - Azurosa Flower"
 	path = /obj/item/alch/rosa/azure
 
+/datum/loadout_item/donator/universal/ilamellard
+	name = "Gift - Iron Lamellar Armor Ddecoration"
+	path = /obj/item/clothing/suit/roguetown/shirt/ilamellar
+
+/datum/loadout_item/donator/universal/blamellard
+	name = "Gift - Bronze Lamellar Armor Decoration"
+	path = /obj/item/clothing/suit/roguetown/shirt/blamellar
+
 /datum/loadout_item/donator/universal/azurosa_seeds
 	name = "Gift - Azurosa Flower, Seeds"
 	path = /obj/item/storage/belt/rogue/pouch/azurosa_seeds
@@ -90,6 +98,10 @@
 	name = "Gift - Kit, Armored Plackart"
 	path = /obj/item/enchantingkit/plackart
 
+/datum/loadout_item/donator/universal/sabatons
+	name = "Gift - Kit, Foot Plates"
+	path = /obj/item/enchantingkit/sabatons
+
 /datum/loadout_item/donator/universal/jadehalfmask_donator
 	name = "Gift - Kit, Jade Halfask"
 	path = /obj/item/enchantingkit/jadehalfmask
@@ -117,6 +129,10 @@
 /datum/loadout_item/donator/universal/armor_gothic_burgeonet
 	name = "Gift - Kit, Gothic Burgeonet"
 	path = /obj/item/enchantingkit/gothicburgeonet
+
+/datum/loadout_item/donator/universal/armor_gothic_ornate
+	name = "Gift - Kit, Gothic Fluted Armor"
+	path = /obj/item/enchantingkit/gothicornatecuirass
 
 /datum/loadout_item/donator/universal/armor_gothic_psydonic
 	name = "Gift - Kit, Gothic Psydonic Cuirass"
@@ -444,6 +460,11 @@
 	name = "Trimmed down padded dress"
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/funkydress
 	ckeywhitelist = list("funkemonke", "droolingcowboy")
+
+/datum/loadout_item/donator/fregian_mage
+	name = "Violet Silk Gown"
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/silkdress/steward/donator_fregian_mage
+	ckeywhitelist = list("lucine")
 
 /datum/loadout_item/donator/eekasqueak
 	name = "Saffira encrusted tiara"
@@ -954,6 +975,11 @@
 	path = /obj/item/enchantingkit/weapon/kadedao
 	ckeywhitelist = list("shiroseschnee", "Zerantio", "elox2000")
 
+/datum/loadout_item/donator/forgefiend_wrench
+	name = "Donator Kit - Forgefiend Wrench"
+	path = /obj/item/enchantingkit/weapon/forgefiend_wrench
+	ckeywhitelist = list("tamaya")
+
 /datum/loadout_item/donator/falling_star
 	name = "Donator Kit - Falling Star"
 	path = /obj/item/enchantingkit/weapon/falling_star
@@ -1307,26 +1333,97 @@
 /datum/loadout_item/donator/thedragmeme_scarletglove
 	name = "Donator Gift - Scarlet Gloves"
 	path = /obj/item/clothing/gloves/roguetown/rosa/two
-	ckeywhitelist = list("thedragmeme")
+	ckeywhitelist = list("thedragmeme", "witchlilly", "maesune", "koruu")
 
 /datum/loadout_item/donator/thedragmeme_scarlethat
 	name = "Donator Gift - Scarlet Hat"
 	path = /obj/item/clothing/head/roguetown/rosa
-	ckeywhitelist = list("thedragmeme")
+	ckeywhitelist = list("thedragmeme", "witchlilly", "maesune", "koruu")
 
 /datum/loadout_item/donator/thedragmeme_scarletshoes
 	name = "Donator Gift - Scarlet Shoes"
 	path = /obj/item/clothing/shoes/roguetown/rosa/two
-	ckeywhitelist = list("thedragmeme")
+	ckeywhitelist = list("thedragmeme", "witchlilly", "maesune", "koruu")
 
 /datum/loadout_item/donator/thedragmeme_scarletdress
 	name = "Donator Gift - Scarlet Dress"
 	path = /obj/item/clothing/suit/roguetown/shirt/tunic/rosa/two
-	ckeywhitelist = list("thedragmeme")
+	ckeywhitelist = list("thedragmeme", "witchlilly", "maesune", "koruu")
 
 /datum/loadout_item/donator/lief_ring
 	name = "Donator Item - Blortz Incrusted Blacksteel Ring"
 	path = /obj/item/clothing/ring/lief_ring
 	ckeywhitelist = list("linxsysart", "pessime959")
-	sort_category = "Donator"
+
+/datum/loadout_item/donator/boemanerds
+	name = "Donator Item - plate corslet morphkit"
+	path = /obj/item/enchantingkit/triumph_armorkini_steel
+	ckeywhitelist = list("boemanerds", "bulaven")
+
+/datum/loadout_item/donator/boemanerds/iron
+	name = "Donator Item - iron plate corslet morphkit"
+	path = /obj/item/enchantingkit/triumph_armorkini_iron
+	ckeywhitelist = list("boemanerds", "bulaven")
+
+/datum/loadout_item/donator/yoshi_estoc
+	name = "Donator Kit - Xylixian Estoc"
+	path = /obj/item/enchantingkit/weapon/yoshi_estoc
+	ckeywhitelist = list("limetease", "yosheh3") //yosheh3's ckey is Yosheh_3, but in the logic check its checking against yosheh3 so this is a workaround.
+
+/datum/loadout_item/donator/limeastratatabard
+	name = "Donator Item - Astratan Tabard"
+	path = /obj/item/clothing/cloak/tabard/limeastratatabard
+	ckeywhitelist = list("limetease")
+
+
+/datum/loadout_item/donator/limetabard
+	name = "Donator Item - Leathery Tabard"
+	path = /obj/item/clothing/cloak/tabard/limetabard
+
+/datum/loadout_item/donator/limeastratahelm
+	name = "Donator Item - Astratan Helmet"
+	path = /obj/item/enchantingkit/limeastratahelm
+	ckeywhitelist = list("limetease")
+
+/datum/loadout_item/donator/guidress
+	name = "Donator Item - Gilded Dress"
+	path = /obj/item/clothing/cloak/poncho/guidress
+	ckeywhitelist = list("guimontag", "limetease")
+
+/datum/loadout_item/donator/ulqbelt
+	name = "Donator Item - Potionkeeper's Belt"
+	path = /obj/item/storage/belt/rogue/leather/ulqbelt
+	ckeywhitelist = list("seraphlemonade")
+
+/datum/loadout_item/donator/ulqsusbelt
+	name = "Donator Item - Potionkeeper's Messy Belt"
+	path = /obj/item/storage/belt/rogue/leather/ulqsusbelt
+	ckeywhitelist = list("seraphlemonade")
+
+// Solar Dominion Items
+/datum/loadout_item/donator/universal/dominion_sword
+	name = "Elixir - Dominion Sword"
+	path = /obj/item/enchantingkit/weapon/dominion_sword
+
+/datum/loadout_item/donator/universal/dominion_knife
+	name = "Elixir - Dominion Knife"
+	path = /obj/item/enchantingkit/weapon/dominion_knife
+
+/datum/loadout_item/donator/universal/dominion_greatsword
+	name = "Elixir - Dominion Greatsword"
+	path = /obj/item/enchantingkit/weapon/dominion_greatsword
+
+/datum/loadout_item/donator/universal/dominion_shotel
+	name = "Elixir - Dominion Shotel"
+	path = /obj/item/enchantingkit/weapon/dominion_shotel
+
+/datum/loadout_item/donator/universal/dominion_shield
+	name = "Elixir - Dominion Shield"
+	path = /obj/item/enchantingkit/weapon/dominion_shield
+
+/datum/loadout_item/donator/universal/dominion_cestus
+	name = "Elixir - Dominion Cestus"
+	path = /obj/item/enchantingkit/dominion_cestus
+	ckeywhitelist = list("limetease", "yosheh3")
+	sort_category = "Donator" // TA EDIT
 */

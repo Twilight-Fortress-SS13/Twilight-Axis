@@ -586,7 +586,6 @@
 	if(ishuman(target))
 		playsound(target.loc, 'sound/vo/hug.ogg', 100, FALSE, -1)
 
-/*
 /datum/emote/living/stat_roll/strength
 	attempt_message_list = list(
 		"испытывает свою силу...",
@@ -664,10 +663,6 @@
 	)
 
 /datum/emote/living/stat_roll/willpower
-	modifiers_list = list(
-		TRAIT_TOLERANT = -1,
-	)
-
 	attempt_message_list = list(
 		"испытывает свою силу воли...",
 		"собирается с мыслями...",
@@ -742,7 +737,6 @@
 		"не очень-то убедительно...",
 		"собранность висит на честном слове...",
 	)
-*/
 
 /datum/emote/living/carbon/slowclap
 	key_third_person = "хлопает"

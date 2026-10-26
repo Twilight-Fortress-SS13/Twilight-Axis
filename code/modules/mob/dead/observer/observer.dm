@@ -3,6 +3,8 @@ GLOBAL_LIST_EMPTY(ghost_images_simple) //this is a list of all ghost images as t
 
 GLOBAL_VAR_INIT(observer_default_invisibility, INVISIBILITY_OBSERVER)
 GLOBAL_VAR_CONST(observer_move_delay_multiplier, 0.5)
+///Regular player ghosts step once per this many tick-lags; admin and eye observers use observer_move_delay_multiplier instead TA EDIT
+#define OBSERVER_STEP_TICKS 6
 #define ROGUE_GHOST_MAX_BODY_RANGE 20
 /mob/dead/observer
 	name = "ghost"
@@ -55,6 +57,22 @@ GLOBAL_VAR_CONST(observer_move_delay_multiplier, 0.5)
 	sight = SEE_TURFS | SEE_MOBS | SEE_OBJS
 	see_in_dark = 100
 	draw_icon = FALSE
+
+/mob/dead/observer/proc/apply_admin_ghost_image()
+	if(!client?.holder)
+		return
+	if(client?.prefs?.admin_ghost_icon)
+		icon = client.prefs.admin_ghost_icon
+		icon_state = ""
+	else
+		icon = initial(icon)
+		icon_state = initial(icon_state)
+	if(ghostimage_default)
+		ghostimage_default.icon = icon
+		ghostimage_default.icon_state = icon_state
+	if(ghostimage_simple)
+		ghostimage_simple.icon = icon
+		ghostimage_simple.icon_state = icon_state
 
 /mob/dead/observer/nodraw
 	draw_icon = FALSE
@@ -129,9 +147,17 @@ GLOBAL_VAR_CONST(observer_move_delay_multiplier, 0.5)
 
 
 
+///Actual per-tile move interval for this observer; the next_gmove gate and the glide size both derive from it so the slide matches the cadence
+/mob/dead/observer/proc/get_move_delay()
+	// TA EDIT: admin and eye observers keep the fast global multiplier, regular player ghosts step slower
+	if(istype(src, /mob/dead/observer/admin) || istype(src, /mob/dead/observer/eye))
+		return world.tick_lag * GLOB.observer_move_delay_multiplier
+	return world.tick_lag * OBSERVER_STEP_TICKS
+
 /mob/dead/observer/Initialize(mapload)
+	GLOB.observer_list += src
 	set_invisibility(GLOB.observer_default_invisibility)
-	set_glide_size(DELAY_TO_GLIDE_SIZE(3)) // 6 is atom/movable animation speed TA EDIT
+	set_glide_size(DELAY_TO_GLIDE_SIZE(get_move_delay())) // keep the slide in step with the client/Move cadence TA EDIT
 
 	add_verb(src, list(
 		/mob/dead/observer/proc/dead_tele,
@@ -229,6 +255,7 @@ GLOBAL_VAR_CONST(observer_move_delay_multiplier, 0.5)
 	addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, update_atom_colour)), 10)
 
 /mob/dead/observer/Destroy()
+	GLOB.observer_list -= src
 	STOP_PROCESSING(SShaunting, src)
 
 	QDEL_NULL(spawners_menu)
@@ -1370,4 +1397,5 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 	return entry
 
+#undef OBSERVER_STEP_TICKS
 #undef ROGUE_GHOST_MAX_BODY_RANGE // TA EDIT END

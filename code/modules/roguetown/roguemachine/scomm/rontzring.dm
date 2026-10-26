@@ -57,6 +57,7 @@
 		if(user.voicecolor_override)
 			usedcolor = user.voicecolor_override
 		user.whisper(input_text)
+		user.log_talk(input_text, LOG_GAME, tag="RONTZ RING SCOM") // TA EDIT
 		if(length(input_text) > 100)
 			input_text = "<small>[input_text]</small>"
 		for(var/obj/item/mattcoin/S in SSroguemachine.scomm_machines)

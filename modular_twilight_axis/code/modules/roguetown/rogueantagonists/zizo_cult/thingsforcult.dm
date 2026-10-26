@@ -401,7 +401,7 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	desc = "An doublehead axe, which made for kills for Zizo-queen."
 	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone_twoh.dmi'
 	icon_state = "Ztaxe"
-	special = /datum/special_intent/vicious_swipe
+	special = /datum/special_intent/wave_swing/vicious
 	max_blade_int = 400
 	max_integrity = 380
 	wdefense = 9
@@ -634,12 +634,6 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	REMOVE_TRAIT(user, TRAIT_ZIZOSIGHT, TRAIT_GENERIC)
 
 //статус эффекты
-
-/datum/status_effect/debuff/ritualdefiled/cult
-	id = "ritualdefiled"
-	alert_type = /atom/movable/screen/alert/status_effect/debuff/ritualdefiled
-	effectedstats = list(STATKEY_STR = -2, STATKEY_WIL = -3, STATKEY_CON = -1, STATKEY_SPD = -1, STATKEY_LCK = -3)
-	duration = 30 MINUTES // Punishing AS FUCK, but not as punishing as being dead.
 
 /datum/status_effect/debuff/arcynestolen
 	id = "arcynestolen"

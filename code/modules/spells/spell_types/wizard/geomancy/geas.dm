@@ -21,7 +21,7 @@
 	charge_required = TRUE
 	weapon_cast_penalized = TRUE
 	charge_time = 1 SECONDS
-	charge_swingdelay_type = SWINGDELAY_CANCEL
+	charge_swingdelay_type = SWINGDELAY_PENALTY
 	hold_drain = 1
 	charge_slowdown = CHARGING_SLOWDOWN_MEDIUM
 	charge_sound = 'sound/magic/charging_fire.ogg'
@@ -68,6 +68,7 @@
 			continue
 		L.Immobilize(hold_duration)
 		L.OffBalance(hold_duration)
+		L.log_message("affected by spell [name] by [key_name_admin(caster)].", LOG_ATTACK) // TA EDIT
 		L.visible_message(span_warning("[L] is bound fast to the earth!"))
 		new /obj/effect/temp_visual/geas/long(get_turf(L))
 

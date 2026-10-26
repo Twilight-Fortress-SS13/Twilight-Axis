@@ -3,6 +3,9 @@
 		return
 	if(user.mind)
 		user.mind.i_know_person(src)
+	if(user.has_flaw(/datum/charflaw/paranoid))	//The weak should fear the strong..
+		if((STASTR - user.STASTR) > 1 && !has_flaw(/datum/charflaw/paranoid))
+			user.add_stress(/datum/stressevent/parastr)
 	if(HAS_TRAIT(user, TRAIT_JESTERPHOBIA) && job == "Jester")
 		user.add_stress(/datum/stressevent/jesterphobia)
 	if(HAS_TRAIT(src, TRAIT_BEAUTIFUL) && user != src)
@@ -567,7 +570,11 @@
 		if(BP.brand_text)
 			if(observer_privilege || get_location_accessible(src, BP.body_zone))
 				msg += "<span class='warning' style='font-size: 1.15em;'>[m1] branded on [m2] [BP.name]: <b style='font-size: 1.3em; color: #c48e42;'>\"[uppertext(BP.brand_text)]\"</b></span>"
-
+		//TA EDIT START
+		if(BP.flesh_written_text)
+			if(observer_privilege || get_location_accessible(src, BP.body_zone))
+				msg += span_cultbigbold("[capitalize(m2)] [BP.name] has half-knit letters carved into it: [span_red(BP.flesh_written_text)]")
+		//TA EDIT END
 	//Grabbing
 	if(pulledby && pulledby.grab_state)
 		msg += "[m1] being grabbed by [pulledby]."
@@ -680,9 +687,6 @@
 		else if(has_status_effect(/datum/status_effect/debuff/sleepytime))
 			msg += "[m1] looking a little tired."
 
-		if(key && !client && disconnected_at)
-			var/disconnected_minutes = max(0, ceil((world.time - disconnected_at) / (1 MINUTES)))
-			msg += "<b>[m1] won't be able to wake up soon. [m1] been like this for about [disconnected_minutes] minute[disconnected_minutes == 1 ? "" : "s"].</b>"
 	else
 		msg += "[m1] unconscious."
 
@@ -874,9 +878,11 @@
 	if(name in unknown_names)
 		. += span_info("ø ------------ ø\nThis is <EM>[name]</EM>.")
 		. += deadite_examine()
+		. += get_ssd_examine_text(m3)
 	else if(obscure_name && !client?.prefs?.masked_examine)
 		. += span_info("ø ------------ ø\nThis is an unknown <EM>[name]</EM>.")
 		. += deadite_examine()
+		. += get_ssd_examine_text(m3)
 	else
 		on_examine_face(user)
 		var/can_identify_face = !obscure_name || observer_privilege
@@ -962,10 +968,10 @@
 			else
 				. += span_notice("Something about them seems... different.")
 
-		if((HAS_TRAIT(user, TRAIT_ANCIENT_HAG) || HAS_TRAIT(user, TRAIT_FEYTOUCHED) || istype(user, /mob/living/carbon/human/species/familiar/fae)) && HAS_TRAIT(src, TRAIT_FEYTOUCHED))
+		if((HAS_TRAIT(user, TRAIT_ANCIENT_HAG) || HAS_TRAIT(user, TRAIT_FEYBOUND) || HAS_TRAIT(user, TRAIT_FEYTOUCHED) || istype(user, /mob/living/carbon/human/species/familiar/fae)) && (HAS_TRAIT(src, TRAIT_FEYBOUND) || HAS_TRAIT(src, TRAIT_FEYTOUCHED)))
 			. += span_nicegreen("Someone touched by, or created by fey. Perhaps a vessel of the past, or a deeply affected puppet.")
 
-		if((HAS_TRAIT(user, TRAIT_FEYTOUCHED) ||	istype(user, /mob/living/carbon/human/species/familiar/fae)) && HAS_TRAIT(src, TRAIT_ANCIENT_HAG))
+		if((HAS_TRAIT(user, TRAIT_FEYBOUND) || HAS_TRAIT(user, TRAIT_FEYTOUCHED) ||	istype(user, /mob/living/carbon/human/species/familiar/fae)) && HAS_TRAIT(src, TRAIT_ANCIENT_HAG))
 			. += span_nicegreen("A true force of the fey, the mossmother speaks to this one closely.")
 
 		if(SSticker.rulermob == src)
@@ -985,8 +991,15 @@
 
 		if(HAS_TRAIT(src, TRAIT_AGENT_MERCHANT))
 			. += span_notice("An agent of the Azurian Trading Company.")
-		if(HAS_TRAIT(src, TRAIT_AGENT_BATHHOUSE))
-			. += span_notice("An agent of the Bathhouse.")
+
+		// only bath-house workers and other bath-house agents can recognize bath-house agents
+		if(HAS_TRAIT(src, TRAIT_AGENT_BATHHOUSE) && ishuman(user))
+			var/mob/living/carbon/human/bath_viewer = user
+			if((bath_viewer.job in GLOB.bathhouse_positions) || HAS_TRAIT(bath_viewer, TRAIT_AGENT_BATHHOUSE))
+				. += span_notice("[m1] an agent of the Bathhouse.")
+
+		if(HAS_TRAIT(src, TRAIT_ARMOR_BREAK))
+			. += span_phobia("[capitalize(m2)] armor hangs on by a thread...")
 
 		if(HAS_TRAIT(src, TRAIT_DEBTOR))
 			if(ishuman(user))
@@ -1006,13 +1019,14 @@
 						. += span_userdanger("DEFAULT DEBTOR OF THE CROWN!")
 
 		. += deadite_examine()
+		. += get_ssd_examine_text(m3)
 
 		var/datum/antagonist/vampire/vamp_inspect_vlord = src.mind?.has_antag_datum(/datum/antagonist/vampire/lord)
 		if(vamp_inspect_vlord && (!SEND_SIGNAL(src, COMSIG_DISGUISE_STATUS)))
 			. += span_userdanger("A MONSTER!")
 
-		if(HAS_TRAIT(src, TRAIT_ARMOR_BREAK))
-			. += span_phobia("[capitalize(m2)] armor hangs on by a thread...")
+	//	if(HAS_TRAIT(src, TRAIT_ARMOR_BREAK))
+	//		. += span_phobia("[capitalize(m2)] armor hangs on by a thread...")
 
 		if(HAS_TRAIT(src, TRAIT_ARREARS))
 			if(ishuman(user))
@@ -1094,16 +1108,16 @@
 			if(has_flaw(/datum/charflaw/addiction/alcoholic) && user.has_flaw(/datum/charflaw/addiction/alcoholic))
 				. += span_syndradio("[m1] struggling to hide the hangover, and the stench of spirits. We're alike.")
 
-			if(user.has_flaw(/datum/charflaw/addiction/paranoid))
-				var/datum/charflaw/addiction/paranoid/pflaw = user.get_flaw(/datum/charflaw/addiction/paranoid)
+			if(user.has_flaw(/datum/charflaw/addiction/factionalist))
+				var/datum/charflaw/addiction/factionalist/pflaw = user.get_flaw(/datum/charflaw/addiction/factionalist)
 				if(ishuman(user))
-					if(has_flaw(/datum/charflaw/addiction/paranoid))
+					if(has_flaw(/datum/charflaw/addiction/factionalist))
 						. += span_nicegreen("[m1] is the kind who sticks to their own. I understand.")
-						user.sate_addiction(/datum/charflaw/addiction/paranoid)
+						user.sate_addiction(/datum/charflaw/addiction/factionalist)
 					else if(pflaw)
 						if(pflaw.check_faction(src))
 							. += span_nicegreen("One of my own.")
-							user.sate_addiction(/datum/charflaw/addiction/paranoid)
+							user.sate_addiction(/datum/charflaw/addiction/factionalist)
 						else
 							user.add_stress(/datum/stressevent/paracrowd)
 
@@ -1132,7 +1146,7 @@
 						. += span_voyeurvice("[m1] [english_list(vice_desc)]...")
 
 			if(HAS_TRAIT(user, TRAIT_EMPATH) && HAS_TRAIT(src, TRAIT_PERMAMUTE))
-				. += span_notice("[m1] lacks a voice. [m1] is a mute!")
+				. += span_notice("[m3] no voice. [m1] mute!") // [they have] no voice [they are] mute.
 
 		var/villain_text = get_villain_text(user, can_identify_face)
 		if(villain_text)
@@ -1179,26 +1193,6 @@
 		var/datum/antagonist/vampire/vamp_inspect =src.mind?.has_antag_datum(/datum/antagonist/vampire)
 		if(vamp_inspect && (!SEND_SIGNAL(src, COMSIG_DISGUISE_STATUS)))
 			. += span_redtext("[m3] strange glowing eyes and fangs!")
-
-		if((HAS_TRAIT(src, TRAIT_INQUISITION) && HAS_TRAIT(user, TRAIT_BLACKBLOOD)) && src != user)
-			var/mob/living/carbon/carbs = user
-			if(HAS_TRAIT(user, TRAIT_PSYDONIAN_GRIT) || HAS_TRAIT(user, TRAIT_NOMOOD))
-				return
-
-			if(!(src in examined_inquisitors))
-				examined_inquisitors += src
-
-				if(!carbs.has_stress_event(/datum/stressevent/inq_trauma))
-					carbs.add_stress(/datum/stressevent/inq_trauma)
-					if(prob(20))
-						carbs.stress_freakout()
-					else if(prob(40))
-						carbs.freak_out()
-					else
-						carbs.emote("gulp")
-				if(!HAS_TRAIT(user, TRAIT_STEELHEARTED))
-					carbs.Jitter(10)
-					carbs.stuttering += 25
 
 		if(HAS_TRAIT(src, TRAIT_DNR) && src != user)
 			if(!HAS_TRAIT(user, TRAIT_DEATHSIGHT))

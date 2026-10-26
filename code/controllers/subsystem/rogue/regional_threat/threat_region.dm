@@ -100,7 +100,8 @@
 	return clamp(scaled, kill_target_floor, kill_target_floor + QUEST_KILL_CEILING_OFFSET)
 
 /datum/threat_region/proc/allows_quest_type(quest_type)
-	return (quest_type in allowed_quest_types)
+	var/datum/quest/proto = GLOB.quest_prototypes[quest_type]
+	return proto && (region_name in proto.eligible_regions) && proto.fits_region(src)
 
 /datum/threat_region/proc/get_threat_weight()
 	if(!max_ambush || latent_ambush <= 0)

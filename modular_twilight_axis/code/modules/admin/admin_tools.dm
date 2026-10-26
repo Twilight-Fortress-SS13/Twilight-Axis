@@ -1806,3 +1806,277 @@ GLOBAL_DATUM_INIT(ta_round_favorites, /datum/ta_round_favorites, new)
 
 #undef TA_ADMIN_LOADOUT_TRAIT
 #undef TA_ADMIN_LOADOUT_FILE
+
+
+#define TA_TRAIT_UNSPEAKABLE_HORRORS "ta_unspeakable_horrors"
+
+GLOBAL_DATUM_INIT(ta_patron_followers, /datum/ta_patron_followers, new)
+
+/datum/admins/proc/ta_show_patron_followers()
+	if(!usr?.client || usr.client.holder != src || !check_rights_for(usr.client, R_ADMIN))
+		return
+	GLOB.ta_patron_followers.ui_interact(usr)
+
+/datum/ta_patron_followers/ui_state(mob/user)
+	if(user?.client?.holder && check_rights_for(user.client, R_ADMIN))
+		return GLOB.always_state
+	return GLOB.never_state
+
+/datum/ta_patron_followers/ui_interact(mob/user, datum/tgui/ui)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "PatronFollowers", "Followers by Patron")
+		ui.open()
+		ui.set_autoupdate(FALSE)
+
+/datum/ta_patron_followers/ui_data(mob/user)
+	var/list/groups_by_patron = list()
+	var/list/group_ids = list()
+	var/total_followers = 0
+	for(var/client/C in GLOB.clients)
+		var/mob/living/L = C.mob
+		if(!istype(L) || QDELETED(L) || !L.patron)
+			continue
+		var/patron_id = "[L.patron.type]"
+		var/list/group = groups_by_patron[patron_id]
+		if(!group)
+			group = list(
+				"id" = patron_id,
+				"name" = html_decode("[L.patron.name]"),
+				"followers" = list(),
+				"count" = 0,
+			)
+			groups_by_patron[patron_id] = group
+			group_ids += patron_id
+		var/list/followers = group["followers"]
+		followers += list(list(
+			"ref" = REF(L),
+			"name" = html_decode("[L.real_name || L.name]"),
+			"ckey" = C.ckey,
+		))
+		group["count"] = length(followers)
+		total_followers++
+
+	var/list/groups = list()
+	for(var/patron_id in sortList(group_ids))
+		groups += list(groups_by_patron[patron_id])
+	return list("groups" = groups, "total_followers" = total_followers)
+
+/datum/ta_patron_followers/proc/resolve_follower(ref_id)
+	var/mob/living/L = locate(ref_id)
+	if(!istype(L) || QDELETED(L) || !L.client || !L.patron)
+		return null
+	if(!(L.client in GLOB.clients))
+		return null
+	return L
+
+/datum/ta_patron_followers/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
+	. = ..()
+	if(.)
+		return
+	var/mob/user = ui.user
+	if(!user?.client?.holder || !check_rights_for(user.client, R_ADMIN))
+		return
+	var/datum/admins/holder = user.client.holder
+	if(action == "refresh")
+		return TRUE
+	if(action == "narrate-group")
+		holder.ta_narrate_patron_followers(params["patron"], user)
+		return TRUE
+	var/mob/living/L = resolve_follower(params["ref"])
+	if(!L)
+		to_chat(user, span_warning("That follower is no longer available."))
+		return TRUE
+	switch(action)
+		if("player-panel")
+			holder.show_player_panel(L)
+			return TRUE
+		if("direct-narrate")
+			user.client.cmd_admin_direct_narrate(L)
+			return TRUE
+		if("private-message")
+			user.client.cmd_admin_pm(L.client, null)
+			return TRUE
+	return FALSE
+
+/datum/admins/proc/ta_narrate_patron_followers(patron_text, mob/admin = usr)
+	if(!admin?.client || admin.client.holder != src || !check_rights_for(admin.client, R_ADMIN))
+		return
+	var/patron_type = text2path(patron_text)
+	if(!ispath(patron_type, /datum/patron))
+		return
+	var/list/recipients = list()
+	var/patron_name = null
+	for(var/client/C in GLOB.clients)
+		var/mob/living/L = C.mob
+		if(istype(L) && !QDELETED(L) && L.patron?.type == patron_type)
+			recipients += L
+			patron_name = L.patron.name
+	if(!length(recipients))
+		to_chat(admin, span_warning("No online followers of this patron."))
+		return
+	var/message = input(admin, "Narration to [length(recipients)] online followers:", "Patron Direct Narrate") as message|null
+	if(!message || !admin.client || !check_rights_for(admin.client, R_ADMIN))
+		return
+	if(alert(admin, "Send to the online followers of [patron_name]?", "Confirm group narration", "Send", "Cancel") != "Send")
+		return
+	if(!admin.client || !check_rights_for(admin.client, R_ADMIN))
+		return
+	var/delivered = 0
+	message = parse_admin_spans(message)
+	for(var/mob/living/L in recipients)
+		if(QDELETED(L) || !L.client || L.patron?.type != patron_type)
+			continue
+		to_chat(L, message)
+		admin_ticket_log(L, "Patron DirectNarrate: [message]")
+		delivered++
+	log_admin("Patron DirectNarrate: [key_name(admin)] to [delivered] followers of [patron_name]: [message]")
+	message_admins(span_adminnotice("<b>Patron DirectNarrate: [key_name_admin(admin)] to [delivered] followers of [patron_name]:</b> [message]"))
+	SSblackbox.record_feedback("tally", "admin_verb", 1, "Patron Direct Narrate")
+
+/datum/special_trait/seen_unspeakable_horrors
+	name = "I Have Seen Unspeakable Horrors"
+	greet_text = span_notice("I have witnessed horrors beyond understanding. Lesser terrors no longer shake me.")
+	weight = 25
+
+/datum/special_trait/seen_unspeakable_horrors/on_apply(mob/living/carbon/human/character, silent)
+	ADD_TRAIT(character, TA_TRAIT_UNSPEAKABLE_HORRORS, "[type]")
+
+/datum/status_effect/debuff/ta_admin_fear
+	id = "ta_admin_fear"
+	status_type = STATUS_EFFECT_REPLACE
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/ta_admin_fear
+	duration = 5 MINUTES
+	tick_interval = 1 SECONDS
+	effectedstats = list(STATKEY_INT = -3, STATKEY_WIL = -3, STATKEY_STR = 2, STATKEY_CON = 2)
+	var/severity = 2
+	var/fear_reaction_end = 0
+	var/next_terror_message = 0
+
+/datum/status_effect/debuff/ta_admin_fear/on_apply()
+	. = ..()
+	if(!.)
+		return FALSE
+	var/reaction_time = 0
+	switch(severity)
+		if(1)
+			reaction_time = 2 SECONDS
+			owner.jitteriness = max(owner.jitteriness, 5)
+		if(2)
+			reaction_time = 5 SECONDS
+			owner.jitteriness = max(owner.jitteriness, 10)
+		if(3)
+			reaction_time = 30 SECONDS
+			owner.jitteriness = max(owner.jitteriness, 15)
+			next_terror_message = world.time + 5 SECONDS
+	fear_reaction_end = world.time + reaction_time
+	owner.emote("tremble", forced = TRUE)
+	return TRUE
+
+/datum/status_effect/debuff/ta_admin_fear/tick()
+	if(owner.stat != CONSCIOUS || world.time >= fear_reaction_end)
+		return
+	if(severity == 3)
+		owner.jitteriness = max(owner.jitteriness, 15)
+		if(world.time >= next_terror_message)
+			to_chat(owner, span_boldred("МНЕ НУЖНО БЕЖАТЬ ИЛИ СПРЯТАТЬСЯ!"))
+			owner.emote("tremble", forced = TRUE)
+			next_terror_message = world.time + 5 SECONDS
+	else if(severity == 2)
+		owner.jitteriness = max(owner.jitteriness, 10)
+	else
+		owner.jitteriness = max(owner.jitteriness, 5)
+
+/datum/status_effect/debuff/ta_admin_fear/fright
+	duration = 1 MINUTES
+	severity = 1
+	effectedstats = list(STATKEY_INT = -1)
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/ta_admin_fear/fright
+
+/datum/status_effect/debuff/ta_admin_fear/terror
+	duration = 10 MINUTES
+	severity = 3
+	effectedstats = list(STATKEY_INT = -5, STATKEY_WIL = -5, STATKEY_STR = 2, STATKEY_CON = 2)
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/ta_admin_fear/terror
+
+/atom/movable/screen/alert/status_effect/debuff/ta_admin_fear
+	name = "Страх"
+	desc = "Какой кошмар... Надеюсь, больше этого не увижу."
+	icon_state = "debuff"
+
+/atom/movable/screen/alert/status_effect/debuff/ta_admin_fear/fright
+	name = "Испуг"
+	desc = "Это было неожиданно..."
+
+/atom/movable/screen/alert/status_effect/debuff/ta_admin_fear/terror
+	name = "Ужас"
+	desc = "Я не могу это забыть, оно будет преследовать меня во снах!"
+
+/client/proc/ta_admin_apply_fear(mob/living/carbon/human/target, strength)
+	if(!istype(target) || QDELETED(target))
+		return FALSE
+	if(strength <= 2 && HAS_TRAIT(target, TA_TRAIT_UNSPEAKABLE_HORRORS))
+		return FALSE
+	var/datum/status_effect/debuff/ta_admin_fear/current = target.has_status_effect(/datum/status_effect/debuff/ta_admin_fear)
+	if(current && strength < current.severity)
+		return FALSE
+	var/effect_type
+	switch(strength)
+		if(1)
+			effect_type = /datum/status_effect/debuff/ta_admin_fear/fright
+		if(2)
+			effect_type = /datum/status_effect/debuff/ta_admin_fear
+		if(3)
+			effect_type = /datum/status_effect/debuff/ta_admin_fear/terror
+		else
+			return FALSE
+	var/datum/status_effect/applied = target.apply_status_effect(effect_type)
+	if(!applied || QDELETED(applied))
+		return FALSE
+	switch(strength)
+		if(1)
+			to_chat(target, span_warning("Это было неожиданно..."))
+		if(2)
+			to_chat(target, span_userdanger("Какой кошмар, надеюсь, больше этого не увижу."))
+		if(3)
+			to_chat(target, span_userdanger("Я не могу это забыть, оно будет преследовать меня во снах!"))
+			to_chat(target, span_boldred("МНЕ НУЖНО БЕЖАТЬ ИЛИ СПРЯТАТЬСЯ!"))
+	target.stress_freakout()
+	return TRUE
+
+/client/proc/ta_admin_area_fear(mob/living/selected)
+	if(!check_rights(R_ADMIN) || !check_rights(R_FUN))
+		return
+	if(!ishuman(selected))
+		to_chat(src, span_warning("Select a human character as the centre of Fear."))
+		return
+	var/choice = input(src, "Choose fear intensity:", "Smite - Fear") as null|anything in list("1 - Startle", "2 - Fear", "3 - Terror")
+	if(!choice)
+		return
+	var/strength = text2num(copytext(choice, 1, 2))
+	var/radius = input(src, "Radius in tiles (0 = only target, maximum 15):", "Smite - Fear", 0) as num|null
+	if(isnull(radius))
+		return
+	radius = clamp(round(radius), 0, 15)
+	var/list/targets = list()
+	if(radius == 0)
+		targets += selected
+	else
+		for(var/mob/living/carbon/human/H in view(radius, selected))
+			targets |= H
+		targets |= selected
+	if(alert(src, "Apply [choice] to up to [length(targets)] characters within [radius] tiles?", "Confirm Fear", "Apply", "Cancel") != "Apply")
+		return
+	if(!check_rights(R_ADMIN) || !check_rights(R_FUN) || QDELETED(selected))
+		return
+	var/affected = 0
+	for(var/mob/living/carbon/human/H in targets)
+		if(QDELETED(H) || H.z != selected.z || get_dist(H, selected) > radius)
+			continue
+		if(ta_admin_apply_fear(H, strength))
+			affected++
+	log_admin("Smite Fear: [key_name(src)] used [choice] at [AREACOORD(selected)] radius [radius] on [affected] characters.")
+	message_admins(span_adminnotice("[key_name_admin(src)] used [choice] near [ADMIN_VERBOSEJMP(selected)] (radius [radius], affected [affected])."))
+	SSblackbox.record_feedback("tally", "admin_verb", 1, "Smite Fear")
+
+#undef TA_TRAIT_UNSPEAKABLE_HORRORS

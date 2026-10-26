@@ -205,7 +205,7 @@
 				backl = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
 			if("Bow")
 				beltr = /obj/item/quiver/arrows
-				backl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/watchman
+				backl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve/watchman //TA EDIT Bow -> Recurve Bow
 			if("Sling")
 				beltr = /obj/item/quiver/sling/iron
 				l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/sling

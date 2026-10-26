@@ -1191,18 +1191,14 @@
 		target.dust()
 		return TRUE
 
-	if(alert(target, "A Toll is being offered for your soul, BREAK FREE?", "Revival", "I need to wake up", "Don't let me go") != "I need to wake up")
+	var/mob/dead/observer/underworld_spirit = target.get_spirit()
+	if(alert(underworld_spirit || target, "A Toll is being offered for your soul, BREAK FREE?", "Revival", "I need to wake up", "Don't let me go") != "I need to wake up")
 		target.visible_message(span_notice("Nothing happens. They are not being let go."))
 		return
 	target.adjustOxyLoss(-target.getOxyLoss()) //Ye Olde CPR
 	if(!target.revive(full_heal = FALSE))
 		to_chat(user, span_warning("Nothing happens."))
 		return
-	var/mob/living/carbon/spirit/underworld_spirit = target.get_spirit()
-	if(underworld_spirit)
-		var/mob/dead/observer/ghost = underworld_spirit.ghostize()
-		qdel(underworld_spirit)
-		ghost.mind.transfer_to(target, TRUE)
 	target.grab_ghost(force = TRUE)
 	target.emote("breathgasp")
 	target.Jitter(100)
@@ -1461,7 +1457,10 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 				return
 			var/onrune = view(1, loc)
 			var/list/folksonrune = list()
+			var/is_spy = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic/spy)
 			for(var/mob/living/carbon/human/persononrune in onrune)
+				if(is_spy && persononrune == user)
+					continue
 				if(HAS_TRAIT(persononrune, TRAIT_CABAL))
 					folksonrune += persononrune
 			var/mob/living/carbon/human/target = input(user, "Choose a host") as null|anything in folksonrune
@@ -1659,8 +1658,9 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	neck = /obj/item/clothing/neck/roguetown/bevor/zizo
 	r_hand = /obj/item/rogueweapon/sword/long/zizo
 
-	H.mind.RemoveSpell(/datum/action/cooldown/spell/mending) // brute forcing this one, hope this works ryon!
-	H.mind.AddSpell(new /datum/action/cooldown/spell/mending/lesser)
+	if(!istype(src, /datum/outfit/job/roguetown/darksteelrite/medium)) // TA EDIT
+		H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
+		ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL) // TA EDIT
 //	if(!H.mind.has_spell(/datum/action/cooldown/spell/miracle/intervention) && H.devotion.max_devotion == CLERIC_REQ_4)	// Devotion check to make sure we give it to the HWretch not some Guy
 //		H.mind.AddSpell(new /datum/action/cooldown/spell/miracle/intervention)
 
@@ -1706,7 +1706,10 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 				return
 			var/onrune = view(1, loc)
 			var/list/folksonrune = list()
+			var/is_spy = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic/spy)
 			for(var/mob/living/carbon/human/persononrune in onrune)
+				if(is_spy && persononrune == user)
+					continue
 				if(HAS_TRAIT(persononrune, TRAIT_FREEMAN))
 					folksonrune += persononrune
 			var/mob/living/carbon/human/target = input(user, "Choose a host") as null|anything in folksonrune
@@ -1857,7 +1860,8 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	neck = /obj/item/clothing/neck/roguetown/chaincoif/chainmantle/matthios
 	backr = /obj/item/rogueweapon/flail/peasantwarflail/matthios
 
-	H.mind.AddSpell(new /datum/action/cooldown/spell/mending/lesser)
+	H.mind.AddSpell(new /datum/action/cooldown/spell/mending) // TA EDIT
+	ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL) // TA EDIT
 //	if(!H.mind.has_spell(/datum/action/cooldown/spell/miracle/intervention) && H.devotion.max_devotion == CLERIC_REQ_4)	// Devotion check to make sure we give it to the HWretch not some Guy
 //		H.mind.AddSpell(new /datum/action/cooldown/spell/miracle/intervention)
 
@@ -1887,7 +1891,10 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 				return
 			var/onrune = view(1, loc)
 			var/list/folksonrune = list()
+			var/is_spy = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic/spy)
 			for(var/mob/living/carbon/human/persononrune in onrune)
+				if(is_spy && persononrune == user)
+					continue
 				if(HAS_TRAIT(persononrune, TRAIT_HORDE))
 					folksonrune += persononrune
 			var/mob/living/carbon/human/target = input(user, "Choose a host") as null|anything in folksonrune
@@ -2078,7 +2085,8 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	r_hand = /obj/item/rogueweapon/stoneaxe/woodcut/steel/graggar
 	l_hand = /obj/item/rogueweapon/shield/iron/graggar
 
-	H.mind.AddSpell(new /datum/action/cooldown/spell/mending/lesser)
+	H.mind.AddSpell(new /datum/action/cooldown/spell/mending) // TA EDIT
+	ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL) // TA EDIT
 
 /obj/structure/ritualcircle/baotha
 	name = "Rune of Hedonism"
@@ -2198,7 +2206,8 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/baotha
 	backr = /obj/item/rogueweapon/spear/partizan/baotha
 
-	H.mind.AddSpell(new /datum/action/cooldown/spell/mending/lesser)
+	H.mind.AddSpell(new /datum/action/cooldown/spell/mending) // TA EDIT
+	ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL) // TA EDIT
 //	if(!H.mind.has_spell(/datum/action/cooldown/spell/miracle/intervention) && H.devotion.max_devotion == CLERIC_REQ_4)	// Devotion check to make sure we give it to the HWretch not some Guy
 //		H.mind.AddSpell(new /datum/action/cooldown/spell/miracle/intervention)
 

@@ -127,5 +127,8 @@ GLOBAL_VAR_INIT(cmp_field, "name")
 /proc/cmp_skills_for_display(datum/skill/A, datum/skill/B)
 	return sorttext("[B.abstract_type]", "[A.abstract_type]") || sorttext(B.name, A.name)
 
+/proc/cmp_quest_chronicle_order(datum/quest/A, datum/quest/B)
+	return A.chronicle_order - B.chronicle_order
+
 /proc/cmp_num_string_asc(A, B)
 	return text2num(A) - text2num(B)

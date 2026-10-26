@@ -48,10 +48,10 @@ GLOBAL_LIST_INIT(virtue_mount_choices_anthrax, (list(
 	var/mob/living/our_owner = owner.resolve()
 	if(!our_owner || QDELETED(our_owner))
 		return
-	if(ishuman(our_owner)) // TA EDIT START
+	if(ishuman(our_owner)) // TA EDIT
 		var/mob/living/carbon/human/human_owner = our_owner
 		if(!human_owner.saddleborn_mount || human_owner.saddleborn_mount.resolve() != parent)
-			return // TA EDIT END
+			return // TA EDIT
 	to_chat(our_owner, span_boldwarning("A quavering pang of loneliness streaks through your chest like cold lightning, sinking to the pit of your stomach. THEY ARE GONE!"))
 	our_owner.add_stress(/datum/stressevent/precious_mob_died)
 
@@ -69,7 +69,7 @@ GLOBAL_LIST_INIT(virtue_mount_choices_anthrax, (list(
 	chargedrain = 0
 	chargetime = 0
 
-/mob/living/carbon/human/proc/get_saddleborn_mount_choices(show_special_messages = FALSE) // TA EDIT START
+/mob/living/carbon/human/proc/get_saddleborn_mount_choices(show_special_messages = FALSE) // TA EDIT
 	var/list/choices = list()
 	var/list/mount_choices = GLOB.virtue_mount_choices.Copy()
 
@@ -232,11 +232,11 @@ GLOBAL_LIST_INIT(virtue_mount_choices_anthrax, (list(
 			return FALSE
 	return TRUE
 
-/datum/tgui_alert/saddleborn_mount_change/ui_interact(mob/user, datum/tgui/ui) // TA EDIT START
+/datum/tgui_alert/saddleborn_mount_change/ui_interact(mob/user, datum/tgui/ui) // TA EDIT
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "AlertModal", title, 420, 220)
-		ui.open() // TA EDIT END
+		ui.open() // TA EDIT
 
 /mob/living/carbon/human/proc/try_change_saddleborn_mount(atom/target)
 	if(saddleborn_mount_change_in_progress || !HasSpell(/obj/effect/proc_holder/spell/self/saddleborn/whistle))
@@ -256,12 +256,12 @@ GLOBAL_LIST_INIT(virtue_mount_choices_anthrax, (list(
 		warning = "Make [new_mount] your treasured mount?"
 	warning += " You must remain beside [new_mount] for 15 seconds; moving will cancel the process."
 
-	var/datum/tgui_alert/saddleborn_mount_change/confirmation_alert = new(src, warning, "Change Mount", list("Begin Bonding", "Cancel")) // TA EDIT START
+	var/datum/tgui_alert/saddleborn_mount_change/confirmation_alert = new(src, warning, "Change Mount", list("Begin Bonding", "Cancel")) // TA EDIT
 	confirmation_alert.ui_interact(src)
 	confirmation_alert.wait()
 	var/confirmation = confirmation_alert?.choice
 	if(confirmation_alert)
-		qdel(confirmation_alert) // TA EDIT END
+		qdel(confirmation_alert) // TA EDIT
 	if(confirmation != "Begin Bonding" || !can_use_as_saddleborn_mount(new_mount, TRUE))
 		return FALSE
 
@@ -317,7 +317,7 @@ GLOBAL_LIST_INIT(virtue_mount_choices_anthrax, (list(
 	user.AddSpell(new /obj/effect/proc_holder/spell/self/saddleborn/sendaway)
 	user.AddSpell(new /obj/effect/proc_holder/spell/self/saddleborn/whistle)
 	add_verb(user, /mob/living/carbon/human/proc/change_saddleborn_mount)
-	QDEL_IN(src, 0) // TA EDIT END
+	QDEL_IN(src, 0) // TA EDIT
 
 // dirty subtype for saddleborn spells that handles checking if we can actually do fucking anything at all
 /obj/effect/proc_holder/spell/self/saddleborn/proc/check_mount(mob/living/carbon/human/user)

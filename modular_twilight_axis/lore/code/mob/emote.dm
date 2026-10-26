@@ -1,11 +1,10 @@
 /datum/emote/living/pray/run_emote(mob/user, params, type_override, intentional)
 	var/mob/living/carbon/follower = user
 	var/datum/patron/patron = follower.patron
-
 	var/prayer = tgui_input_text(user, "Whisper your Prayer", "Prayer", multiline = TRUE)
 	if(!prayer)
 		return
-	
+
 	//If God can hear your prayer (long enough, no bad words, etc.)
 	if(patron.hear_prayer(follower, prayer))
 		if(follower.has_flaw(/datum/charflaw/addiction/godfearing))
@@ -20,10 +19,12 @@
 					return
 				else
 					follower.sate_addiction(/datum/charflaw/addiction/godfearing)
-
 	/* admin stuff - tells you the followers name, key, and what patron they follow */
 	var/follower_ident = "[follower.key]/([follower.real_name]) (follower of [patron])"
-	message_admins("[follower_ident] [ADMIN_SM(follower)] [ADMIN_FLW(follower)] prays: [span_info(prayer)]")
+	GLOB.ta_prayer_journal.record(follower, prayer, patron.name, "PRAYER")
+	var/prayer_notice = "<span class='prayer'><b>PRAYER:</b> [follower_ident] [ADMIN_SM(follower)] [ADMIN_FLW(follower)] prays: [span_info(prayer)]</span>"
+	for(var/client/admin_client in GLOB.admins)
+		to_chat(admin_client, prayer_notice, type = MESSAGE_TYPE_PRAYER)
 	user.log_message("(follower of [patron]) prays: [prayer]", LOG_GAME)
 	record_round_statistic(STATS_PRAYERS_MADE)
 
@@ -31,6 +32,5 @@
 
 	if(SEND_SIGNAL(follower, COMSIG_CARBON_PRAY, prayer) & CARBON_PRAY_CANCEL)
 		return
-
 	for(var/mob/living/LICKMYBALLS in hearers(2,src))	// Lickmyballs = person in crit.
 		LICKMYBALLS.succumb_timer = world.time			//..succumb timer does nothing rn btw..

@@ -16,6 +16,8 @@ PROCESSING_SUBSYSTEM_DEF(roguemachine)
 	var/list/pending_letters = list()
 	var/list/ghost_mailboxes = list()
 	var/list/letter_archive = list()
+	/// All Rosewall boards (bathhouse service adverts). See noticeboard/rosewall.dm.
+	var/list/rosewalls = list()
 	var/obj/item/clothing/head/roguetown/crown/serpcrown/crown
 	var/obj/item/rogueweapon/sword/long/martyr/martyrweapon
 	var/obj/item/key
