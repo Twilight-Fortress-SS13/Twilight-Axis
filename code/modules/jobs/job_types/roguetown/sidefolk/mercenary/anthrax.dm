@@ -330,6 +330,7 @@
 	adjustable = CAN_CADJUST
 	max_integrity = ARMOR_INT_HELMET_HEAVY_STEEL - ARMOR_INT_HELMET_HEAVY_ADJUSTABLE_PENALTY
 	smeltresult = /obj/item/ingot/drow
+	stack_fovs = FALSE
 
 /obj/item/clothing/head/roguetown/helmet/heavy/shadowvisage/ComponentInitialize()
 	..()
