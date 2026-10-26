@@ -4101,6 +4101,7 @@
 #include "modular_twilight_axis\code\game\objects\items\rogueitems\metal_stuff.dm"
 #include "modular_twilight_axis\code\modules\clothing\rogueclothes\pants\cloth.dm"
 #include "modular_twilight_axis\code\modules\virtues\crafter.dm"
+#include "modular_twilight_axis\code\modules\virtues\size.dm"
 #include "modular_twilight_axis\code\modules\virtues\utility.dm"
 #include "modular_twilight_axis\code\modules\erp_system\actions\erp_action_editor_schema.dm"
 #include "modular_twilight_axis\code\modules\erp_system\actions\erp_action_message_renderer.dm"
