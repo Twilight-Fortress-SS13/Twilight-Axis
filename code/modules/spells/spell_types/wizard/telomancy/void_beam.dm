@@ -173,8 +173,8 @@
 			if(istype(caster) && !QDELETED(caster) && ishuman(L))
 				if(arcyne_strike(caster, L, null, damage, caster.zone_selected, \
 					BCLASS_PIERCE, spell_name = spell_name, \
-					damage_type = BRUTE, \
-					skip_animation = TRUE) == ARCYNE_STRIKE_WARDED)
+					damage_type = BURN, \
+					skip_animation = TRUE) == ARCYNE_STRIKE_WARDED) //TA EDIT
 					continue
 			else
 				L.adjustBruteLoss(damage)
