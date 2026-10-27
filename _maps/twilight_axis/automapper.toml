@@ -66,7 +66,7 @@ coordinates = [71, 54, 1]
 
 # dunworld drowvillage_kingtomb
 [templates.drowvillage_kingtomb]
-map_files = ["drowvillage_kingtomb_1.dmm","drowvillage_kingtomb_2.dmm","drowvillage_kingtomb_3.dmm"]
+map_files = ["drowvillage_kingtomb_1.dmm","drowvillage_kingtomb_3.dmm"]
 directory = "_maps/twilight_axis/templates/dungeons/drowvillage_kingtomb/"
 required_map = "dun_world.dmm"
 coordinates = [2, 317, 1]
