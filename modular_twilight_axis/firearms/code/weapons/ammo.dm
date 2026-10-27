@@ -517,8 +517,8 @@
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "grapeshot"
 	dropshrink = 0.5
-	max_integrity = 0.1
-	pellets = 6
+	max_integrity = 0.2
+	pellets = 10
 	variance = 30
 
 /obj/item/ammo_casing/caseless/rogue/twilight_lead/paper
@@ -528,3 +528,88 @@
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "paper_bullet"
 	breech_loaded = TRUE
+
+/obj/item/ammo_casing/caseless/rogue/twilight_grapeshotdouble
+	name = "double lead grapeshot"
+	desc = "Плотно упакованный в бумагу набор небольших металлических шариков. Хорошо сочетается с порохом."
+	projectile_type = /obj/projectile/bullet/twilight_grapeshot
+	caliber = "cannonball"
+	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi' // САЙК ПОСТАВЬ СПРАЙТ
+	icon_state = "grapeshot"
+	dropshrink = 0.5
+	max_integrity = 0.4
+	pellets = 20
+	variance = 30
+	ammo_weight = 2
+
+/obj/projectile/bullet/crow_lead
+	name = "coin sphere"
+	desc = "Небольшая свинцовая сфера. Созданная из пары медяков."
+	damage = 120
+	damage_type = BRUTE
+	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
+	icon_state = "musketball_proj"
+	ammo_type = /obj/item/ammo_casing/caseless/rogue/crow_lead
+	range = 12
+	hitsound = 'sound/combat/hits/hi_arrow2.ogg'
+	embedchance = 100
+	woundclass = BCLASS_PIERCE
+	flag = "bullet"
+	armor_penetration = PEN_NONE
+	speed = 0.1
+	intdamfactor = 2
+	secondary_damage = 30
+	secondary_damage_type = BURN
+
+/obj/item/ammo_casing/caseless/rogue/crow_lead
+	name = "crow lead sphere"
+	desc = "Небольшая свинцовая сфера. Хорошо сочетается с порохом."
+	projectile_type = /obj/projectile/bullet/crow_lead
+	caliber = "crow_lead"
+	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi' // САЙК ПОСТАВЬ СПРАЙТ
+	icon_state = "musketball"
+	dropshrink = 0.5
+	max_integrity = 0.1
+	ammo_weight = 1
+
+/obj/projectile/bullet/crow_lead/silver
+	name = "silver coin sphere"
+	desc = "Небольшая серебряная сфера. Скованная из пары серебрянников."
+	ammo_type = /obj/item/ammo_casing/caseless/rogue/crow_lead/silver
+	damage = 120
+	armor_penetration = PEN_NONE
+	silver = TRUE
+	critfactor = 0.8
+	intdamfactor = 1.5 // САЙК ПОСТАВЬ СПРАЙТ
+
+/obj/item/ammo_casing/caseless/rogue/crow_lead/silver
+	name = "silver coin sphere"
+	desc = "Небольшая серебряная сфера. Скованная из пары серебрянников."
+	projectile_type = /obj/projectile/bullet/crow_lead/silver
+	icon_state = "musketball_silver" // САЙК ПОСТАВЬ СПРАЙТ
+
+/obj/projectile/bullet/crow_lead/gold
+	name = "golden coin sphere"
+	desc = "Небольшая золотая сфера. Скованная из пары золотых монет, ощущается иначе чем другие пули"
+	ammo_type = /obj/item/ammo_casing/caseless/rogue/crow_lead/gold
+	icon_state = "musketball_proj" // САЙК ПОСТАВЬ СПРАЙТ
+	damage = 120
+
+/obj/item/ammo_casing/caseless/rogue/crow_lead/gold
+	name = "golden coin sphere"
+	desc = "Небольшая золотая сфера. Скованная из пары золотых монет, ощущается иначе чем другие пули"
+	projectile_type = /obj/projectile/bullet/crow_lead/gold
+	icon_state = "musketball" // САЙК ПОСТАВЬ СПРАЙТ
+
+/obj/projectile/bullet/crow_lead/gold/on_hit(atom/target, blocked = FALSE)
+	. = ..()
+	if(!ishuman(target))
+		return
+	var/mob/living/carbon/human/H = target
+	var/mammonsonperson = get_mammons_in_atom(H)
+	var/mammonsinbank = SStreasury.get_balance(H)
+	var/bonus = (mammonsonperson + mammonsinbank) * 0.2
+	if(bonus <= 0)
+		return
+	H.adjustFireLoss(bonus)
+	H.visible_message(span_danger("[H] корчится под тяжестью своего золота!"), span_userdanger("Я чувствую, как мои богатства обжигают душу!"))
