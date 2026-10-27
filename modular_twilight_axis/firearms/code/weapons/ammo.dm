@@ -565,7 +565,7 @@
 	name = "crow lead sphere"
 	desc = "Небольшая свинцовая сфера. Хорошо сочетается с порохом."
 	projectile_type = /obj/projectile/bullet/crow_lead
-	caliber = "crow_lead"
+	caliber = "lead_sphere"
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi' // САЙК ПОСТАВЬ СПРАЙТ
 	icon_state = "musketball"
 	dropshrink = 0.5

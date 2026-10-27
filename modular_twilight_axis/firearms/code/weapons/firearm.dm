@@ -1125,7 +1125,7 @@
 /obj/item/ammo_box/magazine/internal/twilight_firearm/crowpistol
 	name = "crow pistol internal magazine"
 	ammo_type = list(/obj/item/ammo_casing/caseless/rogue/crow_lead, /obj/item/ammo_casing/caseless/rogue/twilight_lead)
-	caliber = "crow_lead"
+	caliber = "lead_sphere"
 	max_ammo = 1
 	start_empty = TRUE
 
