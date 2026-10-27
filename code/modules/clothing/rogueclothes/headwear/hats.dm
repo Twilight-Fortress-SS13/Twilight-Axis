@@ -240,6 +240,10 @@
 	item_state = "chap_alt"
 	color = "#7dcea0"
 
+/obj/item/clothing/head/roguetown/chaperon/archivist  //TA edit
+	name = "archivist's chaperon hat"
+	color = "#23253D"
+
 /obj/item/clothing/head/roguetown/chaperon/greyscale/elder
 	name = "elder's chaperon hat"
 	color = "#007fff"

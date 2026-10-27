@@ -63,6 +63,7 @@
 	//Languages
 	/datum/language/gyedzenese, //TA EDIT
 	/datum/language/valorian, //TA EDIT
+	/datum/language/common, //TA EDIT
 	/datum/language/aavnic,
 	/datum/language/celestial,
 	/datum/language/raneshi,

@@ -94,10 +94,10 @@
 		shirt = /obj/item/clothing/suit/roguetown/shirt/robe/archivist
 		armor = /obj/item/clothing/suit/roguetown/armor/leather/vest/sailor/nightman
 		pants = /obj/item/clothing/under/roguetown/tights/black
-		head = /obj/item/clothing/head/roguetown/nightman
+		head	= /obj/item/clothing/head/roguetown/chaperon/archivist  //TA edit
 	backr = /obj/item/storage/backpack/rogue/satchel
 	shoes = /obj/item/clothing/shoes/roguetown/shortboots
-	belt = /obj/item/storage/belt/rogue/leather/plaquesilver
+	belt = /obj/item/storage/belt/rogue/leather/rope/upgraded/dark  //TA edit
 	beltl = /obj/item/storage/keyring/archivist
 	beltr = /obj/item/storage/belt/rogue/pouch/coins/mid
 	mask = /obj/item/clothing/mask/rogue/spectacles
