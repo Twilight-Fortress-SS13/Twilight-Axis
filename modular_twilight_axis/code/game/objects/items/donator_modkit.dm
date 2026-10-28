@@ -425,3 +425,86 @@
 	result_item.pixel_x = 0
 	result_item.pixel_y = 0
 	result_item.dropshrink = null
+
+/obj/item/enchantingkit/dasfox_helm
+	name = "'archaic valkyrhelm' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Armet"
+	target_items = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet)
+	result_item = /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/dasfox
+
+/obj/item/enchantingkit/dasfox_cuirass
+	name = "'archaic cermonial cuirass' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Fluted Cuirass"
+	target_items = list(/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted)
+	result_item = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/dasfox
+
+/obj/item/enchantingkit/hellpossum_grandmaster_helm
+	name = "'Grandmaster's Burgeonet' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Pigface Bascinet, Hounskull Bascinet, Roundface Bascinet, or its Aventailed \
+	variant."
+	target_items = list(
+		/obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface		= /obj/item/clothing/head/roguetown/helmet/bascinet/apostle/grandmaster,
+		/obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull		= /obj/item/clothing/head/roguetown/helmet/bascinet/apostle/grandmaster,
+		/obj/item/clothing/head/roguetown/helmet/bascinet/pigface				= /obj/item/clothing/head/roguetown/helmet/bascinet/apostle/grandmaster,
+		/obj/item/clothing/head/roguetown/helmet/heavy/aventail					= /obj/item/clothing/head/roguetown/helmet/bascinet/apostle/aventail/grandmaster
+	)
+	result_item = null
+	icon_loadout = /obj/item/clothing/head/roguetown/helmet/bascinet/apostle/grandmaster
+	exact_type = TRUE
+
+/obj/item/enchantingkit/hellpossum_grandmaster_habit
+	name = "'Grandmaster's Habit' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Pigface Bascinet, Hounskull Bascinet, Roundface Bascinet, or its Aventailed \
+	variant."
+	target_items = list(
+		/obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface		= /obj/item/clothing/head/roguetown/helmet/grandmaster_habit,
+		/obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull		= /obj/item/clothing/head/roguetown/helmet/grandmaster_habit,
+		/obj/item/clothing/head/roguetown/helmet/bascinet/pigface				= /obj/item/clothing/head/roguetown/helmet/grandmaster_habit,
+		/obj/item/clothing/head/roguetown/helmet/heavy/aventail					= /obj/item/clothing/head/roguetown/helmet/grandmaster_habit/aventail
+	)
+	result_item = null
+	icon_loadout = /obj/item/clothing/head/roguetown/helmet/grandmaster_habit
+	exact_type = TRUE
+
+/obj/item/enchantingkit/hellpossum_grandmaster_armor
+	name = "'Grandmaster's Armor' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a set of Steel Plate Armor, or a set of Steel Plate-and-Maille, alongside \
+	its Fluted variants."
+	target_items = list(
+		/obj/item/clothing/suit/roguetown/armor/plate/full/fluted/ornate		= /obj/item/clothing/suit/roguetown/armor/plate/full/robed/grandmaster,
+		/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/ornate		= /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/fluted/robed/grandmaster,
+		/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/fluted		= /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/fluted/robed/grandmaster,
+		/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/heavy			= /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/fluted/robed/grandmaster,
+		/obj/item/clothing/suit/roguetown/armor/plate/full/fluted				= /obj/item/clothing/suit/roguetown/armor/plate/full/robed/grandmaster,
+		/obj/item/clothing/suit/roguetown/armor/plate/full						= /obj/item/clothing/suit/roguetown/armor/plate/full/robed/grandmaster
+	)
+	result_item = null
+	icon_loadout = /obj/item/clothing/suit/roguetown/armor/plate/full/robed/grandmaster
+	exact_type = TRUE
+
+/obj/item/enchantingkit/sabatons
+	icon_loadout = /obj/item/clothing/shoes/roguetown/boots/armor/bare
+
+/obj/item/enchantingkit/gothicornatecuirass
+	icon_loadout = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/ornate/donator_gothic
+
+/obj/item/enchantingkit/dominion_cestus
+	icon_loadout = /obj/item/clothing/gloves/roguetown/bandages/weighted/dominion_cestus
+
+/obj/item/enchantingkit/dasfox_ranger_woadsleeve
+	icon_loadout = /obj/item/clothing/suit/roguetown/armor/plate/elven_plate/dasfox_ranger
+
+/obj/item/enchantingkit/dasfox_ranger_undersuit
+	icon_loadout = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/dasfox_ranger
+
+/obj/item/enchantingkit/dasfox_ranger_demigaunts
+	icon_loadout = /obj/item/clothing/gloves/roguetown/elven_gloves/dasfox_ranger
+
+/obj/item/enchantingkit/dasfox_ranger_schynbalds
+	icon_loadout = /obj/item/clothing/shoes/roguetown/boots/elven_boots/dasfox_ranger
+
+/obj/item/enchantingkit/triumph_armorkini_steel
+	icon_loadout = /obj/item/clothing/suit/roguetown/armor/plate/full/corslet
+
+/obj/item/enchantingkit/triumph_armorkini_iron
+	icon_loadout = /obj/item/clothing/suit/roguetown/armor/plate/full/iron/corslet
