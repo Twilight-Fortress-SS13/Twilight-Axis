@@ -22,8 +22,8 @@ SUBSYSTEM_DEF(resource_preload)
 	var/list/next_send = list()
 	/// ckey -> REF() of the client connection the progress belongs to
 	var/list/connections = list()
-	/// Download speed we plan for when spacing out bundles
-	var/assumed_bytes_per_second = 2 * 1024 * 1024
+	/// Download speed we plan for when spacing out bundles: 100 Mbit/s
+	var/assumed_bytes_per_second = 100 * 1000 * 1000 / 8
 	var/min_delay = 5 SECONDS
 	var/max_delay = 2 MINUTES
 	/// Grace period after connecting, so we don't fight the login resource download

@@ -6,8 +6,9 @@
 
 env_file="$(dirname "$0")/asset_bundles.env"
 if [ -f "$env_file" ]; then
+	# Strip CR so a file saved with Windows line endings doesn't leak \r into values
 	set -a
-	. "$env_file"
+	. <(tr -d '\r' < "$env_file")
 	set +a
 fi
 
