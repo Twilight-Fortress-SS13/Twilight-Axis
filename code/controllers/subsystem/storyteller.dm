@@ -1353,7 +1353,7 @@ SUBSYSTEM_DEF(gamemode)
 			return 0 // TA EDIT
 	if(antag_datum == /datum/antagonist/bandit) // TA EDIT START
 		if(storyteller_type == /datum/storyteller/gamemode/guaranteed_antag)
-			return 5 // TA EDIT END
+			return 4 // TA EDIT END
 	var/storyteller_antag_flags = initial(antag_datum:storyteller_antag_flags)
 	if(storyteller_blocks_antag(storyteller_antag_flags, roundstart, storyteller_type) && !(ispath(antag_datum, /datum/antagonist/bandit) && storyteller_type == /datum/storyteller/gamemode/no_antag)) // TA EDIT
 		return 0
@@ -1368,7 +1368,7 @@ SUBSYSTEM_DEF(gamemode)
 	if(antag_datum == /datum/antagonist/bandit && story_policy_type(TRUE) == /datum/storyteller/gamemode/guaranteed_antag) // TA EDIT START
 		var/admin_bandit_slot = get_admin_slot(antag_datum)
 		if(isnull(admin_bandit_slot))
-			return player_count >= 60 ? 5 : 0
+			return player_count >= 60 ? 4 : 0
 	if(slot_count <= 0)
 		return 0
 	if(ispath(antag_datum, /datum/antagonist/bandit))
