@@ -1352,7 +1352,7 @@ SUBSYSTEM_DEF(gamemode)
 		if(!ispath(antag_datum, /datum/antagonist/wretch)) // TA EDIT
 			return 0 // TA EDIT
 	if(antag_datum == /datum/antagonist/bandit) // TA EDIT START
-		if(storyteller_type == /datum/storyteller/gamemode/guaranteed_antag)
+		if(storyteller_type == /datum/storyteller/gamemode/guaranteed_antag || storyteller_type == /datum/storyteller/gamemode/no_antag)
 			return 4 // TA EDIT END
 	var/storyteller_antag_flags = initial(antag_datum:storyteller_antag_flags)
 	if(storyteller_blocks_antag(storyteller_antag_flags, roundstart, storyteller_type) && !(ispath(antag_datum, /datum/antagonist/bandit) && storyteller_type == /datum/storyteller/gamemode/no_antag)) // TA EDIT
