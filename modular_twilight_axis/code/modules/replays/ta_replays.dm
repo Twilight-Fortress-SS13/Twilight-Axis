@@ -2,7 +2,7 @@
 
 SUBSYSTEM_DEF(replays)
 	name = "Replay Recorder"
-	flags = SS_TICKER
+	flags = SS_BACKGROUND
 	runlevels = RUNLEVELS_DEFAULT | RUNLEVEL_LOBBY
 	wait = 1
 	priority = FIRE_PRIORITY_DEFAULT
@@ -22,6 +22,17 @@ SUBSYSTEM_DEF(replays)
 	var/list/icon_cache = list()
 	var/list/icon_state_caches = list()
 	var/list/name_cache = list()
+	var/list/full_appearance_cache = list()
+	var/list/full_appearance_cache_order = list()
+	var/full_appearance_cache_slot = 1
+	var/max_cached_appearances = 2048
+	var/list/normal_diff_cache = list()
+	var/list/overlay_diff_cache = list()
+	var/normal_diff_cache_count = 0
+	var/overlay_diff_cache_count = 0
+	var/max_cached_diffs = 2048
+	var/max_entries_per_fire = 64
+	var/max_pending_entries = 8192
 
 /datum/controller/subsystem/replays/Initialize(timeofday)
 	if(!CONFIG_GET(flag/record_replays))
@@ -71,6 +82,15 @@ SUBSYSTEM_DEF(replays)
 		return FALSE
 	WRITE_FILE(demo_file, "[line]")
 	return TRUE
+
+/datum/controller/subsystem/replays/proc/write_batch(list/lines, at_time)
+	if(!lines.len)
+		return
+	var/batch_text = jointext(lines, "\n")
+	if(last_written_time != at_time)
+		batch_text = "time [at_time]\n[batch_text]"
+		last_written_time = at_time
+	write_demo_line(batch_text)
 
 /datum/controller/subsystem/replays/proc/write_initial_turfs()
 	for(var/z in 1 to world.maxz)
@@ -156,19 +176,31 @@ SUBSYSTEM_DEF(replays)
 
 	var/list/output_lines = list()
 	var/current_replay_time = world.time - recording_start_time
-	if(last_written_time != current_replay_time)
-		output_lines += "time [current_replay_time]"
-		last_written_time = current_replay_time
-
-	if(del_list.len)
-		output_lines += "del [jointext(del_list, ",")]"
-		del_list.Cut()
-
+	var/processed_entries = 0
 	var/canceled = FALSE
+	var/list/deleted_entries = list()
+	while(del_list.len && processed_entries < max_entries_per_fire)
+		if(MC_TICK_CHECK)
+			canceled = TRUE
+			break
+		var/deleted_ref = del_list[del_list.len]
+		del_list.len--
+		deleted_entries += deleted_ref
+		processed_entries++
+	if(deleted_entries.len)
+		output_lines += "del [jointext(deleted_entries, ",")]"
+	if(canceled || processed_entries >= max_entries_per_fire)
+		write_batch(output_lines, current_replay_time)
+		return
+
 	var/list/dirty_updates = list()
-	while(marked_dirty.len)
+	while(marked_dirty.len && processed_entries < max_entries_per_fire)
+		if(MC_TICK_CHECK)
+			canceled = TRUE
+			break
 		var/atom/movable/M = marked_dirty[marked_dirty.len]
 		marked_dirty.len--
+		processed_entries++
 		if(!M || M.gc_destroyed)
 			continue
 		if(M.loc == M.demo_last_loc && M.appearance == M.demo_last_appearance)
@@ -189,20 +221,20 @@ SUBSYSTEM_DEF(replays)
 			M.demo_last_appearance = M.appearance
 		dirty_updates += "\ref[M] [loc_string] [appearance_string]"
 		M.demo_snapshot_written = TRUE
-		if(MC_TICK_CHECK)
-			canceled = TRUE
-			break
 	if(dirty_updates.len)
 		output_lines += "update [jointext(dirty_updates, ",")]"
-	if(canceled)
-		if(output_lines.len)
-			write_demo_line(jointext(output_lines, "\n"))
+	if(canceled || processed_entries >= max_entries_per_fire)
+		write_batch(output_lines, current_replay_time)
 		return
 
 	var/list/new_updates = list()
-	while(marked_new.len)
+	while(marked_new.len && processed_entries < max_entries_per_fire)
+		if(MC_TICK_CHECK)
+			canceled = TRUE
+			break
 		var/atom/movable/M = marked_new[marked_new.len]
 		marked_new.len--
+		processed_entries++
 		if(!M || M.gc_destroyed)
 			continue
 		var/loc_string = "null"
@@ -214,42 +246,42 @@ SUBSYSTEM_DEF(replays)
 		M.demo_last_appearance = M.appearance
 		M.demo_snapshot_written = TRUE
 		new_updates += "\ref[M] [loc_string] [encode_appearance(M.appearance, encoded_type = M.type)]"
-		if(MC_TICK_CHECK)
-			canceled = TRUE
-			break
 	if(new_updates.len)
 		output_lines += "new [jointext(new_updates, ",")]"
-	if(canceled)
-		if(output_lines.len)
-			write_demo_line(jointext(output_lines, "\n"))
+	if(canceled || processed_entries >= max_entries_per_fire)
+		write_batch(output_lines, current_replay_time)
 		return
 
 	var/list/turf_updates = list()
-	while(marked_turfs.len)
+	while(marked_turfs.len && processed_entries < max_entries_per_fire)
+		if(MC_TICK_CHECK)
+			canceled = TRUE
+			break
 		var/coord = marked_turfs[marked_turfs.len]
 		marked_turfs.len--
+		processed_entries++
 		var/list/parts = splittext(coord, ",")
 		if(parts.len != 3)
 			continue
 		var/turf/T = locate(text2num(parts[1]), text2num(parts[2]), text2num(parts[3]))
-		if(!T)
+		if(!T || T.appearance == T.demo_last_appearance)
 			continue
 		T.demo_last_appearance = T.appearance
 		turf_updates += "([coord])=[encode_appearance(T.appearance, encoded_type = T.type)]"
-		if(MC_TICK_CHECK)
-			canceled = TRUE
-			break
 	if(turf_updates.len)
 		output_lines += "turf [jointext(turf_updates, ",")]"
 
-	if(output_lines.len)
-		write_demo_line(jointext(output_lines, "\n"))
-	if(canceled)
-		return
+	write_batch(output_lines, current_replay_time)
 
 /datum/controller/subsystem/replays/Shutdown()
 	if(recording && snapshot_complete)
-		fire()
+		if(SSticker?.current_state == GAME_STATE_FINISHED)
+			var/remaining_flushes = 128
+			while(remaining_flushes-- > 0 && (marked_new.len || marked_dirty.len || marked_turfs.len || del_list.len))
+				fire()
+				CHECK_TICK
+		else
+			fire()
 		if(SSticker?.current_state == GAME_STATE_FINISHED && !marked_new.len && !marked_dirty.len && !marked_turfs.len && !del_list.len && replay_complete_path)
 			var/final_replay_time = world.time - recording_start_time
 			if(last_written_time != final_replay_time)
@@ -258,6 +290,15 @@ SUBSYSTEM_DEF(replays)
 			WRITE_FILE(file(replay_complete_path), "ta-replay-complete-v1")
 	recording = FALSE
 	return ..()
+
+/datum/controller/subsystem/replays/proc/check_backlog()
+	if(!recording || !snapshot_complete)
+		return
+	if(marked_new.len + marked_dirty.len + marked_turfs.len + del_list.len < max_pending_entries)
+		return
+	recording = FALSE
+	can_fire = FALSE
+	log_world("\[replay\] Recording stopped: event backlog exceeded [max_pending_entries]. Replay remains incomplete.")
 
 /datum/controller/subsystem/replays/proc/mark_new(atom/A)
 	if(!recording || !A || (!isobj(A) && !ismob(A)))
@@ -268,6 +309,7 @@ SUBSYSTEM_DEF(replays)
 		return
 	marked_dirty -= A
 	marked_new[A] = TRUE
+	check_backlog()
 
 /datum/controller/subsystem/replays/proc/mark_dirty(atom/A)
 	if(!recording || !A)
@@ -278,8 +320,9 @@ SUBSYSTEM_DEF(replays)
 		return
 	if((!isobj(A) && !ismob(A)) || A.gc_destroyed)
 		return
-	if(!marked_new[A])
+	if(!marked_new[A] && !marked_dirty[A])
 		marked_dirty[A] = TRUE
+		check_backlog()
 
 /datum/controller/subsystem/replays/proc/mark_destroyed(atom/A)
 	if(!recording || !A || (!isobj(A) && !ismob(A)))
@@ -288,18 +331,58 @@ SUBSYSTEM_DEF(replays)
 	marked_new -= M
 	marked_dirty -= M
 	if(M.demo_snapshot_written)
-		del_list["\ref[M]"] = TRUE
+		var/ref_key = "\ref[M]"
+		if(!del_list[ref_key])
+			del_list[ref_key] = TRUE
+			check_backlog()
 
 /datum/controller/subsystem/replays/proc/mark_turf(turf/T)
 	if(!recording || !T)
 		return
-	marked_turfs["[T.x],[T.y],[T.z]"] = TRUE
+	var/coord = "[T.x],[T.y],[T.z]"
+	if(!marked_turfs[coord])
+		marked_turfs[coord] = TRUE
+		check_backlog()
+
+/datum/controller/subsystem/replays/proc/cache_appearance_diff(image/appearance, image/before, diff_remove_overlays, encoded)
+	var/list/cache = diff_remove_overlays ? overlay_diff_cache : normal_diff_cache
+	if(diff_remove_overlays)
+		if(overlay_diff_cache_count >= max_cached_diffs)
+			return
+	else if(normal_diff_cache_count >= max_cached_diffs)
+		return
+	var/list/previous_values = cache[appearance]
+	if(!previous_values)
+		previous_values = list()
+		cache[appearance] = previous_values
+	if(!isnull(previous_values[before]))
+		return
+	previous_values[before] = encoded
+	if(diff_remove_overlays)
+		overlay_diff_cache_count++
+	else
+		normal_diff_cache_count++
 
 /datum/controller/subsystem/replays/proc/encode_appearance(image/appearance, image/diff_appearance, diff_remove_overlays = FALSE, atom/encoded_type = null)
 	if(isnull(appearance))
 		return "n"
 	if(appearance == diff_appearance)
 		return "="
+
+	var/cache_allowed = (!encoded_type || initial(encoded_type.smooth) == SMOOTH_FALSE)
+	var/cache_full = !diff_appearance && cache_allowed
+	var/cache_diff = !!diff_appearance && cache_allowed
+	if(cache_full)
+		var/cached_full = full_appearance_cache[appearance]
+		if(!isnull(cached_full))
+			return cached_full
+	if(cache_diff)
+		var/list/diff_lookup = diff_remove_overlays ? overlay_diff_cache : normal_diff_cache
+		var/list/appearance_diffs = diff_lookup[appearance]
+		if(appearance_diffs)
+			var/cached_diff = appearance_diffs[diff_appearance]
+			if(!isnull(cached_diff))
+				return cached_diff
 
 	var/appearance_icon = appearance.icon
 	var/appearance_icon_state = appearance.icon_state
@@ -334,21 +417,29 @@ SUBSYSTEM_DEF(replays)
 			inted[i] = round(old_list[i] * 255)
 		color_string = jointext(inted, ",")
 
-	var/overlays_string = "\[]"
-	if(appearance.overlays.len)
-		var/list/overlays_list = list()
-		for(var/i in 1 to appearance.overlays.len)
-			var/image/overlay = appearance.overlays[i]
-			overlays_list += encode_appearance(overlay, appearance, TRUE)
-		overlays_string = "\[[jointext(overlays_list, ",")]]"
-
-	var/underlays_string = "\[]"
-	if(appearance.underlays.len)
-		var/list/underlays_list = list()
-		for(var/i in 1 to appearance.underlays.len)
-			var/image/underlay = appearance.underlays[i]
-			underlays_list += encode_appearance(underlay, appearance, TRUE)
-		underlays_string = "\[[jointext(underlays_list, ",")]]"
+	var/list/current_overlays = appearance.overlays
+	var/list/current_underlays = appearance.underlays
+	var/overlays_identical = FALSE
+	var/underlays_identical = FALSE
+	if(diff_appearance)
+		if(diff_remove_overlays)
+			overlays_identical = !current_overlays.len
+			underlays_identical = !current_underlays.len
+		else
+			var/list/previous_overlays = diff_appearance.overlays
+			var/list/previous_underlays = diff_appearance.underlays
+			if(current_overlays.len == previous_overlays.len)
+				overlays_identical = TRUE
+				for(var/i in 1 to current_overlays.len)
+					if(current_overlays[i] != previous_overlays[i])
+						overlays_identical = FALSE
+						break
+			if(current_underlays.len == previous_underlays.len)
+				underlays_identical = TRUE
+				for(var/i in 1 to current_underlays.len)
+					if(current_underlays[i] != previous_underlays[i])
+						underlays_identical = FALSE
+						break
 
 	var/appearance_transform_string = "i"
 	if(appearance.transform)
@@ -356,6 +447,59 @@ SUBSYSTEM_DEF(replays)
 		appearance_transform_string = "[M.a],[M.b],[M.c],[M.d],[M.e],[M.f]"
 		if(appearance_transform_string == "1,0,0,0,1,0")
 			appearance_transform_string = "i"
+
+	var/list/diffed_appearance_list
+	if(diff_appearance)
+		var/diff_transform_string = "i"
+		if(diff_appearance.transform)
+			var/matrix/DM = diff_appearance.transform
+			diff_transform_string = "[DM.a],[DM.b],[DM.c],[DM.d],[DM.e],[DM.f]"
+			if(diff_transform_string == "1,0,0,0,1,0")
+				diff_transform_string = "i"
+
+		diffed_appearance_list = list(
+			json_encode(cached_icon),
+			json_encode(cached_icon_state),
+			json_encode(cached_name),
+			appearance.appearance_flags == diff_appearance.appearance_flags ? "" : appearance.appearance_flags,
+			appearance.layer == diff_appearance.layer ? "" : appearance.layer,
+			appearance.plane == diff_appearance.plane ? "" : appearance.plane,
+			appearance.dir == diff_appearance.dir ? "" : appearance.dir,
+			appearance.color == diff_appearance.color ? "" : color_string,
+			appearance.alpha == diff_appearance.alpha ? "" : appearance.alpha,
+			appearance.pixel_x == diff_appearance.pixel_x ? "" : appearance.pixel_x,
+			appearance.pixel_y == diff_appearance.pixel_y ? "" : appearance.pixel_y,
+			appearance.blend_mode == diff_appearance.blend_mode ? "" : appearance.blend_mode,
+			appearance_transform_string == diff_transform_string ? "" : appearance_transform_string,
+			appearance:invisibility == diff_appearance:invisibility ? "" : appearance:invisibility,
+			appearance.pixel_w == diff_appearance.pixel_w ? "" : appearance.pixel_w,
+			appearance.pixel_z == diff_appearance.pixel_z ? "" : appearance.pixel_z,
+			"",
+			""
+		)
+		if(overlays_identical && underlays_identical && (current_overlays.len || current_underlays.len))
+			while(diffed_appearance_list.len > 0 && diffed_appearance_list[diffed_appearance_list.len] == "")
+				diffed_appearance_list.len--
+			var/unchanged_layers_diff = "~{[jointext(diffed_appearance_list, ";")]}"
+			if(cache_diff)
+				cache_appearance_diff(appearance, diff_appearance, diff_remove_overlays, unchanged_layers_diff)
+			return unchanged_layers_diff
+
+	var/overlays_string = "\[]"
+	if(current_overlays.len)
+		var/list/overlays_list = list()
+		for(var/i in 1 to current_overlays.len)
+			var/image/overlay = current_overlays[i]
+			overlays_list += encode_appearance(overlay, appearance, TRUE)
+		overlays_string = "\[[jointext(overlays_list, ",")]]"
+
+	var/underlays_string = "\[]"
+	if(current_underlays.len)
+		var/list/underlays_list = list()
+		for(var/i in 1 to current_underlays.len)
+			var/image/underlay = current_underlays[i]
+			underlays_list += encode_appearance(underlay, appearance, TRUE)
+		underlays_string = "\[[jointext(underlays_list, ",")]]"
 
 	var/list/appearance_list = list(
 		json_encode(cached_icon),
@@ -374,68 +518,36 @@ SUBSYSTEM_DEF(replays)
 		appearance:invisibility == 0 ? "" : appearance:invisibility,
 		appearance.pixel_w == 0 ? "" : appearance.pixel_w,
 		appearance.pixel_z == 0 ? "" : appearance.pixel_z,
-		appearance.overlays.len ? overlays_string : "",
-		appearance.underlays.len ? underlays_string : ""
+		current_overlays.len ? overlays_string : "",
+		current_underlays.len ? underlays_string : ""
 	)
 	while(appearance_list.len > 0 && appearance_list[appearance_list.len] == "")
 		appearance_list.len--
 	var/undiffed_string = "{[jointext(appearance_list, ";")]}"
 
 	if(diff_appearance)
-		var/overlays_identical = TRUE
-		if(diff_remove_overlays)
-			overlays_identical = (appearance.overlays.len == 0)
-		else if(appearance.overlays.len != diff_appearance.overlays.len)
-			overlays_identical = FALSE
-		else
-			for(var/i in 1 to appearance.overlays.len)
-				if(appearance.overlays[i] != diff_appearance.overlays[i])
-					overlays_identical = FALSE
-					break
-
-		var/underlays_identical = TRUE
-		if(diff_remove_overlays)
-			underlays_identical = (appearance.underlays.len == 0)
-		else if(appearance.underlays.len != diff_appearance.underlays.len)
-			underlays_identical = FALSE
-		else
-			for(var/i in 1 to appearance.underlays.len)
-				if(appearance.underlays[i] != diff_appearance.underlays[i])
-					underlays_identical = FALSE
-					break
-
-		var/diff_transform_string = "i"
-		if(diff_appearance.transform)
-			var/matrix/DM = diff_appearance.transform
-			diff_transform_string = "[DM.a],[DM.b],[DM.c],[DM.d],[DM.e],[DM.f]"
-			if(diff_transform_string == "1,0,0,0,1,0")
-				diff_transform_string = "i"
-
-		var/list/diffed_appearance_list = list(
-			json_encode(cached_icon),
-			json_encode(cached_icon_state),
-			json_encode(cached_name),
-			appearance.appearance_flags == diff_appearance.appearance_flags ? "" : appearance.appearance_flags,
-			appearance.layer == diff_appearance.layer ? "" : appearance.layer,
-			appearance.plane == diff_appearance.plane ? "" : appearance.plane,
-			appearance.dir == diff_appearance.dir ? "" : appearance.dir,
-			appearance.color == diff_appearance.color ? "" : color_string,
-			appearance.alpha == diff_appearance.alpha ? "" : appearance.alpha,
-			appearance.pixel_x == diff_appearance.pixel_x ? "" : appearance.pixel_x,
-			appearance.pixel_y == diff_appearance.pixel_y ? "" : appearance.pixel_y,
-			appearance.blend_mode == diff_appearance.blend_mode ? "" : appearance.blend_mode,
-			appearance_transform_string == diff_transform_string ? "" : appearance_transform_string,
-			appearance:invisibility == diff_appearance:invisibility ? "" : appearance:invisibility,
-			appearance.pixel_w == diff_appearance.pixel_w ? "" : appearance.pixel_w,
-			appearance.pixel_z == diff_appearance.pixel_z ? "" : appearance.pixel_z,
-			overlays_identical ? "" : overlays_string,
-			underlays_identical ? "" : underlays_string
-		)
+		diffed_appearance_list[17] = overlays_identical ? "" : overlays_string
+		diffed_appearance_list[18] = underlays_identical ? "" : underlays_string
 		while(diffed_appearance_list.len > 0 && diffed_appearance_list[diffed_appearance_list.len] == "")
 			diffed_appearance_list.len--
 		var/diffed_string = "~{[jointext(diffed_appearance_list, ";")]}"
 		if(length(diffed_string) < length(undiffed_string))
+			if(cache_diff)
+				cache_appearance_diff(appearance, diff_appearance, diff_remove_overlays, diffed_string)
 			return diffed_string
+	if(cache_diff)
+		cache_appearance_diff(appearance, diff_appearance, diff_remove_overlays, undiffed_string)
+	if(cache_full && length(undiffed_string) <= 4096)
+		if(full_appearance_cache.len >= max_cached_appearances)
+			var/old_appearance = full_appearance_cache_order[full_appearance_cache_slot]
+			full_appearance_cache -= old_appearance
+			full_appearance_cache_order[full_appearance_cache_slot] = appearance
+			full_appearance_cache_slot++
+			if(full_appearance_cache_slot > max_cached_appearances)
+				full_appearance_cache_slot = 1
+		else
+			full_appearance_cache_order += appearance
+		full_appearance_cache[appearance] = undiffed_string
 	return undiffed_string
 
 /atom
