@@ -68,15 +68,20 @@
 	// TA EDIT END
 /datum/storyteller/gamemode/guaranteed_antag/low_wretch
 	name = "Tempered Intensity"
-	vote_desc = "Гарантированный крупный антагонист случайного типа. Также присутствует несколько малых антагонистов."
-	desc = "Гарантированный раундстартовый крупный антагонист с более агрессивным масштабированием от онлайна. До 4 изгоев (Wretches). До 1 гнолла. До 9 бандитов. Карга (Hag) присутствует. Сноходец (Dreamwalker) может появиться."
+	vote_desc = "Только бандиты и изгои, без крупных антагонистов." // TA EDIT
+	desc = "Без крупных антагонистов. До 5 изгоев (Wretches) и до 7 бандитов. Гноллы, карги и сноходцы не появляются." // TA EDIT
 	color_theme = "#7a1f1f"
 	vote_hidden = TRUE // TA EDIT
 	hard_mult = 2
+	guaranteed_hard = FALSE // TA EDIT
+	guarantees_roundstart_roleset = FALSE // TA EDIT
+	roundstart_prob = 0 // TA EDIT
+	block_hard = TRUE // TA EDIT
 	block_soft = FALSE
-	allow_dreamwalker = TRUE
-	preferred_gnoll_mode = GNOLL_SCALING_SINGLE	// max 1
-	wretch_slot_cap = 4
+	hag_slots = 0 // TA EDIT
+	allow_dreamwalker = FALSE // TA EDIT
+	preferred_gnoll_mode = GNOLL_SCALING_NONE // TA EDIT
+	wretch_slot_cap = 5 // TA EDIT
 // ----------------------------------------------------------------------------------------------------------
 // TEN pool - no hard antags, soft antags only. Standard is the lighter option, Medium the default fallback.
 // ----------------------------------------------------------------------------------------------------------

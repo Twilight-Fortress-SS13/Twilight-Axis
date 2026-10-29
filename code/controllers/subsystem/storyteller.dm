@@ -988,7 +988,10 @@ SUBSYSTEM_DEF(gamemode)
 	if(!preset)
 		return misc
 	if(preset.block_hard)
-		misc += "Крупные антагонисты отключены"
+		if(storyteller_type == /datum/storyteller/gamemode/guaranteed_antag/low_wretch) // TA EDIT
+			misc += "Крупные антагонисты отключены (кроме бандитов)" // TA EDIT
+		else // TA EDIT
+			misc += "Крупные антагонисты отключены"
 	else if(preset.guaranteed_hard)
 		misc += "Гарантированный крупный антагонист на старте раунда (требует онлайн [HARD_ANTAG_MIN_POP]+)"
 		if(preset.hard_mult > 1)
@@ -1029,7 +1032,7 @@ SUBSYSTEM_DEF(gamemode)
 			caps["Gnoll"] = gnolls
 	if(preset.hag_slots > 0)
 		caps["Hag"] = preset.hag_slots
-	if(!preset.block_hard)
+	if(!preset.block_hard || storyteller_type == /datum/storyteller/gamemode/guaranteed_antag/low_wretch) // TA EDIT
 		if(SSmapping?.config?.map_name == "Desert Town")
 			var/freeman_cap = story_antag_slot_cap(/datum/antagonist/bandit/freeman, roundstart = TRUE, storyteller_type = storyteller_type)
 			if(freeman_cap > 0)
@@ -1041,6 +1044,8 @@ SUBSYSTEM_DEF(gamemode)
 			var/bandit_cap = story_antag_slot_cap(/datum/antagonist/bandit, roundstart = TRUE, storyteller_type = storyteller_type)
 			if(bandit_cap > 0)
 				caps["Bandit"] = bandit_cap
+	if(storyteller_type == /datum/storyteller/gamemode/guaranteed_antag/low_wretch) // TA EDIT
+		return caps // TA EDIT
 	var/list/seen = list()
 
 	for(var/datum/round_event_control/antagonist/solo/ec in event_pools[EVENT_TRACK_CHARACTER_INJECTION])
@@ -1252,6 +1257,11 @@ SUBSYSTEM_DEF(gamemode)
 	storyteller_type = story_policy_type(event.roundstart, storyteller_type)
 	if(!storyteller_type)
 		return base_weight
+	if(storyteller_type == /datum/storyteller/gamemode/guaranteed_antag/low_wretch && istype(event, /datum/round_event_control/antagonist/solo)) // TA EDIT
+		var/datum/round_event_control/antagonist/solo/antag_event = event // TA EDIT
+		if(!ispath(antag_event.antag_datum, /datum/antagonist/bandit) && !ispath(antag_event.antag_datum, /datum/antagonist/wretch)) // TA EDIT
+			return 0 // TA EDIT
+		return base_weight // TA EDIT
 	// Preset-blocked antags are weightless; everything else keeps its base weight. Presets no longer favour or
 	// guarantee a specific hard antag - that is driven by the block flags and the admin-opened slots instead.
 	if(storyteller_blocks_antag(event.storyteller_antag_flags, event.roundstart, storyteller_type))
@@ -1264,6 +1274,8 @@ SUBSYSTEM_DEF(gamemode)
 	if(isnull(player_count))
 		player_count = get_correct_popcount()
 	storyteller_type = story_policy_type(TRUE, storyteller_type)
+	if(storyteller_type == /datum/storyteller/gamemode/guaranteed_antag/low_wretch && !ispath(event.antag_datum, /datum/antagonist/bandit) && !ispath(event.antag_datum, /datum/antagonist/wretch)) // TA EDIT
+		return "blocked by gamemode preset" // TA EDIT
 	var/failure_reason = event.return_failure_string(player_count)
 	if(length(failure_reason))
 		return failure_reason
@@ -1334,11 +1346,14 @@ SUBSYSTEM_DEF(gamemode)
 	if(!ispath(antag_datum, /datum/antagonist))
 		return 0
 	storyteller_type = story_policy_type(roundstart, storyteller_type)
+	if(storyteller_type == /datum/storyteller/gamemode/guaranteed_antag/low_wretch) // TA EDIT
+		if(ispath(antag_datum, /datum/antagonist/bandit)) // TA EDIT
+			return 7 // TA EDIT
+		if(!ispath(antag_datum, /datum/antagonist/wretch)) // TA EDIT
+			return 0 // TA EDIT
 	if(antag_datum == /datum/antagonist/bandit) // TA EDIT START
 		if(storyteller_type == /datum/storyteller/gamemode/guaranteed_antag)
-			return 5
-		if(storyteller_type == /datum/storyteller/gamemode/guaranteed_antag/low_wretch)
-			return 9 // TA EDIT END
+			return 5 // TA EDIT END
 	var/storyteller_antag_flags = initial(antag_datum:storyteller_antag_flags)
 	if(storyteller_blocks_antag(storyteller_antag_flags, roundstart, storyteller_type) && !(ispath(antag_datum, /datum/antagonist/bandit) && storyteller_type == /datum/storyteller/gamemode/no_antag)) // TA EDIT
 		return 0
