@@ -4,7 +4,7 @@ SUBSYSTEM_DEF(replays)
 	name = "Replay Recorder"
 	flags = SS_BACKGROUND
 	runlevels = RUNLEVELS_DEFAULT | RUNLEVEL_LOBBY
-	wait = 1
+	wait = 2
 	priority = FIRE_PRIORITY_DEFAULT
 	init_order = INIT_ORDER_TA_REPLAYS
 
@@ -31,7 +31,7 @@ SUBSYSTEM_DEF(replays)
 	var/normal_diff_cache_count = 0
 	var/overlay_diff_cache_count = 0
 	var/max_cached_diffs = 2048
-	var/max_entries_per_fire = 64
+	var/max_entries_per_fire = 128
 	var/max_pending_entries = 8192
 	var/list/replay_client_mobs = list()
 	var/list/replay_identity_cache = list()
@@ -71,7 +71,7 @@ SUBSYSTEM_DEF(replays)
 		if(!M || M.gc_destroyed || !M.demo_snapshot_written)
 			continue
 		marked_new -= M
-		if(M.loc != M.demo_last_loc || M.appearance != M.demo_last_appearance)
+		if(get_turf(M) != M.demo_last_loc)
 			marked_dirty[M] = TRUE
 
 	snapshot_complete = TRUE
@@ -79,6 +79,7 @@ SUBSYSTEM_DEF(replays)
 	last_written_time = 0
 	var/replay_wall_clock = time2text(world.timeofday, "hh:mm:ss")
 	write_demo_line("clock [replay_wall_clock]")
+	write_demo_line("mode dolls")
 	write_demo_line("time 0")
 	scan_replay_clients(0)
 	next_client_scan = world.time + 10
@@ -96,16 +97,22 @@ SUBSYSTEM_DEF(replays)
 		seen[client_ckey] = TRUE
 		var/mob_ref = C.mob ? "\ref[C.mob]" : "null"
 		if(C.mob)
+			if(!C.mob.demo_snapshot_written && !marked_new[C.mob])
+				mark_new(C.mob)
 			var/recorded_real_name = ""
 			if("real_name" in C.mob.vars)
 				recorded_real_name = C.mob.vars["real_name"]
 			if(!istext(recorded_real_name))
 				recorded_real_name = ""
 			recorded_real_name = copytext(recorded_real_name, 1, 161)
+			var/visible_name = C.mob.name
+			if(!istext(visible_name))
+				visible_name = ""
+			visible_name = copytext(visible_name, 1, 161)
 			var/list/previous_identity = replay_identity_cache[mob_ref]
-			if(!islist(previous_identity) || previous_identity[1] != recorded_real_name || previous_identity[2] != client_ckey)
-				replay_identity_cache[mob_ref] = list(recorded_real_name, client_ckey)
-				var/identity_payload = json_encode(list("real_name" = recorded_real_name, "ckey" = client_ckey))
+			if(!islist(previous_identity) || previous_identity[1] != recorded_real_name || previous_identity[2] != client_ckey || previous_identity[3] != visible_name)
+				replay_identity_cache[mob_ref] = list(recorded_real_name, client_ckey, visible_name)
+				var/identity_payload = json_encode(list("real_name" = recorded_real_name, "ckey" = client_ckey, "visible_name" = visible_name))
 				lines += "identity [mob_ref] [identity_payload]"
 		var/old_ref = replay_client_mobs[client_ckey]
 		if(isnull(old_ref))
@@ -137,6 +144,8 @@ SUBSYSTEM_DEF(replays)
 	write_demo_line(batch_text)
 
 /datum/controller/subsystem/replays/proc/write_initial_turfs()
+	var/list/snapshot_cache = list()
+	var/snapshot_cache_size = 0
 	for(var/z in 1 to world.maxz)
 		var/list/row_list = list()
 		var/last_appearance
@@ -146,8 +155,14 @@ SUBSYSTEM_DEF(replays)
 				var/turf/T = locate(x, y, z)
 				var/this_appearance
 				if(T)
-					T.demo_last_appearance = T.appearance
 					this_appearance = T.appearance
+					T.demo_last_appearance = this_appearance
+					T.demo_last_recorded_type = T.type
+					T.demo_last_recorded_icon = T.icon
+					T.demo_last_recorded_icon_state = T.icon_state
+					T.demo_last_recorded_dir = T.dir
+					T.demo_last_recorded_density = T.density
+					T.demo_last_recorded_opacity = T.opacity
 				else
 					this_appearance = "n"
 				if(this_appearance == last_appearance)
@@ -159,7 +174,17 @@ SUBSYSTEM_DEF(replays)
 					if(istext(this_appearance))
 						row_list += this_appearance
 					else
-						row_list += encode_appearance(this_appearance, istext(last_appearance) ? null : last_appearance, encoded_type = T.type)
+						var/list/type_cache = snapshot_cache[T.type]
+						var/encoded_appearance = type_cache ? type_cache[this_appearance] : null
+						if(isnull(encoded_appearance))
+							encoded_appearance = encode_appearance(this_appearance, encoded_type = T.type)
+							if(snapshot_cache_size < 8192)
+								if(!type_cache)
+									type_cache = list()
+									snapshot_cache[T.type] = type_cache
+								type_cache[this_appearance] = encoded_appearance
+								snapshot_cache_size++
+						row_list += encoded_appearance
 				last_appearance = this_appearance
 			CHECK_TICK
 		if(rle_count > 1)
@@ -168,48 +193,54 @@ SUBSYSTEM_DEF(replays)
 		CHECK_TICK
 
 /datum/controller/subsystem/replays/proc/write_initial_objects()
+	var/list/mobs_by_row = list()
+	var/list/nullspace_list = list()
+	for(var/mob/M in world)
+		if(isturf(M.loc))
+			var/row_key = "[M.z],[M.y]"
+			var/list/bucket_row = mobs_by_row[row_key]
+			if(!bucket_row)
+				bucket_row = list()
+				mobs_by_row[row_key] = bucket_row
+			var/x_key = "[M.x]"
+			var/list/bucket_cell = bucket_row[x_key]
+			if(!bucket_cell)
+				bucket_cell = list()
+				bucket_row[x_key] = bucket_cell
+			bucket_cell += encode_init_obj(M)
+		else if(isnull(M.loc))
+			nullspace_list += encode_init_obj(M)
+		CHECK_TICK
+
 	for(var/z in 1 to world.maxz)
 		var/spacing = 0
 		var/list/row_list = list()
 		for(var/y in 1 to world.maxy)
+			var/list/mapped_row = mobs_by_row["[z],[y]"]
+			if(!mapped_row)
+				spacing += world.maxx
+				CHECK_TICK
+				continue
 			for(var/x in 1 to world.maxx)
-				var/turf/T = locate(x, y, z)
-				var/list/turf_list = list()
-				if(T)
-					for(var/atom/movable/M in T.contents)
-						if(M.loc != T || (!isobj(M) && !ismob(M)))
-							continue
-						turf_list += encode_init_obj(M)
-				if(turf_list.len)
+				var/list/mapped_cell = mapped_row["[x]"]
+				if(mapped_cell)
 					if(spacing)
 						row_list += spacing
 						spacing = 0
-					row_list += turf_list
+					row_list += mapped_cell
 				spacing++
 			CHECK_TICK
 		write_demo_line(jointext(row_list, ","))
-
-	var/list/nullspace_list = list()
-	for(var/atom/movable/M in world)
-		if(M.loc != null || (!isobj(M) && !ismob(M)))
-			continue
-		nullspace_list += encode_init_obj(M)
-		CHECK_TICK
 	write_demo_line(jointext(nullspace_list, ","))
 
-/datum/controller/subsystem/replays/proc/encode_init_obj(atom/movable/M)
-	M.demo_last_loc = M.loc
-	M.demo_last_appearance = M.appearance
+/datum/controller/subsystem/replays/proc/encode_doll_name(mob/M)
+	var/mob_name = istext(M.name) ? M.name : ""
+	return "{;;[json_encode(mob_name)]}"
+
+/datum/controller/subsystem/replays/proc/encode_init_obj(mob/M)
+	M.demo_last_loc = get_turf(M)
 	M.demo_snapshot_written = TRUE
-	var/encoded_appearance = encode_appearance(M.appearance, encoded_type = M.type)
-	var/list/encoded_contents = list()
-	for(var/atom/movable/C in M.contents)
-		if(isobj(C) || ismob(C))
-			encoded_contents += encode_init_obj(C)
-	var/contents_string = ""
-	if(encoded_contents.len)
-		contents_string = "([jointext(encoded_contents, ",")])"
-	return "\ref[M]=[encoded_appearance][contents_string]"
+	return "\ref[M]=[encode_doll_name(M)]"
 
 /datum/controller/subsystem/replays/fire(resumed = FALSE)
 	if(!recording || !snapshot_complete)
@@ -250,23 +281,14 @@ SUBSYSTEM_DEF(replays)
 		processed_entries++
 		if(!M || M.gc_destroyed)
 			continue
-		if(M.loc == M.demo_last_loc && M.appearance == M.demo_last_appearance)
+		if(!ismob(M))
 			continue
-
-		var/loc_string = "="
-		if(M.loc != M.demo_last_loc)
-			loc_string = "null"
-			if(isturf(M.loc))
-				loc_string = "[M.x],[M.y],[M.z]"
-			else if(ismovableatom(M.loc))
-				loc_string = "\ref[M.loc]"
-			M.demo_last_loc = M.loc
-
-		var/appearance_string = "="
-		if(M.appearance != M.demo_last_appearance)
-			appearance_string = encode_appearance(M.appearance, M.demo_last_appearance, encoded_type = M.type)
-			M.demo_last_appearance = M.appearance
-		dirty_updates += "\ref[M] [loc_string] [appearance_string]"
+		var/turf/current_turf = get_turf(M)
+		if(current_turf == M.demo_last_loc)
+			continue
+		M.demo_last_loc = current_turf
+		var/doll_loc = current_turf ? "[current_turf.x],[current_turf.y],[current_turf.z]" : "null"
+		dirty_updates += "\ref[M] [doll_loc] ="
 		M.demo_snapshot_written = TRUE
 	if(dirty_updates.len)
 		output_lines += "update [jointext(dirty_updates, ",")]"
@@ -284,15 +306,13 @@ SUBSYSTEM_DEF(replays)
 		processed_entries++
 		if(!M || M.gc_destroyed)
 			continue
-		var/loc_string = "null"
-		if(isturf(M.loc))
-			loc_string = "[M.x],[M.y],[M.z]"
-		else if(ismovableatom(M.loc))
-			loc_string = "\ref[M.loc]"
-		M.demo_last_loc = M.loc
-		M.demo_last_appearance = M.appearance
+		if(!ismob(M))
+			continue
+		var/turf/mob_turf = get_turf(M)
+		var/loc_string = mob_turf ? "[mob_turf.x],[mob_turf.y],[mob_turf.z]" : "null"
+		M.demo_last_loc = mob_turf
 		M.demo_snapshot_written = TRUE
-		new_updates += "\ref[M] [loc_string] [encode_appearance(M.appearance, encoded_type = M.type)]"
+		new_updates += "\ref[M] [loc_string] [encode_doll_name(M)]"
 	if(new_updates.len)
 		output_lines += "new [jointext(new_updates, ",")]"
 	if(canceled || processed_entries >= max_entries_per_fire)
@@ -311,10 +331,20 @@ SUBSYSTEM_DEF(replays)
 		if(parts.len != 3)
 			continue
 		var/turf/T = locate(text2num(parts[1]), text2num(parts[2]), text2num(parts[3]))
-		if(!T || T.appearance == T.demo_last_appearance)
+		if(!T)
 			continue
-		T.demo_last_appearance = T.appearance
-		turf_updates += "([coord])=[encode_appearance(T.appearance, encoded_type = T.type)]"
+		if(T.demo_last_recorded_type == T.type && T.demo_last_recorded_icon == T.icon && T.demo_last_recorded_icon_state == T.icon_state && T.demo_last_recorded_dir == T.dir && T.demo_last_recorded_density == T.density && T.demo_last_recorded_opacity == T.opacity)
+			continue
+		var/current_appearance = T.appearance
+		if(current_appearance != T.demo_last_appearance)
+			turf_updates += "([coord])=[encode_appearance(current_appearance, encoded_type = T.type)]"
+		T.demo_last_appearance = current_appearance
+		T.demo_last_recorded_type = T.type
+		T.demo_last_recorded_icon = T.icon
+		T.demo_last_recorded_icon_state = T.icon_state
+		T.demo_last_recorded_dir = T.dir
+		T.demo_last_recorded_density = T.density
+		T.demo_last_recorded_opacity = T.opacity
 	if(turf_updates.len)
 		output_lines += "turf [jointext(turf_updates, ",")]"
 
@@ -348,7 +378,7 @@ SUBSYSTEM_DEF(replays)
 	log_world("\[replay\] Recording stopped: event backlog exceeded [max_pending_entries]. Replay remains incomplete.")
 
 /datum/controller/subsystem/replays/proc/mark_new(atom/A)
-	if(!recording || !A || (!isobj(A) && !ismob(A)))
+	if(!recording || !A || !ismob(A))
 		return
 	if(A.gc_destroyed)
 		return
@@ -363,16 +393,24 @@ SUBSYSTEM_DEF(replays)
 		return
 	if(isturf(A))
 		var/turf/T = A
-		mark_turf(T)
+		mark_turf(T, TRUE)
 		return
-	if((!isobj(A) && !ismob(A)) || A.gc_destroyed)
+	if(!ismob(A) || A.gc_destroyed)
 		return
-	if(!marked_new[A] && !marked_dirty[A])
-		marked_dirty[A] = TRUE
-		check_backlog()
+	if(marked_dirty[A] || marked_new[A])
+		return
+	var/mob/actor = A
+	if(!actor.demo_snapshot_written)
+		mark_new(A)
+		return
+	var/turf/current_turf = isturf(actor.loc) ? actor.loc : get_turf(actor)
+	if(current_turf == actor.demo_last_loc)
+		return
+	marked_dirty[A] = TRUE
+	check_backlog()
 
 /datum/controller/subsystem/replays/proc/mark_destroyed(atom/A)
-	if(!recording || !A || (!isobj(A) && !ismob(A)))
+	if(!recording || !A || !ismob(A))
 		return
 	var/atom/movable/M = A
 	marked_new -= M
@@ -383,8 +421,10 @@ SUBSYSTEM_DEF(replays)
 			del_list[ref_key] = TRUE
 			check_backlog()
 
-/datum/controller/subsystem/replays/proc/mark_turf(turf/T)
+/datum/controller/subsystem/replays/proc/mark_turf(turf/T, visual_update = FALSE)
 	if(!recording || !T)
+		return
+	if(visual_update && T.demo_last_recorded_type == T.type && T.demo_last_recorded_icon == T.icon && T.demo_last_recorded_icon_state == T.icon_state && T.demo_last_recorded_dir == T.dir && T.demo_last_recorded_density == T.density && T.demo_last_recorded_opacity == T.opacity)
 		return
 	var/coord = "[T.x],[T.y],[T.z]"
 	if(!marked_turfs[coord])
@@ -599,6 +639,14 @@ SUBSYSTEM_DEF(replays)
 
 /atom
 	var/image/demo_last_appearance
+
+/turf
+	var/demo_last_recorded_type
+	var/demo_last_recorded_icon
+	var/demo_last_recorded_icon_state
+	var/demo_last_recorded_dir
+	var/demo_last_recorded_density
+	var/demo_last_recorded_opacity
 
 /atom/movable
 	var/atom/demo_last_loc
