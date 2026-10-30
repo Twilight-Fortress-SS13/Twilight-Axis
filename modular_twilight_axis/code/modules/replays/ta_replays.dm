@@ -33,6 +33,8 @@ SUBSYSTEM_DEF(replays)
 	var/max_cached_diffs = 2048
 	var/max_entries_per_fire = 64
 	var/max_pending_entries = 8192
+	var/list/replay_client_mobs = list()
+	var/next_client_scan = 0
 
 /datum/controller/subsystem/replays/Initialize(timeofday)
 	if(!CONFIG_GET(flag/record_replays))
@@ -74,8 +76,37 @@ SUBSYSTEM_DEF(replays)
 	snapshot_complete = TRUE
 	recording_start_time = world.time
 	last_written_time = 0
+	var/replay_wall_clock = time2text(world.timeofday, "hh:mm:ss")
+	write_demo_line("clock [replay_wall_clock]")
 	write_demo_line("time 0")
+	scan_replay_clients(0)
+	next_client_scan = world.time + 10
 	return ..()
+
+/datum/controller/subsystem/replays/proc/scan_replay_clients(at_time)
+	if(!recording || !snapshot_complete)
+		return
+	var/list/seen = list()
+	var/list/lines = list()
+	for(var/client/C in GLOB.clients)
+		if(!C || !C.ckey)
+			continue
+		var/client_ckey = C.ckey
+		seen[client_ckey] = TRUE
+		var/mob_ref = C.mob ? "\ref[C.mob]" : "null"
+		var/old_ref = replay_client_mobs[client_ckey]
+		if(isnull(old_ref))
+			lines += "login [client_ckey]"
+			replay_client_mobs[client_ckey] = mob_ref
+			lines += "setmob [client_ckey] [mob_ref]"
+		else if(old_ref != mob_ref)
+			replay_client_mobs[client_ckey] = mob_ref
+			lines += "setmob [client_ckey] [mob_ref]"
+	for(var/client_ckey in replay_client_mobs)
+		if(!seen[client_ckey])
+			lines += "logout [client_ckey]"
+			replay_client_mobs -= client_ckey
+	write_batch(lines, at_time)
 
 /datum/controller/subsystem/replays/proc/write_demo_line(line)
 	if(!demo_file)
@@ -171,11 +202,14 @@ SUBSYSTEM_DEF(replays)
 	if(!recording || !snapshot_complete)
 		return
 
+	var/current_replay_time = world.time - recording_start_time
+	if(world.time >= next_client_scan)
+		next_client_scan = world.time + 10
+		scan_replay_clients(current_replay_time)
 	if(!marked_new.len && !marked_dirty.len && !marked_turfs.len && !del_list.len)
 		return
 
 	var/list/output_lines = list()
-	var/current_replay_time = world.time - recording_start_time
 	var/processed_entries = 0
 	var/canceled = FALSE
 	var/list/deleted_entries = list()
