@@ -4326,6 +4326,7 @@
 #include "modular_twilight_axis\code\modules\mob\living\carbon\human\undress_all.dm"
 #include "modular_twilight_axis\code\modules\mob\living\carbon\human\rabbit_ears_swap.dm"
 #include "modular_twilight_axis\code\modules\mob\living\emote.dm"
+#include "modular_twilight_axis\code\modules\mob\living\combat\magic_barrier.dm"
 #include "modular_twilight_axis\code\modules\mob\living\carbon\human\emotes_noises.dm"
 #include "modular_twilight_axis\code\modules\mob\living\carbon\human\npc\skeleton\skeleton_outfits.dm"
 #include "modular_twilight_axis\code\modules\mob\living\combat\special_intents.dm"
