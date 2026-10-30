@@ -153,3 +153,29 @@
 
 /obj/item/rogueweapon/sword/sabre/stalker/bloodraider/zizo/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_AVANTYNE)
+
+/obj/item/rogueweapon/sword/long/oathbreaker_matthios
+	name = "\"Kingslayer\""
+	desc = "The blade seems to be forged of pure gold, yet it cuts and blocks just as well as any steel blade would. </br>'Rise, now, stand and fight! Take your freedom, claim your right!' </br>'Rise, now, stand and sing! Storm the castle, kill the king!'"
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon_state = "oathbreakersword"
+	item_state = "oathbreakersword"
+	//sheathe_icon = "oathbreakersword" //Когда замержат #1569, буду это делать
+	force = 35
+	force_wielded = 40
+	max_blade_int = 400
+	max_integrity = 500
+	equip_delay_self = 0
+	unequip_delay_self = 0
+	wdefense_wbonus = 7
+	smeltresult = null
+	possible_item_intents = list(/datum/intent/sword/cut/krieg, /datum/intent/sword/chop/falx, /datum/intent/sword/strike, /datum/intent/rend/krieg)
+	gripped_intents = list(/datum/intent/sword/cut/krieg, /datum/intent/sword/thrust/long/deep, /datum/intent/sword/strike, /datum/intent/rend/krieg)
+	alt_grips = list(/datum/alt_grip/mordhau/sword/lesser, /datum/alt_grip/halfsword/lesser)
+
+/obj/item/rogueweapon/sword/long/oathbreaker_matthios/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_OATHBREAKER, "SWORD")
+
+/obj/item/rogueweapon/sword/long/oathbreaker_matthios/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_MATTHIOS_WEAPON)

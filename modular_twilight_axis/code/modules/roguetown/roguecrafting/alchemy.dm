@@ -2,7 +2,7 @@
 	name = "smartium"
 	structurecraft = null
 	result = list(/obj/item/reagent_containers/powder/smartium)
-	reqs = list(/obj/item/ash = 2, /datum/reagent/berrypoison = 2, /obj/item/reagent_containers/food/snacks/grown/manabloom = 1, /obj/item/reagent_containers/food/snacks/grown/rogue/swampweeddry = 1)
+	reqs = list(/obj/item/natural/ash = 2, /datum/reagent/berrypoison = 2, /obj/item/reagent_containers/food/snacks/grown/manabloom = 1, /obj/item/reagent_containers/food/snacks/grown/rogue/swampweeddry = 1)
 	craftdiff = 2
 
 /datum/crafting_recipe/roguetown/alchemy/smartium_3x
@@ -11,14 +11,14 @@
 	result = list(/obj/item/reagent_containers/powder/smartium,
 					/obj/item/reagent_containers/powder/smartium,
 					/obj/item/reagent_containers/powder/smartium)
-	reqs = list(/obj/item/ash = 3, /datum/reagent/berrypoison = 3, /obj/item/reagent_containers/food/snacks/grown/manabloom = 3, /obj/item/reagent_containers/food/snacks/grown/rogue/swampweeddry = 1)
+	reqs = list(/obj/item/natural/ash = 3, /datum/reagent/berrypoison = 3, /obj/item/reagent_containers/food/snacks/grown/manabloom = 3, /obj/item/reagent_containers/food/snacks/grown/rogue/swampweeddry = 1)
 	craftdiff = 3
 
 /datum/crafting_recipe/roguetown/alchemy/corps_dust
 	name = "corps dust"
 	structurecraft = null
 	result = list(/obj/item/reagent_containers/powder/corps_dust)
-	reqs = list(/obj/item/ash = 1, /datum/reagent/berrypoison = 2, /obj/item/alch/viscera = 2, /obj/item/alch/bone = 2)
+	reqs = list(/obj/item/natural/ash = 1, /datum/reagent/berrypoison = 2, /obj/item/alch/viscera = 2, /obj/item/alch/bone = 2)
 	craftdiff = 2
 
 /datum/crafting_recipe/roguetown/alchemy/corps_dust_3x
@@ -27,7 +27,7 @@
 	result = list(/obj/item/reagent_containers/powder/corps_dust,
 					/obj/item/reagent_containers/powder/corps_dust,
 					/obj/item/reagent_containers/powder/corps_dust)
-	reqs = list(/obj/item/ash = 2, /datum/reagent/berrypoison = 3, /obj/item/alch/viscera = 3, /obj/item/alch/bone = 3)
+	reqs = list(/obj/item/natural/ash = 2, /datum/reagent/berrypoison = 3, /obj/item/alch/viscera = 3, /obj/item/alch/bone = 3)
 	craftdiff = 3
 
 /datum/crafting_recipe/roguetown/alchemy/grave_powder
@@ -66,7 +66,7 @@
 	name = "moondust purest"
 	category = "Table"
 	result = list(/obj/item/reagent_containers/powder/moondust_purest)
-	reqs = list(/obj/item/ash = 1, /obj/item/reagent_containers/powder/ozium = 1, /obj/item/reagent_containers/powder/moondust = 1, /obj/item/reagent_containers/powder/smartium)
+	reqs = list(/obj/item/natural/ash = 1, /obj/item/reagent_containers/powder/ozium = 1, /obj/item/reagent_containers/powder/moondust = 1, /obj/item/reagent_containers/powder/smartium)
 	craftdiff = 4
 
 /datum/crafting_recipe/roguetown/alchemy/quicksilver/blessed

@@ -81,6 +81,7 @@
 	backpack_contents = list(
 		/obj/item/ritechalk = 1,
 		/obj/item/mini_flagpole/church,
+		/obj/item/needle/thorn,
 		/obj/item/storage/keyring/acolyte
 		)
 	H.cmode_music = sound("sound/music/cmode/church/combat_acolyte.ogg") // has to be defined here for the selection below to work. sm1 please rewrite cmusic to apply pre-equip.
@@ -140,8 +141,7 @@
 			backpack_contents[/obj/item/clothing/head/roguetown/eoramask] = 1
 			neck = /obj/item/clothing/neck/roguetown/psicross/eora/g
 			cloak = /obj/item/clothing/cloak/templar/eoran
-			r_hand = /obj/item/rogueweapon/huntingknife/scissors
-			l_hand = /obj/item/needle/thorn
+			l_hand = /obj/item/rogueweapon/huntingknife/scissors
 			var/robes = list("Modest","Exposed")
 			var/robe_choice = input(H, "Choose your ROBES.", "TAKE UP ROBES.") as anything in robes
 			switch(robe_choice) // This feels wrong to do but I am unsure how else to do it

@@ -86,7 +86,6 @@
 		slapcraft_recipes = slapcraft_recipe_list,\
 		)
 
-// TA EDIT START
 /obj/item/reagent_containers/food/snacks/tallow/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Mixing tallow with a filled glass of red wine can make 'redtallow', a crimson-tinged wax that's popular for sealing folded letters of ducal- and religious importance.")
@@ -140,12 +139,12 @@
 		return TRUE
 
 	// Try to make blacktallow with ash
-	if(istype(I, /obj/item/ash))
+	if(is_ash_item(I)) // TA EDIT
 		if(tgui_alert(user, "Soak the tallow in ash to make blacktallow?", "Make Blacktallow", list("Yes", "No")) != "Yes")
 			return TRUE
 
+		consume_ash_unit(I) // TA EDIT
 		changefood(/obj/item/reagent_containers/food/snacks/tallow/black, user)
-		qdel(I)
 		to_chat(user, span_notice("You stain the tallow with ash, turning it into blacktallow."))
 		return TRUE
 
@@ -240,5 +239,3 @@
 			return TRUE
 
 	return FALSE
-
-// TA EDIT END

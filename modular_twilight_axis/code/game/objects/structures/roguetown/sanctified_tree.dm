@@ -482,7 +482,7 @@
 		if("enchanted_stone_or_boulder", "boulder_cat4", "boulder_only") return /obj/item/natural/rock
 		if("any_stone_cat4") return /obj/item/natural/stone
 		if("vital_item") return /obj/item/alch/sinew
-		if("ash") return /obj/item/ash
+		if("ash") return /obj/item/natural/ash
 		if("compost") return /obj/item/compost
 		if("zizobane") return /obj/item/reagent_containers/food/snacks/zizo_bane
 		if("druid_armor") return /obj/item/clothing/suit/roguetown/armor/leather/druid
@@ -691,7 +691,7 @@
 		if("vital_item")
 			return istype(held, /obj/item/alch/sinew) || istype(held, /obj/item/alch/viscera) || istype(held, /obj/item/alch/bonemeal) || istype(held, /obj/item/skull)
 		if("ash")
-			return istype(held, /obj/item/ash)
+			return istype(held, /obj/item/natural/ash)
 		if("compost")
 			return istype(held, /obj/item/compost)
 		if("zizobane")

@@ -801,7 +801,7 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 	melee_damage_lower = 25
 	melee_damage_upper = 30
 	icon_dead = ""
-	loot = list(/obj/item/ash,	/obj/item/ash)
+	loot = list(/obj/item/natural/ash,	/obj/item/natural/ash)
 	can_have_ai = FALSE //disable native ai
 	AIStatus = AI_OFF
 	var/buffed_r = FALSE

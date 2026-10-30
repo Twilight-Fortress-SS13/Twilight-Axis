@@ -21,14 +21,12 @@ type Data = {
   groups: PatronGroup[];
   total_followers: number;
 };
-
 export const PatronFollowers = () => {
   const { act, data } = useBackend<Data>();
   const { groups = [], total_followers = 0 } = data;
   const [query, setQuery] = useState('');
   const [collapsed, setCollapsed] = useState<string[]>([]);
   const needle = query.toLowerCase().trim();
-
   const filteredGroups = [...groups]
     .sort((a, b) => a.name.localeCompare(b.name))
     .map((group) => ({
@@ -43,13 +41,11 @@ export const PatronFollowers = () => {
         .sort((a, b) => a.name.localeCompare(b.name)),
     }))
     .filter((group) => group.followers.length > 0);
-
   const toggleGroup = (id: string) => {
     setCollapsed((current) => current.includes(id)
       ? current.filter((entry) => entry !== id)
       : [...current, id]);
   };
-
   return (
     <Window width={850} height={750} title="Followers by Patron">
       <Window.Content scrollable>
@@ -60,7 +56,7 @@ export const PatronFollowers = () => {
                 fluid
                 value={query}
                 placeholder="Search god, character or ckey..."
-                onInput={(_, value) => setQuery(value)}
+                onChange={setQuery}
               />
             </Stack.Item>
             <Stack.Item>
@@ -70,7 +66,6 @@ export const PatronFollowers = () => {
             </Stack.Item>
           </Stack>
         </Section>
-
         {filteredGroups.length === 0 ? (
           <Section>
             <Box color="label">No matching online followers.</Box>

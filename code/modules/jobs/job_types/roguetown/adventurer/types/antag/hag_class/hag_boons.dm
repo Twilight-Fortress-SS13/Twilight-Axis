@@ -17,6 +17,7 @@
 	var/hag_curse = FALSE
 	var/hag_is_valid = TRUE
 	var/hag_trait = FALSE
+	var/cursed = FALSE // TA ADDITION - this boon has been cursed and will not be counted in list as a positive.
 
 /datum/hag_boon/curse_scar
 	name = "Curse Scar"

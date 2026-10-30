@@ -1,5 +1,0 @@
-author: "voorex2"
-delete-after: True
-changes:
-  - balance: "Lesser Mending заменён на обычный Mending в ритуалах Зизо, Граггара, Маттиоса и Баоты."
-  - bugfix: "Ритуальная броня больше не отнимает ранее изученный Mending."

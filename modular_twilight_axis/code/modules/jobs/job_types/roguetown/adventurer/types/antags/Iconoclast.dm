@@ -1,5 +1,6 @@
 /mob/living/carbon/human
 	var/tmp/ta_is_golden_serpent = FALSE
+	var/tmp/ta_is_oathbreaker = FALSE
 
 /datum/advclass/iconoclast
 	traits_applied = list(
@@ -36,6 +37,14 @@
 		human.change_stat(STATKEY_CON, 2)
 		human.change_stat(STATKEY_LCK, -2)
 		return
+	else if(human.ta_is_oathbreaker)
+		ADD_TRAIT(human, TRAIT_MEDIUMARMOR, ADVENTURER_TRAIT)
+		ADD_TRAIT(human, TRAIT_OATHBREAKER, ADVENTURER_TRAIT)
+		human.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_MASTER, TRUE)
+		human.adjust_skillrank_up_to(/datum/skill/combat/shields, SKILL_LEVEL_EXPERT, TRUE)
+		human.adjust_skillrank_up_to(/datum/skill/combat/unarmed, SKILL_LEVEL_JOURNEYMAN, TRUE)
+		human.adjust_skillrank_up_to(/datum/skill/combat/wrestling, SKILL_LEVEL_JOURNEYMAN, TRUE)
+		return
 
 	ADD_TRAIT(human, TRAIT_HEAVYARMOR, ADVENTURER_TRAIT)
 	human.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, SKILL_LEVEL_MASTER, TRUE)
@@ -65,10 +74,11 @@
 
 	var/subtype_choice = "Chosen of Matthios"
 	if(human.mind)
-		var/list/subtype_choices = list("Chosen of Matthios", "Golden Serpent")
+		var/list/subtype_choices = list("Chosen of Matthios", "Golden Serpent", "Oathbreaker")
 		subtype_choice = input(human, "Choose your path.", "TAKE UP ARMS") as anything in subtype_choices
 
 	human.ta_is_golden_serpent = subtype_choice == "Golden Serpent"
+	human.ta_is_oathbreaker = subtype_choice == "Oathbreaker"
 	human.set_blindness(0)
 
 	if(human.ta_is_golden_serpent)
@@ -96,6 +106,20 @@
 
 		var/obj/item/bodypart/l_arm/prosthetic/bronzeleft/left_arm = new()
 		left_arm.attach_limb(human)
+	else if(human.ta_is_oathbreaker)
+		r_hand = /obj/item/rogueweapon/sword/long
+		cloak = /obj/item/clothing/cloak/raincloak/furcloak/brown
+		armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass
+		shirt = /obj/item/clothing/suit/roguetown/armor/chainmail
+		beltr = /obj/item/rogueweapon/scabbard/sword
+		belt = /obj/item/storage/belt/rogue/leather/steel
+		pants = /obj/item/clothing/under/roguetown/chainlegs/iron
+		shoes = /obj/item/clothing/shoes/roguetown/boots/armor/iron
+		backl = /obj/item/rogueweapon/shield/iron
+		head = /obj/item/clothing/head/roguetown/helmet/heavy/volfplate
+		gloves = /obj/item/clothing/gloves/roguetown/chain/iron
+		wrists = /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios
+		neck = /obj/item/clothing/neck/roguetown/gorget
 	else
 		r_hand = /obj/item/rogueweapon/woodstaff
 		head = /obj/item/clothing/head/roguetown/roguehood
@@ -108,3 +132,5 @@
 	var/datum/devotion/matthios_devotion = new /datum/devotion(human, human.patron)
 	matthios_devotion.grant_miracles(human, cleric_tier = CLERIC_T4, passive_gain = CLERIC_REGEN_MAJOR, start_maxed = TRUE)
 	human.mind?.AddSpell(new /datum/action/cooldown/spell/matthios/raze)
+
+

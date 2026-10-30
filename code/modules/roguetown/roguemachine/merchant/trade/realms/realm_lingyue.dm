@@ -119,5 +119,10 @@
 		"The saost scholars say the world turns on balance: duty against profit, honor against survival. I say a good captain learns which side of the scale he can afford to let touch the water.",
 		"Your duke fancies himself a patron of eastern culture? Then let him patronize my ledger. Gyedzai silk on his shoulders will speak more eloquently than any envoy he can afford.",
 		"I carry letters sealed by three rival courts, each warning me not to trade with the other two. I keep them together in one box – they make a fine cushion for hard coin.",
-		"Do not haggle with a man whose homeland is at war with itself. I have learned every trick of survival from our own princes; your market squabbles are children's play in comparison."
+		"Do not haggle with a man whose homeland is at war with itself. I have learned every trick of survival from our own princes; your market squabbles are children's play in comparison.",
+		"...we're out of rice.",
+		"Please keep the Otavans away from our ship.",
+		"Tis dire, I'm out of rice wine! Do you have any local rice wine to trade?",
+		"A dozen crabs of at least twenty catty for the families back home!",
+		"Jade, pepper, and a variety of weapons and armor to suit your needs!"
 	) //TA EDIT

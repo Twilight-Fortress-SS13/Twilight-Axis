@@ -163,6 +163,8 @@
 			playsound(loc, 'sound/magic/holyshield.ogg', 80, FALSE, -1)
 			moonlightdance(src)
 			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
+		// TA REMOVAL START - RITUAL REMOVED CUZ THERE IS SAME ABILITY IN MIRACLES.
+		/*
 		if("Moonlight Inspiration")
 			if(!do_after(user, 5 SECONDS))
 				return
@@ -177,16 +179,22 @@
 			playsound(loc, 'sound/magic/holyshield.ogg', 80, FALSE, -1)
 			mooninspiration(src)
 			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
+		*/
+		// TA REMOVAL END
 
 /obj/structure/ritualcircle/noc/proc/moonlightdance(src)
 	var/ritualtargets = view(7, loc)
 	for(var/mob/living/carbon/human/target in ritualtargets)
 		target.apply_status_effect(/datum/status_effect/buff/moonlightdance)
 
+// TA REMOVAL START - RITUAL REMOVED CUZ THERE IS SAME ABILITY IN MIRACLES.
+/*
 /obj/structure/ritualcircle/noc/proc/mooninspiration(src)
 	var/ritualtargets = view(2, loc)
 	for(var/mob/living/carbon/human/target in ritualtargets)
 		target.mind.sleep_adv.sleep_adv_points += 3
+*/
+// TA REMOVAL END
 
 /obj/structure/ritualcircle/xylix
 	name = "Rune of Trickery"
@@ -1457,7 +1465,10 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 				return
 			var/onrune = view(1, loc)
 			var/list/folksonrune = list()
+			var/is_spy = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic/spy)
 			for(var/mob/living/carbon/human/persononrune in onrune)
+				if(is_spy && persononrune == user)
+					continue
 				if(HAS_TRAIT(persononrune, TRAIT_CABAL))
 					folksonrune += persononrune
 			var/mob/living/carbon/human/target = input(user, "Choose a host") as null|anything in folksonrune
@@ -1703,7 +1714,10 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 				return
 			var/onrune = view(1, loc)
 			var/list/folksonrune = list()
+			var/is_spy = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic/spy)
 			for(var/mob/living/carbon/human/persononrune in onrune)
+				if(is_spy && persononrune == user)
+					continue
 				if(HAS_TRAIT(persononrune, TRAIT_FREEMAN))
 					folksonrune += persononrune
 			var/mob/living/carbon/human/target = input(user, "Choose a host") as null|anything in folksonrune
@@ -1752,6 +1766,17 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 /obj/structure/ritualcircle/matthios/proc/matthiosarmaments(mob/living/carbon/human/target)
 	if(!HAS_TRAIT(target, TRAIT_FREEMAN))
 		loc.visible_message(span_cult("THE RITE REJECTS ONES WHO BOW DOWN TO TYRANNY!!")) //TA Lore edit
+		return
+	if(HAS_TRAIT(target, TRAIT_OATHBREAKER)) //TA EDIT START
+		target.Stun(60)
+		playsound(loc, 'sound/misc/smelter_fin.ogg', 50)
+		loc.visible_message(span_cult("[target]'s lux pours from their nose and into the rune! Gleeming gold simmers and contorts upon it, before manifesting itself into a blade!"))
+		spawn(20)
+			playsound(loc, 'sound/foley/equip/swordlarge1.ogg', 90)
+			playsound(loc, 'sound/items/bsmith1.ogg', 50)
+			target.put_in_hands(new /obj/item/rogueweapon/sword/long/oathbreaker_matthios(target), forced = TRUE)
+			spawn(40)
+				to_chat(target, span_cult("Take up these arms, and claim your right.")) //TA EDIT END
 		return
 	target.Stun(60)
 	target.Knockdown(60)
@@ -1885,7 +1910,10 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 				return
 			var/onrune = view(1, loc)
 			var/list/folksonrune = list()
+			var/is_spy = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic/spy)
 			for(var/mob/living/carbon/human/persononrune in onrune)
+				if(is_spy && persononrune == user)
+					continue
 				if(HAS_TRAIT(persononrune, TRAIT_HORDE))
 					folksonrune += persononrune
 			var/mob/living/carbon/human/target = input(user, "Choose a host") as null|anything in folksonrune

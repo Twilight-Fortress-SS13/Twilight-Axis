@@ -627,6 +627,13 @@ GLOBAL_LIST_EMPTY(round_join_times)
 #define ARMOR_MAT_LEATHER 2
 #define ARMOR_MAT_CHAINMAIL 3
 
+//Intent-saving defines. If a weapon has more than 3 altgrip states it's likely to runtime somewhere.
+#define UNWIELDED_INTENT 0
+#define WIELDED_INTENT 1
+#define ALTGRIP_ONE_INTENT 2
+#define ALTGRIP_TWO_INTENT 3
+#define ALTGRIP_THREE_INTENT 4
+
 /*
 	Formerly bitflags, now we are strings
 	Currently used for classes
@@ -637,7 +644,7 @@ GLOBAL_LIST_EMPTY(round_join_times)
 #define CTAG_ROYALGUARD_ENIGMA "CAT_ROYALGUARD_ENIGMA"
 #define CTAG_ROYALKNIGHT "CAT_ROYALKNIGHT"
 #define CTAG_ROYALSERGEANT "CAT_ROYALSERGEANT"
-#define CTAG_SHERIFF "CAT_SHERIFF"			
+#define CTAG_SHERIFF "CAT_SHERIFF"
 #define CTAG_TOWN_WATCH "CAT_TOWN_WATCH"
 #define CTAG_VANGUARD "CAT_VANGUARD"
 #define CTAG_OVERSEER "CAT_OVERSEER"
