@@ -34,6 +34,7 @@ SUBSYSTEM_DEF(replays)
 	var/max_entries_per_fire = 64
 	var/max_pending_entries = 8192
 	var/list/replay_client_mobs = list()
+	var/list/replay_identity_cache = list()
 	var/next_client_scan = 0
 
 /datum/controller/subsystem/replays/Initialize(timeofday)
@@ -94,6 +95,18 @@ SUBSYSTEM_DEF(replays)
 		var/client_ckey = C.ckey
 		seen[client_ckey] = TRUE
 		var/mob_ref = C.mob ? "\ref[C.mob]" : "null"
+		if(C.mob)
+			var/recorded_real_name = ""
+			if("real_name" in C.mob.vars)
+				recorded_real_name = C.mob.vars["real_name"]
+			if(!istext(recorded_real_name))
+				recorded_real_name = ""
+			recorded_real_name = copytext(recorded_real_name, 1, 161)
+			var/list/previous_identity = replay_identity_cache[mob_ref]
+			if(!islist(previous_identity) || previous_identity[1] != recorded_real_name || previous_identity[2] != client_ckey)
+				replay_identity_cache[mob_ref] = list(recorded_real_name, client_ckey)
+				var/identity_payload = json_encode(list("real_name" = recorded_real_name, "ckey" = client_ckey))
+				lines += "identity [mob_ref] [identity_payload]"
 		var/old_ref = replay_client_mobs[client_ckey]
 		if(isnull(old_ref))
 			lines += "login [client_ckey]"
