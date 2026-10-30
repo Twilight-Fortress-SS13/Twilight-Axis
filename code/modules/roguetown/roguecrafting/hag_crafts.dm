@@ -22,7 +22,7 @@
 
 /datum/crafting_recipe/roguetown/alchemy/hag/faded_moss
 	name = "moss faded"
-	result = list(/obj/item/alch/hag_moss/enchanted/random/low = 1)
+	result = list(/obj/item/alch/hag_moss/enchanted/random/low = 2) // TA EDIT - ORIGINAL: result = list(/obj/item/alch/hag_moss/enchanted/random/low = 1)
 	reqs = list(/obj/item/alch/hag_moss/sorrow = 1, /obj/item/alch/valeriana = 1)
 	craftdiff = 4
 

@@ -725,8 +725,12 @@
 		return
 	if(HAS_TRAIT(owner, TRAIT_NOHEAL) || HAS_TRAIT(owner, TRAIT_IRONMAN))
 		return
-	if(HAS_TRAIT(owner, TRAIT_HALFHEAL))
+	if(HAS_TRAIT(owner, TRAIT_HALFHEAL) || !HAS_TRAIT(owner, TRAIT_REGENERATION)) // TA EDIT - ORIGINAL: if(HAS_TRAIT(owner, TRAIT_HALFHEAL))
 		healing_on_tick /= 2
+	// TA ADDITION START
+	if(HAS_TRAIT(owner, TRAIT_REGENERATION))
+		healing_on_tick *= 2
+	// TA ADDITION END
 	var/obj/effect/temp_visual/heal/H = new /obj/effect/temp_visual/heal_rogue/campfire(get_turf(owner))
 	H.color = "#c7aa5c"
 	var/bleeding = owner.bleed_rate > 1 ? TRUE : FALSE

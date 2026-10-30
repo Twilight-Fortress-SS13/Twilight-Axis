@@ -634,7 +634,7 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 			energy_add(sleepy_mod * 2)
 		if(buckled?.sleepy)
 			sleepy_mod = buckled.sleepy
-		if(HAS_TRAIT(src, TRAIT_REGROW_LIMBS))
+		if(HAS_TRAIT(src, TRAIT_REGROW_LIMBS) || HAS_TRAIT(src, TRAIT_REGENERATION)) // TA EDIT - ORIGINAL: if(HAS_TRAIT(src, TRAIT_REGROW_LIMBS))
 			var/list/limb_list = list(BODY_ZONE_R_ARM, BODY_ZONE_L_ARM, BODY_ZONE_R_LEG, BODY_ZONE_L_LEG)
 			for(var/zone in limb_list)
 				var/obj/item/bodypart/limb = get_bodypart(zone)

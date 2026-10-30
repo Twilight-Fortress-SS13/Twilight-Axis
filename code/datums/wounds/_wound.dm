@@ -320,7 +320,10 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 			healamount = 0.2 + (owner.STAWIL * 0.1)
 		else if(HAS_TRAIT(owner, TRAIT_PSYDONITE_2))
 			healamount = owner.STAWIL * 0.1
-
+		// TA ADDITION START
+		if(HAS_TRAIT(owner, TRAIT_REGENERATION))
+			healamount += owner.STACON * 0.01
+		// TA ADDITION END
 		if(healamount > 0)
 			heal_wound(healamount)
 			if(!owner || QDELETED(owner) || QDELETED(src))

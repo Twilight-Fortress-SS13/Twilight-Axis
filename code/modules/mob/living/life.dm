@@ -47,7 +47,7 @@
 		heal_wounds(1)
 
 	// PSYDONITE PASSIVE HEALING -- Does not stack with Blackblooded, the latter overwrites this.
-	if(!stat && HAS_TRAIT(src, TRAIT_PSYDONITE) && !HAS_TRAIT(src, TRAIT_BLACKBLOOD) && !HAS_TRAIT(src, TRAIT_PARALYSIS))
+	if((!stat && HAS_TRAIT(src, TRAIT_PSYDONITE) && !HAS_TRAIT(src, TRAIT_BLACKBLOOD) && !HAS_TRAIT(src, TRAIT_PARALYSIS)))
 		//handle_wounds() //TA EDIT
 		// Passively heal wounds when you're in trouble.
 		if(blood_volume > BLOOD_VOLUME_SURVIVE)
@@ -67,6 +67,11 @@
 	if(HAS_TRAIT(src, TRAIT_WOUNDREGEN))
 		for(var/datum/wound/wound as anything in get_wounds())
 			wound.heal_wound(10)
+	// TA ADDITION START
+	if(!stat && HAS_TRAIT(src, TRAIT_REGENERATION))
+		adjustBruteLoss(-1)
+		adjustFireLoss(-1)
+	// TA ADDITION END
 	// REGEN RESTRICTIONS -- Starving, or being on fire/silverfired.
 	var/noregen = nutrition < NUTRITION_LEVEL_STARVING - 75 || has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder) || has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
 

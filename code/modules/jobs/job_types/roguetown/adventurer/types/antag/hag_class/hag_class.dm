@@ -9,9 +9,9 @@
 							TRAIT_HOMESTEAD_EXPERT, TRAIT_SEWING_EXPERT,
 							TRAIT_ZOMBIE_IMMUNE, TRAIT_NOMOOD,
 							TRAIT_UNLYCKERABLE, TRAIT_BOGWALKER,
-							TRAIT_DARKVISION, TRAIT_NOHUNGER,
+							TRAIT_NITEVISION, TRAIT_NOHUNGER, // TA EDIT - ORIGINAL: TRAIT_DARKVISION, TRAIT_NOHUNGER,
 							TRAIT_TECHNOPHOBE, TRAIT_NOPVE, TRAIT_UNCONVERTIBLE,
-							TRAIT_NOWW, TRAIT_NODISMEMBER) // decapping does in fact bug the hell out of revives and thelike
+							TRAIT_NOWW, TRAIT_NODISMEMBER, TRAIT_DEATHSIGHT, TRAIT_SOUL_EXAMINE)// TA EDIT - ORIGINAL: TRAIT_NOWW, TRAIT_NODISMEMBER) // decapping does in fact bug the hell out of revives and thelike
 	reset_stats = TRUE
 	subclass_stats = list(
 		STATKEY_STR = -7,
@@ -85,11 +85,20 @@
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/caring_moss)
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/rooted_moss)
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/creeping_moss)
+		// TA ADDITION START
+		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/vibrant_moss)
+		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/altered_moss)
+		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/forest_moss)
+		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/secret_moss)
+		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/moving_moss)
+		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/rage_moss)
+		// TA ADDITION END
 
 		// High Rarity
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/prismatic_moss)
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/gilded_moss)
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/drowned_moss)
+		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/boned_moss) // TA ADDITION
 
 		// Items
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/wyrd_axe)
@@ -105,6 +114,7 @@
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/grant_boon)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/resurrect/hag)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/mindlink/hag)
+		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/roots_movement) // TA ADDITION
 		H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/female/hag]
 		H.dna.species.soundpack_f = GLOB.voice_packs[/datum/voicepack/male/hag]
 		if(!H.mind.has_antag_datum(/datum/antagonist/hag))
