@@ -68,4 +68,4 @@
 	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/wizard]
 	if(H.mind)
 		backr = choose_implement(H, "greater")
-		wretch_select_bounty(H)
+		bountychoice_roguemage(H) // TA EDIT - ORIGINAL: wretch_select_bounty(H)

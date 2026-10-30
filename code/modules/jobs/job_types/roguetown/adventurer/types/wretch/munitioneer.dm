@@ -96,6 +96,9 @@
 			if(crimeschoice == "They fear me")
 				H.put_in_hands(new /obj/item/rogueweapon/mace/goden/steel)
 				H.change_stat(STATKEY_STR, 1)
+				// TA ADDITION START
+				H.change_stat(STATKEY_WIL, 2)
+				// TA ADDITION END
 			else
 				H.put_in_hands(new /obj/item/rogueweapon/mace/warhammer/steel)
 		if("Path of the Crossbow - Crossbow and Bolts")
@@ -104,6 +107,9 @@
 				H.put_in_hands(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/heavy)
 				H.put_in_hands(new /obj/item/quiver/bolt/heavy/bronze)
 				H.change_stat(STATKEY_STR, 1)
+				// TA ADDITION START
+				H.change_stat(STATKEY_SPD, 1)
+				// TA ADDITION END
 			else
 				H.put_in_hands(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow)
 				H.put_in_hands(new /obj/item/quiver/bolt/standard)
@@ -113,6 +119,11 @@
 				H.put_in_hands(new /obj/item/rogueweapon/stoneaxe/woodcut/pick)
 				H.put_in_hands(new /obj/item/rogueweapon/stoneaxe/woodcut/pick)
 				ADD_TRAIT(H, TRAIT_DUALWIELDER, TRAIT_GENERIC)
+				// TA ADDITION START
+				H.change_stat(STATKEY_STR, 1)
+				H.change_stat(STATKEY_WIL, 1)
+				H.change_stat(STATKEY_CON, 1)
+				// TA ADDITION END
 			else
 				H.put_in_hands(new /obj/item/rogueweapon/stoneaxe/woodcut/pick)
 		if("Path of Artifice - Steel Wrench and Engineering") //they can level engineering already- the wrench is a downgrade from the warhammer, but someone picking this probably wants to be an engineer
