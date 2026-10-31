@@ -35,8 +35,8 @@ SUBSYSTEM_DEF(ta_rockhill_masquerade)
 
 	if(SSmapping.config.map_name != "Rockhill")
 		return
-	if(SSgamemode.storyteller_is(/datum/storyteller/gamemode/extended, TRUE))
-		log_storyteller("Rockhill Masquerade fallback skipped: Extended is active.")
+	if(SSgamemode.storyteller_is(/datum/storyteller/gamemode/no_antag/small_wretch, TRUE)) // TA EDIT
+		log_storyteller("Rockhill Masquerade fallback skipped: Low Intensity is active.")
 		return
 	if(SSgamemode.halted_storyteller || SSgamemode.current_storyteller?.disable_distribution)
 		log_storyteller("Rockhill Masquerade fallback skipped: storyteller distribution is halted.")

@@ -222,13 +222,16 @@ SUBSYSTEM_DEF(ticker)
 			if(!lobby_start)
 				lobby_start = world.time
 
-			var/admin_window = min(GAMEMODE_VOTE_ADMIN_WINDOW, max(0, (start_at - lobby_start) - GAMEMODE_VOTE_END_BUFFER - GAMEMODE_VOTE_MIN_PERIOD))
+			var/admin_window = min(GAMEMODE_VOTE_ADMIN_WINDOW, max(0, (start_at - lobby_start) - GAMEMODE_VOTE_MIN_PERIOD))
 			if(!gamemode_voted && world.time >= (lobby_start + admin_window))
 				gamemode_voted = TRUE
 				if(SSgamemode.allow_vote)
-					// Display period only; the lobby countdown force-closes this vote at the end buffer (below).
-					var/vote_period = max(GAMEMODE_VOTE_MIN_PERIOD, timeLeft - GAMEMODE_VOTE_END_BUFFER)
-					SSvote.initiate_vote("storyteller", "Gamemode", vote_period)
+					var/vote_period = max(GAMEMODE_VOTE_MIN_PERIOD, timeLeft)
+					if(SSvote.initiate_vote("storyteller", "Gamemode", vote_period))
+						SSvote.ticker_managed_storyteller_vote = TRUE
+						SSvote.roundstart_storyteller_winner = null
+						SSvote.roundstart_storyteller_population = 0
+						SSvote.roundstart_storyteller_recorded = FALSE
 				else
 					message_admins("Gamemode player vote suppressed (Allow Player Vote = No); using the admin-configured gamemode.")
 					log_admin("Gamemode player vote suppressed (Allow Player Vote = No).")
@@ -241,11 +244,6 @@ SUBSYSTEM_DEF(ticker)
 			if(timeLeft < 0)
 				return
 			timeLeft -= wait
-
-			// Single clock: the lobby countdown owns the vote's lifetime. Once only the end buffer remains, close
-			// the gamemode vote here so the round still starts on time (at timeLeft <= 0) with a guaranteed gap after.
-			if(SSvote?.mode == STORYTELLER_VOTE && timeLeft <= GAMEMODE_VOTE_END_BUFFER)
-				SSvote.end_vote()
 
 			if(timeLeft <= 300 && !tipped)
 #ifdef MATURESERVER
@@ -260,6 +258,8 @@ SUBSYSTEM_DEF(ticker)
 					timeLeft = null
 					Master.SetRunLevel(RUNLEVEL_LOBBY)
 				else
+					if(SSvote.mode == STORYTELLER_VOTE && SSvote.ticker_managed_storyteller_vote)
+						SSvote.end_vote()
 					SEND_SIGNAL(src, COMSIG_TICKER_ENTER_SETTING_UP)
 					current_state = GAME_STATE_SETTING_UP
 					Master.SetRunLevel(RUNLEVEL_SETUP)
@@ -483,6 +483,7 @@ SUBSYSTEM_DEF(ticker)
 	SSgamemode.current_storyteller?.round_started = TRUE
 
 	world.TgsAnnounceRoundStart()
+	SSvote.record_roundstart_storyteller_vote()
 
 	setup_done = TRUE
 

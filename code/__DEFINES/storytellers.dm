@@ -138,14 +138,14 @@
 /// How long after lobby start admins have to fine-tune the gamemode before the player vote fires.
 #define GAMEMODE_VOTE_ADMIN_WINDOW (120 SECONDS)
 /// Buffer kept clear between the gamemode vote ending and roundstart, so players see the result and prep.
-#define GAMEMODE_VOTE_END_BUFFER (60 SECONDS)
+#define GAMEMODE_VOTE_END_BUFFER (3 SECONDS) // TA EDIT
 /// Minimum time the gamemode vote runs for if the lobby is too short to give it a full window.
 #define GAMEMODE_VOTE_MIN_PERIOD (30 SECONDS)
 
 /// Gamemode vote pool names (the three pools players vote between).
 #define GAMEMODE_POOL_EXTENDED "PSYDON"
 #define GAMEMODE_POOL_GUARANTEED "ASCENDANT"
-#define GAMEMODE_POOL_NOANTAG "TEN"
+#define GAMEMODE_POOL_NOANTAG "TEN" // TA EDIT
 
 /// Holds the event type of the last roundstart hard antag
 #define LAST_VILLAIN_FILE "data/last_round/last_villain.txt"
