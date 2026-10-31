@@ -6,7 +6,7 @@
 	description = "Civilization in a cup. Could you truly ask for anything more?"
 	color = "#a17c10" // rgb: 102, 67, 0
 	nutriment_factor = 0.1
-	boozepwr = 25
+	boozepwr = 10 //TA EDIT
 	taste_description = "frothy ale"
 	glass_name = "glass of beer"
 	glass_desc = ""
@@ -17,7 +17,7 @@
 	name = "rum"
 	description = "Where has the rum gone?"
 	color = "#5f3b23" // rgb: 102, 67, 0
-	boozepwr = 40
+	boozepwr = 30 //TA EDIT
 	taste_description = "tingling sweetness with hints of caramel and vanilla"
 	quality = DRINK_NICE
 
@@ -27,7 +27,7 @@
 	name = "whiskey"
 	description = "Ah, whiskey. Can it get any more local than this?"
 	color = "#D59A6F"
-	boozepwr = 60
+	boozepwr = 55 //TA EDIT
 	taste_description = "subtly sweet, woody spice and a lingering burn"
 	quality = DRINK_VERYGOOD
 
@@ -67,7 +67,7 @@
 	cuisine = CUISINE_OTAVAIS|CUISINE_ETRUSCAN
 	drink_type = DRINKTYPE_CIDER
 	name = "apple cider"
-	boozepwr = 40
+	boozepwr = 30 //TA EDIT
 	taste_description = "crisp freshness of apple"
 	glass_name = "glass of cider"
 	color = "#6aa945"
@@ -75,7 +75,7 @@
 
 /datum/reagent/consumable/ethanol/cider/pear
 	name = "pear cider"
-	boozepwr = 40
+	boozepwr = 30 //TA EDIT
 	taste_description = "sweet subtle delights of pear"
 	glass_name = "glass of pear cider"
 	color = "fffc6c"
@@ -83,7 +83,7 @@
 
 /datum/reagent/consumable/ethanol/cider/strawberry
 	name = "strawberry cider"
-	boozepwr = 40
+	boozepwr = 30 //TA EDIT
 	taste_description = "a subtle hint of strawberry sweetness"
 	color = "#da4d4d"
 	taste_description = "strawberry cider"
@@ -102,7 +102,7 @@
 	cuisine = CUISINE_NORTH_IMPERIAL
 	drink_type = DRINKTYPE_SPIRIT
 	name = "apple brandy"
-	boozepwr = 60
+	boozepwr = 55 //TA EDIT
 	taste_description = "caramel oak brandy"
 	glass_name = "glass of brandy"
 	color = "#6aa945"
@@ -110,28 +110,28 @@
 
 /datum/reagent/consumable/ethanol/brandy/pear
 	name = "pear brandy"
-	boozepwr = 60
+	boozepwr = 55 //TA EDIT
 	taste_description = "ripe pear with a hint of spice"
 	color = "b9b607"
 	quality = DRINK_VERYGOOD
 
 /datum/reagent/consumable/ethanol/brandy/strawberry
 	name = "strawberry brandy"
-	boozepwr = 60
+	boozepwr = 55 //TA EDIT
 	taste_description = "overwhelming sweetness with a smooth finish"
 	color = "#bb1a1a"
 	quality = DRINK_VERYGOOD
 
 /datum/reagent/consumable/ethanol/brandy/tangerine
 	name = "tangerine brandy"
-	boozepwr = 60
+	boozepwr = 55 //TA EDIT
 	taste_description = "spice and a twist of citrus"
 	color = "#bb751a"
 	quality = DRINK_VERYGOOD
 
 /datum/reagent/consumable/ethanol/brandy/plum
 	name = "plum brandy"
-	boozepwr = 60
+	boozepwr = 55 //TA EDIT
 	taste_description = "purple sweetness and vanilla"
 	color = "#5c0449"
 	quality = DRINK_VERYGOOD
@@ -140,7 +140,7 @@
 	cuisine = CUISINE_ETRUSCAN
 	drink_type = DRINKTYPE_WINE
 	name = "wine"
-	boozepwr = 30
+	boozepwr = 20 //TA EDIT
 	taste_description = "aromatic bitterness with notes of sweetly-fermented jackberries"
 	glass_name = "glass of wine"
 	color = "#8a0b0b"
@@ -179,7 +179,7 @@
 	name = "ale"
 	description = "A dark alcoholic beverage made with malted barley and yeast."
 	color = "#664300" // rgb: 102, 67, 0
-	boozepwr = 25
+	boozepwr = 10 //TA EDIT
 	taste_description = "hearty barley ale"
 	glass_icon_state = "aleglass"
 	glass_name = "glass of ale"
@@ -201,7 +201,7 @@
 	cuisine = CUISINE_NORTH_IMPERIAL
 	drink_type = DRINKTYPE_SPIRIT
 	name = "gin"
-	boozepwr = 65
+	boozepwr = 55 //TA EDIT
 	taste_description = "strong, piney flavor"
 	color = "#809978"
 	quality = DRINK_NICE
@@ -217,7 +217,7 @@
 	cuisine = CUISINE_NORTH_IMPERIAL
 	drink_type = DRINKTYPE_ALE
 	name = "Hagwood Bitter"
-	boozepwr = 25
+	boozepwr = 10 //TA EDIT
 	taste_description = "dull crispness"
 	color = "#BBB525"
 	quality = DRINK_NICE
@@ -226,7 +226,7 @@
 	cuisine = CUISINE_NORTH_IMPERIAL
 	drink_type = DRINKTYPE_ALE
 	name = "Black Gote Kriek"
-	boozepwr = 25
+	boozepwr = 10 //TA EDIT
 	taste_description = "overwhelming sourness"
 	color = "#401806"
 	quality = DRINK_NICE
@@ -266,7 +266,7 @@
 	cuisine = CUISINE_NORTHERN
 	drink_type = DRINKTYPE_ALE
 	name = "Butterhairs"
-	boozepwr = 30
+	boozepwr = 25 //TA EDIT
 	taste_description = "buttery richness"
 	color = "#5D8A8A"
 	quality = DRINK_GOOD
@@ -275,7 +275,7 @@
 	cuisine = CUISINE_NORTHERN
 	drink_type = DRINKTYPE_ALE
 	name = "Stonebeard Reserve"
-	boozepwr = 40
+	boozepwr = 30 //TA EDIT
 	taste_description = "potent oatlike liquor"
 	color = "#5D8A8A"
 	quality = DRINK_GOOD
@@ -284,7 +284,7 @@
 	cuisine = CUISINE_NORTHERN
 	drink_type = DRINKTYPE_SPIRIT
 	name = "Voddena"
-	boozepwr = 40	// now it's just vodka
+	boozepwr = 30	// now it's just vodka //TA EDIT
 	taste_description = "clean liquor"
 	color = "#a1a1a1"
 	quality = DRINK_NICE
@@ -293,7 +293,7 @@
 	cuisine = CUISINE_RANESHENI
 	drink_type = DRINKTYPE_SPIRIT
 	name = "Saz Distal"
-	boozepwr = 55	// holy shit
+	boozepwr = 50	// holy shit //TA EDIT
 	taste_description = "spicy chilis, ginger, and dirt"
 	color = "#2D1D1D"
 	quality = DRINK_GOOD
@@ -302,7 +302,7 @@
 	cuisine = CUISINE_ETRUSCAN
 	drink_type = DRINKTYPE_SPIRIT
 	name = "Limoncello"
-	boozepwr = 45	// holy shit
+	boozepwr = 40	// holy shit //TA EDIT
 	taste_description = "burning and lemony"
 	color = "#d2da63"
 	quality = DRINK_GOOD
@@ -341,7 +341,7 @@
 	cuisine = CUISINE_OTAVAIS
 	drink_type = DRINKTYPE_WINE
 	name = "white wine"
-	boozepwr = 30
+	boozepwr = 20 //TA EDIT
 	taste_description = "sweet white wine"
 	color = "#F3ED91"
 	quality = DRINK_NICE
@@ -350,7 +350,7 @@
 	cuisine = CUISINE_OTAVAIS
 	drink_type = DRINKTYPE_WINE
 	name = "red wine"
-	boozepwr = 30
+	boozepwr = 20 //TA EDIT
 	taste_description = "tannin-stricken wine"
 	color = "#571111"
 	quality = DRINK_NICE
@@ -366,14 +366,14 @@
 
 /datum/reagent/consumable/ethanol/jackberrywine/aged
 	name = "aged jacksberried wine"
-	boozepwr = 30
+	boozepwr = 20 //TA EDIT
 	taste_description = "sweet aged wine"
 	color = "#402249"
 	quality = DRINK_GOOD
 
 /datum/reagent/consumable/ethanol/jackberrywine/delectable
 	name = "delectable jacksberried wine"
-	boozepwr = 30
+	boozepwr = 20 //TA EDIT
 	taste_description = "sweet delectably aged wine"
 	color = "#652679"
 	quality = DRINK_VERYGOOD
@@ -389,14 +389,14 @@
 
 /datum/reagent/consumable/ethanol/plum_wine/aged
 	name = "aged umeshu"
-	boozepwr = 30
+	boozepwr = 20 //TA EDIT
 	taste_description = "sweet slightly sour aged wine"
 	color = "#c27cd8"
 	quality = DRINK_GOOD
 
 /datum/reagent/consumable/ethanol/plum_wine/delectable
 	name = "delectable umeshu"
-	boozepwr = 30
+	boozepwr = 20 //TA EDIT
 	taste_description = "delectably aged sour sweet wine"
 	color = "#a854c2"
 	quality = DRINK_VERYGOOD
@@ -412,14 +412,14 @@
 
 /datum/reagent/consumable/ethanol/tangerine/aged
 	name = "aged tangerine wine"
-	boozepwr = 30
+	boozepwr = 20 //TA EDIT
 	taste_description = "bittersweet, citrusy aged wine"
 	color = "#d68d2d"
 	quality = DRINK_GOOD
 
 /datum/reagent/consumable/ethanol/tangerine/delectable
 	name = "delectable tangerine wine"
-	boozepwr = 30
+	boozepwr = 20 //TA EDIT
 	taste_description = "bittersweet, citrusy delectably aged wine"
 	color = "#eb9321"
 	quality = DRINK_VERYGOOD
@@ -435,14 +435,14 @@
 
 /datum/reagent/consumable/ethanol/raspberry/aged
 	name = "aged raspberry wine"
-	boozepwr = 30
+	boozepwr = 20 //TA EDIT
 	taste_description = "tart sweet aged wine"
 	color = "#d83788"
 	quality = DRINK_GOOD
 
 /datum/reagent/consumable/ethanol/raspberry/delectable
 	name = "delectable raspberry wine"
-	boozepwr = 30
+	boozepwr = 20 //TA EDIT
 	taste_description = "tart sweet delectably aged wine"
 	color = "#db0d74"
 	quality = DRINK_VERYGOOD
@@ -458,14 +458,14 @@
 
 /datum/reagent/consumable/ethanol/blackberry/aged
 	name = "aged blackberry wine"
-	boozepwr = 30
+	boozepwr = 20 //TA EDIT
 	taste_description = "bitter tart aged wine"
 	color = "#58065f"
 	quality = DRINK_GOOD
 
 /datum/reagent/consumable/ethanol/blackberry/delectable
 	name = "delectable blackberry wine"
-	boozepwr = 30
+	boozepwr = 20 //TA EDIT
 	taste_description = "bitter tart delectably aged wine"
 	color = "#330038"
 	quality = DRINK_VERYGOOD
@@ -502,7 +502,7 @@
 
 /datum/reagent/consumable/ethanol/spicedwine/delectable
 	name = "delectable spiced wine"
-	boozepwr = 40
+	boozepwr = 30 //TA EDIT
 	taste_description = "heavenly aromatic sweetness, followed by an ever-familiar warmness in the heart"
 	color = "#821500"
 	quality = DRINK_FANTASTIC
@@ -555,7 +555,7 @@
 	cuisine = CUISINE_SOUTH_IMPERIAL
 	drink_type = DRINKTYPE_WINE
 	name = "Valmora Blue"
-	boozepwr = 50
+	boozepwr = 45 //TA EDIT
 	taste_description = "saintly sweetness"
 	color = "#2C9DAF"
 	quality = DRINK_FANTASTIC
@@ -565,7 +565,7 @@
 	cuisine = CUISINE_NORTH_IMPERIAL
 	drink_type = DRINKTYPE_SPIRIT
 	name = "Jagdtrunk"
-	boozepwr = 55	// gotta be stronk
+	boozepwr = 50	// gotta be stronk //TA EDIT
 	taste_description = "spicy herbal remedy"
 	color = "#331f18"
 	quality = DRINK_NICE
@@ -574,7 +574,7 @@
 	cuisine = CUISINE_NORTH_IMPERIAL
 	drink_type = DRINKTYPE_CIDER
 	name = "Appelheimer"
-	boozepwr = 45
+	boozepwr = 40 //TA EDIT
 	taste_description = "tart crispness and mellow sweetness"
 	color = "#e0cb55"
 	quality = DRINK_NICE
@@ -582,7 +582,7 @@
 /datum/reagent/consumable/ethanol/rtoper
 	drink_type = DRINKTYPE_SPIRIT
 	name = "Lirvas Toper"
-	boozepwr = 40
+	boozepwr = 30 //TA EDIT
 	taste_description = "overwhelming tartness"
 	color = "#e0a400"
 	quality = DRINK_NICE
@@ -591,7 +591,7 @@
 	cuisine = CUISINE_NORTHERN
 	drink_type = DRINKTYPE_WINE
 	name = "Norwardine Red"
-	boozepwr = 30
+	boozepwr = 20 //TA EDIT
 	taste_description = "heavy caramel note and slight bitterness"
 	color = "#543633"
 	quality = DRINK_GOOD
@@ -600,7 +600,7 @@
 	cuisine = CUISINE_NORTHERN
 	drink_type = DRINKTYPE_MEAD
 	name = "Ragnar's Brew"
-	boozepwr = 35
+	boozepwr = 25 //TA EDIT
 	taste_description = "notes of honey and red berries" //I love red mead ok...
 	color = "#772C48"
 	quality = DRINK_GOOD
@@ -645,7 +645,7 @@
 	cuisine = CUISINE_SOUTHEASTERN
 	drink_type = DRINKTYPE_RICEWINE
 	name = "Junmai-ginjo"
-	boozepwr = 50
+	boozepwr = 45 //TA EDIT
 	taste_description = "dry sweetness"
 	color = "#ccd7e0"
 	quality = DRINK_VERYGOOD
@@ -654,7 +654,7 @@
 	cuisine = CUISINE_SOUTHEASTERN
 	drink_type = DRINKTYPE_RICEWINE
 	name = "Shochu"
-	boozepwr = 60
+	boozepwr = 55 //TA EDIT
 	taste_description = "dry, clean finish"
 	color = "#F8FDFC"
 	quality = DRINK_VERYGOOD
@@ -663,7 +663,7 @@
 	cuisine = CUISINE_SOUTHEASTERN
 	drink_type = DRINKTYPE_WINE
 	name = "Umeshu"
-	boozepwr = 30
+	boozepwr = 20 //TA EDIT
 	taste_description = "a mix of sweet and sour"
 	color = "#ddb99b"
 	quality = DRINK_GOOD
@@ -673,7 +673,7 @@
 	cuisine = CUISINE_SOUTHEASTERN
 	drink_type = DRINKTYPE_RICEWINE
 	name = "Huangjiu"
-	boozepwr = 30
+	boozepwr = 20 //TA EDIT
 	taste_description = "a mix of sweet and sour"
 	color = "#d8b84c"
 	quality = DRINK_NICE
@@ -682,7 +682,7 @@
 	cuisine = CUISINE_SOUTHEASTERN
 	drink_type = DRINKTYPE_RICEWINE
 	name = "Baijiu"
-	boozepwr = 60
+	boozepwr = 55 //TA EDIT
 	taste_description = "fiery and pungent alcohol with a hint of sweetness"
 	color = "#f8fdfc"
 	quality = DRINK_GOOD
@@ -691,7 +691,7 @@
 	cuisine = CUISINE_SOUTHEASTERN
 	drink_type = DRINKTYPE_RICEWINE
 	name = "Yaojiu"
-	boozepwr = 50
+	boozepwr = 45 //TA EDIT
 	taste_description = "bittersweet alcohol with deep herbal notes"
 	color = "#8C4B1F"
 	quality = DRINK_VERYGOOD
@@ -700,7 +700,7 @@
 	cuisine = CUISINE_SOUTHEASTERN
 	drink_type = DRINKTYPE_RICEWINE
 	name = "Shejiu"
-	boozepwr = 50
+	boozepwr = 45 //TA EDIT
 	taste_description = "musky and strong alcohol with a hint of gameiness"
 	color = "#C49A6C"
 	quality = DRINK_VERYGOOD
@@ -726,7 +726,7 @@
 // Special Drugs
 /datum/reagent/consumable/ethanol/murkwine // not Toilet wine
 	name = "Mürkwine"
-	boozepwr = 50	// bubba's best
+	boozepwr = 45	// bubba's best //TA EDIT
 	taste_description = "hints of questionable choices--a bouqet of murkwater and pure ethanol"
 	color = "#4b1e00"
 
@@ -763,7 +763,7 @@
 /datum/reagent/consumable/ethanol/nocmash
 	name = "Noc Mash"
 	description = "A raw, grain-fortified distillate. Must be distilled with swampweed before it becomes the notorious Noc's Shine."
-	boozepwr = 55
+	boozepwr = 50 //TA EDIT
 	taste_description = "undiluted alcohol with a faint hint of wheat"
 	color = "#b8d4d6"
 
@@ -794,7 +794,7 @@
 	drink_type = DRINKTYPE_RICEWINE
 	name = "Divine Snake Wine"
 	description = "The True Form of the Whipwine. A medicinal rice wine from the Lingyuese highlands, steeped for years with a coiled venomous serpent and a secret cocktail of mountain herbs. Said to restore the vigor of even the most spent of men."
-	boozepwr = 60
+	boozepwr = 55 //TA EDIT
 	taste_description = "deep herbal warmth, iron, and a slow-burning fire that climbs the spine"
 	color = "#553837"
 	quality = DRINK_FANTASTIC
@@ -852,7 +852,7 @@
 	description = "A very natural and very alcoholic mixture for a blessing from Dendor instead of a curse."
 	color = "#628C58"
 	quality = DRINK_FANTASTIC
-	boozepwr = 40
+	boozepwr = 30 //TA EDIT
 	taste_description = "sweet taste of nature."
 	metabolization_rate = 0.5 * REAGENTS_METABOLISM
 	overdose_threshold = null
@@ -872,7 +872,7 @@
 	description = "A refreshingly sweet and tart blackberry mixture, screams Otavan. This alcohol is practically a dessert."
 	color = "#2E2047"
 	quality = DRINK_FANTASTIC
-	boozepwr = 40
+	boozepwr = 30 //TA EDIT
 	taste_description = "slightly tart sweetness."
 	metabolization_rate = 0.5 * REAGENTS_METABOLISM
 	overdose_threshold = null
@@ -891,7 +891,7 @@
 	description = "A gamble to your senses, this drink is harsh and definitely an acquired taste."
 	color = "#EBBD1C"
 	quality = DRINK_FANTASTIC
-	boozepwr = 40
+	boozepwr = 30 //TA EDIT
 	taste_description = "Spicy and acidic shock."
 	metabolization_rate = 0.5 * REAGENTS_METABOLISM
 	overdose_threshold = null

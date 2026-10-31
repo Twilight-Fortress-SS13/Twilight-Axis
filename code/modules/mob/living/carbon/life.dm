@@ -369,6 +369,8 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 
 		if(drunkenness >= 21 && prob(2))
 			emote("sway")
+		if(drunkenness >= 7) //TA EDIT
+			sate_addiction(/datum/charflaw/addiction/alcoholic)
 
 		if(drunkenness >= 41)
 			if(prob(25))

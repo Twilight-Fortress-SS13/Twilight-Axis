@@ -50,9 +50,15 @@ All effects don't start immediately, but rather get worse over time; the rate is
 			alcohol_rate *= max(liver.alcohol_tolerance / ALCOHOL_RATE, 0.2)
 		else
 			alcohol_rate *= 2
+		var/con_mult = 1 - ((C.STACON - 10) * 0.1)
+		con_mult = max(con_mult, 0)
+		if(isdwarf(C) || is_species(C, /datum/species/halforc))
+			con_mult *= 0.8
+		if(C.has_flaw(/datum/charflaw/addiction/alcoholic))
+			con_mult *= 0.8
 //		if(HAS_TRAIT(C, TRAIT_ALCOHOL_TOLERANCE))
 //			alcohol_rate *= 0.5
-		C.drunkenness = max((C.drunkenness + (sqrt(volume) * booze_power * alcohol_rate)), 0) //Volume, power, and server alcohol rate effect how quickly one gets drunk
+		C.drunkenness = max((C.drunkenness + (sqrt(volume) * booze_power * alcohol_rate * con_mult)), 0) //Volume, power, and server alcohol rate effect how quickly one gets drunk
 	if(C.blood_volume < BLOOD_VOLUME_NORMAL && !holder.has_reagent(/datum/reagent/water)) // TA EDIT END
 		C.blood_volume = min(C.blood_volume + ALCOHOL_BLOOD_RESTORE, BLOOD_VOLUME_NORMAL)
 //		if(boozepwr > 0)
