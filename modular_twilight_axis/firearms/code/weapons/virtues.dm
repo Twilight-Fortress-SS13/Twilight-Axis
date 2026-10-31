@@ -2,9 +2,11 @@
 	name = "Grenadier Training"
 	desc = "Back in the day I've been conscripted to serve in my liege's military campaign. Over that time, I've received some training in handling gunpowder weapons."
 	ui_fa_icon = "gun"
-	custom_text = "+1 to Firearms, Up to Legendary, Minimum Apprentice. Does not affect classes that have Heavy Armor Training or Critical Resistance."
+	custom_text = "+1 to Firearms, Up to Expert, Minimum Apprentice. Does not affect classes that have Heavy Armor Training or Critical Resistance."
+	added_traits = list(TRAIT_FIREARMS_MARKSMAN)
 	added_stashed_items = list("Ammo bag" = /obj/item/quiver/twilight_bullet/lead_ten,
-								"Powderflask" = /obj/item/twilight_powderflask
+								"Powderflask" = /obj/item/twilight_powderflask,
+								"Barker" = /obj/item/gun/ballistic/twilight_firearm/barker,
 	)
 
 /datum/virtue/combat/gunslinger/apply_to_human(mob/living/carbon/human/recipient)
@@ -12,4 +14,4 @@
 		if(recipient.get_skill_level(/datum/skill/combat/twilight_firearms) < SKILL_LEVEL_APPRENTICE)
 			recipient.adjust_skillrank_up_to(/datum/skill/combat/twilight_firearms, SKILL_LEVEL_APPRENTICE, silent = TRUE)
 		else
-			added_skills = list(list(/datum/skill/combat/twilight_firearms, 1, 6))
+			added_skills = list(list(/datum/skill/combat/twilight_firearms, 1, 4))

@@ -32,7 +32,7 @@
 	else if(attack_flag in ARMOR_DR_PIERCE_TYPES)
 		// Fire/Acid: DR reduces damage, but reduced damage still reaches HP.
 		if(armor_tier > 0)
-			var/dr_mult = 1 / (1 + 0.2 * armor_tier)
+			var/dr_mult = 1 - (0.2 * armor_tier)
 			blocked = block_damage * (1 - dr_mult) //TA EDIT END
 	else
 		// Penetration: tier comparison
@@ -270,33 +270,33 @@
 				if(istype(source, /obj/effect/proc_holder/spell/self/magic_shield))
 					S = source
 					break
-	
+
 		if(S && S.active)
-		
+
 			var/damage_cost = P.damage * S.stamina_damage_ratio
-		
-		
+
+
 			if(!src.stamina_add(damage_cost))
 				S.deactivate_shield(src, shattered = TRUE)
-			
-				return ..() 
-		
-		
+
+				return ..()
+
+
 			src.visible_message(span_danger("[src.name]'s shield flares, reflecting [P.name] back at [P.firer]!"))
 			playsound(src.loc, 'sound/combat/parry/shield/magicshield (1).ogg', 50, TRUE)
-		
-		
+
+
 			var/new_angle = Get_Angle(src, P.firer)
-			new_angle += rand(-10, 10) 
+			new_angle += rand(-10, 10)
 			P.setAngle(new_angle)
 
 			P.decayedRange = max(0, P.decayedRange - P.reflect_range_decrease)
 			P.range = P.decayedRange
 			P.permutated = list()
-			P.firer = src 
+			P.firer = src
 
 			return BULLET_ACT_FORCE_PIERCE //TA EDIT END
-	
+
 	if(SEND_SIGNAL(src, COMSIG_ATOM_BULLET_ACT, P, def_zone) & COMPONENT_ATOM_BLOCK_BULLET)
 		return
 	var/aimed_zone = def_zone
@@ -380,10 +380,10 @@
 		return 0
 
 /mob/living/hitby(atom/movable/AM, skipcatch, hitpush = TRUE, blocked = FALSE, datum/thrownthing/throwingdatum, damage_flag = "blunt")
-	
+
 	if(HAS_TRAIT(src, "ethereal")) //TA EDIT
-		return FALSE 
-	
+		return FALSE
+
 	if(istype(AM, /obj/item))
 		var/obj/item/I = AM
 		// Hit the selected zone, or else a random zone centered on the chest
