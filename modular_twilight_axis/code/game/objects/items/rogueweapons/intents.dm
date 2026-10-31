@@ -124,3 +124,32 @@
 		return S.GetKickOffbalanceDuration(base_duration)
 
 	return base_duration
+
+/datum/intent
+	var/pen_guarded = null
+	var/pen_base = null
+
+/datum/intent/proc/is_target_guarded(mob/living/target)
+	if(target.has_status_effect(/datum/status_effect/debuff/breachcd))
+		return TRUE
+	if(target.has_status_effect(/datum/status_effect/buff/tempo_one))
+		return TRUE
+	if(target.has_status_effect(/datum/status_effect/buff/tempo_two))
+		return TRUE
+	if(target.has_status_effect(/datum/status_effect/buff/tempo_three))
+		return TRUE
+	return FALSE
+
+/datum/intent/proc/apply_breach_pen(mob/living/target)
+	if(isnull(pen_guarded) || !istype(target))
+		return
+	if(isnull(pen_base))
+		pen_base = penfactor
+	penfactor = is_target_guarded(target) ? pen_guarded : pen_base
+	if(!target.has_status_effect(/datum/status_effect/debuff/breachcd))
+		target.apply_status_effect(/datum/status_effect/debuff/breachcd)
+	addtimer(CALLBACK(src, PROC_REF(restore_penfactor)), 1)
+
+/datum/intent/proc/restore_penfactor()
+	if(!isnull(pen_base))
+		penfactor = pen_base
