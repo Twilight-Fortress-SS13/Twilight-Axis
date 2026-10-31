@@ -538,7 +538,7 @@ GLOBAL_LIST_INIT(goblin_pyromancer_aggro, list(
 	N.choose_name_popup("Goblin") //This is so dumb but funny
 	if(N.mind)
 		N.mind.add_antag_datum(new /datum/antagonist/goblin()) //Ensures we are in fact, a goblin (so friend/foe examines + admin antag tracking)
-	to_chat(N, span_danger("You are a disposable antagonist, expect to die rather quickly. Now go cause problems and stirr some conflict! Remember to roleplay where possible."))
+	to_chat(N, span_danger("You are a disposable antagonist, expect to die rather quickly. Now go cause problems and stir some conflict! Remember to roleplay where possible."))
 	if(!N.cmode)	//Turns on combat mode if its not on, so you're immedately ready to do your thing
 		N.toggle_cmode()
 	qdel(user)

@@ -17,44 +17,32 @@
 # coordinates = [1, 1, 1]
 
 # dunworld witch huts
-# [templates.witch_hut]
-# map_files = ["witch_hut_1.dmm","witch_hut_2.dmm"]
-# directory = "_maps/twilight_axis/templates/dun_world/witch_hut/"
-# required_map = "dun_world.dmm"
-# coordinates = [194, 240, 1]
+[templates.witch_hut]
+map_files = ["witch_hut_1.dmm","witch_hut_2.dmm","witch_hut_3.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/witch_hut/"
+required_map = "dun_world.dmm"
+coordinates = [194, 240, 1]
 
 # dunworld hunter huts
-# [templates.towner_hunter_hut]
-# map_files = ["hunter_hut.dmm"]
-# directory = "_maps/twilight_axis/templates/dun_world/hunter_hut/"
-# required_map = "dun_world.dmm"
-# coordinates = [161, 252, 2]
+[templates.towner_hunter_hut]
+map_files = ["hunter_hut.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/hunter_hut/"
+required_map = "dun_world.dmm"
+coordinates = [161, 252, 2]
 
 # dunworld eoran house and church
-# [templates.towner_eoran_house]
-# map_files = ["eoran_house_1.dmm","eoran_house_2.dmm"]
-# directory = "_maps/twilight_axis/templates/dun_world/eoran_house/"
-# required_map = "dun_world.dmm"
-# coordinates = [159, 144, 2]
+[templates.towner_eoran_house]
+map_files = ["eoran_house_1.dmm","eoran_house_2.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/eoran_house/"
+required_map = "dun_world.dmm"
+coordinates = [159, 144, 2]
 
-# dunworld towner house
-# [templates.towner_house1]
-# map_files = ["Bashna.dmm"]
-# directory = "_maps/twilight_axis/templates/dun_world/towner_house/"
-# required_map = "dun_world.dmm"
-# coordinates = [163, 124, 2]
-
-# [templates.towner_house2]
-# map_files = ["Dvadoma.dmm"]
-# directory = "_maps/twilight_axis/templates/dun_world/towner_house/"
-# required_map = "dun_world.dmm"
-# coordinates = [124, 133, 1]
-
-# [templates.towner_house5]
-# map_files = ["Ydvorcha.dmm"]
-# directory = "_maps/twilight_axis/templates/dun_world/towner_house/"
-# required_map = "dun_world.dmm"
-# coordinates = [106, 104, 2]
+# dunworld two house
+[templates.towner_two_house]
+map_files = ["two_house.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/two_house/"
+required_map = "dun_world.dmm"
+coordinates = [124, 159, 1]
 
 # dunworld bath collars
 [templates.dunworldbathcollars]

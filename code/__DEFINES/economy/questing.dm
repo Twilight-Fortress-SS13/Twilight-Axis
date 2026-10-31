@@ -180,7 +180,7 @@
 // Townie cannot sign contract within the first hour
 #define CONTRACT_TOWNIE_GATE_TIME (1 HOURS)
 
-#define QUEST_KILL_FRACTION 0.05
+#define QUEST_KILL_FRACTION 0.10
 #define QUEST_KILL_CEILING_OFFSET 3
 
 // Each tick generates up to this many kill quests across all regions; evergreen quests top up
@@ -285,6 +285,7 @@
 #define BLOCKADE_WAVE_BASE_TP 180
 #define BLOCKADE_EARLY_WAVE_TP_MULT 1.2
 #define BLOCKADE_DEFENDER_SCAN_RANGE 7
+#define BLOCKADE_CLEAR_TRIUMPHS 1
 
 #define BLOCKADE_ARCHETYPE_WARBAND "warband"
 #define BLOCKADE_ARCHETYPE_SWARM "swarm"

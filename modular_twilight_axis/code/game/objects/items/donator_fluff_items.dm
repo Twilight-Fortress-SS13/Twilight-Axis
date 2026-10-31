@@ -76,7 +76,7 @@
 	name = "Regret"
 	desc = "People bring the small flames of their wishes together... to keep them from burning out, we cast our own flames into the biggest fire we can find. But you know... I didn't bring a flame with me. As for me, maybe I just wandered up to the campfire to warm myself a little..."
 	icon_state = "eiren"
-	icon = 'icons/obj/items/donor_weapons_64.dmi'
+	icon = 'modular_twilight_axis/icons/obj/items/donor_weapons_64.dmi'
 	max_blade_int = 240
 	wdefense = 4
 	force = 14
@@ -1257,3 +1257,32 @@
 	AddComponent(/datum/component/adjustable_clothing, (HEAD|EARS|HAIR|MOUTH|NECK), (HIDEEARS|HIDEHAIR), null, 'sound/items/visor.ogg', null, UPD_HEAD)
 	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
 	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
+
+/obj/item/rogueweapon/example/eiren_sabre
+	name = "Lunae"
+	desc = "Two blades, one forged in Noc's light, a soothing breath of clarity. Here, and here alone, were moon and fire ever together."
+	icon_state = "eiren2"
+	icon = 'modular_twilight_axis/icons/obj/items/donor_weapons.dmi'
+	sheathe_icon = "eiren2"
+
+/obj/item/rogueweapon/example/eiren_sabre_alt
+	name = "Cinis"
+	desc = "Two blades, the other born of Astrata's ire, a raging flame of passion. Here, and here alone, were fates severed and torn."
+	icon_state = "eiren3"
+	icon = 'modular_twilight_axis/icons/obj/items/donor_weapons.dmi'
+	sheathe_icon = "eiren3"
+
+/obj/item/rogueweapon/example/eiren_greatsword
+	name = "Regret"
+	desc = "People bring the small flames of their wishes together... to keep them from burning out, we cast our own flames into the biggest fire we can find. But you know... I didn't bring a flame with me. As for me, maybe I just wandered up to the campfire to warm myself a little..."
+	icon_state = "eiren"
+	icon = 'modular_twilight_axis/icons/obj/items/donor_weapons_64.dmi'
+	bigboy = TRUE
+
+/obj/item/rogueweapon/eirenxiv/eirensword
+	name = "stygian longsword"
+	desc = "A finely crafted steel longsword, its design perfectly combining elegance and practicality. Quenched in white oil, refined by the dwarves of Hammerhold, the blade holds a darker hue than usual."
+	icon_state = "eirensword"
+	icon = 'modular_twilight_axis/icons/obj/items/donor_weapons_64.dmi'
+	sheathe_icon = "eirensword"
+	bigboy = TRUE
