@@ -26,8 +26,3 @@
 /area/rogue/indoors/wretchcamp
 	pseudo_roof = TRUE
 
-/area/rogue/outdoors/bograt/north
-	warden_area = TRUE
-
-/area/rogue/indoors/shelter/bog
-	warden_area = TRUE

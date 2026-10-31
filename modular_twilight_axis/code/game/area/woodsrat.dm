@@ -48,6 +48,8 @@
 	deathsight_message = "somewhere in the wilds"
 	threat_region = THREAT_REGION_ROCKHILL_WOODS_NORTH
 	warden_area = FALSE
+	loot_budget = LOOT_BUDGET_RH_FOREST_NORTH
+	loot_pool_key = "rh_forest_north"
 
 /area/rogue/outdoors/woodsrat/south
 	name = "Rockhill Woods - South"
@@ -66,6 +68,8 @@
 	deathsight_message = "somewhere in the wilds"
 	threat_region = THREAT_REGION_ROCKHILL_WOODS_SOUTH
 	warden_area = FALSE
+	loot_budget = LOOT_BUDGET_RH_FOREST_SOUTH
+	loot_pool_key = "rh_forest_south"
 
 /area/rogue/outdoors/woodsrat/above
 	name = "Woods above"
