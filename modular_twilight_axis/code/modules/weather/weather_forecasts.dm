@@ -190,72 +190,16 @@ SUBSYSTEM_DEF(ta_climate_weather)
 		for(var/datum/existing_modifier as anything in existing_modifiers)
 			if(istype(existing_modifier) && islist(existing_modifier.vars["weather_weights"]))
 				return
-	var/level = ta_climate_round_chaos_level
+	var/level = clamp(ta_climate_round_chaos_level, 0, 3)
 	if(level <= 0)
 		return
-	if(level > 3)
-		level = 3
-	var/budget
-	switch(level)
-		if(1)
-			budget = rand(2, 5)
-		if(2)
-			budget = rand(6, 8)
-		if(3)
-			budget = rand(6, 12)
 	var/list/profiles = list(
-		list("clear", 10, 1, 1),
-		list("fog", 10, 1, 1),
-		list("stormy", 8, 1, 2),
-		list("low_bandits", 10, 1, 1),
-		list("medium_bandits", 30, 2, 2),
-		list("high_bandits", 15, 4, 3),
-		list("low_gnolls", 20, 1, 1),
-		list("medium_gnolls", 10, 2, 1),
-		list("high_gnolls", 10, 4, 2),
-		list("high_wretches", 10, 4, 3),
-		list("vampire", 10, 4, 2),
-		list("vampirelord", 5, 8, 3),
-		list("assassin", 10, 1, 1),
-		list("rebel", 10, 2, 1),
-		list("dreamwalker", 10, 2, 2),
-		list("lich", 6, 6, 3)
+		"clear" = 10,
+		"fog" = 10
 	)
-	var/list/pool = list()
-	var/list/costs = list()
-	for(var/list/profile as anything in profiles)
-		if(level < profile[4])
-			continue
-		pool[profile[1]] = profile[2]
-		costs[profile[1]] = profile[3]
-	var/list/incompatible = list(
-		"clear" = list("fog", "stormy"),
-		"fog" = list("stormy"),
-		"medium_bandits" = list("low_bandits"),
-		"high_bandits" = list("low_bandits", "medium_bandits"),
-		"medium_gnolls" = list("low_gnolls"),
-		"high_gnolls" = list("low_gnolls", "medium_gnolls")
-	)
-	var/list/selected = list()
-	var/selected_weather
-	while(budget > 0 && length(pool))
-		var/candidate = pickweight(pool)
-		pool -= candidate
-		if(costs[candidate] > budget)
-			continue
-		var/blocked = FALSE
-		for(var/other in selected)
-			var/list/other_blocked = incompatible[other]
-			var/list/candidate_blocked = incompatible[candidate]
-			if((islist(other_blocked) && (candidate in other_blocked)) || (islist(candidate_blocked) && (other in candidate_blocked)))
-				blocked = TRUE
-				break
-		if(blocked)
-			continue
-		budget -= costs[candidate]
-		selected += candidate
-		if(candidate == "clear" || candidate == "fog" || candidate == "stormy")
-			selected_weather = candidate
+	if(level >= 2)
+		profiles["stormy"] = 8
+	var/selected_weather = pickweight(profiles)
 	switch(selected_weather)
 		if("clear")
 			round_weather_modifier = new /datum/ta_climate_weather_round_modifier/clear
