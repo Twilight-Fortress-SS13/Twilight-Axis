@@ -252,6 +252,10 @@
 		scar = new /datum/hag_boon/curse_scar(true_name, src, points)
 		name_list += scar
 	check_tier_upgrade()
+	// TA ADDITION START
+	var/mob/living/victim = find_target(true_name)
+	playsound(victim, 'sound/hag/hag_cackles.ogg', 100, FALSE)
+	// TA ADDITION END
 
 /datum/component/hag_curio_tracker/proc/check_tier_upgrade()
 	var/scar_60_count = 0
