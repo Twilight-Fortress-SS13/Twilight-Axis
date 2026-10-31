@@ -1,6 +1,6 @@
 /datum/particle_weather/snow_gentle
-	name = "Rain"
-	desc = "Gentle Rain, la la description."
+	name = "Snowfall" // TA EDIT
+	desc = "Тихий снегопад. Снежинки медленно опускаются на землю." // TA EDIT
 	weather_icon_state = "snow"
 	weather_visual_color = "#ffffff"
 	weather_scroll_x = -512
@@ -27,12 +27,12 @@
 		L.add_stress(/datum/stressevent/parasol_snow)
 		return
 
-	L.adjust_bodytemperature(-rand(5,10))
+	L.ta_climate_weather_temperature(-rand(10, 15) / 10) // TA EDIT
 
 
 /datum/particle_weather/snow_storm
-	name = "Rain"
-	desc = "Gentle Rain, la la description."
+	name = "Snowstorm" // TA EDIT
+	desc = "Сильный снегопад и порывистый ветер ухудшают видимость." // TA EDIT
 	weather_icon_state = "snow_storm"
 	weather_visual_color = "#ffffff"
 	weather_scroll_x = -512
@@ -55,4 +55,4 @@
 
 //Makes you a lot little chilly
 /datum/particle_weather/snow_storm/weather_act(mob/living/L)
-	L.adjust_bodytemperature(-rand(10,25))
+	L.ta_climate_weather_temperature(-rand(15, 25) / 10) // TA EDIT

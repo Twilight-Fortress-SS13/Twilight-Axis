@@ -14,6 +14,8 @@
 /// Should SSseason treat this turf as open to the sky? Area-only - no per-tile roof check, so an
 /// outdoor area snows uniformly instead of patchwork under overhangs.
 /turf/proc/is_seasonally_exposed()
+	if(ta_climate_is_desert_climate()) // TA EDIT
+		return FALSE // TA EDIT
 	var/area/turf_area = loc
 	return !!turf_area?.outdoors
 

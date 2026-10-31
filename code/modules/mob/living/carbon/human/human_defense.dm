@@ -696,6 +696,18 @@
 	else
 		examination += span_dead("[m1] dead.")
 
+	switch(get_temperature_state()) // TA EDIT
+		if("Очень холодно") // TA EDIT
+			examination += span_warning("[m1] сильно мёрзнет.") // TA EDIT
+		if("Холодно") // TA EDIT
+			examination += span_info("[m1] ощущает холод.") // TA EDIT
+		if("Нормальная температура") // TA EDIT
+			examination += span_info("[m1] чувствует себя комфортно по температуре.") // TA EDIT
+		if("Жарко") // TA EDIT
+			examination += span_warning("[m1] сильно потеет.") // TA EDIT
+		if("Очень жарко") // TA EDIT
+			examination += span_danger("[m1] страдает от сильной жары.") // TA EDIT
+
 	switch(blood_volume)
 		if(-INFINITY to BLOOD_VOLUME_SURVIVE)
 			examination += span_artery("<B>[m1] extremely anemic.</B>")

@@ -44,6 +44,7 @@
 		if(!L.anti_magic_check())
 			
 			L.apply_status_effect(/datum/status_effect/stacking/hypothermia, 2)
+			ta_climate_apply_spell_temperature(L, -35)
 			
 			
 			var/push_dir = get_dir(firer, L)

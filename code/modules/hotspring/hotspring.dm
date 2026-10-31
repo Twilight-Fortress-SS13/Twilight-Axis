@@ -73,6 +73,7 @@
 		if(!item2wash)
 			if(get_turf(src) == get_turf(user) && ishuman(user))
 				var/mob/living/carbon/human/bather = user
+				bather.ta_climate_warm_from_source(15) // TA EDIT
 				bather.relaxing_bath(2)
 				return
 			user.visible_message(span_info("[user] starts to wash in [src]."))
@@ -81,6 +82,7 @@
 				user.remove_stress(/datum/stressevent/sewertouched)
 				user.remove_stress(/datum/stressevent/unlanded_noble_bloody_equipment)
 				playsound(user, pick(wash), 100, FALSE)
+				L.ta_climate_warm_from_source(15) // TA EDIT
 		else
 			user.visible_message(span_info("[user] starts to wash [item2wash] in [src]."))
 			if(do_after(L, 30, target = src))

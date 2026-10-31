@@ -286,6 +286,7 @@
 		vis_contents += detail_layer
 	detail_layer.configure_detail(W, effect_color, effect_alpha, weather_tile_size, tile_count)
 	set_effect_alpha(effect_alpha)
+	ta_climate_start_parallax_scroll(W) // TA EDIT
 
 /obj/weather_effect/fog_parallax/proc/apply_parallax_position(transition_time = 0, easing_mode = 0)
 	var/target_x = round(offset_x - camera_offset_x, 1)
