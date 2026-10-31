@@ -126,6 +126,8 @@
 					wash_atom(user, CLEAN_STRONG)
 					playsound(user, pick(wash), 100, FALSE)
 					user.remove_stress(/datum/stressevent/sewertouched)
+					if(L.bodytemperature > BODYTEMP_COLD_LEVEL_ONE_MAX + 50) // TA EDIT
+						L.adjust_bodytemperature(-50) // TA EDIT
 					user.remove_stress(/datum/stressevent/unlanded_noble_bloody_equipment)
 			else
 				user.visible_message(span_info("[user] starts to wash [item2wash] in [src]."))

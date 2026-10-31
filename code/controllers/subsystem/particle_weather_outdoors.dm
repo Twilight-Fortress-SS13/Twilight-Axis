@@ -73,6 +73,7 @@ SUBSYSTEM_DEF(outdoor_effects)
 			if(SSmapping.level_trait(zlevel, ZTRAIT_IGNORE_WEATHER_TRAIT))
 				continue
 			turf_weather_affectable_z_levels[zlevel] = TRUE
+		ta_climate_initialize_weather_z_levels() // TA EDIT
 		get_time_of_day()
 		InitializeTurfs()
 		initialized = TRUE

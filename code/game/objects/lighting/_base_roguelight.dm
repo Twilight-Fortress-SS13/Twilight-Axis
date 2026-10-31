@@ -25,6 +25,7 @@
 	update_icon()
 	if(!roundstart_forbid)
 		seton(TRUE)
+	update_turf_heat() // TA EDIT
 	. = ..()
 
 /obj/machinery/light/rogue/weather_trigger(W)
@@ -78,6 +79,7 @@
 		GLOB.fires_list |= src
 	else
 		GLOB.fires_list -= src
+	update_turf_heat() // TA EDIT
 
 /obj/machinery/light/rogue/Destroy()
 	if(ispath(soundloop))
@@ -85,6 +87,7 @@
 	else
 		QDEL_NULL(soundloop)
 	GLOB.fires_list -= src
+	ta_climate_clear_turf_heat() // TA EDIT
 	. = ..()
 
 /obj/machinery/light/rogue/proc/on_ignited()
@@ -131,6 +134,10 @@
 	fire_act()
 
 /obj/machinery/light/rogue/attackby(obj/item/W, mob/living/user, params)
+	if(on && heat_level > 0 && istype(W, /obj/item/clothing)) // TA EDIT
+		var/obj/item/clothing/C = W // TA EDIT
+		C.ta_climate_dry_over_fire(src, user) // TA EDIT
+		return TRUE // TA EDIT
 	var/datum/skill/craft/cooking/cs = user?.get_skill_level(/datum/skill/craft/cooking)
 	var/cooktime_divisor = get_cooktime_divisor(cs)
 	if(cookonme && on)

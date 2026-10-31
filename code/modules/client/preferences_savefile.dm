@@ -129,6 +129,14 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["statbrowser_theme"]	>> statbrowser_theme
 	S["vv_dark_mode"]		>> vv_dark_mode
 	S["preferred_ui_language"] >> preferred_ui_language
+	var/legacy_climate_palette // TA EDIT
+	S["ta_rw_temperature_palette"] >> legacy_climate_palette // TA EDIT
+	var/saved_climate_palette // TA EDIT
+	S["ta_climate_temperature_palette"] >> saved_climate_palette // TA EDIT
+	if(!isnull(saved_climate_palette)) // TA EDIT
+		ta_climate_temperature_palette = saved_climate_palette // TA EDIT
+	else if(!isnull(legacy_climate_palette)) // TA EDIT
+		ta_climate_temperature_palette = legacy_climate_palette // TA EDIT
 	S["windowflash"]		>> windowflashing
 	S["be_special"]		>> be_special
 	S["no_storyteller_events"] >> no_storyteller_events
@@ -222,6 +230,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	return TRUE
 
 /datum/preferences/proc/sanitize_preferences()
+	if(!(ta_climate_temperature_palette in list("none", "deuten", "protan", "tritan"))) // TA EDIT
+		ta_climate_temperature_palette = "none" // TA EDIT
 	// bools
 	chat_on_map			= sanitize_bool(chat_on_map, initial(chat_on_map))
 	showrolls			= sanitize_bool(showrolls, initial(showrolls))
@@ -401,6 +411,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["ambientocclusion"], ambientocclusion)
 	WRITE_FILE(S["auto_fit_viewport"], auto_fit_viewport)
 	WRITE_FILE(S["preferred_map"], preferred_map)
+	WRITE_FILE(S["ta_climate_temperature_palette"], ta_climate_temperature_palette) // TA EDIT
 	WRITE_FILE(S["menuoptions"], menuoptions)
 	WRITE_FILE(S["key_bindings"], key_bindings)
 	WRITE_FILE(S["attack_blip_frequency"] , attack_blip_frequency)
