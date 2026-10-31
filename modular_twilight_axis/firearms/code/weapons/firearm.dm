@@ -1108,3 +1108,75 @@
 	advanced_icon_r_norod = null
 	effective_range = 5
 	locktype = LOCKTYPE_BREECH
+
+/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/crowpistol
+	name = "\"Crow Pistol\""
+	desc = "Дорогостоящий, сложный в производстве пистоль. Ни о каком серийном проивоздстве речи и быть не может, каждый экземпляр создан на заказ и с помощью одного анонимного мастера. На доной стороне рукояти, виднеются инициалы D.N."
+	critfactor = 1
+	icon = 'modular_twilight_axis/firearms/icons/crowpistol/pistol.dmi'
+	advanced_icon = 'modular_twilight_axis/firearms/icons/crowpistol/pistol.dmi'
+	advanced_icon_r = 'modular_twilight_axis/firearms/icons/crowpistol/pistol_r.dmi'
+	advanced_icon_norod	= 'modular_twilight_axis/firearms/icons/crowpistol/pistol_norod.dmi'
+	advanced_icon_r_norod = 'modular_twilight_axis/firearms/icons/crowpistol/pistol_r_norod.dmi'
+	effective_range = 5
+	load_time = 40
+	mag_type = /obj/item/ammo_box/magazine/internal/twilight_firearm/crowpistol
+
+/obj/item/ammo_box/magazine/internal/twilight_firearm/crowpistol
+	name = "crow pistol internal magazine"
+	ammo_type = list(/obj/item/ammo_casing/caseless/rogue/crow_lead, /obj/item/ammo_casing/caseless/rogue/twilight_lead)
+	caliber = "lead_sphere"
+	max_ammo = 1
+	start_empty = TRUE
+
+/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/crowpistol/getonmobprop(tag)
+	. = ..()
+	if(tag)
+		switch(tag)
+			if("gen")
+				return list("shrink" = 0.3,"sx" = -10,"sy" = -7,"nx" = 9,"ny" = -8,"wx" = -5,"wy" = -8,"ex" = 6,"ey" = -8,"northabove" = -1,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 90,"sturn" = -90,"wturn" = -90,"eturn" = 90,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0,)
+			if("onbelt")
+				return list("shrink" = 0.3,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
+
+/obj/item/gun/ballistic/twilight_firearm/dragonhunter
+	name = "\"Dragon Hunter\""
+	desc = "Охотник на драконов представляет собой работу анонимного мастера. Предназначен для охоты на тех, кого не берут обычные пули. Расширенный ствол позволяет вставить двойную порцию картечи в дуло, но отдача сильнее обычной аркебузы. На рукояти виднеются инициалы D.N."
+	icon = 'modular_twilight_axis/firearms/icons/dragonhunter/arquebus.dmi'
+	icon_state = "arquebus"
+	item_state = "arquebus"
+	advanced_icon = 'modular_twilight_axis/firearms/icons/dragonhunter/arquebus.dmi'
+	advanced_icon_norod = 'modular_twilight_axis/firearms/icons/dragonhunter/arquebus_norod.dmi'
+	effective_range = 2
+	mag_type = /obj/item/ammo_box/magazine/internal/twilight_firearm/dragonhunter
+	cartridge_wording = "cannonball"
+
+/obj/item/ammo_box/magazine/internal/twilight_firearm/dragonhunter
+	name = "dragonhunter internal magazine"
+	ammo_type = list(/obj/item/ammo_casing/caseless/rogue/twilight_cannonball, /obj/item/ammo_casing/caseless/rogue/twilight_grapeshotdouble)
+	caliber = "cannonball"
+	max_ammo = 1
+	start_empty = TRUE
+
+/obj/item/gun/ballistic/twilight_firearm/dragonhunter/getonmobprop(tag)
+	. = ..()
+	if(tag)
+		switch(tag)
+			if("gen")
+				return list("shrink" = 0.5,"sx" = -7,"sy" = 6,"nx" = 7,"ny" = 6,"wx" = -2,"wy" = 3,"ex" = 1,"ey" = 3,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = -43,"sturn" = 43,"wturn" = 30,"eturn" = -30, "nflip" = 0, "sflip" = 8,"wflip" = 8,"eflip" = 0)
+			if("wielded")
+				return list("shrink" = 0.5,"sx" = 5,"sy" = -2,"nx" = -5,"ny" = -1,"wx" = -8,"wy" = 2,"ex" = 8,"ey" = 2,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 1,"nturn" = -45,"sturn" = 45,"wturn" = 0,"eturn" = 0,"nflip" = 8,"sflip" = 0,"wflip" = 8,"eflip" = 0)
+			if("onback")
+				return list("shrink" = 0.5,"sx" = -1,"sy" = 2,"nx" = 0,"ny" = 2,"wx" = 2,"wy" = 1,"ex" = 0,"ey" = 1,"nturn" = 0,"sturn" = 0,"wturn" = 70,"eturn" = 15,"nflip" = 1,"sflip" = 1,"wflip" = 1,"eflip" = 1,"northabove" = 1,"southabove" = 0,"eastabove" = 0,"westabove" = 0)
+
+/obj/item/gun/ballistic/twilight_firearm/dragonhunter/shoot_live_shot(mob/living/user as mob|obj, pointblank = 0, mob/pbtarget = null, message = 1)
+	var/double_load = istype(chambered, /obj/item/ammo_casing/caseless/rogue/twilight_grapeshotdouble)
+	var/recoil_dir = isliving(user) ? turn(user.dir, 180) : null
+	. = ..()
+	if(double_load && recoil_dir && isliving(user))
+		var/mob/living/L = user
+		var/dist = rand(1, 2)
+		var/turf/T = get_ranged_target_turf(L, recoil_dir, dist)
+		to_chat(L, span_danger("Отдача отбрасывает меня назад!"))
+		L.throw_at(T, dist, 1, L, FALSE)
+		if(prob(40))
+			L.Knockdown(20)
