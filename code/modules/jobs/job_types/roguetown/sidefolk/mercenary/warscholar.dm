@@ -104,12 +104,13 @@
 	class_select_category = CLASS_CAT_NALEDI
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_WARMAGE)
 	cmode_music = sound("sound/music/warscholar.ogg")
-	traits_applied = list(TRAIT_CIVILIZEDBARBARIAN, TRAIT_ARCYNE, TRAIT_NALEDI)
+	traits_applied = list(TRAIT_CIVILIZEDBARBARIAN, TRAIT_ARCYNE, TRAIT_NALEDI, TRAIT_DODGEEXPERT) //TA EDIT
 	// Previous budget was kinda lopsided with negative per and con on a melee class (??) to give them a lot of str and speed. I took 6 points off and shifted it to wil and perception instead.
 	subclass_stats = list(
-		STATKEY_STR = 2,
-		STATKEY_WIL = 2,
-		STATKEY_CON = 3
+		STATKEY_STR = 1, //TA EDIT START
+		STATKEY_WIL = 1,
+		STATKEY_CON = 2,
+		STATKEY_SPD = 2 //TA EDIT END
 	)
 	subclass_skills = list(
 		/datum/skill/combat/wrestling = SKILL_LEVEL_APPRENTICE,
