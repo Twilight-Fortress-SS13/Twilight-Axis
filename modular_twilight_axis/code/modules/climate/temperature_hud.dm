@@ -40,6 +40,12 @@ GLOBAL_VAR_INIT(ta_climate_heated_floor_hud_overlay, mutable_appearance(
 	if(stat == DEAD || !hud_used?.temperature)
 		return
 	var/atom/movable/screen/temperature/T = hud_used.temperature
+	if(ta_climate_undead_temperature_immune())
+		T.icon_state = "tempnormal"
+		if(T.ta_climate_heated_tile)
+			T.ta_climate_heated_tile = FALSE
+			T.cut_overlay(GLOB.ta_climate_heated_floor_hud_overlay)
+		return
 	if(bodytemperature < BODYTEMP_COLD_LEVEL_ONE_MAX)
 		T.icon_state = "tempverycold"
 	else if(bodytemperature < BODYTEMP_NORMAL_MIN)

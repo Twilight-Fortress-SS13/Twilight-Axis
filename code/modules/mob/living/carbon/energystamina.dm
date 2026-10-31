@@ -12,8 +12,10 @@
 		added = round(-10 + (added * - 40))
 		if(src.climbing) // no stam regen while climbing guh
 			added = 0
-		if(ishuman(src) && bodytemperature > BODYTEMP_HEAT_LEVEL_ONE_MAX) // TA EDIT
-			added = round(added * 0.5, 1) // TA EDIT
+		if(ishuman(src)) // TA EDIT
+			var/mob/living/carbon/human/H = src // TA EDIT
+			if(H.bodytemperature > BODYTEMP_HEAT_LEVEL_ONE_MAX && !H.ta_climate_undead_temperature_immune()) // TA EDIT
+				added = round(added * 0.5, 1) // TA EDIT
 		if(HAS_TRAIT(src, TRAIT_MISSING_NOSE))
 			added = round(added * 0.5, 1)
 		if(HAS_TRAIT(src, TRAIT_MONK_ROBE))
@@ -84,8 +86,10 @@
 		if (amt == 2 && prob(STACON * 5)) // only sprinting knocks off 2 stamina at a time, so test this vs our con to see if we drop it
 			return 0
 
-	if(ishuman(src) && bodytemperature < BODYTEMP_NORMAL_MIN) // TA EDIT
-		nutrition_amount *= 1.3 // TA EDIT
+	if(ishuman(src)) // TA EDIT
+		var/mob/living/carbon/human/H = src // TA EDIT
+		if(H.bodytemperature < BODYTEMP_NORMAL_MIN && !H.ta_climate_undead_temperature_immune()) // TA EDIT
+			nutrition_amount *= 1.3 // TA EDIT
 
 	var/tox_damage = getToxLoss()
 	if (tox_damage >= (maxHealth * 0.2)) // if we have over 20% of our health as toxin damage, add 10% of our toxin damage as base loss

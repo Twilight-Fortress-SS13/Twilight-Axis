@@ -1085,14 +1085,14 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 
 	if(H.nutrition > 0 && H.stat != DEAD && !HAS_TRAIT(H, TRAIT_NOHUNGER))
 		var/hunger_rate = HUNGER_FACTOR
-		if(H.bodytemperature < BODYTEMP_NORMAL_MIN) // TA EDIT
+		if(H.bodytemperature < BODYTEMP_NORMAL_MIN && !H.ta_climate_undead_temperature_immune()) // TA EDIT
 			hunger_rate *= 1.5 // TA EDIT
 		H.adjust_nutrition(-hunger_rate)
 
 	if(H.hydration > 0 && H.stat != DEAD && !HAS_TRAIT(H, TRAIT_NOHUNGER))
 
 		var/hydration_rate = HUNGER_FACTOR
-		if(H.bodytemperature > BODYTEMP_NORMAL_MAX) // TA EDIT
+		if(H.bodytemperature > BODYTEMP_NORMAL_MAX && !H.ta_climate_undead_temperature_immune()) // TA EDIT
 			hydration_rate *= 1.5 // TA EDIT
 		H.adjust_hydration(-hydration_rate)
 

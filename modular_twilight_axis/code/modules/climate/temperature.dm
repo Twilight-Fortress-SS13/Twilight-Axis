@@ -14,6 +14,10 @@ GLOBAL_VAR_INIT(ta_climate_cold_breath_overlay, mutable_appearance(
     limit = min(limit, BODYTEMP_NORMAL_MAX)
     if(stat == DEAD || bodytemperature >= limit || amount <= 0)
         return
+    if(ishuman(src))
+        var/mob/living/carbon/human/H = src
+        if(H.ta_climate_undead_temperature_immune())
+            return
     adjust_bodytemperature(min(amount, limit - bodytemperature))
 
 /mob/living/carbon/human/proc/ta_climate_handle_environment_temperature(turf/cur_turf, loc_temp)
@@ -24,6 +28,11 @@ GLOBAL_VAR_INIT(ta_climate_cold_breath_overlay, mutable_appearance(
 			cut_overlay(GLOB.ta_climate_cold_breath_overlay)
 		return
 	ta_climate_update_clothing_wetness(cur_turf)
+	if(ta_climate_undead_temperature_immune())
+		ta_climate_wet_until = 0
+		if(GLOB.ta_climate_cold_breath_overlay in overlays)
+			cut_overlay(GLOB.ta_climate_cold_breath_overlay)
+		return
 	var/wet_load = ta_climate_wet_clothing_load()
 	var/env_adjust = 0
 	var/protection = 0
@@ -107,10 +116,12 @@ GLOBAL_VAR_INIT(ta_climate_cold_breath_overlay, mutable_appearance(
 /proc/ta_climate_is_desert_climate()
 	return SSmapping?.config?.map_name == "Desert Town"
 
-/mob/living/carbon/human/proc/ta_climate_extreme_temperature_immune()
-	if(istype(src, /mob/living/carbon/human/species/gnoll) || istype(src, /mob/living/carbon/human/species/werewolf) || istype(src, /mob/living/carbon/human/species/skeleton))
+/mob/living/carbon/human/proc/ta_climate_undead_temperature_immune()
+	if(mob_biotypes & MOB_UNDEAD)
 		return TRUE
-	if(istype(dna?.species, /datum/species/gnoll) || istype(dna?.species, /datum/species/werewolf))
+	if(istype(src, /mob/living/carbon/human/species/skeleton))
+		return TRUE
+	if(mind && (mind.has_antag_datum(/datum/antagonist/skeleton) || mind.has_antag_datum(/datum/antagonist/lich) || mind.has_antag_datum(/datum/antagonist/vampire) || mind.has_antag_datum(/datum/antagonist/zombie)))
 		return TRUE
 	if(!length(bodyparts))
 		return FALSE
@@ -119,7 +130,16 @@ GLOBAL_VAR_INIT(ta_climate_cold_breath_overlay, mutable_appearance(
 			return FALSE
 	return TRUE
 
+/mob/living/carbon/human/proc/ta_climate_extreme_temperature_immune()
+	if(ta_climate_undead_temperature_immune())
+		return TRUE
+	if(istype(src, /mob/living/carbon/human/species/gnoll) || istype(src, /mob/living/carbon/human/species/werewolf))
+		return TRUE
+	return istype(dna?.species, /datum/species/gnoll) || istype(dna?.species, /datum/species/werewolf)
+
 /mob/living/carbon/human/proc/ta_climate_temperature_offset()
+	if(ta_climate_undead_temperature_immune())
+		return 0
 	var/season = SSseason?.current_season
 	var/map_name = SSmapping?.config?.map_name
 	var/temperature_offset = 0
@@ -155,6 +175,8 @@ GLOBAL_VAR_INIT(ta_climate_cold_breath_overlay, mutable_appearance(
 	return ta_climate_temperature_offset()
 
 /mob/living/carbon/human/proc/apply_weather_temperature(base_delta, exposure_temp = null)
+	if(ta_climate_undead_temperature_immune())
+		return 0
 	if(!base_delta)
 		return 0
 	if(isnull(exposure_temp))
@@ -228,7 +250,7 @@ GLOBAL_VAR_INIT(ta_climate_cold_breath_overlay, mutable_appearance(
 				W.remove_from_bodypart()
 
 /mob/living/carbon/human/proc/ta_climate_ambient_temperature_offset(turf/T)
-	if(!isturf(loc) || !ta_climate_valid_outdoors(T))
+	if(ta_climate_undead_temperature_immune() || !isturf(loc) || !ta_climate_valid_outdoors(T))
 		return 0
 	return ta_climate_temperature_offset()
 
@@ -271,7 +293,7 @@ GLOBAL_VAR_INIT(ta_climate_cold_breath_overlay, mutable_appearance(
 				W.cure_timer = null
 
 /mob/living/carbon/human/proc/ta_climate_limit_ordinary_heat_overflow()
-	if(stat == DEAD || !isturf(loc))
+	if(stat == DEAD || ta_climate_undead_temperature_immune() || !isturf(loc))
 		return
 	if(on_fire)
 		ta_climate_independent_heat_floor = max(BODYTEMP_NORMAL_MAX, bodytemperature)
@@ -309,6 +331,8 @@ GLOBAL_VAR_INIT(ta_climate_cold_breath_overlay, mutable_appearance(
 	ta_climate_update_temperature_hud()
 	if(stat == DEAD || (ta_climate_extreme_temperature_immune() && !istype(dna?.species, /datum/species/construct/metal)))
 		ta_climate_clear_temperature_transient_effects()
+		if(ta_climate_undead_temperature_immune())
+			ta_climate_independent_heat_floor = BODYTEMP_NORMAL_MAX
 		if(stat == DEAD)
 			ta_climate_temperature_death_cleanup()
 			return
@@ -371,6 +395,8 @@ GLOBAL_VAR_INIT(ta_climate_cold_breath_overlay, mutable_appearance(
 		hypothermia_timer_id = null
 
 /mob/living/carbon/human/proc/get_temperature_state()
+	if(ta_climate_undead_temperature_immune())
+		return "Температура не ощущается"
 	if(bodytemperature < BODYTEMP_COLD_LEVEL_ONE_MAX)
 		return "Очень холодно"
 	if(bodytemperature < BODYTEMP_NORMAL_MIN)
@@ -384,6 +410,9 @@ GLOBAL_VAR_INIT(ta_climate_cold_breath_overlay, mutable_appearance(
 /mob/living/carbon/human/verb/check_temperature_state()
 	set name = "Ощутить температуру"
 	set category = "IC"
+	if(ta_climate_undead_temperature_immune())
+		to_chat(src, span_notice("Ваше тело не реагирует на холод и жару."))
+		return
 	var/temperature_state = get_temperature_state()
 	var/list/description = list(span_notice("Температура тела: [temperature_state]."))
 	switch(temperature_state)
