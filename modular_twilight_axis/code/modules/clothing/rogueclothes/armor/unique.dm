@@ -7,3 +7,12 @@
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/armor.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/armor.dmi'
 	body_parts_covered = CHEST | GROIN | LEGS | ARMS
+
+/obj/item/clothing/suit/roguetown/armor/basiceast/yohei
+	name = "black dobo robe"
+	desc = "A dark dobo robe with reinforced leather inlays. Offers decent protection while allowing for ease of movement."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/armor.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/armor.dmi'
+	icon_state = "yoheisuit"
+	armor = ARMOR_BRIGANDINE
+	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER + 25
