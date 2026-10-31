@@ -20,6 +20,7 @@ SUBSYSTEM_DEF(replays)
 	var/list/marked_turfs = list()
 	var/list/del_list = list()
 	var/list/icon_cache = list()
+	var/appearance_dictionary_version = 0
 	var/list/icon_state_caches = list()
 	var/list/name_cache = list()
 	var/list/full_appearance_cache = list()
@@ -177,8 +178,9 @@ SUBSYSTEM_DEF(replays)
 						var/list/type_cache = snapshot_cache[T.type]
 						var/encoded_appearance = type_cache ? type_cache[this_appearance] : null
 						if(isnull(encoded_appearance))
+							var/dictionary_version_before = appearance_dictionary_version
 							encoded_appearance = encode_appearance(this_appearance, encoded_type = T.type)
-							if(snapshot_cache_size < 8192)
+							if(snapshot_cache_size < 8192 && dictionary_version_before == appearance_dictionary_version)
 								if(!type_cache)
 									type_cache = list()
 									snapshot_cache[T.type] = type_cache
@@ -456,6 +458,7 @@ SUBSYSTEM_DEF(replays)
 	if(appearance == diff_appearance)
 		return "="
 
+	var/dictionary_version_before = appearance_dictionary_version
 	var/cache_allowed = (!encoded_type || initial(encoded_type.smooth) == SMOOTH_FALSE)
 	var/cache_full = !diff_appearance && cache_allowed
 	var/cache_diff = !!diff_appearance && cache_allowed
@@ -482,6 +485,7 @@ SUBSYSTEM_DEF(replays)
 	var/list/icon_state_cache
 	if(!isnum(cached_icon))
 		icon_cache[icon_txt] = icon_cache.len + 1
+		appearance_dictionary_version++
 		icon_state_caches[++icon_state_caches.len] = list()
 		icon_state_cache = icon_state_caches[icon_cache[icon_txt]]
 	else
@@ -490,10 +494,12 @@ SUBSYSTEM_DEF(replays)
 	var/cached_icon_state = icon_state_cache[appearance_icon_state] || appearance_icon_state
 	if(!isnum(cached_icon_state))
 		icon_state_cache[appearance_icon_state] = icon_state_cache.len + 1
+		appearance_dictionary_version++
 
 	var/cached_name = name_cache[appearance.name] || appearance.name
 	if(!isnum(cached_name))
 		name_cache[appearance.name] = name_cache.len + 1
+		appearance_dictionary_version++
 
 	var/color_string = appearance.color || "w"
 	if(islist(color_string))
@@ -568,7 +574,7 @@ SUBSYSTEM_DEF(replays)
 			while(diffed_appearance_list.len > 0 && diffed_appearance_list[diffed_appearance_list.len] == "")
 				diffed_appearance_list.len--
 			var/unchanged_layers_diff = "~{[jointext(diffed_appearance_list, ";")]}"
-			if(cache_diff)
+			if(cache_diff && dictionary_version_before == appearance_dictionary_version)
 				cache_appearance_diff(appearance, diff_appearance, diff_remove_overlays, unchanged_layers_diff)
 			return unchanged_layers_diff
 
@@ -619,12 +625,12 @@ SUBSYSTEM_DEF(replays)
 			diffed_appearance_list.len--
 		var/diffed_string = "~{[jointext(diffed_appearance_list, ";")]}"
 		if(length(diffed_string) < length(undiffed_string))
-			if(cache_diff)
+			if(cache_diff && dictionary_version_before == appearance_dictionary_version)
 				cache_appearance_diff(appearance, diff_appearance, diff_remove_overlays, diffed_string)
 			return diffed_string
-	if(cache_diff)
+	if(cache_diff && dictionary_version_before == appearance_dictionary_version)
 		cache_appearance_diff(appearance, diff_appearance, diff_remove_overlays, undiffed_string)
-	if(cache_full && length(undiffed_string) <= 4096)
+	if(cache_full && dictionary_version_before == appearance_dictionary_version && length(undiffed_string) <= 4096)
 		if(full_appearance_cache.len >= max_cached_appearances)
 			var/old_appearance = full_appearance_cache_order[full_appearance_cache_slot]
 			full_appearance_cache -= old_appearance
