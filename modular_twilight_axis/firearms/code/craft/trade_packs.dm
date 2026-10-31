@@ -222,6 +222,21 @@
 	cost = 20
 	contains = list(/obj/item/rogueweapon/stoneaxe/battle)
 
+/datum/supply_pack/rogue/Afreet/saber
+	name = "Sabre"
+	cost = 10
+	contains = list(/obj/item/rogueweapon/sword/sabre)
+
+/datum/supply_pack/rogue/Afreet/cutlass
+	name = "Cutlass"
+	cost = 15
+	contains = list(/obj/item/rogueweapon/sword/cutlass)
+
+/datum/supply_pack/rogue/Afreet/shamshir
+	name = "Shamshir"
+	cost = 20
+	contains = list(/obj/item/rogueweapon/sword/sabre/shamshir)
+
 /datum/supply_pack/rogue/Afreet/bulletbag
 	name = "Bullet bag (empty)"
 	cost = 10
