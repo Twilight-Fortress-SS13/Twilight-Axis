@@ -150,6 +150,7 @@
 #define INIT_ORDER_PATH				-50
 #define INIT_ORDER_DISCORD			-60
 #define INIT_ORDER_PERSISTENCE		-95
+#define INIT_ORDER_TA_REPLAYS		-96 // TA EDIT
 #define INIT_ORDER_CHAT				-100 //Should be last to ensure chat remains smooth during init.
 #define INIT_ORDER_INIT_PROFILER	-101 //Dumps the init profile, must be after everything else has initialized.
 
@@ -252,7 +253,10 @@
 				AA.copy_overlays(changed_on, TRUE);\
 			}\
 		} \
-	}
+	} \
+	if(SSreplays?.recording) { \
+		SSreplays.mark_dirty(changed_on); \
+	} // TA EDIT
 /**
 	Create a new timer and add it to the queue.
 	* Arguments:

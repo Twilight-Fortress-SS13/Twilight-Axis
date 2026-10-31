@@ -125,6 +125,8 @@
 		if(SSatoms.InitAtom(src, args))
 			//we were deleted
 			return
+		if(SSreplays?.recording) // TA EDIT
+			SSreplays.mark_new(src) // TA EDIT
 
 /**
  * The primary method that objects are setup in SS13 with
@@ -216,6 +218,8 @@
  * * clears the light object
  */
 /atom/Destroy()
+	if(SSreplays?.recording) // TA EDIT
+		SSreplays.mark_destroyed(src) // TA EDIT
 	if(alternate_appearances)
 		for(var/K in alternate_appearances)
 			var/datum/atom_hud/alternate_appearance/AA = alternate_appearances[K]
@@ -478,6 +482,8 @@
 		. |= vand_update_desc(updates)
 	if(updates & UPDATE_ICON)
 		. |= update_icon(updates)
+	if(SSreplays?.recording) // TA EDIT
+		SSreplays.mark_dirty(src) // TA EDIT
 
 /// Updates the name of the atom
 /atom/proc/vand_update_name(updates = ALL)
@@ -506,6 +512,8 @@
 		if(length(new_overlays))
 			managed_overlays = new_overlays
 			add_overlay(new_overlays)
+	if(SSreplays?.recording) // TA EDIT
+		SSreplays.mark_dirty(src) // TA EDIT
 
 /// Updates the icon state of the atom
 /atom/proc/update_icon_state()
@@ -746,6 +754,8 @@
 /atom/proc/setDir(newdir)
 	SEND_SIGNAL(src, COMSIG_ATOM_DIR_CHANGE, dir, newdir)
 	dir = newdir
+	if(SSreplays?.recording) // TA EDIT
+		SSreplays.mark_dirty(src) // TA EDIT
 
 /**
  * Called when the atom log's in or out
@@ -797,6 +807,8 @@
 		atom_colours = list()
 		atom_colours.len = COLOUR_PRIORITY_AMOUNT //four priority levels currently.
 	color = null
+	if(SSreplays?.recording) // TA EDIT
+		SSreplays.mark_dirty(src) // TA EDIT
 	for(var/C in atom_colours)
 		if(islist(C))
 			var/list/L = C

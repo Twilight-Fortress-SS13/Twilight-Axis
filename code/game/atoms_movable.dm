@@ -466,6 +466,8 @@
 		else if(new_turf && !old_turf)
 			SSspatial_grid.enter_cell(src, new_turf)
 
+	if(SSreplays?.recording) // TA EDIT
+		SSreplays.mark_dirty(src) // TA EDIT
 	return TRUE
 
 /atom/movable/Destroy(force)
