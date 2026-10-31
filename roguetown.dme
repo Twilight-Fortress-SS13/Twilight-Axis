@@ -4273,6 +4273,7 @@
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\adventurer\adventurer.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\adventurer\wretch.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\adventurer\types\antags\Iconoclast.dm"
+#include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\adventurer\types\antags\alchemist.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\adventurer\types\combat\cleric.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\adventurer\types\combat\foreigner.dm"
 #include "modular_twilight_axis\code\modules\jobs\job_types\roguetown\adventurer\types\combat\rogue.dm"
