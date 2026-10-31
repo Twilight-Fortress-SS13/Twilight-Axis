@@ -2,7 +2,7 @@
 	name = "Trait - Foodless"
 	trait_to_apply = TRAIT_NOHUNGER
 	desc = "The bearer can survive and live without food and water."
-	points = 20
+	points = 30
 
 /datum/hag_boon/trait/death_sight
 	name = "Trait - Death Sight"
@@ -14,7 +14,7 @@
 	name = "Trait - Parry Expert"
 	trait_to_apply = TRAIT_PARRYEXPERT
 	desc = "Enhances the bearer's abiliy to parry with weapon."
-	points = 40
+	points = 30
 
 /datum/hag_boon/trait/poison_immune
 	name = "Trait - Poison Immune"
@@ -32,7 +32,7 @@
 	name = "Trait - Light Steps"
 	trait_to_apply = TRAIT_LIGHT_STEP
 	desc = "Bearer steps more lighty and swifty, makes less noise when walking and can sneak much quicker."
-	points = 30
+	points = 20
 
 /datum/hag_boon/trait/noble
 	name = "Trait - Noble"

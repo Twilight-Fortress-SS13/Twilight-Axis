@@ -98,9 +98,12 @@
 	name = "Skeleton Form"
 	desc = "Bearer becomes a Skeleton, nothing else."
 	points = 85
+	status_type = /datum/status_effect/buff/hag_boon/skeleton_form
 
-/datum/hag_boon/buff/skeleton/apply_boon_effect(mob/living/L)
-	var/mob/living/carbon/human/H = L
+/datum/status_effect/buff/hag_boon/skeleton_form/on_apply()
+	if(!ishuman(owner))
+		return
+	var/mob/living/carbon/human/H = owner
 	H.become_skeleton()
 	H.select_skeleton_features()
 	return
