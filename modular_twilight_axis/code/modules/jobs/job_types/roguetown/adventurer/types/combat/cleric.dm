@@ -281,7 +281,7 @@
 		STATKEY_SPD = -2,
 		STATKEY_STR = -1,
 	)
-	maximum_possible_slots = 2
+	maximum_possible_slots = 1 // No more than one. Henceforth and never again.
 	vice_limits = list(/datum/charflaw/silverweakness)
 	subclass_skills = list(
 		/datum/skill/misc/medicine = SKILL_LEVEL_JOURNEYMAN,
