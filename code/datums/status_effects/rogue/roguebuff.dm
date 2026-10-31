@@ -2004,7 +2004,7 @@
 /datum/status_effect/buff/griefflower
 	id = "griefflower"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/griefflower
-	effectedstats = list(STATKEY_CON = 1,STATKEY_WIL = 1,STATKEY_STR = -1)
+	effectedstats = list(STATKEY_CON = 1,STATKEY_WIL = 1) //TA EDIT
 
 /datum/status_effect/buff/griefflower/on_apply()
 	. = ..()
