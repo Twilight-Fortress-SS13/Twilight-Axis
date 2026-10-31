@@ -263,6 +263,7 @@
 		return
 	if(silent)
 		return
+	skill_ref.skill_level_effect(known_skills[skill_ref], src) //TA EDIT
 	if(known_skills[skill_ref] >= old_level)
 		SEND_SIGNAL(current, COMSIG_SKILL_RANK_INCREASED, skill_ref, known_skills[skill_ref], old_level)
 		to_chat(current, span_nicegreen("I feel like I've become more proficient at [skill_ref.name]!"))

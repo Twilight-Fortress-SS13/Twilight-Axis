@@ -867,7 +867,7 @@
 		if(!isnull(G.lighting_alpha))
 			lighting_alpha = min(lighting_alpha, G.lighting_alpha)
 
-	if(HAS_TRAIT(src, TRAIT_DARKVISION))
+	if(HAS_TRAIT(src, TRAIT_DARKVISION) || (get_skill_level(/datum/skill/misc/sneaking) >= SKILL_LEVEL_MASTER)) //TA EDIT
 		lighting_alpha = min(lighting_alpha, LIGHTING_PLANE_ALPHA_DARKVISION)
 		see_in_dark = max(see_in_dark, 12)
 
