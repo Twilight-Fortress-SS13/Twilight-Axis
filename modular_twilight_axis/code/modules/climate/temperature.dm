@@ -146,7 +146,7 @@ GLOBAL_VAR_INIT(ta_climate_cold_breath_overlay, mutable_appearance(
 	switch(map_name)
 		if("Desert Town")
 			temperature_offset = 55
-		if("Dun World")
+		if("Dun World", "Pilgrim")
 			temperature_offset = -25
 		if("Build Your Own Settlement")
 			temperature_offset = 25
