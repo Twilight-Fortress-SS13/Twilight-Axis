@@ -575,8 +575,10 @@
 	icon_state = "kamishimo"
 	item_state = "kamishimo"
 	flags_inv = HIDEBOOB
-	icon = 'modular_twilight_axis/icons/roguetown/clothing/armor.dmi'
-	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/armor.dmi'
+	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR|ITEM_SLOT_CLOAK
+	body_parts_covered = CHEST|VITALS
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/shirts.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
 	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/helpers/sleeves_armor.dmi'
 
 /obj/item/clothing/suit/roguetown/shirt/kamishimo/ronin
