@@ -189,6 +189,8 @@
 	/// Default state of the subprefs; for most roles, this will just be the subclass selection.
 	var/list/default_subprefs = list("favorite_advclass" = null)
 
+	var/obj/item/additional_item // TA ADDITION START
+
 ///Returns the client's subprefs list for this job, initializing it if it does not exist. Will be null if the client or prefs are null.
 /datum/job/proc/get_roleprefs(client/C)
 	if(!C)
