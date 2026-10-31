@@ -3887,6 +3887,7 @@
 #include "modular_twilight_axis\code\controllers\subsystem\area_spawn_subsystem.dm"
 #include "modular_twilight_axis\code\controllers\subsystem\automap_template.dm"
 #include "modular_twilight_axis\code\controllers\subsystem\automapper_subsystem.dm"
+#include "modular_twilight_axis\code\controllers\subsystem\resource_preload.dm"
 #include "modular_twilight_axis\code\controllers\subsystem\rogue\regional_threat\dun_world.dm"
 #include "modular_twilight_axis\code\controllers\subsystem\rogue\regional_threat\rockhill.dm"
 #include "modular_twilight_axis\code\controllers\subsystem\rogue\role_class_handler\role_class_handler_admin_full_dress.dm"
