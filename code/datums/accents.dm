@@ -15,7 +15,7 @@ GLOBAL_LIST_INIT(character_accents, list("No accent",
 	"Etruscan accent",
 //	"Half Orc accent",
 //	"Urban Orc accent",
-//	"Drakian accent",
+	"Drakian accent",
 //	"Inzectoid accent",
 //	"Feline accent",
 	"Abyssal accent"

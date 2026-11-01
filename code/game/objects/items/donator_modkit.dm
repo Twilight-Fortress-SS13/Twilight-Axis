@@ -2133,8 +2133,14 @@
 /obj/item/enchantingkit/limeastratahelm
 	name = "The True Astratan Helmet"
 	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of an Astratan Helmet."
-	target_items = list(/obj/item/clothing/head/roguetown/helmet/heavy/astratahelm)
+	target_items = list(
+		/obj/item/clothing/head/roguetown/helmet/heavy/astratan = /obj/item/clothing/head/roguetown/helmet/heavy/astratahelm/limeastratahelm,
+		/obj/item/clothing/head/roguetown/helmet/heavy/astratan/oldrw = /obj/item/clothing/head/roguetown/helmet/heavy/astratahelm/limeastratahelm,
+		/obj/item/clothing/head/roguetown/helmet/heavy/astratahelm = /obj/item/clothing/head/roguetown/helmet/heavy/astratahelm/limeastratahelm,
+		/obj/item/clothing/head/roguetown/helmet/heavy/astratahelm/cleric = /obj/item/clothing/head/roguetown/helmet/heavy/astratahelm/limeastratahelm
+	)
 	result_item = /obj/item/clothing/head/roguetown/helmet/heavy/astratahelm/limeastratahelm
+	icon_loadout = /obj/item/clothing/head/roguetown/helmet/heavy/astratahelm/limeastratahelm
 
 // Solar Dominion Items
 /obj/item/enchantingkit/weapon/dominion_sword

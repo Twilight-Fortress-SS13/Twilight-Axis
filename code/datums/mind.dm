@@ -1009,7 +1009,7 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 
 /datum/mind/proc/show_spell_tip()
 	if(current)
-		to_chat(current, span_nicegreen("Tip: Ctrl-Click any spell button to enter rearrangement mode. Your bar will glow gree, spells cannot be cast and you can drag one button onto another to swap them in place. Ctrl-Click again to lock in and re-enable casting. Hotkeys are bound left to right (Alt 1 to Alt 9 default), matching the numbers shown on the buttons. Shift-click a spell to learn more about it."))
+		to_chat(current, span_nicegreen("Tip: Ctrl-Click any spell button to enter rearrangement mode. Your bar will glow green, spells cannot be cast and you can drag one button onto another to swap them in place. Ctrl-Click again to lock in and re-enable casting. Hotkeys are bound left to right (Alt 1 to Alt 9 default), matching the numbers shown on the buttons. Shift-click a spell to learn more about it."))
 
 /datum/mind/proc/setup_mage_aspects(list/config, grant_attunement = TRUE)
 	mage_aspect_config = config
@@ -1432,6 +1432,7 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 						var/path2item = user.mind.special_items[item]
 						user.mind.special_items -= item
 						var/obj/item/I = new path2item(user.loc)
+						user.mind.tat_apply_special_item_sale_lock(item, I)
 						user.put_in_hands(I)
 						if(!LI?.triumph_cost)
 							I.special_item = TRUE

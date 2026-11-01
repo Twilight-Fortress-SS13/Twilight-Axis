@@ -890,6 +890,8 @@
 		var/used_title = get_role_title()
 		if(HAS_TRAIT(src, TRAIT_RESIDENT) && used_title == "Licker" && licker_subclass)
 			used_title = licker_subclass.name
+		if(tat_pliant_title) // TA EDIT - TAT system
+			used_title = tat_pliant_title // TA EDIT - TAT system
 		if(SSticker.rulermob != src)
 			if(SSticker.regentmob == src)
 				if(src.mind?.has_antag_datum(/datum/antagonist/vampire/lord))
@@ -1062,7 +1064,7 @@
 			if(H.marriedto == name)
 				. += span_love("It's my spouse.")
 
-		if(name in GLOB.excommunicated_players)
+		if((name in GLOB.excommunicated_players) || HAS_TRAIT(src, TRAIT_OATHBREAKER)) //TA EDIT
 			. += span_userdanger("HERETIC! SHAME!")
 
 		if(HAS_TRAIT(src, TRAIT_EXCOMMUNICATED))

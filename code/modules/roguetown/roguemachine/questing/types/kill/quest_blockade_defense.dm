@@ -164,6 +164,13 @@
 	fellowship_reward_mult = 1 + fellowship_reward_rate * fellowship_extras
 	reward_amount = round(reward_amount * fellowship_reward_mult)
 
+/datum/quest/kill/blockade_defense/proc/award_defender_triumphs(region_name)
+	for(var/datum/weakref/W as anything in fellowship_roster)
+		var/mob/living/M = W.resolve()
+		if(QDELETED(M) || !M.mind)
+			continue
+		M.mind.adjust_triumphs(BLOCKADE_CLEAR_TRIUMPHS, TRUE, "Blockade cleared ([region_name])", "You have made [SSticker.realm_name] safer todae.")
+
 /datum/quest/kill/blockade_defense/proc/wave_tp_budget(wave_num)
 	var/mult = (wave_num < BLOCKADE_TOTAL_WAVES) ? BLOCKADE_EARLY_WAVE_TP_MULT : 1
 	return BLOCKADE_WAVE_BASE_TP * mult
@@ -393,9 +400,11 @@
 	clear_wave_timers()
 	var/datum/blockade/B = blockade_ref?.resolve()
 	if(B)
+		var/datum/economic_region/ER = B.get_region()
 		B.active_scroll_ref = null
 		B.active_quest_ref = null
 		SSeconomy.clear_blockade(B, "cleared")
+		award_defender_triumphs(ER ? ER.name : region)
 	var/mob/lead = quest_receiver_reference?.resolve()
 	var/payout = reward_amount
 	record_completion_stats(payout)
