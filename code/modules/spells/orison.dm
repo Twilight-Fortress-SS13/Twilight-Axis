@@ -462,7 +462,7 @@
 
 GLOBAL_LIST_INIT(convert_incantations, list(
 		/datum/patron/divine/undivided = "Ten above, bring this wayward soul into thy embrace!!",
-		/datum/patron/divine/astrata = "O great Overtyrant, grant order to this wayward soul!!",
+		/datum/patron/divine/astrata = "O Goddess Supreme, grant order to this wayward soul!!", //TA EDIT
 		/datum/patron/divine/noc = "O wise Moonbrother, grant wisdom to this wayward soul!!",
 		/datum/patron/divine/dendor = "O great Treefather, grant this wayward soul the nature of the wyld!!",
 		/datum/patron/divine/abyssor = "O great Dreamer, induct this wayward soul into the mysteries of the deep!!",
@@ -473,9 +473,9 @@ GLOBAL_LIST_INIT(convert_incantations, list(
 		/datum/patron/divine/malum = "O great Forgefather, bring diligence to this wayward soul!!",
 		/datum/patron/divine/eora = "Great Mother, show mercy to this wayward soul!!", // because just "love" is too tacky
 		/datum/patron/old_god = "Embrace the truth; PSYDON lyves!!", // psydon doesn't hear you, so you're talking to the other person here
-		/datum/patron/inhumen/zizo = "Dame of Progress, show this one the truth of the world!", // culty, progressive, quieter than tennite invocations. all the Four are, except Graggar, because there's more of a usecase for being subtle
+		/datum/patron/inhumen/zizo = "Lady of Salvation, show this one the truth of the world!", // TA EDIT; culty, progressive, quieter than tennite invocations. all the Four are, except Graggar, because there's more of a usecase for being subtle
 		/datum/patron/inhumen/graggar = "SHATTER THE BINDS OF MIND AND SOUL! SMASH THE CAGE OF LIES! GRAGGAR GRAGGAR GRAGGAR!!", // the ten's order is a cage. shatter the bars, claw free to the truth. in other words: they're larping. also, loud.
-		/datum/patron/inhumen/matthios = "O Lorde, grant camaraderie to this wayward soul!", // similar to astrata's on purpose. and linked to matthios's free-men/comrades/siblings-in-arms thing. yes the title portion IS based entirely on how avarice refers to matthios why do you ask
+		/datum/patron/inhumen/matthios = "O Lord of No Realm, grant camaraderie to this wayward soul!", // TA EDIT; similar to astrata's on purpose. and linked to matthios's free-men/comrades/siblings-in-arms thing. yes the title portion IS based entirely on how avarice refers to matthios why do you ask
 		/datum/patron/inhumen/baotha = "Lady of Heartbreak, grant mercy to this wounded soul!" // once more, similar to eora's. emphasizes the "mercy" baotha grants to the broken
 		))
 
@@ -500,7 +500,7 @@ GLOBAL_LIST_INIT(convert_incantations, list(
 		return FALSE
 
 	// no converting NPCs. if they're SSD this may also trigger, but why are you trying to convert ssd players. also, no ping-ponging back and forth in a single round or converting patron-locked roles
-	if(!new_convert.client || HAS_TRAIT(new_convert, TRAIT_RECENT_CONVERT) || HAS_TRAIT(new_convert, TRAIT_UNCONVERTIBLE))
+	if(!new_convert.client || HAS_TRAIT(new_convert, TRAIT_UNCONVERTIBLE)) //TA EDIT
 		to_chat(caster, span_info("They don't seem like they'll be receptive to my proselytizing..."))
 		return FALSE
 
@@ -593,6 +593,13 @@ GLOBAL_LIST_INIT(convert_incantations, list(
 		new_convert.remove_status_effect(/datum/status_effect/debuff/excomm)
 		new_convert.remove_stress(/datum/stressevent/excommunicated)
 
+	if(!(ispath(new_patron, /datum/patron/divine) && istype(old_patron, /datum/patron/divine))) //TA EDIT START
+		// give a small mood buff to both parties, identical to prayer; psydonites get the same thing but with more ambiguous wording
+		if(istype(new_convert.patron, /datum/patron/old_god))
+			caster.add_stress(/datum/stressevent/convert/psydon)
+		else
+			caster.add_stress(/datum/stressevent/convert) //TA EDIT END
+
 	if(!length(result))
 		return FALSE
 
@@ -654,10 +661,10 @@ GLOBAL_LIST_INIT(convert_incantations, list(
 
 	if(!(ispath(new_patron, /datum/patron/divine) && istype(old_patron, /datum/patron/divine))) // sigh.
 		// give a small mood buff to both parties, identical to prayer; psydonites get the same thing but with more ambiguous wording
-		if(istype(new_convert.patron, /datum/patron/old_god))
+		/*if(istype(new_convert.patron, /datum/patron/old_god)) //TA EDIT START
 			caster.add_stress(/datum/stressevent/convert/psydon)
 		else
-			caster.add_stress(/datum/stressevent/convert)
+			caster.add_stress(/datum/stressevent/convert)*/ //TA EDIT END
 		new_convert.add_stress(/datum/stressevent/convert/recipient)
 
 	message_admins("CONVERSION: [caster.real_name] ([caster.ckey]) has converted [new_convert.real_name] ([new_convert.ckey]) to [new_convert.patron.name]")
