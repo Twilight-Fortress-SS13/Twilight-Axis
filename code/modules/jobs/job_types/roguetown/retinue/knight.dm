@@ -574,7 +574,11 @@
 				beltr = /obj/item/quiver/sling/iron
 				beltl = /obj/item/gun/ballistic/revolver/grenadelauncher/sling
 
-			if("Shamshir + Pistol") //TA EDIT START
+			if("Threaded Sword-Whip")				//TA EDIT START
+				r_hand = /obj/item/rogueweapon/sword/sabre/threaded
+				beltl = /obj/item/rogueweapon/scabbard/sword/cane_bb
+
+			if("Shamshir + Pistol")
 				r_hand = /obj/item/rogueweapon/sword/sabre/shamshir
 				l_hand = /obj/item/twilight_powderflask
 				backl = /obj/item/rogueweapon/scabbard/sword
