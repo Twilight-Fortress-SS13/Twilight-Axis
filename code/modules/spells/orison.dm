@@ -556,17 +556,17 @@ GLOBAL_LIST_INIT(convert_incantations, list(
 	if(!do_mob(caster, new_convert, 10 SECONDS, can_move = FALSE) || caster.cmode || new_convert.cmode)
 		to_chat(caster, span_info("I lose focus! The rite fails."))
 		return FALSE
-	if(!length(result))
+	/*if(!length(result)) //TA EDIT START
 		if(is_tennite)
 			to_chat(caster, span_warning("[new_convert] is not responsive to my proselytizing..."))
 		else
-			to_chat(caster, span_warning("[new_convert] clings still to their misguided faith... or they already walk [get_god_name(caster.patron)]'s path."))
-		return FALSE
+			to_chat(caster, span_warning("[new_convert] clings still to their misguided faith... or they already walk [get_god_name(caster.patron)]'s path.")) 
+		return FALSE*/ //TA EDIT END
 
 	// we have a player that has accepted and is valid for conversion: it's go time
 	var/datum/patron/new_patron = caster.patron.type
 	var/datum/patron/old_patron = new_convert.patron
-	if(is_tennite) // tennites can convert to any tennite faith, since they're a package deal; inhumen are much more individualized
+	if(is_tennite && length(result)) // TA EDIT; tennites can convert to any tennite faith, since they're a package deal; inhumen are much more individualized
 		var/list/patrons_named = list()
 		for(var/path as anything in GLOB.patrons_by_faith[/datum/faith/divine])
 			var/datum/patron/patron = GLOB.patronlist[path]
@@ -583,7 +583,7 @@ GLOBAL_LIST_INIT(convert_incantations, list(
 	else
 		caster.say(GLOB.convert_incantations[new_patron.type])
 
-	if(istype(new_convert.patron, /datum/patron/inhumen) && !ispath(new_patron, /datum/patron/inhumen)) // you're no longer a heretic
+	if(istype(new_convert.patron, /datum/patron/inhumen) && !ispath(new_patron, /datum/patron/inhumen) && length(result)) // TA EDIT; you're no longer a heretic
 		REMOVE_TRAIT(new_convert, TRAIT_HERESIARCH, TRAIT_GENERIC)
 
 	if(HAS_TRAIT(caster, TRAIT_CLERGY)) // however, only members of the church can actually remove excommunication (if you get converted by like a missionary or something, go up to the churchies and roleplay to get it removed)
@@ -592,6 +592,9 @@ GLOBAL_LIST_INIT(convert_incantations, list(
 		REMOVE_TRAIT(new_convert, TRAIT_EXCOMMUNICATED, TRAIT_GENERIC)
 		new_convert.remove_status_effect(/datum/status_effect/debuff/excomm)
 		new_convert.remove_stress(/datum/stressevent/excommunicated)
+
+	if(!length(result))
+		return FALSE
 
 	// Save devotion state
 	var/saved_level = CLERIC_T0
@@ -659,7 +662,7 @@ GLOBAL_LIST_INIT(convert_incantations, list(
 
 	message_admins("CONVERSION: [caster.real_name] ([caster.ckey]) has converted [new_convert.real_name] ([new_convert.ckey]) to [new_convert.patron.name]")
 	log_game("CONVERSION: [caster.real_name] ([caster.ckey]) converted [new_convert.real_name] ([new_convert.ckey]) to [new_convert.patron.name]")
-	to_chat(caster, span_danger("You've converted [new_convert.name] to follow [get_god_name(new_convert.patron)]!"))
+	//to_chat(caster, span_danger("You've converted [new_convert.name] to follow [get_god_name(new_convert.patron)]!")) //TA EDIT
 	if(istype(new_convert.patron, /datum/patron/old_god))
 		to_chat(new_convert, span_danger("You feel divine energies shift as [get_god_name(old_patron)]'s blessings forsake you!")) // woe is you, blessed fool
 	else
