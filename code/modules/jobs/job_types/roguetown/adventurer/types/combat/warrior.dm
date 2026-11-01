@@ -599,7 +599,7 @@
 				H.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, SKILL_LEVEL_JOURNEYMAN, TRUE)
 				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_JOURNEYMAN, TRUE)
 				r_hand = /obj/item/rogueweapon/sword/sabre/threaded
-				beltr = /obj/item/rogueweapon/scabbard/sword/cane_bb
+				l_hand = /obj/item/rogueweapon/scabbard/sword/cane_bb
 
 
 		var/sidearm = list("Dagger", "Parrying Dagger", "Heavy Dagger", "Broadsword", "Greatshield", "Stake Launcher", "Blessed Silver Stake", "Blessed Silver Hunting Knife", "Blessed Silver Shovel")

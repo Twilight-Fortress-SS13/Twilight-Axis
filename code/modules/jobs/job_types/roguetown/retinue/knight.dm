@@ -576,7 +576,7 @@
 
 			if("Threaded Sword-Whip")				//TA EDIT START
 				r_hand = /obj/item/rogueweapon/sword/sabre/threaded
-				beltl = /obj/item/rogueweapon/scabbard/sword/cane_bb
+				l_hand = /obj/item/rogueweapon/scabbard/sword/cane_bb
 
 			if("Shamshir + Pistol")
 				r_hand = /obj/item/rogueweapon/sword/sabre/shamshir

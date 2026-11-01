@@ -295,5 +295,13 @@
 	anvilrepair = /datum/skill/craft/carpentry
 	wdefense = 5
 	special = /datum/special_intent/limbguard
-	cant_strip = FALSE
+	slot_flags = NONE
+	cant_strip = TRUE
 	max_integrity = 100
+
+/obj/item/rogueweapon/scabbard/sword/cane_bb/getonmobprop(tag)
+	. = ..()
+	if(tag)
+		switch(tag)
+			if("gen")
+				return list("shrink" = 0.4,"sx" = -11,"sy" = -11,"nx" = 11,"ny" = 0,"wx" = -4,"wy" = 0,"ex" = 1,"ey" = -10,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 0,"sturn" = -110,"wturn" = 0,"eturn" = 109,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
