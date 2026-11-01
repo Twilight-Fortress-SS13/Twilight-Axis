@@ -598,7 +598,7 @@
 			if("Silver Threaded Sword-Whip")			//TA - EDIT
 				H.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, SKILL_LEVEL_JOURNEYMAN, TRUE)
 				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_JOURNEYMAN, TRUE)
-				r_hand = /obj/item/rogueweapon/sword/sabre/threaded
+				r_hand = /obj/item/rogueweapon/sword/sabre/threaded/silver
 				l_hand = /obj/item/rogueweapon/scabbard/sword/cane_bb
 
 
