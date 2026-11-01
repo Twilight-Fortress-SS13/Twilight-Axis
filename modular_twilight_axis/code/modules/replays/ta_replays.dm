@@ -80,7 +80,7 @@ SUBSYSTEM_DEF(replays)
 	last_written_time = 0
 	var/replay_wall_clock = time2text(world.timeofday, "hh:mm:ss")
 	write_demo_line("clock [replay_wall_clock]")
-	write_demo_line("mode dolls")
+	write_demo_line("mode dollsmap")
 	write_demo_line("time 0")
 	scan_replay_clients(0)
 	next_client_scan = world.time + 10
@@ -98,6 +98,7 @@ SUBSYSTEM_DEF(replays)
 		seen[client_ckey] = TRUE
 		var/mob_ref = C.mob ? "\ref[C.mob]" : "null"
 		if(C.mob)
+			C.mob.demo_player_tracked = TRUE
 			if(!C.mob.demo_snapshot_written && !marked_new[C.mob])
 				mark_new(C.mob)
 			var/recorded_real_name = ""
@@ -194,31 +195,50 @@ SUBSYSTEM_DEF(replays)
 		write_demo_line(jointext(row_list, ","))
 		CHECK_TICK
 
+/datum/controller/subsystem/replays/proc/should_record_static_obj(obj/O)
+	if(!O || O.gc_destroyed || istype(O, /obj/item) || istype(O, /obj/effect))
+		return FALSE
+	if(!isturf(O.loc) || (!O.anchored && !O.density))
+		return FALSE
+	return O.icon || length(O.overlays) || length(O.underlays)
+
+/datum/controller/subsystem/replays/proc/add_initial_atom(atom/movable/A, encoded, list/rows, list/nullspace_list)
+	var/turf/current_turf = get_turf(A)
+	if(!current_turf)
+		nullspace_list += encoded
+		return
+	var/row_key = "[current_turf.z],[current_turf.y]"
+	var/list/bucket_row = rows[row_key]
+	if(!bucket_row)
+		bucket_row = list()
+		rows[row_key] = bucket_row
+	var/x_key = "[current_turf.x]"
+	var/list/bucket_cell = bucket_row[x_key]
+	if(!bucket_cell)
+		bucket_cell = list()
+		bucket_row[x_key] = bucket_cell
+	bucket_cell += encoded
+
 /datum/controller/subsystem/replays/proc/write_initial_objects()
-	var/list/mobs_by_row = list()
+	var/list/objects_by_row = list()
 	var/list/nullspace_list = list()
-	for(var/mob/M in world)
-		if(isturf(M.loc))
-			var/row_key = "[M.z],[M.y]"
-			var/list/bucket_row = mobs_by_row[row_key]
-			if(!bucket_row)
-				bucket_row = list()
-				mobs_by_row[row_key] = bucket_row
-			var/x_key = "[M.x]"
-			var/list/bucket_cell = bucket_row[x_key]
-			if(!bucket_cell)
-				bucket_cell = list()
-				bucket_row[x_key] = bucket_cell
-			bucket_cell += encode_init_obj(M)
-		else if(isnull(M.loc))
-			nullspace_list += encode_init_obj(M)
+	for(var/obj/O in world)
+		if(should_record_static_obj(O))
+			add_initial_atom(O, encode_init_static_obj(O), objects_by_row, nullspace_list)
+		CHECK_TICK
+	for(var/client/C in GLOB.clients)
+		var/mob/M = C.mob
+		if(!M || M.gc_destroyed || M.demo_snapshot_written)
+			continue
+		M.demo_player_tracked = TRUE
+		add_initial_atom(M, encode_init_obj(M), objects_by_row, nullspace_list)
 		CHECK_TICK
 
 	for(var/z in 1 to world.maxz)
 		var/spacing = 0
 		var/list/row_list = list()
 		for(var/y in 1 to world.maxy)
-			var/list/mapped_row = mobs_by_row["[z],[y]"]
+			var/list/mapped_row = objects_by_row["[z],[y]"]
 			if(!mapped_row)
 				spacing += world.maxx
 				CHECK_TICK
@@ -234,6 +254,11 @@ SUBSYSTEM_DEF(replays)
 			CHECK_TICK
 		write_demo_line(jointext(row_list, ","))
 	write_demo_line(jointext(nullspace_list, ","))
+
+/datum/controller/subsystem/replays/proc/encode_init_static_obj(obj/O)
+	O.demo_last_loc = get_turf(O)
+	O.demo_snapshot_written = TRUE
+	return "\ref[O]=[encode_appearance(O.appearance, encoded_type = O.type)]"
 
 /datum/controller/subsystem/replays/proc/encode_doll_name(mob/M)
 	var/mob_name = istext(M.name) ? M.name : ""
@@ -285,6 +310,9 @@ SUBSYSTEM_DEF(replays)
 			continue
 		if(!ismob(M))
 			continue
+		var/mob/tracked_mob = M
+		if(!tracked_mob.demo_player_tracked)
+			continue
 		var/turf/current_turf = get_turf(M)
 		if(current_turf == M.demo_last_loc)
 			continue
@@ -308,13 +336,24 @@ SUBSYSTEM_DEF(replays)
 		processed_entries++
 		if(!M || M.gc_destroyed)
 			continue
-		if(!ismob(M))
+		var/encoded_new
+		if(ismob(M))
+			var/mob/player_mob = M
+			if(!player_mob.demo_player_tracked)
+				continue
+			encoded_new = encode_doll_name(player_mob)
+		else if(isobj(M))
+			var/obj/static_obj = M
+			if(!should_record_static_obj(static_obj))
+				continue
+			encoded_new = encode_appearance(static_obj.appearance, encoded_type = static_obj.type)
+		else
 			continue
-		var/turf/mob_turf = get_turf(M)
-		var/loc_string = mob_turf ? "[mob_turf.x],[mob_turf.y],[mob_turf.z]" : "null"
-		M.demo_last_loc = mob_turf
+		var/turf/atom_turf = get_turf(M)
+		var/loc_string = atom_turf ? "[atom_turf.x],[atom_turf.y],[atom_turf.z]" : "null"
+		M.demo_last_loc = atom_turf
 		M.demo_snapshot_written = TRUE
-		new_updates += "\ref[M] [loc_string] [encode_doll_name(M)]"
+		new_updates += "\ref[M] [loc_string] [encoded_new]"
 	if(new_updates.len)
 		output_lines += "new [jointext(new_updates, ",")]"
 	if(canceled || processed_entries >= max_entries_per_fire)
@@ -380,9 +419,18 @@ SUBSYSTEM_DEF(replays)
 	log_world("\[replay\] Recording stopped: event backlog exceeded [max_pending_entries]. Replay remains incomplete.")
 
 /datum/controller/subsystem/replays/proc/mark_new(atom/A)
-	if(!recording || !A || !ismob(A))
+	if(!recording || !A || A.gc_destroyed)
 		return
-	if(A.gc_destroyed)
+	if(ismob(A))
+		var/mob/M = A
+		if(!M.demo_player_tracked && !M.client)
+			return
+		M.demo_player_tracked = TRUE
+	else if(isobj(A))
+		var/obj/O = A
+		if(!should_record_static_obj(O))
+			return
+	else
 		return
 	if(marked_new[A])
 		return
@@ -399,26 +447,36 @@ SUBSYSTEM_DEF(replays)
 		return
 	if(!ismob(A) || A.gc_destroyed)
 		return
+	var/mob/actor = A
+	if(!actor.demo_player_tracked)
+		if(!actor.client)
+			return
+		actor.demo_player_tracked = TRUE
 	if(marked_dirty[A] || marked_new[A])
 		return
-	var/mob/actor = A
 	if(!actor.demo_snapshot_written)
 		mark_new(A)
 		return
-	var/turf/current_turf = isturf(actor.loc) ? actor.loc : get_turf(actor)
+	var/turf/current_turf = get_turf(actor)
 	if(current_turf == actor.demo_last_loc)
 		return
 	marked_dirty[A] = TRUE
 	check_backlog()
 
 /datum/controller/subsystem/replays/proc/mark_destroyed(atom/A)
-	if(!recording || !A || !ismob(A))
+	if(!recording || !A || (!ismob(A) && !isobj(A)))
 		return
-	var/atom/movable/M = A
-	marked_new -= M
-	marked_dirty -= M
-	if(M.demo_snapshot_written)
-		var/ref_key = "\ref[M]"
+	if(ismob(A))
+		var/mob/tracked_mob = A
+		if(!tracked_mob.demo_player_tracked)
+			return
+	var/atom/movable/deleted_atom = A
+	if(isobj(A) && !deleted_atom.demo_snapshot_written && !marked_new[A])
+		return
+	marked_new -= deleted_atom
+	marked_dirty -= deleted_atom
+	if(deleted_atom.demo_snapshot_written)
+		var/ref_key = "\ref[deleted_atom]"
 		if(!del_list[ref_key])
 			del_list[ref_key] = TRUE
 			check_backlog()
@@ -653,6 +711,9 @@ SUBSYSTEM_DEF(replays)
 	var/demo_last_recorded_dir
 	var/demo_last_recorded_density
 	var/demo_last_recorded_opacity
+
+/mob
+	var/demo_player_tracked = FALSE
 
 /atom/movable
 	var/atom/demo_last_loc
