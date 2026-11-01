@@ -194,7 +194,7 @@
 	playsound(src.loc, 'sound/combat/armor_degrade_chain3.ogg', 50, TRUE)
 	if(transformed)
 		possible_item_intents = list(/datum/intent/whip/lash/master, /datum/intent/whip/crack, /datum/intent/whip/punish)
-		force = 21
+		force = 20
 		throwforce = 5
 		wdefense = 3
 		icon_state = "cane_whip"
@@ -213,7 +213,7 @@
 		icon_state = "cane_sword"
 		attack_verb = list("cuts", "slashes")
 		sharpness = IS_SHARP
-		swingsound = BLADEWOOSH_MED
+		swingsound = BLADEWOOSH_SMALL
 		update_force_dynamic()
 		update_wdefense_dynamic()
 		associated_skill = /datum/skill/combat/swords
@@ -245,7 +245,7 @@
 	playsound(src.loc, 'sound/combat/armor_degrade_chain3.ogg', 50, TRUE)
 	if(transformed)
 		possible_item_intents = list(/datum/intent/whip/lash/master, /datum/intent/whip/crack, /datum/intent/whip/punish)
-		force = 22
+		force = 20
 		throwforce = 5
 		wdefense = 3
 		icon_state = "cane_whip_s"
@@ -258,7 +258,7 @@
 		special = /datum/special_intent/whip_coil
 	else
 		possible_item_intents = list(/datum/intent/sword/cut/sabre, /datum/intent/sword/thrust/sabre, /datum/intent/sword/strike)
-		force = 25
+		force = 22
 		throwforce = 10
 		wdefense = 7
 		icon_state = "cane_sword_s"
