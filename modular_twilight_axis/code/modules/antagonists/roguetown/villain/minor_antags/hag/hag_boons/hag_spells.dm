@@ -155,3 +155,19 @@
 	desc = "Grants bearer a berkerker's rage, allowing it to become stronger."
 	spell_type = /obj/effect/proc_holder/spell/self/rage
 	points = 75
+
+// HAG SPELLS - We make it ignore cockblock, cuz it's non-combat spells
+/obj/effect/proc_holder/spell/invoked/resurrect/hag
+	ignore_cockblock = TRUE
+
+/obj/effect/proc_holder/spell/invoked/grant_boon
+	ignore_cockblock = TRUE
+
+/obj/effect/proc_holder/spell/invoked/transmutation_rite
+	ignore_cockblock = TRUE
+
+/obj/effect/proc_holder/spell/invoked/spiritual_siphon
+	ignore_cockblock = TRUE
+
+/obj/effect/proc_holder/spell/invoked/mindlink/hag
+	ignore_cockblock = TRUE
