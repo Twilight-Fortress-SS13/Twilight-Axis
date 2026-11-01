@@ -3568,10 +3568,7 @@
 	pixel_x = 14;
 	pixel_y = -9
 	},
-/obj/structure/fluff/railing/border/west{
-	layer = 4.3
-	},
-/turf/open/floor/rogue/snowpatchy,
+/turf/closed/wall/mineral/rogue/stone/moss/unbreakable,
 /area/rogue/under/cavewet/wizarddungeon)
 "awc" = (
 /mob/living/simple_animal/hostile/retaliate/rogue/minotaur/axe,
@@ -48695,12 +48692,6 @@
 	},
 /turf/open/floor/carpet/purple,
 /area/rogue/indoors/town/manor/rockhill)
-"hfO" = (
-/obj/structure/fluff/railing/border/west{
-	dir = 9
-	},
-/turf/open/floor/rogue/dark_ice,
-/area/rogue/under/cavewet/wizarddungeon)
 "hfP" = (
 /obj/structure/flora/roguegrass/water,
 /turf/open/water/swamp,
@@ -60941,10 +60932,11 @@
 /area/rogue/indoors/town/rockhill)
 "iXA" = (
 /obj/effect/spawner/lootdrop/cheap_jewelry_spawner,
-/obj/structure/closet/crate/coffin/royal{
-	locked = 1
-	},
 /obj/item/storage/belt/rogue/pouch/coins/poor,
+/obj/structure/closet/crate/coffin/royal{
+	locked = 1;
+	keylock = 1
+	},
 /turf/open/floor/rogue/cobble,
 /area/rogue/indoors/town/church/basement)
 "iXI" = (
@@ -69132,12 +69124,6 @@
 	},
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/under/town/basement)
-"kfz" = (
-/obj/structure/fluff/railing/border/west{
-	dir = 5
-	},
-/turf/open/floor/rogue/cobblerock,
-/area/rogue/under/cavewet/wizarddungeon)
 "kfA" = (
 /obj/structure/stairs/fancy/r{
 	dir = 1
@@ -69361,12 +69347,6 @@
 	},
 /turf/open/floor/rogue/wood,
 /area/rogue/indoors/town/manor/rockhill)
-"khp" = (
-/obj/structure/fluff/railing/border/west{
-	dir = 5
-	},
-/turf/open/floor/rogue/snow,
-/area/rogue/under/cavewet/wizarddungeon)
 "khr" = (
 /obj/structure/roguemachine/atm/rockhill,
 /turf/open/floor/rogue/church,
@@ -71517,12 +71497,6 @@
 	},
 /turf/open/floor/rogue/twig,
 /area/rogue/under/cavelava/rh_lava_east)
-"kya" = (
-/obj/structure/fluff/railing/border/west{
-	dir = 1
-	},
-/turf/open/floor/rogue/snow,
-/area/rogue/under/cavewet/wizarddungeon)
 "kyb" = (
 /obj/structure/table/wood,
 /obj/machinery/light/rogue/candle/l,
@@ -86278,16 +86252,6 @@
 /obj/structure/closet/crate/chest/gold,
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/under/cave/dragonden)
-"mMJ" = (
-/obj/effect/wisp/prestidigitation/willowwisp{
-	pixel_x = 14;
-	pixel_y = -9
-	},
-/obj/structure/fluff/railing/border/west{
-	dir = 1
-	},
-/turf/open/floor/rogue/greenstone,
-/area/rogue/under/cavewet/wizarddungeon)
 "mMO" = (
 /obj/structure/mirror/fancy,
 /obj/structure/table/wood/long_table,
@@ -87686,7 +87650,8 @@
 "mXr" = (
 /mob/living/simple_animal/hostile/retaliate/rogue/white_stag_corpse{
 	health = 3000;
-	maxHealth = 3000
+	maxHealth = 3000;
+	aggressive = 1
 	},
 /turf/open/floor/rogue/snow,
 /area/rogue/under/cavewet/wizarddungeon)
@@ -94128,12 +94093,6 @@
 	},
 /turf/open/floor/rogue/wood,
 /area/rogue/outdoors/town/rockhill)
-"nSB" = (
-/obj/structure/fluff/railing/border/west{
-	dir = 9
-	},
-/turf/open/floor/rogue/greenstone,
-/area/rogue/under/cavewet/wizarddungeon)
 "nSC" = (
 /turf/open/floor/rogue/ruinedwood,
 /area/rogue/under/town/basement/rh_bog_basement)
@@ -118185,10 +118144,6 @@
 /obj/structure/flora/roguetree,
 /turf/open/floor/rogue/grassyel,
 /area/rogue/outdoors/woodsrat/above)
-"rxG" = (
-/obj/structure/flora/roguegrass/bush/wall/tall,
-/turf/open/transparent/openspace,
-/area/rogue/indoors/town/manor/rockhill)
 "rxH" = (
 /obj/structure/stairs{
 	dir = 8
@@ -125895,12 +125850,6 @@
 	},
 /turf/open/transparent/openspace,
 /area/rogue/rockharbor)
-"sGv" = (
-/obj/structure/fluff/railing/border/west{
-	dir = 10
-	},
-/turf/open/floor/rogue/snow,
-/area/rogue/under/cavewet/wizarddungeon)
 "sGz" = (
 /obj/effect/decal/cobbleedge{
 	dir = 9
@@ -136287,9 +136236,14 @@
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/outdoors/rtfield/rockhill)
 "umW" = (
-/obj/structure/rack/rogue/shelf/tablecloth_moon,
-/turf/open/transparent/openspace,
-/area/rogue/outdoors/town/roofs/rockhillroofs)
+/obj/effect/spawner/lootdrop/cheap_jewelry_spawner,
+/obj/structure/closet/crate/coffin/royal{
+	locked = 1;
+	keylock = 1
+	},
+/obj/item/storage/belt/rogue/pouch/coins/poor,
+/turf/open/floor/rogue/cobble,
+/area/rogue/indoors/town/church/basement)
 "umZ" = (
 /obj/structure/fluff/railing/border{
 	dir = 1
@@ -446994,7 +446948,7 @@ kKp
 okv
 hTR
 rom
-khp
+xUJ
 xUJ
 xUJ
 hiF
@@ -447426,7 +447380,7 @@ kKp
 byr
 byr
 pCo
-kya
+byr
 hiF
 rJq
 mXr
@@ -447856,9 +447810,9 @@ kKp
 kKp
 kKp
 byr
-sGv
+byr
 avY
-hfO
+byr
 wwL
 xUJ
 hwk
@@ -556722,7 +556676,7 @@ kKp
 kKp
 byr
 byr
-kfz
+byr
 wvS
 jCB
 jCB
@@ -557154,7 +557108,7 @@ kKp
 kKp
 byr
 pCo
-mMJ
+avY
 rUh
 qzc
 jCB
@@ -557586,7 +557540,7 @@ kKp
 kKp
 byr
 lKr
-nSB
+mmZ
 mmZ
 mmZ
 mmZ
@@ -638468,7 +638422,7 @@ fZJ
 fZJ
 fZJ
 fZJ
-umW
+fZJ
 fZJ
 fZJ
 fZJ
@@ -664768,7 +664722,7 @@ xlm
 sPr
 bpH
 bpH
-rxG
+dxS
 eOR
 omr
 omr
@@ -697271,7 +697225,7 @@ aOv
 aOv
 war
 qEa
-iXA
+umW
 hXp
 tgy
 aqg
