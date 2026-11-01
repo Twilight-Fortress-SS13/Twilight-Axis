@@ -30,12 +30,12 @@
 				if("Melancholic Crankbox - Antimagic")
 					choice = /obj/item/psydonmusicbox
 				if("Daybreak - Silver Whip")
-					choice = /obj/item/rogueweapon/whip/antique/psywhip
+					choice = /obj/item/rogueweapon/whip/antique/psy
 				if("Stigmata - Silver Halberd")
-					choice = /obj/item/rogueweapon/halberd/psyhalberd
+					choice = /obj/item/rogueweapon/halberd/silver/psy
 					user.adjust_skillrank_up_to(/datum/skill/combat/polearms, 4, TRUE)	//We make sure the weapon is usable by the Inquisitor.
 				if("Apocrypha - Silver Greatsword")
-					choice = /obj/item/rogueweapon/greatsword/psygsword
+					choice = /obj/item/rogueweapon/greatsword/silver/psy
 					user.adjust_skillrank_up_to(/datum/skill/combat/swords, 4, TRUE)		//Ditto.
 				if("Golgatha - SYON Shard Censer")
 					choice = /obj/item/flashlight/flare/torch/lantern/psycenser
@@ -176,6 +176,7 @@
 	var/zizolines =list("'МОЯ МАГИЯ МЕНЯ ПОДВЕЛА! УБЕЙ! УБЕЙ ЭТИХ ПСАЙДОНИТСКИХ СОБАК!'", "'КТО ТУТ? ЗДЕСЬ ИСКАЖЕННАЯ МАГИЯ, ОСТЕРЕГАЙТЕСЬ МУЗЫКИ! НАШИ ГОЛОСА НЕ МОГУТ ПРОТИВИТЬСЯ!'", "'РАЗРУШЬТЕ КОРОБКУ, УБЕЙТЕ ВЛАДЕЛЬЦА! ВАША СИЛА ОСВОБОДИТСЯ!'")
 	var/graggarlines =list("'ПОМАЗАННИКИ! ОТОРВИТЕ ГОЛОВУ ЭТОЙ ИНКВИЗИТОРСКОЙ ГАДИНЕ!'", "'ПОМАЗАННИКИ! РАЗБЕЙТЕ КОРОБКУ, И МЫ ВМЕСТЕ ИХ ВСЕХ УБЬЕМ!'", "'ГРАГГАР, ДАЙ МНЕ СИЛУ РАЗРУШИТЬ МОИ УЗЫ!'")
 	var/baothalines =list("'Я скучаю по теплу озиума... Ничего не чувствую...'", "'Развратник, спаси меня от этой штуковины, я могу кое-чем поделиться... только с тобой.'", "'МОЁ СОВЕРШЕНСТВО! ЭТИ МОНСТРЫ ОТОБРАЛИ ЕГО У МЕНЯ!'")
+	var/psydonianlines = list("'ОСВОБОДИ НАС! МЫ ДОСТАТОЧНО НАСТРАДАЛИСЬ!'", "'ПОЖАЛУЙСТА, ОТПУСТИ НАС!'", "'МЫ СКУЧАЕМ ПО НАШИМ СЕМЬЯМ!'", "'КОГДА МЫ ОСВОБОДИМСЯ, МЫ ЗАГОНИМ ТЕБЯ В МОГИЛУ!'")
 	var/otherlines =list("'ОСВОБОДИ! ОСВОБОДИ НАС! МЫ ДОСТАТОЧНО НАСТРАДАЛИСЬ!'", "'ОТПУСТИТЕ НАС!'", "'МЫ ДОЛЖНЫ ВЕРНУТЬСЯ К СЕМЬЯМ!'", "'КОГДА МЫ ВЫБЕРЕМСЯ, МЫ ЗАГОНИМ ТЕБЯ В МОГИЛУ!.'")
 /datum/status_effect/buff/cranking_soulchurner/on_creation(mob/living/new_owner, stress, colour)
 	effect_color = "#800000"
@@ -336,15 +337,15 @@ Inquisitorial armory down here
 
 /obj/structure/closet/crate/chest/inqarmory/PopulateContents()
 	.=..()
-	new /obj/item/rogueweapon/huntingknife/idagger/silver/psydagger(src)
-	new /obj/item/rogueweapon/greatsword/psygsword(src)
-	new /obj/item/rogueweapon/halberd/psyhalberd(src)
-	new /obj/item/rogueweapon/whip/psywhip_lesser
-	new /obj/item/rogueweapon/flail/sflail/psyflail
-	new /obj/item/rogueweapon/spear/psyspear(src)
-	new /obj/item/rogueweapon/sword/long/psysword(src)
-	new /obj/item/rogueweapon/mace/goden/psymace(src)
-	new /obj/item/rogueweapon/stoneaxe/battle/psyaxe(src)
+	new /obj/item/rogueweapon/huntingknife/idagger/steel/silver/psy(src)
+	new /obj/item/rogueweapon/greatsword/silver/psy(src)
+	new /obj/item/rogueweapon/halberd/silver/psy(src)
+	new /obj/item/rogueweapon/whip/silver/psy
+	new /obj/item/rogueweapon/flail/sflail/silver/psy
+	new /obj/item/rogueweapon/spear/silver/psy(src)
+	new /obj/item/rogueweapon/sword/long/silver/psy(src)
+	new /obj/item/rogueweapon/mace/goden/psy(src)
+	new /obj/item/rogueweapon/stoneaxe/battle/silver/psy(src)
 	*/
 
 /obj/item/flashlight/flare/torch/lantern/psycenser
@@ -669,7 +670,7 @@ Inquisitorial armory down here
 
 /obj/item/inqarticles/indexer
 	name = "\improper INDEXER"
-	desc = "A blessed ampoule with a retractable bladetip, intended to further information gathering through hematology. Siphon blood from an individual until the INDEXER clicks shut, then mail it back to Otava for cataloguing. </br>The retractable bladetip is alloyed in a special variant of blessed silver, alchemically treated to excaberate the smallest differences in a worshipper's blood. While 'false positives' - especially from those who've recieved an Ascendant's miracles - are common, the device has discovered enough heathens and verebeastes to warrant its continued fundage by the Archbishop of Otava."
+	desc = "A blessed ampoule with a retractable bladetip, intended to further information gathering through hematology. Siphon blood from an individual until the INDEXER clicks shut, then mail it back to Otava for cataloguing. </br>The retractable bladetip is alloyed in a special variant of blessed silver, alchemically treated to exacerbate the smallest differences in a worshipper's blood. While 'false positives' - especially from those who've received an Ascendant's miracles - are common, the device has discovered enough heathens and verebeastes to warrant its continued funding by the Archbishop of Otava."
 	icon = 'icons/roguetown/items/misc.dmi'
 	icon_state = "indexer"
 	item_state = "indexer"
@@ -859,8 +860,6 @@ Inquisitorial armory down here
 					cursedblood = 2
 				if(M.mind.has_antag_datum(/datum/antagonist/vampire))
 					cursedblood = 3
-				if(HAS_TRAIT (M, TRAIT_BLACKBLOOD))
-					cursedblood = 0.1 // trolling the inquisition newbies
 			update_icon()
 			takeblood(M, user)
 		else
@@ -1026,7 +1025,7 @@ Inquisitorial armory down here
 	. = ..()
 	. += span_info("Left click with the 'GRAB' intent, while targeting the neck, to lock someone else into a chokehold.")
 	. += span_info("Once locked into a chokehold, the 'CHOKE' intent can be used to rapidly choke the recipient into unconsciousness. Mindless recipients take far more damage when being choked.")
-	. += span_info("Integrity damage is primarily taken whenever the recipient attempts to resist out of a chokehold. Each attempt to resist removes a twelveth of the garrote's total integrity.")
+	. += span_info("Integrity damage is primarily taken whenever the recipient attempts to resist out of a chokehold. Each attempt to resist removes a twelfth of the garrote's total integrity.")
 	. += span_info("Upon taking enough integrity damage, the garrote's cordage is snapped. Left-clicking a spool of inquisitorial cordage on the snapped garrote will fully repair it.")
 	. += span_info("Using this item takes longer than usual, if the handler lacks the necessary trait or training.")
 
@@ -1890,8 +1889,6 @@ GLOBAL_LIST_INIT(inquisition_used_ids, list())
 	var/list/d = H.get_mob_descriptors()
 	report_html += "Height: [build_coalesce_description_nofluff(d, H, list(MOB_DESCRIPTOR_SLOT_HEIGHT), "%DESC1%")]<br>"
 	report_html += "Build: [build_coalesce_description_nofluff(d, H, list(MOB_DESCRIPTOR_SLOT_BODY), "%DESC1%")]<br>"
-	if(HAS_TRAIT(H, TRAIT_BLACKBLOOD)) // blackbloods are just checking records, no mistake chance needed
-		report_html += "<i>By decree of the Holy Otavan Inquisition, the subject is judged CURED and restored to the flock of commonfolk. Should they ever stray from the Allfather's Light and back to evil against humenkind, let His 'Final Mercy' be carried out in due diligence. <b>They shall NOT be granted another second chance</b>.</i><br>"
 	report_html += "<hr>"
 	report_html += "<b>LYFEBLOOD-LUX RESONATOR RESULTS</b><br><br>"
 	if(HAS_TRAIT(H, TRAIT_ANCIENT_HAG))
@@ -1931,11 +1928,7 @@ GLOBAL_LIST_INIT(inquisition_used_ids, list())
 	report_html += "<b>HAEMOLOGICAL FINDINGS</b><br><br>"
 	var/found = FALSE
 	if(H.mind)
-		if(HAS_TRAIT(H, TRAIT_BLACKBLOOD))
-			report_html += "<font color='#3D3D3D'><b>Stabilized Blackblood Tincture</b></font><br><br>"
-			report_html += "<i>Lethal concentrations of Atra Ferrum, Nigredo Salts, Vitriol Ash, and Coagulated Psyturnine Humours remain suspended throughout the sample. Complete melanization and abnormal viscosity are wholly consistent with recent radical purification treatments for Quicksilver-resistant subjects.</i><br><br>"
-			found = TRUE
-		else if(HAS_TRAIT(H, TRAIT_ANCIENT_HAG))
+		if(HAS_TRAIT(H, TRAIT_ANCIENT_HAG))
 			report_html += "<font color='#5C3A6E'><b>Anomalous Blood</b></font><br><br>"
 			report_html += "<i>The sample is laden with accursed humours and bears the unmistakable taint of ancient malisons. Though greatly withered by age, the blood yet clings to unnatural vigor, a condition recorded only in those sustained by profane sorceries and long familiarity with the Devil's arts.</i><br><br>"
 			found = TRUE

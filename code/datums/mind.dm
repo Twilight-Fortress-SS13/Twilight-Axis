@@ -58,7 +58,7 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 
 	var/list/major_aspects
 	var/list/minor_aspects
-	/// Mage aspect system config from subclass. Keys: "mastery", "major", "minor", "utilities". Optional: "locked_aspects" (list of type paths).
+	/// Mage aspect system config from subclass. Keys: "mastery", "major", "minor", "utilities". Optional: "locked_aspects", "unlocked_aspects" (lists of type paths).
 	var/list/mage_aspect_config
 	/// Aspect reset budget used. Major costs 2, Minor/Utility costs 1. Max 2. Resets on sleep.
 	var/aspect_resets_used = 0
@@ -1009,7 +1009,7 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 
 /datum/mind/proc/show_spell_tip()
 	if(current)
-		to_chat(current, span_nicegreen("Tip: Ctrl-Click any spell button to enter rearrangement mode. Your bar will glow gree, spells cannot be cast and you can drag one button onto another to swap them in place. Ctrl-Click again to lock in and re-enable casting. Hotkeys are bound left to right (Alt 1 to Alt 9 default), matching the numbers shown on the buttons. Shift-click a spell to learn more about it."))
+		to_chat(current, span_nicegreen("Tip: Ctrl-Click any spell button to enter rearrangement mode. Your bar will glow green, spells cannot be cast and you can drag one button onto another to swap them in place. Ctrl-Click again to lock in and re-enable casting. Hotkeys are bound left to right (Alt 1 to Alt 9 default), matching the numbers shown on the buttons. Shift-click a spell to learn more about it."))
 
 /datum/mind/proc/setup_mage_aspects(list/config, grant_attunement = TRUE)
 	mage_aspect_config = config
@@ -1432,11 +1432,12 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 						var/path2item = user.mind.special_items[item]
 						user.mind.special_items -= item
 						var/obj/item/I = new path2item(user.loc)
+						user.mind.tat_apply_special_item_sale_lock(item, I)
 						user.put_in_hands(I)
 						if(!LI?.triumph_cost)
 							I.special_item = TRUE
-							I.smeltresult = /obj/item/ash
-							I.salvage_result = /obj/item/ash
+							I.smeltresult = /obj/item/natural/ash
+							I.salvage_result = /obj/item/natural/ash
 						var/list/metadata = user.mind.special_items_metadata[base_name]
 						if(islist(metadata))
 							I.apply_loadout_color_metadata(metadata) // TA EDIT

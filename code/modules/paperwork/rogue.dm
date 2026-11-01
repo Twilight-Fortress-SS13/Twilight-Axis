@@ -270,7 +270,7 @@
 
 /obj/item/paper/inqslip/accusation
 	name = "accusation"
-	desc = "A writ of religious suspicion, printed on Otavan parchment: one signed not in ink, but blood. Contrary to the name, these writs - while primarly used to request haemological investigations - can also be used to simply catalogue the blood of others. </br>Fold and seal it, it's only proper."
+	desc = "A writ of religious suspicion, printed on Otavan parchment: one signed not in ink, but blood. Contrary to the name, these writs - while primarily used to request haemological investigations - can also be used to simply catalogue the blood of others. </br>Fold and seal it, it's only proper."
 	marquevalue = 4
 	sliptype = 0
 
@@ -306,7 +306,7 @@
 /obj/item/paper/inqslip/arrival/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("SLIPS are used by the Holy Psydonic Inquisition to ascertain how many members of a SECT are present, and - in turn - how much funding the SECT should receive.")
-	. += span_info("Left click yourself, while bleeding fron anywhere on the body, to sign the SLIP.")
+	. += span_info("Left click yourself, while bleeding from anywhere on the body, to sign the SLIP.")
 	. += span_info("Once signed, left-clicking the SLIP will fold it into a letter. This letter can then be mailed to Otava through the HERMES.")
 	. += span_info("Stamping a folded letter with redtallow will increase the amount of MARQUES that're rewarded upon mailage.")
 	. += span_info("Successfully mailing a SLIP will reward the sender with MARQUES. The amount of rewarded MARQUES increases, depending on whether you're an Orthodoxist, Absolver, or Inquisitor.")
@@ -321,15 +321,7 @@
 	marquevalue = 16 //Ditto.
 
 /obj/item/paper/inqslip/proc/attemptsign(mob/living/carbon/human/target, mob/living/carbon/human/user)
-	if(sliptype == 2)
-		if(!paired)
-			return
-		if(paired.subject != target)
-			to_chat(user, span_warning("Why am I trying to make them sign this with the wrong [paired] paired with it?"))
-			return
-		if(alert(target, "SIGN THE CONFESSION?", "CONFIRM OR DENY", "YES", "NO") == "NO")
-			return
-	else if(!alert(target, "SIGN THE SLIP?", "CONFIRM OR DENY", "YES", "NO") == "NO")
+	if(alert(target, "SIGN THE [(sliptype == 2) ? "CONFESSION" : "SLIP"]?", "CONFIRM OR DENY", "YES", "NO") == "NO")
 		return
 	signed = TRUE
 	signee = target
@@ -352,15 +344,10 @@
 	if(!target.get_bleed_rate())
 		to_chat(user, span_warning("It must be signed in blood."))
 		return
-	if(sliptype == 1)
-		if(signee == target)
-			attemptsign(user)
-		else
-			to_chat(user, span_warning("This slip isn't meant for me."))
-	else if(!sliptype)
-		attemptsign(user)
-	else
-		attemptsign(target, user)
+	if(sliptype == 1 && signee != target)
+		to_chat(user, span_warning("This slip isn't meant for me."))
+		return
+	attemptsign(target)
 
 /obj/item/paper/inqslip/attack_self(mob/user)
 	if(waxed)

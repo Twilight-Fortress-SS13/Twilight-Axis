@@ -1,5 +1,0 @@
-author: "SmthAwfl"
-delete-after: True
-changes:
-  - bugfix: "AI-controlled simple animals now glide at their actual step cadence instead of a hardcoded value, so slowed or wounded animals no longer stutter"
-  - bugfix: "ghost slide speed now always matches its movement rate, including admin/eye ghosts and after mid-round fps changes"

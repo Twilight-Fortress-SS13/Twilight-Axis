@@ -24,7 +24,7 @@
 
 /obj/machinery/light/rogue/get_mechanics_examine(mob/user)
 	. = ..()
-	. += span_info("If extinguished, this can be rekindled by left-clicking it with a torch, lamptern, flint, or any other source of ignition. In a pinch, the sparks that're born from sharpening bladed weapons and hitting stones together can suffice.")
+	. += span_info("If extinguished, this can be rekindled by left-clicking it with a torch, lamptern, flint, or other ignition source. In a pinch, the sparks that're born from sharpening bladed weapons and hitting stones together can suffice.")
 
 /obj/machinery/light/rogue/firebowl/CanPass(atom/movable/mover, turf/target)
 	if(istype(mover) && (mover.pass_flags & PASSTABLE))
@@ -400,7 +400,7 @@
 
 /obj/machinery/light/rogue/chand
 	name = "chandelier"
-	desc = "A dazzling and resplendant array of candles held aloft by a dozen slender metal arms joined together and suspended from the ceiling."
+	desc = "A dazzling and resplendent array of candles held aloft by a dozen slender metal arms joined together and suspended from the ceiling."
 	icon_state = "chand1"
 	base_state = "chand"
 	icon = 'icons/roguetown/misc/tallwide.dmi'
@@ -504,6 +504,11 @@
 /obj/machinery/light/rogue/hearth/attackby(obj/item/W, mob/living/user, params)
 	if(!attachment)
 		if(istype(W, /obj/item/cooking/pan) || istype(W, /obj/item/reagent_containers/glass/bucket/pot))
+			// TA eddit start - check crafting for turnin (important for pig-spit)
+			if(locate(/obj/structure/pig_spit) in loc)
+				to_chat(user, span_warning("The roasting spit is in the way."))
+				return TRUE
+			// TA eddit start - check crafting for turnin (important for pig-spit)
 			playsound(get_turf(user), 'sound/foley/dropsound/shovel_drop.ogg', 40, TRUE, -1)
 			attachment = W
 			user.doUnEquip(W)
@@ -601,6 +606,7 @@
 			return TRUE
 
 /obj/machinery/light/rogue/hearth/process()
+	ta_burn_mobs_on_tile() // TA EDIT
 	if(isopenturf(loc))
 		var/turf/open/O = loc
 		if(IS_WET_OPEN_TURF(O))
@@ -760,7 +766,7 @@
 /obj/machinery/light/rogue/campfire/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Resting by a campfire gradually restores energy and stamina, while also healing wounds and dislocations. Sleeping next to a campfire further enhances the boons of a good nite's rest.")
-	. += span_info("If the fire is gone, then it may have simply ran out of fuel as well. Left-click it with something flammable, such as a book or stick, before rekindling to keep yourself warm.")
+	. += span_info("If the fire is gone, then it may have simply run out of fuel as well. Left-click it with something flammable, such as a book or stick, before rekindling to keep yourself warm.")
 	. += span_info("You can place a kettle on the campfire to boil liquids or prepare stews. <b>Middle-Click</b> removes it.")
 
 /obj/machinery/light/rogue/campfire/examine(mob/user)
@@ -792,6 +798,11 @@
 /obj/machinery/light/rogue/campfire/attackby(obj/item/W, mob/living/user, params)
 	if(!attachment)
 		if(istype(W, /obj/item/reagent_containers/glass/bucket/pot/kettle))
+			// TA eddit start - check crafting for turnin (important for pig-spit)
+			if(locate(/obj/structure/pig_spit) in loc)
+				to_chat(user, span_warning("The roasting spit is in the way."))
+				return TRUE
+			// TA eddit start - check crafting for turnin (important for pig-spit)
 			playsound(get_turf(user), 'sound/foley/dropsound/shovel_drop.ogg', 40, TRUE, -1)
 			attachment = W
 			user.doUnEquip(W)

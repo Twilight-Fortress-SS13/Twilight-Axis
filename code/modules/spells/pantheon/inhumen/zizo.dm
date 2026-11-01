@@ -284,7 +284,7 @@
 	if(QDELETED(src))
 		return
 	visible_message(span_purple("[src] crumbles into dust..."), span_purple("[src] crumbles into dust..."))
-	new /obj/item/ash(get_turf(src))
+	new /obj/item/natural/ash(get_turf(src))
 	qdel(src)
 
 /obj/projectile/magic/profane
@@ -376,7 +376,6 @@
 	summons_per_cast = 1
 	summon_replace_mode = CONJURE_SUMMON_SINGLES
 
-	recoil_energy_floor = 500
 	recoil_severity = CONJURE_RECOIL_PARTIAL
 	reclaim_recoil = TRUE
 
@@ -452,7 +451,7 @@
 /datum/action/cooldown/spell/zizo/bestowcant
 	name = "Bestow Zizocant"
 	desc = "Bestow the forbidden tongue of Zizo's chant, requires a semi-lengthy ritual and a fellow Cabalist of Zizo's faith. You must remain still during the ritual."
-	fluff_desc = "A tongue known to the initated of Zizo's Cabal, as well as the reanimated by those whom serve in her name. To the ignorant it is but gibberish with an eerie resemblance to the elven tongue; but to the enlightened it is a hallowed tongue reborn from the reminants of all that were lost."
+	fluff_desc = "A tongue known to the initiated of Zizo's Cabal, as well as the reanimated by those whom serve in her name. To the ignorant it is but gibberish with an eerie resemblance to the elven tongue; but to the enlightened it is a hallowed tongue reborn from the remnants of all that were lost."
 	button_icon_state = "zizocant"
 	sound = 'sound/magic/baotha_blessdrink.ogg'
 	glow_intensity = GLOW_INTENSITY_LOW
@@ -491,7 +490,7 @@
 
 	if(spelltarget != H && HAS_TRAIT(spelltarget, TRAIT_CABAL))
 		to_chat(H, span_warning("I bestow Zizo's sacred tongue upon [spelltarget]!"))
-		to_chat(spelltarget, span_warning("A strange chant settles into familarity in my mind. I can use ,W to speak Zizo's tongue, however its best I do so carefully as to not draw attention."))
+		to_chat(spelltarget, span_warning("A strange chant settles into familiarity in my mind. I can use ,W to speak Zizo's tongue, however its best I do so carefully as to not draw attention."))
 		spelltarget.grant_language(/datum/language/undead)
 	return TRUE
 
@@ -563,14 +562,31 @@
 		anti_spam = FALSE
 		return TRUE
 
-	ADD_TRAIT(user, TRAIT_ARCYNE, "[type]")
-
-	if(user.mind?.has_antag_datum(/datum/antagonist/vampire))
+	//issue is without decapitation instant kills, + bugs w/ missing a head + no bloodloss, you physically can't kill them outside of gibbing/admin involvement/blessed silver.
+	if(isdullahan(user) && path_choice == "Unlife")
+		user.playsound_local(user,'sound/villain/littlescary.ogg', 10)
+		to_chat(user, "</br><i>...I don't feel anything different from attempting this... How strange..?</i>")
 		user.visible_message(span_boldwarning("[user]'s prayers are unanswered!"))
-		user.mind?.RemoveSpell(src)
-		qdel(src)
 		anti_spam = FALSE
 		return TRUE
+
+	//constructs are made of metal, what flesh to turn to faith?
+	if(isconstruct(user) && path_choice == "Unlife")
+		user.playsound_local(user,'sound/villain/littlescary.ogg', 10)
+		to_chat(user, "</br><i>...I don't feel anything different from attempting this... How strange..?</i>")
+		user.visible_message(span_boldwarning("[user]'s prayers are unanswered!"))
+		anti_spam = FALSE
+		return TRUE
+
+	//vampires are bloodloss immune + have their own healing that makes this impractical to use, not you can cast it as one.
+	if(user.mind?.has_antag_datum(/datum/antagonist/vampire))
+		user.playsound_local(user,'sound/villain/littlescary.ogg', 10)
+		to_chat(user, "</br><i>...I don't feel anything different from attempting this... How strange..?</i>")
+		user.visible_message(span_boldwarning("[user]'s prayers are unanswered!"))
+		anti_spam = FALSE
+		return TRUE
+
+	ADD_TRAIT(user, TRAIT_ARCYNE, "[type]")
 
 	switch(path_choice)
 		if("Progress")
@@ -598,7 +614,7 @@
 // Explode your summoned skeletons if you are in combat mode, or absorb them into energy if not.
 /datum/action/cooldown/spell/zizo/bone_cataclysm
 	name = "Bone Cataclysm"
-	desc = "Detonate all of your nearby skeletons in a wave of profane bone shrapnel. You and Gravemarked allies will not be harmed by it.<br><br>If used outside Combat Mode, you will disintegrate them and restore your energy."
+	desc = "Detonate all of your nearby skeletons in a wave of profane bone shrapnel. You and marked allies will not be harmed by it.<br><br>If used outside Combat Mode, you will disintegrate them and restore your energy."
 	fluff_desc = "Zizo taught her faithful that the dead must always serve twice: once in unlife, and once more when their bones are shattered in her name."
 	button_icon_state = "cataclysm"
 	click_to_activate = FALSE

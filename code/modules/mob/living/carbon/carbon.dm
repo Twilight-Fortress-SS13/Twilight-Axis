@@ -615,9 +615,10 @@
 	nausea = clamp(nausea + amt, 0, 300)
 
 /mob/living/carbon/proc/handle_nausea()
-	if(HAS_TRAIT(src, TRAIT_ROTMAN)||HAS_TRAIT(src, TRAIT_IRONMAN))
-		return TRUE
 	if(stat == DEAD)
+		return TRUE
+	if(HAS_TRAIT(src, TRAIT_ROTMAN) || HAS_TRAIT(src, TRAIT_IRONMAN) || HAS_TRAIT(src, TRAIT_DEADITE))
+		add_nausea(-1)
 		return TRUE
 	if(nausea >= 100)
 		if(mob_timers["puke"])
@@ -638,6 +639,8 @@
 
 
 /mob/living/carbon/proc/vomit(lost_nutrition = 50, blood = FALSE, stun = TRUE, distance = 1, message = TRUE, toxic = FALSE, harm = FALSE, force = FALSE)
+	if(stat == DEAD)
+		return FALSE
 	if(HAS_TRAIT(src, TRAIT_IRONMAN))
 		return TRUE
 
@@ -655,7 +658,7 @@
 
 	var/atom/movable/vomit_source = vomitrelay ? vomitrelay : src
 
-	if(nutrition <= 50 && !blood)
+	if(nutrition <= 50 && hydration <= 50 && !blood)
 		if(message)
 			emote("gag")
 		if(stun)
@@ -708,9 +711,9 @@
 	blur_eyes(10)
 
 	if(!blood)
-		if(nutrition > 50)
-			adjust_nutrition(-lost_nutrition)
-			adjust_hydration(-lost_nutrition)
+		if(nutrition > 50 || hydration > 50)
+			adjust_nutrition(-min(lost_nutrition, max(nutrition - 50, 0)))
+			adjust_hydration(-min(lost_nutrition, max(hydration - 50, 0)))
 //adjustToxLoss(-3)
 	if(harm)
 		adjustBruteLoss(3)
@@ -1256,14 +1259,14 @@
 /mob/living/carbon/extinguish_mob(itemz = TRUE)
 	if(itemz)
 		for(var/obj/item/I as anything in get_equipped_items())
-			if(I.extinguishable)
+			if(I.extinguishable && !istype(I, /obj/item/clothing/mask/cigarette))
 				I.extinguish() //extinguishes our clothes
 			I.acid_level = 0 //washes off the acid on our clothes
 		var/obj/item/I = get_active_held_item()
-		if(I && I.extinguishable)
+		if(I && I.extinguishable && !istype(I, /obj/item/clothing/mask/cigarette))
 			I.extinguish()
 		I = get_inactive_held_item()
-		if(I && I.extinguishable)
+		if(I && I.extinguishable && !istype(I, /obj/item/clothing/mask/cigarette))
 			I.extinguish()
 	..()
 

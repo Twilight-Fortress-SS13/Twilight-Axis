@@ -8,7 +8,7 @@
 		return
 
 	to_chat(src, span_notice("You press your feet to the earth, seeking the Mother's pulse..."))
-	
+
 	if(do_after(src, 1 SECONDS, target = src))
 		var/obj/structure/roguemachine/mossmother/closest_tree
 		var/min_dist = INFINITY
@@ -16,7 +16,7 @@
 
 		for(var/obj/structure/roguemachine/mossmother/tree in GLOB.hag_trees)
 			var/turf/tree_turf = get_turf(tree)
-			if(!tree_turf) 
+			if(!tree_turf)
 				continue
 
 			var/dist = get_dist_euclidean(my_turf, tree_turf)
@@ -44,3 +44,32 @@
 			src.playsound_local(src.loc, 'sound/magic/heartbeat.ogg', 75, TRUE)
 		else
 			to_chat(src, span_warning("The earth is hollow and silent. You are beyond the reach of the Mossmother."))
+
+/mob/living/carbon/human/proc/remember_fey()
+	set name = "Remember Fey"
+	set category = "RoleUnique.Hag"
+	set desc = "Remember which of your lesser kin walk these lands."
+	var/datum/component/hag_curio_tracker/HCT = src.GetComponent(/datum/component/hag_curio_tracker)
+	if(!HCT)
+		remove_verb(src, /mob/living/carbon/human/proc/remember_fey)
+		return
+	HCT.recognize_fey(ping_feytouched = FALSE)
+
+// TA ADDITION START
+/mob/living/carbon/human/proc/heavy_curse()
+	set name = "Heavy Curse Toggle"
+	set category = "RoleUnique.Hag"
+	set desc = "If enabled, cursing someone will remove all their boons"
+	var/datum/component/hag_curio_tracker/HCT = src.GetComponent(/datum/component/hag_curio_tracker)
+	if(HCT)
+		if(HCT.heavy_curse)
+			HCT.heavy_curse = FALSE
+			to_chat(src, span_purple("You will now make easy curses, that does not removes boons."))
+		else
+			HCT.heavy_curse = TRUE
+			to_chat(src, span_purple("You will now make heavy curses, that removes boons."))
+	else
+		remove_verb(src, /mob/living/carbon/human/proc/heavy_curse)
+		return
+
+// TA ADDITION END

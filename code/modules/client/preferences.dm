@@ -64,6 +64,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/datum/virtue/virtue = new /datum/virtue/none // LETHALSTONE EDIT: the virtue we get for not picking a statpack
 	var/datum/virtue/virtuetwo = new /datum/virtue/none
 	var/datum/virtue/virtue_origin = new /datum/virtue/origin/unknown
+	var/datum/quirk/quirklesser = new /datum/quirk/none
+	var/datum/quirk/quirkgreater = new /datum/quirk/none
 	var/age = AGE_ADULT						//age of character
 	var/skin_tone = "caucasian1"		//Skin color
 	var/vampire_skin = null
@@ -98,6 +100,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/joblessrole = RETURNTOLOBBY  //defaults to 1 for fewer assistants
 
 	var/clientfps = 100//0 is sync
+	var/icon/admin_ghost_icon
 
 	var/ambientocclusion = TRUE
 	var/auto_fit_viewport = FALSE
@@ -124,6 +127,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/no_redflash = FALSE
 	var/no_storyteller_events = FALSE
 	var/top_examine = FALSE
+	var/show_nsfw_clothed = FALSE
 	var/no_runechat_animation = FALSE //TA EDIT
 
 	var/lastclass
@@ -142,6 +146,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/nickname = "Please Change Me"
 	var/highlight_color = "#FF0000"
 	var/list/charflaws = list()
+	var/list/charflaw_choices = list()
 
 	var/static/default_cmusic_type = /datum/combat_music/default
 	var/datum/combat_music/combat_music
@@ -235,7 +240,6 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/preset_bounty_severity_v_key
 	var/preset_bounty_crime
 
-
 	var/averse_chosen_faction = "Inquisition"
 
 	var/datum/voicepack/temp_vp
@@ -251,10 +255,16 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	/// Whether we can see the feint HUD bar.
 	var/feint_hud = FALSE
 
+	var/datum/tat_build/tat_build
+	var/list/legacy_tat_build_data
+	var/legacy_tat_build_migrated = FALSE
+
 /datum/preferences/New(client/C)
 	parent = C
 	migrant = new /datum/migrant_pref(src)
 	familiar_prefs = new /datum/familiar_prefs(src)
+
+	tat_build = new(src)
 
 	if(istype(C))
 		if(!IsGuestKey(C.key))

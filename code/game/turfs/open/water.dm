@@ -177,11 +177,15 @@
 	/// Mobs will heavily avoid pathing through this turf if their stamina is too low.
 	var/const/LOW_STAM_PENALTY = 7 // only go through this if we'd have to go offscreen otherwise
 	. = ..()
-	if(isliving(traverser) && !HAS_TRAIT(traverser, TRAIT_INFINITE_STAMINA))
-		var/mob/living/living_traverser = traverser
-		var/remaining_stamina = (living_traverser.max_stamina - living_traverser.stamina)
-		if(remaining_stamina < get_stamina_drain(living_traverser, travel_dir)) // not enough stamina reserved to cross
-			. += LOW_STAM_PENALTY // really want to avoid this unless we don't have any better options
+	if(isliving(traverser) && is_swim_exhausting(traverser, travel_dir))
+		. += LOW_STAM_PENALTY // really want to avoid this unless we don't have any better options
+
+/turf/open/water/proc/is_swim_exhausting(mob/living/swimmer, travel_dir)
+	var/const/STAM_RESERVE_TILES = 3 // enough left over to swim back out
+	if(HAS_TRAIT(swimmer, TRAIT_INFINITE_STAMINA))
+		return FALSE
+	var/remaining_stamina = swimmer.max_stamina - swimmer.stamina
+	return remaining_stamina < get_stamina_drain(swimmer, travel_dir) * STAM_RESERVE_TILES
 
 /turf/open/water/hitby(atom/movable/AM, skipcatch, hitpush, blocked, datum/thrownthing/throwingdatum, damage_flag = "blunt")
 	..()
@@ -290,9 +294,10 @@
 				if(wash_in)
 					wash_atom(user, CLEAN_STRONG)
 					user.remove_stress(/datum/stressevent/sewertouched)
+					user.remove_stress(/datum/stressevent/unlanded_noble_bloody_equipment)
 				playsound(user, pick(wash), 100, FALSE)
-				if(istype(src,/turf/open/water/sewer) || istype(src,/turf/open/water/swamp) || istype(src, /turf/open/water/sewer))
-					if (istype(src, /turf/open/water/sewer))
+				if(istype(src,/turf/open/water/sewer) || istype(src,/turf/open/water/swamp))
+					if (istype(src, /turf/open/water/sewer) || (istype(src, /turf/open/water/swamp) && HAS_TRAIT(user, TRAIT_NOBLE_UNLANDED)))
 						user.add_stress(/datum/stressevent/sewertouched)
 					if (!HAS_TRAIT(L,TRAIT_LEECHIMMUNE) && !HAS_TRAIT(L,TRAIT_BOGWALKER)) // cleaning yourself in nasty water is a wonderful way to get leeches.
 						if (prob(20)) // 1 in 5 chance of getting leeched if you wash up in gross water.

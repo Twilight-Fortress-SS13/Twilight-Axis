@@ -348,7 +348,7 @@
 				limb.skeletonized = FALSE
 		human_target.update_body()
 	else
-		to_chat(user, span_warning("No bodyparts were attached."))
+		to_chat(user, span_warning("No body parts were attached."))
 
 	return TRUE
 
@@ -460,10 +460,10 @@
 	var/death_burst_done = FALSE
 
 /datum/status_effect/buff/infestation/on_apply()
+	if(owner.stat == DEAD)
+		return FALSE
 	. = ..()
 	var/mob/living/target = owner
-	if(owner.stat == DEAD) // infinite corpse miasma explosions are cool but not the scope here, soz!
-		qdel(src)
 	to_chat(owner, span_danger("I am suddenly surrounded by a cloud of bugs!"))
 	target.Jitter(20)
 	target.add_overlay(rotten)
@@ -474,8 +474,6 @@
 
 /datum/status_effect/buff/infestation/on_remove()
 	var/mob/living/target = owner
-	if(owner.stat == DEAD)
-		return
 	target.cut_overlay(rotten)
 	target.update_vision_cone()
 	if(!target.mind)
@@ -561,7 +559,7 @@
 // Cure rot
 /obj/effect/proc_holder/spell/invoked/cure_rot
 	name = "Cure Rot"
-	desc = "Invoke Pestras will though a Psycross to cast out rot from people or regrow their flesh."
+	desc = "Invoke Pestra's will though a Psycross to cast out rot from people or regrow their flesh."
 	overlay_icon = 'icons/mob/actions/pestraspells.dmi'
 	action_icon = 'icons/mob/actions/pestraspells.dmi'
 	overlay_state = "rot"
@@ -585,7 +583,7 @@
 	var/is_lethal = TRUE
 
 /obj/effect/proc_holder/spell/invoked/cure_rot/priest
-	desc = "Burn out the rot by Astratas will."
+	desc = "Burn out the rot by Astrata's will."
 	is_lethal = FALSE
 
 /obj/effect/proc_holder/spell/invoked/cure_rot/cast(list/targets, mob/living/user)
@@ -749,12 +747,12 @@
 			target.visible_message(span_info("[target] stirs for a moment, the miracle dissipates."), span_blue("A dull warmth swells in your heart, only to fade as quickly as it arrived."))
 			playsound(target, 'sound/magic/PSY.ogg', 100, FALSE, -1)
 			user.playsound_local(user, 'sound/magic/PSY.ogg', 100, FALSE, -1)
-			return FALSE
+			return TRUE
 		if(HAS_TRAIT(target, TRAIT_UNFORGIVABLE)) //Vhelsynites aren't affected
 			target.visible_message(span_info("[target] stirs for a moment, the miracle dissipates."), span_blue("A dull warmth passes through your hollow husk of a body, only to fade as quickly as it arrived."))
 			playsound(target, 'sound/magic/PSY.ogg', 100, FALSE, -1)
 			user.playsound_local(user, 'sound/magic/PSY.ogg', 100, FALSE, -1)
-			return FALSE
+			return TRUE
 		// Keep in mind this is 7.5 per tick with fortify!
 		// Double the power of miracle
 		var/healing = 5
@@ -808,7 +806,7 @@
 	. = ..()
 	if(isliving(targets[1]))
 		var/mob/living/target = targets[1]
-		target.visible_message(span_info("An ethereal, mushroom infested arm carresses [target]!"), span_notice("I feel a caring touch!"))
+		target.visible_message(span_info("An ethereal, mushroom infested arm caresses [target]!"), span_notice("I feel a caring touch!"))
 		target.apply_status_effect(/datum/status_effect/buff/divine_rebirth_healing)
 		SEND_SIGNAL(user, COMSIG_DIVINE_REBIRTH_CAST, target)
 		return TRUE

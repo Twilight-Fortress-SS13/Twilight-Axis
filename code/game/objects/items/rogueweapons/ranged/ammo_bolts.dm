@@ -188,7 +188,7 @@
 
 /obj/projectile/bullet/reusable/heavy_bolt
 	name = "heavy bolt"
-	damage = 90 // +20 damage over the regular bolt.
+	damage = 100 // +30 damage over the regular bolt.
 	damage_type = BRUTE
 	armor_penetration = PEN_BSTEEL
 	object_damage_multiplier = 14 //Determines the multiplier that's applied to the bolt's damage value, when striking a structure. By default, it can destroy any wooden defense - a door, barricade, wall - in one shot.
@@ -251,7 +251,7 @@
 /obj/item/ammo_casing/caseless/rogue/heavy_bolt/aalloy
 	name = "decrepit heavy bolt"
 	desc = "A length of rotted metal, quilled to take flight and tear down the living. \
-	Metal flakes occassionally peel off from its core, mysteriously hovering about - \
+	Metal flakes occasionally peel off from its core, mysteriously hovering about - \
 	tolerable by the undying, but unbearibly noxious to the living."
 	icon_state = "ancientheavybolt"
 	projectile_type = /obj/projectile/bullet/reusable/heavy_bolt/aalloy
@@ -298,7 +298,7 @@
 /obj/item/ammo_casing/caseless/rogue/bolt/silver
 	name = "silver bolt"
 	desc = "A masterworked bolt of silver, fitted to a winged rod of boswellia wood. Expensive, yet uncompromisingly lethal; the \
-	final adjucation of abberants, delivered from afar. </br>'Non timebo mala..' - '..I will fear no evil.'"
+	final adjucation of aberrants, delivered from afar. </br>'Non timebo mala..' - '..I will fear no evil.'"
 	projectile_type = /obj/projectile/bullet/reusable/bolt/silver
 	possible_item_intents = list(/datum/intent/dagger/cut, /datum/intent/dagger/thrust)
 	caliber = "regbolt"
@@ -351,14 +351,14 @@
 
 /obj/projectile/bullet/reusable/heavy_bolt/stake
 	name = "siegestake"
-	damage = 60
+	damage = 67
 	armor_penetration = PEN_BSTEEL
 	ammo_type = /obj/item/ammo_casing/caseless/rogue/heavy_bolt/stake
 	icon_state = "heavystake_proj"
 	hitsound = 'sound/combat/hits/hi_bolt (2).ogg'
 	speed = 0.8
 	poisontype = /datum/reagent/water/blessed
-	poisonamount = 6 //Deals 60 BRUTE and 30 BURN, on top of some mild afterburn.
+	poisonamount = 6 //Deals 67 BRUTE and 30 BURN, on top of some mild afterburn.
 
 /obj/item/ammo_casing/caseless/rogue/heavy_bolt/stake_silver
 	name = "silver-tipped siegestake"
@@ -375,7 +375,7 @@
 
 /obj/projectile/bullet/reusable/heavy_bolt/stake_silver
 	name = "silver-tipped siegestake"
-	damage = 70 // In essence, a lesser version of the traditional silver siegebolts.
+	damage = 78 // In essence, a lesser version of the traditional silver siegebolts.
 	armor_penetration = PEN_BSTEEL
 	ammo_type = /obj/item/ammo_casing/caseless/rogue/heavy_bolt/stake_silver
 	icon_state = "silvheavystake_proj"
@@ -383,7 +383,7 @@
 	speed = 0.6
 	is_silver_proj = TRUE
 	poisontype = /datum/reagent/water/blessed
-	poisonamount = 4 //Deals 70 BRUTE and 40 BURN, on top of some mild afterburn.
+	poisonamount = 4 //Deals 78 BRUTE and 40 BURN, on top of some mild afterburn.
 
 //
 

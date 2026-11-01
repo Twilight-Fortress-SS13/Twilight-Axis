@@ -274,7 +274,7 @@
 		ensnare(target)
 
 /obj/projectile/magic/unholy_grasp/proc/ensnare(mob/living/carbon/carbon)
-	carbon.visible_message(span_warning("[src] ensnares [carbon] around their legs in a horrid cacophany of blood and guts!"), span_warning("I AM ENCAPTURED BY BLOOD AND GUTS! THERES A NET ON MY LEGS!"))
+	carbon.visible_message(span_warning("[src] ensnares [carbon] around their legs in a horrid cacophany of blood and guts!"), span_warning("I AM ENTRAPPED BY BLOOD AND GUTS! THERE'S A NET ON MY LEGS!"))
 	carbon.apply_status_effect(/datum/status_effect/debuff/netted/vile)
 	playsound(src, 'sound/combat/caught.ogg', 20, TRUE)
 
@@ -300,7 +300,10 @@
 	invocations = list("REND AND TEAR! TIL NAUGHT BUT RED REMAINS!!")
 	invocation_type = INVOCATION_SHOUT
 
-	charge_required = FALSE
+	charge_required = TRUE
+	charge_time = 1 SECONDS
+	charge_slowdown = 1
+	charge_swingdelay_type = SWINGDELAY_PENALTY
 	cooldown_time = 5 MINUTES
 
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z

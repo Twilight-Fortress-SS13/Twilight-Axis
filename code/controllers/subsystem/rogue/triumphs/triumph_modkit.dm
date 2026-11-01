@@ -59,6 +59,7 @@
 	result_item = null
 	exact_type = TRUE
 	custom_name = TRUE
+	icon_loadout = /obj/item/clothing/suit/roguetown/armor/brigandine/heavy/triumph
 
 /obj/item/enchantingkit/triumph_armorkit_drow
 	name = "'Drowcraft Armor' morphing elixir"
@@ -505,6 +506,9 @@
 // Handles Triumph-specific variants of the items in enchanting_examples.dm. Refer to that file for more detailed instructions and up-to-date examples.
 // In essence, it works like a 'reskin' that specifically changes the icon, name, and description (without having to further alter any mechanical details.)
 
+/obj/item/rogueweapon/example
+	gripsprite = TRUE
+
 /obj/item/rogueweapon/example/valorian_sword
 	name = "valorian sword"
 	desc = "A modest take on a mythical design, hailing from the blood-splattered crossroads \
@@ -610,7 +614,7 @@
 	name = "anointed longsword"
 	icon = 'icons/roguetown/weapons/swords64.dmi'
 	desc = "A cleric's longsword, adorned with a blade of cold iron and blessed to smite evil. Though this blessed alloy lacks the strength to \
-	sunder those who bare greater curses, it nevertheless channels enough power to dispell the lesser curses of mindless fiends-and-foes. </br>'Strike \
+	sunder those who bare greater curses, it nevertheless channels enough power to dispel the lesser curses of mindless fiends-and-foes. </br>'Strike \
 	true, my child, for thy blade is thine God..'"
 	icon_state = "crusaderlongsword"
 	sheathe_icon = "crusaderlongsword"
@@ -733,7 +737,7 @@
 	name = "valorian psycrucific longsword"
 	desc = "A lethal and perfectly balanced weapon, the longsword is the protagonist of endless tales and myths \
 	all across Psydonia. This particular variant has a psycruciformed crossguard; a masterwork, held in silent \
-	reverance by those who've vowed to never forget the ultimate sacrifice."
+	reverence by those who've vowed to never forget the ultimate sacrifice."
 	icon_state = "longsword_psycrucifix"
 	sheathe_icon = "opsysword"
 
@@ -742,7 +746,7 @@
 	icon = 'icons/roguetown/weapons/64.dmi'
 	desc = "A lethal and perfectly balanced weapon, the longsword is the protagonist of endless tales and myths \
 	all across Psydonia. This silvered variant has a psycruciformed crossguard; a masterwork, held in silent \
-	reverance by those who've vowed to never forget the ultimate sacrifice."
+	reverence by those who've vowed to never forget the ultimate sacrifice."
 	icon_state = "longsword_psycrucifix"
 	sheathe_icon = "opsysword"
 
@@ -764,7 +768,7 @@
 	icon = 'icons/roguetown/weapons/64.dmi'
 	desc = "A lethal and perfectly balanced weapon, the longsword is the protagonist of endless tales and myths \
 	all across Psydonia. This silvered variant has a psycruciformed crossguard; a masterwork, held in silent \
-	reverance by those who've vowed to never forget the ultimate sacrifice."
+	reverence by those who've vowed to never forget the ultimate sacrifice."
 	icon_state = "longsword_psycrucifix"
 	sheathe_icon = "opsysword"
 
@@ -1094,7 +1098,7 @@
 
 /obj/item/clothing/suit/roguetown/armor/plate/full/fluted/legacy
 	name = "valorian fluted plate armor"
-	desc = "A resplendant set of steel plate armor, decorated with silver flutings. Blessed dreamer, accursed heathen, lowly \
+	desc = "A resplendent set of steel plate armor, decorated with silver flutings. Blessed dreamer, accursed heathen, lowly \
 	fool; the curtain call is a mere heartbeat away. Are you ready for one last dance, before midnight calls?"
 	icon_state = "legacyornateplate"
 	item_state = "legacyornateplate"
@@ -1223,3 +1227,23 @@
 	desc = "A brigandine cuirass covered with an additional layer of plate armor. </br><i>'Henry's \
 	come to see us!'</i>"
 	icon_state = "heavybrig"
+
+/obj/item/enchantingkit/triumph_armorkini_steel
+	name = "'Steel Full Plate Corslet' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can restore the original appearance of a Steel Cuirass, a Steel Halfplate, a set of Steel Plate Armor, or a set of Fluted Plate Armor."
+	target_items = list(
+		/obj/item/clothing/suit/roguetown/armor/plate/full					= /obj/item/clothing/suit/roguetown/armor/plate/full/corslet,
+		)
+	result_item = null
+	exact_type = TRUE
+	custom_name = TRUE
+
+/obj/item/enchantingkit/triumph_armorkini_iron
+	name = "'Iron Full Plate Corslet' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can restore the original appearance of an Iron Plate Armor."
+	target_items = list(
+		/obj/item/clothing/suit/roguetown/armor/plate/full/iron					= /obj/item/clothing/suit/roguetown/armor/plate/full/iron/corslet,
+		)
+	result_item = null
+	custom_name = TRUE
+

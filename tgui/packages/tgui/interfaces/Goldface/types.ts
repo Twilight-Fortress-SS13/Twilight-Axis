@@ -164,6 +164,12 @@ export type FavorLedgerEntry = {
   refunded_hail: BooleanLike;
 };
 
+export type SendForRealm = {
+  id: string;
+  name: string;
+  available: BooleanLike;
+};
+
 export type FavorData = {
   current: number;
   high_water: number;
@@ -179,6 +185,9 @@ export type FavorData = {
   auto_hailer_cost: number;
   auto_hailer_unlocked: BooleanLike;
   auto_hailer_on: BooleanLike;
+  send_for_ship_cost: number;
+  send_for_ship_used_today: BooleanLike;
+  send_for_realms: SendForRealm[];
   brackets: number[];
   from_sendoffs: number;
   from_navigator: number;

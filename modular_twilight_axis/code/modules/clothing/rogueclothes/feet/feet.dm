@@ -98,3 +98,26 @@
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/boots.dmi'
 	icon_state = "legionboots"
 	item_state = "legionboots"
+
+/obj/item/clothing/shoes/roguetown/boots/elven_boots/druidic
+	allowed_race = null
+	name = "blessed druid boots"
+	desc = "Living-wood boots hallowed by the Treefather."
+	armor = ARMOR_BLACKOAK
+	max_integrity = ARMOR_INT_SIDE_IRON
+
+/obj/item/clothing/shoes/roguetown/boots/elven_boots/druidic/Initialize(mapload)
+	. = ..()
+	set_light(1, 1, 2, l_color = "#58C86A")
+	add_filter("druid_blessed_glow", 2, list("type" = "outline", "color" = "#58C86A", "alpha" = 95, "size" = 1))
+
+/obj/item/clothing/shoes/roguetown/boots/elven_boots/druidic/pickup(mob/user)
+	. = ..()
+	if(!istype(user, /mob/living/carbon/human))
+		return
+	var/mob/living/carbon/human/H = user
+	if(H.patron?.type == /datum/patron/divine/dendor)
+		return
+	H.electrocute_act(30, src)
+	H.mob_timers["kneestinger"] = world.time
+	to_chat(H, span_warning("[name] rejects my grasp — only the Treefather's faithful may bear such a gift!"))

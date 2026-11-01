@@ -105,7 +105,6 @@
 						new_origin = pick(/datum/virtue/origin/raneshen, /datum/virtue/origin/naledi, /datum/virtue/origin/zybantian)
 					var/datum/virtue/origin/applied_origin = new new_origin()
 					player.prefs.virtue_origin = applied_origin
-					apply_virtue(H, applied_origin)
 
 /datum/outfit/job/roguetown/sultan
 	neck = /obj/item/storage/belt/rogue/pouch/coins/rich

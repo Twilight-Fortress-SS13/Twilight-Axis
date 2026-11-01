@@ -124,6 +124,10 @@
 #define SUNLIGHTING_PLANE 16
 #define SUNLIGHTING_RENDER_TARGET "*SUNLIGHT_PLANE"
 
+/// Whitening stage between the packed sun mask and the sunlight fullscreen
+#define SUNLIGHT_WHITENED_PLANE 12
+#define SUNLIGHT_WHITENED_RENDER_TARGET "*SUNLIGHT_WHITENED_PLANE"
+
 #define LIGHTING_PLANE 17
 #define LIGHTING_LAYER 15 //15
 

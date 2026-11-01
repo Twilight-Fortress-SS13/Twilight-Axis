@@ -54,7 +54,7 @@
 #define STANDING_ORDER_POP_SCALE_PER_PLAYER 0
 #define STANDING_ORDER_POP_SCALE_MAX 3.0
 
-#define STANDING_ORDER_BASE_BONUS 1.0
+#define STANDING_ORDER_BASE_BONUS 1.5
 
 // Scarcity bonus: boosts order PAYOUT (never required quantity) below reference pop, ramping
 // linearly up to +MAX_BONUS at pop 0. Crown income only, no player-side cut.
@@ -87,6 +87,11 @@
 #define STOCKPILE_AUTO_LIMIT_DAYS 2
 #define STOCKPILE_LIMIT_MIN 5
 #define STOCKPILE_LIMIT_MAX 40
+#define STOCKPILE_LIMIT_MANUAL_MAX 9999
+#define STEWARD_POLICY_EXPORT_VERSION 1
+#define STEWARD_POLICY_IMPORT_MAX_LEN 16384
+#define STEWARD_POLICY_WINDOW_WIDTH 900
+#define STEWARD_POLICY_WINDOW_HEIGHT 700
 
 // Buying the same import = escalating price
 #define CROWN_IMPORT_ELASTICITY 0.25

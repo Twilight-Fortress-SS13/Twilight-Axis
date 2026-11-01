@@ -110,6 +110,9 @@ SUBSYSTEM_DEF(ticker)
 /datum/controller/subsystem/ticker/Initialize(timeofday)
 	load_mode()
 
+	if(CONFIG_GET(flag/autostart))
+		start_immediately = TRUE
+
 	var/list/byond_sound_formats = list(
 		"mid"  = TRUE,
 		"midi" = TRUE,
@@ -159,6 +162,7 @@ SUBSYSTEM_DEF(ticker)
 				continue
 		music -= S
 
+	login_music = pick('sound/music/title.ogg', 'sound/music/title2.ogg', 'modular_twilight_axis/sound/music/title3.ogg', 'modular_twilight_axis/sound/music/title4.ogg', 'modular_twilight_axis/sound/music/title5.ogg')
 	if(isemptylist(music))
 		music = world.file2list(ROUND_START_MUSIC_LIST, "\n")
 		if(length(music))
@@ -166,7 +170,6 @@ SUBSYSTEM_DEF(ticker)
 	else
 		login_music = "[global.config.directory]/title_music/sounds/[pick(music)]"
 
-	login_music = pick('sound/music/title.ogg', 'sound/music/title2.ogg', 'modular_twilight_axis/sound/music/title3.ogg', 'modular_twilight_axis/sound/music/title4.ogg', 'modular_twilight_axis/sound/music/title5.ogg')
 
 	if(!GLOB.syndicate_code_phrase)
 		GLOB.syndicate_code_phrase	= generate_code_phrase(return_list=TRUE)
@@ -527,10 +530,10 @@ SUBSYSTEM_DEF(ticker)
 	for(var/i in GLOB.new_player_list)
 		var/mob/dead/new_player/player = i
 		if(!player)
-			message_admins("THERES A FUCKING NULL IN THE NEW_PLAYER_LIST, REPORT IT TO AZURE DEVELOPMENT STAFF NOW!")
+			message_admins("THERE'S A FUCKING NULL IN THE NEW_PLAYER_LIST, REPORT IT TO AZURE DEVELOPMENT STAFF NOW!")
 			continue
 		if(!player.mind)
-			message_admins("THERES A MIND LACKING PLAYER IN THE NEW_PLAYER_LIST, REPORT IT TO AZURE DEVELOPMENT STAFF NOW!")
+			message_admins("THERE'S A MIND LACKING PLAYER IN THE NEW_PLAYER_LIST, REPORT IT TO AZURE DEVELOPMENT STAFF NOW!")
 			continue
 		if(player.ready == PLAYER_READY_TO_PLAY)
 			GLOB.joined_player_list += player.ckey

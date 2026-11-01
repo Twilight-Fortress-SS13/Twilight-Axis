@@ -169,6 +169,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["combat_toggles"]		>> combat_toggles
 	S["ghost_toggles"]		>> ghost_toggles
 	S["admin_chat_toggles"]	>> admin_chat_toggles
+	S["admin_ghost_icon"]	>> admin_ghost_icon
 	S["clientfps"]			>> clientfps
 	S["ambientocclusion"]	>> ambientocclusion
 	S["auto_fit_viewport"]	>> auto_fit_viewport
@@ -186,6 +187,11 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["erp_kink_prefs"] >> erp_kink_prefs
 	S["erp_organ_sensitivity"] >> erp_organ_prefs
 	// TA Addition end - new ERP SYSTEM
+	S["tat_build_migrated_to_character"] >> legacy_tat_build_migrated
+	S["tat_build"] >> legacy_tat_build_data
+
+	if(!tat_build)
+		tat_build = new(src)
 
 	//try to fix any outdated data if necessary
 	if(needs_update >= 0)
@@ -193,6 +199,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	//Sanitize
 	sanitize_preferences()
+	legacy_tat_build_migrated = sanitize_integer(legacy_tat_build_migrated, FALSE, TRUE, FALSE)
+	legacy_tat_build_data = legacy_tat_build_migrated ? null : sanitize_islist(legacy_tat_build_data, null)
 	S["ccg_known_rare_cards"] >> ccg_known_rare_cards
 	ccg_known_rare_cards = SANITIZE_LIST(ccg_known_rare_cards)
 	S["ccg_selected_deck"] >> ccg_selected_deck
@@ -257,6 +265,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	combat_toggles		= sanitize_integer(combat_toggles, 0, INFINITY, initial(combat_toggles))
 	ghost_toggles		= sanitize_integer(ghost_toggles, 0, INFINITY, initial(ghost_toggles))
 	admin_chat_toggles	= sanitize_integer(admin_chat_toggles, 0, INFINITY, initial(admin_chat_toggles))
+	if(admin_ghost_icon && !isicon(admin_ghost_icon))
+		admin_ghost_icon = null
 	chat_toggles		= sanitize_integer(chat_toggles, 0, INFINITY, initial(chat_toggles))
 	clientfps			= sanitize_integer(clientfps, 0, 1000, initial(clientfps))
 	musicvol			= sanitize_integer(musicvol, 0, 100, initial(musicvol))
@@ -284,7 +294,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	sanitize_erp_organ_prefs()
 
 	// etc
-	asaycolor			= sanitize_ooccolor(sanitize_hexcolor(asaycolor, 6, TRUE, initial(asaycolor)))
+	asaycolor			= sanitize_hexcolor(asaycolor, 6, TRUE, initial(asaycolor)) // TA EDIT
 	lastchangelog		= sanitize_text(lastchangelog, initial(lastchangelog))
 	preferred_ui_language = sanitize_preferred_ui_language(preferred_ui_language)
 	preferred_map		= sanitize_text(preferred_map, initial(preferred_map))
@@ -386,6 +396,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["combat_toggles"], combat_toggles)
 	WRITE_FILE(S["ghost_toggles"], ghost_toggles)
 	WRITE_FILE(S["admin_chat_toggles"], admin_chat_toggles)
+	WRITE_FILE(S["admin_ghost_icon"], admin_ghost_icon)
 	WRITE_FILE(S["clientfps"], clientfps)
 	WRITE_FILE(S["ambientocclusion"], ambientocclusion)
 	WRITE_FILE(S["auto_fit_viewport"], auto_fit_viewport)
@@ -402,6 +413,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["erp_kink_prefs"], erp_kink_prefs)
 	WRITE_FILE(S["erp_organ_sensitivity"], erp_organ_prefs)
 	// TA Addition end - new ERP SYSTEM
+	WRITE_FILE(S["tat_build_migrated_to_character"], legacy_tat_build_migrated)
 	return TRUE
 
 
@@ -439,6 +451,19 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	if(!LAZYLEN(charflaws))
 		charflaws = list(/datum/charflaw/noflaw)
 
+/datum/preferences/proc/validate_charflaw_choices() // TA EDIT
+	for(var/cf_type in charflaw_choices) // TA EDIT
+		var/datum/charflaw/cf = GLOB.character_flaws_singletons[cf_type] // TA EDIT
+		var/list/picked = charflaw_choices[cf_type] // TA EDIT
+		if(!cf || !islist(picked) || !(cf_type in charflaws)) // TA EDIT
+			charflaw_choices -= cf_type // TA EDIT
+			continue // TA EDIT
+		for(var/choice in picked) // TA EDIT
+			if(!(choice in cf.extra_choices)) // TA EDIT
+				picked -= choice // TA EDIT
+		if(length(picked) > cf.max_choices) // TA EDIT
+			picked.Cut(cf.max_choices + 1) // TA EDIT
+
 /datum/preferences/proc/_load_culinary_preferences(S)
 	S["favorite_cuisine"] >> favorite_cuisine
 	S["favorite_dish"] >> favorite_dish
@@ -464,13 +489,15 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		S[choices_key] >> choices
 	return copy_virtue_choices(choices)
 
-/datum/preferences/proc/normalize_saved_virtue(saved_value, savefile/S, choices_key)
+/datum/preferences/proc/normalize_saved_virtue(saved_value, savefile/S, choices_key, legacy_choices_key = null)
 	var/virtue_type = /datum/virtue/none
 	var/list/choices = list()
 
 	if(ispath(saved_value, /datum/virtue))
 		virtue_type = saved_value
 		choices = get_saved_virtue_choices(S, choices_key)
+		if(!length(choices) && legacy_choices_key)
+			choices = get_saved_virtue_choices(S, legacy_choices_key)
 	else if(istype(saved_value, /datum/virtue))
 		var/datum/virtue/loaded_virtue = saved_value
 		if(ispath(loaded_virtue.type, /datum/virtue))
@@ -531,12 +558,21 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	var/saved_virtue_type
 	var/saved_virtuetwo_type
 	var/saved_origin_type
+	var/legacy_virtue_type
+	var/legacy_virtuetwo_type
 	S["virtue"] >> saved_virtue_type
 	S["virtuetwo"] >> saved_virtuetwo_type
 	S["virtue_origin"] >> saved_origin_type
+	S["virtue_type"] >> legacy_virtue_type
+	S["virtuetwo_type"] >> legacy_virtuetwo_type
 
-	var/list/virtue_data = normalize_saved_virtue(saved_virtue_type, S, "virtue_choices")
-	var/list/virtuetwo_data = normalize_saved_virtue(saved_virtuetwo_type, S, "virtuetwo_choices")
+	if(!saved_virtue_type && legacy_virtue_type)
+		saved_virtue_type = legacy_virtue_type
+	if(!saved_virtuetwo_type && legacy_virtuetwo_type)
+		saved_virtuetwo_type = legacy_virtuetwo_type
+
+	var/list/virtue_data = normalize_saved_virtue(saved_virtue_type, S, "virtue_choices", "virtue_picked_choices")
+	var/list/virtuetwo_data = normalize_saved_virtue(saved_virtuetwo_type, S, "virtuetwo_choices", "virtuetwo_picked_choices")
 	var/list/origin_data = normalize_saved_virtue(saved_origin_type, S, "virtue_origin_choices")
 
 	// Upstream migration: "Second Voice" was renamed to "Alter Ego".
@@ -603,6 +639,29 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	if(!length(ccg_saved_deck_cards) && length(ccg_selected_deck))
 		ccg_saved_deck_cards = ccg_selected_deck.Copy()
 	ccg_load_or_migrate_sql()
+
+/datum/preferences/proc/_load_quirk(S)
+	var/quirklesser_type
+	var/quirkgreater_type
+	S["quirklesser"] >> quirklesser_type
+	S["quirkgreater"] >> quirkgreater_type
+
+	if(!quirklesser_type)
+		quirklesser_type = /datum/quirk/none
+	if(!quirkgreater_type)
+		quirkgreater_type = /datum/quirk/none
+
+	if(ispath(quirklesser_type, /datum/quirk))
+		var/datum/quirk/lesserpath = quirklesser_type
+		QDEL_NULL(quirklesser)
+		if(!lesserpath::greater) // juuuust in case something gets retroactively maid greater, or someone messes with the savefiles
+			quirklesser = new quirklesser_type
+		else
+			quirklesser = new /datum/quirk/none
+
+	if(ispath(quirkgreater_type, /datum/quirk))
+		QDEL_NULL(quirkgreater)
+		quirkgreater = new quirkgreater_type
 
 /datum/preferences/proc/_load_gear_list(savefile/S)
 	var/list/saved_gear_list
@@ -732,6 +791,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	_load_species(S)
 
 	_load_virtue(S)
+	_load_quirk(S)
 	_load_flaw(S)
 
 	_load_culinary_preferences(S)
@@ -741,6 +801,13 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	_load_loadout(S)
 	_load_gear_list(S)
+	loadout_subscription_tier = 0 // TA EDIT
+	S["loadout_subscription_tier"] >> loadout_subscription_tier // TA EDIT
+	loadout_subscription_tier = sanitize_integer(loadout_subscription_tier, 0, 5, 0) // TA EDIT
+	if(GLOB.PatreonsLoaded && parent?.mob?.ckey) // TA EDIT
+		sanitize_subscription_loadout(parent.mob) // TA EDIT
+		WRITE_FILE(S["gear_list"], gear_list) // TA EDIT
+		WRITE_FILE(S["loadout_subscription_tier"], loadout_subscription_tier) // TA EDIT
 
 	_load_combat_music(S)
 
@@ -756,6 +823,12 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		selected_patron = GLOB.patronlist[default_patron]
 		if(selected_patron)
 			WRITE_FILE(S["selected_patron"], selected_patron.type) // TA EDIT END
+
+	var/list/tat_character_data
+	S["tat_build"] >> tat_character_data
+	if(!tat_build)
+		tat_build = new(src)
+	tat_build.load_tat_slots_state_from_list(tat_character_data, legacy_tat_build_data)
 
 	S["have_manor"] >> have_manor  //TA EDIT
 	S["manor_name"] >> manor_name  //TA EDIT
@@ -809,9 +882,11 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["rumour"]					>> rumour
 	S["noble_gossip"]			>> noble_gossip
 	S["averse_chosen_faction"]	>> averse_chosen_faction
+	S["charflaw_choices"] >> charflaw_choices // TA EDIT
 	S["song_artist"]				>> song_artist
 	S["song_title"]				>> song_title
 	S["nsfwflavortext"]			>> nsfwflavortext
+	S["show_nsfw_clothed"]		>> show_nsfw_clothed
 	S["nsfw_ooc_extra_img"]		>> nsfw_ooc_extra_img
 	S["nsfw_ooc_extra_img_link"]	>> nsfw_ooc_extra_img_link
 	if(!valid_headshot_link(null, nsfw_ooc_extra_img_link, FALSE, list("jpg", "jpeg", "png", "gif", "mp4")))
@@ -944,6 +1019,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	descriptor_entries = SANITIZE_LIST(descriptor_entries)
 	custom_descriptors = SANITIZE_LIST(custom_descriptors)
 	validate_descriptors()
+	charflaw_choices = SANITIZE_LIST(charflaw_choices) // TA EDIT
+	validate_charflaw_choices() // TA EDIT
 
 	var/list/valid_skin_tones = pref_species.get_skin_list()
 	var/list/valid_skin_colors = list()
@@ -988,7 +1065,6 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		var/slot_num = job_characters[job_title]
 		if(!isnum(slot_num) || slot_num < 1 || slot_num > max_save_slots)
 			job_characters -= job_title //TA EDIT END
-
 	if(!islist(job_subclass_preferences)) // TA EDIT START
 		job_subclass_preferences = list()
 	if(!islist(job_subclass_strict))
@@ -1013,6 +1089,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 			job_subclass_strict[job_title] = sanitize_integer(job_subclass_strict[job_title], FALSE, TRUE, FALSE)
 			if(!job_subclass_strict[job_title])
 				job_subclass_strict -= job_title // TA EDIT END
+
 
 	if(!islist(job_subprefs))
 		job_subprefs = list()
@@ -1121,12 +1198,21 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	var/saved_virtue_type
 	var/saved_virtuetwo_type
 	var/saved_origin_type
+	var/legacy_virtue_type
+	var/legacy_virtuetwo_type
 	S["virtue"] >> saved_virtue_type
 	S["virtuetwo"] >> saved_virtuetwo_type
 	S["virtue_origin"] >> saved_origin_type
+	S["virtue_type"] >> legacy_virtue_type
+	S["virtuetwo_type"] >> legacy_virtuetwo_type
 
-	var/list/virtue_data = normalize_saved_virtue(saved_virtue_type, S, "virtue_choices")
-	var/list/virtuetwo_data = normalize_saved_virtue(saved_virtuetwo_type, S, "virtuetwo_choices")
+	if(!saved_virtue_type && legacy_virtue_type)
+		saved_virtue_type = legacy_virtue_type
+	if(!saved_virtuetwo_type && legacy_virtuetwo_type)
+		saved_virtuetwo_type = legacy_virtuetwo_type
+
+	var/list/virtue_data = normalize_saved_virtue(saved_virtue_type, S, "virtue_choices", "virtue_picked_choices")
+	var/list/virtuetwo_data = normalize_saved_virtue(saved_virtuetwo_type, S, "virtuetwo_choices", "virtuetwo_picked_choices")
 	var/list/origin_data = normalize_saved_virtue(saved_origin_type, S, "virtue_origin_choices")
 
 	virtue = load_clean_virtue(virtue_data[1], virtue_data[2])
@@ -1170,6 +1256,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["skin_tone"]			, skin_tone)
 	WRITE_FILE(S["species"]				, pref_species.name)
 	WRITE_FILE(S["charflaws"]			, charflaws)
+	WRITE_FILE(S["charflaw_choices"], charflaw_choices) // TA EDIT
 	WRITE_FILE(S["feature_mcolor"]		, features["mcolor"])
 	WRITE_FILE(S["feature_mcolor2"]		, features["mcolor2"])
 	WRITE_FILE(S["feature_mcolor3"]		, features["mcolor3"])
@@ -1257,6 +1344,10 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["statpack"] , statpack.type)
 
 	write_clean_virtue_paths(S, virtue ? virtue.type : /datum/virtue/none, virtuetwo ? virtuetwo.type : /datum/virtue/none, virtue_origin ? virtue_origin.type : /datum/virtue/none, virtue ? virtue.picked_choices : null, virtuetwo ? virtuetwo.picked_choices : null)
+	var/quirklesser_save_type = quirklesser ? quirklesser.type : /datum/quirk/none
+	var/quirkgreater_save_type = quirkgreater ? quirkgreater.type : /datum/quirk/none
+	WRITE_FILE(S["quirklesser"], quirklesser_save_type)
+	WRITE_FILE(S["quirkgreater"], quirkgreater_save_type)
 
 	WRITE_FILE(S["race_bonus"], race_bonus)
 	var/combat_music_save_type = default_cmusic_type // TA EDIT START
@@ -1269,12 +1360,15 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["body_size"] , features["body_size"])
 	WRITE_FILE(S["body_build"] , features["body_build"])
 	WRITE_FILE(S["nsfwflavortext"] , html_decode(nsfwflavortext))
+	WRITE_FILE(S["show_nsfw_clothed"], show_nsfw_clothed)
 	WRITE_FILE(S["nsfw_ooc_extra_img"] , nsfw_ooc_extra_img)
 	WRITE_FILE(S["nsfw_ooc_extra_img_link"] , nsfw_ooc_extra_img_link)
 	WRITE_FILE(S["erpprefs"] , html_decode(erpprefs))
 	WRITE_FILE(S["img_gallery"] , img_gallery)
 	WRITE_FILE(S["nsfw_img_gallery"] , nsfw_img_gallery)
+	sanitize_subscription_loadout(parent?.mob, FALSE) // TA EDIT
 	WRITE_FILE(S["gear_list"], gear_list)
+	WRITE_FILE(S["loadout_subscription_tier"], loadout_subscription_tier) // TA EDIT
 
 	//Familiar Files
 	WRITE_FILE(S["familiar_names"] , familiar_prefs.familiar_names)
@@ -1288,6 +1382,15 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["familiar_ooc_notes_display"] , familiar_prefs.familiar_ooc_notes_display)
 	WRITE_FILE(S["familiar_ooc_extra"] , familiar_prefs.familiar_ooc_extra)
 	WRITE_FILE(S["familiar_ooc_extra_link"] , familiar_prefs.familiar_ooc_extra_link)
+
+	if(tat_build)
+		WRITE_FILE(S["tat_build"], tat_build.export_tat_slots_state_to_list())
+		legacy_tat_build_migrated = TRUE
+		legacy_tat_build_data = null
+		var/original_cd = S.cd
+		S.cd = "/"
+		WRITE_FILE(S["tat_build_migrated_to_character"], TRUE)
+		S.cd = original_cd
 
 	// TA EDIT START - save familytree settings with the active character slot.
 	familytree_module_save_character_to_savefile(S, default_slot)

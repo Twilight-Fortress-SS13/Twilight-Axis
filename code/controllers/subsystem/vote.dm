@@ -7,7 +7,7 @@
 /// Added to every preset's multiplier after each completed player vote, so presets that keep losing become overdue.
 #define STORYTELLER_OVERDUE_STEP_PERCENT 20
 /// Highest multiplier an overdue preset can reach.
-#define STORYTELLER_OVERDUE_MAX_PERCENT 250
+#define STORYTELLER_OVERDUE_MAX_PERCENT 150
 /// Multiplier the winner of a player vote drops to for the next vote, so the same preset needs a clearer lead to
 /// win twice running. It climbs back by STORYTELLER_OVERDUE_STEP_PERCENT per vote like everything else.
 #define STORYTELLER_WIN_COOLDOWN_PERCENT 60
@@ -131,18 +131,20 @@ SUBSYSTEM_DEF(vote)
 	fdel(json_file)
 	WRITE_FILE(json_file, json_encode(file_data))
 
-/// After a completed player vote, every votable preset's multiplier climbs by the overdue step, then the winner
-/// drops to the cooldown multiplier.
+/// After a completed player vote, every votable preset's multiplier climbs by the overdue step, then every preset
+/// in the winning pool drops to the cooldown multiplier. Cooling the whole pool keeps a pool with several options
+/// from chaining wins by shifting votes to a sibling preset that still carries its overdue bonus.
 /datum/controller/subsystem/vote/proc/record_storyteller_vote_win(winning_choice)
 	load_storyteller_vote_multipliers()
+	var/winner_pool = get_storyteller_vote_pool(get_storyteller_choice_type(winning_choice))
 	for(var/storyteller_type in SSgamemode.storytellers)
 		var/datum/storyteller/storyboy = SSgamemode.storytellers[storyteller_type]
 		if(!storyboy.preset_pool) // only votable presets
 			continue
+		if(winner_pool && storyboy.preset_pool == winner_pool)
+			storyteller_vote_multipliers[storyteller_type] = STORYTELLER_WIN_COOLDOWN_PERCENT
+			continue
 		storyteller_vote_multipliers[storyteller_type] = min(get_storyteller_vote_percent(storyteller_type) + STORYTELLER_OVERDUE_STEP_PERCENT, STORYTELLER_OVERDUE_MAX_PERCENT)
-	var/winner_type = get_storyteller_choice_type(winning_choice)
-	if(winner_type)
-		storyteller_vote_multipliers[winner_type] = STORYTELLER_WIN_COOLDOWN_PERCENT
 	save_storyteller_vote_multipliers()
 	var/list/mult_lines = list()
 	for(var/storyteller_type in storyteller_vote_multipliers)
@@ -944,7 +946,7 @@ SUBSYSTEM_DEF(vote)
 		if(mode == "storyteller")
 			if(!length(storyteller_vote_log))
 				load_storyteller_vote_log()
-			var/pool_text = "Нажмите на (?) для получения описания режима. Раундстартовые крупные антагонисты требуют минимум [HARD_ANTAG_MIN_POP] игроков. Победивший блок режимов будет исключён из голосования в следующем раунде. Вес каждого режима умножается на накопленный коэффициент: победивший режим получает x[STORYTELLER_WIN_COOLDOWN_PERCENT / 100], а каждый режим после голосования получает +[STORYTELLER_OVERDUE_STEP_PERCENT]% вплоть до x[STORYTELLER_OVERDUE_MAX_PERCENT / 100]."
+			var/pool_text = "Нажмите (?) для описания режимов. Крупные раундстартовые антагонисты требуют не менее [HARD_ANTAG_MIN_POP] активных игроков. После победы коэффициент режима снижается до x[STORYTELLER_WIN_COOLDOWN_PERCENT / 100], затем повышается на [STORYTELLER_OVERDUE_STEP_PERCENT]% за раунд; режимы без побед также получают прибавку до x[STORYTELLER_OVERDUE_MAX_PERCENT / 100]. У каждого варианта показаны текущий множитель и реальные голоса." // TA EDIT
 			. += "<div style='color:#992414;font-size:0.9rem;margin-bottom:6px;'>[pool_text]</div>"
 			. += render_storyteller_choices(can_vote, C)
 		else

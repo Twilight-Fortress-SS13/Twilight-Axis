@@ -7,17 +7,22 @@
 		"Trader",
 	)
 	
+/datum/charflaw/lawless/constant_ui_data()
+	. = ..()
+	.["requirements_warning"] = "Requires PQ [required_pq]+ as [english_list(allowed_jobs)]. Otherwise this vice is replaced by a random one."
+
 /datum/charflaw/lawless/apply_post_equipment(mob/living/carbon/human/user)
 	if(!istype(user) || !user.mind || !user.ckey)
 		return
 
 	if(get_playerquality(user.ckey, FALSE) < required_pq || (!(user.job in allowed_jobs)))
+		user.charflaws -= src
 		var/datum/charflaw/randflaw/F = new
 		user.charflaws += F
 		F.on_mob_creation(user)
 		F.apply_post_equipment(user)
 		return
-	
+
 	var/list/states = list(
 		"The Justiciary of Azuria" = GLOB.outlawed_players,
 		"The Grenzelhoftian Holy See" = GLOB.excommunicated_players,

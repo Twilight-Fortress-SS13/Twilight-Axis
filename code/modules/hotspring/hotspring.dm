@@ -15,7 +15,7 @@
 	friction = 0.3
 	grow = 0.037
 
-///these were unfortunately requested to not be smoothed. I will likely create a smooth helper version aswell though
+///these were unfortunately requested to not be smoothed. I will likely create a smooth helper version as well though
 ///the issue is they would need atleast a 2x2 to smooth proper.
 /obj/structure/hotspring
 	abstract_type = /obj/structure/hotspring
@@ -79,6 +79,7 @@
 			if(do_after(L, 3 SECONDS, target = src))
 				wash_atom(user, CLEAN_STRONG)
 				user.remove_stress(/datum/stressevent/sewertouched)
+				user.remove_stress(/datum/stressevent/unlanded_noble_bloody_equipment)
 				playsound(user, pick(wash), 100, FALSE)
 		else
 			user.visible_message(span_info("[user] starts to wash [item2wash] in [src]."))
@@ -195,7 +196,7 @@
 
 /obj/machinery/light/rogue/torchholder/hotspring
 	name = "stone lantern"
-	desc = "A stone lantern, built in Kazengunese style. It is believed these lanterns attracts spirits and guide their way."
+	desc = "A stone lantern, built in Kazengunese style. It is believed these lanterns attract spirits and guide their way."
 	icon = 'icons/obj/structures/hotspring.dmi'
 	icon_state = "stonelantern1"
 	torch_off_state = "stonelantern"

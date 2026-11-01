@@ -137,8 +137,8 @@
 	playsound(T, 'sound/magic/swap.ogg', 50, TRUE)
 	caster.energy_add(120)
 	caster.stamina_add(-50)
-	new /obj/item/ash(T)
-	new /obj/item/ash(T)
+	new /obj/item/natural/ash(T)
+	new /obj/item/natural/ash(T)
 	qdel(S)
 
 /datum/action/cooldown/spell/zizo/rituos/proc/run_ritual_chant(mob/living/carbon/human/user, path_choice)
@@ -180,7 +180,7 @@
 	user.adjust_skillrank(/datum/skill/magic/arcane, 3, TRUE)
 
 	if(user.mind)
-		user.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 0, "minor" = 2, "utilities" = 6))
+		user.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 0, "minor" = 2, "utilities" = 9))
 		new /obj/effect/temp_visual/zizorite(get_turf(user))
 		ADD_TRAIT(user, TRAIT_STEELHEARTED, "[type]")
 		ADD_TRAIT(user, TRAIT_JACKOFALLTRADES, "[type]")
@@ -241,11 +241,13 @@
 	eyes = SSwardrobe.provide_type(/obj/item/organ/eyes/night_vision/zombie)
 	eyes.Insert(user)
 	user.update_body_parts()
+	user.base_intents = list(INTENT_HELP, INTENT_DISARM, INTENT_GRAB, /datum/intent/unarmed/claw) //skeleton hands, buffs your punches into clawing at people.
+	user.update_a_intents()
 
 	user.adjust_skillrank(/datum/skill/magic/arcane, 3, TRUE)
 
 	if(user.mind)
-		user.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 0, "minor" = 2, "utilities" = 4))
+		user.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 0, "minor" = 2, "utilities" = 5))
 		user.mind.AddSpell(new /datum/action/cooldown/spell/bonechill)
 		user.mind.AddSpell(new /datum/action/cooldown/spell/bonemend)
 		grant_poke_spell_zizo(user)
@@ -481,3 +483,57 @@
 	animate(src, pixel_x = pixel_x + rand(-16,16), pixel_y = pixel_y + rand(8,20), alpha = 0, time = duration, easing = EASE_OUT)
 
 #undef MAMMON_FILTER
+
+////////////////////
+/// BARTER UTILS ///
+////////////////////
+
+/proc/validate_matthios_item(obj/item/I, mob/user)
+	if(!I)
+		return FALSE
+	if(I.GetComponent(/datum/component/cursed_item) || I.GetComponent(/datum/component/martyrweapon) || I.GetComponent(/datum/component/silverbless))
+		to_chat(user, span_warning("You feel like Matthios would not like this at all, there is a warding quality to it."))
+		return FALSE
+	if(I.override_state)
+		to_chat(user, span_warning("You feel like Matthios would not like this at all, as it is too quirky."))
+		return FALSE
+	if(I.GetComponent(/datum/component/decal/blood))
+		to_chat(user, span_warning("You feel like Matthios would not like this at all, as it is bloodstained."))
+		return FALSE
+	if(I.obj_broken)
+		to_chat(user, span_warning("You feel like Matthios would not like this at all, as it is broken."))
+		return FALSE
+	if(I.max_integrity != I.obj_integrity)
+		to_chat(user, span_warning("You feel like Matthios would not like this at all, as it is damaged."))
+		return FALSE
+	if(I.is_important)
+		to_chat(user, span_warning("You feel like Matthios would not like this at all, it just doesn't mesh with Him."))
+		return FALSE
+	if(istype(I, /obj/item/roguecoin))
+		to_chat(user, span_warning("You feel like Matthios would not like this at all, He could take it as an insult."))
+		return FALSE
+	if(istype(I, /obj/structure/handcart))
+		to_chat(user, span_warning("Doing it like this would make this Barter less personal than He would like."))
+		return FALSE
+	if(I.get_real_price() < 1)
+		to_chat(user, span_info("This is worthless, both for you and for Him. You know better."))
+		return FALSE
+	var/category = (GLOB.derived_categories && GLOB.derived_categories[I.type]) || ITEM_CAT_MISCELLANEOUS
+	var/bucket = get_navigator_bucket_for_item(I, category)
+	if(bucket == NAVIGATOR_BUCKET_MISCELLANEOUS)
+		if(GLOB.bulk_trade_item_types && GLOB.bulk_trade_item_types[I.type])
+			to_chat(user, span_warning("You feel like Matthios would not like this at all, bulk goods are meaningless for Gods."))
+			return FALSE
+	var/refusal = get_barter_refusal_message(bucket)
+	if(refusal)
+		to_chat(user, span_warning(refusal))
+		return FALSE
+	return TRUE
+
+/proc/get_barter_refusal_message(bucket)
+	switch(bucket)
+		if(NAVIGATOR_BUCKET_REFUSED_FOOD)
+			return "You feel like Matthios would not like this at all, He doesn't need food or drinks."
+		if(NAVIGATOR_BUCKET_REFUSED_BULK)
+			return "You feel like Matthios would not like this at all, His hoard is no warehouse."
+	return null

@@ -43,6 +43,8 @@
 		list("good" = TRADE_GOOD_TOPER, "qty_min" = BULK_QTY_TINY_MIN, "qty_max" = BULK_QTY_TINY_MAX, "price_mod" = BULK_PRICE_DISCOUNT),
 		list("good" = TRADE_GOOD_SAFFIRA, "qty_min" = BULK_QTY_TINY_MIN, "qty_max" = BULK_QTY_TINY_MAX, "price_mod" = BULK_PRICE_FAIR),
 		list("good" = TRADE_GOOD_BLORTZ, "qty_min" = BULK_QTY_TINY_MIN, "qty_max" = BULK_QTY_TINY_MAX, "price_mod" = BULK_PRICE_FAIR),
+		list("good" = TRADE_GOOD_BEANS, "qty_min" = BULK_QTY_TINY_MIN, "qty_max" = BULK_QTY_SMALL_MAX, "price_mod" = BULK_PRICE_FAIR, "always" = TRUE),
+		list("good" = TRADE_GOOD_LENTILS, "qty_min" = BULK_QTY_TINY_MIN, "qty_max" = BULK_QTY_SMALL_MAX, "price_mod" = BULK_PRICE_FAIR, "always" = TRUE),
 	)
 	bulk_demand_pool_base = list(
 		list("good" = TRADE_GOOD_STEEL_INGOT, "qty_min" = BULK_QTY_LARGE_MIN, "qty_max" = BULK_QTY_LARGE_MAX, "price_mod" = BULK_PRICE_DESPERATE, "always" = TRUE),
@@ -100,9 +102,19 @@
 		/datum/supply_pack/rogue/naledi/gold_finery,
 	)
 	hail_lines = list(
-		"Please reminds your stevedores to not point at us rudely nor whisper to us. We are not accustomed to such behaviors",
-		"I have the finest rooibos and hibiscus teas. I hear that your people do not have a taste for them, but I assure you, they are very delicious and as nourishing for the soul as it is for the body.",
-		"Keep the tieflings away from our ship",
-		"I have a few travelling warscholars who seeks to reduce the djin - daem - villains of this land to ashes and dust. Just don't tell them to take their masks off, as members of your retinue are prone to do",
-		"Every time we sell you coffee and tea, the finest in Psydonia, one of your stevedores would offer us wines and drinks. Know that us in Naledi do not indulge in such spirits nor bring them to court. We follow that very strictly. Now - do you happen to have some Kazengunese plum wine on hand?",
+		"Please remind your stevedores not to point at us. It's a sign of hostility to the crew.",
+
+		"I have the finest rooibos and hibiscus teas. I hear that your people do not have a taste for them, but I assure you, \
+		they are very delicious and as nourishing for the soul as it is for the body.",
+
+		"...the crew are not fond of tieflings. Keep them away from the ship, if you would.",
+
+		"I have a few travelling warscholars who seeks to reduce the dji... I mean, villains of this land to ashes and dust! \
+		Just keep your garrison members in check. I hear they often demand mercenaries to remove their masks.",
+
+		"We've brought weapons, gems, and finery. You will bring us iron, steel, and calendula.",
+
+		"Every time we sell you coffee and tea, one of your stevedores would offer us wines and drinks. \
+		Know that us in Naledi do not indulge in such spirits nor bring them to court. \
+		We follow that very strictly. Now - do you happen to have some Kazengunese plum wine on hand?",
 	)

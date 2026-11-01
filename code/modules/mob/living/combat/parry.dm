@@ -26,7 +26,7 @@
 	if(pulledby || pulling)
 		return FALSE
 
-	var/paired_swing = user?.dualwield_twoswing
+	var/paired_swing = user?.dualwield_processing
 	if(!paired_swing && world.time < (last_parry + parrydelay))
 		if(!istype(rmb_intent, /datum/rmb_intent/riposte))
 			return FALSE
@@ -166,21 +166,21 @@
 				if((attacker_weapon.wbalance == WBALANCE_SWIFT) && (user.STASPD > src.STASPD)) //enemy weapon is quick, so get a bonus based on spddiff
 					var/spdmod = ((user.STASPD - src.STASPD) * 10)
 					var/permod = ((src.STAPER - user.STAPER) * 5)
-					var/intmod = ((src.STAINT - user.STAINT) * 3)
+					var/intmod = ((src.STAINT - user.STAINT) * 5)
 					var/finalmod = spdmod
 					if(mind)
 						var/ceilclamp = SWIFTCAP_CHEST
-						if(user.zone_selected == BODY_ZONE_CHEST)	// Attacker is targeting chest. Worst boons! INT and PER are subtracted.
-							if(permod > 0)
-								spdmod -= permod
-							if(intmod > 0)
-								spdmod -= intmod
-						else if(user.zone_selected != check_zone(user.zone_selected))	// They are targeting a precise zone. Best boons! No INT/ PER influence.
+
+						if(permod > 0)
+							spdmod -= permod
+						if(intmod > 0)
+							spdmod -= intmod
+
+						if(user.zone_selected != check_zone(user.zone_selected))
 							ceilclamp = SWIFTCAP_PRECISE
+
 						else if((check_zone(user.zone_selected) == user.zone_selected) && user.zone_selected != BODY_ZONE_CHEST)
 							ceilclamp = SWIFTCAP_LIMBS
-							if(permod > 0)
-								spdmod -= permod
 						if(used_weapon?.wbalance == WBALANCE_NORMAL)
 							ceilclamp -= 10
 						finalmod = clamp(spdmod, 0, ceilclamp)

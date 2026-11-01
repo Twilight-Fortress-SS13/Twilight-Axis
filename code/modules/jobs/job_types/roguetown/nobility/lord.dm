@@ -104,7 +104,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 		SSticker.regentmob = null //Time for regent to give up the position.
 
 		addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, lord_marriage_choice)), 50)
-		addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, lord_suitor_choice)), 50)
+		//addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, lord_suitor_choice)), 50) //TA EDIT
 		if(STATION_TIME_PASSED() <= 30 MINUTES) //Late to the party? Stuck with default colors, sorry!
 			spawn(50){
 				var/list/prefs = get_roleprefs(L.client)
@@ -240,9 +240,9 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	backpack_contents = list(
 		/obj/item/storage/keyring/lord = 1,
 		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 1,
-		/obj/item/rogueweapon/huntingknife/idagger/steel/decorated = 1, 
-		/obj/item/blueprint/mace_mushroom = 1, 
-		/obj/item/hunting_map/white_stag = 1, 
+		/obj/item/rogueweapon/huntingknife/idagger/steel/decorated = 1,
+		/obj/item/blueprint/mace_mushroom = 1,
+		/obj/item/hunting_map/white_stag = 1,
 		/obj/item/rogueweapon/scabbard/sheath/royal = 1
 	)
 
@@ -299,9 +299,9 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	backpack_contents = list(
 		/obj/item/storage/keyring/lord = 1,
 		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 1,
-		/obj/item/rogueweapon/huntingknife/idagger/steel/decorated = 1, 
-		/obj/item/blueprint/mace_mushroom = 1, 
-		/obj/item/hunting_map/white_stag = 1, 
+		/obj/item/rogueweapon/huntingknife/idagger/steel/decorated = 1,
+		/obj/item/blueprint/mace_mushroom = 1,
+		/obj/item/hunting_map/white_stag = 1,
 		/obj/item/rogueweapon/scabbard/sheath/royal = 1
 	)
 	if(H.mind)
@@ -328,7 +328,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 		STATKEY_PER = 2,
 		STATKEY_WIL = 1,
 	)
-	subclass_mage_aspects = list("mastery" = FALSE, "major" = 1, "minor" = 1, "utilities" = 4, "ward" = TRUE)
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 1, "minor" = 1, "utilities" = 5, "ward" = TRUE)
 	subclass_skills = list(
 		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/arcyne = SKILL_LEVEL_EXPERT,
@@ -358,13 +358,12 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	backpack_contents = list(
 		/obj/item/storage/keyring/lord = 1,
 		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 1,
-		/obj/item/rogueweapon/huntingknife/idagger/steel/decorated = 1, 
-		/obj/item/blueprint/mace_mushroom = 1, 
-		/obj/item/hunting_map/white_stag = 1, 
-		/obj/item/rogueweapon/scabbard/sheath/royal = 1
+		/obj/item/rogueweapon/huntingknife/idagger/steel/silver/arcyne = 1,
+		/obj/item/rogueweapon/scabbard/sheath/royal = 1,
+		/obj/item/blueprint/mace_mushroom = 1,
+		/obj/item/hunting_map/white_stag = 1,
+		/obj/item/rogueweapon/spellbook/greater = 1
 	)
-
-	backpack_contents = list(/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1, /obj/item/rogueweapon/spellbook = 1, /obj/item/blueprint/mace_mushroom = 1, /obj/item/chalk = 1, /obj/item/hunting_map/white_stag = 1,)
 
 /**
 	Inbred Lord subclass. A joke class, evolution of the Inbred Wastrel.
@@ -411,9 +410,9 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	backpack_contents = list(
 		/obj/item/storage/keyring/lord = 1,
 		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 1,
-		/obj/item/rogueweapon/huntingknife/idagger/steel/decorated = 1, 
-		/obj/item/blueprint/mace_mushroom = 1, 
-		/obj/item/hunting_map/white_stag = 1, 
+		/obj/item/rogueweapon/huntingknife/idagger/steel/decorated = 1,
+		/obj/item/blueprint/mace_mushroom = 1,
+		/obj/item/hunting_map/white_stag = 1,
 		/obj/item/rogueweapon/scabbard/sheath/royal = 1
 	)
 	H.adjust_skillrank(/datum/skill/combat/crossbows, pick(0,1), TRUE)

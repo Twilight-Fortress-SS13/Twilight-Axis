@@ -7,7 +7,7 @@
 // If penfactor == armor tier: 20% of damage penetrates armor.
 // If penfactor < armor tier: fully blocked (0 through).
 // Blunt and Fire use DR Absorb — damage multiplied by 1 / (1 + 0.2 * DR tier), all absorbed by armor (none to HP).
-// Bullets use DR Pierce — damage is reduced by tier, but still reaches HP; armor also takes integrity damage.
+// Bullets use DR Pierce — damage is reduced by 20% by tier, but still reaches HP; armor also takes integrity damage.
 
 // Penetration tiers (0-4). Weapon attacks.
 #define PEN_NONE			0	// No penetration. Training weapons, base cuts/chops.
@@ -25,7 +25,7 @@
 
 // Damage reduction tiers (0-5). Used by blunt and fire (DR Absorb) and bullets (DR Pierce).
 // Note that blunt by default have 1.6x Integrity Multiplier.
-// Damage multiplier = 1 / (1 + 0.2 * tier)
+// Damage multiplier = 1 / (1 + 0.2 * tier) for blunt and fire, 1 - (0.2 * tier) for bullets.
 // Blunt and fire: all damage is absorbed by armor. Bullets: reduced damage still reaches HP.
 #define DR_NONE				0	// Nothing. 100% damage. EDPS: 160%
 #define DR_LIGHT			1	// Plate / Metal. 20% EHP increase. EDPS: 133%
@@ -191,10 +191,10 @@
 #define ARMOR_BRONZE list("blunt" = DR_MEDIUM, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_MEDIUM, "fire" = DR_MEDIUM, "bullet" = DR_LIGHT)
 
 // MAILLE — Chainmail. Medium: Plate level protection but weak vs Bodkin (100% through)
-#define ARMOR_MAILLE list("blunt" = DR_MEDIUM, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_LIGHT, "fire" = DR_NONE, "bullet" = DR_HEAVY)
+#define ARMOR_MAILLE list("blunt" = DR_MEDIUM, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_LIGHT, "fire" = DR_NONE, "bullet" = DR_MEDIUM)
 
 // PLATE — Cuirass, plate. All plate-tier items; differentiated by integrity, not rating. Spear (PEN_HEAVY) gets 20% through stab. Bodkin goes through 100% - MEDIUM rating. Weak vs Blunt.
-#define ARMOR_PLATE list("blunt" = DR_LIGHT, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_MEDIUM, "fire" = DR_NONE, "bullet" = DR_SUPER)
+#define ARMOR_PLATE list("blunt" = DR_LIGHT, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_MEDIUM, "fire" = DR_NONE, "bullet" = DR_HEAVY)
 
 // BSTEEL — Blacksteel, antagonist. DBLOCK_BSTEEL (4).
 // Halfsword (PEN_BSTEEL) gets 20% through. Blunt still works decently (DR_MEDIUM only).
@@ -211,6 +211,8 @@
 #define ARMOR_GNOLL_STANDARD list("blunt" = DR_SUPER, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_HEAVY, "fire" = DR_MEDIUM, "bullet" = DR_SUPER)
 #define ARMOR_GNOLL_STRONG list("blunt" = DR_MEDIUM, "slash" = DBLOCK_BSTEEL, "stab" = DBLOCK_BSTEEL, "piercing" = DBLOCK_HEAVY, "fire" = DR_MEDIUM, "bullet" = DR_ULTRA)
 #define ARMOR_BLACKOAK list("blunt" = DR_ULTRA, "slash" = DBLOCK_LIGHT, "stab" = DBLOCK_BSTEEL, "piercing" = DBLOCK_MEDIUM, "fire" = DR_NONE, "bullet" = DR_MEDIUM) // Wood: great vs blunt/stab, bad vs slash
+#define ARMOR_INSULATED_BRIGANDINE list("blunt" = DR_HEAVY, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_HEAVY, "fire" = DR_ULTRA, "bullet" = DR_HEAVY)
+#define ARMOR_INSULATED_LEATHER list("blunt" = DR_ULTRA, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_HEAVY, "fire" = DR_ULTRA, "bullet" = DR_LIGHT)
 
 // Indestructible / Meme
 #define ARMOR_INDESTRUCTIBLE list("blunt" = DR_ULTRA, "slash" = DBLOCK_BSTEEL, "stab" = DBLOCK_BSTEEL, "piercing" = DBLOCK_BSTEEL, "fire" = DR_ULTRA, "bullet" = DR_ULTRA) // Magical / indestructible items

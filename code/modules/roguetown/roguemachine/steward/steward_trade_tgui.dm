@@ -118,14 +118,32 @@
 	data["petitions_per_day"] = PETITIONS_PER_DAY
 	data["realm_labels"] = ta_economy_realm_labels_payload()
 
-	var/list/lview = ledger_view[user.ckey]
-	if(lview && lview["open"])
-		data["ledger_page"] = build_ledger_page(user.ckey)
-
 	return data
 
 /obj/structure/roguemachine/steward/proc/build_ledger_page(ckey)
 	var/list/lview = ledger_view[ckey]
+	var/view_mode = lview ? (lview["view"] || "journal") : "journal"
+	var/list/page_data = list("view" = view_mode)
+	switch(view_mode)
+		if("ledger")
+			var/account_id = lview ? (lview["account"] || LEDGER_CROWN_CASH) : LEDGER_CROWN_CASH
+			page_data["chart"] = SStreasury.get_chart_listing(LEDGER_BOOK_CROWN)
+			page_data["account_ledger"] = SStreasury.get_account_ledger(account_id, 100)
+			return page_data
+		if("trial")
+			page_data["trial_balance"] = SStreasury.get_trial_balance(LEDGER_BOOK_CROWN)
+			page_data["reconciliation"] = SStreasury.reconcile_ledger(LEDGER_BOOK_CROWN)
+			return page_data
+		if("income")
+			page_data["income_statement"] = SStreasury.get_income_statement(LEDGER_BOOK_CROWN)
+			return page_data
+		if("balance")
+			page_data["balance_sheet"] = SStreasury.get_balance_sheet(LEDGER_BOOK_CROWN)
+			return page_data
+		if("subsidiary")
+			page_data["subsidiary"] = SStreasury.get_subsidiary_ledgers()
+			return page_data
+
 	var/page = max(1, lview ? (lview["page"] || 1) : 1)
 	var/filter = lview ? (lview["filter"] || "") : ""
 	var/window_start = (page - 1) * LEDGER_PAGE_SIZE + 1
@@ -136,7 +154,10 @@
 	var/crown_name = SStreasury.discretionary_fund?.name
 	for(var/i = total to 1 step -1)
 		var/datum/treasury_entry/E = SStreasury.ledger[i]
-		if(crown_name && E.from_name != crown_name && E.to_name != crown_name)
+		if(E.legs)
+			if(!E.touches_book(LEDGER_BOOK_CROWN))
+				continue
+		else if(crown_name && E.from_name != crown_name && E.to_name != crown_name)
 			continue
 		if(filter && !findtext(E.reason, filter) && !findtext(E.from_name, filter) && !findtext(E.to_name, filter))
 			continue
@@ -145,25 +166,24 @@
 			continue
 		if(matched > window_end)
 			break
-		entries += list(list(
-			"kind" = E.kind,
-			"from" = E.from_name,
-			"to" = E.to_name,
-			"amount" = E.amount,
-			"reason" = E.reason || "",
-			"count" = E.count || 1,
-		))
-	return list(
-		"entries" = entries,
-		"page" = page,
-		"page_size" = LEDGER_PAGE_SIZE,
-		"shown" = length(entries),
-		"has_more" = (matched > window_end) ? TRUE : FALSE,
-		"filtered" = filter ? TRUE : FALSE,
-	)
+		entries += list(SStreasury.journal_entry_view(E, LEDGER_BOOK_CROWN))
+	page_data["entries"] = entries
+	page_data["page"] = page
+	page_data["page_size"] = LEDGER_PAGE_SIZE
+	page_data["shown"] = length(entries)
+	page_data["has_more"] = (matched > window_end) ? TRUE : FALSE
+	page_data["filtered"] = filter ? TRUE : FALSE
+	return page_data
 
 /obj/structure/roguemachine/steward/ui_data(mob/user)
 	var/list/data = list()
+	// The ledger page rides on normal updates, sent once after each ledger action. Static data is
+	// rate-limited to one full update a second, and tgui swaps the whole window for a "Loading"
+	// screen while one is pending - rapid ledger clicks used to kick the Steward back to its base menu.
+	var/list/ledger_state = ledger_view[user.ckey]
+	if(ledger_state && ledger_state["open"] && ledger_state["dirty"])
+		ledger_state["dirty"] = FALSE
+		data["ledger_page"] = build_ledger_page(user.ckey)
 	data["realm_labels"] = ta_economy_realm_labels_payload()
 	data["treasury"] = SStreasury?.discretionary_fund?.balance || 0
 	data["day"] = GLOB.dayspassed
@@ -593,6 +613,7 @@ GLOBAL_LIST_INIT(steward_trade_sequestration_locked_actions, list(
 	"set_buy_price",
 	"set_sell_price",
 	"set_stockpile_limit",
+	"import_steward_policy",
 	"autoprice_all",
 	"autolimit_all",
 	"autoprice_category",
@@ -787,8 +808,31 @@ GLOBAL_LIST_INIT(steward_trade_sequestration_locked_actions, list(
 			var/datum/roguestock/D = SSeconomy.find_stockpile_by_trade_good(params["good_id"])
 			var/lim = text2num("[params["limit"]]")
 			if(D && !isnull(lim))
-				D.stockpile_limit = clamp(round(lim), 0, 9999)
-				D.automatic_limit = FALSE
+				D.set_manual_limit(lim)
+			SStgui.update_uis(src)
+			return TRUE
+		if("export_steward_policy")
+			if(SScity_assembly?.is_alderman(usr))
+				return TRUE
+			tgui_input_text(usr, "Copy the text here and save it locally. You can paste it into Import Policy in later rounds to keep your custom settings, including: Handset limits, autoexport / withdraw bars, unaccepted goods, autoimport list, essential opt-outs, surplus threshold and purse floor. Autolimits or prices are not stored.", "Export Policy", SStreasury.export_steward_policy(), max_length = STEWARD_POLICY_IMPORT_MAX_LEN, multiline = TRUE, encode = FALSE, width = STEWARD_POLICY_WINDOW_WIDTH, height = STEWARD_POLICY_WINDOW_HEIGHT)
+			return TRUE
+		if("import_steward_policy")
+			if(SScity_assembly?.is_alderman(usr))
+				return TRUE
+			var/blob = tgui_input_text(usr, "Import exported policies from previous round. See export policy for what are covered.", "Import Policy", max_length = STEWARD_POLICY_IMPORT_MAX_LEN, multiline = TRUE, encode = FALSE, width = STEWARD_POLICY_WINDOW_WIDTH, height = STEWARD_POLICY_WINDOW_HEIGHT)
+			if(!blob || !user_can_act(usr) || SScity_assembly?.is_alderman(usr) || SStreasury.is_in_receivership())
+				return TRUE
+			var/list/result = SStreasury.import_steward_policy(blob)
+			if(!result)
+				to_chat(usr, span_warning("The Steward policy looks wrong or malformed."))
+				return TRUE
+			var/applied = result["applied"]
+			var/skipped = result["skipped"]
+			var/skipped_text = ""
+			if(skipped)
+				skipped_text = " Skipped [skipped] unknown [skipped == 1 ? "entry" : "entries"]."
+			to_chat(usr, span_notice("Applied [applied] setting\s.[skipped_text]"))
+			log_game("POLICY IMPORT: [key_name(usr)] imported [applied] steward policy settings ([skipped] skipped)")
 			SStgui.update_uis(src)
 			return TRUE
 		if("autoprice_all")
@@ -1124,8 +1168,8 @@ GLOBAL_LIST_INIT(steward_trade_sequestration_locked_actions, list(
 				SStreasury.royal_custom_margin = clamp(round(n), 0, 500)
 			return TRUE
 		if("ledger_open")
-			ledger_view[usr.ckey] = list("open" = TRUE, "page" = 1, "filter" = "")
-			update_static_data(usr)
+			SStreasury.revalue_stockpile_inventory()
+			ledger_view[usr.ckey] = list("open" = TRUE, "page" = 1, "filter" = "", "dirty" = TRUE)
 			return TRUE
 		if("ledger_close")
 			var/list/lview = ledger_view[usr.ckey]
@@ -1137,7 +1181,7 @@ GLOBAL_LIST_INIT(steward_trade_sequestration_locked_actions, list(
 			if(!lview || !lview["open"])
 				return TRUE
 			lview["page"] = max(1, text2num("[params["page"]]") || 1)
-			update_static_data(usr)
+			lview["dirty"] = TRUE
 			return TRUE
 		if("ledger_filter")
 			var/list/lview = ledger_view[usr.ckey]
@@ -1145,13 +1189,36 @@ GLOBAL_LIST_INIT(steward_trade_sequestration_locked_actions, list(
 				return TRUE
 			lview["filter"] = trim("[params["filter"]]")
 			lview["page"] = 1
-			update_static_data(usr)
+			lview["dirty"] = TRUE
+			return TRUE
+		if("ledger_view")
+			var/list/lview = ledger_view[usr.ckey]
+			if(!lview || !lview["open"])
+				return TRUE
+			var/new_view = "[params["view"]]"
+			if(!(new_view in list("journal", "ledger", "trial", "income", "balance", "subsidiary")))
+				return TRUE
+			SStreasury.revalue_stockpile_inventory()
+			lview["view"] = new_view
+			lview["page"] = 1
+			lview["dirty"] = TRUE
+			return TRUE
+		if("ledger_account")
+			var/list/lview = ledger_view[usr.ckey]
+			if(!lview || !lview["open"])
+				return TRUE
+			var/datum/ledger_account/picked = SStreasury.get_ledger_account("[params["id"]]")
+			if(!picked || picked.book != LEDGER_BOOK_CROWN)
+				return TRUE
+			lview["account"] = picked.id
+			lview["dirty"] = TRUE
 			return TRUE
 		if("ledger_refresh")
 			var/list/lview = ledger_view[usr.ckey]
 			if(!lview || !lview["open"])
 				return TRUE
-			update_static_data(usr)
+			SStreasury.revalue_stockpile_inventory()
+			lview["dirty"] = TRUE
 			return TRUE
 
 #undef LEDGER_PAGE_SIZE

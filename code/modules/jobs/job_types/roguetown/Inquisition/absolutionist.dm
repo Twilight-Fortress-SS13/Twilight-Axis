@@ -7,7 +7,7 @@
 	spawn_positions = 1
 	forbidden_races = list(RACES_OOZE)
 	allowed_patrons = list(/datum/patron/old_god) //Requires the character to be a practicing Psydonite.
-	tutorial = "Once, you were alone in this monastery; a chapel of stone, protecting a shard of Psydon's divinity. Now, you've a whole sect to shepherd - and their propensity for violence oft-clashes with your own vows of pacifism. Temper the floch with your wisdom, siphon away their wounds with your blessings, and guide the wayard towards absolution."
+	tutorial = "Once, you were alone in this monastery; a chapel of stone, protecting a shard of Psydon's divinity. Now, you've a whole sect to shepherd - and their propensity for violence oft-clashes with your own vows of pacifism. Temper the floch with your wisdom, siphon away their wounds with your blessings, and guide the wayward towards absolution."
 	selection_color = JCOLOR_INQUISITION
 	outfit = /datum/outfit/job/roguetown/absolver
 	display_order = JDO_ABSOLVER
@@ -39,7 +39,7 @@
 
 /datum/advclass/absolver
 	name = "Absolver"
-	tutorial = "Once, you were alone in this monastery; a chapel of stone, protecting a shard of Psydon's divinity. Now, you've a whole sect to shepherd - and their propensity for violence oft-clashes with your own vows of pacifism. Temper the floch with your wisdom, siphon away their wounds with your blessings, and guide the wayard towards absolution."
+	tutorial = "Once, you were alone in this monastery; a chapel of stone, protecting a shard of Psydon's divinity. Now, you've a whole sect to shepherd - and their propensity for violence oft-clashes with your own vows of pacifism. Temper the floch with your wisdom, siphon away their wounds with your blessings, and guide the wayward towards absolution."
 	outfit = /datum/outfit/job/roguetown/absolver/basic
 	subclass_languages = list(/datum/language/otavan)
 	category_tags = list(CTAG_ABSOLVER)
@@ -100,11 +100,11 @@
 	backr = /obj/item/storage/backpack/rogue/satchel/otavan
 	belt = /obj/item/storage/belt/rogue/leather
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan
-	armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fencer/psydon
+	armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fencer/ornate
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/inq
 	shoes = /obj/item/clothing/shoes/roguetown/boots/psydonboots
 	mask = /obj/item/clothing/head/roguetown/helmet/blacksteel/psythorns
-	head = /obj/item/clothing/head/roguetown/helmet/heavy/absolver
+	head = /obj/item/clothing/head/roguetown/helmet/heavy/ornate/absolver
 	id = /obj/item/clothing/ring/signet/psy
 	backpack_contents = list(
 		/obj/item/book/rogue/bibble/psy = 1,

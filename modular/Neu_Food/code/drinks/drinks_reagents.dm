@@ -63,12 +63,17 @@
 	description = "Why are you seeing this?"
 	hydration_factor = 5
 	overdose_threshold = 60
+	brew_buff = /datum/status_effect/buff/brew/vigorized
+
+/datum/reagent/consumable/caffeine/on_mob_metabolize(mob/living/L)
+	. = ..()
+	apply_brew(L, TRUE)
 
 /datum/reagent/consumable/caffeine/on_mob_life(mob/living/carbon/M)
 	. = ..()
 	if(!HAS_TRAIT(M,TRAIT_INFINITE_STAMINA))
 		M.energy_add(5) // 1/6th of mana pot
-	M.apply_status_effect(/datum/status_effect/buff/vigorized)
+	apply_brew(M)
 	M.sate_addiction(/datum/charflaw/addiction/caffiend)
 
 /datum/reagent/consumable/caffeine/overdose_process(mob/living/carbon/M)
@@ -90,7 +95,7 @@
 
 /datum/reagent/consumable/caffeine/coffee/milk
 	cuisine = CUISINE_ETRUSCAN
-	name = "etrusso"
+	name = "etruccino"
 	description = "Milk added to a wonderfully brewed coffee, savory and smooth."
 	reagent_state = LIQUID
 	color = "#7a5f49"
@@ -99,8 +104,8 @@
 	alpha = 200
 	quality = DRINK_FANTASTIC
 
-/datum/chemical_reaction/alch/etrusso
-	name = "Etrusso"
+/datum/chemical_reaction/alch/etruccino
+	name = "Etruccino"
 	mix_sound = 'sound/items/fillbottle.ogg'
 	id = /datum/reagent/consumable/caffeine/coffee/milk
 	results = list(/datum/reagent/consumable/caffeine/coffee/milk = 2)
@@ -122,7 +127,7 @@
 
 /datum/reagent/consumable/caffeine/coffee/cheese // cheese is milk right?
 	cuisine = CUISINE_ETRUSCAN
-	name = "lumpy etrusso"
+	name = "lumpy etruccino"
 	description = "A thing of coffee with... with cheese in it. What. Who thought cheese was milk?"
 	reagent_state = LIQUID
 	color = "#aa894c"
@@ -131,17 +136,17 @@
 	alpha = 200
 	quality = DRINK_GOOD // it made the coffee worse
 
-/datum/chemical_reaction/alch/lumpyetrusso
-	name = "Lumpy Etrusso"
+/datum/chemical_reaction/alch/lumpyetruccino
+	name = "Lumpy Etruccino"
 	mix_sound = 'sound/items/fillbottle.ogg'
 	id = /datum/reagent/consumable/caffeine/coffee/cheese
 	results = list(/datum/reagent/consumable/caffeine/coffee/cheese = 2)
-	required_reagents = list(/datum/reagent/consumable/caffeine/coffee = 1, /datum/reagent/consumable/soup/stew/cheese = 1)
+	required_reagents = list(/datum/reagent/consumable/caffeine/coffee = 1, /datum/reagent/consumable/soup/stew/thickcheese = 1)
 
 /datum/reagent/consumable/caffeine/coffee_spiced
 	cuisine = CUISINE_RANESHENI
 	name = "spiced coffee"
-	description = "Spiced offee beans brewed into a hot drink, with a hint of bitterness. Modestly rejuvenating."
+	description = "Spiced coffee beans brewed into a hot drink, with a hint of bitterness. Modestly rejuvenating."
 	reagent_state = LIQUID
 	color = "#8C4221"
 	taste_description = "caramelized spiciness"
@@ -177,10 +182,10 @@
 /datum/reagent/consumable/caffeine/tea/milk
 	cuisine = CUISINE_SOUTHEASTERN
 	name = "milk tea"
-	description = "A hot tea mixture with the savoryness of milk added to it. Very refreshing."
+	description = "A hot tea mixture with the savoriness of milk added to it. Very refreshing."
 	reagent_state = LIQUID
 	color = "#768b70" // Deeper green to make it look better
-	taste_description = "smooth and savory grassiness" // Yeah, uh.
+	taste_description = "smooth, savory grassiness" // Yeah, uh.
 	metabolization_rate = REAGENTS_METABOLISM
 	alpha = 173
 	quality = DRINK_FANTASTIC
@@ -209,7 +214,7 @@
 /datum/reagent/consumable/caffeine/tea_spiced
 	cuisine = CUISINE_SOUTHEASTERN
 	name = "spiced tea"
-	description = "Spiced tea leaves brewed into a hot drink. Slight hint of bitterness. Smoothly rejuvinating."
+	description = "Spiced tea leaves brewed into a hot drink. Slight hint of bitterness. Smoothly rejuvenating."
 	reagent_state = LIQUID
 	color = "#788C41" // Deeper green to make it look better
 	taste_description = "spiced grassiness"
@@ -309,7 +314,7 @@
 	name = "spiced chocolate"
 	description = "Impossibly smooth, velvety, and rich. Provides a generous portion of health regeneration, and minor stamina regeneration."
 	color = "#6D472F"
-	taste_description = "an impossible blemd of richness, sweetness, and a hint of throat-tingling spiciness"
+	taste_description = "an impossible blend of richness, sweetness, and a hint of throat-tingling spiciness"
 	quality = DRINK_VERYGOOD
 	alpha = 250
 
