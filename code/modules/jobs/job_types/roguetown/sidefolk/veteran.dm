@@ -121,7 +121,7 @@
 				H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/sword, SLOT_BELT_L)
 			if("Mace")
 				H.put_in_hands(new /obj/item/rogueweapon/mace)
-		var/retirement = list("Pursue Homesteading", "Dabble Smithing", "Write an autobiography")
+		var/retirement = list("Pursue Homesteading", "Dabble in Smithing", "Write an autobiography")
 		var/retirement_choice = input(H, "During your retirement, you decided to...", "PICK A HOBBY.") as anything in retirement
 		switch(retirement_choice)
 			if("Pursue Homesteading")
