@@ -37,6 +37,11 @@ SUBSYSTEM_DEF(replays)
 	var/list/replay_client_mobs = list()
 	var/list/replay_identity_cache = list()
 	var/next_client_scan = 0
+	var/list/replay_inventory_mobs = list()
+	var/list/replay_inventory_cache = list()
+	var/replay_inventory_cursor = 1
+	var/max_inventory_scans_per_fire = 4
+	var/max_inventory_entries = 96
 
 /datum/controller/subsystem/replays/Initialize(timeofday)
 	if(!CONFIG_GET(flag/record_replays))
@@ -83,6 +88,7 @@ SUBSYSTEM_DEF(replays)
 	write_demo_line("mode dollsmap")
 	write_demo_line("time 0")
 	scan_replay_clients(0)
+	scan_replay_inventories(0)
 	next_client_scan = world.time + 10
 	return ..()
 
@@ -99,6 +105,8 @@ SUBSYSTEM_DEF(replays)
 		var/mob_ref = C.mob ? "\ref[C.mob]" : "null"
 		if(C.mob)
 			C.mob.demo_player_tracked = TRUE
+			if(!(C.mob in replay_inventory_mobs))
+				replay_inventory_mobs += C.mob
 			if(!C.mob.demo_snapshot_written && !marked_new[C.mob])
 				mark_new(C.mob)
 			var/recorded_real_name = ""
@@ -128,6 +136,46 @@ SUBSYSTEM_DEF(replays)
 		if(!seen[client_ckey])
 			lines += "logout [client_ckey]"
 			replay_client_mobs -= client_ckey
+	write_batch(lines, at_time)
+
+/datum/controller/subsystem/replays/proc/collect_inventory_names(atom/owner, list/result, prefix = "", depth = 0)
+	if(!owner || depth > 3 || result.len >= max_inventory_entries)
+		return
+	for(var/obj/item/I in owner.contents)
+		if(result.len >= max_inventory_entries)
+			return
+		if(!I || I.gc_destroyed)
+			continue
+		var/item_name = istext(I.name) ? copytext(I.name, 1, 81) : "Предмет"
+		var/item_path = length(prefix) ? "[prefix] / [item_name]" : item_name
+		result.len++
+		result[result.len] = item_path
+		if(depth < 3 && I.contents.len)
+			collect_inventory_names(I, result, item_path, depth + 1)
+
+/datum/controller/subsystem/replays/proc/scan_replay_inventories(at_time)
+	if(!recording || !snapshot_complete || !replay_inventory_mobs.len)
+		return
+	var/list/lines = list()
+	var/scans = min(max_inventory_scans_per_fire, replay_inventory_mobs.len)
+	for(var/i in 1 to scans)
+		if(MC_TICK_CHECK)
+			break
+		if(replay_inventory_cursor > replay_inventory_mobs.len)
+			replay_inventory_cursor = 1
+		var/mob/M = replay_inventory_mobs[replay_inventory_cursor]
+		replay_inventory_cursor++
+		if(!M || M.gc_destroyed || !M.demo_player_tracked)
+			replay_inventory_mobs -= M
+			continue
+		var/list/names = list()
+		collect_inventory_names(M, names)
+		var/mob_ref = "\ref[M]"
+		var/payload = json_encode(names)
+		if(replay_inventory_cache[mob_ref] == payload)
+			continue
+		replay_inventory_cache[mob_ref] = payload
+		lines += "inventory [mob_ref] [payload]"
 	write_batch(lines, at_time)
 
 /datum/controller/subsystem/replays/proc/write_demo_line(line)
@@ -277,6 +325,7 @@ SUBSYSTEM_DEF(replays)
 	if(world.time >= next_client_scan)
 		next_client_scan = world.time + 10
 		scan_replay_clients(current_replay_time)
+	scan_replay_inventories(current_replay_time)
 	if(!marked_new.len && !marked_dirty.len && !marked_turfs.len && !del_list.len)
 		return
 
@@ -470,6 +519,7 @@ SUBSYSTEM_DEF(replays)
 		var/mob/tracked_mob = A
 		if(!tracked_mob.demo_player_tracked)
 			return
+		replay_inventory_mobs -= tracked_mob
 	var/atom/movable/deleted_atom = A
 	if(isobj(A) && !deleted_atom.demo_snapshot_written && !marked_new[A])
 		return
