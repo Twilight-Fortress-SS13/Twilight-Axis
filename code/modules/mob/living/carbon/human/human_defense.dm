@@ -100,14 +100,15 @@
 					best_layer = C
 			protection += get_trophy_armor_bonus_for_zone(def_zone, d_type)
 			// DR tier formula: damage * 1 / (1 + 0.2 * tier)
-			if(protection > 0)
-				var/dr_mult = 1 / (1 + 0.2 * protection)
+			if(protection > 0) //TA EDIT START
 				if(d_type in ARMOR_DR_PIERCE_TYPES)
 					// Bullet: armor takes the blocked portion (what doesn't reach HP)
+					var/dr_mult = 1 - (0.2 * protection)
 					intdamage *= (1 - dr_mult)
 				else
 					// Blunt/Fire: armor takes the DR-reduced amount
-					intdamage *= dr_mult
+					var/dr_mult = 1 / (1 + 0.2 * protection)
+					intdamage *= dr_mult //TA EDIT END
 			if(intdamfactor != 1)
 				intdamage *= intdamfactor
 
@@ -221,6 +222,7 @@
 
 		if(check_shields(P, P.damage, "the [P.name]", PROJECTILE_ATTACK, P.armor_penetration))
 			P.on_hit(src, 100, def_zone)
+			P.handle_drop()
 			return BULLET_ACT_HIT
 
 	return ..(P, def_zone)

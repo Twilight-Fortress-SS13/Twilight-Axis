@@ -138,6 +138,7 @@
 #undef NOTABLE_SHREWD
 
 #define SOCIALITE_BEAUTIFUL "Beautiful Trait"
+#define SOCIALITE_MASSAGE "Massage Ability"
 #define SOCIALITE_NUTCRACKER "Nutcracker Trait"
 #define SOCIALITE_EMPATH "Empath Trait"
 #define SOCIALITE_PERFORMER "Performer Trait"
@@ -212,6 +213,7 @@
 #undef SOCIALITE_NUTCRACKER
 #undef SOCIALITE_EMPATH
 #undef SOCIALITE_PERFORMER
+#undef SOCIALITE_MASSAGE
 
 /datum/virtue/utility/failed_squire
 	name = "Failed Squire"
@@ -232,7 +234,7 @@
 
 /datum/virtue/utility/intellectual
 	name = "Intellectual"
-	desc = "I've spent my life surrounded by various books or sophisticated foreigners, be it through travel or other fortunes beset on my life. I've picked up several tongues and wits, and keep a journal closeby. I can tell people's exact prowess."
+	desc = "I've spent my life surrounded by various books or sophisticated foreigners, be it through travel or other fortunes beset on my life. I've picked up several tongues and wits, and keep a journal close-by. I can tell people's exact prowess."
 	ui_fa_icon = "book"
 	custom_text = "Maximizes Assess benefits with a bonus of the target's Stats. Allows the choice of up to 6 languages to learn."
 	added_traits = list(TRAIT_INTELLECTUAL)
@@ -276,8 +278,13 @@
 /datum/virtue/utility/hollow
 	name = "Hollow"
 	desc = "Some fell magick has rendered me inwardly unliving - I do not hunger, and I do not breathe."
+	custom_text = "Grants a unique verb called 'suicide prayer' which allows you to immediately end your feeble lyfe."
 	ui_fa_icon = "lungs"
 	added_traits = list(TRAIT_NOHUNGER, TRAIT_NOBREATH)
+
+/datum/virtue/utility/hollow/apply_to_human(mob/living/carbon/human/recipient)
+	. = ..()
+	add_verb(recipient, /mob/living/carbon/human/proc/praysuicide)
 
 /datum/virtue/utility/deadened
 	name = "Deadened"
@@ -393,7 +400,7 @@
 	name = "Bronze Limbs"
 	desc = "Through connections or wealth, my limb had been replaced by one of bronze and gears, that can grip and hold onto things. I've learned just a bit of Engineering as a result."
 	ui_fa_icon = "robot"
-	custom_text = "Replaces your chosen limbs with a prosthetic Bronze ones."
+	custom_text = "Replaces your chosen limbs with prosthetic bronze ones."
 	added_skills = list(list(/datum/skill/craft/engineering, 1, 6))
 	max_choices = 4
 	stackable = TRUE //We're OK with this, it's fairly innocuous

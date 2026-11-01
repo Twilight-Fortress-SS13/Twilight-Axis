@@ -8,7 +8,7 @@
 	outfit = /datum/outfit/job/roguetown/wretch/twilight_blood_raider
 	category_tags = list(CTAG_WRETCH)
 	class_select_category = CLASS_CAT_RANGER
-	traits_applied = list(TRAIT_FIREARMS_MARKSMAN, TRAIT_DODGEEXPERT, TRAIT_ARCYNE)
+	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_ARCYNE)
 	maximum_possible_slots = 1
 
 	cmode_music = sound("modular_twilight_axis/firearms/sound/music/combat_bloodraider.ogg")

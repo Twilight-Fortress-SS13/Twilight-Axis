@@ -41,7 +41,6 @@
 	beltl = /obj/item/flashlight/flare/torch/lantern
 
 	backpack_contents = list(
-		/obj/item/book/rogue/soundbreaker_codex = 1,
 		/obj/item/recipe_book/survival = 1,
 	)
 
