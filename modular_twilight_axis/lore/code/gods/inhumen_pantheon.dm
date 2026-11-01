@@ -227,7 +227,6 @@
 		"ЖИВИ, СМЕЙСЯ, ЛЮБИ!",
 		"БАОТА - МОЯ РАДОСТЬ!",
 	)
-	traits_tier = list(TRAIT_CRACKHEAD = CLERIC_T1, TRAIT_BEAUTIFUL = CLERIC_T1)
 /////////////////////////////////
 // Does God Hear Your Prayer ? //
 /////////////////////////////////
