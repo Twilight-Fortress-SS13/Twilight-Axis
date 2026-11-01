@@ -182,8 +182,9 @@
 	sheathe_icon = "cane_sheath"
 	smeltresult = /obj/item/ingot/bronze
 	max_blade_int = 200
-	pixel_y = -20
-	pixel_x = -20
+	bigboy = TRUE
+	pixel_y = -16
+	pixel_x = -16
 	inhand_x_dimension = 64
 	inhand_y_dimension = 64
 	var/transformed = FALSE
