@@ -731,12 +731,15 @@
 					if(!card?.hero)
 						destroy_played_card(side, row, played)
 
-/datum/ccg_match/proc/destroy_played_card(side, row, datum/ccg_played_card/played)
+/datum/ccg_match/proc/destroy_played_card(side, row, datum/ccg_played_card/played, summon_next_round = FALSE)
 	board[side][row] -= played
 	discarded[side] += played.card_id
 	var/datum/ccg_card/card = ccg_card(played.card_id)
 	if(card?.effect == CCG_EFFECT_AVENGER && card.avenger_card && ccg_card(card.avenger_card))
-		add_played_card(side, row, card.avenger_card, played.owner_side)
+		if(summon_next_round)
+			carryover_cards[side] += card.avenger_card
+		else
+			add_played_card(side, row, card.avenger_card, played.owner_side)
 
 /datum/ccg_match/proc/remove_last_played(side, row)
 	var/list/row_cards = board[side][row]
@@ -879,11 +882,16 @@
 		var/list/carryover_for_side = carryover_cards[side] || list()
 		var/list/side_carryover = carryover_for_side.Copy()
 		for(var/row in list(CCG_ROW_INFANTRY, CCG_ROW_ARCHERS, CCG_ROW_SIEGE))
-			for(var/datum/ccg_played_card/played in board[side][row])
+			var/list/row_cards = board[side][row].Copy()
+			for(var/datum/ccg_played_card/played in row_cards)
 				if(played.card_id in side_carryover)
 					side_carryover -= played.card_id
 					continue
-				discarded[side] += played.card_id
+				var/datum/ccg_card/card = ccg_card(played.card_id)
+				if(card?.effect == CCG_EFFECT_AVENGER)
+					destroy_played_card(side, row, played, TRUE)
+				else
+					discarded[side] += played.card_id
 	for(var/datum/ccg_played_card/played in weather_board)
 		discarded[played.owner_side] += played.card_id
 	for(var/side in list(CCG_SIDE_ONE, CCG_SIDE_TWO))
