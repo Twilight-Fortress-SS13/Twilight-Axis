@@ -46,15 +46,25 @@
 		//passively heal even wounds with no passive healing
 		heal_wounds(1)
 
-	// PSYDONITE PASSIVE HEALING -- Does not stack with Blackblooded, the latter overwrites this.
-	if(!stat && HAS_TRAIT(src, TRAIT_PSYDONITE) && !HAS_TRAIT(src, TRAIT_BLACKBLOOD) && !HAS_TRAIT(src, TRAIT_PARALYSIS))
-		//handle_wounds() //TA EDIT
-		// Passively heal wounds when you're in trouble.
-		if(blood_volume > BLOOD_VOLUME_SURVIVE)
-			/*for(var/datum/wound/wound as anything in get_wounds())//TA EDIT START
-				if(wound?.severity <= WOUND_SEVERITY_MODERATE)
-					if(!istype(wound, /datum/wound/slash/incision))
-						wound.heal_wound(0.4)*/
+	// PSYDONITE REGEN -- Passively heals wounds and damage. Damage cannot be healed in combat or while bleeding.
+	// Blocks Constructs, Deadites, Werewolves, NoRegen and disabled users.
+	if(!stat && (HAS_TRAIT(src, TRAIT_PSYDONITE) && blood_volume >= BLOOD_VOLUME_SURVIVE && !HAS_TRAIT(src, TRAIT_PARALYSIS) && !HAS_TRAIT(src, TRAIT_NOREGEN) && !HAS_TRAIT(src, TRAIT_BLACKBLOOD) && !HAS_TRAIT(src, TRAIT_IRONMAN) && !HAS_TRAIT(src, TRAIT_DEADITE) && !HAS_TRAIT(src, TRAIT_LYCANRESILENCE)))
+		var/list/wCount = src.get_wounds()
+		var/bleeding = FALSE
+		for(var/datum/wound/wound as anything in wCount)
+			if(istype(wound, /datum/wound/slash/incision) || wound.severity > WOUND_SEVERITY_SEVERE) // Also this, prevents healing arteries and other lethal injuries. It's been unnerfed in the psydon changes for some reason, so bringing it back.
+				continue
+			if(wound.bleed_rate)
+				var/obj/item/bodypart/BP = wound.bodypart_owner
+				var/stemmed = BP && length(BP.grabbedby)
+				if(!stemmed)
+					bleeding = TRUE
+			wound.heal_wound(0.4) // 40% of the heal happens naturally.
+			if(HAS_TRAIT(src, TRAIT_DEATHLESS))
+				wound.heal_wound(0.6) // The other bulk of the effects, only if you are not Deathless.
+				heal_psydonite(0.1, 0.1)
+		if(!(in_combat_until > world.time) && !cmode && !bleeding)
+			heal_psydonite(0.2, 0.2) // Heals damage over time, but you must be completely out of trouble to proc.
 			if(HAS_TRAIT(src, TRAIT_PSYDONITE_4))
 				adjustBruteLoss(-5)
 				adjustFireLoss(-5)
@@ -63,10 +73,20 @@
 				adjustFireLoss(-2)
 			else if(HAS_TRAIT(src, TRAIT_PSYDONITE_2))
 				adjustBruteLoss(-1)
-				adjustFireLoss(-1) //TA EDIT END
+				adjustFireLoss(-1)
+
+	if(!stat && HAS_TRAIT(src, TRAIT_PSYDONIAN_GRIT) && !HAS_TRAIT(src, TRAIT_PARALYSIS) && !HAS_TRAIT(src, TRAIT_NOREGEN) && !HAS_TRAIT(src, TRAIT_IRONMAN) && !HAS_TRAIT(src, TRAIT_DEADITE) && !HAS_TRAIT(src, TRAIT_LYCANRESILENCE))
+		var/in_combat = in_combat_until > world.time
+		if(!in_combat && !cmode)
+			var/list/wCount = src.get_wounds()
+			for(var/datum/wound/wound as anything in wCount)
+				if(wound.woundpain)
+					wound.woundpain = max(0, wound.woundpain - 0.2) // ENDURE! Over time it will make the wound hurt less.
+
 	if(HAS_TRAIT(src, TRAIT_WOUNDREGEN))
 		for(var/datum/wound/wound as anything in get_wounds())
 			wound.heal_wound(10)
+
 	// REGEN RESTRICTIONS -- Starving, or being on fire/silverfired.
 	var/noregen = nutrition < NUTRITION_LEVEL_STARVING - 75 || has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder) || has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
 
@@ -87,7 +107,7 @@
 			for(var/datum/wound/wound as anything in get_wounds())
 				wound.heal_wound(0.5)
 
-	if(blood_volume <= BLOOD_VOLUME_SURVIVE && stat)
+	if(blood_volume <= BLOOD_VOLUME_BAD && stat)
 		handle_passive_blood()
 
 	if(QDELETED(src)) // diseases can qdel the mob via transformations
