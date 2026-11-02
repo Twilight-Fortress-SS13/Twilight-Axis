@@ -857,7 +857,7 @@
 
 /obj/item/clothing/neck/roguetown/psicross/noc/g
 	name = "golden amulet of Noc"
-	desc = "His sister's radiance would mean nothing without comparison - or more importantly, the capacity to compare at all."
+	desc = "Her sister's radiance would mean nothing without comparison - or more importantly, the capacity to compare at all." //TA EDIT
 	icon_state = "noc_g"
 	resistance_flags = FIRE_PROOF
 
