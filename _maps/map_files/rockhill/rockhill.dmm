@@ -5794,9 +5794,9 @@
 /turf/open/floor/rogue/grasscold,
 /area/rogue/outdoors/woodsrat/south)
 "aMl" = (
-/obj/structure/window_curtain/oldred_north_open/west,
-/turf/open/transparent/openspace,
-/area/rogue/outdoors/town/rockhill)
+/mob/living/simple_animal/hostile/retaliate/rogue/fae/glimmerwing,
+/turf/open/floor/rogue/grass,
+/area/rogue/rh_sea)
 "aMo" = (
 /obj/structure/fluff/railing/corner/south_west,
 /obj/effect/decal/cleanable/blood/old,
@@ -27951,6 +27951,7 @@
 /obj/item/roguekey/lord,
 /obj/item/scomstone/garrison,
 /obj/machinery/light/rogue/candle/r,
+/obj/item/clothing/head/roguetown/nyle/consortcrown,
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town/manor/rockhill)
 "dZo" = (
@@ -30933,6 +30934,10 @@
 /obj/structure/closet/crate/drawer,
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town/manor/rockhill)
+"ewF" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/fae/sprite,
+/turf/open/floor/rogue/dirt,
+/area/rogue/rh_sea)
 "ewG" = (
 /obj/structure/bookcase/random/archive,
 /turf/open/floor/rogue/ruinedwood/spiral,
@@ -48791,6 +48796,10 @@
 	},
 /turf/open/water/cleanshallow,
 /area/rogue/outdoors/rtfield/rockhill)
+"hgx" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/fae/glimmerwing,
+/turf/open/floor/rogue/grasscold,
+/area/rogue/rh_sea)
 "hgz" = (
 /obj/structure/fluff/railing/fence{
 	dir = 4
@@ -94589,7 +94598,9 @@
 	layer = 2.8;
 	pixel_x = 8
 	},
-/obj/structure/fluff/railing/wood,
+/obj/structure/fluff/railing/wood{
+	pixel_y = -7
+	},
 /turf/open/transparent/openspace,
 /area/rogue/outdoors/town/rockhill)
 "nWz" = (
@@ -100156,6 +100167,10 @@
 /obj/item/clothing/suit/roguetown/armor/leather/studded/bikini,
 /turf/open/floor/rogue/churchbrick,
 /area/rogue/outdoors/exposed/bath/vault)
+"oMz" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/fae/sprite,
+/turf/open/floor/rogue/grass,
+/area/rogue/rh_sea)
 "oMD" = (
 /obj/structure/bars{
 	icon_state = "barsbent";
@@ -154231,6 +154246,10 @@
 /obj/item/rope,
 /turf/open/floor/rogue/concrete,
 /area/rogue/under/town/sewer/rockhill)
+"wSq" = (
+/mob/living/simple_animal/hostile/retaliate/rogue/fae/dryad,
+/turf/open/floor/rogue/grass,
+/area/rogue/rh_sea)
 "wSt" = (
 /obj/structure/table/wood{
 	dir = 1;
@@ -242257,10 +242276,10 @@ qHu
 byt
 byt
 byt
-fmf
-fmf
+sdL
 fmf
 dSs
+sdL
 fmf
 byt
 byt
@@ -278492,7 +278511,7 @@ xcc
 uTo
 wDG
 fXv
-wDG
+aMl
 tdz
 mrJ
 wEE
@@ -278928,7 +278947,7 @@ aLK
 nKh
 wDG
 wDG
-wDG
+aMl
 fJH
 oDP
 fdp
@@ -281092,7 +281111,7 @@ wDG
 wDG
 wDG
 wDG
-wDG
+oMz
 aLK
 aLK
 aLK
@@ -281507,7 +281526,7 @@ mez
 mez
 mez
 mez
-wDG
+wSq
 wDG
 wDG
 sZm
@@ -286689,7 +286708,7 @@ mez
 wDG
 aLK
 wEE
-aVd
+hgx
 wDG
 sZm
 uTo
@@ -287567,7 +287586,7 @@ xcc
 wDG
 aLK
 qml
-aLK
+ewF
 wEE
 aVd
 mQs
@@ -287987,7 +288006,7 @@ aLK
 uTo
 ehm
 wEE
-aLK
+ewF
 wEE
 nrm
 aLK
@@ -453535,7 +453554,7 @@ xtR
 xAt
 xAt
 xAt
-aMl
+xAt
 xAt
 xAt
 xAt
@@ -564524,7 +564543,7 @@ euP
 euP
 euP
 fZJ
-mBC
+fZJ
 fZJ
 fZJ
 fZJ
@@ -684681,7 +684700,7 @@ fZJ
 fZJ
 nvU
 myC
-fZJ
+xlA
 xlA
 xlA
 xlA
@@ -685113,7 +685132,7 @@ fZJ
 fZJ
 fZJ
 myC
-fZJ
+xlA
 xlA
 xlA
 xlA
