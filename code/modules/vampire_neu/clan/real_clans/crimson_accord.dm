@@ -40,6 +40,7 @@
 		TRAIT_LIMBATTACHMENT,
 		TRAIT_SILVER_WEAK,
 		TRAIT_ZOMBIE_IMMUNE,
+		TRAIT_BREADY
 	)
 	leader = /datum/clan_leader/crimson_fang
 	covens_to_select = 0

@@ -47,6 +47,7 @@
 		TRAIT_KEENEARS,
 		TRAIT_SILVER_WEAK,
 		TRAIT_ZOMBIE_IMMUNE,
+		TRAIT_BREADY
 	)
 	covens_to_select = 0
 

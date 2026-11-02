@@ -36,5 +36,7 @@
 #include "./overrides/crucible_access.dm"
 #include "./overrides/thinblood_restrictions.dm"
 #include "./overrides/obfuscate.dm"
+#include "./overrides/presense.dm"
+#include "./overrides/luxv.dm"
 // Local defines
 #include "./TA_Vampires_uniclude.dm"
