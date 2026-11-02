@@ -70,21 +70,20 @@
 		if(ishuman(user) && HAS_TRAIT(H, TRAIT_ARCYNE) && HAS_TRAIT(H, TRAIT_VAMPBITE))
 			if(H.bloodpool < vitae_cost)
 				to_chat(H, span_warning("Оружию требуется больше крови!"))
-				if(prob(5))
-					to_chat(H, "<span style='color:#5E2129'>The bloodlock</span> slurs, " + span_cult(pick("<i>\"Да, да, ДА! Какое же блаженство...\"</i>", "<i>\"Этот прилив сил... Пристрели шавку!\"</i>", "<i>\"Они поплатятся за то, что подняли на тебя клинок!\"</i>")))
-				playsound(src,'modular_twilight_axis/firearms/sound/bloodlock_reload.ogg', 100, FALSE)
-				var/adj_reload_time = reload_time
-				if(H.mind)
-					var/skill = H.get_skill_level(/datum/skill/combat/twilight_firearms)
-					if(skill)
-						adj_reload_time = reload_time / skill
-				if(do_after(H, adj_reload_time SECONDS, src))
-					H.adjust_bloodpool(-vitae_cost)
-					H.update_action_buttons()
-					playsound(H, 'modular_twilight_axis/firearms/sound/musketcock.ogg', 100, FALSE)
-					cocked = TRUE
-			else
-				to_chat(H, span_warning("Я совершенно не понимаю, как этим пользоваться!"))
+				return
+			if(prob(5))
+				to_chat(H, "<span style='color:#5E2129'>The bloodlock</span> slurs, " + span_cult(pick("<i>\"Да, да, ДА! Какое же блаженство...\"</i>", "<i>\"Этот прилив сил... Пристрели шавку!\"</i>", "<i>\"Они поплатятся за то, что подняли на тебя клинок!\"</i>")))
+			playsound(src,'modular_twilight_axis/firearms/sound/bloodlock_reload.ogg', 100, FALSE)
+			var/adj_reload_time = reload_time
+			if(H.mind)
+				var/skill = H.get_skill_level(/datum/skill/combat/twilight_firearms)
+				if(skill)
+					adj_reload_time = reload_time / skill
+			if(do_after(H, adj_reload_time SECONDS, src))
+				H.adjust_bloodpool(-vitae_cost)
+				H.update_action_buttons()
+				playsound(H, 'modular_twilight_axis/firearms/sound/musketcock.ogg', 100, FALSE)
+				cocked = TRUE
 		else
 			to_chat(user, span_warning("Я совершенно не понимаю, как этим пользоваться!"))
 	else
