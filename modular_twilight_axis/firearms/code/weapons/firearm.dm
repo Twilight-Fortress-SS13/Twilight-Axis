@@ -246,6 +246,7 @@
 	inv_storage_delay = 1 SECONDS
 	var/spread_num = 10
 	var/damfactor = 1
+	var/accfactor = 1
 	var/critfactor = 1
 	var/npcdamfactor = 2
 	var/reloaded = FALSE
@@ -323,6 +324,8 @@
 /datum/intent/shoot/twilight_firearm
 	ready_sound = "modular_twilight_axis/firearms/sound/musketcock.ogg"
 	chargedrain = 0
+	hold_grace = RANGED_HOLD_GRACE * 3
+	hold_ramp = 0
 
 /datum/intent/shoot/twilight_firearm/get_chargetime()
 	if(mastermob && chargetime)
@@ -343,6 +346,8 @@
 	ready_sound = "modular_twilight_axis/firearms/sound/musketcock.ogg"
 	chargetime = 1
 	chargedrain = 0
+	hold_grace = RANGED_HOLD_GRACE * 3
+	hold_ramp = 0
 
 /datum/intent/arc/twilight_firearm/get_chargetime()
 	if(mastermob && chargetime)
@@ -431,6 +436,12 @@
 				icon = advanced_icon_r
 			else
 				icon = advanced_icon
+
+/obj/item/gun/ballistic/twilight_firearm/proc/apply_firearm_ranged_accuracy(obj/projectile/BB, mob/living/user)
+	if(!BB || !user)
+		return
+	var/level = max(1, (user.STAPER - 9))
+	BB.aim_peak = (ACC_RANGED_BASE + (level * ACC_RANGED_PER_SKILL)) * accfactor
 
 /obj/item/gun/ballistic/twilight_firearm/attackby(obj/item/A, mob/user, params)
 	var/firearm_skill = (user?.mind ? user.get_skill_level(/datum/skill/combat/twilight_firearms) : 1)
@@ -582,7 +593,9 @@
 
 /obj/item/gun/ballistic/twilight_firearm/get_mechanics_examine(mob/user)
 	. = ..()
+	var/riding_range = max(ceil(effective_range / 2), 2)
 	. += span_info("Прицельная дальность стрельбы этого оружия [effective_range]0 метров.")
+	. += span_small("[riding_range]0 метров при стрельбе верхом.")
 	switch(locktype)
 		if(LOCKTYPE_WHEELLOCK)
 			. += span_info("Колесцовые замки требуют пороховой заряд, пулю и уплотнение заряда шомполом перед стрельбой.")
@@ -637,6 +650,7 @@
 		spread = 0
 	for(var/obj/item/ammo_casing/CB in get_ammo_list(FALSE, TRUE))
 		var/obj/projectile/bullet/BB = CB.BB
+		apply_firearm_ranged_accuracy(BB, user)
 		BB.gunpowder = gunpowder
 	reloaded = FALSE
 	if(advanced_icon)
@@ -684,6 +698,8 @@
 					var/def_zone = "[(user.active_hand_index == 2) ? "r" : "l" ]_arm"
 					var/obj/item/bodypart/BP = user.get_bodypart(def_zone)
 					BP.add_wound(/datum/wound/dislocation)
+		if(user.buckled)
+			user.Immobilize(50 - (firearm_skill * 5))
 	else if(locktype == LOCKTYPE_FUSE)
 		if(advanced_icon_f)
 			icon = advanced_icon_f
@@ -730,6 +746,8 @@
 						var/def_zone = "[(user.active_hand_index == 2) ? "r" : "l" ]_arm"
 						var/obj/item/bodypart/BP = user.get_bodypart(def_zone)
 						BP.add_wound(/datum/wound/dislocation)
+			if(user.buckled)
+				user.Immobilize(50 - (firearm_skill * 5))
 
 /obj/item/gun/ballistic/twilight_firearm/can_shoot()
 	if (!reloaded)
