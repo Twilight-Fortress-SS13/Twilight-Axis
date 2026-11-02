@@ -324,7 +324,7 @@
 						H.equip_to_slot_or_del(new /obj/item/clothing/cloak/templar/undividedcleric, SLOT_CLOAK, TRUE)
 		if(/datum/patron/old_god)
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/silver, SLOT_RING, TRUE)
-			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/ornate, SLOT_ARMOR, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/fluted/ornate, SLOT_ARMOR, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/leather/studded/cuirbouilli, SLOT_SHIRT, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/chain/psydon, SLOT_GLOVES, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/clothing/shoes/roguetown/boots/otavan/inqboots, SLOT_SHOES, TRUE)
@@ -342,11 +342,13 @@
 		if(helmchoice != "None")
 			var/helmet = helmets[helmchoice]
 			H.equip_to_slot_if_possible(new helmet, SLOT_HEAD)
-	H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/cuirass, SLOT_ARMOR, TRUE)
-	H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk, SLOT_SHIRT, TRUE)
+	H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/fluted/ornate, SLOT_ARMOR, TRUE)
+	H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/leather/studded/cuirbouilli, SLOT_SHIRT, TRUE)
 	H.equip_to_slot_or_del(new /obj/item/clothing/gloves/roguetown/chain, SLOT_GLOVES, TRUE)
 	H.equip_to_slot_or_del(new /obj/item/clothing/wrists/roguetown/bracers/psythorns, SLOT_WRISTS, TRUE)
-	H.equip_to_slot_or_del(new /obj/item/clothing/shoes/roguetown/boots/armor, SLOT_SHOES, TRUE)
+	H.equip_to_slot_or_del(new /obj/item/clothing/shoes/roguetown/boots/otavan/inqboots, SLOT_SHOES, TRUE)
+	H.equip_to_slot_or_del(/obj/item/clothing/under/roguetown/platelegs, SLOT_PANTS, TRUE)
+	H.equip_to_slot_or_del(/obj/item/clothing/neck/roguetown/gorget/steel, SLOT_NECK, TRUE)
 
 /datum/advclass/wretch/heretic/spy
 	name = "Heretic Spy"
