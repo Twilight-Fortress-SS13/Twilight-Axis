@@ -4,17 +4,16 @@
 /// (written by tools/deploy_asset_bundles.sh) one at a time through client.preload_rsc:
 /// all icon bundles first, then sounds.
 /// BYOND has no "download finished" callback, so the next bundle is handed out after
-/// a delay estimated from the previous bundle's size.
 SUBSYSTEM_DEF(resource_preload)
 	name = "Resource Preload"
-	wait = 1 SECONDS
+	wait = 0.5 SECONDS
 	priority = FIRE_PRIORITY_PING
 	flags = SS_BACKGROUND
 	runlevels = RUNLEVEL_LOBBY | RUNLEVELS_DEFAULT
 
 	/// Dated CDN directory the bundles come from
 	var/version
-	/// Ordered list of list("url" = ..., "size" = bytes), icons before sounds
+	/// Ordered list of list("url" = ..., "category" = "icons"/"sounds"), icons before sounds
 	var/list/bundles = list()
 	/// ckey -> index of the last bundle handed to that player this round
 	var/list/progress = list()
@@ -22,10 +21,20 @@ SUBSYSTEM_DEF(resource_preload)
 	var/list/next_send = list()
 	/// ckey -> REF() of the client connection the progress belongs to
 	var/list/connections = list()
-	/// Download speed we plan for when spacing out bundles: 100 Mbit/s
-	var/assumed_bytes_per_second = 100 * 1000 * 1000 / 8
-	var/min_delay = 5 SECONDS
-	var/max_delay = 2 MINUTES
+	/// Delay after handing out an icon bundle
+	var/icon_delay = 10 SECONDS
+	/// Delay after handing out an icon bundle while the server is in the lobby runlevel
+	var/icon_lobby_delay = 5 SECONDS
+	/// Delay after handing out a sound bundle
+	var/sound_delay = 20 SECONDS
+	/// Delay after handing out a sound bundle while the server is in the lobby runlevel
+	var/sound_lobby_delay = 10 SECONDS
+	/// Fire interval while the server is in the lobby runlevel
+	var/lobby_wait = 0.5 SECONDS
+	/// Fire interval once the round is going
+	var/game_wait = 2 SECONDS
+	/// At most this many clients are looked at per fire, the rest wait for the next one
+	var/max_clients_per_fire = 10
 	/// Grace period after connecting, so we don't fight the login resource download
 	var/connect_delay = 15 SECONDS
 
@@ -64,17 +73,21 @@ SUBSYSTEM_DEF(resource_preload)
 		for(var/list/entry in entries)
 			if(!istext(entry["url"]))
 				continue
-			bundles += list(list("url" = entry["url"], "size" = isnum(entry["size"]) ? entry["size"] : 0))
+			bundles += list(list("url" = entry["url"], "category" = category))
 	log_config("Loaded [length(bundles)] asset bundles for version [version]")
 
 /datum/controller/subsystem/resource_preload/fire(resumed)
-	if(!resumed)
+	wait = Master.current_runlevel == RUNLEVEL_LOBBY ? lobby_wait : game_wait
+
+	if(!length(src.currentrun))
 		src.currentrun = GLOB.clients.Copy()
 
 	var/list/currentrun = src.currentrun
-	while(length(currentrun))
+	var/processed = 0
+	while(length(currentrun) && processed < max_clients_per_fire)
 		var/client/client = currentrun[currentrun.len]
 		currentrun.len--
+		processed++
 
 		if(client?.ckey)
 			process_client(client)
@@ -105,6 +118,12 @@ SUBSYSTEM_DEF(resource_preload)
 	var/list/bundle = bundles[index]
 	client.preload_rsc = bundle["url"]
 	progress[ckey] = index
-	next_send[ckey] = world.time + clamp(bundle["size"] / assumed_bytes_per_second * (1 SECONDS), min_delay, max_delay)
+	next_send[ckey] = world.time + get_delay(bundle["category"])
+
+/datum/controller/subsystem/resource_preload/proc/get_delay(category)
+	var/in_lobby = Master.current_runlevel == RUNLEVEL_LOBBY
+	if(category == "sounds")
+		return in_lobby ? sound_lobby_delay : sound_delay
+	return in_lobby ? icon_lobby_delay : icon_delay
 
 #undef RESOURCE_URLS_FILE
