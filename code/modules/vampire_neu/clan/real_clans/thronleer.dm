@@ -35,7 +35,6 @@
 		TRAIT_LIMBATTACHMENT,
 		TRAIT_SILVER_WEAK,
 		TRAIT_ZOMBIE_IMMUNE,
-		TRAIT_BREADY
 	)
 	clane_covens = list(
 		/datum/coven/demonic,
