@@ -14,12 +14,15 @@
 		TRAIT_CIVILIZEDBARBARIAN,
 		TRAIT_BLOOD_RESISTANCE,
 		TRAIT_ARCYNE,
-		TRAIT_NALEDI
+		TRAIT_NALEDI,
+		TRAIT_DODGEEXPERT
 	)
 	subclass_stats = list(
 		STATKEY_STR = 2,
-		STATKEY_WIL = 2,
-		STATKEY_CON = 3
+		STATKEY_WIL = 3,
+		STATKEY_CON = 3,
+		STATKEY_SPD = 1
+		STATKEY_INT = 1
 	)
 	subclass_skills = list(
 		/datum/skill/combat/wrestling = SKILL_LEVEL_APPRENTICE,
@@ -27,7 +30,7 @@
 		/datum/skill/combat/arcyne = SKILL_LEVEL_EXPERT, // Bare-handed abilities no weapon and read AA. Match unarmed.
 		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/magic/arcane = SKILL_LEVEL_APPRENTICE,
