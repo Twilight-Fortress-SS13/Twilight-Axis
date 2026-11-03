@@ -23,6 +23,8 @@
 	// taur_icon_state sets which icon to use from icons/mob/taurs.dmi to render
 	// (we don't use icon_state to avoid duplicate rendering on dropped organs)
 	var/taur_icon_state = "naga_s"
+	/// Stable clothing sprite ID, independent of the legacy saiga equipment overlays.
+	var/taur_sprite_id
 
 	// We can Blend() a color with the base greyscale color, only some tails support this
 	var/has_taur_color = FALSE
@@ -73,6 +75,7 @@ GLOBAL_LIST_INIT(taur_types, subtypesof(/obj/item/bodypart/taur))
 
 /obj/item/bodypart/taur/lamia
 	name = "Lamia Tail"
+	taur_sprite_id = "lamia"
 
 	offset_x = -16
 	taur_icon_state = "altnaga_s"
@@ -81,6 +84,7 @@ GLOBAL_LIST_INIT(taur_types, subtypesof(/obj/item/bodypart/taur))
 
 /obj/item/bodypart/taur/spider
 	name = "Spider Body"
+	taur_sprite_id = "spider"
 
 	offset_x = -16
 	taur_icon_state = "spider_s"
@@ -89,6 +93,7 @@ GLOBAL_LIST_INIT(taur_types, subtypesof(/obj/item/bodypart/taur))
 
 /obj/item/bodypart/taur/horse
 	name = "Saiga Body"
+	taur_sprite_id = "saiga"
 
 	offset_x = -16
 	taur_icon_state = "saiga_s"
@@ -99,6 +104,7 @@ GLOBAL_LIST_INIT(taur_types, subtypesof(/obj/item/bodypart/taur))
 
 /obj/item/bodypart/taur/goat
 	name = "Goat Legs"
+	taur_sprite_id = "goat"
 
 	offset_x = -16
 	taur_icon_state = "goat_s"
