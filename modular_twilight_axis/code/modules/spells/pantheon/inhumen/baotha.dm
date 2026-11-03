@@ -478,55 +478,83 @@
 
 // Insufflation - effectively just drugging yourself. Lets you pick, the same as Enrapturing Powder. T1, for now, to make up for the loss of the Baotha Blessing buff.
 
-/obj/effect/proc_holder/spell/self/TAinsufflation 
+/datum/action/cooldown/spell/baotha/TAinsufflation
 	name = "Insufflation"
-	desc = "Imbibes yourself on one of four drugs, in Her name. Your intent will determine the drug ingested. \n\
+	desc = "Imbibes yourself on one of four drugs, in Her name. Cycle the drug with Shift+G while the spell is selected. \n\
 	\
-	Feint intent will dose you on Spice, giving you +5 INT, +3 SPD, and -5 FOR. \n\
+	Spice: +5 INT, +3 SPD, and -5 FOR. \n\
 	\
-	Aimed intent will dose you on Moondust, giving you +3 SPD, +3 WILL, and -2 INT. \n\
+	Moondust: +3 SPD, +3 WILL, and -2 INT. \n\
 	\
-	Strong intent will dose you on Herozium, giving you -5 SPD, +4 WILL, -3 INT, +3 CON, pain immunity, and resistance to damage slowdown. \n\
+	Herozium: -5 SPD, +4 WILL, -3 INT, +3 CON, pain immunity, and resistance to damage slowdown. \n\
 	\
-	Swift intent will dose you on Starsugar, giving you +4 SPD, +4 WILL -3 INT, -3 CON, darkvision, and dodge expert."
-	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
+	Starsugar: +4 SPD, +4 WILL, -3 INT, -3 CON, darkvision, and dodge expert."
+	button_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
-	overlay_state = "powder"
-	glow_color = GLOW_COLOR_BAOTHA
+	overlay_icon_state = "powder"
+	button_icon_state = null
+	click_to_activate = TRUE
+	self_cast_possible = TRUE
 	glow_intensity = GLOW_INTENSITY_LOW
-	clothes_req = FALSE
-	associated_skill = /datum/skill/magic/holy
-	chargedloop = /datum/looping_sound/invokeascendant
-	releasedrain = 10
-	chargedrain = 0
-	chargetime = 15
-	recharge_time = 10 SECONDS
-	invocation_type = "emote"
-	invocations = list("flicks their wrist, filling the air in front of them with a fine powder.")
-	antimagic_allowed = TRUE
-	miracle = TRUE
-	devotion_cost = 30
+	required_items = null
+	charge_time = null
+	invocation_type = INVOCATION_EMOTE
+	invocations = list("%CASTER flicks their wrist, filling the air in front of them with a fine powder.")
+	spell_requirements = SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
+	check_flags = AB_CHECK_CONSCIOUS
+	primary_resource_cost = SPELLCOST_MIRACLE
+	secondary_resource_cost = SPELLCOST_MINOR_PROJECTILE
+	cooldown_time = 10 SECONDS
+	sound = null
+	var/current_mode = 3
+	var/list/modes = list(
+		list("name" = "Spice", "tag" = "SPICE", "reagent" = /datum/reagent/druqks, "dose" = 8, "buff" = /datum/status_effect/buff/druqks),
+		list("name" = "Moondust", "tag" = "DUST", "reagent" = /datum/reagent/moondust_purest, "dose" = 8, "buff" = /datum/status_effect/buff/moondust_purest),
+		list("name" = "Herozium", "tag" = "HERO", "reagent" = /datum/reagent/herozium, "dose" = 19.5, "buff" = /datum/status_effect/buff/herozium),
+		list("name" = "Starsugar", "tag" = "STAR", "reagent" = /datum/reagent/starsugar, "dose" = 19.5, "buff" = /datum/status_effect/buff/starsugar),
+	)
 
-/obj/effect/proc_holder/spell/self/TAinsufflation/cast(list/targets, mob/user)
-	if(!ishuman(user))
-		revert_cast()
+/datum/action/cooldown/spell/baotha/TAinsufflation/Grant(mob/grant_to)
+	. = ..()
+	apply_mode(current_mode)
+
+/datum/action/cooldown/spell/baotha/TAinsufflation/proc/apply_mode(index)
+	var/list/mode = modes[index]
+	update_mode_maptext(mode["tag"])
+
+/datum/action/cooldown/spell/baotha/TAinsufflation/toggle_alt_mode(mob/user)
+	current_mode = (current_mode % length(modes)) + 1
+	apply_mode(current_mode)
+	to_chat(user, span_notice("[name]: [modes[current_mode]["name"]] mode."))
+	return TRUE
+
+/datum/action/cooldown/spell/baotha/TAinsufflation/proc/update_mode_maptext(tag)
+	for(var/datum/hud/hud as anything in viewers)
+		var/atom/movable/screen/movable/action_button/B = viewers[hud]
+		var/atom/movable/screen/arc_maptext_holder/holder
+		for(var/atom/movable/screen/arc_maptext_holder/existing in B.vis_contents)
+			holder = existing
+			break
+		if(!holder)
+			holder = new(B)
+			B.vis_contents.Add(holder)
+		holder.maptext = MAPTEXT(tag)
+		holder.color = GLOW_COLOR_BAOTHA
+
+/datum/action/cooldown/spell/baotha/TAinsufflation/cast(atom/cast_on)
+	. = ..()
+	var/mob/living/carbon/user = owner
+	if(!istype(user))
 		return FALSE
-	switch(user.rmb_intent.name)
-		if("feint")
-			user.reagents.add_reagent(/datum/reagent/druqks, 4)
-			return TRUE
-		if("aimed")
-			user.reagents.add_reagent(/datum/reagent/moondust_purest, 8)
-			return TRUE
-		if("strong")
-			user.reagents.add_reagent(/datum/reagent/herozium, 8)
-			return TRUE
-		if("swift")
-			user.reagents.add_reagent(/datum/reagent/starsugar, 8)
-			return TRUE
-		else
-			user.reagents.add_reagent(/datum/reagent/herozium, 8)
-			return TRUE
+	var/list/mode = modes[current_mode]
+	user.reagents.add_reagent(mode["reagent"], mode["dose"])
+	user.apply_status_effect(mode["buff"])
+	return TRUE
+
+/datum/action/cooldown/spell/baotha/TAinsufflation/get_spell_statistics(mob/living/user)
+	var/list/stats = ..()
+	stats += span_info("Drug (Shift+G): Spice / Moondust / Herozium / Starsugar.")
+	return stats
 
 //Enrapturing Powder - T2, basically a crackhead blowing cocaine in your face.
 

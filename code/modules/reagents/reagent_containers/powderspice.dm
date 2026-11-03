@@ -347,6 +347,7 @@
 
 /datum/reagent/moondust_purest/on_mob_end_metabolize(mob/living/M)
 	animate(M.client)
+	M.remove_status_effect(/datum/status_effect/buff/moondust_purest)
 
 /datum/reagent/moondust_purest/on_mob_life(mob/living/carbon/M)
 	narcolepsy_drug_up(M)
