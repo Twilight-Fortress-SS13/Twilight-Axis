@@ -32,10 +32,10 @@ SUBSYSTEM_DEF(vote)
 	var/list/vote_powers = list()
 	var/list/storyteller_vote_log = list()
 	var/list/storyteller_vote_penalties = list()
-	var/storyteller_vote_last_winner = null
 	var/ticker_managed_storyteller_vote = FALSE
 	var/roundstart_storyteller_winner
 	var/roundstart_storyteller_population = 0
+	var/roundstart_storyteller_voter_count = 0
 	var/roundstart_storyteller_recorded = FALSE
 	var/list/map_vote_coefficients = list()
 	var/list/generated_actions = list()
@@ -102,45 +102,89 @@ SUBSYSTEM_DEF(vote)
 
 /datum/controller/subsystem/vote/proc/load_storyteller_vote_penalties()
 	storyteller_vote_penalties.Cut()
-	storyteller_vote_last_winner = null
 	var/json_file = file(STORYTELLER_VOTE_PENALTIES_FILE)
 	if(!fexists(json_file))
 		return
 	var/list/file_data = safe_json_decode(file2text(json_file))
 	if(!islist(file_data))
 		return
-	var/last_winner = file_data["last_winner"]
-	if(!istext(last_winner) || !ispath(text2path(last_winner), /datum/storyteller))
-		return
 	var/list/penalties = file_data["penalties"]
 	if(!islist(penalties))
 		return
-	var/penalty = penalties[last_winner]
-	if(!isnum(penalty))
-		penalty = text2num("[penalty]")
-	if(penalty > 0)
-		storyteller_vote_last_winner = last_winner
-		storyteller_vote_penalties[last_winner] = min(0.9, round(penalty, 0.01))
+	for(var/storyteller_path in penalties)
+		if(!ispath(text2path(storyteller_path), /datum/storyteller))
+			continue
+		var/penalty_mult = penalties[storyteller_path]
+		if(!isnum(penalty_mult))
+			penalty_mult = text2num("[penalty_mult]")
+		if(!penalty_mult)
+			continue
+		if(penalty_mult > 0 && penalty_mult <= 0.2)
+			penalty_mult = 1 - penalty_mult // legacy format: stored penalty amount instead of multiplier
+		penalty_mult = round(penalty_mult, 0.01)
+		if(penalty_mult < 0.1 || penalty_mult > 1)
+			continue
+		storyteller_vote_penalties[storyteller_path] = penalty_mult
+		break
 
 /datum/controller/subsystem/vote/proc/record_roundstart_storyteller_vote()
 	if(roundstart_storyteller_recorded || !roundstart_storyteller_winner)
 		return
 	roundstart_storyteller_recorded = TRUE
-	var/winner_key = "[roundstart_storyteller_winner]"
-	var/penalty = 0
-	if(roundstart_storyteller_population < 50)
-		if(storyteller_vote_last_winner == winner_key)
-			penalty = min(0.9, round((storyteller_vote_penalties[winner_key] || 0) + 0.1, 0.01))
-		else
-			penalty = 0.2
 	storyteller_vote_penalties.Cut()
-	storyteller_vote_last_winner = null
-	if(penalty > 0)
-		storyteller_vote_penalties[winner_key] = penalty
-		storyteller_vote_last_winner = winner_key
-	var/json_file = file(STORYTELLER_VOTE_PENALTIES_FILE)
-	fdel(json_file)
-	WRITE_FILE(json_file, json_encode(list("last_winner" = storyteller_vote_last_winner, "penalties" = storyteller_vote_penalties)))
+	if(roundstart_storyteller_voter_count < 50)
+		var/current_key = null
+		var/current_mult = 1
+		var/json_file = file(STORYTELLER_VOTE_PENALTIES_FILE)
+		if(fexists(json_file))
+			var/list/file_data = safe_json_decode(file2text(json_file))
+			if(islist(file_data))
+				var/list/penalties = file_data["penalties"]
+				if(islist(penalties))
+					for(var/storyteller_path in penalties)
+						if(!ispath(text2path(storyteller_path), /datum/storyteller))
+							continue
+						var/saved_mult = penalties[storyteller_path]
+						if(!isnum(saved_mult))
+							saved_mult = text2num("[saved_mult]")
+						if(saved_mult > 0 && saved_mult <= 0.2)
+							saved_mult = 1 - saved_mult
+						if(saved_mult >= 0.1 && saved_mult <= 1)
+							current_key = storyteller_path
+							current_mult = round(saved_mult, 0.01)
+							break
+		var/winner_key = "[roundstart_storyteller_winner]"
+		var/new_mult = 0.8
+		if(current_key == winner_key)
+			new_mult = max(0.1, round(current_mult - 0.1, 0.01))
+		storyteller_vote_penalties[winner_key] = new_mult
+	var/json_file_out = file(STORYTELLER_VOTE_PENALTIES_FILE)
+	fdel(json_file_out)
+	WRITE_FILE(json_file_out, json_encode(list("penalties" = storyteller_vote_penalties)))
+
+/datum/controller/subsystem/vote/proc/get_storyteller_penalty_mult(storyteller_type)
+	if(!ispath(storyteller_type, /datum/storyteller))
+		return 1
+	return storyteller_vote_penalties["[storyteller_type]"] || 1
+
+/datum/controller/subsystem/vote/proc/get_storyteller_penalty_text(storyteller_type)
+	var/penalty_mult = get_storyteller_penalty_mult(storyteller_type)
+	if(penalty_mult >= 1)
+		return "нет (x1)"
+	var/penalty_percent = round((1 - penalty_mult) * 100)
+	return "-[penalty_percent]% (x[format_vote_power(penalty_mult)])"
+
+/datum/controller/subsystem/vote/proc/get_storyteller_raw_vote_count(choice_text)
+	if(!choice_text)
+		return 0
+	var/count = 0
+	for(var/voter_ckey in storyteller_vote_log)
+		var/list/vote_data = storyteller_vote_log[voter_ckey]
+		if(!islist(vote_data))
+			continue
+		if(vote_data["choice"] == choice_text)
+			count++
+	return count
 
 /datum/controller/subsystem/vote/proc/get_storyteller_vote_mult(storyteller_type)
 	if(!ispath(storyteller_type, /datum/storyteller))
@@ -154,8 +198,7 @@ SUBSYSTEM_DEF(vote)
 		base_mult = preset.highpop_vote_mult
 	else if(ready_count > 40)
 		base_mult = preset.midpop_vote_mult
-	var/penalty = storyteller_vote_penalties["[storyteller_type]"] || 0
-	return round(base_mult * (1 - penalty), 0.01)
+	return round(base_mult * get_storyteller_penalty_mult(storyteller_type), 0.01)
 
 /// An option's votes after its multiplier, rounded down. Only votes cast this vote count; the multiplier just
 /// scales them, so a preset nobody voted for still scores 0. A preset that got any votes scores at least 1, so in
@@ -164,7 +207,7 @@ SUBSYSTEM_DEF(vote)
 	var/votes = choices[option] || 0
 	if(votes <= 0)
 		return 0
-	return max(1, floor(votes * get_storyteller_vote_mult(get_storyteller_choice_type(option)))) // TA EDIT
+	return round(votes * get_storyteller_vote_mult(get_storyteller_choice_type(option)), 0.01)
 
 /datum/controller/subsystem/vote/proc/format_vote_power(vote_power)
 	return "[round((vote_power || 0), 0.01)]"
@@ -388,14 +431,9 @@ SUBSYSTEM_DEF(vote)
 		var/choice_text = choices[option_index]
 		var/storyteller_type = get_storyteller_choice_type(choice_text)
 		var/votes = get_storyteller_effective_votes(choice_text)
-		// TA EDIT START
-		var/mult = get_storyteller_vote_mult(storyteller_type)
-		var/overdue_text = ""
-		if(mult != 1)
-			var/streak_multiplier = round(1 - (storyteller_vote_penalties["[storyteller_type]"] || 0), 0.01)
-			var/streak_text = streak_multiplier < 1 ? "; серия побед: x[streak_multiplier]" : ""
-			overdue_text = "<div style='color:[theme["meta"]];font-size:0.7rem;font-style:italic;opacity:0.85;'>Итоговый вес x[mult] (готово: [length(GLOB.ready_player_list)][streak_text]; исходные голоса: [format_vote_power(choices[choice_text] || 0)])</div>"
-		// TA EDIT END
+		var/raw_votes = get_storyteller_raw_vote_count(choice_text)
+		var/penalty_text = get_storyteller_penalty_text(storyteller_type)
+		var/vote_mult = get_storyteller_vote_mult(storyteller_type)
 		var/is_selected = (selected_option == choice_text)
 		var/selected_color = theme["selection_color"]
 		var/selected_text = is_selected ? " <span style='color:[selected_color];font-size:0.76rem;font-weight:bold;'>(выбрано)</span>" : ""
@@ -403,9 +441,13 @@ SUBSYSTEM_DEF(vote)
 		var/details_link = "<a href='?src=[REF(SSgamemode)];storyboy_details=[storyteller_type]' style='display:inline-block;margin-left:4px;color:[theme["meta"]];font-size:0.75rem;text-decoration:none;'>(?)</a>"
 		var/threat = SSgamemode.preset_threat_tags(storyteller_type, theme["border"])
 		if(can_vote)
-			entry += "<div><a href='?src=[REF(src)];vote=[option_index]' style='font-size:0.9rem;color:[theme["link"]];font-weight:bold;'>[choice_text]</a>[details_link][selected_text] <span style='color:[theme["meta"]];font-size:0.76rem;'>[format_vote_power(votes)] вес</span></div>[threat][overdue_text]"
+			entry += "<div><a href='?src=[REF(src)];vote=[option_index]' style='font-size:0.9rem;color:[theme["link"]];font-weight:bold;'>[choice_text]</a>[details_link][selected_text] <span style='color:[theme["meta"]];font-size:0.76rem;'>[format_vote_power(votes)] вес</span></div>"
 		else
-			entry += "<div><span style='font-size:0.9rem;font-weight:bold;'>[choice_text]</span>[details_link][selected_text] <span style='color:[theme["meta"]];font-size:0.76rem;'>[format_vote_power(votes)] вес</span></div>[threat][overdue_text]"
+			entry += "<div><span style='font-size:0.9rem;font-weight:bold;'>[choice_text]</span>[details_link][selected_text] <span style='color:[theme["meta"]];font-size:0.76rem;'>[format_vote_power(votes)] вес</span></div>"
+		entry += "<div style='margin-top:3px;color:[theme["summary"]];font-size:0.8rem;'>Голосов за режим: [raw_votes]</div>"
+		entry += "<div style='margin-top:2px;color:[theme["summary"]];font-size:0.8rem;'>Текущий штраф: [penalty_text]</div>"
+		entry += "<div style='margin-top:2px;color:[theme["summary"]];font-size:0.8rem;'>Вес одного голоса: x[format_vote_power(vote_mult)]</div>"
+		entry += "[threat]"
 		entry += "</div>"
 		dat += entry
 	dat += "</div></div>"
@@ -941,7 +983,7 @@ SUBSYSTEM_DEF(vote)
 		if(mode == "storyteller")
 			if(!length(storyteller_vote_log))
 				load_storyteller_vote_log()
-			var/pool_text = "Нажмите (?) для описания режимов. Крупные раундстартовые антагонисты требуют не менее [HARD_ANTAG_MIN_POP] активных игроков. При 60+ готовых игроков базовый вес x1; при 41-59 — High и Medium x0.66, Low x1; при 40 и меньше — High x0.16, Medium x0.33, Low x1. При менее чем 50 готовых победитель получает x0.80 на следующий раунд; каждая его следующая победа подряд снижает множитель на 0.10 (x0.70, x0.60 и далее, минимум x0.10). Победа другого режима сбрасывает прежний штраф и начинает новую серию с x0.80. При 50+ готовых серия сбрасывается. Отображаются итоговые множители и голоса." // TA EDIT
+			var/pool_text = "Нажмите (?) для описания режимов. Крупные раундстартовые антагонисты требуют не менее [HARD_ANTAG_MIN_POP] активных игроков. При 60+ готовых игроков базовый вес x1; при 41-59 — High и Medium x0.66, Low x1; при 40 и меньше — High x0.16, Medium x0.33, Low x1. Если проголосовало меньше 50 человек, победивший режим в следующем раунде получает штраф x0.8; если победит снова — x0.7, затем x0.6 и так далее до минимума x0.1. Победа другого режима сбрасывает прежнюю серию и начинает новую для нового победителя. Ниже показываются текущий штраф, вес одного голоса и количество поданных голосов за режим." // TA EDIT
 			. += "<div style='color:#992414;font-size:0.9rem;margin-bottom:6px;'>[pool_text]</div>"
 			. += render_storyteller_choices(can_vote, C)
 		else
