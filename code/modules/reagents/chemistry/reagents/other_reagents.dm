@@ -122,6 +122,8 @@
 			H.adjust_hydration(hydration)
 		if(M.blood_volume < BLOOD_VOLUME_NORMAL)
 			M.blood_volume = min(M.blood_volume+WATER_BLOOD_RESTORE, BLOOD_VOLUME_NORMAL)
+		if(M.bodytemperature > BODYTEMP_NORMAL_MIN + 5) // TA EDIT
+			M.adjust_bodytemperature(-5) // TA EDIT
 	..()
 #undef WATER_BLOOD_RESTORE
 
@@ -305,6 +307,10 @@
 	if(method == TOUCH)
 		M.adjust_fire_stacks(-(reac_volume / 10))
 		M.SoakMob(FULL_BODY)
+	if(method == TOUCH || method == VAPOR || method == PATCH) // TA EDIT
+		var/cooling = min(reac_volume * (100 / 120), max(0, M.bodytemperature - BODYTEMP_COLD_LEVEL_ONE_MAX)) // TA EDIT
+		if(cooling > 0) // TA EDIT
+			M.adjust_bodytemperature(-cooling) // TA EDIT
 //		for(var/obj/effect/decal/cleanable/blood/target in M)
 //			qdel(target)
 	..()

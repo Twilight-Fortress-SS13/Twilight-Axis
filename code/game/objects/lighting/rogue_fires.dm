@@ -47,6 +47,8 @@
 			H.visible_message("<span class='info'>[H] warms [user.p_their()] hand over the fire.</span>")
 
 			if(do_after(H, 15, target = src))
+				if(H.bodytemperature < BODYTEMP_NORMAL_MIN) // TA EDIT
+					H.ta_climate_warm_from_source(10) // TA EDIT
 				var/obj/item/bodypart/affecting = H.get_bodypart("[(user.active_hand_index % 2 == 0) ? "r" : "l" ]_arm")
 				to_chat(H, "<span class='warning'>HOT!</span>")
 				if(affecting && affecting.receive_damage( 0, 5 ))		// 5 burn damage
@@ -599,6 +601,7 @@
 			if(istype(H))
 				H.visible_message(span_info("[H] warms [user.p_their()] hand over the embers."))
 				if(do_after(H, 50, target = src))
+					H.ta_climate_warm_from_source(75) // TA EDIT
 					var/obj/item/bodypart/affecting = H.get_bodypart("[(user.active_hand_index % 2 == 0) ? "r" : "l" ]_arm")
 					to_chat(H, span_warning("HOT!"))
 					if(affecting && affecting.receive_damage( 0, 5 ))		// 5 burn damage
@@ -865,6 +868,7 @@
 		var/mob/living/carbon/human/H = user
 		if(ishuman(H))
 			H.visible_message(span_info("[H] warms [user.p_their()] hand near the fire."))
+			H.ta_climate_warm_from_source(75) // TA EDIT
 
 /obj/machinery/light/rogue/campfire/process()
 	..()

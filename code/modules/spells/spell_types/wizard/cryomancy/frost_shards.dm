@@ -99,6 +99,7 @@
 				L.adjust_fire_stacks(-1)
 				L.visible_message(span_warning("The frost dampens the flames on [L]!"))
 			apply_frost_stack(L)
+			ta_climate_apply_spell_temperature(L, -23) // TA EDIT
 			playsound(get_turf(L), pick('sound/combat/fracture/fracturedry (1).ogg', 'sound/combat/fracture/fracturedry (2).ogg', 'sound/combat/fracture/fracturedry (3).ogg'), 80, TRUE)
 			new /obj/effect/temp_visual/snap_freeze(get_turf(L))
 	else if(isobj(target))
@@ -147,6 +148,7 @@
 				L.adjust_fire_stacks(-1)
 				L.visible_message(span_warning("The frost dampens the flames on [L]!"))
 			apply_frost_stack(L)
+			ta_climate_apply_spell_temperature(L, -23) // TA EDIT
 			playsound(get_turf(L), pick('sound/combat/fracture/fracturedry (1).ogg', 'sound/combat/fracture/fracturedry (2).ogg', 'sound/combat/fracture/fracturedry (3).ogg'), 80, TRUE)
 			new /obj/effect/temp_visual/snap_freeze(get_turf(L))
 	else if(isobj(target))

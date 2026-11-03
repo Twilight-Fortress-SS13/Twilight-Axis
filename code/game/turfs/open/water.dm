@@ -249,6 +249,8 @@
 					if(AM.loc == src)
 						water_overlay.layer = ABOVE_MOB_LAYER
 						water_overlay.plane = GAME_PLANE_HIGHEST
+		if(temperature <= 250 && L.bodytemperature > BODYTEMP_COLD_LEVEL_ONE_MAX + 10) // TA EDIT
+			L.adjust_bodytemperature(-5) // TA EDIT
 		if(!istype(L, /mob/living/carbon/human/species/skeleton))
 			return
 		if(!istype(src, /turf/open/water/sewer))
@@ -296,6 +298,12 @@
 					user.remove_stress(/datum/stressevent/sewertouched)
 					user.remove_stress(/datum/stressevent/unlanded_noble_bloody_equipment)
 				playsound(user, pick(wash), 100, FALSE)
+				if(temperature < 250 && L.bodytemperature > BODYTEMP_COLD_LEVEL_ONE_MAX + 75) // TA EDIT
+					L.adjust_bodytemperature(-75) // TA EDIT
+				else if(temperature >= 300 && L.bodytemperature < BODYTEMP_NORMAL_MIN) // TA EDIT
+					L.adjust_bodytemperature(75) // TA EDIT
+				else if(temperature >= 300 && L.bodytemperature > BODYTEMP_NORMAL_MAX) // TA EDIT
+					L.adjust_bodytemperature(-75) // TA EDIT
 				if(istype(src,/turf/open/water/sewer) || istype(src,/turf/open/water/swamp))
 					if (istype(src, /turf/open/water/sewer) || (istype(src, /turf/open/water/swamp) && HAS_TRAIT(user, TRAIT_NOBLE_UNLANDED)))
 						user.add_stress(/datum/stressevent/sewertouched)

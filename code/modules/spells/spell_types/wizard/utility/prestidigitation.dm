@@ -2,6 +2,7 @@
 #define PRESTI_SPARK "presti_spark"
 #define PRESTI_MOTE "presti_mote"
 #define PRESTI_SENSE "presti_sense"
+#define PRESTI_SPLASH "presti_splash" // TA EDIT
 
 /datum/action/cooldown/spell/touch/prestidigitation
 	name = "Prestidigitation"
@@ -48,6 +49,9 @@
 		if(/datum/intent/hand/sense)
 			if(presti_hand.sense_leylines(caster))
 				handle_presti_cost(caster, PRESTI_SENSE)
+		if(/datum/intent/hand/splash) // TA EDIT
+			if(presti_hand.ta_climate_shoot_waterbolt(caster, victim)) // TA EDIT
+				handle_presti_cost(caster, PRESTI_SPLASH) // TA EDIT
 
 	return FALSE // don't consume the hand
 
@@ -63,6 +67,8 @@
 			extra_fatigue = 15
 		if(PRESTI_SENSE)
 			extra_fatigue = 10
+		if(PRESTI_SPLASH) // TA EDIT
+			extra_fatigue = 15 // TA EDIT
 
 	user.stamina_add(fatigue_used + extra_fatigue)
 
@@ -297,6 +303,7 @@
 #undef PRESTI_SPARK
 #undef PRESTI_MOTE
 #undef PRESTI_SENSE
+#undef PRESTI_SPLASH // TA EDIT
 
 /obj/effect/temp_visual/cleaning_pulse
 	name = "cleaning pulse"

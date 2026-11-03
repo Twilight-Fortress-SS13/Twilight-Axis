@@ -216,26 +216,26 @@
 /mob/living/carbon/human/proc/get_heat_protection_flags(temperature) //Temperature is the temperature you're being exposed to.
 	var/thermal_protection_flags = 0
 	//Handle normal clothing
-	if(head)
+	if(head && !head.obj_broken) // TA EDIT
 		if(head.max_heat_protection_temperature && head.max_heat_protection_temperature >= temperature)
-			thermal_protection_flags |= head.heat_protection
-	if(wear_armor)
+			thermal_protection_flags |= ta_climate_effective_thermal_flags(head, head.heat_protection) // TA EDIT
+	if(wear_armor && !wear_armor.obj_broken) // TA EDIT
 		if(wear_armor.max_heat_protection_temperature && wear_armor.max_heat_protection_temperature >= temperature)
-			thermal_protection_flags |= wear_armor.heat_protection
-	if(wear_pants)
+			thermal_protection_flags |= ta_climate_effective_thermal_flags(wear_armor, wear_armor.heat_protection) // TA EDIT
+	if(wear_pants && !wear_pants.obj_broken) // TA EDIT
 		if(wear_pants.max_heat_protection_temperature && wear_pants.max_heat_protection_temperature >= temperature)
-			thermal_protection_flags |= wear_pants.heat_protection
-	if(shoes)
+			thermal_protection_flags |= ta_climate_effective_thermal_flags(wear_pants, wear_pants.heat_protection) // TA EDIT
+	if(shoes && !shoes.obj_broken) // TA EDIT
 		if(shoes.max_heat_protection_temperature && shoes.max_heat_protection_temperature >= temperature)
-			thermal_protection_flags |= shoes.heat_protection
-	if(gloves)
+			thermal_protection_flags |= ta_climate_effective_thermal_flags(shoes, shoes.heat_protection) // TA EDIT
+	if(gloves && !gloves.obj_broken) // TA EDIT
 		if(gloves.max_heat_protection_temperature && gloves.max_heat_protection_temperature >= temperature)
-			thermal_protection_flags |= gloves.heat_protection
-	if(wear_mask)
+			thermal_protection_flags |= ta_climate_effective_thermal_flags(gloves, gloves.heat_protection) // TA EDIT
+	if(wear_mask && !wear_mask.obj_broken) // TA EDIT
 		if(wear_mask.max_heat_protection_temperature && wear_mask.max_heat_protection_temperature >= temperature)
-			thermal_protection_flags |= wear_mask.heat_protection
+			thermal_protection_flags |= ta_climate_effective_thermal_flags(wear_mask, wear_mask.heat_protection) // TA EDIT
 
-	return thermal_protection_flags
+	return thermal_protection_flags | ta_climate_extra_heat_clothing_flags(temperature) | ta_climate_trait_thermal_flags() // TA EDIT
 
 /mob/living/carbon/human/proc/get_heat_protection(temperature) //Temperature is the temperature you're being exposed to.
 	var/thermal_protection_flags = get_heat_protection_flags(temperature)
@@ -273,26 +273,26 @@
 	var/thermal_protection_flags = 0
 	//Handle normal clothing
 
-	if(head)
+	if(head && !head.obj_broken) // TA EDIT
 		if(head.min_cold_protection_temperature && head.min_cold_protection_temperature <= temperature)
-			thermal_protection_flags |= head.cold_protection
-	if(wear_armor)
+			thermal_protection_flags |= ta_climate_effective_thermal_flags(head, head.cold_protection) // TA EDIT
+	if(wear_armor && !wear_armor.obj_broken) // TA EDIT
 		if(wear_armor.min_cold_protection_temperature && wear_armor.min_cold_protection_temperature <= temperature)
-			thermal_protection_flags |= wear_armor.cold_protection
-	if(wear_pants)
+			thermal_protection_flags |= ta_climate_effective_thermal_flags(wear_armor, wear_armor.cold_protection) // TA EDIT
+	if(wear_pants && !wear_pants.obj_broken) // TA EDIT
 		if(wear_pants.min_cold_protection_temperature && wear_pants.min_cold_protection_temperature <= temperature)
-			thermal_protection_flags |= wear_pants.cold_protection
-	if(shoes)
+			thermal_protection_flags |= ta_climate_effective_thermal_flags(wear_pants, wear_pants.cold_protection) // TA EDIT
+	if(shoes && !shoes.obj_broken) // TA EDIT
 		if(shoes.min_cold_protection_temperature && shoes.min_cold_protection_temperature <= temperature)
-			thermal_protection_flags |= shoes.cold_protection
-	if(gloves)
+			thermal_protection_flags |= ta_climate_effective_thermal_flags(shoes, shoes.cold_protection) // TA EDIT
+	if(gloves && !gloves.obj_broken) // TA EDIT
 		if(gloves.min_cold_protection_temperature && gloves.min_cold_protection_temperature <= temperature)
-			thermal_protection_flags |= gloves.cold_protection
-	if(wear_mask)
+			thermal_protection_flags |= ta_climate_effective_thermal_flags(gloves, gloves.cold_protection) // TA EDIT
+	if(wear_mask && !wear_mask.obj_broken) // TA EDIT
 		if(wear_mask.min_cold_protection_temperature && wear_mask.min_cold_protection_temperature <= temperature)
-			thermal_protection_flags |= wear_mask.cold_protection
+			thermal_protection_flags |= ta_climate_effective_thermal_flags(wear_mask, wear_mask.cold_protection) // TA EDIT
 
-	return thermal_protection_flags
+	return thermal_protection_flags | ta_climate_extra_cold_clothing_flags(temperature) | ta_climate_trait_thermal_flags() // TA EDIT
 
 /mob/living/carbon/human/proc/get_cold_protection(temperature)
 	temperature = max(temperature, 2.7) //There is an occasional bug where the temperature is miscalculated in ares with a small amount of gas on them, so this is necessary to ensure that that bug does not affect this calculation. Space's temperature is 2.7K and most suits that are intended to protect against any cold, protect down to 2.0K.

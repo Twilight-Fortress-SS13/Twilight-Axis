@@ -110,6 +110,7 @@
 				L.adjust_fire_stacks(-1)
 				L.visible_message(span_warning("The frost dampens the flames on [L]!"))
 			apply_frost_stack(L, 2)
+			ta_climate_apply_spell_temperature(L, -35) // TA EDIT
 			playsound(get_turf(L), pick('sound/combat/fracture/fracturedry (1).ogg', 'sound/combat/fracture/fracturedry (2).ogg', 'sound/combat/fracture/fracturedry (3).ogg'), 80, TRUE)
 			new /obj/effect/temp_visual/snap_freeze(get_turf(L))
 		hits++
@@ -193,6 +194,7 @@
 					skip_animation = TRUE, SPELL_STRIKE_SCALING) == ARCYNE_STRIKE_WARDED)
 					continue
 				apply_frost_stack(L, 1)
+				ta_climate_apply_spell_temperature(L, -35) // TA EDIT
 				new /obj/effect/temp_visual/spell_impact(get_turf(L), GLOW_COLOR_ICE, SPELL_IMPACT_MEDIUM)
 
 	// Apply frost to direct hit target (AOE loop skips them)
@@ -202,6 +204,7 @@
 			L.adjust_fire_stacks(-1)
 			L.visible_message(span_warning("The frost dampens the flames on [L]!"))
 		apply_frost_stack(L, 1)
+		ta_climate_apply_spell_temperature(L, -35) // TA EDIT
 
 	qdel(src)
 	return TRUE
