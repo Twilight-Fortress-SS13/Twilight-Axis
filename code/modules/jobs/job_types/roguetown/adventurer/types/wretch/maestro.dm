@@ -23,6 +23,7 @@
 	subclass_skills = list(
 		/datum/skill/misc/music		= SKILL_LEVEL_MASTER,
 		/datum/skill/misc/sneaking	= SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/stealing	= SKILL_LEVEL_JOURNEYMAN, // TA EDIT
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics	= SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/climbing	= SKILL_LEVEL_JOURNEYMAN,
@@ -104,6 +105,7 @@
 
 				ADD_TRAIT(H, TRAIT_LIGHT_STEP, TRAIT_GENERIC)
 				H.adjust_skillrank_up_to(/datum/skill/misc/sneaking,	SKILL_LEVEL_EXPERT, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/misc/stealing,	SKILL_LEVEL_EXPERT, TRUE) // TA EDIT
 				H.adjust_skillrank_up_to(/datum/skill/misc/lockpicking, SKILL_LEVEL_EXPERT, TRUE)
 				H.adjust_skillrank_up_to(/datum/skill/misc/climbing,	SKILL_LEVEL_EXPERT, TRUE)
 				H.adjust_skillrank_up_to(/datum/skill/combat/knives,	SKILL_LEVEL_EXPERT, TRUE)
