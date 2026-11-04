@@ -28,9 +28,9 @@
 	always_show_on_latechoices = TRUE
 	job_reopens_slots_on_death = FALSE //no endless stream of bandits, unless the migration waves deem it so
 	job_traits = list(TRAIT_SELF_SUSTENANCE, TRAIT_STEELHEARTED)//Bandits and knaves truly though
-	vice_restrictions = list(/datum/charflaw/wanted)
-	same_job_respawn_delay = 30 MINUTES
-	cmode_music = sound("sound/music/cmode/antag/combat_deadlyshadows.ogg")
+	vice_restrictions = list(/datum/charflaw/mute, /datum/charflaw/wanted, /datum/charflaw/forlorne) // TA EDIT
+	same_job_respawn_delay = 30 MINUTES // TA EDIT
+	cmode_music = sound("sound/music/cmode/antag/combat_deadlyshadows.ogg") // TA EDIT
 	job_subclasses = list(
 		/datum/advclass/brigand,
 		/datum/advclass/hedgealchemist,
