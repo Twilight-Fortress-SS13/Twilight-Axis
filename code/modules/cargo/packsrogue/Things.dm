@@ -135,6 +135,11 @@
 	cost = 25
 	contains = list(/obj/item/storage/backpack/rogue/satchel)
 
+/datum/supply_pack/rogue/Things/short_satchel
+	name = "Short Satchel"
+	cost = 25
+	contains = list(/obj/item/storage/backpack/rogue/satchel/short)
+
 /datum/supply_pack/rogue/Things/backpack
 	name = "Backpack"
 	cost = 30
@@ -144,6 +149,21 @@
 	name = "Leather Belt"
 	cost = 10
 	contains = list(/obj/item/storage/belt/rogue/leather)
+
+/datum/supply_pack/rogue/Things/maille_mask_iron
+	name = "Maille Mask, Iron"
+	cost = 25
+	contains = list(/obj/item/clothing/mask/rogue/facemask/maille)
+
+/datum/supply_pack/rogue/Things/fluted_maille_mask_iron
+	name = "Fluted Maille Mask, Iron"
+	cost = 30
+	contains = list(/obj/item/clothing/mask/rogue/facemask/maille/fluted)
+
+/datum/supply_pack/rogue/Things/fluted_maille_mask_steel
+	name = "Fluted Maille Mask, Steel"
+	cost = 55
+	contains = list(/obj/item/clothing/mask/rogue/facemask/steel/maille/fluted)
 
 /////////////
 // UTILITY //

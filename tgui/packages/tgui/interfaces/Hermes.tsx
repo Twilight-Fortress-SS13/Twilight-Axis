@@ -25,6 +25,8 @@ type Data = {
   delay_min?: number;
   delay_max?: number;
   letter_count?: number;
+  // TA EDIT
+  is_court_agent?: boolean;
 };
 
 const FORMATTING_HELP: [string, string][] = [
@@ -112,6 +114,7 @@ export const Hermes = (props: any, context: any) => {
     delay_min,
     delay_max,
     letter_count,
+    is_court_agent,
   } = data;
 
   const [recipient, setRecipient] = useState('');
@@ -148,8 +151,10 @@ export const Hermes = (props: any, context: any) => {
   );
 
   const isFree = !!free_send_ready;
+  // TA EDIT
   const canSendLetter =
-    recipient.length > 0 && (isFree || balance >= letter_cost);
+    recipient.length > 0 &&
+    (isFree || balance >= letter_cost || is_court_agent);
   const canBuyPaper = balance >= paper_cost;
   const canBuyQuill = balance >= quill_cost;
   const canSendTube = letterContent.length > 0;

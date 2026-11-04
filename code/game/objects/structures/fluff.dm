@@ -141,6 +141,17 @@
 		dest = src.loc
 	if(!dest)
 		return
+	var/climb_dir = get_dir(climber_turf, dest) // TA EDIT START
+	for(var/obj/structure/fluff/railing/fence/F in climber_turf)
+		if(F.dir == climb_dir)
+			if(ismob(A))
+				to_chat(A, span_warning("Something is blocking the way."))
+			return
+	for(var/obj/structure/fluff/railing/fence/blocking_fence in dest)
+		if(blocking_fence.dir == get_dir(dest, climber_turf))
+			if(ismob(A))
+				to_chat(A, span_warning("Something is blocking the way."))
+			return // TA EDIT END
 	if(dest.is_blocked_turf(source_atom = A))
 		if(ismob(A))
 			to_chat(A, span_warning("Something is blocking the way."))
@@ -374,6 +385,7 @@
 	icon = 'icons/roguetown/misc/structure.dmi'
 	icon_state = "bars"
 	density = TRUE
+	climbable = FALSE // TA EDIT
 	anchored = TRUE
 	blade_dulling = DULLING_BASHCHOP
 	max_integrity = 1400
@@ -464,6 +476,10 @@
 	name = "steel bars"
 	max_integrity = 2500
 
+/obj/structure/bars/passage/obj_break(damage_flag) // TA EDIT START
+	. = ..()
+	icon_state = "passage1b" // TA EDIT END
+
 /obj/structure/bars/passage/redstone_triggered()
 	if(obj_broken)
 		return
@@ -540,8 +556,13 @@
 	return ..()
 
 /obj/structure/bars/grille/obj_break(damage_flag)
+	set_is_platform(FALSE) // TA EDIT
 	obj_flags = CAN_BE_HIT
 	..()
+	var/turf/T = loc // TA EDIT START
+	if(istype(T))
+		for(var/mob/living/M in loc)
+			T.Entered(M) // TA EDIT END
 
 /obj/structure/bars/grille/redstone_triggered()
 	if(obj_broken)
@@ -646,9 +667,9 @@
 	attacked_sound = list('sound/combat/hits/onwood/woodimpact (1).ogg','sound/combat/hits/onwood/woodimpact (2).ogg')
 	..()
 
-/obj/structure/fluff/clock/attack_right(mob/user)
+/obj/structure/fluff/clock/attack_right(mob/user) // TA EDIT START
 	handle_special_items_retrieval(user, src)
-	return
+	return // TA EDIT END
 
 /obj/structure/fluff/clock/examine(mob/user)
 	. = ..()
@@ -693,9 +714,9 @@
 	attacked_sound = 'sound/combat/hits/onglass/glasshit.ogg'
 	pixel_y = 32
 
-/obj/structure/fluff/wallclock/attack_right(mob/user)
+/obj/structure/fluff/wallclock/attack_right(mob/user) // TA EDIT START
 	handle_special_items_retrieval(user, src)
-	return
+	return // TA EDIT END
 
 /obj/structure/fluff/wallclock/Destroy()
 	if(soundloop)
@@ -762,7 +783,34 @@
 	destroy_sound = 'sound/combat/hits/onwood/destroyfurniture.ogg'
 	attacked_sound = list('sound/combat/hits/onwood/woodimpact (1).ogg','sound/combat/hits/onwood/woodimpact (2).ogg')
 
+/obj/structure/fluff/signage/examine(mob/user)
+	. = ..()
+	var/realm_name = SSmapping.map_adjustment.realm_name //TA EDIT таблички теперь корректно работают на всех картах
+	if(!user.is_literate())
+		. += "I have no idea what it says."
+	else
+		. += "It says \"[realm_name]\""
+
 /obj/structure/fluff/sign
+	icon_state = "signwrote"
+	name = "sign"
+	desc = "It's a sign! These usually have words carved into them."
+	icon = 'icons/roguetown/misc/structure.dmi'
+
+/obj/structure/fluff/buysign
+	icon_state = "signwrote"
+	name = "sign"
+	desc = ""
+	icon = 'icons/roguetown/misc/structure.dmi'
+
+/obj/structure/fluff/buysign/examine(mob/user)
+	. = ..()
+	if(!user.is_literate())
+		. += "I have no idea what it says."
+	else
+		. += "It says \"IMPORTS\""
+
+/obj/structure/fluff/sellsign
 	icon_state = "signwrote"
 	name = "sign"
 	desc = "It's a sign! These usually have words carved into them."
@@ -940,7 +988,7 @@
 		to_chat(user, span_warning("I can't get [with] onto the table for processing!"))
 		return
 	for(var/obj/item/alch/catalyst/path as anything in typesof(/obj/item/alch/catalyst))
-		if(path::seed_item && ispath(with.type, path::seed_item))
+		if(path::seed_item && (ispath(with.type, path::seed_item) || (path::alt_seed_item && ispath(with.type, path::alt_seed_item)))) //TA EDIT
 			current_recipe=path
 			seed_item = with
 			seed_item.forceMove(src)
@@ -1347,8 +1395,8 @@
 	dirin = turn(dirin, 180)
 	. = ..()
 
-/obj/structure/fluff/statue/attack_right(mob/user)
-	handle_special_items_retrieval(user, src)
+/obj/structure/fluff/statue/attack_right(mob/user) // TA EDIT
+	handle_special_items_retrieval(user, src)// TA EDIT
 
 /obj/structure/fluff/statue/CanPass(atom/movable/mover, turf/target)
 	if(get_dir(loc, mover) == dir)
@@ -2171,6 +2219,7 @@
 /obj/structure/bars/passage/shutter/bookcase/redstone_triggered()
 	if(obj_broken)
 		return
+
 	if(density)
 		icon_state = "decoybookcase1"
 		density = FALSE

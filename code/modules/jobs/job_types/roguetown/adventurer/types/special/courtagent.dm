@@ -6,9 +6,9 @@
 
 	total_positions = 2
 	spawn_positions = 2
-	round_contrib_points = 2
+	round_contrib_points = null
 	tutorial = "Whether acquired by merit, shrewd negotiation or fulfilled bounties, you have found yourself under the underhanded employ of the Hand. Fulfill desires and whims of the court that they would rather not be publicly known. Your position is anything but secure, and any mistake can leave you disowned and charged like the petty criminal are. Garrison and Court members know who you are."
-	min_pq = 5
+	min_pq = 10
 	job_reopens_slots_on_death = FALSE
 	always_show_on_latechoices = TRUE
 	show_in_credits = TRUE
@@ -18,6 +18,11 @@
 	class_setup_examine = FALSE
 	has_subprefs = TRUE
 	default_subprefs = list("codename" = null, "hand_file_notes" = null, "hand_file_notes_raw" = null)
+	// TA EDIT BEGIN
+	peopleiknow = list("Hand", "Vizier") // TA edit
+	peopleknowme = list("Hand", "Vizier") // TA edit
+	// TA EDIT END
+	same_job_respawn_delay = 30 MINUTES
 
 /datum/job/roguetown/adventurer/courtagent/Topic(href, list/href_list)
 	var/client/C = usr.client

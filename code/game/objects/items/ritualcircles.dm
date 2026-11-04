@@ -163,6 +163,8 @@
 			playsound(loc, 'sound/magic/holyshield.ogg', 80, FALSE, -1)
 			moonlightdance(src)
 			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
+		// TA REMOVAL START - RITUAL REMOVED CUZ THERE IS SAME ABILITY IN MIRACLES.
+		/*
 		if("Moonlight Inspiration")
 			if(!do_after(user, 5 SECONDS))
 				return
@@ -177,16 +179,22 @@
 			playsound(loc, 'sound/magic/holyshield.ogg', 80, FALSE, -1)
 			mooninspiration(src)
 			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
+		*/
+		// TA REMOVAL END
 
 /obj/structure/ritualcircle/noc/proc/moonlightdance(src)
 	var/ritualtargets = view(7, loc)
 	for(var/mob/living/carbon/human/target in ritualtargets)
 		target.apply_status_effect(/datum/status_effect/buff/moonlightdance)
 
+// TA REMOVAL START - RITUAL REMOVED CUZ THERE IS SAME ABILITY IN MIRACLES.
+/*
 /obj/structure/ritualcircle/noc/proc/mooninspiration(src)
 	var/ritualtargets = view(2, loc)
 	for(var/mob/living/carbon/human/target in ritualtargets)
 		target.mind.sleep_adv.sleep_adv_points += 3
+*/
+// TA REMOVAL END
 
 /obj/structure/ritualcircle/xylix
 	name = "Rune of Trickery"
@@ -943,7 +951,7 @@
 			turf_data[T] = T.type
 			T.ChangeTurf(/turf/open/floor/rogue/dark_ice, flags = CHANGETURF_IGNORE_AIR)
 			playsound(T, 'sound/magic/fleshtostone.ogg', 30, TRUE)
-			sleep(10)
+			stoplag(1 SECONDS)
 
 	end_conversion()
 
@@ -1658,10 +1666,11 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	neck = /obj/item/clothing/neck/roguetown/bevor/zizo
 	r_hand = /obj/item/rogueweapon/sword/long/zizo
 
-	H.mind.RemoveSpell(/datum/action/cooldown/spell/mending) // brute forcing this one, hope this works ryon!
-	H.mind.AddSpell(new /datum/action/cooldown/spell/mending/lesser)
-	if(!H.mind.has_spell(/datum/action/cooldown/spell/miracle/intervention) && H.devotion.max_devotion == CLERIC_REQ_4)	// Devotion check to make sure we give it to the HWretch not some Guy
-		H.mind.AddSpell(new /datum/action/cooldown/spell/miracle/intervention)
+	if(!istype(src, /datum/outfit/job/roguetown/darksteelrite/medium)) // TA EDIT
+		H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
+		ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL) // TA EDIT
+//	if(!H.mind.has_spell(/datum/action/cooldown/spell/miracle/intervention) && H.devotion.max_devotion == CLERIC_REQ_4)	// Devotion check to make sure we give it to the HWretch not some Guy
+//		H.mind.AddSpell(new /datum/action/cooldown/spell/miracle/intervention)
 
 /datum/outfit/job/roguetown/darksteelrite/medium/pre_equip(mob/living/carbon/human/H, visualsOnly = FALSE)
 	..()
@@ -1697,7 +1706,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	if(user.has_status_effect(/datum/status_effect/debuff/ritesexpended))
 		to_chat(user,span_warning("I have performed enough rituals for the day... I must rest before communing more."))
 		return
-	var/riteselection = input(user, "Rituals of Transaction", src) as null|anything in matthiosrites
+	var/riteselection = input(user, "Rituals of Brotherhood", src) as null|anything in matthiosrites //TA Lore edit. Можно сделать модульно, но так это будет сложнее мейнтейнить
 	switch(riteselection) // put ur rite selection here
 		if("Rite of Armaments")
 			if(user.has_status_effect(/datum/status_effect/debuff/armamentrites))
@@ -1716,13 +1725,13 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 				return
 			if(!do_after(user, 5 SECONDS))
 				return
-			user.say("Gold and Silver, He feeds!")
+			user.say("Lord of No Realm, heed my call!!") //TA Lore edit.
 			if(!do_after(user, 5 SECONDS))
 				return
-			user.say("Pieces o' tens, hundreds, thousands; o', the Transactor feeds 'pon them all!")
+			user.say("The hour draws closer for tyrants to fall!!") //TA Lore edit
 			if(!do_after(user, 5 SECONDS))
 				return
-			user.say("Arms to claim, Arms to TAAAAAAAKE!!")
+			user.say("The arms of freedom, to crush them by nightfall!!") //TA Lore edit
 			if(!do_after(user, 5 SECONDS))
 				return
 			icon_state = "matthios_active"
@@ -1736,13 +1745,13 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 		if("Defenestration")
 			if(!do_after(user, 5 SECONDS))
 				return
-			user.say("The window is open, the transaction is made!")
+			user.say("Father of freedom, pay heed to our litany!!") //TA Lore edit
 			if(!do_after(user, 5 SECONDS))
 				return
-			user.say("Pieces o' tens, hundreds, thousands; o', the Transactor feeds 'pon them all!")
+			user.say("To thou we offer - a scion of tyranny!!") //TA Lore edit
 			if(!do_after(user, 5 SECONDS))
 				return
-			user.say("Accept my transaction o' unmatched value, and FEAST upon this gluttonous PIIIIG!!")
+			user.say("Ravage their soul, a penance for villainy!!") //TA Lore edit
 			if(!do_after(user, 5 SECONDS))
 				return
 			icon_state = "matthios_active"
@@ -1756,7 +1765,18 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 
 /obj/structure/ritualcircle/matthios/proc/matthiosarmaments(mob/living/carbon/human/target)
 	if(!HAS_TRAIT(target, TRAIT_FREEMAN))
-		loc.visible_message(span_cult("THE RITE REJECTS ONE WITHOUT GREED IN THEIR HEART!!"))
+		loc.visible_message(span_cult("THE RITE REJECTS ONES WHO BOW DOWN TO TYRANNY!!")) //TA Lore edit
+		return
+	if(HAS_TRAIT(target, TRAIT_OATHBREAKER)) //TA EDIT START
+		target.Stun(60)
+		playsound(loc, 'sound/misc/smelter_fin.ogg', 50)
+		loc.visible_message(span_cult("[target]'s lux pours from their nose and into the rune! Gleeming gold simmers and contorts upon it, before manifesting itself into a blade!"))
+		spawn(20)
+			playsound(loc, 'sound/foley/equip/swordlarge1.ogg', 90)
+			playsound(loc, 'sound/items/bsmith1.ogg', 50)
+			target.put_in_hands(new /obj/item/rogueweapon/sword/long/oathbreaker_matthios(target), forced = TRUE)
+			spawn(40)
+				to_chat(target, span_cult("Take up these arms, and claim your right.")) //TA EDIT END
 		return
 	target.Stun(60)
 	target.Knockdown(60)
@@ -1780,7 +1800,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 		), list("armor", "shirt", "pants", "shoes", "wrists", "gloves", "head", "neck", "backr"))
 		target.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, SKILL_LEVEL_EXPERT, TRUE)
 		spawn(40)
-			to_chat(target, span_cult("More to the maw, this shall help feed our greed."))
+			to_chat(target, span_cult("Take up these arms, and claim your right.")) //TA Lore edit
 
 /// Performs the de-noblification ritual, which requires a noble character in the center of the circle. TRUE on success, FALSE on failure.
 /obj/structure/ritualcircle/matthios/proc/defenestration()
@@ -1835,6 +1855,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	to_chat(victim, span_userdanger("ASTRATA WEEPS!"))
 	victim.emote("superagony")
 	REMOVE_TRAIT(victim, TRAIT_NOBLE, TRAIT_GENERIC)
+	REMOVE_TRAIT(victim, TRAIT_NOBLE, JOB_TRAIT)
 	REMOVE_TRAIT(victim, TRAIT_NOBLE, TRAIT_VIRTUE)
 	ADD_TRAIT(victim, TRAIT_DEFILED_NOBLE, TRAIT_GENERIC)
 	playsound(loc, 'sound/misc/evilevent.ogg', 100, FALSE, -1)
@@ -1858,9 +1879,10 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	neck = /obj/item/clothing/neck/roguetown/chaincoif/chainmantle/matthios
 	backr = /obj/item/rogueweapon/flail/peasantwarflail/matthios
 
-	H.mind.AddSpell(new /datum/action/cooldown/spell/mending/lesser)
-	if(!H.mind.has_spell(/datum/action/cooldown/spell/miracle/intervention) && H.devotion.max_devotion == CLERIC_REQ_4)	// Devotion check to make sure we give it to the HWretch not some Guy
-		H.mind.AddSpell(new /datum/action/cooldown/spell/miracle/intervention)
+	H.mind.AddSpell(new /datum/action/cooldown/spell/mending) // TA EDIT
+	ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL) // TA EDIT
+//	if(!H.mind.has_spell(/datum/action/cooldown/spell/miracle/intervention) && H.devotion.max_devotion == CLERIC_REQ_4)	// Devotion check to make sure we give it to the HWretch not some Guy
+//		H.mind.AddSpell(new /datum/action/cooldown/spell/miracle/intervention)
 
 /obj/structure/ritualcircle/graggar
 	name = "Rune of Violence"
@@ -2001,8 +2023,8 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 		spawn(40)
 			to_chat(target, span_cult("Break them."))
 
-	if(!target.mind.has_spell(/datum/action/cooldown/spell/miracle/intervention) && target.devotion.max_devotion == CLERIC_REQ_4)	// Devotion check to make sure we give it to the HWretch not some Guy
-		target.mind.AddSpell(new /datum/action/cooldown/spell/miracle/intervention)
+//	if(!target.mind.has_spell(/datum/action/cooldown/spell/miracle/intervention) && target.devotion.max_devotion == CLERIC_REQ_4)	// Devotion check to make sure we give it to the HWretch not some Guy
+//		target.mind.AddSpell(new /datum/action/cooldown/spell/miracle/intervention)
 
 /// Performs the war ritual, which requires a noble, clergy, or inquisition member in the center of the circle. TRUE on success, FALSE on failure.
 /obj/structure/ritualcircle/graggar/proc/perform_warritual()
@@ -2082,7 +2104,8 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	r_hand = /obj/item/rogueweapon/stoneaxe/woodcut/steel/graggar
 	l_hand = /obj/item/rogueweapon/shield/iron/graggar
 
-	H.mind.AddSpell(new /datum/action/cooldown/spell/mending/lesser)
+	H.mind.AddSpell(new /datum/action/cooldown/spell/mending) // TA EDIT
+	ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL) // TA EDIT
 
 /obj/structure/ritualcircle/baotha
 	name = "Rune of Hedonism"
@@ -2202,9 +2225,10 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/baotha
 	backr = /obj/item/rogueweapon/spear/partizan/baotha
 
-	H.mind.AddSpell(new /datum/action/cooldown/spell/mending/lesser)
-	if(!H.mind.has_spell(/datum/action/cooldown/spell/miracle/intervention) && H.devotion.max_devotion == CLERIC_REQ_4)	// Devotion check to make sure we give it to the HWretch not some Guy
-		H.mind.AddSpell(new /datum/action/cooldown/spell/miracle/intervention)
+	H.mind.AddSpell(new /datum/action/cooldown/spell/mending) // TA EDIT
+	ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL) // TA EDIT
+//	if(!H.mind.has_spell(/datum/action/cooldown/spell/miracle/intervention) && H.devotion.max_devotion == CLERIC_REQ_4)	// Devotion check to make sure we give it to the HWretch not some Guy
+//		H.mind.AddSpell(new /datum/action/cooldown/spell/miracle/intervention)
 
 /obj/effect/decal/cleanable/roguerune/god/psydon
 	name = "Rune of Perseverance"

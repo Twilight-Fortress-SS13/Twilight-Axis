@@ -166,27 +166,25 @@
 	if(item_flags & IN_STORAGE)
 		return
 	var/mob/living/carbon/human/H = user
-	switch(amount)
-		if(2)
-			var/obj/F = new stacktype(src.loc)
-			var/obj/I = new stacktype(src.loc)
-			H.put_in_hands(F)
-			H.put_in_hands(I)
-			qdel(src)
-			return
-		else
-			// bandaid. if it's 1 it shouldnt be a bundle. if its 0 or below it DEFINITELY shouldnt be a bundle.
-			if(amount <= 1)
-				// this SHOULD stop at 1 so we'll still give you the one back.
-				var/obj/I = new stacktype(src.loc)
-				log_runtime("BUNDLE: [src] somehow had [src.amount] items in it when [user.name] ([user.real_name] - [user.client.ckey]) tried to retrieve [src.stacktype]!")
-				H.put_in_hands(I)
-				qdel(src)
-				return
-			amount -= 1
-			var/obj/F = new stacktype(src.loc)
-			H.put_in_hands(F)
-			user.visible_message(span_info("[user] removes [F] from [src]."), span_info("I remove [F] from [src]."))
+	if(amount <= 0) // TA EDIT START
+		qdel(src)
+		return
+	if(amount == 1)
+		var/obj/F = new stacktype(src.loc)
+		H.put_in_hands(F)
+		qdel(src)
+		return
+	if(amount == 2)
+		var/obj/F = new stacktype(src.loc)
+		var/obj/I = new stacktype(src.loc)
+		H.put_in_hands(F)
+		H.put_in_hands(I)
+		qdel(src)
+		return
+	amount -= 1
+	var/obj/F = new stacktype(src.loc)
+	H.put_in_hands(F)
+	user.visible_message(span_info("[user] removes [F] from [src]."), span_info("I remove [F] from [src].")) // TA EDIT END
 	update_bundle()
 
 /obj/item/natural/bundle/attack_turf(turf/T, mob/living/user)

@@ -11,6 +11,7 @@
 	)
 	subclass_skills = list(
 		/datum/skill/misc/sneaking = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/stealing = SKILL_LEVEL_EXPERT, // TA EDIT
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
 	)
 	extra_context = "FOR and INT are randomised."

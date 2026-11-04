@@ -1,12 +1,15 @@
 /datum/asset/simple/roguefonts
 	keep_local_name = TRUE
 	assets = list(
+		"Mookmania.otf" = 'interface/fonts/Mookmania.otf', // Основной
 		"pterra.ttf" = 'interface/fonts/pterra.ttf',
 		"lora-regular.ttf" = 'interface/fonts/lora-regular.ttf',
 		"lora-italic.ttf" = 'interface/fonts/lora-italic.ttf',
 		"lora-bold.ttf" = 'interface/fonts/lora-bold.ttf',
 		"lora-medium.ttf" = 'interface/fonts/lora-medium.ttf',
 		"medievalsharp.ttf" = 'interface/fonts/medievalsharp.ttf',
+		"newrocker.ttf" = 'interface/fonts/newrocker.ttf',
+		"nosfer.ttf" = 'interface/fonts/nosfer.ttf',
 		"chiseld.ttf" = 'interface/fonts/chiseld.ttf',
 		"blackmoor.ttf" = 'interface/fonts/blackmoor.ttf',
 		"handwrite.ttf" = 'interface/fonts/handwrite.ttf',
@@ -14,16 +17,17 @@
 		"book2.ttf" = 'interface/fonts/book1.ttf',
 		"book3.ttf" = 'interface/fonts/book1.ttf',
 		"book4.ttf" = 'interface/fonts/book1.ttf',
-		"dwarf.ttf" = 'interface/fonts/languages/dwarf.ttf',
-		"elf.ttf" = 'interface/fonts/languages/elf.ttf',
-		"hell.ttf" = 'interface/fonts/languages/hell.ttf',
-		"orc.ttf" = 'interface/fonts/languages/orc.ttf',
-		"celestial.ttf" = 'interface/fonts/languages/celestial.ttf',
-		"raneshi.ttf" = 'interface/fonts/languages/raneshi.ttf',
-		"undead.ttf" = 'interface/fonts/languages/undead.ttf',
-		"draconic.ttf" = 'interface/fonts/languages/draconic.ttf',
-		"grenzelhoftian.ttf" = 'interface/fonts/languages/grenzelhoftian.ttf',
-		"kazengunese.ttf" = 'interface/fonts/languages/kazengunese.ttf',
+		"Celtes SP.otf" = 'interface/fonts/languages/Celtes SP.otf', // Дворфы Не работает
+		"MarkScript-Regular.ttf" = 'interface/fonts/languages/MarkScript-Regular.ttf', // Эльфийский
+		"Comforter Brush.otf" = 'interface/fonts/languages/Comforter Brush.otf', // инфернальный
+		"VizaviTYGRA.ttf" = 'interface/fonts/languages/VizaviTYGRA.ttf', // Орочий
+		"Kamelia.ttf" = 'interface/fonts/languages/Kamelia.ttf', // аасимарский и самаглос
+		"FDMedian.ttf" = 'interface/fonts/languages/FDMedian.ttf', // андеад
+		"Kautiva Cyrillic Black.ttf" = 'interface/fonts/languages/Kautiva Cyrillic Black.ttf', // Ящерский
+		"ALOT Gutenberg B Normal.ttf" = 'interface/fonts/languages/ALOT Gutenberg B Normal.ttf', // Грензели
+		"gyedzai.otf" = 'interface/fonts/languages/gyedzai.otf', // Китай
+		"valorian.ttf" = 'interface/fonts/languages/valorian.ttf', // Валория
+		"Ganesha Type.ttf" = 'interface/fonts/languages/Ganesha Type.ttf', // Казенгунский Не работает
 		"lingyuese.ttf" = 'interface/fonts/languages/lingyuese.ttf',
 		"otavan.ttf" = 'interface/fonts/languages/otavan.ttf',
 		"oldazure.ttf" = 'interface/fonts/languages/oldazure.ttf',
@@ -33,4 +37,8 @@
 		"aavnic.ttf" = 'interface/fonts/languages/aavnic.ttf',
 		"parisienne.ttf" = 'interface/fonts/tegaki/parisienne.ttf',
 		"parisienne_data.json" = 'interface/fonts/tegaki/parisienne_data.json',
+		"Deutsch Gothic.ttf" = 'interface/fonts/languages/Deutsch Gothic.ttf', // Отава
+		"TolkienCyr.ttf" = 'interface/fonts/languages/TolkienCyr.ttf', // Этруский 
+		"RUSNeverwinter.ttf" = 'interface/fonts/languages/RUSNeverwinter.ttf', // Гронновский
+		"Arabic Cyr (kerning fixed).ttf" = 'interface/fonts/languages/Arabic Cyr (kerning fixed).ttf', // Аавианский Не работает
 	)

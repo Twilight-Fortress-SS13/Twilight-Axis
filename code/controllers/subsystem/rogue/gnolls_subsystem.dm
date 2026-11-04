@@ -15,7 +15,7 @@ SUBSYSTEM_DEF(gnoll_scaling)
 
 /datum/controller/subsystem/gnoll_scaling/proc/unlock_gnoll_scaling()
 	var/players_amt = get_active_player_count(alive_check = 1, afk_check = 1, human_check = 1)
-	if(players_amt < 25)
+	if(players_amt < 40)
 		addtimer(CALLBACK(src, PROC_REF(unlock_gnoll_scaling)), 6000)
 		return
 

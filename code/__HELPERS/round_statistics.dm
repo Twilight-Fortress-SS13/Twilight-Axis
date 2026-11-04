@@ -1,6 +1,7 @@
 // Census
 #define STATS_ALIVE_NORTHERN_HUMANS "alive_northern_humans"
 #define STATS_ALIVE_DWARVES "alive_dwarves"
+#define STATS_ALIVE_GNOMES "alinve_gnomes"
 #define STATS_ALIVE_DARK_ELVES "alive_dark_elves"
 #define STATS_ALIVE_WOOD_ELVES "alive_wood_elves"
 #define STATS_ALIVE_SUN_ELVES "alive_sun_elves"
@@ -14,6 +15,7 @@
 #define STATS_ALIVE_HALFKIN "alive_halfkin"
 #define STATS_ALIVE_WILDKIN "alive_wildkin"
 #define STATS_ALIVE_CONSTRUCTS "alive_constructs"
+#define STATS_ALIVE_REVENANTS "alive_revenants"
 #define STATS_ALIVE_VERMINFOLK "alive_verminfolk"
 #define STATS_ALIVE_DRACON "alive_dracon"
 #define STATS_ALIVE_AXIAN "alive_axian"
@@ -21,6 +23,7 @@
 #define STATS_ALIVE_VULPS "alive_vulps"
 #define STATS_ALIVE_LUPIANS "alive_lupians"
 #define STATS_ALIVE_MOTHS "alive_moths"
+#define STATS_ALIVE_AURA "alive_aura"
 
 #define STATS_VAMPIRES "vampires"
 
@@ -242,7 +245,12 @@
 #define STATS_JUNKIES "junkies"
 #define STATS_NYMPHOMANIACS "nymphomaniacs"
 
+#define STATS_KNOTTED "knottings"
+#define STATS_KNOTTED_NOT_LUPIANS "knottings_by_non_lupians"
+
+
 //Matthios
+#define STATS_ITEMS_PICKPOCKETED "items_pickpocketed" // TA EDIT
 #define STATS_SHRINE_VALUE "shrine_value"
 #define STATS_GREEDY_PEOPLE "tomb_deaths"
 #define STATS_LOCKS_PICKED "locks_picked"
@@ -446,6 +454,7 @@ GLOBAL_LIST_EMPTY(patron_follower_counts)
 
 // Featured stats of the round
 #define FEATURED_STATS_TREE_FELLERS "tree_fellers"
+#define FEATURED_STATS_THIEVES "thieves" // TA EDIT
 #define FEATURED_STATS_ALCHEMISTS "alchemists"
 #define FEATURED_STATS_TAX_PAYERS "tax_payers"
 #define FEATURED_STATS_ALCOHOLICS "alcohol_drinkers"
@@ -551,6 +560,11 @@ GLOBAL_LIST_INIT(featured_stats, list(
 		"color" = "#48505e", // im blue da ba de ba da die
 		"entires" = list()
 	),
+	FEATURED_STATS_THIEVES = list( // TA EDIT
+		"name" = "TOP Thieves", // TA EDIT
+		"color" = "#6e4a25", // TA EDIT
+		"entries" = list() // TA EDIT
+	), // TA EDIT
 	FEATURED_STATS_ALCOHOLICS = list(
 		"name" = "TOP Alcoholics",
 		"color" = "#945d96",

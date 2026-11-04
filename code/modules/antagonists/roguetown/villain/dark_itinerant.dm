@@ -21,7 +21,7 @@
 			H.charflaws.Remove(cf)
 			QDEL_NULL(cf)
 	H.set_patron(/datum/patron/inhumen/zizo)
-	H.cmode_music = 'sound/music/combat_heretic.ogg'
+	H.cmode_music = sound("sound/music/combat_heretic.ogg")
 	H.faction = list(FACTION_UNDEAD)
 	to_chat(owner, span_danger("I'm a servant to the ALMIGHTY. They call it the UNSPEAKABLE. I SHALL WRECK HAVOK and SURVIVE."))
 	H.equipOutfit(outfit_path)
@@ -102,7 +102,7 @@
 			armor = /obj/item/clothing/suit/roguetown/armor/brigandine
 			ADD_TRAIT(H, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
 
-	H.cmode_music = 'sound/music/combat_heretic.ogg'
+	H.cmode_music = sound("sound/music/combat_heretic.ogg")
 	ADD_TRAIT(H, TRAIT_SQUIRE_REPAIR, TRAIT_GENERIC)
 	ADD_TRAIT(H, TRAIT_STEELHEARTED, TRAIT_GENERIC)
 	wretch_select_bounty(H)
@@ -151,6 +151,26 @@
 	H.change_stat(STATKEY_CON, 2)
 	H.change_stat(STATKEY_WIL, 2)
 	H.change_stat(STATKEY_SPD, -1) // 11 weighted
+	var/onhelm = list( //TA EDIT START
+		"Horns" = /obj/item/clothing/head/roguetown/onhelm/tw_d_horns,
+		"Howers" = /obj/item/clothing/head/roguetown/onhelm/tw_d_castle_red,
+		"Afreet" = /obj/item/clothing/head/roguetown/onhelm/tw_d_efreet,
+		"Sun" = /obj/item/clothing/head/roguetown/onhelm/tw_d_sun,
+		"Astrata" = /obj/item/clothing/head/roguetown/onhelm/tw_d_peace,
+		"Graggar" = /obj/item/clothing/head/roguetown/onhelm/tw_d_graggar,
+		"Feathers" = /obj/item/clothing/head/roguetown/onhelm/tw_d_feathers,
+		"Lion" = /obj/item/clothing/head/roguetown/onhelm/tw_d_lion,
+		"Dragon" = /obj/item/clothing/head/roguetown/onhelm/tw_d_dragon_red,
+		"Swan" = /obj/item/clothing/head/roguetown/onhelm/tw_d_swan,
+		"Le Fishe" = /obj/item/clothing/head/roguetown/onhelm/tw_d_fish,
+		"Mighty Windmill" = /obj/item/clothing/head/roguetown/onhelm/tw_d_windmill,
+		"Oathkeeper" = /obj/item/clothing/head/roguetown/onhelm/tw_d_oathtaker,
+		"Skull" = /obj/item/clothing/head/roguetown/onhelm/tw_d_skull,
+		"None"
+		)
+	var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
+	if(onhelmchoice != "None")
+		mask = onhelm[onhelmchoice] //TA EDIT END
 	if(H.mind)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/mindlink)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/convertrole/zizosquire)
@@ -161,7 +181,7 @@
 	ADD_TRAIT(H, TRAIT_HEAVYARMOR, TRAIT_GENERIC)
 	ADD_TRAIT(H, TRAIT_STEELHEARTED, TRAIT_GENERIC)
 	ADD_TRAIT(H, TRAIT_RITUALIST, TRAIT_GENERIC)
-	H.cmode_music = 'sound/music/combat_heretic.ogg'
+	H.cmode_music = sound("sound/music/combat_heretic.ogg")
 	wretch_select_bounty(H)
 
 /obj/effect/proc_holder/spell/self/convertrole/zizosquire

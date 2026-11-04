@@ -9,7 +9,7 @@
 	needs_emotion = TRUE
 
 /mob/living/carbon/human/verb/emote_cry()
-	set name = "Cry"
+	set name = "Плакать"
 	set category = "Emotes.Noises"
 
 	emote("cry", intentional = TRUE)
@@ -63,7 +63,7 @@
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_eyebrow()
-	set name = "Raise Eyebrow"
+	set name = "Приподнять бровь"
 	set category = "Emotes"
 
 	emote("eyebrow", intentional = TRUE)
@@ -75,7 +75,7 @@
 	nomsg = TRUE
 
 /mob/living/carbon/human/verb/emote_psst()
-	set name = "Psst"
+	set name = "Пс-ст!"
 	set category = "Emotes.Noises"
 
 	emote("psst", intentional = TRUE)
@@ -88,7 +88,7 @@
 	emote_type = EMOTE_AUDIBLE
 
 /mob/living/carbon/human/verb/emote_grumble()
-	set name = "Grumble"
+	set name = "Бухтеть"
 	set category = "Emotes.Noises"
 
 	emote("grumble", intentional = TRUE)
@@ -242,7 +242,7 @@
 
 
 /mob/living/carbon/human/verb/hand_games()
-	set name = "Handgames"
+	set name = "Игры руками"
 	set desc = "Challenge another to a variety of handgames, which can either be done while standing next to each other or while across a table."
 	set category = "Emotes"
 

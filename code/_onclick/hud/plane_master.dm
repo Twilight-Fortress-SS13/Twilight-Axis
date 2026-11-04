@@ -68,7 +68,6 @@
 	clear_filters()
 	if(istype(mymob) && mymob.client && mymob.client.prefs && mymob.client.prefs.ambientocclusion)
 		filters += AMBIENT_OCCLUSION
-//		filters += filter(type="bloom", size = 4, offset = 0, threshold = "#282828")
 	if(istype(mymob) && mymob.eye_blurry)
 		filters += GAUSSIAN_BLUR(CLAMP(mymob.eye_blurry*0.1,0.6,3))
 	if(istype(mymob))
@@ -150,6 +149,51 @@
 			var/mob/living/L = mymob
 			if(L.has_status_effect(/datum/status_effect/buff/druqks))
 				add_filter("druqks_color", 2, color_matrix_filter(list(0,0,1,0, 0,1,0,0, 1,0,0,0, 0,0,0,1, 0,0,0,0)))
+
+/atom/movable/screen/plane_master/game_world_below
+	name = "lowest game world plane master"
+	plane = GAME_PLANE_LOWER
+	appearance_flags = PLANE_MASTER
+	blend_mode = BLEND_OVERLAY
+
+/atom/movable/screen/plane_master/game_world_below/backdrop(mob/mymob)
+	clear_filters()
+	if(istype(mymob) && mymob.client && mymob.client.prefs && mymob.client.prefs.ambientocclusion)
+		filters += AMBIENT_OCCLUSION
+	if(istype(mymob) && mymob.eye_blurry)
+		filters += GAUSSIAN_BLUR(CLAMP(mymob.eye_blurry*0.1,0.6,3))
+	if(istype(mymob))
+		if(isliving(mymob))
+			var/mob/living/L = mymob
+			if(L.has_status_effect(/datum/status_effect/buff/druqks))
+				add_filter("druqks_ripple", 1, ripple_filter(0, 50, 1, x = 80))
+				var/filter = get_filter("druqks_ripple")
+				add_filter("druqks_color", 2, color_matrix_filter(list(0,0,1,0, 0,1,0,0, 1,0,0,0, 0,0,0,1, 0,0,0,0)))
+				animate(filter, 1 SECONDS, -1, radius=480, size=50, flags=ANIMATION_PARALLEL)
+
+
+/atom/movable/screen/plane_master/game_world_walls
+	name = "game world walls"
+	plane = WALL_PLANE
+	appearance_flags = PLANE_MASTER
+	blend_mode = BLEND_OVERLAY
+
+/atom/movable/screen/plane_master/game_world_walls/backdrop(mob/mymob)
+	clear_filters()
+	if(istype(mymob) && mymob.client && mymob.client.prefs && mymob.client.prefs.ambientocclusion)
+		filters += AMBIENT_OCCLUSION_WALLS
+	if(istype(mymob) && mymob.eye_blurry)
+		filters += GAUSSIAN_BLUR(CLAMP(mymob.eye_blurry*0.1,0.6,3))
+	if(istype(mymob))
+		if(isliving(mymob))
+			var/mob/living/L = mymob
+			if(L.has_status_effect(/datum/status_effect/buff/druqks))
+				add_filter("druqks_ripple", 1, ripple_filter(0, 50, 1, x = 80))
+				var/filter = get_filter("druqks_ripple")
+				add_filter("druqks_color", 2, color_matrix_filter(list(0,0,1,0, 0,1,0,0, 1,0,0,0, 0,0,0,1, 0,0,0,0)))
+				animate(filter, 1 SECONDS, -1, radius=480, size=50, flags=ANIMATION_PARALLEL)
+
+
 /atom/movable/screen/plane_master/field_of_vision_blocker
 	name = "field of vision blocker plane master"
 	plane = FIELD_OF_VISION_BLOCKER_PLANE
@@ -172,53 +216,6 @@
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	blend_mode = BLEND_MULTIPLY
 
-/atom/movable/screen/plane_master/game_world_below
-	name = "lowest game world plane master"
-	plane = GAME_PLANE_LOWER
-	appearance_flags = PLANE_MASTER
-	blend_mode = BLEND_OVERLAY
-
-/atom/movable/screen/plane_master/game_world_below/backdrop(mob/mymob)
-	clear_filters()
-	if(istype(mymob) && mymob.client && mymob.client.prefs && mymob.client.prefs.ambientocclusion)
-		filters = list()
-		filters += AMBIENT_OCCLUSION
-		if(istype(mymob) && mymob.eye_blurry)
-			filters += GAUSSIAN_BLUR(CLAMP(mymob.eye_blurry*0.1,0.6,3))
-		if(istype(mymob))
-			if(isliving(mymob))
-				var/mob/living/L = mymob
-				if(L.has_status_effect(/datum/status_effect/buff/druqks))
-					filters += filter(type="ripple",x=80,size=50,radius=0,falloff = 1)
-					var/F1 = filters[filters.len]
-					filters += filter(type="color", color = list(0,0,1,0, 0,1,0,0, 1,0,0,0, 0,0,0,1, 0,0,0,0))
-					F1 = filters[filters.len-1]
-					animate(F1, size=50, radius=480, time=10, loop=-1, flags=ANIMATION_PARALLEL)
-
-
-/atom/movable/screen/plane_master/game_world_walls
-	name = "game world walls"
-	plane = WALL_PLANE
-	appearance_flags = PLANE_MASTER
-	blend_mode = BLEND_OVERLAY
-
-/atom/movable/screen/plane_master/game_world_walls/backdrop(mob/mymob)
-	clear_filters()
-	if(istype(mymob) && mymob.client && mymob.client.prefs && mymob.client.prefs.ambientocclusion)
-		filters = list()
-		filters += AMBIENT_OCCLUSION_WALLS
-		if(istype(mymob) && mymob.eye_blurry)
-			filters += GAUSSIAN_BLUR(CLAMP(mymob.eye_blurry*0.1,0.6,3))
-		if(istype(mymob))
-			if(isliving(mymob))
-				var/mob/living/L = mymob
-				if(L.has_status_effect(/datum/status_effect/buff/druqks))
-					filters += filter(type="ripple",x=80,size=50,radius=0,falloff = 1)
-					var/F1 = filters[filters.len]
-					filters += filter(type="color", color = list(0,0,1,0, 0,1,0,0, 1,0,0,0, 0,0,0,1, 0,0,0,0))
-					F1 = filters[filters.len-1]
-					animate(F1, size=50, radius=480, time=10, loop=-1, flags=ANIMATION_PARALLEL)
-
 //Contains all weather overlays
 /atom/movable/screen/plane_master/weather_overlay
 	name = "weather overlay master"
@@ -229,22 +226,41 @@
 	blend_mode = BLEND_MULTIPLY
 	//render_relay_plane = null //Used as alpha filter for weather_effect fullscreen
 
+/atom/movable/screen/plane_master/weather_overlay/Initialize(mapload)
+	. = ..()
+	// Pure converter stage - nothing is drawn on this plane anymore: it grabs the packed
+	// sunlight mask and turns its G channel (weather gate) into the alpha mask the
+	// weather effect plane master filters its particles by.
+	filters = list(
+		filter(type="layer", render_source=SUNLIGHTING_RENDER_TARGET),
+		filter(type="color", color=list(
+			0, 0, 0, 0,
+			0, 0, 0, 1,
+			0, 0, 0, 0,
+			0, 0, 0, 0)),
+	)
+
 //Contains the weather effect itself
 /atom/movable/screen/plane_master/weather_effect
 	name = "weather effect plane master"
 	plane = WEATHER_EFFECT_PLANE
 	blend_mode = BLEND_OVERLAY
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	screen_loc = "CENTER-2:-16, CENTER"
 	//render_relay_plane = RENDER_PLANE_GAME
+	var/obj/weather_effect/weather_visual
 
 /atom/movable/screen/plane_master/weather_effect/Initialize(mapload)
 	. = ..()
-	//filters += filter(type="alpha", render_source=WEATHER_RENDER_TARGET)
-	SSoutdoor_effects.weather_planes_need_vis |= src
+	filters += filter(type="alpha", render_source=WEATHER_RENDER_TARGET)
+	weather_visual = new /obj/weather_effect()
+	vis_contents = list(weather_visual)
+	SSParticleWeather.registerWeatherEffect(weather_visual)
 
 /atom/movable/screen/plane_master/weather_effect/Destroy()
-	. = ..()
-	SSoutdoor_effects.weather_planes_need_vis -= src
+	SSParticleWeather.unregisterWeatherEffect(weather_visual)
+	QDEL_NULL(weather_visual)
+	return ..()
 /* Our sunlight planemaster mashes all of our sunlight overlays together into one				*/
 /* The fullscreen then grabs the plane_master with a layer filter, and colours it				*/
 /* We do this so the sunlight fullscreen acts as a big lighting object, in our lighting plane */
@@ -258,7 +274,8 @@
 
 /atom/movable/screen/fullscreen/lighting_backdrop/sunlight/Initialize(mapload)
 	. = ..()
-	filters += filter(type="layer", render_source=SUNLIGHTING_RENDER_TARGET)
+	filters += filter(type="layer", render_source=SUNLIGHT_WHITENED_RENDER_TARGET)
+	filters += GAUSSIAN_BLUR(SUNLIGHT_MASK_BLUR_SIZE)
 	SSoutdoor_effects.sunlighting_planes |= src
 	color = SSoutdoor_effects.last_color
 	SSoutdoor_effects.transition_sunlight_color(src)
@@ -274,3 +291,89 @@
 	blend_mode = BLEND_MULTIPLY
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	render_target = SUNLIGHTING_RENDER_TARGET
+
+/atom/movable/screen/plane_master/sunlight/Initialize(mapload)
+	. = ..()
+
+//Whitening stage: flattens the packed mask (yellow/red = sun) into a plain white mask.
+/atom/movable/screen/plane_master/sunlight_whitened
+	name = "sunlight white mask plane master"
+	plane = SUNLIGHT_WHITENED_PLANE
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	render_target = SUNLIGHT_WHITENED_RENDER_TARGET
+
+/atom/movable/screen/plane_master/sunlight_whitened/Initialize(mapload)
+	. = ..()
+	filters = list(
+		filter(type="layer", render_source=SUNLIGHTING_RENDER_TARGET),
+		filter(type="color", color=list(
+			1, 1, 1, 0,
+			0, 0, 0, 0,
+			0, 0, 0, 0,
+			0, 0, 0, 1)),
+	)
+
+/atom/movable/screen/plane_master/space_backdrop
+	name = "space backdrop plane master"
+	plane = PLANE_SPACE
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/hud
+	name = "hud plane master"
+	plane = HUD_PLANE
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/clickcatcher
+	name = "clickcatcher plane master"
+	plane = CLICKCATCHER_PLANE
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/game_world_highest
+	name = "highest game world plane master"
+	plane = GAME_PLANE_HIGHEST
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/blackness
+	name = "blackness plane master"
+	plane = BLACKNESS_PLANE
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/emissive
+	name = "emissive plane master"
+	plane = EMISSIVE_PLANE
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/above_lighting
+	name = "above lighting plane master"
+	plane = ABOVE_LIGHTING_PLANE
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/fullscreen
+	name = "fullscreen plane master"
+	plane = FULLSCREEN_PLANE
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/above_hud
+	name = "above hud plane master"
+	plane = ABOVE_HUD_PLANE
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/splashscreen
+	name = "splashscreen plane master"
+	plane = SPLASHSCREEN_PLANE
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/balloon_chat
+	name = "balloon chat plane master"
+	plane = BALLOON_CHAT_PLANE
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/point
+	name = "point plane master"
+	plane = POINT_PLANE
+	appearance_flags = PLANE_MASTER
+
+/atom/movable/screen/plane_master/lobby_menu
+	name = "lobby menu plane master"
+	plane = LOBBY_MENU_PLANE
+	appearance_flags = PLANE_MASTER

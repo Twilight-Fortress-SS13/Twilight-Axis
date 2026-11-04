@@ -74,26 +74,7 @@
 /obj/item/clothing/gloves/roguetown/knuckles/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_notice("Allows unarmed parrying, similar to bracers. Takes integrity damage when parrying. Expert Pugilists parry far more effectively with these.")
-	. += span_warning("While worn, I cannot wield weapons or hold a shield.")
 	//. += span_notice("Activate - while held in your current hand - to turn these into knuckledusters, which can be wielded as a dedicated weapon for unarmed combat.")
-
-/obj/item/clothing/gloves/roguetown/knuckles/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
-	if(slot == SLOT_GLOVES && (locate(/obj/item/rogueweapon/shield) in M.held_items))
-		if(!disable_warning)
-			to_chat(M, span_warning("I can't wear [src] while holding a shield."))
-		return FALSE
-	return ..()
-
-/obj/item/clothing/gloves/roguetown/knuckles/equipped(mob/user, slot)
-	. = ..()
-	if(slot == SLOT_GLOVES)
-		to_chat(user, span_warning("[src] strengthens my unarmed strikes, but hinders my ability to wield most things!"))
-		ADD_TRAIT(user, TRAIT_WEAPONLESS, REF(src))
-
-/obj/item/clothing/gloves/roguetown/knuckles/dropped(mob/user)
-	. = ..()
-	to_chat(user, span_warning("Free from [src], my fingers feel lithe and dexterous once more. I can wield most things again."))
-	REMOVE_TRAIT(user, TRAIT_WEAPONLESS, REF(src))
 
 /obj/item/clothing/gloves/roguetown/knuckles/bronze
 	name = "bronze knuckles"

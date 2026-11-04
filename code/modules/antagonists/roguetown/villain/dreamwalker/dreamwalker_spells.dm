@@ -23,6 +23,12 @@
 		"Absolver",
 		"Templar",
 		"Sergeant",
+		"Royal Guard Sergeant",
+		"Royal Guard",
+		"Town Sheriff",
+		"Town Guard",
+		"Overseer",
+		"Vanguard",
 		"Men-at-arms",
 		"Knight",
 		"Squire",
@@ -200,7 +206,10 @@
 		/area/rogue/outdoors/beach/south,
 		/area/rogue/outdoors/beach/grim,
 		/area/rogue/outdoors/beach/north/grim,
-		/area/rogue/outdoors/beach/south/grim
+		/area/rogue/outdoors/beach/south/grim,
+		/area/rogue/outdoors/beach/harbor,
+		/area/rogue/rockharbor,
+		/area/rogue/outdoors/desert/river
 	)
 	var/area/destination_area = GLOB.areas_by_type[pick(possible_areas)]
 	if(!destination_area)

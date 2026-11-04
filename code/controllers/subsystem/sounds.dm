@@ -22,9 +22,13 @@ SUBSYSTEM_DEF(sounds)
 	var/channel_random_low
 	/// higher reserve position - decremented and incremented to reserve sound channels, anything above this is reserved. The channel at this index is the highest unreserved channel.
 	var/channel_reserve_high
+	var/datum/sound_group/instruments/instrument_channels
 
 /datum/controller/subsystem/sounds/Initialize(mapload)
 	setup_available_channels()
+	// Reserve the existing music budget before map objects can consume the general pool.
+	instrument_channels = new
+	GLOB.created_sound_groups += instrument_channels
 	return ..()
 
 /datum/controller/subsystem/sounds/proc/setup_available_channels()

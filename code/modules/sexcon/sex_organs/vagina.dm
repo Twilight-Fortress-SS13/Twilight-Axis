@@ -1,6 +1,7 @@
 /obj/item/organ/vagina
 	name = "vagina"
-	icon_state = "severedtail" //placeholder
+	icon = 'modular_twilight_axis/icons/roguetown/items/surgery.dmi' //TA_EDIT
+	icon_state = "womb" //TA_EDIT
 	visible_organ = TRUE
 	zone = BODY_ZONE_PRECISE_GROIN
 	slot = ORGAN_SLOT_VAGINA

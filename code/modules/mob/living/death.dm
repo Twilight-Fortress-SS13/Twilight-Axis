@@ -104,6 +104,7 @@ GLOBAL_LIST_EMPTY(last_words)
 
 	set_stat(DEAD)
 	unset_machine()
+	stop_sneaking_on_death()
 	timeofdeath = world.time
 	tod = station_time_timestamp()
 

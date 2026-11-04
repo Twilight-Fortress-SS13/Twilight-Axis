@@ -129,3 +129,6 @@ GLOBAL_VAR_INIT(cmp_field, "name")
 
 /proc/cmp_quest_chronicle_order(datum/quest/A, datum/quest/B)
 	return A.chronicle_order - B.chronicle_order
+
+/proc/cmp_num_string_asc(A, B)
+	return text2num(A) - text2num(B)

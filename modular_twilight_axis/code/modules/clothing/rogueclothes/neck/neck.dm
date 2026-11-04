@@ -1,0 +1,90 @@
+/obj/item/clothing/neck/roguetown/collar/bell_collar
+	icon = 'modular_twilight_axis/icons/obj/leashes_collars.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/mob/collars_leashes.dmi'
+
+/obj/item/clothing/neck/roguetown/gorget/cursed_collar
+	leashable = TRUE
+
+// Crafting recipes for collars and leashes
+
+/datum/crafting_recipe/roguetown/leather/neck/catbell_collar
+	name = "catbell collar"
+	result = /obj/item/clothing/neck/roguetown/collar/bell/catbell
+	reqs = list(/obj/item/natural/hide/cured = 1, /obj/item/catbell = 1)
+	tools = list(/obj/item/needle)
+	time = 10 SECONDS
+	category = "Leatherwork"
+	subcategory = CAT_NONE
+	always_availible = TRUE
+
+/datum/crafting_recipe/roguetown/leather/neck/cowbell_collar
+	name = "cowbell collar"
+	result = /obj/item/clothing/neck/roguetown/collar/bell/cowbell
+	reqs = list(/obj/item/natural/hide/cured = 1, /obj/item/catbell/cow = 1)
+	tools = list(/obj/item/needle)
+	time = 10 SECONDS
+	category = "Leatherwork"
+	subcategory = CAT_NONE
+	always_availible = TRUE
+
+
+/datum/crafting_recipe/roguetown/leather/neck/leather_leash
+	name = "leather leash"
+	result = /obj/item/leash/leather
+	reqs = list(/obj/item/natural/hide/cured = 1)
+	tools = list(/obj/item/needle)
+	time = 10 SECONDS
+	category = "Leatherwork"
+	subcategory = CAT_NONE
+	always_availible = TRUE
+
+/obj/item/clothing/neck/roguetown/loveamulet
+	name = "tears of love amulet"
+	desc = "This amulet is made in the southern county of the Black Empire called Sudstal. Faceted with black diamonds, this piece of jewelry symbolizes the pain and sadness that lies beneath the surface of happiness and tranquility."
+	icon_state = "loveamulet"
+	item_state = "loveamulet"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/neck.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/neck.dmi'
+
+/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/moneta
+	name = "pierced coin amulet"
+	desc = "A simple luck charm - a zenny, pierced by a blade and hanging on a thin iron chain. A tiny inscription upon the amulet's edge reads: «All tyrants will die alone.»"
+	icon_state = "matthios"
+	item_state = "matthios"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/neck.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/neck.dmi'
+
+/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/moneta/examine(mob/user)
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		if(istype(H.patron, /datum/patron/inhumen/matthios))
+			desc = "A recognizible charm of Matthios' own - a coin shattered, a symbol the pure rejection of wealth by those who would be oppressed with it. The amulet contains no power of its own, yet as you hold it in the palm of your hand, you can feel the promise of freedom empowering you. A tiny inscription upon the amulet's edge reads: «All tyrants will die alone.»"
+		else
+			desc = "A simple luck charm - a zenny, pierced by a blade and hanging on a thin iron chain. A tiny inscription upon the amulet's edge reads: «All tyrants will die alone.»"
+	. = ..()
+
+/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/moneta/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD, "Strange luck charm")
+
+/obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/spider
+	name = "carved talisman" //rising spider
+	desc = "'Sacrifice, purification through pain, healing through suffering, duty and fate woven together. If you reach out for every perishing soul, the web will tear, and everyone will drown.'  </br>  </br>The Rising Spider stands apart from the other Beasts of Gronn. Her Priestesses preach that the world is sick, and the sickness cannot be burned away without pain. She demands that suffering be accepted as the price of salvation: part of the tree must rot so that the trunk may survive. Due to alarming similarities between these teachings and the outsider Cult of Salvation, most Gronnic harbors and settlements barely tolerate the followers of the Spider: they are allowed to set up small shrines outside the walls, but are rarely accepted into a clan."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/neck.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/neck.dmi'
+	icon_state = "gronnspider"
+	item_state = "gronnspider"
+
+/obj/item/clothing/neck/roguetown/chaincoif/chainmantle/bloodraider
+	name = "raider's chain mantle"
+	desc = "A thicker and more durable piece of neck protection that also covers the mouth when pulled up."
+	icon_state = "bloodchainmantle"
+	item_state = "bloodchainmantle"
+	icon = 'modular_twilight_axis/icons/clothing/bloodraider.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/bloodraider.dmi'
+
+/obj/item/clothing/neck/roguetown/chaincoif/chainmantle/bloodraider/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")
+
+/obj/item/clothing/neck/roguetown/chaincoif/chainmantle/bloodraider/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)

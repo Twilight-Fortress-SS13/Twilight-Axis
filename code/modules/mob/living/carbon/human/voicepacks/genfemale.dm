@@ -198,4 +198,10 @@
 				used = list('sound/foley/trap.ogg')
 			if("spark")
 				used = list('sound/foley/machinebreak.ogg')
+
+			//MODULAR TWILIGHT AXIS
+			if("softmoan")
+				used = list('modular_twilight_axis/sound/misc/vo/female/gen/softmoan.ogg')
+			if("moan")
+				used = list('modular_twilight_axis/sound/misc/vo/female/gen/moan.ogg')
 	return used
