@@ -562,7 +562,6 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 	var/ticket_ping = FALSE
 	/// Who is handling this admin help?
 	var/handler
-	COOLDOWN_DECLARE(player_message_cooldown) // TA EDIT
 
 //call this on its own to create a ticket, don't manually assign current_ticket
 //msg is the title of the ticket: usually the ahelp text
@@ -606,7 +605,6 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 		AddInteraction("<font color='green'>Ticket opened. Your message has been sent to the admin team.</font>")
 
 		MessageNoRecipient(msg, newticket = TRUE)
-		COOLDOWN_START(src, player_message_cooldown, 1 MINUTES) // TA EDIT
 
 	GLOB.ahelp_tickets.active_tickets += src
 	SStgui.update_uis(GLOB.ahelp_tickets) // TA EDIT
@@ -707,11 +705,7 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 		send2discordwh(data)
 
 /datum/admin_help/proc/SendPlayerMessage(msg) // TA EDIT START
-	if(!COOLDOWN_FINISHED(src, player_message_cooldown))
-		to_chat(initiator, span_warning("You can only send one adminhelp message per minute."))
-		return FALSE
 	MessageNoRecipient(msg)
-	COOLDOWN_START(src, player_message_cooldown, 1 MINUTES)
 	return TRUE
 // TA EDIT END
 
