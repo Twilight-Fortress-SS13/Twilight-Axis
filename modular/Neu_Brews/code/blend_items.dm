@@ -60,7 +60,7 @@
 	tastes = list("sweet, sickly oblivion" = 1)
 
 /obj/item/reagent_containers/food/snacks/grown/rogue/blend/forgottenlove
-	name = "The Sisters Blend"
+	name = "The Blend of Love and Sorrow" //TA EDIT
 	desc = "A union of love and pain. Eorans and Baothans both fear this brew, for it promises the impossible. Or does it? "
 	icon_state = "forgottenlove"
 	tastes = list("bitter, incomplete nostalgia" = 1)
