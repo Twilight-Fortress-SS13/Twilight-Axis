@@ -135,7 +135,7 @@
 
 	C.visible_message(span_yellow("[C]'s legs begin to cover in strange roots..."), \
 							span_yellow("I starts to move to [found_mob.name]..."))
-	if(!do_after(C, 10 SECONDS, TRUE, src))
+	if(!do_after(C, 10 SECONDS, TRUE, C))
 		revert_cast()
 		return FALSE
 
