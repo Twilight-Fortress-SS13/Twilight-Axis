@@ -1498,6 +1498,7 @@
 							ta_apply_spawn_advanced_options(O, ta_spawn_advanced) // TA EDIT
 							if(href_list["disable_ai"] && ismob(O))
 								var/mob/spawned_mob = O
+								ADD_TRAIT(spawned_mob, TRAIT_AI_DISABLED, ADMIN_TRAIT)
 								if(isanimal(spawned_mob))
 									var/mob/living/simple_animal/SA = spawned_mob
 									SA.toggle_ai(AI_OFF)
