@@ -17,10 +17,11 @@
 
 	display_order = JDO_DRUID
 	give_bank_account = TRUE
-	min_pq = 0
+	min_pq = 5
 	max_pq = null
 	round_contrib_points = 2
-	cmode_music = 'sound/music/cmode/garrison/combat_warden.ogg' // this was originally druid music. i think its ok to have druids share it w/ wardens.
+	same_job_respawn_delay = 20 MINUTES
+	cmode_music = sound("sound/music/cmode/garrison/combat_warden.ogg") // this was originally druid music. i think its ok to have druids share it w/ wardens.
 
 	//You're.. not REALLY a full-on church member, but being a druid implies you became a clergy-man of some sort; even if it's non-organized. So, still shouldn't be noble.
 	virtue_restrictions = list(/datum/virtue/utility/noble)
@@ -54,7 +55,7 @@
 		/datum/skill/craft/tanning = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/alchemy = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/magic/holy = SKILL_LEVEL_MASTER, //You're the peak of Dendorite Miracle-Casting.
@@ -112,6 +113,9 @@
 	H.ambushable = FALSE
 
 	H.AddComponent(/datum/component/wise_tree_alert)
+	H.mind.AddSpell(new /datum/action/cooldown/spell/conjure_arcyne_ward/druid)
+	H.AddSpell(new /obj/effect/proc_holder/spell/self/beast_claws)
+	H.AddSpell(new /obj/effect/proc_holder/spell/self/beast_rage)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T4, passive_gain = CLERIC_REGEN_MAJOR, start_maxed = TRUE)	//Starts off maxed out.
 	if(H.mind)

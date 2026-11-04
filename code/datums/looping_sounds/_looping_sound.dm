@@ -17,7 +17,35 @@ GLOBAL_LIST_EMPTY(created_sound_groups)
 	channel_count = 150
 
 /datum/sound_group/instruments
-	channel_count = 32 //probably more than enough
+	channel_count = 32
+	/// Channels stay reserved to music for the round; only their leases change during playback.
+	var/list/channel_leases = list()
+	var/list/channel_owners = list()
+
+/datum/sound_group/instruments/proc/acquire_channel(datum/owner)
+	if(!owner || QDELETED(owner))
+		return FALSE
+	if(channel_leases[owner])
+		return channel_leases[owner]
+	for(var/available_channel in reserved_channels)
+		if(available_channel && !channel_owners["[available_channel]"])
+			channel_leases[owner] = available_channel
+			channel_owners["[available_channel]"] = owner
+			RegisterSignal(owner, COMSIG_PARENT_QDELETING, PROC_REF(on_owner_deleted))
+			return available_channel
+	return FALSE
+
+/datum/sound_group/instruments/proc/release_channel(datum/owner)
+	var/leased_channel = channel_leases[owner]
+	if(!leased_channel)
+		return
+	UnregisterSignal(owner, COMSIG_PARENT_QDELETING)
+	channel_owners -= "[leased_channel]"
+	channel_leases -= owner
+
+/datum/sound_group/instruments/proc/on_owner_deleted(datum/source)
+	SIGNAL_HANDLER
+	release_channel(source)
 
 /*
 	parent	(the source of the sound)			The source the sound comes from
@@ -53,14 +81,18 @@ GLOBAL_LIST_EMPTY(created_sound_groups)
 	var/frequency
 	var/stopped = TRUE
 	var/persistent_loop = FALSE //we stay in the client's played_loops so we keep updating volume even when out of range
+	var/preload_persistent_to_all_clients = TRUE  // TA EDIT
 	var/cursound
 	var/list/thingshearing = list() // this is a list of WEAKREFS to the mobs that can currently hear us
 	var/ignore_walls = TRUE
+	var/list/blocked_z_levels
 	var/timerid
 	/// Has the looping started yet?
 	var/loop_started = FALSE
 	///our sound channel
 	var/channel
+	/// Some loops borrow a channel only while playing rather than reserve one on construction.
+	var/defer_channel_reservation = FALSE
 	var/datum/sound_group/sound_group
 	var/starttime // A world.time snapshot of when the loop was started.
 	/// Which bitflag pref we check for when playing this to listeners, if any. This will check for its ABSENCE, not its presence.
@@ -75,7 +107,7 @@ GLOBAL_LIST_EMPTY(created_sound_groups)
 		return
 
 	var/datum/sound_group/group
-	if(sound_group)
+	if(sound_group && !defer_channel_reservation)
 		for(var/datum/sound_group/listed in GLOB.created_sound_groups)
 			if(listed.type != sound_group)
 				continue
@@ -100,7 +132,7 @@ GLOBAL_LIST_EMPTY(created_sound_groups)
 
 	if(_channel)
 		channel = _channel
-	if(!channel)
+	if(!channel && !defer_channel_reservation)
 		channel = SSsounds.reserve_sound_channel(src)
 
 	if(start_immediately)
@@ -146,6 +178,8 @@ GLOBAL_LIST_EMPTY(created_sound_groups)
 	on_start()
 
 /datum/looping_sound/proc/stop(null_parent)
+	if(stopped) // TA EDIT
+		return // TA EDIT
 	stopped = TRUE
 	if(null_parent)
 		set_parent(null)
@@ -186,7 +220,7 @@ GLOBAL_LIST_EMPTY(created_sound_groups)
 			var/mob/mob = parent
 			mob.playsound_local(mob, soundfile, volume, vary, frequency, falloff, repeat = src, channel = channel)
 		return
-	var/list/R = playsound(parent, soundfile, volume, vary, extra_range, falloff, frequency, channel, ignore_walls = ignore_walls, repeat = src)
+	var/list/R = playsound(parent, soundfile, volume, vary, extra_range, falloff, frequency, channel, ignore_walls = ignore_walls, repeat = src, blocked_z_levels = blocked_z_levels)
 	for(var/datum/weakref/listener_ref in thingshearing)
 		var/mob/M = listener_ref.resolve()
 		if(!M?.client)
@@ -234,7 +268,7 @@ GLOBAL_LIST_EMPTY(created_sound_groups)
 	if(start_sound) //does ANYTHING even use start_sound
 		play(start_sound)
 		start_wait = start_length
-	if(persistent_loop)
+	if(persistent_loop && preload_persistent_to_all_clients) // TA EDIT
 		attach_loop_to_all_clients()
 	addtimer(CALLBACK(src, PROC_REF(begin_loop)), start_wait, TIMER_CLIENT_TIME)
 	if(persistent_loop && !(src in GLOB.persistent_sound_loops))

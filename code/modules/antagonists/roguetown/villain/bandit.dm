@@ -1,6 +1,4 @@
-// Roundstart bandit slots are a flat per-gamemode cap - NO population scaling. High Intensity opens 6 slots.
-// The full cap is opened at roundstart even if not every seat fills (see
-// get_antag_amount / start in events/antagonist/solo/bandits.dm). Bandits still need HARD_ANTAG_MIN_POP to roll.
+// Roundstart bandit slots use flat caps per gamemode without population scaling.
 /datum/antagonist/bandit
 	name = "Bandit"
 	roundend_category = "bandits"
@@ -19,10 +17,12 @@
 	override_candidatereq = TRUE
 	storyteller_min_players = CHARACTER_INJECTION_MIN_POP
 	storyteller_slot_scaling = 1	// unused: bandits use a flat cap, not storyteller_scale_slots
-	storyteller_slot_default_cap = 2
+	storyteller_slot_default_cap = 4 // TA EDIT START
 	storyteller_maxcaps = list(
-		/datum/storyteller/gamemode/guaranteed_antag = 6,	// High Intensity
-	)
+		/datum/storyteller/gamemode/guaranteed_antag = 8,			// High Intensity
+		/datum/storyteller/gamemode/guaranteed_antag/low_wretch = 6,	// Tempered Intensity
+		/datum/storyteller/gamemode/no_antag = 5,
+	) // TA EDIT END
 	var/favor = 150
 	var/totaldonated = 0
 
@@ -41,7 +41,7 @@
 /datum/antagonist/bandit/proc/finalize_bandit()
 	owner.current.playsound_local(get_turf(owner.current), 'sound/music/traitor.ogg', 60, FALSE, pressure_affected = FALSE)
 	var/mob/living/carbon/human/H = owner.current
-	if(!istype(H.patron, /datum/patron/inhumen))
+	if((!istype(H.patron, /datum/patron/inhumen)) || (istype(H.patron, /datum/patron/inhumen/zizo)))
 		H.set_patron(/datum/patron/inhumen/matthios)	//If you aren't a heretical worshiper, forces you to Matthios worship. (All bandits follow Matthios.)
 	for(var/datum/charflaw/cf in H.charflaws)
 		if(istype(cf, /datum/charflaw/hunted) || istype(cf, /datum/charflaw/targeted))
@@ -52,6 +52,7 @@
 	ADD_TRAIT(H, TRAIT_SEEPRICES, TRAIT_GENERIC)
 	ADD_TRAIT(H, TRAIT_STEELHEARTED, TRAIT_GENERIC)
 	ADD_TRAIT(H, TRAIT_FREEMAN, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_OUTLANDER, TRAIT_GENERIC) //TA EDIT
 	ADD_TRAIT(H, TRAIT_OUTLAW, TRAIT_GENERIC)		//Just to stop them from using mesiters like Wretches.
 	to_chat(H, span_alertsyndie("I am a BANDIT!"))
 	to_chat(H, span_boldwarning("Long ago I did a crime worthy of my bounty being hung on the wall outside of the local inn. I live now with fellow free men in reverence to MATTHIOS whose idol grants us boons and wishes when fed the money, treasures, and metals of the civilized wretches. As a member of the free men, I worship MATTHIOS first and foremost, though I may have allegiance to other deities."))

@@ -64,7 +64,7 @@
 		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 2,
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpotnew = 2,
 		)
-	H.cmode_music = 'sound/music/combat_desertrider.ogg'
+	H.cmode_music = sound("sound/music/combat_desertrider.ogg")
 	H.grant_language(/datum/language/raneshi)
 
 /datum/migrant_role/ranesheni/amirah
@@ -122,7 +122,7 @@
 		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 1,
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpotnew = 1,
 	)
-	H.cmode_music = 'sound/music/combat_desertrider.ogg'
+	H.cmode_music = sound("sound/music/combat_desertrider.ogg")
 	H.grant_language(/datum/language/raneshi)
 
 /datum/migrant_role/ranesheni/janissary
@@ -185,7 +185,7 @@
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpotnew = 1,
 		/obj/item/natural/bundle/cloth/bandage/full = 1,
 		)
-	H.cmode_music = 'sound/music/combat_desertrider.ogg'
+	H.cmode_music = sound("sound/music/combat_desertrider.ogg")
 	H.grant_language(/datum/language/raneshi)
 	var/weapons = list("Mace","Spear")
 	if(H.mind)
@@ -255,7 +255,7 @@
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 1,
 		)
-	H.cmode_music = 'sound/music/combat_desertrider.ogg'
+	H.cmode_music = sound("sound/music/combat_desertrider.ogg")
 	H.grant_language(/datum/language/raneshi)
 
 #undef CTAG_RANESHENI_EMIR

@@ -55,10 +55,10 @@
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		)
-	H.cmode_music = 'sound/music/cmode/adventurer/combat_outlander4.ogg'
+	H.cmode_music = sound("sound/music/cmode/adventurer/combat_outlander4.ogg")
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
-			H.cmode_music = 'sound/music/combat_heretic.ogg'
+			H.cmode_music = sound("sound/music/combat_heretic.ogg")
 
 /datum/advclass/mage/alchemist
 	name = "Alchemist"
@@ -238,10 +238,10 @@
 	if(granted_weapon)
 		H.adjust_skillrank_up_to(granted_weapon::associated_skill, SKILL_LEVEL_JOURNEYMAN, TRUE)
 
-	H.cmode_music = 'sound/music/cmode/adventurer/combat_outlander3.ogg'
+	H.cmode_music = sound("sound/music/cmode/adventurer/combat_outlander3.ogg")
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
-			H.cmode_music = 'sound/music/combat_heretic.ogg'
+			H.cmode_music = sound("sound/music/combat_heretic.ogg")
 
 /datum/advclass/mage/spellsinger
 	name = "Spellsinger"
@@ -291,10 +291,10 @@
 		H.mind.AddSpell(new /datum/action/cooldown/spell/conjure_instrument)
 		grant_poke_spell(H)
 
-	H.cmode_music = 'sound/music/cmode/adventurer/combat_outlander3.ogg'
+	H.cmode_music = sound("sound/music/cmode/adventurer/combat_outlander3.ogg")
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
-			H.cmode_music = 'sound/music/combat_heretic.ogg'
+			H.cmode_music = sound("sound/music/combat_heretic.ogg")
 
 /datum/advclass/mage/spellfist
 	name = "Spellfist"
@@ -385,14 +385,14 @@
 		if("knuckledusters")
 			H.put_in_hands(new /obj/item/clothing/gloves/roguetown/knuckles/bronze(H))
 
-	H.cmode_music = 'sound/music/cmode/adventurer/combat_outlander3.ogg'
+	H.cmode_music = sound("sound/music/cmode/adventurer/combat_outlander3.ogg")
 
 /datum/advclass/mage/spellthief
 	name = "Arcyne Trickster"
 	tutorial = "You are an Arcyne Trickster, a thief and hooligan gifted in the arcyne arts."
 	outfit = /datum/outfit/job/roguetown/adventurer/spellthief
 	subclass_languages = list(/datum/language/thievescant)
-	cmode_music = 'sound/music/cmode/antag/combat_cutpurse.ogg'
+	cmode_music = sound("sound/music/cmode/antag/combat_cutpurse.ogg")
 	traits_applied = list(TRAIT_ARCYNE)
 	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 2, "utilities" = 8)
 	subclass_stats = list(

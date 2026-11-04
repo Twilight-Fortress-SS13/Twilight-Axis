@@ -60,6 +60,13 @@
 /datum/antagonist/lich/get_antag_cap_weight()
 	return 3
 
+/datum/antagonist/lich/is_banned(mob/M)
+	if(ishuman(M))
+		var/mob/living/carbon/human/H = M
+		if(tat_is_pliant_roundstart_character(H))
+			return TRUE
+	return ..()
+
 /datum/antagonist/lich/on_gain()
 	owner.unknow_all_people() //ancient lich, nobody knows them
 	for(var/datum/mind/MF in get_minds())
@@ -72,7 +79,7 @@
 	save_stats()
 	set_stats()
 	greet()
-	return ..()
+	return .
 
 /datum/antagonist/lich/greet()
 	to_chat(owner.current, span_userdanger("An immortal king cries for new subjects. Subdue and conquer."))
@@ -130,7 +137,7 @@
 		owner.become_unknown_to(MF)
 
 	var/mob/living/carbon/human/L = owner.current
-	L.cmode_music = 'sound/music/combat_heretic.ogg'
+	L.cmode_music = sound("modular_twilight_axis/sound/music/combat_lich.ogg") //TA_EDIT
 	L.faction = list(FACTION_UNDEAD)
 
 	for(var/datum/charflaw/cf in L.charflaws)

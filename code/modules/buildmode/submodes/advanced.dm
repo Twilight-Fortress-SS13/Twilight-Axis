@@ -28,6 +28,7 @@
 			objholder = null
 			alert(c, "That path is not allowed.")
 			return
+	BM.log_action("configured advanced mode object type as [objholder].") // TA EDIT
 
 /datum/buildmode_mode/advanced/handle_click(client/c, params, obj/object)
 	var/list/pa = params2list(params)
@@ -39,20 +40,23 @@
 		if (istype(object, /turf) || istype(object, /obj) || istype(object, /mob))
 			objholder = object.type
 			to_chat(c, span_notice("[initial(object.name)] ([object.type]) selected."))
+			BM.log_action("copied object type [object.type] from [object] at [AREACOORD(object)] for advanced mode.") // TA EDIT
 		else
 			to_chat(c, span_notice("[initial(object.name)] is not a turf, object, or mob! Please select again."))
 	else if(left_click)
 		if(ispath(objholder,/turf))
 			var/turf/T = get_turf(object)
-			log_admin("Build Mode: [key_name(c)] modified [T] in [AREACOORD(object)] to [objholder]")
+			var/old_type = T.type // TA EDIT
+			var/location_desc = AREACOORD(T) // TA EDIT
 			T.ChangeTurf(objholder)
+			BM.log_action("changed turf at [location_desc] from [old_type] to [objholder] using advanced mode.") // TA EDIT
 		else if(!isnull(objholder))
 			var/obj/A = new objholder (get_turf(object))
 			A.setDir(BM.build_dir)
-			log_admin("Build Mode: [key_name(c)] modified [A]'s [COORD(A)] dir to [BM.build_dir]")
+			BM.log_action("created [A] ([A.type]) at [AREACOORD(A)] facing [dir2text(BM.build_dir)] ([BM.build_dir]) using advanced mode.") // TA EDIT
 		else
 			to_chat(c, span_warning("Select object type first."))
 	else if(right_click)
 		if(isobj(object))
-			log_admin("Build Mode: [key_name(c)] deleted [object] at [AREACOORD(object)]")
+			BM.log_action("deleted [object] ([object.type]) at [AREACOORD(object)] using advanced mode.") // TA EDIT
 			qdel(object)

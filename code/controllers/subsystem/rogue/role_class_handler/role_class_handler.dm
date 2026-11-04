@@ -19,6 +19,12 @@ SUBSYSTEM_DEF(role_class_handler)
 	contents: class_select_handlers = list("ckey" = /datum/class_select_handler, "ckey2" = /datum/class_select_handler,... etc)
 */
 	var/list/class_select_handlers = list()
+	var/list/roundstart_subclass_reservations = list() // TA EDIT START
+	var/list/roundstart_subclass_reservation_jobs = list()
+	var/list/roundstart_subclass_reservation_strict = list()
+	var/list/roundstart_subclass_reservation_counts = list()
+	var/list/roundstart_subclass_fallback_exclusions = list()
+	var/list/roundstart_subclass_pending = list() // TA EDIT END
 
 /*
 	This ones basically a list for if you want to give a specific ckey a specific isolated datum
@@ -76,14 +82,244 @@ SUBSYSTEM_DEF(role_class_handler)
 
 	//Well that about covers it really.
 
+/datum/controller/subsystem/role_class_handler/proc/get_job_subclass_by_name(datum/job/job, subclass_name) // TA EDIT START
+	if(!job || !subclass_name || !length(job.job_subclasses))
+		return null
+	for(var/subclass_path in job.job_subclasses)
+		var/datum/advclass/subclass_type = subclass_path
+		if(initial(subclass_type.name) != subclass_name)
+			continue
+		return get_advclass_by_name(subclass_name)
+	return null
+
+/datum/controller/subsystem/role_class_handler/proc/class_has_available_slot(datum/advclass/target_datum, ckey)
+	if(!target_datum)
+		return FALSE
+	if(target_datum.maximum_possible_slots == -1)
+		return TRUE
+	var/reserved_slots = roundstart_subclass_reservation_counts[target_datum.type] || 0
+	var/datum/advclass/owned_reservation = roundstart_subclass_reservations[ckey]
+	if(owned_reservation?.type == target_datum.type)
+		reserved_slots = max(reserved_slots - 1, 0)
+	return target_datum.total_slots_occupied + reserved_slots < target_datum.maximum_possible_slots
+
+/datum/controller/subsystem/role_class_handler/proc/release_roundstart_subclass_reservation(ckey)
+	if(!ckey)
+		return
+	var/datum/advclass/reserved_class = roundstart_subclass_reservations[ckey]
+	if(reserved_class)
+		var/reserved_class_type = reserved_class.type
+		var/remaining_reservations = max((roundstart_subclass_reservation_counts[reserved_class_type] || 0) - 1, 0)
+		if(remaining_reservations)
+			roundstart_subclass_reservation_counts[reserved_class_type] = remaining_reservations
+		else
+			roundstart_subclass_reservation_counts.Remove(reserved_class_type)
+	roundstart_subclass_reservations.Remove(ckey)
+	roundstart_subclass_reservation_jobs.Remove(ckey)
+	roundstart_subclass_reservation_strict.Remove(ckey)
+
+/datum/controller/subsystem/role_class_handler/proc/clear_roundstart_subclass_state(ckey)
+	var/list/pending_subclass = roundstart_subclass_pending[ckey]
+	if(pending_subclass)
+		var/datum/class_select_handler/pending_handler = pending_subclass["handler"]
+		if(pending_handler && !QDELETED(pending_handler))
+			qdel(pending_handler)
+		roundstart_subclass_pending.Remove(ckey)
+	release_roundstart_subclass_reservation(ckey)
+	roundstart_subclass_fallback_exclusions.Remove(ckey)
+
+/datum/controller/subsystem/role_class_handler/proc/clear_roundstart_subclass_states()
+	for(var/ckey in roundstart_subclass_reservations.Copy())
+		release_roundstart_subclass_reservation(ckey)
+	roundstart_subclass_reservations.Cut()
+	roundstart_subclass_reservation_jobs.Cut()
+	roundstart_subclass_reservation_strict.Cut()
+	roundstart_subclass_reservation_counts.Cut()
+	roundstart_subclass_fallback_exclusions.Cut()
+	for(var/ckey in roundstart_subclass_pending)
+		var/list/pending_subclass = roundstart_subclass_pending[ckey]
+		var/datum/class_select_handler/pending_handler = pending_subclass["handler"]
+		if(pending_handler && !QDELETED(pending_handler))
+			qdel(pending_handler)
+	roundstart_subclass_pending.Cut()
+
+/datum/controller/subsystem/role_class_handler/proc/try_reserve_roundstart_subclass(client/player, datum/preferences/character_prefs, datum/job/job, subclass_name, strict_mode)
+	if(!player || !character_prefs || !job || !subclass_name)
+		return !strict_mode
+
+	clear_roundstart_subclass_state(player.ckey)
+	var/datum/advclass/preferred_subclass = get_job_subclass_by_name(job, subclass_name)
+	if(!preferred_subclass || !preferred_subclass.check_preferences_requirements(character_prefs, player, TRUE, TRUE))
+		if(!strict_mode && preferred_subclass)
+			roundstart_subclass_fallback_exclusions[player.ckey] = preferred_subclass
+			to_chat(player, span_warning("Your preferred subclass, [subclass_name], was unavailable. You will choose another subclass after spawning."))
+		return !strict_mode
+
+	roundstart_subclass_reservations[player.ckey] = preferred_subclass
+	roundstart_subclass_reservation_jobs[player.ckey] = job.title
+	roundstart_subclass_reservation_strict[player.ckey] = strict_mode ? TRUE : FALSE
+	roundstart_subclass_reservation_counts[preferred_subclass.type] = (roundstart_subclass_reservation_counts[preferred_subclass.type] || 0) + 1
+	return TRUE
+
+/datum/controller/subsystem/role_class_handler/proc/consume_roundstart_subclass_reservation(ckey, job_title)
+	if(!ckey)
+		return null
+	if(roundstart_subclass_reservation_jobs[ckey] != job_title)
+		release_roundstart_subclass_reservation(ckey)
+		return null
+	var/datum/advclass/reserved_class = roundstart_subclass_reservations[ckey]
+	if(!reserved_class)
+		return null
+	return list(
+		"class" = reserved_class,
+		"strict" = roundstart_subclass_reservation_strict[ckey] ? TRUE : FALSE
+	)
+
+/datum/controller/subsystem/role_class_handler/proc/consume_roundstart_subclass_exclusions(ckey)
+	var/datum/advclass/excluded_class = roundstart_subclass_fallback_exclusions[ckey]
+	roundstart_subclass_fallback_exclusions.Remove(ckey)
+	if(excluded_class)
+		return list(excluded_class)
+	return list() // TA EDIT END
+
+
+/datum/controller/subsystem/role_class_handler/proc/queue_roundstart_subclass(mob/living/carbon/human/H, datum/advclass/picked_class, datum/class_select_handler/related_handler, strict_mode, advclass_rolls_override, register_id) // TA EDIT START
+	if(!H?.client || !picked_class || !related_handler)
+		return FALSE
+	roundstart_subclass_pending[H.client.ckey] = list(
+		"mob" = H,
+		"class" = picked_class,
+		"handler" = related_handler,
+		"strict" = strict_mode,
+		"advclass_rolls_override" = advclass_rolls_override,
+		"register_id" = register_id
+	)
+	addtimer(CALLBACK(src, PROC_REF(trigger_roundstart_subclass), H.client.ckey), 1)
+	addtimer(CALLBACK(src, PROC_REF(recover_roundstart_subclass), H.client.ckey), 50)
+	return TRUE
+
+/datum/controller/subsystem/role_class_handler/proc/trigger_roundstart_subclass(ckey)
+	var/list/pending_subclass = roundstart_subclass_pending[ckey]
+	if(!pending_subclass)
+		return
+	var/datum/class_select_handler/related_handler = pending_subclass["handler"]
+	var/client/player = related_handler?.linked_client
+	if(!player || player.ckey != ckey)
+		return
+	winset(player, null, "command=\".apply-roundstart-subclass\"")
+
+/datum/controller/subsystem/role_class_handler/proc/recover_roundstart_subclass(ckey)
+	var/list/pending_subclass = roundstart_subclass_pending[ckey]
+	if(!pending_subclass)
+		return
+	roundstart_subclass_pending.Remove(ckey)
+	var/mob/living/carbon/human/H = pending_subclass["mob"]
+	var/datum/advclass/picked_class = pending_subclass["class"]
+	var/datum/class_select_handler/related_handler = pending_subclass["handler"]
+	if(QDELETED(H) || !H.client || H.client.ckey != ckey || !picked_class || !related_handler)
+		if(related_handler && !QDELETED(related_handler))
+			qdel(related_handler)
+		release_roundstart_subclass_reservation(ckey)
+		return
+	var/list/recovered_classes = list()
+	recovered_classes[picked_class] = 0
+	related_handler.rolled_classes = recovered_classes
+	class_select_handlers[ckey] = related_handler
+	related_handler.second_step()
+
+/datum/controller/subsystem/role_class_handler/proc/apply_roundstart_subclass(client/player)
+	if(!player?.ckey)
+		return
+	var/list/pending_subclass = roundstart_subclass_pending[player.ckey]
+	if(!pending_subclass)
+		return
+	roundstart_subclass_pending.Remove(player.ckey)
+	var/mob/living/carbon/human/H = pending_subclass["mob"]
+	var/datum/advclass/picked_class = pending_subclass["class"]
+	var/datum/class_select_handler/related_handler = pending_subclass["handler"]
+	var/strict_mode = pending_subclass["strict"]
+	var/advclass_rolls_override = pending_subclass["advclass_rolls_override"]
+	var/register_id = pending_subclass["register_id"]
+	if(QDELETED(H) || player.mob != H || !picked_class || !related_handler)
+		if(related_handler && !QDELETED(related_handler))
+			qdel(related_handler)
+		release_roundstart_subclass_reservation(player.ckey)
+		return
+	var/tat_class_is_currently_valid = TRUE
+	if(istype(picked_class, /datum/advclass/tat_class))
+		var/datum/advclass/tat_class/picked_tat_class = picked_class
+		tat_class_is_currently_valid = client_can_use_tat_role_bucket(player, picked_tat_class.required_tat_bucket) && client_has_tat_role_bucket(player, picked_tat_class.required_tat_bucket)
+	if(tat_class_is_currently_valid && finish_class_handler(H, picked_class, related_handler, 0, FALSE))
+		release_roundstart_subclass_reservation(player.ckey)
+		return
+	if(related_handler && !QDELETED(related_handler))
+		qdel(related_handler)
+	release_roundstart_subclass_reservation(player.ckey)
+	if(strict_mode)
+		to_chat(H, span_warning("Your reserved subclass became unavailable, so you were returned to the lobby."))
+		H.returntolobby()
+		return
+	roundstart_subclass_fallback_exclusions[player.ckey] = picked_class
+	setup_class_handler(H, advclass_rolls_override, register_id)
+
+/client/verb/apply_roundstart_subclass()
+	set name = ".apply-roundstart-subclass"
+	set hidden = TRUE
+	set instant = TRUE
+	SSrole_class_handler.apply_roundstart_subclass(src) // TA EDIT END
+
 /*
 	We setup the class handler here, aka the menu
 	We will cache it per server session via an assc list with a ckey leading to the datum.
 */
 /datum/controller/subsystem/role_class_handler/proc/setup_class_handler(mob/living/carbon/human/H, advclass_rolls_override = null, register_id = null)
+	if(!H?.client)
+		return
+	var/job_title = H.job
+	var/datum/job/roguetown/RT_JOB
+	if(job_title)
+		RT_JOB = SSjob.GetJob(job_title)
+	if(!RT_JOB && H.mind?.assigned_role)
+		job_title = H.mind.assigned_role
+		RT_JOB = SSjob.GetJob(job_title)
+	if(!RT_JOB && !advclass_rolls_override) // TA EDIT START
+		return
+	if(!advclass_rolls_override && !length(RT_JOB.advclass_cat_rolls) && !length(RT_JOB.job_subclasses))
+		return // TA EDIT END
 	if(!register_id)
-		if(H.job == "Towner")
+		if(job_title == "Towner")
 			register_id = "towner"
+
+	// TA EDIT START
+	if(H.mind?.picked_advclass || H.advjob)
+		return
+	// TA EDIT END
+
+	if(roundstart_subclass_pending[H.client.ckey]) // TA EDIT START
+		return
+	var/list/roundstart_excluded_classes = consume_roundstart_subclass_exclusions(H.client.ckey)
+	var/list/roundstart_reservation = consume_roundstart_subclass_reservation(H.client.ckey, job_title)
+	if(roundstart_reservation)
+		var/datum/advclass/reserved_class = roundstart_reservation["class"]
+		if(class_has_available_slot(reserved_class, H.client.ckey))
+			var/datum/class_select_handler/reserved_handler = new()
+			reserved_handler.linked_client = H.client
+			reserved_handler.register_id = register_id
+			if(register_id)
+				add_class_register_listener(register_id, H)
+			if(queue_roundstart_subclass(H, reserved_class, reserved_handler, roundstart_reservation["strict"], advclass_rolls_override, register_id))
+				return
+			qdel(reserved_handler)
+		release_roundstart_subclass_reservation(H.client.ckey)
+		if(roundstart_reservation["strict"])
+			var/strict_subclass_name = reserved_class?.name
+			log_game("ROLE CLASS HANDLER: [H.ckey] ([H.real_name]) returned to lobby because strict reserved subclass [strict_subclass_name] became unavailable for job [job_title].")
+			message_admins("ROLE CLASS HANDLER: [H.ckey] ([H.real_name]) returned to lobby because strict reserved subclass [strict_subclass_name] became unavailable for job [job_title].")
+			to_chat(H, span_warning("Your reserved subclass became unavailable, so you were returned to the lobby."))
+			H.returntolobby()
+			return
+		roundstart_excluded_classes |= reserved_class // TA EDIT END
+
 	// insure they somehow aren't closing the datum they got and opening a new one w rolls
 	var/datum/class_select_handler/GOT_IT = class_select_handlers[H.client.ckey]
 	if(GOT_IT)
@@ -94,13 +330,19 @@ SUBSYSTEM_DEF(role_class_handler)
 
 	var/datum/class_select_handler/XTRA_MEATY = new()
 	XTRA_MEATY.linked_client = H.client
+	XTRA_MEATY.excluded_classes = roundstart_excluded_classes // TA EDIT
 
 		// Hack for Migrants
 	if(advclass_rolls_override)
 		XTRA_MEATY.class_cat_alloc_attempts = advclass_rolls_override
 		//XTRA_MEATY.PQ_boost_divider = 10
 	else
-		var/datum/job/roguetown/RT_JOB = SSjob.GetJob(H.job)
+		if(!RT_JOB)
+			var/assigned_role = H.mind?.assigned_role
+			log_game("ROLE CLASS HANDLER: Could not resolve job for [H.ckey] ([H.real_name]); H.job=[H.job], assigned_role=[assigned_role]. Skipping subclass setup.")
+			message_admins("ROLE CLASS HANDLER: Could not resolve job for [H.ckey] ([H.real_name]); H.job=[H.job], assigned_role=[assigned_role]. Skipping subclass setup.")
+			qdel(XTRA_MEATY)
+			return
 		if(LAZYLEN(RT_JOB.advclass_cat_rolls))
 			XTRA_MEATY.class_cat_alloc_attempts = RT_JOB.advclass_cat_rolls
 		else // no advclasses here sire
@@ -113,8 +355,10 @@ SUBSYSTEM_DEF(role_class_handler)
 		XTRA_MEATY.special_session_queue = list()
 		for(var/funny_key in special_session_queue[H.client.ckey])
 			var/datum/advclass/XTRA_SPECIAL = special_session_queue[H.client.ckey][funny_key]
-			if(XTRA_SPECIAL.maximum_possible_slots > XTRA_SPECIAL.total_slots_occupied)
-				XTRA_MEATY.special_session_queue += XTRA_SPECIAL
+			if(XTRA_MEATY.is_class_excluded(XTRA_SPECIAL)) // TA EDIT START
+				continue
+			if(XTRA_SPECIAL.maximum_possible_slots > -1 && class_has_available_slot(XTRA_SPECIAL, H.client.ckey))
+				XTRA_MEATY.special_session_queue += XTRA_SPECIAL // TA EDIT END
 
 	XTRA_MEATY.register_id = register_id
 	if(!XTRA_MEATY.initial_setup())
@@ -149,10 +393,17 @@ SUBSYSTEM_DEF(role_class_handler)
 /datum/controller/subsystem/role_class_handler/proc/finish_class_handler(mob/living/carbon/human/H, datum/advclass/picked_class, datum/class_select_handler/related_handler, plus_factor, special_session_queue)
 	if(!picked_class || !related_handler || !H) // ????????? This is realistically only going to happen when someones doubling up or trying to href exploit
 		return FALSE
-	if(!(picked_class.maximum_possible_slots == -1)) // Is the class not set to infinite?
-		if(picked_class.total_slots_occupied >= picked_class.maximum_possible_slots) // are the occupied slots greater than or equal to the current maximum possible slots on the datum?
-			related_handler.rolled_class_is_full(picked_class) //If so we inform the datum in the off-chance some desyncing is occurring so we don't have a deadslot in their options.
-			return FALSE // Along with stop here as they didn't get it.
+	// TA EDIT START
+	if(H.mind?.picked_advclass)
+		related_handler.ForceCloseMenus()
+		if(related_handler.linked_client)
+			class_select_handlers.Remove(related_handler.linked_client.ckey)
+		qdel(related_handler)
+		return TRUE
+	// TA EDIT END
+	if(!class_has_available_slot(picked_class, H.client?.ckey)) // TA EDIT START
+		related_handler.rolled_class_is_full(picked_class)
+		return FALSE // TA EDIT END
 
 
 	if(H.mind)
@@ -167,7 +418,7 @@ SUBSYSTEM_DEF(role_class_handler)
 	if(plus_factor)
 		picked_class.boost_by_plus_power(plus_factor, H)
 
-	if(related_handler.register_id)
+	if(related_handler.register_id && !istype(picked_class, /datum/advclass/tat_class)) //Twilight Axis Edit - TAT
 		add_class_register_msg(related_handler.register_id, "[H.real_name] is the [picked_class.name]", related_handler.linked_client.mob)
 
 
@@ -181,6 +432,12 @@ SUBSYSTEM_DEF(role_class_handler)
 	qdel(related_handler)
 
 	adjust_class_amount(picked_class, 1) // adjust the amount here, we are handling one guy right now.
+	var/player_ckey = H.client?.ckey // TA EDIT START
+	var/datum/advclass/roundstart_reservation = roundstart_subclass_reservations[player_ckey]
+	if(roundstart_reservation?.type == picked_class.type)
+		release_roundstart_subclass_reservation(player_ckey)
+	return TRUE // TA EDIT END
+
 
 // A dum helper to adjust the class amount, we could do it elsewhere but this will also inform any relevant class handlers open.
 /datum/controller/subsystem/role_class_handler/proc/adjust_class_amount(datum/advclass/target_datum, amount)

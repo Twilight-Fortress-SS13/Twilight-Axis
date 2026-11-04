@@ -54,6 +54,16 @@
       $lightness: -10%
     )};
 
+  --color-faith-cult: #{map.get($colors, faith-cult)};
+  --color-faith-cult-light: #{color.adjust(
+      map.get($colors, faith-cult),
+      $lightness: 10%
+    )};
+    --color-faith-cult-dark: #{color.adjust(
+      map.get($colors, faith-cult),
+      $lightness: -10%
+    )};
+
   --color-faith-geneism: #{map.get($colors, faith-geneism)};
   --color-faith-geneism-light: #{color.adjust(
       map.get($colors, faith-geneism),
@@ -163,6 +173,12 @@
       --color-faith-used-light: var(--color-faith-geneism-light);
       --color-faith-used-dark: var(--color-faith-geneism-dark);
     }
+
+    &.The.Cult.of.Salvation { //TA EDIT START
+      --color-faith-used: var(--color-faith-cult);
+      --color-faith-used-light: var(--color-faith-cult-light);
+      --color-faith-used-dark: var(--color-faith-cult-dark);
+    } //TA EDIT END
 
     // Actual Styles
     color: var(--color-faith-used-light) !important;
@@ -424,6 +440,7 @@ $default-vice: #8b0e0e;
 $default-faith: #a89424;
 $default-faith-ascendent: #a82424;
 $default-faith-geneism: #818181;
+$default-faith-cult: #6d24a8; //TA EDIT
 
 :root {
   @include cs-colors(
@@ -433,6 +450,7 @@ $default-faith-geneism: #818181;
       'faith': $default-faith,
       'faith-ascendent': $default-faith-ascendent,
       'faith-geneism': $default-faith-geneism,
+      'faith-cult': $default-faith-cult, //TA EDIT
     )
   );
 }
@@ -445,6 +463,7 @@ $default-faith-geneism: #818181;
       'faith': $default-faith,
       'faith-ascendent': $default-faith-ascendent,
       'faith-geneism': $default-faith-geneism,
+      'faith-cult': $default-faith-cult,
     )
   );
 }
@@ -457,6 +476,7 @@ $default-faith-geneism: #818181;
       'faith': #8d7c1b,
       'faith-ascendent': $default-faith-ascendent,
       'faith-geneism': $default-faith-geneism,
+      'faith-cult': $default-faith-cult, //TA EDIT
     )
   );
 }
@@ -469,6 +489,7 @@ $default-faith-geneism: #818181;
       'faith': $default-faith,
       'faith-ascendent': $default-faith-ascendent,
       'faith-geneism': $default-faith-geneism,
+      'faith-cult': $default-faith-cult, //TA EDIT
     )
   );
 }
@@ -481,6 +502,7 @@ $default-faith-geneism: #818181;
       'faith': $default-faith,
       'faith-ascendent': $default-faith-ascendent,
       'faith-geneism': $default-faith-geneism,
+      'faith-cult': $default-faith-cult, //TA EDIT
     )
   );
 }
@@ -493,6 +515,7 @@ $default-faith-geneism: #818181;
       'faith': $default-faith,
       'faith-ascendent': $default-faith-ascendent,
       'faith-geneism': $default-faith-geneism,
+      'faith-cult': $default-faith-cult, //TA EDIT
     )
   );
 }
@@ -505,6 +528,7 @@ $default-faith-geneism: #818181;
       'faith': $default-faith,
       'faith-ascendent': $default-faith-ascendent,
       'faith-geneism': $default-faith-geneism,
+      'faith-cult': $default-faith-cult, //TA EDIT
     )
   );
 }
@@ -517,6 +541,7 @@ $default-faith-geneism: #818181;
       'faith': #978311,
       'faith-ascendent': $default-faith-ascendent,
       'faith-geneism': $default-faith-geneism,
+      'faith-cult': $default-faith-cult, //TA EDIT
     )
   );
 }
@@ -529,6 +554,7 @@ $default-faith-geneism: #818181;
       'faith': #978311,
       'faith-ascendent': $default-faith-ascendent,
       'faith-geneism': $default-faith-geneism,
+      'faith-cult': $default-faith-cult, //TA EDIT
     )
   );
 }

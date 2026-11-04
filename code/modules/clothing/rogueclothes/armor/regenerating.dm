@@ -6,6 +6,7 @@
 	icon_state = null
 	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_ARMOR
 	unenchantable = TRUE
+	sewrepair = FALSE
 
 	/// Feedback messages
 	var/repairmsg_begin = "My armour begins to slowly mend its abuse.."
@@ -20,6 +21,8 @@
 
 	/// Holder for disruption timer
 	var/disrupttimer
+
+	var/mob/living/current_regen_owner // TA EDIT
 
 	/// To make repairs relative or not.
 	/// In other words, if you use relative repairing then it will use a different repair interval.
@@ -53,18 +56,69 @@
 		setup_auto_repair()
 	addtimer(CALLBACK(src, PROC_REF(check_owner)), 5 SECONDS)
 
+/obj/item/clothing/suit/roguetown/armor/regenerating/Destroy() // TA EDIT START
+	clear_regen_owner()
+	if(reptimer)
+		deltimer(reptimer)
+		reptimer = null
+	if(disrupttimer)
+		deltimer(disrupttimer)
+		disrupttimer = null
+	return ..()
+
+/obj/item/clothing/suit/roguetown/armor/regenerating/equipped(mob/living/user, slot)
+	. = ..()
+	if(slot == SLOT_SHIRT || slot == SLOT_ARMOR)
+		set_regen_owner(user)
+
+/obj/item/clothing/suit/roguetown/armor/regenerating/dropped(mob/living/user)
+	. = ..()
+	if(current_regen_owner == user)
+		clear_regen_owner()
+
 /obj/item/clothing/suit/roguetown/armor/regenerating/proc/check_owner()
 	if(!ishuman(loc))
 		return
-	var/mob/living/L = loc
-	RegisterSignal(L, COMSIG_MOB_ITEM_BEING_ATTACKED, PROC_REF(process_attack))
-	RegisterSignal(L, COMSIG_MOB_ATTACKED_BY_HAND, PROC_REF(process_attack))
+	set_regen_owner(loc)
+
+/obj/item/clothing/suit/roguetown/armor/regenerating/proc/set_regen_owner(mob/living/new_owner)
+	if(current_regen_owner == new_owner)
+		return
+	clear_regen_owner()
+	if(!new_owner)
+		return
+	current_regen_owner = new_owner
+	RegisterSignal(current_regen_owner, COMSIG_MOB_ITEM_BEING_ATTACKED, PROC_REF(process_attack))
+	RegisterSignal(current_regen_owner, COMSIG_MOB_ATTACKED_BY_HAND, PROC_REF(process_attack))
+	RegisterSignal(current_regen_owner, COMSIG_PARENT_QDELETING, PROC_REF(on_regen_owner_qdeleted))
+
+/obj/item/clothing/suit/roguetown/armor/regenerating/proc/on_regen_owner_qdeleted(datum/source)
+	SIGNAL_HANDLER
+
+	if(source != current_regen_owner)
+		return
+
+	clear_regen_owner()
+
+/obj/item/clothing/suit/roguetown/armor/regenerating/proc/clear_regen_owner()
+	if(!current_regen_owner)
+		return
+	UnregisterSignal(current_regen_owner, COMSIG_MOB_ITEM_BEING_ATTACKED)
+	UnregisterSignal(current_regen_owner, COMSIG_MOB_ATTACKED_BY_HAND)
+	UnregisterSignal(current_regen_owner, COMSIG_PARENT_QDELETING)
+	current_regen_owner = null
 
 /obj/item/clothing/suit/roguetown/armor/regenerating/proc/process_attack(mob/living/parent, mob/living/target, mob/user, obj/item/I)
+	SIGNAL_HANDLER
+
+	if(parent != current_regen_owner)
+		return
 	is_disrupted = TRUE
 	if(reptimer)
 		deltimer(reptimer)
-	disrupttimer = addtimer(CALLBACK(src, PROC_REF(revert_disrupt)), 60 SECONDS, TIMER_OVERRIDE|TIMER_UNIQUE|TIMER_STOPPABLE)
+		reptimer = null
+		to_chat(parent, span_notice(repairmsg_stop))
+	disrupttimer = addtimer(CALLBACK(src, PROC_REF(revert_disrupt)), 60 SECONDS, TIMER_OVERRIDE|TIMER_UNIQUE|TIMER_STOPPABLE) // TA EDIT END
 
 /obj/item/clothing/suit/roguetown/armor/regenerating/proc/revert_disrupt()
 	if(is_disrupted)

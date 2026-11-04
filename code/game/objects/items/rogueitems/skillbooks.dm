@@ -226,7 +226,7 @@
 				"Fancy Book 7" = "book7",
 				"Fancy Book 8" = "book8",
 				"Knowledge Tome" = "knowledge",
-				"Swatch Book" = "swatchbook",
+//				"Swatch Book" = "swatchbook", // TA EDIT
 				"Bibble" = "bibble",
 				"Psyble" = "psyble",
 				"Law Tome" = "lawtome",

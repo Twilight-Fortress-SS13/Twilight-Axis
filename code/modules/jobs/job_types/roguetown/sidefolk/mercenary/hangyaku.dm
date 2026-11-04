@@ -9,7 +9,7 @@
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
 	traits_applied = list(TRAIT_NOBLE) //i hate nobles but it's thematic
 	noble_income = 15
-	cmode_music = 'sound/music/combat_Kazengun_Firestorm.ogg'
+	cmode_music = sound("sound/music/combat_Kazengun_Firestorm.ogg")
 	maximum_possible_slots = 3
 	subclass_stats = list(	// 11 - 2 weight, aka, 9 weighted. same as grenzel.
 		STATKEY_STR = 2,
@@ -23,7 +23,7 @@
 		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/swords = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/knives = SKILL_LEVEL_APPRENTICE,
@@ -116,7 +116,7 @@
 	subclass_virtues = list(
 		/datum/virtue/combat/guarded
 	)
-	cmode_music = 'sound/music/combat_kazengite.ogg'
+	cmode_music = sound("sound/music/combat_kazengite.ogg")
 	subclass_stats = list(
 		STATKEY_STR = 2,
 		STATKEY_CON = 2,

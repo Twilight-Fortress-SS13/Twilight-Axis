@@ -37,22 +37,23 @@
 	tempo_capable = FALSE //already removed by being a skeleton, in case we add it to the UI in future.
 	adv_stat_ceiling = list(STAT_INTELLIGENCE = 8, STAT_SPEED = 9, STAT_CONSTITUTION = 10, STAT_WILLPOWER = 12) //infinite fatigue + decent skills vs vamp
 	extra_context = "This class is unable to be revived and all forms of death will gib you."
+	forbidden_races = list(RACES_DESPISED RACES_OOZE) // ta edit
 
 /datum/outfit/job/roguetown/wretch/ancient_deathknight/pre_equip(mob/living/carbon/human/H)
 	..()
-
+	REMOVE_TRAITS_IN(H, SPECIES_TRAIT)
 	H.become_skeleton()
 	H.can_do_sex = FALSE
 	change_origin(H, /datum/virtue/origin/unselectable/skeleton, "Legion")
 
-	//no swift intent
+	/* TA EDIT
 	H.possible_rmb_intents = list(/datum/rmb_intent/feint,\
 	/datum/rmb_intent/aimed,\
 	/datum/rmb_intent/riposte,\
 	/datum/rmb_intent/strong,\
 	/datum/rmb_intent/weak)
 	H.swap_rmb_intent(num=1)
-
+	*/
 	// Skeleton antag datum + patron (matching greater_skeleton setup)
 	H.set_patron(/datum/patron/inhumen/zizo)
 	if(H.mind)
@@ -60,7 +61,7 @@
 
 	H.choose_name_popup("Unbound Ancient Death Knight")
 
-	H.cmode_music = 'sound/music/combat_weird.ogg'
+	H.cmode_music = sound("sound/music/combat_weird.ogg")
 
 	// Equipment — gilbranze loadout loosely matching lich skeleton death knight/bulwark -> helm picks and stuff come later
 	belt = /obj/item/storage/belt/rogue/leather/black

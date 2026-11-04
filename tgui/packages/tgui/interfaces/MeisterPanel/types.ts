@@ -104,6 +104,7 @@ export type Data = {
   bathhouse_worker_withdrawals_suspended: boolean;
   bathhouse_agent_withdrawals_suspended: boolean;
   bathhouse_viewer_withdrawal_limit_hit: boolean;
+  ta_map: string;
 };
 
 export type TabKey =

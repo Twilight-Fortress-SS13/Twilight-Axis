@@ -48,7 +48,7 @@
 
 	// PSYDONITE REGEN -- Passively heals wounds and damage. Damage cannot be healed in combat or while bleeding.
 	// Blocks Constructs, Deadites, Werewolves, NoRegen and disabled users.
-	if(!stat && (HAS_TRAIT(src, TRAIT_PSYDONITE) && blood_volume >= BLOOD_VOLUME_SURVIVE && !HAS_TRAIT(src, TRAIT_PARALYSIS) && !HAS_TRAIT(src, TRAIT_NOREGEN) && !HAS_TRAIT(src, TRAIT_IRONMAN) && !HAS_TRAIT(src, TRAIT_DEADITE) && !HAS_TRAIT(src, TRAIT_LYCANRESILENCE)))
+	if(!stat && (HAS_TRAIT(src, TRAIT_PSYDONITE) && blood_volume >= BLOOD_VOLUME_SURVIVE && !HAS_TRAIT(src, TRAIT_PARALYSIS) && !HAS_TRAIT(src, TRAIT_NOREGEN) && !HAS_TRAIT(src, TRAIT_BLACKBLOOD) && !HAS_TRAIT(src, TRAIT_IRONMAN) && !HAS_TRAIT(src, TRAIT_DEADITE) && !HAS_TRAIT(src, TRAIT_LYCANRESILENCE)))
 		var/list/wCount = src.get_wounds()
 		var/bleeding = FALSE
 		for(var/datum/wound/wound as anything in wCount)
@@ -65,6 +65,15 @@
 				heal_psydonite(0.1, 0.1)
 		if(!(in_combat_until > world.time) && !cmode && !bleeding)
 			heal_psydonite(0.2, 0.2) // Heals damage over time, but you must be completely out of trouble to proc.
+			if(HAS_TRAIT(src, TRAIT_PSYDONITE_4))
+				adjustBruteLoss(-5)
+				adjustFireLoss(-5)
+			else if(HAS_TRAIT(src, TRAIT_PSYDONITE_3))
+				adjustBruteLoss(-2)
+				adjustFireLoss(-2)
+			else if(HAS_TRAIT(src, TRAIT_PSYDONITE_2))
+				adjustBruteLoss(-1)
+				adjustFireLoss(-1)
 
 	if(!stat && HAS_TRAIT(src, TRAIT_PSYDONIAN_GRIT) && !HAS_TRAIT(src, TRAIT_PARALYSIS) && !HAS_TRAIT(src, TRAIT_NOREGEN) && !HAS_TRAIT(src, TRAIT_IRONMAN) && !HAS_TRAIT(src, TRAIT_DEADITE) && !HAS_TRAIT(src, TRAIT_LYCANRESILENCE))
 		var/in_combat = in_combat_until > world.time
@@ -73,6 +82,10 @@
 			for(var/datum/wound/wound as anything in wCount)
 				if(wound.woundpain)
 					wound.woundpain = max(0, wound.woundpain - 0.2) // ENDURE! Over time it will make the wound hurt less.
+
+	if(HAS_TRAIT(src, TRAIT_WOUNDREGEN))
+		for(var/datum/wound/wound as anything in get_wounds())
+			wound.heal_wound(10)
 
 	// REGEN RESTRICTIONS -- Starving, or being on fire/silverfired.
 	var/noregen = nutrition < NUTRITION_LEVEL_STARVING - 75 || has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder) || has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed)

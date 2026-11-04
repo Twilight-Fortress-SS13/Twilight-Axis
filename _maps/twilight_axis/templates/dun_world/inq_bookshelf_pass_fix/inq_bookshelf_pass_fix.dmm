@@ -1,0 +1,84 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/obj/structure/lever/bookcase{
+	redstone_id = "secret_inq_torture_area";
+	icon = 'modular_twilight_axis/icons/roguetown/misc/bookshelf.dmi'
+	},
+/turf/open/floor/rogue/churchrough,
+/area/rogue/indoors/inq/basement)
+"b" = (
+/obj/structure/fluff/railing/corner/south_east,
+/turf/open/floor/rogue/churchrough,
+/area/rogue/indoors/inq/basement)
+"h" = (
+/obj/structure/closet/crate/chest/inqcrate,
+/obj/item/paper/scroll,
+/obj/item/paper/scroll,
+/obj/item/paper/scroll,
+/obj/item/paper/scroll,
+/obj/item/paper/scroll,
+/obj/item/paper/scroll,
+/obj/item/paper/scroll,
+/obj/item/paper/scroll,
+/obj/item/paper/scroll,
+/obj/item/paper,
+/obj/item/paper,
+/obj/item/paper,
+/obj/item/paper,
+/obj/item/paper,
+/obj/item/paper,
+/obj/item/paper,
+/obj/item/paper,
+/turf/open/floor/rogue/churchrough,
+/area/rogue/indoors/inq/basement)
+"n" = (
+/obj/machinery/light/rogue/candle/blue/l,
+/turf/open/floor/rogue/churchrough,
+/area/rogue/indoors/inq/basement)
+"w" = (
+/obj/structure/bookcase/random,
+/turf/open/floor/rogue/churchrough,
+/area/rogue/indoors/inq/basement)
+"H" = (
+/obj/structure/bars/passage/shutter/bookcase{
+	redstone_id = "secret_inq_torture_area";
+	max_integrity = 15000;
+	icon = 'modular_twilight_axis/icons/roguetown/misc/bookshelf.dmi'
+	},
+/turf/open/floor/rogue/churchrough,
+/area/rogue/indoors/inq/basement)
+"M" = (
+/turf/closed/wall/mineral/rogue/craftstone,
+/area/rogue/indoors/inq/basement)
+"Q" = (
+/turf/open/floor/rogue/churchrough,
+/area/rogue/indoors/inq/basement)
+"X" = (
+/obj/structure/fluff/railing/corner/north_east,
+/turf/open/floor/rogue/churchrough,
+/area/rogue/indoors/inq/basement)
+
+(1,1,1) = {"
+M
+M
+w
+w
+M
+a
+"}
+(2,1,1) = {"
+M
+h
+Q
+Q
+n
+Q
+"}
+(3,1,1) = {"
+H
+b
+X
+Q
+Q
+b
+"}
