@@ -861,10 +861,14 @@
 				snuff()
 			else
 				var/list/seen = dview(blast, T)
+				for(var/mob/living/target in seen)
+					var/dmg = PVE_damage * (1 - get_dist(target, T) / (blast + 1))
+					var/armor_block = target.run_armor_check(BODY_ZONE_CHEST, "blunt", blade_dulling = BCLASS_BLUNT, damage = dmg, no_debuff = TRUE)
+					target.apply_damage(dmg, BRUTE, BODY_ZONE_CHEST, armor_block)
+					target.apply_status_effect(/datum/status_effect/debuff/staggered)
 				for(var/obj/structure/S in seen)
 					if(!QDELETED(S))
 						S.take_damage(PVE_damage * 2 * (1 - get_dist(S, T) / (blast + 1)), BRUTE, "blunt", FALSE)
-				if(istype(src, /obj/item/satchel_bomb/mega)) //removing restrictions, may the gods have mercy on you all
 				if(istype(src, /obj/item/satchel_bomb/mega)) // TA EDIT
 					for(var/mob/living/target in range(3, T)) // TA EDIT
 						target.adjustFireLoss(PVE_damage) // TA EDIT
