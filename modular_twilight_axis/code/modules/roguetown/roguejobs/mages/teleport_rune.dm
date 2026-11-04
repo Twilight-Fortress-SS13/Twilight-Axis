@@ -143,7 +143,7 @@ GLOBAL_DATUM_INIT(ta_public_teleport_network, /datum/ta_teleport_network, new)
 /obj/effect/decal/cleanable/roguerune/arcyne/teleport/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Stand within the circle, place [english_list(get_cost_names())] inside it and use the rune with an empty hand to choose a destination.")
-	. += span_info("Everyone standing in the circle, alive or dead, and every loose item within it will be carried along. Furniture and other structures stay behind.")
+	. += span_info("Everyone standing in the circle, alive or dead, and every loose item within it will be carried along. Loose handcarts and chests come along with their contents; furniture and other structures stay behind.")
 
 /obj/effect/decal/cleanable/roguerune/arcyne/teleport/proc/get_cost_names()
 	var/list/names = list()
@@ -191,7 +191,9 @@ GLOBAL_DATUM_INIT(ta_public_teleport_network, /datum/ta_teleport_network, new)
 				continue
 			if(!isobj(AM))
 				continue
-			if(istype(AM, /obj/structure) || istype(AM, /obj/machinery) || istype(AM, /obj/effect))
+			// Handcarts and crates/chests travel (with their contents) unless anchored; other structures stay.
+			var/portable_structure = istype(AM, /obj/structure/handcart) || istype(AM, /obj/structure/closet/crate)
+			if(!portable_structure && (istype(AM, /obj/structure) || istype(AM, /obj/machinery) || istype(AM, /obj/effect)))
 				continue
 			var/obj/O = AM
 			if(O.anchored || O.invisibility)
