@@ -886,7 +886,7 @@
 		. += deadite_examine()
 		. += blackoak_examine(user)
 		. += get_ssd_examine_text(m3)
-	else if(obscure_name && !client?.prefs?.masked_examine)
+	else if(obscure_name) // TA EDIT
 		. += span_info("ø ------------ ø\nThis is an unknown <EM>[name]</EM>.")
 		. += deadite_examine()
 		. += blackoak_examine(user)
