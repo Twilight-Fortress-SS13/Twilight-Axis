@@ -1,5 +1,5 @@
 /datum/ai_controller/ifrit
-	movement_delay = WOLF_MOVEMENT_SPEED
+	//movement_delay = WOLF_MOVEMENT_SPEED
 
 	ai_movement = /datum/ai_movement/hybrid_pathing
 
@@ -154,7 +154,7 @@
 	ADD_TRAIT(src, TRAIT_STRONGBITE, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NOFALLDAMAGE1, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_BREADY, TRAIT_GENERIC)
-	ADD_TRAIT(src, TRAIT_GUIDANCE, TRAIT_GENERIC)
+	//ADD_TRAIT(src, TRAIT_GUIDANCE, TRAIT_GENERIC)
 	src.adjust_skillrank(/datum/skill/combat/unarmed, 5, TRUE)
 
 /mob/living/simple_animal/hostile/retaliate/rogue/ifrit/matriarch/Destroy()

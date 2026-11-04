@@ -568,7 +568,7 @@
 
 /obj/structure/table/templestoneslab/slab5
 	icon_state = "slab_5"
-
+/*
 /client/proc/admin_move_oasis()
 	set name = "Move Mirage Oasis"
 	set category = "-GameMaster-"
@@ -588,7 +588,7 @@
 		log_admin("[key_name(usr)] forced the mirage oasis to relocate.")
 	else
 		to_chat(usr, span_warning("Couldn't find a clear marker to relocate to - all candidates may be occupied."))
-
+*/
 /obj/structure/fluff/templedebris
 	name = "sand pile"
 	desc = "A pile of loose sand."

@@ -1,4 +1,4 @@
-GLOBAL_LIST_EMPTY(mirage_markers)
+/* GLOBAL_LIST_EMPTY(mirage_markers)
 GLOBAL_DATUM(mirage_controller, /datum/mirage_controller)
 
 /datum/map_template/mirage_oasis
@@ -169,3 +169,4 @@ GLOBAL_DATUM(mirage_controller, /datum/mirage_controller)
 			current_marker = M
 			return TRUE
 	return FALSE
+*/

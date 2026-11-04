@@ -5,9 +5,9 @@
 	var/random_deserter_cloak = rand(1,4)
 	switch(random_deserter_cloak)
 		if(1)
-			cloak = /obj/item/clothing/cloak/cape/nomad
+			cloak = /obj/item/clothing/cloak/cape
 		if(2)
-			cloak = /obj/item/clothing/cloak/stabard/dungeon
+			cloak = /obj/item/clothing/cloak
 		if(3)
 			cloak = /obj/item/clothing/cloak/dunestalker
 
@@ -16,25 +16,25 @@
 	switch(random_deserter_weapon)
 		if(1)
 			r_hand = /obj/item/rogueweapon/sword/iron
-			l_hand = /obj/item/rogueweapon/shield/iron/nomad
+			l_hand = /obj/item/rogueweapon/shield/iron
 		if(2)
-			r_hand = /obj/item/rogueweapon/spear/nomad
-			l_hand = /obj/item/rogueweapon/shield/iron/nomad
+			r_hand = /obj/item/rogueweapon/spear
+			l_hand = /obj/item/rogueweapon/shield/iron
 
 /datum/outfit/job/roguetown/human/northern/dunewell_raider/proc/add_random_deserter_weapon_hard(mob/living/carbon/human/H)
 	var/add_random_deserter_weapon_hard = rand(1,4)
 	switch(add_random_deserter_weapon_hard)
 		if(1)
 			r_hand = /obj/item/rogueweapon/sword/sabre/iron
-			l_hand = /obj/item/rogueweapon/shield/iron/nomad
+			l_hand = /obj/item/rogueweapon/shield/iron
 		if(2)
-			r_hand = /obj/item/rogueweapon/spear/nomad
-			l_hand = /obj/item/rogueweapon/shield/iron/nomad
+			r_hand = /obj/item/rogueweapon/spear
+			l_hand = /obj/item/rogueweapon/shield/iron
 		if(3)
 			r_hand = /obj/item/rogueweapon/halberd/bardiche
 		if(4)
 			r_hand = /obj/item/rogueweapon/flail
-			l_hand = /obj/item/rogueweapon/shield/iron/nomad
+			l_hand = /obj/item/rogueweapon/shield/iron
 
 /datum/outfit/job/roguetown/human/northern/dunewell_raider/proc/add_random_deserter_beltl_stuff(mob/living/carbon/human/H)
 	var/add_random_deserter_beltl_stuff = rand(1,9)
@@ -54,7 +54,7 @@
 		if(7)
 			beltl = /obj/item/rogueweapon/scabbard/sheath
 		if(8)
-			beltl = /obj/item/storage/belt/rogue/pouch/treasure/lucky
+			beltl = /obj/item/storage/belt/rogue/pouch/treasure
 		if(9)
 			beltl = /obj/item/storage/belt/rogue/pouch/treasure
 
@@ -80,9 +80,9 @@
 	var/random_deserter_armor_hard = rand(1,3)
 	switch(random_deserter_armor_hard)
 		if(1)
-			armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/zyb
+			armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat
 		if(2)
-			armor = /obj/item/clothing/suit/roguetown/armor/brigandine/coatplates
+			armor = /obj/item/clothing/suit/roguetown/armor/brigandine/heavy
 		if(3)
 			armor = /obj/item/clothing/suit/roguetown/armor/plate/scale
 
@@ -143,14 +143,14 @@
 	H.STAPER = 11
 	H.STAINT = 10
 	add_random_deserter_cloak(H)
-	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/nomad
-	armor = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hierophant/nomad
+	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt
+	armor = /obj/item/clothing/suit/roguetown/armor/gambeson
 	neck = /obj/item/clothing/neck/roguetown/coif/heavypadding
-	head = /obj/item/clothing/head/roguetown/roguehood/shalal/nomad
+	head = /obj/item/clothing/head/roguetown/roguehood/shalal
 	gloves = /obj/item/clothing/gloves/roguetown/bandages
-	wrists = /obj/item/clothing/wrists/roguetown/splintarms/iron
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/jackchain
 	belt = /obj/item/storage/belt/rogue/leather
-	pants = /obj/item/clothing/under/roguetown/splintlegs/iron
+	pants = /obj/item/clothing/under/roguetown/splintlegs
 	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/iron
 	add_random_deserter_weapon(H)
 	add_random_deserter_beltl_stuff(H)
@@ -211,11 +211,11 @@
 	H.STAWIL = 13
 	H.STAPER = 11
 	H.STAINT = 10
-	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hierophant/nomad
+	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hierophant
 	add_random_deserter_armor_hard(H)
 	add_random_deserter_cloak(H)
-	neck = /obj/item/clothing/neck/roguetown/coif/padded/nomad
-	head = /obj/item/clothing/head/roguetown/roguehood/shalal/nomad
+	neck = /obj/item/clothing/neck/roguetown/coif/padded
+	head = /obj/item/clothing/head/roguetown/roguehood/shalal
 	gloves = /obj/item/clothing/gloves/roguetown/plate/iron
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/iron
 	belt = /obj/item/storage/belt/rogue/leather
