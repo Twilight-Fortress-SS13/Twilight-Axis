@@ -2290,3 +2290,5 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	user.apply_status_effect(/datum/status_effect/debuff/devitalised/lesser)
 
 	return TRUE
+
+#undef TA_ARMAMENTS_RITE_MIN_POP
