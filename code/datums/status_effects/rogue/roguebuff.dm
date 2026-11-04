@@ -1631,7 +1631,7 @@
 	guard_disrupted()
 
 /datum/status_effect/buff/clash/proc/apply_cooldown()
-	var/newcd = BASE_RCLICK_CD - owner.get_tempo_bonus(TEMPO_TAG_RCLICK_CD_BONUS)
+	var/newcd = owner.get_rclick_cd(BASE_RCLICK_CD) //TA EDIT
 	if(deflected_spell || HAS_TRAIT(owner, TRAIT_PACIFISM))
 		newcd *= 0.5
 	owner.apply_status_effect(/datum/status_effect/debuff/clashcd, newcd)
@@ -1957,7 +1957,7 @@
 
 /datum/status_effect/buff/clash/limbguard/apply_cooldown()
 	owner.apply_status_effect(/datum/status_effect/debuff/specialcd, 60 SECONDS)
-	owner.apply_status_effect(/datum/status_effect/debuff/clashcd)
+	owner.apply_status_effect(/datum/status_effect/debuff/clashcd, owner.get_rclick_cd(BASE_RCLICK_CD, apply_tempo = FALSE)) //TA EDIT
 
 //We don't have a cost to cancelling limbguard, so most of these are overridden.
 //No green regen at all + the initial cost is steep already.

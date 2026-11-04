@@ -5,6 +5,9 @@
 /mob/proc/get_active_held_item()
 	return get_item_for_held_index(active_hand_index)
 
+/mob/living/proc/holding_normal_balance()
+	var/obj/item/I = get_active_held_item()
+	return I && I.wbalance == WBALANCE_NORMAL
 
 //Finds the opposite limb for the active one (eg: upper left arm will find the item in upper right arm)
 //So we're treating each "pair" of limbs as a team, so "both" refers to them

@@ -47,13 +47,13 @@
 	var/mob/living/carbon/human/HU = user
 	var/target_zone = HT.zone_selected
 	var/user_zone = HU.zone_selected
-	var/newcd = (BAIT_RCLICK_CD - HU.get_tempo_bonus(TEMPO_TAG_RCLICK_CD_BONUS))
+	var/newcd = HU.get_rclick_cd(BAIT_RCLICK_CD) //TA EDIT
 
 	if(HT.has_status_effect(/datum/status_effect/debuff/baited) || user.has_status_effect(/datum/status_effect/debuff/baitcd))
 		return	//We don't do anything if either of us is affected by bait statuses
 
 	if(!HT.can_see_cone(user) && HT.mind && HT.get_tempo_bonus(TEMPO_TAG_FEINTBAIT_FOV))
-		newcd = 5 SECONDS
+		newcd = HU.get_rclick_cd(5 SECONDS, apply_tempo = FALSE) //TA EDIT
 		to_chat(user, span_notice("[HT.p_they()] didn't see me! Nothing happened!"))
 		HU.apply_status_effect(/datum/status_effect/debuff/baitcd, newcd)
 		return
@@ -193,7 +193,7 @@
 	skill_factor = (ourskill - theirskill)/2
 
 	var/special_msg
-	var/newcd = (FEINT_RCLICK_CD - user.get_tempo_bonus(TEMPO_TAG_RCLICK_CD_BONUS))
+	var/newcd = user.get_rclick_cd(FEINT_RCLICK_CD) //TA EDIT
 
 	if(L.has_status_effect(/datum/status_effect/debuff/exposed) || L.has_status_effect(/datum/status_effect/debuff/vulnerable))
 		perc = 0
@@ -201,7 +201,7 @@
 	if(L.has_status_effect(/datum/status_effect/buff/weapon_binded))
 		perc = 0
 		special_msg = span_warning("They had my tricks figured out and are too aware!")
-		newcd = 10 SECONDS
+		newcd = user.get_rclick_cd(10 SECONDS, apply_tempo = FALSE) //TA EDIT
 
 	if(L.has_status_effect(/datum/status_effect/debuff/feinted))
 		perc = 0
@@ -209,7 +209,7 @@
 
 	if(!L.can_see_cone(user) && L.mind && L.get_tempo_bonus(TEMPO_TAG_FEINTBAIT_FOV))
 		perc = 0
-		newcd = 5 SECONDS
+		newcd = user.get_rclick_cd(5 SECONDS, apply_tempo = FALSE) //TA EDIT
 		special_msg = span_warning("They need to see me for me to feint them!")
 
 	if(perc)
@@ -218,7 +218,7 @@
 	if(L.has_status_effect(/datum/status_effect/buff/clash))
 		L.remove_status_effect(/datum/status_effect/buff/clash)
 		to_chat(user, span_notice("[L.p_their(TRUE)] Guard disrupted!"))
-		newcd = ((BASE_RCLICK_CD + 10 SECONDS) - user.get_tempo_bonus(TEMPO_TAG_RCLICK_CD_BONUS))
+		newcd = user.get_rclick_cd(BASE_RCLICK_CD + 10 SECONDS) //TA EDIT
 		perc = 100
 
 	if(!prob(perc)) //feint intent increases the immobilize duration significantly
