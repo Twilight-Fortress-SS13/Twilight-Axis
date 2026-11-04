@@ -45,7 +45,7 @@
 	..()
 
 /datum/hag_boon/trait/regeneration
-	name = "Trait - Regeneration"
-	trait_to_apply = TRAIT_REGENERATION
-	desc = "The bearer will start to regenerate - especially near the campfire. This regeneration will be enough to restore the lost limb, if sleeping..."
-	points = 85
+	name = "Trait - Regrow Limb"
+	trait_to_apply = TRAIT_REGROW_LIMBS
+	desc = "The bearer will gain ability to regrow limbs if sleeping."
+	points = 30
