@@ -71,6 +71,3 @@ GENERAL_PROTECT_DATUM(/datum/log_category)
 	if(isnull(config) || CONFIG_GET(flag/log_as_json))
 		var/path = get_output_file(entry)
 		entry.write_entry_to_file(path)
-		if(length(GLOB?.logview_live))
-			var/datum/log_source/live = GLOB.logview_live[path]
-			live?.feed(entry)

@@ -127,7 +127,6 @@ GLOBAL_PROTECT(admin_verbs_admin)
 	/datum/admins/proc/wake_view,
 	/datum/admins/proc/extend_round,
 	/client/proc/cmd_admin_set_ic_date, /* Set custom IC date for events */
-	/client/proc/log_viewer_new,
 	/client/proc/cmd_view_letter_log,		/*view all HERMES letter and package records this round*/ // TA EDIT
 	)
 GLOBAL_LIST_INIT(admin_verbs_ban, list(
