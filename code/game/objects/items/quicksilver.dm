@@ -119,6 +119,7 @@
 			to_chat(M, span_userdanger("THE FOUL SILVER! MY BODY RENDS ITSELF ASUNDER!"))
 			M.werewolf_untransform()
 			Wereless.on_removal()
+			update_wretch_slots() //TA EDIT
 			ADD_TRAIT(I, TRAIT_SILVER_BLESSED, POULTICE_TRAIT)
 			ADD_TRAIT(I, TRAIT_PACIFISM, POULTICE_TRAIT)
 			I.emote("agony", forced = TRUE)
@@ -131,6 +132,7 @@
 			M.emote("agony", forced = TRUE)
 			to_chat(M, span_userdanger("THE FOUL SILVER! IT BURNS ME TO MY CORE!"))
 			Were.on_removal()
+			update_wretch_slots() //TA EDIT
 			ADD_TRAIT(M, TRAIT_SILVER_BLESSED, POULTICE_TRAIT)
 			M.poultice_pacify()
 			M.Stun(30)
