@@ -189,8 +189,8 @@
 		//TA EDIT START
 		if(attacker_weapon.wbalance == WBALANCE_HEAVY && user.STASTR > src.STASTR && !HAS_TRAIT(attacker, TRAIT_FREEBLADE))
 			if(!has_status_effect(/datum/status_effect/buff/weapon_binded))
-				var/strmod = ((user.STASTR - src.STASTR) * 12)
-				var/wilmod = ((src.STAWIL - user.STAWIL) * 1)
+				var/strmod = ((user.STASTR - src.STASTR) * 10)
+				var/wilmod = ((src.STAWIL - user.STAWIL) * 3)
 				var/conmod = ((src.STACON - user.STACON) * 7)
 				var/finalmod = strmod
 				if(mind)
@@ -216,8 +216,8 @@
 		if(attacker.unarmed_balance == WBALANCE_HEAVY)
 			if(user.STASTR > src.STASTR && !HAS_TRAIT(attacker, TRAIT_FREEBLADE))
 				if(!has_status_effect(/datum/status_effect/buff/weapon_binded))
-					var/strmod = ((user.STASTR - src.STASTR) * 12)
-					var/wilmod = ((src.STAWIL - user.STAWIL) * 1)
+					var/strmod = ((user.STASTR - src.STASTR) * 10)
+					var/wilmod = ((src.STAWIL - user.STAWIL) * 3)
 					var/conmod = ((src.STACON - user.STACON) * 7)
 					var/finalmod = strmod
 					if(mind)
