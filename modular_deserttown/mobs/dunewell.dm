@@ -105,6 +105,9 @@
 	ADD_TRAIT(src, TRAIT_NOHUNGER, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_BREADY, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
+	INVOKE_ASYNC(src, .proc/dunewell_post_init)
+
+/mob/living/carbon/human/species/human/northern/dunewell_raider/proc/dunewell_post_init()
 	equipOutfit(new /datum/outfit/job/roguetown/human/northern/dunewell_raider)
 	var/obj/item/organ/eyes/organ_eyes = getorgan(/obj/item/organ/eyes)
 	if(organ_eyes)
@@ -175,6 +178,9 @@
 	ADD_TRAIT(src, TRAIT_NOHUNGER, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_BREADY, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
+	INVOKE_ASYNC(src, .proc/dunewell_post_init)
+
+/mob/living/carbon/human/species/human/northern/dunewell_raider/better_gear/proc/dunewell_post_init()
 	equipOutfit(new /datum/outfit/job/roguetown/human/northern/dunewell_raider/better_gear)
 	var/obj/item/organ/eyes/organ_eyes = getorgan(/obj/item/organ/eyes)
 	if(organ_eyes)
