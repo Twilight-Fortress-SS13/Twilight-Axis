@@ -882,7 +882,8 @@
 		var/list/carryover_for_side = carryover_cards[side] || list()
 		var/list/side_carryover = carryover_for_side.Copy()
 		for(var/row in list(CCG_ROW_INFANTRY, CCG_ROW_ARCHERS, CCG_ROW_SIEGE))
-			var/list/row_cards = board[side][row].Copy()
+			var/list/board_row = board[side][row]
+			var/list/row_cards = board_row.Copy()
 			for(var/datum/ccg_played_card/played in row_cards)
 				if(played.card_id in side_carryover)
 					side_carryover -= played.card_id
