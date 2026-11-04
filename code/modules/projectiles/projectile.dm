@@ -108,8 +108,8 @@
 	var/ignore_source_check = FALSE
 
 	var/damage = 10
-	/// Bonus damage vs simple animals. DO NOT EVER SET THIS OUTSIDE THE CROSSBOW / SLURBOW / STAKER AMMO FAMILY. It used to exists on nearly every projectile to get around simple animals being unfun. I don't see a way to make it "viable" in PVE without using this multiplier. DO NOT UNDER ANY CIRCUMSTANCES PROLIFERATE THIS.
-	var/npc_simple_damage_mult = 1
+	/// Damage multiplier against simple animals. Use the ANTIBEAST_* defines.
+	var/antibeast_factor = 1
 	/// Damage was reduced by SPELL_DMG. Simple animals take the unscaled value.
 	var/spell_damage_scaled = FALSE
 	var/damage_type = BRUTE //BRUTE, BURN, TOX, OXY, CLONE are the only things that should be in here
@@ -162,6 +162,8 @@
 	var/poisonfeel
 
 	var/aim_peak = 0
+	/// Flat aim modifier from the ammo itself, added on top of aim_peak
+	var/aim_mod = 0
 	/// Ignores every zone hit penalty and ceiling
 	var/steady_aim = FALSE
 
@@ -201,7 +203,7 @@
 		return ACC_RANGED_FLOOR
 	if(max_range && distance > max_range)
 		return ACC_RANGED_FLOOR
-	var/aim = aim_peak
+	var/aim = aim_peak + aim_mod
 	if(distance > ACC_RANGED_VISUAL_REACH)
 		aim -= (distance - ACC_RANGED_VISUAL_REACH) * ACC_RANGED_FARSIGHT_PENALTY
 	if(crossed_z)
@@ -211,10 +213,10 @@
 //
 /obj/projectile/proc/get_aim_from(atom/target)
 	if(!starting)
-		return aim_peak
+		return aim_peak + aim_mod
 	var/turf/T = get_turf(target)
 	if(!istype(T))
-		return aim_peak
+		return aim_peak + aim_mod
 	return get_aim_at(max(abs(T.x - starting.x), abs(T.y - starting.y)), T.z != starting.z)
 
 /obj/projectile/proc/check_range(turf/T)

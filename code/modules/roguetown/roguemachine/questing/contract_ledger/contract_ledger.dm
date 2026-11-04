@@ -9,16 +9,20 @@
 	layer = ABOVE_MOB_LAYER
 	plane = GAME_PLANE_UPPER
 	var/input_point
+	var/input_point_y_offset = -1
 	var/directives_issued_today = 0
 	var/directives_day_stamp = -1
 
 /obj/structure/roguemachine/contractledger/Initialize(mapload)
 	. = ..()
-	input_point = locate(x, y - 1, z)
+	input_point = locate(x, y + input_point_y_offset, z)
 	var/obj/effect/decal/marker_export/marker = new(get_turf(input_point))
 	marker.desc = "Drop items for retrieval contracts here to turn them in."
 	marker.layer = ABOVE_OBJ_LAYER
 	SSquestpool.registered_ledgers += src
+
+/obj/structure/roguemachine/contractledger/south
+	input_point_y_offset = 1
 
 /obj/structure/roguemachine/contractledger/Destroy()
 	SSquestpool.registered_ledgers -= src
@@ -328,7 +332,6 @@ GLOBAL_LIST_INIT(contract_proxy_officials, list(
 			"projected_reward" = Q.project_fellowship_reward(user),
 			"fellowship_threat_rate" = Q.fellowship_threat_rate,
 			"fellowship_reward_rate" = Q.fellowship_reward_rate,
-			"fellowship_group_bonus" = Q.fellowship_reward_rate ? (Q.get_difficulty_term("group_bonus") || 0) : 0,
 			"deposit" = Q.deposit_amount,
 			"area" = Q.target_spawn_area,
 			"region" = Q.region,

@@ -54,6 +54,9 @@
 		. += span_notice(spec_desc)
 	. += span_notice("Пороха осталось на [charges] перезарядок.")
 
+/obj/item/twilight_powderflask/proc/on_mob_hit(mob/living/carbon/T, obj/projectile/bullet/P, var/blocked = FALSE)
+	return
+
 /obj/item/twilight_powderflask/fyre
 	name = "powderflask"
 	desc = "Пороховница, предназначенная для удобной перезарядки огнестрельного оружия. Содержит огненный порох, наделяющий пули зажигательным эффектом."
@@ -69,6 +72,22 @@
 		"modular_twilight_axis/firearms/sound/fyrepowder/arquefire4.ogg",
 		"modular_twilight_axis/firearms/sound/fyrepowder/arquefire5.ogg")
 	charges = 16
+
+/obj/item/twilight_powderflask/fyre/on_mob_hit(mob/living/carbon/T, obj/projectile/bullet/P, var/blocked = FALSE)
+	if(blocked)
+		if(istype(src, /obj/projectile/bullet/twilight_grapeshot))
+			T.adjust_fire_stacks(1)
+		else
+			T.adjust_fire_stacks(3)
+
+	else
+		if(istype(P, /obj/projectile/bullet/twilight_grapeshot))
+			T.adjust_fire_stacks(2)
+		else
+			T.adjust_fire_stacks(5)
+
+	T.ignite_mob()
+	return
 
 /obj/item/twilight_powderflask/thunder
 	name = "powderflask"
@@ -86,6 +105,14 @@
 		"modular_twilight_axis/firearms/sound/thunderpowder/arquefire5.ogg"
 		)
 	charges = 16
+
+/obj/item/twilight_powderflask/thunder/on_mob_hit(mob/living/carbon/T, obj/projectile/bullet/P, var/blocked = FALSE)
+	if(blocked)
+		T.Immobilize(10)
+	else
+		T.Immobilize(30)
+	T.apply_status_effect(/datum/status_effect/debuff/thunderpowder)
+	return
 
 /obj/item/twilight_powderflask/terror
 	name = "powderflask"
@@ -121,6 +148,12 @@
 		)
 	charges = 10
 
+/obj/item/twilight_powderflask/corrosive/on_mob_hit(mob/living/carbon/T, obj/projectile/bullet/P, var/blocked = FALSE)
+	playsound(src, 'sound/misc/drink_blood.ogg', 100)
+	T.apply_status_effect(/datum/status_effect/debuff/corrosivesplash)
+	new /obj/effect/temp_visual/acidsplash(get_turf(T))
+	return
+
 /obj/item/twilight_powderflask/arcyne
 	name = "powderflask"
 	desc = "Пороховница, предназначенная для удобной перезарядки огнестрельного оружия. Содержит арканный порох, делающий оружие существенно эффективнее против магов."
@@ -137,6 +170,14 @@
 		"modular_twilight_axis/firearms/sound/arcynepowder/arquefire5.ogg"
 		)
 	charges = 10
+
+/obj/item/twilight_powderflask/arcyne/on_mob_hit(mob/living/carbon/T, obj/projectile/bullet/P, var/blocked = FALSE)
+	if(blocked)
+		return
+	if(ishuman(T))
+		var/mob/living/carbon/human/H = T
+		H.set_silence(5 SECONDS)
+	return
 
 /obj/item/twilight_powderflask/holyfyre
 	name = "powderflask"
@@ -155,6 +196,30 @@
 		)
 	charges = 16
 
+/obj/item/twilight_powderflask/holyfyre/on_mob_hit(mob/living/carbon/T, obj/projectile/bullet/P, var/blocked = FALSE)
+	var/fire_to_add = /datum/status_effect/fire_handler/fire_stacks/divine
+	if(HAS_TRAIT(T, TRAIT_SILVER_WEAK))
+		fire_to_add = /datum/status_effect/fire_handler/fire_stacks/sunder/blessed
+		if(!T.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder))
+			if(T.patron)
+				to_chat(T, span_danger("The trice-cursed Otavan silver! By [T.patron.name], it hurts!!"))
+			else
+				to_chat(T, span_danger("The trice-cursed Otavan silver! By all that's holy, it hurts!!"))
+
+	if(blocked)
+		if(istype(P, /obj/projectile/bullet/twilight_grapeshot))
+			T.adjust_fire_stacks(2, fire_to_add)
+		else
+			T.adjust_fire_stacks(5, fire_to_add)
+
+	if(istype(P, /obj/projectile/bullet/twilight_grapeshot))
+		T.adjust_fire_stacks(2, fire_to_add)
+	else
+		T.adjust_fire_stacks(5, fire_to_add)
+
+	T.ignite_mob()
+	return
+
 /obj/item/twilight_powderflask/volf
 	name = "powderflask"
 	desc = "Пороховница, предназначенная для удобной перезарядки огнестрельного оружия. Содержит порох смешанный с ядовитыми порошками, изготовленными специально для волков. В нём нет благословлений, его существование столь же омерзительно как и существование рунных волков."
@@ -170,6 +235,10 @@
 		"modular_twilight_axis/firearms/sound/fyrepowder/arquefire5.ogg"
 		)
 	charges = 20
+
+/obj/item/twilight_powderflask/volf/on_mob_hit(mob/living/carbon/T, obj/projectile/bullet/P, var/blocked = FALSE)
+	T.apply_status_effect(/datum/status_effect/debuff/psypowder)
+	return
 
 /obj/effect/particle_effect/smoke/arquebus
 	name = "smoke"
@@ -246,6 +315,7 @@
 	inv_storage_delay = 1 SECONDS
 	var/spread_num = 10
 	var/damfactor = 1
+	var/accfactor = 1
 	var/critfactor = 1
 	var/npcdamfactor = 2
 	var/reloaded = FALSE
@@ -253,6 +323,7 @@
 	var/breech_open = FALSE
 	var/load_time = 50
 	var/gunpowder
+	var/obj/item/twilight_powderflask/actual_gunpowder
 	var/powder_pour_sound
 	var/list/powder_fire_sounds
 	var/obj/effect/particle_effect/powder_smoke
@@ -323,6 +394,8 @@
 /datum/intent/shoot/twilight_firearm
 	ready_sound = "modular_twilight_axis/firearms/sound/musketcock.ogg"
 	chargedrain = 0
+	hold_grace = RANGED_HOLD_GRACE * 3
+	hold_ramp = 0
 
 /datum/intent/shoot/twilight_firearm/get_chargetime()
 	if(mastermob && chargetime)
@@ -343,6 +416,8 @@
 	ready_sound = "modular_twilight_axis/firearms/sound/musketcock.ogg"
 	chargetime = 1
 	chargedrain = 0
+	hold_grace = RANGED_HOLD_GRACE * 3
+	hold_ramp = 0
 
 /datum/intent/arc/twilight_firearm/get_chargetime()
 	if(mastermob && chargetime)
@@ -432,6 +507,12 @@
 			else
 				icon = advanced_icon
 
+/obj/item/gun/ballistic/twilight_firearm/proc/apply_firearm_ranged_accuracy(obj/projectile/BB, mob/living/user)
+	if(!BB || !user)
+		return
+	var/level = max(1, (user.STAPER - 9))
+	BB.aim_peak = (ACC_RANGED_BASE + (level * ACC_RANGED_PER_SKILL)) * accfactor
+
 /obj/item/gun/ballistic/twilight_firearm/attackby(obj/item/A, mob/user, params)
 	var/firearm_skill = (user?.mind ? user.get_skill_level(/datum/skill/combat/twilight_firearms) : 1)
 	var/load_time_skill = load_time - (firearm_skill*5)
@@ -469,6 +550,7 @@
 							user.visible_message(span_notice("[user] inserts [V.name] into the breech of [src]."))
 							if(!gunpowder)
 								gunpowder = "black gunpowder"
+								actual_gunpowder = /obj/item/twilight_powderflask
 							if (chambered == null && bolt_type == BOLT_TYPE_NO_BOLT)
 								chamber_round()
 							if(advanced_icon_r)
@@ -518,6 +600,7 @@
 			if(do_after(user, load_time_skill, src))
 				user.visible_message(span_notice("[user] fills [src] with [W.gunpowder]."))
 				gunpowder = W.gunpowder
+				actual_gunpowder = W
 				powder_pour_sound = W.pour_sound
 				powder_fire_sounds = W.fire_sounds
 				powder_smoke = W.smoke
@@ -582,7 +665,9 @@
 
 /obj/item/gun/ballistic/twilight_firearm/get_mechanics_examine(mob/user)
 	. = ..()
+	var/riding_range = max(ceil(effective_range / 2), 2)
 	. += span_info("Прицельная дальность стрельбы этого оружия [effective_range]0 метров.")
+	. += span_small("[riding_range]0 метров при стрельбе верхом.")
 	switch(locktype)
 		if(LOCKTYPE_WHEELLOCK)
 			. += span_info("Колесцовые замки требуют пороховой заряд, пулю и уплотнение заряда шомполом перед стрельбой.")
@@ -637,7 +722,9 @@
 		spread = 0
 	for(var/obj/item/ammo_casing/CB in get_ammo_list(FALSE, TRUE))
 		var/obj/projectile/bullet/BB = CB.BB
+		apply_firearm_ranged_accuracy(BB, user)
 		BB.gunpowder = gunpowder
+		BB.real_gunpowder = actual_gunpowder
 	reloaded = FALSE
 	if(advanced_icon)
 		if(!myrod && advanced_icon_norod)
@@ -684,6 +771,8 @@
 					var/def_zone = "[(user.active_hand_index == 2) ? "r" : "l" ]_arm"
 					var/obj/item/bodypart/BP = user.get_bodypart(def_zone)
 					BP.add_wound(/datum/wound/dislocation)
+		if(user.buckled)
+			user.Immobilize(50 - (firearm_skill * 5))
 	else if(locktype == LOCKTYPE_FUSE)
 		if(advanced_icon_f)
 			icon = advanced_icon_f
@@ -704,6 +793,7 @@
 					new effect_to_spawn(get_ranged_target_turf(user, user.dir, 1))
 
 			gunpowder = null
+			actual_gunpowder = null
 			powder_pour_sound = null
 			powder_fire_sounds = null
 			powder_smoke = null
@@ -730,6 +820,8 @@
 						var/def_zone = "[(user.active_hand_index == 2) ? "r" : "l" ]_arm"
 						var/obj/item/bodypart/BP = user.get_bodypart(def_zone)
 						BP.add_wound(/datum/wound/dislocation)
+			if(user.buckled)
+				user.Immobilize(50 - (firearm_skill * 5))
 
 /obj/item/gun/ballistic/twilight_firearm/can_shoot()
 	if (!reloaded)

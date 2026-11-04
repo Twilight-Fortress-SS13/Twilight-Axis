@@ -301,7 +301,7 @@
 		"Church" = ta_roleban_panel_list(GLOB.church_positions, null),
 		"Inquisition" = ta_roleban_panel_list(GLOB.inquisition_positions, null),
 		"Wanderers" = ta_roleban_panel_list(GLOB.wanderer_positions, null),
-		"Abstract" = list("Appearance", "Emote", "Deadchat", "OOC", "LOOC", "MENTORHELP"),
+		"Abstract" = list("Appearance", "Emote", "Deadchat", "OOC", "LOOC", "MENTORHELP", "TAT System", "TAT Towner", "TAT Trader", "TAT Adventurer", "TAT Wretch"),
 		"Peasants" = ta_roleban_panel_list(GLOB.peasant_positions, list("Servant", "Palace Slave")),
 		"Burghers" = ta_roleban_panel_list(GLOB.burgher_positions, null),
 		"ATC" = ta_roleban_panel_list(GLOB.atc_positions, null),
@@ -1041,6 +1041,13 @@
 				is_admin = TRUE
 			if(roles_to_ban[1] == "Server" && (!is_admin || (is_admin && applies_to_admins)))
 				qdel(i)
+	var/has_tat_role_ban = FALSE
+	for(var/role_to_ban in roles_to_ban)
+		if(role_to_ban == "TAT System" || role_to_ban == "TAT Towner" || role_to_ban == "TAT Trader" || role_to_ban == "TAT Adventurer" || role_to_ban == "TAT Wretch")
+			has_tat_role_ban = TRUE
+			break
+	if(player_ckey && has_tat_role_ban)
+		tat_apply_restriction_side_effects_to_online_client(player_ckey)
 	return TRUE
 
 /datum/admins/proc/unban_panel(player_key, admin_key, player_ip, player_cid, page = 0)

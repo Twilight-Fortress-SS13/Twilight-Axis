@@ -82,8 +82,13 @@
 			else
 				to_chat(src, span_userdanger("No, NO! This cannot be!"))
 				L.out_of_lives = TRUE
+				update_wretch_slots() //TA EDIT
 				gib()
 				return
+		//TA EDIT BEGIN
+		if(mind.has_antag_datum(/datum/antagonist/vampire/lord) || mind.has_antag_datum(/datum/antagonist/werewolf))
+			update_wretch_slots()
+		//TA EDIT END
 
 	if(client || mind)
 		record_round_statistic(STATS_DEATHS)
