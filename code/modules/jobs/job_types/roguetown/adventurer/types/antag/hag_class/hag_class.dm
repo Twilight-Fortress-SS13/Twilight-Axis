@@ -109,7 +109,10 @@
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/wyrd_mirror)
 
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/repulse)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/roots_movement) // TA ADDITION
+		// TA ADDITION START
+		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/roots_movement)
+		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/wildshape/hag_rat_form)
+		// TA ADDITION END
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/spiritual_siphon)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/transmutation_rite)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/grant_boon)
