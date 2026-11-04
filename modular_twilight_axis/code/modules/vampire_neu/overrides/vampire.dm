@@ -152,4 +152,4 @@
 
 /datum/clan/New()
 	. = ..()
-	clane_traits |= list(TRAIT_BREADY)
+	clane_traits += TRAIT_BREADY
