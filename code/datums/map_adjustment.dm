@@ -34,6 +34,13 @@
 
 	var/list/threat_regions
 
+	// TA ADDITION START
+	var/list/trait_adjust
+	var/list/additional_item_adjust
+	var/list/subclass_adjust
+	var/list/patron_adjust
+	// TA ADDITION END
+
 /// called on map config is loaded.
 /// You need to change things manually here.
 /datum/map_adjustment/proc/on_mapping_init()
@@ -61,6 +68,20 @@
 	for(var/job as anything in ages_adjust)
 		var/datum/job/J = SSjob.GetJobType(job)
 		J?.allowed_ages = ages_adjust[job]
+	// TA ADDITION START
+	for(var/job as anything in trait_adjust)
+		var/datum/job/J = SSjob.GetJobType(job)
+		J.job_traits = trait_adjust[job]
+	for(var/job as anything in additional_item_adjust)
+		var/datum/job/J = SSjob.GetJobType(job)
+		J.additional_item = additional_item_adjust[job]
+	for(var/job as anything in subclass_adjust)
+		var/datum/job/J = SSjob.GetJobType(job)
+		J.job_subclasses = subclass_adjust[job]
+	for(var/job as anything in patron_adjust)
+		var/datum/job/J = SSjob.GetJobType(job)
+		J.allowed_patrons = patron_adjust[job]
+	// TA ADDITION END
 
 /**
  * job_type`</datum/job/J>`: Type of the job that's being adjusted \
