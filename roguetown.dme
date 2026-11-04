@@ -4541,4 +4541,13 @@
 #include "modular_deserttown\jobs\bandits_replace\lost_grenzel-advclasses\lost_imperial_knight.dm"
 #include "modular_deserttown\desert_bandit_test.dm"
 #include "modular_deserttown\deadbodies.dm"
+#include "modular_deserttown\quicksand.dm"
+#include "modular_deserttown\dunes.dm"
+#include "modular_deserttown\goggles.dm"
+#include "modular_deserttown\mirage_oasis.dm"
+#include "modular_deserttown\ambush_configs.dm"
+#include "modular_deserttown\mobs\ifrit.dm"
+#include "modular_deserttown\mobs\sandworms.dm"
+#include "modular_deserttown\mobs\antlion.dm"
+#include "modular_deserttown\mobs\dunewell.dm"
 // END_INCLUDE
