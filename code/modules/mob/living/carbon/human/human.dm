@@ -1031,13 +1031,6 @@
 	gender = target.gender
 	pronouns = target.pronouns
 	real_name = target.real_name
-	vocal_bark = target.vocal_bark
-	vocal_bark_id = target.vocal_bark_id
-	vocal_current_bark = target.vocal_current_bark
-	vocal_pitch = target.vocal_pitch
-	vocal_pitch_range = target.vocal_pitch_range
-	vocal_speed = target.vocal_speed
-	vocal_volume = target.vocal_volume
 	voice_color = target.voice_color
 	voice_pitch = target.voice_pitch
 	voice_type = target.voice_type
@@ -1213,10 +1206,6 @@
 	voice_color = client.prefs.voice_color
 	voice_pitch = client.prefs.voice_pitch
 	voice_type = client.prefs.voice_type
-	set_bark(client.prefs.bark_id)
-	vocal_speed = client.prefs.bark_speed
-	vocal_pitch = client.prefs.bark_pitch
-	vocal_pitch_range = client.prefs.bark_variance
 	apply_voicepacks(src, client)
 	return TRUE*/
 
