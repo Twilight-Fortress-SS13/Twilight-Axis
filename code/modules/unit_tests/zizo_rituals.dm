@@ -20,6 +20,7 @@
 		qdel(spare)
 
 	var/mob/living/carbon/human/user = allocate(/mob/living/carbon/human, center)
+	ADD_TRAIT(user, TRAIT_NOBREATH, TRAIT_GENERIC) // TA EDIT
 	TEST_ASSERT_EQUAL(sigil.find_ritual_ingredient(center, /mob/living/carbon/human), user, "Rituals must accept human targets")
 	sigil.consume_ritual_ingredient(user)
 	TEST_ASSERT(!QDELETED(user), "Human targets must remain for the ritual's effect")
