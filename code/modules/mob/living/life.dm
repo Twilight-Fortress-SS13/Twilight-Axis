@@ -46,15 +46,6 @@
 		//passively heal even wounds with no passive healing
 		heal_wounds(1)
 
-	// PSYDONITE PASSIVE HEALING -- Does not stack with Blackblooded, the latter overwrites this.
-	if((!stat && HAS_TRAIT(src, TRAIT_PSYDONITE) && !HAS_TRAIT(src, TRAIT_BLACKBLOOD) && !HAS_TRAIT(src, TRAIT_PARALYSIS)))
-		//handle_wounds() //TA EDIT
-		// Passively heal wounds when you're in trouble.
-		if(blood_volume > BLOOD_VOLUME_SURVIVE)
-			/*for(var/datum/wound/wound as anything in get_wounds())//TA EDIT START
-				if(wound?.severity <= WOUND_SEVERITY_MODERATE)
-					if(!istype(wound, /datum/wound/slash/incision))
-						wound.heal_wound(0.4)*/
 	// PSYDONITE REGEN -- Passively heals wounds and damage. Damage cannot be healed in combat or while bleeding.
 	// Blocks Constructs, Deadites, Werewolves, NoRegen and disabled users.
 	if(!stat && (HAS_TRAIT(src, TRAIT_PSYDONITE) && blood_volume >= BLOOD_VOLUME_SURVIVE && !HAS_TRAIT(src, TRAIT_PARALYSIS) && !HAS_TRAIT(src, TRAIT_NOREGEN) && !HAS_TRAIT(src, TRAIT_BLACKBLOOD) && !HAS_TRAIT(src, TRAIT_IRONMAN) && !HAS_TRAIT(src, TRAIT_DEADITE) && !HAS_TRAIT(src, TRAIT_LYCANRESILENCE)))
