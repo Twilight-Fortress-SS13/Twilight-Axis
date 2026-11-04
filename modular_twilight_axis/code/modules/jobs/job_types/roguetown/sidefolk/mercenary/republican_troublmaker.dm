@@ -92,9 +92,14 @@
 	return ..()
 
 /obj/item/clothing/wrists/roguetown/bracers/handcrossbow/attack_right(mob/living/user)
+	if(user.get_item_by_slot(SLOT_WRISTS) != src)
+		return
 	if(!stored_crossbow || QDELETED(stored_crossbow))
 		return
 	if(stored_crossbow.loc == src)
+		if(!length(user.get_empty_held_indexes()))
+			to_chat(user, span_warning("Нужна свободная рука."))
+			return
 		user.put_in_hands(stored_crossbow)
 	else
 		stored_crossbow.fold_back()

@@ -55,7 +55,7 @@
 
 /obj/item/quiver/bolt/light/bandolier/Initialize(mapload)
 	. = ..()
-	for(var/i in 1 to max_storage)
+	for(var/i in 16 to max_storage)
 		var/obj/item/ammo_casing/caseless/rogue/bolt/light/A = new()
 		arrows += A
 	update_icon()
