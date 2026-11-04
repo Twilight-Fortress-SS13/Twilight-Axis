@@ -17,8 +17,8 @@
 	wanderer_examine = FALSE
 	advjob_examine = FALSE
 	give_bank_account = 15
-	vice_restrictions = list(/datum/charflaw/silverweakness)
-	same_job_respawn_delay = 30 MINUTES
+	vice_restrictions = list(/datum/charflaw/silverweakness, /datum/charflaw/wanted) // TA EDIT
+	same_job_respawn_delay = 30 MINUTES // TA EDIT
 
 	job_traits = list(
 		TRAIT_NOPAINSTUN,
