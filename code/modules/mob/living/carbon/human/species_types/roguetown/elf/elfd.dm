@@ -47,11 +47,10 @@
 	species_traits = list(EYECOLOR,HAIR,FACEHAIR,LIPS,OLDGREY)
 	allowed_taur_types = list(
 		/obj/item/bodypart/taur/spider,
+		/obj/item/bodypart/taur/arachne		//TA-EDIT
 	)
 	default_features = MANDATORY_FEATURE_LIST
 	use_skintones = TRUE
-	disliked_food = NONE
-	liked_food = NONE
 	inherent_traits = list(TRAIT_CAVEDWELLER)
 	possible_ages = ALL_AGES_LIST
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | RACE_SWAP | SLIME_EXTRACT
@@ -125,7 +124,7 @@
 
 	gender_swapping = TRUE
 	stress_examine = TRUE
-	stress_desc = span_red("A loathesome dark elf.")
+	stress_desc = span_red("A loathsome dark elf.")
 
 /datum/species/elf/dark/raider
 	name = "Dark Elf Raider"

@@ -33,7 +33,7 @@
 	var/atom/movable/moving_from_pull		//attempt to resume grab after moving instead of before.
 	var/list/acted_explosions	//for explosion dodging
 	glide_size = 6
-	appearance_flags = TILE_BOUND|PIXEL_SCALE
+	appearance_flags = TILE_BOUND|PIXEL_SCALE|LONG_GLIDE
 	var/datum/forced_movement/force_moving = null	//handled soley by forced_movement.dm
 	///Holds information about any movement loops currently running/waiting to run on the movable. Lazy, will be null if nothing's going on (pulled in from Vanderlin)
 	var/datum/movement_packet/move_packet
@@ -1001,6 +1001,15 @@ GLOBAL_VAR_INIT(pixel_diff_time, 1)
 					atk_effrange.icon_state = "effrange"
 					atk_effrange.layer = (atk.layer + 0.1)	//Should always be on top of the regular indicator.
 			first_step = next_step
+	if(wiggle)
+		wiggle(A)
+
+/atom/movable/proc/do_attack_animation_at(atom/A, visual_effect_icon, wiggle = TRUE, datum/intent/used_intent)
+	var/newdir = get_dir(src, A)
+	var/obj/effect/temp_visual/dir_setting/attack_effect/atk = new(get_turf(A), newdir)
+	atk.icon_state = visual_effect_icon
+	atk.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	atk.layer = ABOVE_MOB_LAYER
 	if(wiggle)
 		wiggle(A)
 

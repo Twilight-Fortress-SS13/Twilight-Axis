@@ -28,7 +28,15 @@
 		"Ladylike Cloak" = /obj/item/clothing/cloak/lordcloak/ladycloak,							//Ladylike Cloak
 		"Golden Scabbard" = /obj/item/rogueweapon/scabbard/sword/royal,							//Decorated Scabbard, Golden
 		"Golden Sheath" = /obj/item/rogueweapon/scabbard/sheath/royal,								//Decorated Sheath, Golden
-		"Golden Dorpel Ring" = /obj/item/clothing/ring/diamond/triumph								//Golden Dorpel Ring, Ornate
+		"Golden Dorpel Ring" = /obj/item/clothing/ring/diamond/triumph,								//Golden Dorpel Ring, Ornate
+		"Jade Circlet"	= /obj/item/clothing/head/roguetown/circlet/carvedgem/jade,					//Gem Circlets, same as noble adventurer
+		"Amber Circlet"	= /obj/item/clothing/head/roguetown/circlet/carvedgem/amber,
+		"Shell Circlet"	= /obj/item/clothing/head/roguetown/circlet/carvedgem/shell,
+		"Rosestone Circlet"	= /obj/item/clothing/head/roguetown/circlet/carvedgem/rose,
+		"Cerulite Circlet"	= /obj/item/clothing/head/roguetown/circlet/carvedgem/turq,
+		"Onyxa Circlet"	= /obj/item/clothing/head/roguetown/circlet/carvedgem/onyxa,
+		"Heartstone Circlet"	= /obj/item/clothing/head/roguetown/circlet/carvedgem/coral,
+		"Opal Circlet"	= /obj/item/clothing/head/roguetown/circlet/carvedgem/opal
 	)
 
 
@@ -202,10 +210,10 @@
 				recipient.mind.special_items[choice] = extra_choices[choice]
 
 #undef SOCIALITE_BEAUTIFUL
-#undef SOCIALITE_MASSAGE
 #undef SOCIALITE_NUTCRACKER
 #undef SOCIALITE_EMPATH
 #undef SOCIALITE_PERFORMER
+#undef SOCIALITE_MASSAGE
 
 /datum/virtue/utility/failed_squire
 	name = "Failed Squire"
@@ -226,7 +234,7 @@
 
 /datum/virtue/utility/intellectual
 	name = "Intellectual"
-	desc = "I've spent my life surrounded by various books or sophisticated foreigners, be it through travel or other fortunes beset on my life. I've picked up several tongues and wits, and keep a journal closeby. I can tell people's exact prowess."
+	desc = "I've spent my life surrounded by various books or sophisticated foreigners, be it through travel or other fortunes beset on my life. I've picked up several tongues and wits, and keep a journal close-by. I can tell people's exact prowess."
 	ui_fa_icon = "book"
 	custom_text = "Maximizes Assess benefits with a bonus of the target's Stats. Allows the choice of up to 6 languages to learn."
 	added_traits = list(TRAIT_INTELLECTUAL)
@@ -270,8 +278,13 @@
 /datum/virtue/utility/hollow
 	name = "Hollow"
 	desc = "Some fell magick has rendered me inwardly unliving - I do not hunger, and I do not breathe."
+	custom_text = "Grants a unique verb called 'suicide prayer' which allows you to immediately end your feeble lyfe."
 	ui_fa_icon = "lungs"
 	added_traits = list(TRAIT_NOHUNGER, TRAIT_NOBREATH)
+
+/datum/virtue/utility/hollow/apply_to_human(mob/living/carbon/human/recipient)
+	. = ..()
+	add_verb(recipient, /mob/living/carbon/human/proc/praysuicide)
 
 /datum/virtue/utility/deadened
 	name = "Deadened"
@@ -331,6 +344,16 @@
 				add_verb(recipient, /mob/living/carbon/human/proc/alterego_swap)
 				recipient.AddComponent(/datum/component/alter_ego)
 
+// Grim fandango
+/datum/virtue/utility/granary
+	name = "Cunning Provisioner"
+	added_traits = list(TRAIT_HOMESTEAD_EXPERT)
+	desc = "You've worked in or around the docks enough to steal away a sack of supplies that no one would surely miss, just in case. You've picked up on some cooking and fishing tips in your spare time, as well."
+	ui_fa_icon = "fish-fins"
+	added_stashed_items = list("Bag of Food" = /obj/item/storage/roguebag/food)
+	added_skills = list(list(/datum/skill/craft/cooking, 3, 6),
+						list(/datum/skill/labor/fishing, 2, 6))
+
 /datum/virtue/utility/performer/apply_to_human(mob/living/carbon/human/recipient)
 	if(triumph_check(recipient))
 		for(var/choice in picked_choices)
@@ -341,6 +364,7 @@
 /datum/virtue/utility/homesteader
 	name = "Pilgrim (-3 TRI)"
 	added_traits = list(TRAIT_HOMESTEAD_EXPERT)
+	softcap = TRUE
 	desc= "As they say, 'hearth is where the heart is'. You are intimately familiar with the labors of lyfe, and have stowed away everything necessary to start anew: a hunting dagger, your trusty hoe, and a sack of assorted supplies."
 	ui_fa_icon = "house-fire"
 	triumph_cost = 3
@@ -349,10 +373,10 @@
 		"Bag of Food" = /obj/item/storage/roguebag/food,
 		"Hunting Knife" = /obj/item/rogueweapon/huntingknife
 	)
-	added_skills = list(list(/datum/skill/craft/cooking, 3, 3),
+	added_skills = list(list(/datum/skill/craft/cooking, 2, 2),
 						list(/datum/skill/misc/athletics, 2, 2),
-						list(/datum/skill/labor/farming, 3, 3),
-						list(/datum/skill/labor/fishing, 3, 3),
+						list(/datum/skill/labor/farming, 2, 2),
+						list(/datum/skill/labor/fishing, 2, 2),
 						list(/datum/skill/labor/lumberjacking, 2, 2),
 						list(/datum/skill/combat/knives, 2, 2)
 	)
@@ -376,7 +400,7 @@
 	name = "Bronze Limbs"
 	desc = "Through connections or wealth, my limb had been replaced by one of bronze and gears, that can grip and hold onto things. I've learned just a bit of Engineering as a result."
 	ui_fa_icon = "robot"
-	custom_text = "Replaces your chosen limbs with a prosthetic Bronze ones."
+	custom_text = "Replaces your chosen limbs with prosthetic bronze ones."
 	added_skills = list(list(/datum/skill/craft/engineering, 1, 6))
 	max_choices = 4
 	stackable = TRUE //We're OK with this, it's fairly innocuous
@@ -436,7 +460,7 @@
 // DEVOTION NOTE - it'll be touching this later to add a bit more to it to justify the statnuke n its presence as a virtue over the quirk form. do not remove
 /datum/virtue/utility/feytouched
 	name = "Feybound"
-	desc = "A vessel or creation of the Mossmother, or perhaps a puppet of the past. You are sympathetic to the hag's cause. Your connection to the fey allows you to offer lux or bloated leechticks and traverse the roots, or pure lux to gain the bog's blessing, though your mortal form is frail (-1 INT, -2 STR). The hag is aware of you; your lux is corrupted. You may know of old events, but as the decades lengthen, so does your recollection of them fade. Hag-boons cannot take hold."
+	desc = "A vessel for the Mossmother, or perhaps a puppet of the past. You are sympathetic to the hag's cause. Your connection to the fey allows you to offer lux or bloated leechticks and traverse the roots, or pure lux to gain the bog's blessing, though your mortal form is frail (-1 INT, -2 STR). The hag is aware of you; your lux is corrupted. You may know of old events, but as the decades lengthen, so does your recollection of them fade. Hag-boons cannot take hold."
 	ui_fa_icon = "ghost"
 	added_stats = list(STATKEY_INT = -1, STATKEY_STR = -2)
 	added_traits = list(TRAIT_FEYBOUND)
@@ -458,3 +482,36 @@
 		if(hag_mind.current)
 			to_chat(hag_mind.current, span_boldnotice("A familiar rhythm pulses in the roots... [recipient.real_name], a feybound, is walking the lands this week."))
 	to_chat(recipient, span_boldnotice("The Mossmother's gaze lingers upon you. You are recognized by her daughters."))
+
+//Virtue to skip roundstart grind, but gives nothing unique on its own. Should never raise any skill caps, and should always have minimal monetary value.
+//Could add lumberjacking, fishing, engineering, ceramics down the line if a boost is desired.
+//Should never have combat skills or 'niche protected' skills like hunting, arcyne, miracles.
+/datum/virtue/utility/preperation
+	name = "Handily Prepared"
+	desc = "I've dabbled in the basics of many skills and trades, and make sure to always keep some improvised tools at hand."
+	ui_fa_icon = "hammer"
+	added_stashed_items = list(
+		"Whetstone" = /obj/item/natural/whetstone,
+		"Thorn Needle" = /obj/item/needle/thorn,
+		"Sack" = /obj/item/storage/roguebag,
+		"Stone Hammer" = /obj/item/rogueweapon/hammer/stone,
+		"Stone Knife" = /obj/item/rogueweapon/huntingknife/stoneknife,
+		"Stone Axe" = /obj/item/rogueweapon/stoneaxe,
+		"Stone Hoe" = /obj/item/rogueweapon/hoe/stone,
+		"Wood Spade" = /obj/item/rogueweapon/shovel/small
+		)
+	added_skills = list(list(/datum/skill/craft/crafting, 1, 1),
+						list(/datum/skill/craft/carpentry, 1, 1),
+						list(/datum/skill/craft/masonry, 1, 1),
+						list(/datum/skill/craft/sewing, 1, 1),
+						list(/datum/skill/craft/tanning, 1, 1),
+						list(/datum/skill/craft/blacksmithing, 1, 1),
+						list(/datum/skill/craft/weaponsmithing, 1, 1),
+						list(/datum/skill/craft/armorsmithing, 1, 1),
+						list(/datum/skill/craft/cooking, 1, 1),
+						list(/datum/skill/labor/butchering, 1, 1),
+						list(/datum/skill/misc/medicine, 1, 1),
+						list(/datum/skill/misc/athletics, 1, 1),
+						list(/datum/skill/misc/climbing, 1, 1),
+						list(/datum/skill/misc/swimming, 1, 1)
+	)

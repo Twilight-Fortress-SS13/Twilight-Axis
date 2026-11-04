@@ -73,7 +73,7 @@
 	. = ..()
 	beltr = /obj/item/storage/belt/rogue/pouch/kronas/veryrich
 
-/datum/advclass/heartfelt/retinue/servant	
+/datum/advclass/heartfelt/retinue/servant
 	tutorial = "You are Servant of Heartfelt, originating from a once-prosperous realm under the de Lovett royal dynasty. \
 	However, with the civil war continuing to ravage your homeland without an end in sight, you now follow your ruler to the distant land of Azuria."
 
@@ -118,7 +118,7 @@
 		/obj/item/recipe_book/alchemy,
 		/obj/item/roguegem/amethyst,
 		/obj/item/rogueweapon/spellbook,
-		/obj/item/rogueweapon/huntingknife/idagger/silver/arcyne,
+		/obj/item/rogueweapon/huntingknife/idagger/steel/silver/arcyne ,
 		/obj/item/scrying,
 		/obj/item/storage/belt/rogue/pouch/kronas/rich = 1,
 		)
@@ -174,11 +174,11 @@
 /datum/outfit/job/roguetown/heartfelt/retinue/squire/pre_equip(mob/living/carbon/human/H)
 	. = ..()
 	backpack_contents = list(
-		/obj/item/rogueweapon/huntingknife/idagger = 1,  
+		/obj/item/rogueweapon/huntingknife/idagger = 1,
 		/obj/item/storage/belt/rogue/pouch/kronas/mid = 1,
 		/obj/item/rogueweapon/hammer/iron = 1, // Failed Squire Virtue Items
 		/obj/item/polishing_cream = 1,
 		/obj/item/armor_brush = 1,
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpotnew = 1,
-	) 
+	)
 

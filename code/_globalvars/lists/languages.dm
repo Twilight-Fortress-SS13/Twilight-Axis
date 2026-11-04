@@ -22,7 +22,8 @@ GLOBAL_LIST_INIT(languages_character_selection, list(
 	/datum/language/etruscan,
 	/datum/language/gronnic,
 	/datum/language/otavan,
-	/datum/language/aavnic
+	/datum/language/aavnic,
+	/datum/language/undercommon
 ))
 
 /proc/init_language_prototypes()

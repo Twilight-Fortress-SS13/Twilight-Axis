@@ -7,6 +7,7 @@
 	var/list/enabled_recipes	// list of recipe datum paths that the catalyst allows one to craft. initialized automatically
 	var/recipe_base_type		// path to a base recipe that the initialize function will populate the above list with subtypes of
 	var/obj/item/seed_item		// item used to start creating the catalyst. MUST BE UNIQUE (if there are two catalysts with the same seed item one of them will be uncraftable and do not ask this one which will win)
+	var/obj/item/alt_seed_item	//TA EDIT: optional second item that also works as the seed (matched like seed_item, subtypes included)
 	var/difficulty = 5			// steps in the process. 5 is default, 4-7 the sane range. any less and it's trivial, any more and it feels unfair
 
 /obj/item/alch/catalyst/Initialize(mapload)
@@ -48,12 +49,13 @@
 	recipe_base_type = /datum/transmutation_recipe/chrysopoeia
 	materia = list(/datum/materia_aspect/solar, /datum/materia_aspect/malleability)
 	seed_item = /obj/item/roguecoin/gold
+	alt_seed_item = /obj/item/roguecoin/goldkrona //TA EDIT
 	difficulty = 6
 
 /obj/item/alch/catalyst/argyropoeia // DO NOT ADD A SEED ITEM TO THIS. IT IS SUPPOSED TO BE UNCRAFTABLE.
 	name = "argyropoeia catalyst"	// IF I SEE YOU MAKING THIS CRAFTABLE IT MEANS SILVER IS CONSISTENTLY TRANSMUTABLE BY MAGES NOW
 	icon_state = "argyro"			// AND YOU ACCEPT THE CONSEQUENCES OF THAT
-	desc = "A gemstone of purest silver, banded in Her gold. Noc's greatest mystery, and Otava's biggest secret. It's warm in your hands - and burns at your fingers if they're bare, like you too have some small scorn from this object."
+	desc = "A gemstone of purest silver, banded in Her gold. Noc's greatest mystery, and Otava's biggest secret. It's warm in your hands - and burns at your fingers if they're bare, as if you, too, have some small scorn from this object."
 	recipe_base_type = /datum/transmutation_recipe/argyropoeia
 	materia = list(/datum/materia_aspect/lunar, /datum/materia_aspect/malleability, /datum/materia_aspect/rubedo) // hey i wonder why this has the paradox slash divine aspect
 	difficulty = 7 // (if it _was_ craftable it'd have the highest difficulty)

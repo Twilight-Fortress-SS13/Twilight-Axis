@@ -26,11 +26,12 @@
 		/obj/item/bodypart/taur/horse,
 		/obj/item/bodypart/taur/goat,
 		/obj/item/bodypart/taur/feline,				//TA-EDIT
-		/obj/item/bodypart/taur/feline_furry		//TA-EDIT
+		/obj/item/bodypart/taur/feline/furry,	//TA-EDIT
+		/obj/item/bodypart/taur/arachne		//TA-EDIT
 	)
 
-	inherent_biotypes = MOB_ORGANIC|MOB_HUMANOID
 	attack_verb = "slash"
+	inherent_biotypes = MOB_ORGANIC|MOB_HUMANOID
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | RACE_SWAP | SLIME_EXTRACT
 	possible_ages = ALL_AGES_LIST
 	limbs_icon_m = 'icons/roguetown/mob/bodies/m/mta.dmi'

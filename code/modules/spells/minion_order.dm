@@ -20,10 +20,10 @@
 	has_visual_effects = FALSE
 	sound = null
 	var/order_range = 12
-	var/faction_ordering = FALSE
+	var/faction_ordering = FALSE // TA EDIT
 
-/datum/action/cooldown/spell/minion_order/lich
-	faction_ordering = TRUE
+/datum/action/cooldown/spell/minion_order/lich // TA EDIT
+	faction_ordering = TRUE // TA EDIT
 
 /datum/action/cooldown/spell/minion_order/cast(atom/cast_on)
 	. = ..()

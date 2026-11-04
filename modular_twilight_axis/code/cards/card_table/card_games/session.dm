@@ -1,5 +1,5 @@
 /datum/card_table_session
-	var/obj/item/toy/cards/deck/owner
+	var/obj/item/deck/playing_cards/owner
 	var/game_type = CARD_TABLE_GAME_NONE
 	var/stage = CARD_TABLE_STAGE_LOBBY
 	var/list/players = list()
@@ -45,7 +45,7 @@
 	var/list/trump_card = null
 	var/trump_suit = null
 
-/datum/card_table_session/New(obj/item/toy/cards/deck/new_owner)
+/datum/card_table_session/New(obj/item/deck/playing_cards/new_owner)
 	owner = new_owner
 
 /datum/card_table_session/Destroy()

@@ -29,9 +29,13 @@
 	return TRUE
 
 /datum/intent/shoot/bow/prewarning()
-	if(mastermob)
-		mastermob.visible_message(span_warning("[mastermob] draws [masteritem]!"))
-		playsound(mastermob, bow_draw_sound(get_chargetime()), 100, FALSE, channel = CHANNEL_WEAPON_DRAW)
+	if(!mastermob || mastermob.next_move > world.time)
+		return
+	if(last_prewarning_sound > world.time)
+		return
+	last_prewarning_sound = world.time + clickcd
+	mastermob.visible_message(span_warning("[mastermob] draws [masteritem]!"))
+	playsound(mastermob, bow_draw_sound(get_chargetime()), 100, FALSE, channel = CHANNEL_WEAPON_DRAW)
 
 /datum/intent/shoot/bow/get_chargetime() //draw speed lives on the bow itself so players and NPCs share one curve. damage is handled below in /obj/item/gun/ballistic/revolver/grenadelauncher/bow/process_fire
 	if(mastermob && chargetime)
@@ -60,9 +64,13 @@
 	return TRUE
 
 /datum/intent/arc/bow/prewarning()
-	if(mastermob)
-		mastermob.visible_message(span_warning("[mastermob] draws [masteritem] in an arc!"))
-		playsound(mastermob, bow_draw_sound(get_chargetime()), 100, FALSE, channel = CHANNEL_WEAPON_DRAW)
+	if(!mastermob || mastermob.next_move > world.time)
+		return
+	if(last_prewarning_sound > world.time)
+		return
+	last_prewarning_sound = world.time + clickcd
+	mastermob.visible_message(span_warning("[mastermob] draws [masteritem] in an arc!"))
+	playsound(mastermob, bow_draw_sound(get_chargetime()), 100, FALSE, channel = CHANNEL_WEAPON_DRAW)
 
 /datum/intent/arc/bow/get_chargetime() //same curve as above, but slower and with a higher floor
 	if(mastermob && chargetime)
@@ -113,33 +121,7 @@
 	per_scales_damage = TRUE
 	early_release_acc_penalty = BOW_EARLY_RELEASE_ACC_PENALTY
 	early_release_embed_mult = BOW_EARLY_RELEASE_EMBED_MULT
-	var/datum/special_intent/special
-
-/obj/item/gun/ballistic/revolver/grenadelauncher/bow/equipped(mob/user, slot) //TA EDIT START
-	. = ..()
-	if(slot == ITEM_SLOT_HANDS)
-		if(HAS_TRAIT(user, TRAIT_BOW_DOUBLESHOT))
-			if(!istype(special, /datum/special_intent/range_special/bow_doubleshot))
-				special = new /datum/special_intent/range_special/bow_doubleshot()
-				
-		else if(HAS_TRAIT(user, TRAIT_BOW_LONGSHOT))
-			if(!istype(special, /datum/special_intent/range_special/bow_longshot))
-				special = new /datum/special_intent/range_special/bow_longshot()
-		
-		else if(HAS_TRAIT(user, TRAIT_BOW_BACKSTEP))
-			if(!istype(special, /datum/special_intent/range_special/bow_backstep))
-				special = new /datum/special_intent/range_special/bow_backstep()
-
-		else
-			special = null
-
-/obj/item/gun/ballistic/revolver/grenadelauncher/bow/Destroy()
-	if(special)
-		qdel(special)
-		special = null
-
-	return ..()//TA EDIT END
-
+	steady_aim = TRUE
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/bow/can_quick_load(mob/user)
 	if(user.get_num_arms(FALSE) < 2 || user.get_inactive_held_item())
@@ -238,9 +220,8 @@
 /obj/item/gun/ballistic/revolver/grenadelauncher/bow/shoot_with_empty_chamber()
 	return
 
-/obj/item/gun/ballistic/revolver/grenadelauncher/bow/dropped(mob/user, silent)
+/obj/item/gun/ballistic/revolver/grenadelauncher/bow/dropped()
 	. = ..()
-	special = null
 	if(chambered && spill_ammo_on_drop)
 		chambered = null
 		var/num_unloaded = 0
@@ -248,7 +229,7 @@
 			CB.forceMove(drop_location())
 //			CB.bounce_away(FALSE, NONE)
 			num_unloaded++
-		if(num_unloaded)
+		if (num_unloaded)
 			update_icon()
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/bow/process_fire(atom/target, mob/living/user, message = TRUE, params = null, zone_override = "", bonus_spread = 0)
@@ -295,6 +276,11 @@
 	icon_state = "recurve_bow"
 	release_drain = RECURVE_RELEASEDRAIN
 	force = 9
+
+/obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve/goat
+	name = "goat horn bow"
+	desc = "A bendy and regal looking bow fashioned out of the curled horns of a forest goat."
+	icon_state = "goat"
 
 /*
 /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve/getonmobprop(tag)

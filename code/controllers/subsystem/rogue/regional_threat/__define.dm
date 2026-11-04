@@ -1,14 +1,15 @@
 /// Minimum time between natural ambushes in the same region. Signal horn bypasses this.
-#define AMBUSH_REGION_COOLDOWN (5 MINUTES)
+#define AMBUSH_REGION_COOLDOWN (5 MINUTES) // TA EDIT
 
 /// Fraction of the latent_ambush pool spent as budget per ambush.
-/// Paired with 1.5x region max_ambush so ambush size at full fill matches the old 3% model,
-/// but there is more pool depth to drain before a region is cleared.
-#define AMBUSH_BUDGET_PCT_REGULAR 0.03
+/// TA region budget balance is preserved while the upstream ambush mechanics are enabled.
+#define AMBUSH_BUDGET_PCT_REGULAR 0.03 // TA EDIT
+#define AMBUSH_BUDGET_PCT_SAFE_REGION 0.02 // TA EDIT
+#define AMBUSH_BUDGET_FLOOR 16
 
-/// Safe regions have proportionally lower budget so that they can still spawn some ambushes
-/// without needing to adjust the max_ambush downward.
-#define AMBUSH_BUDGET_PCT_SAFE_REGION 0.02
+#define AMBUSH_AGGRO_DELAY (1.5 SECONDS)
+// Make them focus their original target for a little bit first
+#define AMBUSH_AGGRO_THREAT 15
 
 /// Backwards-compatible default budget percentage for older TA code paths.
 #define AMBUSH_BUDGET_PCT AMBUSH_BUDGET_PCT_REGULAR

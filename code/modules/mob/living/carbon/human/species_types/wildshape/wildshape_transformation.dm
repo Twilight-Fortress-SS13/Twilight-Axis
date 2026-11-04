@@ -29,7 +29,7 @@
 		else if(I.has_armor_value()) //Drop armor
 			dropItemToGround(I)
 
-/mob/living/carbon/human/proc/wildshape_transformation(shapepath, list/allowed_equipment, list/disallowed_equipment)
+/mob/living/carbon/human/proc/wildshape_transformation(shapepath, list/allowed_equipment, list/disallowed_equipment, preserve_equipment = FALSE) // TA EDIT
 	if(!mind)
 		log_runtime("NO MIND ON [src.name] WHEN TRANSFORMING")
 	Paralyze(1, ignore_canstun = TRUE)
@@ -40,13 +40,9 @@
 		WA.remove_form_sex_organs()
 	// TA edit end - new ERP SYSTEM
 
-	//before we shed our items, save our neck and ring, if we have any, so we can quickly rewear them
-	var/obj/item/stored_neck = wear_neck
-	var/obj/item/stored_ring = wear_ring
-	dropItemToGround(stored_neck)
-	dropItemToGround(stored_ring)
 
-	wildshape_drop_items(allowed_equipment, disallowed_equipment)
+	if(!preserve_equipment) // TA EDIT
+		wildshape_drop_items(allowed_equipment, disallowed_equipment) // TA EDIT
 
 	regenerate_icons()
 	icon = null
@@ -69,13 +65,8 @@
 		W.spawn_gibs(FALSE)
 	playsound(W.loc, 'sound/body/shapeshift-start.ogg', 100, FALSE, 3)
 	src.forceMove(W)
-	// re-equip our stored neck and ring items, if we have them
-	if (stored_ring)
-		W.equip_to_slot_if_possible(stored_ring, SLOT_RING) // have to do this because we can wear psycrosses as rings even though we shouldn't be able to
-
-	if (stored_neck)
-		W.equip_to_slot_if_possible(stored_neck, SLOT_NECK)
 	W.after_creation()
+	src.ta_transfer_wildshape_worn_items(W) // TA EDIT
 	W.stored_language = new
 	W.stored_language.copy_known_languages_from(src)
 	W.stored_skills = ensure_skills().known_skills.Copy()
@@ -122,6 +113,7 @@
 		W.apply_status_effect(/datum/status_effect/debuff/sleepytime)
 
 	mind.transfer_to(W)
+	ADD_TRAIT(W, TRAIT_SPELLCOCKBLOCK, TRAIT_SOURCE_WILDSHAPE)
 	skills?.known_skills = list()
 	skills?.skill_experience = list()
 	W.grant_language(/datum/language/beast)
@@ -152,6 +144,8 @@
 	invisibility = oldinv
 
 	W.gain_inherent_skills()
+	W.ta_copy_wildshape_devotion_from(src) // TA EDIT
+	W.ta_enable_wildshape_miracles(src) // TA EDIT
 
 /mob/living/carbon/human/proc/wildshape_untransform(dead,gibbed)
 	if(!stored_mob)
@@ -159,14 +153,6 @@
 	if(!mind)
 		log_runtime("NO MIND ON [src.name] WHEN UNTRANSFORMING")
 	Paralyze(1, ignore_canstun = TRUE)
-	// as before, save our worn stuff and prepare to move it back to the mob
-	var/obj/item/stored_neck = wear_neck
-	var/obj/item/stored_ring = wear_ring
-	dropItemToGround(stored_neck)
-	dropItemToGround(stored_ring)
-
-	wildshape_drop_items()
-
 	icon = null
 	invisibility = INVISIBILITY_MAXIMUM
 
@@ -187,12 +173,10 @@
 	REMOVE_TRAIT(W, TRAIT_NOMOOD, TRAIT_SOURCE_WILDSHAPE)
 	REMOVE_TRAIT(W, TRAIT_PACIFISM, TRAIT_SOURCE_WILDSHAPE)
 	W.status_flags &= ~GODMODE
-	// re-equip our stored neck and ring items, if we have them
-	if (stored_ring)
-		W.equip_to_slot_if_possible(stored_ring, SLOT_RING) // have to do this because we can wear psycrosses as rings even though we shouldn't be able to
-
-	if (stored_neck)
-		W.equip_to_slot_if_possible(stored_neck, SLOT_NECK)
+	var/mob/living/carbon/human/species/wildshape/WA = src // TA EDIT
+	WA.ta_transfer_wildshape_worn_items(W) // TA EDIT
+	WA.ta_restore_wildshape_miracles() // TA EDIT
+	wildshape_drop_items()
 	if(dead)
 		W.death()
 
@@ -230,19 +214,17 @@
 	W.forceMove(get_turf(src))
 	mind.transfer_to(W)
 
-	var/mob/living/carbon/human/species/wildshape/WA = src
 	W.copy_known_languages_from(WA.stored_language)
 	skills?.known_skills = WA.stored_skills.Copy()
 	skills?.skill_experience = WA.stored_experience.Copy()
 	playsound(W.loc, 'sound/body/shapeshift-end.ogg', 100, FALSE, 3)
-	//Compares the list of spells we had before transformation with those we do now. If there are any that don't match, we remove them
-	for(var/obj/effect/proc_holder/spell/self/originspell in WA.stored_spells)
-		for(var/obj/effect/proc_holder/spell/self/wildspell in W.mind.spell_list)
-			if(wildspell != originspell)
-				W.RemoveSpell(wildspell)
+	for(var/datum/spell as anything in W.mind.spell_list.Copy())
+		if(!(spell in WA.stored_spells))
+			W.mind.RemoveSpell(spell)
 
 	W.regenerate_icons()
 	to_chat(W, span_userdanger("I return to my old form."))
+	W.ta_copy_wildshape_devotion_from(src) // TA EDIT
 
 	qdel(src)
 

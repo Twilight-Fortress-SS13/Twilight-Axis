@@ -171,7 +171,7 @@
 		/datum/skill/combat/crossbows = SKILL_LEVEL_MASTER,
 		/datum/skill/combat/bows = SKILL_LEVEL_MASTER,
 		/datum/skill/combat/slings = SKILL_LEVEL_MASTER,
-		/datum/skill/combat/twilight_firearms = SKILL_LEVEL_MASTER,
+		/datum/skill/combat/twilight_firearms = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
@@ -212,7 +212,7 @@
 				backl = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
 			if("Bow")
 				beltr = /obj/item/quiver/arrows
-				backl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
+				backl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve/watchman
 			if("Sling")
 				beltr = /obj/item/quiver/sling/iron
 				r_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/sling
@@ -220,12 +220,10 @@
 				beltr = /obj/item/quiver/twilight_bullet/lead
 				r_hand = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol
 				l_hand = /obj/item/twilight_powderflask
-				ADD_TRAIT(H, TRAIT_FIREARMS_MARKSMAN, TRAIT_GENERIC)
 			if("Arquebus Rifle")
 				beltr = /obj/item/quiver/twilight_bullet/lead
 				r_hand = /obj/item/gun/ballistic/twilight_firearm/arquebus/bayonet
 				l_hand = /obj/item/twilight_powderflask
-				ADD_TRAIT(H, TRAIT_FIREARMS_MARKSMAN, TRAIT_GENERIC)
 		switch(armor_choice)
 			if("Maille Set (Medium Armor)")
 				armor = /obj/item/clothing/suit/roguetown/armor/plate/scale

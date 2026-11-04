@@ -1350,9 +1350,6 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 			user.bad_guard(span_suicide("I tried to strike while focused on defense whole! It drains me!"), cheesy = TRUE)
 			return
 
-		var/mob/living/carbon/human/H = target
-		H.process_golgatha_rebuke(user)
-
 		if(user.mob_biotypes & MOB_UNDEAD)
 			if(target.has_status_effect(/datum/status_effect/buff/necras_vow))
 				if(isnull(user.mind))
@@ -1391,7 +1388,17 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 			return 0
 
 		user.break_invisibility_from_combat()
-		var/armor_block = target.run_armor_check(selzone, "blunt", armor_penetration = PEN_NONE, blade_dulling = user.used_intent.blade_class, damage = damage, intdamfactor = user.used_intent?.intent_intdamage_factor)
+		var/obj/item/clothing/gloves/roguetown/worn_gloves = user.get_item_by_slot(SLOT_GLOVES)
+		var/glove_intdamfactor_mult = 1
+		if(istype(worn_gloves))
+			var/datum/component/silverbless/glove_bless = worn_gloves.GetComponent(/datum/component/silverbless)
+			if(glove_bless)
+				glove_intdamfactor_mult = glove_bless.get_int_damage_multiplier()
+
+		var/base_intdamfactor = user.used_intent?.intent_intdamage_factor
+		if(isnum(base_intdamfactor))
+			base_intdamfactor *= glove_intdamfactor_mult
+		var/armor_block = target.run_armor_check(selzone, "blunt", armor_penetration = PEN_NONE, blade_dulling = user.used_intent.blade_class, damage = damage, intdamfactor = base_intdamfactor)
 
 		target.lastattacker = user.real_name
 		if(target.mind)
@@ -1416,7 +1423,6 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 
 			target.on_hit_as_pacifist(user)
 
-			var/obj/item/clothing/gloves/roguetown/worn_gloves = user.get_item_by_slot(SLOT_GLOVES)
 			if(istype(worn_gloves))
 				worn_gloves.apply_unarmed_weapon_effects(user, affecting, user.used_intent, target, selzone)
 		log_combat(user, target, "punched", zone=selzone)
@@ -1750,7 +1756,9 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 			if(stander)
 				shove_blocked = TRUE
 
+		ADD_TRAIT(target, TRAIT_KICKED, "kick")
 		target.Move(target_shove_turf, shove_dir)
+		REMOVE_TRAIT(target, TRAIT_KICKED, "kick")
 
 		if(get_turf(target) == target_oldturf)
 			if(stander)
@@ -2051,9 +2059,9 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 			if(prob(I.force * 2) || bloody)	//blood spatter!
 				bloody = 1
 				var/turf/location = H.loc
-				var/splatter_dir = get_dir(H, user)
-				var/obj/effect/temp_visual/dir_setting/bloodsplatter/splatter = new(H.loc, splatter_dir)
-				splatter.set_blood_color(H.get_blood_color())
+				if(!(bladec in GLOB.gore_bclasses))
+					var/obj/effect/temp_visual/dir_setting/bloodsplatter/splatter = new(H.loc, get_dir(H, user))
+					splatter.set_blood_color(H.get_blood_color())
 				if(istype(location))
 					H.add_splatter_floor(location)
 					H.add_splatter_wall(location, force = I.force)
@@ -2485,7 +2493,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 	if(H.buckled)
 		buckled_obj = H.buckled
 
-	to_chat(H, span_notice("My wings spazz out and launch you!"))
+	to_chat(H, span_notice("My wings spasm wildly and launch me!"))
 
 	playsound(H.loc, 'sound/blank.ogg', 100, TRUE, -3)
 

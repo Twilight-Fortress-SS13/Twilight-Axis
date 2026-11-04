@@ -113,11 +113,10 @@
 	H.ambushable = FALSE
 
 	H.AddComponent(/datum/component/wise_tree_alert)
-	H.AddSpell(new /obj/effect/proc_holder/spell/targeted/create_seed)
 	H.mind.AddSpell(new /datum/action/cooldown/spell/conjure_arcyne_ward/druid)
 	H.AddSpell(new /obj/effect/proc_holder/spell/self/beast_claws)
 	H.AddSpell(new /obj/effect/proc_holder/spell/self/beast_rage)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T4, passive_gain = CLERIC_REGEN_MAJOR, start_maxed = TRUE)	//Starts off maxed out.
 	if(H.mind)
-		SStreasury.give_money_account(ECONOMIC_DESTITUTE, H, "Church Funding.")
+		SStreasury.give_money_account(ECONOMIC_DESTITUTE, H, "Church Funding.", mint_new = TRUE, mint_label = "Church funding", income_acct = LEDGER_CITIZEN_ESTATE)

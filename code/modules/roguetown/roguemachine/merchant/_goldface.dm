@@ -54,9 +54,11 @@
 		"Tools",
 		"Wardrobe",
 		"Zadpacks",
+		"Hunting Maps",
 	)
 	var/list/categories_gamer = list(
 		"Adventuring Supplies",
+		"Arcyne Supplies",
 		"Armor (Light)",
 		"Armor (Iron)",
 		"Armor (Steel)",
@@ -90,6 +92,7 @@
 	value_record_key = STATS_SILVERFACE_VALUE_SPENT
 	categories = list(
 		"Adventuring Supplies",
+		"Arcyne Supplies",
 		"Alcohols",
 		"Artillery",
 		"Consumable",
@@ -101,6 +104,7 @@
 		"Seeds",
 		"Tools",
 		"Weapons (Foreign)",
+		"Hunting Maps",
 	)
 	categories_gamer = list()
 
@@ -193,7 +197,7 @@
 	return extra_fee
 
 /obj/structure/roguemachine/goldface/proc/compute_pack_price(datum/supply_pack/PA, mob/living/carbon/human/H)
-	var/cost = PA.cost + PA.cost * get_effective_fee() + compute_pack_surcharge(PA)
+	var/cost = PA.cost + PA.cost * get_effective_fee()
 	if(!is_tax_exempt(H))
 		cost += compute_pack_tax(PA)
 	return round(cost)
@@ -201,18 +205,8 @@
 /obj/structure/roguemachine/goldface/proc/compute_pack_tax(datum/supply_pack/PA)
 	return round(SStreasury.get_tax_rate(TAX_CATEGORY_IMPORT_TARIFF) * PA.cost)
 
-/obj/structure/roguemachine/goldface/proc/get_pack_blockade_pct(datum/supply_pack/PA)
-	if(!blockade_surcharge)
-		return 0
-	return get_blockade_goldface_surcharge_pct(PA.group)
-
-/obj/structure/roguemachine/goldface/proc/compute_pack_surcharge(datum/supply_pack/PA)
-	return round(PA.cost * get_pack_blockade_pct(PA) / 100)
-
 /obj/structure/roguemachine/goldface/proc/serialize_pack(datum/supply_pack/PA, tariff_active)
 	var/base = round(PA.cost + PA.cost * get_effective_fee())
-	var/blockade_pct = get_pack_blockade_pct(PA)
-	var/surcharge = round(PA.cost * blockade_pct / 100)
 	var/tariff = tariff_active ? compute_pack_tax(PA) : 0
 	return list(
 		"ref" = "[PA.type]",
@@ -220,10 +214,8 @@
 		"category" = PA.group,
 		"qty" = PA.no_name_quantity ? 1 : PA.contains.len,
 		"price_base" = base,
-		"price_blockade" = surcharge,
-		"blockade_pct" = blockade_pct,
 		"price_tariff" = tariff,
-		"price" = base + surcharge + tariff,
+		"price" = base + tariff,
 	)
 
 /obj/structure/roguemachine/goldface/update_icon()
@@ -328,8 +320,6 @@
 	data["tariff_paid"] = tariff_collected_here
 	data["tariff_evaded"] = tariff_evaded_here
 	data["dodging"] = dodging ? TRUE : FALSE
-	data["active_blockades"] = blockade_surcharge ? build_blockade_goldface_rows() : list()
-	data["blockade_gear_pct"] = blockade_surcharge ? get_blockade_gear_surcharge_pct() : 0
 	if(is_public)
 		var/effective_pct = round(get_effective_fee() * 100)
 		data["public_margin_pct"] = effective_pct
@@ -554,6 +544,14 @@
 	var/list/ledger = list()
 	for(var/list/entry as anything in SSmerchant_trade.favor_ledger)
 		ledger += list(entry.Copy())
+	var/list/send_for_realms = list()
+	for(var/realm_id in SSmerchant_trade.realms)
+		var/datum/foreign_realm/R = SSmerchant_trade.realms[realm_id]
+		send_for_realms += list(list(
+			"id" = R.id,
+			"name" = R.name,
+			"available" = (R.id == SSmerchant_trade.current_kinship_realm || SSmerchant_trade.realm_has_available_ship(R.id)) ? TRUE : FALSE,
+		))
 	return list(
 		"current" = SSmerchant_trade.merchant_favor,
 		"high_water" = SSmerchant_trade.merchant_favor_high,
@@ -569,6 +567,9 @@
 		"auto_hailer_cost" = AUTO_HAILER_FAVOR,
 		"auto_hailer_unlocked" = SSmerchant_trade.auto_hailer_unlocked,
 		"auto_hailer_on" = SSmerchant_trade.auto_hailer_on,
+		"send_for_ship_cost" = SEND_FOR_SHIP_FAVOR,
+		"send_for_ship_used_today" = SSmerchant_trade.send_for_ship_used_day == GLOB.dayspassed,
+		"send_for_realms" = send_for_realms,
 		"brackets" = list(FAVOR_TRIUMPH_BRACKET_1, FAVOR_TRIUMPH_BRACKET_2, FAVOR_TRIUMPH_BRACKET_3, FAVOR_TRIUMPH_BRACKET_4, FAVOR_TRIUMPH_BRACKET_5, FAVOR_TRIUMPH_BRACKET_6),
 		"from_sendoffs" = SSmerchant_trade.favor_from_sendoffs,
 		"from_navigator" = SSmerchant_trade.favor_from_navigator,
@@ -769,7 +770,7 @@
 			record_round_statistic(STATS_TRADE_VALUE_IMPORTED, cost)
 			playsound(loc, 'sound/misc/gold_misc.ogg', 70, FALSE, -1)
 			if(!(is_tax_exempt(H)))
-				SStreasury.mint(SStreasury.discretionary_fund, tax_amt, "[TAX_CATEGORY_IMPORT_TARIFF] ([src.name])")
+				SStreasury.mint(SStreasury.discretionary_fund, tax_amt, "[TAX_CATEGORY_IMPORT_TARIFF] ([src.name])", null, LEDGER_CROWN_REV_IMPORT_TARIFF)
 				SStreasury.apply_concordat_tithe(cost, TAX_CATEGORY_IMPORT_TARIFF, "[src.name]")
 				record_featured_stat(FEATURED_STATS_TAX_PAYERS, H, tax_amt)
 				record_round_statistic(STATS_TAXES_COLLECTED, tax_amt)
@@ -781,7 +782,7 @@
 			if(is_public && SSmerchant_trade?.gnome_automation_unlocked)
 				var/margin = round(PA.cost * get_effective_fee())
 				if(margin > 0)
-					SStreasury.mint(SStreasury.merchant_fund, margin, "Company Gnomes margin ([src.name])")
+					SStreasury.mint(SStreasury.merchant_fund, margin, "Company Gnomes margin ([src.name])", null, LEDGER_MERCHANT_MARGIN_IN)
 					SSmerchant_trade.gnome_margin_collected += margin
 					SSmerchant_trade.log_fund_movement("Gnomes margin ([src.name])", margin)
 			if(cost > 0 && SSmerchant_trade)
@@ -850,7 +851,7 @@
 			record_round_statistic(value_record_key, total_cost)
 			record_round_statistic(STATS_TRADE_VALUE_IMPORTED, total_cost)
 			if(!is_tax_exempt(H))
-				SStreasury.mint(SStreasury.discretionary_fund, tax_amt, "[TAX_CATEGORY_IMPORT_TARIFF] ([src.name])")
+				SStreasury.mint(SStreasury.discretionary_fund, tax_amt, "[TAX_CATEGORY_IMPORT_TARIFF] ([src.name])", null, LEDGER_CROWN_REV_IMPORT_TARIFF)
 				SStreasury.apply_concordat_tithe(total_cost, TAX_CATEGORY_IMPORT_TARIFF, "[src.name]")
 				record_featured_stat(FEATURED_STATS_TAX_PAYERS, H, tax_amt)
 				record_round_statistic(STATS_TAXES_COLLECTED, tax_amt)
@@ -908,7 +909,7 @@
 			record_round_statistic(value_record_key, total_cost)
 			record_round_statistic(STATS_TRADE_VALUE_IMPORTED, total_cost)
 			if(tariff_active)
-				SStreasury.mint(SStreasury.discretionary_fund, tax_amt, "[TAX_CATEGORY_IMPORT_TARIFF] ([src.name])")
+				SStreasury.mint(SStreasury.discretionary_fund, tax_amt, "[TAX_CATEGORY_IMPORT_TARIFF] ([src.name])", null, LEDGER_CROWN_REV_IMPORT_TARIFF)
 				SStreasury.apply_concordat_tithe(total_cost, TAX_CATEGORY_IMPORT_TARIFF, "[src.name]")
 				record_featured_stat(FEATURED_STATS_TAX_PAYERS, H, tax_amt)
 				record_round_statistic(STATS_TAXES_COLLECTED, tax_amt)
@@ -975,7 +976,7 @@
 			record_round_statistic(STATS_TRADE_VALUE_IMPORTED, total_cost)
 			if(tariff_active)
 				if(tariff_float > 0)
-					SStreasury.mint_fractional(SStreasury.discretionary_fund, tariff_float, "[TAX_CATEGORY_IMPORT_TARIFF] (bulk import: [TG.name] x[qty])")
+					SStreasury.mint_fractional(SStreasury.discretionary_fund, tariff_float, "[TAX_CATEGORY_IMPORT_TARIFF] (bulk import: [TG.name] x[qty])", null, LEDGER_CROWN_REV_IMPORT_TARIFF)
 					SStreasury.apply_concordat_tithe(gross, TAX_CATEGORY_IMPORT_TARIFF, "bulk import")
 					record_featured_stat(FEATURED_STATS_TAX_PAYERS, H, round(tariff_float))
 					record_round_statistic(STATS_TAXES_COLLECTED, round(tariff_float))
@@ -1036,6 +1037,18 @@
 				if(SSmerchant_trade.unlock_auto_hailer())
 					to_chat(H, span_notice("The harbor crew is on retainer. Set them to work from the Harbor Crew toggle."))
 					playsound(loc, 'sound/misc/gold_misc.ogg', 70, FALSE, -1)
+			return TRUE
+		if("send_for_ship")
+			var/realm_id = "[params["realm"]]"
+			if(!try_favor_unlock(H, SSmerchant_trade?.send_for_ship_used_day == GLOB.dayspassed, SEND_FOR_SHIP_FAVOR, "You have already sent zads for a ship today.", "Not enough favor to send for a ship."))
+				return TRUE
+			var/datum/foreign_realm/R = SSmerchant_trade.realms[realm_id]
+			switch(SSmerchant_trade.send_for_ship(realm_id))
+				if("ok")
+					to_chat(H, span_notice("A ship from [R.name] will wait offshore for your hail until the next dae."))
+					playsound(loc, 'sound/misc/gold_misc.ogg', 70, FALSE, -1)
+				if("already_available")
+					to_chat(H, span_warning("A ship from [R.name] is already waiting offshore."))
 			return TRUE
 		if("unlock_catalog")
 			var/cid = "[params["catalog"]]"

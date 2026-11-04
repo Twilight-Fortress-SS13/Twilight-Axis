@@ -147,6 +147,7 @@
 	heat_time = 30 SECONDS
 
 /obj/machinery/light/rogue/forge/arcane/process()
+	ta_burn_mobs_on_tile() // TA EDIT
 	if(isopenturf(loc))
 		var/turf/open/O = loc
 		if(IS_WET_OPEN_TURF(O))
@@ -209,7 +210,7 @@
 	qdel(src)
 
 /obj/structure/voidstoneobelisk/attack_hand(mob/living/carbon/human/user)
-	to_chat(user, span_notice("You reach out to touch the abberant obelisk..."))
+	to_chat(user, span_notice("You reach out to touch the aberrant obelisk..."))
 	if(do_after(user, 3 SECONDS, target = src))
 		user.visible_message(span_danger("[src] comes to life, archaic stone shifting into position!"))
 		sleep(2)

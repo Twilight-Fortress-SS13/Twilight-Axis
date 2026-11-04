@@ -183,7 +183,7 @@
 
 /obj/item/clothing/shoes/roguetown/sandals/aalloy
 	name = "decrepit sandals"
-	desc = "Rotted metal platforms, curled about to cradle the feet. The beaches that these sandals once treaded are no more; pearly sands, long since turnt to glass from the Comet Syon's impact."
+	desc = "Rotted metal platforms, curled about to cradle the feet. The beaches that these sandals once trod are no more; pearly sands, long since turnt to glass from the Comet Syon's impact."
 	icon_state = "ancientsandals"
 	color = "#bb9696"
 	max_integrity = ARMOR_INT_SIDE_DECREPIT
@@ -369,7 +369,7 @@
 	name = "maille boots"
 	desc = "A pair of leather boots, reinforced with smaller steel plates along the feet and ankles. Woven into the top of each boot's cuff is a \
 	thick layer of chainmail, which further protects the wearer's lower legs from harm. A favorite amongst men-at-arms and clerics, alongside the \
-	occassional plucky squire that's a few sizes too short to properly wade in them."
+	occasional plucky squire that's a few sizes too short to properly wade in them."
 	body_parts_covered = FEET
 	icon_state = "shalfplateboots"
 	item_state = "shalfplateboots"
@@ -424,7 +424,7 @@
 
 /obj/item/clothing/shoes/roguetown/boots/armor/gold
 	name = "golden greaves"
-	desc = "Resplendant sabatons of pure gold, adorned with angled greaves that proudly bear the holy sigil. Its besilked cuffs have remained surprisingly bereft of debris - not even a sprig of lint remains to be criticized."
+	desc = "Resplendent sabatons of pure gold, adorned with angled greaves that proudly bear the holy sigil. Its besilked cuffs have remained surprisingly bereft of debris - not even a sprig of lint remains to be criticized."
 	icon_state = "goldgreaves"
 	item_state = "goldgreaves"
 	body_parts_covered = FEET | LEGS
@@ -527,7 +527,7 @@
 
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha
 	name = "saccharine heels"
-	desc = "Yet, as the lepers begged for comfort from Eora, she gave them naught but love and platitude; and Belladoth's heart throbbed with pity."
+	desc = "She cared not for weeping and suffering of her subjects, for they cared not for her own struggle." //TA EDIT
 	icon_state = "baothaboots"
 	item_state = "baothaboots"
 	chunkcolor = "#6d1c87"
@@ -710,6 +710,41 @@
 		user.visible_message(span_notice("[user] stops adjusting [src]."))
 		return
 
+/obj/item/clothing/shoes/roguetown/boots/armor/bare
+	name = "sabatons"
+	desc = "A set of overlapping metal lames that protect the feet and are usually worn with boots or a hose - you <b>are</b> wearing a hose, right?"
+	icon_state = "feetplate"
+	item_state = "feetplate"
+	detail_tag = "_det"
+	detail_color = "#FFFFFF"
+	var/picked = FALSE
+
+/obj/item/clothing/shoes/roguetown/boots/armor/bare/Initialize(mapload)
+	. = ..()
+	update_icon()
+
+/obj/item/clothing/shoes/roguetown/boots/armor/bare/attack_right(mob/user)
+	..()
+	if(!picked)
+		var/choice = input(user, "Choose a color.", "Sabaton colors") as null|anything in COLOR_MAP
+		if(!choice)
+			return
+		picked = TRUE
+		detail_color = COLOR_MAP[choice]
+		update_icon()
+		if(loc == user && ishuman(user))
+			var/mob/living/carbon/H = user
+			H.update_inv_shoes()
+
+/obj/item/clothing/shoes/roguetown/boots/armor/bare/update_icon()
+	cut_overlays()
+	if(get_detail_tag())
+		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		pic.appearance_flags = RESET_COLOR
+		if(get_detail_color())
+			pic.color = get_detail_color()
+		add_overlay(pic)
+
 // ----------------- BLACKSTEEL -----------------------
 
 /obj/item/clothing/shoes/roguetown/boots/armor/blacksteel/modern
@@ -815,7 +850,7 @@
 
 /obj/item/clothing/shoes/roguetown/horseshoes/bronze
 	name = "bronze horseshoes"
-	desc = "A pair of venerable bronze horsehoes nailed onto thick leather soles. These are ready to be attached to some hooves."
+	desc = "A pair of venerable bronze horseshoes nailed onto thick leather soles. These are ready to be attached to some hooves."
 	icon_state = "bronze_horseshoes"
 	item_state = "bronze_horseshoes"
 	clothing_flags = TAUR_COMPATIBLE
@@ -823,7 +858,7 @@
 	sewrepair = FALSE
 	smeltresult = /obj/item/ingot/bronze
 
-/obj/item/clothing/shoes/courtphysician
+/obj/item/clothing/shoes/roguetown/courtphysician
 	name = "sanguine shoes"
 	desc = "Leather shoes, the solemn tap of these bears grim news, or salvation."
 	icon_state = "docshoes"
@@ -834,7 +869,7 @@
 	salvage_result = /obj/item/natural/hide/cured
 	sewrepair = TRUE
 
-/obj/item/clothing/shoes/courtphysician/female
+/obj/item/clothing/shoes/roguetown/courtphysician/female
 	name = "sanguine heels"
 	desc = "Leather heels, the solemn tap of these bears grim news, or salvation."
 	icon_state = "docheels"
@@ -844,17 +879,18 @@
 	mob_overlay_icon = 'icons/roguetown/clothing/special/onmob/courtphys.dmi'
 	detail_tag = "_detail"
 	detail_color = CLOTHING_RED
+	bootknife = TRUE
 
-/obj/item/clothing/shoes/courtphysician/female/Initialize(mapload)
+/obj/item/clothing/shoes/roguetown/courtphysician/female/Initialize(mapload)
 	. = ..()
 	update_icon()
 
-/obj/item/clothing/shoes/courtphysician/female/ComponentInitialize()
+/obj/item/clothing/shoes/roguetown/courtphysician/female/ComponentInitialize()
 	. = ..()
 	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_HEELS, 2)
 	stepnoise_flag = STEPNOISE_HEELS // This will prevent default footstep noise from being made by the heels (sounds odd)
 
-/obj/item/clothing/shoes/courtphysician/female/update_icon()
+/obj/item/clothing/shoes/roguetown/courtphysician/female/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
 		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
@@ -863,7 +899,7 @@
 			pic.color = get_detail_color()
 		add_overlay(pic)
 
-/obj/item/clothing/shoes/courtphysician/female/keeper //unique to keepers, intended to also be unarmored. Role is grab-immune sire, please.
+/obj/item/clothing/shoes/roguetown/courtphysician/female/keeper //unique to keepers, intended to also be unarmored. Role is grab-immune sire, please.
 	name = "pestrian heels"
 	desc = "Leather heels, oft worn by those of Pestra's sects.</br> Raised just enough to fit the warped feet of those mutated by sickness without being uncomfortable; the solemn tap of these oft bears grim news, or salvation."
 	detail_color = CLOTHING_GREEN

@@ -4,6 +4,13 @@
 #define TILEPANEL_ACT_INTERACT "interact"
 #define TILEPANEL_ACT_DROP "drop"
 #define TILEPANEL_REFRESH_THROTTLE_DS 10
+#define TILEPANEL_ICON_BATCH 4
+#define TILEPANEL_ICON_GLOBAL_RATE 32
+#define TILEPANEL_ICON_CACHE_LIMIT 256
+
+GLOBAL_LIST_EMPTY(tilepanel_preview_icons)
+GLOBAL_VAR_INIT(tilepanel_icon_second, -1)
+GLOBAL_VAR_INIT(tilepanel_icon_count, 0)
 
 /mob
 	var/datum/tile_panel/tile_panel
@@ -41,9 +48,6 @@
 	if(!can_open_tile_panel_turf(T))
 		return FALSE
 
-	listed_turf = T
-	client.statpanel = T.name
-
 	var/datum/tile_panel/P = get_tile_panel()
 	return P.open(T)
 
@@ -56,8 +60,10 @@
 	var/refresh_throttle_ds = TILEPANEL_REFRESH_THROTTLE_DS
 	var/list/appearance_cache
 	var/list/row_cache
-	var/icon_serial = 0
 	var/panel_revision = 0
+	var/icon_serial = 0
+	var/list/pending_icons = list()
+	var/icon_work_queued = FALSE
 
 /datum/tile_panel/New(mob/user)
 	owner = user
@@ -84,6 +90,7 @@
 		target_turf = T
 		panel_revision++
 		row_cache = list()
+		pending_icons = list()
 		last_refresh_at = 0
 		refresh_queued = FALSE
 		return TRUE
@@ -219,6 +226,20 @@
 		return
 
 	switch(action)
+		if("request_icons")
+			if(usr != owner || !owner?.client || !target_turf || !owner.can_open_tile_panel_turf(target_turf))
+				return FALSE
+			var/list/refs = params["refs"]
+			if(!islist(refs))
+				return FALSE
+			for(var/i in 1 to min(refs.len, 16))
+				var/atom/A = locate(refs[i])
+				if(!A || QDELETED(A) || (A != target_turf && (A.loc != target_turf || !_should_include_atom(A))))
+					continue
+				if(!_get_cached_appearance_ref(A))
+					pending_icons |= REF(A)
+			_queue_icon_work()
+			return FALSE
 		if(TILEPANEL_ACT_CLOSE)
 			close()
 			return TRUE
@@ -321,6 +342,7 @@
 /datum/tile_panel/proc/_clear_appearance_containers()
 	appearance_cache = list()
 	row_cache = list()
+	pending_icons = list()
 
 /datum/tile_panel/proc/_should_include_atom(atom/A)
 	if(!A)
@@ -340,86 +362,74 @@
 /datum/tile_panel/proc/_build_visual_cache_key(atom/A)
 	if(!A || QDELETED(A))
 		return null
-
-	var/mutable_appearance/ap = A.appearance
-	var/list/key_parts = list(
-		"[REF(A)]",
-		"[A.type]",
-		"[A.icon]",
-		"[A.icon_state]",
-		"[A.dir]",
-		"[A.color]",
-		"[A.alpha]"
-	)
-
-	if(ap)
-		key_parts += "[ap.icon]"
-		key_parts += "[ap.icon_state]"
-		key_parts += "[ap.dir]"
-		key_parts += "[ap.color]"
-		key_parts += "[ap.alpha]"
-		key_parts += "[ap.blend_mode]"
-		key_parts += "[ap.transform]"
-		key_parts += "[length(ap.overlays)]"
-		for(var/overlay in ap.overlays)
-			key_parts += "[overlay]"
-		key_parts += "[length(ap.underlays)]"
-		for(var/underlay in ap.underlays)
-			key_parts += "[underlay]"
-
-	return key_parts.Join("|")
+	// BYOND appearances are value snapshots: equality includes overlays, color matrices and transforms.
+	// Avoid walking and stringifying every overlay whenever the panel updates.
+	return A.appearance
 
 /datum/tile_panel/proc/_make_preview_icon(atom/A)
 	if(!A || QDELETED(A) || !A.icon)
 		return null
-
-	var/icon/I
-	if(A.icon_state)
-		I = icon(A.icon, A.icon_state, A.dir)
-	else
-		I = icon(A.icon)
-
-	if(!I)
-		return null
-
-	if(istext(A.color))
-		I.Blend(A.color, ICON_MULTIPLY)
-
+	var/image/preview = image(A.icon)
+	preview.appearance = copy_appearance_filter_overlays(A.appearance)
+	var/icon/I = getFlatIcon(preview, defdir = A.dir, no_anim = TRUE)
+	if(I && (I.Width() > 64 || I.Height() > 64))
+		var/ratio = min(64 / I.Width(), 64 / I.Height())
+		I.Scale(max(round(I.Width() * ratio), 1), max(round(I.Height() * ratio), 1))
 	return I
 
-/datum/tile_panel/proc/_make_icon_filename()
-	icon_serial++
-	return "tilepanel_[world.time]_[icon_serial]_[rand(1000, 9999)].dmi"
-
-/datum/tile_panel/proc/_get_cached_appearance_ref(atom/A)
+/datum/tile_panel/proc/_get_cached_appearance_ref(atom/A, visual_key = null)
 	if(!A || QDELETED(A))
 		return null
-	if(!owner?.client)
-		return null
+	var/list/entry = appearance_cache[REF(A)]
+	if(islist(entry) && entry["key"] == (visual_key || _build_visual_cache_key(A)))
+		return entry["appearance_ref"]
+	return null
 
-	var/refid = REF(A)
-	var/visual_key = _build_visual_cache_key(A)
-	if(!visual_key)
-		return null
+/datum/tile_panel/proc/_queue_icon_work()
+	if(icon_work_queued || !pending_icons.len || !_is_open())
+		return
+	icon_work_queued = TRUE
+	addtimer(CALLBACK(src, PROC_REF(_process_icon_work)), 2)
 
-	var/list/ref_entry = appearance_cache[refid]
-	if(islist(ref_entry))
-		if(ref_entry["key"] == visual_key)
-			return ref_entry["appearance_ref"]
-
-	var/icon/preview_icon = _make_preview_icon(A)
-	if(!preview_icon)
-		return null
-
-	var/file_name = _make_icon_filename()
-	owner << browse_rsc(preview_icon, file_name)
-
-	appearance_cache[refid] = list(
-		"key" = visual_key,
-		"appearance_ref" = file_name
-	)
-
-	return file_name
+/datum/tile_panel/proc/_process_icon_work()
+	icon_work_queued = FALSE
+	if(!_is_open() || !target_turf || !owner.can_open_tile_panel_turf(target_turf))
+		pending_icons = list()
+		return
+	var/second = floor(world.time / 10)
+	if(GLOB.tilepanel_icon_second != second)
+		GLOB.tilepanel_icon_second = second
+		GLOB.tilepanel_icon_count = 0
+	var/processed = 0
+	var/changed = FALSE
+	while(pending_icons.len && processed < TILEPANEL_ICON_BATCH && GLOB.tilepanel_icon_count < TILEPANEL_ICON_GLOBAL_RATE)
+		if(TICK_CHECK)
+			break
+		var/refid = pending_icons[1]
+		pending_icons.Cut(1, 2)
+		var/atom/A = locate(refid)
+		if(!A || QDELETED(A) || (A != target_turf && (A.loc != target_turf || !_should_include_atom(A))) || _get_cached_appearance_ref(A))
+			continue
+		processed++
+		GLOB.tilepanel_icon_count++
+		var/visual_key = _build_visual_cache_key(A)
+		var/icon/I = GLOB.tilepanel_preview_icons[visual_key]
+		if(!I)
+			I = _make_preview_icon(A)
+			if(!I)
+				continue
+			if(GLOB.tilepanel_preview_icons.len >= TILEPANEL_ICON_CACHE_LIMIT)
+				GLOB.tilepanel_preview_icons.Remove(GLOB.tilepanel_preview_icons[1])
+			GLOB.tilepanel_preview_icons[visual_key] = I
+		// The asset transport uses content hashes and skips resources already sent to this client.
+		var/url = icon2html(I, owner.client, sourceonly = TRUE)
+		appearance_cache[refid] = list("key" = visual_key, "appearance_ref" = url)
+		changed = TRUE
+		if(TICK_CHECK)
+			break
+	if(changed)
+		SStgui.update_uis(src)
+	_queue_icon_work()
 
 /datum/tile_panel/proc/_get_or_build_row(atom/A, is_turf = FALSE)
 	if(!A || QDELETED(A))
@@ -429,8 +439,8 @@
 	var/name = "[A.name]"
 	var/path = "[A.type]"
 	var/visual_key = _build_visual_cache_key(A)
-	var/appearance_ref = _get_cached_appearance_ref(A)
-	var/render_key = "[panel_revision]|[refid]|[visual_key]|[appearance_ref]"
+	var/appearance_ref = _get_cached_appearance_ref(A, visual_key)
+	var/render_key
 
 	var/list/entry = row_cache[refid]
 	if(islist(entry))
@@ -438,9 +448,10 @@
 			var/list/cached_row = entry["row"]
 			if(islist(cached_row))
 				cached_row["appearance_ref"] = appearance_ref
-				cached_row["render_key"] = render_key
 				return cached_row
 
+	icon_serial++
+	render_key = "[panel_revision]|[refid]|[icon_serial]"
 	var/list/row = list(
 		"name" = name,
 		"path" = path,
@@ -481,3 +492,6 @@
 #undef TILEPANEL_ACT_INTERACT
 #undef TILEPANEL_ACT_DROP
 #undef TILEPANEL_REFRESH_THROTTLE_DS
+#undef TILEPANEL_ICON_BATCH
+#undef TILEPANEL_ICON_GLOBAL_RATE
+#undef TILEPANEL_ICON_CACHE_LIMIT

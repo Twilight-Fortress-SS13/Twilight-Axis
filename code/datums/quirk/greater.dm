@@ -32,7 +32,6 @@
 		"Orcish" = /datum/language/orcish,
 		"Infernal" = /datum/language/hellspeak,
 		"Draconic" = /datum/language/draconic,
-		"Celestial" = /datum/language/celestial,
 		"Ranesheni" = /datum/language/raneshi,
 		"Grenzelhoftian" = /datum/language/grenzelhoftian,
 		"Kazengunese" = /datum/language/kazengunese,

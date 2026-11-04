@@ -567,20 +567,15 @@
 
 /turf/open/floor/rogue/dirt/get_slowdown(mob/user)
 	. = ..()
-	var/negate_slowdown = FALSE
-
-	for(var/obj/item/stick in user.held_items)  // TA EDIT START
-		if(stick.walking_stick && !stick.wielded && !user.cmode) // 
-			negate_slowdown = TRUE //
-			break // TA EDIT FIN
-
-	if((isliving(user))&&(user?.movement_type == FLYING))
-		negate_slowdown = TRUE
-	if(HAS_TRAIT(user, TRAIT_LONGSTRIDER))
-		negate_slowdown = TRUE
-
-	if(negate_slowdown)
-		. -= 1 // TA EDIT 2 —> 1 (since slowdown numbers were changed)
+	var/negate_slowdown = FALSE // TA EDIT
+	for(var/obj/item/stick in user.held_items) // TA EDIT
+		if(stick.walking_stick && !stick.wielded && !user.cmode) // TA EDIT
+			negate_slowdown = TRUE // TA EDIT
+			break // TA EDIT
+	if((user.movement_type & FLYING) || HAS_TRAIT(user, TRAIT_LONGSTRIDER)) // TA EDIT
+		negate_slowdown = TRUE // TA EDIT
+	if(negate_slowdown) // TA EDIT
+		. -= 1 // TA EDIT
 	return max(., 0)
 
 
@@ -1215,6 +1210,7 @@
 	icon = 'icons/turf/roguefloor.dmi'
 	icon_state = "herringedge"
 	mouse_opacity = 0
+	bake_to_loc = TRUE
 
 /obj/effect/decal/wood/herringbone
 	name = "herringbone flooring"
@@ -1222,6 +1218,7 @@
 	icon = 'icons/turf/roguefloor.dmi'
 	icon_state = "herringbonewoodedge"
 	mouse_opacity = 0
+	bake_to_loc = TRUE
 
 /obj/effect/decal/wood/herringbone2
 	name = "herringbone flooring"
@@ -1229,6 +1226,7 @@
 	icon = 'icons/turf/roguefloor.dmi'
 	icon_state = "herringbonewood2edge"
 	mouse_opacity = 0
+	bake_to_loc = TRUE
 
 /turf/open/floor/rogue/ruinedwood/herringbone
 	name = "wooden herringbone flooring"
@@ -1360,6 +1358,7 @@
 	// not "snowcobblestone_edges" since this decal is a single directional sprite, unlike
 	// /obj/effect/decal/cobble/mossy below.
 	winter_icon_state = "snowcobbleedge"
+	bake_to_loc = TRUE
 
 /obj/effect/decal/cobble/mossy
 	name = "mossy brick floor"
@@ -1368,6 +1367,7 @@
 	icon_state = "mossystone_edges"
 	mouse_opacity = 0
 	winter_icon_state = "snowcobblestone_edges"
+	bake_to_loc = TRUE
 
 /obj/effect/decal/edge
 	name = "stone edge"
@@ -1375,6 +1375,7 @@
 	icon = 'icons/turf/roguefloor.dmi'
 	icon_state = "border"
 	mouse_opacity = 0
+	bake_to_loc = TRUE
 
 /obj/effect/decal/edge_corner
 	name = "stone edge corner"
@@ -1382,6 +1383,7 @@
 	icon = 'icons/turf/roguefloor.dmi'
 	icon_state = "border_corner"
 	mouse_opacity = 0
+	bake_to_loc = TRUE
 
 /turf/open/floor/rogue/cobblerock
 	icon_state = "cobblerock"
@@ -1428,6 +1430,7 @@
 	icon_state = "cobblestone_edges"
 	mouse_opacity = 0
 	winter_icon_state = "snowcobblestone_edges"
+	bake_to_loc = TRUE
 
 /obj/effect/decal/carpet
 	name = "exotic rug"
@@ -1436,6 +1439,7 @@
 	pixel_z = -17
 	icon = 'icons/roguetown/misc/64x64.dmi'
 	icon_state = "kover"
+	bake_to_loc = TRUE
 
 /obj/effect/decal/carpet/kover_darkred
 	name = "rustic red rug"
@@ -1908,7 +1912,7 @@
 			possible_turfs += T
 		if(!length(possible_turfs))
 			return
-		H.forceMove(pick(possible_turfs))
+		step_towards(H, pick(possible_turfs))
 		to_chat(H, span_warning("I slip on [src]!"))
 
 /turf/open/floor/rogue/frozen_water/deep

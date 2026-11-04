@@ -19,6 +19,11 @@
 	path = /obj/item/clothing/mask/rogue/spectacles
 	sort_category = "Accessories"
 
+/datum/loadout_item/thinspectacles
+	name = "Thin Spectacles"
+	path = /obj/item/clothing/mask/rogue/spectacles/thin
+	sort_category = "Accessories"
+
 /datum/loadout_item/fingerless
 	name = "Fingerless Gloves"
 	path = /obj/item/clothing/gloves/roguetown/fingerless
@@ -104,6 +109,16 @@
 /datum/loadout_item/collar
 	name = "Collar"
 	path = /obj/item/clothing/neck/roguetown/collar
+	sort_category = "Accessories"
+
+/datum/loadout_item/cravat
+	name = "Cravat"
+	path = /obj/item/clothing/neck/roguetown/cravat
+	sort_category = "Accessories"
+
+/datum/loadout_item/ruffle
+	name = "Ruffled Collar"
+	path = /obj/item/clothing/neck/roguetown/ruffle
 	sort_category = "Accessories"
 
 /datum/loadout_item/forlon_collar
