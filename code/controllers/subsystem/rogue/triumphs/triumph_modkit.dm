@@ -511,6 +511,7 @@
 
 /obj/item/rogueweapon/example/valorian_sword
 	name = "valorian sword"
+	icon = 'icons/roguetown/weapons/swords32.dmi'
 	desc = "A modest take on a mythical design, hailing from the blood-splattered crossroads \
 	between Valoria and Rockhill. It feels right at home, in the palm of your hand."
 	icon = 'icons/roguetown/weapons/swords32.dmi'
