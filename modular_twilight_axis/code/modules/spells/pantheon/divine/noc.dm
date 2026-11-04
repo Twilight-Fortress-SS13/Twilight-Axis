@@ -348,7 +348,7 @@
 	var/list/magister_bundle = list(
 		/datum/action/cooldown/spell/projectile/arc_bolt,
 		/datum/action/cooldown/spell/projectile/spitfire,
-		/datum/action/cooldown/spell/projectile/frost_bolt,
+		/datum/action/cooldown/spell/projectile/frostbolt, // TA EDIT
 	)
 	// Controller - debuffs
 	var/list/controller_bundle = list(
