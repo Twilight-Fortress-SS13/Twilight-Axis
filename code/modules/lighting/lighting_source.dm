@@ -227,8 +227,6 @@
 	effect_str = null
 
 /datum/light_source/proc/recalc_corner(datum/lighting_corner/C)
-	if(!C || QDELETED(C) || !isturf(pixel_turf)) // TA EDIT
-		return // TA EDIT
 	SETUP_CORNERS_CACHE(src)
 	LAZYINITLIST(effect_str)
 	if (effect_str[C]) // Already have one.
@@ -285,9 +283,6 @@
 		if (applied)
 			remove_lum()
 		return
-	if(!isturf(pixel_turf)) // TA EDIT START
-		pixel_turf = source_turf
-		update = TRUE // TA EDIT END
 
 	if (source_atom.light_falloff_curve != light_falloff_curve)
 		light_falloff_curve = source_atom.light_falloff_curve
@@ -354,7 +349,7 @@
 			if (!impacted_turf.lighting_corners_initialised)
 				impacted_turf.generate_missing_corners()
 			cached_corners = impacted_turf.corners
-			if(!islist(cached_corners) || length(cached_corners) < 4 || !cached_corners[1] || !cached_corners[2] || !cached_corners[3] || !cached_corners[4]) // TA EDIT
+			if(!islist(cached_corners) || length(cached_corners) < 4)
 				continue
 			corners[cached_corners[1]] = 0
 			corners[cached_corners[2]] = 0
@@ -368,8 +363,6 @@
 	var/list/L
 	if (needs_update == LIGHTING_VIS_UPDATE)
 		for (C as anything in corners - effect_str) // New corners
-			if(!C || QDELETED(C)) // TA EDIT
-				continue // TA EDIT
 			APPLY_CORNER(C)
 			if(. != 0)
 				LAZYADD(C.affecting, src)
@@ -377,16 +370,12 @@
 	else
 		L = corners - effect_str
 		for (C as anything in L) // New corners
-			if(!C || QDELETED(C)) // TA EDIT
-				continue // TA EDIT
 			APPLY_CORNER(C)
 			if(. != 0)
 				LAZYADD(C.affecting, src)
 				effect_str[C] = .
 
 		for (C as anything in corners - L) // Existing corners
-			if(!C || QDELETED(C)) // TA EDIT
-				continue // TA EDIT
 			APPLY_CORNER(C)
 			if (. != 0)
 				effect_str[C] = .
@@ -396,8 +385,6 @@
 
 	L = effect_str - corners
 	for (C as anything in L) // Old, now gone, corners.
-		if(!C || QDELETED(C)) // TA EDIT
-			continue // TA EDIT
 		REMOVE_CORNER(C)
 		LAZYREMOVE(C.affecting, src)
 	effect_str -= L
