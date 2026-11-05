@@ -14,7 +14,7 @@
 
 /obj/structure/roguesand/dune/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/roguedune)
+	AddComponent(/datum/component/roguedune) //bro its fine trust me
 
 /datum/component/roguedune/Initialize()
 	RegisterSignal(parent, list(COMSIG_MOVABLE_CROSSED), PROC_REF(Crossed))
@@ -50,3 +50,21 @@
 		if(Living != O)
 			return
 	opacity = TRUE
+
+/obj/structure/roguesand/dune/one
+	icon_state = "dune_1"
+
+/obj/structure/roguesand/dune/two
+	icon_state = "dune_2"
+
+/obj/structure/roguesand/dune/three
+	icon_state = "dune_3"
+
+/obj/structure/roguesand/dune/four
+	icon_state = "dune_4"
+
+/obj/structure/roguesand/dune/five
+	icon_state = "dune_5"
+
+/obj/structure/roguesand/dune/six
+	icon_state = "dune_6"
