@@ -11337,6 +11337,10 @@
 /obj/machinery/light/rogue/torchholder/l,
 /turf/open/transparent/openspace,
 /area/rogue/under/cave/orcdungeon/rh_orcdungeon)
+"bEZ" = (
+/obj/structure/flora/roguegrass/thorn_bush,
+/turf/open/water/swamp,
+/area/rogue/outdoors/rtfield/rockhill)
 "bFe" = (
 /obj/structure/fluff/railing/border{
 	dir = 1
@@ -21271,8 +21275,9 @@
 /turf/open/floor/rogue/cobblerock,
 /area/rogue/under/town/basement/keep)
 "dch" = (
-/turf/closed/basic,
-/area/rogue/under/cavewet/rh_undercity)
+/obj/structure/flora/roguegrass/water,
+/turf/open/water/swamp,
+/area/rogue/outdoors/rtfield/rockhill)
 "dck" = (
 /obj/effect/decal/edge{
 	color = "#3f3f3f";
@@ -37996,6 +38001,10 @@
 /obj/effect/spawner/lootdrop/steel_weapon_spawner,
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/under/cave/orcdungeon/rh_orcdungeon)
+"fBd" = (
+/obj/structure/glowshroom,
+/turf/open/water/swamp,
+/area/rogue/outdoors/rtfield/rockhill)
 "fBi" = (
 /obj/structure/fluff/walldeco/stone/stone6{
 	pixel_x = 32;
@@ -194549,7 +194558,7 @@ isC
 isC
 isC
 kBL
-dch
+cHx
 cHx
 cHx
 isC
@@ -248596,7 +248605,7 @@ swJ
 swJ
 swJ
 swJ
-iXe
+rga
 wIp
 wIp
 wIp
@@ -251192,7 +251201,7 @@ gIw
 rBI
 wSn
 wSn
-fjF
+bEZ
 xXt
 cUL
 cUL
@@ -251623,8 +251632,8 @@ gIw
 gIw
 uaL
 wSn
-nZc
-jsk
+dch
+kSn
 cUL
 klV
 cUL
@@ -252052,10 +252061,10 @@ gIw
 gIw
 kSn
 bcA
-cUL
+gIw
 tBZ
 kPB
-xXt
+xJC
 gIw
 fjF
 cUL
@@ -252484,10 +252493,10 @@ gIw
 kSn
 kSn
 bcA
+gIw
+gIw
 wSn
-wSn
-wSn
-wjE
+fBd
 gIw
 xrJ
 cUL
@@ -252917,9 +252926,9 @@ qvR
 gIw
 bcA
 wSn
-wSn
+gIw
 vLF
-jsk
+kSn
 gIw
 gIw
 cUL
@@ -533244,7 +533253,7 @@ bGx
 rtG
 bGx
 bGx
-jHA
+fZJ
 fZJ
 fZJ
 fZJ
