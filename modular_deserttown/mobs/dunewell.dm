@@ -171,7 +171,11 @@
 	threat_point = THREAT_TOUGH
 	ambush_faction = "dunewell"
 
-/mob/living/carbon/human/species/human/northern/dunewell_raider/better_gear/dunewell_post_init()
+/mob/living/carbon/human/species/human/northern/dunewell_raider/better_gear/Initialize(mapload)
+	. = ..(mapload)
+	INVOKE_ASYNC(src, .proc/dunewell_veteran_post_init)
+
+/mob/living/carbon/human/species/human/northern/dunewell_raider/better_gear/proc/dunewell_veteran_post_init()
 	equipOutfit(new /datum/outfit/job/roguetown/human/northern/dunewell_raider/better_gear)
 	var/obj/item/organ/eyes/organ_eyes = getorgan(/obj/item/organ/eyes)
 	if(organ_eyes)
