@@ -11,7 +11,7 @@
 // Causes any affecting light sources to be queued for a visibility update, for example a door got opened.
 /turf/proc/reconsider_lights()
 	for(var/datum/lighting_corner/corner as anything in get_corners())
-		corner.vis_update()
+		corner?.vis_update() // TA EDIT
 
 /turf/proc/lighting_clear_overlay()
 	if (lighting_object)
