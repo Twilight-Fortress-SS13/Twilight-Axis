@@ -10,10 +10,10 @@
 	realm_type = "Kingdom"
 	realm_type_short = "Kingdom"
 	blacklist = list(
-		/datum/job/roguetown/manorguard, 
-		/datum/job/roguetown/warden, 
-		/datum/job/roguetown/knight, 
-		/datum/job/roguetown/sergeant, 
+		/datum/job/roguetown/manorguard,
+		/datum/job/roguetown/warden,
+		/datum/job/roguetown/knight,
+		/datum/job/roguetown/sergeant,
 		/datum/job/roguetown/physician,
 		/datum/job/roguetown/cataphract,
 		/datum/job/roguetown/vizier,
@@ -29,12 +29,11 @@
 		)
 	slot_adjust = list(
 	/datum/job/roguetown/squire = 2,
-	/datum/job/roguetown/wapprentice = 3,
 	)
 	title_adjust = list(
 		/datum/job/roguetown/lord = list(display_title = "King", f_title = "Queen")
 	)
-	
+
 	threat_regions = list(
 		THREAT_REGION_ROCKHILL_BASIN,
 		THREAT_REGION_ROCKHILL_BOG_NORTH,
