@@ -1,4 +1,4 @@
-#define CALENDAR_EPOCH_YEAR 1513
+#define CALENDAR_EPOCH_YEAR 1526 //TA EDIT
 // Per player feedback, I am fixing the year to 1513 to avoid people dealing with implications of aging etc. Cycle instead track how many years passed OOC.
 #define YEAR_PER_CYCLE 1 // How many years until the calendar repeats itself from epoch year
 #define CALENDAR_MONTHS_PER_YEAR 12

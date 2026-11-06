@@ -93,7 +93,7 @@
 	weight = 50
 
 /datum/special_trait/duelist/on_apply(mob/living/carbon/human/character, silent)
-	character.cmode_music = 'sound/music/cmode/adventurer/combat_outlander4.ogg'
+	character.cmode_music = sound("sound/music/cmode/adventurer/combat_outlander4.ogg")
 	character.change_stat(STATKEY_SPD, 2)
 	character.adjust_skillrank_up_to(/datum/skill/combat/swords, 6, TRUE) //will make a unique trait later on
 	character.mind.special_items["Rapier"] = /obj/item/rogueweapon/sword/rapier
@@ -207,7 +207,8 @@
 		character.put_in_hands(bottle, forced = TRUE)
 
 	character.adjust_skillrank_up_to(/datum/skill/misc/riding, 4, TRUE)
-	new /mob/living/simple_animal/hostile/retaliate/rogue/saiga/tame/saddled(get_turf(character))
+	var/mob/living/simple_animal/saiga_mount = new /mob/living/simple_animal/hostile/retaliate/rogue/saiga/tame/saddled(get_turf(character)) // TA EDIT
+	saiga_mount.assign_livestock_owner(character) // TA EDIT
 
 /datum/special_trait/spring_in_my_step
 	name = "Spring in my Step"
@@ -231,6 +232,7 @@
 	weight = 100
 
 /datum/special_trait/thief/on_apply(mob/living/carbon/human/character, silent)
+	character.adjust_skillrank_up_to(/datum/skill/misc/stealing, 5, TRUE) // TA EDIT
 	character.adjust_skillrank_up_to(/datum/skill/misc/sneaking, 4, TRUE)
 	character.adjust_skillrank_up_to(/datum/skill/misc/climbing, 3, TRUE)
 
@@ -526,6 +528,7 @@
 	character.adjust_skillrank(/datum/skill/combat/knives, 2, TRUE)
 	character.adjust_skillrank(/datum/skill/misc/reading, -2, TRUE)
 	character.adjust_skillrank(/datum/skill/misc/sneaking, -2, TRUE)
+	character.adjust_skillrank(/datum/skill/misc/stealing, -2, TRUE) // TA EDIT
 
 /datum/special_trait/vengantbum
 	name = "Vengant Bum"

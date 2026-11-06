@@ -22,6 +22,11 @@
 	if(isturf(the_target) || !the_target) // bail out on invalids
 		return FALSE
 
+	// TA EDIT START
+	if(living_mob && living_mob.ai_controller && living_mob.ai_controller.is_melee_target_ignored(the_target))
+		return FALSE
+	// TA EDIT END
+
 	var/mob/living/simple_animal/simple_mob = living_mob
 	if(istype(simple_mob) && simple_mob.binded)
 		return FALSE

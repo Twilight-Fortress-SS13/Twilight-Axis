@@ -137,20 +137,23 @@
 			else
 				.["other"][I.type] += 1
 
-/datum/component/personal_crafting/proc/check_tools(mob/user, datum/crafting_recipe/R, list/contents)
+/datum/component/personal_crafting/proc/check_tools(mob/user, datum/crafting_recipe/R, list/contents, list/out_found_tools = null)
 	if(!R.tools.len)
 		return TRUE
 	var/list/possible_tools = list()
 	var/list/present_qualities = list()
+	var/list/actual_tools = list()
 	present_qualities |= contents["tool_behaviour"]
 	for(var/obj/item/I in user.contents)
 		if(istype(I, /obj/item/storage))
 			for(var/obj/item/SI in I.contents)
 				possible_tools += SI.type
+				actual_tools[SI.type] = SI //TA EDIT
 				if(SI.tool_behaviour)
 					present_qualities.Add(SI.tool_behaviour)
 
 		possible_tools += I.type
+		actual_tools[I.type] = I //TA EDIT
 
 		if(I.tool_behaviour)
 			present_qualities.Add(I.tool_behaviour)
@@ -164,6 +167,8 @@
 			else
 				for(var/I in possible_tools)
 					if(ispath(I, A))
+						if(out_found_tools) //TA EDIT
+							out_found_tools += actual_tools[I] //TA EDIT
 						continue main_loop
 			return FALSE
 	return TRUE
@@ -228,6 +233,7 @@
 	if(user.doing)
 		return
 	var/list/contents = get_surroundings(user)
+	var/list/found_tools = list() //TA EDIT
 //	var/send_feedback = 1
 	var/build_dir = user.dir
 	var/craft_dir = R.do_not_turn ? SOUTH : build_dir
@@ -235,6 +241,13 @@
 	if(isopenturf(T) && R.wallcraft)
 		to_chat(user, span_warning("Need to craft this on a wall."))
 		return
+	if(R.doorcraft || R.windowcraft) // TA EDIT START
+		var/obj/structure/mineral_door/door = locate() in T
+		var/obj/structure/roguewindow/window = locate() in T
+
+		if(!door && !window)
+			to_chat(user, span_warning("Need to craft this on a door or window."))
+			return  //TA EDIT END
 	if(!isopenturf(T) || R.ontile)
 		T = get_turf(user.loc)
 	if(!R.TurfCheck(user, T))
@@ -276,7 +289,7 @@
 			to_chat(user, span_warning("I'm missing a structure I need: \the <b>[str]</b>"))
 			return
 	if(check_contents(R, contents))
-		if(check_tools(user, R, contents))
+		if(check_tools(user, R, contents, found_tools)) //TA EDIT
 			if(R.craftsound)
 				playsound(T, R.craftsound, 100, TRUE)
 			var/time2use = 10
@@ -383,7 +396,8 @@
 						else
 							to_chat(user, span_danger("I've failed to craft \the [R.name]... [prob2craft]%"))
 						continue
-
+					if(user.dir != build_dir || !R.TurfCheck(user, T)) // TA EDIT
+						return FALSE // TA EDIT
 					var/list/quality_capture = R.skip_quality ? list() : null
 					var/list/parts = del_reqs(R, user, quality_capture)
 					var/inherited_quality = quality_capture?["min_quality"]
@@ -434,6 +448,18 @@
 							I.add_fingerprint(user)
 					user.visible_message(span_notice("[user] [R.verbage] \a [R.name]!"), \
 										span_notice("I [R.verbage_simple] \a [R.name]!"))
+					if(found_tools && found_tools.len) //TA EDIT START
+						for(var/atom/movable/tool_inst in found_tools)
+							if(istype(tool_inst, /obj/item/twilight_powderflask))
+								var/obj/item/twilight_powderflask/flask = tool_inst
+								flask.charges -= 1
+								if(flask.charges <= 0)
+									qdel(flask)
+									var/obj/item/twilight_powderflask_empty/E = new /obj/item/twilight_powderflask_empty(get_turf(user))
+									if(isliving(user))
+										user.put_in_hands(E)
+									else
+										E.Move(get_turf(user)) //TA EDIT END
 					if(user.mind && R.skillcraft && R.xp_modifier > 0)
 						if(isliving(user))
 							var/mob/living/L = user

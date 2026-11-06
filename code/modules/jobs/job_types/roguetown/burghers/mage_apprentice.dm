@@ -20,11 +20,11 @@
 
 	display_order = JDO_APPRENTICE
 	give_bank_account = TRUE
-
-	min_pq = 0
+	same_job_respawn_delay = 20 MINUTES
+	min_pq = 2
 	max_pq = null
 	round_contrib_points = 2
-	cmode_music = 'sound/music/cmode/nobility/combat_courtmage.ogg'
+	cmode_music = sound("sound/music/cmode/nobility/combat_courtmage.ogg")
 	advjob_examine = TRUE // So that Court Magicians can know if they're teachin' a Apprentice or if someone's a bit more advanced of a player. Just makes the title show up as the advjob's name.
 
 	job_traits = list(TRAIT_ALCHEMY_EXPERT)
@@ -88,7 +88,6 @@
 	pants = /obj/item/clothing/under/roguetown/tights/random
 	belt = /obj/item/storage/belt/rogue/leather
 	beltl = /obj/item/storage/magebag/associate
-	beltr = /obj/item/storage/keyring/apprentice
 	backl = /obj/item/storage/backpack/rogue/satchel
 	shoes = /obj/item/clothing/shoes/roguetown/gladiator
 	armor = /obj/item/clothing/suit/roguetown/shirt/robe/mage
@@ -99,10 +98,14 @@
 		)
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
-			H.cmode_music = 'sound/music/combat_heretic.ogg'
+			H.cmode_music = sound("sound/music/combat_heretic.ogg")
 	if(H.mind)
 		backr = choose_implement(H, starting_implement_tier)
 		SStreasury.grant_savings(ECONOMIC_LOWER_MIDDLE_CLASS, H)
+	if(SSmapping.config.map_name == "Rockhill") //TA_EDIT
+		beltr = /obj/item/storage/keyring/apprenticeenigma
+	else
+		beltr = /obj/item/storage/keyring/apprentice
 
 /datum/outfit/job/roguetown/wapprentice/associate/post_equip(mob/living/carbon/human/H, visualsOnly)
 	. = ..() 			// small bonus picks to get you into your field of study - also a good character-building tool. Not impactful enough to
@@ -139,11 +142,11 @@
 // And unlike adventurer, the University being technically keep aligned means they can jump in and gank antags and there's less admins can do about it.
 // If the University becomes independent one day, we can restore it. Until then, it will remain commented out.
 
-/*
+
 /datum/advclass/wapprentice/spellblade
-	name = "Azurcaephan Associate"
+	name = "Magician's Practice"
 	maximum_possible_slots = 2
-	tutorial = "You are an Azurcaephan Associate — a Spellblade, carrier of the five hundred yils tradition \
+	tutorial = "You are an Magician Practice — a Spellblade, carrier of the five hundred yils tradition \
 		originating in Azurea. You are employed under the University \
 		as a fellow Magos. The arcyne arts are dangerous, \
 		and you are to protect your peers from their own recklessness. \
@@ -208,7 +211,9 @@
 
 	to_chat(H, span_warning("You start with Bind Weapon. Remember to Bind your weapon so you can use your abilities and build up Arcyne Momentum."))
 
-	var/spellblade_chant_selected = prompt_spellblade_choice(H, get_spellblade_chant_html(src, H, "conventional"))
+	var/spellblade_chant_selected = prompt_spellblade_choice(H, get_spellblade_chant_html(src, H, "conventional")) // TA EDIT START
+	if(spellblade_chant_selected)
+		equip_spellblade_chant(H, spellblade_chant_selected) // TA EDIT END
 
 /datum/outfit/job/roguetown/wapprentice/spellblade/equip_spellblade_chant(mob/living/carbon/human/H, spellblade_chant_selected = "blade")
 	H << browse(null, "window=spellblade_chant")
@@ -270,7 +275,6 @@
 					r_hand = /obj/item/rogueweapon/mace/warhammer
 			H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_JOURNEYMAN, TRUE)
 
-	H.cmode_music = 'sound/music/cmode/nobility/combat_courtmage.ogg'
+	H.cmode_music = sound("sound/music/cmode/nobility/combat_courtmage.ogg")
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_LOWER_MIDDLE_CLASS, H)
-*/

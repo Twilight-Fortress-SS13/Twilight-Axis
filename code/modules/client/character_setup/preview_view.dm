@@ -16,6 +16,9 @@
 	var/obj/item/organ/penis/preview_penis = mannequin.getorganslot(ORGAN_SLOT_PENIS)
 	if(preview_penis)
 		preview_penis.update_erect_state(preview_boner_state)
+	// copy_to() can reuse a pooled mannequin whose penis already has this state.
+	// Rebuild after setting it so a species change cannot leave the preview on its old cached overlay.
+	mannequin.update_body_parts(redraw = TRUE)
 	return mannequin.appearance
 
 /datum/preferences/proc/cycle_boner_preview()

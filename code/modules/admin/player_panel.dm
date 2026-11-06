@@ -2,6 +2,7 @@
 	if(!check_rights())
 		return
 	log_admin("[key_name(usr)] checked the player panel.")
+	message_admins("[key_name_admin(usr)] checked the player panel.")
 	var/dat = "<html><head><meta http-equiv='X-UA-Compatible' content='IE=edge'/><title>Player Panel</title></head>"
 
 	//javascript, the part that does most of the work~
@@ -187,7 +188,7 @@
 		<table width='560' align='center' cellspacing='0' cellpadding='5' id='maintable'>
 			<tr id='title_tr'>
 				<td align='center'>
-					<font size='5'><b>Player panel</b></font><br>
+					<font size='5'><b>Player panel</b></font><br> <a href='?_src_=holder;[HrefToken()];ta_patron_followers=1'>Followers by Patron</a> -
 					Hover over a line to see more information - <a href='?_src_=holder;[HrefToken()];check_antagonist=1'>Check antagonists</a> - Kick <a href='?_src_=holder;[HrefToken()];kick_all_from_lobby=1;afkonly=0'>everyone</a>/<a href='?_src_=holder;[HrefToken()];kick_all_from_lobby=1;afkonly=1'>AFKers</a> in lobby
 					<p>
 				</td>

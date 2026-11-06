@@ -103,7 +103,7 @@
 				l_hand = /obj/item/rogueweapon/scabbard/gwstrap
 				wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/heavy
 				gloves = /obj/item/clothing/gloves/roguetown/bandages
-	H.cmode_music = 'sound/music/combat_holy.ogg' // left in bc i feel like monk players want their darktide TRAIT_DODGEEXPERT
+	H.cmode_music = sound("sound/music/combat_holy.ogg") // left in bc i feel like monk players want their darktide TRAIT_DODGEEXPERT
 	switch(H.patron?.type)
 		if(/datum/patron/old_god)
 			cloak = /obj/item/clothing/cloak/tabard/psydontabard/black
@@ -215,7 +215,7 @@
 		/obj/item/flashlight/flare/torch/metal = 1,
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
 		)
-	H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg'
+	H.cmode_music = sound("sound/music/cmode/church/combat_reckoning.ogg")
 
 	//Armor varients here
 	var/armors = list("Hauberk")
@@ -426,7 +426,7 @@
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1
 		)
-	H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg'
+	H.cmode_music = sound("sound/music/cmode/church/combat_reckoning.ogg")
 	switch(H.patron?.type)
 		if(/datum/patron/old_god)
 			if(H.mind)
@@ -539,7 +539,7 @@
 		/obj/item/needle/thorn/cleric = 1,
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpot = 1,
 		)
-	H.cmode_music = 'sound/music/cmode/church/combat_acolyte.ogg' // our cleric pre_equip handles cmode music
+	H.cmode_music = sound("sound/music/cmode/church/combat_acolyte.ogg") // our cleric pre_equip handles cmode music
 	switch(H.patron?.type)
 		if(/datum/patron/old_god)
 			head = /obj/item/clothing/head/roguetown/roguehood/psydon/black
@@ -697,7 +697,7 @@
 			H.adjust_skillrank_up_to(/datum/skill/misc/climbing, SKILL_LEVEL_JOURNEYMAN, TRUE)
 			H.adjust_skillrank(/datum/skill/misc/lockpicking, SKILL_LEVEL_NOVICE, TRUE)
 			H.adjust_skillrank_up_to(/datum/skill/misc/music, SKILL_LEVEL_EXPERT, TRUE)
-			H.cmode_music = 'sound/music/combat_jester.ogg'
+			H.cmode_music = sound("sound/music/combat_jester.ogg")
 			var/datum/inspiration/I = new /datum/inspiration(H)
 			I.grant_inspiration(H, bard_tier = BARD_T2) //(NGL Xylix needs better high-end miracles vs clutching off this system, until then, untouched)
 			if(H.mind)
@@ -754,12 +754,22 @@
 			shirt = /obj/item/clothing/suit/roguetown/armor/vestments_padded
 			H.mind?.AddSpell(new /datum/action/cooldown/spell/minion_order)
 			H.mind?.AddSpell(new /datum/action/cooldown/spell/minion_mark)
+			H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_NOVICE, TRUE) // TA EDIT
+		if(/datum/patron/inhumen/baotha) // TA EDIT
+			cloak = /obj/item/clothing/suit/roguetown/shirt/robe // TA EDIT
+			head = /obj/item/clothing/head/roguetown/roguehood // TA EDIT
+			H.adjust_skillrank(/datum/skill/misc/medicine, SKILL_LEVEL_NOVICE, TRUE) // TA EDIT
+			H.adjust_skillrank(/datum/skill/craft/cooking, SKILL_LEVEL_APPRENTICE, TRUE) // TA EDIT
+			H.adjust_skillrank(/datum/skill/craft/alchemy, SKILL_LEVEL_NOVICE, TRUE) // TA EDIT
 		if(/datum/patron/inhumen/graggar)
 			shoes = /obj/item/clothing/shoes/roguetown/boots/furlinedboots //tribal-esc shaman look
 			gloves = /obj/item/clothing/gloves/roguetown/angle/gronnfur/cleric //role-unique
 			belt = /obj/item/storage/belt/rogue/leather/rope/upgraded/dark
 			shirt = /obj/item/clothing/suit/roguetown/armor/vestments_padded
 			cloak = /obj/item/clothing/cloak/raincloak/furcloak/brown
+			H.adjust_skillrank(/datum/skill/combat/whipsflails, SKILL_LEVEL_NOVICE, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/wrestling, SKILL_LEVEL_APPRENTICE, TRUE)
+			ADD_TRAIT(H, TRAIT_STEELHEARTED, TRAIT_GENERIC)
 
 			var/helms = list("Skull Mask + Hood (Classic)","Saiga Skull","Antler Hood")
 			var/helm_choice = input(H, "Choose your HEADWEAR.", "SHATTER YOUR BINDS.") as anything in helms
@@ -771,6 +781,13 @@
 					head = /obj/item/clothing/head/roguetown/helmet/leather/saiga/druid
 				if("Antler Hood")
 					head = /obj/item/clothing/head/roguetown/antlerhood
+		if	(/datum/patron/inhumen/matthios)
+			cloak = /obj/item/clothing/suit/roguetown/shirt/robe
+			head = /obj/item/clothing/head/roguetown/roguehood
+			H.adjust_skillrank(/datum/skill/misc/stealing, SKILL_LEVEL_APPRENTICE, TRUE)
+			H.adjust_skillrank(/datum/skill/misc/sneaking, SKILL_LEVEL_APPRENTICE, TRUE)
+			H.adjust_skillrank(/datum/skill/misc/lockpicking, SKILL_LEVEL_NOVICE, TRUE)
+		// TA ADDITION END - ADDS SKILLRANK BONUSES TO OTHER PATRONS
 		else
 			belt = /obj/item/storage/belt/rogue/leather/rope/upgraded
 			shoes = /obj/item/clothing/shoes/roguetown/sandals

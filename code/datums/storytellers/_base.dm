@@ -3,6 +3,9 @@
 /// Lower follower modifier for special storytellers such as Astrata, who is a default patron.
 #define LOWER_FOLLOWER_MODIFIER (STANDARD_FOLLOWER_MODIFIER - 2)
 
+/datum/round_event_control/antagonist/solo
+	var/consumes_hard_antag_slot = TRUE
+
 /datum/storyteller
 	/// Name of our storyteller.
 	var/name = "Badly coded storyteller"
@@ -94,6 +97,13 @@
 	// --- Gamemode preset configuration ---
 	/// Which vote pool this preset belongs to (GAMEMODE_POOL_*). Presets sharing a pool are excluded together the round after one wins.
 	var/preset_pool
+	// TA EDIT START
+	var/vote_hidden = FALSE
+	var/alternate_preset
+	var/highpop_vote_mult = 1
+	var/midpop_vote_mult = 1
+	var/lowpop_vote_mult = 1
+	// TA EDIT END
 	/// If TRUE, a roundstart hard antag (Bandit/Lich/Werewolf/Vampire Lord) is guaranteed to roll (still needs pop >= HARD_ANTAG_MIN_POP).
 	var/guaranteed_hard = FALSE
 	/// Multiplier applied to hard-antag slot scaling. >1 scales hard antag counts more aggressively with pop.
@@ -170,16 +180,22 @@
 		mode.forced_next_events -= track
 		are_forced = TRUE
 	else
-		mode.update_crew_infos()
+		var/current_players // TA EDIT START
+		if(mode.roundstart_prejob_roll)
+			mode.calculate_ready_players()
+			current_players = mode.ready_players
+		else
+			mode.update_crew_infos()
+			current_players = mode.active_players // TA EDIT END
 		var/pop_required = mode.min_pop_thresholds[track]
-		if(mode.active_players < pop_required)
-			message_admins("Storyteller failed to pick an event for track of [track] due to insufficient population. (required: [pop_required] active pop for [track]. Current: [mode.active_players])")
+		if(current_players < pop_required) // TA EDIT
+			message_admins("Storyteller failed to pick an event for track of [track] due to insufficient population. (required: [pop_required] active pop for [track]. Current: [current_players])") // TA EDIT
 			mode.event_track_points[track] *= TRACK_FAIL_POINT_PENALTY_MULTIPLIER
 			return
 		calculate_weights(track)
 		var/list/valid_events = list()
 		var/list/invalid_reasons = list()
-		var/roundstart_players_amt = get_active_player_count(alive_check = TRUE, afk_check = TRUE, human_check = TRUE)
+		var/roundstart_players_amt = mode.roundstart_prejob_roll ? mode.ready_players : get_active_player_count(alive_check = TRUE, afk_check = TRUE, human_check = TRUE) // TA EDIT
 		// Determine which events are valid to pick
 		for(var/datum/round_event_control/event as anything in mode.event_pools[track])
 			var/players_amt = roundstart_players_amt
@@ -223,7 +239,9 @@
 			return
 		if(track == EVENT_TRACK_CHARACTER_INJECTION && !SSticker?.HasRoundStarted())
 			var/list/guaranteed_events = mode.storyteller_guaranteed_events(valid_events)
-			if(length(guaranteed_events))
+			var/datum/storyteller/preset = active_preset()
+			var/guaranteed_only = length(mode.opened_hard_antags()) || preset?.guaranteed_hard
+			if(guaranteed_only)
 				var/list/filtered_out_events = list()
 				for(var/datum/round_event_control/antagonist/solo/event as anything in valid_events)
 					if(event in guaranteed_events)
@@ -231,6 +249,10 @@
 					filtered_out_events[event] = "filtered by guaranteed-only roll"
 				mode.log_roundstart_antag_pool(guaranteed_events, filtered_out_events, guaranteed_only = TRUE)
 				valid_events = guaranteed_events
+				if(!length(valid_events))
+					message_admins("Storyteller failed to find a valid hard antagonist for the guaranteed roundstart roll.")
+					mode.event_track_points[track] *= TRACK_FAIL_POINT_PENALTY_MULTIPLIER
+					return
 		picked_event = pickweight(valid_events)
 		if(!picked_event)
 			if(length(valid_events))

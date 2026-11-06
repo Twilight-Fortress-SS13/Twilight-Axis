@@ -141,6 +141,7 @@
 		/datum/skill/combat/knives = SKILL_LEVEL_MASTER,
 		/datum/skill/combat/bows = SKILL_LEVEL_MASTER,
 		/datum/skill/misc/climbing = SKILL_LEVEL_MASTER,
+		/datum/skill/misc/stealing = SKILL_LEVEL_MASTER, // TA EDIT
 		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT
 	)
 	stat_mods = list(
@@ -177,6 +178,7 @@
 	target_age = AGE_OLD
 	skill_mods = list(
 		/datum/skill/misc/sneaking = SKILL_LEVEL_LEGENDARY,
+		/datum/skill/misc/stealing = SKILL_LEVEL_LEGENDARY, // TA EDIT
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_LEGENDARY
 	)
 

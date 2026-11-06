@@ -45,7 +45,7 @@
 		/datum/language/abyssal // you can send people to the dream you can presumably communicate with its denizens
 	)
 	category_tags = list(CTAG_HAG)
-	cmode_music = 'sound/music/combat_graggar.ogg'
+	cmode_music = sound("sound/music/combat_graggar.ogg")
 
 /datum/outfit/job/roguetown/hag
 

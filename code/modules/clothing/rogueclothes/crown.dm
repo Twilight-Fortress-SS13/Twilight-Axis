@@ -27,6 +27,15 @@
 
 /obj/item/clothing/head/roguetown/crown/serpcrown/Initialize(mapload)
 	. = ..()
+	// TA EDIT START
+	if(type == /obj/item/clothing/head/roguetown/crown/serpcrown)
+		if(SSmapping.config.map_name == "Rockhill")
+			name = "Crown of Enigma"
+		else if(SSmapping.config.map_name == "Desert Town")
+			name = "Crown of Al-Ashur"
+		else
+			name = "Crown of Azuria"
+	// TA EDIT END
 	if(register_as_roguemachine_crown)
 		if(SSroguemachine.crown)
 			if(!replace_existing_roguemachine_crown)
@@ -47,7 +56,7 @@
 	REMOVE_TRAIT(user, TRAIT_GARRISON_ITEM, "[ref(src)]")
 
 /obj/item/clothing/head/roguetown/crown/serpcrown/proc/anti_stall()
-	src.visible_message(span_danger("The Crown of Azuria crumbles to dust, the ashes spiriting away in the direction of the Keep."))
+	src.visible_message(span_danger("The [src.name] crumbles to dust, the ashes spiriting away in the direction of the Keep."))
 	SSroguemachine.scomm_machines -= src
 	SSroguemachine.crown = null //Do not harddel.
 	qdel(src) //Anti-stall
@@ -62,6 +71,10 @@
 		if(user.voicecolor_override)
 			usedcolor = user.voicecolor_override
 		user.whisper(input_text)
+		if(garrisonline) // TA EDIT START
+			user.log_talk(input_text, LOG_GAME, tag="CROWN GARRISON SCOM")
+		else
+			user.log_talk(input_text, LOG_GAME, tag="CROWN SCOM") // TA EDIT END
 		if(length(input_text) > 100)
 			input_text = "<small>[input_text]</small>"
 		if(!garrisonline)

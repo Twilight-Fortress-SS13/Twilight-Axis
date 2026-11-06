@@ -16,6 +16,8 @@
 	experimental_inhand = TRUE
 	experimental_onhip = TRUE
 	var/overarmor = TRUE
+	equip_delay_self = 1.5 SECONDS
+	unequip_delay_self = 1.5 SECONDS
 
 /obj/item/clothing/mask/rogue/attack_right(mob/user)
 	. = ..()
@@ -699,6 +701,8 @@
 	flags_inv = HIDEFACE|HIDESNOUT
 	slot_flags = ITEM_SLOT_MASK|ITEM_SLOT_HIP
 	sellprice = 0
+	equip_delay_self = 3.5 SECONDS
+	unequip_delay_self = 3.5 SECONDS
 
 /obj/item/clothing/mask/rogue/lordmask/naledi/sojourner/inlaid_spectacles
 	has_inlaid_spectacles = TRUE

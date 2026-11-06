@@ -75,7 +75,7 @@
 
 	var/spell
 	var/spellname = "conjure bugs"
-
+	
 /obj/item/book/granter/spell/already_known(mob/user)
 	if(!spell)
 		return TRUE
@@ -93,6 +93,12 @@
 	user.mind.AddSpell(S)
 	user.log_message("learned the spell [spellname] ([S])", LOG_ATTACK, color="orange")
 	onlearned(user)
+
+/obj/item/book/granter/spell/attack_self(mob/living/user)
+	if(!HAS_TRAIT(user, TRAIT_ARCYNE))
+		to_chat(user, span_danger("I don't know how to parse [src]. It hurts my head."))
+		return FALSE
+	..()
 
 /obj/item/book/granter/spell/random
 	icon_state = "random_book"

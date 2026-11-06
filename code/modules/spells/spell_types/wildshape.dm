@@ -67,7 +67,7 @@
 
 	user.Stun(30)
 	user.Knockdown(30)
-	INVOKE_ASYNC(user, TYPE_PROC_REF(/mob/living/carbon/human, wildshape_transformation), GLOB.wildshapes[new_wildshape_type], allowed_equipment_type, disallowed_equipment_type)
+	INVOKE_ASYNC(user, TYPE_PROC_REF(/mob/living/carbon/human, wildshape_transformation), GLOB.wildshapes[new_wildshape_type], allowed_equipment_type, disallowed_equipment_type, TRUE) // TA EDIT
 
 	return TRUE
 

@@ -44,12 +44,22 @@
 	minimum_distance = 0
 	milkies = FALSE
 
+	// TA EDIT START
+	gender = MALE
+	animal_species = /mob/living/simple_animal/hostile/retaliate/rogue/mirespider
+	food_type = list(/obj/item/reagent_containers/food/snacks/rogue/meat)
+	tame_food_type = list(/obj/item/reagent_containers/food/snacks/rogue/meat)
+	tame_chance = 15
+	bonus_tame_chance = 10
+	// TA EDIT END
+
 	STACON = 7
 	STASTR = 7
 	STASPD = 13
 	footstep_type = FOOTSTEP_MOB_BAREFOOT
 	retreat_health = 0
 	food = 0
+	var/fixed_gender = FALSE // TA EDIT
 
 	AIStatus = AI_OFF
 	can_have_ai = FALSE
@@ -58,13 +68,73 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/mirespider/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/ai_aggro_system)
-	AddElement(/datum/element/ai_retaliate)
+	// TA EDIT START
+	if(ai_controller)
+		AddComponent(/datum/component/ai_aggro_system)
+		AddElement(/datum/element/ai_retaliate)
+	if(!fixed_gender)
+		gender = prob(33) ? FEMALE : MALE
+	if(gender == FEMALE && !adult_growth)
+		childtype = list(
+			/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/spiderling = 67,
+			/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/spiderling/female = 33,
+		)
+	else
+		childtype = null
+	// TA EDIT END
 	update_icon()
 	ADD_TRAIT(src, TRAIT_NOPAINSTUN, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_KNEESTINGER_IMMUNITY, INNATE_TRAIT)
 
 	addtimer(CALLBACK(src, PROC_REF(find_lurker_to_follow)), 10)
+
+// TA EDIT START
+/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/male
+	fixed_gender = TRUE
+	gender = MALE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/female
+	fixed_gender = TRUE
+	gender = FEMALE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/spiderling
+	name = "mire crawlerling"
+	desc = "A young mire crawler, small and harmless until it matures."
+	fixed_gender = TRUE
+	gender = MALE
+	animal_species = null
+	adult_growth = /mob/living/simple_animal/hostile/retaliate/rogue/mirespider/male
+	health = 15
+	maxHealth = 15
+	melee_damage_lower = 1
+	melee_damage_upper = 3
+	STACON = 3
+	STASTR = 2
+	STASPD = 8
+	mob_size = MOB_SIZE_SMALL
+	aggressive = 0
+	ai_controller = null
+	can_receive_livestock_commands = FALSE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/spiderling/CanAttack(atom/the_target)
+	return FALSE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/spiderling/Retaliate()
+	return 0
+
+/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/spiderling/GiveTarget(new_target)
+	return 0
+
+/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/spiderling/Initialize(mapload)
+	. = ..()
+	var/matrix/spiderling_scale = matrix()
+	spiderling_scale.Scale(0.65, 0.65)
+	transform = spiderling_scale
+
+/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/spiderling/female
+	gender = FEMALE
+	adult_growth = /mob/living/simple_animal/hostile/retaliate/rogue/mirespider/female
+// TA EDIT END
 
 /mob/living/simple_animal/hostile/retaliate/rogue/mirespider/proc/find_lurker_to_follow()
 	var/mob/living/simple_animal/hostile/rogue/mirespider_lurker/lurker = null
@@ -76,6 +146,14 @@
 
 	if(lurker && ai_controller)
 		ai_controller.set_blackboard_key(BB_FOLLOW_TARGET, lurker)
+
+
+// TA EDIT START
+/mob/living/simple_animal/hostile/retaliate/rogue/mirespider/tamed(mob/user)
+	clear_enemies()
+	LoseTarget()
+	return ..(user)
+// TA EDIT END
 
 /mob/living/simple_animal/hostile/retaliate/rogue/mirespider/death(gibbed)
 	..()

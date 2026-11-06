@@ -709,7 +709,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 
 /// Preserved so `*str`/`*strength` keep a dedicated command-panel verb, same as every other stat roll.
 /mob/living/carbon/human/verb/emote_strength_roll()
-	set name = "Roll Strength"
+	set name = "%Проверка силы"
 	set category = "Emotes"
 
 	emote(STAT_STRENGTH, intentional = TRUE)
@@ -756,7 +756,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 	)
 
 /mob/living/carbon/human/verb/emote_perception_roll()
-	set name = "Roll Perception"
+	set name = "%Проверка восприятия"
 	set category = "Emotes"
 
 	emote(STAT_PERCEPTION, intentional = TRUE)
@@ -801,7 +801,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 	)
 
 /mob/living/carbon/human/verb/emote_intelligence_roll()
-	set name = "Roll Intelligence"
+	set name = "%Проверка интеллекта"
 	set category = "Emotes"
 
 	emote(STAT_INTELLIGENCE, intentional = TRUE)
@@ -846,7 +846,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 	)
 
 /mob/living/carbon/human/verb/emote_constitution_roll()
-	set name = "Roll Constitution"
+	set name = "%Проверка телосложения"
 	set category = "Emotes"
 
 	emote(STAT_CONSTITUTION, intentional = TRUE)
@@ -855,6 +855,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 	key = STAT_WILLPOWER
 	key_third_person = "wil"
 	modifiers_list = list(
+		TRAIT_TOLERANT = -1,
 		TRAIT_FEARLESS = -1,
 		TRAIT_PSYDONITE = -1,
 		TRAIT_STEELHEARTED = -1,
@@ -890,7 +891,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 	)
 
 /mob/living/carbon/human/verb/emote_willpower_roll()
-	set name = "Roll Willpower"
+	set name = "%Проверка воли"
 	set category = "Emotes"
 
 	emote(STAT_WILLPOWER, intentional = TRUE)
@@ -938,7 +939,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 	)
 
 /mob/living/carbon/human/verb/emote_speed_roll()
-	set name = "Roll Speed"
+	set name = "%Проверка скорости"
 	set category = "Emotes"
 
 	emote(STAT_SPEED, intentional = TRUE)
@@ -978,7 +979,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 	)
 
 /mob/living/carbon/human/verb/emote_fortune_roll()
-	set name = "Roll Fortune"
+	set name = "%Проверка удачи"
 	set category = "Emotes"
 
 	emote(STAT_FORTUNE, intentional = TRUE)
@@ -1030,7 +1031,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 	)
 
 /mob/living/carbon/human/verb/emote_charisma_roll()
-	set name = "Roll Charisma"
+	set name = "%Проверка харизмы"
 	set category = "Emotes"
 
 	emote(STAT_CHARISMA, intentional = TRUE)

@@ -60,10 +60,9 @@
 			name = "burnt tree"
 			update_icon()
 
-/obj/structure/flora/newtree/attack_right(mob/user)
-	if(user.cmode)
-		return
+/obj/structure/flora/newtree/attack_right(mob/user) // TA EDIT START
 	handle_special_items_retrieval(user, src)
+	return // TA EDIT END
 
 /obj/structure/flora/newtree/obj_destruction(damage_flag)//this proc is stupidly long for a destruction proc
 	var/turf/NT = get_turf(src)

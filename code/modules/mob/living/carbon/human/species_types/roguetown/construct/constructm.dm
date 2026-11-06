@@ -349,25 +349,22 @@
 		return TRUE
 
 	// === SCRAP ===
-	if(I.type == /obj/item/scrap)
+	if(I.type == /obj/item/scrap) // TA EDIT START
 		var/obj/item/scrap/L = I
 		if(user == M)
 			M.visible_message(
-				span_notice("[M] blows arcyne steam at [L], combusting it into usable slag!"),
-				span_notice("I puff arcyne steam at [L], combusting it into usable slag!")
+				span_notice("[M] crushes [L] between their jaws, feeding the fragments into their frame."),
+				span_notice("I crush [L] between my jaws, feeding the fragments into my frame.")
 			)
 		else
 			M.visible_message(
-				span_notice("[user] offers [L] to [M]'s mouth, and they blow arcyne steam at it!"),
-				span_notice("I puff arcyne steam at [L], combusting it into usable slag!")
+				span_notice("[user] offers [L] to [M], who crushes it between their jaws."),
+				span_notice("[user] offers [L] to me. I crush it between my jaws and feed the fragments into my frame.")
 			)
-		new /obj/effect/particle_effect/thick_steam(get_turf(user))
-		playsound(user.loc, 'sound/items/steamrelease.ogg', 50, FALSE, -1)
-		sleep(4)
-		playsound(user.loc, 'sound/magic/fireball.ogg', 30)
+		playsound(M.loc, 'sound/combat/hits/onmetal/sheet (1).ogg', 50, TRUE)
+		M.energy_add(5)
 		qdel(I)
-		new /obj/item/rogueore/iron(get_turf(user))
-		return TRUE
+		return TRUE // TA EDIT END
 
 	// === WOOD ===
 	if(I.type == /obj/item/grown/log/tree/small)
