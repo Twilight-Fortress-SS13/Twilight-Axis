@@ -41,7 +41,7 @@
 		added_def = 2,\
 	)
 
-/obj/item/rogueweapon/huntingknife/idagger/silver/psydagger/parrying
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver/psy/parrying
 	name = "psydonic parrying dagger"
 	desc = "A finely balanced silver parrying dagger, carried by loyal servants of the Inquisition. \
 	Its crossguard turns aside wicked steel while its blessed edge delivers Psydon's judgement."
@@ -52,7 +52,7 @@
 	wdefense = 9
 	max_integrity = 150
 
-/obj/item/rogueweapon/huntingknife/idagger/silver/psydagger/parrying/ComponentInitialize()
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver/psy/parrying/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
@@ -177,7 +177,7 @@
 				var/weapon_choice = input(H,"Choose your WEAPON.", "TAKE UP PSYDON'S ARMS.") as anything in weapons
 				switch(weapon_choice)
 					if("Psydonic Parrying Dagger")
-						l_hand = /obj/item/rogueweapon/huntingknife/idagger/silver/psydagger/parrying
+						l_hand = /obj/item/rogueweapon/huntingknife/idagger/steel/silver/psy/parrying
 						r_hand = /obj/item/rogueweapon/scabbard/sheath
 						H.adjust_skillrank_up_to(/datum/skill/combat/knives, 4, TRUE)
 					if("Psydonic Foil")

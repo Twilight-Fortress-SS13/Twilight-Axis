@@ -7808,7 +7808,7 @@
 	pixel_x = -9;
 	pixel_y = 17
 	},
-/obj/item/rogueweapon/huntingknife/idagger/silver{
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver{
 	pixel_x = 5;
 	pixel_y = 7
 	},
@@ -8728,7 +8728,7 @@
 /area/rogue/under/desertdark)
 "ckj" = (
 /obj/structure/table/wood/fancy/red,
-/obj/item/rogueweapon/huntingknife/idagger/silver/elvish,
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver/elvish,
 /obj/effect/spawner/lootdrop/roguetown/dungeon/money,
 /turf/open/floor/rogue/ruinedwood{
 	icon_state = "horzw"
@@ -15429,7 +15429,7 @@
 	pixel_x = -3;
 	pixel_y = 1
 	},
-/obj/item/rogueweapon/huntingknife/idagger/silver/elvish/drow,
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver/elvish/drow,
 /obj/item/roguegem/random,
 /turf/open/floor/rogue/grasscold,
 /area/rogue/under/desertdark)
@@ -50959,7 +50959,7 @@
 /area/rogue/under/cavewet/bogcaves/camp)
 "ncO" = (
 /obj/structure/toilet,
-/obj/item/rogueweapon/huntingknife/idagger/silver/elvish/poopknife,
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver/elvish/poopknife,
 /mob/living/carbon/human/species/human/northern/deranged_knight/matthios,
 /turf/open/floor/rogue/darkpath{
 	color = "#b0b0b0"
@@ -90978,7 +90978,7 @@
 "xic" = (
 /obj/structure/table/wood,
 /obj/item/paper,
-/obj/item/rogueweapon/huntingknife/idagger/silver/elvish,
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver/elvish,
 /turf/open/floor/rogue/blocks/stonered/tiny,
 /area/rogue/indoors/town/manor/desert/toilet)
 "xid" = (
