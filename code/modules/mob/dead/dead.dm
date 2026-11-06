@@ -48,6 +48,7 @@ INITIALIZE_IMMEDIATE(/mob/dead)
 	Moved(oldloc, NONE, TRUE)
 
 /mob/dead/proc/server_hop()
+	set category = "OOC"
 	set name = "Server Hop!"
 	set desc= "Jump to the other server"
 	set hidden = 1

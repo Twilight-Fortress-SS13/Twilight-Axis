@@ -16,11 +16,11 @@ The priests will whisper that you follow the Sun-Thief. Frown, shake your head, 
 	outfit = /datum/outfit/job/roguetown/merchant
 	give_bank_account = TRUE
 	noble_income = 100 // ATC chapter stipend - The sole Money Role outside of the keep, should help them keep pace a bit + pick up if they get completely knocked out of coin.
-	min_pq = 1 //"Yeah...my guy says the best I can do is one PQ, final offer"
+	min_pq = 4 //"Yeah...my guy says the best I can do is one PQ, final offer"
 	max_pq = null
 	required = TRUE
 	round_contrib_points = 3
-	cmode_music = 'sound/music/combat_noble.ogg'
+	cmode_music = sound("sound/music/combat_noble.ogg")
 	is_quest_giver = TRUE
 
 	job_traits = list(TRAIT_SEEPRICES, TRAIT_CICERONE)
@@ -59,6 +59,7 @@ The priests will whisper that you follow the Sun-Thief. Frown, shake your head, 
 		/datum/skill/combat/knives = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_MASTER,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/stealing = SKILL_LEVEL_APPRENTICE, // TA EDIT
 		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/cooking = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/riding = SKILL_LEVEL_JOURNEYMAN,

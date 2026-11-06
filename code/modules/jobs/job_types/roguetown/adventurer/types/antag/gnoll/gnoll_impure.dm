@@ -25,7 +25,7 @@
 		/datum/skill/misc/sneaking = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/hunting = SKILL_LEVEL_APPRENTICE,
 	)
-	cmode_music = 'sound/music/combat_graggar.ogg'
+	cmode_music = sound("sound/music/combat_graggar.ogg")
 
 /datum/outfit/job/roguetown/gnoll_impure
 	var/vamp_armor_type = /obj/item/clothing/suit/roguetown/armor/vampiric/gnoll/impure

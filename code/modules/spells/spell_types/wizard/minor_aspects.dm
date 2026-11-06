@@ -35,6 +35,7 @@
 	pointbuy_spells = list(
 		/datum/action/cooldown/spell/phase,
 		/datum/action/cooldown/spell/invisibility,
+		/datum/action/cooldown/spell/blink, // TA EDIT
 		// 1-cost utility filler
 		/datum/action/cooldown/spell/light,
 		/datum/action/cooldown/spell/nondetection,

@@ -23,6 +23,7 @@
 	var/sparks = TRUE
 	var/datum/effect_system/spark_spread/spark_system
 	var/scraptype = /obj/item/scrap
+	var/disarm_by_sight = TRUE // TA ADDITION
 
 /obj/structure/trap/get_mechanics_examine(mob/user)
 	. = ..()
@@ -56,7 +57,7 @@
 	var/mob/living/luser = user
 	if(user.mind && (user.mind in immune_minds))
 		return
-	if(get_dist(user, src) <= FLOOR((luser.STAPER-4)/4,1))
+	if(get_dist(user, src) <= FLOOR((luser.STAPER-4)/4,1) && disarm_by_sight) // TA EDIT - ORIGINAL: if(get_dist(user, src) <= FLOOR((luser.STAPER-4)/4,1))
 		to_chat(user,span_notice("I reveal and temporarily disarm \the [src]"))
 		flare()
 
@@ -204,8 +205,14 @@
 
 /obj/structure/trap/stun/hunter/flare()
 	..()
-	stored_item.forceMove(get_turf(src))
-	forceMove(stored_item)
+	if(!stored_item || QDELETED(stored_item))
+		return
+	var/turf/T = get_turf(src)
+	if(!T)
+		return
+	stored_item.forceMove(T)
+	if(!QDELETED(src))
+		forceMove(stored_item)
 	if(caught)
 		stored_item.announce_fugitive()
 		caught = FALSE
@@ -519,7 +526,7 @@
 	if(special == "lich" || special == "vampire lord")
 		return TRUE
 
-	if(assigned == "bogguard")
+	if(assigned == "Overseer" || assigned == "Vanguard")
 		return TRUE
 
 	return FALSE
@@ -548,8 +555,9 @@
 	var/special	= LOWER_TEXT("[H.mind.special_role]")
 
 	return (assigned == "bandit" || special == "bandit" \
-		|| assigned == "bogguard" \
-		|| assigned == "warden" || special == "warden")
+		|| assigned == "vanguard" \
+		|| assigned == "warden" || special == "warden" \
+		|| assigned == "overseer" || special == "overseer")
 
 /obj/structure/trap/bogtrap/proc/show_personal_reveal(mob/user)
 	if(!user || !user.client)

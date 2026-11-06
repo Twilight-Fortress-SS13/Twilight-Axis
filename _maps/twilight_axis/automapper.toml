@@ -1,0 +1,73 @@
+# Automapper configuration
+# [templates.example_template] - example_template should be replaced with the name of your map template.
+# directory - The direct path to our map files.
+# map_files - These are the names of the map files, including the extension, that will be loaded. Supports multiple for randomness.
+# required_map - This is the name of the required map that needs to be loaded in order for this template to load.
+# coordinates - The coordinates of the map template placement. (X, Y, Z). PLEASE NOTE: The Z coordinate is the same as would be shown in SDMM. NOT IN GAME.
+# leave it at 1 if it is not a multi-z map. It is relative to the map file Z, not the one loaded in game.
+# trait_name - The name of the Z level trait that will be used to determine what Z level we use.
+# Traits - Station (for station relatied edits), CentCom (for edits on the CC map), Mining (for edits on Lavaland)
+# More can be found in code\__DEFINES\maps.dm
+
+# roguetest test lavafort
+# [templates.test_map]
+# map_files = ["lavafort.dmm"]
+# directory = "_maps/twilight_axis/templates/test/"
+# required_map = "roguetest.dmm"
+# coordinates = [1, 1, 1]
+
+# dunworld witch huts
+[templates.witch_hut]
+map_files = ["witch_hut_1.dmm","witch_hut_2.dmm","witch_hut_3.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/witch_hut/"
+required_map = "dun_world.dmm"
+coordinates = [194, 240, 1]
+
+# dunworld hunter huts
+[templates.towner_hunter_hut]
+map_files = ["hunter_hut.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/hunter_hut/"
+required_map = "dun_world.dmm"
+coordinates = [161, 252, 2]
+
+# dunworld eoran house and church
+[templates.towner_eoran_house]
+map_files = ["eoran_house_1.dmm","eoran_house_2.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/eoran_house/"
+required_map = "dun_world.dmm"
+coordinates = [159, 144, 2]
+
+# dunworld two house
+[templates.towner_two_house]
+map_files = ["two_house.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/two_house/"
+required_map = "dun_world.dmm"
+coordinates = [124, 159, 1]
+
+# dunworld bath collars
+[templates.dunworldbathcollars]
+map_files = ["collar_1.dmm","collar_2.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/bathcollars/"
+required_map = "dun_world.dmm"
+coordinates = [67, 54, 1]
+
+# dunworld drowvillage_kingtomb
+[templates.drowvillage_kingtomb]
+map_files = ["drowvillage_kingtomb_1.dmm","drowvillage_kingtomb_2.dmm","drowvillage_kingtomb_3.dmm"]
+directory = "_maps/twilight_axis/templates/dungeons/drowvillage_kingtomb/"
+required_map = "dun_world.dmm"
+coordinates = [2, 317, 1]
+
+# dunworld inquisition bookshelf passage fix
+[templates.inq_bookshelf_pass_fix]
+map_files = ["inq_bookshelf_pass_fix.dmm"]
+directory = "_maps/twilight_axis/templates/dun_world/inq_bookshelf_pass_fix/"
+required_map = "dun_world.dmm"
+coordinates = [20, 124, 2]
+
+# jagged jaw inquisition bookshelf passage fix
+[templates.jagged_jaw_inq_fix]
+map_files = ["jagged_jaw_inq_fix.dmm"]
+directory = "_maps/twilight_axis/templates/jagged_jaw/jagged_jaw_inq_fix/"
+required_map = "jagged_jaw.dmm"
+coordinates = [61, 171, 2]

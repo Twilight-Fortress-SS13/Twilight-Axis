@@ -641,12 +641,11 @@
 			if(!skipprob && prob(prob2fail))
 				snuff()
 			else
-				for(var/mob/living/target in dview(blast, T))
-					var/dmg = PVE_damage * (1 - get_dist(target, T) / (blast + 1))
-					var/armor_block = target.run_armor_check(BODY_ZONE_CHEST, "blunt", blade_dulling = BCLASS_BLUNT, damage = dmg, no_debuff = TRUE)
-					target.apply_damage(dmg, BRUTE, BODY_ZONE_CHEST, armor_block)
-					target.apply_status_effect(/datum/status_effect/debuff/staggered)
-				explosion(T, heavy_impact_range = 1, light_impact_range = 4, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg'))
+				for(var/mob/living/target in dview(blast, T)) // TA EDIT
+					var/dmg = PVE_damage * (1 - get_dist(target, T) / (blast + 1)) // TA EDIT
+					target.adjustFireLoss(dmg) // TA EDIT
+					target.apply_status_effect(/datum/status_effect/debuff/staggered) // TA EDIT
+				explosion(T, heavy_impact_range = 1, light_impact_range = 4, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg')) // TA EDIT
 				chain_explode(src, T, thrower)
 				qdel(src) //IMPORTANT!! go into walls /turf/closed/wall/ and see /turf/closed/wall/ex_act. Its bounded with /proc/explosion. Same for /obj/structure and /obj/structure/ex_act because if you going to fuck intergity or whatever this shit called players will skin you alive for breaking their equipment and keys
 		else //also /turf/open/floor/ex_act for comment above
@@ -870,10 +869,18 @@
 				for(var/obj/structure/S in seen)
 					if(!QDELETED(S))
 						S.take_damage(PVE_damage * 2 * (1 - get_dist(S, T) / (blast + 1)), BRUTE, "blunt", FALSE)
-				if(istype(src, /obj/item/satchel_bomb/mega)) //removing restrictions, may the gods have mercy on you all
-					explosion(T, extreme_impact_range = 10, heavy_impact_range = 15, light_impact_range = 40, adminlog = TRUE, ignorecap = TRUE, flame_range = 10, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg')) //5 times the size
+				if(istype(src, /obj/item/satchel_bomb/mega)) // TA EDIT
+					for(var/mob/living/target in range(3, T)) // TA EDIT
+						target.adjustFireLoss(PVE_damage) // TA EDIT
+					for(var/mob/living/target in range(8, T)) // TA EDIT
+						target.adjustFireLoss(PVE_damage - 100) // TA EDIT
+					explosion(T, extreme_impact_range = 10, heavy_impact_range = 15, light_impact_range = 40, adminlog = TRUE, ignorecap = TRUE, flame_range = 10, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg')) // TA EDIT
 				else
-					explosion(T, extreme_impact_range = 3, heavy_impact_range = 5, light_impact_range = 8, flame_range = 5, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg'))
+					for(var/mob/living/target in range(3, T)) // TA EDIT
+						target.adjustFireLoss(PVE_damage) // TA EDIT
+					for(var/mob/living/target in range(8, T)) // TA EDIT
+						target.adjustFireLoss(PVE_damage - 100) // TA EDIT
+					explosion(T, extreme_impact_range = 3, heavy_impact_range = 5, light_impact_range = 8, flame_range = 5, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg')) // TA EDIT
 				chain_explode(src, T, thrower)
 				qdel(src)
 

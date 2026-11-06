@@ -888,6 +888,7 @@
 	// If cast() returns FALSE, the spell fizzled - skip cooldown, cost, and feedback
 	if(cast_result == FALSE)
 		weapon_penalty_active = FALSE
+		cancel_casting() // TA EDIT
 		if(charge_required && click_to_activate && !channel_cast && owner?.client)
 			UnregisterSignal(owner.client, list(COMSIG_CLIENT_MOUSEDOWN, COMSIG_CLIENT_MOUSEUP))
 			RegisterSignal(owner.client, COMSIG_CLIENT_MOUSEDOWN, PROC_REF(start_casting))
@@ -1194,6 +1195,7 @@
 	show_cast_effect(owner)
 
 	// Spell glow light
+	QDEL_NULL(spell_glow_light)
 	if(glow_intensity && spell_color && isliving(owner))
 		if(spell_glow_light)
 			QDEL_NULL(spell_glow_light)
@@ -1235,6 +1237,10 @@
 
 /// End the charging cycle
 /datum/action/cooldown/spell/proc/end_charging()
+	QDEL_NULL(spell_glow_light)
+	if(!currently_charging)
+		return
+
 	currently_charging = FALSE
 	fully_charged = FALSE
 	fully_charged_at = 0

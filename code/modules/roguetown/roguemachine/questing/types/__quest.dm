@@ -30,6 +30,7 @@ GLOBAL_LIST_INIT(quest_prototypes, build_quest_prototypes())
 	var/datum/weakref/quest_receiver_reference
 	var/quest_receiver_name = ""
 	var/quest_type = ""
+	var/region_quest_type
 	var/list/eligible_regions = list()
 	var/chronicle_order = QUEST_CHRONICLE_ORDER_DEFAULT
 	var/pool_kind

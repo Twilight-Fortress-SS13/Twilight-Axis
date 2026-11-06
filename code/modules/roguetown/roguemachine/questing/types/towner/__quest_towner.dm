@@ -23,6 +23,7 @@ GLOBAL_LIST_INIT(towner_posting_tiers, list(
 	chronicle_order = QUEST_CHRONICLE_ORDER_TOWNER
 	pool_kind = null
 	pool_weight = 0
+	region_quest_type = QUEST_RECOVERY
 	rumor_cost = 0 // We don't want the Innkeeper to be able to issue these quests, so these overrides prevent it from appearing in their list.
 	writ_type = WRIT_TYPE_TOWNER
 	levy_exempt = TRUE
@@ -157,7 +158,8 @@ GLOBAL_LIST_INIT(towner_posting_tiers, list(
 /datum/quest/kill/recovery/towner/preview(obj/effect/landmark/quest_spawner/landmark)
 	if(!landmark)
 		return FALSE
-	if(!(landmark.region in eligible_regions))
+	var/datum/threat_region/TR = SSregionthreat.get_region(landmark.region)
+	if(!TR || !TR.allows_quest_type(quest_type))
 		return FALSE
 	wave_budgets = get_tier_wave_budgets()
 	tp_budget = wave_budgets[1]

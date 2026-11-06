@@ -1,18 +1,11 @@
 #define LAST_STORYTELLER_VOTE_LOG_FILE "data/last_round/storyteller_vote.json"
-/// Per-preset vote multiplier (in percent), carried between rounds.
-#define STORYTELLER_VOTE_MULTIPLIER_FILE "data/last_round/storyteller_vote_multipliers.json"
-/// Multipliers are whole percentages because BYOND's 32-bit floats would turn e.g. 10 * 1.3 into 12.99...
-/// Multiplier a preset starts at before it has ever won, and what the admin reset returns it to.
-#define STORYTELLER_VOTE_BASE_PERCENT 100
-/// Added to every preset's multiplier after each completed player vote, so presets that keep losing become overdue.
-#define STORYTELLER_OVERDUE_STEP_PERCENT 20
-/// Highest multiplier an overdue preset can reach.
-#define STORYTELLER_OVERDUE_MAX_PERCENT 150
-/// Multiplier the winner of a player vote drops to for the next vote, so the same preset needs a clearer lead to
-/// win twice running. It climbs back by STORYTELLER_OVERDUE_STEP_PERCENT per vote like everything else.
-#define STORYTELLER_WIN_COOLDOWN_PERCENT 60
+#define STORYTELLER_VOTE_PENALTIES_FILE "data/storyteller_vote_penalties.json"
+#define LAST_MAP_VOTE_LOG_FILE "data/last_round/map_vote.json"
 #define DEFAULT_VOTE_PANEL_REFRESH_INTERVAL 2 SECONDS
 #define STORYTELLER_VOTE_PANEL_REFRESH_INTERVAL 5 SECONDS
+#define MAP_VOTE_FIRST_LOSS_BONUS 0.20
+#define MAP_VOTE_SECOND_LOSS_BONUS 0.10
+#define MAP_VOTE_FOLLOWUP_LOSS_BONUS 0.05
 
 SUBSYSTEM_DEF(vote)
 	name = "Vote"
@@ -38,19 +31,28 @@ SUBSYSTEM_DEF(vote)
 	var/list/vote_selections = list()
 	var/list/vote_powers = list()
 	var/list/storyteller_vote_log = list()
-	/// Storyteller type path -> vote multiplier in percent. Persists via STORYTELLER_VOTE_MULTIPLIER_FILE.
-	var/list/storyteller_vote_multipliers = list()
+	var/list/storyteller_vote_penalties = list()
+	var/ticker_managed_storyteller_vote = FALSE
+	var/roundstart_storyteller_winner
+	var/roundstart_storyteller_population = 0
+	var/roundstart_storyteller_voter_count = 0
+	var/roundstart_storyteller_recorded = FALSE
+	var/list/map_vote_coefficients = list()
 	var/list/generated_actions = list()
-	var/static/list/everyone_is_equal = list("custom")
+	var/static/list/everyone_is_equal = list("custom", "map") // TA EDIT
 	/// Vote types that require lobby players to ready up before voting.
 	var/static/list/ready_required_modes = list("gamemode", "storyteller")
 
 /datum/controller/subsystem/vote/fire()	//called by master_controller
 	if(mode)
+		remove_ineligible_votes()
 		var/vote_period = custom_vote_period || CONFIG_GET(number/vote_period)
-		time_remaining = round((started_time + vote_period - world.time)/10)
+		if(ticker_managed_storyteller_vote && mode == STORYTELLER_VOTE)
+			time_remaining = max(0, round(SSticker.timeLeft / 10))
+		else
+			time_remaining = round((started_time + vote_period - world.time) / 10)
 
-		if(time_remaining < 0)
+		if(!ticker_managed_storyteller_vote && time_remaining < 0)
 			end_vote()
 		else if(world.time >= next_panel_refresh)
 			next_panel_refresh = world.time + panel_refresh_interval
@@ -62,22 +64,20 @@ SUBSYSTEM_DEF(vote)
 /datum/controller/subsystem/vote/proc/end_vote()
 	if(!mode)
 		return
+	remove_ineligible_votes()
 	result()
 	for(var/client/C in voting)
 		C << browse(null, "window=vote;can_close=0;size=[vote_width]x[vote_height]")
 	reset()
-
-
 /datum/controller/subsystem/vote/proc/show_vote(client/C)
 	if(!C)
 		return
-	var/datum/browser/noclose/client_popup = new(C, "vote", "Voting Panel", nwidth = vote_width, nheight = vote_height)
+	var/datum/browser/noclose/client_popup = new(C, "vote", "Голосование", nwidth = vote_width, nheight = vote_height)
 	client_popup.set_window_options("can_close=0")
 	client_popup.width = vote_width
 	client_popup.height = vote_height
 	client_popup.set_content(interface(C))
 	client_popup.open(FALSE)
-
 
 /datum/controller/subsystem/vote/proc/reset()
 	initiator = null
@@ -87,7 +87,9 @@ SUBSYSTEM_DEF(vote)
 	vote_height = initial(vote_height)
 	panel_refresh_interval = initial(panel_refresh_interval)
 	next_panel_refresh = 0
+	started_time = null // TA EDIT
 	mode = null
+	ticker_managed_storyteller_vote = FALSE
 	question = null
 	choices.Cut()
 	voted.Cut()
@@ -95,75 +97,108 @@ SUBSYSTEM_DEF(vote)
 	vote_selections.Cut()
 	vote_powers.Cut()
 	storyteller_vote_log.Cut()
+	map_vote_coefficients.Cut()
 	remove_action_buttons()
 
-/datum/controller/subsystem/vote/proc/load_storyteller_vote_multipliers()
-	storyteller_vote_multipliers = list()
-	var/json_file = file(STORYTELLER_VOTE_MULTIPLIER_FILE)
+/datum/controller/subsystem/vote/proc/load_storyteller_vote_penalties()
+	storyteller_vote_penalties.Cut()
+	var/json_file = file(STORYTELLER_VOTE_PENALTIES_FILE)
 	if(!fexists(json_file))
-		return FALSE
+		return
 	var/list/file_data = safe_json_decode(file2text(json_file))
 	if(!islist(file_data))
-		return FALSE
-	for(var/type_text in file_data)
-		var/storyteller_type = text2path(type_text)
-		if(!ispath(storyteller_type, /datum/storyteller))
+		return
+	var/list/penalties = file_data["penalties"]
+	if(!islist(penalties))
+		return
+	for(var/storyteller_path in penalties)
+		if(!ispath(text2path(storyteller_path), /datum/storyteller))
 			continue
-		var/percent = file_data[type_text]
-		if(!isnum(percent))
-			percent = text2num("[percent]")
-		if(!isnum(percent))
+		var/penalty_mult = penalties[storyteller_path]
+		if(!isnum(penalty_mult))
+			penalty_mult = text2num("[penalty_mult]")
+		if(!penalty_mult)
 			continue
-		storyteller_vote_multipliers[storyteller_type] = clamp(round(percent), 0, STORYTELLER_OVERDUE_MAX_PERCENT)
-	return TRUE
-
-/datum/controller/subsystem/vote/proc/save_storyteller_vote_multipliers()
-	var/list/file_data = list()
-	for(var/storyteller_type in storyteller_vote_multipliers)
-		file_data["[storyteller_type]"] = storyteller_vote_multipliers[storyteller_type]
-	var/json_file = file(STORYTELLER_VOTE_MULTIPLIER_FILE)
-	fdel(json_file)
-	WRITE_FILE(json_file, json_encode(file_data))
-
-/// After a completed player vote, every votable preset's multiplier climbs by the overdue step, then every preset
-/// in the winning pool drops to the cooldown multiplier. Cooling the whole pool keeps a pool with several options
-/// from chaining wins by shifting votes to a sibling preset that still carries its overdue bonus.
-/datum/controller/subsystem/vote/proc/record_storyteller_vote_win(winning_choice)
-	load_storyteller_vote_multipliers()
-	var/winner_pool = get_storyteller_vote_pool(get_storyteller_choice_type(winning_choice))
-	for(var/storyteller_type in SSgamemode.storytellers)
-		var/datum/storyteller/storyboy = SSgamemode.storytellers[storyteller_type]
-		if(!storyboy.preset_pool) // only votable presets
+		if(penalty_mult > 0 && penalty_mult <= 0.2)
+			penalty_mult = 1 - penalty_mult // legacy format: stored penalty amount instead of multiplier
+		penalty_mult = round(penalty_mult, 0.01)
+		if(penalty_mult < 0.1 || penalty_mult > 1)
 			continue
-		if(winner_pool && storyboy.preset_pool == winner_pool)
-			storyteller_vote_multipliers[storyteller_type] = STORYTELLER_WIN_COOLDOWN_PERCENT
+		storyteller_vote_penalties[storyteller_path] = penalty_mult
+		break
+
+/datum/controller/subsystem/vote/proc/record_roundstart_storyteller_vote()
+	if(roundstart_storyteller_recorded || !roundstart_storyteller_winner)
+		return
+	roundstart_storyteller_recorded = TRUE
+	storyteller_vote_penalties.Cut()
+	if(roundstart_storyteller_voter_count < 50)
+		var/current_key = null
+		var/current_mult = 1
+		var/json_file = file(STORYTELLER_VOTE_PENALTIES_FILE)
+		if(fexists(json_file))
+			var/list/file_data = safe_json_decode(file2text(json_file))
+			if(islist(file_data))
+				var/list/penalties = file_data["penalties"]
+				if(islist(penalties))
+					for(var/storyteller_path in penalties)
+						if(!ispath(text2path(storyteller_path), /datum/storyteller))
+							continue
+						var/saved_mult = penalties[storyteller_path]
+						if(!isnum(saved_mult))
+							saved_mult = text2num("[saved_mult]")
+						if(saved_mult > 0 && saved_mult <= 0.2)
+							saved_mult = 1 - saved_mult
+						if(saved_mult >= 0.1 && saved_mult <= 1)
+							current_key = storyteller_path
+							current_mult = round(saved_mult, 0.01)
+							break
+		var/winner_key = "[roundstart_storyteller_winner]"
+		var/new_mult = 0.8
+		if(current_key == winner_key)
+			new_mult = max(0.1, round(current_mult - 0.1, 0.01))
+		storyteller_vote_penalties[winner_key] = new_mult
+	var/json_file_out = file(STORYTELLER_VOTE_PENALTIES_FILE)
+	fdel(json_file_out)
+	WRITE_FILE(json_file_out, json_encode(list("penalties" = storyteller_vote_penalties)))
+
+/datum/controller/subsystem/vote/proc/get_storyteller_penalty_mult(storyteller_type)
+	if(!ispath(storyteller_type, /datum/storyteller))
+		return 1
+	return storyteller_vote_penalties["[storyteller_type]"] || 1
+
+/datum/controller/subsystem/vote/proc/get_storyteller_penalty_text(storyteller_type)
+	var/penalty_mult = get_storyteller_penalty_mult(storyteller_type)
+	if(penalty_mult >= 1)
+		return "нет (x1)"
+	var/penalty_percent = round((1 - penalty_mult) * 100)
+	return "-[penalty_percent]% (x[format_vote_power(penalty_mult)])"
+
+/datum/controller/subsystem/vote/proc/get_storyteller_raw_vote_count(choice_text)
+	if(!choice_text)
+		return 0
+	var/count = 0
+	for(var/voter_ckey in storyteller_vote_log)
+		var/list/vote_data = storyteller_vote_log[voter_ckey]
+		if(!islist(vote_data))
 			continue
-		storyteller_vote_multipliers[storyteller_type] = min(get_storyteller_vote_percent(storyteller_type) + STORYTELLER_OVERDUE_STEP_PERCENT, STORYTELLER_OVERDUE_MAX_PERCENT)
-	save_storyteller_vote_multipliers()
-	var/list/mult_lines = list()
-	for(var/storyteller_type in storyteller_vote_multipliers)
-		var/datum/storyteller/storyboy = SSgamemode.storytellers?[storyteller_type]
-		mult_lines += "[storyboy ? storyboy.name : storyteller_type]: x[get_storyteller_vote_mult(storyteller_type)]"
-	log_vote("Storyteller vote multipliers for next vote: [length(mult_lines) ? jointext(mult_lines, ", ") : "none"]")
+		if(vote_data["choice"] == choice_text)
+			count++
+	return count
 
-/// Puts one preset's multiplier, or every preset's if none is given, back to the base x1.
-/datum/controller/subsystem/vote/proc/reset_storyteller_vote_multipliers(storyteller_type = null)
-	load_storyteller_vote_multipliers()
-	if(storyteller_type)
-		storyteller_vote_multipliers[storyteller_type] = STORYTELLER_VOTE_BASE_PERCENT
-	else
-		for(var/tracked_type in storyteller_vote_multipliers)
-			storyteller_vote_multipliers[tracked_type] = STORYTELLER_VOTE_BASE_PERCENT
-	save_storyteller_vote_multipliers()
-
-/// A preset's vote multiplier in percent. Presets with no record yet sit at the base.
-/datum/controller/subsystem/vote/proc/get_storyteller_vote_percent(storyteller_type)
-	var/percent = storyteller_vote_multipliers[storyteller_type]
-	return isnum(percent) ? percent : STORYTELLER_VOTE_BASE_PERCENT
-
-/// Display form of the multiplier, e.g. 1.3.
 /datum/controller/subsystem/vote/proc/get_storyteller_vote_mult(storyteller_type)
-	return get_storyteller_vote_percent(storyteller_type) / 100
+	if(!ispath(storyteller_type, /datum/storyteller))
+		return 1
+	var/datum/storyteller/preset = SSgamemode.storytellers?[storyteller_type]
+	if(!preset)
+		return 1
+	var/ready_count = length(GLOB.ready_player_list)
+	var/base_mult = preset.lowpop_vote_mult
+	if(ready_count >= 60)
+		base_mult = preset.highpop_vote_mult
+	else if(ready_count > 40)
+		base_mult = preset.midpop_vote_mult
+	return round(base_mult * get_storyteller_penalty_mult(storyteller_type), 0.01)
 
 /// An option's votes after its multiplier, rounded down. Only votes cast this vote count; the multiplier just
 /// scales them, so a preset nobody voted for still scores 0. A preset that got any votes scores at least 1, so in
@@ -172,13 +207,130 @@ SUBSYSTEM_DEF(vote)
 	var/votes = choices[option] || 0
 	if(votes <= 0)
 		return 0
-	var/percent = get_storyteller_vote_percent(get_storyteller_choice_type(option))
-	return max(1, floor(votes * percent / 100))
+	return round(votes * get_storyteller_vote_mult(get_storyteller_choice_type(option)), 0.01)
+
+/datum/controller/subsystem/vote/proc/format_vote_power(vote_power)
+	return "[round((vote_power || 0), 0.01)]"
+
+/datum/controller/subsystem/vote/proc/get_map_vote_multiplier(choice_text)
+	if(!choice_text)
+		return 1
+	return map_vote_coefficients[choice_text] || 1
+
+/datum/controller/subsystem/vote/proc/get_map_vote_bonus_text(choice_text)
+	if(mode != "map")
+		return ""
+	var/multiplier = get_map_vote_multiplier(choice_text)
+	if(multiplier <= 1)
+		return ""
+	var/bonus_percent = round((multiplier - 1) * 100)
+	return " <span style='color:#5a9f54;'>(x[format_vote_power(multiplier)] vote, +[bonus_percent]%)</span>"
+
+/datum/controller/subsystem/vote/proc/get_map_vote_bonus_for_streak(streak)
+	if(!isnum(streak))
+		streak = text2num("[streak]")
+	if(!streak || streak <= 0)
+		return 0
+
+	var/bonus = MAP_VOTE_FIRST_LOSS_BONUS
+	if(streak >= 2)
+		bonus += MAP_VOTE_SECOND_LOSS_BONUS
+	if(streak >= 3)
+		bonus += MAP_VOTE_FOLLOWUP_LOSS_BONUS * (streak - 2)
+	return bonus
+
+/datum/controller/subsystem/vote/proc/load_map_vote_coefficients()
+	map_vote_coefficients.Cut()
+
+	var/json_file = file(LAST_MAP_VOTE_LOG_FILE)
+	if(!fexists(json_file))
+		return
+
+	var/list/file_data = safe_json_decode(file2text(json_file))
+	if(!islist(file_data))
+		return
+
+	var/list/map_streaks = file_data["map_streaks"]
+	if(islist(map_streaks))
+		for(var/choice_text in choices)
+			var/streak = map_streaks[choice_text]
+			if(!isnum(streak))
+				streak = text2num("[streak]")
+			if(!streak || streak <= 0)
+				continue
+			map_vote_coefficients[choice_text] = round(1 + get_map_vote_bonus_for_streak(streak), 0.01)
+		return
+
+	var/last_winner = file_data["winner"]
+	if(!last_winner || !(last_winner in choices))
+		return
+
+	var/streak = file_data["streak"]
+	if(!isnum(streak))
+		streak = text2num("[streak]")
+	if(!streak || streak <= 0)
+		return
+
+	var/multiplier = round(1 + get_map_vote_bonus_for_streak(streak), 0.01)
+	for(var/choice_text in choices)
+		map_vote_coefficients[choice_text] = (choice_text == last_winner) ? 1 : multiplier
+
+/datum/controller/subsystem/vote/proc/save_map_vote_log(winning_choice)
+	if(!winning_choice)
+		return
+
+	var/json_file = file(LAST_MAP_VOTE_LOG_FILE)
+	var/list/file_data = list()
+
+	if(fexists(json_file))
+		file_data = safe_json_decode(file2text(json_file))
+
+	if(!islist(file_data))
+		file_data = list()
+
+	var/list/map_streaks = file_data["map_streaks"]
+	if(!islist(map_streaks))
+		map_streaks = list()
+
+		var/previous_winner = file_data["winner"]
+		var/previous_streak = file_data["streak"]
+		if(!isnum(previous_streak))
+			previous_streak = text2num("[previous_streak]")
+		if(!previous_streak || previous_streak < 0)
+			previous_streak = 0
+		if(previous_winner)
+			for(var/choice_text in choices)
+				map_streaks[choice_text] = (choice_text == previous_winner) ? 0 : previous_streak
+
+	for(var/choice_text in choices)
+		var/current_streak = map_streaks[choice_text]
+		if(!isnum(current_streak))
+			current_streak = text2num("[current_streak]")
+		if(!current_streak || current_streak < 0)
+			current_streak = 0
+		map_streaks[choice_text] = (choice_text == winning_choice) ? 0 : current_streak + 1
+
+	file_data["winner"] = winning_choice
+	file_data["map_streaks"] = map_streaks
+	file_data -= "streak"
+
+	fdel(json_file)
+	WRITE_FILE(json_file, json_encode(file_data))
 
 /datum/controller/subsystem/vote/proc/get_storyteller_vote_pool(storyteller_type)
 	if(!ispath(storyteller_type, /datum/storyteller))
 		return null
 	return SSgamemode.get_story_pool(storyteller_type)
+
+/datum/controller/subsystem/vote/proc/get_storyteller_vote_pool_display_name(pool_name)
+	switch(pool_name)
+		if(GAMEMODE_POOL_EXTENDED)
+			return "Псайдон"
+		if(GAMEMODE_POOL_GUARANTEED)
+			return "Презренные"
+		if(GAMEMODE_POOL_NOANTAG) // TA EDIT
+			return "Десять"
+	return pool_name
 
 /datum/controller/subsystem/vote/proc/get_storyteller_pool_totals()
 	var/list/pool_totals = list()
@@ -253,7 +405,7 @@ SUBSYSTEM_DEF(vote)
 			theme["entry"] = "rgba(255,214,214,0.08)"
 			theme["link"] = "#ffd6d6"
 			theme["selection_color"] = "#ffd6d6"
-		if(GAMEMODE_POOL_NOANTAG)
+		if(GAMEMODE_POOL_NOANTAG) // TA EDIT
 			theme["border"] = "#2b8c87"
 			theme["background"] = "#10464a"
 			theme["title"] = "#d7fffb"
@@ -267,39 +419,42 @@ SUBSYSTEM_DEF(vote)
 /datum/controller/subsystem/vote/proc/render_storyteller_pool(list/choice_indices, pool_name, can_vote, selected_option)
 	if(!length(choice_indices))
 		return ""
+	var/list/theme = get_storyteller_pool_theme(pool_name)
+	var/pool_display_name = get_storyteller_vote_pool_display_name(pool_name)
 	var/list/pool_totals = get_storyteller_pool_totals()
 	var/pool_votes = pool_totals[pool_name] || 0
-	var/list/theme = get_storyteller_pool_theme(pool_name)
 	var/dat = "<div style='border:1px solid [theme["border"]];border-radius:8px;padding:7px 8px;background:[theme["background"]];min-height:100%;box-sizing:border-box;'>"
-	dat += "<div style='font-size:0.96rem;font-weight:bold;margin-bottom:6px;color:[theme["title"]];'>[pool_name] <span style='float:right;font-size:0.78rem;color:[theme["meta"]];'>[pool_votes] votepwr</span></div>"
+	dat += "<div style='font-size:0.96rem;font-weight:bold;margin-bottom:6px;color:[theme["title"]];'>[pool_display_name] <span style='font-size:0.76rem;color:[theme["meta"]];font-weight:normal;'>(Вес: [format_vote_power(pool_votes)])</span></div>"
 	dat += "<div style='display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:6px;'>"
 	for(var/index in choice_indices)
 		var/option_index = text2num(index)
 		var/choice_text = choices[option_index]
 		var/storyteller_type = get_storyteller_choice_type(choice_text)
 		var/votes = get_storyteller_effective_votes(choice_text)
-		var/vote_percent = get_storyteller_vote_percent(storyteller_type)
-		var/overdue_text = ""
-		if(vote_percent != STORYTELLER_VOTE_BASE_PERCENT)
-			var/reason = vote_percent > STORYTELLER_VOTE_BASE_PERCENT ? "overdue bonus" : "won recently"
-			overdue_text = "<div style='color:[theme["meta"]];font-size:0.7rem;font-style:italic;opacity:0.85;'>x[get_storyteller_vote_mult(storyteller_type)] [reason] ([choices[choice_text] || 0] cast)</div>"
+		var/raw_votes = get_storyteller_raw_vote_count(choice_text)
+		var/penalty_text = get_storyteller_penalty_text(storyteller_type)
+		var/vote_mult = get_storyteller_vote_mult(storyteller_type)
 		var/is_selected = (selected_option == choice_text)
 		var/selected_color = theme["selection_color"]
-		var/selected_text = is_selected ? " <span style='color:[selected_color];font-size:0.76rem;font-weight:bold;'>(current)</span>" : ""
+		var/selected_text = is_selected ? " <span style='color:[selected_color];font-size:0.76rem;font-weight:bold;'>(выбрано)</span>" : ""
 		var/entry = "<div style='padding:5px 6px;border-radius:6px;background:[theme["entry"]];min-width:0;'>"
 		var/details_link = "<a href='?src=[REF(SSgamemode)];storyboy_details=[storyteller_type]' style='display:inline-block;margin-left:4px;color:[theme["meta"]];font-size:0.75rem;text-decoration:none;'>(?)</a>"
 		var/threat = SSgamemode.preset_threat_tags(storyteller_type, theme["border"])
 		if(can_vote)
-			entry += "<div><a href='?src=[REF(src)];vote=[option_index]' style='font-size:0.9rem;color:[theme["link"]];font-weight:bold;'>[choice_text]</a>[details_link][selected_text]</div>[threat]<div style='color:[theme["meta"]];font-size:0.76rem;'>[votes] votepwr</div>[overdue_text]"
+			entry += "<div><a href='?src=[REF(src)];vote=[option_index]' style='font-size:0.9rem;color:[theme["link"]];font-weight:bold;'>[choice_text]</a>[details_link][selected_text] <span style='color:[theme["meta"]];font-size:0.76rem;'>[format_vote_power(votes)] вес</span></div>"
 		else
-			entry += "<div><span style='font-size:0.9rem;font-weight:bold;'>[choice_text]</span>[details_link][selected_text]</div>[threat]<div style='color:[theme["meta"]];font-size:0.76rem;'>[votes] votepwr</div>[overdue_text]"
+			entry += "<div><span style='font-size:0.9rem;font-weight:bold;'>[choice_text]</span>[details_link][selected_text] <span style='color:[theme["meta"]];font-size:0.76rem;'>[format_vote_power(votes)] вес</span></div>"
+		entry += "<div style='margin-top:3px;color:[theme["summary"]];font-size:0.8rem;'>Голосов за режим: [raw_votes]</div>"
+		entry += "<div style='margin-top:2px;color:[theme["summary"]];font-size:0.8rem;'>Текущий штраф: [penalty_text]</div>"
+		entry += "<div style='margin-top:2px;color:[theme["summary"]];font-size:0.8rem;'>Вес одного голоса: x[format_vote_power(vote_mult)]</div>"
+		entry += "[threat]"
 		entry += "</div>"
 		dat += entry
 	dat += "</div></div>"
 	return dat
 
 /datum/controller/subsystem/vote/proc/render_storyteller_choices(can_vote, client/C)
-	var/list/pool_order = list(GAMEMODE_POOL_EXTENDED, GAMEMODE_POOL_GUARANTEED, GAMEMODE_POOL_NOANTAG)
+	var/list/pool_order = list(GAMEMODE_POOL_EXTENDED, GAMEMODE_POOL_NOANTAG, GAMEMODE_POOL_GUARANTEED) // TA EDIT
 	var/list/pooled_indices = list()
 	var/selected_option = null
 	if(C)
@@ -338,14 +493,16 @@ SUBSYSTEM_DEF(vote)
 		total_votes += votes
 		if(votes > greatest_votes)
 			greatest_votes = votes
+
 	//default-vote for everyone who didn't vote
 	if(!CONFIG_GET(flag/default_no_vote) && choices.len)
 		var/list/non_voters = GLOB.directory.Copy()
 		non_voters -= voted
-		for (var/non_voter_ckey in non_voters)
+		for(var/non_voter_ckey in non_voters)
 			var/client/C = non_voters[non_voter_ckey]
-			if (!C || C.is_afk())
+			if(!C || C.is_afk())
 				non_voters -= non_voter_ckey
+
 		if(non_voters.len > 0)
 			if(mode == "restart")
 				choices["Continue Playing"] += non_voters.len
@@ -357,11 +514,19 @@ SUBSYSTEM_DEF(vote)
 					if(choices[GLOB.master_mode] >= greatest_votes)
 						greatest_votes = choices[GLOB.master_mode]
 			else if(mode == "map")
-				for (var/non_voter_ckey in non_voters)
-					if(global.config.defaultmap)
+				for(var/non_voter_ckey in non_voters)
+					var/client/C = non_voters[non_voter_ckey]
+					if(C.prefs.preferred_map && (C.prefs.preferred_map in choices))
+						var/preferred_map = C.prefs.preferred_map
+						var/default_vote_power = round(get_map_vote_multiplier(preferred_map), 0.01)
+						choices[preferred_map] += default_vote_power
+						greatest_votes = max(greatest_votes, choices[preferred_map])
+					else if(global.config.defaultmap && (global.config.defaultmap.map_name in choices))
 						var/default_map = global.config.defaultmap.map_name
-						choices[default_map] += 1
+						var/default_vote_power = round(get_map_vote_multiplier(default_map), 0.01)
+						choices[default_map] += default_vote_power
 						greatest_votes = max(greatest_votes, choices[default_map])
+
 	//get all options with that many votes and return them in a list
 	. = list()
 	if(greatest_votes)
@@ -376,6 +541,8 @@ SUBSYSTEM_DEF(vote)
 	if(winners.len > 0)
 		if(question)
 			text += "<b>[question]</b>"
+		else if(mode == "storyteller")
+			text += "<b>Голосование: Рассказчик</b>"
 		else
 			text += "<b>[capitalize(mode)] Vote</b>"
 		for(var/i=1,i<=choices.len,i++)
@@ -384,20 +551,20 @@ SUBSYSTEM_DEF(vote)
 				votes = 0
 			if(mode == "storyteller")
 				var/storyteller_type = get_storyteller_choice_type(choices[i])
-				if(get_storyteller_vote_percent(storyteller_type) != STORYTELLER_VOTE_BASE_PERCENT)
-					text += "\n<b>[choices[i]]:</b> [get_storyteller_effective_votes(choices[i])] ([votes] x[get_storyteller_vote_mult(storyteller_type)])"
+				if(get_storyteller_vote_mult(storyteller_type) != 1) // TA EDIT
+					text += "\n<b>[choices[i]]:</b> [format_vote_power(get_storyteller_effective_votes(choices[i]))] ([format_vote_power(votes)] x[get_storyteller_vote_mult(storyteller_type)])"
 					continue
-			text += "\n<b>[choices[i]]:</b> [votes]"
+			text += "\n<b>[choices[i]]:</b> [format_vote_power(votes)]"
 		if(mode == "storyteller")
 			var/list/pool_totals = get_storyteller_pool_totals()
 			if(pool_totals.len)
-				text += "\n<hr><b>Pool Totals</b>"
+				text += "\n<hr><b>Итоги блоков:</b>"
 				for(var/pool_name in pool_totals)
-					text += "\n<b>[pool_name]:</b> [pool_totals[pool_name]]"
+					text += "\n<b>[get_storyteller_vote_pool_display_name(pool_name)]:</b> [format_vote_power(pool_totals[pool_name])]"
 		if(mode != "custom")
 			if(winners.len > 1)
 				if(mode == "storyteller")
-					text += "\n<b>Vote Tied Between:</b>"
+					text += "\n<b>Ничья между:</b>"
 				else
 					text = "\n<b>Vote Tied Between:</b>"
 				for(var/option in winners)
@@ -405,20 +572,24 @@ SUBSYSTEM_DEF(vote)
 				if(mode == "endround")
 					winners = list("End Round")
 			. = pick(winners)
-			text += "\n<b>Vote Result: [.]</b>"
+			if(mode == "storyteller")
+				text += "\n<b>Итог голосования: [.]</b>"
+			else
+				text += "\n<b>Vote Result: [.]</b>"
 		else
 			text += "\n<b>Did not vote:</b> [GLOB.clients.len-voted.len]"
 	else
 		if(mode == "endround")
 			. = "End Round"
 			text += "\n<b>Vote Result: [.]</b>"
+		else if(mode == "storyteller")
+			text += "<b>Итог голосования: нет результата, голосов не было.</b>"
 		else
 			text += "<b>Vote Result: Inconclusive - No Votes!</b>"
 	log_vote(text)
 	remove_action_buttons()
 	to_world("\n<font color='purple'>[text]</font>")
 	return .
-
 /datum/controller/subsystem/vote/proc/result()
 	. = announce_result()
 	var/restart = 0
@@ -435,27 +606,33 @@ SUBSYSTEM_DEF(vote)
 					else
 						GLOB.master_mode = .
 			if("map")
+				// save_map_vote_log(.)
 				SSmapping.changemap(global.config.maplist[.])
 			if("endround")
 				if(. == "Continue Playing")
 					log_game("LOG VOTE: CONTINUE PLAYING AT [REALTIMEOFDAY]")
 					GLOB.round_timer = world.time + ROUND_EXTENSION_TIME
-					send2chat(new /datum/tgs_message_content("Round has been extended!"), CONFIG_GET(string/chat_announce_new_game))
+					world.TgsAnnounceRoundExtended()
 				else
 					log_game("LOG VOTE: ELSE	[REALTIMEOFDAY]")
 					log_game("LOG VOTE: ROUNDVOTEEND [REALTIMEOFDAY]")
 					to_world("\n<font color='purple'>[ROUND_END_TIME_VERBAL]</font>")
 					SSgamemode.roundvoteend = TRUE
 					SSgamemode.round_ends_at = world.time + ROUND_END_TIME
+					world.TgsAnnounceVoteEndRound()
+					var/map_vote_period = ROUND_END_TIME + (CONFIG_GET(number/round_end_countdown) * 10) // TA EDIT
+					addtimer(CALLBACK(src, PROC_REF(initiate_vote), "map", "Psydon", map_vote_period), 10) // TA EDIT
 			if("storyteller")
+				if(ticker_managed_storyteller_vote)
+					roundstart_storyteller_winner = get_storyteller_choice_type(.)
+					roundstart_storyteller_population = length(GLOB.ready_player_list)
+					roundstart_storyteller_recorded = FALSE
 				save_storyteller_vote_log(., "completed")
-				record_storyteller_vote_win(.)
 				SSgamemode.storyteller_vote_result(.)
 	else if(mode == "storyteller")
 		// No winner (inconclusive / no votes cast). Still run the result hook so
 		// selected_storyteller falls back to the default No Antag / Regular Wretch preset.
 		save_storyteller_vote_log(null, "completed")
-		record_storyteller_vote_win(null) // no player-vote winner, so nothing resets; everything ticks up
 		SSgamemode.storyteller_vote_result(null)
 
 	if(restart)
@@ -475,13 +652,18 @@ SUBSYSTEM_DEF(vote)
 /datum/controller/subsystem/vote/proc/can_client_vote(client/C)
 	if(isnull(C))
 		return FALSE
+	if(ticker_managed_storyteller_vote && mode == STORYTELLER_VOTE)
+		if(!istype(C.mob, /mob/dead/new_player))
+			return FALSE
+		var/mob/dead/new_player/NP = C.mob
+		return NP.ready == PLAYER_READY_TO_PLAY
 	if(C.holder)
 		return TRUE
 	if(!(mode in ready_required_modes))
 		return TRUE
 	if(istype(C.mob, /mob/dead/new_player))
 		var/mob/dead/new_player/NP = C.mob
-		if(NP.ready != PLAYER_READY_TO_PLAY)
+		if(mode != "map" && NP.ready != PLAYER_READY_TO_PLAY)
 			return FALSE
 	return TRUE
 
@@ -606,6 +788,14 @@ SUBSYSTEM_DEF(vote)
 		save_storyteller_vote_log(null, "active")
 	return TRUE
 
+/datum/controller/subsystem/vote/proc/remove_ineligible_votes()
+	if(!(mode in ready_required_modes))
+		return
+	for(var/voter_ckey in voted.Copy())
+		var/client/C = GLOB.directory[voter_ckey]
+		if(!C || !can_client_vote(C))
+			remove_vote_for_ckey(voter_ckey)
+
 /datum/controller/subsystem/vote/proc/submit_vote(vote)
 	// Voting where vote power is equal for all
 	if(mode)
@@ -619,6 +809,9 @@ SUBSYSTEM_DEF(vote)
 				remove_vote_for_ckey(usr.ckey)
 			voted += usr.ckey
 			var/vote_power = get_vote_power(usr)
+			if(mode == "map")
+				vote_power *= get_map_vote_multiplier(selected_option)
+				vote_power = round(vote_power, 0.01)
 			var/choice_name = selected_option
 			if(mode == "storyteller")
 				choice_name = get_storyteller_choice_name(selected_option)
@@ -630,11 +823,14 @@ SUBSYSTEM_DEF(vote)
 					"vote_power" = vote_power,
 				)
 				save_storyteller_vote_log(null, "active")
-			choices[selected_option] += vote_power //check this
+			choices[selected_option] += vote_power
 			return vote
 	return FALSE
 
 /datum/controller/subsystem/vote/proc/initiate_vote(vote_type, initiator_key, vote_period)
+	if(vote_type == "gamemode")
+		vote_type = "storyteller"
+
 	var/sound/vote_alert = new()
 	vote_alert.file = null
 	vote_alert.priority = 250
@@ -678,6 +874,7 @@ SUBSYSTEM_DEF(vote)
 					if(VM.config_min_users > 0 && player_count <= VM.config_min_users)
 						continue
 					choices.Add(VM.map_name)
+				vote_alert.file = 'sound/misc/levelup2.ogg' // TA EDIT
 			if("custom")
 				question = stripped_input(usr,"What is the vote for?")
 				if(!question)
@@ -688,20 +885,26 @@ SUBSYSTEM_DEF(vote)
 						break
 					choices.Add(option)
 			if("endround")
-				initiator_key = pick("Psydon", "Zizo")
+				if(SSmapping.retainer.cult_ascended == TRUE)
+					initiator_key = "AHAHAHAHAHAHAHAHAHHA"
+				else
+					initiator_key = pick("Psydon", "Zizo")
 				choices.Add("Continue Playing","End Round")
 				vote_alert.file = 'sound/roundend/roundend-vote-sound.ogg'
 			if("storyteller")
+				load_storyteller_vote_penalties()
 				choices.Add(SSgamemode.storyteller_vote_choices())
-				load_storyteller_vote_multipliers()
 				vote_width = 900
 				vote_height = 600 // Give more room for storyteller
 				panel_refresh_interval = STORYTELLER_VOTE_PANEL_REFRESH_INTERVAL
 			else
 				return FALSE
+
 		message_admins(span_danger("Admin [key_name_admin(usr)] start a vote of [vote_type]!"))
 		log_admin("Admin [key_name_admin(usr)] start a vote of [vote_type]!")
 		mode = vote_type
+		// if(mode == "map")
+		// 	load_map_vote_coefficients()
 		initiator = initiator_key
 		started_time = world.time
 		var/text = "[capitalize(mode)] vote started by [initiator]."
@@ -721,7 +924,9 @@ SUBSYSTEM_DEF(vote)
 				SEND_SOUND(M, vote_alert)
 		if(mode == "storyteller")
 			save_storyteller_vote_log(null, "active")
-		to_world("\n<font color='purple'><b>[text]</b>\nClick <a href='?src=[REF(src)]'>here</a> to place your vote.\nYou have [DisplayTimeText(vp)] to vote.</font>")
+			to_world("\n<font color='purple'><b>[text]</b>\nНажмите <a href='?src=[REF(src)]'>сюда</a>, чтобы проголосовать за рассказчика.\nНа голосование отведено [DisplayTimeText(vp)].</font>")
+		else
+			to_world("\n<font color='purple'><b>[text]</b>\nClick <a href='?src=[REF(src)]'>here</a> to place your vote.\nYou have [DisplayTimeText(vp)] to vote.</font>")
 		for(var/client/C in GLOB.clients)
 			if(!isliving(C.mob))
 				show_vote(C)
@@ -738,9 +943,20 @@ SUBSYSTEM_DEF(vote)
 	if(mode == "custom")
 		text += "\n[question]"
 	var/remaining_time = time_remaining * 10
-	to_chat(C, "\n<font color='purple'><b>[text]</b>\nClick <a href='?src=[REF(src)]'>here</a> to place your vote.\nYou have [DisplayTimeText(remaining_time)] to vote.</font>")
+	if(mode == "storyteller")
+		to_chat(C, "\n<font color='purple'><b>[text]</b>\nНажмите <a href='?src=[REF(src)]'>сюда</a>, чтобы проголосовать за рассказчика.\nОсталось [DisplayTimeText(remaining_time)].</font>")
+	else
+		to_chat(C, "\n<font color='purple'><b>[text]</b>\nClick <a href='?src=[REF(src)]'>here</a> to place your vote.\nYou have [DisplayTimeText(remaining_time)] to vote.</font>")
 	if(!isliving(C.mob))
 		show_vote(C)
+
+/datum/controller/subsystem/vote/proc/remind_map_vote() // TA EDIT START
+	if(mode != "map")
+		return
+	var/vote_period = custom_vote_period || CONFIG_GET(number/vote_period)
+	var/remaining_time = max(0, started_time + vote_period - world.time)
+	var/text = "[capitalize(mode)] vote started by [initiator]."
+	to_world("\n<font color='purple'><b>[text]</b>\nClick <a href='?src=[REF(src)]'>here</a> to place your vote.\nYou have [DisplayTimeText(remaining_time)] to vote.</font>") // TA EDIT END
 
 /datum/controller/subsystem/vote/proc/interface(client/C)
 	if(!C)
@@ -756,19 +972,23 @@ SUBSYSTEM_DEF(vote)
 	if(mode)
 		if(question)
 			. += "<h2>Vote: '[question]'</h2>"
+		else if(mode == "storyteller")
+			. += "<h2>Голосование: Рассказчик</h2>"
 		else
-			. += "<h2>Vote: [mode == "storyteller" ? "Gamemode" : capitalize(mode)]</h2>"
-		. += "Time Left: [time_remaining] s<hr>"
+			. += "<h2>Vote: [capitalize(mode)]</h2>"
+		. += "[mode == "storyteller" ? "Осталось" : "Time Left"]: [time_remaining] s<hr>"
 		var/can_vote = can_client_vote(C)
 		if(!can_vote && istype(C.mob, /mob/dead/new_player))
 			. += "<div style='color:#e06b75;font-weight:bold;margin-bottom:6px;'>(READY UP TO VOTE)</div>"
 		if(mode == "storyteller")
 			if(!length(storyteller_vote_log))
 				load_storyteller_vote_log()
-			var/pool_text = "Check the (?) for a description of each gamemode. Roundstart hard antags require [HARD_ANTAG_MIN_POP] active pop. To keep rounds varied, votes are scaled per gamemode: the one that just won drops to x[STORYTELLER_WIN_COOLDOWN_PERCENT / 100] and recovers +[STORYTELLER_OVERDUE_STEP_PERCENT]% each round, while gamemodes that keep losing gain +[STORYTELLER_OVERDUE_STEP_PERCENT]% each round (up to x[STORYTELLER_OVERDUE_MAX_PERCENT / 100]). Each option shows its current multiplier and how many votes were actually cast for it."
+			var/pool_text = "Нажмите (?) для описания режимов. Крупные раундстартовые антагонисты требуют не менее [HARD_ANTAG_MIN_POP] активных игроков. При 60+ готовых игроков базовый вес x1; при 41-59 — High и Medium x0.66, Low x1; при 40 и меньше — High x0.16, Medium x0.33, Low x1. Если проголосовало меньше 50 человек, победивший режим в следующем раунде получает штраф x0.8; если победит снова — x0.7, затем x0.6 и так далее до минимума x0.1. Победа другого режима сбрасывает прежнюю серию и начинает новую для нового победителя. Ниже показываются текущий штраф, вес одного голоса и количество поданных голосов за режим." // TA EDIT
 			. += "<div style='color:#992414;font-size:0.9rem;margin-bottom:6px;'>[pool_text]</div>"
 			. += render_storyteller_choices(can_vote, C)
 		else
+			// if(mode == "map")
+			// 	. += "<div style='color:#5a9f54;font-size:0.95rem;margin-bottom:6px;'>Каждая карта копит свой бонус отдельно: первый проигрыш даёт +20% к весу голоса, второй +10%, третий и последующие +5%. Победившая карта сбрасывает только свой бонус до x1.</div>"
 			. += "<ul>"
 			var/selected_option = vote_selections[C.ckey]
 			for(var/i=1,i<=choices.len,i++)
@@ -776,16 +996,17 @@ SUBSYSTEM_DEF(vote)
 				var/votes = choices[choice_text]
 				if(!votes)
 					votes = 0
+				var/bonus_text = mode == "map" ? get_map_vote_bonus_text(choice_text) : ""
 				var/selected_text = selected_option == choice_text ? " <b>(current vote)</b>" : ""
 				if(can_vote)
-					. += "<li><a href='?src=[REF(src)];vote=[i]'>[choice_text]</a>[selected_text] ([votes] votepwr)</li>"
+					. += "<li><a href='?src=[REF(src)];vote=[i]'>[choice_text]</a>[bonus_text][selected_text] ([format_vote_power(votes)] votepwr)</li>"
 				else
-					. += "<li>[choice_text][selected_text] ([votes] votepwr)</li>"
+					. += "<li>[choice_text][bonus_text][selected_text] ([format_vote_power(votes)] votepwr)</li>"
 			. += "</ul>"
 		. += "<hr>"
 		if(admin)
-			. += "(<a href='?src=[REF(src)];vote=cancel'>Cancel Vote</a>) "
-			. += "(<a href='?src=[REF(src)];vote=end_early'>End Vote Early</a>) "
+			. += "(<a href='?src=[REF(src)];vote=cancel'>[mode == "storyteller" ? "Отменить голосование" : "Cancel Vote"]</a>) "
+			. += "(<a href='?src=[REF(src)];vote=end_early'>[mode == "storyteller" ? "Завершить досрочно" : "End Vote Early"]</a>) "
 	else
 		. += "<h2>Start a vote:</h2><hr><ul><li>"
 		//restart
@@ -800,9 +1021,9 @@ SUBSYSTEM_DEF(vote)
 		//gamemode
 		var/avm = CONFIG_GET(flag/allow_vote_mode)
 		if(trialmin || avm)
-			. += "<a href='?src=[REF(src)];vote=gamemode'>GameMode</a>"
+			. += "<a href='?src=[REF(src)];vote=gamemode'>Storyteller</a>"
 		else
-			. += "<font color='grey'>GameMode (Disallowed)</font>"
+			. += "<font color='grey'>Storyteller (Disallowed)</font>"
 		if(trialmin)
 			. += "\t(<a href='?src=[REF(src)];vote=toggle_gamemode'>[avm ? "Allowed" : "Disallowed"]</a>)"
 
@@ -821,9 +1042,8 @@ SUBSYSTEM_DEF(vote)
 		if(trialmin)
 			. += "<li><a href='?src=[REF(src)];vote=custom'>Custom</a></li>"
 		. += "</ul><hr>"
-	. += "<a href='?src=[REF(src)];vote=close' style='position:absolute;top:8px;right:18px;padding:3px 8px;border:1px solid #6e2b33;border-radius:999px;background:rgba(18,12,14,0.96);color:#e06b75;font-size:0.8rem;font-weight:bold;text-decoration:none;line-height:1.2;'>Close</a>"
+	. += "<a href='?src=[REF(src)];vote=close' style='position:absolute;top:8px;right:18px;padding:3px 8px;border:1px solid #6e2b33;border-radius:999px;background:rgba(18,12,14,0.96);color:#e06b75;font-size:0.8rem;font-weight:bold;text-decoration:none;line-height:1.2;'>Закрыть</a>"
 	return .
-
 
 /datum/controller/subsystem/vote/Topic(href,href_list[],hsrc)
 	if(!usr || !usr.client)
@@ -842,6 +1062,9 @@ SUBSYSTEM_DEF(vote)
 		if("end_early")
 			if(usr.client.holder)
 				if(!mode)
+					return
+				if(ticker_managed_storyteller_vote && mode == STORYTELLER_VOTE)
+					to_chat(usr, span_warning("The roundstart gamemode vote ends when the round starts."))
 					return
 				if(alert(usr, "End this [mode] vote in 5 seconds?", "End Vote Early", "Yes", "No") != "Yes")
 					return
@@ -935,10 +1158,10 @@ SUBSYSTEM_DEF(vote)
 			P.player_actions -= src
 
 #undef LAST_STORYTELLER_VOTE_LOG_FILE
-#undef STORYTELLER_VOTE_MULTIPLIER_FILE
-#undef STORYTELLER_VOTE_BASE_PERCENT
-#undef STORYTELLER_OVERDUE_STEP_PERCENT
-#undef STORYTELLER_OVERDUE_MAX_PERCENT
-#undef STORYTELLER_WIN_COOLDOWN_PERCENT
+#undef STORYTELLER_VOTE_PENALTIES_FILE
+#undef LAST_MAP_VOTE_LOG_FILE
 #undef DEFAULT_VOTE_PANEL_REFRESH_INTERVAL
 #undef STORYTELLER_VOTE_PANEL_REFRESH_INTERVAL
+#undef MAP_VOTE_FIRST_LOSS_BONUS
+#undef MAP_VOTE_SECOND_LOSS_BONUS
+#undef MAP_VOTE_FOLLOWUP_LOSS_BONUS

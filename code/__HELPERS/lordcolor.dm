@@ -1,4 +1,5 @@
 GLOBAL_LIST_EMPTY(lordcolor)
+GLOBAL_LIST_EMPTY(loadout_lordcolor) // TA EDIT
 
 GLOBAL_VAR(lordprimary)
 GLOBAL_VAR(lordsecondary)
@@ -37,6 +38,7 @@ GLOBAL_VAR(lordsecondary)
 		O.lordcolor(prim,sec)
 	for(var/turf/T in GLOB.lordcolor)
 		T.lordcolor(prim,sec)
+	update_loadout_lord_colors(prim, sec) // TA EDIT
 
 /proc/lord_color_default()
 	GLOB.lordprimary = "#007fff" //AZURE
@@ -45,3 +47,4 @@ GLOBAL_VAR(lordsecondary)
 		O.lordcolor(GLOB.lordprimary,GLOB.lordsecondary)
 	for(var/turf/T in GLOB.lordcolor)
 		T.lordcolor(GLOB.lordprimary,GLOB.lordsecondary)
+	update_loadout_lord_colors(GLOB.lordprimary, GLOB.lordsecondary) // TA EDIT

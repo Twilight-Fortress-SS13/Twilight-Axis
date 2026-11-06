@@ -3,7 +3,7 @@
 	tutorial = "You are a true devotee of the God of the Forge; a wandering priest of Malum, your altar an anvil and your prayer the hiss of steam from a fresh-wrought blade. You care little for 'politics' or 'schisms'; you are a hammer in a worlde of nails."
 
 	outfit = /datum/outfit/job/roguetown/wretch/munitioneer
-	cmode_music = 'sound/music/combat_dwarf.ogg'
+	cmode_music = sound("sound/music/combat_dwarf.ogg")
 	class_select_category = CLASS_CAT_WARRIOR
 	category_tags = list(CTAG_WRETCH)
 	traits_applied = list(TRAIT_TRAINED_SMITH, TRAIT_SMITHING_EXPERT, TRAIT_HOMESTEAD_EXPERT, TRAIT_RITUALIST)
@@ -83,21 +83,41 @@
 		H.AddComponent(/datum/component/ore_sight) // controversial, and powerful, but it means you're spending less Wretch Time just mining.
 	var/weapons = list("Path of the Hammer - Steel Warhammer", "Path of the Crossbow - Crossbow and Bolts", "Path of the Pick - Pulaski Axe", "Path of Artifice - Steel Wrench and Engineering")
 	var/weapon_choice = input(H, "Choose your weapon.", "HOT IS THE ANVYL") as anything in weapons
+	var/crimes = list("I'm nobody", "They fear me")
+	var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+	if(crimeschoice == "I'm nobody")
+		GLOB.excommunicated_players += H.real_name
+	else if(crimeschoice == "They fear me")
+		wretch_select_bounty(H)
+
 	switch(weapon_choice)
 		if("Path of the Hammer - Steel Warhammer")
 			H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_EXPERT, TRUE)
-			H.put_in_hands(new /obj/item/rogueweapon/mace/warhammer/steel)
+			if(crimeschoice == "They fear me")
+				H.put_in_hands(new /obj/item/rogueweapon/mace/goden/steel)
+				H.change_stat(STATKEY_STR, 1)
+			else
+				H.put_in_hands(new /obj/item/rogueweapon/mace/warhammer/steel)
 		if("Path of the Crossbow - Crossbow and Bolts")
 			H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_EXPERT, TRUE)
-			H.put_in_hands(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow)
-			H.put_in_hands(new /obj/item/quiver/bolt/standard)
+			if(crimeschoice == "They fear me")
+				H.put_in_hands(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/heavy)
+				H.put_in_hands(new /obj/item/quiver/bolt/heavy/bronze)
+				H.change_stat(STATKEY_STR, 1)
+			else
+				H.put_in_hands(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow)
+				H.put_in_hands(new /obj/item/quiver/bolt/standard)
 		if("Path of the Pick - Pulaski Axe")
 			H.adjust_skillrank_up_to(/datum/skill/combat/axes, SKILL_LEVEL_EXPERT, TRUE)
-			H.put_in_hands(new /obj/item/rogueweapon/stoneaxe/woodcut/pick)
+			if(crimeschoice == "They fear me")
+				H.put_in_hands(new /obj/item/rogueweapon/stoneaxe/woodcut/pick)
+				H.put_in_hands(new /obj/item/rogueweapon/stoneaxe/woodcut/pick)
+				ADD_TRAIT(H, TRAIT_DUALWIELDER, TRAIT_GENERIC)
+			else
+				H.put_in_hands(new /obj/item/rogueweapon/stoneaxe/woodcut/pick)
 		if("Path of Artifice - Steel Wrench and Engineering") //they can level engineering already- the wrench is a downgrade from the warhammer, but someone picking this probably wants to be an engineer
 			H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_EXPERT, TRUE)
 			H.adjust_skillrank_up_to(/datum/skill/craft/engineering, SKILL_LEVEL_EXPERT, TRUE)
 			H.put_in_hands(new /obj/item/rogueweapon/contraption/linker/mace/big/steel/precharged)
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T4, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_4)	//Minor regen, is pre-emptively leveled up to T4 to avoid grind and support.
-	wretch_select_bounty(H)
