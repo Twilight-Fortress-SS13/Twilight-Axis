@@ -4,7 +4,9 @@
 	set desc = ""
 	set category = "Server"
 
-	browseserverlogs()
+	if(!check_rights(R_ADMIN|R_BAN)) // TA EDIT START
+		return
+	browseserverlogs() // TA EDIT END
 
 /client/proc/getcurrentlogs()
 	set name = "Get Current Logs"
