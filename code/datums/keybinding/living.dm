@@ -337,14 +337,11 @@
 		return FALSE
 	var/mob/living/C = user.mob
 	var/datum/hud/H = C.hud_used
-	if(H?.rearrange_mode)
+	if(H?.rearrange_mode || H?.free_position_mode) // TA EDIT
 		H.rearrange_hint(C)
 		return TRUE
 	var/count = 0
 	for(var/datum/action/A as anything in C.actions)
-		var/atom/movable/screen/movable/action_button/B = H ? A.viewers[H] : null
-		if(B && B.moved)
-			continue
 		count++
 		if(count == action_taken)
 			A.Trigger()

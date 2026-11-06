@@ -35,6 +35,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	// Custom Keybindings
 	var/list/key_bindings = list()
+	var/list/action_button_positions = list() // TA EDIT
 
 	var/tgui_lock = TRUE
 	var/tgui_theme = "azure_gilbranze" // TA EDIT

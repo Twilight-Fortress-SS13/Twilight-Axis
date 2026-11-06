@@ -52,6 +52,7 @@
 
 	var/action_buttons_hidden = FALSE
 	var/rearrange_mode = FALSE
+	var/free_position_mode = FALSE // TA EDIT
 	var/next_rearrange_hint = 0
 
 	var/atom/movable/screen/healths
