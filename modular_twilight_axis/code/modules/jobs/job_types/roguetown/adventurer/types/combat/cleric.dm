@@ -325,6 +325,7 @@
 		facewear_choice = "Psydonic Hood"
 	mask = facewear[facewear_choice]
 	if(H.mind)
+    H.mind.AddSpell(new /datum/action/cooldown/spell/touch/asperges)
 		H.mind.RemoveSpell(/datum/action/cooldown/spell/psydon/respite)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/psydon/persist)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/psydon/lux/weep) // TA EDIT
