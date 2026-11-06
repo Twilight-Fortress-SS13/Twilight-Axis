@@ -182,8 +182,10 @@
 
 	if(use_icons)
 		if(sheathed)
+			I.icon = sheathed.sheathe || initial(I.icon) // TA EDIT: Weapon may bring its own scabbard sprite sheet
 			I.icon_state = "[initial(I.icon_state)]_[sheathed.sheathe_icon]"
 		else
+			I.icon = initial(I.icon) // TA EDIT: Back to the scabbard's own .dmi once the weapon is drawn
 			I.icon_state = "[initial(I.icon_state)]"
 
 	if(istype(I, /obj/item/rogueweapon/scabbard)) // TA EDIT START
