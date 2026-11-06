@@ -21,6 +21,7 @@
 	drop_sound = 'sound/foley/dropsound/shovel_drop.ogg'
 	var/obj/item/natural/dirtclod/heldclod
 	smeltresult = /obj/item/ingot/iron
+	associated_skill = /datum/skill/combat/polearms //TA EDIT
 	max_blade_int = 300
 	grid_width = 32
 	grid_height = 96
@@ -341,6 +342,7 @@
 	w_class = WEIGHT_CLASS_NORMAL
 	max_blade_int = 0
 	smeltresult = null
+	associated_skill = /datum/skill/combat/maces //TA EDIT
 	grid_height = 64
 
 /obj/item/rogueweapon/shovel/aalloy
