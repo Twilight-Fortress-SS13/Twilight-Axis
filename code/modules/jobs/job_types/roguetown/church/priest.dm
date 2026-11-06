@@ -493,6 +493,12 @@ GLOBAL_LIST_EMPTY(heretical_players)
 	if(!H)
 		return
 
+	// TA ADDITION START
+	if(HAS_TRAIT(H, TRAIT_NORECONCILE))
+		to_chat(src, span_warning("You can't reconcile someone shamed by god!"))
+		return
+
+	// TA ADDITION ENDs
 	var/target_name = H.real_name
 
 	if (target_name in GLOB.excommunicated_players)

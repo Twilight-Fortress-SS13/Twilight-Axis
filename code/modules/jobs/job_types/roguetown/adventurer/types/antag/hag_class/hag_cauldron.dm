@@ -18,12 +18,18 @@
 	/// Synthesis recipe list
 	var/list/synth_recipes = list(
 		// GILDED ITEMS
+		// TA ADDITION START
+		/obj/item/rogueweapon/sword/rapier/dec = /obj/item/hag_catalyst/synth_base/gilded,
+		// TA ADDITION END
 		/obj/item/rogueweapon/sword/decorated = /obj/item/hag_catalyst/synth_base/gilded,
 		/obj/item/rogueweapon/huntingknife/idagger/steel/decorated = /obj/item/hag_catalyst/synth_base/gilded,
 		// REGULAR STEEL - SWORDS
 		/obj/item/rogueweapon/sword = /obj/item/hag_catalyst/synth_base,
 		/obj/item/rogueweapon/sword/long = /obj/item/hag_catalyst/synth_base,
 		/obj/item/rogueweapon/sword/long/broadsword/steel = /obj/item/hag_catalyst/synth_base,
+		// TA ADDITION START - REGULAR STEEL - RAPIER
+		/obj/item/rogueweapon/sword/rapier = /obj/item/hag_catalyst/synth_base,
+		// TA ADDITION END
 		// REGULAR STEEL - DAGGERS
 		/obj/item/rogueweapon/huntingknife/chefknife = /obj/item/hag_catalyst/synth_base,
 		/obj/item/rogueweapon/huntingknife/chefknife/cleaver = /obj/item/hag_catalyst/synth_base,
@@ -80,7 +86,38 @@
 		/obj/item/rogueweapon/greataxe = /obj/item/hag_catalyst/synth_base,
 		/obj/item/rogueweapon/greataxe/steel = /obj/item/hag_catalyst/synth_base,
 		/obj/item/rogueweapon/greataxe/steel/knight = /obj/item/hag_catalyst/synth_base,
-		/obj/item/rogueweapon/greataxe/steel/doublehead = /obj/item/hag_catalyst/synth_base
+		/obj/item/rogueweapon/greataxe/steel/doublehead = /obj/item/hag_catalyst/synth_base,
+		// TA ADDITION - REGULAR STEEL - ARMOR
+		/obj/item/clothing/suit/roguetown/armor/plate = /obj/item/hag_catalyst/synth_base,
+		/obj/item/clothing/suit/roguetown/armor/plate/full = /obj/item/hag_catalyst/synth_base,
+		/obj/item/clothing/suit/roguetown/armor/brigandine/light = /obj/item/hag_catalyst/synth_base,
+		/obj/item/clothing/suit/roguetown/armor/chainmail = /obj/item/hag_catalyst/synth_base,
+		/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk = /obj/item/hag_catalyst/synth_base,
+		/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/heavy = /obj/item/hag_catalyst/synth_base,
+		/obj/item/clothing/gloves/roguetown/plate = /obj/item/hag_catalyst/synth_base,
+		/obj/item/clothing/gloves/roguetown/chain = /obj/item/hag_catalyst/synth_base,
+		/obj/item/clothing/gloves/roguetown/leather = /obj/item/hag_catalyst/synth_base,
+		/obj/item/clothing/shoes/roguetown/boots/armor = /obj/item/hag_catalyst/synth_base,
+		/obj/item/clothing/shoes/roguetown/boots/leather/reinforced = /obj/item/hag_catalyst/synth_base,
+		/obj/item/clothing/head/roguetown/helmet/kettle = /obj/item/hag_catalyst/synth_base,
+		/obj/item/clothing/head/roguetown/helmet/leather = /obj/item/hag_catalyst/synth_base,
+		/obj/item/clothing/head/roguetown/helmet/heavy = /obj/item/hag_catalyst/synth_base,
+		/obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor = /obj/item/hag_catalyst/synth_base,
+		/obj/item/clothing/under/roguetown/brigandinelegs = /obj/item/hag_catalyst/synth_base,
+		/obj/item/clothing/under/roguetown/skirt/gambeson = /obj/item/hag_catalyst/synth_base,
+		/obj/item/clothing/under/roguetown/heavy_leather_pants = /obj/item/hag_catalyst/synth_base,
+		/obj/item/clothing/under/roguetown/gambeson/heavy = /obj/item/hag_catalyst/synth_base,
+		/obj/item/clothing/under/roguetown/chainlegs = /obj/item/hag_catalyst/synth_base,
+		/obj/item/clothing/neck/roguetown/bevor = /obj/item/hag_catalyst/synth_base,
+		/obj/item/clothing/neck/roguetown/chaincoif = /obj/item/hag_catalyst/synth_base,
+		/obj/item/clothing/neck/roguetown/gorget = /obj/item/hag_catalyst/synth_base,
+		/obj/item/clothing/neck/roguetown/leather = /obj/item/hag_catalyst/synth_base,
+		// GILDED ITEMS - RINGS
+		/obj/item/clothing/ring/statonyx = /obj/item/hag_catalyst/synth_base/gilded,
+		/obj/item/clothing/ring/statamythortz = /obj/item/hag_catalyst/synth_base/gilded,
+		/obj/item/clothing/ring/statrontz = /obj/item/hag_catalyst/synth_base/gilded,
+		/obj/item/clothing/ring/statgemerald = /obj/item/hag_catalyst/synth_base/gilded,
+		// TA ADDITION END
 	)
 
 /obj/item/hag_catalyst/varnish_base

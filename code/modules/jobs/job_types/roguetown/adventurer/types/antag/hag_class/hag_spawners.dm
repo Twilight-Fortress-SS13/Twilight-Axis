@@ -15,10 +15,14 @@
 		/obj/item/alch/hag_moss/enchanted/caring		= 2,
 		/obj/item/alch/hag_moss/enchanted/rooted		= 2,
 		/obj/item/alch/hag_moss/enchanted/creeping	= 2,
+		// TA ADDITION START
+		/obj/item/alch/hag_moss/enchanted/vibrant	= 2,
+		/obj/item/alch/hag_moss/enchanted/secret		= 2,
 		// High Rarity Enchanted
 		/obj/item/alch/hag_moss/enchanted/random/high = 1,
 		/obj/item/alch/hag_moss/enchanted/gilded		= 1,
-		/obj/item/alch/hag_moss/enchanted/drowned		= 1
+		/obj/item/alch/hag_moss/enchanted/drowned		= 1,
+		/obj/item/alch/hag_moss/enchanted/boned			= 1, // TA ADDITION
 	)
 
 /obj/effect/spawner/lootdrop/hag/mothers_cache
