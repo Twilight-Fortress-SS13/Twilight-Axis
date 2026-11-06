@@ -174,6 +174,8 @@ third; SUNSET, little neat ability. it may be buggy. don't quote me on that. it 
 	var/outline_colour = "#f5d96c"
 	var/obj/effect/dummy/lighting_obj/moblight/lirvanlight
 	var/gonna_fort = FALSE //like, we're gonna use fortitude. we'll apply fortitude to...ah, nevermind.
+	var/got_str_unbound = FALSE //TA EDIT
+	var/got_inf_stamina = FALSE //TA EDIT
 
 /datum/status_effect/buff/lirvan_tithe/on_apply()
 	update_effects()
@@ -193,6 +195,14 @@ third; SUNSET, little neat ability. it may be buggy. don't quote me on that. it 
 			ADD_TRAIT(owner, TRAIT_FORTITUDE, STATUS_EFFECT_TRAIT)
 			gonna_fort = TRUE
 			to_chat(owner, span_userdanger("FORTIFIED."))
+		if(wealth_value >= 1000) //TA EDIT START
+			ADD_TRAIT(owner, TRAIT_STRENGTH_UNCAPPED, STATUS_EFFECT_TRAIT)
+			got_str_unbound = TRUE
+			to_chat(owner, span_userdanger("STRENGTH UNBOUND."))
+		if(wealth_value >= 1200)
+			ADD_TRAIT(owner, TRAIT_INFINITE_STAMINA, STATUS_EFFECT_TRAIT)
+			got_inf_stamina = TRUE
+			to_chat(owner, span_userdanger("BOUNDLESS STAMINA.")) //TA EDIT END
 		playsound(owner, 'sound/combat/hits/burn (2).ogg', 100, TRUE)
 
 /datum/status_effect/buff/lirvan_tithe/on_remove()
@@ -200,6 +210,12 @@ third; SUNSET, little neat ability. it may be buggy. don't quote me on that. it 
 	if(gonna_fort)
 		REMOVE_TRAIT(owner, TRAIT_FORTITUDE, STATUS_EFFECT_TRAIT)
 		gonna_fort = FALSE
+	if(got_str_unbound) //TA EDIT START
+		REMOVE_TRAIT(owner, TRAIT_STRENGTH_UNCAPPED, STATUS_EFFECT_TRAIT)
+		got_str_unbound = FALSE
+	if(got_inf_stamina)
+		REMOVE_TRAIT(owner, TRAIT_INFINITE_STAMINA, STATUS_EFFECT_TRAIT)
+		got_inf_stamina = FALSE //TA EDIT END
 	owner.remove_filter(LIRVAN_BLING_FILTER)
 	QDEL_NULL(lirvanlight)
 	to_chat(owner, span_warning("POWER fades."))
@@ -252,42 +268,57 @@ third; SUNSET, little neat ability. it may be buggy. don't quote me on that. it 
 	ignore_armor_penalty = TRUE
 	invocations = list("draws 'pon DRAKKYRMAW.")
 	invocation_type = "emote"
-	var/obj/item/rogueweapon/katar/lirvan_talon/summoned_talon
+	var/list/summoned_talons = list() //TA EDIT
+
+/obj/effect/proc_holder/spell/self/lirvan_talon/proc/clear_talons() //TA EDIT START
+	var/list/old_talons = summoned_talons.Copy()
+	summoned_talons.Cut()
+	for(var/obj/item/rogueweapon/katar/lirvan_talon/talon in old_talons)
+		if(!QDELETED(talon))
+			UnregisterSignal(talon, COMSIG_PARENT_QDELETING)
+			qdel(talon) //TA EDIT END
 
 /obj/effect/proc_holder/spell/self/lirvan_talon/Destroy()
-	if(summoned_talon && !QDELETED(summoned_talon))
-		UnregisterSignal(summoned_talon, COMSIG_PARENT_QDELETING)
-		QDEL_NULL(summoned_talon)
+	clear_talons() //TA EDIT
 	return ..()
 
 /obj/effect/proc_holder/spell/self/lirvan_talon/cast(mob/living/user)
 	if(!ishuman(user))
 		return FALSE
-	if(summoned_talon && !QDELETED(summoned_talon))
-		qdel(summoned_talon)
+	if(length(summoned_talons)) //TA EDIT START
+		clear_talons() //TA EDIT END
 		to_chat(user, span_danger("WHY STOP NOW?"))
 		return TRUE
 
 	var/wealth_value = get_moni_value(user)
-	summoned_talon = new(user)
-	summoned_talon.attuned_owner = user
-	summoned_talon.attune_to_wealth(wealth_value)
-	RegisterSignal(summoned_talon, COMSIG_PARENT_QDELETING, PROC_REF(on_talon_destroyed))
-	if(!user.put_in_hands(summoned_talon))
-		qdel(summoned_talon)
+	if(!summon_talon(user, wealth_value)) //TA EDIT START
+		return FALSE
+	if(HAS_TRAIT(user, TRAIT_DUALWIELDER) && summon_talon(user, wealth_value))
+		to_chat(user, span_danger("[wealth_value] TEETH ARRANGED IN A PAIR OF MACABRE SMILES."))
+		return TRUE
+	to_chat(user, span_danger("[wealth_value] TEETH ARRANGED IN MACABRE SMILE."))
+	return TRUE //TA EDIT END
+
+/obj/effect/proc_holder/spell/self/lirvan_talon/proc/summon_talon(mob/living/user, wealth_value) //TA EDIT START
+	var/obj/item/rogueweapon/katar/lirvan_talon/talon = new(user)
+	talon.attuned_owner = user
+	talon.attune_to_wealth(wealth_value)
+	RegisterSignal(talon, COMSIG_PARENT_QDELETING, PROC_REF(on_talon_destroyed))
+	summoned_talons += talon
+	if(!user.put_in_hands(talon))
+		qdel(talon) //TA EDIT END
 		if(user.get_num_arms() <= 0)
 			to_chat(user, span_userdanger("WITH WHAT FUCKING ARMS???"))
 			user.emote("cry", forced = TRUE)
 		else
 			to_chat(user, span_warning("My hands are full!"))
 		return FALSE
-	to_chat(user, span_danger("[wealth_value] TEETH ARRANGED IN MACABRE SMILE."))
-	QDEL_IN(summoned_talon, 60 SECONDS)
+	QDEL_IN(talon, 3 MINUTES) //TA EDIT
 	return TRUE
 
 /obj/effect/proc_holder/spell/self/lirvan_talon/proc/on_talon_destroyed(datum/source)
 	SIGNAL_HANDLER
-	summoned_talon = null
+	summoned_talons -= source //TA EDIT
 
 /obj/item/rogueweapon/katar/lirvan_talon
 	name = "DRAKKYRMAW"
