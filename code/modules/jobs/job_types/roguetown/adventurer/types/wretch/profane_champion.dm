@@ -96,7 +96,7 @@
 				H.put_in_hands(new /obj/item/rogueweapon/spear/partizan/baotha(H))
 		var/datum/devotion/C = new /datum/devotion(H, H.patron)
 		C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_MAJOR, devotion_limit = CLERIC_REQ_2)
-		wretch_select_bounty(H)
+		bountychoice_profane_champion(H) // TA EDIT - ORIGINAL: wretch_select_bounty(H)
 
 	if (istype (H.patron, /datum/patron/inhumen/zizo))
 		if(H.mind)

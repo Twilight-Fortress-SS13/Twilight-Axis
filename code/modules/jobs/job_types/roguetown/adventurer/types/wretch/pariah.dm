@@ -143,4 +143,4 @@
 	if(granted_weapon)
 		H.adjust_skillrank_up_to(granted_weapon::associated_skill, SKILL_LEVEL_EXPERT, TRUE)
 
-	wretch_select_bounty(H)
+	bountychoice_pariah(H) // TA EDIT - ORIGINAL: wretch_select_bounty(H)
