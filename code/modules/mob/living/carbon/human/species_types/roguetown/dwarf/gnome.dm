@@ -8,12 +8,12 @@
 	origin_default = /datum/virtue/origin/hammerhold
 	origin = "Hammerhold"
 	base_name = "Dwarf"
-	desc_title = "Gnome"
-	desc = "Gnomes are short delicate creatures known for their quick thinking and wit.<br>\
-The naturally inquisitive mind of a Gnome inclines them towards arcane pursuits, artificing and teaching others.\
-Gnomish folk have an earned reputation for being brilliant tradespeople and crafters, although their rapid thoughts often lead to them seeming scatterbrained to the other beings of Azuria.<br>\
-Gnomes are typically a mixed race of Dwarves and a magical race, typically Elves when the two aren't arguing, but some are born with fae blood as well. <br>\
-Even though they are of mixed blood and smaller than typical dwarves, most gnomes and dwarves still regard each other as kin."
+	desc_title = "Гном"
+	desc = "Гномы — невысокие, утонченные существа, известные своей сообразительностью и остроумием.<br>\
+От природы пытливый ум гномов влечет их к изучению арканных искусств, созданию механизмов и обучению этому других.\
+Гномы по праву слывут прекрасными ремесленниками и мастерами своего дела, хотя из-за стремительного хода мыслей они, зачастую, кажутся окружающим обитателям Азурии рассеяными созданиями .<br>\
+Как правило, гномы — это народ смешанного происхождения: потомки дворфов и какой-либо магической расы (чаще всего эльфов — в те редкие моменты, когда те не враждуют друг с другом),хотя встречаются и те, в чьих жилах течет кровь фей. <br>\
+Несмотря на смешанное происхождение и меньший, по сравнению с обычными дворфами, рост, большинство гномов и дворфов по-прежнему считают друг друга сородичами."
 
 	skin_tone_wording = "Skintone"
 	use_skin_tone_wording_for_examine = FALSE
