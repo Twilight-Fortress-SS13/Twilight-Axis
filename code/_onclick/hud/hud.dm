@@ -53,6 +53,7 @@
 	var/action_buttons_hidden = FALSE
 	var/rearrange_mode = FALSE
 	var/free_position_mode = FALSE // TA EDIT
+	var/datum/action/wheel_selected_action // TA EDIT
 	var/next_rearrange_hint = 0
 
 	var/atom/movable/screen/healths

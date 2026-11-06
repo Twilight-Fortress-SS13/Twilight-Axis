@@ -56,6 +56,13 @@
 				clientfps = desiredfps
 				parent.fps = desiredfps
 			return TRUE
+		if("action_wheel_modifier") // TA EDIT START
+			var/modifier = params["modifier"]
+			if(!(modifier in list("ctrl", "shift", "alt", "none")))
+				return TRUE
+			action_wheel_modifier = modifier
+			save_preferences()
+			return TRUE // TA EDIT END
 		if("auto_fit_viewport")
 			auto_fit_viewport = !auto_fit_viewport
 			if(auto_fit_viewport && parent)

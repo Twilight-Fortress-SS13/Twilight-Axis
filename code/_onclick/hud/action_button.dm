@@ -57,9 +57,12 @@
 	var/atom/movable/screen/maptext_holder/maptext_holder
 
 	var/atom/movable/screen/hotkey_label_holder/hotkey_label_holder
+	var/atom/movable/screen/wheel_selection_holder/wheel_selection_holder // TA EDIT
 
 /atom/movable/screen/movable/action_button/Destroy()
 	if(our_hud)
+		if(our_hud.wheel_selected_action == linked_action) // TA EDIT START
+			our_hud.wheel_selected_action = null // TA EDIT END
 		var/mob/viewer = our_hud.mymob
 		viewer?.client?.screen -= src
 		linked_action?.viewers -= our_hud
@@ -68,6 +71,7 @@
 	linked_action = null
 	QDEL_NULL(maptext_holder)
 	QDEL_NULL(hotkey_label_holder)
+	QDEL_NULL(wheel_selection_holder) // TA EDIT
 	return ..()
 
 /atom/movable/screen/movable/action_button/proc/can_use(mob/user)
@@ -142,6 +146,24 @@
 		actions.Swap(first_idx, second_idx)
 		usr.mind?.sync_spell_list_to_actions()
 		usr.update_action_buttons()
+
+
+/client/MouseWheel(object, delta_x, delta_y, location, control, params) // TA EDIT START
+	var/on_game_map = control == "mapwindow.map" || isturf(location) || istype(object, /atom/movable/screen/movable/action_button)
+	var/list/modifiers = params2list(params)
+	if(keys_held["Ctrl"])
+		modifiers["ctrl"] = TRUE
+	if(keys_held["Shift"])
+		modifiers["shift"] = TRUE
+	if(keys_held["Alt"])
+		modifiers["alt"] = TRUE
+	var/modifier_matches = prefs?.matches_action_wheel_modifier(modifiers)
+	var/handled = FALSE
+	if(delta_y && isliving(mob) && on_game_map && modifier_matches)
+		handled = mob.hud_used?.cycle_wheel_action(delta_y > 0 ? -1 : 1)
+	if(handled)
+		return TRUE
+	return ..() // TA EDIT END
 
 /atom/movable/screen/movable/action_button/Click(location,control,params)
 	if (!can_use(usr))
@@ -240,6 +262,7 @@
 				continue
 			B.screen_loc = null
 			B.set_hotkey_label(null)
+			B.set_wheel_selected(FALSE) // TA EDIT
 			if(reload_screen)
 				client.screen += B
 	else
@@ -260,8 +283,75 @@
 			button_number++
 			B.screen_loc = B.moved ? B.moved : hud_used.ButtonNumberToScreenCoords(button_number) // TA EDIT
 			B.set_hotkey_label(button_number <= 9 ? button_number : null)
+			B.set_wheel_selected(A == hud_used.wheel_selected_action) // TA EDIT
 			if(reload_screen)
 				client.screen += B
+
+/datum/action/proc/is_wheel_selectable() // TA EDIT START
+	return FALSE
+
+/datum/action/cooldown/spell/is_wheel_selectable()
+	return click_to_activate && charge_required
+
+/datum/action/spell_action/is_wheel_selectable()
+	var/obj/effect/proc_holder/spell/S = target
+	return (istype(S, /obj/effect/proc_holder/spell/invoked) || istype(S, /obj/effect/proc_holder/spell/aimed)) && S.get_chargetime() > 0
+
+/datum/action/proc/select_for_wheel()
+	return FALSE
+
+/datum/action/cooldown/spell/select_for_wheel()
+	if(!is_wheel_selectable())
+		return FALSE
+	if(owner?.click_intercept == src)
+		return TRUE
+	return Trigger()
+
+/datum/action/spell_action/select_for_wheel()
+	var/obj/effect/proc_holder/S = target
+	if(!is_wheel_selectable() || !istype(S))
+		return FALSE
+	if(S.active && S.ranged_ability_user == owner)
+		return TRUE
+	return Trigger()
+
+/datum/hud/proc/cycle_wheel_action(direction, datum/action/start_action)
+	if(!mymob?.client || !length(mymob.actions) || !direction || rearrange_mode || free_position_mode || hud_shown != HUD_STYLE_STANDARD || action_buttons_hidden)
+		return FALSE
+	var/list/available = list()
+	for(var/datum/action/A as anything in mymob.actions)
+		if(A.owner != mymob || !A.viewers[src] || !A.is_wheel_selectable())
+			continue
+		available += A
+	if(!length(available))
+		wheel_selected_action = null
+		return FALSE
+	var/datum/action/current = wheel_selected_action
+	if(!(current in available))
+		current = start_action
+	var/index = available.Find(current)
+	if(!index)
+		index = direction > 0 ? 0 : 1
+	var/next_index = index + direction
+	if(next_index > length(available))
+		next_index = 1
+	else if(next_index < 1)
+		next_index = length(available)
+	for(var/attempt in 1 to length(available))
+		var/datum/action/selected = available[next_index]
+		if(selected.IsAvailable() && selected.select_for_wheel())
+			wheel_selected_action = selected
+			for(var/datum/action/A as anything in mymob.actions)
+				var/atom/movable/screen/movable/action_button/B = A.viewers[src]
+				if(B)
+					B.set_wheel_selected(A == wheel_selected_action)
+			return TRUE
+		next_index += direction
+		if(next_index > length(available))
+			next_index = 1
+		else if(next_index < 1)
+			next_index = length(available)
+	return FALSE // TA EDIT END
 
 /mob/proc/toggle_action_buttons()
 	if(!hud_used)
@@ -333,6 +423,24 @@
 		hotkey_label_holder = new(src)
 		vis_contents.Add(hotkey_label_holder)
 	hotkey_label_holder.maptext = MAPTEXT("<span style='color: #ffe14d; -dm-text-outline: 1 #000000; font-weight: bold;'>[number]</span>")
+
+/atom/movable/screen/movable/action_button/proc/set_wheel_selected(selected) // TA EDIT START
+	if(!selected)
+		if(wheel_selection_holder)
+			wheel_selection_holder.maptext = null
+		return
+	if(!wheel_selection_holder)
+		wheel_selection_holder = new(src)
+		vis_contents.Add(wheel_selection_holder)
+	wheel_selection_holder.maptext = MAPTEXT("<span style='color: #80eaff; -dm-text-outline: 1 #000000; font-weight: bold;'>◆</span>")
+
+/atom/movable/screen/wheel_selection_holder
+	layer = ABOVE_HUD_LAYER
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	maptext_x = 22
+	maptext_y = 21
+	maptext_width = 12
+	maptext_height = 11 // TA EDIT END
 
 /atom/movable/screen/hotkey_label_holder
 	layer = ABOVE_HUD_LAYER

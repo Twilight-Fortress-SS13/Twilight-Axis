@@ -180,6 +180,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	// Custom hotkeys
 	S["key_bindings"]		>> key_bindings
 	S["action_button_positions"] >> action_button_positions // TA EDIT
+	S["action_wheel_modifier"] >> action_wheel_modifier // TA EDIT
 
 	S["no_runechat_animation"] >> no_runechat_animation //TA EDIT
 	S["defiant"]			>> defiant
@@ -200,6 +201,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	//Sanitize
 	sanitize_preferences()
+	if(!(action_wheel_modifier in list("ctrl", "shift", "alt", "none"))) // TA EDIT START
+		action_wheel_modifier = "ctrl" // TA EDIT END
 	action_button_positions = sanitize_islist(action_button_positions, list()) // TA EDIT START
 	if(length(action_button_positions) > 150)
 		action_button_positions = list()
@@ -412,6 +415,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["menuoptions"], menuoptions)
 	WRITE_FILE(S["key_bindings"], key_bindings)
 	WRITE_FILE(S["action_button_positions"], action_button_positions) // TA EDIT
+	WRITE_FILE(S["action_wheel_modifier"], action_wheel_modifier) // TA EDIT
 	WRITE_FILE(S["attack_blip_frequency"] , attack_blip_frequency)
 	WRITE_FILE(S["compliance_notifs"], compliance_notifs)
 	WRITE_FILE(S["roll_tokens"], roll_tokens)
