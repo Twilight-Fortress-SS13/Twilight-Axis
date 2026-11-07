@@ -973,15 +973,15 @@ GLOBAL_LIST_INIT(familytree_title_prefixes, list(
 	var/gender_text
 	switch(partner.gender)
 		if(MALE)
-			gender_text = "мужской"
+			gender_text = "маскулинное"
 		if(FEMALE)
-			gender_text = "женский"
+			gender_text = "феминное"
 		if(PLURAL)
-			gender_text = "множественный"
+			gender_text = "множественное"
 		if(NEUTER)
-			gender_text = "средний"
+			gender_text = "нейтральное"
 		else
-			gender_text = "неопределённый"
+			gender_text = "неопределенное"
 	var/has_penis = partner.getorganslot(ORGAN_SLOT_PENIS) != null
 	var/has_vagina = partner.getorganslot(ORGAN_SLOT_VAGINA) != null
 	var/anatomy_text
@@ -993,7 +993,7 @@ GLOBAL_LIST_INIT(familytree_title_prefixes, list(
 		anatomy_text = "женская"
 	else
 		anatomy_text = "без половых признаков"
-	return "\nРаса: [species_name]\nПол: [gender_text]\nАнатомия: [anatomy_text]"
+	return "\nРаса: [species_name]\nМестоимение: [partner.pronouns]\nТелосложение: [gender_text]\nАнатомия: [anatomy_text]"
 
 /datum/controller/subsystem/familytree/proc/CanBeSiblings(age1, age2)
 	if(!age1 || !age2)
