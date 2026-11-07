@@ -65,7 +65,7 @@
 				heal_psydonite(0.1, 0.1)
 		if(!(in_combat_until > world.time) && !cmode && !bleeding)
 			heal_psydonite(0.2, 0.2) // Heals damage over time, but you must be completely out of trouble to proc.
-			if(HAS_TRAIT(owner, TRAIT_PSYDONITE_5))
+			if(HAS_TRAIT(src, TRAIT_PSYDONITE_5))
 				adjustBruteLoss(-2.5)
 				adjustFireLoss(-2.5)
 			else if(HAS_TRAIT(src, TRAIT_PSYDONITE_4))
