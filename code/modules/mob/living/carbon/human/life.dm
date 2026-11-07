@@ -198,6 +198,8 @@
 		return
 	if(HAS_TRAIT(src, TRAIT_NOBREATH))
 		return
+	if(m_intent == MOVE_INTENT_SNEAK) //TA EDIT
+		return
 	breathe_tick++
 	var/mask_sound
 	if(istype(wear_mask, /obj/item/clothing/mask/rogue/facemask/steel/confessor))
