@@ -197,6 +197,18 @@
 
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
+/datum/action/cooldown/spell/noc/TAnitevision/cast(atom/cast_on)
+	. = ..()
+	var/mob/living/carbon/human/H = owner
+	if(!istype(H))
+		return FALSE
+
+	H.visible_message("[H] mutters an incantation and a dim pulse of light radiates out from them.")
+	for(var/mob/living/L in range(2, H))
+		L.apply_status_effect(/datum/status_effect/buff/nitevision/noc)
+
+	return TRUE
+
 /datum/status_effect/buff/nitevision/noc
 	id = "noc_nitevision"
 	effectedstats = list(STATKEY_PER = 1)
