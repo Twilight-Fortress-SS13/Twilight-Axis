@@ -30,6 +30,11 @@
 	first_time_text = "Rockhill Keep"
 	deathsight_message = "those sequestered amongst Astrata's favor"
 
+/area/rogue/indoors/town/manor/rockhill/courtyard
+	first_time_text = "Rockhill Keep inner courtyard"
+	deathsight_message = "those sequestered amongst Astrata's favor"
+	outdoors = 1
+
 /area/rogue/indoors/town/warden
 	name = "Vanguard Bastion"
 	first_time_text = "Vanguard Bastion"
@@ -166,6 +171,7 @@
 	loot_budget = LOOT_BUDGET_RH_HARBOR
 	loot_pool_key = "rh_harbor"
 	deathsight_message = "harbor posts reeking of salt and fish"
+	outdoors = 1
 
 /area/rogue/indoors/town/harborcowered
 
