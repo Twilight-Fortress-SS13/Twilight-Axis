@@ -411,7 +411,7 @@
 	else
 		displayed_headshot = src.headshot_link
 
-	var/can_show_masked_identity = !obscure_name || client?.prefs?.masked_examine || observer_privilege
+	var/can_show_masked_identity = (!skipface && !obscure_name) || observer_privilege // TA EDIT
 
 	if(can_show_masked_identity && (valid_headshot_link(src, displayed_headshot, TRUE)) && (user.client?.prefs.chatheadshot))
 		. += span_info("[chat_headshot(displayed_headshot)]")
@@ -443,17 +443,16 @@
 	if(length(medical_text))
 		. += medical_text
 
-	if(can_show_masked_identity)
-		var/list/examine_links = list()
-		if(showassess)
-			examine_links += "<a href='?src=[REF(src)];task=assess;'>Assess</a>"
-		if(flavortext || displayed_headshot || ooc_notes)
-			examine_links += "<a href='?src=[REF(src)];task=view_headshot;'>Examine closer</a>"
-		if(length(rumour) || length(noble_gossip))
-			if(!obscure_name || (obscure_name && client?.prefs.masked_examine) || observer_privilege)
-				examine_links += "<a href='?src=[REF(src)];task=view_rumours_gossip;'>Recall Rumours & Gossip</a>"
-		if(length(examine_links))
-			. += jointext(examine_links, " | ")
+	var/list/examine_links = list() // TA EDIT START
+	if(can_show_masked_identity && showassess)
+		examine_links += "<a href='?src=[REF(src)];task=assess;'>Assess</a>"
+	if(skipface || flavortext || displayed_headshot || ooc_notes || erpprefs_cached)
+		examine_links += "<a href='?src=[REF(src)];task=view_headshot;'>Examine closer</a>"
+	if(can_show_masked_identity && (length(rumour) || length(noble_gossip)))
+		if(!obscure_name || (obscure_name && client?.prefs.masked_examine) || observer_privilege)
+			examine_links += "<a href='?src=[REF(src)];task=view_rumours_gossip;'>Recall Rumours & Gossip</a>"
+	if(length(examine_links))
+		. += jointext(examine_links, " | ") // TA EDIT END
 
 	/// Rumours & Gossip
 //	if(length(rumour) || length(noble_gossip)) TA EDIT START
