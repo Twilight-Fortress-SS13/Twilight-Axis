@@ -240,15 +240,3 @@
 			to_chat(M, span_warning("Agh.. I feel weak in my body.."))
 
 	return ..()
-
-/obj/item/rogueweapon/huntingknife/idagger/silver/elvish/bandit
-	sellprice = 0
-	smeltresult = null
-
-/datum/element/tipped_item
-	element_flags = ELEMENT_DETACH
-
-	blacklisted_reagents = list(
-		/datum/reagent/sleep_powder,
-		/datum/reagent/consumable/brew/baothablend //чай на кинжале? втф
-	)
