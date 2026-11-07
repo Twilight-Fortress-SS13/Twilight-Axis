@@ -160,7 +160,7 @@
 		if("asaycolor")
 			var/new_asaycolor = tgui_color_picker(user, "Choose your ASAY color:", "ASAY Color", asaycolor)
 			if(new_asaycolor)
-				asaycolor = sanitize_hexcolor(new_asaycolor) // TA EDIT
+				asaycolor = sanitize_ooccolor(new_asaycolor) // TA EDIT
 				save_preferences() // TA EDIT
 			return TRUE
 

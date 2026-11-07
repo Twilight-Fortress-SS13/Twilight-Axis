@@ -240,6 +240,8 @@
 	data["balance"] = coin_loaded
 	data["free_send_ready"] = free_send_ready(user) ? TRUE : FALSE
 	data["free_send_remaining_ds"] = free_send_remaining(user)
+	data["real_name"] = user.real_name
+	data["pen_name"] = mail_pen_name(user)
 	return data
 
 /// Describes what is being mailed. Call before delivery, as delivering a letter to a ghost deletes it.
@@ -286,7 +288,7 @@
 	return "<ul style='margin:2px 0;padding-left:18px'>[rows.Join()]</ul>"
 
 /// Logs a sent letter or package to the game log, the admins and the letter archive. machine is where it was posted from, if any.
-/proc/log_mail_send(mob/user, recipient_name, list/record, ghost_send = FALSE, obj/machine, recipient_desc)
+/proc/log_mail_send(mob/user, recipient_name, list/record, ghost_send = FALSE, obj/machine, recipient_desc, signed_as)
 	if(!user)
 		return
 	var/is_package = record?["package"]
@@ -295,21 +297,59 @@
 		recipient_desc = mail_recipient_desc(recipient_name)
 	var/via = machine ? " via [machine.name]" : ""
 	var/contents_note = is_package ? " containing: [record["summary"]]" : ""
+	var/signed = signed_as ? ", signed [mail_signature_desc(user, signed_as)]" : ""
 	var/sender_desc = key_name(user)
-	user.log_message("[what][via] to [recipient_desc][contents_note]", LOG_GAME)
-	var/logged_content = record?["content"] // TA EDIT
-	if(istext(logged_content) && length(logged_content)) // TA EDIT
-		logged_content = replacetext(logged_content, "<br>", "\\n") // TA EDIT
-		logged_content = replacetext(logged_content, "<br/>", "\\n") // TA EDIT
-		logged_content = replacetext(logged_content, "<br />", "\\n") // TA EDIT
-		logged_content = html_decode(logged_content) // TA EDIT
-		logged_content = replacetext(logged_content, "\n", "\\n") // TA EDIT
+	user.log_message("[what][via] to [recipient_desc][signed][contents_note]", LOG_GAME) // TA EDIT START
+	var/logged_content = record?["content"]
+	if(istext(logged_content) && length(logged_content))
+		logged_content = replacetext(logged_content, "<br>", "\\n")
+		logged_content = replacetext(logged_content, "<br/>", "\\n")
+		logged_content = replacetext(logged_content, "<br />", "\\n")
+		logged_content = html_decode(logged_content)
+		logged_content = replacetext(logged_content, "\n", "\\n")
 	else
-		logged_content = "(no text content)" // TA EDIT
-	log_mail("[sender_desc] [what][via] to [recipient_desc][contents_note] | CONTENT: [logged_content]") // TA EDIT
-	var/link = archive_letter(recipient_desc, record?["content"], sender_desc, is_package)
-	message_admins("[sender_desc] [what][via] to [recipient_desc][contents_note][link]")
+		logged_content = "(no text content)"
+	log_mail("[sender_desc] [what][via] to [recipient_desc][signed][contents_note] | CONTENT: [logged_content]")
+	var/link = archive_letter(recipient_desc, record?["content"], "[sender_desc][signed]", is_package)
+	message_admins("[sender_desc] [what][via] to [recipient_desc][signed][contents_note][link]") // TA EDIT END
 	return link
+
+/proc/mail_pen_name(mob/user)
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		return H.pen_name
+	if(isobserver(user))
+		var/mob/dead/observer/G = user
+		return G.pen_name
+	return null
+
+/proc/mail_signature(mob/user, choice)
+	switch(choice)
+		if(MAIL_SIGN_REAL)
+			return user.real_name
+		if(MAIL_SIGN_PEN)
+			return mail_pen_name(user)
+		if(MAIL_SIGN_ANON)
+			return MAILER_ANONYMOUS
+	return null
+
+/proc/mail_signature_desc(mob/user, signed_as)
+	if(!signed_as || signed_as == MAILER_ANONYMOUS)
+		return "anonymously"
+	if(signed_as == user.real_name)
+		return "with their real name"
+	return "under the pen name '[signed_as]'"
+
+/proc/mail_signature_prompt(mob/user)
+	var/list/choices = list("Real name: [user.real_name]" = MAIL_SIGN_REAL)
+	var/pen = mail_pen_name(user)
+	if(pen)
+		choices["Pen name: [pen]"] = MAIL_SIGN_PEN
+	choices["Anonymous"] = MAIL_SIGN_ANON
+	var/picked = input(user, "Who is this from?", "ROGUETOWN") as null|anything in choices
+	if(!picked)
+		return null
+	return mail_signature(user, choices[picked])
 
 /proc/show_parchment(mob/user, body, window = "parchment")
 	if(!user?.client)
@@ -453,8 +493,8 @@
 	STR.handle_item_insertion(I, prevent_warning = TRUE)
 	master.new_mail = TRUE
 	master.update_icon()
+	send_ooc_note(sender == MAILER_ANONYMOUS ? "A new letter has arrived for you in HERMES." : "New letter from <b>[sender]</b> is waiting for you in HERMES.", name = destination) // TA EDIT
 	if(H)
-		send_ooc_note("You got new letter waiting for you in HERMES.", name = H.real_name)
 		H.apply_status_effect(/datum/status_effect/ugotmail)
 		H.playsound_local(H, 'sound/misc/mail.ogg', 100, FALSE, -1)
 	return TRUE
@@ -538,8 +578,12 @@
 			if(length(content) > 2000)
 				to_chat(user, span_warning("Letter too long."))
 				return TRUE
-			var/obj/item/paper/P = build_sanitized_letter(user, params["recipient"], content, params["sender"])
-			var/send2place = html_decode(P.mailedto) // TA EDIT
+			var/signed_as = mail_signature(user, params["signature"]) // TA EDIT START
+			if(!signed_as)
+				to_chat(user, span_warning("I have no such name to sign with."))
+				return TRUE
+			var/obj/item/paper/P = build_sanitized_letter(user, params["recipient"], content, signed_as)
+			var/send2place = html_decode(P.mailedto) // TA EDIT END
 			P.mailedto = send2place // TA EDIT
 			var/free_send = check_free_send(user, send2place) // TA EDIT
 			var/is_free = free_send_ready(user)
@@ -562,7 +606,7 @@
 					if(is_target) // TA EDIT
 						H.apply_status_effect(/datum/status_effect/ugotmail) // TA EDIT
 						H.playsound_local(H, 'sound/misc/mail.ogg', 100, FALSE, -1) // TA EDIT
-				log_mail_send(user, send2place, secret_record, machine = src) // TA EDIT
+				log_mail_send(user, send2place, secret_record, machine = src, signed_as = signed_as) // TA EDIT
 				visible_message(span_warning("[user] sends something.")) // TA EDIT
 				playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1) // TA EDIT
 				return TRUE // TA EDIT
@@ -576,7 +620,7 @@
 				to_chat(user, span_warning("The master of mails has perished?"))
 				qdel(P)
 				return TRUE
-			log_mail_send(user, send2place, record, machine = src)
+			log_mail_send(user, send2place, record, machine = src, signed_as = signed_as)
 			visible_message(span_warning("[user] sends something."))
 			playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
 			if(is_free)
@@ -1029,7 +1073,9 @@
 			if(!mail_exists(send2place))
 				to_chat(user, span_warning(mail_fail_msg(send2place)))
 				return
-			var/sentfrom = sanitize_mail_sender(input(user, "Who is this from? (Leave blank to send anonymously)", "ROGUETOWN", null))
+			var/sentfrom = mail_signature_prompt(user)
+			if(!sentfrom)
+				return
 			sign_mail(P, sentfrom)
 			var/list/record = mail_item_record(P)
 			if(!deliver_mail(P, send2place, sentfrom, key_name(user)))
@@ -1037,7 +1083,7 @@
 				return
 			if(!findtext(send2place, "#"))
 				playsound(src.loc, 'sound/misc/hiss.ogg', 100, FALSE, -1)
-			log_mail_send(user, send2place, record, machine = src)
+			log_mail_send(user, send2place, record, machine = src, signed_as = sentfrom)
 			visible_message(span_warning("[user] sends something."))
 			playsound(loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
 			return
