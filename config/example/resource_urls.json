@@ -1,0 +1,10 @@
+{
+  "version": "28_10_2026",
+  "base_url": "https://cdn.example.com/bundles/",
+  "icons": [
+    {"url": "https://cdn.example.com/bundles/icons/0123456789abcdef.zip", "size": 52428800}
+  ],
+  "sounds": [
+    {"url": "https://cdn.example.com/bundles/sounds/fedcba9876543210.zip", "size": 52428800}
+  ]
+}
