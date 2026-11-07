@@ -248,8 +248,7 @@
 /datum/element/tipped_item
 	element_flags = ELEMENT_DETACH
 
-	//Reagent blacklist. Killer's ice should probably be here too TBH.
 	blacklisted_reagents = list(
 		/datum/reagent/sleep_powder,
-		/datum/reagent/consumable/brew/baothablend
+		/datum/reagent/consumable/brew/baothablend //чай на кинжале? втф
 	)
