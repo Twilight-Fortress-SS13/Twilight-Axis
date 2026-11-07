@@ -59,3 +59,17 @@
 	icon_state = "overseerpants"
 	item_state = "overseerpants"
 	color = null
+
+/obj/item/clothing/under/roguetown/heavy_leather_pants/hrtpants
+	name = "heartfelt pants"
+	desc = "A pair of comfortable black trousers, a style often found in Heartfelt."
+	icon_state = "hrtpants"
+	item_state = "hrtpants"
+	salvage_result = /obj/item/natural/hide/cured
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/pants.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/pants.dmi'
+	armor_class = ARMOR_CLASS_LIGHT
+	armor = ARMOR_LEATHER
+	break_sound = 'sound/foley/cloth_rip.ogg'
+	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
+	allowed_race = NON_DWARVEN_RACE_TYPES
