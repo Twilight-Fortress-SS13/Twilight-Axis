@@ -47,6 +47,7 @@ GLOBAL_VAR_CONST(observer_move_delay_multiplier, 0.5)
 	var/datum/orbit_menu/orbit_menu // TA EDIT
 	var/orbiting_ref // TA EDIT
 	var/ghostize_time = 0
+	var/pen_name // TA EDIT
 	var/atom/movable/ghost_body_anchor
 	var/turf/ghost_body_anchor_turf
 	var/next_body_range_warning = 0
@@ -195,6 +196,9 @@ GLOBAL_VAR_CONST(observer_move_delay_multiplier, 0.5)
 				name = random_unique_name(gender)
 
 		mind = body.mind	//we don't transfer the mind but we keep a reference to it.
+		if(ishuman(body))
+			var/mob/living/carbon/human/H = body
+			pen_name = H.pen_name
 
 		set_suicide(body.suiciding) // Transfer whether they committed suicide.
 

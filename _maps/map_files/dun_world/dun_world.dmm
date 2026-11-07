@@ -34971,10 +34971,8 @@
 /turf/open/floor/rogue/cobble,
 /area/rogue/under/cave/his_vault)
 "fUO" = (
-/obj/structure/bed/rogue/inn/double{
-	can_buckle = 0
-	},
 /obj/item/bedsheet/rogue/fabric_double,
+/obj/structure/bed/rogue/inn/double,
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town/church/chapel)
 "fUQ" = (
@@ -51032,9 +51030,6 @@
 /obj/item/storage/roguebag,
 /obj/item/flint,
 /obj/item/cooking/pan,
-/obj/item/millstone{
-	pixel_y = 10
-	},
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/town/bath)
 "iIg" = (
@@ -57894,10 +57889,8 @@
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/outdoors/rtfield/eora)
 "jPp" = (
-/obj/structure/bed/rogue/inn/double{
-	can_buckle = 0
-	},
 /obj/item/bedsheet/rogue/double_pelt,
+/obj/structure/bed/rogue/inn/double,
 /turf/open/floor/rogue/hexstone,
 /area/rogue/indoors/town/church/chapel)
 "jPs" = (
@@ -59974,8 +59967,7 @@
 "kgE" = (
 /obj/structure/mineral_door/bars{
 	color = "#755f48";
-	name = "rusted iron door";
-	locked = 1
+	name = "rusted iron door"
 	},
 /turf/open/floor/rogue/concrete,
 /area/rogue/under/town/sewer)
@@ -74955,10 +74947,8 @@
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/inq/chapel)
 "mEX" = (
-/obj/structure/bed/rogue/inn/double{
-	can_buckle = 0
-	},
 /obj/item/bedsheet/rogue/fabric_double,
+/obj/structure/bed/rogue/inn/double,
 /turf/open/floor/carpet/red,
 /area/rogue/indoors/town/church/chapel)
 "mEY" = (
@@ -165577,7 +165567,7 @@ jTV
 cqm
 ydF
 bjc
-oxE
+enI
 cqm
 qHj
 qHj
@@ -171903,7 +171893,7 @@ nPv
 rqY
 rqY
 cqm
-oxE
+enI
 bjc
 ydF
 cqm
@@ -177320,7 +177310,7 @@ gBf
 iZp
 iZp
 dlK
-oxE
+enI
 bjc
 xam
 gBf

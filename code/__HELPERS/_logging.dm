@@ -70,6 +70,8 @@
 /proc/log_mail(text) // TA EDIT
 	WRITE_LOG(GLOB.world_mail_log, "MAIL: [text]") // TA EDIT
 
+/proc/log_ghost_poll(text, list/data)
+	logger.Log(LOG_CATEGORY_GAME_GHOST_POLLS, text, data)
 /proc/log_asset(text)
 	logger.Log(LOG_CATEGORY_DEBUG_ASSET, text)
 

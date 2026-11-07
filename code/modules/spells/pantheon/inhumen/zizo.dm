@@ -548,7 +548,7 @@
 			S.Jitter(100)
 
 			var/delay = rand(3 SECONDS, 6 SECONDS)
-			var/datum/beam/B = caster.Beam(S, icon_state = "necra_beam", time = delay, maxdistance = 20)
+			var/datum/beam/B = caster.Beam(S, icon_state = "necra_beam", time = delay, max_distance = 20)
 			spawn(delay)
 				explode_skeleton(S, caster, B)
 
@@ -561,7 +561,7 @@
 		S.Jitter(100)
 
 		var/delay = rand(2 SECONDS, 3 SECONDS)
-		var/datum/beam/B = caster.Beam(S, icon_state = "necra_beam", time = delay, maxdistance = 20)
+		var/datum/beam/B = caster.Beam(S, icon_state = "necra_beam", time = delay, max_distance = 20)
 
 		spawn(delay)
 			despawn_skeleton(S, caster, B)
