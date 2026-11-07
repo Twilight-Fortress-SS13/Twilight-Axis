@@ -1014,7 +1014,7 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 
 /datum/mind/proc/show_spell_tip()
 	if(current)
-		to_chat(current, span_nicegreen("Tip: Ctrl-Click any spell button to enter rearrangement mode. Your bar will glow green, spells cannot be cast and you can drag one button onto another to swap them in place. Ctrl-Click again to lock in and re-enable casting. Hotkeys are bound left to right (Alt 1 to Alt 9 default), matching the numbers shown on the buttons. Shift-click a spell to learn more about it."))
+		to_chat(current, span_nicegreen("Tip: Ctrl-Click any spell button to enter rearrangement mode. Your bar will glow green, spells cannot be cast and you can drag one button onto another to swap them in place. Ctrl-Click again to lock in and re-enable casting. Hotkeys follow the action order (Alt 1 to Alt 9 by default), matching the numbers shown even when buttons are moved. Shift-click a spell to learn more about it. Ctrl-Shift-Click toggles free positioning (blue bar); drag buttons anywhere on screen. Alt-Click resets one position; Ctrl-Alt-Click resets all positions. Scroll with the modifier chosen in Game Settings (Ctrl by default) over an action button or the map to select an action without casting; Alt+0 activates the selected action.")) // TA EDIT
 
 /datum/mind/proc/setup_mage_aspects(list/config, grant_attunement = TRUE)
 	mage_aspect_config = config
