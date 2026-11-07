@@ -86,7 +86,7 @@
 		"+1 PER" = STATKEY_PER,
 		"No Hunger & Thirst" = TRAIT_NOHUNGER
 	)
-	mechanics_explanations = list("Are the only race whose lux is already purified when extracted. However, their lux takes far longer to regrow than every other races.")
+	mechanics_explanations = list("Это единственная раса, чей люкс при извлечении уже оказывается очищенным. Однако на восстановление их люкса уходит гораздо больше времени, чем у любой другой расы.")
 
 /datum/species/aasimar/after_creation(mob/living/carbon/C)
 	..()

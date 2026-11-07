@@ -1,22 +1,22 @@
 /datum/species/ooze
 	name = "Murkling"
 	id = "ooze"
-	desc_title = "Murkling"
-	desc = "Few know the true origins of the Murklings. Ancient records place their beginnings deep within the cold caverns of the Underdark \
-	where primordial ooze infested tunnels and defended its spawning pits with relentless hostility. \
-	For centuries, Dark Elves and Dwarven delvers alike sealed these regions away, leaving the living mire undisturbed. \
-	Only within the last century did the ooze begin to change. \
-	What emerged were crude humanoid figures that were somehow sentient. \
-	They now stood in the shape of humens, two-legged, speaking, and curious to an unsettling degree. Once mindless sludge, they had become something new. \
-	As their spawning pools withered like parents releasing their young, the Murklings formed colonies of their own. \
-	Though hardened by the violent depths, they remain volatile and naive, struggling to understand a surface world that often sees them as monsters. \
-	True to their nature, Murklings rapidly adapt to their surroundings, their forms shifting to match the lands they inhabit. \
-	Yet this adaptability carries a curse: their bodies absorb more than shape. \
-	Dusts, spirits, and smoke can alter them beyond recovery - breeding a severe dependence, \
-	having consumed enough for their bodies to recreate and secrete the very substance that sustains them. \
-	Caught now in the struggles of surface faiths and kingdoms, Murklings search for purpose beyond their primordial mothers. \
-	Some turn to gods as they are susceptible to faith to fill the gaps their spawning pools left, and others reject them entirely. \
-	Yet all carry the memory of the deep: the silent, all-encompassing love and will from which they were born."
+	desc_title = "Мерклинг"
+	desc = "Мало кому известно истинное происхождение Мерклингов. Древние летописи гласят что они зародились в глубоких, холодных пещерах Подземья. \
+	где первозданная слизь заполняла туннели, яростно защищая свои «ямы рождения» — места, где она порождала жизнь. \
+	На протяжении веков, Темные Эльфы и Дворфы-рудокопы изолировали эти области, стараясь не тревожить эту живую субстанцию. \
+	Лишь в последнее столетие слизь начала меняться. \
+	Из неё возникли грубые гуманоидные фигуры, наделенные зачатками разума. \
+	Теперь они обрели облик людей: передвигаются на двух ногах, способны говорить и проявляют пугающее, чрезмерное любопытство. Бывшая некогда бездумной массой, эта субстанция превратилась в нечто совершенно иное. \
+	Когда их «бассейны рождения» иссякли — подобно тому, как родители отпускают своих детей в самостоятельную жизнь — Мерклинги начали создавать собственные колонии. \
+	Закаленные суровыми условиями глубин, они остаются крайне переменчивыми и наивными, пытаясь постичь мир на поверхности, где их зачастую считают чудовищами. \
+	Следуя своей природе, Мерклинги стремительно приспосабливаются к окружающей среде: их тела меняют форму, подстраиваясь под земли, в которых они обитают. \
+	Однако эта адаптивность — своего рода проклятие: их тела впитывают не только внешние очертания. \
+	Пыль, духи или дым могут изменить их до неузноваемости, порождая сильную зависимость: \
+	поглотив достаточное количество того или иного вещества, Мерклинги начинают вырабатывать его сами — оно становится для них источником существования. \
+	Оказавшись вовлеченными в конфликты между королевствами и верованиями поверхности, Мерклинги ищут смысл жизни, отличный от того, что был заложен их изначальными «матерями». \
+	Они обращаются к богам — ведь они весьма восприимчивы к вере, которая помогает заполнить пустоту, оставшуюся после исчезновения их «инкубаторов» — другие же полностью их отвергают. \
+	И всё же в каждом из них живет память о глубинах: о той безмолвной, всеобъемлющей любви и воле, из которых они когда-то появились на свет."
 	blood_color = "#00FFFF" //Defaults to blue, but we recolor this later to match the slime person's body color.
 	origin_default = /datum/virtue/origin/racial/underdark
 	base_name = "Ooze"
@@ -95,9 +95,9 @@
 		ORGAN_SLOT_STOMACH = /obj/item/organ/stomach/ooze,
 		)
 
-	mechanics_explanations = list("Have no bones to break. However, upon suffering a severe blunt wound, or when a limb would experience a bone fracture, the limb melts. Lost limbs similarly melt off.",
-		"Can regenerate lost limbs by sleeping, at a great cost to their bodily nutrition.",
-		"Have uniquely colored blood that matches the color of their bodies.")
+	mechanics_explanations = list("Бескостный — нечему ломаться. Однако при получении тупой травмы или в случае, если конечность должна была быть сломана, она плавится. Утраченные конечности точно так же плавятся ",
+		"Могут восстанавливать утраченные конечности во время сна — ценой значительного истощения организма.",
+		"Обладают кровью необычного цвета, которая совпадает с их цветом тела.")
 
 ////// ORGAN SPRITES, provided by VelSlime
 /obj/item/organ/brain/ooze
