@@ -97,6 +97,13 @@
 	// --- Gamemode preset configuration ---
 	/// Which vote pool this preset belongs to (GAMEMODE_POOL_*). Presets sharing a pool are excluded together the round after one wins.
 	var/preset_pool
+	// TA EDIT START
+	var/vote_hidden = FALSE
+	var/alternate_preset
+	var/highpop_vote_mult = 1
+	var/midpop_vote_mult = 1
+	var/lowpop_vote_mult = 1
+	// TA EDIT END
 	/// If TRUE, a roundstart hard antag (Bandit/Lich/Werewolf/Vampire Lord) is guaranteed to roll (still needs pop >= HARD_ANTAG_MIN_POP).
 	var/guaranteed_hard = FALSE
 	/// Multiplier applied to hard-antag slot scaling. >1 scales hard antag counts more aggressively with pop.
@@ -293,6 +300,10 @@
 	mode.event_track_points[track] = max(mode.event_track_points[track] - total_cost, 0)
 	message_admins("Storyteller purchased and triggered [bought_event] event, on [track] track, for [total_cost] cost.")
 	if(bought_event.roundstart)
+		if(!mode.ran_roundstart && (bought_event.storyteller_antag_flags & STORYTELLER_ANTAG_VILLAIN))
+			mode.last_villain = bought_event.type
+			fdel(LAST_VILLAIN_FILE)
+			text2file("[bought_event.type]", LAST_VILLAIN_FILE)
 		SSgamemode.ran_roundstart = TRUE
 		SSgamemode.current_roundstart_event = bought_event
 		mode.TriggerEvent(bought_event, forced)

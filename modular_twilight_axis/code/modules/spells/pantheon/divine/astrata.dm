@@ -754,7 +754,7 @@
 			var/dist = get_dist(O, user)
 			if(dist > 1)
 				return
-			if(istype(O, /obj/item/ash))
+			if(istype(O, /obj/item/natural/ash))
 				cost = 20
 			if(istype(O, /obj/item/reagent_containers/food/snacks/grown/rogue/fyritius))
 				cost = 50

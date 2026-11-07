@@ -118,6 +118,16 @@
 		if(!controller.owner.has_testicles())
 			return "У инициатора нет тестикул."
 
+	var/list/appearance_tags = list("hair", "wings", "tail", "snout", "horns", "frills", "fluff", "accessory", "face_detail", "facedetail", "underwear", "legwear", "leagwear", "piercing", "piercings")
+	if(islist(A.action_tags))
+		for(var/tag in appearance_tags)
+			if(tag in A.action_tags)
+				if(!controller.active_partner.has_appearance_tag(tag))
+					return "У цели нет нужной особенности: [tag]."
+			if("actor_[tag]" in A.action_tags)
+				if(!controller.owner.has_appearance_tag(tag))
+					return "У инициатора нет нужной особенности: [tag]."
+
 	if(A.inject_timing != INJECT_NONE && A.inject_target_mode == INJECT_CONTAINER)
 		if(!ctx.has_container)
 			return "Нужен контейнер с реагентами рядом."

@@ -19,7 +19,8 @@
 		/obj/item/bodypart/taur/horse,
 		/obj/item/bodypart/taur/goat,
 		/obj/item/bodypart/taur/feline,				//TA-EDIT
-		/obj/item/bodypart/taur/feline/furry		//TA-EDIT
+		/obj/item/bodypart/taur/feline/furry,		//TA-EDIT
+		/obj/item/bodypart/taur/arachne		//TA-EDIT
 	)
 	default_features = MANDATORY_FEATURE_LIST
 	use_skintones = TRUE
