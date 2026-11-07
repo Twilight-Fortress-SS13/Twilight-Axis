@@ -156,6 +156,7 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/sandworm/wormling
 	name = "sand wormling"
+	threat_point = THREAT_LOW
 	icon_state = "hatchling"
 	icon_living = "hatchling"
 	icon_dead = "hatchling-dead"
@@ -177,6 +178,7 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/sandworm/stalker
 	name = "sand stalker"
+	threat_point = THREAT_HIGH
 	icon_living = "juvenile"
 	icon_state = "juvenile"
 	icon_dead = "juvenile-dead"
@@ -200,6 +202,7 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/sandworm/elder
 	name = "elder sandworm"
+	threat_point = THREAT_DEADLY
 	icon_living = "adult"
 	icon_state = "adult"
 	icon_dead = "adult-dead"

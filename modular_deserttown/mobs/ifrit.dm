@@ -47,6 +47,7 @@
 		playsound(owner, 'sound/magic/meteorstorm.ogg', 100, TRUE)
 
 /mob/living/simple_animal/hostile/retaliate/rogue/ifrit
+	threat_point = THREAT_DANGEROUS
 	icon = 'modular_deserttown/icons/mob/monster/ifrit.dmi'
 	name = "ifrit"
 	icon_state = "ifrit"

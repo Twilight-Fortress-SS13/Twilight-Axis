@@ -105,7 +105,8 @@
 	ADD_TRAIT(src, TRAIT_NOHUNGER, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_BREADY, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
-	INVOKE_ASYNC(src, .proc/dunewell_post_init)
+	if(type == /mob/living/carbon/human/species/human/northern/dunewell_raider || type == /mob/living/carbon/human/species/human/northern/dunewell_raider/ambush)
+		INVOKE_ASYNC(src, .proc/dunewell_post_init)
 
 /mob/living/carbon/human/species/human/northern/dunewell_raider/proc/dunewell_post_init()
 	equipOutfit(new /datum/outfit/job/roguetown/human/northern/dunewell_raider)

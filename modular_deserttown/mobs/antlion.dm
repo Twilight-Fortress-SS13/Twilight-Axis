@@ -2,6 +2,7 @@
 	icon = 'modular_deserttown/icons/mob/monster/antlion.dmi'
 	name = "antlion"
 	desc = ""
+	threat_point = THREAT_TOUGH
 	pixel_x = -2
 	pixel_y = 7
 	faction = list("antlion")

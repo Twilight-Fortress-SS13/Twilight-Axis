@@ -13,6 +13,7 @@
 	spookysounds = SPOOKY_GEN
 	spookynight = SPOOKY_GEN
 	ambush_mobs = list(
+		/mob/living/carbon/human/species/human/northern/dunewell_raider/ambush = 20,
 		/mob/living/simple_animal/hostile/retaliate/rogue/sandworm/stalker = 10,
 		/mob/living/simple_animal/hostile/retaliate/rogue/badger  = 10,
 		/mob/living/simple_animal/hostile/retaliate/rogue/sandworm/wormling = 25,

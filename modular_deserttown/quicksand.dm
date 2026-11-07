@@ -9,11 +9,12 @@
 	density = FALSE
 	anchored = TRUE
 
+	can_buckle = 1
 	buckle_lying = FALSE
 	buckle_prevents_pull = TRUE
 	max_integrity = -1
 	alpha = 175
-	plane = -8
+	plane = FLOOR_PLANE
 
 /obj/structure/quicksand/Initialize(mapload)
 	. = ..()
@@ -28,12 +29,21 @@
 	var/mob/living/carbon/human/Living = AtomMovable
 	if(Living.buckled)
 		return
+	if(Living.is_flying())
+		return
 	if(Living.m_intent == MOVE_INTENT_SNEAK)
 		return
 	buckle_mob(Living, TRUE, check_loc = FALSE)
 	SEND_SIGNAL(src, COMSIG_MOB_OVERLAY_FORCE_UPDATE, Living)
+	playsound(loc, pick('sound/foley/footsteps/FTMUD (1).ogg', 'sound/foley/footsteps/FTMUD (2).ogg', 'sound/foley/footsteps/FTMUD (3).ogg'), 70, TRUE)
 	visible_message(span_warning("[Living] sinks into the quicksand!"))
 	START_PROCESSING(SSobj, src)
+
+/obj/structure/quicksand/post_unbuckle_mob(mob/living/M)
+	. = ..()
+	SEND_SIGNAL(src, COMSIG_MOB_OVERLAY_FORCE_REMOVE, M)
+	if(!has_buckled_mobs())
+		STOP_PROCESSING(SSobj, src)
 
 /obj/structure/quicksand/user_unbuckle_mob(mob/living/buckled_mob, mob/living/user)
 	var/mob/living/carbon/human/Human = buckled_mob
@@ -42,15 +52,15 @@
 	user.visible_message(span_warning("[user] struggles to escape the quicksand!"))
 
 	if(!do_after(user, escape_time, FALSE, src))
-		return
+		return FALSE
 
-	playsound(src, FOOTSTEP_MUD, 50)
+	playsound(loc, pick('sound/foley/footsteps/FTMUD (1).ogg', 'sound/foley/footsteps/FTMUD (2).ogg', 'sound/foley/footsteps/FTMUD (3).ogg'), 60, TRUE)
 
 	unbuckle_mob(Human)
-	SEND_SIGNAL(src, COMSIG_MOB_OVERLAY_FORCE_REMOVE, Human)
 	Human.stamina_add(75)
 
 	visible_message(span_notice("[buckled_mob] drags themselves free of the quicksand!"))
+	return TRUE
 
 /obj/structure/quicksand/attackby(obj/item/I, mob/user, params)
 	if(istype(I, /obj/item/rogueweapon/shovel))
@@ -58,19 +68,25 @@
 		to_chat(user, span_info("I start digging up \the [name]..."))
 		if(do_after(user, 5 SECONDS, src))
 			playsound(loc, 'sound/items/empty_shovel.ogg', 100, TRUE)
+			unbuckle_all_mobs(TRUE)
 			qdel(src)
 			return
 	return ..()
 
 /obj/structure/quicksand/attack_hand(mob/user)
 	if(has_buckled_mobs())
-		var/person = buckled_mobs[1].name
-		if(user == buckled_mobs[1])
-			person = "themself"
-		user.visible_message(span_warning("[user.name] starts to pull [person] out of the quicksand!"))
-		if(do_after(user, 2 SECONDS))
-			unbuckle_mob(buckled_mobs[1], TRUE)
-			user.visible_message(span_warning("[user.name] pulls [person] out of the quicksand."))
+		var/mob/living/victim = buckled_mobs[1]
+		if(user == victim)
+			user_unbuckle_mob(user, user)
+			return
+		user.visible_message(span_warning("[user.name] starts to pull [victim.name] out of the quicksand!"))
+		if(do_after(user, 3 SECONDS, target = src))
+			if(!has_buckled_mobs() || buckled_mobs[1] != victim)
+				return
+			playsound(loc, pick('sound/foley/footsteps/FTMUD (1).ogg', 'sound/foley/footsteps/FTMUD (2).ogg', 'sound/foley/footsteps/FTMUD (3).ogg'), 60, TRUE)
+			unbuckle_mob(victim, TRUE)
+			user.visible_message(span_notice("[user.name] pulls [victim.name] out of the quicksand."))
+			return
 	. = ..()
 
 /obj/structure/quicksand/process()
