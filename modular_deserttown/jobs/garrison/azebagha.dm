@@ -111,7 +111,7 @@
 		/obj/item/storage/keyring/azebagha = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1,
-		/obj/item/signal_horn = 1
+		/obj/item/clothing/mask/rogue/spectacles/goggles = 1
 		)
 	H.adjust_blindness(-3)
 	if(H.mind)
