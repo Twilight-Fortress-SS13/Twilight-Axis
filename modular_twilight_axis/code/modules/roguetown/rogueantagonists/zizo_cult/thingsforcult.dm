@@ -401,7 +401,7 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	desc = "An doublehead axe, which made for kills for Zizo-queen."
 	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone_twoh.dmi'
 	icon_state = "Ztaxe"
-	special = /datum/special_intent/vicious_swipe
+	special = /datum/special_intent/wave_swing/vicious
 	max_blade_int = 400
 	max_integrity = 380
 	wdefense = 9

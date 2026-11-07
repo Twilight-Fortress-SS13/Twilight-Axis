@@ -592,8 +592,7 @@
 	if(impact_center)
 		new /obj/effect/temp_visual/ravox_impact(impact_center)
 
-	_clear_grid()
-	_assign_grid_indexes()
+	affected_turfs = alist()
 	_create_grid()
 
 	var/list/turfs = affected_turfs[0]

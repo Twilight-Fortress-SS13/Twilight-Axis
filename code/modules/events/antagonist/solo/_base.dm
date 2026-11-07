@@ -374,15 +374,15 @@
 /// POLLING LOGIC BELOW.
 /datum/round_event/antagonist/solo/proc/poll_and_assign(list/mob/living/possible_candidates)
 	var/datum/round_event_control/antagonist/solo/cast_control = control
-	var/list/willing_candidates = list()
-	var/poll_time = 20 SECONDS
-
-	for(var/mob/living/L in possible_candidates)
-		if(!L.client || candidate_is_antag_banned(L))
-			continue
-		INVOKE_ASYNC(src, PROC_REF(ask_candidate), L, willing_candidates, poll_time)
-
-	sleep(poll_time)
+	possible_candidates = cast_control.filter_antag_banned_candidates(possible_candidates) // TA EDIT
+	var/list/willing_candidates = SSpolling.poll_candidates(
+		question = "The storyteller is requesting a [antag_flag]. Would you like to play this role?",
+		poll_time = 20 SECONDS,
+		group = possible_candidates,
+		role_name_text = cast_control.name,
+	)
+	if(!willing_candidates)
+		willing_candidates = list()
 
 	for(var/mob/M in willing_candidates)
 		if(QDELETED(M) || !M.client || (M.stat == DEAD && !istype(M, /mob/dead/observer)) || candidate_is_antag_banned(M))
@@ -406,11 +406,3 @@
 
 	message_admins("STORYTELLER: [cast_control.name] poll finished. [setup_minds.len] antags spawned.")
 
-/datum/round_event/antagonist/solo/proc/ask_candidate(mob/M, list/willing_list, poll_time)
-	if(candidate_is_antag_banned(M))
-		return
-
-	var/ask_text = "The storyteller is requesting a [antag_flag]. Would you like to play this role?"
-	var/choice = tgui_alert(M, ask_text, "Antagonist Request", list("Yes", "No"), poll_time)
-	if(choice == "Yes" && !candidate_is_antag_banned(M))
-		willing_list += M

@@ -23,7 +23,7 @@
 
 /obj/structure/flora/roguetree/get_mechanics_examine(mob/user)
 	. = ..()
-	. += span_info("Most trees can be toppled by hitting them with the 'CUT', 'CHOP', or 'REND' intents on bladed weapons. Nothing chops trees and foliage better, or quicker, than a good old fashioned axe.")
+	. += span_info("Most trees can be toppled by hitting them with the 'CUT', 'CHOP', or 'REND' intents on bladed weapons. Nothing chops trees and foliage better, or quicker, than a good old-fashioned axe.")
 
 /obj/structure/flora/roguetree/attack_right(mob/user)
 	if(user.mind && isliving(user))
@@ -35,6 +35,7 @@
 						var/path2item = user.mind.special_items[item]
 						user.mind.special_items -= item
 						var/obj/item/I = new path2item(user.loc)
+						user.mind.tat_apply_special_item_sale_lock(item, I) //Twilight Axis Edit - TAT
 						user.put_in_hands(I)
 			return
 
@@ -268,7 +269,7 @@
 	if(occupied)
 		to_chat(user, span_warning("Someone is already hiding inside [src]!"))
 		return
-	if(!do_after(user, sneaktime, src))
+	if(!do_after(user, sneaktime, target = src))
 		return
 	user.forceMove(src)
 	occupied = TRUE
@@ -481,7 +482,7 @@
 	if(occupied)
 		to_chat(user, span_warning("Someone is already hiding in [src]!"))
 		return
-	if(!do_after(user, sneaktime, src))
+	if(!do_after(user, sneaktime, target = src))
 		return
 	user.forceMove(src)
 	occupied = TRUE
@@ -618,6 +619,7 @@
 						var/path2item = user.mind.special_items[item]
 						user.mind.special_items -= item
 						var/obj/item/I = new path2item(user.loc)
+						user.mind.tat_apply_special_item_sale_lock(item, I) //Twilight Axis Edit - TAT
 						user.put_in_hands(I)
 			return
 
@@ -693,7 +695,7 @@
 
 /obj/structure/roguerock
 	name = "rock"
-	desc = "A rock protuding from the ground."
+	desc = "A rock protruding from the ground."
 	icon_state = "rock1"
 	icon = 'icons/roguetown/misc/foliage.dmi'
 	opacity = 0
@@ -929,7 +931,7 @@
 
 /obj/structure/flora/rogueshroom/get_mechanics_examine(mob/user)
 	. = ..()
-	. += span_info("Most shroomtrees can be toppled by hitting them with the 'CUT', 'CHOP', or 'REND' intents on bladed weapons. Nothing chops trees and foliage better, or quicker, than a good old fashioned axe.")
+	. += span_info("Most shroomtrees can be toppled by hitting them with the 'CUT', 'CHOP', or 'REND' intents on bladed weapons. Nothing chops trees and foliage better, or quicker, than a good old-fashioned axe.")
 
 /obj/structure/flora/rogueshroom/happy/Initialize(mapload)
 	. = ..()

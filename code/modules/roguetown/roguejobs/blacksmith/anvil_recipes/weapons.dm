@@ -461,6 +461,7 @@
 	req_bar = /obj/item/ingot/bronze
 	additional_items = list(/obj/item/rogueweapon/contraption/linker)
 	created_item = /obj/item/rogueweapon/contraption/linker/mace
+	appro_skill = /datum/skill/craft/engineering
 	display_category = ITEM_CAT_WEAPONS_MACES
 
 /datum/anvil_recipe/weapons/bronze/bigbattlewrench
@@ -469,6 +470,7 @@
 	req_bar = /obj/item/ingot/bronze
 	additional_items = list(/obj/item/rogueweapon/contraption/linker, /obj/item/ingot/bronze)
 	created_item = /obj/item/rogueweapon/contraption/linker/mace/big
+	appro_skill = /datum/skill/craft/engineering
 	display_category = ITEM_CAT_WEAPONS_MACES
 
 /datum/anvil_recipe/weapons/bronze/whip
@@ -756,6 +758,7 @@
 	req_bar = /obj/item/ingot/iron
 	additional_items = list(/obj/item/rogueweapon/contraption/linker)
 	created_item = /obj/item/rogueweapon/contraption/linker/mace/iron
+	appro_skill = /datum/skill/craft/engineering
 	display_category = ITEM_CAT_WEAPONS_MACES
 
 /datum/anvil_recipe/weapons/iron/bigbattlewrench
@@ -764,6 +767,7 @@
 	req_bar = /obj/item/ingot/iron
 	additional_items = list(/obj/item/rogueweapon/contraption/linker, /obj/item/ingot/iron)
 	created_item = /obj/item/rogueweapon/contraption/linker/mace/big/iron
+	appro_skill = /datum/skill/craft/engineering
 	display_category = ITEM_CAT_WEAPONS_MACES
 
 /datum/anvil_recipe/weapons/iron/spear
@@ -1067,6 +1071,7 @@
 	req_bar = /obj/item/ingot/steel
 	additional_items = list(/obj/item/rogueweapon/contraption/linker)
 	created_item = /obj/item/rogueweapon/contraption/linker/mace/steel
+	appro_skill = /datum/skill/craft/engineering
 	display_category = ITEM_CAT_WEAPONS_MACES
 
 /datum/anvil_recipe/weapons/steel/bigbattlewrench
@@ -1075,6 +1080,7 @@
 	req_bar = /obj/item/ingot/steel
 	additional_items = list(/obj/item/rogueweapon/contraption/linker, /obj/item/ingot/steel)
 	created_item = /obj/item/rogueweapon/contraption/linker/mace/big/steel
+	appro_skill = /datum/skill/craft/engineering
 	display_category = ITEM_CAT_WEAPONS_MACES
 
 /datum/anvil_recipe/weapons/steel/greatsword
@@ -1426,6 +1432,13 @@
 	created_item = /obj/item/rogueweapon/katar/silver
 	display_category = ITEM_CAT_WEAPONS_SWORDS
 
+/datum/anvil_recipe/weapons/silver/knuckle
+	name = "Knuckles, Silver"
+	category = "Silver"
+	req_bar = /obj/item/ingot/silver
+	created_item = /obj/item/clothing/gloves/roguetown/knuckles/silver
+	display_category = ITEM_CAT_WEAPONS_MACES
+
 /datum/anvil_recipe/weapons/silver/sword
 	name = "Arming Sword, Silver (+1 Silver)"
 	category = "Silver"
@@ -1515,7 +1528,7 @@
 	display_category = ITEM_CAT_WEAPONS_MACES
 
 /datum/anvil_recipe/weapons/silver/flangedmace
-	name = "Flanged Mace, Silver	(+1 Silver, +1 Small Log)"
+	name = "Flanged Mace, Silver (+1 Silver, +1 Small Log)"
 	category = "Silver"
 	req_bar = /obj/item/ingot/silver
 	additional_items = list(/obj/item/ingot/silver, /obj/item/grown/log/tree/small)
@@ -1536,6 +1549,7 @@
 	req_bar = /obj/item/ingot/silver
 	additional_items = list(/obj/item/rogueweapon/contraption/linker)
 	created_item = /obj/item/rogueweapon/contraption/linker/mace/silver
+	appro_skill = /datum/skill/craft/engineering
 	display_category = ITEM_CAT_WEAPONS_MACES
 
 /datum/anvil_recipe/weapons/silver/bigbattlewrench
@@ -1544,6 +1558,7 @@
 	req_bar = /obj/item/ingot/silver
 	additional_items = list(/obj/item/rogueweapon/contraption/linker, /obj/item/ingot/silver)
 	created_item = /obj/item/rogueweapon/contraption/linker/mace/big/silver
+	appro_skill = /datum/skill/craft/engineering
 	display_category = ITEM_CAT_WEAPONS_MACES
 
 /datum/anvil_recipe/weapons/silver/quarterstaff
@@ -2110,6 +2125,24 @@
 	additional_items = list(/obj/item/ingot/silverblessed, /obj/item/grown/log/tree/stick)
 	i_type = "Weapons"
 
+/datum/anvil_recipe/weapons/psy/poleaxe
+	name = "Psydonic Poleaxe (+2 Blessed Silver, +2 Small Logs)"
+	category = "Silver"
+	req_bar = /obj/item/ingot/silverblessed
+	created_item = /obj/item/rogueweapon/greataxe/steel/knight/silver/psy
+	display_category = ITEM_CAT_WEAPONS_AXES
+	additional_items = list(/obj/item/ingot/silverblessed, /obj/item/ingot/silverblessed, /obj/item/grown/log/tree/small, /obj/item/grown/log/tree/small)
+	i_type = "Weapons"
+
+/datum/anvil_recipe/weapons/psy/flangedmace
+	name = "Psydonic Flanged Mace (+1 Blessed Silver)"
+	category = "Blessed Silver"
+	req_bar = /obj/item/ingot/silverblessed
+	created_item = /obj/item/rogueweapon/mace/cudgel/flanged/silver/psy
+	display_category = ITEM_CAT_WEAPONS_MACES
+	additional_items = list(/obj/item/ingot/silverblessed)
+	i_type = "Weapons"
+
 /datum/anvil_recipe/weapons/psy/mace
 	name = "Psydonic Mace (+1 Blessed Silver, +1 Stick)"
 	category = "Blessed Silver"
@@ -2152,6 +2185,14 @@
 	display_category = ITEM_CAT_WEAPONS_SWORDS
 	i_type = "Weapons"
 
+/datum/anvil_recipe/weapons/psy/knuckles
+	name = "Psydonic Knuckles"
+	category = "Blessed Silver"
+	req_bar = /obj/item/ingot/silverblessed
+	created_item = /obj/item/clothing/gloves/roguetown/knuckles/silver/psy
+	display_category = ITEM_CAT_WEAPONS_MACES
+	i_type = "Weapons"
+
 /datum/anvil_recipe/weapons/psy/armingsword
 	name = "Psydonic Arming Sword"
 	category = "Blessed Silver"
@@ -2185,6 +2226,15 @@
 	created_item = /obj/item/rogueweapon/greatsword/silver/psy
 	display_category = ITEM_CAT_WEAPONS_SWORDS
 	additional_items = list(/obj/item/ingot/silverblessed, /obj/item/ingot/silverblessed)
+	i_type = "Weapons"
+
+/datum/anvil_recipe/weapons/psy/flail
+	name = "Psydonic Flail (+3 Blessed Silver, +1 Chain)"
+	category = "Blessed Silver"
+	req_bar = /obj/item/ingot/silverblessed
+	created_item = /obj/item/rogueweapon/flail/sflail/silver/psy
+	display_category = ITEM_CAT_WEAPONS_FLAILS
+	additional_items = list(/obj/item/ingot/silverblessed, /obj/item/ingot/silverblessed, /obj/item/ingot/silverblessed, /obj/item/rope/chain)
 	i_type = "Weapons"
 
 /datum/anvil_recipe/weapons/psy/sword
@@ -2260,6 +2310,24 @@
 	additional_items = list(/obj/item/ingot/silverblessed/bullion, /obj/item/grown/log/tree/stick)
 	i_type = "Weapons"
 
+/datum/anvil_recipe/weapons/psy/poleaxe/inq
+	name = "Psydonic Poleaxe (+2 Blessed Silver, +2 Small Logs)"
+	category = "Silver"
+	req_bar = /obj/item/ingot/silverblessed/bullion
+	created_item = /obj/item/rogueweapon/greataxe/steel/knight/silver/psy
+	display_category = ITEM_CAT_WEAPONS_AXES
+	additional_items = list(/obj/item/ingot/silverblessed/bullion, /obj/item/ingot/silverblessed/bullion, /obj/item/grown/log/tree/small, /obj/item/grown/log/tree/small)
+	i_type = "Weapons"
+
+/datum/anvil_recipe/weapons/psy/flangedmace
+	name = "Psydonic Flanged Mace (+1 Blessed Silver)"
+	category = "Blessed Silver"
+	req_bar = /obj/item/ingot/silverblessed/bullion
+	created_item = /obj/item/rogueweapon/mace/cudgel/flanged/silver/psy
+	display_category = ITEM_CAT_WEAPONS_MACES
+	additional_items = list(/obj/item/ingot/silverblessed/bullion)
+	i_type = "Weapons"
+
 /datum/anvil_recipe/weapons/psy/mace/inq
 	name = "Psydonic Mace (+1 Blessed Silver, +1 Stick)"
 	category = "Blessed Silver"
@@ -2312,10 +2380,10 @@
 	i_type = "Weapons"
 
 /datum/anvil_recipe/weapons/psy/knuckles/inq
-	name = "Psydonic Knuckledusters"
+	name = "Psydonic Knuckles"
 	category = "Blessed Silver"
 	req_bar = /obj/item/ingot/silverblessed/bullion
-	created_item = /obj/item/clothing/gloves/roguetown/knuckles/silver/psydon
+	created_item = /obj/item/clothing/gloves/roguetown/knuckles/silver/psy
 	display_category = ITEM_CAT_WEAPONS_MACES
 	i_type = "Weapons"
 
@@ -2343,6 +2411,15 @@
 	created_item = /obj/item/rogueweapon/greatsword/silver/psy
 	display_category = ITEM_CAT_WEAPONS_SWORDS
 	additional_items = list(/obj/item/ingot/silverblessed/bullion, /obj/item/ingot/silverblessed/bullion)
+	i_type = "Weapons"
+
+/datum/anvil_recipe/weapons/psy/flail/inq
+	name = "Psydonic Flail (+3 Blessed Silver, +1 Chain)"
+	category = "Blessed Silver"
+	req_bar = /obj/item/ingot/silverblessed/bullion
+	created_item = /obj/item/rogueweapon/flail/sflail/silver/psy
+	display_category = ITEM_CAT_WEAPONS_FLAILS
+	additional_items = list(/obj/item/ingot/silverblessed/bullion, /obj/item/ingot/silverblessed/bullion, /obj/item/ingot/silverblessed/bullion, /obj/item/rope/chain)
 	i_type = "Weapons"
 
 /datum/anvil_recipe/weapons/psy/sword/inq
@@ -2561,7 +2638,7 @@
 	name = "Blacksteel Flail (+1 Silk)"
 	category = "Blacksteel"
 	req_bar = /obj/item/ingot/blacksteel
-	additional_items = list(/obj/item/ingot/blacksteel, /obj/item/natural/silk)
+	additional_items = list(/obj/item/natural/silk)
 	created_item = /obj/item/rogueweapon/flail/blacksteel
 	display_category = ITEM_CAT_WEAPONS_FLAILS
 
