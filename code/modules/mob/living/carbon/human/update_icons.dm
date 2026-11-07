@@ -1826,30 +1826,27 @@ generate/load female uniform sprites matching all previously decided variables
 	else if(cloak && (cloak.flags_inv & HIDEBOOB))
 		hiden = TRUE
 
-	var/list/new_limbs = list()
-	var/changed = FALSE
+	var/list/part_keys = list()
 	for(var/obj/item/bodypart/BP as anything in bodyparts)
 		BP.update_limb()
-		var/new_key = BP.get_cache_key(hiden)
-		if(!redraw && new_key == icon_render_keys[BP.body_zone] && limb_icon_cache[new_key])
-			new_limbs += limb_icon_cache[new_key]
-			continue
-		changed = TRUE
-		var/is_chest = (BP.name == BODY_ZONE_CHEST)
-		var/list/limb_overlays
-		if(!redraw && limb_icon_cache[new_key])
-			limb_overlays = limb_icon_cache[new_key]
-		else
-			limb_overlays = BP.get_limb_icon(hideaux = is_chest ? hiden : FALSE)
+		part_keys += "[BP.get_cache_key(BP.body_zone == BODY_ZONE_CHEST ? hiden : FALSE)]-[obscured_flags]"
+	var/new_key = jointext(part_keys, "|")
+	if(!redraw && new_key == icon_render_key)
+		return
+	icon_render_key = new_key
+
+	var/list/new_limbs = list()
+	for(var/i in 1 to length(bodyparts))
+		var/obj/item/bodypart/BP = bodyparts[i]
+		var/limb_key = part_keys[i]
+		var/list/limb_overlays = !redraw && limb_icon_cache[limb_key]
+		if(!limb_overlays)
+			limb_overlays = BP.get_limb_icon(hideaux = (BP.body_zone == BODY_ZONE_CHEST) ? hiden : FALSE)
 			if(isooze(src))
 				for(var/image/limb_alpha in limb_overlays)
 					limb_alpha.alpha = 180
+			limb_icon_cache[limb_key] = limb_overlays
 		new_limbs += limb_overlays
-		limb_icon_cache[new_key] = limb_overlays
-		icon_render_keys[BP.body_zone] = new_key
-
-	if(!changed)
-		return
 
 	remove_overlay(BODYPARTS_LAYER)
 	if(length(new_limbs))

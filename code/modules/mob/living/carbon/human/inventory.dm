@@ -379,8 +379,6 @@
 	if(I.flags_inv & HIDEEARS || forced)
 		update_body()
 	..()
-	if(I.flags_inv & (HIDEHAIR|HIDEFACIALHAIR|HIDEFACE|HIDEEARS|HIDEEYES) || forced)
-		update_body_parts(TRUE)
 
 /mob/living/carbon/human/proc/equipOutfit(outfit, visualsOnly = FALSE)
 	var/datum/outfit/O = null
