@@ -147,13 +147,13 @@
 	if(assocskill)
 		int_bonus = 2
 		if(assocskill >= 4)
-			int_bonus = 2
+			int_bonus = 3
 	if(!GLOB.tod == "day")
 		if(assocskill <= 2)
-			int_bonus = 2
+			int_bonus = 3
 		else
 			int_bonus = assocskill
-		duration *= 2
+		duration *= 1.5
 	else if(GLOB.tod == "day")
 		int_bonus--
 	if(int_bonus > 0)
