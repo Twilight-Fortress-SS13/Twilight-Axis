@@ -302,7 +302,7 @@ GLOBAL_LIST_INIT(vampire_clan_selection_i18n, build_vampire_clan_selection_i18n(
 		TRAIT_DARKVISION,
 		TRAIT_LIMBATTACHMENT,
 		TRAIT_SILVER_WEAK,
-		TRAIT_VAMPMANSION
+		TRAIT_VAMPMANSION,
 	)
 
 /datum/vampire_clan_selection_menu/proc/base_lord_traits()
