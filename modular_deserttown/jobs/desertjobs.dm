@@ -428,17 +428,17 @@
 		shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/zyb
 
 // Trait Slave for specific jobs in Desert Town
-/datum/job/roguetown/shophand/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
+/*/ /datum/job/roguetown/shophand/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	..()
 	if(SSmapping.config.map_name == "Desert Town")
 		ADD_TRAIT(L, TRAIT_SLAVE, TRAIT_GENERIC)
-
+*/
 /datum/job/roguetown/bathworker/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	..()
 	if(SSmapping.config.map_name == "Desert Town")
 		ADD_TRAIT(L, TRAIT_SLAVE, TRAIT_GENERIC)
 
-/datum/job/roguetown/cook/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
+ /* /datum/job/roguetown/cook/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	..()
 	if(SSmapping.config.map_name == "Desert Town")
 		ADD_TRAIT(L, TRAIT_SLAVE, TRAIT_GENERIC)
@@ -447,7 +447,7 @@
 	..()
 	if(SSmapping.config.map_name == "Desert Town")
 		ADD_TRAIT(L, TRAIT_SLAVE, TRAIT_GENERIC)
-
+*/
 /datum/controller/subsystem/job/Initialize(timeofday)
 	. = ..()
 	if(SSmapping && SSmapping.config && SSmapping.config.map_name == "Desert Town")
