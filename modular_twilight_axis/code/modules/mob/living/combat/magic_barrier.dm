@@ -180,9 +180,11 @@ GLOBAL_LIST_INIT(magearmor_advclasses, list(
 	/datum/advclass/heir/bookworm,
 	/datum/advclass/mercenary/warscholar,
 	/datum/advclass/vagabond_mage,
-	// Ниже идут классы, появившиеся после удаления барьера.
-	/datum/advclass/mage/spellfist,
-	/datum/advclass/mage/spellthief,
+	// Ниже идут классы, появившиеся после ПР на удаление барьера и имеющие мажорную школу.
+	/datum/advclass/mercenary/desert_rider_sahir,
+	/datum/advclass/mercenary/grenzelhoft_mage,
+	/datum/advclass/vampseigemage,
+	/datum/advclass/psydonianwarscholar,
 	// "Spellblade 2 rework" отдельно удалил спеллблейдам барьер, посему их здесь нет.
 ))
 
@@ -200,3 +202,19 @@ GLOBAL_LIST_INIT(magearmor_jobs, list(
 	. = ..()
 	if(type in GLOB.magearmor_jobs)
 		LAZYOR(job_traits, TRAIT_MAGEARMOR)
+
+// Некоторые классы выбирают "путь" с мажорной школой уже после спавна за определенный подкласс.
+// Барьер выдается им в отдельном проке по логике "есть мажорная школа — ты боевой маг".
+/proc/grant_barrier_for_major_school(mob/living/carbon/human/H)
+	if(H.mind?.mage_aspect_config?["major"] >= 1)
+		ADD_TRAIT(H, TRAIT_MAGEARMOR, TRAIT_GENERIC)
+
+// Ведьмы с Old Magick имеют мажорку, следовательно, полноценные боевые маги.
+/datum/outfit/job/roguetown/adventurer/witch/pre_equip(mob/living/carbon/human/H)
+	. = ..()
+	grant_barrier_for_major_school(H)
+
+// Naledi Refugee с путём Hierophant аналогично.
+/datum/outfit/job/roguetown/adventurer/refugee/pre_equip(mob/living/carbon/human/H)
+	. = ..()
+	grant_barrier_for_major_school(H)
