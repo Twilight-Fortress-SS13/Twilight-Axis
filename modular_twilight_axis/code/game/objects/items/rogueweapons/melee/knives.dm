@@ -240,3 +240,7 @@
 			to_chat(M, span_warning("Agh.. I feel weak in my body.."))
 
 	return ..()
+
+/obj/item/rogueweapon/huntingknife/idagger/silver/elvish/bandit
+	sellprice = 0
+	smeltresult = null
