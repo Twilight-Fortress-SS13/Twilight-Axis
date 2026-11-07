@@ -93,11 +93,11 @@
 				H.change_stat(STATKEY_STR, 3)
 				H.change_stat(STATKEY_PER, 1) //Applies a base statblock of 11/12/10/13 to CON, STR, SPD and PER - compared to the standard 10/9/13/12 + DODGE EXPERT. Physically adept and capable of higher ranged damage..
 				H.change_stat(STATKEY_SPD, -3) //..but with a massive loss to mobility and damage evasion, alongside the naturally low defense of their sidearms.
-		var/rangedweapons = list("Slurbow - Lesser Damage, Rapid & Accurate", "Crossbow - Access To Special Bolts", "Siegebow - Greater Damage, Structurebreaker")
+		var/rangedweapons = list("Bracer-mounted crossbow - Lesser Damage, Rapid & Accurate", "Crossbow - Access To Special Bolts", "Siegebow - Greater Damage, Structurebreaker") //TA EDIT START
 		var/rangedweapon_choice = input(H,"Choose your BOW.", "TAKE UP PSYDON'S ARCAGE.") as anything in rangedweapons
 		switch(rangedweapon_choice)
-			if("Slurbow - Lesser Damage, Rapid & Accurate")
-				backl = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow
+			if("Bracer-mounted crossbow - Lesser Damage, Rapid & Accurate")
+				wrists = /obj/item/clothing/wrists/roguetown/bracers/handcrossbow //TA EDIT END
 				var/lightquivers = list("Light Bolts - Steel-Tipped", "Light Sunderbolts - Silver-Tipped, Halved Damage")
 				var/lightboltchoice = input(H,"Choose your MUNITIONS.", "TAKE UP PSYDON'S MISSILES.") as anything in lightquivers
 				switch(lightboltchoice)
@@ -121,7 +121,7 @@
 				beltl = /obj/item/quiver/bolt/heavy/stake
 
 	cloak = /obj/item/storage/backpack/rogue/satchel/beltpack
-	wrists = /obj/item/clothing/neck/roguetown/psicross/silver
+	//wrists = /obj/item/clothing/neck/roguetown/psicross/silver //TA EDIT
 	gloves = /obj/item/clothing/gloves/roguetown/otavan/psygloves
 	neck = /obj/item/clothing/neck/roguetown/gorget
 	backr = /obj/item/storage/backpack/rogue/satchel/otavan
@@ -140,7 +140,8 @@
 		/obj/item/grapplinghook = 1,
 		/obj/item/paper/inqslip/arrival/ortho = 1,
 		/obj/item/rogueweapon/huntingknife/idagger/steel/silver/psy = 1,
-		/obj/item/rogueweapon/scabbard/sheath = 1
+		/obj/item/rogueweapon/scabbard/sheath = 1,
+		/obj/item/clothing/neck/roguetown/psicross/silver = 1 //TA EDIT
 		)
 
 	add_verb(H, /mob/living/carbon/human/proc/faith_test)
