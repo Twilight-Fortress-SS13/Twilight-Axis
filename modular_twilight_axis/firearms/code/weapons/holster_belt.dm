@@ -1,0 +1,127 @@
+/obj/item/storage/belt/rogue/leather/twilight_holsterbelt
+	name = "holster belt"
+	desc = "Ремень с кобурой. Пришлось пожертвовать местом на поясе ради возможности удобно носить пистоль."
+	icon = 'modular_twilight_axis/firearms/icons/obj_belts.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/firearms/icons/onmob_belts.dmi'
+	icon_state = "holsterbelt"
+	item_state = "holsterbelt"
+	strip_delay = 20
+	var/max_storage = 1
+	var/list/pistol = list()
+	sewrepair = TRUE
+	component_type = /datum/component/storage/concrete/roguetown/belt/holster_belt
+	grid_width = 96
+	grid_height = 96
+
+/obj/item/storage/belt/rogue/leather/twilight_holsterbelt/update_icon()
+	if(pistol.len)
+		icon_state = "holsterbelt_full"
+	else
+		icon_state = "holsterbelt"
+
+/obj/item/storage/belt/rogue/leather/twilight_holsterbelt/proc/eatpistol(obj/A)
+	if((A.type in typesof(/obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock)) || (A.type in typesof(/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol)))
+		var/obj/item/gun/ballistic/P = A
+		if(!P.gripped_intents)
+			if(pistol.len < max_storage)
+				P.forceMove(src)
+				pistol += P
+				update_icon()
+				return TRUE
+			else
+				return FALSE
+
+/obj/item/storage/belt/rogue/leather/twilight_holsterbelt/attackby(obj/A, loc, params)
+	if((A.type in typesof(/obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock)) || (A.type in typesof(/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol)))
+		var/obj/item/gun/ballistic/P = A
+		if(!P.gripped_intents)
+			if(pistol.len < max_storage)
+				if(ismob(loc))
+					var/mob/M = loc
+					M.doUnEquip(P, TRUE, src, TRUE, silent = TRUE)
+				else
+					P.forceMove(src)
+				pistol += P
+				update_icon()
+				to_chat(usr, span_notice("I holster the [P.name] into [src.name]."))
+			else
+				to_chat(loc, span_warning("Something is already holstered."))
+			return
+	..()
+
+/obj/item/storage/belt/rogue/leather/twilight_holsterbelt/attack_right(mob/user)
+	if(pistol.len)
+		var/obj/O = pistol[pistol.len]
+		pistol -= O
+		O.forceMove(user.loc)
+		user.put_in_hands(O)
+		update_icon()
+		return TRUE
+
+/obj/item/storage/belt/rogue/leather/twilight_holsterbelt/examine(mob/user)
+	. = ..()
+	if(pistol.len == 1)
+		. += span_notice("В кобуре есть оружие.")
+	else
+		. += span_notice("Кобура пустая.")
+
+/obj/item/storage/belt/rogue/leather/twilight_holsterbelt/lord
+	name = "plaque holster belt"
+	desc = "Пояс с позолоченными металлическими вставками, демонстрирующими богатство и статус. Оснащен кобурой для удобного размещения пистоля."
+	sellprice = 50
+	sewrepair = FALSE
+	anvilrepair = /datum/skill/craft/armorsmithing
+	icon = 'modular_twilight_axis/firearms/icons/obj_belts_royal.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/firearms/icons/onmob_belts_royal.dmi'
+
+/obj/item/storage/belt/rogue/leather/twilight_holsterbelt/lord/New()
+	. = ..()
+	for(var/i in 1 to max_storage)
+		var/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/A = new()
+		pistol += A
+	update_icon()
+
+/obj/item/storage/belt/rogue/leather/twilight_holsterbelt/black
+	name = "black holster belt"
+	desc = "Чёрный ремень с кобурой. Пришлось пожертвовать местом на поясе ради возможности удобно носить пистоль."
+	icon = 'modular_twilight_axis/firearms/icons/obj_belts_black.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/firearms/icons/onmob_belts_black.dmi'
+
+/obj/item/storage/belt/rogue/leather/twilight_holsterbelt/black/runelock/New()
+	. = ..()
+	for(var/i in 1 to max_storage)
+		var/obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/A = new()
+		pistol += A
+	update_icon()
+
+/obj/item/storage/belt/rogue/leather/twilight_holsterbelt/blackpowder
+	name = "blackpowder order holster belt"
+	desc = "Ремень с кобурой образца Ордена Чёрного Пороха. Улучшенная посадка позволяет носить пистоль без потери места на поясе."
+	icon = 'modular_twilight_axis/firearms/icons/obj_belts_blackpowder.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/firearms/icons/onmob_belts_blackpowder.dmi'
+	component_type = /datum/component/storage/concrete/roguetown/belt
+
+/obj/item/storage/belt/rogue/leather/twilight_holsterbelt/blackpowder/update_icon()
+	if(pistol.len)
+		var/obj/item/gun/ballistic/P = pistol[1]
+		if(istype(P, /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock))
+			icon = 'modular_twilight_axis/firearms/icons/obj_belts_blackpowder_runelock.dmi'
+		else if(istype(P, /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/umbra))
+			icon = 'modular_twilight_axis/firearms/icons/obj_belts_blackpowder_umbra.dmi'
+		else
+			icon = 'modular_twilight_axis/firearms/icons/obj_belts_blackpowder.dmi'
+	return ..()
+
+/obj/item/storage/belt/rogue/leather/twilight_holsterbelt/blackpowder/runelock/New()
+	. = ..()
+	for(var/i in 1 to max_storage)
+		var/obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/A = new()
+		pistol += A
+	update_icon()
+
+/obj/item/storage/belt/rogue/leather/twilight_holsterbelt/blackpowder/umbra/New()
+	. = ..()
+	for(var/i in 1 to max_storage)
+		var/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/umbra/A = new()
+		pistol += A
+	update_icon()

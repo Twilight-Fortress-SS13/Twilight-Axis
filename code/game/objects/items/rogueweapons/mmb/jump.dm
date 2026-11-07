@@ -11,6 +11,10 @@
 	user.jump_action(target)
 
 /mob/living/proc/jump_action(atom/A)
+	if(src.stat == DEAD || src.stat == UNCONSCIOUS)
+		to_chat(src, span_warning("What?"))
+		return FALSE
+
 	if(istype(get_turf(src), /turf/open/water))
 		to_chat(src, span_warning("I can't jump while floating."))
 		return FALSE
@@ -106,16 +110,6 @@
 	animate(transform = turn(transform, flip_angle), time=1)
 	animate(pixel_z = prev_pixel_z, transform = turn(transform, flip_angle), time=1)
 	animate(transform = prev_transform, time = 0)
-
-	// Need to animate the flip separately for the client because FOV cone blocks it.
-	var/image/cone_self = get_cone_self_image()
-	if(!cone_self)
-		return
-	var/matrix/prev_cone_transform = cone_self.transform
-	animate(cone_self, transform = turn(prev_cone_transform, flip_angle), time = 1)
-	animate(transform = turn(prev_cone_transform, flip_angle * 2), time = 1)
-	animate(transform = turn(prev_cone_transform, flip_angle * 3), time = 1)
-	animate(transform = prev_cone_transform, time = 0)
 
 /mob/living/proc/jump_action_resolve(atom/A, jadded, jrange, jextra, jroot)
 	var/do_a_flip = (get_skill_level(/datum/skill/misc/athletics) > 4)

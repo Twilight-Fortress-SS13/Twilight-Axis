@@ -19,6 +19,14 @@
 	var/will_hawk = TRUE
 	var/max_items = 30
 
+//Twilight Axis Edit Start - TAT
+/obj/structure/roguemachine/vendor/proc/can_use_vendor_direct(mob/user)
+	return user?.canUseTopic(src, BE_CLOSE)
+
+/obj/structure/roguemachine/vendor/proc/can_use_vendor_purchase(mob/user)
+	return can_use_vendor_direct(user)
+//Twilight Axis Edit End
+
 /obj/structure/roguemachine/vendor/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Owners of the storefront's PEDDLER can unlock it. They can then restock wares and vend whatever coinage might've been earned from completed sales.")
@@ -119,7 +127,7 @@
 	// BUY
 	if(href_list["buy"])
 		// ensure caller has permission; buying usually requires machine locked
-		if(!usr.canUseTopic(src, BE_CLOSE) || !locked)
+		if(!can_use_vendor_purchase(usr) || !locked) //Twilight Axis Edit - TAT
 			return
 
 		var/keyorref = href_list["buy"]
@@ -149,7 +157,7 @@
 
 	// RETRIEVE (take out of vendor by owner/operator; usually only when unlocked)
 	if(href_list["retrieve"])
-		if(!usr.canUseTopic(src, BE_CLOSE) || locked)
+		if(!can_use_vendor_direct(usr) || locked) //Twilight Axis Edit - TAT
 			return
 
 		var/keyorref = href_list["retrieve"]
@@ -165,7 +173,7 @@
 
 	// CHANGE (convert budget to change for player) - keep original permission logic
 	if(href_list["change"])
-		if(!usr.canUseTopic(src, BE_CLOSE) || !locked)
+		if(!can_use_vendor_purchase(usr) || !locked) //Twilight Axis Edit - TAT
 			return
 		if(ishuman(usr) && budget > 0)
 			budget2change(budget, usr)
@@ -173,7 +181,7 @@
 
 	// WITHDRAW GAIN (owner withdraws stored profit when unlocked)
 	if(href_list["withdrawgain"])
-		if(!usr.canUseTopic(src, BE_CLOSE) || locked)
+		if(!can_use_vendor_direct(usr) || locked) //Twilight Axis Edit - TAT
 			return
 		if(ishuman(usr) && wgain > 0)
 			budget2change(wgain, usr)
@@ -181,7 +189,7 @@
 
 	// SET NAME (apply name to the whole group)
 	if(href_list["setname"])
-		if(!usr.canUseTopic(src, BE_CLOSE) || locked)
+		if(!can_use_vendor_direct(usr) || locked) //Twilight Axis Edit - TAT
 			return
 
 		var/keyorref = href_list["setname"]
@@ -199,7 +207,7 @@
 
 	// SET PRICE (apply price to the whole group)
 	if(href_list["setprice"])
-		if(!usr.canUseTopic(src, BE_CLOSE) || locked)
+		if(!can_use_vendor_direct(usr) || locked) //Twilight Axis Edit - TAT
 			return
 
 		var/keyorref = href_list["setprice"]
@@ -225,6 +233,12 @@
 	. = ..()
 	if(.)
 		return
+	open_vendor_browser(user, locked) //Twilight Axis Edit - TAT
+
+//Twilight Axis Edit Start - TAT
+/obj/structure/roguemachine/vendor/proc/open_vendor_browser(mob/living/user, buyer_view = TRUE)
+	if(!user)
+		return
 	user.changeNext_move(CLICK_CD_INTENTCAP)
 	playsound(loc, 'sound/misc/beep.ogg', 100, FALSE, -1)
 	var/canread = user.can_read(src, TRUE)
@@ -232,13 +246,13 @@
 
 	if(canread)
 		contents = "<center>THE PEDDLER, THIRD ITERATION<BR>"
-		if(locked)
+		if(buyer_view)
 			contents += "<a href='?src=[REF(src)];change=1'>Stored Mammon:</a> [budget]<BR>"
 		else
 			contents += "<a href='?src=[REF(src)];withdrawgain=1'>Stored Profits:</a> [wgain]<BR>"
 	else
 		contents = "<center>[stars("THE PEDDLER, THIRD ITERATION")]<BR>"
-		if(locked)
+		if(buyer_view)
 			contents += "<a href='?src=[REF(src)];change=1'>[stars("Stored Mammon:")]</a> [budget]<BR>"
 		else
 			contents += "<a href='?src=[REF(src)];withdrawgain=1'>[stars("Stored Profits:")]</a> [wgain]<BR>"
@@ -260,7 +274,7 @@
 		var/price = groups[key]["PRICE"]
 		var/count = groups[key]["COUNT"]
 
-		if(locked)
+		if(buyer_view)
 			if(canread)
 				contents += "[icon2html(rep, user)] [namer] x[count] - [price] <a href='?src=[REF(src)];buy=[REF(rep)]'>BUY</a>"
 			else
@@ -276,6 +290,7 @@
 	var/datum/browser/popup = new(user, "VENDORTHING", "", 450, 350)
 	popup.set_content(contents)
 	popup.open()
+//Twilight Axis Edit End
 
 /obj/structure/roguemachine/vendor/obj_break(damage_flag)
 	..()
@@ -386,8 +401,14 @@
 /obj/structure/roguemachine/vendor/inn/Initialize(mapload)
 	. = ..()
 
+	var/list/key_list
+
+	if(SSmapping.config.map_name == "Rockhill")
+		key_list = list(/obj/item/roguekey/roomi, /obj/item/roguekey/roomii, /obj/item/roguekey/roomiii, /obj/item/roguekey/roomiv, /obj/item/roguekey/roomv, /obj/item/roguekey/roomvi, /obj/item/roguekey/roomvii, /obj/item/roguekey/roomviii)
+	else
+		key_list = list(/obj/item/roguekey/roomi, /obj/item/roguekey/roomii, /obj/item/roguekey/roomiii, /obj/item/roguekey/roomiv, /obj/item/roguekey/roomv, /obj/item/roguekey/roomvi)
 	// Add room keys with a price of 20
-	for (var/X in list(/obj/item/roguekey/roomi, /obj/item/roguekey/roomii, /obj/item/roguekey/roomiii, /obj/item/roguekey/roomiv, /obj/item/roguekey/roomv, /obj/item/roguekey/roomvi))
+	for (var/X in key_list)
 		var/obj/P = new X(src)
 		held_items[P] = list()
 		held_items[P]["NAME"] = P.name
@@ -421,6 +442,20 @@
 		held_items[P] = list()
 		held_items[P]["NAME"] = P.name
 		held_items[P]["PRICE"] = 0
+
+// TA EDIT START - ROCKHILL MANSION
+/obj/structure/roguemachine/vendor/mansion
+	keycontrol = "steward"
+
+/obj/structure/roguemachine/vendor/mansion/Initialize(mapload)
+	. = ..()
+	for (var/Z in list(/obj/item/storage/keyring/rockhillmansion))
+		var/obj/F = new Z(src)
+		held_items[F] = list()
+		held_items[F]["NAME"] = F.name
+		held_items[F]["PRICE"] = 1000
+	update_icon()
+// TA EDIT END - ROCKHILL MANSION
 
 /obj/structure/roguemachine/vendor/merchant
 	keycontrol = "merchant"

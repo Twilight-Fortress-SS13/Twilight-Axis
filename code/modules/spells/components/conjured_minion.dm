@@ -46,7 +46,7 @@
 		return
 	M.ai_controller.set_blackboard_key(BB_FOLLOW_TARGET, summoner)
 	M.ai_controller.set_blackboard_key(BB_TARGETTING_DATUM, GLOB.conjured_targetting)
-	M.pet_passive = TRUE
+	M.pet_passive = !istype(M, /mob/living/carbon/human/species/skeleton/conjured/undead) // TA EDIT
 
 /datum/component/conjured_minion/Destroy(force, silent)
 	if(tether_timer)

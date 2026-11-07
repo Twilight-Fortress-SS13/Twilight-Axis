@@ -74,7 +74,8 @@
 		msg += "[m1] being grabbed by [pulledby]."
 
 	if(stat >= UNCONSCIOUS)
-		msg += "[m1] unconscious."
+		msg += "[m1] [IsSleeping() ? "sleeping" : "unconscious"]."
+
 
 	if(length(msg))
 		. += span_warning("[msg.Join("\n")]")

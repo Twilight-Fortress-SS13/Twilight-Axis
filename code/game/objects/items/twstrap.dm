@@ -33,26 +33,29 @@
 	var/obj/item/I = A
 	if(!I)
 		return ..()
-
 	var/can_store = FALSE
 	for(var/typepath in storable_types)
 		if(istype(I, typepath))
 			can_store = TRUE
 			break
-
 	if(!can_store)
 		return ..()
-
 	if(length(tweps) >= max_storage)
 		to_chat(user, span_warning("Full!"))
 		return TRUE
-
 	if(!user.transferItemToLoc(I, src))
 		return TRUE
-
 	if(!(I in tweps))
 		tweps += I
+	update_icon()
+	return TRUE
 
+/obj/item/twstrap/proc/draw_item(mob/user, obj/item/I)
+	if(!I || !(I in tweps))
+		return TRUE
+	if(!user.put_in_hands(I))
+		return TRUE
+	tweps -= I
 	update_icon()
 	return TRUE
 
@@ -65,18 +68,14 @@
 	var/selected_name = tgui_input_list(user, "WHAT DO YOU GET OUT?", name, targets)
 	if(!selected_name)
 		return
-	var/atom/movable/AM = targets[selected_name]
-	tweps -= AM
-	user.put_in_hands(AM)
-	update_icon()
-	return TRUE
+	var/obj/item/I = targets[selected_name]
+	return draw_item(user, I)
 
 /obj/item/twstrap/attack_turf(turf/T, mob/living/user)
 	if(tweps.len >= max_storage)
 		to_chat(user, span_warning("My [src.name] is full!"))
 		return
 	to_chat(user, span_notice("I begin to gather the ammunition..."))
-
 	for(var/obj/item/knife in T.contents)
 		if(istype(knife, /obj/item/throwing_star) || istype(knife, /obj/item/rogueweapon/huntingknife))
 			if(do_after(user, 5))
@@ -95,7 +94,6 @@
 
 /obj/item/twstrap/attack_self(mob/living/user)
 	..()
-
 	if (!tweps.len)
 		return
 	to_chat(user, span_warning("I begin to take out the ammunition from [src], one by one..."))
@@ -105,24 +103,20 @@
 				return
 			knife.forceMove(user.loc)
 			tweps -= knife
-
-	update_icon()
+			update_icon()
 
 /obj/item/twstrap/attack_right(mob/user)
-	if(tweps.len)
-		if(user.get_skill_level(/datum/skill/combat/knives)<2)
-			if(do_after(user, 20, target = user)) //Limits those not skilled in knives from using it properly
-				to_chat(user, span_notice("You fumble to draw a throwing weapon..."))
-				var/obj/O = tweps[tweps.len]
-				tweps -= O
-				user.put_in_hands(O)
-				update_icon()
-		else
-			var/obj/O = tweps[tweps.len]
-			tweps -= O
-			user.put_in_hands(O)
-			update_icon()
+	if(!tweps.len)
 		return TRUE
+	if(user.get_skill_level(/datum/skill/combat/knives)<2)
+		if(do_after(user, 20, target = user)) //Limits those not skilled in knives from using it properly
+			to_chat(user, span_notice("You fumble to draw a throwing weapon..."))
+			var/obj/item/I = tweps[tweps.len]
+			return draw_item(user, I)
+	else
+		var/obj/item/I = tweps[tweps.len]
+		return draw_item(user, I)
+	return TRUE
 
 /obj/item/twstrap/examine(mob/user)
 	. = ..()
@@ -182,7 +176,6 @@
 		/obj/item/impact_grenade
 	)
 
-
 /obj/item/twstrap/bombstrap/attack_turf(turf/T, mob/living/user)
 	if(tweps.len >= max_storage)
 		to_chat(user, span_warning("My [src.name] is full!"))
@@ -206,7 +199,6 @@
 
 /obj/item/twstrap/bombstrap/attack_self(mob/living/user)
 	..()
-
 	if (!tweps.len)
 		return
 	to_chat(user, span_warning("I begin to take out the ammunition from [src], one by one..."))
@@ -216,46 +208,41 @@
 				return
 			bomb.forceMove(user.loc)
 			tweps -= bomb
-
-	update_icon()
+			update_icon()
 
 /obj/item/twstrap/bombstrap/attack_right(mob/user)
-	if(tweps.len)
-		if(HAS_TRAIT(user, TRAIT_EXPLOSIVE_SUPPLY)) //virtue and bomber roles
-			var/obj/O = tweps[tweps.len]
-			tweps -= O
-			user.put_in_hands(O)
-			update_icon()
-		else
-			if(do_after(user, 20, target = user))
-				to_chat(user, span_notice("You fumble to draw a throwing weapon..."))
-				var/obj/O = tweps[tweps.len]
-				tweps -= O
-				user.put_in_hands(O)
-				update_icon()
+	if(!tweps.len)
 		return TRUE
+	if(HAS_TRAIT(user, TRAIT_EXPLOSIVE_SUPPLY)) //virtue and bomber roles
+		var/obj/item/I = tweps[tweps.len]
+		return draw_item(user, I)
+	else
+		if(do_after(user, 20, target = user))
+			to_chat(user, span_notice("You fumble to draw a throwing weapon..."))
+			var/obj/item/I = tweps[tweps.len]
+			return draw_item(user, I)
+	return TRUE
 
 /obj/item/twstrap/bombstrap/bomb_and_fire/Initialize(mapload)
 	..()
 	fill_list = list(/obj/item/bomb,
-	/obj/item/bomb,
-	/obj/item/bomb,
-	/obj/item/bomb,
-	/obj/item/tntstick,
-	/obj/item/tntstick,
-	/obj/item/impact_grenade/explosion,
-	/obj/item/impact_grenade/explosion,
-	/obj/item/impact_grenade/smoke/fire_gas,
-	/obj/item/impact_grenade/smoke/fire_gas,
+		/obj/item/bomb,
+		/obj/item/bomb,
+		/obj/item/bomb,
+		/obj/item/tntstick,
+		/obj/item/tntstick,
+		/obj/item/impact_grenade/explosion,
+		/obj/item/impact_grenade/explosion,
+		/obj/item/impact_grenade/smoke/fire_gas,
+		/obj/item/impact_grenade/smoke/fire_gas,
 	)
 	for(var/i in 1 to max_storage)
 		var/pickitem = pick(fill_list)
 		fill_list -= pickitem
-
 		var/obj/item/I = new pickitem(src)
 		I.forceMove(src)
 		tweps += I
-	update_icon()
+		update_icon()
 
 /obj/item/twstrap/bombstrap/firebomb/Initialize(mapload)
 	..()
@@ -263,4 +250,4 @@
 		var/obj/item/bomb/I = new(src)
 		I.forceMove(src)
 		tweps += I
-	update_icon()
+		update_icon()

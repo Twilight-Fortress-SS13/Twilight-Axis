@@ -4,7 +4,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 
 	outfit = /datum/outfit/job/roguetown/adventurer/sfighter
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander2.ogg'
+	cmode_music = sound("sound/music/cmode/adventurer/combat_outlander2.ogg")
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_MEDIUMARMOR)
 	class_select_category = CLASS_CAT_WARRIOR
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT, CTAG_LICKER_WRETCH)
@@ -132,7 +132,7 @@
 	name = "Duelist"
 	tutorial = "You are an esteemed swordsman who foregoes armor in exchange for a more nimble fighting style."
 	outfit = /datum/outfit/job/roguetown/adventurer/duelist
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander2.ogg'
+	cmode_music = sound("sound/music/cmode/adventurer/combat_outlander2.ogg")
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_DODGEEXPERT)
 	subclass_virtues = list(
 		/datum/virtue/combat/guarded
@@ -229,8 +229,8 @@
 	name = "Barbarian"
 	tutorial = "You are a brutal warrior, who has foregone armor in favor of pure strength. Crush your enemies, see them driven before you, and hear the lamentations of their women! Oh, and you can specialize in unarmed combat and wrestling."
 	outfit = /datum/outfit/job/roguetown/adventurer/barbarian
-	cmode_music = 'sound/music/cmode/antag/combat_darkstar.ogg'
-	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_IGNOREDAMAGESLOWDOWN, TRAIT_BLOOD_RESISTANCE, TRAIT_NOPAINSTUN, TRAIT_RAGE)
+	cmode_music = sound("sound/music/cmode/antag/combat_darkstar.ogg")
+	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN, TRAIT_RAGE)
 	extra_context = "This subclass gains access to the RAGE ability."
 	subclass_stats = list(
 		STATKEY_STR = 3,
@@ -328,8 +328,7 @@
 	if(should_wear_masc_clothes(H))
 		H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/warrior]
 	if(should_wear_femme_clothes(H))
-		if(weapon_choice != "Discipline - Unarmed" && weapon_choice != "Discipline - Bodybuilder")
-			armor = /obj/item/clothing/suit/roguetown/armor/leather/bikini
+		H.dna.species.soundpack_f = new /datum/voicepack/female/warrior()
 	backl = /obj/item/storage/backpack/rogue/satchel
 	backpack_contents = list(
 		/obj/item/flashlight/flare/torch = 1,
@@ -483,7 +482,7 @@
 	name = "Exorcist"
 	tutorial = "You are a specialist who hunts terrible monsters; nitebeasts, vampyres, deadites and more. Your humenity might be limiting - but with silver weapons and steel maille, you may yet slight the odds in your favor."
 	outfit = /datum/outfit/job/roguetown/adventurer/mhunter
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander2.ogg'
+	cmode_music = sound("sound/music/cmode/adventurer/combat_outlander2.ogg")
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_PURITAN_ADVENTURER, TRAIT_ALCHEMY_EXPERT, TRAIT_EXPERT_HUNTER)
 	maximum_possible_slots = 5 //Not a Wretch or Towner, but still conditionally lethal for an Adventurer - especially with steel coverage and round-start access to silver weapons. Adjust the amount of available slots as needed.
@@ -613,10 +612,7 @@
 				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_JOURNEYMAN, TRUE)
 				l_hand = /obj/item/rogueweapon/sword/long/broadsword/steel
 			if("Greatshield")
-				if(ispath(r_hand, /obj/item/rogueweapon/handclaw) || ispath(r_hand, /obj/item/rogueweapon/katar))
-					backr = /obj/item/rogueweapon/shield/tower/metal
-				else
-					l_hand = /obj/item/rogueweapon/shield/tower/metal
+				l_hand = /obj/item/rogueweapon/shield/tower/metal
 				H.adjust_skillrank_up_to(/datum/skill/combat/shields, SKILL_LEVEL_JOURNEYMAN, TRUE)
 			if("Stake Launcher")
 				l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/staker
@@ -695,6 +691,7 @@
 		/obj/item/flashlight/flare/torch/metal = 1,
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
+		/obj/item/book/rogue/trophy_rules = 1 //TA edit - added trophy_hunter component
 		)
 
 	H.set_blindness(0)
@@ -710,13 +707,15 @@
 		else
 			wrists = /obj/item/clothing/neck/roguetown/psicross/silver/undivided
 
+	H.AddComponent(/datum/component/trophy_hunter) //TA edit - added trophy_hunter component
+
 	//Old people get the option to become glass cannons. Expert Knives + Expert in their chosen weapon, but a permenant -I STR, -I PER, -2 SPD and -2 CON debuff.
 
 /datum/advclass/sfighter/deprived
 	name = "Deprived"
 	tutorial = "You are a vagrant. Your skin itches at the thought of wearing proper armor. Not after everything was taken from you. Armed with a piece of wood, it's only through your body that you endure. At least you aren't bothered by the lack of comfort like most others."
 	outfit = /datum/outfit/job/roguetown/adventurer/deprived
-	cmode_music = 'sound/music/cmode/antag/combat_darkstar.ogg'
+	cmode_music = sound("sound/music/cmode/antag/combat_darkstar.ogg")
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN, TRAIT_SHIRTLESS, TRAIT_WILD_EATER, TRAIT_OUTDOORSMAN, TRAIT_HOMESTEAD_EXPERT, TRAIT_TECHNOPHOBE, TRAIT_HARDSOLE)
 	subclass_stats = list(
 		STATKEY_STR = 3,

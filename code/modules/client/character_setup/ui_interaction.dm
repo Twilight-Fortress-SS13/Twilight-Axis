@@ -15,6 +15,7 @@
 /datum/preferences/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
+		QDEL_NULL(character_preview_view)
 		character_preview_view = create_character_preview_view(user)
 		ui = new(user, src, "PreferencesMenu", "Preferences")
 		// Note: Because of this, ui_static_data is basically useless,
@@ -38,6 +39,7 @@
 /datum/preferences/ui_close(mob/user)
 	. = ..()
 	close_subwindows(user)
+	QDEL_NULL(character_preview_view)
 
 /datum/preferences/ui_assets(mob/user)
 	. = ..()

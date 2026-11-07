@@ -6,7 +6,7 @@
 	outfit = /datum/outfit/job/roguetown/confessor
 	category_tags = list(CTAG_ORTHODOXIST)
 	subclass_languages = list(/datum/language/otavan)
-	cmode_music = 'sound/music/cmode/antag/combat_deadlyshadows.ogg'
+	cmode_music = sound("sound/music/cmode/antag/combat_deadlyshadows.ogg")
 	traits_applied = list(
 		TRAIT_BLACKBAGGER,
 		TRAIT_PERFECT_TRACKER,
@@ -27,6 +27,7 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/medicine = SKILL_LEVEL_JOURNEYMAN, //Ensures that captured individuals are less likely to die, if subdued with harsher force.
 		/datum/skill/misc/sneaking = SKILL_LEVEL_MASTER,
+		/datum/skill/misc/stealing = SKILL_LEVEL_MASTER, // TA EDIT
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_MASTER,
 		/datum/skill/misc/tracking = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/crossbows = SKILL_LEVEL_EXPERT,

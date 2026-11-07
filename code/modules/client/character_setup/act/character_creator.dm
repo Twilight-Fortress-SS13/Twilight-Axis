@@ -51,12 +51,6 @@ Add a new override in your modular folder that looks like this:
 		if("triumphs")
 			user.show_triumphs_list()
 			return CHARACTER_ACT_DATA_UPDATE
-		if("agevet")
-			if(!user.check_agevet())
-				to_chat(user, span_info("- You are a whitelisted player with full access to the server's features. If you'd also like to show others that you've been <b>AGE-VERIFIED</b> with a censored ID, you can open a ticket in Azure Peak's <b>#vet-here</b> channel. If you are already verified on Discord, but not in-game, ahelp. Note that this is a purely optional process, and - besides awarding a special header for your flavortext - doesn't affect you in any other way."))
-			else
-				to_chat(user, span_love("- You have been successfully <b>AGE-VERIFIED!</b>"))
-			return CHARACTER_ACT_DATA_UPDATE
 		if("changelog")
 			user.client.changelog()
 			return CHARACTER_ACT_DATA_UPDATE

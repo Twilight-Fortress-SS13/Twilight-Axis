@@ -24,6 +24,9 @@
 #define ROLE_WRETCH				"Wretch"
 #define ROLE_UNBOUND_DEATHKNIGHT "Unbound Death Knight"
 #define ROLE_DARK_ITINERANT "Dark Itinerant"
+#define ROLE_CULT			"Cult of Ascension"
+#define ROLE_FREEMAN		"Freeman" // TA EDIT
+#define ROLE_LOSTGRENZEL	"Lost Grenzel" // TA EDIT
 
 #define ROLE_SYNDICATE			"Syndicate"
 #define ROLE_TRAITOR			"Traitor"
@@ -73,9 +76,14 @@ GLOBAL_LIST_INIT(special_roles_rogue, list(
 	ROLE_GNOLL = /datum/antagonist/gnoll,
 	ROLE_ASSASSIN = /datum/antagonist/assassin,
 	ROLE_HAG = /datum/antagonist/hag,
+	ROLE_CULT = /datum/antagonist/zizocultist,
 ))
 
 //Job defines for what happens when you fail to qualify for any job during job selection
 #define BEOVERFLOW	1
 #define BERANDOMJOB "Be Random Role"
-#define RETURNTOLOBBY	"Return to Lobby"
+#define RETURNTOLOBBY 	"Return to Lobby"
+
+
+// TA
+#define ROLE_ZIZOIDCULTIST		"Zizoid Cultist"

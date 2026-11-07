@@ -13,7 +13,8 @@ GLOBAL_LIST_INIT(languages_character_selection, list(
 	/datum/language/orcish,
 	/datum/language/hellspeak,
 	/datum/language/draconic,
-	/datum/language/celestial,
+	/datum/language/valorian, // TA EDIT
+	/datum/language/gyedzenese, // TA EDIT
 	/datum/language/raneshi,
 	/datum/language/grenzelhoftian,
 	/datum/language/kazengunese,
@@ -21,7 +22,8 @@ GLOBAL_LIST_INIT(languages_character_selection, list(
 	/datum/language/etruscan,
 	/datum/language/gronnic,
 	/datum/language/otavan,
-	/datum/language/aavnic
+	/datum/language/aavnic,
+	/datum/language/undercommon
 ))
 
 /proc/init_language_prototypes()

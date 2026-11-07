@@ -7,6 +7,7 @@
 /atom
 	layer = TURF_LAYER
 	plane = GAME_PLANE
+	appearance_flags = TILE_BOUND|LONG_GLIDE
 	var/level = 2
 
 	///If non-null, overrides a/an/some in all cases
@@ -53,6 +54,9 @@
 	///overlays managed by update_overlays() to prevent removing overlays that weren't added by the same proc
 	var/list/managed_overlays
 
+	///Used for changing icon states for different base sprites.
+	var/base_icon_state
+
 	///Cooldown tick timer for buckle messages
 	var/buckle_message_cooldown = 0
 	///Last fingerprints to touch this atom
@@ -89,7 +93,8 @@
 
 	///Icon to use for smoothing, only required for secret doors
 	var/smoothing_icon
-	///What directions this is currently smoothing with. IMPORTANT: This uses the smoothing direction flags as defined in icon_smoothing.dm, instead of the BYOND flags.
+	///What directions this is currently smoothing with. IMPORTANT: This uses the smoothing direction flags as
+	///defined in icon_smoothing.dm, instead of the BYOND flags.
 	var/smoothing_junction = null //This starts as null for us to know when it's first set, but after that it will hold a 8-bit mask ranging from 0 to 255.
 	///What smoothing groups does this atom belongs to, to match smoothing_list. If null, nobody can smooth with it.
 	var/list/smoothing_groups = null
@@ -224,7 +229,10 @@
 	LAZYCLEARLIST(overlays)
 
 	QDEL_NULL(light)
-	QDEL_NULL(ai_controller)
+	if(ispath(ai_controller))
+		ai_controller = null
+	else
+		QDEL_NULL(ai_controller)
 
 	return ..()
 

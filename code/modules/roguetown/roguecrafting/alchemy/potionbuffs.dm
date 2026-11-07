@@ -49,9 +49,9 @@
 /datum/status_effect/buff/alch/statbuff/strengthpot
 	id = "strpot"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/alch/strengthpot
-	effectedstats = list(STATKEY_STR = 2, STATKEY_LCK = -1, STATKEY_INT = -1, STATKEY_PER = -1)
+	effectedstats = list(STATKEY_STR = 2, STATKEY_LCK = -1)
 	outline_colour = "#ff9000"
-	buff_flavor = "strength (str +2, for -1, int -1, per -1)!"
+	buff_flavor = "strength (str +2, for -1)!"
 
 /atom/movable/screen/alert/status_effect/buff/alch/strengthpot
 	name = STATKEY_STR
@@ -104,9 +104,9 @@
 /datum/status_effect/buff/alch/statbuff/speedpot
 	id = "spdpot"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/alch/speedpot
-	effectedstats = list(STATKEY_SPD = 2, STATKEY_LCK = -1, STATKEY_WIL = -1, STATKEY_CON = -1)
+	effectedstats = list(STATKEY_SPD = 2, STATKEY_LCK = -1)
 	outline_colour = "#00d9b5"
-	buff_flavor = "speed (spd +2, for -1, wil -1, con -1)!"
+	buff_flavor = "speed (spd +2, for -1)!"
 
 /atom/movable/screen/alert/status_effect/buff/alch/speedpot
 	name = STATKEY_SPD
@@ -126,7 +126,7 @@
 /datum/status_effect/buff/alch/statbuff/fortitude
 	id = "fortitudepot"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/alch/fortitude
-	buff_flavor = "fortitude (-15% stam)!"
+	buff_flavor = "fortitude (-25% stam)!"
 
 /datum/status_effect/buff/alch/statbuff/fortitude/on_apply()
 	. = ..()

@@ -124,6 +124,10 @@
 #define SUNLIGHTING_PLANE 16
 #define SUNLIGHTING_RENDER_TARGET "*SUNLIGHT_PLANE"
 
+/// Whitening stage between the packed sun mask and the sunlight fullscreen
+#define SUNLIGHT_WHITENED_PLANE 12
+#define SUNLIGHT_WHITENED_RENDER_TARGET "*SUNLIGHT_WHITENED_PLANE"
+
 #define LIGHTING_PLANE 17
 #define LIGHTING_LAYER 15 //15
 
@@ -172,3 +176,17 @@
 #define POINT_PLANE 90
 
 #define FOV_EFFECTS_LAYER 10000
+
+#define LOBBY_MENU_PLANE 5000
+#define LOBBY_MENU_RENDER_TARGET "LOBBY_MENU_RENDER_TARGET"
+
+///Layer for lobby menu collapse button
+#define LOBBY_BELOW_MENU_LAYER 2
+/// Layer for background
+#define LOBBY_BACKGROUND_LAYER 3
+///Layer for main buttons (Join/Ready, Observe, Character Prefs)
+#define LOBBY_MENU_LAYER 4
+///Layer for lobby menu shutter, which covers up the menu to collapse/expand it
+#define LOBBY_SHUTTER_LAYER 5
+///Layer for lobby menu buttons that are hanging away from and lower than the main panel
+#define LOBBY_BOTTOM_BUTTON_LAYER 6
