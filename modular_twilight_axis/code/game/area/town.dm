@@ -155,6 +155,10 @@
 	first_time_text = "Magician Tower"
 	name = "Magician Tower"
 
+/area/rogue/indoors/town/magician/rh_library
+	first_time_text = "Rockhill Library"
+	name = "Rockhill Library"
+
 /area/rogue/rockharbor
 	name = "Harbor"
 	first_time_text = "Rockhill Harbor"
