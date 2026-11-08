@@ -185,7 +185,7 @@
 	playsound(target,'sound/villain/wonder_secret_known.ogg', 40)
 	if(!owner.cmode)
 		owner.say("На колени.")
-		to_chat(target, "<span class='userlove'><b>МОЙ НОВЫЙ БОГ!</b></span>")
+		to_chat(target, "<span class='userlove'><b>Агх! Сила этих слов... Мне нужно послушаться...</b></span>")
 	else
 		owner.say("НА КОЛЕНИ!!")
 
