@@ -30,6 +30,7 @@
 	var/mob/living/carbon/human/H = user
 	var/skill_level = H.get_skill_level(associated_skill)
 	H.apply_status_effect(/datum/status_effect/buff/TAnoc_gaze, skill_level)
+	H.apply_status_effect(/datum/status_effect/buff/darkvision)
 	return TRUE
 
 /atom/movable/screen/alert/status_effect/buff/TAnoc_gaze
