@@ -38,6 +38,8 @@
 	..()
 	if(ishuman(L))
 		var/mob/living/carbon/human/H = L
+		if(H.mind)
+			H.mind.AddSpell(new /datum/action/cooldown/spell/takeprotege)
 		var/prev_real_name = H.real_name
 		var/prev_name = H.name
 		var/honorary = "Faris"
@@ -121,6 +123,7 @@
 
 	H.adjust_blindness(-3)
 	if(H.mind)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/takeprotege)
 		var/weapons = list("Claymore","Great Mace","Battle Axe","Greataxe","Estoc","Lucerne","Partizan", "Lance + Scimitar")
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		H.set_blindness(0)
@@ -217,6 +220,7 @@
 
 	H.adjust_blindness(-3)
 	if(H.mind)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/takeprotege)
 		var/weapons = list("Shamshir","Whip","Warhammer","Sabre")
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		H.set_blindness(0)
@@ -297,6 +301,7 @@
 
 	H.adjust_blindness(-3)
 	if(H.mind)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/takeprotege)
 		var/weapons = list("Scimitar + Longbow","Estoc + Recurve Bow","Sabre + Shield","Whip + Crossbow")
 		var/armor_options = list("Light Coat", "Light Brigandine", "Scalemail")
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
@@ -417,6 +422,7 @@
 
 	H.adjust_blindness(-3)
 	if(H.mind)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/takeprotege)
 		var/weapons = list("Edict","Heavy Scimitar","Shamshir","Warhammer")
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		var/second_weapons = list("Kite Shield & elvish dagger", "Crossbow & bolts", "Recurve Bow & arrows", "Lance")
