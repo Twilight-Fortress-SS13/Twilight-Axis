@@ -925,6 +925,9 @@
 			display_as_wanderer = FALSE
 		if(src.mind?.has_antag_datum(/datum/antagonist/vampire/lord) && SSticker.rulermob != src && SSticker.regentmob != src)
 			display_as_wanderer = TRUE
+		if(fake_title) // TA EDIT START
+			used_title = fake_title
+			display_as_wanderer = FALSE // TA EDIT END
 		if(display_as_wanderer)
 			. += (span_info("ø ------------ ø\nThis is <EM>[used_name]</EM>, the wandering [race_name]."))
 		else if(used_title)
@@ -1027,6 +1030,25 @@
 				if(!saw_specific && HAS_TRAIT(src, TRAIT_DEBTOR_CROWN))
 					if((viewer.job in GLOB.garrison_positions) || (viewer.job in GLOB.retinue_positions) || (viewer.job in GLOB.courtier_positions) || (viewer.job in GLOB.noble_positions))
 						. += span_userdanger("DEFAULT DEBTOR OF THE CROWN!")
+
+		if(name in GLOB.excommunicated_players)
+			. += span_userdanger("HERETIC! SHAME!")
+
+		if(HAS_TRAIT(src, TRAIT_EXCOMMUNICATED))
+			. += span_userdanger("EXCOMMUNICATED! SHAME!")
+		if(name in GLOB.outlawed_players)
+			. += span_userdanger("OUTLAW!")
+		if(wear_neck && istype(wear_neck, /obj/item/clothing/neck/roguetown/collar/prisoner)) // TA EDIT START
+			var/obj/item/clothing/neck/roguetown/collar/prisoner/castifico_collar = wear_neck
+			var/collar_faction = "unknown"
+			switch(castifico_collar.issuing_faction)
+				if("crown")
+					collar_faction = "the Justiciary of Azuria"
+				if("church")
+					collar_faction = "the Church of the Ten"
+				if("inquisition")
+					collar_faction = "the Otavan Inquisition"
+			. += span_greentext("[m1] wearing a castifico collar with markings belonging to [collar_faction]!") // TA EDIT END
 
 		. += deadite_examine()
 		. += get_ssd_examine_text(m3)

@@ -255,6 +255,7 @@ SUBSYSTEM_DEF(gamemode)
 		"Masquerade" = null,
 		"Werewolf" = null,
 		"Rebel" = null,
+		"Renegade" = null,
 	)
 
 	/// List of new player minds we currently want to give our roundstart antag to
@@ -821,6 +822,7 @@ SUBSYSTEM_DEF(gamemode)
 	apply_storyteller_bonus_roundstart_antags()
 	handle_post_setup_points()
 	enforce_storyteller_soft_antag_slots()
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(renegade_midround)), RENEGADE_MIDROUND_DELAY)
 	roundstart_event_view = FALSE
 	return TRUE
 
@@ -1511,6 +1513,8 @@ SUBSYSTEM_DEF(gamemode)
 		return "Wretch"
 	if(ispath(antag_datum, /datum/antagonist/prebel))
 		return "Rebel"
+	if(ispath(antag_datum, /datum/antagonist/renegade))
+		return "Renegade"
 	return null
 
 /// Switches the round to the permissive Admin sandbox preset when an admin fine-tunes via a toggle or slot
@@ -1539,7 +1543,7 @@ SUBSYSTEM_DEF(gamemode)
 	var/list/opened = list()
 	if(allow_vote)
 		return opened
-	for(var/key in list("Lich", "VL", "Werewolf", "Rebel")) // TA EDIT
+	for(var/key in list("Lich", "VL", "Werewolf", "Rebel", "Renegade")) // TA EDIT
 		if((admin_slots[key] || 0) > 0)
 			opened += key
 	return opened

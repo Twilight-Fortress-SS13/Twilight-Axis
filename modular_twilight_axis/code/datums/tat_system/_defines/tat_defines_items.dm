@@ -567,9 +567,9 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/rogueweapon/sword/sabre/bane = TAT_ITEM_ENTRY("Bane's Edge", 13, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
 	/obj/item/rope/chain = TAT_ITEM_ENTRY("Chain", 1, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/rope = TAT_ITEM_ENTRY("Rope", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
-	/obj/item/bomb/smoke = TAT_ITEM_ENTRY("Smoke Bomb", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "bombs"), \
-	/obj/item/bomb = TAT_ITEM_ENTRY("Bottle Bomb", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "bombs"), \
-	/obj/item/impact_grenade/explosion = TAT_ITEM_ENTRY("Impact Bomb", 1.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "bombs"), \
+	/obj/item/explosive/impact/smoke/bomb = TAT_ITEM_ENTRY("Smoke Bomb", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "bombs"), \
+	/obj/item/explosive/fused/bottle = TAT_ITEM_ENTRY("Bottle Bomb", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "bombs"), \
+	/obj/item/explosive/impact/shrapnel = TAT_ITEM_ENTRY("Impact Bomb", 1.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "bombs"), \
 	/obj/item/folding_alchstation_stored = TAT_ITEM_ENTRY("Alchemical station", 3, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
 	/obj/item/folding_alchcauldron_stored = TAT_ITEM_ENTRY("Alchemical cauldron", 3, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
 	/obj/item/ration = TAT_ITEM_ENTRY("Ration paper", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "food"), \

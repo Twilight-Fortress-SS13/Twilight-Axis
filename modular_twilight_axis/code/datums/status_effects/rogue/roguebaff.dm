@@ -145,10 +145,10 @@
 		if(!HAS_TRAIT(owner, TRAIT_IGNORESLOWDOWN))
 			ignore_slowdown = 1
 			ADD_TRAIT(owner, TRAIT_IGNORESLOWDOWN, TRAIT_GENERIC)
-		addtimer(CALLBACK(src, PROC_REF(remove_traits)), 30 SECONDS)
+		addtimer(CALLBACK(src, PROC_REF(remove_corps_dust_traits)), 30 SECONDS)
 		owner.hallucination = min(owner.hallucination + 10, 50)
 
-/datum/status_effect/buff/corps_dust/proc/remove_traits() //do not remove any owner standart traits. Only drug buffs.
+/datum/status_effect/buff/corps_dust/proc/remove_corps_dust_traits() //do not remove any owner standart traits. Only drug buffs.
 	if(ignor_damage_slowdown == 1)
 		REMOVE_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, TRAIT_GENERIC)
 	if(ignor_grab == 1)
