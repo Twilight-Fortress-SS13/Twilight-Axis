@@ -52,6 +52,8 @@
 
 	var/action_buttons_hidden = FALSE
 	var/rearrange_mode = FALSE
+	var/free_position_mode = FALSE // TA EDIT
+	var/datum/action/wheel_selected_action // TA EDIT
 	var/next_rearrange_hint = 0
 
 	var/atom/movable/screen/healths
@@ -93,22 +95,6 @@
 		var/atom/movable/screen/plane_master/instance = new mytype()
 		plane_masters["[instance.plane]"] = instance
 		instance.backdrop(mymob)
-
-/datum/hud/new_player/New(mob/owner)
-	..()
-	scannies = new /atom/movable/screen/scannies
-	scannies.hud = src
-	static_inventory += scannies
-	if(owner.client?.prefs?.crt == TRUE)
-		scannies.alpha = 70
-
-/datum/hud/new_player/New(mob/owner)
-	..()
-	grain = new /atom/movable/screen/grain
-	grain.hud = src
-	static_inventory += grain
-	if(owner.client?.prefs?.grain == TRUE)
-		grain.alpha = 55
 
 /datum/hud/Destroy()
 	if(mymob.hud_used == src)

@@ -46,6 +46,7 @@
 	AddComponent(/datum/component/ai_aggro_system)
 	ADD_TRAIT(src, TRAIT_SILVER_WEAK, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NPC_EXAMINE, TRAIT_GENERIC)
+	ADD_TRAIT(src, TRAIT_BADTRAINER, TRAIT_GENERIC)
 
 	if(user)
 		if(user.mind && user.mind.current)

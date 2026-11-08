@@ -129,8 +129,7 @@
 		/obj/item/clothing/suit/roguetown/armor/plate/cuirass = 30,
 		/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted = 4,
 		/obj/item/rogueweapon/greatsword/grenz/flamberge/blacksteel = 1,
-		/obj/item/rogueweapon/halberd/glaive = 4,
-		/obj/item/heelkit = 11
+		/obj/item/rogueweapon/halberd/glaive = 4
 	)
 
 /obj/structure/closet/crate/roguecloset/dark/squire/can_open(mob/living/user)
@@ -265,14 +264,14 @@
 		return
 
 	new /obj/item/rogueweapon/sword/long/judgement(get_turf(src))
-	new /obj/item/clothing/head/roguetown/helmet/heavy/frogmouth(get_turf(src))
-	new /obj/item/clothing/neck/roguetown/gorget/steel(get_turf(src))
-	new /obj/item/clothing/suit/roguetown/armor/plate/full(get_turf(src))
 	new /obj/item/clothing/wrists/roguetown/bracers(get_turf(src))
-	new /obj/item/clothing/gloves/roguetown/plate(get_turf(src))
+	new /obj/item/clothing/neck/roguetown/gorget/steel(get_turf(src))
 	new /obj/item/storage/belt/rogue/leather/steel/tasset(get_turf(src))
-	new /obj/item/clothing/under/roguetown/platelegs(get_turf(src))
-	new /obj/item/clothing/shoes/roguetown/boots/armor(get_turf(src))
+	new /obj/item/clothing/gloves/roguetown/plate/blacksteel/modern(get_turf(src))
+	new /obj/item/clothing/head/roguetown/helmet/blacksteel/modern(get_turf(src))
+	new /obj/item/clothing/shoes/roguetown/boots/armor/blacksteel/modern(get_turf(src))
+	new /obj/item/clothing/suit/roguetown/armor/plate/full/blacksteel/modern(get_turf(src))
+	new /obj/item/clothing/under/roguetown/platelegs/blacksteel/modern(get_turf(src))
 	has_spawned_gear = TRUE
 	close()
 
@@ -303,6 +302,9 @@
 		/obj/item/roguegem/yellow = 10,
 		/obj/item/roguestatue/bronze = 10,
 		/obj/item/roguestatue/iron = 5,
+		/obj/item/ccg_card_generator/common = 3,
+		/obj/item/ccg_card_booster = 2,
+		/obj/item/ccg_card_booster/premium = 1,
 		/obj/item/clothing/mask/cigarette/rollie/nicotine = 20, //Misc stuff
 		/obj/item/reagent_containers/food/snacks/butter = 10,
 		/obj/item/reagent_containers/food/snacks/rogue/raisins = 10,
@@ -345,6 +347,10 @@
 		/obj/item/roguegem/violet = 10,
 		/obj/item/roguestatue/gold/loot = 10,
 		/obj/item/roguestatue/aalloy = 5,
+		/obj/item/ccg_card_generator/common = 4,
+		/obj/item/ccg_card_generator/rare = 3,
+		/obj/item/ccg_card_booster = 2,
+		/obj/item/ccg_card_booster/premium = 1,
 		/obj/item/storage/belt/rogue/pouch/zigarrete/nicotine = 15, //Misc stuff
 		/obj/item/reagent_containers/food/snacks/butter = 15,
 		/obj/item/reagent_containers/food/snacks/canned = 15,
@@ -384,6 +390,11 @@
 		/obj/item/roguestatue/gold = 10,
 		/obj/item/roguestatue/silver = 10,
 		/obj/item/roguestatue/blacksteel = 5,
+		/obj/item/ccg_card_generator/common = 1,
+		/obj/item/ccg_card_generator/rare = 3,
+		/obj/item/ccg_card_generator/unique = 2,
+		/obj/item/ccg_card_booster = 2,
+		/obj/item/ccg_card_booster/premium = 1,
 		/obj/item/storage/belt/rogue/pouch/zigarrete/nicotine = 10, //Misc stuff
 		/obj/item/reagent_containers/food/snacks/canned = 20,
 		/obj/item/reagent_containers/food/snacks/rogue/crackerscooked = 5,

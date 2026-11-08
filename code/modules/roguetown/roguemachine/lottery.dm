@@ -99,20 +99,20 @@
 			playsound(src, 'sound/misc/machinetalk.ogg', 100, FALSE, -1)
 			src.gamblingprob = src.gamblingbaseprob
 			src.oldtithe = src.gamblingprice //this is redundant but i feel like bad things will happen if i don't do this :T
-			sleep(15)
+			stoplag(1.5 SECONDS)
 			src.stopgambling = 0
 			return
 
 		else
 			src.say(pick("TEN, WHEEL OF FORTUNE - inversed.", "The Castle. O, Omen!", "A harvest of locusts...!", "Look into my eyes and whisper your woes.", "Aw, dangit.", "Fool. Poor fool.", "Your eyes leak out of your skull, drool falling from your lips.", "Divine idiocy.", "You stand just as I did; loser and a freek."))
 			playsound(src, 'sound/misc/bug.ogg', 100, FALSE, -1)
-			sleep(20) //really make them THINK about their life choices up to this point
+			stoplag(2 SECONDS) //really make them THINK about their life choices up to this point
 			src.say(pick("King of fools, your land is barren. Play again?", "Divine comedy. Play again?", "Next time, surely. Play again?", "Haha-...ah-ha-ha! Again! Play again, jester!", "Poor beggar! Spin me again?"))
 			playsound(src, 'sound/misc/bug.ogg', 100, FALSE, -1)
 			src.gamblingprob = src.gamblingbaseprob
 			src.gamblingprice = 0
 			src.oldtithe = 0
-			sleep(15)
+			stoplag(1.5 SECONDS)
 			src.stopgambling = 0
 			return
 
@@ -134,22 +134,32 @@
 			say("Your peasant's tithe is NEGATIVE.")
 			return
 		var/list/choicez = list()
-		if(gamblingprice > 10)
-			choicez += "GOLD"
-		if(gamblingprice > 5)
-			choicez += "SILVER"
+		if(SSmapping.config.map_name == "Rockhill")
+			if(gamblingprice > 14)
+				choicez += "GOLD"
+		else
+			if(gamblingprice > 10)
+				choicez += "GOLD"
+			if(gamblingprice > 5)
+				choicez += "SILVER"
 		choicez += "BRONZE"
 		var/selection = input(user, "Make a Selection", src) as null|anything in choicez
 		if(!selection)
 			return
 		var/mod = 1
-		if(selection == "GOLD")
-			mod = 10
-		if(selection == "SILVER")
-			mod = 5
+		// TA EDIT START
+		if(SSmapping.config.map_name == "Rockhill")
+			if(selection == "GOLD")
+				mod = 14
+		else
+			if(selection == "GOLD")
+				mod = 10
+			if(selection == "SILVER")
+				mod = 5
 		var/maxwithdraw = min(floor(gamblingprice/mod), 20)
 		var/coin_amt = input(user, "Sayyid, you have [src.gamblingprice] mammon in tithes. You may withdraw [maxwithdraw] [selection] COINS.", src) as null|num
 		coin_amt = min(round(coin_amt), 20)
+		// TA EDIT END
 		if(coin_amt < 1)
 			return
 		if(!Adjacent(user))

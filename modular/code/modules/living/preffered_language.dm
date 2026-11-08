@@ -1,3 +1,5 @@
+#define SERVER_DEFAULT_UI_LANGUAGE "ru"
+
 GLOBAL_LIST_INIT(preferred_ui_languages, build_preferred_ui_languages())
 
 /// Add new selectable TGUI languages from other modules by defining subtypes.
@@ -10,10 +12,10 @@ GLOBAL_LIST_INIT(preferred_ui_languages, build_preferred_ui_languages())
 	language_code = DEFAULT_PREFERRED_UI_LANGUAGE
 
 /datum/preferences
-	var/preferred_ui_language = DEFAULT_PREFERRED_UI_LANGUAGE
+	var/preferred_ui_language = SERVER_DEFAULT_UI_LANGUAGE
 
 /client
-	var/preferred_ui_language = DEFAULT_PREFERRED_UI_LANGUAGE
+	var/preferred_ui_language = SERVER_DEFAULT_UI_LANGUAGE
 
 /proc/build_preferred_ui_languages()
 	. = list()
@@ -34,7 +36,11 @@ GLOBAL_LIST_INIT(preferred_ui_languages, build_preferred_ui_languages())
 	return get_preferred_ui_language_display_name(language_code) ? TRUE : FALSE
 
 /proc/sanitize_preferred_ui_language(language_code)
-	return is_preferred_ui_language_available(language_code) ? language_code : DEFAULT_PREFERRED_UI_LANGUAGE
+	if(is_preferred_ui_language_available(language_code))
+		return language_code
+	if(is_preferred_ui_language_available(SERVER_DEFAULT_UI_LANGUAGE))
+		return SERVER_DEFAULT_UI_LANGUAGE
+	return DEFAULT_PREFERRED_UI_LANGUAGE
 
 /client/proc/get_preferred_ui_language()
 	if(prefs)

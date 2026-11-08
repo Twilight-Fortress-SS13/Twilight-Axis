@@ -15,6 +15,12 @@
 //Limit of how many enemies a unit can target through
 #define AI_MAX_ENEMIES 99
 
+// TA EDIT START
+#define AI_MELEE_NO_PROGRESS_LIMIT 20
+#define AI_MELEE_NO_PROGRESS_TIME (30 SECONDS)
+#define AI_MELEE_IGNORE_TIME (30 SECONDS)
+// TA EDIT END
+
 /// After either being given a verbal order or a pointing order, ignore further of each for this duration
 #define AI_HOSTILE_COMMAND_COOLDOWN (2 SECONDS)
 

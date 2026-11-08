@@ -1,15 +1,16 @@
 /datum/advclass/templar/guardian
-	name = "Guardian"
-	tutorial = "You are the heavily-armoured guardian of this temple, clad in plate. Your presence alone maintains order amongst the pews; and in \n	the most dire tymes, you may yet be the one thing that stands between the flock and the volves."
+	name = "Templar" // TA EDIT
+	tutorial = "You are a templar of the Church, trained in heavy weaponry and zealous warfare. You are the instrument of your God's wrath, clad in silver and faith." //TA EDIT
 	outfit = /datum/outfit/job/roguetown/templar/guardian
 	category_tags = list(CTAG_TEMPLAR)
 	subclass_languages = list(/datum/language/grenzelhoftian)
-	maximum_possible_slots = 1
+//	maximum_possible_slots = 1 // TA EDIT
 	traits_applied = list(TRAIT_HEAVYARMOR)
 	subclass_stats = list(
 		STATKEY_STR = 2,
 		STATKEY_CON = 2,
 		STATKEY_WIL = 3,
+		STATKEY_INT = 1,
 	)
 	subclass_skills = list(
 		/datum/skill/combat/swords = SKILL_LEVEL_JOURNEYMAN,
@@ -30,7 +31,7 @@
 	subclass_stashed_items = list(
 		"The Verses and Acts of the Ten" = /obj/item/book/rogue/bibble,
 	)
-	extra_context = "This subclass gains Expert skill in their weapon of choice."
+	extra_context = "This subclass gains Expert skill in their weapon of choice. Taking a ranged option will provide Expert skills in Crossbows and Journeyman skills in Swordsmanship, at the cost of starting with reduced armor and atrophying in all other weapon skills." // TA EDIT
 
 /datum/outfit/job/roguetown/templar/guardian/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -55,18 +56,22 @@
 		/obj/item/storage/belt/rogue/pouch/coins/mid = 1,
 		/obj/item/storage/keyring/acolyte = 1
 		)
-	H.cmode_music = 'sound/music/cmode/church/combat_reckoning.ogg' // this is probably awful implementation. too bad!
+	H.cmode_music = sound("sound/music/cmode/church/combat_reckoning.ogg") // this is probably awful implementation. too bad!
 	switch(H.patron?.type)
 		if(/datum/patron/divine/undivided)
 			beltr = /obj/item/clothing/neck/roguetown/psicross/undivided
 			if(H.mind)
-				var/cloaks = list("Cloak", "Tabard")
+				var/cloaks = list("Cloak", "Tabard", "Clerical Cloak", "Clerical Tabard")
 				var/cloakchoice = input(H,"Choose your covering", "TAKE UP FASHION") as anything in cloaks
 				switch(cloakchoice)
 					if("Cloak")
 						cloak = /obj/item/clothing/cloak/undivided
 					if("Tabard")
 						cloak = /obj/item/clothing/cloak/templar/undivided_alt
+					if("Clerical Cloak")
+						cloak = /obj/item/clothing/cloak/undividedcleric
+					if("Clerical Tabard")
+						cloak = /obj/item/clothing/cloak/templar/undividedcleric
 				var/helms = list("Bucket Helmet", "Barbute")
 				var/helmchoice = input(H, "Choose your headwear", "TAKE UP NOGGIN PROTECTION") as anything in helms
 				switch(helmchoice)
@@ -86,12 +91,12 @@
 			beltr = /obj/item/clothing/neck/roguetown/psicross/xylix
 			cloak = /obj/item/clothing/cloak/templar/xylixian
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/xylixhelm
-			H.cmode_music = 'sound/music/combat_jester.ogg'
+			H.cmode_music = sound("sound/music/combat_jester.ogg")
 		if(/datum/patron/divine/dendor)
 			beltr = /obj/item/clothing/neck/roguetown/psicross/dendor
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/dendorhelm
 			cloak = /obj/item/clothing/cloak/tabard/crusader/dendor
-			H.cmode_music = 'sound/music/cmode/garrison/combat_warden.ogg'
+			H.cmode_music = sound("sound/music/cmode/garrison/combat_warden.ogg")
 		if(/datum/patron/divine/necra)
 			beltr = /obj/item/clothing/neck/roguetown/psicross/necra
 			head = /obj/item/clothing/head/roguetown/helmet/heavy/necran
@@ -133,7 +138,7 @@
 
 /datum/outfit/job/roguetown/templar/guardian/choose_loadout(mob/living/carbon/human/H)
 	. = ..()
-	var/weapons = list("Arming Sword","Longsword","Flail","Mace","Battle Axe","Spear")
+	var/weapons = list("Arming Sword","Longsword","Flail","Mace","Battle Axe","Spear", "Crossbow + Shortsword") // TA EDIT
 	switch(H.patron?.type)
 		if(/datum/patron/divine/astrata) //Unique patron weapons, more can be added here if wanted.
 			weapons += "Solar Judgement"
@@ -147,6 +152,7 @@
 			weapons += "Moonlight Kriegmesser"
 		if(/datum/patron/divine/necra)
 			weapons += "Swift End"
+			weapons += "The Equipoise" // TA EDIT
 		if(/datum/patron/divine/pestra)
 			weapons += "Plaguebringer Sickles"
 			weapons += "Lance of Boils"
@@ -192,6 +198,15 @@
 			H.put_in_hands(new /obj/item/rogueweapon/sword/undivided(H))
 			H.adjust_skillrank(/datum/skill/combat/swords, SKILL_LEVEL_NOVICE, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/sword, SLOT_BELT_L, TRUE)
+		if("Crossbow + Shortsword") // TA EDIT
+			H.equip_to_slot_or_del(new /obj/item/quiver/bolt/standard, SLOT_BELT_R, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/cuirass, SLOT_ARMOR, TRUE) // Reduced armor
+			H.put_in_hands(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow(H))
+			H.put_in_hands(new /obj/item/rogueweapon/sword/short(H), TRUE)
+			H.adjust_skillrank(/datum/skill/combat/crossbows, SKILL_LEVEL_APPRENTICE, TRUE) // Expert Crossbow
+			H.adjust_skillrank(/datum/skill/combat/maces, -SKILL_LEVEL_NOVICE, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/axes, -SKILL_LEVEL_NOVICE, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/whipsflails, -SKILL_LEVEL_NOVICE, TRUE)
 		if("Decablade")
 			H.put_in_hands(new /obj/item/rogueweapon/sword/long/undivided(H))
 			H.adjust_skillrank(/datum/skill/combat/swords, SKILL_LEVEL_NOVICE, TRUE)
@@ -211,6 +226,11 @@
 		if("Swift End")
 			H.put_in_hands(new /obj/item/rogueweapon/flail/sflail/necraflail(H))
 			H.adjust_skillrank(/datum/skill/combat/whipsflails, SKILL_LEVEL_NOVICE, TRUE)
+		if("The Equipoise") // TA EDIT
+			H.put_in_hands(new /obj/item/rogueweapon/halberd/bardiche/twilight_necrascythe/preblessed(H), TRUE)
+			H.put_in_hands(new /obj/item/rogueweapon/scabbard/gwstrap(H))
+			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 4, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/silver, SLOT_ARMOR, TRUE)
 		if("Plaguebringer Sickles")
 			H.put_in_hands(new /obj/item/rogueweapon/huntingknife/idagger/steel/pestrasickle(H))
 			H.put_in_hands(new /obj/item/rogueweapon/huntingknife/idagger/steel/pestrasickle(H))
@@ -266,7 +286,7 @@
 		H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_NOVICE, TRUE)
 	if(H.patron?.type == /datum/patron/divine/astrata)
 		H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_NOVICE, TRUE)
-		H.cmode_music = 'sound/music/cmode/church/combat_astrata.ogg'
+		H.cmode_music = sound("sound/music/cmode/church/combat_astrata.ogg")
 	if(H.patron?.type == /datum/patron/divine/dendor)
 		H.adjust_skillrank(/datum/skill/labor/farming, SKILL_LEVEL_NOVICE, TRUE)
 		H.adjust_skillrank(/datum/skill/misc/climbing, SKILL_LEVEL_NOVICE, TRUE)
@@ -283,7 +303,7 @@
 	if(H.patron?.type == /datum/patron/divine/necra)
 		ADD_TRAIT(H, TRAIT_NOSTINK, TRAIT_GENERIC)
 		ADD_TRAIT(H, TRAIT_SOUL_EXAMINE, TRAIT_GENERIC)
-		H.cmode_music = 'sound/music/cmode/church/combat_necra.ogg'
+		H.cmode_music = sound("sound/music/cmode/church/combat_necra.ogg")
 	if(H.patron?.type == /datum/patron/divine/pestra)
 		H.adjust_skillrank(/datum/skill/misc/medicine, SKILL_LEVEL_NOVICE, TRUE)
 		H.adjust_skillrank(/datum/skill/craft/alchemy, SKILL_LEVEL_NOVICE, TRUE)
@@ -292,7 +312,9 @@
 	if(H.patron?.type == /datum/patron/divine/eora)
 		ADD_TRAIT(H, TRAIT_BEAUTIFUL, TRAIT_GENERIC)
 		ADD_TRAIT(H, TRAIT_EMPATH, TRAIT_GENERIC)
-		H.cmode_music = 'sound/music/cmode/church/combat_eora.ogg'
+		H.cmode_music = sound("sound/music/cmode/church/combat_eora.ogg")
+		H.mind.special_items["Alt Tabard"] = /obj/item/clothing/cloak/templar/eoran/alt // TA EDIT
+		H.mind.special_items["Helmet Morphing Elixer"] = /obj/item/enchantingkit/eoran_helm_resprite // TA EDIT
 	if(H.patron?.type == /datum/patron/divine/malum)
 		H.adjust_skillrank(/datum/skill/craft/blacksmithing, SKILL_LEVEL_NOVICE, TRUE)
 		H.adjust_skillrank(/datum/skill/craft/armorsmithing, SKILL_LEVEL_NOVICE, TRUE)

@@ -168,6 +168,7 @@ GLOBAL_LIST_EMPTY(patron_follower_counts)
 
 // Featured stats of the round
 #define FEATURED_STATS_TREE_FELLERS "tree_fellers"
+#define FEATURED_STATS_THIEVES "thieves" // TA EDIT
 #define FEATURED_STATS_ALCHEMISTS "alchemists"
 #define FEATURED_STATS_TAX_PAYERS "tax_payers"
 #define FEATURED_STATS_ALCOHOLICS "alcohol_drinkers"
@@ -273,6 +274,11 @@ GLOBAL_LIST_INIT(featured_stats, list(
 		"color" = "#48505e", // im blue da ba de ba da die
 		"entires" = list()
 	),
+	FEATURED_STATS_THIEVES = list( // TA EDIT
+		"name" = "TOP Thieves", // TA EDIT
+		"color" = "#6e4a25", // TA EDIT
+		"entries" = list() // TA EDIT
+	), // TA EDIT
 	FEATURED_STATS_ALCOHOLICS = list(
 		"name" = "TOP Alcoholics",
 		"color" = "#945d96",

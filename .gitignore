@@ -5,6 +5,8 @@
 
 #Ignore everything in datafolder and subdirectories
 /data/**/*
+!/data/paintings/
+!/data/paintings/.gitkeep
 /tmp/**/*
 
 #Ignore byond config folder.

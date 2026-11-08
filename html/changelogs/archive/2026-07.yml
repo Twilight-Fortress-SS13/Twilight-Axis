@@ -30,6 +30,8 @@
       can be refunded if an Absolver's presence makes it less-than-needed.
   Quinalion:
   - code_imp: Standardizes Psydonian maces code path for consistency.
+  SmthAwfl:
+  - rscadd: sage's big hat
   WeNeedMorePhoron:
   - rscadd: There's now two slots for Noccian Spellblade since it isn't that OP, actually.
       They lost tempo access.
@@ -55,6 +57,34 @@
   - balance: vamp arsonist has a heavy helm vs its miner helm before + different class
       name now
 2026-07-02:
+  SillyMoff:
+  - balance: "-\u0412 \u0441\u0432\u044F\u0437\u0438 \u0441 \u0438\u0437\u043C\u0435\
+      \u043D\u0435\u043D\u0438\u0435\u043C \u043C\u0438\u0440\u0430\u0436\u0430 -\
+      \ \u0442\u0435\u043F\u0435\u0440\u044C \u0431\u0430\u043E\u0442\u0438\u0441\u0442\
+      \u044B \u0441\u043D\u043E\u0432\u0430 \u043C\u043E\u0433\u0443\u0442 \u043F\u043E\
+      \u043B\u0443\u0447\u0438\u0442\u044C \u0431\u0430\u0444\u0444 \u0437\u0430 \u0440\
+      \u043E\u0437\u044B\u0441\u043A, \u0430 \u043A \u0442\u043E\u043C\u0443 \u0436\
+      \u0435 \u0431\u0430\u043E\u0442\u0438\u0441\u0442-\u0448\u043F\u0438\u043E\u043D\
+      \ \u043C\u043E\u0436\u0435\u0442 \u043D\u0435 \u0431\u0440\u0430\u0442\u044C\
+      \ +\u043A \u0441\u0442\u0430\u0442\u0430\u043C, \u043D\u043E \u0438 \u043D\u0430\
+      \u0434\u043F\u0438\u0441\u044C \u0435\u0440\u0435\u0442\u0438\u043A\u0430 \u043D\
+      \u0430 \u043B\u0438\u0446\u043E \u043D\u0435 \u043F\u043E\u043B\u0443\u0447\u0438\
+      \u0442 \u0442\u043E\u0436\u0435."
+  Vladmar11:
+  - bugfix: "\u0424\u0438\u043A\u0441 \u043F\u0440\u043E\u0441\u043A\u0430\u043B\u044C\
+      \u0437\u044B\u0432\u0430\u043D\u0438\u044F \u043F\u0443\u0441\u0442\u044B\u043D\
+      \u043D\u044B\u0445 \u0441\u043B\u0435\u0434\u043E\u0432 \u0432 \u0434\u0440\u0443\
+      \u0433\u0438\u0435 \u043A\u0430\u0440\u0442\u044B"
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u043F\u043E\
+      \u0442\u0440\u0435\u0431\u043B\u0435\u043D\u0438\u0435 \u0440\u0443\u043D\u043E\
+      \u0439 \u0432\u0441\u0435\u0445 \u0440\u0435\u0441\u0443\u0440\u0441\u043E\u0432\
+      , \u0447\u0442\u043E \u043D\u0430 \u043D\u0435\u0439 \u043B\u0435\u0436\u0430\
+      \u0442"
+  - balance: "\u0422\u0435\u043F\u0435\u0440\u044C \u0433\u0440\u0430\u0431\u043D\u0443\
+      \u0442\u044B\u0439 \u043D\u0435 \u0442\u0440\u0430\u0442\u0438\u0442 \u0441\u0442\
+      \u0430\u043C\u0438\u043D\u0443 \u043F\u0440\u0438 \u043F\u0435\u0440\u0435\u043C\
+      \u0435\u0449\u0435\u043D\u0438\u044F\u0445 \u043F\u043E \u0442\u0430\u0439\u043B\
+      \u0430\u043C \u0432\u043E\u0434\u044B"
   WeNeedMorePhoron:
   - bugfix: Fixes a major issue stemming from an obsolete feature
   eirenxiv:
@@ -233,6 +263,15 @@
   radarseas:
   - bugfix: Gives Iconoclast an Amulet so they can actually Play their Role.
 2026-07-05:
+  Aism4n:
+  - rscadd: "merc jaeger (arquebuse) \u043F\u043E\u043B\u0443\u0447\u0438\u043B staves\
+      \ apperentice"
+  - rscadd: "lostgrenzel jaeger (arquebuse) \u043F\u043E\u043B\u0443\u0447\u0438\u043B\
+      \ staves apperentice"
+  - rscadd: "\u0421\u0442\u0443\u0434\u0438\u044F \u0440\u0443\u0433\u0430\u043B\u0430\
+      \u0441\u044C \u0447\u0442\u043E \u0432 \u043A\u043E\u043D\u0446\u0435 \u0444\
+      \u0430\u0439\u043B\u0430 \u043B\u043E\u0441\u0442\u043E\u0432 \u043D\u0435 \u0431\
+      \u044B\u043B\u043E \u043F\u0440\u043E\u0431\u0435\u043B\u0430"
   Happyowl93:
   - bugfix: pot can fill containers now.
   KatTheFox:
@@ -251,6 +290,20 @@
   - rscadd: A shard. A fragment. A donator reskin of no particular note.
   SomeDeviant:
   - bugfix: fixed Sojourner minor amount for autowardry
+  Vladmar11:
+  - balance: "\u041E\u0441\u043B\u0430\u0431\u043B\u0435\u043D\u043E \u043F\u0440\u043E\
+      \u0431\u0438\u0442\u0438\u0435 \u0431\u0440\u043E\u043D\u0438 \u0443 \u0410\u041E\
+      \u0415-\u0430\u0442\u0430\u043A\u0438 \u043E\u0431\u043E\u0440\u043E\u0442\u043D\
+      \u044F Hefty Swing."
+  - balance: "\u0422\u0435\u043F\u0435\u0440\u044C \u043F\u0435\u0440\u0435\u0437\u0430\
+      \u0440\u044F\u0434\u043A\u0430 \u0440\u0443\u043D\u043B\u043E\u043A\u043E\u0432\
+      \ \u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u0441\u0442\u0430\u043C\u0438\u043D\
+      \u0443, \u0430 \u0438\u0445 \u0441\u0431\u043E\u0440 \u0441\u0443\u043C\u043A\
+      \u043E\u0439 \u0443\u0432\u0435\u043B\u0438\u0447\u0435\u043D"
+  - code_imp: "\u0423\u0431\u0440\u0430\u043D\u0430 \u0434\u044B\u043C\u043E\u0432\
+      \u0430\u044F \u0437\u0430\u0432\u0435\u0441\u0430 \u043F\u043E\u0441\u043B\u0435\
+      \ \u0432\u044B\u0441\u0442\u0440\u0435\u043B\u043E\u0432 \u0441 \u0440\u0443\
+      \u043D\u043B\u043E\u043A\u0430."
   WeNeedMorePhoron:
   - rscadd: Attempted to optimize in hand item overlays. Report any oddity especially
       with items that change states in your hand.
@@ -277,14 +330,29 @@
       \ should generally represent how a player might be affected by the changes rather\
       \ than a summary of the PR's contents. -->"
   - bugfix: wanted vice role availability
+  msw7007:
+  - bugfix: "\u043F\u0430\u0442\u0447\u0438 \u0441\u0438\u0441\u0442\u0435\u043C\u044B\
+      \ \u0415\u0420\u041F, \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u044E\
+      \u0442 \u043E\u0448\u0438\u0431\u043A\u0438, \u043D\u0435\u0436\u0435\u043B\u0430\
+      \u0442\u0435\u043B\u044C\u043D\u043E\u0435 \u043F\u043E\u0432\u0435\u0434\u0435\
+      \u043D\u0438\u0435 \u043D\u0435\u043A\u043E\u0442\u043E\u0440\u044B\u0445 \u0441\
+      \u0438\u0441\u0442\u0435\u043C.."
   radarseas:
   - bugfix: fixed oversight w/ancient bracers being EXCEPTIONALLY ODD and not VLORD
       BRACERS only as intended.
 2026-07-06:
+  Aism4n:
+  - rscadd: Quicksilver (alt) recipe
+  - rscadd: Absolving silver (alt) recipe
   Aisu9:
   - qol: Divine arcanum now target fellowship party members, reduce the number of
       affected allies down to 4 from 6, also change the description to reflect the
       new value and targeting logic.
+  Baneuus:
+  - rscadd: "\u0410\u0441\u0441\u0430\u0441\u0438\u043D\u044B \u043F\u043E\u043B\u0443\
+      \u0447\u0430\u044E\u0442 \u0430\u0431\u0438\u043B\u043A\u0443 \u043D\u0430 \u043E\
+      \u0442\u0441\u043B\u0435\u0436\u0438\u0432\u0430\u043D\u0438\u0435 \u0446\u0435\
+      \u043B\u0435\u0439."
   FreeStylaLT:
   - rscdel: Removed Mountable virtue.
   - balance: Disabled Bind mechanic for unarmed.
@@ -304,11 +372,24 @@
   Lamasmaster:
   - balance: Monk-class statlines
   - rscadd: Vaquero mockery
+  Quinalion:
+  - rscadd: "\u042D\u0444\u0444\u0435\u043A\u0442 \u0434\u044B\u043C\u0430 \u043F\u0440\
+      \u0438 \u0441\u0442\u0440\u0435\u043B\u044C\u0431\u0435 \u0438\u0437 \u0440\u0443\
+      \u043D\u043B\u043E\u043A\u0430."
   Ryan180602:
   - rscdel: Fungal Illumination is removed.
   SomeDeviant:
   - bugfix: fixed Bad trainer Trait check to src instead of user
   - bugfix: fixed Bad trainer Trait targeting -3 levels below instead of -2
+  Vladmar11:
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u044B \u043B\u0430\
+      \u0433\u0438 \u0437\u0430 \u0444\u0430\u043C\u0438\u043B\u044C\u044F\u0440\u043E\
+      \u0432 \u0438 \u0437\u0430 \u0444\u043E\u0440\u043C\u044B \u0432\u0435\u0434\
+      \u044C\u043C\u044B"
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0430 \u0430\u0431\
+      \u0438\u043B\u043A\u0430 Spirit Transformation. \u0422\u0435\u043F\u0435\u0440\
+      \u044C \u043E\u043D\u0430 \u043D\u0435 \u0431\u043B\u043E\u0447\u0438\u0442\
+      \  \u0441\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u0438."
   WeNeedMorePhoron:
   - rscadd: Brings bracers parry to 8 instead of 7 WDEF so people stop asking for
       +1 Skill Level over armed classes.
@@ -418,9 +499,100 @@
       multiple others.
   - rscadd: Azure's classic daggers, courtesy of Kavrick, now available once more
       as a Triumph-exclusive reksin.
+  PatapoIIIa:
+  - refactor: "\u0412\u0430\u043C\u043F\u0438\u0440\u0441\u043A\u0438\u0439 \u043A\
+      \u043E\u0434 Twilight Axis \u0432\u044B\u043D\u0435\u0441\u0435\u043D \u0432\
+      \ \u043B\u043E\u043A\u0430\u043B\u044C\u043D\u044B\u0439 \u043C\u043E\u0434\u0443\
+      \u043B\u044C\u043D\u044B\u0439 \u0441\u043B\u043E\u0439."
+  - code_imp: "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u044B \u043B\u043E\
+      \u043A\u0430\u043B\u044C\u043D\u044B\u0435 vampire define, cleanup undefine\
+      \ \u0438 override-\u0444\u0430\u0439\u043B\u044B \u0434\u043B\u044F \u043E\u0441\
+      \u043D\u043E\u0432\u043D\u044B\u0445 \u0432\u0430\u043C\u043F\u0438\u0440\u0441\
+      \u043A\u0438\u0445 \u043C\u0435\u0445\u0430\u043D\u0438\u043A."
+  - balance: "\u041F\u0435\u0440\u0435\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u0430\
+      \ \u044D\u043A\u043E\u043D\u043E\u043C\u0438\u043A\u0430 RP, \u043B\u0438\u043C\
+      \u0438\u0442\u044B \u043F\u043E\u0440\u043E\u0436\u0434\u0435\u043D\u0438\u0439\
+      , \u0446\u0435\u043D\u0430 \u043E\u0431\u0440\u0430\u0449\u0435\u043D\u0438\u044F\
+      \ \u0438 \u043F\u043E\u043A\u0443\u043F\u043A\u0430 \u0443\u0440\u043E\u0432\
+      \u043D\u0435\u0439 \u043A\u043E\u0432\u0435\u043D\u043E\u0432."
+  - balance: "\u041F\u0440\u043E\u043A\u0430\u0447\u043A\u0430 \u043A\u043E\u0432\u0435\
+      \u043D\u043E\u0432 \u0447\u0435\u0440\u0435\u0437 XP \u043E\u0442\u043A\u043B\
+      \u044E\u0447\u0435\u043D\u0430; \u0443\u0440\u043E\u0432\u043D\u0438 \u043A\u043E\
+      \u0432\u0435\u043D\u043E\u0432 \u0442\u0435\u043F\u0435\u0440\u044C \u043F\u043E\
+      \u043A\u0443\u043F\u0430\u044E\u0442\u0441\u044F \u0437\u0430 Vitae \u0438 RP."
+  - balance: "\u041F\u0435\u0440\u0435\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u043E\
+      \ \u043A\u0440\u043E\u0432\u043E\u043F\u0438\u0442\u0438\u0435, \u0432\u044B\
+      \u0441\u0430\u0441\u044B\u0432\u0430\u043D\u0438\u0435 Vitae, \u0441\u043C\u0435\
+      \u0440\u0442\u0435\u043B\u044C\u043D\u043E\u0435 \u043F\u0438\u0442\u044C\u0435\
+      \ \u0438 \u0434\u0438\u0430\u0431\u043B\u0435\u0440\u0438\u044F."
+  - balance: "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u044B \u0434\u043E\u0431\
+      \u0440\u043E\u0432\u043E\u043B\u044C\u043D\u043E\u0435 \u043E\u0431\u0440\u0430\
+      \u0449\u0435\u043D\u0438\u0435, \u043D\u0430\u0441\u0438\u043B\u044C\u0441\u0442\
+      \u0432\u0435\u043D\u043D\u043E\u0435 \u043E\u0431\u0440\u0430\u0449\u0435\u043D\
+      \u0438\u0435 \u0438 \u0438\u0441\u0441\u0443\u0448\u0435\u043D\u0438\u0435 \u0447\
+      \u0435\u0440\u0435\u0437 \u0414\u0430\u0440 \u0441\u043C\u0435\u0440\u0442\u0438\
+      ."
+  - balance: "\u041D\u0430\u0441\u0438\u043B\u044C\u0441\u0442\u0432\u0435\u043D\u043D\
+      \u043E\u0435 \u043E\u0431\u0440\u0430\u0449\u0435\u043D\u0438\u0435 \u0442\u0435\
+      \u043F\u0435\u0440\u044C \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E \u0442\
+      \u043E\u043B\u044C\u043A\u043E \u0432\u0430\u043C\u043F\u0438\u0440-\u043B\u043E\
+      \u0440\u0434\u0443."
+  - balance: "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u044B Pallid-\u0438\
+      \u0441\u0441\u0443\u0448\u0435\u043D\u0438\u0435, \u0414\u0430\u0440\u044B \u0441\
+      \u043C\u0435\u0440\u0442\u0438 \u0438 \u043B\u0438\u043C\u0438\u0442\u044B \u0414\
+      \u0430\u0440\u043E\u0432 \u0441\u043C\u0435\u0440\u0442\u0438 \u043F\u043E \u043F\
+      \u043E\u043A\u043E\u043B\u0435\u043D\u0438\u044E."
+  - balance: "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u044B \u0432\u043E\u0437\
+      \u0432\u044B\u0448\u0435\u043D\u043D\u044B\u0435 \u043A\u043E\u0432\u0435\u043D\
+      \u044B \u0438 \u043D\u043E\u0432\u044B\u0435 \u0441\u0438\u043B\u044B 6 \u0443\
+      \u0440\u043E\u0432\u043D\u044F \u0434\u043B\u044F \u0432\u0430\u043C\u043F\u0438\
+      \u0440-\u043B\u043E\u0440\u0434\u043E\u0432."
+  - balance: "Transfix \u043F\u0435\u0440\u0435\u0440\u0430\u0431\u043E\u0442\u0430\
+      \u043D: \u0434\u043B\u0438\u043D\u0430 \u0444\u0440\u0430\u0437\u044B, \u0430\
+      \u043D\u0442\u0438-\u043A\u043E\u043F\u0438\u043F\u0430\u0441\u0442\u0430, \u043D\
+      \u0430\u043A\u0430\u0437\u0430\u043D\u0438\u0435 \u0437\u0430 \u0437\u043B\u043E\
+      \u0443\u043F\u043E\u0442\u0440\u0435\u0431\u043B\u0435\u043D\u0438\u0435, \u0441\
+      \u0435\u0440\u0435\u0431\u0440\u044F\u043D\u044B\u0435 \u043F\u0440\u043E\u0432\
+      \u0435\u0440\u043A\u0438 \u0438 \u043E\u0431\u0440\u044B\u0432 \u043F\u0440\u0438\
+      \ \u043F\u043E\u0431\u0435\u0433\u0435 \u0446\u0435\u043B\u0438."
+  - balance: "\u0421\u0435\u0440\u0435\u0431\u0440\u043E \u0442\u0435\u043F\u0435\u0440\
+      \u044C \u043C\u043E\u0436\u0435\u0442 \u043F\u0440\u0435\u0440\u044B\u0432\u0430\
+      \u0442\u044C \u044F\u0440\u043E\u0441\u0442\u044C \u0414\u0430\u0440\u0430 \u0431\
+      \u0435\u0440\u0441\u0435\u0440\u043A\u0430."
+  - qol: "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u044B \u0431\u043E\u043B\
+      \u0435\u0435 \u043F\u043E\u043D\u044F\u0442\u043D\u044B\u0435 \u0441\u043E\u043E\
+      \u0431\u0449\u0435\u043D\u0438\u044F \u0434\u043B\u044F \u043E\u0431\u0440\u0430\
+      \u0449\u0435\u043D\u0438\u044F, \u0438\u0441\u0441\u0443\u0448\u0435\u043D\u0438\
+      \u044F, Pallid, \u0414\u0430\u0440\u043E\u0432 \u0441\u043C\u0435\u0440\u0442\
+      \u0438 \u0438 Transfix."
+  - qol: "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0430 \u0440\u0443\u0441\
+      \u0441\u043A\u0430\u044F \u043B\u043E\u043A\u0430\u043B\u0438\u0437\u0430\u0446\
+      \u0438\u044F \u0432\u0430\u043C\u043F\u0438\u0440\u0441\u043A\u043E\u0433\u043E\
+      \ UI \u0438 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u043A\u0430 \u0440\u0443\
+      \u0441\u0441\u043A\u043E\u0433\u043E UI-\u044F\u0437\u044B\u043A\u0430."
+  - qol: "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D \u0438\u043D\u0442\u0435\
+      \u0440\u0444\u0435\u0439\u0441 \u0432\u0430\u043C\u043F\u0438\u0440\u0441\u043A\
+      \u0438\u0445 \u0412\u0440\u0430\u0442 \u0440\u0430\u0437\u043B\u043E\u043C\u0430\
+      ."
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u044B DreamChecker-\u043E\
+      \u0448\u0438\u0431\u043A\u0438 \u0414\u0430\u0440\u0430 \u0431\u0435\u0440\u0441\
+      \u0435\u0440\u043A\u0430, \u0441\u0432\u044F\u0437\u0430\u043D\u043D\u044B\u0435\
+      \ \u0441 \u0431\u043B\u043E\u043A\u0438\u0440\u0443\u044E\u0449\u0438\u043C\u0438\
+      \ \u0432\u044B\u0437\u043E\u0432\u0430\u043C\u0438 \u0432 signal-handler."
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D Transfix, \u043A\
+      \u043E\u0442\u043E\u0440\u044B\u0439 \u043C\u043E\u0433 \u0441\u0440\u0430\u0431\
+      \u043E\u0442\u0430\u0442\u044C \u043F\u043E\u0441\u043B\u0435 \u043F\u043E\u0431\
+      \u0435\u0433\u0430 \u0446\u0435\u043B\u0438 \u0441\u043B\u0438\u0448\u043A\u043E\
+      \u043C \u0434\u0430\u043B\u0435\u043A\u043E."
   Ryumi:
   - qol: Race descriptions now include any bonus languages that a race grants.
   - bugfix: Fixed Humen race descriptions not displaying quite the same as other races.
+  SmthAwfl:
+  - rscadd: "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0430 \u0430\u043B\u044C\
+      \u0442\u0435\u0440\u043D\u0430\u0442\u0438\u0432\u0430 \u0428\u0430\u043C\u0448\
+      \u0438\u0440 + \u041F\u0438\u0441\u0442\u043E\u043B\u044C, \u043D\u043E \u0420\
+      \u0430\u043F\u0438\u0440\u0430 + \u041F\u0438\u0441\u0442\u043E\u043B\u044C\
+      \ \u0434\u043B\u044F Irregular Knight"
   WeNeedMorePhoron:
   - rscadd: Encyclopedia's existence is now aggressively pushed to you whenever you
       join.
@@ -592,6 +764,25 @@
   Ryan180602:
   - bugfix: gnoll migrants are disabled on psydon gamemodes. if a gamemode isn't meant
       to have gnolls
+  Vladmar11:
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D \u0431\u0430\u0433\
+      \ \u0441 \u0440\u0435\u0433\u0435\u043D\u043E\u043C \u0431\u0440\u043E\u043D\
+      \u0438 \u0411\u0430\u043E\u0442\u044B \u0432\u043E \u0432\u0440\u0435\u043C\u044F\
+      \ \u0431\u043E\u044F"
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0430 \u043F\u0440\
+      \u043E\u0431\u043B\u0435\u043C\u0430 \u0438\u0437-\u0437\u0430 \u043A\u043E\u0442\
+      \u043E\u0440\u043E\u0439 \u0430\u0443\u0440\u0430 \u0411\u0430\u043E\u0442\u044B\
+      \ \u043D\u0435 \u0443\u0431\u0438\u0440\u0430\u043B\u0430\u0441\u044C \u0443\
+      \ \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u0436\u0435\u0439, \u0447\u0442\
+      \u043E \u0443\u0448\u043B\u0438 \u0437\u0430 \u0435\u0435 \u0440\u0430\u0434\
+      \u0438\u0443\u0441"
+  - rscadd: "\u041B\u043E\u0434\u0430\u0443\u0442 \u043C\u0435\u043D\u044E \u0431\u044B\
+      \u043B\u043E \u043F\u0435\u0440\u0435\u0440\u0430\u0431\u043E\u0442\u0430\u043D\
+      \u043E \u0438 \u0441\u0434\u0435\u043B\u0430\u043D\u043E \u0431\u043E\u043B\u0435\
+      \u0435 \u043A\u043E\u043C\u043F\u0430\u043A\u0442\u043D\u044B\u043C"
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u044B \u043B\u0430\
+      \u0433\u0438 \u043F\u0440\u0438 \u043E\u0442\u043A\u0440\u044B\u0442\u0438\u0438\
+      \ \u043B\u043E\u0434\u0430\u0443\u0442\u0430"
   WeNeedMorePhoron:
   - rscadd: Raised the per client topic limit to 200 and no longer count the statpanel
       to hopefully alleviates issues
@@ -625,13 +816,30 @@
   string-thing:
   - bugfix: fixed con buff on fort. vapours
 2026-07-12:
-  7erracotta:
-  - rscadd: Added Saree's and Dhoti's
   Kell-E:
   - bugfix: Fixes siege bow zombie walls
+  Ryan180602:
+  - qol: Admins don't need to ready up to vote.
+  - qol: End round votes can be done from lobby now again
+  ShiroseSchnee:
+  - rscadd: Adds new donator item for ShiroseSchnee
+  borneblood:
+  - bugfix: fixed tomato on a fundamental level
+  - bugfix: fixed Avantail and Chainmantle
+2026-07-13:
+  7erracotta:
+  - rscadd: Added Saree's and Dhoti's
+  KatTheFox:
+  - bugfix: Elemental and void familiars can now resist to break out of tool transformations
+  - balance: Tier 1 earthen forge no longer halves the durability of conjured items
   Ketrai:
   - rscadd: Abyssor's power shifts, tidal spires now produce darkwater.
   - bugfix: zizo's pet cemetery event being unable to run
+  Lamasmaster:
+  - balance: Bishop Combat Skills were changed. Bishop now gains Master Unarmed instead
+      of Master Polearms.
+  - balance: Ravox Vow wound heal rate was reduced.
+  - bugfix: Noc T4 hopefully
   Ollanius:
   - bugfix: Haubyrines no longer inherit unintended coverage of the groin.
   - balance: Haubyrines cannot be worn by those with TRAIT_ARCYNE or TRAIT_CIVILIZEDBARBARIAN;
@@ -640,6 +848,8 @@
       be unwearable by those with TRAIT_ARCYNE, TRAIT_CIVILIZEDBARBARIAN, or TRAIT_DODGEEXPERT--
       independently or all together. Check out chainmail.dm for an example of how
       to add multiple tags to the same armor-filtering component.
+  - rscadd: Shotstakes can now be made from any stationary heat source, courtesy of
+      a single recipe per stake.
   Ryan180602:
   - bugfix: painting crashes + other bugs
   - bugfix: errant hair editor bugs
@@ -649,33 +859,9 @@
   - bugfix: fixed ghost polling for scried clients.
   - bugfix: prevents scried clients from jumping around with double click to move
       turf.
-  - qol: Admins don't need to ready up to vote.
-  - qol: End round votes can be done from lobby now again
-  ShiroseSchnee:
-  - rscadd: Adds new donator item for ShiroseSchnee
   WeNeedMorePhoron:
   - bugfix: Potentially fixes spells and attacks fizzling when you move your mouse
       after charging
-  borneblood:
-  - rscadd: added a way to access either of the Bishop's holy staves
-  - bugfix: fixed the staff of the shepherd's missing interactions
-  - bugfix: fixed tomato on a fundamental level
-  - rscadd: Added 'Pouched Suspenders' as a cosmetic for the loadout.
-  - bugfix: fixed Avantail and Chainmantle
-  - bugfix: frei swords can now block projectiles on halfsword intent's block
-2026-07-13:
-  KatTheFox:
-  - bugfix: Elemental and void familiars can now resist to break out of tool transformations
-  - balance: Tier 1 earthen forge no longer halves the durability of conjured items
-  Lamasmaster:
-  - balance: Bishop Combat Skills were changed. Bishop now gains Master Unarmed instead
-      of Master Polearms.
-  - balance: Ravox Vow wound heal rate was reduced.
-  - bugfix: Noc T4 hopefully
-  Ollanius:
-  - rscadd: Shotstakes can now be made from any stationary heat source, courtesy of
-      a single recipe per stake.
-  WeNeedMorePhoron:
   - rscadd: Reworked the entirety of mage schools
   - rscadd: Added Conjuration School
   - rscadd: Reworked Augmentation School to remove statbuffs in favor of situational
@@ -688,6 +874,12 @@
   - rscdel: Killed teleportation ruine
   - rscadd: Kingsfield BLockade is now in the Grove
 2026-07-14:
+  borneblood:
+  - rscadd: added a way to access either of the Bishop's holy staves
+  - bugfix: fixed the staff of the shepherd's missing interactions
+  - rscadd: Added 'Pouched Suspenders' as a cosmetic for the loadout.
+  - bugfix: frei swords can now block projectiles on halfsword intent's block
+2026-07-15:
   7erracotta:
   - rscadd: glazed pottery, dye-brush on some/most normal pottery yields this
   FreeStylaLT:
@@ -710,8 +902,30 @@
   - rscadd: Adds a new T1 Fae enchantment, Fair Seeming. It cleans the user after
       a 2 second action, even removing the sewer grime. You could get soap for a fraction
       of the value, but, who am I to tell you how to use your money.
+  Quinalion:
+  - rscadd: "\u0421\u043E\u0431\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0439 \u0434\
+      \u0440\u0438\u043F \u043D\u0430\u043B\u0435\u0434\u0438\u0439\u0441\u043A\u043E\
+      \u043C\u0443 \u043C\u0430\u0433\u0443 \u0438\u043D\u043A\u0432\u0438\u0437\u0438\
+      \u0446\u0438\u0438."
+  - balance: "\u041F\u0440\u0430\u0432\u043A\u0438 \u0432 \u043F\u043E\u0434\u043A\
+      \u043B\u0430\u0441\u0441 \u043D\u0430\u043B\u0435\u0434\u0438\u0439\u0441\u043A\
+      \u043E\u0433\u043E \u043C\u0430\u0433\u0430 \u0438\u043D\u043A\u0432\u0438\u0437\
+      \u0438\u0446\u0438\u0438."
   SomeDeviant:
   - bugfix: fixed non-job locked and non-trait locked travel tiles functioning properly
+  Ssheya:
+  - rscadd: "\u0412\u044B\u0431\u043E\u0440 \u0443 \u0430\u043A\u043E\u043B\u0438\u0442\
+      \u043E\u0432 \u0438 \u0442\u0435\u043C\u043F\u043B\u0430\u0440\u043E\u0432 \u043C\
+      \u0435\u0436\u0434\u0443 \u0441\u0435\u0440\u044B\u043C\u0438 \u0438 \u0433\u043E\
+      \u043B\u0443\u0431\u044B\u043C\u0438 \u043E\u0434\u0435\u044F\u043D\u0438\u044F\
+      \u043C\u0438"
+  Vladmar11:
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u043F\u043E\
+      \u044F\u0432\u043B\u0435\u043D\u0438\u0435 \u0432\u0442\u043E\u0440\u043E\u0439\
+      \ \u0441\u0442\u0430\u0442\u043F\u0430\u043D\u0435\u043B\u0438 \u043F\u0440\u0438\
+      \ \u0437\u0430\u0445\u043E\u0434\u0435 \u0432 \u0440\u0430\u0443\u043D\u0434\
+      \ \u0441 \u0432\u043A\u043B\u044E\u0447\u0435\u043D\u043D\u043E\u0439 \u0432\
+      \u043A\u043B\u0430\u0434\u043A\u043E\u0439 Round Info"
   WeNeedMorePhoron:
   - rscadd: Removed gems from stockpile after it was blatantly used while not reported
       for transmuting gems and reselling them. The margins on this operation is a
@@ -743,7 +957,7 @@
   kiwedespars:
   - bugfix: graggar organs event fixed (hacky, no longer requires hearts)
   - bugfix: graggar culling now works properly.
-2026-07-15:
+2026-07-16:
   FreeStylaLT:
   - rscadd: Added a heel-morphing elixir, that could add heels (and the appropriate
       SFX) to any shoewear item.
@@ -800,36 +1014,18 @@
   - bugfix: wildshaping will no longer remove your tired status
   probbrie:
   - rscadd: Added wide palmate antlers to character customisation.
-2026-07-16:
+2026-07-17:
   FreeStylaLT:
   - sound: Saccharine Heels (Baothan Heretic boots) now make the appropriate heel
       SFX.
-  Ollanius:
-  - bugfix: Purchasing a refitting kit now properly vends a refitting kit.
-  - balance: Reduces cost of a refitting kit from 50 to 25, as it's wholly cosmetic.
-  WeNeedMorePhoron:
-  - rscadd: Councillors lose Stewardry key except for Cofferers, who cannot take crafting
-      virtues
-  - rscadd: Added a confirmation prompt to "Start Now" if there's more than one client
-      in game, defaulting to NO on the left against normal intuition, to prevent accidentally
-      starting live server early due to roundstart focus hijack.
-  - rscadd: Nerfs STR and PER soft cap to 3% from 5%
-  - rscadd: Fixes random vices rolling two restricted vice, make it indicate what
-      extra vice you get
-  - admin: Add the ability for admins / coders to download player saves.
-  - bugfix: Give Councillors keep key back
-  probbrie:
-  - balance: added Dual Wield to Zeybek when they choose twin shamshirs
-2026-07-17:
   Lamasmaster:
-  - rscadd: Hag Panel Interaction
   - balance: Malum Miracles
   - bugfix: Malum Ritual
   - bugfix: Antiquarian not getting Secular Barter
   - balance: Tanning Hides now provides 1 + SKILL (TANNING) Cured Leathers.
-  Lutowski:
-  - image: Partially resprited werewolf.
   Ollanius:
+  - bugfix: Purchasing a refitting kit now properly vends a refitting kit.
+  - balance: Reduces cost of a refitting kit from 50 to 25, as it's wholly cosmetic.
   - bugfix: Decorated steel armor no longer requires fluted armor to make. Whoopsies!
   - rscadd: Adjusts the bastard sword's description.
   ShadowLarkens:
@@ -848,23 +1044,27 @@
   - config: Human-Readable Logs can be turned off by commenting out config.txt ->
       LOG_AS_HUMAN_READABLE
   WeNeedMorePhoron:
+  - rscadd: Councillors lose Stewardry key except for Cofferers, who cannot take crafting
+      virtues
+  - rscadd: Added a confirmation prompt to "Start Now" if there's more than one client
+      in game, defaulting to NO on the left against normal intuition, to prevent accidentally
+      starting live server early due to roundstart focus hijack.
+  - rscadd: Nerfs STR and PER soft cap to 3% from 5%
+  - rscadd: Fixes random vices rolling two restricted vice, make it indicate what
+      extra vice you get
+  - admin: Add the ability for admins / coders to download player saves.
+  - bugfix: Give Councillors keep key back
   - rscadd: Refactored the armor filtering component and fixed it since it was broken
       to add in haubrynie support. Naledi complex should work properly, so should
       honor bound and or other different traits.
-  - bugfix: Fixes shield overlay broken by my optimization PR that stopped forcing
-      redraw of all in hand sprite to save on cpu
-  - bugfix: Fixes poleaxe / lance overlays messing up blood by cutting overlays unilaterally,
-      which is unrelated ot my PR.
   - bugfix: Fix snouts not showing on character preview.
   - rscadd: Optimized away unnecessary calls of forced redraw of bodyparts to female
       chest, upper body, mask update. I am still trying to investigate why previews
       breaks some of the time. Rejoin to see it show properly. I apologize for the
       inconvenience as this PR and its changes will be kept in due to drastic CPU
       saving around 10 - 15%
-  borneblood:
-  - bugfix: fixed an oversight that caused Bishop's staff to sizzle them
-  plsleavemealon:
-  - balance: mauls no longer require herculean strength to use them
+  probbrie:
+  - balance: added Dual Wield to Zeybek when they choose twin shamshirs
   the evil wizard on the cover of dopethrone:
   - rscadd: smoking is now tracked in endround. see TOP BLACKLUNGS
   yyzsong:
@@ -876,9 +1076,27 @@
   - balance: hitting a Limbguard with your bare hands now does severe damage to your
       gloves. If your gloves are broken or you are bare handed, punching a Limbguard
       will break the offending arm.
+  GDWK-matt:
+  - rscadd: "\u043D\u0430\u0432\u044B\u043A \u0447\u0442\u0435\u043D\u0438\u044F"
+  - balance: "\u0440\u0435\u0431\u0430\u043B\u0430\u043D\u0441 \u0431\u0440\u043E\u043D\
+      \u0438 \u0438 \u0441\u0442\u0430\u0442\u043E\u0432"
+  GoodGrief1488:
+  - qol: "\u0443\u043F\u0440\u043E\u0441\u0442\u0438\u043B \u0438\u0441\u043F\u043E\
+      \u043B\u044C\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u043A\u043D\u0443\u0442\
+      \u0430"
+  - balance: "\u0441\u0434\u0435\u043B\u0430\u043B \u043A\u043D\u0443\u0442 \u044D\
+      \u0444\u0444\u0435\u043A\u0442\u0438\u0432\u043D\u0435\u0439"
+  Lamasmaster:
+  - rscadd: Hag Panel Interaction
+  Lutowski:
+  - image: Partially resprited werewolf.
   Quinalion:
   - bugfix: Fixed grenzelhoftian clothing icons.
   WeNeedMorePhoron:
+  - bugfix: Fixes shield overlay broken by my optimization PR that stopped forcing
+      redraw of all in hand sprite to save on cpu
+  - bugfix: Fixes poleaxe / lance overlays messing up blood by cutting overlays unilaterally,
+      which is unrelated ot my PR.
   - bugfix: Refresh action buttons after outfit is equipped so you don't get bamboozled
       by your spells being unavailable and manually click it to reflect properly.
   - bugfix: remove unavailable Gravel Blast option from poke spells. Thanks to Abyssal
@@ -961,8 +1179,16 @@
   - rscadd: Improved UI to show the new feature to swap choice spell in place for
       2 points
   - bugfix: Probably fix the Grenzelhoftian Leibwachter not spawnign with wepaons
+  borneblood:
+  - bugfix: fixed an oversight that caused Bishop's staff to sizzle them
   changelingonberry:
   - bugfix: Loadout manager (select loadout) no longer announces to the whole server
+  msw7007:
+  - bugfix: "\u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0432\
+      \ \u0441\u0438\u0441\u0442\u0435\u043C\u0435 \u0415\u0420\u041F, \u0432 \u0441\
+      \u0438\u0441\u0442\u0435\u043C\u0435 \u043A\u0430\u0440\u0442."
+  plsleavemealon:
+  - balance: mauls no longer require herculean strength to use them
   radarseas:
   - rscadd: Added phase roll, a means of dodging exclusive to Vheslynite Cultists,
       used to phase through flesh and steel alyke
@@ -985,6 +1211,16 @@
       get hags smited anymore.
   - image: added Vheslynite spells and Profane Fire status Effect
   - code_imp: added code ready for implimentation into Vheslyn Cultists
+  sinerume:
+  - rscadd: "\u041B\u0435\u0441\u0441\u0435\u0440 \u043C\u0435\u043D\u0434\u0438\u043D\
+      \u0433 \u0434\u043B\u044F \u0440\u0438\u0442\u0443\u0430\u043B\u0430"
+  - rscadd: "\u041F\u0435\u0440\u0435\u043D\u043E\u0441 \u043B\u0430\u0442 \u0438\
+      \ \u043A\u043E\u043F\u044C\u044F \u0411\u0430\u043E\u0442\u044B \u0432 \u043C\
+      \u043E\u0434\u0443\u043B\u044C"
+  - balance: "\u041F\u0435\u0440\u0435\u0434\u0435\u043B\u0430\u043D\u044B \u0441\u0442\
+      \u0430\u0442\u044B \u043A\u043E\u0438\u0444\u0430"
+  - bugfix: "\u0412\u043E\u0437\u0432\u0440\u0430\u0449\u0435\u043D \u043C\u0435\u043D\
+      \u0434\u0438\u043D\u0433"
   yyzsong:
   - rscadd: Gold bowl smithing recipe
 2026-07-19:
@@ -1020,6 +1256,13 @@
   SomeDeviant:
   - bugfix: fixed new 'blank' icon for the gatehatch structures on the bridge to the
       keep/keep front door
+  Vladmar11:
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0430 \u043E\u0431\
+      \u0440\u0430\u0431\u043E\u0442\u043A\u0430 \u0443\u0434\u0430\u043B\u0451\u043D\
+      \u043D\u044B\u0445 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0439 \u0430\
+      \u043D\u0438\u043C\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u043E\u0433\u043E\
+      \ runechat."
+  - rscadd: "\u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D \u043C\u044F\u0447"
   WeNeedMorePhoron:
   - rscdel: Mimic no longer do the jumpscare zoom
   radarseas:
@@ -1046,6 +1289,17 @@
   - rscadd: Padded and Hardened Leather footwraps.
   - bugfix: Cloth/Leather bracers making metallic sounds.
   - sound: Equip/pickup sound to Gambesons / Leather armour
+  Quinalion:
+  - rscadd: "\u0422\u0435\u043F\u0435\u0440\u044C \u0418\u0441\u043A\u0443\u043F\u0438\
+      \u0442\u0435\u043B\u044E \u0438\u043D\u043A\u0432\u0438\u0437\u0438\u0446\u0438\
+      \u0438 \u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D \u043C\u0438\u0440\u0430\
+      \u043A\u043B ASPERGES, \u043F\u043E \u0441\u0432\u043E\u0435\u0439 \u043C\u0435\
+      \u0445\u0430\u043D\u0438\u043A\u0435 \u0430\u043D\u0430\u043B\u043E\u0433\u0438\
+      \u0447\u043D\u044B\u0439 Orison \u043E\u0441\u0442\u0430\u043B\u044C\u043D\u044B\
+      \u0445 \u043C\u0438\u0440\u0430\u043A\u043B\u0438\u0441\u0442\u043E\u0432."
+  - image: "\u0420\u0435\u0441\u043F\u0440\u0430\u0439\u0442 \u042D\u0442\u0440\u0443\
+      \u0441\u043A\u043E\u0433\u043E \u041F\u043B\u0430\u0449\u0430 \u0438\u0437 \u043B\
+      \u043E\u0434\u0430\u0443\u0442\u0430."
   Ryan180602:
   - rscadd: donor item
   THE GRAND DUKE OF AZURE PEAK:
@@ -1057,6 +1311,23 @@
   TankTheBirb:
   - bugfix: Fixes manabloom tea outputting "/list" when you OD on it instead of the
       correct "MY STOMACH BURNS" text.
+  Vladmar11:
+  - bugfix: "\u0418\u0418 \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0434\
+      \u043E\u043B\u0436\u0435\u043D \u0431\u0435\u0441\u043A\u043E\u043D\u0435\u0447\
+      \u043D\u043E \u0430\u0442\u0430\u043A\u043E\u0432\u0430\u0442\u044C \u0446\u0435\
+      \u043B\u0438, \u043A\u043E\u0442\u043E\u0440\u044B\u043C \u043E\u043D \u0434\
+      \u043B\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0435 \u0432\u0440\u0435\u043C\
+      \u044F \u043D\u0435 \u043C\u043E\u0436\u0435\u0442 \u043D\u0430\u043D\u0435\u0441\
+      \u0442\u0438 \u0443\u0440\u043E\u043D."
+  - rscadd: "\u0411\u0430\u043D \u0438 \u0430\u043D\u0431\u0430\u043D \u043F\u0430\
+      \u043D\u0435\u043B\u044C \u0442\u0435\u043F\u0435\u0440\u044C \u043D\u0430 \u0422\
+      \u0413\u0423\u0418"
+  - balance: "\u0421\u0438\u043D\u044F\u044F \u043F\u043E\u043B\u043E\u0441\u043A\u0430\
+      \ \u0442\u0440\u0430\u0442\u0438\u0442\u0441\u044F \u043D\u0430 40% \u043C\u0435\
+      \u043D\u044C\u0448\u0435 (\u0438\u0441\u043A\u043B\u044E\u0447\u0435\u043D\u0438\
+      \u0435 \u0437\u0430\u043A\u043B\u0438\u043D\u0430\u043D\u0438\u044F)"
+  - balance: "\u0417\u0430\u0442\u043E\u0447\u043A\u0430 \u0442\u0440\u0430\u0442\u0438\
+      \u0442\u0441\u044F \u043D\u0430 30% \u043C\u0435\u043D\u044C\u0448\u0435"
   WeNeedMorePhoron:
   - rscadd: Needle can be reloaded from bundle (continously)
   - rscadd: Uploading an audio with a protected playback error no longer warn every
@@ -1087,6 +1358,91 @@
       pool across all retrievals in the round.
   - bugfix: Fixed loadout items from still being sellable when they arent bought with
       triumph.
+  PatapoIIIa:
+  - bugfix: "\u0412\u0430\u043C\u043F\u0438\u0440\u044B \u0431\u043E\u043B\u044C\u0448\
+      \u0435 \u043D\u0435 \u043C\u043E\u0433\u0443\u0442 \u0442\u0435\u043B\u0435\u043F\
+      \u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0441\u0435\u0431\
+      \u044F (Presence) \u0441\u043A\u0432\u043E\u0437\u044C \u0441\u0442\u0435\u043D\
+      \u044B \u043F\u0440\u0438 \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u043C Auspex"
+  - bugfix: "\u0414\u0430\u0440 \u0411\u0435\u0440\u0441\u0435\u0440\u043A\u0430 \u0442\
+      \u0435\u043F\u0435\u0440\u044C \u0441\u0440\u0430\u0431\u0430\u0442\u044B\u0432\
+      \u0430\u0435\u0442 \u0438 \u043F\u043E\u0441\u043B\u0435 \u043C\u0433\u043D\u043E\
+      \u0432\u0435\u043D\u043D\u043E\u0439 \u0441\u043C\u0435\u0440\u0442\u0438 \u043E\
+      \u0442 \u043E\u0434\u0438\u043D\u043E\u0447\u043D\u043E\u0433\u043E \u0443\u0434\
+      \u0430\u0440\u0430"
+  - bugfix: "\u0421\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u044C Quietus\
+      \ \xAB\u0412\u0437\u043E\u0440 \u0412\u0430\u0430\u043B\u0430\xBB (T4) \u0431\
+      \u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0431\u044B\u043B\u0430 \u043F\u043E\
+      \u043B\u043D\u043E\u0441\u0442\u044C\u044E \u043D\u0435\u0440\u0430\u0431\u043E\
+      \u0447\u0435\u0439"
+  - bugfix: "Dagon's Call \u043D\u0435\u043B\u044C\u0437\u044F \u043E\u0431\u0440\u0430\
+      \u0442\u0438\u0442\u044C \u043D\u0430 \u0441\u0430\u043C\u043E\u0433\u043E \u0441\
+      \u0435\u0431\u044F"
+  - bugfix: "\u0423\u0441\u0442\u0440\u0430\u043D\u0435\u043D\u044B \u0434\u0432\u043E\
+      \u0439\u043D\u043E\u0439 \u0443\u0440\u043E\u043D \u0438 \u0434\u0443\u0431\u043B\
+      \u0438\u0440\u0443\u044E\u0449\u0435\u0435\u0441\u044F \u0441\u043E\u043E\u0431\
+      \u0449\u0435\u043D\u0438\u0435 \u043E\u0442 \u044F\u0434\u0430 Quietus (Vitae\
+      \ Acid)"
+  - bugfix: "\u0412\u0430\u043C\u043F\u0438\u0440\u044B \u0441\u043D\u043E\u0432\u0430\
+      \ \u0432\u0438\u0434\u044F\u0442 HUD-\u0438\u043A\u043E\u043D\u043A\u0443 \u0430\
+      \u043D\u0442\u0430\u0433\u043E\u043D\u0438\u0441\u0442\u0430 \u0434\u0440\u0443\
+      \u0433 \u0443 \u0434\u0440\u0443\u0433\u0430"
+  - bugfix: "\u0420\u0435\u0437\u0438\u0434\u0435\u043D\u0442\u044B \u0441 \u0434\u0430\
+      \u0440\u043E\u043C \xAB\u0416\u0438\u0442\u0435\u043B\u044C\xBB \u0441\u043D\
+      \u043E\u0432\u0430 \u043F\u043E\u043B\u0443\u0447\u0430\u044E\u0442 \u0433\u0440\
+      \u0430\u043C\u043E\u0442\u0443 \u0438 \u043C\u0435\u0441\u0442\u043E \u0432\
+      \ \u0442\u0430\u0432\u0435\u0440\u043D\u0435"
+  - bugfix: "\u041F\u0440\u0438\u0437\u0432\u0430\u043D\u043D\u044B\u0435 \u0441\u0443\
+      \u0449\u0435\u0441\u0442\u0432\u0430 (\u0434\u043E\u0441\u043F\u0435\u0445\u0438\
+      \ \u043C\u0430\u0433\u0430 \u0438 \u0442.\u043F.) \u0431\u043E\u043B\u044C\u0448\
+      \u0435 \u043D\u0435 \u043C\u043E\u0433\u0443\u0442 \u0441\u0442\u0430\u0442\u044C\
+      \ \xAB\u0436\u0435\u043D\u0438\u0445\u043E\u043C/\u043D\u0435\u0432\u0435\u0441\
+      \u0442\u043E\u0439\xBB \u0432 \u0441\u0435\u043C\u0435\u0439\u043D\u043E\u0439\
+      \ \u0441\u0438\u0441\u0442\u0435\u043C\u0435"
+  - bugfix: "\u0412\u0437\u0430\u0438\u043C\u043D\u044B\u0439 \u043E\u0442\u043A\u0430\
+      \u0437 \u043E\u0442 \u043F\u0430\u0440\u044B \u0432 \u0441\u0435\u043C\u0435\
+      \u0439\u043D\u043E\u0439 \u0441\u0438\u0441\u0442\u0435\u043C\u0435 \u0431\u043E\
+      \u043B\u044C\u0448\u0435 \u043D\u0435 \u0441\u0432\u043E\u0434\u0438\u0442 \u0442\
+      \u0435\u0445 \u0436\u0435 \u0434\u0432\u0443\u0445 \u043B\u044E\u0434\u0435\u0439\
+      \ \u043F\u043E\u0432\u0442\u043E\u0440\u043D\u043E"
+  - bugfix: "\u0423\u0441\u0442\u0440\u0430\u043D\u0435\u043D\u044B \u0437\u0430\u0432\
+      \u0438\u0441\u0430\u043D\u0438\u044F \u043F\u043E\u0434\u0442\u0432\u0435\u0440\
+      \u0436\u0434\u0435\u043D\u0438\u044F \u043F\u0430\u0440\u044B \u0432 \u0441\u0435\
+      \u043C\u0435\u0439\u043D\u043E\u0439 \u0441\u0438\u0441\u0442\u0435\u043C\u0435\
+      \ (\u0438\u043A\u043E\u043D\u043A\u0430/\u0431\u043B\u043E\u043A\u0438\u0440\
+      \u043E\u0432\u043A\u0430 \u043D\u0430\u0432\u0441\u0435\u0433\u0434\u0430, \u0430\
+      \u0432\u0442\u043E\u043F\u0440\u0438\u043D\u044F\u0442\u0438\u0435 \u0437\u0430\
+      \ \u043E\u0442\u043A\u043B\u044E\u0447\u0438\u0432\u0448\u0435\u0433\u043E\u0441\
+      \u044F)"
+  - balance: "Rockhill Masquerade \u2014 \u0448\u0430\u043D\u0441 \u043F\u043E\u044F\
+      \u0432\u043B\u0435\u043D\u0438\u044F \u0437\u0430\u0432\u0438\u0441\u0438\u0442\
+      \ \u043E\u0442 \u043D\u0430\u0441\u0435\u043B\u0451\u043D\u043D\u043E\u0441\u0442\
+      \u0438 \u0440\u0430\u0443\u043D\u0434\u0430, \u0434\u043E\u0431\u0430\u0432\u043B\
+      \u0435\u043D \u0442\u0430\u0439\u043C\u0435\u0440 \u0432\u044B\u0431\u043E\u0440\
+      \u0430 \u043A\u043B\u0430\u043D\u0430"
+  - qol: "\u0414\u0438\u0430\u043B\u043E\u0433 \u043E\u0436\u0438\u0434\u0430\u043D\
+      \u0438\u044F \xAB\u0438\u0437\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E\
+      \xBB \u0432 \u0441\u0435\u043C\u044C\u0435 \u0441\u0447\u0438\u0442\u0430\u0435\
+      \u0442 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0435 \u0432\u0440\u0435\u043C\
+      \u044F, \u0430 \u043D\u0435 \u0447\u0438\u0441\u043B\u043E \u043F\u043E\u043F\
+      \u044B\u0442\u043E\u043A"
+  - qol: "\u0418\u043A\u043E\u043D\u043A\u0430 \u0432\u044B\u0431\u043E\u0440\u0430\
+      \ \u043A\u043B\u0430\u043D\u0430 \u0443 \u0432\u0440\u0435\u0442\u0447\u0435\
+      \u0439/\u043B\u0438\u043A\u0435\u0440\u043E\u0432 \u0441 \u043F\u0440\u0438\u043D\
+      \u0443\u0434\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u043C \u043A\u043B\u0430\
+      \u043D\u043E\u043C \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0432\u0438\
+      \u0441\u0438\u0442 \u0431\u0435\u0437 \u043D\u0443\u0436\u0434\u044B"
+  - qol: "\u0417\u0430\u043A\u0440\u044B\u0442\u0438\u0435 \u043C\u0435\u043D\u044E\
+      \ \u0432\u044B\u0431\u043E\u0440\u0430 \u043A\u043B\u0430\u043D\u0430 \u0431\
+      \u0435\u0437 \u0432\u044B\u0431\u043E\u0440\u0430 \u0431\u043E\u043B\u044C\u0448\
+      \u0435 \u043D\u0435 \u0444\u043E\u0440\u0441\u0438\u0442 \u043A\u043B\u0430\u043D\
+      \ \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E"
+  - admin: "\u041B\u043E\u0433\u0438 \u0441\u0435\u043C\u0435\u0439\u043D\u043E\u0439\
+      \ \u0441\u0438\u0441\u0442\u0435\u043C\u044B \u043F\u0435\u0440\u0435\u0432\u0435\
+      \u0434\u0435\u043D\u044B \u0432 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\
+      \u0439 ss_family.log \u0441 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\
+      \u0430\u0435\u043C\u044B\u043C \u043F\u043E\u0434\u0440\u043E\u0431\u043D\u044B\
+      \u043C \u0440\u0435\u0436\u0438\u043C\u043E\u043C"
   Ryan180602:
   - balance: Throwing knives have 80% embed chance.
   - balance: Broadheads and Bodkins do +5 damage.
@@ -1209,6 +1565,11 @@
       unarmed claw at IC tab.
   Ryan180602:
   - bugfix: noc eclipse bug
+  Vladmar11:
+  - qol: "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0430 \u0432\u043E\u0437\
+      \u043C\u043E\u0436\u043D\u043E\u0441\u0442\u044C \u0432\u044B\u0431\u0440\u0430\
+      \u0442\u044C \u043F\u043E\u0434\u043A\u043B\u0430\u0441\u0441 \u0443 \u0440\u043E\
+      \u043B\u0438 \u0432 \u043B\u043E\u0431\u0431\u0438"
   WeNeedMorePhoron:
   - bugfix: Sanitized a bunch of inputs
   borneblood:
@@ -1265,6 +1626,63 @@
       is now available.
   - bugfix: Removes sellprice from the Decablessed Shield, so that it can properly
       calculate its sellprice based off the crafting materials used in its recipe.
+  Quinalion:
+  - balance: "\u0420\u0435\u0431\u0430\u043B\u0430\u043D\u0441 \u041A\u0430\u043F\u0438\
+      \u0442\u0430\u043D\u0430 \u0420\u0443\u043C\u043E\u0432\u0446\u0435\u0432 \u043F\
+      \u043E\u0441\u043B\u0435 \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\
+      \u0439 \u0430\u043F\u0441\u0442\u0440\u0438\u043C\u0430."
+  - balance: "\u0422\u044F\u0436\u0451\u043B\u044B\u0435 \u0438 \u043F\u043E\u043B\
+      \u043D\u043E\u0441\u0442\u044C\u044E \u0437\u0430\u043A\u0440\u044B\u0432\u0430\
+      \u044E\u0449\u0438\u0435 \u043B\u0430\u0442\u044B \u0442\u0435\u043F\u0435\u0440\
+      \u044C \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\
+      \u0438 \u0437\u0430\u0449\u0438\u0449\u0430\u044E\u0442 \u0448\u0435\u044E."
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u043E\u0442\
+      \u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u0441\u043F\u0440\u0430\
+      \u0439\u0442\u0430 \u0437\u0438\u0431\u0430\u043D\u0442\u0438\u0439\u0441\u043A\
+      \u043E\u0433\u043E \u043F\u043B\u0430\u0449\u0430 \u043C\u0438\u0440\u0430\u0436\
+      \u0444\u0435\u043D\u0430."
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u043E\u0442\
+      \u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u0441\u043F\u0440\u0430\
+      \u0439\u0442\u043E\u0432 \u0433\u0440\u0435\u043D\u0437\u0435\u043B\u044C\u0441\
+      \u043A\u043E\u0439 \u043E\u0434\u0435\u0436\u0434\u044B \u0438 \u0448\u043B\u0435\
+      \u043C\u043E\u0432."
+  - bugfix: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0430 \u0441\u043B\
+      \u043E\u043C\u0430\u043D\u043D\u0430\u044F \u0441\u0442\u0438\u043B\u0438\u0437\
+      \u0430\u0446\u0438\u044F \u0442\u0435\u043A\u0441\u0442\u0430 \u0438 \u043E\u0442\
+      \u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u0440\u0430\u0441\u043E\
+      \u0432\u044B\u0445 \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u0438\u0441\
+      \u0442\u0438\u043A."
+  - qol: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u0440\u0435\u0446\u0435\
+      \u043F\u0442\u043E\u0432 \u043A\u0440\u0430\u0444\u0442\u0430 \u0438\u0437 \u043B\
+      \u043E\u043C\u0430 \u0441\u0434\u0435\u043B\u0430\u043D\u044B \u0431\u043E\u043B\
+      \u0435\u0435 \u0438\u043D\u0442\u0443\u0438\u0442\u0438\u0432\u043D\u044B\u043C\
+      \u0438 \u0438 \u043F\u043E\u043D\u044F\u0442\u043D\u044B\u043C\u0438."
+  - spellcheck: "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0430 \u0430\
+      \u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0430\u044F \u0433\u0440\u0430\u043C\
+      \u043C\u0430\u0442\u0438\u043A\u0430 \u0432 \u043D\u0430\u0437\u0432\u0430\u043D\
+      \u0438\u044F\u0445 \u0440\u0435\u0446\u0435\u043F\u0442\u043E\u0432 \u0438 \u0443\
+      \u0431\u0440\u0430\u043D\u044B \u0440\u0443\u0441\u0438\u0444\u0438\u0446\u0438\
+      \u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0435 \u043D\u0430\u0437\u0432\u0430\
+      \u043D\u0438\u044F \u043F\u0440\u0435\u0434\u043C\u0435\u0442\u043E\u0432."
+  - refactor: "\u0423\u043F\u0440\u043E\u0449\u0435\u043D\u0430 \u043C\u043E\u0434\
+      \u0443\u043B\u044F\u0440\u0438\u0437\u0430\u0446\u0438\u044F \u0431\u0430\u0444\
+      \u0444\u0430 \u043D\u043E\u0436\u0435\u043D \u0431\u0435\u0437 \u0437\u0430\u0442\
+      \u0440\u0430\u0433\u0438\u0432\u0430\u043D\u0438\u044F \u0438\u0441\u0445\u043E\
+      \u0434\u043D\u043E\u0433\u043E \u043A\u043E\u0434\u0430."
+  - refactor: "\u0423\u043F\u0440\u043E\u0449\u0451\u043D \u0440\u0435\u0446\u0435\
+      \u043F\u0442 \u043A\u0440\u0430\u0444\u0442\u0430 \u043F\u0440\u0438\u043F\u0430\
+      \u0440\u043A\u0438 \u0437\u0430 \u0441\u0447\u0451\u0442 \u043D\u0430\u0441\u043B\
+      \u0435\u0434\u043E\u0432\u0430\u043D\u0438\u044F \u043E\u0442 \u0440\u043E\u0434\
+      \u0438\u0442\u0435\u043B\u044F."
+  - refactor: "\u041C\u043E\u0434\u0443\u043B\u044F\u0440\u0438\u0437\u0430\u0446\u0438\
+      \u044F \u043F\u0440\u0438\u0447\u0451\u0441\u043E\u043A \u043F\u0435\u0440\u0435\
+      \u0432\u0435\u0434\u0435\u043D\u0430 \u0432 \u043E\u0434\u0438\u043D \u0444\u0430\
+      \u0439\u043B, \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u043D\u0443\
+      \u0436\u043D\u043E \u0432\u0440\u0443\u0447\u043D\u0443\u044E \u043F\u0440\u043E\
+      \u043F\u0438\u0441\u044B\u0432\u0430\u0442\u044C .dmi."
+  - rscdel: "\u0423\u0434\u0430\u043B\u0435\u043D\u044B \u043D\u0435\u0438\u0441\u043F\
+      \u043E\u043B\u044C\u0437\u0443\u0435\u043C\u044B\u0435 \u0438 \u043F\u0443\u0441\
+      \u0442\u044B\u0435 \u0444\u0430\u0439\u043B\u044B \u0438\u0437 .dme."
 2026-07-26:
   Antoonij:
   - bugfix: hag revival now properly restores lost organs
@@ -1417,6 +1835,11 @@
   - rscdel: Removed Artificer Armor from standing order and added some proper categorizations
       to some artificers items for display / market purpose
 2026-07-28:
+  Antoonij:
+  - code_imp: "\u0437\u0430\u0431\u044B\u0432\u0430\u0439\u043A\u0430 \u0432\u0430\
+      \u043C\u043F\u0438\u0440\u043E\u0432 \u0437\u0430\u043C\u0435\u043D\u0435\u043D\
+      \u0430 \u043D\u0430 \u0430\u043D\u0441\u0438\u043D \u043F\u0440\u0435\u0437\u0435\
+      \u043D\u0441++"
   FreeStylaLT:
   - rscadd: Added Fencing Breeches to the Donator Regional Loadout.
   - bugfix: Fixed fencing gloves in the Donator Regional Loadout not giving out the
@@ -1455,10 +1878,28 @@
       master medicine down to expert
   - balance: Expert Physicker option of Take Apprentice now gives Apprentice medicine
       skill instead of Novice
+  Vladmar11:
+  - balance: "\u041C\u0430\u0441\u043A\u0430\u0440\u0430\u0434 \u0442\u0435\u043F\u0435\
+      \u0440\u044C \u043D\u0435 \u0436\u0440\u0435\u0442 \u0441\u043B\u043E\u0442\
+      \ \u043C\u0430\u0436\u043E\u0440 \u0430\u043D\u0442\u0430\u0433\u043E\u0432"
+  - code_imp: "\u0417\u0432\u0443\u043A\u0438 \u0441 \u0434\u0440\u0443\u0433\u0438\
+      \u0445 Z \u043B\u0432\u043B\u043E\u0432 \u043D\u0435 \u0431\u0443\u0434\u0435\
+      \u0442 \u0441\u043B\u044B\u0448\u043D\u043E \u043D\u0430 \u043F\u0435\u0440\u0432\
+      \u043E\u043C Z \u043B\u0432\u043B\u0435"
+  - balance: "\u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0435 \u043D\
+      \u0430 1 \u0441\u043B\u043E\u0442 \u0434\u043B\u044F \u043E\u0442\u0430\u0432\
+      \u0430\u043D\u0441\u043A\u043E\u0433\u043E \u0432\u043E\u043B\u043A\u0430"
   WeNeedMorePhoron:
   - rscdel: Removed Tomb of Alotheos and all supporting code for it.
   eirenxiv:
   - bugfix: fixed female details on the coat of the commander
+  sinerume:
+  - rscadd: "\u0426\u043E\u043A\u0430\u043D\u044C\u0435 \u043A\u0430\u0431\u043B\u0443\
+      \u0447\u043A\u043E\u0432"
+  - rscadd: "\u041F\u043E\u043C\u0435\u043D\u044F\u043B \u0434\u0435\u0444\u0430\u0439\
+      \u043D \u0431\u0440\u043E\u043D\u0438 \u0443 \u043D\u0430\u0440\u0443\u0447\u0438\
+      \u0439, \u043F\u043E\u043D\u043E\u0436\u0435\u0439, \u043A\u043E\u0438\u0444\
+      \u0430"
 2026-07-29:
   FeniaFox:
   - balance: rebalanced many skin armors to use the confessor's manual needle-sewing
@@ -1512,6 +1953,15 @@
       would accept that as coinage, right?
   - bugfix: padded undervestments no longer make plate armor noises.
 2026-07-30:
+  Chituka:
+  - refactor: "\u0440\u0435\u0444\u0430\u043A\u0442\u043E\u0440 \u043A\u043E\u0434\
+      \u0430 \u043E\u0433\u043D\u0435\u0441\u0442\u0440\u0435\u043B\u0430\n:cl:\n\
+      <!-- Both :cl:'s are required for the changelog to work! You can put your name\
+      \ to the right of the first :cl: if you want to overwrite your GitHub username\
+      \ as author ingame. -->\n<!-- You can use multiple of the same prefix (they're\
+      \ only used for the icon ingame) and delete the unneeded ones. Despite some\
+      \ of the tags, changelogs should generally represent how a player might be affected\
+      \ by the changes rather than a summary of the PR's contents. -->"
   Doomtail:
   - rscadd: Added one new hairstyle and snout option
   FeniaFox:
@@ -1530,7 +1980,18 @@
       infinitely brick people to death with only 1 brick
   - bugfix: Void familiars no longer lose flight when dying and reviving
   - bugfix: Picked up mobs should no longer be or become deaf
+  LeviathanWeber:
+  - bugfix: "\u041F\u0435\u0441\u043E\u043A \u043F\u0440\u0438\u0437\u044B\u0432\u0430\
+      \u0435\u043C\u044B\u0439 \u043D\u0430\u0431\u043E\u0436\u043D\u044B\u043C\u0438\
+      \ \u041C\u0430\u0442\u0442\u0438\u043E\u0441\u0438\u0442\u0430\u043C\u0438 \u0442\
+      \u0435\u043F\u0435\u0440\u044C \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442\
+      \ \u0438 \u043C\u043E\u0436\u0435\u0442 \u0441\u043D\u043E\u0432\u0430 \u0438\
+      \u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C\u0441\u044F\
+      ."
   Quinalion:
+  - image: "\u0418\u043A\u043E\u043D\u043A\u0430 \u0431\u043B\u0438\u043D\u043A\u0430\
+      \ \u0442\u0435\u043F\u0435\u0440\u044C \u0444\u0438\u043E\u043B\u0435\u0442\u043E\
+      \u0432\u0430\u044F."
   - image: All Hierophant's Naledi equipment is now greyscale and can be dyed.
   - bugfix: Fixed several incorrect onmob sprites.
   Ryan180602:

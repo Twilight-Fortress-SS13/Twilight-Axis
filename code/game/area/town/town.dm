@@ -14,7 +14,7 @@
 	droning_sound_night = 'sound/music/area/sleeping.ogg'
 	converted_type = /area/rogue/outdoors/exposed/town
 	town_area = TRUE
-	deathsight_message = "the city of Azure Peak and all its bustling souls"
+	deathsight_message = "the city of Twilight Axis and all its bustling souls"
 	detail_text = DETAIL_TEXT_AZURE_PEAK
 
 /area/rogue/outdoors/exposed/town
@@ -45,7 +45,7 @@
 	droning_sound_dusk = null
 	droning_sound_night = null
 	converted_type = /area/rogue/outdoors/exposed/manorgarri
-	first_time_text = "THE KEEP OF AZURE PEAK"
+	first_time_text = "THE KEEP OF TWILIGHT AXIS"
 	keep_area = TRUE
 	detail_text = DETAIL_TEXT_MANOR
 
@@ -381,6 +381,7 @@
 	droning_sound_dawn = 'sound/music/area/churchdawn.ogg'
 	converted_type = /area/rogue/outdoors/exposed/church
 	deathsight_message = "a hallowed place, sworn to the Ten"
+	holy_area = TRUE //TA EDIT
 
 /area/rogue/outdoors/exposed/church
 	icon_state = "church"
@@ -389,6 +390,7 @@
 	droning_sound_night = null
 	droning_sound_dawn = 'sound/music/area/churchdawn.ogg'
 	deathsight_message = "a hallowed place, sworn to the Ten"
+	holy_area = TRUE //TA EDIT
 
 /area/rogue/indoors/town/church/chapel
 	icon_state = "chapel"

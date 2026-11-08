@@ -289,8 +289,8 @@
 	name = "bronze heartplate"
 	desc = "A curious - and particularly revealing - variant of a bronze cuirass. It's said that the intentionally provocative design \
 	excels at diverting strikes that'd otherwise pierce the wearer's unprotected regions."
-	icon = 'icons/clothing/donor_clothes.dmi'
-	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
+	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes.dmi'
 	item_state = "heartplateb"
 	icon_state = "heartplateb"
 
@@ -806,9 +806,9 @@
 	desc = "A pair of interlocked steel plate arm harnesses, composed of pauldrons, rerebraces, couters, and vambraces - all snugly latched around the limb and secured to one another thanks to a series of leather straps, metal aglets, and sliding rivets. The engineering is so meticulous that flexibility of the limb is hardly impeded."
 	item_state = "armharness"
 	icon_state = "armharness"
-	icon = 'icons/clothing/donor_clothes.dmi'
-	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
-	sleeved = 'icons/clothing/onmob/donor_sleeves_armor.dmi'
+	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_sleeves_armor.dmi'
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/donor_sleeves_armor.dmi'
 
 /obj/item/clothing/wrists/roguetown/bracers/iron/armharness
 	name = "iron plate arm harness"
@@ -875,8 +875,11 @@
 /obj/item/clothing/head/roguetown/decoration/orle/donator_oathkeeper/crest
 	name = "oathkeeper's noble crest"
 	desc = "A decoration that takes the form of a golden winged shield; an unofficial coat-of-arms used to represent Azuria's many noble houses. To wear such garments is to command respect from those that've come after you; hopefully, not undue."
-	item_state = "d_oathtaker_lone"
-	icon_state = "d_oathtaker_lone"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/onhelm.dmi' // TA EDIT START
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/32х48/onhelm.dmi'
+	item_state = "d_oathtaker"
+	icon_state = "d_oathtaker"
+	worn_offsets = list("x" = 0, "y" = 0) // TA EDIT END
 
 /obj/item/clothing/head/roguetown/decoration/orle/donator_dyeable
 	name = "orle"
@@ -1100,6 +1103,9 @@
 /obj/item/clothing/suit/roguetown/shirt/apothshirt/donator
 	name = "doublet"
 	desc = "A snug-fitting tunic, favored by Azurians during the chillier daes of autumn. It has been dyed with a pale, green tone."
+	icon_state = "jadehalfmask"
+	item_state = "jadehalfmask"
+	smeltresult = /obj/item/ingot/aaslag
 
 /obj/item/clothing/cloak/donator_greatcoat
 	name = "greatcoat"
@@ -1700,7 +1706,7 @@
 	name = "Wortträger"
 	desc = "An imported Grenzelhoftian panzerstecher, a superbly crafted implement devoid of armory marks- merely bearing a maker's mark and the Zenitstadt seal. This one has a grip of walnut wood, and a pale saffira set within the crossguard. The ricasso is engraved with Ravoxian scripture."
 	icon_state = "mansa"
-	icon = 'icons/obj/items/donor_weapons_64.dmi'
+	icon = 'modular_twilight_axis/icons/obj/items/donor_weapons_64.dmi'
 
 //Srusu's donator item - dress
 /obj/item/clothing/suit/roguetown/shirt/dress/emerald
@@ -1766,7 +1772,7 @@
 	boobed = FALSE
 	flags_inv = HIDECROTCH|HIDEBOOB
 	slot_flags = ITEM_SLOT_SHIRT|ITEM_SLOT_CLOAK|ITEM_SLOT_ARMOR
-	icon = 'icons/clothing/donor_clothes.dmi'
+	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
 	sleeved = null
 	nodismemsleeves = TRUE
@@ -1798,7 +1804,7 @@
 	icon_state = "formfit"
 	item_state = "formfit"
 	color = "#ffffff"
-	icon = 'icons/clothing/donor_clothes.dmi'
+	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
 
 //Bat's donator item - custom harp sprite
@@ -1981,6 +1987,65 @@
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
 
 // DASFOX
+
+/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/dasfox
+	name = "archaic ceremonial valkyrhelm"
+	desc = "A winged and angular helm of archaic design, tracing its lineage back to the Celestial Empire's fall. \
+		House Timbermere makes sole use of its design within Azuria, claiming it as their heritage right. \
+		This one has been gilded by Astrata's own colors, with a hand-woven plume atop to bear heraldic colors."
+	icon_state = "valkyrhelm"
+	icon = 'icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
+
+/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/dasfox/attackby(obj/item/W, mob/living/user, params)
+	..()
+	if(!(istype(W, /obj/item/natural/feather) && !detail_tag))
+		return
+	var/choice = input(user, "Choose a color.", "Plume") as anything in COLOR_MAP
+	user.visible_message(span_warning("[user] adds [W] to [src]."))
+	user.transferItemToLoc(W, src, FALSE, FALSE)
+	detail_color = COLOR_MAP[choice]
+	detail_tag = "_detail"
+	update_icon()
+	if(loc == user && ishuman(user))
+		var/mob/living/carbon/H = user
+		H.update_inv_head()
+
+/obj/item/clothing/neck/roguetown/psicross/astrata/dasfox
+	name = "defiled Astratan periapt"
+	desc = "This golden-lashed eye atop a blade was once a periapt of Astrata, \
+	used in prayer and reverence of Her Tyrannical Light. This one has been damaged heavily, \
+	and near-shattered- and is bound together by cloth and silver wires. \
+	In lieu of its former nature, it now serves as amulet or attachment to armor due to the braided wire to be \
+	utilized as a chain."
+	icon = 'icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
+	icon_state = "astrata_periapt"
+
+/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/dasfox
+	name = "archaic ceremonial cuirass"
+	desc = "A cuirass and tasset set of archaic design, tracing its lineage back to the Celestial Empire's fall. \
+		House Timbermere makes sole use of its design within Azuria, claiming it as their heritage right. \
+		This one has been gilded by Astrata's own colors atop a sleeved surcoat to bear heraldic colors."
+	icon = 'icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
+	icon_state = "archaiccuirass"
+	sleeved = 'icons/clothing/onmob/donor_sleeves_armor.dmi'
+	detail_tag = "_det"
+	detail_color = CLOTHING_WHITE
+	boobed = FALSE
+	boobed_detail = FALSE
+
+/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/dasfox/update_icon()
+	cut_overlays()
+	if(!get_detail_tag())
+		return
+	var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+	pic.appearance_flags = RESET_COLOR
+	if(get_detail_color())
+		pic.color = get_detail_color()
+	add_overlay(pic)
+
 /obj/item/rogueweapon/spear/lance/dasfox
 	name = "La Rosa de la Chevalerie"
 	desc = "A jousting lance, designed to look much like the flower- a softness backed by steel. \
@@ -3182,6 +3247,7 @@ As Excaliber."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
 	icon_state = "chiv_adeathmask"
+	item_state = "chiv_adeathmask" // TA EDIT
 	smeltresult = /obj/item/ingot/aaslag
 	chunkcolor = "#532e25"
 	worn_offsets = list("x" = 0, "y" = 1) //Offset to account for the adjustable aura.
@@ -3200,6 +3266,7 @@ As Excaliber."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
 	icon_state = "chiv_abevor"
+	item_state = "chiv_abevor" // TA EDIT
 	smeltresult = /obj/item/ingot/aaslag
 	chunkcolor = "#532e25"
 
@@ -3210,6 +3277,9 @@ As Excaliber."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
 	icon_state = "chiv_acuirass"
+	item_state = "chiv_acuirass" // TA EDIT
+	sleeved = 'icons/clothing/onmob/donor_sleeves_armor.dmi' // TA EDIT
+	sleevetype = "chiv_acuirass" // TA EDIT
 	smeltresult = /obj/item/ingot/aaslag
 	chunkcolor = "#532e25"
 	allowed_sex = list(FEMALE) //Donator-exclusive to a Female Aasimar character. Applies to all other non-headpieces in the '/aasimar' branch.
@@ -3221,6 +3291,9 @@ As Excaliber."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
 	icon_state = "chiv_acuirass"
+	item_state = "chiv_acuirass" // TA EDIT
+	sleeved = 'icons/clothing/onmob/donor_sleeves_armor.dmi' // TA EDIT
+	sleevetype = "chiv_acuirass" // TA EDIT
 	smeltresult = /obj/item/ingot/aaslag
 	chunkcolor = "#532e25"
 	allowed_sex = list(FEMALE) //Donator-exclusive to a Female Aasimar character. Applies to all other non-headpieces in the '/aasimar' branch.
@@ -3232,6 +3305,9 @@ As Excaliber."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
 	icon_state = "chiv_achaussus"
+	item_state = "chiv_achaussus" // TA EDIT
+	sleeved = 'icons/clothing/onmob/donor_sleeves_armor.dmi' // TA EDIT
+	sleevetype = "chiv_achaussus" // TA EDIT
 	smeltresult = /obj/item/ingot/aaslag
 	chunkcolor = "#532e25"
 	allowed_sex = list(FEMALE)
@@ -3243,6 +3319,7 @@ As Excaliber."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
 	icon_state = "chiv_aboots"
+	item_state = "chiv_aboots" // TA EDIT
 	smeltresult = /obj/item/ingot/aaslag
 	chunkcolor = "#532e25"
 	allowed_sex = list(FEMALE)
@@ -3254,6 +3331,7 @@ As Excaliber."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
 	icon_state = "chiv_agauntlets"
+	item_state = "chiv_agauntlets" // TA EDIT
 	smeltresult = /obj/item/ingot/aaslag
 	chunkcolor = "#532e25"
 	allowed_sex = list(FEMALE)
@@ -3265,6 +3343,7 @@ As Excaliber."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
 	icon_state = "chiv_abracers"
+	item_state = "chiv_abracers" // TA EDIT
 	smeltresult = /obj/item/ingot/aaslag
 	chunkcolor = "#532e25"
 	allowed_sex = list(FEMALE)
@@ -3664,8 +3743,8 @@ As Excaliber."
 	Let the world, through my deeds, once more see Your favor!" //A bit messy, but it works. Might be worth revisiting to properly optimize, later.
 	item_state = "apostleburgeonet"
 	icon_state = "apostleburgeonet"
-	icon = 'icons/clothing/donor_clothes.dmi'
-	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
+	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes.dmi'
 	adjustable = CAN_CADJUST
 	emote_environment = 3
 	body_parts_covered = FULL_HEAD
@@ -4279,6 +4358,7 @@ As Excaliber."
 	icon = 'icons/obj/items/donor_weapons.dmi'
 	icon_state = "stalkerino_crossbowalt0"
 	item_state = "stalkerino_crossbowalt"
+	hasloadedsprite = FALSE // TA EDIT
 	smeltresult = /obj/item/ingot/drow
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow/donator_stalkerino
@@ -4288,6 +4368,7 @@ As Excaliber."
 	icon = 'icons/obj/items/donor_weapons.dmi'
 	icon_state = "stalkerino_crossbowalt0"
 	item_state = "stalkerino_crossbowalt"
+	hasloadedsprite = FALSE // TA EDIT
 	smeltresult = /obj/item/ingot/drow
 
 /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/donator_stalkerino
@@ -4680,7 +4761,7 @@ As Excaliber."
 
 // REZATHEDWARF
 /obj/item/clothing/cloak/half/donator_rezathedwarf
-	name = "Noah's Glimmering Cloak"
+	name = "Glimmering Cloak"
 	desc = "Cloak from the infamous Redcloaks, said to have dyed their cloaks in the blood of their first kills. Even now, it pulses \
 	and brightens with magical energy of wild color, perhaps of the dead souls that are rumored to be within it. If the old stories \
 	are true, anyone who wears this is sure to go insane."
@@ -4782,6 +4863,7 @@ As Excaliber."
 	icon_state = "radiantgoldmask"
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
+	armor = null
 
 // CYNTHIA
 /obj/item/rogueweapon/example/forgefiend_wrench
