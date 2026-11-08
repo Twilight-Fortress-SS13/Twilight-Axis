@@ -1,4 +1,3 @@
-// TA EDIT - Перевод текста бросков без изменения ключей, синтаксиса и расчётов.
 /proc/roll_text(message, ...)
 	var/static/list/translations = list(
 		"Strength" = "Сила",
@@ -58,7 +57,6 @@
 		"syntax_help" = "Запись: число костей D число граней, затем модификаторы и /DC со сложностью. D20 — одна двадцатигранная кость; 2D6+3 — две шестигранных и бонус 3. Можно прибавить STR, PER, INT, CON, WIL, SPD, FOR или CHA. Пример: 3D6+STR+1/DC12. Суффикс /NOCRIT отключает критические результаты. Для быстрого броска введите в чат *2D10+STR/DC15.",
 	)
 	var/text = translations[message] || message
-	// TA EDIT - Обратный порядок не даёт %1 заменить начало %10.
 	for(var/index in length(args) to 2 step -1)
 		text = replacetext(text, "%[index - 1]", "[args[index]]")
 	return text

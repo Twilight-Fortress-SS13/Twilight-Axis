@@ -15,7 +15,6 @@
 					send_emote_panel_data()
 					return
 				prefs.emote_favourites += name
-			// TA EDIT - Частые нажатия объединяются в одну запись настроек.
 			addtimer(CALLBACK(prefs, TYPE_PROC_REF(/datum/preferences, save_preferences)), 3 SECONDS, TIMER_UNIQUE)
 			send_emote_panel_data()
 

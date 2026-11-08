@@ -379,5 +379,4 @@
 	return data
 
 /datum/preferences
-	// TA EDIT - Названия эмоций, добавленных игроком в избранное.
 	var/list/emote_favourites = list()
