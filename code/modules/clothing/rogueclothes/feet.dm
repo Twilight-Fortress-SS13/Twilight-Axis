@@ -527,7 +527,7 @@
 
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha
 	name = "saccharine heels"
-	desc = "Yet, as the lepers begged for comfort from Eora, she gave them naught but love and platitude; and Belladoth's heart throbbed with pity."
+	desc = "She cared not for weeping and suffering of her subjects, for they cared not for her own struggle." //TA EDIT
 	icon_state = "baothaboots"
 	item_state = "baothaboots"
 	chunkcolor = "#6d1c87"

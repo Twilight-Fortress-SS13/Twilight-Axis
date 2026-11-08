@@ -1,4 +1,10 @@
-import { type CSSProperties, type ReactNode, useEffect, useMemo, useState } from 'react';
+import {
+  type CSSProperties,
+  type ReactNode,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 import { Button, Section } from 'tgui-core/components';
 
@@ -25,8 +31,6 @@ type ChessHistoryRow = {
   white: string | null;
   black: string | null;
 };
-
-
 
 type ModeOption = {
   key: 'chess' | 'checkers' | 'nards';
@@ -112,6 +116,7 @@ type ChessBoardData = {
   can_confirm_reset_request: boolean;
   can_cancel_reset_request: boolean;
   can_flip_board: boolean;
+  can_resign: boolean;
   mode_options: ModeOption[];
   nards: NardsData | null;
 };
@@ -160,8 +165,6 @@ const CHECKERS_LABELS: Record<string, string> = {
   wm: 'M',
 };
 
-
-
 const NARDS_CHECKERS_IMAGES: Record<'w' | 'b', string> = {
   w: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAL1JREFUOI1jYKAQMOKSkJfX/I/Mf/jwOla1GIIwjeXNXSjinbVlWA1iRNeMrhEZHN63l+HY/p0ohrDg0nx4314429bJGYVm2M/wH2YIEy6bYBpgmkL8VFENQfYCsu3ImtFBiJ8qw5pNt+Fh8vDhdUasLiAF0NcAmPMxDHj48Dojut+RYwGdD/M/A3I0wgAstA/v24s1KtEB3IDlCyYwMjAw/Ec2BBtAtp0BW1KOTCj4f2z/TvKSMjIgNjNRDAB8iF6KIITsnAAAAABJRU5ErkJggg==',
   b: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAMVJREFUOI29k7EKwyAQhn9LHqJbtkKXPkDAQR36zBkah4APkCWQIeAQkrewS00v5qQtgf6Lyvl/53EncFAiFyjLa6Bn73v2bpEzVuq+DVgEDiRS885ItAwdxmneQIqceRm6dX++3DYrgBAhp1ymaIgmqU0KeZdAs1NzKqkN2uYBAHC2hve9YF/wi/4LiM/fAbzvRVo77UJ6jvWDGySpDdqXgWtlqhVgXSMUEFoC4USzg/sLqtJhnObdKDtbA59Gmerbz3RYT03UYPxBM4coAAAAAElFTkSuQmCC',
@@ -186,16 +189,16 @@ const NARDS_DICE_ROLL: Record<number, string> = {
 };
 
 const NARDS_MODE_FALLBACK: ModeOption[] = [
-  { key: 'chess', label: 'Шахматы' },
+  { key: 'chess', label: 'Шахматы' }, // TA EDIT START
   { key: 'checkers', label: 'Шашки' },
-  { key: 'nards', label: 'Нарды' },
+  { key: 'nards', label: 'Нарды' }, // TA EDIT END
 ];
 
 const PROMOTION_LABELS: Record<string, string> = {
-  queen: 'Ферзь',
+  queen: 'Ферзь', // TA EDIT START
   rook: 'Ладья',
   bishop: 'Слон',
-  knight: 'Конь',
+  knight: 'Конь', // TA EDIT END
 };
 
 const boardWrapStyle: CSSProperties = {
@@ -322,13 +325,19 @@ const getPieceImageStyle = (
   if (pose === 'fallen_left') {
     style = {
       ...style,
-      transform: appendTransform(style.transform as string | undefined, 'rotate(-90deg)'),
+      transform: appendTransform(
+        style.transform as string | undefined,
+        'rotate(-90deg)',
+      ),
       transformOrigin: 'center center',
     };
   } else if (pose === 'fallen_right') {
     style = {
       ...style,
-      transform: appendTransform(style.transform as string | undefined, 'rotate(90deg)'),
+      transform: appendTransform(
+        style.transform as string | undefined,
+        'rotate(90deg)',
+      ),
       transformOrigin: 'center center',
     };
   }
@@ -346,14 +355,16 @@ const getPieceImageStyle = (
   if (angle) {
     style = {
       ...style,
-      transform: appendTransform(style.transform as string | undefined, `rotate(${angle}deg)`),
+      transform: appendTransform(
+        style.transform as string | undefined,
+        `rotate(${angle}deg)`,
+      ),
       transformOrigin: 'center center',
     };
   }
 
   return style;
 };
-
 
 export const ChessBoard = () => {
   const { act, data } = useBackend<ChessBoardData>();
@@ -362,12 +373,14 @@ export const ChessBoard = () => {
     to: number;
   } | null>(null);
   const [confirmReset, setConfirmReset] = useState(false);
+  const [confirmResign, setConfirmResign] = useState(false);
   const [showModePicker, setShowModePicker] = useState(false);
   const [modePickerStep, setModePickerStep] = useState<ModePickerStep>('root');
-  const [rollingDiceFaces, setRollingDiceFaces] = useState<[number, number] | null>(null);
-  const [modePickerCheckersFlyingKings, setModePickerCheckersFlyingKings] = useState(
-    !!data.checkers_flying_kings,
-  );
+  const [rollingDiceFaces, setRollingDiceFaces] = useState<
+    [number, number] | null
+  >(null);
+  const [modePickerCheckersFlyingKings, setModePickerCheckersFlyingKings] =
+    useState(!!data.checkers_flying_kings);
   const [modePickerNardsLongRules, setModePickerNardsLongRules] = useState(
     !!data.nards_long_rules,
   );
@@ -375,7 +388,9 @@ export const ChessBoard = () => {
   const board = data.board || [];
   const history = data.history || [];
   const promotionChoices = data.promotion_choices || [];
-  const modeOptions = data.mode_options?.length ? data.mode_options : NARDS_MODE_FALLBACK;
+  const modeOptions = data.mode_options?.length
+    ? data.mode_options
+    : NARDS_MODE_FALLBACK;
   const nards = data.nards;
   const hasMode = data.game_mode !== 'none';
 
@@ -395,8 +410,10 @@ export const ChessBoard = () => {
 
   const nardsInteractive = interactive && data.game_mode === 'nards';
 
-  const imageMap = data.game_mode === 'checkers' ? CHECKERS_IMAGES : CHESS_IMAGES;
-  const labelMap = data.game_mode === 'checkers' ? CHECKERS_LABELS : CHESS_LABELS;
+  const imageMap =
+    data.game_mode === 'checkers' ? CHECKERS_IMAGES : CHESS_IMAGES;
+  const labelMap =
+    data.game_mode === 'checkers' ? CHECKERS_LABELS : CHESS_LABELS;
 
   const isBlackPerspective = data.my_side_key === 'b';
   const displayedBoard = isBlackPerspective ? [...board].reverse() : board;
@@ -408,12 +425,16 @@ export const ChessBoard = () => {
     : ['8', '7', '6', '5', '4', '3', '2', '1'];
 
   const whiteSeatButtonLabel =
-    data.white_player_name === 'Свободно' ? 'Сесть за белых' : 'Освободить белых';
+    data.white_player_name === 'Свободно' // TA EDIT START
+      ? 'Сесть за белых'
+      : 'Освободить белых'; // TA EDIT END
   const blackSeatButtonLabel =
-    data.black_player_name === 'Свободно' ? 'Сесть за чёрных' : 'Освободить чёрных';
+    data.black_player_name === 'Свободно' // TA EDIT START
+      ? 'Сесть за черных'
+      : 'Освободить черных'; // TA EDIT END
 
   const handleWhiteSeatButton = () => {
-    if (data.white_player_name === 'Свободно') {
+    if (data.white_player_name === 'Свободно') { // TA EDIT
       act('claim_side', { color: 'w' });
       return;
     }
@@ -421,15 +442,16 @@ export const ChessBoard = () => {
   };
 
   const handleBlackSeatButton = () => {
-    if (data.black_player_name === 'Свободно') {
+    if (data.black_player_name === 'Свободно') { // TA EDIT
       act('claim_side', { color: 'b' });
       return;
     }
     act('release_side', { color: 'b' });
   };
 
-  const pauseResumeLabel = data.paused ? 'Продолжить' : 'Пауза';
-  const pauseResumeDisabled = !hasMode || (data.paused ? !data.can_resume : false);
+  const pauseResumeLabel = data.paused ? 'Продолжить' : 'Пауза'; // TA EDIT
+  const pauseResumeDisabled =
+    !hasMode || (data.paused ? !data.can_resume : false);
 
   const handlePauseResume = () => {
     if (data.paused) {
@@ -447,7 +469,16 @@ export const ChessBoard = () => {
 
   useEffect(() => {
     setConfirmReset(false);
-  }, [data.game_mode, data.result_text, data.last_message, data.reset_pending_text]);
+  }, [
+    data.game_mode,
+    data.result_text,
+    data.last_message,
+    data.reset_pending_text,
+  ]);
+
+  useEffect(() => {
+    setConfirmResign(false);
+  }, [data.can_resign, data.game_mode, data.result_text]);
 
   useEffect(() => {
     setShowModePicker(false);
@@ -511,7 +542,8 @@ export const ChessBoard = () => {
 
     const selected = data.selected_square;
     const piece = square.piece;
-    const ownPiece = !!piece && !!data.my_side_key && piece.startsWith(data.my_side_key);
+    const ownPiece =
+      !!piece && !!data.my_side_key && piece.startsWith(data.my_side_key);
 
     if (!selected || ownPiece || square.index === selected || !interactive) {
       act('select_square', { square: square.index });
@@ -551,6 +583,14 @@ export const ChessBoard = () => {
     setConfirmReset(false);
   };
 
+  const resignGame = () => {
+    if (!confirmResign) {
+      setConfirmResign(true);
+      return;
+    }
+    act('resign_game');
+    setConfirmResign(false);
+  };
 
   const handleNardsPointClick = (point: number) => {
     if (!nardsInteractive || !nards) {
@@ -631,21 +671,23 @@ export const ChessBoard = () => {
     }
 
     const chessLabel =
-      modeOptions.find((option) => option.key === 'chess')?.label || 'Шахматы';
+      modeOptions.find((option) => option.key === 'chess')?.label || 'Шахматы'; // TA EDIT
     const checkersLabel =
-      modeOptions.find((option) => option.key === 'checkers')?.label || 'Шашки';
+      modeOptions.find((option) => option.key === 'checkers')?.label ||
+      'Шашки'; // TA EDIT
     const nardsLabel =
-      modeOptions.find((option) => option.key === 'nards')?.label || 'Нарды';
+      modeOptions.find((option) => option.key === 'nards')?.label ||
+      'Нарды'; // TA EDIT
 
-    let title = 'Выбор режима';
-    let description = 'Выберите режим для этой доски.';
+    let title = 'Выбор режима'; // TA EDIT
+    let description = 'Выберите режим для этой доски.'; // TA EDIT
 
     if (modePickerStep === 'checkers_rules') {
-      title = 'Правила шашек';
-      description = 'Выберите, как должна ходить дамка.';
+      title = 'Правила шашек'; // TA EDIT
+      description = 'Выберите, как должна ходить дамка.'; // TA EDIT
     } else if (modePickerStep === 'nards_rules') {
-      title = 'Правила нард';
-      description = 'Выберите длинные или короткие нарды.';
+      title = 'Правила нард'; // TA EDIT
+      description = 'Выберите длинные или короткие нарды.'; // TA EDIT
     }
 
     return (
@@ -677,7 +719,10 @@ export const ChessBoard = () => {
 
           {modePickerStep === 'root' && (
             <>
-              <Button disabled={isSameModeSelection('chess')} onClick={() => requestModeSwitch('chess')}>
+              <Button
+                disabled={isSameModeSelection('chess')}
+                onClick={() => requestModeSwitch('chess')}
+              >
                 {chessLabel}
               </Button>
               <Button onClick={() => setModePickerStep('checkers_rules')}>
@@ -686,31 +731,35 @@ export const ChessBoard = () => {
               <Button onClick={() => setModePickerStep('nards_rules')}>
                 {nardsLabel}
               </Button>
-              <Button onClick={closeModePicker}>Закрыть</Button>
+              <Button onClick={closeModePicker}>Закрыть</Button> {/* TA EDIT */}
             </>
           )}
 
           {modePickerStep === 'checkers_rules' && (
             <>
               <Button
-                disabled={data.game_mode === 'checkers' && !data.checkers_flying_kings}
+                disabled={
+                  data.game_mode === 'checkers' && !data.checkers_flying_kings
+                }
                 onClick={() => {
                   setModePickerCheckersFlyingKings(false);
                   requestModeSwitch('checkers', { checkersFlyingKings: false });
                 }}
               >
-                Обычная дамка
+                Обычная дамка {/* TA EDIT */}
               </Button>
               <Button
-                disabled={data.game_mode === 'checkers' && !!data.checkers_flying_kings}
+                disabled={
+                  data.game_mode === 'checkers' && !!data.checkers_flying_kings
+                }
                 onClick={() => {
                   setModePickerCheckersFlyingKings(true);
                   requestModeSwitch('checkers', { checkersFlyingKings: true });
                 }}
               >
-                Дальняя дамка
+                Дальняя дамка {/* TA EDIT */}
               </Button>
-              <Button onClick={() => setModePickerStep('root')}>Назад</Button>
+              <Button onClick={() => setModePickerStep('root')}>Назад</Button> {/* TA EDIT */}
             </>
           )}
 
@@ -723,7 +772,7 @@ export const ChessBoard = () => {
                   requestModeSwitch('nards', { nardsLongRules: false });
                 }}
               >
-                Короткие нарды
+                Короткие нарды {/* TA EDIT */}
               </Button>
               <Button
                 disabled={data.game_mode === 'nards' && !!data.nards_long_rules}
@@ -732,9 +781,9 @@ export const ChessBoard = () => {
                   requestModeSwitch('nards', { nardsLongRules: true });
                 }}
               >
-                Длинные нарды
+                Длинные нарды {/* TA EDIT */}
               </Button>
-              <Button onClick={() => setModePickerStep('root')}>Назад</Button>
+              <Button onClick={() => setModePickerStep('root')}>Назад</Button> {/* TA EDIT */}
             </>
           )}
         </div>
@@ -850,7 +899,9 @@ export const ChessBoard = () => {
           }}
         >
           {fileLabels.map((file) => (
-            <div key={file} style={{ textAlign: 'center' }}>{file}</div>
+            <div key={file} style={{ textAlign: 'center' }}>
+              {file}
+            </div>
           ))}
         </div>
       </div>
@@ -869,7 +920,9 @@ export const ChessBoard = () => {
     const selectedBar = !!nards?.selected_bar;
     const nardsOverturned =
       !!nards?.overturned ||
-      (data.game_mode === 'nards' && !!data.result_text && data.result_text.includes('Доска опрокинута'));
+      (data.game_mode === 'nards' &&
+        !!data.result_text &&
+        data.result_text.includes('Доска опрокинута')); // TA EDIT
     const scatterPieces = nards?.scatter || [];
     const scatterDice = nards?.scatter_dice || [];
 
@@ -887,7 +940,11 @@ export const ChessBoard = () => {
       return 8 + 6 * 28 + 20 + (idx - 6) * 28;
     };
 
-    const renderPointHotspot = (pointNumber: number, idx: number, isTop: boolean) => {
+    const renderPointHotspot = (
+      pointNumber: number,
+      idx: number,
+      isTop: boolean,
+    ) => {
       const selected = selectedPoint === pointNumber;
       const target = legalTargets.includes(pointNumber);
       const left = getPointX(idx);
@@ -920,23 +977,30 @@ export const ChessBoard = () => {
       );
     };
 
-    const renderPointStack = (pointNumber: number, idx: number, isTop: boolean) => {
+    const renderPointStack = (
+      pointNumber: number,
+      idx: number,
+      isTop: boolean,
+    ) => {
       const point = pointMap.get(pointNumber);
-      if (!point?.color || !point.count) {
+      if (!point?.color || !point?.count) {
         return null;
       }
 
       const nodes: ReactNode[] = [];
       const visibleCount = Math.min(point.count, 15);
-      const checkerSize = visibleCount >= 13 ? 24 : visibleCount >= 10 ? 26 : 32;
+      const checkerSize =
+        visibleCount >= 13 ? 24 : visibleCount >= 10 ? 26 : 32;
       const stackSpan = 144 - checkerSize;
       const naturalStep = Math.max(8, checkerSize - 10);
-      const naturalHeight = checkerSize + naturalStep * Math.max(0, visibleCount - 1);
-      const stackStep = visibleCount <= 1
-        ? 22
-        : naturalHeight <= 144
-          ? naturalStep
-          : Math.max(6, Math.floor(stackSpan / (visibleCount - 1)));
+      const naturalHeight =
+        checkerSize + naturalStep * Math.max(0, visibleCount - 1);
+      const stackStep =
+        visibleCount <= 1
+          ? 22
+          : naturalHeight <= 144
+            ? naturalStep
+            : Math.max(6, Math.floor(stackSpan / (visibleCount - 1)));
       const pieceLeft = getPointX(idx) + Math.floor((28 - checkerSize) / 2);
 
       for (let i = 0; i < visibleCount; i++) {
@@ -965,8 +1029,16 @@ export const ChessBoard = () => {
 
       if (point.count > 5) {
         const badgeTop = isTop
-          ? Math.min(8 + (visibleCount - 1) * stackStep + Math.max(12, checkerSize - 8), 152)
-          : Math.max(392 - 8 - checkerSize - (visibleCount - 1) * stackStep - 6, 226);
+          ? Math.min(
+              8 +
+                (visibleCount - 1) * stackStep +
+                Math.max(12, checkerSize - 8),
+              152,
+            )
+          : Math.max(
+              392 - 8 - checkerSize - (visibleCount - 1) * stackStep - 6,
+              226,
+            );
 
         nodes.push(
           <div
@@ -999,7 +1071,10 @@ export const ChessBoard = () => {
       return nodes;
     };
 
-    const diceFaces = rollingDiceFaces || [nards?.die_one || 0, nards?.die_two || 0];
+    const diceFaces = rollingDiceFaces || [
+      nards?.die_one || 0,
+      nards?.die_two || 0,
+    ];
     const diceImageMap = rollingDiceFaces ? NARDS_DICE_ROLL : NARDS_DICE_FLAT;
     const availableRollsText = nards?.available_rolls?.length
       ? nards.available_rolls.join(', ')
@@ -1017,9 +1092,21 @@ export const ChessBoard = () => {
             overflow: 'hidden',
           }}
         >
-          <svg width="372" height="392" style={{ position: 'absolute', inset: 0 }}>
+          <svg
+            width="372"
+            height="392"
+            style={{ position: 'absolute', inset: 0 }}
+          >
             <rect x="0" y="0" width="372" height="392" fill="#caa173" />
-            <rect x="6" y="6" width="360" height="380" fill="#ead8bd" stroke="#6b4a2d" strokeWidth="2" />
+            <rect
+              x="6"
+              y="6"
+              width="360"
+              height="380"
+              fill="#ead8bd"
+              stroke="#6b4a2d"
+              strokeWidth="2"
+            />
             <rect x="176" y="6" width="20" height="380" fill="#9f6f43" />
             <rect x="6" y="194" width="360" height="4" fill="#8f6239" />
             {Array.from({ length: 12 }).map((_, idx) => {
@@ -1027,89 +1114,113 @@ export const ChessBoard = () => {
               const color = idx % 2 === 0 ? '#b58863' : '#f0d9b5';
               return (
                 <g key={`tri-${idx}`}>
-                  <polygon points={`${x},8 ${x + 28},8 ${x + 14},152`} fill={color} />
-                  <polygon points={`${x},384 ${x + 28},384 ${x + 14},240`} fill={color} />
+                  <polygon
+                    points={`${x},8 ${x + 28},8 ${x + 14},152`}
+                    fill={color}
+                  />
+                  <polygon
+                    points={`${x},384 ${x + 28},384 ${x + 14},240`}
+                    fill={color}
+                  />
                 </g>
               );
             })}
           </svg>
 
-          {!nardsOverturned && topPoints.map((pointNumber, idx) => renderPointHotspot(pointNumber, idx, true))}
-          {!nardsOverturned && bottomPoints.map((pointNumber, idx) => renderPointHotspot(pointNumber, idx, false))}
+          {!nardsOverturned &&
+            topPoints.map((pointNumber, idx) =>
+              renderPointHotspot(pointNumber, idx, true),
+            )}
+          {!nardsOverturned &&
+            bottomPoints.map((pointNumber, idx) =>
+              renderPointHotspot(pointNumber, idx, false),
+            )}
 
           {!nardsOverturned && (
-          <div
-            onClick={handleNardsBarClick}
-            style={{
-              position: 'absolute',
-              left: '170px',
-              top: '8px',
-              width: '32px',
-              height: '376px',
-              cursor: nardsInteractive && nards?.can_select_bar ? 'pointer' : 'default',
-              backgroundColor: selectedBar
-                ? 'rgba(255, 220, 90, 0.18)'
-                : 'transparent',
-              outline: selectedBar ? '2px solid rgba(255, 220, 90, 0.95)' : 'none',
-              zIndex: 6,
-            }}
-          />
+            <div
+              onClick={handleNardsBarClick}
+              style={{
+                position: 'absolute',
+                left: '170px',
+                top: '8px',
+                width: '32px',
+                height: '376px',
+                cursor:
+                  nardsInteractive && nards?.can_select_bar
+                    ? 'pointer'
+                    : 'default',
+                backgroundColor: selectedBar
+                  ? 'rgba(255, 220, 90, 0.18)'
+                  : 'transparent',
+                outline: selectedBar
+                  ? '2px solid rgba(255, 220, 90, 0.95)'
+                  : 'none',
+                zIndex: 6,
+              }}
+            />
           )}
 
-          {!nardsOverturned && topPoints.map((pointNumber, idx) => renderPointStack(pointNumber, idx, true))}
-          {!nardsOverturned && bottomPoints.map((pointNumber, idx) => renderPointStack(pointNumber, idx, false))}
+          {!nardsOverturned &&
+            topPoints.map((pointNumber, idx) =>
+              renderPointStack(pointNumber, idx, true),
+            )}
+          {!nardsOverturned &&
+            bottomPoints.map((pointNumber, idx) =>
+              renderPointStack(pointNumber, idx, false),
+            )}
 
+          {nardsOverturned &&
+            scatterPieces.map((piece, index) => {
+              let transform = `rotate(${piece.angle || 0}deg)`;
+              if (piece.pose === 'fallen_left') {
+                transform = `rotate(${(piece.angle || 0) - 90}deg)`;
+              } else if (piece.pose === 'fallen_right') {
+                transform = `rotate(${(piece.angle || 0) + 90}deg)`;
+              }
 
-          {nardsOverturned && scatterPieces.map((piece, index) => {
-            let transform = `rotate(${piece.angle || 0}deg)`;
-            if (piece.pose === 'fallen_left') {
-              transform = `rotate(${(piece.angle || 0) - 90}deg)`;
-            } else if (piece.pose === 'fallen_right') {
-              transform = `rotate(${(piece.angle || 0) + 90}deg)`;
-            }
+              return (
+                <div
+                  key={`scatter-${index}`}
+                  style={{
+                    position: 'absolute',
+                    left: `${piece.left}px`,
+                    top: `${piece.top}px`,
+                    width: '32px',
+                    height: '32px',
+                    backgroundImage: `url(${NARDS_CHECKERS_IMAGES[piece.color]})`,
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
+                    imageRendering: 'pixelated',
+                    transform,
+                    transformOrigin: 'center center',
+                    zIndex: piece.z || 25,
+                    pointerEvents: 'none',
+                  }}
+                />
+              );
+            })}
 
-            return (
+          {nardsOverturned &&
+            scatterDice.map((die, index) => (
               <div
-                key={`scatter-${index}`}
+                key={`scatter-die-${index}`}
                 style={{
                   position: 'absolute',
-                  left: `${piece.left}px`,
-                  top: `${piece.top}px`,
-                  width: '32px',
-                  height: '32px',
-                  backgroundImage: `url(${NARDS_CHECKERS_IMAGES[piece.color]})`,
+                  left: `${die.left}px`,
+                  top: `${die.top}px`,
+                  width: '28px',
+                  height: '28px',
+                  backgroundImage: `url(${NARDS_DICE_FLAT[Math.max(1, Math.min(6, die.face || 1))]})`,
                   backgroundSize: 'contain',
                   backgroundRepeat: 'no-repeat',
                   imageRendering: 'pixelated',
-                  transform,
+                  transform: `rotate(${die.angle || 0}deg)`,
                   transformOrigin: 'center center',
-                  zIndex: piece.z || 25,
+                  zIndex: die.z || 240,
                   pointerEvents: 'none',
                 }}
               />
-            );
-          })}
-
-          {nardsOverturned && scatterDice.map((die, index) => (
-            <div
-              key={`scatter-die-${index}`}
-              style={{
-                position: 'absolute',
-                left: `${die.left}px`,
-                top: `${die.top}px`,
-                width: '28px',
-                height: '28px',
-                backgroundImage: `url(${NARDS_DICE_FLAT[Math.max(1, Math.min(6, die.face || 1))]})`,
-                backgroundSize: 'contain',
-                backgroundRepeat: 'no-repeat',
-                imageRendering: 'pixelated',
-                transform: `rotate(${die.angle || 0}deg)`,
-                transformOrigin: 'center center',
-                zIndex: die.z || 240,
-                pointerEvents: 'none',
-              }}
-            />
-          ))}
+            ))}
 
           <div
             style={{
@@ -1133,7 +1244,7 @@ export const ChessBoard = () => {
               pointerEvents: 'none',
             }}
           >
-            {['Т', 'А', 'В', 'Е', 'Р', 'Н', 'А'].map((letter, index) => (
+            {['Т', 'А', 'В', 'Е', 'Р', 'Н', 'А'].map((letter, index) => ( // TA EDIT
               <div key={`tav-${index}`}>{letter}</div>
             ))}
           </div>
@@ -1177,8 +1288,11 @@ export const ChessBoard = () => {
             flexWrap: 'wrap',
           }}
         >
-          <Button disabled={!nards?.can_roll} onClick={() => act('roll_nards_dice')}>
-            Бросить кости
+          <Button
+            disabled={!nards?.can_roll}
+            onClick={() => act('roll_nards_dice')}
+          >
+            Бросить кости {/* TA EDIT */}
           </Button>
           <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
             {diceFaces[0] ? (
@@ -1206,11 +1320,20 @@ export const ChessBoard = () => {
               />
             ) : null}
           </div>
-          <div style={{ fontSize: '12px', opacity: 0.8 }}>Доступные кости: {availableRollsText}</div>
-          <div style={{ fontSize: '12px', opacity: 0.8 }}>Белые выведены: {nards?.off_white || 0}</div>
-          <div style={{ fontSize: '12px', opacity: 0.8 }}>Чёрные выведены: {nards?.off_black || 0}</div>
-          <Button disabled={!nards?.legal_targets?.includes(0)} onClick={handleNardsBearOffClick}>
-            Снять в дом
+          <div style={{ fontSize: '12px', opacity: 0.8 }}>
+            Доступные кости: {availableRollsText} {/* TA EDIT */}
+          </div>
+          <div style={{ fontSize: '12px', opacity: 0.8 }}>
+            Белые выведены: {nards?.off_white || 0} {/* TA EDIT */}
+          </div>
+          <div style={{ fontSize: '12px', opacity: 0.8 }}>
+            Черные выведены: {nards?.off_black || 0} {/* TA EDIT */}
+          </div>
+          <Button
+            disabled={!nards?.legal_targets?.includes(0)}
+            onClick={handleNardsBearOffClick}
+          >
+            Снять в дом {/* TA EDIT */}
           </Button>
         </div>
       </div>
@@ -1218,32 +1341,56 @@ export const ChessBoard = () => {
   };
 
   return (
-    <Window width={920} height={780} title={data.board_title || 'Шахматная доска'}>
+    <Window width={920} height={780} title={data.board_title || 'Шахматная доска'}> {/* TA EDIT */}
       <Window.Content scrollable>
         <div style={{ position: 'relative' }}>
           {renderModePicker()}
           <div style={panelStyle}>
             <div>
-              <Section title="Доска">
-                <div style={{ marginBottom: '8px', fontSize: '13px', opacity: 0.9 }}>
-                  <div><b>Режим:</b> {data.game_mode_label}</div>
-                  {!!data.current_rules_text && <div><b>Правила:</b> {data.current_rules_text}</div>}
-                  <div><b>Белые:</b> {data.white_player_name}</div>
-                  <div><b>Чёрные:</b> {data.black_player_name}</div>
-                  <div><b>Вы:</b> {data.my_side}</div>
-                  <div><b>Ход:</b> {data.turn}</div>
+              <Section title="Доска"> {/* TA EDIT */}
+                <div
+                  style={{
+                    marginBottom: '8px',
+                    fontSize: '13px',
+                    opacity: 0.9,
+                  }}
+                >
+                  <div>
+                    <b>Режим:</b> {data.game_mode_label} {/* TA EDIT */}
+                  </div>
+                  {!!data.current_rules_text && (
+                    <div>
+                      <b>Правила:</b> {data.current_rules_text} {/* TA EDIT */}
+                    </div>
+                  )}
+                  <div>
+                    <b>Белые:</b> {data.white_player_name} {/* TA EDIT */}
+                  </div>
+                  <div>
+                    <b>Черные:</b> {data.black_player_name} {/* TA EDIT */}
+                  </div>
+                  <div>
+                    <b>Вы:</b> {data.my_side} {/* TA EDIT */}
+                  </div>
+                  <div>
+                    <b>Ход:</b> {data.turn} {/* TA EDIT */}
+                  </div>
                 </div>
-                {data.game_mode === 'nards' ? renderNardsBoard() : renderClassicBoard()}
+                {data.game_mode === 'nards'
+                  ? renderNardsBoard()
+                  : renderClassicBoard()}
                 {!hasMode && (
-                  <div style={{ marginTop: '8px', fontSize: '12px', opacity: 0.8 }}>
-                    Режим ещё не выбран. Используйте кнопку смены режима.
+                  <div
+                    style={{ marginTop: '8px', fontSize: '12px', opacity: 0.8 }}
+                  >
+                    Режим еще не выбран. Используйте кнопку смены режима. {/* TA EDIT */}
                   </div>
                 )}
               </Section>
             </div>
 
             <div>
-              <Section title="Статус">
+              <Section title="Статус"> {/* TA EDIT */}
                 <div style={{ marginBottom: '8px' }}>{data.status_text}</div>
                 {!!data.result_text && (
                   <div style={{ marginBottom: '8px', color: '#ff9f9f' }}>
@@ -1251,7 +1398,9 @@ export const ChessBoard = () => {
                   </div>
                 )}
                 {!!data.last_message && (
-                  <div style={{ marginBottom: '8px', color: '#d5efb3' }}>{data.last_message}</div>
+                  <div style={{ marginBottom: '8px', color: '#d5efb3' }}>
+                    {data.last_message}
+                  </div>
                 )}
                 {!!data.mode_switch_pending_text && (
                   <div style={{ marginBottom: '8px', color: '#ffd985' }}>
@@ -1265,95 +1414,150 @@ export const ChessBoard = () => {
                 )}
               </Section>
 
-              <Section title="Места и управление">
+              <Section title="Места и управление"> {/* TA EDIT */}
                 <div style={buttonGroupStyle}>
-                  <Button onClick={handleWhiteSeatButton}>{whiteSeatButtonLabel}</Button>
-                  <Button onClick={handleBlackSeatButton}>{blackSeatButtonLabel}</Button>
+                  <Button onClick={handleWhiteSeatButton}>
+                    {whiteSeatButtonLabel}
+                  </Button>
+                  <Button onClick={handleBlackSeatButton}>
+                    {blackSeatButtonLabel}
+                  </Button>
                 </div>
 
                 <div style={{ ...buttonGroupStyle, marginTop: '8px' }}>
-                  <Button disabled={pauseResumeDisabled} onClick={handlePauseResume}>
+                  <Button
+                    disabled={pauseResumeDisabled}
+                    onClick={handlePauseResume}
+                  >
                     {pauseResumeLabel}
                   </Button>
+                  {!!data.can_resign && (
+                    <Button onClick={resignGame}>
+                      {confirmResign ? 'Подтвердить сдачу' : 'Сдаться'} {/* TA EDIT */}
+                    </Button>
+                  )}
+                  {confirmResign && (
+                    <Button onClick={() => setConfirmResign(false)}>
+                      Отмена {/* TA EDIT */}
+                    </Button>
+                  )}
                   <Button onClick={resetBoard}>
-                    {confirmReset ? 'Подтвердить сброс' : 'Сбросить доску'}
+                    {confirmReset ? 'Подтвердить сброс' : 'Сбросить доску'} {/* TA EDIT */}
                   </Button>
                   {confirmReset && (
-                    <Button onClick={() => setConfirmReset(false)}>Отмена</Button>
+                    <Button onClick={() => setConfirmReset(false)}>
+                      Отмена {/* TA EDIT */}
+                    </Button>
                   )}
                   {!!data.can_confirm_reset_request && (
                     <Button onClick={() => act('confirm_reset_board')}>
-                      Подтвердить сброс
+                      Подтвердить сброс {/* TA EDIT */}
                     </Button>
                   )}
                   {!!data.can_cancel_reset_request && (
                     <Button onClick={() => act('cancel_reset_board')}>
-                      Отменить запрос сброса
+                      Отменить запрос сброса {/* TA EDIT */}
                     </Button>
                   )}
-                  <Button disabled={!data.can_pack} onClick={() => act('pack_board')}>
-                    Собрать доску
+                  <Button
+                    disabled={!data.can_pack}
+                    onClick={() => act('pack_board')}
+                  >
+                    Собрать доску {/* TA EDIT */}
                   </Button>
-                  <Button disabled={!data.can_flip_board} onClick={() => act('flip_board')}>
-                    Опрокинуть доску
+                  <Button
+                    disabled={!data.can_flip_board}
+                    onClick={() => act('flip_board')}
+                  >
+                    Опрокинуть доску {/* TA EDIT */}
                   </Button>
                 </div>
 
                 <div style={{ ...buttonGroupStyle, marginTop: '8px' }}>
-                  <Button onClick={openModePicker}>Сменить режим</Button>
+                  <Button onClick={openModePicker}>Сменить режим</Button> {/* TA EDIT */}
                   {!!data.can_confirm_mode_switch && (
                     <Button onClick={() => act('confirm_mode_switch')}>
-                      Подтвердить смену режима
+                      Подтвердить смену режима {/* TA EDIT */}
                     </Button>
                   )}
                   {!!data.can_cancel_mode_switch && (
                     <Button onClick={() => act('cancel_mode_switch')}>
-                      Отменить запрос
+                      Отменить запрос {/* TA EDIT */}
                     </Button>
                   )}
                 </div>
 
-                <div style={{ marginTop: '8px', fontSize: '12px', opacity: 0.8 }}>
-                  Во время активной партии смена игроков выполняется через паузу. Для смены
-                  режима во время уже начавшейся партии требуется согласие обоих игроков.
+                <div
+                  style={{ marginTop: '8px', fontSize: '12px', opacity: 0.8 }}
+                >
+                  Во время активной партии смена игроков выполняется через паузу. Для смены {/* TA EDIT */}
+                  режима во время уже начавшейся партии требуется согласие обоих игроков. {/* TA EDIT */}
                 </div>
               </Section>
 
               {!!pendingPromotion && data.game_mode === 'chess' && (
-                <Section title="Превращение пешки">
+                <Section title="Превращение пешки"> {/* TA EDIT */}
                   <div style={{ marginBottom: '8px' }}>
-                    Выберите фигуру для превращения пешки.
+                    Выберите фигуру для превращения пешки. {/* TA EDIT */}
                   </div>
                   <div style={buttonGroupStyle}>
                     {promotionChoices.map((choice) => (
-                      <Button key={choice} onClick={() => submitPromotion(choice)}>
+                      <Button
+                        key={choice}
+                        onClick={() => submitPromotion(choice)}
+                      >
                         {PROMOTION_LABELS[choice] || choice}
                       </Button>
                     ))}
-                    <Button onClick={() => setPendingPromotion(null)}>Отмена</Button>
+                    <Button onClick={() => setPendingPromotion(null)}>
+                      Отмена {/* TA EDIT */}
+                    </Button>
                   </div>
                 </Section>
               )}
 
-              <Section title="История ходов">
-                {!history.length && <div>Ходов ещё не было.</div>}
+              <Section title="История ходов"> {/* TA EDIT */}
+                {!history.length && <div>Ходов еще не было.</div>} {/* TA EDIT */}
                 {!!history.length && (
-                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+                  <table
+                    style={{
+                      width: '100%',
+                      borderCollapse: 'collapse',
+                      fontSize: '13px',
+                    }}
+                  >
                     <thead>
                       <tr>
-                        <th style={{ textAlign: 'left', paddingBottom: '4px' }}>#</th>
-                        <th style={{ textAlign: 'left', paddingBottom: '4px' }}>Белые</th>
-                        <th style={{ textAlign: 'left', paddingBottom: '4px' }}>Чёрные</th>
+                        <th style={{ textAlign: 'left', paddingBottom: '4px' }}>
+                          #
+                        </th>
+                        <th style={{ textAlign: 'left', paddingBottom: '4px' }}>
+                          Белые {/* TA EDIT */}
+                        </th>
+                        <th style={{ textAlign: 'left', paddingBottom: '4px' }}>
+                          Черные {/* TA EDIT */}
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
                       {history.map((row) => (
                         <tr key={row.turn}>
-                          <td style={{ padding: '2px 0', verticalAlign: 'top' }}>{row.turn}.</td>
-                          <td style={{ padding: '2px 4px 2px 0', verticalAlign: 'top' }}>
+                          <td
+                            style={{ padding: '2px 0', verticalAlign: 'top' }}
+                          >
+                            {row.turn}.
+                          </td>
+                          <td
+                            style={{
+                              padding: '2px 4px 2px 0',
+                              verticalAlign: 'top',
+                            }}
+                          >
                             {row.white || ''}
                           </td>
-                          <td style={{ padding: '2px 0', verticalAlign: 'top' }}>
+                          <td
+                            style={{ padding: '2px 0', verticalAlign: 'top' }}
+                          >
                             {row.black || ''}
                           </td>
                         </tr>

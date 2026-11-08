@@ -1564,7 +1564,7 @@
 			/obj/effect/proc_holder/spell/invoked/diagnose/secular,
 		),
 		/datum/skill/misc/hunting = list(
-			/obj/effect/proc_holder/spell/invoked/huntersyell,
+			/obj/effect/proc_holder/spell/self/run_for_it,
 		),
 		/datum/skill/craft/ceramics = list(
 			/obj/effect/proc_holder/spell/invoked/digclay,

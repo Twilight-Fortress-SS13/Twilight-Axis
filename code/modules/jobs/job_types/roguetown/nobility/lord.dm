@@ -35,7 +35,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	same_job_respawn_delay = 30 MINUTES
 
 	// Can't use the Throat when you can't talk properly or.. at all for that matter.
-	vice_restrictions = list(/datum/charflaw/mute, /datum/charflaw/unintelligible)
+	vice_restrictions = list(/datum/charflaw/mute, /datum/charflaw/unintelligible, /datum/charflaw/wanted)
 
 	job_subclasses = list(
 		/datum/advclass/lord/warrior,

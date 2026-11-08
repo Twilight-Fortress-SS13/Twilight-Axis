@@ -20,6 +20,7 @@
 		qdel(spare)
 
 	var/mob/living/carbon/human/user = allocate(/mob/living/carbon/human, center)
+	ADD_TRAIT(user, TRAIT_NOBREATH, TRAIT_GENERIC) // TA EDIT
 	TEST_ASSERT_EQUAL(sigil.find_ritual_ingredient(center, /mob/living/carbon/human), user, "Rituals must accept human targets")
 	sigil.consume_ritual_ingredient(user)
 	TEST_ASSERT(!QDELETED(user), "Human targets must remain for the ritual's effect")
@@ -34,16 +35,12 @@
 	TEST_ASSERT(!(locate(/obj/effect/decal/cleanable/sigil) in center), "Drawing while bound must not create a sigil")
 	TEST_ASSERT_EQUAL(user.bloody_hands, 1, "Failed drawing must not use blood")
 	user.handcuffed = null
-
-	addtimer(CALLBACK(src, PROC_REF(bind_user), user, restraints), 1)
-	center.generateSigils(user)
-	TEST_ASSERT(!(locate(/obj/effect/decal/cleanable/sigil) in center), "Becoming bound during drawing must interrupt it")
+	user.handcuffed = restraints
+	TEST_ASSERT(!center.complete_sigil_drawing(user), "Becoming bound before drawing completes must interrupt it")
+	TEST_ASSERT(!(locate(/obj/effect/decal/cleanable/sigil) in center), "Becoming bound before completion must not create a sigil")
 	TEST_ASSERT_EQUAL(user.bloody_hands, 1, "Interrupted drawing must not use blood")
 	user.handcuffed = null
 
-	center.generateSigils(user)
-	TEST_ASSERT(locate(/obj/effect/decal/cleanable/sigil) in center, "An unrestrained human must successfully draw a sigil")
+	TEST_ASSERT(center.complete_sigil_drawing(user), "An unrestrained human must successfully draw a sigil")
+	TEST_ASSERT(locate(/obj/effect/decal/cleanable/sigil) in center, "Successful drawing must create a sigil")
 	TEST_ASSERT_EQUAL(user.bloody_hands, 0, "Successful drawing must use blood")
-
-/datum/unit_test/zizo_rituals/proc/bind_user(mob/living/carbon/human/user, obj/item/rope/restraints)
-	user.handcuffed = restraints

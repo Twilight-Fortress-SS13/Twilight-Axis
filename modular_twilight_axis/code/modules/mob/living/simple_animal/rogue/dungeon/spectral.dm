@@ -107,7 +107,7 @@
 	ai_controller = /datum/ai_controller/spectral_maid
 
 /obj/projectile/magic/frostbolt/spectral
-	npc_simple_damage_mult = 2
+	antibeast_factor = ANTIBEAST_GREATER
 	speed = MAGE_PROJ_SLOW
 
 /mob/living/simple_animal/hostile/rogue/spectral/Initialize()

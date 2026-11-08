@@ -17,8 +17,8 @@
 	wanderer_examine = FALSE
 	advjob_examine = FALSE
 	give_bank_account = 15
-	vice_restrictions = list(/datum/charflaw/silverweakness)
-	same_job_respawn_delay = 30 MINUTES
+	vice_restrictions = list(/datum/charflaw/silverweakness, /datum/charflaw/wanted) // TA EDIT
+	same_job_respawn_delay = 30 MINUTES // TA EDIT
 
 	job_traits = list(
 		TRAIT_NOPAINSTUN,
@@ -81,8 +81,8 @@
 		if(H.mind)
 			H.mind.AddSpell(new /datum/action/cooldown/spell/touch/asperges) //TA EDIT
 			H.mind.AddSpell(new /datum/action/cooldown/spell/psydon/persist)
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/psydonlux_tamper)
-			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/psydonabsolve)
+			H.mind.AddSpell(new /datum/action/cooldown/spell/psydon/lux/weep)
+			H.mind.AddSpell(new /datum/action/cooldown/spell/psydon/lux/absolve)
 			H.mind.RemoveSpell(/datum/action/cooldown/spell/psydon/respite)
 			H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/qsabsolution)
 			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/diagnose/secular)

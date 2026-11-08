@@ -303,6 +303,7 @@
 	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes.dmi'
 	sleeved = 'modular_twilight_axis/icons/clothing/onmob/donor_sleeves_armor.dmi'
+	flags_inv = HIDEBOOB
 
 /obj/item/clothing/cloak/poncho/dittocloak/Initialize()
 	. = ..()

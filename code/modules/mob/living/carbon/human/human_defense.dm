@@ -100,14 +100,15 @@
 					best_layer = C
 			protection += get_trophy_armor_bonus_for_zone(def_zone, d_type)
 			// DR tier formula: damage * 1 / (1 + 0.2 * tier)
-			if(protection > 0)
-				var/dr_mult = 1 / (1 + 0.2 * protection)
+			if(protection > 0) //TA EDIT START
 				if(d_type in ARMOR_DR_PIERCE_TYPES)
 					// Bullet: armor takes the blocked portion (what doesn't reach HP)
+					var/dr_mult = 1 - (0.2 * protection)
 					intdamage *= (1 - dr_mult)
 				else
 					// Blunt/Fire: armor takes the DR-reduced amount
-					intdamage *= dr_mult
+					var/dr_mult = 1 / (1 + 0.2 * protection)
+					intdamage *= dr_mult //TA EDIT END
 			if(intdamfactor != 1)
 				intdamage *= intdamfactor
 
@@ -399,11 +400,11 @@
 		if(nodmg)
 			return FALSE
 
-/mob/living/carbon/human/ex_act(severity, target, epicenter, devastation_range, heavy_impact_range, light_impact_range, flame_range)
+/mob/living/carbon/human/ex_act(severity, target, epicenter, extreme_impact_range, heavy_impact_range, light_impact_range, flame_range)
 	..()
 	if (!severity)
 		return
-	var/ddist = devastation_range
+	var/ddist = extreme_impact_range
 	var/hdist = heavy_impact_range
 	var/ldist = light_impact_range
 	var/fdist = flame_range

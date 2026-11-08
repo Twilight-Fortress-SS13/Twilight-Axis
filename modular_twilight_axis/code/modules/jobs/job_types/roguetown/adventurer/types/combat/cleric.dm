@@ -281,7 +281,7 @@
 		STATKEY_SPD = -2,
 		STATKEY_STR = -1,
 	)
-	maximum_possible_slots = 2
+	maximum_possible_slots = 1 // No more than one. Henceforth and never again.
 	vice_limits = list(/datum/charflaw/silverweakness)
 	subclass_skills = list(
 		/datum/skill/misc/medicine = SKILL_LEVEL_JOURNEYMAN,
@@ -327,7 +327,7 @@
 	if(H.mind)
 		H.mind.RemoveSpell(/datum/action/cooldown/spell/psydon/respite)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/psydon/persist)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/psydonlux_tamper) // absolver's bleed transfer
+		H.mind.AddSpell(new /datum/action/cooldown/spell/psydon/lux/weep) // TA EDIT
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/psydonvicariate) // nerfed no-rez version of absolver's absolve
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/diagnose/secular)
 

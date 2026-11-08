@@ -1,5 +1,6 @@
 // Roundstart bandit slots use flat caps per gamemode without population scaling.
 /datum/antagonist/bandit
+	overrides_forlorne_vice = TRUE
 	name = "Bandit"
 	roundend_category = "bandits"
 	antagpanel_category = "Bandit"

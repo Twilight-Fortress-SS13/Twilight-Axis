@@ -314,12 +314,13 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 
 	if(!HAS_TRAIT(owner, TRAIT_PARALYSIS) && owner.blood_volume > BLOOD_VOLUME_SURVIVE && owner.stat < UNCONSCIOUS && !HAS_TRAIT(src, TRAIT_BLACKBLOOD)) //TA EDIT START
 		var/healamount = 0
+		var/wil_scaling = owner.STAWIL * 0.05
 		if(HAS_TRAIT(owner, TRAIT_PSYDONITE_4))
-			healamount = 0.4 + (owner.STAWIL * 0.1)
+			healamount = 0.4 + wil_scaling
 		else if(HAS_TRAIT(owner, TRAIT_PSYDONITE_3))
-			healamount = 0.2 + (owner.STAWIL * 0.1)
+			healamount = 0.2 + wil_scaling
 		else if(HAS_TRAIT(owner, TRAIT_PSYDONITE_2))
-			healamount = owner.STAWIL * 0.1
+			healamount = wil_scaling
 
 		if(healamount > 0)
 			heal_wound(healamount)
