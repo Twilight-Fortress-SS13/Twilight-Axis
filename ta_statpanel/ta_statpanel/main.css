@@ -14,9 +14,9 @@
   --tab-hover-grad: linear-gradient(180deg, #242424 0%, #171717 52%, #090909 100%);
   --tab-hover-border: #9a9a9a #3a3a3a #161616 #7a7a7a;
   --tab-active-grad: linear-gradient(180deg, #343434 0%, #262626 100%);
-  --tab-active-outline: #e6cd6a;
-  --tab-active-border: var(--tab-active-outline) #4a4014 #2e2810 #c9b25e;
+  --tab-active-border: #e6cd6a #4a4014 #2e2810 #c9b25e;
   --tab-active-text: #f4e7b0;
+  --emote-star-active: #e6cd6a;
   --tab-inset: inset 0 1px 0 rgba(255, 255, 255, 0.07), inset 0 -1px 0 rgba(0, 0, 0, 0.78);
   --text-shadow: 0 1px 0 #000, 0 0 4px rgba(0, 0, 0, 0.35);
 
@@ -50,9 +50,9 @@
   --tab-hover-grad: linear-gradient(180deg, #4e3f28 0%, #443824 55%, #382e1d 100%);
   --tab-hover-border: #a88d57 #5a4a2e #342a19 #917a49;
   --tab-active-grad: linear-gradient(180deg, #82693f 0%, #6e5836 100%);
-  --tab-active-outline: #c8a050;
-  --tab-active-border: var(--tab-active-outline) #4a3a22 #2c2114 #917a49;
+  --tab-active-border: #c8a050 #4a3a22 #2c2114 #917a49;
   --tab-active-text: #f0dca8;
+  --emote-star-active: #c8a050;
   --tab-inset: inset 0 1px 0 rgba(212, 192, 144, 0.10), inset 0 -1px 0 rgba(0, 0, 0, 0.5);
   --text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
 
@@ -495,5 +495,5 @@ img {
 }
 
 .emote-star.active {
-  color: var(--tab-active-outline);
+  color: var(--emote-star-active);
 }
