@@ -47,6 +47,7 @@ GLOBAL_VAR_CONST(observer_move_delay_multiplier, 0.5)
 	var/datum/orbit_menu/orbit_menu // TA EDIT
 	var/orbiting_ref // TA EDIT
 	var/ghostize_time = 0
+	var/pen_name // TA EDIT
 	var/atom/movable/ghost_body_anchor
 	var/turf/ghost_body_anchor_turf
 	var/next_body_range_warning = 0
@@ -195,6 +196,9 @@ GLOBAL_VAR_CONST(observer_move_delay_multiplier, 0.5)
 				name = random_unique_name(gender)
 
 		mind = body.mind	//we don't transfer the mind but we keep a reference to it.
+		if(ishuman(body))
+			var/mob/living/carbon/human/H = body
+			pen_name = H.pen_name
 
 		set_suicide(body.suiciding) // Transfer whether they committed suicide.
 
@@ -1314,7 +1318,8 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		list("type" = /datum/antagonist/dreamwalker, "group" = "major", "priority" = 61),
 		list("type" = /datum/antagonist/unbound_death_knight, "group" = "major", "priority" = 62),
 		list("type" = /datum/antagonist/zizo_knight, "group" = "major", "priority" = 63),
-		list("type" = /datum/antagonist/zizocultist, "group" = "major", "priority" = 64),
+		list("type" = /datum/antagonist/zizocultist, "group" = "major", "priority" = 64), // TA EDIT
+		list("type" = /datum/antagonist/renegade, "group" = "major", "priority" = 65), // TA EDIT
 		list("type" = /datum/antagonist/prebel/head, "group" = "minor", "priority" = 70),
 		list("type" = /datum/antagonist/prebel, "group" = "minor", "priority" = 71),
 		list("type" = /datum/antagonist/aspirant, "group" = "minor", "priority" = 72),

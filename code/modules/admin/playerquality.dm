@@ -44,21 +44,29 @@
 		return FALSE
 	return !can_view_playerquality_of(usr.client, key, FALSE)
 
+/// Numeric PQ per key as passed to get_playerquality, so we don't hit the disk on every lookup.
+/// adjust_playerquality is the only writer of pq_num.json and drops the entry for its key.
+GLOBAL_LIST_EMPTY(playerquality_cache)
+
 /proc/get_playerquality(key, text)
 	if(!key)
 		return
-	if(playerquality_hidden_from_user(key))
-		return
-	var/the_pq = 0
-	var/json_file = file("data/player_saves/[copytext(key,1,2)]/[key]/pq_num.json")
-	if(!fexists(json_file))
-		WRITE_FILE(json_file, "{}")
-	var/list/json = json_decode(file2text(json_file))
-
-	if(json[ckey(key)])
-		the_pq = json[ckey(key)]
-	if(!the_pq)
+	if(playerquality_hidden_from_user(key)) // TA EDIT
+		return // TA EDIT
+	key = ckey(key) // TA EDIT
+	var/the_pq = GLOB.playerquality_cache[key]
+	if(isnull(the_pq))
 		the_pq = 0
+		var/json_file = file("data/player_saves/[copytext(key,1,2)]/[key]/pq_num.json")
+		if(!fexists(json_file))
+			WRITE_FILE(json_file, "{}")
+		var/list/json = json_decode(file2text(json_file))
+
+		if(json[ckey(key)])
+			the_pq = json[ckey(key)]
+		if(!the_pq)
+			the_pq = 0
+		GLOB.playerquality_cache[key] = the_pq
 	if(!text)
 		return the_pq
 	else
@@ -67,7 +75,7 @@
 		if(the_pq >= 800)
 			return "<span style='color: #198CFF;'>UNDYING</span>"
 		if(the_pq >= 600)
-			return "<span style='color: 0055FF;'>DIVINE</span>"
+			return "<span style='color: #0055FF;'>DIVINE</span>"
 		if(the_pq >= 400)
 			return "<span style='color: #0073E6;'>EXALTED</span>"
 		if(the_pq >= 280)
@@ -118,6 +126,7 @@
 	json[key] = curpq
 	fdel(json_file)
 	WRITE_FILE(json_file, json_encode(json))
+	GLOB.playerquality_cache -= key
 
 	if(reason || admin)
 		var/thing = ""
@@ -205,11 +214,9 @@
 	if(!fexists(full_path))
 		to_chat(usr, span_boldwarning("User does not exist."))
 		return
-	var/popup_window_data = "<center>[canonical_ckey]</center>"
-	popup_window_data += "<center>PQ: [get_playerquality(canonical_ckey, TRUE, TRUE)] ([get_playerquality(canonical_ckey, FALSE, TRUE)])</center>"
-
-//	dat += "<table width=100%><tr><td width=33%><div style='text-align:left'><a href='?_src_=prefs;preference=playerquality;task=menu'><b>PQ:</b></a> [get_playerquality(user.ckey, text = TRUE)]</div></td><td width=34%><center><a href='?_src_=prefs;preference=triumphs;task=menu'><b>TRIUMPHS:</b></a> [user.get_triumphs() ? "\Roman [user.get_triumphs()]" : "None"]</center></td><td width=33%></td></tr></table>"
-	popup_window_data += "<center><a href='?_src_=holder;[HrefToken()];cursemenu=[canonical_ckey]'>CURSES</a></center>"
+	var/popup_window_data = "<center>[canonical_ckey]</center>" // TA EDIT
+	popup_window_data += "<center>PQ: [get_playerquality(canonical_ckey, TRUE)] ([get_playerquality(canonical_ckey, FALSE)])</center>" // TA EDIT
+	popup_window_data += "<center><a href='?_src_=holder;[HrefToken()];cursemenu=[canonical_ckey]'>CURSES</a></center>" // TA EDIT
 	popup_window_data += "<table width=100%><tr><td width=33%><div style='text-align:left'>"
 	popup_window_data += "Commends: <a href='?_src_=holder;[HrefToken()];readcommends=[canonical_ckey]'>[get_commends(canonical_ckey)]</a></div></td>"
 	popup_window_data += "<td width=34%><center>Round Contributor Points: [get_roundpoints(canonical_ckey)]</center></td>"
