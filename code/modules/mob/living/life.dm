@@ -60,20 +60,20 @@
 				if(!stemmed)
 					bleeding = TRUE
 			wound.heal_wound(0.4) // 40% of the heal happens naturally.
-			if(HAS_TRAIT(src, TRAIT_DEATHLESS))
-				wound.heal_wound(0.6) // The other bulk of the effects, only if you are not Deathless.
+			if(!HAS_TRAIT(src, TRAIT_DEATHLESS) && !HAS_TRAIT(src, TRAIT_BLOODLOSS_IMMUNE) && !HAS_TRAIT(src, TRAIT_BLOOD_RESISTANCE))
+				wound.heal_wound(0.6) // The other bulk of the effects, only if you are not Deathless nor have any form of thing that can stall your death.
 				heal_psydonite(0.1, 0.1)
 		if(!(in_combat_until > world.time) && !cmode && !bleeding)
 			heal_psydonite(0.2, 0.2) // Heals damage over time, but you must be completely out of trouble to proc.
 			if(HAS_TRAIT(src, TRAIT_PSYDONITE_4))
-				adjustBruteLoss(-5)
-				adjustFireLoss(-5)
-			else if(HAS_TRAIT(src, TRAIT_PSYDONITE_3))
-				adjustBruteLoss(-2)
-				adjustFireLoss(-2)
-			else if(HAS_TRAIT(src, TRAIT_PSYDONITE_2))
 				adjustBruteLoss(-1)
 				adjustFireLoss(-1)
+			else if(HAS_TRAIT(src, TRAIT_PSYDONITE_3))
+				adjustBruteLoss(-0.6)
+				adjustFireLoss(-0.6)
+			else if(HAS_TRAIT(src, TRAIT_PSYDONITE_2))
+				adjustBruteLoss(-0.3)
+				adjustFireLoss(-0.3) //TA EDIT END
 
 	if(!stat && HAS_TRAIT(src, TRAIT_PSYDONIAN_GRIT) && !HAS_TRAIT(src, TRAIT_PARALYSIS) && !HAS_TRAIT(src, TRAIT_NOREGEN) && !HAS_TRAIT(src, TRAIT_IRONMAN) && !HAS_TRAIT(src, TRAIT_DEADITE) && !HAS_TRAIT(src, TRAIT_LYCANRESILENCE))
 		var/in_combat = in_combat_until > world.time
@@ -112,8 +112,6 @@
 
 	if(QDELETED(src)) // diseases can qdel the mob via transformations
 		return
-
-	handle_environment()
 
 	//Random events (vomiting etc)
 	handle_random_events()
@@ -200,9 +198,6 @@
 		handle_inwater(loc)
 
 /mob/living/proc/handle_random_events()
-	return
-
-/mob/living/proc/handle_environment()
 	return
 
 /mob/living/proc/handle_wounds()

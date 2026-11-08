@@ -173,8 +173,8 @@
 			if(istype(caster) && !QDELETED(caster) && ishuman(L))
 				if(arcyne_strike(caster, L, null, damage, caster.zone_selected, \
 					BCLASS_PIERCE, spell_name = spell_name, \
-					damage_type = BRUTE, \
-					skip_animation = TRUE, SPELL_STRIKE_SCALING) == ARCYNE_STRIKE_WARDED)
+					damage_type = BURN, \
+					skip_animation = TRUE, SPELL_STRIKE_SCALING) == ARCYNE_STRIKE_WARDED) //TA EDIT
 					continue
 			else
 				L.adjustBruteLoss(SPELL_DMG_VS(L, damage))
@@ -197,3 +197,7 @@
 	duration = 6
 
 #undef VOID_BEAM_SLOWDOWN_ID
+
+/obj/effect/temp_visual/telegraph/telomancy
+	light_color = GLOW_COLOR_ARCANE
+	duration = 3 SECONDS

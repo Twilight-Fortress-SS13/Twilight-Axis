@@ -56,6 +56,13 @@
 				clientfps = desiredfps
 				parent.fps = desiredfps
 			return TRUE
+		if("action_wheel_modifier") // TA EDIT START
+			var/modifier = params["modifier"]
+			if(!(modifier in list("ctrl", "shift", "alt", "none")))
+				return TRUE
+			action_wheel_modifier = modifier
+			save_preferences()
+			return TRUE // TA EDIT END
 		if("auto_fit_viewport")
 			auto_fit_viewport = !auto_fit_viewport
 			if(auto_fit_viewport && parent)
@@ -153,7 +160,7 @@
 		if("asaycolor")
 			var/new_asaycolor = tgui_color_picker(user, "Choose your ASAY color:", "ASAY Color", asaycolor)
 			if(new_asaycolor)
-				asaycolor = sanitize_hexcolor(new_asaycolor) // TA EDIT
+				asaycolor = sanitize_ooccolor(new_asaycolor) // TA EDIT
 				save_preferences() // TA EDIT
 			return TRUE
 

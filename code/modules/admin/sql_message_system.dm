@@ -95,6 +95,8 @@
 		return
 	qdel(query_create_message)
 	if(logged)
+		if(type == "note")
+			announce_note_change("NOTES: [key_name(usr)] added a [note_severity] severity note for [target_key]: [note_text_for_chat(text)]")
 		log_admin_private(pm)
 		message_admins("[header]:<br>[text]")
 		admin_ticket_log(target_ckey, "<font color='blue'>[header]</font>")
@@ -145,6 +147,8 @@
 		message_admins(m2)
 		if(type == "note" || type == "message" || type == "message sent" || type == "watchlist entry")
 			world.TgsAnnounceAdminMessageDeletion(deleted_by_ckey, target_key, type, text)
+		if(type == "note")
+			announce_note_change("NOTES: [user_key_name] deleted a note for [target_key]: [note_text_for_chat(text)]")
 		if(browse)
 			browse_messages("[type]")
 		else
@@ -196,6 +200,8 @@
 		message_admins("[kna] has edited a [type] [(type == "note" || type == "message" || type == "watchlist entry") ? " for [target_key]" : ""] made by [admin_key] from<br>[old_text]<br>to<br>[new_text]")
 		if(type == "note" || type == "message" || type == "watchlist entry")
 			world.TgsAnnounceAdminMessageEdit(editor_ckey, target_key, admin_key, type, old_text, new_text)
+		if(type == "note")
+			announce_note_change("NOTES: [kn] edited a note for [target_key] made by [admin_key]\nFrom: [note_text_for_chat(old_text, 800)]\nTo: [note_text_for_chat(new_text, 800)]")
 		if(browse)
 			browse_messages("[type]")
 		else
@@ -321,6 +327,7 @@
 		qdel(query_edit_note_severity)
 		log_admin_private("[kn] has edited the severity of a [type] for [target_key] made by [admin_key] from [old_severity] to [new_severity]")
 		message_admins("[kna] has edited the severity time of a [type] for [target_key] made by [admin_key] from [old_severity] to [new_severity]")
+		announce_note_change("NOTES: [kn] changed the severity of a note for [target_key] made by [admin_key] from [old_severity] to [new_severity]")
 		browse_messages(target_ckey = ckey(target_key), agegate = TRUE)
 	qdel(query_find_edit_note_severity)
 
