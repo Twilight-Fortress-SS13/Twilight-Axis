@@ -59,6 +59,7 @@
 	block_hard = FALSE
 	block_soft = FALSE
 	allow_dreamwalker = TRUE
+	allow_renegade = TRUE
 	preferred_gnoll_mode = GNOLL_SCALING_FLAT	// max 2
 	wretch_slot_cap = 7 // TA EDIT
 	// TA EDIT START

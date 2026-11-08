@@ -27,6 +27,7 @@
 #define ROLE_CULT			"Cult of Ascension"
 #define ROLE_FREEMAN		"Freeman" // TA EDIT
 #define ROLE_LOSTGRENZEL	"Lost Grenzel" // TA EDIT
+#define ROLE_RENEGADE			"Renegade" // TA EDIT
 
 #define ROLE_SYNDICATE			"Syndicate"
 #define ROLE_TRAITOR			"Traitor"
@@ -77,6 +78,7 @@ GLOBAL_LIST_INIT(special_roles_rogue, list(
 	ROLE_ASSASSIN = /datum/antagonist/assassin,
 	ROLE_HAG = /datum/antagonist/hag,
 	ROLE_CULT = /datum/antagonist/zizocultist,
+	ROLE_RENEGADE = /datum/antagonist/renegade, // TA EDIT
 ))
 
 //Job defines for what happens when you fail to qualify for any job during job selection
