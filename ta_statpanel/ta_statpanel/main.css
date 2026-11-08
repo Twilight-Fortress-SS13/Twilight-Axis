@@ -426,3 +426,62 @@ img {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.emote-toolbar {
+  display: flex;
+  gap: 0.4em;
+  margin-bottom: 0.5em;
+}
+
+.emote-toolbar .verb-search {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+
+.emote-page-toggle {
+  display: flex;
+}
+
+.emote-page-toggle button {
+  font: inherit;
+  cursor: pointer;
+  color: inherit;
+  background: transparent;
+  border: 1px solid currentColor;
+}
+
+.emote-page-toggle button.active {
+  background: rgba(128, 128, 128, 0.3);
+}
+
+.emote-cell {
+  align-items: stretch;
+  vertical-align: top;
+}
+
+.emote-item-name {
+  pointer-events: auto;
+  flex: 1;
+  min-width: 0;
+  width: auto;
+}
+
+.emote-star {
+  flex: none;
+  margin: 1px 1px 1px 0;
+  padding: 0 0.3em;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--text-muted);
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--tab-border);
+  background: var(--tab-grad);
+}
+
+.emote-star:hover,
+.emote-star.active {
+  color: var(--accent);
+}

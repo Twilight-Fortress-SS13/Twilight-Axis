@@ -1461,6 +1461,7 @@ GLOBAL_LIST_EMPTY(external_rsc_urls)
  * Handles incoming messages from the stat-panel TGUI.
  */
 /client/proc/on_stat_panel_message(type, payload)
+	handle_emote_panel_message(type, payload) // TA EDIT - persistent emote favourites.
 	switch(type)
 		if("Update-Verbs")
 			init_verbs()
