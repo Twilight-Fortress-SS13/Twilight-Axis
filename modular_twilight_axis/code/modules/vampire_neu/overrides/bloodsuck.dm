@@ -201,7 +201,7 @@ drinksomeblood()
 	addtimer(CALLBACK(src, TYPE_PROC_REF(/mob/living/carbon, vomit), 0, TRUE), rand(8 SECONDS, 15 SECONDS))
 
 /mob/living/carbon/human/proc/should_puke_nonvamp()
-	if(HAS_TRAIT(src, TRAIT_HORDE) || HAS_TRAIT(src, TRAIT_NASTY_EATER))
+	if(HAS_TRAIT(src, TRAIT_HORDE) || HAS_TRAIT(src, TRAIT_NASTY_EATER) || HAS_TRAIT(src, TRAIT_SANGUIVORE))
 		return FALSE
 	return TRUE
 
