@@ -330,13 +330,13 @@
 	var/max_points
 	switch(hag_tier)
 		if(1)
-			max_victims = 5 // TA EDIT - ORIGINAL: 4
+			max_victims = 6 // TA EDIT - ORIGINAL: 4
 			max_points = 60
 		if(2)
-			max_victims = 7 // TA EDIT - ORIGINAL: 5
+			max_victims = 8 // TA EDIT - ORIGINAL: 5
 			max_points = 85
 		else
-			max_victims = 9 // TA EDIT - ORIGINAL: 6
+			max_victims = 10 // TA EDIT - ORIGINAL: 6
 			max_points = 110
 
 	// TA ADDITION START
