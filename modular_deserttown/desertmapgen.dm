@@ -46,6 +46,9 @@
 							/obj/effect/decal/remains/human = 0.3,
 							/obj/structure/desert_spice = 0.2,
 							/obj/structure/flora/junglebush/desertbush = 0.6,
+							/obj/structure/fluff/templedebris/debris5 = 1,
+							/obj/structure/fluff/templedebris/debris4 = 1,
+							/obj/structure/fluff/templedebris/debris4 = 1,
 							/obj/effect/landmark/desert_track_spawner = 1.4) // Added for modular hunting
 	//spawnableTurfs = list(/turf/open/floor/rogue/dirt/road=2,
 	// 					/turf/open/water/swamp=2,)
