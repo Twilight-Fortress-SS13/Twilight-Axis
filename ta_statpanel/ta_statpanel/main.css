@@ -293,7 +293,7 @@ img {
   z-index: 1;
 }
 
-.grid-item:hover::after {
+.grid-item[data-label]:not([data-label=""]):hover::after {
   content: attr(data-label);
   position: absolute;
   left: 50%;
@@ -444,15 +444,22 @@ img {
 }
 
 .emote-page-toggle button {
-  font: inherit;
+  pointer-events: auto;
+  width: auto;
   cursor: pointer;
-  color: inherit;
-  background: transparent;
-  border: 1px solid currentColor;
+}
+
+.emote-page-toggle button:hover,
+.emote-page-toggle button:focus-visible {
+  background: var(--tab-hover-grad);
+  border-color: var(--tab-hover-border);
+  color: var(--text);
 }
 
 .emote-page-toggle button.active {
-  background: rgba(128, 128, 128, 0.3);
+  background: var(--tab-active-grad);
+  border-color: var(--tab-active-border);
+  color: var(--tab-active-text);
 }
 
 .emote-cell {

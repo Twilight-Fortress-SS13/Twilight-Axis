@@ -434,7 +434,7 @@ function VerbsPanel({ cat }) {
         >★</button>
       </div>
     ) : (
-      <a key={command} href="#" className="grid-item" onClick={onVerbClick(command)}>
+      <a key={command} href="#" className="grid-item" data-label={command} onClick={onVerbClick(command)}>
         <span className="grid-item-text">{command}</span>
       </a>
     )
@@ -456,8 +456,8 @@ function VerbsPanel({ cat }) {
       />
       {isEmotes && (
         <div className="emote-page-toggle">
-          <button type="button" className={!favouritesOnly ? 'active' : ''} onClick={() => setFavouritesOnly(false)}>Все</button>
-          <button type="button" className={favouritesOnly ? 'active' : ''} onClick={() => setFavouritesOnly(true)}>Избранное</button>
+          <button type="button" className={'grid-item-text' + (!favouritesOnly ? ' active' : '')} onClick={() => setFavouritesOnly(false)}>Все</button>
+          <button type="button" className={'grid-item-text' + (favouritesOnly ? ' active' : '')} onClick={() => setFavouritesOnly(true)}>Избранное</button>
         </div>
       )}
       </div>
