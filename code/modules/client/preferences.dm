@@ -35,6 +35,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	// Custom Keybindings
 	var/list/key_bindings = list()
+	var/list/action_button_positions = list() // TA EDIT
+	var/action_wheel_modifier = "ctrl" // TA EDIT
 
 	var/tgui_lock = TRUE
 	var/tgui_theme = "azure_gilbranze" // TA EDIT
@@ -201,6 +203,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	var/flavortext
 	var/flavortext_cached
+
+	var/pen_name
 
 	var/ooc_notes
 	var/ooc_notes_cached
@@ -547,3 +551,12 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	if(!migrant.queued_wave)
 		return FALSE
 	return TRUE
+
+/datum/preferences/proc/matches_action_wheel_modifier(list/modifiers) // TA EDIT START
+	if(!islist(modifiers))
+		return FALSE
+	if(action_wheel_modifier == "none")
+		return !modifiers["ctrl"] && !modifiers["shift"] && !modifiers["alt"]
+	if(!modifiers[action_wheel_modifier])
+		return FALSE
+	return (!modifiers["ctrl"] || action_wheel_modifier == "ctrl") && (!modifiers["shift"] || action_wheel_modifier == "shift") && (!modifiers["alt"] || action_wheel_modifier == "alt") // TA EDIT END

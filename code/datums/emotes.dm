@@ -119,7 +119,8 @@
 	var/sound/tmp_sound = get_sound(user)
 	if(!istype(tmp_sound))
 		tmp_sound = sound(get_sfx(tmp_sound))
-	tmp_sound.frequency = pitch
+	if(tmp_sound) // TA EDIT
+		tmp_sound.frequency = pitch // TA EDIT
 	if(tmp_sound && tmp_sound.file && (!only_forced_audio || !intentional))
 		// Specifying what bodyparts are needed to run an emote is a desireable replacement.
 		// Band-aid so emotes with sound aren't misplaced. You can still point with your head, for example.
@@ -197,20 +198,28 @@
 				modifier = "old"
 			if((!ignore_silent && (H.silent)) || (!ignore_silent && !is_emote_muffled(H)) || (!ignore_silent && HAS_TRAIT(H, TRAIT_MUTE)) ||	(!ignore_silent && HAS_TRAIT(H, TRAIT_BAGGED)))
 				modifier = "silenced"
-			if(user.gender == FEMALE && H.dna.species.soundpack_f)
-				possible_sounds = H.dna.species.soundpack_f.get_sound(key,modifier)
-			else if(H.dna.species.soundpack_m)
-				possible_sounds = H.dna.species.soundpack_m.get_sound(key,modifier)
-				// LETHALSTONE ADDITION BEGIN: use preference-set voice types where possible
+			// Species can still hold a voicepack type path until their voice packs are initialized.
+			var/datum/voicepack/male_pack = H.dna.species.soundpack_m // TA EDIT START
+			var/datum/voicepack/female_pack = H.dna.species.soundpack_f
+			if(ispath(male_pack, /datum/voicepack))
+				male_pack = GLOB.voice_packs[male_pack]
+			if(ispath(female_pack, /datum/voicepack))
+				female_pack = GLOB.voice_packs[female_pack]
+			if(user.gender == FEMALE && istype(female_pack))
+				possible_sounds = female_pack.get_sound(key, modifier)
+			else if(istype(male_pack))
+				possible_sounds = male_pack.get_sound(key, modifier)
+			// LETHALSTONE ADDITION BEGIN: use preference-set voice types where possible
 			if(H.voice_type)
-				switch (H.voice_type)
-					if (VOICE_TYPE_MASC)
-						possible_sounds = H.dna.species.soundpack_m.get_sound(key, modifier)
+				switch(H.voice_type)
+					if(VOICE_TYPE_MASC)
+						if(istype(male_pack))
+							possible_sounds = male_pack.get_sound(key, modifier)
 					else
-						if (H.dna.species.soundpack_f)
-							possible_sounds = H.dna.species.soundpack_f.get_sound(key, modifier)
-						else
-							possible_sounds = H.dna.species.soundpack_m.get_sound(key, modifier)
+						if(istype(female_pack))
+							possible_sounds = female_pack.get_sound(key, modifier)
+						else if(istype(male_pack))
+							possible_sounds = male_pack.get_sound(key, modifier) // TA EDIT END
 			// LETHALSTONE ADDITION END
 			if(possible_sounds)
 				if(islist(possible_sounds))
