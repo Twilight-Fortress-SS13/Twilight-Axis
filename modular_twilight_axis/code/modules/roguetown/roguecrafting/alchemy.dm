@@ -75,7 +75,7 @@
 	result = list(/obj/item/ointment/brute,
 				/obj/item/ointment/brute,
 				/obj/item/ointment/brute)
-	reqs = list(/obj/item/natural/ash = 2, /obj/item/alch/calendula = 2, /obj/item/alch/viscera = 2, /obj/item/reagent_containers/glass/bowl = 3)
+	reqs = list(/obj/item/natural/ash = 2, /obj/item/alch/calendula = 2, /obj/item/alch/viscera = 2, /obj/item/reagent_containers/glass/bowl = 1)
 	craftdiff = 2
 
 /datum/crafting_recipe/roguetown/alchemy/ointment_brute_two
