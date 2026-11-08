@@ -94,8 +94,8 @@
 	)
 
 	failure_message_list = list(
-		"видимо страдает близорукостью!",
-		"похоже обладает катарактой!",
+		"видимо страдает близорукостью...",
+		"похоже обладает катарактой...",
 		"ничего не замечает...",
 	)
 
@@ -215,32 +215,32 @@
 
 /datum/emote/living/stat_roll/strength
 	crit_success_message_list = list("вызывает гордость Равокса!")
-	crit_failure_message_list = list("не может напрячь ни единой мышцы.")
+	crit_failure_message_list = list("не может напрячь ни единой мышцы...")
 
 /datum/emote/living/stat_roll/perception
 	crit_success_message_list = list("замечает каждую мелочь!")
-	crit_failure_message_list = list("не видит дальше собственного носа.")
+	crit_failure_message_list = list("не видит дальше собственного носа...")
 
 /datum/emote/living/stat_roll/intelligence
 	crit_success_message_list = list("блистает умом!")
-	crit_failure_message_list = list("не может связать и двух мыслей.")
+	crit_failure_message_list = list("не может связать и двух мыслей...")
 
 /datum/emote/living/stat_roll/constitution
 	crit_success_message_list = list("показывает железную выносливость!")
-	crit_failure_message_list = list("едва держится на ногах.")
+	crit_failure_message_list = list("едва держится на ногах...")
 
 /datum/emote/living/stat_roll/willpower
 	crit_success_message_list = list("сохраняет несокрушимую решимость!")
-	crit_failure_message_list = list("теряет остатки решимости.")
+	crit_failure_message_list = list("теряет остатки решимости...")
 
 /datum/emote/living/stat_roll/speed
 	crit_success_message_list = list("двигается молниеносно!")
-	crit_failure_message_list = list("путается в собственных ногах.")
+	crit_failure_message_list = list("путается в собственных ногах...")
 
 /datum/emote/living/stat_roll/fortune
 	crit_success_message_list = list("пользуется благосклонностью Ксайликса!")
-	crit_failure_message_list = list("привлекает все возможные неудачи.")
+	crit_failure_message_list = list("привлекает все возможные неудачи...")
 
 /datum/emote/living/stat_roll/charisma
 	crit_success_message_list = list("может очаровать саму Баоту!")
-	crit_failure_message_list = list("производит худшее из возможных впечатлений.")
+	crit_failure_message_list = list("производит худшее из возможных впечатлений...")
