@@ -82,7 +82,7 @@
 
 	/* admin stuff - tells you the followers name, key, and what patron they follow */
 	var/follower_ident = "[follower.key]/([follower.real_name]) ([devout ? "devout " : ""]follower of [patron])"
-	message_admins("[follower_ident] [ADMIN_SM(follower)] [ADMIN_FLW(follower)] prays: [span_info(prayer)]")
+	message_admins("[follower_ident] [ADMIN_DN(follower)] [ADMIN_FLW(follower)] prays: [span_info(prayer)]")
 	user.log_message("(follower of [patron]) prays: [prayer]", LOG_GAME)
 	record_round_statistic(STATS_PRAYERS_MADE)
 

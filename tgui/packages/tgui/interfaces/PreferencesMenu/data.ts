@@ -16,6 +16,7 @@ export type GameSettingsData = {
   windowflashing: BooleanLike;
   clientfps: number;
   auto_fit_viewport: BooleanLike;
+  action_wheel_modifier: 'ctrl' | 'shift' | 'alt' | 'none';
   schizo_voice: BooleanLike;
   no_storyteller_events: BooleanLike;
   verbose_character_creator: BooleanLike;

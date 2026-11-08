@@ -13,11 +13,10 @@
 		return
 	if(!user.mind)
 		return
-	if(!user.cmode)
-		if(ishuman(user) && ishuman(target))
-			var/mob/living/carbon/human/H = user
-			if(target.Adjacent(H))
-				H.attempt_steal(user, target)
-			return
+	if(!user.cmode && ishuman(user) && ishuman(target)) // TA EDIT
+		var/mob/living/carbon/human/H = user // TA EDIT
+		if(target.Adjacent(H)) // TA EDIT
+			H.attempt_steal(H, target) // TA EDIT
+		return // TA EDIT
 	user.try_special(target)
 	. = ..()
