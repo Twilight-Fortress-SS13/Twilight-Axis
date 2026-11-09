@@ -8004,6 +8004,11 @@
 	pixel_x = 0;
 	pixel_y = 13
 	},
+/obj/item/cannon_shell/grapeshot{
+	pixel_x = 0;
+	pixel_y = 12
+	},
+/obj/machinery/light/rogue/torchholder/c,
 /turf/open/floor/rogue/tile/brownbrick{
 	icon = 'modular_deserttown/icons/alt/roguefloor.dmi'
 	},
@@ -20559,8 +20564,18 @@
 	pixel_x = -4;
 	pixel_y = -3
 	},
-/obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow,
-/obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/heavy,
+/obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow{
+	pixel_x = -3;
+	pixel_y = 12
+	},
+/obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/heavy{
+	pixel_x = 11;
+	pixel_y = 14
+	},
+/obj/item/ammo_casing/caseless/rogue/heavy_bolt{
+	pixel_x = -12;
+	pixel_y = -6
+	},
 /turf/open/floor/rogue/tile/brownbrick{
 	icon = 'modular_deserttown/icons/alt/roguefloor.dmi'
 	},
@@ -25786,9 +25801,12 @@
 /obj/structure/table/wood{
 	icon_state = "tablewood1"
 	},
+/obj/item/cannon_fuse/fiber,
+/obj/item/cannon_fuse/parchment,
+/obj/item/cannon_fuse/parchment,
 /obj/item/cannon_fuse/parchment,
 /obj/item/cannon_fuse/fiber,
-/obj/item/cannon_fuse,
+/obj/item/cannon_fuse/fiber,
 /turf/open/floor/rogue/tile/brownbrick{
 	icon = 'modular_deserttown/icons/alt/roguefloor.dmi'
 	},
@@ -44398,13 +44416,13 @@
 /obj/effect/decal/edge_corner/desert_gray{
 	dir = 4
 	},
-/obj/item/clothing/shoes/roguetown/boots/armor/blacksteel/legate,
 /obj/item/clothing/neck/roguetown/bevor/blacksteel/modern,
-/obj/item/clothing/under/roguetown/platelegs/blacksteel/legate,
 /obj/item/clothing/wrists/roguetown/bracers/blacksteel/modern,
-/obj/item/clothing/suit/roguetown/armor/plate/full/blacksteel/legate,
-/obj/item/clothing/gloves/roguetown/plate/blacksteel/legate,
-/obj/item/clothing/head/roguetown/helmet/blacksteel/legate,
+/obj/item/clothing/shoes/roguetown/boots/armor/blacksteel/legate/sultan,
+/obj/item/clothing/gloves/roguetown/plate/blacksteel/legate/sultan,
+/obj/item/clothing/head/roguetown/helmet/blacksteel/legate/sultan,
+/obj/item/clothing/suit/roguetown/armor/plate/full/blacksteel/legate/sultan,
+/obj/item/clothing/under/roguetown/platelegs/blacksteel/legate/sultan,
 /turf/open/floor/rogue/tile/harem1,
 /area/rogue/indoors/town/manor/desert)
 "kZT" = (
@@ -46656,13 +46674,11 @@
 	pixel_x = 0;
 	pixel_y = 16
 	},
-/obj/item/cannon_shell/grapeshot{
-	pixel_x = 0;
-	pixel_y = 12
-	},
 /obj/structure/fluff/walldeco/customflag/deserttown{
 	pixel_x = -32
 	},
+/obj/item/cannon_shell/cannonball,
+/obj/item/cannon_shell/cannonball,
 /turf/open/floor/rogue/tile/brownbrick{
 	icon = 'modular_deserttown/icons/alt/roguefloor.dmi'
 	},
@@ -53088,16 +53104,6 @@
 /obj/structure/flora/roguetree/burnt,
 /turf/open/floor/rogue/dirt/desert/nospawn,
 /area/rogue/outdoors/town/desert)
-"ndl" = (
-/obj/structure/rack/rogue,
-/obj/item/rogueweapon/flail/sflail,
-/obj/item/rogueweapon/flail/sflail,
-/obj/item/rogueweapon/flail/sflail,
-/obj/machinery/light/rogue/torchholder/l,
-/turf/open/floor/rogue/tile/brownbrick{
-	icon = 'modular_deserttown/icons/alt/roguefloor.dmi'
-	},
-/area/rogue/under/town/basement/desert/keep)
 "ndp" = (
 /obj/structure/table/wood{
 	dir = 1;
@@ -58922,8 +58928,9 @@
 /area/rogue/under/town/basement/desert)
 "oxg" = (
 /obj/structure/rack/rogue,
-/obj/item/rogueweapon/mace/cudgel,
-/obj/item/rogueweapon/mace/cudgel,
+/obj/item/rogueweapon/flail/sflail,
+/obj/item/rogueweapon/flail/sflail,
+/obj/item/rogueweapon/flail/sflail,
 /turf/open/floor/rogue/tile/brownbrick{
 	icon = 'modular_deserttown/icons/alt/roguefloor.dmi'
 	},
@@ -60363,10 +60370,10 @@
 /turf/open/floor/rogue/ruinedwood,
 /area/rogue/indoors/town/magician/desert)
 "oPO" = (
-/obj/structure/cannon{
-	dir = 4;
-	pixel_x = -26;
-	pixel_y = -27
+/obj/structure/cannon/basilika{
+	dir = 8;
+	pixel_x = -18;
+	pixel_y = 4
 	},
 /turf/open/floor/rogue/deserttile{
 	icon_state = "tiledrab2"
@@ -62257,6 +62264,7 @@
 /area/rogue/under/cavewet/bogcaves)
 "ppf" = (
 /obj/structure/rack/rogue,
+/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/janissary,
 /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/janissary,
 /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/janissary,
 /turf/open/floor/rogue/deserttile{
@@ -68167,6 +68175,10 @@
 /obj/structure/rack/rogue{
 	pixel_x = 0;
 	pixel_y = 16
+	},
+/obj/item/cannon_shell/grapeshot{
+	pixel_x = 0;
+	pixel_y = 12
 	},
 /obj/item/cannon_shell/grapeshot{
 	pixel_x = 0;
@@ -85510,8 +85522,14 @@
 /area/rogue/outdoors/town/manor/desert/roofs)
 "uPZ" = (
 /obj/structure/rack/rogue,
-/obj/item/rogueweapon/eaglebeak,
-/obj/item/rogueweapon/eaglebeak,
+/obj/item/rogueweapon/eaglebeak{
+	pixel_x = -16;
+	pixel_y = -14
+	},
+/obj/item/rogueweapon/eaglebeak{
+	pixel_x = -19;
+	pixel_y = -11
+	},
 /obj/structure/rack/rogue/shelf,
 /obj/item/rogueweapon/scabbard/sword{
 	pixel_y = 41;
@@ -85549,8 +85567,14 @@
 	pixel_x = -55;
 	pixel_y = -11
 	},
-/obj/item/rogueweapon/spear/billhook,
-/obj/item/rogueweapon/spear/billhook,
+/obj/item/rogueweapon/spear/billhook{
+	pixel_x = -14;
+	pixel_y = -18
+	},
+/obj/item/rogueweapon/spear/billhook{
+	pixel_x = -10;
+	pixel_y = -21
+	},
 /turf/open/floor/rogue/tile/brownbrick{
 	icon = 'modular_deserttown/icons/alt/roguefloor.dmi'
 	},
@@ -95755,6 +95779,7 @@
 /area/rogue/indoors/town/desert)
 "xvo" = (
 /obj/structure/rack/rogue,
+/obj/item/clothing/shoes/roguetown/shalal/reinforced,
 /obj/item/clothing/shoes/roguetown/shalal/reinforced,
 /obj/item/clothing/shoes/roguetown/shalal/reinforced,
 /turf/open/floor/rogue/tile/brownbrick{
@@ -319133,8 +319158,8 @@ lZU
 kvr
 smX
 bYn
-oPO
 ibw
+oPO
 kYM
 ioY
 mjt
@@ -319758,7 +319783,7 @@ kvr
 smX
 smX
 vSV
-oZx
+vSV
 oZx
 ioY
 ioY
@@ -320070,7 +320095,7 @@ smX
 smX
 uPZ
 kYM
-ndl
+kYM
 xwg
 smX
 knU
