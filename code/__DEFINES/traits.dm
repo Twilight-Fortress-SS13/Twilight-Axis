@@ -500,6 +500,7 @@
 #define TRAIT_PSYDONITE_2 "Psydonic Respite"
 #define TRAIT_PSYDONITE_3 "Psydonic Respite (II)"
 #define TRAIT_PSYDONITE_4 "Psydonic Respite (III)"
+#define TRAIT_PSYDONITE_5 "Psydonic Respite (IIII)"
 #define TRAIT_PSYDONIC_MEDICINE "My Hands are Steady by HIS Grace"
 #define TRAIT_CLERGY_TA "Decem Dii Vult"
 #define TRAIT_FIREARMS_MARKSMAN "Expert Gunslinger" // They keep saying firearms are too easy to level up. Unlocks Master and Legendary Firearms.
@@ -837,6 +838,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_PSYDONITE_2 = span_info("My body is a temple of iron will; the stronger my willpower, the faster my flesh knits back together."),
 	TRAIT_PSYDONITE_3 = span_info("My body is a temple of iron will; the stronger my willpower, the faster my flesh knits back together."),
 	TRAIT_PSYDONITE_4 = span_info("My body is a temple of iron will; the stronger my willpower, the faster my flesh knits back together."),
+	TRAIT_PSYDONITE_5 = span_info("My body is a temple of iron will; the stronger my willpower, the faster my flesh knits back together."),
 	TRAIT_PSYDONIC_MEDICINE = span_info("My medical skills know no match among those of Psydon, for it is HE who guides me to save lyves of HIS children."),
 	TRAIT_FIREARMS_MARKSMAN = span_greentext("I'm an experienced gunslinger, and have spent many years learning to shoot firearms accurately over great distances. Firearms can progress to Legendary levels."),
 	TRAIT_VILLAIN = span_warning("I am a devious, conniving villain!"),
