@@ -320,6 +320,8 @@
 
 /obj/effect/track/proc/hide_images()
 	for(var/client/viewer as anything in shown_to)
+		if(!viewer) // TA EDIT
+			continue // TA EDIT
 		viewer.images -= real_image
 		viewer.images -= marked_image
 	shown_to = null

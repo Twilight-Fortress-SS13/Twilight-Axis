@@ -735,7 +735,7 @@
 	if(locktype == LOCKTYPE_MATCHLOCK || locktype == LOCKTYPE_WHEELLOCK || locktype == LOCKTYPE_BREECH)
 		..()
 		spawn_muzzle_smoke(user, target)
-		if(!silenced)
+		if(!silenced && ispath(powder_smoke, /obj/effect/particle_effect))
 			var/obj/effect/particle_effect/effect_to_spawn = powder_smoke
 			spawn (5)
 				new effect_to_spawn(get_ranged_target_turf(user,user.dir,1))
@@ -783,7 +783,7 @@
 			if(advanced_icon_s)
 				icon = advanced_icon_s
 
-			if(!silenced)
+			if(!silenced && ispath(powder_smoke, /obj/effect/particle_effect))
 				var/obj/effect/particle_effect/effect_to_spawn = powder_smoke
 				spawn (1)
 					new effect_to_spawn(get_ranged_target_turf(user, user.dir, 1))
