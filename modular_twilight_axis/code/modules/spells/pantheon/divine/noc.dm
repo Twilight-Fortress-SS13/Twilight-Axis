@@ -159,11 +159,11 @@
 		int_bonus--
 	if(int_bonus > 0)
 		effectedstats = list(STATKEY_INT = int_bonus)
-	restore_energy(new_owner, assocskill)
 	. = ..()
 
-/datum/status_effect/buff/TAwise_moon/proc/restore_energy(mob/living/new_owner, assocskill)
-	new_owner.energy_add((100 * (owner.get_skill_level(assocskill))) * 2)
+/datum/status_effect/buff/TAwise_moon/on_apply()
+	. = ..()
+	owner.energy_add((100 * (owner.get_skill_level(/datum/skill/magic/holy))) * 2)
 
 /////////////////////////
 // T1 - Nitesight. //////
