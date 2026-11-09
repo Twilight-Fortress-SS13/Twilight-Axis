@@ -9,15 +9,16 @@
 /datum/emote/living/meow
 	key_third_person = "мяукает!"
 	message = "мяукает!"
-	message_muffled = "издает приглушенный звук"
+	message_muffled = "издаёт приглушённый звук!"
 
 /datum/emote/living/mreow
-	message = "мяукает!"
-	message_muffled = "приглушённо мяукает!"
+	key_third_person = "протяжно мяукает!"
+	message = "протяжно мяукает!"
+	message_muffled = "приглушённо и протяжно мяукает!"
 
 /datum/emote/living/mrrp
-	key_third_person = "недовольно мурчит!"
-	message = "недовольно мурчит!"
+	key_third_person = "мурлычет!"
+	message = "мурлычет!"
 	message_muffled = "издает приглушенный звук!"
 
 /datum/emote/living/caw
@@ -51,8 +52,8 @@
 	message_muffled = "издает приглушенный звук!"
 
 /datum/emote/living/roar
-	key_third_person = "рычит!"
-	message = "рычит!"
+	key_third_person = "ревёт!"
+	message = "ревёт!"
 	message_muffled = "издает приглушенный звук!"
 
 /datum/emote/living/howl
@@ -61,8 +62,8 @@
 	message_muffled = "издает приглушенный звук!"
 
 /datum/emote/living/cackle
-	key_third_person = "насмехается!"
-	message = "насмехается!"
+	key_third_person = "хохочет!"
+	message = "хохочет!"
 	message_muffled = "издает приглушенный звук!"
 
 /datum/emote/living/whine
@@ -71,8 +72,8 @@
 	message_muffled = "издает приглушенный звук!"
 
 /datum/emote/living/fwhine
-	key_third_person = "скулит по венардински"
-	message = "скулит по венардински."
+	key_third_person = "скулит по-венардински"
+	message = "скулит по-венардински."
 	message_muffled = "издает приглушенный звук!"
 
 /datum/emote/living/psnort
@@ -86,13 +87,13 @@
 	message_muffled = "издает приглушенный звук!"
 
 /datum/emote/living/trill
-	key_third_person = "трещит!"
-	message = "трещит!"
+	key_third_person = "издаёт трель!"
+	message = "издаёт трель!"
 	message_muffled = "издает приглушенный звук!"
 
 /datum/emote/living/purr
-	key_third_person = "мурчит!"
-	message = "мурчит!"
+	key_third_person = "мурлычет!"
+	message = "мурлычет!"
 	message_muffled = "издает приглушенный звук!"
 
 /datum/emote/living/moo
@@ -111,8 +112,8 @@
 	message_muffled = "издает приглушенный звук!"
 
 /datum/emote/living/prbt
-	key_third_person = "ухает!"
-	message = "ухает!"
+	key_third_person = "фыркает!"
+	message = "фыркает!"
 	message_muffled = "издает приглушенный звук!"
 
 /datum/emote/living/bleat
@@ -129,14 +130,14 @@
 	message = "трепещет!"
 
 /datum/emote/living/yip
-	key_third_person = "ипает!"
-	message = "ипает!"
-	message_muffled = "издает приглушенное ип!"
+	key_third_person = "тявкает!"
+	message = "тявкает!"
+	message_muffled = "приглушённо тявкает!"
 
 /datum/emote/living/lizard_bellow
-	key_third_person = "ревет"
-	message = "ревет!"
-	message_muffled = "издает приглушенный рев!"
+	key_third_person = "ревёт"
+	message = "ревёт!"
+	message_muffled = "издаёт приглушённый рёв!"
 
 /datum/emote/living/lizard_hiss
 	key_third_person = "шипит"
@@ -144,9 +145,9 @@
 	message_muffled = "приглушенно шипит!"
 
 /datum/emote/living/lizard_squeal
-	key_third_person = "пищит!"
-	message = "пищит!"
-	message_muffled = "приглушенно пищит!"
+	key_third_person = "визжит!"
+	message = "визжит!"
+	message_muffled = "приглушённо визжит!"
 
 /datum/emote/living/emote_lizard_thump
 	key_third_person = "топает!"

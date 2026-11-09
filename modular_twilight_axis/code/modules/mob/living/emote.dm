@@ -99,7 +99,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 /datum/emote/living/gasp
 	key_third_person = "ахает"
 	message = "ахает!"
-	message_muffled = "издает приглушенный звук в попытке закричать."
+	message_muffled = "приглушённо ахает."
 
 /datum/emote/living/breathgasp
 	key_third_person = "ловит ртом воздух"
@@ -256,7 +256,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	message = "кричит в агонии!"
 
 /datum/emote/living/haltyell
-	message = "требует остановится!"
+	message = "требует остановиться!"
 
 /datum/emote/living/rage
 	message = "кричит в ярости!"
@@ -419,10 +419,10 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	message = "машет."
 
 /datum/emote/living/whimper
-	key_third_person = "всхлипывает"
-	message = "всхлипывает."
-	message_mime = "всхлипывает."
-	message_muffled = "приглушенно всхлипывает."
+	key_third_person = "хнычет"
+	message = "хнычет."
+	message_mime = "хнычет."
+	message_muffled = "приглушённо хнычет."
 
 /datum/emote/living/wsmile
 	key_third_person = "слабо улыбается"
@@ -444,24 +444,24 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	message = "прищуривается."
 
 /datum/emote/living/snap
-	key_third_person = "щелкает пальцем"
-	message = "щелкает пальцем!"
+	key_third_person = "щёлкает пальцами"
+	message = "щёлкает пальцами!"
 
 /datum/emote/living/blink
-	key_third_person = "хлопает глазами."
-	message = "хлопает глазами."
+	key_third_person = "моргает."
+	message = "моргает."
 
 /datum/emote/living/stomp
 	key_third_person = "топает"
 	message = "топает!"
 
 /datum/emote/living/snap2
-	key_third_person = "дважды щелкает пальцами"
-	message = "дважды щелкает пальцами!"
+	key_third_person = "дважды щёлкает пальцами"
+	message = "дважды щёлкает пальцами!"
 
 /datum/emote/living/snap3
-	key_third_person = "трижды щелкает пальцами"
-	message = "трижды щелкает пальцами!"
+	key_third_person = "трижды щёлкает пальцами"
+	message = "трижды щёлкает пальцами!"
 
 /datum/emote/living/fsalute
 	key_third_person = "превозносит свою веру"

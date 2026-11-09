@@ -51,7 +51,7 @@
 	if(istype(usr.getorganslot(ORGAN_SLOT_TONGUE), /obj/item/organ/tongue/wild_tongue))
 		set name = TA_EMOTE_NAME_EMOTE_MREOW
 		set category = "Emotes.Wildtongue" //Wildtongue
-		emote("meow", intentional = TRUE, animal = TRUE)
+		emote("mreow", intentional = TRUE, animal = TRUE)
 	else
 		to_chat(usr, span_warning("Your tongue doesn't do that"))
 		return
