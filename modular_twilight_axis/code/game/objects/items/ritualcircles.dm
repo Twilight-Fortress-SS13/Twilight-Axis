@@ -118,6 +118,8 @@
 	var/riteselection = input(user, "Rituals of Hedonism", src) as null|anything in baothists
 	switch(riteselection) // put ur rite selection here
 		if("Rite of Armaments")
+			if(!ta_armaments_rite_pop_gate(user))
+				return
 			if(user.has_status_effect(/datum/status_effect/debuff/armamentrites))
 				to_chat(user, span_warning("I am not yet ready to perform this rite."))
 				return
@@ -184,7 +186,7 @@
 				return FALSE
 			user.say("Baotha, fill my cup with endless mirth!")
 			playsound(loc, 'sound/misc/evilevent.ogg', 100, FALSE, -1)
-			var/ritual_type = list("Ozium x3", "Moon Dust x3", "Purified Moondust x2", "Star shugar x2", "Spice x2", "Herozium x2", "Smartium x3", "Grave Powder x3", "Corps Dust x3", "Inferrum x3", "Grenzelhoft Sour x3", "Otavan Red x3", "Otavan White x3", "Elven Red x3", "Valmora Blue x2", "Aged Spiced Wine x2", "Delectable Spiced Wine x2")
+			var/ritual_type = list("Ozium x3", "Moon Dust x3", "Purified Moondust x2", "Starsugar x2", "Spice x2", "Herozium x2", "Smartium x3", "Grave Powder x3", "Corps Dust x3", "Inferrum x3", "Grenzelhoft Sour x3", "Otavan Red x3", "Otavan White x3", "Elven Red x3", "Valmora Blue x2", "Aged Spiced Wine x2", "Delectable Spiced Wine x2")
 			var/chooselection = input(user, "Rituals of Gedonism", src) as null|anything in ritual_type
 			var/choose = /obj/item/reagent_containers/powder/ozium
 			var/count = 3
