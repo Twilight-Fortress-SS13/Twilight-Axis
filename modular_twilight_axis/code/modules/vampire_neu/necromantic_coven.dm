@@ -104,15 +104,23 @@
 
 /datum/coven_power/necromantic/raise_unholy_undead
 	name = "Raise Unholy Undead"
-	desc = "Raise a single revenant that serves you. They are imbued with a fragment of a soul and are more intelligent than simple-minded lesser undead."
+	desc = "Raise a single skeletal revenant that serves you. If no soul answers the call, a lesser mindless skeleton rises instead. Only one summoned undead may live at a time."
 
 	level = 3
 	research_cost = 2
-	target_type = TARGET_TURF | TARGET_LIVING | TARGET_MOB
+	target_type = TARGET_TURF | TARGET_LIVING | TARGET_MOB | TARGET_SELF
 	range = 7
 	cooldown_length = 60 SECONDS
 	check_flags = COVEN_CHECK_CONSCIOUS | COVEN_CHECK_CAPABLE | COVEN_CHECK_IMMOBILE | COVEN_CHECK_LYING
 	var/list/summoned_undead = list()
+	var/summon_in_progress = FALSE
+
+/datum/coven_power/necromantic/raise_unholy_undead/can_activate_untargeted(alert = FALSE)
+	if(summon_in_progress)
+		if(alert && owner)
+			to_chat(owner, span_warning("The dead are still answering my call."))
+		return FALSE
+	return ..()
 
 /datum/coven_power/necromantic/raise_unholy_undead/Destroy()
 	for(var/mob/living/undead as anything in summoned_undead)
@@ -151,36 +159,67 @@
 	if(!.)
 		return FALSE
 
+	if(summon_in_progress || !owner)
+		return ta_refund_failed_use()
+
 	if(ta_living_undead_count() >= TA_NECROMANTIC_MAX_UNDEAD)
 		to_chat(owner, span_warning("My revenant already walks these lands. My blood cannot hold another."))
 		return ta_refund_failed_use()
 
 	var/turf/landing = get_turf(target)
-	if(!isopenturf(landing))
+	if(!isopenturf(landing) || landing.is_blocked_turf())
 		to_chat(owner, span_warning("The targeted location is blocked. My summon fails to come forth."))
 		return ta_refund_failed_use()
 
-	var/list/candidates = pollGhostCandidates("Do you want to play as a Vampyre's chosen undead?", ROLE_VAMPIRE_UNDEAD, null, null, 10 SECONDS, POLL_IGNORE_VAMPIRE_UNDEAD)
-	if(!LAZYLEN(candidates))
-		to_chat(owner, span_warning("The depths are hollow."))
-		return TRUE
-
-	var/mob/candidate = pick(candidates)
-	if(!candidate || !istype(candidate, /mob/dead))
+	var/mob/living/carbon/human/caster = owner
+	summon_in_progress = TRUE
+	var/list/candidates = pollGhostCandidates("Do you want to play as a Vampyre's skeletal revenant?", ROLE_VAMPIRE_UNDEAD, null, null, 10 SECONDS, POLL_IGNORE_VAMPIRE_UNDEAD)
+	if(QDELETED(src))
+		return FALSE
+	if(QDELETED(caster) || owner != caster || caster.stat == DEAD || !caster.client || caster.z != landing.z || !isopenturf(landing) || landing.is_blocked_turf() || get_dist(caster, landing) > range || ta_living_undead_count() >= TA_NECROMANTIC_MAX_UNDEAD)
+		summon_in_progress = FALSE
 		return ta_refund_failed_use()
+
+	var/mob/dead/candidate
+	if(LAZYLEN(candidates))
+		var/mob/picked_candidate = pick(candidates)
+		if(istype(picked_candidate, /mob/dead) && !QDELETED(picked_candidate) && picked_candidate.key)
+			candidate = picked_candidate
+
+	if(!candidate)
+		var/mob/living/carbon/human/species/skeleton/npc/summon/skeleton = new(landing, caster)
+		skeleton.set_summoner(caster)
+		apply_mob_lifespan(skeleton, caster, 45 MINUTES)
+		ta_track_undead(skeleton)
+		to_chat(caster, span_notice("No soul answered the call. A mindless skeleton rises instead."))
+		summon_in_progress = FALSE
+		return TRUE
 
 	if(istype(candidate, /mob/dead/new_player))
 		var/mob/dead/new_player/new_candidate = candidate
 		new_candidate.close_spawn_windows()
 
-	var/mob/living/carbon/human/species/dullahan/revenant = new /mob/living/carbon/human/species/dullahan(landing)
-	revenant.key = candidate.key
-	SSjob.EquipRank(revenant, "Fortified Skeleton", TRUE)
-	revenant.copy_known_languages_from(owner, TRUE)
-	revenant.visible_message(span_warning("[revenant]'s eyes light up with an eerie glow!"))
+	var/mob/living/carbon/human/species/dullahan/revenant = new(landing)
 	ta_track_undead(revenant)
+	revenant.key = candidate.key
+	SSjob.EquipRank(revenant, "Greater Skeleton", TRUE)
+	if(QDELETED(revenant))
+		summon_in_progress = FALSE
+		return ta_refund_failed_use()
+	revenant.copy_known_languages_from(caster, TRUE)
+	revenant.faction |= list(FACTION_UNDEAD, "[caster.real_name]_faction")
+	var/obj/item/organ/eyes/old_eyes = revenant.getorganslot(ORGAN_SLOT_EYES)
+	if(old_eyes)
+		old_eyes.Remove(revenant, TRUE)
+		qdel(old_eyes)
+	var/obj/item/organ/eyes/night_vision/zombie/undead_eyes = new
+	undead_eyes.Insert(revenant)
+	revenant.possible_rmb_intents = list(/datum/rmb_intent/feint, /datum/rmb_intent/aimed, /datum/rmb_intent/strong, /datum/rmb_intent/swift, /datum/rmb_intent/riposte, /datum/rmb_intent/weak)
+	revenant.swap_rmb_intent(num = 1)
+	revenant.visible_message(span_warning("[revenant]'s eyes light up with an eerie glow!"))
 	addtimer(CALLBACK(revenant, TYPE_PROC_REF(/mob/living/carbon/human, choose_name_popup), "UNHOLY UNDEAD"), 3 SECONDS)
 	addtimer(CALLBACK(revenant, TYPE_PROC_REF(/mob/living/carbon/human, choose_pronouns_and_body)), 7 SECONDS)
+	summon_in_progress = FALSE
 	return TRUE
 
 /datum/coven_power/necromantic/harvest_lux

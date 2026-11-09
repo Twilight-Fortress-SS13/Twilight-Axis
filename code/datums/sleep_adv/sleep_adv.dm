@@ -73,6 +73,8 @@
 
 /datum/sleep_adv/proc/add_sleep_experience(skill, amt, silent = FALSE, _show_xp = TRUE)
 	var/mob/living/L = mind.current
+	if(!L) // TA EDIT
+		return // TA EDIT
 	var/datum/skill/sleep_gate = GetSkillRef(skill)
 	if(sleep_gate && !sleep_gate.learnable_in_sleep)
 		return
