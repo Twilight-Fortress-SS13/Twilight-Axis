@@ -8,6 +8,8 @@
 	var/datum/family_member/founder
 	var/datum/family_member/house_leader
 	var/closed = FALSE
+	var/member_resync_pending = FALSE
+	var/member_resync_restart_requested = FALSE
 
 	var/list/family_curses = list()
 	var/list/curse_history = list()
@@ -279,7 +281,7 @@
 	for(var/datum/family_node/node as anything in member_nodes)
 		if(!node.person || node.person == new_person)
 			continue
-		SSfamilytree.introduce_pair(new_person, node.person)
+		SSfamilytree.introduce_pair(new_person, node.person, 0, FALSE)
 
 /datum/heritage/proc/AddToFamily(mob/living/carbon/human/person, datum/family_member/parent1, datum/family_member/parent2, adopt = FALSE)
 	var/datum/family_member/new_member = CreateFamilyMember(person)
