@@ -75,7 +75,7 @@
 #define TA_EMOTE_NAME_EMOTE_HOWL "Выть"
 #define TA_EMOTE_NAME_EMOTE_CACKLE "Хохотать"
 #define TA_EMOTE_NAME_EMOTE_WHINE "Скулить"
-#define TA_EMOTE_NAME_EMOTE_FWHINE "Скулить (вен.)"
+#define TA_EMOTE_NAME_EMOTE_FWHINE "Скулить"
 #define TA_EMOTE_NAME_EMOTE_SNORT "Фыркать"
 #define TA_EMOTE_NAME_EMOTE_OINK "Хрюкать"
 #define TA_EMOTE_NAME_EMOTE_TRILL "Издать трель"

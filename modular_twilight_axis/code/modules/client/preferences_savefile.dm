@@ -13,6 +13,7 @@
 		"Дважды щёлкнуть пальцами" = TA_EMOTE_NAME_EMOTE_SNAP2,
 		"Трижды щёлкнуть пальцами" = TA_EMOTE_NAME_EMOTE_SNAP3,
 		"Скулить по-венардински" = TA_EMOTE_NAME_EMOTE_FWHINE,
+		"Скулить (вен.)" = TA_EMOTE_NAME_EMOTE_FWHINE,
 		"Карканье" = TA_EMOTE_NAME_EMOTE_CAW,
 	)
 	for(var/name in saved)
