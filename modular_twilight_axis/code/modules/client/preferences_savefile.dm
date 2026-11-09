@@ -8,10 +8,11 @@
 	var/static/list/renamed_emotes = list(
 		"Покачать головой" = TA_EMOTE_NAME_EMOTE_SHAKE,
 		"Сморщиться" = TA_EMOTE_NAME_EMOTE_GRIMACE,
-		"Ярость" = TA_EMOTE_NAME_EMOTE_RAGE,
-		"Щелкнуть 1" = TA_EMOTE_NAME_EMOTE_SNAP,
-		"Щелкнуть 2" = TA_EMOTE_NAME_EMOTE_SNAP2,
-		"Щелкнуть 3" = TA_EMOTE_NAME_EMOTE_SNAP3,
+		"Кричать в ярости" = TA_EMOTE_NAME_EMOTE_RAGE,
+		"Щёлкнуть пальцами" = TA_EMOTE_NAME_EMOTE_SNAP,
+		"Дважды щёлкнуть пальцами" = TA_EMOTE_NAME_EMOTE_SNAP2,
+		"Трижды щёлкнуть пальцами" = TA_EMOTE_NAME_EMOTE_SNAP3,
+		"Скулить по-венардински" = TA_EMOTE_NAME_EMOTE_FWHINE,
 		"Карканье" = TA_EMOTE_NAME_EMOTE_CAW,
 	)
 	for(var/name in saved)
