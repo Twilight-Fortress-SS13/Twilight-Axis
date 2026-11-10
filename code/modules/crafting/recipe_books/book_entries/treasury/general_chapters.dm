@@ -70,6 +70,7 @@
 			with it.</li>
 			<li>Maximum [CHARGE_CAP_FLAT]m per head. Charters may cap a class at [CHARGE_CAP_CHARTER]m or
 			exempt it outright. No levies while the Magna Carta is in force.</li>
+			<li>Latejoiners are immune to levy raised within [POLL_LEVY_LATEJOIN_GRACE / (1 MINUTES)] minutes of their arrival.</li>
 			<li>The levy never taxes an account below <b>[POLL_LEVY_PROTECTED_BALANCE]m</b>, so everyone can afford some contract deposit.</li>
 			<li>Whatever a subject cannot pay becomes <b>arrears</b>. Arrears are drawn from the account whenever someone deposit in it and at dawn every day. The subject is marked <b>destitute</b> until
 			the debt is settled or forgiven.</li>
@@ -391,6 +392,8 @@
 		<b>+[QUEST_ACTIVE_FELLOWSHIP_BONUS_PAIR]</b> with one fellow in the band and
 		<b>+[QUEST_ACTIVE_FELLOWSHIP_BONUS_BAND]</b> with two or more. A led
 		fellowship of three can run [QUEST_MAX_ACTIVE_PER_PLAYER + QUEST_ACTIVE_FELLOWSHIP_BONUS_BAND] contracts at once.</p>
+
+		<p>Contract scales to the amount of people who were actually present for the contract. This counts everyone within two screens of the contract when it spawns.</p>
 
 		<p>Beyond the active cap, a <b>take cooldown</b> starts once you have signed
 		your cap worth of contracts within [QUEST_TAKE_COOLDOWN / 600] minutes.</p>

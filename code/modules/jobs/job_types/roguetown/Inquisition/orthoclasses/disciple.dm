@@ -8,7 +8,7 @@
 	category_tags = list(CTAG_ORTHODOXIST)
 	traits_applied = list(
 		TRAIT_CIVILIZEDBARBARIAN,
-		TRAIT_BLOOD_RESISTANCE
+		TRAIT_BLOOD_RESISTANCE, // TA ADDITION - Disciple now gain BLOOD RESISTANCE
 	)
 	subclass_stats = list(
 		STATKEY_STR = 3,

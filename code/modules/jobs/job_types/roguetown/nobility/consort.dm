@@ -20,8 +20,7 @@
 	min_pq = 10 //should probably be higher with duchess at 50
 	max_pq = null
 	round_contrib_points = 3
-
-	vice_restrictions = list(/datum/charflaw/mute, /datum/charflaw/unintelligible) //Needs to use the throat - sometimes
+	vice_restrictions = list(/datum/charflaw/mute, /datum/charflaw/unintelligible, /datum/charflaw/wanted) // TA EDIT
 
 	same_job_respawn_delay = 30 MINUTES
 
@@ -44,7 +43,7 @@
 		STATKEY_LCK = 5,
 	)
 	subclass_skills = list(
-		/datum/skill/misc/stealing = SKILL_LEVEL_EXPERT,
+		/datum/skill/misc/stealing = SKILL_LEVEL_EXPERT, // TA EDIT
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/tracking = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_EXPERT,
