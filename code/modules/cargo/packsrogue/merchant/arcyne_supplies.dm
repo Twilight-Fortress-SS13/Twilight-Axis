@@ -8,6 +8,8 @@
 	cost = 25
 	contains = list(/obj/item/rogueweapon/woodstaff/implement)
 
+// TA REMOVAL START (Тинктуры апгрейдов и тиры имплементов)
+/*
 /datum/supply_pack/rogue/arcyne_supplies/greater_focus
 	name = "Runic Tincture of Greater Focus"
 	cost = 20
@@ -17,6 +19,8 @@
 	name = "Runic Tincture of Grand Focus"
 	cost = 60
 	contains = list(/obj/item/enchantmentscroll/implement/grand)
+*/
+// TA REMOVAL END
 
 /datum/supply_pack/rogue/arcyne_supplies/greater_implement
 	name = "Greater Implement"

@@ -190,6 +190,8 @@
 	required_atoms = list(/obj/item/rogueore/cinnabar = 1, /obj/item/reagent_containers/glass/bottle/alchemical = 1, /obj/item/magic/leyline = 1, /obj/item/magic/fae/sylvanessence = 1)
 	result_atoms = list(/obj/item/enchantmentscroll/mythic/rewind)
 
+// TA REMOVAL START (Тинктуры апгрейдов и тиры имплементов)
+/*
 // ----- Implement Tinctures (1x realm mat + cinnabar + vial) -----
 
 /datum/runeritual/enchanting/implement_greater
@@ -223,3 +225,5 @@
 /datum/runeritual/enchanting/implement_grand/elemental
 	name = "Grand Focus (Elemental)"
 	required_atoms = list(/obj/item/rogueore/cinnabar = 1, /obj/item/reagent_containers/glass/bottle/alchemical = 1, /obj/item/magic/elemental/fragment = 1)
+*/
+// TA REMOVAL END
