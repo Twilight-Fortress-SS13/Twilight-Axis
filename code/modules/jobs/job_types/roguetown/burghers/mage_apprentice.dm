@@ -78,10 +78,10 @@
 	)
 
 /datum/outfit/job/roguetown/wapprentice/associate
-	var/starting_implement_tier = "greater"
+	var/starting_implement = /obj/item/rogueweapon/woodstaff/implement/greater/sapphire // TA EDIT
 
 /datum/outfit/job/roguetown/wapprentice/associate/apprentice
-	starting_implement_tier = "lesser"
+	starting_implement = /obj/item/rogueweapon/woodstaff/implement/amethyst // TA EDIT
 
 /datum/outfit/job/roguetown/wapprentice/associate/pre_equip(mob/living/carbon/human/H)
 	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt
@@ -100,7 +100,7 @@
 		if(/datum/patron/inhumen/zizo)
 			H.cmode_music = sound("sound/music/combat_heretic.ogg")
 	if(H.mind)
-		backr = choose_implement(H, starting_implement_tier)
+		backr = starting_implement // TA EDIT
 		SStreasury.grant_savings(ECONOMIC_LOWER_MIDDLE_CLASS, H)
 	if(SSmapping.config.map_name == "Rockhill") //TA_EDIT
 		beltr = /obj/item/storage/keyring/apprenticeenigma

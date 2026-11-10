@@ -65,7 +65,7 @@
 
 	if(H.mind)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/sahir_sandstorm)
-		var/weapons = list("Twin Shamshirs", "Greater Staff")
+		var/weapons = list("Twin Shamshirs", "Rontz Staff") // TA EDIT
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		H.set_blindness(0)
 		switch(weapon_choice)
@@ -74,8 +74,8 @@
 				beltr = /obj/item/rogueweapon/scabbard/sword
 				r_hand = /obj/item/rogueweapon/sword/sabre/shamshir
 				l_hand = /obj/item/rogueweapon/sword/sabre/shamshir
-			if("Greater Staff")
-				r_hand = /obj/item/rogueweapon/woodstaff/implement/greater
+			if("Rontz Staff") // TA EDIT
+				r_hand = /obj/item/rogueweapon/woodstaff/implement/greater/ruby // TA EDIT
 
 	H.merctype = 4
 

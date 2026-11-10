@@ -481,7 +481,7 @@
 	belt = /obj/item/storage/belt/rogue/leather/battleskirt
 	beltl = /obj/item/rogueweapon/spellbook/greater
 	backl = /obj/item/storage/backpack/rogue/satchel/black
-	backr = choose_implement(H, "greater")
+	backr = /obj/item/rogueweapon/woodstaff/implement/greater/ruby // TA EDIT
 
 	backpack_contents = list(
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,

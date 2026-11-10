@@ -45,7 +45,7 @@
 	backl = /obj/item/storage/backpack/rogue/satchel
 	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/wizard]
 	if(H.mind)
-		backr = choose_implement(H, "lesser")
+		backr = /obj/item/rogueweapon/woodstaff/implement // TA EDIT
 		backpack_contents = list(
 			/obj/item/rogueweapon/spellbook = 1,
 			/obj/item/chalk = 1,
@@ -109,7 +109,7 @@
 	backl = /obj/item/storage/backpack/rogue/satchel
 	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/wizard]
 	if(H.mind)
-		backr = choose_implement(H, "lesser")
+		backr = /obj/item/rogueweapon/woodstaff/implement // TA EDIT
 	backpack_contents = list(
 			/obj/item/rogueweapon/spellbook = 1,
 			/obj/item/chalk = 1,
