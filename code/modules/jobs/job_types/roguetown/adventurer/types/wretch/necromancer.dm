@@ -55,7 +55,7 @@
 		)
 	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/wizard]
 	if(H.mind)
-		backr = /obj/item/rogueweapon/woodstaff/implement/greater/ruby // TA EDIT
+		backr = /obj/item/rogueweapon/woodstaff/implement/greater/ruby // TA EDIT (Убираем "косметические" камни)
 		H.set_patron(/datum/patron/inhumen/zizo)
 		wretch_select_bounty(H)
 	H.grant_language(/datum/language/undead)

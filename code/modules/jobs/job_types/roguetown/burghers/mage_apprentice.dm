@@ -78,10 +78,10 @@
 	)
 
 /datum/outfit/job/roguetown/wapprentice/associate
-	var/starting_implement = /obj/item/rogueweapon/woodstaff/implement/greater/sapphire // TA EDIT
+	var/starting_implement = /obj/item/rogueweapon/woodstaff/implement/greater/sapphire // TA EDIT (Убираем "косметические" камни)
 
 /datum/outfit/job/roguetown/wapprentice/associate/apprentice
-	starting_implement = /obj/item/rogueweapon/woodstaff/implement/amethyst // TA EDIT
+	starting_implement = /obj/item/rogueweapon/woodstaff/implement/amethyst // TA EDIT (Убираем "косметические" камни)
 
 /datum/outfit/job/roguetown/wapprentice/associate/pre_equip(mob/living/carbon/human/H)
 	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt
@@ -100,7 +100,7 @@
 		if(/datum/patron/inhumen/zizo)
 			H.cmode_music = sound("sound/music/combat_heretic.ogg")
 	if(H.mind)
-		backr = starting_implement // TA EDIT
+		backr = starting_implement // TA EDIT (Убираем "косметические" камни)
 		SStreasury.grant_savings(ECONOMIC_LOWER_MIDDLE_CLASS, H)
 	if(SSmapping.config.map_name == "Rockhill") //TA_EDIT
 		beltr = /obj/item/storage/keyring/apprenticeenigma

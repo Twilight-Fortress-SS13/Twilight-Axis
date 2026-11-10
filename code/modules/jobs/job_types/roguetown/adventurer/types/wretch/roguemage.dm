@@ -67,5 +67,5 @@
 	)
 	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/wizard]
 	if(H.mind)
-		backr = /obj/item/rogueweapon/woodstaff/implement/greater/ruby // TA EDIT
+		backr = /obj/item/rogueweapon/woodstaff/implement/greater/ruby // TA EDIT (Убираем "косметические" камни)
 		wretch_select_bounty(H)

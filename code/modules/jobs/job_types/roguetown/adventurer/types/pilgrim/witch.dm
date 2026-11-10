@@ -86,7 +86,7 @@
 			if(H.mind)
 				H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 1, "minor" = 1, "utilities" = 8, "ward" = TRUE))
 			backl = /obj/item/storage/backpack/rogue/satchel
-			backr = /obj/item/rogueweapon/woodstaff/implement // TA EDIT
+			backr = /obj/item/rogueweapon/woodstaff/implement // TA EDIT (Убираем "косметические" камни)
 			backpack_contents = list(
 								/obj/item/rogueweapon/spellbook = 1,
 								/obj/item/reagent_containers/glass/mortar = 1,

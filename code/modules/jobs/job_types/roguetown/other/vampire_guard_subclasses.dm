@@ -481,7 +481,7 @@
 	belt = /obj/item/storage/belt/rogue/leather/battleskirt
 	beltl = /obj/item/rogueweapon/spellbook/greater
 	backl = /obj/item/storage/backpack/rogue/satchel/black
-	backr = /obj/item/rogueweapon/woodstaff/implement/greater/ruby // TA EDIT
+	backr = /obj/item/rogueweapon/woodstaff/implement/greater/ruby // TA EDIT (Убираем "косметические" камни)
 
 	backpack_contents = list(
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
