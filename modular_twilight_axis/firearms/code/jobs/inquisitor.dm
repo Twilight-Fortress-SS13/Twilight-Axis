@@ -24,9 +24,6 @@
 		STATKEY_CON = 2,
 		STATKEY_INT = 2,
 	)
-
-	tempo_capable = TRUE
-
 	subclass_skills = list(
 		/datum/skill/combat/twilight_firearms = SKILL_LEVEL_MASTER,
 		/datum/skill/misc/tracking = SKILL_LEVEL_EXPERT,
@@ -86,7 +83,7 @@
 				mask = /obj/item/clothing/mask/rogue/facemask/steel/confessor
 				cloak = /obj/item/storage/backpack/rogue/satchel/beltpack
 				belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/blackpowder/umbra
-				beltl = /obj/item/rogueweapon/knuckledusters/psy/relic
+				r_hand = /obj/item/clothing/gloves/roguetown/knuckles/psydon/relic
 				beltr = /obj/item/quiver/twilight_bullet/silver
 				backpack_contents = list(
 					/obj/item/storage/keyring/inquisitor = 1,
@@ -192,6 +189,9 @@
 	and each blow is said to serve as a reminder that faith need not wield a sword to break the bones of the wicked."
 	force = 30
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
+	icon_state = "psyknuckle"
+	slot_flags = ITEM_SLOT_HIP | ITEM_SLOT_BACK
+	possible_item_intents = list(/datum/intent/mace/smash, /datum/intent/mace/strike/dislocate)
 
 /obj/item/rogueweapon/knuckledusters/psy/relic/ComponentInitialize()
 	AddComponent(\
@@ -211,7 +211,8 @@
 		if(user.is_holding(src))
 			user.dropItemToGround(src)
 			user.put_in_hands(P)
-		P.obj_integrity = src.obj_integrity
+
+		P.obj_integrity = P.max_integrity * (src.obj_integrity / src.max_integrity)
 		qdel(src)
 	else
 		user.visible_message(span_warning("[user] stops adjusting their grip on [src]."))
@@ -223,6 +224,7 @@
 	who made a practice of delivering judgement without drawing a blade. The three crowned studs bear the mark of Psydon, \
 	and each blow is said to serve as a reminder that faith need not wield a sword to break the bones of the wicked."
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
+	icon_state = "psyknuckledusters"
 	unarmed_bonus = 10
 
 /obj/item/clothing/gloves/roguetown/knuckles/psydon/relic/ComponentInitialize()
@@ -243,7 +245,7 @@
 		if(user.is_holding(src))
 			user.dropItemToGround(src)
 			user.put_in_hands(P)
-		P.obj_integrity = src.obj_integrity
+		P.obj_integrity = P.max_integrity * (src.obj_integrity / src.max_integrity)
 		qdel(src)
 	else
 		user.visible_message(span_warning("[user] stops adjusting their grip on [src]."))
