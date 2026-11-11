@@ -190,25 +190,18 @@ GLOBAL_LIST_EMPTY(ta_estate_news_remaining)
 	var/obj/item/paper/report = createEstateLetter(owner)
 	report.info += pickEstateNews(getEstateCulture(owner))
 
-	if(industry_settled && industry_last_production)
-		var/processed_name = html_encode(
-			industry_last_production["processed_good"]
-		)
-		var/processed = industry_last_production["processed"]
-		var/consumed = industry_last_production["consumed"]
-		var/points = industry_last_production["points"]
-		report.info += "<br><br>На переработке подготовили [processed] × \
-		[processed_name]. Мастерская использовала [consumed] ед. материала и \
-		получила [points] очков производства."
-	else if(industry_settled)
-		var/smeltery_metal_name = industry_last_smeltery_metal == "steel" \
-			? "стали" : "железа"
-		var/forge_metal_name = industry_last_forge_metal == "steel" ? "сталь" \
-			: "железо"
-		report.info += "<br><br>В шахте добыли [industry_last_ore] ед. руды. \
-		Ремесленники выплавили [industry_last_ingots] слитков \
-		[smeltery_metal_name]. Кузница переработала [forge_metal_name] в \
-		[industry_last_points] ОП."
+	if(industry_settled)
+		var/processed = industry_last_ingots
+		var/workshop_supplied = industry_last_points > 0
+		if(industry_last_production)
+			processed = industry_last_production["processed"]
+			workshop_supplied = industry_last_production["consumed"] > 0
+		if(processed > 0)
+			report.info += "<br><br>Ремесленники закончили обработку очередной \
+			партии сырья. Готовые материалы учтены в хозяйственной книге."
+		if(workshop_supplied)
+			report.info += "[processed > 0 ? " " : "<br><br>"]Мастерам \
+			выдали всё необходимое; теперь они готовы исполнить Ваши заказы."
 
 	var/list/products = list()
 	for(var/good in sold_summary)
@@ -239,7 +232,10 @@ GLOBAL_LIST_EMPTY(ta_estate_news_remaining)
 	if(import_tariff)
 		report.info += " Ещё [import_tariff] маммон взяли за ввоз."
 	if(estate_levy || import_tariff)
-		report.info += " Когда со сборами рассчитались, осталось [net] маммон."
+		if(net)
+			report.info += " Когда со сборами рассчитались, осталось [net] маммон."
+		else
+			report.info += " Все полученные маммоны ушли на уплату сборов."
 	if(payout)
 		if(pays_to_account)
 			report.info += " По Вашему распоряжению я отправил [payout] \
@@ -248,7 +244,11 @@ GLOBAL_LIST_EMPTY(ta_estate_news_remaining)
 			report.info += " По Вашему распоряжению я отсчитал [payout] \
 			маммон и приложил их к письму."
 	report.info += "<br><br>Перед тем как запечатать письмо, я сверил приход \
-	и расход. В казне имения сейчас [estate_treasury?.balance || 0] маммон."
+	и расход."
+	if(estate_treasury?.balance)
+		report.info += " В казне имения сейчас [estate_treasury.balance] маммон."
+	else
+		report.info += " В казне имения сейчас нет маммонов."
 	report.info += "<br><br>Ваш верный подданный,<br>[report.mailer]"
 	report.updateinfolinks()
 
