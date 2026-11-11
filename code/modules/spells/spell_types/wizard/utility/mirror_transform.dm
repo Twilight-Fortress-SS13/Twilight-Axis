@@ -61,6 +61,10 @@
 //		if("Nudeshot")  // Надо будет сделать кнопку добавления в NSFW галерею и кнопку удаления от туда картинок. Это уже потом.
 //			H.mirror_set_nudeshot_url()
 		//TA addition end - new ERP SYSTEM
+		if("Headshost")
+			var/new_headshot = input(H, "You can see your own face shifting it's form...", "Choose your face")
+			if(valid_headshot_link(H,new_headshot))
+				H.headshot_link = new_headshot
 		if("Hairstyle")
 			var/datum/customizer_choice/bodypart_feature/hair/head/humanoid/hair_choice = CUSTOMIZER_CHOICE(/datum/customizer_choice/bodypart_feature/hair/head/humanoid)
 			var/list/valid_hairstyles = list()
