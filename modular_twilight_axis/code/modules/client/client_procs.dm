@@ -1,7 +1,5 @@
 /client/proc/handle_emote_panel_message(type, payload)
 	switch(type)
-		if("Update-Verbs")
-			send_emote_panel_data()
 		if("Emote-Favourite")
 			if(!prefs || !islist(payload))
 				return
