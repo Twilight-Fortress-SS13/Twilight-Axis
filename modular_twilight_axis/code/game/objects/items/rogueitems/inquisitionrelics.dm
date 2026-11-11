@@ -343,7 +343,7 @@ GLOBAL_VAR_INIT(inquisition_suspicion_next_failure_log, 0)
 
 /obj/item/paper/inquisition_suspicion
 	name = "writ of heretical suspicion"
-	desc = "An official writ from Otava naming a resident of the realm for doctrinal investigation. The subject's blood must be indexed, their professed faith recorded, and an inquisitorial signature affixed in blood before the writ is returned through a HERMES."
+	desc = "An official writ from Otava naming a resident of the realm for doctrinal investigation. The subject's professed faith must be recorded, and an inquisitorial signature affixed in blood before the writ is returned through a HERMES."
 	icon_state = "paper"
 	var/datum/mind/target_mind
 	var/writ_id = 0
@@ -361,7 +361,6 @@ GLOBAL_VAR_INIT(inquisition_suspicion_next_failure_log, 0)
 	var/target_signature
 	var/inquisitor_signed = FALSE
 	var/inquisitor_signature
-	var/obj/item/inqarticles/indexer/paired
 	var/submitted = FALSE
 	var/admin_status = "Активно"
 	var/admin_reward = 0
@@ -396,7 +395,6 @@ GLOBAL_VAR_INIT(inquisition_suspicion_next_failure_log, 0)
 		update_admin_record()
 		log_writ_event("DESTROYED", null, "location=[get_turf(src)]")
 	GLOB.inquisition_suspicion_writs -= src
-	paired = null
 	target_mind = null
 	return ..()
 
@@ -425,7 +423,6 @@ GLOBAL_VAR_INIT(inquisition_suspicion_next_failure_log, 0)
 	var/faith_name = declared_patron_type ? get_patron_name(declared_patron_type) : "—"
 	var/subject_signature = target_signed ? target_signature : "—"
 	var/inq_signature = inquisitor_signed ? inquisitor_signature : "—"
-	var/index_state = paired?.full ? "Приложен" : "Нет"
 	var/faith_correct = declared_patron_type ? (declared_patron_type == target_patron_type ? "Да" : "Нет") : "—"
 	GLOB.inquisition_suspicion_history[REF(src)] = list(
 		"id" = writ_id,
@@ -441,7 +438,6 @@ GLOBAL_VAR_INIT(inquisition_suspicion_next_failure_log, 0)
 		"correct" = faith_correct,
 		"subject_signature" = subject_signature,
 		"inquisitor_signature" = inq_signature,
-		"indexer" = index_state,
 		"status" = admin_status,
 		"reward" = admin_reward,
 		"submitted_by" = admin_submitted_by
@@ -451,14 +447,12 @@ GLOBAL_VAR_INIT(inquisition_suspicion_next_failure_log, 0)
 	var/faith_text = declared_patron_type ? get_patron_name(declared_patron_type) : "НЕ УКАЗАН"
 	var/target_sign_text = target_signed ? target_signature : "НЕ ПРЕДОСТАВЛЕНА"
 	var/inq_sign_text = inquisitor_signed ? inquisitor_signature : "ТРЕБУЕТСЯ"
-	var/index_text = paired?.full ? "ИНДЕКСЕР ПРИЛОЖЕН" : "НЕ ПРИЛОЖЕН"
 	info = {"
 		<center><b>ПРЕДПИСАНИЕ О ДОЗНАНИИ ПО ПОДОЗРЕНИЮ В ЕРЕСИ</b></center>
 		<br>
 		<b>ПОДОЗРЕВАЕМЫЙ:</b> [target_name]<br>
 		<b>ЗАЯВЛЕННЫЙ ПОКРОВИТЕЛЬ:</b> [faith_text]<br>
 		<b>КРОВАВАЯ ПОДПИСЬ ПОДОЗРЕВАЕМОГО:</b> [target_sign_text]<br>
-		<b>СВИДЕТЕЛЬСТВО КРОВИ:</b> [index_text]<br>
 		<b>КРОВАВАЯ ПОДПИСЬ ИНКВИЗИЦИИ:</b> [inq_sign_text]
 	"}
 	info_links = info
@@ -469,12 +463,14 @@ GLOBAL_VAR_INIT(inquisition_suspicion_next_failure_log, 0)
 	. = ..()
 	. += span_info("Use a writing feather or thorn on the writ to record the patron the subject claims to worship.")
 	. += span_info("The named subject may sign the writ in their own blood by holding it and using it on themselves. Doing so records their true patron automatically.")
-	. += span_info("Fill an INDEXER with the named subject's blood and use it on the writ to attach it.")
 	. += span_info("A member of the Inquisition must also sign the writ in their own blood by holding it and using it on themselves.")
 	. += span_info("Return the completed writ through a HERMES. Correctly identifying the subject's patron doubles the role bounty. Otava also awards a 60-Marque bonus for the fifth submitted writ and 120 Marques for the tenth in a round.")
 
 /obj/item/paper/inquisition_suspicion/attack(mob/living/carbon/human/M, mob/user)
 	if(submitted || M != user)
+		return
+	if(M.mind == target_mind && istype(M.dna?.species, /datum/species/construct))
+		to_chat(user, span_warning("Constructs must sign the writ with a writing feather."))
 		return
 	if(!M.get_bleed_rate())
 		to_chat(user, span_warning("The writ must be signed in blood."))
@@ -507,24 +503,19 @@ GLOBAL_VAR_INIT(inquisition_suspicion_next_failure_log, 0)
 /obj/item/paper/inquisition_suspicion/attackby(obj/item/P, mob/living/carbon/human/user, params)
 	if(submitted)
 		return
-	if(istype(P, /obj/item/inqarticles/indexer))
-		var/obj/item/inqarticles/indexer/I = P
-		if(paired)
-			to_chat(user, span_warning("An INDEXER is already attached."))
-			return
-		if(!I.full || !I.subject)
-			to_chat(user, span_warning("The INDEXER must be completely filled with the subject's blood."))
-			return
-		if(I.subject.mind != target_mind)
-			to_chat(user, span_warning("This INDEXER does not contain the blood of [target_name]."))
-			return
-		paired = I
-		user.transferItemToLoc(I, src, TRUE)
-		rebuild_suspicion_writ()
-		playsound(src, 'sound/items/inqslip_sealed.ogg', 75, TRUE, 4)
-		log_writ_event("INDEXER_ATTACHED", user, "blood_subject=[key_name(I.subject)]; indexer_full=[I.full]")
-		return
 	if(istype(P, /obj/item/natural/thorn) || istype(P, /obj/item/natural/feather))
+		if(istype(P, /obj/item/natural/feather) && user.mind == target_mind && istype(user.dna?.species, /datum/species/construct))
+			if(target_signed)
+				to_chat(user, span_warning("The subject has already signed the writ."))
+				return
+			target_signed = TRUE
+			target_signature = user.real_name
+			declared_patron_type = target_patron_type
+			playsound(src, 'sound/items/write.ogg', 100, FALSE)
+			rebuild_suspicion_writ()
+			to_chat(user, span_notice("You sign the writ with a feather. The writ records your patron as [get_patron_name(target_patron_type)]."))
+			log_writ_event("SUBJECT_SIGNED", user, "method=feather; declared_patron=[get_patron_name(declared_patron_type)]")
+			return
 		if(target_signed)
 			to_chat(user, span_notice("The subject's blood signature has already fixed the recorded patron as [get_patron_name(target_patron_type)]."))
 			return
@@ -543,16 +534,6 @@ GLOBAL_VAR_INIT(inquisition_suspicion_next_failure_log, 0)
 		return
 	return
 
-/obj/item/paper/inquisition_suspicion/attack_right(mob/user)
-	if(paired && !submitted && !user.get_active_held_item())
-		var/obj/item/inqarticles/indexer/removed_indexer = paired
-		user.put_in_active_hand(paired, user.active_hand_index)
-		paired = null
-		rebuild_suspicion_writ()
-		log_writ_event("INDEXER_REMOVED", user, "blood_subject=[key_name(removed_indexer.subject)]")
-		return TRUE
-	return ..()
-
 /obj/item/paper/inquisition_suspicion/proc/submit_to_otava(mob/living/user)
 	if(submitted)
 		return FALSE
@@ -562,11 +543,11 @@ GLOBAL_VAR_INIT(inquisition_suspicion_next_failure_log, 0)
 	if(!inquisitor_signed)
 		to_chat(user, span_warning("The writ still requires an inquisitorial blood signature."))
 		return FALSE
+	if(!target_signed)
+		to_chat(user, span_warning("The writ still requires the named subject's signature."))
+		return FALSE
 	if(!declared_patron_type)
 		to_chat(user, span_warning("The subject's professed patron has not been recorded."))
-		return FALSE
-	if(!paired || !paired.full || !paired.subject || paired.subject.mind != target_mind)
-		to_chat(user, span_warning("A complete INDEXER containing [target_name]'s blood must be attached."))
 		return FALSE
 	var/correct = declared_patron_type == target_patron_type
 	var/bonus = 0
@@ -592,8 +573,6 @@ GLOBAL_VAR_INIT(inquisition_suspicion_next_failure_log, 0)
 	update_admin_record()
 	log_writ_event("SUBMITTED", user, "declared_patron=[get_patron_name(declared_patron_type)]; correct=[correct]; base_reward=[role_reward]; reimbursement=11; milestone_bonus=[bonus]; paid=[reward]; round_submitted=[GLOB.inquisition_suspicion_submitted]")
 	GLOB.inquisition_suspicion_writs -= src
-	qdel(paired)
-	paired = null
 	visible_message(span_warning("[user] sends the completed writ to Otava."))
 	playsound(user.loc, 'sound/misc/otavasent.ogg', 100, FALSE, -1)
 	playsound(user.loc, 'sound/misc/disposalflush.ogg', 100, FALSE, -1)
@@ -614,7 +593,7 @@ GLOBAL_VAR_INIT(inquisition_suspicion_next_failure_log, 0)
 		<h2 style='text-align:center'>Предписания Инквизиции</h2>
 		<p>Всего выдано: [length(GLOB.inquisition_suspicion_history)] &nbsp; Активно: [length(GLOB.inquisition_suspicion_writs)] &nbsp; Сдано: [GLOB.inquisition_suspicion_submitted] &nbsp; Верно определена вера: [GLOB.inquisition_suspicion_correct]</p>
 		<table style='border-collapse:collapse;width:100%' border='1' cellspacing='0' cellpadding='5'>
-		<tr style='background:#333'><th>№</th><th>Статус</th><th>Кто купил</th><th>Подозреваемый</th><th>ckey</th><th>Профессия</th><th>Основание</th><th>Resident</th><th>Истинная вера</th><th>Указанная вера</th><th>Совпадает</th><th>Подпись цели</th><th>Подпись Инквизиции</th><th>INDEXER</th><th>Сдал</th><th>Выплата</th></tr>
+		<tr style='background:#333'><th>№</th><th>Статус</th><th>Кто купил</th><th>Подозреваемый</th><th>ckey</th><th>Профессия</th><th>Основание</th><th>Resident</th><th>Истинная вера</th><th>Указанная вера</th><th>Совпадает</th><th>Подпись цели</th><th>Подпись Инквизиции</th><th>Сдал</th><th>Выплата</th></tr>
 	"}
 	for(var/obj/item/paper/inquisition_suspicion/active_writ as anything in GLOB.inquisition_suspicion_writs)
 		if(!QDELETED(active_writ))
@@ -637,16 +616,15 @@ GLOBAL_VAR_INIT(inquisition_suspicion_next_failure_log, 0)
 		var/correct_text = html_encode(record["correct"])
 		var/subject_text = html_encode(record["subject_signature"])
 		var/inquisitor_text = html_encode(record["inquisitor_signature"])
-		var/indexer_text = html_encode(record["indexer"])
 		var/submitter_text = html_encode(record["submitted_by"])
 		var/reward_text = "—"
 		if(record["status"] == "Сдано")
 			var/issued_reward = record["reward"]
 			reward_text = "[issued_reward] марок"
 		var/writ_number = record["id"]
-		html += "<tr><td>[writ_number]</td><td>[status_text]</td><td>[buyer_text]</td><td>[target_text]</td><td>[ckey_text]</td><td>[role_text]</td><td>[eligibility_text]</td><td>[resident_text]</td><td>[actual_text]</td><td>[declared_text]</td><td>[correct_text]</td><td>[subject_text]</td><td>[inquisitor_text]</td><td>[indexer_text]</td><td>[submitter_text]</td><td>[reward_text]</td></tr>"
+		html += "<tr><td>[writ_number]</td><td>[status_text]</td><td>[buyer_text]</td><td>[target_text]</td><td>[ckey_text]</td><td>[role_text]</td><td>[eligibility_text]</td><td>[resident_text]</td><td>[actual_text]</td><td>[declared_text]</td><td>[correct_text]</td><td>[subject_text]</td><td>[inquisitor_text]</td><td>[submitter_text]</td><td>[reward_text]</td></tr>"
 	if(!counter)
-		html += "<tr><td colspan='16' style='text-align:center'>Предписаний в текущем раунде ещё не выдавали.</td></tr>"
+		html += "<tr><td colspan='15' style='text-align:center'>Предписаний в текущем раунде ещё не выдавали.</td></tr>"
 	html += "</table></body></html>"
 	var/datum/browser/popup = new(mob, "INQUISITION_WRITS", "Inquisition Writs", 1150, 520)
 	popup.set_content(html)

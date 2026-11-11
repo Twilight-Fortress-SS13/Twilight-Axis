@@ -516,6 +516,7 @@
 	for(var/i in 1 to max_storage)
 		var/obj/item/rogueweapon/huntingknife/throwingknife/steel/silver/psy/preblessed/K = new()
 		knives += K
+	max_storage = 15 // TA EDIT
 	update_icon()
 
 /obj/item/storage/belt/rogue/leather/knifebelt/black/kazengun/Initialize(mapload)
