@@ -45,6 +45,9 @@
 		STATKEY_CON = 1,
 		STATKEY_INT = 1
 	)
+
+	tempo_capable = TRUE
+
 	subclass_skills = list(
 		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_EXPERT,

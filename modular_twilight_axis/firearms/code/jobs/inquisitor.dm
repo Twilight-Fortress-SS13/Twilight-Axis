@@ -24,6 +24,9 @@
 		STATKEY_CON = 2,
 		STATKEY_INT = 2,
 	)
+
+	tempo_capable = TRUE
+
 	subclass_skills = list(
 		/datum/skill/combat/twilight_firearms = SKILL_LEVEL_MASTER,
 		/datum/skill/misc/tracking = SKILL_LEVEL_EXPERT,

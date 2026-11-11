@@ -58,6 +58,8 @@
 	)
 	has_subprefs = TRUE
 	default_subprefs = list("bounty_poster_key" = null, "bounty_severity_key" = null, "my_crime" = null, "favorite_advclass" = null)
+/datum/advclass/wretch
+	tempo_capable = TRUE
 
 // for future viewers, here's how you add subprefs to a job. adventurer provides a simpler example for how to merely add subclass favoriting.
 /datum/job/roguetown/wretch/Topic(href, list/href_list)

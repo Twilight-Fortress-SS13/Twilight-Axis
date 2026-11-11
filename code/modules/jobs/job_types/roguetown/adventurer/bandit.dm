@@ -32,15 +32,18 @@
 	same_job_respawn_delay = 30 MINUTES // TA EDIT
 	cmode_music = sound("sound/music/cmode/antag/combat_deadlyshadows.ogg") // TA EDIT
 	job_subclasses = list(
-		/datum/advclass/brigand,
-		/datum/advclass/hedgealchemist,
-		/datum/advclass/hedgeknight,
-		/datum/advclass/hedgemage,
-		/datum/advclass/iconoclast,
-		/datum/advclass/knave,
-		/datum/advclass/sellsword,
-		/datum/advclass/twilight_afreet
+		/datum/advclass/bandit/brigand,
+		/datum/advclass/bandit/hedgealchemist,
+		/datum/advclass/bandit/hedgeknight,
+		/datum/advclass/bandit/hedgemage,
+		/datum/advclass/bandit/iconoclast,
+		/datum/advclass/bandit/knave,
+		/datum/advclass/bandit/sellsword,
+		/datum/advclass/bandit/twilight_afreet
 	)
+
+/datum/advclass/bandit
+	tempo_capable = TRUE
 
 /datum/job/roguetown/bandit/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	..()

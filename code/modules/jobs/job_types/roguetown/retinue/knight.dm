@@ -70,6 +70,9 @@
 		/obj/item/storage/keyring/knight = 1,
 	)
 
+/datum/advclass/knight
+	tempo_capable = TRUE
+
 /datum/advclass/knight/heavy
 	name = "Heavy Knight"
 	tutorial = "You've trained thoroughly and hit far harder than most - adept with massive swords, axes, maces, and polearms. People may fear the mounted knights, but they should truly fear those who come off their mount..."
@@ -715,8 +718,6 @@
 	subclass_virtues = list(
 		/datum/virtue/utility/riding
 	)
-
-	tempo_capable = FALSE
 
 /datum/outfit/job/roguetown/knightchampion/pre_equip(mob/living/carbon/human/H)
 	backpack_contents = list(

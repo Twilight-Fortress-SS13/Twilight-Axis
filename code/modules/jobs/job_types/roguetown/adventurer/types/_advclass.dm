@@ -75,7 +75,7 @@
 
 	var/class_tempo_faction = null
 
-	var/tempo_capable = TRUE
+	var/tempo_capable = FALSE
 
 /datum/advclass/New()
 	if(ispath(age_mod) && !istype(age_mod))

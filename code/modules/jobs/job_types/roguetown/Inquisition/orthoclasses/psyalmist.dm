@@ -1,4 +1,4 @@
-/datum/advclass/psyaltrist
+/datum/advclass/inq/psyaltrist
 	name = "Psyaltrist"
 	tutorial = "You spent some time with cathedral choirs and psyaltrists. Now you spend your days applying the musical arts to the practical on behalf of His most Holy of Inquisitions."
 	outfit = /datum/outfit/job/roguetown/psyaltrist

@@ -16,7 +16,8 @@
 //They aren't supposed to be too common, feel free to jakk up the prices in bloodpool.ddm in neu vampires if they are too common. Worst case they somehow still are, I might see to trying to limit them.
 //Due to their more, richer status they don't meddle with a mix of gilbranze, they use steel of the century. Vlord gets a full enchanted set but these guys just get steel, plain and simple.
 
-
+/datum/advclass/vampchamp
+	tempo_capable = TRUE
 
 //The fragbeast class, powerful, jack-of-all-trades. Similar to knight banneret or knight with town buff.
 //Pretty insane when you look at it, but you need to remember unlike wretches, these guys absolutely WILL dust upon dying due to being bloodpool vampires. +5000 vitae cost.

@@ -75,6 +75,9 @@
 		STATKEY_WIL = 1,
 		STATKEY_SPD = -1,
 	)
+
+	tempo_capable = TRUE
+
 	subclass_skills = list(
 		/datum/skill/combat/maces = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/axes = SKILL_LEVEL_EXPERT,
@@ -124,6 +127,9 @@
 		STATKEY_CON = 1,
 		STATKEY_WIL = 2,
 	)
+
+	tempo_capable = TRUE
+
 	subclass_skills = list(
 		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/polearms = SKILL_LEVEL_EXPERT,

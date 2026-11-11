@@ -164,7 +164,7 @@
 		return TRUE
 
 GLOBAL_LIST_INIT(magearmor_advclasses, list(
-	/datum/advclass/hedgemage,
+	/datum/advclass/bandit/hedgemage,
 	/datum/advclass/mage,
 	/datum/advclass/mage/spellsinger,
 	/datum/advclass/heartfelt/hand/advisor,
@@ -183,7 +183,7 @@ GLOBAL_LIST_INIT(magearmor_advclasses, list(
 	// Ниже идут классы, появившиеся после ПР на удаление барьера и имеющие мажорную школу.
 	/datum/advclass/mercenary/desert_rider_sahir,
 	/datum/advclass/mercenary/grenzelhoft_mage,
-	/datum/advclass/vampseigemage,
+	/datum/advclass/vampguard/vampseigemage,
 	/datum/advclass/psydonianwarscholar,
 	// "Spellblade 2 rework" отдельно удалил спеллблейдам барьер, посему их здесь нет.
 ))
