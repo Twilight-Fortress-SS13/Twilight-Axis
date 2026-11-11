@@ -43,19 +43,19 @@
 
 //----------------------------------------//
 
-/obj/item/alch/calendula/fire_act()
-	create_cloud(/datum/pollutant/smoke/calendula, src)
+/obj/item/alch/mentha/fire_act()
+	create_cloud(/datum/pollutant/smoke/mentha, src)
 
-/datum/pollutant/smoke/calendula
-	reagent = /datum/reagent/medicine/boil/calendula
+/datum/pollutant/smoke/mentha
+	reagent = /datum/reagent/medicine/boil/mentha
 	color = "#e47a24"
 
 //----------------------------------------//
-/obj/item/alch/taraxacum/fire_act()
-	create_cloud(/datum/pollutant/smoke/taraxacum, src)
+/obj/item/alch/valeriana/fire_act()
+	create_cloud(/datum/pollutant/smoke/valeriana, src)
 
-/datum/pollutant/smoke/taraxacum
-	reagent = /datum/reagent/medicine/boil/taraxacum
+/datum/pollutant/smoke/valeriana
+	reagent = /datum/reagent/medicine/boil/valeriana
 	color = "#e3e342"
 
 //----------------------------------------//

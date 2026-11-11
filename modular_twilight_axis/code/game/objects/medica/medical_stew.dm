@@ -10,14 +10,14 @@
 	created_reagent = /datum/reagent/medicine/viscera
 
 /datum/container_craft/cooking/medica/base_health_brute
-	name = "calendula decoction"
-	requirements = list(/obj/item/alch/calendula = 1)
-	created_reagent = /datum/reagent/medicine/boil/calendula
+	name = "mentha decoction"
+	requirements = list(/obj/item/alch/mentha = 1)
+	created_reagent = /datum/reagent/medicine/boil/mentha
 
 /datum/container_craft/cooking/medica/base_health_burn
-	name = "taraxacum decoction"
-	requirements = list(/obj/item/alch/taraxacum = 1)
-	created_reagent = /datum/reagent/medicine/boil/taraxacum
+	name = "valeriana decoction"
+	requirements = list(/obj/item/alch/valeriana = 1)
+	created_reagent = /datum/reagent/medicine/boil/valeriana
 
 /datum/container_craft/cooking/medica/base_health_wound
 	name = "leech decoction"
