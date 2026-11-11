@@ -124,7 +124,7 @@
 	var/datum/mind/squire_mind = squire.mind
 	if(!taAppointmentParticipantsNear(liege, squire, liege_mind, squire_mind))
 		return FALSE
-	if(!HAS_TRAIT(squire, TRAIT_SQUIRE))
+	if(!HAS_TRAIT(squire, TRAIT_SQUIRE_REPAIR))
 		to_chat(
 			liege,
 			span_warning("I can only appoint someone trained as a squire.")
@@ -151,7 +151,7 @@
 	if(
 		owner != liege \
 		|| !IsAvailable() \
-		|| !HAS_TRAIT(squire, TRAIT_SQUIRE) \
+		|| !HAS_TRAIT(squire, TRAIT_SQUIRE_REPAIR) \
 		|| !taAppointmentParticipantsNear(
 			liege,
 			squire,

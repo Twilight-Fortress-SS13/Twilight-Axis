@@ -319,9 +319,6 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_SKILLED_CLOTHIER = TAT_TRAIT_ENTRY("Skilled Clothier", 1, "Skilled with cloth and leather. Sewing and Skincrafting can be picked to Master levels."), \
 	TRAIT_SEEDKNOW = TAT_TRAIT_ENTRY("Seed Knower", 1, "You know which seeds grow which crops."), \
 	TRAIT_CAUTIOUS_FISHER = TAT_TRAIT_ENTRY("Cautious Fisher", 1, "You know the dangers of fishing and how to avoid unwanted attention from the depths."), \
-	TRAIT_SQUIRE = TAT_TRAIT_ENTRY("Squire", 0, \
-		"You use your culture's squire title and can be considered for \
-		knighthood. Does not grant equipment repair or nobility."), \
 	TRAIT_SQUIRE_REPAIR = TAT_TRAIT_ENTRY("Squire Knowledge", 1, "You can restore gear with time and polish it until it gleams like new."), \
 	TAT_TRAIT_SADDLEBORN = TAT_TRAIT_ENTRY("Saddleborn", 1, "You can select and mount a specific mount. Riding can progress to Master levels."), \
 	TRAIT_MASTERFUL_HUNTER = TAT_TRAIT_ENTRY("Masterful Hunter", 2, "To hunt well is to know the land. Hunting, Tracking and Butchering can progress to Legendary levels."), \

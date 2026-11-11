@@ -678,7 +678,7 @@ GLOBAL_LIST_INIT(ta_nobility_pq_requirements, list(0, 0, 25, 50))
 		if(
 			HAS_TRAIT(src, TRAIT_NOBLE) \
 			|| HAS_TRAIT(src, TRAIT_DEFILED_NOBLE) \
-			|| HAS_TRAIT(src, TRAIT_SQUIRE)
+			|| HAS_TRAIT(src, TRAIT_SQUIRE_REPAIR)
 		)
 			var/nobility_text = taNobilityExamineText()
 			if(nobility_text)

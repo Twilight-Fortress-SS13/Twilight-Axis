@@ -684,7 +684,7 @@ const ManorWorkshop = ({
                   ` ×${recipe.units}`}
                 {' '}({recipe.cost} ОП)
               </Button>
-              {recipe.locked && <Box color="#ceb38b">Требуется освоить материал</Box>}
+              {!!recipe.locked && <Box color="#ceb38b">Требуется освоить материал</Box>}
             </div>
           ))}
           {pageCount > 1 && (

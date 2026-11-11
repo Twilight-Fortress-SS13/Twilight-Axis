@@ -69,7 +69,7 @@ GLOBAL_LIST_INIT(ta_noble_titles, taBuildNobleTitles())
 	catalogue[title.id] = title
 
 /mob/living/carbon/human/proc/taSquireNobilityTitle()
-	if(!HAS_TRAIT(src, TRAIT_SQUIRE))
+	if(!HAS_TRAIT(src, TRAIT_SQUIRE_REPAIR))
 		return null
 	return GLOB.ta_noble_titles["[taNobilityCulture()]/-1/Squire"] \
 		|| GLOB.ta_noble_titles["azuria/-1/Squire"]
