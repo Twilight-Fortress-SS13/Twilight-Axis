@@ -65,19 +65,9 @@
 	last_free_send[user.ckey] = world.time
 
 /obj/structure/roguemachine/mail/attack_hand(mob/user)
-	if(user.mind && length(user.mind.manor_packages)) //TA EDIT START
-		var/mob/living/carbon/human/H = user
-		var/obj/item/manor_delivery/D = pick(user.mind.manor_packages)
-		user.mind.manor_packages -= D
-		H.put_in_hands(D)
-		if(SSroguemachine.hermailermaster)
-			var/obj/item/roguemachine/mastermail/M = SSroguemachine.hermailermaster
-			if(!any_additional_mail(M, H))
-				H.remove_status_effect(/datum/status_effect/ugotmail)
-		else
-			H.remove_status_effect(/datum/status_effect/ugotmail) //TA EDIT END
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
+		var/obj/item/estate_mail = taDeliverEstateMail(H) // TA EDIT
 		var/addl_mail = FALSE
 		// TA EDIT BEGIN
 		if(SSroguemachine.secret_mail?.len)
@@ -114,10 +104,7 @@
 					else
 						say("You have additional mail available.")
 						break
-			if(!any_additional_mail(M, H)) // TA EDIT
-				if(!addl_mail && H.has_status_effect(/datum/status_effect/ugotmail)) // we apparently got mail, but never got mail (hint: it was stolen by someone with access to the master mailer)
-					to_chat(user, span_notice("I look inside the machine and find no letter, how strange."))
-				H.remove_status_effect(/datum/status_effect/ugotmail)
+		taUpdateEstateMailAlert(H, estate_mail, addl_mail) // TA EDIT
 	if(!ishuman(user))
 		return
 	if (user.mind?.has_bomb) //for TRAIT_EXPLOSIVE_SUPPLY. One bomb per one day.

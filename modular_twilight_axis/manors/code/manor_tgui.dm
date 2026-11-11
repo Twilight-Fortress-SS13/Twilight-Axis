@@ -1,6 +1,14 @@
 /datum/manor_panel
 	var/mob/living/carbon/human/holder
 
+/proc/taCanManageManor(mob/living/carbon/human/owner, datum/manor/estate)
+	if(!istype(owner) || QDELETED(owner) || QDELETED(estate))
+		return FALSE
+	if(owner.stat != CONSCIOUS || owner.incapacitated())
+		return FALSE
+	return owner.mind?.current == owner \
+		&& owner.mind.get_owned_manor() == estate
+
 /datum/manor_panel/New(mob/holder_mob)
 	. = ..()
 	if(istype(holder_mob, /mob/living/carbon/human))
@@ -35,12 +43,184 @@
 	)
 
 /datum/manor_panel/ui_assets(mob/user)
-	return list(get_asset_datum(/datum/asset/simple/manor))
+	return list(
+		get_asset_datum(/datum/asset/simple/manor),
+		get_asset_datum(/datum/asset/spritesheet/manor_orders),
+	)
+
+/datum/asset/spritesheet/manor_orders
+	name = "manor_orders"
+
+/datum/asset/spritesheet/manor_orders/create_spritesheets()
+	Insert("manor-smeltery", 'icons/roguetown/misc/forge.dmi', "cavesmelter1")
+	Insert("manor-forge", 'icons/roguetown/misc/forge.dmi', "anvil")
+	var/obj/item/manor_delivery/package_type = /obj/item/manor_delivery
+	Insert("manor-order-package", package_type::icon, package_type::icon_state)
+	var/list/catalogue = getManorAdditionalCatalogue() + \
+		getManorWorkshopRecipes()
+	for(var/id in catalogue)
+		var/list/entry = catalogue[id]
+		var/obj/item/item_type = entry["item_type"]
+		if(
+			!entry["hidden"] \
+			&& item_type::icon_state \
+			&& icon_exists(item_type::icon, item_type::icon_state)
+		)
+			Insert(id, item_type::icon, item_type::icon_state)
 
 /datum/manor_panel/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
 	. = ..()
 	if(.)
 		return
+	if(ui?.user != holder)
+		return FALSE
+	if(!taCanManageManor(holder, holder?.mind?.get_owned_manor()))
+		return FALSE
+
+	if(action == "withdraw_estate_money")
+		var/mob/living/carbon/human/owner = ui?.user
+		if(!istype(owner) || owner != holder)
+			return FALSE
+		var/datum/manor/owned_manor = owner.mind?.get_owned_manor()
+		if(!owned_manor)
+			return FALSE
+		var/amount = params["amount"]
+		var/revision = params["revision"]
+		if(!isnum(revision))
+			return FALSE
+		if(owned_manor.withdrawEstateMoney(owner, amount, revision))
+			if(owned_manor.paysEstateToAccount(owner))
+				to_chat(
+					owner,
+					span_notice("Запрошенные средства переведены на ваш счёт.")
+				)
+			else
+				to_chat(
+					owner,
+					span_notice( \
+						"Потребуется некоторое время, прежде чем средства \
+						прибудут из имения." \
+					)
+				)
+		else
+			to_chat(
+				owner,
+				span_warning( \
+					"Не удалось получить запрошенные средства из казны \
+					имения." \
+				)
+			)
+		SStgui.update_uis(src)
+		return TRUE
+
+	if(action == "set_warehouse_sale" || action == "request_warehouse_shipment")
+		var/mob/living/carbon/human/owner = ui?.user
+		if(!istype(owner) || owner != holder)
+			return FALSE
+		var/datum/manor/owned_manor = owner.mind?.get_owned_manor()
+		if(!owned_manor)
+			return FALSE
+
+		if(action == "set_warehouse_sale")
+			if(
+				!owned_manor.setWarehouseSale(
+					owner,
+					params["stage"],
+					params["percent"]
+				)
+			)
+				return FALSE
+		else
+			var/list/requested = params["items"]
+			var/revision = params["revision"]
+			if(!islist(requested) || !isnum(revision))
+				return FALSE
+			if(owned_manor.requestWarehouseShipment(owner, requested, revision))
+				to_chat(
+					owner,
+					span_notice("Поставка из имения займёт некоторое время.")
+				)
+			else
+				to_chat(
+					owner,
+					span_warning( \
+						"Не удалось собрать запрошенную поставку. Сверьтесь с \
+						запасами имения." \
+					)
+				)
+		SStgui.update_uis(src)
+		return TRUE
+
+	if(action == "request_industry_order")
+		var/mob/living/carbon/human/owner = ui?.user
+		if(!istype(owner) || owner != holder)
+			return FALSE
+		var/datum/manor/owned_manor = owner.mind?.get_owned_manor()
+		if(!owned_manor)
+			return FALSE
+		if(
+			owned_manor.requestIndustryOrder(
+				owner,
+				params["items"],
+				params["revision"]
+			)
+		)
+			to_chat(
+				owner,
+				span_notice( \
+					"Мастерская отправит заказ через HERMES. Доставка займёт \
+					некоторое время." \
+				)
+			)
+		else
+			to_chat(
+				owner,
+				span_warning( \
+					"Мастерская не смогла принять заказ. Сверьтесь с запасами \
+					имения." \
+				)
+			)
+		SStgui.update_uis(src)
+		return TRUE
+
+	if(
+		action == "set_industry_metal" \
+		|| action == "set_mining_priority" \
+		|| action == "set_production_material"
+	)
+		var/mob/living/carbon/human/owner = ui?.user
+		if(!istype(owner) || owner != holder)
+			return FALSE
+		var/datum/manor/owned_manor = owner.mind?.get_owned_manor()
+		switch(action)
+			if("set_mining_priority")
+				if(
+					!owned_manor?.setIndustryMiningPriority(
+						owner,
+						params["good_id"]
+					)
+				)
+					return FALSE
+			if("set_production_material")
+				if(
+					!owned_manor?.setProductionMaterial(
+						owner,
+						params["stage"],
+						params["material"]
+					)
+				)
+					return FALSE
+			if("set_industry_metal")
+				if(
+					!owned_manor?.setIndustryMetal(
+						owner,
+						params["station"],
+						params["metal"]
+					)
+				)
+					return FALSE
+		SStgui.update_uis(src)
+		return TRUE
 
 	var/mob/request_user = holder
 	if(ui?.user)
@@ -49,9 +229,20 @@
 	var/datum/manor/manor = get_manor_for_user(request_user)
 	if(!manor)
 		return FALSE
+	if(
+		manor.industry_active \
+		&& (
+			request_user != holder \
+			|| holder.stat == DEAD \
+			|| holder.mind?.get_owned_manor() != manor
+		)
+	)
+		return FALSE
 
-	var/id = text2num(params["id"])
-	if(!id || id < 1 || id > length(manor.workstations))
+	var/id = params["id"]
+	if(!isnum(id))
+		id = text2num(id)
+	if(!id || id < 1 || id > length(manor.workstations) || id != round(id))
 		return FALSE
 
 	var/datum/workstation/workstation = manor.workstations[id]
@@ -60,9 +251,19 @@
 
 	switch(action)
 		if("inc_workers")
-			if(manor.get_assigned_workers() >= manor.total_workers)
-				return TRUE
 			if(workstation.workers_employed >= workstation.workstation_size)
+				return TRUE
+			var/assigned = manor.get_assigned_workers()
+			var/population = manor.total_workers
+			if(manor.industry_active)
+				var/artisans_assigned = manor.getAssignedArtisans()
+				if(manor.isArtisanWorkstation(workstation))
+					assigned = artisans_assigned
+					population = manor.industry_artisans
+				else
+					assigned -= artisans_assigned
+					population = manor.industry_peasants
+			if(assigned >= population)
 				return TRUE
 			workstation.workers_employed += 1
 			if(workstation.production_increase_per_job)
@@ -92,7 +293,10 @@
 	var/datum/job/J = SSjob.GetJob(user.job)
 
 	if(J)
-		if(J.department_flag & NOBLEMEN)
+		if(
+			(J.department_flag & NOBLEMEN) \
+			&& (!ishuman(user) || isnull(user:taRoleNobilityTier()))
+		)
 			return FALSE
 
 	if(HAS_TRAIT(user, TRAIT_OUTLAW))
@@ -113,7 +317,12 @@
 	if(!istype(user, /mob/living/carbon/human) || !user.mind)
 		return FALSE
 	var/mob/living/carbon/human/H = user
-	if(!H.check_manor_pref)
+	if(
+		H.mind.ta_nobility_pending \
+		|| (!isnull(H.mind.ta_nobility_tier) && H.mind.ta_nobility_tier == 0)
+	)
+		return FALSE
+	if(!H.check_manor_pref && isnull(H.mind.ta_nobility_tier))
 		return FALSE
 	if(user.mind.get_owned_manor())
 		return TRUE
@@ -185,16 +394,36 @@
 		return "astrata"
 	return as_text
 
-/datum/manor_panel/proc/serialize_workstation(datum/workstation/workstation, index)
+/datum/manor_panel/proc/serialize_workstation(
+	datum/manor/manor,
+	datum/workstation/workstation,
+	index
+)
 	var/list/produce_names = list()
-	var/list/already_added = list()
 
-	for(var/stock_type in workstation.produce)
-		var/stock_name = get_readable_type_name(stock_type, "Ресурс")
-		if(stock_name in already_added)
-			continue
-		already_added += stock_name
-		produce_names += stock_name
+	for(var/stock_path in workstation.produce)
+		var/datum/roguestock/stockpile/stock_type = stock_path
+		var/datum/trade_good/good = GLOB.trade_goods[stock_type::trade_good_id]
+		produce_names |= good?.name || get_readable_type_name(stock_path, \
+			"Ресурс")
+
+	var/industry_icon_id
+	if(workstation == manor.industry_smeltery)
+		produce_names += manor.getIndustryMaterialLabel(
+			manor.industry_smeltery_metal
+		)
+		industry_icon_id = "manor-smeltery"
+	else if(workstation == manor.industry_forge)
+		produce_names += manor.getIndustryMaterialLabel(
+			manor.industry_forge_metal
+		)
+		industry_icon_id = "manor-forge"
+	var/station_icon
+	if(industry_icon_id)
+		var/datum/asset/spritesheet/sprites = get_asset_datum(
+			/datum/asset/spritesheet/manor_orders
+		)
+		station_icon = sprites.icon_class_name(industry_icon_id)
 
 	return list(
 		"id" = index,
@@ -203,6 +432,9 @@
 		"workers_max" = workstation.workstation_size,
 		"produce" = produce_names,
 		"kind" = workstation.get_theme_key(),
+		"icon" = station_icon,
+		"pool" = manor.isArtisanWorkstation(workstation) ? "artisans" \
+			: "peasants",
 		"type_of_produce" = workstation.type_of_produce,
 		"production_bonus" = workstation.production_modifier
 	)
@@ -219,17 +451,50 @@
 			"workers_assigned" = 0,
 			"workers_free" = 0,
 			"productivity_last_cycle" = 0,
+			"estate_balance" = null,
+			"estate_treasury_retention" = 0,
+			"estate_withdrawal_revision" = 0,
+			"warehouse" = list(),
+			"warehouse_raw_sale" = 100,
+			"warehouse_processed_sale" = 100,
+			"warehouse_revision" = 0,
+			"warehouse_shipment_limit" = MANOR_SHIPMENT_MAX_UNITS,
+			"industry" = null,
 			"workstations" = list()
 		)
 
 	var/list/workstations_data = list()
 	var/index = 1
 	for(var/datum/workstation/workstation in manor.workstations)
-		workstations_data += list(serialize_workstation(workstation, index))
+		workstations_data += list(
+			serialize_workstation(manor, workstation, index)
+		)
 		index += 1
 	var/origin
 	if(manor.virtue_origin)
 		origin = manor.virtue_origin.map_state_name
+	var/is_owner = user == holder && user?.mind?.get_owned_manor() == manor
+	var/list/industry_data = is_owner ? manor.getIndustryPanelData() : null
+	if(industry_data)
+		var/datum/asset/spritesheet/sprites = get_asset_datum(
+			/datum/asset/spritesheet/manor_orders
+		)
+		var/package_icon = sprites.icon_class_name("manor-order-package")
+		for(var/list/recipe in industry_data["recipes"])
+			recipe["icon"] = sprites.icon_class_name(recipe["id"]) \
+				|| package_icon
+	var/list/warehouse_data = list()
+	if(is_owner)
+		for(var/good_id in manor.warehouse_stock)
+			var/quantity = manor.warehouse_stock[good_id]
+			var/datum/trade_good/good = GLOB.trade_goods[good_id]
+			if(!good || quantity <= 0)
+				continue
+			warehouse_data += list(list(
+				"id" = good_id,
+				"name" = good.name,
+				"quantity" = quantity,
+			))
 
 	return list(
 		"manor_name" = manor.manor_name,
@@ -240,5 +505,18 @@
 		"workers_assigned" = manor.get_assigned_workers(),
 		"workers_free" = manor.get_free_workers(),
 		"productivity_last_cycle" = manor.last_cycle_productivity,
+		"estate_balance" = is_owner ? (
+			manor.estate_treasury?.balance || 0
+		) : null,
+		"estate_treasury_retention" = is_owner ? manor.treasury_retention : 0,
+		"estate_withdrawal_revision" = is_owner \
+			? manor.estate_withdrawal_revision : 0,
+		"warehouse" = warehouse_data,
+		"warehouse_raw_sale" = is_owner ? manor.warehouse_raw_sale : 100,
+		"warehouse_processed_sale" = is_owner ? manor.warehouse_processed_sale \
+			: 100,
+		"warehouse_revision" = is_owner ? manor.warehouse_revision : 0,
+		"warehouse_shipment_limit" = MANOR_SHIPMENT_MAX_UNITS,
+		"industry" = industry_data,
 		"workstations" = workstations_data
 	)

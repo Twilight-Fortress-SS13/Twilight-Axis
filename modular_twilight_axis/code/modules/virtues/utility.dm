@@ -63,3 +63,13 @@
 		var/turf/spawn_loc = pick(possible_spawns)
 		recipient.forceMove(spawn_loc)
 		to_chat(recipient, span_notice("Как житель города, вы оказываетесь в местной таверне."))
+
+/datum/virtue/utility/noble
+	stackable = TRUE
+
+/mob/living/carbon/human/proc/taApplyNobilityVirtue()
+	if(!mind)
+		return
+	mind.ta_nobility_virtue_picks = min(2, mind.ta_nobility_virtue_picks + 1)
+	if(isnull(taRoleNobilityTier()))
+		taPrepareNobility()

@@ -1,0 +1,5 @@
+#include "nobility_fixture.dm"
+#include "nobility.dm"
+#include "nobility_appointments.dm"
+#include "nobility_review.dm"
+#include "manor_review.dm"

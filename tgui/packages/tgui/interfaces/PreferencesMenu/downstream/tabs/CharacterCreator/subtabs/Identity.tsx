@@ -12,7 +12,7 @@ export const SubtabIdentityCardGameplayDownstream = () => {
         mt={1}
         onClick={() => act('open_manor_preferences')}
       >
-        Manor Preferences
+        Настроить поместье
       </Button>
       <Button
         fluid

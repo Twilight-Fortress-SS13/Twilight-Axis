@@ -2,13 +2,22 @@ import type React from 'react';
 import {
   Box,
   Button,
+  Icon,
+  Input,
+  NumberInput,
   Stack,
+  Tabs,
 } from 'tgui-core/components';
 import { useBackend } from '../backend';
 import { Window } from '../layouts';
 import { resolveAsset } from '../assets';
-import { useState } from 'react';
-import type { ManorPanelData, WorkstationData } from './ManorPanelData';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import type {
+  ManorIndustryData,
+  ManorPanelData,
+  WarehouseItem,
+  WorkstationData,
+} from './ManorPanelData';
 
 const GOD_ICONS: Record<string, string> = {
   'abyssor': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAM1BMVEX////1tACOnLkoOV0NGTFKYZNBVoMbKksuQWogMVggGw8SHDR+i6cIEy4LEBppdZASIUYydIarAAAAAXRSTlMAQObYZgAAAHV6VFh0RGVzY3JpcHRpb24AAHicU1ZwcnX39FNw8fXkKkstKs7Mz1OwVTDRM+DiLM9MKckAcoyNuDgzUjPTM0ognOKSxJJUIFOpODM9L94xqbK4OL9IiYszJbOoGChsyMWZVpSYmwpl5+TnF4BZygqufi5gewBYux95NFLtQQAAAKxJREFUOI3tks0OwjAMg5c4f2Vl3fs/LSkSXJpxQ+KAe/QnN3G7bX/9pOilS5sZkqcmiMCsZnCXiph+qEWEAxVBiPTdXdWb3BYgA6a/d1VTiKxABpjtzOw5RlsAonnBzv3eu3krANgE+nEcI6KhAMImwMdIAAUgbhp+9jEQucWyJgEeueT59NeAHFLgWRMwiyp7SiLnSNuLCd4ZnhGzpYvHInnq8rm3z7/he3oAYjgE/vh2GAEAAAAASUVORK5CYII=',
@@ -35,7 +44,7 @@ const GOD_TOOLTIPS: Record<string, string> = {
   'baotha': 'Следуя учениям Баоты, ваши крестьяне ведут гедонический образ жизни. В определенные дни недели они отводят время для отдыха и развлечений, что повышает их продуктивность в другие периоды.',
   'dendor': 'Дендор благословляет леса поблизости от вашего имения, привлекая дичь на ваши угодья. Ваши охотники не забывают соблюдать все необходимые обряды и возносить Ему хвалу.',
   'eora': '',
-  'graggar': 'Ваши солдаты регулярно выходят в рейды, чтобы захватить новых рабов для вашего имения.',
+  'graggar': 'В ваших землях чтут Граггара. Силу и стойкость здесь ставят выше милосердия.',
   'malum': 'Малум благословляет холмы и горы поблизости от вашего имения. Шахты изобилуют рудами и драгоценностями.',
   'matthios': 'Жители вашего имения - не слуги, но товарищи в борьбе за свободу. Они не платят налога ни казне, ни вам, вместо этого добровольно поддерживая вас финансами. Часть сырья и товаров укрывается от казны и продается на рынке, благодаря чему вы избегаете налогообложения.',
   'necra': '',
@@ -89,121 +98,6 @@ type HoverCardData = {
   text: string;
 };
 
-const clamp = (value: number, min = 0, max = 100) => Math.max(min, Math.min(max, value));
-
-const getKindTheme = (kind: string) => {
-  switch (kind) {
-    case 'field':
-      return {
-        accent: '#d7b065',
-        border: 'transparent',
-        card: 'transparent',
-        overlay: 'transparent',
-        chip: 'rgba(24, 14, 8, 0.33)',
-        subtitle: 'Злаки и овощи',
-      };
-    case 'orchard':
-      return {
-        accent: '#8fc86d',
-        border: 'transparent',
-        card: 'transparent',
-        overlay: 'transparent',
-        chip: 'rgba(24, 14, 8, 0.33)',
-        subtitle: 'Фрукты и ягоды',
-      };
-    case 'hunt':
-      return {
-        accent: '#88a8d8',
-        border: 'transparent',
-        card: 'transparent',
-        overlay: 'transparent',
-        chip: 'rgba(24, 14, 8, 0.33)',
-        subtitle: 'Мех, шкуры и дичь',
-      };
-    case 'farm':
-      return {
-        accent: '#d4ae71',
-        border: 'transparent',
-        card: 'transparent',
-        overlay: 'transparent',
-        chip: 'rgba(24, 14, 8, 0.33)',
-        subtitle: 'Скот и припасы',
-      };
-    case 'trade':
-      return {
-        accent: '#c7a2e5',
-        border: 'transparent',
-        card: 'transparent',
-        overlay: 'transparent',
-        chip: 'rgba(24, 14, 8, 0.33)',
-        subtitle: 'Товары и прибыль',
-      };
-    case 'fish':
-      return {
-        accent: '#a2bfe5',
-        border: 'transparent',
-        card: 'transparent',
-        overlay: 'transparent',
-        chip: 'rgba(24, 14, 8, 0.33)',
-        subtitle: 'Рыба и морские сокровища',
-      };
-    case 'mining':
-      return {
-        accent: '#e5a2a2',
-        border: 'transparent',
-        card: 'transparent',
-        overlay: 'transparent',
-        chip: 'rgba(24, 14, 8, 0.33)',
-        subtitle: 'Руды и ископаемые',
-      };
-    case 'forest':
-      return {
-        accent: '#a2e5a7',
-        border: 'transparent',
-        card: 'transparent',
-        overlay: 'transparent',
-        chip: 'rgba(24, 14, 8, 0.33)',
-        subtitle: 'Древисина и уголь',
-      };
-    case 'mage_tower':
-      return {
-        accent: '#d5a2e5',
-        border: 'transparent',
-        card: 'transparent',
-        overlay: 'transparent',
-        chip: 'rgba(24, 14, 8, 0.33)',
-        subtitle: 'Магические реагенты',
-      };
-    case 'cathedral':
-      return {
-        accent: '#fafafa',
-        border: 'transparent',
-        card: 'transparent',
-        overlay: 'transparent',
-        chip: 'rgba(24, 14, 8, 0.33)',
-        subtitle: 'Вознесем хвалу Ему',
-      };
-    case 'outpost':
-      return {
-        accent: '#e5a2a2',
-        border: 'transparent',
-        card: 'transparent',
-        overlay: 'transparent',
-        chip: 'rgba(24, 14, 8, 0.33)',
-        subtitle: 'На страже мира и порядка',
-      };
-    default:
-      return {
-        accent: '#d9c39a',
-        border: 'rgba(238, 220, 185, 0.28)',
-        card: 'linear-gradient(180deg, rgba(97,70,43,0.96), rgba(47,32,18,0.98))',
-        overlay: 'linear-gradient(135deg, rgba(240,210,160,0.12), rgba(0,0,0,0.08) 70%)',
-        chip: 'rgba(24, 14, 8, 0.33)',
-        subtitle: 'Хозяйственное угодье',
-      };
-  }
-};
-
 const getManorType = (type: string) => {
   switch (type) {
     case 'manor':
@@ -213,7 +107,7 @@ const getManorType = (type: string) => {
     case 'fisher_hamlet':
       return 'Рыбацкий хутор';
     case 'mining_settlement':
-      return 'Шахтерский поселок';
+      return 'Шахтёрский посёлок';
     case 'village':
       return 'Деревня';
     default:
@@ -251,52 +145,6 @@ const frameStyle: React.CSSProperties = {
   position: 'relative',
 };
 
-const ornamentBand: React.CSSProperties = {
-  height: '8px',
-  borderRadius: '999px',
-  background:
-    'repeating-linear-gradient(90deg, rgba(233,191,121,0.34) 0 14px, rgba(115,74,33,0.12) 14px 28px)',
-};
-
-const statBox = (label: string, value: number | string) => (
-  <div
-    style={{
-      minWidth: '122px',
-      padding: '10px 12px',
-      borderRadius: '14px',
-      border: '1px solid rgba(222, 184, 131, 0.22)',
-      background: 'linear-gradient(180deg, rgba(93,58,28,0.28), rgba(27,17,9,0.42))',
-      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)',
-    }}>
-    <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.12em', opacity: 0.72 }}>{label}</div>
-    <div style={{ fontSize: '24px', fontWeight: 800, marginTop: '2px' }}>{value}</div>
-  </div>
-);
-
-const resourceChip = (background: string): React.CSSProperties => ({
-  display: 'inline-block',
-  marginRight: '6px',
-  marginBottom: '6px',
-  padding: '4px 8px',
-  borderRadius: '999px',
-  fontSize: '11px',
-  border: '1px solid rgba(255,255,255,0.08)',
-  background,
-  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)',
-});
-
-const workerButton: React.CSSProperties = {
-  minWidth: '36px',
-  height: '32px',
-  borderRadius: '10px',
-  border: '1px solid rgba(230, 191, 134, 0.25)',
-  background: 'linear-gradient(180deg, rgba(107,71,34,0.9), rgba(59,37,16,0.95))',
-  color: '#f0dfc0',
-  fontSize: '20px',
-  fontWeight: 700,
-  boxShadow: '0 6px 14px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.05)',
-};
-
 const PatronMedallion = ({
   patronKey,
   setHoveredItem,
@@ -305,187 +153,858 @@ const PatronMedallion = ({
   setHoveredItem: (value: HoverCardData | null) => void;
 }) => {
   const icon = GOD_ICONS[patronKey] || GOD_ICONS.astrata;
-  const godtooltip = GOD_TOOLTIPS[patronKey] || GOD_TOOLTIPS.astrata;
+  const godtooltip = GOD_TOOLTIPS[patronKey] || '';
   return (
-    <div style={{
-      width: '104px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}>
-      <div style={{
-        width: '92px',
-        height: '92px',
+    <div
+      style={{
+        width: '48px',
+        height: '48px',
+        flexShrink: 0,
         borderRadius: '50%',
         border: '1px solid rgba(255, 218, 156, 0.22)',
-        background:
-          'radial-gradient(circle at 50% 35%, rgba(255,231,171,0.2), rgba(99,23,28,0.92) 70%),' +
-          'linear-gradient(180deg, rgba(93,32,35,0.98), rgba(47,11,15,1))',
-        boxShadow: '0 12px 28px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.05)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        background: 'radial-gradient(circle at 50% 35%, #96383d, #5e181c 78%)',
+        display: 'grid',
+        placeItems: 'center',
       }}
-      onMouseEnter={() =>
-        setHoveredItem({
-          text: godtooltip,
-        })
-      }
+      onMouseEnter={() => setHoveredItem(godtooltip ? { text: godtooltip } : null)}
       onMouseLeave={() => setHoveredItem(null)}>
-        <img
-          src={icon}
-          style={{
-            width: '56px',
-            height: '56px',
-            imageRendering: 'pixelated',
-            filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.52))',
-          }}
-        />
-      </div>
+      <img
+        src={icon}
+        alt=""
+        style={{ width: '30px', height: '30px', imageRendering: 'pixelated' }}
+      />
     </div>
   );
 };
 
-const Scene = ({ kind }: { kind: string }) => {
-  const common: React.CSSProperties = { position: 'absolute', pointerEvents: 'none' };
-
-  if (kind === 'field') {
-    return (
-      <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('field_icon.png')} alt="Поля" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
-    );
-  }
-
-  if (kind === 'orchard') {
-    return (
-      <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('fruit_icon.png')} alt="Сады" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
-    );
-  }
-
-  if (kind === 'hunt') {
-    return (
-      <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('hunting_icon.png')} alt="Охотничьи угодья" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
-    );
-  }
-
-  if (kind === 'farm') {
-    return (
-      <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('ranch_icon.png')} alt="Фермы" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
-    );
-  }
-
-  if (kind === 'trade') {
-    return (
-      <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('trade_icon.png')} alt="Торговые ряды" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
-    );
-  }
-
-  if (kind === 'fish') {
-    return (
-      <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('fishing_icon.png')} alt="Заводи" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
-    );
-  }
-
-  if (kind === 'mining') {
-    return (
-      <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('mine_icon.png')} alt="Шахты" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
-    );
-  }
-
-  if (kind === 'forest') {
-    return (
-      <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('forest_icon.png')} alt="Леса" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
-    );
-  }
-
-  if (kind === 'mage_tower') {
-    return (
-      <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('mage_tower_icon.png')} alt="Леса" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
-    );
-  }
-
-  if (kind === 'cathedral') {
-    return (
-      <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('cathedral_icon.png')} alt="Леса" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
-    );
-  }
-
-  if (kind === 'outpost') {
-    return (
-      <div style={{ ...common, left: '0', right: '0', bottom: '0', width: '100%', height: '100%' }}><img src={resolveAsset('outpost_icon.png')} alt="Аванпост" style={{width: '100%', height: '100%', objectFit: 'fill', display: 'block', userSelect: 'none'}} /></div>
-    );
-  }
-
-  return null;
+const workstationImages: Partial<Record<string, string>> = {
+  cathedral: 'cathedral_icon.png',
+  farm: 'ranch_icon.png',
+  field: 'field_icon.png',
+  fish: 'fishing_icon.png',
+  forest: 'forest_icon.png',
+  hunt: 'hunting_icon.png',
+  mage_tower: 'mage_tower_icon.png',
+  mining: 'mine_icon.png',
+  orchard: 'fruit_icon.png',
+  outpost: 'outpost_icon.png',
+  trade: 'trade_icon.png',
 };
 
-const WorkstationCard = ({ ws, act }: { ws: WorkstationData; act: (action: string, payload?: Record<string, unknown>) => void }) => {
-  const theme = getKindTheme(ws.kind);
-  const percent = ws.workers_max ? clamp((ws.workers_employed / ws.workers_max) * 100) : 0;
+const tableBorder = '1px solid rgba(226,191,141,0.14)';
+const tablePanel: React.CSSProperties = {
+  ...frameStyle,
+  marginTop: '12px',
+  padding: '12px 16px',
+};
+
+const workstationAccents: Partial<Record<string, string>> = {
+  cathedral: '#e1d7b5',
+  farm: '#d4ae71',
+  field: '#d7b065',
+  fish: '#a2bfe5',
+  forest: '#a2d5a7',
+  forge: '#d9b784',
+  hunt: '#a1bbd7',
+  mage_tower: '#d5a2e5',
+  mining: '#e5b0a2',
+  orchard: '#a8cb82',
+  outpost: '#e5a2a2',
+  smeltery: '#dfab75',
+  trade: '#c7a2e5',
+};
+
+const defaultIngotNames: Record<string, string> = { iron: 'Iron Ingot', steel: 'Steel Ingot' };
+const productionPointsFormat = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 3 });
+const sharedPointsHint = 'Очки от всех материалов поступают на общий счёт.';
+
+const getMaterialName = (industry: ManorIndustryData, material: string) =>
+  industry.metal_names?.[material] ?? defaultIngotNames[material] ?? material;
+
+const productionTile = (accent: string, selected: boolean): React.CSSProperties => ({
+  font: 'inherit',
+  padding: '4px 8px',
+  minHeight: '26px',
+  color: selected ? '#f4e1c1' : '#ead9bb',
+  border: `1px solid ${selected ? accent : 'rgba(234, 205, 160, 0.30)'}`,
+  borderRadius: '5px',
+  background: selected ? 'rgba(150, 103, 47, 0.68)' : 'rgba(43, 29, 18, 0.84)',
+  cursor: 'pointer',
+});
+
+const ManorWorkstationCard = ({
+  station,
+  free,
+  industry,
+}: {
+  station: WorkstationData;
+  free: number;
+  industry?: ManorIndustryData;
+}) => {
+  const { act, data } = useBackend<ManorPanelData>();
+  const [inspected, setInspected] = useState<string | null>(null);
+  const image = workstationImages[station.kind];
+  const accent = workstationAccents[station.kind] ?? '#d9c39a';
+  const isSmeltery = station.kind === 'smeltery';
+  const isForge = station.kind === 'forge';
+  const stage = industry?.stages?.find((item) => item.station_id === station.id);
+  const stageOption = stage?.options.find((option) => option.id === stage.selected);
+  const stageInputs = stageOption?.inputs?.join(' + ');
+  const stageOutput =
+    stage?.kind === 'workshop' && stageOption?.points_per_unit
+      ? `${productionPointsFormat.format(stageOption.points_per_unit)} ОП`
+      : stageOption?.produce.join(', ');
+  const isIndustrial = isSmeltery || isForge || !!stage;
+  const miningOptions = station.kind === 'mining' ? industry?.mining_options : undefined;
+  const isPriorityMine = !!miningOptions?.length;
+  const smelteryMetal = industry?.smeltery_metal;
+  const forgeMetal = industry?.forge_metal;
+  const metal = isSmeltery ? smelteryMetal : forgeMetal;
+  const forgeRate = forgeMetal ? industry?.points_per_ingot?.[forgeMetal] : undefined;
+  const materialOptions = (isSmeltery ? industry?.smeltery_options : industry?.forge_options)
+    ?? industry?.metal_options;
+  const warehouseGood = inspected && data.warehouse?.find((item) => item.name === inspected);
+  const separateForgeStock = isForge && industry && forgeMetal && forgeMetal !== smelteryMetal
+    ? getMaterialName(industry, forgeMetal)
+    : null;
 
   return (
-    <div
+    <section
+      aria-label={station.name}
       style={{
-        position: 'relative',
+        ...frameStyle,
+        borderColor: 'rgba(226,191,141,0.36)',
+        display: 'flex',
+        flexDirection: 'column',
         overflow: 'hidden',
-        minHeight: '214px',
-        padding: '14px',
-        borderRadius: '16px',
-        background: `${theme.overlay}, ${theme.card}`,
-        border: `1px solid ${theme.border}`,
-        boxShadow: '0 14px 24px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.05)',
-        textShadow: '-1px -1px 3px black, 1px -1px 2px black, -1px 1px 2px black, 1px 1px 2px black',
+        minHeight: '164px',
+        padding: '10px 12px',
       }}>
-      <Scene kind={ws.kind} />
-      <div style={{ position: 'relative', zIndex: 1 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
-          <div>
-            <div style={{ fontSize: '25px', fontWeight: 800, lineHeight: 1.1, color: theme.accent, textShadow: '-1px -1px 2px black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black' }}>{ws.name}</div>
-            <div style={{ fontSize: '15px', marginTop: '5px', letterSpacing: '0.12em', textTransform: 'uppercase' }}>{theme.subtitle}</div>
-          </div>
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '23px', fontWeight: 800, color: theme.accent, textShadow: '-1px -1px 2px black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black' }}>{ws.workers_employed}/{ws.workers_max}</div>
-            <div style={{ fontSize: '15px' }}>рабочих</div>
-          </div>
-        </div>
-
-        <div style={{ marginTop: '12px' }}>
-          <div style={{
-            height: '10px',
-            borderRadius: '999px',
-            overflow: 'hidden',
-            background: 'rgba(0,0,0,0.28)',
-            border: '1px solid rgba(255,255,255,0.06)',
-          }}>
-            <div style={{
-              width: `${percent}%`,
-              height: '100%',
-              background: `linear-gradient(90deg, ${theme.accent}, rgba(255,255,255,0.82))`,
-              boxShadow: '0 0 16px rgba(255,255,255,0.16)',
-            }} />
-          </div>
-          <div style={{ marginTop: '6px', fontSize: '15px', display: 'flex', justifyContent: 'space-between' }}>
-            <span>Заполненность угодья</span>
-            <span>{Math.round(percent)}%</span>
-          </div>
-        </div>
-
-        <div style={{ marginTop: '12px', minHeight: '58px' }}>
-          {ws.produce.slice(0, 10).map((item) => (
-            <span key={item} style={resourceChip(theme.chip)}>{item}</span>
+      {image && (
+        <img
+          src={resolveAsset(image)}
+          alt=""
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            opacity: 0.44,
+            pointerEvents: 'none',
+          }}
+        />
+      )}
+      <div
+        style={{
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
+          flexGrow: 1,
+          gap: '6px',
+        }}>
+        <Stack align="center" justify="space-between">
+          <Stack.Item>
+            <Box bold color={accent} fontSize={1.45}>{station.name}</Box>
+            {isPriorityMine ? (
+              <div title="Приоритет повышает долю выбранного ресурса в общей добыче.">
+                Приоритет добычи
+              </div>
+            ) : (
+              <Box color="#ead9bb">
+                {stage?.kind === 'processing' && 'Переработка сырья'}
+                {stage?.kind === 'workshop' && 'Материал для мастерской'}
+                {!stage && (isSmeltery ? 'Выплавка слитков' : isForge ? 'Сырьё для кузницы' : getProduceType(station.type_of_produce))}
+              </Box>
+            )}
+          </Stack.Item>
+          {isIndustrial && (
+            <Stack.Item>
+              <div
+                aria-hidden="true"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '44px',
+                  height: '38px',
+                }}>
+                {station.icon ? (
+                  <span className={station.icon} style={{ imageRendering: 'pixelated', flexShrink: 0, transform: 'scale(1.2)' }} />
+                ) : (
+                  <Icon name={isForge || stage?.kind === 'workshop' ? 'hammer' : 'fire'} size={1.5} color={accent} />
+                )}
+              </div>
+            </Stack.Item>
+          )}
+        </Stack>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+          {isPriorityMine && [
+            { id: null, name: 'Без приоритета' },
+            ...miningOptions,
+          ].map((option) => {
+            const selected = (industry?.mining_priority ?? null) === option.id;
+            return (
+              <button
+                key={option.id ?? 'no-priority'}
+                type="button"
+                aria-pressed={selected}
+                style={productionTile(accent, selected)}
+                onClick={() => act('set_mining_priority', { good_id: option.id })}>
+                {option.name}
+              </button>
+            );
+          })}
+          {stage?.options.map((option) => (
+            <button
+              key={option.id}
+              type="button"
+              aria-pressed={stage.selected === option.id}
+              style={productionTile(accent, stage.selected === option.id)}
+              onClick={() =>
+                act('set_production_material', { stage: stage.id, material: option.id })
+              }>
+              {option.name}
+            </button>
+          ))}
+          {!stage && industry && (isSmeltery || isForge) && materialOptions?.map((option) => (
+            <button
+              key={option}
+              type="button"
+              aria-pressed={metal === option}
+              style={productionTile(accent, metal === option)}
+              onClick={() => act('set_industry_metal', { station: station.kind, metal: option })}>
+              {getMaterialName(industry, option)}
+            </button>
+          ))}
+          {!isPriorityMine && !stage && (!industry || !isIndustrial) && station.produce?.map((product) => (
+            <button
+              key={product}
+              type="button"
+              aria-pressed={inspected === product}
+              style={productionTile(accent, inspected === product)}
+              onClick={() => setInspected(inspected === product ? null : product)}>
+              {product}
+            </button>
           ))}
         </div>
-
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '10px', marginTop: '8px' }}>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <Button style={workerButton} onClick={() => act('dec_workers', { id: ws.id })}>−</Button>
-            <Button style={workerButton} onClick={() => act('inc_workers', { id: ws.id })}>+</Button>
+        {stageInputs && stageOutput && (
+          <div style={{ color: '#ead9bb' }} title={stage?.kind === 'workshop' ? sharedPointsHint : undefined}>
+            {stageInputs} → {stageOutput}
           </div>
-          <div style={{ textAlign: 'right', fontSize: '15px' }}>
-            <div>Продуктивность: {Math.round(ws.production_bonus * 100)}%</div>
-            <div>{getProduceType(ws.type_of_produce)}</div>
+        )}
+        {!stage && isForge && industry && forgeMetal && forgeRate != null && (
+          <div style={{ color: '#ead9bb' }} title={sharedPointsHint}>
+            1 {getMaterialName(industry, forgeMetal)} → {productionPointsFormat.format(forgeRate)} ОП
           </div>
+        )}
+        {separateForgeStock && (
+          <Box color="#ead9bb">
+            На складе {data.warehouse?.find((item) => item.name === separateForgeStock)?.quantity ?? 0}
+          </Box>
+        )}
+        {inspected && (
+          <Box color="#ead9bb" aria-live="polite">
+            {inspected}{station.type_of_produce === 'Goods'
+              ? ` · На складе ${warehouseGood ? warehouseGood.quantity : 0}`
+              : ` · ${getProduceType(station.type_of_produce)}`}
+          </Box>
+        )}
+        <div
+          style={{
+            alignItems: 'center',
+            borderTop: tableBorder,
+            display: 'flex',
+            gap: '8px',
+            marginTop: 'auto',
+            paddingTop: '5px',
+          }}>
+          <span>Работники</span>
+          <Button
+            icon="minus"
+            tooltip={`Снять работника (${station.name})`}
+            disabled={station.workers_employed <= 0}
+            onClick={() => act('dec_workers', { id: station.id })}
+          />
+          <span style={{ fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
+            {station.workers_employed}/{station.workers_max}
+          </span>
+          <Button
+            icon="plus"
+            tooltip={`Назначить работника (${station.name})`}
+            disabled={station.workers_employed >= station.workers_max || free <= 0}
+            onClick={() => act('inc_workers', { id: station.id })}
+          />
         </div>
       </div>
+    </section>
+  );
+};
+
+const ManorWorkstations = ({
+  workstations,
+  peasantsFree,
+  artisansFree,
+  industry,
+}: {
+  workstations: WorkstationData[];
+  peasantsFree: number;
+  artisansFree: number;
+  industry?: ManorIndustryData;
+}) => {
+  if (!workstations.length) {
+    return <div style={tablePanel}>В имении пока нет рабочих мест.</div>;
+  }
+
+  const lastProduction = industry?.last_production;
+  const lastSmelteryMetal = industry?.last_smeltery_metal;
+  const lastForgeMetal = industry?.last_forge_metal;
+
+  return (
+    <>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 232px), 1fr))',
+          gap: '10px',
+          marginTop: '12px',
+        }}>
+        {workstations.map((station) => (
+          <ManorWorkstationCard
+            key={station.id}
+            station={station}
+            free={station.pool === 'artisans' ? artisansFree : peasantsFree}
+            industry={industry}
+          />
+        ))}
+      </div>
+      {!lastProduction && industry?.has_report && lastSmelteryMetal && lastForgeMetal && (
+        <Stack mt={1} align="center" wrap>
+          <Stack.Item bold>За прошлый даэ</Stack.Item>
+          <Stack.Item ml={1}>Iron Ore {industry.last_ore}</Stack.Item>
+          <Stack.Item ml={1}>{getMaterialName(industry, lastSmelteryMetal)} {industry.last_ingots}</Stack.Item>
+          <Stack.Item ml={1}>
+            Кузница {industry.last_forged_ingots} {getMaterialName(industry, lastForgeMetal)} → {productionPointsFormat.format(industry.last_points ?? 0)} ОП
+          </Stack.Item>
+        </Stack>
+      )}
+      {lastProduction && (lastProduction.processed_good || lastProduction.material) && (
+        <Stack mt={1} align="center" wrap>
+          <Stack.Item bold>За прошлый даэ</Stack.Item>
+          {lastProduction.processed_good && (
+            <Stack.Item ml={1}>{lastProduction.processed_good} {lastProduction.processed}</Stack.Item>
+          )}
+          {lastProduction.material && (
+            <Stack.Item ml={1}>
+              Мастерская {lastProduction.consumed} {lastProduction.material_name ?? lastProduction.material} → {productionPointsFormat.format(lastProduction.points)} ОП
+            </Stack.Item>
+          )}
+        </Stack>
+      )}
+    </>
+  );
+};
+
+type WorkshopRecipe = ManorIndustryData['recipes'][number];
+
+const recipeSprite = (recipe: WorkshopRecipe) => (
+  <span
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '38px',
+      height: '38px',
+      flexShrink: 0,
+      overflow: 'hidden',
+    }}>
+    <span
+      className={recipe.icon}
+      style={{
+        display: 'block',
+        flexShrink: 0,
+        transform: recipe.icon?.includes('64x64') ? 'scale(0.56)' : undefined,
+      }}
+    />
+  </span>
+);
+
+const recipeRow: React.CSSProperties = {
+  alignItems: 'center',
+  display: 'flex',
+  gap: '8px',
+  height: '44px',
+  boxSizing: 'border-box',
+  borderBottom: tableBorder,
+};
+
+const WORKSHOP_PAGE_SIZE = 8;
+
+const ManorWorkshop = ({
+  industry,
+  active,
+}: {
+  industry: ManorIndustryData;
+  active: boolean;
+}) => {
+  const { act, data } = useBackend<ManorPanelData>();
+  const [choosing, setChoosing] = useState(false);
+  const [category, setCategory] = useState<string | null>(null);
+  const [material, setMaterial] = useState<string | null>(null);
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(0);
+  const [draft, setDraft] = useState<Record<string, number>>({});
+  const recipes = industry.recipes ?? [];
+  const categories = [...new Set(recipes.map((recipe) => recipe.category))];
+  const inCategory = recipes.filter((recipe) => recipe.category === category);
+  const materials = new Map(inCategory.map((recipe) => [recipe.material, recipe.material_label]));
+  const query = search.trim().toLocaleLowerCase();
+  const showCatalogue = !!material || !!query;
+  const matchingRecipes = showCatalogue
+    ? recipes.filter((recipe) =>
+        (!category || recipe.category === category) &&
+        (!material || recipe.material === material) &&
+        recipe.name.toLocaleLowerCase().includes(query),
+      )
+    : [];
+  const pageCount = Math.max(1, Math.ceil(matchingRecipes.length / WORKSHOP_PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount - 1);
+  const displayedRecipes = matchingRecipes.slice(
+    currentPage * WORKSHOP_PAGE_SIZE,
+    (currentPage + 1) * WORKSHOP_PAGE_SIZE,
+  );
+  const selected = recipes.filter((recipe) => draft[recipe.id] > 0);
+  const { points } = industry;
+  let orderTotal = 0;
+  let quantity = 0;
+  for (const recipe of selected) {
+    const count = draft[recipe.id];
+    orderTotal += recipe.cost * count;
+    quantity += count * (recipe.units ?? 1);
+  }
+
+  if (!active) {
+    return null;
+  }
+
+  return (
+    <div style={tablePanel}>
+      <Stack align="center" justify="space-between">
+        <Stack.Item>
+          <strong title={sharedPointsHint}>Очки производства {points}</strong>
+        </Stack.Item>
+        <Stack.Item>
+          <Button
+            icon={choosing ? 'times' : 'plus'}
+            disabled={!recipes.length}
+            onClick={() => {
+              setChoosing(!choosing);
+              setCategory(null);
+              setMaterial(null);
+              setSearch('');
+              setPage(0);
+            }}>
+            {choosing ? 'Закрыть' : 'Добавить'}
+          </Button>
+        </Stack.Item>
+      </Stack>
+
+      {choosing && (
+        <div style={{ borderTop: tableBorder, marginTop: '10px', paddingTop: '8px' }}>
+          <Stack align="center" mb={1}>
+            {category && (
+              <Stack.Item>
+                <Button
+                  icon="arrow-left"
+                  onClick={() => {
+                    setPage(0);
+                    if (material) {
+                      setMaterial(null);
+                    } else {
+                      setCategory(null);
+                    }
+                  }}>
+                  Назад
+                </Button>
+              </Stack.Item>
+            )}
+            <Stack.Item bold>
+              {(material && materials.get(material)) || category || (query ? 'Каталог' : 'Категория')}
+            </Stack.Item>
+            <Stack.Item grow />
+            <Stack.Item basis="14em">
+              <Input
+                fluid
+                placeholder="Найти изделие"
+                value={search}
+                onChange={(value) => {
+                  setSearch(value);
+                  setPage(0);
+                }}
+              />
+            </Stack.Item>
+          </Stack>
+          {!showCatalogue && !category && categories.map((value) => (
+            <Button
+              key={value}
+              onClick={() => {
+                setCategory(value);
+                setPage(0);
+              }}>
+              {value}
+            </Button>
+          ))}
+          {!showCatalogue && category && Array.from(materials, ([id, label]) => (
+            <Button
+              key={id}
+              onClick={() => {
+                setMaterial(id);
+                setPage(0);
+              }}>
+              {label}
+            </Button>
+          ))}
+          {showCatalogue && !displayedRecipes.length && <Box color="#ceb38b">Ничего не найдено.</Box>}
+          {displayedRecipes.map((recipe) => (
+            <div key={recipe.id} style={recipeRow}>
+              {recipeSprite(recipe)}
+              <Button
+                fluid
+                disabled={
+                  !recipe.available ||
+                  orderTotal + recipe.cost > points ||
+                  quantity + (recipe.units ?? 1) > data.warehouse_shipment_limit
+                }
+                onClick={() =>
+                  setDraft((items) => ({ ...items, [recipe.id]: (items[recipe.id] ?? 0) + 1 }))
+                }
+                style={{ textAlign: 'left', flex: '1 1 auto' }}>
+                {recipe.name}
+                {recipe.units != null && (recipe.units > 1 || recipe.category === 'Напитки') &&
+                  ` ×${recipe.units}`}
+                {' '}({recipe.cost} ОП)
+              </Button>
+              {recipe.locked && <Box color="#ceb38b">Требуется освоить материал</Box>}
+            </div>
+          ))}
+          {pageCount > 1 && (
+            <Stack align="center" justify="space-between" mt={1}>
+              <Stack.Item>
+                <Button
+                  icon="chevron-left"
+                  disabled={currentPage === 0}
+                  onClick={() => setPage(currentPage - 1)}>
+                  Предыдущая
+                </Button>
+              </Stack.Item>
+              <Stack.Item>{currentPage + 1} / {pageCount}</Stack.Item>
+              <Stack.Item>
+                <Button
+                  icon="chevron-right"
+                  disabled={currentPage + 1 === pageCount}
+                  onClick={() => setPage(currentPage + 1)}>
+                  Следующая
+                </Button>
+              </Stack.Item>
+            </Stack>
+          )}
+        </div>
+      )}
+
+      {selected.length > 0 && (
+        <div style={{ borderTop: tableBorder, marginTop: '10px', paddingTop: '8px' }}>
+          <Box bold>Заказ</Box>
+          {selected.map((recipe) => {
+            const batches = draft[recipe.id];
+            const batchSize = recipe.units ?? 1;
+            return (
+              <div key={recipe.id} style={recipeRow}>
+                {recipeSprite(recipe)}
+                <span style={{ flexGrow: 1 }}>
+                  {recipe.name} ×{batches}
+                  {batchSize > 1 && ` (${batches * batchSize} шт.)`}
+                </span>
+                <span>{recipe.cost * batches} ОП</span>
+                <Button
+                  icon="minus"
+                  tooltip={`${batchSize > 1 ? 'Убрать одну партию' : 'Убрать один предмет'} (${recipe.name})`}
+                  onClick={() =>
+                    setDraft((items) => ({ ...items, [recipe.id]: items[recipe.id] - 1 }))
+                  }
+                />
+              </div>
+            );
+          })}
+          <Stack mt={1} align="center" justify="space-between">
+            <Stack.Item>
+              <Box bold>Стоимость заказа {orderTotal} ОП</Box>
+            </Stack.Item>
+            <Stack.Item>
+              <Button
+                icon="box"
+                disabled={
+                  selected.some((recipe) => !recipe.available) ||
+                  orderTotal > points ||
+                  quantity > data.warehouse_shipment_limit
+                }
+                onClick={() => {
+                  act('request_industry_order', {
+                    items: Object.fromEntries(selected.map((recipe) => [recipe.id, draft[recipe.id]])),
+                    revision: industry.revision,
+                  });
+                  setDraft({});
+                  setChoosing(false);
+                  setCategory(null);
+                  setMaterial(null);
+                  setSearch('');
+                  setPage(0);
+                }}>
+                Заказать
+              </Button>
+            </Stack.Item>
+          </Stack>
+        </div>
+      )}
+    </div>
+  );
+};
+
+type ShipmentItems = Record<string, number>;
+
+const getShipment = (
+  warehouse: WarehouseItem[],
+  draft: ShipmentItems,
+  limit: number,
+) => {
+  const items: ShipmentItems = {};
+  let quantity = 0;
+  for (const row of warehouse) {
+    const selected = Math.min(
+      draft[row.id] ?? 0,
+      row.quantity,
+      limit - quantity,
+    );
+    if (selected > 0) {
+      items[row.id] = selected;
+      quantity += selected;
+    }
+  }
+  return { items, quantity };
+};
+
+const QuantityField = ({
+  label,
+  value,
+  max,
+  onChange,
+  commitOnBlur = false,
+}: {
+  label: string;
+  value: number;
+  max: number;
+  onChange: (amount: number) => void;
+  commitOnBlur?: boolean;
+}) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [editing, setEditing] = useState<string | null>(null);
+
+  useEffect(() => {
+    const input = inputRef.current;
+    if (!input || !max) {
+      return;
+    }
+    const adjustQuantity = (event: WheelEvent) => {
+      if (!event.deltaY || event.ctrlKey) {
+        return;
+      }
+      event.preventDefault();
+      setEditing(null);
+      const amount = Math.max(0, Math.min(value - Math.sign(event.deltaY), max));
+      if (amount !== value) {
+        onChange(amount);
+      }
+    };
+    input.addEventListener('wheel', adjustQuantity, { passive: false });
+    return () => input.removeEventListener('wheel', adjustQuantity);
+  }, [max, onChange, value]);
+
+  const commit = (text: string) => {
+    const amount = Math.max(0, Math.min(Math.round(Number(text)), max));
+    if (Number.isFinite(amount) && amount !== value) {
+      onChange(amount);
+    }
+  };
+
+  return (
+    <input
+      aria-label={label}
+      ref={inputRef}
+      type="number"
+      inputMode="numeric"
+      min={0}
+      max={max}
+      step={1}
+      disabled={!max}
+      value={editing ?? value}
+      onFocus={(event) => event.currentTarget.select()}
+      onChange={(event) => {
+        const text = event.currentTarget.value;
+        setEditing(text);
+        if (!commitOnBlur) {
+          commit(text);
+        }
+      }}
+      onBlur={() => {
+        if (commitOnBlur && editing !== null) {
+          commit(editing);
+        }
+        setEditing(null);
+      }}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter') {
+          event.currentTarget.blur();
+        }
+      }}
+      style={{
+        background: 'rgba(13,8,4,0.72)',
+        border: tableBorder,
+        borderRadius: '4px',
+        boxSizing: 'border-box',
+        color: '#f0dfc0',
+        font: 'inherit',
+        fontVariantNumeric: 'tabular-nums',
+        height: '25px',
+        padding: '1px 4px',
+        textAlign: 'right',
+        width: '4.5em',
+      }}
+    />
+  );
+};
+
+const warehouseRow: React.CSSProperties = {
+  alignItems: 'center',
+  display: 'grid',
+  gridTemplateColumns: 'minmax(0, 1fr) 5.5em 4.5em',
+  gap: '10px',
+  minHeight: '32px',
+  borderBottom: tableBorder,
+};
+
+const ManorWarehouse = ({ active }: { active: boolean }) => {
+  const { act, data } = useBackend<ManorPanelData>();
+  const {
+    warehouse,
+    warehouse_raw_sale,
+    warehouse_processed_sale,
+    warehouse_revision,
+    warehouse_shipment_limit,
+  } = data;
+  const [draft, setDraft] = useState<{ revision: number; items: ShipmentItems }>({
+    revision: warehouse_revision,
+    items: {},
+  });
+  const rows = useMemo(
+    () => [...(warehouse ?? [])].sort((a, b) => a.name.localeCompare(b.name)),
+    [warehouse],
+  );
+  const { items, quantity } = getShipment(
+    rows,
+    draft.items,
+    warehouse_shipment_limit,
+  );
+
+  if (draft.revision !== warehouse_revision) {
+    setDraft({ revision: warehouse_revision, items });
+  }
+
+  if (!active) {
+    return null;
+  }
+
+  return (
+    <div style={{ ...tablePanel, maxWidth: '31em' }}>
+      <div
+        style={{
+          alignItems: 'center',
+          display: 'grid',
+          gridTemplateColumns: '1fr auto',
+          gap: '4px 10px',
+          marginBottom: '8px',
+        }}>
+        {([
+          { stage: 'raw', label: 'Продавать сырьё', value: warehouse_raw_sale },
+          { stage: 'processed', label: 'Продавать переработанное', value: warehouse_processed_sale },
+        ] as const).map(({ stage, label, value }) => (
+          <div key={stage} style={{ display: 'contents' }}>
+            <Box bold>{label}</Box>
+            <span>
+              <QuantityField
+                label={label}
+                commitOnBlur
+                max={100}
+                value={value}
+                onChange={(percent) => act('set_warehouse_sale', { stage, percent })}
+              /> %
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {rows.length > 0 ? (
+        <>
+          <div style={{ ...warehouseRow, color: '#ceb38b', borderTop: tableBorder }}>
+            <span>Товар</span>
+            <span style={{ textAlign: 'right' }}>На складе</span>
+            <span style={{ textAlign: 'center' }}>В заказ</span>
+          </div>
+          {rows.map((row) => {
+            const selected = items[row.id] ?? 0;
+            const maximum = Math.min(
+              row.quantity,
+              warehouse_shipment_limit - quantity + selected,
+            );
+            return (
+              <div key={row.id} style={warehouseRow}>
+                <span>{row.name}</span>
+                <span style={{ textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>
+                  {row.quantity}
+                </span>
+                <QuantityField
+                  label={`${row.name}, количество в заказе`}
+                  max={maximum}
+                  value={selected}
+                  onChange={(amount) =>
+                    setDraft({
+                      revision: warehouse_revision,
+                      items: { ...items, [row.id]: amount },
+                    })
+                  }
+                />
+              </div>
+            );
+          })}
+          <Stack align="center" mt={1} justify="space-between" wrap>
+            <Stack.Item>Выбрано {quantity} из {warehouse_shipment_limit}</Stack.Item>
+            <Stack.Item>
+              <Button
+                icon="box"
+                disabled={!quantity}
+                onClick={() => {
+                  act('request_warehouse_shipment', {
+                    items,
+                    revision: warehouse_revision,
+                  });
+                  setDraft({ revision: warehouse_revision, items: {} });
+                }}>
+                Запросить поставку
+              </Button>
+            </Stack.Item>
+          </Stack>
+        </>
+      ) : (
+        <Box color="#ceb38b" py={1}>Склад пока пуст.</Box>
+      )}
     </div>
   );
 };
@@ -493,6 +1012,8 @@ const WorkstationCard = ({ ws, act }: { ws: WorkstationData; act: (action: strin
 export const ManorPanel = () => {
   const { act, data } = useBackend<ManorPanelData>();
   const [hoveredItem, setHoveredItem] = useState<HoverCardData | null>(null);
+  const [withdrawAmount, setWithdrawAmount] = useState(1);
+  const [tab, setTab] = useState<'people' | 'warehouse' | 'workshop'>('people');
   const {
     manor_name,
     manor_type,
@@ -500,115 +1021,140 @@ export const ManorPanel = () => {
     manor_origin,
     total_workers,
     workers_assigned,
-    workers_free,
-    productivity_last_cycle,
+    estate_balance,
+    estate_treasury_retention,
+    estate_withdrawal_revision,
+    industry,
     workstations = [],
   } = data;
 
-  const loadPercent = total_workers ? clamp((workers_assigned / total_workers) * 100) : 0;
+  const production = industry?.active ? industry : undefined;
+  const peasants = production?.peasants ?? total_workers;
+  const artisans = production?.artisans ?? 0;
+  const peasantsAssigned = production?.peasants_assigned ?? workers_assigned;
+  const artisansAssigned = production?.artisans_assigned ?? 0;
+  const maxWithdrawal = Math.floor(estate_balance ?? 0);
 
   return (
     <Window title={manor_name || 'Владение'} width={860} height={595}>
       <Window.Content scrollable style={panelBackground}>
         <div style={{ padding: '12px' }}>
-          <div style={{ ...frameStyle, padding: '14px 16px 12px' }}>
-            <div style={{ position: 'absolute', inset: '12px', border: '1px solid rgba(226,191,141,0.08)', borderRadius: '14px', pointerEvents: 'none' }} />
-            <div style={{ ...ornamentBand, marginBottom: '12px' }} />
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 108px', gap: '14px', alignItems: 'center' }}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: '29px', fontWeight: 900, lineHeight: 1.02 }}>{manor_name}</div>
-                    <div style={{ marginTop: '6px', fontSize: '11px', letterSpacing: '0.16em', textTransform: 'uppercase', opacity: 0.72 }}>
-                      {getManorType(manor_type)}
-                    </div>
-                    {manor_origin ? (
-                      <div style={{ marginTop: '6px', fontSize: '11px', letterSpacing: '0.16em', textTransform: 'uppercase', opacity: 0.72 }}>
-                        {manor_origin}
-                      </div>
-                    ) : ('')}
-                  </div>
-                </div>
-
-                <div style={{ marginTop: '12px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                  {statBox('Всего', total_workers)}
-                  {statBox('Занято', workers_assigned)}
-                  {statBox('Свободно', workers_free)}
-                  {statBox('За цикл', productivity_last_cycle)}
-                </div>
-
-                <div style={{
-                  marginTop: '14px',
-                  padding: '10px 12px 11px',
-                  borderRadius: '14px',
-                  border: '1px solid rgba(228,190,139,0.14)',
-                  background: 'linear-gradient(180deg, rgba(94,58,28,0.24), rgba(24,14,8,0.4))',
-                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)',
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', opacity: 0.8 }}>
-                    <span>Занятость людей</span>
-                    <span>{Math.round(loadPercent)}%</span>
-                  </div>
-                  <div style={{
-                    marginTop: '8px',
-                    height: '12px',
-                    borderRadius: '999px',
-                    overflow: 'hidden',
-                    border: '1px solid rgba(245, 208, 149, 0.12)',
-                    background: 'rgba(0,0,0,0.3)',
-                  }}>
-                    <div style={{
-                      width: `${loadPercent}%`,
-                      height: '100%',
-                      background: 'linear-gradient(90deg, rgba(177,124,47,0.95), rgba(245,214,161,0.96))',
-                      boxShadow: '0 0 20px rgba(255,228,179,0.14)',
-                    }} />
-                  </div>
-                </div>
-              </div>
-
-              <PatronMedallion patronKey={manor_patron_key} setHoveredItem={setHoveredItem} />
-            </div>
-          </div>
-
-          <div style={{ marginTop: '12px', padding: '0 4px' }}>
-            <div style={{ ...ornamentBand, marginBottom: '9px' }} />
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '8px',
-              flexWrap: 'wrap',
-            }}>
-              <div style={{ fontSize: '21px', fontWeight: 900, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Угодья</div>
-              <div style={{ fontSize: '11px', opacity: 0.72, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-                Управление рабочими местами
-              </div>
-            </div>
-          </div>
-
-          {workstations.length ? (
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '12px',
-              marginTop: '10px',
-            }}>
-              {workstations.slice(0, 5).map((ws) => (
-                <WorkstationCard key={ws.id} ws={ws} act={act} />
-              ))}
-            </div>
-          ) : (
-            <div style={{
+          <div
+            style={{
               ...frameStyle,
-              marginTop: '10px',
-              padding: '14px',
-              textAlign: 'center',
-              fontSize: '14px',
-              opacity: 0.85,
+              alignItems: 'center',
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'space-between',
+              gap: '10px 24px',
+              padding: '8px 14px',
             }}>
-              У этого персонажа пока нет доступного поместья или в нём ещё не создано ни одного угодья.
-            </div>
+            <Stack style={{ alignItems: 'center', gap: '12px' }}>
+              <Stack.Item>
+                <PatronMedallion patronKey={manor_patron_key} setHoveredItem={setHoveredItem} />
+              </Stack.Item>
+              <Stack.Item>
+                <Box bold>{getManorType(manor_type)}</Box>
+                {manor_origin && <Box color="#ceb38b">{manor_origin}</Box>}
+              </Stack.Item>
+            </Stack>
+            {estate_balance != null && (
+              <Stack style={{ alignItems: 'center', flexWrap: 'wrap', gap: '6px 10px' }}>
+                <Stack.Item>
+                  <Box bold>
+                    Казна имения
+                    <span style={{ marginLeft: '10px' }}>{estate_balance} маммон</span>
+                  </Box>
+                  <Box color="#ceb38b">В казне остаётся {estate_treasury_retention}% дохода</Box>
+                </Stack.Item>
+                {maxWithdrawal >= 1 && (
+                  <>
+                    <Stack.Item>
+                      <NumberInput
+                        minValue={0}
+                        maxValue={maxWithdrawal}
+                        step={1}
+                        unit="м."
+                        value={withdrawAmount}
+                        width="5em"
+                        onChange={setWithdrawAmount}
+                      />
+                    </Stack.Item>
+                    <Stack.Item>
+                      <Button
+                        icon="coins"
+                        disabled={
+                          !Number.isInteger(withdrawAmount) ||
+                          withdrawAmount < 1 ||
+                          withdrawAmount > maxWithdrawal
+                        }
+                        onClick={() => {
+                          act('withdraw_estate_money', {
+                            amount: withdrawAmount,
+                            revision: estate_withdrawal_revision,
+                          });
+                          setWithdrawAmount(1);
+                        }}>
+                        Запросить средства
+                      </Button>
+                    </Stack.Item>
+                  </>
+                )}
+              </Stack>
+            )}
+          </div>
+
+          {estate_balance != null && (
+            <Tabs mt={1}>
+              <Tabs.Tab
+                selected={tab === 'people'}
+                onClick={() => setTab('people')}
+                icon="users"
+              >
+                Люди
+              </Tabs.Tab>
+              <Tabs.Tab
+                selected={tab === 'warehouse'}
+                onClick={() => setTab('warehouse')}
+                icon="box"
+              >
+                Склад
+              </Tabs.Tab>
+              {!!industry?.active && (
+                <Tabs.Tab
+                  selected={tab === 'workshop'}
+                  onClick={() => setTab('workshop')}
+                  icon="hammer"
+                >
+                  Мастерские
+                </Tabs.Tab>
+              )}
+            </Tabs>
+          )}
+
+          {tab === 'people' && (
+            <>
+              <div style={{ ...tablePanel, padding: '5px 16px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '7.5em auto', width: 'fit-content', gap: '4px 10px' }}>
+                  <Box bold>Население</Box>
+                  <Box bold>{peasantsAssigned + artisansAssigned}/{peasants + artisans}</Box>
+                  <span>Крестьяне</span>
+                  <span>{peasantsAssigned}/{peasants}</span>
+                  <span>Ремесленники</span>
+                  <span>{artisansAssigned}/{artisans}</span>
+                </div>
+              </div>
+              <ManorWorkstations
+                workstations={workstations}
+                peasantsFree={peasants - peasantsAssigned}
+                artisansFree={artisans - artisansAssigned}
+                industry={production}
+              />
+            </>
+          )}
+          {estate_balance != null && <ManorWarehouse active={tab === 'warehouse'} />}
+          {production && (
+            <ManorWorkshop industry={production} active={tab === 'workshop'} />
           )}
         </div>
         <HoverCard data={hoveredItem} />

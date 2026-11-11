@@ -585,6 +585,7 @@
 		return
 	if(ishuman(target))
 		playsound(target.loc, 'sound/vo/hug.ogg', 100, FALSE, -1)
+		SEND_SIGNAL(user, COMSIG_MOB_PATTED, target)
 
 /datum/emote/living/stat_roll/strength
 	attempt_message_list = list(

@@ -48,3 +48,9 @@
 					to_chat(player, span_notice("No choice detected. Picking a random compatible origin."))
 					new_origin = pick(/datum/virtue/origin/raneshen, /datum/virtue/origin/naledi, /datum/virtue/origin/zybantian)
 				change_origin(H, new_origin, "Royal line")
+
+/datum/job/roguetown/prince
+	noble_income = 40
+
+/datum/advclass/heir/aristocrat
+	noble_income = 160

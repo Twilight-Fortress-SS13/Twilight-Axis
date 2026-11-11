@@ -290,12 +290,11 @@ GLOBAL_LIST_INIT(food_preserving_locs, typecacheof(list(
 				to_chat(human_eater, span_green("Delicious - just the way I like it!"))
 
 		if (!HAS_TRAIT(human_eater, TRAIT_NASTY_EATER) && !HAS_TRAIT(human_eater, TRAIT_ORGAN_EATER))
+			// TA EDIT START: table manners depend on applied nobility rank.
+			if(!portable)
+				human_eater.taCheckNobleTable()
+			// TA EDIT END
 			if (human_eater.is_noble())
-				if (!portable)
-					if(!has_table_surface(range(1, eater)))
-						eater.add_stress(/datum/stressevent/noble_ate_without_table) // look i just had to okay?
-						if (prob(25))
-							to_chat(eater, span_red("I should really eat this at a table..."))
 				switch (faretype)
 					if (FARE_IMPOVERISHED)
 						eater.add_stress(/datum/stressevent/noble_impoverished_food)

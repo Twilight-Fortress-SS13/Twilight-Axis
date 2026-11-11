@@ -987,17 +987,7 @@
 		if((HAS_TRAIT(user, TRAIT_FEYBOUND) || HAS_TRAIT(user, TRAIT_FEYTOUCHED) ||	istype(user, /mob/living/carbon/human/species/familiar/fae)) && HAS_TRAIT(src, TRAIT_ANCIENT_HAG))
 			. += span_nicegreen("A true force of the fey, the mossmother speaks to this one closely.")
 
-		if(SSticker.rulermob == src)
-			. += span_notice("<b>The ruler of this land.</b>")
-		else if(GLOB.lord_titles[name])
-			. += span_notice("[m3] been granted the title of \"[GLOB.lord_titles[name]]\".")
-
-		if(show_descriptors)
-			if(HAS_TRAIT(src, TRAIT_NOBLE) || HAS_TRAIT(src, TRAIT_DEFILED_NOBLE))
-				if(HAS_TRAIT(user, TRAIT_NOBLE) || HAS_TRAIT(user, TRAIT_DEFILED_NOBLE))
-					. += span_notice("A fellow noble.")
-				else
-					. += span_notice("A noble!")
+		. += taNobleExamineLines(m3, show_descriptors) // TA EDIT
 
 		if(HAS_TRAIT(src, TRAIT_RESIDENT))
 			. += span_notice("A chartered resident.")

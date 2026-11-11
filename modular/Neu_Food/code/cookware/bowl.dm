@@ -134,5 +134,6 @@
 			if(do_after(user, 1 SECONDS, target = src))
 				playsound(src,'sound/misc/eat.ogg', rand(30,60), TRUE)
 				visible_message(span_info("[user] eats from [src]."))
+				taCheckNobleConsumption(user, TRUE) // TA EDIT
 				addtimer(CALLBACK(reagents, TYPE_PROC_REF(/datum/reagents, trans_to), user, min(amount_per_transfer_from_this,5), TRUE, TRUE, FALSE, user, FALSE, INGEST), 5)
 		return TRUE
