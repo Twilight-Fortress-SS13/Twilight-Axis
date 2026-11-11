@@ -7,7 +7,7 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "luxsteal0"
-	glow_color = GLOW_COLOR_BAOTHA
+	glow_color = PATRON_COLOR_BAOTHA
 	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 100
 	chargedrain = 0
@@ -18,7 +18,7 @@
 	invocation_type = "none"
 	associated_skill = /datum/skill/magic/holy
 	antimagic_allowed = TRUE
-	recharge_time = 5 SECONDS 
+	recharge_time = 5 SECONDS
 	miracle = TRUE
 	devotion_cost = 0
 	var/lux = FALSE
@@ -95,7 +95,7 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "mirage"
-	glow_color = GLOW_COLOR_BAOTHA
+	glow_color = PATRON_COLOR_BAOTHA
 	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 10
 	chargedrain = 0
@@ -158,7 +158,7 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "vice"
-	glow_color = GLOW_COLOR_BAOTHA
+	glow_color = PATRON_COLOR_BAOTHA
 	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 10
 	chargedrain = 0
@@ -169,7 +169,7 @@
 	invocation_type = "none"
 	associated_skill = /datum/skill/magic/holy
 	antimagic_allowed = TRUE
-	recharge_time = 3 SECONDS 
+	recharge_time = 3 SECONDS
 	miracle = TRUE
 	devotion_cost = 10
 	var/list/fake_vices = list()
@@ -217,7 +217,7 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "bless_drink"
-	glow_color = GLOW_COLOR_BAOTHA
+	glow_color = PATRON_COLOR_BAOTHA
 	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 10
 	chargedrain = 0
@@ -263,7 +263,7 @@
 		revert_cast()
 		to_chat(user, span_info("This is not a suitable container for this!"))
 		return FALSE
-	
+
 	var/obj/item/reagent_containers/glass/target_container = held
 	for(var/reagent in reagent_blacklist)
 		if(target_container.reagents.has_reagent(reagent))
@@ -294,7 +294,7 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "blessing"
-	glow_color = GLOW_COLOR_BAOTHA
+	glow_color = PATRON_COLOR_BAOTHA
 	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 30
 	chargedrain = 0
@@ -322,7 +322,7 @@
 			to_chat(user, span_warning("They're already blessed by these effects!"))
 			revert_cast()
 			return FALSE
-		target.apply_status_effect(/datum/status_effect/buff/druqks/baotha) //Gets the trait temorarily, basically will just stop any active/upcoming ODs.	
+		target.apply_status_effect(/datum/status_effect/buff/druqks/baotha) //Gets the trait temorarily, basically will just stop any active/upcoming ODs.
 		target.visible_message("<span class='info'>[target]'s eyes appear to gloss over!</span>", "<span class='notice'>I feel.. at ease.</span>")
 	return TRUE
 
@@ -334,7 +334,7 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "ruin"
-	glow_color = GLOW_COLOR_BAOTHA
+	glow_color = PATRON_COLOR_BAOTHA
 	glow_intensity = GLOW_INTENSITY_LOW
 	chargedrain = 0
 	chargetime = 0
@@ -399,7 +399,7 @@
 		if(thing.reagents.holder_full())
 			to_chat(user, span_warning("[thing] is full."))
 			return
-		
+
 		user.visible_message(span_info("[user] extends a hand over [thing]. Sweet-smelling ichor drips from [user.p_their()] fingertips, like blood."), span_notice("I call forth [user.patron.name], to fill [thing] with Her blessings..."))
 
 		var/holy_skill = user.get_skill_level(attached_spell.associated_skill)
@@ -422,7 +422,7 @@
 
 			if(prob(80))
 				playsound(user, 'sound/items/fillcup.ogg', 55, TRUE)
-		
+
 		return max(50, fatigue_spent)
 	else
 		to_chat(user, span_info("I'll need to find a container that can hold Her blessing."))
@@ -436,7 +436,7 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "bloom"
-	glow_color = GLOW_COLOR_BAOTHA
+	glow_color = PATRON_COLOR_BAOTHA
 	glow_intensity = GLOW_INTENSITY_LOW
 	sound = list('sound/magic/magnet.ogg')
 	releasedrain = 40
@@ -478,7 +478,7 @@
 
 // Insufflation - effectively just drugging yourself. Lets you pick, the same as Enrapturing Powder. T1, for now, to make up for the loss of the Baotha Blessing buff.
 
-/obj/effect/proc_holder/spell/self/TAinsufflation 
+/obj/effect/proc_holder/spell/self/TAinsufflation
 	name = "Insufflation"
 	desc = "Imbibes yourself on one of four drugs, in Her name. Your intent will determine the drug ingested. \n\
 	\
@@ -492,7 +492,7 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "powder"
-	glow_color = GLOW_COLOR_BAOTHA
+	glow_color = PATRON_COLOR_BAOTHA
 	glow_intensity = GLOW_INTENSITY_LOW
 	clothes_req = FALSE
 	associated_skill = /datum/skill/magic/holy
@@ -536,7 +536,7 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "powder"
-	glow_color = GLOW_COLOR_BAOTHA
+	glow_color = PATRON_COLOR_BAOTHA
 	glow_intensity = GLOW_INTENSITY_LOW
 	clothes_req = FALSE
 	range = 3	//POCKET OPIUM!
@@ -575,7 +575,7 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "last_high"
-	glow_color = GLOW_COLOR_BAOTHA
+	glow_color = PATRON_COLOR_BAOTHA
 	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 30
 	chargedrain = 0
@@ -598,7 +598,7 @@
 			return FALSE
 
 		target.visible_message(
-			span_info("[target] is forced to deeply inhale a sweet smelling mist. They twist and choke as spittle runs down the corner of their mouth, yet an eerie calm passes over them."), 
+			span_info("[target] is forced to deeply inhale a sweet smelling mist. They twist and choke as spittle runs down the corner of their mouth, yet an eerie calm passes over them."),
 			span_notice("The world fades around me. My throat melts, my stomach churns, and the pounding in my chest feels relentless. I can barely move, but it doesn't matter. Oblivion melts into love in front of my glossed-over eyes.")
 		)
 		target.adjustToxLoss(3)
@@ -608,7 +608,7 @@
 /datum/stressevent/TAlasthigh
 	timer = 10 MINUTES
 	stressadd = -99
-	desc = span_hypnophrase("The world fades around me. My throat melts, my stomach churns, and the pounding in my chest feels relentless. I can barely move, but it doesn't matter. Oblivion melts into love in front of my glossed-over eyes.") 
+	desc = span_hypnophrase("The world fades around me. My throat melts, my stomach churns, and the pounding in my chest feels relentless. I can barely move, but it doesn't matter. Oblivion melts into love in front of my glossed-over eyes.")
 
 
 // T3 - bond that lasts for 8 minutes as long as bonded are within 7 tiles, TRAIT_NOPAIN, spd = 5 end = 3
@@ -618,7 +618,7 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "joyride"
-	glow_color = GLOW_COLOR_BAOTHA
+	glow_color = PATRON_COLOR_BAOTHA
 	glow_intensity = GLOW_INTENSITY_LOW
 	range = 2
 	chargetime = 0.5 SECONDS
@@ -664,7 +664,7 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/baothamiracles.dmi'
 	overlay_state = "pleasure"
-	glow_color = GLOW_COLOR_BAOTHA
+	glow_color = PATRON_COLOR_BAOTHA
 	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 30
 	chargedrain = 0
