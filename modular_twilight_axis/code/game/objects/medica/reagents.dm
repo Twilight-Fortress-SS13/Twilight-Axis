@@ -18,9 +18,9 @@
 /datum/reagent/medicine/viscera/on_mob_life(mob/living/carbon/M)
 	if(volume >= 60)
 		M.reagents.remove_reagent(/datum/reagent/medicine/viscera, 2) //No overhealing.
-	if(M.reagents.has_reagent(/datum/reagent/medicine/boil/mentha))
+	if(M.reagents.has_reagent(/datum/reagent/medicine/boil/calendula))
 		brut_mod = -2.5
-	if(M.reagents.has_reagent(/datum/reagent/medicine/boil/valeriana))
+	if(M.reagents.has_reagent(/datum/reagent/medicine/boil/taraxacum))
 		burn_mod = -2.5
 	if(M.reagents.has_reagent(/datum/reagent/medicine/boil/leech))
 		woundmod = 6
@@ -79,16 +79,16 @@
 		M.adjustToxLoss(toxinmod  * REAGENTS_EFFECT_MULTIPLIER, 0)
 	..()
 
-/datum/reagent/medicine/boil/mentha
-	name = "Mentha Extract"
-	color = "#81e424"
+/datum/reagent/medicine/boil/calendula
+	name = "Calendula Extract"
+	color = "#c2c05c"
 	taste_description = "violence"
 	scent_description = "violence"
 	brut_mod = -2
 
-/datum/reagent/medicine/boil/valeriana
-	name = "Valeriana Extract"
-	color = "#a1a189"
+/datum/reagent/medicine/boil/taraxacum
+	name = "Taraxacum Extract"
+	color = "#af8d30"
 	taste_description = "cremation"
 	scent_description = "cremation"
 	burn_mod = -2

@@ -2,40 +2,46 @@
 /obj/item/alch
 	resistance_flags = FLAMMABLE
 	max_integrity = 30
+	var/datum/pollutant/smoke/smoke_type
+
 ////////////////////////////////////////////
 /obj/item/natural/worms/leech
 	resistance_flags = FLAMMABLE
+	var/datum/pollutant/smoke/smoke_type
+
 ////////////////////////////////////////////
 /obj/item/seeds
 	max_integrity = 30
+
 ////////////////////////////////////////////
 
-/obj/item/alch/viscera/fire_act()
-	create_cloud(/datum/pollutant/smoke/viscera, src)
+/obj/item/alch/viscera
+	smoke_type = /datum/pollutant/smoke/viscera
 
 /datum/pollutant/smoke/viscera
 	reagent = /datum/reagent/medicine/viscera
 	color = "#d05555"
+
 //----------------------------------------//
 
-/obj/item/alch/bonemeal/fire_act()
-	create_cloud(/datum/pollutant/smoke/bonedust, src)
+/obj/item/alch/bonemeal
+	smoke_type = /datum/pollutant/smoke/bonedust
 
 /datum/pollutant/smoke/bonedust
 	reagent = /datum/reagent/medicine/boil/bonedust
 	color = "#a18888"
 //----------------------------------------//
 
-/obj/item/alch/swampdust/fire_act()
-	create_cloud(/datum/pollutant/smoke/leaf, src)
+/obj/item/alch/swampdust
+	smoke_type = /datum/pollutant/smoke/leaf
 
 /datum/pollutant/smoke/leaf
 	reagent = /datum/reagent/medicine/boil/leaf
 	color = "#3f6239"
 //----------------------------------------//
 
-/obj/item/alch/tobaccodust/fire_act()
-	create_cloud(/datum/pollutant/smoke/leaf, src)
+/obj/item/alch/tobaccodust
+	smoke_type = /datum/pollutant/smoke/leaf
 
 /datum/pollutant/smoke/leaf
 	reagent = /datum/reagent/medicine/boil/leaf
@@ -43,35 +49,36 @@
 
 //----------------------------------------//
 
-/obj/item/alch/mentha/fire_act()
-	create_cloud(/datum/pollutant/smoke/mentha, src)
+/obj/item/alch/calendula
+	smoke_type = /datum/pollutant/smoke/calendula
 
-/datum/pollutant/smoke/mentha
-	reagent = /datum/reagent/medicine/boil/mentha
+/datum/pollutant/smoke/calendula
+	reagent = /datum/reagent/medicine/boil/calendula
 	color = "#e47a24"
 
 //----------------------------------------//
-/obj/item/alch/valeriana/fire_act()
-	create_cloud(/datum/pollutant/smoke/valeriana, src)
+/obj/item/alch/taraxacum
+	smoke_type = /datum/pollutant/smoke/taraxacum
 
-/datum/pollutant/smoke/valeriana
-	reagent = /datum/reagent/medicine/boil/valeriana
+/datum/pollutant/smoke/taraxacum
+	reagent = /datum/reagent/medicine/boil/taraxacum
 	color = "#e3e342"
 
 //----------------------------------------//
-/obj/item/natural/worms/leech/fire_act()
-	create_cloud(/datum/pollutant/smoke/leech, src)
+/obj/item/natural/worms/leech
+	smoke_type = /datum/pollutant/smoke/leech
 
 /datum/pollutant/smoke/leech
 	reagent = /datum/reagent/medicine/boil/leech
 	color = "#5c4a86"
 
 //----------------------------------------//
-/obj/item/alch/ozium/fire_act()
-	create_cloud(/datum/pollutant/smoke/ozium, src)
+/obj/item/alch/ozium
+	smoke_type = /datum/pollutant/smoke/ozium
 
 /datum/pollutant/smoke/ozium
 	reagent = /datum/reagent/ozium
+
 //----------------------------------------//
 
 /obj/item/alch/firedust/fire_act()
@@ -82,11 +89,10 @@
 	explosion(get_turf(src), -1, 0, 2, 3, 0, flame_range = 1)
 	qdel(src)
 
-/obj/item/proc/create_cloud(cloud_reagent, item)
-	var/turf/S = get_turf(item)
-	for(var/obj/machinery/light/rogue/O in S.contents)
-		for(var/turf/open/T in range(1, get_turf(item)))
-			T.pollute_turf(cloud_reagent, 100, 200)
+/obj/item/proc/create_cloud(cloud_reagent, item, campfire)
+	var/turf/S = get_turf(campfire)
+	for(var/turf/open/T in range(1, S))
+		T.pollute_turf(cloud_reagent, 100, 200)
 	qdel(item)
 
 /datum/pollutant/smoke
