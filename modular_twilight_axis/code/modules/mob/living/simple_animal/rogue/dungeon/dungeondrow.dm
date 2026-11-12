@@ -10,9 +10,7 @@
 	emote_hear = null
 	emote_see = null
 	speak_chance = 0
-	turns_per_move = 4
 	see_in_dark = 6
-	move_to_delay = 4
 	base_intents = list(/datum/intent/unarmed/punch)
 	faction = list(FACTION_DROW)
 	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
@@ -20,8 +18,6 @@
 	maxHealth = 200
 	melee_damage_lower = 10
 	melee_damage_upper = 20
-	vision_range = 9
-	aggro_vision_range = 9
 	response_help_continuous = "pokes"
 	response_help_simple = "poke"
 	environment_smash = ENVIRONMENT_SMASH_NONE
@@ -29,8 +25,6 @@
 	ranged = TRUE
 	ranged_cooldown_time = 130
 	projectiletype =/obj/projectile/magic/aoe/fireball/drowmage
-	retreat_distance = 4
-	minimum_distance = 3
 	check_friendly_fire = 1
 	food_type = list()
 	pooptype = null
@@ -44,14 +38,13 @@
 	del_on_death = FALSE
 	defprob = 40
 	candodge = TRUE
-	retreat_health = 0
 	food = 0
 	attack_sound = 'sound/combat/hits/blunt/genblunt (1).ogg'
 	attack_verb_continuous = "punches"
 	attack_verb_simple = "punch"
 	dodgetime = 30
 
-	ai_controller = /datum/ai_controller/spectral_maid
+	ai_controller = /datum/ai_controller/skeleton_ranged
 
 /obj/projectile/magic/aoe/fireball/drowmage
 	damage = 20

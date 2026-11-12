@@ -2,6 +2,19 @@
 #define MAX_ADMINBANS_PER_ADMIN 1
 #define MAX_ADMINBANS_PER_HEADMIN 3
 
+/proc/expand_antagonist_ban(list/roles)
+	var/static/list/covered_roles
+	if(!covered_roles)
+		covered_roles = list(ROLE_ANTAGONIST = TRUE, ROLE_SYNDICATE = TRUE)
+		for(var/group in GLOB.antagonist_ban_groups)
+			for(var/role in GLOB.antagonist_ban_groups[group])
+				covered_roles[role] = TRUE
+	var/list/checked = islist(roles) ? roles : list(roles)
+	for(var/role in checked)
+		if(istext(role) && covered_roles[role])
+			return checked | list(ROLE_ANTAGONIST, ROLE_SYNDICATE)
+	return roles
+
 /proc/ta_roleban_list(list/base, list/extras)
 	. = list()
 	if(base)
@@ -181,7 +194,7 @@
 /proc/is_banned_from(player_ckey, list/roles)
 	if(!player_ckey)
 		return
-	roles = ta_roleban_expand_roles(roles)
+	roles = expand_antagonist_ban(ta_roleban_expand_roles(roles)) // TA EDIT
 	if(!length(roles))
 		return
 	var/client/C = GLOB.directory[player_ckey]
@@ -232,7 +245,7 @@
 /proc/is_banned_from_with_details(player_ckey, player_ip, player_cid, role)
 	if(!player_ckey && !player_ip && !player_cid)
 		return
-	var/list/check_roles = ta_roleban_expand_roles(role)
+	var/list/check_roles = expand_antagonist_ban(ta_roleban_expand_roles(role)) // TA EDIT
 	if(!length(check_roles))
 		return
 	var/list/role_values = list("ckey" = player_ckey, "ip" = player_ip, "computerid" = player_cid)

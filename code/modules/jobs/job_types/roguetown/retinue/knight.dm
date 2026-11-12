@@ -532,7 +532,7 @@
 
 	H.adjust_blindness(-3)
 	if(H.mind)
-		var/weapons = list("Rapier + Longbow","Estoc + Recurve Bow","Stecher + Recurve Bow","Sabre + Buckler","Whip + Crossbow","Poleaxe + Sling", "Shamshir + Pistol", "Rapier + Pistol")
+		var/weapons = list("Rapier + Longbow","Estoc + Recurve Bow","Stecher + Recurve Bow","Sabre + Buckler","Whip + Crossbow","Poleaxe + Sling", "Threaded Sword-Whip", "Shamshir + Pistol", "Rapier + Pistol")
 		var/armor_options = list("Light Armor", "Medium Armor", "Medium Cuirass")
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		var/armor_choice = input(H, "Choose your armor.", "TAKE UP ARMS") as anything in armor_options
@@ -574,7 +574,11 @@
 				beltr = /obj/item/quiver/sling/iron
 				beltl = /obj/item/gun/ballistic/revolver/grenadelauncher/sling
 
-			if("Shamshir + Pistol") //TA EDIT START
+			if("Threaded Sword-Whip")				//TA EDIT START
+				r_hand = /obj/item/rogueweapon/sword/sabre/threaded
+				l_hand = /obj/item/rogueweapon/scabbard/sword/cane_bb
+
+			if("Shamshir + Pistol")
 				r_hand = /obj/item/rogueweapon/sword/sabre/shamshir
 				l_hand = /obj/item/twilight_powderflask
 				backl = /obj/item/rogueweapon/scabbard/sword

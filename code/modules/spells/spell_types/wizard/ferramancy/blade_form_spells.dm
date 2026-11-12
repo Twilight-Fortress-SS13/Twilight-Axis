@@ -37,6 +37,7 @@
 		list("label" = "Greatsword", "weapon" = /obj/item/rogueweapon/greatsword/ferramancy, "say" = "Forma Ferrum!"),
 		list("label" = "Greataxe", "weapon" = /obj/item/rogueweapon/greataxe/steel/doublehead/ferramancy, "say" = "Forma Bipennis!"),
 		list("label" = "Halberd", "weapon" = /obj/item/rogueweapon/halberd/ferramancy, "say" = "Forma Hasta!"),
+		list("label" = "Rapier", "weapon" = /obj/item/rogueweapon/sword/rapier/ferramancy, "say" = "Forma Spada!")
 	)
 
 /datum/action/cooldown/spell/form_blade/cast(atom/cast_on)
