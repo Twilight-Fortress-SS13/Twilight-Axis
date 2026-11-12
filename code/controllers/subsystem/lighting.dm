@@ -99,12 +99,10 @@ SUBSYSTEM_DEF(lighting)
 		current_index += 1
 		var/atom/movable/lighting_object/O = queue[current_index]
 
-		if(QDELETED(O))
-			continue
-
-		// these can't delete themselves in update(), so nothing here is removed from the queue mid-loop
-		O.update()
-		O.needs_update = FALSE
+		if(!QDELETED(O)) // TA EDIT START
+			// these can't delete themselves in update(), so nothing here is removed from the queue mid-loop
+			O.update()
+			O.needs_update = FALSE // TA EDIT END
 
 		if(init_tick_checks)
 			if(!TICK_CHECK)

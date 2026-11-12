@@ -1451,6 +1451,7 @@ GLOBAL_LIST_EMPTY(external_rsc_urls)
 		panel_tabs |= verb_to_init.category
 		verblist[++verblist.len] = list(verb_to_init.category, verb_to_init.name)
 	stat_panel.send_message("init_verbs", list(panel_tabs = panel_tabs, verblist = verblist))
+	send_emote_panel_data() // TA EDIT
 
 /client/verb/fix_stat_panel()
 	set name = "Fix Stat Panel"
@@ -1461,6 +1462,7 @@ GLOBAL_LIST_EMPTY(external_rsc_urls)
  * Handles incoming messages from the stat-panel TGUI.
  */
 /client/proc/on_stat_panel_message(type, payload)
+	handle_emote_panel_message(type, payload) // TA EDIT
 	switch(type)
 		if("Update-Verbs")
 			init_verbs()

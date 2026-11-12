@@ -70,7 +70,7 @@
 		faction_list += faction_tag
 		owner.say("Amicus declaratus es.", language = /datum/language/common)
 
-	target.notify_faction_change()
+	target.ai_controller?.nudge_target_scan() // TA EDIT
 	return TRUE
 
 /datum/action/cooldown/spell/gravemark/no_sprite

@@ -9,7 +9,7 @@
 	needs_emotion = TRUE
 
 /mob/living/carbon/human/verb/emote_cry()
-	set name = "Плакать"
+	set name = TA_EMOTE_NAME_EMOTE_CRY
 	set category = "Emotes.Noises"
 
 	emote("cry", intentional = TRUE)
@@ -63,7 +63,7 @@
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_eyebrow()
-	set name = "Приподнять бровь"
+	set name = TA_EMOTE_NAME_EMOTE_EYEBROW
 	set category = "Emotes"
 
 	emote("eyebrow", intentional = TRUE)
@@ -75,7 +75,7 @@
 	nomsg = TRUE
 
 /mob/living/carbon/human/verb/emote_psst()
-	set name = "Пс-ст!"
+	set name = TA_EMOTE_NAME_EMOTE_PSST
 	set category = "Emotes.Noises"
 
 	emote("psst", intentional = TRUE)
@@ -88,7 +88,7 @@
 	emote_type = EMOTE_AUDIBLE
 
 /mob/living/carbon/human/verb/emote_grumble()
-	set name = "Бухтеть"
+	set name = TA_EMOTE_NAME_EMOTE_GRUMBLE
 	set category = "Emotes.Noises"
 
 	emote("grumble", intentional = TRUE)
@@ -195,7 +195,7 @@
 	return H.dna && H.dna.species && H.dna.species.can_flick_ears(user)
 
 /mob/living/carbon/human/verb/emote_eflick()
-	set name = "Ear Flick"
+	set name = TA_EMOTE_NAME_EAR_FLICK
 	set category = "Emotes"
 
 	emote("eflick", intentional = TRUE)
@@ -209,7 +209,7 @@
 	needs_emotion = TRUE
 
 /mob/living/carbon/human/verb/gulp()
-	set name = "Gulp"
+	set name = TA_EMOTE_NAME_GULP
 	set category = "Emotes.Noises"
 
 	emote("gulp", intentional = TRUE)
@@ -222,7 +222,7 @@
 	show_runechat = TRUE
 
 /mob/living/carbon/human/verb/crack()
-	set name = "Knuckles"
+	set name = TA_EMOTE_NAME_KNUCKLES
 	set category = "Emotes.Noises"
 
 	emote("crack", intentional = TRUE)
@@ -235,14 +235,14 @@
 	show_runechat = TRUE
 
 /mob/living/carbon/human/verb/facepalm()
-	set name = "Facepalm"
+	set name = TA_EMOTE_NAME_FACEPALM
 	set category = "Emotes.Noises"
 
 	emote("facepalms", intentional = TRUE)
 
 
 /mob/living/carbon/human/verb/hand_games()
-	set name = "Игры руками"
+	set name = TA_EMOTE_NAME_HAND_GAMES
 	set desc = "Challenge another to a variety of handgames, which can either be done while standing next to each other or while across a table."
 	set category = "Emotes"
 

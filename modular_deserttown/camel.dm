@@ -20,7 +20,7 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/camel/tamed(mob/user)
 	..(user)
-	deaggroprob = 30
+	ai_controller?.clear_aggro()
 	setup_mount(list(TEXT_NORTH = list(0, 10), TEXT_SOUTH = list(0, 10), TEXT_EAST = list(-6, 10), TEXT_WEST = list(6, 10)))
 
 /mob/living/simple_animal/hostile/retaliate/rogue/camel/death()
@@ -38,11 +38,11 @@
 	mob_biotypes = MOB_ORGANIC|MOB_BEAST
 	emote_see = list("looks around.", "chews some leaves.")
 	speak_chance = 1
-	turns_per_move = 5
 	see_in_dark = 6
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_VISIBLE
-	move_to_delay = 8
 	animal_species = /mob/living/simple_animal/hostile/retaliate/rogue/camel
+	ai_controller = /datum/ai_controller/generic/retaliate
+	move_base_delay = 8
 
 	botched_butcher_results = list(/obj/item/reagent_containers/food/snacks/rogue/meat/steak = 2,
 						/obj/item/natural/hide = 2)
@@ -67,8 +67,6 @@
 	attack_verb_simple = "headbutt"
 	melee_damage_lower = 10
 	melee_damage_upper = 25
-	retreat_distance = 10
-	minimum_distance = 10
 	STASPD = 15
 	STACON = 8
 	STASTR = 12

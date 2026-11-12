@@ -101,47 +101,26 @@ function Row(props: { label: string; children: React.ReactNode }) {
 function Help() {
   return (
     <Box className="DiceBuilder__Help">
-      <Box className="DiceBuilder__HelpTitle">Rolling dice</Box>
-      <p>
-        Pick the dice, a stat and a bonus. Everyone nearby sees the result. The
-        sum reads stat, traits, bonus, then dice: <b>13 + 1 + 8 = 22</b>. CHA
-        uses the higher of willpower and fortune.
-      </p>
-      <Box className="DiceBuilder__HelpTitle">Difficulty</Box>
-      <p>
-        The total must reach it to succeed. Without one the roll has no pass or
-        fail.
-      </p>
-      <Box className="DiceBuilder__HelpTitle">Criticals</Box>
-      <p>
-        Every die at its highest is a CRITICAL SUCCESS, every die on 1 a
-        CRITICAL FAIL. They decide a difficulty alone, and only count on rolls
-        that crit at most 1 time in 20, like a d20, 2d10 or 3d6. Untick Crits
-        to leave them out.
-      </p>
-      <Box className="DiceBuilder__HelpTitle">Typing it instead</Box>
-      <p>
-        After a star: <b>*d20</b>, <b>*2d6+3</b>, <b>*d20+STR</b>,{' '}
-        <b>*3d6+STR+1/DC12</b>.
-      </p>
+      <Box className="DiceBuilder__HelpTitle">Броски костей</Box>
+      <p>Выберите кости, характеристику и модификатор. Результат увидят все поблизости.
+        Порядок суммы: характеристика, особенности, модификатор, кости.
+        CHA использует большее из значений воли и удачи.</p>
+      <Box className="DiceBuilder__HelpTitle">Сложность</Box>
+      <p>Для успеха сумма должна достичь сложности. Без неё бросок не считается ни успешным, ни провальным.</p>
+      <Box className="DiceBuilder__HelpTitle">Критические результаты</Box>
+      <p>Максимум на всех костях даёт критический успех, единицы — критический провал.
+        Они определяют исход независимо от суммы. Действуют только для бросков с вероятностью
+        такого результата не больше 1 к 20: например, d20, 2d10 или 3d6. Их можно отключить.</p>
+      <Box className="DiceBuilder__HelpTitle">Быстрый ввод</Box>
+      <p>Введите в чат: <b>*d20</b>, <b>*2d6+3</b>, <b>*d20+STR</b> или <b>*3d6+STR+1/DC12</b>.</p>
       <ul>
-        <li>
-          <b>2d6</b>: dice and faces. The count is optional.
-        </li>
-        <li>
-          <b>+3</b>, <b>-2</b>, or a stat: <b>+STR +PER +INT +CON +WIL +SPD
-          +FOR +CHA</b>.
-        </li>
-        <li>
-          <b>/DC15</b> sets a difficulty, <b>/NOCRIT</b> drops criticals.
-        </li>
-        <li>Up to 24 dice, 2 to 100 faces, bonus up to 99.</li>
+        <li><b>2d6</b>: число костей и граней. Число костей можно опустить.</li>
+        <li>Модификаторы: <b>+3</b>, <b>-2</b> или характеристика: <b>+STR +PER +INT +CON +WIL +SPD +FOR +CHA</b>.</li>
+        <li><b>/DC15</b> задаёт сложность, <b>/NOCRIT</b> отключает критические результаты.</li>
+        <li>До 24 костей, от 2 до 100 граней; модификатор — в пределах значения в поле.</li>
       </ul>
-      <Box className="DiceBuilder__HelpTitle">Contests</Box>
-      <p>
-        Custom Roll opens this window without a difficulty. A critical outranks
-        any total, and equal totals are a draw.
-      </p>
+      <Box className="DiceBuilder__HelpTitle">Состязания</Box>
+      <p>Вариант «Свои кости» открывает это окно без сложности. Критический результат важнее суммы; равные результаты дают ничью.</p>
     </Box>
   );
 }
@@ -216,7 +195,7 @@ export function DiceBuilder() {
                   </Button>
                 ))}
               </Box>
-              <Row label="Dice">
+              <Row label="Кости">
                 <Stepper
                   autoFocus
                   value={count}
@@ -225,10 +204,10 @@ export function DiceBuilder() {
                   onChange={setCount}
                 />
               </Row>
-              <Row label="Faces">
+              <Row label="Грани">
                 <Stepper value={sides} min={2} max={maxSides} onChange={setSides} />
               </Row>
-              <Row label="Bonus">
+              <Row label="Модификатор">
                 <Stepper
                   value={bonus}
                   min={-maxBonus}
@@ -236,21 +215,21 @@ export function DiceBuilder() {
                   onChange={setBonus}
                 />
               </Row>
-              <Row label="Criticals">
+              <Row label="Критические">
                 <Button.Checkbox
                   checked={crits}
                   onClick={() => setCrits(!crits)}
                 >
-                  Crits
+                  Учитывать
                 </Button.Checkbox>
               </Row>
               {allowDifficulty && (
-                <Row label="Against">
+                <Row label="Проверка">
                   <Button.Checkbox
                     checked={useDifficulty}
                     onClick={() => setUseDifficulty(!useDifficulty)}
                   >
-                    Difficulty
+                    Сложность
                   </Button.Checkbox>
                   {useDifficulty && (
                     <Stepper
@@ -262,14 +241,14 @@ export function DiceBuilder() {
                   )}
                 </Row>
               )}
-              <Box className="DiceBuilder__Heading">Add a stat</Box>
+              <Box className="DiceBuilder__Heading">Добавить характеристику</Box>
               <Box className="DiceBuilder__Stats">
                 <Button
                   className="DiceBuilder__Stat"
                   selected={stat === ''}
                   onClick={() => setStat('')}
                 >
-                  None
+                  Нет
                 </Button>
                 {stats.map((option) => (
                   <Button
@@ -301,7 +280,7 @@ export function DiceBuilder() {
                   className="DiceBuilder__Roll"
                   onClick={roll}
                 >
-                  Roll
+                  Бросить
                 </Button>
               </Stack.Item>
               <Stack.Item>
@@ -310,7 +289,7 @@ export function DiceBuilder() {
                   className="DiceBuilder__Cancel"
                   onClick={() => act('cancel')}
                 >
-                  Cancel
+                  Отмена
                 </Button>
               </Stack.Item>
             </Stack>

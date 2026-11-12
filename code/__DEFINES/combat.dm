@@ -436,7 +436,7 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 
 // Per Mage 3.1 decision - we want ARMOR damage of mage to largely stay the same, whereas post-armor damage is reduced slightly, such that it favors grouping with martial or using melee tools like knives or staff to finish them off, but does not completely prevent you from doing so.
 // Applied at compile time. Simplemobs are exempt and take the unscaled damage.
-#define SPELL_DAMAGE_GENERAL_MODIFIER 0.8
+#define SPELL_DAMAGE_GENERAL_MODIFIER 1 //TA EDIT
 #define SPELL_DAMAGE_INTEGRITY_MODIFIER (1 / SPELL_DAMAGE_GENERAL_MODIFIER)
 #define SPELL_DMG(x) ((x) * SPELL_DAMAGE_GENERAL_MODIFIER)
 #define SPELL_INTDAM(x) ((x) * SPELL_DAMAGE_INTEGRITY_MODIFIER)

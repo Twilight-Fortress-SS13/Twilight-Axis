@@ -71,7 +71,7 @@
 	wdefense = 10
 	coverage = 30
 	max_integrity = 220
-	special = null
+	special = /datum/special_intent/limbguard //TA_EDIT
 	unenchantable = TRUE
 	sellprice = 0
 	static_price = TRUE
