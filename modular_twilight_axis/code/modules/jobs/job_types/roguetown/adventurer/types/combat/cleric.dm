@@ -163,7 +163,7 @@
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/light
 	armor = /obj/item/clothing/suit/roguetown/armor/leather
 	pants = /obj/item/clothing/under/roguetown/trou/leather
-	belt = /obj/item/storage/belt/rogue/leather/knifebelt/black/iron
+	belt = /obj/item/storage/belt/rogue/leather/tossbelt/blade/black/iron
 	beltr = /obj/item/storage/belt/rogue/pouch/coins/poor
 	neck = /obj/item/clothing/neck/roguetown/leather
 	shoes = /obj/item/clothing/shoes/roguetown/boots

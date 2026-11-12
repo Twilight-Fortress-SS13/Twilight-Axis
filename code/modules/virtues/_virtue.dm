@@ -192,7 +192,6 @@ GLOBAL_LIST_EMPTY(virtues)
 	virtue_type.handle_added_languages(recipient)
 	virtue_type.handle_stats(recipient)
 	if(HAS_TRAIT(recipient, TRAIT_RESIDENT))
-		REMOVE_TRAIT(recipient, TRAIT_OUTLANDER, ADVENTURER_TRAIT) //TA EDIT
 		REMOVE_TRAIT(recipient, TRAIT_OUTLANDER, JOB_TRAIT) //TA EDIT
 		REMOVE_TRAIT(recipient, TRAIT_OUTLANDER, TRAIT_GENERIC) //TA EDIT
 		if(SStreasury.has_account(recipient))

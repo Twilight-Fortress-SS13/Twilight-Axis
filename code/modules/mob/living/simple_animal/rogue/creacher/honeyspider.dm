@@ -117,15 +117,6 @@
 	ai_controller = null
 	can_receive_livestock_commands = FALSE
 
-/mob/living/simple_animal/hostile/retaliate/rogue/spider/spiderling/CanAttack(atom/the_target)
-	return FALSE
-
-/mob/living/simple_animal/hostile/retaliate/rogue/spider/spiderling/Retaliate()
-	return 0
-
-/mob/living/simple_animal/hostile/retaliate/rogue/spider/spiderling/GiveTarget(new_target)
-	return 0
-
 /mob/living/simple_animal/hostile/retaliate/rogue/spider/spiderling/Initialize(mapload)
 	. = ..()
 	var/matrix/spiderling_scale = matrix()
@@ -145,8 +136,7 @@
 
 
 /mob/living/simple_animal/hostile/retaliate/rogue/spider/tamed(mob/user) // TA EDIT START
-	clear_enemies()
-	LoseTarget()
+	ai_controller?.clear_aggro() // TA EDIT
 	return ..(user) // TA EDIT END
 
 /mob/living/simple_animal/hostile/retaliate/rogue/spider/death(gibbed)

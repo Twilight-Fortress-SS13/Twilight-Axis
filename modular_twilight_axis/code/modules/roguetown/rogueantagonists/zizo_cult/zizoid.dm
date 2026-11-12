@@ -8,11 +8,7 @@
 
 	mob_biotypes = MOB_EPIC
 	footstep_type = FOOTSTEP_MOB_HEAVY
-	vision_range = 6
-	aggro_vision_range = 6
 	environment_smash = ENVIRONMENT_SMASH_STRUCTURES
-	retreat_distance = 0
-	minimum_distance = 0
 
 	health = 1200
 	maxHealth = 1200
@@ -32,8 +28,6 @@
 	STASPD = 4
 	STALUC = 15
 	defprob = 20
-	del_on_deaggro = 99 SECONDS
-	retreat_health = 0
 	food = 0
 
 	dodgetime = 20
@@ -48,6 +42,7 @@
 /mob/living/simple_animal/hostile/retaliate/blood/Initialize()
 	. = ..()
 	ADD_TRAIT(src, TRAIT_BLOODLOSS_IMMUNE, TRAIT_GENERIC)
+	AddComponent(/datum/component/deaggro_despawn, 99 SECONDS)
 
 /mob/living/simple_animal/hostile/retaliate/blood/ascended
 	name = "???"
@@ -56,7 +51,7 @@
 	icon_state = "ascend"
 	icon_living = "ascend"
 	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizoid.dmi'
-	move_to_delay = 0
+	move_base_delay = 1
 	base_intents = list(/datum/intent/unarmed/ascendedclaw)
 	melee_damage_lower = 250
 	melee_damage_upper = 550
@@ -79,6 +74,7 @@
 	set_light(5,5,5, l_color =  LIGHT_COLOR_RED)
 	ADD_TRAIT(src, TRAIT_CRITICAL_RESISTANCE, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_BLOODLOSS_IMMUNE, TRAIT_GENERIC)
+	AddComponent(/datum/component/deaggro_despawn, 99 SECONDS)
 
 /mob/living/simple_animal/hostile/retaliate/blood/ascended/get_sound(input)
 	switch(input)

@@ -145,21 +145,11 @@
 	STASPD = 9
 	mob_size = MOB_SIZE_SMALL
 	aggressive = 0
-	del_on_deaggro = 0
 	ai_controller = null
 	can_receive_livestock_commands = FALSE
 	tame_food_type = list(/obj/item/reagent_containers/food/snacks/rogue/meat)
 	tame_chance = 15
 	bonus_tame_chance = 10
-
-/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/CanAttack(atom/the_target)
-	return FALSE
-
-/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/Retaliate()
-	return 0
-
-/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/GiveTarget(new_target)
-	return 0
 
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/Initialize(mapload)
 	. = ..()
@@ -188,8 +178,7 @@
 	) // TA EDIT END
 
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf/tamed(mob/user) // TA EDIT START
-	clear_enemies()
-	LoseTarget()
+	ai_controller?.clear_aggro() // TA EDIT
 	return ..(user) // TA EDIT END
 
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf/death(gibbed)
