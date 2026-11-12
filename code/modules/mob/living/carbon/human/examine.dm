@@ -1031,8 +1031,8 @@
 					if((viewer.job in GLOB.garrison_positions) || (viewer.job in GLOB.retinue_positions) || (viewer.job in GLOB.courtier_positions) || (viewer.job in GLOB.noble_positions))
 						. += span_userdanger("DEFAULT DEBTOR OF THE CROWN!")
 
-		if(name in GLOB.excommunicated_players)
-			. += span_userdanger("HERETIC! SHAME!")
+//		if(name in GLOB.excommunicated_players)
+//			. += span_userdanger("HERETIC! SHAME!")
 
 		if(HAS_TRAIT(src, TRAIT_EXCOMMUNICATED))
 			. += span_userdanger("EXCOMMUNICATED! SHAME!")

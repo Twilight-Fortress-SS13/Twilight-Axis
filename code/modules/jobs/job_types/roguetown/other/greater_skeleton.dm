@@ -38,8 +38,9 @@
 	/datum/rmb_intent/weak)
 	H.swap_rmb_intent(num=1) //TA_EDIT
 
-	var/datum/antagonist/new_antag = new /datum/antagonist/skeleton()
-	H.mind.add_antag_datum(new_antag)
+	if(H.mind) // TA EDIT START
+		var/datum/antagonist/new_antag = new /datum/antagonist/skeleton()
+		H.mind.add_antag_datum(new_antag) // TA EDIT END
 
 	H.grant_language(/datum/language/undead)
 

@@ -180,3 +180,135 @@
 
 /obj/item/rogueweapon/sword/long/oathbreaker_matthios/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_MATTHIOS_WEAPON)
+
+/obj/item/rogueweapon/sword/sabre/threaded
+	name = "threaded sword"
+	desc = "Изумительное творение неизвестного мастера. В тонком клинке проложена тонкая стальная нить, что при желании владельца способна вытянуть клинок вперёд, превращая оный в смертоносную плеть. Жаль, что он довольно хрупок.."
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon_state = "cane_sword"
+	sheathe_icon = "swordcande"
+	smeltresult = /obj/item/ingot/bronze
+	max_blade_int = 200
+	bigboy = TRUE
+	pixel_y = -16
+	pixel_x = -16
+	inhand_x_dimension = 64
+	inhand_y_dimension = 64
+	var/transformed = FALSE
+
+/obj/item/rogueweapon/sword/sabre/threaded/attack_self(mob/user)
+	transformed = !transformed
+	playsound(src.loc, 'sound/combat/armor_degrade_chain3.ogg', 50, TRUE)
+	if(transformed)
+		possible_item_intents = list(/datum/intent/whip/lash/master, /datum/intent/whip/crack, /datum/intent/whip/punish)
+		force = 20
+		throwforce = 5
+		wdefense = 3
+		icon_state = "cane_whip"
+		attack_verb = list("lashes", "cracks")
+		sharpness = IS_BLUNT
+		swingsound = WHIPWOOSH
+		update_force_dynamic()
+		update_wdefense_dynamic()
+		associated_skill = /datum/skill/combat/whipsflails
+		special = /datum/special_intent/whip_coil
+	else
+		possible_item_intents = list(/datum/intent/sword/cut/sabre, /datum/intent/sword/thrust/sabre, /datum/intent/sword/strike)
+		force = 22
+		throwforce = 10
+		wdefense = 7
+		icon_state = "cane_sword"
+		attack_verb = list("cuts", "slashes")
+		sharpness = IS_SHARP
+		swingsound = BLADEWOOSH_SMALL
+		update_force_dynamic()
+		update_wdefense_dynamic()
+		associated_skill = /datum/skill/combat/swords
+		special = /datum/special_intent/shin_swipe
+
+	if(user.a_intent)
+		var/datum/intent/I = user.a_intent
+		if(istype(I))
+			I.afterchange()
+	user.update_a_intents()
+
+/obj/item/rogueweapon/sword/sabre/threaded/getonmobprop(tag)
+	. = ..()
+	if(tag)
+		switch(tag)
+			if("gen")
+				return list("shrink" = 0.5,"sx" = -16,"sy" = -10,"nx" = 15,"ny" = -7,"wx" = -10,"wy" = -5,"ex" = 7,"ey" = -7,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = -13,"sturn" = 101,"wturn" = -60,"eturn" = -32,"nflip" = 1,"sflip" = 1,"wflip" = 8,"eflip" = 1)
+
+/obj/item/rogueweapon/sword/sabre/threaded/silver
+	name = "silver threaded sword"
+	desc = "Изумительное творение неизвестного мастера. В тонком клинке проложена тонкая стальная нить, что при желании владельца способна вытянуть клинок вперёд, превращая оный в смертоносную плеть. Жаль, что он довольно хрупок.."
+	icon_state = "cane_sword_s"
+	smeltresult = /obj/item/ingot/silver
+	transformed = FALSE
+	is_silver = TRUE
+
+/obj/item/rogueweapon/sword/sabre/threaded/silver/attack_self(mob/user)
+	transformed = !transformed
+	playsound(src.loc, 'sound/combat/armor_degrade_chain3.ogg', 50, TRUE)
+	if(transformed)
+		possible_item_intents = list(/datum/intent/whip/lash/master, /datum/intent/whip/crack, /datum/intent/whip/punish)
+		force = 20
+		throwforce = 5
+		wdefense = 3
+		icon_state = "cane_whip_s"
+		attack_verb = list("lashes", "cracks")
+		sharpness = IS_BLUNT
+		swingsound = WHIPWOOSH
+		update_force_dynamic()
+		update_wdefense_dynamic()
+		associated_skill = /datum/skill/combat/whipsflails
+		special = /datum/special_intent/whip_coil
+	else
+		possible_item_intents = list(/datum/intent/sword/cut/sabre, /datum/intent/sword/thrust/sabre, /datum/intent/sword/strike)
+		force = 22
+		throwforce = 10
+		wdefense = 7
+		icon_state = "cane_sword_s"
+		attack_verb = list("cuts", "slashes")
+		sharpness = IS_SHARP
+		swingsound = BLADEWOOSH_MED
+		update_force_dynamic()
+		update_wdefense_dynamic()
+		associated_skill = /datum/skill/combat/swords
+		special = /datum/special_intent/shin_swipe
+
+	if(user.a_intent)
+		var/datum/intent/I = user.a_intent
+		if(istype(I))
+			I.afterchange()
+	user.update_a_intents()
+
+/obj/item/rogueweapon/scabbard/sword/cane_bb
+	name = "cane sheath"
+	desc = "A piece of steel lined with wood. Great for batting away blows."
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon_state = "cane_sheath"
+	item_state = "cane_sheath"
+	force = 10
+	bigboy = TRUE
+	pixel_y = -16
+	pixel_x = -16
+	inhand_x_dimension = 64
+	inhand_y_dimension = 64
+	valid_blade = /obj/item/rogueweapon/sword/sabre/threaded
+	possible_item_intents = list(SHIELD_BASH, SHIELD_SMASH)
+	can_parry = TRUE
+	sewrepair = FALSE
+	anvilrepair = /datum/skill/craft/carpentry
+	wdefense = 5
+	special = /datum/special_intent/limbguard
+	slot_flags = NONE
+	cant_strip = TRUE
+	max_integrity = 100
+
+/obj/item/rogueweapon/scabbard/sword/cane_bb/getonmobprop(tag)
+	. = ..()
+	if(tag)
+		switch(tag)
+			if("gen")
+				return list("shrink" = 0.4,"sx" = -11,"sy" = -11,"nx" = 11,"ny" = 0,"wx" = -4,"wy" = 0,"ex" = 1,"ey" = -10,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 0,"sturn" = -110,"wturn" = 0,"eturn" = 109,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
