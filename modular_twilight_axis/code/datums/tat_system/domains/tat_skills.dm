@@ -290,14 +290,16 @@
 	if(!islist(rules) || !islist(virtues) || !length(virtues))
 		return 0
 
-	for(var/virtue_entry in virtues)
-		for(var/virtue_rule in rules)
-			if(!virtue_matches_rule(virtue_entry, virtue_rule))
-				continue
-
-			var/list/skill_map = rules[virtue_rule]
-			if(islist(skill_map))
-				total += round(skill_map[skill_type] || 0)
+	for(var/virtue_rule in rules)
+		var/list/skill_map = rules[virtue_rule]
+		if(!islist(skill_map))
+			continue
+		var/bonus_value = round(skill_map[skill_type] || 0)
+		if(!bonus_value)
+			continue
+		for(var/virtue_entry in virtues)
+			if(virtue_matches_rule(virtue_entry, virtue_rule))
+				total += bonus_value
 
 	return total
 
@@ -306,25 +308,35 @@
 	if(!islist(rules) || !islist(virtues) || !length(virtues))
 		return 0
 
+	var/list/active_choice_virtues = list()
 	for(var/virtue_entry in virtues)
 		if(!istype(virtue_entry, /datum/virtue))
 			continue
 		var/datum/virtue/virtue_datum = virtue_entry
-		if(!LAZYLEN(virtue_datum.picked_choices))
+		if(LAZYLEN(virtue_datum.picked_choices))
+			active_choice_virtues += virtue_datum
+	if(!length(active_choice_virtues))
+		return 0
+
+	for(var/virtue_rule in rules)
+		var/list/choice_map = rules[virtue_rule]
+		if(!islist(choice_map))
 			continue
-
-		for(var/virtue_rule in rules)
-			if(!virtue_matches_rule(virtue_datum, virtue_rule))
+		var/list/choice_skill_bonuses = list()
+		for(var/choice in choice_map)
+			var/list/skill_map = choice_map[choice]
+			if(!islist(skill_map))
 				continue
-
-			var/list/choice_map = rules[virtue_rule]
-			if(!islist(choice_map))
+			var/skill_bonus = round(skill_map[skill_type] || 0)
+			if(skill_bonus)
+				choice_skill_bonuses[choice] = skill_bonus
+		if(!length(choice_skill_bonuses))
+			continue
+		for(var/datum/virtue/matching_virtue as anything in active_choice_virtues)
+			if(!virtue_matches_rule(matching_virtue, virtue_rule))
 				continue
-
-			for(var/choice in virtue_datum.picked_choices)
-				var/list/skill_map = choice_map[choice]
-				if(islist(skill_map))
-					total += round(skill_map[skill_type] || 0)
+			for(var/choice in matching_virtue.picked_choices)
+				total += choice_skill_bonuses[choice] || 0
 
 	return total
 

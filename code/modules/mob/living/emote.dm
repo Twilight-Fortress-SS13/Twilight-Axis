@@ -1,26 +1,3 @@
-/* Twilight Axis Localisation */
-GLOBAL_LIST_INIT(zone_translations, list(
-		BODY_ZONE_HEAD = "голову",
-		BODY_ZONE_CHEST = "туловище",
-		BODY_ZONE_R_ARM = "правую руку",
-		BODY_ZONE_L_ARM = "левую руку",
-		BODY_ZONE_R_LEG = "правую ногу",
-		BODY_ZONE_L_LEG = "левую ногу",
-		BODY_ZONE_PRECISE_R_INHAND = "правую ладонь",
-		BODY_ZONE_PRECISE_L_INHAND = "левую ладонь",
-		BODY_ZONE_PRECISE_R_FOOT = "правую ступню",
-		BODY_ZONE_PRECISE_L_FOOT = "левую ступню",
-		BODY_ZONE_PRECISE_SKULL = "череп",
-		BODY_ZONE_PRECISE_EARS = "уши",
-		BODY_ZONE_PRECISE_R_EYE = "правый глаз",
-		BODY_ZONE_PRECISE_L_EYE = "левый глаз",
-		BODY_ZONE_PRECISE_NOSE = "нос",
-		BODY_ZONE_PRECISE_MOUTH = "рот",
-		BODY_ZONE_PRECISE_NECK = "шею",
-		BODY_ZONE_PRECISE_STOMACH = "живот",
-		BODY_ZONE_PRECISE_GROIN = "пах"
-	))
-
 /* EMOTE DATUMS */
 /datum/emote/living
 	mob_type_allowed_typecache = /mob/living
@@ -39,7 +16,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = TRUE
 
 /mob/living/carbon/human/verb/emote_vomit()
-	set name = "Блевать"
+	set name = TA_EMOTE_NAME_EMOTE_VOMIT
 	set category = "Emotes"
 	emote("vomit", intentional = TRUE)
 
@@ -73,7 +50,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	stat_allowed = list(CONSCIOUS, UNCONSCIOUS)
 
 /mob/living/carbon/human/verb/emote_pray()
-	set name = "Молиться"
+	set name = TA_EMOTE_NAME_EMOTE_PRAY
 	set category = "Emotes"
 
 	emote("pray", intentional = TRUE)
@@ -164,7 +141,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_meditate()
-	set name = "Медитировать"
+	set name = TA_EMOTE_NAME_EMOTE_MEDITATE
 	set category = "Emotes"
 
 	emote("meditate", intentional = TRUE)
@@ -206,7 +183,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 				H.add_stress(/datum/stressevent/noble_bowed_to)
 
 /mob/living/carbon/human/verb/emote_bow()
-	set name = "Поклониться"
+	set name = TA_EMOTE_NAME_EMOTE_BOW
 	set category = "Emotes"
 
 	emote("bow", intentional = TRUE, targetted = TRUE)
@@ -220,7 +197,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_burp()
-	set name = "Рыгать"
+	set name = TA_EMOTE_NAME_EMOTE_BURP
 	set category = "Emotes.Noises"
 
 	emote("burp", intentional = TRUE)
@@ -234,7 +211,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_choke()
-	set name = "Задыхаться"
+	set name = TA_EMOTE_NAME_EMOTE_CHOKE
 	set category = "Emotes.Noises"
 
 	emote("choke", intentional = TRUE)
@@ -247,7 +224,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_crossarms()
-	set name = "Скрестить руки"
+	set name = TA_EMOTE_NAME_EMOTE_CROSSARMS
 	set category = "Emotes"
 
 	emote("crossarms", intentional = TRUE)
@@ -290,7 +267,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_cough()
-	set name = "Кашлять"
+	set name = TA_EMOTE_NAME_EMOTE_COUGH
 	set category = "Emotes.Noises"
 
 
@@ -305,7 +282,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_clearthroat()
-	set name = "Прочистить горло"
+	set name = TA_EMOTE_NAME_EMOTE_CLEARTHROAT
 	set category = "Emotes.Noises"
 
 
@@ -319,7 +296,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_dance()
-	set name = "Танцевать"
+	set name = TA_EMOTE_NAME_EMOTE_DANCE
 	set category = "Emotes"
 
 	emote("dance", intentional = TRUE)
@@ -351,7 +328,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_drool()
-	set name = "Пускать слюни"
+	set name = TA_EMOTE_NAME_EMOTE_DROOL
 	set category = "Emotes"
 
 	emote("drool", intentional = TRUE)
@@ -363,7 +340,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_faint()
-	set name = "Свалиться с ног"
+	set name = TA_EMOTE_NAME_EMOTE_FAINT
 	set category = "Emotes"
 
 	emote("faint", intentional = TRUE)
@@ -385,7 +362,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_frown()
-	set name = "Хмуриться"
+	set name = TA_EMOTE_NAME_EMOTE_FROWN
 	set category = "Emotes"
 
 	emote("frown", intentional = TRUE)
@@ -399,7 +376,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_gag()
-	set name = "Подавиться"
+	set name = TA_EMOTE_NAME_EMOTE_GAG
 	set category = "Emotes.Noises"
 
 
@@ -415,7 +392,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_gasp()
-	set name = "Ах!"
+	set name = TA_EMOTE_NAME_EMOTE_GASP
 	set category = "Emotes.Noises"
 
 
@@ -450,7 +427,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 				to_chat(H, span_info("The giggling brings a smile to my face, and fortune to my steps!"))
 
 /mob/living/carbon/human/verb/emote_giggle()
-	set name = "Хихикать"
+	set name = TA_EMOTE_NAME_EMOTE_GIGGLE
 	set category = "Emotes.Noises"
 
 
@@ -477,7 +454,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 				to_chat(H, span_info("The chuckling brings a smile to my face, and fortune to my steps!"))
 
 /mob/living/carbon/human/verb/emote_chuckle()
-	set name = "Усмехнуться"
+	set name = TA_EMOTE_NAME_EMOTE_CHUCKLE
 	set category = "Emotes.Noises"
 
 
@@ -491,7 +468,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_glare()
-	set name = "Сверлить взглядом"
+	set name = TA_EMOTE_NAME_EMOTE_GLARE
 	set category = "Emotes"
 
 	emote("glare", intentional = TRUE)
@@ -502,7 +479,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	message = "grins."
 	emote_type = EMOTE_VISIBLE
 /mob/living/carbon/human/verb/emote_grin()
-	set name = "Ухмыльнуться"
+	set name = TA_EMOTE_NAME_EMOTE_GRIN
 	set category = "Emotes"
 
 	emote("grin", intentional = TRUE)
@@ -527,7 +504,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_groan()
-	set name = "Тяжело вздохнуть"
+	set name = TA_EMOTE_NAME_EMOTE_GROAN
 	set category = "Emotes.Noises"
 
 
@@ -539,7 +516,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	message = "grimaces."
 	emote_type = EMOTE_VISIBLE
 /mob/living/carbon/human/verb/emote_grimace()
-	set name = "Сморщиться"
+	set name = TA_EMOTE_NAME_EMOTE_GRIMACE
 	set category = "Emotes"
 
 	emote("grimace", intentional = TRUE)
@@ -566,7 +543,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	use_params_for_runechat = TRUE
 
 /mob/living/carbon/human/verb/emote_kiss()
-	set name = "Поцеловать"
+	set name = TA_EMOTE_NAME_EMOTE_KISS
 	set category = "Emotes"
 
 	emote("kiss", intentional = TRUE, targetted = TRUE)
@@ -638,7 +615,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	use_params_for_runechat = TRUE
 
 /mob/living/carbon/human/verb/emote_lick()
-	set name = "Облизать"
+	set name = TA_EMOTE_NAME_EMOTE_LICK
 	set category = "Emotes"
 	emote("lick", intentional = TRUE, targetted = TRUE)
 
@@ -692,7 +669,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_spit()
-	set name = "Плюнуть"
+	set name = TA_EMOTE_NAME_EMOTE_SPIT
 	set category = "Emotes"
 
 	emote("spit", intentional = TRUE, targetted = TRUE)
@@ -728,7 +705,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	restraint_check = TRUE
 
 /mob/living/carbon/human/verb/emote_hug()
-	set name = "Обнять"
+	set name = TA_EMOTE_NAME_EMOTE_HUG
 	set category = "Emotes"
 
 	emote("hug", intentional = TRUE, targetted = TRUE)
@@ -758,7 +735,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	stat_allowed = SOFT_CRIT
 
 /mob/living/carbon/human/verb/emote_hold()
-	set name = "Hold Breath"
+	set name = TA_EMOTE_NAME_HOLD_BREATH
 	set category = "Emotes"
 
 	emote("hold", intentional = TRUE)
@@ -806,7 +783,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	..()
 
 /mob/living/carbon/human/verb/emote_slap()
-	set name = "Шлепнуть"
+	set name = TA_EMOTE_NAME_EMOTE_SLAP
 	set category = "Emotes"
 
 	emote("slap", intentional = TRUE, targetted = TRUE)
@@ -846,7 +823,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 		to_chat(user, span_smallred("Ouch..."))
 
 /mob/living/carbon/human/verb/emote_pinch()
-	set name = "Ущипнуть"
+	set name = TA_EMOTE_NAME_EMOTE_PINCH
 	set category = "Emotes"
 
 	emote("pinch", intentional = TRUE, targetted = TRUE)
@@ -885,7 +862,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 				to_chat(H, span_info("The laughter brings a smile to my face, and fortune to my steps!"))
 
 /mob/living/carbon/human/verb/emote_laugh()
-	set name = "Смеяться"
+	set name = TA_EMOTE_NAME_EMOTE_LAUGH
 	set category = "Emotes.Noises"
 
 
@@ -904,7 +881,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	message_param = "nods at %t."
 	emote_type = EMOTE_VISIBLE
 /mob/living/carbon/human/verb/emote_nod()
-	set name = "Кивнуть"
+	set name = TA_EMOTE_NAME_EMOTE_NOD
 	set category = "Emotes"
 
 	emote("nod", intentional = TRUE)
@@ -947,7 +924,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	needs_emotion = TRUE
 
 /mob/living/carbon/human/verb/emote_scream()
-	set name = "Кричать"
+	set name = TA_EMOTE_NAME_EMOTE_SCREAM
 	set category = "Emotes.Noises"
 
 
@@ -1161,7 +1138,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_rage()
-	set name = "Ярость"
+	set name = TA_EMOTE_NAME_EMOTE_RAGE
 	set category = "Emotes.Noises"
 
 
@@ -1175,7 +1152,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_attnwhistle()
-	set name = "Свистнуть"
+	set name = TA_EMOTE_NAME_EMOTE_ATTNWHISTLE
 	set category = "Emotes.Noises"
 
 
@@ -1202,7 +1179,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_shakehead()
-	set name = "Качать головой"
+	set name = TA_EMOTE_NAME_EMOTE_SHAKEHEAD
 	set category = "Emotes"
 
 	emote("shakehead", intentional = TRUE)
@@ -1215,7 +1192,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_shiver()
-	set name = "Дрожать"
+	set name = TA_EMOTE_NAME_EMOTE_SHIVER
 	set category = "Emotes"
 
 	emote("shiver", intentional = TRUE)
@@ -1230,7 +1207,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_sigh()
-	set name = "Вздохнуть"
+	set name = TA_EMOTE_NAME_EMOTE_SIGH
 	set category = "Emotes.Noises"
 
 
@@ -1250,7 +1227,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_whistle()
-	set name = "Насвистывать"
+	set name = TA_EMOTE_NAME_EMOTE_WHISTLE
 	set category = "Emotes.Noises"
 
 
@@ -1265,7 +1242,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_hmm()
-	set name = "Хмыкнуть"
+	set name = TA_EMOTE_NAME_EMOTE_HMM
 	set category = "Emotes.Noises"
 
 
@@ -1280,7 +1257,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_huh()
-	set name = "Что?"
+	set name = TA_EMOTE_NAME_EMOTE_HUH
 	set category = "Emotes.Noises"
 
 
@@ -1295,7 +1272,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_hum()
-	set name = "Напевать"
+	set name = TA_EMOTE_NAME_EMOTE_HUM
 	set category = "Emotes.Noises"
 
 
@@ -1307,7 +1284,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	message = "smiles."
 	emote_type = EMOTE_VISIBLE
 /mob/living/carbon/human/verb/emote_smile()
-	set name = "Улыбнуться"
+	set name = TA_EMOTE_NAME_EMOTE_SMILE
 	set category = "Emotes"
 
 	emote("smile", intentional = TRUE)
@@ -1345,7 +1322,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_shh()
-	set name = "Шикнуть"
+	set name = TA_EMOTE_NAME_EMOTE_SHH
 	set category = "Emotes.Noises"
 
 
@@ -1374,7 +1351,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_snore()
-	set name = "Храпеть"
+	set name = TA_EMOTE_NAME_EMOTE_SNORE
 	set category = "Emotes.Noises"
 	emote("snore", intentional = TRUE)
 
@@ -1429,7 +1406,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_warcry()
-	set name = "Боевой клич"
+	set name = TA_EMOTE_NAME_EMOTE_WARCRY
 	set category = "Emotes.Noises"
 
 
@@ -1457,7 +1434,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_whimper()
-	set name = "Хныкать"
+	set name = TA_EMOTE_NAME_EMOTE_WHIMPER
 	set category = "Emotes.Noises"
 
 
@@ -1477,7 +1454,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_yawn()
-	set name = "Зевать"
+	set name = TA_EMOTE_NAME_EMOTE_YAWN
 	set category = "Emotes.Noises"
 
 
@@ -1616,7 +1593,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_shake()
-	set name = "Покачать головой"
+	set name = TA_EMOTE_NAME_EMOTE_SHAKE
 	set category = "Emotes"
 
 	emote("shake", intentional = TRUE)
@@ -1628,7 +1605,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_squint()
-	set name = "Прищуриться"
+	set name = TA_EMOTE_NAME_EMOTE_SQUINT
 	set category = "Emotes"
 
 	emote("squint", intentional = TRUE)
@@ -1641,7 +1618,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_snap()
-	set name = "Щелкнуть 1"
+	set name = TA_EMOTE_NAME_EMOTE_SNAP
 	set category = "Emotes.Noises"
 
 
@@ -1655,7 +1632,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_blink()
-	set name = "Моргнуть"
+	set name = TA_EMOTE_NAME_EMOTE_BLINK
 	set category = "Emotes.Noises"
 
 
@@ -1669,7 +1646,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_stomp()
-	set name = "Топнуть"
+	set name = TA_EMOTE_NAME_EMOTE_STOMP
 	set category = "Emotes.Noises"
 
 
@@ -1683,7 +1660,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_snap2()
-	set name = "Щелкнуть 2"
+	set name = TA_EMOTE_NAME_EMOTE_SNAP2
 	set category = "Emotes.Noises"
 
 
@@ -1697,7 +1674,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 	show_runechat = FALSE
 
 /mob/living/carbon/human/verb/emote_snap3()
-	set name = "Щелкнуть 3"
+	set name = TA_EMOTE_NAME_EMOTE_SNAP3
 	set category = "Emotes.Noises"
 
 
@@ -1716,7 +1693,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 		user.play_overhead_indicator('icons/mob/overhead_effects.dmi', "stress", 15, MUTATIONS_LAYER, private = user.patron.type, soundin = 'sound/magic/holyshield.ogg', y_offset = 32)
 
 /mob/living/carbon/human/verb/emote_fsalute()
-	set name = "Знак веры"
+	set name = TA_EMOTE_NAME_EMOTE_FSALUTE
 	set category = "Emotes"
 
 	emote("fsalute", intentional =	TRUE)
@@ -1733,7 +1710,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 		. = ..()
 
 /mob/living/carbon/human/proc/emote_ffsalute()
-	set name = "Ложный знак веры"
+	set name = TA_EMOTE_NAME_EMOTE_FFSALUTE
 	set category = "Emotes"
 
 	emote("ffsalute", intentional =	TRUE)
