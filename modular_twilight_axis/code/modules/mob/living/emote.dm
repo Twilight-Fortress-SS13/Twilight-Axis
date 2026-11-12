@@ -535,6 +535,7 @@ GLOBAL_LIST_INIT(zone_translations, list(
 		return
 	if(ishuman(target))
 		playsound(target.loc, 'sound/vo/hug.ogg', 100, FALSE, -1)
+		SEND_SIGNAL(user, COMSIG_MOB_PATTED, target)
 
 /datum/emote/living/vomit
 	message = "рвёт!"

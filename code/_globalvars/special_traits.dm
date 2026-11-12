@@ -56,6 +56,9 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 	character.calculate_energy()
 	character.calculate_stamina()
 	character.energy = character.max_energy
+	// TA EDIT START: role and traits are final before nobility selection.
+	character.taFinishNobility()
+	// TA EDIT END
 
 /// Check for incompatible traits and remove one of them
 /proc/check_trait_incompatibilities(mob/living/carbon/human/H)
