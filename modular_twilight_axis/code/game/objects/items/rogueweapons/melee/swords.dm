@@ -187,7 +187,7 @@
 /obj/item/rogueweapon/sword/sabre/threaded
 	name = "threaded sword"
 	desc = "Изумительное творение неизвестного мастера. В тонком клинке проложена тонкая стальная нить, что при желании владельца способна вытянуть клинок вперёд, превращая оный в смертоносную плеть. Жаль, что он довольно хрупок.."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords64.dmi'
 	icon_state = "cane_sword"
 	sheathe_icon = "swordcande"
 	smeltresult = /obj/item/ingot/bronze
@@ -289,7 +289,7 @@
 /obj/item/rogueweapon/scabbard/sword/cane_bb
 	name = "cane sheath"
 	desc = "A piece of steel lined with wood. Great for batting away blows."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon = 'modular_twilight_axis/icons/obj/items/gwstrap.dmi'
 	icon_state = "cane_sheath"
 	item_state = "cane_sheath"
 	force = 10
