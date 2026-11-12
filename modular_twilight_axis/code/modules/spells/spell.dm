@@ -61,3 +61,51 @@
 
 /datum/action/cooldown/spell/create_campfire
 	point_cost = 1 // TA EDIT END
+
+/obj/effect/proc_holder/spell/perform(list/targets, recharge = TRUE, mob/user = usr)
+	var/mob/target = targets[1]
+	if(istype(target) && psydonite_check(target))
+		playsound(target.loc, 'sound/magic/PSY.ogg', 100, FALSE, -1)
+		revert_cast()
+		return
+
+	return ..()
+
+/obj/effect/proc_holder/spell/proc/psydonite_check(mob/living/target)
+	return devotion_cost && HAS_TRAIT(target, TRAIT_PSYDONITE)
+
+/obj/effect/proc_holder/spell/invoked/infestation/psydonite_check(mob/living/target)
+	return FALSE
+
+/obj/effect/proc_holder/spell/invoked/call_dreamfiend/psydonite_check(mob/living/target)
+	return FALSE
+
+/obj/effect/proc_holder/spell/invoked/raise_spirits_vengeance/psydonite_check(mob/living/target)
+	return FALSE
+
+/obj/effect/proc_holder/spell/invoked/eoracurse/psydonite_check(mob/living/target)
+	return FALSE
+
+/datum/action/cooldown/spell/miracle/anastasis
+	spell_flags = NONE
+
+/obj/effect/proc_holder/spell/invoked/projectile/blowingdust/psydonite_check(mob/living/target)
+	return FALSE
+
+/obj/effect/proc_holder/spell/invoked/projectile/TAblowingdust/psydonite_check(mob/living/target)
+	return FALSE
+
+/obj/effect/proc_holder/spell/invoked/lux_steal/psydonite_check(mob/living/target)
+	return FALSE
+
+/obj/effect/proc_holder/spell/invoked/twilight_weightofchains/psydonite_check(mob/living/target)
+	return FALSE
+
+/obj/effect/proc_holder/spell/invoked/twilight_equalize/psydonite_check(mob/living/target)
+	return FALSE
+
+/obj/effect/proc_holder/spell/invoked/twilight_churnwealthy/psydonite_check(mob/living/target)
+	return FALSE
+
+/obj/effect/proc_holder/spell/invoked/projectile/twilight_crownfortheking/psydonite_check(mob/living/target)
+	return FALSE
