@@ -10,12 +10,12 @@
 	vice_restrictions = list(/datum/charflaw/unintelligible, /datum/charflaw/wanted)
 	forbidden_races = list(RACES_DESPISED)
 	allowed_ages = ALL_AGES_LIST
-	cmode_music = 'sound/music/cmode/towner/combat_towner3.ogg'
+	cmode_music = sound("sound/music/cmode/towner/combat_towner3.ogg")
 
 	outfit = /datum/outfit/job/roguetown/archivist
 	display_order = JDO_ARCHIVIST
 	give_bank_account = TRUE
-	min_pq = 1 // Please do not read smut while brewing bottle bombs. It upsets the maids when they have to scrape archivists off the ceiling.
+	min_pq = 2 // Please do not read smut while brewing bottle bombs. It upsets the maids when they have to scrape archivists off the ceiling.
 	max_pq = null
 	round_contrib_points = 3
 
@@ -59,6 +59,8 @@
 		/datum/language/draconic,
 		/datum/language/undercommon,
 		/datum/language/aavnic, // All but beast, which is associated with werewolves.
+		/datum/language/gyedzenese, //TA EDIT
+		/datum/language/valorian, //TA EDIT
 	)
 	category_tags = list(CTAG_ARCHIVIST)
 	subclass_stats = list(

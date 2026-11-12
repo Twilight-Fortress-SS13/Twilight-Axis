@@ -16,7 +16,7 @@
 	min_pq = -10
 	max_pq = null
 	round_contrib_points = 2
-	cmode_music = 'sound/music/cmode/towner/combat_towner.ogg'
+	cmode_music = sound("sound/music/cmode/towner/combat_towner.ogg")
 
 	job_traits = list(TRAIT_CICERONE, TRAIT_HOMESTEAD_EXPERT)
 
@@ -45,6 +45,7 @@
 		/datum/skill/combat/unarmed = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/stealing = SKILL_LEVEL_JOURNEYMAN, // TA EDIT
 		/datum/skill/misc/swimming = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,

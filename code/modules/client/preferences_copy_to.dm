@@ -6,7 +6,6 @@
 			O.drop_limb()
 			qdel(O)
 			character.regenerate_limb(zone)
-
 	var/datum/species/chosen_species
 	chosen_species = pref_species.type
 	if(!(pref_species.name in GLOB.roundstart_races))
@@ -18,7 +17,9 @@
 	character.gender = gender
 	character.set_species(chosen_species, icon_update = FALSE, pref_load = src)
 	character.dna.update_body_size()
-
+	var/obj/item/organ/breasts/breast_organ = character.getorganslot(ORGAN_SLOT_BREASTS)
+	if(breast_organ)
+		breast_organ.lactating = lactating
 	if(roundstart_checks)
 		if(CONFIG_GET(flag/humans_need_surnames) && ((pref_species.id == "human") || (pref_species.id == "humen")))
 			var/firstspace = findtext(real_name, " ")
@@ -39,7 +40,6 @@
 	character.cmode_music_override_name = combat_music.name
 	character.highlight_color = highlight_color
 	character.nickname = nickname
-
 	character.voice_color = voice_color
 	character.voice_pitch = voice_pitch
 	character.skin_tone = skin_tone
@@ -48,7 +48,8 @@
 	character.vampire_hair = vampire_hair
 	character.vampire_ears = vampire_ears
 	character.set_patron(selected_patron)
-
+	character.defiant = defiant
+	character.check_manor_pref = have_manor
 	// done in two loops just in case it matters
 	character.charflaws.Cut()
 	for(var/cf_type in charflaws)
@@ -69,16 +70,16 @@
 	character.vampire_headshot_artist_link = vampire_headshot_artist_link
 
 	character.statpack = statpack
-
 	character.flavortext = flavortext
 	character.pen_name = pen_name
 	character.ooc_notes = ooc_notes
 	character.nsfwflavortext = nsfwflavortext
+	character.nsfw_ooc_extra_img = nsfw_ooc_extra_img
+	character.nsfw_ooc_extra_img_link = nsfw_ooc_extra_img_link
 	character.erpprefs = erpprefs
 	// Rumours / Noble gossip
 	character.rumour = rumour
 	character.noble_gossip = noble_gossip
-
 	// Copy the cached version
 	character.flavortext_cached = flavortext_cached
 	character.ooc_notes_cached = ooc_notes_cached
@@ -96,7 +97,8 @@
 
 	character.examine_theme = examine_theme
 	character.ooc_extra = ooc_extra
-
+	character.ooc_extra_img = ooc_extra_img
+	character.ooc_extra_img_link = ooc_extra_img_link
 	character.song_title = song_title
 
 	character.song_artist = song_artist
@@ -109,13 +111,7 @@
 
 	// LETHALSTONE ADDITION END
 
-
-
-	// Barks
-	character.set_bark(bark_id)
-	character.vocal_speed = bark_speed
-	character.vocal_pitch = bark_pitch
-	character.vocal_pitch_range = bark_variance
+	character.char_accent = char_accent
 
 	character.d_intent = (char_toggles & CHAR_TOGGLE_DODGE) ? INTENT_DODGE : INTENT_PARRY
 	character.freeuse = !!(char_toggles & CHAR_TOGGLE_FREEUSE)
@@ -131,7 +127,6 @@
 	else if(character_setup)
 		// This should only ever ~do~ anything for previews
 		character.ensure_not_taur()
-
 	if(icon_updates)
 		character.update_body()
 		character.update_hair()

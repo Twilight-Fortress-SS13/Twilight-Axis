@@ -4,10 +4,10 @@
 	allowed_sexes = list(MALE, FEMALE)
 
 	outfit = /datum/outfit/job/roguetown/wretch/poacher
-	cmode_music = 'sound/music/combat_poacher.ogg'
+	cmode_music = sound("sound/music/combat_poacher.ogg")
 	class_select_category = CLASS_CAT_RANGER
 	category_tags = list(CTAG_WRETCH)
-	traits_applied = list(TRAIT_AZURENATIVE, TRAIT_DODGEEXPERT, TRAIT_WOODSMAN, TRAIT_OUTDOORSMAN, TRAIT_SURVIVAL_EXPERT, TRAIT_EXPERT_HUNTER)
+	traits_applied = list(TRAIT_LONGSTRIDER, TRAIT_DODGEEXPERT, TRAIT_WOODSMAN, TRAIT_OUTDOORSMAN, TRAIT_SURVIVAL_EXPERT, TRAIT_EXPERT_HUNTER) // TA EDIT TRAIT_AZURENATIVE —> TRAIT_LONGSTRIDER
 	// No straight upgrade to perception / speed to not stack one stat too high, but still stronger than MAA Skirm out of town.
 	subclass_stats = list(
 		STATKEY_PER = 3,
@@ -27,6 +27,7 @@
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/stealing = SKILL_LEVEL_APPRENTICE, // TA EDIT
 		/datum/skill/craft/traps = SKILL_LEVEL_EXPERT,
 		//these people live in the forest so let's give them some peasant skills
 		/datum/skill/craft/crafting = SKILL_LEVEL_NOVICE,
@@ -81,4 +82,4 @@
 			if ("My Bow Is Enough")
 				H.adjust_skillrank_up_to(/datum/skill/combat/bows, SKILL_LEVEL_LEGENDARY, TRUE)
 				head = /obj/item/clothing/head/roguetown/helmet/kettle
-		wretch_select_bounty(H)
+	bountychoice_poacher(H)				//TA - EDIT

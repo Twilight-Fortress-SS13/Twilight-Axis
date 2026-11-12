@@ -7,7 +7,7 @@
 	class_select_category = CLASS_CAT_RACIAL
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
 	traits_applied = list(TRAIT_SEEPRICES, TRAIT_MEDIUMARMOR)
-	cmode_music = 'sound/music/combat_matthios.ogg'
+	cmode_music = sound("sound/music/combat_matthios.ogg")
 	maximum_possible_slots = 2
 
 	subclass_stats = list(

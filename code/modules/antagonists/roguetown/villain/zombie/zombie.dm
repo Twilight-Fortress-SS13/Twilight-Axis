@@ -122,6 +122,7 @@
 		zombie.update_a_intents()
 		for(var/datum/charflaw/cf in zombie.charflaws)
 			cf.ephemeral = FALSE
+		zombie.remove_status_effect(/datum/status_effect/debuff/rotted_zombie)
 		zombie.update_body()
 
 		GLOB.dead_mob_list -= zombie // Remove it from global dead/alive mob list here here, if they're a zombie they probably died.
@@ -134,9 +135,13 @@
 		for(var/trait in traits_zombie)
 			REMOVE_TRAIT(zombie, trait, "[type]")
 		zombie.remove_client_colour(/datum/client_colour/monochrome)
-		zombie.remove_language(/datum/language/undead)
+		var/underdark_drow = istype(zombie.client?.prefs?.virtue_origin, /datum/virtue/origin/racial/underdark_drow)
+		if(!underdark_drow)
+			zombie.remove_language(/datum/language/undead)
+
 		var/datum/language_holder/language_holder = zombie.get_language_holder()
-		language_holder.selected_default_language = null
+		if(!underdark_drow)
+			language_holder.selected_default_language = null
 
 		if(has_turned && become_rotman)
 			for(var/trait in traits_rotman)
@@ -229,7 +234,7 @@
 	zombie.update_body()
 	zombie.playsound_local(get_turf(zombie), 'sound/music/wolfintro.ogg', 80, FALSE, pressure_affected = FALSE) //Extra bit of AURA
 	to_chat(zombie, span_infection("My mind grows numb and empty as unlyfe takes ahold of my body..."))
-	zombie.cmode_music = 'sound/music/combat_weird.ogg'
+	zombie.cmode_music = sound("sound/music/combat_weird.ogg")
 	zombie.apply_status_effect(/datum/status_effect/debuff/deadite_grace)
 
 	last_bite = world.time

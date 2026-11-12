@@ -9,7 +9,7 @@
 	var/list/types = list()
 	var/mob/current_reader
 	var/open
-	var/base_icon_state
+	base_icon_state
 	var/can_spawn = TRUE
 	/// If TRUE, this book appears in the encyclopedia but not on random bookshelves.
 	var/wiki_only = FALSE

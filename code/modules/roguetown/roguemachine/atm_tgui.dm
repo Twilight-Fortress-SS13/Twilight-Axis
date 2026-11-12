@@ -193,6 +193,7 @@
 				"patrons" = roster_data,
 			)
 	data["patron_rosters"] = patron_rosters
+	data["ta_map"] = SSmapping.config.map_name //TA EDIT
 
 	return data
 
@@ -332,8 +333,12 @@
 		playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
 		return
 	var/mod = 1
-	if(denom == "GOLD")
+	if(denom == "GOLD" && SSmapping.config.map_name == "Rockhill") //TA EDIT
+		mod = 14
+	else if(denom == "GOLD")
 		mod = 10
+	else if(denom == "SILVER" && SSmapping.config.map_name == "Rockhill") //TA EDIT
+		mod = 7
 	else if(denom == "SILVER")
 		mod = 5
 	var/total = coin_amt * mod

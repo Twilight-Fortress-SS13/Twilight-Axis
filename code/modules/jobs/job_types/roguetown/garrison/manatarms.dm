@@ -20,11 +20,12 @@
 	advclass_cat_rolls = list(CTAG_MENATARMS = 20)
 
 	give_bank_account = TRUE
-	min_pq = 3
+	min_pq = 5
 	max_pq = null
 	round_contrib_points = 2
+	same_job_respawn_delay = 30 MINUTES
 
-	cmode_music = 'sound/music/combat_ManAtArms.ogg'
+	cmode_music = sound("sound/music/combat_ManAtArms.ogg")
 	job_subclasses = list(
 		/datum/advclass/manorguard/footsman,
 		/datum/advclass/manorguard/skirmisher,
@@ -71,7 +72,7 @@
 		/datum/skill/combat/whipsflails = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/slings = SKILL_LEVEL_NOVICE,
 		/datum/skill/combat/shields = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_APPRENTICE,
@@ -178,7 +179,7 @@
 		/datum/skill/misc/sneaking = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT, // A little better; run fast, weak boy.
 		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/tracking = SKILL_LEVEL_APPRENTICE,
@@ -204,7 +205,7 @@
 				backl = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
 			if("Bow")
 				beltr = /obj/item/quiver/arrows
-				backl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/watchman
+				backl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve/watchman //TA EDIT Bow -> Recurve Bow
 			if("Sling")
 				beltr = /obj/item/quiver/sling/iron
 				l_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/sling
@@ -285,7 +286,7 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/riding = SKILL_LEVEL_JOURNEYMAN,		// Like the other horselords.
@@ -357,7 +358,7 @@
 	maximum_possible_slots = 1 //Had one dungeoneer before, this is how many we get to keep still.
 
 	category_tags = list(CTAG_MENATARMS)
-	traits_applied = list(TRAIT_CIVILIZEDBARBARIAN, TRAIT_BLOOD_RESISTANCE, TRAIT_NOPAINSTUN)//This is surely going to be funny
+	traits_applied = list(TRAIT_JAILOR, TRAIT_CIVILIZEDBARBARIAN, TRAIT_BLOOD_RESISTANCE, TRAIT_NOPAINSTUN)//This is surely going to be funny
 	subclass_stats = list(
 		STATKEY_STR = 3,
 		STATKEY_CON = 2,
@@ -365,9 +366,9 @@
 		STATKEY_INT = -1//Old dungeoneer statspread more or less
 	)
 	subclass_skills = list(
+		/datum/skill/combat/maces = SKILL_LEVEL_APPRENTICE, // Still can have a cudgel.
 		/datum/skill/combat/whipsflails = SKILL_LEVEL_EXPERT,//Primary way they are meant to dispose of ppl
-		/datum/skill/combat/shields = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT, //hilarious
+		/datum/skill/combat/wrestling = SKILL_LEVEL_MASTER, //hilarious
 		/datum/skill/combat/unarmed = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/slings = SKILL_LEVEL_JOURNEYMAN,//Funny
 		/datum/skill/combat/knives = SKILL_LEVEL_APPRENTICE,
@@ -382,21 +383,24 @@
 		/datum/skill/misc/sneaking = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/tracking = SKILL_LEVEL_APPRENTICE
 	)
+	subclass_stashed_items = list( //TA Branding
+		"Branding Letters" = /obj/item/branding_letters,
+		"Branding Iron" = /obj/item/branding_iron
+	)
 
 /datum/outfit/job/roguetown/manorguard/bailiff/pre_equip(mob/living/carbon/human/H)
 	..()
 
-	head = /obj/item/clothing/head/roguetown/helmet/sallet/visored/iron
-	neck = /obj/item/clothing/neck/roguetown/bevor/iron
-	mask = /obj/item/clothing/mask/rogue/ragmask/black
-	armor = /obj/item/clothing/suit/roguetown/armor/brigandine/light/retinue
-	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson
-	wrists = /obj/item/clothing/wrists/roguetown/bracers/cloth/monk
-	gloves = /obj/item/clothing/gloves/roguetown/bandages/weighted
-	pants = /obj/item/clothing/under/roguetown/brigandinelegs
-	beltl = /obj/item/rogueweapon/flail
+	head = /obj/item/clothing/head/roguetown/menacing/executioner
+	neck = /obj/item/clothing/neck/roguetown/gorget
+	mask = /obj/item/clothing/head/roguetown/roguehood/black
+	armor = /obj/item/clothing/suit/roguetown/armor/manual/resting/padded/bailiff
+	wrists = /obj/item/clothing/wrists/roguetown/bracers
+	gloves = /obj/item/clothing/gloves/roguetown/leather
+	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants
+	beltl = /obj/item/rogueweapon/mace/cudgel
 	beltr = /obj/item/rogueweapon/whip/antique
-	backl = /obj/item/rogueweapon/shield/iron
+	backl = /obj/item/rogueweapon/sword/long/exe/cloth
 
 	H.adjust_blindness(-3)
 	if(H.mind)
@@ -542,6 +546,8 @@
 		if(.)
 			// gives them a rallying message, but doesn't reveal a location. gives antags some leeway
 			var/input_text = "<big><span style='color: [CLOTHING_WOAD_BLUE]'>THE DUCAL STANDARD CALLS FOR ALL GUARDSMEN TO RALLY AT [uppertext(get_area_name(user))]!</span></big>" // non-specific rallying call
+			if(SSmapping.config.map_name == "Rockhill")
+				input_text = "<big><span style='color: [CLOTHING_WOAD_BLUE]'>THE ROYAL STANDARD CALLS FOR ALL GUARDSMEN TO RALLY AT [uppertext(get_area_name(user))]!</span></big>" // non-specific rallying call
 			for(var/obj/item/scomstone/bad/garrison/S in SSroguemachine.scomm_machines)
 				S.repeat_message(input_text, src, CLOTHING_WOAD_BLUE)
 			for(var/obj/item/scomstone/garrison/S in SSroguemachine.scomm_machines)

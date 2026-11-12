@@ -10,9 +10,8 @@
 	GLOB.farm_animals = max(GLOB.farm_animals - 1, 0)
 	return ..()
 
-/mob/living/simple_animal/hostile/retaliate/rogue/goat/tamed()
-	..()
-	deaggroprob = 50
+/mob/living/simple_animal/hostile/retaliate/rogue/goat/tamed(mob/user) // TA EDIT
+	..(user) // TA EDIT
 	setup_mount(
 		list(TEXT_NORTH = list(0, 6), TEXT_SOUTH = list(0, 6), TEXT_EAST = list(-2, 6), TEXT_WEST = list(2, 6)),
 		MOB_LAYER+0.1,
@@ -266,9 +265,8 @@
 		add_saddleicon("saddle-above", "saddle")
 		add_ridericon("goatmale_mounted")
 
-/mob/living/simple_animal/hostile/retaliate/rogue/goatmale/tamed()
-	..()
-	deaggroprob = 20
+/mob/living/simple_animal/hostile/retaliate/rogue/goatmale/tamed(mob/user) // TA EDIT
+	..(user) // TA EDIT
 	setup_mount(
 		list(TEXT_NORTH = list(0, 6), TEXT_SOUTH = list(0, 6), TEXT_EAST = list(-2, 6), TEXT_WEST = list(2, 6)),
 		MOB_LAYER+0.1,

@@ -20,7 +20,10 @@
 	if(TR)
 		. += span_notice("This area is a part of the " + TR.region_name + " threat region.")
 	else
-		. += span_notice("This area is not part of the warden's charge")
+		if(SSmapping.config.map_name == "Rockhill")
+			. += span_notice("This area is not part of the Vanguard's charge")
+		else
+			. += span_notice("This area is not part of the warden's charge")
 
 /obj/item/signal_horn/attack_self(mob/living/user)
 	. = ..()
@@ -44,6 +47,7 @@
 	user.visible_message(span_userdanger("[user] is about to sound [src]!"))
 	user.apply_status_effect(/datum/status_effect/debuff/clickcd, 5 SECONDS) // We don't want them to spam the message.
 	if(do_after(user, 30 SECONDS)) // Enough time for any antag to kick or interrupt third party, me think
+		//user.Immobilize(30) // A very crude solution to kill any solo gamer - TA EDIT, thanks but no thanks
 		if(sound_horn(user))
 			user.Immobilize(30) // A very crude solution to kill any solo gamer
 			TR.last_induced_ambush_time = world.time
@@ -53,7 +57,7 @@
 	switch(user.job)
 		if("Warden", "Levy", "Towner")
 			playsound(src, 'sound/items/horn/bogguardhorn.ogg', 100, TRUE)
-		if("Watchman", "Sergeant", "Man at Arms")
+		if("Town Sheriff", "Watchman", "Sergeant", "Royal Guard Sergeant", "Man at Arms")
 			playsound(src, 'sound/items/horn/wardenhorn.ogg', 100, TRUE)
 		if("Knight", "Marshal")
 			playsound(src, 'sound/items/horn/rghorn.ogg', 100, TRUE)
@@ -98,7 +102,9 @@
 				player.playsound_local(get_turf(player), 'sound/items/horn/bogguardhorn.ogg', 35, FALSE, pressure_affected = FALSE)
 			if("Watchman", "Sergeant", "Man at Arms")
 				player.playsound_local(get_turf(player), 'sound/items/horn/wardenhorn.ogg', 35, FALSE, pressure_affected = FALSE)
-			if("Knight", "Marshal")
+			if("Marshall", "Watchman", "Sergeant", "Royal Guard Sergeant", "Man at Arms")
+				player.playsound_local(get_turf(player), 'sound/items/horn/wardenhorn.ogg', 35, FALSE, pressure_affected = FALSE)
+			if("Knight", "Royal Guard")
 				player.playsound_local(get_turf(player), 'sound/items/horn/rghorn.ogg', 35, FALSE, pressure_affected = FALSE)
 			else
 				player.playsound_local(get_turf(player), 'sound/items/horn/signalhorn.ogg', 35, FALSE, pressure_affected = FALSE)

@@ -8,7 +8,7 @@
 	traits_applied = list(TRAIT_OUTDOORSMAN, TRAIT_SURVIVAL_EXPERT, TRAIT_MASTERFUL_HUNTER, TRAIT_MONSTER_HUNTER)
 	subclass_spells = list(/obj/effect/proc_holder/spell/self/run_for_it)
 	townie_contract_gate_exempt = TRUE
-	cmode_music = 'sound/music/cmode/towner/combat_towner2.ogg'
+	cmode_music = sound("sound/music/cmode/towner/combat_towner2.ogg")
 
 	category_tags = list(CTAG_PILGRIM, CTAG_TOWNER)
 	subclass_stats = list(
@@ -90,7 +90,7 @@
 	outfit = /datum/outfit/job/roguetown/adventurer/hunter_spear
 	traits_applied = list(TRAIT_OUTDOORSMAN, TRAIT_SURVIVAL_EXPERT, TRAIT_MASTERFUL_HUNTER, TRAIT_MONSTER_HUNTER)
 	townie_contract_gate_exempt = TRUE
-	cmode_music = 'sound/music/cmode/towner/combat_towner2.ogg'
+	cmode_music = sound("sound/music/cmode/towner/combat_towner2.ogg")
 	subclass_stats = list(
 		STATKEY_STR = 2,
 		STATKEY_CON = 1,

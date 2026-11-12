@@ -24,7 +24,7 @@
 	var/atom/target = controller.blackboard[target_key]
 	var/datum/targetting_datum/targetting_datum = controller.blackboard[targetting_datum_key]
 
-	if(!targetting_datum.can_attack(basic_mob, target))
+	if(controller.is_melee_target_ignored(target) || !targetting_datum.can_attack(basic_mob, target)) // TA EDIT
 		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
 
 	var/hiding_target = targetting_datum.find_hidden_mobs(basic_mob, target) //If this is valid, theyre hidden in something!
@@ -37,14 +37,23 @@
 	var/forced_zone = controller.blackboard[BB_FORCED_ATTACK_ZONE]
 	if(forced_zone)
 		basic_mob.zone_selected = forced_zone
-	basic_mob.a_intent = pick(basic_mob.possible_a_intents) //randomized intent
+	if(length(basic_mob.possible_a_intents)) // TA EDIT
+		basic_mob.a_intent = pick(basic_mob.possible_a_intents) // TA EDIT
 
 	var/atom/swing_at = resolve_swing_target(controller, basic_mob, target, target_key, hiding_target)
 	if(!swing_at)
 		return AI_BEHAVIOR_DELAY
+
 	if(world.time >= basic_mob.next_move && !basic_mob.claim_pack_swing(target))
 		return AI_BEHAVIOR_DELAY
-	basic_mob.ClickOn(swing_at, list())
+	if(hiding_target) // TA EDIT
+		controller.reset_melee_attack_progress() // TA EDIT
+		basic_mob.ClickOn(swing_at, list()) // TA EDIT
+	else // TA EDIT
+		var/next_click_before = basic_mob.next_click // TA EDIT
+		basic_mob.ClickOn(swing_at, list()) // TA EDIT
+		if(swing_at == target && basic_mob.next_click != next_click_before && controller.record_melee_attack_progress(target, target_key, hiding_location_key)) // TA EDIT
+			return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED // TA EDIT
 
 	if(sidesteps_after && prob(sidestep_chance))
 		basic_mob.combat_sidestep(target, sidestep_offsets, sidestep_seeks_flank)
@@ -191,4 +200,3 @@
 		controller.clear_blackboard_key(target_key)
 		var/mob/living/simple_animal/hostile/retaliate/rogue/mimic/mimic_pawn = controller.pawn
 		mimic_pawn.disguise()
-

@@ -16,3 +16,7 @@
 
 /// cooldown for being shown the images for any particular data hud
 #define ADD_HUD_TO_COOLDOWN 20
+
+// TA
+#define ANTAG_HUD_ZIZOID "antag_hud_zizoid"
+#define ANTAG_HUD_WEREWOLF "antag_hud_werewolf" // TA EDIT

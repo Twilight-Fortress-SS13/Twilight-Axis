@@ -18,11 +18,12 @@
 	outfit = /datum/outfit/job/roguetown/magician
 	whitelist_req = TRUE
 	give_bank_account = TRUE
-	min_pq = 4 //High potential for abuse, lovepotion/killersice/greater fireball is not for the faint of heart
+	min_pq = 14 //High potential for abuse, lovepotion/killersice/greater fireball is not for the faint of heart
 	max_pq = null
 	round_contrib_points = 2
-	cmode_music = 'sound/music/cmode/nobility/combat_courtmage.ogg'
+	cmode_music = sound("sound/music/cmode/nobility/combat_courtmage.ogg")
 	advclass_cat_rolls = list(CTAG_COURTMAGE = 2)
+	same_job_respawn_delay = 30 MINUTES
 
 	// Can't get very far as a magician if you can't chant spells now can you?
 	vice_restrictions = list(/datum/charflaw/mute, /datum/charflaw/wanted)
@@ -88,16 +89,16 @@
 			H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/wizard]
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
-			H.cmode_music = 'sound/music/combat_heretic.ogg'
+			H.cmode_music = sound("sound/music/combat_heretic.ogg")
 			ADD_TRAIT(H, TRAIT_HERESIARCH, TRAIT_GENERIC)
 		if(/datum/patron/inhumen/matthios)
-			H.cmode_music = 'sound/music/combat_matthios.ogg'
+			H.cmode_music = sound("sound/music/combat_matthios.ogg")
 			ADD_TRAIT(H, TRAIT_HERESIARCH, TRAIT_GENERIC)
 		if(/datum/patron/inhumen/graggar)
-			H.cmode_music = 'sound/music/combat_graggar.ogg'
+			H.cmode_music = sound("sound/music/combat_graggar.ogg")
 			ADD_TRAIT(H, TRAIT_HERESIARCH, TRAIT_GENERIC)
 		if(/datum/patron/inhumen/baotha)
-			H.cmode_music = 'sound/music/combat_baotha.ogg'
+			H.cmode_music = sound("sound/music/combat_baotha.ogg")
 			ADD_TRAIT(H, TRAIT_HERESIARCH, TRAIT_GENERIC)
 
 /datum/outfit/job/roguetown/magician/basic/pre_equip(mob/living/carbon/human/H)
@@ -111,7 +112,6 @@
 	shoes = /obj/item/clothing/shoes/roguetown/shortboots
 	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes
 	belt = /obj/item/storage/belt/rogue/leather/plaquesilver
-	beltr = /obj/item/storage/keyring/magician
 	beltl = /obj/item/storage/magebag/associate
 	id = /obj/item/clothing/ring/gold
 	r_hand = /obj/item/rogueweapon/woodstaff/implement/grand/magos
@@ -125,3 +125,9 @@
 	)
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_RICH, H)
+		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/arcane_announcement) //TA EDIT
+		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/shrink) //TA EDIT
+	if(SSmapping.config.map_name == "Rockhill") //TA_EDIT
+		beltr = /obj/item/storage/keyring/magicianenigma
+	else
+		beltr = /obj/item/storage/keyring/magician

@@ -1,4 +1,4 @@
-//TOOLS
+/*//TOOLS
 /datum/loadout_item/paper_parasol
 	name = "Paper Parasol"
 	path = /obj/item/rogueweapon/mace/parasol
@@ -77,3 +77,4 @@
 	triumph_cost = 1
 	sort_category = "Tools"
 
+*/

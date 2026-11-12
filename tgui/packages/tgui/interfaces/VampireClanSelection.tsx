@@ -83,6 +83,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     bloodPreference: 'Blood Preference',
     lordOfClan: 'Lord of the Clan',
     lordHailedAs: 'Hailed as the',
+    lordFallback: 'Lord',
     lordVitae: ', endowed with an extra +{vitae} vitae',
     lordOnlyBoons: 'Lord-only Boons',
     specialClanTraits: 'Special Clan Traits',
@@ -96,6 +97,528 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     warningDefault:
       'If no clan is chosen, Crimson Fangs will be assigned by default.',
   },
+  ru: {
+    title: 'Выбор клана',
+    subtitle: 'Избери свой клан',
+    flavorLine1: 'Кровь помнит.',
+    flavorLine2: 'Избери свою линию крови.',
+    expand: 'Развернуть',
+    restore: 'Восстановить',
+    expandTip: 'Развернуть окно',
+    restoreTip: 'Восстановить размер окна',
+    availableClans: 'Доступные кланы',
+    clanName: 'Имя клана',
+    customNamePlaceholder: 'Нареки свою линию крови...',
+    customNameHint:
+      'Оставь поле пустым — и клан будет именоваться «Пользовательский клан».',
+    description: 'Описание',
+    curseDownside: 'Проклятие и изъян',
+    bloodPreference: 'Предпочитаемая кровь',
+    lordOfClan: 'Владыка клана',
+    lordHailedAs: 'Титул:',
+    lordFallback: 'Лорд',
+    lordVitae: '; запас витэ: +{vitae}',
+    lordOnlyBoons: 'Дары владыки',
+    specialClanTraits: 'Особые черты клана',
+    disciplinesPowers: 'Дисциплины и силы',
+    caitiffNoDisciplines: 'Каитифф изберёт свои дисциплины позже.',
+    none: 'Нет.',
+    unknown: 'Неизвестно',
+    noPowersDocumented: 'Сведения о силах отсутствуют.',
+    accept: 'Избрать клан',
+    close: 'Закрыть',
+    warningDefault:
+      'Если ты не сделаешь выбор, тебе будет назначен клан «Носферату».',
+  },
+};
+
+type ClanLoc = {
+  name: string;
+  desc: string;
+  curse: string;
+  downside: string;
+  bloodPreference: string;
+  tagline: string;
+  lordTitle: string;
+};
+
+const RU_CLANS_BY_NAME: Record<string, ClanLoc> = {
+  Nosferatu: {
+    name: 'Носферату',
+    desc: 'Носферату носят своё проклятие на виду у всех. Объятие чудовищно исказило их тела; они таятся на окраинах городов, служа шпионами и торговцами сведениями. Им помогают звери и сверхъестественный дар скрытности — потому ничто не ускользает от взора Носферату.',
+    curse: 'Облик, нарушающий Маскарад.',
+    downside: 'отвратительный облик и муки под солнцем',
+    bloodPreference: 'кровь сородичей, мёртвых и паразитов',
+    tagline: 'Шпионы подземелий и разбитые маски',
+    lordTitle: 'Носферату',
+  },
+  'Vitabella Family': {
+    name: 'Семейство Витабелла',
+    desc: 'Эора, тронутая твоим неустанным стремлением к искусству и красоте, благословила твою проклятую линию крови. Но, восхищаясь тобой, она не разглядела тёмные грани твоей натуры: извращённое понимание любви и манию величия.',
+    curse: 'Одержимость тщеславием и потребность быть любимым.',
+    downside:
+      'ты совершенен и лишён слабостей — даже солнце тебе не страшно',
+    bloodPreference: 'всё, в чём есть красота жизни',
+    tagline: 'Красота, одержимость и обожание',
+    lordTitle: 'Старейшина',
+  },
+  'House Thronleer': {
+    name: 'Дом Тронлеер',
+    desc: 'Нок, пленённая неутолимой жаждой знаний твоего Дома, благословила твою проклятую линию крови. Но Ксайликс сдал дурную карту, и проклятая кровь обрекла тебя на боязнь шутовства и недоброй судьбы.',
+    curse: 'Шутобоязнь, жажда познания и тяжкая хандра.',
+    downside: 'хроническая шутобоязнь и тяжёлые удары по настроению',
+    bloodPreference: 'любая кровь — в разнообразии знание',
+    tagline: 'Знание, ужас и дурные предзнаменования',
+    lordTitle: 'Старейшина',
+  },
+  'Children of the Abyss': {
+    name: 'Дети Бездны',
+    desc: 'Дети Бездны — линия крови вампиров, поклоняющихся древним демонам. Родство с нечестивым делает их крайне уязвимыми перед святостью богов.',
+    curse: 'Страх перед верой.',
+    downside: 'горят под солнцем и в присутствии Десяти',
+    bloodPreference: 'любая кровь',
+    tagline: 'Демоническое благочестие и святая магия',
+    lordTitle: 'Лорд',
+  },
+  'Crimson Fang': {
+    name: 'Багровый Клык',
+    desc: 'Прочие сородичи считают Багровых Клыков опасными убийцами и диаблеристами. На деле же это стражи, воины и учёные, сторонящиеся политики как вампирского, так и смертного мира.',
+    curse: 'Зависимость от крови сородичей и знати.',
+    downside: 'горишь под солнцем',
+    bloodPreference: 'кровь знати, духовенства, Инквизиции и сородичей',
+    tagline: 'Убийцы, воины и диаблеристы',
+    lordTitle: 'Лорд',
+  },
+};
+
+const RU_CAITIFF: ClanLoc = {
+  name: 'Собственный клан каитиффа',
+  desc: 'Выкуй собственную проклятую линию крови вне древних Домов. Старейшины не признают тебя, но и их цепи тебя не скуют.',
+  curse: 'Нестабильное наследие.',
+  downside: 'у тебя нет древнего Дома, чтобы укрыть твоё имя',
+  bloodPreference: 'твой голод — твой собственный',
+  tagline: 'Выкуй собственную проклятую линию крови',
+  lordTitle: 'Владыка каитиффов',
+};
+
+const RU_LORD_FORMS_BY_NAME: Record<string, { name: string; desc: string }> = {
+  'Sewer Rat Form': {
+    name: 'Облик канализационной крысы',
+    desc: 'Сбрось облик сородича и обернись канализационной крысой — проскользни туда, куда не проберётся ни один смертный.',
+  },
+  'Bat Form': {
+    name: 'Облик летучей мыши',
+    desc: 'Взмой крылатой тенью — быстрой, неуловимой, трудной для удара.',
+  },
+  'Gaseous Form': {
+    name: 'Туманный облик',
+    desc: 'Растворись в тумане — недосягаем, но едва связан с этим миром.',
+  },
+  'Cabbit Form': {
+    name: 'Облик кролика',
+    desc: 'Изящный, обманчиво кроткий облик — красота как маскировка, клык за улыбкой.',
+  },
+};
+
+const RU_TRAITS_BY_NAME: Record<string, { name: string; desc: string }> = {
+  'Nasty Eater': {
+    name: 'Непривередливый желудок',
+    desc: 'Твой желудок безропотно принимает даже скверную пищу.',
+  },
+  'Hidden from Sight': {
+    name: 'Сокрыт от взоров',
+    desc: 'Гадательные чары скользят мимо твоего имени.',
+  },
+  Unseemly: {
+    name: 'Отталкивающий облик',
+    desc: 'Искажённые черты тревожат всякого, кто их увидит.',
+  },
+  'Keen Ears': {
+    name: 'Острый слух',
+    desc: 'Ты ясно слышишь звуки, ускользающие от других.',
+  },
+  Jesterphobia: {
+    name: 'Шутобоязнь',
+    desc: 'Скоморохи, шуты и дураки выводят тебя из равновесия.',
+  },
+  'Brooding Soul': {
+    name: 'Мрачная душа',
+    desc: 'Удары по настроению стают для тебя настоящей трагедией.',
+  },
+  'Self-Sustenance': {
+    name: 'Самодостаточность',
+    desc: 'Долгие занятия научили тебя довольствоваться малым.',
+  },
+  'Skilled writer': {
+    name: 'Искусный писец',
+    desc: 'Твой почерк изящен и лёгок для чтения.',
+  },
+  'Jack of All Trades': {
+    name: 'Мастер на все руки',
+    desc: 'Ты сведущ во множестве ремёсел.',
+  },
+  Intellectual: {
+    name: 'Учёный ум',
+    desc: 'Твой разум острее: ты легко судишь и о людях, и об их помыслах.',
+  },
+  'Light Step': {
+    name: 'Лёгкая поступь',
+    desc: 'Двигаешься, не тревожа добычу или стражу.',
+  },
+  Cicerone: {
+    name: 'Искушённый дегустатор',
+    desc: 'Ловкая рука и зоркий глаз позволяют узнать, что налито в чаше.',
+  },
+  Deathsight: {
+    name: 'Взор смерти',
+    desc: 'Ты чувствуешь умирающих — когда и где им суждено пасть.',
+  },
+  Beautiful: {
+    name: 'Неземная красота',
+    desc: 'Твоя красота не по-человечески совершенна — взгляды приковываются к тебе в любой зале.',
+  },
+  Empath: {
+    name: 'Эмпат',
+    desc: 'Читаешь настроения и мелкую ложь окружающих.',
+  },
+  Exteroception: {
+    name: 'Обострённое восприятие',
+    desc: 'Ты остро чувствуешь тела и окружение.',
+  },
+  'Heavy Armor Mastery': {
+    name: 'Владение тяжёлой бронёй',
+    desc: 'Латы и кольчуга больше тебя не отягощают.',
+  },
+  'Infinite Stamina': {
+    name: 'Неиссякаемая выносливость',
+    desc: 'Труд и битва тебя не истощают.',
+  },
+  'Uncapped Strength': {
+    name: 'Безграничная сила',
+    desc: 'Твоя грубая мощь не знает смертного предела.',
+  },
+  "Appraiser's Eye": {
+    name: 'Глаз оценщика',
+    desc: 'С первого взгляда определяешь стоимость любого товара.',
+  },
+  'Deceiving Meekness': {
+    name: 'Обманчивая кротость',
+    desc: 'Враги недооценивают тебя, пока не становится слишком поздно.',
+  },
+};
+
+const RU_COVENS_BY_NAME: Record<string, { name: string; desc: string }> = {
+  Auspex: {
+    name: 'Прорицание',
+    desc: 'Позволяет видеть сквозь стены существ, их ауры и состояние здоровья.',
+  },
+  Bloodheal: {
+    name: 'Кровавое исцеление',
+    desc: 'Используй силу витэ, чтобы постепенно восстанавливать плоть.',
+  },
+  Celerity: {
+    name: 'Стремительность',
+    desc: 'Дарует скорость, превосходящую пределы смертного тела. Нарушает Маскарад.',
+  },
+  Demonic: {
+    name: 'Демонизм',
+    desc: 'Призови адских тварей на помощь, противостой пламени и обернись бесом. Нарушает Маскарад.',
+  },
+  'Eoran Embrace': {
+    name: 'Объятие Эоры',
+    desc: 'Благословлённые Богиней Любви, Семьи и Искусства, эти вампиры укрепляют узы, вдохновляют красотой и исцеляют душевные раны.',
+  },
+  'Fae Trickery': {
+    name: 'Фейские уловки',
+    desc: 'Эта дисциплина чаще всего пробуждается у вампиров, рождённых близ топей Дафтмарша, среди фей.',
+  },
+  Obfuscate: {
+    name: 'Сокрытие',
+    desc: 'Делает тебя менее заметным для живых и мёртвых.',
+  },
+  Potence: {
+    name: 'Могущество',
+    desc: 'Усиливает урон в ближнем и безоружном бою.',
+  },
+  Presence: {
+    name: 'Присутствие',
+    desc: 'Вторгайся в смертный разум — твои слова сильнее любого меча. Подчиняй их.',
+  },
+  Quietus: {
+    name: 'Смертоносность',
+    desc: 'Таись в тенях и рази лишь тогда, когда это нужно. Яды, смятение и огонь.',
+  },
+  'Siren Blessing': {
+    name: 'Благословение сирены',
+    desc: 'Дар тех, кто ходит по морям Энигмы: голос сирены позволяет лишить врагов воли к движению.',
+  },
+};
+
+const RU_POWERS_BY_NAME: Record<string, { name: string; desc: string }> = {
+  // Auspex
+  'Heightened Senses': {
+    name: 'Обострённые чувства',
+    desc: 'Твои чувства выходят далеко за человеческие пределы.',
+  },
+  'An Ear For Lies': {
+    name: 'Слух на ложь',
+    desc: 'Ты слышишь больше, чем должен.',
+  },
+  "The Spirit's Touch": {
+    name: 'Прикосновение духа',
+    desc: 'Выследи добычу по едва заметным следам.',
+  },
+  'Psychic Projection': {
+    name: 'Психическая проекция',
+    desc: 'Оставь тело и воспари над землями.',
+  },
+  // Bloodheal
+  'Minor Bloodheal': {
+    name: 'Малое кровавое исцеление',
+    desc: 'Медленно затягивай лёгкие раны, расходуя витэ.',
+  },
+  Bloodheal: {
+    name: 'Кровавое исцеление',
+    desc: 'Ровно и без спешки залечивай раны.',
+  },
+  'Quick Bloodheal': {
+    name: 'Стремительное кровавое исцеление',
+    desc: 'Залечивай раны с заметной глазу быстротой — это нарушает Маскарад!',
+  },
+  'Major Bloodheal': {
+    name: 'Большое кровавое исцеление',
+    desc: 'Стремительно залечивай даже серьёзные ранения. Нарушает Маскарад!',
+  },
+  'Greater Bloodheal': {
+    name: 'Великое кровавое исцеление',
+    desc: 'Залечивай раны и восстанавливай повреждённые органы. Нарушает Маскарад!',
+  },
+  // Celerity
+  'Celerity 1': {
+    name: 'Малая стремительность',
+    desc: 'Повысь скорость — и любое дело дастся немного легче.',
+  },
+  'Celerity 2': {
+    name: 'Стремительность',
+    desc: 'Заметно повышает твою скорость и реакцию.',
+  },
+  'Celerity 3': {
+    name: 'Сверхчеловеческая стремительность',
+    desc: 'Двигайся быстрее. Реагируй мгновеннее. Тело подчиняется тебе безупречно.',
+  },
+  'Celerity 4': {
+    name: 'Великая стремительность',
+    desc: 'Превзойди пределы смертного тела. Двигайся подобно молнии.',
+  },
+  'Celerity 5': {
+    name: 'Сверхъестественная стремительность',
+    desc: 'Ты подобен свету. Прорубай себе путь сквозь мир огнём.',
+  },
+  // Demonic
+  'Deny the Mother': {
+    name: 'Отвержение Естества',
+    desc: 'На двадцать секунд ты неуязвим для огня.',
+  },
+  'Fear of the Void': {
+    name: 'Страх Бездны',
+    desc: 'Ненадолго повышает твою скорость и стойкость.',
+  },
+  Conflagration: {
+    name: 'Воспламенение',
+    desc: 'Преврати руки в смертоносные когти.',
+  },
+  Psychomachia: {
+    name: 'Власть огня',
+    desc: 'Испепели врагов огненным шаром.',
+  },
+  'Infernal Fireball': {
+    name: 'Адский огненный шар',
+    desc: 'Выпусти по цели разрывной огненный шар.',
+  },
+  'Wall of Fire': {
+    name: 'Стена огня',
+    desc: 'Огненная стрела? Огненный шар? Нет — стена огня!',
+  },
+  // Eoran
+  'Empathic Bond': {
+    name: 'Эмпатическая связь',
+    desc: 'Коснись цели, чтобы ощутить её чувства и сиюминутные нужды; на короткое время тебя охватит одержимость ею.',
+  },
+  'Artistic Inspiration': {
+    name: 'Художественное вдохновение',
+    desc: 'Вдохнови других божественной творческой искрой, усиливая их искусство и поднимая настроение.',
+  },
+  'Familial Bond': {
+    name: 'Семейные узы',
+    desc: 'Создай временную духовную связь между двумя людьми — они смогут чувствовать местоположение и состояние друг друга.',
+  },
+  "Beauty's Restoration": {
+    name: 'Возвращение красоты',
+    desc: 'Направь силу Эоры, чтобы вернуть телу красоту и исцелить уродства.',
+  },
+  // Fae Trickery
+  'Darkling Trickery': {
+    name: 'Тёмные уловки',
+    desc: 'Обезоружь жертв на расстоянии.',
+  },
+  Goblinism: {
+    name: 'Гоблинизм',
+    desc: 'Призови коварного гоблина, который вцепится врагу в лицо.',
+  },
+  'Chanjelin Ward': {
+    name: 'Знак Чанджелина',
+    desc: 'Начерти знак у своих ног. Жестокая ловушка отбрасывает жертв, кружит им голову, валит наземь и выбивает оружие из рук.',
+  },
+  'Riddle Phantastique': {
+    name: 'Фантасмагорическая загадка',
+    desc: 'Поставь жертве запутанную загадку — она не сможет действовать, пока не ответит.',
+  },
+  'Fae Wrath': {
+    name: 'Гнев фей',
+    desc: 'Обрушь град ударов на врагов.',
+  },
+  // Obfuscate
+  'Cloak of Shadows': {
+    name: 'Покров теней',
+    desc: 'Слейся с тенями и оставайся незамеченным, пока не привлекаешь внимания. Любое движение развеет покров.',
+  },
+  'Unseen Presence': {
+    name: 'Незримое присутствие',
+    desc: 'Двигайся в толпе незамеченным. Стань невидимым даже на ходу.',
+  },
+  "Vanish from the Mind's Eye": {
+    name: 'Исчезновение из мысленного взора',
+    desc: 'Мгновенно исчезни из вида и сотри своё присутствие из недавней памяти.',
+  },
+  'Cloak the Gathering': {
+    name: 'Сокрытие собрания',
+    desc: 'Укрой себя и других в небольшой области. Все ближайшие союзники становятся невидимы.',
+  },
+  // Potence
+  'Potence 1': {
+    name: 'Могущество I',
+    desc: 'Укрепи мышцы. Никогда не бей вполсилы.',
+  },
+  'Potence 2': {
+    name: 'Могущество II',
+    desc: 'Стань сильнее собственных мышц. Сокрушай людей и вещи.',
+  },
+  'Potence 3': {
+    name: 'Могущество III',
+    desc: 'Стань орудием разрушения. Поднимай и ломай то, что не поднять и не сломать.',
+  },
+  'Potence 4': {
+    name: 'Могущество IV',
+    desc: 'Стань неумолимой машиной, пока хватает витэ.',
+  },
+  'Potence 5': {
+    name: 'Могущество V',
+    desc: 'Покажи эту силу смертным — и они начнут поклоняться тебе как богу.',
+  },
+  // Presence
+  Awe: {
+    name: 'Благоговение',
+    desc: 'Заставь окружающих восхищаться тобой. Кто отвернётся — тот столкнётся с последствиями.',
+  },
+  'Dread Gaze': {
+    name: 'Устрашающий взор',
+    desc: 'Пробуди страх в других одними лишь словами и взглядом.',
+  },
+  Kneel: {
+    name: 'На колени',
+    desc: 'Заставь окружающих преклонить колени.',
+  },
+  Summon: {
+    name: 'Призыв',
+    desc: 'Держи друзей близко, а врагов — ещё ближе. Телепортируй цель к себе.',
+  },
+ 
+  // Quietus
+  'Silence of Death': {
+    name: 'Тишина смерти',
+    desc: 'Создай вокруг себя зону полнейшей тишины, сбивая с толку всё внутри неё.',
+  },
+  "Scorpion's Touch": {
+    name: 'Касание скорпиона',
+    desc: 'Создай мощное вещество, поджигающее врагов.',
+  },
+  "Baal's Caress": {
+    name: 'Ласка Баала',
+    desc: 'Преврати свою витэ в яд, уничтожающий всякую плоть, к которой он прикоснётся. Наносится на ОСТРОЕ оружие.',
+  },
+  'Taste of Death': {
+    name: 'Вкус смерти',
+    desc: 'Плюнь во врагов сгустком разъедающей крови.',
+  },
+  "Dagon's Call": {
+    name: 'Зов Дагона',
+    desc: 'Прокляни последнего, кого ты ударил, — пусть он утонет в собственной крови.',
+  },
+  // Siren
+  'The Missing Voice': {
+    name: 'Утерянный голос',
+    desc: 'Брось свой голос в любую видимую тебе точку.',
+  },
+  'Phantom Speaker': {
+    name: 'Призрачный голос',
+    desc: 'Спроецируй голос любому, кого встречал, и говори с ним издалека.',
+  },
+  Madrigal: {
+    name: 'Мадригал',
+    desc: 'Спой песнь сирены — окружающие потянутся к тебе.',
+  },
+  "Siren's Beckoning": {
+    name: 'Зов сирены',
+    desc: 'Затяни неземную песнь, чтобы оглушить окружающих.',
+  },
+  'Shattering Crescendo': {
+    name: 'Сокрушающее крещендо',
+    desc: 'Издай крик неестественной высоты, разрывающий тела врагов.',
+  },
+};
+
+const localizeClan = (clan: ClanData, lang: string): ClanData => {
+  if (lang !== 'ru') return clan;
+  const next: ClanData = { ...clan };
+  const loc = clan.isCustom ? RU_CAITIFF : RU_CLANS_BY_NAME[clan.name];
+  if (loc) {
+    next.name = loc.name;
+    next.desc = loc.desc;
+    next.curse = loc.curse;
+    next.downside = loc.downside;
+    next.bloodPreference = loc.bloodPreference;
+    next.tagline = loc.tagline;
+    next.lordTitle = loc.lordTitle;
+  }
+  if (clan.lordForm && RU_LORD_FORMS_BY_NAME[clan.lordForm.name]) {
+    const f = RU_LORD_FORMS_BY_NAME[clan.lordForm.name];
+    next.lordForm = { name: f.name, desc: f.desc };
+  }
+  const localizeTraits = (traits: TraitData[] | undefined): TraitData[] =>
+    (traits || []).map((tr) => {
+      const tloc = RU_TRAITS_BY_NAME[tr.name];
+      return tloc ? { name: tloc.name, desc: tloc.desc } : tr;
+    });
+  next.lordTraits = localizeTraits(clan.lordTraits);
+  next.clanTraits = localizeTraits(clan.clanTraits);
+  next.covens = (clan.covens || []).map((cv) => {
+    const cvloc = RU_COVENS_BY_NAME[cv.name];
+    const localizedPowers: PowerData[] = (cv.powers || []).map((p) => {
+      const ploc = RU_POWERS_BY_NAME[p.name];
+      return ploc
+        ? { name: ploc.name, level: p.level, desc: ploc.desc }
+        : p;
+    });
+    return cvloc
+      ? {
+          name: cvloc.name,
+          desc: cvloc.desc,
+          icon: cv.icon,
+          powers: localizedPowers,
+        }
+      : { ...cv, powers: localizedPowers };
+  });
+  return next;
 };
 
 const resolveLang = (raw: string | undefined): string => {
@@ -151,8 +674,10 @@ export const VampireClanSelection = () => {
   const lang = resolveLang(data.language);
   const t = makeT(lang, data.i18nOverrides);
 
+  const localizedClans = data.clans.map((clan) => localizeClan(clan, lang));
   const selectedClan =
-    data.clans.find((clan) => clan.id === data.selectedClanId) || data.clans[0];
+    localizedClans.find((clan) => clan.id === data.selectedClanId) ||
+    localizedClans[0];
   const isCustom = !!selectedClan?.isCustom;
 
   const toggleCoven = (covenName: string) => {
@@ -217,7 +742,7 @@ export const VampireClanSelection = () => {
             <Box className="VampireClanSelection__leftPanel">
               <Section title={t('availableClans')} fill scrollable>
                 <Stack vertical>
-                  {data.clans.map((clan, index) => {
+                  {localizedClans.map((clan, index) => {
                     const selected = clan.id === selectedClan?.id;
                     return (
                       <Stack.Item key={clan.id}>
@@ -429,7 +954,7 @@ const LordBlock = (props: { clan: ClanData; t: Translator }) => {
         {t('lordOfClan')}
       </Box>
       <Box className="VampireClanSelection__lordTitleLine">
-        {t('lordHailedAs')} <b>{clan.lordTitle || 'Lord'}</b>
+        {t('lordHailedAs')} <b>{clan.lordTitle || t('lordFallback')}</b>
         {hasVitae ? t('lordVitae', { vitae: clan.vitaeBonus }) : null}.
       </Box>
 
