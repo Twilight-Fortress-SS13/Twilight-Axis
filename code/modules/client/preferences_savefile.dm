@@ -310,7 +310,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	preferred_ui_language = sanitize_preferred_ui_language(preferred_ui_language)
 	preferred_map		= sanitize_text(preferred_map, initial(preferred_map))
 
-	if(parent && is_banned_from(parent.ckey, ROLE_SYNDICATE))
+	if(parent && is_banned_from(parent.ckey, ROLE_ANTAGONIST))
 		be_special = list()
 	verify_keybindings_valid()
 

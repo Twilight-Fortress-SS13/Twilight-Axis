@@ -1196,7 +1196,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/knifebelt // comes empty
 	name = "Tossblade Belt"
 	category = list("Аксессуары", "Триумфы")
-	path = /obj/item/storage/belt/rogue/leather/knifebelt/black
+	path = /obj/item/storage/belt/rogue/leather/tossbelt/blade/black
 	triumph_cost = 4
 
 /datum/loadout_item/psicross
@@ -3201,21 +3201,17 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/head/roguetown/shawl
 	category = "Головные уборы"
 
-// TA EDIT START
 /* /datum/loadout_item/maidband
 	name = "Maid Headdress"
 	path = /obj/item/clothing/head/roguetown/maidhead
 	category = list("Головные уборы", "Донат")
 	donatitem = TRUE */
-// TA EDIT END
 
-// TA EDIT START
 /* /datum/loadout_item/maidbandfancy
 	name = "Valorian Maid Headband"
 	path = /obj/item/clothing/head/roguetown/maidband
 	category = list("Головные уборы", "Донат")
 	donatitem = TRUE */
-// TA EDIT END
 
 // Обувь
 

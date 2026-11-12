@@ -363,7 +363,7 @@
 		GLOB.lord_titles -= recruit.real_name
 		return FALSE
 	recruiter.say("I HEREBY GRANT YOU, [uppertext(recruit.name)], THE TITLE OF [uppertext(granted_title)]!")
-	REMOVE_TRAIT(recruit, TRAIT_OUTLANDER, ADVENTURER_TRAIT)
+	REMOVE_TRAIT(recruit, TRAIT_OUTLANDER, JOB_TRAIT)
 	REMOVE_TRAIT(recruit, TRAIT_OUTLANDER, TRAIT_GENERIC)
 	GLOB.lord_titles[recruit.real_name] = granted_title
 	return TRUE
