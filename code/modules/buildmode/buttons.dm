@@ -21,13 +21,16 @@
 	var/list/pa = params2list(params)
 
 	if(pa.Find("left"))
+		bd.log_action("toggled the buildmode mode selector from the HUD.") // TA EDIT
 		bd.toggle_modeswitch()
 	else if(pa.Find("right"))
+		bd.log_action("opened configuration for [bd.mode.key] mode from the HUD.") // TA EDIT
 		bd.mode.change_settings(usr.client)
 	update_icon()
 	return 1
 
 /atom/movable/screen/buildmode/mode/update_icon()
+	icon = bd.mode.get_button_icon() // TA EDIT
 	icon_state = bd.mode.get_button_iconstate()
 
 /atom/movable/screen/buildmode/help
@@ -36,6 +39,7 @@
 	name = "Buildmode Help"
 
 /atom/movable/screen/buildmode/help/Click(location, control, params)
+	bd.log_action("opened help for [bd.mode.key] mode.") // TA EDIT
 	bd.mode.show_help(usr.client)
 	return 1
 
@@ -49,6 +53,7 @@
 	return
 
 /atom/movable/screen/buildmode/bdir/Click()
+	bd.log_action("toggled the build direction selector from the HUD.") // TA EDIT
 	bd.toggle_dirswitch()
 	update_icon()
 	return 1
@@ -59,7 +64,8 @@
 
 /atom/movable/screen/buildmode/modeswitch/New(bld, mt)
 	modetype = mt
-	icon_state = "buildmode_[initial(modetype.key)]"
+	icon = initial(modetype.button_icon) || initial(icon) // TA EDIT
+	icon_state = initial(modetype.button_icon_state) || "buildmode_[initial(modetype.key)]" // TA EDIT
 	name = initial(modetype.key)
 	return ..(bld)
 
@@ -86,5 +92,5 @@
 	name = "Quit Buildmode"
 
 /atom/movable/screen/buildmode/quit/Click()
-	bd.quit()
+	bd.quit(usr) // TA EDIT
 	return 1

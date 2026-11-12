@@ -36,6 +36,7 @@
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	STASTR = 1 // You are not charging or bumping anyone down
 	STACON = 1 // No charging!
+	sight = 0 // TA edit
 
 	fly_time = 5 //5 ticks because vampire bats are agile
 

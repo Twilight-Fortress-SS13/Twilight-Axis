@@ -116,6 +116,7 @@
 	data["petition_categories"] = petition_categories
 	data["petition_tax_pct"] = round((1 - PETITION_TAX_MULT) * 100)
 	data["petitions_per_day"] = PETITIONS_PER_DAY
+	data["realm_labels"] = ta_economy_realm_labels_payload()
 
 	return data
 
@@ -183,6 +184,7 @@
 	if(ledger_state && ledger_state["open"] && ledger_state["dirty"])
 		ledger_state["dirty"] = FALSE
 		data["ledger_page"] = build_ledger_page(user.ckey)
+	data["realm_labels"] = ta_economy_realm_labels_payload()
 	data["treasury"] = SStreasury?.discretionary_fund?.balance || 0
 	data["day"] = GLOB.dayspassed
 	data["expected_rural_revenue"] = SStreasury?.get_rural_tax_amount() || 0
@@ -377,6 +379,15 @@
 		"arrears_consumed" = SStreasury.atc_loan_arrears_consumed ? TRUE : FALSE,
 		"loans_drawn" = SStreasury.atc_loans_drawn_this_round,
 		"outstanding" = SStreasury.atc_loan_arrears_consumed ? SStreasury.treasury_debt : 0,
+		"authority_capital" = ta_economy_authority_capital(),
+		"authority_lower" = ta_economy_authority_lower(),
+		"authority_possessive" = ta_economy_authority_possessive(),
+		"authority_purse" = ta_economy_authority_purse(),
+		"trade_company" = ta_economy_trade_company(),
+		"trade_company_the" = ta_economy_trade_company_the(),
+		"burghers_capital" = ta_economy_burghers_capital(),
+		"burghers_lower" = ta_economy_burghers_lower(),
+		"pledge_grace_capital" = ta_economy_pledge_grace_capital(),
 	)
 
 	return data
@@ -627,7 +638,7 @@ GLOBAL_LIST_INIT(steward_trade_sequestration_locked_actions, list(
 	if(locked && !alderman_has_access(usr))
 		return TRUE
 	if(SStreasury.is_in_receivership() && (action in GLOB.steward_trade_sequestration_locked_actions))
-		to_chat(usr, span_warning("Trade controls are locked under sequestration. Petitions, taxes and fines still work."))
+		to_chat(usr, span_warning("[ta_economy_trade_company_the()] holds [ta_economy_authority_lower()]'s commerce in sequestration. Petition, tax, and fine are your remaining instruments."))
 		return TRUE
 	if(action == "fulfill_order" || (action in GLOB.steward_trade_sequestration_locked_actions))
 		SStreasury.dirty_market_view()
@@ -1054,7 +1065,7 @@ GLOBAL_LIST_INIT(steward_trade_sequestration_locked_actions, list(
 			if(units <= 0)
 				to_chat(usr, span_warning("No surplus to export. No entries are over their threshold or no regions have remaining demand."))
 				return TRUE
-			scom_announce("The Crown sold [units] units of surplus stock abroad for [revenue] mammon.")
+			scom_announce("[ta_economy_authority_capital()] clears surplus stockpile: [units] units exported for [revenue] mammon.")
 			for(var/line in result["lines"])
 				to_chat(usr, span_notice(line))
 			to_chat(usr, span_notice("<b>Total: [units] units exported for [revenue]m.</b>"))
@@ -1104,7 +1115,7 @@ GLOBAL_LIST_INIT(steward_trade_sequestration_locked_actions, list(
 			if(total_units <= 0)
 				to_chat(usr, span_warning("No [category] surplus to export."))
 				return TRUE
-			scom_announce("The Crown sold [total_units] units of surplus [category] abroad for [total_revenue] mammon.")
+			scom_announce("[ta_economy_authority_capital()] clears [category] surplus: [total_units] units exported for [total_revenue] mammon.")
 			for(var/line in lines)
 				to_chat(usr, span_notice(line))
 			to_chat(usr, span_notice("<b>Total: [total_units] units exported for [total_revenue]m.</b>"))
@@ -1136,17 +1147,17 @@ GLOBAL_LIST_INIT(steward_trade_sequestration_locked_actions, list(
 			return TRUE
 		if("take_atc_loan")
 			if(SScity_assembly?.is_alderman(usr))
-				to_chat(usr, span_warning("As Alderman, you can't take loans for the Crown."))
+				to_chat(usr, span_warning("The Alderman's writ does not extend to drawing loans against [ta_economy_authority_lower()]."))
 				return TRUE
 			if(!(usr.job in GLOB.crown_authority_roles))
-				to_chat(usr, span_warning("Only Crown officials can take loans from the ATC."))
+				to_chat(usr, span_warning("Only [ta_economy_authority_possessive_lower()] office may approach the Company clerk."))
 				return TRUE
 			var/amount = text2num("[params["amount"]]")
 			if(!isnum(amount))
 				return TRUE
 			if(SStreasury.take_atc_loan(amount, usr))
 				playsound(src, 'sound/items/inqslip_sealed.ogg', 70, FALSE, -1)
-				visible_message(span_notice("[src] stamps the loan papers with the ATC seal."))
+				visible_message(span_notice("[src] stamps a sealed writ. The wax bears the mark of [ta_economy_trade_company_the()]."))
 			SStgui.update_uis(src)
 			return TRUE
 		if("set_royal_custom_margin")

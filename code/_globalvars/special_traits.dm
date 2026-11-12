@@ -34,6 +34,8 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 /proc/apply_character_post_equipment(mob/living/carbon/human/character, client/player)
 	if(!player)
 		player = character.client
+	if(!player || !player.prefs) // TA EDIT
+		return // TA EDIT
 	apply_charflaw_equipment(character, player)
 	apply_prefs_virtue(character, player)
 	apply_prefs_race_bonus(character, player)
@@ -45,17 +47,7 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 		apply_dnr_trait(character, player, MERCILESS_ROUND)
 	if(player.prefs.qsr_pref)
 		apply_qsr_trait(character, player)
-	character.mind.triumph_discount_remaining = is_donator(player.ckey) ? 3 : 0 // donators get first 3 triumph points free, spent on retrieval
-	for(var/item_name in player.prefs.gear_list)
-		var/datum/loadout_item/LI = GLOB.loadout_items_by_name[item_name]
-		if(!LI)
-			continue
-		if(LI.triumph_cost)
-			// Tag triumph cost items so that it is charged properly
-			character.mind.special_items["[LI.name][TRIUMPH_STASH_SUFFIX]"] = LI.path
-		else
-			character.mind.special_items[LI.name] = LI.path
-		character.mind.special_items_metadata[LI.name] = player.prefs.gear_list[item_name]
+	tat_apply_legacy_preference_loadout(character, player) // TA EDIT
 	var/datum/job/assigned_job = SSjob.GetJob(character.mind?.assigned_role)
 	if(assigned_job)
 		assigned_job.clamp_stats(character)
@@ -77,9 +69,14 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 	if(advclass?.tempo_capable && H.mind.assigned_role != "Court Agent" && H.mind.assigned_role != "Adventurer" && H.mind.assigned_role != "Towner") // (Easier to filter these out than apply the bool to every subclass)
 		if(!H.mind.has_antag_datum(/datum/antagonist/skeleton) && !H.mind.has_antag_datum(/datum/antagonist/lich) && !H.mind.has_antag_datum(/datum/antagonist/vampire) && !H.mind.has_antag_datum(/datum/antagonist/vampire/lord))
 			ADD_TRAIT(H, TRAIT_TEMPO, SPECIES_TRAIT)
+
+	if(HAS_TRAIT(H, TRAIT_PSYDONIC_MEDICINE)) //TA EDIT
+		H.adjust_skillrank(/datum/skill/misc/medicine, 2, TRUE) //TA EDIT
 	return TRUE
 
 /proc/apply_voicepacks(mob/living/carbon/human/character, client/player)
+	if(!player || !player.prefs) // TA EDIT
+		return // TA EDIT
 	if(player.prefs.voice_pack != "Default")
 		var/datum/voicepack/VP = GLOB.voice_packs[GLOB.voice_packs_list[player.prefs.voice_pack]]
 		character.dna.species.soundpack_m = VP
@@ -115,11 +112,24 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 		else
 			to_chat(character, "Incorrect Second Virtue parameters! It will not be applied.")
 	if(origin_type)
+		var/datum/virtue/origin/forced_origin = null
+		if(origin_type.job_origin == TRUE)
+			forced_origin = origin_type
+			origin_type = forced_origin.last_origin
+			if(!origin_type)
+				origin_type = new /datum/virtue/origin/unknown
+			player.prefs.virtue_origin = origin_type
+		else if(istype(origin_type, /datum/virtue/origin/azuria) && SSmapping.config.map_name == "Rockhill")
+			var/pick = alert(character, "Ваш персонаж имеет азурийское происхождение. Хотели бы Вы изменить его на происхождение с Энигмы?", "ПРОШЛОЕ", "Да", "Нет")
+			if(!pick)
+				pick = "Нет"
+			if(pick == "Да")
+				origin_type = new /datum/virtue/origin/enigma
 		if((language_type && language_type != "None"))
 			character.grant_language(language_type)
-		if(origin_type.job_origin == TRUE)
-			apply_virtue(character, origin_type)
-			player.prefs.virtue_origin = origin_type.last_origin
+		if(forced_origin)
+			apply_virtue(character, forced_origin)
+			qdel(forced_origin)
 		else
 			if(origin_check(origin_type, species))
 				apply_virtue(character, origin_type)
@@ -127,6 +137,28 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 				to_chat(character, "Incorrect Origin parameters! Resetting to default.")
 				origin_type = new character.dna.species.origin_default
 				apply_virtue(character, origin_type)
+
+/proc/force_character_origin(mob/living/carbon/human/H, new_origin)
+	if(!new_origin)
+		return FALSE
+	var/client/player = H?.client
+	if(!player?.prefs)
+		return FALSE
+	var/datum/virtue/origin/old_origin = player.prefs.virtue_origin
+	var/datum/virtue/origin/real_origin = old_origin
+	if(istype(old_origin) && old_origin.job_origin)
+		real_origin = old_origin.last_origin
+		if(istype(real_origin) && real_origin.job_origin)
+			real_origin = null
+	if(!real_origin)
+		real_origin = new /datum/virtue/origin/unknown
+	var/datum/virtue/origin/forced_origin = new new_origin
+	forced_origin.job_origin = TRUE
+	forced_origin.last_origin = real_origin
+	player.prefs.virtue_origin = forced_origin
+	if(istype(old_origin) && old_origin.job_origin)
+		qdel(old_origin)
+	return TRUE
 
 /// Virtuous/fated alone, or two vices: lesser. Virtuous/fated AND two vices: lesser and greater. Neither: no quirks
 /proc/get_quirk_slots(datum/preferences/prefs)
@@ -252,9 +284,10 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 			needs_extra_vice = TRUE
 		else
 			has_extra_vice = TRUE
-	for(var/datum/charflaw/cf in character.charflaws)
+	for(var/datum/charflaw/cf in character.charflaws.Copy()) // TA EDIT START - iterate a copy, a flaw may remove itself while applying
 		cf.apply_post_equipment(character)
-		record_featured_object_stat(FEATURED_STATS_VICES, cf.name)
+		if(cf in character.charflaws) // a flaw replaced during application never took root
+			record_featured_object_stat(FEATURED_STATS_VICES, cf.name) // TA EDIT END
 	if(needs_extra_vice && !has_extra_vice)
 		var/datum/charflaw/randflaw/rf = new()
 		character.charflaws.Add(rf)

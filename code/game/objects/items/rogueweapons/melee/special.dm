@@ -154,13 +154,14 @@
 				return
 
 /obj/item/rogueweapon/mace/stunmace
-	force = 15
-	force_wielded = 15
+	force = 25
+	force_wielded = 25
 	name = "stunmace"
 	icon = 'icons/roguetown/weapons/misc32.dmi'
 	icon_state = "stunmace0"
 	desc = "Pain is our currency here."
 	gripped_intents = null
+	wlength = WLENGTH_NORMAL
 	w_class = WEIGHT_CLASS_NORMAL
 	possible_item_intents = list(/datum/intent/mace/strike/stunner, /datum/intent/mace/smash/stunner)
 	wbalance = WBALANCE_NORMAL
@@ -168,6 +169,15 @@
 	wdefense = 0
 	var/charge = 100
 	var/on = FALSE
+
+/obj/item/rogueweapon/mace/stunmace/getonmobprop(tag)
+	. = ..()
+	if(tag)
+		switch(tag)
+			if("gen")
+				return list("shrink" = 0.5,"sx" = -8,"sy" = -7,"nx" = 10,"ny" = -7,"wx" = -1,"wy" = -8,"ex" = 1,"ey" = -7,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 91,"sturn" = -90,"wturn" = -90,"eturn" = 90,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
+			if("onbelt")
+				return list("shrink" = 0.4,"sx" = -3,"sy" = -4,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 70,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 1,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
 
 /datum/intent/mace/strike/stunner/afterchange()
 	var/obj/item/rogueweapon/mace/stunmace/I = masteritem
@@ -198,8 +208,13 @@
 /obj/item/rogueweapon/mace/stunmace/funny_attack_effects(mob/living/target, mob/living/user, nodmg)
 	. = ..()
 	if(on)
-		target.electrocute_act(5, src)
-		charge -= 33
+		if(target.stamina >= target.max_stamina)
+			target.electrocute_act(5, src)
+			charge -= 6
+		else/// TODO: Check target.STACON!!!!!!!!!! - EDIT: I never did. Whoops!
+			target.energy_add(-10)
+			target.stamina_add(5)
+			charge -= 3
 		if(charge <= 0)
 			on = FALSE
 			charge = 0
@@ -218,6 +233,8 @@
 /obj/item/rogueweapon/mace/stunmace/attack_self(mob/user)
 	if(on)
 		on = FALSE
+		force = 25
+		force_wielded = 25
 	else
 		if(charge <= 33)
 			to_chat(user, span_warning("It's out of juice."))
@@ -225,6 +242,8 @@
 		user.visible_message(span_warning("[user] flicks [src] on."))
 		on = TRUE
 		charge--
+		force = 6
+		force_wielded = 6
 	playsound(user, pick('sound/items/stunmace_toggle (1).ogg','sound/items/stunmace_toggle (2).ogg','sound/items/stunmace_toggle (3).ogg'), 100, TRUE)
 	if(user.a_intent)
 		var/datum/intent/I = user.a_intent
@@ -242,6 +261,8 @@
 	if(charge <= 0)
 		on = FALSE
 		charge = 0
+		force = 25
+		force_wielded = 25
 		update_icon()
 		var/mob/user = loc
 		if(istype(user))
@@ -258,6 +279,8 @@
 			user.electrocute_act(5, src)
 		on = FALSE
 		charge = 0
+		force = 25
+		force_wielded = 25
 		update_icon()
 		playsound(src, pick('sound/items/stunmace_toggle (1).ogg','sound/items/stunmace_toggle (2).ogg','sound/items/stunmace_toggle (3).ogg'), 100, TRUE)
 
@@ -424,7 +447,7 @@
 	icon = 'icons/roguetown/weapons/unarmed32.dmi'
 	wdefense = 3
 	force = 35
-	possible_item_intents = list(/datum/intent/claw/cut, /datum/intent/claw/chop)
+	possible_item_intents = list(/datum/intent/claw/cut/steel, /datum/intent/claw/lunge/steel, /datum/intent/claw/rend/steel)
 	wbalance = WBALANCE_HEAVY
 	max_blade_int = 333
 	max_integrity = 333
@@ -469,9 +492,9 @@
 	icon = 'icons/roguetown/weapons/unarmed32.dmi'
 	wdefense = 3 // this is not a katar?
 	force = 20
-	possible_item_intents = list(/datum/intent/claw/cut, /datum/intent/claw/chop)
+	possible_item_intents = list(/datum/intent/claw/cut/iron, /datum/intent/claw/lunge/iron, /datum/intent/claw/rend)
 	wbalance = WBALANCE_NORMAL
-	max_blade_int = 150 //nerfed compared to the gronn special claws
+	max_blade_int = 180 //nerfed compared to the gronn special claws
 	max_integrity = 180
 	sharpness_mod = 2
 	gripsprite = FALSE
@@ -757,7 +780,7 @@
 	max_blade_int = 120
 	anvilrepair = /datum/skill/craft/carpentry
 	smeltresult = /obj/item/rogueore/coal
-	associated_skill = /datum/skill/labor/farming
+	associated_skill = /datum/skill/combat/polearms
 	walking_stick = TRUE
 	wdefense = 6
 	thrown_bclass = BCLASS_BLUNT
@@ -891,11 +914,11 @@
 			A show of the continual worship and veneration of beasts of strength in Gronn."
 	icon_state = "ironclaws"
 	icon = 'icons/roguetown/weapons/unarmed32.dmi'
-	wdefense = 3
-	force = 25
-	possible_item_intents = list(/datum/intent/claw/cut, /datum/intent/claw/chop)
+	wdefense = 5
+	force = 30
+	possible_item_intents = list(/datum/intent/claw/cut/iron, /datum/intent/claw/lunge/iron, /datum/intent/claw/rend)
 	wbalance = WBALANCE_NORMAL
-	max_blade_int = 150
+	max_blade_int = 300
 	max_integrity = 200
 	gripsprite = FALSE
 	parrysound = list('sound/combat/parry/bladed/bladedthin (1).ogg', 'sound/combat/parry/bladed/bladedthin (2).ogg', 'sound/combat/parry/bladed/bladedthin (3).ogg')
@@ -920,7 +943,7 @@
 	icon = 'icons/roguetown/weapons/unarmed32.dmi'
 	wdefense = 6
 	force = 35
-	possible_item_intents = list(/datum/intent/claw/cut, /datum/intent/claw/chop)
+	possible_item_intents = list(/datum/intent/claw/cut/steel, /datum/intent/claw/lunge/steel, /datum/intent/claw/rend/steel)
 	wbalance = WBALANCE_HEAVY
 	max_blade_int = 180
 	max_integrity = 200
@@ -930,13 +953,13 @@
 /obj/item/rogueweapon/handclaw/gronn
 	name = "gronn beast claws"
 	desc = "A pair of uniquely reinforced iron claws forged with the addition of bone by the Iskarn shamans of the Northern Empty. \
-			Their bone-weighted edges bite deep into hide and leather, and their light weight supports rapid aggressive slashes. \
+			Their unique design aids them in slipping between the plates in armor and their light weight supports rapid aggressive slashes. \
 			</br>'To see the claws of the four, Is to see the true danger of the north. Not man, Not land but beast. We are all prey in their eyes.'"
 	icon_state = "gronnclaws"
 	icon = 'icons/roguetown/weapons/unarmed32.dmi'
-	wdefense = 4
+	wdefense = 3
 	force = 25
-	possible_item_intents = list(/datum/intent/claw/cut/gronn, /datum/intent/claw/chop/gronn, /datum/intent/claw/rend)
+	possible_item_intents = list(/datum/intent/claw/cut/gronn, /datum/intent/claw/lunge/gronn, /datum/intent/claw/rend)
 	wbalance = WBALANCE_SWIFT
 	max_blade_int = 200
 	max_integrity = 200
@@ -949,10 +972,6 @@
 			</br>'Here we stand, to turn and face the odds; sacrifice yourself, or bow to lesser gods!'"
 	smeltresult = /obj/item/ingot/silver
 	icon_state = "silverclaws"
-	wdefense = 3
-	possible_item_intents = list(/datum/intent/claw/cut, /datum/intent/claw/chop)
-	wbalance = WBALANCE_NORMAL
-	max_blade_int = 150
 	is_silver = TRUE
 
 /obj/item/rogueweapon/handclaw/gronn/silver/ComponentInitialize()
@@ -972,7 +991,7 @@
 	icon = 'icons/roguetown/weapons/unarmed32.dmi'
 	wdefense = 1
 	force = 35
-	possible_item_intents = list(/datum/intent/claw/cut/gronn, /datum/intent/claw/chop/gronn, /datum/intent/claw/rend)
+	possible_item_intents = list(/datum/intent/claw/cut/gronn, /datum/intent/claw/lunge/gronn, /datum/intent/claw/rend)
 	wbalance = WBALANCE_HEAVY
 	max_blade_int = 350
 	smeltresult = /obj/item/ingot/blacksteel
@@ -987,25 +1006,32 @@
 			if("onbelt")
 				return list("shrink" = 0.3,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
 
-/datum/intent/claw/chop
-	name = "chop"
-	icon_state = "inchop"
-	attack_verb = list("chops", "hacks")
-	animname = "chop"
-	blade_class = BCLASS_CHOP
-	hitsound = list('sound/combat/hits/bladed/genchop (1).ogg', 'sound/combat/hits/bladed/genchop (2).ogg', 'sound/combat/hits/bladed/genchop (3).ogg')
-	item_d_type = "slash"
-	penfactor = PEN_MEDIUM
-	damfactor = 1.1
-	swingdelay = 10
-	clickcd = CLICK_CD_HEAVY
+/datum/intent/claw/lunge
+	name = "lunge"
+	icon_state = "inimpale"
+	attack_verb = list("lunges")
+	animname = "stab"
+	blade_class = BCLASS_STAB
+	hitsound = list('sound/combat/hits/bladed/genstab (1).ogg', 'sound/combat/hits/bladed/genstab (2).ogg', 'sound/combat/hits/bladed/genstab (3).ogg')
+	item_d_type = "stab"
 
-/datum/intent/claw/chop/gronn
-	penfactor = PEN_NONE
-	damfactor = 0.7
-	intent_intdamage_factor = 3
-	swingdelay = 11
+/datum/intent/claw/lunge/iron
+	damfactor = 1.2
+	swingdelay = 8
 	clickcd = CLICK_CD_MELEE
+	penfactor = PEN_HEAVY
+
+/datum/intent/claw/lunge/steel
+	damfactor = 1.2
+	swingdelay = 12
+	clickcd = CLICK_CD_HEAVY
+	penfactor = PEN_HEAVY
+
+/datum/intent/claw/lunge/gronn
+	damfactor = 1.1
+	swingdelay = 5
+	clickcd = CLICK_CD_QUICK
+	penfactor = PEN_HEAVY
 
 /datum/intent/claw/cut
 	name = "cut"
@@ -1015,14 +1041,23 @@
 	blade_class = BCLASS_CUT
 	hitsound = list('sound/combat/hits/bladed/smallslash (1).ogg', 'sound/combat/hits/bladed/smallslash (2).ogg', 'sound/combat/hits/bladed/smallslash (3).ogg')
 	item_d_type = "slash"
-	penfactor = PEN_LIGHT
-	damfactor = 0.8
-	clickcd = CLICK_CD_MELEE
+
+/datum/intent/claw/cut/iron
+	penfactor = PEN_MEDIUM
+	damfactor = 1.1
+	clickcd = CLICK_CD_HEAVY
+
+/datum/intent/claw/cut/steel
+	penfactor = PEN_MEDIUM
+	swingdelay = 4
+	damfactor = 1.3
+	clickcd = CLICK_CD_HEAVY
 
 /datum/intent/claw/cut/gronn
-	damfactor = 0.6
-	intent_intdamage_factor = 0.5
-	clickcd = CLICK_CD_QUICK
+	penfactor = PEN_MEDIUM
+	swingdelay = 0
+	damfactor = 1.1
+	clickcd = CLICK_CD_MELEE
 
 /datum/intent/claw/rend
 	name = "rend"
@@ -1041,6 +1076,9 @@
 	misscost = 10
 	intent_intdamage_factor = 0.05
 	demolition_mod = 0.05
+
+/datum/intent/claw/rend/steel
+	damfactor = 3
 
 /datum/intent/peculate
 	name = "peculate"
@@ -1112,6 +1150,9 @@
 
 /obj/item/rogueweapon/spear/keep_standard/Initialize(mapload)
 	. = ..()
+	if(SSmapping.config.map_name == "Desert Town")
+		name = "Sultan's Standard"
+
 	if(GLOB.lordprimary)
 		lordcolor(GLOB.lordprimary, GLOB.lordsecondary)
 	GLOB.lordcolor += src

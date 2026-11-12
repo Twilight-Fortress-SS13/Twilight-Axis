@@ -47,7 +47,7 @@
 	if(!arrow || QDELETED(arrow))
 		controller.clear_blackboard_key(arrow_key)
 		return FALSE
-	set_movement_target(controller, arrow)
+	set_movement_target(controller, arrow) // TA EDIT
 	return TRUE
 
 /datum/ai_behavior/retrieve_arrow/perform(delta_time, datum/ai_controller/controller, arrow_key)

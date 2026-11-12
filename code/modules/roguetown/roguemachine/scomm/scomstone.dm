@@ -61,6 +61,7 @@
 	if(user.voicecolor_override)
 		usedcolor = user.voicecolor_override
 	user.whisper(input_text)
+	user.log_talk(input_text, LOG_GAME, tag="SCOMSTONE #[scomstone_number]") // TA EDIT
 	if(length(input_text) > 100) //When these people talk too much, put that shit in slow motion, yeah
 		input_text = "<small>[input_text]</small>"
 	for(var/obj/structure/roguemachine/scomm/S in SSroguemachine.scomm_machines)
@@ -184,6 +185,10 @@
 	if(user.voicecolor_override)
 		usedcolor = user.voicecolor_override
 	user.whisper(input_text)
+	if(garrisonline) // TA EDIT START
+		user.log_talk(input_text, LOG_GAME, tag="CROWNSTONE GARRISON SCOM #[scomstone_number]")
+	else
+		user.log_talk(input_text, LOG_GAME, tag="CROWNSTONE SCOM #[scomstone_number]") // TA EDIT END
 	if(length(input_text) > 100) //When these people talk too much, put that shit in slow motion, yeah
 		input_text = "<small>[input_text]</small>"
 	playsound(loc, 'sound/misc/garrisonscom.ogg', 100, FALSE, -1)

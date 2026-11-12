@@ -86,8 +86,8 @@
 	new /obj/item/magic/voidstone(deathspot)
 	spill_embedded_objects()
 	update_icon()
-	spawn(1)
-		qdel(src)
+	stoplag(1)
+	qdel(src)
 
 
 /mob/living/simple_animal/hostile/retaliate/rogue/voidstoneobelisk/get_sound(input)

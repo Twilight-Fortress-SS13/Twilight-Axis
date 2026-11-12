@@ -65,6 +65,22 @@
 		to_chat(H, span_warning("I can't dash there!"))
 		return FALSE
 
+	var/turf/last_open_turf = start // TA EDIT START
+	for(var/turf/path_turf in getline(start, dest))
+		if(path_turf == start)
+			continue
+		if(path_turf.density || istransparentturf(path_turf) || !isfloorturf(path_turf))
+			break
+		var/blocked = FALSE
+		for(var/atom/movable/blocker in path_turf)
+			if(!isliving(blocker) && blocker.density)
+				blocked = TRUE
+				break
+		if(blocked)
+			break
+		last_open_turf = path_turf
+	dest = last_open_turf // TA EDIT END
+
 	var/distance = get_dist(start, dest)
 	if(distance < 1)
 		to_chat(H, span_warning("I need somewhere to dash to!"))

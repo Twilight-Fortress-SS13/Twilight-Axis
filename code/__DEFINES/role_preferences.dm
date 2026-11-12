@@ -24,7 +24,10 @@
 #define ROLE_WRETCH				"Wretch"
 #define ROLE_UNBOUND_DEATHKNIGHT "Unbound Death Knight"
 #define ROLE_DARK_ITINERANT "Dark Itinerant"
-#define ROLE_RENEGADE			"Renegade"
+#define ROLE_CULT			"Cult of Ascension" // TA EDIT START
+#define ROLE_FREEMAN		"Freeman"
+#define ROLE_LOSTGRENZEL	"Lost Grenzel"
+#define ROLE_RENEGADE			"Renegade" // TA EDIT END
 #define ROLE_ANTAGONIST			"Antagonist"
 
 #define ROLE_SYNDICATE			"Syndicate"
@@ -75,7 +78,8 @@ GLOBAL_LIST_INIT(special_roles_rogue, list(
 	ROLE_GNOLL = /datum/antagonist/gnoll,
 	ROLE_ASSASSIN = /datum/antagonist/assassin,
 	ROLE_HAG = /datum/antagonist/hag,
-	ROLE_RENEGADE = /datum/antagonist/renegade,
+	ROLE_CULT = /datum/antagonist/zizocultist,
+	ROLE_RENEGADE = /datum/antagonist/renegade, // TA EDIT
 ))
 
 //ADD BACK DARK ELF AND MANIAC TO THE LIST IF THEY ARE EVER REENABLED
@@ -89,4 +93,8 @@ GLOBAL_LIST_INIT(antagonist_ban_groups, list(
 //Job defines for what happens when you fail to qualify for any job during job selection
 #define BEOVERFLOW	1
 #define BERANDOMJOB "Be Random Role"
-#define RETURNTOLOBBY	"Return to Lobby"
+#define RETURNTOLOBBY 	"Return to Lobby"
+
+
+// TA
+#define ROLE_ZIZOIDCULTIST		"Zizoid Cultist"

@@ -335,12 +335,12 @@
 	var/old_count = LAZYACCESS(data, "misc")
 	LAZYSET(data, "misc", old_count + 1)
 	M.jitteriness = min(M.jitteriness+4,10)
-	if(data >= 25)		// 10 units, 45 seconds @ metabolism 0.4 units & tick rate 1.8 sec
+	if(old_count + 1 >= 25) // TA EDIT
 		if(!M.stuttering)
 			M.stuttering = 1
 		M.stuttering = min(M.stuttering+4, 10)
 		M.Dizzy(5)
-	if(data >= 60)	// 30 units, 135 seconds
+	if(old_count + 1 >= 60) // TA EDIT
 		M.jitteriness = 0
 		M.stuttering = 0
 		holder.remove_reagent(type, volume)	// maybe this is a little too perfect and a max() cap on the statuses would be better??

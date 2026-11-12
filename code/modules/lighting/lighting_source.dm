@@ -349,7 +349,7 @@
 			if (!impacted_turf.lighting_corners_initialised)
 				impacted_turf.generate_missing_corners()
 			cached_corners = impacted_turf.corners
-			if(!cached_corners)
+			if(!islist(cached_corners) || length(cached_corners) < 4)
 				continue
 			corners[cached_corners[1]] = 0
 			corners[cached_corners[2]] = 0

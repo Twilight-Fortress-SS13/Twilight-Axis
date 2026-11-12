@@ -16,6 +16,8 @@
 	blocksound = SOFTHIT
 	salvage_result = /obj/item/natural/hide
 	salvage_amount = 1
+	equip_delay_self = 2.5 SECONDS
+	unequip_delay_self = 2.5 SECONDS
 
 /obj/item/clothing/head/roguetown/beekeeper
 	name = "beekeeper's hood"
@@ -69,7 +71,7 @@
 	icon_state = "dendormask"
 	item_state = "dendormask"
 	icon = 'icons/roguetown/clothing/head.dmi'
-	mob_overlay_icon = 'icons/roguetown/clothing/onmob/head.dmi'
+	mob_overlay_icon = 'icons/roguetown/clothing/onmob/head.dmi' 
 	body_parts_covered = MOUTH
 	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_MASK
 	flags_inv = HIDEFACE|HIDEFACIALHAIR|HIDESNOUT
@@ -105,6 +107,9 @@
 	name = "executioners hood"
 	icon_state = "dungeoneer"
 	color = null
+
+/obj/item/clothing/head/roguetown/menacing/executioner/ComponentInitialize()
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_JAILOR, "dungeoneer")
 
 /obj/item/clothing/head/roguetown/jester
 	name = "jester's hat"

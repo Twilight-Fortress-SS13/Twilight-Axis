@@ -80,7 +80,10 @@
 		GLOB.fires_list -= src
 
 /obj/machinery/light/rogue/Destroy()
-	QDEL_NULL(soundloop)
+	if(ispath(soundloop))
+		soundloop = null
+	else
+		QDEL_NULL(soundloop)
 	GLOB.fires_list -= src
 	. = ..()
 
@@ -239,9 +242,7 @@
 			if(istype(W, /obj/item/natural/dirtclod))
 				if(!user.temporarilyRemoveItemFromInventory(W))
 					return
-				on = FALSE
-				set_light(0)
-				update_icon()
+				burn_out() // TA EDIT
 				qdel(W)
 				src.visible_message("<span class='warning'>[user] snuffs the fire.</span>")
 				return

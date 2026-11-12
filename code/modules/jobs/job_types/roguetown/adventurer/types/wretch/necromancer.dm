@@ -4,7 +4,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 
 	outfit = /datum/outfit/job/roguetown/wretch/necromancer
-	cmode_music = 'sound/music/combat_heretic.ogg'
+	cmode_music = sound("sound/music/combat_heretic.ogg")
 	class_select_category = CLASS_CAT_MAGE
 	category_tags = list(CTAG_WRETCH)
 	traits_applied = list(TRAIT_ZOMBIE_IMMUNE, TRAIT_NOSTINK, TRAIT_GRAVEROBBER, TRAIT_ARCYNE, TRAIT_ALCHEMY_EXPERT, TRAIT_MEDICINE_EXPERT)

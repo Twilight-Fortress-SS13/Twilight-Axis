@@ -22,7 +22,7 @@
 
 /obj/item/soap/ComponentInitialize()
 	. = ..()
-	AddComponent(/datum/component/slippery, slipperiness)
+	AddComponent(/datum/component/slippery, slipperiness, NONE, null, 0, FALSE, 30, TRUE) //TA EDIT
 
 /obj/item/soap/examine(mob/user)
 	. = ..()

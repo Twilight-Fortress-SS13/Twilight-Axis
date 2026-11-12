@@ -4,8 +4,8 @@
 
 
 /datum/keybinding/living/swap_left
-	hotkey_keys = list("Q")
-	classic_keys = list("Q") // PAGEUP
+	hotkey_keys = list()
+	classic_keys = list() // PAGEUP
 	name = "swap_left"
 	full_name = "Swap to left hand"
 	description = ""
@@ -25,8 +25,8 @@
 	return TRUE
 
 /datum/keybinding/living/swap_right
-	hotkey_keys = list("E")
-	classic_keys = list("E") // PAGEUP
+	hotkey_keys = list()
+	classic_keys = list() // PAGEUP
 	name = "swap_right"
 	full_name = "Swap to right hand"
 	description = ""
@@ -46,8 +46,8 @@
 	return TRUE
 
 /datum/keybinding/living/swap_hands
-	hotkey_keys = list()
-	classic_keys = list()
+	hotkey_keys = list("X")
+	classic_keys = list("X")
 	name = "swap_hands"
 	full_name = "Swap hands"
 	description = ""
@@ -62,8 +62,8 @@
 	return TRUE
 
 /datum/keybinding/living/activate_inhand
-	hotkey_keys = list()
-	classic_keys = list()
+	hotkey_keys = list("Z")
+	classic_keys = list("Z")
 	name = "activate_inhand"
 	full_name = "Activate in-hand"
 	description = "Uses whatever item you have inhand"
@@ -78,7 +78,7 @@
 
 
 /datum/keybinding/living/drop_item
-	hotkey_keys = list("Z")
+	hotkey_keys = list("Q")
 	name = "drop_item"
 	full_name = "Drop Item"
 	description = ""
@@ -95,7 +95,7 @@
 	return TRUE
 
 /datum/keybinding/living/sprint
-	hotkey_keys = list()
+	hotkey_keys = list("Alt")
 	name = "sprint"
 	full_name = "Sprint"
 	description = "Sprinting can be dangerous to your health if you aren't careful."
@@ -138,7 +138,7 @@
 	if(!isliving(L))
 		return
 	if(L.doing)
-		L.doing = 0
+		L.stop_all_doing() // TA EDIT
 	L.submit(TRUE)
 	return TRUE
 
@@ -156,7 +156,7 @@
 	return TRUE
 
 /datum/keybinding/living/resist
-	hotkey_keys = list("X")
+	hotkey_keys = list("B")
 	name = "cancelresist"
 	full_name = "Resist"
 	description = "Spam this to resist against a grab."
@@ -337,14 +337,11 @@
 		return FALSE
 	var/mob/living/C = user.mob
 	var/datum/hud/H = C.hud_used
-	if(H?.rearrange_mode)
+	if(H?.rearrange_mode || H?.free_position_mode) // TA EDIT
 		H.rearrange_hint(C)
 		return TRUE
 	var/count = 0
 	for(var/datum/action/A as anything in C.actions)
-		var/atom/movable/screen/movable/action_button/B = H ? A.viewers[H] : null
-		if(B && B.moved)
-			continue
 		count++
 		if(count == action_taken)
 			A.Trigger()
@@ -424,3 +421,22 @@
 	description = "Select the ninth action."
 	category = CATEGORY_HUMAN
 	action_taken = 9
+
+/datum/keybinding/living/actions/wheel_selected // TA EDIT START
+	hotkey_keys = list("Alt0")
+	name = "wheel_selected_action"
+	full_name = "Use Selected Action"
+	description = "Use the action selected by scrolling the mouse wheel."
+	category = CATEGORY_HUMAN
+
+/datum/keybinding/living/actions/wheel_selected/down(client/user)
+	if(!isliving(user.mob))
+		return FALSE
+	var/mob/living/C = user.mob
+	var/datum/hud/H = C.hud_used
+	if(!H || H.rearrange_mode || H.free_position_mode)
+		return FALSE
+	var/datum/action/A = H.wheel_selected_action
+	if(!A || A.owner != C || !(A in C.actions) || !A.is_wheel_selectable())
+		return FALSE
+	return A.select_for_wheel() // TA EDIT END

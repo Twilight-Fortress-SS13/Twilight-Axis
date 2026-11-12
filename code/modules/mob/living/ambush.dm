@@ -259,7 +259,8 @@ GLOBAL_LIST_INIT(melee_combat_skills, list( \
 		var/mob/spawnedmob = new mob_type(spawnloc)
 		if(istype(spawnedmob, /mob/living/simple_animal/hostile))
 			var/mob/living/simple_animal/hostile/M = spawnedmob
-			M.AddComponent(/datum/component/deaggro_despawn, 44 SECONDS)
+			if(!istype(M, /mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup)) // TA EDIT
+				M.AddComponent(/datum/component/deaggro_despawn, 44 SECONDS) // TA EDIT
 			M.faction += "ambush"
 		if(istype(spawnedmob, /mob/living/carbon/human))
 			var/mob/living/carbon/human/H = spawnedmob
@@ -281,7 +282,10 @@ GLOBAL_LIST_INIT(melee_combat_skills, list( \
 
 /proc/add_ambush_purchase(entry, list/mobs_to_spawn)
 	if(ispath(entry, /mob/living))
-		mobs_to_spawn += entry
+		if(entry == /mob/living/simple_animal/hostile/retaliate/rogue/wolf && mobs_to_spawn.len <= 11 && prob(20)) // TA EDIT START
+			mobs_to_spawn += get_wolf_family_types()
+		else
+			mobs_to_spawn += entry // TA EDIT END
 		return
 	var/datum/npc_warband/warband = get_npc_part(entry)
 	if(warband)
