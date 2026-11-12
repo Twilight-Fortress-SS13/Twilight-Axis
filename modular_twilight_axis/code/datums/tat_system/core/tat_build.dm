@@ -149,6 +149,7 @@
 		return null
 
 	var/list/parts = list()
+	parts += "second_virtue_enabled=[!!P.statpack?.virtuous]"
 	var/list/virtues = list(P.virtue, P.virtuetwo)
 	for(var/virtue_entry in virtues)
 		var/datum/virtue/virtue = virtue_entry
@@ -224,7 +225,7 @@
 	if(owner_preferences.virtue && !istype(owner_preferences.virtue, /datum/virtue/none))
 		result += owner_preferences.virtue
 
-	if(owner_preferences.virtuetwo && !istype(owner_preferences.virtuetwo, /datum/virtue/none))
+	if(owner_preferences.statpack?.virtuous && owner_preferences.virtuetwo && !istype(owner_preferences.virtuetwo, /datum/virtue/none))
 		if(!(owner_preferences.virtuetwo in result))
 			result += owner_preferences.virtuetwo
 

@@ -377,6 +377,7 @@
 	possible_candidates = cast_control.filter_antag_banned_candidates(possible_candidates) // TA EDIT
 	var/list/willing_candidates = SSpolling.poll_candidates(
 		question = "The storyteller is requesting a [antag_flag]. Would you like to play this role?",
+		check_jobban = antag_flag,
 		poll_time = 20 SECONDS,
 		group = possible_candidates,
 		role_name_text = cast_control.name,

@@ -227,6 +227,10 @@
 	effect_str = null
 
 /datum/light_source/proc/recalc_corner(datum/lighting_corner/C)
+	if(!isturf(pixel_turf)) // TA EDIT START
+		pixel_turf = get_turf(top_atom)
+		if(!isturf(pixel_turf))
+			return // TA EDIT END
 	SETUP_CORNERS_CACHE(src)
 	LAZYINITLIST(effect_str)
 	if (effect_str[C]) // Already have one.
@@ -271,10 +275,10 @@
 			update = TRUE
 	else if (top_atom.loc != source_turf)
 		source_turf = top_atom.loc
-		pixel_turf = get_turf_pixel(top_atom)
+		pixel_turf = get_turf_pixel(top_atom) || source_turf // TA EDIT
 		update = TRUE
 	else
-		var/P = get_turf_pixel(top_atom)
+		var/P = get_turf_pixel(top_atom) || source_turf // TA EDIT
 		if (P != pixel_turf)
 			pixel_turf = P
 			update = TRUE
@@ -283,6 +287,9 @@
 		if (applied)
 			remove_lum()
 		return
+	if(!isturf(pixel_turf)) // TA EDIT START
+		pixel_turf = source_turf
+		update = TRUE // TA EDIT END
 
 	if (source_atom.light_falloff_curve != light_falloff_curve)
 		light_falloff_curve = source_atom.light_falloff_curve
