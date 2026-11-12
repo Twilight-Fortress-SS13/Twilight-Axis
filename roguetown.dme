@@ -12,7 +12,7 @@
 #include "_maps\templates\arcyne_fortress.dm"
 #include "code\__byond_version_compat.dm"
 #include "code\_compile_options.dm"
-#include "modular_twilight_axis\code\__DEFINES\nobility.dm" // TA EDIT
+#include "modular_twilight_axis\code\__DEFINES\nobility.dm"
 #include "code\world.dm"
 #include "code\__DEFINES\_alc_def.dm"
 #include "code\__DEFINES\_bitfields.dm"
@@ -3717,7 +3717,7 @@
 #include "code\modules\tgui_panel\telemetry.dm"
 #include "code\modules\tgui_panel\tgui_panel.dm"
 #include "code\modules\underworld\underworld.dm"
-#include "modular_twilight_axis\code\modules\roguetown\roguestock\manor_goods.dm" // TA EDIT: shared by estate code and tests.
+#include "modular_twilight_axis\code\modules\roguetown\roguestock\manor_goods.dm"
 #include "code\modules\unit_tests\_unit_tests.dm"
 #include "code\modules\vampire_neu\_actions.dm"
 #include "code\modules\vampire_neu\bloodsuck.dm"
