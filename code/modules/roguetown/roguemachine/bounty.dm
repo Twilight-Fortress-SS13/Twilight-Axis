@@ -152,7 +152,7 @@
 	switch(employer)
 		if("The Justiciary of Azuria")
 			return "crown"
-		if("The Grenzelhoftian Holy See")
+		if("The Grenzelhoftian Holy See", "The Valorian Holy See") // TA EDIT
 			return "church"
 		if("The Otavan Orthodoxy")
 			return "inquisition"
