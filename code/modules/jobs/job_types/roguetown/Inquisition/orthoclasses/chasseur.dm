@@ -107,4 +107,3 @@
 		if("Siegebow - Greater Damage, Structurebreaker")
 			H.equip_to_slot_or_del(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/heavy, SLOT_BACK_L, TRUE)
 			H.equip_to_slot_or_del(new /obj/item/quiver/bolt/heavy/stake, SLOT_BELT_L, TRUE)
-// am
