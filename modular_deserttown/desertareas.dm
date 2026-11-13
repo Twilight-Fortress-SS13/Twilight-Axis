@@ -524,3 +524,12 @@
 	droning_sound = 'sound/music/area/dungeon2.ogg'
 	droning_sound_dusk = null
 	droning_sound_night = null
+
+/area/rogue/under/dungeon/desertifrit
+	name = "Scorched Ruins"
+	loot_budget = LOOT_BUDGET_IFRITDUNGEON
+	icon_state = "under"
+	first_time_text = "Scorched Ruins"
+	droning_sound = 'sound/music/area/desert/Valley-of-Kings.ogg'
+	droning_sound_dusk = null
+	droning_sound_night = null
