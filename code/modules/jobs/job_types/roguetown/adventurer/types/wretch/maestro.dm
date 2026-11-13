@@ -93,8 +93,10 @@
 				backr = /obj/item/rogue/instrument/drum
 
 		// TA REMOVAL START
+		/*
 		var/crimes = list("I'm nobody", "They fear me")
 		var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
+		*/
 		// TA REMOVAL END
 
 		var/paths = list("Busker", "Cacophonist", "Boomwhacker", "Chanter", "Cipher")
