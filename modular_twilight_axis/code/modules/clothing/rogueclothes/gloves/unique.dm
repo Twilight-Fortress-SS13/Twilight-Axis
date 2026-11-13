@@ -1,4 +1,4 @@
-/obj/item/clothing/gloves/roguetown/knuckles/silver/psydon/relic
+/obj/item/clothing/gloves/roguetown/knuckles/silver/psy/relic
 	name = "\"Penance\""
 	desc = "Forged in the workshops of Otava from silver-blessed steel, these brutal knuckles were carried by an inquisitor \
 	who made a practice of delivering judgement without drawing a blade. The three crowned studs bear the mark of Psydon, \
@@ -6,7 +6,7 @@
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/unarmed32.dmi'
 	unarmed_bonus = 10
 
-/obj/item/clothing/gloves/roguetown/knuckles/silver/psydon/relic/ComponentInitialize()
+/obj/item/clothing/gloves/roguetown/knuckles/silver/psy/relic/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_PSYDONIAN,\

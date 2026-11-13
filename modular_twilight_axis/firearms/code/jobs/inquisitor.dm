@@ -83,7 +83,7 @@
 				mask = /obj/item/clothing/mask/rogue/facemask/steel/confessor
 				cloak = /obj/item/storage/backpack/rogue/satchel/beltpack
 				belt = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/blackpowder/umbra
-				r_hand = /obj/item/clothing/gloves/roguetown/knuckles/silver/psydon/relic
+				r_hand = /obj/item/clothing/gloves/roguetown/knuckles/silver/psy/relic
 				beltr = /obj/item/quiver/twilight_bullet/silver
 				backpack_contents = list(
 					/obj/item/storage/keyring/inquisitor = 1,

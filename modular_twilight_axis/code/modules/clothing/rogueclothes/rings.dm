@@ -69,7 +69,7 @@
 /obj/item/clothing/ring/baotha/attack_self(var/mob/living/carbon/human/user)
 	if(user.patron.type == /datum/patron/inhumen/baotha)
 		if(do_after(user, 10, target = src))
-			var/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/S = new/obj/item/rogueweapon/huntingknife/idagger/steel/baotha(get_turf(src.loc))
+			var/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/corroded/S = new(get_turf(src))
 			if(user.is_holding(src))
 				user.dropItemToGround(src)
 				user.put_in_hands(S)

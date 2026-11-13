@@ -70,8 +70,10 @@
 		cursed_item_intdamage = CURSEITEM_INT_DAMAGE_TEN_MULTIPLIER
 	else
 		cursed_item_intdamage = CURSEITEM_INT_DAMAGE_PSY_MULTIPLIER
-	var/obj/item/rogueweapon/W = parent
+	var/obj/item/W = parent // TA EDIT
 	is_blessed = blessing_type
 	W.name = "blessed [W.name]"
 	W.AddComponent(/datum/component/metal_glint)
-	W.on_blessed(blessing_type)
+	if(istype(W, /obj/item/rogueweapon)) // TA EDIT START
+		var/obj/item/rogueweapon/weapon = W
+		weapon.on_blessed(blessing_type) // TA EDIT END
