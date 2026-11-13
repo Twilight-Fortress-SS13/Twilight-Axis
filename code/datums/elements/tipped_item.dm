@@ -3,7 +3,8 @@
 
 	//Reagent blacklist. Killer's ice should probably be here too TBH.
 	var/list/blacklisted_reagents = list(
-		/datum/reagent/sleep_powder
+		/datum/reagent/sleep_powder,
+		/datum/reagent/consumable/brew/baothablend
 	)
 
 /datum/element/tipped_item/Attach(atom/movable/target, amount)

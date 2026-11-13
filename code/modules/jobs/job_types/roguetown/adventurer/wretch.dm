@@ -14,6 +14,7 @@
 	show_in_credits = FALSE
 	min_pq = 20
 	max_pq = null
+	vice_restrictions = list(/datum/charflaw/forlorne)
 
 	obfuscated_job = TRUE
 	class_categories = TRUE
@@ -28,7 +29,7 @@
 	always_show_on_latechoices = TRUE
 	job_reopens_slots_on_death = FALSE
 	same_job_respawn_delay = 30 MINUTES
-	virtue_restrictions = list(/datum/virtue/heretic/zchurch_keyholder) //all wretch classes automatically get this
+	virtue_restrictions = list(/datum/virtue/utility/zchurch_keyholder) // TA EDIT
 	job_traits = list(TRAIT_STEELHEARTED, TRAIT_OUTLAW, TRAIT_HERESIARCH, TRAIT_SELF_SUSTENANCE, TRAIT_ZURCH)
 	job_subclasses = list(
 		/datum/advclass/wretch/licker,
@@ -194,7 +195,7 @@
 
 	var/list/sev_data = GLOB.wretch_bounty_severities[bounty_severity_key]
 	var/bounty_total = rand(sev_data["min"], sev_data["max"])
-	if(bounty_severity_key == "ATROCITY")
+	if(bounty_severity_key == "ATROCITY" || bounty_severity_key == "UNFORGIVABLE")
 		if(bounty_poster_key == "AZURIA")
 			GLOB.outlawed_players += H.real_name
 		else
@@ -217,7 +218,7 @@
 	var/descriptor_voice = build_coalesce_description_nofluff(
 		d_list, H, list(MOB_DESCRIPTOR_SLOT_VOICE), "%DESC1%"
 	)
-	add_bounty(H.real_name, race, gender, descriptor_height, descriptor_body, descriptor_voice, bounty_total, FALSE, my_crime, bounty_poster)
+	add_bounty(H.real_name, race, gender, descriptor_height, descriptor_body, descriptor_voice, bounty_total, my_crime, bounty_poster, null, TRUE)
 	if(H.has_flaw(/datum/charflaw/wanted))
 		to_chat(H, span_danger("You are wanted; you have a price on your head. Expect conflict to find you whether you seek it or not."))
 	else
@@ -296,6 +297,32 @@
 	if(SSticker.IsRoundInProgress() && player_count < 40)
 		result["combat_positions_alive"] = SSgamemode.combat_positions_alive
 		result["final_slots"] = max(0, min(result["final_slots"], SSgamemode.combat_positions_alive, cap))
+	// TA EDIT END
+
+	// TA EDIT BEGIN
+	var/antag_death_bonus = 0
+	var/werewolves_existed = FALSE
+	var/werewolf_threat_alive = FALSE
+	for(var/datum/antagonist/antag as anything in GLOB.antagonists)
+		if(QDELETED(antag) || QDELETED(antag.owner))
+			continue
+		if(istype(antag, /datum/antagonist/lich))
+			var/datum/antagonist/lich/lich_antag = antag
+			if(lich_antag.out_of_lives)
+				antag_death_bonus += 2
+		else if(istype(antag, /datum/antagonist/vampire/lord))
+			var/mob/living/lord_body = antag.owner.current
+			if(!lord_body || lord_body.stat == DEAD)
+				antag_death_bonus += 2
+		else if(!werewolf_threat_alive && istype(antag, /datum/antagonist/werewolf))
+			werewolves_existed = TRUE
+			var/mob/living/wolf_body = antag.owner.current
+			if(wolf_body && wolf_body.stat != DEAD && !HAS_TRAIT(wolf_body, TRAIT_SILVER_BLESSED))
+				werewolf_threat_alive = TRUE
+	if(werewolves_existed && !werewolf_threat_alive)
+		antag_death_bonus += 4
+	result["antag_death_bonus"] = antag_death_bonus
+	result["final_slots"] = max(0, result["final_slots"] + antag_death_bonus)
 	// TA EDIT END
 
 	return result

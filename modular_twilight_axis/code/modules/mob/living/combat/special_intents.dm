@@ -97,12 +97,7 @@
 	if(!final_target || (final_targ_turf && final_targ_turf.z != target_z))
 		final_target = target_level_turf
 
-	is_arc_mode = FALSE
-	var/list/intents_list = B.possible_item_intents
-	var/idx = B.saved_intent_index
-	if(intents_list && idx > 0 && idx <= length(intents_list))
-		if(ispath(intents_list[idx], /datum/intent/arc))
-			is_arc_mode = TRUE
+	is_arc_mode = istype(L.used_intent, /datum/intent/arc) // TA EDIT
 	return TRUE
 
 /datum/special_intent/ranged/proc/setup_projectile(obj/projectile/proj, proj_range)

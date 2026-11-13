@@ -48,6 +48,10 @@
 	return ..()
 
 /mob/dead/new_player/proc/get_grouped_lobby_player_display()
+	var/static/list/ready_jobs_cache // TA EDIT START
+	var/static/ready_jobs_cache_until = 0
+	if(ready_jobs_cache && world.time < ready_jobs_cache_until)
+		return ready_jobs_cache // TA EDIT END
 	var/list/ready_players_by_job = list()
 	var/list/wanderer_jobs = list(
 		"Adventurer",
@@ -151,7 +155,9 @@
 			"jobs" = jobs_under_department,
 		))
 
-	return result
+	ready_jobs_cache = result // TA EDIT START
+	ready_jobs_cache_until = world.time + 1 SECONDS
+	return result // TA EDIT END
 
 /mob/dead/new_player/ui_data(mob/user)
 	var/list/data = ..()
@@ -183,11 +189,7 @@
 					if(SSticker.job_change_locked)
 						to_chat(src, span_boldwarning("Setting up, roles are locked..."))
 						return
-					if(length(client.prefs.flavortext) < MINIMUM_FLAVOR_TEXT)
-						to_chat(src, span_boldwarning("You need a minimum of [MINIMUM_FLAVOR_TEXT] characters in your flavor text in order to play."))
-						return TRUE
-					if(length(client.prefs.ooc_notes) < MINIMUM_OOC_NOTES)
-						to_chat(src, span_boldwarning("You need at least a few words in your OOC notes in order to play."))
+					if(!check_description_minimums())
 						return TRUE
 
 					ready = PLAYER_READY_TO_PLAY

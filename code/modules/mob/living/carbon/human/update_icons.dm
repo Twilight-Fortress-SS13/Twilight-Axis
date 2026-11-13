@@ -283,6 +283,11 @@ There are several things that need to be remembered:
 				armdam_overlay.color = BP.bandage.color
 				armdam_overlays += armdam_overlay
 
+		if(BP.body_zone == BODY_ZONE_CHEST)
+			var/datum/wound/gutwound = BP.has_wound(/datum/wound/slash/disembowel)
+			if(gutwound && !gutwound.is_sewn())
+				armdam_overlays += mutable_appearance('icons/effects/blood.dmi', "guts", -ARM_DAMAGE_LAYER)
+
 		var/used_offset = BP.offset
 		if(!is_bulky_offset())
 			used_offset = BP.offset_f
@@ -304,6 +309,10 @@ There are several things that need to be remembered:
 	apply_overlay(DAMAGE_LAYER)
 	apply_overlay(LEG_DAMAGE_LAYER)
 	apply_overlay(ARM_DAMAGE_LAYER)
+
+/mob/living/carbon/human/proc/update_gargoyle_gender()
+	if(hud_used?.zone_select)
+		hud_used.zone_select.update_icon()
 
 
 /* --------------------------------------- */
@@ -339,6 +348,9 @@ There are several things that need to be remembered:
 		update_transform()
 		//damage overlays
 		update_damage_overlays()
+		// updates gargoyle type if it needs to be changed
+		update_gargoyle_gender()
+
 
 /mob/proc/regenerate_clothes()
 	return
@@ -1038,7 +1050,7 @@ There are several things that need to be remembered:
 	remove_overlay(CLOAK_LAYER)
 	remove_overlay(CLOAK_BEHIND_LAYER)
 	remove_overlay(TABARD_LAYER)
-	remove_overlay(UNDER_ARMOR_LAYER)
+	remove_overlay(UNDER_ARMOR_CACHE_INDEX)
 
 	var/obj/item/bodypart/taur/taur = get_taur_tail()
 	var/icon/c_mask = taur?.clip_mask
@@ -1074,7 +1086,7 @@ There are several things that need to be remembered:
 			if(cloak.alternate_worn_layer == UNDER_ARMOR_LAYER)
 				var/list/taur_tabard_layers = build_taur_tabard_overlay(taur, cloak)
 				if(taur_tabard_layers)
-					overlays_standing[UNDER_ARMOR_LAYER] = list(cloak_overlay) + taur_tabard_layers
+					overlays_standing[UNDER_ARMOR_CACHE_INDEX] = list(cloak_overlay) + taur_tabard_layers
 				else
 					cloaklays += cloak_overlay
 			else if(!cloak.alternate_worn_layer)
@@ -1128,7 +1140,7 @@ There are several things that need to be remembered:
 	update_inv_armor() //fixboob
 	apply_overlay(TABARD_LAYER)
 	apply_overlay(CLOAK_BEHIND_LAYER)
-	apply_overlay(UNDER_ARMOR_LAYER)
+	apply_overlay(UNDER_ARMOR_CACHE_INDEX)
 	apply_overlay(CLOAK_LAYER)
 
 /mob/living/carbon/human/update_inv_shirt()
@@ -1220,6 +1232,18 @@ There are several things that need to be remembered:
 			var/list/sleeves = list()
 			if(wear_armor.sleeved && armsindex > 0 && !should_hide_sleeves_for_layer(ARMORSLEEVE_LAYER))
 				sleeves = get_sleeves_layer(wear_armor,armsindex,ARMORSLEEVE_LAYER)
+
+			//cosmetics stored in the armor's aesthetic storage need their sleeves drawn too
+			var/obj/item/clothing/suit/roguetown/armor/worn_armor = wear_armor
+			if(armsindex > 0 && istype(worn_armor) && worn_armor.attachment_component)
+				var/datum/component/storage/concrete/roguetown/armor_storage = worn_armor.GetComponent(worn_armor.attachment_component)
+				if(armor_storage)
+					for(var/obj/item/stored as anything in armor_storage.item_to_grid_coordinates)
+						if(!stored.sleeved || (stored.item_flags & NOT_SHOW_IN_STORAGE) || should_hide_sleeves_for_layer(ARMORSLEEVE_LAYER))
+							continue
+						var/list/stored_sleeves = get_sleeves_layer(stored, armsindex, ARMORSLEEVE_LAYER)
+						if(length(stored_sleeves))
+							sleeves += stored_sleeves
 
 			if(sleeves)
 				for(var/mutable_appearance/S as anything in sleeves)

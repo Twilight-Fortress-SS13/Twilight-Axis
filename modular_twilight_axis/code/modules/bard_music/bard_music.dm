@@ -259,7 +259,7 @@ SUBSYSTEM_DEF(bard_music)
 	var/list/band_members = list()
 	var/band_pending_responses = 0
 	var/band_invite_token = 0
-	var/list/timed_tracks = list()
+	var/list/datum/bard_timed_track/timed_tracks = list()
 	var/music_panel_selected = null
 
 /obj/item/rogue/instrument/proc/ensure_timed_tracks()

@@ -108,8 +108,6 @@ GLOBAL_LIST_INIT(ranged_draw_curve, list(1, 0.79, 0.58, 0.33, 0.17, 0.08, 0))
 #define ACC_RANGED_FARSIGHT_PENALTY 10
 #define ACC_RANGED_ZCROSS_PENALTY 20
 #define ACC_RANGED_NPC_BASE 60
-#define RANGED_MAX_ULTRA_PRECISE_HIT_CHANCE 50
-#define RANGED_MAX_FACE_HIT_CHANCE 30
 #define RANGED_ULTRA_PRECISE_HIT_PENALTY -25
 #define RANGED_MAX_PRECISE_HIT_CHANCE 90
 #define RANGED_PRECISE_HIT_PENALTY -10
@@ -438,7 +436,7 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 
 // Per Mage 3.1 decision - we want ARMOR damage of mage to largely stay the same, whereas post-armor damage is reduced slightly, such that it favors grouping with martial or using melee tools like knives or staff to finish them off, but does not completely prevent you from doing so.
 // Applied at compile time. Simplemobs are exempt and take the unscaled damage.
-#define SPELL_DAMAGE_GENERAL_MODIFIER 0.8
+#define SPELL_DAMAGE_GENERAL_MODIFIER 1 //TA EDIT
 #define SPELL_DAMAGE_INTEGRITY_MODIFIER (1 / SPELL_DAMAGE_GENERAL_MODIFIER)
 #define SPELL_DMG(x) ((x) * SPELL_DAMAGE_GENERAL_MODIFIER)
 #define SPELL_INTDAM(x) ((x) * SPELL_DAMAGE_INTEGRITY_MODIFIER)
@@ -470,6 +468,18 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 
 /// Damage multiplier of silver weapons against mobs with TRAIT_SIMPLE_WOUNDS
 #define SILVER_SIMPLEMOB_DAM_MULT 3
+
+/// Anti-Beast Modifier tiers. Multiplies damage dealt to simple animals by weapons and projectiles.
+#define ANTIBEAST_DEFAULT 1.5 // For arrows and such
+#define ANTIBEAST_GREATER 2 // For bolts / crossbow
+#define ANTIBEAST_SUPERIOR 3 // Stakers
+#define ANTIBEAST_EXCEPTIONAL 5 // Holy?
+#define ANTIBEAST_SUPREME 6 // Silver
+
+/// TRAIT_MONSTER_HUNTER modifiers. Meant for HUNTER TOWNERS. To make them good at their job. Only vs simple animals (including cliented one).
+#define MONSTER_HUNTER_ACCURACY_BONUS 20
+#define MONSTER_HUNTER_PART_DAMAGE_MULT 1.5 // Melee multiplier should be as strong as the ranged counterpart
+#define MONSTER_HUNTER_RANGED_PART_MULT (1 / RANGED_PART_CONTRIBUTION) // Monster Hunter basically exactly cancels out the 0.66x part damage modifier. On top of anti-beast + precision bonus, this should makes them effective at killing simples and weakening them.
 
 #define PROJ_PARRY_TIMER	0.65 SECONDS	//The time after an attack (swinging in the air counts) when a thrown item would be deflected at a higher chance.
 

@@ -109,6 +109,12 @@
 		*/
 	var/list/backpack_contents = null
 
+	///Items to go in the armour decor slot.
+	var/list/chest_decor = null
+
+	///Items to go in the head armour's decor slot.
+	var/list/head_decor = null
+
 	/// Internals box. Will be inserted at the start of backpack_contents
 	var/box
 
@@ -237,6 +243,8 @@
 			U.attach_accessory(SSwardrobe.provide_type(accessory, H))
 		else
 			WARNING("Unable to equip accessory [accessory] in outfit [name]. No uniform present!")
+	decorate(H, H.wear_armor, chest_decor, visualsOnly)
+	decorate(H, H.head, head_decor, visualsOnly)
 
 	if(!visualsOnly)
 		// gives a 50/50 chance for hands to be swapped
@@ -298,11 +306,22 @@
 	H.update_body()
 	return TRUE
 
-/datum/outfit/proc/move_storage(obj/item/new_item, turf/T)
+/datum/outfit/proc/move_storage(obj/item/new_item, atom/dest)
+	var/turf/T = get_turf(dest)
 	if(!new_item || !T || QDELETED(new_item))
 		return FALSE
 	new_item.forceMove(T)
 	return TRUE
+
+/datum/outfit/proc/decorate(mob/living/carbon/human/H, obj/item/worn, list/paths, visualsOnly)
+	for(var/path in paths)
+		var/obj/item/decor = SSwardrobe.provide_type(path, H)
+		if(worn && SEND_SIGNAL(worn, COMSIG_TRY_STORAGE_CAN_INSERT, decor, null, TRUE) && SEND_SIGNAL(worn, COMSIG_TRY_STORAGE_INSERT, decor, null, TRUE))
+			continue
+		if(visualsOnly)
+			qdel(decor)
+			continue
+		addtimer(CALLBACK(src, PROC_REF(move_storage), decor, H), 3 SECONDS)
 
 /client/proc/test_spawn_outfits()
 	for(var/path in subtypesof(/datum/outfit/job/roguetown))
@@ -484,25 +503,13 @@
 				num_to_load = 1
 			for(var/i in 1 to num_to_load)
 				preload += type_to_load
+	preload += chest_decor
+	preload += head_decor
 
 	return preload
 
 /datum/outfit/proc/change_origin(mob/living/carbon/human/H, new_origin = /datum/virtue/none, wording = "Custom")
 	var/client/player = H?.client
 	if(player?.prefs)
-		var/datum/virtue/origin/origin_memory = player.prefs.virtue_origin // TA EDIT START
-		var/datum/virtue/origin/temporary_origin = new new_origin
 		H.dna.species.skin_tone_wording = wording
-		temporary_origin.job_origin = TRUE
-		temporary_origin.last_origin = origin_memory
-		temporary_origin.apply_to_human(H)
-		if(length(temporary_origin.added_languages))
-			for(var/L in temporary_origin.added_languages)
-				H.grant_language(L)
-		if(length(origin_memory?.added_languages))
-			for(var/L in origin_memory.added_languages)
-				if(L != player.prefs.extra_language)
-					H.remove_language(L)
-		if(player.prefs.extra_language != "None")
-			H.grant_language(player.prefs.extra_language)
-		qdel(temporary_origin) // TA EDIT END
+		force_character_origin(H, new_origin)

@@ -567,20 +567,15 @@
 
 /turf/open/floor/rogue/dirt/get_slowdown(mob/user)
 	. = ..()
-	var/negate_slowdown = FALSE
-
-	for(var/obj/item/stick in user.held_items)  // TA EDIT START
-		if(stick.walking_stick && !stick.wielded && !user.cmode) // 
-			negate_slowdown = TRUE //
-			break // TA EDIT FIN
-
-	if((isliving(user))&&(user?.movement_type == FLYING))
-		negate_slowdown = TRUE
-	if(HAS_TRAIT(user, TRAIT_LONGSTRIDER))
-		negate_slowdown = TRUE
-
-	if(negate_slowdown)
-		. -= 1 // TA EDIT 2 —> 1 (since slowdown numbers were changed)
+	var/negate_slowdown = FALSE // TA EDIT
+	for(var/obj/item/stick in user.held_items) // TA EDIT
+		if(stick.walking_stick && !stick.wielded && !user.cmode) // TA EDIT
+			negate_slowdown = TRUE // TA EDIT
+			break // TA EDIT
+	if((user.movement_type & FLYING) || HAS_TRAIT(user, TRAIT_LONGSTRIDER)) // TA EDIT
+		negate_slowdown = TRUE // TA EDIT
+	if(negate_slowdown) // TA EDIT
+		. -= 1 // TA EDIT
 	return max(., 0)
 
 
@@ -1865,8 +1860,8 @@
 
 // Chopping or picking a hole in the ice puts the water back for the rest of the round -
 // SSseason only re-freezes on a season change, so a hole you cut stays a hole. This is what
-// keeps the fisher employed in winter: getfishingloot()'s freshwater list wants a real
-// /turf/open/water underfoot, and the thaw-through leaves exactly the subtype that was there.
+// keeps the fisher employed in winter: a fishing spot needs a real /turf/open/water
+// underfoot, and the thaw-through leaves exactly the subtype that was there.
 //
 // (axe/chop, sword/chop, dagger/chop/cleaver, etc), not just axes.
 /turf/open/floor/rogue/frozen_water/attackby(obj/item/C, mob/user, params)
@@ -1917,7 +1912,7 @@
 			possible_turfs += T
 		if(!length(possible_turfs))
 			return
-		H.forceMove(pick(possible_turfs))
+		step_towards(H, pick(possible_turfs))
 		to_chat(H, span_warning("I slip on [src]!"))
 
 /turf/open/floor/rogue/frozen_water/deep

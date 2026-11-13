@@ -71,7 +71,7 @@
 		var/datum/looping_sound/instrument/channel_test/loop = loops[i]
 		if(!loop.start())
 			all_started = FALSE
-		if(!loop.channel || loop.channel in playing_channels)
+		if(!loop.channel || (loop.channel in playing_channels))
 			unique_channels = FALSE
 		playing_channels += loop.channel
 	var/datum/looping_sound/instrument/channel_test/overflow = loops[33]

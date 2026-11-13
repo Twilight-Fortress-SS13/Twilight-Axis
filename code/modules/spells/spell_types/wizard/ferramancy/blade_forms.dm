@@ -54,3 +54,14 @@
 	smeltresult = null
 	associated_skill = /datum/skill/combat/arcyne
 	is_implement = TRUE
+
+/obj/item/rogueweapon/sword/rapier/ferramancy //TA EDIT
+	name = "arcyne rapier"
+	desc = "A rapier of condensed arcyne energy, conjured from raw mana by a Ferramancer's will."
+	color = "#3b5bdb"
+	minstr = 0
+	unenchantable = TRUE
+	anvilrepair = null
+	smeltresult = null
+	associated_skill = /datum/skill/combat/arcyne
+	is_implement = TRUE

@@ -89,7 +89,7 @@
 		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
 
 	var/obj/item/held_weapon = pawn.get_active_held_item()
-	if(!istype(held_weapon, /obj/item/rogueweapon) && !istype(held_weapon, /obj/item/gun))
+	if(!HAS_TRAIT(pawn, TRAIT_CHUNKYFINGERS) && !istype(held_weapon, /obj/item/rogueweapon) && !istype(held_weapon, /obj/item/gun))
 		for(var/obj/item/rogueweapon/candidate in range(1, pawn))
 			if(!isturf(candidate.loc))
 				continue
@@ -145,6 +145,9 @@
 
 	var/atom/swing_at = resolve_swing_target(controller, pawn, target, target_key, hiding_target)
 	if(!swing_at)
+		return AI_BEHAVIOR_DELAY
+
+	if(HAS_TRAIT(pawn, TRAIT_DEADITE) && isliving(swing_at) && pawn.Adjacent(swing_at) && pawn.next_move <= world.time && !pawn.incapacitated() && pawn.do_deadite_attack(swing_at))
 		return AI_BEHAVIOR_DELAY
 
 	controller.ai_interact(swing_at, TRUE, TRUE, modifiers)
@@ -310,11 +313,11 @@
 	if(next_technique && world.time < next_technique)
 		return FALSE
 
-	var/obj/item/held_weapon = pawn.get_active_held_item()
-	if(!istype(held_weapon, /obj/item/rogueweapon) || !held_weapon:special)
+	var/obj/item/rogueweapon/held_weapon = pawn.get_active_held_item()
+	if(!istype(held_weapon) || !held_weapon.special)
 		return FALSE
 
-	var/datum/special_intent/special = held_weapon:special
+	var/datum/special_intent/special = held_weapon.get_special()
 	if(special.stamcost)
 		var/cost = (special.stamcost < 1) ? (pawn.max_stamina * special.stamcost) : special.stamcost
 		if(pawn.stamina + cost > pawn.max_stamina)

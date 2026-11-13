@@ -4,21 +4,22 @@
 	spell_color = GLOW_COLOR_EARTHEN
 	invocations = list("Threefather! Give me your protect!")
 	dismiss_invocation = ""
-	ward_type = /obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/druid
+	ward_type = /obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/crystalhide/druid
 
-/obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/druid
+/obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/crystalhide/druid
 	name = "vine armor"
 	desc = "An holy vine's armor."
 	ward_color = GLOW_COLOR_EARTHEN
+	armor = ARMOR_LEATHER
 
-/obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/druid/setup_ward(mob/living/carbon/human/user)
+/obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/crystalhide/druid/setup_ward(mob/living/carbon/human/user)
 	. = ..()
 	user.apply_status_effect(/datum/status_effect/buff/vinearmour)
-	
-/obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/druid/cleanup_ward()
+
+/obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/crystalhide/druid/cleanup_ward()
 	if(ward_owner)
 		ward_owner.remove_status_effect(/datum/status_effect/buff/vinearmour)
-	
+
 	return ..()
 
 /datum/status_effect/buff/vinearmour
@@ -27,7 +28,7 @@
 	duration = -1
 	examine_text = "<font color='green'>SUBJECTPRONOUN is covered in vines!</font>"
 	var/outline_colour = "#042013"
-	effectedstats = list(STATKEY_STR = 1, STATKEY_WIL = -1, STATKEY_SPD = -1)
+	effectedstats = list(STATKEY_WIL = 1, STATKEY_SPD = 1)
 
 /atom/movable/screen/alert/status_effect/buff/vinearmour
 	name = "Vinearmour"
@@ -41,8 +42,13 @@
 	hitsound = "genslash"
 	miss_sound = "bluntwoosh"
 	item_d_type = "slash"
-	penfactor = PEN_LIGHT
+	penfactor = PEN_MEDIUM
 	icon_state = "inchop"
+
+/datum/intent/claw/lunge/iron/dendor
+	name = "Укол зверя"
+	desc = "Укол звериными когтями, пробивающий доспехи насквозь."
+
 // - - -
 
 /obj/item/rogueweapon/beast_claws
@@ -51,19 +57,19 @@
 	max_blade_int = INFINITY
 	max_integrity = INFINITY
 	associated_skill = /datum/skill/combat/unarmed
-	wlength = WLENGTH_NORMAL
+	wlength = WLENGTH_SHORT
 	sharpness = IS_SHARP_ACCURATE
 	item_flags = DROPDEL
-	possible_item_intents = list(/datum/intent/simple/beast_claws/slash)
+	possible_item_intents = list(/datum/intent/simple/beast_claws/slash, /datum/intent/claw/lunge/iron/dendor)
 	can_parry = TRUE
-	wdefense = 7
+	wdefense = 8
 	// Временная замена до момента появления спрайтера. Увы.
 	item_state = null
 	lefthand_file = null
 	righthand_file = null
 	icon = 'icons/roguetown/weapons/unarmed32.dmi'
 	icon_state = "claw_r"
-	force = 20
+	force = 23
 
 /obj/item/rogueweapon/beast_claws/Initialize()
 	. = ..()
@@ -118,9 +124,9 @@
 	id = "beast_rage_weakness"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/beast_rage
 	effectedstats = list(
-		"speed" = -2,
-		"strength" = -2,
-		"willpower" = -2,
+		"speed" = -1,
+		"strength" = -1,
+		"willpower" = -1,
 	)
 	duration = 1 MINUTES
 
@@ -142,10 +148,15 @@
 	)
 	duration = 1 MINUTES
 
+/datum/status_effect/buff/beast_rage/on_apply()
+	. = ..()
+	ADD_TRAIT(owner, TRAIT_BLOOD_RESISTANCE, TRAIT_GENERIC)
+
 /datum/status_effect/buff/beast_rage/on_remove()
 	. = ..()
 	owner.apply_status_effect(/datum/status_effect/debuff/beast_rage_weakness)
 	owner.clear_fullscreen("beast_mode")
+	REMOVE_TRAIT(owner, TRAIT_BLOOD_RESISTANCE, TRAIT_GENERIC)
 
 // -- Spell
 
@@ -936,15 +947,15 @@
 		to_chat(H, span_warning("The dryad cannot reach that location."))
 		return FALSE
 
-	if(D.ai_controller)
-		D.ai_controller.CancelActions()
-		D.ai_controller.clear_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET)
-		D.ai_controller.clear_blackboard_key(BB_BASIC_MOB_RETALIATE_LIST)
-	D.clear_enemies()
+	D.ai_controller?.clear_aggro()
 	D.target = null
-	D.LoseTarget()
 	D.aggressive = D.dendor_dryad_aggressive_mode
-	D.Goto(target_turf, D.move_to_delay, 1)
+	D.follow_before_surge = D.follow_target
+	D.guard_before_surge = D.guard_turf
+	D.follow_target = null
+	D.guard_turf = target_turf
+	D.ai_controller?.set_ai_status(AI_STATUS_ON)
+	D.ai_controller?.set_blackboard_key(BB_TRAVEL_DESTINATION, target_turf)
 	addtimer(CALLBACK(src, PROC_REF(try_execute_surge), D, target_turf, H, 12), 0.5 SECONDS)
 	return TRUE
 
@@ -953,13 +964,19 @@
 		return
 	if(get_dist(D, target_turf) > 1)
 		if(attempts_left <= 0)
+			D.guard_turf = D.guard_before_surge
+			D.follow_target = D.follow_before_surge
 			to_chat(user, span_warning("My dryad cannot reach the commanded target."))
 			return
-		D.Goto(target_turf, D.move_to_delay, 1)
+		D.ai_controller?.set_blackboard_key(BB_TRAVEL_DESTINATION, target_turf)
 		addtimer(CALLBACK(src, PROC_REF(try_execute_surge), D, target_turf, user, attempts_left - 1), 0.5 SECONDS)
 		return
 	if(!D.dryad_surge(target_turf))
 		to_chat(user, span_warning("My dryad's power has not yet recovered."))
+	D.guard_turf = D.guard_before_surge
+	D.follow_target = D.follow_before_surge
+	D.guard_before_surge = null
+	D.follow_before_surge = null
 
 /mob/living/proc/try_handle_middle_targeted_spell(atom/target)
 	return FALSE
@@ -991,26 +1008,25 @@
 	switch(order_type)
 		if("goto")
 			D.follow_target = null
-			D.clear_enemies()
+			D.ai_controller?.clear_aggro()
 			D.target = null
-			D.LoseTarget()
 			D.guard_turf = target_location
+			D.ai_controller?.set_ai_status(AI_STATUS_ON)
 			walk(D, 0)
 			D.aggressive = D.dendor_dryad_aggressive_mode
 			if("neutral" in D.faction)
 				D.faction -= "neutral"
 			to_chat(caster, span_notice("[D.name] moves to guard that position."))
 		if("follow")
-			D.clear_enemies()
+			D.ai_controller?.clear_aggro()
 			D.target = null
-			D.LoseTarget()
 			D.lastattacker_weakref = null
 			D.ignore_owner_defense_until = world.time + 2 SECONDS
 			D.follow_target = caster
 			D.guard_turf = null
 			D.aggressive = D.dendor_dryad_aggressive_mode
-			D.toggle_ai(AI_IDLE)
-			walk_towards(D, caster, D.move_to_delay)
+			D.ai_controller?.set_ai_status(AI_STATUS_ON)
+			D.ai_controller?.set_blackboard_key(BB_FOLLOW_TARGET, caster)
 			if(!D.dendor_dryad_aggressive_mode && !("neutral" in D.faction))
 				D.faction += "neutral"
 			to_chat(caster, span_notice("[D.name] will follow me."))
@@ -1018,13 +1034,13 @@
 			D.follow_target = null
 			D.guard_turf = null
 			walk(D, 0)
-			D.enemies = list(target)
 			D.target = target
 			D.aggressive = D.dendor_dryad_aggressive_mode
 			if("neutral" in D.faction)
 				D.faction -= "neutral"
-			D.toggle_ai(AI_ON)
-			D.Goto(get_turf(target), D.move_to_delay, 0)
+			D.ai_controller?.set_ai_status(AI_STATUS_ON)
+			if(isliving(target))
+				D.ai_controller?.force_aggro(target)
 			to_chat(caster, span_notice("[D.name] charges at [target.name]!"))
 		if("toggle_stance")
 			if("neutral" in D.faction)
@@ -1035,22 +1051,22 @@
 			else
 				D.follow_target = caster
 				D.guard_turf = null
-				D.clear_enemies()
+				D.ai_controller?.clear_aggro()
 				D.target = null
-				D.LoseTarget()
+				D.ai_controller?.clear_aggro()
 				D.lastattacker_weakref = null
 				D.ignore_owner_defense_until = world.time + 2 SECONDS
-				D.toggle_ai(AI_IDLE)
+				D.ai_controller?.set_ai_status(AI_STATUS_ON)
 				if(!D.dendor_dryad_aggressive_mode)
 					D.faction += "neutral"
-				walk_towards(D, caster, D.move_to_delay)
+				D.ai_controller?.set_blackboard_key(BB_FOLLOW_TARGET, caster)
 				to_chat(caster, span_notice("[D.name] will follow me."))
 		if("aggressive")
 			D.follow_target = null
-			D.clear_enemies()
+			D.ai_controller?.clear_aggro()
 			D.target = null
-			D.LoseTarget()
 			D.guard_turf = get_turf(target)
+			D.ai_controller?.set_ai_status(AI_STATUS_ON)
 			walk(D, 0)
 			D.aggressive = D.dendor_dryad_aggressive_mode
 			if("neutral" in D.faction)
@@ -1059,7 +1075,7 @@
 
 	if(D.dendor_dryad_aggressive_mode && ("neutral" in D.faction))
 		D.faction -= "neutral"
-		D.notify_faction_change()
+		D.ai_controller?.nudge_target_scan()
 
 /obj/effect/proc_holder/spell/self/conjure_floral_seed
 	name = "Conjure Floral Seed"
@@ -1216,8 +1232,7 @@
 			continue
 		if(animal.owner && animal.owner != druid)
 			continue
-		animal.clear_enemies()
-		animal.LoseTarget()
+		animal.ai_controller?.clear_aggro()
 		if(!animal.tame || animal.owner != druid)
 			animal.tamed(druid)
 		animal.aggressive = FALSE

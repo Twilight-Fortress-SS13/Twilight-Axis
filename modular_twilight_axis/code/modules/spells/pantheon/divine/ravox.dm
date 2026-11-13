@@ -166,7 +166,7 @@
 	else
 		return FALSE
 	spirit.pet_passive = FALSE
-	spirit.notify_faction_change()
+	spirit.ai_controller?.nudge_target_scan()
 	return TRUE
 
 //Call to Arms - AoE buff for all people surrounding you.
@@ -711,7 +711,7 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 		else
 			swarm.visible_message(span_notice("A [swarm] manifests from a spectral haze!"))
 		if(swarm.buffed_r == FALSE)
-			addtimer(CALLBACK(swarm, TYPE_PROC_REF(/mob/living, ta_ravox_spirit_expire)), time) // TA EDIT
+			addtimer(CALLBACK(swarm, TYPE_PROC_REF(/mob/living, ta_ravox_spirit_expire)), time)
 			swarm.buffed_r = TRUE
 			swarm.name = "[user.real_name]'s Spirit"
 		return TRUE
@@ -762,7 +762,7 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 			if(swarm.buffed_r == FALSE)
 				swarm.maxHealth *= skill
 				swarm.health *= skill
-				addtimer(CALLBACK(swarm, TYPE_PROC_REF(/mob/living, ta_ravox_spirit_expire)), time) // TA EDIT
+				addtimer(CALLBACK(swarm, TYPE_PROC_REF(/mob/living, ta_ravox_spirit_expire)), time)
 				swarm.buffed_r = TRUE
 		return TRUE
 	return FALSE
@@ -801,9 +801,8 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 	melee_damage_lower = 25
 	melee_damage_upper = 30
 	icon_dead = ""
-	loot = list(/obj/item/ash,	/obj/item/ash)
-	can_have_ai = FALSE //disable native ai
-	AIStatus = AI_OFF
+	loot = list(/obj/item/natural/ash,	/obj/item/natural/ash)
+	ai_controller = null
 	var/buffed_r = FALSE
 
 /mob/living/simple_animal/hostile/rogue/skeleton/ravox_ghost/Initialize(mapload, mob/user, cabal_affine = FALSE, is_summoned = FALSE)
@@ -957,14 +956,14 @@ GLOBAL_LIST_EMPTY(TAarenafolks) // we're just going to use a list and add to it.
 		ADD_TRAIT(held_item, TRAIT_NODROP, TRAIT_GENERIC)
 
 
-/mob/living/proc/ta_ravox_spirit_expire() // TA EDIT
+/mob/living/proc/ta_ravox_spirit_expire()
 	if(QDELETED(src) || stat == DEAD)
 		return
-	add_atom_colour(rgb(207, 135, 255), ADMIN_COLOUR_PRIORITY) // TA EDIT
-	ta_ravox_spirit_wither() // TA EDIT
+	add_atom_colour(rgb(207, 135, 255), ADMIN_COLOUR_PRIORITY)
+	ta_ravox_spirit_wither()
 
-/mob/living/proc/ta_ravox_spirit_wither() // TA EDIT
+/mob/living/proc/ta_ravox_spirit_wither()
 	if(QDELETED(src) || stat == DEAD)
 		return
-	adjustFireLoss(8) // TA EDIT
-	addtimer(CALLBACK(src, PROC_REF(ta_ravox_spirit_wither)), 5 SECONDS) // TA EDIT
+	adjustFireLoss(8)
+	addtimer(CALLBACK(src, PROC_REF(ta_ravox_spirit_wither)), 5 SECONDS)

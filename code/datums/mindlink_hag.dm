@@ -24,18 +24,18 @@
 		return // TA EDIT END
 
 	// Speech logic
-	if(findtext(message, ",m", 1, 3) == 1) // TA EDIT START
-		speech_args[SPEECH_MESSAGE] = null
-		message = trim(copytext(message, 3))
-		if(!length(message))
-			return
-		var/formatted = span_centcomradio("The voice of [speaker] echoes, \"<i>[capitalize(message)]</i>\".")
+	if(findtext(message, ",m", 1, 3) == 1) // TA EDIT
+		speech_args[SPEECH_MESSAGE] = null // TA EDIT
+		message = capitalize(trim(copytext(message, 3)))
+		if(!length(message)) // TA EDIT
+			return // TA EDIT
+		var/formatted = span_centcomradio("The voice of [speaker] echoes, \"<i>[message]</i>\".") // TA EDIT
 
 		for(var/mob/living/M in members)
 			if(QDELETED(M))
 				continue
 			// Slightly more secretive!
 			M.playsound_local(M, 'sound/magic/mindlink.ogg', 75, TRUE)
-			to_chat(M, formatted)
+			M.audible_message(formatted, hearing_distance = 0, runechat_message = message, custom_spans = list("mindlink", "italic")) // TA EDIT
 
 		speaker.log_talk(message, LOG_SAY, tag="Coven Link") // TA EDIT END
