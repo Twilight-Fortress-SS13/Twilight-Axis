@@ -68,6 +68,7 @@
 #include "craftable_hardset_sellprice.dm"
 #include "create_and_destroy.dm"
 #include "focus_only_tests.dm"
+#include "mirror_transform.dm"
 #include "nodupe_salvageresult.dm"
 #include "nodupe_smeltresult.dm"
 #include "reagent_id_typos.dm"
