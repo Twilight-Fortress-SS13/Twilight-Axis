@@ -37,6 +37,7 @@
 		/datum/skill/craft/alchemy = SKILL_LEVEL_LEGENDARY,
 		/datum/skill/craft/sewing = SKILL_LEVEL_MASTER,
 		/datum/skill/craft/cooking = SKILL_LEVEL_MASTER,
+		/datum/skill/magic/holy = SKILL_LEVEL_MASTER, // TA ADDITION
 	)
 	subclass_languages = list(
 		/datum/language/oldazurian, // (gerson voice) you're old!
@@ -123,6 +124,10 @@
 		if(!H.mind.has_antag_datum(/datum/antagonist/hag))
 			var/datum/antagonist/new_antag = new /datum/antagonist/hag()
 			H.mind.add_antag_datum(new_antag)
+		// TA ADDITION START
+		var/datum/devotion/C = new /datum/devotion(H, H.patron)
+		C.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_MAJOR, start_maxed = TRUE)
+		// TA ADDITION END
 
 /datum/antagonist/hag
 	name = "Hag"
