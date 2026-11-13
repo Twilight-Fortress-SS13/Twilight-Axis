@@ -92,15 +92,10 @@
 			if("Drums")
 				backr = /obj/item/rogue/instrument/drum
 
+		// TA REMOVAL START
 		var/crimes = list("I'm nobody", "They fear me")
 		var/crimeschoice = input(H, "Who is me", "How much have I done?") as anything in crimes
-
-		// TA ADDITION START
-		if(crimeschoice == "I'm nobody")
-			to_chat(H, span_warning("К сожалению, своей музыкой я не сыскал славы... Даже в преступном мире."))
-		else if(crimeschoice == "They fear me")
-			wretch_select_bounty(H)
-		// TA ADDITION END
+		// TA REMOVAL END
 
 		var/paths = list("Busker", "Cacophonist", "Boomwhacker", "Chanter", "Cipher")
 		var/path_choice = input(H, "Choose your genre.", "Choose your genre") as anything in paths
@@ -121,11 +116,10 @@
 				H.adjust_skillrank_up_to(/datum/skill/combat/knives,	SKILL_LEVEL_EXPERT, TRUE)
 				beltr	= /obj/item/rogueweapon/huntingknife/idagger/steel/parrying
 				// TA ADDITION START
-				if(crimeschoice == "They fear me")
-					H.adjust_skillrank_up_to(/datum/skill/misc/sneaking,	SKILL_LEVEL_MASTER, TRUE)
-					H.adjust_skillrank_up_to(/datum/skill/misc/stealing,	SKILL_LEVEL_MASTER, TRUE)
-					H.adjust_skillrank_up_to(/datum/skill/misc/lockpicking, SKILL_LEVEL_MASTER, TRUE)
-					H.adjust_skillrank_up_to(/datum/skill/misc/climbing,	SKILL_LEVEL_MASTER, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/misc/sneaking,	SKILL_LEVEL_MASTER, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/misc/stealing,	SKILL_LEVEL_MASTER, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/misc/lockpicking, SKILL_LEVEL_MASTER, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/misc/climbing,	SKILL_LEVEL_MASTER, TRUE)
 				// TA ADDITION END
 			if("Cacophonist")
 				H.inspiration.bonus_rhythm_picks = 1 // 3 rhythm picks instead of T2 default 2
@@ -136,9 +130,8 @@
 				l_hand = /obj/item/rogueweapon/sword
 				beltl	= /obj/item/rogueweapon/scabbard/sword
 				// TA ADDITION START
-				if(crimeschoice == "They fear me")
-					H.inspiration.bonus_rhythm_picks = 1 // 4 rhythm picks instead of T2 default 2
-					H.inspiration.maxsongs++				// 6 song slots instead of T2 default 4
+				H.inspiration.bonus_rhythm_picks = 1 // 4 rhythm picks instead of T2 default 2
+				H.inspiration.maxsongs++				// 6 song slots instead of T2 default 4
 				// TA ADDITION END
 			if("Boomwhacker")
 				ADD_TRAIT(H, TRAIT_CIVILIZEDBARBARIAN, TRAIT_GENERIC)
@@ -148,16 +141,14 @@
 				gloves = /obj/item/clothing/gloves/roguetown/knuckles
 				beltl	= /obj/item/rogueweapon/katar
 				// TA ADDITION START
-				if(crimeschoice == "They fear me")
-					H.adjust_skillrank_up_to(/datum/skill/combat/unarmed,	SKILL_LEVEL_MASTER, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/unarmed,	SKILL_LEVEL_MASTER, TRUE)
 				// TA ADDITION END
 			if("Chanter")
 				H.adjust_skillrank_up_to(/datum/skill/magic/holy, SKILL_LEVEL_JOURNEYMAN, TRUE)
 				var/datum/devotion/D = new /datum/devotion(H, H.patron)
 				D.grant_miracles(H, cleric_tier = CLERIC_T1, passive_gain = CLERIC_REGEN_WEAK, devotion_limit = CLERIC_REQ_1)
 				// TA ADDITION START
-				if(crimeschoice == "They fear me")
-					H.adjust_skillrank_up_to(/datum/skill/magic/holy, SKILL_LEVEL_EXPERT, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/magic/holy, SKILL_LEVEL_EXPERT, TRUE)
 				// TA ADDITION END
 			if("Cipher")
 				ADD_TRAIT(H, TRAIT_ARCYNE, TRAIT_GENERIC)
@@ -165,10 +156,10 @@
 				H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 5))
 				r_hand = /obj/item/rogueweapon/spellbook
 				grant_poke_spell(H)
-				if(crimeschoice == "They fear me")
-					H.adjust_skillrank_up_to(/datum/skill/magic/holy, SKILL_LEVEL_EXPERT, TRUE)
-					H.mind.mage_aspect_config["minor"] += 1
-					H.mind.check_learnspell()
+				// TA ADDITION START
+				H.adjust_skillrank_up_to(/datum/skill/magic/holy, SKILL_LEVEL_EXPERT, TRUE)
+				H.mind.mage_aspect_config["minor"] += 1
+				H.mind.check_learnspell()
 				// TA ADDITION END
 
-		// TA REMOVAL - ORIGINAL: wretch_select_bounty(H)
+		wretch_select_bounty(H)
