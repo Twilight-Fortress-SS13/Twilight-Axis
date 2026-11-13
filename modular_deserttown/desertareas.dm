@@ -27,7 +27,7 @@
 	droning_sound_night = 'sound/music/area/desert/Moonrise.ogg'
 	deathsight_message = "somewhere in the dunes, next to towering walls"
 	warden_area = TRUE
-	
+
 /area/rogue/outdoors/desert/river
 	name = "river"
 	icon_state = "river"
@@ -129,7 +129,7 @@
 	spookysounds = SPOOKY_GEN
 	spookynight = SPOOKY_GEN
 	first_time_text = "Deep Western Dunes"
-	droning_sound = 'sound/music/area/desert/Iberia1.ogg'
+	droning_sound = 'sound/music/area/desert/EternalOceansofSand.ogg'
 	droning_sound_dusk = 'sound/music/area/desert/NightPrayer.ogg'
 	droning_sound_night = 'sound/music/area/desert/Moonrise.ogg'
 	ambush_mobs = list(
@@ -354,7 +354,7 @@
 	droning_sound = 'sound/music/area/desert/DarMeshq.ogg'
 	droning_sound_dusk = null
 	droning_sound_night = null
-	
+
 /area/rogue/indoors/town/garrison/desert/cell
 	name = "dungeon cell"
 	icon_state = "cell"
