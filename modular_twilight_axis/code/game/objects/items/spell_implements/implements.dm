@@ -157,7 +157,7 @@ GLOBAL_LIST_INIT(implement_gem_stats, list(
 		return
 	socketed_gem = gem
 	update_gem_state()
-	playsound(src, 'sound/foley/Building-01.ogg', 50, TRUE)
+	playsound(src, gem.drop_sound || 'sound/items/gem.ogg', 50, TRUE)
 	user.visible_message(
 		span_notice("[user] sets [gem] into [src]."),
 		span_notice("I set [gem] into [src].")
