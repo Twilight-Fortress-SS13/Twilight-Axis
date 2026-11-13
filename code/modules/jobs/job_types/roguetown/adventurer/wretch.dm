@@ -177,7 +177,19 @@
 			sev_choices[GLOB.wretch_bounty_severities[key]["name"]] = key
 		var/choice = input(H, "How severe are your crimes?", "Bounty Amount") as anything in sev_choices
 		bounty_severity_key = sev_choices[choice]
-
+		// TA ADDITION START
+		switch(bounty_severity_key)
+			if("HARM")
+				H.change_stat(STATKEY_LCK, 1)
+			else if("ATROCITY")
+				H.change_stat(STATKEY_CON, 1)
+				H.change_stat(STATKEY_STR, 1)
+				H.change_stat(STATKEY_SPD, 1)
+				H.change_stat(STATKEY_INT, 1)
+				H.change_stat(STATKEY_PER, 1)
+				H.change_stat(STATKEY_WIL, 1)
+				H.change_stat(STATKEY_LCK, 1)
+		// TA ADDITION END
 	var/bounty_poster = GLOB.bounty_posters[bounty_poster_key]
 
 	var/list/sev_data = GLOB.wretch_bounty_severities[bounty_severity_key]

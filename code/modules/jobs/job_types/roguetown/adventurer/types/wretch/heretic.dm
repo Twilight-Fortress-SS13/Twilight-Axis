@@ -9,9 +9,9 @@
 	traits_applied = list(TRAIT_RITUALIST, TRAIT_HEAVYARMOR)
 	maximum_possible_slots = 2 //Ppl dont like heavy armor antags.
 	subclass_stats = list(
-		STATKEY_STR = 2,
-		STATKEY_CON = 2,
-		STATKEY_WIL = 2,
+		STATKEY_STR = 1, // TA EDIT - ORIGINAL: STATKEY_STR = 2
+		STATKEY_CON = 1, // TA EDIT - ORIGINAL: STATKEY_CON = 2
+		STATKEY_WIL = 1, // TA EDIT - ORIGINAL: STATKEY_WIL = 2
 		STATKEY_LCK = 1
 	)
 	subclass_skills = list(

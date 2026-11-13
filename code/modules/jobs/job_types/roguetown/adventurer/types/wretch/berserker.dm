@@ -126,4 +126,4 @@
 			if("Steel Kettle + Wildguard")
 				head = /obj/item/clothing/head/roguetown/helmet/kettle
 				mask = /obj/item/clothing/mask/rogue/wildguard
-		bountychoice_berserker(H) // TA EDIT - ORIGINAL: wretch_select_bounty(H)
+		wretch_select_bounty(H)

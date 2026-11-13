@@ -47,12 +47,12 @@ GLOBAL_LIST_INIT(wretch_bounty_severities, list(
 		"max" = 200
 	),
 	"HARM" = list(
-		"name" = "Harm towards lyfe",
+		"name" = "Harm towards lyfe (+1 LCK)",
 		"min" = 200,
 		"max" = 300
 	),
 	"ATROCITY" = list(
-		"name" = "Horrific atrocities",
+		"name" = "Horrific atrocities (+1 ALL STATS)",
 		"min" = 300,
 		"max" = 400
 	)
