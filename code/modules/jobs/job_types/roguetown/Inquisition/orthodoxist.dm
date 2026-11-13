@@ -26,7 +26,7 @@
 		/datum/advclass/inq/disciple,
 		/datum/advclass/inq/sojourner,
 		/datum/advclass/inq/confessor,
-		/datum/advclass/inq/chasseur
+		/datum/advclass/inq/chasseur,
 		/datum/advclass/inq/psyaltrist
 
 	)
