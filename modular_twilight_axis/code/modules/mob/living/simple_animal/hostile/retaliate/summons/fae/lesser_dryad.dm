@@ -8,21 +8,18 @@
 	melee_damage_lower = 12
 	melee_damage_upper = 18
 	aggressive = FALSE
-	ai_controller = null
+	ai_controller = /datum/ai_controller/ta_dendor_lesser_dryad
 	inherent_spells = list()
 	base_intents = list(/datum/intent/simple/elementalt2_unarmed/lesser_dryad)
 	d_intent = INTENT_PARRY
-	move_to_delay = 7 // Reasonable companion speed
 	environment_smash = ENVIRONMENT_SMASH_NONE // Does not destroy vines or structures in its path
-	robust_searching = TRUE // Use threshold-based stat checking (needed for stat_attack to work)
-	stat_attack = SOFT_CRIT // Stops pursuing when target becomes unconscious or paralyzed
-	retreat_health = 0 // Never flee at low health
-	lose_patience_timeout = 0 // Never give up chasing a target
 	var/special_cd = 0
 	var/conjurer_ckey = null
 	var/obj/effect/proc_holder/spell/targeted/summon_lesser_dryad/summoner_spell
 	var/mob/living/follow_target = null
 	var/turf/guard_turf = null
+	var/turf/guard_before_surge
+	var/mob/living/follow_before_surge
 	var/mob/living/owner_mob = null
 	var/ignore_owner_defense_until = 0
 	var/bark_integrity = 250
@@ -48,6 +45,8 @@
 		owner.faction |= faction_tag
 		faction |= faction_tag
 	default_dryad_factions = faction.Copy()
+	AddComponent(/datum/component/ai_aggro_system)
+	ai_controller?.set_ai_status(AI_STATUS_ON)
 	vine_regen_timer = addtimer(CALLBACK(src, PROC_REF(vine_heal_tick)), 100, TIMER_STOPPABLE)
 
 
@@ -67,30 +66,68 @@
 			var/owner_name = owner_mob.mind?.current?.real_name || owner_mob.real_name
 			var/owner_tag = "[owner_name]_faction"
 			faction = list(owner_tag)
-		if(isliving(target))
-			var/mob/living/L = target
-			if(is_dendor_dryad_ally(L))
-				LoseTarget()
-		toggle_ai(AI_ON)
+		var/mob/living/current_target = ai_controller?.blackboard[BB_BASIC_MOB_CURRENT_TARGET]
+		if(isliving(current_target) && is_dendor_dryad_ally(current_target))
+			ai_controller.clear_aggro()
+		ai_controller?.nudge_target_scan()
 	else
 		faction = default_dryad_factions ? default_dryad_factions.Copy() : list(FACTION_FAE)
-		clear_enemies()
-		LoseTarget()
+		ai_controller?.clear_aggro()
 		if(!QDELETED(owner_mob))
 			follow_target = owner_mob
 			guard_turf = null
-		toggle_ai(AI_IDLE)
-	notify_faction_change()
+		ai_controller?.set_ai_status(AI_STATUS_ON)
+	ai_controller?.nudge_target_scan()
 
-/mob/living/simple_animal/hostile/retaliate/rogue/fae/dryad/lesser/CanAttack(atom/the_target)
-	if(!isliving(the_target))
+/datum/targetting_datum/basic/ta_dendor_dryad/can_attack(mob/living/living_mob, atom/target, vision_range)
+	if(!..())
 		return FALSE
-	var/mob/living/L = the_target
-	if(is_dendor_dryad_ally(L))
+	if(!istype(living_mob, /mob/living/simple_animal/hostile/retaliate/rogue/fae/dryad/lesser) || !isliving(target))
 		return FALSE
-	if(!dendor_dryad_aggressive_mode && !(L in enemies))
+	var/mob/living/simple_animal/hostile/retaliate/rogue/fae/dryad/lesser/dryad = living_mob
+	var/mob/living/living_target = target
+	if(dryad.is_dendor_dryad_ally(living_target))
 		return FALSE
-	return ..()
+	if(!dryad.dendor_dryad_aggressive_mode)
+		var/list/retaliating_against = dryad.ai_controller?.blackboard[BB_BASIC_MOB_RETALIATE_LIST]
+		return living_target in retaliating_against
+	return TRUE
+
+/datum/ai_controller/ta_dendor_lesser_dryad
+	ai_movement = /datum/ai_movement/hybrid_pathing
+	blackboard = list(BB_TARGETTING_DATUM = new /datum/targetting_datum/basic/ta_dendor_dryad())
+	planning_subtrees = list(
+		/datum/ai_planning_subtree/aggro_find_target,
+		/datum/ai_planning_subtree/ta_dendor_dryad_commands,
+		/datum/ai_planning_subtree/attack_obstacle_in_path,
+		/datum/ai_planning_subtree/basic_melee_attack_subtree,
+		/datum/ai_planning_subtree/simple_self_recovery,
+	)
+
+/datum/ai_planning_subtree/ta_dendor_dryad_commands/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
+	var/mob/living/simple_animal/hostile/retaliate/rogue/fae/dryad/lesser/dryad = controller.pawn
+	if(QDELETED(dryad) || dryad.stat != CONSCIOUS)
+		return
+	if(!QDELETED(dryad.owner_mob) && world.time >= dryad.ignore_owner_defense_until)
+		var/mob/living/attacker = dryad.owner_mob.lastattacker_weakref?.resolve()
+		if(isliving(attacker) && attacker.stat != DEAD && !dryad.is_dendor_dryad_ally(attacker))
+			controller.force_aggro(attacker)
+	if(controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET])
+		return
+	if(dryad.guard_turf && !QDELETED(dryad.guard_turf))
+		if(get_dist(dryad, dryad.guard_turf) > 0)
+			controller.set_blackboard_key(BB_TRAVEL_DESTINATION, dryad.guard_turf)
+			controller.queue_behavior(/datum/ai_behavior/travel_towards/stop_on_arrival, BB_TRAVEL_DESTINATION)
+		else
+			controller.clear_blackboard_key(BB_TRAVEL_DESTINATION)
+		return SUBTREE_RETURN_FINISH_PLANNING
+	if(!QDELETED(dryad.follow_target))
+		if(get_dist(dryad, dryad.follow_target) > 2)
+			controller.set_blackboard_key(BB_FOLLOW_TARGET, dryad.follow_target)
+			controller.queue_behavior(/datum/ai_behavior/follow_friend, BB_FOLLOW_TARGET)
+		else
+			controller.clear_blackboard_key(BB_FOLLOW_TARGET)
+		return SUBTREE_RETURN_FINISH_PLANNING
 
 /mob/living/simple_animal/hostile/retaliate/rogue/fae/dryad/lesser/proc/contains_vines(turf/T)
 	for(var/obj/structure/vine/V in T)
@@ -102,43 +139,14 @@
 	var/base_delay = (isturf(newloc) && contains_vines(newloc)) ? 5 : 7
 	switch(frenzy_boost)
 		if(2)  // Bloomstone frenzy: 50% faster
-			move_to_delay = max(2, round(base_delay * 0.5))
+			move_base_delay = max(2, round(base_delay * 0.5))
 		if(1)  // Normal frenzy: 25% faster
-			move_to_delay = max(2, round(base_delay * 0.75))
+			move_base_delay = max(2, round(base_delay * 0.75))
 		else
-			move_to_delay = base_delay
-
-/mob/living/simple_animal/hostile/retaliate/rogue/fae/dryad/lesser/handle_automated_movement()
-	if(target)
-		return ..()
-	if(!QDELETED(owner_mob) && world.time >= ignore_owner_defense_until)
-		var/mob/living/attacker = owner_mob.lastattacker_weakref?.resolve()
-		if(isliving(attacker) && attacker.stat != DEAD && !is_dendor_dryad_ally(attacker))
-			add_enemy(attacker)
-			GiveTarget(attacker)
-			toggle_ai(AI_ON)
-			return
-	if(!QDELETED(follow_target))
-		if(get_dist(src, follow_target) > 2)
-			walk_towards(src, follow_target, move_to_delay)
-		else
-			walk(src, 0)
-		return
-	if(guard_turf && !QDELETED(guard_turf))
-		if(get_dist(src, guard_turf) > 0)
-			walk_towards(src, guard_turf, move_to_delay)
-		else
-			walk(src, 0)
-		return
-	walk(src, 0)
-
-/mob/living/simple_animal/hostile/retaliate/rogue/fae/dryad/lesser/Retaliate()
-	toggle_ai(AI_ON)
-	var/mob/living/attacker = lastattacker_weakref?.resolve()
-	if(isliving(attacker) && !is_dendor_dryad_ally(attacker) && attacker.stat != DEAD)
-		add_enemy(attacker)
+			move_base_delay = base_delay
 
 /mob/living/simple_animal/hostile/retaliate/rogue/fae/dryad/lesser/AttackingTarget()
+	target = ai_controller?.blackboard[BB_BASIC_MOB_CURRENT_TARGET]
 	if(isliving(target))
 		var/mob/living/L = target
 		var/skull_broken = FALSE
@@ -161,13 +169,23 @@
 						break
 			zone_selected = legs_broken ? pick(BODY_ZONE_CHEST, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM) : pick(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
 	var/on_vine = isturf(loc) && contains_vines(loc)
-	if(!on_vine)
-		return ..()
+	var/strike_count = on_vine ? 2 : 1
+	if(frenzy_boost == 2)
+		strike_count *= 2
+	else if(frenzy_boost == 1)
+		frenzy_melee_credit += strike_count
+		var/bonus_attacks = round(frenzy_melee_credit / 3)
+		strike_count += bonus_attacks
+		frenzy_melee_credit -= bonus_attacks * 3
 	var/original_damage_lower = melee_damage_lower
 	var/original_damage_upper = melee_damage_upper
-	melee_damage_lower *= 1.5
-	melee_damage_upper *= 1.5
-	. = ..()
+	if(on_vine)
+		melee_damage_lower *= 1.5
+		melee_damage_upper *= 1.5
+	for(var/i in 1 to strike_count)
+		if(QDELETED(src) || QDELETED(target) || !Adjacent(target))
+			break
+		. = ..()
 	melee_damage_lower = original_damage_lower
 	melee_damage_upper = original_damage_upper
 
@@ -188,17 +206,6 @@
 		if(!isclosedturf(V) && !locate(/obj/structure/vine) in V)
 			new /obj/structure/vine(V)
 	return TRUE
-
-/mob/living/simple_animal/hostile/retaliate/rogue/fae/dryad/lesser/MeleeAction(patience = TRUE)
-	rapid_melee = (isturf(loc) && contains_vines(loc)) ? 2 : 1
-	if(frenzy_boost == 2)
-		rapid_melee *= 2
-	else if(frenzy_boost == 1)
-		frenzy_melee_credit += rapid_melee
-		var/bonus_attacks = round(frenzy_melee_credit / 3)
-		rapid_melee += bonus_attacks
-		frenzy_melee_credit -= bonus_attacks * 3
-	return ..(patience)
 
 /mob/living/simple_animal/hostile/retaliate/rogue/fae/dryad/lesser/death(gibbed)
 	visible_message(span_boldwarning("[src] dissolves into greenish light..."))
@@ -294,7 +301,6 @@
 	frenzy_timer = null
 	frenzy_boost = 0
 	frenzy_melee_credit = 0
-	rapid_melee = (isturf(loc) && contains_vines(loc)) ? 2 : 1
 	set_light(0)
 	remove_filter("dryad_frenzy_outline")
 

@@ -177,7 +177,7 @@
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants
-	belt = /obj/item/storage/belt/rogue/leather/knifebelt/black/steel
+	belt = /obj/item/storage/belt/rogue/leather/tossbelt/blade/black/steel
 	beltr = /obj/item/storage/belt/rogue/pouch/coins/mid
 	neck = /obj/item/clothing/neck/roguetown/chaincoif/full // пока у них не будет нормальных шлемов
 	gloves = /obj/item/clothing/gloves/roguetown/angle
