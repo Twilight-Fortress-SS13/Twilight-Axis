@@ -237,12 +237,15 @@
 
 
 	var/effect_to_apply = (L.mind ? /datum/status_effect/debuff/vulnerable : /datum/status_effect/debuff/exposed)
+	var/is_mount = FALSE
+	if(istype(L, /mob/living/simple_animal) && L.GetComponent(/datum/component/riding))
+		is_mount = TRUE
 
 	L.apply_status_effect(effect_to_apply, feintdur)
 	L.apply_status_effect(/datum/status_effect/debuff/clickcd, max(1.5 SECONDS + skill_factor, 2.5 SECONDS))
-	L.Immobilize(0.5 SECONDS)
+	L.Immobilize(is_mount ? 2 SECONDS : 0.5 SECONDS)
 	L.stamina_add(L.stamina * 0.1)
-	L.Slowdown(2)
+	L.Slowdown(is_mount ? 4 : 2)
 	if(L.d_intent == INTENT_DODGE)
 		L.changeNext_def(clamp(L.dodgetime + 3, 0, CLICK_CD_DODGE))
 		L.changeMaxDodge(-3)

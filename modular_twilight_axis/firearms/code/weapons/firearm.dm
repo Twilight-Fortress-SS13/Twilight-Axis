@@ -771,8 +771,9 @@
 					var/def_zone = "[(user.active_hand_index == 2) ? "r" : "l" ]_arm"
 					var/obj/item/bodypart/BP = user.get_bodypart(def_zone)
 					BP.add_wound(/datum/wound/dislocation)
-		if(user.buckled)
-			user.Immobilize(50 - (firearm_skill * 5))
+		if(user.buckled && istype(user.buckled, /mob/living))
+			var/mob/living/mount = user.buckled
+			mount.Immobilize(50 - (firearm_skill * 5), ignore_canstun = TRUE)
 	else if(locktype == LOCKTYPE_FUSE)
 		if(advanced_icon_f)
 			icon = advanced_icon_f

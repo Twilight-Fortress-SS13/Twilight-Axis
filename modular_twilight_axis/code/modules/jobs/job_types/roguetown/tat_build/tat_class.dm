@@ -174,6 +174,8 @@
 	required_tat_bucket = TAT_ROLE_BUCKET_WRETCH
 	min_pq = 50
 
+	tempo_capable = TRUE
+
 /datum/outfit/job/roguetown/tat_class
 	name = "Pliant Soul"
 
