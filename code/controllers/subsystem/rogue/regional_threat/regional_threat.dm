@@ -159,6 +159,21 @@ SUBSYSTEM_DEF(regionthreat)
 			stack_trace("RegionThreat: Missing threat template for [region_name]")
 			continue
 
-		threat_regions += new path()
+		var/datum/threat_region/new_region = new path() // TA EDIT START
+		switch(region_name)
+			if(THREAT_REGION_AZURE_BASIN)
+				new_region.kill_target_floor = max(new_region.kill_target_floor, 8)
+				new_region.evergreen_target = max(new_region.evergreen_target, 6)
+			if(THREAT_REGION_AZURE_GROVE)
+				new_region.kill_target_floor = max(new_region.kill_target_floor, 10)
+				new_region.evergreen_target = max(new_region.evergreen_target, 6)
+			if(THREAT_REGION_TERRORBOG)
+				new_region.kill_target_floor = max(new_region.kill_target_floor, 8)
+				new_region.evergreen_target = max(new_region.evergreen_target, 6)
+			if(THREAT_REGION_AZUREAN_COAST, THREAT_REGION_MOUNT_DECAP)
+				new_region.kill_target_floor = max(new_region.kill_target_floor, 8)
+			if(THREAT_REGION_UNDERDARK)
+				new_region.kill_target_floor = max(new_region.kill_target_floor, 6)
+		threat_regions += new_region // TA EDIT END
 
 	log_world("RegionThreat: Loaded [threat_regions.len] threat regions for [map.realm_name]")

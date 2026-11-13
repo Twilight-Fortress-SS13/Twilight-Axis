@@ -117,7 +117,7 @@
 				rogue_animal.assign_livestock_owner(H) // TA EDIT
 
 	for(var/trait in traits_applied)
-		ADD_TRAIT(H, trait, ADVENTURER_TRAIT)
+		ADD_TRAIT(H, trait, JOB_TRAIT)
 
 	if(noble_income)
 		var/already_has_income = !isnull(SStreasury.noble_incomes[H])

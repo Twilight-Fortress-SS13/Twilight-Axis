@@ -10,11 +10,7 @@
 	gender = MALE
 	blood_toll_bucket = STATS_KILLED_GREATER_BEASTS
 	speak_chance = 1
-	turns_per_move = 3
 	see_in_dark = 6
-	move_to_delay = 4
-	vision_range = 5
-	aggro_vision_range = 9
 	base_intents = list(/datum/intent/simple/bite/honeyspider)
 	botched_butcher_results = list(/obj/item/reagent_containers/food/snacks/rogue/meat/steak = 1)
 	butcher_results = list(/obj/item/reagent_containers/food/snacks/rogue/meat/steak = 1,
@@ -36,8 +32,6 @@
 	melee_damage_lower = 17
 	melee_damage_upper = 21
 	environment_smash = ENVIRONMENT_SMASH_NONE
-	retreat_distance = 0
-	minimum_distance = 0
 	milkies = FALSE
 	animal_species = /mob/living/simple_animal/hostile/retaliate/rogue/spider // TA EDIT
 	food_type = list(/obj/item/reagent_containers/food/snacks/rogue/meat,
@@ -53,18 +47,13 @@
 	STASTR = 9
 	STASPD = 10
 	deaggroprob = 0
-	attack_same = 0
-	retreat_health = 0.3
 	attack_sound = list('sound/vo/mobs/spider/attack (1).ogg','sound/vo/mobs/spider/attack (2).ogg','sound/vo/mobs/spider/attack (3).ogg','sound/vo/mobs/spider/attack (4).ogg')
 	aggressive = 1
 	var/fixed_gender = FALSE // TA EDIT
 
 	//new ai, old ai off
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
 	ai_controller = /datum/ai_controller/spider
 	move_base_delay = MOVEMENT_DELAY_SPD_10
-	stat_attack = UNCONSCIOUS
 
 /mob/living/simple_animal/hostile/retaliate/rogue/spider/mutated
 	threat_point = THREAT_HIGH
@@ -128,15 +117,6 @@
 	ai_controller = null
 	can_receive_livestock_commands = FALSE
 
-/mob/living/simple_animal/hostile/retaliate/rogue/spider/spiderling/CanAttack(atom/the_target)
-	return FALSE
-
-/mob/living/simple_animal/hostile/retaliate/rogue/spider/spiderling/Retaliate()
-	return 0
-
-/mob/living/simple_animal/hostile/retaliate/rogue/spider/spiderling/GiveTarget(new_target)
-	return 0
-
 /mob/living/simple_animal/hostile/retaliate/rogue/spider/spiderling/Initialize(mapload)
 	. = ..()
 	var/matrix/spiderling_scale = matrix()
@@ -156,8 +136,7 @@
 
 
 /mob/living/simple_animal/hostile/retaliate/rogue/spider/tamed(mob/user) // TA EDIT START
-	clear_enemies()
-	LoseTarget()
+	ai_controller?.clear_aggro() // TA EDIT
 	return ..(user) // TA EDIT END
 
 /mob/living/simple_animal/hostile/retaliate/rogue/spider/death(gibbed)
@@ -186,8 +165,7 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/spider/taunted(mob/user)
 	emote("aggro")
-	Retaliate()
-	GiveTarget(user)
+	ai_controller?.force_aggro(user)
 	return
 
 /mob/living/simple_animal/hostile/retaliate/rogue/spider/Life()
@@ -204,8 +182,7 @@
 	if(pulledby && !tame)
 		if(HAS_TRAIT(pulledby, TRAIT_WEBWALK))
 			return
-		Retaliate()
-		GiveTarget(pulledby)
+		ai_controller?.force_aggro(pulledby)
 
 /datum/intent/simple/bite/honeyspider
 	clickcd = HONEYSPIDER_ATTACK_SPEED
