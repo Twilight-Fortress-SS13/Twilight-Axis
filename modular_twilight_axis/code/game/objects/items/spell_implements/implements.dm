@@ -31,7 +31,6 @@
 	return best
 
 // Донатерские морфы сохраняют силу гема
-// TODO: убедиться, что они будут работать с новой системой рескинов/гемов
 /obj/item/rogueweapon/transfer_implement_state(obj/item/rogueweapon/morphed, mob/user)
 	if(!implement_refund && !implement_cast_speed)
 		return
