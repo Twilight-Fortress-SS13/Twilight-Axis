@@ -1,6 +1,7 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/werewolf_npc
 	name = "WEREWOLF"
+	mob_size = MOB_SIZE_LARGE
 	desc = "THE HOWL OF A MAD GOD SHAKES YOUR BONES! FLESH SHORN INTO VISCERA SPRAYS THE WALLS! RIP AND TEAR!"
 	icon = 'icons/roguetown/mob/monster/werewolf.dmi'
 	icon_state = "wwolf_m"
@@ -10,9 +11,7 @@
 	emote_hear = null
 	emote_see = null
 	speak_chance = 1
-	turns_per_move = 5
 	see_in_dark = 6
-	move_to_delay = 8
 	base_intents = list(/datum/intent/simple/claw/simplewwnpc)
 	head_butcher = /obj/item/natural/head/volf
 	faction = list(FACTION_WOLFS)
@@ -22,14 +21,9 @@
 	melee_damage_lower = 20
 	melee_damage_upper = 30
 	obj_damage = 20
-	vision_range = 7
-	aggro_vision_range = 9
 	environment_smash = ENVIRONMENT_SMASH_WALLS
 	attack_sound = BLADEWOOSH_LARGE
 	dextrous = TRUE
-	retreat_distance = 0
-	minimum_distance = 0
-	robust_searching = TRUE
 	food_type = list(/obj/item/reagent_containers/food/snacks,
 					/obj/item/natural/bone,
 					/obj/item/natural/hide)
@@ -61,8 +55,6 @@
 						/obj/item/alch/viscera = 1,
 						/obj/item/natural/fur/wolf = 2,
 						/obj/item/natural/bone = 4)
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
 	ai_controller = /datum/ai_controller/volf
 	move_base_delay = MOVEMENT_DELAY_SPD_3
 

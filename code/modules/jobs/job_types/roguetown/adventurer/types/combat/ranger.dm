@@ -106,7 +106,7 @@
 	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/black
 	gloves = /obj/item/clothing/gloves/roguetown/fingerless
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
-	belt = /obj/item/storage/belt/rogue/leather/knifebelt/iron
+	belt = /obj/item/storage/belt/rogue/leather/tossbelt/blade/iron
 	armor = /obj/item/clothing/suit/roguetown/armor/leather
 	cloak = /obj/item/clothing/cloak/raincloak/mortus
 	backl = /obj/item/storage/backpack/rogue/satchel
@@ -173,10 +173,12 @@
 					/obj/item/natural/bundle/fibers/full = 1,
 					/obj/item/reagent_containers/food/snacks/grown/rogue/fyritius = 1,
 					/obj/item/flashlight/flare/torch/lantern = 1,
-					/obj/item/bomb = 4,
+					/obj/item/explosive/fused/bottle = 4,
 					/obj/item/flint = 1,
 					)
 				H.change_stat(STATKEY_SPD, 2)
+				H.change_stat(STATKEY_STR, -2)
+				H.change_stat(STATKEY_WIL, 1)
 
 			if("Medium Armor")
 				ADD_TRAIT(H, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
@@ -187,8 +189,9 @@
 					/obj/item/natural/bundle/fibers/full = 1,
 					/obj/item/reagent_containers/food/snacks/grown/rogue/fyritius = 1,
 					/obj/item/flashlight/flare/torch/lantern = 1,
-					/obj/item/bomb = 4,
+					/obj/item/explosive/fused/bottle = 4,
 					/obj/item/flint = 1,
+					/obj/item/rogueweapon/huntingknife = 1,
 					)
 				H.change_stat(STATKEY_CON, 1)
 
@@ -285,7 +288,7 @@
 				H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_APPRENTICE, TRUE)
 				H.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_APPRENTICE, TRUE)
 				ADD_TRAIT(H, TRAIT_CIVILIZEDBARBARIAN, TRAIT_GENERIC)
-				belt = /obj/item/storage/belt/rogue/leather/knifebelt/iron
+				belt = /obj/item/storage/belt/rogue/leather/tossbelt/blade/iron
 				beltl = /obj/item/quiver/javelin/iron
 				beltr = /obj/item/net
 		if(!uses_wits)

@@ -11,11 +11,7 @@
 // tooltip.
 
 /// Explains the freeform roll syntax. Shown whenever a roll arrives empty or unreadable.
-#define DICE_SYNTAX_HELP "A roll is written as (number of dice)D(faces), then any bonuses, then /DC and a difficulty. \
-	Only the faces are required. D20 throws one twenty-sided die. 2D6+3 throws two six-sided dice and adds \
-	three. D20+STR adds your strength, and any of STR, PER, INT, CON, WIL, SPD, FOR and CHA work the same way. \
-	3D6+STR+1/DC12 throws three dice, adds your strength and one, and compares the result against a \
-	difficulty of twelve. Add /NOCRIT at the end to leave criticals out. You can type any of these after a * to roll right away, like *2D10+STR/DC15."
+#define DICE_SYNTAX_HELP roll_text("syntax_help")
 
 /// Sanity caps on a freeform roll, so nobody throws 9999d9999 and floods the chat.
 #define DICE_MAX_COUNT 24
@@ -37,14 +33,14 @@
 /// Every stat that can be rolled or contested, by display name. The values double as the
 /// `key` of the matching stat roll emote.
 GLOBAL_LIST_INIT(rollable_stats, list(
-	"Strength" = STAT_STRENGTH,
-	"Perception" = STAT_PERCEPTION,
-	"Intelligence" = STAT_INTELLIGENCE,
-	"Constitution" = STAT_CONSTITUTION,
-	"Willpower" = STAT_WILLPOWER,
-	"Speed" = STAT_SPEED,
-	"Fortune" = STAT_FORTUNE,
-	"Charisma" = STAT_CHARISMA,
+	roll_text("Strength") = STAT_STRENGTH,
+	roll_text("Perception") = STAT_PERCEPTION,
+	roll_text("Intelligence") = STAT_INTELLIGENCE,
+	roll_text("Constitution") = STAT_CONSTITUTION,
+	roll_text("Willpower") = STAT_WILLPOWER,
+	roll_text("Speed") = STAT_SPEED,
+	roll_text("Fortune") = STAT_FORTUNE,
+	roll_text("Charisma") = STAT_CHARISMA,
 ))
 
 /// The same stats by key, for checking one that came from outside.
@@ -78,7 +74,7 @@ GLOBAL_LIST_INIT(rollable_stats_by_key, list(
 	if(HAS_TRAIT(src, TRAIT_EMOTEMUTE))
 		return FALSE
 	if(client && (client.prefs.muted & MUTE_IC))
-		to_chat(src, span_warning("I cannot send IC messages. (muted)"))
+		to_chat(src, span_warning(roll_text("I cannot send IC messages. (muted)")))
 		return FALSE
 	return TRUE
 
@@ -141,7 +137,7 @@ GLOBAL_LIST_INIT(rollable_stats_by_key, list(
 
 /// What a critical is called, in capitals for a token.
 /proc/crit_label(crit)
-	return crit ? "CRITICALLY SUCCEEDS" : "CRITICAL FAILS"
+	return crit ? roll_text("CRITICALLY SUCCEEDS") : roll_text("CRITICAL FAILS")
 
 /// The line under dice that came up a critical.
 /proc/crit_footer(crit)
@@ -221,14 +217,14 @@ GLOBAL_LIST_INIT(rollable_stats_by_key, list(
 ///////////////////////////////// ROLL DICE EMOTE //////////////////////////////////
 
 /mob/living/carbon/human/verb/roll_dice()
-	set name = "Roll Dice"
-	set desc = "Throw dice, optionally with a stat added and against a difficulty. Typing *2d10+STR/DC15 does the same."
+	set name = TA_EMOTE_NAME_ROLL_DICE
+	set desc = TA_EMOTE_DESC_ROLL_DICE
 	set category = "Emotes.Rolling"
 
 	if(!can_roll_dice())
 		return
 
-	var/list/parsed = tgui_dice_builder(src, "Xylix's Dice Box", allow_difficulty = TRUE)
+	var/list/parsed = tgui_dice_builder(src, roll_text("Xylix's Dice Box"), allow_difficulty = TRUE)
 	if(!parsed)
 		return
 
@@ -285,7 +281,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 	var/cleaned = replacetext(LOWER_TEXT(expression), " ", "")
 
 	if(!dice_expression.Find(cleaned))
-		to_chat(src, span_warning("That is not a roll I know how to make."))
+		to_chat(src, span_warning(roll_text("That is not a roll I know how to make.")))
 		to_chat(src, span_notice(DICE_SYNTAX_HELP))
 		return null
 
@@ -307,22 +303,22 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 			bonus += sign * term_value
 			continue
 		if(!GLOB.dice_stat_names[term])
-			to_chat(src, span_warning("I do not know of any stat called '[html_encode(term)]'."))
+			to_chat(src, span_warning(roll_text("unknown_stat", html_encode(term))))
 			to_chat(src, span_notice(DICE_SYNTAX_HELP))
 			return null
 		if(stat || sign < 0)
-			to_chat(src, span_warning("A roll can have one stat added to it, and not taken away."))
+			to_chat(src, span_warning(roll_text("A roll can have one stat added to it, and not taken away.")))
 			return null
 		stat = GLOB.dice_stat_names[term]
 
 	if(count > DICE_MAX_COUNT)
-		to_chat(src, span_warning("I cannot throw more than [DICE_MAX_COUNT] dice at once."))
+		to_chat(src, span_warning(roll_text("too_many_dice", DICE_MAX_COUNT)))
 		return null
 	if(sides < 2 || sides > DICE_MAX_SIDES)
-		to_chat(src, span_warning("A die has between 2 and [DICE_MAX_SIDES] faces."))
+		to_chat(src, span_warning(roll_text("invalid_sides", DICE_MAX_SIDES)))
 		return null
 	if(abs(bonus) > DICE_MAX_BONUS)
-		to_chat(src, span_warning("That bonus is beyond reckoning."))
+		to_chat(src, span_warning(roll_text("That bonus is beyond reckoning.")))
 		return null
 	return list("count" = count, "sides" = sides, "bonus" = bonus, "stat" = stat, "dc" = dc, "crits" = crits)
 
@@ -371,7 +367,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 	if(stat)
 		header += "<br>" + stat_header(stat, stat_value, trait_sources)
 	if(bonus)
-		header += "<br>Bonus <b>[signed_number(bonus)]</b>"
+		header += roll_text("bonus_header", signed_number(bonus))
 
 	// Zero terms are left out, so the sum never opens on a lone zero.
 	var/list/terms = list()
@@ -423,7 +419,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 
 	var/footer = roll_sum(outcome, side["terms"])
 	if(!isnull(dc))
-		footer += "<br>Needs [dc] or more"
+		footer += roll_text("needs_at_least", dc)
 	if(!isnull(crit))
 		footer += crit_footer(crit)
 	// Several traits only show as a total under the stat, so name them here.
@@ -435,11 +431,11 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 		verdict = " — " + roll_label_span(crit, crit, "<b>[crit_label(crit)]!</b>")
 		runechat_verdict = " — [crit_label(crit)]"
 	else if(!isnull(outcome))
-		verdict = " — " + roll_outcome_span(outcome, outcome ? "<b>Success!</b>" : "<b>Failure!</b>")
-		runechat_verdict = outcome ? " — success" : " — failure"
+		verdict = " — " + roll_outcome_span(outcome, outcome ? roll_text("<b>Success!</b>") : roll_text("<b>Failure!</b>"))
+		runechat_verdict = outcome ? roll_text(" — success") : roll_text(" — failure")
 
 	var/list/throw_stats = side["stat"] ? list(side["stat"]) : null
-	announce_roll("rolls [roll_dice_token(outcome, "[dice_string] = [total]", tooltip, list(side["faces"]), side["sides"], list(side["header"]), throw_stats = throw_stats, throw_footers = list(footer), crit = crit)][verdict]", "rolls [dice_string] for [total][runechat_verdict]")
+	announce_roll("[roll_text("rolls")] [roll_dice_token(outcome, "[dice_string] = [total]", tooltip, list(side["faces"]), side["sides"], list(side["header"]), throw_stats = throw_stats, throw_footers = list(footer), crit = crit)][verdict]", roll_text("dice_result", dice_string, total, runechat_verdict))
 
 /// Bare `*dice` shortcut - opens the same dice window as the Roll Dice verb.
 /datum/emote/living/roll_dice_emote
@@ -539,7 +535,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 			return TRUE
 
 /// Opens the dice window and waits for it. Returns what was built, or `null` if it was closed.
-/proc/tgui_dice_builder(mob/user, title = "Roll Dice", allow_difficulty = TRUE)
+/proc/tgui_dice_builder(mob/user, title = TA_EMOTE_NAME_ROLL_DICE, allow_difficulty = TRUE)
 	if(isnull(user?.client))
 		return null
 	var/datum/dice_builder_prompt/prompt = new(user, title, allow_difficulty, GLOB.tgui_always_state)
@@ -627,32 +623,32 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 
 	var/list/trait_sources = get_trait_sources(living)
 	var/header = stat_header(rolled_stat, stat_value, trait_sources)
-	var/footer = roll_sum(success, list(stat_value, trait_effect, die)) + "<br>Needs over [STAT_ROLL_DIE]"
+	var/footer = roll_sum(success, list(stat_value, trait_effect, die)) + roll_text("needs_over", STAT_ROLL_DIE)
 	if(!isnull(crit))
 		footer += crit_footer(crit)
 	// Several traits only show as a total under the stat, so name them here.
 	var/tooltip = stat_trait_breakdown(trait_sources) || ""
-	var/verdict = !isnull(crit) ? crit_label(crit) : (success ? "SUCCEEDS" : "FAILS")
+	var/verdict = !isnull(crit) ? crit_label(crit) : (success ? roll_text("SUCCEEDS") : roll_text("FAILS"))
 	var/token = roll_dice_token(success, verdict, tooltip, list(list(die)), STAT_ROLL_DIE, list(header), throw_stats = list(key), throw_footers = list(footer), crit = crit)
 	var/list/flavour_list = success ? success_message_list : failure_message_list
 	if(!isnull(crit))
 		flavour_list = (crit ? crit_success_message_list : crit_failure_message_list) || flavour_list
 	var/flavour = replace_pronoun(user, pick(flavour_list))
 
-	living.announce_roll("[token] and [flavour]", show_runechat ? "[verdict] and [flavour]" : null)
+	living.announce_roll(roll_text("stat_result", token, flavour), show_runechat ? roll_text("stat_result", verdict, flavour) : null)
 
 /datum/emote/living/stat_roll/select_message_type(mob/user, msg, intentional)
 	return pick(attempt_message_list)
 
 /mob/living/carbon/human/verb/emote_stat_roll()
-	set name = "Roll Stat"
-	set desc = "Roll one of your stats with traits taken into account."
+	set name = TA_EMOTE_NAME_EMOTE_STAT_ROLL
+	set desc = TA_EMOTE_DESC_ROLL_STAT
 	set category = "Emotes.Rolling"
 
 	if(!can_roll_dice())
 		return
 
-	var/choice = tgui_input_list(src, "Which stat will you roll?", "Xylix's Dice Box", GLOB.rollable_stats)
+	var/choice = tgui_input_list(src, roll_text("Which stat will you roll?"), roll_text("Xylix's Dice Box"), GLOB.rollable_stats)
 	if(!choice)
 		return
 
@@ -709,7 +705,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 
 /// Preserved so `*str`/`*strength` keep a dedicated command-panel verb, same as every other stat roll.
 /mob/living/carbon/human/verb/emote_strength_roll()
-	set name = "%Проверка силы"
+	set name = TA_EMOTE_NAME_EMOTE_STRENGTH_ROLL
 	set category = "Emotes"
 
 	emote(STAT_STRENGTH, intentional = TRUE)
@@ -756,7 +752,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 	)
 
 /mob/living/carbon/human/verb/emote_perception_roll()
-	set name = "%Проверка восприятия"
+	set name = TA_EMOTE_NAME_EMOTE_PERCEPTION_ROLL
 	set category = "Emotes"
 
 	emote(STAT_PERCEPTION, intentional = TRUE)
@@ -801,7 +797,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 	)
 
 /mob/living/carbon/human/verb/emote_intelligence_roll()
-	set name = "%Проверка интеллекта"
+	set name = TA_EMOTE_NAME_EMOTE_INTELLIGENCE_ROLL
 	set category = "Emotes"
 
 	emote(STAT_INTELLIGENCE, intentional = TRUE)
@@ -846,7 +842,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 	)
 
 /mob/living/carbon/human/verb/emote_constitution_roll()
-	set name = "%Проверка телосложения"
+	set name = TA_EMOTE_NAME_EMOTE_CONSTITUTION_ROLL
 	set category = "Emotes"
 
 	emote(STAT_CONSTITUTION, intentional = TRUE)
@@ -891,7 +887,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 	)
 
 /mob/living/carbon/human/verb/emote_willpower_roll()
-	set name = "%Проверка воли"
+	set name = TA_EMOTE_NAME_EMOTE_WILLPOWER_ROLL
 	set category = "Emotes"
 
 	emote(STAT_WILLPOWER, intentional = TRUE)
@@ -939,7 +935,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 	)
 
 /mob/living/carbon/human/verb/emote_speed_roll()
-	set name = "%Проверка скорости"
+	set name = TA_EMOTE_NAME_EMOTE_SPEED_ROLL
 	set category = "Emotes"
 
 	emote(STAT_SPEED, intentional = TRUE)
@@ -979,7 +975,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 	)
 
 /mob/living/carbon/human/verb/emote_fortune_roll()
-	set name = "%Проверка удачи"
+	set name = TA_EMOTE_NAME_EMOTE_FORTUNE_ROLL
 	set category = "Emotes"
 
 	emote(STAT_FORTUNE, intentional = TRUE)
@@ -997,7 +993,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 		TRAIT_NOBLE = -1,
 		TRAIT_EORAN_SERENE = -1,
 		TRAIT_UNSEEMLY = 1,
-		TRAIT_COMICSANS = 1,
+		TRAIT_ANNOYINGVOICE = 1,
 		TRAIT_MISSING_NOSE = 1,
 		TRAIT_DISFIGURED = 2,
 		TRAIT_LEPROSY = 2,
@@ -1031,7 +1027,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 	)
 
 /mob/living/carbon/human/verb/emote_charisma_roll()
-	set name = "%Проверка харизмы"
+	set name = TA_EMOTE_NAME_EMOTE_CHARISMA_ROLL
 	set category = "Emotes"
 
 	emote(STAT_CHARISMA, intentional = TRUE)
@@ -1123,8 +1119,8 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 	prompt.ui_interact(user)
 
 /mob/living/carbon/human/verb/contested_roll()
-	set name = "Contested Roll"
-	set desc = "Pit one of your stats against another's."
+	set name = TA_EMOTE_NAME_CONTESTED_ROLL
+	set desc = TA_EMOTE_DESC_CONTEST
 	set category = "Emotes.Rolling"
 
 	if(!can_roll_dice())
@@ -1137,21 +1133,21 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 		nearby |= opponent
 
 	if(!length(nearby))
-		to_chat(src, span_warning("There is nobody nearby to challenge!"))
+		to_chat(src, span_warning(roll_text("There is nobody nearby to challenge!")))
 		return
 
-	var/mob/living/carbon/human/defender = tgui_input_list(src, "Who will you challenge?", "Xylix's Dice Box", nearby)
+	var/mob/living/carbon/human/defender = tgui_input_list(src, roll_text("Who will you challenge?"), roll_text("Xylix's Dice Box"), nearby)
 	// The handgames rules are what we want here: standing, out of combat mode, and within reach
 	// across a table. Said out loud here so the challenger learns why, and rechecked silently below.
 	if(!defender)
 		return
 	if(defender.cmode)
-		to_chat(src, span_warning("[defender] is too tense for games."))
+		to_chat(src, span_warning(roll_text("opponent_busy", defender)))
 		return
 	if(!hand_games_check(src, defender))
 		return
 
-	var/challenger_choice = tgui_input_list(src, "Challenging [defender]!", "Xylix's Dice Box", contest_options())
+	var/challenger_choice = tgui_input_list(src, roll_text("contest_title", defender), roll_text("Xylix's Dice Box"), contest_options())
 	if(!challenger_choice)
 		return
 	var/challenger_pick = contest_pick(challenger_choice)
@@ -1163,12 +1159,11 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 	var/challenger_label = contest_pick_label(challenger_pick)
 
 	// A stat is "their STR", dice are just "2D6+CHA".
-	var/custom = islist(challenger_pick)
-	to_chat(src, span_notice("I challenge [defender] with [custom ? "" : "my "][challenger_label]. Awaiting their defense."))
+	to_chat(src, span_notice(roll_text("challenge_notice", defender, challenger_label)))
 	// Neutral (xylix) styling here, same as the result tokens below - this is the "attempt" half of
 	// a paired roll, the coloured outcome is the other half once the contest resolves.
-	announce_roll("challenges [defender] with [custom ? "" : "[p_their()] "][stat_span(challenger_label, challenger_label)]!", "challenges [defender] with [custom ? "" : "[p_their()] "][challenger_label]")
-	to_chat(defender, span_notice("[src] challenges me with [custom ? "" : "[p_their()] "][challenger_label]. Defend with a stat or decline."))
+	announce_roll("[roll_text("challenged")] [defender] — [stat_span(islist(challenger_pick) ? null : challenger_pick, challenger_label)]!", "[roll_text("challenged")] [defender] — [challenger_label]")
+	to_chat(defender, span_notice(roll_text("defend_notice", src, challenger_label)))
 
 	// The defender picks their own stake rather than having the challenger pick it for them, and
 	// does so through a window that neither grabs focus nor sits on top of the viewport - this is
@@ -1186,7 +1181,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 /// one by its label.
 /proc/contest_options()
 	var/list/options = GLOB.rollable_stats.Copy()
-	options["Custom Roll"] = "custom"
+	options[roll_text("Custom Roll")] = "custom"
 	return options
 
 /**
@@ -1197,11 +1192,11 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 	var/stake = contest_options()[choice]
 	if(stake != "custom")
 		return stake
-	return tgui_dice_builder(src, "Xylix's Dice Box", allow_difficulty = FALSE)
+	return tgui_dice_builder(src, roll_text("Xylix's Dice Box"), allow_difficulty = FALSE)
 
 /// The stat or dice a side staked, as it reads in chat.
 /proc/contest_pick_label(pick)
-	return islist(pick) ? dice_expression_string(pick) : pick
+	return islist(pick) ? dice_expression_string(pick) : roll_text(pick)
 
 
 /// Bare `*contested` shortcut - opens the same target/stat prompts as the Contested Roll verb.
@@ -1219,23 +1214,22 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 /// Called once the defender answers (or ignores) the window from contested_roll(). `src` is still the challenger.
 /mob/living/carbon/human/proc/on_contested_roll_response(mob/living/carbon/human/defender, challenger_pick, response)
 	if(!response)
-		to_chat(src, span_warning("[defender] declines the contest."))
+		to_chat(src, span_warning(roll_text("contest_declined", defender)))
 		return
 	if(!hand_games_check(src, defender))
-		to_chat(src, span_warning("The contest with [defender] falls through."))
+		to_chat(src, span_warning(roll_text("contest_cancelled", defender)))
 		return
 
 	var/defender_pick = defender.contest_pick(response)
 	// Asked for dice and gave none, or took so long the moment passed.
 	if(!defender_pick || !hand_games_check(src, defender))
-		to_chat(src, span_warning("[defender] declines the contest."))
+		to_chat(src, span_warning(roll_text("contest_declined", defender)))
 		return
 
 	var/defender_label = contest_pick_label(defender_pick)
 	// Same neutral pairing treatment as the challenge announcement - the coloured half of the pair
 	// is resolve_contested_roll()'s result token.
-	var/defender_custom = islist(defender_pick)
-	defender.announce_roll("retorts with [defender_custom ? "" : "[defender.p_their()] "][stat_span(defender_label, defender_label)]!", "retorts with [defender_custom ? "" : "[defender.p_their()] "][defender_label]")
+	defender.announce_roll("[roll_text("defends")] [stat_span(islist(defender_pick) ? null : defender_pick, defender_label)]!", "[roll_text("defends")] [defender_label]")
 
 	resolve_contested_roll(defender, challenger_pick, defender_pick)
 	next_emote = world.time + DICE_ROLL_COOLDOWN
@@ -1250,7 +1244,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 /// `stat_trait_breakdown()` names them elsewhere. Nothing is written for a roller with no
 /// traits. Shared by every roll that uses a stat.
 /proc/stat_header(stat_key, stat_value, list/trait_sources)
-	var/header = "[stat_span(stat_key, "<b>[uppertext(stat_key)]</b>")] <b>[stat_value]</b>"
+	var/header = "[stat_span(stat_key, "<b>[uppertext(roll_text(stat_key))]</b>")] <b>[stat_value]</b>"
 	if(length(trait_sources) == 1)
 		var/trait_key = trait_sources[1]
 		header += "<br>[trait_key] <b>[signed_number(trait_sources[trait_key])]</b>"
@@ -1258,7 +1252,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 		var/trait_total = 0
 		for(var/trait_key in trait_sources)
 			trait_total += trait_sources[trait_key]
-		header += "<br>Traits <b>[signed_number(trait_total)]</b>"
+		header += roll_text("traits_header", signed_number(trait_total))
 	return header
 
 /// Every trait behind a header that had to fold them into a total, with the points each adds, or
@@ -1346,7 +1340,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 
 	// null for a draw - the only genuinely neutral result in a contest.
 	var/result = null
-	var/verdict = "Neither prevails!"
+	var/verdict = roll_text("Neither prevails!")
 	// A critical outranks any total: a natural 20 beats everything but another one, and a natural 1
 	// loses to everything but another one. Only when both sides rank alike do the totals decide.
 	var/challenger_rank = contest_crit_rank(challenger_side["crit"])
@@ -1360,7 +1354,7 @@ GLOBAL_LIST_INIT(dice_stat_names, list(
 		result = (challenger_total > defender_total)
 	if(!isnull(result))
 		var/mob/living/winner = result ? src : defender
-		verdict = "[winner] [isnull(crit) ? "" : "critically "]prevails!"
+		verdict = "[winner] [isnull(crit) ? "" : roll_text("critically")][roll_text("prevails")]"
 
 	// Both totals are already under each name, and the dice are coloured by who came out ahead. All
 	// that is left is naming the traits of anyone who has too many to fit under their name.

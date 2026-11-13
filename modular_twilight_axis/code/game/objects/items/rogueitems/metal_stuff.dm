@@ -113,7 +113,7 @@
 			qdel(I)
 			return
 		if(I.anvilrepair)
-			if(!I.smeltresult || I.smeltresult == /obj/item/ash)
+			if(!I.smeltresult || I.smeltresult == /obj/item/natural/ash)
 				return
 			if(!do_after(user, 2 SECONDS, target = I))
 				return

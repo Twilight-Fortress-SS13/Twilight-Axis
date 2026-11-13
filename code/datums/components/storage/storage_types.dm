@@ -88,7 +88,7 @@
 	. = ..()
 	can_hold = typecacheof(list(/obj/item/roguekey))
 
-/datum/component/storage/concrete/roguetown/belt/knife_belt
+/datum/component/storage/concrete/roguetown/belt/tossbelt
 	screen_max_rows = 3		//Lets you hold a regular knife + keys basically.
 	screen_max_columns = 1
 
@@ -178,6 +178,22 @@
 		/obj/item/natural/head // this only works for animal heads
 		))
 
+/datum/component/storage/concrete/grid/meatsack/fish
+	max_w_class = WEIGHT_CLASS_BULKY
+
+/datum/component/storage/concrete/grid/meatsack/fish/New(datum/P, ...)
+	. = ..()
+	set_holdable(list(
+		/obj/item/reagent_containers/food/snacks/fish,
+		/obj/item/natural/worms,
+		/obj/item/natural/bundle/worms,
+		/obj/item/leechtick,
+		/obj/item/leechtick_bloated,
+		/obj/item/reagent_containers/food/snacks/rogue/cheddarslice,
+		/obj/item/reagent_containers/food/snacks/eoran_aril/cerulean,
+		/obj/item/fishing,
+		))
+
 /datum/component/storage/concrete/grid/magebag
 	max_w_class = WEIGHT_CLASS_NORMAL
 	click_gather = TRUE
@@ -197,7 +213,8 @@
 		/obj/item/herbseed,
 		/obj/item/reagent_containers/food/snacks/grown/manabloom,
 		/obj/item/reagent_containers/food/snacks/grown/berries/rogue,
-		/obj/item/ash,
+		/obj/item/natural/ash,
+		/obj/item/natural/bundle/ash,
 		/obj/item/reagent_containers/food/snacks/grown/rogue/fyritius
 		))
 

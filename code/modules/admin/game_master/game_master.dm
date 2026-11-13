@@ -38,7 +38,10 @@ GLOBAL_LIST_EMPTY(game_masters)
 	var/spawn_dust_leave_head = FALSE
 	var/spawn_dust_delete_gear = FALSE
 	var/spawn_spread = TRUE
+	var/spawn_deadite = FALSE
 	var/spawn_click_intercept = FALSE
+	var/quest_open = FALSE
+	var/datum/gm_quest_draft/quest_draft
 
 /datum/game_master/New(client/using_client)
 	. = ..()
@@ -62,6 +65,7 @@ GLOBAL_LIST_EMPTY(game_masters)
 			game_master_client.game_master_menu = null
 		GLOB.game_masters -= game_master_client
 		game_master_client = null
+	QDEL_NULL(quest_draft)
 
 	return ..()
 
@@ -150,6 +154,7 @@ GLOBAL_LIST_EMPTY(game_masters)
 	data["spawn_dust_leave_head"] = spawn_dust_leave_head
 	data["spawn_dust_delete_gear"] = spawn_dust_delete_gear
 	data["spawn_spread"] = spawn_spread
+	data["spawn_deadite"] = spawn_deadite
 	data["spawn_click_intercept"] = spawn_click_intercept
 
 	data["selected_view"] = selected_view
@@ -159,6 +164,10 @@ GLOBAL_LIST_EMPTY(game_masters)
 	data["spawn_filters"] = warband_view ? GLOB.gm_warband_filters : GLOB.gm_spawn_filters
 	data["filter_counts"] = warband_view ? GLOB.gm_warband_filter_counts : GLOB.gm_spawn_filter_counts
 	data["max_pinned"] = GM_MAX_PINNED_FACTIONS
+	data["quest_open"] = quest_open
+	if(quest_open)
+		data["quest"] = quest_ui_data()
+		data["gm_quests"] = gm_quest_rows()
 
 	return data
 
@@ -167,6 +176,7 @@ GLOBAL_LIST_EMPTY(game_masters)
 
 	data["spawn_factions"] = GLOB.gm_spawn_factions
 	data["mob_threats"] = GLOB.gm_spawn_roster_threats + GLOB.gm_warband_threats
+	data["quest_static"] = gm_quest_static_data()
 
 	return data
 
@@ -175,7 +185,16 @@ GLOBAL_LIST_EMPTY(game_masters)
 	if(.)
 		return
 
+	if(copytext(action, 1, 7) == "quest_")
+		return quest_act(action, params, ui.user)
+
 	switch(action)
+		if("toggle_quest_drawer")
+			quest_open = !quest_open
+			if(quest_open)
+				reset_click_overrides()
+			return TRUE
+
 		if("set_spawn_count")
 			var/new_count = text2num(params["value"])
 			if(!isnum(new_count))
@@ -268,6 +287,10 @@ GLOBAL_LIST_EMPTY(game_masters)
 
 		if("toggle_spawn_spread")
 			spawn_spread = !spawn_spread
+			return TRUE
+
+		if("toggle_spawn_deadite")
+			spawn_deadite = !spawn_deadite
 			return TRUE
 
 		if("toggle_click_spawn")
@@ -448,12 +471,11 @@ GLOBAL_LIST_EMPTY(game_masters)
 		if(!spawn_taints_loot)
 			for(var/obj/item/carried_item in spawned_human.get_equipped_items(TRUE) + spawned_human.held_items)
 				carried_item.unmark_as_looted()
+		if(spawn_deadite) // after the 1 second after_creation that sets up NPC species and gear
+			addtimer(CALLBACK(spawned_human, TYPE_PROC_REF(/mob/living/carbon/human, make_deadite)), 2 SECONDS)
 
 	if(!spawn_ai)
-		if(isanimal(spawned_mob))
-			var/mob/living/simple_animal/simple_mob = spawned_mob
-			simple_mob.toggle_ai(AI_OFF)
-			simple_mob.can_have_ai = FALSE
+		ADD_TRAIT(spawned_mob, TRAIT_AI_DISABLED, ADMIN_TRAIT)
 		if(spawned_mob.ai_controller)
 			QDEL_NULL(spawned_mob.ai_controller)
 

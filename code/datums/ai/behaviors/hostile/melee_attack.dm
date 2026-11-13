@@ -37,7 +37,8 @@
 	var/forced_zone = controller.blackboard[BB_FORCED_ATTACK_ZONE]
 	if(forced_zone)
 		basic_mob.zone_selected = forced_zone
-	basic_mob.a_intent = pick(basic_mob.possible_a_intents) //randomized intent
+	if(length(basic_mob.possible_a_intents)) // TA EDIT
+		basic_mob.a_intent = pick(basic_mob.possible_a_intents) // TA EDIT
 
 	var/atom/swing_at = resolve_swing_target(controller, basic_mob, target, target_key, hiding_target)
 	if(!swing_at)

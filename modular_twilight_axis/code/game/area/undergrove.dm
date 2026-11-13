@@ -26,3 +26,8 @@
 	droning_sound = 'modular_twilight_axis/sound/music/area/abandonedwizartorium.ogg'
 	droning_sound_dusk = null
 	droning_sound_night = null
+	loot_budget = LOOT_BUDGET_RH_WIZARD_DUNGEON
+	loot_pool_key = "rh_wizard_dungeon"
+	ambush_mobs = null
+
+

@@ -166,6 +166,10 @@ GLOBAL_LIST_EMPTY(miracle_tiers)
 /datum/devotion/proc/run_psydon_updates(trait)
 	if(!holder || !holder.mind)
 		return
+	if(trait == TRAIT_PSYDONITE_5)
+		REMOVE_TRAIT(holder, TRAIT_PSYDONITE_4, ROUNDSTART_TRAIT)
+		REMOVE_TRAIT(holder, TRAIT_PSYDONITE_3, ROUNDSTART_TRAIT)
+		REMOVE_TRAIT(holder, TRAIT_PSYDONITE_2, ROUNDSTART_TRAIT)
 	if(trait == TRAIT_PSYDONITE_4)
 		REMOVE_TRAIT(holder, TRAIT_PSYDONITE_3, ROUNDSTART_TRAIT)
 		REMOVE_TRAIT(holder, TRAIT_PSYDONITE_2, ROUNDSTART_TRAIT)
@@ -283,6 +287,11 @@ GLOBAL_LIST_EMPTY(miracle_tiers)
 		ADD_TRAIT(src, TRAIT_COMBAT_AWARE, TRAIT_VIRTUE)
 	to_chat(src, "I will see [HAS_TRAIT(src, TRAIT_COMBAT_AWARE) ? "more" : "less"] combat information now.")
 
+
+/mob/living/carbon/human/proc/praysuicide()
+	set name = "Suicidal Prayer"
+	set category = "RoleUnique.Virtue"
+	emote("praysuicide", intentional = TRUE)
 
 /mob/living/carbon/human/proc/toggle_descriptors()
 	set name = "Toggle Anonimity"
