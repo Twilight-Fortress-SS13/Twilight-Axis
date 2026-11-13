@@ -119,7 +119,7 @@
 	backpack_contents = list(
 		/obj/item/reagent_containers/glass/bottle/rogue/poison,
 		/obj/item/reagent_containers/glass/bottle/rogue/healthpot,
-		/obj/item/rogueweapon/spellbook/grand,
+		/obj/item/rogueweapon/spellbook/riddle, // TA EDIT (Реворк магических имплементов)
 		/obj/item/rogueweapon/huntingknife/idagger/steel/silver/arcyne,
 		/obj/item/chalk
 	)

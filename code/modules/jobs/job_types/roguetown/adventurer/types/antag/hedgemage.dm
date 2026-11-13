@@ -49,7 +49,7 @@
 					/obj/item/needle/thorn = 1,
 					/obj/item/natural/cloth = 1,
 					/obj/item/flashlight/flare/torch = 1,
-					/obj/item/rogueweapon/spellbook/grand = 1, // Spell resetting is a key identity of good mage
+					/obj/item/rogueweapon/spellbook/ruby = 1, // Spell resetting is a key identity of good mage // TA EDIT (Реворк магических имплементов)
 					/obj/item/chalk = 1,
 					)
 	mask = /obj/item/clothing/mask/rogue/facemask/steel //idk if this makes it so they cant cast but i want all of the bandits to have the same mask
@@ -57,7 +57,7 @@
 	head = /obj/item/clothing/head/roguetown/helmet/leather/volfhelm
 	id = /obj/item/mattcoin
 
-	r_hand = /obj/item/rogueweapon/woodstaff/implement/grand
+	r_hand = /obj/item/rogueweapon/woodstaff/implement/greater/ruby // TA EDIT (Реворк магических имплементов)
 	if(H.age == AGE_OLD)
 		head = /obj/item/clothing/head/roguetown/wizhat/gen
 		armor = /obj/item/clothing/suit/roguetown/shirt/robe

@@ -18,6 +18,9 @@
 	special = /datum/special_intent/quarterstaff_sweep
 	sellprice = 12
 //	implement_upgradable = TRUE // TA REMOVAL (Тинктуры апгрейдов)
+
+// TA REMOVAL START (Гемы теперь вставляются во все имплементы, а не только в посохи, этот код переносится в наш модуль)
+/*
 	var/gem_socketable = TRUE
 	var/obj/item/socketed_gem
 
@@ -119,6 +122,8 @@
 	socketed_gem = null
 	gem.forceMove(get_turf(user))
 	user?.put_in_hands(gem)
+*/
+// TA REMOVAL END
 
 /obj/item/rogueweapon/woodstaff/implement/amethyst
 	icon_state = "amethyststaff"

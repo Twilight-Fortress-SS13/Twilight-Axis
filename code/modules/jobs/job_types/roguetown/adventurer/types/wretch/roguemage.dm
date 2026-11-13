@@ -56,7 +56,7 @@
 	beltl = /obj/item/storage/magebag
 	backl = /obj/item/storage/backpack/rogue/backpack
 	backpack_contents = list(
-		/obj/item/rogueweapon/spellbook/greater = 1,
+		/obj/item/rogueweapon/spellbook/ruby = 1, // TA EDIT (Реворк магических имплементов)
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
 		/obj/item/flashlight/flare/torch/lantern/prelit = 1,
 		/obj/item/rope/chain = 1,
@@ -67,5 +67,5 @@
 	)
 	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/wizard]
 	if(H.mind)
-		backr = /obj/item/rogueweapon/woodstaff/implement/greater/ruby // TA EDIT (Убираем "косметические" камни)
+		backr = /obj/item/rogueweapon/woodstaff/implement/greater/ruby // TA EDIT (Реворк магических имплементов)
 		wretch_select_bounty(H)

@@ -78,10 +78,12 @@
 	)
 
 /datum/outfit/job/roguetown/wapprentice/associate
-	var/starting_implement = /obj/item/rogueweapon/woodstaff/implement/greater/sapphire // TA EDIT (Убираем "косметические" камни)
+	var/starting_implement = /obj/item/rogueweapon/woodstaff/implement/greater/sapphire // TA EDIT (Реворк магических имплементов)
+	var/starting_tome = /obj/item/rogueweapon/spellbook/sapphire // TA EDIT (Реворк магических имплементов)
 
 /datum/outfit/job/roguetown/wapprentice/associate/apprentice
-	starting_implement = /obj/item/rogueweapon/woodstaff/implement/amethyst // TA EDIT (Убираем "косметические" камни)
+	starting_implement = /obj/item/rogueweapon/woodstaff/implement/amethyst // TA EDIT (Реворк магических имплементов)
+	starting_tome = /obj/item/rogueweapon/spellbook // TA EDIT (Реворк магических имплементов)
 
 /datum/outfit/job/roguetown/wapprentice/associate/pre_equip(mob/living/carbon/human/H)
 	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt
@@ -93,14 +95,14 @@
 	armor = /obj/item/clothing/suit/roguetown/shirt/robe/mage
 	head = /obj/item/clothing/head/roguetown/roguehood/mage
 	backpack_contents = list(
-		/obj/item/rogueweapon/spellbook = 1,
+		(starting_tome) = 1, // TA EDIT (Реворк магических имплементов)
 		/obj/item/chalk = 1,
 		)
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
 			H.cmode_music = sound("sound/music/combat_heretic.ogg")
 	if(H.mind)
-		backr = starting_implement // TA EDIT (Убираем "косметические" камни)
+		backr = starting_implement // TA EDIT (Реворк магических имплементов)
 		SStreasury.grant_savings(ECONOMIC_LOWER_MIDDLE_CLASS, H)
 	if(SSmapping.config.map_name == "Rockhill") //TA_EDIT
 		beltr = /obj/item/storage/keyring/apprenticeenigma

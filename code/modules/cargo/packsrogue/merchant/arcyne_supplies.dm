@@ -22,6 +22,8 @@
 */
 // TA REMOVAL END
 
+// TA REMOVAL START (Магазины больше не продают готовые имплементы)
+/*
 /datum/supply_pack/rogue/arcyne_supplies/greater_implement
 	name = "Greater Implement"
 	cost = 55
@@ -31,3 +33,5 @@
 	name = "Grand Implement"
 	cost = 115
 	contains = list(/obj/item/rogueweapon/woodstaff/implement/grand)
+*/
+// TA REMOVAL END

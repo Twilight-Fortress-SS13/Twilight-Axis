@@ -45,7 +45,7 @@
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/heavy
 	backl = /obj/item/storage/backpack/rogue/satchel/black
 	backpack_contents = list(
-		/obj/item/rogueweapon/spellbook/greater = 1,
+		/obj/item/rogueweapon/spellbook/ruby = 1, // TA EDIT (Реворк магических имплементов)
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
 		/obj/item/flashlight/flare/torch/lantern/prelit = 1,
 		/obj/item/necro_relics/necro_crystal = 1,
@@ -55,7 +55,7 @@
 		)
 	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/wizard]
 	if(H.mind)
-		backr = /obj/item/rogueweapon/woodstaff/implement/greater/ruby // TA EDIT (Убираем "косметические" камни)
+		backr = /obj/item/rogueweapon/woodstaff/implement/greater/ruby // TA EDIT (Реворк магических имплементов)
 		H.set_patron(/datum/patron/inhumen/zizo)
 		wretch_select_bounty(H)
 	H.grant_language(/datum/language/undead)

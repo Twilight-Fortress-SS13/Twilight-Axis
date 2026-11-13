@@ -72,7 +72,7 @@
 		/obj/item/chalk = 1,
 		/obj/item/roguekey/inquisitionmanor,
 		/obj/item/paper/inqslip/arrival/ortho,
-		/obj/item/rogueweapon/spellbook/greater,
+		/obj/item/rogueweapon/spellbook/ruby,
 		(naledi_book) = 1
 	)
 
