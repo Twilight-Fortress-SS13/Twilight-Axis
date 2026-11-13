@@ -182,7 +182,7 @@
 		switch(bounty_severity_key)
 			if("HARM")
 				H.change_stat(STATKEY_LCK, 1)
-			else if("ATROCITY")
+			else if("ATROCITY" || "UNFORGIVABLE")
 				H.change_stat(STATKEY_CON, 1)
 				H.change_stat(STATKEY_STR, 1)
 				H.change_stat(STATKEY_SPD, 1)
