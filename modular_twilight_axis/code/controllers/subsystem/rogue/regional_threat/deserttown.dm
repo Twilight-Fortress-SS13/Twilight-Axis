@@ -214,6 +214,47 @@
 	)
 	regions[ruins.region_id] = ruins
 
+	var/datum/economic_region/deep_west = deserttown_make_economic_region(
+		TRADE_REGION_AL_ASHUR_DEEP_WEST,
+		"Deep Western Dunes",
+		"Windswept dunes, raider camps and buried tombs",
+		"The deep western reaches of the desert are battered by sandstorms and prowled by raiders. Mineral wealth hides beneath the sands, but the route demands armed escorts, food and medicine.",
+		THREAT_REGION_DESERT_DEEP_WEST,
+		list(
+			TRADE_GOOD_IRON_ORE = TG_SUPPLY_IRON,
+			TRADE_GOOD_COPPER_ORE = TG_SUPPLY_TIN_BRONZE,
+			TRADE_GOOD_TIN_ORE = TG_SUPPLY_TIN_BRONZE,
+			TRADE_GOOD_COAL = TG_SUPPLY_IRON,
+			TRADE_GOOD_STONE = TG_SUPPLY_CHEAP_RAW_MAT,
+			TRADE_GOOD_CLAY = TG_SUPPLY_CHEAP_RAW_MAT,
+			TRADE_GOOD_GOLD_ORE = TG_SUPPLY_PRECIOUS_METAL,
+			TRADE_GOOD_SILVER_ORE = TG_SUPPLY_PRECIOUS_METAL,
+			TRADE_GOOD_HIDE = TG_SUPPLY_LEATHER,
+		),
+		list(
+			TRADE_GOOD_GRAIN = TG_DEMAND_LOCAL_GRAIN,
+			TRADE_GOOD_RICE = TG_DEMAND_LOCAL_GRAIN,
+			TRADE_GOOD_MEAT = TG_DEMAND_MEAT_BULK,
+			TRADE_GOOD_CLOTH = TG_DEMAND_CLOTH,
+			TRADE_GOOD_CURED_LEATHER = TG_DEMAND_LEATHER,
+			TRADE_GOOD_SALT = TG_DEMAND_SALT,
+			TRADE_GOOD_CALENDULA = TG_DEMAND_SPECIALTY_HERB,
+			TRADE_GOOD_POPPY = TG_DEMAND_SPECIALTY_HERB,
+			TRADE_GOOD_WOOD = TG_DEMAND_CHEAP_RAW_MAT * 2,
+		),
+		list(
+			/datum/standing_order/demand_smithing,
+			/datum/standing_order/demand_construction_bulk,
+			/datum/standing_order/demand_victualling_mines,
+			/datum/standing_order/demand_artificery,
+			/datum/standing_order/demand_equipment_armaments,
+			/datum/standing_order/demand_equipment_armor_light,
+			/datum/standing_order/demand_trophy_heads,
+			/datum/standing_order/demand_frontier_gear,
+		)
+	)
+	regions[deep_west.region_id] = deep_west
+
 	return regions
 
 /proc/deserttown_make_economic_region(region_id, name, subtitle, description, threat_region_id, list/produces, list/demands, list/standing_order_templates)
@@ -324,6 +365,10 @@
 /datum/threat_region/desert_deep
 	parent_type = /datum/threat_region/al_ashur_deep_dunes
 	region_name = THREAT_REGION_DESERT_DEEP
+
+/datum/threat_region/desert_deep_west
+	parent_type = /datum/threat_region/al_ashur_deep_dunes
+	region_name = THREAT_REGION_DESERT_DEEP_WEST
 
 /datum/threat_region/al_ashur_sunken_ruins
 	region_name = THREAT_REGION_AL_ASHUR_SUNKEN_RUINS

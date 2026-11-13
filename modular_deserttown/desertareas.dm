@@ -117,6 +117,57 @@
 	first_time_text = null
 	ambush_mobs = null
 
+/area/rogue/outdoors/desertdeepwest
+	name = "Deep Western Dunes"
+	icon_state = "desertdeep"
+	// TA EDIT BEGIN: Added for deserttown contracts
+	threat_region = THREAT_REGION_DESERT_DEEP_WEST
+	// TA EDIT END
+	warden_area = TRUE
+	ambientsounds = AMB_TOWNDAY
+	ambientnight = AMB_TOWNNIGHT
+	spookysounds = SPOOKY_GEN
+	spookynight = SPOOKY_GEN
+	first_time_text = "Deep Western Dunes"
+	droning_sound = 'sound/music/area/desert/Iberia1.ogg'
+	droning_sound_dusk = 'sound/music/area/desert/NightPrayer.ogg'
+	droning_sound_night = 'sound/music/area/desert/Moonrise.ogg'
+	ambush_mobs = list(
+		/mob/living/carbon/human/species/skeleton/npc/ambush = 30,
+		/mob/living/carbon/human/species/human/northern/dunewell_raider/ambush = 60,
+		/mob/living/carbon/human/species/human/northern/dunewell_raider/better_gear/ambush = 20,
+		/mob/living/simple_animal/hostile/retaliate/rogue/antlion = 30,
+		/mob/living/simple_animal/hostile/retaliate/rogue/lamia = 30,
+		/mob/living/simple_animal/hostile/retaliate/rogue/sandworm/wormling = 30,
+		/mob/living/simple_animal/hostile/retaliate/rogue/sandworm/stalker = 40,
+		/mob/living/simple_animal/hostile/retaliate/rogue/sandworm/elder = 20,
+		/mob/living/simple_animal/hostile/retaliate/rogue/ifrit = 20,
+		/mob/living/simple_animal/hostile/retaliate/rogue/headless = 10,
+		/mob/living/simple_animal/hostile/retaliate/rogue/wolf_undead = 10,
+		/mob/living/simple_animal/hostile/rogue/dragger = 15,
+		/mob/living/simple_animal/hostile/retaliate/rogue/spider/mutated = 15)
+	converted_type = /area/rogue/indoors/shelter/desertdeepwest
+	deathsight_message = "an empty, parched desert"
+
+/area/rogue/indoors/shelter/desertdeepwest
+	name = "Deep Western Desert (shelter)"
+	icon_state = "desertdeep"
+	droning_sound = 'sound/music/area/desert/Iberia1.ogg'
+	droning_sound_dusk = 'sound/music/area/desert/NightPrayer.ogg'
+	droning_sound_night = 'sound/music/area/desert/Moonrise.ogg'
+
+/area/rogue/outdoors/desertdeepwest/safe
+	name = "Western Desert Pass"
+	ambush_mobs = null
+
+/area/rogue/outdoors/desertdeepwest/above
+	name = "deep western desert above"
+	ambientsounds = AMB_MOUNTAIN
+	ambientnight = AMB_MOUNTAIN
+	soundenv = 17
+	first_time_text = null
+	ambush_mobs = null
+
 /area/rogue/outdoors/desert/above
 	name = "desert above"
 	ambientsounds = AMB_MOUNTAIN

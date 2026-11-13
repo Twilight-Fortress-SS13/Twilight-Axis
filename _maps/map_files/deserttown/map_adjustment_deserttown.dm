@@ -11,6 +11,7 @@
 	threat_regions = list(
 		THREAT_REGION_DESERT_NEAR,
 		THREAT_REGION_DESERT_DEEP,
+		THREAT_REGION_DESERT_DEEP_WEST,
 	)
 	realm_type = "Sultanate"
 	realm_type_short = "Sultanate"

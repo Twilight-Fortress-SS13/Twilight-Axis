@@ -25,6 +25,7 @@
 //Deserttown versions
 #define THREAT_REGION_DESERT_NEAR "Al-Ashur Dunes"
 #define THREAT_REGION_DESERT_DEEP "The Deep Dunes"
+#define THREAT_REGION_DESERT_DEEP_WEST "The Deep Western Dunes"
 #define THREAT_REGION_AL_ASHUR_OASIS "Al-Ashur Oasis"
 #define THREAT_REGION_AL_ASHUR_CARAVAN_ROAD "Al-Ashur Caravan Road"
 #define THREAT_REGION_AL_ASHUR_SPICE_DUNES "Spice Dunes"

@@ -36,7 +36,8 @@
 #define TRADE_REGION_AL_ASHUR_CARAVAN_ROAD "al_ashur_caravan_road"
 #define TRADE_REGION_AL_ASHUR_SPICE_DUNES "al_ashur_spice_dunes"
 #define TRADE_REGION_AL_ASHUR_GIZA_ROUTE "al_ashur_giza_route"
-#define TRADE_REGION_AL_ASHUR_SUNKEN_RUINS "al_ashur_sunken_ruins" // TA EDIT END
+#define TRADE_REGION_AL_ASHUR_SUNKEN_RUINS "al_ashur_sunken_ruins"
+#define TRADE_REGION_AL_ASHUR_DEEP_WEST "al_ashur_deep_west" // TA EDIT END
 
 #define STANDING_ORDER_DURATION 2
 #define URGENT_ORDER_DURATION 1
