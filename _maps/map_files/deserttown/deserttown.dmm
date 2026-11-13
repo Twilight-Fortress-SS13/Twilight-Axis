@@ -1791,6 +1791,10 @@
 /obj/structure/flora/roguegrass/herb/rosa,
 /turf/open/floor/rogue/desert_grass/nospawn,
 /area/rogue/outdoors/town/manor/desert/roofs)
+"ayf" = (
+/obj/effect/spawner/lootdrop/general_loot_hi/x3,
+/turf/open/floor/rogue/darkpath,
+/area/rogue/under/dungeon)
 "ayj" = (
 /obj/structure/fluff/walldeco/church/line{
 	dir = 8
@@ -9831,6 +9835,10 @@
 	},
 /turf/open/floor/rogue/churchmarble,
 /area/rogue/indoors/shelter/desertdeepfortnoc)
+"csz" = (
+/mob/living/carbon/human/species/npc/arcyne_invoker,
+/turf/open/floor/rogue/darkpath,
+/area/rogue/under/dungeon)
 "csI" = (
 /obj/structure/flora/roguegrass/bush/wall/tall/desert,
 /turf/open/floor/rogue/desert_grass,
@@ -14171,11 +14179,11 @@
 /turf/open/floor/rogue/naturalstone/sandstone,
 /area/rogue/under/cave)
 "dwe" = (
-/obj/machinery/light/rogue/torchholder/l{
-	dir = 1
+/obj/effect/particle_effect/smoke{
+	lifetime = 14400
 	},
-/turf/open/transparent/openspace,
-/area/rogue/under/cave)
+/turf/open/water/river/flow/north,
+/area/rogue/outdoors/desertdeepwest/above)
 "dwf" = (
 /obj/structure/fluff/templedebris/debris2,
 /turf/open/floor/rogue/dunes,
@@ -17729,6 +17737,10 @@
 /obj/structure/flora/roguegrass/bush/desert,
 /turf/open/floor/rogue/desert_grass,
 /area/rogue/outdoors/desert/above)
+"eqR" = (
+/obj/structure/deadbodyrandom/high,
+/turf/open/floor/rogue/darkpath,
+/area/rogue/under/dungeon)
 "eqS" = (
 /obj/structure/chair/zybantine_sofa/left,
 /turf/open/floor/carpet/purple,
@@ -18149,7 +18161,7 @@
 /obj/structure/stairs/desert{
 	dir = 1
 	},
-/turf/open/floor/rogue/naturalstone/sandstone,
+/turf/closed/mineral/rogue/bedrock/sandstone,
 /area/rogue/under/dungeon)
 "evY" = (
 /obj/structure/fluff/littlebanners/bluewhite,
@@ -25684,6 +25696,12 @@
 /obj/item/chair/stool/bar/rogue/crafted,
 /turf/open/floor/rogue/blocks,
 /area/rogue/outdoors/mountains/decap/gunduzirak)
+"gsy" = (
+/obj/effect/particle_effect/smoke{
+	lifetime = 14400
+	},
+/turf/open/water/cleanshallow,
+/area/rogue/outdoors/desertdeepwest/above)
 "gsL" = (
 /turf/open/floor/rogue/greenstone,
 /area/rogue/outdoors/mountains/decap/gunduzirak/bossarena)
@@ -27444,11 +27462,8 @@
 /turf/open/floor/rogue/sandbrick,
 /area/rogue/outdoors/desertdeepwest/above)
 "gMp" = (
-/obj/structure/stairs/desert{
-	dir = 1
-	},
-/turf/open/floor/rogue/naturalstone/sandstone,
-/area/rogue/outdoors/desertdeepwest/above)
+/turf/closed/mineral/rogue/bedrock/sandstone,
+/area/rogue/under/dungeon)
 "gMr" = (
 /turf/open/transparent/openspace,
 /area/rogue/under/town/basement/desert)
@@ -33053,12 +33068,6 @@
 "igs" = (
 /obj/structure/flora/roguegrass/water/reeds,
 /turf/open/floor/rogue/naturalstone/sandstone,
-/area/rogue/outdoors/desertdeepwest/above)
-"igw" = (
-/obj/effect/particle_effect/smoke{
-	lifetime = 14400
-	},
-/turf/open/floor/rogue/dunes,
 /area/rogue/outdoors/desertdeepwest/above)
 "igC" = (
 /obj/effect/landmark/start/dt/slave{
@@ -44559,12 +44568,6 @@
 	icon = 'modular_deserttown/icons/alt/roguefloor.dmi'
 	},
 /area/rogue/under/town/basement/desert/keep)
-"kYO" = (
-/obj/effect/particle_effect/smoke{
-	lifetime = 14400
-	},
-/turf/open/water/cleanshallow,
-/area/rogue/outdoors/desertdeepwest/above)
 "kYZ" = (
 /obj/machinery/light/rogue/candle/l,
 /turf/open/floor/rogue/wood,
@@ -76688,12 +76691,6 @@
 	},
 /turf/open/floor/rogue/tile/harem,
 /area/rogue/indoors/town/manor/desert)
-"sHW" = (
-/obj/effect/particle_effect/smoke{
-	lifetime = 14400
-	},
-/turf/open/water/river/flow/north,
-/area/rogue/outdoors/desertdeepwest/above)
 "sHY" = (
 /obj/structure/fluff/statue/gargoyle,
 /turf/open/floor/rogue/sandbrick,
@@ -78891,6 +78888,14 @@
 /mob/living/carbon/human/species/skeleton/npc/hardspread,
 /turf/open/floor/rogue/citybrick/citybrick4,
 /area/rogue/under/town/basement/desert)
+"tjE" = (
+/obj/item/natural/rock/desert{
+	icon_state = "sandrock2";
+	pixel_x = 5;
+	pixel_y = 0
+	},
+/turf/open/floor/rogue/darkpath,
+/area/rogue/under/dungeon)
 "tjJ" = (
 /obj/structure/bookcase/random/religion,
 /turf/open/floor/rogue/citybrick/citybrick2,
@@ -80280,8 +80285,8 @@
 /obj/structure/stairs/desert{
 	dir = 1
 	},
-/turf/open/floor/rogue/naturalstone/sandstone,
-/area/rogue/under/cave)
+/turf/closed/mineral/rogue/bedrock/sandstone,
+/area/rogue)
 "tzy" = (
 /obj/structure/chair/wood/zybantine{
 	dir = 4
@@ -88547,6 +88552,12 @@
 	},
 /turf/open/floor/rogue/hexstone,
 /area/rogue/outdoors/mountains)
+"vyT" = (
+/obj/effect/particle_effect/smoke{
+	lifetime = 14400
+	},
+/turf/open/floor/rogue/dunes,
+/area/rogue/outdoors/desertdeepwest/above)
 "vyX" = (
 /obj/item/cushion/desert1,
 /obj/machinery/light/rogue/candle,
@@ -110285,9 +110296,9 @@ biu
 biu
 biu
 wel
-urA
+gMp
 saM
-cGS
+ayf
 cGS
 rhi
 wel
@@ -110595,8 +110606,8 @@ pbN
 pbN
 biu
 evV
-lhJ
-ctw
+lgK
+gMp
 cGS
 cGS
 cGS
@@ -110906,12 +110917,12 @@ pbN
 pbN
 pbN
 biu
-evV
-ctw
-ctw
+gMp
+eqR
 cGS
 cGS
-cGS
+gMp
+csz
 cGS
 cGS
 cGS
@@ -111218,12 +111229,12 @@ pbN
 pbN
 pbN
 biu
-evV
-ctw
-ctw
-cGS
-cGS
-cGS
+gMp
+gMp
+gMp
+gMp
+gMp
+tjE
 cGS
 cGS
 cGS
@@ -111533,8 +111544,8 @@ biu
 biu
 biu
 wel
-saM
-cGS
+gMp
+gMp
 mLC
 lgK
 saM
@@ -111851,7 +111862,7 @@ wel
 wel
 wel
 wel
-cGS
+fDZ
 cGS
 wel
 pbN
@@ -114348,7 +114359,7 @@ cGS
 qYl
 wel
 cGS
-urA
+wZk
 wel
 pbN
 pbN
@@ -228528,12 +228539,12 @@ tEt
 tEt
 tEt
 tEt
-lbf
-lbf
-lbf
-lbf
-lbf
-lbf
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
 tEt
 tEt
 tEt
@@ -228840,12 +228851,12 @@ tEt
 tEt
 tEt
 tEt
-lbf
-rRb
-rRb
-rRb
-rRb
-lbf
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
 tEt
 tEt
 tEt
@@ -229152,12 +229163,12 @@ tEt
 tEt
 tEt
 tEt
-lbf
-rRb
+tEt
+tEt
 tzu
-fMl
-rRb
-lbf
+tEt
+tEt
+tEt
 tEt
 tEt
 tEt
@@ -229464,12 +229475,12 @@ tEt
 tEt
 tEt
 tEt
-lbf
-rRb
+tEt
+tEt
 tzu
-dwe
-rRb
-lbf
+tEt
+tEt
+tEt
 tEt
 tEt
 tEt
@@ -229776,12 +229787,12 @@ tEt
 tEt
 tEt
 tEt
-lbf
-rRb
+tEt
+tEt
 tzu
-fMl
-rRb
-lbf
+tEt
+tEt
+tEt
 tEt
 tEt
 tEt
@@ -230088,12 +230099,12 @@ tEt
 tEt
 tEt
 tEt
-lbf
-rRb
-rRb
-rRb
-rRb
-lbf
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
 tEt
 tEt
 tEt
@@ -230400,12 +230411,12 @@ tEt
 tEt
 tEt
 tEt
-lbf
-lbf
-lbf
-lbf
-lbf
-lbf
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
 tEt
 tEt
 tEt
@@ -346775,14 +346786,14 @@ tEt
 tEt
 tEt
 tEt
-lbf
-lbf
-lbf
-lbf
-lbf
-lbf
-lbf
-lbf
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
 tEt
 tEt
 tEt
@@ -347087,14 +347098,14 @@ tEt
 tEt
 tEt
 tEt
-lbf
-lbf
-lbf
-lbf
-lbf
-lbf
-lbf
-lbf
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
 tEt
 tEt
 tEt
@@ -347399,14 +347410,14 @@ tEt
 tEt
 tEt
 tEt
-lbf
-lbf
-rRb
-rRb
-rRb
-rRb
-lbf
-lbf
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
 tEt
 tEt
 tEt
@@ -347711,14 +347722,14 @@ tEt
 tEt
 tEt
 tEt
-lbf
-lbf
-rRb
-tzu
-fMl
-rRb
-lbf
-lbf
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
 tEt
 tEt
 tEt
@@ -348023,14 +348034,14 @@ tEt
 tEt
 tEt
 tEt
-lbf
-lbf
-rRb
-tzu
-dwe
-rRb
-lbf
-lbf
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
 tEt
 tEt
 tEt
@@ -348335,14 +348346,14 @@ tEt
 tEt
 tEt
 tEt
-lbf
-lbf
-rRb
-tzu
-fMl
-rRb
-lbf
-lbf
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
 tEt
 tEt
 tEt
@@ -348647,14 +348658,14 @@ tEt
 tEt
 tEt
 tEt
-lbf
-lbf
-rRb
-rRb
-rRb
-rRb
-lbf
-lbf
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
 tEt
 tEt
 tEt
@@ -348959,14 +348970,14 @@ tEt
 tEt
 tEt
 tEt
-lbf
-lbf
-lbf
-lbf
-lbf
-lbf
-lbf
-lbf
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
 tEt
 tEt
 tEt
@@ -349271,14 +349282,14 @@ tEt
 tEt
 tEt
 tEt
-lbf
-lbf
-lbf
-lbf
-lbf
-lbf
-lbf
-lbf
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
+tEt
 tEt
 tEt
 tEt
@@ -456340,7 +456351,7 @@ xUA
 qMn
 qMn
 qMn
-igw
+vyT
 mQK
 mQK
 mQK
@@ -456652,8 +456663,8 @@ qMn
 qMn
 mkz
 mkz
-kYO
-sHW
+gsy
+dwe
 mQK
 mQK
 mQK
@@ -456965,7 +456976,7 @@ mkz
 mkz
 xwy
 xwy
-sHW
+dwe
 mQK
 mQK
 mQK
@@ -457277,7 +457288,7 @@ xwy
 xwy
 xwy
 xwy
-sHW
+dwe
 xwy
 mQK
 mQK
@@ -457590,7 +457601,7 @@ xwy
 xwy
 xwy
 mkz
-sHW
+dwe
 mQK
 mQK
 mQK
@@ -457901,7 +457912,7 @@ mkz
 mkz
 mkz
 mkz
-kYO
+gsy
 mQK
 mQK
 mQK
@@ -465962,9 +465973,9 @@ xUA
 xUA
 xUA
 xUA
-jPv
-jPv
-jPv
+xUA
+xUA
+xUA
 xUA
 xUA
 xUA
@@ -466274,9 +466285,9 @@ xUA
 xUA
 xUA
 xUA
-gMp
-ujh
-jPv
+xUA
+xUA
+xUA
 xUA
 xUA
 xUA
@@ -466586,9 +466597,9 @@ xUA
 xUA
 xUA
 xUA
-gMp
-ujh
-jPv
+xUA
+xUA
+xUA
 xUA
 xUA
 xUA
@@ -466898,9 +466909,9 @@ xUA
 xUA
 xUA
 xUA
-gMp
-ujh
-jPv
+xUA
+xUA
+xUA
 xUA
 xUA
 lSK
@@ -467210,9 +467221,9 @@ xUA
 xUA
 xUA
 xUA
-jPv
-jPv
-jPv
+xUA
+xUA
+xUA
 xUA
 xUA
 lSK
