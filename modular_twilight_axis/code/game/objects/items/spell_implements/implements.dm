@@ -245,11 +245,20 @@ GLOBAL_LIST_INIT(implement_gem_stats, list(
 	socketed_gem?.forceMove(drop_location())
 	return ..()
 
-// TODO: Перепроверить ценообразование, с ним что-то явно не так
+// Код навигатора не учитывает цену содержимого контейнеров, поэтому мы добавляем цену гема сами
 /obj/item/rogueweapon/get_real_price()
 	. = ..()
 	if(socketed_gem)
 		. += socketed_gem.get_real_price()
+
+// А вот код appraise_price() учитывает содержимое контейнеров, поэтому придется исключить оттуда гемы из-за "фикса" выше
+/obj/item/rogueweapon/appraise_price()
+	if(!socketed_gem)
+		return ..()
+	. = get_real_price()
+	for(var/obj/item/I in contents)
+		if(I != socketed_gem)
+			. += I.appraise_price()
 
 /obj/item/rogueweapon/examine(mob/user)
 	. = ..()
