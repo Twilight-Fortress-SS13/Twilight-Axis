@@ -100,9 +100,8 @@
 			to_chat(H, span_warning("К сожалению, своей музыкой я не сыскал славы... Даже в преступном мире."))
 		else if(crimeschoice == "They fear me")
 			wretch_select_bounty(H)
-			H.change_stat(STATKEY_WIL, 1)
-			H.change_stat(STATKEY_PER, 1)
-			H.change_stat(STATKEY_INT, 1)
+			H.change_stat(STATKEY_WIL, 2)
+			H.change_stat(STATKEY_PER, 2)
 			H.change_stat(STATKEY_CON, 1)
 		// TA ADDITION END
 

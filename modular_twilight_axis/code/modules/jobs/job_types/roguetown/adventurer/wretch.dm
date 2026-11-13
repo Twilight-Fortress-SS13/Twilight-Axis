@@ -234,6 +234,9 @@
 			H.change_stat(STATKEY_INT, 1)
 			H.change_stat(STATKEY_WIL, 2)
 			H.change_stat(STATKEY_CON, 1)
+			H.mind.mage_aspect_config["minor"] += 1
+			H.mind.mage_aspect_config["utility"] += 3
+			H.mind.check_learnspell()
 
 /proc/bountychoice_roguemage(mob/living/carbon/human/H)
 	var/crimes = list("I'm nobody", "They fear me")
