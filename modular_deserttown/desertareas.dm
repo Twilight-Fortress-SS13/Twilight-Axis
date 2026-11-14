@@ -533,3 +533,12 @@
 	droning_sound = 'sound/music/area/desert/Valley-of-Kings.ogg'
 	droning_sound_dusk = null
 	droning_sound_night = null
+
+/area/rogue/indoors/shelter/desertdeepwest/deserterfort
+	name = "Fortress of Failure"
+	icon_state = "desertdeep"
+	first_time_text = "Fortress of Failure"
+	droning_sound = 'sound/music/area/desert/Iberia1.ogg'
+	droning_sound_dusk = 'sound/music/area/desert/NightPrayer.ogg'
+	droning_sound_night = 'sound/music/area/desert/Moonrise.ogg'
+	loot_budget = LOOT_BUDGET_BOGMANFORT
