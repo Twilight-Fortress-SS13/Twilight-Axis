@@ -479,9 +479,9 @@
 	neck = /obj/item/clothing/neck/roguetown/gorget/paalloy //No head armor but good anti-decap armor, intended.
 	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced
 	belt = /obj/item/storage/belt/rogue/leather/battleskirt
-	beltl = /obj/item/rogueweapon/spellbook/greater
+	beltl = /obj/item/rogueweapon/spellbook/ruby // TA EDIT (Реворк магических имплементов)
 	backl = /obj/item/storage/backpack/rogue/satchel/black
-	backr = choose_implement(H, "greater")
+	backr = /obj/item/rogueweapon/woodstaff/implement/greater/ruby // TA EDIT (Реворк магических имплементов)
 
 	backpack_contents = list(
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,

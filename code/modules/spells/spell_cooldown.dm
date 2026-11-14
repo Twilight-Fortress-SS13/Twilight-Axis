@@ -986,10 +986,10 @@
 		var/require_no_move = (spell_requirements & SPELL_REQUIRES_NO_MOVE)
 		on_start_charge()
 		charge_started_at = world.time
-		charge_target_time = charge_time
+		charge_target_time = round(charge_time * get_implement_charge_mult()) // TA EDIT (Гримуары ускоряют каст)
 		apply_charge_intent()
 		var/success = TRUE
-		if(!do_after(owner, charge_time, needhand = FALSE, extra_checks = CALLBACK(src, PROC_REF(do_after_checks), owner, cast_on), no_interrupt = !require_no_move, allow_movement = !require_no_move))
+		if(!do_after(owner, charge_target_time, needhand = FALSE, extra_checks = CALLBACK(src, PROC_REF(do_after_checks), owner, cast_on), no_interrupt = !require_no_move, allow_movement = !require_no_move)) // TA EDIT (Гримуары ускоряют каст)
 			success = FALSE
 			sig_return |= SPELL_CANCEL_CAST
 
@@ -1880,6 +1880,7 @@
 		charge_target_time = charge_time * 0.75
 	else
 		charge_target_time = charge_time
+	charge_target_time = round(charge_target_time * get_implement_charge_mult()) // TA EDIT (Гримуары ускоряют каст)
 
 	return COMPONENT_CLIENT_MOUSEDOWN_INTERCEPT
 

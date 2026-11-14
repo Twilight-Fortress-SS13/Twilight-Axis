@@ -17,7 +17,10 @@
 	max_integrity = 200
 	special = /datum/special_intent/quarterstaff_sweep
 	sellprice = 12
-	implement_upgradable = TRUE
+//	implement_upgradable = TRUE // TA REMOVAL (Тинктуры апгрейдов)
+
+// TA REMOVAL START (Гемы теперь вставляются во все имплементы, а не только в посохи, этот код переносится в наш модуль)
+/*
 	var/gem_socketable = TRUE
 	var/obj/item/socketed_gem
 
@@ -119,6 +122,8 @@
 	socketed_gem = null
 	gem.forceMove(get_turf(user))
 	user?.put_in_hands(gem)
+*/
+// TA REMOVAL END
 
 /obj/item/rogueweapon/woodstaff/implement/amethyst
 	icon_state = "amethyststaff"
@@ -207,7 +212,7 @@
 /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel
 	base_implement_name = "blacksteel staff"
 	name = "blacksteel staff"
-	desc = "A fine wood staff reinforced with blacksteel rivets and furnishings, carried by War-Magos who graduated from the Celestial Academy of Magos. Perched atop it is a beautiful alchemical Dorpel. Its focus can be improved further with a runic tincture."
+	desc = "A fine wood staff reinforced with blacksteel rivets and furnishings, carried by War-Magos who graduated from the Celestial Academy of Magos. Perched atop it is a beautiful alchemical Dorpel." // TA EDIT
 	icon_state = "blacksteelstaff"
 
 /obj/item/rogueweapon/woodstaff/implement/grand/naledi

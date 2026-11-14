@@ -70,6 +70,7 @@
 			hmasteritem.flags_1 |= HOARDMASTER_SPAWNED_1
 			if(istype(hmasteritem, /obj/item))
 				var/obj/item/newitem = hmasteritem
+				newitem.on_hoardmaster_spawned()  // TA EDIT (Хук для передачи флага содержимому предметов)
 				newitem.mark_as_worn()
 				newitem.sellprice = 0
 				if(newitem.smeltresult)

@@ -72,15 +72,15 @@
 		/obj/item/chalk = 1,
 		/obj/item/roguekey/inquisitionmanor,
 		/obj/item/paper/inqslip/arrival/ortho,
-		/obj/item/rogueweapon/spellbook/greater,
+		/obj/item/rogueweapon/spellbook/ruby,
 		(naledi_book) = 1
 	)
 
 /obj/item/rogueweapon/woodstaff/implement/grand/naledi/warscholar
-	base_implement_name = "naledian greater staff"
-	name = "naledian greater staff"
+	base_implement_name = "naledian warstaff"
+	name = "naledian warstaff"
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/polearms64.dmi'
-	desc = "A grand staff issued to the Warscholars of the Golden Cross. Instead of the traditional crescent moon, its crown features a gleaming golden psycross."
+	desc = "A staff issued to the Warscholars of the Golden Cross. Instead of the traditional crescent moon, its crown features a gleaming golden psycross."
 	icon_state = "naledistaffalt"
 
 /obj/item/clothing/under/roguetown/trou/leather/pontifex/warscholar

@@ -307,7 +307,7 @@
 		/obj/item/storage/belt/rogue/leather/black,
 		/obj/item/rogueweapon/spellbook/grand,
 		/obj/item/rogueweapon/huntingknife/idagger/blacksteel, //major antagonist, fuck it. you get a nice dagger. (I WOULD DO AVANTYNE BUT SOME CLASSES DO FORCE-SET PATRON AFTER LICH ROLLS)
-		/obj/item/rogueweapon/woodstaff/implement/grand,
+		/obj/item/rogueweapon/woodstaff/implement/greater/blacksteel, // TA EDIT (Реворк магических имплементов)
 		/obj/item/storage/backpack/rogue/satchel/black,
 	)
 	for (var/i = 1, i <= equipment_slots.len, i++)

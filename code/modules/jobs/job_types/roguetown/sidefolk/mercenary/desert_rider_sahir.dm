@@ -58,14 +58,14 @@
 		/obj/item/rogueweapon/huntingknife/idagger/navaja,
 		/obj/item/rogueweapon/scabbard/sheath,
 		/obj/item/clothing/neck/roguetown/shalal,
-		/obj/item/rogueweapon/spellbook/greater,
+		/obj/item/rogueweapon/spellbook/ruby, // TA EDIT (Реворк магических имплементов)
 		/obj/item/flashlight/flare/torch,
 		/obj/item/storage/belt/rogue/pouch/coins/poor
 		)
 
 	if(H.mind)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/sahir_sandstorm)
-		var/weapons = list("Twin Shamshirs", "Greater Staff")
+		var/weapons = list("Twin Shamshirs", "Rontz Staff") // TA EDIT (Реворк магических имплементов)
 		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
 		H.set_blindness(0)
 		switch(weapon_choice)
@@ -74,8 +74,10 @@
 				beltr = /obj/item/rogueweapon/scabbard/sword
 				r_hand = /obj/item/rogueweapon/sword/sabre/shamshir
 				l_hand = /obj/item/rogueweapon/sword/sabre/shamshir
-			if("Greater Staff")
-				r_hand = /obj/item/rogueweapon/woodstaff/implement/greater
+			// TA EDIT START (Реворк магических имплементов)
+			if("Rontz Staff")
+				r_hand = /obj/item/rogueweapon/woodstaff/implement/greater/ruby
+			// TA EDIT END
 
 	H.merctype = 4
 

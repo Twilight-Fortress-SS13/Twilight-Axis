@@ -29,9 +29,13 @@
 		/obj/item/roguegem/blood_diamond,
 		/obj/item/rogueweapon/huntingknife/idagger/stake,
 		/obj/item/rogueweapon/mace/steel/silver/decorated,
+		// TA REMOVAL START (Больше не крафтится)
+		/*
 		/obj/item/rogueweapon/spellbook,
 		/obj/item/rogueweapon/woodstaff/implement,
 		/obj/item/rogueweapon/woodstaff/implement/amethyst,
+		*/
+		// TA REMOVAL END
 		/obj/item/runicflask/charged,
 		/obj/item/natural/goathorn,
 	)
