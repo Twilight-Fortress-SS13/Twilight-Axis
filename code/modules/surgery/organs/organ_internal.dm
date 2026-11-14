@@ -173,7 +173,8 @@
 
 /obj/item/reagent_containers/food/snacks/organ/On_Consume(mob/living/eater)		//Graggarites looove eating organs, they loooove eating organs!
 	if(HAS_TRAIT(eater, TRAIT_ORGAN_EATER))
-		eat_effect = /datum/status_effect/buff/snackbuff
+		var/mob/living/carbon/human/H = eater //TA EDIT
+		eat_effect = (isgnoll(H) || (ishuman(H) && H.devotion?.level >= CLERIC_T1)) ? /datum/status_effect/buff/snackbuff : null //TA EDIT
 		food_quality = NONE
 	else
 		eat_effect = initial(eat_effect)
