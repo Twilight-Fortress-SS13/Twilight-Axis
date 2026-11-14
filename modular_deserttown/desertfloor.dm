@@ -352,3 +352,16 @@
 	// neighborlay = "duneedge"
 	track_prob = 10
 
+/turf/open/water/crimson
+	name = "crimson water"
+	desc = "The water has a red tint, how strange."
+	icon = 'icons/turf/roguefloor.dmi'
+	icon_state = "dirtW2"
+	water_level = 2
+	water_color = "#7c1c1c"
+	slowdown = 3
+	wash_in = TRUE
+	water_reagent = /datum/reagent/water/gross
+	freeze_type = null // set dressing, not weather-driven
+	fishing_datum = null
+
