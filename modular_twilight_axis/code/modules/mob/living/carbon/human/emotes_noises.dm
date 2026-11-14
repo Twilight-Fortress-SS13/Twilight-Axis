@@ -152,3 +152,15 @@
 /datum/emote/living/emote_lizard_thump
 	key_third_person = "топает!"
 	message = "топает!"
+
+/datum/emote/living/cackle/venardine
+	key = "venard_cackle"
+
+/mob/living/carbon/human/proc/emote_cackle_venard()
+	set name = "Cackle (Venard)"
+	set category = "Emotes.Wildtongue"
+
+	if(!istype(usr.getorganslot(ORGAN_SLOT_TONGUE), /obj/item/organ/tongue/wild_tongue/venardine))
+		return
+
+	emote("venard_cackle", intentional = TRUE, animal = TRUE)
