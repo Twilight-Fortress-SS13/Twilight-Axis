@@ -352,3 +352,12 @@
 	item_state = "overseerhood"
 	color = null
 	toggle_icon_state = FALSE
+
+/obj/item/clothing/head/roguetown/duelhat/hrthat
+	name = "heartfelt hat"
+	desc = "A comfortable hat that will make you look elegant and protect you from the weather."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/head.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/head.dmi'
+	icon_state = "hrthat"
+	item_state = "hrthat"
+	color = null
