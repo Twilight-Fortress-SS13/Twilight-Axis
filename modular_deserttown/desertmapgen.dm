@@ -13,7 +13,7 @@
 /datum/mapGeneratorModule/desertsand_flora
 	clusterCheckFlags = CLUSTER_CHECK_NONE
 	allowed_turfs = list(/turf/open/floor/rogue/dunes)
-	allowed_areas = list(/area/rogue/outdoors/desert, /area/rogue/outdoors/desertdeep)
+	allowed_areas = list(/area/rogue/outdoors/desert, /area/rogue/outdoors/desertdeep, /area/rogue/outdoors/desertdeepwest)
 	spawnableAtoms = list(/obj/structure/flora/roguegrass/desertgrass = 3)
 
 
@@ -34,6 +34,7 @@
 							/obj/structure/flora/roguegrass/bush/desertshrub = 0.5,
 							/obj/structure/flora/roguetree/stump/log = 0.3,
 							/obj/item/natural/stone = 1,
+							/obj/structure/quicksand = 4,
 							/obj/item/natural/rock = 1,
 							/obj/item/magic/artifact = 0.1,
 							/obj/structure/leyline/normal/coast = 0.04,
@@ -45,10 +46,13 @@
 							/obj/effect/decal/remains/human = 0.3,
 							/obj/structure/desert_spice = 0.2,
 							/obj/structure/flora/junglebush/desertbush = 0.6,
+							/obj/structure/fluff/templedebris/debris5 = 1,
+							/obj/structure/fluff/templedebris/debris4 = 1,
+							/obj/structure/fluff/templedebris/debris4 = 1,
 							/obj/effect/landmark/desert_track_spawner = 1.4) // Added for modular hunting
 	//spawnableTurfs = list(/turf/open/floor/rogue/dirt/road=2,
 	// 					/turf/open/water/swamp=2,)
-	allowed_areas = list(/area/rogue/outdoors/desert, /area/rogue/outdoors/desertdeep)
+	allowed_areas = list(/area/rogue/outdoors/desert, /area/rogue/outdoors/desertdeep, /area/rogue/outdoors/desertdeepwest)
 
 
 /datum/mapGeneratorModule/desertgrass
@@ -71,6 +75,7 @@
 							/obj/structure/flora/roguegrass/maneater = 0.5,
 							/obj/structure/flora/roguegrass/maneater/real/juvenile = 0.5,
 							/obj/item/natural/stone = 1,
+							/obj/structure/quicksand = 4,
 							/obj/item/natural/rock = 1,
 							/obj/item/magic/artifact = 0.2,
 							/obj/structure/leyline/normal/coast = 0.1,
@@ -88,7 +93,7 @@
 							/obj/effect/landmark/desert_track_spawner = 2.2) // Added for modular hunting
 	// spawnableTurfs = list(/turf/open/floor/rogue/dirt/road=2,
 	// 					/turf/open/water/swamp=2,)
-	allowed_areas = list(/area/rogue/outdoors/desert, /area/rogue/outdoors/desertdeep)
+	allowed_areas = list(/area/rogue/outdoors/desert, /area/rogue/outdoors/desertdeep, /area/rogue/outdoors/desertdeepwest)
 
 /datum/mapGeneratorModule/deserttrees
 	clusterCheckFlags = CLUSTER_CHECK_ALL
@@ -110,6 +115,7 @@
 							/obj/structure/flora/roguegrass/maneater = 0.5,
 							/obj/structure/flora/roguegrass/maneater/real/juvenile = 0.5,
 							/obj/item/natural/stone = 1,
+							/obj/structure/quicksand = 4,
 							/obj/item/natural/rock = 1,
 							/obj/item/magic/artifact = 0.2,
 							/obj/structure/leyline/normal/coast = 0.05,
@@ -125,18 +131,18 @@
 							/obj/effect/decal/remains/human = 0.3,
 							/obj/structure/zizo_bane = 0.5,
 							/obj/effect/landmark/desert_track_spawner = 2.2) // Added for modular hunting
-	allowed_areas = list(/area/rogue/outdoors/desert, /area/rogue/outdoors/desertdeep)
+	allowed_areas = list(/area/rogue/outdoors/desert, /area/rogue/outdoors/desertdeep, /area/rogue/outdoors/desertdeepwest)
 
 /datum/mapGeneratorModule/desertroad
 	clusterCheckFlags = CLUSTER_CHECK_DIFFERENT_ATOMS
 	allowed_turfs = list(/turf/open/floor/rogue/dirt/road)
 	spawnableAtoms = list(/obj/item/natural/stone = 2,/obj/item/grown/log/tree/stick = 1)
-	allowed_areas = list(/area/rogue/outdoors/desert, /area/rogue/outdoors/desertdeep)
+	allowed_areas = list(/area/rogue/outdoors/desert, /area/rogue/outdoors/desertdeep, /area/rogue/outdoors/desertdeepwest)
 
 /datum/mapGeneratorModule/desertwater
 	clusterCheckFlags = CLUSTER_CHECK_ALL
 	allowed_turfs = list(/turf/open/water/cleanshallow)
-	allowed_areas = list(/area/rogue/outdoors/desert, /area/rogue/outdoors/desertdeep)
+	allowed_areas = list(/area/rogue/outdoors/desert, /area/rogue/outdoors/desertdeep, /area/rogue/outdoors/desertdeepwest)
 	spawnableAtoms = list(	/obj/structure/flora/roguetree/stump/log = 1,
 							/obj/structure/flora/ausbushes/reedbush = 1,
 							/obj/structure/flora/roguegrass/water/reeds = 1,)
@@ -154,7 +160,7 @@
 	var/area/current_area = get_area(src)
 
 	var/spawn_chance = 0
-	if(istype(current_area, /area/rogue/outdoors/desertdeep))
+	if(istype(current_area, /area/rogue/outdoors/desertdeep) || istype(current_area, /area/rogue/outdoors/desertdeepwest))
 		spawn_chance = 75 // Medium amount of tracks in deep desert
 	else if(istype(current_area, /area/rogue/outdoors/desert))
 		spawn_chance = 20 // Low amount of tracks in regular desert

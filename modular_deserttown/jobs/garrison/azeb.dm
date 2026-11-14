@@ -102,7 +102,8 @@
 		/obj/item/storage/keyring/azeb = 1,
 		/obj/item/flashlight/flare/torch/lantern = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
-		/obj/item/signal_horn = 1
+		/obj/item/signal_horn = 1,
+		/obj/item/clothing/mask/rogue/spectacles/goggles = 1
 		)
 	H.verbs |= /mob/proc/haltyell
 	H.set_blindness(0)
@@ -166,8 +167,8 @@
 	backpack_contents = list(
 		/obj/item/storage/keyring/azeb = 1,
 		/obj/item/flashlight/flare/torch/lantern = 1,
-		/obj/item/rogueweapon/scabbard/sheath = 1,
-		/obj/item/signal_horn = 1
+		/obj/item/rogueweapon/scabbard/sheath = 1,,
+		/obj/item/clothing/mask/rogue/spectacles/goggles = 1
 		)
 	H.verbs |= /mob/proc/haltyell
 	H.set_blindness(0)

@@ -13,10 +13,12 @@
 	spookysounds = SPOOKY_GEN
 	spookynight = SPOOKY_GEN
 	ambush_mobs = list(
+		/mob/living/carbon/human/species/human/northern/dunewell_raider/ambush = 20,
+		/mob/living/simple_animal/hostile/retaliate/rogue/sandworm/stalker = 10,
 		/mob/living/simple_animal/hostile/retaliate/rogue/badger  = 10,
-		/mob/living/simple_animal/hostile/retaliate/rogue/raccoon = 25,
+		/mob/living/simple_animal/hostile/retaliate/rogue/sandworm/wormling = 25,
 		/mob/living/simple_animal/hostile/retaliate/rogue/bobcat = 20,
-		/mob/living/simple_animal/hostile/retaliate/rogue/wolf = 30,
+		/mob/living/simple_animal/hostile/retaliate/rogue/wolf = 20,
 		/mob/living/simple_animal/hostile/retaliate/rogue/fox = 30,
 		/mob/living/carbon/human/species/skeleton/npc/supereasy = 30)
 	first_time_text = "Al-Ashur Dunes"
@@ -25,7 +27,7 @@
 	droning_sound_night = 'sound/music/area/desert/Moonrise.ogg'
 	deathsight_message = "somewhere in the dunes, next to towering walls"
 	warden_area = TRUE
-	
+
 /area/rogue/outdoors/desert/river
 	name = "river"
 	icon_state = "river"
@@ -33,6 +35,27 @@
 	ambientnight = AMB_RIVERNIGHT
 	spookysounds = SPOOKY_FROG
 	spookynight = SPOOKY_FOREST
+
+/area/rogue/outdoors/desert/oasis
+	name = "Oasis"
+	first_time_text = "Forgotten Oasis"
+	icon_state = "river"
+	ambientsounds = AMB_RIVERDAY
+	ambientnight = AMB_RIVERNIGHT
+	spookysounds = SPOOKY_FROG
+	spookynight = SPOOKY_FOREST
+
+/area/rogue/outdoors/desert/mirage
+	name = "Fleeting Repose"
+	first_time_text = "Fleeting Repose"
+	icon_state = ""
+	ambientsounds = AMB_TOWNDAY
+	ambientnight = AMB_TOWNNIGHT
+	spookysounds = SPOOKY_GEN
+	spookynight = SPOOKY_GEN
+	droning_sound = 'sound/newmusic/lovecraft2.ogg'
+	droning_sound_dusk = 'sound/newmusic/lovecraft2.ogg'
+	droning_sound_night = 'sound/newmusic/lovecraft2.ogg'
 
 /area/rogue/outdoors/desertdeep
 	name = "Deep Dunes"
@@ -51,15 +74,16 @@
 	droning_sound_night = 'sound/music/area/desert/Moonrise.ogg'
 	ambush_mobs = list(
 		/mob/living/carbon/human/species/skeleton/npc/ambush = 30,
-		/mob/living/simple_animal/hostile/retaliate/rogue/bigrat = 60,
-		/mob/living/simple_animal/hostile/retaliate/rogue/spider/rock = 30,
-		/mob/living/carbon/human/species/goblin/npc/ambush/cave = 50,
-		/mob/living/simple_animal/hostile/retaliate/rogue/troll/bog = 15,
-		/mob/living/carbon/human/species/skeleton/npc/bogguard = 10,
-		/mob/living/carbon/human/species/skeleton/npc/rockhill = 15,
-		/mob/living/simple_animal/hostile/retaliate/rogue/wolf = 20,
+		/mob/living/carbon/human/species/human/northern/dunewell_raider/ambush = 60,
+		/mob/living/carbon/human/species/human/northern/dunewell_raider/better_gear/ambush = 20,
+		/mob/living/simple_animal/hostile/retaliate/rogue/antlion = 30,
+		/mob/living/simple_animal/hostile/retaliate/rogue/lamia = 30,
+		/mob/living/simple_animal/hostile/retaliate/rogue/sandworm/wormling = 30,
+		/mob/living/simple_animal/hostile/retaliate/rogue/sandworm/stalker = 40,
+		/mob/living/simple_animal/hostile/retaliate/rogue/sandworm/elder = 20,
+		/mob/living/simple_animal/hostile/retaliate/rogue/ifrit = 20,
+		/mob/living/simple_animal/hostile/retaliate/rogue/headless = 10,
 		/mob/living/simple_animal/hostile/retaliate/rogue/wolf_undead = 10,
-		/mob/living/simple_animal/hostile/retaliate/rogue/lamia = 10,
 		/mob/living/simple_animal/hostile/rogue/dragger = 15,
 		/mob/living/simple_animal/hostile/retaliate/rogue/spider/mutated = 15)
 	converted_type = /area/rogue/indoors/shelter/desertdeep
@@ -87,6 +111,57 @@
 
 /area/rogue/outdoors/desertdeep/above
 	name = "deep desert above"
+	ambientsounds = AMB_MOUNTAIN
+	ambientnight = AMB_MOUNTAIN
+	soundenv = 17
+	first_time_text = null
+	ambush_mobs = null
+
+/area/rogue/outdoors/desertdeepwest
+	name = "Deep Western Dunes"
+	icon_state = "desertdeep"
+	// TA EDIT BEGIN: Added for deserttown contracts
+	threat_region = THREAT_REGION_DESERT_DEEP_WEST
+	// TA EDIT END
+	warden_area = TRUE
+	ambientsounds = AMB_TOWNDAY
+	ambientnight = AMB_TOWNNIGHT
+	spookysounds = SPOOKY_GEN
+	spookynight = SPOOKY_GEN
+	first_time_text = "Deep Western Dunes"
+	droning_sound = 'sound/music/area/desert/EternalOceansofSand.ogg'
+	droning_sound_dusk = 'sound/music/area/desert/NightPrayer.ogg'
+	droning_sound_night = 'sound/music/area/desert/Moonrise.ogg'
+	ambush_mobs = list(
+		/mob/living/carbon/human/species/skeleton/npc/ambush = 30,
+		/mob/living/carbon/human/species/human/northern/dunewell_raider/ambush = 60,
+		/mob/living/carbon/human/species/human/northern/dunewell_raider/better_gear/ambush = 20,
+		/mob/living/simple_animal/hostile/retaliate/rogue/antlion = 30,
+		/mob/living/simple_animal/hostile/retaliate/rogue/lamia = 30,
+		/mob/living/simple_animal/hostile/retaliate/rogue/sandworm/wormling = 30,
+		/mob/living/simple_animal/hostile/retaliate/rogue/sandworm/stalker = 40,
+		/mob/living/simple_animal/hostile/retaliate/rogue/sandworm/elder = 20,
+		/mob/living/simple_animal/hostile/retaliate/rogue/ifrit = 20,
+		/mob/living/simple_animal/hostile/retaliate/rogue/headless = 10,
+		/mob/living/simple_animal/hostile/retaliate/rogue/wolf_undead = 10,
+		/mob/living/simple_animal/hostile/rogue/dragger = 15,
+		/mob/living/simple_animal/hostile/retaliate/rogue/spider/mutated = 15)
+	converted_type = /area/rogue/indoors/shelter/desertdeepwest
+	deathsight_message = "an empty, parched desert"
+
+/area/rogue/indoors/shelter/desertdeepwest
+	name = "Deep Western Desert (shelter)"
+	icon_state = "desertdeep"
+	droning_sound = 'sound/music/area/desert/Iberia1.ogg'
+	droning_sound_dusk = 'sound/music/area/desert/NightPrayer.ogg'
+	droning_sound_night = 'sound/music/area/desert/Moonrise.ogg'
+
+/area/rogue/outdoors/desertdeepwest/safe
+	name = "Western Desert Pass"
+	ambush_mobs = null
+
+/area/rogue/outdoors/desertdeepwest/above
+	name = "deep western desert above"
 	ambientsounds = AMB_MOUNTAIN
 	ambientnight = AMB_MOUNTAIN
 	soundenv = 17
@@ -279,7 +354,7 @@
 	droning_sound = 'sound/music/area/desert/DarMeshq.ogg'
 	droning_sound_dusk = null
 	droning_sound_night = null
-	
+
 /area/rogue/indoors/town/garrison/desert/cell
 	name = "dungeon cell"
 	icon_state = "cell"
@@ -447,5 +522,14 @@
 	icon_state = "under"
 	first_time_text = "Graggar's Sanctuary"
 	droning_sound = 'sound/music/area/dungeon2.ogg'
+	droning_sound_dusk = null
+	droning_sound_night = null
+
+/area/rogue/under/dungeon/desertifrit
+	name = "Scorched Ruins"
+	loot_budget = LOOT_BUDGET_IFRITDUNGEON
+	icon_state = "under"
+	first_time_text = "Scorched Ruins"
+	droning_sound = 'sound/music/area/desert/Valley-of-Kings.ogg'
 	droning_sound_dusk = null
 	droning_sound_night = null

@@ -323,6 +323,12 @@ GLOBAL_LIST_INIT(melee_combat_skills, list( \
 	for(var/obj/structure/flora/roguegrass/water/WF in orange(max_dist, src))
 		if(isturf(WF.loc) && !get_dist(WF.loc, src) < min_dist)
 			possible_targets += get_adjacent_ambush_turfs(WF.loc)
+	for(var/obj/structure/roguesand/dune/RD in orange(max_dist, src))
+		if(isturf(RD.loc) && !get_dist(RD.loc, src) < min_dist)
+			possible_targets += get_adjacent_ambush_turfs(RD.loc)
+	for(var/obj/structure/flora/junglebush/JB in orange(max_dist, src))
+		if(isturf(JB.loc) && !get_dist(JB.loc, src) < min_dist)
+			possible_targets += get_adjacent_ambush_turfs(JB.loc)
 	return possible_targets
 
 /proc/get_adjacent_ambush_turfs(turf/T)

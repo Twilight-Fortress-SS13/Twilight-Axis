@@ -19,6 +19,7 @@ GLOBAL_LIST_INIT(threat_region_templates, list(
 	// Deserttown / Al-Ashur
 	THREAT_REGION_DESERT_NEAR = /datum/threat_region/desert_near,
 	THREAT_REGION_DESERT_DEEP = /datum/threat_region/desert_deep,
+	THREAT_REGION_DESERT_DEEP_WEST = /datum/threat_region/desert_deep_west,
 	THREAT_REGION_AL_ASHUR_OASIS = /datum/threat_region/al_ashur_oasis,
 	THREAT_REGION_AL_ASHUR_CARAVAN_ROAD = /datum/threat_region/al_ashur_caravan_road,
 	THREAT_REGION_AL_ASHUR_SPICE_DUNES = /datum/threat_region/al_ashur_spice_dunes,

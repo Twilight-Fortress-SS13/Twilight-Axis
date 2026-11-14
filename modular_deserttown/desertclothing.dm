@@ -28,21 +28,22 @@
 	armor_class = ARMOR_CLASS_HEAVY
 	armor = ARMOR_PLATE
 
-/obj/item/clothing/suit/roguetown/armor/plate/cataphract/sultan
-	name = "sultan scale"
-	desc = "Impenetrable scales like an ancient black dragon!"
-	color = "#5e5d5d"
-	armor = ARMOR_PLATE_BSTEEL
-	max_integrity = ARMOR_INT_CHEST_PLATE_BLACKSTEEL
-	smeltresult = /obj/item/ingot/blacksteel
+/obj/item/clothing/suit/roguetown/armor/plate/full/blacksteel/legate/sultan
+	name = "sultan's full-plate"
+//	desc = "Impenetrable scales like an ancient black dragon!"
 
-/obj/item/clothing/head/roguetown/helmet/heavy/cataphract/sultan
-	name = "sultan helm"
-	desc = "Impenetrable scales like an ancient black dragon!"
-	color = "#5e5d5d"
-	armor = ARMOR_PLATE_BSTEEL
-	max_integrity = ARMOR_INT_CHEST_PLATE_BLACKSTEEL
-	smeltresult = /obj/item/ingot/blacksteel
+/obj/item/clothing/head/roguetown/helmet/blacksteel/legate/sultan
+	name = "sultan's helm"
+//	desc = "Impenetrable scales like an ancient black dragon!"
+
+/obj/item/clothing/shoes/roguetown/boots/armor/blacksteel/legate/sultan
+	name = "sultan's babouche"
+
+/obj/item/clothing/gloves/roguetown/plate/blacksteel/legate/sultan
+	name = "sultan's plate gauntlets"
+
+/obj/item/clothing/under/roguetown/platelegs/blacksteel/legate/sultan
+	name = "sultan's blacksteel plate chausses"
 
 /obj/item/clothing/suit/roguetown/armor/brigandine/agha
 	name = "agha scale"

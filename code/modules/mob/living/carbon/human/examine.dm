@@ -963,6 +963,7 @@
 					astratan_symbol = icon2html('icons/misc/language.dmi', world, "celestial")
 					astratan_tooltip = SPAN_TOOLTIP("One of Astrata's [issunelf(src) ? "chosen" : "followers"]", astratan_symbol)
 		var/origin_suffix = ""
+		/*
 		if(SSmapping.config.map_name == "Desert Town")
 			var/species_origin = dna?.species?.origin
 			var/mob/living/carbon/human/H_user = ishuman(user) ? user : null
@@ -971,6 +972,7 @@
 				origin_suffix = " <span class='warning' style='font-size: inherit !important; font-weight: inherit !important;'>Имперский кафир!</span>"
 			else if(H_user && user_origin == "Grenzelhoft" && (species_origin == "Raneshan" || species_origin == "Naledi" || species_origin == "Zybantu"))
 				origin_suffix = " <span class='warning' style='font-size: inherit !important; font-weight: inherit !important;'>Зибантийский швайнехунд!</span>"
+		*/
 		. += span_info("[pronoun] [wording] [origin].[origin_suffix] [astratan_tooltip]")	//"He hails from [X / Nowhere]" || "His [word] originates from [X]" || "His [word] is implacable..."
 
 		if(HAS_TRAIT(src, TRAIT_WITCH))

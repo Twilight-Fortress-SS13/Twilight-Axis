@@ -15,7 +15,8 @@
 	)
 	preferred_areas = list(
 		/area/rogue/outdoors/desert = 40,
-		/area/rogue/outdoors/desertdeep = 20
+		/area/rogue/outdoors/desertdeep = 20,
+		/area/rogue/outdoors/desertdeepwest = 20
 	)
 
 /datum/hunting_category/desert_scavengers
@@ -38,7 +39,8 @@
 	)
 	preferred_areas = list(
 		/area/rogue/outdoors/desert = 10, // Hard to find in regular desert
-		/area/rogue/outdoors/desertdeep = 30 // Easier to find in deep desert
+		/area/rogue/outdoors/desertdeep = 30, // Easier to find in deep desert
+		/area/rogue/outdoors/desertdeepwest = 30
 	)
 
 /datum/hunting_category/desert_predators
@@ -59,5 +61,6 @@
 	)
 	preferred_areas = list(
 		/area/rogue/outdoors/desert = 0, // Never found on the outskirts
-		/area/rogue/outdoors/desertdeep = 50 // Primary habitat
+		/area/rogue/outdoors/desertdeep = 50, // Primary habitat
+		/area/rogue/outdoors/desertdeepwest = 50
 	)
