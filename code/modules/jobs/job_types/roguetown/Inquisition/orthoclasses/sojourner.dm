@@ -1,5 +1,5 @@
 // Pontifex but inquisition. Same statblock - only differences being access to T1 miracles.
-/datum/advclass/sojourner
+/datum/advclass/inq/sojourner
 	name = "Sojourner"
 	tutorial = "Psydonite monks, trained in the Naledian discipline of Automagic - enhancement of one's own body through Arcyne Magick. \
 	Your fists and your will are the one thing that cannot be deprived from you, handy tools when Azuria is rife with monsters and heretics alike. \

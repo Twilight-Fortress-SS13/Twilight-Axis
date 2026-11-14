@@ -22,12 +22,15 @@
 	vice_restrictions = list(/datum/charflaw/silverweakness, /datum/charflaw/wanted)
 	job_traits = list(TRAIT_STEELHEARTED, TRAIT_INQUISITION)
 	job_subclasses = list(
-		/datum/advclass/psydoniantemplar,
-		/datum/advclass/disciple,
-		/datum/advclass/sojourner,
-		/datum/advclass/confessor,
-		/datum/advclass/chasseur,
-		/datum/advclass/psyaltrist
+		/datum/advclass/inq/psydoniantemplar,
+		/datum/advclass/inq/disciple,
+		/datum/advclass/inq/sojourner,
+		/datum/advclass/inq/confessor,
+		/datum/advclass/inq/chasseur,
+		/datum/advclass/inq/psyaltrist
+
 	)
 	same_job_respawn_delay = 30 MINUTES
 
+/datum/advclass/inq
+	tempo_capable = TRUE

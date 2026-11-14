@@ -1,4 +1,4 @@
-/datum/advclass/brigand //Strength class, starts with axe or flails and medium armor training
+/datum/advclass/bandit/brigand //Strength class, starts with axe or flails and medium armor training
 	name = "Brigand"
 	tutorial = "Cast from society, you use your powerful physical might and endurance to take from those who are weaker from you."
 	allowed_sexes = list(MALE, FEMALE)

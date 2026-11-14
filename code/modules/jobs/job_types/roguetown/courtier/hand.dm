@@ -71,6 +71,9 @@
 		STATKEY_CON = 1,
 		STATKEY_LCK = 1, //less lucky than the rest... go figure
 	)
+
+	tempo_capable = TRUE
+
 	age_mod = /datum/class_age_mod/hand_blademaster
 	subclass_skills = list(
 		/datum/skill/combat/maces = SKILL_LEVEL_APPRENTICE,
@@ -123,6 +126,9 @@
 		STATKEY_INT = 2,
 		STATKEY_LCK = 2,
 	)
+
+	tempo_capable = TRUE
+
 	age_mod = /datum/class_age_mod/hand_spymaster
 	subclass_skills = list(
 		/datum/skill/combat/crossbows = SKILL_LEVEL_EXPERT,

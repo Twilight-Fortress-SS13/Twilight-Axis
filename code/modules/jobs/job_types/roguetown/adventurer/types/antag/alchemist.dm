@@ -1,4 +1,4 @@
-/datum/advclass/hedgealchemist
+/datum/advclass/bandit/hedgealchemist
 	name = "Hedge Alchemist"
 	tutorial = "Where most devotees greedily take from others you create your own wealth out of nothing, expert in both medicine and alchemical matters you are true menace to society - as your old Lord found out the hard way."
 	allowed_sexes = list(MALE, FEMALE)
@@ -13,6 +13,9 @@
 		STATKEY_SPD = 3,
 		STATKEY_LCK = 3
 	)
+
+	tempo_capable = FALSE
+
 	age_mod = /datum/class_age_mod/bandit/hedgealchemist
 	subclass_skills = list(
 		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,

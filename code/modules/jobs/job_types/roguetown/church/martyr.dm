@@ -535,6 +535,9 @@
 		STATKEY_PER = 1,
 		STATKEY_INT = 1
 	)
+
+	tempo_capable = TRUE
+
 	subclass_skills = list(
 	//No, they don't get any miracles. Their miracle is being able to use their weapon at all.
 		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,

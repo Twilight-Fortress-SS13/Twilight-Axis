@@ -62,6 +62,9 @@
 		STATKEY_WIL = 2,
 		STATKEY_SPD = 2,
 	)
+
+	tempo_capable = TRUE
+
 	subclass_skills = list(
 		/datum/skill/combat/knives = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/whipsflails = SKILL_LEVEL_EXPERT,
@@ -84,8 +87,6 @@
 		"Branding Letters" = /obj/item/branding_letters, //TA Branding
 		"Branding Iron" = /obj/item/branding_iron
 	)
-
-	tempo_capable = TRUE
 
 /datum/outfit/job/roguetown/inquisitor/inspector/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -212,6 +213,9 @@
 		STATKEY_PER = 1,
 		STATKEY_SPD = -3
 	)
+
+	tempo_capable = TRUE
+
 	subclass_skills = list(
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/athletics = SKILL_LEVEL_MASTER,
@@ -230,7 +234,6 @@
 		"Branding Letters" = /obj/item/branding_letters, // TA Branding
 		"Branding Iron" = /obj/item/branding_iron
 	)
-	tempo_capable = TRUE
 
 /datum/outfit/job/roguetown/inquisitor/ordinator/pre_equip(mob/living/carbon/human/H)
 	..()
