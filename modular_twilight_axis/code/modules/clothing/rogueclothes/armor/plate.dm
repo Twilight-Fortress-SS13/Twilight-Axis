@@ -145,7 +145,6 @@
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_DEPRAVED, "VEIL")
 	AddComponent(/datum/component/adjustable_clothing, NECK, null, null, 'sound/foley/cloth_wipe (1).ogg', null, (UPD_HEAD|UPD_MASK|UPD_NECK))
-	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
 
 /obj/item/clothing/neck/roguetown/coif/baotha_ta/dropped(mob/living/carbon/human/user)
 	. = ..()
@@ -171,7 +170,6 @@
 /obj/item/clothing/suit/roguetown/armor/plate/fluted/baotha_ta/Initialize()
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_DEPRAVED, "ARMOR")
-	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
 
 /obj/item/clothing/suit/roguetown/armor/plate/fluted/baotha_ta/dropped(mob/living/carbon/human/user)
 	. = ..()
@@ -201,7 +199,6 @@
 /obj/item/clothing/suit/roguetown/armor/gambeson/baotha_ta/Initialize()
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_DEPRAVED, "VESTMENTS")
-	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
 
 /obj/item/clothing/suit/roguetown/armor/gambeson/baotha_ta/dropped(mob/living/carbon/human/user)
 	. = ..()
@@ -225,7 +222,6 @@
 /obj/item/clothing/wrists/roguetown/bracers/leather/baotha_ta/Initialize()
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_DEPRAVED, "BRACERS")
-	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
 
 /obj/item/clothing/wrists/roguetown/bracers/leather/baotha_ta/dropped(mob/living/carbon/human/user)
 	. = ..()
@@ -251,7 +247,6 @@
 /obj/item/clothing/under/roguetown/skirt/baotha_ta/Initialize()
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_DEPRAVED, "SKIRT")
-	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
 
 /obj/item/clothing/under/roguetown/skirt/baotha_ta/dropped(mob/living/carbon/human/user)
 	. = ..()
@@ -275,7 +270,6 @@
 /obj/item/clothing/gloves/roguetown/plate/baotha_ta/Initialize()
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_DEPRAVED, "GLOVES")
-	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
 
 /obj/item/clothing/gloves/roguetown/plate/baotha_ta/dropped(mob/living/carbon/human/user)
 	. = ..()
@@ -304,7 +298,6 @@
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha_ta/Initialize()
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_DEPRAVED, "BOOTS")
-	ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
 
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha_ta/dropped(mob/living/carbon/human/user)
 	. = ..()
