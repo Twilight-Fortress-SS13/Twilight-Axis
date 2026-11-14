@@ -267,3 +267,14 @@
 
 /datum/status_effect/debuff/spell_vampire_block/New()
 	qdel(src)
+
+/datum/status_effect/debuff/breachcd
+	id = "breachcd"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/breachcd
+	duration = 5 SECONDS
+
+/atom/movable/screen/alert/status_effect/debuff/breachcd
+	name = "Guard Recovered"
+	desc = "I have been struck by a heavy blow recently, and have braced against the next one. Armor-piercing blows are less effective against me."
+	icon = 'modular_twilight_axis/icons/mob/screen_alert.dmi'
+	icon_state = "breachcd"
