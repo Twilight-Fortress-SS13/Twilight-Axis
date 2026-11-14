@@ -57,7 +57,7 @@
 	if(H.mind)
 		backr = choose_implement(H, "greater")
 		H.set_patron(/datum/patron/inhumen/zizo)
-		wretch_select_bounty(H)
+		bountychoice_necromancer(H) // TA EDIT - ORIGINAL: wretch_select_bounty(H)
 	H.grant_language(/datum/language/undead)
 
 	// Armor choice: Discretion (lighter robes, subtle similar to rogue mage) vs Progress (open armored necromancer robes) with better protection potental and unique drip
