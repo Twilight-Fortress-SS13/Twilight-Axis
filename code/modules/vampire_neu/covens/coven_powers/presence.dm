@@ -47,12 +47,12 @@
 	target.apply_overlay(MUTATIONS_LAYER)
 	playsound(target,'sound/villain/wonder.ogg', 40)
 	target.apply_status_effect(/datum/status_effect/awestruck, owner)
-	if(!owner.cmode)
-		to_chat(target, span_love("<b>Come close and look upon me.</b>"))
-		owner.say("Look upon me.")
+	if(!owner.cmode) //TA EDIT START
+		to_chat(target, span_love("<b>Подойди ближе и взгляни на меня..</b>"))
+		owner.say("Смотри на меня!")
 	else
-		to_chat(target, span_love("<b>BEHOLD ME!!</b>"))
-		owner.say("BEHOLD ME!!")
+		to_chat(target, span_love("<b>УЗРИ ЖЕ МЕНЯ!!</b>"))
+		owner.say("УЗРИ ЖЕ МЕНЯ!!")
 
 
 /datum/coven_power/presence/awe/deactivate(mob/living/carbon/human/target)
@@ -79,7 +79,7 @@
 
 /atom/movable/screen/alert/status_effect/awestruck
 	name = "Awestruck"
-	desc = "I can hardly take my eyes off them!"
+	desc = "Я с трудом могу оторвать от них взгляд!"
 	icon_state = "debuff"
 
 /datum/status_effect/awestruck/on_remove()
@@ -89,21 +89,21 @@
 		awe_target.playsound_local(awe_target, 'sound/magic/heartbeat.ogg', 100)
 		awe_target.Immobilize(4 SECONDS)
 		awe_target.freakout_hud_skew()
-		awe_target.visible_message("<span class='warning'>[awe_target] goes still for a moment, their movements suddenly halted.</span>", "<span class='warning'>You were just beholding their presence.. Where are they? WHERE ARE THEY!?</span>")
+		awe_target.visible_message("<span class='warning'>[awe_target] замирает на миг и перестает двигаться.</span>", "<span class='warning'>Вы чувствуете чьё-то сильное влияние.. О-ок-кудо оно...? ОТКУДА!?</span>")
 	if(awe_target.can_see_cone(awe_user) && dist > 4)
 		awe_target.playsound_local(awe_target, 'sound/magic/heartbeat.ogg', 100)
 		awe_target.Immobilize(4 SECONDS)
 		awe_target.freakout_hud_skew()
-		awe_target.visible_message("<span class='warning'>[awe_target] goes still for a moment, their movements suddenly halted.</span>", "<span class='warning'>Their presence.. you need to be closer, to admire it. YOU NEED TO BE CLOSER!!</span>")
+		awe_target.visible_message("<span class='warning'>[awe_target] замирает на миг и перестает двигаться.</span>", "<span class='warning'>Это влияние... Тебе нужно быть ближе, чтобы подчиниться... ТЕБЕ НУЖНО БЫТЬ БЛИЖЕ!!</span>")
 
 	else
-		awe_target.visible_message("[awe_target]'s gaze seemingly returns to normal.", "My gaze can focus again!")
+		awe_target.visible_message("Взгляд [awe_target] возвращается в норму.", "Мое внимание теперь подчиняется мне!")
 
 /datum/status_effect/awestruck/on_creation(mob/living/new_owner, mob/living/user)
 	awe_user = user
 	awe_target = new_owner
-	new_owner.visible_message("<span class='warning'>[new_owner] blinks, their gaze going strange for a moment.</span>", "<span class='notice'>You blink, and suddenly [user] is the only thing you feel capable of focusing on.</span>")
-
+	new_owner.visible_message("<span class='warning'>[new_owner] Моргает, и на момент его взгляд становится странным...</span>", "<span class='notice'>Вы моргаете, и вдруг вы чувствуете, что [user] единственное, на чем нужно концентрироваться..</span>")
+// TA EDIT END
 	return ..()
 
 
@@ -136,13 +136,13 @@
 	target.overlays_standing[MUTATIONS_LAYER] = presence_overlay
 	target.apply_overlay(MUTATIONS_LAYER)
 
-	to_chat(target, "<span class='userlove'><b>FEAR ME</b></span>")
-	owner.say("FEAR ME!!")
+	to_chat(target, "<span class='userlove'><b>БОЙСЯ МЕНЯ</b></span>") //TA EDIT START
+	owner.say("БОЙСЯ МЕНЯ!!")
 	var/datum/cb = CALLBACK(target, TYPE_PROC_REF(/mob/living/carbon/human, step_away_caster), owner)
 	for(var/i in 1 to 30)
 		addtimer(cb, (i - 1) * target.total_multiplicative_slowdown())
 	target.freak_out()
-	to_chat(target, "<span class='userlove'><b>OH GOD, PLEASE SAVE ME!.</b></span>")
+	to_chat(target, "<span class='userlove'><b>БОЖЕ, СПАСИ МЕНЯ!.</b></span>") // TA EDIT END
 	playsound(target,'sound/villain/wonder.ogg', 40)
 
 /datum/coven_power/presence/dread_gaze/deactivate(mob/living/carbon/human/target)
@@ -171,9 +171,9 @@
 
 /datum/coven_power/presence/fall/activate(mob/living/carbon/human/target)
 	. = ..()
-	var/mypower = owner.STAINT
-	var/theirpower = target.STAINT
-	var/difference = mypower - theirpower
+	//var/mypower = owner.STAINT TA EDIT START
+	//var/theirpower = target.STAINT
+	//var/difference = mypower - theirpower
 
 	target.remove_overlay(MUTATIONS_LAYER)
 	var/mutable_appearance/presence_overlay = mutable_appearance('icons/effects/clan.dmi', "presence", -MUTATIONS_LAYER)
@@ -181,15 +181,15 @@
 	target.overlays_standing[MUTATIONS_LAYER] = presence_overlay
 	target.apply_overlay(MUTATIONS_LAYER)
 
-	to_chat(target, "<span class='userlove'><b>KNEEL.</b></span>")
-	to_chat(target, "<span class='userlove'><b>MY NEW GOD!</b></span>")
+	to_chat(target, "<span class='userlove'><b>НА КОЛЕНИ.</b></span>")
 	playsound(target,'sound/villain/wonder_secret_known.ogg', 40)
 	if(!owner.cmode)
-		owner.say("Kneel.")
+		owner.say("На колени.")
+		to_chat(target, "<span class='userlove'><b>Агх! Сила этих слов... Мне нужно послушаться...</b></span>")
 	else
-		owner.say("KNEEL!!")
+		owner.say("НА КОЛЕНИ!!")
 
-	switch(difference)
+/*	switch(difference)
 		if(-INFINITY to -3)
 			to_chat(target, "<span class='userlove'><b>You hesitate.</b></span>")
 			target.visible_message(span_suicide("[target] hesitates for a moment."))
@@ -211,7 +211,7 @@
 			target.apply_status_effect(/datum/status_effect/debuff/vulnerable, 3 SECONDS)
 			to_chat(target, "<span class='userlove'><b>KNEEL</b></span>")
 			to_chat(target, "<span class='userlove'><b>MY NEW GOD!</b></span>")
-			playsound(target,'sound/villain/wonder_secret_known.ogg', 40)
+			playsound(target,'sound/villain/wonder_secret_known.ogg', 40) TA EDIT END */
 
 /datum/coven_power/presence/fall/deactivate(mob/living/carbon/human/target)
 	. = ..()

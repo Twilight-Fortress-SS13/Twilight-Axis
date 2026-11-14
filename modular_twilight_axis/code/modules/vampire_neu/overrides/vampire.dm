@@ -149,3 +149,7 @@
 
 	if(istype(examined_datum, /datum/antagonist/zombie) || istype(examined_datum, /datum/antagonist/skeleton))
 		return span_boldnotice("Ещё один неживой.")
+
+/datum/clan/New()
+	. = ..()
+	clane_traits += TRAIT_BREADY
