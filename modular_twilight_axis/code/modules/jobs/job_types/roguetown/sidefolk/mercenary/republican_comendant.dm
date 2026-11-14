@@ -86,4 +86,3 @@
 				backl = /obj/item/quiver/bolt/light
 				H.change_stat(STATKEY_PER, 1)
 				H.change_stat(STATKEY_SPD, 2)
-
