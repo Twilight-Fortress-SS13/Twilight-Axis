@@ -86,6 +86,11 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	if(!user.client)
 		return
 
+	var/mob/living/carbon/human/H = user
+	if(!istype(H) || !H.devotion || H.devotion.level < CLERIC_T1)
+		to_chat(user, span_danger("The circle's deeper rites stay veiled until my faith is stronger."))
+		return
+
 	var/list/categories = list(
 		"Servantry" = /datum/ritual/servantry,
 		"Transmutation" = /datum/ritual/transmutation,
@@ -1305,7 +1310,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 
 /datum/ritual/weaponary/zdagger
 	name = "Создание проклятого кинжала Зизо"
-	desk = "Призывает кинжал Зизо, который может содержать в себе яд."
+	desk = "Призывает кинжал Зизо."
 	center_requirement = /obj/item/rogueweapon/huntingknife/idagger
 
 	n_req = /obj/item/ingot/steel/zizo
