@@ -18,6 +18,10 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	///Icon file for mob worn overlays.
 	///no var for state because it should *always* be the same as icon_state
 	var/icon/mob_overlay_icon
+	/// Opt-in body IDs for [base_state]_taur_[m/f]_[body_id] worn sprites. Does not restrict equipping.
+	var/list/taur_sprite_types
+	/// Optional file for wide taur sprites; otherwise use mob_overlay_icon (or the slot's default file).
+	var/icon/taur_mob_overlay_icon
 	//Forced mob worn layer instead of the standard preferred ssize.
 	var/alternate_worn_layer
 
