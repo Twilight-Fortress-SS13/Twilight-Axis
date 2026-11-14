@@ -164,7 +164,7 @@
 	belt = /obj/item/storage/belt/rogue/leather/plaquesilver
 	beltl = /obj/item/rogueweapon/scabbard/sheath/noble
 	cloak = /obj/item/clothing/cloak/half/azuria //What peak is it sire? what do you think it is?
-	id = /obj/item/clothing/ring/silver
+	id = /obj/item/scomstone/bad //TA EDIT
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
 		/obj/item/storage/keyring/manorbase = 1,
@@ -196,7 +196,7 @@
 	beltl = /obj/item/rogueweapon/scabbard/sheath/royal
 	neck = /obj/item/clothing/neck/roguetown/ornateamulet/noble
 	cloak = /obj/item/clothing/cloak/half/azuria //What peak is it sire? what do you think it is?
-	id = /obj/item/clothing/ring/gold
+	id = /obj/item/scomstone/bad //TA EDIT
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
 		/obj/item/storage/keyring/steward,
@@ -221,7 +221,7 @@
 	beltl = /obj/item/rogueweapon/scabbard/sheath/noble
 	beltr = /obj/item/quiver/arrows
 	cloak = /obj/item/clothing/cloak/half/azuria //What peak is it sire? what do you think it is?
-	id = /obj/item/clothing/ring/silver
+	id = /obj/item/scomstone/bad //TA EDIT
 	backpack_contents = list(
 		/obj/item/hunting_map/white_stag = 1,
 		/obj/item/hunting_map/boars = 1,
@@ -250,7 +250,7 @@
 	belt = /obj/item/storage/belt/rogue/leather/plaquegold/noble
 	beltl = /obj/item/rogueweapon/scabbard/sheath/noble
 	cloak = /obj/item/clothing/cloak/half/azuria //What peak is it sire? what do you think it is?
-	id = /obj/item/clothing/ring/silver
+	id = /obj/item/scomstone/bad //TA EDIT
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
 		/obj/item/storage/keyring/manorbase = 1,
