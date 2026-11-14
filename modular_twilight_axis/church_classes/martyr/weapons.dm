@@ -23,10 +23,6 @@
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_TENNITE,\
 		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 0,\
-		added_int = 0,\
-		added_def = 0,\
 	)
 
 /datum/intent/spear/cut/bardiche/martyr

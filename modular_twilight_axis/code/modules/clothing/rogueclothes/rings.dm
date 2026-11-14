@@ -1,5 +1,5 @@
 /obj/item/clothing/ring/baotha
-	name = "snake ring"
+	name = "snake's ring"
 	desc = "The ring is made of steel with gilding, and it is artfully recreated as a snake. The quality of the work is so high that it feels as if the snake's gem-filled eyes are watching you."
 	icon_state = "baotha_knife"
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/rings.dmi'
@@ -69,7 +69,7 @@
 /obj/item/clothing/ring/baotha/attack_self(var/mob/living/carbon/human/user)
 	if(user.patron.type == /datum/patron/inhumen/baotha)
 		if(do_after(user, 10, target = src))
-			var/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/S = new/obj/item/rogueweapon/huntingknife/idagger/steel/baotha(get_turf(src.loc))
+			var/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/corroded/S = new(get_turf(src))
 			if(user.is_holding(src))
 				user.dropItemToGround(src)
 				user.put_in_hands(S)

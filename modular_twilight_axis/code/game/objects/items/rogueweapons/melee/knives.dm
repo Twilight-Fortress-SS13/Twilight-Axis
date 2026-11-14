@@ -23,7 +23,7 @@
 	name ="devilsknife"
 	desc = "More a sickle than a knife. It is said that Xylix once won these in a game of chance against an archdevil. These are simple reproductions, with jingling bells attached to the blades."
 	icon_state = "devilsknife"
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/daggers32.dmi'
 	force = 22 // 10% - This is a 8 clickCD weapon
 	max_integrity = 200
 
@@ -38,21 +38,21 @@
 	max_integrity = 200
 	armor_penetration = 40
 	icon_state = "noc_dagger"
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/daggers32.dmi'
 	embedding = list("embedded_pain_multiplier" = 4, "embed_chance" = 30, "embedded_fall_chance" = 5)
 
 /obj/item/rogueweapon/huntingknife/idagger/steel/astrata
 	name ="dawnbringer"
 	desc = "A blade forged in the name of Astrata herself. It glistens under the light reminding your foes what is coming."
 	icon_state = "astrata_dagger"
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/daggers32.dmi'
 	force = 22
 	max_integrity = 200
 
 /obj/item/rogueweapon/huntingknife/idagger/steel/parrying/eora
 	name = "misericorde"
 	icon_state = "eora_dagger"
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/daggers32.dmi'
 	force = 10
 	throwforce = 10
 	desc = "A parrying dagger created to be used in the free hand and deliver mercy to the foes you've bested."
@@ -64,7 +64,7 @@
 	name ="echo of triumph"
 	desc = "Once, it was a greatsword wielded by the chosen of Ravox. After centuries of battles, the blade finally broke. However, the remaining pieces were reforged into a dagger that reminds battles of the past."
 	icon_state = "ravox_dagger"
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/daggers32.dmi'
 	force = 22
 	max_integrity = 200
 
@@ -72,7 +72,7 @@
 	name ="darkwater ripper"
 	desc = "Fierce dagger quenched in the abyssal depths. If you listen closely, you can hear the clashing of waves during high tide."
 	icon_state = "abyssor_dagger"
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/daggers32.dmi'
 	possible_item_intents = list(/datum/intent/dagger/thrust, /datum/intent/dagger/cut, /datum/intent/dagger/thrust/pick/abyssor, /datum/intent/dagger/sucker_punch)
 	force = 22
 	max_integrity = 200
@@ -81,7 +81,7 @@
 	name ="maddening thorn"
 	desc = "Simple yet wickedly sharp blade fixed to the handle grown whole. The hilt is covered by tiny prickly thorns that slowly madden the wielder."
 	icon_state = "dendor_dagger"
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/daggers32.dmi'
 	possible_item_intents = list(/datum/intent/dagger/thrust/dendor, /datum/intent/dagger/cut/dendor, /datum/intent/dagger/thrust/pick, /datum/intent/dagger/sucker_punch)
 	force = 22
 	max_integrity = 200
@@ -90,7 +90,7 @@
 	name ="embertongue"
 	desc = "Wavy flamelike blade forged in the name of Malum himself."
 	icon_state = "malum_dagger"
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/daggers32.dmi'
 	possible_item_intents = list(/datum/intent/dagger/thrust/malum, /datum/intent/dagger/cut, /datum/intent/dagger/thrust/pick, /datum/intent/dagger/sucker_punch)
 	force = 22
 	wdefense = 2
@@ -100,7 +100,7 @@
 	name ="osteotome"
 	desc = "A macabre cleaver. The hilt is made from a humen spine reinforced with a steel tang."
 	icon_state = "necra_dagger"
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/daggers32.dmi'
 	possible_item_intents = list(/datum/intent/dagger/cut, /datum/intent/dagger/chop/necra) // chop chop chop
 	force = 23
 	max_integrity = 200
@@ -112,16 +112,12 @@
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_TENNITE,\
 		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 50,\
-		added_int = 50,\
-		added_def = 2,\
 	)
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/baotha
-	name = "snakes sting"
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/corroded
+	name = "snake's sting"
 	desc = "The blade is skillfully crafted and appears to be designed for stealthy assassinations. There are visible streaks of a bubbling substance on its blade."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/daggers32.dmi'
 	icon_state = "baotha_knife1"
 	max_blade_int = 300
 	throwforce = 40
@@ -130,20 +126,20 @@
 	var/last_cut = 0
 	var/last_drug = 0
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/get_examine_highlight_status()
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/corroded/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_BAOTHA_WEAPON)
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/Initialize()
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/corroded/Initialize()
 	. = ..()
 	icon_state = "baotha_knife1"
 	addtimer(CALLBACK(src, "icon_proc"), wait = (1 SECONDS))
 	AddComponent(/datum/component/cursed_item, TRAIT_CRACKHEAD, "KNIFE")
 	RegisterSignal(src, COMSIG_ITEM_ATTACK_EFFECT_SELF, PROC_REF(on_hit_effects))
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/proc/icon_proc()
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/corroded/proc/icon_proc()
 	icon_state = "baotha_knife2"
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/attack_self(var/mob/living/carbon/human/user)
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/corroded/attack_self(var/mob/living/carbon/human/user)
 	if(user.patron.type == /datum/patron/inhumen/baotha)
 		if(do_after(user, 10, target = src))
 			var/obj/item/clothing/ring/baotha/S = new/obj/item/clothing/ring/baotha(get_turf(src.loc))
@@ -155,7 +151,7 @@
 		else
 			to_chat(user, "<span class='notice'>I losing concentration!</span>")
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/proc/on_hit_effects(obj/item/source, mob/living/user, obj/item/bodypart/affecting, intent, mob/living/victim, selzone)
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/corroded/proc/on_hit_effects(obj/item/source, mob/living/user, obj/item/bodypart/affecting, intent, mob/living/victim, selzone)
 	SIGNAL_HANDLER
 
 	if(!istype(victim, /mob/living/carbon))
@@ -244,3 +240,31 @@
 /obj/item/rogueweapon/huntingknife/idagger/silver/elvish/bandit
 	sellprice = 0
 	smeltresult = null
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver/psy/parrying
+	name = "psydonic parrying dagger"
+	desc = "A finely balanced silver parrying dagger, carried by loyal servants of the Inquisition. \
+	Its crossguard turns aside wicked steel while its blessed edge delivers Psydon's judgement."
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/daggers32.dmi'
+	icon_state = "psypdagger"
+	force = 15
+	throwforce = 15
+	wdefense = 9
+	max_integrity = 150
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver/psy/parrying/ComponentInitialize()
+	AddComponent(\
+		/datum/component/silverbless,\
+		pre_blessed = BLESSING_NONE,\
+		silver_type = SILVER_PSYDONIAN,\
+	)
+	sellprice += 200
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/curved_dagger
+	name = "curved dagger"
+	desc = "A curved blade notoriously used by assassins of the Zybantenee deserts. Particularly effective against targets already debilitated."
+	possible_item_intents = list(/datum/intent/dagger/thrust,/datum/intent/dagger/cut, /datum/intent/dagger/thrust/pick, /datum/intent/dagger/sucker_punch)
+	icon_state = "curved_dagger"
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/daggers32.dmi'
+	altgripped = TRUE
+	force = 21

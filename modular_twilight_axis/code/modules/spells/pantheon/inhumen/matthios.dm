@@ -261,7 +261,7 @@
 	name = "FREEDOM"
 	desc = "Freed by the Father's grace, now run for it!"
 	icon_state = "shacklebreaker_buff"
-	icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
+	icon = 'modular_twilight_axis/icons/mob/screen_alert.dmi'
 
 /datum/status_effect/buff/twilight_freedom
 	id = "twilight_freedom"
@@ -367,7 +367,7 @@
 	name = "Weight of Chains"
 	desc = "I feel the symbols of my authority weight down on me!"
 	icon_state = "weightofchains_debuff"
-	icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
+	icon = 'modular_twilight_axis/icons/mob/screen_alert.dmi'
 
 /datum/status_effect/debuff/twilight_weightofchains/on_apply()
 	. = ..()
@@ -448,7 +448,7 @@
 	name = "Equalized"
 	desc = "Matthios grants you strength to face even the most wicked of tyrants."
 	icon_state = "equalize_buff"
-	icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
+	icon = 'modular_twilight_axis/icons/mob/screen_alert.dmi'
 
 /datum/status_effect/buff/twilight_equalizebuff/on_apply()
 	. = ..()
@@ -831,7 +831,7 @@
 	name = "Crown for the King"
 	desc = "There is molten gold all over me! It burns!!"
 	icon_state = "crownfortheking_debuff"
-	icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
+	icon = 'modular_twilight_axis/icons/mob/screen_alert.dmi'
 
 //T3
 
@@ -900,7 +900,7 @@
 	force_wielded = 0
 	wdefense = 1
 	possible_item_intents = list(/datum/intent/spear/thrust)
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/polearms64.dmi'
 	icon_state = "matthios_standard"
 	resistance_flags = FIRE_PROOF
 
@@ -921,7 +921,7 @@
 	name = "The People's Banner"
 	desc = "The sigil of Matthios inspires me to fight on!"
 	icon_state = "peoplesbanner_buff"
-	icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
+	icon = 'modular_twilight_axis/icons/mob/screen_alert.dmi'
 
 /datum/status_effect/buff/twilight_peoplesbanner
 	id = "twilight_peoplesbanner"
@@ -974,7 +974,7 @@
 	name = "The People's Banner"
 	desc = "That horrid sigil! How dare they?!"
 	icon_state = "peoplesbanner_debuff"
-	icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
+	icon = 'modular_twilight_axis/icons/mob/screen_alert.dmi'
 
 /datum/status_effect/debuff/twilight_peoplesbanner/on_apply()
 	. = ..()
@@ -1215,7 +1215,7 @@
 	item_state = null
 	lefthand_file = null
 	righthand_file = null
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/unarmed32.dmi'
 	max_blade_int = 600
 	max_integrity = 600
 	force = 28
@@ -1296,7 +1296,7 @@
 	name = "Dragon Form"
 	desc = "Burn them! Burn them all!"
 	icon_state = "wingsoffreedom_buff"
-	icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
+	icon = 'modular_twilight_axis/icons/mob/screen_alert.dmi'
 
 /datum/status_effect/buff/twilight_dragon_form/on_remove()
 	. = ..()
