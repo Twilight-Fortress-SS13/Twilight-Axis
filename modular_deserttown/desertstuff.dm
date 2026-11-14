@@ -382,7 +382,7 @@
 /obj/structure/obelisk/active/proc/add_target(mob/living/carbon/human/H, night)
 	targets += H
 	var/beam_icon_state = night ? "drainbeam" : "medbeam"
-	var/datum/beam/B = src.Beam(H, icon_state = beam_icon_state, time = 35 SECONDS, maxdistance = scan_range + 2)
+	var/datum/beam/B = src.Beam(H, icon_state = beam_icon_state, time = 35 SECONDS, max_distance = scan_range + 2)
 	if(B)
 		active_beams[H] = B
 
@@ -399,7 +399,7 @@
 		var/datum/beam/old_beam = active_beams[H]
 		if(old_beam && !QDELETED(old_beam))
 			qdel(old_beam)
-		var/datum/beam/B = src.Beam(H, icon_state = beam_icon_state, time = 35 SECONDS, maxdistance = scan_range + 2)
+		var/datum/beam/B = src.Beam(H, icon_state = beam_icon_state, time = 35 SECONDS, max_distance = scan_range + 2)
 		if(B)
 			active_beams[H] = B
 

@@ -17,10 +17,8 @@
 	icon_dead = "worm_dead"
 
 	see_in_dark = 8
-	vision_range = 8
-	aggro_vision_range = 8
 	base_intents = list(/datum/intent/simple/bite, /datum/intent/simple/claw)
-	move_to_delay = 15
+	move_base_delay = MOVEMENT_DELAY_SPD_3
 
 	environment_smash = ENVIRONMENT_SMASH_NONE
 
@@ -31,15 +29,11 @@
 
 	mob_biotypes = MOB_ORGANIC|MOB_BEAST
 
-	retreat_distance = 0
-	minimum_distance = 0
-
 	aggressive = TRUE
 
 	food = 0
 
-	del_on_deaggro = 120 SECONDS
-	var/burrow_move_to_delay = 2
+	ai_controller = /datum/ai_controller/mole
 	var/emerge_range = 1
 	var/burrow_giveup_time = 15 SECONDS
 	var/burrow_started = 0
@@ -52,6 +46,12 @@
 	var/burrow_retry_delay = 3 SECONDS
 	var/burrow_fx_state = "leave-hatchling"
 	var/emerge_fx_state = "invade-hatchling"
+
+/mob/living/simple_animal/hostile/retaliate/rogue/sandworm/Initialize(mapload)
+	. = ..()
+	if(ai_controller)
+		AddComponent(/datum/component/ai_aggro_system)
+	AddComponent(/datum/component/deaggro_despawn, 120 SECONDS)
 
 /mob/living/simple_animal/hostile/retaliate/rogue/sandworm/proc/can_burrow(turf/Turf)
 	if(!Turf)
@@ -92,13 +92,15 @@
 	mouse_opacity = initial(mouse_opacity)
 	visible_message(span_danger("[src] erupts from beneath the sand!"))
 	play_burrow_fx(emerge_fx_state)
-	if(target)
+	var/atom/current_target = ai_controller ? ai_controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET] : target
+	if(current_target)
 		AttackingTarget()
 
 /mob/living/simple_animal/hostile/retaliate/rogue/sandworm/proc/travel_and_emerge()
 	if(!burrowed)
 		return
-	var/turf/dest = target ? get_flank_turf(target) : get_turf(src)
+	var/atom/current_target = ai_controller ? ai_controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET] : target
+	var/turf/dest = current_target ? get_flank_turf(current_target) : get_turf(src)
 	if(!dest || !can_burrow(dest))
 		dest = get_turf(src)
 	forceMove(dest)
@@ -126,33 +128,20 @@
 		return behind
 	return get_turf(Living)
 
-/mob/living/simple_animal/hostile/retaliate/rogue/sandworm/handle_automated_action()
+/mob/living/simple_animal/hostile/retaliate/rogue/sandworm/Life()
+	. = ..()
+	if(!.)
+		return
 	if(burrowed)
 		return
-	move_to_delay = initial(move_to_delay)
 	if(world.time >= next_burrow && can_burrow())
-		if(!target)
+		var/atom/current_target = ai_controller ? ai_controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET] : target
+		if(!current_target)
 			burrow()
 		else if(prob(burrow_ambush_chance))
 			burrow()
 		else
 			next_burrow = world.time + burrow_retry_delay
-	..()
-
-/mob/living/simple_animal/hostile/retaliate/rogue/sandworm/proc/handle_burrowed_approach()
-	if(!target || !can_burrow())
-		emerge()
-		return
-	if(world.time >= burrow_started + burrow_giveup_time)
-		emerge()
-		return
-	if(get_dist(src, target) <= emerge_range)
-		emerge()
-		if(target)
-			AttackingTarget()
-		return
-	var/turf/dest = get_flank_turf(target)
-	step_to(src, dest, 0, move_to_delay)
 
 /mob/living/simple_animal/hostile/retaliate/rogue/sandworm/wormling
 	name = "sand wormling"
@@ -164,7 +153,7 @@
 	maxHealth = 65
 	melee_damage_lower = 8
 	melee_damage_upper = 14
-	move_to_delay = 8
+	move_base_delay = MOVEMENT_DELAY_SPD_17
 	STASPD = 11
 	STASTR = 6
 	STACON = 5
@@ -186,7 +175,7 @@
 	maxHealth = 400
 	melee_damage_lower = 22
 	melee_damage_upper = 32
-	move_to_delay = 10
+	move_base_delay = MOVEMENT_DELAY_SPD_10
 	STASTR = 12
 	STACON = 11
 	STASPD = 10
@@ -211,7 +200,7 @@
 	maxHealth = 620
 	melee_damage_lower = 35
 	melee_damage_upper = 55
-	move_to_delay = 12
+	move_base_delay = MOVEMENT_DELAY_SLOW
 	STASTR = 15
 	STACON = 12
 	STASPD = 8

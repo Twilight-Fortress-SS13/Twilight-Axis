@@ -20,9 +20,6 @@
 	milkies = FALSE
 	melee_damage_lower = 60
 	melee_damage_upper = 90
-	retreat_distance = 0
-	minimum_distance = 0
-	retreat_health = 0.3
 	STASPD = 10
 	STACON = 15
 	STASTR = 12
@@ -43,7 +40,8 @@
 	can_saddle = TRUE
 	can_buckle = TRUE
 	aggressive = 1
-	move_to_delay = 8
+	move_base_delay = MOVEMENT_DELAY_SPD_17
+	ai_controller = /datum/ai_controller/mirespider
 	remains_type = /obj/effect/decal/remains/antlion
 
 /obj/effect/decal/remains/antlion
@@ -57,6 +55,10 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/antlion/Initialize(mapload)
 	. = ..()
+	if(ai_controller)
+		AddComponent(/datum/component/ai_aggro_system)
+		AddElement(/datum/element/ai_retaliate)
+		AddElement(/datum/element/ai_flee_while_injured, 0.3, 0.5)
 	ADD_TRAIT(src, TRAIT_CRITICAL_RESISTANCE, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NOFALLDAMAGE2, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NOFIRE, TRAIT_GENERIC)
@@ -96,8 +98,8 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/antlion/taunted(mob/user)
 	emote("aggro")
-	Retaliate()
-	GiveTarget(user)
+	if(isliving(user))
+		ai_controller?.force_aggro(user)
 	return
 
 /mob/living/simple_animal/hostile/retaliate/rogue/antlion/eat_plants()

@@ -59,8 +59,6 @@
 	mob_biotypes = MOB_ORGANIC|MOB_BEAST
 	melee_damage_lower = 50
 	melee_damage_upper = 60
-	vision_range = 6
-	aggro_vision_range = 8
 	environment_smash = ENVIRONMENT_SMASH_STRUCTURES
 	milkies = FALSE
 	footstep_type = FOOTSTEP_MOB_BAREFOOT
@@ -79,18 +77,16 @@
 	simple_detect_bonus = 40
 	deaggroprob = 0
 	defprob = 40
-	del_on_deaggro = FALSE
 	food = 0
 	remains_type = null
 	attack_sound = list('sound/vo/mobs/direbear/direbear_attack1.ogg','sound/vo/mobs/direbear/direbear_attack2.ogg','sound/vo/mobs/direbear/direbear_attack3.ogg')
 	dodgetime = 30
 	aggressive = 1
-	stat_attack = UNCONSCIOUS
+//	stat_attack = UNCONSCIOUS
 	eat_forever = TRUE
 
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
 	ai_controller = /datum/ai_controller/ifrit
+	move_base_delay = MOVEMENT_DELAY_SPD_3
 
 /mob/living/simple_animal/hostile/retaliate/rogue/ifrit/get_sound(input)
 	switch(input)
@@ -106,6 +102,7 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/ifrit/Initialize(mapload)
 	. = ..()
+	AddComponent(/datum/component/ai_aggro_system)
 	var/datum/action/cooldown/mob_cooldown/fire_breath/cone/ifrit/fire = new(src)
 	fire.Grant(src)
 	if(ai_controller)
