@@ -43,7 +43,7 @@
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/hrtpants
 	cloak = /obj/item/clothing/cloak/hrtcape
 	neck = /obj/item/clothing/neck/roguetown/bevor/iron
-	belt = /obj/item/storage/belt/rogue/leather/knifebelt/smoke
+	belt = /obj/item/storage/belt/rogue/leather/tossbelt/smoke
 	backr = /obj/item/storage/backpack/rogue/satchel/black
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/rondel = 1,
