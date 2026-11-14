@@ -101,7 +101,7 @@
 	name = "Rune of Hedonism"
 	desc = "A Holy Rune of Baotha. Relief for the broken hearted."
 	icon_state = "baotha_chalky"
-	var/baothists = list("Rite of Armaments", "Rite of Joy", "Expancy", "Masquarade")
+	var/baothists = list("Rite of Armaments", "Rite of Joy", "Expancy")
 
 /obj/structure/ritualcircle/baotha_TA/attack_hand(mob/living/user, list/selected_atoms, turf/loc)
 	if(!..())
