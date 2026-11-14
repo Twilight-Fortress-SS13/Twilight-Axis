@@ -10,7 +10,7 @@
 
 /datum/status_effect/buff/hag_boon/bard_initiate/on_apply()
 	var/mob/living/carbon/human/H = owner
-	H.adjust_skillrank_up_to(/datum/skill/misc/music, SKILL_LEVEL_EXPERT, TRUE)
+	H.adjust_skillrank(/datum/skill/misc/music, 4, TRUE)
 	var/datum/inspiration/I = new /datum/inspiration(H)
 	I.grant_inspiration(H, bard_tier = BARD_T2)
 	if(H.mind)
@@ -111,7 +111,7 @@
 /datum/hag_boon/buff/rejuvenate
 	name = "Wyrd's Rejuvenation"
 	desc = "Cures all long-term physical ailments, including: blindness, ugliness, missing limbs, and leprosy. Does not heal immediate wounds such as fractures and bleeds, and will not fix divine curses such as lux-taint, silver-weakness, vampirisim, or lycanthropy."
-	points = 50
+	points = 30
 	status_type = /datum/status_effect/buff/hag_boon/wyrd_rejuv
 
 /datum/status_effect/buff/hag_boon/wyrd_rejuv

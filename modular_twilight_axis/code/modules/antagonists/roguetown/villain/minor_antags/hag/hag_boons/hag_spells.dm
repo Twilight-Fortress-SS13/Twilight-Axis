@@ -35,15 +35,15 @@
 	. = ..()
 	if(mind)
 		adjust_skillrank(/datum/skill/misc/swimming, SKILL_LEVEL_EXPERT, TRUE)
-		adjust_skillrank(/datum/skill/misc/athletics, SKILL_LEVEL_EXPERT, TRUE)
+		adjust_skillrank(/datum/skill/misc/athletics, SKILL_LEVEL_MASTER, TRUE)
 		adjust_skillrank(/datum/skill/misc/climbing, SKILL_LEVEL_EXPERT, TRUE)
 		adjust_skillrank(/datum/skill/misc/sneaking, SKILL_LEVEL_MASTER, TRUE)
 
 		STASTR = 1
 		STACON = 1 // YOU GONNA DIE FROM ONE HIT, HA-HA-HA!!!
-		STAWIL = 15
+		STAWIL = 16
 		STAPER = 14
-		STASPD = 15
+		STASPD = 16
 		STAINT = 12
 
 		real_name = "rat"
@@ -62,7 +62,10 @@
 		TRAIT_LONGSTRIDER,
 		TRAIT_PERFECT_TRACKER,
 		TRAIT_DODGEEXPERT,
-		TRAIT_CRITICAL_WEAKNESS
+		TRAIT_CRITICAL_WEAKNESS,
+		TRAIT_WEAPONLESS,
+		TRAIT_NOPVE,
+		TRAIT_KEENEARS,
 	)
 	inherent_biotypes = MOB_HUMANOID
 	no_equip = list(SLOT_SHIRT, SLOT_HEAD, SLOT_WEAR_MASK, SLOT_ARMOR, SLOT_GLOVES, SLOT_SHOES, SLOT_PANTS, SLOT_CLOAK, SLOT_BELT, SLOT_BACK_R, SLOT_BACK_L, SLOT_S_STORE)

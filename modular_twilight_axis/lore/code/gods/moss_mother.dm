@@ -14,3 +14,14 @@
 	// The hug really often need to heal someone, to continue their work...
 	miracles = list(/datum/action/cooldown/spell/miracle/heal								= CLERIC_T1,
 					/datum/action/cooldown/spell/miracle/bloodmiracle						= CLERIC_T1,)
+
+/datum/patron/mossmother/on_lesser_heal(
+	mob/living/user,
+	mob/living/target,
+	message_out,
+	message_self,
+	conditional_buff,
+	situational_bonus
+)
+	*message_out = span_info("[target] being covering in strange moss, that's knits it's wounds.")
+	*message_self = span_notice("My wounds being restored by strange moss...")
