@@ -1029,6 +1029,8 @@ There are several things that need to be remembered:
 /mob/living/carbon/human/proc/build_taur_tabard_overlay(obj/item/bodypart/taur/taur, obj/item/clothing/cloak/cloak)
 	if(!taur?.taur_clothing_category || !istype(cloak, /obj/item/clothing/cloak/tabard))
 		return null
+	if(cloak.get_taur_worn_state(src))
+		return null // The replacement already includes the taur body.
 	var/list/taur_tabard_layers = list()
 	var/mutable_appearance/base_tabard_ov = mutable_appearance('icons/roguetown/clothing/onmob/64x32/saiga_barding.dmi', "[taur.taur_clothing_category]_tabard", -TABARD_LAYER)
 	base_tabard_ov.pixel_x = taur.offset_x
@@ -1297,7 +1299,7 @@ There are several things that need to be remembered:
 			var/femw = (!is_bulky_body()) ? "_f" : ""
 			if(wear_pants.sleeved && legsindex > 0 && wear_pants.adjustable != CADJUSTED && !should_hide_sleeves_for_layer(LEGSLEEVE_LAYER))
 				sleeves = get_sleeves_layer(wear_pants,legsindex,LEGSLEEVE_LAYER)
-			if(wear_pants.adjustable == CADJUSTED)
+			if(wear_pants.adjustable == CADJUSTED && !wear_pants.get_taur_worn_state(src))
 				var/mutable_appearance/overleg = mutable_appearance(wear_pants.mob_overlay_icon, "[wear_pants.icon_state][femw][racecustom ? "_[racecustom]" : ""]", -LEGSLEEVE_LAYER)
 				sleeves += overleg
 			if(sleeves)
@@ -1505,6 +1507,14 @@ generate/load female uniform sprites matching all previously decided variables
 		file2use = mob_overlay_icon
 	if(!file2use)
 		file2use = default_icon_file
+	var/taur_state = isinhands ? null : get_taur_worn_state(default_icon_file = default_icon_file, override_state = override_state)
+	var/obj/item/bodypart/taur/taur
+	if(taur_state)
+		var/mob/living/carbon/human/taur_wearer = get_taur_sprite_wearer()
+		taur = taur_wearer.get_taur_tail()
+		t_state = taur_state
+		file2use = get_taur_worn_icon(default_icon_file)
+		clip_mask = null
 
 	//Find a valid layer from variables+arguments
 	var/layer2use
@@ -1523,7 +1533,7 @@ generate/load female uniform sprites matching all previously decided variables
 	var/mutable_appearance/standing
 //	if(femaleuniform)
 //		standing = wear_female_version(t_state,file2use,layer2use,femaleuniform)
-	if(sleeved && sleevejazz && sleeveindex < 4) //cut out sleeves from north/south sprites
+	if(!taur_state && sleeved && sleevejazz && sleeveindex < 4) //cut out sleeves from north/south sprites
 		if(!nodismemsleeves)
 			standing = wear_dismembered_version(t_state,file2use,layer2use,sleeveindex,sleevejazz)
 		else
@@ -1538,32 +1548,32 @@ generate/load female uniform sprites matching all previously decided variables
 //		for(var/mutable_appearance/MA in worn_overlays)
 //			MA.blend_mode = BLEND_MULTIPLY
 		standing.overlays.Add(worn_overlays)
-	if(!isinhands && boobed_overlay && boobed)
+	if(!isinhands && boobed_overlay && boobed && (!taur_state || icon_exists(file2use, "[t_state]_boob")))
 		var/mutable_appearance/boob_overlay = mutable_appearance(file2use, "[t_state]_boob", -layer2use)
 		standing.overlays.Add(boob_overlay)
 
-	var/detail_state = get_detail_state(t_state)
+	var/detail_state = taur_state || get_detail_state(t_state)
 
-	if(get_detail_tag())
+	if(get_detail_tag() && (!taur_state || icon_exists(file2use, "[detail_state][get_detail_tag()]")))
 		var/mutable_appearance/pic = mutable_appearance(icon(file2use, "[detail_state][get_detail_tag()]"), -layer2use)
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
 		standing.overlays.Add(pic)
-		if(!isinhands && boobed_overlay && boobed_detail && boobed)
+		if(!isinhands && boobed_overlay && boobed_detail && boobed && (!taur_state || icon_exists(file2use, "[detail_state]_boob[get_detail_tag()]")))
 			pic = mutable_appearance(icon(file2use, "[detail_state]_boob[get_detail_tag()]"), -layer2use)
 			pic.appearance_flags = RESET_COLOR
 			if(get_detail_color())
 				pic.color = get_detail_color()
 			standing.overlays.Add(pic)
 
-	if(get_altdetail_tag())
+	if(get_altdetail_tag() && (!taur_state || icon_exists(file2use, "[detail_state][get_altdetail_tag()]")))
 		var/mutable_appearance/pic = mutable_appearance(icon(file2use, "[detail_state][get_altdetail_tag()]"), -layer2use)
 		pic.appearance_flags = RESET_COLOR
 		if(get_altdetail_color())
 			pic.color = get_altdetail_color()
 		standing.overlays.Add(pic)
-		if(!isinhands && boobed_overlay && boobed_detail && boobed)
+		if(!isinhands && boobed_overlay && boobed_detail && boobed && (!taur_state || icon_exists(file2use, "[detail_state]_boob[get_altdetail_tag()]")))
 			pic = mutable_appearance(icon(file2use, "[detail_state]_boob[get_altdetail_tag()]"), -layer2use)
 			pic.appearance_flags = RESET_COLOR
 			if(get_altdetail_color())
@@ -1571,7 +1581,11 @@ generate/load female uniform sprites matching all previously decided variables
 			standing.overlays.Add(pic)
 
 	var/datum/component/decal/blood/item_blood = GetComponent(/datum/component/decal/blood)
-	if(!isinhands && (HAS_BLOOD_DNA(src) || item_blood))
+	if(taur_state && (HAS_BLOOD_DNA(src) || item_blood))
+		var/mob/living/carbon/human/wearer = get_taur_sprite_wearer()
+		var/blood_color = item_blood?.blood_color || wearer.get_blood_color() || "#C80000"
+		standing.add_overlay(mutable_appearance(get_taur_blood_icon(file2use, t_state, blood_color, taur.offset_x), layer = -layer2use))
+	else if(!isinhands && (HAS_BLOOD_DNA(src) || item_blood))
 		var/index = "[t_state][sleeveindex]"
 		var/mob/living/carbon/human/wearer = loc
 		var/blood_color = item_blood?.blood_color || (ishuman(wearer) ? wearer.get_blood_color() : "#C80000")
@@ -1592,7 +1606,10 @@ generate/load female uniform sprites matching all previously decided variables
 		var/mutable_appearance/pic = mutable_appearance(clothing_icon, -layer2use)
 		standing.overlays.Add(pic)
 
-	standing = center_image(standing, isinhands ? inhand_x_dimension : worn_x_dimension, isinhands ? inhand_y_dimension : worn_y_dimension)
+	if(taur_state)
+		standing.pixel_x = taur.offset_x
+	else
+		standing = center_image(standing, isinhands ? inhand_x_dimension : worn_x_dimension, isinhands ? inhand_y_dimension : worn_y_dimension)
 
 	if(worn_offsets)
 		standing.pixel_x += worn_offsets["x"]
@@ -1654,6 +1671,11 @@ generate/load female uniform sprites matching all previously decided variables
 	if(I.l_sleeve_status == SLEEVE_TORN || I.l_sleeve_status == SLEEVE_ROLLED)
 		if(sleeveindex == 4 || sleeveindex == 3)
 			sleeveindex -= 2
+	if(ishuman(src))
+		var/mob/living/carbon/human/wearer = src
+		var/taur_state = I.get_taur_worn_state(wearer)
+		if(taur_state)
+			return wearer.get_taur_sleeves_layer(I, taur_state, sleeveindex, layer2use)
 
 	var/racecustom
 	if(dna.species.custom_clothes)
