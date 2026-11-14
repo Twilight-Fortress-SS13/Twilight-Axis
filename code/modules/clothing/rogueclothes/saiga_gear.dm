@@ -36,8 +36,12 @@
 	// clip_mask exists to cut away normal humanoid clothing where it would overlap the horse body -
 	// the exact opposite of what we want here, since this barding is drawn to cover that body. Skip it.
 	var/mutable_appearance/image = ..(default_layer, default_icon_file, isinhands, femaleuniform, state_to_use, female, customi, sleeveindex, boobed_overlay, null)
-	image.pixel_x = -16
+	if(!get_taur_worn_state(default_icon_file = default_icon_file, override_state = state_to_use))
+		image.pixel_x = -16
 	return image
+
+/obj/item/clothing/suit/roguetown/armor/saiga_barding/get_taur_base_state(override_state)
+	return override_state || ((barding_style == "caparison") ? "[icon_state]_cap" : icon_state)
 
 /obj/item/clothing/suit/roguetown/armor/saiga_barding/MiddleClick(mob/user)
 	barding_style = (barding_style == "caparison") ? "fullbod" : "caparison"
@@ -152,3 +156,6 @@
 // /mob/living/carbon/human/proc/build_taur_tabard_overlay() (see update_icons.dm) drapes the actual saiga-shaped tabard graphic over the horse body.
 /obj/item/clothing/cloak/tabard/saiga/build_worn_icon(default_layer, default_icon_file, isinhands, femaleuniform, override_state, female, customi, sleeveindex, boobed_overlay, icon/clip_mask)
 	return ..(default_layer, default_icon_file, isinhands, femaleuniform, "tabard", female, customi, sleeveindex, boobed_overlay, clip_mask)
+
+/obj/item/clothing/cloak/tabard/saiga/get_taur_base_state(override_state)
+	return override_state || "tabard"
