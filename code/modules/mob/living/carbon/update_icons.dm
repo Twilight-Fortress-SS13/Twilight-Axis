@@ -453,22 +453,23 @@
 	update_body_parts()
 
 /mob/living/carbon/proc/update_body_parts()
-	var/list/new_limbs = list()
-	var/changed = FALSE
+	var/list/part_keys = list()
 	for(var/obj/item/bodypart/BP as anything in bodyparts)
 		BP.update_limb()
-		var/new_key = BP.get_cache_key()
-		if(new_key == icon_render_keys[BP.body_zone] && limb_icon_cache[new_key])
-			new_limbs += limb_icon_cache[new_key]
-			continue
-		changed = TRUE
-		var/list/limb_overlays = limb_icon_cache[new_key] || BP.get_limb_icon()
-		new_limbs += limb_overlays
-		limb_icon_cache[new_key] = limb_overlays
-		icon_render_keys[BP.body_zone] = new_key
-
-	if(!changed)
+		part_keys += BP.get_cache_key()
+	var/new_key = jointext(part_keys, "|")
+	if(new_key == icon_render_key)
 		return
+	icon_render_key = new_key
+
+	var/list/new_limbs = list()
+	for(var/i in 1 to length(bodyparts))
+		var/obj/item/bodypart/BP = bodyparts[i]
+		var/list/limb_overlays = limb_icon_cache[part_keys[i]]
+		if(!limb_overlays)
+			limb_overlays = BP.get_limb_icon()
+			limb_icon_cache[part_keys[i]] = limb_overlays
+		new_limbs += limb_overlays
 
 	remove_overlay(BODYPARTS_LAYER)
 	if(length(new_limbs))
