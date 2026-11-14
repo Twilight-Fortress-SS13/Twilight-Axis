@@ -61,3 +61,19 @@
 
 /datum/action/cooldown/spell/create_campfire
 	point_cost = 1 // TA EDIT END
+
+/obj/effect/proc_holder/spell/perform(list/targets, recharge = TRUE, mob/user = usr)
+	var/mob/target = targets[1]
+	if(istype(target) && psydonite_check(target))
+		playsound(target.loc, 'sound/magic/PSY.ogg', 100, FALSE, -1)
+		revert_cast()
+		return
+
+	return ..()
+
+/obj/effect/proc_holder/spell/proc/psydonite_check(mob/living/target)
+	return devotion_cost && HAS_TRAIT(target, TRAIT_PSYDONITE)
+
+/datum/action/cooldown/spell/miracle/anastasis
+    spell_flags = NONE
+
