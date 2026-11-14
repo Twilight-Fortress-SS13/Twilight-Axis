@@ -198,6 +198,25 @@
 				number_of_alphanumeric++
 				last_char_group = 4
 
+			// А .. Я TA EDIT
+			if(1040 to 1071)
+				t_out += ascii2text(ascii_char)
+				number_of_alphanumeric++
+				last_char_group = 4
+
+			// а .. я
+			if(1072 to 1103)
+				t_out += ascii2text(ascii_char)
+				number_of_alphanumeric++
+				last_char_group = 4
+			// TA EDIT END
+
+			// Ё ё
+			if(1025, 1105)
+				t_out += ascii2text(ascii_char)
+				number_of_alphanumeric++
+				last_char_group = 4
+
 			// special accented characters (diacritical)
 			if(192 to 383)
 				t_out+= ascii2text(ascii_char)
