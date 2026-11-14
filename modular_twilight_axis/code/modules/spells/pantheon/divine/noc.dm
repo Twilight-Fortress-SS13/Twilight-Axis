@@ -3,17 +3,217 @@
 	button_icon = 'modular_twilight_axis/icons/mob/actions/nocmiracles.dmi'
 	associated_skill = /datum/skill/magic/holy
 
+//Зеркально взору Астраты.
+/obj/effect/proc_holder/spell/self/TAnoc_gaze
+	name = "Взор Нок"
+	desc = "Убирает ограничения вашего взгляда и ума, позволяя видеть всё сокрытое."
+	action_icon = 'modular_twilight_axis/icons/mob/actions/nocmiracles.dmi'
+	overlay_icon = 'modular_twilight_axis/icons/mob/actions/nocmiracles.dmi'
+	overlay_state = "nocshroud"
+	releasedrain = 10
+	chargedrain = 0
+	chargetime = 0
+	chargedloop = /datum/looping_sound/invokeholy
+	sound = 'sound/magic/astrata_choir.ogg'
+	associated_skill = /datum/skill/magic/holy
+	antimagic_allowed = FALSE
+	invocations = "Нок, покажи мне сокрытое."
+	invocation_type = INVOCATION_WHISPER
+	recharge_time = 90 SECONDS
+	devotion_cost = 30
+	miracle = TRUE
+
+/obj/effect/proc_holder/spell/self/TAnoc_gaze/cast(list/targets, mob/user)
+	if(!ishuman(user))
+		revert_cast()
+		return FALSE
+	var/mob/living/carbon/human/H = user
+	var/skill_level = H.get_skill_level(associated_skill)
+	H.apply_status_effect(/datum/status_effect/buff/TAnoc_gaze, skill_level)
+	H.apply_status_effect(/datum/status_effect/buff/darkvision)
+	return TRUE
+
+/atom/movable/screen/alert/status_effect/buff/TAnoc_gaze
+	name = "Взор Нок"
+	desc = "С её глазами, я найду и увижу всё сокрытое."
+	icon = 'modular_twilight_axis/icons/mob/actions/nocmiracles.dmi'
+	icon_state = "nocshroud"
+
+/datum/status_effect/buff/TAnoc_gaze
+	id = "nocgaze"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/TAnoc_gaze
+	duration = 20 SECONDS
+	var/skill_level = 0
+	status_type = STATUS_EFFECT_REPLACE
+
+/datum/status_effect/buff/TAnoc_gaze/on_creation(mob/living/new_owner, slevel)
+	// Only store skill level here
+	skill_level = slevel
+	.=..()
+
+/datum/status_effect/buff/TAnoc_gaze/on_apply()
+	var/per_bonus = 1
+	duration = 20 SECONDS
+
+	if(skill_level > SKILL_LEVEL_NOVICE)
+		per_bonus++
+
+	if(!GLOB.tod == "day")
+		per_bonus++
+		duration *= 2
+
+	duration *= skill_level
+
+	if(per_bonus)
+		effectedstats = list(STATKEY_PER = per_bonus)
+
+	if(ishuman(owner))
+		var/mob/living/carbon/human/H = owner
+		H.viewcone_override = TRUE
+		H.hide_cone()
+		H.update_cone_show()
+
+	to_chat(owner, span_info("Нок даровала мне свои чувства! Я могу увидеть всё!"))
+
+	return ..()
+
+/datum/status_effect/buff/TAnoc_gaze/on_remove()
+	. = ..()
+	if(ishuman(owner))
+		var/mob/living/carbon/human/H = owner
+		H.viewcone_override = FALSE
+		H.hide_cone()
+		H.update_cone_show()
+
 /////////////////////////
-// T0 - Nitesight. //////
+// T1 - Enlightenment. //
 /////////////////////////
 
-/datum/action/cooldown/spell/noc/nitevision
+/datum/action/cooldown/spell/noc/TAenlightenment
+	name = "Озарение"
+	desc = "Создайте низшую форму танца лунного света, временно повышающую интеллект вашей цели. \
+	Навык чудес влияет на силу эффекта, а также эффект становится намного сильнее вне дня."
+	button_icon_state = "moon_light"
+	sound = 'sound/magic/clang.ogg'
+	glow_intensity = GLOW_INTENSITY_LOW
+
+	click_to_activate = TRUE
+	cast_range = SPELL_RANGE_GROUND
+	self_cast_possible = TRUE
+
+	primary_resource_cost = SPELLCOST_STAT_BUFF
+	secondary_resource_cost = SPELLCOST_STAT_BUFF
+
+	invocations = list("Даруй мне свое наставление.")
+	invocation_type = INVOCATION_WHISPER
+
+	charge_required = TRUE
+	charge_time = 1 SECONDS
+	charge_slowdown = CHARGING_SLOWDOWN_SMALL
+	charge_sound = 'sound/magic/charging.ogg'
+	charge_then_click = TRUE
+	cooldown_time = 2 MINUTES
+
+	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
+
+/datum/action/cooldown/spell/noc/TAenlightenment/cast(atom/cast_on)
+	. = ..()
+	var/mob/living/carbon/human/H = owner
+	if(!istype(H))
+		return FALSE
+
+	if(!isliving(cast_on))
+		to_chat(H, span_warning("That is not a valid target!"))
+		return FALSE
+
+	var/skill_level = H.get_skill_level(associated_skill)
+	var/mob/living/spelltarget = cast_on
+
+	if(spelltarget != H)
+		H.visible_message("[H] mutters an incantation and [spelltarget] briefly shines green.")
+		to_chat(H, span_notice("With another person as a conduit, my spell's duration is extended."))
+		spelltarget.apply_status_effect(/datum/status_effect/buff/TAwise_moon, skill_level)
+	else
+		H.visible_message("[H] mutters an incantation and they briefly shine green.")
+		spelltarget.apply_status_effect(/datum/status_effect/buff/TAwise_moon, skill_level)
+	return TRUE
+
+/datum/status_effect/buff/TAwise_moon
+	id = "wise_moon"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/wise_moon
+	duration = 2 MINUTES
+
+/datum/status_effect/buff/TAwise_moon/on_creation(mob/living/new_owner, assocskill)
+	var/int_bonus = 0
+	if(assocskill)
+		int_bonus = 2
+		if(assocskill >= 4)
+			int_bonus = 3
+	if(!GLOB.tod == "day")
+		if(assocskill <= 2)
+			int_bonus = 3
+		else
+			int_bonus = assocskill
+		duration *= 1.5
+	else if(GLOB.tod == "day")
+		int_bonus--
+	if(int_bonus > 0)
+		effectedstats = list(STATKEY_INT = int_bonus)
+	. = ..()
+
+/datum/status_effect/buff/TAwise_moon/on_apply()
+	. = ..()
+	owner.energy_add((100 * (owner.get_skill_level(/datum/skill/magic/holy))) * 2)
+
+/////////////////////////
+// T1 - Nitesight. //////
+/////////////////////////
+
+/datum/action/cooldown/spell/noc/TAnitevision
 	name = "Ночное зрение"
 	button_icon = 'icons/mob/actions/mage_augmentation.dmi'
 	button_icon_state = "darkvision"
 	desc = "Дарует вам и людям вокруг ночное зрение."
+	fluff_desc = "Когда первые люди появились, они не были наделены даром видеть ночью. В темноте они становились добычей чудовищ и животных. Нок, в своей бесконечной мудрости, наделила человечество даром ночного видения. И вскоре, маги смогли повторить её зрение с помощью арканы."
+	sound = 'sound/magic/haste.ogg'
+	glow_intensity = GLOW_INTENSITY_LOW
+
+	click_to_activate = TRUE
+	self_cast_possible = TRUE
+
+	primary_resource_cost = SPELLCOST_STAT_BUFF
+
+	secondary_resource_cost = SPELLCOST_STAT_BUFF
+
 	invocations = list("Нок направляет мой взор.")
 	invocation_type = INVOCATION_WHISPER
+
+	charge_required = TRUE
+	charge_time = 1 SECONDS
+	charge_slowdown = CHARGING_SLOWDOWN_NONE
+	charge_sound = 'sound/magic/charging.ogg'
+	cooldown_time = 5 MINUTES
+
+	spell_impact_intensity = SPELL_IMPACT_NONE
+
+	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
+
+/datum/action/cooldown/spell/noc/TAnitevision/cast(atom/cast_on)
+	. = ..()
+	var/mob/living/carbon/human/H = owner
+	if(!istype(H))
+		return FALSE
+
+	H.visible_message("[H] mutters an incantation and a dim pulse of light radiates out from them.")
+	for(var/mob/living/L in range(2, H))
+		L.apply_status_effect(/datum/status_effect/buff/nitevision/noc)
+
+	return TRUE
+
+/datum/status_effect/buff/nitevision/noc
+	id = "noc_nitevision"
+	effectedstats = list(STATKEY_PER = 1)
+	duration = 10 MINUTES
 
 //////////////////////////////
 // T1 - Hiden Rune. //
@@ -25,7 +225,7 @@
 	sound = 'sound/spellbooks/crystal.ogg'
 	background_icon = 'modular_twilight_axis/icons/mob/actions/nocmiracles.dmi'
 	button_icon = 'modular_twilight_axis/icons/mob/actions/nocmiracles.dmi'
-	button_icon_state = "noc_gaze"
+	button_icon_state = "antimagenoc"
 
 	click_to_activate = TRUE
 	cast_range = SPELL_RANGE_ADJACENT
@@ -269,7 +469,7 @@
 	name = "Тишина"
 	desc = "Закройте жертве рот - жертва не произнесёт ни слова, будь это чтение заклинания или оскорбление. \
 		Длительность зависит от уровня чудес."
-	button_icon_state = "silence"
+	button_icon_state = "silencenoc"
 	self_cast_possible = FALSE
 	cooldown_time = 60 SECONDS
 	charge_time = 1 SECONDS
@@ -326,12 +526,10 @@
 // T3 - Arcyne Affinity. //
 ///////////////////////////
 
+// Альтернатива Ритуоса - но вместо крутых трейтов дает больше магии.
 /datum/action/cooldown/spell/noc/TAspellpack
-	name = "Arcyne Affinity"
-	desc = "Allows you to learn a spellpack. \n \
-	<b>MAGISTER</b>: Arc Bolt, Spit Fire, Arcyne Lance \n \
-	<b>CONTROLLER</b>: Geas, Gravity, Wither \n \
-	<b>SEER</b>: Attune Hawk, Attune Haste, Fortitude, Arcyne Forge, Mending, Lesser Knock"
+	name = "Арканные знания"
+	desc = "Дарует вам частицу знаний Арканы, позволяя использовать её без зубрения в книжках!"
 	button_icon_state = "spellpack"
 	click_to_activate = FALSE
 	primary_resource_cost = SPELLCOST_MIRACLE
@@ -341,158 +539,25 @@
 	cooldown_time = 5 SECONDS
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
-	/// var we use to flag we are currently choosing a bundle.
-	var/choosing_bundle = FALSE
-	var/chosen_bundle
-	// Magister - attacks
-	var/list/magister_bundle = list(
-		/datum/action/cooldown/spell/projectile/arc_bolt,
-		/datum/action/cooldown/spell/projectile/spitfire,
-		/datum/action/cooldown/spell/projectile/frostbolt, // TA EDIT
-	)
-	// Controller - debuffs
-	var/list/controller_bundle = list(
-		/datum/action/cooldown/spell/geas,
-		/datum/action/cooldown/spell/gravity,
-		/datum/action/cooldown/spell/wither,
-	// Seer - support and help
-	)
-	var/list/seer_bundle = list(
-		/datum/action/cooldown/spell/augment_buff/guidance,
-		/datum/action/cooldown/spell/augment_buff/precognition,
-		/datum/action/cooldown/spell/augment_buff/surge,
-		/datum/action/cooldown/spell/arcyne_forge,
-		/datum/action/cooldown/spell/mending,
-		/datum/action/cooldown/spell/lesser_knock,
-	)
-
 /datum/action/cooldown/spell/noc/TAspellpack/cast(atom/cast_on)
 	. = ..()
+	owner.adjust_skillrank(/datum/skill/magic/arcane, 4, TRUE)
+	if(owner.mind)
+		if(!LAZYLEN(owner.mind.mage_aspect_config))
+			owner.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 0, "minor" = 3, "utilities" = 9))
+		else
+			owner.mind.mage_aspect_config["utilities"] += 3
+			owner.mind.mage_aspect_config["minor"] += 3
+			owner.mind.check_learnspell()
+		ADD_TRAIT(owner, TRAIT_WARLOCK, "[type]")
+		grant_poke_spell(owner)
 
-	if(choosing_bundle)
-		return FALSE
-	var/choice = chosen_bundle
-	if(!chosen_bundle)
-		choosing_bundle = TRUE
-		choice = alert(owner, "What type of spells has Noc blessed you with?", "CHOOSE PATH", "Magister", "Controller", "Seer")
-		chosen_bundle = choice
-		choosing_bundle = FALSE
-
-	switch(choice)
-		if("Magister")
-			add_spells(owner, magister_bundle, grant_all = TRUE)
-			owner.mind?.RemoveSpell(src.type)
-			return TRUE
-		if("Controller")
-			add_spells(owner, controller_bundle, grant_all = TRUE)
-			owner.mind?.RemoveSpell(src.type)
-			return TRUE
-		if("Seer")
-			add_spells(owner, seer_bundle, grant_all = TRUE)
-			owner.mind?.RemoveSpell(src.type)
-			return TRUE
-	return FALSE
-
-/datum/action/cooldown/spell/noc/TAspellpack/proc/add_spells(mob/owner, list/spells, choice_count = 1, grant_all = FALSE)
-	for(var/spell_type in spells)
-		if(owner?.mind.has_spell(spells[spell_type]))
-			spells.Remove(spell_type)
-	if(!grant_all)
-		var/choice_count_visual = choice_count
-		for(var/i in 1 to choice_count)
-			var/choice = input(owner, "Choose a spell! Choices remaining: [choice_count_visual]") as null|anything in spells
-			if(!isnull(choice))
-				var/picked_spell = spells[choice]
-				var/datum/new_spell = new picked_spell
-				owner?.mind.AddSpell(new_spell)
-				choice_count_visual--
-				spells.Remove(choice)
-	else
-		for(var/spell_type in spells)
-			var/datum/new_spell = new spell_type
-			owner?.mind.AddSpell(new_spell)
-	if(!length(spells))
-		owner.mind?.RemoveSpell(src.type)
-
-
-//////////////////////
-// T3 - Moonlight. //
-//////////////////////
-
-/datum/action/cooldown/spell/noc/TAmoonlight
-	name = "Лунный свет"
-	desc = "Луна поглощает весь свет и замедляет окружающих в определенном радиусе, эффект зависит от уровня чудес. \
-		Низшие существа вокруг вас парализуются."
-	button_icon_state = "moon_light"
-	sound = 'sound/magic/churn.ogg'
-	glow_intensity = GLOW_INTENSITY_LOW
-
-	click_to_activate = TRUE
-	cast_range = 8
-	self_cast_possible = FALSE
-
-	primary_resource_cost = SPELLCOST_MIRACLE_MAJOR
-
-	secondary_resource_cost = SPELLCOST_MIRACLE
-
-	invocation_type = INVOCATION_WHISPER
-	invocations = list("Для меня всегда найдётся тень!", "Попробуй найди меня!")
-
-	charge_required = TRUE
-	charge_time = 3 SECONDS
-	charge_slowdown = CHARGING_SLOWDOWN_SMALL
-	charge_sound = 'sound/magic/holycharging.ogg'
-	cooldown_time = 2 MINUTES
-
-	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
-
-/datum/action/cooldown/spell/noc/TAmoonlight/cast(atom/cast_on)
-	. = ..()
-	var/mob/living/carbon/caster = owner
-	var/checkrange = (1 + caster.get_skill_level(/datum/skill/magic/holy))
-	for(var/mob/living/M in range(checkrange, caster))
-		if(M == caster)
-			continue
-		if(M.anti_magic_check(TRUE, TRUE))
-			continue
-		M.apply_status_effect(/datum/status_effect/debuff/TAnoc_darkness)
-	for(var/obj/O in range(checkrange, caster))
-		if(istype(O, /obj/item/flashlight/flare/torch/lantern/psycenser))
-			continue
-		if(istype(O, /obj/item/flashlight/flare/light))
-			qdel(O)
-		O.extinguish()
+	owner.visible_message(
+		span_boldwarning("Арканные руны покрывают кожу [owner], излучая приятный, синий свет, прежде чем потухнуть."),
+		span_notice("Нок даровала частицу своего знания! Знания наполнили мой разум!")
+	)
+	owner.mind?.RemoveSpell(src.type)
 	return TRUE
-
-/datum/status_effect/debuff/TAnoc_darkness
-	id = "noc_darkness"
-	alert_type = /atom/movable/screen/alert/status_effect/debuff/TAnoc_darkness
-	effectedstats = list(STATKEY_SPD = -2)
-	duration = 15 SECONDS
-
-/datum/status_effect/debuff/TAnoc_darkness/on_apply()
-	if(!owner.mind)
-		owner.Immobilize(3 SECONDS)
-
-	for(var/obj/O in range(1, owner))
-		if(istype(O, /obj/item/flashlight/flare/torch/lantern/psycenser))
-			continue
-		if(istype(O, /obj/item/flashlight/flare/light))
-			qdel(O)
-		O.extinguish()
-
-	for(var/mob/M in range(1, owner))
-		for(var/obj/O in M.contents)
-			if(istype(O, /obj/item/flashlight/flare/torch/lantern/psycenser))
-				continue
-			if(istype(O, /obj/item/flashlight/flare/light))
-				qdel(O)
-			O.extinguish()
-	return ..()
-
-/atom/movable/screen/alert/status_effect/debuff/TAnoc_darkness
-	name = "Nite Darkness"
-	desc = "You feel a weight on your soul, as if something is pulling you down..."
 
 // That's one in fact is not Noc changes, but it’s related to that.
 
