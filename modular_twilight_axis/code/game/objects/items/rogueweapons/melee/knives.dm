@@ -117,7 +117,7 @@
 		added_int = 50,\
 		added_def = 2,\
 	)
-
+/*
 /obj/item/rogueweapon/huntingknife/idagger/steel/baotha
 	name = "snakes sting"
 	desc = "The blade is skillfully crafted and appears to be designed for stealthy assassinations. There are visible streaks of a bubbling substance on its blade."
@@ -240,7 +240,7 @@
 			to_chat(M, span_warning("Agh.. I feel weak in my body.."))
 
 	return ..()
-
+*/
 /obj/item/rogueweapon/huntingknife/idagger/silver/elvish/bandit
 	sellprice = 0
 	smeltresult = null
