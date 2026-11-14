@@ -352,6 +352,14 @@
 	// neighborlay = "duneedge"
 	track_prob = 10
 
+/turf/open/floor/rogue/crimsondunes/cardinal_smooth(adjacencies)
+	roguesmooth(adjacencies)
+
+/turf/open/floor/rogue/crimsondunes/Initialize(mapload)
+	. = ..()
+	dir = pick(GLOB.cardinals)
+	icon_state = "crimsondune[rand(1,16)]"
+
 /turf/open/water/crimson
 	name = "crimson water"
 	desc = "The water has a red tint, how strange."
