@@ -16,12 +16,16 @@
 #define IMPLEMENT_CAST_SPEED_DORPEL 0.18
 #define IMPLEMENT_CAST_SPEED_RIDDLE 0.20
 
-// implement_cast_speed никогда не должен превышать 0.25, это значение здесь лишь для подстраховки
-#define IMPLEMENT_CAST_SPEED_MAX 0.95
+// Подстраховываемся хардкапом от эксплойтов, если кто-нибудь их изобретёт
+#define IMPLEMENT_CAST_SPEED_MAX 0.25
 
 /obj/item/rogueweapon
 	// Время на каст умножается на (1 - implement_cast_speed)
 	var/implement_cast_speed = 0
+	var/gem_socketable = FALSE
+	var/obj/item/socketed_gem
+	var/starting_gem_type  // Для спавна посохов сразу с гемами
+	var/implement_noun  // Для автоматического переименования при вызове update_gem_name
 
 /mob/living/carbon/human/proc/get_held_cast_speed_implement()
 	var/obj/item/rogueweapon/best
@@ -78,12 +82,6 @@ GLOBAL_LIST_INIT(implement_gem_stats, list(
 			return GLOB.implement_gem_stats[gem_type]
 	return null
 
-/obj/item/rogueweapon
-	var/gem_socketable = FALSE
-	var/obj/item/socketed_gem
-	var/starting_gem_type  // Для спавна посохов сразу с гемами
-	var/implement_noun  // Для автоматического переименования при вызове update_gem_name
-
 /obj/item/rogueweapon/Initialize(mapload)
 	. = ..()
 	if(!gem_socketable)
@@ -130,13 +128,18 @@ GLOBAL_LIST_INIT(implement_gem_stats, list(
 // Обновляет статы, спрайты и название при смене гема
 /obj/item/rogueweapon/proc/update_gem_state()
 	var/list/stats = get_implement_gem_stats(socketed_gem)
+	implement_refund = 0
+	implement_cast_speed = 0
 	apply_gem_stats(stats)
+
 	implement_tier = stats ? stats["glow"] : 0
 	attuned_color = null
 	COOLDOWN_RESET(src, attunement_cd)
 	remove_filter(IMPLEMENT_GLOW_FILTER)
+
 	update_gem_name(stats)
 	update_gem_icon(stats)
+
 	if(ismob(loc))
 		var/mob/M = loc
 		M.update_inv_hands()
@@ -149,7 +152,7 @@ GLOBAL_LIST_INIT(implement_gem_stats, list(
 	)
 	if(!do_after(user, 2 SECONDS, target = src))
 		return
-	if(socketed_gem) // Filled while we were at it.
+	if(socketed_gem)  // Если несколько игроков как-то додумаются одновременно совать камни в один посох
 		to_chat(user, span_warning("There's already [socketed_gem] set into [src]!"))
 		return
 	if(!user.transferItemToLoc(gem, src))

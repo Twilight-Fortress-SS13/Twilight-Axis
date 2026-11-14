@@ -1,3 +1,4 @@
+/// Adds this enchantment's bonus on top of the implement's current values.
 /datum/magic_item/greater/implement/proc/add_bonus(obj/item/rogueweapon/implement)
 	return
 
@@ -23,7 +24,6 @@
 /datum/magic_item/greater/implement/rapid_concentration/add_bonus(obj/item/rogueweapon/implement)
 	implement.implement_cast_speed += 0.05
 
-// The gem sets the base values (0 when the setting is empty), then each implement enchantment adds on top.
 /obj/item/rogueweapon/update_gem_state()
 	. = ..()
 	var/datum/component/magic_item/M = GetComponent(/datum/component/magic_item)
@@ -31,6 +31,19 @@
 		return
 	for(var/datum/magic_item/greater/implement/effect in M.magical_effects)
 		effect.add_bonus(src)
+
+// Морф донатерским китом копирует статы, но не компонент зачарования
+// Поэтому пересчитываем статы перед копированием, чтобы не эксплойтили стакающиеся статы зачарований
+/obj/item/rogueweapon/transfer_implement_state(obj/item/rogueweapon/morphed, mob/user)
+	var/datum/component/magic_item/M = GetComponent(/datum/component/magic_item)
+	if(M)
+		qdel(M) // Морф теряет зачарования
+		if(gem_socketable)
+			update_gem_state() // Статы гема без бонуса.
+		else // У уникальных посохов статы заданы типом.
+			implement_refund = initial(implement_refund)
+			implement_cast_speed = initial(implement_cast_speed)
+	return ..()
 
 // Тинктуры
 

@@ -12,7 +12,6 @@
 
 /obj/item/rogueweapon/spellbook/apply_gem_stats(list/stats)
 	implement_cast_speed = stats ? stats["cast_speed"] : 0
-	implement_refund = 0
 
 // Сохраняем название после рескина
 /obj/item/rogueweapon/spellbook/update_gem_name(list/stats)
@@ -30,7 +29,7 @@
 	starting_gem_type = /obj/item/roguegem/yellow
 
 /obj/item/rogueweapon/spellbook/greater
-	desc = "A well-bound arcyne tome with a setting for a focus-gem in its cover. It can rebind aspect spells and significantly hastens spell incantations"
+	desc = "A well-bound arcyne tome with a setting for a focus-gem in its cover. It can rebind aspect spells and significantly hastens spell incantations."
 	starting_gem_type = /obj/item/roguegem/green
 	force = 25
 	max_integrity = 120

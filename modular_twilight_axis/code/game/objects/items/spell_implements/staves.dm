@@ -9,9 +9,7 @@
 
 /obj/item/rogueweapon/woodstaff/implement/apply_gem_stats(list/stats)
 	implement_refund = stats ? stats["refund"] : 0
-	implement_cast_speed = 0
 
-// Получаем стейт для
 /obj/item/rogueweapon/woodstaff/implement/proc/get_gem_icon_state(key)
 	return key ? "[key]staff" : "gemless"
 
@@ -104,12 +102,14 @@
 // Посохи-фамильяры
 
 /obj/item/rogueweapon/woodstaff/implement/greater/elemental
+	unenchantable = TRUE  // Иначе чары потеряются при обратном обращении
 	gem_socketable = FALSE
 	starting_gem_type = null
 	implement_tier = 2
 	implement_refund = IMPLEMENT_REFUND_BLORTZ
 
 /obj/item/rogueweapon/woodstaff/implement/greater/infernal
+	unenchantable = TRUE  // Иначе чары потеряются при обратном обращении
 	gem_socketable = FALSE
 	starting_gem_type = null
 	implement_tier = 2
