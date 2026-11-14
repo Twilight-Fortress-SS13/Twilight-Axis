@@ -24,3 +24,10 @@
 			return TRUE
 
 	return FALSE
+
+/mob/living/carbon/human/Initialize(mapload)
+	. = ..()
+	taRegisterNobleAppointmentSignals()
+
+/mob/living/carbon/human/check_equipment_mood_penalty()
+	taCheckNobleEquipment()

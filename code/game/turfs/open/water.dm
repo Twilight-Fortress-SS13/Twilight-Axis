@@ -344,8 +344,14 @@
 					user.remove_stress(/datum/stressevent/unlanded_noble_bloody_equipment)
 				playsound(user, pick(wash), 100, FALSE)
 				if(istype(src,/turf/open/water/sewer) || istype(src,/turf/open/water/swamp))
+					// TA EDIT START: noble comfort follows the applied rank.
+					/*
 					if (istype(src, /turf/open/water/sewer) || (istype(src, /turf/open/water/swamp) && HAS_TRAIT(user, TRAIT_NOBLE_UNLANDED)))
+					*/
+					if(istype(src, /turf/open/water/sewer) || \
+						taNobleExpectsComfort(user))
 						user.add_stress(/datum/stressevent/sewertouched)
+					// TA EDIT END
 					if (!HAS_TRAIT(L,TRAIT_LEECHIMMUNE) && !HAS_TRAIT(L,TRAIT_BOGWALKER)) // cleaning yourself in nasty water is a wonderful way to get leeches.
 						if (prob(20)) // 1 in 5 chance of getting leeched if you wash up in gross water.
 

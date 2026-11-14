@@ -201,4 +201,3 @@
 		)
 	if(H.mind)
 		SStreasury.give_money_account(ECONOMIC_UPPER_CLASS, H, "Savings.")
-		H.mind.AddSpell(new /datum/action/cooldown/spell/takeprotege)

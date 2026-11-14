@@ -1,5 +1,7 @@
 /datum/job/roguetown/lord/after_spawn(mob/living/H, mob/M, latejoin = TRUE)
 	..()
+	if(!latejoin && ishuman(H))
+		SSticker.taRegisterInitialDuke(H)
 	if(ishuman(H))
 		var/prev_real_name = H.real_name
 		var/prev_name = H.name
@@ -20,3 +22,17 @@
 				if(MF.known_people)
 					MF.known_people -= prev_real_name
 					H.mind.person_knows_me(MF)
+
+/obj/effect/proc_holder/spell/self/grant_nobility/grant_nobility(
+	mob/living/carbon/human/recruit,
+	mob/living/carbon/human/recruiter,
+)
+	if(QDELETED(recruit) || !recruit.mind)
+		return FALSE
+	. = ..()
+	if(!.)
+		return
+	if(isnull(recruit.mind.ta_nobility_tier) \
+		&& !recruit.mind.ta_nobility_pending)
+		recruit.mind.ta_nobility_tier = 1
+	recruit.taRefreshNobleRoleActions()

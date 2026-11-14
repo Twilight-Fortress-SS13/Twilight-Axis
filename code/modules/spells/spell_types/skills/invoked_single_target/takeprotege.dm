@@ -158,7 +158,10 @@
 	var/datum/stressevent/existing = get_stress_event(/datum/stressevent/protege_lord_dead)
 	if(existing && (world.time - existing.time_added) < 5 MINUTES)
 		return
-	to_chat(src, span_userdanger("My knight [source.name] has fallen!"))
+	// TA EDIT START
+	// to_chat(src, span_userdanger("My knight [source.name] has fallen!"))
+	taNotifyProtegeLiegeDeath(source)
+	// TA EDIT END
 	add_stress(/datum/stressevent/protege_lord_dead)
 
 
@@ -202,11 +205,17 @@
 
 /datum/status_effect/buff/protege_vigilance/on_apply()
 	. = ..()
-	to_chat(owner, span_blue("My knight stands with me. I will do them proud."))
+	// TA EDIT START
+	// to_chat(owner, span_blue("My knight stands with me. I will do them proud."))
+	taNotifyLiegePresence(TRUE)
+	// TA EDIT END
 
 /datum/status_effect/buff/protege_vigilance/on_remove()
 	if(owner && !QDELETED(owner))
-		to_chat(owner, span_warning("Without my knight near, my duty rings hollow."))
+		// TA EDIT START
+		// to_chat(owner, span_warning("Without my knight near, my duty rings hollow."))
+		taNotifyLiegePresence(FALSE)
+		// TA EDIT END
 	. = ..()
 
 /atom/movable/screen/alert/status_effect/buff/protege_vigilance
