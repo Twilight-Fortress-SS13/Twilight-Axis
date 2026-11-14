@@ -1210,6 +1210,61 @@
 /obj/structure/flora/roguegrass/desertgrass/update_icon()
 	icon_state = "desertgrass[rand(1, 5)]"
 
+/obj/structure/flora/roguegrass/crimson
+	icon = 'modular_deserttown/icons/flora.dmi'
+	icon_state = "crimsongrassall1"
+	gender = PLURAL
+
+/obj/structure/flora/roguegrass/crimson/update_icon()
+	icon_state = "crimsongrassall[rand(1, 3)]"
+
+/obj/structure/flora/roguegrass/crimson/Initialize(mapload)
+	icon_state = "crimsongrassall[rand(1, 3)]"
+	. = ..()
+
+/obj/structure/flora/roguegrass/crimson/brown
+	icon_state = "crimsongrass1bb"
+
+/obj/structure/flora/roguegrass/crimson/brown/Initialize(mapload)
+	icon_state = "crimsongrass[rand(1, 3)]bb"
+	. = ..()
+
+/obj/structure/flora/roguegrass/crimson/brown/update_icon()
+	icon_state = "crimsongrass[rand(1, 3)]bb"
+
+/obj/structure/flora/roguegrass/crimson/green
+	icon_state = "crimsongrass1gb"
+
+/obj/structure/flora/roguegrass/crimson/green/Initialize(mapload)
+	icon_state = "crimsongrass[rand(1, 3)]gb"
+	. = ..()
+
+/obj/structure/flora/roguegrass/crimson/green/update_icon()
+	icon_state = "crimsongrass[rand(1, 3)]gb"
+
+/obj/structure/flora/roguegrass/crimson/both
+	icon_state = "crimsongrassall1"
+
+/obj/structure/flora/roguegrass/crimson/both/Initialize(mapload)
+	icon_state = "crimsongrassall[rand(1, 3)]"
+	. = ..()
+
+/obj/structure/flora/roguegrass/crimson/both/update_icon()
+	icon_state = "crimsongrassall[rand(1, 3)]"
+
+/obj/structure/flora/roguegrass/crimsongrass
+	parent_type = /obj/structure/flora/roguegrass/crimson
+
+/obj/structure/flora/roguegrass/crimsongrass/brown
+	parent_type = /obj/structure/flora/roguegrass/crimson/brown
+
+/obj/structure/flora/roguegrass/crimsongrass/green
+	parent_type = /obj/structure/flora/roguegrass/crimson/green
+
+/obj/structure/flora/roguegrass/crimsongrass/both
+	parent_type = /obj/structure/flora/roguegrass/crimson/both
+
+
 /obj/effect/spawner/lootdrop/cheap_carvedgem_spawner
 	name = "cheap carvedgem spawner"
 	icon_state = "lowjewlery"
