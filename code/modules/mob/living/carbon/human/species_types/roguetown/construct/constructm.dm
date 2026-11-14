@@ -96,18 +96,18 @@
 
 	restricted_virtues = list(/datum/virtue/utility/noble, /datum/virtue/utility/hollow)
 
-	mechanics_explanations = list("Their wounds cannot be mended with needles or surgery, but instead with mechanical repairs. Light wounds can be mended with just a hammer, but more severe injuries will require a pair of tongs or a wrench held in the off hand for the hammer to work.",
-		"Generic healing miracles used on them will be less effective the closer they are to being at perfect condition.",
-		"Spells of mending can heal their wounds.",
-		"While on the brink of death, can be temporarily stabilized by sticks or rocks.",
-		"Can easily attach any prosthetic limbs to their bodies, including their own when they are lost.",
-		"Can mine rocky terrain by trying to walk into it while in Combat Mode and while in STRONG stance.",
-		"Are vulnerable to electrocution.",
-		"Have unique interactions when certain items are used on them:\n\
-		\t<b>Gemstones, Ingots, Raw Ores, and Stones</b>: Are consumed to heal the construct.\n\
-		\t<b>Cut Tree Logs</b>: Are turned into charcoal.\n\
-		\t<b>Whole Tree Logs</b>: Are split in half.\n\
-		\t<b>Large Rocks</b>: Are broken down into stones.")
+	mechanics_explanations = list("Их раны нельзя залечить с помощью игл или хирургического вмешательства — для этого требуется механический ремонт. Незначительные повреждения можно устранить одним лишь молотком, однако для более серьезных травм, помимо молотка, потребуется инструмент (например, клещи или гаечный ключ), который нужно держать в другой руке ",
+		"Обычные целительные чудеса действуют на них тем слабее, чем ближе их состояние к идеальному.",
+		"Заклинания починки способны исцелять их раны.",
+		"В критическом состоянии (на грани гибели) их можно временно стабилизировать с помощью палок или камней.",
+		"Они могут легко присоединять к своему телу любые протезы — в том числе и свои собственные, если те были утрачены.",
+		"Могут копать скалистую породу, просто пытаясь пройти сквозь неё в Combat Mode и в стойке STRONG.",
+		"Уязвимы к поражению электрическим током.",
+		"При использовании определенных предметов с ними происходят особые взаимодействия:\n\
+		\t<b>Драгоценные камни, слитки, необработанная руда и камни</b>: поглощаются для восстановления целостности конструкции.\n\
+		\t<b>Распиленные бревна</b>: превращаются в древесный уголь.\n\
+		\t<b>Цельные бревна</b>: раскалываются пополам.\n\
+		\t<b>Крупные валуны</b>: разбиваются на отдельные камни.")
 
 /datum/species/construct/metal/check_roundstart_eligible()
 	return TRUE
@@ -134,10 +134,6 @@
 
 /proc/try_construct_consume(obj/item/I, mob/living/M, mob/user)
 	if(!HAS_TRAIT(M, TRAIT_IRONMAN))
-		if(M == user)
-			to_chat(user, span_warning("I cannot eat that!"))
-		else
-			to_chat(user, span_warning("[M] doesn't seem capable of eating that."))
 		return FALSE
 
 	if(M.stat == DEAD)
