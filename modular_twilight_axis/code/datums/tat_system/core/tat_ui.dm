@@ -543,28 +543,31 @@
 			result += trait_id
 	return result
 
-/datum/tat_build/proc/build_ui_effective_trait_counts()
+/datum/tat_build/proc/build_ui_effective_trait_counts(list/external_traits = null)
 	var/list/result = list()
 	if(!traits)
 		return result
-	var/list/effective_traits = traits.get_effective_trait_counts()
+	var/list/effective_traits = traits.get_effective_trait_counts(external_traits)
 	for(var/trait_id in effective_traits)
 		var/count = round(effective_traits[trait_id] || 0)
 		if(count > 0)
 			result[trait_id] = count
 	return result
 
-/datum/tat_build/proc/build_ui_external_trait_counts()
+/datum/tat_build/proc/build_ui_external_trait_counts(list/external_traits = null)
 	var/list/result = list()
 	if(!traits)
 		return result
-	var/list/external_traits = traits.get_external_traits()
+	if(!islist(external_traits))
+		external_traits = traits.get_external_traits()
 	for(var/trait_id in external_traits)
 		result[trait_id] = 1
 	return result
 
-/datum/tat_build/proc/build_ui_trait_entries()
+/datum/tat_build/proc/build_ui_trait_entries(list/external_traits = null)
 	var/list/result = list()
+	if(!islist(external_traits))
+		external_traits = traits?.get_external_traits()
 	for(var/trait_id in GLOB.tat_available_traits)
 		if(trait_id == TAT_TRAIT_MENTOR && get_owner_ckey() != "mrix")
 			continue
@@ -600,7 +603,7 @@
 			"desc" = entry["desc"],
 			"repeatable" = traits?.is_repeatable_trait(trait_id),
 			"maximum" = traits?.get_trait_maximum(trait_id),
-			"external" = traits?.has_external_trait(trait_id),
+			"external" = !!(external_traits && external_traits[trait_id]),
 			"can_add" = can_add,
 			"direction" = directions?.get_trait_direction(trait_id),
 			"direction_cost" = directions?.get_trait_cost(trait_id),
@@ -824,9 +827,14 @@
 	var/list/_skills = build_ui_skills()
 	var/list/_sel_traits = build_ui_selected_traits()
 	var/list/_trait_counts = build_ui_trait_counts()
-	var/list/_effective_traits = build_ui_effective_traits()
-	var/list/_effective_trait_counts = build_ui_effective_trait_counts()
-	var/list/_external_trait_counts = build_ui_external_trait_counts()
+	var/list/_external_traits = traits?.get_external_traits()
+	var/list/_effective_trait_counts = build_ui_effective_trait_counts(_external_traits)
+	var/list/_effective_traits = list()
+	for(var/trait_id in _effective_trait_counts)
+		var/count = round(_effective_trait_counts[trait_id] || 0)
+		for(var/i in 1 to count)
+			_effective_traits += trait_id
+	var/list/_external_trait_counts = build_ui_external_trait_counts(_external_traits)
 	var/list/_items_state = build_ui_items_state()
 	var/list/_loadout = build_ui_loadout()
 	var/list/_tat_slots = build_ui_tat_slots()
@@ -840,7 +848,7 @@
 		"effective_traits" = _effective_traits,
 		"effective_trait_counts" = _effective_trait_counts,
 		"external_trait_counts" = _external_trait_counts,
-		"available_traits" = build_ui_trait_entries(),
+		"available_traits" = build_ui_trait_entries(_external_traits),
 		"directions" = _directions,
 		"items_state" = _items_state,
 		"loadout" = _loadout,
