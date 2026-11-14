@@ -121,3 +121,15 @@
 	H.electrocute_act(30, src)
 	H.mob_timers["kneestinger"] = world.time
 	to_chat(H, span_warning("[name] rejects my grasp — only the Treefather's faithful may bear such a gift!"))
+
+/obj/item/clothing/shoes/roguetown/boots/leather/reinforced/hrtboots
+	name = "heartfelt boots"
+	desc = "A pair of comfortable black boots, a style often found in Heartfelt."
+	icon_state = "hrtboots"
+	item_state = "hrtboots"
+	sewrepair = TRUE
+	salvage_amount = 1
+	salvage_result = /obj/item/natural/hide/cured
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/boots.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/boots.dmi'
+	allowed_race = NON_DWARVEN_RACE_TYPES

@@ -245,7 +245,7 @@
 	hammerhold_colors = list("white", "blue")
 	hammerhold_variants = null
 
-/obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/furcoat/heavy 
+/obj/item/clothing/suit/roguetown/shirt/twilight_hammerhold/dress/furcoat/heavy
 	body_parts_covered = COVERAGE_ALL_BUT_ARMS
 	armor = ARMOR_LEATHER
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER
@@ -560,6 +560,15 @@
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
 	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/helpers/sleeves_armor.dmi'
 
+/obj/item/clothing/suit/roguetown/shirt/freifechter/hrtshirt
+	name = "heartfelt shirt"
+	icon_state = "hrtshirt"
+	item_state = "hrtshirt"
+	flags_inv = HIDEBOOB
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/armor.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/armor.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/helpers/sleeves_armor.dmi'
+
 /obj/item/clothing/suit/roguetown/shirt/kamishimo
 	name = "kamishimo"
 	desc = "A sleeveless vest-jacket with wide shoulders, worn over a kimono."
@@ -666,7 +675,7 @@
 	allowed_race = NON_DWARVEN_RACE_TYPES
 	detail_tag = "_detail"
 	boobed = FALSE
-	detail_color = CLOTHING_WHITE	
+	detail_color = CLOTHING_WHITE
 /obj/item/clothing/suit/roguetown/shirt/dress/etrdress3/update_icon()
 	cut_overlays()
 	if(get_detail_tag())

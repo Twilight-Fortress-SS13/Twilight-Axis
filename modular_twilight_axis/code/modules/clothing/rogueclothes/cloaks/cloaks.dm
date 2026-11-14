@@ -360,3 +360,16 @@
 	H.electrocute_act(30, src)
 	H.mob_timers["kneestinger"] = world.time
 	to_chat(H, span_warning("[name] rejects my grasp — only the Treefather's faithful may bear such a gift!"))
+
+/obj/item/clothing/cloak/hrtcape
+	name = "comandant's cape"
+	desc = "A stylish raincoat that protects you from the rain and makes you look great"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/cloaks.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/cloaks.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/cloaks.dmi'
+	icon_state = "hrtcape"
+	item_state = "hrtcape"
+	slot_flags = ITEM_SLOT_CLOAK
+	inhand_mod = FALSE
+	color = null
+	allowed_race = NON_DWARVEN_RACE_TYPES
