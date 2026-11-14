@@ -16,7 +16,6 @@
 				source_turf = get_step_multiz(source_turf, UP)
 			if(A.z < user.z)
 				source_turf = get_step_multiz(source_turf, DOWN)
-
 	before_cast(targets, user = user)
 	if(user && user.ckey)
 		user.log_message(span_danger("cast the spell [name]."), LOG_ATTACK)
@@ -53,3 +52,12 @@
 			action.build_all_button_icons()
 		return TRUE
 	return FALSE
+
+/datum/action/cooldown/spell/mending // TA EDIT START
+	point_cost = 2
+
+/datum/action/cooldown/spell/mindlink
+	point_cost = 2
+
+/datum/action/cooldown/spell/create_campfire
+	point_cost = 1 // TA EDIT END

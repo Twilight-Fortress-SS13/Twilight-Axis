@@ -47,6 +47,7 @@
 	species_traits = list(EYECOLOR,HAIR,FACEHAIR,LIPS,OLDGREY)
 	allowed_taur_types = list(
 		/obj/item/bodypart/taur/spider,
+		/obj/item/bodypart/taur/arachne		//TA-EDIT
 	)
 	default_features = MANDATORY_FEATURE_LIST
 	use_skintones = TRUE
@@ -123,7 +124,7 @@
 
 	gender_swapping = TRUE
 	stress_examine = TRUE
-	stress_desc = span_red("A loathesome dark elf.")
+	stress_desc = span_red("A loathsome dark elf.")
 
 /datum/species/elf/dark/raider
 	name = "Dark Elf Raider"

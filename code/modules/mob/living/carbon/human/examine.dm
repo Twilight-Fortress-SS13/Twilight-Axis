@@ -3,6 +3,9 @@
 		return
 	if(user.mind)
 		user.mind.i_know_person(src)
+	if(user.has_flaw(/datum/charflaw/paranoid))	//The weak should fear the strong..
+		if((STASTR - user.STASTR) > 1 && !has_flaw(/datum/charflaw/paranoid))
+			user.add_stress(/datum/stressevent/parastr)
 	if(HAS_TRAIT(user, TRAIT_JESTERPHOBIA) && job == "Jester")
 		user.add_stress(/datum/stressevent/jesterphobia)
 	if(HAS_TRAIT(src, TRAIT_BEAUTIFUL) && user != src)
@@ -870,15 +873,23 @@
 		. += span_userdanger("DEADITE!")
 		. += span_warning("Uneasy steps, the sound of profane flesh and bone knitting itself and a stench of rot. A walking corpse!")
 
+/// Black Oaks recognize each other on sight, even behind masks.
+/mob/living/carbon/human/proc/blackoak_examine(mob/user)
+	. = list()
+	if(user != src && HAS_TRAIT(user, TRAIT_BLACKOAK) && HAS_TRAIT(src, TRAIT_BLACKOAK))
+		. += span_nicegreen("A member of the enclave.")
+
 /mob/living/carbon/human/proc/generate_main_examine_body(mob/user, m1, m2, m3, obscure_name, race_name, origin_name, observer_privilege, list/unknown_names)
 	. = list()
 	if(name in unknown_names)
 		. += span_info("ø ------------ ø\nThis is <EM>[name]</EM>.")
 		. += deadite_examine()
+		. += blackoak_examine(user)
 		. += get_ssd_examine_text(m3)
-	else if(obscure_name && !client?.prefs?.masked_examine)
+	else if(obscure_name) // TA EDIT
 		. += span_info("ø ------------ ø\nThis is an unknown <EM>[name]</EM>.")
 		. += deadite_examine()
+		. += blackoak_examine(user)
 		. += get_ssd_examine_text(m3)
 	else
 		on_examine_face(user)
@@ -887,6 +898,8 @@
 		var/used_title = get_role_title()
 		if(HAS_TRAIT(src, TRAIT_RESIDENT) && used_title == "Licker" && licker_subclass)
 			used_title = licker_subclass.name
+		if(tat_pliant_title) // TA EDIT - TAT system
+			used_title = tat_pliant_title // TA EDIT - TAT system
 		if(SSticker.rulermob != src)
 			if(SSticker.regentmob == src)
 				if(src.mind?.has_antag_datum(/datum/antagonist/vampire/lord))
@@ -912,6 +925,9 @@
 			display_as_wanderer = FALSE
 		if(src.mind?.has_antag_datum(/datum/antagonist/vampire/lord) && SSticker.rulermob != src && SSticker.regentmob != src)
 			display_as_wanderer = TRUE
+		if(fake_title) // TA EDIT START
+			used_title = fake_title
+			display_as_wanderer = FALSE // TA EDIT END
 		if(display_as_wanderer)
 			. += (span_info("ø ------------ ø\nThis is <EM>[used_name]</EM>, the wandering [race_name]."))
 		else if(used_title)
@@ -1015,6 +1031,25 @@
 					if((viewer.job in GLOB.garrison_positions) || (viewer.job in GLOB.retinue_positions) || (viewer.job in GLOB.courtier_positions) || (viewer.job in GLOB.noble_positions))
 						. += span_userdanger("DEFAULT DEBTOR OF THE CROWN!")
 
+//		if(name in GLOB.excommunicated_players)
+//			. += span_userdanger("HERETIC! SHAME!")
+
+		if(HAS_TRAIT(src, TRAIT_EXCOMMUNICATED))
+			. += span_userdanger("EXCOMMUNICATED! SHAME!")
+		if(name in GLOB.outlawed_players)
+			. += span_userdanger("OUTLAW!")
+		if(wear_neck && istype(wear_neck, /obj/item/clothing/neck/roguetown/collar/prisoner)) // TA EDIT START
+			var/obj/item/clothing/neck/roguetown/collar/prisoner/castifico_collar = wear_neck
+			var/collar_faction = "unknown"
+			switch(castifico_collar.issuing_faction)
+				if("crown")
+					collar_faction = "the Justiciary of Azuria"
+				if("church")
+					collar_faction = "the Church of the Ten"
+				if("inquisition")
+					collar_faction = "the Otavan Inquisition"
+			. += span_greentext("[m1] wearing a castifico collar with markings belonging to [collar_faction]!") // TA EDIT END
+
 		. += deadite_examine()
 		. += get_ssd_examine_text(m3)
 
@@ -1022,9 +1057,8 @@
 		if(vamp_inspect_vlord && (!SEND_SIGNAL(src, COMSIG_DISGUISE_STATUS)))
 			. += span_userdanger("A MONSTER!")
 
-		if(HAS_TRAIT(src, TRAIT_ARMOR_BREAK))
-			. += span_phobia("[capitalize(m2)] armor hangs on by a thread...")
-
+	//	if(HAS_TRAIT(src, TRAIT_ARMOR_BREAK))
+	//		. += span_phobia("[capitalize(m2)] armor hangs on by a thread...")
 		if(HAS_TRAIT(src, TRAIT_ARREARS))
 			if(ishuman(user))
 				var/mob/living/carbon/human/viewer = user
@@ -1045,6 +1079,8 @@
 		if((HAS_TRAIT(user, TRAIT_BLACKOAK) && !(src.dna.species.name == "Elf" || src.dna.species.name == "Dark Elf" || src.dna.species.name == "Half-Elf")))
 			. += span_phobia("An invader...")
 
+		. += blackoak_examine(user)
+
 		if(length(GLOB.tennite_schisms))
 			var/datum/tennite_schism/S = GLOB.tennite_schisms[1]
 			var/user_side = (WEAKREF(user) in S.supporters_astrata) ? "astrata" : (WEAKREF(user) in S.supporters_challenger) ? "challenger" : null
@@ -1060,7 +1096,7 @@
 			if(H.marriedto == name)
 				. += span_love("It's my spouse.")
 
-		if(name in GLOB.excommunicated_players)
+		if((name in GLOB.excommunicated_players) || HAS_TRAIT(src, TRAIT_OATHBREAKER)) //TA EDIT
 			. += span_userdanger("HERETIC! SHAME!")
 
 		if(HAS_TRAIT(src, TRAIT_EXCOMMUNICATED))
@@ -1105,16 +1141,16 @@
 			if(has_flaw(/datum/charflaw/addiction/alcoholic) && user.has_flaw(/datum/charflaw/addiction/alcoholic))
 				. += span_syndradio("[m1] struggling to hide the hangover, and the stench of spirits. We're alike.")
 
-			if(user.has_flaw(/datum/charflaw/addiction/paranoid))
-				var/datum/charflaw/addiction/paranoid/pflaw = user.get_flaw(/datum/charflaw/addiction/paranoid)
+			if(user.has_flaw(/datum/charflaw/addiction/factionalist))
+				var/datum/charflaw/addiction/factionalist/pflaw = user.get_flaw(/datum/charflaw/addiction/factionalist)
 				if(ishuman(user))
-					if(has_flaw(/datum/charflaw/addiction/paranoid))
+					if(has_flaw(/datum/charflaw/addiction/factionalist))
 						. += span_nicegreen("[m1] is the kind who sticks to their own. I understand.")
-						user.sate_addiction(/datum/charflaw/addiction/paranoid)
+						user.sate_addiction(/datum/charflaw/addiction/factionalist)
 					else if(pflaw)
 						if(pflaw.check_faction(src))
 							. += span_nicegreen("One of my own.")
-							user.sate_addiction(/datum/charflaw/addiction/paranoid)
+							user.sate_addiction(/datum/charflaw/addiction/factionalist)
 						else
 							user.add_stress(/datum/stressevent/paracrowd)
 
@@ -1143,7 +1179,7 @@
 						. += span_voyeurvice("[m1] [english_list(vice_desc)]...")
 
 			if(HAS_TRAIT(user, TRAIT_EMPATH) && HAS_TRAIT(src, TRAIT_PERMAMUTE))
-				. += span_notice("[m1] lacks a voice. [m1] is a mute!")
+				. += span_notice("[m3] no voice. [m1] mute!") // [they have] no voice [they are] mute.
 
 		var/villain_text = get_villain_text(user, can_identify_face)
 		if(villain_text)
@@ -1190,26 +1226,6 @@
 		var/datum/antagonist/vampire/vamp_inspect =src.mind?.has_antag_datum(/datum/antagonist/vampire)
 		if(vamp_inspect && (!SEND_SIGNAL(src, COMSIG_DISGUISE_STATUS)))
 			. += span_redtext("[m3] strange glowing eyes and fangs!")
-
-		if((HAS_TRAIT(src, TRAIT_INQUISITION) && HAS_TRAIT(user, TRAIT_BLACKBLOOD)) && src != user)
-			var/mob/living/carbon/carbs = user
-			if(HAS_TRAIT(user, TRAIT_PSYDONIAN_GRIT) || HAS_TRAIT(user, TRAIT_NOMOOD))
-				return
-
-			if(!(src in examined_inquisitors))
-				examined_inquisitors += src
-
-				if(!carbs.has_stress_event(/datum/stressevent/inq_trauma))
-					carbs.add_stress(/datum/stressevent/inq_trauma)
-					if(prob(20))
-						carbs.stress_freakout()
-					else if(prob(40))
-						carbs.freak_out()
-					else
-						carbs.emote("gulp")
-				if(!HAS_TRAIT(user, TRAIT_STEELHEARTED))
-					carbs.Jitter(10)
-					carbs.stuttering += 25
 
 		if(HAS_TRAIT(src, TRAIT_DNR) && src != user)
 			if(!HAS_TRAIT(user, TRAIT_DEATHSIGHT))

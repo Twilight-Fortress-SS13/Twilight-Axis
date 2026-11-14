@@ -151,7 +151,7 @@
 /obj/effect/track/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Right-clicking the eye on your HUD allows you to check for tracks, alongside hidden ambushes and traps. The effectiveness of each check scales with your character's Perception and Tracking skill.")
-	. += span_info("The higher your Tracking skill is, the more likely you can discover older and hidden tracks. Likewise, higher levels also let you determine how old the tracks are, which direction they've went, and what kinds of footwear or soles made them.")
+	. += span_info("The higher your Tracking skill is, the more likely you can discover older and hidden tracks. Likewise, higher levels also let you determine how old the tracks are, which direction they've gone, and what kinds of footwear or soles made them.")
 
 /obj/effect/track/Initialize(mapload)
 	. = ..()
@@ -320,6 +320,8 @@
 
 /obj/effect/track/proc/hide_images()
 	for(var/client/viewer as anything in shown_to)
+		if(!viewer) // TA EDIT
+			continue // TA EDIT
 		viewer.images -= real_image
 		viewer.images -= marked_image
 	shown_to = null

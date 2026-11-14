@@ -32,7 +32,7 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/misc/stealing = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/stealing = SKILL_LEVEL_APPRENTICE, // TA EDIT
 		/datum/skill/misc/music = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE,
@@ -160,7 +160,7 @@
 		H.mind.special_items["Barber's Innocuous Bag"] = /obj/item/storage/belt/rogue/surgery_bag/full
 		H.mind.special_items["Trusty Pick"] = /obj/item/rogueweapon/pick/bronze
 		H.mind.special_items["Tuneful Instrument"] = pick(subtypesof(/obj/item/rogue/instrument))
-		H.mind.special_items["Fishing Rod"] = /obj/item/fishingrod/crafted
+		H.mind.special_items["Fishing Rod"] = /obj/item/fishingrod
 		H.mind.special_items["Pan for Frying"] = /obj/item/cooking/pan
 
 		H.adaptive_name_title = "Homesteader"

@@ -149,7 +149,6 @@
 				beltr = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol
 				H.change_stat(STATKEY_PER, 2)
 				H.adjust_skillrank_up_to(/datum/skill/combat/twilight_firearms, 4, TRUE)
-				ADD_TRAIT(H, TRAIT_FIREARMS_MARKSMAN, TRAIT_GENERIC)
 
 		var/armors = list(
 			"Brigandine"		= /obj/item/clothing/suit/roguetown/armor/brigandine/retinue,

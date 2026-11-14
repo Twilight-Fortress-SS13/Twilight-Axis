@@ -2228,11 +2228,20 @@
 /datum/controller/subsystem/familytree/proc/schedule_house_member_resync(datum/heritage/house, delay = 1 SECONDS, attempt = 1)
 	if(!house || QDELETED(house))
 		return
+	if(house.member_resync_pending)
+		if(attempt == 1)
+			house.member_resync_restart_requested = TRUE
+		return
+	house.member_resync_pending = TRUE
 	addtimer(CALLBACK(src, PROC_REF(resync_house_members), house, attempt), delay)
 
 /datum/controller/subsystem/familytree/proc/resync_house_members(datum/heritage/house, attempt = 1)
 	if(!house || QDELETED(house))
 		return
+	if(house.member_resync_restart_requested)
+		attempt = 1
+		house.member_resync_restart_requested = FALSE
+	house.member_resync_pending = FALSE
 	var/list/people = list()
 	var/needs_retry = FALSE
 	for(var/datum/family_node/node as anything in house.member_nodes)
@@ -2246,11 +2255,11 @@
 		var/mob/living/carbon/human/A = people[i]
 		for(var/j = i + 1 to people.len)
 			var/mob/living/carbon/human/B = people[j]
-			introduce_pair(A, B)
+			introduce_pair(A, B, 0, FALSE)
 	if(needs_retry && attempt < 10)
 		schedule_house_member_resync(house, 3 SECONDS, attempt + 1)
 
-/datum/controller/subsystem/familytree/proc/introduce_pair(mob/living/carbon/human/A, mob/living/carbon/human/B, retry_count = 0)
+/datum/controller/subsystem/familytree/proc/introduce_pair(mob/living/carbon/human/A, mob/living/carbon/human/B, retry_count = 0, allow_retry = TRUE)
 	if(!A || !B || A == B)
 		return
 	var/needs_retry = FALSE
@@ -2266,7 +2275,7 @@
 			fix_family_fjob(B, A)
 	else
 		needs_retry = TRUE
-	if(needs_retry && retry_count < 10)
+	if(allow_retry && needs_retry && retry_count < 10)
 		addtimer(CALLBACK(src, PROC_REF(delayed_introduce_pair), A, B, retry_count + 1), 3 SECONDS)
 
 /datum/controller/subsystem/familytree/proc/delayed_introduce_pair(mob/living/carbon/human/A, mob/living/carbon/human/B, retry_count = 1)

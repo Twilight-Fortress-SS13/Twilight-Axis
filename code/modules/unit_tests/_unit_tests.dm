@@ -43,7 +43,7 @@
 /// Intended to be used in the manner of `TEST_FOCUS(/datum/unit_test/math)`
 #define TEST_FOCUS(test_path) ##test_path { focus = TRUE; }
 
-/// Logs a noticable message on GitHub, but will not mark as an error.
+/// Logs a noticeable message on GitHub, but will not mark as an error.
 /// Use this when something shouldn't happen and is of note, but shouldn't block CI.
 /// Does not mark the test as failed.
 #define TEST_NOTICE(source, message) source.log_for_test((##message), "notice", __FILE__, __LINE__)
@@ -62,6 +62,7 @@
 #define TEST_CREATE_AND_DESTROY 9001
 // BEGIN_INCLUDE
 #include "anchored_mobs.dm"
+#include "bard_music.dm"
 #include "component_tests.dm"
 #include "container_collision.dm"
 #include "craftable_hardset_sellprice.dm"
@@ -71,8 +72,10 @@
 #include "nodupe_smeltresult.dm"
 #include "reagent_id_typos.dm"
 #include "reagent_recipe_collisions.dm"
+#include "renegade.dm"
 #include "spawn_humans.dm"
 #include "species_whitelists.dm"
+#include "tile_panel.dm"
 #include "timer_sanity.dm"
 #include "unit_test.dm"
 #include "worn_ac_cache.dm"

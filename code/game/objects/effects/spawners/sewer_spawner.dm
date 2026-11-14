@@ -3,7 +3,7 @@
 	icon_state = "sewer"
 	lootcount = 3
 	loot_value = LOOT_VALUE_SEWERS
-	junk_loot = list(/obj/item/ash = 5, /obj/item/natural/glass_shard = 5, /obj/item/natural/stone = 3)
+	junk_loot = list(/obj/item/natural/ash = 5, /obj/item/natural/glass_shard = 5, /obj/item/natural/stone = 3)
 	loot = list(
 		// Materials
 		/obj/item/natural/bundle/stick = 4,
@@ -29,7 +29,7 @@
 		/obj/item/clothing/gloves/roguetown/leather = 4,
 		/obj/item/clothing/shoes/roguetown/boots = 8,
 		/obj/item/clothing/shoes/roguetown/boots/leather = 8,
-		/obj/item/storage/belt/rogue/leather/knifebelt/iron = 1,
+		/obj/item/storage/belt/rogue/leather/tossbelt/blade/iron = 1,
 
 		// Money
 		/obj/item/roguecoin/copper = 10,
@@ -39,7 +39,7 @@
 
 		// Garbage and Miscellanous
 		/obj/item/rogue/instrument/flute = 3,
-		/obj/item/ash = 5,
+		/obj/item/natural/ash = 5,
 		/obj/item/natural/glass_shard = 5,
 		/obj/item/candle/yellow = 3,
 		/obj/item/flashlight/flare/torch = 3,

@@ -54,7 +54,11 @@
 	if(H.stat == DEAD || infected_wake)
 		H.zombie_check_can_convert()
 		var/datum/antagonist/zombie/zombie_antag = H.mind?.has_antag_datum(/datum/antagonist/zombie)
-		if(zombie_antag && !zombie_antag.has_turned)
+		if(!zombie_antag)
+			H.infected = FALSE
+			owner.remove_status_effect(/datum/status_effect/zombie_infection)
+			return
+		if(!zombie_antag.has_turned)
 			H.visible_message(span_warning("[H] suddenly collapses as a blackened oily-like substance drips out of their eyes and mouth."))
 			zombie_antag.wake_zombie(infected_wake)
 			owner.remove_status_effect(/datum/status_effect/zombie_infection)
@@ -92,11 +96,14 @@
 	if(!source)
 		return FALSE
 	
-	var/datum/antagonist/zombie/zombie_antag = source.mind?.has_antag_datum(/datum/antagonist/zombie)
-	if(!zombie_antag || !zombie_antag.has_turned)
+	if(source.mind)
+		var/datum/antagonist/zombie/zombie_antag = source.mind.has_antag_datum(/datum/antagonist/zombie)
+		if(!zombie_antag || !zombie_antag.has_turned)
+			return FALSE
+	else if(!HAS_TRAIT(source, TRAIT_DEADITE)) // NPC deadites have no mind to hold the antag datum
 		return FALSE
 
-	if(mind?.has_antag_datum(/datum/antagonist/zombie))
+	if(HAS_TRAIT(src, TRAIT_DNR) || mind?.has_antag_datum(/datum/antagonist/zombie))
 		return FALSE
 
 	// Apply status effect with timer

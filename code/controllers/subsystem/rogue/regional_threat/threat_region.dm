@@ -95,12 +95,19 @@
 			return TRUE
 	return FALSE
 
-/datum/threat_region/proc/get_kill_target(pop)
+/datum/threat_region/proc/get_kill_target(pop, target_mult = 1)
 	var/scaled = round(pop * QUEST_KILL_FRACTION)
-	return clamp(scaled, kill_target_floor, kill_target_floor + QUEST_KILL_CEILING_OFFSET)
+	return round(clamp(scaled, kill_target_floor, kill_target_floor + QUEST_KILL_CEILING_OFFSET) * target_mult)
+
+/datum/threat_region/proc/get_evergreen_target(target_mult = 1)
+	return round(evergreen_target * target_mult)
 
 /datum/threat_region/proc/allows_quest_type(quest_type)
-	return (quest_type in allowed_quest_types)
+	var/datum/quest/proto = GLOB.quest_prototypes[quest_type]
+	if(!proto || !proto.fits_region(src))
+		return FALSE
+	var/required_type = proto.region_quest_type || quest_type
+	return required_type in allowed_quest_types
 
 /datum/threat_region/proc/get_threat_weight()
 	if(!max_ambush || latent_ambush <= 0)

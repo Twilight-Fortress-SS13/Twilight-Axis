@@ -175,8 +175,6 @@
 			icon_state = "ts[copytext(icon_state, length(CTYPE_SILVER) + 1)]"
 			if(quantity <= 2)
 				icon = 'modular_twilight_axis/lore/icons/valuable.dmi'
-			else
-				icon = 'icons/roguetown/items/valuable.dmi'
 	else if(SSmapping.config.map_name == "Desert Town")
 		desc = "The dirham is a silver coin."
 		if(quantity == 1)

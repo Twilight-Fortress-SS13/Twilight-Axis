@@ -9,11 +9,7 @@
 	faction = list("orcs", "wolfs")
 	emote_hear = null
 	emote_see = null
-	turns_per_move = 5
 	see_in_dark = 9
-	move_to_delay = 2
-	vision_range = 9
-	aggro_vision_range = 9
 
 	butcher_results = list(/obj/item/reagent_containers/food/snacks/rogue/meat/steak = 2,
 						/obj/item/natural/hide = 2,
@@ -35,12 +31,8 @@
 	STASPD = 13
 
 	simple_detect_bonus = 20
-	retreat_distance = 0
-	minimum_distance = 0
 	deaggroprob = 0
 	defprob = 35
-	del_on_deaggro = 44 SECONDS
-	retreat_health = 0.4
 	food = 0
 	dodgetime = 17
 	aggressive = 1
@@ -48,8 +40,6 @@
 	remains_type = /obj/effect/decal/remains/hyena
 
 	///this mob was updated to new ai
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
 	ai_controller = /datum/ai_controller/volf
 
 /obj/effect/decal/remains/hyena
@@ -60,7 +50,8 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/hyena/Initialize()
 	. = ..()
-	AddElement(/datum/element/ai_flee_while_injured, 0.75, retreat_health)
+	AddElement(/datum/element/ai_flee_while_injured, 0.75, 0.4)
+	AddComponent(/datum/component/deaggro_despawn, 44 SECONDS)
 
 	gender = MALE
 	if(prob(33))
@@ -88,21 +79,18 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/hyena/taunted(mob/user)
 	emote("aggro")
-	Retaliate()
-	GiveTarget(user)
+	if(isliving(user))
+		var/mob/living/living_user = user
+		ai_controller?.force_aggro(living_user)
 	return
 
 /mob/living/simple_animal/hostile/retaliate/rogue/hyena/Life()
 	..()
 	if(pulledby && !tame)
-		Retaliate()
-		GiveTarget(pulledby)
+		if(isliving(pulledby))
+			var/mob/living/living_pull = pulledby
+			ai_controller?.force_aggro(living_pull)
 
-
-/mob/living/simple_animal/hostile/retaliate/rogue/hyena/find_food()
-	. = ..()
-	if(!.)
-		return eat_bodies()
 
 /mob/living/simple_animal/hostile/retaliate/rogue/hyena/simple_limb_hit(zone)
 	if(!zone)

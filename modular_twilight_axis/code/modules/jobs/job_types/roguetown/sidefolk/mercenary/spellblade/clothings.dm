@@ -27,7 +27,7 @@
 	max_integrity = 300
 	armor_class = ARMOR_CLASS_MEDIUM
 
-/obj/item/clothing/mask/rogue/ragmask/newmoon 
+/obj/item/clothing/mask/rogue/ragmask/newmoon
 	name = "newmoon mask"
 	desc = "Маска сотканная из шелковистого хорошодышащего материала."
 	color = "#78a3c9"
@@ -35,7 +35,7 @@
 	body_parts_covered = FACE
 	alternate_worn_layer = NECK_LAYER
 
-/obj/item/clothing/mask/rogue/ragmask/newmoon/MiddleClick(mob/user) 
+/obj/item/clothing/mask/rogue/ragmask/newmoon/MiddleClick(mob/user)
 	overarmor = !overarmor
 	to_chat(user, span_info("I [overarmor ? "wear \the [src] under my hair" : "wear \the [src] over my hair"]."))
 	if(overarmor)
@@ -48,6 +48,8 @@
 /obj/item/clothing/suit/roguetown/shirt/tunic/newmoon
 	name = "newmoon tunic"
 	color = "#78a3c9"
+	armor = ARMOR_PADDED
+	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER
 
 /obj/item/clothing/cloak/half/newmoon
 	name = "newmoon cloak"
