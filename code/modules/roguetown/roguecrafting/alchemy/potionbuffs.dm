@@ -49,9 +49,9 @@
 /datum/status_effect/buff/alch/statbuff/strengthpot
 	id = "strpot"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/alch/strengthpot
-	effectedstats = list(STATKEY_STR = 2, STATKEY_LCK = -1)
+	effectedstats = list(STATKEY_STR = 3) //TA EDIT
 	outline_colour = "#ff9000"
-	buff_flavor = "strength (str +2, for -1)!"
+	buff_flavor = "strength (str +3)!" //TA EDIT
 
 /atom/movable/screen/alert/status_effect/buff/alch/strengthpot
 	name = STATKEY_STR
@@ -60,9 +60,9 @@
 /datum/status_effect/buff/alch/statbuff/perceptionpot
 	id = "perpot"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/alch/perceptionpot
-	effectedstats = list(STATKEY_PER = 2, STATKEY_LCK = -1)
+	effectedstats = list(STATKEY_PER = 3) //TA EDIT
 	outline_colour = "#45c8ff"
-	buff_flavor = "perception (per +2, for -1)!"
+	buff_flavor = "perception (per +3)!" //TA EDIT
 
 /atom/movable/screen/alert/status_effect/buff/alch/perceptionpot
 	name = STATKEY_PER
@@ -71,9 +71,9 @@
 /datum/status_effect/buff/alch/statbuff/intelligencepot
 	id = "intpot"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/alch/intelligencepot
-	effectedstats = list(STATKEY_INT = 2, STATKEY_LCK = -1)
+	effectedstats = list(STATKEY_INT = 3) //TA EDIT
 	outline_colour = "#7b5cff"
-	buff_flavor = "intelligence (int +2, for -1)!"
+	buff_flavor = "intelligence (int +3)!" //TA EDIT
 
 /atom/movable/screen/alert/status_effect/buff/alch/intelligencepot
 	name = STATKEY_INT
@@ -82,9 +82,9 @@
 /datum/status_effect/buff/alch/statbuff/constitutionpot
 	id = "conpot"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/alch/constitutionpot
-	effectedstats = list(STATKEY_CON = 2, STATKEY_LCK = -1)
+	effectedstats = list(STATKEY_CON = 3) //TA EDIT
 	outline_colour = "#a0522d"
-	buff_flavor = "constitution (con +2, for -1)!"
+	buff_flavor = "constitution (con +3)!" //TA EDIT
 
 /atom/movable/screen/alert/status_effect/buff/alch/constitutionpot
 	name = STATKEY_CON
@@ -93,9 +93,9 @@
 /datum/status_effect/buff/alch/statbuff/endurancepot
 	id = "endpot"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/alch/endurancepot
-	effectedstats = list(STATKEY_WIL = 2, STATKEY_LCK = -1)
+	effectedstats = list(STATKEY_WIL = 3) //TA EDIT
 	outline_colour = "#d63384"
-	buff_flavor = "willpower (wil +2, for -1)!"
+	buff_flavor = "willpower (wil +3)!" //TA EDIT
 
 /atom/movable/screen/alert/status_effect/buff/alch/endurancepot
 	name = STATKEY_WIL
@@ -104,9 +104,9 @@
 /datum/status_effect/buff/alch/statbuff/speedpot
 	id = "spdpot"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/alch/speedpot
-	effectedstats = list(STATKEY_SPD = 2, STATKEY_LCK = -1)
+	effectedstats = list(STATKEY_SPD = 3) //TA EDIT
 	outline_colour = "#00d9b5"
-	buff_flavor = "speed (spd +2, for -1)!"
+	buff_flavor = "speed (spd +3)!" //TA EDIT
 
 /atom/movable/screen/alert/status_effect/buff/alch/speedpot
 	name = STATKEY_SPD
