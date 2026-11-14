@@ -152,6 +152,8 @@
 		if(used_weapon.wbalance == WBALANCE_SWIFT)
 			if(mainhand && !offhand && def_swift_capable) // We're one-handing a swift-balanced weapon (rapiers, sabres, etc). Small parry boost (1 wdef equiv.)
 				prob2defend += 10
+		if(used_weapon.wbalance == WBALANCE_HEAVY && used_weapon.wielded)
+			prob2defend += 10 //TA EDIT
 
 	var/obj/item/attacker_weapon = attack_intent.masteritem
 	if(attacker_weapon)
@@ -181,14 +183,57 @@
 
 						else if((check_zone(user.zone_selected) == user.zone_selected) && user.zone_selected != BODY_ZONE_CHEST)
 							ceilclamp = SWIFTCAP_LIMBS
-						if(used_weapon?.wbalance == WBALANCE_NORMAL)
-							ceilclamp -= 10
+						//TA EDIT
 						finalmod = clamp(spdmod, 0, ceilclamp)
 					prob2defend -= finalmod
+		//TA EDIT START
+		if(attacker_weapon.wbalance == WBALANCE_HEAVY && user.STASTR > src.STASTR && !HAS_TRAIT(attacker, TRAIT_FREEBLADE))
+			if(!has_status_effect(/datum/status_effect/buff/weapon_binded))
+				var/strmod = ((user.STASTR - src.STASTR) * 10)
+				var/wilmod = ((src.STAWIL - user.STAWIL) * 3)
+				var/conmod = ((src.STACON - user.STACON) * 7)
+				var/finalmod = strmod
+				if(mind)
+					var/ceilclamp = SWIFTCAP_CHEST
+
+					if(wilmod > 0)
+						strmod -= wilmod
+					if(conmod > 0)
+						strmod -= conmod
+
+					if(user.zone_selected != check_zone(user.zone_selected))
+						ceilclamp = SWIFTCAP_PRECISE
+
+					else if((check_zone(user.zone_selected) == user.zone_selected) && user.zone_selected != BODY_ZONE_CHEST)
+						ceilclamp = SWIFTCAP_LIMBS
+					finalmod = clamp(strmod, 0, ceilclamp)
+				prob2defend -= finalmod
+		// TA EDIT END
 	else
 		attacker_skill = attacker.get_skill_level(/datum/skill/combat/unarmed)
 		prob2defend -= (attacker_skill * PARRY_PER_SKILL_LEVEL)
-		if(user.STASPD > src.STASPD && !HAS_TRAIT(attacker, TRAIT_FREEBLADE)) //unarmed is inherently swift
+		//TA EDIT START
+		if(attacker.unarmed_balance == WBALANCE_HEAVY)
+			if(user.STASTR > src.STASTR && !HAS_TRAIT(attacker, TRAIT_FREEBLADE))
+				if(!has_status_effect(/datum/status_effect/buff/weapon_binded))
+					var/strmod = ((user.STASTR - src.STASTR) * 10)
+					var/wilmod = ((src.STAWIL - user.STAWIL) * 3)
+					var/conmod = ((src.STACON - user.STACON) * 7)
+					var/finalmod = strmod
+					if(mind)
+						var/ceilclamp = SWIFTCAP_CHEST
+						if(wilmod > 0)
+							strmod -= wilmod
+						if(conmod > 0)
+							strmod -= conmod
+						if(user.zone_selected != check_zone(user.zone_selected))
+							ceilclamp = SWIFTCAP_PRECISE
+						else if((check_zone(user.zone_selected) == user.zone_selected) && user.zone_selected != BODY_ZONE_CHEST)
+							ceilclamp = SWIFTCAP_LIMBS
+						finalmod = clamp(strmod, 0, ceilclamp)
+					prob2defend -= finalmod
+		else if(user.STASPD > src.STASPD && !HAS_TRAIT(attacker, TRAIT_FREEBLADE)) //unarmed is inherently swift
+		// TA EDIT END
 			var/spdmod = ((user.STASPD - src.STASPD) * 10)
 			var/permod = ((src.STAPER - user.STAPER) * 10)
 			var/intmod = ((src.STAINT - user.STAINT) * 3)
@@ -199,10 +244,8 @@
 					spdmod -= intmod
 			var/finalmod = spdmod
 			if(mind)
-				if(used_weapon?.wbalance == WBALANCE_NORMAL)
-					finalmod = clamp(spdmod, 0, 20)
-				else
-					finalmod = clamp(spdmod, 0, 30)
+				//TA EDIT
+				finalmod = clamp(spdmod, 0, 30)
 			prob2defend -= finalmod
 
 	// --- Weapon binding! ---
@@ -275,15 +318,7 @@
 
 	var/parry_status = prob(prob2defend)
 
-	if(parry_status)
-		if(!has_status_effect(/datum/status_effect/buff/weapon_binded))
-			if(attacker_weapon)
-				if(attacker_weapon.wbalance == WBALANCE_HEAVY && user.STASTR > src.STASTR) //enemy weapon is heavy, so get a bonus scaling on strdiff
-					var/heavy_weapon_drain = min(( attacker_weapon.wbalance * ((user.STASTR - src.STASTR) * STAM_DRAIN_PER_STR_DIFF_HEAVY_BAL) ), 20)
-					if(used_weapon?.wbalance == WBALANCE_NORMAL)
-						heavy_weapon_drain -= STAM_DRAIN_PER_STR_DIFF_HEAVY_BAL
-					drained += max(heavy_weapon_drain, 0)
-	else
+	if(!parry_status) //TA EDIT
 		text += span_warning(" The enemy defeated my parry!")
 	if(src.client?.prefs.showrolls)
 		to_chat(src, span_info("[text]"))

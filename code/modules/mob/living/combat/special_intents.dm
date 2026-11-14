@@ -368,6 +368,7 @@ This allows the devs to draw whatever shape they want at the cost of it feeling 
 	var/cd_to_apply = cooldown
 	if(cd)
 		cd_to_apply = cd
+	cd_to_apply = howner.get_rclick_cd(cd_to_apply, apply_tempo = FALSE) //TA EDIT
 	if(override)
 		howner.remove_status_effect(/datum/status_effect/debuff/specialcd)
 		howner.apply_status_effect(/datum/status_effect/debuff/specialcd, cd_to_apply)

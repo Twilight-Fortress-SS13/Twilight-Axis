@@ -211,6 +211,8 @@
 	if(istype(user.rmb_intent, /datum/rmb_intent/swift))
 		if(user.used_intent.clickcd > CLICK_CD_INTENTCAP)	//If we're on Swift and our intent is not already at the cap by default, we consume extra stamina.
 			rmb_stam_penalty = EXTRA_STAMDRAIN_SWIFSTRONG
+	if(rmb_stam_penalty && user.holding_normal_balance())
+		rmb_stam_penalty *= 0.7 //TA EDIT
 	// Release drain on attacks besides unarmed attacks/grabs is 1, so it'll just be whatever the penalty is + 1.
 	// Unarmed attacks are the only ones right now that have differing releasedrain, see unarmed attacks for their calc.
 	user.stamina_add(user.used_intent.releasedrain + rmb_stam_penalty)
