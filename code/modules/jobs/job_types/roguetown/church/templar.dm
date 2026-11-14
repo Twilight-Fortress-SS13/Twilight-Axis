@@ -35,7 +35,7 @@
 /datum/outfit/job/roguetown/templar
 	job_bitflag = BITFLAG_HOLY_WARRIOR
 	has_loadout = TRUE
-	allowed_patrons = ALL_DIVINE_PATRONS
+	// TA REMOVAL - ORIGINAL: allowed_patrons = ALL_DIVINE_PATRONS
 /*
 /datum/advclass/templar/crusader
 	name = "Templar"
