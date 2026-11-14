@@ -13,9 +13,7 @@
 	emote_hear = null
 	emote_see = null
 	speak_chance = 1
-	turns_per_move = 3
 	see_in_dark = 6
-	move_to_delay = 3
 	base_intents = list(/datum/intent/simple/bite/volf)
 	botched_butcher_results = list(/obj/item/reagent_containers/food/snacks/rogue/meat/wolf = 1, /obj/item/alch/viscera = 1, /obj/item/alch/sinew = 1, /obj/item/natural/bone = 2)
 	butcher_results = list(/obj/item/reagent_containers/food/snacks/rogue/meat/wolf = 2,
@@ -41,11 +39,7 @@
 	maxHealth = WOLF_HEALTH
 	melee_damage_lower = 19
 	melee_damage_upper = 29
-	vision_range = 7
-	aggro_vision_range = 9
 	environment_smash = ENVIRONMENT_SMASH_NONE
-	retreat_distance = 0
-	minimum_distance = 0
 	milkies = FALSE
 	animal_species = /mob/living/simple_animal/hostile/retaliate/rogue/wolf // TA EDIT
 	food_type = list(/obj/item/reagent_containers/food/snacks,
@@ -63,13 +57,10 @@
 	STASPD = 12
 	simple_detect_bonus = 20
 	deaggroprob = 0
-	del_on_deaggro = 44 SECONDS
-	retreat_health = 0.3
 	food = 0
 	attack_sound = list('sound/vo/mobs/vw/attack (1).ogg','sound/vo/mobs/vw/attack (2).ogg','sound/vo/mobs/vw/attack (3).ogg','sound/vo/mobs/vw/attack (4).ogg')
 	dodgetime = 30
 	aggressive = 1
-//	stat_attack = UNCONSCIOUS
 	remains_type = /obj/effect/decal/remains/wolf
 	eat_forever = TRUE
 	var/chomp_cd = 0
@@ -77,8 +68,6 @@
 	var/fixed_gender = FALSE // TA EDIT
 
 //new ai, old ai off
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
 	ai_controller = /datum/ai_controller/volf
 	move_base_delay = MOVEMENT_DELAY_SPD_3
 
@@ -156,21 +145,11 @@
 	STASPD = 9
 	mob_size = MOB_SIZE_SMALL
 	aggressive = 0
-	del_on_deaggro = 0
 	ai_controller = null
 	can_receive_livestock_commands = FALSE
 	tame_food_type = list(/obj/item/reagent_containers/food/snacks/rogue/meat)
 	tame_chance = 15
 	bonus_tame_chance = 10
-
-/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/CanAttack(atom/the_target)
-	return FALSE
-
-/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/Retaliate()
-	return 0
-
-/mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/GiveTarget(new_target)
-	return 0
 
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf/pup/Initialize(mapload)
 	. = ..()
@@ -199,8 +178,7 @@
 	) // TA EDIT END
 
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf/tamed(mob/user) // TA EDIT START
-	clear_enemies()
-	LoseTarget()
+	ai_controller?.clear_aggro() // TA EDIT
 	return ..(user) // TA EDIT END
 
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf/death(gibbed)
@@ -234,15 +212,13 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf/taunted(mob/user)
 	emote("aggro")
-	Retaliate()
-	GiveTarget(user)
+	ai_controller?.force_aggro(user)
 	return
 
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf/Life()
 	..()
 	if(pulledby)
-		Retaliate()
-		GiveTarget(pulledby)
+		ai_controller?.force_aggro(pulledby)
 
 
 /datum/intent/simple/bite/volf

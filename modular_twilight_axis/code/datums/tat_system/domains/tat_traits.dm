@@ -50,7 +50,7 @@
 			return 0
 	if(trait_id == TAT_TRAIT_WEAPON_TRAINING)
 		var/role_choice = owner_build?.directions?.role_choice
-		if(!(role_choice in list(TAT_ROLE_CHOICE_TOWNER, TAT_ROLE_CHOICE_TRADER)))
+		if(role_choice != TAT_ROLE_CHOICE_TOWNER && role_choice != TAT_ROLE_CHOICE_TRADER)
 			return 0
 		if(owner_build?.has_built_in_weapon_training())
 			return 1
@@ -135,7 +135,7 @@
 /datum/tat_traits/proc/has_effective_trait(trait_id)
 	return get_effective_trait_count(trait_id) > 0
 
-/datum/tat_traits/proc/get_effective_trait_counts()
+/datum/tat_traits/proc/get_effective_trait_counts(list/external_traits = null)
 	var/list/result = list()
 	var/role_trait = owner_build?.directions?.get_effective_role_trait()
 	if(role_trait)
@@ -146,7 +146,8 @@
 		if(count > 0)
 			result[trait_id] = count
 
-	var/list/external_traits = get_external_traits()
+	if(!islist(external_traits))
+		external_traits = get_external_traits()
 	for(var/trait_id in external_traits)
 		result[trait_id] = max(round(result[trait_id] || 0), 1)
 
@@ -392,38 +393,37 @@
 		if(islist(skill_map))
 			total += round(skill_map[skill_type] || 0)
 
-	if(skill_type == /datum/skill/magic/arcane && has_trait(TAT_TRAIT_SPELLBLADE))
-		total += 3
-	else if(has_trait(TRAIT_ARCYNE) && skill_type == /datum/skill/magic/arcane)
-		total += 3
-	if(skill_type == /datum/skill/combat/arcyne && has_trait(TAT_TRAIT_SPELLBLADE))
+	if(skill_type == /datum/skill/magic/arcane)
+		if(has_trait(TAT_TRAIT_SPELLBLADE) || has_trait(TRAIT_ARCYNE))
+			total += 3
+		if(has_trait(TAT_TRAIT_MAGE_INITIATE) && !has_trait(TAT_TRAIT_SPELLBLADE))
+			total += 1
+	else if(skill_type == /datum/skill/combat/arcyne && has_trait(TAT_TRAIT_SPELLBLADE))
 		total += 2
 
-	if(has_trait(TRAIT_CIVILIZEDBARBARIAN) && (skill_type == /datum/skill/combat/unarmed || skill_type == /datum/skill/combat/wrestling))
+	if((skill_type == /datum/skill/combat/unarmed || skill_type == /datum/skill/combat/wrestling) && has_trait(TRAIT_CIVILIZEDBARBARIAN))
 		total += 1
 
-	if(has_trait(TAT_TRAIT_MAGE_INITIATE) && !has_trait(TAT_TRAIT_SPELLBLADE) && skill_type == /datum/skill/magic/arcane)
-		total += 1
-
-	if(has_trait(TAT_TRAIT_MAGE_INITIATE) && skill_type == /datum/skill/misc/reading)
+	if(skill_type == /datum/skill/misc/reading && has_trait(TAT_TRAIT_MAGE_INITIATE))
 		total += min(4, max(0, owner_build?.directions?.get_points(TAT_DIRECTION_MAGIC) || 0))
 
-	if(has_trait(TAT_TRAIT_SADDLEBORN) && skill_type == /datum/skill/misc/riding)
+	if(skill_type == /datum/skill/misc/riding && has_trait(TAT_TRAIT_SADDLEBORN))
 		total += 1
 
-	if(has_trait(TAT_TRAIT_DIVINE_INITIATE) && skill_type == /datum/skill/magic/holy)
+	if(skill_type == /datum/skill/magic/holy && has_trait(TAT_TRAIT_DIVINE_INITIATE))
 		total += 1
 
-	var/ranged_points = owner_build?.directions?.get_points(TAT_DIRECTION_RANGED) || 0
-	if(ranged_points > 0)
-		if(has_trait(TAT_TRAIT_RANGED_SYNERGY_BOWS) && skill_type == /datum/skill/combat/bows)
-			total += ranged_points
-		if(has_trait(TAT_TRAIT_RANGED_SYNERGY_CROSSBOWS) && skill_type == /datum/skill/combat/crossbows)
-			total += ranged_points
-		if(has_trait(TAT_TRAIT_RANGED_SYNERGY_SLINGS) && skill_type == /datum/skill/combat/slings)
-			total += ranged_points
-		if(has_trait(TAT_TRAIT_RANGED_SYNERGY_FIREARMS) && skill_type == /datum/skill/combat/twilight_firearms)
-			total += ranged_points
+	if(skill_type == /datum/skill/combat/bows || skill_type == /datum/skill/combat/crossbows || skill_type == /datum/skill/combat/slings || skill_type == /datum/skill/combat/twilight_firearms)
+		var/ranged_points = owner_build?.directions?.get_points(TAT_DIRECTION_RANGED) || 0
+		if(ranged_points > 0)
+			if(skill_type == /datum/skill/combat/bows && has_trait(TAT_TRAIT_RANGED_SYNERGY_BOWS))
+				total += ranged_points
+			else if(skill_type == /datum/skill/combat/crossbows && has_trait(TAT_TRAIT_RANGED_SYNERGY_CROSSBOWS))
+				total += ranged_points
+			else if(skill_type == /datum/skill/combat/slings && has_trait(TAT_TRAIT_RANGED_SYNERGY_SLINGS))
+				total += ranged_points
+			else if(skill_type == /datum/skill/combat/twilight_firearms && has_trait(TAT_TRAIT_RANGED_SYNERGY_FIREARMS))
+				total += ranged_points
 
 	return total
 
@@ -553,7 +553,7 @@
 		TAT_TRAIT_BODYBUILDER_SKIN = list(TAT_TRAIT_SAVAGE_SKIN, TAT_TRAIT_SAVAGE_RAGE, TAT_TRAIT_BERSERKER_RAGE),
 		TAT_TRAIT_SAVAGE_RAGE = list(TAT_TRAIT_BERSERKER_RAGE, TAT_TRAIT_BODYBUILDER_SKIN),
 		TRAIT_EASYDISMEMBER = list(TRAIT_HARDDISMEMBER),
-		TRAIT_FENCERDEXTERITY = list(TAT_TRAIT_SAVAGE_SKIN, TAT_TRAIT_BODYBUILDER_SKIN, TAT_TRAIT_WARRIOR_MASTER),
+		TRAIT_FENCERDEXTERITY = list(TAT_TRAIT_SAVAGE_SKIN, TAT_TRAIT_BODYBUILDER_SKIN, TAT_TRAIT_WARRIOR_MASTER, TAT_TRAIT_MAGE_INITIATE, TAT_TRAIT_WITCH_INITIATE, TRAIT_NOPAINSTUN, TRAIT_CRITICAL_RESISTANCE),
 		TRAIT_NUDIST = list(TRAIT_SHIRTLESS),
 		TRAIT_SHIRTLESS = list(TRAIT_NUDIST),
 		TRAIT_NUDE_SLEEPER = list(TRAIT_NUDIST, TAT_TRAIT_SAVAGE_SKIN, TAT_TRAIT_BODYBUILDER_SKIN, TRAIT_NOSLEEP),

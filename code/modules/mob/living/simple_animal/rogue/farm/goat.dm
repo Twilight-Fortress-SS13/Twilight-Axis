@@ -10,16 +10,8 @@
 	GLOB.farm_animals = max(GLOB.farm_animals - 1, 0)
 	return ..()
 
-/mob/living/simple_animal/hostile/retaliate/rogue/goat/find_food()
-	..()
-	var/obj/structure/vine/SV = locate(/obj/structure/vine) in loc
-	if(SV)
-		SV.eat(src)
-		food = max(food + 30, 100)
-
 /mob/living/simple_animal/hostile/retaliate/rogue/goat/tamed(mob/user) // TA EDIT
 	..(user) // TA EDIT
-	deaggroprob = 50
 	setup_mount(
 		list(TEXT_NORTH = list(0, 6), TEXT_SOUTH = list(0, 6), TEXT_EAST = list(-2, 6), TEXT_WEST = list(2, 6)),
 		MOB_LAYER+0.1,
@@ -59,9 +51,8 @@
 	mob_biotypes = MOB_ORGANIC|MOB_BEAST
 	emote_see = list("shakes her head.", "chews her cud.")
 	speak_chance = 1
-	turns_per_move = 5
 	see_in_dark = 6
-	move_to_delay = 8
+	ride_move_delay = 8
 	animal_species = /mob/living/simple_animal/hostile/retaliate/rogue/goatmale
 	botched_butcher_results = list(/obj/item/reagent_containers/food/snacks/rogue/meat/steak = 2,
 									/obj/item/reagent_containers/food/snacks/fat = 1,
@@ -107,8 +98,6 @@
 	remains_type = /obj/effect/decal/remains/cow
 
 	//new ai, old ai off
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
 	ai_controller = /datum/ai_controller/generic/goat //slightly more agressive retaliation
 	move_base_delay = MOVEMENT_DELAY_SLOW
 
@@ -211,9 +200,8 @@
 	gender = MALE
 	emote_see = list("shakes his head.", "chews his cud.")
 	speak_chance = 1
-	turns_per_move = 3
 	see_in_dark = 6
-	move_to_delay = 8
+	ride_move_delay = 8
 	base_intents = list(/datum/intent/simple/headbutt)
 	botched_butcher_results = list(/obj/item/reagent_containers/food/snacks/rogue/meat/steak = 2,
 									/obj/item/reagent_containers/food/snacks/fat = 1,
@@ -239,8 +227,6 @@
 	melee_damage_lower = 25
 	melee_damage_upper = 50
 	environment_smash = ENVIRONMENT_SMASH_NONE
-	retreat_distance = 0
-	minimum_distance = 0
 	milkies = FALSE
 	food_type = list(
 		/obj/item/reagent_containers/food/snacks/grown/wheat,
@@ -261,8 +247,6 @@
 	remains_type = /obj/effect/decal/remains/cow
 
 	//new ai, old ai off
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
 	ai_controller = /datum/ai_controller/generic
 	move_base_delay = MOVEMENT_DELAY_SLOW
 
@@ -283,7 +267,6 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/goatmale/tamed(mob/user) // TA EDIT
 	..(user) // TA EDIT
-	deaggroprob = 20
 	setup_mount(
 		list(TEXT_NORTH = list(0, 6), TEXT_SOUTH = list(0, 6), TEXT_EAST = list(-2, 6), TEXT_WEST = list(2, 6)),
 		MOB_LAYER+0.1,
@@ -314,8 +297,7 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/goatmale/taunted(mob/user)
 	emote("aggro")
-	Retaliate()
-	GiveTarget(user)
+	ai_controller?.force_aggro(user)
 	return
 
 /mob/living/simple_animal/hostile/retaliate/rogue/goatmale/eat_plants()
