@@ -10,7 +10,7 @@
 	var/datum/component/hag_curio_tracker/tracker
 	/// How powerful a boon is. Not used for all types of boons.
 	var/points = 1
-	/// Whether or not this boon can be transmuted into a curse. 
+	/// Whether or not this boon can be transmuted into a curse.
 	/// Curses should never be able to transmuted.
 	/// Some boons can only be triggered into specific curses, rather than free form.
 	var/transmutable = TRUE
@@ -136,7 +136,24 @@
 		/datum/hag_boon/item/hag_sword,
 		/datum/hag_boon/item/hag_axe,
 		/datum/hag_boon/item/hag_spear,
-		/datum/hag_boon/item/wyrd_cross
+		/datum/hag_boon/item/wyrd_cross,
+		// TA ADDITION START
+		/datum/hag_boon/spell/rat_form,
+		/datum/hag_boon/spell/blesscrop,
+		/datum/hag_boon/trait/curse/vegan,
+		/datum/hag_boon/trait/curse/light_sensivity,
+		/datum/hag_boon/trait/parry_expert,
+		/datum/hag_boon/trait/death_sight,
+		/datum/hag_boon/trait/no_hunger,
+		/datum/hag_boon/trait/poison_immune,
+		/datum/hag_boon/trait/eoran_serene,
+		/datum/hag_boon/trait/light_step,
+		/datum/hag_boon/trait/noble,
+		/datum/hag_boon/buff/rejuvenate,
+		/datum/hag_boon/buff/arcyne_affinity,
+		/datum/hag_boon/buff/devotee,
+		/datum/hag_boon/buff/bard_initiate,
+		// TA ADDITION END
 	)
 
 /obj/item/recipe_book/hag_grimoire/attack_self(mob/user)

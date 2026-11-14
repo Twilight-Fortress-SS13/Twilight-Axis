@@ -11,3 +11,6 @@
 		"ВОЗМЕЗДИЕ ГРЯДЕТ.",
 		"Я ЕСТЬ САМА ЗЕМЛЯ. ТЫ ДОЛЖЕН БЛАГОДАРИТЬ МЕНЯ ЗА ДОЗВОЛЕНИЕ СТУПАТЬ ПО НЕЙ.",
 	)
+	// The hug really often need to heal someone, to continue their work...
+	miracles = list(/datum/action/cooldown/spell/miracle/heal								= CLERIC_T1,
+					/datum/action/cooldown/spell/miracle/bloodmiracle						= CLERIC_T1,)

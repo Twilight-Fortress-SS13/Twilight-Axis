@@ -82,7 +82,11 @@
 		TRAIT_HARDDISMEMBER,
 		TRAIT_PIERCEIMMUNE,
 		TRAIT_LONGSTRIDER,
-		TRAIT_BOGWALKER
+		TRAIT_BOGWALKER,
+		// TA ADDITION START
+		TRAIT_NITEVISION,
+		TRAIT_NOPVE,
+		// TA ADDITION END
 	)
 	no_equip = list(SLOT_SHIRT, SLOT_HEAD, SLOT_WEAR_MASK, SLOT_ARMOR, SLOT_GLOVES, SLOT_SHOES, SLOT_PANTS, SLOT_CLOAK, SLOT_BELT, SLOT_BACK_R, SLOT_BACK_L, SLOT_S_STORE)
 	nojumpsuit = 1
@@ -104,6 +108,7 @@
 	action_icon_state = "hag_transform"
 	miracle = FALSE
 	devotion_cost = 0
+	ignore_cockblock = TRUE // TA ADDITION
 
 	// The cooldown variable we track on the human mob
 	var/static/hag_lockout_time = 2 MINUTES
