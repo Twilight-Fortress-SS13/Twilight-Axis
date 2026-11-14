@@ -7,7 +7,7 @@
 	cant_hold = list(
 		/obj/item/storage,
 		/obj/item/rogueweapon,
-		/obj/item/bomb,
+		/obj/item/explosive/fused/bottle,
 		/obj/item/flashlight,
 		/obj/item/recipe_book,
 	)
@@ -133,7 +133,7 @@
 					else
 						C.item_flags |= NOT_SHOW_IN_STORAGE
 					to_chat(user, span_info("[C] will be [(C.item_flags & NOT_SHOW_IN_STORAGE) ? "hidden" : "visible"] \the [src]"))
-				user.update_inv_head()
+				user.update_inv_armor()
 
 
 /obj/item/clothing/suit/roguetown/armor/build_worn_icon(default_layer = 0, default_icon_file = null, isinhands = FALSE, femaleuniform = NO_FEMALE_UNIFORM, override_state = null, female = FALSE, customi = null, sleeveindex, boobed_overlay = FALSE, icon/clip_mask = null)
@@ -142,6 +142,17 @@
 	if(attachment_component)
 		var/datum/component/storage/concrete/roguetown/our_component = GetComponent(attachment_component)
 		if(our_component && length(our_component.item_to_grid_coordinates))
+			var/has_taur_sprite = !isinhands && get_taur_worn_state(default_icon_file = default_icon_file, override_state = override_state)
+			if(!isinhands && !has_taur_sprite)
+				for(var/obj/item/attachment as anything in our_component.item_to_grid_coordinates)
+					if(!(attachment.item_flags & NOT_SHOW_IN_STORAGE) && attachment.get_taur_worn_state(default_icon_file = default_icon_file))
+						has_taur_sprite = TRUE
+						break
+			if(has_taur_sprite)
+				// Keep each item's clipping and origin on its own layer. A humanoid armor mask must not cut off a taur cosmetic.
+				var/mutable_appearance/base_armor = standing
+				standing = mutable_appearance(layer = base_armor.layer)
+				standing.add_overlay(base_armor)
 			for(var/obj/item/thing as anything in our_component.item_to_grid_coordinates)
 				if(thing.item_flags & NOT_SHOW_IN_STORAGE)
 					continue
@@ -187,7 +198,8 @@
 									standing.add_overlay(tabard_piece)
 								continue
 //-------- Taur Tabard Code finishes here
-				var/mutable_appearance/thing_appearance = thing.build_worn_icon(default_layer, default_icon_file, isinhands, femaleuniform, override_state, female, customi, sleeveindex, boobed_overlay, clip_mask)
+				var/thing_override = has_taur_sprite ? null : override_state
+				var/mutable_appearance/thing_appearance = thing.build_worn_icon(default_layer, default_icon_file, isinhands, femaleuniform, thing_override, female, customi, sleeveindex, boobed_overlay, clip_mask)
 				thing_appearance.appearance_flags = RESET_COLOR
 				thing_appearance.pixel_x += standing.pixel_x
 				thing_appearance.pixel_y += standing.pixel_y

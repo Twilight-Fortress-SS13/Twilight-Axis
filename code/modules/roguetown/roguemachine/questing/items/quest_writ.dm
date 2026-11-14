@@ -37,10 +37,13 @@ GLOBAL_LIST_EMPTY(quest_scrolls)
 	armor = ARMOR_INDESTRUCTIBLE
 	base_icon_state = "scroll_quest"
 	var/datum/quest/assigned_quest
+	var/claim_in_progress = FALSE
 	var/last_compass_direction = ""
 	var/last_z_level_hint = ""
 	var/last_whisper = 0
 	var/opened = FALSE
+	var/unattended_since = 0
+	var/unattended_final_warned = FALSE
 
 /obj/item/quest_writ/Initialize(mapload)
 	. = ..()
@@ -65,15 +68,61 @@ GLOBAL_LIST_EMPTY(quest_scrolls)
 		icon_state = "[base_icon_state]_closed"
 
 /obj/item/quest_writ/process()
-	if(world.time > last_whisper + WHISPER_COOLDOWN)
-		last_whisper = world.time
-		target_whisper()
+	if(world.time <= last_whisper + WHISPER_COOLDOWN)
+		return
+	last_whisper = world.time
+	if(check_unattended())
+		return
+	target_whisper()
+
+/obj/item/quest_writ/proc/is_attended()
+	var/mob/living/carrier = get(src, /mob/living)
+	return carrier && assigned_quest.may_carry_scroll(carrier)
+
+/obj/item/quest_writ/proc/unattended_time_left()
+	return max(0, unattended_since + QUEST_SCROLL_UNATTENDED_LAPSE - world.time)
+
+/obj/item/quest_writ/proc/check_unattended()
+	if(!assigned_quest?.lapses_unattended() || is_attended())
+		unattended_since = 0
+		unattended_final_warned = FALSE
+		return FALSE
+	if(!unattended_since)
+		unattended_since = world.time
+		warn_unattended()
+		return FALSE
+	var/remaining = unattended_time_left()
+	if(remaining <= 0)
+		SSquestpool.lapse_unattended_scroll(assigned_quest)
+		return TRUE
+	if(!unattended_final_warned && remaining <= QUEST_SCROLL_UNATTENDED_WARN)
+		unattended_final_warned = TRUE
+		warn_unattended()
+	return FALSE
+
+/obj/item/quest_writ/proc/warn_unattended()
+	var/mob/owner = assigned_quest.get_scroll_owner()
+	if(!owner)
+		return
+	var/minutes = max(1, round(unattended_time_left() / (1 MINUTES)))
+	to_chat(owner, span_warning("Your contract scroll <b>[assigned_quest.get_title() || name]</b> is not on you. It will crumble to dust in [minutes] minute\s unless you take it back."))
 
 /obj/item/quest_writ/proc/try_hand_claim(mob/user)
+	if(claim_in_progress)
+		return FALSE
+	claim_in_progress = TRUE
+	. = do_hand_claim(user)
+	claim_in_progress = FALSE
+
+/obj/item/quest_writ/proc/do_hand_claim(mob/user)
 	var/datum/quest/Q = assigned_quest
 	if(Q.quest_giver_name && Q.quest_giver_name == user.real_name && !Q.issuer_may_claim && !SSquestpool.debug_mode)
 		to_chat(user, span_warning("You can't take a contract you issued."))
 		return FALSE
+	if(!SStreasury.has_account(user))
+		to_chat(user, span_warning("You have no bank account. Register with a Meister first."))
+		return FALSE
+	Q.lock_fellowship(user)
 	if(!Q.materialized)
 		var/obj/effect/landmark/quest_spawner/landmark = Q.pending_landmark_ref?.resolve()
 		if(!landmark || !Q.materialize(landmark))
@@ -113,6 +162,9 @@ GLOBAL_LIST_EMPTY(quest_scrolls)
 		. += span_notice("\nThis contract is complete! Return it to the Contract Ledger to claim your reward.")
 	else
 		. += span_notice("\nThis contract is still in progress.")
+	if(unattended_since && assigned_quest.lapses_unattended() && !is_attended())
+		var/minutes = max(1, round(unattended_time_left() / (1 MINUTES)))
+		. += span_warning("It has been left unattended. It will crumble to dust in [minutes] minute\s unless its holder takes it back.")
 
 /obj/item/quest_writ/attackby(obj/item/P, mob/living/carbon/human/user, params)
 	if(P.get_sharpness())
@@ -236,6 +288,7 @@ GLOBAL_LIST_EMPTY(quest_scrolls)
 	data["progress_required"] = Q.progress_required
 	data["shows_commission_seal"] = Q.shows_commission_seal
 	data["is_towner"] = Q.source == QUEST_SOURCE_TOWNER
+	data["arrival_scan_range"] = QUEST_ARRIVAL_SCAN_RANGE
 	Q.populate_scroll_ui_static_data(data)
 	return data
 
@@ -248,6 +301,11 @@ GLOBAL_LIST_EMPTY(quest_scrolls)
 	data["z_hint"] = last_z_level_hint
 	data["objective"] = assigned_quest.get_objective_text()
 	data["reward"] = assigned_quest.reward_amount
+	data["fellowship_size"] = length(assigned_quest.fellowship_roster)
+	data["fellowship_extras"] = assigned_quest.fellowship_extras
+	data["fellowship_split"] = assigned_quest.fellowship_split_payout
+	data["fellowship_threat_pct"] = round((assigned_quest.fellowship_threat_mult - 1) * 100)
+	data["fellowship_reward_pct"] = round((assigned_quest.fellowship_reward_mult - 1) * 100)
 	data["progress_current"] = assigned_quest.progress_current
 	data["complete"] = assigned_quest.complete
 	data["levy_exempt"] = assigned_quest.levy_exempt

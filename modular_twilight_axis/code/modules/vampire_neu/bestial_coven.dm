@@ -134,10 +134,7 @@
 	health = 180
 	melee_damage_lower = 40
 	melee_damage_upper = 50
-	move_to_delay = 2
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
-	wander = FALSE
+	ai_controller = null
 
 /mob/living/simple_animal/hostile/retaliate/bat/ta_storm_bat/Initialize()
 	. = ..()

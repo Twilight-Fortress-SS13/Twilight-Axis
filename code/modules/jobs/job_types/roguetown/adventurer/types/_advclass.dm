@@ -45,6 +45,9 @@
 	/// Subclass languages.
 	var/list/subclass_languages
 
+	/// Subclass spells. Granted to the mind on equip.
+	var/list/subclass_spells
+
 	/// Subclass virtues.
 	var/list/subclass_virtues
 
@@ -114,7 +117,7 @@
 				rogue_animal.assign_livestock_owner(H) // TA EDIT
 
 	for(var/trait in traits_applied)
-		ADD_TRAIT(H, trait, ADVENTURER_TRAIT)
+		ADD_TRAIT(H, trait, JOB_TRAIT)
 
 	if(noble_income)
 		var/already_has_income = !isnull(SStreasury.noble_incomes[H])
@@ -127,6 +130,10 @@
 	if(length(subclass_languages))
 		for(var/lang in subclass_languages)
 			H.grant_language(lang)
+
+	if(length(subclass_spells) && H.mind)
+		for(var/spell in subclass_spells)
+			H.mind.AddSpell(new spell)
 
 	if(reset_stats)
 		H.reset_stats()
@@ -235,9 +242,9 @@
 		if(!correlation)
 			var/datum/virtue/origin/first_origin = origin_limits[1]
 			to_chat(H, span_warning("I've spent so many daes in [first_origin.origin_name] that I've come to call it my home."))
-			change_origin(H, first_origin)
+			change_origin(H, first_origin) // TA EDIT
 
-/datum/advclass/proc/change_origin(mob/living/carbon/human/H, new_origin = /datum/virtue/none, wording)
+/datum/advclass/proc/change_origin(mob/living/carbon/human/H, new_origin = /datum/virtue/none, wording, apply_immediately = TRUE) // TA EDIT
 	var/client/player = H?.client
 	if(player?.prefs)
 		if(wording)

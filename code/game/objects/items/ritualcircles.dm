@@ -94,7 +94,7 @@
 	if(user.has_status_effect(/datum/status_effect/debuff/ritesexpended))
 		to_chat(user,span_warning("I have performed enough rituals for the day... I must rest before communing more.")) // If you have already done a ritual in the last 30 minutes, you cannot do another.
 		return
-	var/riteselection = input(user, "Rituals of the Sun", src) as null|anything in solarrites // When you use a open hand on a rune, It'll give you a selection of all the rites available from that rune
+	var/riteselection = input(user, "Rituals of the Sun", src) as null|anything in solarrites // When you use an open hand on a rune, It'll give you a selection of all the rites available from that rune
 	switch(riteselection) // rite selection goes in this section, try to do something fluffy. Presentation is most important here, truthfully.
 		if("Guiding Light") // User selects Guiding Light, begins the stuff for it
 			if(!do_after(user, 5 SECONDS)) // just flavor stuff before activation
@@ -163,6 +163,8 @@
 			playsound(loc, 'sound/magic/holyshield.ogg', 80, FALSE, -1)
 			moonlightdance(src)
 			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
+		// TA REMOVAL START - RITUAL REMOVED CUZ THERE IS SAME ABILITY IN MIRACLES.
+		/*
 		if("Moonlight Inspiration")
 			if(!do_after(user, 5 SECONDS))
 				return
@@ -177,16 +179,22 @@
 			playsound(loc, 'sound/magic/holyshield.ogg', 80, FALSE, -1)
 			mooninspiration(src)
 			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
+		*/
+		// TA REMOVAL END
 
 /obj/structure/ritualcircle/noc/proc/moonlightdance(src)
 	var/ritualtargets = view(7, loc)
 	for(var/mob/living/carbon/human/target in ritualtargets)
 		target.apply_status_effect(/datum/status_effect/buff/moonlightdance)
 
+// TA REMOVAL START - RITUAL REMOVED CUZ THERE IS SAME ABILITY IN MIRACLES.
+/*
 /obj/structure/ritualcircle/noc/proc/mooninspiration(src)
 	var/ritualtargets = view(2, loc)
 	for(var/mob/living/carbon/human/target in ritualtargets)
 		target.mind.sleep_adv.sleep_adv_points += 3
+*/
+// TA REMOVAL END
 
 /obj/structure/ritualcircle/xylix
 	name = "Rune of Trickery"
@@ -460,13 +468,13 @@
 	var/ritualtargets = view(4, loc)
 	for(var/mob/living/carbon/human/target in ritualtargets)
 		target.apply_status_effect(/datum/status_effect/buff/malumritual)
-		to_chat(target,span_cultsmall("Malum's persistance guides me forward!"))
+		to_chat(target,span_cultsmall("Malum's persistence guides me forward!"))
 
 /obj/structure/ritualcircle/abyssor
 	name = "Rune of Storms"
 	desc = "A holy rune of <font color='3769b8'>Abyssor.</font> </br> <i>You sense your mind getting pulled into the drawn spiral.</i>"
 	icon_state = "abyssor_chalky"
-	var/stormrites = list("Rite of the Tides")
+	var/stormrites = list("Rite of the Tides", "Rite of Sea-grounds Aplenty")
 
 /obj/structure/ritualcircle/abyssor_alt
 	name = "Rune of Stirring"
@@ -521,7 +529,7 @@
 	switch(riteselection)
 		if("Rite of the Crystal Spire")
 			if(do_after(user, 50))
-				user.say("Deep Father, hear my call!")
+				user.say("Deepfather, hear my call!")
 				if(do_after(user, 50))
 					user.say("From the Abyss, split the earth!")
 					if(do_after(user, 50))
@@ -630,11 +638,11 @@
 	if(user.has_status_effect(/datum/status_effect/debuff/ritesexpended))
 		to_chat(user,span_warning("I have performed enough rituals for the day... I must rest before communing more."))
 		return
-	var/riteselection = input(user, "Rite of the Tides", src) as null|anything in stormrites
+	var/riteselection = input(user, "Which rite will you perform?", "Rune of Storms") as null|anything in stormrites
 	switch(riteselection)
 		if("Rite of the Tides")
 			if(do_after(user, 50))
-				user.say("Deep Father, hear my call!")
+				user.say("Deepfather, hear my call!")
 				if(do_after(user, 50))
 					user.say("I beg thee! A deluge upon your anointed!")
 					if(do_after(user, 50))
@@ -642,6 +650,57 @@
 						user.say("Let your waters swallow the land!")
 						to_chat(user, span_cultsmall("A crystalline shard forms at the center of the rune, humming with Abyssor's power."))
 						new /obj/item/abyssal_marker/tidal(loc)
+						user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
+						spawn(240)
+							icon_state = "abyssor_chalky"
+		if("Rite of Sea-grounds Aplenty")
+			var/list/offered = list()
+			for(var/obj/item/fishing/bait/bait in get_turf(src))
+				if(istype(bait, /obj/item/fishing/bait/deluxe))
+					continue
+				offered += bait
+				if(length(offered) >= FISHING_ENCHANT_RITE_BAITS)
+					break
+			if(!length(offered))
+				to_chat(user, span_warning("The rune needs rolled bait laid upon it before the Deepfather will bless it. It takes from one to [FISHING_ENCHANT_RITE_BAITS] at a time."))
+				return
+			to_chat(user, span_notice("The rune will bless up to [FISHING_ENCHANT_RITE_BAITS] rolled baits at once. [length(offered)] [length(offered) == 1 ? "lies" : "lie"] upon it[length(offered) >= FISHING_ENCHANT_RITE_BAITS ? ", any beyond that will be left as they are" : ""]."))
+			var/list/ale_types = get_reagent_types_by_drink_type(DRINKTYPE_ALE)
+			var/list/containers = list()
+			for(var/obj/item/reagent_containers/container in get_turf(src))
+				containers += container
+			var/list/offering = list()
+			if(!find_reagent_containers(containers, ale_types, FISHING_ENCHANT_RITE_ALE, offering))
+				var/ale_found = reagent_volume_in_containers(containers, ale_types)
+				if(!ale_found)
+					to_chat(user, span_warning("There is no ale upon the rune to offer. A full and open cup is needed for the Deepfather to answer."))
+				else
+					to_chat(user, span_warning("There is ale upon the rune, but not a full cup of it. The Deepfather asks [FISHING_ENCHANT_RITE_ALE] measures and I count [ale_found]."))
+				return
+			if(do_after(user, 50))
+				user.say("Hear! Great Deepfather! God of the depths, mover of the seas and lord of the dreams.")
+				if(do_after(user, 50))
+					user.say("Take this offering of ale! And bless us with sea-grounds aplenty, let these morsels carry your blessing!")
+					if(do_after(user, 50))
+						containers = list()
+						for(var/obj/item/reagent_containers/container in get_turf(src))
+							containers += container
+						offering = list()
+						if(!find_reagent_containers(containers, ale_types, FISHING_ENCHANT_RITE_ALE, offering))
+							to_chat(user, span_warning("The ale is no longer upon the rune. He does not answer."))
+							return
+						icon_state = "abyssor_active"
+						user.say("Pour abundance upon your anointed!")
+						playsound(loc, 'sound/foley/footsteps/FTWAT_1.ogg', 100)
+						drain_reagent_from_containers(offering, ale_types, FISHING_ENCHANT_RITE_ALE)
+						var/blessed = 0
+						for(var/obj/item/fishing/bait/bait as anything in offered)
+							if(QDELETED(bait) || get_turf(bait) != get_turf(src))
+								continue
+							qdel(bait)
+							new /obj/item/fishing/bait/deluxe(loc)
+							blessed++
+						to_chat(user, span_cultsmall("A salty fog rolls over the rune. When it clears, the ale has disappeared, and [blessed] [blessed == 1 ? "bait lies" : "baits lie"] glistening with Abyssor's blessing."))
 						user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
 						spawn(240)
 							icon_state = "abyssor_chalky"
@@ -1216,7 +1275,7 @@
 		target.visible_message(span_danger("[target] is looking on the verge of exploding again! Their core may need an extra whack from a hammer."))
 	target.add_stress(/datum/stressevent/necrarevive)
 	src.coinslot -= 1 // -1 coin, please insert more coins.
-	user.apply_status_effect(/datum/status_effect/debuff/ritesexpended) // only after a succesful revive
+	user.apply_status_effect(/datum/status_effect/debuff/ritesexpended) // only after a successful revive
 
 /obj/structure/ritualcircle/necra/proc/undermaidenbargain(src)
 	var/ritualtargets = view(7, loc)
@@ -1422,6 +1481,14 @@
 	switch(riteselection) // put ur rite selection here
 		if()
 */
+#define TA_ARMAMENTS_RITE_MIN_POP 30 //TA EDIT
+
+/proc/ta_armaments_rite_pop_gate(mob/user) //TA EDIT
+	if(GLOB.joined_player_list.len >= TA_ARMAMENTS_RITE_MIN_POP)
+		return TRUE
+	to_chat(user, span_warning("Ten's influence is too strong for this ritual for now."))
+	return FALSE
+
 // TIME FOR THE ASCENDANT. These can be stronger. As they are pretty much antag exclusive - Iconoclast for Matthios, Lich for ZIZO. ZIZO!
 
 /*
@@ -1452,6 +1519,8 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	var/riteselection = input(user, "Rituals of Progress", src) as null|anything in zizorites
 	switch(riteselection)
 		if("Rite of Armaments")
+			if(!ta_armaments_rite_pop_gate(user)) //TA EDIT
+				return
 			if(user.has_status_effect(/datum/status_effect/debuff/armamentrites))
 				to_chat(user, span_warning("I am not yet ready to perform this rite."))
 				return
@@ -1525,7 +1594,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 				return
 			user.say("ZIZO! ZIZO! TRUTH TO A WORLD OF IGNORAANCE!!")
 			icon_state = "zizo_active"
-			to_chat(user,span_cultsmall("Her Inzanity although incomprehendable to the ignorant, is invaluable to the enlightened. Her darkness now guides you, for the light now spurns you."))
+			to_chat(user,span_cultsmall("Her Inzanity, although incomprehensible to the ignorant, is invaluable to the enlightened. Her darkness now guides you, for the light now spurns you."))
 			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
 			zizolightsnuff(src)
 			spawn(10)
@@ -1547,7 +1616,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 				return
 			user.say("ZIZO! ZIZO! PROGRESS AT AAANY COST!!")
 			icon_state = "zizo_active"
-			to_chat(user,span_cultsmall("Her Inzanity although incomprehendable to the ignorant, is invaluable to the enlightened. Her hands guide your mynd and dreamed talent to rapidly Progress."))
+			to_chat(user,span_cultsmall("Her Inzanity, although incomprehensible to the ignorant, is invaluable to the enlightened. Her hands guide your mynd and dreamed talent to rapidly Progress."))
 			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
 			zizolightsnuff(src)
 			spawn(10)
@@ -1701,6 +1770,8 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	var/riteselection = input(user, "Rituals of Brotherhood", src) as null|anything in matthiosrites //TA Lore edit. Можно сделать модульно, но так это будет сложнее мейнтейнить
 	switch(riteselection) // put ur rite selection here
 		if("Rite of Armaments")
+			if(!ta_armaments_rite_pop_gate(user)) //TA EDIT
+				return
 			if(user.has_status_effect(/datum/status_effect/debuff/armamentrites))
 				to_chat(user, span_warning("I am not yet ready to perform this rite."))
 				return
@@ -1758,6 +1829,17 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 /obj/structure/ritualcircle/matthios/proc/matthiosarmaments(mob/living/carbon/human/target)
 	if(!HAS_TRAIT(target, TRAIT_FREEMAN))
 		loc.visible_message(span_cult("THE RITE REJECTS ONES WHO BOW DOWN TO TYRANNY!!")) //TA Lore edit
+		return
+	if(HAS_TRAIT(target, TRAIT_OATHBREAKER)) //TA EDIT START
+		target.Stun(60)
+		playsound(loc, 'sound/misc/smelter_fin.ogg', 50)
+		loc.visible_message(span_cult("[target]'s lux pours from their nose and into the rune! Gleeming gold simmers and contorts upon it, before manifesting itself into a blade!"))
+		spawn(20)
+			playsound(loc, 'sound/foley/equip/swordlarge1.ogg', 90)
+			playsound(loc, 'sound/items/bsmith1.ogg', 50)
+			target.put_in_hands(new /obj/item/rogueweapon/sword/long/oathbreaker_matthios(target), forced = TRUE)
+			spawn(40)
+				to_chat(target, span_cult("Take up these arms, and claim your right.")) //TA EDIT END
 		return
 	target.Stun(60)
 	target.Knockdown(60)
@@ -1886,6 +1968,8 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	var/riteselection = input(user, "Rituals of Violence", src) as null|anything in graggarrites
 	switch(riteselection) // put ur rite selection here
 		if("Rite of Armaments")
+			if(!ta_armaments_rite_pop_gate(user)) //TA EDIT
+				return
 			if(user.has_status_effect(/datum/status_effect/debuff/armamentrites))
 				to_chat(user, span_warning("I am not yet ready to perform this rite."))
 				return
@@ -2109,6 +2193,8 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	var/riteselection = input(user, "Rituals of Indulgence", src) as null|anything in baotharites
 	switch(riteselection) // put ur rite selection here
 		if("Rite of Armaments")
+			if(!ta_armaments_rite_pop_gate(user)) //TA EDIT
+				return
 			if(user.has_status_effect(/datum/status_effect/debuff/armamentrites))
 				to_chat(user, span_warning("I am not yet ready to perform this rite."))
 				return
@@ -2255,3 +2341,5 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	user.apply_status_effect(/datum/status_effect/debuff/devitalised/lesser)
 
 	return TRUE
+
+#undef TA_ARMAMENTS_RITE_MIN_POP

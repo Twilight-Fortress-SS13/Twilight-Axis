@@ -387,6 +387,7 @@
 		mastermob.vis_contents += mob_charge_effect
 
 /datum/intent/proc/on_charge_cancel()
+	on_mouse_up() // TA EDIT
 	if(!tranged || !mastermob?.client)
 		return
 	if(!mastermob.client.charging)

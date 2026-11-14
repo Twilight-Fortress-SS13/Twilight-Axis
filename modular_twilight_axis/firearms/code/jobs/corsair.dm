@@ -16,7 +16,6 @@
 	outfit = /datum/outfit/job/roguetown/wretch/twilight_corsair
 	category_tags = list(CTAG_WRETCH)
 	class_select_category = CLASS_CAT_RANGER
-	traits_applied = list(TRAIT_FIREARMS_MARKSMAN)
 	maximum_possible_slots = 2
 	subclass_stats = list(
 		STATKEY_PER = 3,
@@ -84,7 +83,7 @@
 			gloves = /obj/item/clothing/gloves/roguetown/angle/grenzelgloves
 			r_hand = /obj/item/rogueweapon/sword/sabre
 			mask = /obj/item/clothing/mask/rogue/facemask/steel
-			backpack_contents = list(/obj/item/twilight_powderflask = 1, /obj/item/bomb = 2, /obj/item/rogueweapon/huntingknife/idagger/steel/special = 1, /obj/item/rope/chain = 1, /obj/item/storage/belt/rogue/pouch/coins/poor = 1)
+			backpack_contents = list(/obj/item/twilight_powderflask = 1, /obj/item/explosive/fused/bottle = 2, /obj/item/rogueweapon/huntingknife/idagger/steel/special = 1, /obj/item/rope/chain = 1, /obj/item/storage/belt/rogue/pouch/coins/poor = 1)
 			H.grant_language(/datum/language/grenzelhoftian)
 			switch(crimeschoice)
 				if("I'm nobody")
@@ -113,7 +112,7 @@
 			beltl = /obj/item/quiver/twilight_bullet/lead
 			beltr = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol
 			backl = /obj/item/storage/backpack/rogue/satchel
-			backpack_contents = list(/obj/item/bomb/smoke = 2, /obj/item/rogueweapon/huntingknife/idagger/steel/kazengun = 1, /obj/item/twilight_powderflask = 1, /obj/item/rope/chain = 1)
+			backpack_contents = list(/obj/item/explosive/impact/smoke/bomb = 2, /obj/item/rogueweapon/huntingknife/idagger/steel/kazengun = 1, /obj/item/twilight_powderflask = 1, /obj/item/rope/chain = 1)
 			H.grant_language(/datum/language/kazengunese)
 			switch(crimeschoice)
 				if("I'm nobody")
@@ -136,7 +135,7 @@
 			neck = /obj/item/clothing/neck/roguetown/chaincoif/chainmantle
 			belt = /obj/item/storage/belt/rogue/leather
 			backl = /obj/item/storage/backpack/rogue/satchel
-			backpack_contents = list(/obj/item/twilight_powderflask = 1, /obj/item/bomb = 2, /obj/item/rogueweapon/huntingknife/idagger/steel/special = 1, /obj/item/rope/chain = 1, /obj/item/storage/belt/rogue/pouch/coins/poor = 1)
+			backpack_contents = list(/obj/item/twilight_powderflask = 1, /obj/item/explosive/fused/bottle = 2, /obj/item/rogueweapon/huntingknife/idagger/steel/special = 1, /obj/item/rope/chain = 1, /obj/item/storage/belt/rogue/pouch/coins/poor = 1)
 			H.grant_language(/datum/language/grenzelhoftian)
 
 			var/helmets = list(

@@ -64,6 +64,26 @@
 	var/mob/dead/observer/G = usr
 	G.dead_tele()
 
+/atom/movable/screen/ghost/hermes
+	name = "HERMES"
+	icon_state = "hermes"
+
+/atom/movable/screen/ghost/hermes/Click()
+	var/mob/dead/observer/G = usr
+	if(!G?.client?.holder) // TA EDIT
+		return // TA EDIT
+	GLOB.ghost_hermes.open(G)
+
+/atom/movable/screen/ghost/character
+	name = "Character Creator"
+	icon_state = "character"
+
+/atom/movable/screen/ghost/character/Click()
+	var/mob/dead/observer/G = usr
+	if(!G?.client?.holder) // TA EDIT
+		return // TA EDIT
+	G.client?.prefs?.ShowChoices(G, PREFERENCE_TAB_CHARACTER_CREATOR)
+
 /atom/movable/screen/ghost/moveup
 	name = "Move Up"
 	icon_state = "up"
@@ -99,6 +119,23 @@
 	using.hud = src
 	static_inventory += using
 
+	if(owner.client?.holder) // TA EDIT START
+		using = new /atom/movable/screen/ghost/hermes(null, src)
+		using.screen_loc = ui_ghost_hermes
+		static_inventory += using
+
+		using = new /atom/movable/screen/ghost/character(null, src)
+		using.screen_loc = ui_ghost_character
+		static_inventory += using
+
+		using = new /atom/movable/screen/ghost/moveup(null, src)
+		using.screen_loc = ui_ghost_moveup
+		static_inventory += using
+
+		using = new /atom/movable/screen/ghost/movedown(null, src)
+		using.screen_loc = ui_ghost_movedown
+		static_inventory += using // TA EDIT END
+
 	grain = new /atom/movable/screen/grain
 	grain.hud = src
 	static_inventory += grain
@@ -129,6 +166,14 @@
 
 	using = new /atom/movable/screen/ghost/teleport(null, src)
 	using.screen_loc = ui_ghost_teleport
+	static_inventory += using
+
+	using = new /atom/movable/screen/ghost/hermes(null, src)
+	using.screen_loc = ui_ghost_hermes
+	static_inventory += using
+
+	using = new /atom/movable/screen/ghost/character(null, src)
+	using.screen_loc = ui_ghost_character
 	static_inventory += using
 
 	using = new /atom/movable/screen/ghost/moveup(null, src)

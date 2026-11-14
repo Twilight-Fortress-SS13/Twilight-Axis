@@ -1,6 +1,6 @@
 /datum/advclass/witch
 	name = "Witch"
-	tutorial = "You are a witch, seen as wisefolk to some and a demon to many. Ostracized and sequestered for wrongthinks or outright heresy, your potions are what the commonfolk turn to when all else fails, and for this they tolerate you — at an arm's length. Take care not to end 'pon a pyre, for the church condemns your left handed arts."
+	tutorial = "You are a witch, seen as wisefolk to some and a demon to many. Ostracized and sequestered for wrongthink or outright heresy, your potions are what the commonfolk turn to when all else fails, and for this they tolerate you — at an arm's length. Take care not to end 'pon a pyre, for the church condemns your left handed arts."
 	allowed_sexes = list(MALE, FEMALE)
 
 	outfit = /datum/outfit/job/roguetown/adventurer/witch
@@ -273,18 +273,12 @@
 /mob/living/simple_animal/hostile/retaliate/bat/witch_shifted
 	name = "bat"
 	desc = "A small fluttering creature. This one has a peculiar intelligence in its eyes..."
-	move_to_delay = 2
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
-	wander = FALSE
+	ai_controller = null // TA EDIT
 
 /mob/living/simple_animal/hostile/retaliate/bat/crow/witch_shifted
 	name = "zad"
 	desc = "A black bird with a peculiar intelligence in its eyes..."
-	move_to_delay = 2
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
-	wander = FALSE
+	ai_controller = null // TA EDIT
 
 /datum/intent/simple/claw/witch_cat
 	name = "scratch"
@@ -293,25 +287,18 @@
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf/witch_shifted
 	name = "lesser volf"
 	desc = "A smaller, runtier variant of the classic volf that hounds the woods nearby. Rarely seen around these parts, and doesn't look nearly as dangerous as its larger counterparts. This one has a peculiar intelligence in its yellow eyes..."
-	move_to_delay = 2
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
-	wander = FALSE
+	ai_controller = null // TA EDIT
 	STASPD = 15
 	STASTR = 3
 	STACON = 5
 	melee_damage_lower = 9
 	melee_damage_upper = 14
-	del_on_deaggro = null
 	defprob = 70
 
 /mob/living/simple_animal/pet/cat/witch_shifted
 	name = "aloof cat"
 	desc = "A bored-seeming feline. This one has a peculiar intelligence in its green eyes..."
-	move_to_delay = 2
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
-	wander = FALSE
+	ai_controller = null // TA EDIT
 	defprob = 90
 	STASPD = 18
 	STASTR = 1
@@ -323,10 +310,7 @@
 /mob/living/simple_animal/pet/cat/rogue/black/witch_shifted
 	name = "voidblack cat"
 	desc = "Supposedly sacred to Necra, and just as interested in rats as their lesser counterparts. This one has a strange intelligence behind its dark, wide eyes..."
-	move_to_delay = 2
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
-	wander = FALSE
+	ai_controller = null // TA EDIT
 	defprob = 90
 	STASPD = 18
 	STASTR = 1
@@ -338,26 +322,19 @@
 /mob/living/simple_animal/hostile/retaliate/rogue/fox/witch_shifted
 	name = "lesser vernard"
 	desc = "A smaller, runtier variant of the sneaky vernards that skulk the woods nearby. Rarely seen around these parts, and doesn't look nearly as dangerous as its larger counterparts. This one has a peculiar intelligence in its yellow eyes..."
-	move_to_delay = 2
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
-	wander = FALSE
+	ai_controller = null // TA EDIT
 	defprob = 90
 	STASPD = 18
 	STASTR = 2
 	STACON = 4
 	melee_damage_lower = 8
 	melee_damage_upper = 12
-	del_on_deaggro = null
 	defprob = 70
 
 /mob/living/simple_animal/hostile/retaliate/smallrat/witch_shifted
 	name = "small rous"
 	desc = "Supposedly sacred to Pestra, these small and occasionally pestilent creachurs are commonly found in pantries and ships. This one seems to be a bit more smarter than the others..."
-	move_to_delay = 2
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
-	wander = FALSE
+	ai_controller = null // TA EDIT
 	defprob = 90
 	STASPD = 18
 	STASTR = 1
@@ -369,10 +346,7 @@
 /mob/living/simple_animal/hostile/retaliate/rogue/mudcrab/cabbit/witch_shifted
 	name = "lesser cabbit"
 	desc = "Seeing one of these quick beasts is said to bring Xylix's fortune, along with their feet. It looks weak and innocent, and incredibly adorable."
-	move_to_delay = 2
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
-	wander = FALSE
+	ai_controller = null // TA EDIT
 	defprob = 90
 	STASPD = 20
 	STASTR = 1
