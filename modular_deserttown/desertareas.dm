@@ -547,9 +547,9 @@
 	spookysounds = SPOOKY_GEN
 	spookynight = SPOOKY_GEN
 	first_time_text = "Crimson Dunes"
-	droning_sound = 'sound/music/area/desert/EternalOceansofSand.ogg'
-	droning_sound_dusk = 'sound/music/area/desert/NightPrayer.ogg'
-	droning_sound_night = 'sound/music/area/desert/Moonrise.ogg'
+	droning_sound = 'sound/music/area/desert/TheCorruption.ogg'
+	droning_sound_dusk = 'sound/music/area/desert/TheCorruption.ogg'
+	droning_sound_night = 'sound/music/area/desert/TheCorruption.ogg'
 	ambush_mobs = list(
 		/mob/living/carbon/human/species/skeleton/npc/ambush = 30,
 		/mob/living/carbon/human/species/human/northern/dunewell_raider/ambush = 60,
@@ -602,3 +602,12 @@
 		return
 
 	GLOB.bogged_players -= L.real_name
+
+/area/rogue/under/dungeon/alLuqmani
+	name = "Kuzaim al-Luqmani tomb"
+	loot_budget = LOOT_BUDGET_RH_FOREST_SOUTH
+	icon_state = "under"
+	first_time_text = "Kuzaim al-Luqmani tomb"
+	droning_sound = 'sound/music/area/desert/Valley-of-Kings.ogg'
+	droning_sound_dusk = null
+	droning_sound_night = null
