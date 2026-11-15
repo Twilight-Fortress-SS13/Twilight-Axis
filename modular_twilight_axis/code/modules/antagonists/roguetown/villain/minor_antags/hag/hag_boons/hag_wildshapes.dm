@@ -9,6 +9,7 @@
 	wildshape_icon = 'icons/roguetown/mob/monster/rat.dmi'
 	wildshape_icon_state = "srat"
 	give_miracles = FALSE
+	pass_flags = PASSMOB
 
 /mob/living/carbon/human/species/wildshape/rat/gain_inherent_skills()
 	. = ..()
@@ -45,6 +46,7 @@
 		TRAIT_KEENEARS,
 		TRAIT_HARDDISMEMBER,
 		TRAIT_BREADY,
+		TRAIT_PASSTABLE,
 	)
 	inherent_biotypes = MOB_HUMANOID
 	no_equip = list(SLOT_SHIRT, SLOT_HEAD, SLOT_WEAR_MASK, SLOT_ARMOR, SLOT_GLOVES, SLOT_SHOES, SLOT_PANTS, SLOT_CLOAK, SLOT_BELT, SLOT_BACK_R, SLOT_BACK_L, SLOT_S_STORE)
