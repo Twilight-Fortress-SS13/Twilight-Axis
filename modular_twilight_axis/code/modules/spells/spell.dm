@@ -75,37 +75,36 @@
 	return devotion_cost && HAS_TRAIT(target, TRAIT_PSYDONITE)
 
 /obj/effect/proc_holder/spell/invoked/infestation/psydonite_check(mob/living/target)
-	return FALSE
-
+	return istype(target.devotion?.patron, /datum/patron/old_god)  && (target.devotion > CLERIC_T2 || HAS_TRAIT(target, TRAIT_PURITAN))
 /obj/effect/proc_holder/spell/invoked/call_dreamfiend/psydonite_check(mob/living/target)
-	return FALSE
+	return istype(target.devotion?.patron, /datum/patron/old_god)  && (target.devotion > CLERIC_T2 || HAS_TRAIT(target, TRAIT_PURITAN))
 
 /obj/effect/proc_holder/spell/invoked/raise_spirits_vengeance/psydonite_check(mob/living/target)
-	return FALSE
+	return istype(target.devotion?.patron, /datum/patron/old_god)  && (target.devotion > CLERIC_T2 || HAS_TRAIT(target, TRAIT_PURITAN))
 
 /obj/effect/proc_holder/spell/invoked/eoracurse/psydonite_check(mob/living/target)
-	return FALSE
+	return istype(target.devotion?.patron, /datum/patron/old_god)  && (target.devotion > CLERIC_T2 || HAS_TRAIT(target, TRAIT_PURITAN))
 
 /datum/action/cooldown/spell/miracle/anastasis
 	spell_flags = NONE
 
 /obj/effect/proc_holder/spell/invoked/projectile/blowingdust/psydonite_check(mob/living/target)
-	return FALSE
+	return istype(target.devotion?.patron, /datum/patron/old_god)  && (target.devotion > CLERIC_T2 || HAS_TRAIT(target, TRAIT_PURITAN))
 
 /obj/effect/proc_holder/spell/invoked/projectile/TAblowingdust/psydonite_check(mob/living/target)
-	return FALSE
+	return istype(target.devotion?.patron, /datum/patron/old_god)  && (target.devotion > CLERIC_T2 || HAS_TRAIT(target, TRAIT_PURITAN))
 
 /obj/effect/proc_holder/spell/invoked/lux_steal/psydonite_check(mob/living/target)
-	return FALSE
+	return istype(target.devotion?.patron, /datum/patron/old_god)  && (target.devotion > CLERIC_T2 || HAS_TRAIT(target, TRAIT_PURITAN))
 
 /obj/effect/proc_holder/spell/invoked/twilight_weightofchains/psydonite_check(mob/living/target)
-	return FALSE
+	return istype(target.devotion?.patron, /datum/patron/old_god)  && (target.devotion > CLERIC_T2 || HAS_TRAIT(target, TRAIT_PURITAN))
 
 /obj/effect/proc_holder/spell/invoked/twilight_equalize/psydonite_check(mob/living/target)
-	return FALSE
+	return istype(target.devotion?.patron, /datum/patron/old_god)  && (target.devotion > CLERIC_T2 || HAS_TRAIT(target, TRAIT_PURITAN))
 
 /obj/effect/proc_holder/spell/invoked/twilight_churnwealthy/psydonite_check(mob/living/target)
-	return FALSE
+	return istype(target.devotion?.patron, /datum/patron/old_god)  && (target.devotion > CLERIC_T2 || HAS_TRAIT(target, TRAIT_PURITAN))
 
 /obj/effect/proc_holder/spell/invoked/projectile/twilight_crownfortheking/psydonite_check(mob/living/target)
-	return FALSE
+	return istype(target.devotion?.patron, /datum/patron/old_god)  && (target.devotion > CLERIC_T2 || HAS_TRAIT(target, TRAIT_PURITAN))
