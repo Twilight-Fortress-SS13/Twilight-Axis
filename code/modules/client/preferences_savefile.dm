@@ -897,6 +897,9 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		ooc_extra_img_link = null
 	S["rumour"]					>> rumour
 	S["noble_gossip"]			>> noble_gossip
+	S["secrets"]				>> secrets
+	if(!islist(secrets))
+		secrets = list()
 	S["averse_chosen_faction"]	>> averse_chosen_faction
 	S["charflaw_choices"] >> charflaw_choices // TA EDIT
 	S["song_artist"]				>> song_artist
@@ -1349,6 +1352,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["ooc_extra_img_link"] , ooc_extra_img_link)
 	WRITE_FILE(S["rumour"] , html_decode(rumour))
 	WRITE_FILE(S["noble_gossip"] , html_decode(noble_gossip))
+	WRITE_FILE(S["secrets"] , secrets)
 	WRITE_FILE(S["averse_chosen_faction"] , html_decode(averse_chosen_faction))
 	WRITE_FILE(S["song_artist"] , song_artist)
 	WRITE_FILE(S["song_title"] , song_title)

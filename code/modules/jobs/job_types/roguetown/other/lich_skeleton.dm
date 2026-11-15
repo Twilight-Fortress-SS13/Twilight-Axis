@@ -1036,7 +1036,6 @@ LICH SKELETONS
 	color = "#bb9696"
 	smeltresult = /obj/item/ingot/aaslag
 	anvilrepair = null
-	randomize_blade_int_on_init = TRUE
 
 /obj/item/rogueweapon/greatsword/grenz/flamberge/paalloy
 	name = "ancient flamberge"

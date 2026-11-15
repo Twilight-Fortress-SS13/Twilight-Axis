@@ -64,7 +64,9 @@
 	if(!target)
 		return TRUE
 
-	var/blood_given = min(max(BLOOD_VOLUME_NORMAL - target.blood_volume, 0), blood_storage, blood_sucking)
+	var/blood_given = min(max(BLOOD_VOLUME_NORMAL - target.blood_volume, 0), blood_storage, blood_sucking) // TA EDIT START
+	if(target.is_in_combat())
+		blood_given = min(blood_given, 1) // TA EDIT END
 	target.blood_volume = min(target.blood_volume + blood_given, BLOOD_VOLUME_NORMAL)
 	blood_storage = max(blood_storage - blood_given, 0)
 
