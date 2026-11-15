@@ -261,8 +261,3 @@
 	path = /obj/item/storage/belt/rogue/leather/belthooks
 	sort_category = "Accessories"
 */
-
-/datum/loadout_item/bandithood // TA EDIT START
-	name = "Bandit Hood"
-	path = /obj/item/clothing/head/roguetown/menacing/bandit
-	sort_category = "Accessories" // TA EDIT END
