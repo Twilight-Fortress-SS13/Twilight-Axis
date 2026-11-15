@@ -4550,6 +4550,7 @@
 #include "modular_twilight_axis\code\modules\antagonists\roguetown\villain\minor_antags\hag\hag_boons\hag_effects.dm"
 #include "modular_twilight_axis\code\modules\antagonists\roguetown\villain\minor_antags\hag\hag_boons\hag_spells.dm"
 #include "modular_twilight_axis\code\modules\antagonists\roguetown\villain\minor_antags\hag\hag_boons\hag_traits.dm"
+#include "modular_twilight_axis\code\modules\antagonists\roguetown\villain\minor_antags\hag\hag_boons\hag_wildshapes.dm"
 #include "modular_twilight_axis\code\modules\antagonists\roguetown\villain\minor_antags\hag\hag_crafts.dm"
 #include "modular_twilight_axis\code\modules\antagonists\roguetown\villain\minor_antags\hag\hag_curses.dm"
 #include "modular_twilight_axis\witcher_chain\witcher_chain.dm"

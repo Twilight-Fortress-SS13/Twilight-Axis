@@ -20,7 +20,6 @@
 		/obj/item/alch/hag_moss/enchanted/secret		= 2,
 		/obj/item/alch/hag_moss/enchanted/forest		= 2,
 		/obj/item/alch/hag_moss/enchanted/altered		= 2,
-		/obj/item/alch/hag_moss/enchanted/moving		= 2,
 		// TA ADDITION END
 		// High Rarity Enchanted
 		/obj/item/alch/hag_moss/enchanted/random/high = 1,

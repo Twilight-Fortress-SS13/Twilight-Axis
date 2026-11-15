@@ -21,90 +21,49 @@
 	)
 	disallowed_equipment_type = list(/obj/item/rogueweapon)
 
-/mob/living/carbon/human/species/wildshape/rat
-	name = "Rat"
-	race = /datum/species/shaperat
-	footstep_type = FOOTSTEP_MOB_CLAW
-	ambushable = FALSE
-	skin_armor = null
-	wildshape_icon = 'icons/roguetown/mob/monster/rat.dmi'
-	wildshape_icon_state = "srat"
-	give_miracles = FALSE
+/datum/hag_boon/spell/rous_form
+	name = "Boon of rous form"
+	desc = "Allows bearer to transform into a big, evil rat..."
+	spell_type = /obj/effect/proc_holder/spell/self/wildshape/hag_rous_form
+	points = 65
 
-/mob/living/carbon/human/species/wildshape/rat/gain_inherent_skills()
-	. = ..()
-	if(mind)
-		adjust_skillrank(/datum/skill/misc/swimming, SKILL_LEVEL_EXPERT, TRUE)
-		adjust_skillrank(/datum/skill/misc/athletics, SKILL_LEVEL_MASTER, TRUE)
-		adjust_skillrank(/datum/skill/misc/climbing, SKILL_LEVEL_EXPERT, TRUE)
-		adjust_skillrank(/datum/skill/misc/sneaking, SKILL_LEVEL_MASTER, TRUE)
+/obj/effect/proc_holder/spell/self/wildshape/hag_rous_form
+	name = "Rous Form"
+	desc = "Turns yourself into a big, evil rat!"
+	invocation_type = "none"
+	recharge_time = 10 SECONDS
+	miracle = FALSE
+	devotion_cost = 0
+	clothes_req = FALSE
+	human_req = FALSE
+	ignore_cockblock = TRUE
 
-		STASTR = 1
-		STACON = 1 // YOU GONNA DIE FROM ONE HIT, HA-HA-HA!!!
-		STAWIL = 16
-		STAPER = 14
-		STASPD = 16
-		STAINT = 12
-
-		real_name = "rat"
-		faction += "rats"
-
-/datum/species/shaperat
-	name = "rat"
-	id = "shaperat"
-	species_traits = list(NO_UNDERWEAR, NO_ORGAN_FEATURES, NO_BODYPART_FEATURES)
-	inherent_traits = list(
-		TRAIT_KNEESTINGER_IMMUNITY,
-		TRAIT_STEELHEARTED,
-		TRAIT_INFINITE_ENERGY,
-		TRAIT_ORGAN_EATER,
-		TRAIT_WILD_EATER,
-		TRAIT_LONGSTRIDER,
-		TRAIT_PERFECT_TRACKER,
-		TRAIT_DODGEEXPERT,
-		TRAIT_CRITICAL_WEAKNESS,
-		TRAIT_WEAPONLESS,
-		TRAIT_NOPVE,
-		TRAIT_KEENEARS,
+	possible_shapes = list(
+		/mob/living/carbon/human/species/wildshape/rous
 	)
-	inherent_biotypes = MOB_HUMANOID
-	no_equip = list(SLOT_SHIRT, SLOT_HEAD, SLOT_WEAR_MASK, SLOT_ARMOR, SLOT_GLOVES, SLOT_SHOES, SLOT_PANTS, SLOT_CLOAK, SLOT_BELT, SLOT_BACK_R, SLOT_BACK_L, SLOT_S_STORE)
-	nojumpsuit = 1
-	sexes = 1
-	offset_features = list(OFFSET_HANDS = list(0,2), OFFSET_HANDS_F = list(0,2))
-	organs = list(
-		ORGAN_SLOT_BRAIN = /obj/item/organ/brain,
-		ORGAN_SLOT_HEART = /obj/item/organ/heart,
-		ORGAN_SLOT_LUNGS = /obj/item/organ/lungs,
-		ORGAN_SLOT_EYES = /obj/item/organ/eyes/night_vision,
-		ORGAN_SLOT_EARS = /obj/item/organ/ears,
-		ORGAN_SLOT_TONGUE = /obj/item/organ/tongue/wild_tongue,
-		ORGAN_SLOT_LIVER = /obj/item/organ/liver,
-		ORGAN_SLOT_STOMACH = /obj/item/organ/stomach,
-		ORGAN_SLOT_APPENDIX = /obj/item/organ/appendix,
-		ORGAN_SLOT_GUTS = /obj/item/organ/guts,
-		)
+	disallowed_equipment_type = list(/obj/item/rogueweapon)
 
-	languages = list(
-		/datum/language/beast,
-		/datum/language/common,
+/datum/hag_boon/spell/troll_form
+	name = "Boon of troll form"
+	desc = "Allows bearer to transform into a big, slow troll..."
+	spell_type = /obj/effect/proc_holder/spell/self/wildshape/hag_troll_form
+	points = 85
+
+/obj/effect/proc_holder/spell/self/wildshape/hag_troll_form
+	name = "Troll Form"
+	desc = "Turns yourself into a big, slow troll!"
+	invocation_type = "none"
+	recharge_time = 10 SECONDS
+	miracle = FALSE
+	devotion_cost = 0
+	clothes_req = FALSE
+	human_req = FALSE
+	ignore_cockblock = TRUE
+
+	possible_shapes = list(
+		/mob/living/carbon/human/species/wildshape/troll
 	)
-
-/datum/species/shaperat/send_voice(mob/living/carbon/human/H)
-	playsound(get_turf(H), pick('sound/vo/mobs/rat/rat_life.ogg','sound/vo/mobs/rat/rat_life2.ogg','sound/vo/mobs/rat/rat_life3.ogg','sound/vo/mobs/rat/aggro (1).ogg','sound/vo/mobs/rat/aggro (2).ogg', 'sound/vo/mobs/rat/aggro (3).ogg'), 80, TRUE, -1)
-
-/datum/species/shaperat/regenerate_icons(mob/living/carbon/human/human)
-	human.icon = 'icons/roguetown/mob/monster/rat.dmi'
-	human.base_intents = list(INTENT_HELP, INTENT_DISARM, INTENT_GRAB)
-	human.icon_state = "srat"
-	human.update_damage_overlays()
-	return TRUE
-
-/datum/hag_boon/spell/roots_movement
-	name = "Boon of roots moving"
-	desc = "Allows bearer to move throught the roots to someone they know."
-	spell_type = /obj/effect/proc_holder/spell/self/roots_movement
-	points = 50
+	disallowed_equipment_type = list(/obj/item/rogueweapon)
 
 /obj/effect/proc_holder/spell/self/roots_movement
 	name = "Movement of roots"
