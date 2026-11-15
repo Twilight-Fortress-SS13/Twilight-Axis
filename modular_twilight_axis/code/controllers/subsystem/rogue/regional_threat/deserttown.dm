@@ -370,6 +370,10 @@
 	parent_type = /datum/threat_region/al_ashur_deep_dunes
 	region_name = THREAT_REGION_DESERT_DEEP_WEST
 
+/datum/threat_region/crimson_dunes
+	parent_type = /datum/threat_region/al_ashur_deep_dunes
+	region_name = THREAT_REGION_CRIMSON_DUNES
+
 /datum/threat_region/al_ashur_sunken_ruins
 	region_name = THREAT_REGION_AL_ASHUR_SUNKEN_RUINS
 	latent_ambush = 400
