@@ -44,7 +44,17 @@
 			if(!index)
 				index = H.real_name
 			S.name = "veteran cloak ([index])"
+		// TA ADDITION START
+		new additional_item(L.loc)
+		H.put_in_inactive_hand(additional_item)
 
+/obj/item/roguekey/guildmasterkey
+	name = "guild master Key"
+	desc = "This key will open guild master doors."
+	icon_state = "brownkey"
+	lockid = "cheesekey"
+
+// TA ADDITION END
 
 /datum/advclass/veteran/battlemaster
 	name = "Veteran Battlemaster"

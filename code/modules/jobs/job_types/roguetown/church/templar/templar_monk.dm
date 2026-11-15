@@ -104,6 +104,12 @@
 			mask = /obj/item/clothing/head/roguetown/roguehood
 			beltl = /obj/item/clothing/neck/roguetown/psicross/malum
 			cloak = /obj/item/clothing/cloak/templar/malumite
+		// TA ADDITION START
+		if(/datum/patron/old_god)
+			mask = /obj/item/clothing/head/roguetown/roguehood/psydon/black
+			beltl = /obj/item/clothing/neck/roguetown/psicross
+			cloak = /obj/item/clothing/cloak/absolutionistrobe/black
+		// TA ADDITION END
 	// Patron dagger + sheath in satchel
 	var/patron_dagger = get_templar_patron_dagger(H)
 	if(patron_dagger)
