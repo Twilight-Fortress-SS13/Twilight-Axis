@@ -877,9 +877,9 @@
 	name = "'Experimental Azurian Fellowshippe Staff' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a mage staff."
 	target_items = list(
-		/obj/item/rogueweapon/woodstaff/implement/greater = /obj/item/rogueweapon/woodstaff/implement/greater/fellowshippe,
-		/obj/item/rogueweapon/woodstaff/implement/grand = /obj/item/rogueweapon/woodstaff/implement/grand/fellowshippe,
 		/obj/item/rogueweapon/woodstaff/implement/grand/magos = /obj/item/rogueweapon/woodstaff/implement/grand/magos/fellowshippe,
+		/obj/item/rogueweapon/woodstaff/implement/grand = /obj/item/rogueweapon/woodstaff/implement/grand/fellowshippe,
+		/obj/item/rogueweapon/woodstaff/implement/greater = /obj/item/rogueweapon/woodstaff/implement/greater/fellowshippe,
 		/obj/item/rogueweapon/woodstaff/implement = /obj/item/rogueweapon/woodstaff/implement/fellowshippe
 	)
 	result_item = null
