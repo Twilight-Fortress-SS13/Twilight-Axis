@@ -648,15 +648,31 @@
 /datum/intent/sword/cut/martyr
 		item_d_type = "fire"
 		blade_class = BCLASS_CUT
+
+/datum/intent/sword/cut/long/martyr // TA EDIT START
+	item_d_type = "fire"
+	blade_class = BCLASS_CUT // TA EDIT END
 /datum/intent/sword/thrust/martyr
 		item_d_type = "fire"
 		blade_class = BCLASS_PICK // so our armor-piercing attacks in ult mode can do crits(against most armors, not having crit)
+
+/datum/intent/sword/thrust/long/martyr // TA EDIT START
+	item_d_type = "fire"
+	blade_class = BCLASS_PICK // TA EDIT END
+
+/datum/intent/sword/thrust/long/deep/martyr // TA EDIT START
+	item_d_type = "fire"
+	blade_class = BCLASS_PICK // TA EDIT END
 /datum/intent/sword/strike/martyr
 		item_d_type = "fire"
 		blade_class = BCLASS_SMASH
 /datum/intent/sword/chop/martyr
 		item_d_type = "fire"
 		blade_class = BCLASS_CHOP
+
+/datum/intent/sword/chop/long/martyr // TA EDIT START
+	item_d_type = "fire"
+	blade_class = BCLASS_CHOP // TA EDIT END
 
 
 /obj/item/rogueweapon/sword/long/martyr/Initialize(mapload)
@@ -666,8 +682,8 @@
 	else
 		SSroguemachine.martyrweapon = src
 	if(!gc_destroyed)
-		var/list/active_intents = list(/datum/intent/sword/cut/martyr, /datum/intent/sword/thrust/martyr, /datum/intent/sword/strike/martyr)
-		var/list/active_intents_wielded = list(/datum/intent/sword/cut/martyr, /datum/intent/sword/thrust/martyr, /datum/intent/sword/strike/martyr, /datum/intent/sword/chop/martyr)
+		var/list/active_intents = list(/datum/intent/sword/cut/martyr, /datum/intent/sword/thrust/long/martyr, /datum/intent/sword/strike/martyr) // TA EDIT
+		var/list/active_intents_wielded = list(/datum/intent/sword/cut/long/martyr, /datum/intent/sword/thrust/long/martyr, /datum/intent/sword/chop/long/martyr, /datum/intent/sword/thrust/long/deep/martyr) // TA EDIT
 		var/safe_damage = 20
 		var/safe_damage_wielded = 25
 		AddComponent(/datum/component/martyrweapon, active_intents, active_intents_wielded, safe_damage, safe_damage_wielded)
@@ -725,8 +741,8 @@
 /obj/item/rogueweapon/greataxe/steel/doublehead/martyr
 	force = 20
 	force_wielded = 35
-	possible_item_intents = list(/datum/intent/axe/cut, /datum/intent/axe/chop, /datum/intent/axe/bash)
-	gripped_intents = list(/datum/intent/axe/cut/long, /datum/intent/axe/chop/long, /datum/intent/axe/bash)
+	possible_item_intents = list(/datum/intent/axe/cut, /datum/intent/axe/chop, SPEAR_BASH) // TA EDIT
+	gripped_intents = list(/datum/intent/axe/cut/long, /datum/intent/axe/chop/long, /datum/intent/axe/sweep) // TA EDIT
 	icon_state = "martyraxe"
 	icon = 'icons/roguetown/weapons/axes64.dmi'
 	item_state = "martyraxe"
@@ -773,6 +789,10 @@
 		item_d_type = "fire"
 		blade_class = BCLASS_SMASH
 
+/datum/intent/axe/sweep/martyr // TA EDIT START
+	item_d_type = "fire"
+	blade_class = BCLASS_CUT // TA EDIT END
+
 /obj/item/rogueweapon/greataxe/steel/doublehead/martyr/Initialize(mapload)
 	. = ..()
 	if(SSroguemachine.martyrweapon)
@@ -780,8 +800,8 @@
 	else
 		SSroguemachine.martyrweapon = src
 	if(!gc_destroyed)
-		var/list/active_intents = list(/datum/intent/axe/cut/martyr, /datum/intent/axe/chop/martyr, /datum/intent/axe/bash/martyr)
-		var/list/active_intents_wielded = list(/datum/intent/axe/cut/long/martyr, /datum/intent/axe/chop/long/martyr, /datum/intent/axe/bash/martyr)
+		var/list/active_intents = list(/datum/intent/axe/cut/martyr, /datum/intent/axe/chop/martyr, /datum/intent/spear/bash/martyr) // TA EDIT
+		var/list/active_intents_wielded = list(/datum/intent/axe/cut/long/martyr, /datum/intent/axe/chop/long/martyr, /datum/intent/axe/sweep/martyr) // TA EDIT
 		var/safe_damage = 15
 		var/safe_damage_wielded = 35
 		AddComponent(/datum/component/martyrweapon, active_intents, active_intents_wielded, safe_damage, safe_damage_wielded)
@@ -829,8 +849,8 @@
 	force = 20
 	force_wielded = 30
 	wdefense = 6
-	possible_item_intents = list(/datum/intent/mace/strike)
-	gripped_intents = list(/datum/intent/mace/strike, /datum/intent/mace/smash, /datum/intent/effect/daze, /datum/intent/effect/hobble)
+	possible_item_intents = list(/datum/intent/mace/strike, /datum/intent/mace/bash/ranged) // TA EDIT
+	gripped_intents = list(/datum/intent/mace/strike/grand, /datum/intent/mace/smash/grand, /datum/intent/mace/rangedthrust/short, /datum/intent/effect/daze, /datum/intent/effect/hobble) // TA EDIT
 	icon_state = "martyrmace"
 	icon = 'icons/roguetown/weapons/blunt64.dmi'
 	item_state = "martyrmace"
@@ -857,9 +877,25 @@
 		item_d_type = "fire"
 		blade_class = BCLASS_BLUNT
 
+/datum/intent/mace/strike/grand/martyr // TA EDIT START
+	item_d_type = "fire"
+	blade_class = BCLASS_BLUNT // TA EDIT END
+
+/datum/intent/mace/bash/ranged/martyr // TA EDIT START
+	item_d_type = "fire"
+	blade_class = BCLASS_BLUNT // TA EDIT END
+
 /datum/intent/mace/smash/martyr
 		item_d_type = "fire"
 		blade_class = BCLASS_SMASH
+
+/datum/intent/mace/smash/grand/martyr // TA EDIT START
+	item_d_type = "fire"
+	blade_class = BCLASS_SMASH // TA EDIT END
+
+/datum/intent/mace/rangedthrust/short/martyr // TA EDIT START
+	item_d_type = "fire"
+	blade_class = BCLASS_STAB // TA EDIT END
 
 /datum/intent/effect/daze/martyr
 		item_d_type = "fire"
@@ -878,8 +914,8 @@
 	else
 		SSroguemachine.martyrweapon = src
 	if(!gc_destroyed)
-		var/list/active_intents = list(/datum/intent/mace/strike/martyr)
-		var/list/active_intents_wielded = list(/datum/intent/mace/strike/martyr, /datum/intent/mace/smash/martyr, /datum/intent/effect/daze/martyr, /datum/intent/effect/hobble/martyr)
+		var/list/active_intents = list(/datum/intent/mace/strike/martyr, /datum/intent/mace/bash/ranged/martyr) // TA EDIT
+		var/list/active_intents_wielded = list(/datum/intent/mace/strike/grand/martyr, /datum/intent/mace/smash/grand/martyr, /datum/intent/mace/rangedthrust/short/martyr, /datum/intent/effect/daze/martyr, /datum/intent/effect/hobble/martyr) // TA EDIT
 		var/safe_damage = 20
 		var/safe_damage_wielded = 30
 		AddComponent(/datum/component/martyrweapon, active_intents, active_intents_wielded, safe_damage, safe_damage_wielded)
