@@ -72950,7 +72950,6 @@
 /area/rogue/indoors/town/manor/desert)
 "qou" = (
 /obj/structure/table/wood/long_table,
-/obj/structure/table/wood/long_table,
 /obj/effect/temp_visual/coinburst,
 /obj/effect/temp_visual/coinburst,
 /obj/item/reagent_containers/food/snacks/grown/fruit/tomato,
