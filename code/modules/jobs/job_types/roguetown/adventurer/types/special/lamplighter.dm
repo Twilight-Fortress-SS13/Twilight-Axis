@@ -14,8 +14,9 @@
 	display_order = JDO_LAMPLIGHTER
 	selection_color = JCOLOR_WANDERER
 	show_in_credits = TRUE
-	min_pq = 5
+	min_pq = 10
 	max_pq = null
+	same_job_respawn_delay = 30 MINUTES
 
 	advclass_cat_rolls = list(CTAG_LAMPLIGHTER = 20)
 	PQ_boost_divider = 10

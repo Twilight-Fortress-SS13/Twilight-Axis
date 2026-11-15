@@ -21,7 +21,7 @@
 	var/mob/living/carbon/human/L = owner.current
 	L.become_skeleton()
 	ADD_TRAIT(L, TRAIT_HEAVYARMOR, TRAIT_GENERIC)
-	ADD_TRAIT(L, TRAIT_SHATTER_KILL, TRAIT_GENERIC)
+	//TA_EDIT ADD_TRAIT(L, TRAIT_SHATTER_KILL, TRAIT_GENERIC)
 	ADD_TRAIT(L, TRAIT_SKELETAL_GIB_ON_DEATH, TRAIT_GENERIC)
 
 /datum/antagonist/unbound_death_knight/proc/equip_knight()
@@ -30,24 +30,24 @@
 		owner.become_unknown_to(MF)
 
 	var/mob/living/carbon/human/H = owner.current
-	H.cmode_music = 'sound/music/combat_cult.ogg'
+	H.cmode_music = sound("sound/music/combat_cult.ogg")
 	H.faction = list(FACTION_UNDEAD)
 	H.equipOutfit(/datum/outfit/job/roguetown/unbound_deathknight)
 
 /datum/antagonist/unbound_death_knight/greet()
-	sleep(5 SECONDS) // Lets all other messages finish before we start.
+	stoplag(5 SECONDS) // Lets all other messages finish before we start.
 	to_chat(owner, span_warning("You feel the power of unknown energy course through you."))
-	sleep(1 SECONDS)
+	stoplag(1 SECONDS)
 	to_chat(owner, span_warning("You are... Awake? But how?"))
-	sleep(1 SECONDS)
+	stoplag(1 SECONDS)
 	to_chat(owner, span_warning("The realization of what is happening slowly overwhelms you with horror..."))
-	sleep(2 SECONDS)
+	stoplag(2 SECONDS)
 	to_chat(owner, "<span class='pulsedeath'>Your master is gone!</span>")
-	sleep(1 SECONDS)
+	stoplag(1 SECONDS)
 	to_chat(owner, "<span class='pulsedeath'>You have no orders!</span>")
-	sleep(1 SECONDS)
+	stoplag(1 SECONDS)
 	to_chat(owner, "<span class='pulsedeath'>You have no goal!</span>")
-	sleep(2 SECONDS)
+	stoplag(2 SECONDS)
 	to_chat(owner, "<span class='pulsedeath'>You have no reason to be here. But you are awake.</span>")
 
 /datum/antagonist/unbound_death_knight/proc/forge_objectives()

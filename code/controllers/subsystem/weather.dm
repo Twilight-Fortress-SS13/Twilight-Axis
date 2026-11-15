@@ -11,20 +11,31 @@ SUBSYSTEM_DEF(weather)
 	var/list/next_hit_by_zlevel = list() //Used by barometers to know when the next storm is coming
 	var/list/turf2process = list()
 	var/list/currentrun = list()
+	var/list/clients_to_update = list() // TA EDIT
+	var/next_client_update = 0 // TA EDIT
 	processing_flag = PROCESSING_WEATHER
 
 
 /datum/controller/subsystem/weather/fire(resumed = 0)
 	if (!resumed)
 		currentrun = processing.Copy()
+		if(world.time >= next_client_update) // TA EDIT START
+			clients_to_update = GLOB.clients.Copy()
+			next_client_update = world.time + 5 // TA EDIT END
 	//cache for sanic speed (lists are references anyways)
 	var/list/current_run = currentrun
 
-	for(var/datum/weather/W in curweathers)
-		W.process()
+	if(!resumed) // TA EDIT START
+		for(var/datum/weather/W in curweathers)
+			W.process() // TA EDIT END
 
-	for(var/client/C in GLOB.clients)
-		C.update_weather()
+	while(clients_to_update.len) // TA EDIT START
+		var/client/C = clients_to_update[clients_to_update.len]
+		clients_to_update.len--
+		if(C)
+			C.update_weather()
+		if(MC_TICK_CHECK)
+			return // TA EDIT END
 
 	while(current_run.len)
 		var/atom/thing = current_run[current_run.len]

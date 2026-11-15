@@ -55,6 +55,7 @@
 	/datum/skill/misc/climbing,
 	/datum/skill/misc/reading,
 	/datum/skill/misc/swimming,
+	/datum/skill/misc/stealing, // TA EDIT
 	/datum/skill/misc/sneaking,
 	/datum/skill/misc/lockpicking,
 	/datum/skill/misc/riding,

@@ -1,4 +1,4 @@
-//ACCESSORIES
+/*//ACCESSORIES
 /datum/loadout_item/wrappings
 	name = "Handwraps"
 	path = /obj/item/clothing/wrists/roguetown/wrappings
@@ -260,8 +260,9 @@
 	name = "Belt Hooks"
 	path = /obj/item/storage/belt/rogue/leather/belthooks
 	sort_category = "Accessories"
+*/
 
-/datum/loadout_item/bandithood
+/datum/loadout_item/bandithood // TA EDIT START
 	name = "Bandit Hood"
 	path = /obj/item/clothing/head/roguetown/menacing/bandit
-	sort_category = "Accessories"
+	sort_category = "Accessories" // TA EDIT END

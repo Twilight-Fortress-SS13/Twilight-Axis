@@ -121,7 +121,8 @@
 	var/sound/tmp_sound = get_sound(user)
 	if(!istype(tmp_sound))
 		tmp_sound = sound(get_sfx(tmp_sound))
-	tmp_sound.frequency = pitch
+	if(tmp_sound) // TA EDIT
+		tmp_sound.frequency = pitch // TA EDIT
 	if(tmp_sound && tmp_sound.file && (!only_forced_audio || !intentional))
 		// Specifying what bodyparts are needed to run an emote is a desireable replacement.
 		// Band-aid so emotes with sound aren't misplaced. You can still point with your head, for example.
@@ -144,7 +145,7 @@
 			var/static/regex/regex = regex(@"[,.!?]", "g")
 			pre_color_msg = regex.Replace(pre_color_msg, "")
 			pre_color_msg = trim(pre_color_msg, MAX_MESSAGE_LEN)
-		// Build the styled name for chat
+		// Checks to see if we're emoting on the body while we have a head, or if we're emoting on the head.
 		var/styled_name
 		if(human && human.voice_color)
 			var/color_to_use = human.voice_color
@@ -153,6 +154,7 @@
 			styled_name = "<span style='color:[color_to_use];text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;'><b>[emotelocation]</b></span>"
 		else
 			styled_name = "<b>[emotelocation]</b>"
+
 		// If the message contains $n, substitute it with the name instead of prepending
 		if(findtext(msg, "$n"))
 			msg = trim(replacetext(msg, "$n", styled_name))
@@ -170,7 +172,6 @@
 
 /mob/living/proc/get_emote_pitch()
 	return clamp(voice_pitch, 0.5, 2)
-
 
 
 
@@ -199,20 +200,28 @@
 				modifier = "old"
 			if((!ignore_silent && (H.silent)) || (!ignore_silent && !is_emote_muffled(H)) || (!ignore_silent && HAS_TRAIT(H, TRAIT_MUTE)) ||	(!ignore_silent && HAS_TRAIT(H, TRAIT_BAGGED)))
 				modifier = "silenced"
-			if(user.gender == FEMALE && H.dna.species.soundpack_f)
-				possible_sounds = H.dna.species.soundpack_f.get_sound(key,modifier)
-			else if(H.dna.species.soundpack_m)
-				possible_sounds = H.dna.species.soundpack_m.get_sound(key,modifier)
-				// LETHALSTONE ADDITION BEGIN: use preference-set voice types where possible
+			// Species can still hold a voicepack type path until their voice packs are initialized.
+			var/datum/voicepack/male_pack = H.dna.species.soundpack_m // TA EDIT START
+			var/datum/voicepack/female_pack = H.dna.species.soundpack_f
+			if(ispath(male_pack, /datum/voicepack))
+				male_pack = GLOB.voice_packs[male_pack]
+			if(ispath(female_pack, /datum/voicepack))
+				female_pack = GLOB.voice_packs[female_pack]
+			if(user.gender == FEMALE && istype(female_pack))
+				possible_sounds = female_pack.get_sound(key, modifier)
+			else if(istype(male_pack))
+				possible_sounds = male_pack.get_sound(key, modifier)
+			// LETHALSTONE ADDITION BEGIN: use preference-set voice types where possible
 			if(H.voice_type)
-				switch (H.voice_type)
-					if (VOICE_TYPE_MASC)
-						possible_sounds = H.dna.species.soundpack_m.get_sound(key, modifier)
+				switch(H.voice_type)
+					if(VOICE_TYPE_MASC)
+						if(istype(male_pack))
+							possible_sounds = male_pack.get_sound(key, modifier)
 					else
-						if (H.dna.species.soundpack_f)
-							possible_sounds = H.dna.species.soundpack_f.get_sound(key, modifier)
-						else
-							possible_sounds = H.dna.species.soundpack_m.get_sound(key, modifier)
+						if(istype(female_pack))
+							possible_sounds = female_pack.get_sound(key, modifier)
+						else if(istype(male_pack))
+							possible_sounds = male_pack.get_sound(key, modifier) // TA EDIT END
 			// LETHALSTONE ADDITION END
 			if(possible_sounds)
 				if(islist(possible_sounds))

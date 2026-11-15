@@ -421,8 +421,8 @@
 				water_contents = list(/datum/reagent/water/blessed = water_qty)
 			if(caster.patron.name == "Pestra")
 				water_contents = list(/datum/reagent/water/medicine = water_qty)
-			if(caster.patron.name == "Baotha")
-				water_contents = list(/datum/reagent/consumable/ethanol/loversruin = water_qty)
+//			if(caster.patron.name == "Baotha") // TA EDIT
+//				water_contents = list(/datum/reagent/consumable/ethanol/loversruin = water_qty) // TA EDIT
 			var/datum/reagents/reagents_to_add = new()
 			reagents_to_add.add_reagent_list(water_contents)
 			reagents_to_add.trans_to(victim, reagents_to_add.total_volume, transfered_by = caster)

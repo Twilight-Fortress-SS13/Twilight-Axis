@@ -35,6 +35,7 @@
 		/datum/skill/combat/shields = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_MASTER,
 		/datum/skill/misc/medicine = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/stealing = SKILL_LEVEL_APPRENTICE, // TA EDIT
 		/datum/skill/misc/riding = SKILL_LEVEL_JOURNEYMAN,
 	)
 
@@ -64,7 +65,7 @@
 		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 2,
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpotnew = 2,
 		)
-	H.cmode_music = 'sound/music/combat_desertrider.ogg'
+	H.cmode_music = sound("sound/music/combat_desertrider.ogg")
 	H.grant_language(/datum/language/raneshi)
 
 /datum/migrant_role/ranesheni/amirah
@@ -85,6 +86,7 @@
 		STATKEY_PER = 1,
 	)
 	subclass_skills = list(
+		/datum/skill/misc/stealing = SKILL_LEVEL_NOVICE, // TA EDIT
 		/datum/skill/misc/sneaking = SKILL_LEVEL_NOVICE,
 		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
@@ -122,7 +124,7 @@
 		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 1,
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpotnew = 1,
 	)
-	H.cmode_music = 'sound/music/combat_desertrider.ogg'
+	H.cmode_music = sound("sound/music/combat_desertrider.ogg")
 	H.grant_language(/datum/language/raneshi)
 
 /datum/migrant_role/ranesheni/janissary
@@ -185,7 +187,7 @@
 		/obj/item/reagent_containers/glass/bottle/alchemical/healthpotnew = 1,
 		/obj/item/natural/bundle/cloth/bandage/full = 1,
 		)
-	H.cmode_music = 'sound/music/combat_desertrider.ogg'
+	H.cmode_music = sound("sound/music/combat_desertrider.ogg")
 	H.grant_language(/datum/language/raneshi)
 	var/weapons = list("Mace","Spear")
 	if(H.mind)
@@ -229,6 +231,7 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_LEGENDARY,
 		/datum/skill/misc/reading = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_EXPERT,
+		/datum/skill/misc/stealing = SKILL_LEVEL_EXPERT, // TA EDIT
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_EXPERT,
 		/datum/skill/craft/traps = SKILL_LEVEL_EXPERT,
 	)
@@ -255,7 +258,7 @@
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 1,
 		)
-	H.cmode_music = 'sound/music/combat_desertrider.ogg'
+	H.cmode_music = sound("sound/music/combat_desertrider.ogg")
 	H.grant_language(/datum/language/raneshi)
 
 #undef CTAG_RANESHENI_EMIR

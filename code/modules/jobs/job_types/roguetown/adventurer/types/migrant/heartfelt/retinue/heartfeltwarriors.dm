@@ -233,7 +233,7 @@
 		STATKEY_CON = 2,
 		STATKEY_SPD = 2,
 	)
-	cmode_music = 'sound/music/combat_squire.ogg'
+	cmode_music = sound("sound/music/combat_squire.ogg")
 
 	subclass_skills = list(
 		/datum/skill/combat/swords = SKILL_LEVEL_NOVICE,

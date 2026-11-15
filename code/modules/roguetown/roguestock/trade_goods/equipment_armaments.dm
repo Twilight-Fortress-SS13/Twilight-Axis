@@ -15,41 +15,49 @@
 	id = TRADE_GOOD_STEEL_ARMING_SWORD
 	name = "steel arming sword"
 	item_type = /obj/item/rogueweapon/sword
+	base_price = SELLPRICE_STEEL_INGOT * 2
 
 /datum/trade_good/equipment/crafted/shortsword
 	id = TRADE_GOOD_STEEL_SHORTSWORD
 	name = "steel shortsword"
 	item_type = /obj/item/rogueweapon/sword/short
+	base_price = SELLPRICE_STEEL_INGOT * 2
 
 /datum/trade_good/equipment/crafted/falchion
 	id = TRADE_GOOD_STEEL_FALCHION
 	name = "steel falchion"
 	item_type = /obj/item/rogueweapon/sword/short/falchion
+	base_price = SELLPRICE_STEEL_INGOT * 2
 
 /datum/trade_good/equipment/crafted/messer
 	id = TRADE_GOOD_STEEL_MESSER
 	name = "steel messer"
 	item_type = /obj/item/rogueweapon/sword/short/messer
+	base_price = SELLPRICE_STEEL_INGOT * 2
 
 /datum/trade_good/equipment/crafted/sabre
 	id = TRADE_GOOD_STEEL_SABRE
 	name = "steel sabre"
 	item_type = /obj/item/rogueweapon/sword/sabre
+	base_price = SELLPRICE_STEEL_INGOT * 2
 
 /datum/trade_good/equipment/crafted/mace
 	id = TRADE_GOOD_STEEL_MACE
 	name = "steel mace"
 	item_type = /obj/item/rogueweapon/mace/steel
+	base_price = SELLPRICE_STEEL_INGOT * 2
 
 /datum/trade_good/equipment/crafted/flanged_mace
 	id = TRADE_GOOD_STEEL_FLANGED_MACE
 	name = "flanged mace"
 	item_type = /obj/item/rogueweapon/mace/cudgel/flanged
+	base_price = SELLPRICE_STEEL_INGOT * 2
 
 /datum/trade_good/equipment/crafted/flail
 	id = TRADE_GOOD_STEEL_FLAIL
 	name = "steel flail"
 	item_type = /obj/item/rogueweapon/flail/sflail
+	base_price = SELLPRICE_STEEL_INGOT * 2
 
 // ============================================================================
 // WEAPONS - STEEL (2-ingot tier)
@@ -59,26 +67,31 @@
 	id = TRADE_GOOD_STEEL_LONGSWORD
 	name = "steel longsword"
 	item_type = /obj/item/rogueweapon/sword/long
+	base_price = SELLPRICE_STEEL_INGOT * 4
 
 /datum/trade_good/equipment/crafted/broadsword
 	id = TRADE_GOOD_STEEL_BROADSWORD
 	name = "steel broadsword"
 	item_type = /obj/item/rogueweapon/sword/long/broadsword/steel
+	base_price = SELLPRICE_STEEL_INGOT * 4
 
 /datum/trade_good/equipment/crafted/warhammer
 	id = TRADE_GOOD_STEEL_WARHAMMER
 	name = "steel warhammer"
 	item_type = /obj/item/rogueweapon/mace/warhammer/steel
+	base_price = SELLPRICE_STEEL_INGOT * 4
 
 /datum/trade_good/equipment/crafted/battleaxe
 	id = TRADE_GOOD_STEEL_BATTLEAXE
 	name = "battle axe"
 	item_type = /obj/item/rogueweapon/stoneaxe/battle
+	base_price = SELLPRICE_STEEL_INGOT * 4
 
 /datum/trade_good/equipment/crafted/hurlbat
 	id = TRADE_GOOD_HURLBAT
 	name = "hurlbat"
 	item_type = /obj/item/rogueweapon/stoneaxe/hurlbat
+	base_price = SELLPRICE_STEEL_INGOT * 3
 
 // ============================================================================
 // WEAPONS - STEEL (3+ ingot tier)
@@ -88,16 +101,19 @@
 	id = TRADE_GOOD_STEEL_GREATSWORD
 	name = "greatsword"
 	item_type = /obj/item/rogueweapon/greatsword
+	base_price = SELLPRICE_STEEL_INGOT * 6
 
 /datum/trade_good/equipment/crafted/halberd
 	id = TRADE_GOOD_STEEL_HALBERD
 	name = "halberd"
 	item_type = /obj/item/rogueweapon/halberd
+	base_price = SELLPRICE_STEEL_INGOT * 5
 
 /datum/trade_good/equipment/crafted/eaglebeak
 	id = TRADE_GOOD_STEEL_EAGLEBEAK
 	name = "eagle's beak"
 	item_type = /obj/item/rogueweapon/eaglebeak
+	base_price = SELLPRICE_STEEL_INGOT * 5
 
 // ============================================================================
 // RANGED
@@ -107,3 +123,4 @@
 	id = TRADE_GOOD_RECURVE_BOW
 	name = "recurve bow"
 	item_type = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
+	base_price = SELLPRICE_WOOD * 8

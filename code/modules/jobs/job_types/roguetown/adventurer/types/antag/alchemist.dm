@@ -2,11 +2,11 @@
 	name = "Hedge Alchemist"
 	tutorial = "Where most devotees greedily take from others you create your own wealth out of nothing, expert in both medicine and alchemical matters you are true menace to society - as your old Lord found out the hard way."
 	allowed_sexes = list(MALE, FEMALE)
-	
+
 	outfit = /datum/outfit/job/roguetown/bandit/hedgealchemist
 	category_tags = list(CTAG_BANDIT)
 	maximum_possible_slots = 2
-	cmode_music = 'sound/music/combat_physician.ogg'
+	cmode_music = sound("sound/music/combat_physician.ogg")
 	traits_applied = list(TRAIT_MEDICINE_EXPERT, TRAIT_NOSTINK, TRAIT_ALCHEMY_EXPERT, TRAIT_EXPLOSIVE_SUPPLY, TRAIT_BOMBER_EXPERT)
 	subclass_stats = list(
 		STATKEY_INT = 4,

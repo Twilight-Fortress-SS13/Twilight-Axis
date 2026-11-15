@@ -278,5 +278,13 @@
 
 /datum/rmb_intent/weak
 	name = "weak"
-	desc = "Your attacks deal 20% damage and will never critically-hit. Useful for longer punishments, play-fighting, and bloodletting."
+	desc = "Your attacks deal 20% damage and will never critically-hit. Useful for longer punishments, play-fighting, and bloodletting.\nRight click will attempt to steal from the target." // TA EDIT
 	icon_state = "rmbweak"
+
+/datum/rmb_intent/weak/special_attack(mob/living/carbon/human/user, mob/living/carbon/human/target) // TA EDIT
+	if(!istype(target) || !istype(user) || !target.Adjacent(user)) // TA EDIT
+		return // TA EDIT
+	if(user.incapacitated()) // TA EDIT
+		return // TA EDIT
+	user.attempt_steal(user, target) // TA EDIT
+	return ..() // TA EDIT

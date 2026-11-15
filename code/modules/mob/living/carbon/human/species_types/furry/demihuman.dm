@@ -18,6 +18,9 @@
 		/obj/item/bodypart/taur/spider,
 		/obj/item/bodypart/taur/horse,
 		/obj/item/bodypart/taur/goat,
+		/obj/item/bodypart/taur/feline,				//TA-EDIT
+		/obj/item/bodypart/taur/feline/furry,		//TA-EDIT
+		/obj/item/bodypart/taur/arachne		//TA-EDIT
 	)
 	default_features = MANDATORY_FEATURE_LIST
 	use_skintones = TRUE
@@ -178,4 +181,11 @@
 		"Naledi West" = SKIN_COLOR_NALEDI_B,
 		"Naledi East" = SKIN_COLOR_NALEDI_D,
 		"Kazengun" = SKIN_COLOR_KAZENGUN,
+		"Gyedzai" = SKIN_COLOR_KAZENGUN
 	)
+
+/datum/species/demihuman/on_species_gain(mob/living/carbon/C, datum/species/old_species)
+	..() // TA EDIT
+
+/datum/species/demihuman/on_species_loss(mob/living/carbon/C)
+	. = ..() // TA EDIT

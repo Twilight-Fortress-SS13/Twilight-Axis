@@ -79,6 +79,12 @@
 		var/mob/dead/observer/observer = mob
 		if(world.time < observer.next_gmove)
 			return FALSE
+		// TA EDIT START
+		if(n && direct)
+			var/turf/target_turf = get_step(get_turf(observer), direct)
+			if(!observer.can_move_near_body(target_turf))
+				return FALSE
+		// TA EDIT END
 	else if(world.time < move_delay) //do not move anything ahead of this check please
 		return FALSE
 	next_move_dir_add = 0
@@ -86,10 +92,13 @@
 	var/old_move_delay = move_delay
 	if(istype(mob, /mob/dead/observer))
 		var/mob/dead/observer/observer = mob
-		observer.next_gmove = world.time + (world.tick_lag * GLOB.observer_move_delay_multiplier)
+		var/observer_move_delay = observer.get_move_delay()
+		observer.next_gmove = world.time + observer_move_delay
+		// keep the slide animation in step with the interval above, it drifts on fps change and differs for admin/eye observers
+		observer.set_glide_size(DELAY_TO_GLIDE_SIZE(observer_move_delay))
 		move_delay = world.time
 	else
-		move_delay = world.time + world.tick_lag //this is here because Move() can now be called mutiple times per tick
+		move_delay = world.time + world.tick_lag
 	if(!mob || !mob.loc)
 		return FALSE
 	if(!n || !direct)
@@ -461,6 +470,8 @@
 	switch(mob.zone_selected)
 		if(BODY_ZONE_R_ARM)
 			next_in_line = BODY_ZONE_PRECISE_R_HAND
+//.		if(BODY_ZONE_PRECISE_R_HAND) // ta edit
+//			next_in_line = BODY_ZONE_PRECISE_R_INHAND // ta edit
 		else
 			next_in_line = BODY_ZONE_R_ARM
 
@@ -497,6 +508,8 @@
 	switch(mob.zone_selected)
 		if(BODY_ZONE_L_ARM)
 			next_in_line = BODY_ZONE_PRECISE_L_HAND
+//		if(BODY_ZONE_PRECISE_L_HAND) // ta edit
+//			next_in_line = BODY_ZONE_PRECISE_L_INHAND // ta edit
 		else
 			next_in_line = BODY_ZONE_L_ARM
 
@@ -792,6 +805,21 @@
 	for(var/atom/movable/screen/eye_intent/eyet in hud_used.static_inventory)
 		eyet.update_icon(src)
 	playsound_local(src, 'sound/misc/click.ogg', 100)
+
+/*/client/proc/hearglobalLOOC()
+	set category = "Prefs - Admin"
+	set name = "Show/Hide Global LOOC"
+	if(!holder)
+		return
+	if(!prefs)
+		return
+	prefs.chat_toggles ^= CHAT_ADMINLOOC
+	prefs.save_preferences()
+	if(prefs.chat_toggles & CHAT_ADMINLOOC)
+		to_chat(src, span_notice("I will now hear all LOOC chatter."))
+	else
+		to_chat(src, span_info("I will now only hear LOOC chatter around me."))*/ // Лоок вырезан. Не нужно.
+
 ///Moves a mob upwards in z level
 
 /mob/proc/ghost_up()

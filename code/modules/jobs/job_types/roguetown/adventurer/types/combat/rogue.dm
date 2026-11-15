@@ -4,7 +4,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 
 	outfit = /datum/outfit/job/roguetown/adventurer/rogue
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander3.ogg'
+	cmode_music = sound("sound/music/cmode/adventurer/combat_outlander3.ogg")
 	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_SEEPRICES, TRAIT_GRAVEROBBER)
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT, CTAG_LICKER_WRETCH)
 	townie_contract_gate_exempt = TRUE
@@ -28,6 +28,7 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_MASTER,
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/stealing = SKILL_LEVEL_JOURNEYMAN, // TA EDIT
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/traps = SKILL_LEVEL_JOURNEYMAN,
 	)
@@ -70,7 +71,7 @@
 	tutorial = "You are a scoundrel and a thief. A master in getting into places you shouldn't be and taking things that aren't rightfully yours."
 	outfit = /datum/outfit/job/roguetown/adventurer/thief
 	subclass_languages = list(/datum/language/thievescant)
-	cmode_music = 'sound/music/cmode/antag/combat_cutpurse.ogg'
+	cmode_music = sound("sound/music/cmode/antag/combat_cutpurse.ogg")
 	traits_applied = list(TRAIT_DODGEEXPERT)
 	subclass_stats = list(
 		STATKEY_STR = -1,
@@ -91,6 +92,7 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_LEGENDARY,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_EXPERT,
+		/datum/skill/misc/stealing = SKILL_LEVEL_EXPERT, // TA EDIT
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_EXPERT,
 		/datum/skill/craft/traps = SKILL_LEVEL_EXPERT,
 	)
@@ -122,7 +124,7 @@
 	name = "Bard"
 	tutorial = "You make your fortune in brothels, flop houses, and taverns – gaining fame for your songs and legends. If there is any truth to them, that is."
 	outfit = /datum/outfit/job/roguetown/adventurer/bard
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander3.ogg'
+	cmode_music = sound("sound/music/cmode/adventurer/combat_outlander3.ogg")
 	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_GOODLOVER, TRAIT_EMPATH)
 	subclass_stats = list(
 		STATKEY_INT = 2,
@@ -139,6 +141,7 @@
 		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/stealing = SKILL_LEVEL_JOURNEYMAN, // TA EDIT
 		/datum/skill/misc/music = SKILL_LEVEL_MASTER,
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/traps = SKILL_LEVEL_APPRENTICE,
@@ -198,7 +201,7 @@
 	name = "Swashbuckler"
 	tutorial = "You are a daring rogue of the seas! Swashbucklers wield agile swordplay and acrobatic prowess - fighting dirty to outmaneuver foes with flair."
 	outfit = /datum/outfit/job/roguetown/adventurer/swashbuckler
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander3.ogg'
+	cmode_music = sound("sound/music/cmode/adventurer/combat_outlander3.ogg")
 	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_NUTCRACKER, TRAIT_LEAPER)
 	subclass_virtues = list(
 		/datum/virtue/combat/guarded
@@ -218,6 +221,7 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/stealing = SKILL_LEVEL_JOURNEYMAN, // TA EDIT
 		/datum/skill/misc/music = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/traps = SKILL_LEVEL_APPRENTICE,
@@ -249,7 +253,7 @@
 	name = "Antiquarian"
 	tutorial = "Your scholarship and connections allow you to find wealth where others do not care to look. You're unpracticed in direct combat, but knowledge and preparation leaves a few tricks up your sleeve."
 	outfit = /datum/outfit/job/roguetown/adventurer/antiquarian
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander3.ogg'
+	cmode_music = sound("sound/music/cmode/adventurer/combat_outlander3.ogg")
 	traits_applied = list(TRAIT_SEEPRICES, TRAIT_GRAVEROBBER, TRAIT_INTELLECTUAL, TRAIT_ALCHEMY_EXPERT)
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
 	subclass_stats = list(
