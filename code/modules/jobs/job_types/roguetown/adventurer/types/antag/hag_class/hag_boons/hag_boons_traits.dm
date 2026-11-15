@@ -197,11 +197,27 @@
 	desc = "Grants an affinity for the medical arts, allowing one's skills to progress to Legendary levels."
 	points = 10
 
+// TA ADDITION START
+/datum/hag_boon/trait/expert_medicine/apply_boon_effect(mob/living/L)
+	. = ..()
+	L.adjust_skillrank(/datum/skill/misc/medicine, 2, FALSE)
+	if(!L.mind?.has_spell(/obj/effect/proc_holder/spell/invoked/diagnose/secular))
+		L.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/diagnose/secular)
+
+// TA ADDITION END
+
 /datum/hag_boon/trait/expert_alchemy
 	name = "Boon of the Alchemist"
 	trait_to_apply = TRAIT_ALCHEMY_EXPERT
 	desc = "Imparts knowledge of the alchemical arts, allowing one's skills to progress to Legendary levels."
 	points = 10
+
+// TA ADDITION START
+/datum/hag_boon/trait/expert_alchemy/apply_boon_effect(mob/living/L)
+	. = ..()
+	L.adjust_skillrank(/datum/skill/craft/alchemy, 2, FALSE)
+
+// TA ADDITION END
 
 /datum/hag_boon/trait/expert_smithing
 	name = "Boon of the Smith"
@@ -209,11 +225,30 @@
 	desc = "Grants an affinity for the forge, allowing Smithing, Smelting, Engineering, Mining, Masonry and Pottery to progress to Legendary levels."
 	points = 10
 
+// TA ADDITION START
+/datum/hag_boon/trait/expert_homestead/apply_boon_effect(mob/living/L)
+	. = ..()
+	L.adjust_skillrank(/datum/skill/craft/weaponsmithing, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/craft/armorsmithing, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/craft/blacksmithing, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/craft/smelting, 2, FALSE)
+
+// TA ADDITION END
+
 /datum/hag_boon/trait/expert_sewing
 	name = "Boon of the Tailor"
 	trait_to_apply = TRAIT_SEWING_EXPERT
 	desc = "Grants an affinity for the arts of tailoring, allowing Sewing, Skincrafting and Butchering to progress to Legendary levels."
 	points = 10
+
+// TA ADDITION START
+/datum/hag_boon/trait/expert_homestead/apply_boon_effect(mob/living/L)
+	. = ..()
+	L.adjust_skillrank(/datum/skill/craft/tanning, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/craft/sewing, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/craft/butchering, 2, FALSE)
+
+// TA ADDITION END
 
 /datum/hag_boon/trait/expert_survival
 	name = "Boon of the Survivor"
@@ -221,11 +256,38 @@
 	desc = "Imparts the primal urge to survive, allowing Cooking, Fishing, Butchering and Skincrafting to progress to Legendary levels, and Sewing to progress to Journeyman levels."
 	points = 10
 
+// TA ADDITION START
+/datum/hag_boon/trait/expert_survival/apply_boon_effect(mob/living/L)
+	. = ..()
+	L.adjust_skillrank(/datum/skill/craft/traps, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/misc/tracking, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/labor/butchering, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/craft/sewing, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/craft/tanning, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/misc/hunting, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/craft/cooking, 2, FALSE)
+
+// TA ADDITION END
+
 /datum/hag_boon/trait/expert_homestead
 	name = "Boon of the Homesteader"
 	trait_to_apply = TRAIT_HOMESTEAD_EXPERT
 	desc = "Grants an affinity for the arts of homesteading, allowing Farming, Mining, Cooking, Fishing, Butchering, Lumberjacking, Masonry and Pottery to progress to Legendary levels, and Sewing and Skincrafting to progress to Journeyman levels."
 	points = 10
+
+// TA ADDITION START
+/datum/hag_boon/trait/expert_homestead/apply_boon_effect(mob/living/L)
+	. = ..()
+	L.adjust_skillrank(/datum/skill/craft/cooking, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/labor/farming, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/labor/fishing, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/labor/lumberjacking, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/labor/mining, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/labor/butchering, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/craft/masonry, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/craft/ceramics, 2, FALSE)
+
+// TA ADDITION END
 
 /datum/hag_boon/trait/self_sustenance
 	name = "Boon of Self-Sustenance"
