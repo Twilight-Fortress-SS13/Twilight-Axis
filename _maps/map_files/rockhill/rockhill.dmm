@@ -5763,10 +5763,7 @@
 /area/rogue/indoors/town/rockhill)
 "aMa" = (
 /obj/structure/fluff/nest,
-/mob/living/simple_animal/hostile/retaliate/rogue/wolf{
-	del_on_deaggro = 0;
-	name = "Rowena"
-	},
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf,
 /obj/item/natural/bone,
 /obj/effect/decal/cobbleedge{
 	dir = 10;
@@ -12128,9 +12125,7 @@
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/outdoors/rtfield/rockhill)
 "bMc" = (
-/mob/living/simple_animal/hostile/retaliate/rogue/wolf{
-	name = "Bitey"
-	},
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf,
 /turf/open/floor/rogue/cobble/mossy,
 /area/rogue/indoors/shelter/bog/bogmanfort)
 "bMd" = (
@@ -17932,10 +17927,7 @@
 /turf/closed/wall/mineral/rogue/roofwall/middle/dir1,
 /area/rogue/indoors/rh_village_indoors)
 "cDA" = (
-/mob/living/simple_animal/hostile/retaliate/rogue/infernal/watcher{
-	pixel_x = -22;
-	pixel_y = -3
-	},
+/mob/living/simple_animal/hostile/retaliate/rogue/infernal/watcher,
 /turf/open/floor/carpet/royalblack,
 /area/rogue/under/cavewet/wizarddungeon)
 "cDB" = (
@@ -24225,9 +24217,7 @@
 /turf/open/floor/rogue/ruinedwood/herringbone,
 /area/rogue/indoors/shelter/bograt)
 "dxi" = (
-/mob/living/simple_animal/hostile/retaliate/rogue/infernal/watcher{
-	del_on_deaggro = 599400
-	},
+/mob/living/simple_animal/hostile/retaliate/rogue/infernal/watcher,
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/under/cavelava/rh_lava_west)
 "dxj" = (
@@ -41246,10 +41236,7 @@
 /turf/open/floor/rogue/cobble,
 /area/rogue/under/cave/inhumen/rockhill)
 "fZp" = (
-/mob/living/simple_animal/hostile/retaliate/rogue/minotaur{
-	faction = list("neutral");
-	wander = 0
-	},
+/mob/living/simple_animal/hostile/retaliate/rogue/minotaur/axe,
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/under/cave/rhgoblinencampment)
 "fZx" = (
@@ -52433,9 +52420,6 @@
 /turf/open/floor/rogue/deserttile,
 /area/rogue/indoors/rh_village_indoors)
 "hKb" = (
-/mob/living/simple_animal/hostile/retaliate/rogue/fae/dryad{
-	del_on_deaggro = 599400
-	},
 /obj/structure/leyline/normal/grove,
 /turf/open/floor/rogue/grassred,
 /area/rogue/under/cavewet/rh_bog_caves)
@@ -80639,12 +80623,9 @@
 /turf/open/floor/rogue/concrete,
 /area/rogue/under/cave/licharena/grim/rockhill)
 "lSg" = (
-/mob/living/simple_animal/hostile/retaliate/rogue/minotaur{
-	STASTR = 20;
-	faction = list("undead")
-	},
-/turf/open/floor/rogue/cobble,
-/area/rogue/under/cave/inhumen/rockhill)
+/mob/living/simple_animal/hostile/retaliate/rogue/fae/dryad,
+/turf/open/floor/rogue/grassred,
+/area/rogue/under/cavewet/rh_bog_caves)
 "lSm" = (
 /obj/structure/roguemachine/noticeboard/wall/bulletinboard{
 	pixel_x = -33;
@@ -82481,10 +82462,7 @@
 /area/rogue/under/cave/rh_cursed_peak)
 "mhj" = (
 /obj/structure/curtain/red,
-/mob/living/simple_animal/hostile/retaliate/rogue/infernal/watcher{
-	pixel_x = -22;
-	pixel_y = -3
-	},
+/mob/living/simple_animal/hostile/retaliate/rogue/infernal/watcher,
 /turf/open/floor/rogue/hexstone,
 /area/rogue/under/cavewet/wizarddungeon)
 "mhl" = (
@@ -89253,10 +89231,7 @@
 /area/rogue/indoors/town/dwarfin/rockhill)
 "nhO" = (
 /obj/structure/fluff/nest,
-/mob/living/simple_animal/hostile/retaliate/rogue/wolf{
-	del_on_deaggro = 0;
-	name = "Beatrix"
-	},
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf,
 /obj/item/natural/bone,
 /obj/effect/decal/cobbleedge{
 	dir = 6;
@@ -106742,9 +106717,7 @@
 /turf/open/transparent/openspace,
 /area/rogue/rockharbor)
 "pJG" = (
-/mob/living/simple_animal/hostile/retaliate/rogue/elemental/behemoth{
-	del_on_deaggro = 599400
-	},
+/mob/living/simple_animal/hostile/retaliate/rogue/elemental/behemoth,
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/under/cavewet/rh_underbog)
 "pJP" = (
@@ -134531,10 +134504,7 @@
 /area/rogue/outdoors/woodsrat/south)
 "tVf" = (
 /obj/structure/fluff/nest,
-/mob/living/simple_animal/hostile/retaliate/rogue/wolf{
-	del_on_deaggro = 0;
-	name = "Aruzhan"
-	},
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf,
 /obj/item/natural/bone,
 /obj/effect/decal/cobbleedge{
 	dir = 10;
@@ -198469,7 +198439,7 @@ uez
 jza
 bko
 xQO
-lSg
+xQO
 xQO
 xQO
 xQO
@@ -378993,7 +378963,7 @@ vTx
 lXZ
 ioG
 mNw
-mNw
+lSg
 hKb
 mNw
 tFu
