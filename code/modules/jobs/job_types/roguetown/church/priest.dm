@@ -40,7 +40,9 @@ GLOBAL_LIST_EMPTY(heretical_players)
 	min_pq = 12 // You should know the basics of things if you're going to lead the town's entire religious sector
 	max_pq = null
 	round_contrib_points = 5
-	same_job_respawn_delay = 30 MINUTES
+	quest_claim_barred = TRUE
+	same_job_respawn_delay = 30 MINUTES // TA EDIT
+
 	//No nobility for you, being a member of the clergy means you gave UP your nobility. It says this in many of the church tutorial texts.
 	virtue_restrictions = list(/datum/virtue/utility/noble)
 	quirk_restrictions = list(/datum/quirk/noble)
@@ -207,6 +209,7 @@ GLOBAL_LIST_EMPTY(heretical_players)
 	department_flag = CHURCHMEN
 	total_positions = 0
 	spawn_positions = 0
+	quest_claim_barred = TRUE
 
 /mob/living/carbon/human/proc/coronate_lord()
 	set name = "Coronate"

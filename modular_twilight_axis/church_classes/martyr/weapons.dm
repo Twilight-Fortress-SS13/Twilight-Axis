@@ -39,7 +39,7 @@
 
 /datum/intent/spear/cut/glaive/sweep/martyr
 		item_d_type = "fire"
-		blade_class = BCLASS_CHOP
+		blade_class = BCLASS_CUT
 
 /datum/intent/axe/chop/scythe/martyr
 		item_d_type = "fire"
