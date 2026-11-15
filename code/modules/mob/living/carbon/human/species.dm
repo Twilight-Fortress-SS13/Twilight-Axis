@@ -838,7 +838,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 			if( !(I.slot_flags & ITEM_SLOT_SHOES) )
 				return FALSE
 			var/obj/item/clothing/shoes = I
-			if(is_taur && (!istype(shoes) || !(shoes.clothing_flags & TAUR_COMPATIBLE)))
+			if(is_taur && (!istype(shoes) || (!(shoes.clothing_flags & TAUR_COMPATIBLE) && !shoes.get_taur_worn_state(H))))
 				return FALSE
 			if(num_legs < 1)
 				return FALSE
