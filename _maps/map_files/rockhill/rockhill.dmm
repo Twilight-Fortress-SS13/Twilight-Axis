@@ -42722,7 +42722,6 @@
 "gjV" = (
 /mob/living/simple_animal/hostile/retaliate/rogue/dragon/broodmother{
 	faction = list("wolfs");
-	retreat_health = 0.1;
 	icon = 'icons/roguetown/mob/monster/cow.dmi';
 	icon_state = "cow";
 	name = "Odd Cow";
@@ -112155,7 +112154,6 @@
 "qzc" = (
 /mob/living/simple_animal/hostile/retaliate/rogue/dragon/broodmother{
 	faction = list("wolfs");
-	retreat_health = 0.1;
 	icon = 'icons/roguetown/mob/monster/cow.dmi';
 	icon_state = "cow";
 	name = "Odd Cow";
