@@ -889,7 +889,8 @@
 	name = "'Etruscan Design Cloak' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Poncho"
 	target_items = list(/obj/item/clothing/cloak/poncho)
-	result_item = /obj/item/clothing/cloak/poncho/dittocloak // TA EDIT END
+	result_item = /obj/item/clothing/cloak/poncho/dittocloak
+	icon_loadout = /obj/item/clothing/cloak/poncho // TA EDIT END
 
 /obj/item/enchantingkit/strudel4
 	name = "'Form-Fitting Padded Gambeson' morphing elixir"
