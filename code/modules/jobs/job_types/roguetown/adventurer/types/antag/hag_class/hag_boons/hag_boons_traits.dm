@@ -246,7 +246,7 @@
 	. = ..()
 	L.adjust_skillrank(/datum/skill/craft/tanning, 2, FALSE)
 	L.adjust_skillrank(/datum/skill/craft/sewing, 2, FALSE)
-	L.adjust_skillrank(/datum/skill/craft/butchering, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/labor/butchering, 2, FALSE)
 
 // TA ADDITION END
 
