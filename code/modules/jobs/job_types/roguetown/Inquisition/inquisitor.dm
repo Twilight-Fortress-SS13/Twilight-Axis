@@ -149,9 +149,10 @@
 			H.equip_to_slot_or_del(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/heavy/relic, SLOT_BACK_L, TRUE)
 			H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_MASTER, TRUE)
 		if("Relic, 'Marshal's Writ' (Runelock Pistol)") //TA EDIT START
-			H.put_in_hands(new /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/black/runelock(H))
+			H.put_in_hands(new /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/blackpowder(H))
+			H.put_in_hands(new /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock(H))
 			H.equip_to_slot_or_del(new /obj/item/quiver/twilight_bullet/runicbag/runed, SLOT_BELT_R, TRUE)
-			H.adjust_skillrank_up_to(/datum/skill/combat/twilight_firearms, 3, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/twilight_firearms, 4, TRUE)
 		if("Psydonic Longsword")
 			H.put_in_hands(new /obj/item/rogueweapon/sword/long/silver/psy(H))
 			H.put_in_hands(new /obj/item/rogueweapon/scabbard/sword/noble(H))
