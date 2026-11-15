@@ -566,6 +566,7 @@
 		/mob/living/simple_animal/hostile/retaliate/rogue/spider/mutated = 15)
 	converted_type = /area/rogue/indoors/shelter/desertdeepwest
 	deathsight_message = "a dangerous, crimson forest"
+	var/list/recent_intruders = list()
 
 /area/rogue/outdoors/desertzoomerzone/Entered(atom/movable/AM)
 	..()
