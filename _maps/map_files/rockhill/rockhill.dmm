@@ -1862,10 +1862,7 @@
 /turf/open/transparent/openspace,
 /area/rogue/indoors/town/grovercin)
 "ahW" = (
-/mob/living/simple_animal/hostile/retaliate/rogue/dragon{
-	faction = list("wolfs");
-	retreat_health = 0.1
-	},
+/mob/living/simple_animal/hostile/retaliate/rogue/dragon,
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/under/cave/dragonden)
 "ahY" = (
@@ -21010,9 +21007,7 @@
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/rh_sea)
 "daw" = (
-/mob/living/simple_animal/hostile/retaliate/rogue/infernal/hellhound{
-	wander = 0
-	},
+/mob/living/simple_animal/hostile/retaliate/rogue/infernal/hellhound,
 /turf/open/floor/rogue/volcanic{
 	desc = "Silky and sharp-smooth, like cracked glass"
 	},
@@ -25871,9 +25866,7 @@
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/rh_village_indoors)
 "dJP" = (
-/mob/living/simple_animal/hostile/retaliate/rogue/infernal/imp{
-	faction = list("infernal","neutral")
-	},
+/mob/living/simple_animal/hostile/retaliate/rogue/infernal/imp,
 /turf/open/floor/rogue/volcanic{
 	desc = "Silky and sharp-smooth, like cracked glass"
 	},
@@ -76514,10 +76507,7 @@
 /turf/open/floor/rogue/woodturned,
 /area/rogue/indoors/town/magician/tower)
 "lkC" = (
-/mob/living/simple_animal/hostile/retaliate/rogue/dragon/broodmother{
-	faction = list("wolfs");
-	retreat_health = 0.1
-	},
+/mob/living/simple_animal/hostile/retaliate/rogue/dragon/broodmother,
 /turf/open/floor/rogue/volcanic,
 /area/rogue/under/cave/dragonden)
 "lkF" = (
@@ -95987,10 +95977,7 @@
 /turf/open/floor/rogue/ruinedwood,
 /area/rogue/indoors/shelter/bograt)
 "ogD" = (
-/mob/living/simple_animal/hostile/retaliate/rogue/dragon{
-	faction = list("wolfs");
-	retreat_health = 0.1
-	},
+/mob/living/simple_animal/hostile/retaliate/rogue/dragon,
 /turf/open/floor/rogue/volcanic,
 /area/rogue/under/cave/dragonden)
 "ogG" = (
@@ -158331,12 +158318,6 @@
 	dir = 8
 	},
 /area/rogue/outdoors/town/roofs/rockhillroofs)
-"xwq" = (
-/mob/living/simple_animal/hostile/retaliate/rogue/infernal/hellhound{
-	wander = 0
-	},
-/turf/open/floor/rogue/naturalstone,
-/area/rogue/indoors/town/fire_chamber/helly)
 "xwt" = (
 /obj/structure/fluff/railing/border{
 	dir = 9;
@@ -391726,7 +391707,7 @@ gjv
 bqk
 bqk
 bqk
-xwq
+xUK
 ljj
 bqk
 jFM
