@@ -4,9 +4,7 @@
 /area/rogue/outdoors/desert
 	name = "Inner Dunes"
 	icon_state = "desert"
-	// TA EDIT BEGIN: Added for deserttown contracts
 	threat_region = THREAT_REGION_DESERT_NEAR
-	// TA EDIT END
 	soundenv = 19
 	ambientsounds = AMB_TOWNDAY
 	ambientnight = AMB_TOWNNIGHT
@@ -60,9 +58,7 @@
 /area/rogue/outdoors/desertdeep
 	name = "Deep Dunes"
 	icon_state = "desertdeep"
-	// TA EDIT BEGIN: Added for deserttown contracts
 	threat_region = THREAT_REGION_DESERT_DEEP
-	// TA EDIT END
 	warden_area = TRUE
 	ambientsounds = AMB_TOWNDAY
 	ambientnight = AMB_TOWNNIGHT
@@ -120,9 +116,7 @@
 /area/rogue/outdoors/desertdeepwest
 	name = "Deep Western Dunes"
 	icon_state = "desertdeep"
-	// TA EDIT BEGIN: Added for deserttown contracts
 	threat_region = THREAT_REGION_DESERT_DEEP_WEST
-	// TA EDIT END
 	warden_area = TRUE
 	ambientsounds = AMB_TOWNDAY
 	ambientnight = AMB_TOWNNIGHT
@@ -222,7 +216,7 @@
 	spookynight = SPOOKY_GEN
 	soundenv = 17
 	first_time_text = null
-///
+
 
 /area/rogue/indoors/town/desert/warden
 	name = "Warden Fort"
@@ -262,7 +256,7 @@
 	spookynight = SPOOKY_GEN
 	soundenv = 17
 	first_time_text = null
-//////////////////////////////////////////////////////////////////
+
 
 /area/rogue/indoors/shelter/town/desert
 	droning_sound = 'sound/music/area/desert/TheRoad.ogg'
@@ -287,7 +281,7 @@
 	spookynight = SPOOKY_GEN
 	soundenv = 17
 	first_time_text = null
-///
+
 
 /area/rogue/indoors/town/desert
 	name = "desert town indoors"
@@ -542,3 +536,68 @@
 	droning_sound_dusk = 'sound/music/area/desert/NightPrayer.ogg'
 	droning_sound_night = 'sound/music/area/desert/Moonrise.ogg'
 	loot_budget = LOOT_BUDGET_BOGMANFORT
+
+/area/rogue/outdoors/desertzoomerzone
+	name = "Crimson Dunes"
+	icon_state = "desertdeep"
+	threat_region = THREAT_REGION_CRIMSON_DUNES
+	warden_area = FALSE
+	ambientsounds = AMB_TOWNDAY
+	ambientnight = AMB_TOWNNIGHT
+	spookysounds = SPOOKY_GEN
+	spookynight = SPOOKY_GEN
+	first_time_text = "Crimson Dunes"
+	droning_sound = 'sound/music/area/desert/EternalOceansofSand.ogg'
+	droning_sound_dusk = 'sound/music/area/desert/NightPrayer.ogg'
+	droning_sound_night = 'sound/music/area/desert/Moonrise.ogg'
+	ambush_mobs = list(
+		/mob/living/carbon/human/species/skeleton/npc/ambush = 30,
+		/mob/living/carbon/human/species/human/northern/dunewell_raider/ambush = 60,
+		/mob/living/carbon/human/species/human/northern/dunewell_raider/better_gear/ambush = 20,
+		/mob/living/simple_animal/hostile/retaliate/rogue/lamia = 30,
+		/mob/living/simple_animal/hostile/retaliate/rogue/ifrit = 20,
+		/mob/living/simple_animal/hostile/retaliate/rogue/headless = 10,
+		/mob/living/simple_animal/hostile/retaliate/rogue/wolf_undead = 10,
+		/mob/living/simple_animal/hostile/rogue/dragger = 15,
+		/mob/living/simple_animal/hostile/retaliate/rogue/infernal/watcher = 15,
+		/mob/living/simple_animal/hostile/rogue/haunt = 25,
+		/mob/living/simple_animal/hostile/retaliate/rogue/infernal/imp = 20,
+		/mob/living/carbon/human/species/goblin/npc/ambush/hell = 30,
+		/mob/living/simple_animal/hostile/retaliate/rogue/spider/mutated = 15)
+	converted_type = /area/rogue/indoors/shelter/desertdeepwest
+	deathsight_message = "a dangerous, crimson forest"
+
+/area/rogue/outdoors/desertzoomerzone/Entered(atom/movable/AM)
+	..()
+	if(!GLOB.active_hags.len)
+		return
+
+	var/mob/living/L = AM
+	if(!istype(L) || !L.client || L.stat == DEAD)
+		return
+
+	if(L in GLOB.active_hags)
+		return
+
+	GLOB.bogged_players += L.real_name
+
+	if(recent_intruders[L] && recent_intruders[L] > world.time)
+		return
+
+	recent_intruders[L] = world.time + 1 MINUTES
+	for(var/mob/living/H in GLOB.active_hags)
+		to_chat(H, span_boldwarning("The roots of your sanctum shiver... a soul named [L.name] has stepped within [src.name]."))
+
+/area/rogue/outdoors/desertzoomerzone/Exited(atom/movable/AM)
+	. = ..()
+	if(!GLOB.active_hags.len)
+		return
+
+	var/mob/living/L = AM
+	if(!istype(L) || !L.client || L.stat == DEAD)
+		return
+
+	if(L in GLOB.active_hags)
+		return
+
+	GLOB.bogged_players -= L.real_name
