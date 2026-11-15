@@ -4,7 +4,7 @@
 
 /datum/storyteller/gamemode
 	always_votable = TRUE
-	hag_slots = 1
+	hag_slots = 2 // TA EDIT - ORIGINAL: hag_slots = 1
 // ----------------------------------------------------------------------------------------------------------
 // Admin sandbox - NOT votable. Admins pick before the 120s mark to disable player vote and
 // insert their own antags in.
