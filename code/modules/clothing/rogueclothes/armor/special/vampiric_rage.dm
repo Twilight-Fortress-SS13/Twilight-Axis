@@ -153,7 +153,7 @@
 			if(4)
 				to_chat(owner, span_danger("YOU ARE ANGRY... SO... DAMN... ANGRY!!!"))
 				if(ishuman(owner))
-					ADD_TRAIT(owner, TRAIT_NOPAINSTUN, SPECIES_TRAIT)
+					ADD_TRAIT(owner, TRAIT_CRITICAL_RESISTANCE, SPECIES_TRAIT) // TA EDIT
 				var/filter = owner.get_filter(FURY_FILTER)
 				if(!filter)
 					owner.add_filter(FURY_FILTER, 2, list("type" = "outline", "color" = outline_colour, "alpha" = 100, "size" = 1))
@@ -174,7 +174,7 @@
 				to_chat(owner, span_info("The pure blinding rush of the apex hunt passes, giving way back to conscious thought."))
 				owner.remove_filter(FURY_FILTER)
 				if(ishuman(owner))
-					REMOVE_TRAIT(owner, TRAIT_NOPAINSTUN, SPECIES_TRAIT)
+					REMOVE_TRAIT(owner, TRAIT_CRITICAL_RESISTANCE, SPECIES_TRAIT) // TA EDIT
 
 	tier = new_tier
 

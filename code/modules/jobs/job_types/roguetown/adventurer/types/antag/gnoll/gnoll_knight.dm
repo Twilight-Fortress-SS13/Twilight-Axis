@@ -8,7 +8,8 @@
 	traits_applied = list(TRAIT_HEAVYARMOR, TRAIT_UNCONVERTIBLE) // Flavoring
 
 	cmode_music = sound("sound/music/cmode/antag/combat_thewall.ogg")
-	reset_stats = TRUE
+	reset_stats = FALSE // TA EDIT
+
 	subclass_stats = list(
 		STATKEY_WIL = 5,
 		STATKEY_CON = 5,
