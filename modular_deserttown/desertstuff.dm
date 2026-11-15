@@ -1355,6 +1355,18 @@
 
 	)
 
+/obj/structure/flora/roguegrass/bush/wall/tallcrimson
+	icon = 'icons/roguetown/misc/foliagetall.dmi'
+	icon_state = "tallbush1"
+	opacity = 1
+	pixel_x = -16
+	debris = null
+	static_debris = null
+
+/obj/structure/flora/roguegrass/bush/wall/tallcrimson/Initialize(mapload)
+	. = ..()
+	bush_base_state = "tallbush[pick(1,2)]"
+	refresh_bush_icon()
 
 
 

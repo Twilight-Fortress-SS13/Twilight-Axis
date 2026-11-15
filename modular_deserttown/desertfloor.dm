@@ -360,16 +360,19 @@
 	dir = pick(GLOB.cardinals)
 	icon_state = "crimsondune[rand(1,16)]"
 
-/turf/open/water/crimson
+/turf/open/water/swamp/crimson
 	name = "crimson water"
 	desc = "The water has a red tint, how strange."
-	icon = 'icons/turf/roguefloor.dmi'
-	icon_state = "dirtW2"
-	water_level = 2
 	water_color = "#7c1c1c"
-	slowdown = 3
-	wash_in = TRUE
-	water_reagent = /datum/reagent/water/gross
-	freeze_type = null // set dressing, not weather-driven
+	freeze_type = null
+
+
+/turf/open/water/swamp/crimson/Initialize(mapload)
+	icon_state = "dirt"
+	dir = pick(GLOB.cardinals)
+	water_color = pick("#7c1c1c")
+	.	= ..()
+
+/turf/open/water/swamp/crimson/nofish
 	fishing_datum = null
 
