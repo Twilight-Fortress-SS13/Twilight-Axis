@@ -15953,10 +15953,6 @@
 	},
 /turf/open/transparent/openspace,
 /area/rogue/indoors/town/tavern/desert)
-"dBT" = (
-/mob/living/carbon/human/species/human/northern/outlaw_duelist,
-/turf/open/floor/rogue/blocks/stonered/tiny,
-/area/rogue/indoors/shelter/desertdeepwest/deserterfort)
 "dBV" = (
 /obj/structure/fluff/railing/border{
 	dir = 6
@@ -39171,10 +39167,6 @@
 	},
 /turf/open/floor/rogue/blocks/stonered/tiny,
 /area/rogue/indoors/town/manor/desert)
-"iLC" = (
-/mob/living/simple_animal/hostile/retaliate/rogue/camel,
-/turf/open/floor/rogue/lightpath,
-/area/rogue/indoors/shelter/desertdeepwest/deserterfort)
 "iLH" = (
 /obj/item/natural/rock/desert,
 /turf/open/floor/rogue/naturalstone/sandstone,
@@ -485836,7 +485828,7 @@ jSw
 kdX
 oUN
 fiE
-dBT
+jSw
 jSw
 pOY
 jSw
@@ -488024,7 +488016,7 @@ lvd
 lXf
 bxP
 bxP
-iLC
+vUX
 ezI
 vUX
 cgV
