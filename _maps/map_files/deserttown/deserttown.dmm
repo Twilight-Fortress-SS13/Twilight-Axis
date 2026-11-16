@@ -27849,9 +27849,6 @@
 /obj/structure/stairs/desert{
 	dir = 1
 	},
-/obj/structure/stairs/desert{
-	dir = 1
-	},
 /turf/open/floor/rogue/dunes,
 /area/rogue/outdoors/caves)
 "gnK" = (
