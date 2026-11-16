@@ -211,3 +211,36 @@
 		to_chat(H, span_smallgreen("My posture straigtens, my face is mended; my disfigurement is lifted!"))
 	clean_body_parts(H)
 	return
+
+/datum/hag_boon/buff/gold_bless
+	name = "Gold Bless"
+	desc = "The bearer, when getting damage, will summon coins under him."
+	points = 60
+	status_type = /datum/status_effect/buff/hag_boon/gold_bless
+
+/datum/status_effect/buff/hag_boon/gold_bless
+	id = "gold_bless"
+	duration = -1
+	alert_type = /atom/movable/screen/alert/status_effect/buff/hag_boon/gold_bless
+
+/atom/movable/screen/alert/status_effect/buff/hag_boon/gold_bless
+	name = "Gold Bless"
+	desc = "I will return all attacks to coins!"
+	icon_state = "buff"
+
+/datum/status_effect/buff/hag_boon/gold_bless/on_apply()
+	. = ..()
+	RegisterSignal(owner, COMSIG_MOB_APPLY_DAMGE, PROC_REF(on_damage))
+
+/datum/status_effect/buff/hag_boon/gold_bless/on_remove()
+	. = ..()
+	UnregisterSignal(owner, COMSIG_MOB_APPLY_DAMGE)
+
+/datum/status_effect/buff/hag_boon/gold_bless/proc/on_damage(datum/source, damage, damagetype)
+	SIGNAL_HANDLER
+	if(owner.stat != CONSCIOUS)
+		return FALSE
+	if(damage > 0)
+		var/total_value = (damage * 0.5)
+		budget2change(total_value, owner, putinhands = FALSE, custom_turf = owner.loc)
+		return TRUE

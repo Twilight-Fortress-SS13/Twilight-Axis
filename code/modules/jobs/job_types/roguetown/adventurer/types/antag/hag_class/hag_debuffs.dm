@@ -85,8 +85,8 @@
 	id = "storm_weakness"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/hag_curse/storm_weakness
 	effectedstats = list(STATKEY_CON = -5)
-	duration = -1
-	needs_processing = FALSE
+	duration = 30 MINUTES // TA EDIT - ORIGINAL: -1
+	needs_processing = TRUE // TA EDIT - ORIGINAL: FALSE
 
 /atom/movable/screen/alert/status_effect/debuff/hag_curse/storm_weakness
 	name = "Storm-Scarred"
