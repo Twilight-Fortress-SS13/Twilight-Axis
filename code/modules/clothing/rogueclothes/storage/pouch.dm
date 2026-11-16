@@ -37,8 +37,7 @@
 	if(!storage_comp)
 		return
 
-	// TA EDIT
-	if(target_coin in storage_comp.contents())
+	if(target_coin.loc == storage_comp.real_location() || (target_coin in storage_comp.contents())) // TA EDIT
 		return
 
 	var/original_target_quantity = target_coin.quantity	// Store original quantity for verification
@@ -108,9 +107,9 @@
 	grid_width = 32
 	component_type = /datum/component/storage/concrete/roguetown/coin_pouch/merchant
 
-/obj/item/storage/belt/rogue/pouch/merchant/coins/Initialize(mapload) //TA EDIT - Rockhill currency support
+/obj/item/storage/belt/rogue/pouch/merchant/coins/Initialize(mapload)
 	. = ..()
-	if(SSmapping.config.map_name == "Rockhill")
+	if(SSmapping.config.map_name == "Rockhill") // TA EDIT START
 		var/obj/item/roguecoin/goldkrona/mid_pile/H = new(loc)
 		if(istype(H))
 			if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, H, null, TRUE, TRUE))
@@ -132,7 +131,7 @@
 			H = new(loc)
 			if(istype(H))
 				if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, H, null, TRUE, TRUE))
-					qdel(H)
+					qdel(H) // TA EDIT END
 
 /obj/item/storage/belt/rogue/pouch/cloth
 	name = "cloth pouch"
@@ -332,20 +331,20 @@
 	new /obj/item/reagent_containers/food/snacks/rogue/crackerscooked(src)
 
 /obj/item/storage/belt/rogue/pouch/healing
-
-/obj/item/storage/belt/rogue/pouch/healing/PopulateContents()
-	new /obj/item/reagent_containers/glass/bottle/alchemical/healthpot(src)
-	new /obj/item/reagent_containers/glass/bottle/alchemical/healthpot(src)
-	new /obj/item/reagent_containers/glass/bottle/alchemical/water(src)
-	new /obj/item/needle(src)
+	populate_contents = list(
+	/obj/item/reagent_containers/glass/bottle/alchemical/healthpot,
+	/obj/item/reagent_containers/glass/bottle/alchemical/healthpot,
+	/obj/item/reagent_containers/glass/bottle/alchemical/water,
+	/obj/item/needle
+	)
 
 /obj/item/storage/belt/rogue/pouch/alchemy
-
-/obj/item/storage/belt/rogue/pouch/alchemy/PopulateContents()
-	new /obj/item/reagent_containers/glass/bottle/alchemical(src)
-	new /obj/item/reagent_containers/glass/bottle/alchemical(src)
-	new /obj/item/reagent_containers/glass/bottle/alchemical(src)
-	new /obj/item/needle(src)
+	populate_contents = list(
+	/obj/item/reagent_containers/glass/bottle/alchemical,
+	/obj/item/reagent_containers/glass/bottle/alchemical,
+	/obj/item/reagent_containers/glass/bottle/alchemical,
+	/obj/item/needle
+	)
 
 /obj/item/storage/belt/rogue/pouch/zigarrete
 	name = "zig box"
@@ -355,21 +354,25 @@
 	component_type = /datum/component/storage/concrete/roguetown/zig_box
 	dropshrink = 0.5
 
-/obj/item/storage/belt/rogue/pouch/zigarrete/nicotine/PopulateContents()
-	new /obj/item/clothing/mask/cigarette/rollie/nicotine(src)
-	new /obj/item/clothing/mask/cigarette/rollie/nicotine(src)
-	new /obj/item/clothing/mask/cigarette/rollie/nicotine(src)
-	new /obj/item/clothing/mask/cigarette/rollie/nicotine(src)
-	new /obj/item/clothing/mask/cigarette/rollie/nicotine(src)
-	new /obj/item/clothing/mask/cigarette/rollie/nicotine(src)
+/obj/item/storage/belt/rogue/pouch/zigarrete/nicotine
+	populate_contents = list(
+	/obj/item/clothing/mask/cigarette/rollie/nicotine,
+	/obj/item/clothing/mask/cigarette/rollie/nicotine,
+	/obj/item/clothing/mask/cigarette/rollie/nicotine,
+	/obj/item/clothing/mask/cigarette/rollie/nicotine,
+	/obj/item/clothing/mask/cigarette/rollie/nicotine,
+	/obj/item/clothing/mask/cigarette/rollie/nicotine
+	)
 
-/obj/item/storage/belt/rogue/pouch/zigarrete/cannabis/PopulateContents()
-	new /obj/item/clothing/mask/cigarette/rollie/cannabis(src)
-	new /obj/item/clothing/mask/cigarette/rollie/cannabis(src)
-	new /obj/item/clothing/mask/cigarette/rollie/cannabis(src)
-	new /obj/item/clothing/mask/cigarette/rollie/cannabis(src)
-	new /obj/item/clothing/mask/cigarette/rollie/cannabis(src)
-	new /obj/item/clothing/mask/cigarette/rollie/cannabis(src)
+/obj/item/storage/belt/rogue/pouch/zigarrete/cannabis
+	populate_contents = list(
+	/obj/item/clothing/mask/cigarette/rollie/cannabis,
+	/obj/item/clothing/mask/cigarette/rollie/cannabis,
+	/obj/item/clothing/mask/cigarette/rollie/cannabis,
+	/obj/item/clothing/mask/cigarette/rollie/cannabis,
+	/obj/item/clothing/mask/cigarette/rollie/cannabis,
+	/obj/item/clothing/mask/cigarette/rollie/cannabis
+	)
 
 /obj/item/storage/belt/rogue/pouch/triumphlunch
 	name = "pouched luncheon"
@@ -382,10 +385,11 @@
 
 /obj/item/storage/belt/rogue/pouch/bombs
 
-/obj/item/storage/belt/rogue/pouch/bombs/PopulateContents()
-	new /obj/item/explosive/fused/bottle(src)
-	new /obj/item/explosive/fused/bottle(src)
-	new /obj/item/explosive/fused/bottle(src)
+	populate_contents = list(
+	/obj/item/explosive/fused/bottle,
+	/obj/item/explosive/fused/bottle,
+	/obj/item/explosive/fused/bottle
+	)
 
 /obj/item/storage/belt/rogue/pouch/tailorscrap
 	name = "pouch of tailorscrap"

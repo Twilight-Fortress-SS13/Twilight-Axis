@@ -182,8 +182,10 @@
 	body += "<br><A href='?_src_=holder;[HrefToken()];heal_panel=[REF(M)]'>Heal Panel</A> | "
 	body += "<A href='?_src_=holder;[HrefToken()];inventory_panel=[REF(M)]'>Inventory Panel</A> | " // TA EDIT START
 	if(ishuman(M) || isobserver(M))
-		body += "<A href='?_src_=holder;[HrefToken()];select_equipment=[REF(M)]'>Select Equipment</A> | " // TA EDIT END
+		body += "<A href='?_src_=holder;[HrefToken()];select_equipment=[REF(M)]'>Select Equipment</A> | "
 	body += "<A href='?_src_=holder;[HrefToken()];examine_player=[REF(M)]'>Flavor Text</A>"
+	if(ishuman(M))
+		body += " | <A href='?_src_=holder;[HrefToken()];secrets_panel=[REF(M)]'>Secrets</A>" // TA EDIT END
 
 	body += "</div>"
 

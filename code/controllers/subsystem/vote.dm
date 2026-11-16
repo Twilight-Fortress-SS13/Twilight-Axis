@@ -623,9 +623,10 @@ SUBSYSTEM_DEF(vote)
 					var/map_vote_period = ROUND_END_TIME + (CONFIG_GET(number/round_end_countdown) * 10) // TA EDIT
 					addtimer(CALLBACK(src, PROC_REF(initiate_vote), "map", "Psydon", map_vote_period), 10) // TA EDIT
 			if("storyteller")
-				if(ticker_managed_storyteller_vote)
+				if(ticker_managed_storyteller_vote || initiator == "Gamemode") // TA EDIT
 					roundstart_storyteller_winner = get_storyteller_choice_type(.)
 					roundstart_storyteller_population = length(GLOB.ready_player_list)
+					roundstart_storyteller_voter_count = length(voted) // TA EDIT
 					roundstart_storyteller_recorded = FALSE
 				save_storyteller_vote_log(., "completed")
 				SSgamemode.storyteller_vote_result(.)
