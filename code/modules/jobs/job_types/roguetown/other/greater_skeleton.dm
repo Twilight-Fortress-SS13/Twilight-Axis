@@ -17,7 +17,7 @@
 	show_in_credits = TRUE
 	give_bank_account = FALSE
 	hidden_job = TRUE
-	vice_restrictions = list(/datum/charflaw/hunted, /datum/charflaw/targeted)
+	vice_restrictions = list(/datum/charflaw/hunted, /datum/charflaw/targeted, /datum/charflaw/wanted, /datum/charflaw/forlorne)
 
 /datum/outfit/job/roguetown/greater_skeleton/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -38,8 +38,9 @@
 	/datum/rmb_intent/weak)
 	H.swap_rmb_intent(num=1) //TA_EDIT
 
-	var/datum/antagonist/new_antag = new /datum/antagonist/skeleton()
-	H.mind.add_antag_datum(new_antag)
+	if(H.mind) // TA EDIT START
+		var/datum/antagonist/new_antag = new /datum/antagonist/skeleton()
+		H.mind.add_antag_datum(new_antag) // TA EDIT END
 
 	H.grant_language(/datum/language/undead)
 

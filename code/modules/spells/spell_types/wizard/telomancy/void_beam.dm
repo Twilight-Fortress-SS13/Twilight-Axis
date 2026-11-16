@@ -88,6 +88,13 @@
 	line = build_beam_line(origin, last_dir)
 	void_beam_detonate(line, H, origin, last_dir, beam_damage, push_dist, expose_duration, src, name)
 
+/datum/action/cooldown/spell/void_beam/get_impact_turfs(atom/center)
+	var/turf/origin = get_turf(owner)
+	var/beam_dir = cardinal_toward(origin, get_turf(center))
+	if(!beam_dir)
+		return list()
+	return build_beam_line(origin, beam_dir)
+
 /datum/action/cooldown/spell/void_beam/proc/build_beam_line(turf/origin, beam_dir)
 	var/list/turf/line = list()
 	var/turf/current = origin
@@ -173,8 +180,8 @@
 			if(istype(caster) && !QDELETED(caster) && ishuman(L))
 				if(arcyne_strike(caster, L, null, damage, caster.zone_selected, \
 					BCLASS_PIERCE, spell_name = spell_name, \
-					damage_type = BRUTE, \
-					skip_animation = TRUE, SPELL_STRIKE_SCALING) == ARCYNE_STRIKE_WARDED)
+					damage_type = BURN, \
+					skip_animation = TRUE, SPELL_STRIKE_SCALING) == ARCYNE_STRIKE_WARDED) //TA EDIT
 					continue
 			else
 				L.adjustBruteLoss(SPELL_DMG_VS(L, damage))
@@ -197,3 +204,7 @@
 	duration = 6
 
 #undef VOID_BEAM_SLOWDOWN_ID
+
+/obj/effect/temp_visual/telegraph/telomancy
+	light_color = GLOW_COLOR_ARCANE
+	duration = 3 SECONDS

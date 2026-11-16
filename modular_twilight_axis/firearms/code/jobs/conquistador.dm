@@ -84,11 +84,10 @@
 		if("Hidalgo (Light Armor & Rapier + Pistol)")
 			to_chat(H, span_warning("Волею судьбы ваш путь связан с порохом и дестрезой."))
 			H.adjust_skillrank(/datum/skill/combat/swords, 4, TRUE)
-			H.adjust_skillrank(/datum/skill/combat/twilight_firearms, 5, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/twilight_firearms, 4, TRUE)
 			H.change_stat(STATKEY_SPD, 3)
 			H.change_stat(STATKEY_INT, 2)
 			H.change_stat(STATKEY_PER, 3)
-			ADD_TRAIT(H, TRAIT_FIREARMS_MARKSMAN, TRAIT_GENERIC)
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 			beltl = /obj/item/quiver/twilight_bullet/lead
 			beltr = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol

@@ -873,11 +873,24 @@
 	target_items = list(/obj/item/clothing/cloak/templar/xylixian)
 	result_item = /obj/item/clothing/cloak/templar/xylixian/faux
 
-/obj/item/enchantingkit/strudel3
+/obj/item/enchantingkit/strudel3 // TA EDIT START
+	name = "'Experimental Azurian Fellowshippe Staff' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a mage staff."
+	target_items = list(
+		/obj/item/rogueweapon/woodstaff/implement/grand/magos = /obj/item/rogueweapon/woodstaff/implement/grand/magos/fellowshippe,
+		/obj/item/rogueweapon/woodstaff/implement/grand = /obj/item/rogueweapon/woodstaff/implement/grand/fellowshippe,
+		/obj/item/rogueweapon/woodstaff/implement/greater = /obj/item/rogueweapon/woodstaff/implement/greater/fellowshippe,
+		/obj/item/rogueweapon/woodstaff/implement = /obj/item/rogueweapon/woodstaff/implement/fellowshippe
+	)
+	result_item = null
+	custom_name = TRUE // TA EDIT END
+
+/obj/item/enchantingkit/strudel3_etruscan // TA EDIT START
 	name = "'Etruscan Design Cloak' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Poncho"
 	target_items = list(/obj/item/clothing/cloak/poncho)
 	result_item = /obj/item/clothing/cloak/poncho/dittocloak
+	icon_loadout = /obj/item/clothing/cloak/poncho // TA EDIT END
 
 /obj/item/enchantingkit/strudel4
 	name = "'Form-Fitting Padded Gambeson' morphing elixir"
@@ -1462,22 +1475,6 @@
 	result_item = null
 	icon_loadout = /obj/item/rogueweapon/greatsword/limetease
 
-//MortoSasye - Ice Staffs + Azure Crown
-/obj/item/enchantingkit/morto_staff
-	name = "'Frozen Vow' morphing elixir"
-	target_items = list(
-		/obj/item/rogueweapon/woodstaff/implement/grand/magos		=	/obj/item/rogueweapon/woodstaff/implement/grand/magos/morto,
-		/obj/item/rogueweapon/woodstaff/implement/					=	/obj/item/rogueweapon/woodstaff/implement/morto
-	)
-	result_item = null
-
-/obj/item/enchantingkit/morto_crown
-	name = "'Sun Crown' morphing elixir"
-	target_items = list(
-		/obj/item/clothing/head/roguetown/crown/serpcrown
-	)
-	result_item = /obj/item/clothing/head/roguetown/crown/serpcrown/mortosuncrown
-
 //Tyesca
 
 /obj/item/enchantingkit/weapon/tyesca_sword
@@ -1757,8 +1754,8 @@
 	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Steel Cuirass or a set of Steel Plate Armor, alongside \
 	its Fluted variants."
 	target_items = list(
-		/obj/item/clothing/suit/roguetown/armor/plate/full/fluted/ornate		= /obj/item/clothing/suit/roguetown/armor/plate/full/apostle,
-		/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/ornate		= /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/apostle,
+		/obj/item/clothing/suit/roguetown/armor/plate/full/fluted/ornate		= /obj/item/clothing/suit/roguetown/armor/plate/full/fluted/ornate/apostle,
+		/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/ornate		= /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/ornate/apostle,
 		/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted			= /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/apostle,
 		/obj/item/clothing/suit/roguetown/armor/plate/full/fluted				= /obj/item/clothing/suit/roguetown/armor/plate/full/apostle,
 		/obj/item/clothing/suit/roguetown/armor/plate/cuirass					= /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/apostle,
@@ -1774,10 +1771,10 @@
 	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of a Steel Cuirass, a set of Steel Plate Armor, or a set of Steel Plate-and-Maille, alongside \
 	its Fluted variants."
 	target_items = list(
-		/obj/item/clothing/suit/roguetown/armor/plate/full/fluted/ornate		= /obj/item/clothing/suit/roguetown/armor/plate/full/robed,
-		/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/ornate		= /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/robed,
+		/obj/item/clothing/suit/roguetown/armor/plate/full/fluted/ornate		= /obj/item/clothing/suit/roguetown/armor/plate/full/fluted/ornate/robed,
+		/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/ornate		= /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/ornate/robed,
 		/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted			= /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/robed,
-		/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/ornate		= /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/fluted/robed,
+		/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/ornate		= /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/ornate/robed,
 		/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/fluted		= /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/fluted/robed,
 		/obj/item/clothing/suit/roguetown/armor/plate/full/fluted				= /obj/item/clothing/suit/roguetown/armor/plate/full/robed,
 		/obj/item/clothing/suit/roguetown/armor/plate/cuirass					= /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted/robed,
@@ -1877,15 +1874,6 @@
 	)
 	result_item = /obj/item/clothing/mask/rogue/facemask/steel/maille/birdmask
 	icon_loadout = /obj/item/clothing/mask/rogue/facemask/steel/maille/birdmask
-
-// RosySaturniidae - Rosestone Clasped Collar
-/obj/item/enchantingkit/rosy/rosecollar
-	name = "'Rosestone Clasped Collar' morphing elixir"
-	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of an Amulet of Eora."
-	target_items = list(
-		/obj/item/clothing/neck/roguetown/psicross/eora
-	)
-	result_item = /obj/item/clothing/neck/roguetown/psicross/eora/rosecollar
 
 // Noire and Co.
 

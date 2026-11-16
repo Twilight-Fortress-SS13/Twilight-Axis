@@ -50,6 +50,15 @@
 	if(!owner.cmode) //TA EDIT START
 		to_chat(target, span_love("<b>Подойди ближе и взгляни на меня..</b>"))
 		owner.say("Смотри на меня!")
+	var/secret_link = ""
+	if(target.get_secret_for(owner, "vampire"))
+		if(ishuman(owner) && ishuman(target))
+			var/mob/living/carbon/human/vampire = owner
+			var/mob/living/carbon/human/awestruck_human = target
+			vampire.remember_secret_target(awestruck_human, "vampire")
+		secret_link = " (<a href='?src=[REF(target)];task=view_remote_secret;secret_type=vampire'>Recall Secrets</a>)"
+	if(secret_link)
+		to_chat(owner, span_notice("Ваше сверхъестественное присутствие наталкивается на что-то скрытое внутри [target].") + secret_link)
 	else
 		to_chat(target, span_love("<b>УЗРИ ЖЕ МЕНЯ!!</b>"))
 		owner.say("УЗРИ ЖЕ МЕНЯ!!")

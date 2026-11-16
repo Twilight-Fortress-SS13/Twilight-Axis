@@ -8,19 +8,12 @@
 	icon_state = "driderboss"
 	icon_living = "driderboss"
 	icon_dead = "driderboss_dead"
-	wander = 0
-	vision_range = 8
-	aggro_vision_range = 24
 	ranged = 1
 	rapid = 3
 	rapid_fire_delay = 8
 	ranged_message = "casts a spell"
 	ranged_cooldown_time = 70
-	ranged_ignores_vision = TRUE
 	environment_smash = 0
-	minimum_distance = 6
-	retreat_distance = 4
-	move_to_delay = 5
 	obj_damage = 100
 	base_intents = list(/datum/intent/simple/driderboss)
 	melee_damage_lower = 60
@@ -39,9 +32,8 @@
 	var/allowed_projectile_types = /obj/projectile/magic/acidsplash
 	patron = /datum/patron/inhumen/zizo
 	footstep_type = FOOTSTEP_MOB_BAREFOOT
-	stat_attack = UNCONSCIOUS
 
-	ai_controller = /datum/ai_controller/spectral_maid
+	ai_controller = /datum/ai_controller/driderboss // TA EDIT
 
 	var/next_cast = 0
 	var/list/taunt = list("Она смотрит на нас!!! Умрите красиво!", "Ах, вкусная плоть...", "Страдайте!")
@@ -93,18 +85,33 @@
 			new minions_chosen (get_step(boss,pick_n_take(directions)), 1)
 		summoned_minions += 1;
 
-/mob/living/simple_animal/hostile/boss/driderboss/handle_automated_action()
-	. = ..()
-	if(target && next_cast < world.time && next_summon < world.time) //Second summon ability. Spawns a mob of small spiders
-		spawn_minions(minions_to_spawn)
-		INVOKE_ASYNC(src, TYPE_PROC_REF(/atom/movable, say), "Придите, дети мои! Пируйте их плотью!", null, list("colossus", "yell"))
-		next_cast = world.time + 10
-		next_summon = world.time + 600
-		return .
-	if(target && next_cast < world.time)
-		blast()
-		next_cast = world.time + 100
-		return .
+/datum/ai_controller/driderboss // TA EDIT START
+	ai_movement = /datum/ai_movement/hybrid_pathing
+	blackboard = list(BB_TARGETTING_DATUM = new /datum/targetting_datum/basic())
+	planning_subtrees = list(
+		/datum/ai_planning_subtree/aggro_find_target,
+		/datum/ai_planning_subtree/driderboss_special,
+		/datum/ai_planning_subtree/spacing/ranged,
+		/datum/ai_planning_subtree/basic_ranged_attack_subtree/opportunistic,
+		/datum/ai_planning_subtree/basic_melee_attack_subtree/spaced,
+	)
+
+/datum/ai_planning_subtree/driderboss_special/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
+	var/mob/living/simple_animal/hostile/boss/driderboss/boss = controller.pawn
+	var/mob/living/current_target = controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET]
+	if(QDELETED(boss) || boss.stat != CONSCIOUS || !isliving(current_target) || QDELETED(current_target) || current_target.stat == DEAD)
+		return
+	boss.target = current_target
+	if(boss.next_cast >= world.time)
+		return
+	if(boss.next_summon < world.time)
+		boss.spawn_minions()
+		INVOKE_ASYNC(boss, TYPE_PROC_REF(/atom/movable, say), "Придите, дети мои! Пируйте их плотью!", null, list("colossus", "yell"))
+		boss.next_cast = world.time + 10
+		boss.next_summon = world.time + 600
+		return
+	boss.blast()
+	boss.next_cast = world.time + 100 // TA EDIT END
 
 /mob/living/simple_animal/hostile/boss/driderboss/proc/shoot_projectile(turf/marker, set_angle)
 	if(!isnum(set_angle) && (!marker || marker == loc))

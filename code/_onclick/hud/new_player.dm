@@ -213,6 +213,9 @@
 		new_player.ready = PLAYER_NOT_READY
 		base_icon_state = "not_ready"
 		GLOB.ready_player_list -= new_player.ckey
+		if(SSvote.mode == STORYTELLER_VOTE)
+			SSvote.remove_vote_for_ckey(new_player.ckey)
+			SSvote.show_vote(new_player.client)
 	//update_appearance(UPDATE_ICON)
 	update_wretch_slots()
 	update_mercenary_slots()

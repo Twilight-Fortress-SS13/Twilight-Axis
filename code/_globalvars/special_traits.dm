@@ -45,28 +45,11 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 		apply_dnr_trait(character, player, TRAIT_GENERIC)
 	if(SSgamemode?.dnr_round)
 		apply_dnr_trait(character, player, MERCILESS_ROUND)
+	if(SSgamemode?.lastlegs_round) // TA EDIT
+		apply_lastlegs_trait(character, player, MERCILESS_ROUND) // TA EDIT
 	if(player.prefs.qsr_pref)
 		apply_qsr_trait(character, player)
-	character.mind.triumph_discount_remaining = get_donator_triumph_discount(player.ckey)
-	var/mob/loadout_user = player.mob // TA EDIT
-	if(loadout_user?.ckey) // TA EDIT
-		player.prefs.sanitize_subscription_loadout(loadout_user) // TA EDIT
-	var/loadout_slots_left = loadout_user?.ckey ? player.prefs.get_loadout_size(loadout_user) : 0 // TA EDIT
-	if(player.prefs.gear_list)
-		for(var/key in player.prefs.gear_list)
-			if(loadout_slots_left <= 0) // TA EDIT
-				break // TA EDIT
-			var/datum/loadout_item/item = GLOB.loadout_items_by_name[key]
-			if(!item || !item.path || item.get_loadout_lock_reason(loadout_user)) // TA EDIT
-				continue
-			loadout_slots_left-- // TA EDIT
-			if(item.triumph_cost)
-				character.mind.special_items["[item.name][TRIUMPH_STASH_SUFFIX]"] = item.path
-			else
-				character.mind.special_items[item.name] = item.path
-			var/list/loadout_metadata = player.prefs.gear_list[key] // TA EDIT START
-			if(islist(loadout_metadata) && loadout_metadata.len)
-				character.mind.special_items_metadata[item.name] = deepCopyList(loadout_metadata) // TA EDIT END
+	tat_apply_legacy_preference_loadout(character, player) // TA EDIT
 	var/datum/job/assigned_job = SSjob.GetJob(character.mind?.assigned_role)
 	if(assigned_job)
 		assigned_job.clamp_stats(character)
@@ -111,11 +94,7 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 		return
 
 	var/virtuous = FALSE
-	var/heretic = FALSE
 	var/species = character.dna.species
-
-	if(istype(player.prefs.selected_patron, /datum/patron/inhumen))
-		heretic = TRUE
 
 	if(player.prefs.statpack.virtuous)
 		virtuous = TRUE
@@ -125,12 +104,12 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 	var/datum/virtue/origin_type = player.prefs.virtue_origin
 	var/language_type = player.prefs.extra_language
 	if(virtue_type)
-		if(virtue_check(virtue_type, heretic, species))
+		if(virtue_check(virtue_type, species))
 			apply_virtue(character, virtue_type)
 		else
 			to_chat(character, "Incorrect Virtue parameters! It will not be applied.")
 	if(virtuetwo_type && virtuous)
-		if(virtue_check(virtuetwo_type, heretic, species))
+		if(virtue_check(virtuetwo_type, species))
 			apply_virtue(character, virtuetwo_type)
 		else
 			to_chat(character, "Incorrect Second Virtue parameters! It will not be applied.")
@@ -271,10 +250,8 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 	if(bonus in GLOB.roguetraits)
 		ADD_TRAIT(character, bonus, SPECIES_TRAIT)
 
-/proc/virtue_check(datum/virtue/V, heretic = FALSE, datum/species/species)
+/proc/virtue_check(datum/virtue/V, datum/species/species)
 	if(V)
-		if(istype(V,/datum/virtue/heretic) && !heretic)
-			return FALSE
 		if(V.restricted)
 			if((species.type in V.races))
 				return FALSE
@@ -309,9 +286,17 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 			needs_extra_vice = TRUE
 		else
 			has_extra_vice = TRUE
-	for(var/datum/charflaw/cf in character.charflaws.Copy()) // TA EDIT START - iterate a copy, a flaw may remove itself while applying
+	var/list/flaw_order = list() // TA EDIT START
+	for(var/datum/charflaw/cf in character.charflaws.Copy())
+		if(cf.relocates_owner)
+			flaw_order.Insert(1, cf)
+		else
+			flaw_order += cf
+	for(var/datum/charflaw/cf in flaw_order)
+		if(!(cf in character.charflaws))
+			continue
 		cf.apply_post_equipment(character)
-		if(cf in character.charflaws) // a flaw replaced during application never took root
+		if(cf in character.charflaws)
 			record_featured_object_stat(FEATURED_STATS_VICES, cf.name) // TA EDIT END
 	if(needs_extra_vice && !has_extra_vice)
 		var/datum/charflaw/randflaw/rf = new()
@@ -320,6 +305,9 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 
 /proc/apply_dnr_trait(mob/living/carbon/human/character, client/player, source = TRAIT_GENERIC)
 	ADD_TRAIT(player.mob, TRAIT_DNR, source)
+
+/proc/apply_lastlegs_trait(mob/living/carbon/human/character, client/player, source = TRAIT_GENERIC) // TA EDIT
+	ADD_TRAIT(player.mob, TRAIT_LASTLEGS, source) // TA EDIT
 
 /proc/apply_qsr_trait(mob/living/carbon/human/character, client/player)
 	ADD_TRAIT(player.mob, TRAIT_QUICKSILVERRESISTANT, TRAIT_GENERIC)

@@ -787,11 +787,11 @@
 
 	return FALSE
 
-/datum/reagents/proc/has_reagent(reagent, amount = -1, needs_metabolizing = FALSE)
+/datum/reagents/proc/has_reagent(reagent, amount = -1, needs_metabolizing = FALSE, check_subtypes = FALSE)
 	var/list/cached_reagents = reagent_list
 	for(var/_reagent in cached_reagents)
 		var/datum/reagent/R = _reagent
-		if (R.type == reagent)
+		if (check_subtypes ? istype(R, reagent) : R.type == reagent)
 			if(!amount)
 				if(needs_metabolizing && !R.metabolizing)
 					return 0
@@ -806,14 +806,17 @@
 
 	return 0
 
-/datum/reagents/proc/get_reagent_amount(reagent)
+/datum/reagents/proc/get_reagent_amount(reagent, include_subtypes = FALSE)
 	var/list/cached_reagents = reagent_list
+	var/total = 0
 	for(var/_reagent in cached_reagents)
 		var/datum/reagent/R = _reagent
-		if (R.type == reagent)
-			return round(R.volume, CHEMICAL_QUANTISATION_LEVEL)
+		if (include_subtypes ? istype(R, reagent) : R.type == reagent)
+			if(!include_subtypes)
+				return round(R.volume, CHEMICAL_QUANTISATION_LEVEL)
+			total += R.volume
 
-	return 0
+	return round(total, CHEMICAL_QUANTISATION_LEVEL)
 
 /datum/reagents/proc/get_reagents()
 	var/list/names = list()
@@ -879,7 +882,11 @@
 	var/shown_name = R.name
 	if(R.description)
 		shown_name = "<span class='tooltip' title=\"[html_encode(R.description)]\">[R.name]</span>"
-	return "[round(R.volume, 0.1)] [UNIT_FORM_STRING(round(R.volume, 0.1))] of <font color=[R.color]>[shown_name]</font>"
+	var/abv = "" //TA EDIT START
+	if(istype(R, /datum/reagent/consumable/ethanol))
+		var/datum/reagent/consumable/ethanol/booze = R
+		abv = " ([max(round(booze.boozepwr * 100 / BOOZEPOWER_FULLPROOF, 1), 0)]°)"
+	return "[round(R.volume, 0.1)] [UNIT_FORM_STRING(round(R.volume, 0.1))] of <font color=[R.color]>[shown_name]</font>[abv]" //TA EDIT END
 
 /datum/reagents/proc/generate_scent_message(minimum_percent=15)
 	// the lower the minimum percent, the more sensitive the message is.

@@ -5,7 +5,7 @@
 	faction = "Station"
 	total_positions = 6
 	spawn_positions = 6
-	vice_restrictions = list(/datum/charflaw/silverweakness)
+	vice_restrictions = list(/datum/charflaw/silverweakness, /datum/charflaw/wanted)
 	forbidden_races = list(RACES_DESPISED)
 	allowed_patrons = ALL_DIVINE_PATRONS
 	allowed_sexes = list(MALE, FEMALE)
@@ -17,7 +17,8 @@
 	min_pq = 4 //A step above sexton, should funnel new players to the sexton role to learn miracles at a more sedate pace
 	max_pq = null
 	round_contrib_points = 5
-	same_job_respawn_delay = 20 MINUTES
+	quest_claim_barred = TRUE
+	same_job_respawn_delay = 20 MINUTES // TA EDIT
 
 	//No nobility for you, being a member of the clergy means you gave UP your nobility. It says this in many of the church tutorial texts.
 	virtue_restrictions = list(/datum/virtue/utility/noble)

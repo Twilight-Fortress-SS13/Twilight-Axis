@@ -63,6 +63,7 @@ const Settings = () => {
     windowflashing,
     clientfps,
     auto_fit_viewport,
+    action_wheel_modifier,
     schizo_voice,
     verbose_character_creator,
     donor_visuals,
@@ -141,6 +142,25 @@ const Settings = () => {
           <Button onClick={() => act('auto_fit_viewport')}>
             {auto_fit_viewport ? 'Yes' : 'No'}
           </Button>
+        </LabeledGridList.Item>
+        <LabeledGridList.Item
+          label="Spell Wheel Modifier"
+          tooltip="Modifier for scrolling through abilities without casting them."
+        >
+          {[
+            { value: 'ctrl', label: 'Ctrl' },
+            { value: 'shift', label: 'Shift' },
+            { value: 'alt', label: 'Alt' },
+            { value: 'none', label: 'None' },
+          ].map(({ value, label }) => (
+            <Button
+              key={value}
+              selected={action_wheel_modifier === value}
+              onClick={() => act('action_wheel_modifier', { modifier: value })}
+            >
+              {label}
+            </Button>
+          ))}
         </LabeledGridList.Item>
         <LabeledGridList.Item
           label="Be Voice"

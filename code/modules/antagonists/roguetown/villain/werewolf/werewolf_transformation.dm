@@ -61,6 +61,7 @@
 
 /mob/living/carbon/human/species/werewolf/death(gibbed, nocutscene = FALSE)
 	werewolf_untransform(TRUE, gibbed)
+	update_wretch_slots() //TA EDIT
 
 /mob/living/carbon/human/proc/werewolf_transform()
 	if(!mind)

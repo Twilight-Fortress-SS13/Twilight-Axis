@@ -151,17 +151,17 @@
 
 /datum/loadout_item/cloakgoldenorder
 	name = "Cloak, Golden Order"
-	path = /obj/item/clothing/cloak/cape/inquisitorgold
+	path = /obj/item/clothing/cloak/cape/puritan/gold
 	sort_category = "Cloaks"
 
 /datum/loadout_item/cloaksilverorder
 	name = "Cloak, Silver Order"
-	path = /obj/item/clothing/cloak/cape/inquisitorsilver
+	path = /obj/item/clothing/cloak/cape/puritan/silver
 	sort_category = "Cloaks"
 
 /datum/loadout_item/surcoatheavy
 	name = "Surcoat, Overvestments"
-	path = /obj/item/clothing/cloak/tabard/stabard/crusader/heavy
+	path = /obj/item/clothing/cloak/tabard/stabard/overvestments
 	sort_category = "Cloaks"
 
 /datum/loadout_item/surcoatgoldenorder
@@ -192,6 +192,11 @@
 /datum/loadout_item/surcoatsilverorderuni
 	name = "Surcoat, Silver Order, Undivided"
 	path = /obj/item/clothing/cloak/tabard/stabard/crusader/t/undivided
+	sort_category = "Cloaks"
+
+/datum/loadout_item/frayedcloak
+	name = "Frayed Cloak"
+	path = /obj/item/clothing/cloak/templar/astratancleric/grey
 	sort_category = "Cloaks"
 
 /datum/loadout_item/scaledcloak

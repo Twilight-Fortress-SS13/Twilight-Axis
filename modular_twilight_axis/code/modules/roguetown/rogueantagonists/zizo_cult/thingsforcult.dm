@@ -532,7 +532,7 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 				/mob/living/simple_animal/hostile/retaliate/bat,
 				/mob/living/simple_animal/hostile/retaliate/rogue/chicken,
 				/mob/living/simple_animal/hostile/retaliate/rogue/cow,
-				/mob/living/simple_animal/hostile/retaliate/goat,
+				/mob/living/simple_animal/hostile/retaliate/rogue/goat,
 				/mob/living/simple_animal/hostile/retaliate/rogue/spider,
 				/mob/living/simple_animal/pet/cat,
 				/mob/living/simple_animal/hostile/retaliate/rogue/mudcrab/cabbit,
