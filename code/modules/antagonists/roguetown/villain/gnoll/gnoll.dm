@@ -80,9 +80,11 @@
 	item_d_type = "slash"
 	damfactor = 1.2 // TA EDIT - ORIGINAL: 1.4
 	// TA REMOVAL START
+	/*
 	swingdelay = 0.8 SECONDS
 	swingdelay_type = SWINGDELAY_PENALTY
 	clickcd = CLICK_CD_CHARGED
+	*/
 	// TA REMOVAL END
 
 /datum/intent/mace/smash/werewolf/gnoll
