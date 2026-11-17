@@ -79,9 +79,10 @@
 	character.nsfw_ooc_extra_img = nsfw_ooc_extra_img
 	character.nsfw_ooc_extra_img_link = nsfw_ooc_extra_img_link
 	character.erpprefs = erpprefs
-	// Rumours / Noble gossip
+	// Rumours / Noble gossip / Secrets
 	character.rumour = rumour
 	character.noble_gossip = noble_gossip
+	character.secrets = secrets?.Copy() // TA EDIT
 	// Copy the cached version
 	character.flavortext_cached = flavortext_cached
 	character.ooc_notes_cached = ooc_notes_cached

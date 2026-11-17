@@ -7,7 +7,7 @@
 //	where you would want the updater procs below to run
 
 //	This also works with decimals.
-#define SAVEFILE_VERSION_MAX	36
+#define SAVEFILE_VERSION_MAX	37
 
 /*
 SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Carn
@@ -51,6 +51,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	if(current_version < 31) // RAISE THIS TO SAVEFILE_VERSION_MAX (and make sure to add +1 to the version) EVERY TIME YOU ADD SERVER-CHANGING KEYBINDS LIKE CHANGING HOW SAY WORKS!!
 		force_reset_keybindings_direct()
 		addtimer(CALLBACK(src, PROC_REF(force_reset_keybindings_direct)), 30)
+	if(current_version < 37 && islist(key_bindings) && !key_bindings["F10"]) // Add the AntagOOC default without resetting custom keybinds
+		key_bindings["F10"] = list("AntagOOC")
 
 /datum/preferences/proc/update_character(current_version, savefile/S)
 	if(current_version < 30)
@@ -899,6 +901,9 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		ooc_extra_img_link = null
 	S["rumour"]					>> rumour
 	S["noble_gossip"]			>> noble_gossip
+	S["secrets"]				>> secrets
+	if(!islist(secrets))
+		secrets = list()
 	S["averse_chosen_faction"]	>> averse_chosen_faction
 	S["charflaw_choices"] >> charflaw_choices // TA EDIT
 	S["song_artist"]				>> song_artist
@@ -1359,6 +1364,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["ooc_extra_img_link"] , ooc_extra_img_link)
 	WRITE_FILE(S["rumour"] , html_decode(rumour))
 	WRITE_FILE(S["noble_gossip"] , html_decode(noble_gossip))
+	WRITE_FILE(S["secrets"] , secrets)
 	WRITE_FILE(S["averse_chosen_faction"] , html_decode(averse_chosen_faction))
 	WRITE_FILE(S["song_artist"] , song_artist)
 	WRITE_FILE(S["song_title"] , song_title)
