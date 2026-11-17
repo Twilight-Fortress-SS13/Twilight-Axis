@@ -17333,7 +17333,6 @@
 /area/rogue/indoors/town/church/basement)
 "dNN" = (
 /obj/structure/closet/crate/chest/wicker,
-/obj/structure/closet/crate/chest/wicker,
 /obj/item/roguegem/ruby,
 /turf/open/floor/rogue/hay,
 /area/rogue/indoors/town/desert/warden)
@@ -98094,8 +98093,7 @@
 	},
 /turf/open/floor/rogue/lightpath{
 	desc = "My eyes can see far down below.";
-	name = "open space";
-	alpha = 5
+	name = "open space"
 	},
 /area/rogue/outdoors/desertdeep/above)
 "vpy" = (
