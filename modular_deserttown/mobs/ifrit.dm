@@ -115,22 +115,22 @@
 		fire_line(target, offset)
 
 /datum/action/cooldown/mob_cooldown/fire_breath/cone/ifrit
-	fire_range = 6
-	cooldown_time = 15 SECONDS
+	fire_range = 3
+	cooldown_time = 25 SECONDS
 
 /datum/action/cooldown/mob_cooldown/fire_breath/mass_fire
 	name = "Fire Wheel"
 	button_icon = 'icons/effects/fire.dmi'
 	button_icon_state = "light"
 	desc = "Breathe flames in all directions."
-	cooldown_time = 35 SECONDS
+	cooldown_time = 65 SECONDS
 	fire_range = 8
 	npc_min_range = 0
 	npc_max_range = 8
 	self_targetable = TRUE
 	use_chance = 50
 
-	var/sectors = 12
+	var/sectors = 8
 	var/breath_delay = 1.5 SECONDS
 	var/total_spins = 2
 
