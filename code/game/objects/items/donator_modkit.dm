@@ -242,6 +242,12 @@
 		new_item.name = "[initial(new_item.name)] <font size = 1>([old_name])</font>"
 	else
 		new_item.name = initial(new_item.name)
+	if(I.polished == 4) // TA EDIT START
+		new_item.apply_full_polish()
+	else
+		new_item.polished = I.polished
+	if(I.has_item_quality)
+		new_item.item_quality = I.item_quality // TA EDIT END
 	qdel(I)
 
 	if(!user.put_in_hands(new_item))

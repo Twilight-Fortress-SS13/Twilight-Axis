@@ -434,7 +434,7 @@ GLOBAL_LIST_INIT(quest_prototypes, build_quest_prototypes())
 
 /datum/quest/proc/available_fellowship_members(mob/living/user)
 	. = list()
-	if(!user)
+	if(!isliving(user))
 		return
 	. += user
 	var/datum/fellowship/F = user.current_fellowship
