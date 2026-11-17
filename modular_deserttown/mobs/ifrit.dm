@@ -99,7 +99,7 @@
 /datum/action/cooldown/mob_cooldown/fire_breath/proc/on_burn_mob(mob/living/barbecued, mob/living/source)
 	to_chat(barbecued, span_userdanger("You are burned by [source]'s fire breath!"))
 	barbecued.fire_act(4, 8)
-	barbecued.apply_damage(30, BURN)
+	barbecued.apply_damage(10, BURN)
 
 /datum/action/cooldown/mob_cooldown/fire_breath/cone
 	name = "Fire Cone"
