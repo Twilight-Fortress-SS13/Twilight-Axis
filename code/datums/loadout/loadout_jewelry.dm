@@ -1,4 +1,4 @@
-
+/*
 /datum/loadout_item/psicross
 	name = "Psydonian Cross"
 	path = /obj/item/clothing/neck/roguetown/psicross
@@ -150,3 +150,4 @@
 	name = "Wedding Band, Ancient"
 	path = /obj/item/clothing/ring/band/paalloy
 	sort_category = "Jewelry"
+*/

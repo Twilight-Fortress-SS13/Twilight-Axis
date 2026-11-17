@@ -20,9 +20,12 @@
 	if(left_click)
 		var/turf/T = get_turf(object)
 		if(stored)
+			var/template_desc = "[stored]" // TA EDIT
+			var/template_type = "[stored.type]" // TA EDIT
 			DuplicateObject(stored, perfectcopy=1, sameloc=0,newloc=T)
-			log_admin("Build Mode: [key_name(c)] copied [stored] to [AREACOORD(object)]")
+			BM.log_action("copied template [template_desc] ([template_type]) to [AREACOORD(T)] using copy mode.") // TA EDIT
 	else if(right_click)
 		if(ismovableatom(object)) // No copying turfs for now.
 			to_chat(c, span_notice("[object] set as template."))
 			stored = object
+			BM.log_action("selected [stored] ([stored.type]) at [AREACOORD(stored)] as the copy template.") // TA EDIT

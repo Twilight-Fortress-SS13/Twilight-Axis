@@ -351,7 +351,7 @@
 
 /datum/stressevent/soulchurner
 	timer = 1 MINUTES
-	stressadd = 30
+	stressadd = 20
 	desc = span_red("The horrid wails of the dead call for relief!")
 
 /datum/stressevent/soulchurnerpsydon
@@ -444,10 +444,7 @@
 	desc = span_boldred("I have lost my hood! My faith wavers without it. I feel ashamed.")
 	timer = 999 MINUTES
 
-/datum/stressevent/dungeoneerhoodlost
-	stressadd = 3
-	desc = span_boldred("I have lost my hood! It's not right. I feel ashamed.")
-	timer = 999 MINUTES
+//TA EDIT
 
 /datum/stressevent/headless
 	stressadd = 3
@@ -505,6 +502,11 @@
 	timer = 2 MINUTES
 	stressadd = 3
 	desc = span_boldred("The Undermaiden is watching me with disgust!")
+
+/datum/stressevent/hatezizo
+	timer = 666 MINUTES
+	stressadd = 666 // :)
+	desc = span_red("ZIZOZIZOZIZO")
 
 /datum/stressevent/something_stirs // Psydonites can pray in blood rain. For a price.
 	timer = 5 MINUTES

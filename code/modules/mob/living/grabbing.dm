@@ -423,6 +423,9 @@
 				return
 
 /obj/item/grabbing/proc/twistlimb(mob/living/user) //implies limb_grabbed and sublimb are things -- Kunai: that's fucked up, but hope this fixes that
+	if(SEND_SIGNAL(user, COMSIG_MOB_TWIST_LIMB, user, src, grabbed) & COMPONENT_CANCEL_TWIST) //TA edit
+		return
+
 	if(user.badluck(5))
 		badluckmessage(user)
 		user.stop_pulling(TRUE)

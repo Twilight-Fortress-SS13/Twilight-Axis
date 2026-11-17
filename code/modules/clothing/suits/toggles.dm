@@ -121,6 +121,9 @@
 
 /obj/item/clothing/head/hooded/Destroy()
 	if(connected_cloak)
+		var/list/stored_items = contents.Copy() // TA EDIT START
+		for(var/obj/item/I in stored_items)
+			I.forceMove(connected_cloak) // TA EDIT END
 		connected_cloak.RemoveHood() // Notify the linked cloak.
 		connected_cloak = null
 	return ..()

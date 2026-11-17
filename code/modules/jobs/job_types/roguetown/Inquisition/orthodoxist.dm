@@ -12,7 +12,7 @@
 	outfit = null
 	outfit_female = null
 	display_order = JDO_ORTHODOXIST
-	min_pq = 5
+	min_pq = 10
 	max_pq = null
 	round_contrib_points = 2
 	quest_claim_barred = TRUE
@@ -30,3 +30,5 @@
 		/datum/advclass/chasseur,
 		/datum/advclass/psyaltrist
 	)
+	same_job_respawn_delay = 30 MINUTES
+

@@ -1,6 +1,11 @@
-// Set in config.txt (MINIMUM_FLAVOR_TEXT and MINIMUM_OOC_NOTES), 0 turns the requirement off.
-#define MINIMUM_FLAVOR_TEXT CONFIG_GET(number/minimum_flavor_text)
-#define MINIMUM_OOC_NOTES CONFIG_GET(number/minimum_ooc_notes)
+#ifdef LOCALTEST
+	#define MINIMUM_FLAVOR_TEXT 0
+	#define MINIMUM_OOC_NOTES 0
+#endif
+#ifndef LOCALTEST
+	#define MINIMUM_FLAVOR_TEXT		0
+	#define MINIMUM_OOC_NOTES 		0
+#endif
 
 //Preference toggles
 #define SOUND_ADMINHELP			(1<<0)
@@ -80,6 +85,14 @@
 #define JP_LOW 1
 #define JP_MEDIUM 2
 #define JP_HIGH 3
+#define JP_BOOST 4 // TA EDIT
+
+// TA EDIT START
+#define JOB_PREF_UI_HIGH 1
+#define JOB_PREF_UI_MEDIUM 2
+#define JOB_PREF_UI_LOW 3
+#define JOB_PREF_UI_NEVER 4
+#define JOB_PREF_UI_BOOST 5 // TA EDIT END
 
 #define MAX_ROLL_TOKENS 2
 /// Roll tokens (each token gives 20%). These are counted in ratios instead of flat bonuses.

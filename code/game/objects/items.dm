@@ -18,6 +18,10 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	///Icon file for mob worn overlays.
 	///no var for state because it should *always* be the same as icon_state
 	var/icon/mob_overlay_icon
+	/// Opt-in body IDs for [base_state]_taur_[m/f]_[body_id] worn sprites. Does not restrict equipping.
+	var/list/taur_sprite_types
+	/// Optional file for wide taur sprites; otherwise use mob_overlay_icon (or the slot's default file).
+	var/icon/taur_mob_overlay_icon
 	//Forced mob worn layer instead of the standard preferred ssize.
 	var/alternate_worn_layer
 
@@ -457,8 +461,8 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	if(sharpness) //give sharp objects butchering functionality, for consistency
 		AddComponent(/datum/component/butchering, 80 * toolspeed)
 
-	if(max_blade_int)
-		blade_int = max_blade_int
+	if(max_blade_int) // TA EDIT
+		blade_int = max_blade_int // TA EDIT
 
 /obj/item/Destroy()
 	item_flags &= ~DROPDEL	//prevent reqdels
@@ -542,14 +546,19 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		to_chat(usr, output)
 
 	if(href_list["explainbalance"])
-		var/output = span_info("A heavy weapon is easier to dodge, and inflicts [STAM_DRAIN_PER_STR_DIFF_HEAVY_BAL] stamina damage per level of strength difference on a parrying defender. \n\
-		A swift balance weapon reduces the enemy's parry chance depending on SPD difference. \n\
-		Targeting harder to hit zones such as hands, feet, stomach or face zones has a defense reduction cap at [SWIFTCAP_PRECISE]%. \n\
-		Targeting large limbs such as arms, head or legs has a defense reduction cap of [SWIFTCAP_LIMBS]%. \n\
-		Targeting the chest only has a cap of [SWIFTCAP_CHEST]% parry reduction. \n\
+		var/output = span_red("A <b>heavy</b> weapon is easier to dodge, and inflicts <b>[STAM_DRAIN_PER_STR_DIFF_HEAVY_BAL]</b> stamina damage per level of STR difference on a parrying defender.\n")
+
+		output += span_nicegreen("A <b>swift</b> balance weapon reduces the enemy's parry chance depending on SPD difference. \n\
+		Targeting harder to hit zones such as hands, feet, stomach or face zones has a defense reduction cap at [SWIFTCAP_PRECISE]%</b>. \n\
+		Targeting large limbs such as arms, head or legs has a defense reduction cap of <b>[SWIFTCAP_LIMBS]%</b>. \n\
+		Targeting the chest only has a cap of <b>[SWIFTCAP_CHEST]%</b> parry reduction. \n\
 		Swift Balance does not work if the attacker is wearing Medium or Heavy AC equipment on their outerwear, innerwear or pants slots. \n\
 		Defender's difference in INT and PER (if higher) may reduce the parry penalty in some circumstances. \n\
 		Having a swift weapon in your dominant hand and nothing in your off-hand increases your parry chance.")
+
+		output += span_notice("A <b>normal</b> balance weapon helps against both balances by lowering swift's parry reduction by <b>10</b>, \n\
+		and blocking <b>[abs(STAM_DRAIN_PER_STR_DIFF_HEAVY_BAL)]</b> stamina damage done by heavy balance")
+
 		if(!usr.client.prefs.no_examine_blocks)
 			output = examine_block(output)
 		to_chat(usr, output)
@@ -606,7 +615,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		to_chat(usr, output)
 
 	if(href_list["explainpenfactor"])
-		var/output = span_info(stat_hint_penfactor())
+		var/output = span_info(stat_hint_penfactor()) // TA EDIT
 		if(!usr.client.prefs.no_examine_blocks)
 			output = examine_block(output)
 		to_chat(usr, output)
@@ -643,13 +652,15 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		if(gripped_intents && !wielded)
 			if(force_wielded)
 				inspec += "\n<b>WIELDED FORCE:</b> [get_force_string(force_wielded)] <span class='info'><a href='?src=[REF(src)];showforcewield=1'>{?}</a></span>"
-
-		if(wbalance)
+		if(force)
 			inspec += "\n<b>BALANCE: </b>"
-			if(wbalance == WBALANCE_HEAVY)
-				inspec += "Heavy"
-			if(wbalance == WBALANCE_SWIFT)
-				inspec += "Swift"
+			if(wbalance)
+				if(wbalance == WBALANCE_HEAVY)
+					inspec += "Heavy"
+				if(wbalance == WBALANCE_SWIFT)
+					inspec += "Swift"
+			else
+				inspec += "Normal"
 			inspec += " <span class='info'><a href='?src=[REF(src)];explainbalance=1'>{?}</a></span>"
 
 		if(wlength != WLENGTH_NORMAL)
@@ -704,7 +715,11 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		if(istype(src, /obj/item/rogueweapon))
 			var/obj/item/rogueweapon/W = src
 			if(W.special)
-				inspec += "[W.get_special().get_examine()]"
+				inspec += "[W.get_special().get_examine()]" // TA EDIT
+		else if(istype(src, /obj/item/gun/ballistic/revolver/grenadelauncher/bow)) // TA EDIT
+			var/obj/item/gun/ballistic/revolver/grenadelauncher/bow/B = src
+			if(B.special)
+				inspec += "[B.special.get_examine()]" // TA EDIT
 
 		if(istype(src, /obj/item/rogueweapon/shield))
 			var/obj/item/rogueweapon/shield/S = src
@@ -1265,7 +1280,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	if(!get_sharpness() || !affecting.can_dismember(src))
 		return 0
 
-	var/nuforce = get_complex_damage(src, user)
+	var/nuforce = get_complex_damage(src, user) // TA EDIT
 
 	if(user)
 		if(istype(user.rmb_intent, /datum/rmb_intent/weak))
@@ -1275,7 +1290,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 
 		if(user.used_intent.blade_class == BCLASS_CHOP) //chopping attacks always attempt dismembering
 			nuforce *= 1.1
-		else if(user.used_intent.blade_class != BCLASS_CUT)
+		else if(user.used_intent.blade_class != BCLASS_CUT) // TA EDIT
 			return 0
 
 	return affecting.dismemberment_chance_from_force(nuforce, zone_sel)
@@ -1674,7 +1689,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		var/obj/item/clothing/C = src
 		if(C.armor)
 			var/datum/armor/def_armor = C.armor
-			return def_armor.blunt || def_armor.slash || def_armor.stab || def_armor.piercing
+			return def_armor.blunt || def_armor.slash || def_armor.stab || def_armor.piercing || def_armor.fire || def_armor.bullet
 
 	return FALSE
 
@@ -1684,14 +1699,15 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		var/obj/item/clothing/C = src
 		if(C.armor)
 			var/datum/armor/def_armor = C.armor
-			if(!def_armor.blunt && !def_armor.slash && !def_armor.stab && !def_armor.piercing)
+			if(!def_armor.blunt && !def_armor.slash && !def_armor.stab && !def_armor.piercing && !def_armor.fire && !def_armor.bullet)
 				str += "<b>NO ARMOR!</b>"
 			else
-				var/defense = "[SPAN_TOOLTIP(stat_hint_absorb(), "<u><b>ABSORB:</b></u>")] [colorgrade_rating("BLUNT", def_armor.blunt, elaborate = TRUE, max_tier = 5)]"
+				var/defense = "[SPAN_TOOLTIP(stat_hint_absorb(), "<u><b>ABSORB:</b></u>")] [colorgrade_rating("BLUNT", def_armor.blunt, elaborate = TRUE, max_tier = 5)]" // TA EDIT
 				defense += "<br>"
-				defense += "[SPAN_TOOLTIP(stat_hint_reduce(), "<u><b>REDUCE:</b></u>")] [colorgrade_rating("BURN", def_armor.fire, elaborate = TRUE, max_tier = 5)]"
+				defense += "[SPAN_TOOLTIP(stat_hint_reduce(), "<u><b>REDUCE:</b></u>")] [colorgrade_rating("BURN", def_armor.fire, elaborate = TRUE, max_tier = 5)]" // TA EDIT
+				defense += " | [colorgrade_rating("BULLET", def_armor.bullet, elaborate = TRUE, max_tier = 5)]"
 				defense += "<br>"
-				defense += "[SPAN_TOOLTIP(stat_hint_block(), "<u><b>BLOCK:</b></u>")] "
+				defense += "[SPAN_TOOLTIP(stat_hint_block(), "<u><b>BLOCK:</b></u>")] " // TA EDIT
 				defense += "[colorgrade_rating("SLASH", def_armor.slash, elaborate = TRUE)] | "
 				defense += "[colorgrade_rating("STAB", def_armor.stab, elaborate = TRUE)] | "
 				defense += "[colorgrade_rating("PIERCING", def_armor.piercing, elaborate = TRUE)]"

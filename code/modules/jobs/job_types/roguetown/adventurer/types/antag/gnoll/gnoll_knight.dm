@@ -27,7 +27,7 @@
 		/datum/skill/labor/butchering = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/cooking = SKILL_LEVEL_NOVICE,
 	)
-	cmode_music = 'sound/music/cmode/antag/combat_thewall.ogg'
+	cmode_music = sound("sound/music/cmode/antag/combat_thewall.ogg") // TA EDIT
 
 /datum/outfit/job/roguetown/gnoll/knight
 	vamp_armor_type = /obj/item/clothing/suit/roguetown/armor/vampiric/gnoll/knight

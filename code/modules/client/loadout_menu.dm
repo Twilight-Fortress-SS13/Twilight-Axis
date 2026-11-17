@@ -1,4 +1,4 @@
-/// TGUI Loadout Menu - Opened from character preferences to select loadout items within a point budget.
+/*/// TGUI Loadout Menu - Opened from character preferences to select loadout items within a point budget.
 /// Uses a name-keyed associative list (gear_list) with per-item metadata for color, custom name, and custom description.
 /// Based on Bay / Eris / Sojourn loadout menu with a different UI but the same save format.
 #define LOADOUT_MAX_POINTS 10
@@ -231,5 +231,6 @@
 #undef LOADOUT_MAX_POINTS
 #undef LOADOUT_MAX_NAME_LEN
 #undef LOADOUT_MAX_DESC_LEN
-#undef LOADOUT_TRIUMPH_DISCOUNT
+#undef LOADOUT_TRIUMPH_DISCOUNT3
 #undef LOADOUT_DONATOR_BONUS
+*/

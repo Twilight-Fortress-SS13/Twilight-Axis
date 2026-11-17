@@ -37,6 +37,12 @@
 		to_chat(user, span_warning("This trail has been cross-examined with a map for the best routes."))
 		return
 
+	var/datum/hunting_category/C = new target_category() // TA EDIT START
+	var/area/A = get_area(target)
+	if(!C.can_spawn_in_area(A))
+		to_chat(user, span_warning("The signs shown on [src] do not match this terrain."))
+		return // TA EDIT END
+
 	user.visible_message(span_notice("[user] consults [src] while examining the earth."), \
 		span_notice("You cross-reference the signs in the dirt with the markings on [src]..."))
 

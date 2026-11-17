@@ -1,0 +1,89 @@
+/obj/item/clothing/suit/roguetown/armor/leather/jacket/artijacket/handjacket
+	name = "noble jacket"
+	icon_state = "handcoat"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/special/noble.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/special/onmob/noble.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/special/onmob/noble.dmi'
+	detail_tag = "_detail"
+	detail_color = CLOTHING_BLACK
+	body_parts_covered = COVERAGE_SHIRT
+
+/obj/item/clothing/suit/roguetown/armor/leather/jacket/artijacket/handjacket/update_icon()
+	cut_overlays()
+	if(get_detail_tag())
+		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		pic.appearance_flags = RESET_COLOR
+		if(get_detail_color())
+			pic.color = get_detail_color()
+		add_overlay(pic)
+
+/obj/item/clothing/suit/roguetown/armor/leather/jacket/artijacket/handjacket/lordcolor(primary,secondary)
+	detail_color = primary
+	update_icon()
+
+/obj/item/clothing/suit/roguetown/armor/leather/jacket/artijacket/handjacket/Initialize()
+	. = ..()
+	if(GLOB.lordprimary)
+		lordcolor(GLOB.lordprimary,GLOB.lordsecondary)
+	else
+		GLOB.lordcolor += src
+
+/obj/item/clothing/suit/roguetown/armor/leather/jacket/artijacket/handjacket/Destroy()
+	GLOB.lordcolor -= src
+	return ..()
+
+/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/raneshen/new_coat
+	name = "ranesheni scale coat"
+	desc = "A lightweight armor made from the scales of the Ranesheni \"megarmach\", an armored reptilian creacher that ambushes prey by the riverside, and drags them deep into Abyssor's domain."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/armor.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/32х48/armor.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/helpers/32х48/sleeves_armor.dmi'
+	icon_state = "light_armour"
+	item_state = "light_armour"
+	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
+
+/obj/item/clothing/suit/roguetown/armor/leather/etrjacket
+	name = "wanderer's jacket"
+	desc = "A comfortable jacket, more suitable for court receptions than for hiking in the swamps."
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/special/onmob/noble.dmi'
+	icon_state = "etrjacket"
+	item_state = "etrjacket"
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/shirts.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/shirts.dmi'
+	allowed_race = NON_DWARVEN_RACE_TYPES
+	armor = null
+
+/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/confessor/overseer
+	name = "confessor jacket"
+	desc = "Стеганая куртка, обеспечивающая достаточную защиту от безоружных невинных людей."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/overseer.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/onmob/overseer_onmob.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/onmob/overseer_onmob.dmi'
+	icon_state = "overseerjacket"
+	item_state = "overseerjacket"
+	color = null
+	boobed = TRUE
+
+/obj/item/clothing/suit/roguetown/armor/leather/druid/blessed
+	name = "blessed druid armor"
+	desc = "Druid armor hallowed by the Treefather's rite. The bark pulses with faint living light; it feels as though the forest itself watches over whoever wears it."
+	armor = ARMOR_LEATHER
+	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER
+	body_parts_covered = COVERAGE_TORSO|ARMS|LEGS
+	color = "#73c47a"
+
+/obj/item/clothing/suit/roguetown/armor/leather/druid/blessed/Initialize(mapload)
+	. = ..()
+	set_light(1, 1, 2, l_color = "#58C86A")
+	add_filter("druid_blessed_glow", 2, list("type" = "outline", "color" = "#58C86A", "alpha" = 95, "size" = 1))
+
+/obj/item/clothing/suit/roguetown/armor/leather/druid/blessed/pickup(mob/user)
+	. = ..()
+	if(!istype(user, /mob/living/carbon/human))
+		return
+	var/mob/living/carbon/human/H = user
+	if(H.patron?.type == /datum/patron/divine/dendor)
+		return
+	H.electrocute_act(30, src)
+	H.mob_timers["kneestinger"] = world.time
+	to_chat(H, span_warning("[name] rejects my grasp — only the Treefather's faithful may bear such a gift!"))

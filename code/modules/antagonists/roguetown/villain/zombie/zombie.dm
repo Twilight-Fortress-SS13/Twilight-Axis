@@ -125,6 +125,7 @@
 		zombie.dna.species.blood_color = base_species_blood_color
 		for(var/datum/charflaw/cf in zombie.charflaws)
 			cf.ephemeral = FALSE
+		zombie.remove_status_effect(/datum/status_effect/debuff/rotted_zombie)
 		zombie.update_body()
 
 		GLOB.dead_mob_list -= zombie // Remove it from global dead/alive mob list here here, if they're a zombie they probably died.
@@ -137,9 +138,13 @@
 		for(var/trait in traits_zombie)
 			REMOVE_TRAIT(zombie, trait, "[type]")
 		zombie.remove_client_colour(/datum/client_colour/monochrome)
-		zombie.remove_language(/datum/language/undead)
+		var/underdark_drow = istype(zombie.client?.prefs?.virtue_origin, /datum/virtue/origin/racial/underdark_drow)
+		if(!underdark_drow)
+			zombie.remove_language(/datum/language/undead)
+
 		var/datum/language_holder/language_holder = zombie.get_language_holder()
-		language_holder.selected_default_language = null
+		if(!underdark_drow)
+			language_holder.selected_default_language = null
 
 		if(has_turned && become_rotman)
 			for(var/trait in traits_rotman)
@@ -233,8 +238,8 @@
 //We greet them there, play a stinger and yeah.
 	zombie.update_body()
 	zombie.playsound_local(get_turf(zombie), 'sound/music/wolfintro.ogg', 80, FALSE, pressure_affected = FALSE) //Extra bit of AURA
-	to_chat(zombie, span_cult(pick("SO... HUNGRY... CRAVE FLESH!", "FLESH... MUST HAVE FLESH!", "HUNGER... KILL... FLESH!")))
-	zombie.cmode_music = 'sound/music/combat_weird.ogg'
+	to_chat(zombie, span_cult(pick("SO... HUNGRY... CRAVE FLESH!", "FLESH... MUST HAVE FLESH!", "HUNGER... KILL... FLESH!"))) // TA EDIT
+	zombie.cmode_music = sound("sound/music/combat_weird.ogg")
 	zombie.apply_status_effect(/datum/status_effect/debuff/deadite_grace)
 
 	last_bite = world.time

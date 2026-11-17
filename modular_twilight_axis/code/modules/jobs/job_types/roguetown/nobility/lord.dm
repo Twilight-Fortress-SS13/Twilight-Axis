@@ -1,0 +1,22 @@
+/datum/job/roguetown/lord/after_spawn(mob/living/H, mob/M, latejoin = TRUE)
+	..()
+	if(ishuman(H))
+		var/prev_real_name = H.real_name
+		var/prev_name = H.name
+		var/nobility = "Duke"
+		if(SSmapping.config.map_name == "Rockhill")
+			nobility = "King"
+			if(H.titles_pref == TITLES_F)
+				nobility = "Queen"
+		else
+			nobility = "Duke"
+			if(H.titles_pref == TITLES_F)
+				nobility = "Duchess"
+		H.real_name = "[nobility] [prev_real_name]"
+		H.name = "[nobility] [prev_name]"
+
+		for(var/X in peopleknowme)
+			for(var/datum/mind/MF in get_minds(X))
+				if(MF.known_people)
+					MF.known_people -= prev_real_name
+					H.mind.person_knows_me(MF)

@@ -289,6 +289,11 @@
 		else if(razes && isstructure(A))
 			var/obj/structure/S = A
 			S.take_damage(PVE_damage * 2 * falloff, BRUTE, "blunt", FALSE)
+	if(razes) // TA EDIT START
+		for(var/mob/living/target in range(3, T))
+			target.adjustFireLoss(PVE_damage)
+		for(var/mob/living/target in range(8, T))
+			target.adjustFireLoss(PVE_damage - 100) // TA EDIT END
 	//IMPORTANT!! go into walls /turf/closed/wall/ and see /turf/closed/wall/ex_act. Its bounded with /proc/explosion. Same for /obj/structure and /obj/structure/ex_act because if you going to fuck intergity or whatever this shit called players will skin you alive for breaking their equipment and keys
 	//also /turf/open/floor/ex_act for comment above
 	explosion(T, extreme_impact_range = devrange, heavy_impact_range = heavyrange, light_impact_range = lightrange, ignorecap = ignorecap, flame_range = flamerange, smoke = TRUE, soundin = BOMB_SOUND)

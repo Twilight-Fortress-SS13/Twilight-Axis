@@ -23,7 +23,14 @@
 		"Absolver",
 		"Templar",
 		"Sergeant",
-		"Man at Arms",
+		"Royal Guard Sergeant",
+		"Royal Guard",
+		"Town Sheriff",
+		"Town Guard",
+		"Overseer",
+		"Vanguard",
+		"Man at Arms", // TA EDIT
+		"Men-at-arms",
 		"Knight",
 		"Squire",
 		"Mercenary",
@@ -77,10 +84,10 @@
 	user.mind.AddSpell(tracking_spell)
 	mark_component.set_marked_target(marked_target)
 
-	if(ishuman(user) && ishuman(marked_target))
+	if(ishuman(user) && ishuman(marked_target)) // TA EDIT START
 		var/mob/living/carbon/human/dreamwalker = user
 		var/mob/living/carbon/human/marked_human = marked_target
-		dreamwalker.remember_secret_target(marked_human, "dreamwalker")
+		dreamwalker.remember_secret_target(marked_human, "dreamwalker") // TA EDIT END
 
 	if(marked_target != user)
 		to_chat(user, span_warning("[user] traces a glowing symbol in the air marking [marked_target]."),
@@ -104,10 +111,10 @@
 	return (target.mind.assigned_role in valid_target_roles)
 
 /obj/effect/proc_holder/spell/invoked/mark_target/proc/remove_mark()
-	if(usr)
+	if(usr) // TA EDIT START
 		var/datum/component/dreamwalker_mark/mark_component = usr.GetComponent(/datum/component/dreamwalker_mark)
 		if(mark_component)
-			mark_component.set_marked_target(null)
+			mark_component.set_marked_target(null) // TA EDIT END
 	if(marked_target)
 		marked_target = null
 	if(tracking_spell && usr && usr.mind)
@@ -142,11 +149,11 @@
 	var/turf/user_turf = get_turf(user)
 	var/turf/target_turf = get_turf(marked_target)
 
-	var/secret_link = ""
+	var/secret_link = "" // TA EDIT START
 	if(ishuman(marked_target))
 		var/mob/living/carbon/human/marked_human = marked_target
 		if(marked_human.get_secret_for(user, "dreamwalker"))
-			secret_link = " (<a href='?src=[REF(marked_human)];task=view_remote_secret;secret_type=dreamwalker'>Recall Secrets</a>)"
+			secret_link = " (<a href='?src=[REF(marked_human)];task=view_remote_secret;secret_type=dreamwalker'>Recall Secrets</a>)" // TA EDIT END
 
 	if(user_turf.z != target_turf.z)
 		// Different z-level
@@ -156,17 +163,17 @@
 		else
 			z_direction = "above"
 
-		to_chat(user, span_notice("The target is on a level [z_direction] you.") + secret_link)
+		to_chat(user, span_notice("The target is on a level [z_direction] you.") + secret_link) // TA EDIT
 	else
 		// Same z-level
 		var/distance = get_dist(user, marked_target)
 		var/direction = get_dir(user, marked_target)
 
 		if(distance == 0)
-			to_chat(user, span_notice("The target is here!") + secret_link)
+			to_chat(user, span_notice("The target is here!") + secret_link) // TA EDIT
 		else
 			var/direction_text = dir2text(direction)
-			to_chat(user, span_notice("The target is [distance] tiles away to the [direction_text].") + secret_link)
+			to_chat(user, span_notice("The target is [distance] tiles away to the [direction_text].") + secret_link) // TA EDIT
 
 	// Check if the target is downed and adjacent
 	if(user.Adjacent(marked_target) && !(marked_target.mobility_flags & MOBILITY_STAND) && !marked_target.buckled)
@@ -215,7 +222,10 @@
 		/area/rogue/outdoors/beach/south,
 		/area/rogue/outdoors/beach/grim,
 		/area/rogue/outdoors/beach/north/grim,
-		/area/rogue/outdoors/beach/south/grim
+		/area/rogue/outdoors/beach/south/grim,
+		/area/rogue/outdoors/beach/harbor,
+		/area/rogue/rockharbor,
+		/area/rogue/outdoors/desert/river
 	)
 	var/area/destination_area = GLOB.areas_by_type[pick(possible_areas)]
 	if(!destination_area)

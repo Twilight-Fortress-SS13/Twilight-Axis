@@ -268,7 +268,7 @@
  * force - whether an update is forced regardless of existing status
  */
 /datum/action/proc/update_button_status(atom/movable/screen/movable/action_button/current_button, force = FALSE)
-	if(current_button.our_hud?.rearrange_mode)
+	if(current_button.our_hud?.rearrange_mode || current_button.our_hud?.free_position_mode) // TA EDIT
 		return
 	if(IsAvailable())
 		current_button.color = null

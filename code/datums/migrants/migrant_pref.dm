@@ -17,6 +17,10 @@
 	// Hidden waves are only queueable while an admin has them forced and forming.
 	if(wave.hidden && !SSmigrants.is_forced_forming(wave_type))
 		return
+	var/respawn_cooldown = SSmigrants.get_respawn_cooldown_remaining(prefs.parent) // TA EDIT
+	if(respawn_cooldown) // TA EDIT
+		to_chat(prefs.parent, span_warning("You must wait [round(respawn_cooldown / 10)] seconds before spawning as a migrant again.")) // TA EDIT
+		return // TA EDIT
 	if(role_type && !SSmigrants.can_fill_role(prefs.parent, role_type))
 		to_chat(prefs.parent, span_warning("Your character can't be this role. (Wrong species, faith, age, or reputation.)"))
 		return

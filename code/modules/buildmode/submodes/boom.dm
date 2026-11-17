@@ -29,11 +29,15 @@
 	flames = input(c, "Range of flames. -1 to none", text("Input")) as num|null
 	if(flames == null)
 		flames = -1
+	BM.log_action("configured explosion ranges: devastation=[devastation], heavy=[heavy], light=[light], flash=[flash], flames=[flames].") // TA EDIT
 
 /datum/buildmode_mode/boom/handle_click(client/c, params, obj/object)
 	var/list/pa = params2list(params)
 	var/left_click = pa.Find("left")
 
 	if(left_click)
+		var/target_desc = "[object]" // TA EDIT START
+		var/target_type = "[object.type]"
+		var/location_desc = AREACOORD(object) // TA EDIT END
 		explosion(object, devastation, heavy, light, flash, FALSE, TRUE, flames)
-		log_admin("Build Mode: [key_name(c)] caused an explosion(dev=[devastation], hvy=[heavy], lgt=[light], flash=[flash], flames=[flames]) at [AREACOORD(object)]")
+		BM.log_action("caused an explosion on [target_desc] ([target_type]) at [location_desc] with devastation=[devastation], heavy=[heavy], light=[light], flash=[flash], flames=[flames].") // TA EDIT

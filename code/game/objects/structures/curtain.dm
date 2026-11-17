@@ -70,8 +70,8 @@
 			playsound(loc, 'sound/blank.ogg', 80, TRUE)
 
 /obj/structure/curtain/bounty
-	icon_type = "bounty"
-	icon_state = "bounty-open"
+	icon_type = "curtain" // TA EDIT
+	icon_state = "curtain-open" // TA EDIT
 	color = null
 	alpha = 255
 
