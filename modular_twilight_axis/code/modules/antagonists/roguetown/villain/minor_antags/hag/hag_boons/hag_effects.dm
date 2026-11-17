@@ -241,6 +241,6 @@
 	if(owner.stat != CONSCIOUS)
 		return FALSE
 	if(damage > 0)
-		var/total_value = (damage * 0.5)
+		var/total_value = (damage * 0.25)
 		budget2change(total_value, owner, putinhands = FALSE, custom_turf = owner.loc)
 		return TRUE

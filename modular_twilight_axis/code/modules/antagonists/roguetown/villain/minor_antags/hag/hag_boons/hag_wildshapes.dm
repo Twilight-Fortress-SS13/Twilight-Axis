@@ -305,6 +305,7 @@
 		TRAIT_BLOOD_RESISTANCE,
 		TRAIT_HARDDISMEMBER,
 		TRAIT_NOPAINSTUN,
+		TRAIT_BASHDOORS,
 	)
 	inherent_biotypes = MOB_HUMANOID
 	no_equip = list(SLOT_SHIRT, SLOT_HEAD, SLOT_WEAR_MASK, SLOT_ARMOR, SLOT_GLOVES, SLOT_SHOES, SLOT_PANTS, SLOT_CLOAK, SLOT_BELT, SLOT_BACK_R, SLOT_BACK_L, SLOT_S_STORE)
@@ -367,6 +368,7 @@
 	miss_text = "punches the air!"
 	miss_sound = "bluntswoosh"
 	item_d_type = "slash"
+	demolition_mod = 1.6
 
 /obj/item/rogueweapon/troll_arm
 	name = "troll arm"

@@ -33,6 +33,11 @@
 	result = list(/obj/item/alch/hag_moss/enchanted/rage = 1)
 	reqs = list(/obj/item/alch/hag_moss/fury = 1, /obj/item/natural/thorn = 1)
 
+/datum/crafting_recipe/roguetown/alchemy/hag/power_moss
+	name = "moss power"
+	result = list(/obj/item/alch/hag_moss/enchanted/power = 1)
+	reqs = list(/obj/item/alch/hag_moss/fury = 1, /obj/item/alch/hag_moss/envy = 1)
+
 // Moss
 /obj/item/alch/hag_moss/enchanted/vibrant
 	name = "Vibrant Moss"
@@ -97,3 +102,35 @@
 	boon_path = /datum/hag_boon/spell/berserker_rage
 	desc = "This moss is RED, filled with RAGE and BLOOD. Touching this makes you EVIL!"
 	color = "#ff0000"
+
+/obj/item/alch/hag_moss/enchanted/power
+	name = "Power Moss"
+	boon_path = /datum/hag_boon/stats/str
+	desc = "This moss is filled with everything!"
+	color = "#0099ff"
+
+/obj/item/alch/hag_moss/enchanted/power/Initialize(mapload)
+	. = ..()
+	var/probability = rand(1, 7)
+	switch(probability)
+		if(1)
+			boon_path = /datum/hag_boon/stats/str
+			name = "Strength Moss"
+		if(2)
+			boon_path = /datum/hag_boon/stats/int
+			name = "Intellect Moss"
+		if(3)
+			boon_path = /datum/hag_boon/stats/per
+			name = "Perception Moss"
+		if(4)
+			boon_path = /datum/hag_boon/stats/con
+			name = "Constitution Moss"
+		if(5)
+			boon_path = /datum/hag_boon/stats/spd
+			name = "Speed Moss"
+		if(6)
+			boon_path = /datum/hag_boon/stats/wil
+			name = "Willpower Moss"
+		if(7)
+			boon_path = /datum/hag_boon/stats/lck
+			name = "Lucky Moss"

@@ -4575,6 +4575,7 @@
 #include "modular_twilight_axis\code\modules\antagonists\roguetown\villain\minor_antags\assassin_spells.dm"
 #include "modular_twilight_axis\code\modules\antagonists\roguetown\villain\minor_antags\hag\hag_boons\hag_effects.dm"
 #include "modular_twilight_axis\code\modules\antagonists\roguetown\villain\minor_antags\hag\hag_boons\hag_spells.dm"
+#include "modular_twilight_axis\code\modules\antagonists\roguetown\villain\minor_antags\hag\hag_boons\hag_stats.dm"
 #include "modular_twilight_axis\code\modules\antagonists\roguetown\villain\minor_antags\hag\hag_boons\hag_traits.dm"
 #include "modular_twilight_axis\code\modules\antagonists\roguetown\villain\minor_antags\hag\hag_boons\hag_wildshapes.dm"
 #include "modular_twilight_axis\code\modules\antagonists\roguetown\villain\minor_antags\hag\hag_crafts.dm"
