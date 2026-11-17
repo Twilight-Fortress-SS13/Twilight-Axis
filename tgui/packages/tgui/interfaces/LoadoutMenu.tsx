@@ -444,7 +444,7 @@ export const LoadoutMenu = () => {
                 <Stack.Item grow>
                   <Box>
                     Стоимость: {data.effective_triumph_cost || 0} триумфов
-                    {' · '}На счету: {data.player_triumphs || 0}
+                    {' | '}На счету: {data.player_triumphs || 0}
                   </Box>
                   {!!data.triumph_discount && (
                     <Box color="gold" mt={0.3}>
