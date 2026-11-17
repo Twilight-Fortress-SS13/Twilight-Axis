@@ -133,3 +133,25 @@
 
 /obj/effect/proc_holder/spell/invoked/mindlink/hag
 	ignore_cockblock = TRUE
+
+// Hag forms
+/obj/effect/proc_holder/spell/self/wildshape/hag_disgusting_form
+	name = "Disgusting Form"
+	desc = "Turns yourself into a disgusting creature."
+	invocation_type = "none"
+	recharge_time = 10 SECONDS
+	miracle = FALSE
+	devotion_cost = 0
+	clothes_req = FALSE
+	human_req = FALSE
+	ignore_cockblock = TRUE
+
+	possible_shapes = list(
+		/mob/living/carbon/human/species/wildshape/rat,
+		/mob/living/carbon/human/species/wildshape/mirecrawler,
+		/mob/living/carbon/human/species/wildshape/spider,
+		/mob/living/carbon/human/species/wildshape/rous,
+		/mob/living/carbon/human/species/wildshape/fox,
+		/mob/living/carbon/human/species/wildshape/crow,
+	)
+	disallowed_equipment_type = list(/obj/item/rogueweapon)
