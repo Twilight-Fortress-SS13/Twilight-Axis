@@ -169,7 +169,7 @@
 				return TRUE
 			if(meta_key == "custom_name")
 				value = replacetext(value, "\n", "")
-				value = replacetext(value, "\r", "")
+				value = replacetext(value, ascii2text(13), "")
 				value = copytext_char(value, 1, TA_LOADOUT_NAME_LENGTH + 1)
 			else
 				value = copytext_char(value, 1, TA_LOADOUT_DESC_LENGTH + 1)
