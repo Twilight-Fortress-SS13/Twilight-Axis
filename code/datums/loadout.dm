@@ -26,10 +26,6 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 	var/obj/targetitem = path
 	desc = targetitem?.desc || desc || ""
-	if(triumph_cost)
-		if(length(desc))
-			desc += " "
-		desc += "<b>Стоит [triumph_cost] ТРИУМФОВ.</b>"
 	if(donat_tier > 0)
 		if(length(desc))
 			desc += " "
