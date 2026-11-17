@@ -98,7 +98,7 @@
 /datum/intent/simple/gnoll_cut
 	name = "cutting claw"
 	hitsound = "genslash"
-	penfactor = PEN_MEDIUM // TA EDIT - ORIGINAL:
+	penfactor = PEN_MEDIUM // TA EDIT - ORIGINAL: PEN_LIGHT
 	candodge = TRUE
 	canparry = TRUE
 	miss_text = "slashes the air!"
