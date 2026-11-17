@@ -1,4 +1,3 @@
-// TA EDIT START
 #define TA_LOADOUT_NAME_LENGTH 64
 #define TA_LOADOUT_DESC_LENGTH 1024
 
@@ -231,18 +230,28 @@
 	return layers
 
 /datum/loadout_item/proc/get_loadout_requirements()
+	if(ispath(path, /obj/item/heelkit))
+		return "Обувь"
 	if(!ispath(path, /obj/item/enchantingkit))
 		return
-	var/obj/item/enchantingkit/kit = path
-	var/list/target_items = initial(kit.target_items)
+	var/static/list/requirements_by_type = list()
+	if(path in requirements_by_type)
+		return requirements_by_type[path]
+	var/obj/item/enchantingkit/kit = new path(null)
 	var/list/names = list()
-	for(var/target_type in target_items)
+	for(var/target_type in kit.target_items)
 		if(!ispath(target_type, /obj/item))
 			continue
 		var/obj/item/target_item = target_type
 		names |= initial(target_item.name)
-	return english_list(names)
+	var/requirements
+	if(length(names))
+		requirements = english_list(names)
+		if(!kit.exact_type)
+			requirements += " (и их разновидности)"
+	qdel(kit)
+	requirements_by_type[path] = requirements
+	return requirements
 
 #undef TA_LOADOUT_NAME_LENGTH
 #undef TA_LOADOUT_DESC_LENGTH
-// TA EDIT END
