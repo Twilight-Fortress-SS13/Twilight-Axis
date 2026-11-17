@@ -253,7 +253,7 @@
 			return ui_act_character_creator_identity_subcharflaw(params, user)
 
 		if("open_loadout")
-			var/datum/loadout_panel/LM = new(user)
+			var/datum/loadout_menu/LM = new(user.client) // TA EDIT
 			LM.ui_interact(user)
 			return CHARACTER_ACT_DATA_UPDATE
 

@@ -92,7 +92,7 @@
 	for (var/path in subtypesof(/datum/loadout_item))
 		var/datum/loadout_item/loadout_item = new path()
 		GLOB.loadout_items[path] = loadout_item
-		GLOB.loadout_items_by_name[loadout_item.name] = loadout_item // TW EDIT
+		GLOB.loadout_items_by_name[loadout_item.get_loadout_save_key()] = loadout_item // TA EDIT
 
 	GLOB.loadout_items_by_category["Всё"] = list()
 	GLOB.loadout_items_by_category["Донат"] = list()

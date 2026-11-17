@@ -92,7 +92,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 				if(old_hex[1] != "#")
 					old_hex = "#[old_hex]"
 				meta["color"] = old_hex
-			gear_list[LI.name] = meta
+			gear_list[LI.get_loadout_save_key()] = meta // TA EDIT
 	if(current_version < 36) // Strip the old per-item favorite/hated food & drink data now that preferences are category flags
 		S.dir.Remove("culinary_preferences")
 
@@ -701,7 +701,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 				var/item_name = legacy_item
 				if(ispath(legacy_item, /datum/loadout_item))
 					var/datum/loadout_item/legacy_loadout_item = GLOB.loadout_items[legacy_item]
-					item_name = legacy_loadout_item?.name
+					item_name = legacy_loadout_item?.get_loadout_save_key() // TA EDIT
 				if(!item_name || !(item_name in GLOB.loadout_items_by_name))
 					continue
 				var/list/meta = list()
