@@ -611,3 +611,13 @@
 	droning_sound = 'sound/music/area/desert/Valley-of-Kings.ogg'
 	droning_sound_dusk = null
 	droning_sound_night = null
+
+/area/rogue/under/cave/dwarffortress
+	name = "Abandoned fortress"
+	loot_budget = LOOT_BUDGET_TARICHEA_MANOR
+	icon_state = "under"
+	first_time_text = "Abandoned fortress"
+	droning_sound = 'sound/music/area/grimcaves.ogg'
+	droning_sound_dusk = null
+	droning_sound_night = null
+	threat_region = THREAT_REGION_DESERTDARK_DEEP
