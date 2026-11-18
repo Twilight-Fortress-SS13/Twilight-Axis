@@ -599,6 +599,7 @@
 	owner.adjustToxLoss(-healing_on_tick, 0)
 	owner.adjustOrganLoss(ORGAN_SLOT_BRAIN, -healing_on_tick)
 	owner.adjustCloneLoss(-healing_on_tick, 0)
+	owner.updatehealth() // TA EDIT
 // Lesser miracle effect end
 
 #define REWIND_AURA "originhealing"

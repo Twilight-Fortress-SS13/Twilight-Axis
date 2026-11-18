@@ -367,6 +367,7 @@ GLOBAL_LIST_INIT(virtue_mount_choices_anthrax, (list(
 		return TRUE
 
 /datum/status_effect/buff/healing/saddleborn
+	id = "saddleborn_healing" // TA EDIT
 	healing_on_tick = 0.25
 	duration = 5 MINUTES
 	examine_text = "SUBJECTPRONOUN looks well-rested!"
