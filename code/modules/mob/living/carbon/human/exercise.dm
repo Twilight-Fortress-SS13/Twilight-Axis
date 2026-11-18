@@ -4,7 +4,7 @@ Exercise Verbs
 
 /mob/living/carbon/human/verb/pushup()
 	set name = "Отжиматься"
-	set desc = "Makes you do a pushup."
+	set desc = "Makes you do a push-up."
 	set category = "Emotes"
 
 	do_pushups()
@@ -76,11 +76,11 @@ Exercise Verbs
 		return FALSE
 
 	if(!resting)
-		to_chat(src, span_warning("You need to lie on the floor to do a pushup."))
+		to_chat(src, span_warning("You need to lie on the floor to do a push-up."))
 		return FALSE
 
 	if(buckling)
-		to_chat(src, span_warning("You need to lie on the floor to do a pushup."))
+		to_chat(src, span_warning("You need to lie on the floor to do a push-up."))
 		return FALSE
 
 	var/list/missing_limbs = get_missing_limbs()

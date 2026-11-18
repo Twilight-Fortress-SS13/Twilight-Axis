@@ -10,9 +10,7 @@
 	emote_hear = null
 	emote_see = null
 	speak_chance = 0
-	turns_per_move = 4
 	see_in_dark = 6
-	move_to_delay = 4
 	base_intents = list(/datum/intent/simple/slash)
 	faction = list(FACTION_UNDEAD)
 	mob_biotypes = MOB_UNDEAD|MOB_HUMANOID
@@ -20,12 +18,9 @@
 	maxHealth = 280
 	melee_damage_lower = 25
 	melee_damage_upper = 45
-	attack_same = FALSE
 	attack_sound = 'sound/combat/wooshes/bladed/wooshmed (1).ogg'
 	dodge_sound = 'sound/combat/dodge.ogg'
 	parry_sound = "bladedmedium"
-	vision_range = 7
-	aggro_vision_range = 9
 	response_help_continuous = "passes through"
 	response_help_simple = "pass through"
 	environment_smash = ENVIRONMENT_SMASH_NONE
@@ -43,7 +38,6 @@
 	del_on_death = TRUE
 	defprob = 50
 	d_intent = INTENT_PARRY
-	retreat_health = null
 	food = 0
 	attack_verb_continuous = "slashes"
 	attack_verb_simple = "slash"
@@ -62,9 +56,7 @@
 	emote_hear = null
 	emote_see = null
 	speak_chance = 0
-	turns_per_move = 4
 	see_in_dark = 6
-	move_to_delay = 4
 	base_intents = list(/datum/intent/unarmed/claw)
 	faction = list(FACTION_UNDEAD)
 	mob_biotypes = MOB_UNDEAD|MOB_HUMANOID
@@ -72,8 +64,6 @@
 	maxHealth = 150
 	melee_damage_lower = 15
 	melee_damage_upper = 17
-	vision_range = 7
-	aggro_vision_range = 9
 	response_help_continuous = "passes through"
 	response_help_simple = "pass through"
 	environment_smash = ENVIRONMENT_SMASH_NONE
@@ -81,8 +71,6 @@
 	ranged = TRUE
 	ranged_cooldown_time = 40
 	projectiletype = /obj/projectile/magic/frostbolt/spectral
-	retreat_distance = 4
-	minimum_distance = 3
 	check_friendly_fire = 1
 	food_type = list()
 	movement_type = FLYING
@@ -97,17 +85,16 @@
 	del_on_death = TRUE
 	defprob = 40
 	candodge = TRUE
-	retreat_health = 0
 	food = 0
 	attack_sound = 'sound/combat/hits/bladed/smallslash (1).ogg'
 	attack_verb_continuous = "claws"
 	attack_verb_simple = "claw"
 	dodgetime = 30
 
-	ai_controller = /datum/ai_controller/spectral_maid
+	ai_controller = /datum/ai_controller/skeleton_ranged
 
 /obj/projectile/magic/frostbolt/spectral
-	npc_simple_damage_mult = 2
+	antibeast_factor = ANTIBEAST_GREATER
 	speed = MAGE_PROJ_SLOW
 
 /mob/living/simple_animal/hostile/rogue/spectral/Initialize()
@@ -122,7 +109,7 @@
 
 /mob/living/simple_animal/hostile/rogue/spectral/Life()
 	. = ..()
-	if(!target)
+	if(!ai_controller?.blackboard[BB_BASIC_MOB_CURRENT_TARGET])
 		if(prob(2))
 			emote(pick("laugh", "moan", "whisper"), TRUE)
 

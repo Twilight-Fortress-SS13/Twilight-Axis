@@ -23,6 +23,8 @@
 	// taur_icon_state sets which icon to use from icons/mob/taurs.dmi to render
 	// (we don't use icon_state to avoid duplicate rendering on dropped organs)
 	var/taur_icon_state = "naga_s"
+	/// Stable clothing sprite ID, independent of the legacy saiga equipment overlays.
+	var/taur_sprite_id
 
 	// We can Blend() a color with the base greyscale color, only some tails support this
 	var/has_taur_color = FALSE
@@ -73,6 +75,7 @@ GLOBAL_LIST_INIT(taur_types, subtypesof(/obj/item/bodypart/taur))
 
 /obj/item/bodypart/taur/lamia
 	name = "Lamia Tail"
+	taur_sprite_id = "lamia"
 
 	offset_x = -16
 	taur_icon_state = "altnaga_s"
@@ -81,14 +84,27 @@ GLOBAL_LIST_INIT(taur_types, subtypesof(/obj/item/bodypart/taur))
 
 /obj/item/bodypart/taur/spider
 	name = "Spider Body"
+	taur_sprite_id = "spider"
 
 	offset_x = -16
 	taur_icon_state = "spider_s"
 
 	has_taur_color = TRUE
 
+/obj/item/bodypart/taur/spider/drider
+	max_damage = 400 // Makes them tougher so it don't die in 1 hit
+	max_stamina_damage = 150
+
+// Severed bodies can be implanted on players, so they lose the NPC toughness
+/obj/item/bodypart/taur/spider/drider/drop_limb(special)
+	. = ..()
+	var/obj/item/bodypart/taur/spider/plain = /obj/item/bodypart/taur/spider
+	max_damage = initial(plain.max_damage)
+	max_stamina_damage = initial(plain.max_stamina_damage)
+
 /obj/item/bodypart/taur/horse
 	name = "Saiga Body"
+	taur_sprite_id = "saiga"
 
 	offset_x = -16
 	taur_icon_state = "saiga_s"
@@ -99,6 +115,7 @@ GLOBAL_LIST_INIT(taur_types, subtypesof(/obj/item/bodypart/taur))
 
 /obj/item/bodypart/taur/goat
 	name = "Goat Legs"
+	taur_sprite_id = "goat"
 
 	offset_x = -16
 	taur_icon_state = "goat_s"

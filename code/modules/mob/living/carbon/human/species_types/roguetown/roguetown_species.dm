@@ -23,7 +23,7 @@
 	//	"Lupian accent" = "polish_replacement.json",
 	//	"Gronn accent" = "mongolian_replacement.json",
 	//	"Urban Orc accent" = "norf_replacement.json",
-	//	"Drakian accent" = "hissy_replacement.json",
+		"Drakian accent" = "hissy_replacement.json",
 	//	"Inzectoid accent" = "inzectoid_replacement.json",
 	//	"Feline accent" = "feline_replacement.json",
 	//	"Slopes accent" = "welsh_replacement.json",
@@ -64,7 +64,7 @@
 	//	"Lupian accent"						= list(/datum/language/aavnic),
 	//	"Gronn accent"						= list(/datum/language/gronnic),
 	//	"Urban Orc accent"					= list(/datum/language/orcish),
-	//	"Drakian accent"					= list(/datum/language/drakian),
+		"Drakian accent"					= list(/datum/language/draconic),
 	//	"Inzectoid accent"					= list(/datum/language/beast),
 	//	"Feline accent"						= list(/datum/language/feline),
 	//	"Slopes accent"						= list(/datum/language/slopes),
@@ -234,7 +234,45 @@
 		text = replacetextEx_char(text, uppertext(syllable), uppertext(picked_syllable))
 		text = replacetextEx_char(text, syllable, picked_syllable)
 
+	if(accent_list["syllable_once"])
+		text = ta_apply_accent_syllables_once(text, accent_list["syllable_once"])
+
 	return text
+
+/proc/ta_apply_accent_syllables_once(message, list/replacements)
+	if(!istext(message) || !length_char(message) || !length(replacements))
+		return message
+
+	var/output = ""
+	var/message_length = length_char(message)
+	var/position = 1
+
+	while(position <= message_length)
+		var/match_length = 0
+		var/matched_replacement
+		for(var/sequence in replacements)
+			var/sequence_length = length_char(sequence)
+			if(sequence_length <= match_length || position + sequence_length - 1 > message_length)
+				continue
+			var/original_segment = copytext_char(message, position, position + sequence_length)
+			if(LOWER_TEXT(original_segment) != sequence)
+				continue
+			match_length = sequence_length
+			matched_replacement = replacements[sequence]
+
+		if(match_length)
+			var/original_segment = copytext_char(message, position, position + match_length)
+			if(match_length == 1 && original_segment == uppertext(original_segment) && original_segment != LOWER_TEXT(original_segment))
+				output += capitalize(matched_replacement)
+			else
+				output += match_case(original_segment, matched_replacement)
+			position += match_length
+			continue
+
+		output += copytext_char(message, position, position + 1)
+		position++
+
+	return output
 
 // TA EDIT END
 

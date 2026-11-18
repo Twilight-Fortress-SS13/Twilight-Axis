@@ -184,9 +184,6 @@
 				if(M.mind)	//No clickcd if we're grabbing a mindless mob, just frag the stupid AI
 					L.changeNext_move(clickcd)
 				M.changeNext_move(CLICK_CD_HEAVY)
-	if(istype(AM, /mob/living/simple_animal))
-		var/mob/living/simple_animal/simple_animal = AM
-		simple_animal.toggle_ai(AI_ON)
 	return TRUE
 
 /atom/movable/proc/stop_pulling(forced = TRUE)
@@ -1001,6 +998,15 @@ GLOBAL_VAR_INIT(pixel_diff_time, 1)
 					atk_effrange.icon_state = "effrange"
 					atk_effrange.layer = (atk.layer + 0.1)	//Should always be on top of the regular indicator.
 			first_step = next_step
+	if(wiggle)
+		wiggle(A)
+
+/atom/movable/proc/do_attack_animation_at(atom/A, visual_effect_icon, wiggle = TRUE, datum/intent/used_intent)
+	var/newdir = get_dir(src, A)
+	var/obj/effect/temp_visual/dir_setting/attack_effect/atk = new(get_turf(A), newdir)
+	atk.icon_state = visual_effect_icon
+	atk.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	atk.layer = ABOVE_MOB_LAYER
 	if(wiggle)
 		wiggle(A)
 

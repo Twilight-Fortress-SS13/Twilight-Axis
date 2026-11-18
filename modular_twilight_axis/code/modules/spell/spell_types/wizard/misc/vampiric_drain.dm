@@ -103,7 +103,7 @@
 
 	
 	if(vamp_beam)
-		vamp_beam.End()
+		qdel(vamp_beam)
 	
 	if(user && !QDELETED(user))
 		user.remove_status_effect(/datum/status_effect/debuff/vampiric_slowdown)

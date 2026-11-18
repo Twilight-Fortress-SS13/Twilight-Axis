@@ -45,6 +45,7 @@
 	var/playing = FALSE
 	grid_height = 64
 	grid_width = 32
+	obj_flags = UNIQUE_RENAME
 
 /obj/item/rogue/instrument/equipped(mob/living/user, slot)
 	. = ..()
@@ -267,7 +268,7 @@
 
 /obj/item/rogue/instrument/shamisen
 	name = "shamisen"
-	desc = "The shamisen, or simply \"three strings\", is an kazengunese stringed instrument with a washer, which is usually played with the help of a bachi."
+	desc = "The shamisen, or simply «three strings», is an Kazengunese stringed instrument with a washer, which is usually played with the help of a bachi."
 	icon_state = "shamisen"
 	lefthand_file = 'icons/mob/inhands/items_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/items_righthand.dmi'

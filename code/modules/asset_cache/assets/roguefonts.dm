@@ -41,4 +41,5 @@
 		"TolkienCyr.ttf" = 'interface/fonts/languages/TolkienCyr.ttf', // Этруский 
 		"RUSNeverwinter.ttf" = 'interface/fonts/languages/RUSNeverwinter.ttf', // Гронновский
 		"Arabic Cyr (kerning fixed).ttf" = 'interface/fonts/languages/Arabic Cyr (kerning fixed).ttf', // Аавианский Не работает
+		"notocoloremoji.ttf" = 'interface/fonts/noto/notocoloremoji.ttf',
 	)

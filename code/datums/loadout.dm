@@ -568,7 +568,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/surcoatheavy
 	name = "Surcoat, Overvestments"
 	category = list("Плащи", "Триумфы")
-	path = /obj/item/clothing/cloak/tabard/stabard/crusader/heavy
+	path = /obj/item/clothing/cloak/tabard/stabard/overvestments
 	triumph_cost = 3
 
 /datum/loadout_item/surcoatgoldenorder
@@ -802,6 +802,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Desert Hood"
 	category = "Головные уборы"
 	path = /obj/item/clothing/head/roguetown/deserthood
+
+/datum/loadout_item/bandithood
+	name = "Bandit Hood"
+	category = "Головные уборы"
+	path = /obj/item/clothing/head/roguetown/menacing/bandit
 
 /datum/loadout_item/desertskirt
 	name = "Desert Skirt"
@@ -1196,7 +1201,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/knifebelt // comes empty
 	name = "Tossblade Belt"
 	category = list("Аксессуары", "Триумфы")
-	path = /obj/item/storage/belt/rogue/leather/knifebelt/black
+	path = /obj/item/storage/belt/rogue/leather/tossbelt/blade/black
 	triumph_cost = 4
 
 /datum/loadout_item/psicross
@@ -1858,6 +1863,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/donator_strudel3
 	name = "Donator Kit - Etruscan Design Cloak - Required: Poncho (No Small Races)"
 	category = list("Плащи", "Донат")
+	path = /obj/item/enchantingkit/strudel3_etruscan
+	donatitem = TRUE
+
+/datum/loadout_item/donator_strudel3_fellowshippe
+	name = "Donator Kit - Experimental Azurian Fellowshippe Staff - Required: Mage Staff"
+	category = list("Оружие", "Донат")
 	path = /obj/item/enchantingkit/strudel3
 	donatitem = TRUE
 
@@ -3201,21 +3212,17 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/head/roguetown/shawl
 	category = "Головные уборы"
 
-// TA EDIT START
 /* /datum/loadout_item/maidband
 	name = "Maid Headdress"
 	path = /obj/item/clothing/head/roguetown/maidhead
 	category = list("Головные уборы", "Донат")
 	donatitem = TRUE */
-// TA EDIT END
 
-// TA EDIT START
 /* /datum/loadout_item/maidbandfancy
 	name = "Valorian Maid Headband"
 	path = /obj/item/clothing/head/roguetown/maidband
 	category = list("Головные уборы", "Донат")
 	donatitem = TRUE */
-// TA EDIT END
 
 // Обувь
 
@@ -3835,14 +3842,14 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/cloakgoldenorder
 	name = "Cloak, Golden Order"
 	category = list("Плащи", "Донат")
-	path = /obj/item/clothing/cloak/cape/inquisitorgold
+	path = /obj/item/clothing/cloak/cape/puritan/gold
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/cloaksilverorder
 	name = "Cloak, Silver Order"
 	category = list("Плащи", "Донат")
-	path = /obj/item/clothing/cloak/cape/inquisitorsilver
+	path = /obj/item/clothing/cloak/cape/puritan/silver
 	donatitem = TRUE
 	donat_tier = 2
 
