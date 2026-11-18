@@ -244,3 +244,22 @@
 /obj/item/rogueweapon/huntingknife/idagger/silver/elvish/bandit
 	sellprice = 0
 	smeltresult = null
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver/psy/parrying
+	name = "psydonic parrying dagger"
+	desc = "A finely balanced silver parrying dagger, carried by loyal servants of the Inquisition. \
+	Its crossguard turns aside wicked steel while its blessed edge delivers Psydon's judgement."
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/daggers32.dmi'
+	icon_state = "psypdagger"
+	force = 15
+	throwforce = 15
+	wdefense = 9
+	max_integrity = 150
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver/psy/parrying/ComponentInitialize()
+	AddComponent(\
+		/datum/component/silverbless,\
+		pre_blessed = BLESSING_NONE,\
+		silver_type = SILVER_PSYDONIAN,\
+	)
+	sellprice += 200
