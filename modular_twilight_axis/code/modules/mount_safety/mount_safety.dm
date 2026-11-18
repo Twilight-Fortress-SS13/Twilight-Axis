@@ -242,9 +242,10 @@
 	qdel(mount_maneater_resist_progress)
 	mount_maneater_resist_progress = null
 	var/chance = clamp(STASTR * 2, 5, 70)
-	if(prob(chance))
+	if(istype(maneater, /obj/structure/flora/roguegrass/maneater/real/juvenile))
+		chance = min(100, chance * 2)
+	if(prob(chance) && maneater.unbuckle_mob(src, TRUE))
 		visible_message(span_warning("[src] tears free of [maneater]'s jaws!"))
-		maneater.unbuckle_mob(src)
 	if(buckled == maneater)
 		mount_begin_maneater_resist_progress()
 	else
