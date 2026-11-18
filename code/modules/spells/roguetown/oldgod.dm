@@ -770,6 +770,9 @@
 				H.blood_volume += transferred
 				C.blood_volume -= transferred
 
+	H.remove_CC()
+	H.update_stat()
+
 	// VISUALS
 	user.visible_message(span_danger("[user] purifies [H]'s wounds!"))
 
