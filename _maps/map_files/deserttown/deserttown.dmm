@@ -1416,7 +1416,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 8
 	},
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "apS" = (
 /obj/item/natural/rock/desert{
@@ -2771,7 +2771,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 4
 	},
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "aEI" = (
 /obj/structure/table/wood/fancy,
@@ -3345,7 +3345,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 8
 	},
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "aKa" = (
 /obj/effect/decal/edge_corner/desert_gray{
@@ -4709,7 +4709,7 @@
 /obj/machinery/light/rogue/candle{
 	pixel_y = -32
 	},
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "aZf" = (
 /obj/structure/fluff/railing/border,
@@ -5310,9 +5310,9 @@
 	},
 /area/rogue/indoors/town/desert)
 "bgt" = (
-/obj/structure/chair/bench{
-	pixel_x = 0;
-	pixel_y = 15
+/obj/structure/chair/bench/stone{
+	pixel_x = -1;
+	pixel_y = 18
 	},
 /turf/open/floor/rogue/citybrick/citybrick1,
 /area/rogue/outdoors/town/desert)
@@ -8110,7 +8110,7 @@
 	pixel_x = 2;
 	pixel_y = -5
 	},
-/turf/open/floor/rogue/church,
+/turf/open/floor/rogue/tile/moontile_dark,
 /area/rogue/indoors/town/church/chapel)
 "bKM" = (
 /obj/structure/fluff/railing/border,
@@ -8383,7 +8383,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 1
 	},
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "bOj" = (
 /obj/machinery/light/rogue/candle,
@@ -13347,7 +13347,7 @@
 /obj/item/natural/bundle/cloth{
 	pixel_y = 40
 	},
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "cOC" = (
 /obj/effect/decal/cobbleedge{
@@ -15822,7 +15822,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 4
 	},
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "dqu" = (
 /obj/structure/fermentation_keg/distiller,
@@ -24925,7 +24925,7 @@
 	pixel_x = 3;
 	pixel_y = 31
 	},
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "fnY" = (
 /turf/closed/wall/mineral/rogue/decostone/mossy/red/long{
@@ -28622,7 +28622,7 @@
 	pixel_x = 0;
 	pixel_y = -5
 	},
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "gdG" = (
 /obj/structure/table/wood{
@@ -31183,7 +31183,7 @@
 /area/rogue/outdoors/town/desert)
 "gFg" = (
 /obj/effect/landmark/start/templar,
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "gFr" = (
 /obj/structure/stairs/stone{
@@ -33994,7 +33994,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 8
 	},
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "hib" = (
 /obj/machinery/light/rogue/candle/floorcandle{
@@ -36871,7 +36871,7 @@
 	dir = 1
 	},
 /obj/effect/landmark/events/haunts,
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "hOX" = (
 /obj/effect/decal/cleanable/debris/woody,
@@ -38654,6 +38654,13 @@
 /obj/machinery/light/rogue/firebowl/church/off,
 /turf/open/floor/rogue/sandbrick,
 /area/rogue/under/cave/dtsanctum)
+"igM" = (
+/obj/structure/closet/crate/chest/crate/shipping{
+	pixel_x = -2;
+	pixel_y = 11
+	},
+/turf/open/floor/rogue/darkpath,
+/area/rogue/outdoors/town/desert)
 "igN" = (
 /turf/closed/mineral/random/rogue/sandstone,
 /area/rogue/outdoors/desertdeep)
@@ -42136,7 +42143,7 @@
 	pixel_x = 1;
 	pixel_y = 38
 	},
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "iXc" = (
 /obj/effect/decal/duneedge{
@@ -44757,7 +44764,7 @@
 /turf/open/floor/rogue/blocks/stonered,
 /area/rogue/indoors/town/bath/desert)
 "jyt" = (
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "jyu" = (
 /obj/structure/table/wood{
@@ -45668,8 +45675,9 @@
 /turf/open/transparent/openspace,
 /area/rogue/outdoors/desertdeep/above)
 "jGz" = (
-/obj/structure/chair/bench{
-	pixel_y = 15
+/obj/structure/chair/bench/stone{
+	pixel_x = 0;
+	pixel_y = 17
 	},
 /turf/open/floor/rogue/citybrick/citybrick1,
 /area/rogue/outdoors/town/desert)
@@ -46946,7 +46954,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 8
 	},
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church)
 "jVi" = (
 /obj/structure/bars,
@@ -55255,7 +55263,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 8
 	},
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "lJE" = (
 /obj/structure/fluff/railing/border/west,
@@ -61553,7 +61561,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 4
 	},
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church)
 "mXG" = (
 /obj/effect/decal/cleanable/debris/stony,
@@ -62509,7 +62517,7 @@
 /obj/structure/fluff/railing/border{
 	dir = 9
 	},
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "nhD" = (
 /obj/structure/fluff/railing/border/west,
@@ -64330,7 +64338,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 8
 	},
-/turf/open/floor/rogue/church,
+/turf/open/floor/rogue/tile/moontile_dark,
 /area/rogue/indoors/town/church/chapel)
 "nDc" = (
 /obj/structure/chair/wood/zybantine{
@@ -65712,7 +65720,7 @@
 	pixel_x = 0;
 	pixel_y = -5
 	},
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "nSJ" = (
 /obj/item/cushion/desert2{
@@ -67107,6 +67115,13 @@
 /obj/machinery/light/rogue/torchholder/l,
 /turf/open/floor/rogue/darkpath,
 /area/rogue/indoors/town/garrison/desert/cell)
+"oiq" = (
+/obj/structure/closet/crate/chest/crate/shipping{
+	pixel_x = 7;
+	pixel_y = 8
+	},
+/turf/open/floor/rogue/darkpath,
+/area/rogue/outdoors/town/desert)
 "ois" = (
 /obj/item/grown/log/tree/small,
 /turf/open/floor/rogue/churchrough{
@@ -74423,7 +74438,7 @@
 /obj/effect/decal/edge_corner/desert_gray{
 	dir = 1
 	},
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "pHL" = (
 /obj/structure/table/wood{
@@ -75619,7 +75634,7 @@
 "pTA" = (
 /obj/structure/vase,
 /obj/structure/flora/roguegrass/bush/desertshrub/decor,
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "pTD" = (
 /obj/structure/bed/rogue/inn/double,
@@ -89913,7 +89928,7 @@
 /obj/effect/decal/edge_corner/desert_gray{
 	dir = 8
 	},
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "sSg" = (
 /turf/open/transparent/openspace,
@@ -92477,6 +92492,9 @@
 	},
 /turf/open/floor/rogue/ruinedwood/herringbone_clear,
 /area/rogue/indoors/town/manor/desert)
+"tsN" = (
+/turf/open/floor/rogue/tile/moontile_bw,
+/area/rogue/indoors/town/church)
 "tsP" = (
 /turf/closed/wall/mineral/rogue/sandstone{
 	color = "#919191"
@@ -95508,7 +95526,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 4
 	},
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "tWm" = (
 /obj/structure/ritualcircle/zizo,
@@ -95599,7 +95617,7 @@
 /area/rogue/indoors/town/shop/desert)
 "tXk" = (
 /obj/machinery/light/rogue/candle,
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "tXl" = (
 /obj/effect/decal/cleanable/dirt/cobweb{
@@ -100898,7 +100916,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 1
 	},
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "vbM" = (
 /obj/structure/chair/bench{
@@ -101887,7 +101905,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 1
 	},
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "vnm" = (
 /obj/structure/fluff/statue/tdummy,
@@ -102091,7 +102109,7 @@
 /area/rogue/indoors/town/tavern/desert)
 "vpV" = (
 /obj/structure/fluff/railing/border,
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "vpW" = (
 /obj/structure/fluff/railing/border{
@@ -108396,7 +108414,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 4
 	},
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "wJR" = (
 /obj/effect/spawner/trap,
@@ -110158,13 +110176,7 @@
 /turf/open/floor/carpet/royalblack,
 /area/rogue/under/dungeon/desert_pyramid)
 "xcK" = (
-/obj/structure/chair/bench{
-	pixel_x = 0;
-	pixel_y = 15
-	},
-/obj/effect/decal/duneedge{
-	dir = 1
-	},
+/obj/structure/chair/bench/stone,
 /turf/open/floor/rogue/citybrick/citybrick1,
 /area/rogue/outdoors/town/desert)
 "xcQ" = (
@@ -111642,7 +111654,7 @@
 /obj/structure/fluff/walldeco/church/line{
 	dir = 8
 	},
-/turf/open/floor/rogue/churchmarble,
+/turf/open/floor/rogue/tile/moontile_bw,
 /area/rogue/indoors/town/church/chapel)
 "xsJ" = (
 /obj/effect/decal/edge/desert_gray{
@@ -426471,9 +426483,9 @@ xPK
 dAX
 yiY
 qUs
-icQ
+xcK
 hCp
-bgt
+icQ
 vSn
 qOh
 oFq
@@ -426783,9 +426795,9 @@ tRd
 dAX
 kRH
 qUs
-icQ
-hCp
 xcK
+hCp
+tpG
 wCZ
 qOh
 cGg
@@ -430212,7 +430224,7 @@ dtB
 hOW
 jyt
 jyt
-fda
+tsN
 jCo
 fFw
 jCo
@@ -433647,9 +433659,9 @@ uGz
 cLA
 kRH
 qUs
-icQ
+xcK
 hCp
-bgt
+icQ
 icQ
 icQ
 icQ
@@ -433959,9 +433971,9 @@ wKb
 cLA
 odo
 qUs
-icQ
+xcK
 hCp
-bgt
+icQ
 icQ
 icQ
 icQ
@@ -444574,7 +444586,7 @@ oWW
 oWW
 ycd
 iiI
-bep
+oiq
 pxz
 rrW
 iVP
@@ -444886,7 +444898,7 @@ gHh
 gHh
 xKu
 iiI
-bep
+igM
 icQ
 icQ
 iVP
