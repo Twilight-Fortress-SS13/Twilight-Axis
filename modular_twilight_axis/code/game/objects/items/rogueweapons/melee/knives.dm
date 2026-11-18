@@ -253,3 +253,7 @@
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/daggers32.dmi'
 	altgripped = TRUE
 	force = 21
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver/psy/parrying
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/daggers32.dmi'
+	icon_state = "psypdagger"

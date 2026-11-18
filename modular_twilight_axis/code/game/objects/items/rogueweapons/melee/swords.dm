@@ -292,3 +292,11 @@
 		switch(tag)
 			if("gen")
 				return list("shrink" = 0.4,"sx" = -11,"sy" = -11,"nx" = 11,"ny" = 0,"wx" = -4,"wy" = 0,"ex" = 1,"ey" = -10,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 0,"sturn" = -110,"wturn" = 0,"eturn" = 109,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
+
+/obj/item/rogueweapon/sword/rapier/silver/psy/folding
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords64.dmi'
+	icon_state = "psyfoldingblade_on"
+
+/obj/item/rogueweapon/sword/rapier/silver/psy/smallsword
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords32.dmi'
+	icon_state = "psysmallsword"

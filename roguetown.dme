@@ -4154,6 +4154,7 @@
 #include "modular_twilight_axis\code\modules\clothing\rogueclothes\gloves\blacksteel.dm"
 #include "modular_twilight_axis\code\modules\clothing\rogueclothes\gloves\leather.dm"
 #include "modular_twilight_axis\code\modules\clothing\rogueclothes\gloves\plate.dm"
+#include "modular_twilight_axis\code\modules\clothing\rogueclothes\gloves\unique.dm"
 #include "modular_twilight_axis\code\modules\clothing\rogueclothes\headwear\hats.dm"
 #include "modular_twilight_axis\code\modules\clothing\rogueclothes\headwear\helm_accessories.dm"
 #include "modular_twilight_axis\code\modules\clothing\rogueclothes\headwear\helmet\heavy_helmet.dm"
