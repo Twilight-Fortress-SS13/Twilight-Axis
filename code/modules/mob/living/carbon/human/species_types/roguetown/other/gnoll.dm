@@ -1,7 +1,6 @@
 /mob/living/carbon/human/species/gnoll
 	race = /datum/species/gnoll
 	footstep_type = FOOTSTEP_MOB_HEAVY
-	can_do_sex = FALSE // TA ADDITION
 
 /mob/living/carbon/human/species/gnoll/updatehealth()
 	..()
