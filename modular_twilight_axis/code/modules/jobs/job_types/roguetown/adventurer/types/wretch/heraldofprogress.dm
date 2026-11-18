@@ -72,6 +72,46 @@
 		I.grant_inspiration(H, bard_tier = BARD_T2)
 		H.set_blindness(0)
 		wretch_select_bounty(H)
+	var/skelet = list("Yes", "No")
+	var/skelet_choice = input(H, "Choose your specie.", "WANNA BE SKELETON?") as anything in skelet
+	H.set_blindness(0)
+	switch(skelet_choice)
+		if("Yes")
+			skelet(H)
+		if("No")
+			return TRUE
+
+/datum/outfit/job/roguetown/wretch/herald_of_progress/proc/skelet(mob/living/carbon/human/H)
+	REMOVE_TRAITS_IN(H, SPECIES_TRAIT)
+	H.hairstyle = "Bald"
+	H.facial_hairstyle = "Shaved"
+	H.select_skeleton_features()
+	H.choose_name_popup("undead bard")
+	H.mind.add_antag_datum(new /datum/antagonist/skeleton())
+	change_origin(H, /datum/virtue/origin/unselectable/skeleton, "Legion")
+	ADD_TRAIT(H, TRAIT_LIMBATTACHMENT, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_SILVER_WEAK, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_ZOMBIE_IMMUNE, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_FACELESS_KNOWN, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_NOMOOD, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_DEATHLESS, TRAIT_GENERIC)
+	H.dna.species.species_traits |= NOBLOOD
+	H.mob_biotypes = MOB_UNDEAD
+	H.become_skeleton()
+	var/obj/item/organ/eyes/eyes = H.getorganslot(ORGAN_SLOT_EYES)
+	if (eyes)
+		eyes.Remove(H, TRUE)
+		QDEL_NULL(eyes)
+	eyes = new /obj/item/organ/eyes/night_vision/zombie
+	eyes.Insert(H)
+	H.update_body()
+	H.update_hair()
+	H.update_body_parts(redraw = TRUE)
+	for(var/datum/charflaw/cf in H.charflaws)
+		H.charflaws.Remove(cf)
+		QDEL_NULL(cf)
+	H.dna.species.soundpack_m = new /datum/voicepack/skeleton()
+	H.dna.species.soundpack_f = new /datum/voicepack/skeleton()
 
 /obj/item/rogue/instrument/ztratocaster
 	name = "ztratocaster"
