@@ -1,7 +1,15 @@
+/obj/item/rogueweapon/spear/boar/kazengun
+	name = "jūmonji yari"
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/polearms64.dmi'
+	icon_state = "jumonjiyari"
+	desc = "A spear with a long, straight head and a pair of curved blades pointing upward. A Kazengunese design, the side-blades parallel an Aavnic partizan. Its function is certainly similar, tearing the flesh of any unfortunate enough to be pierced by it."
+	gripped_intents = list(/datum/intent/spear/thrust, /datum/intent/spear/cut/naginata, /datum/intent/rend/reach/partizan)
+	wdefense = 7
+
 /obj/item/rogueweapon/halberd/bardiche/twilight_necrascythe
 	name = "equipoise"
 	desc = "Often wielded by the Necran Immortals, this silver scythe is claimed to be capable of bypassing all protection, striking directly at the enemy's soul."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/polearms64.dmi'
 	icon_state = "necrascythe"
 	possible_item_intents = list(/datum/intent/spear/cut/oneh, SPEAR_BASH) //bash is for nonlethal takedowns, only targets limbs
 	gripped_intents = list(/datum/intent/spear/cut/bardiche, /datum/intent/rend/reach, /datum/intent/axe/chop/scythe, SPEAR_BASH)
@@ -31,6 +39,7 @@
 		added_int = 50,\
 		added_def = 2,\
 	)
+
 /obj/item/rogueweapon/spear/partizan/baotha_ta
 	name = "saccharine swordspear"
 	desc = "Keep the rest at arm's length, lest you're burdened with the pain of rememberance."

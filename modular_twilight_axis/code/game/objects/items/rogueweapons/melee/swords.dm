@@ -1,8 +1,8 @@
 /obj/item/rogueweapon/sword/rapier/psyrapier
 	name = "psydonian rapier"
 	desc = "An ornate rapier, plated in a ceremonial veneer of silver. The barbs pierce your palm, and - for just a moment - you see red. Never forget that you are why Psydon wept."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
-	icon_state = "psyrapier"
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords32.dmi'
+	icon_state = "psysmallsword"
 	sheathe_icon = "silverrapier"
 	resistance_flags = FIRE_PROOF
 	force = 20
@@ -23,7 +23,7 @@
 /obj/item/rogueweapon/sword/rapier/foldsword
 	name = "pathmaker"
 	desc = "Дорогостоющий складной меч, сделанный специально по заказу для десницы. Можно носить как обычный меч в ножнах, так и в сумке или в поясе, если сложить."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords64.dmi'
 	icon_state = "folding_sword_on"
 	var/extended = FALSE
 
@@ -65,19 +65,6 @@
 	icon_state = "ast_kriegmesser"
 	sheathe_icon = "bs_swordregal"
 
-/obj/item/rogueweapon/greatsword/grenz/flamberge/relevement
-	name = "relevement"
-	desc = "The grave wounds caused by flame-bladed swords make them a highly sought-after weapon among the Dark Elves - the charges of dishonorable warfare notwithstanding. Consequentially, these weapons are often wielded by both sides of the Underdark Feud Wars."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
-	icon_state = "drowflamberge"
-	item_state = "drowflamberge"
-	max_integrity = 240
-	max_blade_int = 240
-	smeltresult = /obj/item/ingot/drow
-
-/obj/item/rogueweapon/sword/long/exe/silver
-	is_silver = TRUE
-
 /obj/item/rogueweapon/sword/long/exe/berserk
 	special = /datum/special_intent/wave_swing/greatsword
 	parrysound = list(
@@ -112,7 +99,7 @@
 /obj/item/rogueweapon/sword/rapier/psy/folding
 	name = "psydonian folding blade"
 	desc = "A costly folding blade commissioned for the rune volves of the Psydonian Inquisition. Built for investigators and executioners alike, it folds into a compact package for discreet carry before locking into a deadly dueling weapon."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords64.dmi'
 	icon_state = "psyfoldingblade_on"
 	sheathe_icon = "silverrapier"
 	var/extended = FALSE
@@ -151,7 +138,7 @@
 /obj/item/rogueweapon/sword/long/oathbreaker_matthios
 	name = "\"Kingslayer\""
 	desc = "The blade seems to be forged of pure gold, yet it cuts and blocks just as well as any steel blade would. </br>'Rise, now, stand and fight! Take your freedom, claim your right!' </br>'Rise, now, stand and sing! Storm the castle, kill the king!'"
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords64.dmi'
 	icon_state = "oathbreakersword"
 	item_state = "oathbreakersword"
 	//sheathe_icon = "oathbreakersword" //Когда замержат #1569, буду это делать
@@ -177,7 +164,7 @@
 /obj/item/rogueweapon/sword/sabre/threaded
 	name = "threaded sword"
 	desc = "Изумительное творение неизвестного мастера. В тонком клинке проложена тонкая стальная нить, что при желании владельца способна вытянуть клинок вперёд, превращая оный в смертоносную плеть. Жаль, что он довольно хрупок.."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords64.dmi'
 	icon_state = "cane_sword"
 	sheathe_icon = "swordcande"
 	smeltresult = /obj/item/ingot/bronze
@@ -279,7 +266,7 @@
 /obj/item/rogueweapon/scabbard/sword/cane_bb
 	name = "cane sheath"
 	desc = "A piece of steel lined with wood. Great for batting away blows."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon = 'modular_twilight_axis/icons/obj/items/gwstrap.dmi'
 	icon_state = "cane_sheath"
 	item_state = "cane_sheath"
 	force = 10

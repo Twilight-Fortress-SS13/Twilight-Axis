@@ -900,7 +900,7 @@
 	force_wielded = 0
 	wdefense = 1
 	possible_item_intents = list(/datum/intent/spear/thrust)
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/polearms64.dmi'
 	icon_state = "matthios_standard"
 	resistance_flags = FIRE_PROOF
 
@@ -1215,7 +1215,7 @@
 	item_state = null
 	lefthand_file = null
 	righthand_file = null
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/unarmed32.dmi'
 	max_blade_int = 600
 	max_integrity = 600
 	force = 28

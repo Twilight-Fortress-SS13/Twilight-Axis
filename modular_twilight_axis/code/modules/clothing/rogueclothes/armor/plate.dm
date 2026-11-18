@@ -362,3 +362,20 @@
 	item_state = "viceseercoat"
 	color = null
 	boobed = TRUE
+
+/obj/item/clothing/suit/roguetown/armor/plate/hussar
+	name = "hussar's plate harness"
+	desc = "An ornate suit of plate armour made with Aavnr's finest Vyšvou steel, meant to be used by the Potentate's elite cavalry. A frame is attached to the back of the cuirass, and raptor feathers create the illusion of an angel's wings."
+	icon_state = "hussar"
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/32х48/armor.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/armor.dmi'
+	body_parts_covered = COVERAGE_ALL_BUT_HANDLEGS
+	equip_delay_self = 5 SECONDS
+	unequip_delay_self = 5 SECONDS
+	equip_delay_other = 2 SECONDS
+	strip_delay = 4 SECONDS
+	smelt_bar_num = 2
+	boobed = FALSE
+	worn_x_dimension = 32
+	worn_y_dimension = 36
+	allowed_race = NON_DWARVEN_RACE_TYPES

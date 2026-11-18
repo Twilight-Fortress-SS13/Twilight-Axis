@@ -2,7 +2,7 @@
 	name = "psydonic claws"
 	desc = "Three silver claws mounted upon a reinforced gauntlet, blessed for those who hunt in silence. \
 	Though lacking the reach of a sword, they find purchase where steel cannot, rending the servants of darkness in Psydon's name."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/unarmed32.dmi'
 	icon_state = "psyclaws"
 
 /obj/item/rogueweapon/handclaw/gronn/silver/psy/ComponentInitialize()
@@ -20,8 +20,8 @@
 	name = "psydonic foil"
 	desc = "A slender silver foil crafted for swift and precise strikes. \
 	Though elegant in form, it was forged with a singular purpose: to pierce both the hearts of men and the blasphemies that lurk beyond them."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
-	icon_state = "psyrapier"
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords32.dmi'
+	icon_state = "psysmallsword"
 	sheathe_icon = "silverrapier"
 	max_integrity = 175
 	max_blade_int = 175
@@ -45,7 +45,7 @@
 	name = "psydonic parrying dagger"
 	desc = "A finely balanced silver parrying dagger, carried by loyal servants of the Inquisition. \
 	Its crossguard turns aside wicked steel while its blessed edge delivers Psydon's judgement."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/daggers32.dmi'
 	icon_state = "psypdagger"
 	force = 15
 	throwforce = 15
