@@ -82,7 +82,7 @@
 	minor_mod = 1
 	utility_mod = 3
 
-// --- VETERAN ---
+/* // --- VETERAN ---
 /datum/class_age_mod/veteran
 	target_age = AGE_OLD	//Saving ourselves the redundancy
 
@@ -146,7 +146,8 @@
 	)
 	stat_mods = list(
 		STATKEY_SPD = 1	// You get -2 speed from being old. You are still in the negative stat wise from picking old.
-	)
+	) */
+
 //--- THE REST ---
 
 /datum/class_age_mod/grand_duke

@@ -417,10 +417,10 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/storage/belt/rogue/leather/black = TAT_ITEM_ENTRY("Black Leather Belt", 0.5, "clothing", "armor_family", TAT_ARMOR_CLOTH, "belt"), \
 	/obj/item/storage/belt/rogue/leather/cloth = TAT_ITEM_ENTRY("Cloth Belt", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "belt"), \
 	/obj/item/clothing/suit/roguetown/shirt/undershirt/black = TAT_ITEM_ENTRY("Shirt", 0, "clothing", "armor_family", TAT_ARMOR_CLOTH, "suit"), \
-	/obj/item/storage/belt/rogue/leather/knifebelt/black/iron = TAT_ITEM_ENTRY("Iron Tossblade belt", 1, "clothing", "armor_family", TAT_ARMOR_LEATHER, "belt"), \
-	/obj/item/storage/belt/rogue/leather/knifebelt/black/steel = TAT_ITEM_ENTRY("Steel Tossblade Belt", 2, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "belt"), \
-	/obj/item/storage/belt/rogue/leather/knifebelt/black/silver = TAT_ITEM_ENTRY("Silver Tossblade belt", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "belt"), \
-	/obj/item/storage/belt/rogue/leather/knifebelt/black/kazengun = TAT_ITEM_ENTRY("Eastern tossbale belt", 2, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "belt"), \
+	/obj/item/storage/belt/rogue/leather/tossbelt/blade/black/iron = TAT_ITEM_ENTRY("Iron Tossblade belt", 1, "clothing", "armor_family", TAT_ARMOR_LEATHER, "belt"), \
+	/obj/item/storage/belt/rogue/leather/tossbelt/blade/black/steel = TAT_ITEM_ENTRY("Steel Tossblade Belt", 2, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "belt"), \
+	/obj/item/storage/belt/rogue/leather/tossbelt/blade/black/silver = TAT_ITEM_ENTRY("Silver Tossblade belt", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "belt"), \
+	/obj/item/storage/belt/rogue/leather/tossbelt/blade/black/kazengun = TAT_ITEM_ENTRY("Eastern tossbale belt", 2, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "belt"), \
 	/obj/item/rogueweapon/spear/psyspear/old = TAT_ITEM_ENTRY("Enduring Spear", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "polearm"), \
 	/obj/item/rogueweapon/mace/cudgel/psy/old = TAT_ITEM_ENTRY("Enduring Flanged Mace", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "blunt"), \
 	/obj/item/clothing/head/roguetown/helmet/heavy/psydonhelm = TAT_ITEM_ENTRY("Psydonic Armet", 2.5, "clothing", TAT_UNLOCK_TYPE_PATRON, TAT_PATRON_PSYDON, "head"), \
@@ -567,9 +567,9 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/rogueweapon/sword/sabre/bane = TAT_ITEM_ENTRY("Bane's Edge", 13, "weapon", "weapon_supply", TAT_SUPPLY_ARTIFACTS, "artifact"), \
 	/obj/item/rope/chain = TAT_ITEM_ENTRY("Chain", 1, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
 	/obj/item/rope = TAT_ITEM_ENTRY("Rope", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "adventur' supply"), \
-	/obj/item/bomb/smoke = TAT_ITEM_ENTRY("Smoke Bomb", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "bombs"), \
-	/obj/item/bomb = TAT_ITEM_ENTRY("Bottle Bomb", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "bombs"), \
-	/obj/item/impact_grenade/explosion = TAT_ITEM_ENTRY("Impact Bomb", 1.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "bombs"), \
+	/obj/item/explosive/impact/smoke/bomb = TAT_ITEM_ENTRY("Smoke Bomb", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "bombs"), \
+	/obj/item/explosive/fused/bottle = TAT_ITEM_ENTRY("Bottle Bomb", 0.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "bombs"), \
+	/obj/item/explosive/impact/shrapnel = TAT_ITEM_ENTRY("Impact Bomb", 1.5, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "bombs"), \
 	/obj/item/folding_alchstation_stored = TAT_ITEM_ENTRY("Alchemical station", 3, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
 	/obj/item/folding_alchcauldron_stored = TAT_ITEM_ENTRY("Alchemical cauldron", 3, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "adventur' supply"), \
 	/obj/item/ration = TAT_ITEM_ENTRY("Ration paper", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "food"), \

@@ -3,12 +3,11 @@
 	tutorial = "Those fools at the academy laughed at you and cast you from the ivory tower of higher learning and magickal practice. No matter - you will ascend to great power one day, but first you need wealth - vast amounts of it. Show those fools in the town what REAL magic looks like.\n\n\
 	You have gaine the power of the spell of Mastery in the arcyne arts, though you are not strong enough to attune yourself to two major aspects at once."
 	allowed_sexes = list(MALE, FEMALE)
-
+	//subclass_mage_aspects = list("mastery" = TRUE, "major" = 1, "minor" = 3, "utilities" = 9, "ward" = TRUE)
 	outfit = /datum/outfit/job/roguetown/bandit/hedgemage
 	category_tags = list(CTAG_BANDIT)
 	cmode_music = sound("sound/music/cmode/antag/combat_timestopper.ogg")
 	maximum_possible_slots = 1 //Shadow wizard money gang
-	subclass_mage_aspects = list("mastery" = TRUE, "major" = 1, "minor" = 3, "utilities" = 13, "ward" = TRUE)
 	traits_applied = list(TRAIT_ARCYNE, TRAIT_ALCHEMY_EXPERT)
 	subclass_stats = list(
 		STATKEY_INT = 3,
@@ -56,8 +55,19 @@
 	neck = /obj/item/clothing/neck/roguetown/coif
 	head = /obj/item/clothing/head/roguetown/helmet/leather/volfhelm
 	id = /obj/item/mattcoin
-
 	r_hand = /obj/item/rogueweapon/woodstaff/implement/grand
+
 	if(H.age == AGE_OLD)
 		head = /obj/item/clothing/head/roguetown/wizhat/gen
 		armor = /obj/item/clothing/suit/roguetown/shirt/robe
+
+	if(H.mind) //TA EDIT START
+		var/list/subtype = list("Specialist", "Jack of 2 Trades")
+		var/subtype_choice = input(H, "Choose your path.", "TAKE UP ARCANA") as anything in subtype
+		H.set_blindness(0)
+		switch(subtype_choice)
+			if("Specialist") //Rogue
+				H.mind.setup_mage_aspects(list("mastery" = TRUE, "major" = 1, "minor" = 3, "utilities" = 9, "ward" = TRUE))
+			if("Jack of 2 Trades") //Poacher
+				H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 2, "minor" = 3, "utilities" = 9, "ward" = TRUE)) //TA EDIT END
+

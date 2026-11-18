@@ -396,7 +396,7 @@
 	will_hawk = FALSE
 
 /obj/structure/roguemachine/vendor/bathhouse
-	keycontrol = "nightman"
+	keycontrol = "nightmaiden"
 
 /obj/structure/roguemachine/vendor/inn/Initialize(mapload)
 	. = ..()
@@ -443,7 +443,7 @@
 		held_items[P]["NAME"] = P.name
 		held_items[P]["PRICE"] = 0
 
-// TA EDIT START - ROCKHILL MANSION
+// TA EDIT START - ROCKHILL
 /obj/structure/roguemachine/vendor/mansion
 	keycontrol = "steward"
 
@@ -455,7 +455,19 @@
 		held_items[F]["NAME"] = F.name
 		held_items[F]["PRICE"] = 1000
 	update_icon()
-// TA EDIT END - ROCKHILL MANSION
+
+/obj/structure/roguemachine/vendor/magicians
+	keycontrol = "mage"
+
+/obj/structure/roguemachine/vendor/magicians/Initialize(mapload)
+	. = ..()
+	for (var/Z in list(/obj/item/roguekey/rh_mage_1, /obj/item/roguekey/rh_mage_2, /obj/item/roguekey/rh_mage_3, /obj/item/roguekey/rh_mage_4))
+		var/obj/F = new Z(src)
+		held_items[F] = list()
+		held_items[F]["NAME"] = F.name
+		held_items[F]["PRICE"] = 0
+	update_icon()
+// TA EDIT END - ROCKHILL
 
 /obj/structure/roguemachine/vendor/merchant
 	keycontrol = "merchant"

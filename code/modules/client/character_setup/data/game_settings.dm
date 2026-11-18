@@ -9,6 +9,7 @@
 		"windowflashing" = windowflashing,
 		"clientfps" = clientfps,
 		"auto_fit_viewport" = auto_fit_viewport,
+		"action_wheel_modifier" = action_wheel_modifier, // TA EDIT
 		"schizo_voice" = (toggles & SCHIZO_VOICE),
 		"no_storyteller_events" = no_storyteller_events,
 		"verbose_character_creator" = verbose_character_creator,

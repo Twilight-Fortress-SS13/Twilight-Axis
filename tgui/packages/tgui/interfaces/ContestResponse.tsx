@@ -7,7 +7,7 @@ import { classes } from 'tgui-core/react';
 import { godClass } from './common/statGods';
 
 // Not a stat: the defender builds dice of their own instead. Spans the whole grid row.
-const CUSTOM_OPTION = 'Custom Roll';
+const CUSTOM_OPTION = 'Свои кости';
 
 type Data = {
   title: string;
@@ -20,7 +20,7 @@ export function ContestResponse() {
   const { act, data } = useBackend<Data>();
   const {
     title,
-    challengerName = 'Someone',
+    challengerName = 'Кто-то',
     attackingStat = '',
     stats = [],
   } = data;
@@ -79,8 +79,7 @@ export function ContestResponse() {
             <Stack.Item>
               <Box className="ContestResponse__Challenger">
                 {/* A stat is theirs, but dice are just the roll. */}
-                {challengerName} challenges you with
-                {godClass(attackingStat) ? ' their' : ''}
+                {challengerName} вызывает вас на состязание:
               </Box>
               <Box className={classes(['ContestResponse__Stat', godClass(attackingStat)])}>
                 {attackingStat}
@@ -94,7 +93,7 @@ export function ContestResponse() {
                 selected={selected === 0}
                 onClick={() => activate(0)}
               >
-                Decline
+                Отказаться
               </Button>
             </Stack.Item>
             <Stack.Item grow>

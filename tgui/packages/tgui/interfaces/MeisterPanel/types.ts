@@ -1,4 +1,5 @@
 import type { sendAct } from 'tgui/events/act';
+import type { BooleanLike } from 'tgui-core/react';
 
 export type FundEntry = {
   id: string;
@@ -81,7 +82,25 @@ export type LogEntry = {
   reason: string;
 };
 
+export type MercContractEntry = {
+  ref: string;
+  title: string;
+  lines: string[];
+  end_wait: string | null;
+  end_note: string;
+  agreed_end_terms: string;
+  agreed_end_pending: BooleanLike;
+};
+
+export type MercData = {
+  is_merc: BooleanLike;
+  hired: BooleanLike;
+  cooldown_text: string | null;
+  contracts: MercContractEntry[];
+};
+
 export type Data = {
+  merc: MercData | null;
   funds: FundEntry[];
   account_balance: number;
   day: number;
@@ -99,12 +118,21 @@ export type Data = {
   bathhouse_tithe_round_total: number;
   bathhouse_ordinance_cooldown_seconds: number;
   bathhouse_ordinance_cooldown_minutes: number;
-  bathhouse_worker_withdraw_limit: number;
-  bathhouse_agent_withdraw_limit: number;
-  bathhouse_worker_withdrawals_suspended: boolean;
-  bathhouse_agent_withdrawals_suspended: boolean;
-  bathhouse_viewer_withdrawal_limit_hit: boolean;
-  ta_map: string;
+  fund_allowances: Record<string, FundAllowance>;
+  ta_map: string; // TA EDIT
+};
+
+export type AllowanceGroup = {
+  id: string;
+  label: string;
+  limit: number;
+  suspended: boolean;
+};
+
+export type FundAllowance = {
+  header: string;
+  groups: AllowanceGroup[];
+  viewer_limit_hit: boolean;
 };
 
 export type TabKey =
@@ -112,7 +140,8 @@ export type TabKey =
   | 'institutional'
   | 'patronage'
   | 'polllevy'
-  | 'ledger';
+  | 'ledger'
+  | 'mercenary';
 
 export type TabProps = {
   data: Data;

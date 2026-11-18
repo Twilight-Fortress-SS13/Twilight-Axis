@@ -377,3 +377,6 @@
 	data["current_origin_type"] = current_origin ? "[current_origin.type]" : null
 	data["current_species_name"] = current_species ? origin_picker_species_name(current_species) : "Неизвестно"
 	return data
+
+/datum/preferences
+	var/list/emote_favourites = list()

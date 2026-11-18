@@ -251,7 +251,7 @@
 	cuisine = CUISINE_NORTHERN
 	drink_type = DRINKTYPE_SPIRIT
 	name = "Voddena"
-	boozepwr = 30	// now it's just vodka //TA EDIT
+	boozepwr = 60	// now it's just vodka //TA EDIT
 	taste_description = "clean liquor"
 	color = "#a1a1a1"
 	quality = DRINK_NICE

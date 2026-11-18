@@ -95,6 +95,10 @@ GLOBAL_LIST_EMPTY(virtues)
 /datum/virtue/proc/apply_to_human(mob/living/carbon/human/recipient)
 	return
 
+/// Job restrictions that depend on more than the job's virtue_restrictions list. Returns the reason shown to the player, or null.
+/datum/virtue/proc/restricts_job(datum/job/job, datum/preferences/prefs)
+	return null
+
 /datum/virtue/proc/handle_traits(mob/living/carbon/human/recipient)
 	if (!LAZYLEN(added_traits))
 		return
@@ -188,7 +192,6 @@ GLOBAL_LIST_EMPTY(virtues)
 	virtue_type.handle_added_languages(recipient)
 	virtue_type.handle_stats(recipient)
 	if(HAS_TRAIT(recipient, TRAIT_RESIDENT))
-		REMOVE_TRAIT(recipient, TRAIT_OUTLANDER, ADVENTURER_TRAIT) //TA EDIT
 		REMOVE_TRAIT(recipient, TRAIT_OUTLANDER, JOB_TRAIT) //TA EDIT
 		REMOVE_TRAIT(recipient, TRAIT_OUTLANDER, TRAIT_GENERIC) //TA EDIT
 		if(SStreasury.has_account(recipient))

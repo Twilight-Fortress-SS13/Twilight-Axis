@@ -7,7 +7,7 @@
 //	where you would want the updater procs below to run
 
 //	This also works with decimals.
-#define SAVEFILE_VERSION_MAX	36
+#define SAVEFILE_VERSION_MAX	37
 
 /*
 SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Carn
@@ -144,6 +144,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["masked_examine"]		>> masked_examine
 	S["nsfw_examine_always"]>> nsfw_examine_always // TA EDIT
 	S["full_examine"]		>> full_examine
+	load_emote_favourites(S) // TA EDIT
 	S["mute_animal_emotes"]	>> mute_animal_emotes
 	S["autoconsume"]		>> autoconsume
 	S["no_examine_blocks"]	>> no_examine_blocks
@@ -179,6 +180,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	// Custom hotkeys
 	S["key_bindings"]		>> key_bindings
+	S["action_button_positions"] >> action_button_positions // TA EDIT
+	S["action_wheel_modifier"] >> action_wheel_modifier // TA EDIT
 
 	S["no_runechat_animation"] >> no_runechat_animation //TA EDIT
 	S["defiant"]			>> defiant
@@ -199,6 +202,15 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	//Sanitize
 	sanitize_preferences()
+	if(!(action_wheel_modifier in list("ctrl", "shift", "alt", "none"))) // TA EDIT START
+		action_wheel_modifier = "ctrl" // TA EDIT END
+	action_button_positions = sanitize_islist(action_button_positions, list()) // TA EDIT START
+	if(length(action_button_positions) > 150)
+		action_button_positions = list()
+	for(var/key in action_button_positions)
+		var/position = action_button_positions[key]
+		if(!istext(key) || length(key) > 200 || !istext(position) || length(position) > 80 || !findtext(position, ",") || !findtext(position, ":"))
+			action_button_positions -= key // TA EDIT END
 	legacy_tat_build_migrated = sanitize_integer(legacy_tat_build_migrated, FALSE, TRUE, FALSE)
 	legacy_tat_build_data = legacy_tat_build_migrated ? null : sanitize_islist(legacy_tat_build_data, null)
 	S["ccg_known_rare_cards"] >> ccg_known_rare_cards
@@ -299,7 +311,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	preferred_ui_language = sanitize_preferred_ui_language(preferred_ui_language)
 	preferred_map		= sanitize_text(preferred_map, initial(preferred_map))
 
-	if(parent && is_banned_from(parent.ckey, ROLE_SYNDICATE))
+	if(parent && is_banned_from(parent.ckey, ROLE_ANTAGONIST))
 		be_special = list()
 	verify_keybindings_valid()
 
@@ -360,6 +372,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["masked_examine"], masked_examine)
 	WRITE_FILE(S["nsfw_examine_always"], nsfw_examine_always) // TA EDIT
 	WRITE_FILE(S["full_examine"], full_examine)
+	save_emote_favourites(S) // TA EDIT
 	WRITE_FILE(S["mute_animal_emotes"], mute_animal_emotes)
 	WRITE_FILE(S["autoconsume"], autoconsume)
 	WRITE_FILE(S["no_examine_blocks"], no_examine_blocks)
@@ -403,6 +416,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["preferred_map"], preferred_map)
 	WRITE_FILE(S["menuoptions"], menuoptions)
 	WRITE_FILE(S["key_bindings"], key_bindings)
+	WRITE_FILE(S["action_button_positions"], action_button_positions) // TA EDIT
+	WRITE_FILE(S["action_wheel_modifier"], action_wheel_modifier) // TA EDIT
 	WRITE_FILE(S["attack_blip_frequency"] , attack_blip_frequency)
 	WRITE_FILE(S["compliance_notifs"], compliance_notifs)
 	WRITE_FILE(S["roll_tokens"], roll_tokens)
@@ -872,6 +887,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	S["qsr"]					>> qsr_pref
 	S["flavortext"]				>> flavortext
+	S["pen_name"]				>> pen_name
 	S["ooc_notes"]				>> ooc_notes
 	S["ooc_extra"]				>> ooc_extra
 	S["ooc_extra_img"]			>> ooc_extra_img
@@ -881,6 +897,9 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		ooc_extra_img_link = null
 	S["rumour"]					>> rumour
 	S["noble_gossip"]			>> noble_gossip
+	S["secrets"]				>> secrets
+	if(!islist(secrets))
+		secrets = list()
 	S["averse_chosen_faction"]	>> averse_chosen_faction
 	S["charflaw_choices"] >> charflaw_choices // TA EDIT
 	S["song_artist"]				>> song_artist
@@ -1326,12 +1345,14 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["preset_bounty_severity_v_key"] , preset_bounty_severity_v_key)
 	WRITE_FILE(S["preset_bounty_crime"] , preset_bounty_crime)
 	WRITE_FILE(S["flavortext"] , html_decode(flavortext))
+	WRITE_FILE(S["pen_name"] , pen_name)
 	WRITE_FILE(S["ooc_notes"] , html_decode(ooc_notes))
 	WRITE_FILE(S["ooc_extra"] ,	ooc_extra)
 	WRITE_FILE(S["ooc_extra_img"] , ooc_extra_img)
 	WRITE_FILE(S["ooc_extra_img_link"] , ooc_extra_img_link)
 	WRITE_FILE(S["rumour"] , html_decode(rumour))
 	WRITE_FILE(S["noble_gossip"] , html_decode(noble_gossip))
+	WRITE_FILE(S["secrets"] , secrets)
 	WRITE_FILE(S["averse_chosen_faction"] , html_decode(averse_chosen_faction))
 	WRITE_FILE(S["song_artist"] , song_artist)
 	WRITE_FILE(S["song_title"] , song_title)

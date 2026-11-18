@@ -30,7 +30,7 @@
 
 /mob/living/carbon/human/proc/emote_meow()
 	if(istype(usr.getorganslot(ORGAN_SLOT_TONGUE), /obj/item/organ/tongue/wild_tongue))
-		set name = "Meow"
+		set name = TA_EMOTE_NAME_EMOTE_MEOW
 		set category = "Emotes.Wildtongue" //Wildtongue
 		emote("meow", intentional = TRUE, animal = TRUE)
 	else
@@ -49,9 +49,9 @@
 
 /mob/living/carbon/human/proc/emote_mreow()
 	if(istype(usr.getorganslot(ORGAN_SLOT_TONGUE), /obj/item/organ/tongue/wild_tongue))
-		set name = "Mreow"
+		set name = TA_EMOTE_NAME_EMOTE_MREOW
 		set category = "Emotes.Wildtongue" //Wildtongue
-		emote("meow", intentional = TRUE, animal = TRUE)
+		emote("mreow", intentional = TRUE, animal = TRUE)
 	else
 		to_chat(usr, span_warning("Your tongue doesn't do that"))
 		return
@@ -67,7 +67,7 @@
 	is_animal = TRUE
 
 /mob/living/proc/emote_mrrp()
-	set name = "Mrrp"
+	set name = TA_EMOTE_NAME_EMOTE_MRRP
 	set category = "Emotes.Wildtongue"
 	if(iscarbon(src))
 		var/obj/item/organ/tongue/tongue = getorganslot(ORGAN_SLOT_TONGUE)
@@ -88,7 +88,7 @@
 
 /mob/living/carbon/human/proc/emote_caw()
 	if(istype(usr.getorganslot(ORGAN_SLOT_TONGUE), /obj/item/organ/tongue/wild_tongue))
-		set name = "Caw"
+		set name = TA_EMOTE_NAME_EMOTE_CAW
 		set category = "Emotes.Wildtongue"
 		emote("caw", intentional = TRUE, animal = TRUE)
 	else
@@ -107,7 +107,7 @@
 
 /mob/living/carbon/human/proc/emote_peep()
 	if(istype(usr.getorganslot(ORGAN_SLOT_TONGUE), /obj/item/organ/tongue/wild_tongue))
-		set name = "Peep"
+		set name = TA_EMOTE_NAME_EMOTE_PEEP
 		set category = "Emotes.Wildtongue"
 		emote("peep", intentional = TRUE, animal = TRUE)
 	else
@@ -126,7 +126,7 @@
 
 /mob/living/carbon/human/proc/emote_hoot()
 	if(istype(usr.getorganslot(ORGAN_SLOT_TONGUE), /obj/item/organ/tongue/wild_tongue))
-		set name = "Hoot"
+		set name = TA_EMOTE_NAME_EMOTE_HOOT
 		set category = "Emotes.Wildtongue"
 		emote("hoot", intentional = TRUE, animal = TRUE)
 	else
@@ -144,7 +144,7 @@
 	is_animal = TRUE
 
 /mob/living/proc/emote_squeak()
-	set name = "Squeak"
+	set name = TA_EMOTE_NAME_EMOTE_SQUEAK
 	set category = "Emotes.Wildtongue"
 	if(iscarbon(src))
 		var/obj/item/organ/tongue/tongue = getorganslot(ORGAN_SLOT_TONGUE)
@@ -164,7 +164,7 @@
 	is_animal = TRUE
 
 /mob/living/proc/emote_hiss()
-	set name = "Hiss"
+	set name = TA_EMOTE_NAME_EMOTE_HISS
 	set category = "Emotes.Wildtongue"
 	if(iscarbon(src))
 		var/obj/item/organ/tongue/tongue = getorganslot(ORGAN_SLOT_TONGUE)
@@ -184,7 +184,7 @@
 	is_animal = TRUE
 
 /mob/living/carbon/human/proc/emote_phiss()
-	set name = "PHiss"
+	set name = TA_EMOTE_NAME_EMOTE_PHISS
 	set category = "Emotes.Wildtongue"
 	var/obj/item/organ/tongue/tongue = getorganslot(ORGAN_SLOT_TONGUE)
 	if(!istype(tongue, /obj/item/organ/tongue/wild_tongue) && !istype(tongue, /obj/item/organ/tongue/lizard))
@@ -203,7 +203,7 @@
 
 /mob/living/carbon/human/proc/emote_roar()
 	if(istype(usr.getorganslot(ORGAN_SLOT_TONGUE), /obj/item/organ/tongue/wild_tongue))
-		set name = "Roar"
+		set name = TA_EMOTE_NAME_EMOTE_ROAR
 		set category = "Emotes.Wildtongue"
 		emote("roar", intentional = TRUE)
 	else
@@ -222,7 +222,7 @@
 
 /mob/living/carbon/human/proc/emote_howl()
 	if(istype(usr.getorganslot(ORGAN_SLOT_TONGUE), /obj/item/organ/tongue/wild_tongue))
-		set name = "Howl"
+		set name = TA_EMOTE_NAME_EMOTE_HOWL
 		set category = "Emotes.Wildtongue"
 		emote("howl", intentional = TRUE, animal = TRUE)
 	else
@@ -253,7 +253,7 @@
 
 /mob/living/carbon/human/proc/emote_cackle()
 	if(istype(usr.getorganslot(ORGAN_SLOT_TONGUE), /obj/item/organ/tongue/wild_tongue))
-		set name = "Cackle"
+		set name = TA_EMOTE_NAME_EMOTE_CACKLE
 		set category = "Emotes.Wildtongue"
 		emote("cackle", intentional = TRUE, animal = TRUE)
 	else
@@ -272,7 +272,7 @@
 
 /mob/living/carbon/human/proc/emote_whine()
 	if(istype(usr.getorganslot(ORGAN_SLOT_TONGUE), /obj/item/organ/tongue/wild_tongue))
-		set name = "Whine"
+		set name = TA_EMOTE_NAME_EMOTE_WHINE
 		set category = "Emotes.Wildtongue"
 		emote("whine", intentional = TRUE, animal = TRUE)
 	else
@@ -291,7 +291,7 @@
 
 /mob/living/carbon/human/proc/emote_fwhine()
 	if(istype(usr.getorganslot(ORGAN_SLOT_TONGUE), /obj/item/organ/tongue/wild_tongue))
-		set name = "Whine (Venard)"
+		set name = TA_EMOTE_NAME_EMOTE_FWHINE
 		set category = "Emotes.Wildtongue"
 		emote("fwhine", intentional = TRUE, animal = TRUE)
 	else
@@ -310,7 +310,7 @@
 
 /mob/living/carbon/human/proc/emote_snort()
 	if(istype(usr.getorganslot(ORGAN_SLOT_TONGUE), /obj/item/organ/tongue/wild_tongue))
-		set name = "Snort (Animal)"
+		set name = TA_EMOTE_NAME_EMOTE_SNORT
 		set category = "Emotes.Wildtongue"
 		emote("psnort", intentional = TRUE, animal = TRUE)
 	else
@@ -329,7 +329,7 @@
 
 /mob/living/carbon/human/proc/emote_oink()
 	if(istype(usr.getorganslot(ORGAN_SLOT_TONGUE), /obj/item/organ/tongue/wild_tongue))
-		set name = "Oink"
+		set name = TA_EMOTE_NAME_EMOTE_OINK
 		set category = "Emotes.Wildtongue"
 		emote("oink", intentional = TRUE, animal = TRUE)
 	else
@@ -348,7 +348,7 @@
 
 /mob/living/carbon/human/proc/emote_trill()
 	if(istype(usr.getorganslot(ORGAN_SLOT_TONGUE), /obj/item/organ/tongue/wild_tongue))
-		set name = "Trill"
+		set name = TA_EMOTE_NAME_EMOTE_TRILL
 		set category = "Emotes.Wildtongue"
 		emote("trill", intentional = TRUE, animal = TRUE)
 	else
@@ -366,7 +366,7 @@
 	is_animal = TRUE
 
 /mob/living/carbon/human/proc/emote_purr()
-	set name = "Purr"
+	set name = TA_EMOTE_NAME_EMOTE_PURR
 	set category = "Emotes.Wildtongue"
 	var/obj/item/organ/tongue/tongue = getorganslot(ORGAN_SLOT_TONGUE)
 	if(!istype(tongue, /obj/item/organ/tongue/wild_tongue) && !istype(tongue, /obj/item/organ/tongue/lizard))
@@ -386,7 +386,7 @@
 
 /mob/living/carbon/human/proc/emote_moo()
 	if(istype(usr.getorganslot(ORGAN_SLOT_TONGUE), /obj/item/organ/tongue/wild_tongue))
-		set name = "Moo"
+		set name = TA_EMOTE_NAME_EMOTE_MOO
 		set category = "Emotes.Wildtongue"
 		emote("moo", intentional = TRUE, animal = TRUE)
 	else
@@ -405,7 +405,7 @@
 
 /mob/living/carbon/human/proc/emote_bark()
 	if(istype(usr.getorganslot(ORGAN_SLOT_TONGUE), /obj/item/organ/tongue/wild_tongue))
-		set name = "Bark"
+		set name = TA_EMOTE_NAME_EMOTE_BARK
 		set category = "Emotes.Wildtongue"
 		emote("bark", intentional = TRUE, animal = TRUE)
 	else
@@ -423,7 +423,7 @@
 	is_animal = TRUE
 
 /mob/living/carbon/human/proc/emote_growl()
-	set name = "Growl"
+	set name = TA_EMOTE_NAME_EMOTE_GROWL
 	set category = "Emotes.Wildtongue"
 	var/obj/item/organ/tongue/tongue = getorganslot(ORGAN_SLOT_TONGUE)
 	if(!istype(tongue, /obj/item/organ/tongue/wild_tongue) && !istype(tongue, /obj/item/organ/tongue/lizard))
@@ -442,7 +442,7 @@
 	is_animal = TRUE
 
 /mob/living/proc/emote_prbt()
-	set name = "Prbt"
+	set name = TA_EMOTE_NAME_EMOTE_PRBT
 	set category = "Emotes.Wildtongue"
 	if(iscarbon(src))
 		var/obj/item/organ/tongue/tongue = getorganslot(ORGAN_SLOT_TONGUE)
@@ -463,7 +463,7 @@
 
 /mob/living/carbon/human/proc/emote_bleat()
 	if(istype(usr.getorganslot(ORGAN_SLOT_TONGUE), /obj/item/organ/tongue/wild_tongue))
-		set name = "Bleat"
+		set name = TA_EMOTE_NAME_EMOTE_BLEAT
 		set category = "Emotes.Wildtongue"
 		emote("bleat", intentional = TRUE, animal = TRUE)
 	else
@@ -481,7 +481,7 @@
 	is_animal = TRUE
 
 /mob/living/carbon/human/proc/emote_chitter()
-	set name = "Chitter"
+	set name = TA_EMOTE_NAME_EMOTE_CHITTER
 	set category = "Emotes.Wildtongue"
 	var/obj/item/organ/tongue/tongue = getorganslot(ORGAN_SLOT_TONGUE)
 	if(!istype(tongue, /obj/item/organ/tongue/wild_tongue) && !istype(tongue, /obj/item/organ/tongue/moth))
@@ -497,7 +497,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/proc/emote_flutter()
-	set name = "Flutter"
+	set name = TA_EMOTE_NAME_EMOTE_FLUTTER
 	set category = "Emotes.Wildtongue"
 	var/obj/item/organ/tongue/tongue = getorganslot(ORGAN_SLOT_TONGUE)
 	if(!istype(tongue, /obj/item/organ/tongue/wild_tongue) && !istype(tongue, /obj/item/organ/tongue/moth))
@@ -515,7 +515,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/proc/emote_yip()
-	set name = "Yip"
+	set name = TA_EMOTE_NAME_EMOTE_YIP
 	set category = "Emotes.Wildtongue"
 	var/obj/item/organ/tongue/tongue = getorganslot(ORGAN_SLOT_TONGUE)
 	if(!istype(tongue, /obj/item/organ/tongue/wild_tongue) && !istype(tongue, /obj/item/organ/tongue/lizard))
@@ -533,7 +533,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/proc/emote_lizard_bellow()
-	set name = "LizBellow"
+	set name = TA_EMOTE_NAME_EMOTE_LIZARD_BELLOW
 	set category = "Emotes.Wildtongue"
 	var/obj/item/organ/tongue/tongue = getorganslot(ORGAN_SLOT_TONGUE)
 	if(!istype(tongue, /obj/item/organ/tongue/wild_tongue) && !istype(tongue, /obj/item/organ/tongue/lizard))
@@ -551,7 +551,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/proc/emote_lizard_hiss()
-	set name = "LizHiss"
+	set name = TA_EMOTE_NAME_EMOTE_LIZARD_HISS
 	set category = "Emotes.Wildtongue"
 	var/obj/item/organ/tongue/tongue = getorganslot(ORGAN_SLOT_TONGUE)
 	if(!istype(tongue, /obj/item/organ/tongue/wild_tongue) && !istype(tongue, /obj/item/organ/tongue/lizard))
@@ -569,7 +569,7 @@
 	show_runechat = FALSE
 
 /mob/living/carbon/human/proc/emote_lizard_squeal()
-	set name = "LizSqueal"
+	set name = TA_EMOTE_NAME_EMOTE_LIZARD_SQUEAL
 	set category = "Emotes.Wildtongue"
 	var/obj/item/organ/tongue/tongue = getorganslot(ORGAN_SLOT_TONGUE)
 	if(!istype(tongue, /obj/item/organ/tongue/wild_tongue) && !istype(tongue, /obj/item/organ/tongue/lizard))
@@ -586,7 +586,7 @@
 	is_animal = TRUE
 
 /mob/living/carbon/human/proc/emote_lizard_thump()
-	set name = "LizThump"
+	set name = TA_EMOTE_NAME_EMOTE_LIZARD_THUMP
 	set category = "Emotes.Wildtongue"
 	var/obj/item/organ/tongue/tongue = getorganslot(ORGAN_SLOT_TONGUE)
 	if(!istype(tongue, /obj/item/organ/tongue/wild_tongue) && !istype(tongue, /obj/item/organ/tongue/lizard))

@@ -177,27 +177,27 @@
 				should_update = TRUE
 
 		if("Skin Color")
-			var/old_skintone = H.dna.species.use_skintones ? H.skin_tone : H.dna.features["mcolor"]
+			var/old_skintone = mirror_uses_skin_tones(H) ? H.skin_tone : H.dna.features["mcolor"]
 			var/new_skin_color = color_pick_sanitized(H, "Choose your skin color", "Skin Color", old_skintone)
 			if(new_skin_color)
-				if(H.dna.species.use_skintones)
+				if(mirror_uses_skin_tones(H))
 					H.skin_tone = sanitize_hexcolor(new_skin_color, 6, FALSE)
 				else
-					H.dna.features["mcolor"] = sanitize_hexcolor(new_skin_color, 6, TRUE)
+					H.dna.features["mcolor"] = sanitize_hexcolor(new_skin_color, 6, FALSE)
 				H.update_body_parts()
 				should_update = TRUE
 
 		if("Skin Color 2")
 			var/new_skin_color = color_pick_sanitized(H, "Choose your skin color", "Skin Color", H.dna.features["mcolor2"])
 			if(new_skin_color)
-				H.dna.features["mcolor2"] = sanitize_hexcolor(new_skin_color, 6, TRUE)
+				H.dna.features["mcolor2"] = sanitize_hexcolor(new_skin_color, 6, FALSE)
 			H.update_body_parts()
 			should_update = TRUE
 
 		if("Skin Color 3")
 			var/new_skin_color = color_pick_sanitized(H, "Choose your skin color", "Skin Color", H.dna.features["mcolor3"])
 			if(new_skin_color)
-				H.dna.features["mcolor3"] = sanitize_hexcolor(new_skin_color, 6, TRUE)
+				H.dna.features["mcolor3"] = sanitize_hexcolor(new_skin_color, 6, FALSE)
 			H.update_body_parts()
 			should_update = TRUE
 

@@ -882,7 +882,11 @@
 	var/shown_name = R.name
 	if(R.description)
 		shown_name = "<span class='tooltip' title=\"[html_encode(R.description)]\">[R.name]</span>"
-	return "[round(R.volume, 0.1)] [UNIT_FORM_STRING(round(R.volume, 0.1))] of <font color=[R.color]>[shown_name]</font>"
+	var/abv = "" //TA EDIT START
+	if(istype(R, /datum/reagent/consumable/ethanol))
+		var/datum/reagent/consumable/ethanol/booze = R
+		abv = " ([max(round(booze.boozepwr * 100 / BOOZEPOWER_FULLPROOF, 1), 0)]°)"
+	return "[round(R.volume, 0.1)] [UNIT_FORM_STRING(round(R.volume, 0.1))] of <font color=[R.color]>[shown_name]</font>[abv]" //TA EDIT END
 
 /datum/reagents/proc/generate_scent_message(minimum_percent=15)
 	// the lower the minimum percent, the more sensitive the message is.
