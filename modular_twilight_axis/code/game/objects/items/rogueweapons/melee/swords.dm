@@ -248,7 +248,7 @@
 /obj/item/rogueweapon/sword/rapier/silver/psy/folding
 	name = "psydonic folding blade"
 	desc = "A costly folding blade commissioned for the rune volves of the Psydonian Inquisition. Built for investigators and executioners alike, it folds into a compact package for discreet carry before locking into a deadly dueling weapon."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords64.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
 	icon_state = "psyfoldingblade_on"
 	sheathe_icon = "silverrapier"
 	var/extended = TRUE
@@ -298,10 +298,9 @@
 	name = "psydonic smallsword"
 	desc = "A slender silver smallsword crafted for swift and precise strikes. \
 	Though elegant in form, it was forged with a singular purpose: to pierce both the hearts of men and the blasphemies that lurk beyond them."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords32.dmi'
-	icon_state = "psysmallsword"
-	sheathe = 'modular_twilight_axis/icons/obj/items/scabbard.dmi'
-	sheathe_icon = "psysmallsword"
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
+	icon_state = "psyrapier"
+	sheathe_icon = "silverrapier"
 	max_blade_int = 200
 	grid_width = 32
 	grid_height = 64

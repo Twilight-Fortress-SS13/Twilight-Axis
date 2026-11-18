@@ -249,7 +249,7 @@
 	name = "psydonic parrying dagger"
 	desc = "A finely balanced silver parrying dagger, carried by loyal servants of the Inquisition. \
 	Its crossguard turns aside wicked steel while its blessed edge delivers Psydon's judgement."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/daggers32.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
 	icon_state = "psypdagger"
 	force = 15
 	throwforce = 15
