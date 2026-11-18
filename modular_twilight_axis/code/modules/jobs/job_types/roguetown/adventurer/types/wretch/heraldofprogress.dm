@@ -86,11 +86,17 @@
 	song_list = list("Laid To Rest" = 'modular_twilight_axis/sound/music/instruments/ztrato (1).ogg',
 	"Fulmen" = 'modular_twilight_axis/sound/music/instruments/ztrato (2).ogg',
 	"Painkiller" = 'modular_twilight_axis/sound/music/instruments/ztrato (3).ogg',
-	"Abyssor's Bane" = 'modular_twilight_axis/sound/music/instruments/ztrato (4).ogg')
+	"Abyssor's Bane" = 'modular_twilight_axis/sound/music/instruments/ztrato (4).ogg',
+	"Holy Warrior" = 'modular_twilight_axis/sound/music/instruments/ztrato (5).ogg',
+	"Be the lightning" = 'modular_twilight_axis/sound/music/instruments/ztrato (6).ogg',
+	"The last stand" = 'modular_twilight_axis/sound/music/instruments/ztrato (7).ogg',
+	"The bell rings for Psydon" = 'modular_twilight_axis/sound/music/instruments/ztrato (8).ogg',
+	"I came from hell" = 'modular_twilight_axis/sound/music/instruments/ztrato (9).ogg')
 	blade_dulling = DULLING_BASHCHOP
 	w_class = WEIGHT_CLASS_HUGE
 	minstr = 8
 	max_blade_int = 300
+	max_integrity = 250
 	anvilrepair = /datum/skill/craft/weaponsmithing
 	obj_flags = CAN_BE_HIT
 	integrity_failure = 0.2
