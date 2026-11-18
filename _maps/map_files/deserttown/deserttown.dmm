@@ -56943,6 +56943,12 @@
 	dir = 1
 	},
 /area/rogue/under/desertdark)
+"mkr" = (
+/obj/effect/landmark/start/lamplighter,
+/turf/open/floor/rogue/twig{
+	icon = 'modular_deserttown/icons/alt/roguefloor.dmi'
+	},
+/area/rogue/outdoors/desert)
 "mkw" = (
 /obj/effect/decal/carpet/square/black{
 	pixel_x = 16;
@@ -425388,7 +425394,7 @@ eMy
 tIF
 cLW
 eZT
-eZT
+mkr
 cLW
 tIF
 eMy
@@ -426005,7 +426011,7 @@ lcO
 muK
 muK
 tIF
-eZT
+mkr
 eZT
 tIF
 pGv
@@ -427262,7 +427268,7 @@ bWY
 tdM
 eMy
 bWY
-eZT
+mkr
 saA
 uHQ
 tIF
@@ -427879,7 +427885,7 @@ muK
 eMy
 tIF
 eZT
-eZT
+mkr
 tdM
 eMy
 qXw
