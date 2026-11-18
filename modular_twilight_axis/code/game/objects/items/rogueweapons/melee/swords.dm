@@ -306,3 +306,7 @@
 	icon_state = "ast_kriegmesser"
 	sheathe = 'modular_twilight_axis/icons/obj/items/scabbard.dmi'
 	sheathe_icon = "ast_kriegmesser"
+
+/obj/item/rogueweapon/sword/rapier/silver/psy/smallsword
+	sheathe = 'modular_twilight_axis/icons/obj/items/scabbard.dmi'
+	sheathe_icon = "psysmallsword"
