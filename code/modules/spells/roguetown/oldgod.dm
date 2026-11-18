@@ -585,18 +585,11 @@
 	required_items = null
 	charge_required = TRUE
 	channel_cast = TRUE
-	charge_swingdelay_type = SWINGDELAY_CANCEL
+	charge_swingdelay_type = SWINGDELAY_NORMAL // TA EDIT
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z | SPELL_REQUIRES_NO_MOVE
 	cooldown_time = 30 SECONDS
 
-/datum/action/cooldown/spell/psydon/lux/can_cast_spell(feedback = TRUE)
-	. = ..()
-	if(!.)
-		return
-	if(!(locate(/obj/item/flashlight/flare/torch/lantern/psycenser) in owner.held_items))
-		if(feedback)
-			owner.balloon_alert(owner, "I need the Golgatha in hand!")
-		return FALSE
+// TA EDIT - Lux miracles no longer require Golgatha.
 
 /datum/action/cooldown/spell/psydon/lux/do_after_checks(mob/owner, atom/cast_on)
 	. = ..()
@@ -608,7 +601,14 @@
 /datum/action/cooldown/spell/psydon/lux/weep
 	name = "WEEP"
 	button_icon_state = "WEEP" //Absolver-exclusive. Classified as 'lux-magicka', rather than a traditional miracle. Same line of thought as the Naledians.
-	desc = "Lesser lux-magicka. Endure the wounds of another, for their sake. </br>‎	</br>Siphons away lesser injuries, such as gashes and fractures, from the target. In exchange, any siphoned injuries are subsequently imposed onto you. If the target has lost any blood, they will be fully replenished through your own veins. </br>‎	</br>Requires the Golgatha in hand and a brief channel, during which I must stand still; being struck or moving will interrupt the miracle."
+	// TA EDIT START
+	desc = "Lesser lux-magicka. Endure the wounds of another, for their sake. \
+		<br><br>Siphons away lesser injuries, such as gashes and fractures, \
+		from the target. In exchange, any siphoned injuries are subsequently \
+		imposed onto you. If the target has lost any blood, they will be fully \
+		replenished through your own veins. <br><br>Requires a stationary \
+		3-second channel."
+	// TA EDIT END
 	sound = 'sound/magic/psydonbleeds.ogg'
 	primary_resource_cost = 80
 	secondary_resource_cost = 33
@@ -803,7 +803,15 @@
 /datum/action/cooldown/spell/psydon/lux/absolve
 	name = "ABSOLVE"
 	button_icon_state = "ABSOLVE" //Absolver-exclusive. Classified as 'lux-magicka', rather than a traditional miracle. Same line of thought as the Naledians.
-	desc = "Greater lux-magicka. Exchange your vitality for the sake of another. </br>‎	</br>Siphons away all injuries - be it physical damage, blood loss, or dismemberment - from the target, completely healing them. In exchange, all siphoned injuries are subsequently inflicted unto you. Using this on a target who's dead will fully resurrect them, albeit at the cost of your own lyfe. </br>‎	</br>Requires the Golgatha in hand and a channel, during which I must stand still; being struck or moving will interrupt the miracle."
+	// TA EDIT START
+	desc = "Greater lux-magicka. Exchange your vitality for the sake of \
+		another. <br><br>Siphons away all injuries - be it physical damage, \
+		blood loss, or dismemberment - from the target, completely healing \
+		them. In exchange, all siphoned injuries are subsequently inflicted \
+		unto you. Using this on a target who's dead will fully resurrect them, \
+		albeit at the cost of your own lyfe. <br><br>Requires a stationary \
+		5-second channel."
+	// TA EDIT END
 	sound = 'sound/magic/psyabsolution.ogg'
 	primary_resource_cost = 100
 	secondary_resource_cost = 50
