@@ -229,7 +229,7 @@
 	extended = !extended
 	update_folding_state(user, extended, "psyfoldingblade_on", "psyfoldingblade_off")
 
-/obj/item/rogueweapon/sword/rapier/silver/psy/rapier
+/obj/item/rogueweapon/sword/rapier/silver/psy/smallsword
 	name = "psydonic smallsword"
 	desc = "A slender silver smallsword crafted for swift and precise strikes. \
 	Though elegant in form, it was forged with a singular purpose: to pierce both the hearts of men and the blasphemies that lurk beyond them."
@@ -243,7 +243,7 @@
 	dropshrink = 0
 	bigboy = FALSE
 
-/obj/item/rogueweapon/sword/rapier/silver/psy/rapier/ComponentInitialize()
+/obj/item/rogueweapon/sword/rapier/silver/psy/smallsword/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
