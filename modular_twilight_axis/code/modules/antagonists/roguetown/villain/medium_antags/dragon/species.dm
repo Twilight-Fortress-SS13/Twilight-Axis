@@ -43,7 +43,6 @@
 		TRAIT_UNLYCKERABLE, //Just stop
 		TRAIT_NOFIRE
 	)
-	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | RACE_SWAP | SLIME_EXTRACT
 	inherent_biotypes = MOB_HUMANOID
 	no_equip = list(SLOT_SHIRT, SLOT_HEAD, SLOT_WEAR_MASK, SLOT_ARMOR, SLOT_GLOVES, SLOT_SHOES, SLOT_PANTS, SLOT_CLOAK, SLOT_BELT, SLOT_BACK_L, SLOT_BACK_R, SLOT_S_STORE)
 	nojumpsuit = 1
@@ -72,6 +71,7 @@
 
 /datum/species/dragon/regenerate_icons(mob/living/carbon/human/H)
 	H.icon = 'modular_twilight_axis/icons/mob/monster/player_dragon.dmi'
+	H.icon_state = "dragon"
 	H.base_intents = list(INTENT_HELP, INTENT_DISARM, INTENT_GRAB)
 	H.update_damage_overlays()
 	H.update_inv_armor_special()
@@ -82,44 +82,8 @@
 		return
 	playsound(get_turf(H), pick('sound/vo/mobs/wwolf/wolftalk1.ogg','sound/vo/mobs/wwolf/wolftalk2.ogg'), 100, TRUE, -1)
 
-/datum/species/dragon/on_species_gain(mob/living/carbon/C, datum/species/old_species)
-	. = ..()
-	C.icon_state = "dragon"
-	C.base_pixel_x = -32
-	C.base_pixel_y = -16
-	C.pixel_x = -32
-	C.pixel_y = -16
-
 /datum/species/dragon/update_damage_overlays(mob/living/carbon/human/H)
 	H.remove_overlay(DAMAGE_LAYER)
-	var/list/hands = list()
-	var/mutable_appearance/inhand_overlay = mutable_appearance("[H.icon_state]-dam", layer=-DAMAGE_LAYER)
-	var/burnhead = 0
-	var/brutehead = 0
-	var/burnch = 0
-	var/brutech = 0
-	var/obj/item/bodypart/affecting = H.get_bodypart(BODY_ZONE_HEAD)
-	if(affecting)
-		burnhead = (affecting.burn_dam / affecting.max_damage)
-		brutehead = (affecting.brute_dam / affecting.max_damage)
-	affecting = H.get_bodypart(BODY_ZONE_CHEST)
-	if(affecting)
-		burnch = (affecting.burn_dam / affecting.max_damage)
-		brutech = (affecting.brute_dam / affecting.max_damage)
-	var/usedloss = 0
-	if(burnhead > usedloss)
-		usedloss = burnhead
-	if(brutehead > usedloss)
-		usedloss = brutehead
-	if(burnch > usedloss)
-		usedloss = burnch
-	if(brutech > usedloss)
-		usedloss = brutech
-	inhand_overlay.alpha = 255 * usedloss
-
-	hands += inhand_overlay
-	H.overlays_standing[DAMAGE_LAYER] = hands
-	H.apply_overlay(DAMAGE_LAYER)
 	return TRUE
 
 /datum/species/dragon/random_name(gender,unique,lastname)

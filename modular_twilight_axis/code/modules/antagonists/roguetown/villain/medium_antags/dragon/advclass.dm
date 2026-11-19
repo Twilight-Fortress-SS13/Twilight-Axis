@@ -37,8 +37,9 @@
 		)
 	vice_restrictions = list(/datum/charflaw/hunted, /datum/charflaw/targeted)
 	job_subclasses = list(
-		/datum/advclass/dragon
+		/datum/advclass/dragon,
 	)
+	has_subprefs = FALSE // only one subclass
 
 /datum/job/roguetown/dragon/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	..()
@@ -55,14 +56,14 @@
 		H.set_blindness(0)
 		H.regenerate_icons()
 		H.AddSpell(new /obj/effect/proc_holder/spell/self/claws/dragon)
-		H.AddSpell(new /datum/action/cooldown/spell/message)
-		H.AddSpell(new /datum/action/cooldown/spell/telegraphed_strike/dragons_breath)
-		H.AddSpell(new /datum/action/cooldown/spell/projectile/fireball)
-		H.AddSpell(new /datum/action/cooldown/spell/fire_curtain)
-		H.AddSpell(new /datum/action/cooldown/spell/projectile/fireball/barrage)
-		H.AddSpell(new /datum/action/cooldown/spell/projectile/spitfire)
-		H.AddSpell(new /datum/action/cooldown/spell/ultio)
-		H.AddSpell(new /datum/action/cooldown/spell/projectile/smoke_burst)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/message)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/telegraphed_strike/dragons_breath)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/fireball)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/fire_curtain)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/fireball/barrage)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/spitfire)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/ultio)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/projectile/smoke_burst)
 		to_chat(H, span_boldwarning("As a dragon, you are a political entity in the duchy. \
 									You are not a mindless beast who chomps peasants and abducts cows. \
 									Bargain with the lesser races, strike deals with seekers of riches, \
@@ -89,8 +90,9 @@
 	outfit = /datum/outfit/job/roguetown/dragon
 	cmode_music = 'sound/music/combat_matthios.ogg'
 	category_tags = list(CTAG_DRAGON)
-	applies_post_equipment = FALSE
+	tempo_capable = TRUE
 	traits_applied = list()
+	reset_stats = TRUE
 	subclass_stats = list(
 		STATKEY_STR = 5,
 		STATKEY_CON = 5,
@@ -115,6 +117,7 @@
 /datum/outfit/job/roguetown/dragon/pre_equip(mob/living/carbon/human/H)
 	if(H.mind)
 		H.set_species(/datum/species/dragon)
+		H.regenerate_icons()
 		H.skin_armor = new /obj/item/clothing/suit/roguetown/armor/regenerating/skin/dragon_armor(H)
 		neck = /obj/item/storage/belt/rogue/pouch/healing
 		don_scales(H)
