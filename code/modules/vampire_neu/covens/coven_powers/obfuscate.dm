@@ -147,12 +147,12 @@
 	owner.mob_timers[MT_INVISIBILITY] = world.time + 360000
 	owner.alpha = 0
 
-	// Memory wipe effect - make nearby people forget they saw you
+	/* Memory wipe effect - make nearby people forget they saw you
 	for(var/mob/living/carbon/human/viewer in oviewers(7, owner))
 		if(viewer.client && viewer.stat < UNCONSCIOUS)
 			to_chat(viewer, span_hypnophrase("<span style='font-size: 200%; text-shadow: 0 0 8px #ffffff;'>Wait... wasn't someone just here? No, must be my imagination...</span>"))
 			to_chat(viewer, span_hypnophrase("<span style='font-size: 80%; text-shadow: 0 0 6px #ffffff;'>You forget that you saw [owner].</span>"))
-			// Could add more memory effects here like removing recent chat logs mentioning the user
+			Could add more memory effects here like removing recent chat logs mentioning the user */
 
 /datum/coven_power/obfuscate/vanish_from_the_minds_eye/deactivate()
 	. = ..()

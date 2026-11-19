@@ -12,6 +12,28 @@
 #define THREAT_REGION_TERRORBOG "Terrorbog"
 #define THREAT_REGION_UNDERDARK "Underdark"
 
+// Rockhill versions
+#define THREAT_REGION_ROCKHILL_BASIN "Rockhill Basin"
+#define THREAT_REGION_ROCKHILL_BOG_NORTH "Northern Terrorbog"
+#define THREAT_REGION_ROCKHILL_BOG_WEST "Western Terrorbog"
+#define THREAT_REGION_ROCKHILL_BOG_SOUTH "Southern Terrorbog"
+#define THREAT_REGION_ROCKHILL_BOG_SUNKMIRE "Terrorbog Sunken Mire"
+#define THREAT_REGION_ROCKHILL_WOODS_NORTH "Murderwood North"
+#define THREAT_REGION_ROCKHILL_WOODS_SOUTH "Murderwood South"
+#define THREAT_REGION_ROCKHILL_OUTER_GROVE "Rockhill Outer Grove"
+
+//Deserttown versions
+#define THREAT_REGION_DESERT_NEAR "Al-Ashur Dunes"
+#define THREAT_REGION_DESERT_DEEP "The Deep Dunes"
+#define THREAT_REGION_AL_ASHUR_OASIS "Al-Ashur Oasis"
+#define THREAT_REGION_AL_ASHUR_CARAVAN_ROAD "Al-Ashur Caravan Road"
+#define THREAT_REGION_AL_ASHUR_SPICE_DUNES "Spice Dunes"
+#define THREAT_REGION_AL_ASHUR_DEEP_DUNES "The Deep Dunes"
+#define THREAT_REGION_AL_ASHUR_SUNKEN_RUINS "Sunken Ashurian Ruins"
+#define THREAT_REGION_DESERTDARK "Desert Underdark"
+#define THREAT_REGION_DESERTDARK_DEEP "Deep Desert Underdark"
+
+
 #define LOWPOP_THRESHOLD 30 // When do we give highpop tick?
 
 /// Threat Point tiers for ambush mobs. Base unit: 10 = one wolf.

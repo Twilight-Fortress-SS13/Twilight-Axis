@@ -16,6 +16,8 @@ This allows the devs to draw whatever shape they want at the cost of it feeling 
 	var/mob/living/howner
 	var/atom/movable/iparent
 
+	var/special_armor_penetration = null // TA EDIT
+
 	/// The main place where we can draw out the pattern. Every tile entry is a list with two numbers.
 	/// The origin (0,0) is one step forward from the dir the owner is facing.
 	/// This is abstract, and can be modified, though it's best done before _create_grid().
@@ -30,6 +32,7 @@ This allows the devs to draw whatever shape they want at the cost of it feeling 
 
 	/// The list of turfs the grid will be drawn on and
 	var/list/affected_turfs
+	var/use_doafter = FALSE // TA EDIT
 
 	/// Whether our howner needs to be wielding the weapon. DO NOT USE THIS FOR ESOTERIC SPECIALS WITHOUT A MOB (TRAPS, ETC)
 	var/requires_wielding = FALSE
@@ -112,15 +115,25 @@ This allows the devs to draw whatever shape they want at the cost of it feeling 
 		to_chat(src, span_warning(pick("I use the ancient technique... of nearly falling over..", "I muster all of my strength... and forgot what I was doing..", "I trip and stumble while wildly flailing around..", "I focus... and... feel too hungry to do so..", "I... feel suddenly very... what is stupid..?", "I focus... but the concept slipped my mind..")))
 		return
 	face_atom(target)
-	var/obj/item/rogueweapon/W = get_active_held_item()
+	var/obj/item/W = get_active_held_item() // TA EDIT
 	var/datum/special_intent/active_special
 	var/skill_level = SKILL_LEVEL_NONE
-	if(istype(W) && W.special)
-		if(W.obj_broken)
-			to_chat(src, span_warning("The weapon is in no state to be used like this!"))
-			return
-		active_special = W.get_special()
-		skill_level = get_wskill(W)
+	if(istype(W, /obj/item/rogueweapon)) // TA EDIT
+		var/obj/item/rogueweapon/RW = W // TA EDIT
+		if(RW.special)
+			if(RW.obj_broken)
+				to_chat(src, span_warning("The weapon is in no state to be used like this!"))
+				return
+			active_special = RW.get_special() // TA EDIT
+			skill_level = get_wskill(RW) // TA EDIT
+	else if(istype(W, /obj/item/gun/ballistic/revolver/grenadelauncher/bow)) // TA EDIT
+		var/obj/item/gun/ballistic/revolver/grenadelauncher/bow/B = W // TA EDIT
+		if(B.special)
+			if(B.obj_broken)
+				to_chat(src, span_warning("The weapon is in no state to be used like this!"))
+				return
+			active_special = B.special // TA EDIT
+			skill_level = get_skill_level(/datum/skill/combat/bows) // TA EDIT
 	else if(!W)
 		active_special = unarmed_special
 		skill_level = get_skill_level(/datum/skill/combat/unarmed)
@@ -162,6 +175,8 @@ This allows the devs to draw whatever shape they want at the cost of it feeling 
 	if(!isliving(user) && !ismovableatom(parent))
 		CRASH("Special intent called with non-living parent AND non-movable atom source.")
 
+	if(user && (user.stat || !(user.mobility_flags & MOBILITY_STAND) || !(user.mobility_flags & MOBILITY_MOVE))) // TA EDIT
+		return FALSE
 	if(howner != user)
 		if(howner)
 			UnregisterSignal(howner, COMSIG_QDELETING)
@@ -183,6 +198,8 @@ This allows the devs to draw whatever shape they want at the cost of it feeling 
 /datum/special_intent/proc/process_attack()
 	SHOULD_CALL_PARENT(TRUE)
 
+	if(!_do_after()) // TA EDIT
+		return // TA EDIT
 	_add_log()
 	_reset()
 	affected_turfs = alist()
@@ -197,6 +214,13 @@ This allows the devs to draw whatever shape they want at the cost of it feeling 
 		howner.log_message(span_danger("Used the Special [name]."), LOG_ATTACK)
 	else
 		log_admin("[name] Special was deployed.")
+
+/datum/special_intent/proc/_do_after() // TA EDIT START
+	if(!use_doafter)
+		return TRUE
+	if(!howner || QDELETED(howner))
+		return FALSE
+	return do_after(howner, use_doafter, TRUE, howner, same_direction = TRUE) // TA EDIT END
 
 /// Checks if the range & z levels are valid, along with other reqs. Best handled by external sources just like the cost.
 /// Really only usable with use_clickloc, as otherwise the Special will be anchored to the source on the same plane anyway.
@@ -382,7 +406,10 @@ This allows the devs to draw whatever shape they want at the cost of it feeling 
 		var/obj/item/bodypart/affecting = HT.get_bodypart(zone)
 		if(!affecting)
 			affecting = HT.get_bodypart(BODY_ZONE_CHEST)//fallback for if we're targeting a missing limb
-		var/armor_block = HT.run_armor_check(zone, d_type, 0, damage = dam, used_weapon = W, armor_penetration = (no_pen ? PEN_NONE : 0))
+		var/armor_penetration = no_pen ? PEN_NONE : 0 // TA EDIT START
+		if(!isnull(special_armor_penetration))
+			armor_penetration = special_armor_penetration
+		var/armor_block = HT.run_armor_check(zone, d_type, 0, damage = dam, used_weapon = W, armor_penetration = armor_penetration) // TA EDIT END
 		if(full_pen)
 			armor_block = 0		//You block NOTHING, sir!
 		if(HT.apply_damage(dam, W.damtype, affecting, armor_block))
@@ -564,7 +591,7 @@ SPECIALS START HERE
 	tile_coordinates = list(list(0,0), list(0,1, 0.1 SECONDS), list(0,2, 0.2 SECONDS))
 	post_icon_state = "kick_fx"
 	respect_adjacency = TRUE
-	requires_wielding = TRUE
+//	requires_wielding = TRUE
 	delay = 0.7 SECONDS
 	cooldown = 25 SECONDS
 	stamcost = 25
@@ -761,6 +788,9 @@ SPECIALS START HERE
 
 /datum/special_intent/axe_swing/graggarite
 	requires_wielding = FALSE
+
+/datum/special_intent/axe_swing/graggarite/werewolf // TA EDIT
+	special_armor_penetration = PEN_MEDIUM // TA EDIT
 
 /datum/special_intent/hatchet_twirl
 	name = "Hefty Flourish"
@@ -982,7 +1012,7 @@ SPECIALS START HERE
 
 //apply_cost is called before anything else, so it works here for the toggle checks, but it's kind of a bad example -- don't do this.
 /datum/special_intent/limbguard/apply_cost(mob/living/L)
-	if(L.has_status_effect(/datum/status_effect/buff/clash) || L.toggle_timer > world.time)
+	if(L.has_status_effect(/datum/status_effect/buff/clash) || L.has_status_effect(/datum/status_effect/debuff/vulnerable) || L.toggle_timer > world.time)
 		return FALSE
 	var/datum/status_effect/buff/clash/limbguard/lg = L.has_status_effect(/datum/status_effect/buff/clash/limbguard)
 	if(lg)

@@ -97,9 +97,8 @@ GLOBAL_LIST_INIT(valid_fogbeast_colors, list("White" = COLOR_WHITE, "Gray" = COL
 	emote("aggro")
 	ai_controller?.force_aggro(user)
 
-/mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/tamed()
-	..()
-	ai_controller?.set_blackboard_key(BB_BASIC_MOB_TAMED, TRUE)
+/mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/tamed(mob/user) // TA EDIT
+	..(user) // TA EDIT
 	setup_mount()
 
 /mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/death()

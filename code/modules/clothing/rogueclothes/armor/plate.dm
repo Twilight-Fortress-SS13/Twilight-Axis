@@ -9,7 +9,7 @@
 	item_state = "halfplate"
 	armor = ARMOR_PLATE
 	nodismemsleeves = TRUE
-	max_integrity = ARMOR_INT_CHEST_PLATE_STEEL
+	max_integrity = ARMOR_INT_CHEST_PLATE_STEEL - 100
 	allowed_sex = list(MALE, FEMALE)
 	drop_sound = 'sound/foley/dropsound/armor_drop.ogg'
 	pickup_sound = 'sound/foley/equip/equip_armor_plate.ogg'
@@ -18,7 +18,7 @@
 	smeltresult = /obj/item/ingot/steel
 	equip_delay_self = 4 SECONDS
 	unequip_delay_self = 4 SECONDS
-	armor_class = ARMOR_CLASS_HEAVY
+	armor_class = ARMOR_CLASS_MEDIUM // TA EDIT - Half-plate ARMOR_CLASS_HEAVY -> ARMOR_CLASS_MEDIUM
 	smelt_bar_num = 3
 	chunkcolor = "#a9c1ca"
 	material_category = ARMOR_MAT_PLATE
@@ -38,6 +38,7 @@
 	item_state = "ihalfplate"
 	boobed = FALSE	//the armor just looks better with this, makes sense and is 8 sprites less
 	max_integrity = ARMOR_INT_CHEST_PLATE_IRON
+	armor_class = ARMOR_CLASS_MEDIUM  // TA EDIT - Half-plate ARMOR_CLASS_HEAVY -> ARMOR_CLASS_MEDIUM
 	smeltresult = /obj/item/ingot/iron
 
 /obj/item/clothing/suit/roguetown/armor/plate/iron/bikini
@@ -47,7 +48,7 @@
 	icon_state = "ihalfplatekini"
 	item_state = "ihalfplatekini"
 	max_integrity = ARMOR_INT_CHEST_MEDIUM_IRON
-	armor_class = ARMOR_CLASS_MEDIUM // This is a cuirass' durability
+	armor_class = ARMOR_CLASS_MEDIUM
 	smelt_bar_num = 2
 
 /obj/item/clothing/suit/roguetown/armor/plate/iron/banded
@@ -284,8 +285,9 @@
 	equip_delay_self = 6 SECONDS
 	unequip_delay_self = 6 SECONDS
 
-	max_integrity = ARMOR_INT_CHEST_PLATE_STEEL
+	//max_integrity = ARMOR_INT_CHEST_PLATE_STEEL TA Edit
 	body_parts_covered = CHEST | VITALS | LEGS // Less durability than proper plate, more expensive to manufacture, and accurate to the sprite.
+	armor_class = ARMOR_CLASS_MEDIUM // TA EDIT - Half-plate ARMOR_CLASS_HEAVY -> ARMOR_CLASS_MEDIUM
 
 // Heretic Graggar Plate
 /obj/item/clothing/suit/roguetown/armor/plate/fluted/graggar
@@ -890,10 +892,11 @@
 	icon_state = "silverhalfplate"
 	item_state = "silverhalfplate"
 	armor = ARMOR_PLATE
-	max_integrity = ARMOR_INT_CHEST_PLATE_STEEL
+	//max_integrity = ARMOR_INT_CHEST_PLATE_STEEL   //TA Edit
 	allowed_sex = list(MALE, FEMALE)
 	anvilrepair = /datum/skill/craft/armorsmithing
 	smeltresult = /obj/item/ingot/steel
+	armor_class = ARMOR_CLASS_MEDIUM // TA EDIT - Half-plate ARMOR_CLASS_HEAVY -> ARMOR_CLASS_MEDIUM
 	smelt_bar_num = 3
 
 //Coats of Plates

@@ -46,10 +46,22 @@
 			affectedjobs = list("Man at Arms", "Warden", "Watchman")
 		else if(owner.job == "Marshal")//He is the boss after all
 			affectedjobs = list("Knight", "Squire", "Sergeant", "Man at Arms", "Warden", "Watchman")
+		else if(owner.job == "Royal Guard Sergeant")
+			affectedjobs = list("Royal Guard")
+		else if((owner.job == "Knight") || (owner.job == "Royal Knight"))
+			affectedjobs = list("Knight", "Squire", "Royal Knight")
 		else if(owner.job == "Wretch")
 			affectedjobs = list("Brother")
-		else if(owner)
+		else if(owner.job == "Migrant")
 			affectedjobs = list("Heartfelt Retinue", "Migrant")
+		else if(owner.job == "Town Sheriff")
+			affectedjobs = list("Town Watch")
+		else if(owner.job == "Overseer")
+			affectedjobs = list("Vanguard")
+		else if(owner.job == "Janissary Sergeant")
+			affectedjobs = list("Janissary", "Janissary Footman", "Janissary Jezail", "Janissary Zephyr") // Desert Town
+		else if(owner.job == "Azeb Agha")
+			affectedjobs = list("Azeb") // Desert Town
 		else //failsafe in case someone somehow gets the spells without a role that uses them
 			to_chat(owner, span_alert("I don't have authority to order anyone!"))
 			return FALSE
@@ -183,9 +195,25 @@
 			if(!(target.job in list("Knight", "Squire", "Sergeant", "Man at Arms", "Warden", "Watchman")))
 				to_chat(owner, span_alert("I cannot order one not of my ranks!"))
 				return
+		if(owner.job == "Royal Guard Sergeant")
+			if(!(target.job in list("Royal Guard")))
+				to_chat(owner, span_alert("I cannot order one not of my ranks!"))
+				return
+		if((owner.job == "Knight") || (owner.job == "Royal Knight"))
+			if(!(target.job in list("Knight", "Squire", "Royal Knight")))
+				to_chat(owner, span_alert("I cannot order one not of my ranks!"))
+				return
 		if(owner.job == "Wretch")
 			if(!(target.job in list("Brother")))
 				to_chat(owner, span_alert("I cannot order one not of the brotherhood cause!"))
+				return
+		if(owner.job == "Town Sheriff")
+			if(!(target.job in list("Town Watch")))
+				to_chat(owner, span_alert("I cannot order one not of my ranks!"))
+				return
+		if(owner.job == "Overseer")
+			if(!(target.job in list("Vanguard")))
+				to_chat(owner, span_alert("I cannot order one not of my ranks!"))
 				return
 		if(target == owner)
 			to_chat(owner, span_alert("I cannot order myself!"))

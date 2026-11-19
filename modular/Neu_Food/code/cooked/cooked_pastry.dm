@@ -165,13 +165,13 @@
 /obj/item/reagent_containers/food/snacks/rogue/cookie/On_Consume(mob/living/eater)
 	..()
 	if(slices_num)
-		if(bitecount == 3)
+		if(bitecount == 3 && slices_num >= 5)
 			slices_num = 5
-		if(bitecount == 4)
+		if(bitecount == 4 && slices_num >= 4)
 			slices_num = 4
-		if(bitecount == 5)
+		if(bitecount == 5 && slices_num >= 3)
 			slices_num = 3
-		if(bitecount == 6)
+		if(bitecount == 6 && slices_num >= 2)
 			slices_num = 2
 		if(bitecount == 7)
 			changefood(slice_path, eater)
@@ -242,13 +242,13 @@
 /obj/item/reagent_containers/food/snacks/rogue/cookied/On_Consume(mob/living/eater)
 	..()
 	if(slices_num)
-		if(bitecount == 3)
+		if(bitecount == 3 && slices_num >= 5)
 			slices_num = 5
-		if(bitecount == 4)
+		if(bitecount == 4 && slices_num >= 4)
 			slices_num = 4
-		if(bitecount == 5)
+		if(bitecount == 5 && slices_num >= 3)
 			slices_num = 3
-		if(bitecount == 6)
+		if(bitecount == 6 && slices_num >= 2)
 			slices_num = 2
 		if(bitecount == 7)
 			changefood(slice_path, eater)
@@ -319,13 +319,13 @@
 /obj/item/reagent_containers/food/snacks/rogue/cookiec/On_Consume(mob/living/eater)
 	..()
 	if(slices_num)
-		if(bitecount == 3)
+		if(bitecount == 3 && slices_num >= 5)
 			slices_num = 5
-		if(bitecount == 4)
+		if(bitecount == 4 && slices_num >= 4)
 			slices_num = 4
-		if(bitecount == 5)
+		if(bitecount == 5 && slices_num >= 3)
 			slices_num = 3
-		if(bitecount == 6)
+		if(bitecount == 6 && slices_num >= 2)
 			slices_num = 2
 		if(bitecount == 7)
 			changefood(slice_path, eater)
@@ -396,13 +396,13 @@
 /obj/item/reagent_containers/food/snacks/rogue/cookier/On_Consume(mob/living/eater)
 	..()
 	if(slices_num)
-		if(bitecount == 3)
+		if(bitecount == 3 && slices_num >= 5)
 			slices_num = 5
-		if(bitecount == 4)
+		if(bitecount == 4 && slices_num >= 4)
 			slices_num = 4
-		if(bitecount == 5)
+		if(bitecount == 5 && slices_num >= 3)
 			slices_num = 3
-		if(bitecount == 6)
+		if(bitecount == 6 && slices_num >= 2)
 			slices_num = 2
 		if(bitecount == 7)
 			changefood(slice_path, eater)
@@ -534,13 +534,13 @@
 /obj/item/reagent_containers/food/snacks/rogue/pumpkinloaf/On_Consume(mob/living/eater)
 	..()
 	if(slices_num)
-		if(bitecount == 1)
+		if(bitecount == 1 && slices_num >= 5)
 			slices_num = 5
-		if(bitecount == 2)
+		if(bitecount == 2 && slices_num >= 4)
 			slices_num = 4
-		if(bitecount == 3)
+		if(bitecount == 3 && slices_num >= 3)
 			slices_num = 3
-		if(bitecount == 4)
+		if(bitecount == 4 && slices_num >= 2)
 			slices_num = 2
 		if(bitecount == 5)
 			changefood(slice_path, eater)
@@ -904,13 +904,13 @@
 /obj/item/reagent_containers/food/snacks/rogue/bookbread/On_Consume(mob/living/eater)
 	..()
 	if(slices_num)
-		if(bitecount == 3)
+		if(bitecount == 3 && slices_num >= 5)
 			slices_num = 5
-		if(bitecount == 4)
+		if(bitecount == 4 && slices_num >= 4)
 			slices_num = 4
-		if(bitecount == 5)
+		if(bitecount == 5 && slices_num >= 3)
 			slices_num = 3
-		if(bitecount == 6)
+		if(bitecount == 6 && slices_num >= 2)
 			slices_num = 2
 		if(bitecount == 7)
 			changefood(slice_path, eater)
@@ -993,13 +993,13 @@
 /obj/item/reagent_containers/food/snacks/rogue/pearbookbread/On_Consume(mob/living/eater)
 	..()
 	if(slices_num)
-		if(bitecount == 3)
+		if(bitecount == 3 && slices_num >= 5)
 			slices_num = 5
-		if(bitecount == 4)
+		if(bitecount == 4 && slices_num >= 4)
 			slices_num = 4
-		if(bitecount == 5)
+		if(bitecount == 5 && slices_num >= 3)
 			slices_num = 3
-		if(bitecount == 6)
+		if(bitecount == 6 && slices_num >= 2)
 			slices_num = 2
 		if(bitecount == 7)
 			changefood(slice_path, eater)
@@ -1050,13 +1050,13 @@
 /obj/item/reagent_containers/food/snacks/rogue/plumbookbread/On_Consume(mob/living/eater)
 	..()
 	if(slices_num)
-		if(bitecount == 3)
+		if(bitecount == 3 && slices_num >= 5)
 			slices_num = 5
-		if(bitecount == 4)
+		if(bitecount == 4 && slices_num >= 4)
 			slices_num = 4
-		if(bitecount == 5)
+		if(bitecount == 5 && slices_num >= 3)
 			slices_num = 3
-		if(bitecount == 6)
+		if(bitecount == 6 && slices_num >= 2)
 			slices_num = 2
 		if(bitecount == 7)
 			changefood(slice_path, eater)
@@ -1107,13 +1107,13 @@
 /obj/item/reagent_containers/food/snacks/rogue/lemonbookbread/On_Consume(mob/living/eater)
 	..()
 	if(slices_num)
-		if(bitecount == 3)
+		if(bitecount == 3 && slices_num >= 5)
 			slices_num = 5
-		if(bitecount == 4)
+		if(bitecount == 4 && slices_num >= 4)
 			slices_num = 4
-		if(bitecount == 5)
+		if(bitecount == 5 && slices_num >= 3)
 			slices_num = 3
-		if(bitecount == 6)
+		if(bitecount == 6 && slices_num >= 2)
 			slices_num = 2
 		if(bitecount == 7)
 			changefood(slice_path, eater)
@@ -1164,13 +1164,13 @@
 /obj/item/reagent_containers/food/snacks/rogue/tangerinebookbread/On_Consume(mob/living/eater)
 	..()
 	if(slices_num)
-		if(bitecount == 3)
+		if(bitecount == 3 && slices_num >= 5)
 			slices_num = 5
-		if(bitecount == 4)
+		if(bitecount == 4 && slices_num >= 4)
 			slices_num = 4
-		if(bitecount == 5)
+		if(bitecount == 5 && slices_num >= 3)
 			slices_num = 3
-		if(bitecount == 6)
+		if(bitecount == 6 && slices_num >= 2)
 			slices_num = 2
 		if(bitecount == 7)
 			changefood(slice_path, eater)
@@ -1221,13 +1221,13 @@
 /obj/item/reagent_containers/food/snacks/rogue/blackberrybookbread/On_Consume(mob/living/eater)
 	..()
 	if(slices_num)
-		if(bitecount == 3)
+		if(bitecount == 3 && slices_num >= 5)
 			slices_num = 5
-		if(bitecount == 4)
+		if(bitecount == 4 && slices_num >= 4)
 			slices_num = 4
-		if(bitecount == 5)
+		if(bitecount == 5 && slices_num >= 3)
 			slices_num = 3
-		if(bitecount == 6)
+		if(bitecount == 6 && slices_num >= 2)
 			slices_num = 2
 		if(bitecount == 7)
 			changefood(slice_path, eater)
@@ -1278,13 +1278,13 @@
 /obj/item/reagent_containers/food/snacks/rogue/raspberrybookbread/On_Consume(mob/living/eater)
 	..()
 	if(slices_num)
-		if(bitecount == 3)
+		if(bitecount == 3 && slices_num >= 5)
 			slices_num = 5
-		if(bitecount == 4)
+		if(bitecount == 4 && slices_num >= 4)
 			slices_num = 4
-		if(bitecount == 5)
+		if(bitecount == 5 && slices_num >= 3)
 			slices_num = 3
-		if(bitecount == 6)
+		if(bitecount == 6 && slices_num >= 2)
 			slices_num = 2
 		if(bitecount == 7)
 			changefood(slice_path, eater)
@@ -1335,13 +1335,13 @@
 /obj/item/reagent_containers/food/snacks/rogue/jackberrybookbread/On_Consume(mob/living/eater)
 	..()
 	if(slices_num)
-		if(bitecount == 3)
+		if(bitecount == 3 && slices_num >= 5)
 			slices_num = 5
-		if(bitecount == 4)
+		if(bitecount == 4 && slices_num >= 4)
 			slices_num = 4
-		if(bitecount == 5)
+		if(bitecount == 5 && slices_num >= 3)
 			slices_num = 3
-		if(bitecount == 6)
+		if(bitecount == 6 && slices_num >= 2)
 			slices_num = 2
 		if(bitecount == 7)
 			changefood(slice_path, eater)
@@ -1392,13 +1392,13 @@
 /obj/item/reagent_containers/food/snacks/rogue/poisonberrybookbread/On_Consume(mob/living/eater)
 	..()
 	if(slices_num)
-		if(bitecount == 3)
+		if(bitecount == 3 && slices_num >= 5)
 			slices_num = 5
-		if(bitecount == 4)
+		if(bitecount == 4 && slices_num >= 4)
 			slices_num = 4
-		if(bitecount == 5)
+		if(bitecount == 5 && slices_num >= 3)
 			slices_num = 3
-		if(bitecount == 6)
+		if(bitecount == 6 && slices_num >= 2)
 			slices_num = 2
 		if(bitecount == 7)
 			changefood(slice_path, eater)
@@ -1449,13 +1449,13 @@
 /obj/item/reagent_containers/food/snacks/rogue/chocolatebookbread/On_Consume(mob/living/eater)
 	..()
 	if(slices_num)
-		if(bitecount == 3)
+		if(bitecount == 3 && slices_num >= 5)
 			slices_num = 5
-		if(bitecount == 4)
+		if(bitecount == 4 && slices_num >= 4)
 			slices_num = 4
-		if(bitecount == 5)
+		if(bitecount == 5 && slices_num >= 3)
 			slices_num = 3
-		if(bitecount == 6)
+		if(bitecount == 6 && slices_num >= 2)
 			slices_num = 2
 		if(bitecount == 7)
 			changefood(slice_path, eater)

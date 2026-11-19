@@ -1,15 +1,15 @@
 /datum/decree/great_writ
 	id = DECREE_GREAT_WRIT
-	name = "The Great Writ of Azuria"
+	name = "Великий Декрет Азурии"
 	category = DECREE_CATEGORY_ANCIENT
-	mechanical_text = "Nobles pay no direct taxes nor fines."
-	flavor_text = {"This Great Writ of Azuria, pronounced under Astrata's Sun and with Ravox as witness, declareth that the nobility of this land, and the blue blood of foreign realms sojourning within it, being of lineage blessed by Astrata's grace, shall bear no tax nor levy upon their persons or estates, excepting where they bear arms for hire and not in duty, whereupon they shall pay shield-monee.
+	mechanical_text = "Дворяне освобождены от большинства прямых налогов и штрафов, кроме сборов с контрактов и доходов поместий."
+	flavor_text = {"Настоящий Великий Декрет Азурии, провозглашенный под Светом Астраты и при свидетельстве Равокса, провозглашает, что дворяне этой земли, а также представители знатных родов чужеземных царств, пребывающие на ней, будучи потомками родов, благословленных милостью Астраты, не будут облагаться прямыми налогами или сборами в отношении них самих и их владений, кроме сборов с наёмных контрактов и доходов поместий.
 
-In return, the nobles of Azuria shall undertake the duty of arms - to defend the Realm in their own person and with their retainers, to answer the Crown's call to war in whatsoever hour it cometh, and to render unto the throne the fealty that is owed by blood and by oath.
+Взамен дворяне Азурии обязуются нести военную службу — защищать Герцогство собственными силами и силами своих вассалов, откликаться на призыв Короны к войне в любой час, когда оный прозвучит, и хранить верность трону, как того требуют кровь и клятва.
 
-Yeven under the seal of the Crown, in witness of the Ten."}
-	revoke_text = "The %RULER% has set aside the Great Writ. The laws of Astrata shall apply to the nobility of Azuria, who shall pay taxes and fines as anyone else."
-	restore_text = "The %RULER% has renewed the Great Writ. The privileges of the nobles have been restored, and they shall no longer be subject to unjust taxes or fines."
+Заверено печатью Короны, милостью Астраты и Равокса."}
+	revoke_text = "Правитель сиих земель отменил Великий Декрет. Дворяне Азурии должны служить Короне как кровью, так и золотом — пусть ни один род не считает себя слишком благословенным, чтобы платить."
+	restore_text = "Правитель сиих земель возобновил Великий Декрет. Голубая кровь Азурии вновь освобождена от налога, дабы дворяне могли служить Королевству оружием, а не монетами."
 
 /datum/decree/great_writ/roll_initial_year()
 	return CALENDAR_EPOCH_YEAR - rand(100, 200)
@@ -17,7 +17,7 @@ Yeven under the seal of the Crown, in witness of the Ten."}
 /datum/decree/great_writ/apply_exemption(mob/living/payer, tax_category)
 	if(!active)
 		return FALSE
-	if(tax_category == TAX_CATEGORY_CONTRACT_LEVY)
+	if(tax_category == TAX_CATEGORY_CONTRACT_LEVY || tax_category == TAX_CATEGORY_ESTATE_LEVY) // TA EDIT
 		return FALSE
 	if(HAS_TRAIT(payer, TRAIT_NOBLE))
 		return TRUE

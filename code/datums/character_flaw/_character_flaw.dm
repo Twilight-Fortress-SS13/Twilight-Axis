@@ -14,7 +14,7 @@ GLOBAL_LIST_INIT(averse_factions, list(
 	"Burghers" = BURGHERS,
 	"Azurian Trading Company" = ATC,
 	"Retinue" = RETINUE,
-	"Garrison" = GARRISON,
+	"Garrison" = (GARRISON | VANGUARD | CITYWATCH),
 	"Churchmen" = CHURCHMEN,
 	"Peasants" = PEASANTS,
 	"Wanderers" = WANDERERS,
@@ -46,6 +46,7 @@ GLOBAL_LIST_INIT(averse_factions, list(
 		"desc" = desc,
 		"icon" = ui_fa_icon,
 		"needs_extra_vice" = needs_extra_vice,
+		"requirements_warning" = null, // TA EDIT
 		"restricted_species" = null
 	)
 

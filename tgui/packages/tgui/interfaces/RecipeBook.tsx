@@ -98,6 +98,7 @@ export type RecipeBookData = {
   recipe_entry_data?: RecipeEntryData | null;
   recipe_stat_card?: ItemStatCardData | null;
   initial_category?: string;
+  locked_book?: boolean;
 };
 
 export const RecipeBook = () => {
@@ -241,7 +242,7 @@ const BookPage = () => {
           selectedRecipe={data.current_recipe}
           onCategoryChange={setCategory}
           onSelectRecipe={(path) => act('view_recipe', { path })}
-          onBack={() => act('back_to_library')}
+          onBack={data.locked_book ? undefined : () => act('back_to_library')}
         />
       </Stack.Item>
       <Stack.Item grow basis={0}>

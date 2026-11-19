@@ -71,6 +71,8 @@ const getGodheadIcon = (patron: ConstantPatron) => {
       return '\u16BC';
     case 'Zizo':
       return '\u16E3';
+    case 'Baotha': //TA EDIT
+      return '\uD83D\uDD77';
     default:
       return '?';
   }
@@ -250,7 +252,7 @@ const RightPane = (props: {
               {godhead?.name || 'None'}
             </LabeledGridList.Item>
             <LabeledGridList.Item label="Likely Worshippers">
-              {faith.worshippers}
+              <Box dangerouslySetInnerHTML={{ __html: faith.worshippers }} />
             </LabeledGridList.Item>
             <LabeledGridList.Item>
               <Box dangerouslySetInnerHTML={{ __html: faith.desc }} />
@@ -294,7 +296,7 @@ const RightPane = (props: {
               {patron.domain}
             </LabeledGridList.Item>
             <LabeledGridList.Item label="Likely Worshippers">
-              {patron.worshippers}
+              <Box dangerouslySetInnerHTML={{ __html: patron.worshippers }} />
             </LabeledGridList.Item>
             <LabeledGridList.Item>
               <Box dangerouslySetInnerHTML={{ __html: patron.desc }} />
