@@ -18,7 +18,7 @@
 	body_parts_covered = FULL_BODY
 	body_parts_inherent = FULL_BODY
 	salvage_result = /obj/item/reagent_containers/lux
-	max_integrity = ARMOR_INT_CHEST_PLATE_BRIGANDINE + 200
+	max_integrity = ARMOR_INT_CHEST_PLATE_BRIGANDINE + 50
 	armor = ARMOR_BRIGANDINE
 	auto_repair_mode = TRUE
 	relative_repair_interval = 15 SECONDS

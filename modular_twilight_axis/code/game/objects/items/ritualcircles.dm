@@ -253,6 +253,9 @@
 				return FALSE
 			user.say("Baotha, fill my cup with endless mirth!")
 			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
+			var/is_heretic = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic || /datum/advclass/wretch/heretic/spy || /datum/advclass/gnoll/shaman)
+			if(is_heretic)
+				user.apply_status_effect(/datum/status_effect/debuff/armamentrites)
 			playsound(loc, 'sound/misc/evilevent.ogg', 100, FALSE, -1)
 			new /obj/item/clothing/ring/baotha (get_turf(src))
 			user.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_EXPERT, TRUE)

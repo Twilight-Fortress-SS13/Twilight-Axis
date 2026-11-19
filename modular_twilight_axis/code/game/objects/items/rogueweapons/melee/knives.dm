@@ -118,7 +118,7 @@
 		added_def = 2,\
 	)
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/baotha
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/poison
 	name = "snakes sting"
 	desc = "The blade is skillfully crafted and appears to be designed for stealthy assassinations. There are visible streaks of a bubbling substance on its blade."
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
@@ -130,20 +130,20 @@
 	var/last_cut = 0
 	var/last_drug = 0
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/get_examine_highlight_status()
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/poison/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_BAOTHA_WEAPON)
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/Initialize()
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/poison/Initialize()
 	. = ..()
 	icon_state = "baotha_knife1"
 	addtimer(CALLBACK(src, "icon_proc"), wait = (1 SECONDS))
 	AddComponent(/datum/component/cursed_item, TRAIT_CRACKHEAD, "KNIFE")
 	RegisterSignal(src, COMSIG_ITEM_ATTACK_EFFECT_SELF, PROC_REF(on_hit_effects))
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/proc/icon_proc()
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/poison/proc/icon_proc()
 	icon_state = "baotha_knife2"
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/attack_self(var/mob/living/carbon/human/user)
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/poison/attack_self(var/mob/living/carbon/human/user)
 	if(user.patron.type == /datum/patron/inhumen/baotha)
 		if(do_after(user, 10, target = src))
 			var/obj/item/clothing/ring/baotha/S = new/obj/item/clothing/ring/baotha(get_turf(src.loc))
@@ -155,7 +155,7 @@
 		else
 			to_chat(user, "<span class='notice'>I losing concentration!</span>")
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/proc/on_hit_effects(obj/item/source, mob/living/user, obj/item/bodypart/affecting, intent, mob/living/victim, selzone)
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/poison/proc/on_hit_effects(obj/item/source, mob/living/user, obj/item/bodypart/affecting, intent, mob/living/victim, selzone)
 	SIGNAL_HANDLER
 
 	if(!istype(victim, /mob/living/carbon))
