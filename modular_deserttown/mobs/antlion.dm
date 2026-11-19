@@ -72,6 +72,9 @@
 			add_overlay(saddlet)
 			saddlet = mutable_appearance(icon, "saddle")
 			add_overlay(saddlet)
+		if(has_buckled_mobs())
+			var/mutable_appearance/mounted = mutable_appearance(icon, "antlion_mounted", 4.3)
+			add_overlay(mounted)
 
 /mob/living/simple_animal/hostile/retaliate/rogue/antlion/tamed()
 	..()
@@ -118,13 +121,7 @@
 				if(step)
 					if(locate(/obj/structure/vine) in step || locate(/obj/structure/glowshroom) in step)
 						Move(step, get_dir(src, step))
-	if(stat != DEAD)
-		if(has_buckled_mobs())
-			icon_state = "antlion_mounted"
-			icon_living = "antlion_mounted"
-		else
-			icon_state = "antlion"
-			icon_living = "antlion"
+
 
 /mob/living/simple_animal/hostile/retaliate/rogue/antlion/simple_limb_hit(zone)
 	if(!zone)
