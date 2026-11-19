@@ -13,6 +13,8 @@
 		set_new_race(new /datum/species/human/northern)
 
 	character.age = age
+	character.birthday_month = birthday_month //TA EDIT
+	character.birthday_day = birthday_day //TA EDIT
 	character.dna.features = features.Copy()
 	character.gender = gender
 	character.set_species(chosen_species, icon_update = FALSE, pref_load = src)
@@ -77,9 +79,10 @@
 	character.nsfw_ooc_extra_img = nsfw_ooc_extra_img
 	character.nsfw_ooc_extra_img_link = nsfw_ooc_extra_img_link
 	character.erpprefs = erpprefs
-	// Rumours / Noble gossip
+	// Rumours / Noble gossip / Secrets
 	character.rumour = rumour
 	character.noble_gossip = noble_gossip
+	character.secrets = secrets?.Copy() // TA EDIT
 	// Copy the cached version
 	character.flavortext_cached = flavortext_cached
 	character.ooc_notes_cached = ooc_notes_cached

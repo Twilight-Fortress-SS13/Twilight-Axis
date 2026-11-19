@@ -53,6 +53,8 @@
 	var/lip_color = "white"
 
 	var/age = "Adult"		//Player's age
+	var/birthday_month = 0	//TA EDIT
+	var/birthday_day = 0	//TA EDIT
 
 	var/shavelevel = 0
 	var/breathe_tick = 0 // Used for gas mask delays.
@@ -135,6 +137,8 @@
 	var/ooc_extra_img_link
 	var/rumour = null
 	var/noble_gossip = null
+	var/list/secrets = list()
+	var/list/remembered_secret_targets = list()
 	var/song_title
 	var/song_artist
 	var/received_resident_key = FALSE

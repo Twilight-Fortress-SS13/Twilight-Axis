@@ -67,6 +67,57 @@
 			usr.client.cmd_admin_select_equipment(M)
 		return // TA EDIT END
 
+	if(href_list["secrets_panel"]) // TA EDIT START
+		if(!check_rights(R_ADMIN))
+			return
+
+		var/mob/living/carbon/human/H = locate(href_list["secrets_panel"])
+		if(!istype(H))
+			return
+
+		var/list/all_secrets = H.get_secrets_for(usr)
+		if(!length(all_secrets))
+			to_chat(usr, span_info("This one has no secrets recorded."))
+			return
+
+		var/static/list/secret_labels = list(
+			"assassin" = "Assassin (Targeted)",
+			"bandit" = "Bandit",
+			"dreamwalker" = "Dreamwalker (Marked)",
+			"gnoll" = "Gnoll (Hunted)",
+			"hag" = "Hag",
+			"lich" = "Lich",
+			"maniac" = "Maniac",
+			"peasant_rebel" = "Rebel",
+			"vampire" = "Vampire",
+			"werewolf" = "Werewolf",
+			"wretch" = "Wretch",
+		)
+
+		var/secret_recall_msg = "<b>You recall the secrets recorded about [H]...</b><br>"
+		var/has_secret = FALSE
+
+		for(var/secret_type in all_secrets)
+			var/secret = all_secrets[secret_type]
+			if(!secret)
+				continue
+			if(has_secret)
+				secret_recall_msg += "<br><br>"
+
+			var/secret_label = secret_labels[secret_type]
+			if(!secret_label)
+				secret_label = "[secret_type]"
+
+			var/parsed_secret = parsemarkdown_basic(html_encode(secret), hyperlink = TRUE)
+			secret_recall_msg += "<b>[secret_label]:</b><br>[parsed_secret]"
+			has_secret = TRUE
+
+		if(!has_secret)
+			to_chat(usr, span_info("This one has no secrets recorded."))
+			return
+		to_chat(usr, "<span class='info'>[secret_recall_msg]</span>")
+		return // TA EDIT END
+
 	// Heal panel actions
 	if(href_list["heal_target"])
 		var/mob/living/M = locate(href_list["heal_target"])
@@ -1483,7 +1534,7 @@
 							O = new path(target)
 
 						if(!QDELETED(O))
-							O.flags_1 |= ADMIN_SPAWNED_1
+							O.flags_1 |= ADMIN_SPAWNED_1 // TA EDIT
 							if(obj_dir)
 								O.setDir(obj_dir)
 							if(obj_quality_set && istype(O, /obj/item))

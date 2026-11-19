@@ -5,9 +5,11 @@
 //They should not exceed the capacity of wretches though, they're intended to be scarier in numbers but weaker than a solo wretch on average.
 //Also account for the fact they are neonites, they have 9RP to work with.
 
+/datum/advclass/vampguard
+	tempo_capable = TRUE
 
 //Jack of all trades fighter, gains expert in their chosen weapon pick
-/datum/advclass/vampguardsman
+/datum/advclass/vampguard/vampguardsman
 	name = "Vampiric Footsoldier"
 	tutorial = "You are a seasoned weapon specialist, clad in maille, with years of experience in warfare and battle under your belt, more than any mortal could ever claim."
 	allowed_sexes = list(MALE, FEMALE)
@@ -128,7 +130,7 @@
 		)
 
 // Ranger, minifort class. Also doubles as a knockoff assassin, a good tracker for people that run from your conversion horde.
-/datum/advclass/vampskirmisher
+/datum/advclass/vampguard/vampskirmisher
 	name = "Vampiric Skirmisher"
 	tutorial = "You are a professional soldier, light in footwork, yet with years of experience in warfare and archery, far more than most mortals could claim. Your lord's will be done."
 	allowed_sexes = list(MALE, FEMALE)
@@ -202,7 +204,7 @@
 				beltl = /obj/item/quiver/bolt/standard
 
 // Dodger melee class, excels in damage but also lacks the jack-of-all trades that is, guardsman and weaker tracking
-/datum/advclass/vampduelist
+/datum/advclass/vampguard/vampduelist
 	name = "Vampiric Duelist"
 	tutorial = "You are an professional swordsman and warrior who foregoes armor in exchange for a more nimble fighting style than most mortals could claim. Your lord's will be done."
 	outfit = /datum/outfit/job/roguetown/other/vampduelist
@@ -297,7 +299,7 @@
 		//						//
 
 // Puglist arson experiment class, replacement for adventurer bombardier. Still despite going all-in they actually perform worst as a puglist class when fighting themselves over just using bombs, this is intended.
-/datum/advclass/vampbomber
+/datum/advclass/vampguard/vampbomber
 	name = "Vampiric Fyre-Pugilist"
 	tutorial = "There has been nothing more enchanting in unlyfe than the dance of flames upon an inferno of your alchemical mixes and the taste of blood freshly beaten out of a victim with your bare hands. Now your master arises once more and your talents shall see use again. Your lord's will be done."
 	outfit = /datum/outfit/job/roguetown/other/vampbomber
@@ -351,7 +353,7 @@
 		)
 
 //A bunch of motherfuckin' draculas and they're all playin' flute. Buff-class lite duelist, doesn't perform as well as duelist in tradeoff for being able to buff up their teammates with music and perform vicious mockery.
-/datum/advclass/vampbard
+/datum/advclass/vampguard/vampbard
 	name = "Vampiric Bard"
 	tutorial = "Betwixt an occasional visit to a brothel, tavern or flophouse for your thirst for blood, you once told legends and myths of yils untold. One that someone could only dream of lyving, except you; yet now you've a prophecy to fulfil. Your lord's will be done."
 	outfit = /datum/outfit/job/roguetown/other/vampbard
@@ -363,6 +365,9 @@
 		STATKEY_WIL = 2,
 		//6 point statline, unchanged from adv save for +1 wil so they last longer in combat with music. Due to how strong bardic buffs can be in the hands of vampyres now they get numbers (I.E stam regen, health regen, etc) although they do still feel blue bar (excluding vlord) they have to retain being somewhat weak-ish
 	)
+
+	tempo_capable = FALSE
+
 	subclass_skills = list(
 		/datum/skill/combat/wrestling = SKILL_LEVEL_APPRENTICE, //Still not amazing, because you can buff up already pretty stacked classes.
 		/datum/skill/combat/unarmed = SKILL_LEVEL_APPRENTICE,
@@ -433,7 +438,7 @@
 
 // No-Armor mage, basically vampire magos for the lord. Specialises in faster casting, as a sort of step-in replacement for the grenzelhoftian seige mage. They may be buffed, nerfed or replaced depending how they perform.
 // Despite decent wards, stabbing them w/silver should make them fall over to pain pretty fast or straight dust them on the spot after a few critical sunders. Expect them to lose a fair bit of blue w/ reliance on wards + spam casting.
-/datum/advclass/vampseigemage
+/datum/advclass/vampguard/vampseigemage
 	name = "Vampiric Battlemage"
 	tutorial = "You were a magos of old, ever since the embrace you've never had more time to practice your persuit of arcayne magicks, let alone revel in your taste for blood; now your master arises once more and your arcayne research shall see fruition. Your lord's will be done."
 	outfit = /datum/outfit/job/roguetown/other/vampseigemage
@@ -448,6 +453,9 @@
 		// 8 point statline, mostly put into perception + int, they lack on their baseline speed being slightly higher unlike most mages on top of weaker martal talent
 		// Yeah vampire mages are pretty insanely strong with some clan potencies but rule of cool honestly.
 	)
+
+	tempo_capable = FALSE
+
 	subclass_skills = list(
 		/datum/skill/combat/staves = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/arcyne = SKILL_LEVEL_EXPERT,

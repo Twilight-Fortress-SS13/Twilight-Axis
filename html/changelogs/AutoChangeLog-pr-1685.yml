@@ -1,0 +1,4 @@
+author: "Nakname"
+delete-after: True
+changes:
+  - balance: "Для Strength Potion, Perception Potion, Intelligence Potion, Constitution Potion, Willpower Potion, Speed Potion убраны дебаффы к характеристикам, получая ещё одну единичку к значениям"

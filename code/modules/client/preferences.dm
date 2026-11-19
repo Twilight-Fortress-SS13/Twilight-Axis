@@ -69,6 +69,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/datum/quirk/quirklesser = new /datum/quirk/none
 	var/datum/quirk/quirkgreater = new /datum/quirk/none
 	var/age = AGE_ADULT						//age of character
+	var/birthday_month = 0					//TA EDIT
+	var/birthday_day = 0					//TA EDIT
 	var/skin_tone = "caucasian1"		//Skin color
 	var/vampire_skin = null
 	var/vampire_eyes = null
@@ -223,6 +225,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	var/noble_gossip
 	var/noble_gossip_cached
+
+	var/list/secrets = list()
 
 	var/list/img_gallery = list()
 	var/list/nsfw_img_gallery = list()

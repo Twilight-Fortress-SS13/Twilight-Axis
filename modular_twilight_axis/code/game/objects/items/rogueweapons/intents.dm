@@ -127,9 +127,8 @@
 
 /datum/intent
 	var/pen_guarded = null
-	var/pen_base = null
 
-/datum/intent/proc/is_target_guarded(mob/living/target)
+/datum/intent/proc/isTargetGuarded(mob/living/target)
 	if(target.has_status_effect(/datum/status_effect/debuff/breachcd))
 		return TRUE
 	if(target.has_status_effect(/datum/status_effect/buff/tempo_one))
@@ -140,16 +139,35 @@
 		return TRUE
 	return FALSE
 
-/datum/intent/proc/apply_breach_pen(mob/living/target)
-	if(isnull(pen_guarded) || !istype(target))
+/datum/intent/proc/getArmorPenetration(mob/living/target)
+	if(!isnull(pen_guarded) && istype(target) && isTargetGuarded(target))
+		return pen_guarded
+	return penfactor
+
+/datum/intent/proc/applyBreachGuard(mob/living/target)
+	if(!istype(target))
 		return
-	if(isnull(pen_base))
-		pen_base = penfactor
-	penfactor = is_target_guarded(target) ? pen_guarded : pen_base
 	if(!target.has_status_effect(/datum/status_effect/debuff/breachcd))
 		target.apply_status_effect(/datum/status_effect/debuff/breachcd)
-	addtimer(CALLBACK(src, PROC_REF(restore_penfactor)), 1)
 
-/datum/intent/proc/restore_penfactor()
-	if(!isnull(pen_base))
-		penfactor = pen_base
+/datum/intent/axe/chop/heavy
+	pen_guarded = PEN_MEDIUM
+
+/datum/intent/axe/chop/heavy/spec_on_apply_effect(
+	mob/living/target,
+	mob/living/user,
+	params,
+)
+	applyBreachGuard(target)
+	return ..()
+
+/datum/intent/sword/thrust/rapier/lunge
+	pen_guarded = PEN_MEDIUM
+
+/datum/intent/sword/thrust/rapier/lunge/spec_on_apply_effect(
+	mob/living/target,
+	mob/living/user,
+	params,
+)
+	applyBreachGuard(target)
+	return ..()

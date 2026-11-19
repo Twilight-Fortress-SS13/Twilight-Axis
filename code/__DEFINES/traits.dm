@@ -17,7 +17,7 @@
 #define TRAIT_DRUG_SUPPLY "Drug Supply"
 #define TRAIT_BOMBER_EXPERT "Explosives Specialist"
 #define TRAIT_SKILLBLESSED "Skill Blessed"
-#define TRAIT_JAILOR "Gnarly Jailor"
+//TA EDIT
 #define TRAIT_PARRYEXPERT "Parry Expert"// TA ADD - new ronin class
 #define TRAIT_MAGEARMOR "Magic Barrier"
 #define TRAIT_PHILOSOPHER_BOUND "Philosopher bound"
@@ -42,6 +42,7 @@
 #define TRAIT_FROZEN_STAMINA "Frozen Stamina"
 #define TRAIT_DEATHBARGAIN "Death Bargain" // Used by UNDERMAIDEN'S BARGAIN
 #define TRAIT_RITUALIST "Ritualist"	// Allows use of ritual chalk
+#define TRAIT_LESSER_RITUALIST "Lesser Ritualist" // Allows limited use of ritual chalk
 #define TRAIT_MARRIAGE_CAPABLE "Marriage Capable"
 #define TRAIT_OUTDOORSMAN "Outdoorsman"
 #define TRAIT_WATERSLEEP "Aquaphile" // outdoorsman but for water tiles. does NOT come with water breathing
@@ -129,6 +130,9 @@
 #define TRAIT_ROTMAN "Rotman" //No heartbeat + can invoke Zizo ascension/not regular ascensions - Also lets you eat brains
 #define TRAIT_PALLID "Pallid" //Drink the blood, bleeggh! // TA EDIT
 #define TRAIT_BLACKBLOOD "Blackblooded" //Passive healing at the price of hunger, blood is always SLIGHTLY cursed on inquis indexer checks // TA EDIT
+
+//Vice traits
+#define TRAIT_NO_AMBUSH "No Ambush" // You can't be ambushed, currently only used for forlorne vice.
 
 //Gear Restriction Related Traits
 #define TRAIT_ARMOUR_LIKED "Fitting Armour"
@@ -535,7 +539,8 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_WOODSMAN = span_info("I am vigilant in my duties. In the grove and coast, my abilities are sharper due to my routine and familiarity."), //TA_EDIT
 	TRAIT_ANTHRAXI = span_info("I am the deadliest being in the underdark. No beast or foe can ever hope to match me in the caves."),
 	TRAIT_DEATHBARGAIN = span_info("A horrible deal has been prepared in your name. May you never see it fulfilled..."),
-	TRAIT_RITUALIST = span_info("I am skilled in the holy arts. Using ritual chalk, I can more deftly channel my God's powers via runes."),
+	TRAIT_RITUALIST = span_info("I am skilled in the holy arts. Using a ritual chalk, I can more deftly channel my God's powers via runes."),
+	TRAIT_LESSER_RITUALIST = span_info("I am knowledgeable in the holy arts. Using a ritual chalk, I can channel one of my God's rites via runes."),
 	TRAIT_MARRIAGE_CAPABLE = span_info("By the favor of Eora or the authority of Astrata, I can perform the Eoran rite of marriage."),
 	TRAIT_INSPIRING_MUSICIAN = span_info("The flow of battle dances to my song!"),
 	TRAIT_INQUISITION = span_info("I serve the Holy Otavan Inquisition. From a passing glance, I can recognize all other adherents within the local sect."),
@@ -583,7 +588,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_FREEBLADE = span_info("I am unparalleled in my craft, a lifelong killer of Kingsmen and thief of renown. Matthios above has blessed me with unmatched skill to take as I need, and liberate as I must. Faith, Time, and Zeal have made me master of the blade, short or long, though I've a distaste for greatswords, and a love for the Longsword."),
 	TRAIT_HONORBOUND = span_info("The Tattoos of this Clan bind me to a lyfestyle of bare-skinned battle and swordsmanship. I refuse to wear armor that do not compliment my traditional garb and tattoos."),
 	TRAIT_NALEDI = span_info("I hail from the lands of Naledi. My blood and knowledge storied in yils of texts and techniques. My birthright is my pride."),
-	TRAIT_JAILOR = span_info("I am the ducal torturer and executioneer. Society looks down upon me and I will never be graced by loving touch of the Gods."),
+	//TA EDIT
 	TRAIT_SKILLBLESSED = span_greentext("I've reunited with an old friend of mine. All is well."),
 	TRAIT_LONGSWORDSMAN = span_info("\"I will crush anyone who opposes me. I am of royal blood. I dispense justice, advance the cause of good and destroy evil. To those who learn my crossings I will grant great fame and renown in the art of armed fighting.\" - I fight like a Master when I wield a traditional longsword and I know how to perform master strikes with them."),
 	TRAIT_SABRIST = span_info("I've learned all there is to know about the Southern curve. When using a szöréndnížine sabre, I fight like a Master. My swings are innately more accurate when targetting hands and arms."),
@@ -734,6 +739,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_DETACHED = span_info("Nothing could move me. Any emotion I show is a facade."),
 	TRAIT_AZURENATIVE = span_info("I've grown up and lived all my lyfe in these lands. I can only trigger ambushes if I sprint through them."),
 	TRAIT_BOGWALKER = span_info("The bog's blessing graces me. Kneestingers and leeches will not harm me, and I cannot trigger ambushes within the bog unless sprinting."),
+	TRAIT_NO_AMBUSH = span_info("I cannot be ambushed."),
 	TRAIT_NOPVE = span_info("I am a true force of nature. No critter or creechur would dare harm me, and I can exert enough influence to deflect the ire of simple-minded mortals as well."),
 	TRAIT_HARDSHELL = span_info("The bulk of this armor prevents me from parrying effectively, but I can still move out of the way."),
 	TRAIT_MATTHIOS_EYES = span_notice("I have a sense for what the most valuable item someone has is. I can also tell if someone is hoarding mammons, and with blessed gilded spectacles, I can even see how much they have in their bank."),
@@ -1091,6 +1097,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define CRIT_TRAIT "crit"
 #define ROUNDSTART_TRAIT "roundstart" //cannot be removed without admin intervention
 #define JOB_TRAIT "job"
+/// Bad trainer given by being taken as a veteran's protégé
+#define PROTEGE_TRAIT "protege"
 #define ADMIN_TRAIT "admin" // (B)admins only.
 #define CULT_TRAIT "cult"
 #define CURSED_ITEM_TRAIT "cursed-item" // The item is magically cursed

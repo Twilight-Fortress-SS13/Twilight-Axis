@@ -1198,7 +1198,6 @@
 	color = "#bb9696"
 	smeltresult = /obj/item/ingot/aaslag
 	anvilrepair = null
-	randomize_blade_int_on_init = TRUE
 
 /obj/item/rogueweapon/sword/short/pashortsword
 	name = "ancient shortsword"
@@ -1278,7 +1277,6 @@
 	color = "#bb9696"
 	smeltresult = /obj/item/ingot/aaslag
 	anvilrepair = null
-	randomize_blade_int_on_init = TRUE
 
 /obj/item/rogueweapon/sword/short/gladius/pagladius
 	name = "ancient gladius"
@@ -1574,7 +1572,6 @@
 	color = "#bb9696"
 	smeltresult = /obj/item/ingot/aaslag
 	anvilrepair = null
-	randomize_blade_int_on_init = TRUE
 
 /obj/item/rogueweapon/sword/sabre/palloy
 	name = "ancient khopesh"

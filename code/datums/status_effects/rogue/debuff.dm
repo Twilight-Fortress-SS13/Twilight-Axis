@@ -917,15 +917,7 @@
 	name = "Lost Hood"
 	desc = "The sacred hood is lost. I feel frail and sapped without it."
 
-/datum/status_effect/debuff/lost_dungeoneer_hood
-	id = "dungeoneerhood"
-	alert_type = /atom/movable/screen/alert/status_effect/debuff/dungeoneer_hood
-	effectedstats = list(STATKEY_STR = -3, STATKEY_LCK = -3)
-
-/atom/movable/screen/alert/status_effect/debuff/dungeoneer_hood
-	name = "Gnarly Visage"
-	desc = "I am a repulsive freek looked down upon by everyone else. I'd do best to hide my visage once more."
-	icon_state = "muscles"
+//TA EDIT
 
 ///////////////////////
 /// CLIMBING STUFF ///
@@ -965,10 +957,7 @@
 	if(!istype(tile_under_climber, /turf/open/transparent/openspace) || random_shit_under_climber.len)
 		climber.remove_status_effect(/datum/status_effect/debuff/climbing_lfwb)
 		return
-	if((istype(climber.backr, /obj/item/clothing/climbing_gear)) || (istype(climber.backl, /obj/item/clothing/climbing_gear)))
-		stamcost_final = stamcost / 2
-	else
-		stamcost_final = stamcost
+	stamcost_final = stamcost
 	climber.stamina_add(stamcost_final) // every tick interval this much stamina is deducted
 	if(climber.stamina >= climber.max_stamina) // if we run out of green bar stamina, we fall
 		to_chat(climber, span_dead("I can't hold onto the ledge for any longer!"))
