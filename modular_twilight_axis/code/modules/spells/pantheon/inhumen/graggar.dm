@@ -4,7 +4,7 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/graggarmiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/graggarmiracles.dmi'
 	overlay_state = "stomp"
-	glow_color = GLOW_COLOR_GRAGGAR
+	glow_color = PATRON_COLOR_GRAGGAR
 	glow_intensity = GLOW_INTENSITY_LOW
 	xp_gain = TRUE
 	releasedrain = 30
@@ -101,7 +101,7 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/graggarmiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/graggarmiracles.dmi'
 	overlay_state = "call"
-	glow_color = GLOW_COLOR_GRAGGAR
+	glow_color = PATRON_COLOR_GRAGGAR
 	glow_intensity = GLOW_INTENSITY_LOW
 	miracle = TRUE
 	devotion_cost = 40
@@ -171,7 +171,7 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/graggarmiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/graggarmiracles.dmi'
 	overlay_state = "regenerate"
-	glow_color = GLOW_COLOR_GRAGGAR
+	glow_color = PATRON_COLOR_GRAGGAR
 	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 10
 	chargedrain = 0
@@ -245,7 +245,7 @@
 			if(last_water + 10 SECONDS <= world.time)
 				last_water = world.time
 				if(skill >= 3)
-					user.reagents.add_reagent(/datum/reagent/water, 3*skill) 
+					user.reagents.add_reagent(/datum/reagent/water, 3*skill)
 			for(var/i in 1 to 3)
 				var/obj/effect/temp_visual/heal/H = new /obj/effect/temp_visual/heal_blood(get_turf(owner))
 				H.color = "#bc0909"

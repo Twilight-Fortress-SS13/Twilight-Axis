@@ -45,6 +45,40 @@
 	for(var/datum/calendar_event/event in get_calendar_events_for_month(view_month))
 		events_in_view += list(event.to_ui_list())
 
+	// TA EDIT START
+	if(user.mind)
+		for(var/person_name in user.mind.known_people)
+			var/list/person_info = user.mind.known_people[person_name]
+			if(!islist(person_info))
+				continue
+			var/fbmonth = person_info["FBMONTH"]
+			var/fbday = person_info["FBDAY"]
+			if(fbmonth == view_month && fbday)
+				events_in_view += list(list(
+					"id" = "bday_[person_name]",
+					"calendar_system" = CALENDAR_SYSTEM_AZURIAN,
+					"month" = fbmonth,
+					"day" = fbday,
+					"duration_days" = 1,
+					"title" = "[person_name]'s Birthday",
+					"desc" = "",
+					"color_tag" = "#a34d7c",
+				))
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		if(H.birthday_month == view_month && H.birthday_day)
+			events_in_view += list(list(
+				"id" = "bday_own",
+				"calendar_system" = CALENDAR_SYSTEM_AZURIAN,
+				"month" = H.birthday_month,
+				"day" = H.birthday_day,
+				"duration_days" = 1,
+				"title" = "Your Birthday",
+				"desc" = "",
+				"color_tag" = "#a34d7c",
+			))
+	// TA EDIT END
+
 	return list(
 		"today_day" = today_day,
 		"today_month" = today_month,

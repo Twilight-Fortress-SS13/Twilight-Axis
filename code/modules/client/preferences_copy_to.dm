@@ -1,16 +1,11 @@
 /datum/preferences/proc/copy_to(mob/living/carbon/human/character, icon_updates = 1, roundstart_checks = TRUE, character_setup = FALSE, antagonist = FALSE)
-	// Bandaid to undo no arm flaw prosthesis
-	if(LAZYLEN(charflaws))
-		var/obj/item/bodypart/O = character.get_bodypart(BODY_ZONE_R_ARM)
-		if(O)
+	// Bandaid to undo no arm flaw prosthesis. One arm at a time so worn gloves always keep a hand.
+	for(var/zone in list(BODY_ZONE_R_ARM, BODY_ZONE_L_ARM))
+		var/obj/item/bodypart/O = character.get_bodypart(zone)
+		if(istype(O, /obj/item/bodypart/r_arm/prosthetic/woodright) || istype(O, /obj/item/bodypart/l_arm/prosthetic/woodleft))
 			O.drop_limb()
 			qdel(O)
-		O = character.get_bodypart(BODY_ZONE_L_ARM)
-		if(O)
-			O.drop_limb()
-			qdel(O)
-		character.regenerate_limb(BODY_ZONE_R_ARM)
-		character.regenerate_limb(BODY_ZONE_L_ARM)
+			character.regenerate_limb(zone)
 	var/datum/species/chosen_species
 	chosen_species = pref_species.type
 	if(!(pref_species.name in GLOB.roundstart_races))
@@ -18,9 +13,14 @@
 		set_new_race(new /datum/species/human/northern)
 
 	character.age = age
+	character.birthday_month = birthday_month //TA EDIT
+	character.birthday_day = birthday_day //TA EDIT
 	character.dna.features = features.Copy()
 	character.gender = gender
 	character.set_species(chosen_species, icon_update = FALSE, pref_load = src)
+	var/datum/component/ooze_color_shift/color_shift = character.GetComponent(/datum/component/ooze_color_shift)
+	if(color_shift)
+		color_shift.apply_preferences(src)
 	character.dna.update_body_size()
 	var/obj/item/organ/breasts/breast_organ = character.getorganslot(ORGAN_SLOT_BREASTS)
 	if(breast_organ)
@@ -33,7 +33,8 @@
 				real_name += " [pick(GLOB.last_names)]"
 			else if(firstspace == name_length)
 				real_name += "[pick(GLOB.last_names)]"
-	if(real_name in GLOB.chosen_names)
+
+	if(real_name != character.real_name && (real_name in GLOB.chosen_names))
 		character.real_name = pref_species.random_name(gender)
 	else
 		character.real_name = real_name
@@ -75,14 +76,16 @@
 
 	character.statpack = statpack
 	character.flavortext = flavortext
+	character.pen_name = pen_name
 	character.ooc_notes = ooc_notes
 	character.nsfwflavortext = nsfwflavortext
 	character.nsfw_ooc_extra_img = nsfw_ooc_extra_img
 	character.nsfw_ooc_extra_img_link = nsfw_ooc_extra_img_link
 	character.erpprefs = erpprefs
-	// Rumours / Noble gossip
+	// Rumours / Noble gossip / Secrets
 	character.rumour = rumour
 	character.noble_gossip = noble_gossip
+	character.secrets = secrets?.Copy() // TA EDIT
 	// Copy the cached version
 	character.flavortext_cached = flavortext_cached
 	character.ooc_notes_cached = ooc_notes_cached

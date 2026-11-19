@@ -10,6 +10,9 @@
 	var/list/magic_profile = list()
 	var/list/_cached_active_virtues = null
 	var/_cached_active_virtues_key = null
+	var/datum/preferences/_cached_active_virtues_preferences = null
+	var/datum/virtue/_cached_active_virtue_primary = null
+	var/datum/virtue/_cached_active_virtue_secondary = null
 	var/_cached_preference_loadout_key = null
 	var/_cached_owner_patron_type = null
 	var/list/_cached_ui_data = null
@@ -149,6 +152,7 @@
 		return null
 
 	var/list/parts = list()
+	parts += "second_virtue_enabled=[!!P.statpack?.virtuous]"
 	var/list/virtues = list(P.virtue, P.virtuetwo)
 	for(var/virtue_entry in virtues)
 		var/datum/virtue/virtue = virtue_entry
@@ -193,8 +197,8 @@
 	owner_preferences = P
 
 	if(preferences_changed || virtues_changed || patron_changed)
-		_cached_active_virtues = null
-		_cached_active_virtues_key = null
+		invalidate_active_virtues_cache()
+		_cached_active_virtues_key = new_virtues_key
 		_cached_owner_patron_type = new_patron_type
 		skills?.sanitize(FALSE)
 		traits?.sanitize()
@@ -212,24 +216,23 @@
 	return TRUE
 
 /datum/tat_build/proc/get_active_virtues()
-	var/cache_key = get_active_virtues_cache_key(owner_preferences)
-	if(islist(_cached_active_virtues) && _cached_active_virtues_key == cache_key)
+	var/datum/preferences/P = owner_preferences
+	var/datum/virtue/primary_virtue = P?.virtue
+	var/datum/virtue/secondary_virtue = P?.statpack?.virtuous ? P.virtuetwo : null
+	if(islist(_cached_active_virtues) && _cached_active_virtues_preferences == P && _cached_active_virtue_primary == primary_virtue && _cached_active_virtue_secondary == secondary_virtue)
 		return _cached_active_virtues
+
 	var/list/result = list()
-	if(!owner_preferences)
-		_cached_active_virtues = result
-		_cached_active_virtues_key = cache_key
-		return result
+	if(primary_virtue && !istype(primary_virtue, /datum/virtue/none))
+		result += primary_virtue
 
-	if(owner_preferences.virtue && !istype(owner_preferences.virtue, /datum/virtue/none))
-		result += owner_preferences.virtue
+	if(secondary_virtue && !istype(secondary_virtue, /datum/virtue/none) && !(secondary_virtue in result))
+		result += secondary_virtue
 
-	if(owner_preferences.virtuetwo && !istype(owner_preferences.virtuetwo, /datum/virtue/none))
-		if(!(owner_preferences.virtuetwo in result))
-			result += owner_preferences.virtuetwo
-
+	_cached_active_virtues_preferences = P
+	_cached_active_virtue_primary = primary_virtue
+	_cached_active_virtue_secondary = secondary_virtue
 	_cached_active_virtues = result
-	_cached_active_virtues_key = cache_key
 	return result
 
 /datum/tat_build/proc/suppresses_arcyne_potential()
@@ -259,6 +262,9 @@
 /datum/tat_build/proc/invalidate_active_virtues_cache()
 	_cached_active_virtues = null
 	_cached_active_virtues_key = null
+	_cached_active_virtues_preferences = null
+	_cached_active_virtue_primary = null
+	_cached_active_virtue_secondary = null
 
 /datum/tat_build/proc/get_magic_value(key, default_value = null)
 	if(!istext(key) || !length(key))

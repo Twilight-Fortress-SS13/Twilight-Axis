@@ -36,6 +36,9 @@
 	outfit = /datum/outfit/job/roguetown/jester/basic
 	category_tags = list(CTAG_JESTER)
 
+	tempo_capable = TRUE
+
+
 /datum/outfit/job/roguetown/jester/basic/pre_equip(mob/living/carbon/human/H)
 	..()
 	shoes = /obj/item/clothing/shoes/roguetown/jester
@@ -50,7 +53,7 @@
 	H.adjust_skillrank(/datum/skill/combat/knives, SKILL_LEVEL_JOURNEYMAN, TRUE)
 	H.adjust_skillrank(/datum/skill/misc/reading, SKILL_LEVEL_EXPERT, TRUE)
 	H.adjust_skillrank(/datum/skill/misc/sneaking, SKILL_LEVEL_EXPERT, TRUE)
-	H.adjust_skillrank(/datum/skill/misc/stealing, SKILL_LEVEL_MASTER, TRUE)
+	H.adjust_skillrank(/datum/skill/misc/stealing, SKILL_LEVEL_MASTER, TRUE) // TA EDIT
 	H.adjust_skillrank(/datum/skill/misc/climbing, SKILL_LEVEL_EXPERT, TRUE)
 	H.adjust_skillrank(/datum/skill/misc/music, rand(SKILL_LEVEL_EXPERT, SKILL_LEVEL_LEGENDARY), TRUE)
 	H.adjust_skillrank(/datum/skill/misc/lockpicking, SKILL_LEVEL_APPRENTICE, TRUE)

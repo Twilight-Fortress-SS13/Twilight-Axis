@@ -9,7 +9,7 @@
 	item_state = "halfplate"
 	armor = ARMOR_PLATE
 	nodismemsleeves = TRUE
-	max_integrity = ARMOR_INT_CHEST_PLATE_STEEL
+	max_integrity = ARMOR_INT_CHEST_PLATE_STEEL - 100
 	allowed_sex = list(MALE, FEMALE)
 	drop_sound = 'sound/foley/dropsound/armor_drop.ogg'
 	pickup_sound = 'sound/foley/equip/equip_armor_plate.ogg'
@@ -285,7 +285,7 @@
 	equip_delay_self = 6 SECONDS
 	unequip_delay_self = 6 SECONDS
 
-	max_integrity = ARMOR_INT_CHEST_PLATE_STEEL
+	//max_integrity = ARMOR_INT_CHEST_PLATE_STEEL TA Edit
 	body_parts_covered = CHEST | VITALS | LEGS // Less durability than proper plate, more expensive to manufacture, and accurate to the sprite.
 	armor_class = ARMOR_CLASS_MEDIUM // TA EDIT - Half-plate ARMOR_CLASS_HEAVY -> ARMOR_CLASS_MEDIUM
 
@@ -341,18 +341,19 @@
 	battle."
 	icon_state = "ornatehalfplate"
 	smeltresult = /obj/item/ingot/silverblessed
-	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET // Less durability than proper plate, more expensive to manufacture, and accurate to the sprite.
+	body_parts_covered = CHEST | VITALS | ARMS
 
-	max_integrity = ARMOR_INT_CHEST_PLATE_PSYDON
+	max_integrity = ARMOR_INT_CHEST_PLATE_PSYDON + 50
 
 /obj/item/clothing/suit/roguetown/armor/plate/fluted/ornate/ComponentInitialize()
+	. = ..()
 	AddComponent(/datum/component/armour_filtering/positive, TRAIT_PSYDONIAN_GRIT, "ornate_plate")
 
 /obj/item/clothing/suit/roguetown/armor/plate/fluted/ornate/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("With more blessed silver and an armorsmith's hammer, this armor can be further upgraded.")
 	. += span_info("If a character has the 'Maille Training' trait and has Psydon as their selected patron, they can comfortably wear Psydonic plate armor without suffering any downsides.")
-	. += span_hypnophrase("'..the thrumming of madness, to think that your suffering was all-for-naught to Adonai's sacrificial lamb..'")
+	. += span_hypnophrase("'..the thrumming of madness, to think that your suffering was all-for-naught to be His sacrificial lamb..'")
 
 // HEAVY
 /obj/item/clothing/suit/roguetown/armor/plate/full
@@ -368,6 +369,12 @@
 	strip_delay = STRIP_DELAY_ARMOR
 	armor_class = ARMOR_CLASS_HEAVY
 	smelt_bar_num = 4
+
+/obj/item/clothing/suit/roguetown/armor/plate/full/ComponentInitialize()
+	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_PLATE_FULL_STEP, 12)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FREEBLADEDEXTERITY)
 
 /obj/item/clothing/suit/roguetown/armor/plate/full/iron
 	name = "iron plate armor"
@@ -447,7 +454,7 @@
 	icon_state = "ornateplate"
 	smeltresult = /obj/item/ingot/silverblessed
 
-	max_integrity = ARMOR_INT_CHEST_PLATE_PSYDON
+	max_integrity = ARMOR_INT_CHEST_PLATE_PSYDON + 50
 
 	/// Whether the user has the Heavy Armour Trait prior to donning.
 	var/traited = FALSE
@@ -891,7 +898,7 @@
 	icon_state = "silverhalfplate"
 	item_state = "silverhalfplate"
 	armor = ARMOR_PLATE
-	max_integrity = ARMOR_INT_CHEST_PLATE_STEEL
+	//max_integrity = ARMOR_INT_CHEST_PLATE_STEEL   //TA Edit
 	allowed_sex = list(MALE, FEMALE)
 	anvilrepair = /datum/skill/craft/armorsmithing
 	smeltresult = /obj/item/ingot/steel
@@ -1076,7 +1083,7 @@
 	equip_delay_self = 8 SECONDS
 	armor_class = ARMOR_CLASS_HEAVY
 	armor = ARMOR_PLATE
-	max_integrity = ARMOR_INT_CHEST_PLATE_PSYDON
+	max_integrity = ARMOR_INT_CHEST_PLATE_PSYDON + 50
 	is_silver = TRUE
 	is_lesser_silver = TRUE
 

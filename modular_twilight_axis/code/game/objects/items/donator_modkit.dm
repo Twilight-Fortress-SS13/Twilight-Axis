@@ -1,3 +1,11 @@
+/obj/item/enchantingkit/rosy/rosecollar
+	name = "'Rosestone Clasped Collar' morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. It can be used to alter the appearance of an Amulet of Eora."
+	target_items = list(
+		/obj/item/clothing/neck/roguetown/psicross/eora
+	)
+	result_item = /obj/item/clothing/neck/roguetown/psicross/eora/rosecollar
+
 /obj/item/enchantingkit/kumie_boots
 	name = "'Aristocratic boots' morphing elixer'"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Heavy Leather Boots"
@@ -508,3 +516,19 @@
 
 /obj/item/enchantingkit/triumph_armorkini_iron
 	icon_loadout = /obj/item/clothing/suit/roguetown/armor/plate/full/iron/corslet
+
+/obj/item/enchantingkit/morto_staff
+	name = "'Frozen Vow' morphing elixir"
+	target_items = list(
+		/obj/item/rogueweapon/woodstaff/implement/grand/magos		=	/obj/item/rogueweapon/woodstaff/implement/grand/magos/morto,
+		/obj/item/rogueweapon/woodstaff/implement/					=	/obj/item/rogueweapon/woodstaff/implement/morto
+	)
+	result_item = null
+	icon_loadout = /obj/item/rogueweapon/woodstaff/implement/grand/magos/morto
+
+/obj/item/enchantingkit/morto_crown
+	name = "'Sun Crown' morphing elixir"
+	target_items = list(
+		/obj/item/clothing/head/roguetown/crown/serpcrown
+	)
+	result_item = /obj/item/clothing/head/roguetown/crown/serpcrown/mortosuncrown

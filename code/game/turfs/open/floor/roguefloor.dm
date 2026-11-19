@@ -2,9 +2,7 @@
 	desc = ""
 	canSmoothWith = null
 	smooth = SMOOTH_FALSE
-	// roguesmooth() only ever reads cardinal adjacency bits, so this skips calculate_adjacencies()
-	// computing 4 unused diagonal ones - inherited by the whole grass/dirt/snow/cobble family.
-	smooth_diag = FALSE
+	// TA EDIT - Corner smoothing needs diagonals; cardinal-only floor types opt out below.
 	var/smooth_icon = null
 	var/prettifyturf = FALSE
 	icon = 'icons/turf/roguefloor.dmi'
@@ -249,6 +247,7 @@
 
 
 /turf/open/floor/rogue/AzureSand
+	smooth_diag = FALSE
 	name = "sand"
 	desc = "Warm sand that, sadly, has been mixed with dirt."
 	icon_state = "grimshart"
@@ -271,6 +270,7 @@
 	roguesmooth(adjacencies)
 
 /turf/open/floor/rogue/snow
+	smooth_diag = FALSE
 	name = "snow"
 	desc = "A gentle blanket of snow."
 	icon_state = "snow"
@@ -318,6 +318,7 @@
 		START_PROCESSING(SSwaterlevel, src)
 
 /turf/open/floor/rogue/snowrough
+	smooth_diag = FALSE
 	name = "rough snow"
 	desc = "A rugged blanket of snow."
 	icon_state = "snowrough"
@@ -342,6 +343,7 @@
 	roguesmooth(adjacencies)
 
 /turf/open/floor/rogue/snowpatchy
+	smooth_diag = FALSE
 	name = "patchy snow"
 	desc = "Half-melted snow revealing the hardy grass underneath."
 	icon_state = "snowpatchy_grass"
@@ -362,6 +364,7 @@
 	roguesmooth(adjacencies)
 
 /turf/open/floor/rogue/grasscold
+	smooth_diag = FALSE
 	name = "tundra grass"
 	desc = "Grass, frigid and touched by winter."
 	icon_state = "grass_cold"
@@ -399,6 +402,7 @@
 	snowy = TRUE
 
 /turf/open/floor/rogue/grassred
+	smooth_diag = FALSE
 	name = "red grass"
 	desc = "Grass, ripe with Dendor's blood."
 	icon_state = "grass_red"
@@ -435,6 +439,7 @@
 	snowy = TRUE
 
 /turf/open/floor/rogue/grassyel
+	smooth_diag = FALSE
 	name = "yellow grass"
 	desc = "Grass, blessed by Astrata's light."
 	icon_state = "grass_yel"
@@ -470,6 +475,7 @@
 	snowy = TRUE
 
 /turf/open/floor/rogue/grass
+	smooth_diag = FALSE
 	name = "grass"
 	desc = "Grass, sodden with mud and bogwater."
 	icon_state = "grass"
@@ -536,6 +542,7 @@
 	spread_chance = 8
 
 /turf/open/floor/rogue/dirt
+	smooth_diag = FALSE
 	name = "dirt"
 	desc = "The dirt is pocked with the scars of countless wars."
 	icon_state = "dirt"
@@ -567,20 +574,15 @@
 
 /turf/open/floor/rogue/dirt/get_slowdown(mob/user)
 	. = ..()
-	var/negate_slowdown = FALSE
-
-	for(var/obj/item/stick in user.held_items)  // TA EDIT START
-		if(stick.walking_stick && !stick.wielded && !user.cmode) // 
-			negate_slowdown = TRUE //
-			break // TA EDIT FIN
-
-	if((isliving(user))&&(user?.movement_type == FLYING))
-		negate_slowdown = TRUE
-	if(HAS_TRAIT(user, TRAIT_LONGSTRIDER))
-		negate_slowdown = TRUE
-
-	if(negate_slowdown)
-		. -= 1 // TA EDIT 2 —> 1 (since slowdown numbers were changed)
+	var/negate_slowdown = FALSE // TA EDIT
+	for(var/obj/item/stick in user.held_items) // TA EDIT
+		if(stick.walking_stick && !stick.wielded && !user.cmode) // TA EDIT
+			negate_slowdown = TRUE // TA EDIT
+			break // TA EDIT
+	if((user.movement_type & FLYING) || HAS_TRAIT(user, TRAIT_LONGSTRIDER)) // TA EDIT
+		negate_slowdown = TRUE // TA EDIT
+	if(negate_slowdown) // TA EDIT
+		. -= 1 // TA EDIT
 	return max(., 0)
 
 
@@ -1010,6 +1012,7 @@
 	icon_state = "glyph6"
 
 /turf/open/floor/rogue/hexstone
+	smooth_diag = FALSE
 	icon_state = "hexstone"
 	footstep = FOOTSTEP_STONE
 	barefootstep = FOOTSTEP_HARD_BAREFOOT
@@ -1045,6 +1048,7 @@
 //Church floors
 
 /turf/open/floor/rogue/churchmarble
+	smooth_diag = FALSE
 	icon_state = "church_marble"
 	name = "marble flooring"
 	desc = "Polished marble tiling clacks softly with every footstep. A prized material for vaunted halls."
@@ -1080,6 +1084,7 @@
 	dir = pick(GLOB.cardinals)
 
 /turf/open/floor/rogue/church
+	smooth_diag = FALSE
 	icon_state = "church"
 	name = "polished tile floor"
 	desc = "Glazed tiling that has withstood the decades with barely a scratch despite the steady accumulation of dirt and grime."
@@ -1115,6 +1120,7 @@
 	dir = pick(GLOB.cardinals)
 
 /turf/open/floor/rogue/churchbrick
+	smooth_diag = FALSE
 	icon_state = "church_brick"
 	footstep = FOOTSTEP_STONE
 	barefootstep = FOOTSTEP_HARD_BAREFOOT
@@ -1148,6 +1154,7 @@
 	dir = pick(GLOB.cardinals)
 
 /turf/open/floor/rogue/churchrough
+	smooth_diag = FALSE
 	icon_state = "church_rough"
 	footstep = FOOTSTEP_STONE
 	barefootstep = FOOTSTEP_HARD_BAREFOOT
@@ -1181,6 +1188,7 @@
 	dir = pick(GLOB.cardinals)
 //
 /turf/open/floor/rogue/herringbone
+	smooth_diag = FALSE
 	icon_state = "herringbone"
 	name = "stone herringbone flooring"
 	desc = "These stone bricks have been carefully arranged in a rather pleasing pattern."
@@ -1265,6 +1273,7 @@
 	icon_state = "herringbonewood2"
 
 /turf/open/floor/rogue/cobble
+	smooth_diag = FALSE
 	icon_state = "cobblestone1"
 	name = "cobblestone"
 	desc = "Stone bricks carefully inlaid upon the ground for a more refined and resilient path."
@@ -1391,6 +1400,7 @@
 	bake_to_loc = TRUE
 
 /turf/open/floor/rogue/cobblerock
+	smooth_diag = FALSE
 	icon_state = "cobblerock"
 	name = "cobbled rock path"
 	desc = "A crude path of lumpy rocks that allows feet and cart wheels alike to escape the treacherous mud."
@@ -1731,6 +1741,7 @@
 	dir = pick(GLOB.cardinals)
 
 /turf/open/floor/rogue/naturalstone
+	smooth_diag = FALSE
 	name = "rough stone ground"
 	desc = "Rough stone that's been exposed to the air either through erosion or the swing of a pickaxe. A few patchy lichens eke out a living between the cracks."
 	icon_state = "digstone"
@@ -1748,6 +1759,7 @@
 	roguesmooth(adjacencies)
 
 /turf/open/floor/rogue/dark_ice
+	smooth_diag = FALSE
 	name = "black ice"
 	desc = "A deep black rock glazed over with unnaturally cold ice."
 	icon_state = "blackice"
@@ -1808,6 +1820,7 @@
 // bogice), water_level 3 freezes thin (darkice / dark brownice). Darker and more saturated
 // means more water underneath, means it can give way.
 /turf/open/floor/rogue/frozen_water
+	smooth_diag = FALSE
 	name = "ice"
 	desc = "The shallows have frozen over, milky and clouded with trapped air."
 	icon_state = "ice"
@@ -1865,8 +1878,8 @@
 
 // Chopping or picking a hole in the ice puts the water back for the rest of the round -
 // SSseason only re-freezes on a season change, so a hole you cut stays a hole. This is what
-// keeps the fisher employed in winter: getfishingloot()'s freshwater list wants a real
-// /turf/open/water underfoot, and the thaw-through leaves exactly the subtype that was there.
+// keeps the fisher employed in winter: a fishing spot needs a real /turf/open/water
+// underfoot, and the thaw-through leaves exactly the subtype that was there.
 //
 // (axe/chop, sword/chop, dagger/chop/cleaver, etc), not just axes.
 /turf/open/floor/rogue/frozen_water/attackby(obj/item/C, mob/user, params)
@@ -1917,7 +1930,7 @@
 			possible_turfs += T
 		if(!length(possible_turfs))
 			return
-		H.forceMove(pick(possible_turfs))
+		step_towards(H, pick(possible_turfs))
 		to_chat(H, span_warning("I slip on [src]!"))
 
 /turf/open/floor/rogue/frozen_water/deep

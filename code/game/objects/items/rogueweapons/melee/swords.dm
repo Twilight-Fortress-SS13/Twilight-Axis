@@ -372,14 +372,14 @@
 			if("onbelt") return list("shrink" = 0.4, "sx" = -4, "sy" = -6, "nx" = 5, "ny" = -6, "wx" = 0, "wy" = -6, "ex" = -1, "ey" = -6, "nturn" = 100, "sturn" = 156, "wturn" = 90, "eturn" = 180, "nflip" = 0, "sflip" = 0, "wflip" = 0, "eflip" = 0, "northabove" = 0, "southabove" = 1, "eastabove" = 1, "westabove" = 0)
 			if("altgrip") return list("shrink" = 0.6,"sx" = 2,"sy" = 3,"nx" = -7,"ny" = 1,"wx" = -8,"wy" = 0,"ex" = 8,"ey" = -1,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = -135,"sturn" = -35,"wturn" = 45,"eturn" = 145,"nflip" = 8,"sflip" = 8,"wflip" = 1,"eflip" = 0)
 
-/obj/item/rogueweapon/sword/long/palloy //no decrepit version, this is a recent artifice found only on unbounds.
+/obj/item/rogueweapon/sword/long/palloy //no decrepit version, this is a recent artifice found only on unbounds/lich spellblades.
 	name = "ancient longsword"
 	desc = "A lethal and perfectly balanced weapon. An artificed recreation of the traditional blades of this era created with \
 	reborn purpose; this blade of polished Gilbranze stands as a reborn testament of Progress against the rot that would claim the old, \
 	it menaces with a slightly-more durable and defensive design over that of traditional steel longswords."
 	icon_state = "ancientlongsword"
-	sheathe_icon = "longsword" //FOR NOW, UNTIL THE REFACTOR IS IN// YELL AT ME, SHADOWS OF ERAS PAST IN THE DISC IF MY DUMBASS FORGOT TO ADD ONE POST-REFACTOR MERGE AND YOUR CODEBASE /IS/ AZURE PEAK
-	max_integrity = 130 //uniquely, slightly more durable as its a unique-weapon for unbound DK.
+	sheathe_icon = "ancientlongsword"
+	max_integrity = 130 //uniquely, slightly more durable as its a unique-weapon for unbound DK + Ancient/Lich Spellblades
 	force = 25
 	force_wielded = 28
 	wdefense_wbonus = 5 //Uniquely, higher defense + lower force slightly, its a side-grade under decablade's unique aspect of durability-alone for a mixture of more durable, less force and more defense.
@@ -1086,6 +1086,7 @@
 	max_integrity = 350
 	max_blade_int = 400
 	awakens = FALSE
+	gripped_intents = list(/datum/intent/sword/cut/zwei, /datum/intent/sword/chop/heavy, /datum/intent/sword/thrust/long/deep, /datum/intent/sword/thrust/estoc) // TA EDIT
 
 /obj/item/rogueweapon/sword/long/broadsword/silver/psy/forgotten/relic/ComponentInitialize()
 	AddComponent(\
@@ -1197,7 +1198,6 @@
 	color = "#bb9696"
 	smeltresult = /obj/item/ingot/aaslag
 	anvilrepair = null
-	randomize_blade_int_on_init = TRUE
 
 /obj/item/rogueweapon/sword/short/pashortsword
 	name = "ancient shortsword"
@@ -1277,7 +1277,6 @@
 	color = "#bb9696"
 	smeltresult = /obj/item/ingot/aaslag
 	anvilrepair = null
-	randomize_blade_int_on_init = TRUE
 
 /obj/item/rogueweapon/sword/short/gladius/pagladius
 	name = "ancient gladius"
@@ -1573,7 +1572,6 @@
 	color = "#bb9696"
 	smeltresult = /obj/item/ingot/aaslag
 	anvilrepair = null
-	randomize_blade_int_on_init = TRUE
 
 /obj/item/rogueweapon/sword/sabre/palloy
 	name = "ancient khopesh"

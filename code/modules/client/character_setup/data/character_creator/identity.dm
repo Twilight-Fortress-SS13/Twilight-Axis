@@ -6,8 +6,10 @@
 		"race_bonus" = null,
 
 		"nickname" = nickname,
+		"pen_name" = pen_name,
 		"highlight_color" = highlight_color,
 		"age" = age,
+		"birthday" = format_birthday(birthday_month, birthday_day) || "Not set", // TA EDIT
 
 		"pronouns" = pronouns,
 		"titles_pref" = titles_pref,
@@ -157,10 +159,7 @@
 		if(!statpack.virtuous)
 			return "This virtue slot will only be used with virtuous stat packs."
 
-	var/heretic = FALSE
-	if(istype(selected_patron, /datum/patron/inhumen))
-		heretic = TRUE
-	if(!virtue_check(V, heretic, pref_species))
+	if(!virtue_check(V, pref_species))
 		return "Incorrect virtue parameters."
 
 	return null

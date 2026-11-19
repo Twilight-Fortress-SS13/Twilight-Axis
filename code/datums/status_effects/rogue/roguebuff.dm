@@ -33,7 +33,7 @@
 	duration = 5 MINUTES
 
 /datum/status_effect/buff/drunk/on_creation(mob/living/new_owner)
-	new_owner.sate_addiction(/datum/charflaw/addiction/alcoholic)
+//TA EDIT
 	if(HAS_TRAIT(new_owner, TRAIT_NOHUNGER))
 		return FALSE
 	. = ..()
@@ -705,8 +705,7 @@
 /datum/status_effect/buff/campfire_stamina/tick()
 	if(HAS_TRAIT(owner, TRAIT_NOREGEN) || HAS_TRAIT(owner, TRAIT_IRONMAN))
 		return
-	owner.adjust_bodytemperature(8)
-	if(owner.in_combat_until > world.time)
+	if(owner.is_in_combat())
 		return
 	owner.energy_add(healing_on_tick * 2)
 
@@ -721,7 +720,7 @@
 	duration = 6 SECONDS
 
 /datum/status_effect/buff/campfire/tick()
-	if(owner.in_combat_until > world.time)
+	if(owner.is_in_combat())
 		return
 	if(HAS_TRAIT(owner, TRAIT_NOHEAL) || HAS_TRAIT(owner, TRAIT_IRONMAN))
 		return
@@ -735,7 +734,7 @@
 		owner.blood_volume = min(owner.blood_volume+healing_on_tick, BLOOD_VOLUME_OKAY)
 	var/list/wCount = owner.get_wounds()
 	if(length(wCount))
-		owner.heal_wounds(wound_heal, list(/datum/wound/slash, /datum/wound/puncture, /datum/wound/bite, /datum/wound/bruise, /datum/wound/dynamic, /datum/wound/dislocation))
+		owner.heal_wounds(wound_heal, list(/datum/wound/slash, /datum/wound/puncture, /datum/wound/bite, /datum/wound/bruise, /datum/wound/dynamic, /datum/wound/dislocation), excluded_types = list(/datum/wound/slash/incision))
 		owner.update_damage_overlays()
 	owner.adjustBruteLoss(-healing_on_tick, 0)
 	owner.adjustFireLoss(-healing_on_tick, 0)
@@ -871,21 +870,20 @@
 /datum/status_effect/buff/psyhealing/tick()
 	if(HAS_TRAIT(owner, TRAIT_NOHEAL) || HAS_TRAIT(owner, TRAIT_IRONMAN))
 		return
+	var/heal = healing_on_tick
 	if(HAS_TRAIT(owner, TRAIT_HALFHEAL))
-		healing_on_tick /= 2
+		heal /= 2
 	var/obj/effect/temp_visual/heal/H = new /obj/effect/temp_visual/psyheal_rogue(get_turf(owner))
 	H.color = "#d3d3d3"
+	owner.adjustOxyLoss(-heal * 2.25, 0)
 	var/list/wCount = owner.get_wounds()
-	if(wCount.len > 0)
-		owner.heal_wounds(healing_on_tick * 2.25)
-		for(var/datum/wound/wound as anything in wCount)
-			if(wound.woundpain)
-				wound.woundpain = max(0, wound.woundpain - healing_on_tick)
-		owner.update_damage_overlays()
-	owner.adjustOxyLoss(-healing_on_tick * 2.25, 0)
-	owner.adjustToxLoss(-healing_on_tick, 0)
-	owner.adjustOrganLoss(ORGAN_SLOT_BRAIN, -healing_on_tick)
-	owner.adjustCloneLoss(-healing_on_tick, 0)
+	if(!wCount.len)
+		return
+	for(var/datum/wound/wound as anything in wCount)
+		if(wound.woundpain)
+			wound.woundpain = max(0, wound.woundpain - heal)
+	owner.heal_wounds(heal * 2.25, maxsev = WOUND_SEVERITY_MODERATE)
+	owner.update_damage_overlays()
 
 /datum/status_effect/buff/psyvived
 	id = "psyvived"
@@ -1629,7 +1627,7 @@
 	guard_disrupted()
 
 /datum/status_effect/buff/clash/proc/guard_swaphands()
-	guard_disrupted()
+	guard_disrupted_swaphand() // TA EDIT - ORIGINAL: guard_disrupted()
 
 /datum/status_effect/buff/clash/proc/apply_cooldown()
 	var/newcd = BASE_RCLICK_CD - owner.get_tempo_bonus(TEMPO_TAG_RCLICK_CD_BONUS)
@@ -1642,6 +1640,14 @@
 	if(ishuman(owner))
 		var/mob/living/carbon/human/H = owner
 		H.bad_guard("My focus was disrupted!")
+
+// TA ADDITION START
+/datum/status_effect/buff/clash/proc/guard_disrupted_swaphand()
+	if(ishuman(owner))
+		var/mob/living/carbon/human/H = owner
+		H.bad_guard("My focus was disrupted!", FALSE, 26)
+
+// TA ADDITION END
 
 //We tried to cheese it. Generally reserved for egregious things, like attacking / casting while its active.
 /datum/status_effect/buff/clash/proc/guard_disrupted_cheesy()
@@ -2028,7 +2034,7 @@
 
 /atom/movable/screen/alert/status_effect/buff/adrenaline_rush/psydon
 	name = "Endure"
-	desc = "I suffer in His light; my bleeding comes to a still."
+	desc = "I suffer in His light; my pain dulls and my bleeding slows."
 	icon_state = "adrrush"
 
 /datum/status_effect/buff/adrenaline_rush
@@ -2041,10 +2047,13 @@
 	var/adrenaline_stam = TRUE
 	var/blood_restore = 30
 	var/calmer_rush = FALSE
+	///Grants TRAIT_ADRENALINE_RUSH, which halts all bleeding and halves wound pain
+	var/rushtrait = TRUE
 
 /datum/status_effect/buff/adrenaline_rush/on_apply()
 	. = ..()
-	ADD_TRAIT(owner, TRAIT_ADRENALINE_RUSH, INNATE_TRAIT)
+	if(rushtrait)
+		ADD_TRAIT(owner, TRAIT_ADRENALINE_RUSH, INNATE_TRAIT)
 	var/mob/living/carbon/human/human = owner
 	if(istype(human))
 		if(!calmer_rush)
@@ -2084,6 +2093,7 @@
 	blood_restore = 0
 	adrenaline_stam = FALSE
 	calmer_rush = TRUE // stops the badumpbadump sound effect, given ENDURE already has its own.
+	rushtrait = FALSE
 	effectedstats = list(STATKEY_WIL = 3) // on pair with graggar, but WIL
 
 /datum/status_effect/buff/nocblessing

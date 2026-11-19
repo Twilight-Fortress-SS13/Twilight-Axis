@@ -160,6 +160,7 @@
 		SScity_assembly.notify_alderman_lost_ref(departing_name, departing_job, "disconnected")
 	QDEL_NULL(physiology)
 	QDEL_NULL(sunder_light_obj)
+	QDEL_NULL(devotion)
 	GLOB.human_list -= src
 	if(current_fellowship)
 		current_fellowship.remove_member(src, reason = FELLOWSHIP_REASON_DESTROYED)
@@ -1052,8 +1053,15 @@
 	if(flavortext_cached)
 		// this might be a bad idea. i dont know.
 		flavortext_cached = target.flavortext_cached
+	if(target.rumour)
+		rumour = target.rumour
+	if(target.rumour_cached)
+		rumour_cached = target.rumour_cached
+	if(noble_gossip)
+		noble_gossip = target.noble_gossip
+	if(noble_gossip_cached)
+		noble_gossip_cached = target.noble_gossip_cached
 	copy_descriptors(target)
-
 	var/obj/item/bodypart/head/target_head = target.get_bodypart(BODY_ZONE_HEAD)
 	if(!isnull(target_head))
 		var/obj/item/bodypart/head/user_head = get_bodypart(BODY_ZONE_HEAD)
@@ -1199,10 +1207,6 @@
 	voice_color = client.prefs.voice_color
 	voice_pitch = client.prefs.voice_pitch
 	voice_type = client.prefs.voice_type
-	set_bark(client.prefs.bark_id)
-	vocal_speed = client.prefs.bark_speed
-	vocal_pitch = client.prefs.bark_pitch
-	vocal_pitch_range = client.prefs.bark_variance
 	apply_voicepacks(src, client)
 	return TRUE*/
 

@@ -45,6 +45,9 @@
 	/// Subclass languages.
 	var/list/subclass_languages
 
+	/// Subclass spells. Granted to the mind on equip.
+	var/list/subclass_spells
+
 	/// Subclass virtues.
 	var/list/subclass_virtues
 
@@ -72,7 +75,7 @@
 
 	var/class_tempo_faction = null
 
-	var/tempo_capable = TRUE
+	var/tempo_capable = FALSE
 
 /datum/advclass/New()
 	if(ispath(age_mod) && !istype(age_mod))
@@ -105,16 +108,8 @@
 
 	H.advjob = name
 
-	var/turf/TU = get_turf(H)
-	if(TU)
-		if(horse)
-			var/mob/horse_mob = new horse(TU)
-			if(istype(horse_mob, /mob/living/simple_animal/hostile/retaliate/rogue))
-				var/mob/living/simple_animal/hostile/retaliate/rogue/rogue_animal = horse_mob
-				rogue_animal.assign_livestock_owner(H) // TA EDIT
-
 	for(var/trait in traits_applied)
-		ADD_TRAIT(H, trait, ADVENTURER_TRAIT)
+		ADD_TRAIT(H, trait, JOB_TRAIT)
 
 	if(noble_income)
 		var/already_has_income = !isnull(SStreasury.noble_incomes[H])
@@ -127,6 +122,10 @@
 	if(length(subclass_languages))
 		for(var/lang in subclass_languages)
 			H.grant_language(lang)
+
+	if(length(subclass_spells) && H.mind)
+		for(var/spell in subclass_spells)
+			H.mind.AddSpell(new spell)
 
 	if(reset_stats)
 		H.reset_stats()
@@ -163,6 +162,13 @@
 
 	if(applies_post_equipment)
 		apply_character_post_equipment(H)
+	if(horse)
+		var/turf/TU = get_turf(H)
+		if(TU)
+			var/mob/horse_mob = new horse(TU)
+			if(istype(horse_mob, /mob/living/simple_animal/hostile/retaliate/rogue))
+				var/mob/living/simple_animal/hostile/retaliate/rogue/rogue_animal = horse_mob
+				rogue_animal.assign_livestock_owner(H) // TA EDIT
 	H.set_advsetup(FALSE)
 	H.mind?.refresh_spell_buttons()
 //======== Massive shitcode, that works at least.
