@@ -638,3 +638,8 @@
 	soundenv = 5
 	town_waters = TRUE
 	converted_type = /area/rogue/outdoors/exposed/under/sewer
+
+/area/rogue/outdoors/desert/wretch_lair
+	warden_area = FALSE
+	ambush_mobs = null
+	threat_region = ""
