@@ -253,6 +253,7 @@ export type IdentityData = {
   pen_name: string | null; // null indicates unset
   highlight_color: Color;
   age: string;
+  birthday: string; // TA EDIT
 
   pronouns: string;
   titles_pref: string;
