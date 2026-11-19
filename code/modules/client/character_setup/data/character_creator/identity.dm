@@ -9,6 +9,7 @@
 		"pen_name" = pen_name,
 		"highlight_color" = highlight_color,
 		"age" = age,
+		"birthday" = format_birthday(birthday_month, birthday_day) || "Not set", // TA EDIT
 
 		"pronouns" = pronouns,
 		"titles_pref" = titles_pref,

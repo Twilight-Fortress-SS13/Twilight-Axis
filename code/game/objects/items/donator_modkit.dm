@@ -242,6 +242,12 @@
 		new_item.name = "[initial(new_item.name)] <font size = 1>([old_name])</font>"
 	else
 		new_item.name = initial(new_item.name)
+	if(I.polished == 4) // TA EDIT START
+		new_item.apply_full_polish()
+	else
+		new_item.polished = I.polished
+	if(I.has_item_quality)
+		new_item.item_quality = I.item_quality // TA EDIT END
 	qdel(I)
 
 	if(!user.put_in_hands(new_item))
@@ -889,8 +895,7 @@
 	name = "'Etruscan Design Cloak' morphing elixir"
 	desc = "A small container of special morphing dust, perfect to make a specifc item. Required: Poncho"
 	target_items = list(/obj/item/clothing/cloak/poncho)
-	result_item = /obj/item/clothing/cloak/poncho/dittocloak
-	icon_loadout = /obj/item/clothing/cloak/poncho // TA EDIT END
+	result_item = /obj/item/clothing/cloak/poncho/dittocloak // TA EDIT END
 
 /obj/item/enchantingkit/strudel4
 	name = "'Form-Fitting Padded Gambeson' morphing elixir"

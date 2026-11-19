@@ -39,12 +39,15 @@
 	/// Icon for sheathing. Only null for weapons that are unsheathable.
 	var/sheathe_icon = null
 
+	/// Optional .dmi with this weapon's sheathed sprites. Null = use the scabbard's own .dmi.
+	var/sheathe = null // TA EDIT
+
 	var/datum/special_intent/special
 	var/list/special_picks
 
 	var/malumblessed_w = FALSE
 
-	// whether this is actually a tool, like hoes and hammers, not a weapon proper. used to allow TRAIT_TINYPAWS users to conduct repairs and such
+	// whether this is actually a tool, like hoes and hammers, not a weapon proper. used to allow TRAIT_WEAPONLESS users to conduct repairs and such
 	var/is_tool = FALSE
 	/// sigh
 	var/hoe_damage = null //the durability damage received for every work cycle

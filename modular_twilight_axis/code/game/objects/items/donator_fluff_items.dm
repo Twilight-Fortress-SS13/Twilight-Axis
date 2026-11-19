@@ -300,6 +300,25 @@
 //Etruscan design cloak resprite
 
 /obj/item/clothing/cloak/poncho/dittocloak
+	name = "etruscan design cloak"
+	desc = "A overly fancy and nicely designed Cloak with what appears to be Etruscan silks. Looks expensive."
+	detail_tag = "_detail"
+	altdetail_tag = "_detailalt"
+	adjustable = CAN_CADJUST
+	alternate_worn_layer = 9.9 // okay look this is weird but its to cover hair :)
+	color = CLOTHING_WHITE
+	detail_color = CLOTHING_WHITE
+	altdetail_color = CLOTHING_WHITE
+	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes.dmi'
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/donor_sleeves_armor.dmi'
+	icon_state = "dittocloak"
+	item_state = "dittocloak"
+	sleevetype = "dittocloak"
+	nodismemsleeves = TRUE
+	flags_inv = HIDEBOOB
+
+/obj/item/clothing/cloak/poncho/dittocloak
 	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes.dmi'
 	sleeved = 'modular_twilight_axis/icons/clothing/onmob/donor_sleeves_armor.dmi'

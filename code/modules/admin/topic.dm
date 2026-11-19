@@ -1260,6 +1260,7 @@
 		var/current_value = M.get_stat(statkey)
 		var/new_value = input(usr, "Set [statkey] to:", "Set Stat", current_value) as num|null
 		if(new_value != null && M)
+			new_value = clamp(round(new_value), 1, 20)
 			var/difference = new_value - current_value
 			if(difference != 0)
 				M.change_stat(statkey, difference)
@@ -1534,7 +1535,7 @@
 							O = new path(target)
 
 						if(!QDELETED(O))
-							O.flags_1 |= ADMIN_SPAWNED_1
+							O.flags_1 |= ADMIN_SPAWNED_1 // TA EDIT
 							if(obj_dir)
 								O.setDir(obj_dir)
 							if(obj_quality_set && istype(O, /obj/item))

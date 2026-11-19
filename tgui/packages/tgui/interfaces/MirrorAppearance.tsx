@@ -43,6 +43,12 @@ type OrganInfo = {
   colors?: ColorEntry[];
 };
 
+type BodyHairInfo = {
+  style: string;
+  colors: ColorEntry[];
+  available: boolean;
+};
+
 type SizedOrganInfo = OrganInfo & {
   size: number;
 };
@@ -87,6 +93,10 @@ type MirrorData = {
     third_gradient: string;
     third_color: string;
   };
+  pubes: BodyHairInfo;
+  pits: BodyHairInfo;
+  pubes_styles: StyleOption[];
+  pits_styles: StyleOption[];
   facial_hair: {
     style: string;
     color: string;
@@ -265,25 +275,19 @@ const PathDropdown = (props: {
   );
 };
 
-const NameDropdown = (props: {
+const NameStylePicker = (props: {
   label: string;
   options?: StyleOption[];
   currentName?: string;
   onSelect: (path: string) => void;
-}) => {
-  const { label, options = [], currentName, onSelect } = props;
-  return (
-    <SelectField
-      label={label}
-      value={currentName || 'Нет'}
-      options={options.map((o) => o.name)}
-      onChange={(name) => {
-        const match = options.find((o) => o.name === name);
-        onSelect(match ? match.path : '');
-      }}
-    />
-  );
-};
+}) => (
+  <StylePicker
+    label={props.label}
+    options={props.options}
+    currentPath={props.options?.find((option) => option.name === props.currentName)?.path}
+    onSelect={props.onSelect}
+  />
+);
 
 const SizeStepper = (props: {
   label: string;
@@ -574,7 +578,7 @@ const OrganColorPanel = (props: {
         padding: '6px 8px',
         marginBottom: '6px',
       }}>
-      <NameDropdown
+      <NameStylePicker
         label={label}
         options={options}
         currentName={present ? organData?.style : 'Нет'}
@@ -715,9 +719,39 @@ const TabHair = ({ act, data }: TabProps) => (
   </Panel>
 );
 
+const BodyHairSection = ({ act, data }: TabProps) => (
+  <Panel title="Волосы на теле">
+    {([
+      ['pubes', 'Лобковые волосы'],
+      ['pits', 'Волосы подмышек'],
+    ] as const).map(([feature, label]) =>
+      data[feature].available ? (
+        <div key={feature}>
+          <StylePicker
+            label={label}
+            options={data[`${feature}_styles`]}
+            currentPath={data[feature].style}
+            onSelect={(path) => act('set_body_hair', { feature, path })}
+          />
+          {data[feature].colors.map((color) => (
+            <ColorField
+              key={color.index}
+              label="Цвет"
+              value={color.value}
+              act={act}
+              pickAction="pick_body_hair_color"
+              pickParams={{ feature }}
+            />
+          ))}
+        </div>
+      ) : null,
+    )}
+  </Panel>
+);
+
 const FaceSection = ({ act, data }: TabProps) => (
   <Panel title="Лицо">
-    <PathDropdown
+    <StylePicker
       label="Деталь лица"
       options={data.face_detail_styles}
       currentPath={data.face_detail_style}
@@ -734,7 +768,7 @@ const FaceSection = ({ act, data }: TabProps) => (
           pickParams={{ index: c.index }}
         />
       ))}
-    <PathDropdown
+    <StylePicker
       label="Аксессуар"
       options={data.accessory_styles}
       currentPath={data.accessory_style}
@@ -776,7 +810,7 @@ const ChestSection = ({ act, data }: TabProps) => {
   const skinColor = data.skin.color1;
   return (
     <Panel title="Грудь">
-      <NameDropdown
+      <NameStylePicker
         label="Тип груди"
         options={data.breast_styles}
         currentName={present ? breasts.style : 'Нет'}
@@ -821,7 +855,7 @@ const GenitalsSection = ({ act, data }: TabProps) => {
   return (
     <>
       <Panel title="Пенис">
-        <PathDropdown
+        <StylePicker
           label="Тип"
           options={data.penis_styles}
           currentPath={penis.style_path}
@@ -853,7 +887,7 @@ const GenitalsSection = ({ act, data }: TabProps) => {
         )}
       </Panel>
       <Panel title="Яички">
-        <NameDropdown
+        <NameStylePicker
           label="Тип"
           options={data.testicle_styles}
           currentName={testiclesPresent ? testicles.style : 'Нет'}
@@ -885,7 +919,7 @@ const GenitalsSection = ({ act, data }: TabProps) => {
         )}
       </Panel>
       <Panel title="Вагина">
-        <NameDropdown
+        <NameStylePicker
           label="Тип"
           options={data.vagina_styles}
           currentName={vaginaPresent ? vagina.style : 'Нет'}
@@ -914,6 +948,7 @@ const TabBody = ({ act, data }: TabProps) => (
   <>
     <SkinEyesSection act={act} data={data} />
     <FaceSection act={act} data={data} />
+    <BodyHairSection act={act} data={data} />
     <ChestSection act={act} data={data} />
     <GenitalsSection act={act} data={data} />
   </>
