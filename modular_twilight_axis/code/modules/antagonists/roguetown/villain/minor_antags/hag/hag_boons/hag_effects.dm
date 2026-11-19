@@ -92,6 +92,7 @@
 		H.mind.mage_aspect_config["utilities"] += 8
 		H.mind.check_learnspell()
 	H.adjust_skillrank_up_to(/datum/skill/magic/arcane, 4, TRUE)
+	grant_poke_spell(H)
 	return
 
 /datum/hag_boon/buff/skeleton

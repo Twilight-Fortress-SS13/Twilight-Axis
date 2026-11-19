@@ -49,3 +49,118 @@
 	trait_to_apply = TRAIT_REGROW_LIMBS
 	desc = "The bearer will gain ability to regrow limbs if sleeping."
 	points = 30
+
+/datum/hag_boon/trait/lightweight_armor
+	name = "Trait - Armor No Speed Cap"
+	trait_to_apply = TRAIT_ARMOR_NOSPDCAP
+	desc = "The bearer will never get slowdowned by armor."
+	points = 30
+
+/datum/hag_boon/trait/lightweight_armor
+	name = "Trait - Heretic Seer"
+	trait_to_apply = TRAIT_HERETIC_SEER
+	desc = "The bearer can see if someone heretic-minded."
+	points = 30
+
+/datum/hag_boon/trait/strong_kick
+	name = "Trait - Strong Kick"
+	trait_to_apply = TRAIT_STRONGKICK
+	desc = "The bearer will be guaranteed to knockdown the victim on kick."
+	points = 50
+
+/datum/hag_boon/trait/sentinel_of_wits
+	name = "Trait - Sentinew Of Wits"
+	trait_to_apply = TRAIT_SENTINELOFWITS
+	desc = "The bearer will gain bonus to parry/dodge the smarter he is."
+	points = 10
+
+/datum/hag_boon/trait/firearms_marksman
+	name = "Trait - Firearms Marksman"
+	desc = "The bearer can progress firearms to legendary level, and will become better at it when taking a boon."
+	points = 30
+
+/datum/hag_boon/trait/firearms_marksman/apply_boon_effect(mob/living/L)
+	ADD_TRAIT(L, TRAIT_FIREARMS_MARKSMAN, TRAIT_HAG_BOON)
+	L.adjust_skillrank(/datum/skill/combat/twilight_firearms, 2, TRUE)
+	return
+
+/datum/hag_boon/trait/firearms_marksman/remove_boon_effect(mob/living/L)
+	REMOVE_TRAIT(L, TRAIT_FIREARMS_MARKSMAN, TRAIT_HAG_BOON)
+	L.adjust_skillrank(/datum/skill/combat/twilight_firearms, -2, TRUE)
+	return
+
+/datum/hag_boon/trait/civil_barbarian
+	name = "Trait - Unarmed Amplifier"
+	trait_to_apply = TRAIT_CIVILIZEDBARBARIAN
+	desc = "The bearer will parry far more effectively with bracers, knuckles, and bandages, strike harder with unarmed attacks, and be able to reach any limb with their fists and feet."
+	points = 30
+
+
+// MODULAR CHANGES
+// Anyone can use this with just having magica, why do it cost 40???
+/datum/hag_boon/trait/mirror_magic
+	points = 10
+
+// I don't think this should cost SO much
+/datum/hag_boon/trait/wood_walker
+	points = 20
+
+// Same
+/datum/hag_boon/trait/azure_native
+	points = 20
+
+/datum/hag_boon/trait/civil_barbarian/apply_boon_effect(mob/living/L)
+	. = ..()
+	L.adjust_skillrank(/datum/skill/combat/unarmed, 2, TRUE)
+	L.adjust_skillrank(/datum/skill/combat/wrestling, 2, TRUE)
+	return
+
+/datum/hag_boon/trait/civil_barbarian/remove_boon_effect(mob/living/L)
+	. = ..()
+	L.adjust_skillrank(/datum/skill/combat/unarmed, 2, TRUE)
+	L.adjust_skillrank(/datum/skill/combat/wrestling, 2, TRUE)
+	return
+
+/datum/hag_boon/trait/expert_smithing/apply_boon_effect(mob/living/L)
+	. = ..()
+	L.adjust_skillrank(/datum/skill/craft/weaponsmithing, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/craft/armorsmithing, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/craft/blacksmithing, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/craft/smelting, 2, FALSE)
+
+/datum/hag_boon/trait/expert_alchemy/apply_boon_effect(mob/living/L)
+	. = ..()
+	L.adjust_skillrank(/datum/skill/craft/alchemy, 2, FALSE)
+
+/datum/hag_boon/trait/expert_medicine/apply_boon_effect(mob/living/L)
+	. = ..()
+	L.adjust_skillrank(/datum/skill/misc/medicine, 2, FALSE)
+	if(!L.mind?.has_spell(/obj/effect/proc_holder/spell/invoked/diagnose/secular))
+		L.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/diagnose/secular)
+
+/datum/hag_boon/trait/expert_sewing/apply_boon_effect(mob/living/L)
+	. = ..()
+	L.adjust_skillrank(/datum/skill/craft/tanning, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/craft/sewing, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/labor/butchering, 2, FALSE)
+
+/datum/hag_boon/trait/expert_survival/apply_boon_effect(mob/living/L)
+	. = ..()
+	L.adjust_skillrank(/datum/skill/craft/traps, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/misc/tracking, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/labor/butchering, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/craft/sewing, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/craft/tanning, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/misc/hunting, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/craft/cooking, 2, FALSE)
+
+/datum/hag_boon/trait/expert_homestead/apply_boon_effect(mob/living/L)
+	. = ..()
+	L.adjust_skillrank(/datum/skill/craft/cooking, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/labor/farming, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/labor/fishing, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/labor/lumberjacking, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/labor/mining, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/labor/butchering, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/craft/masonry, 2, FALSE)
+	L.adjust_skillrank(/datum/skill/craft/ceramics, 2, FALSE)

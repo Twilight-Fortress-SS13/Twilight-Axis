@@ -21,28 +21,6 @@
 	)
 	disallowed_equipment_type = list(/obj/item/rogueweapon)
 
-/datum/hag_boon/spell/rous_form
-	name = "Boon of rous form"
-	desc = "Allows bearer to transform into a big, evil rat..."
-	spell_type = /obj/effect/proc_holder/spell/self/wildshape/hag_rous_form
-	points = 65
-
-/obj/effect/proc_holder/spell/self/wildshape/hag_rous_form
-	name = "Rous Form"
-	desc = "Turns yourself into a big, evil rat!"
-	invocation_type = "none"
-	recharge_time = 10 SECONDS
-	miracle = FALSE
-	devotion_cost = 0
-	clothes_req = FALSE
-	human_req = FALSE
-	ignore_cockblock = TRUE
-
-	possible_shapes = list(
-		/mob/living/carbon/human/species/wildshape/rous
-	)
-	disallowed_equipment_type = list(/obj/item/rogueweapon)
-
 /datum/hag_boon/spell/troll_form
 	name = "Boon of troll form"
 	desc = "Allows bearer to transform into a big, slow troll..."
@@ -64,6 +42,12 @@
 		/mob/living/carbon/human/species/wildshape/troll
 	)
 	disallowed_equipment_type = list(/obj/item/rogueweapon)
+
+/datum/hag_boon/spell/mirecrawler
+	name = "Boon of mirecrawler form"
+	desc = "Allows bearer to transform into a small, awful mirecrawler..."
+	spell_type = /obj/effect/proc_holder/spell/targeted/shapeshift/mireboi
+	points = 30
 
 /obj/effect/proc_holder/spell/self/roots_movement
 	name = "Movement of roots"
@@ -150,7 +134,6 @@
 		/mob/living/carbon/human/species/wildshape/rat,
 		/mob/living/carbon/human/species/wildshape/mirecrawler,
 		/mob/living/carbon/human/species/wildshape/spider,
-		/mob/living/carbon/human/species/wildshape/rous,
 		/mob/living/carbon/human/species/wildshape/fox,
 		/mob/living/carbon/human/species/wildshape/crow,
 	)

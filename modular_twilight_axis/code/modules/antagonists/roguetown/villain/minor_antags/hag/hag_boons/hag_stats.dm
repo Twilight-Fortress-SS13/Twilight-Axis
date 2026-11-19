@@ -1,6 +1,6 @@
 /datum/hag_boon/stats
 	name = "stat boon"
-	points = 50
+	points = 30
 	var/amount
 	var/stat
 	var/grant_name
@@ -42,7 +42,7 @@
 
 /datum/hag_boon/stats/con
 	name = "constitution boon"
-	amount = 2
+	amount = 3
 	stat = STATKEY_CON
 	grant_name = "constitution"
 

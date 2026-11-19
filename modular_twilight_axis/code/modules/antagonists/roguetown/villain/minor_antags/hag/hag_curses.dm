@@ -1,9 +1,3 @@
-/datum/hag_boon/trait/curse/vegan
-	name = "Trait - Vegan"
-	trait_to_apply = TRAIT_VEGAN
-	desc = "The bearer becomes Vegan... What a awful fate!"
-	points = 15
-
 /datum/hag_boon/trait/curse/light_sensivity
 	name = "Trait - Light Sensivity"
 	trait_to_apply = TRAIT_SUNLIGHT_SENSITIVE
@@ -29,18 +23,21 @@
 	points = 50
 
 /datum/hag_boon/curse/awful_voice
-	name = "Trait - Awful Voice"
+	name = "Trait - Annoying Voice"
 	desc = "The bearer's voice becomes really awful!"
-	points = 5
+	points = 10
 
 /datum/hag_boon/curse/awful_voice/apply_boon_effect(mob/living/L)
-	RegisterSignal(L, COMSIG_MOB_SAY, PROC_REF(handle_speech))
+	var/mob/living/carbon/human/H = L
+	H.AddComponent(/datum/component/annoying_voice)
+	return
 
 /datum/hag_boon/curse/awful_voice/remove_boon_effect(mob/living/L)
-	UnregisterSignal(L, COMSIG_MOB_SAY)
-
-/datum/hag_boon/curse/awful_voice/proc/handle_speech(datum/source, list/speech_args)
-	speech_args[SPEECH_SPANS] |= SPAN_SANS
+	var/mob/living/carbon/human/H = L
+	var/datum/component/annoying_voice/prev_voice = H.GetComponent(/datum/component/annoying_voice)
+	if(prev_voice)
+		qdel(prev_voice)
+	return
 
 /datum/hag_boon/curse/excommunicated
 	name = "Excommunication"

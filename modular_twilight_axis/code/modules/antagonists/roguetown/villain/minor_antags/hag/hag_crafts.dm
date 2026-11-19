@@ -65,11 +65,11 @@
 			boon_path = /datum/hag_boon/spell/rat_form
 			name = "Rat Moss"
 		if(2)
-			boon_path = /datum/hag_boon/spell/rous_form
-			name = "Rous Moss"
-		if(3)
 			boon_path = /datum/hag_boon/spell/troll_form
 			name = "Troll Moss"
+		if(3)
+			boon_path = /datum/hag_boon/spell/mirecrawler
+			name = "Mirecrawler Moss"
 
 /obj/item/alch/hag_moss/enchanted/forest
 	name = "Forest Moss"
