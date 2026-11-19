@@ -395,5 +395,4 @@
 
 /obj/item/rogueweapon/sword/rapier/psy/folding/relic/attack_self(mob/user)
 	extended = !extended
-	update_folding_state(user, extended,
-		"psyfoldingblade_on", "psyfoldingblade_off")
+	update_folding_state(user, extended, "psyfoldingblade_on", "psyfoldingblade_off")
