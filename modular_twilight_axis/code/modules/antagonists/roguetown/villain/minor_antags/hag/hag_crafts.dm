@@ -28,11 +28,6 @@
 	reqs = list(/obj/item/alch/hag_moss/lullaby = 1, /obj/item/alch/manabloompowder = 1)
 	craftdiff = 6
 
-/datum/crafting_recipe/roguetown/alchemy/hag/rage_moss
-	name = "moss rage"
-	result = list(/obj/item/alch/hag_moss/enchanted/rage = 1)
-	reqs = list(/obj/item/alch/hag_moss/fury = 1, /obj/item/natural/thorn = 1)
-
 /datum/crafting_recipe/roguetown/alchemy/hag/power_moss
 	name = "moss power"
 	result = list(/obj/item/alch/hag_moss/enchanted/power = 1)
@@ -96,12 +91,6 @@
 		if(3)
 			boon_path = /datum/hag_boon/buff/bard_initiate
 			name = "Musical Moss"
-
-/obj/item/alch/hag_moss/enchanted/rage
-	name = "Rage Moss"
-	boon_path = /datum/hag_boon/spell/berserker_rage
-	desc = "This moss is RED, filled with RAGE and BLOOD. Touching this makes you EVIL!"
-	color = "#ff0000"
 
 /obj/item/alch/hag_moss/enchanted/power
 	name = "Power Moss"
