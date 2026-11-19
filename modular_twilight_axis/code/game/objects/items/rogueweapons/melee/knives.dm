@@ -107,7 +107,7 @@
 	smeltresult = /obj/item/ingot/silver
 	is_silver = TRUE
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/baotha
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/poison
 	name = "snakes sting"
 	desc = "The blade is skillfully crafted and appears to be designed for stealthy assassinations. There are visible streaks of a bubbling substance on its blade."
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
