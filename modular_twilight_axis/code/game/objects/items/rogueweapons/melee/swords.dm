@@ -29,9 +29,7 @@
 
 /obj/item/rogueweapon/sword/rapier/foldsword/attack_self(mob/user)
 	extended = !extended
-	updateFoldingState(user, extended,
-		"folding_sword_on", "folding_sword_off")
-
+	update_folding_state(user, extended, "folding_sword_on", "folding_sword_off")
 
 /obj/item/rogueweapon/sword/long/exe/berserk
 	special = /datum/special_intent/wave_swing/greatsword
@@ -74,8 +72,7 @@
 
 /obj/item/rogueweapon/sword/rapier/psy/folding/attack_self(mob/user)
 	extended = !extended
-	updateFoldingState(user, extended,
-		"psyfoldingblade_on", "psyfoldingblade_off")
+	update_folding_state(user, extended, "psyfoldingblade_on", "psyfoldingblade_off")
 
 /obj/item/rogueweapon/sword/long/oathbreaker_matthios
 	name = "\"Kingslayer\""
@@ -103,8 +100,7 @@
 /obj/item/rogueweapon/sword/long/oathbreaker_matthios/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_MATTHIOS_WEAPON)
 
-/obj/item/rogueweapon/sword/rapier/proc/updateFoldingState(
-	mob/user, extended, open_icon, closed_icon)
+/obj/item/rogueweapon/sword/rapier/proc/update_folding_state(mob/user, extended, open_icon, closed_icon)
 	if(extended)
 		possible_item_intents = list(
 			/datum/intent/sword/thrust/rapier,
@@ -159,8 +155,7 @@
 
 /obj/item/rogueweapon/sword/rapier/folding/attack_self(mob/user)
 	extended = !extended
-	updateFoldingState(user, extended,
-		"folding_sword_on", "folding_sword_off")
+	update_folding_state(user, extended, "folding_sword_on", "folding_sword_off")
 
 /obj/item/rogueweapon/sword/sabre/threaded
 	name = "threaded sword"
@@ -277,8 +272,7 @@
 
 /obj/item/rogueweapon/sword/rapier/silver/psy/folding/attack_self(mob/user)
 	extended = !extended
-	updateFoldingState(user, extended,
-		"psyfoldingblade_on", "psyfoldingblade_off")
+	update_folding_state(user, extended, "psyfoldingblade_on", "psyfoldingblade_off")
 
 /obj/item/rogueweapon/sword/rapier/silver/psy/smallsword
 	name = "psydonic smallsword"
@@ -401,5 +395,5 @@
 
 /obj/item/rogueweapon/sword/rapier/psy/folding/relic/attack_self(mob/user)
 	extended = !extended
-	updateFoldingState(user, extended,
+	update_folding_state(user, extended,
 		"psyfoldingblade_on", "psyfoldingblade_off")
