@@ -549,7 +549,6 @@
 
     new /obj/effect/temp_visual/chain_impact(target_turf)
 
-    message_admins("hook target's path: [hooked_target.type]")
     if(!istype(hooked_target,/mob/living/simple_animal))
         var/armor_block = hooked_target.run_armor_check(BODY_ZONE_CHEST, "stab", blade_dulling = BCLASS_PICK, armor_penetration = hook_penetration, damage = hook_damage, used_weapon = iparent)
         if(!(hooked_target.apply_damage(25, BRUTE, BODY_ZONE_CHEST, armor_block)))
