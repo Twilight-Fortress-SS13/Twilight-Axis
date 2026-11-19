@@ -96,6 +96,12 @@
 	spell_type = /obj/effect/proc_holder/spell/targeted/blesscrop
 	points = 50
 
+/datum/hag_boon/spell/berserker_rage
+	name = "Boon of berserker rage"
+	desc = "Grants bearer a berkerker's rage, allowing it to become stronger."
+	spell_type = /datum/action/cooldown/spell/rage
+	points = 75
+
 // HAG SPELLS - We make it ignore cockblock, cuz it's non-combat spells
 /obj/effect/proc_holder/spell/invoked/resurrect/hag
 	ignore_cockblock = TRUE
