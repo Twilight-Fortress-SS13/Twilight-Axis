@@ -32,8 +32,8 @@
 		/datum/virtue/combat/combat_virtue, //They do not need shield skills or anything in here
 		/datum/virtue/utility/notable, //No resident (????) or free-money-stash gnolls
 		/datum/virtue/utility/bronzelimbs, //They should feel pain in their limbs given their state
-		/datum/virtue/movement/acrobatic, //This should be given to them when they are actually after a Hunted
-		/datum/virtue/utility/woodwalker, //This should be given to them when they are actually after a Hunted
+		/datum/virtue/movement/acrobatic,
+		/datum/virtue/utility/woodwalker,
 		)
 	vice_restrictions = list(/datum/charflaw/hunted, /datum/charflaw/targeted)
 	job_subclasses = list(
@@ -55,6 +55,7 @@
 	if(H.mind)
 		H.set_blindness(0)
 		H.regenerate_icons()
+		H.dna.species.regenerate_icons()
 		H.AddSpell(new /obj/effect/proc_holder/spell/self/claws/dragon)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/message)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/telegraphed_strike/dragons_breath)
@@ -118,6 +119,7 @@
 	if(H.mind)
 		H.set_species(/datum/species/dragon)
 		H.regenerate_icons()
+		H.dna.species.regenerate_icons()
 		H.skin_armor = new /obj/item/clothing/suit/roguetown/armor/regenerating/skin/dragon_armor(H)
 		neck = /obj/item/storage/belt/rogue/pouch/healing
 		don_scales(H)

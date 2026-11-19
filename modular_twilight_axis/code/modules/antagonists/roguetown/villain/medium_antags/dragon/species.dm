@@ -18,7 +18,7 @@
 	name = "Dragon"
 	id = "dragon"
 	custom_rotation_icon = TRUE
-	custom_base_icon = "dragon"
+	custom_base_icon = "dragon_cool"
 	species_traits = list(NO_UNDERWEAR, NO_ORGAN_FEATURES, NO_BODYPART_FEATURES)
 	inherent_traits = list(
 		TRAIT_LONGSTRIDER,
@@ -41,7 +41,8 @@
 		TRAIT_ZJUMP,
 		TRAIT_NUDIST,
 		TRAIT_UNLYCKERABLE, //Just stop
-		TRAIT_NOFIRE
+		TRAIT_NOFIRE,
+		TRAIT_LEAPER,
 	)
 	inherent_biotypes = MOB_HUMANOID
 	no_equip = list(SLOT_SHIRT, SLOT_HEAD, SLOT_WEAR_MASK, SLOT_ARMOR, SLOT_GLOVES, SLOT_SHOES, SLOT_PANTS, SLOT_CLOAK, SLOT_BELT, SLOT_BACK_L, SLOT_BACK_R, SLOT_S_STORE)
@@ -70,12 +71,25 @@
 	)
 
 /datum/species/dragon/regenerate_icons(mob/living/carbon/human/H)
-	H.icon = 'modular_twilight_axis/icons/mob/monster/player_dragon.dmi'
-	H.icon_state = "dragon"
+	H.icon = 'modular/icons/mob/96x96/ratwood_dragon.dmi'
+	H.icon_state = "dragon_cool"
 	H.base_intents = list(INTENT_HELP, INTENT_DISARM, INTENT_GRAB)
 	H.update_damage_overlays()
 	H.update_inv_armor_special()
 	return TRUE
+
+/datum/species/dragon/on_species_gain(mob/living/carbon/human/C, datum/species/old_species)
+	. = ..()
+	RegisterSignal(C, COMSIG_MOB_SAY, PROC_REF(handle_speech))
+	C.icon_state = "dragon_cool"
+	C.base_pixel_x = -32
+	C.pixel_x = -32
+	C.base_pixel_y = -8
+	C.pixel_y = -8
+
+/datum/species/dragon/on_species_loss(mob/living/carbon/C)
+	. = ..()
+	UnregisterSignal(C, COMSIG_MOB_SAY)
 
 /datum/species/dragon/send_voice(mob/living/carbon/human/H)
 	if(H.m_intent == MOVE_INTENT_SNEAK)
