@@ -55,6 +55,7 @@
 	if(H.mind)
 		H.set_blindness(0)
 		H.regenerate_icons()
+		H.dna.species.regenerate_icons(H)
 		H.AddSpell(new /obj/effect/proc_holder/spell/self/claws/dragon)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/message)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/telegraphed_strike/dragons_breath)
@@ -118,6 +119,7 @@
 	if(H.mind)
 		H.set_species(/datum/species/dragon)
 		H.regenerate_icons()
+		H.dna.species.regenerate_icons(H)
 		H.skin_armor = new /obj/item/clothing/suit/roguetown/armor/regenerating/skin/dragon_armor(H)
 		neck = /obj/item/storage/belt/rogue/pouch/healing
 		don_scales(H)

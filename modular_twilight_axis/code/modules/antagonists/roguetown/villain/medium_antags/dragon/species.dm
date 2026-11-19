@@ -18,13 +18,14 @@
 	name = "Dragon"
 	id = "dragon"
 	custom_rotation_icon = TRUE
-	custom_base_icon = "dragon"
+	custom_base_icon = "dragon_cool"
 	species_traits = list(NO_UNDERWEAR, NO_ORGAN_FEATURES, NO_BODYPART_FEATURES)
 	inherent_traits = list(
 		TRAIT_LONGSTRIDER,
 		TRAIT_NO_VOICEPACK_OVERRIDE, //They have voicepack lines.
 		TRAIT_IGNORESLOWDOWN,
 		TRAIT_IGNOREDAMAGESLOWDOWN,
+		TRAIT_NOPAIN,
 		TRAIT_CRITICAL_RESISTANCE,
 		TRAIT_NOFALLDAMAGE1,
 		TRAIT_STRENGTH_UNCAPPED,
@@ -44,7 +45,7 @@
 		TRAIT_NOFIRE
 	)
 	inherent_biotypes = MOB_HUMANOID
-	no_equip = list(SLOT_SHIRT, SLOT_HEAD, SLOT_WEAR_MASK, SLOT_ARMOR, SLOT_GLOVES, SLOT_SHOES, SLOT_PANTS, SLOT_CLOAK, SLOT_BELT, SLOT_BACK_L, SLOT_BACK_R, SLOT_S_STORE)
+	no_equip = list(SLOT_SHIRT, SLOT_HEAD, SLOT_WEAR_MASK, SLOT_ARMOR, SLOT_GLOVES, SLOT_SHOES, SLOT_PANTS, SLOT_CLOAK, SLOT_BELT, SLOT_BACK_L, SLOT_S_STORE)
 	nojumpsuit = 1
 	sexes = 1
 	offset_features = list(OFFSET_HANDS = list(0,2), OFFSET_HANDS_F = list(0,2))
@@ -70,12 +71,25 @@
 	)
 
 /datum/species/dragon/regenerate_icons(mob/living/carbon/human/H)
-	H.icon = 'modular_twilight_axis/icons/mob/monster/player_dragon.dmi'
-	H.icon_state = "dragon"
+	H.icon = 'modular/icons/mob/96x96/ratwood_dragon.dmi'
+	H.icon_state = "dragon_cool"
 	H.base_intents = list(INTENT_HELP, INTENT_DISARM, INTENT_GRAB)
 	H.update_damage_overlays()
 	H.update_inv_armor_special()
 	return TRUE
+
+/datum/species/dragon/on_species_gain(mob/living/carbon/human/C, datum/species/old_species)
+	. = ..()
+	RegisterSignal(C, COMSIG_MOB_SAY, PROC_REF(handle_speech))
+	C.icon_state = "dragon_cool"
+	C.base_pixel_x = -32
+	C.pixel_x = -32
+	C.base_pixel_y = -8
+	C.pixel_y = -8
+
+/datum/species/dragon/on_species_loss(mob/living/carbon/C)
+	. = ..()
+	UnregisterSignal(C, COMSIG_MOB_SAY)
 
 /datum/species/dragon/send_voice(mob/living/carbon/human/H)
 	if(H.m_intent == MOVE_INTENT_SNEAK)
@@ -84,6 +98,34 @@
 
 /datum/species/dragon/update_damage_overlays(mob/living/carbon/human/H)
 	H.remove_overlay(DAMAGE_LAYER)
+	var/list/hands = list()
+	var/mutable_appearance/inhand_overlay = mutable_appearance("[H.icon_state]-dam", layer=-DAMAGE_LAYER)
+	var/burnhead = 0
+	var/brutehead = 0
+	var/burnch = 0
+	var/brutech = 0
+	var/obj/item/bodypart/affecting = H.get_bodypart(BODY_ZONE_HEAD)
+	if(affecting)
+		burnhead = (affecting.burn_dam / affecting.max_damage)
+		brutehead = (affecting.brute_dam / affecting.max_damage)
+	affecting = H.get_bodypart(BODY_ZONE_CHEST)
+	if(affecting)
+		burnch = (affecting.burn_dam / affecting.max_damage)
+		brutech = (affecting.brute_dam / affecting.max_damage)
+	var/usedloss = 0
+	if(burnhead > usedloss)
+		usedloss = burnhead
+	if(brutehead > usedloss)
+		usedloss = brutehead
+	if(burnch > usedloss)
+		usedloss = burnch
+	if(brutech > usedloss)
+		usedloss = brutech
+	inhand_overlay.alpha = 255 * usedloss
+
+	hands += inhand_overlay
+	H.overlays_standing[DAMAGE_LAYER] = hands
+	H.apply_overlay(DAMAGE_LAYER)
 	return TRUE
 
 /datum/species/dragon/random_name(gender,unique,lastname)

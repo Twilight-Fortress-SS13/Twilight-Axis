@@ -2,9 +2,9 @@
 	slot_flags = null
 	name = "dragon scales"
 	desc = "an impenetrable coat of greed."
-	mob_overlay_icon = 'modular_twilight_axis/icons/mob/monster/player_dragon.dmi'
-	icon = 'modular_twilight_axis/icons/mob/monster/player_dragon.dmi'
-	icon_state = "empty"
+	mob_overlay_icon = 'modular/icons/mob/96x96/ratwood_dragon.dmi'
+	icon = 'modular/icons/mob/96x96/ratwood_dragon.dmi'
+	icon_state = "dragon_cool"
 	body_parts_covered = FULL_BODY
 	body_parts_inherent = FULL_BODY
 	armor = ARMOR_DRAGON_STRONG
