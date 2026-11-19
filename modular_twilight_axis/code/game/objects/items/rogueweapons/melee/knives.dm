@@ -234,7 +234,7 @@
 	name = "psydonic parrying dagger"
 	desc = "A finely balanced silver parrying dagger, carried by loyal servants of the Inquisition. \
 	Its crossguard turns aside wicked steel while its blessed edge delivers Psydon's judgement."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/daggers32.dmi'
 	icon_state = "psypdagger"
 	force = 15
 	throwforce = 15
@@ -262,13 +262,32 @@
 	altgripped = TRUE
 	force = 21
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/silver/psy/parrying
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/daggers32.dmi'
-	icon_state = "psypdagger"
-
 /obj/item/rogueweapon/huntingknife/idagger/steel/necra/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_TENNITE,\
 		silver_type = SILVER_TENNITE,\
 	)
+
+/obj/item/rogueweapon/huntingknife/idagger/silver/psydagger/parrying
+	name = "psydonic parrying dagger"
+	desc = "A finely balanced silver parrying dagger, carried by loyal servants of the Inquisition. \
+	Its crossguard turns aside wicked steel while its blessed edge delivers Psydon's judgement."
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/daggers32.dmi'
+	icon_state = "psypdagger"
+	force = 15
+	throwforce = 15
+	wdefense = 9
+	max_integrity = 150
+
+/obj/item/rogueweapon/huntingknife/idagger/silver/psydagger/parrying/ComponentInitialize()
+	AddComponent(\
+		/datum/component/silverbless,\
+		pre_blessed = BLESSING_NONE,\
+		silver_type = SILVER_PSYDONIAN,\
+		added_force = 0,\
+		added_blade_int = 0,\
+		added_int = 100,\
+		added_def = 2,\
+	)
+	sellprice += 200

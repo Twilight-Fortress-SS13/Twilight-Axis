@@ -270,7 +270,7 @@
 		Psydonian Inquisition. Built for investigators and executioners \
 		alike, it folds into a compact package for discreet carry before \
 		locking into a deadly dueling weapon."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords64.dmi'
 	icon_state = "psyfoldingblade_on"
 	sheathe_icon = "silverrapier"
 	var/extended = TRUE
@@ -284,8 +284,8 @@
 	name = "psydonic smallsword"
 	desc = "A slender silver smallsword crafted for swift and precise strikes. \
 	Though elegant in form, it was forged with a singular purpose: to pierce both the hearts of men and the blasphemies that lurk beyond them."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
-	icon_state = "psyrapier"
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords32.dmi'
+	icon_state = "psysmallsword"
 	sheathe = 'modular_twilight_axis/icons/obj/items/scabbard.dmi'
 	sheathe_icon = "psysmallsword"
 	max_blade_int = 200
@@ -345,14 +345,6 @@
 			if("gen")
 				return list("shrink" = 0.4,"sx" = -11,"sy" = -11,"nx" = 11,"ny" = 0,"wx" = -4,"wy" = 0,"ex" = 1,"ey" = -10,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 0,"sturn" = -110,"wturn" = 0,"eturn" = 109,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
 
-/obj/item/rogueweapon/sword/rapier/silver/psy/folding
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords64.dmi'
-	icon_state = "psyfoldingblade_on"
-
-/obj/item/rogueweapon/sword/rapier/silver/psy/smallsword
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords32.dmi'
-	icon_state = "psysmallsword"
-
 /obj/item/rogueweapon/sword/long/kriegmesser/donat_astrata
 	name = "\"Her Verdict\""
 	desc = "Wielded by the Paladins of the Punishing Light, these swords are forged from the same alloy of steel and silver used in the Eclipsum blades. While effective on the field of battle, this weapon is primarily known for it's use public executions.</br>'In the light of your rays I stand before you..' </br>'..with my blade raised and my soul bare..' </br>'..let you judge my verdict, and find it true..' </br>'..and let you guide my hand, O Radiant One.'"
@@ -360,3 +352,54 @@
 	icon_state = "ast_kriegmesser"
 	sheathe = 'modular_twilight_axis/icons/obj/items/scabbard.dmi'
 	sheathe_icon = "ast_kriegmesser"
+
+/obj/item/rogueweapon/sword/rapier/silver/psyrapier
+	name = "psydonic foil"
+	desc = "A slender silver foil crafted for swift and precise strikes. \
+	Though elegant in form, it was forged with a singular purpose: to pierce both the hearts of men and the blasphemies that lurk beyond them."
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords32.dmi'
+	icon_state = "psysmallsword"
+	sheathe_icon = "silverrapier"
+	max_integrity = 175
+	max_blade_int = 175
+	grid_width = 32
+	grid_height = 64
+	dropshrink = 0
+	bigboy = FALSE
+
+/obj/item/rogueweapon/sword/rapier/silver/psyrapier/ComponentInitialize()
+	AddComponent(\
+		/datum/component/silverbless,\
+		pre_blessed = BLESSING_NONE,\
+		silver_type = SILVER_PSYDONIAN,\
+		added_force = 0,\
+		added_blade_int = 100,\
+		added_int = 100,\
+		added_def = 2,\
+	)
+
+/obj/item/rogueweapon/sword/rapier/psy/folding/relic
+	name = "\"Testament\""
+	desc = "Commissioned by the Inquisition and wrought by the blacksmiths of Arkenfeit, this peculiar blade was made for those \
+	who could ill afford to announce their calling before the time came to draw steel. Its silvered edge folds neatly into \
+	the hilt, concealing a weapon fit for the most delicate of investigations. Many a heretic has mistaken its bearer for \
+	a harmless clerk, only to learn that the Inquisition keeps its sharpest judgements close at hand."
+	max_integrity = 250
+	max_blade_int = 250
+	extended = TRUE
+
+/obj/item/rogueweapon/sword/rapier/psy/folding/relic/ComponentInitialize()
+	AddComponent(\
+		/datum/component/silverbless,\
+		pre_blessed = BLESSING_PSYDONIAN,\
+		silver_type = SILVER_PSYDONIAN,\
+		added_force = 0,\
+		added_blade_int = 100,\
+		added_int = 100,\
+		added_def = 2,\
+	)
+
+/obj/item/rogueweapon/sword/rapier/psy/folding/relic/attack_self(mob/user)
+	extended = !extended
+	updateFoldingState(user, extended,
+		"psyfoldingblade_on", "psyfoldingblade_off")
