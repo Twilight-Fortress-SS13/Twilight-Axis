@@ -14,7 +14,6 @@
 	show_in_credits = FALSE
 	min_pq = 20
 	max_pq = null
-	vice_restrictions = list(/datum/charflaw/forlorne)
 
 	obfuscated_job = TRUE
 	class_categories = TRUE
@@ -29,7 +28,7 @@
 	always_show_on_latechoices = TRUE
 	job_reopens_slots_on_death = FALSE
 	same_job_respawn_delay = 30 MINUTES
-	virtue_restrictions = list(/datum/virtue/heretic/zchurch_keyholder) //all wretch classes automatically get this
+	virtue_restrictions = list(/datum/virtue/utility/zchurch_keyholder) // TA EDIT
 	job_traits = list(TRAIT_STEELHEARTED, TRAIT_OUTLAW, TRAIT_HERESIARCH, TRAIT_SELF_SUSTENANCE, TRAIT_ZURCH)
 	job_subclasses = list(
 		/datum/advclass/wretch/licker,
@@ -58,6 +57,8 @@
 	)
 	has_subprefs = TRUE
 	default_subprefs = list("bounty_poster_key" = null, "bounty_severity_key" = null, "my_crime" = null, "favorite_advclass" = null)
+/datum/advclass/wretch
+	tempo_capable = TRUE
 
 // for future viewers, here's how you add subprefs to a job. adventurer provides a simpler example for how to merely add subclass favoriting.
 /datum/job/roguetown/wretch/Topic(href, list/href_list)
@@ -183,7 +184,7 @@
 
 	var/list/sev_data = GLOB.wretch_bounty_severities[bounty_severity_key]
 	var/bounty_total = rand(sev_data["min"], sev_data["max"])
-	if(bounty_severity_key == "ATROCITY")
+	if(bounty_severity_key == "ATROCITY" || bounty_severity_key == "UNFORGIVABLE")
 		if(bounty_poster_key == "AZURIA")
 			GLOB.outlawed_players += H.real_name
 		else

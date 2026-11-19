@@ -82,98 +82,6 @@
     )
     special = /datum/special_intent/witcher_chain_hook
 
-/obj/item/rogueweapon/whip/witcher_chain/silver
-    name = "silver battle chain"
-    desc = "A tempered silver chain balanced with a faceted piercing dart. Deceptively fast, it can ensnare distant foes and drag them into lethal range."
-    icon_state = "silver_witcher_chain"
-    icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
-    force = 24
-    sharpness = IS_SHARP
-    wlength = WLENGTH_GREAT
-    w_class = WEIGHT_CLASS_NORMAL
-    slot_flags = ITEM_SLOT_HIP | ITEM_SLOT_BELT
-    associated_skill = /datum/skill/combat/whipsflails
-    sewrepair = FALSE
-    parrysound = list('sound/combat/parry/parrygen.ogg')
-    swingsound = CHAINWHOOSH
-    max_blade_int = 250
-    max_integrity = 250
-    throwforce = 12
-    wdefense = 6
-    is_silver = TRUE
-    minstr = 8
-    anvilrepair = /datum/skill/craft/weaponsmithing
-    smeltresult = /obj/item/ingot/silver
-    grid_width = 32
-    grid_height = 64
-    transform_type = /obj/item/clothing/wrists/roguetown/bracers/witcher/silver
-
-/obj/item/rogueweapon/whip/witcher_chain/silver/ComponentInitialize()
-    AddComponent(\
-        /datum/component/silverbless,\
-        pre_blessed = BLESSING_NONE,\
-        silver_type = SILVER_TENNITE,\
-        added_force = 0,\
-        added_blade_int = 0,\
-        added_int = 50,\
-        added_def = 0,\
-    )
-
-/obj/item/rogueweapon/whip/witcher_chain/bronze
-    name = "bronze battle chain"
-    desc = "A crude bronze chain balanced with a piercing dart. Softer than steel, it holds an edge poorly and bends easily under strain."
-    icon_state = "bronze_witcher_chain"
-    icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
-    force = 24
-    sharpness = IS_SHARP
-    wlength = WLENGTH_GREAT
-    w_class = WEIGHT_CLASS_NORMAL
-    slot_flags = ITEM_SLOT_HIP | ITEM_SLOT_BELT
-    associated_skill = /datum/skill/combat/whipsflails
-    sewrepair = FALSE
-    parrysound = list('sound/combat/parry/parrygen.ogg')
-    swingsound = CHAINWHOOSH
-    max_blade_int = 200
-    max_integrity = 200
-    throwforce = 10
-    wdefense = 5
-    minstr = 8
-    anvilrepair = /datum/skill/craft/weaponsmithing
-    smeltresult = /obj/item/ingot/bronze
-    grid_width = 32
-    grid_height = 64
-    transform_type = /obj/item/clothing/wrists/roguetown/bracers/witcher/bronze
-
-/*
-// ---  Цепь граггара пока коммент ---
-
-/obj/item/rogueweapon/whip/witcher_chain/graggar
-    name = "graggar battle chain"
-    desc = "A monstrously heavy chain, tipped with an oversized hook capable of punching clean through."
-    icon_state = "graggarbattlechain"
-    icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
-    force = 30
-    sharpness = IS_SHARP
-    wlength = WLENGTH_GREAT
-    w_class = WEIGHT_CLASS_NORMAL
-    slot_flags = ITEM_SLOT_HIP | ITEM_SLOT_BELT
-    associated_skill = /datum/skill/combat/whipsflails
-    sewrepair = FALSE
-    parrysound = list('sound/combat/parry/parrygen.ogg')
-    swingsound = CHAINWHOOSH
-    max_blade_int = 300
-    max_integrity = 300
-    throwforce = 14
-    wdefense = 6
-    minstr = 8
-    anvilrepair = /datum/skill/craft/weaponsmithing
-    smeltresult = /obj/item/ingot/steel
-    grid_width = 32
-    grid_height = 64
-    transform_type = /obj/item/clothing/wrists/roguetown/bracers/witcher/graggar
-    special = /datum/special_intent/witcher_chain_hook/graggar
-*/
-
 /obj/item/rogueweapon/whip/witcher_chain/attack(mob/living/target, mob/living/user)
     if(is_being_thrown_by_special)
         return FALSE
@@ -549,7 +457,6 @@
 
     new /obj/effect/temp_visual/chain_impact(target_turf)
 
-    message_admins("hook target's path: [hooked_target.type]")
     if(!istype(hooked_target,/mob/living/simple_animal))
         var/armor_block = hooked_target.run_armor_check(BODY_ZONE_CHEST, "stab", blade_dulling = BCLASS_PICK, armor_penetration = hook_penetration, damage = hook_damage, used_weapon = iparent)
         if(!(hooked_target.apply_damage(25, BRUTE, BODY_ZONE_CHEST, armor_block)))
@@ -697,4 +604,64 @@
     name = "Chain Ensnare"
     desc = "Hurl the weighted hook of the chain toward a target. The hook pierces armor, wraps around the victim, and forcefully drags them into melee range for a finishing blow."
     hook_penetration = PEN_MEDIUM
+*/
+
+/obj/item/rogueweapon/whip/witcher_chain/silver
+	name = "silver battle chain"
+	desc = "A tempered silver chain balanced with a faceted piercing dart. Deceptively fast, it can ensnare distant foes and drag them into lethal range."
+	icon_state = "silver_witcher_chain"
+	w_class = WEIGHT_CLASS_NORMAL
+	is_silver = TRUE
+	smeltresult = /obj/item/ingot/silver
+	transform_type = /obj/item/clothing/wrists/roguetown/bracers/witcher/silver
+
+/obj/item/rogueweapon/whip/witcher_chain/silver/ComponentInitialize()
+	AddComponent(\
+		/datum/component/silverbless,\
+		pre_blessed = BLESSING_NONE,\
+		silver_type = SILVER_TENNITE,\
+	)
+
+/obj/item/rogueweapon/whip/witcher_chain/bronze
+	name = "bronze battle chain"
+	desc = "A crude bronze chain balanced with a piercing dart. Softer than steel, it holds an edge poorly and bends easily under strain."
+	icon_state = "bronze_witcher_chain"
+	w_class = WEIGHT_CLASS_NORMAL
+	force = 24
+	max_blade_int = 200
+	max_integrity = 200
+	throwforce = 10
+	wdefense = 5
+	minstr = 8
+	smeltresult = /obj/item/ingot/bronze
+	transform_type = /obj/item/clothing/wrists/roguetown/bracers/witcher/bronze
+
+/*
+// ---  Цепь граггара пока коммент ---
+
+/obj/item/rogueweapon/whip/witcher_chain/graggar
+	name = "graggar battle chain"
+	desc = "A monstrously heavy chain, tipped with an oversized hook capable of punching clean through."
+	icon_state = "graggarbattlechain"
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/misc32.dmi'
+	force = 30
+	sharpness = IS_SHARP
+	wlength = WLENGTH_GREAT
+	w_class = WEIGHT_CLASS_NORMAL
+	slot_flags = ITEM_SLOT_HIP | ITEM_SLOT_BELT
+	associated_skill = /datum/skill/combat/whipsflails
+	sewrepair = FALSE
+	parrysound = list('sound/combat/parry/parrygen.ogg')
+	swingsound = CHAINWHOOSH
+	max_blade_int = 300
+	max_integrity = 300
+	throwforce = 14
+	wdefense = 6
+	minstr = 8
+	anvilrepair = /datum/skill/craft/weaponsmithing
+	smeltresult = /obj/item/ingot/steel
+	grid_width = 32
+	grid_height = 64
+	transform_type = /obj/item/clothing/wrists/roguetown/bracers/witcher/graggar
+	special = /datum/special_intent/witcher_chain_hook/graggar
 */

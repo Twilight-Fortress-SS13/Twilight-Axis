@@ -1,4 +1,4 @@
-/datum/advclass/iconoclast //Support Cleric, Heavy armor, unarmed, miracles.
+/datum/advclass/bandit/iconoclast //Support Cleric, Heavy armor, unarmed, miracles.
 	name = "Iconoclast"
 	tutorial = "Trained by an Ecclesial sect, you uphold the Ideological purity of the Matthiosian Creed. Take from the wealthy, give to the worthless, empower. They will look up to you, in search of the God of Robbery's guidance. Be their light in the dark."
 	allowed_sexes = list(MALE, FEMALE)

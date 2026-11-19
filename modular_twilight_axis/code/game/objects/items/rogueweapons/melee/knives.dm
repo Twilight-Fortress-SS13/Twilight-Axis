@@ -107,19 +107,8 @@
 	smeltresult = /obj/item/ingot/silver
 	is_silver = TRUE
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/necra/ComponentInitialize()
-	AddComponent(\
-		/datum/component/silverbless,\
-		pre_blessed = BLESSING_TENNITE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 50,\
-		added_int = 50,\
-		added_def = 2,\
-	)
-
-/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/poison
-	name = "Snake's sting"
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha
+	name = "snakes sting"
 	desc = "The blade is skillfully crafted and appears to be designed for stealthy assassinations. There are visible streaks of a bubbling substance on its blade."
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
 	icon_state = "baotha_knife1"
@@ -239,3 +228,10 @@
 /obj/item/rogueweapon/huntingknife/idagger/silver/elvish/bandit
 	sellprice = 0
 	smeltresult = null
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/necra/ComponentInitialize()
+	AddComponent(\
+		/datum/component/silverbless,\
+		pre_blessed = BLESSING_TENNITE,\
+		silver_type = SILVER_TENNITE,\
+	)

@@ -440,6 +440,9 @@
 	name = "Gift - Regional, Hatanga Coat"
 	path = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/steppe/loadout
 
+/datum/loadout_item/donator/universal/mountaineer
+	name = "Gift - Mountaineer Cloak"
+	path = /obj/item/clothing/cloak/mountaineer
 
 /////////////////////////////
 // ! Player / Donor Kits ! //
@@ -489,9 +492,9 @@
 	ckeywhitelist = list("toasterstrudes")
 
 /datum/loadout_item/donator/strudel3
-	name = "Donator Kit - Etruscan Design Cloak"
+	name = "Donator Kit - Experimental Azurian Fellowshippe Staff"
 	path = /obj/item/enchantingkit/strudel3
-	ckeywhitelist = list("toasterstrudes")
+	ckeywhitelist = list("toasterstrudes", "pogoco25")
 
 /datum/loadout_item/donator/strudel4
 	name = "Donator Kit - Form-fitting Padded Gambeson"
@@ -915,31 +918,6 @@
 	path = /obj/item/clothing/head/roguetown/decoration/gazelleskull
 	ckeywhitelist = list("shiroseschnee")
 
-/datum/loadout_item/donator/morto_staff
-	name = "Donator Kit - Frozen Vow"
-	path = /obj/item/enchantingkit/morto_staff
-	ckeywhitelist = list("mortosasye")
-
-/datum/loadout_item/donator/mortosasye_deepcutdress
-	name = "Donator Item - Deep Cut Dress"
-	path = /obj/item/clothing/suit/roguetown/shirt/dress/silkdress/donator_mortosasye_deepcutdress
-	ckeywhitelist = list("mortosasye")
-
-/datum/loadout_item/donator/mortosasye_sunrisegown
-	name = "Donator Item - Sunrise Gown"
-	path = /obj/item/clothing/suit/roguetown/shirt/dress/silkdress/donator_mortosasye_sunrisegown
-	ckeywhitelist = list("mortosasye")
-
-/datum/loadout_item/donator/mortosasye_goldendiadem
-	name = "Donator Item - Golden Diadem"
-	path = /obj/item/clothing/head/roguetown/circlet/donator_mortosasye_golddiadem
-	ckeywhitelist = list("mortosasye", "flybrokenwings")
-
-/datum/loadout_item/donator/morto_crown
-	name = "Donator Kit - Sun Crown"
-	path = /obj/item/enchantingkit/morto_crown
-	ckeywhitelist = list("mortosasye")
-
 /datum/loadout_item/donator/racobio_staff
 	name = "Donator Kit - Obsidian Tower"
 	path = /obj/item/enchantingkit/racobio_staff
@@ -1315,26 +1293,6 @@
 	path = /obj/item/clothing/mask/rogue/facemask/goldmask/radiant
 	ckeywhitelist = list("mystoganzi")
 
-/datum/loadout_item/donator/thedragmeme_scarletglove
-	name = "Donator Gift - Scarlet Gloves"
-	path = /obj/item/clothing/gloves/roguetown/rosa/two
-	ckeywhitelist = list("thedragmeme", "witchlilly", "maesune", "koruu")
-
-/datum/loadout_item/donator/thedragmeme_scarlethat
-	name = "Donator Gift - Scarlet Hat"
-	path = /obj/item/clothing/head/roguetown/rosa
-	ckeywhitelist = list("thedragmeme", "witchlilly", "maesune", "koruu")
-
-/datum/loadout_item/donator/thedragmeme_scarletshoes
-	name = "Donator Gift - Scarlet Shoes"
-	path = /obj/item/clothing/shoes/roguetown/rosa/two
-	ckeywhitelist = list("thedragmeme", "witchlilly", "maesune", "koruu")
-
-/datum/loadout_item/donator/thedragmeme_scarletdress
-	name = "Donator Gift - Scarlet Dress"
-	path = /obj/item/clothing/suit/roguetown/shirt/tunic/rosa/two
-	ckeywhitelist = list("thedragmeme", "witchlilly", "maesune", "koruu")
-
 /datum/loadout_item/donator/lief_ring
 	name = "Donator Item - Blortz Incrusted Blacksteel Ring"
 	path = /obj/item/clothing/ring/lief_ring
@@ -1359,7 +1317,6 @@
 	name = "Donator Item - Astratan Tabard"
 	path = /obj/item/clothing/cloak/tabard/limeastratatabard
 	ckeywhitelist = list("limetease")
-
 
 /datum/loadout_item/donator/limetabard
 	name = "Donator Item - Leathery Tabard"
@@ -1393,18 +1350,18 @@
 /datum/loadout_item/donator/lockwoodcloak
 	name = "Donator Item - Courtly Cloak"
 	path = /obj/item/clothing/cloak/rosa/two
-	ckeywhitelist = list("XLockwoodx")
+	ckeywhitelist = list("xlockwoodx")
 
 /datum/loadout_item/donator/lockwoodjacket
 	name = "Donator Item - Sanguine Jacket"
 	path = /obj/item/clothing/suit/roguetown/armor/leather/heavy/jacket/courtphysician/female/lockwood
-	ckeywhitelist = list("XLockwoodx")
+	ckeywhitelist = list("xlockwoodx")
 
-// Was asked to make this for all donors, dont complain about lack of other gem amulets	
+// Was asked to make this for all donors, dont complain about lack of other gem amulets
 /datum/loadout_item/donator/universal/lockwoodamulet
 	name = "Donator Item - Onyxa Amulet"
 	path = /obj/item/clothing/neck/roguetown/carved/onyxaamulet
-	ckeywhitelist = list("XLockwoodx")
+	ckeywhitelist = list("xlockwoodx")
 
 // Solar Dominion Items
 /datum/loadout_item/donator/universal/dominion_sword
@@ -1430,6 +1387,19 @@
 /datum/loadout_item/donator/universal/dominion_cestus
 	name = "Elixir - Dominion Cestus"
 	path = /obj/item/enchantingkit/dominion_cestus
-	ckeywhitelist = list("limetease", "yosheh3")
-	sort_category = "Donator" // TA EDIT
-*/
+
+/datum/loadout_item/donator/rosy/bluelily
+	name = "Donator Item - Tufted Blue-lily"
+	path = /obj/item/clothing/head/roguetown/decoration/bluelily
+	ckeywhitelist = list("rosysaturniidae")
+
+/datum/loadout_item/donator/rosy/rosecollar
+	name = "Donator Item - Clasped Rosestone Collar"
+	path = /obj/item/clothing/neck/roguetown/psicross/eora/rosecollar
+	ckeywhitelist = list("rosysaturniidae")
+
+/datum/loadout_item/donator/sigholtcoronet
+	name = "Donator Item - Adjustable Blacksteel Coronet"
+	path = /obj/item/clothing/head/roguetown/circlet/sigholt_coronet
+	ckeywhitelist = list("sigholtstarsong")
+*/a

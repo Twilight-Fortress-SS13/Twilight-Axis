@@ -222,6 +222,7 @@
 	backpack_contents = list(
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
+		/obj/item/rogueweapon/huntingknife = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1
 		)
 
@@ -427,6 +428,8 @@
 	backpack_contents = list(
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
 		/obj/item/repair_kit/metal/bad = 1,
+		/obj/item/rogueweapon/huntingknife = 1,
+		/obj/item/rogueweapon/scabbard/sheath = 1,
 		)
 	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/warrior]
 	H.set_blindness(0)
@@ -515,7 +518,7 @@
 	add_verb(H, /mob/living/carbon/human/proc/faith_test) //Allows the Exorcist to interrogate others for their faith. Trait's agnostically worded, to allow more flexiable usage by Pantheoneers and Ascendants in this role.
 	add_verb(H, /mob/living/carbon/human/proc/torture_victim) //Not as scary as it sounds. Mostly. Okay, just a little bit.
 	if(H.mind)
-		var/silver = list("Silver Dagger","Silver Shortsword","Silver Arming Sword","Silver Rapier","Silver Longsword","Silver Broadsword","Silver Executioner Sword","Silver Mace","Silver Warhammer","Silver Morningstar","Silver Whip","Silver War Axe","Silver Tomahawk","Silver Poleaxe","Silver Spear","Silver Halberd","Silver Quarterstaff","Silver Katar (+1 Athletics)","Silver Claws (+1 Athletics)","Silver Knuckledusters (+1 Athletics)", "Stake Launcher + 24 Shotstakes")
+		var/silver = list("Silver Dagger","Silver Shortsword","Silver Arming Sword","Silver Rapier","Silver Longsword","Silver Broadsword","Silver Executioner Sword","Silver Mace","Silver Warhammer","Silver Morningstar","Silver Whip","Silver War Axe","Silver Tomahawk","Silver Poleaxe","Silver Spear","Silver Halberd","Silver Quarterstaff","Silver Katar (+1 Athletics)","Silver Claws (+1 Athletics)","Silver Knuckledusters (+1 Athletics)", "Stake Launcher + 24 Shotstakes", "Silver Threaded Sword-Whip")
 		var/silver_choice = input(H, "Choose your WEAPON.", "PREPARE YOUR ARMS.") as anything in silver //Trim down to five or six choices, later? See what's the most popular, first. Gives people a chance to experiment with all of the new silver weapons.
 		switch(silver_choice)
 			if("Silver Dagger")
@@ -595,6 +598,12 @@
 				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_JOURNEYMAN, TRUE)
 				r_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/staker
 				beltr = /obj/item/quiver/bolt/stake/standard
+			if("Silver Threaded Sword-Whip")			//TA - EDIT
+				H.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, SKILL_LEVEL_JOURNEYMAN, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_JOURNEYMAN, TRUE)
+				r_hand = /obj/item/rogueweapon/sword/sabre/threaded/silver
+				l_hand = /obj/item/rogueweapon/scabbard/sword/cane_bb
+
 
 		var/sidearm = list("Dagger", "Parrying Dagger", "Heavy Dagger", "Broadsword", "Greatshield", "Stake Launcher", "Blessed Silver Stake", "Blessed Silver Hunting Knife", "Blessed Silver Shovel")
 		var/sidearm_choice = input(H, "Choose your SIDEARM.", "SAY YOUR PRAYERS.") as anything in sidearm
@@ -626,10 +635,10 @@
 			if("Blessed Silver Shovel")
 				l_hand = /obj/item/rogueweapon/shovel/silver/preblessed //Unlocks the secret 'Shovel Knight' subclass. No dagger skills if you take this. Doesn't scale off anything, I think. Raw style.
 
-		var/discipline = list("Traditionalist - Hauberk & Silver-Blood (+I INT)", "Reformist - Chainmaille & Dodge Expert (+I SPD)", "Orthodoxist - Cuirass & Plate Training (+I CON / -I SPD)")
+		var/discipline = list("Sanguine - Silverblooded (+I INT)", "Swiftfooted - Dodgemaster (+I SPD)", "Stalwart - Platearmorable (+I CON / -I SPD)")
 		var/discipline_choice = input(H, "Choose your DISCIPLINE.", "FACE YOUR NIGHTMARE.") as anything in discipline
 		switch(discipline_choice)
-			if("Traditionalist - Hauberk & Silver-Blood (+I INT)")
+			if("Sanguine - Silverblooded (+I INT)")
 				ADD_TRAIT(H, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
 				ADD_TRAIT(H, TRAIT_SILVER_BLESSED, TRAIT_GENERIC) //'Witcher' archetype. Well-rounded, and vamp immune, but not exceptional in any particular field.
 				H.change_stat(STATKEY_INT, 1)
@@ -637,15 +646,15 @@
 				armor = /obj/item/clothing/suit/roguetown/shirt/undershirt/puritan
 				shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
 				belt = /obj/item/storage/belt/rogue/leather/black
-			if("Reformist - Chainmaille & Dodge Expert (+I SPD)")
+			if("Swiftfooted - Dodgemaster (+I SPD)")
 				ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC) //'Puritan' archetype. Closer to the Roguetown-era Inquisitor in portrayal. No armor training, but overprepared with silver throwing daggers and excellent evasive maneuvers.
 				H.change_stat(STATKEY_SPD, 1)
 				H.adjust_skillrank_up_to(/datum/skill/misc/sneaking, SKILL_LEVEL_JOURNEYMAN, TRUE)
 				head = /obj/item/clothing/head/roguetown/puritan
 				armor = /obj/item/clothing/suit/roguetown/shirt/undershirt/puritan
 				shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/besilked
-				belt = /obj/item/storage/belt/rogue/leather/knifebelt/black/silver
-			if("Orthodoxist - Cuirass & Plate Training (+I CON / -I SPD)")
+				belt = /obj/item/storage/belt/rogue/leather/tossbelt/blade/black/silver
+			if("Stalwart - Platearmorable (+I CON / -I SPD)")
 				ADD_TRAIT(H, TRAIT_HEAVYARMOR, TRAIT_GENERIC)
 				ADD_TRAIT(H, TRAIT_ZOMBIE_IMMUNE, TRAIT_GENERIC) //'Templar' archetype. Blessings protect from the Rot, while opening the opportunity for heavy armor usage. Well-protected and resilient, but slower and visibly identifiable as a prioritable threat.
 				H.change_stat(STATKEY_CON, 1)
@@ -680,6 +689,9 @@
 						head = /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface
 					if("Snouted Roundface Bascinet")
 						head = /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/roundface/snouted
+		if(r_hand == /obj/item/rogueweapon/stoneaxe/handaxe/silver && belt == /obj/item/storage/belt/rogue/leather/black)
+			r_hand = null
+			belt = /obj/item/storage/belt/rogue/leather/tossbelt/tomahawk/black/silver
 
 	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced
 	pants = /obj/item/clothing/under/roguetown/tights/puritan
@@ -690,6 +702,7 @@
 	backpack_contents = list(
 		/obj/item/flashlight/flare/torch/metal = 1,
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
+		/obj/item/rogueweapon/huntingknife = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
 		/obj/item/book/rogue/trophy_rules = 1 //TA edit - added trophy_hunter component
 		)

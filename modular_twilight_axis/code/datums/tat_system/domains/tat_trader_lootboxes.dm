@@ -217,8 +217,8 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_medium_base_pool, list(
 	/obj/item/rogueweapon/sword/short/messer = 9,
 	/obj/item/rogueweapon/sword/short/messer/alt = 9,
 	/obj/item/rogueweapon/woodstaff/quarterstaff/steel = 6,
-	/obj/item/storage/belt/rogue/leather/knifebelt/black/kazengun = 9,
-	/obj/item/storage/belt/rogue/leather/knifebelt/black/steel = 9,
+	/obj/item/storage/belt/rogue/leather/tossbelt/blade/black/kazengun = 9,
+	/obj/item/storage/belt/rogue/leather/tossbelt/blade/black/steel = 9,
 ))
 
 GLOBAL_LIST_INIT(tat_trader_lootbox_expensive_base_pool, list(
@@ -279,7 +279,7 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_expensive_base_pool, list(
 	/obj/item/rogueweapon/whip/silver/psy = 5,
 	/obj/item/rogueweapon/whip/silver = 5,
 	/obj/item/rogueweapon/woodstaff/quarterstaff/steel/silver = 5,
-	/obj/item/storage/belt/rogue/leather/knifebelt/black/silver = 5,
+	/obj/item/storage/belt/rogue/leather/tossbelt/blade/black/silver = 5,
 	/obj/item/clothing/ring/statamythortz = 2,
 	/obj/item/clothing/ring/statgemerald = 2,
 	/obj/item/clothing/ring/statonyx = 2,

@@ -11,6 +11,7 @@ const state = {
   hrefToken: null,
   verbTabs: [],
   verbs: [['', '']],
+  emoteFavourites: [],
   verbSearch: '',
   lastVerbCat: '',
   tickets: [],
@@ -365,6 +366,8 @@ function SDQL2Panel() {
 function VerbsPanel({ cat }) {
   const s = useStatState();
   const [search, setSearch] = useState(s.verbSearch);
+  const [favouritesOnly, setFavouritesOnly] = useState(false);
+  const isEmotes = cat === 'Emotes';
 
   useEffect(() => {
     if (cat !== s.lastVerbCat) {
@@ -415,7 +418,27 @@ function VerbsPanel({ cat }) {
   }, [s.verbs, effectiveCat, s.splitAdminTabs]);
 
   const q = (search || '').toLowerCase();
-  const matches = (command) => !q || command.toLowerCase().indexOf(q) !== -1;
+  const matches = (command) =>
+    (!q || command.toLowerCase().includes(q)) &&
+    (!isEmotes || !favouritesOnly || s.emoteFavourites.includes(command));
+  const renderVerb = (command) => (
+    isEmotes ? (
+      <div key={command} className="grid-item emote-cell" data-label={command}>
+        <a href="#" className="grid-item-text emote-item-name" title={command} onClick={onVerbClick(command)}>{command}</a>
+        <button
+          type="button"
+          className={'emote-star' + (s.emoteFavourites.includes(command) ? ' active' : '')}
+          title={s.emoteFavourites.includes(command) ? 'Убрать из избранного' : 'Добавить в избранное'}
+          aria-pressed={s.emoteFavourites.includes(command)}
+          onClick={() => Byond.sendMessage('Emote-Favourite', { name: command })}
+        >★</button>
+      </div>
+    ) : (
+      <a key={command} href="#" className="grid-item" data-label={command} onClick={onVerbClick(command)}>
+        <span className="grid-item-text">{command}</span>
+      </a>
+    )
+  );
   const onVerbClick = (command) => (e) => {
     e.preventDefault();
     runAfterFocus(() => Byond.command(command.replace(/\s/g, '-')));
@@ -423,6 +446,7 @@ function VerbsPanel({ cat }) {
 
   return (
     <Fragment>
+      <div className="emote-toolbar">
       <input
         type="text"
         className="verb-search"
@@ -430,29 +454,28 @@ function VerbsPanel({ cat }) {
         value={search}
         onInput={onInput}
       />
-      <div className="grid-container">
-        {main.map((command, i) => (
-          <a key={i} href="#" className="grid-item" data-label={command}
-            style={{ display: matches(command) ? '' : 'none' }}
-            onClick={onVerbClick(command)}>
-            <span className="grid-item-text">{command}</span>
-          </a>
-        ))}
+      {isEmotes && (
+        <div className="emote-page-toggle">
+          <button type="button" className={'grid-item-text' + (!favouritesOnly ? ' active' : '')} onClick={() => setFavouritesOnly(false)}>Все</button>
+          <button type="button" className={'grid-item-text' + (favouritesOnly ? ' active' : '')} onClick={() => setFavouritesOnly(true)}>Избранное</button>
+        </div>
+      )}
       </div>
-      {Object.keys(additions).map((subCat) => (
-        <Fragment key={subCat}>
-          <h3>{subCat}</h3>
-          <div className="grid-container">
-            {additions[subCat].map((command, i) => (
-              <a key={i} href="#" className="grid-item" data-label={command}
-                style={{ display: matches(command) ? '' : 'none' }}
-                onClick={onVerbClick(command)}>
-                <span className="grid-item-text">{command}</span>
-              </a>
-            ))}
-          </div>
-        </Fragment>
-      ))}
+      <div className="grid-container">{main.filter(matches).map(renderVerb)}</div>
+      {Object.keys(additions).map((subCat) => {
+        const commands = additions[subCat].filter(matches);
+        if (!commands.length) return null;
+        const titles = { Noises: 'Звуки', Rolling: 'Броски', Wildtongue: 'Звериные звуки' };
+        return (
+          <Fragment key={subCat}>
+            <h3>{isEmotes ? titles[subCat] || subCat : subCat}</h3>
+            <div className="grid-container">{commands.map(renderVerb)}</div>
+          </Fragment>
+        );
+      })}
+      {isEmotes && favouritesOnly && ![...main, ...Object.values(additions).flat()].some(matches) && (
+        <p>Отметьте эмоции звёздочкой на вкладке «Все», чтобы добавить их в избранное.</p>
+      )}
     </Fragment>
   );
 }
@@ -779,3 +802,7 @@ window.set_theme = set_theme;
 window.set_font_size = set_font_size;
 window.set_tabs_style = set_tabs_style;
 window.getCookie = getCookie;
+
+Byond.subscribeTo('emote_panel_data', (payload) => {
+  setState({ emoteFavourites: Array.isArray(payload.favourites) ? payload.favourites : [] });
+});

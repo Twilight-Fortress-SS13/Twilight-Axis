@@ -300,6 +300,25 @@
 //Etruscan design cloak resprite
 
 /obj/item/clothing/cloak/poncho/dittocloak
+	name = "etruscan design cloak"
+	desc = "A overly fancy and nicely designed Cloak with what appears to be Etruscan silks. Looks expensive."
+	detail_tag = "_detail"
+	altdetail_tag = "_detailalt"
+	adjustable = CAN_CADJUST
+	alternate_worn_layer = 9.9 // okay look this is weird but its to cover hair :)
+	color = CLOTHING_WHITE
+	detail_color = CLOTHING_WHITE
+	altdetail_color = CLOTHING_WHITE
+	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes.dmi'
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/donor_sleeves_armor.dmi'
+	icon_state = "dittocloak"
+	item_state = "dittocloak"
+	sleevetype = "dittocloak"
+	nodismemsleeves = TRUE
+	flags_inv = HIDEBOOB
+
+/obj/item/clothing/cloak/poncho/dittocloak
 	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes.dmi'
 	sleeved = 'modular_twilight_axis/icons/clothing/onmob/donor_sleeves_armor.dmi'
@@ -1287,3 +1306,59 @@
 	icon = 'modular_twilight_axis/icons/obj/items/donor_weapons_64.dmi'
 	sheathe_icon = "eirensword"
 	bigboy = TRUE
+
+/obj/item/rogueweapon/woodstaff/implement/morto
+	base_implement_name = null
+	name = "Frozen Vow"
+	desc = "A magic staff sheathed in dark ice and crowned with flawless blortz gems of exceptional purity. Each crystalline facet drinks in the arcane energy that would otherwise dissipate into the air with every spell, preserving it within the frozen metal before returning it to its wielder. Extremely cold to the touch."
+	icon_state = "mystralstaff"
+	icon = 'modular_twilight_axis/icons/obj/items/donor_weapons_64.dmi'
+
+/obj/item/rogueweapon/woodstaff/implement/grand/magos/morto
+	base_implement_name = null
+	name = "Frozen Vow"
+	desc = "A magic staff sheathed in dark ice and crowned with flawless blortz gems of exceptional purity. Each crystalline facet drinks in the arcane energy that would otherwise dissipate into the air with every spell, preserving it within the frozen metal before returning it to its wielder. Extremely cold to the touch."
+	icon_state = "mystralstaff"
+	icon = 'modular_twilight_axis/icons/obj/items/donor_weapons_64.dmi'
+
+/obj/item/clothing/suit/roguetown/shirt/dress/silkdress/donator_mortosasye_deepcutdress
+	name = "deep cut dress"
+	desc = "A daring dress with a deep V-cut neckline, secured at the sides by sleek, fitted fabric straps. It is tailored to its owner specific measurements. It seems to have a light coat of frost."
+	icon_state = "mortosasye_deepcutdress"
+	item_state = "mortosasye_deepcutdress"
+	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes.dmi'
+	color = null
+	allowed_sex = list(FEMALE)
+
+/obj/item/clothing/suit/roguetown/shirt/dress/silkdress/donator_mortosasye_sunrisegown
+	name = "sunrise gown"
+	desc = "A beautiful gown that seems to shimmer with the light of a rising sun, almost abnormally radiant."
+	icon_state = "mortosasye_sunrisegown"
+	item_state = "mortosasye_sunrisegown"
+	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/donor_clothes.dmi'
+	color = null
+	allowed_sex = list(FEMALE)
+
+/obj/item/clothing/head/roguetown/crown/serpcrown/mortosuncrown
+	name = "sun crown"
+	article = null
+	desc = "A far too extravagant crown made of gold, sporting a rontz at the center. The metal has been shaped to resemble sunrays."
+	replace_existing_roguemachine_crown = TRUE
+	icon_state = "mortosasye_suncrown"
+	item_state = "mortosasye_suncrown"
+	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/obj/items/donor_weapons_64.dmi'
+	worn_x_dimension = 64
+	worn_y_dimension = 64
+
+/obj/item/clothing/head/roguetown/circlet/donator_mortosasye_golddiadem
+	name = "gold diadem"
+	desc = "A simple diadem sporting a diamond-shape at the center, made of gold. It is a simple, yet elegant piece of jewelry - passed down through generations of the Xulu noble house."
+	icon_state = "mortosasye_golddiadem"
+	item_state = "mortosasye_golddiadem"
+	icon = 'modular_twilight_axis/icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/obj/items/donor_weapons_64.dmi'
+	worn_x_dimension = 64
+	worn_y_dimension = 64

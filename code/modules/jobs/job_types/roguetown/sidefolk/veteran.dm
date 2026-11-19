@@ -44,6 +44,7 @@
 			if(!index)
 				index = H.real_name
 			S.name = "veteran cloak ([index])"
+		H.mind?.AddSpell(new /datum/action/cooldown/spell/vetprotege)
 
 
 /datum/advclass/veteran/battlemaster
@@ -358,7 +359,7 @@
 	subclass_languages = list(/datum/language/grenzelhoftian)
 	cmode_music = sound("sound/music/combat_grenzelhoft.ogg")
 	category_tags = list(CTAG_VETERAN)
-	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_STEELHEARTED)
+	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_STEELHEARTED, TRAIT_BADTRAINER) //I am sick of fullplate grenzelvets
 	subclass_stats = list(
 		STATKEY_WIL = 3,
 		STATKEY_STR = 2,
@@ -602,7 +603,7 @@
 	beltl = /obj/item/rogueweapon/whip/bronze
 	beltr = /obj/item/flashlight/flare/torch/lantern
 	backr = /obj/item/storage/backpack/rogue/satchel/black
-	belt = /obj/item/storage/belt/rogue/leather/knifebelt/iron
+	belt = /obj/item/storage/belt/rogue/leather/tossbelt/blade/iron
 	cloak = /obj/item/clothing/cloak/raincloak/mortus
 	backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/corroded = 1,

@@ -187,25 +187,23 @@ SUBSYSTEM_DEF(outdoor_effects)
 
 	for (i in 1 to GLOB.SUNLIGHT_QUEUE_CORNER.len)
 		var/turf/T = GLOB.SUNLIGHT_QUEUE_CORNER[i]
-		T.turf_flags &= ~TURF_SUNLIGHT_QUEUED
-		var/atom/movable/outdoor_effect/U = T.outdoor_effect
+		if(T) // TA EDIT START
+			T.turf_flags &= ~TURF_SUNLIGHT_QUEUED
+			var/atom/movable/outdoor_effect/U = T.outdoor_effect
 
-		/* if we haven't initialized but we are affected, create new and check state */
-		if(!U)
-			T.outdoor_effect = new /atom/movable/outdoor_effect(T)
-			T.update_sky_and_weather_states()
-			U = T.outdoor_effect
+			/* if we haven't initialized but we are affected, create new and check state */
+			if(!U)
+				T.outdoor_effect = new /atom/movable/outdoor_effect(T)
+				T.update_sky_and_weather_states()
+				U = T.outdoor_effect
 
-			/* in case we aren't indoor somehow, wack us into the proc queue, we will be skipped on next indoor check */
-			if(U.state != SKY_BLOCKED)
-				GLOB.SUNLIGHT_QUEUE_UPDATE += T.outdoor_effect
+				/* in case we aren't indoor somehow, wack us into the proc queue, we will be skipped on next indoor check */
+				if(U && U.state != SKY_BLOCKED)
+					GLOB.SUNLIGHT_QUEUE_UPDATE += T.outdoor_effect
 
-		if(U.state != SKY_BLOCKED)
-			continue
-
-		//This might need to be run more liberally
-		update_outdoor_effect_overlays(U)
-
+			//This might need to be run more liberally
+			if(U && U.state == SKY_BLOCKED)
+				update_outdoor_effect_overlays(U) // TA EDIT END
 
 		if(init_tick_checks)
 			CHECK_TICK

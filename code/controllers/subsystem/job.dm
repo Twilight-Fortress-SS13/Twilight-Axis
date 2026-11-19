@@ -24,16 +24,34 @@ SUBSYSTEM_DEF(job)
 	if(!occupations.len)
 		SetupOccupations()
 	set_overflow_role(CONFIG_GET(string/overflow_job))
-	build_townie_contract_gate_exempt_cache()
+	build_contract_signing_caches()
 	return ..()
 
 /datum/controller/subsystem/job/var/list/townie_contract_gate_exempt_names = list()
+/datum/controller/subsystem/job/var/list/quest_claim_barred_names = list()
+/datum/controller/subsystem/job/var/list/quest_claim_towner_names = list()
+/datum/controller/subsystem/job/var/list/quest_claim_lowpop_names = list()
+/datum/controller/subsystem/job/var/list/quest_claim_solo_names = list()
 
-/datum/controller/subsystem/job/proc/build_townie_contract_gate_exempt_cache()
+/datum/controller/subsystem/job/proc/build_contract_signing_caches()
 	townie_contract_gate_exempt_names = list()
+	quest_claim_barred_names = list()
+	quest_claim_towner_names = list()
+	quest_claim_lowpop_names = list()
+	quest_claim_solo_names = list()
 	for(var/datum/job/J as anything in occupations)
 		if(J.townie_contract_gate_exempt)
 			townie_contract_gate_exempt_names |= J.title
+		if(!J.quest_claim_barred)
+			continue
+		if(J.quest_claim_towner_allowed)
+			quest_claim_towner_names |= J.title
+		if(J.quest_claim_lowpop_allowed)
+			quest_claim_lowpop_names |= J.title
+		if(J.quest_claim_solo_allowed)
+			quest_claim_solo_names |= J.title
+		if(!J.quest_claim_towner_allowed && !J.quest_claim_lowpop_allowed && !J.quest_claim_solo_allowed)
+			quest_claim_barred_names |= J.title
 	for(var/path in subtypesof(/datum/advclass))
 		var/datum/advclass/AC = path
 		if(!initial(AC.townie_contract_gate_exempt) || !initial(AC.name))
@@ -42,9 +60,16 @@ SUBSYSTEM_DEF(job)
 			continue
 		townie_contract_gate_exempt_names |= initial(AC.name)
 	sortTim(townie_contract_gate_exempt_names, /proc/cmp_text_asc)
+	sortTim(quest_claim_barred_names, /proc/cmp_text_asc)
+	sortTim(quest_claim_towner_names, /proc/cmp_text_asc)
+	sortTim(quest_claim_lowpop_names, /proc/cmp_text_asc)
+	sortTim(quest_claim_solo_names, /proc/cmp_text_asc)
 
 /datum/controller/subsystem/job/proc/townie_contract_gate_exempt_display_names()
 	return townie_contract_gate_exempt_names
+
+/datum/controller/subsystem/job/proc/quest_claim_barred_display_names()
+	return quest_claim_barred_names
 
 /datum/controller/subsystem/job/proc/set_overflow_role(new_overflow_role)
 	var/datum/job/new_overflow = GetJob(new_overflow_role)
@@ -183,7 +208,7 @@ SUBSYSTEM_DEF(job)
 		if(length(job.allowed_patrons) && !(player.client.prefs.selected_patron?.type in job.allowed_patrons))
 			JobDebug("FOC incompatible with patron, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 			continue
-		if(length(job.virtue_restrictions) && ((player.client.prefs.virtue?.type in job.virtue_restrictions) || (player.client.prefs.virtuetwo?.type in job.virtue_restrictions) || (player.client.prefs.virtue_origin?.type in job.virtue_restrictions)))
+		if(length(job.get_restricted_virtue_names(player.client.prefs)))
 			JobDebug("FOC incompatible with virtues, Player: [player], Job: [job.title], Virtue 1: [player.client.prefs.virtue?.name], Virtue 2: [player.client.prefs.virtuetwo?.name]")
 			continue
 		if(length(job.quirk_restrictions) && ((player.client.prefs.quirklesser?.type in job.quirk_restrictions) || (player.client.prefs.quirkgreater?.type in job.quirk_restrictions)))
@@ -276,7 +301,7 @@ SUBSYSTEM_DEF(job)
 			JobDebug("GRJ incompatible with patron, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 			continue
 
-		if(length(job.virtue_restrictions) && ((player.client.prefs.virtue?.type in job.virtue_restrictions) || (player.client.prefs.virtuetwo?.type in job.virtue_restrictions) || (player.client.prefs.virtue_origin?.type in job.virtue_restrictions)))
+		if(length(job.get_restricted_virtue_names(player.client.prefs)))
 			JobDebug("GRJ incompatible with virtues, Player: [player], Job: [job.title], Virtue 1: [player.client.prefs.virtue?.name], Virtue 2: [player.client.prefs.virtuetwo?.name]")
 			continue
 
@@ -631,7 +656,7 @@ SUBSYSTEM_DEF(job)
 		JobDebug("DO incompatible with patron, Player: [player], Job: [job.title], Race: [player.client.prefs.pref_species.name]")
 		return FALSE
 
-	if(length(job.virtue_restrictions) && ((player.client.prefs.virtue?.type in job.virtue_restrictions) || (player.client.prefs.virtuetwo?.type in job.virtue_restrictions) || (player.client.prefs.virtue_origin?.type in job.virtue_restrictions)))
+	if(length(job.get_restricted_virtue_names(player.client.prefs)))
 		JobDebug("DO incompatible with virtues, Player: [player], Job: [job.title], Virtue 1: [player.client.prefs.virtue?.name]")
 		return FALSE
 
@@ -718,7 +743,7 @@ SUBSYSTEM_DEF(job)
 				if(length(job.allowed_patrons) && !(player.client.prefs.selected_patron?.type in job.allowed_patrons))
 					continue
 
-				if(length(job.virtue_restrictions) && ((player.client.prefs.virtue?.type in job.virtue_restrictions) || (player.client.prefs.virtuetwo?.type in job.virtue_restrictions) || (player.client.prefs.virtue_origin?.type in job.virtue_restrictions)))
+				if(length(job.get_restricted_virtue_names(player.client.prefs)))
 					continue
 
 				if(length(job.get_quirk_job_lock_names(player.client.prefs)))

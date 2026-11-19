@@ -63,6 +63,8 @@
 	// Default a bunch of stuff
 	reset_descriptors()
 	age = initial(age)
+	birthday_month = rand(1, CALENDAR_MONTHS_PER_YEAR) // TA EDIT
+	birthday_day = rand(1, CALENDAR_DAYS_IN_MONTH) // TA EDIT
 	statpack = new /datum/statpack/wildcard/fated
 	qsr_pref = initial(qsr_pref)
 	char_toggles = initial(char_toggles)
@@ -90,6 +92,7 @@
 	rumour_cached = null
 	noble_gossip = null
 	noble_gossip_cached = null
+	secrets = list()
 
 	headshot_link = null
 	headshot_artist_credit = null
