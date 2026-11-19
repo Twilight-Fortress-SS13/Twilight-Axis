@@ -489,6 +489,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/cloak/raincloak/furcloak
 
 /datum/loadout_item/wickercloak
+	save_key = "Wicker Cloak (Standard)" // TA EDIT
 	name = "Wicker Cloak"
 	category = "Плащи"
 	path = /obj/item/clothing/cloak/wickercloak
@@ -701,6 +702,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/suit/roguetown/armor/longcoat
 
 /datum/loadout_item/slit_dress
+	save_key = "Slitted Dress (Standard)" // TA EDIT
 	name = "Slitted dress"
 	category = "Одежда"
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/slit
@@ -812,7 +814,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/suit/roguetown/shirt/explorer
 
 /datum/loadout_item/fancycoat
-	name = "Fancy Coat"
+	name = "Fancy Cloak" // TA EDIT
 	category = "Одежда"
 	path = /obj/item/clothing/cloak/poncho/fancycoat
 
@@ -1070,7 +1072,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/natural/feather
 
 /datum/loadout_item/collar
-	name = "Collar"
+	name = "Leather Collar" // TA EDIT
 	category = "Аксессуары"
 	path = /obj/item/clothing/neck/roguetown/collar/leather
 
@@ -1421,12 +1423,14 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	triumph_cost = 5
 
 /datum/loadout_item/triumph_scabbardnoble
+	save_key = "Decorated Scabbard, Silver (Triumph)" // TA EDIT
 	name = "Decorated Scabbard, Silver"
 	path = /obj/item/rogueweapon/scabbard/sword/noble
 	category = list("Триумфы")
 	triumph_cost = 10
 
 /datum/loadout_item/triumph_sheathnoble
+	save_key = "Decorated Sheath, Silver (Triumph)" // TA EDIT
 	name = "Decorated Sheath, Silver"
 	path = /obj/item/rogueweapon/scabbard/sheath/noble
 	category = list("Триумфы")
@@ -1457,12 +1461,14 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	triumph_cost = 13
 
 /datum/loadout_item/triumph_gildedshirt
+	save_key = "Gilded Dress Shirt (Triumph)" // TA EDIT
 	name = "Gilded Dress Shirt"
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/royal/prince
 	category = list("Триумфы")
 	triumph_cost = 6
 
 /datum/loadout_item/triumph_pristinedress
+	save_key = "Pristine Dress (Triumph)" // TA EDIT
 	name = "Pristine Dress"
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/royal/princess
 	category = list("Триумфы")
@@ -1795,6 +1801,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Триумфы")
 	path = /obj/item/clothing/neck/roguetown/psicross/malum/bronze
 	triumph_cost = 2
+
+// TA EDIT START
+/datum/loadout_item/psicross/inhumen
+	path = null
+// TA EDIT END
 
 /datum/loadout_item/psicross/inhumen/graggar/bronze
 	name = "Bronze Amulet of Graggar"

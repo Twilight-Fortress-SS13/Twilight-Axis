@@ -146,6 +146,34 @@
 						to_chat(user, "In a place as lethal as PSYDONIA, the elderly are all but marvels... or beneficiaries of the habitually privileged. (-1 STR, -2 SPE, -1 PER, -2 CON, +2 INT, +1 FOR)")
 			return CHARACTER_ACT_DATA_UPDATE
 
+		if("birthday") // TA EDIT START
+			var/list/month_choices = list("None")
+			for(var/i in 1 to CALENDAR_MONTHS_PER_YEAR)
+				month_choices += get_month_number_to_text(i)
+			var/current_month = birthday_month ? get_month_number_to_text(birthday_month) : "None"
+			var/month_choice = tgui_input_list(user, "Choose your character's birth month", "BIRTHDAY", month_choices, current_month)
+			if(isnull(month_choice))
+				return CHARACTER_ACT_DATA_UPDATE
+			var/old_birthday = format_birthday(birthday_month, birthday_day) || "Not set"
+			if(month_choice == "None")
+				birthday_month = 0
+				birthday_day = 0
+				verbose_pref_log_change(user, "notice", "Birthday", old_birthday, "Not set")
+				return CHARACTER_ACT_DATA_UPDATE
+			var/new_month = month_choices.Find(month_choice) - 1
+			var/list/day_choices = list()
+			for(var/d in 1 to CALENDAR_DAYS_IN_MONTH)
+				day_choices += d
+			var/day_choice = tgui_input_list(user, "Choose your character's birth day", "BIRTHDAY", day_choices, birthday_day || null)
+			if(isnull(day_choice))
+				return CHARACTER_ACT_DATA_UPDATE
+			birthday_month = new_month
+			birthday_day = day_choice
+			verbose_pref_log_change(user, "notice", "Birthday", old_birthday, format_birthday(birthday_month, birthday_day))
+			to_chat(user, span_notice("Your character was born on [format_birthday(birthday_month, birthday_day)]."))
+			return CHARACTER_ACT_DATA_UPDATE
+		// TA EDIT END
+
 		if("domhand")
 			if(domhand == 1)
 				domhand = 2

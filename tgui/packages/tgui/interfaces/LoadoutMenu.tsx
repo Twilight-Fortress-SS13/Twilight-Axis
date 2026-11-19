@@ -60,6 +60,8 @@ type Data = {
   player_triumphs: number;
 };
 
+const ITEMS_PER_PAGE = 50;
+
 const tintKey = (color: string | null | undefined): string | null => {
   if (typeof color !== 'string') {
     return null;
@@ -227,6 +229,7 @@ export const LoadoutMenu = () => {
   const { data, act } = useBackend<Data>();
   const [category, setCategory] = useState('Всё');
   const [search, setSearch] = useState('');
+  const [page, setPage] = useState(0);
   const [compact, setCompact] = useState(false);
   const [previewText, setPreviewText] = useState(false);
   const items = data.items || [];
@@ -247,11 +250,20 @@ export const LoadoutMenu = () => {
         .sort((first, second) => first.label.localeCompare(second.label)),
     [items, category, query],
   );
+  const pageCount = Math.max(
+    1,
+    Math.ceil(filteredItems.length / ITEMS_PER_PAGE),
+  );
+  const currentPage = Math.min(page, pageCount - 1);
+  const visibleItems = filteredItems.slice(
+    currentPage * ITEMS_PER_PAGE,
+    (currentPage + 1) * ITEMS_PER_PAGE,
+  );
   const colors = compact
     ? []
     : Array.from(
         new Set(
-          filteredItems.flatMap((item) =>
+          visibleItems.flatMap((item) =>
             (item.preview_layers || [])
               .map((layer) =>
                 tintKey(layerColor(layer, selectedByName.get(item.name))),
@@ -300,7 +312,10 @@ export const LoadoutMenu = () => {
                 <Tabs.Tab
                   key={name}
                   selected={name === category}
-                  onClick={() => setCategory(name)}
+                  onClick={() => {
+                    setCategory(name);
+                    setPage(0);
+                  }}
                 >
                   {name}
                 </Tabs.Tab>
@@ -314,7 +329,10 @@ export const LoadoutMenu = () => {
                   fluid
                   placeholder="Поиск по всем категориям..."
                   value={search}
-                  onChange={setSearch}
+                  onChange={(value) => {
+                    setSearch(value);
+                    setPage(0);
+                  }}
                 />
               </Stack.Item>
               <Stack.Item>
@@ -348,6 +366,34 @@ export const LoadoutMenu = () => {
               </Stack.Item>
             </Stack>
           </Stack.Item>
+          <Stack.Item>
+            <Stack align="center">
+              <Stack.Item grow color="label">
+                Найдено предметов: {filteredItems.length}
+              </Stack.Item>
+              <Stack.Item>
+                <Button
+                  icon="chevron-left"
+                  disabled={currentPage === 0}
+                  onClick={() => setPage(currentPage - 1)}
+                >
+                  Назад
+                </Button>
+              </Stack.Item>
+              <Stack.Item>
+                {currentPage + 1} / {pageCount}
+              </Stack.Item>
+              <Stack.Item>
+                <Button
+                  icon="chevron-right"
+                  disabled={currentPage === pageCount - 1}
+                  onClick={() => setPage(currentPage + 1)}
+                >
+                  Далее
+                </Button>
+              </Stack.Item>
+            </Stack>
+          </Stack.Item>
           <Stack.Item grow>
             <Section fill scrollable>
               <TintFilters colors={colors} />
@@ -362,7 +408,7 @@ export const LoadoutMenu = () => {
                   <Table.Cell>Доступ</Table.Cell>
                   <Table.Cell textAlign="right">Триумфы</Table.Cell>
                 </Table.Row>
-                {filteredItems.flatMap((item) => {
+                {visibleItems.flatMap((item) => {
                   const selection = selectedByName.get(item.name);
                   const lock = locks[item.name];
                   return [

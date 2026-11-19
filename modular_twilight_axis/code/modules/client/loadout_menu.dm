@@ -3,12 +3,14 @@
 
 /datum/loadout_menu
 	var/client/owner
+	var/character_slot
 	var/list/gear_list = list()
 	var/subscription_tier = 0
 
 /datum/loadout_menu/New(client/new_owner)
 	owner = new_owner
 	if(owner?.prefs)
+		character_slot = owner.prefs.default_slot
 		owner.prefs.sanitize_subscription_loadout(owner.mob)
 		gear_list = deepCopyList(owner.prefs.gear_list)
 		subscription_tier = owner.prefs.loadout_subscription_tier
@@ -18,11 +20,22 @@
 	gear_list = null
 	return ..()
 
+/datum/loadout_menu/proc/isCurrentCharacter(mob/user)
+	if(!owner?.prefs || user?.client != owner)
+		return FALSE
+	return owner.prefs.default_slot == character_slot \
+		&& owner.prefs.loaded_slot == character_slot
+
+/datum/loadout_menu/ui_status(mob/user, datum/ui_state/state)
+	if(!isCurrentCharacter(user))
+		return UI_CLOSE
+	return ..()
+
 /datum/loadout_menu/ui_state(mob/user)
 	return GLOB.always_state
 
 /datum/loadout_menu/ui_interact(mob/user, datum/tgui/ui)
-	if(user.client != owner)
+	if(!isCurrentCharacter(user))
 		return
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
@@ -45,7 +58,7 @@
 			gear_list -= item_name
 
 /datum/loadout_menu/ui_static_data(mob/user)
-	if(user.client != owner)
+	if(!isCurrentCharacter(user))
 		return list()
 	var/list/items = list()
 	var/list/categories = list("Всё")
@@ -74,7 +87,7 @@
 	return list("items" = items, "categories" = categories)
 
 /datum/loadout_menu/ui_data(mob/user)
-	if(user.client != owner)
+	if(!isCurrentCharacter(user))
 		return list()
 	sanitize_selection(user)
 	var/list/selected = list()
@@ -123,8 +136,9 @@
 	if(..())
 		return TRUE
 	var/mob/user = ui.user
-	if(!owner?.prefs || user.client != owner)
-		return FALSE
+	if(!isCurrentCharacter(user))
+		ui.close()
+		return TRUE
 	if(!GLOB.PatreonsLoaded && action != "cancel" && action != "boosty")
 		return TRUE
 	sanitize_selection(user)

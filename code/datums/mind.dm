@@ -212,6 +212,8 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 		if(H.dna && H.dna.species)
 			known_people[H.real_name]["FSPECIES"] = H.dna.species.name
 		known_people[H.real_name]["FAGE"] = H.age
+		known_people[H.real_name]["FBMONTH"] = H.birthday_month // TA EDIT
+		known_people[H.real_name]["FBDAY"] = H.birthday_day // TA EDIT
 		if(ishuman(current))
 			var/mob/living/carbon/human/C = current
 			var/heretic_text = H.get_heretic_symbol(C)
@@ -251,6 +253,8 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 						referred_gender = "Androgynous"
 				M.known_people[H.real_name]["FGENDER"] = referred_gender
 				M.known_people[H.real_name]["FAGE"] = H.age
+				M.known_people[H.real_name]["FBMONTH"] = H.birthday_month // TA EDIT
+				M.known_people[H.real_name]["FBDAY"] = H.birthday_day // TA EDIT
 				if(ishuman(M.current))
 					var/mob/living/carbon/human/C = M.current
 					var/heretic_text = C.get_heretic_symbol(H)

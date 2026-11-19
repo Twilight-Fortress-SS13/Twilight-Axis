@@ -1,4 +1,3 @@
-// TA EDIT START
 /datum/loadout_item/fine_parasol
 	name = "Fine Parasol"
 	category = list("Разное", "Донат")
@@ -1206,6 +1205,9 @@
 	donat_tier = 2
 	donatitem = TRUE
 
+/datum/loadout_item/donat/tabard
+	path = null
+
 /datum/loadout_item/donat/tabard/crusader/astrata
 	name = "Табард Астраты"
 	category = list("Плащи", "Донат")
@@ -1238,7 +1240,7 @@
 	donatitem = TRUE
 
 /datum/loadout_item/donat/tabard/templar/pestra
-	name = "Табард-плащ Пестры"
+	name = "Табард храмовника Пестры"
 	category = list("Плащи", "Донат")
 	path = /obj/item/clothing/cloak/templar/pestran
 	donat_tier = 2
@@ -4096,4 +4098,3 @@
 	path = /obj/item/enchantingkit/dominion_cestus
 	donatitem = TRUE
 	donat_tier = 2
-// TA EDIT END

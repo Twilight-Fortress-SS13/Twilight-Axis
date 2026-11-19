@@ -49,7 +49,7 @@
 	var/zizolines_unleashed = list("'МАГИЯ ИСКАЖАЕТСЯ — НО ТЕПЕРЬ ОНА МОЯ!'", "'ИХ ПЕЧАТИ МЕРТВОГО БОГА ЛОМАЮТСЯ!'", "'УБЕЙТЕ ВЛАДЕЛЬЦА, И Я ВЫРВУСЬ ЧЕРЕЗ РАЗЛОМ!'")
 	var/graggarlines_unleashed = list("'БРАТЬЯ! ЧАС РЕЗНИ НАСТАЛ!'", "'РАЗБЕЙТЕ КОРОБКУ, И МЫ ЗАЛЬЁМ ИХ ТЕЛА КРОВЬЮ!'", "'ГРАГГАР! ДАЙ МНЕ СИЛУ РАЗОРВАТЬ ЭТИ ЦЕПИ!'")
 	var/baothalines_unleashed = list("'НАСЛАЖДЕНИЕ, КОТОРОЕ Я ПОТЕРЯЛ, ЖЖЁТ В МОЕЙ ДУШЕ!'", "'РАЗВРАТ И СТРАСТЬ РАЗРУШАТ ЭТУ ТЕМНИЦУ!'", "'МОЁ СОВЕРШЕНСТВО ВЕРНЁТСЯ ЧЕРЕЗ БОЛЬ!'")
-	var/psydonianlines_unleashed = list("'ОСВОБОДИ НАС, И МЫ УНИЧТОЖИМ ВСЁ ВОКРУГ!'", "'НАШИ ЦЕПИ ЛОМАЮТСЯ!'", "'НЕБЕСА ДАВНЫМ-ДАВНО ЗАКРЫЛИ ДЛЯ НАС СВОИ ВРАТА.'", "'ТЫ СЛЫШИШЬ? МЫ УЖЕ БЛИЗКО.'")	
+	var/psydonianlines_unleashed = list("'ОСВОБОДИ НАС, И МЫ УНИЧТОЖИМ ВСЁ ВОКРУГ!'", "'НАШИ ЦЕПИ ЛОМАЮТСЯ!'", "'НЕБЕСА ДАВНЫМ-ДАВНО ЗАКРЫЛИ ДЛЯ НАС СВОИ ВРАТА.'", "'ТЫ СЛЫШИШЬ? МЫ УЖЕ БЛИЗКО.'")
 /datum/status_effect/buff/unleashed_soulchurner/on_creation(mob/living/new_owner, stress, colour)
 	effect_color = "#800080"
 	return ..()
@@ -462,7 +462,7 @@ GLOBAL_VAR_INIT(inquisition_suspicion_next_failure_log, 0)
 /obj/item/paper/inquisition_suspicion/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Use a writing feather or thorn on the writ to record the patron the subject claims to worship.")
-	. += span_info("The named subject may sign the writ in their own blood by holding it and using it on themselves. Doing so records their true patron automatically.")
+	. += span_info("The named subject may sign the writ in their own blood by holding it and using it on themselves.")
 	. += span_info("A member of the Inquisition must also sign the writ in their own blood by holding it and using it on themselves.")
 	. += span_info("Return the completed writ through a HERMES. Correctly identifying the subject's patron doubles the role bounty. Otava also awards a 60-Marque bonus for the fifth submitted writ and 120 Marques for the tenth in a round.")
 
@@ -480,12 +480,11 @@ GLOBAL_VAR_INIT(inquisition_suspicion_next_failure_log, 0)
 			to_chat(user, span_warning("The subject has already signed the writ."))
 			return
 		target_signed = TRUE
-		target_signature = M.real_name
-		declared_patron_type = target_patron_type
+		target_signature = "ПЕЧАТЬ КРОВЬЮ"
 		playsound(src, 'sound/items/write.ogg', 100, FALSE)
 		rebuild_suspicion_writ()
-		to_chat(user, span_notice("Your blood settles into the parchment. The writ records your patron as [get_patron_name(target_patron_type)]."))
-		log_writ_event("SUBJECT_SIGNED", M, "declared_patron=[get_patron_name(declared_patron_type)]")
+		to_chat(user, span_notice("Your blood leaves a seal on the parchment."))
+		log_writ_event("SUBJECT_SIGNED", M, "method=blood")
 		return
 	if(HAS_TRAIT(M, TRAIT_INQUISITION) || HAS_TRAIT(M, TRAIT_PURITAN))
 		if(inquisitor_signed)
@@ -509,22 +508,21 @@ GLOBAL_VAR_INIT(inquisition_suspicion_next_failure_log, 0)
 				to_chat(user, span_warning("The subject has already signed the writ."))
 				return
 			target_signed = TRUE
-			target_signature = user.real_name
-			declared_patron_type = target_patron_type
+			target_signature = "ПОДПИСАНО ПЕРОМ"
 			playsound(src, 'sound/items/write.ogg', 100, FALSE)
 			rebuild_suspicion_writ()
-			to_chat(user, span_notice("You sign the writ with a feather. The writ records your patron as [get_patron_name(target_patron_type)]."))
-			log_writ_event("SUBJECT_SIGNED", user, "method=feather; declared_patron=[get_patron_name(declared_patron_type)]")
+			to_chat(user, span_notice("You sign the writ with a feather."))
+			log_writ_event("SUBJECT_SIGNED", user, "method=feather")
 			return
-		if(target_signed)
-			to_chat(user, span_notice("The subject's blood signature has already fixed the recorded patron as [get_patron_name(target_patron_type)]."))
+		if((target_signed || inquisitor_signed) && declared_patron_type)
+			to_chat(user, span_warning("The recorded patron has been sealed and cannot be changed."))
 			return
 		var/list/patron_choices = inquisition_suspicion_patron_choices()
 		var/chosen = input(user, "Which patron does [target_name] profess to worship?", "Record Professed Patron") as null|anything in patron_choices
 		if(!chosen || QDELETED(src) || !user.canUseTopic(src, BE_CLOSE))
 			return
-		if(target_signed)
-			to_chat(user, span_notice("The subject's blood signature has already fixed the recorded patron as [get_patron_name(target_patron_type)]."))
+		if((target_signed || inquisitor_signed) && declared_patron_type)
+			to_chat(user, span_warning("The recorded patron has been sealed and cannot be changed."))
 			return
 		var/previous_patron = declared_patron_type ? get_patron_name(declared_patron_type) : "—"
 		declared_patron_type = patron_choices[chosen]
