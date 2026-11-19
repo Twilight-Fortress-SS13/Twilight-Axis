@@ -1,11 +1,57 @@
+/// Divine pantheon storytellers
+#define DIVINE_STORYTELLERS list( \
+	/datum/storyteller/astrata, \
+	/datum/storyteller/noc, \
+	/datum/storyteller/ravox, \
+	/datum/storyteller/abyssor, \
+	/datum/storyteller/xylix, \
+	/datum/storyteller/necra, \
+	/datum/storyteller/pestra, \
+	/datum/storyteller/malum, \
+	/datum/storyteller/eora, \
+	/datum/storyteller/dendor, \
+	/datum/storyteller/psydon, \
+)
+
+//Yeah-yeah, he's not the same pantheon but suck it up, buttercup. We not makin' more defines.
+
+/// Inhumen pantheon storytellers
+#define INHUMEN_STORYTELLERS list( \
+	/datum/storyteller/zizo, \
+	/datum/storyteller/baotha, \
+	/datum/storyteller/graggar, \
+	/datum/storyteller/matthios, \
+)
+
+/// All storytellers
+#define STORYTELLERS_ALL (DIVINE_STORYTELLERS + INHUMEN_STORYTELLERS)
+
+/datum/storyteller
+	var/ru_name = null
+
+/datum/storyteller/proc/get_display_name()
+	return ru_name || name
+
 /datum/storyteller/psydon
 	name = "Psydon"
+	ru_name = "Псайдон"
+	vote_desc = "Воцаряется покой. Антагонистов не будет. Его дети могут спать спокойно - они заслужили передышку."
+	desc = "Обыденные и умеренные события случаются в 1.2 раза чаще. Без антагонистов и божественного вмешательства. Гноллы отключены."
+	welcome_text = "Мягкий ветер проходит по тихим улицам..."
+	weight = 6
+	always_votable = TRUE
 	color_theme = "#80ced8"
 
 	//Has no influence, your actions will not impact him his spawn rates. Cus he's asleep.
 
 /datum/storyteller/astrata
 	name = "Astrata"
+	ru_name = "Астрата" // TA EDIT START
+	vote_desc = "Воцаряется порядок. Великим угрозам не суждено явиться, а гноллы не смеют ступать под Её дневной свет. Её милость обращена к дворянству и Её указам."
+	desc = "Бандиты, личи, оборотни и вампирские лорды не выпадают. Маскарад - единственный крупный антагонист на старте раунда и получает вес x1.5. Гноллы отключены. Изгои (Wretches) масштабируются обычным образом."
+	welcome_text = "Тёплый дневной свет пробуждает вас ото сна..."
+	weight = 6
+	always_votable = TRUE // TA EDIT END
 	follower_modifier = LOWER_FOLLOWER_MODIFIER
 	color_theme = "#FFD700"
 
@@ -30,6 +76,12 @@
 
 /datum/storyteller/noc
 	name = "Noc"
+	ru_name = "Нок" // TA EDIT START
+	vote_desc = "Воцаряется знание. Событий меньше чем обычно, но арканное вмешательство всё ещё возможно. Её милость обращена к тем, кто мечтает о большем."
+	desc = "Магические события получают вес x1.2, события с призраками - x1.1. Разброс стоимости событий выше. Пул антагонистов без изменений. Возможен один гнолл."
+	welcome_text = "Воздух потрескивает от арканной энергии..."
+	weight = 4
+	always_votable = TRUE // TA EDIT END
 	color_theme = "#F0F0F0"
 
 	influence_sets = list(
@@ -52,7 +104,34 @@
 
 /datum/storyteller/ravox
 	name = "Ravox"
+	ru_name = "Равокс" // TA EDIT START
+	vote_desc = "Воцаряется слава. Набеги и знамения приходят чаще. Его милость слышна в звоне стали и военных кличах - бандиты отвечают на Его зов, но гноллы держатся в стороне."
+	desc = "Пул рейдов набирает очки в 2 раза быстрее, а события-рейды получают вес x1.3. Бандиты гарантированно становятся крупными антагонистами на старте раунда. Обыденные и личные события подавлены. Гноллы отключены."
+	welcome_text = "\"Вдалеке эхом гремят трубы Зерихо...\""
+	weight = 4
+	always_votable = TRUE
 	color_theme = "#228822"
+	preferred_gnoll_mode = GNOLL_SCALING_NONE
+	guarantees_roundstart_roleset = TRUE
+	roundstart_prob = 100
+
+	tag_multipliers = list(
+		TAG_RAID = 1.3,
+	)
+
+	starting_point_multipliers = list(
+		EVENT_TRACK_CHARACTER_INJECTION = 1,
+	)
+
+	point_gains_multipliers = list(
+		EVENT_TRACK_MUNDANE = 0.75,
+		EVENT_TRACK_PERSONAL = 0.9,
+		EVENT_TRACK_MODERATE = 1,
+		EVENT_TRACK_INTERVENTION = 1,
+		EVENT_TRACK_CHARACTER_INJECTION = 0,	//No midround antagonist spawns - raids and omens carry the conflict.
+		EVENT_TRACK_OMENS = 1,
+		EVENT_TRACK_RAIDS = 2,
+	) // TA EDIT END
 
 	influence_sets = list(
 		"Set 1" = list(
@@ -74,6 +153,12 @@
 
 /datum/storyteller/abyssor
 	name = "Abyssor"
+	ru_name = "Абиссор" // TA EDIT START
+	vote_desc = "Воцаряется вода. События спокойны, но их течение меняется вместе с приливом. Его милость обращена к рыбакам, пиявкам и утопленникам - сноходцы (dreamwalkers) идут глубинными путями, а гноллы не смеют выходить к Его берегам."
+	desc = "Водные события получают вес x1.3, торговые - x1.2. Сноходец (Dreamwalker) получает вес x1.5 в пуле антагонистов. Гноллы отключены."
+	welcome_text = "Горизонт темнеет: тучи собираются к близкой буре..."
+	weight = 4
+	always_votable = TRUE // TA EDIT END
 	color_theme = "#3366CC"
 
 	influence_sets = list(
@@ -98,6 +183,14 @@
 
 /datum/storyteller/xylix
 	name = "Xylix"
+	ru_name = "Ксайликс" // TA EDIT START
+	vote_desc = "Воцаряется непредсказуемость. Ничто не высечено в камне, зато возможно всё. Его милость обращена к случайности, прихоти и шутке."
+	desc = "Некоторые принудительные события игнорируют требования к онлайну, а уже сработавшие события сразу получают полный штраф за повтор. Божественное вмешательство x1.75; внедрение персонажей, знамения (bad omen) и набеги подавлены до 0. Все крупные антагонисты, доступные на старте раунда, получают вес x1.5. Режим гноллов выбирается случайно."
+	welcome_text = "\"...вот что бывает от лишних пряностей и вина!\""
+	weight = 4
+	always_votable = TRUE
+	event_repetition_multiplier = 0
+	forced = TRUE // TA EDIT END
 	color_theme = "#AA8888"
 
 	influence_sets = list(
@@ -118,6 +211,12 @@
 
 /datum/storyteller/necra
 	name = "Necra"
+	ru_name = "Некра" // TA EDIT START
+	vote_desc = "Воцаряется смерть. События случаются реже, а антагонисты выпадают неохотнее. Её милость обращена к тем, кто возвращает неупокоенных обратно в могилы."
+	desc = "События с призраками получают вес x1.3. Очки появления антагонистов и рейдов набирают очки вдвое медленнее; личные события тоже замедлены. Обыденные и умеренные события случаются в 1.25 раза чаще. Возможен один гнолл."
+	welcome_text = "\"В феоде Зенмарка повеяло запахом тления...\""
+	weight = 4
+	always_votable = TRUE // TA EDIT END
 	color_theme = "#888888"
 
 	influence_sets = list(
@@ -143,6 +242,10 @@
 
 /datum/storyteller/pestra
 	name = "Pestra"
+	ru_name = "Пестра" // TA EDIT START
+	vote_desc = "Воцаряется исцеление. События спокойны, но умелые руки могут склонить их ход. Её милость обращена к лекарям и алхимикам."
+	desc = "Алхимические и медицинские события получают вес x1.2, природные - x1.1. Все крупные антагонисты выпадают с одинаковым базовым весом - без предпочтения между бандитами, личами, вервольфами и вампирскими лордами. Возможен один гнолл."
+	welcome_text = "Слышится звон инструментов и бульканье алхимических чудес..." // TA EDIT END
 	color_theme = "#AADDAA"
 
 	influence_sets = list(
@@ -168,6 +271,10 @@
 
 /datum/storyteller/malum
 	name = "Malum"
+	ru_name = "Малум" // TA EDIT START
+	vote_desc = "Воцаряется труд. Божественное вмешательство случается чаще. Его милость обращена к мастерам, творящим шедевры, и шахтёрам."
+	desc = "События труда получают вес x1.5. Божественное вмешательство случается в 2 раза чаще, личные события - в 1.2 раза чаще. Все крупные антагонисты выпадают с одинаковым базовым весом. Возможен один гнолл."
+	welcome_text = "Звон молотов разносится по округе, а жар горнов наполняют улицы..." // TA EDIT END
 	color_theme = "#D4A56C"
 
 	influence_sets = list(
@@ -191,6 +298,10 @@
 
 /datum/storyteller/eora
 	name = "Eora"
+	ru_name = "Эора" // TA EDIT START
+	vote_desc = "Воцаряется любовь. Добрые события приходят чаще, и Она не желает никому зла. Без антагонистов и гноллов; лишь горстка изгоев (Wretches) прячется на окраинах. Её милость обращена к романтике."
+	desc = "Массовые события получают вес x1.5, благословения - x1.2. Без антагонистов и рейдов. Божественное вмешательство случается в 2 раза чаще, личные события - в 1.4 раза чаще. Изгои (Wretches) принудительно ограничены 5-ю слотами. Гноллы отключены."
+	welcome_text = "\"Любовь витает в воздухе? Нет же; это пахнут свежеиспечённые пироги на подоконниках!\"" // TA EDIT END
 	color_theme = "#9966CC"
 
 	influence_sets = list(
@@ -213,6 +324,12 @@
 
 /datum/storyteller/dendor
 	name = "Dendor"
+	ru_name = "Дендор" // TA EDIT START
+	vote_desc = "Воцаряется природа. Заросли и оборотни приходят чаще. Его милость обращена к урожаю и ликантропам - гноллы держатся подальше от Его диких земель."
+	desc = "Природные события получают вес x1.5. Оборотень - единственный крупный антагонист на старте раунда и получает вес x1.5; бандиты, личи и вампирские лорды не выпадают. Божественное вмешательство случается в 2 раза чаще. Гноллы отключены."
+	welcome_text = "Перекличка сидящих на ветвях птиц и блеск утренней росы..."
+	weight = 4
+	always_votable = TRUE // TA EDIT END
 	color_theme = "#664422"
 
 	influence_sets = list(
@@ -237,6 +354,12 @@
 
 /datum/storyteller/zizo
 	name = "Zizo"
+	ru_name = "Зизо" // TA EDIT START
+	vote_desc = "Воцаряется хаос. Личи пробуждаются охотнее, чем под властью любого другого Бога, нежить становится куда свирепее, а культисты Вознесения вылезают из своих укрытий наружу, дабы принести своей Госпоже достойную жертву. Её милость обращена к трупам - святым, знатным или восставшим."
+	desc = "Магические, азартные, лживые и внезапные события получают повышенный вес (от x1.2 до x1.5). Лич или Культ Вознесения гарантированы на старте раунда; бандиты, оборотни и вампирские лорды не выпадают. Сильный разброс стоимости событий. Фиксированный спавн гноллов: шанс 15%, максимум 2. Может сработать расширение количества слотов изгоев (Wretches) в зависимости от количества слотов гарнизона."
+	welcome_text = "Мертвенный ветер несёт вой проклятых..."
+	weight = 4
+	always_votable = TRUE // TA EDIT END
 	color_theme = "#CC4444"
 
 	influence_sets = list(
@@ -263,6 +386,12 @@
 
 /datum/storyteller/baotha
 	name = "Baotha"
+	ru_name = "Баота" // TA EDIT START
+	vote_desc = "Воцаряется дурман. События становятся хаотичнее и мрачнее. Её милость обращена к пьяницам и зависимым."
+	desc = "События безумия, магии и бедствий получают повышенный вес (от x1.1 до x1.4). Вампирский лорд гарантирован на старте раунда; бандиты, личи и оборотни не выпадают. Все события накапливают очки быстрее. Режим гноллов выбирается случайно. Может сработать расширение количества слотов изгоев (Wretches) в зависимости от количества слотов гарнизона."
+	welcome_text = "Воздух наполняет приторный запах хмеля и пряностей..."
+	weight = 4
+	always_votable = TRUE // TA EDIT END
 	color_theme = "#9933FF"
 
 	influence_sets = list(
@@ -284,10 +413,19 @@
 		"Set 6" = list(
 			STATS_PLEASURES = list("name" = "Pleasures had:", "points" = 5, "capacity" = 50),
 		),
+		"Set 5" = list(
+			STATS_KNOTTED_NOT_LUPIANS = list("name" = "Non-Lupian knottings:", "points" = 5, "capacity" = 50),
+		),
 	)
 
 /datum/storyteller/graggar
 	name = "Graggar"
+	ru_name = "Граггар" // TA EDIT START
+	vote_desc = "Воцаряется сила. Гноллы и ассасины рыщут усерднее, чем при любом другом Боге, а набеги случаются куда чаще. Его милость обращена к кровопролитию и каннибализму."
+	desc = "Боевые, кровавые и военные события получают повышенный вес (от x1.2 до x1.6). Гноллы и ассасины гарантированы на старте раунда. Набеги набирает очки в 2.5 раза быстрее. Динамическое масштабирование гноллов: стаи растут вместе с населением. Может сработать расширение количества слотов изгоев (Wretches) в зависимости от количества слотов гарнизона."
+	welcome_text = "По улицам стелется дым, отдающий пеплом и кровью..."
+	weight = 4
+	always_votable = TRUE // TA EDIT END
 	color_theme = "#8B3A3A"
 
 	influence_sets = list(
@@ -310,7 +448,30 @@
 
 /datum/storyteller/matthios
 	name = "Matthios"
+	ru_name = "Маттиос" // TA EDIT START
+	vote_desc = "Воцаряется свобода. Бандитские набеги случаются куда чаще, чем при других Богах. Его милость обращена к кражам и подношениям у одного особого святилища."
+	desc = "Торговые, коррупционные и связанные с добычей события выбираются чаще (от x1.2 до x1.4). Бандиты гарантированы на старте раунда; личи, оборотни и вампирские лорды не появляются. Очки появления антагонистов копятся в 1.5 раза быстрее. Режим гноллов выбирается случайно. Может сработать расширение количества слотов изгоев (Wretches) в зависимости от количества слотов гарнизона."
+	welcome_text = "Звенят маммоны, а свежеподписанные награды ещё пахнут чернилами..."
+	weight = 4
+	always_votable = TRUE
 	color_theme = "#8B4513"
+	preferred_gnoll_mode = GNOLL_SCALING_RANDOM
+	wretch_slot_cap = 15
+	tag_multipliers = list(
+		TAG_TRADE = 1.4,
+		TAG_CORRUPTION = 1.3,
+		TAG_LOOT = 1.2,
+	)
+
+	point_gains_multipliers = list(
+		EVENT_TRACK_MUNDANE = 1,
+		EVENT_TRACK_PERSONAL = 1.1,
+		EVENT_TRACK_MODERATE = 1.2,
+		EVENT_TRACK_INTERVENTION = 1.3,
+		EVENT_TRACK_CHARACTER_INJECTION = 1.5,
+		EVENT_TRACK_OMENS = 1.1,
+		EVENT_TRACK_RAIDS = 0.6,
+	) // TA EDIT END
 
 	influence_sets = list(
 		"Set 1" = list(
@@ -324,6 +485,11 @@
 			STATS_INDEBTED = list("name"= "Number of indebted people:", "points" = 5, "capacity" = 25),
 		),
 		"Set 4" = list(
+			STATS_ITEMS_PICKPOCKETED = list("name" = "Items pickpocketed:", "points" = 4.5, "capacity" = 80), // TA EDIT
 			STATS_LOCKS_PICKED = list("name" = "Locks picked:", "points" = 3.75, "capacity" = 80),
 		)
 	)
+
+#undef DIVINE_STORYTELLERS
+#undef INHUMEN_STORYTELLERS
+#undef STORYTELLERS_ALL

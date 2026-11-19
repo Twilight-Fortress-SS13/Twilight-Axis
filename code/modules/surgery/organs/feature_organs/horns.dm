@@ -1,7 +1,8 @@
 /obj/item/organ/horns
 	name = "horns"
 	desc = "A severed pair of horns. What did you cut this off of?"
-	icon_state = "severedtail" //placeholder
+	icon = 'modular_twilight_axis/icons/roguetown/items/surgery.dmi' //TA_EDIT
+	icon_state = "horns" //TA_EDIT
 	visible_organ = TRUE
 	zone = BODY_ZONE_HEAD
 	slot = ORGAN_SLOT_HORNS

@@ -19,12 +19,19 @@
 
 /turf/open/transparent/update_multiz(prune_on_fail = FALSE, init = FALSE)
 	. = ..()
+
 	var/turf/T = GET_TURF_BELOW(src)
 	if(!T)
+		T = get_step_multiz(src, DOWN)
+	if(!T && z > 1)
+		T = locate(x, y, z - 1)
+
+	if(!T)
 		vis_contents.len = 0
-		if(!show_bottom_level() && prune_on_fail) //If we cant show whats below, and we prune on fail, change the turf to plating as a fallback
+		if(!show_bottom_level() && prune_on_fail)
 			ChangeTurf(/turf/open/floor/rogue/naturalstone, flags = CHANGETURF_INHERIT_AIR)
 		return FALSE
+
 	if(init)
 		vis_contents += T
 	return TRUE
@@ -50,3 +57,29 @@
 	var/mutable_appearance/underlay_appearance = mutable_appearance(initial(path.icon), initial(path.icon_state), layer = TURF_LAYER, plane = PLANE_SPACE)
 	underlays += underlay_appearance
 	return TRUE
+
+
+/client/proc/debug_below_turf()
+	set name = "Debug Below Turf"
+	set category = "Debug"
+
+	var/turf/T = get_turf(usr)
+	if(!T)
+		to_chat(usr, "no turf")
+		return
+
+	var/turf/B = GET_TURF_BELOW(T)
+	to_chat(usr, "HERE: [T] type=[T.type] ([T.x],[T.y],[T.z])")
+	to_chat(usr, "BELOW: [B] type=[B?.type] ([B?.x],[B?.y],[B?.z])")
+	var/turf/L = locate(T.x, T.y, T.z - 1)
+	to_chat(src, "LOCATE BELOW: [L] type=[L?.type] z=[T.z-1] maxz=[world.maxz] maxx=[world.maxx] maxy=[world.maxy]")
+
+	var/turf/stepB = get_step_multiz(T, DOWN)
+	to_chat(src, "get_step_multiz(DOWN): [stepB] type=[stepB?.type]")
+
+	to_chat(usr, "multiz_levels.len=[length(SSmapping.multiz_levels)]")
+	to_chat(usr, "get_step(DOWN)=[get_step(T, DOWN)] type=[get_step(T, DOWN)?.type]")
+
+	if(istype(T, /turf/open/transparent) || istype(T, /turf/closed/transparent))
+		T.update_multiz(TRUE, TRUE)
+		to_chat(usr, "after update_multiz: vis=[length(T.vis_contents)] underlays=[length(T.underlays)]")

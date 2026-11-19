@@ -22,6 +22,16 @@
 	if(!CheckAdminHref(href, href_list))
 		return
 
+	if(href_list["ta_patron_followers"]) // TA EDIT
+		if(check_rights(R_ADMIN)) // TA EDIT
+			ta_show_patron_followers() // TA EDIT
+		return // TA EDIT
+
+	if(href_list["ta_patron_narrate"]) // TA EDIT
+		if(check_rights(R_ADMIN)) // TA EDIT
+			ta_narrate_patron_followers(href_list["ta_patron_narrate"]) // TA EDIT
+		return // TA EDIT
+
 	if(href_list["read_letter"])
 		var/index = text2num(href_list["read_letter"])
 		if(index >= 1 && index <= length(SSroguemachine.letter_archive))
@@ -29,6 +39,8 @@
 			R.show_letter(usr)
 		return
 
+	if(href_list["ccg_manage"]) // TA EDIT
+		ccg_management_topic(href_list) // TA EDIT
 	if(href_list["letter_log"])
 		show_letter_log()
 		return
@@ -47,13 +59,20 @@
 			show_inventory_panel(M)
 		return
 
-	// Open Secrets from Player Panel
-	if(href_list["secrets_panel"])
+	if(href_list["select_equipment"]) // TA EDIT START
+		if(!check_rights(R_SPAWN))
+			return
+		var/mob/M = locate(href_list["select_equipment"])
+		if(M)
+			usr.client.cmd_admin_select_equipment(M)
+		return // TA EDIT END
+
+	if(href_list["secrets_panel"]) // TA EDIT START
 		if(!check_rights(R_ADMIN))
 			return
 
 		var/mob/living/carbon/human/H = locate(href_list["secrets_panel"])
-		if(!H)
+		if(!istype(H))
 			return
 
 		var/list/all_secrets = H.get_secrets_for(usr)
@@ -97,7 +116,7 @@
 			to_chat(usr, span_info("This one has no secrets recorded."))
 			return
 		to_chat(usr, "<span class='info'>[secret_recall_msg]</span>")
-		return
+		return // TA EDIT END
 
 	// Heal panel actions
 	if(href_list["heal_target"])
@@ -705,6 +724,9 @@
 		browse_messages("watchlist entry", filter = TRUE)
 
 	else if(href_list["showmessageckey"])
+		var/rank_name = usr.client?.holder?.rank.name // TA EDIT
+		if(rank_name in list("Eventmin", "Coder", "Developer")) // TA EDIT
+			return // TA EDIT
 		if(!check_rights(R_BAN))
 			return
 		var/target = href_list["showmessageckey"]
@@ -718,6 +740,9 @@
 		browse_messages(target_ckey = target, linkless = TRUE)
 
 	else if(href_list["messageedits"])
+		var/rank_name = usr.client?.holder?.rank.name // TA EDIT
+		if(rank_name in list("Eventmin", "Coder", "Developer")) // TA EDIT
+			return // TA EDIT
 		if(!check_rights(R_BAN))
 			return
 		var/datum/DBQuery/query_get_message_edits = SSdbcore.NewQuery(
@@ -852,6 +877,16 @@
 				delete_character = TRUE
 			H.admin_send_back_to_lobby(usr, delete_character)
 		else
+			if(M.mind)
+				M.mind.unknow_all_people()
+				for(var/datum/mind/MF in get_minds())
+					M.mind.become_unknown_to(MF)
+				for(var/datum/bounty/removing_bounty in GLOB.head_bounties)
+					if(removing_bounty.target == M.real_name)
+						GLOB.head_bounties -= removing_bounty
+			log_admin("[key_name(usr)] has sent [key_name(M)] back to the Lobby.")
+			GLOB.chosen_names -= M.real_name
+			LAZYREMOVE(GLOB.actors_list, M.mobid)
 			SSdroning.kill_droning(M.client)
 			SSdroning.kill_loop(M.client)
 			SSdroning.kill_rain(M.client)
@@ -994,6 +1029,8 @@
 				job.spawn_positions = job.total_positions
 				if(job.uses_storyteller_slot_caps())
 					job.admin_slot_override = TRUE
+				log_admin("[key_name(usr)] added slot to [job.title].")
+				message_admins("[key_name(usr)] added slot to [job.title].")
 				break
 
 		src.manage_free_slots()
@@ -1020,7 +1057,8 @@
 				job.spawn_positions = newtime
 				if(job.uses_storyteller_slot_caps())
 					job.admin_slot_override = TRUE
-
+				log_admin("[key_name(usr)] made custom [newtime] slots to [job.title].")
+				message_admins("[key_name(usr)] made custom [newtime] slots to [job.title].")
 		src.manage_free_slots()
 
 	else if(href_list["removejobslot"])
@@ -1035,6 +1073,8 @@
 				job.spawn_positions = job.total_positions
 				if(job.uses_storyteller_slot_caps())
 					job.admin_slot_override = TRUE
+				log_admin("[key_name(usr)] removed job slot from [job.title].")
+				message_admins("[key_name(usr)] removed job slot from [job.title].")
 				break
 
 		src.manage_free_slots()
@@ -1051,6 +1091,8 @@
 				job.spawn_positions = -1
 				if(job.uses_storyteller_slot_caps())
 					job.admin_slot_override = TRUE
+				log_admin("[key_name(usr)] removed the limit from [job.title] slots.")
+				message_admins("[key_name(usr)] removed the limit from [job.title] slots.")
 				break
 
 		src.manage_free_slots()
@@ -1067,6 +1109,8 @@
 				job.spawn_positions = job.total_positions
 				if(job.uses_storyteller_slot_caps())
 					job.admin_slot_override = TRUE
+				log_admin("[key_name(usr)] added the limit to [job.title] slots.")
+				message_admins("[key_name(usr)] added the limit to [job.title] slots.")
 				break
 
 		src.manage_free_slots()
@@ -1416,6 +1460,9 @@
 		if(obj_dir && !(obj_dir in list(1,2,4,8,5,6,9,10)))
 			obj_dir = null
 		var/obj_name = sanitize(href_list["object_name"])
+		var/list/ta_spawn_advanced = ta_get_spawn_advanced_options(href_list) // TA EDIT START
+		if(ta_spawn_advanced["cancelled"])
+			return // TA EDIT END
 		var/quality_raw = href_list["object_quality"]
 		var/obj_quality = null
 		var/obj_quality_set = FALSE
@@ -1478,6 +1525,8 @@
 						var/turf/N = O.ChangeTurf(path)
 						if(N && obj_name)
 							N.name = obj_name
+						if(N) // TA EDIT
+							ta_apply_spawn_advanced_options(N, ta_spawn_advanced) // TA EDIT
 					else
 						var/atom/O
 						if(where == "frompod")
@@ -1486,7 +1535,7 @@
 							O = new path(target)
 
 						if(!QDELETED(O))
-							O.flags_1 |= ADMIN_SPAWNED_1 | ANTAGOOC_ACCESS_1
+							O.flags_1 |= ADMIN_SPAWNED_1 // TA EDIT
 							if(obj_dir)
 								O.setDir(obj_dir)
 							if(obj_quality_set && istype(O, /obj/item))
@@ -1501,6 +1550,7 @@
 								if(ismob(O))
 									var/mob/M = O
 									M.real_name = obj_name
+							ta_apply_spawn_advanced_options(O, ta_spawn_advanced) // TA EDIT
 							if(href_list["disable_ai"] && ismob(O))
 								var/mob/spawned_mob = O
 								ADD_TRAIT(spawned_mob, TRAIT_AI_DISABLED, ADMIN_TRAIT)
@@ -1626,6 +1676,9 @@
 		show_player_panel(M)
 
 	else if(href_list["modtriumphs"])
+		var/rank_name = usr.client?.holder?.rank.name // TA EDIT
+		if(rank_name in list("Eventmin", "Coder", "Developer")) // TA EDIT
+			return // TA EDIT
 		if(!check_rights(R_BAN))
 			return
 		var/mob/M = locate(href_list["mob"]) in GLOB.mob_list
@@ -1633,6 +1686,9 @@
 		show_player_panel(M)
 
 	else if(href_list["modpq"])
+		var/rank_name = usr.client?.holder?.rank.name // TA EDIT
+		if(rank_name in list("Eventmin", "Coder", "Developer")) // TA EDIT
+			return // TA EDIT
 		if(!check_rights(R_BAN))
 			return
 		var/mob/M = locate(href_list["mob"]) in GLOB.mob_list
@@ -1709,9 +1765,11 @@
 		check_teams()
 
 	else if(href_list["editpq"])
-		if(!check_rights(R_BAN))
+		if(!can_adjust_playerquality(usr.client, TRUE))
 			return
 		var/mob/M = locate(href_list["mob"]) in GLOB.mob_list
+		if(!M || !M.client)
+			return
 		var/client/mob_client = M.client
 		var/amt2change = input(usr, "How much to modify the PQ by? (20 to -20, or 0 to just add a note)") as null|num
 		if(!check_rights(R_BAN,0))
@@ -1719,16 +1777,21 @@
 		var/raisin = stripped_input(usr, "State a short reason for this change", "Game Master", "", null)
 		if((!isnull(amt2change) && amt2change != 0) && !raisin)
 			return
+		if(mob_client.ckey == usr.ckey)
+			to_chat(src, span_boldwarning("Самому себе PQ менять нельзя."))
+			return
 		adjust_playerquality(amt2change, mob_client.ckey, usr.ckey, raisin)
 		for(var/client/C in GLOB.clients) // I hate this, but I'm not refactoring the cancer above this point.
 			if(LOWER_TEXT(C.key) == LOWER_TEXT(mob_client.ckey))
 				to_chat(C, "<span class=\"admin\"><span class=\"prefix\">ADMIN LOG:</span> <span class=\"message linkify\">Your PQ has been adjusted by [amt2change] by [usr.key] for reason: [raisin]</span></span>")
 				return
 	else if(href_list["showpq"])
-		if(!check_rights(R_BAN))
-			return
 		var/mob/M = locate(href_list["mob"]) in GLOB.mob_list
+		if(!M || !M.client)
+			return
 		var/client/mob_client = M.client
+		if(!can_view_playerquality_of(usr.client, mob_client.ckey, TRUE))
+			return
 		check_pq_menu(mob_client.key)
 
 	else if(href_list["edittriumphs"])
@@ -1744,7 +1807,11 @@
 		var/raisin = stripped_input(usr, "State a short reason for this change", "Game Master", null, null)
 		if(!amt2change || !raisin)
 			return
+		if(M.ckey == usr.ckey)
+			to_chat(src, span_boldwarning("Самому себе триумфы выдавать нельзя."))
+			return
 		M.adjust_triumphs(amt2change, FALSE, "Edit Triumphs (Game Master panel) by [usr.key]: [raisin]")
+		world.TgsAnnounceTriumphChanges(amt2change, M.ckey, usr.ckey, raisin)
 		message_admins("[usr.key] adjusted [M.key]'s triumphs by [amt2change] with [!raisin ? "no reason given" : "reason: [raisin]"].")
 		log_admin("[usr.key] adjusted [M.key]'s triumphs by [amt2change] with [!raisin ? "no reason given" : "reason: [raisin]"].")
 

@@ -1,5 +1,5 @@
 // Verb to toggle restart notifications
-/client/verb/notify_restart()
+/* /client/verb/notify_restart() // TA EDIT START
 	set category = "OOC"
 	set name = "Notify Restart"
 	set desc = ""
@@ -31,4 +31,4 @@
 
 		// If we got here, they arent in the list. Chuck 'em in!
 		to_chat(src, span_notice("I will now be notified when the server restarts"))
-		SSdiscord.notify_members += "[stored_id]" // The list uses strings because BYOND cannot handle a 17 digit integer
+		SSdiscord.notify_members += "[stored_id]" */ // The list uses strings because BYOND cannot handle a 17 digit integer // TA EDIT END

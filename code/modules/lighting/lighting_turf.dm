@@ -13,6 +13,7 @@
 	for(var/datum/lighting_corner/corner as anything in corners)
 		corner?.vis_update()
 
+
 /turf/proc/lighting_clear_overlay()
 	if (lighting_object)
 		qdel(lighting_object, TRUE)

@@ -6,12 +6,14 @@
 	outfit = /datum/outfit/job/roguetown/wretch/ancient_spellblade
 	class_select_category = CLASS_CAT_ACCURSED
 	category_tags = list(CTAG_WRETCH)
-	maximum_possible_slots = 2 // Two, so the gimmic isn't overdone. Keep in mind these are, very. very. strong.
+	maximum_possible_slots = 2 // Two so that the gimmick isn't overdone
+	min_pq = 30 // TA EDIT
 	applies_post_equipment = TRUE
-	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_SHATTER_KILL, TRAIT_ARCYNE, TRAIT_SKELETAL_GIB_ON_DEATH, TRAIT_BLOODLOSS_IMMUNE)
+	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_ARCYNE, TRAIT_SKELETAL_GIB_ON_DEATH, TRAIT_BLOODLOSS_IMMUNE)
 	subclass_stats = list(
 		STATKEY_INT = 2,
 		STATKEY_WIL = 2,
+		STATKEY_CON = -3, // ta edit
 		STATKEY_PER = 1,
 		STATKEY_SPD = -1,
 		STATKEY_STR = -1,
@@ -22,7 +24,7 @@
 		/datum/skill/combat/wrestling = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN, // ta edit
 		/datum/skill/magic/arcane = SKILL_LEVEL_APPRENTICE,
 		//ex-servantry skills
 		/datum/skill/craft/carpentry = SKILL_LEVEL_NOVICE,
@@ -33,32 +35,34 @@
 	tempo_capable = FALSE //already removed by being a skeleton, in case we add it to the UI in future.
 	adv_stat_ceiling = list(STAT_INTELLIGENCE = 12, STAT_SPEED = 9, STAT_CONSTITUTION = 10, STAT_WILLPOWER = 12) //infinite fatigue + spellblade fuckery vs vamp
 	extra_context = "This class is unable to be revived and all forms of death will gib you."
+	forbidden_races = list(RACES_DESPISED RACES_OOZE) // ta edit
 
 /datum/outfit/job/roguetown/wretch/ancient_spellblade
 
 /datum/outfit/job/roguetown/wretch/ancient_spellblade/pre_equip(mob/living/carbon/human/H)
 	..()
+	REMOVE_TRAITS_IN(H, SPECIES_TRAIT)
 
 	H.become_skeleton()
 	H.can_do_sex = FALSE
 	change_origin(H, /datum/virtue/origin/unselectable/skeleton, "Legion")
 
-	//no swift intent
+	/* TA EDIT
 	H.possible_rmb_intents = list(/datum/rmb_intent/feint,\
 	/datum/rmb_intent/aimed,\
 	/datum/rmb_intent/riposte,\
 	/datum/rmb_intent/strong,\
 	/datum/rmb_intent/weak)
 	H.swap_rmb_intent(num=1)
-
+	*/
 	// Skeleton antag datum + patron (matching greater_skeleton setup)
-	H.set_patron(/datum/patron/inhumen/zizo)
+	// H.set_patron(/datum/patron/inhumen/zizo) TA EDIT
 	if(H.mind)
 		H.mind.add_antag_datum(new /datum/antagonist/skeleton())
 
 	H.choose_name_popup("Ancient Azurcaephan")
 
-	H.cmode_music = 'sound/music/combat_weird.ogg'
+	H.cmode_music = sound("sound/music/combat_weird.ogg")
 
 	// Equipment — gilbranze loadout matching lich skeleton spellblade
 	belt = /obj/item/storage/belt/rogue/leather

@@ -139,7 +139,6 @@ export const RollTooltip = (props: RollTooltipProps) => {
       <div className="RollTooltip__throws">
         {throws.map((roll, i) => (
           // The list never reorders, so the index is the identity.
-          // biome-ignore lint/suspicious/noArrayIndexKey: see above
           <div key={i} className="RollTooltip__throw">
             {/* Every throw fills all four grid rows, so a missing label or footer is an empty cell. */}
             <div

@@ -1,3 +1,4 @@
+/* // TA EDIT START
 /mob/proc/has_antagooc_access()
 	if(flags_1 & ANTAGOOC_ACCESS_1)
 		return TRUE
@@ -68,3 +69,4 @@
 			continue
 		var/shown_name = C.holder ? "[mob.name]([key])" : mob.name
 		to_chat(C, "<font color='[PATRON_COLOR_ZIZO]'><b>AntagOOC—</b><EM>[shown_name]:</EM> <span class='message linkify'>[msg]</span></font>", type = MESSAGE_TYPE_OOC)
+*/ // TA EDIT END

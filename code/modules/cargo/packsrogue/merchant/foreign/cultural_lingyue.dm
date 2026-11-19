@@ -1,6 +1,6 @@
 /datum/supply_pack/rogue/lingyue
 	group = "Cultural Stock"
-	crate_name = "Lingyue crate"
+	crate_name = "Gyedzai crate" //TA EDIT
 	crate_type = /obj/structure/closet/crate/chest/merchant
 	not_in_public = TRUE
 

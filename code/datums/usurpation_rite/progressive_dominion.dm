@@ -19,14 +19,14 @@
  */
 
 /datum/usurpation_rite/progressive_dominion
-	name = "Rite of Progressive Dominion"
+	name = "Rite of Salvation" //TA EDIT
 	desc = "The rule of the ignorant must end! Only those who are not beholden to the past, who progress the world toward a bright future, shall rule!"
-	explanation = {"<p>A mage of sufficient power, a follower of Zizo, or the undead, may claim the throne through the assent of those who embrace progress.</p>\
+	explanation = {"<p>A mage of sufficient power, a follower of Zizo, or the undead, may claim the throne through the assent of those who embrace salvation from death itself.</p>\
 <p><b>Who may invoke:</b> Any mage with Apprentice-level Arcyne Training or higher, any follower of Zizo, or any undead.</p>\
 <p><b>How it works:</b> Mages trained in the Arcyne arts, followers of Zizo, or those touched by undeath, must gather near the throne and speak the words 'I assent' to support your claim.</p>\
 <p><b>Completion condition:</b> <b>5</b> voices must speak their assent. Once the threshold is reached, the realm is alerted and a contestation period begins — survive it and stay conscious while remaining near the throne, and it is yours.</p>\
-<p><b>Restrictions:</b> None. All who seek progress are welcome — the living, the undead, the outlaw.</p>\
-<p><b>Realm type if successful:</b> Dominion, ruled by an Exarch.</p>"}
+<p><b>Restrictions:</b> None. All who seek salvation are welcome — the living, the undead, the outlaw.</p>\
+<p><b>Realm type if successful:</b> Dominion, ruled by an Exarch.</p>"} //TA EDIT
 	new_ruler_title = "Exarch"
 	new_ruler_title_f = "Exarch"
 	new_realm_type = "Dominion"
@@ -52,7 +52,7 @@
 	phase_timer_id = addtimer(CALLBACK(src, PROC_REF(on_gathering_timeout)), RITE_GATHERING_DURATION, TIMER_STOPPABLE)
 
 /datum/usurpation_rite/progressive_dominion/on_gathering_timeout()
-	fail("The voices of progress did not grant sufficient assent.")
+	fail("The voices of salvation did not grant sufficient assent.") //TA EDIT
 
 /// Override: mages, Zizite followers, and undead assent. Any arcyne training, Zizo patron, OR undead status qualifies.
 /datum/usurpation_rite/progressive_dominion/try_assent(mob/living/carbon/human/supporter)
@@ -80,8 +80,8 @@
 
 /datum/usurpation_rite/progressive_dominion/on_assent_accepted(mob/living/carbon/human/supporter)
 	supporter.visible_message( \
-		span_notice("[supporter.real_name] speaks their assent to the Rite of Progressive Dominion."), \
-		span_notice("You speak your assent. Progress demands no less."))
+		span_notice("[supporter.real_name] speaks their assent to the Rite of Salvation."), \
+		span_notice("You speak your assent. Salvation demands no less.")) //TA EDIT
 	to_chat(invoker, span_notice("[supporter.real_name] has assented. ([length(assenters)]/[DOMINION_REQUIRED_ASSENTS])"))
 
 /datum/usurpation_rite/progressive_dominion/check_assent_threshold()
@@ -90,12 +90,12 @@
 
 /datum/usurpation_rite/progressive_dominion/on_contesting_started()
 	priority_announce( \
-		"[invoker.real_name] has invoked the Rite of Progressive Dominion!\n\n" + \
-		"In the name of Zizo, Mistress of Progress, a claim is made upon the throne of [SSticker.realm_name].\n\n" + \
+		"[invoker.real_name] has invoked the Rite of Salvation!\n\n" + \
+		"In the name of Zizo, One Who Brings Salvation, a claim is made upon the throne of [SSticker.realm_name].\n\n" + \
 		"A Council of the Enlightened has affirmed this claim.\n\n" + \
 		"The future shall be decided in [RITE_CONTEST_DURATION / (1 MINUTES)] minutes -- unless the claim is struck down.\n\n", \
-		"Rite of Progressive Dominion", \
-		sound_contesting)
+		"Rite of Salvation", \
+		sound_contesting) //TA EDIT
 	to_chat(invoker, span_notice("The enlightened have spoken. The realm has been alerted. Stay near the throne for [RITE_CONTEST_DURATION / (1 MINUTES)] minutes and the succession is yours. You may move freely, but do not stray too far."))
 	phase_timer_id = addtimer(CALLBACK(src, PROC_REF(complete)), RITE_CONTEST_DURATION, TIMER_STOPPABLE)
 
@@ -109,39 +109,39 @@
 			"How long will the living -- even those who follow the Mistress of Progress -- tolerate their rule?"
 	else
 		roundend_epilogue = \
-			"And as suddenly as the Celestial Empire has fallen, " + \
-			"it has seemingly returned in [SSticker.realm_name]. " + \
-			"O Zizo! Dame of Progress! The future will be bright under your rule! " + \
+			"The [SSticker.realm_name] has thus been destroyed, " + \
+			"and upon its ruins, a new order had risen. " + \
+			"O Zizo! One Who Brings Salvation! The future will be bright under your rule! " + \
 			"Grant us armaments! Grant us power! " + \
 			"Let us stand fast against the darkness of stagnation! " + \
 			"Let us stand fast against the rot of the old order! " + \
 			"Long live [invoker.real_name], [new_ruler_title] of [SSticker.realm_name]!"
 	..()
 	priority_announce( \
-		"To cling to the past is to rot in place. Progress waits for no one.\n\n" + \
-		"A Council of the Enlightened, under the gaze of Zizo, Mistress of Progress, " + \
-		"declares [invoker.real_name] the rightful [SSticker.rulertype] of [SSticker.realm_name], establishing a PROGRESSIVE rule of arcane enlightenment.\n\n" + \
+		"To cling to mortality is to rot in place. Salvation waits for no one.\n\n" + \
+		"A Council of the Enlightened, under the gaze of Zizo, One Who Brings Salvation, " + \
+		"declares [invoker.real_name] the rightful [SSticker.rulertype] of [SSticker.realm_name], establishing a DOMINION of arcane enlightenment.\n\n" + \
 		"[old_ruler_name], unable to contest this succession, has been found wanting in vision, " + \
-		"and their claim to rulership crumbles before the march of progress.\n\n" + \
+		"and their claim to rulership crumbles before the march of true progress.\n\n" + \
 		"Long live [invoker.real_name], [SSticker.rulertype] of [SSticker.realm_name]!", \
 		"A New [SSticker.rulertype] Ascends", \
-		sound_victory)
+		sound_victory) //TA EDIT
 	to_chat(invoker, span_notice("The future bends to your will. The throne is yours."))
 
 /datum/usurpation_rite/progressive_dominion/on_fail(reason)
 	if(stage >= RITE_STAGE_CONTESTING)
 		priority_announce( \
-			"The Rite of Progressive Dominion has failed. [reason] Progress is halted — for now.", \
+			"The Rite of Salvation has failed. [reason] Salvation is halted — for now.", \
 			"Rite Failed", \
-			sound_failure)
+			sound_failure) //TA EDIT
 	if(invoker)
-		to_chat(invoker, span_warning("The Rite of Progressive Dominion has failed. [reason]"))
+		to_chat(invoker, span_warning("The Rite of Salvation has failed. [reason]")) //TA EDIT
 
 
 /datum/usurpation_rite/progressive_dominion/get_status_text()
 	switch(stage)
 		if(RITE_STAGE_GATHERING)
-			return "The Rite of Progressive Dominion is underway. [length(assenters)]/[DOMINION_REQUIRED_ASSENTS] voices have spoken their assent."
+			return "The Rite of Salvation is underway. [length(assenters)]/[DOMINION_REQUIRED_ASSENTS] voices have spoken their assent." //TA EDIT
 		if(RITE_STAGE_CONTESTING)
 			return "The Council of the Enlightened has affirmed [invoker?.real_name]'s claim. The future approaches."
 	return null
@@ -149,7 +149,7 @@
 /datum/usurpation_rite/progressive_dominion/get_periodic_announcement()
 	switch(stage)
 		if(RITE_STAGE_GATHERING)
-			return "[invoker?.real_name] claims the throne in the name of progress. Speak your assent -- or stop them. ([length(assenters)]/[DOMINION_REQUIRED_ASSENTS] voices)"
+			return "[invoker?.real_name] claims the throne in the name of salvation. Speak your assent -- or stop them. ([length(assenters)]/[DOMINION_REQUIRED_ASSENTS] voices)" //TA EDIT
 		if(RITE_STAGE_CONTESTING)
 			var/remaining = ""
 			if(contest_time_remaining > 0)

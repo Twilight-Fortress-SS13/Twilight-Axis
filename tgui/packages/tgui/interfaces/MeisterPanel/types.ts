@@ -119,6 +119,7 @@ export type Data = {
   bathhouse_ordinance_cooldown_seconds: number;
   bathhouse_ordinance_cooldown_minutes: number;
   fund_allowances: Record<string, FundAllowance>;
+  ta_map: string; // TA EDIT
 };
 
 export type AllowanceGroup = {

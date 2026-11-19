@@ -4,6 +4,14 @@
 
 // The god who watches over each stat. Their colours live in ContestResponse.scss.
 const GOD_BY_STAT: Record<string, string> = {
+  сила: 'ravox',
+  восприятие: 'dendor',
+  интеллект: 'noc',
+  воля: 'graggar',
+  телосложение: 'malum',
+  скорость: 'matthios',
+  удача: 'xylix',
+  харизма: 'baotha',
   strength: 'ravox',
   perception: 'dendor',
   intelligence: 'noc',
