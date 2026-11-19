@@ -621,3 +621,20 @@
 	droning_sound_dusk = null
 	droning_sound_night = null
 	threat_region = THREAT_REGION_DESERTDARK_DEEP
+
+/area/rogue/under/town/sewer/alashur
+	name = "sewer"
+	loot_budget = LOOT_BUDGET_UNDERCOAST
+	icon_state = "sewer"
+	first_time_text = "Al-Ashur sewers"
+	ambientsounds = AMB_CAVEWATER
+	ambientnight = AMB_CAVEWATER
+	spookysounds = SPOOKY_RATS
+	spookynight = SPOOKY_RATS
+	droning_sound = 'sound/music/area/desert/alashursewers.ogg'
+	droning_sound_dusk = null
+	droning_sound_night = null
+	ambientrain = RAIN_SEWER
+	soundenv = 5
+	town_waters = TRUE
+	converted_type = /area/rogue/outdoors/exposed/under/sewer
