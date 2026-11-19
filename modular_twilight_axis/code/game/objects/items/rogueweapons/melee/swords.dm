@@ -353,7 +353,8 @@
 	Though elegant in form, it was forged with a singular purpose: to pierce both the hearts of men and the blasphemies that lurk beyond them."
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords32.dmi'
 	icon_state = "psysmallsword"
-	sheathe_icon = "silverrapier"
+	sheathe = 'modular_twilight_axis/icons/obj/items/scabbard.dmi'
+	sheathe_icon = "psysmallsword"
 	max_integrity = 175
 	max_blade_int = 175
 	grid_width = 32
