@@ -107,17 +107,6 @@
 	smeltresult = /obj/item/ingot/silver
 	is_silver = TRUE
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/necra/ComponentInitialize()
-	AddComponent(\
-		/datum/component/silverbless,\
-		pre_blessed = BLESSING_TENNITE,\
-		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 50,\
-		added_int = 50,\
-		added_def = 2,\
-	)
-
 /obj/item/rogueweapon/huntingknife/idagger/steel/baotha
 	name = "snakes sting"
 	desc = "The blade is skillfully crafted and appears to be designed for stealthy assassinations. There are visible streaks of a bubbling substance on its blade."
@@ -245,21 +234,9 @@
 	sellprice = 0
 	smeltresult = null
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/silver/psy/parrying
-	name = "psydonic parrying dagger"
-	desc = "A finely balanced silver parrying dagger, carried by loyal servants of the Inquisition. \
-	Its crossguard turns aside wicked steel while its blessed edge delivers Psydon's judgement."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
-	icon_state = "psypdagger"
-	force = 15
-	throwforce = 15
-	wdefense = 9
-	max_integrity = 150
-
-/obj/item/rogueweapon/huntingknife/idagger/steel/silver/psy/parrying/ComponentInitialize()
+/obj/item/rogueweapon/huntingknife/idagger/steel/necra/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
-		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_PSYDONIAN,\
+		pre_blessed = BLESSING_TENNITE,\
+		silver_type = SILVER_TENNITE,\
 	)
-	sellprice += 200
