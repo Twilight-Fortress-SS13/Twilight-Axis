@@ -171,15 +171,15 @@
 					/obj/item/inqarticles/garrote = 1,
 					/obj/item/clothing/head/inqarticles/blackbag = 1
 					)
-				var/weapons = list("Psydonic Parrying Dagger", "Psydonic Foil", "Psydonic Claws")
+				var/weapons = list("Psydonic Parrying Dagger", "Psydonic Smallsword", "Psydonic Claws")
 				var/weapon_choice = input(H,"Choose your WEAPON.", "TAKE UP PSYDON'S ARMS.") as anything in weapons
 				switch(weapon_choice)
 					if("Psydonic Parrying Dagger")
-						l_hand = /obj/item/rogueweapon/huntingknife/idagger/silver/psydagger/parrying
+						l_hand = /obj/item/rogueweapon/huntingknife/idagger/steel/silver/psy/parrying
 						r_hand = /obj/item/rogueweapon/scabbard/sheath
 						H.adjust_skillrank_up_to(/datum/skill/combat/knives, 4, TRUE)
-					if("Psydonic Foil")
-						l_hand = /obj/item/rogueweapon/sword/rapier/silver/psyrapier
+					if("Psydonic Smallsword")
+						l_hand = /obj/item/rogueweapon/sword/rapier/silver/psy/smallsword
 						r_hand = /obj/item/rogueweapon/scabbard/sword
 						H.adjust_skillrank_up_to(/datum/skill/combat/swords, 4, TRUE)
 					if("Psydonic Claws")

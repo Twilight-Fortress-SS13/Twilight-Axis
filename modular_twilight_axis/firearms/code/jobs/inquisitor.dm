@@ -138,7 +138,7 @@
 	a harmless clerk, only to learn that the Inquisition keeps its sharpest judgements close at hand."
 	max_integrity = 250
 	max_blade_int = 250
-	extended = FALSE
+	extended = TRUE
 
 /obj/item/rogueweapon/sword/rapier/psy/folding/relic/ComponentInitialize()
 	AddComponent(\
@@ -153,34 +153,8 @@
 
 /obj/item/rogueweapon/sword/rapier/psy/folding/relic/attack_self(mob/user)
 	extended = !extended
-	playsound(src.loc, 'sound/blank.ogg', 50, TRUE)
-	if(extended)
-		possible_item_intents = list(/datum/intent/sword/thrust/rapier, /datum/intent/sword/cut/rapier, /datum/intent/sword/thrust/rapier/lunge)
-		wlength = WLENGTH_NORMAL
-		w_class = WEIGHT_CLASS_BULKY
-		sharpness = IS_SHARP
-		slot_flags = ITEM_SLOT_HIP | ITEM_SLOT_BACK
-		equip_delay_self = initial(equip_delay_self)
-		unequip_delay_self = initial(unequip_delay_self)
-		inv_storage_delay = initial(inv_storage_delay)
-		icon_state = "psyfoldingblade_on"
-		playsound(user, 'sound/items/knife_open.ogg', 100, TRUE)
-	else
-		possible_item_intents = list(/datum/intent/sword/strike)
-		wlength = WLENGTH_SHORT
-		w_class = WEIGHT_CLASS_SMALL
-		sharpness = IS_BLUNT
-		slot_flags = ITEM_SLOT_HIP
-		equip_delay_self = 0 SECONDS
-		unequip_delay_self = 0 SECONDS
-		inv_storage_delay = 0 SECONDS
-		icon_state = "psyfoldingblade_off"
-	if(user.a_intent)
-		var/datum/intent/I = user.a_intent
-		if(istype(I))
-			I.afterchange()
-	user.update_a_intents()
-	update_icon()
+	updateFoldingState(user, extended,
+		"psyfoldingblade_on", "psyfoldingblade_off")
 
 /obj/item/rogueweapon/knuckledusters/psy/relic
 	name = "\"Penance\""
