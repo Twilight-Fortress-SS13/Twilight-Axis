@@ -53,6 +53,8 @@
 	var/lip_color = "white"
 
 	var/age = "Adult"		//Player's age
+	var/birthday_month = 0	//TA EDIT
+	var/birthday_day = 0	//TA EDIT
 
 	var/shavelevel = 0
 	var/breathe_tick = 0 // Used for gas mask delays.
