@@ -288,7 +288,6 @@ Works together with spawning an observer, noted above.
 		SSdroning.kill_loop(client)
 		SSdroning.kill_droning(client)
 	var/mob/dead/observer/ghost = new ghostpath(src)
-	ghost.flags_1 |= flags_1 & ANTAGOOC_ACCESS_1
 	ghost.ghost_body_anchor = src // TA EDIT
 	ghost.ghost_body_anchor_turf = get_turf(src) // TA EDIT
 	ghost.ghostize_time = world.time
