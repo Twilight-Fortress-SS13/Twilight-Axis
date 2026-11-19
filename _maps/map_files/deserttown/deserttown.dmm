@@ -36340,14 +36340,6 @@
 /mob/living/simple_animal/hostile/retaliate/rogue/mirespider,
 /turf/open/floor/rogue/naturalstone/sandstone,
 /area/rogue/under/cave)
-"hmc" = (
-/obj/structure/stairs/stone,
-/obj/structure/stairs/stone{
-	dir = 1;
-	icon_state = "stonestairs"
-	},
-/turf/open/floor/rogue/concrete,
-/area/rogue/under/town/sewer/alashur)
 "hmg" = (
 /turf/open/floor/rogue/citybrick/citybrick3,
 /area/rogue/under/dungeon/desertifrit)
@@ -329184,7 +329176,7 @@ hvH
 hvH
 hls
 jUR
-hmc
+dDA
 aWO
 hzo
 uws
