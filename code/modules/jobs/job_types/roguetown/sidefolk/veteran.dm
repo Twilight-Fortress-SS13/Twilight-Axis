@@ -471,7 +471,6 @@
 	subclass_stashed_items = list(
 		"Wax Putty" = /obj/item/waxputty,
 	)
-	age_mod = /datum/class_age_mod/veteran/scout
 	subclass_skills = list(
 		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/axes = SKILL_LEVEL_LEGENDARY,
@@ -574,7 +573,6 @@
 	subclass_stashed_items = list(
 		"Wax Putty" = /obj/item/waxputty,
 	)
-	age_mod = /datum/class_age_mod/veteran/spy
 	subclass_skills = list(
 		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/maces = SKILL_LEVEL_JOURNEYMAN,
