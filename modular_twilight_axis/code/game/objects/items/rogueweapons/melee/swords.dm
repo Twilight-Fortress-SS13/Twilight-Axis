@@ -1,35 +1,10 @@
 /obj/item/rogueweapon/sword/rapier/psyrapier
-	name = "psydonian rapier"
-	desc = "An ornate rapier, plated in a ceremonial veneer of silver. The barbs pierce your palm, and - for just a moment - you see red. Never forget that you are why Psydon wept."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords32.dmi'
-	icon_state = "psysmallsword"
-	sheathe_icon = "silverrapier"
-	resistance_flags = FIRE_PROOF
+	parent_type = /obj/item/rogueweapon/sword/rapier/silver/psy/smallsword
 	force = 20
 	force_wielded = 20
-	is_silver = TRUE
-
-/obj/item/rogueweapon/sword/rapier/psyrapier/ComponentInitialize()
-	AddComponent(\
-		/datum/component/silverbless,\
-		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 100,\
-		added_int = 50,\
-		added_def = 2,\
-	)
 
 /obj/item/rogueweapon/sword/rapier/foldsword
-	name = "pathmaker"
-	desc = "Дорогостоющий складной меч, сделанный специально по заказу для десницы. Можно носить как обычный меч в ножнах, так и в сумке или в поясе, если сложить."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords64.dmi'
-	icon_state = "folding_sword_on"
-	var/extended = TRUE
-
-/obj/item/rogueweapon/sword/rapier/foldsword/attack_self(mob/user)
-	extended = !extended
-	update_folding_state(user, extended, "folding_sword_on", "folding_sword_off")
+	parent_type = /obj/item/rogueweapon/sword/rapier/folding
 
 /obj/item/rogueweapon/sword/long/exe/berserk
 	special = /datum/special_intent/wave_swing/greatsword
@@ -63,16 +38,7 @@
 				return list("shrink" = 0.6,"sx" = -1,"sy" = 2,"nx" = 0,"ny" = 2,"wx" = 2,"wy" = 1,"ex" = 0,"ey" = 1,"nturn" = 0,"sturn" = 0,"wturn" = 70,"eturn" = 15,"nflip" = 1,"sflip" = 1,"wflip" = 1,"eflip" = 1,"northabove" = 1,"southabove" = 0,"eastabove" = 0,"westabove" = 0)
 
 /obj/item/rogueweapon/sword/rapier/psy/folding
-	name = "psydonian folding blade"
-	desc = "A costly folding blade commissioned for the rune volves of the Psydonian Inquisition. Built for investigators and executioners alike, it folds into a compact package for discreet carry before locking into a deadly dueling weapon."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords64.dmi'
-	icon_state = "psyfoldingblade_on"
-	sheathe_icon = "silverrapier"
-	var/extended = TRUE
-
-/obj/item/rogueweapon/sword/rapier/psy/folding/attack_self(mob/user)
-	extended = !extended
-	update_folding_state(user, extended, "psyfoldingblade_on", "psyfoldingblade_off")
+	parent_type = /obj/item/rogueweapon/sword/rapier/silver/psy/folding
 
 /obj/item/rogueweapon/sword/long/oathbreaker_matthios
 	name = "\"Kingslayer\""
@@ -296,6 +262,8 @@
 	)
 
 /obj/item/rogueweapon/sword/rapier/silver/psy/folding/relic
+	max_integrity = 250
+	max_blade_int = 250
 	name = "\"Testament\""
 	desc = "Commissioned by the Inquisition and wrought by the blacksmiths of Arkenfeit, this peculiar blade was made for those \
 	who could ill afford to announce their calling before the time came to draw steel. Its silvered edge folds neatly into \
@@ -348,52 +316,9 @@
 	sheathe_icon = "ast_kriegmesser"
 
 /obj/item/rogueweapon/sword/rapier/silver/psyrapier
-	name = "psydonic foil"
-	desc = "A slender silver foil crafted for swift and precise strikes. \
-	Though elegant in form, it was forged with a singular purpose: to pierce both the hearts of men and the blasphemies that lurk beyond them."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords32.dmi'
-	icon_state = "psysmallsword"
-	sheathe = 'modular_twilight_axis/icons/obj/items/scabbard.dmi'
-	sheathe_icon = "psysmallsword"
+	parent_type = /obj/item/rogueweapon/sword/rapier/silver/psy/smallsword
 	max_integrity = 175
 	max_blade_int = 175
-	grid_width = 32
-	grid_height = 64
-	dropshrink = 0
-	bigboy = FALSE
-
-/obj/item/rogueweapon/sword/rapier/silver/psyrapier/ComponentInitialize()
-	AddComponent(\
-		/datum/component/silverbless,\
-		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 100,\
-		added_int = 100,\
-		added_def = 2,\
-	)
 
 /obj/item/rogueweapon/sword/rapier/psy/folding/relic
-	name = "\"Testament\""
-	desc = "Commissioned by the Inquisition and wrought by the blacksmiths of Arkenfeit, this peculiar blade was made for those \
-	who could ill afford to announce their calling before the time came to draw steel. Its silvered edge folds neatly into \
-	the hilt, concealing a weapon fit for the most delicate of investigations. Many a heretic has mistaken its bearer for \
-	a harmless clerk, only to learn that the Inquisition keeps its sharpest judgements close at hand."
-	max_integrity = 250
-	max_blade_int = 250
-	extended = TRUE
-
-/obj/item/rogueweapon/sword/rapier/psy/folding/relic/ComponentInitialize()
-	AddComponent(\
-		/datum/component/silverbless,\
-		pre_blessed = BLESSING_PSYDONIAN,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 100,\
-		added_int = 100,\
-		added_def = 2,\
-	)
-
-/obj/item/rogueweapon/sword/rapier/psy/folding/relic/attack_self(mob/user)
-	extended = !extended
-	update_folding_state(user, extended, "psyfoldingblade_on", "psyfoldingblade_off")
+	parent_type = /obj/item/rogueweapon/sword/rapier/silver/psy/folding/relic
