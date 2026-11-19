@@ -36,6 +36,9 @@
 	outfit = /datum/outfit/job/roguetown/jester/basic
 	category_tags = list(CTAG_JESTER)
 
+	tempo_capable = TRUE
+
+
 /datum/outfit/job/roguetown/jester/basic/pre_equip(mob/living/carbon/human/H)
 	..()
 	shoes = /obj/item/clothing/shoes/roguetown/jester

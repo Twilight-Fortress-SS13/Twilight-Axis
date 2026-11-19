@@ -745,6 +745,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["gender"]				>> gender
 	S["domhand"]			>> domhand
 	S["age"]				>> age
+	S["birthday_month"]		>> birthday_month // TA EDIT
+	S["birthday_day"]		>> birthday_day // TA EDIT
 	S["vampire_skin"]		>> vampire_skin
 	S["vampire_hair"]		>> vampire_hair
 	S["vampire_eyes"]		>> vampire_eyes
@@ -997,6 +999,12 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	// lists
 	age				= sanitize_inlist(age, pref_species.possible_ages, AGE_ADULT)
+	birthday_month	= sanitize_integer(birthday_month, 0, CALENDAR_MONTHS_PER_YEAR, 0) // TA EDIT
+	birthday_day	= sanitize_integer(birthday_day, 0, CALENDAR_DAYS_IN_MONTH, 0) // TA EDIT
+	if(!birthday_month || !birthday_day) // TA EDIT START
+		birthday_month = 0
+		birthday_day = 0
+	// TA EDIT END
 	extra_language	= sanitize_inlist(extra_language, GLOB.languages_character_selection, "None") // None just becomes None so it's fine
 	pronouns		= sanitize_inlist(pronouns, GLOB.pronouns_list, THEY_THEM)
 	titles_pref		= sanitize_inlist(titles_pref, GLOB.titles_list, TITLES_M)
@@ -1265,6 +1273,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["gender"]				, gender)
 	WRITE_FILE(S["domhand"]				, domhand)
 	WRITE_FILE(S["age"]					, age)
+	WRITE_FILE(S["birthday_month"]		, birthday_month) // TA EDIT
+	WRITE_FILE(S["birthday_day"]		, birthday_day) // TA EDIT
 	WRITE_FILE(S["vampire_skin"]		, vampire_skin)
 	WRITE_FILE(S["vampire_hair"]		, vampire_hair)
 	WRITE_FILE(S["vampire_eyes"]		, vampire_eyes)

@@ -232,6 +232,12 @@
 	if(!turf_check(next, current))
 		to_chat(user, span_warning("My [AM] can not go onto [next]!"))
 		return
+	//TA addition start
+	if(istype(AM, /mob/living/simple_animal))
+		var/mob/living/simple_animal/mount = AM
+		if(mount.IsImmobilized())
+			return
+	//TA addition end
 	if(!isturf(AM.loc))
 		return
 	update_vehicle_glide_size()
