@@ -298,7 +298,8 @@
 	Though elegant in form, it was forged with a singular purpose: to pierce both the hearts of men and the blasphemies that lurk beyond them."
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
 	icon_state = "psyrapier"
-	sheathe_icon = "silverrapier"
+	sheathe = 'modular_twilight_axis/icons/obj/items/scabbard.dmi'
+	sheathe_icon = "psysmallsword"
 	max_blade_int = 200
 	grid_width = 32
 	grid_height = 64
@@ -318,8 +319,6 @@
 	who could ill afford to announce their calling before the time came to draw steel. Its silvered edge folds neatly into \
 	the hilt, concealing a weapon fit for the most delicate of investigations. Many a heretic has mistaken its bearer for \
 	a harmless clerk, only to learn that the Inquisition keeps its sharpest judgements close at hand."
-	max_integrity = 300
-	max_blade_int = 300
 
 /obj/item/rogueweapon/sword/rapier/silver/psy/folding/relic/ComponentInitialize()
 	AddComponent(\
@@ -365,7 +364,3 @@
 	icon_state = "ast_kriegmesser"
 	sheathe = 'modular_twilight_axis/icons/obj/items/scabbard.dmi'
 	sheathe_icon = "ast_kriegmesser"
-
-/obj/item/rogueweapon/sword/rapier/silver/psy/smallsword
-	sheathe = 'modular_twilight_axis/icons/obj/items/scabbard.dmi'
-	sheathe_icon = "psysmallsword"
