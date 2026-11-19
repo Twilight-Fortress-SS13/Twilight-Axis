@@ -8,6 +8,7 @@
 	origin_limits = list(/datum/virtue/origin/heartfelt)
 	allowed_patrons = list(/datum/patron/divine/undivided, /datum/patron/divine/noc, /datum/patron/divine/dendor, /datum/patron/divine/abyssor, /datum/patron/divine/ravox, /datum/patron/divine/necra, /datum/patron/divine/xylix, /datum/patron/divine/pestra, /datum/patron/divine/malum, /datum/patron/divine/eora, /datum/patron/old_god, /datum/patron/inhumen/graggar, /datum/patron/inhumen/matthios, /datum/patron/inhumen/baotha)
 	class_select_category = CLASS_CAT_HEARTFELT
+	extra_context = "Выбирая путь Сержанта, вы получите прибавку к силе и интелекту, вместе с возможностью носить среднюю броню и топор. Оратор в свою очередь, уворотлив и более смышленен в драке с мечами и арбалетами."
 	subclass_languages = list(/datum/language/etruscan)
 	cmode_music = sound("modular_twilight_axis/sound/music/republicantroublemaker.ogg")
 
