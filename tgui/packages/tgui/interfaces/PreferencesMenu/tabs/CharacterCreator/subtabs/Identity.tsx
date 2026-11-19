@@ -258,6 +258,7 @@ export const SubtabIdentityCardGameplay = () => {
   const { act, data } = useBackendStrict<IdentityData>();
   const {
     age,
+    birthday, // TA EDIT
     combat_music,
     defiant,
     domhand,
@@ -316,6 +317,18 @@ export const SubtabIdentityCardGameplay = () => {
                 {age}
               </Button>
             </LabeledGridList.Item>
+            <LabeledGridList.Item label="Birthday">
+              {/* TA EDIT START */}
+              <Button
+                fluid
+                icon="cake-candles"
+                tooltip="Shown to people who know you, on the calendar and in the people you know list."
+                onClick={() => act('birthday')}
+              >
+                {birthday}
+              </Button>
+            </LabeledGridList.Item>
+            {/* TA EDIT END */}
             <LabeledGridList.Item label="Dominance">
               <Button fluid onClick={() => act('domhand')}>
                 {domhand === 2 ? 'Right-handed' : 'Left-handed'}
