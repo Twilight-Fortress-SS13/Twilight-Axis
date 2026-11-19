@@ -115,7 +115,7 @@
 						r_hand = /obj/item/rogueweapon/scabbard/sheath
 						H.adjust_skillrank_up_to(/datum/skill/combat/knives, 4, TRUE)
 					if("Psydonic Smallsword")
-						l_hand = /obj/item/rogueweapon/sword/rapier/silver/psy/smallsword
+						l_hand = /obj/item/rogueweapon/sword/rapier/silver/psy/rapier
 						r_hand = /obj/item/rogueweapon/scabbard/sword
 						H.adjust_skillrank_up_to(/datum/skill/combat/swords, 4, TRUE)
 					if("Psydonic Claws")

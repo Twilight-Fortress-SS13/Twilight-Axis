@@ -258,7 +258,7 @@ GLOBAL_LIST_INIT(tat_trader_lootbox_expensive_base_pool, list(
 	/obj/item/rogueweapon/greatsword/bsword/psy = 5,
 	/obj/item/rogueweapon/greatsword/silver = 3,
 	/obj/item/rogueweapon/handclaw/gronn/silver = 3,
-	/obj/item/rogueweapon/huntingknife/idagger/silver = 5,
+	/obj/item/rogueweapon/huntingknife/idagger/steel/silver = 5,
 	/obj/item/rogueweapon/huntingknife/idagger/steel/silver/stake = 8,
 	/obj/item/rogueweapon/katar/silver = 5,
 	/obj/item/rogueweapon/mace/cudgel/flanged/silver = 3,

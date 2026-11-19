@@ -249,7 +249,7 @@
 	)
 	sellprice += 200
 
-/obj/item/rogueweapon/huntingknife/idagger/silver/elvish/bandit
+/obj/item/rogueweapon/huntingknife/idagger/steel/silver/elvish/bandit
 	sellprice = 0
 	smeltresult = null
 
@@ -268,6 +268,3 @@
 		pre_blessed = BLESSING_TENNITE,\
 		silver_type = SILVER_TENNITE,\
 	)
-
-/obj/item/rogueweapon/huntingknife/idagger/silver/psydagger/parrying
-	parent_type = /obj/item/rogueweapon/huntingknife/idagger/steel/silver/psy/parrying

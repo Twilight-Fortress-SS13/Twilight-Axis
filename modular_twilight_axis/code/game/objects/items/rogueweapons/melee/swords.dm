@@ -1,11 +1,3 @@
-/obj/item/rogueweapon/sword/rapier/psyrapier
-	parent_type = /obj/item/rogueweapon/sword/rapier/silver/psy/smallsword
-	force = 20
-	force_wielded = 20
-
-/obj/item/rogueweapon/sword/rapier/foldsword
-	parent_type = /obj/item/rogueweapon/sword/rapier/folding
-
 /obj/item/rogueweapon/sword/long/exe/berserk
 	special = /datum/special_intent/wave_swing/greatsword
 	parrysound = list(
@@ -36,9 +28,6 @@
 				return list("shrink" = 0.6,"sx" = 4,"sy" = 0,"nx" = -7,"ny" = 1,"wx" = -8,"wy" = 0,"ex" = 8,"ey" = -1,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = -135,"sturn" = -35,"wturn" = 45,"eturn" = 145,"nflip" = 8,"sflip" = 8,"wflip" = 1,"eflip" = 0)
 			if("onback")
 				return list("shrink" = 0.6,"sx" = -1,"sy" = 2,"nx" = 0,"ny" = 2,"wx" = 2,"wy" = 1,"ex" = 0,"ey" = 1,"nturn" = 0,"sturn" = 0,"wturn" = 70,"eturn" = 15,"nflip" = 1,"sflip" = 1,"wflip" = 1,"eflip" = 1,"northabove" = 1,"southabove" = 0,"eastabove" = 0,"westabove" = 0)
-
-/obj/item/rogueweapon/sword/rapier/psy/folding
-	parent_type = /obj/item/rogueweapon/sword/rapier/silver/psy/folding
 
 /obj/item/rogueweapon/sword/long/oathbreaker_matthios
 	name = "\"Kingslayer\""
@@ -240,7 +229,7 @@
 	extended = !extended
 	update_folding_state(user, extended, "psyfoldingblade_on", "psyfoldingblade_off")
 
-/obj/item/rogueweapon/sword/rapier/silver/psy/smallsword
+/obj/item/rogueweapon/sword/rapier/silver/psy/rapier
 	name = "psydonic smallsword"
 	desc = "A slender silver smallsword crafted for swift and precise strikes. \
 	Though elegant in form, it was forged with a singular purpose: to pierce both the hearts of men and the blasphemies that lurk beyond them."
@@ -254,7 +243,7 @@
 	dropshrink = 0
 	bigboy = FALSE
 
-/obj/item/rogueweapon/sword/rapier/silver/psy/smallsword/ComponentInitialize()
+/obj/item/rogueweapon/sword/rapier/silver/psy/rapier/ComponentInitialize()
 	AddComponent(\
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_NONE,\
@@ -314,11 +303,3 @@
 	icon_state = "ast_kriegmesser"
 	sheathe = 'modular_twilight_axis/icons/obj/items/scabbard.dmi'
 	sheathe_icon = "ast_kriegmesser"
-
-/obj/item/rogueweapon/sword/rapier/silver/psyrapier
-	parent_type = /obj/item/rogueweapon/sword/rapier/silver/psy/smallsword
-	max_integrity = 175
-	max_blade_int = 175
-
-/obj/item/rogueweapon/sword/rapier/psy/folding/relic
-	parent_type = /obj/item/rogueweapon/sword/rapier/silver/psy/folding/relic

@@ -13,6 +13,3 @@
 		pre_blessed = BLESSING_PSYDONIAN,\
 		silver_type = SILVER_PSYDONIAN,\
 	)
-
-/obj/item/clothing/gloves/roguetown/knuckles/psydon/relic
-	parent_type = /obj/item/clothing/gloves/roguetown/knuckles/silver/psy/relic

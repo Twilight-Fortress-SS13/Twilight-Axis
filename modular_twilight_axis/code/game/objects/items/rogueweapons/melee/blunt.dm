@@ -15,6 +15,3 @@
 	sharpness = IS_SHARP
 	minstr = 11
 	slot_flags = ITEM_SLOT_BACK
-
-/obj/item/rogueweapon/knuckledusters/psy/relic
-	parent_type = /obj/item/clothing/gloves/roguetown/knuckles/silver/psy/relic
