@@ -5988,6 +5988,7 @@
 /area/rogue/under/dungeon)
 "bkU" = (
 /obj/structure/spider/stickyweb,
+/obj/item/restraints/legcuffs/beartrap/armed,
 /turf/open/floor/rogue/concrete,
 /area/rogue/under/town/sewer/alashur)
 "bkW" = (
@@ -10017,6 +10018,10 @@
 /obj/structure/closet/crate/roguecloset,
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors/town/desert/warden)
+"caG" = (
+/obj/effect/decal/cleanable/coom,
+/turf/open/floor/rogue/greenstone,
+/area/rogue/under/town/sewer/alashur)
 "caI" = (
 /obj/structure/fluff/railing/border/east,
 /turf/open/floor/rogue/ruinedwood,
@@ -15713,6 +15718,10 @@
 /obj/structure/roguemachine/vaultbank/merchant,
 /turf/open/floor/rogue/wood,
 /area/rogue/indoors/town/shop/desert)
+"djO" = (
+/obj/structure/flora/tinymushrooms,
+/turf/open/water/river/flow/murk/deep/north,
+/area/rogue/under/town/sewer/alashur)
 "djU" = (
 /obj/structure/bed/rogue/inn/wool,
 /obj/item/bedsheet/rogue/cloth,
@@ -16476,8 +16485,7 @@
 /area/rogue/indoors/town/desert)
 "dsa" = (
 /obj/structure/flora/roguegrass/water,
-/obj/item/natural/poo,
-/turf/open/water/sewer,
+/turf/open/water/river/flow/murk/deep/east,
 /area/rogue/under/town/sewer/alashur)
 "dsd" = (
 /obj/structure/table/wood{
@@ -23125,6 +23133,9 @@
 	},
 /turf/open/floor/carpet/red,
 /area/rogue/indoors/town/church)
+"eLU" = (
+/turf/open/water/river/flow/murk/deep,
+/area/rogue/under/town/sewer/alashur)
 "eLX" = (
 /obj/machinery/light/rogue/candle/off/r,
 /obj/item/chair/stool/bar/rogue/crafted,
@@ -31837,7 +31848,7 @@
 /obj/structure/spider/stickyweb{
 	dir = 1
 	},
-/turf/open/floor/rogue/crawl_space,
+/turf/open/floor/rogue/dirt/desert,
 /area/rogue/under/town/sewer/alashur)
 "gBc" = (
 /obj/effect/decal/cleanable/blood,
@@ -39436,6 +39447,10 @@
 	},
 /turf/open/floor/carpet/purple,
 /area/rogue/indoors/town/manor/desert)
+"hZV" = (
+/obj/item/natural/poo,
+/turf/open/floor/rogue/blocks/flipped,
+/area/rogue/under/town/sewer/alashur)
 "hZW" = (
 /obj/structure/table/wood{
 	dir = 1;
@@ -39865,6 +39880,9 @@
 	},
 /turf/open/floor/rogue/tile/harem1,
 /area/rogue/indoors/town/church)
+"ieA" = (
+/turf/open/water/river/flow/murk,
+/area/rogue/under/town/sewer/alashur)
 "ieD" = (
 /obj/structure/table/wood/long_table/right,
 /obj/effect/decal/cobbleedge{
@@ -41342,7 +41360,11 @@
 /area/rogue/indoors/town/desert/warden)
 "itE" = (
 /obj/structure/closet/crate/chest/crate/shipping,
-/obj/item/clothing/suit/roguetown/armor/plate/full/bikini,
+/obj/item/clothing/gloves/roguetown/leather/ponyhooves,
+/obj/item/clothing/head/roguetown/helmet/pony_harness,
+/obj/item/clothing/mask/rogue/blindfold/pony,
+/obj/item/clothing/shoes/roguetown/boots/pony,
+/obj/item/clothing/suit/roguetown/armor/corset/pony,
 /turf/open/floor/rogue/greenstone,
 /area/rogue/under/town/sewer/alashur)
 "itG" = (
@@ -41428,7 +41450,7 @@
 /area/rogue/outdoors/desertdeepwest/above)
 "iuE" = (
 /obj/structure/mineral_door/bars,
-/turf/open/floor/rogue/crawl_space,
+/turf/closed/basic,
 /area/rogue/under/town/sewer/alashur)
 "iuI" = (
 /obj/structure/fermentation_keg/fancypot/random/wine,
@@ -53929,6 +53951,12 @@
 /obj/item/cushion/desert1,
 /turf/open/floor/carpet/stellar,
 /area/rogue/indoors/town/magician/desert)
+"lav" = (
+/obj/structure/glowshroom{
+	icon_state = "glowshroom2"
+	},
+/turf/open/water/river/flow/murk/deep/north,
+/area/rogue/under/town/sewer/alashur)
 "laz" = (
 /obj/machinery/light/rogue/campfire/densefire,
 /turf/open/floor/rogue/twig,
@@ -54455,6 +54483,10 @@
 /obj/effect/decal/remains/human,
 /obj/effect/decal/remains/saiga,
 /turf/open/floor/rogue/naturalstone,
+/area/rogue/under/town/sewer/alashur)
+"lfx" = (
+/obj/item/natural/poo/cow,
+/turf/open/water/river/flow/murk/deep/west,
 /area/rogue/under/town/sewer/alashur)
 "lfC" = (
 /obj/machinery/light/rogue/candle{
@@ -64335,7 +64367,7 @@
 /turf/open/floor/rogue/darkpath,
 /area/rogue/outdoors/desert)
 "ncM" = (
-/turf/open/floor/rogue/crawl_space,
+/turf/open/water/river/flow/murk/deep/north,
 /area/rogue/under/town/sewer/alashur)
 "ncO" = (
 /obj/structure/toilet,
@@ -76572,8 +76604,8 @@
 /turf/open/floor/rogue/blocks/stonered/tiny,
 /area/rogue/outdoors/desertzoomerzone)
 "pAs" = (
-/obj/item/restraints/legcuffs/beartrap/armed,
-/turf/open/floor/rogue/crawl_space,
+/obj/structure/flora/roguegrass/water/reeds,
+/turf/open/water/river/flow/murk/deep,
 /area/rogue/under/town/sewer/alashur)
 "pAu" = (
 /obj/structure/fluff/railing/corner/north_east,
@@ -83092,7 +83124,7 @@
 	icon_state = "stickyweb2"
 	},
 /obj/structure/mineral_door/bars,
-/turf/open/floor/rogue/crawl_space,
+/turf/closed/basic,
 /area/rogue/under/town/sewer/alashur)
 "qQr" = (
 /obj/item/ingot/iron{
@@ -97514,6 +97546,13 @@
 	},
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/under/desertdark/north)
+"tJk" = (
+/obj/structure/flora/roguegrass/water,
+/obj/structure/glowshroom{
+	color = "#87CEEB"
+	},
+/turf/open/water/river/flow/murk/deep,
+/area/rogue/under/town/sewer/alashur)
 "tJl" = (
 /obj/structure/rack/rogue/shelf/biggest,
 /turf/open/floor/rogue/woodturned,
@@ -99450,6 +99489,10 @@
 /obj/structure/underworld/carriage_normal,
 /turf/open/floor/rogue/dunes,
 /area/rogue/outdoors/desertdeep)
+"uaY" = (
+/obj/structure/flora/tinymushrooms,
+/turf/open/water/river/flow/murk/deep/east,
+/area/rogue/under/town/sewer/alashur)
 "ubc" = (
 /obj/item/natural/rock,
 /turf/open/floor/rogue/blocks,
@@ -101659,10 +101702,7 @@
 	},
 /area/rogue/indoors/town/desert/warden)
 "uws" = (
-/turf/open/floor/rogue/crawl_space{
-	icon_state = "crawlspace_4";
-	color = "#3b444b"
-	},
+/turf/open/water/river/flow/murk/deep/west,
 /area/rogue/under/town/sewer/alashur)
 "uwt" = (
 /obj/structure/hotspring/border/four,
@@ -108540,6 +108580,9 @@
 /obj/machinery/light/rogue/candle/floorcandle/alt,
 /turf/open/floor/rogue/wood,
 /area/rogue/indoors/town/desert)
+"vSI" = (
+/turf/open/water/river/flow/murk/deep/east,
+/area/rogue/under/town/sewer/alashur)
 "vSK" = (
 /obj/structure/mineral_door/wood/donjon/stone{
 	locked = 1;
@@ -109830,6 +109873,12 @@
 /obj/machinery/light/rogue/torchholder/l,
 /turf/open/floor/rogue/hexstone,
 /area/rogue/indoors/shelter/desertdeepwest/deserterfort)
+"wgN" = (
+/obj/structure/glowshroom{
+	icon_state = "glowshroom2"
+	},
+/turf/open/water/river/flow/murk/deep,
+/area/rogue/under/town/sewer/alashur)
 "wgO" = (
 /obj/effect/decal/duneedge{
 	dir = 8
@@ -112589,6 +112638,7 @@
 /obj/structure/spider/stickyweb{
 	plane = -3
 	},
+/obj/effect/decal/cleanable/coom,
 /turf/open/floor/rogue/grass,
 /area/rogue/under/town/sewer/alashur)
 "wKZ" = (
@@ -319832,7 +319882,7 @@ iJH
 skd
 vcS
 vcS
-vcS
+fbF
 jze
 wcE
 wdq
@@ -320143,7 +320193,7 @@ rfk
 urG
 skd
 vcS
-vcS
+fbF
 rGZ
 wcE
 vyr
@@ -320433,7 +320483,7 @@ usd
 wdW
 tDv
 ggR
-mjE
+aeS
 hvH
 hvH
 hvH
@@ -321377,7 +321427,7 @@ jYS
 asD
 asD
 hvH
-rfk
+caG
 jKt
 rfk
 rfk
@@ -322015,7 +322065,7 @@ jUR
 jUR
 vcS
 vcS
-vcS
+fbF
 duj
 cUn
 tDv
@@ -322024,7 +322074,7 @@ bMT
 icm
 buw
 fbF
-fbF
+vcS
 asD
 poX
 asD
@@ -322328,14 +322378,14 @@ vcS
 vcS
 avE
 vcS
-vcS
+fbF
 bPb
 cUn
 wdq
 icm
 hpx
 fbF
-fbF
+vcS
 vcS
 poX
 poX
@@ -322645,8 +322695,8 @@ vcS
 btJ
 oyu
 btJ
-fbF
-fbF
+vcS
+vcS
 vcS
 vcS
 hvH
@@ -329789,7 +329839,7 @@ tDv
 niP
 tDv
 vxK
-jUR
+dVI
 eKC
 wdq
 ycD
@@ -330101,7 +330151,7 @@ sNw
 usd
 tDv
 vxK
-ncM
+dVI
 tDv
 tDv
 cJf
@@ -330125,12 +330175,12 @@ usd
 lBj
 uUg
 uUg
-uws
+dVI
 tDv
 rob
 avE
 tDv
-tDv
+usd
 ggR
 ggR
 ggR
@@ -331061,11 +331111,11 @@ guz
 fNs
 nJY
 aeS
-tDv
-rOY
-tDv
-tDv
-usd
+vSI
+pAs
+vSI
+ncM
+uaY
 biI
 ggR
 qZU
@@ -331373,11 +331423,11 @@ guz
 aGD
 nJY
 jUR
-tDv
+vSI
 ggR
 vxK
 ggR
-tDv
+vSI
 dVI
 ggR
 vSa
@@ -331655,7 +331705,7 @@ tDv
 tDv
 jXK
 ggR
-xBH
+dVI
 tDv
 sNw
 kRA
@@ -331685,10 +331735,10 @@ guz
 sFY
 uxD
 bkU
-avE
-tDv
-tDv
-tDv
+tJk
+eLU
+eGA
+ncM
 dsa
 jVE
 ggR
@@ -331997,12 +332047,12 @@ voL
 fNs
 nJY
 aeS
-tDv
-rlg
-tDv
-tAu
-tDv
-jUR
+eLU
+ieA
+eGA
+lav
+ncM
+hZV
 ggR
 xfO
 wlI
@@ -332309,11 +332359,11 @@ fNs
 fNs
 nJY
 vfa
-bVN
-tDv
-usd
-tDv
-tDv
+eLU
+dUE
+eGA
+ncM
+ncM
 iEJ
 ggR
 pKE
@@ -332593,7 +332643,7 @@ mjm
 ggR
 jXK
 tDv
-pAs
+jXK
 erQ
 ggR
 mVc
@@ -332621,11 +332671,11 @@ fNs
 gEm
 nJY
 aeS
-tDv
+uws
 ggR
 oyu
 ggR
-tDv
+uws
 rfk
 ggR
 vSa
@@ -332905,7 +332955,7 @@ jXK
 ggR
 xSA
 usd
-ncM
+dVI
 wdq
 ggR
 nJY
@@ -332933,11 +332983,11 @@ nJY
 nJY
 mVc
 jUR
-tDv
-tDv
-tDv
-usd
-tDv
+uws
+eLU
+uws
+djO
+uws
 aeS
 ggR
 pGg
@@ -333245,10 +333295,10 @@ mjm
 mDy
 tDv
 xHE
-rOY
-sKD
-puS
-tDv
+pAs
+wgN
+lfx
+uws
 ggR
 tjs
 ggR
@@ -333557,7 +333607,7 @@ tDv
 rfk
 tDv
 tDv
-xHE
+uws
 ggR
 ggR
 ggR
@@ -336651,7 +336701,7 @@ wdq
 krc
 enF
 sNw
-ncM
+dVI
 stL
 huy
 sNw
@@ -336967,7 +337017,7 @@ rOY
 tDv
 wdW
 sKD
-ncM
+dVI
 sNw
 tDv
 mVc
@@ -336989,8 +337039,8 @@ iTP
 cJf
 tDv
 rOY
-uws
-ncM
+tDv
+wdq
 tDv
 lyf
 tDv
