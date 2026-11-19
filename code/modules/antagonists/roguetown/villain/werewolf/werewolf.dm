@@ -163,6 +163,10 @@
 		return FALSE
 	if(mind.has_antag_datum(/datum/antagonist/skeleton))
 		return FALSE
+	// TA ADDITION START
+	if(mind.has_antag_datum(/datum/antagonist/dragon))
+		return
+	// TA ADDITION END
 	//No cross species pollination!!!
 	if(mind.has_antag_datum(/datum/antagonist/gnoll))
 		return FALSE

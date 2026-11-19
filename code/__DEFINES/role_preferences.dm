@@ -26,6 +26,7 @@
 #define ROLE_DARK_ITINERANT "Dark Itinerant"
 #define ROLE_CULT			"Cult of Ascension" // TA EDIT START
 #define ROLE_FREEMAN		"Freeman"
+#define ROLE_DRAGON				"Dragon"
 #define ROLE_LOSTGRENZEL	"Lost Grenzel"
 #define ROLE_RENEGADE			"Renegade" // TA EDIT END
 #define ROLE_ANTAGONIST			"Antagonist"
@@ -80,6 +81,7 @@ GLOBAL_LIST_INIT(special_roles_rogue, list(
 	ROLE_HAG = /datum/antagonist/hag,
 	ROLE_CULT = /datum/antagonist/zizocultist,
 	ROLE_RENEGADE = /datum/antagonist/renegade, // TA EDIT
+	ROLE_DRAGON = /datum/antagonist/dragon, // TA ADDITION
 ))
 
 //ADD BACK DARK ELF AND MANIAC TO THE LIST IF THEY ARE EVER REENABLED
