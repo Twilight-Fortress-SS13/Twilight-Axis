@@ -4,7 +4,6 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item
 	var/name = "Parent loadout datum"
-	var/save_key // TA EDIT - Keep saved selections independent of display names.
 	var/desc
 	var/atom/movable/path
 	var/donoritem			//autoset on new if null
@@ -30,9 +29,6 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 		if(length(desc))
 			desc += " "
 		desc += "<b>Доступно для меценатов уровня: [donat_tier]</b>"
-
-/datum/loadout_item/proc/get_loadout_save_key() // TA EDIT
-	return save_key || name
 
 /datum/loadout_item/proc/donator_ckey_check(key)
 	key = ckey(key)
@@ -88,46 +84,46 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 	return 0
 
-//Miscellaneous
+// Miscellaneous
 /datum/loadout_item/card_deck
 	name = "Card Deck"
-	category = "Разное"
+	category = list("Разное")
 	path = /obj/item/deck/playing_cards
 
 /datum/loadout_item/farkle_dice
 	name = "Farkle Dice Container"
-	category = "Разное"
+	category = list("Разное")
 	path = /obj/item/storage/pill_bottle/dice/farkle
 
 /datum/loadout_item/tarot_deck
 	name = "Tarot Deck"
-	category = "Разное"
+	category = list("Разное")
 	path = /obj/item/deck/tarot/includes_minor_arcana
 
 /datum/loadout_item/tarot_deck_majorarcana
 	name = "Tarot Deck (Major Arcana)"
-	category = "Разное"
+	category = list("Разное")
 	path = /obj/item/deck/tarot
 
 /datum/loadout_item/bibble
 	name = "The Verses and Acts of the Ten"
-	category = "Разное"
+	category = list("Разное")
 	path = /obj/item/book/rogue/bibble
 
 /datum/loadout_item/bibble_psy
 	name = "Psy Bible"
-	category = "Разное"
+	category = list("Разное")
 	path = /obj/item/book/rogue/bibble/psy
 
 /datum/loadout_item/custom_book
 	name = "Custom Book"
-	category = "Разное"
+	category = list("Разное")
 	path = /obj/item/book/rogue/loadoutbook
 
-//TOOLS
+// Tools
 /datum/loadout_item/paper_parasol
 	name = "Paper Parasol"
-	category = "Разное"
+	category = list("Разное")
 	path = /obj/item/rogueweapon/mace/parasol
 
 /datum/loadout_item/broom
@@ -190,46 +186,46 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/handmirror
 	triumph_cost = 6
 
-//HATS
+// Hats
 
 /datum/loadout_item/chaperon
 	name = "Chaperon (Normal)"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/chaperon
 
 /datum/loadout_item/chaperon/alt
 	name = "Chaperon (Alt)"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/chaperon/greyscale
 
 /datum/loadout_item/shalal
 	name = "Keffiyeh"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/roguehood/shalal
 
 /datum/loadout_item/tricorn
 	name = "Tricorn Hat"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/helmet/tricorn
 
 /datum/loadout_item/nurseveil
-	name = "Nurse Veil"
-	category = "Головные уборы"
+	name = "Nurse's Veil"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/veiled
 
 /datum/loadout_item/archercap
 	name = "Archer's Cap"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/archercap
 
 /datum/loadout_item/strawhat
 	name = "Straw Hat"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/strawhat
 
 /datum/loadout_item/eaststrawhat
-	name = "Worn rice hat"
-	category = "Головные уборы"
+	name = "Worn Rice Hat"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/eaststrawhat
 
 /datum/loadout_item/tw_d_horns
@@ -240,7 +236,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/tw_d_basic
 	name = "Helm's Chaperon"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/onhelm/tw_d_basic
 
 /datum/loadout_item/tw_d_castle_red
@@ -293,265 +289,264 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/antlers
 	name = "Old Antlers"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/antlers
 
 /datum/loadout_item/headscarf
 	name = "Head Scarf"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/hscarf
 
 /datum/loadout_item/tengai
 	name = "Tengai"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/tengai
 
 /datum/loadout_item/burgerhood
 	name = "Noble Hood"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/roguehood/burgerhood
 
 /datum/loadout_item/gasa
 	name = "Gasa"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/gasa
 
 /datum/loadout_item/torioigasa
 	name = "Torioigasa"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/torioigasa
 
 /datum/loadout_item/roningasa
 	name = "Roningasa"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/roningasa
 
 /datum/loadout_item/witchhat
 	name = "Witch Hat"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/witchhat
 
 /datum/loadout_item/bardhat
 	name = "Bard Hat"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/bardhat
 
 /datum/loadout_item/fancyhat
 	name = "Fancy Hat"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/fancyhat
 
 /datum/loadout_item/furhat
 	name = "Fur Hat"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/hatfur
 
 /datum/loadout_item/smokingcap
 	name = "Smoking Cap"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/smokingcap
 
 /datum/loadout_item/headband
 	name = "Headband"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/headband
 
 /datum/loadout_item/buckled_hat
 	name = "Buckled Hat"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/puritan
 
 /datum/loadout_item/folded_hat
 	name = "Folded Hat"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/bucklehat
 
 /datum/loadout_item/duelist_hatc
 	name = "Duelist's Hat"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/duelhat
 
 /datum/loadout_item/hood
 	name = "Hood"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/roguehood
 
 /datum/loadout_item/hijab
 	name = "Hijab"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/roguehood/shalal/hijab
 
 /datum/loadout_item/heavyhood
 	name = "Heavy Hood"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/roguehood/shalal/heavyhood
 
 /datum/loadout_item/nunveil
 	name = "Nun Veil"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/nun
 
 /datum/loadout_item/papakha
 	name = "Papakha"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/papakha
 
 /datum/loadout_item/rosa_crown
 	name = "Rosa Crown"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/flowercrown/rosa
 
 /datum/loadout_item/salvia_crown
 	name = "Salvia Crown"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/flowercrown/salvia
 
 /datum/loadout_item/matricaria_crown
 	name = "Matricaria Crown"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/flowercrown/matricaria
 
 /datum/loadout_item/calendula_crown
 	name = "Calendula Crown"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/flowercrown/calendula
 
 /datum/loadout_item/manabloom_crown
 	name = "Manabloom Crown"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/flowercrown/manabloom
 
 /datum/loadout_item/briar_crown
 	name = "Briar Thorn Crown"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/flowercrown/briar
 
 /datum/loadout_item/briarthorns
 	name = "Briar Thorns"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/briarthorns
 
 /datum/loadout_item/loudmouth_headgear
 	name = "Loudmouth's Headcover"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/veiled/loudmouth
 	donat_tier = 2
 
-//CLOAKS
+// Cloaks
 /datum/loadout_item/tabard
 	name = "Tabard"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/tabard
 
 /datum/loadout_item/surcoat
 	name = "Surcoat"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/tabard/stabard
 
 /datum/loadout_item/jupon
 	name = "Jupon"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/tabard/stabard/surcoat
 
 /datum/loadout_item/bandolier
 	name = "Bandolier"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/bandolier
 
 /datum/loadout_item/jupon_short
 	name = "Short Jupon"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/tabard/stabard/surcoat/short
 
 /datum/loadout_item/cape
 	name = "Cape"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/cape
 
 /datum/loadout_item/halfcloak
 	name = "Halfcloak"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/half
 
 /datum/loadout_item/ridercloak
 	name = "Rider Cloak"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/half/rider
 
 /datum/loadout_item/raincloak
 	name = "Rain Cloak"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/raincloak
 
 /datum/loadout_item/furcloak
 	name = "Fur Cloak"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/raincloak/furcloak
 
 /datum/loadout_item/wickercloak
-	save_key = "Wicker Cloak (Standard)" // TA EDIT
 	name = "Wicker Cloak"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/wickercloak
 
 /datum/loadout_item/direcloak
 	name = "Direbear Cloak"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/darkcloak/bear
 
 /datum/loadout_item/lightdirecloak
 	name = "Light Direbear Cloak"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/darkcloak/bear/light
 
 /datum/loadout_item/volfmantle
 	name = "Volf Mantle"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/volfmantle
 
 /datum/loadout_item/eastcloak2
 	name = "Leather Cloak"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/eastcloak2
 
 /datum/loadout_item/thief_cloakc
 	name = "Rapscallion's Shawl"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/thief_cloak
 
 /datum/loadout_item/tabardscarlet
 	name = "Tabard, Scarlet"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/suit/roguetown/shirt/robe/tabardscarlet
 
 /datum/loadout_item/shroudscarlet
-	name = "Tabard Shroud, Scarlet"
-	category = "Плащи"
+	name = "Tabard's Shroud, Scarlet"
+	category = list("Плащи")
 	path = /obj/item/clothing/head/roguetown/roguehood/shroudscarlet
 
 /datum/loadout_item/tabardblack
 	name = "Tabard, Black"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/suit/roguetown/shirt/robe/tabardblack
 
 /datum/loadout_item/shroudblack
-	name = "Tabard Shroud, Black"
-	category = "Плащи"
+	name = "Tabard's Shroud, Black"
+	category = list("Плащи")
 	path = /obj/item/clothing/head/roguetown/roguehood/shroudblack
 
 /datum/loadout_item/tabardwhite
 	name = "Tabard, White"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/suit/roguetown/shirt/robe/tabardwhite
 
 /datum/loadout_item/shroudwhite
 	name = "Tabard's Shroud, White"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/head/roguetown/roguehood/shroudwhite
 
 /datum/loadout_item/aproncook
 	name = "Apron, Cooking"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/apron/cook
 
 /datum/loadout_item/surcoatheavy
@@ -610,78 +605,78 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/scaledcloak
 	name = "Scaled Cloak"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/scaledcloak
 
 /datum/loadout_item/sleevedtabard
 	name = "Tabard, Sleeved"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/sleevedtabard
 
 /datum/loadout_item/toga
-	name = "Toga, Robed"
-	category = "Плащи"
+	name = "Toga"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/tabard/toga
 
 /datum/loadout_item/toga_dress
 	name = "Toga, Dress"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/tabard/toga/dress
 
-//SHOES
+// Shoes
 /datum/loadout_item/leatherboots
 	name = "Leather Boots"
-	category = "Обувь"
+	category = list("Обувь")
 	path = /obj/item/clothing/shoes/roguetown/boots/leather
 
 /datum/loadout_item/classicsandals
 	name = "Classical Sandals"
-	category = "Обувь"
+	category = list("Обувь")
 	path = /obj/item/clothing/shoes/roguetown/sandals/toga
 
 /datum/loadout_item/darkboots
 	name = "Dark Boots"
-	category = "Обувь"
+	category = list("Обувь")
 	path = /obj/item/clothing/shoes/roguetown/boots
 
 /datum/loadout_item/babouche
 	name = "Babouche"
-	category = "Обувь"
+	category = list("Обувь")
 	path = /obj/item/clothing/shoes/roguetown/shalal
 
 /datum/loadout_item/nobleboots
 	name = "Noble Boots"
-	category = "Обувь"
+	category = list("Обувь")
 	path = /obj/item/clothing/shoes/roguetown/boots/nobleboot
 
 /datum/loadout_item/sandals
 	name = "Sandals"
-	category = "Обувь"
+	category = list("Обувь")
 	path = /obj/item/clothing/shoes/roguetown/sandals
 
 /datum/loadout_item/shortboots
 	name = "Short Boots"
-	category = "Обувь"
+	category = list("Обувь")
 	path = /obj/item/clothing/shoes/roguetown/shortboots
 
 /datum/loadout_item/gladsandals
 	name = "Gladiatorial Sandals"
-	category = "Обувь"
+	category = list("Обувь")
 	path = /obj/item/clothing/shoes/roguetown/gladiator
 
 /datum/loadout_item/ridingboots
 	name = "Riding Boots"
-	category = "Обувь"
+	category = list("Обувь")
 	path = /obj/item/clothing/shoes/roguetown/ridingboots
 
 /datum/loadout_item/ankletscloth
 	name = "Cloth Anklets"
-	category = "Обувь"
+	category = list("Обувь")
 	path = /obj/item/clothing/shoes/roguetown/boots/clothlinedanklets
 
 /datum/loadout_item/ankletsfur
 	name = "Fur Anklets"
-	category = "Обувь"
+	category = list("Обувь")
 	path = /obj/item/clothing/shoes/roguetown/boots/furlinedanklets
 
 /datum/loadout_item/silkanklets
@@ -692,64 +687,63 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/rumaclanshoes
 	name = "Raised Sandals"
+	category = list("Обувь")
 	path = /obj/item/clothing/shoes/roguetown/armor/rumaclan/shitty
-	category = "Обувь"
 
-//SHIRTS
+// Clothing
 /datum/loadout_item/longcoat
 	name = "Longcoat"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/armor/longcoat
 
 /datum/loadout_item/slit_dress
-	save_key = "Slitted Dress (Standard)" // TA EDIT
-	name = "Slitted dress"
-	category = "Одежда"
+	name = "Slitted Dress"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/slit
 
 /datum/loadout_item/robe
 	name = "Robe"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/robe
 
 /datum/loadout_item/phys_robe
 	name = "Physicker's Robe"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/robe/phys
 
 /datum/loadout_item/feld_robe
 	name = "Feldsher's Robe"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/robe/feld
 
 /datum/loadout_item/formalsilks
 	name = "Formal Silks"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/undershirt/puritan
 
 /datum/loadout_item/longshirt
 	name = "Shirt"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/undershirt/black
 
 /datum/loadout_item/shortshirt
 	name = "Short-sleeved Shirt"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/shortshirt
 
 /datum/loadout_item/sailorshirt
 	name = "Striped Shirt"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/undershirt/sailor
 
 /datum/loadout_item/sailorjacket
 	name = "Leather Jacket"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/armor/leather/vest/sailor
 
 /datum/loadout_item/priestrobe
 	name = "Undervestments"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/undershirt/priest
 
 /datum/loadout_item/silkbra
@@ -760,258 +754,258 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/desertbra
 	name = "Desert Bra"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/desertbra
 
 /datum/loadout_item/kimono2
 	name = "Long Sleeved Kimono"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/kimono2
 
 /datum/loadout_item/haori
 	name = "Haori"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/haori
 
 /datum/loadout_item/yoroihitatare
 	name = "Yoroihitatare"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/yoroihitatare
 
 /datum/loadout_item/kamishimo
 	name = "Kamishimo"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/kamishimo
 
 /datum/loadout_item/kazengun_jacket
 	name = "Kazengun Jacket"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/kazengun_jacket
 
 /datum/loadout_item/deserthood
 	name = "Desert Hood"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/deserthood
 
 /datum/loadout_item/bandithood
 	name = "Bandit Hood"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/menacing/bandit
 
 /datum/loadout_item/desertskirt
 	name = "Desert Skirt"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/under/roguetown/skirt/desert
 
 /datum/loadout_item/explorerhat
 	name = "Explorer Hat"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/explorerhat
 
 /datum/loadout_item/explorervest
 	name = "Explorer Vest"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/explorer
 
 /datum/loadout_item/fancycoat
-	name = "Fancy Cloak" // TA EDIT
-	category = "Одежда"
+	name = "Fancy Cloak"
+	category = list("Одежда")
 	path = /obj/item/clothing/cloak/poncho/fancycoat
 
 /datum/loadout_item/explorerpants
 	name = "Explorer Pants"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/under/roguetown/tights/explorerpants
 
 /datum/loadout_item/bottomtunic
 	name = "Low-cut Tunic"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/undershirt/lowcut
 
 /datum/loadout_item/tunic
 	name = "Tunic"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/tunic
 
 /datum/loadout_item/stripedtunic
 	name = "Striped Tunic"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/armor/workervest
 
 /datum/loadout_item/dress
 	name = "Dress"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/gen
 
 /datum/loadout_item/bardress
 	name = "Bar Dress"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/dress
 
 /datum/loadout_item/chemise
 	name = "Chemise"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/silkdress
 
 /datum/loadout_item/sexydress
 	name = "Sexy Dress"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/gen/sexy
 
 /datum/loadout_item/straplessdress
 	name = "Strapless Dress"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/gen/strapless
 
 /datum/loadout_item/straplessdress/alt
-	name = "Strapless Dress, alt"
-	category = "Одежда"
+	name = "Strapless Dress, Alt"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/gen/strapless/alt
 
 /datum/loadout_item/gown
 	name = "Spring Gown"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/gown
 
 /datum/loadout_item/gown/summer
 	name = "Summer Gown"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/gown/summergown
 
 /datum/loadout_item/gown/fall
 	name = "Fall Gown"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/gown/fallgown
 
 /datum/loadout_item/gown/winter
 	name = "Winter Gown"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/gown/wintergown
 
 /datum/loadout_item/gown/silkydress
 	name = "Silky Dress"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/silkydress
 
 /datum/loadout_item/noblecoat
 	name = "Fancy Coat"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/tunic/noblecoat
 
 /datum/loadout_item/leathervest
 	name = "Leather Vest"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/armor/leather/vest
 
 /datum/loadout_item/nun_habit
 	name = "Nun Habit"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/robe/nun
 
 /datum/loadout_item/eastshirt1
 	name = "Black Foreign Shirt"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/undershirt/eastshirt1
 
 /datum/loadout_item/formalskirt
 	name = "Knee-High Skirt"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/under/roguetown/skirt/formal
 
 /datum/loadout_item/eastshirt2
 	name = "White Foreign Shirt"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/undershirt/eastshirt2
 
 /datum/loadout_item/baredrobe
 	name = "Bared Robe"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/robe/bared
 
 /datum/loadout_item/tights
 	name = "Cloth Tights"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/under/roguetown/tights/black
 
 /datum/loadout_item/hosen
 	name = "Cloth Hosen"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/under/roguetown/tights/hose
 
 /datum/loadout_item/leathertights
 	name = "Leather Tights"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/under/roguetown/trou/leathertights
 
 /datum/loadout_item/hakama
 	name = "Hakama Pants"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/under/roguetown/trou/leather/hakama
 
 /datum/loadout_item/trou
 	name = "Work Trousers"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/under/roguetown/trou
 
 /datum/loadout_item/belt_trousers
 	name = "Belt-Buckled Trousers"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/under/roguetown/trou/beltpants
 
 /datum/loadout_item/leathertrou
 	name = "Leather Trousers"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/under/roguetown/trou/leather
 
 /datum/loadout_item/leathershorts
 	name = "Leather Shorts"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/under/roguetown/heavy_leather_pants/shorts
 
 /datum/loadout_item/sailorpants
 	name = "Seafaring Pants"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/under/roguetown/tights/sailor
 
 /datum/loadout_item/skirt
 	name = "Skirt"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/under/roguetown/skirt
 
-//ACCESSORIES
+// Accessories
 /datum/loadout_item/wrappings
 	name = "Handwraps"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/wrists/roguetown/wrappings
 
 /datum/loadout_item/allwrappings
 	name = "Cloth Wrappings"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/wrists/roguetown/allwrappings
 
 /datum/loadout_item/loincloth
 	name = "Loincloth"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/under/roguetown/loincloth
 
 /datum/loadout_item/spectacles
 	name = "Spectacles"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/mask/rogue/spectacles
 
 /datum/loadout_item/thinspectacles
 	name = "Thin Spectacles"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/mask/rogue/spectacles/thin
 
 /datum/loadout_item/fingerless
 	name = "Fingerless Gloves"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/gloves/roguetown/fingerless
 
 /datum/loadout_item/bandages
 	name = "Bandages, Gloves"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/gloves/roguetown/bandages
 
 /datum/loadout_item/silkbelt
@@ -1022,27 +1016,27 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/ragmask
 	name = "Rag Mask"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/mask/rogue/ragmask
 
 /datum/loadout_item/halfmask
 	name = "Halfmask"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/mask/rogue/shepherd
 
 /datum/loadout_item/dendormask
 	name = "Briar Mask"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/head/roguetown/dendormask
 
 /datum/loadout_item/tutorialbook
 	name = "A Tutorialeer's Handbook"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/recipe_book/survival
 
 /datum/loadout_item/ball
 	name = "Ball"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/ball
 
 /datum/loadout_item/silkmask
@@ -1053,88 +1047,88 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/duelmaskc
 	name = "Duelist's Mask"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/mask/rogue/duelmask
 
 /datum/loadout_item/pipe
 	name = "Pipe"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/mask/cigarette/pipe
 
 /datum/loadout_item/pipewestman
 	name = "Westman Pipe"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/mask/cigarette/pipe/westman
 
 /datum/loadout_item/feather
 	name = "Feather"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/natural/feather
 
 /datum/loadout_item/collar
-	name = "Leather Collar" // TA EDIT
-	category = "Аксессуары"
+	name = "Leather Collar"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/collar/leather
 
 /datum/loadout_item/forlon_collar
 	name = "Light Forlorn Collar"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/collar/forlorn
 
 /datum/loadout_item/catbell_collar
 	name = "Catbell Collar"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/collar/bell/catbell
 
 /datum/loadout_item/bell_collar
 	name = "Cowbell Collar"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/collar/bell/cowbell
 
 /datum/loadout_item/cursed_collar
 	name = "Cursed Collar"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/gorget/cursed_collar
 
 /datum/loadout_item/rope_leash
 	name = "Rope Leash"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/leash
 
 /datum/loadout_item/leather_leash
 	name = "Leather Leash"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/leash/leather
 
 /datum/loadout_item/chain_leash
 	name = "Chain Leash"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/leash/chain
 
 /datum/loadout_item/cloth_blindfold
 	name = "Cloth Blindfold"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/mask/rogue/blindfold
 
 /datum/loadout_item/fake_blindfold
 	name = "Fake Blindfold"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/mask/rogue/blindfold/fake
 
 /datum/loadout_item/bases
-	name = "Cloth military skirt"
+	name = "Cloth Military Skirt"
 	category = list("Аксессуары", "Триумфы")
 	path = /obj/item/storage/belt/rogue/leather/battleskirt
 	triumph_cost = 3
 
 /datum/loadout_item/fauldedbelt
-	name = "Belt with faulds"
+	name = "Belt with Faulds"
 	category = list("Аксессуары", "Триумфы")
 	path = /obj/item/storage/belt/rogue/leather/battleskirt/faulds
 	triumph_cost = 3
 
 /datum/loadout_item/doublebelt
-	name = "Paired belts"
+	name = "Paired Belts"
 	category = list("Аксессуары", "Триумфы")
 	path = /obj/item/storage/belt/rogue/leather/double
 	triumph_cost = 4
@@ -1147,7 +1141,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/psicross
 	name = "Psydonian Cross"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/psicross
 
 /datum/loadout_item/psicross/reform
@@ -1156,17 +1150,17 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/psicross/astrata
 	name = "Amulet of Astrata"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/psicross/astrata
 
 /datum/loadout_item/psicross/noc
 	name = "Amulet of Noc"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/psicross/noc
 
 /datum/loadout_item/psicross/abyssor
 	name = "Amulet of Abyssor"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/psicross/abyssor
 
 /datum/loadout_item/psicross/xylix
@@ -1175,62 +1169,62 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/psicross/dendor
 	name = "Amulet of Dendor"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/psicross/dendor
 
 /datum/loadout_item/psicross/necra
 	name = "Amulet of Necra"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/psicross/necra
 
 /datum/loadout_item/psicross/pestra
 	name = "Amulet of Pestra"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/psicross/pestra
 
 /datum/loadout_item/psicross/ravox
 	name = "Amulet of Ravox"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/psicross/ravox
 
 /datum/loadout_item/psicross/malum
 	name = "Amulet of Malum"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/psicross/malum
 
 /datum/loadout_item/psicross/eora
 	name = "Amulet of Eora"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/psicross/eora
 
 /datum/loadout_item/psicross/undivided
 	name = "Amulet of Ten"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/psicross/undivided
 
 /datum/loadout_item/psicross/zizo
 	name = "Decrepit Zcross"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy
 
 /datum/loadout_item/zcross_iron
 	name = "Iron Zcross"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/iron
 
 /datum/loadout_item/psicross/matthios
 	name = "Amulet of Matthios"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios
 
 /datum/loadout_item/psicross/graggar
 	name = "Amulet of Graggar"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/graggar
 
 /datum/loadout_item/psicross/baotha
 	name = "Amulet of Baotha"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/baotha
 
 /datum/loadout_item/psicross/gronnzizo
@@ -1269,416 +1263,381 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/neck/roguetown/psicross/abyssor/gronn
 
 /datum/loadout_item/wedding_band
-	name = "silver wedding band"
-	category = "Аксессуары"
+	name = "Wedding Band, Silver"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/ring/band
 
 /datum/loadout_item/jesterhatc
 	name = "Jester's Hat"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/jester
 
 /datum/loadout_item/jestertunickc
 	name = "Jester's Tunick"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/jester
 
 /datum/loadout_item/jestershoess
 	name = "Jester's Shoes"
-	category = "Обувь"
+	category = list("Обувь")
 	path = /obj/item/clothing/shoes/roguetown/jester
 
 /datum/loadout_item/cotehardie
 	name = "Fitted Coat"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/cloak/cotehardie
 
-//CAPARISONS
+// Caparisons
 
 /datum/loadout_item/caparison
 	name = "Caparison"
-	category = "Разное"
+	category = list("Разное")
 	path = /obj/item/caparison
 
 /datum/loadout_item/triumph_knife
 	name = "Laborer's Knife"
-	path = /obj/item/rogueweapon/huntingknife/throwingknife/triumph
 	category = list("Триумфы")
+	path = /obj/item/rogueweapon/huntingknife/throwingknife/triumph
 	triumph_cost = 5
 
 /datum/loadout_item/triumph_necklace
 	name = "Golden Necklace, Ornate"
-	path = /obj/item/clothing/neck/roguetown/ornateamulet/noble/triumph
 	category = list("Триумфы")
+	path = /obj/item/clothing/neck/roguetown/ornateamulet/noble/triumph
 	triumph_cost = 7
 
 /datum/loadout_item/triumph_ring
 	name = "Golden Ring, Ornate"
-	path = /obj/item/clothing/ring/gold/triumph
 	category = list("Триумфы")
+	path = /obj/item/clothing/ring/gold/triumph
 	triumph_cost = 7
 
 /datum/loadout_item/triumph_circlet
 	name = "Golden Circlet, Ornate"
-	path = /obj/item/clothing/head/roguetown/circlet/triumph
 	category = list("Триумфы")
+	path = /obj/item/clothing/head/roguetown/circlet/triumph
 	triumph_cost = 7
 
 /datum/loadout_item/triumph_weaponkit_fancymace
-	name = "Triumph Kit - Rungu-Shishpar Mace - Required: Iron Mace, an Iron Warhammer, a Steel Mace, a Steel Warhammer, or a Silver Mace"
-	path = /obj/item/enchantingkit/triumph_weaponkit_fancymace
+	name = "Triumph Kit - Rungu-Shishpar Mace"
 	category = list("Триумфы")
+	path = /obj/item/enchantingkit/triumph_weaponkit_fancymace
 	triumph_cost = 6
 
 /datum/loadout_item/triumph_weaponkit_krisdagger
-	name = "Triumph Kit - Kris - Required: Bauernwehr, a Combat Knife, an Iron Dagger, or a Steel Dagger"
-	path = /obj/item/enchantingkit/triumph_weaponkit_kris
+	name = "Triumph Kit - Kris"
 	category = list("Триумфы")
+	path = /obj/item/enchantingkit/triumph_weaponkit_kris
 	triumph_cost = 6
 
 /datum/loadout_item/triumph_weaponkit_njoradagger
-	name = "Triumph Kit - Njora - Required: Steel Dagger, an Iron Dagger, a Hunting Knife, or a Combat Knife"
-	path = /obj/item/enchantingkit/triumph_weaponkit_njora
+	name = "Triumph Kit - Njora"
 	category = list("Триумфы")
+	path = /obj/item/enchantingkit/triumph_weaponkit_njora
 	triumph_cost = 6
 
 /datum/loadout_item/triumph_weaponkit_alloywhip
-	name = "Triumph Kit - Alloytip Whip - Required: Bronze Whip, a Whip, or a Silver Whip"
-	path = /obj/item/enchantingkit/triumph_weaponkit_whip
+	name = "Triumph Kit - Alloytip Whip"
 	category = list("Триумфы")
+	path = /obj/item/enchantingkit/triumph_weaponkit_whip
 	triumph_cost = 6
 
 /datum/loadout_item/triumph_weaponkit_kaskara
-	name = "Triumph Kit - Kaskara - Required: Iron Arming Sword, a Steel Arming Sword, or a Rapier"
-	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_kaskara
+	name = "Triumph Kit - Kaskara"
 	category = list("Триумфы")
+	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_kaskara
 	triumph_cost = 6
 
 /datum/loadout_item/triumph_weaponkit_ida
-	name = "Triumph Kit - Ida - Required: Iron Shortsword or a Steel Shortsword"
-	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_ida
+	name = "Triumph Kit - Ida"
 	category = list("Триумфы")
+	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_ida
 	triumph_cost = 6
 
 /datum/loadout_item/triumph_weaponkit_hwi
-	name = "Triumph Kit - Hwi - Required: Iron Hunting Sword, an Iron Dueling Messer, a Steel Messer, a Steel Hunting Sword, or a Falchion"
-	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_hwi
+	name = "Triumph Kit - Hwi"
 	category = list("Триумфы")
+	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_hwi
 	triumph_cost = 6
 
 /datum/loadout_item/triumph_weaponkit_ngombe
-	name = "Triumph Kit - Ngombe - Required: Iron Hunting Sword, an Iron Dueling Messer, a Steel Messer, a Steel Hunting Sword, or a Falchion"
-	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_ngombe
+	name = "Triumph Kit - Ngombe"
 	category = list("Триумфы")
+	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_ngombe
 	triumph_cost = 6
 
 /datum/loadout_item/triumph_weaponkit_ada
-	name = "Triumph Kit - Ada - Required: Iron Sabre, a Steel Sabre, a Falx, or a Falchion"
-	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_ada
+	name = "Triumph Kit - Ada"
 	category = list("Триумфы")
+	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_ada
 	triumph_cost = 6
 
 /datum/loadout_item/triumph_weaponkit_sengese
-	name = "Triumph Kit - Sengese - Required: Iron Sabre, a Steel Sabre, a Falx, or a Falchion"
-	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_sengese
+	name = "Triumph Kit - Sengese"
 	category = list("Триумфы")
+	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_sengese
 	triumph_cost = 6
 
 /datum/loadout_item/triumph_weaponkit_clericsword
-	name = "Triumph Kit - Clerical Longsword - Required: Long Sword"
-	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_clericsword
+	name = "Triumph Kit - Clerical Longsword"
 	category = list("Триумфы")
+	path = /obj/item/enchantingkit/weapon/triumph_weaponkit_clericsword
 	triumph_cost = 6
-
-// -5 TRI Minisection.
 
 /datum/loadout_item/triumph_shortsatchel
 	name = "Short Satchel"
-	path = /obj/item/storage/backpack/rogue/satchel/short
 	category = list("Триумфы")
+	path = /obj/item/storage/backpack/rogue/satchel/short
 	triumph_cost = 5
 
 /datum/loadout_item/triumph_waterskin
 	name = "Waterskin"
-	path = /obj/item/reagent_containers/glass/bottle/waterskin
 	category = list("Триумфы")
+	path = /obj/item/reagent_containers/glass/bottle/waterskin
 	triumph_cost = 5
 
 /datum/loadout_item/triumph_messkit
 	name = "Mess Kit"
-	path = /obj/item/storage/gadget/messkit
 	category = list("Триумфы")
+	path = /obj/item/storage/gadget/messkit
 	triumph_cost = 5
 
 /datum/loadout_item/triumph_foldtable
 	name = "Folding Table"
-	path = /obj/item/folding_table_stored
 	category = list("Триумфы")
+	path = /obj/item/folding_table_stored
 	triumph_cost = 5
 
 /datum/loadout_item/triumph_bedroll
 	name = "Bedroll"
-	path = /obj/item/bedroll
 	category = list("Триумфы")
+	path = /obj/item/bedroll
 	triumph_cost = 5
 
 /datum/loadout_item/triumph_scabbardnoble
-	save_key = "Decorated Scabbard, Silver (Triumph)" // TA EDIT
 	name = "Decorated Scabbard, Silver"
-	path = /obj/item/rogueweapon/scabbard/sword/noble
 	category = list("Триумфы")
+	path = /obj/item/rogueweapon/scabbard/sword/noble
 	triumph_cost = 10
 
 /datum/loadout_item/triumph_sheathnoble
-	save_key = "Decorated Sheath, Silver (Triumph)" // TA EDIT
 	name = "Decorated Sheath, Silver"
-	path = /obj/item/rogueweapon/scabbard/sheath/noble
 	category = list("Триумфы")
+	path = /obj/item/rogueweapon/scabbard/sheath/noble
 	triumph_cost = 10
 
 /datum/loadout_item/triumph_psycross
 	name = "Golden Psycross, Ornate"
-	path = /obj/item/clothing/neck/roguetown/psicross/g/triumph
 	category = list("Триумфы")
+	path = /obj/item/clothing/neck/roguetown/psicross/g/triumph
 	triumph_cost = 11
 
 /datum/loadout_item/triumph_zcross
 	name = "Golden Zizote Amulet, Ornate"
-	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/g/triumph
 	category = list("Триумфы")
+	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/g/triumph
 	triumph_cost = 12
 
 /datum/loadout_item/triumph_astcross
 	name = "Golden Astratan Amulet, Ornate"
-	path = /obj/item/clothing/neck/roguetown/psicross/astrata/g/triumph
 	category = list("Триумфы")
+	path = /obj/item/clothing/neck/roguetown/psicross/astrata/g/triumph
 	triumph_cost = 13
 
 /datum/loadout_item/triumph_signet
 	name = "Golden Signet Ring, Ornate"
-	path = /obj/item/clothing/ring/signet/triumph
 	category = list("Триумфы")
+	path = /obj/item/clothing/ring/signet/triumph
 	triumph_cost = 13
 
 /datum/loadout_item/triumph_gildedshirt
-	save_key = "Gilded Dress Shirt (Triumph)" // TA EDIT
 	name = "Gilded Dress Shirt"
-	path = /obj/item/clothing/suit/roguetown/shirt/dress/royal/prince
 	category = list("Триумфы")
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/royal/prince
 	triumph_cost = 6
 
 /datum/loadout_item/triumph_pristinedress
-	save_key = "Pristine Dress (Triumph)" // TA EDIT
 	name = "Pristine Dress"
-	path = /obj/item/clothing/suit/roguetown/shirt/dress/royal/princess
 	category = list("Триумфы")
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/royal/princess
 	triumph_cost = 6
 
 /datum/loadout_item/triumph_royalsleeves
 	name = "Royal Sleeves"
-	path = /obj/item/clothing/wrists/roguetown/royalsleeves
 	category = list("Триумфы")
+	path = /obj/item/clothing/wrists/roguetown/royalsleeves
 	triumph_cost = 6
 
 /datum/loadout_item/triumph_goldhalfmask
 	name = "Golden Halfmask, Ornate"
-	path = /obj/item/clothing/mask/rogue/lordmask/triumph
 	category = list("Триумфы")
+	path = /obj/item/clothing/mask/rogue/lordmask/triumph
 	triumph_cost = 10
 
 /datum/loadout_item/triumph_goldfullmask
 	name = "Golden Mask, Ornate"
-	path = /obj/item/clothing/mask/rogue/facemask/goldmask/triumph
 	category = list("Триумфы")
+	path = /obj/item/clothing/mask/rogue/facemask/goldmask/triumph
 	triumph_cost = 13
 
 /datum/loadout_item/triumph_goldfullmaskc
 	name = "Crestless Golden Mask, Ornate"
-	path = /obj/item/clothing/mask/rogue/facemask/goldmaskc/triumph
 	category = list("Триумфы")
+	path = /obj/item/clothing/mask/rogue/facemask/goldmaskc/triumph
 	triumph_cost = 13
 
 /datum/loadout_item/triumph_weaponkit_estoc
-	name = "Triumph Kit - Azurian Estoc - Required: Estoc or Stecher"
-	path = /obj/item/enchantingkit/triumph_weaponkit_estoc
+	name = "Triumph Kit - Azurian Estoc"
 	category = list("Триумфы")
+	path = /obj/item/enchantingkit/triumph_weaponkit_estoc
 	triumph_cost = 6
 
-//////////////////
-//  PERFUMES !  //
-//////////////////
+// Perfumes
 
 /datum/loadout_item/triumph_perfume_lavender
 	name = "Lavender Perfume"
-	path = /obj/item/perfume/lavender
 	category = list("Триумфы")
+	path = /obj/item/perfume/lavender
 	triumph_cost = 2
 
 /datum/loadout_item/triumph_perfume_cherry
 	name = "Cherry Perfume"
-	path = /obj/item/perfume/cherry
 	category = list("Триумфы")
+	path = /obj/item/perfume/cherry
 	triumph_cost = 2
 
 /datum/loadout_item/triumph_perfume_rose
 	name = "Rose Perfume"
-	path = /obj/item/perfume/rose
 	category = list("Триумфы")
+	path = /obj/item/perfume/rose
 	triumph_cost = 2
 
 /datum/loadout_item/triumph_perfume_jasmine
 	name = "Jasmine Perfume"
-	path = /obj/item/perfume/jasmine
 	category = list("Триумфы")
+	path = /obj/item/perfume/jasmine
 	triumph_cost = 2
 
 /datum/loadout_item/triumph_perfume_mint
 	name = "Mint Perfume"
-	path = /obj/item/perfume/mint
 	category = list("Триумфы")
+	path = /obj/item/perfume/mint
 	triumph_cost = 2
 
 /datum/loadout_item/triumph_perfume_vanilla
 	name = "Vanilla Perfume"
-	path = /obj/item/perfume/vanilla
 	category = list("Триумфы")
+	path = /obj/item/perfume/vanilla
 	triumph_cost = 2
 
 /datum/loadout_item/triumph_perfume_pear
 	name = "Pear Perfume"
-	path = /obj/item/perfume/pear
 	category = list("Триумфы")
+	path = /obj/item/perfume/pear
 	triumph_cost = 2
 
 /datum/loadout_item/triumph_perfume_strawberry
 	name = "Strawberry Perfume"
-	path = /obj/item/perfume/strawberry
 	category = list("Триумфы")
+	path = /obj/item/perfume/strawberry
 	triumph_cost = 2
 
 /datum/loadout_item/triumph_perfume_cinnamon
 	name = "Cinnamon Perfume"
-	path = /obj/item/perfume/cinnamon
 	category = list("Триумфы")
+	path = /obj/item/perfume/cinnamon
 	triumph_cost = 2
 
 /datum/loadout_item/triumph_perfume_frankincense
 	name = "Frankincense Perfume"
-	path = /obj/item/perfume/frankincense
 	category = list("Триумфы")
+	path = /obj/item/perfume/frankincense
 	triumph_cost = 3
 
 /datum/loadout_item/triumph_perfume_sandalwood
 	name = "Sandalwood Perfume"
-	path = /obj/item/perfume/sandalwood
 	category = list("Триумфы")
+	path = /obj/item/perfume/sandalwood
 	triumph_cost = 3
 
 /datum/loadout_item/triumph_perfume_myrrh
 	name = "Myrrh Perfume"
-	path = /obj/item/perfume/myrrh
 	category = list("Триумфы")
+	path = /obj/item/perfume/myrrh
 	triumph_cost = 3
 
 /datum/loadout_item/triumph_fermented_crab
 	name = "Fermented Crab"
-	path = /obj/item/reagent_containers/glass/bottle/alchemical/fermented_crab
 	category = list("Триумфы")
+	path = /obj/item/reagent_containers/glass/bottle/alchemical/fermented_crab
 	triumph_cost = 5
 
-// -7 TRI Minisection.
-/*
-/datum/loadout_item/triumph_buttpack
-	name = "Belted Satchel"
-	path = /obj/item/storage/backpack/rogue/satchel/beltpack
-	category = list("Триумфы")
-	triumph_cost = 7
-*/
 /datum/loadout_item/triumph_lunchpouch
 	name = "Pouch of Luncheons"
+	category = list("Триумфы")
 	path = /obj/item/storage/belt/rogue/pouch/triumphlunch
-	category = list("Триумфы")
 	triumph_cost = 8
-
-/* /datum/loadout_item/triumph_grenzhat
-	name = "Grenzelhoftian Beret"
-	path = /obj/item/clothing/head/roguetown/grenzelhofthat/triumph
-	category = list("Триумфы")
-	triumph_cost = 7 */
 
 /datum/loadout_item/triumph_lordcloak
 	name = "Lordly Cloak"
-	path = /obj/item/clothing/cloak/lordcloak
 	category = list("Триумфы")
+	path = /obj/item/clothing/cloak/lordcloak
 	triumph_cost = 10
 
 /datum/loadout_item/triumph_ladycloak
 	name = "Ladylike Cloak"
-	path = /obj/item/clothing/cloak/lordcloak/ladycloak
 	category = list("Триумфы")
+	path = /obj/item/clothing/cloak/lordcloak/ladycloak
 	triumph_cost = 12
 
 /datum/loadout_item/triumph_gdorpelring
 	name = "Golden Dorpel Ring, Ornate"
-	path = /obj/item/clothing/ring/diamond/triumph
 	category = list("Триумфы")
+	path = /obj/item/clothing/ring/diamond/triumph
 	triumph_cost = 16
-
 
 /datum/loadout_item/triumph_metalrepairkit
 	name = "Repair Kit, Metal"
-	path = /obj/item/repair_kit/metal/bad
 	category = list("Триумфы")
+	path = /obj/item/repair_kit/metal/bad
 	triumph_cost = 15
 
 /datum/loadout_item/triumph_clothrepairkit
 	name = "Repair Kit, Cloth"
-	path = /obj/item/repair_kit/bad
 	category = list("Триумфы")
+	path = /obj/item/repair_kit/bad
 	triumph_cost = 15
 
 /datum/loadout_item/shawl
 	name = "Shawl"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/shawl
-	category = "Головные уборы"
 
-/* /datum/loadout_item/maidband
-	name = "Maid Headdress"
-	path = /obj/item/clothing/head/roguetown/maidhead
-	category = list("Головные уборы", "Донат")
-	donatitem = TRUE */
-
-/* /datum/loadout_item/maidbandfancy
-	name = "Valorian Maid Headband"
-	path = /obj/item/clothing/head/roguetown/maidband
-	category = list("Головные уборы", "Донат")
-	donatitem = TRUE */
-
-// Обувь
+// Accessories
 
 /datum/loadout_item/leathergloves
 	name = "Leather Gloves"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/gloves/roguetown/leather
 
 /datum/loadout_item/shadowmask
 	name = "Purple Halfmask"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/mask/rogue/shepherd/shadowmask
 
 /datum/loadout_item/collar/collar
 	name = "Collar"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/collar
 
 /datum/loadout_item/bell_collar/collar
 	name = "Bell Collar"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/collar/bell_collar
 
 /datum/loadout_item/faceveil
 	name = "Face Veil"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/mask/rogue/faceveil
 
 /datum/loadout_item/breechclothbelt
@@ -1707,57 +1666,52 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/darkcloak
 	name = "Dark Cloak"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/darkcloak
 
 /datum/loadout_item/crusadercloak
 	name = "Desert Cloak"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/cape/crusader
-
-/datum/loadout_item/toga
-	name = "Toga"
-	category = "Плащи"
-	path = /obj/item/clothing/cloak/tabard/toga
 
 /datum/loadout_item/cap
 	name = "Cap"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/cap
 
 /datum/loadout_item/tiyon
 	name = "Tiyon"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/tiyon
 
 /datum/loadout_item/longveil
 	name = "Long Veil"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/longveil
 
 /datum/loadout_item/durag
 	name = "Durag"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/durag
 
 /datum/loadout_item/chefhat
 	name = "Chef's Hat"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/chef
 
 /datum/loadout_item/psicross/decrepit
 	name = "Decrepit Psycross"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/psicross/aalloy
 
 /datum/loadout_item/psicross/naledi
 	name = "Naledian Psy-Bracelet"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/psicross/naledi
 
 /datum/loadout_item/psicross/tooth_necklace
 	name = "Tooth Necklace"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gronn/generic
 
 /datum/loadout_item/triumph_satchel
@@ -1802,10 +1756,8 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/neck/roguetown/psicross/malum/bronze
 	triumph_cost = 2
 
-// TA EDIT START
 /datum/loadout_item/psicross/inhumen
 	path = null
-// TA EDIT END
 
 /datum/loadout_item/psicross/inhumen/graggar/bronze
 	name = "Bronze Amulet of Graggar"
@@ -1953,42 +1905,42 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/beltshawl
 	name = "Belt Shawl"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/storage/belt/rogue/leather/beltshawl
 
 /datum/loadout_item/pouched_suspenders
 	name = "Pouched Suspenders"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/suspenders
 
 /datum/loadout_item/sash
 	name = "Sash"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/sash
 
 /datum/loadout_item/thorn_rosa_crown
 	name = "Rosa Crown with Thorns"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/flowercrown/rosa/thorns
 
 /datum/loadout_item/dyeable_crown
 	name = "Gray Flower Crown"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/flowercrown/rosa/dyecrown
 
 /datum/loadout_item/dhoti
 	name = "Dhoti"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/under/roguetown/tights/dhoti
 
 /datum/loadout_item/saree
 	name = "Saree"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/saree
 
 /datum/loadout_item/furboots
 	name = "Fur Boots"
-	category = "Обувь"
+	category = list("Обувь")
 	path = /obj/item/clothing/shoes/roguetown/boots/furlinedboots
 
 /datum/loadout_item/triumph_plaquegoldenbeltfancy
@@ -1998,31 +1950,31 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	triumph_cost = 7
 
 /datum/loadout_item/triumph_armorkit_slimmedsteel
-	name = "Triumph Kit - Slimfitted Steel Armor - Required: Steel Halfplate, Fluted Halfplate, Steel Plate Armor or Fluted Plate Armor"
+	name = "Triumph Kit - Slimfitted Steel Armor"
 	category = list("Триумфы")
 	path = /obj/item/enchantingkit/triumph_armorkit_slimmedsteel
 	triumph_cost = 8
 
 /datum/loadout_item/triumph_weaponkit_classicdaggers
-	name = "Triumph Kit - Classic Daggers - Required: Iron Dagger or Steel Dagger"
+	name = "Triumph Kit - Classic Daggers"
 	category = list("Триумфы")
 	path = /obj/item/enchantingkit/triumph_weaponkit_classicdaggers
 	triumph_cost = 6
 
 /datum/loadout_item/triumph_weaponkit_psyswords
-	name = "Triumph Kit - Slimguarded Psydonic Longsword - Required: Psydonic Longsword or Enduring Longsword"
+	name = "Triumph Kit - Slimguarded Psydonic Longsword"
 	category = list("Триумфы")
 	path = /obj/item/enchantingkit/triumph_weaponkit_psyswords
 	triumph_cost = 6
 
 /datum/loadout_item/triumph_weaponkit_clasiscbeakhelm
-	name = "Triumph Kit - Valorian Beak Helmet - Required: Sugarloaf Helmet or Ravoxian Templar Helmet"
+	name = "Triumph Kit - Valorian Beak Helmet"
 	category = list("Триумфы")
 	path = /obj/item/enchantingkit/triumph_armorkit_classicbeakhelm
 	triumph_cost = 6
 
 /datum/loadout_item/triumph_weaponkit_classicpsymace
-	name = "Triumph Kit - Classic Psydonic Handmace - Required: Psydonic Handmace or Enduring Handmace"
+	name = "Triumph Kit - Classic Psydonic Handmace"
 	category = list("Триумфы")
 	path = /obj/item/enchantingkit/triumph_weaponkit_psymace
 	triumph_cost = 6
@@ -2047,114 +1999,110 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/flimsy_visor
 	name = "Helmetless Visor"
-	category = "Аксессуары"
 	category = list("Аксессуары", "Триумфы")
 	path = /obj/item/clothing/mask/rogue/facemask/steel/visor/flimsy
 	triumph_cost = 4
 
 /datum/loadout_item/furcollar
 	name = "Fur Collar"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/neck/roguetown/collar/fur
 
 /datum/loadout_item/scoutcloak
 	name = "Scout Cloak"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/scout
 
 /datum/loadout_item/traditionaltabard
 	name = "Traditional Tabard, Psydonic"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/tabard/psydontabard/white
 
 /datum/loadout_item/fancycoattrimmed
 	name = "Trimmed Fancy Coat"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/poncho/fancycoat/trimmed
-
 
 /datum/loadout_item/shawlhood
 	name = "Shawl (Hijab Variant)"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/roguehood/shawlhood
-
 
 /datum/loadout_item/shortskirt
 	name = "Short Skirt"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/under/roguetown/skirt/short
-
 
 /datum/loadout_item/silkshirt
 	name = "Silk Shirt"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/shadowshirt
 
 /datum/loadout_item/darkjacket
 	name = "Dark Jacket"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/fancyjacket/triumph_padded
 
 /datum/loadout_item/shalwarpants
 	name = "Shalwar Pants"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/under/roguetown/tights/shalwar
 
 /datum/loadout_item/greendress
 	name = "Light Green Dress"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/green
 
 /datum/loadout_item/bluedress
 	name = "Light Blue Dress"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/blue
 
 /datum/loadout_item/taverndress
 	name = "Tavern Dress"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/tavern
 
 /datum/loadout_item/courtesandress
 	name = "Courtesan Dress"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/courtesan
 
 /datum/loadout_item/nightgown
 	name = "Nightgown"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/dress/nightgown
 
 /datum/loadout_item/wintercoat
 	name = "Winter Coat"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/tunic/winter
 
 /datum/loadout_item/blouse
 	name = "Blouse"
-	category = "Одежда"
+	category = list("Одежда")
 	path = /obj/item/clothing/suit/roguetown/shirt/undershirt/blouse
 
 /datum/loadout_item/triumph_armorkit_pleather
-	name = "Triumph Kit - Padded Leather Armor - Required: Leather Armor, Leather Cuirass, Studded Leather Armor or Hardened Leather Armor"
+	name = "Triumph Kit - Padded Leather Armor"
 	category = list("Триумфы")
 	path = /obj/item/enchantingkit/triumph_armorkit_pleather
 	triumph_cost = 12
 
 /datum/loadout_item/triumph_weaponkit_khanda
-	name = "Triumph Kit - Khanda - Required: Iron Arming Sword, Steel Arming Sword, Silver Arming Sword or Bronze Arming Sword"
+	name = "Triumph Kit - Khanda"
 	category = list("Триумфы")
 	path = /obj/item/enchantingkit/triumph_weaponkit_khanda
 	triumph_cost = 12
 
 /datum/loadout_item/triumph_weaponkit_urumi
-	name = "Triumph Kit - Urumi - Required: Whip, Bronze Whip, Silver Whip or Blacksteel Whip"
+	name = "Triumph Kit - Urumi"
 	category = list("Триумфы")
 	path = /obj/item/enchantingkit/triumph_weaponkit_urumi
 	triumph_cost = 12
 
 /datum/loadout_item/triumph_weaponkit_pata
-	name = "Triumph Kit - Pata - Required: Steel Katar, Silver Katar or Bronze Katar"
+	name = "Triumph Kit - Pata"
 	category = list("Триумфы")
 	path = /obj/item/enchantingkit/triumph_weaponkit_pata
 	triumph_cost = 12
@@ -2166,35 +2114,34 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	triumph_cost = 6
 
 /datum/loadout_item/taur_plate
-	name = "Tauric Plate Armor Morphing Elixir - Required: Any Full Plate Armor"
-	category = "Броня"
+	name = "Tauric Plate Armor Morphing Elixir"
+	category = list("Броня")
 	path = /obj/item/enchantingkit/taur_armor_plate
 
 /datum/loadout_item/taur_gambeson
-	name = "Tauric Gambeson Morphing Elixir - Required: Heavy Padded Gambeson"
-	category = "Броня"
+	name = "Tauric Gambeson Morphing Elixir"
+	category = list("Броня")
 	path = /obj/item/enchantingkit/taur_armor_gambeson
 
 /datum/loadout_item/taur_tabard
-	name = "feline taur tabard"
-	category = "Плащи"
+	name = "Feline Taur Tabard"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/t_tabard/taur
 
 /datum/loadout_item/taur_t_tabard
-	name = "feline tightened taur tabard"
-	category = "Плащи"
+	name = "Feline Tightened Taur Tabard"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/t_tabard/taur/tightened
 
 /datum/loadout_item/taur_hauberk
-	name = "Feline Taur Hauberk Morphing Elixir - Required: Any Hauberk"
-	category = "Броня"
+	name = "Feline Taur Hauberk Morphing Elixir"
+	category = list("Броня")
 	path = /obj/item/enchantingkit/taur_armor_hauberk
 
 /datum/loadout_item/taur_footwraps
-	name = "feline taur footwraps"
-	category = "Обувь"
+	name = "Feline Taur Footwraps"
+	category = list("Обувь")
 	path = /obj/item/clothing/shoes/roguetown/felinetaur
-
 
 /datum/loadout_item/donator/dragontea_hat
 	name = "Greathat, Dyeable"
@@ -2209,87 +2156,87 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 /datum/loadout_item/clothloincloth
 	name = "Belt with Loincloth"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/storage/belt/rogue/leather/battleskirt/loincloth
 
 /datum/loadout_item/carapacedmask
 	name = "Ceramic Mask"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/clothing/mask/rogue/xylixmask/ceramic
 
 /datum/loadout_item/belthooks
 	name = "Belt Hooks"
-	category = "Аксессуары"
+	category = list("Аксессуары")
 	path = /obj/item/storage/belt/rogue/leather/belthooks
 
 /datum/loadout_item/sash_dupatta
 	name = "Sash, Dupatta"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/sash/dupatta
 
 /datum/loadout_item/duelistscloak
 	name = "Duelist's Cape"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/half/duelcape
 
 /datum/loadout_item/furheadband
 	name = "Fur Headband"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/headband/fur
 
 /datum/loadout_item/turban
 	name = "Turban"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/turban
 
 /datum/loadout_item/duelisthat
 	name = "Dashing Feathered Hat"
-	category = "Головные уборы"
+	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/duelisthat
 
 /datum/loadout_item/card_deck_triple
 	name = "Card Deck (3x Cards)"
-	category = "Разное"
+	category = list("Разное")
 	path = /obj/item/deck/playing_cards/triple
 
 /datum/loadout_item/triumph_satcheltail
 	name = "Tail Satchel"
-	category = "Разное"
+	category = list("Разное")
 	path = /obj/item/storage/backpack/rogue/satchel/tailchel
 
 /datum/loadout_item/triumph_blackshortsatchel
 	name = "Short Satchel, Black"
-	category = "Триумфы"
+	category = list("Триумфы")
 	path = /obj/item/storage/backpack/rogue/satchel/short/black
 	triumph_cost = 5
 
-//ЧАСЫ БЛЯДЬ
+// Clocks
 
 /datum/loadout_item/clock_g
-	name = "gold handclock"
+	name = "Gold Handclock"
 	category = list("Триумфы")
 	path = /obj/item/clock_capped
 	triumph_cost = 5
 
 /datum/loadout_item/clock_s
-	name = "silver handclock"
+	name = "Silver Handclock"
 	category = list("Триумфы")
 	path = /obj/item/clock_capped/silver
 	triumph_cost = 5
 
 /datum/loadout_item/clock_br
-	name = "bronze handclock"
+	name = "Bronze Handclock"
 	category = list("Триумфы")
 	path = /obj/item/clock
 	triumph_cost = 2
 
 /datum/loadout_item/clock_i
-	name = "iron handclock"
+	name = "Iron Handclock"
 	category = list("Триумфы")
 	path = /obj/item/clock/iron
 	triumph_cost = 2
 
 /datum/loadout_item/saigatabard
 	name = "Saiga Tabard"
-	category = "Плащи"
+	category = list("Плащи")
 	path = /obj/item/clothing/cloak/tabard/saiga
