@@ -211,7 +211,7 @@
 		prob2defend += 20
 	if(used_weapon && !allow_unarmed_fallback)
 		if(!has_status_effect(/datum/status_effect/buff/weapon_binded) && !has_status_effect(/datum/status_effect/debuff/weapon_binded))
-			if(ishuman(src) && user.get_tempo_bonus(TEMPO_TAG_BINDABLE) && mind)
+			if(ishuman(src) && user.get_tempo_bonus(TEMPO_TAG_BINDABLE))
 				var/mob/living/carbon/human/binding_defender = src
 				if(binding_defender.try_bind(used_weapon, user))
 					return TRUE	//Tentative, might be better if it only increased parry chance on the initial binding rather than a full block.
@@ -220,12 +220,6 @@
 
 	if(HAS_TRAIT(user, TRAIT_CURSE_RAVOX))
 		prob2defend -= 40
-
-	if(!defender.mind && defender.has_status_effect(/datum/status_effect/debuff/staggered))
-		prob2defend *= 0.5
-
-	if(!defender.mind && defender.has_status_effect(/datum/status_effect/debuff/hamstring))
-		prob2defend -= 20
 
 	// parrying while knocked down sucks ass
 	if(!(mobility_flags & MOBILITY_STAND) && !has_status_effect(/datum/status_effect/buff/weapon_binded))

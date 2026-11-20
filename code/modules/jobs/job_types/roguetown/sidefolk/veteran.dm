@@ -468,6 +468,9 @@
 		STATKEY_CON = 1,
 		STATKEY_SPD = 2,
 	)
+	subclass_stashed_items = list(
+		"Wax Putty" = /obj/item/waxputty,
+	)
 	subclass_skills = list(
 		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/axes = SKILL_LEVEL_LEGENDARY,
@@ -566,6 +569,9 @@
 		STATKEY_CON = 1,
 		STATKEY_SPD = 3,
 		STATKEY_WIL = 2,
+	)
+	subclass_stashed_items = list(
+		"Wax Putty" = /obj/item/waxputty,
 	)
 	subclass_skills = list(
 		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,
