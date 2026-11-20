@@ -39,6 +39,12 @@
 	/// Bool for ear flicking -- are we currently in the flick animation?
 	var/is_flicking = FALSE
 
+// TA EDIT - Animated ears cannot share idle or another organ's overlays.
+/obj/item/organ/ears/get_cache_key()
+	. = ..()
+	if(is_flicking)
+		. += "-flick-[REF(src)]"
+
 /obj/item/organ/ears/Insert(mob/living/carbon/M, special, drop_if_replaced)
 	. = ..()
 	for(var/datum/wound/facial/ears/ear_wound as anything in M.get_wounds())

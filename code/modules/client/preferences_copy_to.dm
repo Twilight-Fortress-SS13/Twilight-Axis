@@ -18,6 +18,9 @@
 	character.dna.features = features.Copy()
 	character.gender = gender
 	character.set_species(chosen_species, icon_update = FALSE, pref_load = src)
+	var/datum/component/ooze_color_shift/color_shift = character.GetComponent(/datum/component/ooze_color_shift)
+	if(color_shift)
+		color_shift.apply_preferences(src)
 	character.dna.update_body_size()
 	var/obj/item/organ/breasts/breast_organ = character.getorganslot(ORGAN_SLOT_BREASTS)
 	if(breast_organ)

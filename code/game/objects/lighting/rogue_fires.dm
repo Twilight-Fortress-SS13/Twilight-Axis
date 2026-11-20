@@ -810,6 +810,19 @@
 		fan_crafts(FAN_PROGRESS_BONUS)
 
 /obj/machinery/light/rogue/campfire/attackby(obj/item/W, mob/living/user, params)
+	// TA ADDITION START
+	if(istype(W, /obj/item/alch))
+		var/obj/item/alch/alch_item = W
+		if(alch_item.smoke_type)
+			var/datum/pollutant/smoke/smoke = alch_item.smoke_type
+			alch_item.create_cloud(smoke, alch_item, src)
+		return
+	else if(istype(W, /obj/item/natural/worms/leech))
+		var/obj/item/natural/worms/leech/alch_item = W
+		var/datum/pollutant/smoke/smoke = alch_item.smoke_type
+		alch_item.create_cloud(smoke, alch_item, src)
+		return
+	// TA ADDITION END
 	if(!attachment)
 		if(istype(W, /obj/item/reagent_containers/glass/bucket/pot/kettle))
 			// TA eddit start - check crafting for turnin (important for pig-spit)
