@@ -1,5 +1,5 @@
 /datum/advclass/mercenary/twilight_republican_troublemaker
-	name = "Republican TroubleMaker"
+	name = "Republican Troublemaker"
 	tutorial = "A true fighter and partisan who took a break from his revolution to earn a few mammons to help his homeland."
 	outfit = /datum/outfit/job/roguetown/mercenary/twilight_republican_troublemaker
 	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_EXPLOSIVE_SUPPLY, TRAIT_STEELHEARTED)

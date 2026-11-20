@@ -87,3 +87,13 @@
 				backl = /obj/item/quiver/bolt/light
 				H.change_stat(STATKEY_PER, 1)
 				H.change_stat(STATKEY_SPD, 2)
+
+/obj/effect/proc_holder/spell/self/convertrole/brotherhood
+	var/list/extra_recruit_jobs = list("Mercenary")
+
+/obj/effect/proc_holder/spell/self/convertrole/brotherhood/can_convert(mob/living/carbon/human/recruit)
+	if(QDELETED(recruit) || !recruit.mind || recruit.cmode || !recruit.get_face_name(null))
+		return FALSE
+	if(recruit.job in extra_recruit_jobs)
+		return TRUE
+	return ..()
