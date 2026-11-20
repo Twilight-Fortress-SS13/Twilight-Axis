@@ -431,7 +431,7 @@
 	return TRUE
 
 /datum/component/hag_curio_tracker/proc/hag_teleport_check()
-	if(world.time < last_revive_time + 5 MINUTES)
+	if(world.time < last_revive_time + 2.5 MINUTES) // TA EDIT - ORIGINAL: if(world.time < last_revive_time + 5 MINUTES)
 		return FALSE
 	return TRUE
 

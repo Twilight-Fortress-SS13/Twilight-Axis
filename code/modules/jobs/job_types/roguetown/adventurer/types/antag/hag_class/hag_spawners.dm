@@ -27,7 +27,7 @@
 		/obj/item/alch/hag_moss/enchanted/gilded		= 1,
 		/obj/item/alch/hag_moss/enchanted/drowned		= 1,
 		// TA ADDITION START
-		/obj/item/alch/hag_moss/enchanted/rage			= 1,
+		// /obj/item/alch/hag_moss/enchanted/rage			= 1,
 		/obj/item/alch/hag_moss/enchanted/boned			= 1,
 		// TA ADDITION END
 	)
