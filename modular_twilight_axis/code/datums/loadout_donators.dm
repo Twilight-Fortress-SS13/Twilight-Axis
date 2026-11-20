@@ -256,7 +256,7 @@
 	donatitem = TRUE
 
 /datum/loadout_item/donator_bigfoot_axe
-	name = "Donator Kit - Gilded Greataxe"
+	name = "Donator Kit - Aureline"
 	category = list("Оружие", "Донат")
 	path = /obj/item/enchantingkit/bigfoot_axe
 	donatitem = TRUE
@@ -348,7 +348,7 @@
 	donat_tier = 2
 
 /datum/loadout_item/gdhatsirdon
-	name = "Donator Item - Gravedigger's Hat"
+	name = "Donator Item - Graverobber's Hat"
 	category = list("Головные уборы", "Донат")
 	path = /obj/item/clothing/head/roguetown/duelhat/pretzel
 	donatitem = TRUE
@@ -360,7 +360,7 @@
 	donatitem = TRUE
 
 /datum/loadout_item/donator_zydrashauberk
-	name = "Donator Kit - Mailled Cuirass"
+	name = "Donator Kit - Iron Gardbrace & Fauld"
 	category = list("Броня", "Донат")
 	path = /obj/item/enchantingkit/zydrashauberk
 	donatitem = TRUE
@@ -396,7 +396,7 @@
 	donatitem = TRUE
 
 /datum/loadout_item/donator_waff
-	name = "Donator Kit - Weeper Lathe"
+	name = "Donator Kit - Weeper's Lathe"
 	category = list("Оружие", "Донат")
 	path = /obj/item/enchantingkit/weapon/waff
 	donatitem = TRUE
@@ -578,7 +578,7 @@
 	donat_tier = 2
 
 /datum/loadout_item/donator/des_gaebolg
-	name = "Donator Kit - Gae Bolg"
+	name = "Dontaor Kit - Gae Bolg"
 	category = list("Оружие", "Донат")
 	path = /obj/item/enchantingkit/weapon/des_gaebolg
 	donatitem = TRUE
@@ -743,13 +743,13 @@
 	donatitem = TRUE
 
 /datum/loadout_item/donator_stinketh_pike
-	name = "Donator Kit - Kindness of Ravens Standard"
+	name = "Donator Kit - Pike"
 	category = list("Оружие", "Донат")
 	path = /obj/item/enchantingkit/stinketh_pike
 	donatitem = TRUE
 
 /datum/loadout_item/donator_koruu_glaive
-	name = "Donator Kit - Sixty Five Yils"
+	name = "Donator Kit - Glaive"
 	category = list("Оружие", "Донат")
 	path = /obj/item/enchantingkit/koruu_glaive
 	donatitem = TRUE
@@ -807,7 +807,7 @@
 	donatitem = TRUE
 
 /datum/loadout_item/donator_weaponkitdakkenalloybsword
-	name = "Donator Kit - Avantyne-Threaded Sword"
+	name = "Donator Kit - Avantyne Threaded Sword"
 	category = list("Оружие", "Донат")
 	path = /obj/item/enchantingkit/dakken_alloybsword
 	donatitem = TRUE
@@ -1225,7 +1225,7 @@
 	donat_tier = 2
 
 /datum/loadout_item/poncho
-	name = "Пончо"
+	name = "Poncho"
 	category = list("Плащи", "Донат")
 	path = /obj/item/clothing/cloak/poncho
 	donatitem = TRUE
@@ -1536,7 +1536,7 @@
 	donatitem = TRUE
 
 /datum/loadout_item/etruscan_boots
-	name = "Этруские ботфорты Kit"
+	name = "Этруские ботфорты"
 	category = list("Обувь", "Донат")
 	path = /obj/item/enchantingkit/etruscan_boots
 	donatitem = TRUE
@@ -1560,7 +1560,7 @@
 	donatitem = TRUE
 
 /datum/loadout_item/chess
-	name = "Набор с шахматами, шашками и нардами"
+	name = "Foldable Chessboard"
 	category = list("Разное", "Донат")
 	path = /obj/item/chessboard_folded
 	donatitem = TRUE
@@ -2164,7 +2164,7 @@
 	donat_tier = 2
 
 /datum/loadout_item/donator/universal/jadehalfmask_donator
-	name = "Gift - Kit, Jade Halfmask"
+	name = "Gift - Kit, Jade Halfask"
 	category = list("Аксессуары", "Донат")
 	path = /obj/item/enchantingkit/jadehalfmask
 	donatitem = TRUE
@@ -2191,7 +2191,7 @@
 	donat_tier = 2
 
 /datum/loadout_item/donator/universal/cuirass_plackart
-	name = "Gift - Kit, Plackart"
+	name = "Gift - Kit, Armored Plackart"
 	category = list("Броня", "Донат")
 	path = /obj/item/enchantingkit/plackart
 	donatitem = TRUE
@@ -2341,7 +2341,7 @@
 	donatitem = TRUE
 
 /datum/loadout_item/wizhat/gen
-	name = "Wizard Hat (Generic)"
+	name = "Wizard Hat (No Brim)"
 	category = list("Головные уборы")
 	path = /obj/item/clothing/head/roguetown/wizhat/gen
 	donatitem = TRUE
@@ -2455,14 +2455,14 @@
 	donat_tier = 2
 
 /datum/loadout_item/donator/universal/armorpiece_armharness
-	name = "Donator Kit - Arm Harness"
+	name = "Gift - Armor Cosmetic, Arm Harness"
 	category = list("Броня", "Донат")
 	path = /obj/item/enchantingkit/donator_universal_armharness
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/donator/universal/heelkit
-	name = "Gift - Heelification Elixir"
+	name = "Gift - Armor Cosmetic, Heelification Elixir"
 	category = list("Обувь", "Донат")
 	path = /obj/item/heelkit
 	donatitem = TRUE
@@ -2546,14 +2546,14 @@
 	donat_tier = 2
 
 /datum/loadout_item/donator/chivalre_aasimar
-	name = "Donator Kit - Aasimari Equipment (Only Female, No Small Races)"
+	name = "Donator Kit - Aasimari Equipment"
 	category = list("Броня", "Донат")
 	path = /obj/item/enchantingkit/chivalre_aasimar
 	donatitem = TRUE
 	donat_tier = 1
 
 /datum/loadout_item/donator/chivalre_aasimar_sack
-	name = "Donator Kit - Aasimari Equipment (Only Female, No Small Races), Sackful"
+	name = "Donator Kit - Aasimari Equipment, Sackful"
 	category = list("Разное", "Донат")
 	path = /obj/item/storage/roguebag/donator_chivalre_elixirs
 	donatitem = TRUE
@@ -2854,13 +2854,13 @@
 	donat_tier = 2
 
 /datum/loadout_item/donator/rosy/rosecollar
-	name = "Donator Kit - Rosestone Clasped Collar"
+	name = "Donator Item - Clasped Rosestone Collar"
 	category = list("Аксессуары", "Донат")
 	path = /obj/item/enchantingkit/rosy/rosecollar
 	donatitem = TRUE
 
 /datum/loadout_item/donator/glassfeddockterr_bighat
-	name = "Donator Item - Wizard's Big Hat"
+	name = "Donator Item - Eryn's Archwyzardry Hat"
 	category = list("Головные уборы", "Донат")
 	path = /obj/item/clothing/head/roguetown/wizhat/bighat
 	donatitem = TRUE
@@ -2974,7 +2974,7 @@
 	donatitem = TRUE
 
 /datum/loadout_item/donator/trueterrydactyl_shibari
-	name = "Donator Item - Smallclothes, Shibari (Underwear)"
+	name = "Donator Item - Smallclothes, Shibari"
 	category = list("Одежда", "Донат")
 	path = /obj/item/undies/bikini/shibari
 	donatitem = TRUE
@@ -3015,7 +3015,7 @@
 	donatitem = TRUE
 
 /datum/loadout_item/donator/rezathedwarf
-	name = "Donator Item - Glimmering Cloak (Only Male, No Small Races)"
+	name = "Donator Item - Noah's Glimmering Cloak"
 	category = list("Плащи", "Донат")
 	path = /obj/item/clothing/cloak/half/donator_rezathedwarf
 	donatitem = TRUE
@@ -3315,7 +3315,7 @@
 	donat_tier = 2
 
 /datum/loadout_item/donator/universal/ilamellard
-	name = "Gift - Iron Lamellar Armor Decoration"
+	name = "Gift - Iron Lamellar Armor Ddecoration"
 	category = list("Одежда", "Донат")
 	path = /obj/item/clothing/suit/roguetown/shirt/ilamellar
 	donatitem = TRUE
@@ -3357,14 +3357,14 @@
 	donat_tier = 2
 
 /datum/loadout_item/donator/universal/armorpiece_decapauldron
-	name = "Donator Kit - Decablessed Pauldrons"
+	name = "Gift - Armor Cosmetic, Decablessed Pauldrons"
 	category = list("Броня", "Донат")
 	path = /obj/item/enchantingkit/donator_universal_decapauldron
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/donator/universal/armorpiece_steelpauldron
-	name = "Donator Kit - Steel Pauldrons"
+	name = "Gift - Armor Cosmetic, Steel Pauldrons"
 	category = list("Броня", "Донат")
 	path = /obj/item/enchantingkit/donator_universal_steelpauldron
 	donatitem = TRUE
@@ -3609,14 +3609,14 @@
 	donat_tier = 2
 
 /datum/loadout_item/donator/boemanerds
-	name = "Donator Kit - Steel Full Plate Corslet"
+	name = "Donator Item - plate corslet morphkit"
 	category = list("Броня", "Донат")
 	path = /obj/item/enchantingkit/triumph_armorkini_steel
 	donatitem = TRUE
 	donat_tier = 3
 
 /datum/loadout_item/donator/boemanerds/iron
-	name = "Donator Kit - Iron Full Plate Corslet"
+	name = "Donator Item - iron plate corslet morphkit"
 	category = list("Броня", "Донат")
 	path = /obj/item/enchantingkit/triumph_armorkini_iron
 	donatitem = TRUE

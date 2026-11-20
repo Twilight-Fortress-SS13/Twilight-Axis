@@ -24,11 +24,8 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 		return
 
 	var/obj/targetitem = path
+	// TA EDIT - Subscription requirements are shown in the access column.
 	desc = targetitem?.desc || desc || ""
-	if(donat_tier > 0)
-		if(length(desc))
-			desc += " "
-		desc += "<b>Доступно для меценатов уровня: [donat_tier]</b>"
 
 /datum/loadout_item/proc/donator_ckey_check(key)
 	key = ckey(key)
@@ -54,11 +51,13 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 	var/donat_level = check_patreon_lvl(user.ckey)
 
+	// TA EDIT START
+	if(donat_tier > 0 && donat_level < donat_tier)
+		return "Требуется донат-статус уровня [donat_tier]."
+
 	if(donatitem && !donat_level)
 		return "Требуется донат-статус."
-
-	if(donat_tier > 0 && donat_level < donat_tier)
-		return "Требуется уровень мецената: [donat_tier]."
+	// TA EDIT END
 
 	return null
 

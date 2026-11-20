@@ -1,5 +1,5 @@
 // TA EDIT START
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -61,6 +61,13 @@ type Data = {
 };
 
 const ITEMS_PER_PAGE = 50;
+const DONATOR_TIER_COLORS: Record<number, string> = {
+  1: 'average',
+  2: 'blue',
+  3: 'purple',
+  4: 'pink',
+  5: 'red',
+};
 
 const tintKey = (color: string | null | undefined): string | null => {
   if (typeof color !== 'string') {
@@ -232,6 +239,7 @@ export const LoadoutMenu = () => {
   const [page, setPage] = useState(0);
   const [compact, setCompact] = useState(false);
   const [previewText, setPreviewText] = useState(false);
+  const catalogRef = useRef<HTMLDivElement>(null);
   const items = data.items || [];
   const selected = data.selected || [];
   const locks = data.locks || {};
@@ -255,6 +263,12 @@ export const LoadoutMenu = () => {
     Math.ceil(filteredItems.length / ITEMS_PER_PAGE),
   );
   const currentPage = Math.min(page, pageCount - 1);
+  useEffect(() => {
+    if (catalogRef.current) {
+      catalogRef.current.scrollTop = 0;
+    }
+  }, [currentPage, category, query]);
+
   const visibleItems = filteredItems.slice(
     currentPage * ITEMS_PER_PAGE,
     (currentPage + 1) * ITEMS_PER_PAGE,
@@ -290,7 +304,9 @@ export const LoadoutMenu = () => {
                   </ProgressBar>
                 </Stack.Item>
                 {!!data.donator_tier && (
-                  <Stack.Item color="gold">
+                  <Stack.Item
+                    color={DONATOR_TIER_COLORS[data.donator_tier] || 'label'}
+                  >
                     Меценат: {data.donator_tier}
                   </Stack.Item>
                 )}
@@ -395,7 +411,7 @@ export const LoadoutMenu = () => {
             </Stack>
           </Stack.Item>
           <Stack.Item grow>
-            <Section fill scrollable>
+            <Section fill scrollable ref={catalogRef}>
               <TintFilters colors={colors} />
               {!filteredItems.length && (
                 <Box color="label" textAlign="center" p={2}>
@@ -405,12 +421,18 @@ export const LoadoutMenu = () => {
               <Table>
                 <Table.Row header>
                   <Table.Cell>Предмет</Table.Cell>
-                  <Table.Cell>Доступ</Table.Cell>
-                  <Table.Cell textAlign="right">Триумфы</Table.Cell>
+                  <Table.Cell textAlign="center">Доступ</Table.Cell>
+                  <Table.Cell textAlign="center">Триумфы</Table.Cell>
                 </Table.Row>
                 {visibleItems.flatMap((item) => {
                   const selection = selectedByName.get(item.name);
                   const lock = locks[item.name];
+                  let accessColor = 'label';
+                  if (lock) {
+                    accessColor =
+                      DONATOR_TIER_COLORS[item.donator_tier] || 'average';
+                  }
+
                   return [
                     <Table.Row key={item.name}>
                       <Table.Cell py={0.5}>
@@ -459,15 +481,10 @@ export const LoadoutMenu = () => {
                           </Stack.Item>
                         </Stack>
                       </Table.Cell>
-                      <Table.Cell color={lock ? 'average' : 'label'}>
-                        {lock ||
-                          (item.donator_tier
-                            ? `Меценат ${item.donator_tier}`
-                            : item.donator_item
-                              ? 'Меценат'
-                              : 'Доступно')}
+                      <Table.Cell color={accessColor} textAlign="center">
+                        {lock || '—'}
                       </Table.Cell>
-                      <Table.Cell textAlign="right">
+                      <Table.Cell textAlign="center">
                         {item.triumph_cost || '—'}
                       </Table.Cell>
                     </Table.Row>,
