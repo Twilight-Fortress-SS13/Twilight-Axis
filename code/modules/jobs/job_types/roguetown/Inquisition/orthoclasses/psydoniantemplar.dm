@@ -1,4 +1,4 @@
-/datum/advclass/psydoniantemplar // A templar, but for the Inquisition
+/datum/advclass/inq/psydoniantemplar // A templar, but for the Inquisition
 	name = "Adjudicator"
 	tutorial = "Psydonite knights, clad in fluted chainmaille and blessed with the capacity to invoke lesser \
 	miracles. In lieu of greater miracles and rituals, they compensate through martial discipline and blessed weaponry."
@@ -50,12 +50,13 @@
 	belt = /obj/item/storage/belt/rogue/leather/black
 	beltr = /obj/item/storage/belt/rogue/pouch/coins/mid
 	id = /obj/item/clothing/neck/roguetown/psicross/silver
-	backpack_contents = list(/obj/item/roguekey/inquisitionmanor = 1,
-	/obj/item/paper/inqslip/arrival/ortho = 1,
-	/obj/item/rogueweapon/huntingknife/idagger/stake/inq = 1,
-	/obj/item/clothing/ring/signet/psy = 1)
+	backpack_contents = list(
+		/obj/item/roguekey/inquisitionmanor = 1,
+		/obj/item/paper/inqslip/arrival/ortho = 1,
+		/obj/item/rogueweapon/huntingknife/idagger/stake/inq = 1,
+		/obj/item/clothing/ring/signet/psy = 1
+		)
 
-	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/knight]
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_WEAK, devotion_limit = CLERIC_REQ_2) //Capped to T2 miracles. ENDURE. WITH RESPITE.
 

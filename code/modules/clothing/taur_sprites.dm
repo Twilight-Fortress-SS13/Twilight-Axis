@@ -7,8 +7,15 @@
 		return container
 	return null
 
-/obj/item/proc/get_taur_worn_icon(default_icon_file)
-	return taur_mob_overlay_icon || mob_overlay_icon || default_icon_file
+/obj/item/proc/get_taur_worn_icon(default_icon_file, mob/living/carbon/human/wearer)
+	var/taur_icon = taur_mob_overlay_icon
+	if(islist(taur_icon))
+		if(!wearer)
+			wearer = get_taur_sprite_wearer()
+		var/obj/item/bodypart/taur/taur = wearer?.get_taur_tail()
+		var/list/body_icons = taur_icon
+		taur_icon = taur ? body_icons[taur.taur_sprite_id] : null
+	return taur_icon || mob_overlay_icon || default_icon_file
 
 /obj/item/proc/get_taur_base_state(override_state)
 	return override_state || icon_state
@@ -26,9 +33,17 @@
 		return null
 	var/base_state = get_taur_base_state(override_state)
 	var/state = "[base_state]_taur_[wearer.is_bulky_body() ? "m" : "f"]_[taur.taur_sprite_id]"
-	if(icon_exists(get_taur_worn_icon(default_icon_file), state))
+	if(icon_exists(get_taur_worn_icon(default_icon_file, wearer), state))
 		return state
 	return null
+
+/// A replacement may have its own sleeves even if the ordinary item has none.
+/obj/item/proc/has_worn_sleeves(mob/living/carbon/human/wearer)
+	var/state = get_taur_worn_state(wearer)
+	if(!state)
+		return !!sleeved
+	var/file = get_taur_worn_icon(wearer = wearer)
+	return icon_exists(file, "r_[state]") || icon_exists(file, "l_[state]")
 
 /// Use an optional full-size blood mask, or position the item's ordinary blood mask over the humanoid torso.
 /obj/item/proc/get_taur_blood_icon(file, state, blood_color, body_offset_x)
@@ -56,7 +71,7 @@
 /// Taur sprites use optional separate sleeves in all directions, rather than 32x32 humanoid cutout masks.
 /mob/living/carbon/human/proc/get_taur_sleeves_layer(obj/item/item, state, sleeveindex, layer2use)
 	var/list/sleeves = list()
-	var/file = item.get_taur_worn_icon()
+	var/file = item.get_taur_worn_icon(wearer = src)
 	var/obj/item/bodypart/taur/taur = get_taur_tail()
 	if(item.nodismemsleeves && sleeveindex)
 		sleeveindex = 4
@@ -83,6 +98,7 @@
 		sleeve.alpha = item.alpha
 		if(item.sleeved_detail && item.get_detail_tag() && icon_exists(file, "[sleeve_state][item.get_detail_tag()]"))
 			var/mutable_appearance/detail = mutable_appearance(file, "[sleeve_state][item.get_detail_tag()]", -layer2use)
+			detail.appearance_flags = RESET_COLOR
 			detail.color = item.get_detail_color()
 			sleeve.add_overlay(detail)
 		if(has_blood)

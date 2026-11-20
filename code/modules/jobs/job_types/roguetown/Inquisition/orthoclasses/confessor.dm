@@ -1,4 +1,4 @@
-/datum/advclass/confessor
+/datum/advclass/inq/confessor
 	name = "Confessor"
 	tutorial = "Psydonite hunters, unmatched in the fields of subterfuge and investigation. There is no suspect too powerful to investigate, no room too guarded to infiltrate, and no weakness too hidden to exploit."
 	allowed_sexes = list(MALE, FEMALE)
@@ -18,6 +18,11 @@
 		STATKEY_WIL = 3,
 		STATKEY_PER = 2,
 		STATKEY_STR = -1
+	)
+	subclass_stashed_items = list(
+		"Wax Putty I" = /obj/item/waxputty,
+		"Wax Putty II" = /obj/item/waxputty,
+		"Wax Putty III" = /obj/item/waxputty,
 	)
 	subclass_skills = list(
 		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN, //Should rely on the seizing garrote to properly subdue foes.

@@ -5,41 +5,6 @@
 /datum/storyteller/gamemode
 	hag_slots = 1
 // ----------------------------------------------------------------------------------------------------------
-// PSYDON pool - lowest intensity. No hard antags. Extended opens nothing; Low Intensity opens a few wretches.
-// (Low Intensity is defined further down as no_antag/small_wretch but votes in this pool via preset_pool.)
-// ----------------------------------------------------------------------------------------------------------
-/datum/storyteller/gamemode/extended
-	name = "Extended"
-	vote_desc = "Maybe we were the true antagonists after all."
-	desc = "No hard antags, no soft antags (wretch/gnoll/assassin), no dreamwalker. Hag present."
-	welcome_text = "A temperate breeze rolls through the quiet streets.."
-	color_theme = "#80ced8"
-	preset_pool = GAMEMODE_POOL_EXTENDED
-	block_hard = TRUE
-	block_soft = TRUE
-	allow_dreamwalker = FALSE
-	preferred_gnoll_mode = GNOLL_SCALING_NONE
-	wretch_slot_cap = 0
-	roundstart_prob = 0
-	starting_point_multipliers = list(
-		EVENT_TRACK_MUNDANE = 1,
-		EVENT_TRACK_PERSONAL = 1,
-		EVENT_TRACK_MODERATE = 1,
-		EVENT_TRACK_INTERVENTION = 1,
-		EVENT_TRACK_CHARACTER_INJECTION = 0,
-		EVENT_TRACK_OMENS = 1,
-		EVENT_TRACK_RAIDS = 1,
-	)
-	point_gains_multipliers = list(
-		EVENT_TRACK_MUNDANE = 1,
-		EVENT_TRACK_PERSONAL = 1,
-		EVENT_TRACK_MODERATE = 1,
-		EVENT_TRACK_INTERVENTION = 1,
-		EVENT_TRACK_CHARACTER_INJECTION = 0,
-		EVENT_TRACK_OMENS = 1,
-		EVENT_TRACK_RAIDS = 1,
-	)
-// ----------------------------------------------------------------------------------------------------------
 // Admin sandbox - NOT votable. Admins pick before the 120s mark to disable player vote and
 // insert their own antags in.
 // ----------------------------------------------------------------------------------------------------------
