@@ -286,13 +286,7 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 			needs_extra_vice = TRUE
 		else
 			has_extra_vice = TRUE
-	var/list/flaw_order = list() // TA EDIT START
-	for(var/datum/charflaw/cf in character.charflaws.Copy())
-		if(cf.relocates_owner)
-			flaw_order.Insert(1, cf)
-		else
-			flaw_order += cf
-	for(var/datum/charflaw/cf in flaw_order)
+	for(var/datum/charflaw/cf in character.charflaws.Copy()) // TA EDIT START
 		if(!(cf in character.charflaws))
 			continue
 		cf.apply_post_equipment(character)

@@ -1,11 +1,30 @@
 /mob/living/carbon/Initialize(mapload)
 	..()
 
+	RegisterSignal(src, list(SIGNAL_ADDTRAIT(TRAIT_REGROW_LIMBS), SIGNAL_REMOVETRAIT(TRAIT_REGROW_LIMBS)), PROC_REF(update_regrow_limb_action))
+	update_regrow_limb_action()
+
 	recalculate_pain_threshold()
 
 	create_reagents(1000)
 	update_body_parts() //to update the carbon's new bodyparts appearance
 	GLOB.carbon_list += src
+
+/mob/living/carbon/proc/update_regrow_limb_action(datum/source, trait)
+	SIGNAL_HANDLER
+	var/datum/action/cooldown/regrow_limb/regrow_action
+	for(var/datum/action/cooldown/regrow_limb/existing_action in actions)
+		regrow_action = existing_action
+		break
+
+	if(HAS_TRAIT(src, TRAIT_REGROW_LIMBS))
+		if(!regrow_action)
+			regrow_action = new(src)
+			regrow_action.Grant(src)
+		return
+
+	if(regrow_action)
+		qdel(regrow_action)
 
 /mob/living/carbon/proc/recalculate_pain_threshold()
 	pain_threshold = STAWIL * 10
@@ -867,7 +886,7 @@
 		if(!isnull(G.lighting_alpha))
 			lighting_alpha = min(lighting_alpha, G.lighting_alpha)
 
-	if(HAS_TRAIT(src, TRAIT_DARKVISION))
+	if(HAS_TRAIT(src, TRAIT_DARKVISION) || (get_skill_level(/datum/skill/misc/sneaking) >= SKILL_LEVEL_MASTER)) //TA EDIT
 		lighting_alpha = min(lighting_alpha, LIGHTING_PLANE_ALPHA_DARKVISION)
 		see_in_dark = max(see_in_dark, 12)
 

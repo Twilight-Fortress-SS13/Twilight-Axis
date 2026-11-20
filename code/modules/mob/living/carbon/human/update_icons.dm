@@ -1847,6 +1847,14 @@ generate/load female uniform sprites matching all previously decided variables
 					break
 
 /mob/living/carbon/human/update_body_parts(redraw = FALSE)
+	var/datum/component/ooze_color_shift/color_shift = GetComponent(/datum/component/ooze_color_shift) // TA EDIT START
+	if(color_shift?.shifting)
+		color_shift.update_shift_colors()
+		var/datum/component/amorphous_landing/landing = GetComponent(/datum/component/amorphous_landing)
+		if(landing?.is_landing)
+			return
+		color_shift.clear_visuals()
+		redraw = TRUE // TA EDIT END
 	var/hiden = FALSE //used to tell if we should hide boobs, basically
 	if(wear_armor && (wear_armor.flags_inv & HIDEBOOB))
 		hiden = TRUE
@@ -1874,7 +1882,8 @@ generate/load female uniform sprites matching all previously decided variables
 			if(isooze(src))
 				for(var/image/limb_alpha in limb_overlays)
 					limb_alpha.alpha = 180
-			limb_icon_cache[limb_key] = limb_overlays
+			if(!color_shift?.shifting) // TA EDIT
+				limb_icon_cache[limb_key] = limb_overlays // TA EDIT
 		new_limbs += limb_overlays
 
 	remove_overlay(BODYPARTS_LAYER)
