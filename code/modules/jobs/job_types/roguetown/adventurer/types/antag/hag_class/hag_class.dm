@@ -38,6 +38,8 @@
 		/datum/skill/craft/sewing = SKILL_LEVEL_MASTER,
 		/datum/skill/craft/cooking = SKILL_LEVEL_MASTER,
 		/datum/skill/magic/holy = SKILL_LEVEL_MASTER, // TA ADDITION
+		/datum/skill/labor/farming = SKILL_LEVEL_APPRENTICE, // TA ADDITION
+		/datum/skill/labor/butchering = SKILL_LEVEL_APPRENTICE, // TA ADDITION
 	)
 	subclass_languages = list(
 		/datum/language/oldazurian, // (gerson voice) you're old!
