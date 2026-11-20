@@ -1333,21 +1333,21 @@
 /datum/tat_traits/proc/apply_savage_rage_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_SAVAGE_RAGE) || !H.mind)
 		return FALSE
-	if(owner_build?.grant_mind_spell_if_missing(H, /obj/effect/proc_holder/spell/self/rage))
+	if(owner_build?.grant_mind_spell_if_missing(H, /datum/action/cooldown/spell/rage))
 		return TRUE
 	if(!owner_build)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/rage)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/rage)
 		return TRUE
 	return FALSE
 
 /datum/tat_traits/proc/apply_berserker_rage_package(mob/living/carbon/human/H)
 	if(!H || !has_trait(TAT_TRAIT_BERSERKER_RAGE) || !H.mind)
 		return FALSE
-	if(owner_build?.grant_mind_spell_if_missing(H, /obj/effect/proc_holder/spell/self/rage))
+	if(owner_build?.grant_mind_spell_if_missing(H, /datum/action/cooldown/spell/rage))
 		ADD_TRAIT(H, TRAIT_RAGE, TAT_TRAIT_SOURCE)
 		return TRUE
 	if(!owner_build)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/rage)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/rage)
 		ADD_TRAIT(H, TRAIT_RAGE, TAT_TRAIT_SOURCE)
 		return TRUE
 	return FALSE
