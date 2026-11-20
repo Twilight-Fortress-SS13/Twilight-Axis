@@ -65,6 +65,26 @@ GLOBAL_LIST_EMPTY(mirror_thumb_cache)
 	GLOB.mirror_thumb_cache[cache_key] = b64
 	return b64
 
+// Match the body's color precedence: mutant colors override ancestry tones.
+/proc/mirror_uses_skin_tones(mob/living/carbon/human/H)
+	return H.dna.species.use_skintones && !(MUTCOLORS in H.dna.species.species_traits) && !(DYNCOLORS in H.dna.species.species_traits)
+
+// Use the same layered preview states as the character creator, including
+// gender/size suffixes and separate color masks that have no plain icon_state.
+/proc/mirror_accessory_thumb(accessory_type)
+	var/cache_key = "accessory_[accessory_type]"
+	if(GLOB.mirror_thumb_cache[cache_key])
+		return GLOB.mirror_thumb_cache[cache_key]
+	var/datum/sprite_accessory/accessory = SPRITE_ACCESSORY(accessory_type)
+	if(!accessory?.icon || !length(accessory.preview_states))
+		return null
+	var/icon/preview = icon(accessory.icon, accessory.preview_states[1], SOUTH, 1)
+	for(var/i in 2 to length(accessory.preview_states))
+		preview.Blend(icon(accessory.icon, accessory.preview_states[i], SOUTH, 1), ICON_OVERLAY)
+	var/b64 = icon2base64(preview)
+	GLOB.mirror_thumb_cache[cache_key] = b64
+	return b64
+
 /proc/mirror_ensure_hash(color)
 	if(!color || !length(color))
 		return "#FFFFFF"
@@ -292,7 +312,7 @@ GLOBAL_LIST_EMPTY(mirror_thumb_cache)
 		if(exclude_names && (instance_name in exclude_names))
 			continue
 		seen_names[instance_name] = TRUE
-		out += list(list("name" = instance_name, "path" = "[sub_type]"))
+		out += list(list("name" = instance_name, "path" = "[sub_type]", "thumb" = mirror_accessory_thumb(sub_type)))
 	return out
 
 // ----------------------------------------------------------------------
@@ -402,6 +422,8 @@ GLOBAL_LIST_EMPTY(mirror_thumb_cache)
 	data["fluff_styles"] = build_style_options(/datum/sprite_accessory/neck_feature)
 	data["breast_styles"] = build_style_options(/datum/sprite_accessory/breasts)
 	data["testicle_styles"] = build_style_options(/datum/sprite_accessory/testicles)
+	data["pubes_styles"] = build_style_options(/datum/sprite_accessory/pubes)
+	data["pits_styles"] = build_style_options(/datum/sprite_accessory/pits)
 
 	// Built from /datum/customizer_choice/organ/penis/* rather than scanning
 	// /obj/item/organ/penis subtypes directly. Each customizer_choice pairs
@@ -433,7 +455,7 @@ GLOBAL_LIST_EMPTY(mirror_thumb_cache)
 			continue
 		seen_penis_names[choice_name] = TRUE
 		var/encoded_path = "[organ_type]|[sprite_accessories[1]]"
-		penis_options += list(list("name" = choice_name, "path" = encoded_path))
+		penis_options += list(list("name" = choice_name, "path" = encoded_path, "thumb" = mirror_accessory_thumb(sprite_accessories[1])))
 	data["penis_styles"] = penis_options
 
 	data["vagina_styles"] = build_style_options(/datum/sprite_accessory/vagina)
@@ -473,7 +495,7 @@ GLOBAL_LIST_EMPTY(mirror_thumb_cache)
 			if(!instance_name || !length(instance_name) || seen_accessory_names[instance_name])
 				continue
 			seen_accessory_names[instance_name] = TRUE
-			accessory_opts += list(list("name" = instance_name, "path" = "[accessory_type]"))
+			accessory_opts += list(list("name" = instance_name, "path" = "[accessory_type]", "thumb" = mirror_accessory_thumb(accessory_type)))
 		data["accessory_styles"] = accessory_opts
 
 		var/datum/customizer_choice/bodypart_feature/face_detail/face_choice = CUSTOMIZER_CHOICE(/datum/customizer_choice/bodypart_feature/face_detail)
@@ -484,7 +506,7 @@ GLOBAL_LIST_EMPTY(mirror_thumb_cache)
 			if(!instance_name || !length(instance_name) || seen_face_names[instance_name])
 				continue
 			seen_face_names[instance_name] = TRUE
-			face_opts += list(list("name" = instance_name, "path" = "[detail_type]"))
+			face_opts += list(list("name" = instance_name, "path" = "[detail_type]", "thumb" = mirror_accessory_thumb(detail_type)))
 		data["face_detail_styles"] = face_opts
 
 		var/list/gradients = list()
@@ -553,8 +575,8 @@ GLOBAL_LIST_EMPTY(mirror_thumb_cache)
 	data["closing"] = FALSE
 	data["has_edit_descriptors"] = !!HAS_TRAIT(H, TRAIT_EDIT_DESCRIPTORS)
 	data["skin"] = list(
-		"uses_tones" = !!H.dna.species.use_skintones,
-		"color1" = mirror_ensure_hash(H.dna.species.use_skintones ? H.skin_tone : H.dna.features["mcolor"]),
+		"uses_tones" = !!mirror_uses_skin_tones(H),
+		"color1" = mirror_ensure_hash(mirror_uses_skin_tones(H) ? H.skin_tone : H.dna.features["mcolor"]),
 		"color2" = mirror_ensure_hash(H.dna.features["mcolor2"]),
 		"color3" = mirror_ensure_hash(H.dna.features["mcolor3"]),
 	)
@@ -595,6 +617,16 @@ GLOBAL_LIST_EMPTY(mirror_thumb_cache)
 	data["accessory_colors"] = describe_feature_colors(current_accessory)["colors"]
 	data["face_detail_style"] = current_detail ? "[current_detail.accessory_type]" : ""
 	data["face_detail_colors"] = describe_feature_colors(current_detail)["colors"]
+
+	var/obj/item/bodypart/chest = H.get_bodypart(BODY_ZONE_CHEST)
+	for(var/feature_key in list("pubes", "pits"))
+		var/base_type = feature_key == "pubes" ? /datum/bodypart_feature/pubes : /datum/bodypart_feature/pits
+		var/datum/bodypart_feature/current = get_current_feature(chest, base_type)
+		data[feature_key] = list(
+			"style" = current ? "[current.accessory_type]" : "",
+			"colors" = describe_feature_colors(current)["colors"],
+			"available" = !!chest,
+		)
 
 	data["ears"] = describe_organ_colors(H.getorganslot(ORGAN_SLOT_EARS))
 	data["horns"] = describe_organ_colors(H.getorganslot(ORGAN_SLOT_HORNS))
@@ -677,6 +709,35 @@ GLOBAL_LIST_EMPTY(mirror_thumb_cache)
 					if(new_color)
 						var/feature_key = (idx == 1) ? feature_map[params["organ"]] : null
 						should_update = mirror_set_organ_color(H, slot, idx, new_color, feature_key)
+
+		if("set_body_hair", "pick_body_hair_color")
+			var/feature_key = params["feature"]
+			if(!(feature_key in list("pubes", "pits")))
+				return
+			var/obj/item/bodypart/chest = H.get_bodypart(BODY_ZONE_CHEST)
+			if(!chest)
+				return
+			var/feature_type = feature_key == "pubes" ? /datum/bodypart_feature/pubes : /datum/bodypart_feature/pits
+			var/accessory_base = feature_key == "pubes" ? /datum/sprite_accessory/pubes : /datum/sprite_accessory/pits
+			var/datum/bodypart_feature/current = get_current_feature(chest, feature_type)
+			if(action == "set_body_hair")
+				var/new_style = mirror_resolve_path(params["path"], accessory_base)
+				if(length(params["path"]) && !new_style)
+					return
+				var/old_colors = current?.accessory_colors
+				if(current)
+					chest.remove_bodypart_feature(current)
+					qdel(current)
+				if(new_style)
+					var/datum/bodypart_feature/feature = new feature_type()
+					feature.set_accessory_type(new_style, old_colors, H)
+					chest.add_bodypart_feature(feature)
+				should_update = TRUE
+			else if(current)
+				var/new_color = color_pick_sanitized(H, "Choose body hair color", "Body Hair Color", current.accessory_colors)
+				if(new_color && check_still_valid() && get_current_feature(chest, feature_type) == current)
+					current.accessory_colors = sanitize_hexcolor(new_color, 6, TRUE)
+					should_update = TRUE
 
 		// ---- skin / eyes ----
 		if("set_skin_color")
@@ -1103,7 +1164,7 @@ GLOBAL_LIST_EMPTY(mirror_thumb_cache)
 /datum/mirror_appearance_ui/proc/get_current_skin_color(mob/living/carbon/human/H, tier)
 	switch(tier)
 		if(1)
-			return mirror_ensure_hash(H.dna.species.use_skintones ? H.skin_tone : H.dna.features["mcolor"])
+			return mirror_ensure_hash(mirror_uses_skin_tones(H) ? H.skin_tone : H.dna.features["mcolor"])
 		if(2)
 			return mirror_ensure_hash(H.dna.features["mcolor2"])
 		if(3)
@@ -1115,14 +1176,14 @@ GLOBAL_LIST_EMPTY(mirror_thumb_cache)
 		return FALSE
 	switch(tier)
 		if(1)
-			if(H.dna.species.use_skintones)
+			if(mirror_uses_skin_tones(H))
 				H.skin_tone = sanitize_hexcolor(new_color, 6, FALSE)
 			else
-				H.dna.features["mcolor"] = sanitize_hexcolor(new_color, 6, TRUE)
+				H.dna.features["mcolor"] = sanitize_hexcolor(new_color, 6, FALSE)
 		if(2)
-			H.dna.features["mcolor2"] = sanitize_hexcolor(new_color, 6, TRUE)
+			H.dna.features["mcolor2"] = sanitize_hexcolor(new_color, 6, FALSE)
 		if(3)
-			H.dna.features["mcolor3"] = sanitize_hexcolor(new_color, 6, TRUE)
+			H.dna.features["mcolor3"] = sanitize_hexcolor(new_color, 6, FALSE)
 		else
 			return FALSE
 	H.update_body_parts()
@@ -1297,10 +1358,10 @@ GLOBAL_LIST_EMPTY(mirror_thumb_cache)
 // ----------------------------------------------------------------------
 // Small shared lookups used above.
 // ----------------------------------------------------------------------
-/datum/mirror_appearance_ui/proc/get_current_feature(obj/item/bodypart/head/head, base_type)
-	if(!head || !head.bodypart_features)
+/datum/mirror_appearance_ui/proc/get_current_feature(obj/item/bodypart/bodypart, base_type)
+	if(!bodypart || !bodypart.bodypart_features)
 		return null
-	for(var/datum/bodypart_feature/feature in head.bodypart_features)
+	for(var/datum/bodypart_feature/feature in bodypart.bodypart_features)
 		if(istype(feature, base_type))
 			return feature
 	return null

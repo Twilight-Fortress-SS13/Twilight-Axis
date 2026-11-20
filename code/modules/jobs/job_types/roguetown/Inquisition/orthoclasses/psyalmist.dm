@@ -1,4 +1,4 @@
-/datum/advclass/psyaltrist
+/datum/advclass/inq/psyaltrist
 	name = "Psyaltrist"
 	tutorial = "You spent some time with cathedral choirs and psyaltrists. Now you spend your days applying the musical arts to the practical on behalf of His most Holy of Inquisitions."
 	allowed_sexes = list(MALE, FEMALE)
@@ -6,7 +6,7 @@
 	outfit = /datum/outfit/job/roguetown/psyaltrist
 	category_tags = list(CTAG_ORTHODOXIST)
 	subclass_languages = list(/datum/language/otavan)
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander3.ogg'
+	cmode_music = 'sound/music/combat_psyalmist.ogg'
 	traits_applied = list(
 		TRAIT_DODGEEXPERT,
 		TRAIT_EMPATH

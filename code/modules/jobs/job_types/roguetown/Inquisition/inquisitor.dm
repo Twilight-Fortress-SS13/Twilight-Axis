@@ -22,6 +22,7 @@
 	min_pq = 18
 	max_pq = null
 	round_contrib_points = 2
+	quest_claim_barred = TRUE
 	vice_restrictions = list(/datum/charflaw/silverweakness, /datum/charflaw/wanted)
 	job_subclasses = list(
 		/datum/advclass/inquisitor/inspector,
@@ -62,6 +63,9 @@
 		STATKEY_WIL = 2,
 		STATKEY_SPD = 2,
 	)
+
+	tempo_capable = TRUE
+
 	subclass_skills = list(
 		/datum/skill/combat/knives = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/whipsflails = SKILL_LEVEL_EXPERT,
@@ -84,8 +88,6 @@
 		"Branding Letters" = /obj/item/branding_letters, //TA Branding
 		"Branding Iron" = /obj/item/branding_iron
 	)
-
-	tempo_capable = TRUE
 
 /datum/outfit/job/roguetown/inquisitor/inspector/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -148,9 +150,10 @@
 			H.equip_to_slot_or_del(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/heavy/relic, SLOT_BACK_L, TRUE)
 			H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_MASTER, TRUE)
 		if("Relic, 'Marshal's Writ' (Runelock Pistol)") //TA EDIT START
-			H.put_in_hands(new /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/black/runelock(H))
+			H.put_in_hands(new /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/blackpowder(H))
+			H.put_in_hands(new /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock(H))
 			H.equip_to_slot_or_del(new /obj/item/quiver/twilight_bullet/runicbag/runed, SLOT_BELT_R, TRUE)
-			H.adjust_skillrank_up_to(/datum/skill/combat/twilight_firearms, 3, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/twilight_firearms, 4, TRUE)
 		if("Psydonic Longsword")
 			H.put_in_hands(new /obj/item/rogueweapon/sword/long/silver/psy(H))
 			H.put_in_hands(new /obj/item/rogueweapon/scabbard/sword/noble(H))
@@ -212,6 +215,9 @@
 		STATKEY_PER = 1,
 		STATKEY_SPD = -3
 	)
+
+	tempo_capable = TRUE
+
 	subclass_skills = list(
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/athletics = SKILL_LEVEL_MASTER,
@@ -230,7 +236,6 @@
 		"Branding Letters" = /obj/item/branding_letters, // TA Branding
 		"Branding Iron" = /obj/item/branding_iron
 	)
-	tempo_capable = TRUE
 
 /datum/outfit/job/roguetown/inquisitor/ordinator/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -279,8 +284,8 @@
 			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_MASTER, TRUE)
 		if("Relic, 'Creed & Covenant' (Broadsword + Greatshield)")
 			H.put_in_hands(new /obj/item/rogueweapon/sword/long/broadsword/silver/psy/forgotten/relic(H))
-			H.put_in_hands(new /obj/item/rogueweapon/shield/tower/metal/psy(H))
-			H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/gwstrap, SLOT_BACK_R, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/sword/noble, SLOT_BELT_L, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/rogueweapon/shield/tower/metal/psy, SLOT_BACK_R, TRUE)
 			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_MASTER, TRUE)
 			H.adjust_skillrank_up_to(/datum/skill/combat/shields, SKILL_LEVEL_EXPERT, TRUE)
 		if("Relic, 'Consecratia & Covenant' (Flail + Greatshield)")
@@ -301,7 +306,7 @@
 			H.adjust_skillrank_up_to(/datum/skill/combat/shields, SKILL_LEVEL_EXPERT, TRUE)
 		if("Psydonic Broadsword")
 			H.put_in_hands(new /obj/item/rogueweapon/sword/long/broadsword/silver/psy(H))
-			H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/sword/noble, SLOT_BACK_R, TRUE)
+			H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/sword/noble, SLOT_BELT_L, TRUE)
 			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_MASTER, TRUE)
 		if("Psydonic Poleaxe")
 			H.put_in_hands(new /obj/item/rogueweapon/greataxe/steel/knight/silver/psy(H))
@@ -309,6 +314,7 @@
 			H.adjust_skillrank_up_to(/datum/skill/combat/axes, SKILL_LEVEL_MASTER, TRUE)
 		if("Psydonic Grand Mace")
 			H.put_in_hands(new /obj/item/rogueweapon/mace/goden/psy(H))
+			H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/gwstrap, SLOT_BACK_R, TRUE)
 			H.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_MASTER, TRUE)
 
 /mob/living/carbon/human/proc/faith_test()

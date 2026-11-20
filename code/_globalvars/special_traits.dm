@@ -45,6 +45,8 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 		apply_dnr_trait(character, player, TRAIT_GENERIC)
 	if(SSgamemode?.dnr_round)
 		apply_dnr_trait(character, player, MERCILESS_ROUND)
+	if(SSgamemode?.lastlegs_round) // TA EDIT
+		apply_lastlegs_trait(character, player, MERCILESS_ROUND) // TA EDIT
 	if(player.prefs.qsr_pref)
 		apply_qsr_trait(character, player)
 	tat_apply_legacy_preference_loadout(character, player) // TA EDIT
@@ -284,9 +286,11 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 			needs_extra_vice = TRUE
 		else
 			has_extra_vice = TRUE
-	for(var/datum/charflaw/cf in character.charflaws.Copy()) // TA EDIT START - iterate a copy, a flaw may remove itself while applying
+	for(var/datum/charflaw/cf in character.charflaws.Copy()) // TA EDIT START
+		if(!(cf in character.charflaws))
+			continue
 		cf.apply_post_equipment(character)
-		if(cf in character.charflaws) // a flaw replaced during application never took root
+		if(cf in character.charflaws)
 			record_featured_object_stat(FEATURED_STATS_VICES, cf.name) // TA EDIT END
 	if(needs_extra_vice && !has_extra_vice)
 		var/datum/charflaw/randflaw/rf = new()
@@ -295,6 +299,9 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 
 /proc/apply_dnr_trait(mob/living/carbon/human/character, client/player, source = TRAIT_GENERIC)
 	ADD_TRAIT(player.mob, TRAIT_DNR, source)
+
+/proc/apply_lastlegs_trait(mob/living/carbon/human/character, client/player, source = TRAIT_GENERIC) // TA EDIT
+	ADD_TRAIT(player.mob, TRAIT_LASTLEGS, source) // TA EDIT
 
 /proc/apply_qsr_trait(mob/living/carbon/human/character, client/player)
 	ADD_TRAIT(player.mob, TRAIT_QUICKSILVERRESISTANT, TRAIT_GENERIC)

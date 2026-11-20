@@ -53,6 +53,8 @@
 	var/lip_color = "white"
 
 	var/age = "Adult"		//Player's age
+	var/birthday_month = 0	//TA EDIT
+	var/birthday_day = 0	//TA EDIT
 
 	var/shavelevel = 0
 	var/breathe_tick = 0 // Used for gas mask delays.
@@ -135,6 +137,8 @@
 	var/ooc_extra_img_link
 	var/rumour = null
 	var/noble_gossip = null
+	var/list/secrets = list()
+	var/list/remembered_secret_targets = list()
 	var/song_title
 	var/song_artist
 	var/received_resident_key = FALSE
@@ -243,3 +247,9 @@
 
 	/// Guarded Virtue (TRAIT_DECEIVING_MEEKNESS) exclusive variable for filtering out our descriptors from examine.
 	var/show_descriptors = TRUE
+
+	/// Our last used key. Updates whenever we lock / unlock doors.
+	var/last_used_keyhash
+
+	/// world.time snapshot until when our last_used_keyhash can be imprinted in wax putty without any alarm.
+	var/key_imprint_valid_until

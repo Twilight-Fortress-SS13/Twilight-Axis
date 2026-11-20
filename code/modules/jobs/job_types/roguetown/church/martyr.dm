@@ -500,6 +500,7 @@
 	min_pq = 15 //Cus it's a Martyr of the Ten. Get it.
 	max_pq = null
 	round_contrib_points = 4
+	quest_claim_barred = TRUE
 	total_positions = 1
 	spawn_positions = 1
 	display_order = JDO_MARTYR
@@ -535,6 +536,9 @@
 		STATKEY_PER = 1,
 		STATKEY_INT = 1
 	)
+
+	tempo_capable = TRUE
+
 	subclass_skills = list(
 	//No, they don't get any miracles. Their miracle is being able to use their weapon at all.
 		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,

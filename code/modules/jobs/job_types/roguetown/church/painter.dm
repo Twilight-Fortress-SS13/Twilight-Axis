@@ -17,7 +17,8 @@
 	min_pq = 5
 	max_pq = null
 	round_contrib_points = 3
-	same_job_respawn_delay = 30 MINUTES
+	quest_claim_barred = TRUE
+	same_job_respawn_delay = 30 MINUTES // TA EDIT
 
 	job_traits = list(TRAIT_WATERBREATHING, TRAIT_RITUALIST, TRAIT_CLERGY)
 

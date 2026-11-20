@@ -112,10 +112,6 @@
 		/datum/component/silverbless,\
 		pre_blessed = BLESSING_TENNITE,\
 		silver_type = SILVER_TENNITE,\
-		added_force = 0,\
-		added_blade_int = 50,\
-		added_int = 50,\
-		added_def = 2,\
 	)
 
 /obj/item/rogueweapon/huntingknife/idagger/steel/baotha

@@ -904,6 +904,7 @@
 	attachable = FALSE
 
 /obj/item/clothing/mask/rogue/spectacles/duelist/ComponentInitialize()
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FENCERDEXTERITY)
 	AddComponent(/datum/component/adjustable_clothing, NECK, null, null, 'sound/foley/equip/rummaging-03.ogg', null, (UPD_HEAD|UPD_MASK))	//Standard mask
 
 /obj/item/clothing/mask/rogue/spectacles/duelist/steel
@@ -936,7 +937,13 @@
 	smeltresult = /obj/item/natural/ash
 
 /obj/item/clothing/mask/rogue/facemask/padded/ComponentInitialize()
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FENCERDEXTERITY)
 	AddComponent(/datum/component/adjustable_clothing, NECK, null, null, 'sound/foley/equip/rummaging-03.ogg', null, (UPD_HEAD|UPD_MASK))	//Standard mask
+
+// for NPC
+/obj/item/clothing/mask/rogue/facemask/padded/shoddy
+	name = "shoddy padded mask"
+	max_integrity = 75
 
 /obj/item/clothing/mask/rogue/facemask/leather
 	name = "padded leather mask"
@@ -954,6 +961,7 @@
 	smeltresult = /obj/item/natural/ash
 
 /obj/item/clothing/mask/rogue/facemask/leather/ComponentInitialize()
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FENCERDEXTERITY)
 	AddComponent(/datum/component/adjustable_clothing, NECK, null, null, 'sound/foley/equip/rummaging-03.ogg', null, (UPD_HEAD|UPD_MASK))	//Standard mask
 
 //chainmaille masks = pretty much like a normal mask except is made to protect against cutting damage instead of blunt damage.

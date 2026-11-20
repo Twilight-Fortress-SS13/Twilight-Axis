@@ -815,7 +815,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 				if(istype(H.wear_shirt, I.type))
 					return FALSE
 				if(I.blocksound)
-					if(I.blocksound == H.wear_shirt.blocksound && !(istype(incoming_armor) && is_type_in_list(H.wear_shirt, incoming_armor.underlayers)))
+					if(I.blocksound == H.wear_shirt.blocksound && !((I.blocking_behavior & SAMEWEAR) || (H.wear_shirt.blocking_behavior & SAMEWEAR)) && !(istype(incoming_armor) && is_type_in_list(H.wear_shirt, incoming_armor.underlayers))) //TA EDIT
 						return FALSE
 			if( !(I.slot_flags & ITEM_SLOT_ARMOR) )
 				return FALSE
@@ -838,7 +838,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 			if( !(I.slot_flags & ITEM_SLOT_SHOES) )
 				return FALSE
 			var/obj/item/clothing/shoes = I
-			if(is_taur && (!istype(shoes) || !(shoes.clothing_flags & TAUR_COMPATIBLE)))
+			if(is_taur && (!istype(shoes) || (!(shoes.clothing_flags & TAUR_COMPATIBLE) && !shoes.get_taur_worn_state(H))))
 				return FALSE
 			if(num_legs < 1)
 				return FALSE
@@ -911,7 +911,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 					if(!(I.blocking_behavior & SAMEWEAR))
 						return FALSE
 				if(I.blocksound)
-					if(I.blocksound == H.wear_armor.blocksound && !is_type_in_list(I, H.wear_armor.underlayers))
+					if(I.blocksound == H.wear_armor.blocksound && !((I.blocking_behavior & SAMEWEAR) || (H.wear_armor.blocking_behavior & SAMEWEAR)) && !is_type_in_list(I, H.wear_armor.underlayers)) //TA EDIT
 						return FALSE
 			if( !(I.slot_flags & ITEM_SLOT_SHIRT) )
 				return FALSE
@@ -2128,7 +2128,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 			H.stop_pulling(TRUE)
 
 	if(user != H && user.mind && H.mind)	// Maso / Sadism check. No self-hits, it's already very easy to fulfill like this.
-		var/painpercent = H.get_complex_pain() / H.pain_threshold
+		var/painpercent = (H.get_complex_pain() / H.pain_threshold) * 100
 		if(painpercent >= 100)
 			if(H.get_flaw(/datum/charflaw/addiction/masochist))
 				H.sate_addiction(/datum/charflaw/addiction/masochist)

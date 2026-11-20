@@ -182,8 +182,10 @@
 	body += "<br><A href='?_src_=holder;[HrefToken()];heal_panel=[REF(M)]'>Heal Panel</A> | "
 	body += "<A href='?_src_=holder;[HrefToken()];inventory_panel=[REF(M)]'>Inventory Panel</A> | " // TA EDIT START
 	if(ishuman(M) || isobserver(M))
-		body += "<A href='?_src_=holder;[HrefToken()];select_equipment=[REF(M)]'>Select Equipment</A> | " // TA EDIT END
+		body += "<A href='?_src_=holder;[HrefToken()];select_equipment=[REF(M)]'>Select Equipment</A> | "
 	body += "<A href='?_src_=holder;[HrefToken()];examine_player=[REF(M)]'>Flavor Text</A>"
+	if(ishuman(M))
+		body += " | <A href='?_src_=holder;[HrefToken()];secrets_panel=[REF(M)]'>Secrets</A>" // TA EDIT END
 
 	body += "</div>"
 
@@ -718,7 +720,7 @@
 	else
 		for(var/i in 1 to amount)
 			var/atom/A = new chosen(T)
-			A.flags_1 |= ADMIN_SPAWNED_1
+			A.flags_1 |= ADMIN_SPAWNED_1 // TA EDIT
 
 	log_admin("[key_name(usr)] spawned [amount] x [chosen] at [AREACOORD(usr)]")
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Spawn Atom") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
@@ -741,7 +743,7 @@
 	else
 		var/obj/structure/closet/supplypod/centcompod/pod = new()
 		var/atom/A = new chosen(pod)
-		A.flags_1 |= ADMIN_SPAWNED_1
+		A.flags_1 |= ADMIN_SPAWNED_1 // TA EDIT
 		new /obj/effect/DPtarget(T, pod)
 
 	log_admin("[key_name(usr)] pod-spawned [chosen] at [AREACOORD(usr)]")
