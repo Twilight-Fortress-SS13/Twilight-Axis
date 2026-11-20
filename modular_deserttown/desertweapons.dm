@@ -16,12 +16,6 @@
 	icon_state = "snakestaff"
 
 
-/obj/item/rogueweapon/sword/long/kriegmesser/zybantine
-	name = "heavy scimitar"
-	desc = "A large zybantine sword with a single-edged blade, a crossguard and a knife-like hilt. "
-	icon = 'modular_deserttown/icons/items/desertweapons64.dmi'
-	icon_state = "Kmesser"
-
 /obj/item/rogueweapon/sword/sabre/shamshir/steel
 	name = "steel shamshir"
 	desc = "A curved one-handed sword. This is a forged steel copy of the traditional Ranesheni shamshir."
@@ -72,6 +66,22 @@
 	additional_items = list(/obj/item/ingot/blacksteel, /obj/item/roguegem/green, /obj/item/natural/silk)
 	created_item = /obj/item/rogueweapon/sword/sabre/shamshir/blacksteel
 	display_category = ITEM_CAT_WEAPONS_SWORDS
+
+/obj/item/rogueweapon/sword/long/kriegmesser/zybantine
+	name = "heavy scimitar"
+	desc = "A large zybantine sword with a single-edged blade, a crossguard and a knife-like hilt. "
+	icon = 'modular_deserttown/icons/items/desertweapons64.dmi'
+	icon_state = "Kmesser"
+
+/obj/item/rogueweapon/sword/long/kriegmesser/zybantine/mushir
+	name = "\"Zulfiqar\""
+	desc = "A large ornate golden zybantine sword with a single-edged blade, a crossguard and with a ruby embedded in the knife-like hilt, given to the Mushir for their valiant service to the Sultanate."
+	icon = 'modular_deserttown/icons/items/desertweapons64.dmi'
+	icon_state = "mushirmesser"
+	sheathe_icon = "kingslayer"
+	force = 27
+	force_wielded = 33
+	sellprice = 140
 
 /obj/item/rogueweapon/sword/long/kriegmesser/zybantine/blacksteel
 	name = "blacksteel heavy scimitar"

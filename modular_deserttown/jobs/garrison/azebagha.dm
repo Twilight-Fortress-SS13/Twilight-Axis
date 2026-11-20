@@ -60,10 +60,10 @@
 
 /datum/advclass/azebagha/azebagha
 	name = "Sergeant-at-Arms"
-	tutorial = "An experienced soldier of the Sultan's Azeb Corp you have been tasked with overseeing the newly constructed border. \
-				You report to the Royal Family and their Councillors, \
-				and your job is to keep the younger Janissaries in line and to ensure the routes to the city remain safe.\
-				The Border must not fall."
+	tutorial = "Как опытный воин султанского корпуса азебов, ты получил приказ принять командование над нововозведенным фронтиром. \
+                Ты держишь ответ перед султанской династией и их благородными шейхами, \
+                а твоя задача - держать в узде молодых азебов и обеспечивать безопасность караванных путей к сердцу града. \
+                Граница не должна пасть."
 	outfit = /datum/outfit/job/roguetown/azebagha/azebagha
 
 	category_tags = list(CTAG_AZEBAGHA)
@@ -114,18 +114,18 @@
 		)
 	H.adjust_blindness(-3)
 	if(H.mind)
-		var/primary = list("Scimitar","Shotel","Whip","Warden Axe")
+		var/primary = list("Shamshir","Shotel","Whip","Warden Axe")
 		var/primary_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in primary
 		var/secondary = list("Glaive","Javelins and Shield","Blackhorn Longbow")
 		var/secondary_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in secondary
 		H.set_blindness(0)
 		switch(primary_choice)
-			if("Scimitar")
+			if("Shamshir")
 				beltl = /obj/item/rogueweapon/scabbard/sword
-				l_hand = /obj/item/rogueweapon/sword/sabre/shamshir
+				r_hand = /obj/item/rogueweapon/sword/sabre/shamshir
 			if("Shotel")
 				beltl = /obj/item/rogueweapon/scabbard/sword
-				l_hand = /obj/item/rogueweapon/sword/long/shotel
+				r_hand = /obj/item/rogueweapon/sword/long/shotel
 			if("Whip")
 				beltl = /obj/item/rogueweapon/whip/antique
 			if("Warden Axe")
