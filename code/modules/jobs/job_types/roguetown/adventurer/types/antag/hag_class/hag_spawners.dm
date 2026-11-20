@@ -10,6 +10,7 @@
 		/obj/item/alch/hag_moss/enchanted/deathless	= 4,
 		/obj/item/alch/hag_moss/enchanted/corrosive	= 4,
 		/obj/item/alch/hag_moss/enchanted/sprouting	= 4,
+		/obj/item/alch/hag_moss/enchanted/power = 4, // TA ADDITION
 		// Mid Rarity Enchanted
 		/obj/item/alch/hag_moss/enchanted/random/mid = 3,
 		/obj/item/alch/hag_moss/enchanted/caring		= 2,
