@@ -35,6 +35,7 @@
 	playsound(user, 'sound/magic/repulse.ogg', 80, TRUE)
 	if(!do_after(user, 1 SECONDS, user))
 		to_chat(user, "<span class='danger'>You're concentration breaks!</span>")
+		revert_cast(user) // TA ADDITION
 		return
 	for(var/turf/T in get_hear(push_range, user))
 		new /obj/effect/temp_visual/kinetic_blast(T)
@@ -135,14 +136,25 @@
 		user.emote("warcry")
 		var/perc = (user.STASTR - target.STASTR)
 		var/effect_to_apply = (user.mind ? /datum/status_effect/debuff/vulnerable : /datum/status_effect/debuff/exposed)
+		// TA REMOVAL START
+		/*
 		user.apply_status_effect(effect_to_apply, 3 SECONDS)
 		user.apply_status_effect(/datum/status_effect/debuff/clickcd, max(1.5 SECONDS + 2, 2.5 SECONDS))
 		user.Immobilize(0.5 SECONDS)
 		user.stamina_add(user.stamina * 0.1)
 		user.Slowdown(2)
+		*/
+		// TA REMOVAL END
 		if(HAS_TRAIT(target, TRAIT_STEELHEARTED)) //all combat roles
 			perc -= 1
 		if(perc < 0)
+			// TA ADDITION START
+			user.apply_status_effect(effect_to_apply, 3 SECONDS)
+			user.apply_status_effect(/datum/status_effect/debuff/clickcd, max(1.5 SECONDS + 2, 2.5 SECONDS))
+			user.Immobilize(0.5 SECONDS)
+			user.stamina_add(user.stamina * 0.1)
+			user.Slowdown(2)
+			// TA ADDITION END
 			return
 		if(perc >= 0)
 			if(perc == 1)
