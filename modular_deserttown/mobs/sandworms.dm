@@ -277,7 +277,7 @@
 
 	var/dir_to_target = get_dir(src, target_turf)
 	if(dir_to_target)
-		set_dir(dir_to_target)
+		setDir(dir_to_target)
 	var/steps = clamp(get_dist(src, target_turf), 1, charge_range_max)
 	var/hit_someone = FALSE
 
