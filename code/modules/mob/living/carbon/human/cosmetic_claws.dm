@@ -94,7 +94,12 @@
 
 /mob/living/carbon/human/apply_intent_customizations(datum/intent/intent)
 	. = ..()
-	if(intent.type != INTENT_HARM || !cosmetic_claw_intent)
+	if(intent.type != INTENT_HARM)
+		return
+	if(unarmed_balance == WBALANCE_HEAVY) //TA EDIT START
+		intent.name = "jab"
+	// TA EDIT END
+	if(!cosmetic_claw_intent)
 		return
 	var/datum/intent/unarmed/punch/cosmetic_claw/claw_presentation = new cosmetic_claw_intent(src)
 	intent.name = claw_presentation.name

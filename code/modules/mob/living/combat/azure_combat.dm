@@ -551,6 +551,15 @@
 			else
 				return TRUE
 
+//TA EDIT START
+/mob/living/proc/get_rclick_cd(base_cd, apply_tempo = TRUE)
+	var/newcd = base_cd
+	if(apply_tempo)
+		newcd -= get_tempo_bonus(TEMPO_TAG_RCLICK_CD_BONUS)
+	if(holding_normal_balance())
+		newcd *= 0.7
+	return newcd
+// TA EDIT END
 
 /// A defensive boon from matching subzones.
 /mob/living/carbon/human/proc/try_bind(obj/item/used_weapon, mob/living/user, vuln_exception = FALSE)	//user is the attacker in this context

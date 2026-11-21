@@ -547,7 +547,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		to_chat(usr, output)
 
 	if(href_list["explainbalance"])
-		var/output = span_red("A <b>heavy</b> weapon is easier to dodge, and inflicts <b>[STAM_DRAIN_PER_STR_DIFF_HEAVY_BAL]</b> stamina damage per level of STR difference on a parrying defender.\n")
+		var/output = span_red("A <b>heavy</b> weapon reduces the enemy's parry chance depending on STR difference, countered by the defender's WIL and CON if higher. Capped at <b>[SWIFTCAP_CHEST]%</b> against the chest, <b>[SWIFTCAP_LIMBS]%</b> against large limbs and <b>[SWIFTCAP_PRECISE]%</b> against precise zones. Having a heavy weapon in both hands increases your parry chance.\n") //TA EDIT
 
 		output += span_nicegreen("A <b>swift</b> balance weapon reduces the enemy's parry chance depending on SPD difference. \n\
 		Targeting harder to hit zones such as hands, feet, stomach or face zones has a defense reduction cap at [SWIFTCAP_PRECISE]%</b>. \n\
@@ -557,8 +557,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		Defender's difference in INT and PER (if higher) may reduce the parry penalty in some circumstances. \n\
 		Having a swift weapon in your dominant hand and nothing in your off-hand increases your parry chance.")
 
-		output += span_notice("A <b>normal</b> balance weapon helps against both balances by lowering swift's parry reduction by <b>10</b>, \n\
-		and blocking <b>[abs(STAM_DRAIN_PER_STR_DIFF_HEAVY_BAL)]</b> stamina damage done by heavy balance")
+		output += span_notice("A <b>normal</b> balance weapon reduces the cooldown of your RMB abilities - bait, feint, defend and special - by <b>30%</b>, and lowers the extra stamina swift and strong attacks cost from <b>10</b> to <b>7</b>.") //TA EDIT
 
 		if(!usr.client.prefs.no_examine_blocks)
 			output = examine_block(output)
