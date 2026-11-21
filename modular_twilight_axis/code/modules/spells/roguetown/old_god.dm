@@ -185,6 +185,9 @@
 			if(C.blood_volume <= 0)
 				C.blood_volume = BLOOD_VOLUME_SURVIVE
 
+	H.remove_CC()
+	H.update_stat()
+
 	// VISUALS
 	C.visible_message(span_danger("[C] assumes [H]'s suffering through VICARIATE!"))
 
