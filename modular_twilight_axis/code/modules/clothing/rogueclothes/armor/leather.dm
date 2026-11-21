@@ -87,3 +87,13 @@
 	H.electrocute_act(30, src)
 	H.mob_timers["kneestinger"] = world.time
 	to_chat(H, span_warning("[name] rejects my grasp — only the Treefather's faithful may bear such a gift!"))
+
+/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/hrtcoat
+	name = "heartfelt coat"
+	desc = "A lightweight armor made from the scales of the Heartfelt."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/armor.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/armor.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/helpers/sleeves_armor.dmi'
+	icon_state = "hrtcoat"
+	item_state = "hrtcoat"
+	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET

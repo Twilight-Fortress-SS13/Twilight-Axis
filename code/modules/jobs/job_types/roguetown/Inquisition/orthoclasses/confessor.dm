@@ -53,7 +53,7 @@
 	head = /obj/item/clothing/head/roguetown/roguehood/psydon/confessor
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/confessor
 	cloak = /obj/item/storage/backpack/rogue/satchel/beltpack
-	wrists = /obj/item/clothing/neck/roguetown/psicross/silver
+	//wrists = /obj/item/clothing/neck/roguetown/psicross/silver //TA EDIT
 	gloves = /obj/item/clothing/gloves/roguetown/otavan/psygloves
 	neck = /obj/item/clothing/neck/roguetown/gorget
 	backr = /obj/item/storage/backpack/rogue/satchel/otavan
@@ -72,7 +72,8 @@
 		/obj/item/grapplinghook = 1,
 		/obj/item/paper/inqslip/arrival/ortho = 1,
 		/obj/item/rogueweapon/huntingknife/idagger/steel/silver/psy = 1,
-		/obj/item/rogueweapon/scabbard/sheath = 1
+		/obj/item/rogueweapon/scabbard/sheath = 1,
+		/obj/item/clothing/neck/roguetown/psicross/silver = 1 //TA EDIT
 		)
 
 	add_verb(H, /mob/living/carbon/human/proc/faith_test)
@@ -114,11 +115,11 @@
 			H.put_in_hands(new /obj/item/rogueweapon/whip/silver/psy)
 			H.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, SKILL_LEVEL_EXPERT, TRUE)
 
-	var/rangedweapons = list("Slurbow - Lesser Damage, Rapid & Accurate", "Crossbow - Access To Special Bolts")
+	var/rangedweapons = list("Bracer-mounted crossbow - Lesser Damage, Rapid & Accurate", "Crossbow - Access To Special Bolts")
 	var/rangedweapon_choice = input(H,"Choose your BOW.", "TAKE UP PSYDON'S ARCAGE.") as anything in rangedweapons
 	switch(rangedweapon_choice)
-		if("Slurbow - Lesser Damage, Rapid & Accurate")
-			H.equip_to_slot_or_del(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow, SLOT_BACK_L, TRUE)
+		if("Bracer-mounted crossbow - Lesser Damage, Rapid & Accurate")
+			H.equip_to_slot_or_del(new /obj/item/clothing/wrists/roguetown/bracers/handcrossbow, SLOT_WRISTS, TRUE)
 			var/lightquivers = list("Light Bolts - Steel-Tipped", "Light Sunderbolts - Silver-Tipped, Halved Damage")
 			var/lightboltchoice = input(H,"Choose your MUNITIONS.", "TAKE UP PSYDON'S MISSILES.") as anything in lightquivers
 			switch(lightboltchoice)
