@@ -679,6 +679,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/needle/bronze = TAT_ITEM_ENTRY("Needle", 0, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "medical"), \
 	/obj/item/skillbook/unfinished = TAT_ITEM_ENTRY("Unfinished Skill Book", 1, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
 	/obj/item/storage/meatbag = TAT_ITEM_ENTRY("Game Satchel", 1, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
+	/obj/item/storage/hip/orestore/bronze = TAT_ITEM_ENTRY("Mechanized Ore Bag", 2, "misc", "weapon_supply", TAT_SUPPLY_BRONZE, "lyfe"), \
 	/obj/item/canvas = TAT_ITEM_ENTRY("Canvas", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
 	/obj/item/paint_brush = TAT_ITEM_ENTRY("Paint Brush", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "lyfe"), \
 	/obj/item/pestle = TAT_ITEM_ENTRY("Pestle", 0.5, "misc", "weapon_supply", TAT_SUPPLY_IRON, "medical"), \
