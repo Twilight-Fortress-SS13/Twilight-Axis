@@ -124,3 +124,50 @@
 		return S.GetKickOffbalanceDuration(base_duration)
 
 	return base_duration
+
+/datum/intent
+	var/pen_guarded = null
+
+/datum/intent/proc/isTargetGuarded(mob/living/target)
+	if(target.has_status_effect(/datum/status_effect/debuff/breachcd))
+		return TRUE
+	if(target.has_status_effect(/datum/status_effect/buff/tempo_one))
+		return TRUE
+	if(target.has_status_effect(/datum/status_effect/buff/tempo_two))
+		return TRUE
+	if(target.has_status_effect(/datum/status_effect/buff/tempo_three))
+		return TRUE
+	return FALSE
+
+/datum/intent/proc/getArmorPenetration(mob/living/target)
+	if(!isnull(pen_guarded) && istype(target) && isTargetGuarded(target))
+		return pen_guarded
+	return penfactor
+
+/datum/intent/proc/applyBreachGuard(mob/living/target)
+	if(!istype(target))
+		return
+	if(!target.has_status_effect(/datum/status_effect/debuff/breachcd))
+		target.apply_status_effect(/datum/status_effect/debuff/breachcd)
+
+/datum/intent/axe/chop/heavy
+	pen_guarded = PEN_MEDIUM
+
+/datum/intent/axe/chop/heavy/spec_on_apply_effect(
+	mob/living/target,
+	mob/living/user,
+	params,
+)
+	applyBreachGuard(target)
+	return ..()
+
+/datum/intent/sword/thrust/rapier/lunge
+	pen_guarded = PEN_MEDIUM
+
+/datum/intent/sword/thrust/rapier/lunge/spec_on_apply_effect(
+	mob/living/target,
+	mob/living/user,
+	params,
+)
+	applyBreachGuard(target)
+	return ..()

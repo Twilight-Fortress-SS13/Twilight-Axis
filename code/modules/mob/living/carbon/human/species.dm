@@ -1931,12 +1931,12 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 			do_effect = TRUE
 		if(do_effect)
 			H.apply_status_effect(int.intent_effect)
+	// TA EDIT - Resolve penetration before this hit grants breach protection.
+	var/pen = int.getArmorPenetration(H)
 	int.spec_on_apply_effect(H, user)
 	hit_area = affecting.name
 	var/def_zone = affecting.body_zone
 
-	// Penetration tier from the intent (0-5). Blunt/fire/acid use DR instead, pen is irrelevant.
-	var/pen = user.used_intent?.penfactor ? user.used_intent.penfactor : PEN_NONE
 
 //	var/armor_block = H.run_armor_check(affecting, "I.d_type", span_notice("My armor has protected my [hit_area]!"), span_warning("My armor has softened a hit to my [hit_area]!"),pen)
 
@@ -1970,7 +1970,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 	if((H.client?.prefs.combat_toggles & HITZONE_TEXT) && HAS_TRAIT(user, TRAIT_COMBAT_AWARE)) // TA EDIT - ORIGINAL: if(H.client?.prefs.combat_toggles & HITZONE_TEXT)
 		H.balloon_alert(H, "[bodyzone2readablezone(selzone)]...")
 
-	var/pen_info_check = get_pen_info(H, user, H.get_best_worn_armor(def_zone, int.item_d_type), def_zone, int.item_d_type, int.penfactor, I)
+	var/pen_info_check = get_pen_info(H, user, H.get_best_worn_armor(def_zone, int.item_d_type), def_zone, int.item_d_type, pen, I) // TA EDIT
 	var/armor_block = H.run_armor_check(selzone, I.d_type, "", "",pen, damage = Iforce, blade_dulling=bladec, intdamfactor = used_intfactor, used_weapon = I, pen_info = pen_info_check)
 
 	var/nodmg = FALSE
