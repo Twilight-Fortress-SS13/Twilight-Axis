@@ -43,6 +43,7 @@
 
 /datum/outfit/job/roguetown/bandit/twilight_afreet/pre_equip(mob/living/carbon/human/H) //Basically an evil jager
 	..()
+	H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/survival/goldbullet, /datum/crafting_recipe/roguetown/survival/silverbullet, /datum/crafting_recipe/roguetown/survival/copperbullet, /obj/item/ammo_casing/caseless/rogue/twilight_grapeshotdouble)
 	if (!istype(H.patron, /datum/patron/inhumen/matthios))
 		to_chat(H, span_warning("My former deity has abandoned me.. Matthios is my new master."))
 		H.set_patron(/datum/patron/inhumen/matthios)	//We allow other heretics into the cool-kids club, but if you are a tennite/psydonian it sets you to matthiosan.
@@ -56,10 +57,10 @@
 		if("Jäger Deserter")
 			mask = /obj/item/clothing/mask/rogue/facemask/steel
 			cloak = /obj/item/clothing/cloak/half/brown
-			var/list/firearm_choices = list("Arquebus Rifle", "Culverin")
+			var/list/firearm_choices = list("Arquebus Rifle", "Dragon Hunter")
 			var/firearm_choice = input(H, "Choose your firearm", "Available firearms") as anything in firearm_choices
 			if(firearm_choice == "Culverin")
-				backr = /obj/item/gun/ballistic/twilight_firearm/handgonne
+				backr = /obj/item/gun/ballistic/twilight_firearm/dragonhunter
 				var/list/ammo_choices = list("Lead Cannonballs", "Lead Grapeshot")
 				var/ammo_choice = input(H, "Choose your ammunition", "Available ammunition") as anything in ammo_choices
 				if(ammo_choice == "Lead Grapeshot")
@@ -89,10 +90,10 @@
 			)
 			H.adjust_skillrank_up_to(/datum/skill/combat/axes, 4, TRUE)
 		if("Veteran")
-			mask = /obj/item/clothing/mask/rogue/ragmask/red
+			mask = /obj/item/clothing/mask/rogue/facemask/steel
 			armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat
 			shirt = /obj/item/clothing/suit/roguetown/shirt/freifechter
-			beltr = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol
+			beltr = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/crowpistol
 			beltl = /obj/item/rogueweapon/huntingknife/idagger/steel
 			backl = /obj/item/storage/backpack/rogue/satchel
 			wrists = /obj/item/rogueweapon/katar/punchdagger

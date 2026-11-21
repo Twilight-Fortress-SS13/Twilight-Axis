@@ -214,3 +214,42 @@
 				/obj/item/alch/magicdust = 2,
 				/datum/reagent/medicine/manapot = 30)
 	craftdiff = 3
+
+/datum/crafting_recipe/roguetown/survival/doublegrapeshot
+	name = "double grapeshot"
+	reqs = list(/obj/item/ammo_casing/caseless/rogue/twilight_cannonball/grapeshot = 2, /obj/item/paper = 1)
+	result = /obj/item/ammo_casing/caseless/rogue/twilight_grapeshotdouble
+	verbage_simple = "make"
+	verbage = "makes"
+	craftdiff = 0
+	always_availible = FALSE
+
+/datum/crafting_recipe/roguetown/survival/copperbullet
+	name = "copper bullet"
+	reqs = list(/obj/item/roguecoin/copper = 2)
+	result = /obj/item/ammo_casing/caseless/rogue/crow_lead
+	verbage_simple = "make"
+	verbage = "makes"
+	craftdiff = 0
+	tools = list(/obj/item/rogueweapon/hammer = 1)
+	always_availible = FALSE
+
+/datum/crafting_recipe/roguetown/survival/silverbullet
+	name = "silver bullet"
+	reqs = list(/obj/item/roguecoin/silver = 2)
+	result = /obj/item/ammo_casing/caseless/rogue/crow_lead/silver
+	verbage_simple = "make"
+	verbage = "makes"
+	craftdiff = 0
+	tools = list(/obj/item/rogueweapon/hammer = 1)
+	always_availible = FALSE
+
+/datum/crafting_recipe/roguetown/survival/goldbullet
+	name = "gold bullet"
+	reqs = list(/obj/item/roguecoin/gold = 2)
+	result = /obj/item/ammo_casing/caseless/rogue/crow_lead/gold
+	verbage_simple = "make"
+	verbage = "makes"
+	craftdiff = 0
+	tools = list(/obj/item/rogueweapon/hammer= 1)
+	always_availible = FALSE
