@@ -86,10 +86,11 @@
 		return
 
 	for(var/key in key_bindings.Copy())
+		var/list/bound_names = key_bindings[key]
 		if(!islist(key_bindings[key]))
 			key_bindings -= key
 			continue
-		for(var/kb_name in key_bindings[key].Copy())
+		for(var/kb_name in bound_names.Copy())
 			if(kb_name in snapshot)
 				key_bindings[key] -= kb_name
 		if(!length(key_bindings[key]))
@@ -302,10 +303,11 @@
 		hotbar_keybindings_initialized = list()
 
 	for(var/key in key_bindings.Copy())
+		var/list/bound_names = key_bindings[key]
 		if(!islist(key_bindings[key]))
 			key_bindings -= key
 			continue
-		for(var/kb_name in key_bindings[key].Copy())
+		for(var/kb_name in bound_names.Copy())
 			var/datum/keybinding/kb = GLOB.keybindings_by_name[kb_name]
 			if(istype(kb, /datum/keybinding/living/hotbar_slot))
 				key_bindings[key] -= kb_name
