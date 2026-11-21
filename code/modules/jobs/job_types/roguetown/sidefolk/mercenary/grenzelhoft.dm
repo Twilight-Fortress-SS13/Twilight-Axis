@@ -267,7 +267,7 @@
 	..()
 	to_chat(H, span_warning("You are a Gefechtgelehrter - \"Combat Scholar\" - A proud magos from the Imperial Academy of Arcyne, specializing in Siege Magic and Arcyne Physics for the good of the Emperate.")) //TA EDIT
 	belt = /obj/item/storage/belt/rogue/leather/battleskirt
-	backl = /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel
+	backl = /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel/ruby // TA EDIT (Реворк магических имплементов)
 	cloak = /obj/item/clothing/cloak/tabard/stabard/grenzelmage
 	armor = /obj/item/clothing/suit/roguetown/armor/brigandine/light
 	wrists = /obj/item/clothing/wrists/roguetown/bracers
@@ -284,7 +284,7 @@
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/rogueweapon/huntingknife = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
-		/obj/item/rogueweapon/spellbook/greater = 1,
+		/obj/item/rogueweapon/spellbook/ruby = 1, // TA EDIT (Реворк магических имплементов)
 		/obj/item/chalk = 1
 		)
 	ADD_TRAIT(H, TRAIT_ARCYNE, TRAIT_GENERIC)

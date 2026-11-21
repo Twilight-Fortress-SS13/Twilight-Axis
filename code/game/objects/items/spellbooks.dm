@@ -34,7 +34,7 @@ Intended to be a reward or a goal for pure mage, allowing them to rebind their a
 	special = /datum/special_intent/arcyne_descent
 	implement_tier = IMPLEMENT_TIER_LESSER
 	implement_refund = IMPLEMENT_REFUND_LESSER
-	implement_upgradable = TRUE
+//	implement_upgradable = TRUE // TA REMOVAL (Тинктуры апгрейдов)
 	sellprice = 12
 	var/picked // if the book has had it's style picked or not
 	var/curpage = 1

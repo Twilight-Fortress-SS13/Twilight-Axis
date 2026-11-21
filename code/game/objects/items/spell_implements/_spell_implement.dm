@@ -26,7 +26,7 @@
 	var/implement_refund = 0
 	/// Whether it is exempt from the in hand cast penalty
 	var/is_implement = FALSE
-	var/implement_upgradable = FALSE
+//	var/implement_upgradable = FALSE // TA REMOVAL (Тинктуры апгрейдов)
 	COOLDOWN_DECLARE(attunement_cd)
 
 /obj/item/rogueweapon/proc/attune_implement(spell_color, spell_name)
