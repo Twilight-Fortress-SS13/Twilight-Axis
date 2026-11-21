@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Box,
   Button,
-  DmIcon,
   Input,
   ProgressBar,
   Section,
@@ -18,8 +17,7 @@ import { processedText } from '../process';
 import { sanitizeText } from '../sanitize';
 
 type PreviewLayer = {
-  icon: string;
-  icon_state: string;
+  icon_class: string | null;
   color: string | null;
   channel: string;
 };
@@ -46,6 +44,8 @@ type SelectedItem = {
 };
 
 type Data = {
+  character_name: string | null;
+  character_slot: number;
   categories: string[];
   items: LoadoutItem[];
   selected: SelectedItem[];
@@ -59,7 +59,6 @@ type Data = {
   player_triumphs: number;
 };
 
-const ITEMS_PER_PAGE = 50;
 const DONATOR_TIER_COLORS: Record<number, string> = {
   1: 'average',
   2: 'blue',
@@ -108,24 +107,24 @@ const TintFilters = (props: { colors: string[] }) => (
 
 const ItemIcon = (props: { item: LoadoutItem; selected?: SelectedItem }) => (
   <Box position="relative" width="40px" height="40px" mr={1}>
-    {!props.item.preview_layers?.length && <Box color="label">?</Box>}
+    {!props.item.preview_layers?.some((layer) => layer.icon_class) && (
+      <Box color="label">?</Box>
+    )}
     {props.item.preview_layers?.map((layer) => {
+      if (!layer.icon_class) {
+        return null;
+      }
       const color = tintKey(layerColor(layer, props.selected));
       return (
-        <DmIcon
-          key={`${layer.icon}:${layer.icon_state}:${layer.channel}`}
-          icon={layer.icon}
-          icon_state={layer.icon_state}
-          fallback={
-            layer.channel === 'primary' ? <Box color="label">?</Box> : null
-          }
+        <Box
+          key={`${layer.icon_class}:${layer.channel}`}
+          className={layer.icon_class}
           position="absolute"
           top={0}
           left={0}
           width="40px"
           height="40px"
           style={{
-            objectFit: 'contain',
             filter: color ? `url(#loadout-tint-${color})` : undefined,
           }}
         />
@@ -235,7 +234,6 @@ export const TwilightLoadoutMenu = () => {
   const { data, act } = useBackend<Data>();
   const [category, setCategory] = useState('Всё');
   const [search, setSearch] = useState('');
-  const [page, setPage] = useState(0);
   const [compact, setCompact] = useState(false);
   const [previewText, setPreviewText] = useState(false);
   const catalogRef = useRef<HTMLDivElement>(null);
@@ -243,6 +241,7 @@ export const TwilightLoadoutMenu = () => {
   const selected = data.selected || [];
   const locks = data.locks || {};
   const selectedByName = new Map(selected.map((item) => [item.name, item]));
+  const selectedItems = items.filter((item) => selectedByName.has(item.name));
   const query = search.trim().toLocaleLowerCase();
   const filteredItems = useMemo(
     () =>
@@ -257,26 +256,16 @@ export const TwilightLoadoutMenu = () => {
         .sort((first, second) => first.label.localeCompare(second.label)),
     [items, category, query],
   );
-  const pageCount = Math.max(
-    1,
-    Math.ceil(filteredItems.length / ITEMS_PER_PAGE),
-  );
-  const currentPage = Math.min(page, pageCount - 1);
   useEffect(() => {
     if (catalogRef.current) {
       catalogRef.current.scrollTop = 0;
     }
-  }, [currentPage, category, query]);
-
-  const visibleItems = filteredItems.slice(
-    currentPage * ITEMS_PER_PAGE,
-    (currentPage + 1) * ITEMS_PER_PAGE,
-  );
+  }, [category, query]);
   const colors = compact
     ? []
     : Array.from(
         new Set(
-          visibleItems.flatMap((item) =>
+          [...filteredItems, ...selectedItems].flatMap((item) =>
             (item.preview_layers || [])
               .map((layer) =>
                 tintKey(layerColor(layer, selectedByName.get(item.name))),
@@ -289,7 +278,7 @@ export const TwilightLoadoutMenu = () => {
   const full = selected.length >= limit;
 
   return (
-    <Window width={1000} height={760} title="Лодаут">
+    <Window width={1200} height={760} title="Лодаут">
       <Window.Content>
         <Stack fill vertical>
           <Stack.Item>
@@ -329,7 +318,6 @@ export const TwilightLoadoutMenu = () => {
                   selected={name === category}
                   onClick={() => {
                     setCategory(name);
-                    setPage(0);
                   }}
                 >
                   {name}
@@ -346,7 +334,6 @@ export const TwilightLoadoutMenu = () => {
                   value={search}
                   onChange={(value) => {
                     setSearch(value);
-                    setPage(0);
                   }}
                 />
               </Stack.Item>
@@ -386,119 +373,150 @@ export const TwilightLoadoutMenu = () => {
               <Stack.Item grow color="label">
                 Найдено предметов: {filteredItems.length}
               </Stack.Item>
-              <Stack.Item>
-                <Button
-                  icon="chevron-left"
-                  disabled={currentPage === 0}
-                  onClick={() => setPage(currentPage - 1)}
-                >
-                  Назад
-                </Button>
-              </Stack.Item>
-              <Stack.Item>
-                {currentPage + 1} / {pageCount}
-              </Stack.Item>
-              <Stack.Item>
-                <Button
-                  icon="chevron-right"
-                  disabled={currentPage === pageCount - 1}
-                  onClick={() => setPage(currentPage + 1)}
-                >
-                  Далее
-                </Button>
-              </Stack.Item>
             </Stack>
           </Stack.Item>
           <Stack.Item grow>
-            <Section fill scrollable ref={catalogRef}>
-              <TintFilters colors={colors} />
-              {!filteredItems.length && (
-                <Box color="label" textAlign="center" p={2}>
-                  Предметы не найдены.
-                </Box>
-              )}
-              <Table>
-                <Table.Row header>
-                  <Table.Cell>Предмет</Table.Cell>
-                  <Table.Cell textAlign="center">Доступ</Table.Cell>
-                  <Table.Cell textAlign="center">Триумфы</Table.Cell>
-                </Table.Row>
-                {visibleItems.flatMap((item) => {
-                  const selection = selectedByName.get(item.name);
-                  const lock = locks[item.name];
-                  let accessColor = 'label';
-                  if (lock) {
-                    accessColor =
-                      DONATOR_TIER_COLORS[item.donator_tier] || 'average';
-                  }
+            <TintFilters colors={colors} />
+            <Stack fill>
+              <Stack.Item grow basis={0}>
+                <Section fill scrollable ref={catalogRef}>
+                  {!filteredItems.length && (
+                    <Box color="label" textAlign="center" p={2}>
+                      Предметы не найдены.
+                    </Box>
+                  )}
+                  <Table>
+                    <Table.Row header>
+                      <Table.Cell>Предмет</Table.Cell>
+                      <Table.Cell textAlign="center">Доступ</Table.Cell>
+                      <Table.Cell textAlign="center">Триумфы</Table.Cell>
+                    </Table.Row>
+                    {filteredItems.flatMap((item) => {
+                      const selection = selectedByName.get(item.name);
+                      const lock = locks[item.name];
+                      let accessColor = 'label';
+                      if (lock) {
+                        accessColor =
+                          DONATOR_TIER_COLORS[item.donator_tier] || 'average';
+                      }
 
-                  return [
-                    <Table.Row key={item.name}>
-                      <Table.Cell py={0.5}>
-                        <Stack align="center">
+                      return [
+                        <Table.Row key={item.name}>
+                          <Table.Cell py={0.5}>
+                            <Stack align="center">
+                              <Stack.Item>
+                                <Button
+                                  selected={!!selection}
+                                  disabled={
+                                    !data.subscription_loaded ||
+                                    (!selection && (!!lock || full))
+                                  }
+                                  tooltip={
+                                    lock ||
+                                    (selection
+                                      ? 'Убрать предмет'
+                                      : 'Выбрать предмет')
+                                  }
+                                  onClick={() =>
+                                    act('toggle_item', { name: item.name })
+                                  }
+                                >
+                                  {selection ? '✓' : '+'}
+                                </Button>
+                              </Stack.Item>
+                              {!compact && (
+                                <Stack.Item>
+                                  <ItemIcon item={item} selected={selection} />
+                                </Stack.Item>
+                              )}
+                              <Stack.Item grow>
+                                <Box bold={!!selection}>{item.label}</Box>
+                                {!compact && (
+                                  <Box
+                                    color="label"
+                                    fontSize={0.9}
+                                    dangerouslySetInnerHTML={{
+                                      __html: sanitizeText(item.desc),
+                                    }}
+                                  />
+                                )}
+                                {item.requirements && !compact && (
+                                  <Box color="label" fontSize={0.85} mt={0.3}>
+                                    Подходит для: {item.requirements}
+                                  </Box>
+                                )}
+                              </Stack.Item>
+                            </Stack>
+                          </Table.Cell>
+                          <Table.Cell color={accessColor} textAlign="center">
+                            {lock || '—'}
+                          </Table.Cell>
+                          <Table.Cell textAlign="center">
+                            {item.triumph_cost || '—'}
+                          </Table.Cell>
+                        </Table.Row>,
+                        selection && (
+                          <ItemEditor
+                            key={`${item.name}-editor`}
+                            item={item}
+                            selected={selection}
+                            previewText={previewText}
+                          />
+                        ),
+                      ];
+                    })}
+                  </Table>
+                </Section>
+              </Stack.Item>
+              <Stack.Item width="270px">
+                <Section
+                  fill
+                  scrollable
+                  title={`Выбрано: ${selected.length} / ${limit}`}
+                >
+                  <Box bold>{data.character_name || 'Без имени'}</Box>
+                  <Box color="label" mb={1}>
+                    Персонаж №{data.character_slot}
+                  </Box>
+                  {!selectedItems.length && (
+                    <Box color="label">
+                      Для этого персонажа ничего не выбрано.
+                    </Box>
+                  )}
+                  {selectedItems.map((item) => {
+                    const selection = selectedByName.get(item.name)!;
+                    return (
+                      <Stack key={item.name} align="center" mb={1}>
+                        {!compact && (
                           <Stack.Item>
-                            <Button
-                              selected={!!selection}
-                              disabled={
-                                !data.subscription_loaded ||
-                                (!selection && (!!lock || full))
-                              }
-                              tooltip={
-                                lock ||
-                                (selection
-                                  ? 'Убрать предмет'
-                                  : 'Выбрать предмет')
-                              }
-                              onClick={() =>
-                                act('toggle_item', { name: item.name })
-                              }
-                            >
-                              {selection ? '✓' : '+'}
-                            </Button>
+                            <ItemIcon item={item} selected={selection} />
                           </Stack.Item>
-                          {!compact && (
-                            <Stack.Item>
-                              <ItemIcon item={item} selected={selection} />
-                            </Stack.Item>
+                        )}
+                        <Stack.Item grow>
+                          <Box>{item.label}</Box>
+                          {selection.custom_name && (
+                            <Box color="label" fontSize={0.9}>
+                              {selection.custom_name}
+                            </Box>
                           )}
-                          <Stack.Item grow>
-                            <Box bold={!!selection}>{item.label}</Box>
-                            {!compact && (
-                              <Box
-                                color="label"
-                                fontSize={0.9}
-                                dangerouslySetInnerHTML={{
-                                  __html: sanitizeText(item.desc),
-                                }}
-                              />
-                            )}
-                            {item.requirements && !compact && (
-                              <Box color="label" fontSize={0.85} mt={0.3}>
-                                Подходит для: {item.requirements}
-                              </Box>
-                            )}
-                          </Stack.Item>
-                        </Stack>
-                      </Table.Cell>
-                      <Table.Cell color={accessColor} textAlign="center">
-                        {lock || '—'}
-                      </Table.Cell>
-                      <Table.Cell textAlign="center">
-                        {item.triumph_cost || '—'}
-                      </Table.Cell>
-                    </Table.Row>,
-                    selection && (
-                      <ItemEditor
-                        key={`${item.name}-editor`}
-                        item={item}
-                        selected={selection}
-                        previewText={previewText}
-                      />
-                    ),
-                  ];
-                })}
-              </Table>
-            </Section>
+                        </Stack.Item>
+                        <Stack.Item>
+                          <Button
+                            icon="times"
+                            color="bad"
+                            tooltip="Убрать предмет"
+                            disabled={!data.subscription_loaded}
+                            onClick={() =>
+                              act('toggle_item', { name: item.name })
+                            }
+                          />
+                        </Stack.Item>
+                      </Stack>
+                    );
+                  })}
+                </Section>
+              </Stack.Item>
+            </Stack>
           </Stack.Item>
           <Stack.Item>
             <Section>

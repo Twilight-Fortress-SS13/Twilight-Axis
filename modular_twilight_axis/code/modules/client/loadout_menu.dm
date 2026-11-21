@@ -45,6 +45,9 @@
 /datum/loadout_menu/ui_close(mob/user)
 	qdel(src)
 
+/datum/loadout_menu/ui_assets(mob/user)
+	return list(get_asset_datum(/datum/asset/spritesheet_batched/loadout_icons))
+
 /datum/loadout_menu/proc/sanitize_selection(mob/user)
 	owner.prefs.sanitize_subscription_loadout(user)
 	var/current_tier = owner.prefs.loadout_subscription_tier
@@ -61,6 +64,7 @@
 	if(!isCurrentCharacter(user))
 		return list()
 	var/list/items = list()
+	var/datum/asset/spritesheet_batched/loadout_icons/sheet = get_asset_datum(/datum/asset/spritesheet_batched/loadout_icons)
 	var/list/categories = list("Всё")
 	for(var/category in GLOB.loadout_items_by_category)
 		categories |= category
@@ -72,6 +76,12 @@
 			continue
 		var/list/item_categories = list()
 		item_categories += item.category
+		var/list/preview_layers = item.get_loadout_preview_layers()
+		for(var/list/layer as anything in preview_layers)
+			layer["icon_class"] = sheet.icon_class_name(layer["sprite_id"])
+			layer -= "icon"
+			layer -= "icon_state"
+			layer -= "sprite_id"
 		items += list(list(
 			"name" = item_name,
 			"label" = item.name,
@@ -81,10 +91,15 @@
 			"donator_item" = item.donatitem,
 			"donator_tier" = item.donat_tier,
 			"color_channels" = item.get_loadout_color_channels(),
-			"preview_layers" = item.get_loadout_preview_layers(),
+			"preview_layers" = preview_layers,
 			"requirements" = item.get_loadout_requirements(),
 		))
-	return list("items" = items, "categories" = categories)
+	return list(
+		"items" = items,
+		"categories" = categories,
+		"character_name" = owner.prefs.real_name,
+		"character_slot" = character_slot,
+	)
 
 /datum/loadout_menu/ui_data(mob/user)
 	if(!isCurrentCharacter(user))
@@ -234,13 +249,16 @@
 	var/icon_state = initial(preview_type.icon_state)
 	if(!icon_file || !icon_exists(icon_file, icon_state))
 		return
-	var/list/layers = list(list("icon" = "[icon_file]", "icon_state" = icon_state, "color" = initial(preview_type.color), "channel" = "primary"))
+	var/list/layers = list(list("icon" = icon_file, "icon_state" = icon_state, "color" = initial(preview_type.color), "channel" = "primary"))
 	var/detail = initial(preview_type.detail_tag)
 	if(detail && icon_exists(icon_file, "[icon_state][detail]"))
-		layers += list(list("icon" = "[icon_file]", "icon_state" = "[icon_state][detail]", "color" = initial(preview_type.detail_color), "channel" = "detail"))
+		layers += list(list("icon" = icon_file, "icon_state" = "[icon_state][detail]", "color" = initial(preview_type.detail_color), "channel" = "detail"))
 	var/altdetail = initial(preview_type.altdetail_tag)
 	if(altdetail && icon_exists(icon_file, "[icon_state][altdetail]"))
-		layers += list(list("icon" = "[icon_file]", "icon_state" = "[icon_state][altdetail]", "color" = initial(preview_type.altdetail_color), "channel" = "altdetail"))
+		layers += list(list("icon" = icon_file, "icon_state" = "[icon_state][altdetail]", "color" = initial(preview_type.altdetail_color), "channel" = "altdetail"))
+	for(var/list/layer as anything in layers)
+		var/layer_state = layer["icon_state"]
+		layer["sprite_id"] = "loadout_[md5("[icon_file]:[layer_state]")]"
 	return layers
 
 /datum/loadout_item/proc/get_loadout_requirements()
