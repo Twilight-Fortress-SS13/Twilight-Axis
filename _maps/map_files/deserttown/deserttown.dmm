@@ -19408,6 +19408,13 @@
 	},
 /turf/open/floor/rogue/cobble/mossy,
 /area/rogue/indoors/town/bath/desert)
+"dRf" = (
+/obj/item/paper{
+	info = "Мы ушли. Но обещали вернуться.";
+	icon_state = "paperwrite"
+	},
+/turf/open/floor/rogue/lightpath,
+/area/rogue/outdoors/desertdeepwest/above)
 "dRg" = (
 /obj/effect/decal/cleanable/blood,
 /obj/item/clothing/head/roguetown/fancyhat,
@@ -57382,6 +57389,9 @@
 /mob/living/carbon/human/species/skeleton/npc/easy,
 /turf/open/floor/rogue/darkpath,
 /area/rogue/outdoors/desertdeepwest/above)
+"lug" = (
+/turf/closed/mineral/random/rogue/sandstone/high,
+/area/rogue)
 "luh" = (
 /obj/structure/mineral_door/wood/deadbolt{
 	lockid = "farm";
@@ -374215,9 +374225,9 @@ hMe
 hMe
 hMe
 hMe
-tEt
-tEt
-tEt
+lug
+lug
+lug
 tEt
 tEt
 tEt
@@ -374530,8 +374540,8 @@ tEt
 hMe
 hMe
 hMe
-tEt
-tEt
+lug
+lug
 tEt
 tEt
 tEt
@@ -374839,12 +374849,12 @@ tEt
 tEt
 tEt
 tEt
-tEt
-tEt
+lug
+lug
 tEt
 hMe
-tEt
-tEt
+lug
+lug
 tEt
 tEt
 tEt
@@ -375151,13 +375161,13 @@ hMe
 hMe
 tEt
 tEt
-tEt
-tEt
+hMe
+lug
 hMe
 tEt
 hMe
-tEt
-tEt
+lug
+lug
 tEt
 tEt
 tEt
@@ -375463,14 +375473,14 @@ hMe
 hMe
 tEt
 tEt
-tEt
+lug
 hMe
 tEt
 tEt
 hMe
-tEt
-tEt
-tEt
+lug
+lug
+lug
 tEt
 tEt
 tEt
@@ -375775,14 +375785,14 @@ tEt
 tEt
 tEt
 tEt
-tEt
+lug
 hMe
 tEt
 tEt
 hMe
-tEt
-tEt
-tEt
+lug
+lug
+lug
 tEt
 tEt
 tEt
@@ -376087,15 +376097,15 @@ tEt
 tEt
 tEt
 tEt
-tEt
+lug
 hMe
 tEt
 tEt
 hMe
-tEt
-tEt
-tEt
-tEt
+lug
+lug
+lug
+lug
 tEt
 tEt
 tEt
@@ -376399,14 +376409,14 @@ tEt
 tEt
 tEt
 tEt
-tEt
+lug
 hMe
 tEt
 tEt
 hMe
-tEt
-tEt
-tEt
+lug
+lug
+lug
 tEt
 tEt
 tEt
@@ -376711,14 +376721,14 @@ hMe
 hMe
 tEt
 tEt
-tEt
+lug
 hMe
 tEt
 tEt
 hMe
-tEt
-tEt
-tEt
+lug
+lug
+lug
 tEt
 tEt
 tEt
@@ -377023,13 +377033,13 @@ hMe
 hMe
 tEt
 tEt
-tEt
-tEt
+hMe
+lug
 hMe
 tEt
 hMe
-tEt
-tEt
+lug
+lug
 tEt
 tEt
 tEt
@@ -377335,12 +377345,12 @@ tEt
 tEt
 tEt
 tEt
-tEt
-tEt
+lug
+lug
 tEt
 hMe
-tEt
-tEt
+lug
+lug
 tEt
 tEt
 tEt
@@ -377650,8 +377660,8 @@ tEt
 hMe
 hMe
 hMe
-tEt
-tEt
+lug
+lug
 tEt
 tEt
 tEt
@@ -377959,9 +377969,9 @@ hMe
 hMe
 hMe
 hMe
-tEt
-tEt
-tEt
+lug
+lug
+lug
 tEt
 tEt
 tEt
@@ -635584,7 +635594,7 @@ mQK
 mQK
 uTJ
 lak
-lak
+dRf
 bHO
 lak
 odl
