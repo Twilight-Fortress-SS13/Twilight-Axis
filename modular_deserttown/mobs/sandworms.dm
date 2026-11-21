@@ -266,12 +266,12 @@
 	addtimer(CALLBACK(src, PROC_REF(do_charge), victim, get_turf(victim)), charge_windup)
 
 /mob/living/simple_animal/hostile/retaliate/rogue/sandworm/elder/proc/do_charge(mob/living/victim, turf/target_turf)
+	set waitfor = FALSE
 	if(stat != CONSCIOUS || burrowed || !target_turf)
 		charging = FALSE
 		if(ai_controller)
 			ai_controller.paused_until = 0
 		return
-	set waitfor = FALSE
 	visible_message(span_danger("[src] charges across the sand!"))
 	playsound(loc, 'sound/combat/wooshes/punch/punchwoosh (1).ogg', 100, TRUE)
 
