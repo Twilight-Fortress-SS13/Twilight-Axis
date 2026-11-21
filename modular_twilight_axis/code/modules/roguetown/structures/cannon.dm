@@ -472,6 +472,7 @@
 			shake_camera(M, 4, 2)
 
 	playsound(src, 'modular_twilight_axis/awful_artillery/sound/launch.ogg', 100, 0, 20, 1, null, null, FALSE, TRUE)
+	mount_notify_loud_noise(src, 15, 35, 7 SECONDS)
 
 	for(var/turf/AT in get_adjacent_turfs(src.loc))
 		new /obj/effect/particle_effect/smoke/arquebus(AT)

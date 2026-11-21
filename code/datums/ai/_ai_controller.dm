@@ -518,6 +518,9 @@ have ways of interacting with a specific atom and control it. They posses a blac
 	set_ai_status(AI_STATUS_ON)
 
 /datum/ai_controller/proc/force_aggro(mob/living/target, threat = AGGRO_THREAT_TAUNT)
+	var/mob/living/simple_animal/forced_mount = pawn // TA EDIT START
+	if(istype(forced_mount) && forced_mount.mount_initialized)
+		return FALSE // TA EDIT END
 	if(QDELETED(target) || target == pawn)
 		return FALSE
 	insert_blackboard_key_lazylist(BB_BASIC_MOB_RETALIATE_LIST, target)

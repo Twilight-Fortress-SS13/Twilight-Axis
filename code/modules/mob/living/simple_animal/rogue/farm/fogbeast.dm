@@ -147,15 +147,18 @@ GLOBAL_LIST_INIT(valid_fogbeast_colors, list("White" = COLOR_WHITE, "Gray" = COL
 
 /// If we're a mount and are hit while sprinting, throw our rider off
 /// Also called if the rider is hit
-/mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/proc/check_sprint_dismount()
+/mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/proc/check_sprint_dismount(datum/source, damage, damagetype, def_zone) // TA EDIT START
 	SIGNAL_HANDLER
+	if(source == src || damage < 15 || world.time < mount_next_hit_fear || world.time < mount_fear_until)
+		return
 	for(var/mob/living/carbon/human/rider in buckled_mobs)
 		if(rider.m_intent != MOVE_INTENT_RUN)
 			continue
 		var/rider_skill = rider.get_skill_level(/datum/skill/misc/riding)
 		if(rider_skill >= SKILL_LEVEL_MASTER)
 			continue
-		violent_dismount(rider)
+		if(mount_startle(rider, 3 SECONDS, max(4, 16 - rider_skill * 2)))
+			mount_next_hit_fear = world.time + 12 SECONDS // TA EDIT END
 
 /mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/post_buckle_mob(mob/living/M)
 	. = ..()
