@@ -1,11 +1,9 @@
-// TA EDIT START
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Button,
   DmIcon,
   Input,
-  ProgressBar,
   Section,
   Stack,
   Table,
@@ -15,62 +13,27 @@ import {
 
 import { useBackend } from '../backend';
 import { Window } from '../layouts';
-import { processedText } from '../process';
-import { sanitizeText } from '../sanitize';
 
 type PreviewLayer = {
   icon: string;
   icon_state: string;
   color: string | null;
-  channel: string;
 };
 
 type LoadoutItem = {
   name: string;
-  label: string;
   desc: string;
-  categories: string[];
-  triumph_cost: number;
-  donator_item: boolean;
-  donator_tier: number;
-  color_channels: Record<string, string>;
+  category: string;
+  cost: number;
+  triumph_cost: number | null;
+  color_channels: string[];
   preview_layers: PreviewLayer[] | null;
-  requirements: string | null;
 };
 
-type SelectedItem = {
-  name: string;
-  colors: Record<string, string | null>;
-  color_labels: Record<string, string | null>;
-  custom_name: string | null;
-  custom_desc: string | null;
-};
+const ITEM_ICON_SIZE = '32px';
 
-type Data = {
-  categories: string[];
-  items: LoadoutItem[];
-  selected: SelectedItem[];
-  subscription_loaded: boolean | number;
-  locks: Record<string, string>;
-  max_slots: number;
-  donator_tier: number;
-  triumph_discount: number;
-  total_triumph_cost: number;
-  effective_triumph_cost: number;
-  player_triumphs: number;
-};
-
-const ITEMS_PER_PAGE = 50;
-const DONATOR_TIER_COLORS: Record<number, string> = {
-  1: 'average',
-  2: 'blue',
-  3: 'purple',
-  4: 'pink',
-  5: 'red',
-};
-
-const tintKey = (color: string | null | undefined): string | null => {
-  if (typeof color !== 'string') {
+const tintKey = (color: string | null): string | null => {
+  if (!color) {
     return null;
   }
   let hex = color.replace(/^#/, '').toLowerCase();
@@ -80,463 +43,632 @@ const tintKey = (color: string | null | undefined): string | null => {
   return /^[0-9a-f]{6}([0-9a-f]{2})?$/.test(hex) ? hex : null;
 };
 
-const layerColor = (layer: PreviewLayer, selected?: SelectedItem) =>
-  selected?.colors[layer.channel] || layer.color;
-
-const TintFilters = (props: { colors: string[] }) => (
+const TintFilters = (props: { keys: string[] }) => (
   <svg width={0} height={0} style={{ position: 'absolute' }}>
-    <defs>
-      {props.colors.map((color) => {
-        const [red, green, blue, alpha = 1] = (color.match(/../g) || []).map(
-          (pair) => parseInt(pair, 16) / 255,
-        );
-        return (
-          <filter
-            key={color}
-            id={`loadout-tint-${color}`}
-            colorInterpolationFilters="sRGB"
-          >
-            <feColorMatrix
-              type="matrix"
-              values={`${red} 0 0 0 0 0 ${green} 0 0 0 0 0 ${blue} 0 0 0 0 0 ${alpha} 0`}
-            />
-          </filter>
-        );
-      })}
-    </defs>
+    {props.keys.map((key) => {
+      const [r, g, b, a = 1] = (key.match(/../g) || []).map(
+        (pair) => parseInt(pair, 16) / 255,
+      );
+      return (
+        <filter
+          key={key}
+          id={`loadout-tint-${key}`}
+          colorInterpolationFilters="sRGB"
+        >
+          <feColorMatrix
+            type="matrix"
+            values={`${r} 0 0 0 0 0 ${g} 0 0 0 0 0 ${b} 0 0 0 0 0 ${a} 0`}
+          />
+        </filter>
+      );
+    })}
   </svg>
 );
 
-const ItemIcon = (props: { item: LoadoutItem; selected?: SelectedItem }) => (
-  <Box position="relative" width="40px" height="40px" mr={1}>
-    {!props.item.preview_layers?.length && <Box color="label">?</Box>}
-    {props.item.preview_layers?.map((layer) => {
-      const color = tintKey(layerColor(layer, props.selected));
+const ItemIcon = (props: { layers: PreviewLayer[] | null }) => (
+  <Box
+    position="relative"
+    width={ITEM_ICON_SIZE}
+    height={ITEM_ICON_SIZE}
+    mr={0.5}
+    style={{ flexShrink: 0 }}
+  >
+    {props.layers?.map((layer) => {
+      const key = tintKey(layer.color);
       return (
         <DmIcon
-          key={`${layer.icon}:${layer.icon_state}:${layer.channel}`}
+          key={layer.icon_state}
           icon={layer.icon}
           icon_state={layer.icon_state}
-          fallback={
-            layer.channel === 'primary' ? <Box color="label">?</Box> : null
-          }
           position="absolute"
           top={0}
           left={0}
-          width="40px"
-          height="40px"
-          style={{
-            objectFit: 'contain',
-            filter: color ? `url(#loadout-tint-${color})` : undefined,
-          }}
+          width={ITEM_ICON_SIZE}
+          height={ITEM_ICON_SIZE}
+          style={key ? { filter: `url(#loadout-tint-${key})` } : undefined}
         />
       );
     })}
   </Box>
 );
 
-const escapeHtml = (value: string) =>
-  value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+type SelectedItem = {
+  name: string;
+  color: string | null;
+  detail_color: string | null;
+  altdetail_color: string | null;
+  custom_name: string | null;
+  custom_name_parsed: string | null;
+  custom_desc: string | null;
+  custom_desc_parsed: string | null;
+};
 
-const ItemEditor = (props: {
-  item: LoadoutItem;
-  selected: SelectedItem;
-  previewText: boolean;
+type Data = {
+  // Static
+  categories: string[];
+  items: LoadoutItem[];
+  max_points: number;
+  is_donator: boolean;
+  triumph_discount: number;
+  donator_bonus: number;
+  // Dynamic
+  selected: SelectedItem[];
+  total_cost: number;
+  total_triumph_cost: number;
+  effective_triumph_cost: number;
+  player_triumphs: number;
+};
+
+export const LoadoutMenu = () => {
+  const { data } = useBackend<Data>();
+
+  if (!data.categories || !data.items) {
+    return (
+      <Window width={780} height={600}>
+        <Window.Content>
+          <Stack align="center" justify="center" fill>
+            <Stack.Item fontSize={1.5}>Loading loadout data...</Stack.Item>
+          </Stack>
+        </Window.Content>
+      </Window>
+    );
+  }
+
+  return (
+    <Window width={780} height={600}>
+      <Window.Content>
+        <LoadoutDisplay />
+      </Window.Content>
+    </Window>
+  );
+};
+
+/** Small inline color swatch */
+const ColorSwatch = (props: {
+  color: string;
+  size?: number;
+  onClick?: () => void;
+}) => (
+  <Box
+    inline
+    style={{
+      width: `${(props.size || 0.9) * 12}px`,
+      height: `${(props.size || 0.9) * 12}px`,
+      marginLeft: '3px',
+      backgroundColor: props.color,
+      display: 'inline-block',
+      border: '1px solid rgba(255,255,255,0.3)',
+      borderRadius: '2px',
+      verticalAlign: 'middle',
+      cursor: props.onClick ? 'pointer' : undefined,
+    }}
+    onClick={props.onClick}
+  />
+);
+
+/** Clickable color link: swatch + label, clicking opens the color picker modal */
+const ColorLink = (props: {
+  label: string;
+  currentColor: string | null;
+  action: string;
+  itemName: string;
 }) => {
   const { act } = useBackend<Data>();
-  const { item, selected, previewText } = props;
-  const [name, setName] = useState(selected.custom_name || '');
-  const [description, setDescription] = useState(selected.custom_desc || '');
-  const commit = (action: string, value: string) =>
-    act(action, { name: item.name, value });
+  const { label, currentColor, action, itemName } = props;
+
+  return (
+    <Box inline mr={1.5}>
+      <Box
+        inline
+        style={{ cursor: 'pointer' }}
+        onClick={(e: React.MouseEvent) => {
+          e.stopPropagation();
+          act(action, { name: itemName });
+        }}
+      >
+        <Box inline color="label" mr={0.5}>
+          {label}:
+        </Box>
+        {currentColor ? (
+          <ColorSwatch color={currentColor} size={1} />
+        ) : (
+          <Box inline color="average" fontSize={0.85}>
+            None
+          </Box>
+        )}
+      </Box>
+      {currentColor && (
+        <Box
+          inline
+          color="bad"
+          ml={0.5}
+          fontSize={0.8}
+          style={{ cursor: 'pointer' }}
+          onClick={(e: React.MouseEvent) => {
+            e.stopPropagation();
+            act(action, { name: itemName, clear: true });
+          }}
+        >
+          &#x2715;
+        </Box>
+      )}
+    </Box>
+  );
+};
+
+/** Two-line tweak row for a selected item: colors on line 1, name/desc on line 2 */
+const TweakRow = (props: {
+  itemName: string;
+  meta: SelectedItem | undefined;
+  colorChannels: string[];
+  preview: boolean;
+}) => {
+  const { itemName, meta, colorChannels, preview } = props;
+  const { act } = useBackend<Data>();
+
+  const [localName, setLocalName] = useState(meta?.custom_name || '');
+  const [localDesc, setLocalDesc] = useState(meta?.custom_desc || '');
+
+  const commitName = (val: string) => {
+    act('set_custom_name', { name: itemName, custom_name: val });
+  };
+
+  const commitDesc = (val: string) => {
+    act('set_custom_desc', { name: itemName, custom_desc: val });
+  };
 
   return (
     <Table.Row>
       <Table.Cell colSpan={3}>
-        <Section mb={0.5} ml={2}>
-          <Stack wrap align="center" mb={1}>
-            {Object.entries(item.color_channels).map(([channel, label]) => (
-              <Stack.Item key={channel}>
-                <Button
-                  icon="palette"
-                  tooltip={selected.color_labels[channel] || label}
-                  onClick={() => act('set_color', { name: item.name, channel })}
-                >
-                  {selected.colors[channel] && (
-                    <Box
-                      inline
-                      mr={0.5}
-                      width="10px"
-                      height="10px"
-                      backgroundColor={selected.colors[channel] || undefined}
-                    />
-                  )}
-                  {label}
-                </Button>
-              </Stack.Item>
-            ))}
-            {Object.keys(item.color_channels).length > 0 && (
-              <Stack.Item>
-                <Button
-                  icon="undo"
-                  onClick={() => act('clear_colors', { name: item.name })}
-                >
-                  Сбросить цвета
-                </Button>
-              </Stack.Item>
+        <Box
+          ml={1.2}
+          pl={0.75}
+          py={0.3}
+          style={{
+            background: 'rgba(255,255,255,0.04)',
+            borderLeft: '2px solid rgba(80,200,120,0.5)',
+          }}
+        >
+          {/* Line 1: Color channels */}
+          <Box mb={0.3}>
+            <ColorLink
+              label="Color"
+              currentColor={meta?.color || null}
+              action="set_color"
+              itemName={itemName}
+            />
+            {colorChannels.includes('detail') && (
+              <ColorLink
+                label="Detail"
+                currentColor={meta?.detail_color || null}
+                action="set_detail_color"
+                itemName={itemName}
+              />
             )}
-          </Stack>
-          <Box color="label" mb={0.5}>
-            Название — до 64 символов
+            {colorChannels.includes('altdetail') && (
+              <ColorLink
+                label="Alt"
+                currentColor={meta?.altdetail_color || null}
+                action="set_altdetail_color"
+                itemName={itemName}
+              />
+            )}
           </Box>
-          {previewText ? (
-            <Box
-              mb={1}
-              dangerouslySetInnerHTML={processedText(escapeHtml(name))}
-            />
-          ) : (
-            <Input
-              fluid
-              mb={1}
-              value={name}
-              maxLength={64}
-              placeholder={item.label}
-              onChange={setName}
-              onEnter={(value) => commit('set_custom_name', value)}
-              onBlur={(value) => commit('set_custom_name', value)}
-            />
-          )}
-          <Box color="label" mb={0.5}>
-            Описание — до 1024 символов
+          {/* Line 2: Custom name */}
+          <Box>
+            <Box inline mr={1}>
+              <Box inline color="label" mr={0.5}>
+                Name:
+              </Box>
+              {preview ? (
+                <Box
+                  as="span"
+                  style={{
+                    backgroundColor: 'var(--color-base-end)',
+                    border: '2px solid var(--section-separator-color)',
+                  }}
+                  dangerouslySetInnerHTML={{
+                    // yes yes i know. this is output from the markdown processor and is presanitized
+                    __html: meta?.custom_name_parsed,
+                  }}
+                />
+              ) : (
+                <Input
+                  width="200px"
+                  maxLength={64}
+                  placeholder="Custom name..."
+                  value={localName}
+                  onChange={(val) => setLocalName(val)}
+                  onEnter={(val) => commitName(val)}
+                  onBlur={(val) => commitName(val)}
+                />
+              )}
+            </Box>
           </Box>
-          {previewText ? (
-            <Box
-              minHeight="60px"
-              dangerouslySetInnerHTML={processedText(escapeHtml(description))}
-            />
-          ) : (
-            <TextArea
-              fluid
-              height="70px"
-              value={description}
-              maxLength={1024}
-              placeholder="Описание предмета..."
-              onChange={setDescription}
-              onBlur={(value) => commit('set_custom_desc', value)}
-              dontUseTabForIndent
-            />
-          )}
-        </Section>
+          {/* Line 3: Custom desc (full width textarea) */}
+          <Box mt={0.3}>
+            <Box color="label" mb={0.3}>
+              Description (max 1024 chars):
+            </Box>
+            {preview ? (
+              <Box
+                style={{
+                  backgroundColor: 'var(--color-base-end)',
+                  border: '2px solid var(--section-separator-color)',
+                }}
+                overflowY="scroll"
+                height="60px"
+                dangerouslySetInnerHTML={{
+                  // yes yes i know. this is output from the markdown processor and is presanitizeda
+                  __html: meta?.custom_desc_parsed,
+                }}
+              />
+            ) : (
+              <TextArea
+                fluid
+                maxLength={1024}
+                height="60px"
+                placeholder="Custom description..."
+                value={localDesc}
+                onChange={(val) => setLocalDesc(val)}
+                onBlur={(val) => commitDesc(val)}
+                dontUseTabForIndent
+              />
+            )}
+          </Box>
+        </Box>
       </Table.Cell>
     </Table.Row>
   );
 };
 
-export const LoadoutMenu = () => {
-  const { data, act } = useBackend<Data>();
-  const [category, setCategory] = useState('Всё');
+/** Clear All button with inline "Are you sure?" confirmation for 4+ items */
+const ClearAllButton = (props: { selectedCount: number }) => {
+  const { act } = useBackend<Data>();
+  const [confirming, setConfirming] = useState(false);
+  const needsConfirm = props.selectedCount > 3;
+
+  if (props.selectedCount === 0) {
+    return null;
+  }
+
+  if (confirming) {
+    return (
+      <Box inline>
+        <Box inline color="bad" bold mr={1}>
+          Are you sure?
+        </Box>
+        <Button
+          icon="trash"
+          color="bad"
+          onClick={() => {
+            act('clear_all');
+            setConfirming(false);
+          }}
+        >
+          Yes, clear all
+        </Button>
+        <Button ml={0.5} onClick={() => setConfirming(false)}>
+          Cancel
+        </Button>
+      </Box>
+    );
+  }
+
+  return (
+    <Button
+      icon="trash"
+      color="bad"
+      onClick={() => {
+        if (needsConfirm) {
+          setConfirming(true);
+        } else {
+          act('clear_all');
+        }
+      }}
+    >
+      Clear All ({props.selectedCount})
+    </Button>
+  );
+};
+
+const LoadoutDisplay = () => {
   const [search, setSearch] = useState('');
-  const [page, setPage] = useState(0);
+  const [activeCategory, setActiveCategory] = useState('');
   const [compact, setCompact] = useState(false);
   const [previewText, setPreviewText] = useState(false);
-  const catalogRef = useRef<HTMLDivElement>(null);
-  const items = data.items || [];
-  const selected = data.selected || [];
-  const locks = data.locks || {};
-  const selectedByName = new Map(selected.map((item) => [item.name, item]));
-  const query = search.trim().toLocaleLowerCase();
-  const filteredItems = useMemo(
-    () =>
-      items
-        .filter(
-          (item) =>
-            (query ||
-              category === 'Всё' ||
-              item.categories.includes(category)) &&
-            (!query || item.label.toLocaleLowerCase().includes(query)),
-        )
-        .sort((first, second) => first.label.localeCompare(second.label)),
-    [items, category, query],
-  );
-  const pageCount = Math.max(
-    1,
-    Math.ceil(filteredItems.length / ITEMS_PER_PAGE),
-  );
-  const currentPage = Math.min(page, pageCount - 1);
-  useEffect(() => {
-    if (catalogRef.current) {
-      catalogRef.current.scrollTop = 0;
-    }
-  }, [currentPage, category, query]);
 
-  const visibleItems = filteredItems.slice(
-    currentPage * ITEMS_PER_PAGE,
-    (currentPage + 1) * ITEMS_PER_PAGE,
-  );
-  const colors = compact
+  const { act, data } = useBackend<Data>();
+  const {
+    categories,
+    items,
+    selected,
+    total_cost,
+    max_points,
+    total_triumph_cost,
+    effective_triumph_cost,
+    player_triumphs,
+    is_donator,
+    triumph_discount,
+    donator_bonus,
+  } = data;
+
+  const currentCategory = activeCategory || categories[0] || '';
+
+  const selectedNames = new Set(selected.map((s) => s.name));
+  const selectedMap = new Map(selected.map((s) => [s.name, s]));
+  const channelsMap = new Map(items.map((i) => [i.name, i.color_channels]));
+
+  // Count selected items per category
+  const categoryCounts: Record<string, number> = {};
+  for (const item of items) {
+    if (selectedNames.has(item.name)) {
+      categoryCounts[item.category] = (categoryCounts[item.category] || 0) + 1;
+    }
+  }
+
+  const filteredItems = items
+    .filter((item) => {
+      if (search) {
+        return item.name.toLowerCase().includes(search.toLowerCase());
+      }
+      return item.category === currentCategory;
+    })
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  const tintKeys = compact
     ? []
     : Array.from(
         new Set(
-          visibleItems.flatMap((item) =>
+          filteredItems.flatMap((item) =>
             (item.preview_layers || [])
-              .map((layer) =>
-                tintKey(layerColor(layer, selectedByName.get(item.name))),
-              )
-              .filter((color): color is string => color !== null),
+              .map((layer) => tintKey(layer.color))
+              .filter((key): key is string => !!key),
           ),
         ),
       );
-  const limit = data.max_slots || 0;
-  const full = selected.length >= limit;
 
   return (
-    <Window width={1000} height={760} title="Лодаут">
-      <Window.Content>
-        <Stack fill vertical>
-          <Stack.Item>
-            <Section>
-              <Stack align="center">
-                <Stack.Item grow>
-                  <ProgressBar value={limit ? selected.length / limit : 0}>
-                    {data.subscription_loaded
-                      ? `Выбрано предметов: ${selected.length} / ${limit}`
-                      : 'Загружаются данные подписки...'}
-                  </ProgressBar>
-                </Stack.Item>
-                {!!data.donator_tier && (
-                  <Stack.Item
-                    color={DONATOR_TIER_COLORS[data.donator_tier] || 'label'}
-                  >
-                    Меценат: {data.donator_tier}
-                  </Stack.Item>
-                )}
-                <Stack.Item>
-                  <Button icon="heart" onClick={() => act('boosty')}>
-                    Поддержать проект
-                  </Button>
-                </Stack.Item>
-              </Stack>
-              <Box color="label" mt={1}>
-                Предметы выдаются через статую или дерево. Эликсиры меняют
-                внешний вид подходящего снаряжения.
-              </Box>
-            </Section>
-          </Stack.Item>
-          <Stack.Item>
-            <Tabs fluid style={{ flexWrap: 'wrap' }}>
-              {(data.categories || []).map((name) => (
-                <Tabs.Tab
-                  key={name}
-                  selected={name === category}
-                  onClick={() => {
-                    setCategory(name);
-                    setPage(0);
-                  }}
-                >
-                  {name}
-                </Tabs.Tab>
-              ))}
-            </Tabs>
-          </Stack.Item>
-          <Stack.Item>
-            <Stack align="center">
-              <Stack.Item grow>
-                <Input
-                  fluid
-                  placeholder="Поиск по всем категориям..."
-                  value={search}
-                  onChange={(value) => {
-                    setSearch(value);
-                    setPage(0);
-                  }}
-                />
-              </Stack.Item>
-              <Stack.Item>
-                <Button
-                  icon="list"
-                  selected={compact}
-                  onClick={() => setCompact(!compact)}
-                >
-                  Компактно
-                </Button>
-              </Stack.Item>
-              <Stack.Item>
-                <Button
-                  icon="eye"
-                  selected={previewText}
-                  onClick={() => setPreviewText(!previewText)}
-                >
-                  Просмотр текста
-                </Button>
-              </Stack.Item>
-              <Stack.Item>
-                <Button.Confirm
-                  icon="trash"
-                  color="bad"
-                  disabled={!selected.length}
-                  confirmContent="Очистить всё?"
-                  onClick={() => act('clear_all')}
-                >
-                  Очистить
-                </Button.Confirm>
-              </Stack.Item>
-            </Stack>
-          </Stack.Item>
-          <Stack.Item>
-            <Stack align="center">
-              <Stack.Item grow color="label">
-                Найдено предметов: {filteredItems.length}
-              </Stack.Item>
-              <Stack.Item>
-                <Button
-                  icon="chevron-left"
-                  disabled={currentPage === 0}
-                  onClick={() => setPage(currentPage - 1)}
-                >
-                  Назад
-                </Button>
-              </Stack.Item>
-              <Stack.Item>
-                {currentPage + 1} / {pageCount}
-              </Stack.Item>
-              <Stack.Item>
-                <Button
-                  icon="chevron-right"
-                  disabled={currentPage === pageCount - 1}
-                  onClick={() => setPage(currentPage + 1)}
-                >
-                  Далее
-                </Button>
-              </Stack.Item>
-            </Stack>
-          </Stack.Item>
+    <Stack fill vertical>
+      {/* Category tabs */}
+      <Stack.Item>
+        <Tabs>
+          {categories.map((cat) => {
+            const count = categoryCounts[cat] || 0;
+            return (
+              <Tabs.Tab
+                key={cat}
+                selected={currentCategory === cat}
+                onClick={() => setActiveCategory(cat)}
+              >
+                {cat}
+                {count > 0 && ` (${count})`}
+              </Tabs.Tab>
+            );
+          })}
+        </Tabs>
+      </Stack.Item>
+      {/* Search bar, preview toggle */}
+      <Stack.Item>
+        <Stack fill>
           <Stack.Item grow>
-            <Section fill scrollable ref={catalogRef}>
-              <TintFilters colors={colors} />
-              {!filteredItems.length && (
-                <Box color="label" textAlign="center" p={2}>
-                  Предметы не найдены.
-                </Box>
-              )}
-              <Table>
-                <Table.Row header>
-                  <Table.Cell>Предмет</Table.Cell>
-                  <Table.Cell textAlign="center">Доступ</Table.Cell>
-                  <Table.Cell textAlign="center">Триумфы</Table.Cell>
-                </Table.Row>
-                {visibleItems.flatMap((item) => {
-                  const selection = selectedByName.get(item.name);
-                  const lock = locks[item.name];
-                  let accessColor = 'label';
-                  if (lock) {
-                    accessColor =
-                      DONATOR_TIER_COLORS[item.donator_tier] || 'average';
-                  }
-
-                  return [
-                    <Table.Row key={item.name}>
-                      <Table.Cell py={0.5}>
-                        <Stack align="center">
-                          <Stack.Item>
-                            <Button
-                              selected={!!selection}
-                              disabled={
-                                !data.subscription_loaded ||
-                                (!selection && (!!lock || full))
-                              }
-                              tooltip={
-                                lock ||
-                                (selection
-                                  ? 'Убрать предмет'
-                                  : 'Выбрать предмет')
-                              }
-                              onClick={() =>
-                                act('toggle_item', { name: item.name })
-                              }
-                            >
-                              {selection ? '✓' : '+'}
-                            </Button>
-                          </Stack.Item>
-                          {!compact && (
-                            <Stack.Item>
-                              <ItemIcon item={item} selected={selection} />
-                            </Stack.Item>
-                          )}
-                          <Stack.Item grow>
-                            <Box bold={!!selection}>{item.label}</Box>
-                            {!compact && (
-                              <Box
-                                color="label"
-                                fontSize={0.9}
-                                dangerouslySetInnerHTML={{
-                                  __html: sanitizeText(item.desc),
-                                }}
-                              />
-                            )}
-                            {item.requirements && !compact && (
-                              <Box color="label" fontSize={0.85} mt={0.3}>
-                                Подходит для: {item.requirements}
-                              </Box>
-                            )}
-                          </Stack.Item>
-                        </Stack>
-                      </Table.Cell>
-                      <Table.Cell color={accessColor} textAlign="center">
-                        {lock || '—'}
-                      </Table.Cell>
-                      <Table.Cell textAlign="center">
-                        {item.triumph_cost || '—'}
-                      </Table.Cell>
-                    </Table.Row>,
-                    selection && (
-                      <ItemEditor
-                        key={`${item.name}-editor`}
-                        item={item}
-                        selected={selection}
-                        previewText={previewText}
-                      />
-                    ),
-                  ];
-                })}
-              </Table>
-            </Section>
+            <Input
+              fluid
+              placeholder="Search items..."
+              value={search}
+              onChange={(val) => setSearch(val)}
+            />
           </Stack.Item>
           <Stack.Item>
-            <Section>
-              <Stack align="center">
-                <Stack.Item grow>
-                  <Box>
-                    Стоимость: {data.effective_triumph_cost || 0} триумфов
-                    {' | '}На счету: {data.player_triumphs || 0}
-                  </Box>
-                  {!!data.triumph_discount && (
-                    <Box color="gold" mt={0.3}>
-                      Скидка:{' '}
-                      {Math.min(data.total_triumph_cost, data.triumph_discount)}
-                      {' / '}
-                      {data.triumph_discount} триумфов
-                    </Box>
-                  )}
-                </Stack.Item>
-                <Stack.Item>
-                  <Button onClick={() => act('cancel')}>Отмена</Button>
-                </Stack.Item>
-                <Stack.Item>
-                  <Button
-                    color="good"
-                    icon="check"
-                    disabled={!data.subscription_loaded}
-                    onClick={() => act('confirm')}
-                  >
-                    Сохранить
-                  </Button>
-                </Stack.Item>
-              </Stack>
-            </Section>
+            <Button
+              color="good"
+              fontSize={1.1}
+              onClick={() => setCompact(!compact)}
+            >
+              {compact ? '\u2713' : '\u25CB'} Compact
+            </Button>
+          </Stack.Item>
+          <Stack.Item>
+            <Button
+              color="good"
+              fontSize={1.1}
+              onClick={() => setPreviewText(!previewText)}
+            >
+              {previewText ? '\u2713' : '\u25CB'} Preview Text
+            </Button>
           </Stack.Item>
         </Stack>
-      </Window.Content>
-    </Window>
+      </Stack.Item>
+
+      {/* Items table */}
+      <Stack.Item grow>
+        <Section fill scrollable fitted>
+          {tintKeys.length > 0 && <TintFilters keys={tintKeys} />}
+          {filteredItems.length === 0 ? (
+            <Box color="label" textAlign="center" mt={2}>
+              No items found.
+            </Box>
+          ) : (
+            <Table>
+              <Table.Row header>
+                <Table.Cell pl={2.5}>Name</Table.Cell>
+                <Table.Cell collapsing textAlign="center">
+                  Cost
+                </Table.Cell>
+                <Table.Cell>Description</Table.Cell>
+              </Table.Row>
+              {filteredItems.map((item) => {
+                const isSelected = selectedNames.has(item.name);
+                const meta = selectedMap.get(item.name);
+
+                return [
+                  <Table.Row
+                    key={item.name}
+                    className="candystripe"
+                    style={{
+                      cursor: 'pointer',
+                      verticalAlign: 'middle',
+                      borderBottom: '1px solid rgba(255,255,255,0.07)',
+                    }}
+                    onClick={() => act('toggle_item', { name: item.name })}
+                  >
+                    <Table.Cell py={0.4}>
+                      <Box
+                        style={{
+                          display: 'flex',
+                          alignItems: compact ? 'baseline' : 'center',
+                        }}
+                      >
+                        <Box
+                          inline
+                          width={1.2}
+                          textAlign="center"
+                          bold
+                          color={isSelected ? 'good' : 'label'}
+                          style={{ flexShrink: 0 }}
+                        >
+                          {isSelected ? '\u2713' : '\u25CB'}
+                        </Box>
+                        {!compact && <ItemIcon layers={item.preview_layers} />}
+                        <Box bold={isSelected} fontSize={0.9} py={0.5}>
+                          {item.name}
+                          {isSelected &&
+                            (meta?.color ||
+                              meta?.detail_color ||
+                              meta?.altdetail_color) && (
+                              <Box inline ml={0.5}>
+                                {meta?.color && (
+                                  <ColorSwatch color={meta.color} />
+                                )}
+                                {meta?.detail_color && (
+                                  <ColorSwatch color={meta.detail_color} />
+                                )}
+                                {meta?.altdetail_color && (
+                                  <ColorSwatch color={meta.altdetail_color} />
+                                )}
+                              </Box>
+                            )}
+                        </Box>
+                      </Box>
+                    </Table.Cell>
+                    <Table.Cell collapsing color="label" textAlign="center">
+                      {item.cost}pt
+                      {item.triumph_cost ? (
+                        <Box color="gold" bold fontSize={0.85}>
+                          {item.triumph_cost} tri
+                        </Box>
+                      ) : null}
+                    </Table.Cell>
+                    <Table.Cell color="label" fontSize={0.9}>
+                      {item.desc}
+                    </Table.Cell>
+                  </Table.Row>,
+                  isSelected && (
+                    <TweakRow
+                      key={`${item.name}_tweak`}
+                      itemName={item.name}
+                      meta={meta}
+                      colorChannels={channelsMap.get(item.name) || ['primary']}
+                      preview={previewText}
+                    />
+                  ),
+                ];
+              })}
+            </Table>
+          )}
+        </Section>
+      </Stack.Item>
+
+      {/* Footer: budget + confirm */}
+      <Stack.Item>
+        <Box px={1} py={0.25}>
+          <Stack align="center">
+            <Stack.Item>
+              <ClearAllButton selectedCount={selected.length} />
+            </Stack.Item>
+            <Stack.Item grow>
+              <Box
+                inline
+                bold
+                fontSize={0.95}
+                color={total_cost >= max_points ? 'bad' : undefined}
+                mr={1.5}
+              >
+                Budget: {total_cost}/{max_points}
+              </Box>
+              <Box
+                inline
+                bold
+                fontSize={0.95}
+                color={
+                  effective_triumph_cost > player_triumphs ? 'bad' : 'gold'
+                }
+                mr={1.5}
+              >
+                Triumphs:{' '}
+                {is_donator &&
+                triumph_discount > 0 &&
+                total_triumph_cost > 0 ? (
+                  <>
+                    {total_triumph_cost}
+                    <Box inline color="green" ml={0.5}>
+                      (-{Math.min(triumph_discount, total_triumph_cost)} free)
+                    </Box>
+                    {' = '}
+                    {effective_triumph_cost}/{player_triumphs}
+                  </>
+                ) : (
+                  <>
+                    {effective_triumph_cost}/{player_triumphs}
+                  </>
+                )}
+              </Box>
+              {!!is_donator && (
+                <Box inline bold fontSize={0.85} color="gold" mr={1.5}>
+                  <Box inline mr={0.5}>
+                    &#9733;
+                  </Box>
+                  Donator - +{donator_bonus} budget, {triumph_discount} TRI free
+                </Box>
+              )}
+              <Box inline color="label" fontSize={0.85}>
+                Free loadout items cannot be sold, smelted, or salvaged. Triumph
+                items are exempt.
+              </Box>
+            </Stack.Item>
+            <Stack.Item>
+              <Button
+                icon="check"
+                color="good"
+                fontSize={1.1}
+                onClick={() => act('confirm')}
+              >
+                Confirm
+              </Button>
+            </Stack.Item>
+          </Stack>
+        </Box>
+      </Stack.Item>
+    </Stack>
   );
 };
-// TA EDIT END

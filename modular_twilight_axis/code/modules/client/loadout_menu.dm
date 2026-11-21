@@ -39,7 +39,7 @@
 		return
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
-		ui = new(user, src, "LoadoutMenu", "Лодаут")
+		ui = new(user, src, "TwilightLoadoutMenu", "Лодаут")
 		ui.open()
 
 /datum/loadout_menu/ui_close(mob/user)
