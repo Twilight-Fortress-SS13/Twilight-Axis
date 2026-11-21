@@ -1172,6 +1172,20 @@
 			return
 		make_gas()
 
+/obj/structure/desert_spice/attack_hand(mob/user)
+	if(!isliving(user))
+		return
+	user.changeNext_move(CLICK_CD_MELEE)
+	to_chat(user, span_notice("You begin carefully gathering \the [src]..."))
+	if(!do_after(user, 7 SECONDS, target = src))
+		to_chat(user, span_warning("You stop gathering \the [src]."))
+		return
+	to_chat(user, span_notice("You finish harvesting \the [src]."))
+	var/obj/item/desert_spice/spice = new(drop_location())
+	if(!user.put_in_hands(spice))
+		to_chat(user, span_warning("Your hands are full, so \the [spice] drops to the ground."))
+	qdel(src)
+
 /obj/structure/desert_spice/proc/make_gas()
 	visible_message(span_warningbig("A cloud of spice bursts up from \the [src]!"))
 	var/datum/effect_system/smoke_spread/desert_spice/S = new
@@ -1179,6 +1193,16 @@
 	S.set_up(2, loc)
 	S.start()
 	qdel(src)
+
+/obj/item/desert_spice
+	name = "desert spice"
+	desc = "A handful of unrefined desert spice. Valued by merchants."
+	icon = 'modular_deserttown/icons/desert_spice.dmi'
+	icon_state = "desert_spice"
+	grid_width = 32
+	grid_height = 32
+	w_class = WEIGHT_CLASS_SMALL
+	sellprice = 25
 
 //Throne
 /obj/structure/roguethrone/desert
