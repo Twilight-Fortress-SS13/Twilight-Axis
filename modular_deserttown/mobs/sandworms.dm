@@ -273,7 +273,7 @@
 		return
 	set waitfor = FALSE
 	visible_message(span_danger("[src] charges across the sand!"))
-	playsound(loc, 'sound/combat/wooshes/punch/punch (1).ogg', 100, TRUE)
+	playsound(loc, 'sound/combat/wooshes/punch/punchwoosh (1).ogg', 100, TRUE)
 
 	var/dir_to_target = get_dir(src, target_turf)
 	if(dir_to_target)
