@@ -51630,14 +51630,6 @@
 	},
 /turf/open/transparent/openspace,
 /area/rogue/indoors/town/desert)
-"kkY" = (
-/obj/structure/stairs/stone,
-/obj/structure/stairs/stone{
-	dir = 1;
-	icon_state = "stonestairs"
-	},
-/turf/open/floor/rogue/concrete,
-/area/rogue/under/town/sewer/alashur)
 "klh" = (
 /obj/structure/winch{
 	gid = "townin1";
@@ -329955,7 +329947,7 @@ hvH
 hvH
 hls
 jUR
-kkY
+dDA
 aWO
 hzo
 uws
