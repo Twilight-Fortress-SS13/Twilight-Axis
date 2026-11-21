@@ -97,7 +97,7 @@
 	if(!final_target || (final_targ_turf && final_targ_turf.z != target_z))
 		final_target = target_level_turf
 
-	is_arc_mode = istype(L.used_intent, /datum/intent/arc) // TA EDIT
+	is_arc_mode = istype(L.a_intent, /datum/intent/arc) // TA EDIT
 	return TRUE
 
 /datum/special_intent/ranged/proc/setup_projectile(obj/projectile/proj, proj_range)
