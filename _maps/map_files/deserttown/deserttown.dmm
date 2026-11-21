@@ -24586,8 +24586,8 @@
 /turf/open/floor/rogue/ruinedwood,
 /area/rogue/indoors/town/shop/desert)
 "eTK" = (
-/mob/living/simple_animal/hostile/retaliate/rogue/wolf{
-	del_on_deaggro = 0;
+/mob/living/simple_animal/hostile/retaliate/rogue/wolf/female{
+	tame = 1;
 	name = "Beatrix"
 	},
 /turf/open/floor/rogue/darkpath,
@@ -83114,7 +83114,8 @@
 "qrF" = (
 /mob/living/simple_animal/hostile/retaliate/rogue/bigrat{
 	desc = "The Sultan was Kind enough to let this one live with the finest of wine.";
-	name = "Ratpie"
+	name = "Ratpie";
+	tame = 1
 	},
 /obj/machinery/light/rogue/torchholder/c,
 /turf/open/floor/rogue/darkpath,
