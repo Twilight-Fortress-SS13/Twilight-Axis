@@ -10,7 +10,7 @@
 	var/datum/component/hag_curio_tracker/tracker
 	/// How powerful a boon is. Not used for all types of boons.
 	var/points = 1
-	/// Whether or not this boon can be transmuted into a curse. 
+	/// Whether or not this boon can be transmuted into a curse.
 	/// Curses should never be able to transmuted.
 	/// Some boons can only be triggered into specific curses, rather than free form.
 	var/transmutable = TRUE

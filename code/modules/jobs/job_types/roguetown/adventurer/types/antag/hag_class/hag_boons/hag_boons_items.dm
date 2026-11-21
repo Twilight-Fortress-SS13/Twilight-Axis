@@ -119,7 +119,7 @@
 		src.slot_flags = initial(C.slot_flags)
 		// I'm not implementing this yet for brevity.
 		src.wrist_display = initial(C.wrist_display)
-		
+
 		to_chat(user, span_notice("The strange cross shudders, mimicking the weight and presence of \a [name]."))
 
 	// Ensure the floor and in-hand sprites update
@@ -157,7 +157,7 @@
 
 	return FALSE
 
-/obj/item/clothing/neck/roguetown/psicross/hag/MiddleClick(mob/living/user)
+/obj/item/clothing/neck/roguetown/psicross/hag/attack(mob/living/M, mob/living/user, def_zone)  // TA EDIT - ORIGINAL .../MiddleClick(mob/living/user)
 	. = ..()
 	// Hags can't use this themselves, womp womp
 	if(!can_use_wyrd_power(user, FALSE))
@@ -167,15 +167,15 @@
 		to_chat(user, span_warning("The [src.name]'s magic is spent."))
 		return
 
-	if(!iscarbon(user))
+	if(!iscarbon(M)) // TA EDIT - ORIGINAL: if(!iscarbon(user))
 		return
 
-	to_chat(user, span_notice("You press the [src.name] against your neck, waiting for the needle to bite..."))
+	to_chat(user, span_notice("You press the [src.name] against [M.name] neck, waiting for the needle to bite...")) // TA EDIT - ORIGINAL: to_chat(user, span_notice("You press the [src.name] against your neck, waiting for the needle to bite..."))
 
-	if(do_after(user, 1 SECONDS, target = user))
+	if(do_after(user, 1 SECONDS, target = M)) // TA EDIT - ORIGINAL: if(do_after(user, 1 SECONDS, target = user))
 		if(tonic_spent)
 			return
-		var/mob/living/carbon/C = user
+		var/mob/living/carbon/C = M // TA EDIT - ORIGINAL: var/mob/living/carbon/C = user
 		if(!C.reagents)
 			return
 
@@ -188,6 +188,7 @@
 		playsound(src, 'sound/items/perfume.ogg', 50, TRUE)
 		new /obj/effect/temp_visual/heal(get_turf(C), "#d8d8d8")
 		to_chat(user, span_boldnotice("The [src.name] delivers a cold, refreshing sting as the tonic flows into your veins."))
+		to_chat(user, span_boldnotice("The [src.name] now feels empty... Maybe, you should feed it with moss?")) // TA ADDITION
 
 /obj/item/rogueweapon/greataxe/steel/hag
 	force = 15

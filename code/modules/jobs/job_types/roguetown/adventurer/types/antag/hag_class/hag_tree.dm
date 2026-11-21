@@ -531,6 +531,20 @@
 	desc = "You really want this moss. It is yours, your prized possession!."
 	color = "#eca202"
 
+// TA ADDITION START
+/obj/item/alch/hag_moss/enchanted/gilded/Initialize(mapload)
+	. = ..()
+	var/probability = rand(1, 2)
+	switch(probability)
+		if(1)
+			boon_path = /datum/hag_boon/spell/find_riches
+			name = "Gilded Moss"
+		if(2)
+			boon_path = /datum/hag_boon/buff/gold_bless
+			name = "Gold Moss"
+
+// TA ADDITION END
+
 /obj/item/alch/hag_moss/enchanted/drowned
 	name = "Drowned Moss"
 	boon_path = /datum/hag_boon/spell/banish
