@@ -1402,4 +1402,4 @@
 	name = "Donator Item - Adjustable Blacksteel Coronet"
 	path = /obj/item/clothing/head/roguetown/circlet/sigholt_coronet
 	ckeywhitelist = list("sigholtstarsong")
-*/a
+*/ // TA EDIT - Active definitions are in the Twilight catalog.

@@ -70,29 +70,6 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 						species_name = "Venardine"
 		_load_species(S, species_name)
-	if(current_version < 35) // Migrate old 3-slot loadout to gear_list
-		gear_list = list()
-		var/list/old_keys = list(
-			list("loadout", "loadout_1_hex"),
-			list("loadout2", "loadout_2_hex"),
-			list("loadout3", "loadout_3_hex"),
-		)
-		for(var/list/pair in old_keys)
-			var/loadout_type
-			S[pair[1]] >> loadout_type
-			if(!loadout_type || !ispath(loadout_type))
-				continue
-			var/datum/loadout_item/LI = GLOB.loadout_items[loadout_type]
-			if(!LI || LI.name == "Parent loadout datum")
-				continue
-			var/list/meta = list()
-			var/old_hex
-			S[pair[2]] >> old_hex
-			if(old_hex)
-				if(old_hex[1] != "#")
-					old_hex = "#[old_hex]"
-				meta["color"] = old_hex
-			gear_list[LI.name] = meta
 	if(current_version < 36) // Strip the old per-item favorite/hated food & drink data now that preferences are category flags
 		S.dir.Remove("culinary_preferences")
 
@@ -678,44 +655,14 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		QDEL_NULL(quirkgreater)
 		quirkgreater = new quirkgreater_type
 
+// TA EDIT START
 /datum/preferences/proc/_load_gear_list(savefile/S)
-	var/list/saved_gear_list
-	S["gear_list"] >> saved_gear_list
-	if(islist(saved_gear_list))
-		gear_list = saved_gear_list
-	else
-		gear_list = list()
-		var/list/legacy_selected_loadout_items
-		S["selected_loadout_items"] >> legacy_selected_loadout_items
-		if(islist(legacy_selected_loadout_items))
-			var/legacy_color_1
-			var/legacy_color_2
-			var/legacy_color_3
-			S["loadout_1_hex"] >> legacy_color_1
-			S["loadout_2_hex"] >> legacy_color_2
-			S["loadout_3_hex"] >> legacy_color_3
-			var/list/legacy_colors = list(legacy_color_1, legacy_color_2, legacy_color_3)
-			var/legacy_index = 0
-			for(var/legacy_item in legacy_selected_loadout_items)
-				legacy_index++
-				var/item_name = legacy_item
-				if(ispath(legacy_item, /datum/loadout_item))
-					var/datum/loadout_item/legacy_loadout_item = GLOB.loadout_items[legacy_item]
-					item_name = legacy_loadout_item?.name
-				if(!item_name || !(item_name in GLOB.loadout_items_by_name))
-					continue
-				var/list/meta = list()
-				if(legacy_index <= length(legacy_colors))
-					var/item_color = legacy_colors[legacy_index]
-					if(item_color)
-						if(item_color[1] != "#")
-							item_color = "#[item_color]"
-						meta["color"] = item_color
-				gear_list[item_name] = meta
+	S["gear_list"] >> gear_list
 	gear_list = SANITIZE_LIST(gear_list)
 	for(var/item_name in gear_list)
 		if(!(item_name in GLOB.loadout_items_by_name))
 			gear_list -= item_name
+// TA EDIT END
 
 /datum/preferences/proc/_load_combat_music(S)
 	var/combat_music_type
