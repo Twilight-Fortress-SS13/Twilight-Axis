@@ -110,10 +110,10 @@
 			H.put_in_hands(new /obj/item/rogueweapon/whip/silver/psy)
 			H.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, SKILL_LEVEL_EXPERT, TRUE)
 
-	var/rangedweapons = list("Bracer-mounted crossbow - Lesser Damage, Rapid & Accurate", "Crossbow - Access To Special Bolts")
+	var/rangedweapons = list("Bracer-mounted crossbow - Lesser Damage, Compact", "Crossbow - Access To Special Bolts", "Slurbow - Lesser Damage, Rapid & Accurate")
 	var/rangedweapon_choice = input(H,"Choose your BOW.", "TAKE UP PSYDON'S ARCAGE.") as anything in rangedweapons
 	switch(rangedweapon_choice)
-		if("Bracer-mounted crossbow - Lesser Damage, Rapid & Accurate")
+		if("Bracer-mounted crossbow - Lesser Damage, Compact")
 			H.equip_to_slot_or_del(new /obj/item/clothing/wrists/roguetown/bracers/handcrossbow, SLOT_WRISTS, TRUE)
 			var/lightquivers = list("Light Bolts - Steel-Tipped", "Light Sunderbolts - Silver-Tipped, Halved Damage")
 			var/lightboltchoice = input(H,"Choose your MUNITIONS.", "TAKE UP PSYDON'S MISSILES.") as anything in lightquivers
@@ -133,3 +133,12 @@
 					H.equip_to_slot_or_del(new /obj/item/quiver/bolt/holy, SLOT_BELT_L, TRUE)
 				if("Pyrobolts - Incendiary-Tipped, Minimal Damage")
 					H.equip_to_slot_or_del(new /obj/item/quiver/bolt/pyro, SLOT_BELT_L, TRUE)
+		if("Slurbow - Lesser Damage, Rapid & Accurate")
+			H.equip_to_slot_or_del(new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow, SLOT_BACK_L, TRUE)
+			var/lightquivers = list("Light Bolts - Steel-Tipped", "Light Sunderbolts - Silver-Tipped, Halved Damage")
+			var/lightboltchoice = input(H,"Choose your MUNITIONS.", "TAKE UP PSYDON'S MISSILES.") as anything in lightquivers
+			switch(lightboltchoice)
+				if("Light Bolts - Steel-Tipped")
+					H.equip_to_slot_or_del(new /obj/item/quiver/bolt/light, SLOT_BELT_L, TRUE)
+				if("Light Sunderbolts - Silver-Tipped, Halved Damage")
+					H.equip_to_slot_or_del(new /obj/item/quiver/bolt/lightholy, SLOT_BELT_L, TRUE)

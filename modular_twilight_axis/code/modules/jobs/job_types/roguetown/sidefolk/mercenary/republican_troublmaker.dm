@@ -151,17 +151,22 @@
 /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow/wristbow/attack_right(mob/living/user)
 	fold_back()
 
-/obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow/wristbow/proc/fold_back()
+/obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow/wristbow/proc/fold_back(force = FALSE)
 	if(!wrist_mount || QDELETED(wrist_mount))
 		return
 	if(loc == wrist_mount)
 		return
-	if(chambered)
+	if(chambered && !force)
 		if(ismob(loc))
 			to_chat(loc, span_warning("Нельзя сложить арбалет с заряженным болтом."))
 		return
 	forceMove(wrist_mount)
 	wrist_mount.update_icon()
+
+/obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow/wristbow/dropped(mob/user, silent)
+	. = ..()
+	if(!QDELETED(src) && wrist_mount && loc != wrist_mount)
+		fold_back(TRUE)
 
 /obj/item/ammo_casing/caseless/rogue/bolt/light/fire
 	name = "light fire bolt"
