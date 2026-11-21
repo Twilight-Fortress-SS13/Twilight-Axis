@@ -1,3 +1,11 @@
+/obj/item/rogueweapon/spear/boar/kazengun
+	name = "jūmonji yari"
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/polearms64.dmi'
+	icon_state = "jumonjiyari"
+	desc = "A spear with a long, straight head and a pair of curved blades pointing upward. A Kazengunese design, the side-blades parallel an Aavnic partizan. Its function is certainly similar, tearing the flesh of any unfortunate enough to be pierced by it."
+	gripped_intents = list(/datum/intent/spear/thrust, /datum/intent/spear/cut/naginata, /datum/intent/rend/reach/partizan)
+	wdefense = 7
+
 /obj/item/rogueweapon/spear/partizan/baotha_ta
 	name = "saccharine swordspear"
 	desc = "Keep the rest at arm's length, lest you're burdened with the pain of rememberance."
