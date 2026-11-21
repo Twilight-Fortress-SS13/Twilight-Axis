@@ -48,17 +48,17 @@ GLOBAL_LIST_INIT(wretch_bounty_severities, list(
 		"max" = 250
 	),
 	"HARM" = list(
-		"name" = "Harm towards lyfe", //T2 Debuff
+		"name" = "Harm towards lyfe (+1 LCK)", //T2 Debuff
 		"min" = 250,
 		"max" = 400
 	),
 	"ATROCITY" = list(
-		"name" = "Horrific atrocities", //T3 Debuff
+		"name" = "Horrific atrocities (+1 ALL STATS)", //T3 Debuff
 		"min" = 400,
 		"max" = 500
 	),
 	"UNFORGIVABLE" = list(
-		"name" = "Unforgivable sins against mankind", //Pacifism
+		"name" = "Unforgivable sins against mankind (+1 ALL STATS)", //Pacifism
 		"min" = 501,
 		"max" = 750
 	),

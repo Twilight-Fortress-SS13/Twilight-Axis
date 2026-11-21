@@ -77,4 +77,4 @@
 				beltr = /obj/item/quiver/bolt/pyro
 				beltl = /obj/item/rogueweapon/huntingknife/combat
 
-		wretch_select_bounty(H)
+		bountychoice_pyromaniac(H) // TA EDIT - ORIGINAL: wretch_select_bounty(H)
