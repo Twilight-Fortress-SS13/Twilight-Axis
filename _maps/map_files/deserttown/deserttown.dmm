@@ -2934,6 +2934,13 @@
 /mob/living/carbon/human/species/elf/dark/drowraider,
 /turf/open/floor/rogue/cobblerock,
 /area/rogue/under/desertdark)
+"aEF" = (
+/obj/item/natural/stone{
+	pixel_x = 5;
+	pixel_y = -13
+	},
+/turf/open/floor/rogue/lightpath,
+/area/rogue/outdoors/mountains)
 "aEG" = (
 /obj/structure/fluff/railing/border{
 	dir = 9
@@ -7343,6 +7350,13 @@
 /obj/structure/curtain/purple,
 /turf/open/floor/rogue/tile/harem,
 /area/rogue/indoors/town/manor/desert)
+"byJ" = (
+/obj/item/natural/stone{
+	pixel_x = -12;
+	pixel_y = -11
+	},
+/turf/open/floor/rogue/lightpath,
+/area/rogue/outdoors/desertdeepwest/above)
 "byN" = (
 /obj/structure/spider/cocoon,
 /turf/open/floor/rogue/citybrick/citybrick1,
@@ -14613,6 +14627,14 @@
 	},
 /turf/open/floor/rogue/ruinedwood/herringbone_clear,
 /area/rogue/indoors/shelter/desertdeep)
+"cTs" = (
+/obj/item/natural/rock/desert{
+	icon_state = "sandrock2";
+	pixel_x = -3;
+	pixel_y = -2
+	},
+/turf/open/floor/rogue/lightpath,
+/area/rogue/outdoors/mountains)
 "cTu" = (
 /obj/effect/spawner/lootdrop/decrepit_equipment_spawner,
 /obj/effect/spawner/lootdrop/decrepit_equipment_spawner,
@@ -17483,6 +17505,13 @@
 /obj/item/rogueweapon/shield/wood,
 /turf/open/floor/rogue/sandbrick,
 /area/rogue/under/cave/rhgoblinencampment)
+"dyn" = (
+/obj/item/natural/stone{
+	pixel_x = -16;
+	pixel_y = 10
+	},
+/turf/open/floor/rogue/lightpath,
+/area/rogue/outdoors/mountains)
 "dys" = (
 /obj/machinery/light/rogue/torchholder/l,
 /turf/open/floor/rogue/darkpath,
@@ -34220,6 +34249,14 @@
 /obj/item/rogueore/coal,
 /turf/open/floor/rogue/concrete,
 /area/rogue/under/desertdark/north)
+"gNU" = (
+/obj/item/natural/rock/desert{
+	pixel_x = -32;
+	pixel_y = 4
+	},
+/obj/structure/spider/stickyweb,
+/turf/open/floor/rogue/lightpath,
+/area/rogue/outdoors/mountains)
 "gNW" = (
 /obj/structure/chair/bench/cuckold_chair{
 	pixel_x = 1;
@@ -52871,6 +52908,13 @@
 /obj/machinery/light/rogue/torchholder/l,
 /turf/open/floor/rogue/darkpath,
 /area/rogue/indoors/town/garrison/desert/cell)
+"kxB" = (
+/obj/item/natural/stone{
+	pixel_x = -18;
+	pixel_y = -8
+	},
+/turf/open/floor/rogue/sandbrick,
+/area/rogue/outdoors/desertdeepwest/above)
 "kxE" = (
 /obj/structure/fluff/railing/border,
 /turf/open/floor/rogue/lightpath,
@@ -75111,6 +75155,13 @@
 	},
 /turf/open/floor/rogue/naturalstone/sandstone,
 /area/rogue/under/cave)
+"oNp" = (
+/obj/item/natural/rock/desert{
+	pixel_x = 3;
+	pixel_y = 0
+	},
+/turf/open/floor/rogue/lightpath,
+/area/rogue/outdoors/mountains)
 "oNq" = (
 /obj/structure/closet/crate/chest,
 /obj/effect/spawner/lootdrop/cheap_carvedgem_spawner,
@@ -77997,6 +78048,14 @@
 /obj/machinery/light/rogue/torchholder/r,
 /turf/open/floor/rogue/citybrick/citybrick1,
 /area/rogue/outdoors/town/desert)
+"prk" = (
+/obj/item/natural/rock/desert{
+	icon_state = "sandrock2";
+	pixel_x = -5;
+	pixel_y = 8
+	},
+/turf/open/floor/rogue/lightpath,
+/area/rogue/outdoors/mountains)
 "prt" = (
 /obj/structure/stairs/stone{
 	dir = 1
@@ -80262,6 +80321,10 @@
 	},
 /turf/open/floor/rogue/wood/herringbone,
 /area/rogue/indoors/town/church)
+"pOu" = (
+/obj/structure/spider/stickyweb,
+/turf/open/floor/rogue/lightpath,
+/area/rogue/outdoors/mountains)
 "pOA" = (
 /obj/effect/decal/cleanable/blood/old,
 /obj/effect/decal/cleanable/debris/woody,
@@ -115969,6 +116032,10 @@
 /obj/structure/fluff/statue/gargoyle{
 	pixel_x = 0;
 	pixel_y = 32
+	},
+/obj/item/natural/stone{
+	pixel_x = -5;
+	pixel_y = -4
 	},
 /turf/open/floor/rogue/lightpath,
 /area/rogue/outdoors/mountains)
@@ -396036,7 +396103,7 @@ mQK
 kBA
 kBA
 kBA
-epI
+pOu
 vTa
 vTa
 mQK
@@ -396347,9 +396414,9 @@ mQK
 mQK
 kBA
 eOD
-epI
-epI
-epI
+oNp
+pOu
+pOu
 vTa
 vTa
 ydN
@@ -396653,16 +396720,16 @@ lak
 lak
 lak
 lak
-lak
+byJ
+epI
+cTs
+epI
+epI
+dyn
 epI
 epI
 epI
-epI
-epI
-epI
-epI
-epI
-epI
+pOu
 vTa
 ydN
 bcL
@@ -396967,14 +397034,14 @@ xUA
 xUA
 xUA
 epI
+aEF
 epI
 epI
 epI
-epI
-epI
-epI
-epI
-epI
+pOu
+pOu
+gNU
+pOu
 kBA
 ydN
 bcL
@@ -397276,13 +397343,13 @@ nuO
 nuO
 nuO
 nuO
-nuO
+kxB
 mQK
 kBA
 cwp
 kBA
 wKW
-epI
+prk
 kBA
 vTa
 kBA
