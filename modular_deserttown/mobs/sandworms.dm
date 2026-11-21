@@ -34,9 +34,6 @@
 	food = 0
 
 	ai_controller = /datum/ai_controller/mole
-	var/emerge_range = 1
-	var/burrow_giveup_time = 15 SECONDS
-	var/burrow_started = 0
 	var/burrow_anim_time = 12
 	var/burrow_travel_time = 15
 	var/burrowed = FALSE
@@ -69,6 +66,9 @@
 		return
 	burrowed = TRUE
 	next_burrow = world.time + burrow_cooldown
+	walk(src, 0)
+	if(ai_controller)
+		ai_controller.PauseAi(burrow_anim_time + burrow_travel_time + 1 SECONDS)
 	visible_message(span_warning("[src] dives beneath the sand!"))
 	play_burrow_fx(burrow_fx_state)
 	addtimer(CALLBACK(src, PROC_REF(go_underground)), burrow_anim_time)
@@ -90,10 +90,13 @@
 	invisibility = 0
 	density = TRUE
 	mouse_opacity = initial(mouse_opacity)
+	if(ai_controller)
+		ai_controller.paused_until = 0
 	visible_message(span_danger("[src] erupts from beneath the sand!"))
 	play_burrow_fx(emerge_fx_state)
 	var/atom/current_target = ai_controller ? ai_controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET] : target
 	if(current_target)
+		target = current_target
 		AttackingTarget()
 
 /mob/living/simple_animal/hostile/retaliate/rogue/sandworm/proc/travel_and_emerge()
@@ -207,6 +210,13 @@
 	burrow_anim_time = 12
 	burrow_cooldown = 12 SECONDS
 	var/charge_ready = TRUE
+	var/charge_cooldown = 14 SECONDS
+	var/charge_windup = 8
+	var/charge_range_min = 2
+	var/charge_range_max = 6
+	var/charge_damage = 30
+	var/charge_knockdown_time = 25
+	var/charging = FALSE
 	burrow_fx_state = "leave-adult"
 	emerge_fx_state = "invade-adult"
 	var/slam_ready = TRUE
@@ -216,13 +226,128 @@
 	var/slam_damage = 25
 	var/slam_knockdown_time = 30
 
+/mob/living/simple_animal/hostile/retaliate/rogue/sandworm/elder/Life()
+	. = ..()
+	if(!. || burrowed || charging)
+		return
+	if(charge_ready)
+		var/atom/current_target = ai_controller ? ai_controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET] : target
+		if(current_target && isliving(current_target))
+			var/mob/living/L = current_target
+			if(L.stat != DEAD)
+				var/dist = get_dist(src, L)
+				if(dist >= charge_range_min && dist <= charge_range_max && can_see(src, L, charge_range_max))
+					try_charge(L)
+
 /mob/living/simple_animal/hostile/retaliate/rogue/sandworm/elder/AttackingTarget()
+	var/atom/current_target = ai_controller ? ai_controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET] : target
+	if(current_target)
+		target = current_target
 	if(slam_ready && isliving(target))
 		slam_ready = FALSE
 		addtimer(VARSET_CALLBACK(src, slam_ready, TRUE), slam_cooldown)
 		try_slam(target)
 		return TRUE
 	. = ..()
+
+/mob/living/simple_animal/hostile/retaliate/rogue/sandworm/elder/proc/try_charge(mob/living/victim)
+	if(!charge_ready || charging || burrowed || stat != CONSCIOUS)
+		return
+	charge_ready = FALSE
+	charging = TRUE
+	addtimer(VARSET_CALLBACK(src, charge_ready, TRUE), charge_cooldown)
+	if(ai_controller)
+		ai_controller.PauseAi(charge_windup + 2 SECONDS)
+	walk(src, 0)
+	visible_message(span_boldwarning("[src] coils back tightly, preparing to charge at [victim]!"))
+	playsound(loc, 'sound/combat/shieldraise.ogg', 80, TRUE)
+	var/turf/warn_turf = get_turf(src)
+	new /obj/effect/temp_visual/paw_swipe(warn_turf)
+	addtimer(CALLBACK(src, PROC_REF(do_charge), victim, get_turf(victim)), charge_windup)
+
+/mob/living/simple_animal/hostile/retaliate/rogue/sandworm/elder/proc/do_charge(mob/living/victim, turf/target_turf)
+	if(stat != CONSCIOUS || burrowed || !target_turf)
+		charging = FALSE
+		if(ai_controller)
+			ai_controller.paused_until = 0
+		return
+	set waitfor = FALSE
+	visible_message(span_danger("[src] charges across the sand!"))
+	playsound(loc, 'sound/combat/wooshes/punch/punch (1).ogg', 100, TRUE)
+
+	var/dir_to_target = get_dir(src, target_turf)
+	if(dir_to_target)
+		set_dir(dir_to_target)
+	var/steps = clamp(get_dist(src, target_turf), 1, charge_range_max)
+	var/hit_someone = FALSE
+
+	for(var/i in 1 to steps)
+		if(stat != CONSCIOUS || burrowed)
+			break
+		var/step_dir = get_dir(src, target_turf)
+		if(!step_dir)
+			break
+		var/turf/next_turf = get_step(src, step_dir)
+		if(!next_turf || !next_turf.Enter(src))
+			break
+		step(src, step_dir)
+		new /obj/effect/temp_visual/paw_swipe(get_turf(src))
+
+		// Check collision with any living enemy
+		for(var/mob/living/L in get_turf(src))
+			if(L == src || (L.faction && (L.faction & faction).len))
+				continue
+			hit_charge(L)
+			hit_someone = TRUE
+			break
+		if(hit_someone)
+			break
+		if(victim && get_dist(src, victim) <= 1)
+			hit_charge(victim)
+			hit_someone = TRUE
+			break
+		sleep(1)
+
+	charging = FALSE
+	if(ai_controller)
+		ai_controller.paused_until = 0
+	if(hit_someone && victim)
+		target = victim
+		AttackingTarget()
+
+/mob/living/simple_animal/hostile/retaliate/rogue/sandworm/elder/proc/hit_charge(mob/living/victim)
+	if(!isliving(victim) || victim.stat == DEAD)
+		return
+
+	// 1. Put victim off-balance first
+	victim.OffBalance(3 SECONDS)
+
+	// 2. Perform kick / shove
+	var/shove_dir = get_dir(src, victim) || dir
+	var/turf/shove_turf = get_step(victim, shove_dir)
+	var/shove_blocked = FALSE
+	if(shove_turf)
+		if(!victim.Move(shove_turf, shove_dir))
+			shove_blocked = TRUE
+	else
+		shove_blocked = TRUE
+
+	// 3. Since target is off-balanced, kick guarantees knockdown and drops held items
+	var/knockdown_dur = shove_blocked ? SHOVE_KNOCKDOWN_SOLID : charge_knockdown_time
+	victim.Knockdown(knockdown_dur)
+	victim.drop_all_held_items()
+
+	// 4. Apply damage with armor reduction
+	var/def_zone = pick(BODY_ZONE_CHEST, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
+	var/blocked = victim.run_armor_check(def_zone, "blunt", damage = charge_damage)
+	victim.apply_damage(charge_damage, BRUTE, def_zone, blocked)
+
+	playsound(victim, 'sound/combat/hits/kick/kick.ogg', 100, TRUE, -1)
+	playsound(victim, 'sound/combat/hits/blunt/metalblunt (1).ogg', 100, TRUE)
+
+	to_chat(victim, span_userdanger("[src] barrels directly into you, kicking you off your feet!"))
+	visible_message(span_danger("[src] slams full force into [victim], kicking [victim.p_them()] down!"))
+	new /obj/effect/temp_visual/paw_swipe(get_turf(victim))
 
 /mob/living/simple_animal/hostile/retaliate/rogue/sandworm/elder/proc/try_slam(atom/target_atom)
 	var/dist = get_dist(src, target_atom)
@@ -241,11 +366,12 @@
 	playsound(loc, 'sound/combat/shieldraise.ogg', 100)
 	if(isliving(target_atom))
 		var/mob/living/victim = target_atom
+		victim.OffBalance(3 SECONDS)
 		var/def_zone = pick(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG, BODY_ZONE_CHEST)
 		var/blocked = victim.run_armor_check(def_zone, "stab", damage = slam_damage)
 		victim.apply_damage(slam_damage, BRUTE, def_zone, blocked)
-		if(blocked < 100)
-			victim.Knockdown(slam_knockdown_time)
+		victim.Knockdown(slam_knockdown_time)
+		victim.drop_all_held_items()
 		var/turf/target_turf = get_turf(target_atom)
 		new /obj/effect/temp_visual/paw_swipe(target_turf)
 		to_chat(victim, span_userdanger("[src] slams down on top of you!"))
