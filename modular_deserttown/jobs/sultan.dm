@@ -114,6 +114,17 @@
 
 /datum/outfit/job/roguetown/sultan/pre_equip(mob/living/carbon/human/H)
 	..()
+	if(H.mind)
+		var/weapons = list("Heavy Skimitar","Shamshir")
+		var/weapon_choice = input(H, "Choose your weapon.", "TAKE UP ARMS") as anything in weapons
+		switch(weapon_choice)
+			if("Heavy Skimitar")
+				beltr = /obj/item/rogueweapon/scabbard/sword/royal
+				l_hand = /obj/item/rogueweapon/sword/long/kriegmesser/zybantine/blacksteel/sultan
+			if("Shamshir")
+				beltr = /obj/item/rogueweapon/scabbard/sword/royal
+				l_hand = /obj/item/rogueweapon/sword/sabre/shamshir/blacksteel/sultan
+
 	if(SSroguemachine.crown == null || (QDELETED(SSroguemachine.crown)))
 		SSroguemachine.crown = null
 		head = /obj/item/clothing/head/roguetown/crown/serpcrown

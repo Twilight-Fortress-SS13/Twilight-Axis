@@ -1,5 +1,4 @@
 /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/janissary
-	slot_flags = ITEM_SLOT_ARMOR
 	name = "janissary chainmail"
 	desc = "A longer steel maille that protects the legs."
 	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/helpers/sleeves_armor.dmi'
@@ -8,10 +7,10 @@
 	icon_state = "mamaluke"
 	item_state = "mamaluke"
 	max_integrity = 350
+	slot_flags = ITEM_SLOT_ARMOR
 
 /obj/item/clothing/suit/roguetown/armor/plate/cataphract
-	slot_flags = ITEM_SLOT_ARMOR
-	name = "cataphract armor"
+	name = "cataphract plate-scale armor"
 	desc = "Metal scales interwoven intricately to form flexible protection!"
 	icon = 'modular_deserttown/icons/clothing/armor.dmi'
 	mob_overlay_icon = 'modular_deserttown/icons/clothing/onmob/armor.dmi'
@@ -27,29 +26,45 @@
 	smelt_bar_num = 4
 	armor_class = ARMOR_CLASS_HEAVY
 	armor = ARMOR_PLATE
+	slot_flags = ITEM_SLOT_ARMOR
 
-/obj/item/clothing/suit/roguetown/armor/plate/cataphract/sultan
-	name = "sultan scale"
-	desc = "Impenetrable scales like an ancient black dragon!"
-	color = "#5e5d5d"
-	armor = ARMOR_PLATE_BSTEEL
-	max_integrity = ARMOR_INT_CHEST_PLATE_BLACKSTEEL
-	smeltresult = /obj/item/ingot/blacksteel
+/obj/item/clothing/suit/roguetown/armor/plate/cataphract/mushir
+	name = "mushir's plate-scale armor"
+	color = "#514339"
 
-/obj/item/clothing/head/roguetown/helmet/heavy/cataphract/sultan
-	name = "sultan helm"
-	desc = "Impenetrable scales like an ancient black dragon!"
-	color = "#5e5d5d"
-	armor = ARMOR_PLATE_BSTEEL
-	max_integrity = ARMOR_INT_CHEST_PLATE_BLACKSTEEL
-	smeltresult = /obj/item/ingot/blacksteel
+/obj/item/clothing/suit/roguetown/armor/plate/full/blacksteel/legate/sultan
+	name = "sultan's full-plate armor"
+	desc = "Внушительный и величественный латный доспех, по надежности не уступающий лучшим рыцарским латам, выкованный на основе старых доспехов времен Божественной Империи. \
+	Тяжкий и кропотливый труд мастеров кузнечного дела возвел создание рельефного торса в абсолют, превратив грубую броню в произведение искусства и украсив темные пластины и плечи золотой вязью. \
+	Облаченный в этот грозный доспех Султан способен выдержать натиск целой армии, оставаясь недосягаемым для клинков неверных. Блеск драгоценного металла и мрак черностали скрывают под собой смертного правителя, \
+	оставляя взору лишь величие престола. </br>‎  </br>Перед лицом смерти повелитель обязан оставаться несокрушимым символом."
+
+/obj/item/clothing/head/roguetown/helmet/blacksteel/legate/sultan
+	name = "sultan's helmet"
+	desc = "Тяжелый боевой шлем из черностали, созданный придворными мастерами из лат павших рыцарей Запада и украшенный остатками их знамен для единственного повелителя, чья власть освящена самой верой. Султан — меч и щит своей империи, чей гнев подобен испепеляющему самуму, а милость дарует жизнь. \
+	Лицо правителя закрывает глухая золотая маска с узкими прорезями для глаз, не позволяющая врагам увидеть ни тени сомнения. Золотые лучи короны переплавленные из венцов дворян Черной Империи, вплавленны в темный купол сияют над полем боя подобно неугасимому солнцу. \
+	</br>‎  </br>Кто скрывается за бесстрастным металлом — мудрый отец народа или беспощадный завоеватель? Надевая лик владыки, помни, что назад пути уже нет."
+
+/obj/item/clothing/shoes/roguetown/boots/armor/blacksteel/legate/sultan
+	name = "sultan's babouches"
+	desc = "Тяжелые боевые султанские бабуши из мягкого сафьяна, окованные золотом и черносталью. Когда-то это были шлемы гордых рыцарей Грензельхофта, теперь же в них маршируют по горячему песку Зибантии. \
+	</br>‎  </br>Трофеи былых завоеваний и чужая слава ныне служат лишь опорой для шагов победителя. Помни об этом, когда взойдешь на вершину собственного триумфа."
+
+/obj/item/clothing/gloves/roguetown/plate/blacksteel/legate/sultan
+	name = "sultan's plate gauntlets"
+	desc = "Черносталевые латные перчатки, богато инкрустированные золотом. На их ладонях вычеканено суровое изречение: 'Моей волей и моей дланью любая дерзость будет сокрушена'. \
+	</br>‎  </br>Что тяжелее нести владыке — скипетр дарующий жизнь или клинок несущий гибель? В день великого суда отвечать придется за каждый взмах руки."
+
+/obj/item/clothing/under/roguetown/platelegs/blacksteel/legate/sultan
+	name = "sultan's blacksteel plate chausses"
+	desc = "Изящные и удобные для жаркого климата латные поножи, искусно сочетающие укрепленную кожу, шелк и прочные черносталевые плиты. \
+	Они берегут своего владыку от раскаленного ветра дюн и коварных клинков неприятеля. </br>‎  </br>Величие империи измеряется не длиной границ, а стойкостью того, кто их охраняет. Не сворачивай с избранного пути, сколь бы тяжелым он ни был."
 
 /obj/item/clothing/suit/roguetown/armor/brigandine/agha
 	name = "agha scale"
 	desc = "Fine armor made of treated animal scales, denoting an esteemd career in the dunes."
 	icon_state = "huus"
 	item_state = "huus"
-	//здесь были строчки защиты, вырезаны т.к. айтем наследует статы защиты от бригандины
 	blocksound = SOFTHIT
 	slot_flags = ITEM_SLOT_ARMOR
 	blade_dulling = DULLING_BASHCHOP
@@ -58,6 +73,10 @@
 	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
 	sewrepair = TRUE
 	armor_class = ARMOR_CLASS_MEDIUM
+
+/obj/item/clothing/suit/roguetown/armor/brigandine/agha/mushir
+	name = "mushir's scale"
+	color = "#514339"
 
 //armorhelmets
 
@@ -324,6 +343,10 @@
 	icon_state = "turban"
 	item_state = "turban"
 
+/obj/item/clothing/head/roguetown/turban/mushir
+	name = "Mushir's turban"
+	desc = "A noble's turban made for the local Mushir. \"How terribly unfortunate you are!\""
+
 /obj/item/clothing/head/roguetown/turban/tan
 	color = "#93714b"
 
@@ -342,7 +365,7 @@
 /obj/item/clothing/head/roguetown/turban/random
 
 /obj/item/clothing/head/roguetown/turban/random/Initialize()
-	color = pick("#414141", "#684f41", "#93714b", "#FFFFFF", "#848484")
+	color = pick("#414141", "#684f41", "#93714b", "#FFFFFF", "#848484", "#8b2323", )
 	..()
 
 /datum/crafting_recipe/roguetown/sewing/turban
@@ -389,7 +412,7 @@
 //
 /obj/item/clothing/head/roguetown/sultan
 	name = "sultan's turban"
-	desc = "Bask in its noble size and granduer!."
+	desc = "Bask in its noble size and granduer!"
 	icon = 'modular_deserttown/icons/clothing/head.dmi'
 	mob_overlay_icon = 'modular_deserttown/icons/clothing/onmob/head32x48.dmi'
 	icon_state = "sultan"
@@ -507,7 +530,7 @@
 
 //cloak
 /obj/item/clothing/cloak/catcloak
-	name = "cataphracts cloak"
+	name = "cataphract's cloak"
 	desc = "Noble red cloak of a Zybantine Cataphract"
 	icon = 'modular_deserttown/icons/clothing/cloaks.dmi'
 	mob_overlay_icon = 'modular_deserttown/icons/clothing/onmob/cloaks.dmi'
@@ -516,8 +539,25 @@
 	sleeved = 'modular_deserttown/icons/clothing/onmob/cloaks.dmi'
 	sleevetype = "shirt"
 	slot_flags = ITEM_SLOT_CLOAK
-	sellprice = 50
+	sellprice = 250
 	nodismemsleeves = TRUE
+
+/obj/item/clothing/cloak/catcloak/cataphract_rais
+    name = "Rais-Cataphract's cloak"
+    desc = "Безумно красиво и не менее безумно дорогой плащ, выполненный из лучшего шёлка и окрашенный в пурпурный цвет. Ловцы багрянок - так называют людей добывающих пурпур - трудятся не менее месяца ради одного такого плаща. Носить такое - признак авторитета и богатства."
+    icon = 'icons/roguetown/clothing/special/captain.dmi'
+    mob_overlay_icon = 'icons/roguetown/clothing/special/onmob/captain.dmi'
+    sleeved = 'icons/roguetown/clothing/special/onmob/captain.dmi'
+    icon_state = "capcloak"
+    detail_tag = "_detail"
+    alternate_worn_layer = CLOAK_BEHIND_LAYER
+    detail_color = "#8747B1"
+    color = "#FFFFFF"
+    sellprice = 500
+
+/obj/item/clothing/cloak/catcloak/jancap
+	name = "janissary sergeant's cloak"
+	desc = "A most handsome cloak, of royal red, denoting the authority of a leader."
 
 /obj/item/clothing/cloak/raincloak/amir
 	name = "amir's cloak"

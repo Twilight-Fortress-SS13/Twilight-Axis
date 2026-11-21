@@ -539,3 +539,17 @@
 		explosion(get_turf(src), 1, 2, 4, 0, TRUE, FALSE, 2)
 		qdel(src)
 #undef CANNON_POWDER_COST
+
+/obj/structure/cannon/basilika
+	name = "\"Basilika\""
+	desc = "Огромная пушка вылитая из чистой бронзы, несущая в себе сокрушительную мощь всего Султаната. Способна выдержать множество выстрелов при должном уходе."
+	max_integrity = 3500
+	barrel_integrity = 30
+	cooldown = 10 SECONDS
+	color = "#978A62"
+
+/obj/structure/cannon/basilika/Initialize(mapload)
+	. = ..()
+	var/matrix/M = matrix()
+	M.Scale(1.5, 1.5)
+	transform = M

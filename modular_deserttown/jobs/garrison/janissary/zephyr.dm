@@ -41,13 +41,6 @@
 	gloves = /obj/item/clothing/gloves/roguetown/fingerless_leather
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/zyb
 	head = /obj/item/clothing/head/roguetown/helmet/janissaryhelm
-	backpack_contents = list(
-		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,
-		/obj/item/rope/chain = 1,
-		/obj/item/storage/keyring/manatarms = 1,
-		/obj/item/rogueweapon/scabbard/sheath = 1,
-		/obj/item/reagent_containers/glass/bottle/rogue/healthpot = 1,
-		)
 
 	H.adjust_blindness(-3)
 	if(H.mind)
@@ -66,13 +59,13 @@
 			if("Sling")
 				beltr = /obj/item/quiver/sling/iron
 				r_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/sling
-				
-		var/weapons2 = list("Scimitar","Whip","Club")
+
+		var/weapons2 = list("Sabre","Whip","Club")
 		var/weapon_choice2 = input(H, "Choose your sidearm.", "TAKE UP ARMS") as anything in weapons2
 		switch(weapon_choice2)
-			if("Scimitar")
+			if("Sabre")
 				beltl = /obj/item/rogueweapon/scabbard/sword
-				l_hand = /obj/item/rogueweapon/sword/sabre/shamshir
+				l_hand = /obj/item/rogueweapon/sword/sabre
 			if("Whip")
 				beltl = /obj/item/rogueweapon/whip
 			if("Club")

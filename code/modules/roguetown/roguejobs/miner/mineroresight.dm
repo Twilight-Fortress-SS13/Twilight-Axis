@@ -62,11 +62,11 @@
 		if(T)
 			var/obj/effect/temp_visual/fxtype
 			switch(T.type)
-				if(/turf/closed/mineral/random/rogue/med, /turf/closed/mineral/rogue/copper, /turf/closed/mineral/rogue/tin, /turf/closed/mineral/rogue/coal)
+				if(/turf/closed/mineral/random/rogue/med, /turf/closed/mineral/rogue/copper, /turf/closed/mineral/rogue/tin, /turf/closed/mineral/rogue/coal, /turf/closed/mineral/random/rogue/sandstone/med, /turf/closed/mineral/rogue/sandstone/copper, /turf/closed/mineral/rogue/sandstone/coal, /turf/closed/mineral/rogue/sandstone/tin) // DT TA EDIT
 					fxtype = /obj/effect/temp_visual/medqualityore
-				if(/turf/closed/mineral/random/rogue/high, /turf/closed/mineral/rogue/cinnabar, /turf/closed/mineral/rogue/iron, /turf/closed/mineral/rogue/gold, /turf/closed/mineral/rogue/silver)
+				if(/turf/closed/mineral/random/rogue/high, /turf/closed/mineral/rogue/cinnabar, /turf/closed/mineral/rogue/iron, /turf/closed/mineral/rogue/gold, /turf/closed/mineral/rogue/silver, /turf/closed/mineral/random/rogue/sandstone/high, /turf/closed/mineral/rogue/sandstone/gold, /turf/closed/mineral/rogue/sandstone/silver, /turf/closed/mineral/rogue/sandstone/iron, /turf/closed/mineral/rogue/sandstone/cinnabar) // DT TA EDIT
 					fxtype = /obj/effect/temp_visual/highqualityore
-				if(/turf/closed/mineral/rogue/gem)
+				if(/turf/closed/mineral/rogue/gem, /turf/closed/mineral/rogue/sandstone/gem) // DT TA EDIT
 					fxtype = /obj/effect/temp_visual/gemqualityore
 				if(/turf/closed/mineral/rogue/bedrock)
 					fxtype = /obj/effect/temp_visual/bedrockore

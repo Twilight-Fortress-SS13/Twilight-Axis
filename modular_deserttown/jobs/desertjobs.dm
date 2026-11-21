@@ -428,17 +428,17 @@
 		shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/zyb
 
 // Trait Slave for specific jobs in Desert Town
-/datum/job/roguetown/shophand/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
+/*/ /datum/job/roguetown/shophand/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	..()
 	if(SSmapping.config.map_name == "Desert Town")
 		ADD_TRAIT(L, TRAIT_SLAVE, TRAIT_GENERIC)
-
+*/
 /datum/job/roguetown/bathworker/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	..()
 	if(SSmapping.config.map_name == "Desert Town")
 		ADD_TRAIT(L, TRAIT_SLAVE, TRAIT_GENERIC)
 
-/datum/job/roguetown/cook/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
+ /* /datum/job/roguetown/cook/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	..()
 	if(SSmapping.config.map_name == "Desert Town")
 		ADD_TRAIT(L, TRAIT_SLAVE, TRAIT_GENERIC)
@@ -447,7 +447,7 @@
 	..()
 	if(SSmapping.config.map_name == "Desert Town")
 		ADD_TRAIT(L, TRAIT_SLAVE, TRAIT_GENERIC)
-
+*/
 /datum/controller/subsystem/job/Initialize(timeofday)
 	. = ..()
 	if(SSmapping && SSmapping.config && SSmapping.config.map_name == "Desert Town")
@@ -479,3 +479,27 @@
 			if(!H.equip_to_appropriate_slot(keys))
 				if(!H.put_in_hands(keys))
 					keys.forceMove(H.drop_location())
+
+/datum/outfit/job/roguetown/marshal/pre_equip(mob/living/carbon/human/H)
+	..()
+	if(SSmapping.config.map_name == "Desert Town")
+		shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/raneshen
+		shoes = /obj/item/clothing/shoes/roguetown/shalal/reinforced
+
+/datum/outfit/job/roguetown/marshal/classic/pre_equip(mob/living/carbon/human/H)
+	. = ..()
+	if(SSmapping.config.map_name == "Desert Town")
+		head = /obj/item/clothing/head/roguetown/turban/mushir
+		r_hand = /obj/item/clothing/head/roguetown/helmet/raneshi_jarhelmet
+		armor = /obj/item/clothing/suit/roguetown/armor/brigandine/agha/mushir
+		cloak = /obj/item/clothing/cloak/dunestalker
+
+/datum/outfit/job/roguetown/marshal/kcommander/pre_equip(mob/living/carbon/human/H)
+	. = ..()
+	if(SSmapping.config.map_name == "Desert Town")
+		armor = /obj/item/clothing/suit/roguetown/armor/plate/cataphract/mushir
+		pants = /obj/item/clothing/under/roguetown/platelegs
+		backr = /obj/item/rogueweapon/sword/long/kriegmesser/zybantine/mushir
+		head = /obj/item/clothing/head/roguetown/helmet/heavy/knight/raneshi_hmamluk
+		r_hand = /obj/item/clothing/head/roguetown/turban/mushir
+		cloak = /obj/item/clothing/cloak/dunestalker
