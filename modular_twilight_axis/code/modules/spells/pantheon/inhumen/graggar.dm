@@ -142,10 +142,9 @@
 		user.apply_status_effect(/datum/status_effect/debuff/clickcd, max(1.5 SECONDS + 2, 2.5 SECONDS))
 		user.Immobilize(0.5 SECONDS)
 		user.stamina_add(user.stamina * 0.1)
-		user.Slowdown(2)
+		user.apply_status_effect(/datum/status_effect/debuff/slowed, 2)
 		*/
 		// TA REMOVAL END
-		user.apply_status_effect(/datum/status_effect/debuff/slowed, 2)
 		if(HAS_TRAIT(target, TRAIT_STEELHEARTED)) //all combat roles
 			perc -= 1
 		if(perc < 0)
@@ -154,7 +153,7 @@
 			user.apply_status_effect(/datum/status_effect/debuff/clickcd, max(1.5 SECONDS + 2, 2.5 SECONDS))
 			user.Immobilize(0.5 SECONDS)
 			user.stamina_add(user.stamina * 0.1)
-			user.Slowdown(2)
+			user.apply_status_effect(/datum/status_effect/debuff/slowed, 2)
 			// TA ADDITION END
 			return
 		if(perc >= 0)
