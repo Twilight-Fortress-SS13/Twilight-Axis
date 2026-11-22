@@ -1412,3 +1412,4 @@
 	name = "Donator Item - Ceremonial Lunar Muzzle"
 	path = /obj/item/clothing/mask/rogue/lunarmuzzle
 	ckeywhitelist = list("clemtheduck", "persephoneq")
+*/

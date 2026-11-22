@@ -67,7 +67,7 @@
 		/datum/supply_pack/rogue/naledi/lordmask,
 		/datum/supply_pack/rogue/raneshen/janissary_kit,
 		/datum/supply_pack/rogue/raneshen/shamshir,
-		/datum/supply_pack/rogue/raneshen/shalal_scarf,
+		/datum/supply_pack/rogue/raneshen/headscarf,
 	)
 	hail_lines = list(
 		"By the Ziggurat's shadow, I bring silk, glass and gold. Come bargain with sense and coin.",
