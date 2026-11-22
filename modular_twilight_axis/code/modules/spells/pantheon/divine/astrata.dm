@@ -158,7 +158,7 @@
 					firebust = 10
 					L.apply_status_effect(/datum/status_effect/debuff/staggered, 6 SECONDS)
 					L.apply_status_effect(/datum/status_effect/debuff/exposed, 6 SECONDS)
-					L.Slowdown(6)
+					L.apply_status_effect(/datum/status_effect/debuff/slowed, 6)
 					L.OffBalance(1 SECONDS)
 					L.Immobilize(1 SECONDS)
 				L.adjust_fire_stacks(firebust, /datum/status_effect/fire_handler/fire_stacks/divine)
