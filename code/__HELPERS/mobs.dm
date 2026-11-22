@@ -227,14 +227,12 @@ GLOBAL_LIST_EMPTY(species_list)
 
 	user.doing = TRUE
 	var/doing_generation = ++user.doing_generation // TA EDIT
-	SEND_SIGNAL(user, COMSIG_DO_AFTER_BEGAN)
 
 	delay *= user.do_after_coefficent()
 	var/datum/component/do_after_component/do_after_component = user.AddComponent(/datum/component/do_after_component, delay, needhand, target, progress, extra_checks, same_direction, allow_movement, doing_generation) // TA EDIT START
 	if(QDELETED(do_after_component))
 		if(user.doing_generation == doing_generation)
 			user.doing = FALSE
-		SEND_SIGNAL(user, COMSIG_DO_AFTER_ENDED)
 		return FALSE
 	. = do_after_component.sync() // TA EDIT END
 
@@ -260,14 +258,12 @@ GLOBAL_LIST_EMPTY(species_list)
 		return 0
 	user.doing = 1
 	var/doing_generation = ++user.doing_generation // TA EDIT
-	SEND_SIGNAL(user, COMSIG_DO_AFTER_BEGAN)
 
 	delay *= user.do_after_coefficent()
 	var/datum/component/move_after_component/move_after_component = user.AddComponent(/datum/component/move_after_component, delay, needhand, target, progress, extra_checks, same_direction, doing_generation) // TA EDIT START
 	if(QDELETED(move_after_component))
 		if(user.doing_generation == doing_generation)
 			user.doing = FALSE
-		SEND_SIGNAL(user, COMSIG_DO_AFTER_ENDED)
 		return FALSE
 	. = move_after_component.sync() // TA EDIT END
 
@@ -508,3 +504,6 @@ GLOBAL_LIST_EMPTY(species_list)
 	if(ishuman(src))
 		var/mob/living/carbon/human/H = src
 		H.update_body_parts()
+
+/mob/proc/should_hear_dsay()
+	return FALSE

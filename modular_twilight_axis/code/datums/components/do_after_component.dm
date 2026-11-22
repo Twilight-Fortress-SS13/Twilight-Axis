@@ -19,7 +19,6 @@
 	var/hand_interrupt = FALSE
 	var/hand_check_pending = FALSE
 	var/state_check_pending = FALSE
-	var/send_do_after_signal = FALSE
 	var/same_direction = FALSE
 	var/original_dir
 
@@ -168,8 +167,6 @@
 
 	if(user && !QDELETED(user) && user.doing_generation == doing_generation)
 		user.doing = FALSE
-		if(send_do_after_signal)
-			SEND_SIGNAL(user, COMSIG_DO_AFTER_ENDED)
 
 	release_action_refs()
 
@@ -210,7 +207,6 @@
 	if(target && !isturf(target))
 		original_target_loc = target.loc
 	hand_interrupt = needhand
-	send_do_after_signal = TRUE
 	register_action_signals()
 
 /datum/component/do_after_component/Destroy()
@@ -450,7 +446,6 @@
 	src.same_direction = same_direction
 	original_dir = user.dir
 	hand_interrupt = needhand
-	send_do_after_signal = TRUE
 	register_action_signals()
 
 /datum/component/move_after_component/Destroy()
