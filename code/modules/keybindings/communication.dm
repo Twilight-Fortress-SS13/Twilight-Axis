@@ -32,3 +32,4 @@
 	var/mob/M = user.mob
 	M.me_big_verb_indicator()
 	return TRUE
+

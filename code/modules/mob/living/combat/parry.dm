@@ -211,7 +211,7 @@
 		prob2defend += 20
 	if(used_weapon && !allow_unarmed_fallback)
 		if(!has_status_effect(/datum/status_effect/buff/weapon_binded) && !has_status_effect(/datum/status_effect/debuff/weapon_binded))
-			if(ishuman(src) && user.get_tempo_bonus(TEMPO_TAG_BINDABLE) && mind)
+			if(ishuman(src) && user.get_tempo_bonus(TEMPO_TAG_BINDABLE))
 				var/mob/living/carbon/human/binding_defender = src
 				if(binding_defender.try_bind(used_weapon, user))
 					return TRUE	//Tentative, might be better if it only increased parry chance on the initial binding rather than a full block.
@@ -220,12 +220,6 @@
 
 	if(HAS_TRAIT(user, TRAIT_CURSE_RAVOX))
 		prob2defend -= 40
-
-	if(!defender.mind && defender.has_status_effect(/datum/status_effect/debuff/staggered))
-		prob2defend *= 0.5
-
-	if(!defender.mind && defender.has_status_effect(/datum/status_effect/debuff/hamstring))
-		prob2defend -= 20
 
 	// parrying while knocked down sucks ass
 	if(!(mobility_flags & MOBILITY_STAND) && !has_status_effect(/datum/status_effect/buff/weapon_binded))
@@ -319,9 +313,9 @@
 			if(ispath(attacker_skilltype, /datum/skill/combat) && ispath(defender_skilltype, /datum/skill/combat))
 				if ((mobility_flags & MOBILITY_STAND) && !isanimal(attacker))
 					var/skill_target = attacker_skill
-					if(!HAS_TRAIT(attacker, TRAIT_GOODTRAINER))
+					if(!HAS_TRAIT(attacker, TRAIT_GOODTRAINER) || HAS_TRAIT_FROM(attacker, TRAIT_BADTRAINER, PROTEGE_TRAIT))
 						skill_target -= SKILL_LEVEL_NOVICE
-					if(HAS_TRAIT(attacker, TRAIT_BADTRAINER))
+					if(HAS_TRAIT(attacker, TRAIT_BADTRAINER) && !HAS_TRAIT_FROM(src, TRAIT_BADTRAINER, REF(attacker)))
 						skill_target -= SKILL_LEVEL_NOVICE
 					if (can_train_combat_skill(src, defender_skilltype, skill_target))
 						mind.add_sleep_experience(defender_skilltype, max(round(STAINT*exp_multi*defender_factor), 0), FALSE)
@@ -330,9 +324,9 @@
 				if(attacker.mind && !isanimal(attacker))
 					if ((mobility_flags & MOBILITY_STAND))
 						var/skill_target = defender_skill
-						if(!HAS_TRAIT(src, TRAIT_GOODTRAINER))
+						if(!HAS_TRAIT(src, TRAIT_GOODTRAINER) || HAS_TRAIT_FROM(src, TRAIT_BADTRAINER, PROTEGE_TRAIT))
 							skill_target -= SKILL_LEVEL_NOVICE
-						if(HAS_TRAIT(src, TRAIT_BADTRAINER))
+						if(HAS_TRAIT(src, TRAIT_BADTRAINER) && !HAS_TRAIT_FROM(attacker, TRAIT_BADTRAINER, REF(src)))
 							skill_target -= SKILL_LEVEL_NOVICE
 						if (can_train_combat_skill(attacker, attacker_skilltype, skill_target))
 							attacker.mind.add_sleep_experience(attacker_skilltype, max(round(STAINT*exp_multi*attacker_factor), 0), FALSE)
@@ -400,9 +394,9 @@
 			if(ispath(attacker_skilltype, /datum/skill/combat))
 				if((mobility_flags & MOBILITY_STAND) && !isanimal(attacker))
 					var/skill_target = attacker_skill
-					if(!HAS_TRAIT(attacker, TRAIT_GOODTRAINER))
+					if(!HAS_TRAIT(attacker, TRAIT_GOODTRAINER) || HAS_TRAIT_FROM(attacker, TRAIT_BADTRAINER, PROTEGE_TRAIT))
 						skill_target -= SKILL_LEVEL_NOVICE
-					if(HAS_TRAIT(attacker, TRAIT_BADTRAINER))
+					if(HAS_TRAIT(attacker, TRAIT_BADTRAINER) && !HAS_TRAIT_FROM(defender, TRAIT_BADTRAINER, REF(attacker)))
 						skill_target -= SKILL_LEVEL_NOVICE
 					if(can_train_combat_skill(defender, /datum/skill/combat/unarmed, skill_target))
 						defender.mind?.add_sleep_experience(/datum/skill/combat/unarmed, max(round(STAINT*exp_multi), 0), FALSE)

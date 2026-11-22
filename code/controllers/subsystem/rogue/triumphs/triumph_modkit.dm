@@ -512,9 +512,8 @@
 /obj/item/rogueweapon/example/valorian_sword
 	name = "valorian sword"
 	icon = 'icons/roguetown/weapons/swords32.dmi'
-	desc = "A modest take on a mythical design, hailing from the blood-splattered crossroads \
-	between Valoria and Rockhill. It feels right at home, in the palm of your hand."
-	icon = 'icons/roguetown/weapons/swords32.dmi'
+	desc = "A modest take on a mythical design, hailing from the forges of \
+	Rockhill. It feels right at home, in the palm of your hand."
 	icon_state = "iswordalt"
 	sheathe_icon = "iswordalt"
 
@@ -832,7 +831,7 @@
 /obj/item/rogueweapon/mace/steel/silver/rungu
 	name = "silver rungu"
 	desc = "A silver craning mace from the southern reaches of Psydonia, following an ancient design that has survived \
-	for centuries-hence. It is cherished by the clerics of Lakkari, Naledi, and Ranenshen."
+	for centuries-hence. It is cherished by the clerics of Lakkari, Naledi, and Raneshen."
 	icon_state = "silverrungu"
 
 /obj/item/rogueweapon/huntingknife/combat/iron/kris

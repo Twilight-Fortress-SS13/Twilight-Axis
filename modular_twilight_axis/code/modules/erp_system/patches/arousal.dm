@@ -12,6 +12,7 @@
 	var/tmp/chain_lock_until = 0
 	var/last_overload_sleep_decay_time = 0
 	var/tmp/nympho_hunger_grace_until = 0
+	var/tmp/partner_sate_until = 0
 	var/erp_last_climax_fx_time = 0
 
 /datum/component/arousal/RegisterWithParent()
@@ -136,6 +137,8 @@
 	return istype(H) && !!H.mind?.has_antag_datum(/datum/antagonist/vampire)
 
 /datum/component/arousal/proc/is_nympho_sated()
+	if(world.time < partner_sate_until)
+		return TRUE
 	return (satisfaction_points >= ERP_NYMPHO_SATED_SP)
 
 /datum/component/arousal/proc/get_nympho_hunger_level()
@@ -160,6 +163,9 @@
 		return
 
 	var/was_sated = A.sated
+	if(partner_sate_until && world.time >= partner_sate_until)
+		partner_sate_until = 0
+
 	var/now_sated = is_nympho_sated()
 	if(now_sated)
 		nympho_hunger_grace_until = 0
@@ -311,6 +317,15 @@
 
 	if(is_lovefiend() && !is_nympho_sated() && !is_nympho_hunger_grace_active())
 		gain *= 2
+
+	if(!is_masturbation)
+		if(is_lovefiend())
+			partner_sate_until = world.time + ERP_NYMPHO_PARTNER_SATED_TIME
+		if(partner && partner != climaxer)
+			var/datum/component/arousal/pAro = partner.GetComponent(/datum/component/arousal)
+			if(pAro && pAro.is_lovefiend())
+				pAro.partner_sate_until = world.time + ERP_NYMPHO_PARTNER_SATED_TIME
+				pAro.sync_lovefiend_sated_from_sp()
 
 	adjust_satisfaction(gain)
 	if(gain > 0 && satisfaction_points >= ERP_OVERLOAD_SP_TRIGGER)
@@ -834,6 +849,13 @@
 
 /datum/component/arousal/proc/is_nympho_hunger_grace_active()
 	return is_lovefiend() && (world.time < nympho_hunger_grace_until)
+
+/mob/living/carbon/human/sate_addiction(datum/charflaw/addiction/adc_vice)
+	if(istype(adc_vice, /datum/charflaw/addiction/lovefiend))
+		var/datum/component/arousal/Aro = GetComponent(/datum/component/arousal)
+		if(Aro && !Aro.is_nympho_sated())
+			Aro.partner_sate_until = world.time + ERP_NYMPHO_PARTNER_SATED_TIME
+	return ..()
 
 #undef ERP_OVERLOAD_SLEEP_DECAY_INTERVAL
 #undef NYMPHO_AROUSAL_SOFT_CAP

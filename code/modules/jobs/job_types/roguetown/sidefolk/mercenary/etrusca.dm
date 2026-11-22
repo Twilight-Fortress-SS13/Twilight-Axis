@@ -90,6 +90,10 @@
 		STATKEY_PER = 3, //sharpshooters
 		STATKEY_SPD = 2
 	)
+	subclass_stashed_items = list(
+		"Wax Putty I" = /obj/item/waxputty,
+		"Wax Putty II" = /obj/item/waxputty,
+	)
 	subclass_skills = list(
 		/datum/skill/combat/crossbows = SKILL_LEVEL_MASTER, //Possibly too high, no idea.
 		/datum/skill/combat/swords = SKILL_LEVEL_JOURNEYMAN,

@@ -63,6 +63,8 @@
 	// Default a bunch of stuff
 	reset_descriptors()
 	age = initial(age)
+	birthday_month = rand(1, CALENDAR_MONTHS_PER_YEAR) // TA EDIT
+	birthday_day = rand(1, CALENDAR_DAYS_IN_MONTH) // TA EDIT
 	statpack = new /datum/statpack/wildcard/fated
 	qsr_pref = initial(qsr_pref)
 	char_toggles = initial(char_toggles)
@@ -73,6 +75,7 @@
 // Only run this for "new character" style randomization
 // new characters get all texts merked and a random species assigned
 /datum/preferences/proc/randomize_new_character()
+	ooze_color_shifting = initial(ooze_color_shifting)
 	// assign new species
 	var/random_species_type = GLOB.species_list[pick(get_selectable_species())]
 	set_new_race(new random_species_type, skip_random = TRUE)
@@ -90,6 +93,7 @@
 	rumour_cached = null
 	noble_gossip = null
 	noble_gossip_cached = null
+	secrets = list()
 
 	headshot_link = null
 	headshot_artist_credit = null
