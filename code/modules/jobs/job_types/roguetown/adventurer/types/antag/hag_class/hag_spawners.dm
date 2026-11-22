@@ -22,6 +22,7 @@
 		/obj/item/alch/hag_moss/enchanted/forest		= 2,
 		/obj/item/alch/hag_moss/enchanted/altered		= 2,
 		// TA ADDITION END
+		/obj/item/alch/hag_moss/enchanted/vibrant = 2,
 		// High Rarity Enchanted
 		/obj/item/alch/hag_moss/enchanted/random/high = 1,
 		/obj/item/alch/hag_moss/enchanted/gilded		= 1,

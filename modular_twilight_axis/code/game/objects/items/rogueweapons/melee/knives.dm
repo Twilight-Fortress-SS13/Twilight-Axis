@@ -211,7 +211,7 @@
 		if(prob(15))
 			to_chat(M, span_warning("I'M SO WEAK NOW! STOP IT!!.."))
 		M.apply_status_effect(/datum/status_effect/debuff/exposed)
-		M.Slowdown(5)
+		M.apply_status_effect(/datum/status_effect/debuff/slowed, 5)
 
 	else if(amt >= 5)
 		M.energy_add(-20)

@@ -31,13 +31,17 @@
 	new_ruler_title_f = "Exarch"
 	new_realm_type = "Dominion"
 	new_realm_type_short = "Dominion"
+	required_assents = DOMINION_REQUIRED_ASSENTS
+	assenter_group = "enlightened"
+	council_name = "the Council of the Enlightened"
+	claim_basis = "in the name of salvation" // TA EDIT
 
 /// Any mage with T2+ arcyne training, any Zizite follower, or any undead, can invoke.
 /datum/usurpation_rite/progressive_dominion/can_invoke(mob/living/carbon/human/user)
 	if(!..())
 		return FALSE
 	// Undead can invoke without arcyne training — their existence is Zizo's will
-	if(HAS_TRAIT(user, TRAIT_ROTMAN) || (user.mob_biotypes & MOB_UNDEAD))
+	if(is_undead(user))
 		return TRUE
 	// Zizite followers can invoke — Zizo is their goddess
 	if(istype(user.patron, /datum/patron/inhumen/zizo))
@@ -47,119 +51,56 @@
 		return TRUE
 	return FALSE
 
-/datum/usurpation_rite/progressive_dominion/on_gathering_started()
-	to_chat(invoker, span_notice("The rite has begun. Mages, followers of Zizo, and the undead must now speak 'I assent' near the throne. You require [DOMINION_REQUIRED_ASSENTS] voices within [RITE_GATHERING_DURATION / (1 MINUTES)] minutes. Alternatively, the current ruler may say 'I abdicate' near the throne to yield."))
-	phase_timer_id = addtimer(CALLBACK(src, PROC_REF(on_gathering_timeout)), RITE_GATHERING_DURATION, TIMER_STOPPABLE)
+/datum/usurpation_rite/progressive_dominion/on_gathering_started() // TA EDIT START
+	to_chat(invoker, span_notice("The rite has begun. Mages, followers of Zizo, and the undead must now speak 'I assent' near the throne. You require [get_required_assents()] voices within [RITE_GATHERING_DURATION / (1 MINUTES)] minutes. Alternatively, the current ruler may say 'I abdicate' near the throne to yield."))
+	phase_timer_id = addtimer(CALLBACK(src, PROC_REF(on_gathering_timeout)), RITE_GATHERING_DURATION, TIMER_STOPPABLE) // TA EDIT END
 
-/datum/usurpation_rite/progressive_dominion/on_gathering_timeout()
-	fail("The voices of salvation did not grant sufficient assent.") //TA EDIT
+/datum/usurpation_rite/progressive_dominion/on_gathering_timeout() // TA EDIT
+	fail("The voices of salvation did not grant sufficient assent.") // TA EDIT
 
-/// Override: mages, Zizite followers, and undead assent. Any arcyne training, Zizo patron, OR undead status qualifies.
-/datum/usurpation_rite/progressive_dominion/try_assent(mob/living/carbon/human/supporter)
-	if(stage != RITE_STAGE_GATHERING)
-		return FALSE
-	if(!istype(supporter))
-		return FALSE
-	if(supporter.stat != CONSCIOUS)
-		return FALSE
-	if(supporter == invoker)
-		to_chat(supporter, span_warning("You cannot assent to your own claim."))
-		return FALSE
+/datum/usurpation_rite/progressive_dominion/can_assent(mob/living/carbon/human/supporter)
 	if(!is_qualified_voice(supporter))
 		to_chat(supporter, span_warning("Only those trained in the arcyne arts, followers of Zizo, or touched by undeath may speak assent to this rite."))
 		return FALSE
-	if(assenters[supporter])
-		to_chat(supporter, span_warning("You have already spoken your assent."))
-		return FALSE
-	if(!throne || get_dist(supporter, throne) > RITE_ASSENT_RANGE)
-		return FALSE
-	assenters[supporter] = TRUE
-	on_assent_accepted(supporter)
-	check_assent_threshold()
-	return TRUE
+	return ..()
 
-/datum/usurpation_rite/progressive_dominion/on_assent_accepted(mob/living/carbon/human/supporter)
+/datum/usurpation_rite/progressive_dominion/on_assent_accepted(mob/living/carbon/human/supporter, weight) // TA EDIT START
 	supporter.visible_message( \
-		span_notice("[supporter.real_name] speaks their assent to the Rite of Salvation."), \
-		span_notice("You speak your assent. Salvation demands no less.")) //TA EDIT
-	to_chat(invoker, span_notice("[supporter.real_name] has assented. ([length(assenters)]/[DOMINION_REQUIRED_ASSENTS])"))
+		span_notice("[supporter.get_unmasked_name()] speaks their assent to the Rite of Salvation."), \
+		span_notice("You speak your assent. Salvation demands no less."))
+	to_chat(invoker, span_notice("[supporter.get_unmasked_name()] has assented. ([get_assent_total()]/[get_required_assents()])")) // TA EDIT END
 
-/datum/usurpation_rite/progressive_dominion/check_assent_threshold()
-	if(length(assenters) >= DOMINION_REQUIRED_ASSENTS)
-		start_contesting()
-
-/datum/usurpation_rite/progressive_dominion/on_contesting_started()
-	priority_announce( \
-		"[invoker.real_name] has invoked the Rite of Salvation!\n\n" + \
-		"In the name of Zizo, One Who Brings Salvation, a claim is made upon the throne of [SSticker.realm_name].\n\n" + \
+/datum/usurpation_rite/progressive_dominion/get_contest_announcement() // TA EDIT START
+	return "In the name of Zizo, One Who Brings Salvation, a claim is made upon the throne of [SSticker.realm_name].\n\n" + \
 		"A Council of the Enlightened has affirmed this claim.\n\n" + \
-		"The future shall be decided in [RITE_CONTEST_DURATION / (1 MINUTES)] minutes -- unless the claim is struck down.\n\n", \
-		"Rite of Salvation", \
-		sound_contesting) //TA EDIT
-	to_chat(invoker, span_notice("The enlightened have spoken. The realm has been alerted. Stay near the throne for [RITE_CONTEST_DURATION / (1 MINUTES)] minutes and the succession is yours. You may move freely, but do not stray too far."))
-	phase_timer_id = addtimer(CALLBACK(src, PROC_REF(complete)), RITE_CONTEST_DURATION, TIMER_STOPPABLE)
+		"The future shall be decided in [RITE_CONTEST_DURATION / (1 MINUTES)] minutes -- unless the claim is struck down.\n\n" // TA EDIT END
 
-/datum/usurpation_rite/progressive_dominion/on_complete()
-	var/mob/living/old_ruler = SSticker.rulermob
-	var/old_ruler_name = old_ruler?.real_name || "Their predecessor"
-	if(HAS_TRAIT(invoker, TRAIT_ROTMAN) || (invoker.mob_biotypes & MOB_UNDEAD))
-		roundend_epilogue = \
-			"One can conquer a realm on a tide of bones. " + \
+/datum/usurpation_rite/progressive_dominion/get_roundend_epilogue() // TA EDIT START
+	if(is_undead(invoker))
+		return "One can conquer a realm on a tide of bones. " + \
 			"But the dead bear no children and hold no true will. " + \
 			"How long will the living -- even those who follow the Mistress of Progress -- tolerate their rule?"
-	else
-		roundend_epilogue = \
-			"The [SSticker.realm_name] has thus been destroyed, " + \
-			"and upon its ruins, a new order had risen. " + \
-			"O Zizo! One Who Brings Salvation! The future will be bright under your rule! " + \
-			"Grant us armaments! Grant us power! " + \
-			"Let us stand fast against the darkness of stagnation! " + \
-			"Let us stand fast against the rot of the old order! " + \
-			"Long live [invoker.real_name], [new_ruler_title] of [SSticker.realm_name]!"
-	..()
-	priority_announce( \
-		"To cling to mortality is to rot in place. Salvation waits for no one.\n\n" + \
+	return "The [SSticker.realm_name] has thus been destroyed, " + \
+		"and upon its ruins, a new order had risen. " + \
+		"O Zizo! One Who Brings Salvation! The future will be bright under your rule! " + \
+		"Grant us armaments! Grant us power! " + \
+		"Let us stand fast against the darkness of stagnation! " + \
+		"Let us stand fast against the rot of the old order! " + \
+		"Long live [invoker.get_unmasked_name()], [new_ruler_title] of [SSticker.realm_name]!" // TA EDIT END
+
+/datum/usurpation_rite/progressive_dominion/get_victory_announcement(old_ruler_name) // TA EDIT START
+	return "To cling to mortality is to rot in place. Salvation waits for no one.\n\n" + \
 		"A Council of the Enlightened, under the gaze of Zizo, One Who Brings Salvation, " + \
-		"declares [invoker.real_name] the rightful [SSticker.rulertype] of [SSticker.realm_name], establishing a DOMINION of arcane enlightenment.\n\n" + \
+		"declares [invoker.get_unmasked_name()] the rightful [SSticker.rulertype] of [SSticker.realm_name], establishing a DOMINION of arcane enlightenment.\n\n" + \
 		"[old_ruler_name], unable to contest this succession, has been found wanting in vision, " + \
 		"and their claim to rulership crumbles before the march of true progress.\n\n" + \
-		"Long live [invoker.real_name], [SSticker.rulertype] of [SSticker.realm_name]!", \
-		"A New [SSticker.rulertype] Ascends", \
-		sound_victory) //TA EDIT
-	to_chat(invoker, span_notice("The future bends to your will. The throne is yours."))
+		"Long live [invoker.get_unmasked_name()], [SSticker.rulertype] of [SSticker.realm_name]!" // TA EDIT END
 
-/datum/usurpation_rite/progressive_dominion/on_fail(reason)
+/datum/usurpation_rite/progressive_dominion/on_fail(reason) // TA EDIT START
 	if(stage >= RITE_STAGE_CONTESTING)
-		priority_announce( \
-			"The Rite of Salvation has failed. [reason] Salvation is halted — for now.", \
-			"Rite Failed", \
-			sound_failure) //TA EDIT
+		priority_announce("The Rite of Salvation has failed. [reason] Salvation is halted - for now.", "Rite Failed", sound_failure)
 	if(invoker)
-		to_chat(invoker, span_warning("The Rite of Salvation has failed. [reason]")) //TA EDIT
-
-
-/datum/usurpation_rite/progressive_dominion/get_status_text()
-	switch(stage)
-		if(RITE_STAGE_GATHERING)
-			return "The Rite of Salvation is underway. [length(assenters)]/[DOMINION_REQUIRED_ASSENTS] voices have spoken their assent." //TA EDIT
-		if(RITE_STAGE_CONTESTING)
-			return "The Council of the Enlightened has affirmed [invoker?.real_name]'s claim. The future approaches."
-	return null
-
-/datum/usurpation_rite/progressive_dominion/get_periodic_announcement()
-	switch(stage)
-		if(RITE_STAGE_GATHERING)
-			return "[invoker?.real_name] claims the throne in the name of salvation. Speak your assent -- or stop them. ([length(assenters)]/[DOMINION_REQUIRED_ASSENTS] voices)" //TA EDIT
-		if(RITE_STAGE_CONTESTING)
-			var/remaining = ""
-			if(contest_time_remaining > 0)
-				var/elapsed = world.time - contest_started_at
-				var/left = max(contest_time_remaining - elapsed, 0)
-				remaining = "[round(left / (1 SECONDS))] seconds"
-			else
-				remaining = "moments"
-			return "The Council of the Enlightened has spoken. [invoker?.real_name] will ascend in [remaining]. Defend or destroy this claim!"
-	return null
+		to_chat(invoker, span_warning("The Rite of Salvation has failed. [reason]")) // TA EDIT END
 
 /// Returns TRUE if the mob is a mage (any arcyne training), a Zizite follower, or undead.
 /datum/usurpation_rite/progressive_dominion/proc/is_qualified_voice(mob/living/carbon/human/user)
@@ -167,6 +108,6 @@
 		return TRUE
 	if(istype(user.patron, /datum/patron/inhumen/zizo))
 		return TRUE
-	if(HAS_TRAIT(user, TRAIT_ROTMAN) || (user.mob_biotypes & MOB_UNDEAD))
+	if(is_undead(user))
 		return TRUE
 	return FALSE

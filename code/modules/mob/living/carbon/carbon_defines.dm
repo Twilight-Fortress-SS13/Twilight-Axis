@@ -101,3 +101,5 @@
 
 	var/tempo_faction_flag = null
 
+	// used by feytouched to gain boons even if they ordinarily couldn't
+	var/extra_boon_budget = 0
