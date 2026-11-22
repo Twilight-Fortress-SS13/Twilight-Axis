@@ -1,6 +1,5 @@
 /datum/asset/spritesheet_batched/loadout_icons
-	parent_type = /datum/asset/spritesheet
-	// TA EDIT - Keep layered previews separate from the old 128px cache.
+	// TA EDIT
 	name = "loadout_previews"
 
 /datum/asset/spritesheet_batched/loadout_icons/create_spritesheets()
@@ -13,9 +12,8 @@
 			if(sprite_id in ids)
 				continue
 			ids += sprite_id
-			Insert(sprite_id, layer["icon"], layer["icon_state"], SOUTH, 1)
+			var/datum/universal_icon/preview = uni_icon(
+				layer["icon"], layer["icon_state"], SOUTH, 1)
+			preview.scale(40, 40)
+			insert_icon(sprite_id, preview)
 	// TA EDIT END
-
-/datum/asset/spritesheet_batched/loadout_icons/ModifyInserted(icon/pre_asset)
-	pre_asset.Scale(40, 40) // TA EDIT
-	return pre_asset

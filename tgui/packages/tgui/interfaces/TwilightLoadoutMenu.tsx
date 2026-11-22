@@ -106,7 +106,11 @@ const TintFilters = (props: { colors: string[] }) => (
 );
 
 const ItemIcon = (props: { item: LoadoutItem; selected?: SelectedItem }) => (
-  <Box position="relative" width="40px" height="40px" mr={1}>
+  <Box
+    position="relative"
+    mr={1}
+    style={{ width: '40px', height: '40px', flexShrink: 0 }}
+  >
     {!props.item.preview_layers?.some((layer) => layer.icon_class) && (
       <Box color="label">?</Box>
     )}
@@ -122,9 +126,9 @@ const ItemIcon = (props: { item: LoadoutItem; selected?: SelectedItem }) => (
           position="absolute"
           top={0}
           left={0}
-          width="40px"
-          height="40px"
           style={{
+            width: '40px',
+            height: '40px',
             filter: color ? `url(#loadout-tint-${color})` : undefined,
           }}
         />
@@ -236,6 +240,7 @@ export const TwilightLoadoutMenu = () => {
   const [search, setSearch] = useState('');
   const [compact, setCompact] = useState(false);
   const [previewText, setPreviewText] = useState(false);
+  const showingSelected = category === 'Выбранное';
   const catalogRef = useRef<HTMLDivElement>(null);
   const items = data.items || [];
   const selected = data.selected || [];
@@ -248,13 +253,15 @@ export const TwilightLoadoutMenu = () => {
       items
         .filter(
           (item) =>
-            (query ||
-              category === 'Всё' ||
-              item.categories.includes(category)) &&
+            (showingSelected
+              ? selected.some((selection) => selection.name === item.name)
+              : query ||
+                category === 'Всё' ||
+                item.categories.includes(category)) &&
             (!query || item.label.toLocaleLowerCase().includes(query)),
         )
         .sort((first, second) => first.label.localeCompare(second.label)),
-    [items, category, query],
+    [items, category, query, showingSelected, selected],
   );
   useEffect(() => {
     if (catalogRef.current) {
@@ -312,6 +319,12 @@ export const TwilightLoadoutMenu = () => {
           </Stack.Item>
           <Stack.Item>
             <Tabs fluid style={{ flexWrap: 'wrap' }}>
+              <Tabs.Tab
+                selected={showingSelected}
+                onClick={() => setCategory('Выбранное')}
+              >
+                Выбранное ({selected.length})
+              </Tabs.Tab>
               {(data.categories || []).map((name) => (
                 <Tabs.Tab
                   key={name}
@@ -346,15 +359,17 @@ export const TwilightLoadoutMenu = () => {
                   Компактно
                 </Button>
               </Stack.Item>
-              <Stack.Item>
-                <Button
-                  icon="eye"
-                  selected={previewText}
-                  onClick={() => setPreviewText(!previewText)}
-                >
-                  Просмотр текста
-                </Button>
-              </Stack.Item>
+              {showingSelected && (
+                <Stack.Item>
+                  <Button
+                    icon="eye"
+                    selected={previewText}
+                    onClick={() => setPreviewText(!previewText)}
+                  >
+                    Просмотр текста
+                  </Button>
+                </Stack.Item>
+              )}
               <Stack.Item>
                 <Button.Confirm
                   icon="trash"
@@ -455,7 +470,7 @@ export const TwilightLoadoutMenu = () => {
                             {item.triumph_cost || '—'}
                           </Table.Cell>
                         </Table.Row>,
-                        selection && (
+                        showingSelected && selection && (
                           <ItemEditor
                             key={`${item.name}-editor`}
                             item={item}
