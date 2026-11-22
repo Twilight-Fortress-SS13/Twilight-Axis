@@ -2465,6 +2465,17 @@
 /obj/item/rogueweapon/whip,
 /turf/open/floor/rogue/twig,
 /area/rogue/indoors/shelter/desertdeep)
+"aAa" = (
+/obj/structure/spider/stickyweb{
+	color = "#aba6a2"
+	},
+/obj/item/natural/rock/desert{
+	icon_state = "sandrock2";
+	pixel_x = 16;
+	pixel_y = 25
+	},
+/turf/open/floor/rogue/lightpath,
+/area/rogue/under/cave)
 "aAf" = (
 /obj/structure/bed/rogue/bedroll,
 /obj/effect/landmark/start/dt/LostGrenzel{
@@ -20461,7 +20472,7 @@
 	aportalgoesto = "banditdesertin2";
 	aportalid = "banditdesertexit2"
 	},
-/turf/open/floor/rogue/naturalstone/sandstone,
+/turf/open/floor/rogue/lightpath,
 /area/rogue/outdoors/desertdeepwest/above)
 "dZw" = (
 /turf/closed/mineral/rogue/bedrock/sandstone,
@@ -30819,6 +30830,13 @@
 "gfC" = (
 /turf/open/floor/rogue/herringbone,
 /area/rogue/under/desertdark/north)
+"gfF" = (
+/obj/structure/spider/stickyweb{
+	color = "#aba6a2"
+	},
+/mob/living/simple_animal/hostile/retaliate/rogue/sandworm/stalker,
+/turf/open/floor/rogue/lightpath,
+/area/rogue/under/cave)
 "gfH" = (
 /obj/structure/table/wood{
 	icon_state = "tablewood1"
@@ -90010,6 +90028,10 @@
 	},
 /turf/open/floor/rogue/carpet/lord/left,
 /area/rogue/under/cave/dtsanctum)
+"rFX" = (
+/obj/structure/deadbodyrandom/med,
+/turf/open/floor/rogue/lightpath,
+/area/rogue/under/cave)
 "rGa" = (
 /obj/structure/closet/dirthole/closed/loot{
 	dir = 1
@@ -103625,8 +103647,8 @@
 	aportalgoesto = "lichin";
 	aportalid = "lichout"
 	},
-/turf/open/floor/rogue/lightpath,
-/area/rogue/under/cave)
+/turf/open/floor/rogue/citybrick/citybrick1,
+/area/rogue/under/town/basement/desert)
 "uih" = (
 /obj/machinery/light/rogue/hearth,
 /turf/open/floor/rogue/blocks/stonered/tiny,
@@ -119961,7 +119983,7 @@
 	pixel_x = 8;
 	pixel_y = 21
 	},
-/turf/open/floor/rogue/lightpath,
+/turf/closed/mineral/rogue/sandstone,
 /area/rogue/outdoors/desertdeepwest/above)
 "xue" = (
 /obj/effect/decal/carpet/square{
@@ -121491,6 +121513,13 @@
 "xJw" = (
 /turf/closed/wall/mineral/rogue/wooddark/horizontal,
 /area/rogue/under/town/sewer/alashur)
+"xJC" = (
+/obj/structure/spider/stickyweb{
+	color = "#d1cdc7"
+	},
+/mob/living/simple_animal/hostile/retaliate/rogue/sandworm/wormling,
+/turf/open/floor/rogue/lightpath,
+/area/rogue/under/cave)
 "xJD" = (
 /obj/item/paper,
 /obj/item/natural/feather{
@@ -298214,7 +298243,7 @@ qVX
 qVX
 qVX
 eBo
-stz
+ftg
 kvr
 kvr
 kvr
@@ -298836,8 +298865,8 @@ qVX
 qVX
 qVX
 qVX
-stz
-eBo
+ftg
+gPk
 kvr
 kvr
 kvr
@@ -299149,7 +299178,7 @@ qVX
 qVX
 soh
 eBo
-stz
+eBo
 kvr
 kvr
 kvr
@@ -299459,7 +299488,7 @@ qbK
 qVX
 qVX
 qVX
-soh
+xJC
 eBo
 kvr
 kvr
@@ -300085,7 +300114,7 @@ qVX
 qVX
 eBo
 soh
-stz
+eBo
 kvr
 kvr
 kvr
@@ -301020,9 +301049,9 @@ qVX
 qVX
 qVX
 qVX
+gtA
 eBo
-eBo
-uUo
+aAa
 kvr
 kvr
 kvr
@@ -301334,9 +301363,9 @@ qVX
 kvr
 kvr
 eBo
-stz
 eBo
-uUo
+eBo
+gfF
 kvr
 kvr
 kvr
@@ -301646,8 +301675,8 @@ qVX
 qVX
 kvr
 kvr
-stz
-stz
+eBo
+eBo
 uUo
 kvr
 kvr
@@ -301960,7 +301989,7 @@ kvr
 kvr
 kvr
 eBo
-stz
+eBo
 eBo
 eBo
 kvr
@@ -302276,7 +302305,7 @@ eBo
 eBo
 eBo
 eBo
-uic
+kvr
 kvr
 kvr
 kvr
@@ -302585,10 +302614,10 @@ kvr
 kvr
 kvr
 kvr
-vuM
+rFX
 eBo
 eBo
-uic
+kvr
 kvr
 kvr
 kvr
@@ -302898,9 +302927,9 @@ kvr
 kvr
 kvr
 kvr
-eBo
-eBo
-uic
+kvr
+gtA
+kvr
 kvr
 kvr
 kvr
@@ -481509,9 +481538,9 @@ jdJ
 mQK
 mQK
 mQK
-dZv
-dZv
-dZv
+mQK
+mQK
+mQK
 mQK
 mQK
 mQK
@@ -481821,9 +481850,9 @@ jdJ
 mQK
 mQK
 mQK
-vEf
-vEf
-vEf
+mQK
+mQK
+mQK
 mQK
 mQK
 mQK
@@ -482133,10 +482162,10 @@ jdJ
 mQK
 mQK
 mQK
-vEf
-vEf
-vEf
-vEf
+mQK
+mQK
+mQK
+mQK
 mQK
 mQK
 mQK
@@ -482446,9 +482475,9 @@ mQK
 mQK
 mQK
 mQK
-vEf
-vEf
-vEf
+mQK
+mQK
+mQK
 mQK
 mQK
 mQK
@@ -482758,8 +482787,8 @@ mQK
 mQK
 mQK
 mQK
-vEf
-vEf
+mQK
+mQK
 mQK
 mQK
 mQK
@@ -483069,9 +483098,9 @@ jdJ
 mQK
 mQK
 mQK
-vEf
-vEf
-vEf
+mQK
+mQK
+mQK
 mQK
 mQK
 mQK
@@ -483381,9 +483410,9 @@ jdJ
 mQK
 mQK
 ujh
-vEf
-vEf
-vEf
+mQK
+mQK
+mQK
 mQK
 ujh
 mQK
@@ -516594,7 +516623,7 @@ mQK
 mQK
 mQK
 mQK
-lak
+mQK
 lAU
 mQK
 mQK
@@ -516908,7 +516937,7 @@ mQK
 mQK
 xub
 lak
-lak
+mQK
 mQK
 lak
 lak
@@ -517530,9 +517559,9 @@ mQK
 mQK
 mQK
 mQK
-mQK
 lak
-mQK
+lak
+lak
 mQK
 lak
 lak
@@ -517842,9 +517871,9 @@ mQK
 mQK
 mQK
 mQK
-mQK
-mQK
-mQK
+dZv
+dZv
+dZv
 mQK
 mQK
 mQK
@@ -599231,9 +599260,9 @@ mQK
 mQK
 mQK
 mQK
-dZv
-dZv
-dZv
+mQK
+mQK
+mQK
 mQK
 mQK
 mQK
@@ -599543,9 +599572,9 @@ mQK
 mQK
 mQK
 mQK
-vEf
-vEf
-vEf
+mQK
+mQK
+mQK
 mQK
 mQK
 mQK
@@ -599855,10 +599884,10 @@ mQK
 mQK
 mQK
 mQK
-vEf
-vEf
-vEf
-vEf
+mQK
+mQK
+mQK
+mQK
 mQK
 mQK
 mQK
@@ -600168,9 +600197,9 @@ mQK
 mQK
 mQK
 mQK
-vEf
-vEf
-vEf
+mQK
+mQK
+mQK
 mQK
 mQK
 mQK
@@ -600480,8 +600509,8 @@ mQK
 ujh
 ujh
 ujh
-vEf
-vEf
+mQK
+mQK
 mQK
 mQK
 ujh
@@ -603841,9 +603870,9 @@ jPX
 gMr
 gMr
 gMr
-gMr
-gMr
 jPX
+jPX
+fhY
 sWG
 mve
 kFh
@@ -604153,9 +604182,9 @@ jPX
 gMr
 gMr
 gMr
-gMr
-gMr
 jPX
+uic
+fhY
 sWG
 mve
 kFh
@@ -604465,9 +604494,9 @@ jPX
 gMr
 gMr
 gMr
-gMr
-gMr
 jPX
+uic
+fhY
 sWG
 mve
 kFh
@@ -604777,9 +604806,9 @@ jPX
 gMr
 gMr
 gMr
-gMr
-gMr
 jPX
+uic
+fhY
 sWG
 mve
 kFh
@@ -605089,9 +605118,9 @@ jPX
 gMr
 gMr
 gMr
-gMr
-gMr
 jPX
+jPX
+fhY
 sWG
 mve
 kFh
