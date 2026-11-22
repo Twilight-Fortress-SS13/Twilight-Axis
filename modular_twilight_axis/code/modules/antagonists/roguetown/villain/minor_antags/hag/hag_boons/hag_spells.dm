@@ -135,9 +135,6 @@
 
 	possible_shapes = list(
 		/mob/living/carbon/human/species/wildshape/rat,
-		/mob/living/carbon/human/species/wildshape/mirecrawler,
-		/mob/living/carbon/human/species/wildshape/spider,
 		/mob/living/carbon/human/species/wildshape/fox,
-		/mob/living/carbon/human/species/wildshape/crow,
 	)
 	disallowed_equipment_type = list(/obj/item/rogueweapon)

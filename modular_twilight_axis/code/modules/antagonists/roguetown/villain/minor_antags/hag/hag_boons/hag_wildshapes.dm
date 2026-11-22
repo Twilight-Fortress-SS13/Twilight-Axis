@@ -16,14 +16,14 @@
 	if(mind)
 		adjust_skillrank(/datum/skill/misc/swimming, SKILL_LEVEL_EXPERT, TRUE)
 		adjust_skillrank(/datum/skill/misc/athletics, SKILL_LEVEL_MASTER, TRUE)
-		adjust_skillrank(/datum/skill/misc/climbing, SKILL_LEVEL_EXPERT, TRUE)
-		adjust_skillrank(/datum/skill/misc/sneaking, SKILL_LEVEL_MASTER, TRUE)
+		adjust_skillrank(/datum/skill/misc/climbing, SKILL_LEVEL_LEGENDARY, TRUE)
+		adjust_skillrank(/datum/skill/misc/sneaking, SKILL_LEVEL_LEGENDARY, TRUE)
 
 		STASTR = 1
 		STACON = 1 // YOU GONNA DIE FROM ONE HIT, HA-HA-HA!!!
-		STAWIL = 16
-		STAPER = 14
-		STASPD = 16
+		STAWIL = 18
+		STAPER = 12
+		STASPD = 18
 		STAINT = 12
 
 		real_name = "rat"
