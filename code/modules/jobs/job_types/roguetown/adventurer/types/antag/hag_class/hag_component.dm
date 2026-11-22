@@ -318,7 +318,7 @@
 			max_victims = 10 // TA EDIT - ORIGINAL: 5
 			max_points = 85
 		else
-			max_victims = 12s // TA EDIT - ORIGINAL: 6
+			max_victims = 12 // TA EDIT - ORIGINAL: 6
 			max_points = 120
 
 	// Only block if we are trying to boon a NEW person and we're at the limit
