@@ -11,7 +11,7 @@
 	traits_applied = list(TRAIT_NOPAINSTUN, TRAIT_BLOOD_RESISTANCE, TRAIT_JOURNEYS_END) //no armour, literally made to bleed
 	maximum_possible_slots = 2 //you probably don't want many of these - edit: let them bring a friend/rival
 
-	cmode_music = 'sound/music/combat_Kazengun_Firestorm.ogg'
+	cmode_music = sound("sound/music/combat_Kazengun_Firestorm.ogg")
 	subclass_stats = list(
 		STATKEY_STR = 2, //10 weighted with weapon buff, two below disgraced knight
 		STATKEY_CON = 1,

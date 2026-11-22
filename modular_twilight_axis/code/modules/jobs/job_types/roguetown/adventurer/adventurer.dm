@@ -1,0 +1,13 @@
+/datum/job/roguetown/adventurer/New()
+	job_traits += list(TRAIT_OUTLANDER)
+	job_subclasses += list(
+		/datum/advclass/cleric/nightblade,
+		/datum/advclass/cleric/oblate,
+		/datum/advclass/rogue/soundbreaker,
+		/datum/advclass/foreigner/ronin,
+		/datum/advclass/ranger/twilight_hunter,
+		/datum/advclass/foreigner/gronnadv,
+		/datum/advclass/foreigner/marinero,
+		/datum/advclass/tat_class/adventurer
+	)
+	. = ..()

@@ -38,7 +38,7 @@
 	user << browse(null, "window=capturekeypress")
 
 	for(var/datum/tgui/ui in user.tgui_open_uis)
-		if(istype(ui.src_object, /datum/loadout_menu))
+		if(istype(ui.src_object, /datum/loadout_panel))
 			ui.close()
 
 	migrant.hide_ui()

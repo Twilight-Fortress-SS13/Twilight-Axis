@@ -148,7 +148,7 @@ const MARK_CHECK =
 const NARDS_W = 372;
 const NARDS_H = 392;
 
-const SIDE_NAME: Record<Side, string> = { w: 'White', b: 'Black' };
+const SIDE_NAME: Record<Side, string> = { w: 'Белые', b: 'Черные' }; // TA EDIT
 
 /// Width, height and vertical nudge of each chess sprite on its square
 const PIECE_SIZE: Record<string, [number, number, number]> = {
@@ -170,21 +170,21 @@ const MODES: {
 }[] = [
   {
     key: 'chess',
-    name: 'Chess',
-    blurb: 'The game of kings. Checkmate the enemy king.',
-    variants: ['Set up'],
+    name: 'Шахматы', // TA EDIT START
+    blurb: 'Игра королей. Поставьте мат королю противника.',
+    variants: ['Разложить'], // TA EDIT END
   },
   {
     key: 'checkers',
-    name: 'Checkers',
-    blurb: 'Jump and capture across the dark squares.',
-    variants: ['Short kings', 'Flying kings'],
+    name: 'Шашки', // TA EDIT START
+    blurb: 'Ходите по темным клеткам и рубите шашки противника.',
+    variants: ['Обычная дамка', 'Дальняя дамка'], // TA EDIT END
   },
   {
     key: 'nards',
-    name: 'Backgammon',
-    blurb: 'Race your checkers home by the roll of the dice.',
-    variants: ['Short rules', 'Long rules'],
+    name: 'Нарды', // TA EDIT START
+    blurb: 'Приведите все шашки в дом, бросая кости.',
+    variants: ['Короткие нарды', 'Длинные нарды'], // TA EDIT END
   },
 ];
 
@@ -263,7 +263,7 @@ export const ChessBoard = () => {
   useEffect(() => setPicker(false), [data.mode, data.variant]);
 
   return (
-    <Window width={800} height={650} title="Chessboard" theme="parchment">
+    <Window width={800} height={650} title="Игровая доска" theme="parchment">
       <Window.Content scrollable>
         <div
           style={{
@@ -316,23 +316,23 @@ const SeatBar = (props: { side: Side }) => {
   if (!seat.name) {
     button = (
       <Button icon="chair" onClick={() => act('sit', { side })}>
-        Sit
+        {'Сесть' /* TA EDIT */}
       </Button>
     );
   } else if (seat.mine) {
     button = (
       <Button icon="sign-out-alt" onClick={() => act('stand', { side })}>
-        Get up
+        {'Встать' /* TA EDIT */}
       </Button>
     );
   } else if (seat.away) {
     button = (
       <Button
         icon="user-slash"
-        tooltip="They have walked away from the board."
+        tooltip="Игрок отошел от доски."
         onClick={() => act('stand', { side })}
       >
-        Clear seat
+        {'Освободить место' /* TA EDIT */}
       </Button>
     );
   }
@@ -372,16 +372,16 @@ const SeatBar = (props: { side: Side }) => {
             color: seat.name ? INK : INK_FAINT,
           }}
         >
-          {seat.name || 'Empty seat'}
-          {!!seat.mine && <span style={badgeStyle(SEAL_GREEN)}>You</span>}
+          {seat.name || 'Место свободно'}
+          {!!seat.mine && <span style={badgeStyle(SEAL_GREEN)}>{'Вы' /* TA EDIT */}</span>}
           {!!seat.away && !seat.mine && (
-            <span style={badgeStyle(INK_FAINT)}>Away</span>
+            <span style={badgeStyle(INK_FAINT)}>{'Отошел' /* TA EDIT */}</span>
           )}
         </div>
         <div style={{ fontSize: FONT_SMALL, color: INK_SOFT }}>
           {SIDE_NAME[side]}
-          {active && ' · to move'}
-          {nards && ` · ${nards.off[side === 'w' ? 0 : 1]}/15 borne off`}
+          {active && ' · ходит'}
+          {nards && ` · ${nards.off[side === 'w' ? 0 : 1]}/15 выведено`}
         </div>
       </div>
       {button}
@@ -551,7 +551,7 @@ const GridBoard = (props: { flip: boolean; myTurn: boolean }) => {
             }}
           >
             <div style={{ fontWeight: 'bold', marginBottom: '6px' }}>
-              Promote the pawn
+              {'Превращение пешки' /* TA EDIT */}
             </div>
             <div style={{ display: 'flex', gap: '6px' }}>
               {PROMOTIONS.map((kind) => {
@@ -586,7 +586,7 @@ const GridBoard = (props: { flip: boolean; myTurn: boolean }) => {
               })}
             </div>
             <Button mt={1} icon="times" onClick={() => setPromo(0)}>
-              Cancel
+              {'Отмена' /* TA EDIT */}
             </Button>
           </div>
         </div>
@@ -868,7 +868,7 @@ const NardsBoard = (props: { flip: boolean; myTurn: boolean }) => {
           disabled={!nards.can_roll}
           onClick={() => act('roll')}
         >
-          Roll
+          {'Бросить кости' /* TA EDIT */}
         </Button>
         {faces.map((face, i) =>
           face ? (
@@ -885,14 +885,14 @@ const NardsBoard = (props: { flip: boolean; myTurn: boolean }) => {
           ) : null,
         )}
         <div style={{ flex: 1, fontSize: FONT_SMALL, color: INK_SOFT }}>
-          {nards.rolls.length > 0 && `Left to play: ${nards.rolls.join(', ')}`}
+          {nards.rolls.length > 0 && `Осталось разыграть: ${nards.rolls.join(', ')}`}
         </div>
         <Button
           icon="sign-out-alt"
           disabled={!myTurn || !nards.targets.includes(0)}
           onClick={() => act('point', { point: 0 })}
         >
-          Bear off
+          {'Вывести' /* TA EDIT */}
         </Button>
       </div>
     </div>
@@ -910,7 +910,7 @@ const SidePanel = (props: { myTurn: boolean; openPicker: () => void }) => {
   }, [history.length]);
 
   let tone = INK_SOFT;
-  if (data.result || data.status.includes('Check')) {
+  if (data.result || data.status.includes('Шах')) { // TA EDIT
     tone = SEAL_RED;
   } else if (myTurn) {
     tone = SEAL_GREEN;
@@ -919,8 +919,8 @@ const SidePanel = (props: { myTurn: boolean; openPicker: () => void }) => {
   let startHint: string | undefined;
   if (!data.can_start) {
     startHint = data.side
-      ? 'Both seats must be filled.'
-      : 'Sit down to start the game.';
+      ? 'Оба места должны быть заняты.' // TA EDIT
+      : 'Сядьте за доску, чтобы начать партию.'; // TA EDIT
   }
 
   return (
@@ -936,15 +936,15 @@ const SidePanel = (props: { myTurn: boolean; openPicker: () => void }) => {
       <div style={panelCard}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={capsStyle}>Game</div>
+            <div style={capsStyle}>{'Игра' /* TA EDIT */}</div>
             <div
               style={{ fontFamily: TITLE_FONT, color: TITLE, fontSize: '18px' }}
             >
-              {data.label || 'None chosen'}
+              {data.label || 'Не выбрано'}
             </div>
           </div>
           <Button icon="chess-board" onClick={openPicker}>
-            Change
+            {'Изменить' /* TA EDIT */}
           </Button>
         </div>
         {!!data.rules && (
@@ -986,21 +986,21 @@ const SidePanel = (props: { myTurn: boolean; openPicker: () => void }) => {
                 tooltip={startHint}
                 onClick={() => act('start')}
               >
-                {data.started ? 'Resume' : 'Start game'}
+                {data.started ? 'Продолжить' : 'Начать игру'}
               </Button>
             )}
             {!!data.can_pause && (
               <Button icon="pause" onClick={() => act('pause')}>
-                Pause
+                {'Пауза' /* TA EDIT */}
               </Button>
             )}
             {!!data.can_resign && (
               <Button.Confirm
                 icon="flag"
-                confirmContent="Really resign?"
+                confirmContent="Сдаться?"
                 onClick={() => act('resign')}
               >
-                Resign
+                {'Сдаться' /* TA EDIT */}
               </Button.Confirm>
             )}
           </div>
@@ -1010,7 +1010,7 @@ const SidePanel = (props: { myTurn: boolean; openPicker: () => void }) => {
       {!!data.pending_label && (
         <div style={requestCard}>
           <div>
-            <b>{data.mode_name}</b> proposes switching to{' '}
+            <b>{data.mode_name}</b> предлагает переключиться на{' '}
             <b>{data.pending_label}</b>.
           </div>
           <div style={rowStyle}>
@@ -1024,12 +1024,12 @@ const SidePanel = (props: { myTurn: boolean; openPicker: () => void }) => {
                   })
                 }
               >
-                Agree
+                {'Согласиться' /* TA EDIT */}
               </Button>
             )}
             {!!data.can_cancel_mode && (
               <Button icon="times" onClick={() => act('cancel_mode')}>
-                {data.can_answer_mode ? 'Decline' : 'Withdraw'}
+                {data.can_answer_mode ? 'Отклонить' : 'Отозвать'}
               </Button>
             )}
           </div>
@@ -1041,18 +1041,18 @@ const SidePanel = (props: { myTurn: boolean; openPicker: () => void }) => {
           <div>
             <b>{data.reset_name}</b>
             {data.reset_left
-              ? ` will reset the board and clear the seats in ${data.reset_left}s.`
-              : ' asks to reset the board.'}
+              ? ` сбросит доску и освободит места через ${data.reset_left} сек.` // TA EDIT
+              : ' предлагает сбросить доску.' /* TA EDIT */}
           </div>
           <div style={rowStyle}>
             {!!data.can_answer_reset && (
               <Button icon="check" onClick={() => act('reset')}>
-                Agree
+                {'Согласиться' /* TA EDIT */}
               </Button>
             )}
             {!!data.can_cancel_reset && (
               <Button icon="times" onClick={() => act('cancel_reset')}>
-                {data.can_answer_reset ? 'Decline' : 'Cancel'}
+                {data.can_answer_reset ? 'Отклонить' : 'Отменить'}
               </Button>
             )}
           </div>
@@ -1076,7 +1076,7 @@ const SidePanel = (props: { myTurn: boolean; openPicker: () => void }) => {
             borderBottom: `1px solid ${INK_FAINT}`,
           }}
         >
-          Moves
+          {'Ходы' /* TA EDIT */}
         </div>
         <div ref={log} style={{ flex: 1, overflowY: 'auto', padding: '2px 0' }}>
           {history.length ? (
@@ -1106,7 +1106,7 @@ const SidePanel = (props: { myTurn: boolean; openPicker: () => void }) => {
                 fontSize: FONT_SMALL,
               }}
             >
-              No moves yet.
+              {'Ходов пока нет.' /* TA EDIT */}
             </div>
           )}
         </div>
@@ -1116,29 +1116,29 @@ const SidePanel = (props: { myTurn: boolean; openPicker: () => void }) => {
         <Button.Confirm
           icon="undo"
           disabled={!data.mode}
-          confirmContent="Reset the board?"
-          tooltip="Set the pieces back up. Mid-match, the other player must agree."
+          confirmContent="Сбросить доску?"
+          tooltip="Расставить фигуры заново. Во время партии нужно согласие второго игрока."
           onClick={() => act('reset')}
         >
-          Reset
+          {'Сбросить' /* TA EDIT */}
         </Button.Confirm>
         <Button.Confirm
           icon="random"
           disabled={!data.can_flip}
-          confirmContent="Flip it?"
+          confirmContent="Опрокинуть доску?"
           onClick={() => act('flip')}
         >
-          Flip board
+          {'Опрокинуть доску' /* TA EDIT */}
         </Button.Confirm>
         <Button
           icon="box"
           disabled={!data.can_pack}
           tooltip={
-            data.can_pack ? undefined : 'Finish or reset the game first.'
+            data.can_pack ? undefined : 'Сначала завершите или сбросьте партию.' // TA EDIT
           }
           onClick={() => act('pack')}
         >
-          Pack up
+          {'Сложить доску' /* TA EDIT */}
         </Button>
       </div>
     </div>
@@ -1181,7 +1181,7 @@ const ModePicker = (props: { onClose?: () => void }) => {
             textAlign: 'center',
           }}
         >
-          Set up the board
+          {'Разложить доску' /* TA EDIT */}
         </div>
         <div
           style={{
@@ -1193,8 +1193,8 @@ const ModePicker = (props: { onClose?: () => void }) => {
           }}
         >
           {midgame
-            ? 'A match is under way, so your opponent must agree to a change.'
-            : 'Pick a game to lay out.'}
+            ? 'Партия уже идет. Противник должен согласиться на изменение.' // TA EDIT
+            : 'Выберите настольную игру.' /* TA EDIT */}
         </div>
         {MODES.map((mode) => (
           <div
@@ -1240,7 +1240,7 @@ const ModePicker = (props: { onClose?: () => void }) => {
         {!!onClose && (
           <div style={{ textAlign: 'center', marginTop: '6px' }}>
             <Button icon="times" onClick={onClose}>
-              Close
+              {'Закрыть' /* TA EDIT */}
             </Button>
           </div>
         )}

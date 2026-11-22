@@ -29,14 +29,14 @@ SUBSYSTEM_DEF(questpool)
 				pool_weights[proto.pool_kind] = list()
 			pool_weights[proto.pool_kind][qtype] = proto.pool_weight
 	init_quest_factions()
-	count_region_landmarks()
-	// Front-load every region to its full target so roundstart has a healthy mix.
-	refresh_pool_targets(QUEST_POOL_ROUNDSTART_MULT)
-	regen_kill_targets(total_kill_target())
-	regen_fetch_targets()
-	stagger_roundstart_lapses()
 	RegisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH, PROC_REF(on_mob_death))
 	return ..()
+
+/datum/controller/subsystem/questpool/proc/on_map_ready()
+	count_region_landmarks() // TA EDIT START
+	regen_kill_targets(total_kill_target(QUEST_POOL_ROUNDSTART_MULT), QUEST_POOL_ROUNDSTART_MULT)
+	regen_fetch_targets(QUEST_POOL_ROUNDSTART_MULT)
+	stagger_roundstart_lapses() // TA EDIT END
 
 /datum/controller/subsystem/questpool/proc/on_mob_death(datum/source, mob/living/dead, gibbed)
 	SIGNAL_HANDLER
@@ -194,6 +194,8 @@ SUBSYSTEM_DEF(questpool)
 		var/target = kill_targets_by_region[TR.region_name]
 		if(!target)
 			continue
+		if(!region_allows_pool(TR, QUEST_POOL_KILL) || !has_landmark_for_region(TR.region_name))
+			continue
 		var/have = count_kill_quests_in(TR.region_name)
 		if(have >= target)
 			continue
@@ -224,6 +226,10 @@ SUBSYSTEM_DEF(questpool)
 
 /datum/controller/subsystem/questpool/proc/regen_fetch_targets()
 	for(var/datum/threat_region/TR as anything in SSregionthreat.threat_regions)
+		if(!TR.evergreen_target)
+			continue
+		if(!region_allows_pool(TR, QUEST_POOL_EVERGREEN) || !has_landmark_for_region(TR.region_name))
+			continue
 		var/have = count_evergreen_quests_in(TR.region_name)
 		var/needed = (evergreen_targets_by_region[TR.region_name] || 0) - have
 		for(var/i in 1 to needed)

@@ -33,7 +33,7 @@
 	var/atom/movable/moving_from_pull		//attempt to resume grab after moving instead of before.
 	var/list/acted_explosions	//for explosion dodging
 	glide_size = 6
-	appearance_flags = TILE_BOUND|PIXEL_SCALE
+	appearance_flags = TILE_BOUND|PIXEL_SCALE|LONG_GLIDE
 	var/datum/forced_movement/force_moving = null	//handled soley by forced_movement.dm
 	///Holds information about any movement loops currently running/waiting to run on the movable. Lazy, will be null if nothing's going on (pulled in from Vanderlin)
 	var/datum/movement_packet/move_packet
@@ -171,7 +171,7 @@
 		var/mob/M = AM
 		log_combat(src, M, "grabbed", addition="passive grab")
 		if(M.doing)
-			M.doing = FALSE
+			M.stop_all_doing() // TA EDIT
 		if(!supress_message)
 			M.visible_message("<span class='warning'>[src] [M.cmode ? "<b>clings</b> onto" : "grabs"] [M].</span>", \
 				"<span class='danger'>[src] grabs onto you.</span>")

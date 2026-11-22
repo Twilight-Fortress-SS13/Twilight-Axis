@@ -8,11 +8,9 @@
 
 	planning_subtrees = list(
 		/datum/ai_planning_subtree/being_a_minion,
-		/datum/ai_planning_subtree/aggro_find_target,
-		/datum/ai_planning_subtree/basic_melee_attack_subtree,
 		/datum/ai_planning_subtree/attack_obstacle_in_path,
-
-
+		/datum/ai_planning_subtree/basic_melee_attack_subtree,
+		/datum/ai_planning_subtree/aggro_find_target,
 	)
 
 
@@ -26,10 +24,10 @@
 
 	planning_subtrees = list(
 		/datum/ai_planning_subtree/being_a_minion,
-		/datum/ai_planning_subtree/aggro_find_target,
 		/datum/ai_planning_subtree/attack_obstacle_in_path,
 		/datum/ai_planning_subtree/spacing/melee,
 		/datum/ai_planning_subtree/basic_melee_attack_subtree/spear,
+		/datum/ai_planning_subtree/aggro_find_target,
 	)
 
 /datum/ai_controller/skeleton_ranged
@@ -42,9 +40,9 @@
 
 	planning_subtrees = list(
 		/datum/ai_planning_subtree/being_a_minion,
-		/datum/ai_planning_subtree/aggro_find_target,
-		/datum/ai_planning_subtree/spacing/ranged,
 		/datum/ai_planning_subtree/basic_ranged_attack_subtree,
+		/datum/ai_planning_subtree/aggro_find_target,
+		/datum/ai_planning_subtree/spacing/ranged, // TA EDIT
 	)
 
 ///Key difference is minion is at the end and that it is an /event, so they will attack on the way there
@@ -71,8 +69,8 @@
 /datum/ai_controller/skeleton_ranged/event
 	planning_subtrees = list(
 
-		/datum/ai_planning_subtree/spacing/ranged,
+		/datum/ai_planning_subtree/spacing/ranged, // TA EDIT START
 		/datum/ai_planning_subtree/basic_ranged_attack_subtree,
 		/datum/ai_planning_subtree/simple_find_target/closest,
-		/datum/ai_planning_subtree/travel_to_point/and_clear_target,
+		/datum/ai_planning_subtree/travel_to_point/and_clear_target, // TA EDIT END
 	)

@@ -237,12 +237,15 @@
 
 
 	var/effect_to_apply = (L.mind ? /datum/status_effect/debuff/vulnerable : /datum/status_effect/debuff/exposed)
+	var/is_mount = FALSE
+	if(istype(L, /mob/living/simple_animal) && L.GetComponent(/datum/component/riding))
+		is_mount = TRUE
 
 	L.apply_status_effect(effect_to_apply, feintdur)
 	L.apply_status_effect(/datum/status_effect/debuff/clickcd, max(1.5 SECONDS + skill_factor, 2.5 SECONDS))
-	L.Immobilize(0.5 SECONDS)
+	L.Immobilize(is_mount ? 2 SECONDS : 0.5 SECONDS)
 	L.stamina_add(L.stamina * 0.1)
-	L.apply_slowdown(3 SECONDS)
+	L.apply_slowdown(is_mount ? 4 SECONDS : 3 SECONDS, is_mount ? SLOWDOWN_SEVERITY_HEAVY : SLOWDOWN_SEVERITY_MODERATE) // TA EDIT
 	if(L.d_intent == INTENT_DODGE)
 		L.changeNext_def(clamp(L.dodgetime + 3, 0, CLICK_CD_DODGE))
 		L.changeMaxDodge(-3)
@@ -278,5 +281,13 @@
 
 /datum/rmb_intent/weak
 	name = "weak"
-	desc = "Your attacks deal 20% damage and will never critically-hit. Useful for longer punishments, play-fighting, and bloodletting."
+	desc = "Your attacks deal 20% damage and will never critically-hit. Useful for longer punishments, play-fighting, and bloodletting.\nRight click will attempt to steal from the target." // TA EDIT
 	icon_state = "rmbweak"
+
+/datum/rmb_intent/weak/special_attack(mob/living/carbon/human/user, mob/living/carbon/human/target) // TA EDIT
+	if(!istype(target) || !istype(user) || !target.Adjacent(user)) // TA EDIT
+		return // TA EDIT
+	if(user.incapacitated()) // TA EDIT
+		return // TA EDIT
+	user.attempt_steal(user, target) // TA EDIT
+	return ..() // TA EDIT

@@ -1,0 +1,208 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/obj/structure/bookcase/random/religion,
+/obj/structure/fluff/walldeco/psybanner/red{
+	pixel_y = 32
+	},
+/obj/item/book/rogue/bibble/psy,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/inq/basement)
+"c" = (
+/obj/machinery/light/rogue/hearth{
+	pixel_y = 8
+	},
+/obj/item/natural/ash{
+	pixel_x = -4;
+	pixel_y = 7
+	},
+/obj/item/natural/ash{
+	pixel_x = 4;
+	pixel_y = 7
+	},
+/obj/structure/fluff/walldeco/psybanner/red{
+	pixel_x = -32
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/inq/basement)
+"d" = (
+/obj/structure/fluff/walldeco/church/line{
+	dir = 8
+	},
+/obj/structure/fluff/railing/border{
+	dir = 9
+	},
+/turf/open/floor/rogue/churchmarble,
+/area/rogue/indoors/inq/basement)
+"e" = (
+/obj/structure/fluff/walldeco/med4{
+	pixel_x = 32
+	},
+/obj/structure/bookcase/random/religion,
+/obj/structure/fluff/walldeco/psybanner/red{
+	pixel_y = -32
+	},
+/obj/item/book/rogue/bibble/psy,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/inq/basement)
+"g" = (
+/turf/closed/wall/mineral/rogue/craftstone,
+/area/rogue/indoors/inq/basement)
+"j" = (
+/obj/structure/fluff/railing/border{
+	dir = 1
+	},
+/obj/machinery/light/rogue/candle/blue/l,
+/obj/structure/chair/stool/rogue,
+/turf/open/floor/carpet/royalblack,
+/area/rogue/indoors/inq/basement)
+"l" = (
+/obj/structure/fluff/walldeco/church/line{
+	dir = 1
+	},
+/obj/structure/fluff/walldeco/church/line{
+	dir = 4
+	},
+/turf/open/floor/rogue/churchmarble,
+/area/rogue/indoors/inq/basement)
+"m" = (
+/obj/structure/fluff/walldeco/church/line{
+	dir = 8
+	},
+/obj/structure/fluff/walldeco/church/line,
+/turf/open/floor/rogue/churchmarble,
+/area/rogue/indoors/inq/basement)
+"q" = (
+/obj/structure/fluff/walldeco/church/line{
+	dir = 8
+	},
+/obj/structure/fluff/railing/border{
+	dir = 8
+	},
+/turf/open/floor/rogue/churchmarble,
+/area/rogue/indoors/inq/basement)
+"w" = (
+/obj/structure/fluff/walldeco/psybanner/red{
+	pixel_y = 32
+	},
+/obj/structure/bookcase/random/archive,
+/obj/item/book/rogue/bibble/psy,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/inq/basement)
+"B" = (
+/turf/open/floor/carpet/royalblack,
+/area/rogue/indoors/inq/basement)
+"C" = (
+/obj/structure/fluff/walldeco/church/line{
+	dir = 4
+	},
+/turf/open/floor/rogue/churchmarble,
+/area/rogue/indoors/inq/basement)
+"H" = (
+/obj/structure/bookcase/random/archive,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/inq/basement)
+"I" = (
+/obj/structure/curtain/red{
+	pixel_y = 32
+	},
+/turf/open/floor/carpet/royalblack,
+/area/rogue/indoors/inq/basement)
+"J" = (
+/obj/machinery/light/rogue/candle/blue/l,
+/obj/structure/fluff/railing/border,
+/obj/structure/bookcase/random/religion,
+/obj/item/book/rogue/bibble/psy,
+/turf/open/floor/carpet/royalblack,
+/area/rogue/indoors/inq/basement)
+"L" = (
+/obj/structure/chair/stool/rogue,
+/obj/machinery/light/rogue/candle/blue/r,
+/turf/open/floor/carpet/royalblack,
+/area/rogue/indoors/inq/basement)
+"P" = (
+/obj/structure/fluff/walldeco/psybanner/red{
+	pixel_y = -32
+	},
+/obj/structure/lever/bookcase{
+	redstone_id = "secret_inq_torture_area";
+	icon = 'modular_twilight_axis/icons/roguetown/misc/bookshelf.dmi'
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/inq/basement)
+"Q" = (
+/obj/structure/fluff/walldeco/church/line{
+	dir = 4
+	},
+/obj/structure/fluff/walldeco/church/line,
+/turf/open/floor/rogue/churchmarble,
+/area/rogue/indoors/inq/basement)
+"T" = (
+/obj/structure/bars/passage/shutter/bookcase{
+	redstone_id = "secret_inq_torture_area";
+	max_integrity = 15000;
+	icon = 'modular_twilight_axis/icons/roguetown/misc/bookshelf.dmi'
+	},
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/inq/basement)
+"V" = (
+/obj/structure/fluff/walldeco/church/line{
+	dir = 1
+	},
+/obj/structure/fluff/walldeco/church/line{
+	dir = 8
+	},
+/obj/structure/fluff/railing/border{
+	dir = 10
+	},
+/turf/open/floor/rogue/churchmarble,
+/area/rogue/indoors/inq/basement)
+"Z" = (
+/obj/structure/table/wood/poor,
+/obj/item/candle/silver/lit{
+	pixel_x = 3;
+	pixel_y = 13
+	},
+/obj/item/book/rogue/bibble/psy{
+	pixel_x = -7;
+	pixel_y = -1
+	},
+/obj/structure/fluff/wallclock/r,
+/turf/open/floor/rogue/concrete,
+/area/rogue/indoors/inq/basement)
+
+(1,1,1) = {"
+g
+w
+J
+c
+j
+P
+g
+"}
+(2,1,1) = {"
+H
+I
+V
+q
+d
+m
+B
+"}
+(3,1,1) = {"
+T
+I
+l
+C
+C
+Q
+B
+"}
+(4,1,1) = {"
+g
+a
+L
+Z
+L
+e
+g
+"}

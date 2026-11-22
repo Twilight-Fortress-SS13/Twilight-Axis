@@ -14,10 +14,10 @@
 	job_traits = list(TRAIT_SEWING_EXPERT)
 	outfit = /datum/outfit/job/roguetown/tailor
 	give_bank_account = TRUE
-	min_pq = 0
+	min_pq = 1
 	max_pq = null
 	round_contrib_points = 3
-	cmode_music = 'sound/music/cmode/towner/combat_towner3.ogg'
+	cmode_music = sound("sound/music/cmode/towner/combat_towner3.ogg")
 	advclass_cat_rolls = list(CTAG_TAILOR = 2)
 	job_subclasses = list(
 		/datum/advclass/tailor

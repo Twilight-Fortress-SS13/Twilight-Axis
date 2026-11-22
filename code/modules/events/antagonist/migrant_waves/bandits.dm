@@ -4,7 +4,7 @@
 	wave_type = /datum/migrant_wave/gnolls
 	max_occurrences = 2
 
-	weight = 18
+	weight = 0
 
 	earliest_start = 30 MINUTES
 	min_players = 30
@@ -18,6 +18,17 @@
 	if(is_storyteller_soft_antag_blocked())
 		return EVENT_CANT_RUN
 	if(SSgamemode.current_storyteller?.preferred_gnoll_mode == GNOLL_SCALING_NONE)
+		return EVENT_CANT_RUN
+	return ..()
+
+// TA EDIT - DESERT TOWN
+/datum/round_event_control/antagonist/migrant_wave/banditsorgnolls/canSpawnEvent(players_amt, gamemode, fake_check)
+	if(SSmapping.config.map_name == "Desert Town")
+		return FALSE
+	return ..()
+// TA EDIT - DESERT TOWN
+/datum/round_event_control/antagonist/migrant_wave/banditsorgnolls/preRunEvent()
+	if(is_storyteller_soft_antag_blocked())
 		return EVENT_CANT_RUN
 	return ..()
 

@@ -26,6 +26,7 @@ GLOBAL_PROTECT(##log_var_name);\
 // These should be used where the log category cannot easily be a json log file.
 DECLARE_LOG(config_error_log, DONT_START_LOG)
 DECLARE_LOG(perf_log, DONT_START_LOG) // Declared here but name is set in time_track subsystem
+DECLARE_LOG_NAMED(world_mail_log, "mail", START_LOG) // TA EDIT
 
 #if defined(UNIT_TESTS) || defined(SPACEMAN_DMM)
 DECLARE_LOG_NAMED(test_log, "tests", START_LOG)

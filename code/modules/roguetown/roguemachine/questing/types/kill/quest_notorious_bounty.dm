@@ -1,5 +1,6 @@
 /datum/quest/kill/notorious_bounty
 	quest_type = QUEST_NOTORIOUS_BOUNTY
+	region_quest_type = QUEST_BOUNTY
 	chronicle_order = QUEST_CHRONICLE_ORDER_NOTORIOUS_BOUNTY
 	pool_kind = QUEST_POOL_KILL
 	pool_weight = QUEST_POOL_WEIGHT_NOTORIOUS_BOUNTY

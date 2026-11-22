@@ -22,6 +22,7 @@
 
 	generator_path = options[type]
 	deselect_region()
+	BM.log_action("selected map generator '[type]' ([generator_path]).") // TA EDIT
 
 /datum/buildmode_mode/mapgen/handle_click(client/c, params, obj/object)
 	if(isnull(generator_path))
@@ -40,4 +41,6 @@
 		var/confirm = alert(c, "Are you sure you want to run the map generator?", "Run generator", "Yes", "No")
 		if(confirm == "Yes")
 			G.generate()
-		log_admin("Build Mode: [key_name(c)] ran the map generator '[G.buildmode_name]' in the region from [AREACOORD(cornerA)] to [AREACOORD(cornerB)]")
+			BM.log_action("ran map generator '[G.buildmode_name]' ([generator_path]) in the region from [AREACOORD(cornerA)] to [AREACOORD(cornerB)].") // TA EDIT START
+		else
+			BM.log_action("cancelled map generator '[G.buildmode_name]' ([generator_path]) for the region from [AREACOORD(cornerA)] to [AREACOORD(cornerB)].") // TA EDIT END

@@ -1,0 +1,1530 @@
+#define MARTIAL_MASTER_COMBO_WINDOW            (7 SECONDS)
+#define MARTIAL_MASTER_MAX_HISTORY             6
+#define MARTIAL_MASTER_KICK_MIN_RECOVERY       (0.5 SECONDS)
+
+#define MARTIAL_MASTER_INPUT_PUNCH             1
+#define MARTIAL_MASTER_INPUT_KICK              2
+#define MARTIAL_MASTER_INPUT_GRAB              3
+
+#define MARTIAL_MASTER_STANCE_PROC             1
+#define MARTIAL_MASTER_STANCE_PRECISE          2
+
+#define MARTIAL_MASTER_BUTTON_SWITCH_STANCE    101
+
+#define MARTIAL_MASTER_REVERSE_WINDOW          (3 SECONDS)
+#define MARTIAL_MASTER_CHAIN_STEP_WINDOW       (2 SECONDS)
+#define MARTIAL_MASTER_CHARGE_RANGE            8
+#define MARTIAL_MASTER_CHAIN_STEP_RANGE        3
+#define MARTIAL_MASTER_LINE_RANGE              2
+#define MARTIAL_MASTER_CONE_RANGE              2
+
+#define MARTIAL_MASTER_BALLOON_COOLDOWN        (0.5 SECONDS)
+
+/proc/martial_master_get_component(mob/living/user)
+	if(!isliving(user))
+		return null
+
+	var/datum/component/combo_core/martial_master/C = user.GetComponent(/datum/component/combo_core/martial_master)
+	if(!C)
+		C = user.AddComponent(/datum/component/combo_core/martial_master)
+	return C
+
+/proc/martial_master_get_component_safe(mob/living/user)
+	if(!isliving(user))
+		return null
+
+	return user.GetComponent(/datum/component/combo_core/martial_master)
+
+/datum/component/combo_core/martial_master
+	parent_type = /datum/component/combo_core/combat_style
+	dupe_mode = COMPONENT_DUPE_UNIQUE
+
+	var/current_stance = MARTIAL_MASTER_STANCE_PROC
+	var/last_action_success = FALSE
+	var/last_action_skill = 0
+	var/last_action_zone = BODY_ZONE_CHEST
+	var/mob/living/last_action_target = null
+	var/last_finisher_success = FALSE
+	var/last_matched_rule = null
+	var/reverse_ready = FALSE
+	var/reverse_expires_at = 0
+	var/chain_step_ready = FALSE
+	var/chain_step_expires_at = 0
+	var/mob/living/chain_step_target = null
+	var/list/granted_spells = list()
+	var/spells_granted = FALSE
+	var/last_balloon_at = 0
+	var/obj/item/martial_master_proxy/proxy
+
+/datum/component/combo_core/martial_master/Initialize(_combo_window, _max_history)
+	. = ..(_combo_window || MARTIAL_MASTER_COMBO_WINDOW, _max_history || MARTIAL_MASTER_MAX_HISTORY)
+	if(. == COMPONENT_INCOMPATIBLE)
+		return .
+
+	START_PROCESSING(SSprocessing, src)
+
+	StripExternalStyleSpells()
+	GrantSpells()
+
+	RegisterSignal(owner, COMSIG_ATTACK_TRY_CONSUME, PROC_REF(_sig_try_consume))
+	RegisterSignal(owner, COMSIG_MOB_PARRY_SUCCESS, PROC_REF(_sig_reverse_defense_success))
+
+	_balloon_stance()
+	return .
+
+/datum/component/combo_core/martial_master/Destroy(force)
+	STOP_PROCESSING(SSprocessing, src)
+
+	if(owner)
+		UnregisterSignal(owner, COMSIG_ATTACK_TRY_CONSUME)
+		UnregisterSignal(owner, COMSIG_MOB_PARRY_SUCCESS)
+
+		RevokeSpells()
+
+	if(proxy)
+		if(!QDELETED(proxy))
+			proxy.force = 0
+			proxy.force_dynamic = 0
+			proxy.last_attack_target = null
+			qdel(proxy)
+	proxy = null
+
+	owner = null
+	granted_spells = null
+	chain_step_target = null
+	last_action_target = null
+	return ..()
+
+/datum/component/combo_core/martial_master/process()
+	if(reverse_ready && world.time >= reverse_expires_at)
+		reverse_ready = FALSE
+		reverse_expires_at = 0
+
+	if(chain_step_ready && world.time >= chain_step_expires_at)
+		chain_step_ready = FALSE
+		chain_step_expires_at = 0
+		chain_step_target = null
+
+/datum/component/combo_core/martial_master/DefineRules()
+	RegisterRule("line",       list(MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_PUNCH), 40, PROC_REF(_cb_combo))
+	RegisterRule("cone",       list(MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_KICK),  45, PROC_REF(_cb_combo))
+	RegisterRule("charge",     list(MARTIAL_MASTER_INPUT_GRAB,  MARTIAL_MASTER_INPUT_GRAB,  MARTIAL_MASTER_INPUT_GRAB),  50, PROC_REF(_cb_combo))
+
+	RegisterRule("spear",      list(MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_KICK,  MARTIAL_MASTER_INPUT_PUNCH), 45, PROC_REF(_cb_combo))
+	RegisterRule("push",       list(MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_KICK,  MARTIAL_MASTER_INPUT_KICK),  50, PROC_REF(_cb_combo))
+
+	RegisterRule("spin",       list(MARTIAL_MASTER_INPUT_KICK,  MARTIAL_MASTER_INPUT_KICK,  MARTIAL_MASTER_INPUT_KICK),  45, PROC_REF(_cb_combo))
+	RegisterRule("swap",       list(MARTIAL_MASTER_INPUT_KICK,  MARTIAL_MASTER_INPUT_KICK,  MARTIAL_MASTER_INPUT_PUNCH), 50, PROC_REF(_cb_combo))
+	RegisterRule("chain_step", list(MARTIAL_MASTER_INPUT_KICK,  MARTIAL_MASTER_INPUT_KICK,  MARTIAL_MASTER_INPUT_GRAB),  55, PROC_REF(_cb_combo))
+
+	RegisterRule("silence",    list(MARTIAL_MASTER_INPUT_KICK,  MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_KICK),  45, PROC_REF(_cb_combo))
+	RegisterRule("cross",      list(MARTIAL_MASTER_INPUT_KICK,  MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_PUNCH), 45, PROC_REF(_cb_combo))
+
+	RegisterRule("reverse",    list(MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_PUNCH, MARTIAL_MASTER_INPUT_GRAB),  55, PROC_REF(_cb_combo))
+
+/datum/component/combo_core/martial_master/OnHistoryChanged()
+	return
+
+/datum/component/combo_core/martial_master/OnHistoryCleared(reason)
+	last_matched_rule = null
+	last_finisher_success = FALSE
+
+/datum/component/combo_core/martial_master/OnComboExpired()
+	last_matched_rule = null
+	last_finisher_success = FALSE
+
+/datum/component/combo_core/martial_master/OnComboMatched(rule_id, mob/living/target, zone)
+	last_finisher_success = TRUE
+	last_matched_rule = rule_id
+
+/datum/component/combo_core/martial_master/ConsumeOnCombo(rule_id)
+	ClearHistory("combo")
+
+/datum/component/combo_core/martial_master/proc/StripExternalStyleSpells()
+	if(!owner?.mind)
+		return
+
+	var/list/current = owner.mind.spell_list?.Copy()
+	if(!length(current))
+		return
+
+	for(var/obj/effect/proc_holder/spell/S as anything in current)
+		if(!S)
+			continue
+
+		if(istype(S, /obj/effect/proc_holder/spell/self/martial_master))
+			owner.mind.RemoveSpell(S)
+			continue
+
+		if(istype(S, /obj/effect/proc_holder/spell/self/soundbreaker))
+			owner.mind.RemoveSpell(S)
+			continue
+
+		if(istype(S, /obj/effect/proc_holder/spell/self/ronin))
+			owner.mind.RemoveSpell(S)
+			continue
+
+/datum/component/combo_core/martial_master/proc/GrantSpells()
+	if(spells_granted || !owner?.mind)
+		return
+
+	var/mob/living/L = owner
+	RevokeSpells()
+
+	var/list/paths = list(
+		/obj/effect/proc_holder/spell/self/martial_master/switch_stance
+	)
+
+	for(var/path in paths)
+		var/obj/effect/proc_holder/spell/S = new path
+		L.mind.AddSpell(S)
+		granted_spells += S
+
+	spells_granted = TRUE
+
+/datum/component/combo_core/martial_master/proc/RevokeSpells()
+	if(!owner)
+		return
+
+	if(!length(granted_spells))
+		spells_granted = FALSE
+		return
+
+	if(owner.mind)
+		for(var/obj/effect/proc_holder/spell/S as anything in granted_spells)
+			if(S)
+				owner.mind.RemoveSpell(S)
+	else
+		for(var/obj/effect/proc_holder/spell/S as anything in granted_spells)
+			if(S)
+				qdel(S)
+
+	granted_spells = list()
+	spells_granted = FALSE
+
+/datum/component/combo_core/martial_master/proc/_sig_try_consume(datum/source, atom/target_atom, zone, obj/item/W, forced_skill_id)
+	SIGNAL_HANDLER
+
+	if(!owner)
+		return 0
+
+	if(W)
+		return 0
+
+	var/skill_id = forced_skill_id || ResolveAttackInput(target_atom, W)
+	if(!IsBaseInput(skill_id))
+		return 0
+
+
+	if(!isliving(target_atom) && skill_id != MARTIAL_MASTER_INPUT_GRAB)
+		return 0
+
+	INVOKE_ASYNC(src, PROC_REF(_handle_try_consume_async), skill_id, target_atom, zone)
+	if(skill_id == MARTIAL_MASTER_INPUT_GRAB)
+		if(isliving(target_atom))
+			return 0
+		if(target_atom && !isturf(target_atom) && !isarea(target_atom))
+			return 0
+
+	return COMPONENT_ATTACK_CONSUMED
+
+/datum/component/combo_core/martial_master/proc/_handle_try_consume_async(skill_id, atom/target_atom, zone)
+	if(!owner)
+		return
+
+	owner.stamina_add(1)
+	var/zone_used = zone || BODY_ZONE_CHEST
+	var/mob/living/target = target_atom
+
+	if(skill_id == MARTIAL_MASTER_INPUT_GRAB)
+		if(istype(target))
+			if(target.stat == DEAD)
+				ClearHistory("invalid")
+				last_action_success = FALSE
+				last_finisher_success = FALSE
+				last_matched_rule = null
+				return
+		else if(isturf(target_atom) || isarea(target_atom) || !target_atom)
+			var/turf/target_turf = GetTargetTurf(target_atom)
+			if(target_turf)
+				FaceTurf(target_turf)
+			target = null
+		else
+			ClearHistory("invalid")
+			last_action_success = FALSE
+			last_finisher_success = FALSE
+			last_matched_rule = null
+			return
+
+	else
+		if(!istype(target))
+			return
+
+		if(target.stat == DEAD)
+			return
+
+		var/dmg = CalcPureDamage()
+		if(!AttackViaPipeline(target, dmg, BCLASS_PUNCH, BRUTE, zone_used, 0))
+			last_action_success = FALSE
+			last_finisher_success = FALSE
+			last_matched_rule = null
+			return
+
+	last_action_success = TRUE
+	last_action_skill = skill_id
+	last_action_zone = zone_used
+	last_action_target = target
+	last_finisher_success = FALSE
+	last_matched_rule = null
+
+	if(target && skill_id != MARTIAL_MASTER_INPUT_GRAB)
+		if(current_stance == MARTIAL_MASTER_STANCE_PROC)
+			ApplyProcPressureOnHit(target, last_action_zone, FALSE)
+		else
+			ApplyPreciseOnHit(target, last_action_zone)
+
+	if(target && chain_step_ready)
+		if(world.time >= chain_step_expires_at || !chain_step_target)
+			chain_step_ready = FALSE
+			chain_step_expires_at = 0
+			chain_step_target = null
+		else if(target == chain_step_target)
+			if(AttackMartialAreaTarget(target, max(1, 1.5), BCLASS_PUNCH, BRUTE, last_action_zone, 0))
+				ApplyArmorDamageToZone(target, last_action_zone, GetPressureDamage() * 2)
+				_balloon("chain-step hit")
+
+			chain_step_ready = FALSE
+			chain_step_expires_at = 0
+			chain_step_target = null
+
+	RegisterInput(skill_id, target, last_action_zone)
+	if(target)
+		datum_component_combo_martial_master_check_nutcracker(src, target, last_action_zone, skill_id)
+
+/datum/component/combo_core/martial_master/proc/_sig_reverse_defense_success(datum/source, mob/living/attacker)
+	SIGNAL_HANDLER
+
+	if(!reverse_ready)
+		return
+	if(world.time >= reverse_expires_at)
+		reverse_ready = FALSE
+		reverse_expires_at = 0
+		return
+	if(!attacker || attacker.stat == DEAD)
+		return
+
+	INVOKE_ASYNC(src, PROC_REF(_async_reverse_counter), attacker)
+
+/datum/component/combo_core/martial_master/proc/_async_reverse_counter(mob/living/attacker)
+	if(!owner || !attacker || attacker.stat == DEAD)
+		return
+
+	reverse_ready = FALSE
+	reverse_expires_at = 0
+
+	MartialMasterWaveUp("#5a0f1f")
+	var/d = get_dir(owner, attacker)
+	var/turf/my_turf = get_turf(owner)
+	if(my_turf && d)
+		var/turf/back = get_step(my_turf, turn(d, 180))
+		if(back && !back.density)
+			MartialMasterAfterimage(my_turf, 0.8 SECONDS)
+			owner.forceMove(back)
+
+	if(ProcStrike(attacker, BODY_ZONE_CHEST, 1.40, 1.25))
+		attacker.Knockdown(1 SECONDS)
+
+/datum/component/combo_core/martial_master/proc/ToggleStance()
+	if(current_stance == MARTIAL_MASTER_STANCE_PROC)
+		SetStance(MARTIAL_MASTER_STANCE_PRECISE)
+	else
+		SetStance(MARTIAL_MASTER_STANCE_PROC)
+
+/datum/component/combo_core/martial_master/proc/SetStance(new_stance)
+	if(current_stance == new_stance)
+		return
+
+	current_stance = new_stance
+	if(current_stance == MARTIAL_MASTER_STANCE_PROC)
+		MartialMasterParticleUp("#6b1f2b")
+	else
+		MartialMasterParticleUp("#4a4f7a")
+
+	_balloon_stance()
+
+/datum/component/combo_core/martial_master/proc/_cb_combo(rule_id, mob/living/target, zone)
+	if(!last_action_success)
+		return FALSE
+	if(!owner)
+		return FALSE
+
+	switch(rule_id)
+		if("chain_step", "reverse")
+			if(!LastInputHadTarget(TRUE))
+				return FALSE
+		if("charge")
+			if(!LastInputsHaveNoTarget(3, TRUE))
+				return FALSE
+
+	if(!target)
+		target = last_action_target
+	if(!zone)
+		zone = last_action_zone
+
+	var/success = FALSE
+
+	if(current_stance == MARTIAL_MASTER_STANCE_PRECISE)
+		success = ExecutePreciseCombo(rule_id, target, zone)
+	else
+		success = ExecuteProcCombo(rule_id, target, zone)
+
+	if(success)
+		_balloon_combo(rule_id)
+		ConsumeOnCombo(rule_id)
+
+	return success
+
+/datum/component/combo_core/martial_master/proc/LastInputHadTarget(clear_on_fail = FALSE)
+	if(!length(history))
+		if(clear_on_fail)
+			ClearHistory("invalid")
+		return FALSE
+
+	var/datum/combo_input_entry/E = history[length(history)]
+	if(E?.target)
+		return TRUE
+
+	if(clear_on_fail)
+		ClearHistory("invalid")
+	return FALSE
+
+/datum/component/combo_core/martial_master/proc/LastInputsHaveNoTarget(count, clear_on_fail = FALSE)
+	if(!length(history) || length(history) < count)
+		if(clear_on_fail)
+			ClearHistory("invalid")
+		return FALSE
+
+	var/start_index = length(history) - count + 1
+	for(var/i in start_index to length(history))
+		var/datum/combo_input_entry/E = history[i]
+		if(E?.target)
+			if(clear_on_fail)
+				ClearHistory("invalid")
+			return FALSE
+
+	return TRUE
+
+/datum/component/combo_core/martial_master/proc/_balloon_combo(rule_id)
+	switch(rule_id)
+		if("line")
+			_balloon("combo: line")
+		if("cone")
+			_balloon("combo: cone")
+		if("charge")
+			_balloon("combo: charge")
+		if("spear")
+			_balloon("combo: spear")
+		if("push")
+			_balloon("combo: push")
+		if("spin")
+			_balloon("combo: spin")
+		if("swap")
+			_balloon("combo: swap")
+		if("chain_step")
+			_balloon("combo: chain-step")
+		if("silence")
+			_balloon("combo: silence")
+		if("cross")
+			_balloon("combo: cross")
+		if("reverse")
+			_balloon("combo: reverse")
+		else
+			_balloon("combo!")
+
+/datum/component/combo_core/martial_master/proc/ExecutePreciseCombo(rule_id, mob/living/target, zone)
+	if(!owner || !target || !rule_id)
+		return FALSE
+
+	var/zone_used = TryGetZone(zone)
+	var/mult = 1.2
+	var/dmg = max(1, round(mult * GetComboBaseDamage(rule_id, TRUE) * CalcPureDamage()))
+
+	if(!AttackMartialAreaTarget(target, dmg, BCLASS_PUNCH, BRUTE, zone_used, 0))
+		return FALSE
+
+	ApplyPreciseFinisher(target, zone_used, last_action_skill, rule_id)
+	return TRUE
+
+/datum/component/combo_core/martial_master/proc/ExecuteProcCombo(rule_id, mob/living/target, zone)
+	if(!owner || !rule_id)
+		return FALSE
+
+	switch(rule_id)
+		if("line")
+			return ProcComboLine(zone)
+
+		if("cone")
+			return ProcComboCone(zone)
+
+		if("charge")
+			return ProcComboCharge(zone)
+
+		if("spear")
+			return ProcComboSpear(zone)
+
+		if("push")
+			return ProcComboPush(zone)
+
+		if("spin")
+			return ProcComboSpin(zone)
+
+		if("swap")
+			return ProcComboSwap(zone)
+
+		if("chain_step")
+			return ProcComboChainStep()
+
+		if("silence")
+			return ProcComboSilence(zone)
+
+		if("cross")
+			return ProcComboCross(zone)
+
+		if("reverse")
+			return ProcComboReverse()
+
+	return FALSE
+
+/datum/component/combo_core/martial_master/proc/GetComboBaseDamage(rule_id, precise = FALSE)
+	switch(rule_id)
+		if("line")
+			return precise ? 1.00 : 1.20
+		if("cone")
+			return precise ? 1.05 : 1.15
+		if("charge")
+			return precise ? 1.10 : 1.35
+		if("spear")
+			return precise ? 1.00 : 1.10
+		if("push")
+			return precise ? 0.95 : 1.05
+		if("spin")
+			return precise ? 1.00 : 1.10
+		if("swap")
+			return precise ? 1.00 : 1.10
+		if("chain_step")
+			return precise ? 1.05 : 1.15
+		if("silence")
+			return precise ? 0.90 : 1.00
+		if("cross")
+			return precise ? 1.00 : 1.10
+		if("reverse")
+			return precise ? 0.95 : 1.00
+
+	return precise ? 1.0 : 1.2
+
+// ------------------------------------------------------------
+// proxy / damage pipeline
+// ------------------------------------------------------------
+
+/datum/component/combo_core/martial_master/proc/GetProxy()
+	if(!owner)
+		return null
+
+	if(proxy && QDELETED(proxy))
+		proxy = null
+
+	if(!proxy)
+		proxy = new /obj/item/martial_master_proxy(owner)
+
+	return proxy
+
+/datum/component/combo_core/martial_master/proc/GetDamageFlag(bclass, damage_type)
+	switch(bclass)
+		if(BCLASS_BLUNT, BCLASS_SMASH, BCLASS_TWIST, BCLASS_PUNCH)
+			return "blunt"
+		if(BCLASS_CHOP, BCLASS_CUT, BCLASS_LASHING, BCLASS_PUNISH)
+			return "slash"
+		if(BCLASS_PICK, BCLASS_STAB, BCLASS_PIERCE)
+			return "stab"
+
+	switch(damage_type)
+		if(BRUTE)
+			return "blunt"
+		if(BURN)
+			return "fire"
+		if(TOX)
+			return "bio"
+		if(OXY)
+			return "oxy"
+
+	return "blunt"
+
+/datum/component/combo_core/martial_master/proc/AttackViaPipeline(mob/living/target, damage, bclass = BCLASS_PUNCH, damage_type = BRUTE, zone = BODY_ZONE_CHEST, armor_penetration = 0, params = null)
+	if(!owner || !target)
+		return FALSE
+
+	zone = TryGetZone(zone)
+
+	var/obj/item/martial_master_proxy/P = GetProxy()
+	if(!P)
+		return FALSE
+
+	if(P.loc != owner)
+		P.forceMove(owner)
+
+	if(!islist(params))
+		params = list()
+
+	P.force = damage
+	P.force_dynamic = damage
+	P.damtype = damage_type
+	P.thrown_bclass = bclass
+	P.d_type = GetDamageFlag(bclass, damage_type)
+	P.armor_penetration = armor_penetration
+
+	P.name = "martial strike"
+
+	P.last_attack_success = FALSE
+	P.last_attack_target = null
+
+	owner.face_atom(target)
+	owner.do_attack_animation(target, ATTACK_EFFECT_DISARM)
+	P.melee_attack_chain(owner, target, params)
+
+	return P.last_attack_success
+
+/datum/component/combo_core/martial_master/proc/CheckMartialContact(mob/living/target)
+	if(!owner || !target)
+		return FALSE
+
+	if(target.stat == DEAD)
+		return FALSE
+
+	if((target.mobility_flags & MOBILITY_STAND))
+		if(target.checkmiss(owner))
+			return FALSE
+
+	if(target.checkdefense(owner.used_intent, owner))
+		return FALSE
+
+	return TRUE
+
+/datum/component/combo_core/martial_master/proc/AttackMartialAreaTarget(mob/living/target, damage, bclass = BCLASS_PUNCH, damage_type = BRUTE, zone = BODY_ZONE_CHEST, armor_penetration = 0)
+	if(!owner || !target)
+		return FALSE
+
+	if(target.stat == DEAD)
+		return FALSE
+
+	zone = TryGetZone(zone)
+
+	if((target.mobility_flags & MOBILITY_STAND))
+		if(target.checkmiss(owner))
+			return FALSE
+
+	if(target.checkdefense(owner.used_intent, owner))
+		return FALSE
+
+	var/obj/item/martial_master_proxy/P = GetProxy()
+	if(!P)
+		return FALSE
+
+	if(P.loc != owner)
+		P.forceMove(owner)
+
+	P.force = damage
+	P.force_dynamic = damage
+	P.damtype = damage_type
+	P.thrown_bclass = bclass
+	P.d_type = GetDamageFlag(bclass, damage_type)
+	P.armor_penetration = armor_penetration
+
+	P.last_attack_success = FALSE
+	P.last_attack_target = null
+
+	SEND_SIGNAL(P, COMSIG_ITEM_ATTACK_SUCCESS, target, owner)
+	SEND_SIGNAL(target, COMSIG_ITEM_ATTACKED_SUCCESS, P, owner)
+
+	if(!iscarbon(target))
+		var/nodmg = FALSE
+		var/success = !!target.attacked_by(P, owner)
+		if(!success)
+			nodmg = TRUE
+
+		SEND_SIGNAL(target, COMSIG_ATOM_ATTACK_HAND, owner)
+
+		P.last_attack_success = success
+		P.last_attack_target = target
+
+		if(owner?.used_intent)
+			if(!nodmg)
+				if(owner.used_intent.hitsound)
+					playsound(target.loc, owner.used_intent.hitsound, 100, FALSE, -1)
+			else
+				playsound(target.loc, "nodmg", 100, FALSE, -1)
+
+		return success
+
+	var/mob/living/carbon/C = target
+	var/obj/item/bodypart/affecting = C.get_bodypart(check_zone(zone) || BODY_ZONE_CHEST)
+	if(!affecting)
+		return FALSE
+
+	var/mob/living/carbon/human/H = C
+	if(!H)
+		return FALSE
+
+	if(!H.lying_attack_check(owner))
+		return FALSE
+
+	if(H.has_status_effect(/datum/status_effect/buff/clash) && H.get_active_held_item() && ishuman(owner))
+		var/obj/item/IM = H.get_active_held_item()
+		H.process_clash(owner, IM)
+		return FALSE
+
+	var/attack_flag = "blunt"
+	switch(bclass)
+		if(BCLASS_BLUNT, BCLASS_SMASH, BCLASS_TWIST, BCLASS_PUNCH)
+			attack_flag = "blunt"
+		if(BCLASS_CHOP, BCLASS_CUT, BCLASS_LASHING, BCLASS_PUNISH)
+			attack_flag = "slash"
+		if(BCLASS_PICK, BCLASS_STAB, BCLASS_PIERCE)
+			attack_flag = "stab"
+
+	var/armor_block = H.run_armor_check(
+		zone,
+		attack_flag,
+		armor_penetration = armor_penetration,
+		blade_dulling = owner.used_intent?.blade_class,
+		damage = damage,
+		intdamfactor = owner.used_intent?.intent_intdamage_factor
+	)
+
+	H.next_attack_msg.Cut()
+	var/nodmg = FALSE
+	if(!H.apply_damage(damage, damage_type, affecting, armor_block))
+		nodmg = TRUE
+		H.next_attack_msg += VISMSG_ARMOR_BLOCKED
+	else
+		affecting.bodypart_attacked_by(
+			bclass,
+			damage,
+			owner,
+			zone,
+			crit_message = TRUE,
+			armor = armor_block,
+			weapon = P
+		)
+
+		SEND_SIGNAL(H, COMSIG_ATOM_ATTACK_HAND, owner)
+		if(affecting.body_zone == BODY_ZONE_HEAD)
+			SEND_SIGNAL(owner, COMSIG_HEAD_PUNCHED, H)
+
+	H.send_item_attack_message(P, owner, zone)
+
+	H.next_attack_msg.Cut()
+
+	P.last_attack_target = H
+	P.last_attack_success = TRUE
+
+	if(owner?.used_intent)
+		if(!nodmg)
+			if(owner.used_intent.hitsound)
+				playsound(H.loc, owner.used_intent.hitsound, 100, FALSE, -1)
+		else
+			playsound(H.loc, "nodmg", 100, FALSE, -1)
+
+	return TRUE
+
+// ------------------------------------------------------------
+// proc stance forms
+// ------------------------------------------------------------
+
+/datum/component/combo_core/martial_master/proc/CalcPureDamage()
+	if(!owner)
+		return 0
+
+	var/mob/living/carbon/human/H = owner
+	var/used_str = H.get_stat(STATKEY_STR)
+	if(H.domhand)
+		var/hand = H.active_hand_index
+		used_str = H.get_str_arms(hand)
+
+	var/damage
+	if(H.get_stat(STATKEY_STR) > UNARMED_DAMAGE_DEFAULT || H.get_stat(STATKEY_STR) < 10)
+		damage = H.get_stat(STATKEY_STR)
+	else
+		damage = UNARMED_DAMAGE_DEFAULT
+
+	if(used_str >= 11)
+		damage = max(damage + (damage * ((used_str - 10) * 0.33)), 1)
+
+	if(used_str <= 9)
+		damage = max(damage - (damage * ((10 - used_str) * 0.1)), 1)
+
+	var/obj/G = H.get_item_by_slot(SLOT_GLOVES)
+	if(istype(G, /obj/item/clothing/gloves/roguetown))
+		var/obj/item/clothing/gloves/roguetown/GL = G
+		damage = (damage + GL.unarmed_bonus)
+
+	if(H.dna?.species)
+		damage += H.dna.species.punch_damage
+
+	return max(1, round(damage))
+
+/datum/component/combo_core/martial_master/proc/ProcStrike(mob/living/target, zone, damage_mult = 1.0, armor_mult = 1.0)
+	if(!owner || !target)
+		return FALSE
+
+	var/zone_used = TryGetZone(zone)
+	var/pure_damage = CalcPureDamage()
+	var/dmg_mult = 1.1 * damage_mult
+
+	var/dmg = max(1, round(dmg_mult * pure_damage))
+
+	if(!AttackMartialAreaTarget(target, dmg, BCLASS_PUNCH, BRUTE, zone_used, 0))
+		return FALSE
+
+	ApplyArmorDamageToZone(target, zone_used, max(1, round(GetPressureDamage() * armor_mult)))
+	return TRUE
+
+/datum/component/combo_core/martial_master/proc/ProcComboLine(zone)
+	if(!owner)
+		return FALSE
+
+	var/turf/T = get_turf(owner)
+	if(!T)
+		return FALSE
+
+	var/d = owner.dir
+	var/any = FALSE
+	for(var/i in 1 to MARTIAL_MASTER_LINE_RANGE)
+		T = get_step(T, d)
+		if(!T)
+			break
+
+		MartialMasterTileFX(T, "sweep_fx")
+		for(var/mob/living/L in T)
+			if(L == owner || L.stat == DEAD)
+				continue
+			if(ProcStrike(L, zone, 1.35, 1.0))
+				any = TRUE
+
+	return any
+
+/datum/component/combo_core/martial_master/proc/ProcComboCone(zone)
+	if(!owner)
+		return FALSE
+
+	var/list/turfs = GetProcConeTurfs(owner.dir, MARTIAL_MASTER_CONE_RANGE)
+	var/any = FALSE
+
+	for(var/turf/T as anything in turfs)
+		if(!T)
+			continue
+
+		MartialMasterTileFX(T, "blip")
+		for(var/mob/living/L in T)
+			if(L == owner || L.stat == DEAD)
+				continue
+			if(ProcStrike(L, zone, 1.15, 0.8))
+				any = TRUE
+
+	return any
+
+/datum/component/combo_core/martial_master/proc/GetProcConeTurfs(dir, range = 2)
+	var/list/result = list()
+	var/turf/origin = get_turf(owner)
+	if(!origin)
+		return result
+
+	var/turf/front = get_step(origin, dir)
+	if(front)
+		result += front
+
+	if(range >= 2 && front)
+		var/turf/front2 = get_step(front, dir)
+		if(front2)
+			result += front2
+
+		var/left_dir = turn(dir, 45)
+		var/right_dir = turn(dir, -45)
+
+		var/turf/left = get_step(front, left_dir)
+		var/turf/right = get_step(front, right_dir)
+
+		if(left)
+			result += left
+		if(right)
+			result += right
+
+	return result
+
+/datum/component/combo_core/martial_master/proc/ProcComboSpin(zone)
+	if(!owner)
+		return FALSE
+
+	var/list/dirs = list(NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST)
+	var/turf/origin = get_turf(owner)
+	if(!origin)
+		return FALSE
+
+	var/delay = 0
+	for(var/d in dirs)
+		var/turf/T = get_step(origin, d)
+		if(!T)
+			continue
+
+		addtimer(CALLBACK(src, PROC_REF(_spin_hit_turf), T, zone), delay)
+		delay += 1
+
+	return TRUE
+
+/datum/component/combo_core/martial_master/proc/_spin_hit_turf(turf/T, zone)
+	if(!owner || !T)
+		return
+
+	MartialMasterTileFX(T, "sweep_fx")
+	for(var/mob/living/L in T)
+		if(L == owner || L.stat == DEAD)
+			continue
+		ProcStrike(L, zone, 1.10, 0.8)
+
+/datum/component/combo_core/martial_master/proc/ProcComboCharge(zone)
+	if(!owner)
+		return FALSE
+
+	var/mob/living/target = FindFrontConeTarget(MARTIAL_MASTER_CHARGE_RANGE)
+	if(!target)
+		return FALSE
+
+	var/turf/origin = get_turf(owner)
+	var/turf/tt = get_turf(target)
+	if(!tt)
+		return FALSE
+
+	var/d = get_dir(owner, target)
+	if(!d)
+		d = owner.dir
+
+	var/turf/before_target = get_step(tt, turn(d, 180))
+	if(before_target && !before_target.density)
+		MartialMasterAfterimage(origin, 0.8 SECONDS)
+		owner.forceMove(before_target)
+
+	return ProcStrike(target, zone, 1.45, 1.2)
+
+/// PKP - spear
+/datum/component/combo_core/martial_master/proc/ProcComboSpear(zone)
+	if(!owner)
+		return FALSE
+
+	var/turf/origin = get_turf(owner)
+	if(!origin)
+		return FALSE
+
+	var/any = FALSE
+	var/dir_forward = owner.dir
+	var/dir_back = turn(owner.dir, 180)
+
+	var/turf/front = get_step(origin, dir_forward)
+	var/turf/back = get_step(origin, dir_back)
+
+	for(var/turf/T as anything in list(front, back))
+		if(!T)
+			continue
+
+		MartialMasterTileFX(T, "sweep_fx")
+		for(var/mob/living/L in T)
+			if(L == owner || L.stat == DEAD)
+				continue
+
+			var/hit_dir = get_dir(owner, L)
+			if(ProcStrike(L, zone, 1.10, 1.0))
+				_throw_target_dir(L, hit_dir, 1, TRUE)
+				any = TRUE
+
+	return any
+
+/// PKK - push
+/datum/component/combo_core/martial_master/proc/ProcComboPush(zone)
+	if(!owner)
+		return FALSE
+
+	var/mob/living/target = last_action_target
+	if(!target || target.stat == DEAD)
+		target = FindNearbyTarget(1)
+	if(!target)
+		return FALSE
+
+	if(!ProcStrike(target, zone, 1.00, 0.9))
+		return FALSE
+
+	var/push_dist = 3
+	_throw_target_dir(target, get_dir(owner, target), push_dist, TRUE)
+	return TRUE
+
+/// KKP - swap
+/datum/component/combo_core/martial_master/proc/ProcComboSwap(zone)
+	if(!owner)
+		return FALSE
+
+	var/mob/living/target = last_action_target
+	if(!target || target.stat == DEAD)
+		target = FindNearbyTarget(1)
+	if(!target)
+		return FALSE
+
+	var/turf/my_turf = get_turf(owner)
+	var/turf/target_turf = get_turf(target)
+	if(!my_turf || !target_turf)
+		return FALSE
+
+	MartialMasterAfterimage(my_turf, 0.6 SECONDS)
+	target.forceMove(my_turf)
+	owner.forceMove(target_turf)
+	owner.face_atom(target)
+
+	return ProcStrike(target, zone, 1.10, 1.0)
+
+/// KPK - silence
+/datum/component/combo_core/martial_master/proc/ProcComboSilence(zone)
+	if(!owner)
+		return FALSE
+
+	var/mob/living/target = last_action_target
+	if(!target || target.stat == DEAD)
+		target = FindNearbyTarget(1)
+	if(!target)
+		return FALSE
+
+	if(!ProcStrike(target, zone, 1.00, 1.0))
+		return FALSE
+
+	target.apply_status_effect(/datum/status_effect/silenced, 4 SECONDS)
+	return TRUE
+
+/// KPP - cross
+/datum/component/combo_core/martial_master/proc/ProcComboCross(zone)
+	if(!owner)
+		return FALSE
+
+	var/turf/origin = get_turf(owner)
+	if(!origin)
+		return FALSE
+
+	var/any = FALSE
+	var/d = owner.dir
+	var/turf/front = get_step(origin, d)
+	if(front)
+		MartialMasterTileFX(front, "sweep_fx")
+		for(var/mob/living/L in front)
+			if(L == owner || L.stat == DEAD)
+				continue
+			if(ProcStrike(L, zone, 1.00, 1.0))
+				any = TRUE
+
+	addtimer(CALLBACK(src, PROC_REF(_cross_followup), d, zone), 0.25 SECONDS)
+	return any
+
+/datum/component/combo_core/martial_master/proc/_cross_followup(d, zone)
+	if(!owner)
+		return
+
+	var/turf/origin = get_turf(owner)
+	if(!origin)
+		return
+
+	var/turf/front = get_step(origin, d)
+	if(!front)
+		return
+
+	var/turf/left = get_step(front, turn(d, 45))
+	var/turf/right = get_step(front, turn(d, -45))
+
+	for(var/turf/T as anything in list(left, right))
+		if(!T)
+			continue
+
+		MartialMasterTileFX(T, "blip")
+		for(var/mob/living/L in T)
+			if(L == owner || L.stat == DEAD)
+				continue
+			ProcStrike(L, zone, 0.90, 0.8)
+
+/datum/component/combo_core/martial_master/proc/FindFrontTarget(max_range = 8)
+	if(!owner)
+		return null
+
+	var/turf/T = get_turf(owner)
+	if(!T)
+		return null
+
+	var/d = owner.dir
+	for(var/i in 1 to max_range)
+		T = get_step(T, d)
+		if(!T)
+			break
+
+		for(var/mob/living/L in T)
+			if(L == owner || L.stat == DEAD)
+				continue
+			return L
+
+	return null
+
+/datum/component/combo_core/martial_master/proc/FindFrontConeTarget(max_range = 5)
+	if(!owner)
+		return null
+
+	var/turf/origin = get_turf(owner)
+	if(!origin)
+		return null
+
+	var/base_dir = owner.dir
+	if(!base_dir)
+		return null
+
+	var/list/valid_dirs = list(base_dir, turn(base_dir, 45), turn(base_dir, -45))
+	var/mob/living/best_target = null
+	var/best_dist = INFINITY
+
+	for(var/mob/living/L in view(max_range, owner))
+		if(L == owner || L.stat == DEAD)
+			continue
+
+		var/turf/target_turf = get_turf(L)
+		if(!target_turf)
+			continue
+
+		var/target_dir = get_dir(origin, target_turf)
+		if(!(target_dir in valid_dirs))
+			continue
+
+		var/target_dist = get_dist(origin, target_turf)
+		if(target_dist < best_dist)
+			best_target = L
+			best_dist = target_dist
+
+	return best_target
+
+/datum/component/combo_core/martial_master/proc/ProcComboChainStep()
+	if(!owner)
+		return FALSE
+
+	var/mob/living/target = FindNearbyTarget(MARTIAL_MASTER_CHAIN_STEP_RANGE, last_action_target)
+	if(!target)
+		return FALSE
+
+	var/turf/origin = get_turf(owner)
+	var/turf/tt = get_turf(target)
+	if(!tt)
+		return FALSE
+
+	var/d = get_dir(owner, target)
+	if(!d)
+		d = owner.dir
+
+	var/turf/behind = get_step(tt, d)
+	if(behind && !behind.density)
+		MartialMasterAfterimage(origin, 0.8 SECONDS)
+		owner.forceMove(behind)
+
+	owner.face_atom(target)
+
+	chain_step_ready = TRUE
+	chain_step_expires_at = world.time + MARTIAL_MASTER_CHAIN_STEP_WINDOW
+	chain_step_target = target
+
+	return TRUE
+
+/datum/component/combo_core/martial_master/proc/FindNearbyTarget(max_range = 3, mob/living/preferred = null)
+	if(preferred && get_dist(owner, preferred) <= max_range && preferred.stat != DEAD)
+		return preferred
+
+	for(var/mob/living/L in view(max_range, owner))
+		if(L == owner || L.stat == DEAD)
+			continue
+		return L
+
+	return null
+
+/// PPG - reverse
+/datum/component/combo_core/martial_master/proc/ProcComboReverse()
+	if(!owner)
+		return FALSE
+
+	reverse_ready = TRUE
+	reverse_expires_at = world.time + MARTIAL_MASTER_REVERSE_WINDOW
+
+	MartialMasterWaveUp("#5a0f1f")
+	return TRUE
+
+// ------------------------------------------------------------
+// proc pressure
+// ------------------------------------------------------------
+
+/datum/component/combo_core/martial_master/proc/GetPressureChance()
+	var/chance = 10
+	return clamp(chance, 0, 100)
+
+/datum/component/combo_core/martial_master/proc/GetPressureDamage()
+	if(!owner)
+		return 1
+
+	var/amount = max(1, round(owner.get_stat(STAT_STRENGTH) / 2))
+	if(last_action_skill == MARTIAL_MASTER_INPUT_KICK)
+		amount += 1
+	return amount
+
+/datum/component/combo_core/martial_master/proc/ApplyArmorDamageToZone(mob/living/target, zone, amount)
+	if(!ishuman(target))
+		return
+
+	var/mob/living/carbon/human/H = target
+	var/cover_flag
+
+	switch(zone)
+		if(BODY_ZONE_HEAD)
+			cover_flag = HEAD
+		if(BODY_ZONE_CHEST)
+			cover_flag = CHEST
+		if(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM)
+			cover_flag = ARMS
+		if(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
+			cover_flag = LEGS
+		else
+			cover_flag = CHEST
+
+	for(var/obj/item/clothing/C in H.contents)
+		if(C.loc != H)
+			continue
+		if(!(C.body_parts_covered & cover_flag))
+			continue
+		if(!C.armor)
+			continue
+
+		C.take_damage(amount, BRUTE, "slash")
+		break
+
+/datum/component/combo_core/martial_master/proc/ApplyProcPressureOnHit(mob/living/target, zone, guaranteed = FALSE)
+	if(!owner || !target)
+		return FALSE
+
+	var/chance = guaranteed ? 100 : GetPressureChance()
+	if(!prob(chance))
+		return FALSE
+
+	ApplyArmorDamageToZone(target, zone, GetPressureDamage())
+	return TRUE
+
+// ------------------------------------------------------------
+// precise stance
+// ------------------------------------------------------------
+
+/datum/component/combo_core/martial_master/proc/GetPreciseStaminaDamage()
+	if(!owner)
+		return 1
+
+	var/amount = max(1, round(owner.get_stat(STAT_STRENGTH) / 4))
+	if(last_action_skill == MARTIAL_MASTER_INPUT_KICK)
+		amount += 1
+	return amount
+
+/datum/component/combo_core/martial_master/proc/ApplyPreciseOnHit(mob/living/target, zone)
+	if(!owner || !target)
+		return
+
+	if(!prob(10))
+		return
+
+	var/zone_used = TryGetZone(zone)
+	if(IsMouthZone(zone_used))
+		if(prob(40))
+			target.apply_status_effect(/datum/status_effect/silenced, 3 SECONDS)
+		return
+
+	switch(zone_used)
+		if(BODY_ZONE_HEAD)
+			target.Dizzy(1 SECONDS)
+
+		if(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
+			SafeSlow(target, 1)
+
+		if(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM)
+			if(ishuman(target))
+				var/mob/living/carbon/human/H = target
+				H.drop_all_held_items()
+			else
+				target.Immobilize(0.5 SECONDS)
+
+		if(BODY_ZONE_CHEST)
+			target.stamina_add(GetPreciseStaminaDamage())
+
+/datum/component/combo_core/martial_master/proc/ApplyPreciseFinisher(mob/living/target, zone, finisher_skill, rule_id)
+	if(!target)
+		return
+
+	if(!prob(50))
+		return
+
+	var/zone_used = TryGetZone(zone)
+	if(IsMouthZone(zone_used))
+		target.apply_status_effect(/datum/status_effect/silenced, 5 SECONDS)
+		return
+
+	switch(zone_used)
+		if(BODY_ZONE_HEAD)
+			if(finisher_skill == MARTIAL_MASTER_INPUT_PUNCH)
+				target.Stun(1.5 SECONDS)
+			else
+				target.Dizzy(1 SECONDS)
+
+		if(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM)
+			if(ishuman(target))
+				var/mob/living/carbon/human/H = target
+				H.drop_all_held_items()
+
+			if(finisher_skill == MARTIAL_MASTER_INPUT_GRAB)
+				target.Immobilize(1.5 SECONDS)
+			else
+				target.Immobilize(0.75 SECONDS)
+
+		if(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
+			if(finisher_skill == MARTIAL_MASTER_INPUT_KICK)
+				SafeOffbalance(target, 2 SECONDS)
+			else
+				SafeSlow(target, 1.5)
+
+		if(BODY_ZONE_CHEST)
+			target.stamina_add(round(target.max_stamina * 0.05))
+			if(finisher_skill == MARTIAL_MASTER_INPUT_GRAB)
+				target.Knockdown(1.5 SECONDS)
+
+// ------------------------------------------------------------
+// kick helpers
+// ------------------------------------------------------------
+
+/datum/component/combo_core/martial_master/proc/GetKickOffbalanceDuration(base_duration = 3 SECONDS)
+	return max(MARTIAL_MASTER_KICK_MIN_RECOVERY, round(base_duration * 0.7))
+
+/datum/component/combo_core/martial_master/proc/ComboUsesKick(rule_id)
+	switch(rule_id)
+		if("cone", "spear", "push", "spin", "swap", "chain_step", "silence", "cross")
+			return TRUE
+	return FALSE
+
+/datum/component/combo_core/martial_master/proc/_throw_target_dir(mob/living/target, d, distance = 1, spin = TRUE)
+	if(!target || !d)
+		return FALSE
+
+	var/turf/throw_target = target.loc
+	for(var/i = 1 to distance)
+		var/turf/next = get_step(throw_target, d)
+		if(!next)
+			break
+		throw_target = next
+
+	target.safe_throw_at(throw_target, distance, 1, owner, spin = spin)
+	return TRUE
+
+// ------------------------------------------------------------
+// utils
+// ------------------------------------------------------------
+
+/datum/component/combo_core/martial_master/proc/ResolveAttackInput(atom/target_atom, obj/item/W)
+	if(!owner)
+		return 0
+
+	if(W)
+		return 0
+
+	if(owner.used_intent)
+		var/intent_name = lowertext("[owner.used_intent.name]")
+		var/intent_type = lowertext("[owner.used_intent.type]")
+
+		if(findtext(intent_name, "grab") || findtext(intent_type, "grab"))
+			return MARTIAL_MASTER_INPUT_GRAB
+
+		if(findtext(intent_name, "kick") || findtext(intent_type, "kick"))
+			return MARTIAL_MASTER_INPUT_KICK
+
+	return MARTIAL_MASTER_INPUT_PUNCH
+
+/datum/component/combo_core/martial_master/proc/IsBaseInput(skill_id)
+	return (skill_id == MARTIAL_MASTER_INPUT_PUNCH || skill_id == MARTIAL_MASTER_INPUT_KICK || skill_id == MARTIAL_MASTER_INPUT_GRAB)
+
+/// helper to preserve nutcracker flavor
+/proc/datum_component_combo_martial_master_check_nutcracker(datum/component/combo_core/martial_master/C, mob/living/target, zone_precise, skill_id)
+	if(!C || !target)
+		return FALSE
+	if(C.current_stance != MARTIAL_MASTER_STANCE_PROC)
+		return FALSE
+	if(zone_precise != BODY_ZONE_PRECISE_GROIN)
+		return FALSE
+
+	var/chance = 15
+
+	switch(C.last_matched_rule)
+		if("reverse", "chain_step")
+			chance += 20
+		if("charge", "spin", "push")
+			chance += 40
+
+	if(skill_id == MARTIAL_MASTER_INPUT_KICK)
+		chance += 15
+
+	var/obj/item/bodypart/chest/CH = target.get_bodypart(BODY_ZONE_CHEST)
+	if(!CH)
+		return FALSE
+
+	if(prob(chance))
+		CH.add_wound(/datum/wound/cbt)
+		target.emote("groin", TRUE)
+		target.Stun(20)
+		return TRUE
+
+	return FALSE
+
+/datum/component/combo_core/martial_master/proc/IsMouthZone(zone)
+	var/zone_text = lowertext("[zone]")
+	return (findtext(zone_text, "mouth") || findtext(zone_text, "face_mouth") || findtext(zone_text, "precise_mouth"))
+
+/datum/component/combo_core/martial_master/proc/_balloon(message)
+	if(!owner?.client)
+		return
+	if(world.time < last_balloon_at + MARTIAL_MASTER_BALLOON_COOLDOWN)
+		return
+
+	last_balloon_at = world.time
+	owner.balloon_alert(owner, message)
+
+/datum/component/combo_core/martial_master/proc/_balloon_stance()
+	if(current_stance == MARTIAL_MASTER_STANCE_PROC)
+		_balloon("stance: proc")
+	else
+		_balloon("stance: precise")
+
+/datum/component/combo_core/martial_master/proc/MartialMasterTileFX(turf/T, icon_state = "sweep_fx")
+	if(!T)
+		return
+
+	var/obj/effect/temp_visual/fx = new(T)
+	fx.icon = 'icons/effects/effects.dmi'
+	fx.icon_state = icon_state
+
+/datum/component/combo_core/martial_master/proc/MartialMasterAfterimage(turf/T, duration = 0.8 SECONDS)
+	if(!owner || !T)
+		return
+
+	var/mutable_appearance/ma = mutable_appearance(owner)
+	ma.alpha = 140
+	ma.layer = owner.layer - 0.01
+	ma.appearance_flags = KEEP_TOGETHER | PIXEL_SCALE | RESET_COLOR | RESET_ALPHA
+
+	var/obj/effect/temp_visual/dir_setting/martial_master_afterimage/A = new(T)
+	A.appearance = ma
+	A.dir = owner.dir
+	QDEL_IN(A, duration)
+
+/obj/effect/temp_visual/dir_setting/martial_master_afterimage
+	name = "afterimage"
+	icon = null
+	icon_state = null
+	duration = 10
+	randomdir = FALSE
+
+/datum/component/combo_core/martial_master/proc/MartialMasterWaveUp(color = "#5a0f1f")
+	if(!owner)
+		return
+
+	var/obj/effect/temp_visual/wave_up/W = new(get_turf(owner), owner)
+	W.color = color
+	owner.vis_contents += W
+
+/datum/component/combo_core/martial_master/proc/MartialMasterParticleUp(color = null)
+	if(!owner)
+		return
+
+	var/obj/effect/temp_visual/particle_up/P = new(get_turf(owner), owner, null)
+	if(color)
+		P.color = color
+	owner.vis_contents += P
+
+// ------------------------------------------------------------
+// spells
+// ------------------------------------------------------------
+
+/obj/effect/proc_holder/spell/self/martial_master
+	name = "Martial Master Ability"
+	desc = "Base martial master ability."
+	clothes_req = FALSE
+	charge_type = "recharge"
+	cost = 0
+	xp_gain = FALSE
+
+	releasedrain = 0
+	chargedrain = 0
+	chargetime = 0
+	recharge_time = 6 SECONDS
+
+	warnie = "spellwarning"
+	no_early_release = TRUE
+	movement_interrupt = FALSE
+	spell_tier = 1
+
+	invocations = list()
+	invocation_type = "none"
+	hide_charge_effect = TRUE
+	charging_slowdown = 0
+	chargedloop = null
+	overlay_state = null
+
+	action_icon = 'modular_twilight_axis/icons/roguetown/misc/soundspells.dmi'
+
+/obj/effect/proc_holder/spell/self/martial_master/cast(list/targets, mob/living/user)
+	. = ..()
+	if(!isliving(user))
+		return
+
+	var/mob/living/L = user
+	if(L.incapacitated())
+		return
+
+	var/datum/component/combo_core/martial_master/C = martial_master_get_component_safe(L)
+	if(!C)
+		return
+
+	Execute(L, C)
+
+/obj/effect/proc_holder/spell/self/martial_master/proc/Execute(mob/living/user, datum/component/combo_core/martial_master/C)
+	return
+
+/obj/effect/proc_holder/spell/self/martial_master/switch_stance
+	name = "Switch Stance"
+	desc = "Switch between proc stance and precise stance."
+	overlay_state = "switch_stance"
+	recharge_time = 4 SECONDS
+
+/obj/effect/proc_holder/spell/self/martial_master/switch_stance/Execute(mob/living/user, datum/component/combo_core/martial_master/C)
+	if(!user || !C)
+		return
+
+	C.ToggleStance()
+
+#undef MARTIAL_MASTER_COMBO_WINDOW
+#undef MARTIAL_MASTER_MAX_HISTORY
+#undef MARTIAL_MASTER_KICK_MIN_RECOVERY
+#undef MARTIAL_MASTER_INPUT_PUNCH
+#undef MARTIAL_MASTER_INPUT_KICK
+#undef MARTIAL_MASTER_INPUT_GRAB
+#undef MARTIAL_MASTER_STANCE_PROC
+#undef MARTIAL_MASTER_STANCE_PRECISE
+#undef MARTIAL_MASTER_BUTTON_SWITCH_STANCE
+#undef MARTIAL_MASTER_REVERSE_WINDOW
+#undef MARTIAL_MASTER_CHAIN_STEP_WINDOW
+#undef MARTIAL_MASTER_CHARGE_RANGE
+#undef MARTIAL_MASTER_CHAIN_STEP_RANGE
+#undef MARTIAL_MASTER_LINE_RANGE
+#undef MARTIAL_MASTER_CONE_RANGE
+#undef MARTIAL_MASTER_BALLOON_COOLDOWN

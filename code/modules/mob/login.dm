@@ -95,8 +95,7 @@
 
 	SEND_SIGNAL(src, COMSIG_MOB_LOGIN)
 	log_message("Client [key_name(src)] has taken ownership of mob [src]([src.type])", LOG_OWNERSHIP)
-	if(isliving(src))
-		enable_client_mobs_in_contents(client)
+	enable_client_mobs_in_contents(client) // TA EDIT
 	SEND_SIGNAL(src, COMSIG_MOB_CLIENT_LOGIN, client)
 
 /**
