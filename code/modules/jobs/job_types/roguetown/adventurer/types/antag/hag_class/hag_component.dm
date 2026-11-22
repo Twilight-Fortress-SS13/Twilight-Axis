@@ -312,14 +312,14 @@
 	var/max_points
 	switch(hag_tier)
 		if(1)
-			max_victims = 6 // TA EDIT - ORIGINAL: 4
+			max_victims = 8 // TA EDIT - ORIGINAL: 4
 			max_points = 60
 		if(2)
-			max_victims = 8 // TA EDIT - ORIGINAL: 5
+			max_victims = 10 // TA EDIT - ORIGINAL: 5
 			max_points = 85
 		else
-			max_victims = 10 // TA EDIT - ORIGINAL: 6
-			max_points = 110
+			max_victims = 12s // TA EDIT - ORIGINAL: 6
+			max_points = 120
 
 	// Only block if we are trying to boon a NEW person and we're at the limit
 	// We check if the target currently has a real boon.
