@@ -10721,7 +10721,9 @@
 /obj/structure/drape/desert{
 	opacity = 1
 	},
-/turf/closed/wall/mineral/rogue/sandbrick,
+/turf/open/floor/rogue/tile/brownbrick{
+	icon = 'modular_deserttown/icons/alt/roguefloor.dmi'
+	},
 /area/rogue/indoors/town/desert)
 "cbR" = (
 /obj/structure/fluff/railing/border/west,
@@ -36324,7 +36326,7 @@
 "gYO" = (
 /obj/structure/roguewindow/harem3,
 /obj/structure/curtain/green,
-/turf/closed/wall/mineral/rogue/sandbrick,
+/turf/open/floor/rogue/tile/harem,
 /area/rogue/indoors/town/desert)
 "gYP" = (
 /obj/structure/table/wood/poor,
@@ -36732,7 +36734,7 @@
 "hcE" = (
 /obj/structure/roguewindow/harem3,
 /obj/structure/curtain/brown,
-/turf/closed/wall/mineral/rogue/sandbrick,
+/turf/open/floor/rogue/wood,
 /area/rogue/indoors/town/desert)
 "hcH" = (
 /obj/structure/fluff/railing/border/east,
@@ -63788,7 +63790,9 @@
 	dir = 4
 	},
 /obj/structure/curtain/brown,
-/turf/closed/wall/mineral/rogue/sandbrick,
+/turf/open/floor/rogue/tile/brownbrick{
+	icon = 'modular_deserttown/icons/alt/roguefloor.dmi'
+	},
 /area/rogue/indoors/town/desert)
 "mkW" = (
 /obj/structure/fluff/walldeco/church/line{
@@ -79017,8 +79021,13 @@
 /turf/open/floor/rogue/citybrick,
 /area/rogue/under/cave/dtsanctum)
 "paJ" = (
-/obj/structure/roguewindow/openclose/reinforced,
-/turf/open/floor/rogue/wood,
+/obj/structure/roguewindow/openclose/reinforced{
+	dir = 1
+	},
+/obj/structure/drape/desert{
+	opacity = 1
+	},
+/turf/closed/wall/mineral/rogue/sandbrick,
 /area/rogue/indoors/town/desert)
 "paP" = (
 /obj/structure/chair/zybantine_sofa/right,
@@ -84266,7 +84275,7 @@
 "pZz" = (
 /obj/structure/roguewindow/harem3,
 /obj/structure/curtain/brown,
-/turf/open/floor/rogue/concrete{
+/turf/open/floor/rogue/tile/brownbrick{
 	icon = 'modular_deserttown/icons/alt/roguefloor.dmi'
 	},
 /area/rogue/indoors/town/desert)
@@ -102559,7 +102568,7 @@
 /obj/structure/drape/desert{
 	opacity = 1
 	},
-/turf/closed/wall/mineral/rogue/sandbrick,
+/turf/open/floor/rogue/tile/harem1,
 /area/rogue/indoors/town/desert)
 "txu" = (
 /obj/item/cushion/zybantine{
@@ -118631,7 +118640,7 @@
 	dir = 8
 	},
 /obj/structure/curtain/brown,
-/turf/open/floor/rogue/concrete{
+/turf/open/floor/rogue/tile/brownbrick{
 	icon = 'modular_deserttown/icons/alt/roguefloor.dmi'
 	},
 /area/rogue/indoors/town/desert)
@@ -123255,7 +123264,9 @@
 /obj/structure/drape/desert{
 	opacity = 1
 	},
-/turf/open/floor/rogue/wood,
+/turf/open/floor/rogue/tile/brownbrick{
+	icon = 'modular_deserttown/icons/alt/roguefloor.dmi'
+	},
 /area/rogue/indoors/town/desert)
 "xst" = (
 /obj/structure/spider/stickyweb/solo,
@@ -448500,7 +448511,7 @@ atX
 icQ
 atX
 ybD
-txp
+xsn
 atX
 atX
 atX
@@ -451305,7 +451316,7 @@ pvI
 tsQ
 qGE
 dcQ
-atX
+paJ
 bep
 iZc
 atX
@@ -451620,7 +451631,7 @@ qGE
 atX
 bep
 iZc
-paJ
+hfD
 qGE
 jPo
 jPo
@@ -452241,10 +452252,10 @@ wVw
 oLK
 jhv
 hir
-atX
+paJ
 bep
 iZc
-atX
+hfD
 rzz
 jPo
 jPo
