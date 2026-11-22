@@ -50,6 +50,10 @@
 	)
 	expert_name = "Sneak"
 
+/datum/skill/misc/sneaking/skill_level_effect(level, datum/mind/mind) //TA EDIT
+	if(mind?.current)
+		mind.current.update_sight()
+
 /datum/skill/misc/lockpicking
 	name = "Lockpicking"
 	desc = "Speeds up lockpicking and increases success chance."

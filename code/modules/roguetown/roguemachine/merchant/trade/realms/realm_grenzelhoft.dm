@@ -117,5 +117,12 @@
 		"I sailed with one captive raider of the Gronnic coast in chains below decks for the crossing. He is delivered to your magistrate, alive, as the compact requires. Now my real cargo - grain.",
 		"Give me smoked eels by the barrel. Unjellied, please, that thing is an abomination upon humenity. I've heard the Imperial Academy's students have gotten tired of eating salmon everydaes. So eels from your river would be a nice change of pace.",
 		"Are there any venues with some fat-hipped venardines around? My crew are begging to get to know the locals.",
-		"STORIES FROM THE EMPIRE! Come drink with us, FACTOR!"
-	)  //TA EDIT
+
+		"Ever drank onion cognac? Apfelweinheim? No? Would you like to?",
+
+		"Greetings from the Lampternshores! We've an abundance of weaponry for you!",
+
+		"STORIES FROM THE EMPIRE! Come drink with us, FACTOR!",
+
+		"Vinberg's factor said to give his greetings!",
+	)

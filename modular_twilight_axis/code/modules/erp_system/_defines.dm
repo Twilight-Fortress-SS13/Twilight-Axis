@@ -96,6 +96,7 @@ GLOBAL_LIST_INIT(erp_race_body_zone_bonus, list(
 #define ERP_SATISFY_MAX_TIER 5
 
 #define ERP_NYMPHO_SATED_SP 2.0
+#define ERP_NYMPHO_PARTNER_SATED_TIME (90 MINUTES)
 
 #define ERP_NYMPHO_SOFT_CAP 20
 #define ERP_NYMPHO_HARD_CAP 40
