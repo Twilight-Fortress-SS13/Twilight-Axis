@@ -373,6 +373,7 @@ SUBSYSTEM_DEF(ticker)
 //			readied_count++
 //	var/estimated_pop = round(readied_count * 1.1)
 	gnollslot_update()
+	wyvernslot_update() // TA ADDITION
 //	update_scaling_slots(estimated_pop)
 
 	donor_job_boost_round_tick() // TA EDIT

@@ -599,6 +599,7 @@
 					var/obj/item/bodypart/BP = pick(H.bodyparts)
 					to_chat(H, span_warning("A thorn [pick("slices","cuts","nicks")] my [BP.name]."))
 					BP.receive_damage(10)
+			L.regenerate_icons() // TA ADDITION
 
 /obj/structure/flora/junglebush/attack_hand(mob/user)
 	if(isliving(user))

@@ -246,7 +246,7 @@ GLOBAL_LIST_INIT(antagonist_positions, list( //Mostly lesser antagonists
 	"Bandit",
 	"Freeman", // TA EDIT
 	"Lost Grenzel", // TA EDIT
-	"Dragon", // TA ADDITION
+	"Wyvern", // TA ADDITION
 	"Wretch",
 	"Gnoll",
 	"Hag",

@@ -137,7 +137,7 @@
 #define VAMPIRE_SPAWN	(1<<8)
 #define GNOLL			(1<<9)
 #define HAG				(1<<10)
-#define DRAGON			(1<<11) // TA ADDITION
+#define WYVERN			(1<<11) // TA ADDITION
 
 #define SLOP				(1<<13)
 
@@ -276,7 +276,7 @@
 #define JDO_WRETCH 11.2
 #define JDO_GNOLL 11.3
 #define JDO_HAG 11.4
-#define JDO_DRAGON 11.5 // TA ADDITION
+#define JDO_WYVERN 11.5 // TA ADDITION
 
 #define BITFLAG_HOLY_WARRIOR (1<<0)
 #define BITFLAG_ROYALTY (1<<1)

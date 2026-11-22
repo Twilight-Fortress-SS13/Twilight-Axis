@@ -105,10 +105,12 @@
 	wretch_slot_cap = 12
 	roundstart_prob = 50
 	guarantees_roundstart_roleset = FALSE // TA EDIT END
+	wyvern_slot = 1 // TA ADDITION
+
 /datum/storyteller/gamemode/no_antag/standard
 	name = "Standard Intensity"
 	vote_desc = "Без крупных антагонистов. Умеренное количество малых антагонистов."
-	desc = "Без крупных антагонистов. До 6 изгоев (Wretches). До 2 гноллов. Карга (Hag) присутствует. Сноходцы (Dreamwalkers) не появляются."
+	desc = "Без крупных антагонистов. До 6 изгоев (Wretches). До 2 гноллов. Карга (Hag) присутствует. Виверна (Wyvern) присутствует. Сноходцы (Dreamwalkers) не появляются."
 	color_theme = "#37b3a6"
 	vote_hidden = TRUE // TA EDIT
 	allow_dreamwalker = FALSE
@@ -137,6 +139,7 @@
 	midpop_vote_mult = 1
 	lowpop_vote_mult = 1
 	alternate_preset = null
+	wyvern_slot = 0
 	// TA EDIT END
 	roundstart_prob = 0
 	starting_point_multipliers = list(

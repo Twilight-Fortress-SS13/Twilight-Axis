@@ -91,6 +91,7 @@
 	var/highpop_vote_mult = 1
 	var/midpop_vote_mult = 1
 	var/lowpop_vote_mult = 1
+	var/wyvern_slot = 0
 	// TA EDIT END
 	/// If TRUE, a roundstart hard antag (Bandit/Lich/Werewolf/Vampire Lord) is guaranteed to roll (still needs pop >= HARD_ANTAG_MIN_POP).
 	var/guaranteed_hard = FALSE

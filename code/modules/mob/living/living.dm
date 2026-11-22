@@ -867,6 +867,7 @@
 				playsound(src, 'sound/foley/toggledown.ogg', 100, FALSE)
 				src.visible_message(span_info("[src] lays down."))
 			else
+				regenerate_icons() // TA ADDITION
 				playsound(src, 'sound/foley/toggleup.ogg', 100, FALSE)
 		else
 			to_chat(src, span_warning("I fail to get up!"))

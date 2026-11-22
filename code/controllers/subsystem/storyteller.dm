@@ -258,6 +258,7 @@ SUBSYSTEM_DEF(gamemode)
 		"Werewolf" = null,
 		"Rebel" = null,
 		"Renegade" = null,
+		"Wyvern" = null, // TA ADDITION
 	)
 
 	/// List of new player minds we currently want to give our roundstart antag to
@@ -966,6 +967,7 @@ SUBSYSTEM_DEF(gamemode)
 		misc += "Лимит Wretch: [preset.wretch_slot_cap][preset.wretch_slot_cap > 5 ? " (масштабируется)" : " (фиксированный)"]"
 	misc += "Слоты Hag: [preset.hag_slots]"
 	misc += "Dreamwalker: [preset.allow_dreamwalker ? "может выпасть" : "отключён"]"
+	misc += "Wyvern: [preset.wyvern_slot ? "появляется" : "отключён"]"
 	return misc
 
 /// Gnoll head-count a preset opens, from its scaling mode.
@@ -1417,6 +1419,10 @@ SUBSYSTEM_DEF(gamemode)
 		return "Rebel"
 	if(ispath(antag_datum, /datum/antagonist/renegade))
 		return "Renegade"
+	// TA ADDITION START
+	if(ispath(antag_datum, /datum/antagonist/wyvern))
+		return "Wyvern"
+	// TA ADDITION END
 	return null
 
 /// Switches the round to the permissive Admin sandbox preset when an admin fine-tunes via a toggle or slot
@@ -1521,6 +1527,7 @@ SUBSYSTEM_DEF(gamemode)
 //		update_scaling_slots()
 		enforce_storyteller_soft_antag_slots()
 		enforce_hag_slots()
+		enforce_wyvern_slots() // TA ADDITION
 	if(!secret_storyteller)
 		send_to_playing_players(span_notice("[current_storyteller.welcome_text]"))
 
@@ -1538,6 +1545,10 @@ SUBSYSTEM_DEF(gamemode)
 			return "auto: [gs["final_slots"]]"
 		if("Hag")
 			return "auto: [current_storyteller?.hag_slots || 0]"
+		// TA ADDITION START
+		if("Wyvern")
+			return "auto: [current_storyteller?.wyvern_slot || 0]"
+		// TA ADDITION END
 	// Hard antags + assassin roll via the injection system; the sandbox rolls nothing unless opened.
 	return (current_storyteller?.type == /datum/storyteller/gamemode/admin) ? "auto: 0" : "auto"
 
