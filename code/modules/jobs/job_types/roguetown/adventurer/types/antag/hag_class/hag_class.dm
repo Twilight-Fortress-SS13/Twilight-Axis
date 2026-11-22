@@ -94,7 +94,6 @@
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/rooted_moss)
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/creeping_moss)
 		// TA ADDITION START
-		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/vibrant_moss)
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/altered_moss)
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/forest_moss)
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/secret_moss)

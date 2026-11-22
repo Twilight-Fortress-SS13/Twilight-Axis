@@ -17,7 +17,6 @@
 		/obj/item/alch/hag_moss/enchanted/rooted		= 2,
 		/obj/item/alch/hag_moss/enchanted/creeping	= 2,
 		// TA ADDITION START
-		/obj/item/alch/hag_moss/enchanted/vibrant		= 2,
 		/obj/item/alch/hag_moss/enchanted/secret		= 2,
 		/obj/item/alch/hag_moss/enchanted/forest		= 2,
 		/obj/item/alch/hag_moss/enchanted/altered		= 2,

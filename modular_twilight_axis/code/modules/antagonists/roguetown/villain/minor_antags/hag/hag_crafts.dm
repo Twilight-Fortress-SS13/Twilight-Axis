@@ -1,9 +1,3 @@
-/datum/crafting_recipe/roguetown/alchemy/hag/vibrant_moss
-	name = "moss vibrant"
-	result = list(/obj/item/alch/hag_moss/enchanted/vibrant = 1)
-	reqs = list(/obj/item/alch/hag_moss/mercy = 1, /obj/item/alch/rosa = 1, /obj/item/alch/hypericum = 1)
-	craftdiff = 6
-
 /datum/crafting_recipe/roguetown/alchemy/hag/boned_moss
 	name = "moss boned"
 	result = list(/obj/item/alch/hag_moss/enchanted/boned = 1)
@@ -39,13 +33,6 @@
 	name = "moss power"
 	result = list(/obj/item/alch/hag_moss/enchanted/power = 1)
 	reqs = list(/obj/item/alch/hag_moss/fury = 1, /obj/item/alch/hag_moss/envy = 1)
-
-// Moss
-/obj/item/alch/hag_moss/enchanted/vibrant
-	name = "Vibrant Moss"
-	boon_path = /datum/hag_boon/buff/rejuvenate
-	desc = "This moss is overly-bright, overflowing with energy."
-	color = "#00ff00" // oversaturated on purpose
 
 /obj/item/alch/hag_moss/enchanted/boned
 	name = "Boned Moss"
