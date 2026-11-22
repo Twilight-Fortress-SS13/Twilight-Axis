@@ -12,8 +12,13 @@
 		"Я ЕСТЬ САМА ЗЕМЛЯ. ТЫ ДОЛЖЕН БЛАГОДАРИТЬ МЕНЯ ЗА ДОЗВОЛЕНИЕ СТУПАТЬ ПО НЕЙ.",
 	)
 	// The hug really often need to heal someone, to continue their work...
-	miracles = list(/datum/action/cooldown/spell/miracle/heal								= CLERIC_T1,
-					/datum/action/cooldown/spell/miracle/bloodmiracle						= CLERIC_T1,)
+	miracles = list(
+		/datum/action/cooldown/spell/touch/orison								= CLERIC_T0,
+		/obj/effect/proc_holder/spell/self/roots_movement						= CLERIC_T1,
+		/obj/effect/proc_holder/spell/self/wildshape/hag_disgusting_form		= CLERIC_T1,
+		/datum/action/cooldown/spell/miracle/heal								= CLERIC_T1,
+		/datum/action/cooldown/spell/miracle/bloodmiracle						= CLERIC_T1,
+		)
 
 /datum/patron/mossmother/on_lesser_heal(
 	mob/living/user,

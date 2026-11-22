@@ -111,7 +111,7 @@
 
 /datum/hag_boon/buff/rejuvenate
 	name = "Wyrd's Rejuvenation"
-	desc = "Cures all long-term physical ailments, including: blindness, ugliness, missing limbs, and leprosy. Does not heal immediate wounds such as fractures and bleeds, and will not fix divine curses such as lux-taint, silver-weakness, vampirisim, or lycanthropy."
+	desc = "Cures all long-term physical ailments, including: blindness, ugliness, missing limbs, oldness, and leprosy. Does not heal immediate wounds such as fractures and bleeds, and will not fix divine curses such as lux-taint, silver-weakness, vampirisim, or lycanthropy."
 	points = 30
 	status_type = /datum/status_effect/buff/hag_boon/wyrd_rejuv
 
@@ -198,6 +198,15 @@
 		to_chat(H, span_smallgreen("My constitution bolsters as my illness vanishes!"))
 		H.charflaws.Remove(leper)
 		QDEL_NULL(leper)
+	if(H.age == AGE_MIDDLEAGED)
+		H.change_stat(STATKEY_SPD, 1)
+		to_chat(H, span_warning("You can feel your body becoming as fast and dextrous as it was in your youth!"))
+	else if(H.age == AGE_OLD)
+		H.change_stat(STATKEY_STR, 1)
+		H.change_stat(STATKEY_SPD, 2)
+		H.change_stat(STATKEY_PER, 1)
+		H.change_stat(STATKEY_CON, 2)
+		to_chat(H, span_warning("You feel your body getting dextrous, strong and sturdy - and even though you look just as old, your body feels like new now!"))
 	var/list/regenerable_zones = list(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG, BODY_ZONE_TAUR)
 	for(var/obj/item/bodypart/BP in H.bodyparts)
 		if(BP.is_prosthetic_limb())

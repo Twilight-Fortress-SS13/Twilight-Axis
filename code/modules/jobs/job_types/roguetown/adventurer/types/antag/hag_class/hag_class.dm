@@ -37,9 +37,11 @@
 		/datum/skill/craft/alchemy = SKILL_LEVEL_LEGENDARY,
 		/datum/skill/craft/sewing = SKILL_LEVEL_MASTER,
 		/datum/skill/craft/cooking = SKILL_LEVEL_MASTER,
-		/datum/skill/magic/holy = SKILL_LEVEL_MASTER, // TA ADDITION
-		/datum/skill/labor/farming = SKILL_LEVEL_APPRENTICE, // TA ADDITION
-		/datum/skill/labor/butchering = SKILL_LEVEL_APPRENTICE, // TA ADDITION
+		// TA ADDITION START
+		/datum/skill/magic/holy = SKILL_LEVEL_MASTER,
+		/datum/skill/labor/farming = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/labor/butchering = SKILL_LEVEL_APPRENTICE,
+		// TA ADDITION END
 	)
 	subclass_languages = list(
 		/datum/language/oldazurian, // (gerson voice) you're old!
@@ -113,10 +115,6 @@
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/wyrd_mirror)
 
 		// TA REMOVAL: H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/repulse)
-		// TA ADDITION START
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/roots_movement)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/wildshape/hag_disgusting_form)
-		// TA ADDITION END
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/spiritual_siphon)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/transmutation_rite)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/grant_boon)

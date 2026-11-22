@@ -116,14 +116,7 @@
 		if(hag_mob && hag_mob.mind && victim)
 			hag_mob.mind.i_know_person(victim)
 
-	// TA EDIT - ORIGINAL:
-	// var/datum/hag_boon/B = new boon_path(true_name, src, set_points)
-	// ORIGINAL END
-	var/mob/living/victim = find_target(true_name)
 	var/datum/hag_boon/B = new boon_path(true_name, src, set_points)
-	if(victim && HAS_TRAIT(victim, TRAIT_FEYTOUCHED))
-		B.transmutable = FALSE // you can't curse your feytouched for ez levelups
-	// TA EDIT END
 	var/list/name_list = boon_registry[true_name]
 	name_list += B
 
@@ -261,11 +254,6 @@
 	var/has_scar_20 = FALSE
 
 	for(var/t_name in boon_registry)
-		// TA ADDITION START
-		var/mob/living/carbon/target = find_target(t_name)
-		if(target && iscarbon(target) && target.extra_boon_budget) // cursed feybound DO NOT count towards tiering up
-			continue
-		// TA ADDITION END
 		var/datum/hag_boon/curse_scar/S = find_boon_by_type(t_name, /datum/hag_boon/curse_scar)
 		if(!S)
 			continue
@@ -310,11 +298,6 @@
 
 	var/active_victims = 0
 	for(var/v_name in boon_registry)
-		// TA ADDITION START
-		var/mob/living/victim = find_target(v_name)
-		if(victim && HAS_TRAIT(victim, TRAIT_FEYBOUND))
-			continue
-		// TA ADDITION END
 		var/has_real_boon = FALSE
 		for(var/datum/hag_boon/B in boon_registry[v_name])
 			// If they have a valid hag boon that IS NOT a curse and IS NOT a scar
@@ -338,11 +321,6 @@
 			max_victims = 10 // TA EDIT - ORIGINAL: 6
 			max_points = 110
 
-	// TA ADDITION START
-	var/mob/living/carbon/C = L
-	if(istype(C) && HAS_TRAIT(C, TRAIT_FEYBOUND))
-		max_points = C.extra_boon_budget
-	// TA ADDITION END
 	// Only block if we are trying to boon a NEW person and we're at the limit
 	// We check if the target currently has a real boon.
 	var/target_has_boon = FALSE
@@ -410,7 +388,7 @@
 		return FALSE
 	if(C.mind.has_antag_datum(/datum/antagonist/assassin))
 		return FALSE
-	if(HAS_TRAIT(C, TRAIT_FEYBOUND) && !C.extra_boon_budget) // TA EDIT - ORIGINAL: if(HAS_TRAIT(C, TRAIT_FEYBOUND))
+	if(HAS_TRAIT(C, TRAIT_FEYBOUND))
 		return FALSE
 	return TRUE
 
