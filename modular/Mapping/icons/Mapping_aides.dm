@@ -57,8 +57,8 @@
 	visible_message(span_warning("[src] catches fire!"))
 	var/turf/T = get_turf(src)
 	qdel(src)
-	if(T)
-		new /obj/effect/hotspot(T)
+	if(T) // TA EDIT
+		new /obj/effect/hotspot(T) // TA EDIT
 
 /obj/structure/spider/stickyweb/solo
 	icon_state = "stickyweb3"

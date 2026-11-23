@@ -531,7 +531,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	if(!target.has_extractable_lux())
 		to_chat(user, span_danger("Его душа слишком слаба, чтобы отдать частичку..."))
 		return FALSE
-	if(istiefling(target) || isdullahan(target))
+	if(istiefling(target) || isdullahan(target)) //TA EDIT
 		to_chat(user, span_danger("Его люкс инфернальный. Это не сработает."))
 		return FALSE
 	if(isaasimar(target) && !(HAS_TRAIT(target, TRAIT_ANCIENT_HAG) || HAS_TRAIT(target, TRAIT_FEYTOUCHED)))

@@ -4,7 +4,9 @@
 /area/rogue/outdoors/desert
 	name = "Inner Dunes"
 	icon_state = "desert"
+	// TA EDIT BEGIN: Added for deserttown contracts
 	threat_region = THREAT_REGION_DESERT_NEAR
+	// TA EDIT END
 	soundenv = 19
 	ambientsounds = AMB_TOWNDAY
 	ambientnight = AMB_TOWNNIGHT
@@ -35,7 +37,9 @@
 /area/rogue/outdoors/desertdeep
 	name = "Deep Dunes"
 	icon_state = "desertdeep"
+	// TA EDIT BEGIN: Added for deserttown contracts
 	threat_region = THREAT_REGION_DESERT_DEEP
+	// TA EDIT END
 	warden_area = TRUE
 	ambientsounds = AMB_TOWNDAY
 	ambientnight = AMB_TOWNNIGHT

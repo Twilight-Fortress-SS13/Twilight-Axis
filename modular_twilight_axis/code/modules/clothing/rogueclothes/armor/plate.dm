@@ -170,7 +170,7 @@
 	desc = "She promised to guide and protect them, yet suffered nothing but pain from their misguided adherence to the Old Order.."
 	icon_state = "baothaplate"
 	item_state = "baothaplate"
-	max_integrity = ARMOR_INT_CHEST_PLATE_ANTAG - 250
+	max_integrity = ARMOR_INT_CHEST_PLATE_ANTAG - 250 //TA EDIT
 	armor_class = ARMOR_CLASS_LIGHT //The big, big thing.
 	color = null
 	chunkcolor = "#dd2166"
