@@ -376,7 +376,7 @@ GLOBAL_LIST_EMPTY(fey_vessels)
 /datum/virtue/utility/homesteader
 	name = "Pilgrim (-3 TRI)"
 	added_traits = list(TRAIT_HOMESTEAD_EXPERT)
-	softcap = TRUE
+	softcap = FALSE // TA EDIT
 	desc= "As they say, 'hearth is where the heart is'. You are intimately familiar with the labors of lyfe, and have stowed away everything necessary to start anew: a hunting dagger, your trusty hoe, and a sack of assorted supplies."
 	ui_fa_icon = "house-fire"
 	triumph_cost = 3
