@@ -67,6 +67,42 @@ GLOBAL_LIST_EMPTY(leyline_activations)
 	last_process = world.time
 	GLOB.leyline_sites += src
 	set_light(l_outer_range = 3, l_power = 1, l_color = color, l_on = TRUE)
+	if(!istype(src, /obj/structure/leyline/tamed))
+		spawn_wild_tulips() //TA EDIT
+
+/// Наша штука, спавним тюльпаны у лейлиний
+/// Только на открытом грунте и траве в радиусе двух тайлов от лейлинии.
+/obj/structure/leyline/proc/spawn_wild_tulips()
+	var/turf/origin = get_turf(src)
+	if(!origin)
+		return
+	var/list/valid_turfs = list(
+		/turf/open/floor/rogue/dirt,
+		/turf/open/floor/rogue/dirt/road,
+		/turf/open/floor/rogue/grass,
+		/turf/open/floor/rogue/grasscold,
+		/turf/open/floor/rogue/grasspurple,
+		/turf/open/floor/rogue/grassyel,
+		/turf/open/floor/rogue/grassred,
+		/turf/open/floor/rogue/grassgrey,
+		/turf/open/floor/rogue/snowpatchy,
+		)
+	var/list/candidates = list()
+	for(var/turf/open/T in range(5, origin))
+		if(T == origin)
+			continue
+		if(!is_type_in_list(T, valid_turfs))
+			continue
+		if(T.is_blocked_turf(TRUE))
+			continue
+		candidates += T
+	if(!length(candidates))
+		return
+	for(var/i in 1 to rand(1, 2))
+		if(!length(candidates))
+			return
+		var/turf/T = pick_n_take(candidates)
+		new /obj/structure/flora/roguegrass/herb/tulip(T)
 
 /obj/structure/leyline/Destroy()
 	GLOB.leyline_sites -= src

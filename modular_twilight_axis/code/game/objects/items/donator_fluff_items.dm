@@ -1362,3 +1362,105 @@
 	mob_overlay_icon = 'modular_twilight_axis/icons/obj/items/donor_weapons_64.dmi'
 	worn_x_dimension = 64
 	worn_y_dimension = 64
+
+/obj/item/herbseed/tulip
+	name = "tulip seeds"
+	seed_identity = "tulip seeds"
+	makes_herb = /obj/structure/flora/roguegrass/herb/tulip
+
+/obj/item/herbseed/tulip/black
+	name = "black tulip seeds"
+	seed_identity = "black tulip seeds"
+	makes_herb = /obj/structure/flora/roguegrass/herb/tulip/black
+
+/obj/item/storage/belt/rogue/pouch/tulip_seeds
+	name = "pouch of tulip seeds"
+	desc = "A small pouch of tulip seeds."
+	populate_contents = list(
+	/obj/item/herbseed/tulip,
+	/obj/item/herbseed/tulip,
+	/obj/item/herbseed/tulip,
+	/obj/item/herbseed/tulip,
+	)
+
+/obj/item/storage/belt/rogue/pouch/tulip_seeds/black
+	name = "pouch of black tulip seeds"
+	desc = "A small pouch of black tulip seeds."
+	populate_contents = list(
+	/obj/item/herbseed/tulip/black,
+	/obj/item/herbseed/tulip/black,
+	/obj/item/herbseed/tulip/black,
+	/obj/item/herbseed/tulip/black,
+	)
+
+/obj/structure/flora/roguegrass/herb/tulip
+	name = "tulip"
+	desc = "Originally a white tulip turned blue by the arcane experiments of the Grenzelhoft sages. Symbolizes passion and wisdom, admired amongst the empire's royalty and mages."
+	icon = 'modular_twilight_axis/icons/misc/tulpans.dmi'
+	icon_state = "tulip_flower"
+	herbtype = /obj/item/alch/tulip
+
+/obj/structure/flora/roguegrass/herb/tulip/black
+	name = "black tulip"
+	desc = "This specific flower grows exclusively in the most deep and obscure corners of the Underdark and while can be grown on the surface's soil any seeds extracted from it would turn to ash. That said, there are still a few foolish, desperate or brave who would venture for them and come back."
+	icon_state = "tulip_black_flower"
+	herbtype = /obj/item/alch/tulip/black
+
+/obj/item/alch/tulip
+	name = "tulip"
+	desc = "A blue flower purified by mana and will."
+	icon = 'modular_twilight_axis/icons/misc/tulpans.dmi'
+	icon_state = "tulip"
+	item_state = "tulip"
+	mob_overlay_icon = 'modular_twilight_axis/icons/misc/tulpans.dmi'
+	sellprice = SELLPRICE_HERB_COMMON
+	slot_flags = null
+
+/obj/item/alch/tulip/black
+	name = "black tulip"
+	desc = "An exceptionally rare and elegant flower, seemingly surrounded by mystery."
+	icon_state = "tulip_black"
+	item_state = "tulip_black"
+
+/obj/item/bouquet/tulip
+	name = "tulip bouquet"
+	desc = "Blue tulips bundled together with string and a scrap of parchment. Said to bring wisdom to whoever is handed one."
+	icon = 'modular_twilight_axis/icons/misc/tulpans.dmi'
+	item_state = "tulip_bouquet"
+	icon_state = "tulip_bouquet"
+
+/obj/item/bouquet/tulip/black
+	name = "black tulip bouquet"
+	desc = "Black tulips bundled together with string and a scrap of parchment. Beautiful, and more than a little unsettling."
+	item_state = "tulip_black_bouquet"
+	icon_state = "tulip_black_bouquet"
+
+/datum/crafting_recipe/roguetown/bouquet_tulip
+	name = "tulip bouquet"
+	result = /obj/item/bouquet/tulip
+	reqs = list(/obj/item/alch/tulip = 4,
+				/obj/item/natural/fibers = 2,
+				/obj/item/paper/scroll = 1)
+	craftdiff = 0
+	verbage_simple = "arranged"
+	verbage = "arranges"
+
+/datum/crafting_recipe/roguetown/bouquet_black_tulip
+	name = "black tulip bouquet"
+	result = /obj/item/bouquet/tulip/black
+	reqs = list(/obj/item/alch/tulip/black = 4,
+				/obj/item/natural/fibers = 2,
+				/obj/item/paper/scroll = 1)
+	craftdiff = 0
+	verbage_simple = "arranged"
+	verbage = "arranges"
+
+/datum/alch_grind_recipe/tulip_seed
+	name = "Herb Seed (Tulip)"
+	valid_input = /obj/item/alch/tulip
+	valid_outputs = list(/obj/item/herbseed/tulip = 1)
+
+/datum/alch_grind_recipe/black_tulip_seed
+	name = "Herb Seed (Black Tulip)"
+	valid_input = /obj/item/alch/tulip/black
+	valid_outputs = list(/obj/item/natural/ash = 1)
