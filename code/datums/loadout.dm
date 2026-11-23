@@ -24,7 +24,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 		return
 
 	var/obj/targetitem = path
-	// TA EDIT - Subscription requirements are shown in the access column.
+	// TA EDIT
 	desc = targetitem?.desc || desc || ""
 
 /datum/loadout_item/proc/donator_ckey_check(key)

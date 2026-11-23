@@ -116,7 +116,7 @@
 	outfit = /datum/outfit/job/roguetown/town_watch/dungeoneer
 	maximum_possible_slots = 1
 	category_tags = list(CTAG_TOWN_WATCH)
-	traits_applied = list(TRAIT_GUARDSMAN, TRAIT_STEELHEARTED, TRAIT_CIVILIZEDBARBARIAN, TRAIT_CRITICAL_RESISTANCE, TRAIT_IGNOREDAMAGESLOWDOWN) //TA EDIT
+	traits_applied = list(TRAIT_GUARDSMAN, TRAIT_STEELHEARTED, TRAIT_CIVILIZEDBARBARIAN, TRAIT_CRITICAL_RESISTANCE, TRAIT_IGNOREDAMAGESLOWDOWN)
 	subclass_stats = list(
 		STATKEY_STR = 3,
 		STATKEY_CON = 2,

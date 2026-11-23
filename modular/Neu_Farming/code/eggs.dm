@@ -42,7 +42,6 @@
 		visible_message("<span class='warning'>[H] crushes [src] underfoot.</span>")
 		qdel(src)
 
-// TA EDIT
 /obj/item/reagent_containers/food/snacks/rogue/egg/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
 	. = ..()
 	if(QDELETED(src))

@@ -71,7 +71,7 @@
 
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
-			if(H.mind) //TA EDIT START
+			if(H.mind)
 				var/talismans = list("The Wolf, Plotting", "The Spider, Rising")
 				var/talismanschoice = input(H, "Choose your path", "Beasts of the North") as anything in talismans
 				switch(talismanschoice)
@@ -80,7 +80,7 @@
 					if("The Spider, Rising")
 						id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/spider
 			else
-				id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn //TA EDIT END
+				id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
 		if(/datum/patron/inhumen/graggar)
 			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/graggar/gronn
 		if(/datum/patron/inhumen/matthios)

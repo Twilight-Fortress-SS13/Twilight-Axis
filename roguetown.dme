@@ -1852,6 +1852,7 @@
 #include "code\modules\client\economic_chronicle.dm"
 #include "code\modules\client\familiar_prefs.dm"
 #include "code\modules\client\gods_rankings.dm"
+#include "code\modules\client\loadout_menu.dm"
 #include "code\modules\client\manual_donator.dm"
 #include "code\modules\client\message.dm"
 #include "code\modules\client\player_details.dm"

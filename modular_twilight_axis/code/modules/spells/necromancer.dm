@@ -340,31 +340,31 @@
 #undef TWILIGHT_NECRO_CRYSTAL_MAX_SUMMONS
 #undef TWILIGHT_NECRO_CRYSTAL_MAX_CHARGES
 
-/mob/living/carbon/human/species/skeleton/conjured/undead/champion/after_creation() // TA EDIT
+/mob/living/carbon/human/species/skeleton/conjured/undead/champion/after_creation()
 	. = ..()
-	ta_setup_undead_ai() // TA EDIT
+	ta_setup_undead_ai()
 
-/mob/living/carbon/human/species/skeleton/conjured/undead/horde/after_creation() // TA EDIT
+/mob/living/carbon/human/species/skeleton/conjured/undead/horde/after_creation()
 	. = ..()
-	ta_setup_undead_ai() // TA EDIT
+	ta_setup_undead_ai()
 
-/mob/living/carbon/human/species/skeleton/conjured/undead/proc/ta_setup_undead_ai() // TA EDIT
+/mob/living/carbon/human/species/skeleton/conjured/undead/proc/ta_setup_undead_ai()
 	if(QDELETED(src) || !ai_controller || client)
 		return
 	if(!islist(ai_controller.planning_subtrees))
 		return
-	var/list/ta_undead_planning = list(/datum/ai_planning_subtree/summoned_skeleton_find_target) // TA EDIT
-	for(var/datum/ai_planning_subtree/subtree as anything in ai_controller.planning_subtrees) // TA EDIT
+	var/list/ta_undead_planning = list(/datum/ai_planning_subtree/summoned_skeleton_find_target)
+	for(var/datum/ai_planning_subtree/subtree as anything in ai_controller.planning_subtrees)
 		if(!istype(subtree))
 			continue
 		if(subtree.type == /datum/ai_planning_subtree/aggro_find_target || subtree.type == /datum/ai_planning_subtree/being_a_minion || subtree.type == /datum/ai_planning_subtree/summoned_skeleton_find_target)
 			continue
-		ta_undead_planning += subtree.type // TA EDIT
-	ta_undead_planning += /datum/ai_planning_subtree/being_a_minion // TA EDIT
-	ai_controller.replace_planning_subtrees(ta_undead_planning) // TA EDIT
-	ai_controller.max_target_distance = 12 // TA EDIT
-	ai_controller.idle_requires_client = TRUE // TA EDIT
-	ai_controller.set_blackboard_key(BB_AGGRO_RANGE, 9) // TA EDIT
-	pet_passive = FALSE // TA EDIT
-	ai_controller.nudge_target_scan() // TA EDIT
-	ai_controller.wake_for_combat() // TA EDIT
+		ta_undead_planning += subtree.type
+	ta_undead_planning += /datum/ai_planning_subtree/being_a_minion
+	ai_controller.replace_planning_subtrees(ta_undead_planning)
+	ai_controller.max_target_distance = 12
+	ai_controller.idle_requires_client = TRUE
+	ai_controller.set_blackboard_key(BB_AGGRO_RANGE, 9)
+	pet_passive = FALSE
+	ai_controller.nudge_target_scan()
+	ai_controller.wake_for_combat()

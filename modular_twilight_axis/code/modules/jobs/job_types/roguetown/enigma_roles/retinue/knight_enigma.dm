@@ -175,7 +175,7 @@
 		if(helmchoice != "None")
 			head = helmets[helmchoice]
 
-		var/onhelm = list( //TA EDIT START
+		var/onhelm = list(
 			"Horns" = /obj/item/clothing/head/roguetown/onhelm/tw_d_horns,
 			"Howers" = /obj/item/clothing/head/roguetown/onhelm/tw_d_castle_red,
 			"Afreet" = /obj/item/clothing/head/roguetown/onhelm/tw_d_efreet,
@@ -193,7 +193,7 @@
 			)
 		var/onhelmchoice = input(H, "Choose your decor.", "RAISE UP THE SYMBOL") as anything in onhelm
 		if(onhelmchoice != "None")
-			mask = onhelm[onhelmchoice] //TA EDIT END
+			mask = onhelm[onhelmchoice]
 
 		backpack_contents = list(
 		/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1,

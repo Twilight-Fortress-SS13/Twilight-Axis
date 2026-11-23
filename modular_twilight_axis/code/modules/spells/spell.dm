@@ -53,11 +53,11 @@
 		return TRUE
 	return FALSE
 
-/datum/action/cooldown/spell/mending // TA EDIT START
+/datum/action/cooldown/spell/mending
 	point_cost = 2
 
 /datum/action/cooldown/spell/mindlink
 	point_cost = 2
 
 /datum/action/cooldown/spell/create_campfire
-	point_cost = 1 // TA EDIT END
+	point_cost = 1

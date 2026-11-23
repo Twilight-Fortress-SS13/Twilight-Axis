@@ -139,11 +139,11 @@
 		return TRUE
 
 	// Try to make blacktallow with ash
-	if(is_ash_item(I)) // TA EDIT
+	if(is_ash_item(I))
 		if(tgui_alert(user, "Soak the tallow in ash to make blacktallow?", "Make Blacktallow", list("Yes", "No")) != "Yes")
 			return TRUE
 
-		consume_ash_unit(I) // TA EDIT
+		consume_ash_unit(I)
 		changefood(/obj/item/reagent_containers/food/snacks/tallow/black, user)
 		to_chat(user, span_notice("You stain the tallow with ash, turning it into blacktallow."))
 		return TRUE

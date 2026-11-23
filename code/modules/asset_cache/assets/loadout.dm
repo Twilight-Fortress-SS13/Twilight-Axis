@@ -4,7 +4,7 @@
 
 /datum/asset/spritesheet_batched/loadout_icons/create_spritesheets()
 	// TA EDIT START
-	// TA EDIT - fcopy() does not create directories on a fresh deployment.
+	// TA EDIT
 	var/source_directory = "data/spritesheets/loadout_sources"
 	var/marker = "[source_directory]/.keep"
 	rustg_file_write("", marker)
@@ -19,7 +19,7 @@
 			var/icon_file = layer["icon"]
 			var/source_name = "[icon_file]"
 			if(!(source_name in source_files))
-				// TA EDIT - IconForge needs a disk file, even on RSC-only deployments.
+				// TA EDIT
 				var/source_path = "[source_directory]/[md5(source_name)].dmi"
 				if(fcopy(icon_file, source_path))
 					source_files[source_name] = source_path
@@ -33,7 +33,7 @@
 				icon_file, layer["icon_state"], SOUTH, 1)
 			preview.scale(40, 40)
 			insert_icon(sprite_id, preview)
-			// TA EDIT - BYOND validates the resource; IconForge reads its copy.
+			// TA EDIT
 			var/list/entry = entries[sprite_id]
 			entry["icon_file"] = source_path
 	// TA EDIT END

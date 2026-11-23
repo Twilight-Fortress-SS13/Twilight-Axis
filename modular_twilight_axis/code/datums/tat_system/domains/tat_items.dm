@@ -1437,7 +1437,6 @@
 			return candidate
 	return "[base_name] ([world.time])"
 
-// TA EDIT START
 /datum/tat_items/proc/get_preference_loadout_metadata()
 	var/list/metadata_by_path = list()
 	var/datum/preferences/preferences = owner_build?.owner_preferences
@@ -1460,9 +1459,8 @@
 		var/list/metadata = preferences.gear_list[key]
 		entries += list(islist(metadata) ? deepCopyList(metadata) : list())
 	return metadata_by_path
-// TA EDIT END
 
-/datum/tat_items/proc/add_item_path_to_mind_stash(mob/living/carbon/human/H, item_path, amount = 1, list/preference_metadata) // TA EDIT
+/datum/tat_items/proc/add_item_path_to_mind_stash(mob/living/carbon/human/H, item_path, amount = 1, list/preference_metadata)
 	if(!H?.mind || !ispath(item_path, /obj/item))
 		return FALSE
 	if(!islist(H.mind.special_items))
@@ -1476,11 +1474,10 @@
 		if(!key)
 			continue
 		H.mind.special_items[key] = item_path
-		if(islist(preference_metadata) && i <= preference_metadata.len) // TA EDIT START
+		if(islist(preference_metadata) && i <= preference_metadata.len)
 			var/list/metadata = preference_metadata[i]
 			if(islist(metadata) && metadata.len)
 				H.mind.special_items_metadata[key] = deepCopyList(metadata)
-		// TA EDIT END
 		if(should_sale_lock_item_path(item_path))
 			H.mind.tat_mark_special_item_unmintable(key)
 		added = TRUE
@@ -1499,7 +1496,7 @@
 		if(H.mind.special_items[key] != item_path)
 			continue
 		H.mind.tat_unmintable_special_items -= key
-		H.mind.special_items_metadata -= key // TA EDIT
+		H.mind.special_items_metadata -= key
 		H.mind.special_items -= key
 		removed++
 	return removed > 0
@@ -2063,7 +2060,7 @@
 		return FALSE
 	var/added = FALSE
 	var/list/coin_pouch_amounts = list()
-	var/list/preference_metadata = get_preference_loadout_metadata() // TA EDIT
+	var/list/preference_metadata = get_preference_loadout_metadata()
 	for(var/item_path in get_all_item_paths())
 		var/stash_amount = get_effective_stash_spawn_amount(item_path)
 		if(stash_amount <= 0)
@@ -2071,12 +2068,11 @@
 		if(is_coin_pouch_path(item_path))
 			coin_pouch_amounts[item_path] = round(coin_pouch_amounts[item_path] || 0) + stash_amount
 			continue
-		var/list/item_metadata = preference_metadata["[item_path]"] // TA EDIT START
+		var/list/item_metadata = preference_metadata["[item_path]"]
 		if(islist(item_metadata))
 			var/consumed = min(item_metadata.len, get_consumed_donor_loadout_amount(item_path))
 			item_metadata.Cut(1, consumed + 1)
-		// TA EDIT END
-		if(add_item_path_to_mind_stash(H, item_path, stash_amount, item_metadata)) // TA EDIT
+		if(add_item_path_to_mind_stash(H, item_path, stash_amount, item_metadata))
 			added = TRUE
 	if(length(coin_pouch_amounts))
 		if(spawn_combined_coin_pouches_into_bag_or_fallback(H, coin_pouch_amounts))
@@ -2377,10 +2373,10 @@
 				continue
 			slots_left--
 			if(item.triumph_cost)
-				character.mind.special_items["[key][TRIUMPH_STASH_SUFFIX]"] = item.path // TA EDIT
+				character.mind.special_items["[key][TRIUMPH_STASH_SUFFIX]"] = item.path
 			else
-				character.mind.special_items[key] = item.path // TA EDIT
+				character.mind.special_items[key] = item.path
 			var/list/loadout_metadata = player.prefs.gear_list[key]
 			if(islist(loadout_metadata) && loadout_metadata.len)
-				character.mind.special_items_metadata[key] = deepCopyList(loadout_metadata) // TA EDIT
+				character.mind.special_items_metadata[key] = deepCopyList(loadout_metadata)
 	return TRUE

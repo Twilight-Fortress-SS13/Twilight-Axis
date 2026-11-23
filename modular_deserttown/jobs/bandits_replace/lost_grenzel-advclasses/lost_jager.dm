@@ -38,7 +38,7 @@
 
 /datum/outfit/job/roguetown/lost_grenzel/lost_jager/pre_equip(mob/living/carbon/human/H)
 	..()
-	to_chat(H, span_warning("Trackers, Huntsmen, Marksmen. Those are the first words that describe a Jäger of the Freikorps. Usually drafted from recruits with hunting background, Jägers serve as support troops for the Imperial armies, scouting ahead of the main force, assassinating enemy officers, arranging crossings and foraging for much-needed supplies. As one of those elite soldiers, you are expected to provide the Guild with your expertise in tracking, and scouting. Alongside your marksmanship.")) //TA EDIT
+	to_chat(H, span_warning("Trackers, Huntsmen, Marksmen. Those are the first words that describe a Jäger of the Freikorps. Usually drafted from recruits with hunting background, Jägers serve as support troops for the Imperial armies, scouting ahead of the main force, assassinating enemy officers, arranging crossings and foraging for much-needed supplies. As one of those elite soldiers, you are expected to provide the Guild with your expertise in tracking, and scouting. Alongside your marksmanship."))
 	beltl = /obj/item/rogueweapon/stoneaxe/woodcut/wardenpick/jager
 	if(H.mind)
 		var/armor_options = list("Light Brigandine", "Studded Leather Vest")
@@ -61,7 +61,7 @@
 				H.change_stat(STATKEY_STR, 1)
 				H.change_stat(STATKEY_SPD, -1)
 				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, 5, TRUE)
-			if("Arquebus & 30 Lead Bullets") //TA EDIT
+			if("Arquebus & 30 Lead Bullets")
 				r_hand = /obj/item/gun/ballistic/twilight_firearm/arquebus
 				l_hand = /obj/item/twilight_powderflask
 				beltr = /obj/item/quiver/twilight_bullet/lead
