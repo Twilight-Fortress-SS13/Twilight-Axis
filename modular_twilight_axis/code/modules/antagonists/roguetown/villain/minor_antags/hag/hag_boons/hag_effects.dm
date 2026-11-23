@@ -70,7 +70,7 @@
 
 // Grants T1 spell of any patron
 /proc/grant_poke_spell_devotee(mob/living/carbon/human/user)
-	var/list/poke_options = list("Eoran Bud", "Divine Strike", "Locate Dead", "Malum Forge", "Beast Tame", "Enlightenment", "Sacred Flame", "Twined Gaze", "Twined Gaze", "Vicious Mockery", "Abyssor Bends", "Infestation", "Baothan Blessing", "Heavy Stomp", "Equalize", "Profane Bone")
+	var/list/poke_options = list("Eoran Bud", "Divine Strike", "Locate Dead", "Malum Forge", "Beast Tame", "Enlightenment", "Sacred Flame", "Twined Gaze", "Vicious Mockery", "Vicious Mockery", "Abyssor Bends", "Infestation", "Baothan Blessing", "Heavy Stomp", "Equalize", "Profane Bone", "Absolve")
 	var/poke_choice = tgui_input_list(user, "Choose your devotee blessing.", "Devotee Progress", poke_options)
 	if(!poke_choice || !user.mind)
 		return
@@ -105,6 +105,8 @@
 			user.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/twilight_equalize)
 		if("Profane Bone")
 			user.mind.AddSpell(new /datum/action/cooldown/spell/projectile/zizo/profane)
+		if("Absolve")
+			user.mind.AddSpell(new /datum/action/cooldown/spell/psydon/lux/absolve)
 	return
 
 /datum/hag_boon/buff/arcyne_affinity
