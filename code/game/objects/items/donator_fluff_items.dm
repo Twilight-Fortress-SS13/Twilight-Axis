@@ -1779,7 +1779,8 @@
 	detail_color = CLOTHING_WHITE
 
 /obj/item/rogueweapon/woodstaff/implement/fellowshippe
-	name = "Experimental Azurian Fellowshippe Staff"
+	name = "\improper Experimental Azurian Fellowshippe Staff"
+	base_implement_name = "\improper Experimental Azurian Fellowshippe Staff"
 	desc = "A sleek, purpose driven staff with a blacksteel shaft running the entirety of it's lenght. \
 	Using a special crystalization technique and a gating system, a thin feeder duct exists in \
 	the middle of the shaft allowing a alchemically synthetsized dorpel to run the full lenght,  \
@@ -1789,7 +1790,8 @@
 	icon = 'icons/obj/items/donor_weapons_64.dmi'
 
 /obj/item/rogueweapon/woodstaff/implement/greater/fellowshippe
-	name = "Experimental Azurian Fellowshippe Staff"
+	name = "\improper Experimental Azurian Fellowshippe Staff"
+	base_implement_name = "\improper Experimental Azurian Fellowshippe Staff"
 	desc = "A sleek, purpose driven staff with a blacksteel shaft running the entirety of it's lenght. \
 	Using a special crystalization technique and a gating system, a thin feeder duct exists in \
 	the middle of the shaft allowing a alchemically synthetsized dorpel to run the full lenght,  \
@@ -1799,7 +1801,8 @@
 	icon = 'icons/obj/items/donor_weapons_64.dmi'
 
 /obj/item/rogueweapon/woodstaff/implement/grand/fellowshippe
-	name = "Experimental Azurian Fellowshippe Staff"
+	name = "\improper Experimental Azurian Fellowshippe Staff"
+	base_implement_name = "\improper Experimental Azurian Fellowshippe Staff"
 	desc = "A sleek, purpose driven staff with a blacksteel shaft running the entirety of it's lenght. \
 	Using a special crystalization technique and a gating system, a thin feeder duct exists in \
 	the middle of the shaft allowing a alchemically synthetsized dorpel to run the full lenght,  \
@@ -1809,7 +1812,8 @@
 	icon = 'icons/obj/items/donor_weapons_64.dmi'
 
 /obj/item/rogueweapon/woodstaff/implement/grand/magos/fellowshippe
-	name = "Experimental Azurian Fellowshippe Staff"
+	name = "\improper Experimental Azurian Fellowshippe Staff"
+	base_implement_name = "\improper Experimental Azurian Fellowshippe Staff"
 	desc = "A sleek, purpose driven staff with a blacksteel shaft running the entirety of it's lenght. \
 	Using a special crystalization technique and a gating system, a thin feeder duct exists in \
 	the middle of the shaft allowing a alchemically synthetsized dorpel to run the full lenght,  \
@@ -5227,6 +5231,8 @@ As Excaliber."
 	desc = "It doesn’t seem to serve it’s purpose well anymore, Aeon’s grip slowly fraying it’s structure. The inside of it is filled with scripture in an older, defunct Otavais tongue. Sometimes, it wheezes on its own, lending credence to the whispers of heresy surrounding its invention. Wearing it, you taste copper whenever you draw breath."
 	armor = null
 	smeltresult = null
+	block2add = null
+	body_parts_covered = null
 
 /obj/item/clothing/mask/rogue/facemask/steel/confessor/mrsaxyman/ComponentInitialize()
 	return
@@ -5315,3 +5321,18 @@ As Excaliber."
 		icon_state = unique_reskin[current_skin]
 		item_state = icon_state
 	return ..()
+
+// ClemTheDuck
+/obj/item/clothing/mask/rogue/lunarmuzzle
+	name = "ceremonial lunar muzzle"
+	desc = "A ceremonial mask often used by Noccite cultists, forged of blessed steel alloy with a blue hue. Shaped like a Lupian muzzle to cover the mouth, these masks remind their wearers to listen more than they speak."
+	icon = 'icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
+	icon_state = "lunarmuzzle"
+	item_state = "lunarmuzzle"
+	resistance_flags = FIRE_PROOF
+	flags_inv = HIDEFACE|HIDESNOUT
+	body_parts_covered = FACE
+	block2add = FOV_DEFAULT
+	slot_flags = ITEM_SLOT_MASK|ITEM_SLOT_HEAD|ITEM_SLOT_MOUTH
+	experimental_onhip = TRUE

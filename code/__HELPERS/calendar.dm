@@ -146,6 +146,12 @@
 /proc/get_current_season_phase()
 	return get_season_phase(get_current_month())
 
+/// Formats a birthday as "12 Ravox", or null if unset. //TA EDIT
+/proc/format_birthday(month, day)
+	if(!month || !day)
+		return null
+	return "[day] [get_month_number_to_text(month)]"
+
 /proc/get_calendar_events_for_month(month_number)
 	var/list/matches = list()
 	for(var/datum/calendar_event/event in GLOB.calendar_events)

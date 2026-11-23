@@ -290,7 +290,7 @@ GLOBAL_LIST_INIT(cmode_tracks_by_type, build_cmode_tracks())
 
 /datum/combat_music/eora
 	name = "Eoran Clergy"
-	desc = "Do not listen to this one after a breakup."
+	desc = "Remember them, even after they're gone."
 	shortname = "Eora"
 	credits = "T-87 SULFURHEAD - Family Melts Away (https://www.youtube.com/@T87-Sulfurhead)"
 	musicpath = list(sound("sound/music/cmode/church/combat_eora.ogg"))

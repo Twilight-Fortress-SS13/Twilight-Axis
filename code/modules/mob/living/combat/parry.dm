@@ -221,12 +221,6 @@
 	if(HAS_TRAIT(user, TRAIT_CURSE_RAVOX))
 		prob2defend -= 40
 
-	if(!defender.mind && defender.has_status_effect(/datum/status_effect/debuff/staggered))
-		prob2defend *= 0.5
-
-	if(!defender.mind && defender.has_status_effect(/datum/status_effect/debuff/hamstring))
-		prob2defend -= 20
-
 	// parrying while knocked down sucks ass
 	if(!(mobility_flags & MOBILITY_STAND) && !has_status_effect(/datum/status_effect/buff/weapon_binded))
 		prob2defend *= 0.65
@@ -259,7 +253,8 @@
 	var/text
 
 	// Dual wield drawback (-5%)
-	var/dualwield_penalty = HAS_TRAIT(src, TRAIT_DUALWIELDER) && src.can_dualwield(mainhand, offhand)
+	var/dualwield_penalty = HAS_TRAIT(src, TRAIT_DUALWIELDER) && (can_dualwield(mainhand, offhand) || can_unarmed_dualwield())
+
 	if(dualwield_penalty)
 		prob2defend = clamp(prob2defend - 5, 5, 90)
 
