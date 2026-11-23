@@ -66,6 +66,45 @@
 		var/datum/devotion/our_faith = H.devotion
 		our_faith.passive_devotion_gain += CLERIC_REGEN_MINOR
 		START_PROCESSING(SSobj, our_faith)
+	grant_poke_spell_devotee(H)
+
+// Grants T1 spell of any patron
+/proc/grant_poke_spell_devotee(mob/living/carbon/human/user)
+	var/list/poke_options = list("Eoran Bud", "Divine Strike", "Locate Dead", "Malum Forge", "Beast Tame", "Enlightenment", "Sacred Flame", "Twined Gaze", "Twined Gaze", "Vicious Mockery", "Abyssor Bends", "Infestation", "Baothan Blessing", "Heavy Stomp", "Equalize", "Profane Bone")
+	var/poke_choice = tgui_input_list(user, "Choose your devotee blessing.", "Devotee Progress", poke_options)
+	if(!poke_choice || !user.mind)
+		return
+	switch(poke_choice)
+		if("Eoran Bud")
+			user.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/bud)
+		if("Divine Strike")
+			user.mind.AddSpell(new /obj/effect/proc_holder/spell/self/TAdivine_strike)
+		if("Locate Dead")
+			user.mind.AddSpell(new /obj/effect/proc_holder/spell/self/locate_dead)
+		if("Divine Forge")
+			user.mind.AddSpell(new /datum/action/cooldown/spell/arcyne_forge/miracle)
+		if("Beast Tame")
+			user.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/beasttame)
+		if("Enlightenment")
+			user.mind.AddSpell(new /datum/action/cooldown/spell/noc/TAenlightenment)
+		if("Sacred Flame")
+			user.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/TAsacred_flame)
+		if("Twined Gaze")
+			user.mind.AddSpell(new /datum/action/cooldown/spell/undivided/twinned_gaze)
+		if("Vicious Mockery")
+			user.mind.AddSpell(new /datum/action/cooldown/spell/projectile/vicious_mockery)
+		if("Abyssor Bends")
+			user.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/abyssor_bends)
+		if("Infestation")
+			user.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/infestation)
+		if("Baothan Blessing")
+			user.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/TAbaothablessings)
+		if("Heavy Stomp")
+			user.mind.AddSpell(new /obj/effect/proc_holder/spell/self/heavy_stomp)
+		if("Equalize")
+			user.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/twilight_equalize)
+		if("Profane Bone")
+			user.mind.AddSpell(new /datum/action/cooldown/spell/projectile/zizo/profane)
 	return
 
 /datum/hag_boon/buff/arcyne_affinity
