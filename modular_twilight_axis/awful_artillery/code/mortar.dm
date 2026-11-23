@@ -29,6 +29,7 @@
 		T = GET_TURF_BELOW(T)
 	
 	playsound(src, 'modular_twilight_axis/awful_artillery/sound/fallingonyou.ogg', 100, 0, 10, 1, null, null, FALSE, TRUE)
+	mount_notify_loud_noise(T, 11, 30, 6 SECONDS)
 	sleep(0.5 SECONDS)
 
 	for(var/mob/M in GLOB.player_list)

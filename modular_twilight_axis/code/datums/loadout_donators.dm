@@ -2081,6 +2081,48 @@
 	path = /obj/item/bouquet/rosa/azure
 	donatitem = TRUE
 
+/datum/loadout_item/donator/universal/tulip
+	name = "Donator Item - Tulip Flower"
+	category = list("Разное", "Донат")
+	path = /obj/item/alch/tulip
+	donatitem = TRUE
+	donat_tier = 1
+
+/datum/loadout_item/donator/universal/tulip_seeds
+	name = "Donator Item - Tulip Flower, Seeds"
+	category = list("Разное", "Донат")
+	path = /obj/item/storage/belt/rogue/pouch/tulip_seeds
+	donatitem = TRUE
+	donat_tier = 1
+
+/datum/loadout_item/donator/universal/tulip_bouquet
+	name = "Donator Item - Tulip Flowers, Bouquet"
+	category = list("Разное", "Донат")
+	path = /obj/item/bouquet/tulip
+	donatitem = TRUE
+	donat_tier = 1
+
+/datum/loadout_item/donator/universal/tulip_black
+	name = "Donator Item - Black Tulip Flower"
+	category = list("Разное", "Донат")
+	path = /obj/item/alch/tulip/black
+	donatitem = TRUE
+	donat_tier = 1
+
+/datum/loadout_item/donator/universal/tulip_black_seeds
+	name = "Donator Item - Black Tulip Flower, Seeds"
+	category = list("Разное", "Донат")
+	path = /obj/item/storage/belt/rogue/pouch/tulip_seeds/black
+	donatitem = TRUE
+	donat_tier = 1
+
+/datum/loadout_item/donator/universal/tulip_black_bouquet
+	name = "Donator Item - Black Tulip Flowers, Bouquet"
+	category = list("Разное", "Донат")
+	path = /obj/item/bouquet/tulip/black
+	donatitem = TRUE
+	donat_tier = 1
+
 /datum/loadout_item/donator/universal/cackledagger
 	name = "Gift - Kit, Cackledagger"
 	category = list("Оружие", "Донат")

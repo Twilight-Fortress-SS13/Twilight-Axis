@@ -1,0 +1,5 @@
+author: "Saukykouko"
+delete-after: True
+changes:
+  - rscadd: "Гноллы получают ноупейн"
+  - balance: "Ревёртнут реворк брони гноллов"

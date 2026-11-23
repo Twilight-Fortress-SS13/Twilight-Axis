@@ -528,6 +528,8 @@
 				obj_destruction(need_scrap ? BRUTE : BURN)
 				playsound(user, 'sound/surgery/cautery2.ogg', 100)
 				user.mind.add_sleep_experience(/datum/skill/craft/smelting, (user.STAINT*0.2))
+				to_chat(user,span_alert("I can feel my armor getting weaker and frailer without that crucial element!")) //TA Addition
+				SEND_SIGNAL(user,COMSIG_CURSED_ITEM_BURNED)
 				return
 
 	var/newforce = get_complex_damage(I, user, blade_dulling)
@@ -693,7 +695,7 @@
 	if(HAS_TRAIT(src, "ethereal")) //TA EDIT
 		user.visible_message(span_warning("The [I] passes harmlessly through [src]'s misty form!"))
 		return FALSE
-	
+
 	I.funny_attack_effects(src, user)
 	if(I.force_dynamic)
 		var/newforce = get_complex_damage(I, user)
