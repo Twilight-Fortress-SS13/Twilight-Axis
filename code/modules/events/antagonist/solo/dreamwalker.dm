@@ -11,17 +11,17 @@
 	shared_occurence_type = SHARED_MINOR_THREAT
 	storyteller_antag_flags = STORYTELLER_ANTAG_SOFT
 	consumes_hard_antag_slot = FALSE // TA EDIT
-	min_players = HARD_ANTAG_MIN_POP
+	// TA REMOVAL: min_players = HARD_ANTAG_MIN_POP
 
 	denominator = 80
 
 	base_antags = 1
 	maximum_antags = 2
 
-	weight = 10
+	weight = 18 // TA EDIT - ORIGINAL: 10
 	max_occurrences = 2
 
-	earliest_start = 15 MINUTES
+	earliest_start = 20 SECONDS // TA EDIT - ORIGINAL: 15 MINUTES
 
 	typepath = /datum/round_event/antagonist/solo/dreamwalker
 	antag_datum = /datum/antagonist/dreamwalker
