@@ -22,15 +22,18 @@
 				// TA EDIT - IconForge needs a disk file, even on RSC-only deployments.
 				var/source_path = "[source_directory]/[md5(source_name)].dmi"
 				if(fcopy(icon_file, source_path))
-					source_files[source_name] = file(source_path)
+					source_files[source_name] = source_path
 				else
 					source_files[source_name] = null
 					log_asset("Could not extract loadout preview source: [source_name]")
-			var/source_file = source_files[source_name]
-			if(!source_file)
+			var/source_path = source_files[source_name]
+			if(!source_path)
 				continue
 			var/datum/universal_icon/preview = uni_icon(
-				source_file, layer["icon_state"], SOUTH, 1)
+				icon_file, layer["icon_state"], SOUTH, 1)
 			preview.scale(40, 40)
 			insert_icon(sprite_id, preview)
+			// TA EDIT - BYOND validates the resource; IconForge reads its copy.
+			var/list/entry = entries[sprite_id]
+			entry["icon_file"] = source_path
 	// TA EDIT END
