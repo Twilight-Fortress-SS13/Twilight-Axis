@@ -146,7 +146,7 @@
 	for(var/mob/living/L in loc)
 		L.adjust_fire_stacks(fire_stacks_tick)
 		L.ignite_mob()
-		L.Slowdown(slow_tick)
+		L.apply_status_effect(/datum/status_effect/debuff/slowed, slow_tick)
 
 /atom/movable/screen/alert/status_effect/debuff/necra_harvested
 	name = "Жатва Некры"
@@ -746,7 +746,7 @@
 				if(L == howner)
 					continue
 
-				L.Slowdown(slow_dur)
+				L.apply_status_effect(/datum/status_effect/debuff/slowed, slow_dur)
 				L.adjust_fire_stacks(fire_stacks_first)
 				L.ignite_mob()
 
