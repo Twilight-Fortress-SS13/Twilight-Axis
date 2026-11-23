@@ -18,7 +18,7 @@
 	body_parts_covered = FULL_BODY
 	body_parts_inherent = FULL_BODY
 	salvage_result = /obj/item/reagent_containers/lux
-	max_integrity = ARMOR_INT_CHEST_PLATE_BRIGANDINE + 200
+	max_integrity = ARMOR_INT_CHEST_PLATE_BRIGANDINE + 50
 	armor = ARMOR_BRIGANDINE
 	auto_repair_mode = TRUE
 	relative_repair_interval = 15 SECONDS
@@ -35,7 +35,7 @@
 	realstate = icon_state
 	AddComponent(/datum/component/cursed_item, TRAIT_CRACKHEAD, "CLOTH")
 
-/obj/item/clothing/suit/roguetown/armor/regenerating/baotha/examine(var/mob/living/carbon/human/user)
+/obj/item/clothing/suit/roguetown/armor/regenerating/baotha/examine(mob/living/carbon/human/user)
 	. = ..()
 	if(iscarbon(user))
 		if(user.patron.type == /datum/patron/inhumen/baotha)
@@ -56,7 +56,7 @@
 	active_item = FALSE
 	REMOVE_TRAIT(user, TRAIT_BITERHELM, TRAIT_GENERIC)
 
-/obj/item/clothing/suit/roguetown/armor/regenerating/baotha/attack_right(var/mob/living/carbon/human/user)
+/obj/item/clothing/suit/roguetown/armor/regenerating/baotha/attack_right(mob/living/carbon/human/user)
 	if(user.patron.type == /datum/patron/inhumen/baotha)
 		var/mimicry = list("shirt", "formal silks", "rags", "tunic", "dress", "silky dress", "undervestments", "royal gown", "white foreign shirt", "silk shirt", "fancy coat", "low cut tunic", "pristine dress", "gilded dress shirt", "Undo")
 		var/mimicry_choise = input("Variants:", "camouflage") as anything in mimicry
