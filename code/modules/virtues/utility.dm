@@ -484,7 +484,12 @@ GLOBAL_LIST_EMPTY(fey_vessels)
 // DEVOTION NOTE - it'll be touching this later to add a bit more to it to justify the statnuke n its presence as a virtue over the quirk form. do not remove
 /datum/virtue/utility/feytouched
 	name = "Feybound"
+	// TA EDIT - ORIGINAL:
+	/*
 	desc = "A vessel or creation of the Mossmother, or perhaps a puppet of the past. You are sympathetic to the hag's cause. Your connection to the fey allows you to offer lux or bloated leechticks and traverse the roots, or pure lux to gain the bog's blessing, though your mortal form is frail (-1 INT, -2 STR). The hag is aware of you; your lux is corrupted. You may know of old events, but as the decades lengthen, so does your recollection of them fade. Choice between Pactbound (can receive 30 points of boons; not choosable by certain antags like lyckers) or Vessel (the hag can possess you; use the verb in the RoleUnique tab to toggle)."
+	*/
+	// ORIGINAL END
+	desc = "A vessel or creation of the Mossmother, or perhaps a puppet of the past. You are sympathetic to the hag's cause. Your connection to the fey allows you to offer lux or bloated leechticks and traverse the roots, or pure lux to gain the bog's blessing. The hag is aware of you; your lux is corrupted. You may know of old events, but as the decades lengthen, so does your recollection of them fade. You are limited when getting boons and can be vessel (the hag can possess you; use the verb in the RoleUnique tab to toggle)."
 	ui_fa_icon = "ghost"
 	// TA REMOVAL: added_stats = list(STATKEY_INT = -1, STATKEY_STR = -2)
 	added_traits = list(TRAIT_FEYBOUND)
