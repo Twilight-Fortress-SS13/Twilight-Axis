@@ -300,7 +300,7 @@
 			return FALSE
 
 		var/datum/component/hag_curio_tracker/HCT = user.GetComponent(/datum/component/hag_curio_tracker)
-		if(HCT && !HAS_TRAIT(target, TRAIT_FEYTOUCHED)) // reviving a feytouched doesn't put them in debt as you're not meant to be able to curse them
+		if(HCT && !HAS_TRAIT(target, TRAIT_FEYBOUND)) // TA EDIT - ORIGINAL: if(HCT && !HAS_TRAIT(target, TRAIT_FEYTOUCHED)) // reviving a feytouched doesn't put them in debt as you're not meant to be able to curse them
 			HCT.grant_boon(target.real_name, boon_path, 50)
 			to_chat(user, span_notice("You've tethered [target.real_name] to your garden. Their life is now your currency."))
 	return TRUE

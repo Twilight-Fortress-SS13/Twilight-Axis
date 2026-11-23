@@ -60,27 +60,43 @@
 
 /obj/effect/proc_holder/spell/self/roots_movement/cast(list/targets, mob/user)
 	var/mob/living/carbon/human/C = user
-	var/list/possible = C.mind.known_people.Copy()
+	var/list/possible = list()
+
+	var/datum/component/hag_curio_tracker/HCT = C.GetComponent(/datum/component/hag_curio_tracker)
+	if(!HCT)
+		revert_cast()
+		return FALSE
+	for(var/mob/living/carbon/human/HL in GLOB.human_list)
+		if(HL == C)
+			continue
+		if(HAS_TRAIT(HL, TRAIT_FEYBOUND))
+			possible += HL
+		if(HAS_TRAIT(HL, TRAIT_FEYTOUCHED))
+			possible += HL
+		if(HCT.find_boon_by_type(HL.real_name, /datum/hag_boon))
+			possible += HL
+
 	if(!possible.len)
-		to_chat(C, span_warning("I have no known livings."))
+		to_chat(C, span_warning("I have no fey or booned living."))
 		revert_cast()
 		return FALSE
 
 	var/prompt = "Choose living being to move to..."
-	var/target_name = tgui_input_list(C, prompt, "Roots Moving", sort_list(possible))
+	var/target = tgui_input_list(C, prompt, "Roots Moving", sort_list(possible))
 
-	var/mob/living/carbon/human/found_mob
-	for(var/mob/living/carbon/human/HL in GLOB.human_list)
-		if(HL.real_name == target_name)
-			found_mob = HL
-			break
+	var/mob/living/carbon/human/found_mob = possible[target]
 
 	if(!found_mob)
 		revert_cast()
 		return FALSE
 
+	if(!isturf(found_mob.loc))
+		revert_cast()
+		return FALSE
+
 	C.visible_message(span_yellow("[C]'s legs begin to cover in strange roots..."), \
 							span_yellow("I starts to move to [found_mob.name]..."))
+
 	if(!do_after(C, 10 SECONDS, TRUE, C))
 		revert_cast()
 		return FALSE

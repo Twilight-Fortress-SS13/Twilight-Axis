@@ -337,7 +337,7 @@
 
 		qdel(W)
 		var/counts_as_pure = FALSE
-		if(HAS_TRAIT(user, TRAIT_FEYTOUCHED) && !HAS_TRAIT(user, TRAIT_ROOT_WALKER)) // this is our first offering, so it counts as pure bcs this is PROBABLY a leechtick. doesn't give bogwalker though you do need real lux for that
+		if(HAS_TRAIT(user, TRAIT_FEYBOUND) && !HAS_TRAIT(user, TRAIT_ROOT_WALKER)) // TA EDIT - ORIGINAL: if(HAS_TRAIT(user, TRAIT_FEYTOUCHED) && !HAS_TRAIT(user, TRAIT_ROOT_WALKER)) // this is our first offering, so it counts as pure bcs this is PROBABLY a leechtick. doesn't give bogwalker though you do need real lux for that
 			counts_as_pure = TRUE
 		check_fey_ascension(!is_impure, user)
 		feed_the_network((is_impure || counts_as_pure), user)

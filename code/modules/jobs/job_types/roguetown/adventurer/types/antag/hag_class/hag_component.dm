@@ -317,7 +317,7 @@
 	var/active_victims = 0
 	for(var/v_name in boon_registry)
 		var/mob/living/victim = find_target(v_name)
-		if(victim && HAS_TRAIT(victim, TRAIT_FEYTOUCHED))
+		if(victim && HAS_TRAIT(victim, TRAIT_FEYBOUND)) // TA EDIT - ORIGINAL: if(victim && HAS_TRAIT(victim, TRAIT_FEYTOUCHED))
 			continue // feytouched don't count against your cap since they're already bound and can only have up to 30 pts of boons max
 		var/has_real_boon = FALSE
 		for(var/datum/hag_boon/B in boon_registry[v_name])

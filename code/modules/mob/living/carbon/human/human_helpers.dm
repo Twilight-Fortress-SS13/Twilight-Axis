@@ -152,7 +152,7 @@
 		if("gnoll")
 			return has_flaw(/datum/charflaw/hunted)
 		if("hag")
-			return HAS_TRAIT(src, TRAIT_FEYTOUCHED)
+			return HAS_TRAIT(src, TRAIT_FEYBOUND) // TA EDIT - ORIGINAL: HAS_TRAIT(src, TRAIT_FEYTOUCHED)
 		if("vampire")
 			if(H.remembers_secret_target(src, secret_type))
 				return TRUE
