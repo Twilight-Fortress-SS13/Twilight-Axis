@@ -106,7 +106,7 @@
 		STACON = 16
 		STAWIL = 14
 		STAPER = 12
-		STASPD = 8
+		STASPD = 10
 		STAINT = 6
 
 		real_name = "troll"
@@ -174,7 +174,7 @@
 	blocksound = SOFTHIT
 	blade_dulling = DULLING_BASHCHOP
 	sewrepair = FALSE
-	max_integrity = 250
+	max_integrity = 400
 	item_flags = DROPDEL
 
 /datum/intent/simple/troll
@@ -202,7 +202,7 @@
 	icon = 'icons/roguetown/weapons/misc32.dmi'
 	max_blade_int = 600
 	max_integrity = 600
-	force = 25 // about 35 dmg with 14 str
+	force = 30
 	block_chance = 0
 	wdefense = 6
 	blade_dulling = DULLING_SHAFT_WOOD
