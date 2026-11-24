@@ -1,5 +1,5 @@
 /datum/controller/subsystem/ticker/sunsteal(mob/living/sunstealer)
-	if(sunstolen || QDELETED(sunstealer))
+	if(sunstolen || QDELETED(sunstealer) || sunstealer.stat == DEAD)
 		return FALSE
 	sunstolen = TRUE
 	..()

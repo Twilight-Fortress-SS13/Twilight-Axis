@@ -309,6 +309,12 @@
 	)
 	return amulets[patron?.type] || /obj/item/clothing/neck/roguetown/psicross/silver
 
+/datum/outfit/job/roguetown/silver_inquisitor/proc/get_order_gloves(mob/living/carbon/human/inquisitor)
+	var/static/list/fitting_races = NON_DWARVEN_RACE_TYPES
+	if(inquisitor.dna?.species?.type in fitting_races)
+		return /obj/item/clothing/gloves/roguetown/otavan/inqgloves
+	return /obj/item/clothing/gloves/roguetown/angle
+
 /datum/outfit/job/roguetown/silver_inquisitor/proc/get_order_tabard(datum/patron/patron)
 	var/static/list/tabards = list(
 		/datum/patron/old_god = /obj/item/clothing/cloak/tabard/devotee/psydon,
@@ -437,7 +443,7 @@
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/inq
 	armor = /obj/item/clothing/suit/roguetown/armor/plate/scale/inqcoat
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan
-	gloves = /obj/item/clothing/gloves/roguetown/otavan/inqgloves
+	gloves = get_order_gloves(inquisitor)
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 
 /datum/outfit/job/roguetown/silver_inquisitor/duelist
@@ -474,7 +480,7 @@
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/inq
 	armor = /obj/item/clothing/suit/roguetown/armor/plate/scale/inqcoat
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan
-	gloves = /obj/item/clothing/gloves/roguetown/otavan/inqgloves
+	gloves = get_order_gloves(inquisitor)
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 	if(istype(inquisitor.patron, /datum/patron/old_god))
 		belt = /obj/item/storage/belt/rogue/leather/tossbelt/blade/black/silver/psy/preblessed
@@ -506,7 +512,7 @@
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/inq
 	armor = /obj/item/clothing/suit/roguetown/armor/plate/scale/inqcoat
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan
-	gloves = /obj/item/clothing/gloves/roguetown/otavan/inqgloves
+	gloves = get_order_gloves(inquisitor)
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 	beltr = /obj/item/storage/magebag
 	backpack_contents[/obj/item/rogueweapon/spellbook/greater] = 1

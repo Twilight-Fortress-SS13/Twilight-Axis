@@ -101,6 +101,7 @@
 
 /obj/item/clothing/neck/roguetown/collar/vitae_collar/proc/on_wearer_life(mob/living/carbon/human/source)
 	SIGNAL_HANDLER
+	update_effects()
 	if(!effects_active || source.stat == DEAD || !COOLDOWN_FINISHED(src, harvest_cooldown))
 		return
 	COOLDOWN_START(src, harvest_cooldown, TA_VITAE_COLLAR_HARVEST_INTERVAL)
@@ -161,10 +162,10 @@
 	grid_height = 32
 	grid_width = 32
 
-/obj/item/vitae_collar_key/attack(mob/living/M, mob/living/user)
-	if(!ishuman(M))
+/obj/item/vitae_collar_key/attack(mob/living/prisoner, mob/living/user)
+	if(!ishuman(prisoner))
 		return ..()
-	var/mob/living/carbon/human/target = M
+	var/mob/living/carbon/human/target = prisoner
 	var/obj/item/clothing/neck/roguetown/collar/vitae_collar/collar = target.get_item_by_slot(SLOT_NECK)
 	if(!istype(collar))
 		return ..()

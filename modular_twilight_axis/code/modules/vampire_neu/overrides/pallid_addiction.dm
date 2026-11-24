@@ -308,7 +308,12 @@
 
 /datum/component/pallid_addiction/proc/on_death()
 	SIGNAL_HANDLER
-	qdel(src)
+	addtimer(CALLBACK(src, PROC_REF(end_with_death)), 1 SECONDS)
+
+/datum/component/pallid_addiction/proc/end_with_death()
+	var/mob/living/carbon/human/owner = parent
+	if(!istype(owner) || owner.stat == DEAD)
+		qdel(src)
 
 /datum/component/pallid_addiction/proc/apply_random_rot(rot_count = 1)
 	var/mob/living/carbon/human/owner = parent
@@ -387,6 +392,11 @@
 	var/mob/living/carbon/human/vampire_body = owner?.current
 	if(istype(vampire_body))
 		vampire_body.ta_clear_pallid_curse()
+
+/datum/antagonist/vampire/on_removal()
+	for(var/obj/effect/proc_holder/spell/self/pallid_track/track in owner?.spell_list)
+		owner.RemoveSpell(track)
+	return ..()
 
 /datum/stressevent/pallid_outdoors
 	timer = 2 MINUTES

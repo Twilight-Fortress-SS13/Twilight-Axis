@@ -494,8 +494,8 @@
 
 /datum/vampire_project/power_growth_3/on_complete(obj/structure/vampire/bloodpool/creation_point)
 	. = ..()
-	if(!(type in bloodpool.available_project_types) && !SSticker.sunstolen)
-		SSticker.sunsteal(initiator)
+	if(!(type in bloodpool.available_project_types) && !SSticker.sunstolen && !SSticker.sunsteal(initiator))
+		SSticker.sunsteal(ta_get_vampire_lord_body())
 
 /datum/vampire_project/armor_crafting
 	display_name = "Проклятые латы"
@@ -558,6 +558,9 @@
 	if(QDELETED(pool) || QDELETED(feedback_atom) || pool.summoning_role)
 		return FALSE
 
+	var/datum/antagonist/vampire/summoner_antag = initiator?.mind?.has_antag_datum(/datum/antagonist/vampire)
+	var/inherited_flags = istype(summoner_antag) ? (summoner_antag.antag_flags & FLAG_ANTAG_CAP_IGNORE) : NONE
+
 	feedback_atom.visible_message(span_warning("Тигель оживает, призывая слугу из-за грани..."))
 	pool.summoning_role = summon_label
 	SStgui.update_uis(pool)
@@ -583,7 +586,7 @@
 	var/servant_generation = (role_type == "Vampire Spawn") ? GENERATION_ANCILLAE : GENERATION_NEONATE
 	var/datum/antagonist/vampire/servant_antag = new /datum/antagonist/vampire(incoming_clan = initiator_clan, forced_clan = TRUE, generation = servant_generation)
 	if(ta_vampire_lord_expansion_active())
-		servant_antag.antag_flags |= FLAG_ANTAG_CAP_IGNORE
+		servant_antag.antag_flags |= inherited_flags
 	target.mind.add_antag_datum(servant_antag)
 	if(servant_generation == GENERATION_NEONATE)
 		ADD_TRAIT(target, TRAIT_NOVAMPMITOSIS, TRAIT_GENERIC)

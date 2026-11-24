@@ -19,8 +19,8 @@ GLOBAL_LIST_EMPTY(ta_clan_layout_cache)
 	for(var/flank in flanks)
 		var/hersir_id = "[flank]_hersir"
 		UNTYPED_LIST_ADD(nodes, ta_clan_layout_node(hersir_id, "jarl", flanks[flank], "Присягнувший воевода. Держит свой фланг и повелевает трэллами на нём.", 1, 5, TRUE, "#a83232"))
-		for(var/i in 1 to 3)
-			UNTYPED_LIST_ADD(nodes, ta_clan_layout_node("[hersir_id]_thrall_[i]", hersir_id, "Трэлл-воин", "Связанный воин. Бьётся там, где велит его херсир.", 2, 5, FALSE, "#6e2a2a"))
+		for(var/thrall_number in 1 to 3)
+			UNTYPED_LIST_ADD(nodes, ta_clan_layout_node("[hersir_id]_thrall_[thrall_number]", hersir_id, "Трэлл-воин", "Связанный воин. Бьётся там, где велит его херсир.", 2, 5, FALSE, "#6e2a2a"))
 	return list(
 		"name" = "Простой клан",
 		"nodes" = nodes,
@@ -47,10 +47,10 @@ GLOBAL_LIST_EMPTY(ta_clan_layout_cache)
 	var/list/saved = islist(data) ? data["slots"] : null
 	if(!islist(saved))
 		return slots
-	for(var/i in 1 to min(length(saved), TA_CLAN_LAYOUT_SLOTS))
-		var/list/entry = saved[i]
+	for(var/slot_number in 1 to min(length(saved), TA_CLAN_LAYOUT_SLOTS))
+		var/list/entry = saved[slot_number]
 		if(islist(entry) && istext(entry["name"]) && islist(entry["nodes"]))
-			slots[i] = entry
+			slots[slot_number] = entry
 	return slots
 
 /proc/ta_write_clan_layouts(ckey, list/slots)

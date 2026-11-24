@@ -61,6 +61,7 @@ drinksomeblood()
 #define TA_VAMP_BLOODDRINK_TARGET_FINAL_BLOOD BLOOD_VOLUME_BAD
 #define TA_VAMP_BLOODDRINK_LOCK_TIMEOUT (45 SECONDS)
 #define TA_VAMP_SIRING_RECOVERED_BLOOD BLOOD_VOLUME_OKAY
+#define TA_VAMP_SIRING_DRAINED_MEMORY (2 MINUTES)
 #define TA_VAMP_SIRING_CHOICE_TIMEOUT (30 SECONDS)
 #define TA_VAMP_SIRING_CHANNEL_TIME (7 SECONDS)
 #define TA_VAMP_SIRING_LOCK_MARGIN (15 SECONDS)
@@ -87,7 +88,10 @@ drinksomeblood()
 	var/tmp/ta_siring_token = 0
 	var/tmp/ta_siring_expires = 0
 	var/tmp/ta_siring_offer_ready_at = 0
-	var/tmp/ta_drained_for_siring = FALSE
+	var/tmp/ta_drained_until = 0
+
+/mob/living/carbon
+	var/tmp/ta_diablerized = FALSE
 
 /mob/living/carbon/human/proc/ta_blooddrink_in_progress()
 	if(!ta_blooddrink_busy_since)
@@ -137,11 +141,14 @@ drinksomeblood()
 		vampire_conversion_prompt_active = FALSE
 
 /mob/living/carbon/human/proc/ta_is_drained_for_siring()
-	if(blood_volume <= BLOOD_VOLUME_BAD)
-		ta_drained_for_siring = TRUE
-	else if(blood_volume > TA_VAMP_SIRING_RECOVERED_BLOOD)
-		ta_drained_for_siring = FALSE
-	return ta_drained_for_siring
+	if(blood_volume > TA_VAMP_SIRING_RECOVERED_BLOOD)
+		ta_drained_until = 0
+	else if(blood_volume <= BLOOD_VOLUME_BAD || world.time < ta_drained_until)
+		ta_drained_until = world.time + TA_VAMP_SIRING_DRAINED_MEMORY
+	return world.time < ta_drained_until
+
+/mob/living/carbon/human/proc/ta_can_sire(datum/antagonist/vampire/VDrinker)
+	return clan && VDrinker.can_sire_thrall()
 
 /mob/living/carbon/human/proc/ta_siring_refused_by(mob/living/carbon/victim)
 	return HAS_TRAIT_FROM(victim, TRAIT_REFUSED_VAMP_CONVERT, REF(src)) && !ta_get_rockhill_conversion_ambition(src, victim.mind)
@@ -169,7 +176,7 @@ drinksomeblood()
 		return FALSE
 	if(ta_siring_refused_by(victim))
 		return FALSE
-	if(!VDrinker.can_sire_thrall() && !can_offer_pallid_drain(victim))
+	if(!ta_can_sire(VDrinker) && !can_offer_pallid_drain(victim))
 		return FALSE
 	return TRUE
 
@@ -229,7 +236,6 @@ drinksomeblood()
 
 	last_drinkblood_use = world.time
 	changeNext_move(CLICK_CD_MELEE)
-	victim.ta_note_attacker(src)
 
 	ta_take_victim_blood(victim, TA_VAMP_BLOODDRINK_INITIAL_BLOOD_LOSS)
 	victim.handle_blood()
@@ -304,6 +310,7 @@ drinksomeblood()
 	if(!ishuman(victim))
 		return
 	var/mob/living/carbon/human/human_victim = victim
+	human_victim.ta_note_attacker(src)
 	human_victim.ta_log_damage(src, (blood_before - victim.blood_volume) * TA_SILVER_INQUISITION_BLOOD_DAMAGE)
 
 /mob/living/carbon/human/proc/ta_drain_for_siring(mob/living/carbon/victim)
@@ -340,6 +347,9 @@ drinksomeblood()
 /mob/living/carbon/human/proc/handle_diablerie(mob/living/carbon/victim, datum/antagonist/vampire/VDrinker, datum/antagonist/vampire/VVictim)
 
 	if(VVictim)
+		if(victim.ta_diablerized)
+			return TRUE
+		victim.ta_diablerized = TRUE
 		var/is_breaker = GLOB.coven_breakers_list.Find(victim)
 
 		if(!is_breaker)
@@ -403,6 +413,14 @@ drinksomeblood()
 		return FALSE
 	if(QDELETED(src) || QDELETED(victim))
 		return TRUE
+
+	if(victim.ta_diablerized)
+		to_chat(src, span_warning("Душа [victim] уже поглощена другим."))
+		return TRUE
+
+	if(victim.bloodpool > 0 && !has_vampire_soul_left_body(victim))
+		to_chat(src, span_warning("[victim] снова полнится витэ, и душа ускользает от меня."))
+		return FALSE
 
 	VDrinker = get_vampire_drinker()
 	VVictim = get_vampire_victim(victim)
@@ -599,9 +617,21 @@ drinksomeblood()
 		to_chat(sire, span_warning("У меня нет клана, которому я мог бы отдать эту душу."))
 		return FALSE
 
+	var/datum/antagonist/vampire/new_antag = new /datum/antagonist/vampire(
+		incoming_clan = sire.clan,
+		forced_clan = TRUE,
+		generation = max(VDrinker.generation - 1, GENERATION_THINBLOOD)
+	)
+	if(!mind || !new_antag.can_be_owned(mind))
+		qdel(new_antag)
+		to_chat(src, span_warning("Моя душа не способна принять это проклятие."))
+		to_chat(sire, span_warning("Душа [src] не способна принять проклятие."))
+		return FALSE
+
 	// Force convert costs resources; offer convert is free
 	if(!voluntary)
 		if(!sire.apply_conversion_cost(VDrinker))
+			qdel(new_antag)
 			to_chat(sire, span_warning("У меня больше нет сил для создания порождения."))
 			return FALSE
 
@@ -618,18 +648,13 @@ drinksomeblood()
 	mind?.remove_antag_datum(/datum/antagonist/zombie)
 
 	if(client)
-		client.verbs.Remove(GLOB.ghost_verbs)
+		remove_verb(client, GLOB.ghost_verbs)
+		client.init_verbs()
 
 	visible_message(span_danger("Тёмная энергия начинает перетекать от [sire] в [src]..."))
 	visible_message(span_red("[src] восстаёт как новое порождение!"))
 
 	original_mind?.transfer_to(src, TRUE)
-
-	var/datum/antagonist/vampire/new_antag = new /datum/antagonist/vampire(
-		incoming_clan = sire.clan,
-		forced_clan = TRUE,
-		generation = max(VDrinker.generation - 1, GENERATION_THINBLOOD)
-	)
 
 	if(ta_vampire_lord_expansion_active())
 		new_antag.antag_flags |= (VDrinker.antag_flags & FLAG_ANTAG_CAP_IGNORE)
@@ -641,6 +666,8 @@ drinksomeblood()
 	if(voluntary)
 		sire.grant_offer_conversion_reward(VDrinker)
 	adjust_bloodpool(VAMP_CONVERT_BLOOD_GAIN)
+	reagents?.remove_reagent(/datum/reagent/vampsolution, 30)
+	remove_status_effect(/datum/status_effect/debuff/vampbite)
 	apply_status_effect(/datum/status_effect/incapacitating/stun, VAMP_CONVERT_POST_STUN)
 
 	return TRUE
@@ -695,8 +722,8 @@ drinksomeblood()
 		to_chat(src, span_warning("[victim] уже находится под действием проклятия."))
 		return
 
-	if(!VDrinker.can_sire_thrall() && !can_offer_pallid_drain(victim))
-		to_chat(src, span_warning("Клан достиг предела порождений, а [victim] уже нельзя иссушить."))
+	if(!ta_can_sire(VDrinker) && !can_offer_pallid_drain(victim))
+		to_chat(src, span_warning("Я не могу принять [victim] в клан, а иссушить эту душу уже нельзя."))
 		return
 
 	var/token = victim.ta_begin_siring(TA_VAMP_SIRING_CHOICE_TIMEOUT + TA_VAMP_SIRING_CHANNEL_TIME)
@@ -712,7 +739,7 @@ drinksomeblood()
 	can_force_convert = istype(VDrinker, /datum/antagonist/vampire/lord)
 #endif
 	var/can_drain = can_offer_pallid_drain(victim)
-	var/can_sire_thrall = VDrinker.can_sire_thrall()
+	var/can_sire_thrall = ta_can_sire(VDrinker)
 
 	var/reward_maxbloodpool_cap = get_vampire_conversion_reward_maxbloodpool_cap(VDrinker)
 	var/remaining_maxbloodpool_reward = max(reward_maxbloodpool_cap - maxbloodpool, 0)
@@ -807,7 +834,7 @@ drinksomeblood()
 		ta_finish_pallid_drain(victim, VDrinker)
 		return FALSE
 
-	if(!VDrinker.can_sire_thrall())
+	if(!ta_can_sire(VDrinker))
 		to_chat(src, span_warning("Клан достиг предела порождений."))
 		return FALSE
 
@@ -858,7 +885,8 @@ drinksomeblood()
 	if(!istype(VDrinker))
 		return FALSE
 
-	if(!VDrinker.can_sire_thrall())
+	var/mob/living/carbon/human/human_sire = sire
+	if(!istype(human_sire) || !human_sire.ta_can_sire(VDrinker))
 		to_chat(src, span_warning("Клан вампира достиг предела порождений. Проклятие рассеивается."))
 		return FALSE
 
@@ -1046,6 +1074,7 @@ drinksomeblood()
 #undef TA_VAMP_BLOODDRINK_TARGET_FINAL_BLOOD
 #undef TA_VAMP_BLOODDRINK_LOCK_TIMEOUT
 #undef TA_VAMP_SIRING_RECOVERED_BLOOD
+#undef TA_VAMP_SIRING_DRAINED_MEMORY
 #undef TA_VAMP_SIRING_CHOICE_TIMEOUT
 #undef TA_VAMP_SIRING_CHANNEL_TIME
 #undef TA_VAMP_SIRING_LOCK_MARGIN

@@ -16,6 +16,7 @@
 #define VL_WARD_STACKS_EARLY 1
 #define VL_WARD_STACKS_LATE 3
 #define VL_WARD_SOURCE "ta_astrata_ward"
+#define VL_RETINUE_TRAIT "ta_vampire_lord_retinue"
 #define VL_MANOR_SOURCE "ta_manor_shelter"
 #define VL_WARD_WARNING "Астрата хранит покой этого города, уходи!"
 #define VL_ASCENSION_LOCK_DELAY (1 MINUTES)
@@ -146,7 +147,10 @@ GLOBAL_LIST_INIT(ta_astrata_extra_wards, typecacheof(list(
 		return FALSE
 	if(target.mind.has_antag_datum(/datum/antagonist/vampire/lord))
 		return TRUE
-	return ta_in_vampire_lord_clan(target, ta_get_vampire_lord_body())
+	var/mob/living/carbon/human/lord_body = ta_get_vampire_lord_body()
+	if(ta_in_vampire_lord_clan(target, lord_body))
+		return TRUE
+	return lord_body && HAS_TRAIT(target, VL_RETINUE_TRAIT) && target.clan == lord_body.clan
 
 /proc/ta_assign_vampire_lord_subordinate(mob/living/carbon/human/member, position_name)
 	if(!istype(member) || member.clan_position)
@@ -300,10 +304,16 @@ GLOBAL_LIST_INIT(ta_astrata_extra_wards, typecacheof(list(
 /mob/living/carbon/human/set_clan(setting_clan, joining_round)
 	. = ..()
 	ta_sync_vampire_zone_watch(src)
+	ta_open_retinue_after_clan()
 
 /mob/living/carbon/human/set_clan_direct(datum/clan/new_clan)
 	. = ..()
 	ta_sync_vampire_zone_watch(src)
+	ta_open_retinue_after_clan()
+
+/mob/living/carbon/human/proc/ta_open_retinue_after_clan()
+	if(clan && mind?.has_antag_datum(/datum/antagonist/vampire/lord))
+		ta_vampire_lord_expansion_open_retinue()
 
 /datum/antagonist/vampire/lord/on_gain()
 	. = ..()
@@ -326,6 +336,9 @@ GLOBAL_LIST_INIT(ta_astrata_extra_wards, typecacheof(list(
 
 /proc/ta_vampire_lord_expansion_open_retinue()
 	if(!GLOB.ta_vampire_lord_expansion || !GLOB.ta_vampire_lord_taken)
+		return
+	var/mob/living/carbon/human/lord_body = ta_get_vampire_lord_body()
+	if(lord_body && !lord_body.clan)
 		return
 	var/knight_limit = GLOB.ta_vampire_lord_auto_event ? VL_AUTO_KNIGHT_SLOTS : VL_KNIGHT_SLOTS
 	var/servant_limit = GLOB.ta_vampire_lord_auto_event ? VL_AUTO_SERVANT_SLOTS : VL_SERVANT_SLOTS
@@ -390,6 +403,7 @@ GLOBAL_LIST_INIT(ta_astrata_extra_wards, typecacheof(list(
 		retinue_antag.antag_flags |= FLAG_ANTAG_CAP_IGNORE
 		retinue_body.mind.add_antag_datum(retinue_antag)
 	ADD_TRAIT(retinue_body, TRAIT_DUSTABLE, TRAIT_GENERIC)
+	ADD_TRAIT(retinue_body, VL_RETINUE_TRAIT, VL_WARD_SOURCE)
 	ta_assign_vampire_lord_subordinate(retinue_body, position_name)
 	var/turf/spawn_turf = ta_vampire_lord_spawn_turf()
 	if(spawn_turf)
@@ -501,6 +515,7 @@ GLOBAL_LIST_INIT(ta_astrata_extra_wards, typecacheof(list(
 #undef VL_WARD_STACKS_EARLY
 #undef VL_WARD_STACKS_LATE
 #undef VL_WARD_SOURCE
+#undef VL_RETINUE_TRAIT
 #undef VL_MANOR_SOURCE
 #undef VL_WARD_WARNING
 #undef VL_ASCENSION_LOCK_DELAY

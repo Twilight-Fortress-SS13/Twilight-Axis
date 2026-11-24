@@ -3,6 +3,7 @@ SUBSYSTEM_DEF(ta_silver_inquisition)
 	wait = 5 SECONDS
 	runlevels = RUNLEVEL_GAME
 	can_fire = FALSE
+	var/gathering = FALSE
 	var/list/victims = list()
 
 /datum/controller/subsystem/ta_silver_inquisition/Initialize(timeofday)
@@ -12,9 +13,12 @@ SUBSYSTEM_DEF(ta_silver_inquisition)
 /datum/controller/subsystem/ta_silver_inquisition/fire(resumed)
 	if(wave_arrived())
 		can_fire = FALSE
+		gathering = FALSE
 		return
+	drop_stale_queue()
 	if(SSmigrants.track_forming[MIGRANT_TRACK_EVENT] || SSmigrants.get_forming_track(get_wave()))
 		return
+	gathering = FALSE
 	if(wave_allowed())
 		call_wave()
 
@@ -26,28 +30,35 @@ SUBSYSTEM_DEF(ta_silver_inquisition)
 	return SSmigrants.spawned_waves[/datum/migrant_wave/silver_inquisition] > 0
 
 /datum/controller/subsystem/ta_silver_inquisition/proc/wave_allowed()
-	return ta_vampire_lord_expansion_active() && get_active_player_count() >= TA_SILVER_INQUISITION_MIN_PLAYERS
+	return ta_vampire_lord_expansion_active() && length(GLOB.clients) >= TA_SILVER_INQUISITION_MIN_PLAYERS
 
 /datum/controller/subsystem/ta_silver_inquisition/proc/on_mob_death(datum/source, mob/dead_mob, gibbed)
 	SIGNAL_HANDLER
 	if(can_fire || !ishuman(dead_mob) || !ta_vampire_lord_expansion_active() || wave_arrived())
 		return
 	var/mob/living/carbon/human/victim = dead_mob
-	if(!victim.ta_damage_log || !is_counted_victim(victim))
+	if(!is_counted_victim(victim))
 		return
 	var/victim_ckey = ckey(victim.mind.key)
 	if(victim_ckey in victims)
 		return
-	addtimer(CALLBACK(src, PROC_REF(judge_death), victim_ckey, victim.ta_damage_log), 1)
+	LAZYINITLIST(victim.ta_damage_log)
+	addtimer(CALLBACK(src, PROC_REF(judge_death), victim_ckey, victim.ta_damage_log, WEAKREF(victim)), 1)
 
-/datum/controller/subsystem/ta_silver_inquisition/proc/judge_death(victim_ckey, list/damage_log)
-	if(can_fire || (victim_ckey in victims))
-		return
+/datum/controller/subsystem/ta_silver_inquisition/proc/judge_death(victim_ckey, list/damage_log, datum/weakref/body_ref)
 	var/datum/mind/killer = get_top_attacker(damage_log)
 	if(!istype(killer) || !killer.has_antag_datum(/datum/antagonist/vampire))
 		return
+	addtimer(CALLBACK(src, PROC_REF(count_death), victim_ckey, killer.key, body_ref), TA_SILVER_INQUISITION_CONFIRM_TIME)
+
+/datum/controller/subsystem/ta_silver_inquisition/proc/count_death(victim_ckey, killer_key, datum/weakref/body_ref)
+	if(can_fire || wave_arrived() || (victim_ckey in victims))
+		return
+	var/mob/living/body = body_ref?.resolve()
+	if(body && body.stat != DEAD)
+		return
 	victims += victim_ckey
-	log_game("Silver Inquisition: [victim_ckey] was killed by the vampire [killer.key] ([length(victims)] total).")
+	log_game("Silver Inquisition: [victim_ckey] was killed by the vampire [killer_key] ([length(victims)] total).")
 	if(length(victims) <= TA_SILVER_INQUISITION_KILL_LIMIT)
 		return
 	can_fire = TRUE
@@ -70,7 +81,7 @@ SUBSYSTEM_DEF(ta_silver_inquisition)
 	if(!victim_mind?.key || victim_mind.has_antag_datum(/datum/antagonist/vampire))
 		return FALSE
 	var/datum/antagonist/zombie/deadite = victim_mind.has_antag_datum(/datum/antagonist/zombie)
-	if(deadite?.has_turned)
+	if(istype(deadite) && deadite.has_turned)
 		return FALSE
 	var/datum/job/victim_job = ta_get_assigned_job_datum(victim_mind)
 	return victim_job && (victim_job.title in get_counted_jobs())
@@ -95,6 +106,7 @@ SUBSYSTEM_DEF(ta_silver_inquisition)
 /datum/controller/subsystem/ta_silver_inquisition/proc/call_wave()
 	if(!SSmigrants.begin_forming(MIGRANT_TRACK_EVENT, /datum/migrant_wave/silver_inquisition, TRUE))
 		return
+	gathering = TRUE
 	SSmigrants.track_arrival[MIGRANT_TRACK_EVENT] = world.time + TA_SILVER_INQUISITION_WAVE_TIME
 	message_admins("Серебряная инквизиция: отряд созван, сбор [TA_SILVER_INQUISITION_WAVE_TIME / (1 MINUTES)] мин.")
 	announce_wave()
@@ -111,10 +123,31 @@ SUBSYSTEM_DEF(ta_silver_inquisition)
 	announce_wave()
 	return TRUE
 
-/datum/controller/subsystem/ta_silver_inquisition/proc/cancel_wave(track)
+/datum/controller/subsystem/ta_silver_inquisition/proc/release_track(track)
+	gathering = FALSE
 	SSmigrants.track_forming[track] = null
 	SSmigrants.track_arrival[track] = 0
 	SSmigrants.track_forced[track] = FALSE
+
+/datum/controller/subsystem/ta_silver_inquisition/proc/is_gathering_on(track)
+	return gathering && SSmigrants.track_forming[track] == /datum/migrant_wave/silver_inquisition
+
+/datum/controller/subsystem/ta_silver_inquisition/proc/yield_track(track)
+	if(!is_gathering_on(track))
+		return
+	release_track(track)
+	for(var/client/candidate as anything in SSmigrants.get_wave_candidates(/datum/migrant_wave/silver_inquisition))
+		to_chat(candidate, span_boldwarning("Дорогу занял другой отряд. Сбор инквизиции продолжится следом, моя запись сохранена."))
+	log_game("Silver Inquisition: the gathering yields the event track.")
+
+/datum/controller/subsystem/ta_silver_inquisition/proc/drop_stale_queue()
+	for(var/client/player in GLOB.clients)
+		var/datum/migrant_pref/migrant = player.prefs?.migrant
+		if(migrant?.queued_wave == /datum/migrant_wave/silver_inquisition && player.mob && !isnewplayer(player.mob))
+			migrant.clear_queue(silent = TRUE)
+
+/datum/controller/subsystem/ta_silver_inquisition/proc/cancel_wave(track)
+	release_track(track)
 	for(var/client/candidate as anything in SSmigrants.get_wave_candidates(/datum/migrant_wave/silver_inquisition))
 		to_chat(candidate, span_boldwarning("В этих землях осталось слишком мало душ, сбор отряда отложен."))
 	SSmigrants.reset_wave_queue(/datum/migrant_wave/silver_inquisition)
@@ -139,8 +172,12 @@ SUBSYSTEM_DEF(ta_silver_inquisition)
 		window_flash(listener.client)
 
 /datum/controller/subsystem/migrants/resolve_forming_wave(track)
-	if(SSta_silver_inquisition.can_fire && track_forming[track] == /datum/migrant_wave/silver_inquisition && SSta_silver_inquisition.hold_wave(track))
+	if(SSta_silver_inquisition.is_gathering_on(track) && SSta_silver_inquisition.hold_wave(track))
 		return
+	return ..()
+
+/datum/round_event/migrant_wave/start()
+	SSta_silver_inquisition.yield_track(MIGRANT_TRACK_EVENT)
 	return ..()
 
 /datum/controller/subsystem/migrants
@@ -154,10 +191,21 @@ SUBSYSTEM_DEF(ta_silver_inquisition)
 /datum/controller/subsystem/migrants/can_be_role(client/player, role_type)
 	if(!player || !ispath(role_type, /datum/migrant_role/silver_inquisitor))
 		return ..()
+	if(ta_has_banned_flaw(player, role_type))
+		return FALSE
 	var/player_ckey = player.ckey
 	ta_cooldown_exempt[player_ckey]++
 	. = ..()
 	ta_cooldown_exempt[player_ckey]--
+
+/datum/controller/subsystem/migrants/proc/ta_has_banned_flaw(client/player, role_type)
+	var/datum/migrant_role/role = MIGRANT_ROLE(role_type)
+	for(var/flaw in player.prefs?.charflaws)
+		var/datum/charflaw/flaw_instance = flaw
+		var/flaw_type = ispath(flaw) ? flaw : flaw_instance.type
+		if(flaw_type in role.banned_flaws)
+			return TRUE
+	return FALSE
 
 /datum/migrant_pref/queue_for(wave_type, role_type)
 	if(!prefs.parent || wave_type != /datum/migrant_wave/silver_inquisition)
@@ -167,15 +215,28 @@ SUBSYSTEM_DEF(ta_silver_inquisition)
 	. = ..()
 	SSmigrants.ta_cooldown_exempt[player_ckey]--
 
-/mob/living/proc/ta_note_attacker(mob/living/attacker)
-	lastattacker = attacker.real_name
-	lastattackerckey = attacker.ckey
-	lastattacker_weakref = WEAKREF(attacker)
-	if(mind)
-		mind.attackedme[attacker.real_name] = world.time
-
 /mob/living/carbon/human
 	var/tmp/list/ta_damage_log
+	var/tmp/datum/weakref/ta_attacker_ref
+	var/tmp/ta_attacker_time = 0
+
+/mob/living/carbon/human/proc/ta_note_attacker(mob/living/attacker)
+	if(!mind || !istype(attacker) || attacker == src || !ta_vampire_lord_expansion_active())
+		return
+	ta_attacker_ref = WEAKREF(attacker)
+	ta_attacker_time = world.time
+
+/mob/living/carbon/human/proc/ta_get_current_attacker()
+	if(!mind)
+		return null
+	var/struck_time = lastattacker ? mind.attackedme[lastattacker] : 0
+	var/datum/weakref/attacker_ref = lastattacker_weakref
+	if(ta_attacker_time >= struck_time)
+		struck_time = ta_attacker_time
+		attacker_ref = ta_attacker_ref
+	if(world.time > struck_time + TA_SILVER_INQUISITION_HIT_WINDOW)
+		return null
+	return attacker_ref?.resolve()
 
 /mob/living/carbon/human/proc/ta_log_damage(mob/living/attacker, damage)
 	if(damage <= 0 || !mind || !istype(attacker) || attacker == src || !ta_vampire_lord_expansion_active())
@@ -186,11 +247,6 @@ SUBSYSTEM_DEF(ta_silver_inquisition)
 	if(length(ta_damage_log) > TA_SILVER_INQUISITION_LOG_SIZE)
 		ta_damage_log.Cut(1, 2)
 
-/mob/living/carbon/human/proc/ta_get_current_attacker()
-	if(!mind || !lastattacker || world.time > mind.attackedme[lastattacker] + TA_SILVER_INQUISITION_HIT_WINDOW)
-		return null
-	return lastattacker_weakref?.resolve()
-
 /mob/living/carbon/human/proc/ta_get_health_damage()
 	return getBruteLoss() + getFireLoss() + getToxLoss() + getOxyLoss() + getCloneLoss()
 
@@ -200,24 +256,65 @@ SUBSYSTEM_DEF(ta_silver_inquisition)
 	var/mob/living/attacker = victim.ta_get_current_attacker()
 	if(!attacker)
 		return ..()
-	LAZYINITLIST(victim.ta_damage_log)
 	var/damage_before = victim.ta_get_health_damage()
 	. = ..()
 	victim.ta_log_damage(attacker, victim.ta_get_health_damage() - damage_before)
 
+/datum/species/kicked(mob/living/carbon/human/user, mob/living/carbon/human/target)
+	target.ta_note_attacker(user)
+	return ..()
+
+/mob/living/carbon/human/attacked_by(obj/item/weapon, mob/living/user)
+	ta_note_attacker(user)
+	return ..()
+
 /mob/living/carbon/human/bullet_act(obj/projectile/hit_projectile, def_zone = BODY_ZONE_CHEST)
-	var/mob/living/shooter = hit_projectile?.firer
-	if(istype(shooter) && shooter != src)
-		ta_note_attacker(shooter)
+	ta_note_attacker(hit_projectile?.firer)
 	return ..()
 
 /mob/living/carbon/human/hitby(atom/movable/thrown_thing, skipcatch = FALSE, hitpush = TRUE, blocked = FALSE, datum/thrownthing/throwingdatum, damage_flag = "blunt")
-	var/mob/living/thrower = throwingdatum?.thrower
-	if(istype(thrower) && thrower != src)
-		ta_note_attacker(thrower)
+	ta_note_attacker(throwingdatum?.thrower)
 	return ..()
 
 /mob/living/carbon/human/attack_animal(mob/living/simple_animal/animal)
 	if(istype(animal) && animal.melee_damage_upper > 0)
 		ta_note_attacker(animal)
+	return ..()
+
+/obj/item/grabbing/proc/ta_note_grabber(mob/living/user)
+	var/mob/living/carbon/human/victim = grabbed
+	if(istype(victim))
+		victim.ta_note_attacker(user)
+
+/obj/item/grabbing/twistlimb(mob/living/user)
+	ta_note_grabber(user)
+	return ..()
+
+/obj/item/grabbing/smashlimb(atom/surface, mob/living/user)
+	ta_note_grabber(user)
+	return ..()
+
+/obj/item/grabbing/headbutt(mob/living/carbon/human/user)
+	ta_note_grabber(user)
+	return ..()
+
+/obj/item/grabbing/attack(mob/living/victim, mob/living/user)
+	var/mob/living/carbon/human/choked = victim
+	if(!istype(choked) || user?.used_intent?.type != /datum/intent/grab/choke)
+		return ..()
+	var/suffocation_before = choked.getOxyLoss()
+	. = ..()
+	if(!QDELETED(choked))
+		choked.ta_log_damage(user, choked.getOxyLoss() - suffocation_before)
+
+/datum/coven_power/activate(atom/target)
+	var/mob/living/carbon/human/victim = target
+	if(hostile && istype(victim))
+		victim.ta_note_attacker(owner)
+	return ..()
+
+/datum/coven_power/siren/shattering_crescendo/activate()
+	for(var/mob/living/carbon/human/listener in oviewers(7, owner))
+		if(listener.clan != owner.clan)
+			listener.ta_note_attacker(owner)
 	return ..()

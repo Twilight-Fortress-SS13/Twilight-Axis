@@ -115,7 +115,8 @@
 		if(original_mind && original_mind.current != src)
 			original_mind.transfer_to(src, TRUE)
 		if(client)
-			client.verbs.Remove(GLOB.ghost_verbs)
+			remove_verb(client, GLOB.ghost_verbs)
+			client.init_verbs()
 		remove_status_effect(/datum/status_effect/debuff/rotted_zombie)
 		mind?.remove_antag_datum(/datum/antagonist/zombie)
 
@@ -386,18 +387,18 @@
 	if(!starting && can_start_berserk(owner))
 		start_berserk(owner)
 
-/datum/component/ta_death_gift_berserk/proc/can_start_berserk(mob/living/carbon/human/owner)
+/datum/component/ta_death_gift_berserk/proc/can_start_berserk(mob/living/carbon/human/owner, risen = FALSE)
 	if(!istype(owner) || QDELETED(owner) || owner.stat == DEAD || active)
 		return FALSE
 	if(owner.has_status_effect(/datum/status_effect/debuff/sleepytime) || owner.has_status_effect(/datum/status_effect/debuff/ta_death_gift_tired))
 		return FALSE
 	if(!owner.get_bodypart(BODY_ZONE_HEAD))
 		return FALSE
-	return owner.InCritical() || owner.health <= owner.crit_threshold || ((owner.blood_volume in -INFINITY to BLOOD_VOLUME_SURVIVE) && !HAS_TRAIT(owner, TRAIT_BLOODLOSS_IMMUNE))
+	return risen || owner.InCritical() || owner.health <= owner.crit_threshold || ((owner.blood_volume in -INFINITY to BLOOD_VOLUME_SURVIVE) && !HAS_TRAIT(owner, TRAIT_BLOODLOSS_IMMUNE))
 
-/datum/component/ta_death_gift_berserk/proc/start_berserk(mob/living/carbon/human/owner)
+/datum/component/ta_death_gift_berserk/proc/start_berserk(mob/living/carbon/human/owner, risen = FALSE)
 	starting = FALSE
-	if(!can_start_berserk(owner))
+	if(!can_start_berserk(owner, risen))
 		return
 
 	active = TRUE
@@ -672,12 +673,12 @@
 	if(gibbed)
 		return
 	if(active)
-		INVOKE_ASYNC(src, PROC_REF(ta_bloody_gib), source)
+		addtimer(CALLBACK(src, PROC_REF(ta_bloody_gib), source), 1)
 		return
 	if(!can_rise_from_death(source))
 		return
 	rising = TRUE
-	INVOKE_ASYNC(src, PROC_REF(rise_from_death), source)
+	addtimer(CALLBACK(src, PROC_REF(rise_from_death), source), 1)
 
 /datum/component/ta_death_gift_berserk/proc/can_rise_from_death(mob/living/carbon/human/owner)
 	if(!istype(owner) || QDELETED(owner) || active || starting || rising)
@@ -712,13 +713,14 @@
 
 	owner.visible_message(span_userdanger("Раны [owner] с влажным хрустом стягиваются, и мертвое тело поднимается на ноги!"), span_userdanger("Смерть не удержит мою ярость. ПЛОТЬ СРАСТАЕТСЯ, И Я ВСТАЮ."))
 	if(!active && !starting)
-		start_berserk(owner)
+		start_berserk(owner, TRUE)
 	rising = FALSE
 
 /datum/component/ta_death_gift_berserk/proc/heal_death_wounds(mob/living/carbon/human/owner)
 	for(var/obj/item/bodypart/bodypart as anything in owner.bodyparts)
-		for(var/datum/wound/grievous/killing_wound in bodypart.wounds.Copy())
+		for(var/datum/wound/grievous/killing_wound in bodypart.wounds?.Copy())
 			qdel(killing_wound)
+			bodypart.dismemberable = initial(bodypart.dismemberable)
 
 /datum/component/ta_death_gift_berserk/proc/on_item_attacked_success(mob/living/carbon/human/source, obj/item/weapon, mob/living/attacker)
 	SIGNAL_HANDLER
