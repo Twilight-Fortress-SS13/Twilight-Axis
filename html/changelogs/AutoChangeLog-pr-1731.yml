@@ -1,0 +1,7 @@
+author: "Chituka"
+delete-after: True
+changes:
+  - balance: "Snake's sting cooldown is now based on user, not knife itself"
+  - balance: "decreased masquarade's integrity (550 -> 400)"
+  - code_imp: "minor changes to baotha's knives code"
+  - rscadd: "NODROP armor sets become useless, once you burn one of it's elemets"

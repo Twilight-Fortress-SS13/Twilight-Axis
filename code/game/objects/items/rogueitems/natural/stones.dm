@@ -413,6 +413,18 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 
 /obj/item/natural/rock/Crossed(mob/living/L)
 	if(istype(L) && !L.throwing)
+		var/mob/living/simple_animal/mount // TA EDIT START
+		if(istype(L, /mob/living/simple_animal))
+			mount = L
+		else if(istype(L.buckled, /mob/living/simple_animal))
+			mount = L.buckled
+		var/running = L.m_intent == MOVE_INTENT_RUN
+		if(!running && mount?.has_buckled_mobs())
+			var/mob/living/driver = mount.buckled_mobs[1]
+			running = driver?.m_intent == MOVE_INTENT_RUN
+		if(mount?.mount_initialized && running)
+			mount.mount_stumble()
+			return ..() // TA EDIT END
 		if(L.m_intent == MOVE_INTENT_RUN)
 			L.visible_message(span_warning("[L] trips over the boulder!"),span_warning("I trip over the boulder!"))
 			L.Knockdown(10)
