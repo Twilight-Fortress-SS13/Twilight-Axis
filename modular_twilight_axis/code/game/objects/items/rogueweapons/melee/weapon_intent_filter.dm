@@ -122,7 +122,8 @@
 		Fail("Wielded intents were not filtered", __FILE__, __LINE__)
 	weapon.wielded = FALSE
 
-	var/datum/alt_grip/grip = allocate(/datum/alt_grip)
+	var/datum/alt_grip/grip = new
+	allocated += grip
 	grip.grip_intents = blocked
 	weapon.current_alt_grip = grip
 	weapon.altgripped = TRUE
