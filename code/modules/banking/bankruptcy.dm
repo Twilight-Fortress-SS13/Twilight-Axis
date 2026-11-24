@@ -20,7 +20,10 @@
 	record_round_statistic(STATS_ARREARS_DECLARED, 1)
 	// Direct credit so the loan itself isn't immediately skimmed against the debt we just registered.
 	discretionary_fund.balance += loan_amount
-	log_fund_entry(new /datum/treasury_entry("mint", null, discretionary_fund, loan_amount, "Arrears advance from [ta_economy_trade_company_the()]"))
+	post_ledger_entry("financing", "Arrears advance from [ta_economy_trade_company_the()]", list(
+		list(LEDGER_CROWN_CASH, loan_amount, 0),
+		list(LEDGER_CROWN_ARREARS_ADVANCE, 0, loan_amount),
+	), null, discretionary_fund)
 	priority_announce(
 		"[ta_economy_authority_capital()]'s coffers ran dry at payroll. [ta_economy_burghers_capital()], by their standing pledge, advance [loan_amount]m at no interest to cover the day's wages. Should [ta_economy_authority_lower()] fail again on the morrow, the realm enters sequestration.",
 		ta_economy_burghers_lend_title(),
@@ -37,17 +40,38 @@
 
 	// Reset purse to the operating floor. Adjust by difference and log so the ledger reflects
 	// the residual being burned (or topped up) rather than a silent assignment.
+	var/topup = 0
 	if(discretionary_fund.balance > BANKRUPTCY_OPERATING_FLOOR)
 		var/excess = discretionary_fund.balance - BANKRUPTCY_OPERATING_FLOOR
 		discretionary_fund.balance = BANKRUPTCY_OPERATING_FLOOR
-		log_fund_entry(new /datum/treasury_entry("burn", discretionary_fund, null, excess, "Sequestration: residual Treasury forfeit"))
+		post_ledger_entry("financing", "Sequestration: residual Treasury forfeit", list(
+			list(LEDGER_CROWN_EXP_SEQUESTRATION, excess, 0),
+			list(LEDGER_CROWN_CASH, 0, excess),
+		), discretionary_fund)
 	else if(discretionary_fund.balance < BANKRUPTCY_OPERATING_FLOOR)
-		var/topup = BANKRUPTCY_OPERATING_FLOOR - discretionary_fund.balance
+		topup = BANKRUPTCY_OPERATING_FLOOR - discretionary_fund.balance
 		discretionary_fund.balance = BANKRUPTCY_OPERATING_FLOOR
-		log_fund_entry(new /datum/treasury_entry("mint", null, discretionary_fund, topup, "Sequestration: operating reserve from [ta_economy_trade_company_the()]"))
+		post_ledger_entry("financing", "Sequestration: operating reserve from [ta_economy_trade_company_the()]", list(
+			list(LEDGER_CROWN_CASH, topup, 0),
+			list(LEDGER_CROWN_SEQUESTRATION_DEBT, 0, topup),
+		), null, discretionary_fund)
+
 	// Existing arrears debt is rolled into the new sequestration debt rather than dropped,
 	// so the Crown doesn't escape the smaller obligation by failing harder.
 	var/new_debt = BANKRUPTCY_DEBT_FLAT
+	// The reserve advance above is already on the books as debt; the remainder of the flat
+	// charge (or the over-provision, if the advance exceeded it) is booked as a sequestration charge.
+	var/charge = new_debt - topup
+	if(charge > 0)
+		post_ledger_entry("accrual", "Sequestration charge", list(
+			list(LEDGER_CROWN_EXP_SEQUESTRATION, charge, 0),
+			list(LEDGER_CROWN_SEQUESTRATION_DEBT, 0, charge),
+		))
+	else if(charge < 0)
+		post_ledger_entry("accrual", "Sequestration charge (adjustment)", list(
+			list(LEDGER_CROWN_SEQUESTRATION_DEBT, -charge, 0),
+			list(LEDGER_CROWN_EXP_SEQUESTRATION, 0, -charge),
+		))
 	treasury_debt += new_debt
 	GLOB.azure_round_stats[STATS_TREASURY_DEBT_OUTSTANDING] = treasury_debt
 	treasury_state = TREASURY_BANKRUPTCY
@@ -126,7 +150,11 @@
 	if(discretionary_fund.balance < BANKRUPTCY_RECOVERY_RESET)
 		var/topup = BANKRUPTCY_RECOVERY_RESET - discretionary_fund.balance
 		discretionary_fund.balance = BANKRUPTCY_RECOVERY_RESET
-		log_fund_entry(new /datum/treasury_entry("mint", null, discretionary_fund, topup, "Sequestration lifted: working capital"))
+		post_ledger_entry("financing", "Sequestration lifted: working capital", list(
+			list(LEDGER_CROWN_CASH, topup, 0),
+			list(LEDGER_CROWN_GRANTS, 0, topup),
+		), null, discretionary_fund)
+
 	resume_wages_after_bankruptcy()
 	// Trade configuration intentionally NOT restored - re-tuning it is part of the cost of failure.
 	bankruptcy_concession_picks = BANKRUPTCY_CONCESSION_PICKS
@@ -300,7 +328,17 @@ GLOBAL_LIST_INIT(atc_seizure_inventory, list(
 	atc_loan_arrears_consumed = TRUE
 	// Direct credit so the principal isn't immediately skimmed against the debt we just registered.
 	discretionary_fund.balance += amount
-	log_fund_entry(new /datum/treasury_entry("mint", null, discretionary_fund, amount, "Trading company emergency loan (principal)"))
+	// Principal arrives as cash; the interest premium is expensed up front because the debt is
+	// registered at its full repayable value.
+	var/list/loan_legs = list(
+		list(LEDGER_CROWN_CASH, amount, 0),
+		list(LEDGER_CROWN_ATC_LOAN, 0, debt_owed),
+	)
+	if(debt_owed > amount)
+		loan_legs += list(list(LEDGER_CROWN_INTEREST_EXP, debt_owed - amount, 0))
+	else if(debt_owed < amount)
+		loan_legs += list(list(LEDGER_CROWN_INTEREST_INC, 0, amount - debt_owed))
+	post_ledger_entry("financing", "Trading company emergency loan (principal)", loan_legs, null, discretionary_fund)
 	priority_announce(
 		"[ta_economy_authority_capital()] takes an advance of [amount]m from [ta_economy_trade_company_the()] at the customary one-quarter interest, registering a debt of [debt_owed]m. The arrears grace stands forfeit; should [ta_economy_authority_lower()] miss its next payroll, the realm enters sequestration without warning.",
 		ta_economy_borrows_title(),

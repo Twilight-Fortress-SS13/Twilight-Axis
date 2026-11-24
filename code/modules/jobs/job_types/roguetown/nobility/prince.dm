@@ -21,6 +21,7 @@
 	min_pq = 6
 	max_pq = null
 	round_contrib_points = 3
+	quest_claim_barred = TRUE // TA EDIT
 	cmode_music = sound("sound/music/combat_noble.ogg")
 	job_traits = list(TRAIT_NOBLE)
 	job_subclasses = list(
@@ -38,37 +39,6 @@
 	..()
 	add_verb(H, /mob/living/carbon/human/proc/declarechampion)
 	has_loadout = TRUE
-
-/datum/outfit/job/roguetown/heir/choose_loadout(mob/living/carbon/human/H)
-	. = ..()
-	var/client/player = H?.client
-	if(player.prefs)
-		if(SSmapping.config.map_name == "Rockhill")
-			if(!istype(player.prefs.virtue_origin, /datum/virtue/origin/enigma) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/valorian) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/zybantian))
-				var/list/new_origins = list("Enigma" = /datum/virtue/origin/enigma,
-				"Valoria" = /datum/virtue/origin/valorian,
-				"Zybantu" = /datum/virtue/origin/zybantian)
-				var/new_origin
-				var/choice = input(player, "Your origins are not compatible with the Kingdom. Where do you hail from?", "ANCESTRY") as anything in new_origins
-				if(choice)
-					new_origin = new_origins[choice]
-				else
-					to_chat(player, span_notice("No choice detected. Picking a random compatible origin."))
-					new_origin = pick(/datum/virtue/origin/enigma, /datum/virtue/origin/valorian, /datum/virtue/origin/zybantian)
-				change_origin(H, new_origin, "Royal line")
-		else if(SSmapping.config.map_name != "Desert Town")
-			if(!istype(player.prefs.virtue_origin, /datum/virtue/origin/azuria) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/grenzelhoft) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/valorian))
-				var/list/new_origins = list("Azuria" = /datum/virtue/origin/azuria,
-				"Grenzelhoft" = /datum/virtue/origin/grenzelhoft,
-				"Valoria" = /datum/virtue/origin/valorian)
-				var/new_origin
-				var/choice = input(player, "Your origins are not compatible with the Duchy. Where do you hail from?", "ANCESTRY") as anything in new_origins
-				if(choice)
-					new_origin = new_origins[choice]
-				else
-					to_chat(player, span_notice("No choice detected. Picking a random compatible origin."))
-					new_origin = pick(/datum/virtue/origin/grenzelhoft, /datum/virtue/origin/valorian, /datum/virtue/origin/azuria)
-				change_origin(H, new_origin, "Royal line")
 
 /datum/advclass/heir/daring
 	name = "Daring Twit"
@@ -154,7 +124,7 @@
 		STATKEY_CON = -1,
 		STATKEY_LCK = 1,
 	)
-	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 2, "utilities" = 4)
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 2, "utilities" = 8)
 	subclass_skills = list(
 		/datum/skill/misc/reading = SKILL_LEVEL_MASTER,
 		/datum/skill/magic/arcane = SKILL_LEVEL_NOVICE,
@@ -309,7 +279,7 @@
 
 /datum/advclass/heir/scamp
 	name = "Nettlesome Scamp"
-	tutorial = "The stories told to you by your bedside of valiant rogues and thieves with hearts of gold saving the worlds. The misunderstood hero. The clammor of Knights, the dull books of the arcyne and the wise never interested you. So you donned the cloak, and with your plump figure learned the arts of stealth. Surely the populace will be forgiving of your antics."
+	tutorial = "The stories told to you by your bedside of valiant rogues and thieves with hearts of gold saving the worlds. The misunderstood hero. The clamor of Knights, the dull books of the arcyne and the wise never interested you. So you donned the cloak, and with your plump figure learned the arts of stealth. Surely the populace will be forgiving of your antics."
 	outfit = /datum/outfit/job/roguetown/heir/scamp
 	traits_applied = list(TRAIT_SEEPRICES_SHITTY, TRAIT_ALCHEMY_EXPERT)
 	category_tags = list(CTAG_HEIR)
@@ -323,10 +293,14 @@
 	STATKEY_WIL = 1,
 	STATKEY_LCK = 1,
 	)
+	subclass_stashed_items = list(
+		"Wax Putty I" = /obj/item/waxputty,
+		"Wax Putty II" = /obj/item/waxputty,
+	)
 	subclass_skills = list(
 		/datum/skill/misc/sneaking = SKILL_LEVEL_MASTER,
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
-		/datum/skill/misc/stealing = SKILL_LEVEL_EXPERT,
+		/datum/skill/misc/stealing = SKILL_LEVEL_EXPERT, // TA EDIT
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/slings = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,

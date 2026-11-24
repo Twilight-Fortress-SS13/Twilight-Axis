@@ -5,7 +5,7 @@
 	faction = "Station"
 	total_positions = 6
 	spawn_positions = 6
-	vice_restrictions = list(/datum/charflaw/silverweakness)
+	vice_restrictions = list(/datum/charflaw/silverweakness, /datum/charflaw/wanted)
 	forbidden_races = list(RACES_DESPISED)
 	allowed_patrons = ALL_DIVINE_PATRONS
 	allowed_sexes = list(MALE, FEMALE)
@@ -17,7 +17,8 @@
 	min_pq = 4 //A step above sexton, should funnel new players to the sexton role to learn miracles at a more sedate pace
 	max_pq = null
 	round_contrib_points = 5
-	same_job_respawn_delay = 20 MINUTES
+	quest_claim_barred = TRUE
+	same_job_respawn_delay = 20 MINUTES // TA EDIT
 
 	//No nobility for you, being a member of the clergy means you gave UP your nobility. It says this in many of the church tutorial texts.
 	virtue_restrictions = list(/datum/virtue/utility/noble)
@@ -81,6 +82,7 @@
 	backpack_contents = list(
 		/obj/item/ritechalk = 1,
 		/obj/item/mini_flagpole/church,
+		/obj/item/needle/thorn,
 		/obj/item/storage/keyring/acolyte
 		)
 	H.cmode_music = sound("sound/music/cmode/church/combat_acolyte.ogg") // has to be defined here for the selection below to work. sm1 please rewrite cmusic to apply pre-equip.
@@ -119,7 +121,7 @@
 			neck = /obj/item/clothing/neck/roguetown/psicross/necra/g
 			armor = /obj/item/clothing/suit/roguetown/shirt/robe/necra
 			cloak = /obj/item/clothing/cloak/templar/necrancleric
-			var/list/necra_tools = list("Silver Shovel", "Silver Scythe")
+			var/list/necra_tools = list("Silver Shovel", "Silver Scythe", "Iron Shovel") //TA EDIT
 			var/tool_choice = input(H, "A reaper, or a digger?", "HOW WILL YOU APPEASE THE UNDERMAIDEN?") as anything in necra_tools
 			switch(tool_choice) // choose wisely... larp or effectiveness?
 				if("Silver Shovel")
@@ -127,6 +129,8 @@
 				if("Silver Scythe") // o lawd we farmin
 					backr = /obj/item/rogueweapon/scabbard/gwstrap
 					l_hand = /obj/item/rogueweapon/scythe/silver
+				if("Iron Shovel") //TA EDIT
+					backr = /obj/item/rogueweapon/shovel //TA EDIT
 		if(/datum/patron/divine/pestra)
 			head = /obj/item/clothing/head/roguetown/roguehood/phys
 			neck = /obj/item/clothing/neck/roguetown/psicross/pestra/g
@@ -138,8 +142,7 @@
 			backpack_contents[/obj/item/clothing/head/roguetown/eoramask] = 1
 			neck = /obj/item/clothing/neck/roguetown/psicross/eora/g
 			cloak = /obj/item/clothing/cloak/templar/eoran
-			r_hand = /obj/item/rogueweapon/huntingknife/scissors
-			l_hand = /obj/item/needle/thorn
+			l_hand = /obj/item/rogueweapon/huntingknife/scissors
 			var/robes = list("Modest","Exposed")
 			var/robe_choice = input(H, "Choose your ROBES.", "TAKE UP ROBES.") as anything in robes
 			switch(robe_choice) // This feels wrong to do but I am unsure how else to do it

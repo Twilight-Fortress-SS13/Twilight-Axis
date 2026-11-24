@@ -1,7 +1,7 @@
 /datum/action/cooldown/spell/levinstroke
 	button_icon = 'icons/mob/actions/mage_fulgurmancy.dmi'
 	name = "Levinstroke"
-	desc = "Transform yourself briefly into a bolt of lightning toward a target location, inflicting 60 burn damage to any living things in your path."
+	desc = "Transform yourself briefly into a bolt of lightning toward a target location, inflicting 48 burn damage to any living things in your path."
 	button_icon_state = "levinstroke"
 	sound = 'sound/magic/lightning.ogg'
 	spell_color = GLOW_COLOR_LIGHTNING
@@ -17,7 +17,7 @@
 	invocation_type = INVOCATION_SHOUT
 
 	charge_required = TRUE
-	charge_swingdelay_type = SWINGDELAY_CANCEL
+	charge_swingdelay_type = SWINGDELAY_PENALTY
 	weapon_cast_penalized = TRUE
 	charge_time = CHARGETIME_MINOR
 	hold_drain = 1
@@ -31,8 +31,8 @@
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
 	var/max_range = 5
-	var/strike_damage = 60
-	displayed_damage = 60
+	var/strike_damage = SPELL_DMG(60)
+	displayed_damage = SPELL_DMG(60)
 
 /datum/action/cooldown/spell/levinstroke/cast(atom/cast_on)
 	. = ..()
@@ -62,12 +62,8 @@
 		to_chat(H, span_warning("I need somewhere to surge to!"))
 		return FALSE
 
-	var/list/full_path = getline(start, dest)
-
 	var/list/mobs_in_path = list()
-	for(var/turf/path_turf in full_path)
-		if(path_turf == start)
-			continue
+	for(var/turf/path_turf as anything in levin_path(start, dest))
 		for(var/mob/living/M in path_turf)
 			if(M != H && M.stat != DEAD)
 				mobs_in_path += M
@@ -93,6 +89,20 @@
 
 	return TRUE
 
+/datum/action/cooldown/spell/levinstroke/get_impact_turfs(atom/center)
+	var/turf/start = get_turf(owner)
+	var/turf/dest = isliving(center) ? find_landing_turf(owner, center) : get_turf(center)
+	if(!start || !dest || dest.z != start.z)
+		return list()
+	dest = arcyne_find_max_blink_dest(owner, dest, max_range)
+	if(!dest)
+		return list()
+	return levin_path(start, dest)
+
+/datum/action/cooldown/spell/levinstroke/proc/levin_path(turf/start, turf/dest)
+	. = getline(start, dest)
+	. -= start
+
 /datum/action/cooldown/spell/levinstroke/proc/find_landing_turf(mob/living/user, mob/living/target_mob)
 	var/approach_dir = get_dir(user, target_mob)
 	var/turf/far_side = get_step(target_mob, approach_dir)
@@ -116,7 +126,7 @@
 		if(ishuman(victim))
 			if(arcyne_strike(user, victim, null, strike_damage, def_zone, BCLASS_BURN, \
 				spell_name = "Levinstroke", damage_type = BURN, \
-				skip_animation = TRUE) == ARCYNE_STRIKE_WARDED)
+				skip_animation = TRUE, SPELL_STRIKE_SCALING) == ARCYNE_STRIKE_WARDED)
 				continue
 		else
 			victim.electrocute_act(strike_damage, src, 1, SHOCK_NOSTUN)

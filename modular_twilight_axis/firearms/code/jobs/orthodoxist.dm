@@ -64,7 +64,7 @@
 	)
 	sellprice += 200
 
-/datum/advclass/blackpowder_legionnaire
+/datum/advclass/inq/blackpowder_legionnaire
 	name = "Blackpowder Legionnaire"
 	tutorial = "In the Blackpowder Order, every fourth soldier is a sharpshooter, armed with advanced Otavan firearms. These Legionnaires are the very essence of the everchanging face of warfare, and when the Final War begins, it is with their power that the evil will be driven back."
 	allowed_sexes = list(MALE, FEMALE)
@@ -124,7 +124,7 @@
 						pants = /obj/item/clothing/under/roguetown/chainlegs
 						ADD_TRAIT(H, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
 					if("Light Armor - Dodge Expert, Psydonic Chestplate")
-						armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fencer/psydon
+						armor = /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fencer/ornate
 						pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/otavan
 						ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 				var/weapons = list("Psydonic Shortsword", "Psydonic Cudgel", "Psydonic Flanged Mace")

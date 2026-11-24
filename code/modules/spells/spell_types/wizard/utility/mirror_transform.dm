@@ -61,6 +61,10 @@
 //		if("Nudeshot")  // Надо будет сделать кнопку добавления в NSFW галерею и кнопку удаления от туда картинок. Это уже потом.
 //			H.mirror_set_nudeshot_url()
 		//TA addition end - new ERP SYSTEM
+		if("Headshost")
+			var/new_headshot = input(H, "You can see your own face shifting it's form...", "Choose your face")
+			if(valid_headshot_link(H,new_headshot))
+				H.headshot_link = new_headshot
 		if("Hairstyle")
 			var/datum/customizer_choice/bodypart_feature/hair/head/humanoid/hair_choice = CUSTOMIZER_CHOICE(/datum/customizer_choice/bodypart_feature/hair/head/humanoid)
 			var/list/valid_hairstyles = list()
@@ -177,27 +181,27 @@
 				should_update = TRUE
 
 		if("Skin Color")
-			var/old_skintone = H.dna.species.use_skintones ? H.skin_tone : H.dna.features["mcolor"]
+			var/old_skintone = mirror_uses_skin_tones(H) ? H.skin_tone : H.dna.features["mcolor"]
 			var/new_skin_color = color_pick_sanitized(H, "Choose your skin color", "Skin Color", old_skintone)
 			if(new_skin_color)
-				if(H.dna.species.use_skintones)
+				if(mirror_uses_skin_tones(H))
 					H.skin_tone = sanitize_hexcolor(new_skin_color, 6, FALSE)
 				else
-					H.dna.features["mcolor"] = sanitize_hexcolor(new_skin_color, 6, TRUE)
+					H.dna.features["mcolor"] = sanitize_hexcolor(new_skin_color, 6, FALSE)
 				H.update_body_parts()
 				should_update = TRUE
 
 		if("Skin Color 2")
 			var/new_skin_color = color_pick_sanitized(H, "Choose your skin color", "Skin Color", H.dna.features["mcolor2"])
 			if(new_skin_color)
-				H.dna.features["mcolor2"] = sanitize_hexcolor(new_skin_color, 6, TRUE)
+				H.dna.features["mcolor2"] = sanitize_hexcolor(new_skin_color, 6, FALSE)
 			H.update_body_parts()
 			should_update = TRUE
 
 		if("Skin Color 3")
 			var/new_skin_color = color_pick_sanitized(H, "Choose your skin color", "Skin Color", H.dna.features["mcolor3"])
 			if(new_skin_color)
-				H.dna.features["mcolor3"] = sanitize_hexcolor(new_skin_color, 6, TRUE)
+				H.dna.features["mcolor3"] = sanitize_hexcolor(new_skin_color, 6, FALSE)
 			H.update_body_parts()
 			should_update = TRUE
 
@@ -572,7 +576,11 @@
 				to_chat(H, span_warning("You don't have breasts!")) // TA EDIT END
 
 		if("Vagina")
-			var/list/valid_vagina_types = list("none", "human", "hairy", "spade", "furred", "gaping", "cloaca")
+			// var/list/valid_vagina_types = list("none", "human", "hairy", "spade", "furred", "gaping", "cloaca") TA EDIT
+			var/list/valid_vagina_types = list("none") // TA EDIT
+			for(var/vagina_path in subtypesof(/datum/sprite_accessory/vagina)) // TA EDIT
+				var/datum/sprite_accessory/vagina/vagina = new vagina_path() // TA EDIT
+				valid_vagina_types[vagina.name] = vagina_path // TA EDIT
 			var/new_style = input(H, "Choose your vagina type", "Vagina Customization") as null|anything in valid_vagina_types
 
 			if(new_style)
@@ -601,7 +609,8 @@
 					should_update = TRUE
 
 		if("Breast Size")
-			var/list/breast_sizes = list("Flat", "Slight", "Small", "Moderate", "Large", "Generous", "Heavy", "Massive", "Heaping", "Obscene")
+			// var/list/breast_sizes = list("Flat", "Slight", "Small", "Moderate", "Large", "Generous", "Heavy", "Massive", "Heaping", "Obscene") TA EDIT
+			var/list/breast_sizes = list("Flat", "Very Small", "Small", "Normal", "Large", "Enormous") // TA EDIT
 			var/new_size = input(H, "Choose your breast size", "Breast Size") as null|anything in breast_sizes
 			if(new_size)
 				var/obj/item/organ/breasts/breasts = H.getorganslot(ORGAN_SLOT_BREASTS)
@@ -610,25 +619,25 @@
 					switch(new_size)
 						if("Flat")
 							size_num = 0
-						if("Slight")
+						if("Very Small") // TA EDIT
 							size_num = 1
 						if("Small")
 							size_num = 2
-						if("Moderate")
+						if("Normal") // TA EDIT
 							size_num = 3
 						if("Large")
 							size_num = 4
-						if("Generous")
+						if("Enormous") // TA EDIT
 							size_num = 5
-						if("Heavy")
+/* 						if("Heavy") TA EDIT START
 							size_num = 6
 						if("Massive")
 							size_num = 7
-						if("Heaping")
+						if("Heaping")			MAX_BREASTS_SIZE - BREAST_SIZE_ENORMOUS
 							size_num = 8
 						if("Obscene")
 							size_num = 9
-
+										TA EDIT END */
 					breasts.breast_size = size_num
 					H.update_body()
 					should_update = TRUE
@@ -975,7 +984,7 @@
 					H.update_body()
 					should_update = TRUE
 			else
-				to_chat(H, span_warning("You don't have a ears!"))
+				to_chat(H, span_warning("You don't have ears!"))
 
 		if("Horns")
 			var/list/valid_horns = list("none")

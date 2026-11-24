@@ -8,7 +8,7 @@
 	traits_applied = list(TRAIT_HEAVYARMOR, TRAIT_UNCONVERTIBLE, TRAIT_HALLOWED)
 	reset_stats = TRUE
 	subclass_stats = list(
-		STATKEY_CON = 3,
+		STATKEY_CON = 4, // TA EDIT - ORIGINAL: 3
 		STATKEY_WIL = 2,
 		STATKEY_SPD = 2,
 		STATKEY_STR = 1
@@ -37,12 +37,12 @@
 /datum/outfit/job/roguetown/gnoll/templar/pre_equip(mob/living/carbon/human/H)
 	if(H.mind)
 		H.set_species(/datum/species/gnoll)
-		H.skin_armor = new vamp_armor_type(H)
-		H.AddComponent(/datum/component/vampiric_striker, shard_threshold, shard_repair_value, max_fury_stacks)
+		H.skin_armor = new /obj/item/clothing/suit/roguetown/armor/regenerating/skin/gnoll_armor(H) // TA EDIT - ORIGINAL: new vamp_armor_type(H)
+		// TA REMOVAL: H.AddComponent(/datum/component/vampiric_striker, shard_threshold, shard_repair_value, max_fury_stacks)
 		neck = /obj/item/storage/belt/rogue/pouch/healing
 		backr = /obj/item/storage/backpack/rogue/satchel/gnoll
 		don_pelt(H)
 		var/datum/devotion/C = new /datum/devotion(H, H.patron)
 		C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_MINOR, start_maxed = FALSE)
 		H.mind?.AddSpell(new /datum/action/cooldown/spell/convert_heretic)
-		H.mind?.RemoveSpell(/datum/action/cooldown/spell/miracle/heal)
+		// TA REMOVAL: H.mind?.RemoveSpell(/datum/action/cooldown/spell/miracle/heal)

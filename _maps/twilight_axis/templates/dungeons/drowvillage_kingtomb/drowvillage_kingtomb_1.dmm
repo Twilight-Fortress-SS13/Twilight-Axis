@@ -1047,10 +1047,10 @@
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/under/underdark/north)
 "ov" = (
-/obj/structure/closet/crate/chest/gold,
-/obj/item/roguecoin/gold/pile,
-/obj/item/roguecoin/silver/pile,
-/obj/item/clothing/neck/roguetown/carved/goldamber,
+/obj/structure/closet/crate/chest/gold{
+	locked = 1
+	},
+/obj/item/roguekey/mage/forgottenking,
 /turf/open/floor/rogue/churchmarble,
 /area/rogue/under/kingtomb/bossarena)
 "oy" = (
@@ -2202,6 +2202,7 @@
 "Ei" = (
 /obj/structure/table/wood/fancy/royalblack,
 /obj/item/clothing/head/roguetown/helmet/heavy/knight/gold/king,
+/obj/item/clothing/neck/roguetown/carved/goldamber,
 /turf/open/floor/rogue/churchmarble,
 /area/rogue/under/kingtomb/bossarena)
 "Es" = (
@@ -2590,6 +2591,8 @@
 /obj/item/enchantmentscroll/greater/lightning{
 	pixel_x = 5
 	},
+/obj/item/roguecoin/silver/pile,
+/obj/item/roguecoin/gold/pile,
 /turf/open/floor/rogue/churchmarble,
 /area/rogue/under/kingtomb/bossarena)
 "Mo" = (
@@ -3075,7 +3078,6 @@
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/under/kingtomb)
 "UT" = (
-/obj/item/toy/cards/deck,
 /turf/open/floor/rogue/cobble/mossy,
 /area/rogue/under/kingtomb)
 "UX" = (

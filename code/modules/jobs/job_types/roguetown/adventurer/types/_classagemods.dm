@@ -82,7 +82,7 @@
 	minor_mod = 1
 	utility_mod = 3
 
-// --- VETERAN ---
+/* // --- VETERAN ---
 /datum/class_age_mod/veteran
 	target_age = AGE_OLD	//Saving ourselves the redundancy
 
@@ -141,12 +141,13 @@
 		/datum/skill/combat/knives = SKILL_LEVEL_MASTER,
 		/datum/skill/combat/bows = SKILL_LEVEL_MASTER,
 		/datum/skill/misc/climbing = SKILL_LEVEL_MASTER,
-		/datum/skill/misc/stealing = SKILL_LEVEL_MASTER,
+		/datum/skill/misc/stealing = SKILL_LEVEL_MASTER, // TA EDIT
 		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT
 	)
 	stat_mods = list(
 		STATKEY_SPD = 1	// You get -2 speed from being old. You are still in the negative stat wise from picking old.
-	)
+	) */
+
 //--- THE REST ---
 
 /datum/class_age_mod/grand_duke
@@ -178,7 +179,7 @@
 	target_age = AGE_OLD
 	skill_mods = list(
 		/datum/skill/misc/sneaking = SKILL_LEVEL_LEGENDARY,
-		/datum/skill/misc/stealing = SKILL_LEVEL_LEGENDARY,
+		/datum/skill/misc/stealing = SKILL_LEVEL_LEGENDARY, // TA EDIT
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_LEGENDARY
 	)
 

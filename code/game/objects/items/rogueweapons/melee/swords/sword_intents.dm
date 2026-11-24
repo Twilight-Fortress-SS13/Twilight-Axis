@@ -165,7 +165,7 @@
 		return // Too weak to have any effect
 	var/scaling = CLAMP((chungus_khan_str - 10), 1, maxrange)
 	H.apply_status_effect(/datum/status_effect/debuff/yeetcd)
-	H.Slowdown(scaling)
+	H.apply_slowdown((scaling * 2 - 1) SECONDS)
 	// Copypasta from knockback proc cuz I don't want the math there
 	var/knockback_tiles = scaling // 1 to 2 tiles based on strength
 	if(H.resting)
@@ -404,7 +404,7 @@
 		return // Too weak to have any effect
 	var/scaling = CLAMP((chungus_khan_str - 10), 1, maxrange)
 	H.apply_status_effect(/datum/status_effect/debuff/yeetcd)
-	H.Slowdown(scaling)
+	H.apply_slowdown((scaling * 2 - 1) SECONDS)
 	// Copypasta from knockback proc cuz I don't want the math there
 	var/knockback_tiles = scaling // 1 to 4 tiles based on strength
 	if(H.resting)
@@ -421,8 +421,12 @@
 		force = H.move_force)
 
 /datum/intent/sword/chop/cleave/prewarning()
-	if(mastermob)
-		playsound(mastermob, pick('sound/combat/rend_start.ogg'), 100, FALSE)
+	if(!mastermob || mastermob.next_move > world.time)
+		return
+	if(last_prewarning_sound > world.time)
+		return
+	last_prewarning_sound = world.time + clickcd
+	playsound(mastermob, pick('sound/combat/rend_start.ogg'), 100, FALSE)
 
 /datum/intent/sword/chop/cleave/super
 	name = "unstoppable cleave"

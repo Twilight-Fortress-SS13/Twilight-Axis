@@ -6,8 +6,10 @@
 		"race_bonus" = null,
 
 		"nickname" = nickname,
+		"pen_name" = pen_name,
 		"highlight_color" = highlight_color,
 		"age" = age,
+		"birthday" = format_birthday(birthday_month, birthday_day) || "Not set", // TA EDIT
 
 		"pronouns" = pronouns,
 		"titles_pref" = titles_pref,
@@ -114,10 +116,19 @@
 			continue
 		if(ispath(cf_type, /datum/charflaw/averse))
 			has_averse = TRUE
+		var/list/picked = LAZYACCESS(charflaw_choices, cf_type)
+		var/list/picked_data = list()
+		for(var/i in 1 to length(picked))
+			UNTYPED_LIST_ADD(picked_data, list(
+				"index" = i,
+				"choice" = "[picked[i]]",
+			))
 		UNTYPED_LIST_ADD(charflaws_data, list(
 			"name" = "[cf]",
 			"type" = "[cf.type]",
 			"warning" = cf.needs_extra_vice && !has_extra_vice,
+			"max_choices" = cf.max_choices,
+			"picked_choices" = picked_data,
 		))
 
 	data["charflaws"] = charflaws_data
@@ -148,10 +159,7 @@
 		if(!statpack.virtuous)
 			return "This virtue slot will only be used with virtuous stat packs."
 
-	var/heretic = FALSE
-	if(istype(selected_patron, /datum/patron/inhumen))
-		heretic = TRUE
-	if(!virtue_check(V, heretic, pref_species))
+	if(!virtue_check(V, pref_species))
 		return "Incorrect virtue parameters."
 
 	return null

@@ -174,6 +174,7 @@
 	playsound(turf_mid, 'modular_twilight_axis/awful_artillery/sound/flyby.ogg', 100, 0, 50, 1, null, null, FALSE, TRUE)
 
 	playsound(src, 'modular_twilight_axis/awful_artillery/sound/launch.ogg', 100, 0, 20, 1, null, null, FALSE, TRUE)
+	mount_notify_loud_noise(src, 15, 35, 7 SECONDS)
 
 	ammo.forceMove(target)
 

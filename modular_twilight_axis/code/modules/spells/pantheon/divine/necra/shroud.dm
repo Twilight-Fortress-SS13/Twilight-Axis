@@ -518,9 +518,6 @@
 /mob/living/proc/tranquility_shroud_respects_deadites()
 	if(!tranquility_shroud_is_npc_undead())
 		return FALSE
-	var/mob/living/simple_animal/hostile/hostile_mob = src
-	if(istype(hostile_mob) && hostile_mob.attack_same)
-		return FALSE
 	var/datum/targetting_datum/basic/ignore_faction/ignore_faction_targeting = ai_controller?.blackboard[BB_TARGETTING_DATUM]
 	if(istype(ignore_faction_targeting))
 		return FALSE
@@ -568,6 +565,5 @@
 		if(aggro_table && aggro_table[target])
 			aggro_table -= target
 		ai_controller.CancelActions()
-	var/mob/living/simple_animal/hostile/hostile_mob = src
-	if(istype(hostile_mob) && hostile_mob.target == target)
-		hostile_mob.LoseTarget()
+	if(ai_controller?.blackboard[BB_BASIC_MOB_CURRENT_TARGET] == target)
+		ai_controller.clear_aggro()

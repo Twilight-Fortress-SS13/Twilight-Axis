@@ -210,6 +210,13 @@
 	structurecraft = /obj/machinery/tanningrack
 	craftdiff = 1
 
+/datum/crafting_recipe/roguetown/survival/bill_of_fare
+	name = "bill of fare"
+	display_category = ITEM_CAT_BOOK_WRIT
+	result = /obj/item/bill_of_fare
+	reqs = list(/obj/item/paper = 1)
+	craftdiff = 0
+
 /datum/crafting_recipe/roguetown/survival/zigbox
 	name = "zigbox"
 	result = /obj/item/storage/belt/rogue/pouch/zigarrete
@@ -251,7 +258,7 @@
 	reqs = list(
 		/obj/item/paper/scroll = 3,
 		/obj/item/grown/log/tree/small = 1,
-		/obj/item/ash = 1,
+		/obj/item/natural/ash = 1,
 		)
 	skillcraft = /datum/skill/misc/reading
 	tools = list(/obj/item/natural/feather)
@@ -264,7 +271,7 @@
 	reqs = list(
 		/obj/item/paper/scroll = 3,
 		/obj/item/grown/log/tree/small = 1,
-		/obj/item/ash = 1,
+		/obj/item/natural/ash = 1,
 		)
 	skillcraft = /datum/skill/misc/reading
 	tools = list(/obj/item/natural/feather)
@@ -456,3 +463,14 @@
 		)
 	skillcraft = /datum/skill/craft/cooking
 	craftdiff = 4
+
+/datum/crafting_recipe/roguetown/survival/charcoal
+	name = "wood into charcoal"
+	result = /obj/item/rogueore/coal/charcoal
+	reqs = list(/obj/item/grown/log/tree/small = 1)
+	structurecraft = /obj/machinery/light/rogue/oven
+	craftsound = 'sound/misc/frying.ogg'
+	verbage_simple = "char"
+	verbage = "chars"
+	craftdiff = 0
+	time = 10 SECONDS

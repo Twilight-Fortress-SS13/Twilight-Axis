@@ -11,6 +11,7 @@
 	storyteller_slot_scaling = 2
 	storyteller_slot_default_cap = 2
 	storyteller_maxcaps = list(/datum/storyteller/gamemode/guaranteed_antag = 2)
+	storyteller_blacklisted = TRUE
 	var/list/inherent_traits = list(
 		TRAIT_IGNORESLOWDOWN,
 		TRAIT_IGNOREDAMAGESLOWDOWN,
@@ -42,7 +43,8 @@
 		TRAIT_CHUNKYFINGERS, //So they can no longer use weapons at all.
 		TRAIT_UNLYCKERABLE, //Literal archenemy
 		TRAIT_ZOMBIE_IMMUNE,
-		TRAIT_UNCONVERTIBLE // major antag
+		TRAIT_UNCONVERTIBLE, // major antag
+		TRAIT_NONAMESTEAL
 	)
 	confess_lines = list(
 		"THE BEAST INSIDE ME!",
@@ -104,6 +106,9 @@
 	owner.special_role = name
 	if(increase_votepwr)
 		forge_werewolf_objectives()
+
+	if(ishuman(owner.current))
+		disable_vessel(owner.current)
 
 	wolfname = "[pick(GLOB.wolf_prefixes)] [pick(GLOB.wolf_suffixes)]"
 	return ..()
@@ -184,9 +189,6 @@
 	if(!wolfy)
 		return
 	if(stat >= DEAD) //do shit the natural way i guess
-		return
-	if(HAS_TRAIT(src, TRAIT_BLACKBLOOD) && prob(40)) // since WWs are harder to infect, reducing this to just a fraction of the normal chance
-		to_chat(src, span_danger("I feel something churning within my body... No, not again...! Not this time!"))
 		return
 	to_chat(src, span_danger("I feel horrible... REALLY horrible..."))
 	mob_timers["puke"] = world.time

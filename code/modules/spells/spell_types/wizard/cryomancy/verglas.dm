@@ -27,7 +27,7 @@
 	charge_required = TRUE
 	weapon_cast_penalized = TRUE
 	charge_time = CHARGETIME_MAJOR
-	charge_swingdelay_type = SWINGDELAY_CANCEL
+	charge_swingdelay_type = SWINGDELAY_PENALTY
 	hold_drain = 1
 	charge_slowdown = CHARGING_SLOWDOWN_MEDIUM
 	charge_sound = 'sound/magic/charging.ogg'
@@ -68,6 +68,9 @@
 		holder.maptext = MAPTEXT(labels[verglas_mode])
 		holder.maptext_x = 5
 		holder.color = label_color
+
+/datum/action/cooldown/spell/verglas/get_impact_turfs(atom/center)
+	return get_visible_area_turfs(get_turf(center), verglas_radius)
 
 /datum/action/cooldown/spell/verglas/cast(atom/cast_on)
 	. = ..()
@@ -264,7 +267,7 @@
 
 /datum/status_effect/verglas_concentration/skate/tick()
 	. = ..()
-	if(owner.in_combat_until > world.time) // if you're ever "in combat" it breaks
+	if(owner.is_in_combat()) // if you're ever "in combat" it breaks
 		owner.remove_status_effect(/datum/status_effect/verglas_concentration/skate)
 	if(!owner.stamina_add(2))
 		owner.remove_status_effect(/datum/status_effect/verglas_concentration/skate)

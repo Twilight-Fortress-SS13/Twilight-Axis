@@ -19,6 +19,8 @@
 	if(!istype(src, /obj/item/grabbing) && !istype(src, /obj/item/rogueweapon/werewolf_claw) && !istype(src, /obj/item/bodypart)) //Limbs/Claws are fine
 		if(HAS_TRAIT(user, TRAIT_CHUNKYFINGERS))
 			to_chat(user, span_warning("...What?"))
+			if(HAS_TRAIT(user, TRAIT_DEADITE))
+				user.drop_all_held_items() //zombies vs WWs drop stuff
 			return
 		// FAR less aggressive version of chunkyfingers, designed to be used with nudist. Shrimply lets the user still use neat stuff like orison without letting them weaponize.
 		if(HAS_TRAIT(user, TRAIT_GNARLYDIGITS))
@@ -26,18 +28,6 @@
 				to_chat(user, span_warning("My fingers are too misshapen to use this puny implement."))
 				return
 		// even less aggressive; allows use of tools but not weapons
-		if(HAS_TRAIT(user, TRAIT_TINYPAWS))
-			var/obj/item/rogueweapon/weapon = src
-			if(istype(weapon) && (!weapon.is_tool || ismob(target)))
-				var/exception = FALSE
-				if(weapon.is_tool && istype(user, /mob/living/carbon/human/species/familiar/elemental))
-					var/datum/action/cooldown/spell/arcyne_forge/elementalt2/spell = user.mind?.get_spell(/datum/action/cooldown/spell/arcyne_forge/elementalt2, TRUE)
-					if(spell && (spell.conjured_item == src))
-						exception = TRUE // elemental familiars can swing, but ONLY their conjured shittyiron weapons.
-				if(!exception)
-					to_chat(user, span_warning("I am too small to properly wield a weapon."))
-					return
-		// Uniquely reskinned variant, for those who don't happen to be familiars.Add a comment on	line R34Add diff commentMarkdown input:	edit mode selected.WritePreviewAdd a suggestionHeadingBoldItalicQuoteCodeLinkUnordered listNumbered listTask listMentionReferenceMore Formatting tools items 0Saved repliesAdd FilesPaste, drop, or click to add filesCancelCommentStart a review
 		if(HAS_TRAIT(user, TRAIT_WEAPONLESS))
 			var/obj/item/rogueweapon/weapon = src
 			if(istype(weapon) && (!weapon.is_tool || ismob(target)))
@@ -198,9 +188,9 @@
 					user.do_attack_animation(M, user.used_intent.animname, used_item = src, used_intent = user.used_intent, simplified = TRUE)
 			return
 	var/dualwield_armed = FALSE
-	if(HAS_TRAIT(user, TRAIT_DUALWIELDER))
+	if(HAS_TRAIT(user, TRAIT_DUALWIELDER) && !user.dualwield_processing && user != M && user.cmode)
 		var/datum/intent/dualwield_cached_intent = user.used_intent
-		dualwield_armed = user.process_dualwield(src)
+		dualwield_armed = user.process_dualwield(src) // if we return TRUE, we're primed
 		user.used_intent = dualwield_cached_intent
 
 	M.on_attacked_as_pacifist(user)
@@ -214,9 +204,6 @@
 	// Release drain on attacks besides unarmed attacks/grabs is 1, so it'll just be whatever the penalty is + 1.
 	// Unarmed attacks are the only ones right now that have differing releasedrain, see unarmed attacks for their calc.
 	user.stamina_add(user.used_intent.releasedrain + rmb_stam_penalty)
-	if(ishuman(M))
-		var/mob/living/carbon/human/H = M
-		H.process_golgatha_rebuke(user)
 	if(user.mob_biotypes & MOB_UNDEAD)
 		if(M.has_status_effect(/datum/status_effect/buff/necras_vow))
 			if(isnull(user.mind))
@@ -541,6 +528,8 @@
 				obj_destruction(need_scrap ? BRUTE : BURN)
 				playsound(user, 'sound/surgery/cautery2.ogg', 100)
 				user.mind.add_sleep_experience(/datum/skill/craft/smelting, (user.STAINT*0.2))
+				to_chat(user,span_alert("I can feel my armor getting weaker and frailer without that crucial element!")) //TA Addition
+				SEND_SIGNAL(user,COMSIG_CURSED_ITEM_BURNED)
 				return
 
 	var/newforce = get_complex_damage(I, user, blade_dulling)
@@ -706,7 +695,7 @@
 	if(HAS_TRAIT(src, "ethereal")) //TA EDIT
 		user.visible_message(span_warning("The [I] passes harmlessly through [src]'s misty form!"))
 		return FALSE
-	
+
 	I.funny_attack_effects(src, user)
 	if(I.force_dynamic)
 		var/newforce = get_complex_damage(I, user)
@@ -730,21 +719,25 @@
 					simple_add_embedded_object(I, silent = FALSE, crit_message = TRUE)
 					src.grabbedby(user, 1, item_override = I)
 				*/
-			var/haha = user.used_intent.blade_class
+			var/bclass = user.used_intent.blade_class
 			if(newforce > 5)
-				if(haha != BCLASS_BLUNT)
+				if(bclass != BCLASS_BLUNT)
 					I.add_mob_blood(src)
 					var/turf/location = get_turf(src)
 					add_splatter_floor(location)
 					add_splatter_wall(location, force = newforce)
+					if((bclass in GLOB.splatter_bclasses) && prob(newforce * 2))
+						blood_spray(get_dir(user, src))
 					if(get_dist(user, src) <= 1)	//people with TK won't get smeared with blood
 						user.add_mob_blood(src)
 			if(newforce > 15)
-				if(haha == BCLASS_BLUNT)
+				if(bclass == BCLASS_BLUNT)
 					I.add_mob_blood(src)
 					var/turf/location = get_turf(src)
 					add_splatter_floor(location)
 					add_splatter_wall(location, force = newforce)
+					if(prob(newforce * 2))
+						blood_spray(get_dir(user, src))
 					if(get_dist(user, src) <= 1)	//people with TK won't get smeared with blood
 						user.add_mob_blood(src)
 	send_item_attack_message(I, user, hitlim)
@@ -756,6 +749,8 @@
 /obj/item/proc/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
 	SEND_SIGNAL(src, COMSIG_ITEM_AFTERATTACK, target, user, proximity_flag, click_parameters)
 	SEND_SIGNAL(user, COMSIG_MOB_ITEM_AFTERATTACK, target, src, proximity_flag, click_parameters)
+	if(user.used_intent?.masteritem == src)
+		user.used_intent.on_afterattack(target, user, proximity_flag, click_parameters)
 	if(force_dynamic && !user.used_intent.tranged && !user.used_intent.tshield)
 		if(proximity_flag && isopenturf(target) && !user.used_intent?.noaa)
 			var/adf = user.used_intent.clickcd

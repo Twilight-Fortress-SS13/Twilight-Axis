@@ -26,16 +26,10 @@ export const PackRow = (props: Props) => {
   const { pack, budget, canRead, showCategory, browseOnly, act } = props;
   const cantAfford = budget < pack.price;
   const hasTariff = pack.price_tariff > 0;
-  const hasBlockade = pack.price_blockade > 0;
-  const priceTitle =
-    hasTariff || hasBlockade
-      ? `${pack.price_base}m` +
-        (hasBlockade
-          ? ` + ${pack.price_blockade}m blockade (+${pack.blockade_pct}%)`
-          : '') +
-        (hasTariff ? ` + ${pack.price_tariff}m tariff` : '') +
-        ` = ${pack.price}m`
-      : `${pack.price}m`;
+  const hasStats = !!pack.has_stats && canRead;
+  const priceTitle = hasTariff
+    ? `${pack.price_base}m + ${pack.price_tariff}m tariff = ${pack.price}m`
+    : `${pack.price}m`;
   return (
     <div style={denseRowStyle}>
       <div
@@ -44,7 +38,13 @@ export const PackRow = (props: Props) => {
           fontSize: FONT_TITLE,
           color: INK,
         }}
-        title={showCategory ? `${pack.name} - ${pack.category}` : pack.name}
+        title={
+          hasStats
+            ? `${pack.name} - click to view properties`
+            : showCategory
+              ? `${pack.name} - ${pack.category}`
+              : pack.name
+        }
       >
         {pack.qty > 1 && (
           <span
@@ -57,12 +57,24 @@ export const PackRow = (props: Props) => {
             x{pack.qty}
           </span>
         )}
-        {starsIfIlliterate(pack.name, canRead)}
+        {hasStats ? (
+          <span
+            style={{
+              cursor: 'pointer',
+              textDecoration: 'underline dotted',
+              textUnderlineOffset: '3px',
+            }}
+            onClick={() => act('preview', { ref: pack.ref })}
+          >
+            {pack.name}
+          </span>
+        ) : (
+          starsIfIlliterate(pack.name, canRead)
+        )}
       </div>
       <PriceTag
         price={pack.price}
         tariff={pack.price_tariff}
-        surcharge={pack.price_blockade}
         cantAfford={cantAfford}
         title={priceTitle}
       />

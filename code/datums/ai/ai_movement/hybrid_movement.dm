@@ -90,7 +90,7 @@
 					continue
 
 		// Basic movement for targets on the same z-level with no existing path
-		if(end_turf?.z == movable_pawn?.z && !length(controller.movement_path) && !cliented && !always_advanced)
+		if(end_turf?.z == movable_pawn?.z && !length(controller.movement_path) && !cliented && !always_advanced && !swim_needs_planning(movable_pawn, current_turf, target_turf))
 			advanced = FALSE
 			var/can_move = controller.can_move()
 
@@ -190,7 +190,9 @@
 					var/stepped = step(movable_pawn, move_dir)
 					if(stepped)
 						charge_diagonal_step(controller, current_turf)
-					if(!stepped && controller.can_climb_structures && world.time >= controller.next_climb_time)
+						controller.climb_windup_turf = null
+						controller.climb_failed_turf = null
+					if(!stepped && controller.can_climb_structures)
 						// climbable/climb_structure are declared on /obj/structure and /obj/machinery separately, so iterate both.
 						var/obj/structure/struct_target
 						var/obj/machinery/mach_target
@@ -213,12 +215,12 @@
 								if(M.climbable)
 									mach_target = M
 									break
-						if(struct_target)
+						var/turf/climb_turf = get_turf(struct_target || mach_target)
+						if(climb_turf && controller.climb_windup_done(climb_turf) && world.time >= controller.next_climb_time)
 							controller.next_climb_time = world.time + controller.climb_interval
-							struct_target.climb_structure(movable_pawn)
-						else if(mach_target)
-							controller.next_climb_time = world.time + controller.climb_interval
-							mach_target.climb_structure(movable_pawn)
+							controller.climb_windup_turf = null
+							var/climbed = struct_target ? struct_target.climb_structure(movable_pawn) : mach_target.climb_structure(movable_pawn)
+							controller.climb_failed_turf = climbed ? null : climb_turf
 
 				// Check if target has moved significantly from the end of our path
 				if(last_turf != get_turf(controller.current_movement_target))
@@ -301,3 +303,12 @@
 					controller.movement_path.Cut(1, 2)
 				controller.clear_blackboard_key(future_path_blackboard_key) // Clear any future path as we have a fresh main path
 				SEND_SIGNAL(controller.pawn, COMSIG_AI_PATH_GENERATED, controller.movement_path)
+
+/datum/ai_movement/hybrid_pathing/proc/swim_needs_planning(atom/movable/pawn, turf/current_turf, turf/target_turf)
+	if(!isliving(pawn))
+		return FALSE
+	var/move_dir = get_dir(current_turf, target_turf)
+	for(var/turf/open/water/water_turf in list(current_turf, target_turf))
+		if(water_turf.is_swim_exhausting(pawn, move_dir))
+			return TRUE
+	return FALSE

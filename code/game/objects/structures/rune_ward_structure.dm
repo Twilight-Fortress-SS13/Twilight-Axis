@@ -95,7 +95,7 @@
 	to_chat(L, span_danger("<B>The rune erupts in flames!</B>"))
 	playsound(src, pick('sound/misc/explode/incendiary (1).ogg', 'sound/misc/explode/incendiary (2).ogg'), 80, TRUE)
 	new /obj/effect/hotspot(get_turf(src))
-	L.Slowdown(4)
+	L.apply_slowdown(7 SECONDS)
 	apply_scorch_stack(L, 3, BODY_ZONE_CHEST)
 
 /obj/structure/rune_ward/chill
@@ -106,28 +106,28 @@
 	to_chat(L, span_danger("<B>Frost erupts from the rune and seizes your limbs!</B>"))
 	playsound(src, 'sound/spellbooks/crystal.ogg', 80, TRUE)
 	new /obj/effect/temp_visual/telegraph/ice(get_turf(src))
-	L.Slowdown(4)
-	L.adjustFireLoss(10)
+	L.apply_slowdown(7 SECONDS)
+	L.adjustFireLoss(SPELL_DMG_VS(L, SPELL_DMG(10)))
 	apply_frost_stack(L, 4)
 
 /obj/structure/rune_ward/damage
 	name = "force rune"
 	icon_state = RUNE_WARD_ICON_DAMAGE
-	var/rune_damage = 80
+	var/rune_damage = SPELL_DMG(80)
 
 /obj/structure/rune_ward/damage/rune_effect(mob/living/L)
 	to_chat(L, span_danger("<B>Arcyne blades erupt from the rune!</B>"))
 	playsound(src, 'sound/magic/blade_burst.ogg', 80, TRUE)
 	playsound(src, pick('sound/combat/hits/bladed/genstab (1).ogg', 'sound/combat/hits/bladed/genstab (2).ogg', 'sound/combat/hits/bladed/genstab (3).ogg'), 80, TRUE)
 	new /obj/effect/temp_visual/blade_burst(get_turf(src))
-	L.Slowdown(4)
+	L.apply_slowdown(7 SECONDS)
 	var/mob/living/carbon/human/owner = owner_ref?.resolve()
 	if(ishuman(owner) && ishuman(L))
 		arcyne_strike(owner, L, null, rune_damage, BODY_ZONE_CHEST, \
 			BCLASS_STAB, armor_penetration = PEN_HEAVY, spell_name = "Force Rune", \
-			damage_type = BRUTE, skip_animation = TRUE)
+			damage_type = BRUTE, skip_animation = TRUE, SPELL_STRIKE_SCALING)
 	else
-		L.adjustBruteLoss(rune_damage)
+		L.adjustBruteLoss(SPELL_DMG_VS(L, rune_damage))
 
 /obj/structure/rune_ward/alarm
 	name = "alarm rune"

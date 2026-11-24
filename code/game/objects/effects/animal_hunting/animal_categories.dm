@@ -282,6 +282,24 @@
 	)
 	preferred_areas = list()
 
+/datum/hunting_category/small_map
+	name = "Small Game"
+	skill_weights = list(0, 0, 0, 0, 0, 0, 0)
+	bonus_animal_amount = 2
+	animals = list(
+		/mob/living/simple_animal/hostile/retaliate/rogue/bigrat = 3,
+		/mob/living/simple_animal/hostile/retaliate/rogue/badger = 3,
+		/mob/living/simple_animal/hostile/retaliate/rogue/bobcat = 3,
+		/mob/living/simple_animal/hostile/retaliate/rogue/mudcrab/cabbit = 30,
+		/mob/living/simple_animal/hostile/retaliate/rogue/fox = 3,
+		/mob/living/simple_animal/hostile/retaliate/rogue/raccoon = 3
+	)
+	preferred_tracks = list(
+		/mob/living/simple_animal/hostile/retaliate/rogue/fox = "canine",
+		/mob/living/simple_animal/hostile/retaliate/rogue/bobcat = "small"
+	)
+	preferred_areas = list()
+
 /datum/hunting_category/proc/can_spawn_in_area(area/A) // TA EDIT
 	if(!A)
 		return FALSE

@@ -191,6 +191,7 @@ GLOBAL_LIST_EMPTY(escrow_machines)
 	. = ..()
 	GLOB.escrow_machines += src
 	escrow_fund = new /datum/fund("[name] escrow", null, 0, CURRENCY_MAMMON)
+	SStreasury.register_auxiliary_fund(escrow_fund)
 	init_material_prices()
 	disabled_materials = default_disabled_materials?.Copy() || list()
 	rebuild_catalog()
@@ -254,6 +255,7 @@ GLOBAL_LIST_EMPTY(escrow_machines)
 		return_hold(O)
 	orders?.Cut()
 	manifests?.Cut()
+	SStreasury.retire_fund(escrow_fund, "Escrow closed")
 	escrow_fund = null
 	return ..()
 
@@ -394,11 +396,24 @@ GLOBAL_LIST_EMPTY(escrow_machines)
 			"price" = recipe_price(R),
 			"ingot" = ingot_name,
 			"materials" = recipe_materials(R),
+			"has_stats" = item_has_stat_card(recipe_result_path(R)) ? TRUE : FALSE,
 		))
 	cached_catalog_data = catalog_data
 	cached_categories = cats
 	cached_ingots = ingots
 	catalog_view_dirty = FALSE
+
+/obj/structure/roguemachine/escrow/proc/recipe_result_path(datum/recipe)
+	if(istype(recipe, /datum/anvil_recipe))
+		var/datum/anvil_recipe/AR = recipe
+		return AR.created_item
+	if(istype(recipe, /datum/crafting_recipe))
+		var/datum/crafting_recipe/CR = recipe
+		if(islist(CR.result))
+			var/list/results = CR.result
+			return length(results) ? results[1] : null
+		return CR.result
+	return null
 
 /obj/structure/roguemachine/escrow/proc/recipe_name(datum/recipe)
 	if(istype(recipe, /datum/anvil_recipe))
@@ -815,6 +830,11 @@ GLOBAL_LIST_EMPTY(escrow_machines)
 				return FALSE
 
 	switch(action)
+		if("preview")
+			var/datum/R = locate(params["ref"]) in catalog
+			if(R && usr.can_read(src, TRUE))
+				show_item_stats(usr, recipe_result_path(R))
+			return FALSE
 		if("manifest_inc")
 			var/datum/R = locate(params["ref"]) in catalog
 			if(R)
@@ -973,12 +993,12 @@ GLOBAL_LIST_EMPTY(escrow_machines)
 	O.held = FALSE
 	var/datum/fund/F = O.get_commissioner_fund()
 	if(F && escrow_fund)
-		SStreasury.transfer(escrow_fund, F, O.price, "Commission hold returned")
+		SStreasury.transfer(escrow_fund, F, O.price, "Commission hold returned", LEDGER_CITIZEN_ESCROW, SStreasury.escrow_account(F))
 
 /obj/structure/roguemachine/escrow/proc/pay_smith(mob/user, amount)
 	if(amount <= 0)
 		return
-	if(SStreasury.burn(escrow_fund, amount, "Commission payout"))
+	if(SStreasury.burn(escrow_fund, amount, "Commission payout", LEDGER_CITIZEN_COIN_OUT))
 		budget2change(amount, user)
 
 /obj/structure/roguemachine/escrow/proc/claim_order(datum/escrow_order/O, mob/user)
@@ -991,7 +1011,7 @@ GLOBAL_LIST_EMPTY(escrow_machines)
 		to_chat(user, span_warning("I cannot fulfill my own commission."))
 		return
 	var/datum/fund/commissioner_fund = O.get_commissioner_fund()
-	if(!commissioner_fund || !SStreasury.transfer(commissioner_fund, escrow_fund, O.price, "Commission hold"))
+	if(!commissioner_fund || !SStreasury.transfer(commissioner_fund, escrow_fund, O.price, "Commission hold", SStreasury.escrow_account(commissioner_fund), LEDGER_CITIZEN_ESCROW))
 		to_chat(user, span_warning("[O.commissioner_name] can no longer cover the price of [O.price]m."))
 		SStgui.update_uis(src)
 		return
@@ -1057,7 +1077,7 @@ GLOBAL_LIST_EMPTY(escrow_machines)
 	pay_smith(user, smith_payout)
 	var/datum/fund/commissioner_fund = O.get_commissioner_fund()
 	if(commissioner_refund > 0 && commissioner_fund)
-		SStreasury.transfer(escrow_fund, commissioner_fund, commissioner_refund, "Commission refund")
+		SStreasury.transfer(escrow_fund, commissioner_fund, commissioner_refund, "Commission refund", LEDGER_CITIZEN_ESCROW, SStreasury.escrow_account(commissioner_fund))
 	playsound(loc, 'sound/misc/coindispense.ogg', 100, FALSE, -1)
 	to_chat(user, span_notice("You settle the commission partially and collect [smith_payout]m. [commissioner_refund]m has been returned to [O.commissioner_name]."))
 	notify_commissioner(O, "Your commission at [src] was partly fulfilled ([done_count]/[needed_count]). The finished items were left at [src], and [commissioner_refund]m has been returned to your account.")

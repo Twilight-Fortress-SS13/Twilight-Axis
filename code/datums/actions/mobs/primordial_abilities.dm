@@ -19,7 +19,7 @@
 	name = "Searing Blast"
 	desc = "Breathes a searing blast of fire across the ground ahead."
 
-	damage = 60
+	damage = SPELL_DMG(60)
 	cone_range = 4
 	push_dist = 2
 	scorch_stacks = 1
@@ -33,7 +33,7 @@
 	telegraph_type = /obj/effect/temp_visual/telegraph/primordial/water
 	telegraph_sound = list('sound/misc/undertow.ogg')
 
-	damage = 25
+	damage = SPELL_DMG(25)
 	strike_damage_type = BRUTE
 	blade_class = BCLASS_BLUNT
 	strike_armor_pen = PEN_NONE
@@ -44,7 +44,7 @@
 	strike_sound = 'sound/misc/undertow.ogg'
 	detonate_sound = null
 	hit_sound = null
-	var/victim_slowdown = 4
+	var/victim_slowdown = 7 SECONDS
 	var/flood_duration = 15 SECONDS
 	var/list/flooded
 
@@ -54,7 +54,7 @@
 /datum/action/cooldown/spell/telegraphed_strike/dragons_breath/mob_ability/primordial/deluge/on_hit_target(mob/living/H, mob/living/L, facing)
 	. = ..()
 	if(victim_slowdown)
-		L.Slowdown(victim_slowdown)
+		L.apply_slowdown(victim_slowdown)
 
 /datum/action/cooldown/spell/telegraphed_strike/dragons_breath/mob_ability/primordial/deluge/on_strike_complete(mob/living/H, hit_count, deflected)
 	. = ..()
@@ -72,7 +72,7 @@
 	telegraph_type = /obj/effect/temp_visual/telegraph/primordial/air
 	telegraph_sound = list('sound/weather/rain/wind_6.ogg')
 
-	damage = 20
+	damage = SPELL_DMG(20)
 	strike_damage_type = BRUTE
 	blade_class = BCLASS_BLUNT
 	strike_armor_pen = PEN_NONE

@@ -47,9 +47,9 @@
 		backpack_contents = list(
 			/obj/item/rogueweapon/huntingknife = 1,
 			/obj/item/roguekey/mercenary = 1,
-			/obj/item/rope/chain = 1,
-			/obj/item/natural/head/troll = 1, // will spawn inside of the belt but I can't be bothered to make it spawn in the headhook
-			/obj/item/book/rogue/trophy_rules = 1 //TA edit - added trophy_hunter component
+			/obj/item/rope/chain = 1, // TA EDIT START
+			/obj/item/natural/head/troll = 1,
+			/obj/item/book/rogue/trophy_rules = 1 // TA EDIT END
 		)
 		var/weapons = list("Hatchets", "Greataxe")
 		var/weapon_choice = input(H, "Choose your weapon", "How will you channel your rage?") as anything in weapons
@@ -62,6 +62,14 @@
 				ADD_TRAIT(H, TRAIT_DUALWIELDER, TRAIT_GENERIC)
 		H.AddComponent(/datum/component/trophy_hunter) //TA edit - added trophy_hunter component
 
+/datum/outfit/job/roguetown/mercenary/trollslayer/post_equip(mob/living/carbon/human/H, visualsOnly = FALSE)
+	. = ..()
+	if(visualsOnly || !H.mind)
+		return
+	var/obj/item/natural/head/troll/trophy = new(H)
+	var/obj/item/hook = H.get_item_by_slot(SLOT_BELT_R)
+	if(!hook || !SEND_SIGNAL(hook, COMSIG_TRY_STORAGE_INSERT, trophy, null, TRUE, TRUE))
+		H.put_in_hands(trophy)
 
 /obj/item/clothing/suit/roguetown/armor/manual/pushups/slayer
 	name = "rough skin"

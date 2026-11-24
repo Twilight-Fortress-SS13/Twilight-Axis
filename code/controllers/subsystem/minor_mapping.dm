@@ -7,6 +7,7 @@ SUBSYSTEM_DEF(minor_mapping)
 	//Minor mapping comes quite late in the init list so it should be safe to add here. We want this long after everything else is done
 	SSmapping.load_marks()
 	SSregionthreat.on_map_ready() //TA EDIT
+	SSquestpool.on_map_ready() // TA EDIT
 
 //	place_sunlight()
 	return ..()

@@ -39,8 +39,9 @@
 
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
-	displayed_damage = 40
+	displayed_damage = SPELL_DMG(40)
 
+	impact_radius = 1
 	var/geo_mode = TUMULT_MODE_ERUPT
 	var/static/list/mode_labels = list(TUMULT_MODE_ERUPT = "CAIRN", TUMULT_MODE_CHARGE = "RAMSTAM")
 	var/erupt_cooldown = 10 SECONDS
@@ -56,10 +57,10 @@
 	var/max_tiles = 7
 	var/telegraph_time = 3
 	var/roll_speed = 1
-	var/barrel_damage = 15
+	var/barrel_damage = SPELL_DMG(15)
 	var/knock_dist = 1
 	var/charge_frag_count = 8
-	var/charge_frag_damage = 12
+	var/charge_frag_damage = SPELL_DMG(12)
 	var/crash_structure_damage = 100
 	var/rolling = FALSE
 
@@ -103,6 +104,21 @@
 		return cast_charge(H, cast_on)
 	return cast_erupt(H, cast_on)
 
+/datum/action/cooldown/spell/tumult/proc/is_erupt_mode()
+	return geo_mode == TUMULT_MODE_ERUPT
+
+/datum/action/cooldown/spell/tumult/proc/cairn_turfs(turf/center)
+	. = list()
+	for(var/turf/T in get_hear(impact_radius, center))
+		. += T
+
+/datum/action/cooldown/spell/tumult/get_impact_turfs(atom/center)
+	var/turf/epicenter = get_turf(center)
+	if(!epicenter || !is_erupt_mode())
+		return list()
+	. = cairn_turfs(epicenter)
+	. -= get_turf(owner)
+
 /datum/action/cooldown/spell/tumult/proc/cast_erupt(mob/living/carbon/human/H, atom/cast_on)
 	var/turf/T = get_turf(cast_on)
 	if(!T)
@@ -143,8 +159,8 @@
 		if(spell_guard_check(victim, TRUE))
 			victim.visible_message(span_warning("[victim] braces against the eruption!"))
 			continue
-		if(arcyne_strike(caster, victim, null, erupt_direct, target_zone, BCLASS_BLUNT, \
-			spell_name = "Cairn", damage_type = BRUTE, skip_animation = TRUE) == ARCYNE_STRIKE_WARDED)
+		if(arcyne_strike(caster, victim, null, SPELL_DMG(erupt_direct), target_zone, BCLASS_BLUNT, \
+			spell_name = "Cairn", damage_type = BRUTE, skip_animation = TRUE, SPELL_STRIKE_SCALING) == ARCYNE_STRIKE_WARDED)
 			continue
 		victim.apply_status_effect(/datum/status_effect/debuff/vulnerable, vuln_duration)
 		to_chat(victim, span_userdanger("Stone erupts beneath me!"))
@@ -152,7 +168,8 @@
 		var/push_dir = get_dir(T, victim) || get_dir(caster, victim) || pick(GLOB.cardinals)
 		victim.safe_throw_at(get_ranged_target_turf(victim, push_dir, erupt_push), erupt_push, 1, caster, force = MOVE_FORCE_STRONG)
 
-	for(var/turf/affected in get_hear(1, T))
+	var/list/cairn = cairn_turfs(T)
+	for(var/turf/affected as anything in cairn)
 		if(affected == T)
 			continue
 		new /obj/effect/temp_visual/kinetic_blast(affected)
@@ -163,14 +180,14 @@
 				continue
 			if(spell_guard_check(victim, TRUE))
 				continue
-			if(arcyne_strike(caster, victim, null, erupt_aoe, target_zone, BCLASS_BLUNT, \
-				spell_name = "Cairn", damage_type = BRUTE, skip_animation = TRUE) == ARCYNE_STRIKE_WARDED)
+			if(arcyne_strike(caster, victim, null, SPELL_DMG(erupt_aoe), target_zone, BCLASS_BLUNT, \
+				spell_name = "Cairn", damage_type = BRUTE, skip_animation = TRUE, SPELL_STRIKE_SCALING) == ARCYNE_STRIKE_WARDED)
 				continue
 			victim.apply_status_effect(/datum/status_effect/debuff/vulnerable, vuln_duration)
 			var/push_dir = get_dir(T, victim) || get_dir(caster, victim) || pick(GLOB.cardinals)
 			victim.safe_throw_at(get_ranged_target_turf(victim, push_dir, erupt_push), erupt_push, 1, caster, force = MOVE_FORCE_STRONG)
 
-	for(var/turf/struct_turf in get_hear(1, T))
+	for(var/turf/struct_turf as anything in cairn)
 		for(var/obj/structure/S in struct_turf)
 			S.take_damage(erupt_direct, BRUTE, "blunt", object_damage_multiplier = 2)
 
@@ -322,10 +339,10 @@
 		return
 	if(ishuman(L))
 		if(arcyne_strike(H, L, null, barrel_damage, H.zone_selected || BODY_ZONE_CHEST, BCLASS_BLUNT, \
-			spell_name = "Ramstam", damage_type = BRUTE, skip_animation = TRUE) == ARCYNE_STRIKE_WARDED)
+			spell_name = "Ramstam", damage_type = BRUTE, skip_animation = TRUE, SPELL_STRIKE_SCALING) == ARCYNE_STRIKE_WARDED)
 			return
 	else
-		L.adjustBruteLoss(barrel_damage)
+		L.adjustBruteLoss(SPELL_DMG_VS(L, barrel_damage))
 	new /obj/effect/temp_visual/spell_impact(get_turf(L), spell_color, spell_impact_intensity)
 	var/knockdir = pick(turn(dir, 90), turn(dir, -90))
 	L.safe_throw_at(get_ranged_target_turf(L, knockdir, knock_dist), knock_dist, 1, H, force = MOVE_FORCE_STRONG)

@@ -48,11 +48,13 @@
 		revert_cast()
 		return FALSE
 
+	C.stop_sound_channel(CHANNEL_LOBBYMUSIC)
+
 	if (istype(C, /mob/dead/new_player))
 		var/mob/dead/new_player/N = C
 		N.close_spawn_windows()
 
-	var/mob/living/carbon/human/species/skeleton/no_equipment/target = new /mob/living/carbon/human/species/skeleton/no_equipment/lich_summon(T) // TA EDIT
+	var/mob/living/carbon/human/species/skeleton/no_equipment/target = new /mob/living/carbon/human/species/skeleton/no_equipment(T)
 	target.key = C.key
 	SSjob.EquipRank(target, "Fortified Skeleton", TRUE)
 	target.copy_known_languages_from(user, TRUE)
@@ -74,7 +76,3 @@
 			skeletonnew = new /mob/living/carbon/human/species/skeleton/npc/hard(T)
 	apply_mob_lifespan(skeletonnew, user)
 	return TRUE
-
-/mob/living/carbon/human/species/skeleton/no_equipment/lich_summon/after_creation() // TA EDIT START
-	..()
-	REMOVE_TRAIT(src, TRAIT_EASYDISMEMBER, TRAIT_GENERIC) // TA EDIT STOP

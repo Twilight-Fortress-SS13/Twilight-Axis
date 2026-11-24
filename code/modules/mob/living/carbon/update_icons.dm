@@ -50,18 +50,41 @@
 
 /mob/living
 	var/list/overlays_standing[TOTAL_LAYERS]
+	var/list/applied_overlays_standing[TOTAL_LAYERS] // TA EDIT
 
 /mob/living/proc/apply_overlay(cache_index)
-	if((. = overlays_standing[cache_index]))
-		add_overlay(.)
+	var/previous = applied_overlays_standing[cache_index] // TA EDIT
+	if(previous) // TA EDIT
+		cut_overlay(previous) // TA EDIT
+	applied_overlays_standing[cache_index] = null // TA EDIT
+
+	var/current = overlays_standing[cache_index] // TA EDIT
+	. = current // TA EDIT
+	if(current) // TA EDIT
+		var/list/sources = build_appearance_list(current) // TA EDIT
+		var/list/snapshots = list() // TA EDIT
+		for(var/overlay in sources) // TA EDIT
+			if(isimage(overlay)) // TA EDIT
+				var/image/overlay_image = overlay // TA EDIT
+				snapshots += overlay_image.appearance // TA EDIT
+			else if(isatom(overlay)) // TA EDIT
+				var/atom/overlay_atom = overlay // TA EDIT
+				snapshots += overlay_atom.appearance // TA EDIT
+			else // TA EDIT
+				snapshots += overlay // TA EDIT
+		add_overlay(snapshots) // TA EDIT
+		applied_overlays_standing[cache_index] = snapshots // TA EDIT
 	if(client)
 		update_vision_cone()
 
 /mob/living/proc/remove_overlay(cache_index)
-	var/I = overlays_standing[cache_index]
-	if(I)
-		cut_overlay(I)
-		overlays_standing[cache_index] = null
+	var/previous = applied_overlays_standing[cache_index] // TA EDIT
+	if(previous) // TA EDIT
+		cut_overlay(previous) // TA EDIT
+	else if(overlays_standing[cache_index]) // TA EDIT
+		cut_overlay(overlays_standing[cache_index]) // TA EDIT
+	applied_overlays_standing[cache_index] = null // TA EDIT
+	overlays_standing[cache_index] = null // TA EDIT
 	if(client)
 		update_vision_cone()
 
@@ -430,22 +453,23 @@
 	update_body_parts()
 
 /mob/living/carbon/proc/update_body_parts()
-	var/list/new_limbs = list()
-	var/changed = FALSE
+	var/list/part_keys = list()
 	for(var/obj/item/bodypart/BP as anything in bodyparts)
 		BP.update_limb()
-		var/new_key = BP.get_cache_key()
-		if(new_key == icon_render_keys[BP.body_zone] && limb_icon_cache[new_key])
-			new_limbs += limb_icon_cache[new_key]
-			continue
-		changed = TRUE
-		var/list/limb_overlays = limb_icon_cache[new_key] || BP.get_limb_icon()
-		new_limbs += limb_overlays
-		limb_icon_cache[new_key] = limb_overlays
-		icon_render_keys[BP.body_zone] = new_key
-
-	if(!changed)
+		part_keys += BP.get_cache_key()
+	var/new_key = jointext(part_keys, "|")
+	if(new_key == icon_render_key)
 		return
+	icon_render_key = new_key
+
+	var/list/new_limbs = list()
+	for(var/i in 1 to length(bodyparts))
+		var/obj/item/bodypart/BP = bodyparts[i]
+		var/list/limb_overlays = limb_icon_cache[part_keys[i]]
+		if(!limb_overlays)
+			limb_overlays = BP.get_limb_icon()
+			limb_icon_cache[part_keys[i]] = limb_overlays
+		new_limbs += limb_overlays
 
 	remove_overlay(BODYPARTS_LAYER)
 	if(length(new_limbs))

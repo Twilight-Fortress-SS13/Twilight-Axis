@@ -8,9 +8,6 @@
 	gender = MALE
 	mob_biotypes = MOB_UNDEAD|MOB_HUMANOID
 	blood_toll_bucket = STATS_KILLED_DEADITES
-	robust_searching = 1
-	turns_per_move = 1
-	move_to_delay = 3
 	STACON = 9
 	STASTR = 9
 	STASPD = 8
@@ -19,10 +16,6 @@
 	harm_intent_damage = 10
 	melee_damage_lower = 10
 	melee_damage_upper = 25
-	vision_range = 7
-	aggro_vision_range = 9
-	retreat_distance = 0
-	minimum_distance = 0
 	limb_destroyer = 1
 	base_intents = list(/datum/intent/simple/claw/skeleton)
 	attack_verb_continuous = "hacks"
@@ -34,23 +27,31 @@
 	faction = list(FACTION_UNDEAD)
 	footstep_type = FOOTSTEP_MOB_BAREFOOT
 	del_on_death = TRUE
-	var/start_take_damage = FALSE
-	var/damage_check
 	var/wither = 2.5
-	var/newcolor = rgb(207, 135, 255) //used for livetime code.
 
-	can_have_ai = FALSE //disable native ai
-	AIStatus = AI_OFF
 	ai_controller = /datum/ai_controller/simple_skeleton
 	move_base_delay = MOVEMENT_DELAY_SPD_10
-	melee_cooldown = SKELETON_ATTACK_SPEED
 
-/mob/living/simple_animal/hostile/rogue/skeleton/Initialize(mapload, mob/user, cabal_affine, is_summoned)
+/mob/living/simple_animal/hostile/rogue/skeleton/Initialize(mapload, mob/user)
 	. = ..()
 	AddComponent(/datum/component/ai_aggro_system)
 	ADD_TRAIT(src, TRAIT_SILVER_WEAK, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NPC_EXAMINE, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_BADTRAINER, TRAIT_GENERIC)
+
+	if(user)
+		if(user.mind && user.mind.current)
+			summoner = user.mind.current.real_name
+		else
+			summoner = user.name
+
+	if(user && user.mind && user.mind.current)
+		faction = user.mind.current.faction.Copy()
+		faction += "[user.mind.current.real_name]_faction"
+		var/datum/antagonist/lich/lich_antag = user.mind.has_antag_datum(/datum/antagonist/lich)
+		if(lich_antag && user.real_name)
+			faction += FACTION_UNDEAD
+			faction += "[user.real_name]_faction"
 
 /mob/living/simple_animal/hostile/rogue/skeleton/axe
 	name = "Skeleton"
@@ -93,8 +94,6 @@
 	projectiletype = /obj/projectile/bullet/reusable/arrow/ancient
 	projectilesound = 'sound/combat/Ranged/flatbow-shot-01.ogg'
 	ranged = 1
-	retreat_distance = 2
-	minimum_distance = 5
 	ranged_cooldown_time = 60
 	check_friendly_fire = 1
 	loot = list(
@@ -121,47 +120,15 @@
 		if("idle")
 			return pick('sound/vo/mobs/skel/skeleton_idle (1).ogg','sound/vo/mobs/skel/skeleton_idle (2).ogg','sound/vo/mobs/skel/skeleton_idle (3).ogg')
 
-/mob/living/simple_animal/hostile/rogue/skeleton/Initialize(mapload, mob/user, cabal_affine = FALSE, is_summoned = FALSE)
-	. = ..()
-
-	if(user)
-		if(user.mind && user.mind.current)
-			summoner = user.mind.current.real_name
-		else
-			summoner = user.name
-
-	if(is_summoned || cabal_affine)
-		faction = list(FACTION_CABAL)
-
-	if(user && user.mind && user.mind.current)
-		faction = user.mind.current.faction.Copy()
-		faction += "[user.mind.current.real_name]_faction"
-		var/datum/antagonist/lich/lich_antag = user.mind.has_antag_datum(/datum/antagonist/lich)
-		if(lich_antag && user.real_name)
-			faction += FACTION_UNDEAD
-			faction += "[user.real_name]_faction"
-
-	damage_check = world.time
-
-	if(is_summoned)
-		addtimer(CALLBACK(src, TYPE_PROC_REF(/mob/living/simple_animal/hostile/rogue/skeleton, deathtime), TRUE), 1 MINUTES)
-
-/mob/living/simple_animal/hostile/rogue/skeleton/proc/deathtime()
-	src.add_atom_colour(newcolor, ADMIN_COLOUR_PRIORITY)
-	start_take_damage = TRUE
-
 /mob/living/simple_animal/hostile/rogue/skeleton/Life(mob/user)
 	. = ..()
 	if(!target)
 		if(prob(60))
 			emote(pick("idle"), TRUE)
-	if(start_take_damage == TRUE)
-		if(world.time > damage_check + 5 SECONDS)
-			src.adjustFireLoss(8) //+- one minute for 100 HP (any skeleton) and two minute for guard skeleton (200 HP)
 
 /mob/living/simple_animal/hostile/rogue/skeleton/taunted(mob/user)
 	emote("aggro")
-	GiveTarget(user)
+	ai_controller?.force_aggro(user)
 	return
 
 /mob/living/simple_animal/hostile/rogue/skeleton/proc/can_control(mob/user)
@@ -175,20 +142,17 @@
 /mob/living/simple_animal/hostile/rogue/skeleton/beckoned(mob/user)
 	if (can_control(user))
 		for(var/mob/living/simple_animal/hostile/rogue/skeleton/target in viewers(user))
-			target.LoseTarget()
-			target.search_objects = 2
+			target.pet_passive = TRUE
+			target.ai_controller?.clear_aggro()
 			target.add_overlay("peace_overlay")
 		return
 
 /mob/living/simple_animal/hostile/rogue/skeleton/shood(mob/user)
 	if (can_control(user))
 		for(var/mob/living/simple_animal/hostile/rogue/skeleton/target in viewers(user))
-			target.RegainSearchObjects()
+			target.pet_passive = FALSE
+			target.cut_overlay("peace_overlay")
 		return
-
-/mob/living/simple_animal/hostile/rogue/skeleton/RegainSearchObjects(value)
-	cut_overlay("peace_overlay")
-	. = ..()
 
 
 /datum/intent/simple/claw/skeleton_unarmed
@@ -233,15 +197,3 @@
 /mob/living/simple_animal/hostile/rogue/skeleton/bow/event
 	ai_controller = /datum/ai_controller/skeleton_ranged/event
 	move_base_delay = MOVEMENT_DELAY_SPD_3
-
-/mob/living/simple_animal/hostile/rogue/skeleton/axe/Initialize(mapload, mob/user, cabal_affine = FALSE, is_summoned = FALSE)
-	. = ..(mapload, user, cabal_affine, is_summoned)
-
-/mob/living/simple_animal/hostile/rogue/skeleton/spear/Initialize(mapload, mob/user, cabal_affine = FALSE, is_summoned = FALSE)
-	. = ..(mapload, user, cabal_affine, is_summoned)
-
-/mob/living/simple_animal/hostile/rogue/skeleton/guard/Initialize(mapload, mob/user, cabal_affine = FALSE, is_summoned = FALSE)
-	. = ..(mapload, user, cabal_affine, is_summoned)
-
-/mob/living/simple_animal/hostile/rogue/skeleton/bow/Initialize(mapload, mob/user, cabal_affine = FALSE, is_summoned = FALSE)
-	. = ..(mapload, user, cabal_affine, is_summoned)

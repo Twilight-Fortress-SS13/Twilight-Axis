@@ -30,6 +30,14 @@ export const SubtabIdentityCardGameplayDownstream = () => {
       >
         Family Preferences
       </Button>
+      <Button
+        fluid
+        icon="hammer"
+        mt={1}
+        onClick={() => act('open_tat_build')}
+      >
+        TAT Build
+      </Button>
     </>
   );
 };

@@ -1,5 +1,0 @@
-author: "Quinalion"
-delete-after: True
-changes:
-  - bugfix: "Fixed missing detail sprites for grinning and gilded sallets."
-  - bugfix: "Fixed thin spectacles onmob sprite."

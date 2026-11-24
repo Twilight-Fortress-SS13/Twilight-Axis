@@ -1,5 +1,0 @@
-author: "Ryan180602"
-delete-after: True
-changes:
-  - bugfix: "Frei Pike sprite is a little shorter now."
-  - rscadd: "Frei Pike gets a weak 0.6x cut."

@@ -2,6 +2,19 @@
 #define MAX_ADMINBANS_PER_ADMIN 1
 #define MAX_ADMINBANS_PER_HEADMIN 3
 
+/proc/expand_antagonist_ban(list/roles)
+	var/static/list/covered_roles
+	if(!covered_roles)
+		covered_roles = list(ROLE_ANTAGONIST = TRUE, ROLE_SYNDICATE = TRUE)
+		for(var/group in GLOB.antagonist_ban_groups)
+			for(var/role in GLOB.antagonist_ban_groups[group])
+				covered_roles[role] = TRUE
+	var/list/checked = islist(roles) ? roles : list(roles)
+	for(var/role in checked)
+		if(istext(role) && covered_roles[role])
+			return checked | list(ROLE_ANTAGONIST, ROLE_SYNDICATE)
+	return roles
+
 /proc/ta_roleban_list(list/base, list/extras)
 	. = list()
 	if(base)
@@ -181,7 +194,7 @@
 /proc/is_banned_from(player_ckey, list/roles)
 	if(!player_ckey)
 		return
-	roles = ta_roleban_expand_roles(roles)
+	roles = expand_antagonist_ban(ta_roleban_expand_roles(roles)) // TA EDIT
 	if(!length(roles))
 		return
 	var/client/C = GLOB.directory[player_ckey]
@@ -232,7 +245,7 @@
 /proc/is_banned_from_with_details(player_ckey, player_ip, player_cid, role)
 	if(!player_ckey && !player_ip && !player_cid)
 		return
-	var/list/check_roles = ta_roleban_expand_roles(role)
+	var/list/check_roles = expand_antagonist_ban(ta_roleban_expand_roles(role)) // TA EDIT
 	if(!length(check_roles))
 		return
 	var/list/role_values = list("ckey" = player_ckey, "ip" = player_ip, "computerid" = player_cid)
@@ -301,13 +314,13 @@
 		"Church" = ta_roleban_panel_list(GLOB.church_positions, null),
 		"Inquisition" = ta_roleban_panel_list(GLOB.inquisition_positions, null),
 		"Wanderers" = ta_roleban_panel_list(GLOB.wanderer_positions, null),
-		"Abstract" = list("Appearance", "Emote", "Deadchat", "OOC", "LOOC", "MENTORHELP"),
+		"Abstract" = list("Appearance", "Emote", "Deadchat", "OOC", "LOOC", "MENTORHELP", "TAT System", "TAT Towner", "TAT Trader", "TAT Adventurer", "TAT Wretch"),
 		"Peasants" = ta_roleban_panel_list(GLOB.peasant_positions, list("Servant", "Palace Slave")),
 		"Burghers" = ta_roleban_panel_list(GLOB.burgher_positions, null),
 		"ATC" = ta_roleban_panel_list(GLOB.atc_positions, null),
 		"Sidefolk" = ta_roleban_panel_list(GLOB.sidefolk_positions, null),
 		"Ghost and Other Roles" = list(ROLE_NECRO_SKELETON, ROLE_LICH_SKELETON, ROLE_UNBOUND_DEATHKNIGHT, ROLE_DARK_ITINERANT),
-		"Antagonist Positions" = ta_roleban_panel_list(list(ROLE_ASCENDANT, ROLE_ASPIRANT, ROLE_BANDIT, "Freeman", "Lost Grenzel", ROLE_NBEAST, ROLE_WEREWOLF, ROLE_LICH, ROLE_PREBEL, ROLE_REBEL_LEADER, ROLE_CULT), null),
+		"Antagonist Positions" = ta_roleban_panel_list(list(ROLE_ASCENDANT, ROLE_ASPIRANT, ROLE_BANDIT, "Freeman", "Lost Grenzel", ROLE_NBEAST, ROLE_WEREWOLF, ROLE_LICH, ROLE_PREBEL, ROLE_REBEL_LEADER, ROLE_CULT, ROLE_RENEGADE), null), // TA EDIT
 		"Lesser Antagonst Positions" = list(ROLE_WRETCH, ROLE_DREAMWALKER, ROLE_GNOLL, ROLE_VAMPIRE),
 	)
 	for(var/group_name in group_sources)
@@ -1013,6 +1026,7 @@
 	var/target = ban_target_string(player_key, player_ip, player_cid)
 	var/msg = "has created a [isnull(duration) ? "permanent" : "temporary [time_message]"] [applies_to_admins ? "admin " : ""][roles_to_ban[1] == "Server" ? "server ban" : "role ban from [roles_to_ban.len] roles"] for [target]."
 	log_admin_private("[kn] [msg][roles_to_ban[1] == "Server" ? "" : " Roles: [roles_to_ban.Join(", ")]"] Reason: [reason]")
+	announce_note_change("BANS: [kn] [msg][roles_to_ban[1] == "Server" ? "" : " Roles: [roles_to_ban.Join(", ")]"] Reason: [reason]")
 	message_admins("[kna] [msg][roles_to_ban[1] == "Server" ? "" : " Roles: [roles_to_ban.Join("\n")]"]\nReason: [reason]")
 	world.TgsAnnounceBan(player_key, admin_ckey, duration, time_message, roles_to_ban, reason, severity, applies_to_admins)
 	if(applies_to_admins)
@@ -1041,6 +1055,13 @@
 				is_admin = TRUE
 			if(roles_to_ban[1] == "Server" && (!is_admin || (is_admin && applies_to_admins)))
 				qdel(i)
+	var/has_tat_role_ban = FALSE
+	for(var/role_to_ban in roles_to_ban)
+		if(role_to_ban == "TAT System" || role_to_ban == "TAT Towner" || role_to_ban == "TAT Trader" || role_to_ban == "TAT Adventurer" || role_to_ban == "TAT Wretch")
+			has_tat_role_ban = TRUE
+			break
+	if(player_ckey && has_tat_role_ban)
+		tat_apply_restriction_side_effects_to_online_client(player_ckey)
 	return TRUE
 
 /datum/admins/proc/unban_panel(player_key, admin_key, player_ip, player_cid, page = 0)

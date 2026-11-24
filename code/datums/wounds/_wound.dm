@@ -314,12 +314,15 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 
 	if(!HAS_TRAIT(owner, TRAIT_PARALYSIS) && owner.blood_volume > BLOOD_VOLUME_SURVIVE && owner.stat < UNCONSCIOUS && !HAS_TRAIT(src, TRAIT_BLACKBLOOD)) //TA EDIT START
 		var/healamount = 0
-		if(HAS_TRAIT(owner, TRAIT_PSYDONITE_4))
-			healamount = 0.4 + (owner.STAWIL * 0.1)
+		var/wil_scaling = owner.STAWIL * 0.05
+		if(HAS_TRAIT(owner, TRAIT_PSYDONITE_5))
+			healamount = 0.6 + wil_scaling
+		else if(HAS_TRAIT(owner, TRAIT_PSYDONITE_4))
+			healamount = 0.4 + wil_scaling
 		else if(HAS_TRAIT(owner, TRAIT_PSYDONITE_3))
-			healamount = 0.2 + (owner.STAWIL * 0.1)
+			healamount = 0.2 + wil_scaling
 		else if(HAS_TRAIT(owner, TRAIT_PSYDONITE_2))
-			healamount = owner.STAWIL * 0.1
+			healamount = wil_scaling
 
 		if(healamount > 0)
 			heal_wound(healamount)
@@ -341,13 +344,9 @@ GLOBAL_LIST_INIT(primordial_wounds, init_primordial_wounds())
 /// Called on handle_wounds(), on the life() proc
 /datum/wound/proc/on_death()
 	// for optimization's sake, only do dead wound healing if the mob has a client.
-	if (!owner.client)
+	if(!owner.client)
 		return
 
-	if (HAS_TRAIT(owner, TRAIT_PSYDONITE) && !passive_healing && !HAS_TRAIT(src, TRAIT_BLACKBLOOD))
-		heal_wound(0.6) // psydonites are supposed to apparently slightly heal wounds whether dead or alive
-		if(!istype(src, /datum/wound/slash/incision))
-			heal_wound(0.6)
 	return TRUE
 
 /// Setter for any adjustments we make to our bleed_rate, propagating them to the host bodypart.

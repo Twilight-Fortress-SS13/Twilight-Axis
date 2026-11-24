@@ -512,13 +512,26 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 			var/mob/living/carbon/human/target = AM
 			var/name_to_highlight = target.nickname
 			if(name_to_highlight && name_to_highlight != "" && name_to_highlight != "Please Change Me")	//We don't need to highlight an unset or blank one.
-				highlighted_message = replacetext_char(message, name_to_highlight, "<b><font color = #[target.highlight_color]>[name_to_highlight]</font></b>")
+				highlighted_message = replacetext_char(message, name_to_highlight, "<b><font color = [target.highlight_color]>[name_to_highlight]</font></b>")
 			var/datum/species/dullahan/target_species = target.dna?.species
 			if(istype(target_species) && target_species.headless)
 				tocheck = target_species.my_head
+
+			if(target != src && message_mode != MODE_WHISPER && target.has_flaw(/datum/charflaw/addiction/clamorous))
+				var/chance = 5
+				if(Zs_yell)
+					chance += 10
+				if(Zs_all)
+					chance += 20
+				if(prob(chance))
+					target.sate_addiction(/datum/charflaw/addiction/clamorous)
 		if(eavesdrop_range && get_dist(source, tocheck) > message_range+keenears && !(admin_listeners[AM]))
 			AM.Hear(eavesrendered, src, message_language, eavesdropping, null, spans, message_mode, original_message)
 			heard_message += AM
+			if(ishuman(AM))
+				var/mob/living/carbon/human/H = AM
+				if(H.has_flaw(/datum/charflaw/paranoid))
+					H.add_stress(/datum/stressevent/parawhisper)
 		else
 			AM.Hear(rendered, src, message_language, highlighted_message || message, null, spans, message_mode, original_message)
 			heard_message += AM
@@ -624,7 +637,13 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 
 /mob/living/proc/treat_message(message, language, capitalize_message = TRUE)
 	if(HAS_TRAIT(src, TRAIT_ZOMBIE_SPEECH) && !ispath(language, /datum/language/undead))
-		message = "[repeat_string(rand(1, 3), "U")][repeat_string(rand(1, 6), "H")]..."
+		message = pick(
+		"[repeat_string(rand(1, 3), "U")][repeat_string(rand(1, 6), "H")]...",
+		"[repeat_string(rand(1, 3), "R")][repeat_string(rand(1, 2), "U")][repeat_string(rand(1, 3), "G")][repeat_string(rand(1, 2), "H")]...",
+		"G[repeat_string(rand(1, 4), "R")]G[repeat_string(rand(1, 2), "H")]...",
+		"[repeat_string(rand(1, 2), "U")][repeat_string(rand(1, 3), "R")][repeat_string(rand(1, 5), "H")]...",
+		"[repeat_string(rand(1, 3), "R")][repeat_string(rand(1, 2), "G")][repeat_string(rand(1, 4), "H")]...")
+		//five varients for non-zizocant! yippie! we are probably never going to use this outside of zombies but whatever.
 	else if(HAS_TRAIT(src, TRAIT_GARGLE_SPEECH))
 		message = vocal_cord_torn(message)
 

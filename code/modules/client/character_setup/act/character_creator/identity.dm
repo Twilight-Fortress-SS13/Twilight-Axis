@@ -46,12 +46,29 @@
 		if("nickname")
 			var/new_name = tgui_input_text(user, "Choose your character's nickname (For Highlighting):", "NICKNAME", nickname, encode = FALSE)
 			if(new_name)
-				new_name = reject_bad_name(new_name)
+				new_name = reject_bad_name(new_name, allow_cyrillic = TRUE) // TA EDIT
 				if(new_name)
 					verbose_pref_log_change(user, "notice", "Nickname", nickname, new_name)
 					nickname = new_name
 				else
-					to_chat(user, span_warning("Invalid name. Your name should be at least 2 and at most [MAX_NAME_LEN] characters long. It may only contain the characters A-Z, a-z, -, ', . and ,."))
+					to_chat(user, span_warning("Invalid nickname. It should be at least 2 and at most [MAX_NAME_LEN] characters long. It may contain Latin and Cyrillic letters, as well as -, ', . and ,.")) // TA EDIT
+			return CHARACTER_ACT_DATA_UPDATE
+
+		if("pen_name")
+			var/new_pen_name = tgui_input_text(user, "Input a pen name to sign HERMES letters with. It cannot be changed once the round begins:", "Pen Name", pen_name, max_length = MAX_NAME_LEN, encode = FALSE)
+			if(isnull(new_pen_name))
+				return CHARACTER_ACT_DATA_UPDATE
+			if(new_pen_name == "")
+				verbose_pref_log_change(user, "notice", "Pen Name", pen_name, "")
+				pen_name = null
+				return CHARACTER_ACT_DATA_UPDATE
+			new_pen_name = reject_bad_name(new_pen_name, max_length = MAX_NAME_LEN)
+			if(!new_pen_name || LOWER_TEXT(new_pen_name) == LOWER_TEXT(MAILER_ANONYMOUS))
+				to_chat(user, span_warning("That pen name is not allowed."))
+				return CHARACTER_ACT_DATA_UPDATE
+			verbose_pref_log_change(user, "notice", "Pen Name", pen_name, new_pen_name)
+			pen_name = new_pen_name
+			log_game("[user] has set their pen name to '[new_pen_name]'.")
 			return CHARACTER_ACT_DATA_UPDATE
 
 		if("highlight_color")
@@ -128,6 +145,34 @@
 					if(AGE_OLD)
 						to_chat(user, "In a place as lethal as PSYDONIA, the elderly are all but marvels... or beneficiaries of the habitually privileged. (-1 STR, -2 SPE, -1 PER, -2 CON, +2 INT, +1 FOR)")
 			return CHARACTER_ACT_DATA_UPDATE
+
+		if("birthday") // TA EDIT START
+			var/list/month_choices = list("None")
+			for(var/i in 1 to CALENDAR_MONTHS_PER_YEAR)
+				month_choices += get_month_number_to_text(i)
+			var/current_month = birthday_month ? get_month_number_to_text(birthday_month) : "None"
+			var/month_choice = tgui_input_list(user, "Choose your character's birth month", "BIRTHDAY", month_choices, current_month)
+			if(isnull(month_choice))
+				return CHARACTER_ACT_DATA_UPDATE
+			var/old_birthday = format_birthday(birthday_month, birthday_day) || "Not set"
+			if(month_choice == "None")
+				birthday_month = 0
+				birthday_day = 0
+				verbose_pref_log_change(user, "notice", "Birthday", old_birthday, "Not set")
+				return CHARACTER_ACT_DATA_UPDATE
+			var/new_month = month_choices.Find(month_choice) - 1
+			var/list/day_choices = list()
+			for(var/d in 1 to CALENDAR_DAYS_IN_MONTH)
+				day_choices += d
+			var/day_choice = tgui_input_list(user, "Choose your character's birth day", "BIRTHDAY", day_choices, birthday_day || null)
+			if(isnull(day_choice))
+				return CHARACTER_ACT_DATA_UPDATE
+			birthday_month = new_month
+			birthday_day = day_choice
+			verbose_pref_log_change(user, "notice", "Birthday", old_birthday, format_birthday(birthday_month, birthday_day))
+			to_chat(user, span_notice("Your character was born on [format_birthday(birthday_month, birthday_day)]."))
+			return CHARACTER_ACT_DATA_UPDATE
+		// TA EDIT END
 
 		if("domhand")
 			if(domhand == 1)
@@ -232,6 +277,9 @@
 				averse_chosen_faction = choice
 			return CHARACTER_ACT_DATA_UPDATE
 
+		if("charflaw_subchoice")
+			return ui_act_character_creator_identity_subcharflaw(params, user)
+
 		if("open_loadout")
 			var/datum/loadout_panel/LM = new(user)
 			LM.ui_interact(user)
@@ -288,6 +336,10 @@
 
 		if("open_family_preferences")
 			user.client?.familytree_module_open_preferences(user)
+			return CHARACTER_ACT_DATA_UPDATE
+
+		if("open_tat_build")
+			tat_build.ui_interact(user)
 			return CHARACTER_ACT_DATA_UPDATE
 
 
@@ -391,5 +443,36 @@
 				var/old = relevant_virtue.picked_choices.Join(", ")
 				relevant_virtue.picked_choices.Remove(v_to_remove)
 				verbose_pref_log_change(user, "notice", "[relevant_virtue.name] strength removed", old, relevant_virtue.picked_choices.Join(", "))
+
+	return CHARACTER_ACT_DATA_UPDATE
+
+/datum/preferences/proc/ui_act_character_creator_identity_subcharflaw(list/params, mob/user)
+	var/cf_type = text2path(params["flaw"])
+	if(!(cf_type in charflaws))
+		return CHARACTER_ACT_DATA_UPDATE
+	var/datum/charflaw/cf = GLOB.character_flaws_singletons[cf_type]
+	if(!cf || !cf.max_choices)
+		return CHARACTER_ACT_DATA_UPDATE
+
+	if(!islist(charflaw_choices[cf_type]))
+		charflaw_choices[cf_type] = list()
+	var/list/picked = charflaw_choices[cf_type]
+
+	switch(params["task"])
+		if("add")
+			if(length(picked) < cf.max_choices)
+				var/list/options = cf.extra_choices.Copy()
+				options -= picked
+				var/result = tgui_input_list(user, "Choose an option:", "[uppertext(cf.name)]", options)
+				if(result && (result in options))
+					var/old = picked.Join(", ")
+					picked += result
+					verbose_pref_log_change(user, "notice", "[cf.name] choice added", old, picked.Join(", "))
+		if("remove")
+			var/index = text2num(params["index"])
+			if(index && (index >= 1) && (index <= length(picked)))
+				var/old = picked.Join(", ")
+				picked.Cut(index, index + 1)
+				verbose_pref_log_change(user, "notice", "[cf.name] choice removed", old, picked.Join(", "))
 
 	return CHARACTER_ACT_DATA_UPDATE

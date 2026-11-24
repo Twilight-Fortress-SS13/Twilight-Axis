@@ -30,13 +30,13 @@
 	associated_skill = /datum/skill/magic/arcane
 	spell_tier = 2
 	spell_impact_intensity = SPELL_IMPACT_MEDIUM
-	displayed_damage = 75
+	displayed_damage = SPELL_DMG(75)
 
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
-	var/blast_radius = 1
+	impact_radius = 1
 	var/blast_delay = 2 SECONDS
-	var/blast_damage = 75
+	var/blast_damage = SPELL_DMG(75)
 	var/push_dist = 3
 
 /datum/action/cooldown/spell/arcyne_burst/cast(atom/cast_on)
@@ -53,25 +53,26 @@
 		to_chat(H, span_warning("I can't cast where I can't see!"))
 		return FALSE
 
-	for(var/turf/T in range(blast_radius, center))
+	for(var/turf/T as anything in get_impact_turfs(center))
 		if(T.density)
 			continue
 		new /obj/effect/temp_visual/telegraph/pillar/fadein(T, blast_delay)
 
-	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(arcyne_burst_erupt), center, H, blast_radius, blast_damage, push_dist, src, name), blast_delay)
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(arcyne_burst_erupt), center, H, impact_radius, blast_damage, push_dist, src, name), blast_delay)
 
 	return TRUE
+
+/datum/action/cooldown/spell/arcyne_burst/get_impact_turfs(atom/center)
+	return get_visible_area_turfs(get_turf(center), impact_radius)
 
 /proc/arcyne_burst_erupt(turf/epicenter, mob/living/carbon/human/caster, radius = 1, damage = 50, push_dist = 3, datum/action/cooldown/spell/guard_source, spell_name = "Arcyne Burst")
 	if(!epicenter)
 		return
 	playsound(epicenter, 'sound/magic/repulse.ogg', 90, TRUE, 4)
-	for(var/turf/T in range(radius, epicenter))
-		if(!(T in get_hear(radius, epicenter)))
-			continue
+	for(var/turf/T as anything in get_visible_area_turfs(epicenter, radius))
 		new /obj/effect/temp_visual/kinetic_blast(T)
 		for(var/obj/structure/S in T)
-			S.take_damage(damage, BRUTE, "blunt", FALSE)
+			S.take_damage(damage * SPELL_DAMAGE_INTEGRITY_MODIFIER, BRUTE, "blunt", FALSE)
 		for(var/mob/living/L in T.contents)
 			if(L.anti_magic_check())
 				L.visible_message(span_warning("The arcyne force dissipates around [L]!"))
@@ -84,10 +85,10 @@
 				if(arcyne_strike(caster, L, null, damage, caster.zone_selected, \
 					BCLASS_BLUNT, spell_name = spell_name, \
 					damage_type = BRUTE, \
-					skip_animation = TRUE) == ARCYNE_STRIKE_WARDED)
+					skip_animation = TRUE, SPELL_STRIKE_SCALING) == ARCYNE_STRIKE_WARDED)
 					continue
 			else
-				L.adjustBruteLoss(damage)
+				L.adjustBruteLoss(SPELL_DMG_VS(L, damage))
 				SEND_SIGNAL(L, COMSIG_ATOM_WAS_ATTACKED, caster, damage)
 			var/push_dir = get_dir(epicenter, L) || pick(GLOB.cardinals)
 			L.safe_throw_at(get_ranged_target_turf(L, push_dir, push_dist), push_dist, 1, caster, force = MOVE_FORCE_STRONG)

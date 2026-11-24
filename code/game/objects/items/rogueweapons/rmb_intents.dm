@@ -13,7 +13,7 @@
 	if(!cmode)	//We just toggled it off.
 		addtimer(CALLBACK(src, PROC_REF(purge_bait)), 30 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
 		addtimer(CALLBACK(src, PROC_REF(clear_tempo_all)), 30 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
-		addtimer(CALLBACK(src, PROC_REF(reset_dodgetime), 20 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE))
+		addtimer(CALLBACK(src, PROC_REF(reset_dodgetime)), 20 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
 	if(!HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS))
 		filtered_balloon_alert(TRAIT_COMBAT_AWARE, (cmode ? ("<i><font color = '#831414'>Tense</font></i>") : ("<i><font color = '#c7c6c6'>Relaxed</font></i>")), y_offset = 32)
 
@@ -106,7 +106,7 @@
 	if(HT.bait_stacks <= 1)
 		HT.Immobilize(0.5 SECONDS)
 		HT.stamina_add(HT.max_stamina / fatiguemod)
-		HT.Slowdown(3)
+		HT.apply_slowdown(5 SECONDS)
 		HT.emote("huh")
 		HU.changeNext_move(0.1 SECONDS, override = TRUE)
 		to_chat(HU, span_notice("[HT.p_they(TRUE)] fell for my bait <b>perfectly</b>! One more!"))
@@ -143,45 +143,7 @@
 		return
 	if(user.incapacitated())
 		return
-	if(user.has_status_effect(/datum/status_effect/debuff/specialcd))
-		return
-	if(HAS_TRAIT(user, TRAIT_DEADITE)) //Deadites get extremely funny messages trying to do this.
-		to_chat(user, span_warning(pick("I use the ancient technique... of nearly falling over..", "I muster all of my strength... and forgot what I was doing..", "I trip and stumble while wildly flailing around..", "I focus... and... feel too hungry to do so..", "I... feel suddenly very... what is stupid..?", "I focus... but the concept slipped my mind..")))
-		return
-
-	user.face_atom(target)
-
-	var/obj/item/W = user.get_active_held_item()
-	var/datum/special_intent/active_special
-	var/skill_level = SKILL_LEVEL_NONE
-
-	if(istype(W, /obj/item/rogueweapon))
-		var/obj/item/rogueweapon/RW = W
-		if(RW.special)
-			active_special = RW.special
-			skill_level = user.get_wskill(RW)
-	else if(istype(W, /obj/item/gun/ballistic/revolver/grenadelauncher/bow))
-		var/obj/item/gun/ballistic/revolver/grenadelauncher/bow/B = W
-		if(B.special)
-			active_special = B.special
-			skill_level = user.get_skill_level(/datum/skill/combat/bows)
-	else if(!W && ishuman(user))
-		var/mob/living/carbon/human/HU = user
-		if(HU.unarmed_special)
-			active_special = HU.unarmed_special
-			skill_level = user.get_skill_level(/datum/skill/combat/unarmed)
-
-	if(active_special)
-		if(active_special.custom_skill)
-			skill_level = user.get_skill_level(active_special.custom_skill)
-		if(!HAS_TRAIT(user, TRAIT_BATTLEMASTER))
-			if(skill_level < SKILL_LEVEL_JOURNEYMAN)
-				to_chat(user, span_info("I'm not knowledgeable enough in the arts of this weapon to use this."))
-				return
-		var/atom/parent = W ? W : user
-		if(active_special.check_range(user, target) && active_special.check_reqs(user, parent))
-			if(active_special.apply_cost(user))
-				active_special.deploy(user, parent, target)
+	user.try_special(target)
 
 /datum/rmb_intent/swift
 	name = "swift"
@@ -275,12 +237,15 @@
 
 
 	var/effect_to_apply = (L.mind ? /datum/status_effect/debuff/vulnerable : /datum/status_effect/debuff/exposed)
+	var/is_mount = FALSE
+	if(istype(L, /mob/living/simple_animal) && L.GetComponent(/datum/component/riding))
+		is_mount = TRUE
 
 	L.apply_status_effect(effect_to_apply, feintdur)
 	L.apply_status_effect(/datum/status_effect/debuff/clickcd, max(1.5 SECONDS + skill_factor, 2.5 SECONDS))
-	L.Immobilize(0.5 SECONDS)
+	L.Immobilize(is_mount ? 2 SECONDS : 0.5 SECONDS)
 	L.stamina_add(L.stamina * 0.1)
-	L.Slowdown(2)
+	L.apply_slowdown(is_mount ? 4 SECONDS : 3 SECONDS, is_mount ? SLOWDOWN_SEVERITY_HEAVY : SLOWDOWN_SEVERITY_MODERATE) // TA EDIT
 	if(L.d_intent == INTENT_DODGE)
 		L.changeNext_def(clamp(L.dodgetime + 3, 0, CLICK_CD_DODGE))
 		L.changeMaxDodge(-3)
@@ -316,14 +281,13 @@
 
 /datum/rmb_intent/weak
 	name = "weak"
-	desc = "Your attacks deal 20% damage and will never critically-hit. Useful for longer punishments, play-fighting, and bloodletting.\nRight click will attempt to steal from the target."
+	desc = "Your attacks deal 20% damage and will never critically-hit. Useful for longer punishments, play-fighting, and bloodletting.\nRight click will attempt to steal from the target." // TA EDIT
 	icon_state = "rmbweak"
 
-/datum/rmb_intent/weak/special_attack(mob/living/carbon/human/user, mob/living/carbon/human/target)
-	if(!istype(target) || !istype(user) || !target.Adjacent(user))
-		return
-	if(user.incapacitated())
-		return
-
-	user.attempt_steal(user, target)
-	return ..()
+/datum/rmb_intent/weak/special_attack(mob/living/carbon/human/user, mob/living/carbon/human/target) // TA EDIT
+	if(!istype(target) || !istype(user) || !target.Adjacent(user)) // TA EDIT
+		return // TA EDIT
+	if(user.incapacitated()) // TA EDIT
+		return // TA EDIT
+	user.attempt_steal(user, target) // TA EDIT
+	return ..() // TA EDIT

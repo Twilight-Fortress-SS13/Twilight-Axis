@@ -88,6 +88,7 @@ export const SubtabIdentityCardInfo = () => {
     clothes_pref,
     highlight_color,
     nickname,
+    pen_name,
     pronouns,
     race_bonus,
     real_name,
@@ -172,6 +173,28 @@ export const SubtabIdentityCardInfo = () => {
             </Stack.Item>
           </Stack>
         </LabeledGridList.Item>
+        <LabeledGridList.Item label="Pen Name">
+          <Stack>
+            <Stack.Item grow>
+              <Button
+                fluid
+                style={{
+                  wordBreak: 'break-word',
+                  whiteSpace: 'wrap',
+                }}
+                onClick={() => act('pen_name')}
+              >
+                {pen_name || 'None'}
+              </Button>
+            </Stack.Item>
+            <Stack.Item>
+              <Button
+                icon="question-circle"
+                tooltip="You can select this name for sending letters"
+              />
+            </Stack.Item>
+          </Stack>
+        </LabeledGridList.Item>
         <LabeledGridList.Item label="Pronouns">
           <Button
             fluid
@@ -235,6 +258,7 @@ export const SubtabIdentityCardGameplay = () => {
   const { act, data } = useBackendStrict<IdentityData>();
   const {
     age,
+    birthday, // TA EDIT
     combat_music,
     defiant,
     domhand,
@@ -293,6 +317,18 @@ export const SubtabIdentityCardGameplay = () => {
                 {age}
               </Button>
             </LabeledGridList.Item>
+            <LabeledGridList.Item label="Birthday">
+              {/* TA EDIT START */}
+              <Button
+                fluid
+                icon="cake-candles"
+                tooltip="Shown to people who know you, on the calendar and in the people you know list."
+                onClick={() => act('birthday')}
+              >
+                {birthday}
+              </Button>
+            </LabeledGridList.Item>
+            {/* TA EDIT END */}
             <LabeledGridList.Item label="Dominance">
               <Button fluid onClick={() => act('domhand')}>
                 {domhand === 2 ? 'Right-handed' : 'Left-handed'}
@@ -681,14 +717,44 @@ export const SubtabIdentityCardVices = () => {
   return (
     <Section title="Vices" className="PreferencesMenu__Section__Vices">
       {charflaws.map((flaw) => (
-        <Button
-          key={flaw.type}
-          fluid
-          onClick={() => act('toggle_charflaw', { flaw: flaw.type })}
-        >
-          {flaw.name}
-          {flaw.warning ? ' (Requires Extra Vice!)' : null}
-        </Button>
+        <Box key={flaw.type}>
+          <Button
+            fluid
+            onClick={() => act('toggle_charflaw', { flaw: flaw.type })}
+          >
+            {flaw.name}
+            {flaw.warning ? ' (Requires Extra Vice!)' : null}
+          </Button>
+          {flaw.picked_choices.map((choice) => (
+            <Button
+              key={choice.choice}
+              fluid
+              ml={2}
+              mt={1}
+              onClick={() =>
+                act('charflaw_subchoice', {
+                  flaw: flaw.type,
+                  task: 'remove',
+                  index: choice.index,
+                })
+              }
+            >
+              {choice.choice}
+            </Button>
+          ))}
+          {flaw.picked_choices.length < flaw.max_choices ? (
+            <Button
+              fluid
+              ml={2}
+              mt={1}
+              onClick={() =>
+                act('charflaw_subchoice', { flaw: flaw.type, task: 'add' })
+              }
+            >
+              Pick Option
+            </Button>
+          ) : null}
+        </Box>
       ))}
       <Button fluid icon="bars" ml={4} onClick={() => setPopupId('CharFlaw')}>
         Open Menu

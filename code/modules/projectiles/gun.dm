@@ -72,6 +72,10 @@
 		shake_camera(user, recoil + 1, recoil)
 
 	playsound(user, fire_sound, fire_sound_volume, vary_fire_sound)
+	if(istype(src, /obj/item/gun/ballistic) && fire_sound_volume >= 30 && fire_sound && fire_sound != 'sound/blank.ogg') // TA EDIT START
+		var/obj/item/gun/ballistic/twilight_firearm/twilight_gun = src
+		if(!istype(twilight_gun) || !twilight_gun.silenced)
+			mount_notify_loud_noise(user, 9, 15, 4 SECONDS) // TA EDIT END
 	if(message)
 		user.visible_message("<span class='danger'>[user] shoots [src]!</span>", \
 						"<span class='danger'>I shoot [src]!</span>", \
@@ -123,6 +127,8 @@
 /obj/item/gun/proc/process_fire(atom/target, mob/living/user, message = TRUE, params = null, zone_override = "", bonus_spread = 0)
 	add_fingerprint(user)
 	SEND_SIGNAL(src, COMSIG_ITEM_GUN_PROCESS_FIRE, user, target)
+	if(user)
+		SEND_SIGNAL(user, COMSIG_MOB_FIRED_GUN, src, target, params, zone_override)
 	var/sprd = 0
 	var/randomized_gun_spread = 0
 	if(spread)

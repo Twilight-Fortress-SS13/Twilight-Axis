@@ -21,6 +21,7 @@
 		/obj/item/bodypart/taur/spider,
 		/obj/item/bodypart/taur/horse,
 		/obj/item/bodypart/taur/goat,
+		/obj/item/bodypart/taur/arachne		//TA-EDIT
 	)
 	base_name = "Godtouched"
 	is_subrace = TRUE
@@ -55,7 +56,7 @@
 		ORGAN_SLOT_APPENDIX = /obj/item/organ/appendix,
 		ORGAN_SLOT_GUTS = /obj/item/organ/guts,
 		// Customizable eyes means overriden eyes get thrown out.
-		// HUD organ deals with less parenting problems aswell.
+		// HUD organ deals with less parenting problems as well.
 		ORGAN_SLOT_HUD = /obj/item/organ/dullahan_vision,
 		)
 	bodypart_features = list(
@@ -304,6 +305,7 @@
 /datum/species/dullahan/proc/soul_light_on(mob/living/carbon/human/user)
 	var/obj/item/organ/soul/soul_accessory = user.getorganslot(ORGAN_SLOT_SOUL)
 	if(soul_accessory && user.stat != DEAD)
+		QDEL_NULL(mob_light_obj)
 		mob_light_obj = user.mob_light(soul_accessory.accessory_colors, 2, 2)
 
 /datum/species/dullahan/proc/soul_light_off()

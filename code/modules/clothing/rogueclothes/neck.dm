@@ -44,6 +44,11 @@
 	. = ..()
 	. += span_info("Right click to adjust the coif's coverage. Certain coifs with multiple adjustments - like the heavy padded coif - might need to be right-clicked multiple times, in order to cycle back to its default state.")
 
+/obj/item/clothing/neck/roguetown/coif/ComponentInitialize()
+	AddComponent(/datum/component/adjustable_clothing, NECK, null, null, null, null, (UPD_HEAD|UPD_MASK|UPD_NECK))	//Soundless coif
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FENCERDEXTERITY)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
+
 /obj/item/clothing/neck/roguetown/coif/padded
 	name = "padded coif"
 	desc = "A gambeson's coif, hewn from cloth. It can either be worn beneath a helmet to cushion one's skull from punishment, or worn on its own to keep one's cheeks warm in more frigid climates."
@@ -60,10 +65,6 @@
 	sewrepair = TRUE
 	equip_delay_self = 3.5 SECONDS
 	unequip_delay_self = 3.5 SECONDS
-
-/obj/item/clothing/neck/roguetown/coif/padded/ComponentInitialize()
-	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FENCERDEXTERITY)
-	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
 
 /obj/item/clothing/neck/roguetown/coif/heavypadding
 	name = "heavy padded coif"
@@ -82,11 +83,6 @@
 	sewrepair = TRUE
 	equip_delay_self = 4 SECONDS
 	unequip_delay_self = 4 SECONDS
-
-/obj/item/clothing/neck/roguetown/coif/heavypadding/ComponentInitialize()
-	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FENCERDEXTERITY)
-	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
-	return
 
 /obj/item/clothing/neck/roguetown/coif/heavypadding/AdjustClothes(mob/user)
 	if(loc == user)
@@ -119,8 +115,7 @@
 			H.update_inv_neck()
 			H.update_inv_head()
 
-/obj/item/clothing/neck/roguetown/coif/ComponentInitialize()
-	AddComponent(/datum/component/adjustable_clothing, NECK, null, null, null, null, (UPD_HEAD|UPD_MASK|UPD_NECK))	//Soundless coif
+/obj/item/clothing/neck/roguetown/coif/heavypadding/ComponentInitialize()
 	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FENCERDEXTERITY)
 	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
 
@@ -179,7 +174,7 @@
 
 /obj/item/clothing/neck/roguetown/chaincoif/iron/aalloy
 	name = "decrepit coif"
-	desc = "Rotted metal rings, linked together to form a billowing hood. Shrapnel peppers the linkage; arrowheads and speartips, brought along from a battlefield who's history - and legionnaires - have been lost to tyme."
+	desc = "Rotted metal rings, linked together to form a billowing hood. Shrapnel peppers the linkage; arrowheads and speartips, brought along from a battlefield whose history - and legionnaires - have been lost to tyme."
 	icon_state = "achaincoif"
 	max_integrity = ARMOR_INT_SIDE_DECREPIT
 	color = "#bb9696"
@@ -221,7 +216,7 @@
 	adjustable = CAN_CADJUST
 	smeltresult = /obj/item/ingot/iron
 
-/obj/item/clothing/neck/roguetown/chaincoif/iron/AdjustClothes(mob/user)
+/obj/item/clothing/neck/roguetown/chaincoif/iron/full/AdjustClothes(mob/user)
 	if(loc == user)
 		if(adjustable == CAN_CADJUST)
 			adjustable = CADJUSTED
@@ -251,6 +246,10 @@
 			var/mob/living/carbon/H = user
 			H.update_inv_neck()
 			H.update_inv_head()
+
+/obj/item/clothing/neck/roguetown/chaincoif/iron/full/ComponentInitialize()
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
 
 /obj/item/clothing/neck/roguetown/chaincoif/bronze
 	name = "bronze chain coif"
@@ -302,12 +301,16 @@
 			H.update_inv_neck()
 			H.update_inv_head()
 
+/obj/item/clothing/neck/roguetown/chaincoif/full/ComponentInitialize()
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_FENCERDEXTERITY)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)
+
 /obj/item/clothing/neck/roguetown/chaincoif/full/black
 	color = "#323232"
 
 /obj/item/clothing/neck/roguetown/bevor
 	name = "bevor"
-	desc = "A steel neckguard, traditionally mounted to the collar of a cuirass. It restricts the head's motion, but ensures the absence of abuseable gaps."
+	desc = "A steel neckguard, traditionally mounted to the collar of a cuirass. It restricts the head's motion, but ensures the absence of abusable gaps."
 	icon_state = "bevor"
 	armor = ARMOR_PLATE
 	anvilrepair = /datum/skill/craft/armorsmithing
@@ -331,7 +334,7 @@
 
 /obj/item/clothing/neck/roguetown/bevor/iron
 	name = "iron bevor"
-	desc = "An iron neckguard, traditionally mounted to the collar of a cuirass. It restricts the head's motion, but ensures the absence of abuseable gaps."
+	desc = "An iron neckguard, traditionally mounted to the collar of a cuirass. It restricts the head's motion, but ensures the absence of abusable gaps."
 	icon_state = "ibevor"
 	smeltresult = /obj/item/ingot/iron
 	max_integrity = ARMOR_INT_SIDE_IRON
@@ -476,7 +479,7 @@
 
 /obj/item/clothing/neck/roguetown/gorget/steel
 	name = "steel gorget"
-	desc = "A series of steel plates designed to protect the neck, traditionally worn atop a jacket or cuirass. It bears a mammon-sized divet along its right flank; the certification of its 'proofedness' against a longbow's strike."
+	desc = "A series of steel plates designed to protect the neck, traditionally worn atop a jacket or cuirass. It bears a mammon-sized divot along its right flank; the certification of its 'proofedness' against a longbow's strike."
 	smeltresult = /obj/item/ingot/steel
 	max_integrity = ARMOR_INT_SIDE_STEEL + ARMOR_INT_SIDE_COVERAGE_BONUS
 	icon_state = "sgorget"
@@ -485,7 +488,7 @@
 
 /obj/item/clothing/neck/roguetown/gorget/gold
 	name = "golden gorget"
-	desc = "A series of resplendant golden plates designed to protect the neck, traditionally worn atop a jacket or cuirass. The holy sigil between its buckled halves promises to carry the flame of its wearer, no matter what strike's poised its way."
+	desc = "A series of resplendent golden plates designed to protect the neck, traditionally worn atop a jacket or cuirass. The holy sigil between its buckled halves promises to carry the flame of its wearer, no matter what strike's poised its way."
 	icon_state = "goldgorget"
 	armor_class = ARMOR_CLASS_HEAVY //Ceremonial. Heavy is the head that bears the burden.
 	armor = ARMOR_INDESTRUCTIBLE //Renders its wearer completely invulnerable to damage. The caveat is, however..
@@ -660,7 +663,7 @@
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/paalloy
 	name = "ancient zcross"
-	desc = "'Progress. Ascension. Destiny. A mandate, commanded by God, to be fufilled by Man. She called us forth from the edge of reality - and with Her dying breath, rasped out the final truth; the fire is gone, and the world will soon follow.'"
+	desc = "'Progress. Ascension. Destiny. A mandate, commanded by God, to be fulfilled by Man. She called us forth from the edge of reality - and with Her dying breath, rasped out the final truth; the fire is gone, and the world will soon follow.'"
 	icon_state = "zcross_a"
 	chunkcolor = "#532e25"
 	material_category = ARMOR_MAT_PLATE
@@ -854,7 +857,7 @@
 
 /obj/item/clothing/neck/roguetown/psicross/noc/g
 	name = "golden amulet of Noc"
-	desc = "His sister's radiance would mean nothing without comparison - or more importantly, the capacity to compare at all."
+	desc = "Her sister's radiance would mean nothing without comparison - or more importantly, the capacity to compare at all." //TA EDIT
 	icon_state = "noc_g"
 	resistance_flags = FIRE_PROOF
 
@@ -905,7 +908,7 @@
 
 /obj/item/clothing/neck/roguetown/psicross/dendor/wood
 	name = "wooden amulet of Dendor"
-	desc = "The primordial life force thrumbs through your hands."
+	desc = "The primordial life force thrums through your hands."
 	icon_state = "dendor_w"
 	item_state = "dendor_w"
 	sellprice = 0
@@ -1291,6 +1294,16 @@
 	resistance_flags = FIRE_PROOF
 	dropshrink = 0.5
 	salvage_result = null
+
+/obj/item/clothing/neck/roguetown/cravat
+	name = "cravat"
+	desc = "An otavan fashion, a strip of tied cloth that can be donned on the neck to make oneself look more sophisticated."
+	icon_state = "cravat"
+
+/obj/item/clothing/neck/roguetown/ruffle
+	name = "ruffled collar"
+	desc = "A ridiculous lace collar typically worn by jesters."
+	icon_state = "ruffle"
 
 /obj/item/clothing/neck/roguetown/collar/forlorn
 	name = "light forlorn collar"
@@ -1784,16 +1797,16 @@
 	item_state = "castifico_collar"
 	desc = "A metal collar that seals around the neck, making it impossible to remove. It seems to be enchanted with some kind of vile magic..."
 	var/active_item
-	var/bounty_amount
+	var/issuing_faction
+	var/bounty_amount = 0
 	resistance_flags = FIRE_PROOF
 	slot_flags = ITEM_SLOT_NECK
 	body_parts_covered = NONE //it's not armor
 
 /obj/item/clothing/neck/roguetown/collar/prisoner/get_mechanics_examine(mob/user)
 	. = ..()
-	. += span_info("This cursed collar enforces pacifism and blocks spellcasting.")
-	. += span_info("It will automatically release after a period of penance (5-20 minutes based on bounty amount).")
-	. += span_info("It can only be removed early by a LIBERTAS machine.")
+	. += span_info("This cursed collar blocks spellcasting and weakens its wearer according to their bounty amount. A bounty over 500 mammon pacifies the wearer instead.")
+	. += span_info("It can be removed using a LIBERTAS machine, a key of liberation, or a key of absolution issued by the same faction.")
 
 /obj/item/clothing/neck/roguetown/collar/prisoner/Initialize(mapload)
 	. = ..()
@@ -1803,20 +1816,9 @@
 	. = ..()
 	REMOVE_TRAIT(user, TRAIT_PACIFISM, "castificocollar")
 	REMOVE_TRAIT(user, TRAIT_SPELLCOCKBLOCK, "castificocollar")
-	if(QDELETED(src))
-		return
-	qdel(src)
-
-/obj/item/clothing/neck/roguetown/collar/prisoner/proc/timerup(mob/living/carbon/human/user)
-	REMOVE_TRAIT(user, TRAIT_PACIFISM, "castificocollar")
-	REMOVE_TRAIT(user, TRAIT_SPELLCOCKBLOCK, "castificocollar")
-	visible_message(span_warning("The castifico collar opens with a click, falling off of [user]'s neck and clambering apart on the ground, their penance complete."))
-	say("YOUR PENANCE IS COMPLETE.")
-	for(var/name in GLOB.outlawed_players)
-		if(user.real_name == name)
-			GLOB.outlawed_players -= user.real_name
-			priority_announce("[user.real_name] has completed their penance. Justice has been served in the eyes of Ravox.", "PENANCE", 'sound/misc/bell.ogg')
-	playsound(src.loc, pick('sound/items/pickgood1.ogg','sound/items/pickgood2.ogg'), 5, TRUE)
+	user.remove_status_effect(/datum/status_effect/debuff/castificot1)
+	user.remove_status_effect(/datum/status_effect/debuff/castificot2)
+	user.remove_status_effect(/datum/status_effect/debuff/castificot3)
 	if(QDELETED(src))
 		return
 	qdel(src)
@@ -1827,26 +1829,23 @@
 		return
 	else if(slot == SLOT_NECK)
 		active_item = TRUE
-		to_chat(user, span_warning("This accursed collar pacifies me!"))
-		ADD_TRAIT(user, TRAIT_PACIFISM, "castificocollar")
+		to_chat(user, span_warning("This accursed collar blocks my spellcasting!"))
 		ADD_TRAIT(user, TRAIT_SPELLCOCKBLOCK, "castificocollar")
+		if(bounty_amount >= 100 && bounty_amount <= 250)
+			user.apply_status_effect(/datum/status_effect/debuff/castificot1)
+		else if(bounty_amount > 250 && bounty_amount <= 400)
+			user.apply_status_effect(/datum/status_effect/debuff/castificot2)
+		else if(bounty_amount > 400 && bounty_amount <= 500)
+			user.apply_status_effect(/datum/status_effect/debuff/castificot3)
+		if(bounty_amount > 500)
+			to_chat(user, span_warning("The collar's magic overwhelms your body, forcing you into pacifism!"))
+			ADD_TRAIT(user, TRAIT_PACIFISM, "castificocollar")
 		if(HAS_TRAIT(user, TRAIT_RITUALIST))
 			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
-		var/timer = 5 MINUTES //Base timer is 5 minutes, additional time added per bounty amount
-
-		if(bounty_amount >= 10)
-			var/additional_time = bounty_amount * 0.1 // 10 mammon = 1 minute
-			additional_time = round(additional_time)
-			timer += additional_time MINUTES
-			timer = clamp(timer, 0 MINUTES, 20 MINUTES)
-
-		var/timer_minutes = timer / 600
-
-		addtimer(CALLBACK(src, PROC_REF(timerup), user), timer)
-		say("YOUR PENANCE WILL BE COMPLETE IN [timer_minutes] MINUTES.")
 	return
 
 /obj/item/clothing/neck/roguetown/psicross/liefdonator
 	name = "Aurum's Amulets"
 	desc = "A long gold chain that was double woven for strength. At regular intervals, a gold loop just barely big enough to have something attached to it. Two of the loops had charms dangling from them. Each gold still. One in the shape of a Xylixian mask, the other in the shape of Dendor's claws."
 	icon_state = "lief_amulet"
+

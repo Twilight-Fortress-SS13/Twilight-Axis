@@ -88,6 +88,7 @@
 	var/organ_slowdown = 0 // Its here because this is first shared definition between two leg organ paths // NOTE for future: The value starts at 0, example flavor of -10% is 0.1, so on.
 	var/is_prosthetic = FALSE
 	var/brand_text = null
+	var/flesh_written_text = null  //TA EDIT
 
 	/// Visaul markings to be rendered alongside the bodypart
 	var/list/markings
@@ -119,8 +120,7 @@
 
 /obj/item/bodypart/proc/get_specific_markings_overlays(list/specific_markings, aux = FALSE, mob/living/carbon/human/human_owner, override_color)
 	var/list/appearance_list = list()
-//	var/specific_layer = aux ? aux_layer : BODYPARTS_LAYER
-	var/specific_layer = aux_layer ? aux_layer : BODYPARTS_LAYER
+	var/specific_layer = (aux || aux_layer == LEG_PART_LAYER) ? aux_layer : BODYPARTS_LAYER
 	var/specific_render_zone = aux ? aux_zone : body_zone
 
 	for(var/key in specific_markings)
@@ -665,6 +665,11 @@
 	icon_state = "" //to erase the default sprite, we're building the visual aspects of the bodypart through overlays alone.
 
 	. = list()
+	var/datum/component/ooze_color_shift/color_shift
+	if(!dropped && owner && isooze(owner))
+		color_shift = owner.GetComponent(/datum/component/ooze_color_shift)
+		if(!color_shift?.shifting)
+			color_shift = null
 	var/icon_gender = (body_gender == FEMALE) ? "f" : "m" //gender of the icon, if applicable
 
 	var/image_dir = 0
@@ -733,6 +738,13 @@
 			limb.color = "#[draw_color]"
 			if(aux_zone && !hideaux)
 				aux.color = "#[draw_color]"
+			if(color_shift && !no_update && !rotted && !(HAS_TRAIT(owner, TRAIT_ROTMAN) && !owner.mind) && !mutation_color && draw_color == owner.dna.features["mcolor"])
+				var/list/limb_overlays = .
+				limb_overlays[1] = color_shift.add_body_visual(limb)
+				if(aux)
+					var/aux_index = limb_overlays.Find(aux)
+					if(aux_index)
+						limb_overlays[aux_index] = color_shift.add_body_visual(aux)
 
 	var/draw_organ_features = TRUE
 	var/draw_bodypart_features = TRUE
@@ -761,8 +773,11 @@
 						should_draw = TRUE
 				if(!should_draw)
 					continue
-			var/mutable_appearance/organ_appearance = organ.get_bodypart_overlay(src)
+			var/organ_appearance = organ.get_bodypart_overlay(src)
 			if(organ_appearance)
+				if(color_shift && islist(organ_appearance) && !istype(organ, /obj/item/organ/eyes) && color_shift.prepare_accessory(organ, organ.accessory_type, organ.accessory_colors))
+					var/datum/sprite_accessory/accessory = SPRITE_ACCESSORY(organ.accessory_type)
+					organ_appearance = color_shift.add_accessory_visuals(accessory, src, organ, organ_appearance, organ.accessory_colors)
 				. += organ_appearance
 
 	// Feature overlays
@@ -776,6 +791,9 @@
 			var/overlays = feature.get_bodypart_overlay(src)
 			if(!overlays)
 				continue
+			if(color_shift && color_shift.prepare_accessory(feature, feature.accessory_type, feature.accessory_colors))
+				var/datum/sprite_accessory/accessory = SPRITE_ACCESSORY(feature.accessory_type)
+				overlays = color_shift.add_accessory_visuals(accessory, src, null, overlays, feature.accessory_colors)
 			. += overlays
 
 /obj/item/bodypart/deconstruct(disassembled = TRUE)

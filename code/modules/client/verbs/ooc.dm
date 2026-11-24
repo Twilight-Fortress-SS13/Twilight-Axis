@@ -110,6 +110,9 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 	if(is_banned_from(ckey, "OOC"))
 		to_chat(src, span_danger("I have been banned from OOC."))
 		return
+	if(prefs.chat_toggles & CHAT_OOC_MUTED)
+		to_chat(src, span_danger("I have OOC hidden. Use Show / Hide OOC to see it again."))
+		return
 	if(QDELETED(src))
 		return
 
@@ -142,6 +145,8 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 	var/msg_to_send = ""
 
 	for(var/client/C in GLOB.clients)
+		if(C.prefs.chat_toggles & CHAT_OOC_MUTED)
+			continue
 		// Treat anything at or beyond GAME_STATE_FINISHED as post-round for OOC visibility.
 		var/post_round = (SSticker.current_state >= GAME_STATE_FINISHED)
 		if(!post_round)
@@ -218,6 +223,9 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 	if(is_banned_from(ckey, "OOC"))
 		to_chat(src, span_danger("I have been banned from OOC."))
 		return
+	if(prefs.chat_toggles & CHAT_OOC_MUTED)
+		to_chat(src, span_danger("I have OOC hidden. Use Show / Hide OOC to see it again."))
+		return
 	if(QDELETED(src))
 		return
 
@@ -250,6 +258,8 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 	var/msg_to_send = ""
 
 	for(var/client/C in GLOB.clients)
+		if(C.prefs.chat_toggles & CHAT_OOC_MUTED)
+			continue
 		var/post_round = (SSticker.current_state >= GAME_STATE_FINISHED)
 		if(!post_round)
 			if(!C.holder && !istype(C.mob, /mob/dead/new_player))

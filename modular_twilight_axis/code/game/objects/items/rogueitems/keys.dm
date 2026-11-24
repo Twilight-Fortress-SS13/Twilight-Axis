@@ -88,3 +88,27 @@
 	desc = "This key opens the Town Watch armory."
 	icon_state = "spikekey"
 	lockid = "watcharmory"
+
+/obj/item/roguekey/rh_mage_1
+	name = "Magicians quarter I"
+	desc = "This key opens door in Magician Tower."
+	icon_state = "greenkey"
+	lockid = "rh_mage_1"
+
+/obj/item/roguekey/rh_mage_2
+	name = "Magicians quarter II"
+	desc = "This key opens door in Magician Tower."
+	icon_state = "greenkey"
+	lockid = "rh_mage_2"
+
+/obj/item/roguekey/rh_mage_3
+	name = "Magicians quarter III"
+	desc = "This key opens door in Magician Tower."
+	icon_state = "greenkey"
+	lockid = "rh_mage_3"
+
+/obj/item/roguekey/rh_mage_4
+	name = "Magicians quarter IV"
+	desc = "This key opens door in Magician Tower."
+	icon_state = "greenkey"
+	lockid = "rh_mage_4"

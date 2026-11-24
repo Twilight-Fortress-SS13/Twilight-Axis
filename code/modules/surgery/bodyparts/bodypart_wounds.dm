@@ -68,8 +68,9 @@
 	if(isooze(owner) && wound.severity >= WOUND_SEVERITY_MODERATE) // Handles wounds for murklings.
 		if(ispath(wound, /datum/wound))
 			wound = new wound()
-		if(is_ooze_wound(wound))
-			handle_ooze_wounds(wound, silent, crit_message)
+		var/can_suffer_ooze_fracture = istype(wound, /datum/wound/fracture) && (istype(src, /obj/item/bodypart/head) || istype(src, /obj/item/bodypart/chest))
+		if(is_ooze_wound(wound) && !can_suffer_ooze_fracture && !istype(src, /obj/item/bodypart/head))
+			handle_ooze_wounds(wound, crit_message)
 			return
 	if(ispath(wound, /datum/wound))
 		var/datum/wound/primordial_wound = GLOB.primordial_wounds[wound]
@@ -163,12 +164,18 @@
 		do_crit = FALSE
 
 	var/datum/wound/dynwound = manage_dynamic_wound(bclass, dam, armor, pen_info, debuff_applies)
+	if((bclass in GLOB.splatter_bclasses) && !istype(weapon, /obj/projectile) && prob(dam * 2))
+		var/turf/from = get_turf(user || weapon)
+		if(from)
+			owner.blood_spray(get_dir(from, owner))
 
 	if(do_crit)
 		var/datum/component/silverbless/psyblessed = weapon?.GetComponent(/datum/component/silverbless)
 		var/sundering = HAS_TRAIT(owner, TRAIT_SILVER_WEAK) && istype(weapon) && weapon?.is_silver && psyblessed?.is_blessed
 		var/crit_attempt = try_crit(sundering ? BCLASS_SUNDER : bclass, dam, user, zone_precise, silent, crit_message)
 		if(crit_attempt)
+			if((bclass in GLOB.gore_bclasses) && istype(crit_attempt, /datum/wound))
+				owner.blood_squirt()
 			if(bclass == BCLASS_BURN && user && user != owner)
 				shake_camera(user, 2, 2)
 				flash_color(user, "#a83c1a", 15)
@@ -242,8 +249,6 @@
 			woundtype = /datum/wound/dynamic/punish
 		else	//Wrong bclass type for wounds, skip adding this.
 			return
-	if(isooze(owner) && is_ooze_wound(woundtype))
-		woundtype = /datum/wound/dynamic/ooze
 	var/datum/wound/dynwound = has_wound(woundtype)
 	var/exposed = debuff_applies && owner.has_status_effect(/datum/status_effect/debuff/exposed)
 	if(!isnull(dynwound))
@@ -552,8 +557,11 @@
 						attempted_wounds +=/datum/wound/fracture/head/nose
 					else
 						attempted_wounds += /datum/wound/facial/disfigurement/nose
-				else if(zone_precise in knockout_zones)
-					attempted_wounds += /datum/wound/fracture/head/brain
+				else if(zone_precise in knockout_zones) //because vampires/skeletons exist
+					if(has_wound(/datum/wound/fracture/head/brain))
+						attempted_wounds += /datum/wound/fracture/head/brain/shatter
+					else
+						attempted_wounds += /datum/wound/fracture/head/brain
 	if(bclass in GLOB.sunder_bclasses)
 		if(HAS_TRAIT(owner, TRAIT_SILVER_WEAK) && !owner.has_status_effect(STATUS_EFFECT_ANTIMAGIC))
 			used = round(damage_dividend * 20 + (dam / 2), 1)
@@ -823,17 +831,13 @@
 		// Iterate stack by 1 and then see if we can crit this hit
 		return !crit_resist_tracker_actual.try_crit()
 
-/obj/item/bodypart/proc/handle_ooze_wounds(datum/wound/wound, silent = FALSE, crit_message = FALSE)
+/obj/item/bodypart/proc/handle_ooze_wounds(datum/wound/wound, crit_message = FALSE)
 	if(!wound.handle_ooze_wound(src))
 		return
-	if(!istype(src, /obj/item/bodypart/head/))
-		if(crit_message)
-			var/message = "<span class='crit'><b>Critical hit!</b> The [src] melts apart into goop!</span>"
-			if(message)
-				owner.next_attack_msg += " [message]"
-		src.dismember()
-	else
-		if(has_wound(/datum/wound/slime/knockout))
-			add_wound(/datum/wound/slime/paralyze, silent, crit_message)
-		else
-			add_wound(/datum/wound/slime/knockout, silent, crit_message)
+	if(istype(src, /obj/item/bodypart/head))
+		return
+	if(crit_message)
+		var/message = "<span class='crit'><b>Critical hit!</b> The [src] melts apart into goop!</span>"
+		if(message)
+			owner.next_attack_msg += " [message]"
+	src.dismember()

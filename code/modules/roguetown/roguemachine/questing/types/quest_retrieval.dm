@@ -1,5 +1,13 @@
 /datum/quest/retrieval
 	quest_type = QUEST_RETRIEVAL
+	chronicle_order = QUEST_CHRONICLE_ORDER_RETRIEVAL
+	pool_kind = QUEST_POOL_EVERGREEN
+	pool_weight = QUEST_POOL_WEIGHT_RETRIEVAL
+	rumor_cost = RUMOR_COST_TRIVIAL
+	eligible_regions = list(
+		THREAT_REGION_AZURE_BASIN,
+		THREAT_REGION_AZURE_GROVE,
+	)
 	writ_type = WRIT_TYPE_RECOVERY
 	var/list/fetch_items = list(
 		/obj/item/rogueweapon/huntingknife/throwingknife/steel = "steel tossblades",
@@ -9,6 +17,9 @@
 
 /datum/quest/retrieval/get_base_reward()
 	return QUEST_REWARD_BASE_FETCH
+
+/datum/quest/retrieval/is_contract_item(obj/item/I)
+	return target_item_type && istype(I, target_item_type)
 
 /datum/quest/retrieval/get_title()
 	if(title)
@@ -20,14 +31,7 @@
 
 
 /datum/quest/retrieval/get_additional_reward(turf/origin_turf, turf/target_turf)
-	var/distance = CLAMP(get_dist(origin_turf, target_turf), 0, 200)
-	var/distance_reward = (distance / QUEST_DELIVERY_DISTANCE_DIVISOR) * QUEST_DELIVERY_DISTANCE_BONUS
-	var/item_bonus = progress_required * QUEST_DELIVERY_PER_ITEM_BONUS
-	var/threat_bonus = 0
-	var/datum/threat_region/TR = SSregionthreat.get_region(region)
-	if(TR)
-		threat_bonus = max(0, (TR.delivery_reward_multiplier - 1.0) * QUEST_DELIVERY_THREAT_BONUS)
-	return ROUND_UP(distance_reward + item_bonus + threat_bonus)
+	return ROUND_UP(calculate_delivery_reward(origin_turf, target_turf) + progress_required * QUEST_DELIVERY_PER_ITEM_BONUS)
 
 /datum/quest/retrieval/preview(obj/effect/landmark/quest_spawner/landmark)
 	. = ..()
@@ -35,7 +39,7 @@
 		return
 	target_item_type = pick(fetch_items)
 	target_item_plural = fetch_items[target_item_type]
-	progress_required = rand(1, 3)
+	progress_required = 1
 	finalize_preview_title()
 
 /datum/quest/retrieval/materialize(obj/effect/landmark/quest_spawner/landmark)
@@ -46,7 +50,11 @@
 		var/turf/spawn_turf = landmark.get_safe_spawn_turf()
 		if(!spawn_turf)
 			continue
-		var/obj/item/new_item = new target_item_type(spawn_turf)
+		var/obj/effect/quest_spawn/item/spawner = new(spawn_turf)
+		var/obj/item/new_item = new target_item_type(spawner)
 		new_item.AddComponent(/datum/component/quest_object/retrieval, src)
 		add_tracked_atom(new_item)
+		spawner.contained_atom = new_item
+		spawner.AddComponent(/datum/component/quest_object/mob_spawner, src)
+		register_spawner(spawner)
 	return TRUE

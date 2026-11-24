@@ -16,6 +16,7 @@
   --tab-active-grad: linear-gradient(180deg, #343434 0%, #262626 100%);
   --tab-active-border: #e6cd6a #4a4014 #2e2810 #c9b25e;
   --tab-active-text: #f4e7b0;
+  --emote-star-active: #e6cd6a;
   --tab-inset: inset 0 1px 0 rgba(255, 255, 255, 0.07), inset 0 -1px 0 rgba(0, 0, 0, 0.78);
   --text-shadow: 0 1px 0 #000, 0 0 4px rgba(0, 0, 0, 0.35);
 
@@ -51,6 +52,7 @@
   --tab-active-grad: linear-gradient(180deg, #82693f 0%, #6e5836 100%);
   --tab-active-border: #c8a050 #4a3a22 #2c2114 #917a49;
   --tab-active-text: #f0dca8;
+  --emote-star-active: #c8a050;
   --tab-inset: inset 0 1px 0 rgba(212, 192, 144, 0.10), inset 0 -1px 0 rgba(0, 0, 0, 0.5);
   --text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
 
@@ -293,7 +295,7 @@ img {
   z-index: 1;
 }
 
-.grid-item:hover::after {
+.grid-item[data-label]:not([data-label=""]):hover::after {
   content: attr(data-label);
   position: absolute;
   left: 50%;
@@ -425,4 +427,73 @@ img {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.emote-toolbar {
+  display: flex;
+  gap: 0.4em;
+  margin-bottom: 0.5em;
+}
+
+.emote-toolbar .verb-search {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+
+.emote-page-toggle {
+  display: flex;
+}
+
+.emote-page-toggle button {
+  pointer-events: auto;
+  width: auto;
+  cursor: pointer;
+}
+
+.emote-page-toggle button:hover,
+.emote-page-toggle button:focus-visible {
+  background: var(--tab-hover-grad);
+  border-color: var(--tab-hover-border);
+  color: var(--text);
+}
+
+.emote-page-toggle button.active {
+  background: var(--tab-active-grad);
+  border-color: var(--tab-active-border);
+  color: var(--tab-active-text);
+}
+
+.emote-cell {
+  align-items: stretch;
+  vertical-align: top;
+}
+
+.emote-item-name {
+  pointer-events: auto;
+  flex: 1;
+  min-width: 0;
+  width: auto;
+}
+
+.emote-star {
+  flex: none;
+  margin: 1px 1px 1px 0;
+  padding: 0 0.3em;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--text-muted);
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--tab-border);
+  background: var(--tab-grad);
+}
+
+.emote-star:hover {
+  color: var(--accent);
+}
+
+.emote-star.active {
+  color: var(--emote-star-active);
 }

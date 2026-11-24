@@ -27,6 +27,11 @@
 	var/list/unbinding_chants = list()
 	/// The choice spell that was actually picked during attunement. Set by grant_choice_spell().
 	var/chosen_spell
+	// Hide this aspect unless a class grants it or it is allowed explicitly
+	var/class_locked = FALSE
+
+/datum/magic_aspect/proc/can_select(mob/living/user)
+	return TRUE
 
 /datum/magic_aspect/proc/get_implement_name(base_name)
 	if(!attuned_name)
@@ -38,19 +43,33 @@
 	if(!spell_path || !(spell_path in choice_spells))
 		return
 	chosen_spell = spell_path
-	if(target.has_spell(spell_path))
+	if(target.has_spell(spell_path, specific = TRUE))
+		claim_utility_spell(target, spell_path)
 		return
 	var/datum/new_spell = new spell_path
 	mark_aspect_spell(new_spell)
 	target.AddSpell(new_spell)
 
 /datum/magic_aspect/proc/grant_fixed_one(datum/mind/target, spell_path)
-	if(!spell_path || target.has_spell(spell_path))
+	if(!spell_path)
+		return null
+	if(target.has_spell(spell_path, specific = TRUE))
+		claim_utility_spell(target, spell_path)
 		return null
 	var/datum/new_spell = new spell_path
 	mark_aspect_spell(new_spell)
 	target.AddSpell(new_spell)
 	return new_spell
+
+/datum/magic_aspect/proc/claim_utility_spell(datum/mind/target, spell_path)
+	var/datum/action/cooldown/spell/existing = target.get_spell(spell_path, specific = TRUE)
+	if(!istype(existing) || !existing.utility_learned)
+		return FALSE
+	existing.utility_learned = FALSE
+	mark_aspect_spell(existing)
+	if(target.current)
+		to_chat(target.current, span_notice("[name] grants [existing.name], so its utility points are refunded."))
+	return TRUE
 
 /datum/magic_aspect/proc/grant_spells(datum/mind/target)
 	var/list/granted = list()
@@ -78,8 +97,41 @@
 			grant_fixed_one(target, entry)
 	for(var/spell_path in fixed_spells)
 		grant_fixed_one(target, spell_path)
-	if(choice_spell && !target.has_spell(choice_spell))
+	if(choice_spell && !target.has_spell(choice_spell, specific = TRUE))
 		grant_choice_spell(target, choice_spell)
+
+GLOBAL_LIST_INIT(npc_skipped_spells, list(
+	/datum/action/cooldown/spell/arcyne_forge,
+	/datum/action/cooldown/spell/bind_armament,
+	/datum/action/cooldown/spell/bind_weapon,
+	/datum/action/cooldown/spell/fridigitation,
+	/datum/action/cooldown/spell/touch/orison,
+	/datum/action/cooldown/spell/miracle/bloodmiracle,
+))
+
+/datum/magic_aspect/proc/grant_npc_spells(mob/living/target, choice_spell)
+	if(!isliving(target))
+		return
+	if(!choice_spell)
+		var/list/options = choice_spells - mastery_choice_spells
+		if(length(options))
+			choice_spell = pick(options)
+	var/list/paths = list()
+	for(var/entry in spell_order)
+		if(entry == ASPECT_CHOICE)
+			if(choice_spell)
+				paths |= choice_spell
+		else if(entry != ASPECT_POINTBUY)
+			paths |= entry
+	paths |= fixed_spells
+	if(choice_spell)
+		paths |= choice_spell
+	for(var/spell_path in paths)
+		if((spell_path in GLOB.utility_spells) || (spell_path in GLOB.npc_skipped_spells))
+			continue
+		var/datum/action/cooldown/spell/new_spell = new spell_path(target)
+		mark_aspect_spell(new_spell)
+		new_spell.Grant(target)
 
 /// Apply a named variant's spell swaps. T4 casters automatically get "mastery".
 /datum/magic_aspect/proc/apply_variant(datum/mind/target, variant_name)
@@ -194,9 +246,6 @@
 
 /datum/magic_aspect/pseudo/hierophant
 	name = "Hierophant"
-
-/datum/magic_aspect/pseudo/luminary
-	name = "Luminary"
 
 /datum/magic_aspect/pseudo/desertrider
 	name = "Desert Rider"

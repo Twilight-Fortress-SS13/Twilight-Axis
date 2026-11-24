@@ -21,6 +21,7 @@
 	min_pq = 14 //High potential for abuse, lovepotion/killersice/greater fireball is not for the faint of heart
 	max_pq = null
 	round_contrib_points = 2
+	quest_claim_barred = TRUE
 	cmode_music = sound("sound/music/cmode/nobility/combat_courtmage.ogg")
 	advclass_cat_rolls = list(CTAG_COURTMAGE = 2)
 	same_job_respawn_delay = 30 MINUTES
@@ -43,7 +44,7 @@
 		of the mundane body, whereas you have authority over all things arcane."
 	outfit = /datum/outfit/job/roguetown/magician/basic
 
-	subclass_mage_aspects = list("mastery" = TRUE, "major" = 2, "minor" = 3, "utilities" = 9, "ward" = TRUE)
+	subclass_mage_aspects = list("mastery" = TRUE, "major" = 2, "minor" = 3, "utilities" = 13, "ward" = TRUE)
 	category_tags = list(CTAG_COURTMAGE)
 	traits_applied = list(TRAIT_BADTRAINER)
 	subclass_stats = list(

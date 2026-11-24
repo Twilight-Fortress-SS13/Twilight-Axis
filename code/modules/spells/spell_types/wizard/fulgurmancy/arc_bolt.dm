@@ -28,7 +28,7 @@
 	charge_time = CHARGETIME_POKE
 	hold_drain = 1
 	charge_slowdown = CHARGING_SLOWDOWN_SMALL
-	charge_swingdelay_type = SWINGDELAY_PENALTY
+	charge_swingdelay_type = SWINGDELAY_NORMAL
 	charge_sound = 'sound/magic/charging.ogg'
 	cooldown_time = 6.5 SECONDS
 	attunement_school = ASPECT_NAME_FULGURMANCY
@@ -73,6 +73,16 @@
 		holder.maptext = MAPTEXT(tag)
 		holder.color = "#00ccff"
 
+/datum/action/cooldown/spell/projectile/arc_bolt/get_impact_turfs(atom/center)
+	. = list()
+	var/obj/projectile/magic/arc_bolt/bolt = projectile_type
+	var/turf/epicenter = get_turf(center)
+	if(!epicenter || !initial(bolt.arcs))
+		return
+	for(var/turf/T in view(ARC_BOLT_JUMP_RANGE, epicenter))
+		. += T
+	. -= get_turf(owner)
+
 /datum/action/cooldown/spell/projectile/arc_bolt/get_spell_statistics(mob/living/user)
 	var/list/stats = ..()
 	stats += span_info("Firing mode (toggle with Shift+G): Chain (arcs to 3 foes behind for half damage) / Focus (single target) / Arc (single target, lobs over obstacles, reduced damage).")
@@ -86,7 +96,9 @@
 	hitscan = TRUE
 	movement_type = UNSTOPPABLE
 	light_color = LIGHT_COLOR_WHITE
-	damage = 60
+	damage = SPELL_DMG(60)
+	intdamfactor = SPELL_INTDAM(1)
+	spell_damage_scaled = TRUE
 	max_range = MAGE_LONG_PROJ_RANGE
 	damage_type = BURN
 	woundclass = BCLASS_BURN
@@ -100,12 +112,12 @@
 
 /obj/projectile/magic/arc_bolt/single
 	name = "focused bolt"
-	damage = 60
+	damage = SPELL_DMG(60)
 	arcs = FALSE
 
 /obj/projectile/magic/arc_bolt/single/arc
 	name = "arced bolt"
-	damage = 45
+	damage = SPELL_DMG(45)
 	arcshot = TRUE
 
 
@@ -177,7 +189,7 @@
 	if(istype(caster) && ishuman(L))
 		if(arcyne_strike(caster, L, null, actual_damage, def_zone, BCLASS_BURN, \
 			spell_name = "Arc Bolt", damage_type = BURN, \
-			skip_animation = TRUE) == ARCYNE_STRIKE_WARDED)
+			skip_animation = TRUE, SPELL_STRIKE_SCALING) == ARCYNE_STRIKE_WARDED)
 			return
 	else
 		L.electrocute_act(actual_damage, src, 1, SHOCK_NOSTUN)

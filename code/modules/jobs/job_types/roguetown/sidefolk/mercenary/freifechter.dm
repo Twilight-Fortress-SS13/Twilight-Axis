@@ -10,7 +10,7 @@
 	class_select_category = CLASS_CAT_AAVNR
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_BRAVO)
 	cmode_music = sound("sound/music/frei_fencer.ogg")
-	traits_applied = list(TRAIT_BADTRAINER, TRAIT_INTELLECTUAL, TRAIT_LONGSWORDSMAN, TRAIT_FENCERDEXTERITY)
+	traits_applied = list(TRAIT_BADTRAINER, TRAIT_INTELLECTUAL, TRAIT_LONGSWORDSMAN, TRAIT_FENCERDEXTERITY, TRAIT_PARRYEXPERT, TRAIT_PSYDONITE_2) //TA EDIT
 	subclass_stats = list(
 		STATKEY_INT = 3,
 		STATKEY_PER = 3,
@@ -28,7 +28,7 @@
 		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE
 	)
 	virtue_limits = list(/datum/virtue/combat/dualwielder)
-	adv_stat_ceiling = list(STAT_STRENGTH = 12, STAT_SPEED = 12, STAT_CONSTITUTION = 12)
+	//adv_stat_ceiling = list(STAT_STRENGTH = 12, STAT_SPEED = 12, STAT_CONSTITUTION = 12) //TA EDIT
 
 /datum/outfit/job/roguetown/mercenary/freelancer/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -75,7 +75,7 @@
 	class_select_category = CLASS_CAT_AAVNR
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
 	cmode_music = sound("sound/music/frei_fencer.ogg")
-	traits_applied = list(TRAIT_BADTRAINER, TRAIT_FENCERDEXTERITY, TRAIT_INTELLECTUAL)
+	traits_applied = list(TRAIT_BADTRAINER, TRAIT_FENCERDEXTERITY, TRAIT_INTELLECTUAL, TRAIT_PARRYEXPERT, TRAIT_PSYDONITE_2) //TA EDIT
 	subclass_stats = list(
 		STATKEY_CON = 2,
 		STATKEY_PER = 3,
@@ -91,7 +91,7 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,	//I got told that having zero climbing is a PITA. Bare minimum for a combat class.
 		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE,
 	)
-	adv_stat_ceiling = list(STAT_STRENGTH = 13, STAT_SPEED = 12, STAT_WILLPOWER = 14, STAT_CONSTITUTION = 12)	//Prevent climbing to 14 by picking a +1 STR race.
+	//adv_stat_ceiling = list(STAT_STRENGTH = 13, STAT_SPEED = 12, STAT_WILLPOWER = 14, STAT_CONSTITUTION = 12)	//Prevent climbing to 14 by picking a +1 STR race. //TA EDIT
 
 /datum/outfit/job/roguetown/mercenary/freelancer_lancer/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -133,7 +133,7 @@
 	class_select_category = CLASS_CAT_AAVNR
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_BRAVO)
 	cmode_music = sound("sound/music/frei_sabre.ogg")
-	traits_applied = list(TRAIT_BADTRAINER, TRAIT_INTELLECTUAL, TRAIT_FENCERDEXTERITY, TRAIT_SABRIST)
+	traits_applied = list(TRAIT_BADTRAINER, TRAIT_INTELLECTUAL, TRAIT_FENCERDEXTERITY, TRAIT_SABRIST, TRAIT_PARRYEXPERT, TRAIT_PSYDONITE_2) //TA EDIT
 	subclass_stats = list(
 		STATKEY_INT = 2,
 		STATKEY_PER = 3,
@@ -149,7 +149,7 @@
 		/datum/skill/craft/sewing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE
 	)
-	adv_stat_ceiling = list(STAT_STRENGTH = 12, STAT_CONSTITUTION = 10, STAT_WILLPOWER = 12)
+	//adv_stat_ceiling = list(STAT_STRENGTH = 12, STAT_CONSTITUTION = 10, STAT_WILLPOWER = 12) //TA EDIT
 
 /datum/outfit/job/roguetown/mercenary/freelancer_sabrist/pre_equip(mob/living/carbon/human/H)
 	..()

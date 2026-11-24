@@ -32,7 +32,7 @@
 	else
 		mossback.faction = list(FACTION_NEUTRAL, faction_tag)
 		mossback.pet_passive = TRUE
-	mossback.notify_faction_change()
+	mossback.ai_controller?.nudge_target_scan()
 	if(mossback.ai_controller)
 		if(!mossback.ai_controller.blackboard[BB_CURRENT_PET_TARGET])
 			mossback.ai_controller.CancelActions()

@@ -12,14 +12,15 @@
 	desc = "The inevitable union between wildkin and some form of humanity or another. While they also experience animalistic tendencies akin to their full-blooded ancestors, their intermingling with others has stemmed the severity of such primordial impulses. (Half-kin are not a template race to play your own custom race. If you play a half-kin, you are expected to roleplay to the setting and the race's lore.)"
 	skin_tone_wording = "Ancestry"
 	default_color = "FFFFFF"
-	species_traits = list(EYECOLOR,HAIR,FACEHAIR,LIPS,STUBBLE,OLDGREY,MUTCOLORS)
+	species_traits = list(EYECOLOR,HAIR,FACEHAIR,LIPS,STUBBLE,OLDGREY,MUTCOLORS_PARTSONLY)
 	allowed_taur_types = list(
 		/obj/item/bodypart/taur/lamia,
 		/obj/item/bodypart/taur/spider,
 		/obj/item/bodypart/taur/horse,
 		/obj/item/bodypart/taur/goat,
 		/obj/item/bodypart/taur/feline,				//TA-EDIT
-		/obj/item/bodypart/taur/feline/furry		//TA-EDIT
+		/obj/item/bodypart/taur/feline/furry,		//TA-EDIT
+		/obj/item/bodypart/taur/arachne		//TA-EDIT
 	)
 	default_features = MANDATORY_FEATURE_LIST
 	use_skintones = TRUE

@@ -21,8 +21,19 @@ GLOBAL_LIST_INIT(target_interested_atoms, typecacheof(list(/mob)))
 		CRASH("No target datum was supplied in the blackboard for [controller.pawn]")
 
 	var/atom/current_target = controller.blackboard[target_key]
-	if (targetting_datum.can_attack(living_mob, current_target))
-		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
+	var/atom/quarry = current_target || controller.search_quarry()
+	if (targetting_datum.can_attack(living_mob, quarry))
+		if(controller.track_target_sight(quarry))
+			controller.clear_blackboard_key(BB_TARGET_SEARCH_TURF)
+			if(quarry != current_target)
+				controller.set_blackboard_key(target_key, quarry)
+			return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
+		if(!controller.target_sight_lapsed(quarry) || controller.in_hot_pursuit(quarry))
+			controller.search_for_target(quarry)
+			return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
+		AI_THINK(living_mob, "SIGHT: lost track of [quarry]")
+	if(quarry)
+		controller.forget_target(quarry)
 
 	controller.clear_blackboard_key(target_key)
 
@@ -42,6 +53,7 @@ GLOBAL_LIST_INIT(target_interested_atoms, typecacheof(list(/mob)))
 		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
 
 	var/list/filtered_targets = list()
+	var/low_hp = (living_mob.health <= living_mob.maxHealth * 0.5)
 
 	for(var/atom/pot_target in potential_targets)
 		if(targetting_datum.can_attack(living_mob, pot_target))//Can we attack it?
@@ -52,13 +64,16 @@ GLOBAL_LIST_INIT(target_interested_atoms, typecacheof(list(/mob)))
 		if(living_target.stat == DEAD)
 			filtered_targets -= living_target
 			continue
+		if(HAS_TRAIT(living_target, TRAIT_RUN_FOR_IT))
+			filtered_targets -= living_target
+			continue
 		if(!living_target.rogue_sneaking)
 			continue
 		// Don't passively spot sneakers through a floor - matches old _npc.dm carve-out.
 		if(targets_from_above && (living_target in targets_from_above))
 			filtered_targets -= living_target
 			continue
-		var/extra_chance = (living_mob.health <= living_mob.maxHealth * 50) ? 30 : 0 // if we're below half health, we're way more alert
+		var/extra_chance = low_hp ? 30 : 0
 		if (!living_mob.npc_detect_sneak(living_target, extra_chance))
 			filtered_targets -= living_target
 
@@ -67,6 +82,7 @@ GLOBAL_LIST_INIT(target_interested_atoms, typecacheof(list(/mob)))
 
 	var/atom/target = pick_final_target(controller, filtered_targets)
 	controller.set_blackboard_key(target_key, target)
+	controller.remember_target_at(target)
 
 	var/atom/potential_hiding_location = targetting_datum.find_hidden_mobs(living_mob, target)
 

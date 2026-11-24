@@ -13,9 +13,10 @@ import {
 } from './common/parchment';
 import { InstitutionalTab } from './MeisterPanel/InstitutionalTab';
 import { LedgerTab } from './MeisterPanel/LedgerTab';
+import { MercenaryTab } from './MeisterPanel/MercenaryTab';
 import { PatronageTab } from './MeisterPanel/PatronageTab';
 import { PersonalTab } from './MeisterPanel/PersonalTab';
-import { PollTaxTab } from './MeisterPanel/PollTaxTab';
+import { PollLevyTab } from './MeisterPanel/PollLevyTab';
 import type { Data, TabKey } from './MeisterPanel/types';
 
 export const MeisterPanel = () => {
@@ -66,10 +67,10 @@ export const MeisterPanel = () => {
               </div>
             )}
             <div
-              style={tabStyle(tab === 'polltax')}
-              onClick={() => setTab('polltax')}
+              style={tabStyle(tab === 'polllevy')}
+              onClick={() => setTab('polllevy')}
             >
-              Poll Tax
+              Poll Levy
             </div>
             <div
               style={tabStyle(tab === 'ledger')}
@@ -77,6 +78,14 @@ export const MeisterPanel = () => {
             >
               Ledger
             </div>
+            {!!data.merc && (
+              <div
+                style={tabStyle(tab === 'mercenary')}
+                onClick={() => setTab('mercenary')}
+              >
+                Mercenary
+              </div>
+            )}
           </div>
 
           {tab === 'personal' && <PersonalTab data={data} act={act} />}
@@ -86,8 +95,11 @@ export const MeisterPanel = () => {
           {tab === 'patronage' && accessiblePatronage && (
             <PatronageTab data={data} act={act} />
           )}
-          {tab === 'polltax' && <PollTaxTab data={data} act={act} />}
+          {tab === 'polllevy' && <PollLevyTab data={data} act={act} />}
           {tab === 'ledger' && <LedgerTab data={data} act={act} />}
+          {tab === 'mercenary' && !!data.merc && (
+            <MercenaryTab data={data} act={act} />
+          )}
         </div>
       </Window.Content>
     </Window>

@@ -35,6 +35,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	// Custom Keybindings
 	var/list/key_bindings = list()
+	var/list/action_button_positions = list() // TA EDIT
+	var/action_wheel_modifier = "ctrl" // TA EDIT
 
 	var/tgui_lock = TRUE
 	var/tgui_theme = "azure_gilbranze" // TA EDIT
@@ -67,6 +69,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/datum/quirk/quirklesser = new /datum/quirk/none
 	var/datum/quirk/quirkgreater = new /datum/quirk/none
 	var/age = AGE_ADULT						//age of character
+	var/birthday_month = 0					//TA EDIT
+	var/birthday_day = 0					//TA EDIT
 	var/skin_tone = "caucasian1"		//Skin color
 	var/vampire_skin = null
 	var/vampire_eyes = null
@@ -146,6 +150,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/nickname = "Please Change Me"
 	var/highlight_color = "#FF0000"
 	var/list/charflaws = list()
+	var/list/charflaw_choices = list()
 
 	var/static/default_cmusic_type = /datum/combat_music/default
 	var/datum/combat_music/combat_music
@@ -165,6 +170,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/list/customizer_entries = list()
 	var/list/list/body_markings = list()
 	var/update_mutant_colors = TRUE // if TRUE, resets accessory and marking colors when mutant colors change
+	var/ooze_color_shifting = TRUE
 
 	///direct link to a headshot image on a whitelisted site. it would rather these 3 fields be a list, but that's actually less efficient at runtime
 	var/headshot_link
@@ -201,6 +207,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/flavortext
 	var/flavortext_cached
 
+	var/pen_name
+
 	var/ooc_notes
 	var/ooc_notes_cached
 
@@ -218,6 +226,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	var/noble_gossip
 	var/noble_gossip_cached
+
+	var/list/secrets = list()
 
 	var/list/img_gallery = list()
 	var/list/nsfw_img_gallery = list()
@@ -239,7 +249,6 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/preset_bounty_severity_v_key
 	var/preset_bounty_crime
 
-
 	var/averse_chosen_faction = "Inquisition"
 
 	var/datum/voicepack/temp_vp
@@ -255,10 +264,16 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	/// Whether we can see the feint HUD bar.
 	var/feint_hud = FALSE
 
+	var/datum/tat_build/tat_build
+	var/list/legacy_tat_build_data
+	var/legacy_tat_build_migrated = FALSE
+
 /datum/preferences/New(client/C)
 	parent = C
 	migrant = new /datum/migrant_pref(src)
 	familiar_prefs = new /datum/familiar_prefs(src)
+
+	tat_build = new(src)
 
 	if(istype(C))
 		if(!IsGuestKey(C.key))
@@ -541,3 +556,12 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	if(!migrant.queued_wave)
 		return FALSE
 	return TRUE
+
+/datum/preferences/proc/matches_action_wheel_modifier(list/modifiers) // TA EDIT START
+	if(!islist(modifiers))
+		return FALSE
+	if(action_wheel_modifier == "none")
+		return !modifiers["ctrl"] && !modifiers["shift"] && !modifiers["alt"]
+	if(!modifiers[action_wheel_modifier])
+		return FALSE
+	return (!modifiers["ctrl"] || action_wheel_modifier == "ctrl") && (!modifiers["shift"] || action_wheel_modifier == "shift") && (!modifiers["alt"] || action_wheel_modifier == "alt") // TA EDIT END

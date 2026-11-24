@@ -47,10 +47,10 @@ GLOBAL_LIST_EMPTY(mindlinks)
 	// Check for the ,m prefix
 	if(findtext(message, ",m", 1, 3) == 1) // TA EDIT START
 		// if mindlink ever breaks ensure some dingus didnt set ,m to a language key
-		speech_args[SPEECH_MESSAGE] = null
-		message = trim(copytext(message, 3))
-		if(!length(message))
-			return
+		speech_args[SPEECH_MESSAGE] = null // TA EDIT
+		message = capitalize(trim(copytext(message, 3)))
+		if(!length(message)) // TA EDIT
+			return // TA EDIT
 		var/mob/living/recipient = (speaker == owner ? target : owner)
 		if(!recipient || QDELETED(recipient))
 			to_chat(speaker, span_warning("There is no mind on the other end of the link."))
@@ -59,9 +59,9 @@ GLOBAL_LIST_EMPTY(mindlinks)
 			qdel(src)
 			return
 
-		var/formatted_message = span_centcomradio("The voice of [speaker] echoes, \"<i>[capitalize(message)]</i>\".")
-		to_chat(recipient, formatted_message)
-		to_chat(speaker, formatted_message)
-		recipient.playsound_local(recipient, 'sound/magic/mindlink.ogg', 100, TRUE)
-		speaker.playsound_local(speaker, 'sound/magic/mindlink.ogg', 100, TRUE)
-		speaker.log_talk(message, LOG_SAY, tag="mindlink (to [recipient])") // TA EDIT END
+		var/formatted_message = span_centcomradio("The voice of [speaker] echoes, \"<i>[message]</i>\".") // TA EDIT
+		recipient.audible_message(formatted_message, hearing_distance = 0, runechat_message = message, custom_spans = list("mindlink", "italic")) // TA EDIT
+		to_chat(speaker, formatted_message) // TA EDIT
+		recipient.playsound_local(recipient, 'sound/magic/mindlink.ogg', 100, TRUE) // TA EDIT
+		speaker.playsound_local(speaker, 'sound/magic/mindlink.ogg', 100, TRUE) // TA EDIT
+		speaker.log_talk(message, LOG_SAY, tag="mindlink (to [recipient])") // TA EDIT

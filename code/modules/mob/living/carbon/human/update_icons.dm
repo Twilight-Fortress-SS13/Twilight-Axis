@@ -283,6 +283,11 @@ There are several things that need to be remembered:
 				armdam_overlay.color = BP.bandage.color
 				armdam_overlays += armdam_overlay
 
+		if(BP.body_zone == BODY_ZONE_CHEST)
+			var/datum/wound/gutwound = BP.has_wound(/datum/wound/slash/disembowel)
+			if(gutwound && !gutwound.is_sewn())
+				armdam_overlays += mutable_appearance('icons/effects/blood.dmi', "guts", -ARM_DAMAGE_LAYER)
+
 		var/used_offset = BP.offset
 		if(!is_bulky_offset())
 			used_offset = BP.offset_f
@@ -304,6 +309,10 @@ There are several things that need to be remembered:
 	apply_overlay(DAMAGE_LAYER)
 	apply_overlay(LEG_DAMAGE_LAYER)
 	apply_overlay(ARM_DAMAGE_LAYER)
+
+/mob/living/carbon/human/proc/update_gargoyle_gender()
+	if(hud_used?.zone_select)
+		hud_used.zone_select.update_icon()
 
 
 /* --------------------------------------- */
@@ -339,6 +348,9 @@ There are several things that need to be remembered:
 		update_transform()
 		//damage overlays
 		update_damage_overlays()
+		// updates gargoyle type if it needs to be changed
+		update_gargoyle_gender()
+
 
 /mob/proc/regenerate_clothes()
 	return
@@ -506,7 +518,7 @@ There are several things that need to be remembered:
 
 			//add sleeve overlays, then offset
 			var/list/sleeves = list()
-			if(gloves.sleeved && armsindex > 0 && !should_hide_sleeves_for_layer(GLOVESLEEVE_LAYER))
+			if(gloves.has_worn_sleeves(src) && armsindex > 0 && !should_hide_sleeves_for_layer(GLOVESLEEVE_LAYER))
 				sleeves = get_sleeves_layer(gloves,armsindex,GLOVESLEEVE_LAYER)
 
 			if(sleeves)
@@ -548,7 +560,7 @@ There are several things that need to be remembered:
 			//add sleeve overlays, then offset
 			var/list/sleeves = list()
 			var/wristsleevelayer = (wear_wrists.alternate_worn_layer == OVER_ARMOR_LAYER) ? OVER_GLOVES_LAYER : WRISTSLEEVE_LAYER
-			if(wear_wrists.sleeved && armsindex > 0 && !should_hide_sleeves_for_layer(wristsleevelayer))
+			if(wear_wrists.has_worn_sleeves(src) && armsindex > 0 && !should_hide_sleeves_for_layer(wristsleevelayer))
 				sleeves = get_sleeves_layer(wear_wrists,armsindex,wristsleevelayer)
 
 			if(sleeves)
@@ -646,7 +658,7 @@ There are several things that need to be remembered:
 
 			//add sleeve overlays, then offset
 			var/list/sleeves = list()
-			if(shoes.sleeved && footindex > 0 && !should_hide_sleeves_for_layer(SHOESLEEVE_LAYER))
+			if(shoes.has_worn_sleeves(src) && footindex > 0 && !should_hide_sleeves_for_layer(SHOESLEEVE_LAYER))
 				sleeves = get_sleeves_layer(shoes,footindex,SHOESLEEVE_LAYER)
 			if(sleeves)
 				for(var/mutable_appearance/S as anything in sleeves)
@@ -827,6 +839,15 @@ There are several things that need to be remembered:
 					apply_offset(mbeltoverlay, OFFSET_BELT, OFFSET_BELT_F)
 				standing_front += mbeltoverlay
 
+	var/obj/item/bodypart/taur/taur_belt = get_taur_tail()
+	if(taur_belt?.taur_clothing_category)
+		var/obj/item/worn_belt = belt || beltr || beltl
+		if(worn_belt)
+			var/belt_state = findtext(worn_belt.icon_state, "black") ? "blackbelt" : "belt"
+			var/mutable_appearance/taur_belt_ov = mutable_appearance('icons/roguetown/clothing/onmob/64x32/saiga_barding.dmi', "[taur_belt.taur_clothing_category]_[belt_state]", -BELT_LAYER)
+			taur_belt_ov.pixel_x = taur_belt.offset_x
+			standing_front += taur_belt_ov
+
 	overlays_standing[BELT_LAYER] = standing_front
 	overlays_standing[BELT_BEHIND_LAYER] = standing_behind
 
@@ -990,15 +1011,48 @@ There are several things that need to be remembered:
 	if(undercloaks.len)
 		overlays_standing[UNDER_CLOAK_LAYER] = undercloaks
 
+	var/obj/item/bodypart/taur/taur_back = get_taur_tail()
+	if(taur_back?.taur_clothing_category && (istype(backr, /obj/item/storage) || istype(backl, /obj/item/storage)))
+		var/mutable_appearance/saddlebag_ov = mutable_appearance('icons/roguetown/clothing/onmob/64x32/saiga_barding.dmi', "[taur_back.taur_clothing_category]_bags", -BACK_LAYER)
+		saddlebag_ov.pixel_x = taur_back.offset_x
+		overcloaks += saddlebag_ov
+		overlays_standing[BACK_LAYER] = overcloaks
+
 	rebuild_obscured_flags()
 	apply_overlay(BACK_LAYER)
 	apply_overlay(BACK_BEHIND_LAYER)
 	apply_overlay(UNDER_CLOAK_LAYER)
 
+/// I essentially ported my own PR from RW to do this: https://github.com/Rotwood-Vale/Ratwood-2.0/pull/1320 here for context.
+/// Builds the taur tabard heraldry overlay(s) for a worn tabard-type cloak, mirroring /obj/item/clothing/cloak/tabard's own base+pattern layering.
+/// Returns null if this isn't a tabard the taur has sprites for.
+/mob/living/carbon/human/proc/build_taur_tabard_overlay(obj/item/bodypart/taur/taur, obj/item/clothing/cloak/cloak)
+	if(!taur?.taur_clothing_category || !istype(cloak, /obj/item/clothing/cloak/tabard))
+		return null
+	if(cloak.get_taur_worn_state(src))
+		return null // The replacement already includes the taur body.
+	var/list/taur_tabard_layers = list()
+	var/mutable_appearance/base_tabard_ov = mutable_appearance('icons/roguetown/clothing/onmob/64x32/saiga_barding.dmi', "[taur.taur_clothing_category]_tabard", -TABARD_LAYER)
+	base_tabard_ov.pixel_x = taur.offset_x
+	if(cloak.color)
+		base_tabard_ov.color = cloak.color
+	taur_tabard_layers += base_tabard_ov
+
+	var/pattern_tag = cloak.get_detail_tag()
+	if(pattern_tag && (pattern_tag in list("_spl", "_quad", "_box", "_dim")))
+		var/mutable_appearance/pattern_ov = mutable_appearance('icons/roguetown/clothing/onmob/64x32/saiga_barding.dmi', "[taur.taur_clothing_category]_tabard[pattern_tag]", -TABARD_LAYER)
+		pattern_ov.pixel_x = taur.offset_x
+		pattern_ov.appearance_flags = RESET_COLOR
+		if(cloak.get_detail_color())
+			pattern_ov.color = cloak.get_detail_color()
+		taur_tabard_layers += pattern_ov
+	return taur_tabard_layers
+
 /mob/living/carbon/human/update_inv_cloak()
 	remove_overlay(CLOAK_LAYER)
 	remove_overlay(CLOAK_BEHIND_LAYER)
 	remove_overlay(TABARD_LAYER)
+	remove_overlay(UNDER_ARMOR_CACHE_INDEX)
 
 	var/obj/item/bodypart/taur/taur = get_taur_tail()
 	var/icon/c_mask = taur?.clip_mask
@@ -1027,15 +1081,22 @@ There are several things that need to be remembered:
 
 			apply_offset(cloak_overlay, OFFSET_CLOAK, OFFSET_CLOAK_F)
 			if(cloak.alternate_worn_layer == TABARD_LAYER)
-				overlays_standing[TABARD_LAYER] = cloak_overlay
+				var/list/taur_tabard_layers = build_taur_tabard_overlay(taur, cloak)
+				overlays_standing[TABARD_LAYER] = taur_tabard_layers ? (list(cloak_overlay) + taur_tabard_layers) : cloak_overlay
 			if(cloak.alternate_worn_layer == CLOAK_BEHIND_LAYER)
 				overlays_standing[CLOAK_BEHIND_LAYER] = cloak_overlay
-			if(!cloak.alternate_worn_layer || cloak.alternate_worn_layer == UNDER_ARMOR_LAYER)
+			if(cloak.alternate_worn_layer == UNDER_ARMOR_LAYER)
+				var/list/taur_tabard_layers = build_taur_tabard_overlay(taur, cloak)
+				if(taur_tabard_layers)
+					overlays_standing[UNDER_ARMOR_CACHE_INDEX] = list(cloak_overlay) + taur_tabard_layers
+				else
+					cloaklays += cloak_overlay
+			else if(!cloak.alternate_worn_layer)
 				cloaklays += cloak_overlay
 
 			//add sleeve overlays, then offset
 			var/list/cloaksleeves = list()
-			if(cloak.sleeved)
+			if(cloak.has_worn_sleeves(src))
 				var/sleevelayer = CLOAK_LAYER
 				if(cloak.alternate_worn_layer == UNDER_ARMOR_LAYER)
 					sleevelayer = cloak.sleevetype ? UNDER_ARMORSLEEVE_LAYER : UNDER_ARMOR_LAYER
@@ -1059,7 +1120,8 @@ There are several things that need to be remembered:
 
 			apply_offset(cloak_overlay, OFFSET_CLOAK, OFFSET_CLOAK_F)
 			if(backr.alternate_worn_layer == TABARD_LAYER)
-				overlays_standing[TABARD_LAYER] = cloak_overlay
+				var/list/taur_tabard_layers = build_taur_tabard_overlay(taur, backr)
+				overlays_standing[TABARD_LAYER] = taur_tabard_layers ? (list(cloak_overlay) + taur_tabard_layers) : cloak_overlay
 			if(backr.alternate_worn_layer == CLOAK_BEHIND_LAYER)
 				overlays_standing[CLOAK_BEHIND_LAYER] = cloak_overlay
 			if(!backr.alternate_worn_layer)
@@ -1067,7 +1129,7 @@ There are several things that need to be remembered:
 
 			//add sleeve overlays, then offset
 			var/list/cloaksleeves = list()
-			if(backr.sleeved)
+			if(backr.has_worn_sleeves(src))
 				cloaksleeves = get_sleeves_layer(backr,0,CLOAK_LAYER)
 
 			if(length(cloaksleeves))
@@ -1080,6 +1142,7 @@ There are several things that need to be remembered:
 	update_inv_armor() //fixboob
 	apply_overlay(TABARD_LAYER)
 	apply_overlay(CLOAK_BEHIND_LAYER)
+	apply_overlay(UNDER_ARMOR_CACHE_INDEX)
 	apply_overlay(CLOAK_LAYER)
 
 /mob/living/carbon/human/update_inv_shirt()
@@ -1116,7 +1179,7 @@ There are several things that need to be remembered:
 
 			//add sleeve overlays, then offset
 			var/list/sleeves = list()
-			if(wear_shirt.sleeved && armsindex > 0 && !should_hide_sleeves_for_layer(SHIRTSLEEVE_LAYER))
+			if(wear_shirt.has_worn_sleeves(src) && armsindex > 0 && !should_hide_sleeves_for_layer(SHIRTSLEEVE_LAYER))
 				sleeves = get_sleeves_layer(wear_shirt,armsindex,SHIRTSLEEVE_LAYER)
 
 			if(sleeves)
@@ -1169,8 +1232,20 @@ There are several things that need to be remembered:
 
 			//add sleeve overlays, then offset
 			var/list/sleeves = list()
-			if(wear_armor.sleeved && armsindex > 0 && !should_hide_sleeves_for_layer(ARMORSLEEVE_LAYER))
+			if(wear_armor.has_worn_sleeves(src) && armsindex > 0 && !should_hide_sleeves_for_layer(ARMORSLEEVE_LAYER))
 				sleeves = get_sleeves_layer(wear_armor,armsindex,ARMORSLEEVE_LAYER)
+
+			//cosmetics stored in the armor's aesthetic storage need their sleeves drawn too
+			var/obj/item/clothing/suit/roguetown/armor/worn_armor = wear_armor
+			if(armsindex > 0 && istype(worn_armor) && worn_armor.attachment_component)
+				var/datum/component/storage/concrete/roguetown/armor_storage = worn_armor.GetComponent(worn_armor.attachment_component)
+				if(armor_storage)
+					for(var/obj/item/stored as anything in armor_storage.item_to_grid_coordinates)
+						if(!stored.has_worn_sleeves(src) || (stored.item_flags & NOT_SHOW_IN_STORAGE) || should_hide_sleeves_for_layer(ARMORSLEEVE_LAYER))
+							continue
+						var/list/stored_sleeves = get_sleeves_layer(stored, armsindex, ARMORSLEEVE_LAYER)
+						if(length(stored_sleeves))
+							sleeves += stored_sleeves
 
 			if(sleeves)
 				for(var/mutable_appearance/S as anything in sleeves)
@@ -1222,9 +1297,9 @@ There are several things that need to be remembered:
 			//add sleeve overlays, then offset
 			var/list/sleeves = list()
 			var/femw = (!is_bulky_body()) ? "_f" : ""
-			if(wear_pants.sleeved && legsindex > 0 && wear_pants.adjustable != CADJUSTED && !should_hide_sleeves_for_layer(LEGSLEEVE_LAYER))
+			if(wear_pants.has_worn_sleeves(src) && legsindex > 0 && wear_pants.adjustable != CADJUSTED && !should_hide_sleeves_for_layer(LEGSLEEVE_LAYER))
 				sleeves = get_sleeves_layer(wear_pants,legsindex,LEGSLEEVE_LAYER)
-			if(wear_pants.adjustable == CADJUSTED)
+			if(wear_pants.adjustable == CADJUSTED && !wear_pants.get_taur_worn_state(src))
 				var/mutable_appearance/overleg = mutable_appearance(wear_pants.mob_overlay_icon, "[wear_pants.icon_state][femw][racecustom ? "_[racecustom]" : ""]", -LEGSLEEVE_LAYER)
 				sleeves += overleg
 			if(sleeves)
@@ -1279,7 +1354,7 @@ There are several things that need to be remembered:
 
 	overlays_standing[ARMOR_LAYER] = armor_overlay
 
-	add_overlay(armor_overlay)
+	apply_overlay(ARMOR_LAYER) // TA EDIT
 
 //endrogue
 
@@ -1432,6 +1507,14 @@ generate/load female uniform sprites matching all previously decided variables
 		file2use = mob_overlay_icon
 	if(!file2use)
 		file2use = default_icon_file
+	var/taur_state = isinhands ? null : get_taur_worn_state(default_icon_file = default_icon_file, override_state = override_state)
+	var/obj/item/bodypart/taur/taur
+	if(taur_state)
+		var/mob/living/carbon/human/taur_wearer = get_taur_sprite_wearer()
+		taur = taur_wearer.get_taur_tail()
+		t_state = taur_state
+		file2use = get_taur_worn_icon(default_icon_file)
+		clip_mask = null
 
 	//Find a valid layer from variables+arguments
 	var/layer2use
@@ -1450,7 +1533,7 @@ generate/load female uniform sprites matching all previously decided variables
 	var/mutable_appearance/standing
 //	if(femaleuniform)
 //		standing = wear_female_version(t_state,file2use,layer2use,femaleuniform)
-	if(sleeved && sleevejazz && sleeveindex < 4) //cut out sleeves from north/south sprites
+	if(!taur_state && sleeved && sleevejazz && sleeveindex < 4) //cut out sleeves from north/south sprites
 		if(!nodismemsleeves)
 			standing = wear_dismembered_version(t_state,file2use,layer2use,sleeveindex,sleevejazz)
 		else
@@ -1465,32 +1548,32 @@ generate/load female uniform sprites matching all previously decided variables
 //		for(var/mutable_appearance/MA in worn_overlays)
 //			MA.blend_mode = BLEND_MULTIPLY
 		standing.overlays.Add(worn_overlays)
-	if(!isinhands && boobed_overlay && boobed)
+	if(!isinhands && boobed_overlay && boobed && (!taur_state || icon_exists(file2use, "[t_state]_boob")))
 		var/mutable_appearance/boob_overlay = mutable_appearance(file2use, "[t_state]_boob", -layer2use)
 		standing.overlays.Add(boob_overlay)
 
-	var/detail_state = get_detail_state(t_state)
+	var/detail_state = taur_state || get_detail_state(t_state)
 
-	if(get_detail_tag())
+	if(get_detail_tag() && (!taur_state || icon_exists(file2use, "[detail_state][get_detail_tag()]")))
 		var/mutable_appearance/pic = mutable_appearance(icon(file2use, "[detail_state][get_detail_tag()]"), -layer2use)
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
 		standing.overlays.Add(pic)
-		if(!isinhands && boobed_overlay && boobed_detail && boobed)
+		if(!isinhands && boobed_overlay && boobed_detail && boobed && (!taur_state || icon_exists(file2use, "[detail_state]_boob[get_detail_tag()]")))
 			pic = mutable_appearance(icon(file2use, "[detail_state]_boob[get_detail_tag()]"), -layer2use)
 			pic.appearance_flags = RESET_COLOR
 			if(get_detail_color())
 				pic.color = get_detail_color()
 			standing.overlays.Add(pic)
 
-	if(get_altdetail_tag())
+	if(get_altdetail_tag() && (!taur_state || icon_exists(file2use, "[detail_state][get_altdetail_tag()]")))
 		var/mutable_appearance/pic = mutable_appearance(icon(file2use, "[detail_state][get_altdetail_tag()]"), -layer2use)
 		pic.appearance_flags = RESET_COLOR
 		if(get_altdetail_color())
 			pic.color = get_altdetail_color()
 		standing.overlays.Add(pic)
-		if(!isinhands && boobed_overlay && boobed_detail && boobed)
+		if(!isinhands && boobed_overlay && boobed_detail && boobed && (!taur_state || icon_exists(file2use, "[detail_state]_boob[get_altdetail_tag()]")))
 			pic = mutable_appearance(icon(file2use, "[detail_state]_boob[get_altdetail_tag()]"), -layer2use)
 			pic.appearance_flags = RESET_COLOR
 			if(get_altdetail_color())
@@ -1498,7 +1581,11 @@ generate/load female uniform sprites matching all previously decided variables
 			standing.overlays.Add(pic)
 
 	var/datum/component/decal/blood/item_blood = GetComponent(/datum/component/decal/blood)
-	if(!isinhands && (HAS_BLOOD_DNA(src) || item_blood))
+	if(taur_state && (HAS_BLOOD_DNA(src) || item_blood))
+		var/mob/living/carbon/human/wearer = get_taur_sprite_wearer()
+		var/blood_color = item_blood?.blood_color || wearer.get_blood_color() || "#C80000"
+		standing.add_overlay(mutable_appearance(get_taur_blood_icon(file2use, t_state, blood_color, taur.offset_x), layer = -layer2use))
+	else if(!isinhands && (HAS_BLOOD_DNA(src) || item_blood))
 		var/index = "[t_state][sleeveindex]"
 		var/mob/living/carbon/human/wearer = loc
 		var/blood_color = item_blood?.blood_color || (ishuman(wearer) ? wearer.get_blood_color() : "#C80000")
@@ -1519,7 +1606,10 @@ generate/load female uniform sprites matching all previously decided variables
 		var/mutable_appearance/pic = mutable_appearance(clothing_icon, -layer2use)
 		standing.overlays.Add(pic)
 
-	standing = center_image(standing, isinhands ? inhand_x_dimension : worn_x_dimension, isinhands ? inhand_y_dimension : worn_y_dimension)
+	if(taur_state)
+		standing.pixel_x = taur.offset_x
+	else
+		standing = center_image(standing, isinhands ? inhand_x_dimension : worn_x_dimension, isinhands ? inhand_y_dimension : worn_y_dimension)
 
 	if(worn_offsets)
 		standing.pixel_x += worn_offsets["x"]
@@ -1546,27 +1636,27 @@ generate/load female uniform sprites matching all previously decided variables
 	// This prevents lower-layer sleeve overlays from clipping through
 	switch(layer)
 		if(GLOVESLEEVE_LAYER)
-			if(wear_armor && (wear_armor.body_parts_covered & ARMS) && !wear_armor.sleeved)
+			if(wear_armor && (wear_armor.body_parts_covered & ARMS) && !wear_armor.has_worn_sleeves(src))
 				return TRUE
-			if(wear_shirt && (wear_shirt.body_parts_covered & ARMS) && !wear_shirt.sleeved)
+			if(wear_shirt && (wear_shirt.body_parts_covered & ARMS) && !wear_shirt.has_worn_sleeves(src))
 				return TRUE
-			if(wear_wrists && (wear_wrists.body_parts_covered & ARMS) && !wear_wrists.sleeved)
+			if(wear_wrists && (wear_wrists.body_parts_covered & ARMS) && !wear_wrists.has_worn_sleeves(src))
 				return TRUE
 		if(ARMORSLEEVE_LAYER)
-			if(wear_armor && (wear_armor.body_parts_covered & ARMS) && !wear_armor.sleeved)
+			if(wear_armor && (wear_armor.body_parts_covered & ARMS) && !wear_armor.has_worn_sleeves(src))
 				return TRUE
-			if(wear_shirt && (wear_shirt.body_parts_covered & ARMS) && !wear_shirt.sleeved)
+			if(wear_shirt && (wear_shirt.body_parts_covered & ARMS) && !wear_shirt.has_worn_sleeves(src))
 				return TRUE
 		if(WRISTSLEEVE_LAYER)
-			if(wear_armor && (wear_armor.body_parts_covered & ARMS) && !wear_armor.sleeved)
+			if(wear_armor && (wear_armor.body_parts_covered & ARMS) && !wear_armor.has_worn_sleeves(src))
 				return TRUE
-			if(wear_shirt && (wear_shirt.body_parts_covered & ARMS) && !wear_shirt.sleeved)
+			if(wear_shirt && (wear_shirt.body_parts_covered & ARMS) && !wear_shirt.has_worn_sleeves(src))
 				return TRUE
 		if(SHIRTSLEEVE_LAYER)
-			if(wear_armor && (wear_armor.body_parts_covered & ARMS) && !wear_armor.sleeved)
+			if(wear_armor && (wear_armor.body_parts_covered & ARMS) && !wear_armor.has_worn_sleeves(src))
 				return TRUE
 		if(SHOESLEEVE_LAYER, LEGSLEEVE_LAYER)
-			if(wear_pants && (wear_pants.body_parts_covered & LEGS) && !wear_pants.sleeved)
+			if(wear_pants && (wear_pants.body_parts_covered & LEGS) && !wear_pants.has_worn_sleeves(src))
 				return TRUE
 	return FALSE
 
@@ -1581,6 +1671,11 @@ generate/load female uniform sprites matching all previously decided variables
 	if(I.l_sleeve_status == SLEEVE_TORN || I.l_sleeve_status == SLEEVE_ROLLED)
 		if(sleeveindex == 4 || sleeveindex == 3)
 			sleeveindex -= 2
+	if(ishuman(src))
+		var/mob/living/carbon/human/wearer = src
+		var/taur_state = I.get_taur_worn_state(wearer)
+		if(taur_state)
+			return wearer.get_taur_sleeves_layer(I, taur_state, sleeveindex, layer2use)
 
 	var/racecustom
 	if(dna.species.custom_clothes)
@@ -1752,6 +1847,14 @@ generate/load female uniform sprites matching all previously decided variables
 					break
 
 /mob/living/carbon/human/update_body_parts(redraw = FALSE)
+	var/datum/component/ooze_color_shift/color_shift = GetComponent(/datum/component/ooze_color_shift) // TA EDIT START
+	if(color_shift?.shifting)
+		color_shift.update_shift_colors()
+		var/datum/component/amorphous_landing/landing = GetComponent(/datum/component/amorphous_landing)
+		if(landing?.is_landing)
+			return
+		color_shift.clear_visuals()
+		redraw = TRUE // TA EDIT END
 	var/hiden = FALSE //used to tell if we should hide boobs, basically
 	if(wear_armor && (wear_armor.flags_inv & HIDEBOOB))
 		hiden = TRUE
@@ -1760,30 +1863,28 @@ generate/load female uniform sprites matching all previously decided variables
 	else if(cloak && (cloak.flags_inv & HIDEBOOB))
 		hiden = TRUE
 
-	var/list/new_limbs = list()
-	var/changed = FALSE
+	var/list/part_keys = list()
 	for(var/obj/item/bodypart/BP as anything in bodyparts)
 		BP.update_limb()
-		var/new_key = BP.get_cache_key(hiden)
-		if(!redraw && new_key == icon_render_keys[BP.body_zone] && limb_icon_cache[new_key])
-			new_limbs += limb_icon_cache[new_key]
-			continue
-		changed = TRUE
-		var/is_chest = (BP.name == BODY_ZONE_CHEST)
-		var/list/limb_overlays
-		if(!redraw && limb_icon_cache[new_key])
-			limb_overlays = limb_icon_cache[new_key]
-		else
-			limb_overlays = BP.get_limb_icon(hideaux = is_chest ? hiden : FALSE)
+		part_keys += "[BP.get_cache_key(BP.body_zone == BODY_ZONE_CHEST ? hiden : FALSE)]-[obscured_flags]"
+	var/new_key = jointext(part_keys, "|")
+	if(!redraw && new_key == icon_render_key)
+		return
+	icon_render_key = new_key
+
+	var/list/new_limbs = list()
+	for(var/i in 1 to length(bodyparts))
+		var/obj/item/bodypart/BP = bodyparts[i]
+		var/limb_key = part_keys[i]
+		var/list/limb_overlays = !redraw && limb_icon_cache[limb_key]
+		if(!limb_overlays)
+			limb_overlays = BP.get_limb_icon(hideaux = (BP.body_zone == BODY_ZONE_CHEST) ? hiden : FALSE)
 			if(isooze(src))
 				for(var/image/limb_alpha in limb_overlays)
 					limb_alpha.alpha = 180
+			if(!color_shift?.shifting) // TA EDIT
+				limb_icon_cache[limb_key] = limb_overlays // TA EDIT
 		new_limbs += limb_overlays
-		limb_icon_cache[new_key] = limb_overlays
-		icon_render_keys[BP.body_zone] = new_key
-
-	if(!changed)
-		return
 
 	remove_overlay(BODYPARTS_LAYER)
 	if(length(new_limbs))

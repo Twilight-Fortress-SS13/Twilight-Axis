@@ -334,7 +334,7 @@
 			H.cmode_music = sound("sound/music/cmode/antag/combat_adonai.ogg")
 			helmets += list("Psydonic Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/ornate/barbute,
 				"Psydonic Sallet" = /obj/item/clothing/head/roguetown/helmet/heavy/ornate/sallet,
-				"Psydonic Armet" = /obj/item/clothing/head/roguetown/helmet/heavy/ornate,
+				"Psydonic Armet" = /obj/item/clothing/head/roguetown/helmet/heavy/ornate/armet,
 				"Psydonic Volfskulle Bascinet" = /obj/item/clothing/head/roguetown/helmet/heavy/ornate/volfhelm,
 				"Psydonic Bucket Helm" = /obj/item/clothing/head/roguetown/helmet/heavy/ornate/bucket)
 	if(H.mind)
@@ -373,7 +373,7 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_MASTER,
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_EXPERT,
-		/datum/skill/misc/stealing = SKILL_LEVEL_EXPERT,
+		/datum/skill/misc/stealing = SKILL_LEVEL_EXPERT, // TA EDIT
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_EXPERT,
 		/datum/skill/craft/traps = SKILL_LEVEL_JOURNEYMAN,
 	)
@@ -439,7 +439,7 @@
 				l_hand = /obj/item/rogueweapon/sword/sabre
 				beltl = /obj/item/rogueweapon/scabbard/sword
 			if("Bow")
-				H.adjust_skillrank_up_to(/datum/skill/combat/bows, SKILL_LEVEL_JOURNEYMAN, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/bows, SKILL_LEVEL_EXPERT, TRUE)
 				beltr = /obj/item/quiver/arrows
 				backr = /obj/item/gun/ballistic/revolver/grenadelauncher/bow
 				H.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_EXPERT, TRUE)
@@ -457,7 +457,7 @@
 				else
 					l_hand = /obj/item/rogueweapon/huntingknife/idagger/steel
 			if("Crossbow")
-				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_JOURNEYMAN, TRUE) //have to specifically go into bows/crossbows unlike outlaw
+				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_EXPERT, TRUE) //have to specifically go into bows/crossbows unlike outlaw
 				beltr = /obj/item/quiver/bolt/standard
 				backr = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
 				H.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_EXPERT, TRUE)
@@ -475,7 +475,7 @@
 				else
 					l_hand = /obj/item/rogueweapon/huntingknife/idagger/steel
 			if("Slurbow")
-				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_JOURNEYMAN, TRUE) // I think this is a very good alternative to the crossbow, given that this role involves mobile combat.
+				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_EXPERT, TRUE) // I think this is a very good alternative to the crossbow, given that this role involves mobile combat.
 				beltr = /obj/item/quiver/bolt/light
 				backr = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/slurbow
 				H.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_EXPERT, TRUE)

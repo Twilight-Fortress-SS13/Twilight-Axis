@@ -43,7 +43,7 @@
 	RegisterSignal(parent, COMSIG_ATOM_UPDATE_ICON, PROC_REF(signal_update_icon)) // TA EDIT
 	RegisterSignal(parent, COMSIG_ATOM_EXITED, PROC_REF(update_sheathed_ref))
 
-// through some manner of unforseen tomfoolery (or admin intervention), our sheathed blade has left our contents without clearing our sheathed ref
+// through some manner of unforeseen tomfoolery (or admin intervention), our sheathed blade has left our contents without clearing our sheathed ref
 // let's fix that and update the icon so that people don't try to draw a sword that isn't there, yes?
 /datum/component/holster/proc/update_sheathed_ref(datum/source, atom/movable/thing, newloc)
 	if(!sheathed || (thing != sheathed))
@@ -182,8 +182,10 @@
 
 	if(use_icons)
 		if(sheathed)
+			I.icon = sheathed.sheathe || initial(I.icon) // TA EDIT: Weapon may bring its own scabbard sprite sheet
 			I.icon_state = "[initial(I.icon_state)]_[sheathed.sheathe_icon]"
 		else
+			I.icon = initial(I.icon) // TA EDIT: Back to the scabbard's own .dmi once the weapon is drawn
 			I.icon_state = "[initial(I.icon_state)]"
 
 	if(istype(I, /obj/item/rogueweapon/scabbard)) // TA EDIT START

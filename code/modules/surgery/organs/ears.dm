@@ -11,7 +11,7 @@
 	decay_factor = STANDARD_ORGAN_DECAY
 
 	low_threshold_passed = span_info("My ears begin to resonate with an internal ring sometimes.")
-	now_failing = span_warning("I are unable to hear at all!")
+	now_failing = span_warning("I am unable to hear at all!")
 	now_fixed = span_info("Noise slowly begins filling my ears once more.")
 	low_threshold_cleared = span_info("The ringing in my ears has died down.")
 
@@ -38,6 +38,12 @@
 
 	/// Bool for ear flicking -- are we currently in the flick animation?
 	var/is_flicking = FALSE
+
+// TA EDIT - Animated ears cannot share idle or another organ's overlays.
+/obj/item/organ/ears/get_cache_key()
+	. = ..()
+	if(is_flicking)
+		. += "-flick-[REF(src)]"
 
 /obj/item/organ/ears/Insert(mob/living/carbon/M, special, drop_if_replaced)
 	. = ..()

@@ -29,14 +29,14 @@
 		return
 	owner.faction += FACTION_UNDEAD
 	granted_undead_faction = TRUE
-	owner.notify_faction_change()
+	owner.ai_controller?.nudge_target_scan()
 
 /datum/status_effect/tranquility_shroud/proc/release_undead_faction()
 	if(!granted_undead_faction)
 		return
 	if(owner && !QDELETED(owner))
 		owner.faction -= FACTION_UNDEAD
-		owner.notify_faction_change()
+		owner.ai_controller?.nudge_target_scan()
 	granted_undead_faction = FALSE
 
 /datum/status_effect/tranquility_shroud/proc/grant_deadite_traits()

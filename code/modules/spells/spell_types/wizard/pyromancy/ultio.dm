@@ -22,6 +22,7 @@
 
 	click_to_activate = TRUE
 	cast_range = SPELL_RANGE_GROUND
+	impact_radius = 0
 
 	primary_resource_type = SPELL_COST_STAMINA
 	primary_resource_cost = SPELLCOST_MINOR_PROJECTILE
@@ -30,7 +31,7 @@
 	invocation_type = INVOCATION_SHOUT
 
 	charge_required = TRUE
-	charge_swingdelay_type = SWINGDELAY_PENALTY
+	charge_swingdelay_type = SWINGDELAY_NORMAL
 	weapon_cast_penalized = TRUE
 	charge_time = CHARGETIME_POKE
 	hold_drain = 1
@@ -45,9 +46,9 @@
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
 	var/impact_delay = TELEGRAPH_SKILLSHOT
-	var/strike_damage = 65
+	var/strike_damage = SPELL_DMG(65)
 	var/scorch_stacks = 2
-	displayed_damage = 65
+	displayed_damage = SPELL_DMG(65)
 
 /datum/action/cooldown/spell/ultio/cast(atom/cast_on)
 	. = ..()
@@ -88,10 +89,10 @@
 			L.visible_message(span_warning("[L] shrugs off the flames!"))
 			continue
 		if(istype(caster) && ishuman(L))
-			if(arcyne_strike(caster, L, null, strike_damage, def_zone, BCLASS_BURN, spell_name = "Ultio", damage_type = BURN, skip_animation = TRUE) == ARCYNE_STRIKE_WARDED)
+			if(arcyne_strike(caster, L, null, strike_damage, def_zone, BCLASS_BURN, spell_name = "Ultio", damage_type = BURN, skip_animation = TRUE, SPELL_STRIKE_SCALING) == ARCYNE_STRIKE_WARDED)
 				continue
 		else
-			L.adjustFireLoss(strike_damage)
+			L.adjustFireLoss(SPELL_DMG_VS(L, strike_damage))
 		apply_scorch_stack(L, scorch_stacks, def_zone)
 
 /obj/effect/temp_visual/telegraph/wall/fire/ultio

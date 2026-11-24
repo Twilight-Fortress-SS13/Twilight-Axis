@@ -63,8 +63,8 @@
 		if(ishuman(H))
 			var/mob/living/carbon/human/Hu = H
 			Hu.adjust_hydration(8)
-			if(HAS_TRAIT(Hu, TRAIT_BLACKBLOOD))
-				Hu.reagents.add_reagent(/datum/reagent/medicine/healthpot/zarum/blood, 0.5) // this is a fraction of a fraction in the end, I didn't heal too much from local tests, it's more for situations where you don't have food in pve
+		return
+	if(HAS_TRAIT(H, TRAIT_SANGUIVORE))
 		return
 	H.add_nausea(12)
 	H.adjustToxLoss(2)
@@ -78,6 +78,8 @@
 		if(ishuman(H))
 			var/mob/living/carbon/human/Hu = H
 			Hu.adjust_hydration(12) // hydrates, but does not restore blood nor has any other special effect
+		return
+	if(HAS_TRAIT(H, TRAIT_SANGUIVORE))
 		return
 	H.add_nausea(18) //Do not drink dirty blood!
 	H.adjustToxLoss(4)
@@ -124,7 +126,7 @@
 #undef WATER_BLOOD_RESTORE
 
 /datum/reagent/water/gross
-	description = "Marshy, stagnant water putrified with froth, beloved of Pestra. Not for drinking by ordinary folk."
+	description = "Marshy, stagnant water putrefied with froth, beloved of Pestra. Not for drinking by ordinary folk."
 	taste_description = "something vile"
 	color = "#98934b"
 	harmful = TRUE
@@ -333,12 +335,12 @@
 	var/old_count = LAZYACCESS(data, "misc")
 	LAZYSET(data, "misc", old_count + 1)
 	M.jitteriness = min(M.jitteriness+4,10)
-	if(data >= 25)		// 10 units, 45 seconds @ metabolism 0.4 units & tick rate 1.8 sec
+	if(old_count + 1 >= 25) // TA EDIT
 		if(!M.stuttering)
 			M.stuttering = 1
 		M.stuttering = min(M.stuttering+4, 10)
 		M.Dizzy(5)
-	if(data >= 60)	// 30 units, 135 seconds
+	if(old_count + 1 >= 60) // TA EDIT
 		M.jitteriness = 0
 		M.stuttering = 0
 		holder.remove_reagent(type, volume)	// maybe this is a little too perfect and a max() cap on the statuses would be better??
@@ -665,7 +667,7 @@
 
 /datum/reagent/sulfur
 	name = "sulfur"
-	description = "A sickly yellow solid mostly known for its nasty smell. It's actually much more helpful than it looks in biochemisty."
+	description = "A sickly yellow solid mostly known for its nasty smell. It's actually much more helpful than it looks in biochemistry."
 	reagent_state = SOLID
 	color = "#BF8C00" // rgb: 191, 140, 0
 	taste_description = "rotten eggs"
@@ -1587,7 +1589,7 @@
 
 /datum/reagent/cellulose
 	name = "cellulose fibers"
-	description = "A crystaline polydextrose polymer, plants swear by this stuff."
+	description = "A crystalline polydextrose polymer, plants swear by this stuff."
 	reagent_state = SOLID
 	color = "#E6E6DA"
 	taste_mult = 0

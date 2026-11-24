@@ -7,7 +7,7 @@
 //	where you would want the updater procs below to run
 
 //	This also works with decimals.
-#define SAVEFILE_VERSION_MAX	36
+#define SAVEFILE_VERSION_MAX	37
 
 /*
 SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Carn
@@ -144,6 +144,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["masked_examine"]		>> masked_examine
 	S["nsfw_examine_always"]>> nsfw_examine_always // TA EDIT
 	S["full_examine"]		>> full_examine
+	load_emote_favourites(S) // TA EDIT
 	S["mute_animal_emotes"]	>> mute_animal_emotes
 	S["autoconsume"]		>> autoconsume
 	S["no_examine_blocks"]	>> no_examine_blocks
@@ -179,6 +180,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	// Custom hotkeys
 	S["key_bindings"]		>> key_bindings
+	S["action_button_positions"] >> action_button_positions // TA EDIT
+	S["action_wheel_modifier"] >> action_wheel_modifier // TA EDIT
 
 	S["no_runechat_animation"] >> no_runechat_animation //TA EDIT
 	S["defiant"]			>> defiant
@@ -187,6 +190,11 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["erp_kink_prefs"] >> erp_kink_prefs
 	S["erp_organ_sensitivity"] >> erp_organ_prefs
 	// TA Addition end - new ERP SYSTEM
+	S["tat_build_migrated_to_character"] >> legacy_tat_build_migrated
+	S["tat_build"] >> legacy_tat_build_data
+
+	if(!tat_build)
+		tat_build = new(src)
 
 	//try to fix any outdated data if necessary
 	if(needs_update >= 0)
@@ -194,6 +202,17 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	//Sanitize
 	sanitize_preferences()
+	if(!(action_wheel_modifier in list("ctrl", "shift", "alt", "none"))) // TA EDIT START
+		action_wheel_modifier = "ctrl" // TA EDIT END
+	action_button_positions = sanitize_islist(action_button_positions, list()) // TA EDIT START
+	if(length(action_button_positions) > 150)
+		action_button_positions = list()
+	for(var/key in action_button_positions)
+		var/position = action_button_positions[key]
+		if(!istext(key) || length(key) > 200 || !istext(position) || length(position) > 80 || !findtext(position, ",") || !findtext(position, ":"))
+			action_button_positions -= key // TA EDIT END
+	legacy_tat_build_migrated = sanitize_integer(legacy_tat_build_migrated, FALSE, TRUE, FALSE)
+	legacy_tat_build_data = legacy_tat_build_migrated ? null : sanitize_islist(legacy_tat_build_data, null)
 	S["ccg_known_rare_cards"] >> ccg_known_rare_cards
 	ccg_known_rare_cards = SANITIZE_LIST(ccg_known_rare_cards)
 	S["ccg_selected_deck"] >> ccg_selected_deck
@@ -287,12 +306,12 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	sanitize_erp_organ_prefs()
 
 	// etc
-	asaycolor			= sanitize_ooccolor(sanitize_hexcolor(asaycolor, 6, TRUE, initial(asaycolor)))
+	asaycolor			= sanitize_hexcolor(asaycolor, 6, TRUE, initial(asaycolor)) // TA EDIT
 	lastchangelog		= sanitize_text(lastchangelog, initial(lastchangelog))
 	preferred_ui_language = sanitize_preferred_ui_language(preferred_ui_language)
 	preferred_map		= sanitize_text(preferred_map, initial(preferred_map))
 
-	if(parent && is_banned_from(parent.ckey, ROLE_SYNDICATE))
+	if(parent && is_banned_from(parent.ckey, ROLE_ANTAGONIST))
 		be_special = list()
 	verify_keybindings_valid()
 
@@ -353,6 +372,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["masked_examine"], masked_examine)
 	WRITE_FILE(S["nsfw_examine_always"], nsfw_examine_always) // TA EDIT
 	WRITE_FILE(S["full_examine"], full_examine)
+	save_emote_favourites(S) // TA EDIT
 	WRITE_FILE(S["mute_animal_emotes"], mute_animal_emotes)
 	WRITE_FILE(S["autoconsume"], autoconsume)
 	WRITE_FILE(S["no_examine_blocks"], no_examine_blocks)
@@ -396,6 +416,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["preferred_map"], preferred_map)
 	WRITE_FILE(S["menuoptions"], menuoptions)
 	WRITE_FILE(S["key_bindings"], key_bindings)
+	WRITE_FILE(S["action_button_positions"], action_button_positions) // TA EDIT
+	WRITE_FILE(S["action_wheel_modifier"], action_wheel_modifier) // TA EDIT
 	WRITE_FILE(S["attack_blip_frequency"] , attack_blip_frequency)
 	WRITE_FILE(S["compliance_notifs"], compliance_notifs)
 	WRITE_FILE(S["roll_tokens"], roll_tokens)
@@ -406,6 +428,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["erp_kink_prefs"], erp_kink_prefs)
 	WRITE_FILE(S["erp_organ_sensitivity"], erp_organ_prefs)
 	// TA Addition end - new ERP SYSTEM
+	WRITE_FILE(S["tat_build_migrated_to_character"], legacy_tat_build_migrated)
 	return TRUE
 
 
@@ -443,6 +466,19 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	if(!LAZYLEN(charflaws))
 		charflaws = list(/datum/charflaw/noflaw)
 
+/datum/preferences/proc/validate_charflaw_choices() // TA EDIT
+	for(var/cf_type in charflaw_choices) // TA EDIT
+		var/datum/charflaw/cf = GLOB.character_flaws_singletons[cf_type] // TA EDIT
+		var/list/picked = charflaw_choices[cf_type] // TA EDIT
+		if(!cf || !islist(picked) || !(cf_type in charflaws)) // TA EDIT
+			charflaw_choices -= cf_type // TA EDIT
+			continue // TA EDIT
+		for(var/choice in picked) // TA EDIT
+			if(!(choice in cf.extra_choices)) // TA EDIT
+				picked -= choice // TA EDIT
+		if(length(picked) > cf.max_choices) // TA EDIT
+			picked.Cut(cf.max_choices + 1) // TA EDIT
+
 /datum/preferences/proc/_load_culinary_preferences(S)
 	S["favorite_cuisine"] >> favorite_cuisine
 	S["favorite_dish"] >> favorite_dish
@@ -468,13 +504,15 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		S[choices_key] >> choices
 	return copy_virtue_choices(choices)
 
-/datum/preferences/proc/normalize_saved_virtue(saved_value, savefile/S, choices_key)
+/datum/preferences/proc/normalize_saved_virtue(saved_value, savefile/S, choices_key, legacy_choices_key = null)
 	var/virtue_type = /datum/virtue/none
 	var/list/choices = list()
 
 	if(ispath(saved_value, /datum/virtue))
 		virtue_type = saved_value
 		choices = get_saved_virtue_choices(S, choices_key)
+		if(!length(choices) && legacy_choices_key)
+			choices = get_saved_virtue_choices(S, legacy_choices_key)
 	else if(istype(saved_value, /datum/virtue))
 		var/datum/virtue/loaded_virtue = saved_value
 		if(ispath(loaded_virtue.type, /datum/virtue))
@@ -535,12 +573,21 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	var/saved_virtue_type
 	var/saved_virtuetwo_type
 	var/saved_origin_type
+	var/legacy_virtue_type
+	var/legacy_virtuetwo_type
 	S["virtue"] >> saved_virtue_type
 	S["virtuetwo"] >> saved_virtuetwo_type
 	S["virtue_origin"] >> saved_origin_type
+	S["virtue_type"] >> legacy_virtue_type
+	S["virtuetwo_type"] >> legacy_virtuetwo_type
 
-	var/list/virtue_data = normalize_saved_virtue(saved_virtue_type, S, "virtue_choices")
-	var/list/virtuetwo_data = normalize_saved_virtue(saved_virtuetwo_type, S, "virtuetwo_choices")
+	if(!saved_virtue_type && legacy_virtue_type)
+		saved_virtue_type = legacy_virtue_type
+	if(!saved_virtuetwo_type && legacy_virtuetwo_type)
+		saved_virtuetwo_type = legacy_virtuetwo_type
+
+	var/list/virtue_data = normalize_saved_virtue(saved_virtue_type, S, "virtue_choices", "virtue_picked_choices")
+	var/list/virtuetwo_data = normalize_saved_virtue(saved_virtuetwo_type, S, "virtuetwo_choices", "virtuetwo_picked_choices")
 	var/list/origin_data = normalize_saved_virtue(saved_origin_type, S, "virtue_origin_choices")
 
 	// Upstream migration: "Second Voice" was renamed to "Alter Ego".
@@ -698,6 +745,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["gender"]				>> gender
 	S["domhand"]			>> domhand
 	S["age"]				>> age
+	S["birthday_month"]		>> birthday_month // TA EDIT
+	S["birthday_day"]		>> birthday_day // TA EDIT
 	S["vampire_skin"]		>> vampire_skin
 	S["vampire_hair"]		>> vampire_hair
 	S["vampire_eyes"]		>> vampire_eyes
@@ -769,6 +818,13 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	_load_loadout(S)
 	_load_gear_list(S)
+	loadout_subscription_tier = 0 // TA EDIT
+	S["loadout_subscription_tier"] >> loadout_subscription_tier // TA EDIT
+	loadout_subscription_tier = sanitize_integer(loadout_subscription_tier, 0, 5, 0) // TA EDIT
+	if(GLOB.PatreonsLoaded && parent?.mob?.ckey) // TA EDIT
+		sanitize_subscription_loadout(parent.mob) // TA EDIT
+		WRITE_FILE(S["gear_list"], gear_list) // TA EDIT
+		WRITE_FILE(S["loadout_subscription_tier"], loadout_subscription_tier) // TA EDIT
 
 	_load_combat_music(S)
 
@@ -784,6 +840,12 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		selected_patron = GLOB.patronlist[default_patron]
 		if(selected_patron)
 			WRITE_FILE(S["selected_patron"], selected_patron.type) // TA EDIT END
+
+	var/list/tat_character_data
+	S["tat_build"] >> tat_character_data
+	if(!tat_build)
+		tat_build = new(src)
+	tat_build.load_tat_slots_state_from_list(tat_character_data, legacy_tat_build_data)
 
 	S["have_manor"] >> have_manor  //TA EDIT
 	S["manor_name"] >> manor_name  //TA EDIT
@@ -809,6 +871,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		char_toggles = legacy_dnr ? CHAR_TOGGLE_DNR : NONE
 
 	S["update_mutant_colors"] >> update_mutant_colors
+	ooze_color_shifting = null
+	S["ooze_color_shifting"] >> ooze_color_shifting
 
 	S["headshot_link"]						>> headshot_link
 	S["headshot_artist_credit"]				>> headshot_artist_credit
@@ -827,6 +891,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	S["qsr"]					>> qsr_pref
 	S["flavortext"]				>> flavortext
+	S["pen_name"]				>> pen_name
 	S["ooc_notes"]				>> ooc_notes
 	S["ooc_extra"]				>> ooc_extra
 	S["ooc_extra_img"]			>> ooc_extra_img
@@ -836,7 +901,11 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		ooc_extra_img_link = null
 	S["rumour"]					>> rumour
 	S["noble_gossip"]			>> noble_gossip
+	S["secrets"]				>> secrets
+	if(!islist(secrets))
+		secrets = list()
 	S["averse_chosen_faction"]	>> averse_chosen_faction
+	S["charflaw_choices"] >> charflaw_choices // TA EDIT
 	S["song_artist"]				>> song_artist
 	S["song_title"]				>> song_title
 	S["nsfwflavortext"]			>> nsfwflavortext
@@ -932,6 +1001,12 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	// lists
 	age				= sanitize_inlist(age, pref_species.possible_ages, AGE_ADULT)
+	birthday_month	= sanitize_integer(birthday_month, 0, CALENDAR_MONTHS_PER_YEAR, 0) // TA EDIT
+	birthday_day	= sanitize_integer(birthday_day, 0, CALENDAR_DAYS_IN_MONTH, 0) // TA EDIT
+	if(!birthday_month || !birthday_day) // TA EDIT START
+		birthday_month = 0
+		birthday_day = 0
+	// TA EDIT END
 	extra_language	= sanitize_inlist(extra_language, GLOB.languages_character_selection, "None") // None just becomes None so it's fine
 	pronouns		= sanitize_inlist(pronouns, GLOB.pronouns_list, THEY_THEM)
 	titles_pref		= sanitize_inlist(titles_pref, GLOB.titles_list, TITLES_M)
@@ -965,6 +1040,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	// complex/other stuff
 	preset_bounty_enabled = sanitize_bool(preset_bounty_enabled, initial(preset_bounty_enabled))
 	update_mutant_colors = sanitize_bool(update_mutant_colors, initial(update_mutant_colors))
+	ooze_color_shifting = sanitize_bool(ooze_color_shifting, initial(ooze_color_shifting))
 	lactating = sanitize_bool(lactating, initial(lactating))
 
 	body_markings = SANITIZE_LIST(body_markings)
@@ -973,6 +1049,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	descriptor_entries = SANITIZE_LIST(descriptor_entries)
 	custom_descriptors = SANITIZE_LIST(custom_descriptors)
 	validate_descriptors()
+	charflaw_choices = SANITIZE_LIST(charflaw_choices) // TA EDIT
+	validate_charflaw_choices() // TA EDIT
 
 	var/list/valid_skin_tones = pref_species.get_skin_list()
 	var/list/valid_skin_colors = list()
@@ -1017,7 +1095,6 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		var/slot_num = job_characters[job_title]
 		if(!isnum(slot_num) || slot_num < 1 || slot_num > max_save_slots)
 			job_characters -= job_title //TA EDIT END
-
 	if(!islist(job_subclass_preferences)) // TA EDIT START
 		job_subclass_preferences = list()
 	if(!islist(job_subclass_strict))
@@ -1042,6 +1119,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 			job_subclass_strict[job_title] = sanitize_integer(job_subclass_strict[job_title], FALSE, TRUE, FALSE)
 			if(!job_subclass_strict[job_title])
 				job_subclass_strict -= job_title // TA EDIT END
+
 
 	if(!islist(job_subprefs))
 		job_subprefs = list()
@@ -1150,12 +1228,21 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	var/saved_virtue_type
 	var/saved_virtuetwo_type
 	var/saved_origin_type
+	var/legacy_virtue_type
+	var/legacy_virtuetwo_type
 	S["virtue"] >> saved_virtue_type
 	S["virtuetwo"] >> saved_virtuetwo_type
 	S["virtue_origin"] >> saved_origin_type
+	S["virtue_type"] >> legacy_virtue_type
+	S["virtuetwo_type"] >> legacy_virtuetwo_type
 
-	var/list/virtue_data = normalize_saved_virtue(saved_virtue_type, S, "virtue_choices")
-	var/list/virtuetwo_data = normalize_saved_virtue(saved_virtuetwo_type, S, "virtuetwo_choices")
+	if(!saved_virtue_type && legacy_virtue_type)
+		saved_virtue_type = legacy_virtue_type
+	if(!saved_virtuetwo_type && legacy_virtuetwo_type)
+		saved_virtuetwo_type = legacy_virtuetwo_type
+
+	var/list/virtue_data = normalize_saved_virtue(saved_virtue_type, S, "virtue_choices", "virtue_picked_choices")
+	var/list/virtuetwo_data = normalize_saved_virtue(saved_virtuetwo_type, S, "virtuetwo_choices", "virtuetwo_picked_choices")
 	var/list/origin_data = normalize_saved_virtue(saved_origin_type, S, "virtue_origin_choices")
 
 	virtue = load_clean_virtue(virtue_data[1], virtue_data[2])
@@ -1189,6 +1276,9 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["gender"]				, gender)
 	WRITE_FILE(S["domhand"]				, domhand)
 	WRITE_FILE(S["age"]					, age)
+	WRITE_FILE(S["ooze_color_shifting"]	, ooze_color_shifting)
+	WRITE_FILE(S["birthday_month"]		, birthday_month) // TA EDIT
+	WRITE_FILE(S["birthday_day"]		, birthday_day) // TA EDIT
 	WRITE_FILE(S["vampire_skin"]		, vampire_skin)
 	WRITE_FILE(S["vampire_hair"]		, vampire_hair)
 	WRITE_FILE(S["vampire_eyes"]		, vampire_eyes)
@@ -1199,6 +1289,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["skin_tone"]			, skin_tone)
 	WRITE_FILE(S["species"]				, pref_species.name)
 	WRITE_FILE(S["charflaws"]			, charflaws)
+	WRITE_FILE(S["charflaw_choices"], charflaw_choices) // TA EDIT
 	WRITE_FILE(S["feature_mcolor"]		, features["mcolor"])
 	WRITE_FILE(S["feature_mcolor2"]		, features["mcolor2"])
 	WRITE_FILE(S["feature_mcolor3"]		, features["mcolor3"])
@@ -1268,12 +1359,14 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["preset_bounty_severity_v_key"] , preset_bounty_severity_v_key)
 	WRITE_FILE(S["preset_bounty_crime"] , preset_bounty_crime)
 	WRITE_FILE(S["flavortext"] , html_decode(flavortext))
+	WRITE_FILE(S["pen_name"] , pen_name)
 	WRITE_FILE(S["ooc_notes"] , html_decode(ooc_notes))
 	WRITE_FILE(S["ooc_extra"] ,	ooc_extra)
 	WRITE_FILE(S["ooc_extra_img"] , ooc_extra_img)
 	WRITE_FILE(S["ooc_extra_img_link"] , ooc_extra_img_link)
 	WRITE_FILE(S["rumour"] , html_decode(rumour))
 	WRITE_FILE(S["noble_gossip"] , html_decode(noble_gossip))
+	WRITE_FILE(S["secrets"] , secrets)
 	WRITE_FILE(S["averse_chosen_faction"] , html_decode(averse_chosen_faction))
 	WRITE_FILE(S["song_artist"] , song_artist)
 	WRITE_FILE(S["song_title"] , song_title)
@@ -1308,7 +1401,9 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["erpprefs"] , html_decode(erpprefs))
 	WRITE_FILE(S["img_gallery"] , img_gallery)
 	WRITE_FILE(S["nsfw_img_gallery"] , nsfw_img_gallery)
+	sanitize_subscription_loadout(parent?.mob, FALSE) // TA EDIT
 	WRITE_FILE(S["gear_list"], gear_list)
+	WRITE_FILE(S["loadout_subscription_tier"], loadout_subscription_tier) // TA EDIT
 
 	//Familiar Files
 	WRITE_FILE(S["familiar_names"] , familiar_prefs.familiar_names)
@@ -1322,6 +1417,15 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["familiar_ooc_notes_display"] , familiar_prefs.familiar_ooc_notes_display)
 	WRITE_FILE(S["familiar_ooc_extra"] , familiar_prefs.familiar_ooc_extra)
 	WRITE_FILE(S["familiar_ooc_extra_link"] , familiar_prefs.familiar_ooc_extra_link)
+
+	if(tat_build)
+		WRITE_FILE(S["tat_build"], tat_build.export_tat_slots_state_to_list())
+		legacy_tat_build_migrated = TRUE
+		legacy_tat_build_data = null
+		var/original_cd = S.cd
+		S.cd = "/"
+		WRITE_FILE(S["tat_build_migrated_to_character"], TRUE)
+		S.cd = original_cd
 
 	// TA EDIT START - save familytree settings with the active character slot.
 	familytree_module_save_character_to_savefile(S, default_slot)

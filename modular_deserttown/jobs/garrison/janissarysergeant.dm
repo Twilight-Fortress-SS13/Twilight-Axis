@@ -139,7 +139,6 @@
 						new_origin = pick(/datum/virtue/origin/raneshen, /datum/virtue/origin/naledi, /datum/virtue/origin/zybantian)
 					var/datum/virtue/origin/applied_origin = new new_origin()
 					player.prefs.virtue_origin = applied_origin
-					apply_virtue(H, applied_origin)
 /obj/item/clothing/cloak/catcloak/jancap
 	name = "janissary sergeant's cloak"
 	desc = "A most handsome cloak, of royal red, denoting the authority of a leader."

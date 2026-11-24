@@ -59,6 +59,9 @@
 /mob/living/proc/start_sex_session(mob/living/target)
 	if(!target)
 		return
+	if(cmode && (client?.prefs?.combat_toggles & CMODE_ERP_BLOCK))
+		to_chat(src, span_warning("There's a time and place for everything, but not in middle of a fight."))
+		return
 	var/datum/sex_session/old_session = get_sex_session(src, target)
 	if(old_session)
 		old_session.ui_interact(src)
@@ -117,6 +120,9 @@
 		to_chat(src, "<span class='warning'>[user] failed to touch you.</span>")
 		return
 
+	if(user.cmode && (user.client?.prefs?.combat_toggles & CMODE_ERP_BLOCK)) // TA EDIT START
+		to_chat(user, span_warning("There's a time and place for everything, but not in middle of a fight."))
+		return // TA EDIT END
 	var/datum/erp_controller/C = SSerp.get_or_create_controller(human_user)
 	C.add_partner_atom(target, TRUE)
 	C.open_ui(human_user)

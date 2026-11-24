@@ -67,8 +67,9 @@
 	var/item_d_type = "blunt"
 	var/charging_slowdown = 0
 	var/warnoffset = 0
+	/// To make prewarning() respect clickcd!
+	var/last_prewarning_sound = 0
 	var/swingdelay = 0
-
 	var/swingdelay_type = SWINGDELAY_NORMAL
 	/// Causes a return in /attack() but still allows to be used in attackby()
 	var/no_attack = FALSE
@@ -161,9 +162,10 @@
 		inspec += "\n<b>Effective Range:</b> [suffix] [effective_range] paces"
 	if(damfactor != 1)
 		inspec += "\n<b>Damage:</b> [damfactor]"
-	inspec += "\n<b>Armor Penetration:</b> [penfactor > PEN_NONE ? colorgrade_rating(uppertext(item_d_type), penfactor) : "<font color='#808080'>NONE</font>"]"
-	if(masteritem)
-		inspec += " <span class='info'><a href='?src=[REF(masteritem)];explainpenfactor=1'>{?}</a></span>"
+	if(penfactor > PEN_NONE)
+		inspec += "\n<b>Armor Penetration:</b> [colorgrade_rating(uppertext(item_d_type), penfactor)]"
+		if(masteritem)
+			inspec += " <span class='info'><a href='?src=[REF(masteritem)];explainpenfactor=1'>{?}</a></span>"
 	if(get_chargetime())
 		inspec += "\n<b>Charge Time</b>"
 	if(movement_interrupt)
@@ -174,25 +176,27 @@
 		inspec += "\n<b>Drain While Charged:</b> [chargedrain]"
 		if(hold_grace)
 			inspec += "\n<b>Free Hold:</b> [DisplayTimeText(get_hold_grace())]"
-	if(releasedrain)
+	if(releasedrain && releasedrain != 1)
 		inspec += "\n<b>Drain On Release:</b> [releasedrain]"
-	if(misscost)
+	if(misscost && misscost != 1)
 		inspec += "\n<b>Drain On Miss:</b> [misscost]"
-	inspec += "\n<b>Attack Speed:</b> "
+	var/speed_text
 	if(clickcd <= CLICK_CD_FAST)
-		inspec += "<font color='#4af'>Very Quick</font>"
+		speed_text = "<font color='#4af'>Very Quick</font>"
 	else if(clickcd <= CLICK_CD_QUICK)
-		inspec += "<font color='#8f8'>Quick</font>"
+		speed_text = "<font color='#8f8'>Quick</font>"
 	else if(clickcd <= CLICK_CD_MELEE)
-		inspec += "Normal"
+		speed_text = null
 	else if(clickcd <= CLICK_CD_CHARGED)
-		inspec += "<font color='#fa4'>Sluggish</font>"
+		speed_text = "<font color='#fa4'>Sluggish</font>"
 	else if(clickcd <= CLICK_CD_HEAVY)
-		inspec += "<font color='#f44'>Very Sluggish</font>"
+		speed_text = "<font color='#f44'>Very Sluggish</font>"
 	else if(clickcd <= CLICK_CD_MASSIVE)
-		inspec += "<font color='#f22'>Extremely Sluggish</font>"
+		speed_text = "<font color='#f22'>Extremely Sluggish</font>"
 	else
-		inspec += "<font color='#d11'>Glacial</font>"
+		speed_text = "<font color='#d11'>Glacial</font>"
+	if(speed_text)
+		inspec += "\n<b>Attack Speed:</b> [speed_text]"
 	if(!allow_offhand)
 		inspec += "\nThis intent requires a free off-hand."
 	if(blade_class == BCLASS_EFFECT)
@@ -225,11 +229,9 @@
 			inspec += "<font color='#f44'>Significant</font>"
 		else
 			inspec += "<font color='#f22'>Heavy</font>"
-	if(swingdelay_type)
-		inspec += " | Type: "
+	if(swingdelay_type && swingdelay_type != SWINGDELAY_NORMAL)
+		inspec += swingdelay > 0 ? " | Type: " : "\n<b>Type:</b> "
 		switch(swingdelay_type)
-			if(SWINGDELAY_NORMAL)
-				inspec += SPAN_TOOLTIP("The attack has no additional effects or drawbacks.", "<font color='#e6e6e6'><u>Normal</u></font>")
 			if(SWINGDELAY_PENALTY)
 				inspec += SPAN_TOOLTIP("The attack significantly reduces my ability to dodge or parry while performing it.", "<font color='#dab141'><u>Difficult</u></font>")
 			if(SWINGDELAY_CANCEL, SWINGDELAY_CANCELSLOW)
@@ -238,7 +240,6 @@
 	if(cleave)
 		inspec += "\n<b>Cleave:</b> [cleave.desc]"
 		inspec += "\n	Max additional targets: [cleave.max_targets ? cleave.max_targets : "Unlimited"]"
-		inspec += "\n	Prioritizes living targets over dead."
 		if(cleave.diagonal_desc)
 			inspec += "\n	[cleave.diagonal_desc]"
 		inspec += "\n<tt>[cleave.get_pattern_display()]</tt>"
@@ -368,9 +369,11 @@
 				chargedloop = new chargedloop(mastermob)
 
 /datum/intent/proc/on_charge_start() //what the fuck is going on here lol
-	if(mastermob.curplaying)
-		mastermob.curplaying.chargedloop.stop()
-		mastermob.curplaying = null
+	if(mastermob.curplaying && mastermob.curplaying != src)
+		mastermob.curplaying.on_mouse_up()
+	mastermob.curplaying = null
+	if(mob_light)
+		QDEL_NULL(mob_light)
 	if(chargedloop)
 		if(!istype(chargedloop, /datum/looping_sound))
 			chargedloop = new chargedloop(mastermob)
@@ -384,6 +387,7 @@
 		mastermob.vis_contents += mob_charge_effect
 
 /datum/intent/proc/on_charge_cancel()
+	on_mouse_up() // TA EDIT
 	if(!tranged || !mastermob?.client)
 		return
 	if(!mastermob.client.charging)
@@ -400,11 +404,14 @@
 	if(mastermob?.curplaying == src)
 		mastermob?.curplaying = null
 	if(mob_light)
-		qdel(mob_light)
+		QDEL_NULL(mob_light)
 	if(mob_charge_effect)
 		mastermob?.vis_contents -= mob_charge_effect
 
 /datum/intent/proc/on_mmb(atom/target, mob/living/user, params)
+	return
+
+/datum/intent/proc/on_afterattack(atom/target, mob/living/user, proximity_flag, params)
 	return
 
 // Do something special when this intent is applied to a living target, H being the receiver and user being the attacker
@@ -699,7 +706,7 @@
 					custom_offset = 23
 					taunt_message = "[user] rudely flips [M] off!"
 
-				else if(L.get_stress_amount() > 10 || L.get_flaw(/datum/charflaw/addiction/paranoid))
+				else if(L.get_stress_amount() > 10 || L.get_flaw(/datum/charflaw/addiction/factionalist))
 					taunticon = "midfinger"
 					custom_offset = 23
 					taunt_message = "[user] flips [M] off!"

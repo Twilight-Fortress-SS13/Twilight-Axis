@@ -8,6 +8,7 @@
 	traits_applied = list(TRAIT_SEWING_EXPERT)
 
 	category_tags = list(CTAG_PILGRIM, CTAG_TOWNER)
+	subclass_spells = list(/obj/effect/proc_holder/spell/invoked/takeapprentice)
 	subclass_stats = list(
 		STATKEY_SPD = 2,
 		STATKEY_INT = 2,
@@ -47,7 +48,6 @@
 						/obj/item/recipe_book/leatherworking = 1
 						)
 	if(H.mind)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/fittedclothing)
 		SStreasury.grant_savings(ECONOMIC_LOWER_MIDDLE_CLASS, H)
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/leather/unique/furlinedjacket)
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/leather/unique/artipants)//Artificer

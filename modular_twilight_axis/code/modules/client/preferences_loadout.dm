@@ -162,6 +162,47 @@
 
 /datum/preferences
 	var/current_loadout_category = "Всё"
+	var/loadout_subscription_tier = 0
+
+/datum/preferences/proc/sanitize_subscription_loadout(mob/user, notify = TRUE)
+	if(!user?.ckey || !GLOB.PatreonsLoaded)
+		return FALSE
+	if(!islist(gear_list))
+		gear_list = list()
+	var/current_tier = clamp(round(check_patreon_lvl(user.ckey) || 0), 0, 5)
+	var/previous_tier = sanitize_integer(loadout_subscription_tier, 0, 5, 0)
+	loadout_subscription_tier = current_tier
+	if(previous_tier > current_tier)
+		gear_list = list()
+		if(notify)
+			to_chat(user, span_warning("Уровень подписки снизился. Лодаут полностью сброшен."))
+		return TRUE
+	if(!gear_list.len)
+		return FALSE
+	if(gear_list.len > get_loadout_size(user))
+		gear_list = list()
+		if(notify)
+			to_chat(user, span_warning("Лодаут превышал доступный лимит и был сброшен."))
+		return TRUE
+	var/list/valid_items = list()
+	var/removed_item = FALSE
+	for(var/item_name in gear_list)
+		var/datum/loadout_item/item = GLOB.loadout_items_by_name[item_name]
+		if(!item?.path || item.get_loadout_lock_reason(user))
+			if(item && (item.donatitem || item.donat_tier > 0))
+				gear_list = list()
+				if(notify)
+					to_chat(user, span_warning("Недоступный предмет подписки обнаружен. Лодаут полностью сброшен."))
+				return TRUE
+			removed_item = TRUE
+			continue
+		valid_items[item_name] = gear_list[item_name]
+	if(!removed_item)
+		return FALSE
+	gear_list = valid_items
+	if(notify)
+		to_chat(user, span_warning("Недоступные предметы удалены из лодаута."))
+	return TRUE
 
 // Обрабатывает вещи в списке лодаута игрока и удаляет те, название которых было изменено или они были удалены.
 // Иначе лодаут будет ломаться. Мб это как то адекватнее можно починить, но я хз.
@@ -334,12 +375,14 @@
 	return GLOB.always_state
 
 /datum/loadout_panel/ui_interact(mob/user, datum/tgui/ui)
+	user.client?.prefs?.sanitize_subscription_loadout(user)
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "LoadoutPanel")
 		ui.open()
 
 /datum/loadout_panel/ui_static_data(mob/user)
+	user.client?.prefs?.sanitize_subscription_loadout(user)
 	var/list/data = list()
 	var/list/categories = list()
 	var/datum/preferences/user_prefs = user.client.prefs
@@ -392,6 +435,7 @@
 	return data
 
 /datum/loadout_panel/ui_data(mob/user)
+	user.client?.prefs?.sanitize_subscription_loadout(user)
 	var/list/data = list()
 	var/datum/preferences/user_prefs = user.client.prefs
 	var/list/selected_loadout_items = list()
@@ -436,6 +480,7 @@
 
 	var/mob/user = ui.user
 	var/datum/preferences/user_prefs = user.client.prefs
+	user_prefs.sanitize_subscription_loadout(user)
 
 	switch(action)
 		if("add")

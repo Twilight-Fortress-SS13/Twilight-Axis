@@ -1,6 +1,4 @@
 /mob/living
-	//used by the basic ai controller /datum/ai_behavior/basic_melee_attack to determine how fast a mob can attack
-	var/melee_cooldown = CLICK_CD_MELEE
 	var/pain_threshold = 0
 	var/no_head_bounty = FALSE
 	var/contract_spawned = FALSE
@@ -1035,7 +1033,7 @@
 	stuttering = 0
 	slurring = 0
 	jitteriness = 0
-	slowdown = 0
+	remove_status_effect(/datum/status_effect/debuff/slowed)
 	update_mobility()
 	stop_sound_channel(CHANNEL_HEARTBEAT)
 
@@ -1134,8 +1132,12 @@
 	if(active_storage)
 		active_storage.close(src)
 
-	if(!(mobility_flags & MOBILITY_STAND) && !buckled && prob(getBruteLoss()*200/maxHealth))
+	if(!(mobility_flags & MOBILITY_STAND) && !buckled && bleed_rate)
 		makeTrail(newloc, T, old_direction)
+	if(. && bloodsteps && (mobility_flags & MOBILITY_STAND) && isturf(newloc))
+		bloodsteps--
+		var/obj/effect/decal/cleanable/blood/bigprint/print = new(newloc, stepcolour)
+		print.setDir(dir)
 	//Hearthstone port - track creation hook.
 	if(. && isturf(newloc))
 		check_track_creation(newloc)
@@ -1158,9 +1160,8 @@
 	if(isturf(start))
 		var/trail_type = getTrail()
 		if(trail_type)
-			var/brute_ratio = round(getBruteLoss() / maxHealth, 0.1)
-			if(blood_volume && blood_volume > max(BLOOD_VOLUME_NORMAL*(1 - brute_ratio * 0.25), 0))//don't leave trail if blood volume below a threshold
-				blood_volume = max(blood_volume - max(1, brute_ratio * 2), 0)					//that depends on our brute damage.
+			if(blood_volume)
+				blood_volume = max(blood_volume - max(1, round(getBruteLoss() / maxHealth, 0.1) * 2), 0)
 				var/newdir = get_dir(target_turf, start)
 				if(newdir != direction)
 					newdir = newdir | direction
@@ -1188,7 +1189,7 @@
 	..()
 
 /mob/living/proc/getTrail()
-	if(getBruteLoss() < 300)
+	if(bleed_rate < ARTERY_LIMB_BLEEDRATE / 2)
 		return pick("ltrails_1", "ltrails_2")
 	else
 		return pick("trails_1", "trails_2")
@@ -1783,7 +1784,7 @@
 	return TRUE
 
 /mob/living/proc/can_use_guns(obj/item/G)//actually used for more than guns!
-	if(HAS_TRAIT(src, TRAIT_TINYPAWS))
+	if(HAS_TRAIT(src, TRAIT_WEAPONLESS))
 		to_chat(src, span_warning("I am unable to fire this!"))
 		return FALSE
 	if(G.trigger_guard == TRIGGER_GUARD_NONE)
@@ -1900,8 +1901,8 @@
  */
 
 /mob/living/proc/on_fire_stack(seconds_per_tick, datum/status_effect/fire_handler/fire_stacks/fire_handler)
-	var/fire_resist_mult = HAS_TRAIT(src, TRAIT_FIRE_RESIST) ? 0.5 : 1
-	adjust_bodytemperature(((fire_handler.stacks * 12)) * 0.5 * seconds_per_tick * fire_resist_mult)
+//	var/fire_resist_mult = HAS_TRAIT(src, TRAIT_FIRE_RESIST) ? 0.5 : 1 // quarantined for now, someone else pls look into this later, removal of this proc is causing some systematic problems I cba to fix. ~ Kunai
+
 
 /**
  * Adjust the amount of fire stacks on a mob
@@ -2155,13 +2156,6 @@
 		if (client)
 			if (new_z)
 				SSmobs.clients_by_zlevel[new_z] += src
-				for (var/I in length(SSidlenpcpool.idle_mobs_by_zlevel[new_z]) to 1 step -1) //Backwards loop because we're removing (guarantees optimal rather than worst-case performance), it's fine to use .len here but doesn't compile on 511
-					var/mob/living/simple_animal/SA = SSidlenpcpool.idle_mobs_by_zlevel[new_z][I]
-					if (SA)
-						SA.toggle_ai(AI_ON) // Guarantees responsiveness for when appearing right next to mobs
-					else
-						SSidlenpcpool.idle_mobs_by_zlevel[new_z] -= SA
-
 			registered_z = new_z
 		else
 			registered_z = null
@@ -2241,6 +2235,22 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 		client.mouse_pointer_icon = ranged_ability.ranged_mousepointer
 
 /mob/living/vv_edit_var(var_name, var_value)
+	var/static/list/vv_stat_keys = list(
+		"STASTR" = STATKEY_STR,
+		"STAPER" = STATKEY_PER,
+		"STAINT" = STATKEY_INT,
+		"STACON" = STATKEY_CON,
+		"STAWIL" = STATKEY_WIL,
+		"STASPD" = STATKEY_SPD,
+		"STALUC" = STATKEY_LCK,
+	)
+	var/statkey = vv_stat_keys[var_name]
+	if(statkey)
+		if(!isnum(var_value))
+			return FALSE
+		change_stat(statkey, clamp(round(var_value), 1, 20) - get_stat(statkey))
+		datum_flags |= DF_VAR_EDITED
+		return TRUE
 	switch(var_name)
 		if ("maxHealth")
 			if (!isnum(var_value) || var_value <= 0)
@@ -2456,7 +2466,7 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 
 			if(turf_up_one)
 				for(var/mob/living/L in get_hearers_in_range(search_range, turf_up_one, RECURSIVE_CONTENTS_CLIENT_MOBS))
-					if((L.m_intent == MOVE_INTENT_SNEAK || HAS_TRAIT(src, TRAIT_LIGHT_STEP)) && !has_tracking_perk)
+					if((L.m_intent == MOVE_INTENT_SNEAK || HAS_TRAIT(L, TRAIT_LIGHT_STEP)) && !has_tracking_perk)
 						continue
 					var/turf/T = locate(L.x, L.y, src.z) // We'll want to highlight the turf on -our- z-level.
 					var/val = "[ZTAG_ONE]"
@@ -2466,7 +2476,7 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 
 			if(turf_up_two)
 				for(var/mob/living/L in get_hearers_in_range(search_range, turf_up_two, RECURSIVE_CONTENTS_CLIENT_MOBS))
-					if((L.m_intent == MOVE_INTENT_SNEAK || HAS_TRAIT(src, TRAIT_LIGHT_STEP)) && !has_tracking_perk)
+					if((L.m_intent == MOVE_INTENT_SNEAK || HAS_TRAIT(L, TRAIT_LIGHT_STEP)) && !has_tracking_perk)
 						continue
 					var/turf/T = locate(L.x, L.y, src.z) // We'll want to highlight the turf on -our- z-level.
 					var/val = "[ZTAG_TWO]"
@@ -2476,7 +2486,7 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 
 			if(turf_up_three)
 				for(var/mob/living/L in get_hearers_in_range(search_range, turf_up_three, RECURSIVE_CONTENTS_CLIENT_MOBS))
-					if((L.m_intent == MOVE_INTENT_SNEAK || HAS_TRAIT(src, TRAIT_LIGHT_STEP)) && !has_tracking_perk)
+					if((L.m_intent == MOVE_INTENT_SNEAK || HAS_TRAIT(L, TRAIT_LIGHT_STEP)) && !has_tracking_perk)
 						continue
 					var/turf/T = locate(L.x, L.y, src.z) // We'll want to highlight the turf on -our- z-level.
 					var/val = "[ZTAG_THREE]"
@@ -2771,7 +2781,7 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 
 	if(stealthy)
 		to_chat(src, span_notice("I secretly offer [offered_item] to [offered_to]."))
-		to_chat(offered_to, span_notice("[offered_to] secretly offers [offered_item] to me..."))
+		to_chat(offered_to, span_notice("[src] secretly offers [offered_item] to me..."))
 	else if(!isnull(offered_glass_other) && istype(offered_glass_other) && offered_glass_other?.reagents?.maximum_volume > 0) // Credit to tmyqlfpir; allows for the clinking of everything up to blacksteel tankards.
 		playsound(src,offered_glass_other.reagents.maximum_volume > 50 ? 'sound/misc/clink_drink_big.ogg' : 'sound/misc/clink_drink.ogg', 100, TRUE) //Adds a new sound if the clinked container is above 50 drams in size.
 		addtimer(CALLBACK(src, PROC_REF(stop_offering_item)), 0.6 SECONDS)
@@ -2891,5 +2901,8 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 		return
 	dust()
 
+///the humanmob version of this proc accounts for hag names. in general, use real_name directly when you want to use it INTERNALLY. use get_unmasked_name if you want to display someone's "real name" to players
+/mob/living/proc/get_unmasked_name()
+	return real_name
 /mob/living/proc/resist_leash()
 	return

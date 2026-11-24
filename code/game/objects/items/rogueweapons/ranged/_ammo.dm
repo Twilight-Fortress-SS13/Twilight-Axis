@@ -10,6 +10,10 @@
 	. += span_info("Projectiles have maximum and minimum falloff ranges, with particular falloff factors for damage.")
 	. += span_info("If the target is hit between the maximum and minimum tile range, then the full force is delivered.")
 	. += get_sweetspot_examine()
+	var/obj/projectile/proj = projectile_type
+	var/aimmod = BB ? BB.aim_mod : (proj ? initial(proj.aim_mod) : 0)
+	if(aimmod)
+		. += span_info("Its heft throws off my aim by <b>[-aimmod]</b>.")
 
 /// Returns examine lines describing the sweetspot (full-force range) of this casing's projectile, or an empty list if it has none.
 /obj/item/ammo_casing/proc/get_sweetspot_examine(subject = "This projectile")
@@ -65,8 +69,5 @@
 
 	if(secondary_damage && secondary_damage_type) //TA EDIT
 		var/armor
-		if(secondary_damage_type == BRUTE)
-			armor = victim.run_armor_check(selzone, src.flag, "", "", armor_penetration = src.armor_penetration, damage = secondary_damage, used_weapon = src)
-		else
-			armor = victim.run_armor_check(selzone, "fire", "", "", armor_penetration = src.armor_penetration, damage = secondary_damage, used_weapon = src)
+		armor = victim.run_armor_check(selzone, src.flag, "", "", armor_penetration = src.armor_penetration, damage = secondary_damage, used_weapon = src)
 		victim.apply_damage(secondary_damage, secondary_damage_type, selzone, armor) //TA EDIT END

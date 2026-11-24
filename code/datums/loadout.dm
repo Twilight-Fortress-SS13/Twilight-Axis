@@ -568,7 +568,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/surcoatheavy
 	name = "Surcoat, Overvestments"
 	category = list("Плащи", "Триумфы")
-	path = /obj/item/clothing/cloak/tabard/stabard/crusader/heavy
+	path = /obj/item/clothing/cloak/tabard/stabard/overvestments
 	triumph_cost = 3
 
 /datum/loadout_item/surcoatgoldenorder
@@ -802,6 +802,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Desert Hood"
 	category = "Головные уборы"
 	path = /obj/item/clothing/head/roguetown/deserthood
+
+/datum/loadout_item/bandithood
+	name = "Bandit Hood"
+	category = "Головные уборы"
+	path = /obj/item/clothing/head/roguetown/menacing/bandit
 
 /datum/loadout_item/desertskirt
 	name = "Desert Skirt"
@@ -1047,6 +1052,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Аксессуары"
 	path = /obj/item/clothing/mask/rogue/spectacles
 
+/datum/loadout_item/thinspectacles
+	name = "Thin Spectacles"
+	category = "Аксессуары"
+	path = /obj/item/clothing/mask/rogue/spectacles/thin
+
 /datum/loadout_item/fingerless
 	name = "Fingerless Gloves"
 	category = "Аксессуары"
@@ -1191,7 +1201,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/knifebelt // comes empty
 	name = "Tossblade Belt"
 	category = list("Аксессуары", "Триумфы")
-	path = /obj/item/storage/belt/rogue/leather/knifebelt/black
+	path = /obj/item/storage/belt/rogue/leather/tossbelt/blade/black
 	triumph_cost = 4
 
 /datum/loadout_item/psicross
@@ -1853,6 +1863,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/donator_strudel3
 	name = "Donator Kit - Etruscan Design Cloak - Required: Poncho (No Small Races)"
 	category = list("Плащи", "Донат")
+	path = /obj/item/enchantingkit/strudel3_etruscan
+	donatitem = TRUE
+
+/datum/loadout_item/donator_strudel3_fellowshippe
+	name = "Donator Kit - Experimental Azurian Fellowshippe Staff - Required: Mage Staff"
+	category = list("Оружие", "Донат")
 	path = /obj/item/enchantingkit/strudel3
 	donatitem = TRUE
 
@@ -2009,7 +2025,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 
 /datum/loadout_item/donator_zydrashauberk
-	name = "Donator Kit - Mailled Cuirass - Required: iron plate-and-maille"
+	name = "Donator Kit - Mailled Cuirass - Required: Iron Plate-and-Maille"
 	path = /obj/item/enchantingkit/zydrashauberk
 	category = list("Броня", "Донат")
 	donatitem = TRUE
@@ -3196,21 +3212,17 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/head/roguetown/shawl
 	category = "Головные уборы"
 
-// TA EDIT START
 /* /datum/loadout_item/maidband
 	name = "Maid Headdress"
 	path = /obj/item/clothing/head/roguetown/maidhead
 	category = list("Головные уборы", "Донат")
 	donatitem = TRUE */
-// TA EDIT END
 
-// TA EDIT START
 /* /datum/loadout_item/maidbandfancy
 	name = "Valorian Maid Headband"
 	path = /obj/item/clothing/head/roguetown/maidband
 	category = list("Головные уборы", "Донат")
 	donatitem = TRUE */
-// TA EDIT END
 
 // Обувь
 
@@ -3587,6 +3599,80 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 
 // COMMANDANT SET END
 
+// HUSSAR SET START
+
+/datum/loadout_item/hussar_donator_fur_cap
+	name = "Donator Item - Fur Hussar Cap"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/head/roguetown/duelhat/hussar_cap
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+/datum/loadout_item/hussar_donator_riding_jacket
+	name = "Donator Item - Hussar Riding Jacket"
+	category = list("Плащи", "Донат")
+	path = /obj/item/clothing/cloak/hussar_riding_jacket
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+/datum/loadout_item/hussar_donator_protective_coat
+	name = "Donator Kit - Hussar Protective Coat - Required: Hardened Leather Coat"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/hussar_protective_coat
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+/datum/loadout_item/hussar_donator_shirt
+	name = "Donator Kit - Hussar Shirt - Required: Gambeson or Padded Gambeson"
+	category = list("Одежда", "Донат")
+	path = /obj/item/enchantingkit/hussar_shirt
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+/datum/loadout_item/hussar_donator_sash
+	name = "Donator Item - Hussar Sash"
+	category = list("Одежда", "Донат")
+	path = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt/hussar
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+/datum/loadout_item/hussar_donator_breeches
+	name = "Donator Kit - Hussar Breeches - Required: Brigandine Chausses or Hardened Leather Trousers"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/hussar_breeches
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+/datum/loadout_item/hussar_donator_boots
+	name = "Donator Item - Hussar Cavalry Boots"
+	category = list("Обувь", "Донат")
+	path = /obj/item/clothing/shoes/roguetown/boots/leather/hussar
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+/datum/loadout_item/hussar_donator_pistol
+	name = "Donator Kit - Hussar Pistol - Required: Arquebus Pistol"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/hussar_pistol
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+/datum/loadout_item/hussar_donator_sabre
+	name = "Donator Kit - Hussar Officer's Sabre - Required: Longsword or Sabre"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/hussar_sabre
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+/datum/loadout_item/hussar_donator_scabbard
+	name = "Donator Item - Hussar Officer's Scabbard"
+	category = list("Оружие", "Донат")
+	path = /obj/item/rogueweapon/scabbard/sword/hussar
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+// HUSSAR SET END
+
 // Etruscan vol.3 Kit Start
 
 /datum/loadout_item/etrhat
@@ -3756,14 +3842,14 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/cloakgoldenorder
 	name = "Cloak, Golden Order"
 	category = list("Плащи", "Донат")
-	path = /obj/item/clothing/cloak/cape/inquisitorgold
+	path = /obj/item/clothing/cloak/cape/puritan/gold
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/cloaksilverorder
 	name = "Cloak, Silver Order"
 	category = list("Плащи", "Донат")
-	path = /obj/item/clothing/cloak/cape/inquisitorsilver
+	path = /obj/item/clothing/cloak/cape/puritan/silver
 	donatitem = TRUE
 	donat_tier = 2
 
@@ -3790,6 +3876,48 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Разное", "Донат")
 	path = /obj/item/bouquet/rosa/azure
 	donatitem = TRUE
+
+/datum/loadout_item/donator/universal/tulip
+	name = "Donator Item - Tulip Flower"
+	category = list("Разное", "Донат")
+	path = /obj/item/alch/tulip
+	donatitem = TRUE
+	donat_tier = 1
+
+/datum/loadout_item/donator/universal/tulip_seeds
+	name = "Donator Item - Tulip Flower, Seeds"
+	category = list("Разное", "Донат")
+	path = /obj/item/storage/belt/rogue/pouch/tulip_seeds
+	donatitem = TRUE
+	donat_tier = 1
+
+/datum/loadout_item/donator/universal/tulip_bouquet
+	name = "Donator Item - Tulip Flowers, Bouquet"
+	category = list("Разное", "Донат")
+	path = /obj/item/bouquet/tulip
+	donatitem = TRUE
+	donat_tier = 1
+
+/datum/loadout_item/donator/universal/tulip_black
+	name = "Donator Item - Black Tulip Flower"
+	category = list("Разное", "Донат")
+	path = /obj/item/alch/tulip/black
+	donatitem = TRUE
+	donat_tier = 1
+
+/datum/loadout_item/donator/universal/tulip_black_seeds
+	name = "Donator Item - Black Tulip Flower, Seeds"
+	category = list("Разное", "Донат")
+	path = /obj/item/storage/belt/rogue/pouch/tulip_seeds/black
+	donatitem = TRUE
+	donat_tier = 1
+
+/datum/loadout_item/donator/universal/tulip_black_bouquet
+	name = "Donator Item - Black Tulip Flowers, Bouquet"
+	category = list("Разное", "Донат")
+	path = /obj/item/bouquet/tulip/black
+	donatitem = TRUE
+	donat_tier = 1
 
 /datum/loadout_item/donator/universal/cackledagger
 	name = "Donator Kit - Cackledagger - Required: Steel Dagger or Decorated Dagger"
@@ -4539,12 +4667,6 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 	donat_tier = 2
 
-/datum/loadout_item/donator/stinketh
-	name = "Donator Kit - Silver Shashka - Required: Szöréndnížine Sabre or Aavnic Shashka"
-	category = list("Оружие", "Донат")
-	path = /obj/item/enchantingkit/weapon/stinketh_shashka
-	donatitem = TRUE
-	donat_tier = 2
 
 /datum/loadout_item/donator/kadeguandao
 	name = "Donator Kit - Dawn Cometh - Required: Halberd, Greataxe or Naginata"
@@ -5485,12 +5607,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donat_tier = 2
 
 /datum/loadout_item/taur_plate
-	name = "tauric plate armor morphing elixir"
+	name = "Tauric Plate Armor Morphing Elixir - Required: Any Full Plate Armor"
 	category = "Броня"
 	path = /obj/item/enchantingkit/taur_armor_plate
 
 /datum/loadout_item/taur_gambeson
-	name = "tauric gambeson morphing elixir"
+	name = "Tauric Gambeson Morphing Elixir - Required: Heavy Padded Gambeson"
 	category = "Броня"
 	path = /obj/item/enchantingkit/taur_armor_gambeson
 
@@ -5505,7 +5627,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/clothing/cloak/t_tabard/taur/tightened
 
 /datum/loadout_item/taur_hauberk
-	name = "feline taur hauberk morphing elixir"
+	name = "Feline Taur Hauberk Morphing Elixir - Required: Any Hauberk"
 	category = "Броня"
 	path = /obj/item/enchantingkit/taur_armor_hauberk
 
@@ -5514,3 +5636,493 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = "Обувь"
 	path = /obj/item/clothing/shoes/roguetown/felinetaur
 
+
+/datum/loadout_item/donator/dragontea_hat
+	name = "Greathat, Dyeable"
+	category = list("Головные уборы", "Триумфы")
+	path = /obj/item/clothing/head/roguetown/duelhat/dragontea
+	triumph_cost = 5
+
+/datum/loadout_item/donator/dragontea_featherhat
+	name = "Etruscan Design Hat"
+	category = list("Головные уборы", "Триумфы")
+	path = /obj/item/clothing/head/roguetown/duelisthat/dragontea
+
+/datum/loadout_item/clothloincloth
+	name = "Belt with Loincloth"
+	category = "Аксессуары"
+	path = /obj/item/storage/belt/rogue/leather/battleskirt/loincloth
+
+/datum/loadout_item/carapacedmask
+	name = "Ceramic Mask"
+	category = "Аксессуары"
+	path = /obj/item/clothing/mask/rogue/xylixmask/ceramic
+
+/datum/loadout_item/belthooks
+	name = "Belt Hooks"
+	category = "Аксессуары"
+	path = /obj/item/storage/belt/rogue/leather/belthooks
+
+/datum/loadout_item/sash_dupatta
+	name = "Sash, Dupatta"
+	category = "Плащи"
+	path = /obj/item/clothing/cloak/sash/dupatta
+
+/datum/loadout_item/duelistscloak
+	name = "Duelist's Cape"
+	category = "Плащи"
+	path = /obj/item/clothing/cloak/half/duelcape
+
+/datum/loadout_item/donator/universal/ilamellard
+	name = "Donator Item - Iron Lamellar Armor decoration"
+	category = list("Одежда", "Донат")
+	path = /obj/item/clothing/suit/roguetown/shirt/ilamellar
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/universal/blamellard
+	name = "Donator Item - Bronze Lamellar Armor decoration"
+	category = list("Одежда", "Донат")
+	path = /obj/item/clothing/suit/roguetown/shirt/blamellar
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/universal/armor_gothic_sallet
+	name = "Donator Kit - Gothic Sallet - Required: Steel Visored Sallet"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/gothicsallet
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/universal/headpiece_oathkeeperdeclone
+	name = "Donator Item - Oathtaker's Decoration, Standalone"
+	category = list("Аксессуары", "Донат")
+	path = /obj/item/clothing/head/roguetown/decoration/orle/donator_oathkeeper/crest
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/universal/brimmedhat
+	name = "Donator Item - Brimmed Hat"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/head/roguetown/duelhat/donator_brimmedhat
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/universal/donator_heavybrig
+	name = "Donator Kit - Brigandine with Plate - Required: Steel Coat of Plates"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/triumph_armorkit_heavybrig
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/universal/armorpiece_decapauldron
+	name = "Donator Kit - Decablessed Pauldrons - Required: Steel Bracers"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/donator_universal_decapauldron
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/universal/armorpiece_steelpauldron
+	name = "Donator Kit - Steel Pauldrons - Required: Steel Bracers"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/donator_universal_steelpauldron
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/universal/donator_avantynehelm
+	name = "Donator Kit - Avantyne-Threaded Barbute - Required: Barbute"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/donator_avantynehelm
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/universal/donator_shawl
+	name = "Donator Item - Scarfed Shawl"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/head/roguetown/shawl/donator
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/universal/donator_rockhillarmet
+	name = "Donator Kit - Knight-Errant's Armet - Required: Iron Knight's Armet or Steel Knight's Armet"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/donator_rockhillarmet
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/universal/donator_rockhillmaile
+	name = "Donator Kit - Jacketed Plate-and-Maille - Required: Iron Plate-and-Maille or Steel Plate-and-Maille"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/donator_rockhillmaille
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/universal/donator_drowgoggles
+	name = "Donator Item - Kit, Skikuldic Goggles"
+	category = list("Разное", "Донат")
+	path = /obj/item/clothing/mask/rogue/spectacles/iron/drow
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/mortosasye_deepcutdress
+	name = "Donator Item - Deep Cut Dress"
+	category = list("Одежда", "Донат")
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/silkdress/donator_mortosasye_deepcutdress
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/mortosasye_sunrisegown
+	name = "Donator Item - Sunrise Gown"
+	category = list("Одежда", "Донат")
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/silkdress/donator_mortosasye_sunrisegown
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/mortosasye_goldendiadem
+	name = "Donator Item - Golden Diadem"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/clothing/head/roguetown/circlet/donator_mortosasye_golddiadem
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/morto_crown
+	name = "Donator Kit - Sun Crown - Required: Serpent Crown"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/enchantingkit/morto_crown
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/forgefiend_wrench
+	name = "Donator Kit - Forgefiend Wrench - Required: Massive Wrench"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/weapon/forgefiend_wrench
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/rhynnrhynn_brigandine
+	name = "Donator Kit - Jacketed Brigandine - Required: Lightweight Brigandine"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/rhynnrhynn_brigandine
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/rhynnrhynn_longcloak
+	name = "Donator Item - Ladylike Longcloak"
+	category = list("Плащи", "Донат")
+	path = /obj/item/clothing/cloak/donator_rhynn
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/rhynnrhynn_longcloak_broche
+	name = "Donator Item - Ladylike Longcloak's Broche"
+	category = list("Аксессуары", "Донат")
+	path = /obj/item/clothing/head/roguetown/decoration/broche
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/rhynnrhynn_staff_glow
+	name = "Donator Kit - Celestial Staff, Glowing - Required: Blacksteel Staff or Refined Blacksteel Staff"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/rhynnrhynn_staff_glow
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/flybrokenwings_drowpants
+	name = "Donator Item - Underdweller's Trousers"
+	category = list("Одежда", "Донат")
+	path = /obj/item/clothing/under/roguetown/trou/artipants/donator_thistle
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/flybrokenwings_drowshirt
+	name = "Donator Item - Underdweller's Shirt"
+	category = list("Одежда", "Донат")
+	path = /obj/item/clothing/suit/roguetown/shirt/undershirt/artificer/donator_thistle
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/flybrokenwings_drowgloves
+	name = "Donator Item - Underdweller's Gloves"
+	category = list("Аксессуары", "Донат")
+	path = /obj/item/clothing/gloves/roguetown/cloth/donator_thistle
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/flybrokenwings_drowboots
+	name = "Donator Item - Underdweller's Shoes"
+	category = list("Обувь", "Донат")
+	path = /obj/item/clothing/shoes/roguetown/boots/leather/donator_thistle
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/flybrokenwings_drowapron
+	name = "Donator Item - Underdweller's Apron"
+	category = list("Плащи", "Донат")
+	path = /obj/item/clothing/cloak/apron/blacksmith/donator_thistle
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/flybrokenwings_drowcloak
+	name = "Donator Item - Underdweller's Cloak"
+	category = list("Плащи", "Донат")
+	path = /obj/item/clothing/cloak/poncho/donator_thisle
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/flybrokenwings_case
+	name = "Donator Kit - Cased Satchel - Required: Satchel, Backpack or Rucksack"
+	category = list("Аксессуары", "Донат")
+	path = /obj/item/enchantingkit/donator_case
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/rosa_silveredguitar
+	name = "Donator Item - Silvered Rosa Guitar"
+	category = list("Разное", "Донат")
+	path = /obj/item/rogue/instrument/guitar/rosa_silveredguitar
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/silvered_guitar
+	name = "Donator Item - Silvered Guitar"
+	category = list("Разное", "Донат")
+	path = /obj/item/rogue/instrument/guitar/silveredguitar
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/lief_ring
+	name = "Donator Item - Blortz Incrusted Blacksteel Ring"
+	category = list("Аксессуары", "Донат")
+	path = /obj/item/clothing/ring/lief_ring
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/yoshi_estoc
+	name = "Donator Kit - Xylixian Estoc - Required: Estoc or Stecher"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/weapon/yoshi_estoc
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/furheadband
+	name = "Fur Headband"
+	category = "Головные уборы"
+	path = /obj/item/clothing/head/roguetown/headband/fur
+
+/datum/loadout_item/turban
+	name = "Turban"
+	category = "Головные уборы"
+	path = /obj/item/clothing/head/roguetown/turban
+
+/datum/loadout_item/duelisthat
+	name = "Dashing Feathered Hat"
+	category = "Головные уборы"
+	path = /obj/item/clothing/head/roguetown/duelisthat
+
+/datum/loadout_item/card_deck_triple
+	name = "Card Deck (3x Cards)"
+	category = "Разное"
+	path = /obj/item/deck/playing_cards/triple
+
+/datum/loadout_item/triumph_satcheltail
+	name = "Tail Satchel"
+	category = "Разное"
+	path = /obj/item/storage/backpack/rogue/satchel/tailchel
+
+/datum/loadout_item/triumph_blackshortsatchel
+	name = "Short Satchel, Black"
+	category = "Триумфы"
+	path = /obj/item/storage/backpack/rogue/satchel/short/black
+	triumph_cost = 5
+
+//ЧАСЫ БЛЯДЬ
+
+/datum/loadout_item/clock_g
+	name = "gold handclock"
+	category = list("Триумфы")
+	path = /obj/item/clock_capped
+	triumph_cost = 5
+
+/datum/loadout_item/clock_s
+	name = "silver handclock"
+	category = list("Триумфы")
+	path = /obj/item/clock_capped/silver
+	triumph_cost = 5
+
+/datum/loadout_item/clock_br
+	name = "bronze handclock"
+	category = list("Триумфы")
+	path = /obj/item/clock
+	triumph_cost = 2
+
+/datum/loadout_item/clock_i
+	name = "iron handclock"
+	category = list("Триумфы")
+	path = /obj/item/clock/iron
+	triumph_cost = 2
+
+/datum/loadout_item/clock_compas
+	name = "compas"
+	category = list("Донат")
+	path = /obj/item/clock_capped/compas
+	donatitem = TRUE
+	ckeywhitelist = list("alex23116571")
+
+/datum/loadout_item/saigatabard
+	name = "Saiga Tabard"
+	category = "Плащи"
+	path = /obj/item/clothing/cloak/tabard/saiga
+
+/datum/loadout_item/donator/universal/sabatons
+	name = "Donator Kit - Foot Plates - Required: Steel Plated Boots"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/sabatons
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/universal/armor_gothic_ornate
+	name = "Donator Kit - Gothic Fluted Armor - Required: Fluted Cuirass, Ornate Fluted Cuirass or Fluted Plate Armor"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/gothicornatecuirass
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/fregian_mage
+	name = "Donator Item - Violet Silk Gown"
+	category = list("Одежда", "Донат")
+	path = /obj/item/clothing/suit/roguetown/shirt/dress/silkdress/steward/donator_fregian_mage
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/dasfox/ranger_woadsleeve
+	name = "Donator Kit - Ranger's Woadmaille Bodysleeve - Required: Woad Elven Plate or Hauberk"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/dasfox_ranger_woadsleeve
+	donatitem = TRUE
+	donat_tier = 3
+
+/datum/loadout_item/donator/dasfox/ranger_undersuit
+	name = "Donator Kit - Ranger's Undersuit - Required: Padded Gambeson"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/dasfox_ranger_undersuit
+	donatitem = TRUE
+	donat_tier = 3
+
+/datum/loadout_item/donator/dasfox/ranger_demigaunts
+	name = "Donator Kit - Ranger's Woadwoven Demigaunts - Required: Woad Elven Gloves or Hardened Leather Gloves"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/dasfox_ranger_demigaunts
+	donatitem = TRUE
+	donat_tier = 3
+
+/datum/loadout_item/donator/dasfox/ranger_schynbalds
+	name = "Donator Kit - Ranger's Woadwoven Stirruped Schynbalds - Required: Woad Elven Boots or Hardened Leather Boots"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/dasfox_ranger_schynbalds
+	donatitem = TRUE
+	donat_tier = 3
+
+/datum/loadout_item/donator/dasfox/ranger_mantle
+	name = "Donator Item - Black Oak Ranger's Mantle"
+	category = list("Плащи", "Донат")
+	path = /obj/item/clothing/cloak/dasfox_ranger
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/boemanerds
+	name = "Donator Kit - Steel Full Plate Corslet - Required: Steel Full Plate Armor"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/triumph_armorkini_steel
+	donatitem = TRUE
+	donat_tier = 3
+
+/datum/loadout_item/donator/boemanerds/iron
+	name = "Donator Kit - Iron Full Plate Corslet - Required: Iron Full Plate Armor"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/triumph_armorkini_iron
+	donatitem = TRUE
+	donat_tier = 3
+
+/datum/loadout_item/donator/limeastratatabard
+	name = "Donator Item - Astratan Tabard"
+	category = list("Плащи", "Донат")
+	path = /obj/item/clothing/cloak/tabard/limeastratatabard
+	donatitem = TRUE
+	donat_tier = 3
+
+/datum/loadout_item/donator/limetabard
+	name = "Donator Item - Leathery Tabard"
+	category = list("Плащи", "Донат")
+	path = /obj/item/clothing/cloak/tabard/limetabard
+	donatitem = TRUE
+	donat_tier = 3
+
+/datum/loadout_item/donator/limeastratahelm
+	name = "Donator Kit - Astratan Helmet - Required: Astratan Helmet"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/limeastratahelm
+	donatitem = TRUE
+	donat_tier = 3
+
+/datum/loadout_item/donator/guidress
+	name = "Donator Item - Gilded Dress"
+	category = list("Одежда", "Донат")
+	path = /obj/item/clothing/cloak/poncho/guidress
+	donatitem = TRUE
+	donat_tier = 3
+
+/datum/loadout_item/donator/ulqbelt
+	name = "Donator Item - Potionkeeper's Belt"
+	category = list("Аксессуары", "Донат")
+	path = /obj/item/storage/belt/rogue/leather/ulqbelt
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/ulqsusbelt
+	name = "Donator Item - Potionkeeper's Messy Belt"
+	category = list("Аксессуары", "Донат")
+	path = /obj/item/storage/belt/rogue/leather/ulqsusbelt
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/universal/dominion_sword
+	name = "Elixir - Dominion Sword - Required: Falchion, Falx, Arming Sword or Silver Sword"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/weapon/dominion_sword
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/universal/dominion_knife
+	name = "Elixir - Dominion Knife - Required: Steel Dagger, Iron Dagger, Iron Combat Knife, Steel Combat Knife, Parrying Dagger or Messer"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/weapon/dominion_knife
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/universal/dominion_greatsword
+	name = "Elixir - Dominion Greatsword - Required: Greatsword, Iron Greatsword, Zweihander, Grenzlander, Flamberge, Blacksteel Flamberge, Executioner's Sword, Silver Executioner's Sword or Terminus Est"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/weapon/dominion_greatsword
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/universal/dominion_shotel
+	name = "Elixir - Dominion Shotel - Required: Shotel or Iron Shotel"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/weapon/dominion_shotel
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/universal/dominion_shield
+	name = "Elixir - Dominion Shield - Required: Metal Tower Shield, Wooden Tower Shield, Heater Shield, Iron Shield, Buckler Shield, Hoplon Shield or Hoplon Greatshield"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/weapon/dominion_shield
+	donatitem = TRUE
+	donat_tier = 2
+
+/datum/loadout_item/donator/universal/dominion_cestus
+	name = "Elixir - Dominion Cestus - Required: Weighted Bandages, Pugilistic Bandages, Leather Gloves, Hardened Leather Gloves, Chain Gauntlets, Plate Gauntlets, Steel Knuckles, Bronze Knuckles, Iron Knuckles, Silver Knuckles or Blacksteel Knuckles"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/dominion_cestus
+	donatitem = TRUE
+	donat_tier = 2

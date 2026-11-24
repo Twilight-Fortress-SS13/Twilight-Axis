@@ -58,3 +58,34 @@
 	ai_controller.blackboard[BB_MOB_AGGRO_TABLE] = list()
 	ai_controller.nudge_target_scan()
 	ai_controller.reset_ai_status() // TA EDIT END
+
+/datum/npc_archetype/skeleton/summon // TA EDIT
+	name = "Summoned Skeleton" // TA EDIT
+	statpack = /datum/npc_statpack/line/t1 // TA EDIT
+	armor_training = ARMOR_CLASS_MEDIUM // TA EDIT
+	traits = list(TRAIT_NOZIZORECRUIT) // TA EDIT
+	melee = SKILL_LEVEL_JOURNEYMAN // TA EDIT
+	loadouts = list( // TA EDIT
+		/datum/npc_loadout/armor/medium/iron_chain, // TA EDIT
+		/datum/npc_loadout/kit/skeleton_summon, // TA EDIT
+		/datum/npc_loadout/weapon/skeleton_summon, // TA EDIT
+	) // TA EDIT
+
+/datum/npc_loadout/kit/skeleton_summon // TA EDIT
+	shirt = list( // TA EDIT
+		/obj/item/clothing/suit/roguetown/shirt/undershirt/vagrant = 50, // TA EDIT
+		/obj/item/clothing/suit/roguetown/shirt/undershirt/vagrant/l = 50, // TA EDIT
+	) // TA EDIT
+	cloak = list( // TA EDIT
+		/obj/item/clothing/cloak/tabard/stabard/surcoat/necro, // TA EDIT
+		/obj/item/clothing/cloak/tabard/necro, // TA EDIT
+		/obj/item/clothing/cloak/half/lich, // TA EDIT
+	) // TA EDIT
+
+/datum/npc_loadout/weapon/skeleton_summon // TA EDIT
+	weapons = list( // TA EDIT
+		list(/obj/item/rogueweapon/sword/iron), // TA EDIT
+		list(/obj/item/rogueweapon/spear), // TA EDIT
+		list(/obj/item/rogueweapon/mace), // TA EDIT
+		list(/obj/item/rogueweapon/stoneaxe/woodcut), // TA EDIT
+	) // TA EDIT

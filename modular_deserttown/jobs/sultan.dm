@@ -105,7 +105,6 @@
 						new_origin = pick(/datum/virtue/origin/raneshen, /datum/virtue/origin/naledi, /datum/virtue/origin/zybantian)
 					var/datum/virtue/origin/applied_origin = new new_origin()
 					player.prefs.virtue_origin = applied_origin
-					apply_virtue(H, applied_origin)
 
 /datum/outfit/job/roguetown/sultan
 	neck = /obj/item/storage/belt/rogue/pouch/coins/rich
@@ -364,7 +363,7 @@
 		GLOB.lord_titles -= recruit.real_name
 		return FALSE
 	recruiter.say("I HEREBY GRANT YOU, [uppertext(recruit.name)], THE TITLE OF [uppertext(granted_title)]!")
-	REMOVE_TRAIT(recruit, TRAIT_OUTLANDER, ADVENTURER_TRAIT)
+	REMOVE_TRAIT(recruit, TRAIT_OUTLANDER, JOB_TRAIT)
 	REMOVE_TRAIT(recruit, TRAIT_OUTLANDER, TRAIT_GENERIC)
 	GLOB.lord_titles[recruit.real_name] = granted_title
 	return TRUE
