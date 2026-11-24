@@ -11,7 +11,7 @@
 	shared_occurence_type = SHARED_MINOR_THREAT
 	storyteller_antag_flags = STORYTELLER_ANTAG_SOFT
 	consumes_hard_antag_slot = FALSE // TA EDIT
-	// TA REMOVAL: min_players = HARD_ANTAG_MIN_POP
+	min_players = HARD_ANTAG_MIN_POP
 
 	denominator = 80
 
