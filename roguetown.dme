@@ -4021,6 +4021,7 @@
 #include "modular_twilight_axis\code\datums\trophy_rules\troll.dm"
 #include "modular_twilight_axis\code\datums\trophy_rules\trophy_rule.dm"
 #include "modular_twilight_axis\code\datums\migrants\migrant_waves\gronn_reavers.dm"
+#include "modular_twilight_axis\code\datums\migrants\migrant_waves\silver_inquisition.dm"
 #include "modular_twilight_axis\code\game\sound.dm"
 #include "modular_twilight_axis\code\game\area\actualcoast.dm"
 #include "modular_twilight_axis\code\game\area\basingrove.dm"
