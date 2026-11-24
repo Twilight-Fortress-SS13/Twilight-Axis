@@ -86,7 +86,8 @@
 				close_rift()
 
 /obj/structure/vampire/portalmaker/proc/can_use_rift(mob/living/user)
-	return istype(user) && !!user.mind?.has_antag_datum(/datum/antagonist/vampire)
+	var/mob/living/carbon/human/vampire = user
+	return istype(vampire) && vampire.clan && !!vampire.mind?.has_antag_datum(/datum/antagonist/vampire)
 
 /obj/structure/vampire/portalmaker/proc/get_town_zone_areas(zone_name)
 	var/list/zone_areas = list()
@@ -210,12 +211,14 @@
 			return candidate
 	return null
 
+/obj/structure/vampire/portalmaker/proc/is_rift_forbidden(area/zone)
+	return !zone || zone.hidden || zone.noteleport || istype(zone, /area/rogue/indoors/ravoxarena)
+
 /obj/structure/vampire/portalmaker/proc/get_rift_anchor(obj/item/clothing/neck/portalamulet/amulet)
 	if(amulet.uses <= 0)
 		return null
 	var/turf/anchor = get_turf(amulet)
-	var/area/anchor_area = get_area(anchor)
-	if(!anchor || !anchor_area || anchor_area.hidden)
+	if(!anchor || is_rift_forbidden(get_area(anchor)))
 		return null
 	return anchor
 
@@ -226,7 +229,7 @@
 	if(!istype(destination) || !istype(anchor) || destination.z != anchor.z || get_dist(destination, anchor) > TA_RIFT_PLACEMENT_RANGE)
 		return FALSE
 	var/area/destination_area = get_area(destination)
-	if(!destination_area || destination_area.hidden || !(destination_area in zone_areas))
+	if(is_rift_forbidden(destination_area) || !(destination_area in zone_areas))
 		return FALSE
 	if(!is_rift_footing(destination))
 		return FALSE
@@ -271,7 +274,7 @@
 		return
 	if(!get_worn_gate_amulet(traveler))
 		to_chat(traveler, span_warning("Без амулета врат на шее разлом не вернёт меня назад."))
-	INVOKE_ASYNC(src, PROC_REF(begin_passage), traveler)
+	addtimer(CALLBACK(src, PROC_REF(begin_passage), traveler), 1)
 
 /obj/structure/vampire/rift/proc/can_pass(mob/living/traveler)
 	return TRUE
@@ -283,7 +286,7 @@
 	return amulet
 
 /obj/structure/vampire/rift/proc/begin_passage(mob/living/traveler)
-	if(!do_after(traveler, TA_RIFT_PASSAGE_TIME, FALSE, src))
+	if(QDELETED(traveler) || traveler.loc != loc || !do_after(traveler, TA_RIFT_PASSAGE_TIME, FALSE, src))
 		return
 	if(QDELETED(src) || !exit || QDELETED(traveler) || traveler.loc != loc || traveler.buckled || !can_pass(traveler))
 		return

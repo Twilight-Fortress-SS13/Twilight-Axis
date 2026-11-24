@@ -1,25 +1,30 @@
 import { useState } from 'react';
 
-const setWindowBox = (width: number, height: number, expanded: boolean) => {
-  const scale = window.devicePixelRatio || 1;
-  const screenWidth = Math.floor(window.screen.availWidth * scale);
-  const screenHeight = Math.floor(window.screen.availHeight * scale);
-  const boxWidth = expanded ? screenWidth : Math.min(width, screenWidth);
-  const boxHeight = expanded ? screenHeight : Math.min(height, screenHeight);
-  const x = Math.max(Math.floor((screenWidth - boxWidth) / 2), 0);
-  const y = Math.max(Math.floor((screenHeight - boxHeight) / 2), 0);
+import { useBackend } from '../../backend';
+import { recallWindowGeometry } from '../../drag';
+
+const fillScreen = () => {
+  const pixelRatio = window.devicePixelRatio || 1;
+  const screenWidth = Math.floor(window.screen.availWidth * pixelRatio);
+  const screenHeight = Math.floor(window.screen.availHeight * pixelRatio);
 
   Byond.winset(Byond.windowId, {
-    pos: `${x},${y}`,
-    size: `${boxWidth}x${boxHeight}`,
+    pos: '0,0',
+    size: `${screenWidth}x${screenHeight}`,
   });
 };
 
 export const useWindowExpand = (width: number, height: number) => {
+  const { config } = useBackend();
   const [expanded, setExpanded] = useState(false);
 
   const toggle = () => {
-    setWindowBox(width, height, !expanded);
+    if (expanded) {
+      const { locked, scale } = config.window;
+      recallWindowGeometry({ size: [width, height], locked, scale });
+    } else {
+      fillScreen();
+    }
     setExpanded(!expanded);
   };
 

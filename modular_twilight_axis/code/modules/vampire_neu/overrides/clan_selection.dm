@@ -61,6 +61,13 @@
 	QDEL_NULL(clan_menu)
 	return ..()
 
+/datum/antagonist/vampire/on_removal()
+	var/mob/living/carbon/human/vampdude = owner?.current
+	if(istype(vampdude))
+		remove_verb(vampdude, /mob/living/carbon/human/proc/vampire_choose_clan_verb)
+		vampdude.vampire_clear_choose_clan_button()
+	return ..()
+
 /datum/antagonist/vampire/proc/pause_clan_choice_timeout()
 	return
 

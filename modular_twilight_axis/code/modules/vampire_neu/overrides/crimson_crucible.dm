@@ -22,7 +22,13 @@
 		return
 	if(!is_crucible_vampire(user) && !can_offer_blood(user))
 		return
+	if(is_crucible_clanless(user))
+		to_chat(user, span_warning("Тигель молчит: сперва я должен избрать свою кровь."))
+		return
 	ui_interact(user)
+
+/obj/structure/vampire/bloodpool/proc/is_crucible_clanless(mob/living/carbon/human/user)
+	return istype(user) && is_crucible_vampire(user) && !user.clan
 
 /obj/structure/vampire/bloodpool/ui_state(mob/user)
 	return GLOB.human_adjacent_state
@@ -39,7 +45,7 @@
 	var/ascension_total = 0
 	for(var/project_type in subtypesof(/datum/vampire_project))
 		var/datum/vampire_project/project = get_project_prototype(project_type)
-		if(!project.category)
+		if(!project.category || project_type == /datum/vampire_project/servant)
 			continue
 		if(project.ascension_rite)
 			ascension_total++
@@ -143,7 +149,7 @@
 		return
 	if(action == "give_blood")
 		return can_offer_blood(user) && give_blood(user)
-	if(!is_crucible_vampire(user))
+	if(!is_crucible_vampire(user) || is_crucible_clanless(user))
 		return
 
 	switch(action)
@@ -462,8 +468,12 @@
 		var/refund = contributors[contributor]
 		if(refund <= 0)
 			continue
+		var/vitae_before = contributor.bloodpool
 		contributor.adjust_bloodpool(refund)
-		to_chat(contributor, span_notice("Ритуал «[display_name]» прерван. Ко мне вернулось [refund] витэ."))
+		var/returned = contributor.bloodpool - vitae_before
+		if(returned < refund && !QDELETED(bloodpool))
+			bloodpool.receive_vitae(refund - returned)
+		to_chat(contributor, span_notice("Ритуал «[display_name]» прерван. Ко мне вернулось [returned] витэ[returned < refund ? ", остальное приняла чаша" : ""]."))
 	contributors.Cut()
 	if(cup_paid_amount > 0 && !QDELETED(bloodpool))
 		bloodpool.current += cup_paid_amount

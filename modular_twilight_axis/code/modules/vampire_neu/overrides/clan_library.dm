@@ -104,6 +104,10 @@ GLOBAL_LIST_EMPTY(ta_clan_layout_cache)
 	for(var/datum/clan_hierarchy_node/position as anything in user_clan.all_positions)
 		position.node_x += left_margin - min_x
 
+/datum/clan_hierarchy_interface/generate_hierarchy_nodes_html()
+	var/static/regex/inline_tooltip = regex(@"showNodeTooltip\(event, '[^']*'\)", "g")
+	return inline_tooltip.Replace(..(), "showNodeTooltip(event, this.getAttribute(&quot;data-node-data&quot;))")
+
 /datum/clan_hierarchy_interface/generate_hierarchy_sidebar()
 	. = ..()
 	if(!can_manage_hierarchy())
@@ -114,7 +118,7 @@ GLOBAL_LIST_EMPTY(ta_clan_layout_cache)
 	. = "[copytext(., 1, insert_at)][generate_library_html()][copytext(., insert_at)]"
 
 /datum/clan_hierarchy_interface/proc/generate_library_html()
-	var/can_load = (user == user_clan.clan_leader)
+	var/can_load = can_load_layout()
 	var/list/public_layout = ta_clan_public_layout()
 	var/list/rows = list(library_row_html(public_layout["name"], TA_CLAN_LAYOUT_PUBLIC_SLOT, FALSE, can_load))
 	var/list/slots = ta_get_clan_layouts(user.ckey)
@@ -148,8 +152,13 @@ GLOBAL_LIST_EMPTY(ta_clan_layout_cache)
 			return
 	return ..()
 
+/datum/clan/proc/ta_is_led_by(mob/living/carbon/human/member)
+	if(member == clan_leader)
+		return TRUE
+	return !clan_leader && hierarchy_root && hierarchy_root.assigned_member == member
+
 /datum/clan_menu_interface/can_import_hierarchy()
-	return user_clan && user == user_clan.clan_leader
+	return user_clan?.ta_is_led_by(user)
 
 /datum/clan_menu_interface/Topic(href, href_list)
 	if(!user || usr != user)
@@ -167,7 +176,8 @@ GLOBAL_LIST_EMPTY(ta_clan_layout_cache)
 
 /datum/clan_hierarchy_interface/proc/save_layout(slot_text)
 	var/slot = parse_layout_slot(slot_text)
-	var/list/slots = ta_get_clan_layouts(user.ckey)
+	var/owner_ckey = user.ckey
+	var/list/slots = ta_get_clan_layouts(owner_ckey)
 	if(!slot || !slots || !can_save_layout() || !COOLDOWN_FINISHED(src, layout_cooldown))
 		return
 
@@ -178,7 +188,7 @@ GLOBAL_LIST_EMPTY(ta_clan_layout_cache)
 	layout_name = ta_plain_text(layout_name, TA_CLAN_LAYOUT_NAME_LENGTH) || "Слот [slot]"
 	if(current && tgui_alert(user, "Заменить «[current["name"]]» в слоте [slot]?", "Библиотека клана", list("Заменить", "Отмена")) != "Заменить")
 		return
-	if(!can_save_layout())
+	if(!can_save_layout() || user.ckey != owner_ckey)
 		return
 
 	COOLDOWN_START(src, layout_cooldown, TA_CLAN_LAYOUT_COOLDOWN)
@@ -187,12 +197,12 @@ GLOBAL_LIST_EMPTY(ta_clan_layout_cache)
 		to_chat(user, span_warning("В иерархии больше [TA_CLAN_LAYOUT_MAX_NODES] должностей, такую раскладку потом не загрузить."))
 		return
 	slots[slot] = list("name" = layout_name, "nodes" = layout["nodes"])
-	ta_write_clan_layouts(user.ckey, slots)
+	ta_write_clan_layouts(owner_ckey, slots)
 	to_chat(user, span_notice("Иерархия клана сохранена в слот [slot] как «[html_encode(layout_name)]»."))
 	refresh_hierarchy()
 
 /datum/clan_hierarchy_interface/proc/can_load_layout()
-	return !QDELETED(src) && user_clan && user.clan == user_clan && user == user_clan.clan_leader
+	return !QDELETED(src) && user_clan && user.clan == user_clan && user_clan.ta_is_led_by(user)
 
 /datum/clan_hierarchy_interface/proc/load_layout(slot_text)
 	if(!can_load_layout())

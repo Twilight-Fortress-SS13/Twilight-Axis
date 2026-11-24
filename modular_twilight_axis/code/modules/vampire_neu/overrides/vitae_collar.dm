@@ -33,6 +33,11 @@
 	key_ref = null
 	return ..()
 
+/obj/item/clothing/neck/roguetown/collar/vitae_collar/build_worn_icon(default_layer = 0, default_icon_file = null, isinhands = FALSE, femaleuniform = NO_FEMALE_UNIFORM, override_state = null, female = FALSE, customi = null, sleeveindex, boobed_overlay = FALSE, icon/clip_mask = null)
+	if(!isinhands)
+		override_state = "cursed_collar"
+	return ..(default_layer, default_icon_file, isinhands, femaleuniform, override_state, female, customi, sleeveindex, boobed_overlay, clip_mask)
+
 /obj/item/clothing/neck/roguetown/collar/vitae_collar/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Пока надет в Поместье Вампира: блокирует магию, чудеса и бег.")
@@ -130,7 +135,7 @@
 		return
 
 	var/vitae_multiplier = (victim.mind && !victim.clan) ? CLIENT_VITAE_MULTIPLIER : 1
-	var/available_vitae = victim.bloodpool * vitae_multiplier
+	var/available_vitae = min(victim.bloodpool * vitae_multiplier, pool.get_cup_space() / TA_VITAE_COLLAR_EFFICIENCY)
 	var/spare_blood = victim.blood_volume - TA_VITAE_COLLAR_BLOOD_FLOOR
 	if(available_vitae <= 0 || spare_blood <= 0)
 		return

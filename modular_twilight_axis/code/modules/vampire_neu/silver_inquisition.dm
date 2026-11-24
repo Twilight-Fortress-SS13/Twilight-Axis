@@ -49,13 +49,14 @@ SUBSYSTEM_DEF(ta_silver_inquisition)
 	var/datum/mind/killer = get_top_attacker(damage_log)
 	if(!istype(killer) || !killer.has_antag_datum(/datum/antagonist/vampire))
 		return
-	addtimer(CALLBACK(src, PROC_REF(count_death), victim_ckey, killer.key, body_ref), TA_SILVER_INQUISITION_CONFIRM_TIME)
+	var/mob/living/body = body_ref?.resolve()
+	addtimer(CALLBACK(src, PROC_REF(count_death), victim_ckey, killer.key, body_ref, body?.timeofdeath), TA_SILVER_INQUISITION_CONFIRM_TIME)
 
-/datum/controller/subsystem/ta_silver_inquisition/proc/count_death(victim_ckey, killer_key, datum/weakref/body_ref)
+/datum/controller/subsystem/ta_silver_inquisition/proc/count_death(victim_ckey, killer_key, datum/weakref/body_ref, death_time)
 	if(can_fire || wave_arrived() || (victim_ckey in victims))
 		return
 	var/mob/living/body = body_ref?.resolve()
-	if(body && body.stat != DEAD)
+	if(body && (body.stat != DEAD || body.timeofdeath != death_time))
 		return
 	victims += victim_ckey
 	log_game("Silver Inquisition: [victim_ckey] was killed by the vampire [killer_key] ([length(victims)] total).")
@@ -177,7 +178,9 @@ SUBSYSTEM_DEF(ta_silver_inquisition)
 	return ..()
 
 /datum/round_event/migrant_wave/start()
-	SSta_silver_inquisition.yield_track(MIGRANT_TRACK_EVENT)
+	var/datum/migrant_wave/wave = MIGRANT_WAVE(wave_type)
+	if(wave && !SSmigrants.get_forming_track(wave))
+		SSta_silver_inquisition.yield_track(MIGRANT_TRACK_EVENT)
 	return ..()
 
 /datum/controller/subsystem/migrants
@@ -260,6 +263,25 @@ SUBSYSTEM_DEF(ta_silver_inquisition)
 	. = ..()
 	victim.ta_log_damage(attacker, victim.ta_get_health_damage() - damage_before)
 
+/mob/living/carbon/human/revive(full_heal, admin_revive)
+	. = ..()
+	if(.)
+		ta_damage_log = null
+
+/mob/living/carbon/human/do_attack_animation(atom/target, visual_effect_icon, obj/item/used_item, no_effect, item_animation_override, datum/intent/used_intent, simplified)
+	var/mob/living/carbon/human/victim = target
+	if(istype(victim))
+		victim.ta_note_attacker(src)
+	return ..()
+
+/mob/living/carbon/human/attack_hand(mob/user)
+	ta_note_attacker(user)
+	return ..()
+
+/mob/living/carbon/human/onbite(mob/living/carbon/human/user)
+	ta_note_attacker(user)
+	return ..()
+
 /datum/species/kicked(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	target.ta_note_attacker(user)
 	return ..()
@@ -276,9 +298,8 @@ SUBSYSTEM_DEF(ta_silver_inquisition)
 	ta_note_attacker(throwingdatum?.thrower)
 	return ..()
 
-/mob/living/carbon/human/attack_animal(mob/living/simple_animal/animal)
-	if(istype(animal) && animal.melee_damage_upper > 0)
-		ta_note_attacker(animal)
+/mob/living/carbon/human/check_shields(atom/attacker, damage, attack_text = "the attack", attack_type = MELEE_ATTACK, armor_penetration = 0)
+	ta_note_attacker(attacker)
 	return ..()
 
 /obj/item/grabbing/proc/ta_note_grabber(mob/living/user)
@@ -298,6 +319,14 @@ SUBSYSTEM_DEF(ta_silver_inquisition)
 	ta_note_grabber(user)
 	return ..()
 
+/obj/item/grabbing/twistitemlimb(mob/living/user)
+	ta_note_grabber(user)
+	return ..()
+
+/obj/item/grabbing/bite/bitelimb(mob/living/carbon/human/user)
+	ta_note_grabber(user)
+	return ..()
+
 /obj/item/grabbing/attack(mob/living/victim, mob/living/user)
 	var/mob/living/carbon/human/choked = victim
 	if(!istype(choked) || user?.used_intent?.type != /datum/intent/grab/choke)
@@ -309,7 +338,7 @@ SUBSYSTEM_DEF(ta_silver_inquisition)
 
 /datum/coven_power/activate(atom/target)
 	var/mob/living/carbon/human/victim = target
-	if(hostile && istype(victim))
+	if(istype(victim))
 		victim.ta_note_attacker(owner)
 	return ..()
 

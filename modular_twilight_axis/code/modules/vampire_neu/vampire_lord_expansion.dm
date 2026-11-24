@@ -20,6 +20,7 @@
 #define VL_MANOR_SOURCE "ta_manor_shelter"
 #define VL_WARD_WARNING "Астрата хранит покой этого города, уходи!"
 #define VL_ASCENSION_LOCK_DELAY (1 MINUTES)
+#define VL_RETINUE_CLAN_WAIT (5 MINUTES)
 
 GLOBAL_VAR_INIT(ta_vampire_lord_expansion, FALSE)
 GLOBAL_VAR_INIT(ta_vampire_lord_auto_event, FALSE)
@@ -334,11 +335,11 @@ GLOBAL_LIST_INIT(ta_astrata_extra_wards, typecacheof(list(
 		ta_vampire_lord_expansion_open_retinue()
 	ta_refresh_vampire_zone_watches()
 
-/proc/ta_vampire_lord_expansion_open_retinue()
+/proc/ta_vampire_lord_expansion_open_retinue(ignore_clan = FALSE)
 	if(!GLOB.ta_vampire_lord_expansion || !GLOB.ta_vampire_lord_taken)
 		return
 	var/mob/living/carbon/human/lord_body = ta_get_vampire_lord_body()
-	if(lord_body && !lord_body.clan)
+	if(lord_body && !lord_body.clan && !ignore_clan)
 		return
 	var/knight_limit = GLOB.ta_vampire_lord_auto_event ? VL_AUTO_KNIGHT_SLOTS : VL_KNIGHT_SLOTS
 	var/servant_limit = GLOB.ta_vampire_lord_auto_event ? VL_AUTO_SERVANT_SLOTS : VL_SERVANT_SLOTS
@@ -384,6 +385,7 @@ GLOBAL_LIST_INIT(ta_astrata_extra_wards, typecacheof(list(
 	lord_body.forceMove(spawn_turf)
 	log_game("Vampire Lord Expansion: [key_name(lord_body)] placed at [get_area(lord_body)] ([lord_body.x],[lord_body.y],[lord_body.z]).")
 	ta_vampire_lord_expansion_open_retinue()
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(ta_vampire_lord_expansion_open_retinue), TRUE), VL_RETINUE_CLAN_WAIT)
 	ta_refresh_vampire_zone_watches()
 	return TRUE
 
@@ -519,3 +521,4 @@ GLOBAL_LIST_INIT(ta_astrata_extra_wards, typecacheof(list(
 #undef VL_MANOR_SOURCE
 #undef VL_WARD_WARNING
 #undef VL_ASCENSION_LOCK_DELAY
+#undef VL_RETINUE_CLAN_WAIT
