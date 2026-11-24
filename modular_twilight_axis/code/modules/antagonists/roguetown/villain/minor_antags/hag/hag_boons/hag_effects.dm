@@ -323,12 +323,16 @@
 
 /datum/pollutant/smoke/health
 	reagent = /datum/reagent/medicine/stronghealth
+	reagent_count = 20
 
 /datum/pollutant/smoke/mana
 	reagent = /datum/reagent/medicine/strongmana
+	reagent_count = 20
 
 /datum/pollutant/smoke/stam
 	reagent = /datum/reagent/medicine/strongstam
+	reagent_count = 20
 
 /datum/pollutant/smoke/restoration
 	reagent = /datum/reagent/medicine/restoration
+	reagent_count = 20
