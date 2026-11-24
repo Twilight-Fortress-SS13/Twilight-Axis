@@ -50,10 +50,10 @@
 			if(event)
 				event.stressadd = -max(1, metal_mood + quality_bonus)
 		else
-			human.vomit(force = TRUE)
+			human.add_nausea(200)
 	else if(iscarbon(eater))
 		var/mob/living/carbon/carbon = eater
-		carbon.vomit(force = TRUE)
+		carbon.add_nausea(200)
 	eater.taste(reagents)
 	if(bitecount < bitesize)
 		icon_state = "[icon_prefix][bitesize - bitecount]"
@@ -124,6 +124,8 @@
 
 /obj/item/reagent_containers/food/snacks/metal/crackers
 	name = "gilded steel crackers"
+	desc = "Bite-sized steel crackers glazed with gold. \
+		A festive crunch for Fluvian teeth, a regrettable snack for others."
 	icon_state = "metalick_cracker6"
 	icon_prefix = "metalick_cracker"
 	metal_mood = 4
