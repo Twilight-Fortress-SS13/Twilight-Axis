@@ -15,8 +15,8 @@
 		/obj/item/alch/hag_moss/lullaby = 5,
 		/obj/item/alch/hag_moss/pride = 5,
 		/obj/item/roguekey/hag = 1,
-		/obj/item/leechtick = 3,
-		/obj/item/leechtick_bloated = 3,
+		/obj/item/leechtick = 6, // TA EDIT - ORIGINAL: 3
+		/obj/item/leechtick_bloated = 6, // TA EDIT - ORIGINAL: 3
 	)
 	var/hag_tier = 1
 	var/static/list/curse_registry = list(
@@ -34,6 +34,7 @@
 		// TA ADDITION START
 		/datum/hag_boon/trait/curse/sleepless = list("cost" = 50, "min_tier" = 1),
 		/datum/hag_boon/trait/curse/atheism = list("cost" = 50, "min_tier" = 1),
+		/datum/hag_boon/curse/asundered_mind = list("cost" = 50, "min_tier" = 1),
 		// TA ADDITION END
 		// Trait Curses - Tier 2 (51 - 75 points)
 		/datum/hag_boon/trait/curse/no_run = list("cost" = 60, "min_tier" = 2),
@@ -343,7 +344,7 @@
 			max_points = 120
 
 	var/mob/living/carbon/C = L
-	if(istype(C) && HAS_TRAIT(C, TRAIT_FEYTOUCHED))
+	if(istype(C) && HAS_TRAIT(C, TRAIT_FEYBOUND)) // TA EDIT - ORIGINAL: if(istype(C) && HAS_TRAIT(C, TRAIT_FEYTOUCHED))
 		max_points = C.extra_boon_budget
 
 	// Only block if we are trying to boon a NEW person and we're at the limit

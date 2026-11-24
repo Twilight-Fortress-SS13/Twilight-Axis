@@ -292,6 +292,43 @@
 	if(owner.stat != CONSCIOUS)
 		return FALSE
 	if(damage > 0)
-		var/total_value = (damage * 0.25)
+		var/total_value = (damage * 0.4)
 		budget2change(total_value, owner, putinhands = FALSE, custom_turf = owner.loc)
 		return TRUE
+
+/datum/hag_boon/buff/pleasent_cloud
+	name = "Pleasent Cloud"
+	desc = "The bearer will randomly create clouds with a useful effect."
+	points = 50
+	status_type = /datum/status_effect/buff/hag_boon/pleasent_cloud
+
+/datum/status_effect/buff/hag_boon/pleasent_cloud
+	id = "pleasent_cloud"
+	duration = -1
+	var/list/smokes = list(
+		/datum/pollutant/smoke/health,
+		/datum/pollutant/smoke/mana,
+		/datum/pollutant/smoke/stam,
+		/datum/pollutant/smoke/restoration,
+	)
+
+/datum/status_effect/buff/hag_boon/pleasent_cloud/tick()
+	. = ..()
+	if(prob(2.5))
+		var/datum/pollutant/smoke/smoke_to_create = pick(smokes)
+		var/turf/S = get_turf(owner)
+		for(var/turf/open/T in range(1, S))
+			T.pollute_turf(smoke_to_create, 100, 200)
+		owner.visible_message(span_notice("[owner] suddenly covered by a strange cloud!"), span_notice("Strange clouds starts to appear from your skin..."))
+
+/datum/pollutant/smoke/health
+	reagent = /datum/reagent/medicine/stronghealth
+
+/datum/pollutant/smoke/mana
+	reagent = /datum/reagent/medicine/strongmana
+
+/datum/pollutant/smoke/stam
+	reagent = /datum/reagent/medicine/strongstam
+
+/datum/pollutant/smoke/restoration
+	reagent = /datum/reagent/medicine/restoration

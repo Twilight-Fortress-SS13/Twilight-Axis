@@ -43,12 +43,6 @@
 	)
 	disallowed_equipment_type = list(/obj/item/rogueweapon)
 
-/datum/hag_boon/spell/mirecrawler
-	name = "Boon of mirecrawler form"
-	desc = "Allows bearer to transform into a small, awful mirecrawler..."
-	spell_type = /obj/effect/proc_holder/spell/targeted/shapeshift/mireboi
-	points = 30
-
 /obj/effect/proc_holder/spell/self/roots_movement
 	name = "Movement of roots"
 	desc = "Move through the roots to someone you know..."
@@ -100,16 +94,31 @@
 	name = "Boon of bless crop"
 	desc = "Allows bearer to bless crops as druid does."
 	spell_type = /obj/effect/proc_holder/spell/targeted/blesscrop
-	points = 50
+	points = 20
 
-/*
 /datum/hag_boon/spell/berserker_rage
 	name = "Boon of berserker rage"
 	desc = "Grants bearer a berkerker's rage, allowing it to become stronger."
 	spell_type = /datum/action/cooldown/spell/rage
 	points = 75
 
-*/
+/datum/hag_boon/spell/berserker_rage/apply_boon_effect(mob/living/L)
+	if(!L.mind || !spell_type)
+		return
+
+	if(!locate(spell_type) in L.mind.spell_list)
+		L.mind.AddSpell(new spell_type)
+
+	return
+
+/datum/hag_boon/spell/berserker_rage/remove_boon_effect(mob/living/L)
+	if(!L.mind || !spell_type)
+		return
+
+	if(locate(spell_type) in L.mind.spell_list)
+		L.mind.AddSpell(spell_type)
+
+	return
 
 // HAG SPELLS - We make it ignore cockblock, cuz it's non-combat spells
 /obj/effect/proc_holder/spell/invoked/resurrect/hag

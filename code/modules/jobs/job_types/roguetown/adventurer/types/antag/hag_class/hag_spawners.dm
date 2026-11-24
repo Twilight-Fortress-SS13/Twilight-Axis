@@ -20,6 +20,7 @@
 		/obj/item/alch/hag_moss/enchanted/secret		= 2,
 		/obj/item/alch/hag_moss/enchanted/forest		= 2,
 		/obj/item/alch/hag_moss/enchanted/altered		= 2,
+		/obj/item/alch/hag_moss/enchanted/smoke			= 2,
 		// TA ADDITION END
 		/obj/item/alch/hag_moss/enchanted/vibrant = 2,
 		// High Rarity Enchanted
@@ -27,7 +28,7 @@
 		/obj/item/alch/hag_moss/enchanted/gilded		= 1,
 		/obj/item/alch/hag_moss/enchanted/drowned		= 1,
 		// TA ADDITION START
-		// /obj/item/alch/hag_moss/enchanted/rage			= 1,
+		/obj/item/alch/hag_moss/enchanted/rage			= 1,
 		/obj/item/alch/hag_moss/enchanted/boned			= 1,
 		// TA ADDITION END
 	)

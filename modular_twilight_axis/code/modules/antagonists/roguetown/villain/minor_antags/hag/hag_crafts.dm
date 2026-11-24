@@ -7,7 +7,7 @@
 /datum/crafting_recipe/roguetown/alchemy/hag/altered_moss
 	name = "moss altered"
 	result = list(/obj/item/alch/hag_moss/enchanted/altered = 1)
-	reqs = list(/obj/item/alch/hag_moss/sorrow = 1, /obj/item/reagent_containers/food/snacks/rogue/meat/rat = 1)
+	reqs = list(/obj/item/alch/hag_moss/sorrow = 1, /obj/item/reagent_containers/food/snacks/rogue/meat = 1)
 	craftdiff = 6
 
 /datum/crafting_recipe/roguetown/alchemy/hag/forest_moss
@@ -22,17 +22,26 @@
 	reqs = list(/obj/item/alch/hag_moss/lullaby = 1, /obj/item/alch/manabloompowder = 1)
 	craftdiff = 6
 
-/*
+/datum/crafting_recipe/roguetown/alchemy/hag/smoke_moss
+	name = "moss smoke"
+	result = list(/obj/item/alch/hag_moss/enchanted/smoke = 1)
+	reqs = list(/obj/item/alch/hag_moss/sorrow = 1, /obj/item/natural/cloth = 1)
+
 /datum/crafting_recipe/roguetown/alchemy/hag/rage_moss
 	name = "moss rage"
 	result = list(/obj/item/alch/hag_moss/enchanted/rage = 1)
 	reqs = list(/obj/item/alch/hag_moss/fury = 1, /obj/item/natural/thorn = 1)
-*/
 
 /datum/crafting_recipe/roguetown/alchemy/hag/power_moss
 	name = "moss power"
 	result = list(/obj/item/alch/hag_moss/enchanted/power = 1)
 	reqs = list(/obj/item/alch/hag_moss/fury = 1, /obj/item/alch/hag_moss/envy = 1)
+
+/obj/item/alch/hag_moss/enchanted/smoke
+	name = "Smoke Moss"
+	boon_path = /datum/hag_boon/buff/pleasent_cloud
+	desc = "This moss feels like powder to the touch, and it smells like herbs."
+	color = "#408d8d"
 
 /obj/item/alch/hag_moss/enchanted/boned
 	name = "Boned Moss"
@@ -48,7 +57,7 @@
 
 /obj/item/alch/hag_moss/enchanted/altered/Initialize(mapload)
 	. = ..()
-	var/probability = rand(1, 3)
+	var/probability = rand(1, 2)
 	switch(probability)
 		if(1)
 			boon_path = /datum/hag_boon/spell/rat_form
@@ -56,9 +65,6 @@
 		if(2)
 			boon_path = /datum/hag_boon/spell/troll_form
 			name = "Troll Moss"
-		if(3)
-			boon_path = /datum/hag_boon/spell/mirecrawler
-			name = "Mirecrawler Moss"
 
 /obj/item/alch/hag_moss/enchanted/forest
 	name = "Forest Moss"
@@ -86,14 +92,11 @@
 			boon_path = /datum/hag_boon/buff/bard_initiate
 			name = "Musical Moss"
 
-/*
 /obj/item/alch/hag_moss/enchanted/rage
 	name = "Rage Moss"
 	boon_path = /datum/hag_boon/spell/berserker_rage
 	desc = "This moss is RED, filled with RAGE and BLOOD. Touching this makes you EVIL!"
 	color = "#ff0000"
-
-*/
 
 /obj/item/alch/hag_moss/enchanted/power
 	name = "Power Moss"

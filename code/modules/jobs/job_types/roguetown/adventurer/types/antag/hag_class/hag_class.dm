@@ -97,7 +97,8 @@
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/altered_moss)
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/forest_moss)
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/secret_moss)
-		// H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/rage_moss)
+		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/smoke_moss)
+		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/rage_moss)
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/power_moss)
 		// TA ADDITION END
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/alchemy/hag/vibrant_moss)

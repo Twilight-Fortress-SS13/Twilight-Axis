@@ -71,3 +71,18 @@
 			priority_announce("[H.patron.name] has reconciled [H.real_name] with the Church. They are once again part of the flock!", title = "RECONCILIATION", sound = 'sound/misc/bell.ogg')
 		else
 			priority_announce("Astrata has reconciled [H.real_name] with the Church. They are once again part of the flock!", title = "RECONCILIATION", sound = 'sound/misc/bell.ogg')
+
+/datum/hag_boon/curse/asundered_mind
+	name = "Asundered Mind"
+	desc = "Damages the target's mind, causing to see something unusual..."
+	points = 50
+
+/datum/hag_boon/curse/asundered_mind/apply_boon_effect(mob/living/L)
+	L.hallucination = INFINITY
+	ADD_TRAIT(L, TRAIT_PSYCHOSIS, TRAIT_HAG_BOON)
+	return
+
+/datum/hag_boon/curse/asundered_mind/remove_boon_effect(mob/living/L)
+	L.hallucination = 0
+	REMOVE_TRAIT(L, TRAIT_PSYCHOSIS, TRAIT_HAG_BOON)
+	return
