@@ -13,6 +13,9 @@
 /proc/cmp_name_asc(atom/a, atom/b)
 	return sorttext(b.name, a.name)
 
+/proc/cmp_init_name_asc(atom/a, atom/b)
+	return sorttext(initial(b.name), initial(a.name))
+
 /proc/cmp_name_dsc(atom/a, atom/b)
 	return sorttext(a.name, b.name)
 
@@ -38,7 +41,7 @@ GLOBAL_VAR_INIT(cmp_field, "name")
 
 /proc/cmp_datum_text_dsc(datum/a, datum/b, variable)
 	return sorttext(a.vars[variable], b.vars[variable])
-	
+
 /proc/cmp_ckey_asc(client/a, client/b)
 	return sorttext(b.ckey, a.ckey)
 
@@ -122,10 +125,13 @@ GLOBAL_VAR_INIT(cmp_field, "name")
 	return limb_one.body_part - limb_two.body_part
 
 /proc/cmp_filter_priority_desc(list/A, list/B) // Compares two lists by their 'priority' key. Used for filters.
-    return (A["priority"] || 0) - (B["priority"] || 0)
+	return (A["priority"] || 0) - (B["priority"] || 0)
 
 /proc/cmp_skills_for_display(datum/skill/A, datum/skill/B)
 	return sorttext("[B.abstract_type]", "[A.abstract_type]") || sorttext(B.name, A.name)
+
+/proc/cmp_quest_chronicle_order(datum/quest/A, datum/quest/B)
+	return A.chronicle_order - B.chronicle_order
 
 /proc/cmp_num_string_asc(A, B)
 	return text2num(A) - text2num(B)

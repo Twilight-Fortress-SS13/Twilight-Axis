@@ -4,7 +4,7 @@
 	icon_state = "gambeson"
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/pants.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/pants.dmi'
-	body_parts_covered = COVERAGE_ALL_UNDERGROIN
+	body_parts_covered = GROIN|LEGS|FEET
 	slot_flags = ITEM_SLOT_PANTS
 	armor = ARMOR_PADDED
 	blocksound = SOFTUNDERHIT
@@ -49,3 +49,13 @@
 
 /obj/item/clothing/under/roguetown/trou/leather/etrpants/donat
 	armor_class = null
+
+/obj/item/clothing/under/roguetown/heavy_leather_pants/otavan/overseer
+	name = "heavy trousers"
+	desc = "Пара застиранных тяжелых брюк серого цвета."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/overseer.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/onmob/overseer_onmob.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/onmob/overseer_onmob.dmi'
+	icon_state = "overseerpants"
+	item_state = "overseerpants"
+	color = null

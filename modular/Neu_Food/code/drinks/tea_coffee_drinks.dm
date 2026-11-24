@@ -1,11 +1,12 @@
 // If there's ever more than 10 drinks maybe split this file OK?
 /obj/item/reagent_containers/food/snacks/grown/rogue/rosa_petals
 	name = "fresh rosa petals"
-	desc = "Crushed rosa petals with humor-balancing properties, yearing to be further dried to draw out its flavor."
+	desc = "Crushed rosa petals with humor-balancing properties, yearning to be further dried to draw out its flavor."
 	icon = 'modular/Neu_Food/icons/drinks.dmi'
 	icon_state = "rosamatter"
 	tastes = list("mild sweetness" = 1)
 	bitesize = 1
+	seed = /obj/item/herbseed/rosa
 	list_reagents = list(/datum/reagent/consumable/nutriment = 2, /datum/reagent/medicine/antidote = 1) //Extraordinarily minor.
 	rotprocess = null
 	w_class = WEIGHT_CLASS_TINY
@@ -17,6 +18,7 @@
 	icon_state = "rosamatter_dried"
 	tastes = list("mild sweetness" = 1)
 	bitesize = 1
+	seed = /obj/item/herbseed/rosa
 	list_reagents = list(/datum/reagent/consumable/nutriment = 2, /datum/reagent/medicine/antidote = 1)
 	rotprocess = null
 	w_class = WEIGHT_CLASS_TINY
@@ -28,6 +30,7 @@
 	icon_state = "rosamatter_spiced"
 	tastes = list("mild sweetness" = 1, "a mouthful of cough-inducing powderiness" = 1)
 	bitesize = 1
+	seed = /obj/item/herbseed/rosa
 	list_reagents = list(/datum/reagent/consumable/nutriment = 2, /datum/reagent/medicine/antidote = 1)
 	rotprocess = null
 	w_class = WEIGHT_CLASS_TINY
@@ -69,7 +72,7 @@
 
 /obj/item/reagent_containers/food/snacks/grown/rogue/tealeaves_dry
 	name = "dried tea leaves"
-	desc = "Dried tea leaves. Edible. Seeds can be extracted from them. Needs to be processed in a millstone." 
+	desc = "Dried tea leaves. Edible. Seeds can be extracted from them. Needs to be processed in a millstone."
 	icon = 'modular/Neu_Food/icons/drinks.dmi'
 	icon_state = "teadry"
 	tastes = list("bitterness" = 1)
@@ -104,7 +107,7 @@
 
 /obj/item/reagent_containers/food/snacks/grown/rogue/chocolate_spiced
 	name = "spiced chocolate"
-	desc = "A spiced sliver of heaven, awaiting to be brewed into a velvetly rich drink."
+	desc = "A spiced sliver of heaven, awaiting to be brewed into a velvety and rich drink."
 	icon = 'modular/Neu_Food/icons/drinks.dmi'
 	icon_state = "chocolate_spiced"
 	bitesize = 2
@@ -114,6 +117,8 @@
 	faretype = FARE_LAVISH
 	rotprocess = null
 	eat_effect = /datum/status_effect/buff/snackbuff
+	dish_type = DISH_DAIRY
+	cuisine = CUISINE_RANESHENI
 
 /obj/item/reagent_containers/food/snacks/chocolate_spiced/On_Consume(mob/living/eater)
 	if(islupian(eater) || isvulp(eater))

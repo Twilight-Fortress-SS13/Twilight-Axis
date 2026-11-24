@@ -1,6 +1,6 @@
 /datum/migrant_role/fablefield/goliard
 	name = "Fablefield Goliard"
-	greet_text = "For years you've travelled to Fablefield, honing your craft at the annual grand festival of tales. You are a respected weaver of glorious and valorous stories, with a tongue and wit as sharp as your blade. Of late, you've been obsessed with the isle of Enigma... What fantastical adventures could you embark on here, with your proteges?"
+	greet_text = "For years you've travelled to Fablefield, honing your craft at the annual grand festival of tales. You are a respected weaver of glorious and valorous stories, with a tongue and wit as sharp as your blade. Of late, you've been obsessed with the Duchy of Azuria... What fantastical adventures could you embark on here, with your proteges?"
 	outfit = /datum/outfit/job/roguetown/fablefield/goliard
 	allowed_sexes = list(MALE, FEMALE)
 
@@ -18,7 +18,7 @@
 	backl = /obj/item/storage/backpack/rogue/satchel
 	backr = /obj/item/rogue/instrument/guitar
 	beltl = /obj/item/rogueweapon/sword/rapier/dec
-	beltr = /obj/item/rogueweapon/huntingknife/idagger/silver/elvish
+	beltr = /obj/item/rogueweapon/huntingknife/idagger/steel/silver/elvish
 	backpack_contents = list(/obj/item/book/rogue/tales1, /obj/item/book/rogue/blackmountain, /obj/item/book/rogue/tales3)
 	H.adjust_skillrank(/datum/skill/misc/music, 6, TRUE)
 	H.adjust_skillrank(/datum/skill/misc/reading, 5, TRUE)

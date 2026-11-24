@@ -59,7 +59,7 @@
 					continue
 				if(length(clean_laws) >= max_laws)
 					break
-				law_text = copytext(trim(law_text), 1, 501)
+				law_text = html_encode(copytext(trim(law_text), 1, 501))
 				clean_laws += law_text
 
 			// Check if anything actually changed
@@ -71,7 +71,7 @@
 
 			var/mob/living/carbon/human/ruler = ui.user
 			var/ruler_title = ruler.get_role_title()
-			var/ruler_name = ruler.real_name
+			var/ruler_name = ruler.get_unmasked_name()
 
 			if(length(GLOB.laws_of_the_land))
 				var/list/law_lines = list()

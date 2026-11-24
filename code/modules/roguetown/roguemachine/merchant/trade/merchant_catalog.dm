@@ -11,7 +11,7 @@
 /datum/merchant_catalog/rosawood
 	id = "rosawood"
 	name = "Rosawood Arsenal"
-	desc = "The private arsenal of the Count of Rosawood, producing the finest elven arms in Azuria - fine steel weapons, bows and the bounty of Eveswood." //TODO: flavor
+	desc = "The private arsenal of the Count of Rosawood. It produces the finest elven arms in Azuria: fine steel weapons, bows and the bounty of Rosawood's forests." //TODO: flavor
 	favor_cost = ROSAWOOD_ARSENAL_FAVOR
 	home_origin_name = "Azuria"
 	home_realm_id = REALM_AZURIA
@@ -48,7 +48,7 @@
 /datum/merchant_catalog/underdark
 	id = "underdark"
 	name = "Anthraxi Armory"
-	desc = "Finely crafted drow weapons and armor, with a reputation for quality and lethality."
+	desc = "Finely crafted drow weapons and armor. They have a reputation for quality and lethality."
 	favor_cost = UNDERDARK_CARAVAN_FAVOR
 	home_origin_name = "the Underdark"
 	home_realm_id = REALM_UNDERDARK
@@ -66,7 +66,9 @@
 		/datum/supply_pack/rogue/underdark/skirmisher_gloves = 3,
 		/datum/supply_pack/rogue/underdark/war_mask = 2,
 		/datum/supply_pack/rogue/underdark/glossweave_shirt = 3,
+		/datum/supply_pack/rogue/underdark/glossweave_pants = 3,
 		/datum/supply_pack/rogue/underdark/spidersilk_webbing = 3,
+		/datum/supply_pack/rogue/underdark/spidersilk_shirt = 3,
 		/datum/supply_pack/rogue/underdark/crossbow = 2,
 		/datum/supply_pack/rogue/underdark/recurve_bow = 2,
 		/datum/supply_pack/rogue/underdark/arrows = 5,

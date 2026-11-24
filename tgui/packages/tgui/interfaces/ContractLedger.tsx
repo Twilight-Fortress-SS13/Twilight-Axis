@@ -1,12 +1,100 @@
 import { useState } from 'react';
-import { Button, Dialog } from 'tgui-core/components';
+import { Button, Dialog, Icon, Tooltip } from 'tgui-core/components';
 import type { BooleanLike } from 'tgui-core/react';
 
 import { useBackend } from '../backend';
 import { Window } from '../layouts';
+import { formatRatioPct } from './common/format';
 import { InnkeeperRumorPanel } from './ContractLedgerInnkeeper';
+import {
+  type IssuedContract,
+  IssuedContractsView,
+} from './ContractLedgerIssued';
 import { StewardDefensePanel } from './ContractLedgerSteward';
 import { TownerPostingPanel } from './ContractLedgerTowner';
+
+type SizeRow = {
+  size: number;
+  threat_pct: number;
+  reward: number;
+  short: BooleanLike;
+};
+
+type SizeTableData = {
+  reward: number[];
+  threat_pct: number[];
+};
+
+const toSizeRows = (table: SizeTableData, requiredSize: number): SizeRow[] =>
+  table.reward.map((reward, i) => ({
+    size: i + 1,
+    threat_pct: table.threat_pct[i],
+    reward,
+    short: i + 1 < requiredSize,
+  }));
+
+const SizeTable = (props: {
+  rows: SizeRow[];
+  mySize: number;
+  levyRate: number;
+  guildRate: number;
+  scanRange: number;
+  capPct: number;
+}) => {
+  const { rows, mySize, levyRate, guildRate, scanRange, capPct } = props;
+  const cell = { padding: '1px 6px', textAlign: 'right' } as const;
+  return (
+    <div>
+      <table style={{ borderCollapse: 'collapse' }}>
+        <thead>
+          <tr>
+            <th style={cell}>Size</th>
+            <th style={cell}>Foes</th>
+            <th style={cell}>Pay</th>
+            <th style={cell}>Each</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => {
+            const net =
+              r.reward -
+              Math.round(r.reward * levyRate) -
+              Math.round(r.reward * guildRate);
+            return (
+              <tr
+                key={r.size}
+                style={{
+                  fontWeight: r.size === mySize ? 'bold' : undefined,
+                  color: r.short ? '#e08080' : undefined,
+                }}
+              >
+                <td style={cell}>
+                  {r.size}
+                  {r.short ? ' (short)' : ''}
+                  {r.size === mySize ? ' ◀' : ''}
+                </td>
+                <td style={cell}>{r.threat_pct}%</td>
+                <td style={cell}>{r.reward}</td>
+                <td style={cell}>{Math.floor(net / r.size)}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      <div style={{ marginTop: '4px', maxWidth: '260px' }}>
+        {`Estimates from this contract's rolled threat. Foes are relative to the listed threat. Members count only if within ${scanRange} tiles of the contract when it starts. Pay from extra members stops at +${capPct}%, but foes keep scaling and still count. This assumes an even split after cut.`}
+      </div>
+    </div>
+  );
+};
+
+type FoeOption = {
+  key: string;
+  label: string;
+  title?: string;
+  objective?: string;
+  veteran_objective?: string | null;
+};
 
 type Contract = {
   ref: string;
@@ -14,20 +102,32 @@ type Contract = {
   type: string;
   difficulty: string;
   reward: number;
+  projected_reward: number;
+  fellowship_reward_rate: number;
+  solo_pay_share: number | null;
+  size_table: SizeTableData | null;
+  veteran_size_table: SizeTableData | null;
   deposit: number;
   area: string;
   region: string;
   objective: string;
-  expected_count: number;
   threat_bands: number;
   levy_exempt: BooleanLike;
-  guild_cut_exempt: BooleanLike;
+  guild_cut_rate: number;
   is_rumor: BooleanLike;
-  is_defense: BooleanLike;
+  shows_commission_seal: BooleanLike;
   is_towner: BooleanLike;
+  claim_barred: BooleanLike;
+  solo_limited: BooleanLike;
   is_standing: BooleanLike;
   required_fellowship_size: number;
-  lapse_minutes: number;
+  lapse_minutes: number | null;
+  can_veteran: BooleanLike;
+  veteran: BooleanLike;
+  veteran_reward: number | null;
+  veteran_objective: string | null;
+  foes: string | null;
+  foe_options: FoeOption[] | null;
 };
 
 type ActiveContract = {
@@ -40,6 +140,26 @@ type ActiveContract = {
   progress_current: number;
   progress_required: number;
   complete: BooleanLike;
+  veteran: BooleanLike;
+};
+
+type HoardRecoveryRegion = {
+  region: string;
+  hoard: number;
+  danger: string;
+  active: BooleanLike;
+};
+
+type ScoutRegion = {
+  region_name: string;
+  danger_level: string;
+  danger_color: string;
+  ic_descriptions: string[];
+  blockaded: BooleanLike;
+  blockade_writ_out: BooleanLike;
+  blockade_faction_label: string;
+  blockade_region_label: string;
+  blockade_days_active: number;
 };
 
 type ContractLedgerData = {
@@ -47,19 +167,50 @@ type ContractLedgerData = {
   balance: number;
   has_account: BooleanLike;
   active_count: number;
+  fellows_active_count: number;
   active_max: number;
   active_max_base: number;
   active_fellowship_bonus: number;
   townie_gate_remaining: number;
+  townie_gate_minutes: number;
+  fellowship_bonus_first: number;
+  fellowship_bonus_per_member: number;
   townie_contract_gate_exempt_jobs: string[];
+  quest_claim_barred_jobs: string[];
+  quest_claim_towner_jobs: string[];
+  quest_claim_lowpop_jobs: string[];
+  quest_claim_lowpop_active: BooleanLike;
+  veteran_threat_pct: number;
   take_cooldown_remaining: number;
   user_fellowship_size: number;
+  user_is_fellowship_leader: BooleanLike;
+  fellowship_member_locked: BooleanLike;
+  claim_barred: BooleanLike;
+  claim_barred_reason: string;
+  claim_lowpop_lifted: BooleanLike;
+  solo_limit_applies: BooleanLike;
+  solo_limit_ready: BooleanLike;
+  solo_limit_reason: string;
+  solo_limit_minutes: number;
+  quest_claim_solo_jobs: string[];
+  arrival_scan_range: number;
+  fellowship_reward_cap_pct: number;
   pool: Contract[];
   active: ActiveContract[];
+  issued: IssuedContract[];
+  issuer_cancel_window_minutes: number;
+  refund_on_not_taken_pct: number;
+  refund_on_failure_pct: number;
   regions: string[];
+  hoard_recovery_regions: HoardRecoveryRegion[];
+  hoard_recovery_pledge: number;
+  hoard_recovery_fellowship_min: number;
+  hoard_recovery_hoard_min: number;
+  scout_regions: ScoutRegion[];
+  spoils_tax_rate: number;
   tax_rate: number;
-  guild_cut_rate: number;
   can_proxy_turnin: BooleanLike;
+  can_admin_complete?: BooleanLike;
   dynamic_role: string | null;
   dynamic_roles?: string[];
   rumor_points?: number;
@@ -71,10 +222,15 @@ type ContractLedgerData = {
 const ALL_REGIONS = 'All';
 const ALL_DIFFICULTIES = 'All';
 const STANDING_FILTER = 'Standing';
-const DIFFICULTIES = ['Easy', 'Medium', 'Hard'];
+const DIFFICULTIES = ['Easy', 'Medium', 'Hard', 'Incursion', 'Notorious'];
 const FILTER_BUTTONS = [ALL_DIFFICULTIES, STANDING_FILTER, ...DIFFICULTIES];
 
-type LedgerMode = { kind: 'contracts' } | { kind: 'dynamic'; role: string };
+type LedgerMode =
+  | { kind: 'contracts' }
+  | { kind: 'scouts' }
+  | { kind: 'dynamic'; role: string };
+
+type StripTab = 'contracts' | 'postings';
 
 const DYNAMIC_TAB_LABELS: Record<string, string> = {
   innkeeper: 'Rumors',
@@ -103,6 +259,10 @@ const difficultyPinClass = (difficulty: string) => {
       return 'ContractLedger__Pin ContractLedger__Pin--medium';
     case 'Hard':
       return 'ContractLedger__Pin ContractLedger__Pin--hard';
+    case 'Incursion':
+      return 'ContractLedger__Pin ContractLedger__Pin--incursion';
+    case 'Notorious':
+      return 'ContractLedger__Pin ContractLedger__Pin--notorious';
     default:
       return 'ContractLedger__Pin';
   }
@@ -122,6 +282,7 @@ export const ContractLedger = () => {
         ? [data.dynamic_role]
         : [];
   const showingDynamic = mode.kind === 'dynamic';
+  const showingContracts = mode.kind === 'contracts';
   const activeDynamicRole = mode.kind === 'dynamic' ? mode.role : null;
 
   const matchesRegion = (c: Contract) =>
@@ -144,7 +305,7 @@ export const ContractLedger = () => {
 
   return (
     <Window
-      title="Grand Contract Ledger"
+      title="Contract Ledger"
       width={1000}
       height={760}
       theme="grimoire"
@@ -152,44 +313,46 @@ export const ContractLedger = () => {
       <Window.Content fitted>
         <div className="ContractLedger">
           <div className="ContractLedger__Header">
-            {dynamicRoles.length > 0 ? (
-              <>
+            <span
+              className={
+                'ContractLedger__HeaderMode' +
+                (showingContracts ? ' ContractLedger__HeaderMode--active' : '')
+              }
+              onClick={() => setMode({ kind: 'contracts' })}
+            >
+              Contract Ledger
+            </span>
+            <span className="ContractLedger__HeaderSep">|</span>
+            <span
+              className={
+                'ContractLedger__HeaderMode' +
+                (mode.kind === 'scouts'
+                  ? ' ContractLedger__HeaderMode--active'
+                  : '')
+              }
+              onClick={() => setMode({ kind: 'scouts' })}
+            >
+              Scout Reports
+            </span>
+            {dynamicRoles.map((role) => (
+              <span key={role}>
+                <span className="ContractLedger__HeaderSep">|</span>
                 <span
                   className={
                     'ContractLedger__HeaderMode' +
-                    (!showingDynamic
+                    (activeDynamicRole === role
                       ? ' ContractLedger__HeaderMode--active'
                       : '')
                   }
-                  onClick={() => setMode({ kind: 'contracts' })}
+                  onClick={() => setMode({ kind: 'dynamic', role })}
                 >
-                  Grand Contract Ledger
+                  {DYNAMIC_TAB_LABELS[role] || role}
                 </span>
-                {dynamicRoles.map((role) => (
-                  <span key={role}>
-                    <span className="ContractLedger__HeaderSep">|</span>
-                    <span
-                      className={
-                        'ContractLedger__HeaderMode' +
-                        (activeDynamicRole === role
-                          ? ' ContractLedger__HeaderMode--active'
-                          : '')
-                      }
-                      onClick={() => setMode({ kind: 'dynamic', role })}
-                    >
-                      {DYNAMIC_TAB_LABELS[role] || role}
-                    </span>
-                  </span>
-                ))}
-              </>
-            ) : (
-              <span className="ContractLedger__HeaderStatic">
-                Grand Contract Ledger
               </span>
-            )}
+            ))}
           </div>
 
-          {!showingDynamic && (
+          {showingContracts && (
             <div className="ContractLedger__TabBar">
               {regionTabs.map((region) => {
                 const count = data.pool.filter(
@@ -212,7 +375,7 @@ export const ContractLedger = () => {
             </div>
           )}
 
-          {!showingDynamic && (
+          {showingContracts && (
             <div className="ContractLedger__FilterBar">
               {FILTER_BUTTONS.map((diff) => {
                 const isActive = diff === activeDifficulty;
@@ -235,8 +398,12 @@ export const ContractLedger = () => {
             </div>
           )}
 
+          {showingContracts && <HoardRecoveryCallStrip />}
+
           <div className="ContractLedger__Board">
-            {showingDynamic && activeDynamicRole ? (
+            {mode.kind === 'scouts' ? (
+              <ScoutsPanel />
+            ) : showingDynamic && activeDynamicRole ? (
               renderDynamicPanel(activeDynamicRole)
             ) : filtered.length === 0 ? (
               <div className="ContractLedger__Empty">
@@ -263,41 +430,245 @@ export const ContractLedger = () => {
   );
 };
 
+const HoardRecoveryCallStrip = () => {
+  const { act, data } = useBackend<ContractLedgerData>();
+  const regions = data.hoard_recovery_regions || [];
+  if (regions.length === 0) return null;
+  const minFellows = data.hoard_recovery_fellowship_min || 3;
+  const pledge = data.hoard_recovery_pledge || 0;
+  const hoardMin = data.hoard_recovery_hoard_min || 0;
+  const fellowshipShort = (data.user_fellowship_size || 0) < minFellows;
+  const noAccount = !data.has_account;
+  const cantAfford = data.balance < pledge;
+  const taxPct = formatRatioPct(data.spoils_tax_rate || 0);
+  const blockReason = noAccount
+    ? 'No bank account. Register with a Meister first.'
+    : fellowshipShort
+      ? `You need a fellowship of ${minFellows}. Yours has ${data.user_fellowship_size || 0}.`
+      : cantAfford
+        ? `You need ${pledge} mammon in your account for the stake.`
+        : undefined;
+  return (
+    <div
+      style={{
+        margin: '0 8px 4px 8px',
+        padding: '5px 10px',
+        border: '1px solid #6b4a2a',
+        background: 'rgba(120, 60, 30, 0.12)',
+        fontSize: '0.95em',
+      }}
+    >
+      <div style={{ fontWeight: 'bold', marginBottom: '3px' }}>
+        Hoard Recovery: a fellowship of {minFellows} or more can put up a{' '}
+        {pledge}m stake to call for a recovery scroll on any region whose brigand
+        hoard has reached {hoardMin}m. It pays the usual blockade reward. The
+        Crown taxes {taxPct} of the recovered hoard as Recovered Spoils.
+      </div>
+      {regions.map((r) => (
+        <div
+          key={r.region}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '2px 0',
+          }}
+        >
+          <span>
+            {r.region} ({r.danger}) - hoard of {r.hoard}m
+          </span>
+          {r.active ? (
+            <span style={{ fontStyle: 'italic', color: '#7a6a4a' }}>
+              scroll already in circulation
+            </span>
+          ) : (
+            <Button
+              disabled={!!blockReason}
+              tooltip={blockReason}
+              onClick={() => act('request_hoard_recovery', { region: r.region })}
+            >
+              Call for Recovery
+            </Button>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const scoutCellStyle: React.CSSProperties = {
+  padding: '6px 8px',
+  borderBottom: '1px dashed #6b4a2a',
+  verticalAlign: 'top',
+};
+
+const scoutHeaderCellStyle: React.CSSProperties = {
+  ...scoutCellStyle,
+  textAlign: 'left',
+  fontWeight: 'bold',
+  borderBottom: '1px solid #6b4a2a',
+};
+
+const ScoutsPanel = () => {
+  const { data } = useBackend<ContractLedgerData>();
+  const regions = data.scout_regions || [];
+  if (regions.length === 0) {
+    return (
+      <div className="ContractLedger__Empty">
+        {/* TODO: flavor - plain placeholder, rewrite */}
+        No scout reports are available.
+      </div>
+    );
+  }
+  return (
+    <div style={{ padding: '4px 8px' }}>
+      <table
+        style={{
+          width: '100%',
+          borderCollapse: 'collapse',
+          fontSize: '0.95em',
+        }}
+      >
+        <thead>
+          <tr>
+            <th style={scoutHeaderCellStyle}>Region</th>
+            <th style={scoutHeaderCellStyle}>Danger</th>
+            <th style={scoutHeaderCellStyle}>Blockade</th>
+            <th style={scoutHeaderCellStyle}>Scout Report</th>
+          </tr>
+        </thead>
+        <tbody>
+          {regions.map((r) => (
+            <tr key={r.region_name}>
+              <td style={{ ...scoutCellStyle, fontWeight: 'bold' }}>
+                {r.region_name}
+              </td>
+              <td style={scoutCellStyle}>
+                <span style={{ color: r.danger_color, fontWeight: 'bold' }}>
+                  {r.danger_level}
+                </span>
+              </td>
+              <td style={scoutCellStyle}>
+                {r.blockaded ? (
+                  <>
+                    <div style={{ color: '#8b1a1a', fontWeight: 'bold' }}>
+                      {r.blockade_faction_label || 'unknown raiders'}
+                      <span
+                        style={{
+                          marginLeft: 6,
+                          fontWeight: 'normal',
+                          color: '#7a6a4a',
+                        }}
+                      >
+                        {r.blockade_days_active}d
+                      </span>
+                    </div>
+                    {!!r.blockade_region_label && (
+                      <div style={{ color: '#7a6a4a' }}>
+                        blocking {r.blockade_region_label}
+                      </div>
+                    )}
+                    <div style={{ color: '#a06000' }}>
+                      {r.blockade_writ_out ? 'Scroll out' : 'Awaiting scroll'}
+                    </div>
+                  </>
+                ) : (
+                  <span style={{ color: '#7a6a4a' }}>-</span>
+                )}
+              </td>
+              <td
+                style={{
+                  ...scoutCellStyle,
+                  fontStyle: 'italic',
+                  color: '#7a6a4a',
+                }}
+              >
+                {r.ic_descriptions.length > 0
+                  ? r.ic_descriptions.join('; ')
+                  : 'nothing to report'}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
 const ContractCard = (props: { contract: Contract }) => {
   const { act, data } = useBackend<ContractLedgerData>();
   const c = props.contract;
   const noAccount = !data.has_account;
+  const claimBarred = !!c.claim_barred;
+  const soloLimited = !!c.solo_limited;
+  const memberLocked = !!data.fellowship_member_locked;
   const gateRemaining = data.townie_gate_remaining || 0;
   const takeCooldown = data.take_cooldown_remaining || 0;
-  const atCap = data.active_count >= data.active_max;
+  const fellowsHeld = data.fellows_active_count || 0;
+  const atCap = data.active_count + fellowsHeld >= data.active_max;
   const cantAfford = data.balance < c.deposit;
   const fellowshipShort =
     c.required_fellowship_size > 0 &&
     (data.user_fellowship_size || 0) < c.required_fellowship_size;
+  const notLeader =
+    c.required_fellowship_size > 0 &&
+    !fellowshipShort &&
+    !data.user_is_fellowship_leader;
   const disabled =
     noAccount ||
+    claimBarred ||
+    memberLocked ||
     gateRemaining > 0 ||
+    soloLimited ||
     takeCooldown > 0 ||
     atCap ||
     cantAfford ||
-    fellowshipShort;
-  const exemptList = (data.townie_contract_gate_exempt_jobs || []).join(', ');
+    fellowshipShort ||
+    notLeader;
+  const [veteran, setVeteran] = useState(false);
+  const [foes, setFoes] = useState<string | null>(null);
+  const useVeteran = veteran && !!c.can_veteran;
+  const foeOptions = c.foe_options || [];
+  const pickedFoes = foeOptions.find(
+    (o) => o.key === (foes ?? c.foes),
+  );
+  const cycleFoes = (step: number) => {
+    const count = foeOptions.length;
+    const index = pickedFoes ? foeOptions.indexOf(pickedFoes) : 0;
+    setFoes(foeOptions[(index + step + count) % count].key);
+  };
+  const payout = useVeteran
+    ? (c.veteran_reward ?? c.reward)
+    : (c.projected_reward ?? c.reward);
+  const objective = useVeteran
+    ? pickedFoes?.veteran_objective || c.veteran_objective || c.objective
+    : pickedFoes?.objective || c.objective;
   const title = noAccount
     ? 'No bank account. Register with a Meister first.'
-    : gateRemaining > 0
-      ? `By Guild precedence, the first two daes of a week fall to masterless hands: ${exemptList}. Townfolk in trade or charter may sign in ${Math.ceil(gateRemaining / 60)}m.`
-      : takeCooldown > 0
-        ? `Guild cooldown, wait ${takeCooldown}s before signing another.`
-        : atCap
-          ? `You already hold ${data.active_max} contracts.`
-          : cantAfford
-            ? `Requires ${c.deposit} mammon in your account.`
-            : fellowshipShort
-              ? `Requires a Fellowship of ${c.required_fellowship_size}, you have ${data.user_fellowship_size || 0}.`
-              : undefined;
+    : claimBarred
+      ? data.claim_barred_reason
+      : memberLocked
+        ? 'Only your fellowship leader can sign contracts.'
+        : gateRemaining > 0
+          ? `For the first ${data.townie_gate_minutes} minutes, only certain roles can sign contracts. Everyone else can sign in ${Math.ceil(gateRemaining / 60)}m.`
+          : soloLimited
+            ? data.solo_limit_reason
+            : takeCooldown > 0
+            ? `You've signed too many contracts recently. Wait ${takeCooldown}s before signing another.`
+            : atCap
+              ? fellowsHeld > 0
+                ? `Your fellowship already holds ${data.active_max} contracts.`
+                : `You already hold ${data.active_max} contracts.`
+              : cantAfford
+                ? `You need ${c.deposit} mammon in your account for the deposit.`
+                : fellowshipShort
+                  ? `You need a fellowship of ${c.required_fellowship_size}. Yours has ${data.user_fellowship_size || 0}.`
+                  : notLeader
+                    ? 'Only the fellowship leader can sign this contract.'
+                    : undefined;
   const stamps: { label: string; modifier: string }[] = [];
   if (c.is_rumor) stamps.push({ label: 'RUMORED!', modifier: 'rumor' });
-  if (c.is_defense)
+  if (c.shows_commission_seal)
     stamps.push({ label: 'COMMISSIONED', modifier: 'commissioned' });
   if (c.levy_exempt) stamps.push({ label: 'LEVY EXEMPT', modifier: 'exempt' });
   const contentTopPad = stamps.length > 0 ? 8 + stamps.length * 16 : 0;
@@ -317,7 +688,7 @@ const ContractCard = (props: { contract: Contract }) => {
         className="ContractLedger__CardTitle"
         style={{ marginTop: `${contentTopPad}px` }}
       >
-        {c.title}
+        {pickedFoes?.title || c.title}
       </div>
       <div className="ContractLedger__CardRow">
         <span className="ContractLedger__CardLabel">Locale</span>
@@ -335,7 +706,15 @@ const ContractCard = (props: { contract: Contract }) => {
       </div>
       {c.required_fellowship_size > 0 && (
         <div className="ContractLedger__CardRow">
-          <span className="ContractLedger__CardLabel">Fellowship</span>
+          <span className="ContractLedger__CardLabel">
+            Fellowship
+            <Tooltip
+              position="top"
+              content="If fewer members show up than the contract needs, the threat and reward scales down. Contracts handed to you directly are not affected."
+            >
+              <Icon name="question-circle" ml={0.4} color="#7a6a4a" />
+            </Tooltip>
+          </span>
           <span
             className="ContractLedger__CardValue"
             style={{
@@ -350,21 +729,111 @@ const ContractCard = (props: { contract: Contract }) => {
       )}
       <div className="ContractLedger__CardRow">
         <span className="ContractLedger__CardLabel">Reward</span>
-        <span className="ContractLedger__CardValue">{c.reward}</span>
+        <span className="ContractLedger__CardValue">
+          {payout}
+          {payout !== c.reward && (
+            <span style={{ color: '#8a7a5a', marginLeft: '0.4em' }}>
+              ({c.reward} base)
+            </span>
+          )}
+        </span>
       </div>
+      {foeOptions.length > 0 && (
+        <div className="ContractLedger__CardRow">
+          <span className="ContractLedger__CardLabel">Foes</span>
+          <span className="ContractLedger__CardValue">
+            <span
+              className="ContractLedger__FoesArrow"
+              onClick={() => cycleFoes(-1)}
+            >
+              <Icon name="chevron-left" />
+            </span>
+            {pickedFoes?.label}
+            <span
+              className="ContractLedger__FoesArrow"
+              onClick={() => cycleFoes(1)}
+            >
+              <Icon name="chevron-right" />
+            </span>
+          </span>
+        </div>
+      )}
+      {(!!c.can_veteran || !!c.veteran) && (
+        <div className="ContractLedger__CardRow">
+          <span className="ContractLedger__CardLabel">
+            Veteran
+            <Tooltip
+              position="top"
+              content={`Increases threat by ${data.veteran_threat_pct}% and rewards by that proportionally.`}
+            >
+              <Icon name="question-circle" ml={0.4} color="#7a6a4a" />
+            </Tooltip>
+          </span>
+          <span className="ContractLedger__CardValue">
+            {c.veteran ? (
+              'On'
+            ) : (
+              <Button.Checkbox
+                compact
+                checked={veteran}
+                onClick={() => setVeteran(!veteran)}
+              >
+                {veteran ? 'On' : 'Off'}
+              </Button.Checkbox>
+            )}
+          </span>
+        </div>
+      )}
       {(() => {
         const levyRate = c.levy_exempt ? 0 : data.tax_rate;
-        const guildRate =
-          c.is_defense || c.guild_cut_exempt ? 0 : data.guild_cut_rate || 0;
-        const levy = Math.round(c.reward * levyRate);
-        const guild = Math.round(c.reward * guildRate);
-        const purse = c.reward - levy - guild;
+        const guildRate = c.guild_cut_rate || 0;
+        const levy = Math.round(payout * levyRate);
+        const guild = Math.round(payout * guildRate);
+        const purse = payout - levy - guild;
+        const sizeTable =
+          (useVeteran && c.veteran_size_table) || c.size_table;
+        const sizeRows = sizeTable
+          ? toSizeRows(sizeTable, c.required_fellowship_size)
+          : null;
+        const mySize = Math.min(
+          Math.max(data.user_fellowship_size || 1, 1),
+          sizeRows?.length || 1,
+        );
         return (
           <>
+            {!!sizeRows && (
+              <div className="ContractLedger__CardRow">
+                <span className="ContractLedger__CardLabel">
+                  By group size
+                  <Tooltip
+                    position="top"
+                    content={
+                      <SizeTable
+                        rows={sizeRows}
+                        mySize={mySize}
+                        levyRate={levyRate}
+                        guildRate={guildRate}
+                        scanRange={data.arrival_scan_range}
+                        capPct={data.fellowship_reward_cap_pct}
+                      />
+                    }
+                  >
+                    <Icon name="question-circle" ml={0.4} color="#7a6a4a" />
+                  </Tooltip>
+                </span>
+                <span className="ContractLedger__CardValue">
+                  {c.solo_pay_share
+                    ? `Solo ${formatRatioPct(c.solo_pay_share)}. +${formatRatioPct(c.fellowship_reward_rate)} per member past two`
+                    : c.fellowship_reward_rate > 0
+                      ? `+${formatRatioPct(c.fellowship_reward_rate)} per member`
+                      : 'Cut if short'}
+                </span>
+              </div>
+            )}
             {!c.levy_exempt && data.tax_rate > 0 && (
               <div className="ContractLedger__CardRow">
                 <span className="ContractLedger__CardLabel">
-                  Crown Levy ({Math.round(data.tax_rate * 100)}%)
+                  Crown Levy ({formatRatioPct(data.tax_rate)})
                 </span>
                 <span
                   className="ContractLedger__CardValue"
@@ -377,7 +846,7 @@ const ContractCard = (props: { contract: Contract }) => {
             {guildRate > 0 && (
               <div className="ContractLedger__CardRow">
                 <span className="ContractLedger__CardLabel">
-                  Guild Cut ({Math.round(guildRate * 100)}%)
+                  Guild Cut ({formatRatioPct(guildRate)})
                 </span>
                 <span
                   className="ContractLedger__CardValue"
@@ -405,12 +874,14 @@ const ContractCard = (props: { contract: Contract }) => {
         <span className="ContractLedger__CardLabel">Deposit</span>
         <span className="ContractLedger__CardValue">{c.deposit}</span>
       </div>
-      <div className="ContractLedger__CardRow">
-        <span className="ContractLedger__CardLabel">Lapses</span>
-        <span className="ContractLedger__CardValue">
-          {c.lapse_minutes > 0 ? `~${c.lapse_minutes}m` : '<1m'}
-        </span>
-      </div>
+      {c.lapse_minutes !== null && (
+        <div className="ContractLedger__CardRow">
+          <span className="ContractLedger__CardLabel">Lapses</span>
+          <span className="ContractLedger__CardValue">
+            {c.lapse_minutes > 0 ? `~${c.lapse_minutes}m` : '<1m'}
+          </span>
+        </div>
+      )}
       {c.threat_bands > 0 && (
         <div className="ContractLedger__CardRow">
           <span className="ContractLedger__CardLabel">Clears</span>
@@ -419,8 +890,8 @@ const ContractCard = (props: { contract: Contract }) => {
           </span>
         </div>
       )}
-      {c.objective && (
-        <div className="ContractLedger__CardObjective">{c.objective}</div>
+      {objective && (
+        <div className="ContractLedger__CardObjective">{objective}</div>
       )}
       <div className="ContractLedger__CardFooter">
         <button
@@ -428,7 +899,13 @@ const ContractCard = (props: { contract: Contract }) => {
           className="ContractLedger__SignButton"
           disabled={disabled}
           title={title}
-          onClick={() => act('sign', { ref: c.ref })}
+          onClick={() =>
+            act('sign', {
+              ref: c.ref,
+              veteran: useVeteran ? 1 : 0,
+              foes: pickedFoes?.key,
+            })
+          }
         >
           Sign
         </button>
@@ -443,64 +920,95 @@ const ActiveStrip = (props: {
   balance: number;
 }) => {
   const { act, data } = useBackend<ContractLedgerData>();
+  const [tab, setTab] = useState<StripTab>('contracts');
   const [showFellowshipHelp, setShowFellowshipHelp] = useState(false);
+  const [showSigningHelp, setShowSigningHelp] = useState(false);
+  const issued = data.issued || [];
+  const stripTab = (id: StripTab, label: string) => (
+    <span
+      className={
+        'ContractLedger__HeaderMode' +
+        (tab === id ? ' ContractLedger__HeaderMode--active' : '')
+      }
+      onClick={() => setTab(id)}
+    >
+      {label}
+    </span>
+  );
   const gateRemaining = data.townie_gate_remaining || 0;
   const takeCooldown = data.take_cooldown_remaining || 0;
   const exemptList = (data.townie_contract_gate_exempt_jobs || []).join(', ');
+  const barredList = (data.quest_claim_barred_jobs || []).join(', ');
+  const townerList = (data.quest_claim_towner_jobs || []).join(', ');
+  const lowpopList = (data.quest_claim_lowpop_jobs || []).join(', ');
+  const claimBarred = !!data.claim_barred;
+  const soloList = (data.quest_claim_solo_jobs || []).join(', ');
+  const lowpopLifted = !!data.has_account && !!data.claim_lowpop_lifted;
+  const soloApplies =
+    !!data.has_account &&
+    !claimBarred &&
+    gateRemaining <= 0 &&
+    !!data.solo_limit_applies &&
+    !data.fellowship_member_locked;
+  const soloReady = soloApplies && !!data.solo_limit_ready;
+  const soloLimited = soloApplies && !data.solo_limit_ready;
+  const signingHelp =
+    !!data.has_account && (claimBarred || gateRemaining > 0 || soloLimited);
   const blockReason = !data.has_account
     ? 'You have no bank account. Register with a Meister before signing any contract.'
-    : gateRemaining > 0
-      ? `The Guild observes the precedence of the masterless hand. The first two daes of the week fall to: ${exemptList}. Townfolk in trade or charter may sign in ${Math.ceil(gateRemaining / 60)}m.`
-      : takeCooldown > 0
-        ? `Guild cooldown active, wait ${takeCooldown}s before signing another contract.`
-        : null;
+    : claimBarred
+      ? data.claim_barred_reason
+      : gateRemaining > 0
+        ? `For the first ${data.townie_gate_minutes} minutes, only certain roles can sign contracts:`
+        : soloLimited
+          ? data.solo_limit_reason
+          : takeCooldown > 0
+          ? `You've signed too many contracts recently. Wait ${takeCooldown}s before signing another.`
+          : null;
   const fellowshipBonus = data.active_fellowship_bonus || 0;
+  const fellowsHeld = data.fellows_active_count || 0;
   const fellowshipNote =
     fellowshipBonus > 0
-      ? `+${fellowshipBonus} from leading your Fellowship`
-      : 'Form a Fellowship for more contract slots.';
+      ? `+${fellowshipBonus} from leading your fellowship${fellowsHeld > 0 ? `, ${fellowsHeld} held by your fellows` : ''}`
+      : 'Form a fellowship for more benefits.';
   return (
     <div className="ContractLedger__ActiveStrip">
       <div className="ContractLedger__ActiveStripHeader">
         <span>
-          Your Contracts ({props.active.length} / {props.activeMax})
-          <span
-            style={{
-              marginLeft: '10px',
-              fontSize: '0.85em',
-              color: fellowshipBonus > 0 ? '#2a6b2a' : '#7a6a4a',
-              fontWeight: 'normal',
-            }}
-          >
-            {fellowshipNote}
-          </span>
-          <Button
-            compact
-            ml={0.5}
-            icon="question-circle"
-            selected={showFellowshipHelp}
-            tooltip="Fellowship benefits"
-            onClick={() => setShowFellowshipHelp(true)}
-          />
+          {stripTab(
+            'contracts',
+            `Your Contracts (${props.active.length} / ${props.activeMax})`,
+          )}
+          <span className="ContractLedger__HeaderSep">|</span>
+          {stripTab('postings', `Your Postings (${issued.length})`)}
+          {tab === 'contracts' && (
+            <>
+              <span
+                style={{
+                  marginLeft: '10px',
+                  fontSize: '0.85em',
+                  color: fellowshipBonus > 0 ? '#2a6b2a' : '#7a6a4a',
+                  fontWeight: 'normal',
+                }}
+              >
+                {fellowshipNote}
+              </span>
+              <Button
+                compact
+                ml={0.5}
+                icon="question-circle"
+                selected={showFellowshipHelp}
+                tooltip="Fellowship benefits"
+                onClick={() => setShowFellowshipHelp(true)}
+              />
+            </>
+          )}
         </span>
         <span>Balance: {props.balance} mammon</span>
       </div>
-      {!!data.can_proxy_turnin && (
-        <div
-          style={{
-            fontSize: '0.85em',
-            fontStyle: 'italic',
-            color: '#7a6a4a',
-            marginBottom: '4px',
-          }}
-        >
-          You may turn in any completed contract here on its holder&apos;s
-          behalf - the reward is credited to the holder, and you take no cut.
-        </div>
-      )}
       {showFellowshipHelp && (
         <Dialog
-          title="Form a Fellowship for more benefits"
+          title="Form a fellowship for more benefits"
           width="420px"
           onClose={() => setShowFellowshipHelp(false)}
         >
@@ -509,54 +1017,199 @@ const ActiveStrip = (props: {
               Open the IC tab to form a fellowship and invite people nearby.
             </div>
             <div style={{ marginBottom: '6px' }}>
-              Lead a fellowship of 2+ for more contract slots (+1 at 2 members,
-              +2 at 3+).
+              Only the fellowship leader can sign contracts. The leader gets{' '}
+              {data.fellowship_bonus_first} more contract slots for the first
+              member and {data.fellowship_bonus_per_member} more for each member
+              after.
+            </div>
+            <div style={{ marginBottom: '6px' }}>
+              Fellowship members can turn in each other&apos;s contracts. By
+              default the reward is split evenly between everyone in the
+              fellowship when the contract was taken. Each member&apos;s levy
+              exemption applies to their own share. The leader can switch to
+              paying whoever turns it in. Contracts taken while rewards were
+              split stay split.
+            </div>
+            <div style={{ marginBottom: '6px' }}>
+              Hired sellswords count as members of your fellowship. While one is
+              under contract, rewards are always split evenly and the sellsword
+              cannot be kicked.
             </div>
             <div>
-              Fellowship members may turn in each other&apos;s contracts. It is
-              credited to the one turning it in, using their tax exemption
-              status, if any.
+              Threat is increased for each additional fellow, but rewards scale
+              up even more.
             </div>
           </div>
         </Dialog>
       )}
-      {blockReason && (
-        <div
-          className="ContractLedger__ActiveRow"
-          style={{ color: '#c44', fontWeight: 'bold' }}
+      {showSigningHelp && (
+        <Dialog
+          title="Who can sign contracts"
+          width="420px"
+          onClose={() => setShowSigningHelp(false)}
         >
-          {blockReason}
-        </div>
-      )}
-      {props.active.length === 0 ? (
-        <div className="ContractLedger__ActiveRow">
-          <span className="ContractLedger__ActiveRow__Meta">
-            You hold no active contracts.
-          </span>
-        </div>
-      ) : (
-        props.active.map((a) => (
-          <div key={a.ref} className="ContractLedger__ActiveRow">
-            <span className="ContractLedger__ActiveRow__Title">{a.title}</span>
-            <span className="ContractLedger__ActiveRow__Meta">
-              {a.type} &middot; {a.difficulty} &middot;{' '}
-              {a.region || a.area || 'Unknown'}
-              {a.progress_required > 1 &&
-                ` - ${a.progress_current}/${a.progress_required}`}
-              {!!a.complete && ' - ready to turn in'}
-            </span>
-            {!a.complete && (
-              <Button
-                icon="times"
-                color="bad"
-                tooltip="Forfeit deposit and void the contract."
-                onClick={() => act('abandon', { ref: a.ref })}
-              >
-                Abandon
-              </Button>
+          <div style={{ padding: '10px 14px', fontSize: '0.95em' }}>
+            {gateRemaining > 0 && (
+              <div style={{ marginBottom: '6px' }}>
+                For the first {data.townie_gate_minutes} minutes, only these can
+                sign contracts: {exemptList}. Everyone else can sign in{' '}
+                {Math.ceil(gateRemaining / 60)}m.
+              </div>
             )}
+            <div>
+              These jobs can never sign contracts: {barredList}.
+            </div>
+            {!!townerList && (
+              <div style={{ marginTop: '6px' }}>
+                These jobs can always sign towner postings: {townerList}.
+              </div>
+            )}
+            {!!soloList && (
+              <div style={{ marginTop: '6px' }}>
+                These jobs are limited to one contract every{' '}
+                {data.solo_limit_minutes} minutes and must finish it before
+                signing the next, even when leading a fellowship: {soloList}.
+                Courier and retrieval contracts are included in the cooldown.
+                When one of them signs a contract, any other player with the
+                same job in their fellowship waits as well. Find a fellowship
+                leader with another job to avoid this. The limit is lifted in
+                lowpop.
+              </div>
+            )}
+            {!!lowpopList && (
+              <div style={{ marginTop: '6px' }}>
+                In lowpop, these jobs can sign any contracts: {lowpopList}.{' '}
+                {data.quest_claim_lowpop_active
+                  ? 'Lowpop is in effect now.'
+                  : 'Lowpop is not in effect now.'}
+              </div>
+            )}
+            <div style={{ marginTop: '6px' }}>
+              A contract handed to you directly always works. None of these
+              limits apply to it.
+            </div>
           </div>
-        ))
+        </Dialog>
+      )}
+      {tab === 'postings' ? (
+        <IssuedContractsView
+          entries={issued}
+          windowMinutes={data.issuer_cancel_window_minutes}
+          notTakenPct={data.refund_on_not_taken_pct}
+          failurePct={data.refund_on_failure_pct}
+        />
+      ) : (
+        <>
+          {!!data.can_proxy_turnin && (
+            <div
+              style={{
+                fontSize: '0.85em',
+                fontStyle: 'italic',
+                color: '#7a6a4a',
+                marginBottom: '4px',
+              }}
+            >
+              You can turn in any completed contract on its holder&apos;s
+              behalf. The reward goes to the holder. You take no cut.
+            </div>
+          )}
+          {blockReason && (
+            <div
+              className="ContractLedger__ActiveRow"
+              style={{ color: '#c44', fontWeight: 'bold' }}
+            >
+              {blockReason}
+              {signingHelp && (
+                <Button
+                  compact
+                  ml={0.5}
+                  icon="question-circle"
+                  selected={showSigningHelp}
+                  tooltip="Who can sign contracts"
+                  onClick={() => setShowSigningHelp(true)}
+                />
+              )}
+            </div>
+          )}
+          {lowpopLifted && (
+            <div
+              className="ContractLedger__ActiveRow"
+              style={{ color: '#2a6b2a', fontWeight: 'bold' }}
+            >
+              The town is quiet todae. You are allowed to take on ledger
+              contracts as a Mercenary. Medium contracts are open to everyone
+              seeking employment.
+              <Button
+                compact
+                ml={0.5}
+                icon="question-circle"
+                selected={showSigningHelp}
+                tooltip="Who can sign contracts"
+                onClick={() => setShowSigningHelp(true)}
+              />
+            </div>
+          )}
+          {soloReady && (
+            <div
+              className="ContractLedger__ActiveRow"
+              style={{ color: '#2a6b2a', fontWeight: 'bold' }}
+            >
+              You may only sign one contract on your own every{' '}
+              {data.solo_limit_minutes} minutes. Towner postings do not count.
+              <Button
+                compact
+                ml={0.5}
+                icon="question-circle"
+                selected={showSigningHelp}
+                tooltip="Who can sign contracts"
+                onClick={() => setShowSigningHelp(true)}
+              />
+            </div>
+          )}
+          {props.active.length === 0 ? (
+            <div className="ContractLedger__ActiveRow">
+              <span className="ContractLedger__ActiveRow__Meta">
+                You hold no active contracts.
+              </span>
+            </div>
+          ) : (
+            props.active.map((a) => (
+              <div key={a.ref} className="ContractLedger__ActiveRow">
+                <span className="ContractLedger__ActiveRow__Title">
+                  {a.title}
+                </span>
+                <span className="ContractLedger__ActiveRow__Meta">
+                  {a.type} &middot; {a.difficulty}
+                  {!!a.veteran && ' (Veteran)'} &middot;{' '}
+                  {a.region || a.area || 'Unknown'}
+                  {a.progress_required > 1 &&
+                    ` - ${a.progress_current}/${a.progress_required}`}
+                  {!!a.complete && ' - ready to turn in'}
+                </span>
+                {!a.complete && (
+                  <Button
+                    icon="times"
+                    color="bad"
+                    tooltip="Give up the contract and lose your deposit."
+                    onClick={() => act('abandon', { ref: a.ref })}
+                  >
+                    Abandon
+                  </Button>
+                )}
+                {!!data.can_admin_complete && (
+                  <Button
+                    icon="user-shield"
+                    color="purple"
+                    tooltip="Admin (localhost only): force-complete and turn in this contract."
+                    onClick={() => act('admin_complete', { ref: a.ref })}
+                  >
+                    [ADMIN] Force Complete
+                  </Button>
+                )}
+              </div>
+            ))
+          )}
+        </>
       )}
     </div>
   );

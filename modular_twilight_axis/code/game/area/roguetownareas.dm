@@ -25,3 +25,4 @@
 
 /area/rogue/indoors/wretchcamp
 	pseudo_roof = TRUE
+

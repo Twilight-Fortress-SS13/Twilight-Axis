@@ -55,6 +55,14 @@
 	grid_height = 32
 	sellprice = 5
 
+/obj/item/natural/head/goat_wild
+	name = "tough goat head"
+	desc = "The head of a tough wilden goat with a majestic set of curld horns."
+	icon_state = "goathead_tough"
+	layer = 3.1
+	grid_height = 32
+	sellprice = 10
+
 /obj/item/natural/head/fox
 	name = "venard head"
 	desc = "The head of a majestic venard."
@@ -164,8 +172,8 @@
 	sellprice = 50
 
 /obj/item/natural/head/dragon/
-	name = "dragon head"
-	desc = "The head of a dragon."
+	name = "drake head"
+	desc = "The head of a drake."
 	w_class = WEIGHT_CLASS_NORMAL // We want them to be placeable in headhook
 	grid_height = 96
 	grid_width = 96

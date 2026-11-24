@@ -25,7 +25,7 @@
 	charge_required = TRUE
 	weapon_cast_penalized = TRUE
 	charge_time = CHARGETIME_HEAVY
-	charge_swingdelay_type = SWINGDELAY_CANCEL
+	charge_swingdelay_type = SWINGDELAY_PENALTY
 	hold_drain = 1
 	charge_slowdown = CHARGING_SLOWDOWN_HEAVY
 	charge_sound = 'sound/magic/charging.ogg'
@@ -36,8 +36,11 @@
 
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
-	var/aoe_range = 3
-	displayed_damage = GTSTRIKE_DAMAGE
+	impact_radius = 3
+	displayed_damage = SPELL_DMG(GTSTRIKE_DAMAGE)
+
+/datum/action/cooldown/spell/greater_thunderstrike/get_impact_turfs(atom/center)
+	return get_visible_area_turfs(get_turf(center), impact_radius)
 
 /datum/action/cooldown/spell/greater_thunderstrike/cast(atom/cast_on)
 	. = ..()
@@ -58,14 +61,12 @@
 		to_chat(H, span_warning("I can't cast where I can't see!"))
 		return FALSE
 
-	for(var/turf/T in range(aoe_range, centerpoint))
-		if(!(T in get_hear(aoe_range, centerpoint)))
-			continue
-		new /obj/effect/temp_visual/pillar_warning/fadein(T, GTSTRIKE_TELEGRAPH)
+	for(var/turf/T as anything in get_impact_turfs(centerpoint))
+		new /obj/effect/temp_visual/telegraph/pillar/fadein(T, GTSTRIKE_TELEGRAPH)
 
 	H.visible_message(span_boldwarning("[H] calls down a massive storm of lightning!"))
 	playsound(centerpoint, 'sound/magic/charging.ogg', 80, TRUE, 6)
-	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(thunderstrike_erupt), centerpoint, H, aoe_range, GTSTRIKE_DAMAGE, src, "Greater Thunderstrike"), GTSTRIKE_TELEGRAPH)
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(thunderstrike_erupt), centerpoint, H, impact_radius, SPELL_DMG(GTSTRIKE_DAMAGE), src, "Greater Thunderstrike", SPELL_DAMAGE_INTEGRITY_MODIFIER), GTSTRIKE_TELEGRAPH)
 	return TRUE
 
 #undef GTSTRIKE_DAMAGE

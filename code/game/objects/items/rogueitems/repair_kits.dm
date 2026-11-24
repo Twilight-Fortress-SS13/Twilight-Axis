@@ -51,9 +51,9 @@
 		self_del()
 		return
 	if(can_repair)
-		if(I.sewrepair && repair_type == 1)
+		if(I.sewrepair && !I.anvilrepair && repair_type == 1)
 			return
-		if(I.anvilrepair && repair_type == 0)
+		if(I.anvilrepair && !I.sewrepair && repair_type == 0)
 			return
 		if(I.max_integrity)
 			if(I.obj_integrity == I.max_integrity)
@@ -81,12 +81,12 @@
 					user.visible_message(span_info("[user] repairs [I]'s coverage!"))
 					I.repair_coverage()
 				if(XP_ON_SUCCESS > 0)
-					if(I.anvilrepair)
+					if(I.anvilrepair && repair_type == 1)
 						user.mind.add_sleep_experience(I.anvilrepair, user.STAINT * XP_ON_SUCCESS)
 					else
 						user.mind.add_sleep_experience(/datum/skill/craft/sewing, user.STAINT * XP_ON_SUCCESS)
 				I.obj_integrity = min(I.obj_integrity + (max_integrity/10), I.max_integrity) //10%
-				src.obj_integrity = min(src.obj_integrity - 10, src.max_integrity) //can restore 700% for good cloth kits, and 300% for bad cloth, 400% for bad metal,  1000% for good metal kit.
+				src.obj_integrity = min(src.obj_integrity - 10, src.max_integrity) //can restore 700% for good cloth kits, and 300% for bad cloth, 400% for bad metal,	1000% for good metal kit.
 				if(I.obj_broken && I.obj_integrity >= I.max_integrity)
 					var/obj/item/T = I
 					T.obj_fix()
@@ -159,12 +159,13 @@
 	grid_height = 32
 	dropshrink = 0.7
 	anvilrepair = /datum/skill/craft/blacksmithing //for empty kit code
+	materia = list(/datum/materia_aspect/metal)
 
 /obj/item/scrap/attack(mob/living/M, mob/user)
 	if(!user.cmode)
 		if(try_construct_consume(src, M, user))
 			return
-		else 
+		else
 			return ..()
 	else
 		return ..()

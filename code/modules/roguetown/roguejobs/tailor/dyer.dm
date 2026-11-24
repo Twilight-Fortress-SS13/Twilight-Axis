@@ -1,8 +1,5 @@
-var/global/list/pridelist = list(
-	"Rainbow" = "#fcfcfc"
-)
-
-var/list/used_colors
+GLOBAL_LIST_INIT(pridelist, list("Rainbow" = "#fcfcfc"))
+GLOBAL_LIST_EMPTY(used_colors)
 
 // DYE BIN
 
@@ -17,8 +14,11 @@ var/list/used_colors
 	var/activecolor = "#FFFFFF"
 	var/activecolor_detail = "#FFFFFF"
 	var/activecolor_altdetail = "#FFFFFF"
+	var/list/preview_containers = list()
+	var/mob/preview_viewer
 	var/list/allowed_types = list(
 			/obj/item/clothing,
+			/obj/item/rogueweapon,
 			/obj/item/storage,
 			/obj/item/bedroll,
 			/obj/item/flowercrown,
@@ -41,24 +41,37 @@ var/list/used_colors
 			/obj/item/reagent_containers/glass/bowl/carved/porcelain,
 			/obj/item/kitchen/spoon/carved/porcelain,
 			/obj/item/kitchen/fork/carved/porcelain,
-			/obj/item/cooking/platter/carved/porcelain
+			/obj/item/cooking/platter/carved/porcelain,
+			/obj/item/reagent_containers/glass/bucket/pot/porcelain,
+			/obj/item/reagent_containers/glass/bottle/claytallbaked,
+			/obj/item/reagent_containers/glass/bottle/clayfootbaked,
+			/obj/item/reagent_containers/glass/bottle/claybamanabaked,
+			/obj/item/reagent_containers/glass/bottle/clayamphorabaked,
+			/obj/item/reagent_containers/glass/bottle/clayskinnybaked,
+			/obj/item/reagent_containers/glass/carafe/porcelain
 			)
 
-/obj/machinery/gear_painter/Initialize()
+/obj/machinery/gear_painter/Initialize(mapload)
 	..()
-	used_colors += COLOR_MAP
-	used_colors += pridelist
+	GLOB.used_colors |= COLOR_MAP
+	GLOB.used_colors |= GLOB.pridelist
 
 /obj/machinery/gear_painter/Destroy()
+	clear_previews()
 	if(inserted)
 		inserted.forceMove(drop_location())
 	return ..()
 
 /obj/machinery/gear_painter/attackby(obj/item/I, mob/living/user)
+	if(istype(I, /obj/item/rogueweapon) && user.cmode)
+		return ..()
 	if(inserted)
 		to_chat(user, span_warning("Something is already inside!"))
 		return ..()
 	if(!is_type_in_list(I, allowed_types))
+		to_chat(user, span_warning("[I] cannot be dyed!"))
+		return ..()
+	if(istype(I, /obj/item/rogueweapon) && !I.detail_tag)
 		to_chat(user, span_warning("[I] cannot be dyed!"))
 		return ..()
 	if(!user.transferItemToLoc(I, src))
@@ -86,7 +99,7 @@ var/list/used_colors
 		colors_to_pick["Primary Keep Color"] = GLOB.lordprimary
 	if(GLOB.lordsecondary)
 		colors_to_pick["Secondary Keep Color"] = GLOB.lordsecondary
-	colors_to_pick += used_colors.Copy()
+	colors_to_pick += GLOB.used_colors.Copy()
 	var/picked = input(user, "Choose your dye:", "Dyes", null) as null|anything in colors_to_pick
 	if(!picked)
 		return null
@@ -105,97 +118,19 @@ var/list/used_colors
 		return
 
 	var/obj/item/inserted_item = inserted
+	var/is_weapon = istype(inserted_item, /obj/item/rogueweapon)
 
-	// == Preview system ==
 	dat += "<div style='text-align:center;'>"
-
-	// Create preview icon. extracts only SOUTH direction
-	var/obj/item/preview_item = inserted_item
-	var/icon/preview_icon = new /icon()
-	preview_icon.Insert(new /icon(preview_item.icon, preview_item.icon_state), "", SOUTH, 0)
-	preview_icon.Blend(activecolor, ICON_MULTIPLY)
-
-	// Apply detail overlay if exists
-	if(preview_item.detail_tag && preview_item.detail_color)
-		var/icon/detail_overlay = new /icon()
-		detail_overlay.Insert(new /icon(preview_item.icon, "[preview_item.icon_state][preview_item.detail_tag]"), "", SOUTH, 0)
-		detail_overlay.Blend(activecolor_detail, ICON_MULTIPLY)
-		preview_icon.Blend(detail_overlay, ICON_OVERLAY)
-
-	// Apply altdetail overlay if exists
-	if(preview_item.altdetail_tag && preview_item.altdetail_color)
-		var/icon/altdetail_overlay = new /icon()
-		altdetail_overlay.Insert(new /icon(preview_item.icon, "[preview_item.icon_state][preview_item.altdetail_tag]"), "", SOUTH, 0)
-		altdetail_overlay.Blend(activecolor_altdetail, ICON_MULTIPLY)
-		preview_icon.Blend(altdetail_overlay, ICON_OVERLAY)
-
-	// Show offmob item icon
-	dat += "<img src='data:image/png;base64,[icon2base64(preview_icon)]' style='vertical-align:middle; width:64px; height:64px; image-rendering: pixelated; image-rendering: crisp-edges;'>"
-
-	// Show onmob icon
-	if(istype(preview_item, /obj/item/clothing))
-		var/obj/item/clothing/clothing_item = preview_item
-		var/mob_icon_to_use = clothing_item.mob_overlay_icon
-
-		if(mob_icon_to_use)
-			var/worn_state = clothing_item.icon_state
-			var/icon/worn_preview = new /icon()
-			worn_preview.Insert(new /icon(mob_icon_to_use, worn_state), "", SOUTH, 0)
-			worn_preview.Blend(activecolor, ICON_MULTIPLY)
-
-			// apply detail overlay if exists
-			if(preview_item.detail_tag && preview_item.detail_color)
-				var/icon/detail_overlay = new /icon()
-				detail_overlay.Insert(new /icon(mob_icon_to_use, "[worn_state][preview_item.detail_tag]"), "", SOUTH, 0)
-				detail_overlay.Blend(activecolor_detail, ICON_MULTIPLY)
-				worn_preview.Blend(detail_overlay, ICON_OVERLAY)
-
-			// apply altdetail overlay if exists
-			if(preview_item.altdetail_tag && preview_item.altdetail_color)
-				var/icon/altdetail_overlay = new /icon()
-				altdetail_overlay.Insert(new /icon(mob_icon_to_use, "[worn_state][preview_item.altdetail_tag]"), "", SOUTH, 0)
-				altdetail_overlay.Blend(activecolor_altdetail, ICON_MULTIPLY)
-				worn_preview.Blend(altdetail_overlay, ICON_OVERLAY)
-
-			// add sleeved parts if they exist (for cloaks)
-			if(clothing_item.sleeved && ("[worn_state]" in icon_states(clothing_item.sleeved)))
-				// check if r_ and l_ prefixed states exist before trying to use them
-				if("r_[worn_state]" in icon_states(clothing_item.sleeved))
-					var/icon/r_sleeve = new /icon()
-					r_sleeve.Insert(new /icon(clothing_item.sleeved, "r_[worn_state]"), "", SOUTH, 0)
-					r_sleeve.Blend(activecolor, ICON_MULTIPLY)
-					worn_preview.Blend(r_sleeve, ICON_OVERLAY)
-
-				if("l_[worn_state]" in icon_states(clothing_item.sleeved))
-					var/icon/l_sleeve = new /icon()
-					l_sleeve.Insert(new /icon(clothing_item.sleeved, "l_[worn_state]"), "", SOUTH, 0)
-					l_sleeve.Blend(activecolor, ICON_MULTIPLY)
-					worn_preview.Blend(l_sleeve, ICON_OVERLAY)
-
-				// add sleeved detail if exists
-				if(preview_item.detail_tag && preview_item.detail_color && clothing_item.sleeved_detail)
-					if("r_[worn_state][preview_item.detail_tag]" in icon_states(clothing_item.sleeved))
-						var/icon/r_detail = new /icon()
-						r_detail.Insert(new /icon(clothing_item.sleeved, "r_[worn_state][preview_item.detail_tag]"), "", SOUTH, 0)
-						r_detail.Blend(activecolor_detail, ICON_MULTIPLY)
-						worn_preview.Blend(r_detail, ICON_OVERLAY)
-
-					if("l_[worn_state][preview_item.detail_tag]" in icon_states(clothing_item.sleeved))
-						var/icon/l_detail = new /icon()
-						l_detail.Insert(new /icon(clothing_item.sleeved, "l_[worn_state][preview_item.detail_tag]"), "", SOUTH, 0)
-						l_detail.Blend(activecolor_detail, ICON_MULTIPLY)
-						worn_preview.Blend(l_detail, ICON_OVERLAY)
-
-			dat += " <img src='data:image/png;base64,[icon2base64(worn_preview)]' style='vertical-align:middle; width:64px; height:64px; image-rendering: pixelated; image-rendering: crisp-edges;'>"
-
+	dat += get_preview_html(inserted_item, is_weapon, user)
 	dat += "</div><BR>"
 
 	dat += "Item inserted: [inserted]<BR><BR>"
 
-	dat += "Color: <font color='[activecolor]'>&#10070;</font> "
-	dat += "<A href='?src=\ref[src];select=1'>Select new color.</A><BR>"
-	dat += "<A href='?src=\ref[src];paint_primary=1'>Apply new color</A> | "
-	dat += "<A href='?src=\ref[src];clear_primary=1'>Remove paintjob</A><BR>"
+	if(!is_weapon)
+		dat += "Color: <font color='[activecolor]'>&#10070;</font> "
+		dat += "<A href='?src=\ref[src];select=1'>Select new color.</A><BR>"
+		dat += "<A href='?src=\ref[src];paint_primary=1'>Apply new color</A> | "
+		dat += "<A href='?src=\ref[src];clear_primary=1'>Remove paintjob</A><BR>"
 
 	if(inserted_item.detail_color)
 		dat += "Detail Color: <font color='[activecolor_detail]'>&#10070;</font> "
@@ -213,6 +148,79 @@ var/list/used_colors
 	menu.set_content("<html>[dat.Join("")]</html>")
 	menu.open()
 
+/obj/machinery/gear_painter/proc/clear_previews()
+	for(var/atom/movable/screen/container as anything in preview_containers)
+		preview_viewer?.remove_appearance(container)
+		qdel(container)
+	preview_containers.Cut()
+	preview_viewer = null
+
+/obj/machinery/gear_painter/proc/preview_layer(file, state, layer_color)
+	var/mutable_appearance/layer = mutable_appearance(file, state)
+	layer.dir = SOUTH
+	layer.appearance_flags = RESET_COLOR
+	if(layer_color)
+		layer.color = layer_color
+	return layer
+
+/obj/machinery/gear_painter/proc/preview_stack()
+	var/mutable_appearance/stack = mutable_appearance()
+	stack.dir = SOUTH
+	return stack
+
+/obj/machinery/gear_painter/proc/preview_img(mob/user, mutable_appearance/preview)
+	var/atom/movable/screen/container = user.send_appearance(preview, duration = 0)
+	if(!container)
+		return ""
+	preview_containers += container
+	return "<img src='\ref[container]' style='vertical-align:middle; width:64px; height:64px; image-rendering: pixelated; image-rendering: crisp-edges;'>"
+
+/obj/machinery/gear_painter/proc/get_preview_html(obj/item/preview_item, is_weapon, mob/user)
+	clear_previews()
+	preview_viewer = user
+
+	var/has_detail = preview_item.detail_tag && preview_item.detail_color
+	var/has_altdetail = preview_item.altdetail_tag && preview_item.altdetail_color
+
+	var/mutable_appearance/item_preview = preview_stack()
+	item_preview.overlays += preview_layer(preview_item.icon, preview_item.icon_state, is_weapon ? null : activecolor)
+	if(has_detail)
+		item_preview.overlays += preview_layer(preview_item.icon, "[preview_item.icon_state][preview_item.detail_tag]", activecolor_detail)
+	if(has_altdetail)
+		item_preview.overlays += preview_layer(preview_item.icon, "[preview_item.icon_state][preview_item.altdetail_tag]", activecolor_altdetail)
+
+	var/dat = preview_img(user, item_preview)
+
+	if(!istype(preview_item, /obj/item/clothing))
+		return dat
+	var/obj/item/clothing/clothing_item = preview_item
+	var/mob_icon_to_use = clothing_item.mob_overlay_icon
+	if(!mob_icon_to_use)
+		return dat
+
+	var/worn_state = clothing_item.icon_state
+	var/mutable_appearance/worn_preview = preview_stack()
+	worn_preview.overlays += preview_layer(mob_icon_to_use, worn_state, activecolor)
+	if(has_detail)
+		worn_preview.overlays += preview_layer(mob_icon_to_use, "[worn_state][preview_item.detail_tag]", activecolor_detail)
+	if(has_altdetail)
+		worn_preview.overlays += preview_layer(mob_icon_to_use, "[worn_state][preview_item.altdetail_tag]", activecolor_altdetail)
+
+	var/sleeved = clothing_item.sleeved
+	if(sleeved && icon_exists(sleeved, worn_state))
+		if(icon_exists(sleeved, "r_[worn_state]"))
+			worn_preview.overlays += preview_layer(sleeved, "r_[worn_state]", activecolor)
+		if(icon_exists(sleeved, "l_[worn_state]"))
+			worn_preview.overlays += preview_layer(sleeved, "l_[worn_state]", activecolor)
+		if(has_detail && clothing_item.sleeved_detail)
+			if(icon_exists(sleeved, "r_[worn_state][preview_item.detail_tag]"))
+				worn_preview.overlays += preview_layer(sleeved, "r_[worn_state][preview_item.detail_tag]", activecolor_detail)
+			if(icon_exists(sleeved, "l_[worn_state][preview_item.detail_tag]"))
+				worn_preview.overlays += preview_layer(sleeved, "l_[worn_state][preview_item.detail_tag]", activecolor_detail)
+
+	dat += " " + preview_img(user, worn_preview)
+	return dat
+
 /obj/machinery/gear_painter/ui_interact(mob/user, datum/tgui/ui)
 	interact(user)
 
@@ -228,6 +236,8 @@ var/list/used_colors
 		return
 
 	if(href_list["select"])
+		if(istype(inserted, /obj/item/rogueweapon))
+			return
 		var/c = pick_dye(usr, activecolor, "Primary Dye")
 		if(!c) return
 		activecolor = c
@@ -246,7 +256,7 @@ var/list/used_colors
 		interact(usr)
 
 	if(href_list["paint_primary"])
-		if(!inserted)
+		if(!inserted || istype(inserted, /obj/item/rogueweapon))
 			return
 		var/obj/item/inserted_item = inserted
 		inserted.add_atom_colour(activecolor, FIXED_COLOUR_PRIORITY)
@@ -277,7 +287,7 @@ var/list/used_colors
 		interact(usr)
 
 	if(href_list["clear_primary"])
-		if(!inserted)
+		if(!inserted || istype(inserted, /obj/item/rogueweapon))
 			return
 		var/obj/item/inserted_item = inserted
 		inserted.remove_atom_colour(FIXED_COLOUR_PRIORITY)
@@ -310,6 +320,7 @@ var/list/used_colors
 			return
 		inserted.forceMove(drop_location())
 		inserted = null
+		clear_previews()
 		interact(usr)
 
 
@@ -318,7 +329,7 @@ var/list/used_colors
 /obj/item/dye_brush
 	icon = 'icons/roguetown/items/misc.dmi'
 	name = "dye brush"
-	desc = "A sizeable brush made of the finest mane-hairs. Thick dye adheres to it well."
+	desc = "A sizable brush made of the finest mane-hairs. Thick dye adheres to it well."
 	icon_state = "dbrush"
 	w_class = WEIGHT_CLASS_SMALL
 	dropshrink = 0.7
@@ -361,7 +372,7 @@ var/list/used_colors
 	var/choice_mode = alert(user, "Input Choice", "Brush Dye", "Color Wheel", "Color Preset")
 	if(choice_mode == "Color Preset")
 		var/list/presets = COLOR_MAP
-		presets += pridelist
+		presets += GLOB.pridelist
 
 		var/picked = input(user, "Choose your dye:", "Dyes", null) as null|anything in presets
 		if(!picked)
@@ -380,23 +391,48 @@ var/list/used_colors
 	if(..())
 		return TRUE
 	var/obj/item/target = A
-	if(!istype(target) || target.glazed || !target.icon || !icon_exists(target.icon, "[target.icon_state]_glazed"))
+	if(!istype(target) || target.glazed || !target.icon)
 		return FALSE
+
+	var/static/list/glaze_finishes = list(
+		"Clear glaze" = "glazed",
+		"Kintsugi glaze" = "shattergold",
+		"Lakkarian glaze" = "naled"
+	)
+
+	var/list/choices = list()
+	for(var/finish in glaze_finishes)
+		if(icon_exists(target.icon, "[target.icon_state]_[glaze_finishes[finish]]"))
+			choices += finish
+	if(!length(choices))
+		return FALSE
+
 	if(target.reagents && target.reagents.total_volume)
 		to_chat(user, span_notice("I can't glaze [target] while it has liquid in it."))
 		return TRUE
+
+	var/choice = choices[1]
+	if(length(choices) > 1)
+		choice = tgui_input_list(user, "Which finish shall I glaze [target] with?", "Glazing", choices)
+	if(!choice)
+		return TRUE
+
+	if(QDELETED(target) || target.glazed || !in_range(target, user))
+		return TRUE
+
 	if(!do_after(user, 3 SECONDS, target = target))
 		return TRUE
-	if(target.glazed) // someone else finished first
+	if(target.glazed)
 		return TRUE
+
 	target.glazed = TRUE
-	target.glaze_bonus_flat = rand(10, 40)
-	target.icon_state = "[target.icon_state]_glazed"
+	target.glaze_suffix = glaze_finishes[choice]
+	target.glaze_bonus_flat = rand(5, 15)
+	target.icon_state = "[target.icon_state]_[target.glaze_suffix]"
 	target.update_icon()
 	playsound(loc, "sound/foley/scrubbing[pick(1,2)].ogg", 60, TRUE)
 	user.visible_message(span_notice("[user] glazes [target]."), \
-		span_notice("I glaze [target] with the dye brush.")
-	)
+		span_notice("I glaze [target] with [LOWER_TEXT(choice)]."))
 	return TRUE
 
 /obj/item/dye_brush/attack_turf(turf/T, mob/living/user)
@@ -444,4 +480,3 @@ var/list/used_colors
 		return
 	dye = null
 	update_icon()
-

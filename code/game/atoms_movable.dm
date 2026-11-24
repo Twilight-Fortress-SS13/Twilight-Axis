@@ -33,7 +33,7 @@
 	var/atom/movable/moving_from_pull		//attempt to resume grab after moving instead of before.
 	var/list/acted_explosions	//for explosion dodging
 	glide_size = 6
-	appearance_flags = TILE_BOUND|PIXEL_SCALE
+	appearance_flags = TILE_BOUND|PIXEL_SCALE|LONG_GLIDE
 	var/datum/forced_movement/force_moving = null	//handled soley by forced_movement.dm
 	///Holds information about any movement loops currently running/waiting to run on the movable. Lazy, will be null if nothing's going on (pulled in from Vanderlin)
 	var/datum/movement_packet/move_packet
@@ -47,10 +47,10 @@
 	var/jumping = FALSE
 	var/zfalling = FALSE
 	/**
-	 * an associative lazylist of relevant nested contents by "channel", the list is of the form: list(channel = list(important nested contents of that type))
-	 * each channel has a specific purpose and is meant to replace potentially expensive nested contents iteration.
-	 * do NOT add channels to this for little reason as it can add considerable memory usage.
-	 */
+		* an associative lazylist of relevant nested contents by "channel", the list is of the form: list(channel = list(important nested contents of that type))
+		* each channel has a specific purpose and is meant to replace potentially expensive nested contents iteration.
+		* do NOT add channels to this for little reason as it can add considerable memory usage.
+		*/
 	var/list/important_recursive_contents
 
 	/// String representing the spatial grid groups we want to be held in.
@@ -171,7 +171,7 @@
 		var/mob/M = AM
 		log_combat(src, M, "grabbed", addition="passive grab")
 		if(M.doing)
-			M.doing = FALSE
+			M.stop_all_doing() // TA EDIT
 		if(!supress_message)
 			M.visible_message("<span class='warning'>[src] [M.cmode ? "<b>clings</b> onto" : "grabs"] [M].</span>", \
 				"<span class='danger'>[src] grabs onto you.</span>")
@@ -184,9 +184,6 @@
 				if(M.mind)	//No clickcd if we're grabbing a mindless mob, just frag the stupid AI
 					L.changeNext_move(clickcd)
 				M.changeNext_move(CLICK_CD_HEAVY)
-	if(istype(AM, /mob/living/simple_animal))
-		var/mob/living/simple_animal/simple_animal = AM
-		simple_animal.toggle_ai(AI_ON)
 	return TRUE
 
 /atom/movable/proc/stop_pulling(forced = TRUE)
@@ -399,6 +396,13 @@
 	if(. && pulled && pulledby == pulled && pulled.cmode && pulled.grab_state < GRAB_AGGRESSIVE) //NICHE case of being in a first tier grab state.
 		if(!pulledby || QDELETED(pulledby))
 			return
+
+		if(HAS_TRAIT(pulled, TRAIT_PACIFISM))
+			to_chat(pulled, span_notice("I don't resist as [src] pulls away."))
+			to_chat(pulledby, span_notice("I brush [src] aside and move off."))
+			pulled.stop_pulling()
+			return
+
 		if(pulledby.anchored)
 			pulledby.stop_pulling()
 		else
@@ -745,15 +749,16 @@
 		return TRUE
 	return ..()
 
-// called when this atom is removed from a storage item, which is passed on as S. The loc variable is already set to the new destination before this is called.
+/// Called when this atom is removed from a storage item, which is passed on as S. The loc variable is already set to the new destination before this is called.
 /atom/movable/proc/on_exit_storage(datum/component/storage/concrete/S)
 	return
 
-// called when this atom is added into a storage item, which is passed on as S. The loc variable is already set to the storage item.
-/atom/movable/proc/on_enter_storage(datum/component/storage/concrete/S)
+/// Called when this atom is added into a storage item, which is passed on as S. The loc variable is already set to the storage item.
+/// If the mob putting the atom in storage is known, it is passed on as M.
+/atom/movable/proc/on_enter_storage(datum/component/storage/concrete/S, mob/M)
 	return
 
-//called when a mob resists while inside a container that is itself inside something.
+/// Called when a mob resists while inside a container that is itself inside something.
 /atom/movable/proc/relay_container_resist(mob/living/user, obj/O)
 	return
 
@@ -996,6 +1001,15 @@ GLOBAL_VAR_INIT(pixel_diff_time, 1)
 	if(wiggle)
 		wiggle(A)
 
+/atom/movable/proc/do_attack_animation_at(atom/A, visual_effect_icon, wiggle = TRUE, datum/intent/used_intent)
+	var/newdir = get_dir(src, A)
+	var/obj/effect/temp_visual/dir_setting/attack_effect/atk = new(get_turf(A), newdir)
+	atk.icon_state = visual_effect_icon
+	atk.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	atk.layer = ABOVE_MOB_LAYER
+	if(wiggle)
+		wiggle(A)
+
 ///Bit of a shoddy copy paste specifically for more static swingdelays
 /atom/movable/proc/draw_swingdelay(atom/A, visual_effect_icon, delay)
 	var/newdir = get_dir(src, A)
@@ -1023,8 +1037,32 @@ GLOBAL_VAR_INIT(pixel_diff_time, 1)
 
 /atom/movable/vv_get_dropdown()
 	. = ..()
-	. += "<option value='?_src_=holder;[HrefToken()];adminplayerobservefollow=[REF(src)]'>Follow</option>"
-	. += "<option value='?_src_=holder;[HrefToken()];admingetmovable=[REF(src)]'>Get</option>"
+	VV_DROPDOWN_OPTION("", "--- /movable ---")
+	VV_DROPDOWN_OPTION(VV_HK_OBSERVE_FOLLOW, "Observe Follow")
+	VV_DROPDOWN_OPTION(VV_HK_GET_MOVABLE, "Get Movable")
+	VV_DROPDOWN_OPTION(VV_HK_EDIT_PARTICLES, "Edit Particles")
+
+/atom/movable/vv_do_topic(list/href_list)
+	. = ..()
+
+	if(!.)
+		return
+
+	if(href_list[VV_HK_OBSERVE_FOLLOW])
+		if(!check_rights(R_ADMIN))
+			return
+		usr.client?.admin_follow(src)
+
+	if(href_list[VV_HK_GET_MOVABLE])
+		if(!check_rights(R_ADMIN))
+			return
+		if(QDELETED(src))
+			return
+		forceMove(get_turf(usr))
+
+	if(href_list[VV_HK_EDIT_PARTICLES])
+		var/client/C = usr.client
+		C?.open_particle_editor(src)
 
 /atom/movable/proc/ex_check(ex_id)
 	if(!ex_id)

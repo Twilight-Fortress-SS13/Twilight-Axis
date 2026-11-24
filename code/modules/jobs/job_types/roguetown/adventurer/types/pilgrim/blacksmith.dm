@@ -4,10 +4,11 @@
 	only after building a forge for themselves of course."
 	allowed_sexes = list(MALE, FEMALE)
 	forbidden_races = list(RACES_DESPISED)
-	
+
 	outfit = /datum/outfit/job/roguetown/adventurer/blacksmith
 
 	category_tags = list(CTAG_PILGRIM, CTAG_TOWNER)
+	subclass_spells = list(/obj/effect/proc_holder/spell/invoked/takeapprentice)
 	traits_applied = list(TRAIT_TRAINED_SMITH, TRAIT_SMITHING_EXPERT)
 	subclass_stats = list(
 		STATKEY_WIL = 2,
@@ -58,7 +59,6 @@
 					/obj/item/rogueore/iron = 5,
 					/obj/item/flashlight/flare/torch = 1,
 					/obj/item/recipe_book/blacksmithing = 1,
-					/obj/item/recipe_book/survival = 1,
 					/obj/item/rogueweapon/scabbard/sheath = 1,
 					/obj/item/blueprint/mace_mushroom = 1
 				)
@@ -71,7 +71,6 @@
 					/obj/item/rogueore/tin = 2,
 					/obj/item/flashlight/flare/torch = 1,
 					/obj/item/recipe_book/blacksmithing = 1,
-					/obj/item/recipe_book/survival = 1,
 					/obj/item/rogueweapon/scabbard/sheath = 1,
 					/obj/item/blueprint/mace_mushroom = 1
 				)

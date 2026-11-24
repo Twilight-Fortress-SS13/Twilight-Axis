@@ -1,7 +1,7 @@
 // OH GOD IT'S SO SHITTY IM SO SORRY PLEASE PLEAS EPLEASEP ELEA
 
 GLOBAL_LIST_INIT(psydon_pool, list(
-	/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk,  //todo: items lol
+	/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk,	//todo: items lol
 	/obj/item/clothing/suit/roguetown/armor/gambeson,
 	/obj/item/clothing/suit/roguetown/armor/leather,
 	/obj/item/reagent_containers/glass/bottle/waterskin,
@@ -153,7 +153,7 @@ GLOBAL_LIST_INIT(capstone_pool, list(
 			addomen(ASCEND_FIRST)
 			priority_announce("The leylines begin to tremble in unnatural perversion - MAJOR ARCANA: THE FOOL, UPRIGHT.", "THE DREAMER", 'sound/villain/dreamer_warning.ogg')
 		if(2)
-			to_chat(user, span_danger("The second capstone. Stuck in filth- FILTH AND SHIT! I grab the rotted, fetted thing and begin to peel it back. LAYER BY LAYER- THE COMET SYON. THE ARCHDEVIL. IS HE DEAD, OR SLEEPING? ..."))
+			to_chat(user, span_danger("The second capstone. Stuck in filth- FILTH AND SHIT! I grab the rotted, fetid thing and begin to peel it back. LAYER BY LAYER- THE COMET SYON. THE ARCHDEVIL. IS HE DEAD, OR SLEEPING? ..."))
 			stoplag(3 SECONDS)
 			to_chat(user, span_userdanger("IS HE WEAK - OR A COWARD??"))
 			stoplag(2 SECONDS)
@@ -198,7 +198,7 @@ GLOBAL_LIST_INIT(capstone_pool, list(
 			var/turf/location = get_spawn_turf_for_job("Pilgrim")
 			user.forceMove(location)
 			user.Stun(50)
-			user.cmode_music = 'sound/music/combat_ascended.ogg'
+			user.cmode_music = sound("sound/music/combat_ascended.ogg")
 			user.STASTR += 10
 			user.STAPER += 10
 			user.STAINT += 10

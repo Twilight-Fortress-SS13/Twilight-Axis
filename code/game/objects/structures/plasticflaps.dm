@@ -6,13 +6,15 @@
 	icon_state = "bars_passage"
 	density = FALSE
 	anchored = TRUE
+	blade_dulling = DULLING_BASHCHOP
 	CanAtmosPass = ATMOS_PASS_NO
+	plane = GAME_PLANE_UPPER
 	attacked_sound = list("sound/combat/hits/onmetal/metalimpact (1).ogg", "sound/combat/hits/onmetal/metalimpact (2).ogg")
 
 /obj/structure/plasticflaps/opaque
 	opacity = TRUE
 
-/obj/structure/plasticflaps/Initialize()
+/obj/structure/plasticflaps/Initialize(mapload)
 	. = ..()
 	alpha = 0
 	SSvis_overlays.add_vis_overlay(src, icon, icon_state, ABOVE_MOB_LAYER, plane, dir, add_appearance_flags = RESET_ALPHA) //you see mobs under it, but you hit them like they are above it
@@ -67,7 +69,7 @@
 			return FALSE
 	return ..()
 
-/obj/structure/plasticflaps/Initialize()
+/obj/structure/plasticflaps/Initialize(mapload)
 	. = ..()
 	air_update_turf(TRUE)
 

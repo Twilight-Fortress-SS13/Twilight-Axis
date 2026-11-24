@@ -1,9 +1,15 @@
 /datum/ai_behavior/find_and_set/better_weapon
 
 /datum/ai_behavior/find_and_set/better_weapon/search_tactic(datum/ai_controller/controller, locate_path, search_range)
+	if(!controller || !controller.pawn || !controller.blackboard || !controller.blackboard[BB_WEAPON_TYPE])
+		return null
 	var/mob/living/carbon/human/living_pawn = controller.pawn
+	if(!istype(living_pawn))
+		return null
+	if(living_pawn.incapacitated())
+		return null
 	if(ai_npc_has_weapon(living_pawn))
-		return
+		return null
 	var/obj/item/held_item = living_pawn.get_active_held_item()
 	if(istype(held_item, /obj/item/rogueweapon/shield))
 		living_pawn.swap_hand()
@@ -12,7 +18,7 @@
 	var/weapon_type = controller.blackboard[BB_WEAPON_TYPE]
 	var/list/weapons = list()
 	for(var/obj/item/local_candidate in oview(search_range, controller.pawn))
-		if(!istype(local_candidate, weapon_type))
+		if(!istype(local_candidate, weapon_type) || (local_candidate.flags_ai_inventory & AI_ITEM_THROWING))
 			continue
 		if(held_item)
 			if(held_item.force >= local_candidate.force)
@@ -25,12 +31,19 @@
 	if(checking == pawn)
 		return FALSE
 	var/mob/living/carbon/human/living_pawn = pawn
-	if(!living_pawn?.ai_controller)
+	if(!istype(living_pawn) || !living_pawn.ai_controller)
+		return FALSE
+	if(living_pawn.incapacitated())
 		return FALSE
 	if(ai_npc_has_weapon(living_pawn))
 		return FALSE
 	var/datum/ai_controller/controller = living_pawn.ai_controller
+	if(!controller.blackboard || !controller.blackboard[BB_WEAPON_TYPE])
+		return FALSE
 	if(!istype(checking, controller.blackboard[BB_WEAPON_TYPE]))
+		return FALSE
+	var/obj/item/candidate = checking
+	if(candidate.flags_ai_inventory & AI_ITEM_THROWING)
 		return FALSE
 	var/obj/item/held_item = living_pawn.get_active_held_item()
 	if(istype(held_item, /obj/item/rogueweapon/shield))
@@ -38,7 +51,6 @@
 	if(held_item)
 		if(istype(held_item, /obj/item/rogueweapon/shield))
 			return FALSE
-		var/obj/item/candidate = checking
 		if(held_item.force >= candidate.force)
 			return FALSE
 	return TRUE

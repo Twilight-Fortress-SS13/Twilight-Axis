@@ -413,7 +413,7 @@ To avoid TOO much conflicts w/random char parts, consider a proc that checks if 
 
 #define NON_PSYDON_PATRONS list(/datum/patron/divine/undivided, /datum/patron/divine/astrata, /datum/patron/divine/noc, /datum/patron/divine/dendor, /datum/patron/divine/abyssor, /datum/patron/divine/ravox, /datum/patron/divine/necra, /datum/patron/divine/xylix, /datum/patron/divine/pestra, /datum/patron/divine/malum, /datum/patron/divine/eora, /datum/patron/inhumen/zizo, /datum/patron/inhumen/graggar, /datum/patron/inhumen/matthios, /datum/patron/inhumen/baotha)	//For lord/heir usage
 
-#define ALL_PATRONS  list(/datum/patron/divine/undivided, /datum/patron/divine/astrata, /datum/patron/divine/noc, /datum/patron/divine/dendor, /datum/patron/divine/abyssor, /datum/patron/divine/ravox, /datum/patron/divine/necra, /datum/patron/divine/xylix, /datum/patron/divine/pestra, /datum/patron/divine/malum, /datum/patron/divine/eora, /datum/patron/old_god, /datum/patron/inhumen/zizo, /datum/patron/inhumen/graggar, /datum/patron/inhumen/matthios, /datum/patron/inhumen/baotha)
+#define ALL_PATRONS	list(/datum/patron/divine/undivided, /datum/patron/divine/astrata, /datum/patron/divine/noc, /datum/patron/divine/dendor, /datum/patron/divine/abyssor, /datum/patron/divine/ravox, /datum/patron/divine/necra, /datum/patron/divine/xylix, /datum/patron/divine/pestra, /datum/patron/divine/malum, /datum/patron/divine/eora, /datum/patron/old_god, /datum/patron/inhumen/zizo, /datum/patron/inhumen/graggar, /datum/patron/inhumen/matthios, /datum/patron/inhumen/baotha)
 
 #define ALL_SLAYER_PATRONS list(/datum/patron/divine/malum, /datum/patron/divine/ravox)
 
@@ -458,10 +458,6 @@ GLOBAL_LIST_EMPTY(accused)
 GLOBAL_LIST_EMPTY(confessors)
 
 //preference stuff
-#define FAMILY_NONE 1
-#define FAMILY_PARTIAL 2
-#define FAMILY_FULL 3
-
 GLOBAL_LIST_EMPTY(head_bounties)
 GLOBAL_LIST_EMPTY(noticeboard_notices)
 GLOBAL_LIST_EMPTY(noticeboard_listings)
@@ -483,14 +479,15 @@ GLOBAL_LIST_EMPTY(round_join_times)
 */
 
 #define CTAG_ALLCLASS		"CAT_ALLCLASS"		// jus a define for allclass to not deal with actively typing strings
-#define CTAG_DISABLED 		"CAT_DISABLED" 		// Disabled, aka don't make it fuckin APPEAR
-#define CTAG_PILGRIM 		"CAT_PILGRIM"  		// Pilgrim classes
-#define CTAG_ADVENTURER 	"CAT_ADVENTURER"  	// Adventurer classes
-#define CTAG_TOWNER 		"CAT_TOWNER"  		// Villager class - Villagers can use it
-#define CTAG_ANTAG 			"CAT_ANTAG"  		// Antag class - results in an antag
+#define CTAG_DISABLED		"CAT_DISABLED"		// Disabled, aka don't make it fuckin APPEAR
+#define CTAG_PILGRIM		"CAT_PILGRIM"			// Pilgrim classes
+#define CTAG_ADVENTURER	"CAT_ADVENTURER"		// Adventurer classes
+#define CTAG_TOWNER		"CAT_TOWNER"			// Villager class - Villagers can use it
+#define CTAG_LAMPLIGHTER	"CAT_LAMPLIGHTER"	// Lamplighter classes
+#define CTAG_ANTAG			"CAT_ANTAG"			// Antag class - results in an antag
 #define CTAG_BANDIT			"CAT_BANDIT"		// Bandit class - Tied to the bandit antag really
 #define CTAG_ASSASSIN		"CAT_ASSASSIN"		// Assassin classes - Tied to the assassin antag for specialization
-#define CTAG_CHALLENGE 		"CAT_CHALLENGE"  	// Challenge class - Meant to be free for everyone
+#define CTAG_CHALLENGE		"CAT_CHALLENGE"		// Challenge class - Meant to be free for everyone
 #define CTAG_VAGABOND		"CAT_VAGABOND"		// Vagabond class - start with nothing and work your way up
 #define CTAG_ORTHODOXIST	"CAT_ORTHODOXIST"	// For Orthodoxist subclasses
 #define CTAG_INQUSITOR		"CAT_INQUISITOR"	// For Inquisitor subclasses
@@ -504,17 +501,18 @@ GLOBAL_LIST_EMPTY(round_join_times)
 #define CTAG_VAMPSERVANT	"CAT_VAMPSERVANT"	// Vampire lord bloodpool servant classes
 #define CTAG_VAMPGUARD		"CAT_VAMPGUARD"		// Vampire Lord bloodpool guard classes
 #define CTAG_VAMPSPAWN		"CAT_VAMPSPAWN"		// Vampire Lord bloodpool elite classes
-#define CTAG_LICKER_WRETCH  "CAT_LICKER_WRETCH" // Licker wretch. Nuff said.
+#define CTAG_LICKER_WRETCH	"CAT_LICKER_WRETCH" // Licker wretch. Nuff said.
 #define CTAG_GNOLL			"CAT_GNOLL"			// Wretch-esque gnolls, graggar's chosen.
 #define CTAG_GNOLL_IMPURE	"CAT_GNOLL_IMPURE"	// Reward for beating enough gnolls.
 #define CTAG_HAG			"CAT_HAG"
+#define CTAG_NO_OUTFIT		"CAT_NO_OUTFIT"		//VL and other blank slates
 
 #define CTAG_WARDEN			"CAT_WARDEN"		// Warden class - Handles warden class selector.
 #define CTAG_WATCH			"CAT_WATCH"			// Watch class - Handles Town Watch class selector
 #define CTAG_MENATARMS		"CAT_MENATARMS"		// Men-at-Arms class - Handles Men-at-Arms class selector
 #define CTAG_SERGEANT		"CAT_SERGEANT"		// Sergeant class - Handles Sergeant class selector (weapons selection)
 #define CTAG_ROYALGUARD		"CAT_ROYALGUARD"	// Royal Guard class - Handles Royal Guard class selector
-#define CTAG_CONSORT		"CAT_CONSORT"		// Consort/Suitor subclasses
+#define CTAG_SUITOR		"CAT_SUITOR"		// Suitor subclasses
 #define CTAG_MERCENARY		"CAT_MERCENARY"		// Mercenary class - Handles Mercenary class selector
 #define CTAG_HAND			"CAT_HAND"			// Hand class - Handles Hand class selector
 #define CTAG_TEMPLAR		"CAT_TEMPLAR"		// Templar class - Handles Templar class selector
@@ -527,15 +525,22 @@ GLOBAL_LIST_EMPTY(round_join_times)
 #define CTAG_SENESCHAL		"CAT_SENESCHAL"		// Seneschal's aesthetic choices.
 #define CTAG_SERVANT		"CAT_SERVANT"		// Servant's aesthetic choices.
 #define CTAG_WAPPRENTICE	"CTAG_WAPPRENTICE"	// Mage Apprentice Classes - Handles Mage Apprentices class selector
-#define CTAG_GUILDSMASTER 	"CAT_GUILDSMASTER"	// Guildsmaster class - Handles Guildsmaster class selector
-#define CTAG_GUILDSMEN 		"CAT_GUILDSMEN"		// Guildsmen class - Handles Guildsmen class selector
+#define CTAG_GUILDSMASTER	"CAT_GUILDSMASTER"	// Guildsmaster class - Handles Guildsmaster class selector
+#define CTAG_GUILDSMEN		"CAT_GUILDSMEN"		// Guildsmen class - Handles Guildsmen class selector
 #define CTAG_BATHWORKER		"CAT_BATHWORKER"	// Bathhouse Attendant's aesthetic choices.
 
 // List of Migrant Classes.
-#define CTAG_HFT_LORD "CAT_HFT_LORD"  // Heartfelt Lord Class - Handles Heartfelt Lord class selector.
-#define CTAG_HFT_HAND "CAT_HFT_HAND"  // Heartfelt Hand Class - Handles Heartfelt Hand class selector.
-#define CTAG_HFT_KNIGHT "CAT_HFT_KNIGHT"  // Heartfelt Knight Class - Handles Heartfelt Knight class selector.
-#define CTAG_HFT_RETINUE "CAT_HFT_RETINUE"  // Heartfelt Retinue Class - Handles Heartfelt Retinue class selector.
+#define CTAG_HFT_LORD "CAT_HFT_LORD"	// Heartfelt Lord Class - Handles Heartfelt Lord class selector.
+#define CTAG_HFT_HAND "CAT_HFT_HAND"	// Heartfelt Hand Class - Handles Heartfelt Hand class selector.
+#define CTAG_HFT_KNIGHT "CAT_HFT_KNIGHT"	// Heartfelt Knight Class - Handles Heartfelt Knight class selector.
+#define CTAG_HFT_RETINUE "CAT_HFT_RETINUE"	// Heartfelt Retinue Class - Handles Heartfelt Retinue class selector.
+
+// Pentarchy wave archetype tags; between them they cover every mercenary subclass exactly once.
+#define CTAG_MERCPARTY_VANGUARD "CAT_MERCPARTY_VANGUARD"	// line soldiers
+#define CTAG_MERCPARTY_BULWARK "CAT_MERCPARTY_BULWARK"	// bruisers / tanks
+#define CTAG_MERCPARTY_MARKSMAN "CAT_MERCPARTY_MARKSMAN"	// ranged skirmishers
+#define CTAG_MERCPARTY_BRAVO "CAT_MERCPARTY_BRAVO"	// duelists / hunters
+#define CTAG_MERCPARTY_WARMAGE "CAT_MERCPARTY_WARMAGE"	// battle casters
 
 // List of mono-class categories. Only here for standardisation sake, but can be added on if desired.
 #define CTAG_BISHOP			"CAT_BISHOP"
@@ -546,6 +551,8 @@ GLOBAL_LIST_EMPTY(round_join_times)
 #define CTAG_STEWARD		"CAT_STEWARD"
 #define CTAG_CLERK			"CAT_CLERK"
 #define CTAG_COUNCILLOR		"CAT_COUNCIL"
+#define CTAG_CONSORT		"CAT_CONSORT"
+#define CTAG_JESTER		"CAT_JESTER"
 
 #define CTAG_COURTMAGE		"CAT_COURTMAGE"
 
@@ -556,6 +563,7 @@ GLOBAL_LIST_EMPTY(round_join_times)
 #define CTAG_SHOPHAND		"CAT_SHOPHAND"
 #define CTAG_ARCHIVIST		"CAT_ARCHIVIST"
 #define CTAG_KEEPER			"CAT_KEEPER"
+#define CTAG_PAINTER		"CAT_PAINTER"
 #define CTAG_TAILOR			"CAT_TAILOR"
 #define CTAG_SOILBRIDE		"CAT_SOILBRIDE"
 #define CTAG_INNKEEPER		"CAT_INNKEEPER"
@@ -570,6 +578,9 @@ GLOBAL_LIST_EMPTY(round_join_times)
 #define TRIUMPH_CAT_CHARACTER "CHARACTER"
 #define TRIUMPH_CAT_MISC "MISC!"
 #define TRIUMPH_CAT_ACTIVE_DATUMS "ACTIVE"
+
+// Suffix for a triumph entry so that it doesn't overlap
+#define TRIUMPH_STASH_SUFFIX " - TR"
 
 #define ARMOR_CLASS_NONE 0
 #define ARMOR_CLASS_LIGHT 1
@@ -616,6 +627,13 @@ GLOBAL_LIST_EMPTY(round_join_times)
 #define ARMOR_MAT_LEATHER 2
 #define ARMOR_MAT_CHAINMAIL 3
 
+//Intent-saving defines. If a weapon has more than 3 altgrip states it's likely to runtime somewhere.
+#define UNWIELDED_INTENT 0
+#define WIELDED_INTENT 1
+#define ALTGRIP_ONE_INTENT 2
+#define ALTGRIP_TWO_INTENT 3
+#define ALTGRIP_THREE_INTENT 4
+
 /*
 	Formerly bitflags, now we are strings
 	Currently used for classes
@@ -626,7 +644,7 @@ GLOBAL_LIST_EMPTY(round_join_times)
 #define CTAG_ROYALGUARD_ENIGMA "CAT_ROYALGUARD_ENIGMA"
 #define CTAG_ROYALKNIGHT "CAT_ROYALKNIGHT"
 #define CTAG_ROYALSERGEANT "CAT_ROYALSERGEANT"
-#define CTAG_SHERIFF "CAT_SHERIFF"			
+#define CTAG_SHERIFF "CAT_SHERIFF"
 #define CTAG_TOWN_WATCH "CAT_TOWN_WATCH"
 #define CTAG_VANGUARD "CAT_VANGUARD"
 #define CTAG_OVERSEER "CAT_OVERSEER"

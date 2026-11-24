@@ -47,6 +47,7 @@
 		R.force = R.force + int_scaling
 		R.throwforce = R.throwforce + int_scaling * 2 // 2x scaling for throwing. Let's go.
 		R.name = "magician's brick +[int_scaling]"
+		R.update_force_dynamic()
 	user.put_in_hands(R)
 	src.conjured_brick = R
 	return TRUE
@@ -67,8 +68,12 @@
 	slot_flags = ITEM_SLOT_MOUTH
 	obj_flags = null
 	w_class = WEIGHT_CLASS_TINY
-	implement_tier = IMPLEMENT_TIER_LESSER
-	implement_refund = IMPLEMENT_REFUND_LESSER
 	possible_item_intents = list(/datum/intent/mace/strike) // Not giving it smash so it don't become competetive with conjure weapon (as a melee weapon)
 	associated_skill = /datum/skill/combat/arcyne // what could go wrong...
+	is_implement = TRUE
 	hitsound = list('sound/combat/hits/blunt/brick.ogg')
+	twirly = SKILL_LEVEL_JOURNEYMAN
+	twirl_speed = 6
+
+/obj/item/rogueweapon/magicbrick/twirl_fumble(mob/living/user)
+	return twirl_fumble_bonk(user, 'sound/combat/hits/blunt/brick.ogg') // bonk

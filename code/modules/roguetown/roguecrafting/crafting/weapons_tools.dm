@@ -230,6 +230,7 @@
 
 /datum/crafting_recipe/roguetown/survival/woodhammer
 	name = "wood mallet"
+	aliases = "wood hammer, "
 	display_category = ITEM_CAT_WEAPONS_MACES
 	category = "Tools"
 	result = /obj/item/rogueweapon/hammer/wood
@@ -413,7 +414,7 @@
 	name = "silver-reinforced quarterstaff"
 	display_category = ITEM_CAT_WEAPONS_POLEARMS
 	category = "Tools"
-	result = list(/obj/item/rogueweapon/woodstaff/quarterstaff/silver)
+	result = list(/obj/item/rogueweapon/woodstaff/quarterstaff/steel/silver)
 	reqs = list(
 		/obj/item/rogueweapon/woodstaff/quarterstaff = 1,
 		/obj/item/ingot/silver = 1,
@@ -425,7 +426,7 @@
 	name = "psydonic silver-reinforced quarterstaff"
 	display_category = ITEM_CAT_WEAPONS_POLEARMS
 	category = "Tools"
-	result = list(/obj/item/rogueweapon/woodstaff/quarterstaff/psy)
+	result = list(/obj/item/rogueweapon/woodstaff/quarterstaff/steel/silver/psy)
 	reqs = list(
 		/obj/item/rogueweapon/woodstaff/quarterstaff = 1,
 		/obj/item/ingot/silverblessed = 1,
@@ -434,9 +435,9 @@
 	craftdiff = 5
 
 /datum/crafting_recipe/roguetown/survival/quarterstaff_psydonic/bullion
-	name = "psydonic silver-reinforced quarterstaff"
+	name = "psydonic silver-reinforced quarterstaff (bullion)"
 	category = "Tools"
-	result = list(/obj/item/rogueweapon/woodstaff/quarterstaff/psy)
+	result = list(/obj/item/rogueweapon/woodstaff/quarterstaff/steel/silver/psy)
 	reqs = list(
 		/obj/item/rogueweapon/woodstaff/quarterstaff = 1,
 		/obj/item/ingot/silverblessed/bullion = 1,
@@ -474,7 +475,7 @@
 /datum/crafting_recipe/roguetown/survival/sharpenedstake
 	name = "stake, sharpened"
 	display_category = ITEM_CAT_WEAPONS_DAGGERS
-	category = "Tools" 
+	category = "Tools"
 	result = list(/obj/item/rogueweapon/huntingknife/idagger/stake)
 	reqs = list(
 		/obj/item/grown/log/tree/stake = 1,
@@ -552,6 +553,7 @@
 
 /datum/crafting_recipe/roguetown/survival/woodspade
 	name = "wood spade"
+	aliases = "wooden shovel, "
 	display_category = ITEM_CAT_TOOLS_FIELD
 	category = "Tools"
 	result = /obj/item/rogueweapon/shovel/small
@@ -572,6 +574,21 @@
 		)
 
 /obj/item/fishingrod/crafted
+	difficulty_modifier = FISHING_ROD_CRAFTED_DIFFICULTY
+	starting_reel = null
+	starting_hook = null
+	starting_line = null
+
+/datum/crafting_recipe/roguetown/survival/rodbronze
+	name = "fishing rod, bronze"
+	display_category = ITEM_CAT_TOOLS_SUNDRIES
+	category = "Tools"
+	result = /obj/item/fishingrod/bronze
+	reqs = list(
+		/obj/item/grown/log/tree/small = 1,
+		/obj/item/natural/fibers = 2,
+		/obj/item/ingot/bronze = 1,
+		)
 
 /datum/crafting_recipe/roguetown/survival/rodblacksteel
 	name = "fishing rod, blacksteel"
@@ -583,19 +600,6 @@
 		/obj/item/natural/fibers = 2,
 		/obj/item/ingot/blacksteel = 1,
 		)
-
-/datum/crafting_recipe/roguetown/survival/bow
-	name = "bow"
-	display_category = ITEM_CAT_WEAPONS_AMMO
-	category = "Tools"
-	result = list(/obj/item/gun/ballistic/revolver/grenadelauncher/bow/classic)
-	reqs = list(
-		/obj/item/grown/log/tree = 1,
-		/obj/item/natural/cloth = 1,
-		/obj/item/natural/fibers = 3,
-		)
-	skillcraft = /datum/skill/craft/crafting
-	craftdiff = 3
 
 /datum/crafting_recipe/roguetown/survival/fishingcage
 	name = "fishing cage"
@@ -613,12 +617,39 @@
 	display_category = ITEM_CAT_TOOLS_SUNDRIES
 	category = "Tools"
 	result = list(/obj/item/construction/repairkit/structure,
-				  /obj/item/construction/repairkit/structure,
-				  /obj/item/construction/repairkit/structure)
+					/obj/item/construction/repairkit/structure,
+					/obj/item/construction/repairkit/structure)
 	reqs = list(/obj/item/construction/nail = 6,
 				/obj/item/natural/wood/plank = 3,
 				/obj/item/natural/stoneblock = 3)
 	skillcraft = /datum/skill/craft/carpentry
+	craftdiff = 3
+
+/datum/crafting_recipe/roguetown/sewing/tentkit
+	name = "Small Tent Kit"
+	display_category = ITEM_CAT_TOOLS_FIELD
+	category = "Misc"
+	tools = list(/obj/item/needle)
+	result = list(/obj/item/tent_kit)
+	reqs = list(/obj/item/natural/cloth = 4, /obj/item/natural/fibers = 2, /obj/item/grown/log/tree/stick = 4)
+	craftdiff = 3
+
+/datum/crafting_recipe/roguetown/sewing/gerkit
+	name = "Ger Kit"
+	display_category = ITEM_CAT_TOOLS_FIELD
+	category = "Misc"
+	tools = list(/obj/item/needle)
+	result = list(/obj/item/tent_kit/ger)
+	reqs = list(/obj/item/natural/cloth = 10, /obj/item/natural/fibers = 4, /obj/item/grown/log/tree/stick = 10)
+	craftdiff = 4
+
+/datum/crafting_recipe/roguetown/sewing/yurtkit
+	name = "Yurt Kit"
+	display_category = ITEM_CAT_TOOLS_FIELD
+	category = "Misc"
+	tools = list(/obj/item/needle)
+	result = list(/obj/item/tent_kit/yurt)
+	reqs = list(/obj/item/natural/cloth = 20, /obj/item/natural/fibers = 8, /obj/item/grown/log/tree/stick = 20)
 	craftdiff = 5
 
 /datum/crafting_recipe/roguetown/survival/mortar

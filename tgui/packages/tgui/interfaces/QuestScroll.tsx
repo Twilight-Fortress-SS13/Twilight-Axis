@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import { useBackend } from '../backend';
 import { Window } from '../layouts';
 import { BeastWrit } from './QuestScroll/BeastWrit';
@@ -13,7 +15,6 @@ import {
   RetrievalProgressLine,
   WhisperLine,
 } from './QuestScroll/Marginalia';
-import { OreVeinWrit } from './QuestScroll/OreVeinWrit';
 import { RecoveryWrit } from './QuestScroll/RecoveryWrit';
 import {
   COMMISSION_SEAL,
@@ -22,6 +23,7 @@ import {
 } from './QuestScroll/Seals';
 import type { QuestScrollData } from './QuestScroll/shared';
 import {
+  bountyHeader,
   completionStamp,
   divider,
   FACTION_CAT_BEAST,
@@ -30,15 +32,64 @@ import {
   FACTION_CAT_GRONN,
   FACTION_CAT_UNDEAD,
   failedStamp,
+  marginaliaLabel,
   marginaliaLine,
+  netReward,
   parchment,
   titleHint,
   WRIT_TYPE_CARRIAGE,
   WRIT_TYPE_RECOVERY,
-  WRIT_TYPE_TOWNER_VEIN,
+  WRIT_TYPE_TOWNER,
   writBody,
 } from './QuestScroll/shared';
+import { TownerWrit } from './QuestScroll/TownerWrit';
 import { UndeadWrit } from './QuestScroll/UndeadWrit';
+
+const BountyHeader = (props: {
+  reward: number;
+  levyRate: number;
+  levyExempt: boolean;
+  guildCutRate: number;
+  fellowshipSize: number;
+  fellowshipExtras: number;
+  fellowshipMissing: number;
+  fellowshipSplit: boolean;
+  fellowshipThreatPct: number;
+  fellowshipRewardPct: number;
+}) => {
+  const {
+    reward,
+    levyRate,
+    levyExempt,
+    guildCutRate,
+    fellowshipSize,
+    fellowshipExtras,
+    fellowshipMissing,
+    fellowshipSplit,
+    fellowshipThreatPct,
+    fellowshipRewardPct,
+  } = props;
+  const net = netReward(reward, levyRate, levyExempt, guildCutRate);
+  return (
+    <div style={bountyHeader}>
+      <span style={marginaliaLabel}>Bounty as it now stands:</span>
+      <b>{reward} mammon</b>
+      {net !== reward && <span>({net} in hand after deductions)</span>}
+      {(fellowshipSize > 1 || fellowshipMissing > 0) && (
+        <>
+          <span>
+            Fellowship Size: {fellowshipSize}
+            {fellowshipExtras > 0 &&
+              ` (+${fellowshipExtras} > Contract Requirement. +${fellowshipThreatPct}% threat +${fellowshipRewardPct}% reward)`}
+            {fellowshipMissing > 0 &&
+              ` (-${fellowshipMissing} < Contract Requirement.${fellowshipThreatPct < 0 ? ` ${fellowshipThreatPct}% threat.` : ''} Reward cut to those present)`}
+          </span>
+          <span>Rewards: {fellowshipSplit ? 'Split' : 'Turned In'}</span>
+        </>
+      )}
+    </div>
+  );
+};
 
 type MarginaliaSectionProps = {
   data: QuestScrollData;
@@ -46,24 +97,11 @@ type MarginaliaSectionProps = {
   hasWhisper: boolean;
   hasBlockadeTimer: boolean;
   hasHuntTimer: boolean;
-  hasCaravanTimer: boolean;
-  hasCaravanAwaitingArrival: boolean;
-  hasOreveinTimer: boolean;
-  hasOreveinAwaitingArrival: boolean;
 };
 
 const MarginaliaSection = (props: MarginaliaSectionProps) => {
-  const {
-    data,
-    showProgress,
-    hasWhisper,
-    hasBlockadeTimer,
-    hasHuntTimer,
-    hasCaravanTimer,
-    hasCaravanAwaitingArrival,
-    hasOreveinTimer,
-    hasOreveinAwaitingArrival,
-  } = props;
+  const { data, showProgress, hasWhisper, hasBlockadeTimer, hasHuntTimer } =
+    props;
   return (
     <Marginalia>
       {hasWhisper && (
@@ -78,7 +116,7 @@ const MarginaliaSection = (props: MarginaliaSectionProps) => {
             done={data.progress_current ?? 0}
             total={data.progress_required ?? 1}
             noun={
-              data.fetch_item ? `${data.fetch_item}s` : 'goods of the realm'
+              data.fetch_item_plural || data.fetch_item || 'goods of the realm'
             }
           />
         ) : (
@@ -102,64 +140,22 @@ const MarginaliaSection = (props: MarginaliaSectionProps) => {
       )}
       {!!data.blockade_armed && !data.blockade_timer_label && (
         <div style={marginaliaLine}>
-          <i>Travel to the blockade, waves descend on arrival.</i>
+          <i>Travel to the blockade, waves arrives on arrival.</i>
         </div>
       )}
-      {hasCaravanAwaitingArrival && (
-        <div style={marginaliaLine}>
-          <i>Reach the wreck to start the 20-minute clock.</i>
-        </div>
-      )}
-      {hasCaravanTimer && (
-        <>
-          <BlockadeTimer
-            label="Trail goes cold in"
-            seconds={data.caravan_expiry_seconds ?? 0}
-          />
-          <div style={marginaliaLine}>
-            <i>The strongbox stays buried until the smith reaches the wreck.</i>
-          </div>
-        </>
-      )}
-      {!!data.caravan_parcel_spawned && !data.complete && (
+      {(!!data.armed || !!data.blockade_armed) && !data.complete && (
         <div style={marginaliaLine}>
           <i>
-            The smith has reached the wreck. The strongbox is yours to recover.
+            Fellows who are not within two screens of you when the contract starts does not count toward its final scaling.
           </i>
         </div>
       )}
-      {!!data.caravan_expired && (
-        <div style={marginaliaLine}>
-          <b>The trail has gone cold. The wreck is lost.</b>
-        </div>
-      )}
-      {hasOreveinAwaitingArrival && (
+      {!!data.is_towner && !data.complete && (
         <div style={marginaliaLine}>
           <i>
-            Reach the strike to make the earth erupt. The miner must be at your
-            side.
+            Only {data.issued_by || 'the poster'} can open what you recover -
+            Carry it back to them or put it into the nearest HERMES to complete the contract.
           </i>
-        </div>
-      )}
-      {hasOreveinTimer && (
-        <>
-          <BlockadeTimer
-            label="Vein closes in"
-            seconds={data.orevein_expiry_seconds ?? 0}
-          />
-          {(data.orevein_clusters_total ?? 0) > 0 && (
-            <div style={marginaliaLine}>
-              <i>
-                {data.orevein_clusters_remaining ?? 0} of{' '}
-                {data.orevein_clusters_total ?? 0} clusters remain.
-              </i>
-            </div>
-          )}
-        </>
-      )}
-      {!!data.orevein_expired && (
-        <div style={marginaliaLine}>
-          <b>The vein has closed. The earth has reclaimed her own.</b>
         </div>
       )}
     </Marginalia>
@@ -180,149 +176,149 @@ type WritBodyProps = {
   hasRecoveryAddendum: boolean;
 };
 
-const WritBody = (props: WritBodyProps) => {
-  const {
-    data,
-    realm,
-    rulerTitle,
-    reward,
-    levyRate,
-    levyExempt,
-    guildCutRate,
-    bearer,
-    issuedBy,
-    crimes,
-    hasRecoveryAddendum,
-  } = props;
-  const sealProps = {
-    rulerTitle,
-    issuedBy,
-    issuedOn: data.issued_on,
-    bearer,
-  };
-  const factionGroupProps = {
-    groupWord: data.faction_group_word,
-    namePlural: data.faction_name_plural,
-  };
-  const namedProps = {
-    named: data.named_target,
-    ringleader: data.band_leader,
-  };
-  const rewardProps = { reward, levyRate, levyExempt, guildCutRate };
-  const recoveryProps = {
-    hasRecoveryAddendum,
-    recoveryShipment: data.recovery_shipment,
-    recoveryDestination: data.delivery_destination,
-    recoveryCircumstance: data.circumstance,
-  };
+type WritRenderer = (props: WritBodyProps) => ReactNode;
 
-  if (data.writ_type === WRIT_TYPE_RECOVERY) {
-    return (
-      <RecoveryWrit
-        realm={realm}
-        circumstance={data.circumstance}
-        pickupRegion={data.pickup_region}
-        fetchItem={data.fetch_item}
-        fetchCount={data.fetch_count}
-        {...rewardProps}
-        {...sealProps}
-      />
-    );
-  }
-  if (data.writ_type === WRIT_TYPE_CARRIAGE) {
-    return (
-      <CarriageWrit
-        realm={realm}
-        circumstance={data.circumstance}
-        pickupRegion={data.pickup_region}
-        destination={data.delivery_destination}
-        deliveryItem={data.delivery_item}
-        {...rewardProps}
-        {...sealProps}
-      />
-    );
-  }
-  if (data.writ_type === WRIT_TYPE_TOWNER_VEIN) {
-    return (
-      <OreVeinWrit
-        pickupRegion={data.pickup_region}
-        {...rewardProps}
-        {...sealProps}
-      />
-    );
-  }
-  switch (data.faction_category) {
-    case FACTION_CAT_BEAST:
-      return (
-        <BeastWrit
-          nameSingular={data.faction_name_singular}
-          realm={realm}
-          crimes={crimes}
-          {...rewardProps}
-          {...sealProps}
-          {...recoveryProps}
-        />
-      );
-    case FACTION_CAT_UNDEAD:
-      return (
-        <UndeadWrit
-          realm={realm}
-          {...factionGroupProps}
-          {...rewardProps}
-          {...sealProps}
-          {...recoveryProps}
-        />
-      );
-    case FACTION_CAT_GOBLINOID:
-      return (
-        <GoblinoidWrit
-          realm={realm}
-          {...factionGroupProps}
-          {...rewardProps}
-          {...sealProps}
-          {...recoveryProps}
-        />
-      );
-    case FACTION_CAT_GRONN:
-      return (
-        <GronnWrit
-          realm={realm}
-          crimes={crimes}
-          {...namedProps}
-          {...factionGroupProps}
-          {...rewardProps}
-          {...sealProps}
-          {...recoveryProps}
-        />
-      );
-    case FACTION_CAT_DROW:
-      return (
-        <DrowWrit
-          realm={realm}
-          crimes={crimes}
-          {...namedProps}
-          {...factionGroupProps}
-          {...rewardProps}
-          {...sealProps}
-          {...recoveryProps}
-        />
-      );
-    default:
-      return (
-        <HumanoidWrit
-          realm={realm}
-          {...namedProps}
-          {...factionGroupProps}
-          crimes={crimes}
-          sacralInvoked={!!data.sacral_invoked}
-          oathBreach={!!data.oath_breach}
-          condemnation={data.condemnation || undefined}
-          {...recoveryProps}
-          {...rewardProps}
-          {...sealProps}
-        />
-      );
-  }
+const sealPropsOf = (props: WritBodyProps) => ({
+  rulerTitle: props.rulerTitle,
+  issuedBy: props.issuedBy,
+  issuedOn: props.data.issued_on,
+  bearer: props.bearer,
+});
+
+const rewardPropsOf = (props: WritBodyProps) => ({
+  reward: props.reward,
+  levyRate: props.levyRate,
+  levyExempt: props.levyExempt,
+  guildCutRate: props.guildCutRate,
+});
+
+const factionGroupPropsOf = (props: WritBodyProps) => ({
+  groupWord: props.data.faction_group_word,
+  namePlural: props.data.faction_name_plural,
+});
+
+const namedPropsOf = (props: WritBodyProps) => ({
+  named: props.data.named_target,
+  ringleader: props.data.band_leader,
+});
+
+const recoveryPropsOf = (props: WritBodyProps) => ({
+  hasRecoveryAddendum: props.hasRecoveryAddendum,
+  recoveryShipment: props.data.recovery_shipment,
+  recoveryDestination: props.data.delivery_destination,
+  recoveryCircumstance: props.data.circumstance,
+});
+
+const WRIT_TYPE_RENDERERS: Record<string, WritRenderer> = {
+  [WRIT_TYPE_RECOVERY]: (props) => (
+    <RecoveryWrit
+      realm={props.realm}
+      circumstance={props.data.circumstance}
+      pickupRegion={props.data.pickup_region}
+      fetchItem={props.data.fetch_item}
+      fetchItemPlural={props.data.fetch_item_plural}
+      fetchCount={props.data.fetch_count}
+      {...rewardPropsOf(props)}
+      {...sealPropsOf(props)}
+    />
+  ),
+  [WRIT_TYPE_CARRIAGE]: (props) => (
+    <CarriageWrit
+      realm={props.realm}
+      circumstance={props.data.circumstance}
+      pickupRegion={props.data.pickup_region}
+      destination={props.data.delivery_destination}
+      deliveryItem={props.data.delivery_item}
+      {...rewardPropsOf(props)}
+      {...sealPropsOf(props)}
+    />
+  ),
+  [WRIT_TYPE_TOWNER]: (props) => (
+    <TownerWrit
+      intro={props.data.towner_intro}
+      sealNote={props.data.towner_seal_note}
+      {...rewardPropsOf(props)}
+      {...sealPropsOf(props)}
+    />
+  ),
+};
+
+const FACTION_WRIT_RENDERERS: Record<string, WritRenderer> = {
+  [FACTION_CAT_BEAST]: (props) => (
+    <BeastWrit
+      nameSingular={props.data.faction_name_singular}
+      realm={props.realm}
+      crimes={props.crimes}
+      {...rewardPropsOf(props)}
+      {...sealPropsOf(props)}
+      {...recoveryPropsOf(props)}
+    />
+  ),
+  [FACTION_CAT_UNDEAD]: (props) => (
+    <UndeadWrit
+      realm={props.realm}
+      ringleader={props.data.band_leader}
+      {...factionGroupPropsOf(props)}
+      {...rewardPropsOf(props)}
+      {...sealPropsOf(props)}
+      {...recoveryPropsOf(props)}
+    />
+  ),
+  [FACTION_CAT_GOBLINOID]: (props) => (
+    <GoblinoidWrit
+      realm={props.realm}
+      ringleader={props.data.band_leader}
+      {...factionGroupPropsOf(props)}
+      {...rewardPropsOf(props)}
+      {...sealPropsOf(props)}
+      {...recoveryPropsOf(props)}
+    />
+  ),
+  [FACTION_CAT_GRONN]: (props) => (
+    <GronnWrit
+      realm={props.realm}
+      crimes={props.crimes}
+      {...namedPropsOf(props)}
+      {...factionGroupPropsOf(props)}
+      {...rewardPropsOf(props)}
+      {...sealPropsOf(props)}
+      {...recoveryPropsOf(props)}
+    />
+  ),
+  [FACTION_CAT_DROW]: (props) => (
+    <DrowWrit
+      realm={props.realm}
+      crimes={props.crimes}
+      {...namedPropsOf(props)}
+      {...factionGroupPropsOf(props)}
+      {...rewardPropsOf(props)}
+      {...sealPropsOf(props)}
+      {...recoveryPropsOf(props)}
+    />
+  ),
+};
+
+const renderHumanoidWrit: WritRenderer = (props) => (
+  <HumanoidWrit
+    realm={props.realm}
+    {...namedPropsOf(props)}
+    {...factionGroupPropsOf(props)}
+    crimes={props.crimes}
+    sacralInvoked={!!props.data.sacral_invoked}
+    oathBreach={!!props.data.oath_breach}
+    condemnation={props.data.condemnation || undefined}
+    {...recoveryPropsOf(props)}
+    {...rewardPropsOf(props)}
+    {...sealPropsOf(props)}
+  />
+);
+
+const WritBody = (props: WritBodyProps) => {
+  const render =
+    WRIT_TYPE_RENDERERS[props.data.writ_type || ''] ||
+    FACTION_WRIT_RENDERERS[props.data.faction_category || ''] ||
+    renderHumanoidWrit;
+  return <>{render(props)}</>;
 };
 
 export const QuestScroll = () => {
@@ -366,45 +362,18 @@ export const QuestScroll = () => {
     !!data.blockade_timer_label && (data.blockade_timer_seconds ?? 0) > 0;
   const hasHuntTimer =
     !!data.hunt_timer_label && (data.hunt_timer_seconds ?? 0) > 0;
-  const hasCaravanTimer =
-    (data.caravan_expiry_seconds ?? 0) > 0 && !data.caravan_parcel_spawned;
-  const hasCaravanAwaitingArrival =
-    data.caravan_bearer_arrived !== undefined &&
-    !data.caravan_bearer_arrived &&
-    !data.caravan_expired &&
-    !data.caravan_parcel_spawned;
-  const hasCaravanStatus =
-    !!data.caravan_parcel_spawned || !!data.caravan_expired;
-  const hasOreveinTimer =
-    (data.orevein_expiry_seconds ?? 0) > 0 &&
-    !!data.orevein_clusters_spawned &&
-    !data.orevein_expired;
-  const hasOreveinAwaitingArrival =
-    data.orevein_bearer_arrived !== undefined &&
-    !data.orevein_clusters_spawned &&
-    !data.orevein_expired;
-  const hasOreveinStatus = !!data.orevein_expired;
+  const hasTownerSeal = !!data.is_towner && !data.complete;
   const hasMarginalia =
     hasWhisper ||
     showProgress ||
     hasBlockadeTimer ||
     hasHuntTimer ||
     !!data.blockade_armed ||
-    hasCaravanTimer ||
-    hasCaravanStatus ||
-    hasCaravanAwaitingArrival ||
-    hasOreveinTimer ||
-    hasOreveinAwaitingArrival ||
-    hasOreveinStatus;
-  const hasSealBanners = !!(data.is_defense || data.levy_exempt);
+    !!data.armed ||
+    hasTownerSeal;
+  const hasSealBanners = !!(data.shows_commission_seal || data.levy_exempt);
 
-  const isOutlawry =
-    data.writ_type !== WRIT_TYPE_RECOVERY &&
-    data.writ_type !== WRIT_TYPE_CARRIAGE &&
-    data.writ_type !== WRIT_TYPE_TOWNER_VEIN;
-  // BOG_DESERTER falls through to the humanoid renderer. Its distinction is
-  // force_oath_breach set composer-side, which makes the corruption-of-blood clause
-  // always render under the licence-to-slay.
+  const isOutlawry = !WRIT_TYPE_RENDERERS[data.writ_type || ''];
   const hasRecoveryAddendum = isOutlawry && !!data.recovery_shipment;
 
   return (
@@ -412,6 +381,27 @@ export const QuestScroll = () => {
       <Window.Content scrollable>
         <div style={parchment}>
           {data.title && <div style={titleHint}>{data.title}</div>}
+
+          {!!bearer && (
+            <BountyHeader
+              reward={reward}
+              levyRate={levyRate}
+              levyExempt={levyExempt}
+              guildCutRate={guildCutRate}
+              fellowshipSize={data.fellowship_size ?? 0}
+              fellowshipExtras={data.fellowship_extras ?? 0}
+              fellowshipMissing={data.fellowship_missing ?? 0}
+              fellowshipSplit={!!data.fellowship_split}
+              fellowshipThreatPct={data.fellowship_threat_pct ?? 0}
+              fellowshipRewardPct={data.fellowship_reward_pct ?? 0}
+            />
+          )}
+
+          {!!data.veteran && (
+            <div style={{ textAlign: 'center', fontStyle: 'italic' }}>
+              Veteran contract: threat increased by {data.veteran_threat_pct}%.
+            </div>
+          )}
 
           <div style={writBody}>
             <WritBody
@@ -436,10 +426,6 @@ export const QuestScroll = () => {
               hasWhisper={hasWhisper}
               hasBlockadeTimer={hasBlockadeTimer}
               hasHuntTimer={hasHuntTimer}
-              hasCaravanTimer={hasCaravanTimer}
-              hasCaravanAwaitingArrival={hasCaravanAwaitingArrival}
-              hasOreveinTimer={hasOreveinTimer}
-              hasOreveinAwaitingArrival={hasOreveinAwaitingArrival}
             />
           )}
 
@@ -448,24 +434,14 @@ export const QuestScroll = () => {
               <hr style={divider} />
               <div style={completionStamp}>THIS WORK IS DONE</div>
               <div style={{ textAlign: 'center', marginTop: '6px' }}>
-                Return this writ to the Contract Ledger to claim the bounty.
-              </div>
-              <div
-                style={{
-                  textAlign: 'center',
-                  fontSize: '0.9em',
-                  marginTop: '4px',
-                  color: 'hsl(30, 35%, 40%)',
-                }}
-              >
-                Place it on the marked area or put it on the ledger.
+                Return this scroll to the Contract Ledger to claim your reward.
               </div>
             </>
           ) : data.blockade_failed ? (
             <>
               <hr style={divider} />
               <div style={failedStamp}>
-                THE BLOCKADE HELD, THIS WRIT HAS LAPSED
+                THE BLOCKADE HELD. THIS WRIT HAS LAPSED
               </div>
             </>
           ) : null}
@@ -481,8 +457,8 @@ export const QuestScroll = () => {
                   fontSize: '0.92em',
                 }}
               >
-                By Royal Seal and Ducal Prerogative, the bearer of this writ is
-                held exempt from the Crown&apos;s Levy upon its reward.
+                By seal of the {rulerTitle}, the holder of this writ is exempt
+                from the Crown&apos;s Levy on its reward.
               </div>
             </>
           )}
@@ -497,7 +473,9 @@ export const QuestScroll = () => {
                 marginTop: '18px',
               }}
             >
-              {!!data.is_defense && <SealBannerView seal={COMMISSION_SEAL} />}
+              {!!data.shows_commission_seal && (
+                <SealBannerView seal={COMMISSION_SEAL} />
+              )}
               {!!data.levy_exempt && <SealBannerView seal={EXEMPT_SEAL} />}
             </div>
           )}

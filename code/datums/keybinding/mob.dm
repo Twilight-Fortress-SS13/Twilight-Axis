@@ -2,6 +2,18 @@
 	category = CATEGORY_HUMAN
 	weight = WEIGHT_MOB
 
+/datum/keybinding/mob/toggle_action_buttons
+	hotkey_keys = list("Alt`")
+	name = "toggle_action_buttons"
+	full_name = "Toggle Action Buttons"
+	description = "Show or hide the action button bar."
+
+/datum/keybinding/mob/toggle_action_buttons/down(client/user)
+	var/mob/M = user.mob
+	if(!M)
+		return FALSE
+	M.toggle_action_buttons()
+	return TRUE
 
 /datum/keybinding/mob/face_north
 	hotkey_keys = list("CtrlW", "CtrlNorth")
@@ -63,7 +75,7 @@
 /datum/keybinding/mob/stop_pulling/down(client/user)
 	var/mob/M = user.mob
 	if(!M.pulling)
-		to_chat(user, span_notice("I are not pulling anything."))
+		to_chat(user, span_notice("I am not pulling anything."))
 	else
 		M.stop_pulling()
 	return TRUE

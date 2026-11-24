@@ -5,8 +5,9 @@
 /datum/action/cooldown/spell/blade_dance
 	button_icon = 'icons/mob/actions/mage_ferramancy.dmi'
 	name = "Blade Dance"
+	expose_caster_on_deflect = FALSE
 	desc = "Wreathe yourself in a whirling storm of arcyne blades that moves with you, slashing everything in the tiles around you.\n\n\
-	Deals 20 brute damage per second for 10 seconds to everything in the tiles adjacent to you."
+	Deals 16 brute damage per second for 10 seconds to everything in the tiles adjacent to you."
 	button_icon_state = "blade_dance"
 	sound = 'sound/magic/scrapeblade.ogg'
 	spell_color = GLOW_COLOR_METAL
@@ -40,7 +41,7 @@
 
 /datum/action/cooldown/spell/blade_dance/get_spell_statistics(mob/living/user)
 	var/list/stats = ..()
-	stats += span_info("Damage: [BLADE_DANCE_TICK_DAMAGE] brute per second (up to [DisplayTimeText(BLADE_DANCE_DURATION)])")
+	stats += span_info("Damage: [SPELL_DMG(BLADE_DANCE_TICK_DAMAGE)] brute per second (up to [DisplayTimeText(BLADE_DANCE_DURATION)])")
 	return stats
 
 /datum/action/cooldown/spell/blade_dance/Destroy()
@@ -75,7 +76,7 @@
 	var/mob/living/carbon/human/caster
 	var/datum/action/cooldown/spell/blade_dance/source_spell
 	var/ticks_remaining
-	var/tick_damage = BLADE_DANCE_TICK_DAMAGE
+	var/tick_damage = SPELL_DMG(BLADE_DANCE_TICK_DAMAGE)
 	var/effect_radius = BLADE_DANCE_RADIUS
 	var/list/blade_visuals = list()
 
@@ -149,13 +150,14 @@
 				return
 			if(ishuman(L) && ishuman(caster))
 				var/target_zone = caster.zone_selected || BODY_ZONE_CHEST
-				arcyne_strike(caster, L, null, tick_damage, target_zone, \
+				if(arcyne_strike(caster, L, null, tick_damage, target_zone, \
 					BCLASS_CUT, spell_name = "Blade Dance", \
-					damage_type = BRUTE, npc_simple_damage_mult = 1, \
+					damage_type = BRUTE, \
 					skip_animation = TRUE, skip_message = TRUE, \
-					allow_shield_check = TRUE)
+					allow_shield_check = TRUE, SPELL_STRIKE_SCALING) == ARCYNE_STRIKE_WARDED)
+					continue
 			else
-				L.adjustBruteLoss(tick_damage)
+				L.adjustBruteLoss(SPELL_DMG_VS(L, tick_damage))
 			new /obj/effect/temp_visual/spell_impact(get_turf(L), GLOW_COLOR_METAL, SPELL_IMPACT_MEDIUM)
 
 #undef BLADE_DANCE_RADIUS

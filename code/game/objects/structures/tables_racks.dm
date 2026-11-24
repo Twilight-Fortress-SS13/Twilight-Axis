@@ -21,6 +21,7 @@
 	layer = TABLE_LAYER
 	climbable = TRUE
 	pass_flags = LETPASSTHROW //You can throw objects over this, despite it's density.")
+	drag_slowdown = 5 //can move it up to 10 if this is too low
 	var/frame
 	var/framestack
 	var/buildstack
@@ -38,11 +39,21 @@
 	debris = list(/obj/item/grown/log/tree/small = 1)
 	hidingspot = TRUE
 	var/mob/living/hiddenguy = null // So we can find them with fixed eye search
+	var/stakeable = TRUE
+
+/proc/has_table_surface(location)
+	return !!get_table_surface(location)
+
+/proc/get_table_surface(location)
+	if(!location)
+		return null
+	return (locate(/obj/structure/table) in location) || (locate(/obj/structure/flora/roguetree/stump) in location)
 
 /obj/structure/table/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Some structures can be used as hiding places. Toggle the 'SNEAK' button on your HUD, then click the structure to hide in it. You can stop hiding by clicking the structure again, or by moving out of it.")
-
+	if(stakeable)
+		. += span_info("This table can be unanchored to be dragged around. Left click it with a stake on combat mode to toggle anchoring.")
 /obj/structure/table/examine(mob/user)
 	. = ..()
 //	. += deconstruction_hints(user)
@@ -102,32 +113,20 @@
 				user.stop_pulling()
 	return ..()
 
-/obj/structure/table/attack_right(mob/user)
-	var/obj/item/held = user.get_active_held_item()
-	var/obj/item/rogueweapon/bakers_peel/peel
-	if(istype(held, /obj/item/rogueweapon/bakers_peel))
-		peel = held
-		if(peel.unload_onto_table(src, user))
-			return TRUE
-	held = user.get_inactive_held_item()
-	if(istype(held, /obj/item/rogueweapon/bakers_peel))
-		peel = held
-		if(peel.unload_onto_table(src, user))
-			return TRUE
-	return ..()
-
 /obj/structure/table/proc/hideinside(mob/living/user)
-	if(user.in_combat_until > world.time)
+	if(user.is_in_combat())
 		return
 	var/sneak_level = user.get_skill_level(/datum/skill/misc/sneaking) || 0
-	var/sneaktime = max(10, 45 - (sneak_level * 5))	// 1.5 seconds at Legendary. 
+	var/sneaktime = max(10, 45 - (sneak_level * 5))	// 1.5 seconds at Legendary.
 	if(user.loc == src)
 		unhide(user)
 		return
 	if(occupied)
 		to_chat(user, span_warning("Someone is already hiding under [src]!"))
 		return
-	if(!do_after(user, sneaktime, src))
+	if(!do_after(user, sneaktime, target = src))
+		return
+	if(!QDELETED(src) && !isturf(loc))//prevents folding tables from nullspacing people
 		return
 	user.forceMove(src)
 	occupied = TRUE
@@ -142,6 +141,22 @@
 	hiddenguy = null
 	to_chat(user, span_warning("I come out from under [src]!"))
 
+/obj/structure/table/proc/eject_hiders()
+	var/turf/T = get_turf(src)
+	if(!T)
+		return
+
+	for(var/mob/living/hidden_mob in contents)
+		hidden_mob.forceMove(T)
+		to_chat(hidden_mob, span_warning("I come out from under [src]!"))
+
+	occupied = FALSE
+	hiddenguy = null
+
+/obj/structure/table/Destroy(force)
+	eject_hiders()
+	return ..()
+
 /obj/structure/table/relaymove(mob/user)
 	if(user.loc == src)
 		unhide(user)
@@ -154,7 +169,7 @@
 		return 1
 	if(mover.throwing)
 		return 1
-	if(locate(/obj/structure/table) in get_turf(mover))
+	if(has_table_surface(get_turf(mover)))
 		return 1
 	else
 		return !density
@@ -245,41 +260,27 @@
 				I.pixel_y = initial(I.pixel_y) += CLAMP(text2num(click_params["icon-y"]) - 16, -(world.icon_size/2), world.icon_size/2)
 				return 1
 
+	if(stakeable)
+		if(istype(I, /obj/item/grown/log/tree/stake))
+			if(hiddenguy)
+				to_chat(user, span_warning("Someone is hiding under there!"))
+				return
+			if(anchored)
+				anchored = FALSE
+				to_chat(user, span_warning("[src] can now be moved."))
+			else
+				anchored = TRUE
+				to_chat(user, span_warning("You anchor [src]."))
+			playsound(src,pick('sound/foley/woodclimb.ogg'), 100, TRUE)
+			return
+	..()
+
 	return ..()
 
 /obj/structure/table/ongive(mob/user, params)
 	var/obj/item/I = user.get_active_held_item()
 	if(I)
 		if(!(I.item_flags & ABSTRACT))
-			if(istype(I, /obj/item/toy/cards/singlecard))
-				var/obj/item/toy/cards/singlecard/C = I
-				if(!C.flipped)
-					C.Flip()
-			else if(istype(I, /obj/item/toy/cards/cardhand))
-				var/obj/item/toy/cards/cardhand/H = I
-				user.visible_message("<span class='notice'>[user] lays [user.p_their()] hand of cards face-up on the table.</span>",
-					"<span class='notice'>I lay my cards face-up on the table.</span>")
-
-				var/turf/T = get_turf(src)
-				if(!T)
-					return
-
-				// Fan them out slightly so they don’t stack perfectly
-				var/offset = -((H.currenthand.len - 1) * 4) / 2
-
-				for(var/cardname in H.currenthand)
-					var/obj/item/toy/cards/singlecard/C = new(T)
-					C.parentdeck = H.parentdeck
-					C.cardname = cardname
-					C.apply_card_vars(C, H)
-					C.forceMove(T)
-					C.Flip()
-					C.pixel_x = offset
-					offset += 8
-
-				// delete the hand after laying them down
-				qdel(H)
-				return 1
 			if(user.transferItemToLoc(I, drop_location(), silent = FALSE))
 				var/list/click_params = params2list(params)
 				//Center the icon where the user clicked.
@@ -316,7 +317,7 @@
 	climb_offset = 10
 	buildstack = /obj/item/grown/log/tree/small
 
-/obj/structure/table/wood/crafted/Initialize()
+/obj/structure/table/wood/crafted/Initialize(mapload)
 	. = ..()
 	icon_state = "tablewood1"
 
@@ -335,6 +336,7 @@
 
 /obj/structure/table/wood/large_table
 	icon_state = "largetable"
+	stakeable = FALSE
 
 /obj/structure/table/wood/large_table/south_west
 	dir = 10
@@ -362,6 +364,7 @@
 
 /obj/structure/table/wood/long_table
 	icon_state = "longtable"
+	stakeable = FALSE
 
 /obj/structure/table/wood/long_table/right
 	dir = 1
@@ -381,6 +384,7 @@
 
 /obj/structure/table/wood/map
 	icon_state = "map1"
+	stakeable = FALSE
 
 /obj/structure/table/wood/map/two
 	icon_state = "map2"
@@ -406,6 +410,7 @@
 	smooth = 0
 	climb_offset = 10
 	debris = list(/obj/item/natural/stone = 1)
+	stakeable = FALSE
 
 /obj/structure/table/church/OnCrafted(dirin, user)
 	if(dirin == NORTH || dirin == SOUTH)
@@ -443,9 +448,16 @@
 	icon = 'icons/roguetown/misc/tables.dmi'
 	icon_state = "stonetable_small"
 	max_integrity = 400
-	smooth = 0
+	smooth = 1
+	canSmoothWith = list(/obj/structure/table/finestone)
 	climb_offset = 10
 	debris = list(/obj/item/natural/stoneblock = 1)
+	var/smooth_icon = 'icons/obj/smooth_structures/stone_table.dmi'
+	stakeable = FALSE
+
+/obj/structure/table/finestone/Initialize(mapload)
+	. = ..()
+	icon = smooth_icon
 
 /obj/structure/table/vtable
 	name = "ancient wooden table"
@@ -456,6 +468,7 @@
 	smooth = 0
 	climb_offset = 10
 	debris = list(/obj/item/grown/log/tree/small = 1)
+	stakeable = FALSE
 
 /obj/structure/table/vtable/v2
 	icon = 'icons/roguetown/misc/tables.dmi'
@@ -489,6 +502,7 @@
 	smooth = 0
 	debris = list(/obj/item/grown/log/tree/small, /obj/item/roguegear)
 	climb_offset = 10
+	stakeable = FALSE
 
 
 
@@ -510,10 +524,11 @@
 		/obj/structure/table/wood/fancy/purple,
 		/obj/structure/table/wood/fancy/red,
 		/obj/structure/table/wood/fancy/royalblack,
-		/obj/structure/table/wood/fancy/royalblue)
+		/obj/structure/table/wood/fancy/royalblue,
+		/obj/structure/table/wood/fancy/navy)
 	var/smooth_icon = 'icons/obj/smooth_structures/fancy_table.dmi' // see Initialize()
 
-/obj/structure/table/wood/fancy/Initialize()
+/obj/structure/table/wood/fancy/Initialize(mapload)
 	. = ..()
 	// Needs to be set dynamically because table smooth sprites are 32x34,
 	// which the editor treats as a two-tile-tall object. The sprites are that
@@ -557,6 +572,19 @@
 	icon_state = "fancy_table_royalblue"
 	smooth_icon = 'icons/obj/smooth_structures/fancy_table_royalblue.dmi'
 
+/obj/structure/table/wood/betting
+	name = "betting table"
+	desc = "A table lined with cloth and edged with timber to prevent things falling off."
+	icon = 'icons/obj/structures.dmi'
+	icon_state = "betting_table"
+	smooth = 1
+	canSmoothWith = list(/obj/structure/table/wood/betting)
+	var/smooth_icon = 'icons/obj/smooth_structures/betting_table.dmi' // see Initialize()
+
+/obj/structure/table/wood/betting/Initialize(mapload)
+	. = ..()
+	icon = smooth_icon
+
 /obj/structure/table/wood/folding
 	name = "folding table"
 	desc = "A folding table, useful for setting up a temporary workspace."
@@ -568,6 +596,7 @@
 	debris = list(/obj/item/grown/log/tree/small = 1)
 	climbable = TRUE
 	climb_offset = 10
+	stakeable = FALSE
 
 /obj/structure/table/wood/folding/examine()
 	. = ..()
@@ -576,6 +605,7 @@
 /obj/structure/table/wood/folding/attack_right(mob/user)
 	if(..())
 		return TRUE
+	eject_hiders()
 	user.visible_message(span_notice("[user] folds [src]."), span_notice("You fold [src]."))
 	new /obj/item/folding_table_stored(drop_location())
 	qdel(src)
@@ -644,16 +674,21 @@
 				W.pixel_y = initial(W.pixel_y) + CLAMP(pixel_y + text2num(click_params["icon-y"]) - 16, pixel_y + -(world.icon_size/2), pixel_y + world.icon_size/2)
 				return 1
 
-
-
 /obj/structure/rack/rogue
 	icon = 'icons/roguetown/misc/structure.dmi'
 	icon_state = "rack"
 	climbable = TRUE
 	climb_offset = 10
+	drag_slowdown = 5
+	var/stakeable = TRUE
 
 /obj/structure/rack/rogue/deconstruct(disassembled = TRUE)
 	qdel(src)
+
+/obj/structure/rack/rogue/get_mechanics_examine(mob/user)
+	. = ..()
+	if(stakeable)
+		. += span_info("Left click the rack with a stake on combat mode to toggle anchoring.")
 
 /obj/structure/rack/rogue/shelf
 	icon = 'icons/roguetown/misc/structure.dmi'
@@ -664,6 +699,30 @@
 	// These aren't dense, so they shouldn't have an offset!
 	climb_offset = 0
 	pixel_y = 32
+	
+/obj/structure/rack/rogue/shelf/wall
+	icon = 'icons/roguetown/misc/structure.dmi'
+	icon_state = "shelf"
+	density = FALSE
+	climbable = FALSE
+	dir = SOUTH
+	// These aren't dense, so they shouldn't have an offset!
+	climb_offset = 0
+	pixel_y = 32
+	
+/obj/structure/rack/rogue/shelf/wall/OnCrafted(dirin)
+	pixel_x = 0
+	pixel_y = 0
+	switch(dirin)
+		if(NORTH)
+			pixel_y = 32
+		if(SOUTH)
+			pixel_y = -32
+		if(EAST)
+			pixel_x = 32
+		if(WEST)
+			pixel_x = -32
+	. = ..()
 
 /obj/structure/rack/rogue/shelf/big
 	icon = 'icons/roguetown/misc/structure.dmi'
@@ -681,6 +740,7 @@
 /obj/structure/rack/rogue/shelf/notdense // makes the wall mounted one less weird in a way, got downside of offset when loaded again tho
 	density = FALSE
 	pixel_y = 24
+	stakeable = FALSE
 
 // Necessary to avoid a critical bug with disappearing weapons.
 /obj/structure/rack/rogue/attackby(obj/item/W, mob/user, params)
@@ -696,6 +756,18 @@
 	else
 		. = ..()
 
+	if(stakeable)
+		if(istype(W, /obj/item/grown/log/tree/stake))
+			if(anchored)
+				anchored = FALSE
+				to_chat(user, span_warning("[src] can now be moved."))
+			else
+				anchored = TRUE
+				to_chat(user, span_warning("You anchor [src]."))
+			playsound(src,pick('sound/foley/woodclimb.ogg'), 100, TRUE)
+			return
+		..()
+
 
 /obj/structure/table/optable
 	name = "operating table"
@@ -708,7 +780,7 @@
 	buckle_requires_restraints = 1
 	var/mob/living/carbon/human/patient = null
 
-/obj/structure/table/optable/Initialize()
+/obj/structure/table/optable/Initialize(mapload)
 	. = ..()
 
 /obj/structure/table/optable/tablepush(mob/living/user, mob/living/pushed_mob)
@@ -726,3 +798,36 @@
 	else
 		patient = null
 		return FALSE
+
+/obj/structure/table/wood/smooth
+	icon = 'icons/obj/smooth_structures/tablewood_smooth.dmi'
+	icon_state = "tablewood_smooth"
+	smooth = SMOOTH_TRUE
+	canSmoothWith = list(/obj/structure/table/wood/smooth)
+
+/obj/structure/table/wood/cloth
+	name = "cloth-draped wooden table"
+	desc = "A sturdy wooden table covered with a linen cloth."
+	icon_state = "tablewood_brown"
+
+/obj/structure/table/wood/cloth/beige
+	icon_state = "tablewood_beige"
+
+/obj/structure/table/wood/cloth/red
+	icon_state = "tablewood_red"
+
+/obj/structure/table/wood/cloth/blue
+	icon_state = "tablewood_blue"
+
+/obj/structure/table/wood/cloth/green
+	icon_state = "tablewood_green"
+
+/obj/structure/table/wood/cloth/purple
+	icon_state = "tablewood_purple"
+
+/obj/structure/table/wood/round
+	icon_state = "tablewood_round"
+
+/obj/structure/table/wood/fancy/navy
+	icon_state = "fancy_table_navy"
+	smooth_icon = 'icons/obj/smooth_structures/fancy_table_navy.dmi'

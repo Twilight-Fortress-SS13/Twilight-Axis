@@ -45,6 +45,9 @@
 	/// Subclass languages.
 	var/list/subclass_languages
 
+	/// Subclass spells. Granted to the mind on equip.
+	var/list/subclass_spells
+
 	/// Subclass virtues.
 	var/list/subclass_virtues
 
@@ -72,7 +75,7 @@
 
 	var/class_tempo_faction = null
 
-	var/tempo_capable = TRUE
+	var/tempo_capable = FALSE
 
 /datum/advclass/New()
 	if(ispath(age_mod) && !istype(age_mod))
@@ -101,19 +104,12 @@
 
 	post_equip(H)
 
+	H.flag_gear_as_worn()
+
 	H.advjob = name
 
-	var/turf/TU = get_turf(H)
-	if(TU)
-		if(horse)
-			var/mob/horse_mob = new horse(TU)
-			if(istype(horse_mob, /mob/living/simple_animal/hostile/retaliate/rogue))
-				var/mob/living/simple_animal/hostile/retaliate/rogue/rogue_animal = horse_mob
-				rogue_animal.owner = H
-				rogue_animal.friends |= H
-
 	for(var/trait in traits_applied)
-		ADD_TRAIT(H, trait, ADVENTURER_TRAIT)
+		ADD_TRAIT(H, trait, JOB_TRAIT)
 
 	if(noble_income)
 		var/already_has_income = !isnull(SStreasury.noble_incomes[H])
@@ -126,6 +122,10 @@
 	if(length(subclass_languages))
 		for(var/lang in subclass_languages)
 			H.grant_language(lang)
+
+	if(length(subclass_spells) && H.mind)
+		for(var/spell in subclass_spells)
+			H.mind.AddSpell(new spell)
 
 	if(reset_stats)
 		H.reset_stats()
@@ -144,6 +144,8 @@
 
 	if(length(subclass_virtues))
 		for(var/virtue in subclass_virtues)
+			if(!virtue)
+				continue
 			apply_virtue(H, new virtue)
 
 	if(age_mod)
@@ -160,6 +162,15 @@
 
 	if(applies_post_equipment)
 		apply_character_post_equipment(H)
+	if(horse)
+		var/turf/TU = get_turf(H)
+		if(TU)
+			var/mob/horse_mob = new horse(TU)
+			if(istype(horse_mob, /mob/living/simple_animal/hostile/retaliate/rogue))
+				var/mob/living/simple_animal/hostile/retaliate/rogue/rogue_animal = horse_mob
+				rogue_animal.assign_livestock_owner(H) // TA EDIT
+	H.set_advsetup(FALSE)
+	H.mind?.refresh_spell_buttons()
 //======== Massive shitcode, that works at least.
 /datum/advclass/proc/get_vice_limits(mob/living/carbon/human/H)
 	if(length(vice_limits))
@@ -197,8 +208,9 @@
 		limited_vices = vice_limits
 	if(!length(current_vices) || !length(limited_vices))
 		return
-	for(var/datum/charflaw/cf in current_vices)
-		if(is_vice_limited(cf, limited_vices))
+	for(var/cf_type in current_vices)
+		if(is_vice_limited(cf_type, limited_vices))
+			var/datum/charflaw/cf = GLOB.character_flaws_singletons[cf_type]
 			. += cf.name
 
 /datum/advclass/proc/get_prefs_restriction_names(client/player)
@@ -214,7 +226,8 @@
 	. += get_limited_vice_names(player.prefs.charflaws, get_prefs_vice_limits(player))
 //===
 /datum/advclass/proc/post_equip(mob/living/carbon/human/H)
-	addtimer(CALLBACK(H,TYPE_PROC_REF(/mob/living/carbon/human, add_credit), TRUE), 20)
+	if(H.ckey)
+		SScrediticons.processing[H.ckey] = TRUE
 	if(cmode_music)
 		H.cmode_music = cmode_music
 	if(class_tempo_faction)
@@ -228,25 +241,14 @@
 		if(!correlation)
 			var/datum/virtue/origin/first_origin = origin_limits[1]
 			to_chat(H, span_warning("I've spent so many daes in [first_origin.origin_name] that I've come to call it my home."))
-			change_origin(H, first_origin)
+			change_origin(H, first_origin) // TA EDIT
 
-/datum/advclass/proc/change_origin(mob/living/carbon/human/H, new_origin = /datum/virtue/none, wording)
+/datum/advclass/proc/change_origin(mob/living/carbon/human/H, new_origin = /datum/virtue/none, wording, apply_immediately = TRUE) // TA EDIT
 	var/client/player = H?.client
 	if(player?.prefs)
-		var/datum/virtue/origin/origin_memory = player.prefs.virtue_origin
-		player.prefs.virtue_origin = new new_origin
 		if(wording)
 			H.dna.species.skin_tone_wording = wording
-		player.prefs.virtue_origin.last_origin = origin_memory
-		player.prefs.virtue_origin.apply_to_human(H)
-		if(length(player.prefs.virtue_origin.added_languages))
-			for(var/L in player.prefs.virtue_origin.added_languages)
-				H.grant_language(L)
-		if(length(player.prefs.virtue_origin.last_origin.added_languages))
-			for(var/L in player.prefs.virtue_origin.last_origin.added_languages)
-				if(L != player.prefs.extra_language)
-					H.remove_language(L)
-		H.grant_language(player.prefs.extra_language)  //TA EDIT END
+		force_character_origin(H, new_origin)
 
 /datum/advclass/proc/check_preferences_requirements(datum/preferences/prefs, client/player, check_slots = TRUE, check_probability = TRUE) // TA EDIT START
 	if(!prefs)
@@ -350,6 +352,45 @@
 
 	if(prob(pickprob))
 		return TRUE
+
+/datum/advclass/proc/prefs_lock_reason(datum/preferences/prefs)
+	if(!prefs)
+		return "unavailable"
+
+	var/datum/species/pref_species = prefs.pref_species
+	if(length(allowed_sexes))
+		var/list/local_allowed_sexes = allowed_sexes.Copy()
+		if(!immune_to_genderswap && pref_species?.gender_swapping)
+			if(MALE in allowed_sexes)
+				local_allowed_sexes -= MALE
+				local_allowed_sexes += FEMALE
+			if(FEMALE in allowed_sexes)
+				local_allowed_sexes -= FEMALE
+				local_allowed_sexes += MALE
+		if(length(local_allowed_sexes) && !(prefs.gender in local_allowed_sexes))
+			return "sex"
+
+	if(length(forbidden_races) && (pref_species?.type in forbidden_races))
+		return "species"
+
+	if(length(allowed_ages) && !(prefs.age in allowed_ages))
+		return "age"
+
+	if(length(allowed_patrons) && !(prefs.selected_patron?.type in allowed_patrons))
+		return "faith"
+
+	if(length(virtue_limits))
+		for(var/virtuetype in virtue_limits)
+			if(istype(prefs.virtue, virtuetype) || istype(prefs.virtuetwo, virtuetype))
+				return "virtue"
+
+	#ifdef USES_PQ
+	if(min_pq != -100 && prefs.parent)
+		if(get_playerquality(prefs.parent.ckey) < min_pq)
+			return "reputation"
+	#endif
+
+	return null
 
 // Basically the handler has a chance to plus up a class, heres a generic proc you can override to handle behavior related to it.
 // For now you just get an extra stat in everything depending on how many plusses you managed to get.

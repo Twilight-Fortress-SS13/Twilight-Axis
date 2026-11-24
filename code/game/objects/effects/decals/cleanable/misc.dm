@@ -1,4 +1,4 @@
-/obj/effect/decal/cleanable/dirt/Initialize()
+/obj/effect/decal/cleanable/dirt/Initialize(mapload)
 	. = ..()
 	var/turf/T = get_turf(src)
 	if(T.tiled_dirt)
@@ -21,14 +21,14 @@
 	desc = ""
 	icon_state = "greenglow"
 	light_power = 3
-	light_outer_range =  2
+	light_outer_range =	2
 	light_color = LIGHT_COLOR_GREEN
 	beauty = -300
 
 /obj/effect/decal/cleanable/greenglow/ex_act()
 	return
 
-/obj/effect/decal/cleanable/greenglow/filled/Initialize()
+/obj/effect/decal/cleanable/greenglow/filled/Initialize(mapload)
 	. = ..()
 	reagents.add_reagent(pick(/datum/reagent/uranium, /datum/reagent/uranium/radium), 5)
 
@@ -78,6 +78,32 @@
 /obj/effect/decal/cleanable/vomit/old/Initialize(mapload)
 	. = ..()
 	icon_state += "-old"
+
+/obj/effect/decal/cleanable/paint
+	name = "paint splatter"
+	desc = "splattered paint, what a mess"
+	icon = 'icons/effects/paint.dmi'
+	icon_state = "paintsplat1"
+	random_icon_states = list("paintsplat1", "paintsplat2", "paintsplat3", "paintsplat4", "paintsplat5", "paintsplat6", "paintsplat7", "paintsplat8", "paintsplat9", "paintsplat10")
+	beauty = -100
+	alpha = 200
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	appearance_flags = NO_CLIENT_COLOR
+	mergeable_decal = FALSE
+
+/obj/effect/decal/cleanable/paint/Initialize(mapload)
+	. = ..()
+	GLOB.weather_act_upon_list += src
+	color = RANDOM_COLOUR
+
+/obj/effect/decal/cleanable/paint/Destroy()
+	GLOB.weather_act_upon_list -= src
+	return ..()
+
+/obj/effect/decal/cleanable/paint/weather_act_on(weather_trait, severity)
+	if(weather_trait != PARTICLEWEATHER_RAIN)
+		return
+	qdel(src)
 
 /obj/effect/decal/cleanable/chem_pile
 	name = "chemical pile"
@@ -151,7 +177,7 @@
 	icon = 'icons/roguetown/items/crafting.dmi'
 	icon_state = "tiny"
 	beauty = -20
-/obj/effect/decal/cleanable/debris/Initialize()
+/obj/effect/decal/cleanable/debris/Initialize(mapload)
 	. = ..()
 	setDir(pick(GLOB.cardinals))
 
@@ -170,7 +196,7 @@
 /obj/effect/decal/cleanable/debris/woody	// sawdust gets cleared by weather
 	name = "sawdust"
 	icon_state = "woody"
-/obj/effect/decal/cleanable/debris/woody/Initialize()
+/obj/effect/decal/cleanable/debris/woody/Initialize(mapload)
 	START_PROCESSING(SSprocessing, src)
 	GLOB.weather_act_upon_list += src
 	. = ..()

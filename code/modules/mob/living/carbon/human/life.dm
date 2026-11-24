@@ -28,7 +28,7 @@
 
 	// Sleep gate: skip Life() for idle NPCs to save cycles, but only if fully conscious.
 	// If not conscious, we must run Life() so update_stat() can transition us back and re-wake the AI.
-	if(!client && stat == CONSCIOUS && ai_controller?.ai_status != AI_STATUS_ON)
+	if(!client && stat == CONSCIOUS && ai_controller && ai_controller.ai_status != AI_STATUS_ON)
 		return
 
 	. = ..()
@@ -37,9 +37,6 @@
 		return 0
 
 	SEND_SIGNAL(src, COMSIG_HUMAN_LIFE)
-
-	if(advsetup)
-		Stun(50)
 
 	if(mind)
 		mind.sleep_adv.add_stress_cycle(get_stress_amount())
@@ -58,14 +55,7 @@
 		adjustToxLoss(2)
 	else if(leprosy == 2)
 		if(client)
-			if(check_blacklist(client.ckey))
-				ADD_TRAIT(src, TRAIT_NOPAIN, TRAIT_GENERIC)
-				leprosy = 1
-				var/obj/item/bodypart/B = get_bodypart(BODY_ZONE_HEAD)
-				if(B)
-					B.sellprice = rand(16, 33)
-			else
-				leprosy = 3
+			leprosy = 3
 	//heart attack stuff
 	handle_heart()
 	update_energy()
@@ -107,6 +97,8 @@
 	if((istype(src.get_inactive_held_item(), /obj/item/rogueweapon/spear/matthios_standard) || istype(src.get_active_held_item(), /obj/item/rogueweapon/spear/matthios_standard)) && !(world.time < matthios_banner_timer_check + 5 SECONDS))
 		matthios_banner_timer_check = world.time
 		for(var/mob/living/carbon/human/H as anything in SSspatial_grid.orthogonal_range_search(src, SPATIAL_GRID_CONTENTS_TYPE_CLIENTS, 7))
+			if(!ishuman(H)) // TA EDIT
+				continue // TA EDIT
 			if(get_dist(src, H) > 7)
 				continue
 			if(istype(H.patron, /datum/patron/inhumen/matthios))
@@ -135,10 +127,6 @@
 			if(gender == MALE)
 				has_stubble = TRUE
 				update_hair()
-
-/mob/living/carbon/human/handle_environment()
-
-	dna.species.handle_environment(src)
 
 /mob/living/carbon/human/proc/get_thermal_protection()
 	var/thermal_protection = 0 //Simple check to estimate how protected we are against multiple temperatures
@@ -206,6 +194,8 @@
 		return
 	if(HAS_TRAIT(src, TRAIT_NOBREATH))
 		return
+	if(m_intent == MOVE_INTENT_SNEAK) //TA EDIT
+		return
 	breathe_tick++
 	var/mask_sound
 	if(istype(wear_mask, /obj/item/clothing/mask/rogue/facemask/steel/confessor))
@@ -214,7 +204,7 @@
 			mask_sound = pick('sound/items/confessormask1.ogg', 'sound/items/confessormask2.ogg', 'sound/items/confessormask3.ogg',
 							'sound/items/confessormask4.ogg', 'sound/items/confessormask5.ogg', 'sound/items/confessormask6.ogg',
 							'sound/items/confessormask7.ogg', 'sound/items/confessormask8.ogg', 'sound/items/confessormask9.ogg',
-					 		'sound/items/confessormask10.ogg')
+								'sound/items/confessormask10.ogg')
 			playsound(src, mask_sound, 90, FALSE, 4, 0)
 			return
 

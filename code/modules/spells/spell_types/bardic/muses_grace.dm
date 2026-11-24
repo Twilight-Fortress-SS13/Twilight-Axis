@@ -2,7 +2,7 @@
 	name = "Muse's Grace"
 	desc = "A gentle melody, compelling audience members to sing."
 	button_icon_state = "melody_t1_base"
-	invocations = list("plays a graceful, gentle tune. The world feels compelled to respond in song.")
+	invocations = list("%CASTER plays a graceful, gentle tune. The world feels compelled to respond in song.")
 	song_effect = /datum/status_effect/buff/playing_melody/muses_grace
 
 /datum/status_effect/buff/playing_melody/muses_grace
@@ -16,7 +16,7 @@
 	icon_state = "buff"
 
 /datum/status_effect/buff/song/muses_grace
-	id = "musesgrace"
+	id = "muses_song"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/song/muses_grace
 	duration = 15 SECONDS
 

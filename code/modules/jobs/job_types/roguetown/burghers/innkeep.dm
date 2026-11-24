@@ -16,7 +16,7 @@
 	min_pq = 2
 	max_pq = null
 	round_contrib_points = 3
-	cmode_music = 'sound/music/cmode/towner/combat_retired.ogg'
+	cmode_music = sound("sound/music/cmode/towner/combat_retired.ogg")
 
 	job_traits = list(TRAIT_MEDIUMARMOR, TRAIT_TAVERN_FIGHTER, TRAIT_EMPATH, TRAIT_DODGEEXPERT, TRAIT_CICERONE, TRAIT_HOMESTEAD_EXPERT)
 
@@ -24,6 +24,7 @@
 	job_subclasses = list(
 		/datum/advclass/innkeeper
 	)
+	has_subprefs = FALSE // only one subclass
 	spells = list(/obj/effect/proc_holder/spell/invoked/takeapprentice)
 
 /datum/advclass/innkeeper
@@ -73,11 +74,12 @@
 		shirt = /obj/item/clothing/suit/roguetown/shirt/shortshirt
 		armor = /obj/item/clothing/suit/roguetown/armor/leather/vest/sailor
 	backpack_contents = list(
-		/obj/item/recipe_book/survival,
 		/obj/item/bottle_kit,
 		/obj/item/storage/keyring/innkeep_rooms,
 		/obj/item/reagent_containers/glass/bucket/pot/kettle/tankard/silver,
-		/obj/item/mini_flagpole/innkeeper
+		/obj/item/mini_flagpole/innkeeper,
+		/obj/item/bill_of_fare,
+		/obj/item/natural/feather,
 	)
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_UPPER_CLASS, H)

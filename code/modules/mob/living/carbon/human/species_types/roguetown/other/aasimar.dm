@@ -8,14 +8,15 @@
 	origin = "Otava"
 	base_name = "Godtouched"
 	desc_title = "Aasimar"
-	desc = "Aasimar are born of a rare union between Humens and Angels. \
-	They bear the mark of their celestial touch through their many varying physical features. \
-	Their looks resemble the traditional characteristics of whichever of the Gods their Angel parent was associated with. \
-	Most commonly, Aasimar are similar to Humens, albeit taller, and commonly possess an uncanny beauty. \
-	When compared to the average Humen, they have strangely colored skin and are more physically frail. \
-	Because of their upbringing, they make for natural conduits for godly powers. \
-	Twilight Axis's populace holds them with a mixture of uneasy mixture of fear and respect. \
-	Due to their celestial nature, it is widely believed that an Aasimar's death is a bad omen..."
+	desc = "Creations of the gods and their angels, most Aasimar bear bindings and compulsions, placed \
+	upon them by their creators; they are ageless so long as they abide by these. Aasimar of the Four do not bear bindings. \
+	It is believed to be inevitable that an Aasimar will eventually break these bindings, and begin to age, for as the Yils pass they will grow more and more \
+	independent, until they are as people fully. Rare Aasimar resulting from offspring of an Aasimar (or angel) and a mortal are ageless \
+	without bindings. In extremely rare cases, Aasimar may be created from a divine blessing placed upon a mortal. \
+	Aasimar vary wildly in appearance, being made of anything from starstone to metal, flesh, clay, or wood. Some are made of beauty and love incarnate, \
+	others cold and pale but living flesh. Some bear the pointed ears of Elves, from heritage. Some may also be born with wings, though \
+	a number of these Aasimar purposefully remove their own wings, particularly those among the Psydonic, for they believe removing them \
+	brings them closer to Humenity and in some cases that they are undeserving of something that brings them closer to angels."
 
 	max_age = "???"
 
@@ -23,8 +24,6 @@
 	inherent_traits = list(TRAIT_NOMOBSWAP)
 	default_features = MANDATORY_FEATURE_LIST
 	use_skintones = TRUE
-	disliked_food = NONE
-	liked_food = NONE
 	possible_ages = ALL_AGES_LIST
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | RACE_SWAP | SLIME_EXTRACT
 	limbs_icon_m = 'icons/roguetown/mob/bodies/m/mt.dmi'
@@ -33,18 +32,9 @@
 	dam_icon_f = 'icons/roguetown/mob/bodies/dam/dam_female.dmi'
 	soundpack_m = /datum/voicepack/male/elf
 	soundpack_f = /datum/voicepack/female/elf
-	offset_features = list(
-		OFFSET_ID = list(0,1), OFFSET_GLOVES = list(0,1), OFFSET_WRISTS = list(0,1),\
-		OFFSET_CLOAK = list(0,1), OFFSET_FACEMASK = list(0,1), OFFSET_HEAD = list(0,1), \
-		OFFSET_FACE = list(0,1), OFFSET_BELT = list(0,1), OFFSET_BACK = list(0,1), \
-		OFFSET_NECK = list(0,1), OFFSET_MOUTH = list(0,1), OFFSET_PANTS = list(0,1), \
-		OFFSET_SHIRT = list(0,1), OFFSET_ARMOR = list(0,1), OFFSET_HANDS = list(0,1), OFFSET_UNDIES = list(0,1), \
-		OFFSET_ID_F = list(0,-1), OFFSET_GLOVES_F = list(0,0), OFFSET_WRISTS_F = list(0,0), OFFSET_HANDS_F = list(0,0), \
-		OFFSET_CLOAK_F = list(0,0), OFFSET_FACEMASK_F = list(0,-1), OFFSET_HEAD_F = list(0,-1), \
-		OFFSET_FACE_F = list(0,-1), OFFSET_BELT_F = list(0,-1), OFFSET_BACK_F = list(0,-1), \
-		OFFSET_NECK_F = list(0,-1), OFFSET_MOUTH_F = list(0,-1), OFFSET_PANTS_F = list(0,0), \
-		OFFSET_SHIRT_F = list(0,0), OFFSET_ARMOR_F = list(0,0), OFFSET_UNDIES_F = list(0,-1), \
-		)
+	allowed_body_builds = STANDARD_BODY_BUILDS
+	default_body_build_m = BODY_BUILD_BULKY
+	default_body_build_f = BODY_BUILD_SLIM
 	race_bonus = list(STAT_FORTUNE = 1)
 	enflamed_icon = "widefire"
 	customizers = list(
@@ -60,6 +50,8 @@
 		/datum/customizer/organ/penis/anthro,
 		/datum/customizer/organ/breasts/human,
 		/datum/customizer/organ/vagina/human_anthro,
+		/datum/customizer/bodypart_feature/pubes,
+		/datum/customizer/bodypart_feature/pits,
 		/datum/customizer/organ/wings/aasimar,
 		/datum/customizer/organ/ears/wings,
 		/datum/customizer/organ/horns/wings,
@@ -96,18 +88,9 @@
 	)
 	mechanics_explanations = list("Are the only race whose lux is already purified when extracted. However, their lux takes far longer to regrow than every other races.")
 
-/datum/species/aasimar/on_species_gain(mob/living/carbon/C, datum/species/old_species)
-	..()
-	RegisterSignal(C, COMSIG_MOB_SAY, PROC_REF(handle_speech))
-
-
 /datum/species/aasimar/after_creation(mob/living/carbon/C)
 	..()
 	to_chat(C, "<span class='info'>I can speak Celestial with ,c before my speech.</span>")
-
-/datum/species/aasimar/on_species_loss(mob/living/carbon/C)
-	. = ..()
-	UnregisterSignal(C, COMSIG_MOB_SAY)
 
 /datum/species/aasimar/get_skin_list()
 	return list(
@@ -115,7 +98,7 @@
 		"Cultor" = SKIN_COLOR_CULTOR,
 		"Spiritus" = SKIN_COLOR_SPIRITUS,
 		"Planetar" = SKIN_COLOR_PLANETAR,
-		"Deva"	   = SKIN_COLOR_DEVA,
+		"Deva"		= SKIN_COLOR_DEVA,
 		"Solar" = SKIN_COLOR_SOLAR,
 		"Empyrea" = SKIN_COLOR_EMPYREA,
 		"Gaeia" = SKIN_COLOR_GAEIA,
@@ -124,6 +107,16 @@
 		"Necral" = SKIN_COLOR_NECRAL,
 		"Abyssal" = SKIN_COLOR_ABYSSAL,
 		"Figulus" = SKIN_COLOR_FIGULUS,
+		"Shale" = SKIN_COLOR_SHALE,
+		"Coral" = SKIN_COLOR_CORAL,
+		"Deep Abyssal" = SKIN_COLOR_DEEP_ABYSSAL,
+		"Walnut" = SKIN_COLOR_WALNUT,
+		"Wooden" = SKIN_COLOR_WOODEN,
+		"Granite" = SKIN_COLOR_GRANITE,
+		"Husher" = SKIN_COLOR_HUSHER,
+		"Mahogany" = SKIN_COLOR_MAHOGANY,
+		"Wintermute" = SKIN_COLOR_WINTERMUTE,
+		"Blood" = SKIN_COLOR_BLOOD,
 	)
 
 /datum/species/aasimar/get_hairc_list()

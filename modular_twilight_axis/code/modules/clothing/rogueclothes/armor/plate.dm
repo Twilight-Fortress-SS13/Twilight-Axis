@@ -1,3 +1,8 @@
+/obj/item/clothing/suit/roguetown/armor/plate/Initialize()
+	. = ..()
+	if(body_parts_covered == COVERAGE_ALL_BUT_HANDFEET || armor_class == ARMOR_CLASS_HEAVY)
+		body_parts_covered |= NECK
+
 /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fencer/twilight_elven
 	name = "elven rider cuirass"
 	desc = "An expertly smithed form-fitting steel cuirass that is much lighter and agile, but breaks with much more ease. Its sleek design marks it as a product of elven craftsmanship."
@@ -9,7 +14,7 @@
 
 /obj/item/clothing/suit/roguetown/armor/plate/raneshen_scale
 	slot_flags = ITEM_SLOT_ARMOR
-	name = "ranesheni medium lamellar armor"
+	name = "ranesheni scalemail"
 	desc = "Armor used by the Empire's vanguard fighters. The plates are connected to each other with cord for mobility. The arms are protected by pauldrons, and the legs by a small chainmail skirt. The armor itself is decorated with bronze."
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/armor.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/32х48/armor.dmi'
@@ -33,7 +38,7 @@
 	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/onmob/helpers/32х48/sleeves_armor.dmi'
 	icon_state = "heavy_armour"
 	item_state = "heavy_armour"
-	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET | NECK
+	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
 	equip_delay_self = 12 SECONDS
 	unequip_delay_self = 12 SECONDS
 	equip_delay_other = 3 SECONDS
@@ -41,38 +46,6 @@
 	max_integrity = ARMOR_INT_CHEST_PLATE_STEEL
 	smelt_bar_num = 4
 	armor_class = ARMOR_CLASS_HEAVY
-
-// Heavy armour NECK coverage buff:
-
-/obj/item/clothing/suit/roguetown/armor/plate/fluted
-	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET | NECK
-
-/obj/item/clothing/suit/roguetown/armor/plate/fluted/graggar // As specified in PR neck coverage buff is only for HEAVY, therefore i exclude graggar halfplate
-	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
-
-/obj/item/clothing/suit/roguetown/armor/plate/fluted/ornate
-	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET | NECK
-
-/obj/item/clothing/suit/roguetown/armor/plate/otavan
-	body_parts_covered = COVERAGE_TORSO | NECK
-
-/obj/item/clothing/suit/roguetown/armor/plate/full
-	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET | NECK
-
-/obj/item/clothing/suit/roguetown/armor/plate/full/samsibsa
-	body_parts_covered = COVERAGE_ALL_BUT_LEGS | NECK
-
-/obj/item/clothing/suit/roguetown/armor/plate/vampire
-	body_parts_covered = COVERAGE_ALL_BUT_LEGS | NECK
-
-/obj/item/clothing/suit/roguetown/armor/plate/full/bikini
-	body_parts_covered = CHEST|GROIN|LEGS|ARMS|NECK
-
-/obj/item/clothing/suit/roguetown/armor/heartfelt/lord // In fact - is plate armour
-	body_parts_covered = COVERAGE_ALL_BUT_LEGS | NECK
-
-/obj/item/clothing/suit/roguetown/armor/heartfelt/hand
-	body_parts_covered = COVERAGE_ALL_BUT_LEGS | NECK
 
 /obj/item/clothing/suit/roguetown/armor/plate/scale/townguard
 	name = "watchman's armor"
@@ -134,11 +107,9 @@
 	smelt_bar_num = 2
 	body_parts_covered = COVERAGE_ALL_BUT_HANDLEGS
 
-	#define ARMOR_BAOTHA_LIGHT list("blunt" = DR_MEDIUM, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_MEDIUM, "fire" = DR_MEDIUM, "acid" = DR_NONE, "bullet" = DR_HEAVY)  //TA EDIT
-
 /obj/item/clothing/head/roguetown/helmet/baotha_ta
 	name = "saccharine sallet"
-	desc = "Lo', the twins of beauty; Eora and Belladoth, they sought a prize which but one may have.."
+	desc = "Lo', the Last Empress of the Elves; the one who was destined to take the throne of Holy Celestia, yet rejected it mere minutes after her ascention.."
 	icon_state = "baothahelm"
 	item_state = "baothahelm"
 	body_parts_covered = HEAD | HAIR | EARS | MOUTH | EYES
@@ -150,15 +121,24 @@
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_DEPRAVED, "HELMET")
 
+//TA Addition start
+/obj/item/clothing/head/roguetown/helmet/baotha_ta/equipped(mob/user, slot)
+	RegisterSignal(user, COMSIG_CURSED_ITEM_BURNED)
+	. = ..()
+
+/obj/item/clothing/head/roguetown/helmet/baotha_ta/proc/demilitirize()
+	SIGNAL_HANDLER
+	max_integrity = 50
+//TA Addition end
 /obj/item/clothing/head/roguetown/helmet/baotha_ta/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_BAOTHA_ARMOR)
 
 /obj/item/clothing/neck/roguetown/coif/baotha_ta
 	name = "saccharine veil"
-	desc = "And yet, their methods differed; Belladoth proposed with Her lust and temptation, Eora with Her love and warmth.."
+	desc = "For she did not care for the people who caused her naught but suffering; she only cared to numb her sorrows, and make them understand.."
 	icon_state = "baothacoif"
 	item_state = "baothacoif"
-	armor = ARMOR_BAOTHA_LIGHT
+	armor = ARMOR_MAILLE
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER + 150
 	body_parts_covered = NECK | HAIR | EARS | HEAD | NOSE
 	armor_class = ARMOR_CLASS_LIGHT
@@ -187,7 +167,7 @@
 
 /obj/item/clothing/suit/roguetown/armor/plate/fluted/baotha_ta
 	name = "saccharine plate armor"
-	desc = "Is it not obvious what Ravox would've chosen? Yet upon the dae of His choice, She refused to gift any chance to Her sister.."
+	desc = "She promised to guide and protect them, yet suffered nothing but pain from their misguided adherence to the Old Order.."
 	icon_state = "baothaplate"
 	item_state = "baothaplate"
 	max_integrity = ARMOR_INT_CHEST_PLATE_ANTAG - 250 //TA EDIT
@@ -213,7 +193,7 @@
 
 /obj/item/clothing/suit/roguetown/armor/gambeson/baotha_ta
 	name = "saccharine vestments"
-	desc = "A gemmed chalice, Eora's own, swilled with Psydonia's most noxious venoms - and but a simple sip was enough to bring Her to death's door.."
+	desc = "So upon her lover's deathbed, she had declared that no soul must live in suffering, for life exists to bring joy, not sorrow.."
 	icon_state = "baothagamb"
 	armor_class = ARMOR_CLASS_LIGHT
 	armor = ARMOR_BRIGANDINE
@@ -243,10 +223,10 @@
 
 /obj/item/clothing/wrists/roguetown/bracers/leather/baotha_ta
 	name = "saccharine cuffs"
-	desc = "A betrayal without compare, and a sin without redemption; or so, She believed.."
+	desc = "A betrayal without compare, yet was it truly? For the Empire was long since forefit to the War in Heaven.."
 	icon_state = "baothabracers"
 	chunkcolor = "#6d1c87"
-	armor = ARMOR_BAOTHA_LIGHT
+	armor = ARMOR_MAILLE
 	resistance_flags = FIRE_PROOF
 	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER + 150
 	smeltresult = /obj/item/ingot/component/baotha
@@ -267,8 +247,8 @@
 
 /obj/item/clothing/under/roguetown/skirt/baotha_ta
 	name = "saccharine fauldcoat"
-	desc = "Only did Belladona's haze clear, once She heard Eora's gasps and Ravox's fright; what else could She've done besides fleeing the heavens?"
-	armor = ARMOR_BAOTHA_LIGHT
+	desc = "So why should she suffer for the people who destroyed everything she held dear?"
+	armor = ARMOR_MAILLE
 	icon_state = "baothaskirt"
 	chunkcolor = "#6d1c87"
 	resistance_flags = FIRE_PROOF
@@ -293,7 +273,7 @@
 
 /obj/item/clothing/gloves/roguetown/plate/baotha_ta
 	name = "saccharine gauntlets"
-	desc = "Belladonna's ego died on that dae, and Baotha's venomous id rose in Her stead; for it was better to numb the regret than to face the guilt.."
+	desc = "The Last Empress of the Elves died upon that dae, and Baotha was ascended not for her people, but for her own gains; for it was better to numb the regret than to face the guilt.."
 	icon_state = "baothagloves"
 	item_state = "baothagloves"
 	chunkcolor = "#6d1c87"
@@ -317,13 +297,18 @@
 
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha_ta
 	name = "saccharine heels"
-	desc = "..yet, even as She indulges and mourns beneath the stars, one must wonder; is She truly damned by the Pantheon, or by Herself alone?"
+	desc = "..yet, even as She indulges and mourns beneath the stars, one must wonder; is She truly damned by her people, or by Herself alone?"
 	icon_state = "baothaboots"
 	item_state = "baothaboots"
 	chunkcolor = "#6d1c87"
 	max_integrity = ARMOR_INT_SIDE_ANTAG - 200
 	armor_class = ARMOR_CLASS_LIGHT
 	smeltresult = /obj/item/ingot/component/baotha
+
+/obj/item/clothing/shoes/roguetown/boots/armor/baotha_ta/ComponentInitialize()
+	. = ..()
+	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_HEELS, 2)
+	stepnoise_flag = STEPNOISE_HEELS // This will prevent default footstep noise from being made by the heels (sounds odd)
 
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha_ta/Initialize()
 	. = ..()
@@ -339,4 +324,50 @@
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha_ta/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_BAOTHA_ARMOR)
 
-	#undef ARMOR_BAOTHA_LIGHT
+/obj/item/clothing/suit/roguetown/armor/plate/cuirass/legion
+	name = "elyrian lorica masculata"
+	desc = "Доспех, демонстрирующий высокое мастерство кузнеца. Чётко выведенный рельеф анатомического торса подчеркивает красоту и мужество его обладателя. Из-за высокой цены маскулату носят в основном преторианцы и почтенные патриции Элиррии."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/armor.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/armor.dmi'
+	icon_state = "legioncuirass"
+	item_state = "legioncuirass"
+	max_integrity = ARMOR_INT_CHEST_PLATE_STEEL
+
+/obj/item/clothing/suit/roguetown/armor/plate/legion
+	name = "elyrian lorica segmentata"
+	desc = "Пластинчатый доспех, собранный из скрепленных между собой стальных пластин. Несмотря на дороговизну, легионеры и преторианцы отдают ему предпочтение за надёжность и удобство."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/armor.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/armor.dmi'
+	icon_state = "legionplate"
+	item_state = "legionplate"
+
+/obj/item/clothing/suit/roguetown/armor/plate/fluted/zizo/bloodraider
+	name = "raider's cuirass"
+	desc = "An elegant cuirass that doesn't restrict movement, intimidates enemies, and is simply beautiful. What more could you need?"
+	icon = 'modular_twilight_axis/icons/clothing/bloodraider.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/bloodraider.dmi'
+	icon_state = "bloodcuirass"
+	item_state = "bloodcuirass"
+	allowed_race = list(/datum/species/elf/wood, /datum/species/human/halfelf, /datum/species/elf/dark)
+	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
+	max_integrity = ARMOR_INT_CHEST_PLATE_ANTAG - 400
+	armor_class = ARMOR_CLASS_LIGHT
+	unenchantable = FALSE
+	smelt_bar_num = 1
+
+/obj/item/clothing/suit/roguetown/armor/plate/cuirass/bloodraider/ComponentInitialize()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")
+
+/obj/item/clothing/suit/roguetown/armor/plate/cuirass/bloodraider/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)
+
+/obj/item/clothing/suit/roguetown/armor/plate/scale/inqcoat/overseer
+	name = "confessor coat"
+	desc = "Тяжелое, укрепленное пальто с изысканным бордовым покрытием не оставит никого равнодушным."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/overseer.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/onmob/overseer_onmob.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/onmob/overseer_onmob.dmi'
+	icon_state = "viceseercoat"
+	item_state = "viceseercoat"
+	color = null
+	boobed = TRUE

@@ -3,12 +3,8 @@
 /obj/item
 	/// Current blade integrity
 	var/blade_int = 0
-	/// Blade integrity at which dismemberment reaches 100% effectiveness
-	var/dismember_blade_int = 0
 	/// Maximum blade integrity
 	var/max_blade_int = 0
-	/// Whether to randomize the blade integrity on init.
-	var/randomize_blade_int_on_init = FALSE
 	/// Required skill to repair the blade integrity
 	var/required_repair_skill = 0
 	/// Sharpness loss multiplier.
@@ -138,6 +134,7 @@
 //Just used for grindstones, currently, to restore quality of a blade.
 /obj/item/proc/restore_bintegrity()
 	max_blade_int = initial(max_blade_int)//Given it's reduced above.
-	blade_int = initial(max_blade_int)//Now return it.
+	SEND_SIGNAL(src, COMSIG_ITEM_RESTORE_BINTEGRITY)
+	blade_int = max_blade_int//Now return it.
 
 #undef BLADE_INTEGRITY_LOSS_MULT

@@ -74,7 +74,7 @@
 										"<span class='danger'>I catch [I] in mid-air!</span>")
 						throw_mode_off()
 						return 1
-	..()
+	return ..()
 
 
 /mob/living/carbon/check_projectile_wounding(obj/projectile/P, def_zone, blocked)
@@ -231,9 +231,9 @@
 				add_splatter_wall(location, force = statforce)
 				if(get_dist(user, src) <= 1)	//people with TK won't get smeared with blood
 					user.add_mob_blood(src)
-				var/splatter_dir = get_dir(user, src)
-				var/obj/effect/temp_visual/dir_setting/bloodsplatter/splatter = new(loc, splatter_dir)
-				splatter.set_blood_color(get_blood_color())
+				if(!(user.used_intent.blade_class in GLOB.gore_bclasses))
+					var/obj/effect/temp_visual/dir_setting/bloodsplatter/splatter = new(loc, get_dir(user, src))
+					splatter.set_blood_color(get_blood_color())
 				if(affecting.body_zone == BODY_ZONE_HEAD)
 					if(wear_mask)
 						wear_mask.add_mob_blood(src)
@@ -253,7 +253,7 @@
 	if(statforce)
 		I.remove_bintegrity(1)
 		var/probability = I.get_dismemberment_chance(affecting, user, useder)
-    
+
 		if(prob(probability) && affecting.dismember(I.damtype, user.used_intent?.blade_class, user, user.zone_selected, vorpal = I.vorpal))
 			I.add_mob_blood(src)
 			playsound(get_turf(src), I.get_dismember_sound(), 80, TRUE)
@@ -267,9 +267,9 @@
 	if(!get_bodypart(check_zone(user.zone_selected)))
 		to_chat(user, "<span class='warning'>[src] is missing that.</span>")
 		return FALSE
-
+	// SURGERY
 	if(!user.cmode)
-		var/try_to_fail = !istype(user.rmb_intent, /datum/rmb_intent/weak)
+		var/try_to_fail = istype(user.rmb_intent, /datum/rmb_intent/strong)
 		var/list/possible_steps = list()
 		for(var/datum/surgery_step/surgery_step as anything in GLOB.surgery_steps)
 			if(!surgery_step.name)

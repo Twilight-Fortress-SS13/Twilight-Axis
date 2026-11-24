@@ -2,7 +2,7 @@
 	name = "Fervorous Fantasia"
 	desc = "Inspire the rhythm of battle, sharpening your allies' senses in combat!"
 	button_icon_state = "bardsong_t2_base"
-	invocations = list("plays a bombastic, rhythmic march! The world feels grounded!")
+	invocations = list("%CASTER plays a bombastic, rhythmic march! The world feels grounded!")
 	song_effect = /datum/status_effect/buff/playing_melody/fervor
 
 /datum/status_effect/buff/playing_melody/fervor
@@ -19,7 +19,7 @@
 
 /datum/status_effect/buff/song/fervor
 	var/outline_colour = "#f58e2d"
-	id = "fervor"
+	id = "fervor_song"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/song/fervor
 	duration = 15 SECONDS
 	effectedstats = list(STATKEY_PER = 2)

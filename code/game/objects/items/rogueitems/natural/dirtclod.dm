@@ -5,6 +5,7 @@
 	dropshrink = 0
 	throwforce = 0
 	w_class = WEIGHT_CLASS_TINY
+	materia = list(/datum/materia_aspect/mundane, /datum/materia_aspect/earth)
 
 	var/being_deleted = FALSE
 
@@ -12,16 +13,7 @@
 		/datum/crafting_recipe/roguetown/survival/wickercloak
 	)
 
-/obj/item/natural/dirtclod/snow
-	name = "packed snow"
-	desc = "A handful of snow"
-	icon_state = "snow1"
-
-/obj/item/natural/dirtclod/snow/Initialize()
-	..()
-	icon_state = "snow[rand(1,2)]"
-
-/obj/item/natural/dirtclod/Initialize()
+/obj/item/natural/dirtclod/Initialize(mapload)
 	icon_state = "clod[rand(1,2)]"
 	..()
 
@@ -39,6 +31,23 @@
 			W.update_icon()
 			return
 	..()
+
+/obj/item/natural/dirtclod/attack_obj(obj/O, mob/living/user)
+	if(!isitem(O))
+		return ..()
+	var/obj/item/thing = O
+	if(thing.polished != 4 || thing.polish_dulled)
+		return ..()
+	to_chat(user, span_info("I start rubbing dirt onto \the [thing]..."))
+	if(!do_after(user, 2 SECONDS, target = thing))
+		return
+	if(being_deleted || QDELETED(src) || QDELETED(thing))
+		return
+	if(thing.dull_polish())
+		playsound(get_turf(user), 'sound/foley/jumpland/dirtland.wav', 60, TRUE)
+		to_chat(user, span_info("\The [thing] no longer shines."))
+		being_deleted = TRUE
+		qdel(src)
 
 /obj/item/natural/dirtclod/Entered(atom/newloc)
 	..()
@@ -113,7 +122,7 @@
 
 	var/dirtamt = 5
 
-/obj/structure/fluff/clodpile/Initialize()
+/obj/structure/fluff/clodpile/Initialize(mapload)
 	dir = pick(GLOB.cardinals)
 	..()
 

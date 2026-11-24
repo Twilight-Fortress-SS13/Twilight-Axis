@@ -12,6 +12,7 @@
 	maximum_possible_slots = 1
 	pickprob = 5
 	category_tags = list(CTAG_TOWNER)
+	subclass_spells = list(/obj/effect/proc_holder/spell/invoked/takeapprentice)
 	subclass_stats = list(
 		STATKEY_LCK = 4,
 		STATKEY_STR = 2,
@@ -52,7 +53,7 @@
 	backpack_contents = list(
 						/obj/item/seeds/wheat=1,
 						/obj/item/seeds/apple=1,
-						/obj/item/ash=1,
+						/obj/item/natural/ash=1,
 						/obj/item/flashlight/flare/torch = 1,
 						/obj/item/rogueweapon/huntingknife = 1,
 						/obj/item/rogueweapon/scabbard/sheath = 1

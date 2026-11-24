@@ -6,6 +6,16 @@
 	verbage = "fixes"
 	craftdiff = 0
 
+/datum/crafting_recipe/roguetown/survival/paper_cartridge
+	name = "paper cartridge"
+	reqs = list(/obj/item/ammo_casing/caseless/rogue/twilight_lead = 1, /obj/item/paper = 1)
+	result = /obj/item/ammo_casing/caseless/rogue/twilight_lead/paper
+	verbage_simple = "make"
+	verbage = "makes"
+	craftdiff = 0
+	tools = list(/obj/item/twilight_powderflask = 1)
+	always_availible = FALSE
+
 /datum/crafting_recipe/roguetown/leather/container/belt/twilight_holsterbelt
     name = "holster belt"
     result = /obj/item/storage/belt/rogue/leather/twilight_holsterbelt

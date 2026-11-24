@@ -1,7 +1,7 @@
- /**
-  * Failsafe
-  *
-  * Pretty much pokes the MC to make sure it's still alive.
+/**
+	* Failsafe
+	*
+	* Pretty much pokes the MC to make sure it's still alive.
  **/
 
 GLOBAL_REAL(Failsafe, /datum/controller/failsafe)
@@ -15,7 +15,7 @@ GLOBAL_REAL(Failsafe, /datum/controller/failsafe)
 	// The alert level. For every failed poke, we drop a DEFCON level. Once we hit DEFCON 1, restart the MC.
 	var/defcon = 5
 	//the world.time of the last check, so the mc can restart US if we hang.
-	//	(Real friends look out for *eachother*)
+	//	(Real friends look out for *each other*)
 	var/lasttick = 0
 
 	// Track the MC iteration to make sure its still on track.
@@ -30,7 +30,7 @@ GLOBAL_REAL(Failsafe, /datum/controller/failsafe)
 	Failsafe = src
 	Initialize()
 
-/datum/controller/failsafe/Initialize()
+/datum/controller/failsafe/Initialize(mapload)
 	set waitfor = 0
 	Failsafe.Loop()
 	if(!QDELETED(src))

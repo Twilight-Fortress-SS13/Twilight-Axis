@@ -246,9 +246,9 @@
 		else
 			saturation = range/(2-max-min)
 
-		var/dred = ((max-red)/(6*max)) + 0.5
-		var/dgreen = ((max-green)/(6*max)) + 0.5
-		var/dblue = ((max-blue)/(6*max)) + 0.5
+		var/dred = ((max-red)/(6*range)) + 0.5
+		var/dgreen = ((max-green)/(6*range)) + 0.5
+		var/dblue = ((max-blue)/(6*range)) + 0.5
 
 		if(max==red)
 			hue = dblue - dgreen
@@ -266,7 +266,7 @@
 /proc/hsl2rgb(hue, saturation, lightness)
 	var/red;var/green;var/blue;
 	if(saturation == 0)
-		red = lightness * 255
+		red = round(lightness * 255, 1)
 		green = red
 		blue = red
 	else
@@ -277,9 +277,9 @@
 			b = (lightness+saturation) - (saturation*lightness)
 		a = 2*lightness - b
 
-		red = round(255 * hue2rgb(a, b, hue+(1/3)))
-		green = round(255 * hue2rgb(a, b, hue))
-		blue = round(255 * hue2rgb(a, b, hue-(1/3)))
+		red = round(255 * hue2rgb(a, b, hue+(1/3)), 1)
+		green = round(255 * hue2rgb(a, b, hue), 1)
+		blue = round(255 * hue2rgb(a, b, hue-(1/3)), 1)
 
 	return list(red, green, blue)
 
@@ -408,7 +408,9 @@
 			return READABLE_ZONE_R_LEG
 		if(BODY_ZONE_PRECISE_R_FOOT)
 			return READABLE_ZONE_R_FOOT
-		
+		if(BODY_ZONE_TAUR)
+			return READABLE_ZONE_TAUR
+
 
 /proc/slot2body_zone(slot)
 	switch(slot)
@@ -559,7 +561,7 @@
 /proc/color_hex2color_matrix(string)
 	var/length = length(string)
 	if(length != 7 && length != 9)
-		return color_matrix_identity()
+		return COLOR_MATRIX_IDENTITY
 	var/r = hex2num(copytext(string, 2, 4))/255
 	var/g = hex2num(copytext(string, 4, 6))/255
 	var/b = hex2num(copytext(string, 6, 8))/255
@@ -567,7 +569,7 @@
 	if(length == 9)
 		a = hex2num(copytext(string, 8, 10))/255
 	if(!isnum(r) || !isnum(g) || !isnum(b) || !isnum(a))
-		return color_matrix_identity()
+		return COLOR_MATRIX_IDENTITY
 	return list(r,0,0,0, 0,g,0,0, 0,0,b,0, 0,0,0,a, 0,0,0,0)
 
 //will drop all values not on the diagonal
@@ -610,7 +612,7 @@
 		if(/turf)
 			return "turf"
 		else //regex everything else (works for /proc too)
-			return lowertext(replacetext("[the_type]", "[type2parent(the_type)]/", ""))
+			return LOWER_TEXT(replacetext("[the_type]", "[type2parent(the_type)]/", ""))
 
 /proc/strtohex(str)
 	if(!istext(str)||!str)

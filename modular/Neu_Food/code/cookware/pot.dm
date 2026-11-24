@@ -17,6 +17,11 @@
 	dropshrink = 1 // Override for bucket
 	volume = 240
 
+/obj/item/reagent_containers/glass/bucket/pot/Initialize()
+	. = ..()
+	AddComponent(/datum/component/storage/concrete/grid/food/cooking/pot)
+	AddComponent(/datum/component/container_craft, get_container_craft_family(/datum/container_craft/cooking), TRUE)
+
 /obj/item/reagent_containers/glass/bucket/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_notice("Freshwater can be collected by leaving out buckets, pots, washbins, and any other uncovered containers on an uncovered tile while it's raining.")
@@ -28,6 +33,19 @@
 	. += span_info("Once boiling, left-clicking the hearthbound pot with an ingredient will drop it inside. The larger a pot is, the more ingredients can be dropped in at any given time.")
 	. += span_info("After the first ingredient is placed in, the pot will begin turning it - and any other subsequent ingredients - into a brew, over the course of a minute.")
 	. += span_info("Specific ingredients can create specific brews; dried rosa petals for a refreshing tea, coffee beans for a revitalizing drink, and more..")
+
+/obj/item/reagent_containers/glass/bucket/pot/examine(mob/user)
+	. = ..()
+	if(reagents?.total_volume)
+		. += reagents.chem_temp >= STEW_TEMPERATURE ? span_notice("It is boiling.") : span_notice("It is not boiling.")
+	var/list/solids = list()
+	for(var/obj/item/thing in contents)
+		solids[thing.name] += 1
+	if(length(solids))
+		var/list/listed = list()
+		for(var/thing_name in solids)
+			listed += solids[thing_name] > 1 ? "[solids[thing_name]] [thing_name]" : thing_name
+		. += span_notice("Inside it: [english_list(listed)].")
 
 /obj/item/reagent_containers/glass/bucket/pot/update_icon()
 	cut_overlays()
@@ -56,7 +74,7 @@
 
 /obj/item/reagent_containers/glass/bucket/pot/aalloy
 	name = "decrepit pot"
-	desc = "A kettle of wrought bronze. One could only imagine what the stews of millenia prior must've tasted like; do you suppose they knew of seasonings-and-spices, too?"
+	desc = "A kettle of rotted metal. One could only imagine what the stews of millennia prior must've tasted like; do you suppose they knew of seasonings-and-spices, too?"
 	icon_state = "apote"
 	volume = 120
 	color = "#bb9696"
@@ -85,6 +103,11 @@
 	name = "bronze pot"
 	desc = "A cauldron of bronze, aching to churn water and chopmealings into a champion's broth. It can hold a lot of liquid."
 	icon_state = "bronzepot"
+
+/obj/item/reagent_containers/glass/bucket/pot/porcelain
+	name = "porcelain pot"
+	desc = "A cauldron of porcelain, aching to churn water and chopmealings into a champion's broth. It can hold a lot of liquid."
+	icon_state = "pot_porcelain"
 
 /obj/item/reagent_containers/glass/bucket/pot/teapot
 	name = "teapot"
@@ -194,7 +217,7 @@
 /obj/item/reagent_containers/glass/bucket/pot/kettle/tankard
 	name = "tankard"
 	desc = "A heftsome, iron-bottomed mug. It can be set upon a hearth to brew traditional drinks, or - for the more \
-	alcoholically-inclined - used as a pitcher of liqour."
+	alcoholically-inclined - used as a pitcher of liquor."
 	icon = 'modular/Neu_Food/icons/cookware/unused.dmi'
 	icon_state = "stein"
 	volume = 60

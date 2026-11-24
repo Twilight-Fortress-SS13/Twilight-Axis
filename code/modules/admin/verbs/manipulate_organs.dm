@@ -1,7 +1,7 @@
 /client/proc/manipulate_organs(mob/living/carbon/C in world)
 	set name = "Manipulate Organs"
 	set category = "Debug"
-	var/operation = input("Select organ operation.", "Organ Manipulation", "cancel") as null|anything in list("add organ", "drop organ", "remove organ", "cancel")
+	var/operation = input(usr, "Select organ operation.", "Organ Manipulation", "cancel") as null|anything in list("add organ", "drop organ", "remove organ", "cancel")
 	if (!operation)
 		return
 
@@ -12,13 +12,13 @@
 				var/dat = replacetext("[path]", "/obj/item/organ/", ":")
 				organs[dat] = path
 
-			var/obj/item/organ/organ = input("Select organ type:", "Organ Manipulation", null) as null|anything in organs
+			var/obj/item/organ/organ = input(usr, "Select organ type:", "Organ Manipulation", null) as null|anything in organs
 			if(!organ)
 				return
 			organ = organs[organ]
 			organ = new organ
 			organ.Insert(C)
-			log_admin("[key_name(usr)] has added organ [organ.type] to [key_name(C)]")
+			C.log_message("had organ [organ.name] ([organ.type]) inserted by [key_name(usr)]", LOG_ADMIN)
 			message_admins("[key_name_admin(usr)] has added organ [organ.type] to [ADMIN_LOOKUPFLW(C)]")
 
 		if("drop organ", "remove organ")
@@ -26,7 +26,7 @@
 				var/obj/item/organ/I = X
 				organs["[I.name] ([I.type])"] = I
 
-			var/obj/item/organ = input("Select organ/implant:", "Organ Manipulation", null) as null|anything in organs
+			var/obj/item/organ = input(usr, "Select organ/implant:", "Organ Manipulation", null) as null|anything in organs
 			if(!organ)
 				return
 			organ = organs[organ]
@@ -34,7 +34,7 @@
 				return
 			var/obj/item/organ/O
 
-			log_admin("[key_name(usr)] has removed [organ.type] from [key_name(C)]")
+			C.log_message("had organ [organ.name] ([organ.type]) [operation == "remove organ" ? "removed and deleted" : "dropped"] by [key_name(usr)]", LOG_ADMIN)
 			message_admins("[key_name_admin(usr)] has removed [organ.type] from [ADMIN_LOOKUPFLW(C)]")
 
 			if(isorgan(organ))
@@ -43,5 +43,5 @@
 
 			organ.forceMove(get_turf(C))
 
-			if(operation == "remove organ/implant")
+			if(operation == "remove organ")
 				qdel(organ)

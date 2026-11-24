@@ -23,7 +23,7 @@
 
 	flags_1 = CAN_BE_DIRTY_1
 	var/turf_flags = NONE
-	
+
 	var/list/image/blueprint_data //for the station blueprints, images of objects eg: pipes
 
 	var/explosion_level = 0	//for preventing explosion dodging
@@ -71,6 +71,9 @@
 	var/neighborlay_self
 
 	var/list/panel_listeners
+
+	///The typepath we use for lazy fishing on turfs, to save on world init time.
+	var/fish_source
 
 /turf/vv_edit_var(var_name, new_value)
 	var/static/list/banned_edits = list("x", "y", "z")
@@ -149,7 +152,7 @@
 	T = get_turf_below_ztraits(src)
 	if(T)
 		T.multiz_turf_del(src, UP)
-		
+
 	STOP_PROCESSING(SSweather,src)
 	if(force)
 		..()
@@ -314,7 +317,7 @@
 				continue
 
 		// If the thing is dense AND we're including mobs or the thing isn't a mob AND if there's a source atom and
-		// it cannot pass through the thing on the turf,  we consider the turf blocked.
+		// it cannot pass through the thing on the turf,	we consider the turf blocked.
 		if(movable_content.density && (!exclude_mobs || !ismob(movable_content)))
 			if(source_atom && movable_content.CanPass(source_atom, get_dir(src, source_atom)))
 				continue
@@ -603,9 +606,9 @@
 /turf/proc/Distance(turf/T, mob/traverser)
 	return get_dist(src,T)
 
-//  This Distance proc assumes that only cardinal movement is
-//  possible. It results in more efficient (CPU-wise) pathing
-//  for bots and anything else that only moves in cardinal dirs.
+//	This Distance proc assumes that only cardinal movement is
+//	possible. It results in more efficient (CPU-wise) pathing
+//	for bots and anything else that only moves in cardinal dirs.
 /turf/proc/Distance_cardinal(turf/T, mob/traverser)
 	if(!src || !T)
 		return FALSE
@@ -647,7 +650,7 @@
 
 /turf/proc/is_shielded()
 
-/turf/contents_explosion(severity, target, epicenter, devastation_range, heavy_impact_range, light_impact_range, flame_range)
+/turf/contents_explosion(severity, target, epicenter, extreme_impact_range, heavy_impact_range, light_impact_range, flame_range)
 	var/affecting_level
 	if(severity == 1)
 		affecting_level = 1
@@ -665,7 +668,7 @@
 				var/atom/movable/AM = A
 				if(!AM.ex_check(explosion_id))
 					continue
-			A.ex_act(severity, target, epicenter, devastation_range, heavy_impact_range, light_impact_range, flame_range)
+			A.ex_act(severity, target, epicenter, extreme_impact_range, heavy_impact_range, light_impact_range, flame_range)
 			CHECK_TICK
 
 /turf/narsie_act(force, ignore_mobs, probability = 20)
@@ -750,7 +753,7 @@
 
 /proc/clear_reagents_to_vomit_pool(mob/living/carbon/M, obj/effect/decal/cleanable/vomit/V)
 	M.reagents.trans_to(V, M.reagents.total_volume / 10, transfered_by = M)
-	for(var/datum/reagent/R in M.reagents.reagent_list)                //clears the stomach of anything that might be digested as food
+	for(var/datum/reagent/R in M.reagents.reagent_list)				//clears the stomach of anything that might be digested as food
 		if(istype(R, /datum/reagent/consumable))
 			var/datum/reagent/consumable/nutri_check = R
 			if(nutri_check.nutriment_factor >0)
@@ -761,6 +764,63 @@
 /turf/proc/Melt()
 	return ScrapeAway(flags = CHANGETURF_INHERIT_AIR)
 
+/atom/proc/set_adj_in_dir(direction, direction_flag, list/smoothing_list, new_junction)
+	. = new_junction
+	var/smooth_border = (smooth & SMOOTH_BORDER)
+	var/smooth_obj = (smooth & SMOOTH_OBJ)
+	var/smooth_edge = (smooth & SMOOTH_EDGE)
+
+	var/turf/neighbor = get_step(src, direction);
+	if(!neighbor) {
+		if(smooth_border) {
+			. |= direction_flag;
+		};
+		return
+	};
+	if(smooth_edge && type == neighbor.type) {
+		return
+	};
+	if(smooth_obj) {
+		for(var/atom/movable/thing as anything in neighbor) {
+			if(!thing.anchored) {
+				continue;
+			};
+			if(!smoothing_list) {
+				if(type == thing.type) {
+					. |= direction_flag;
+					return
+				};
+				continue;
+			};
+			var/thing_smoothing_groups = thing.smoothing_groups;
+			if(!thing_smoothing_groups) {
+				continue;
+			};
+			for(var/target in smoothing_list) {
+				if(smoothing_list[target] & thing_smoothing_groups[target]) {
+					. |= direction_flag;
+					return
+				};
+			};
+		};
+	};
+	if(!smoothing_list) {
+		if(type == neighbor.type) {
+			. |= direction_flag;
+		};
+		return
+	};
+	var/neighbor_smoothing_groups = neighbor.smoothing_groups;
+	if(neighbor_smoothing_groups) {
+		for(var/target as anything in smoothing_list) {
+			if(smoothing_list[target] & neighbor_smoothing_groups[target]) {
+				. |= direction_flag;
+				return
+			};
+		};
+	};
+	return
+
 /atom/proc/smooth()
 	if(!smoothing_icon)
 		smoothing_icon = initial(icon_state)
@@ -769,68 +829,10 @@
 	// cache for sanic speed
 	var/smoothing_list = src.smoothing_list
 
-	var/smooth_border = (smooth & SMOOTH_BORDER)
-	var/smooth_obj = (smooth & SMOOTH_OBJ)
 	var/smooth_edge = (smooth & SMOOTH_EDGE)
 
-	#define SET_ADJ_IN_DIR(direction, direction_flag) \
-		set_adj_in_dir: { \
-			do { \
-				var/turf/neighbor = get_step(src, direction); \
-				if(!neighbor) { \
-					if(smooth_border) { \
-						new_junction |= direction_flag; \
-					}; \
-					break set_adj_in_dir; \
-				}; \
-				if(smooth_edge && type == neighbor.type) { \
-					break set_adj_in_dir; \
-				}; \
-				if(smooth_obj) { \
-					for(var/atom/movable/thing as anything in neighbor) { \
-						if(!thing.anchored) { \
-							continue; \
-						}; \
-						if(!smoothing_list) { \
-							if(type == thing.type) { \
-								new_junction |= direction_flag; \
-								break set_adj_in_dir; \
-							}; \
-							continue; \
-						}; \
-						var/thing_smoothing_groups = thing.smoothing_groups; \
-						if(!thing_smoothing_groups) { \
-							continue; \
-						}; \
-						for(var/target in smoothing_list) { \
-							if(smoothing_list[target] & thing_smoothing_groups[target]) { \
-								new_junction |= direction_flag; \
-								break set_adj_in_dir; \
-							}; \
-						}; \
-					}; \
-				}; \
-				if(!smoothing_list) { \
-					if(type == neighbor.type) { \
-						new_junction |= direction_flag; \
-					}; \
-					break set_adj_in_dir; \
-				}; \
-				var/neighbor_smoothing_groups = neighbor.smoothing_groups; \
-				if(neighbor_smoothing_groups) { \
-					for(var/target as anything in smoothing_list) { \
-						if(smoothing_list[target] & neighbor_smoothing_groups[target]) { \
-							new_junction |= direction_flag; \
-							break set_adj_in_dir; \
-						}; \
-					}; \
-				}; \
-				break set_adj_in_dir; \
-			} while(FALSE) \
-		}
-
 	for(var/direction as anything in GLOB.cardinals) //Cardinal case first.
-		SET_ADJ_IN_DIR(direction, direction)
+		new_junction = set_adj_in_dir(direction, direction, smoothing_list, new_junction)
 
 	if(smooth_edge)
 		if(!isturf(src))
@@ -845,21 +847,19 @@
 
 	if(new_junction & NORTH_JUNCTION)
 		if(new_junction & WEST_JUNCTION)
-			SET_ADJ_IN_DIR(NORTHWEST, NORTHWEST_JUNCTION)
+			new_junction = set_adj_in_dir(NORTHWEST, NORTHWEST_JUNCTION, smoothing_list, new_junction)
 
 		if(new_junction & EAST_JUNCTION)
-			SET_ADJ_IN_DIR(NORTHEAST, NORTHEAST_JUNCTION)
+			new_junction = set_adj_in_dir(NORTHEAST, NORTHEAST_JUNCTION, smoothing_list, new_junction)
 
 	if(new_junction & SOUTH_JUNCTION)
 		if(new_junction & WEST_JUNCTION)
-			SET_ADJ_IN_DIR(SOUTHWEST, SOUTHWEST_JUNCTION)
+			new_junction = set_adj_in_dir(SOUTHWEST, SOUTHWEST_JUNCTION, smoothing_list, new_junction)
 
 		if(new_junction & EAST_JUNCTION)
-			SET_ADJ_IN_DIR(SOUTHEAST, SOUTHEAST_JUNCTION)
+			new_junction = set_adj_in_dir(SOUTHEAST, SOUTHEAST_JUNCTION, smoothing_list, new_junction)
 
 	set_smoothed_icon_state(new_junction)
-
-	#undef SET_ADJ_IN_DIR
 
 ///Changes the icon state based on the new junction bitmask.
 /atom/proc/set_smoothed_icon_state(new_junction)
@@ -924,3 +924,36 @@
 		qdel(neighborlay_list[key])
 		neighborlay_list[key] = null
 		LAZYREMOVE(neighborlay_list, key)
+
+/**
+ * the following are some fishing-related optimizations to shave off as much
+ * time we spend implementing the fishing as possible, even if that means
+ * hackier code, because we've hundreds of turfs like lava, water etc every round,
+ */
+/turf/proc/add_lazy_fishing(fish_source_path)
+	RegisterSignal(src, COMSIG_FISHING_ROD_CAST, PROC_REF(add_fishing_spot_comp))
+	RegisterSignal(src, COMSIG_TURF_CHANGE, PROC_REF(remove_lazy_fishing))
+	ADD_TRAIT(src, TRAIT_FISHING_SPOT, INNATE_TRAIT)
+	fish_source = fish_source_path
+
+/turf/proc/remove_lazy_fishing()
+	SIGNAL_HANDLER
+	UnregisterSignal(src, list(
+		COMSIG_FISHING_ROD_CAST,
+		COMSIG_TURF_CHANGE,
+	))
+	REMOVE_TRAIT(src, TRAIT_FISHING_SPOT, INNATE_TRAIT)
+	fish_source = null
+
+/turf/proc/add_fishing_spot_comp(datum/source, obj/item/fishingrod/rod, mob/user, automated)
+	SIGNAL_HANDLER
+	var/datum/component/fishing_spot/spot = source.AddComponent(/datum/component/fishing_spot, get_regional_fish_source(fish_source, get_area(src)))
+	remove_lazy_fishing()
+	return spot.handle_cast(arglist(args))
+
+/// The fish source this turf draws from, whether still lazy or already a fishing spot component. Null for unfishable turfs.
+/turf/proc/get_fish_source()
+	if(fish_source)
+		return get_regional_fish_source(fish_source, get_area(src))
+	var/datum/component/fishing_spot/spot = GetComponent(/datum/component/fishing_spot)
+	return spot?.fish_source

@@ -5,9 +5,9 @@
 	forbidden_races = list(RACES_LIRVAS) //no wildkin; i'd like to allow snek/liznerd wildkin, but i don't have a way of mechanically enforcing that
 	outfit = /datum/outfit/job/roguetown/mercenary/lirvanmerc
 	class_select_category = CLASS_CAT_RACIAL
-	category_tags = list(CTAG_MERCENARY)
+	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
 	traits_applied = list(TRAIT_SEEPRICES, TRAIT_MEDIUMARMOR)
-	cmode_music = 'sound/music/combat_matthios.ogg'
+	cmode_music = sound("sound/music/combat_matthios.ogg")
 	maximum_possible_slots = 2
 
 	subclass_stats = list(
@@ -27,7 +27,7 @@
 		/datum/skill/misc/medicine = SKILL_LEVEL_NOVICE,
 		/datum/skill/craft/carpentry = SKILL_LEVEL_NOVICE, //pity. your staff is incredibly fragile
 		/datum/skill/combat/shields = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/combat/polearms = SKILL_LEVEL_EXPERT,
+		/datum/skill/combat/polearms = SKILL_LEVEL_NOVICE,
 		/datum/skill/combat/swords = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/staves = SKILL_LEVEL_APPRENTICE //awww yeah
 	)
@@ -68,15 +68,14 @@
 			l_hand = /obj/item/rogueweapon/woodstaff/quarterstaff/gold
 			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
 			H.adjust_skillrank_up_to(/datum/skill/combat/staves, SKILL_LEVEL_EXPERT, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_EXPERT, TRUE)
 			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/saxtonhale)
 		if("Unarmed")
 			if(H.gender == FEMALE)
 				shirt = /obj/item/clothing/suit/roguetown/shirt/desertbra
 			gloves = /obj/item/clothing/gloves/roguetown/bandages/pugilist
 			ADD_TRAIT(H, TRAIT_CIVILIZEDBARBARIAN, TRAIT_GENERIC)
-			ADD_TRAIT(H, TRAIT_BLOOD_RESISTANCE, TRAIT_GENERIC)
 			ADD_TRAIT(H, TRAIT_IGNOREDAMAGESLOWDOWN, TRAIT_GENERIC)
-			ADD_TRAIT(H, TRAIT_NOPAINSTUN, TRAIT_GENERIC)
 			H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, SKILL_LEVEL_EXPERT, TRUE)
 			H.adjust_skillrank_up_to(/datum/skill/combat/wrestling, SKILL_LEVEL_JOURNEYMAN, TRUE)
 			H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/lirvan_talon)
@@ -92,13 +91,13 @@
 				H.set_patron(/datum/patron/inhumen/matthios)
 				H.adjust_skillrank_up_to(/datum/skill/misc/athletics, SKILL_LEVEL_JOURNEYMAN, TRUE)
 
-/*                            ,---.
-,--.  ,--.        ,--.  ,--.  |   |
-|  '--'  | ,--,--.|  |,-'  '-.|  .'
-|  .--.  |' ,-.  ||  |'-.  .-'|  |
-|  |  |  |\ '-'  ||  |  |  |  `--'
-`--'  `--' `--`--'`--'  `--'  .--.
-                              '--'
+/*							,---.
+,--.	,--.		,--.	,--.	|	|
+|	'--'	| ,--,--.|	|,-'	'-.|	.'
+|	.--.	|' ,-.	||	|'-.	.-'|	|
+|	|	|	|\ '-'	||	|	|	|	`--'
+`--'	`--' `--`--'`--'	`--'	.--.
+								'--'
 shitcode stuff below this point; first, their regenerating skin.
 Second, a self-buff spell that buffs them depending on their total wealth including item sellvalue. I would have liked this to ideally been just a thing they got passively, but I can't fucking code, so...
 third; SUNSET, little neat ability. it may be buggy. don't quote me on that. it looks cool though doesnt it. */
@@ -106,7 +105,7 @@ third; SUNSET, little neat ability. it may be buggy. don't quote me on that. it 
 
 /obj/item/clothing/neck/roguetown/gorget/steel/gold
 	name = "gold-plated gorget"
-	desc = "A series of steel plates designed to protect the neck, traditionally worn atop a jacket or cuirass. It bears a mammon-sized divet along its right flank; the certification of its 'proofedness' against a longbow's strike. This one is covered in a thin layer of gold."
+	desc = "A series of steel plates designed to protect the neck, traditionally worn atop a jacket or cuirass. It bears a mammon-sized divot along its right flank; the certification of its 'proofedness' against a longbow's strike. This one is covered in a thin layer of gold."
 	color = "#f9a602"
 
 /obj/item/clothing/under/roguetown/chainlegs/kilt/gold
@@ -115,7 +114,7 @@ third; SUNSET, little neat ability. it may be buggy. don't quote me on that. it 
 /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/gold
 	color = "#f9a602"
 
-/obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/lirvas //high and good armor, but full body, so constant dmg  U N G O D L Y  high regen time. get owned when it breaks or swap to a sidearm
+/obj/item/clothing/suit/roguetown/armor/regenerating/skin/disciple/lirvas //high and good armor, but full body, so constant dmg	U N G O D L Y	high regen time. get owned when it breaks or swap to a sidearm
 	name = "hardened scales"
 	desc = "Scales hardened by Lirvan rituo. </br> </br>Who is more worthy to inherit the wealth of the Sun than those who fly closest?"
 	repairmsg_begin = "My scales harden and begin mending."
@@ -125,6 +124,7 @@ third; SUNSET, little neat ability. it may be buggy. don't quote me on that. it 
 	repair_time = 30 SECONDS
 	armor = ARMOR_PLATE
 	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET | HANDS | FEET | COVERAGE_HEAD //all but eyes/nose, seems fair.
+	blocking_behavior = null
 
 
 #define LIRVAN_BLING_FILTER "lirvan_titheaura"
@@ -145,7 +145,7 @@ third; SUNSET, little neat ability. it may be buggy. don't quote me on that. it 
 
 /obj/effect/proc_holder/spell/self/lirvan_tithe
 	name = "INVOKE"
-	desc = "Draw strength from the wealth you carry. Armor, jewelry, and raw mammon counted equally. More WEALTH means more POWER. More POWER at 250, 400, 600, 700, 1000, 1200, 1400, and 1600 mammon."
+	desc = "Draw strength from the wealth you carry. Armor, jewelry, and raw mammon counted equally. More WEALTH means more POWER. More POWER at 160, 200, 300, 360, 440, 600, 800, 1000, and 1200 mammon."
 	antimagic_allowed = TRUE
 	clothes_req = FALSE
 	recharge_time = 90 SECONDS
@@ -174,6 +174,8 @@ third; SUNSET, little neat ability. it may be buggy. don't quote me on that. it 
 	var/outline_colour = "#f5d96c"
 	var/obj/effect/dummy/lighting_obj/moblight/lirvanlight
 	var/gonna_fort = FALSE //like, we're gonna use fortitude. we'll apply fortitude to...ah, nevermind.
+	var/got_str_unbound = FALSE //TA EDIT
+	var/got_inf_stamina = FALSE //TA EDIT
 
 /datum/status_effect/buff/lirvan_tithe/on_apply()
 	update_effects()
@@ -184,15 +186,23 @@ third; SUNSET, little neat ability. it may be buggy. don't quote me on that. it 
 			owner.add_filter(LIRVAN_BLING_FILTER, 2, list("type" = "outline", "color" = outline_colour, "alpha" = 120, "size" = 1))
 		if(!lirvanlight)
 			lirvanlight = owner.mob_light(7, 7, _color = outline_colour)
-		if(wealth_value < 120)
+		if(wealth_value < 160)
 			to_chat(owner, span_notice("WEALTH answers my call. Every single one of my- ONLY [src.wealth_value] MAMMONS?!"))
 			owner.emote("whimper", forced = TRUE)
 			return
 		to_chat(owner, span_notice("WEALTH answers my call. Every single one of my [src.wealth_value] pieces of it."))
-		if(wealth_value > 400)
+		if(wealth_value > 300)
 			ADD_TRAIT(owner, TRAIT_FORTITUDE, STATUS_EFFECT_TRAIT)
 			gonna_fort = TRUE
 			to_chat(owner, span_userdanger("FORTIFIED."))
+		if(wealth_value >= 1000) //TA EDIT START
+			ADD_TRAIT(owner, TRAIT_STRENGTH_UNCAPPED, STATUS_EFFECT_TRAIT)
+			got_str_unbound = TRUE
+			to_chat(owner, span_userdanger("STRENGTH UNBOUND."))
+		if(wealth_value >= 1200)
+			ADD_TRAIT(owner, TRAIT_INFINITE_STAMINA, STATUS_EFFECT_TRAIT)
+			got_inf_stamina = TRUE
+			to_chat(owner, span_userdanger("BOUNDLESS STAMINA.")) //TA EDIT END
 		playsound(owner, 'sound/combat/hits/burn (2).ogg', 100, TRUE)
 
 /datum/status_effect/buff/lirvan_tithe/on_remove()
@@ -200,29 +210,35 @@ third; SUNSET, little neat ability. it may be buggy. don't quote me on that. it 
 	if(gonna_fort)
 		REMOVE_TRAIT(owner, TRAIT_FORTITUDE, STATUS_EFFECT_TRAIT)
 		gonna_fort = FALSE
+	if(got_str_unbound) //TA EDIT START
+		REMOVE_TRAIT(owner, TRAIT_STRENGTH_UNCAPPED, STATUS_EFFECT_TRAIT)
+		got_str_unbound = FALSE
+	if(got_inf_stamina)
+		REMOVE_TRAIT(owner, TRAIT_INFINITE_STAMINA, STATUS_EFFECT_TRAIT)
+		got_inf_stamina = FALSE //TA EDIT END
 	owner.remove_filter(LIRVAN_BLING_FILTER)
 	QDEL_NULL(lirvanlight)
 	to_chat(owner, span_warning("POWER fades."))
 
 /datum/status_effect/buff/lirvan_tithe/proc/update_effects()
 	wealth_value = get_moni_value(owner)
-	if(wealth_value < 120)
+	if(wealth_value < 160)
 		effectedstats = list(STATKEY_CON = 1, STATKEY_LCK = 1)
-	else if(wealth_value < 250)
+	else if(wealth_value < 200)
 		effectedstats = list(STATKEY_STR = 1, STATKEY_CON = 1, STATKEY_LCK = 1)
-	else if(wealth_value < 400)
+	else if(wealth_value < 299)
 		effectedstats = list(STATKEY_STR = 2, STATKEY_CON = 1, STATKEY_LCK = 1)
-	else if(wealth_value < 600)
+	else if(wealth_value < 360)
 		effectedstats = list(STATKEY_STR = 2, STATKEY_CON = 2, STATKEY_LCK = 1, STATKEY_SPD = 1)
-	else if(wealth_value < 700)
+	else if(wealth_value < 440)
 		effectedstats = list(STATKEY_STR = 3, STATKEY_CON = 2, STATKEY_LCK = 2, STATKEY_SPD = 1)
-	else if(wealth_value < 1000)
+	else if(wealth_value < 600)
 		effectedstats = list(STATKEY_STR = 3, STATKEY_CON = 4, STATKEY_LCK = 2, STATKEY_SPD = 2, STATKEY_PER = 1)
-	else if(wealth_value < 1200)
+	else if(wealth_value < 800)
 		effectedstats = list(STATKEY_STR = 3, STATKEY_CON = 4, STATKEY_LCK = 2, STATKEY_SPD = 2, STATKEY_PER = 2)
-	else if(wealth_value < 1400)
+	else if(wealth_value < 1000)
 		effectedstats = list(STATKEY_STR = 4, STATKEY_CON = 4, STATKEY_LCK = 2, STATKEY_SPD = 2, STATKEY_PER = 2)
-	else if(wealth_value < 1600)
+	else if(wealth_value < 1200)
 		effectedstats = list(STATKEY_STR = 4, STATKEY_CON = 5, STATKEY_LCK = 3, STATKEY_SPD = 2, STATKEY_PER = 2)
 	else
 		effectedstats = list(STATKEY_STR = 5, STATKEY_CON = 5, STATKEY_LCK = 3, STATKEY_SPD = 3, STATKEY_PER = 2)
@@ -237,6 +253,7 @@ third; SUNSET, little neat ability. it may be buggy. don't quote me on that. it 
 	hitsound = list('sound/combat/hits/bladed/smallslash (1).ogg', 'sound/combat/hits/bladed/smallslash (2).ogg', 'sound/combat/hits/bladed/smallslash (3).ogg')
 	penfactor = PEN_MEDIUM
 	swingdelay = 1 SECONDS
+	clickcd = 1.2 SECONDS
 	swingdelay_type = SWINGDELAY_CANCEL
 	damfactor = 1.5 //bites you bites you bites yo
 	clickcd = CLICK_CD_MASSIVE
@@ -251,42 +268,57 @@ third; SUNSET, little neat ability. it may be buggy. don't quote me on that. it 
 	ignore_armor_penalty = TRUE
 	invocations = list("draws 'pon DRAKKYRMAW.")
 	invocation_type = "emote"
-	var/obj/item/rogueweapon/katar/lirvan_talon/summoned_talon
+	var/list/summoned_talons = list() //TA EDIT
+
+/obj/effect/proc_holder/spell/self/lirvan_talon/proc/clear_talons() //TA EDIT START
+	var/list/old_talons = summoned_talons.Copy()
+	summoned_talons.Cut()
+	for(var/obj/item/rogueweapon/katar/lirvan_talon/talon in old_talons)
+		if(!QDELETED(talon))
+			UnregisterSignal(talon, COMSIG_PARENT_QDELETING)
+			qdel(talon) //TA EDIT END
 
 /obj/effect/proc_holder/spell/self/lirvan_talon/Destroy()
-	if(summoned_talon && !QDELETED(summoned_talon))
-		UnregisterSignal(summoned_talon, COMSIG_PARENT_QDELETING)
-		QDEL_NULL(summoned_talon)
+	clear_talons() //TA EDIT
 	return ..()
 
 /obj/effect/proc_holder/spell/self/lirvan_talon/cast(mob/living/user)
 	if(!ishuman(user))
 		return FALSE
-	if(summoned_talon && !QDELETED(summoned_talon))
-		qdel(summoned_talon)
+	if(length(summoned_talons)) //TA EDIT START
+		clear_talons() //TA EDIT END
 		to_chat(user, span_danger("WHY STOP NOW?"))
 		return TRUE
 
 	var/wealth_value = get_moni_value(user)
-	summoned_talon = new(user)
-	summoned_talon.attuned_owner = user
-	summoned_talon.attune_to_wealth(wealth_value)
-	RegisterSignal(summoned_talon, COMSIG_PARENT_QDELETING, PROC_REF(on_talon_destroyed))
-	if(!user.put_in_hands(summoned_talon))
-		qdel(summoned_talon)
+	if(!summon_talon(user, wealth_value)) //TA EDIT START
+		return FALSE
+	if(HAS_TRAIT(user, TRAIT_DUALWIELDER) && summon_talon(user, wealth_value))
+		to_chat(user, span_danger("[wealth_value] TEETH ARRANGED IN A PAIR OF MACABRE SMILES."))
+		return TRUE
+	to_chat(user, span_danger("[wealth_value] TEETH ARRANGED IN MACABRE SMILE."))
+	return TRUE //TA EDIT END
+
+/obj/effect/proc_holder/spell/self/lirvan_talon/proc/summon_talon(mob/living/user, wealth_value) //TA EDIT START
+	var/obj/item/rogueweapon/katar/lirvan_talon/talon = new(user)
+	talon.attuned_owner = user
+	talon.attune_to_wealth(wealth_value)
+	RegisterSignal(talon, COMSIG_PARENT_QDELETING, PROC_REF(on_talon_destroyed))
+	summoned_talons += talon
+	if(!user.put_in_hands(talon))
+		qdel(talon) //TA EDIT END
 		if(user.get_num_arms() <= 0)
 			to_chat(user, span_userdanger("WITH WHAT FUCKING ARMS???"))
 			user.emote("cry", forced = TRUE)
 		else
 			to_chat(user, span_warning("My hands are full!"))
 		return FALSE
-	to_chat(user, span_danger("[wealth_value] TEETH ARRANGED IN MACABRE SMILE."))
-	QDEL_IN(summoned_talon, 60 SECONDS)
+	QDEL_IN(talon, 3 MINUTES) //TA EDIT
 	return TRUE
 
 /obj/effect/proc_holder/spell/self/lirvan_talon/proc/on_talon_destroyed(datum/source)
 	SIGNAL_HANDLER
-	summoned_talon = null
+	summoned_talons -= source //TA EDIT
 
 /obj/item/rogueweapon/katar/lirvan_talon
 	name = "DRAKKYRMAW"
@@ -304,7 +336,7 @@ third; SUNSET, little neat ability. it may be buggy. don't quote me on that. it 
 
 /obj/item/rogueweapon/katar/lirvan_talon/proc/attune_to_wealth(new_wealth_value)
 	wealth_value = new_wealth_value
-	force = clamp(round(15 + (wealth_value / 25)), 20, 32)
+	force = clamp(round(15 + (wealth_value / 10)), 20, 32)
 	throwforce = clamp(round(force / 2), 10, 30) //if this ever becomes relevant lol
 	update_force_dynamic()
 	name = "[wealth_value]-toothed DRAKKYRMAW"
@@ -320,6 +352,7 @@ third; SUNSET, little neat ability. it may be buggy. don't quote me on that. it 
 
 /obj/effect/proc_holder/spell/invoked/saxtonhale
 	name = "SUNSET"
+	expose_caster_on_deflect = FALSE
 	desc = "Channel but a mote of the power of a Drakkyn. Take to the skies, before crashing into the ground with a punishing slam after a delay. All caught within are damaged. Hit can be riposted. Center tile takes triple damage."
 	clothes_req = FALSE
 	ignore_armor_penalty = TRUE
@@ -374,7 +407,7 @@ third; SUNSET, little neat ability. it may be buggy. don't quote me on that. it 
 	var/def_zone = H.zone_selected || BODY_ZONE_CHEST
 
 	for(var/turf/affected_turf in range(1, target_turf))
-		new /obj/effect/temp_visual/trap/thunderstrike(affected_turf, delay)
+		new /obj/effect/temp_visual/telegraph/thunderstrike(affected_turf, delay)
 
 	H.visible_message(span_warning("[H] vaults skywards in a half-crescent of gold...!"), span_notice("CRUSH."))
 	playsound(start_turf, 'sound/combat/wooshes/bladed/wooshsmall (1).ogg', 60, TRUE)

@@ -4,6 +4,8 @@
 #define HEAVY_AMMO_SPEED	3.5
 #define HEAVY_AMMO_CHARGE	1.5
 #define MIN_SCATTER_RANGE	1
+#define SLING_AIM	-10
+#define HEAVY_AIM	-25
 
 // Slings - 1x Charge Time, 2x ammo capacity in pouch
 // Never penetrate armor, it is meant to win by attrition, so it starts off with
@@ -69,27 +71,27 @@
 	else
 		. += span_smallnotice("It has some squiggly jiggly scratches on it.")
 
-/obj/item/ammo_casing/caseless/rogue/sling_bullet/stone/Initialize()
+/obj/item/ammo_casing/caseless/rogue/sling_bullet/stone/Initialize(mapload)
 	. = ..()
 	inscription = pick(sling_inscriptions)
 
-/obj/item/ammo_casing/caseless/rogue/sling_bullet/bronze/Initialize()
+/obj/item/ammo_casing/caseless/rogue/sling_bullet/bronze/Initialize(mapload)
 	. = ..()
 	inscription = pick(sling_inscriptions)
 
-/obj/item/ammo_casing/caseless/rogue/sling_bullet/iron/Initialize()
+/obj/item/ammo_casing/caseless/rogue/sling_bullet/iron/Initialize(mapload)
 	. = ..()
 	inscription = pick(sling_inscriptions)
 
-/obj/item/ammo_casing/caseless/rogue/sling_bullet/aalloy/Initialize()
+/obj/item/ammo_casing/caseless/rogue/sling_bullet/aalloy/Initialize(mapload)
 	. = ..()
 	inscription = pick(sling_inscriptions)
 
-/obj/item/ammo_casing/caseless/rogue/sling_bullet/paalloy/Initialize()
+/obj/item/ammo_casing/caseless/rogue/sling_bullet/paalloy/Initialize(mapload)
 	. = ..()
 	inscription = pick(sling_inscriptions)
 
-/obj/item/ammo_casing/caseless/rogue/sling_bullet/scattershot/Initialize()
+/obj/item/ammo_casing/caseless/rogue/sling_bullet/scattershot/Initialize(mapload)
 	. = ..()
 	inscription = pick(sling_inscriptions)
 
@@ -116,7 +118,7 @@
 
 /obj/item/ammo_casing/caseless/rogue/sling_bullet/aalloy
 	name = "decrepit sling bullet"
-	desc = "A pellet of frayed bronze. The alloy flakes apart in your grasp, staining the palm with flecks of brown-and-red."
+	desc = "A pellet of rotted metal. The alloy flakes apart in your grasp, staining the palm with flecks of brown-and-red."
 	projectile_type = /obj/projectile/bullet/reusable/sling_bullet/aalloy
 	icon_state = "ancient_sling_bullet"
 	color = "#bb9696"
@@ -139,7 +141,6 @@
 	damage = 40
 	damage_type = BRUTE
 	armor_penetration = PEN_NONE
-	npc_simple_damage_mult = 2
 	icon = 'icons/roguetown/weapons/ranged/sling_mob.dmi'
 	icon_state = "stone_sling_bullet"
 	range = 15
@@ -149,18 +150,20 @@
 	intdamfactor = BLUNT_DEFAULT_INT_DAMAGEFACTOR // Slings are meant to break armor so this will help
 	flag = "blunt"
 	speed = 0.4
-	npc_simple_damage_mult = 2.5 // Deals roughly ~75-95 damage against a simplemob, compared to the ~140 damage of a crossbolt or arrow.
+	aim_mod = SLING_AIM
 
 /obj/projectile/bullet/sling_bullet/on_hit(atom/target)
 	. = ..()
 	var/mob/living/L = firer
 	if(!L || !L.mind) return
+	if(ricochets && target == firer)
+		return .
 	var/skill_multiplier = 0
 	if(isliving(target)) // If the target theyre shooting at is a mob/living
 		var/mob/living/T = target
 		if(T.stat != DEAD) // If theyre alive
 			skill_multiplier = 4
-	if(skill_multiplier && can_train_combat_skill(L, /datum/skill/combat/slings, SKILL_LEVEL_LEGENDARY))
+	if(skill_multiplier && can_train_combat_skill(L, /datum/skill/combat/slings, SKILL_LEVEL_EXPERT))
 		L.mind.add_sleep_experience(/datum/skill/combat/slings, L.STAINT * skill_multiplier)
 
 /obj/projectile/bullet/reusable/sling_bullet //parent for proper reusable sling bullets
@@ -178,7 +181,7 @@
 	woundclass = BCLASS_BLUNT
 	flag = "blunt"
 	speed = 0.4
-	npc_simple_damage_mult = 2.5 // Deals roughly ~75-95 damage against a simplemob, compared to the ~140 damage of a crossbolt or arrow.
+	aim_mod = SLING_AIM
 	ricochets_max = 2
 	ricochet_chance = 80
 	ricochet_auto_aim_angle = 40
@@ -194,12 +197,14 @@
 	. = ..()
 	var/mob/living/L = firer
 	if(!L || !L.mind) return
+	if(ricochets && target == firer)
+		return .
 	var/skill_multiplier = 0
 	if(isliving(target)) // If the target theyre shooting at is a mob/living
 		var/mob/living/T = target
 		if(T.stat != DEAD) // If theyre alive
 			skill_multiplier = 4
-	if(skill_multiplier && can_train_combat_skill(L, /datum/skill/combat/slings, SKILL_LEVEL_LEGENDARY))
+	if(skill_multiplier && can_train_combat_skill(L, /datum/skill/combat/slings, SKILL_LEVEL_EXPERT))
 		L.mind.add_sleep_experience(/datum/skill/combat/slings, L.STAINT * skill_multiplier)
 
 /obj/projectile/bullet/reusable/sling_bullet/stone
@@ -217,7 +222,7 @@
 	name = "bronze sling bullet"
 	damage = 45
 	ammo_type = /obj/item/ammo_casing/caseless/rogue/sling_bullet/bronze
-	speed = 0.25 // Faster! 
+	speed = 0.25 // Faster!
 	icon_state = "bronzeslingbullet_proj"
 
 /obj/projectile/bullet/reusable/sling_bullet/iron
@@ -247,6 +252,7 @@
 	icon = 'icons/roguetown/weapons/ranged/sling_proj.dmi'
 	icon_state = "scatter_proj"
 	damage = 20
+	aim_mod = 0
 	ricochets_max = 0
 	ricochet_chance = 0
 	min_range = MIN_SCATTER_RANGE
@@ -266,6 +272,7 @@
 	icon = 'icons/roguetown/weapons/ranged/sling_proj.dmi'
 	icon_state = "bsscatter_proj"
 	damage = 30
+	aim_mod = 0
 	ricochets_max = 1
 	ricochet_chance = 25
 	min_range = MIN_SCATTER_RANGE
@@ -284,6 +291,7 @@
 	icon = 'icons/roguetown/weapons/ranged/sling_proj.dmi'
 	icon_state = "blacksteelslingbullet_proj"
 	damage = 30
+	aim_mod = -15
 	ricochets_max = 5
 	ricochet_chance = 100
 	ricochet_decay_damage = 0
@@ -304,6 +312,7 @@
 	damage = 50
 	ammo_type = /obj/item/ammo_casing/caseless/rogue/sling_bullet/heavy_sling_bullet
 	speed = HEAVY_AMMO_SPEED
+	aim_mod = HEAVY_AIM
 	ricochets_max = 0
 	ricochet_chance = 0
 	max_range = 5
@@ -330,16 +339,17 @@
 
 /obj/projectile/bullet/sling_bullet/fire_pot
 	name = "fire pot"
-	damage = 10
+	damage = 20
 	damage_type = BURN
 	icon = 'icons/roguetown/weapons/ranged/sling_proj.dmi'
 	icon_state = "pot_proj"
 	range = 15
 	hitsound = 'sound/combat/hits/blunt/bluntsmall (1).ogg'
 	embedchance = 0
-	woundclass = BCLASS_BLUNT
-	flag = "blunt"
+	woundclass = BCLASS_BURN
+	flag = "fire"
 	speed = HEAVY_AMMO_SPEED
+	aim_mod = HEAVY_AIM
 	min_range = MIN_BULLET_RANGE
 	max_range = MAX_BULLET_RANGE
 	dam_falloff_factor = DAM_FALLOFF_BULLET
@@ -348,12 +358,7 @@
 	. = ..()
 	if(ismob(target))
 		var/mob/living/M = target
-		M.adjust_fire_stacks(2)
-		M.adjustFireLoss(10)
-		M.ignite_mob()
-	var/turf/T = get_turf(target)
-	if(T)
-		new /obj/effect/hotspot(T, null, null, 15)
+		apply_scorch_stack(M, 2, def_zone)
 
 // GUNPOWDER AMMO
 /obj/projectile/bullet/reusable/bullet
@@ -369,7 +374,6 @@
 	flag = "piercing"
 	armor_penetration = PEN_NONE
 	speed = 0.1
-	npc_simple_damage_mult = 2 // I know this isn't used in Azure Peak but trust me some downstream guys are going to thank me for this because everything that uses it shoots so fucking slow that even volves are hard to kill.
 
 /obj/item/ammo_casing/caseless/rogue/bullet
 	name = "lead sphere"
@@ -383,12 +387,6 @@
 
 
 //mob projectiles
-/obj/projectile/bullet/reusable/arrow/orc
-	armor_penetration = PEN_LIGHT
-	ammo_type = /obj/item/ammo_casing/caseless/rogue/arrow/stone
-	embedchance = 100
-	speed = 2 // I guess slower to be slightly more forgiving to players since they're otherwise aimbots
-
 /obj/projectile/bullet/reusable/arrow/ancient
 	damage = 10
 	armor_penetration = PEN_LIGHT
@@ -492,3 +490,5 @@
 #undef HEAVY_AMMO_SPEED
 #undef HEAVY_AMMO_CHARGE
 #undef MIN_SCATTER_RANGE
+#undef SLING_AIM
+#undef HEAVY_AIM

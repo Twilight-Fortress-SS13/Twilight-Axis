@@ -10,7 +10,7 @@
 	if(H.age == target_age)
 		if(length(stat_mods))
 			for(var/stat in stat_mods)
-				H.change_stat(stat_mods[stat])
+				H.change_stat(stat, stat_mods[stat])
 		if(length(skill_mods))
 			for(var/S in skill_mods)
 				var/datum/skill/skill = S
@@ -66,7 +66,7 @@
 /datum/class_age_mod/wretch/maestro
 	target_age = AGE_OLD
 	skill_mods = list(
-		/datum/skill/misc/reading  = SKILL_LEVEL_MASTER,
+		/datum/skill/misc/reading	= SKILL_LEVEL_MASTER,
 		/datum/skill/misc/music = SKILL_LEVEL_LEGENDARY,
 	)
 	stat_mods = list(
@@ -82,7 +82,7 @@
 	minor_mod = 1
 	utility_mod = 3
 
-// --- VETERAN ---
+/* // --- VETERAN ---
 /datum/class_age_mod/veteran
 	target_age = AGE_OLD	//Saving ourselves the redundancy
 
@@ -107,7 +107,7 @@
 	)
 
 /datum/class_age_mod/veteran/cavalryman
-	// You get a lot of weapon skills, but none are legendary. Jack of all trades, master of none. 
+	// You get a lot of weapon skills, but none are legendary. Jack of all trades, master of none.
 	// This is probably worse than just having legendary in one, as people rarely swap weapons mid-combat.
 	skill_mods = list(
 		/datum/skill/combat/swords = SKILL_LEVEL_MASTER,
@@ -141,12 +141,13 @@
 		/datum/skill/combat/knives = SKILL_LEVEL_MASTER,
 		/datum/skill/combat/bows = SKILL_LEVEL_MASTER,
 		/datum/skill/misc/climbing = SKILL_LEVEL_MASTER,
-		/datum/skill/misc/stealing = SKILL_LEVEL_MASTER,
+		/datum/skill/misc/stealing = SKILL_LEVEL_MASTER, // TA EDIT
 		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT
 	)
 	stat_mods = list(
 		STATKEY_SPD = 1	// You get -2 speed from being old. You are still in the negative stat wise from picking old.
-	)
+	) */
+
 //--- THE REST ---
 
 /datum/class_age_mod/grand_duke
@@ -178,7 +179,7 @@
 	target_age = AGE_OLD
 	skill_mods = list(
 		/datum/skill/misc/sneaking = SKILL_LEVEL_LEGENDARY,
-		/datum/skill/misc/stealing = SKILL_LEVEL_LEGENDARY,
+		/datum/skill/misc/stealing = SKILL_LEVEL_LEGENDARY, // TA EDIT
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_LEGENDARY
 	)
 

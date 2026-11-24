@@ -37,6 +37,8 @@ GLOBAL_VAR_INIT(glide_size_multiplier, 1.0)
 ///Should the loop act immediately following its addition?
 #define MOVEMENT_LOOP_START_FAST (1<<0)
 */
+///Should the loop act on the next visual tick following its addition?
+#define MOVEMENT_LOOP_START_INSTANT (1<<2)
 ///Do we not use the priority system?
 #define MOVEMENT_LOOP_IGNORE_PRIORITY (1<<1)
 ///Is the loop moving the movable outside its control, like it's an external force? e.g. footsteps won't play if enabled.

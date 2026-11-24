@@ -1,10 +1,11 @@
 /datum/advclass/witch
 	name = "Witch"
-	tutorial = "You are a witch, seen as wisefolk to some and a demon to many. Ostracized and sequestered for wrongthinks or outright heresy, your potions are what the commonfolk turn to when all else fails, and for this they tolerate you — at an arm's length. Take care not to end 'pon a pyre, for the church condemns your left handed arts."
+	tutorial = "You are a witch, seen as wisefolk to some and a demon to many. Ostracized and sequestered for wrongthink or outright heresy, your potions are what the commonfolk turn to when all else fails, and for this they tolerate you — at an arm's length. Take care not to end 'pon a pyre, for the church condemns your left handed arts."
 	allowed_sexes = list(MALE, FEMALE)
-	
+
 	outfit = /datum/outfit/job/roguetown/adventurer/witch
 	category_tags = list(CTAG_PILGRIM, CTAG_TOWNER)
+	subclass_spells = list(/obj/effect/proc_holder/spell/invoked/takeapprentice)
 	traits_applied = list(TRAIT_DEATHSIGHT, TRAIT_WITCH, TRAIT_ALCHEMY_EXPERT)
 	townie_contract_gate_exempt = TRUE
 	subclass_stats = list(
@@ -13,14 +14,11 @@
 		STATKEY_LCK = 1
 	)
 	age_mod = /datum/class_age_mod/witch
-	
+
 	subclass_skills = list(
 		/datum/skill/misc/reading = SKILL_LEVEL_EXPERT,
 		/datum/skill/craft/alchemy = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/labor/farming = SKILL_LEVEL_NOVICE,
-		/datum/skill/craft/cooking = SKILL_LEVEL_NOVICE,
-		/datum/skill/craft/sewing = SKILL_LEVEL_NOVICE,
 		/datum/skill/craft/crafting = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/carpentry = SKILL_LEVEL_APPRENTICE,
 	)
@@ -34,16 +32,51 @@
 	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/priest
 	gloves = /obj/item/clothing/gloves/roguetown/leather/black
 	belt = /obj/item/storage/belt/rogue/leather/black
-	beltr = /obj/item/storage/belt/rogue/pouch/coins/poor
-	beltl = /obj/item/storage/magebag/starter
+	beltr = /obj/item/storage/belt/rogue/pouch/coins/aalloy
+	beltl = /obj/item/storage/magebag/witch
 	pants = /obj/item/clothing/under/roguetown/trou
 	shoes = /obj/item/clothing/shoes/roguetown/shortboots
 
-	var/classes = list("Old Magick", "Godsblood", "Mystagogue")
-	var/classchoice = input(H, "How do your powers manifest?", "THE OLD WAYS") as anything in classes
+	var/list/prefs = H.client?.prefs?.job_subprefs
+	var/list/witchprefs
+	if(prefs)
+		witchprefs = prefs["Towner"]
+	var/classchoice
+	var/shapeshiftchoice
+	var/skillchoice
+	if(witchprefs && witchprefs["witch_type"])
+		classchoice = witchprefs["witch_type"]
+	if(witchprefs && witchprefs["witch_form"])
+		shapeshiftchoice = witchprefs["witch_form"]
+	if(witchprefs && witchprefs["witch_skills"])
+		skillchoice = witchprefs["witch_skills"]
+	if(!classchoice)
+		var/classes = list("Old Magick", "Godsblood", "Mystagogue")
+		classchoice = input(H, "How do your powers manifest?", "THE OLD WAYS") as anything in classes
+	if(!shapeshiftchoice)
+		var/shapeshifts = list("Zad", "Cat", "Cat (Black)", "Bat", "Lesser Volf", "Cabbit", "Small Rous", "Lesser Venard")
+		shapeshiftchoice = input(H, "What form does your second skin take?", "THE OLD WAYS") as anything in shapeshifts
+	if(!skillchoice)
+		var/skillsets = list("Herbalist", "Forager")
+		skillchoice = input(H, "Which practical skills have you learned?", "THE OLD WAYS") as anything in skillsets
 
-	var/shapeshifts = list("Zad", "Cat", "Cat (Black)", "Bat", "Lesser Volf", "Cabbit", "Small Rous", "Lesser Venard")
-	var/shapeshiftchoice = input(H, "What form does your second skin take?", "THE OLD WAYS") as anything in shapeshifts
+	switch(skillchoice)
+		if("Herbalist")
+			H.adjust_skillrank_up_to(/datum/skill/craft/cooking, SKILL_LEVEL_APPRENTICE, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/labor/farming, SKILL_LEVEL_APPRENTICE, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/craft/sewing, SKILL_LEVEL_APPRENTICE, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/craft/carpentry, SKILL_LEVEL_APPRENTICE, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/labor/butchering, SKILL_LEVEL_APPRENTICE, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/labor/lumberjacking, SKILL_LEVEL_NOVICE, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/craft/tanning, SKILL_LEVEL_NOVICE, TRUE)
+		if("Forager")
+			H.adjust_skillrank_up_to(/datum/skill/labor/fishing, SKILL_LEVEL_APPRENTICE, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/labor/butchering, SKILL_LEVEL_APPRENTICE, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/misc/tracking, SKILL_LEVEL_APPRENTICE, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/misc/climbing, SKILL_LEVEL_APPRENTICE, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/misc/swimming, SKILL_LEVEL_APPRENTICE, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/craft/tanning, SKILL_LEVEL_NOVICE, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/craft/sewing, SKILL_LEVEL_NOVICE, TRUE)
 
 	switch (classchoice)
 		if("Old Magick")
@@ -52,7 +85,7 @@
 			H.adjust_skillrank_up_to(/datum/skill/combat/arcyne, SKILL_LEVEL_JOURNEYMAN, TRUE)
 			H.adjust_skillrank_up_to(/datum/skill/combat/staves, SKILL_LEVEL_JOURNEYMAN, TRUE)
 			if(H.mind)
-				H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 1, "minor" = 1, "utilities" = 5, "ward" = TRUE))
+				H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 1, "minor" = 1, "utilities" = 8, "ward" = TRUE))
 			backl = /obj/item/storage/backpack/rogue/satchel
 			backr = choose_implement(H, "lesser")
 			backpack_contents = list(
@@ -60,7 +93,8 @@
 								/obj/item/reagent_containers/glass/mortar = 1,
 								/obj/item/pestle = 1,
 								/obj/item/candle/yellow = 2,
-								/obj/item/chalk = 1
+								/obj/item/chalk = 1,
+								/obj/item/trans_table_upgrade = 1
 								)
 			if (H.age == AGE_OLD)
 				H.adjust_skillrank(/datum/skill/magic/arcane, SKILL_LEVEL_APPRENTICE, TRUE)
@@ -70,12 +104,16 @@
 			H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_APPRENTICE, TRUE)
 			D.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_WITCH, devotion_limit = CLERIC_REQ_2)
 			D.max_devotion *= 0.5
+			if (istype (H.patron, /datum/patron/inhumen/zizo))
+				if(H.mind)
+					H.mind.AddSpell(new /datum/action/cooldown/spell/minion_order)
+					H.mind.AddSpell(new /datum/action/cooldown/spell/minion_mark)
 			neck = /obj/item/clothing/neck/roguetown/psicross/wood
 			backl = /obj/item/storage/backpack/rogue/satchel
 			backpack_contents = list(
 								/obj/item/reagent_containers/glass/mortar = 1,
 								/obj/item/pestle = 1,
-								/obj/item/candle/yellow = 2,
+								/obj/item/candle/yellow = 2
 								)
 			if (H.age == AGE_OLD)
 				H.adjust_skillrank(/datum/skill/magic/holy, SKILL_LEVEL_NOVICE, TRUE)
@@ -88,7 +126,7 @@
 			ADD_TRAIT(H, TRAIT_ARCYNE, TRAIT_GENERIC)
 			H.adjust_skillrank(/datum/skill/magic/arcane, SKILL_LEVEL_NOVICE, TRUE)
 			if(H.mind)
-				H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 3))
+				H.mind.setup_mage_aspects(list("mastery" = FALSE, "major" = 0, "minor" = 1, "utilities" = 5))
 			neck = /obj/item/clothing/neck/roguetown/psicross/wood
 			backl = /obj/item/storage/backpack/rogue/satchel
 			backpack_contents = list(
@@ -96,7 +134,8 @@
 								/obj/item/reagent_containers/glass/mortar = 1,
 								/obj/item/pestle = 1,
 								/obj/item/candle/yellow = 2,
-								/obj/item/chalk = 1
+								/obj/item/chalk = 1,
+								/obj/item/trans_table_upgrade = 1
 								)
 			if (H.age == AGE_OLD)
 				H.adjust_skillrank(/datum/skill/magic/arcane, SKILL_LEVEL_NOVICE, TRUE)
@@ -129,16 +168,16 @@
 
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
-			H.cmode_music = 'sound/music/combat_heretic.ogg'
+			H.cmode_music = sound("sound/music/combat_heretic.ogg")
 			ADD_TRAIT(H, TRAIT_HERESIARCH, TRAIT_GENERIC)
 		if(/datum/patron/inhumen/matthios)
-			H.cmode_music = 'sound/music/combat_matthios.ogg'
+			H.cmode_music = sound("sound/music/combat_matthios.ogg")
 			ADD_TRAIT(H, TRAIT_HERESIARCH, TRAIT_GENERIC)
 		if(/datum/patron/inhumen/graggar)
-			H.cmode_music = 'sound/music/combat_graggar.ogg'
+			H.cmode_music = sound("sound/music/combat_graggar.ogg")
 			ADD_TRAIT(H, TRAIT_HERESIARCH, TRAIT_GENERIC)
 		if(/datum/patron/inhumen/baotha)
-			H.cmode_music = 'sound/music/combat_baotha.ogg'
+			H.cmode_music = sound("sound/music/combat_baotha.ogg")
 			ADD_TRAIT(H, TRAIT_HERESIARCH, TRAIT_GENERIC)
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_LOWER_MIDDLE_CLASS, H)
@@ -161,7 +200,7 @@
 	// Do-after before transforming
 	if(!do_after(caster, 3 SECONDS, target = caster))
 		to_chat(caster, span_warning("Transformation interrupted!"))
-		revert_cast(caster)  // Refund the cooldown
+		revert_cast(caster)	// Refund the cooldown
 		return
 
 	// Call parent to actually transform
@@ -171,14 +210,14 @@
 	// Check if restrained before allowing revert
 	if(shape.restrained(ignore_grab = FALSE))
 		to_chat(shape, span_warn("I am restrained, I can't transform back!"))
-		revert_cast(shape)  // Refund the cooldown
+		revert_cast(shape)	// Refund the cooldown
 		return
 
 	// Add do-after for witches when reverting
 	shape.visible_message(span_warning("[shape] compresses and takes another form!"), span_notice("I begin to twist back into my normal form..."))
 	if(!do_after(shape, 3 SECONDS, target = shape))
 		to_chat(shape, span_warning("Transformation revert interrupted!"))
-		revert_cast(shape)  // Refund the cooldown
+		revert_cast(shape)	// Refund the cooldown
 		return
 
 	return ..()
@@ -235,20 +274,12 @@
 /mob/living/simple_animal/hostile/retaliate/bat/witch_shifted
 	name = "bat"
 	desc = "A small fluttering creature. This one has a peculiar intelligence in its eyes..."
-	speed = 0
-	move_to_delay = 2
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
-	wander = FALSE
+	ai_controller = null // TA EDIT
 
 /mob/living/simple_animal/hostile/retaliate/bat/crow/witch_shifted
 	name = "zad"
 	desc = "A black bird with a peculiar intelligence in its eyes..."
-	speed = 0
-	move_to_delay = 2
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
-	wander = FALSE
+	ai_controller = null // TA EDIT
 
 /datum/intent/simple/claw/witch_cat
 	name = "scratch"
@@ -257,27 +288,18 @@
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf/witch_shifted
 	name = "lesser volf"
 	desc = "A smaller, runtier variant of the classic volf that hounds the woods nearby. Rarely seen around these parts, and doesn't look nearly as dangerous as its larger counterparts. This one has a peculiar intelligence in its yellow eyes..."
-	speed = 0
-	move_to_delay = 2
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
-	wander = FALSE
+	ai_controller = null // TA EDIT
 	STASPD = 15
 	STASTR = 3
 	STACON = 5
 	melee_damage_lower = 9
 	melee_damage_upper = 14
-	del_on_deaggro = null
 	defprob = 70
 
 /mob/living/simple_animal/pet/cat/witch_shifted
 	name = "aloof cat"
 	desc = "A bored-seeming feline. This one has a peculiar intelligence in its green eyes..."
-	speed = 0
-	move_to_delay = 2
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
-	wander = FALSE
+	ai_controller = null // TA EDIT
 	defprob = 90
 	STASPD = 18
 	STASTR = 1
@@ -289,11 +311,7 @@
 /mob/living/simple_animal/pet/cat/rogue/black/witch_shifted
 	name = "voidblack cat"
 	desc = "Supposedly sacred to Necra, and just as interested in rats as their lesser counterparts. This one has a strange intelligence behind its dark, wide eyes..."
-	speed = 0
-	move_to_delay = 2
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
-	wander = FALSE
+	ai_controller = null // TA EDIT
 	defprob = 90
 	STASPD = 18
 	STASTR = 1
@@ -305,28 +323,19 @@
 /mob/living/simple_animal/hostile/retaliate/rogue/fox/witch_shifted
 	name = "lesser vernard"
 	desc = "A smaller, runtier variant of the sneaky vernards that skulk the woods nearby. Rarely seen around these parts, and doesn't look nearly as dangerous as its larger counterparts. This one has a peculiar intelligence in its yellow eyes..."
-	speed = 0
-	move_to_delay = 2
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
-	wander = FALSE
+	ai_controller = null // TA EDIT
 	defprob = 90
 	STASPD = 18
 	STASTR = 2
 	STACON = 4
 	melee_damage_lower = 8
 	melee_damage_upper = 12
-	del_on_deaggro = null
 	defprob = 70
 
 /mob/living/simple_animal/hostile/retaliate/smallrat/witch_shifted
 	name = "small rous"
 	desc = "Supposedly sacred to Pestra, these small and occasionally pestilent creachurs are commonly found in pantries and ships. This one seems to be a bit more smarter than the others..."
-	speed = 0
-	move_to_delay = 2
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
-	wander = FALSE
+	ai_controller = null // TA EDIT
 	defprob = 90
 	STASPD = 18
 	STASTR = 1
@@ -338,11 +347,7 @@
 /mob/living/simple_animal/hostile/retaliate/rogue/mudcrab/cabbit/witch_shifted
 	name = "lesser cabbit"
 	desc = "Seeing one of these quick beasts is said to bring Xylix's fortune, along with their feet. It looks weak and innocent, and incredibly adorable."
-	speed = 0
-	move_to_delay = 2
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
-	wander = FALSE
+	ai_controller = null // TA EDIT
 	defprob = 90
 	STASPD = 20
 	STASTR = 1
@@ -350,3 +355,12 @@
 	base_intents = list(/datum/intent/simple/claw/witch_cat)
 	melee_damage_lower = 1
 	melee_damage_upper = 2
+
+/mob/living/simple_animal/hostile/retaliate/rogue/mudcrab/cabbit/witch_shifted/can_be_held(mob/by)
+	return TRUE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/mudcrab/cabbit/witch_shifted/set_item_sprite(obj/item/mob_item/orb)
+	..()
+	orb.mob_overlay_icon = 'icons/roguetown/mob/cabbit_item.dmi'
+	orb.worn_offsets = list("x" = 0, "y" = 25)
+	orb.alternate_worn_layer = BODY_UNDER_LAYER

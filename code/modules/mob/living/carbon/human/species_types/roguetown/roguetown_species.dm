@@ -1,30 +1,34 @@
 /datum/species
 	var/amtfail = 0
 
+/mob/living/carbon/human
+	var/char_accent = "No accent"
+
 /datum/species/proc/get_accent_list(mob/living/carbon/human/H, type)
 	var/list/accents = list(
-		"Dwarven accent" = "dwarf_replacement.json",
-		"Dwarf Gibberish accent" = "dwarf_replacement.json",
-		"Dark Elven accent" = "french_replacement.json",
-		"West Elven accent" = "russian_replacement.json",
-		"East Elven accent" = "korean_replacement.json",
-		"Old Empire Accent" = "empire_replacement.json",
-		"Grenzel accent" = "german_replacement.json",
+	//	"Dwarven accent" = "dwarf_replacement.json",
+	//	"Dwarf Gibberish accent" = "dwarf_replacement.json",
+		"Otavan accent" = "french_replacement.json",
+		"North Elven accent" = "russian_replacement.json",
+	//	"East Elven accent" = "korean_replacement.json",
+		"Old Imperial accent" = "empire_replacement.json",
+		"Grenzelhoftian accent" = "german_replacement.json",
+		"Kazengunese accent" = "kazengunese_accent.json",
 		"Zybantine (Traditional) accent" = "arabic_replacement.json",
-		"Otavian accent" = "russian_replacement.json",
-		"Hammerhold accent" = "Anglish.json",
-		"Assimari accent" = "proper_replacement.json",
-		"Sissean accent" = "brazillian_replacement.json",
-		"Tiefling accent" = "spanish_replacement.json",
-		"Half Orc accent" = "middlespeak.json",
-		"Lupian accent" = "polish_replacement.json",
-		"Gronn accent" = "mongolian_replacement.json",
-		"Urban Orc accent" = "norf_replacement.json",
+	//	"Otavian accent" = "russian_replacement.json",
+		"Hammerholdian accent" = "Anglish.json",
+	//	"Aasimari accent" = "proper_replacement.json",
+	//	"Sissean accent" = "brazillian_replacement.json",
+		"Etruscan accent" = "spanish_replacement.json",
+	//	"Half Orc accent" = "middlespeak.json",
+	//	"Lupian accent" = "polish_replacement.json",
+	//	"Gronn accent" = "mongolian_replacement.json",
+	//	"Urban Orc accent" = "norf_replacement.json",
 		"Drakian accent" = "hissy_replacement.json",
-		"Inzectoid accent" = "inzectoid_replacement.json",
+	//	"Inzectoid accent" = "inzectoid_replacement.json",
 	//	"Feline accent" = "feline_replacement.json",
-		"Slopes accent" = "welsh_replacement.json",
-		"Axian accent" = "welsh_replacement.json",
+	//	"Slopes accent" = "welsh_replacement.json",
+	//	"Axian accent" = "welsh_replacement.json",
 		"Abyssal accent" = "abyssal_accent.json"
 	)
 
@@ -44,23 +48,30 @@
 		return FALSE
 
 	var/static/list/accent_native_languages = list(
-		"Dwarven accent" = list(/datum/language/dwarvish),
-		"Dwarf Gibberish accent" = list(/datum/language/dwarvish),
-		"Dark Elven accent" = list(/datum/language/elvish),
-		"West Elven accent" = list(/datum/language/elvish),
-		"East Elven accent" = list(/datum/language/elvish),
-		"Old Empire Accent" = list(/datum/language/oldazurian),
-		"Grenzel accent" = list(/datum/language/grenzelhoftian),
-		"Zybantine (Traditional) accent" = list(/datum/language/raneshi),
-		"Otavian accent" = list(/datum/language/otavan),
-		"Assimari accent" = list(/datum/language/celestial),
-		"Tiefling accent" = list(/datum/language/hellspeak),
-		"Half Orc accent" = list(/datum/language/orcish),
-		"Lupian accent" = list(/datum/language/aavnic),
-		"Gronn accent" = list(/datum/language/gronnic),
-		"Urban Orc accent" = list(/datum/language/orcish),
-		"Inzectoid accent" = list(/datum/language/beast),
-		"Abyssal accent" = list(/datum/language/abyssal)
+	//	"Dwarven accent"					= list(/datum/language/dwarvish),
+	//	"Dwarf Gibberish accent"			= list(/datum/language/dwarvish),
+		"Otavan accent"						= list(/datum/language/otavan),
+		"North Elven accent"				= list(/datum/language/elvish),
+	//	"East Elven accent"					= list(/datum/language/elvish),
+	//	"Old Imperial accent"				= list(/datum/language/oldazurian),
+		"Grenzelhoftian accent"				= list(/datum/language/grenzelhoftian),
+		"Kazengunese accent"				= list(/datum/language/kazengunese),
+		"Zybantine (Traditional) accent"	= list(/datum/language/raneshi),
+	//	"Otavian accent"					= list(/datum/language/otavan),
+		"Hammerholdian accent"				= list(/datum/language/elvish),
+	//	"Aasimari accent"					= list(/datum/language/celestial),
+	//	"Sissean accent"					= list(/datum/language/sissean),
+		"Etruscan accent"					= list(/datum/language/etruscan),
+	//	"Half Orc accent"					= list(/datum/language/orcish),
+	//	"Lupian accent"						= list(/datum/language/aavnic),
+	//	"Gronn accent"						= list(/datum/language/gronnic),
+	//	"Urban Orc accent"					= list(/datum/language/orcish),
+		"Drakian accent"					= list(/datum/language/draconic),
+	//	"Inzectoid accent"					= list(/datum/language/beast),
+	//	"Feline accent"						= list(/datum/language/feline),
+	//	"Slopes accent"						= list(/datum/language/slopes),
+	//	"Axian accent"						= list(/datum/language/axian)
+		"Abyssal accent"					= list(/datum/language/abyssal)
 	)
 
 	var/list/native_languages = accent_native_languages[H.char_accent]
@@ -152,7 +163,7 @@
 				if(!phrase)
 					continue
 
-				var/matching_phrase = accent_list["multi"][lowertext(phrase)]
+				var/matching_phrase = accent_list["multi"][LOWER_TEXT(phrase)]
 				if(islist(matching_phrase)) //delete this and all corresponding list entries from json if perf is an issue
 					matching_phrase = pick(matching_phrase)
 
@@ -166,7 +177,7 @@
 		if(modified_token == original_word)
 			var/mainpart = split_token["mainpart"]
 			if(mainpart)
-				var/matching_token = accent_list["full"][lowertext(mainpart)] //full word match using dict, lowercase here but ignore case in regex
+				var/matching_token = accent_list["full"][LOWER_TEXT(mainpart)] //full word match using dict, lowercase here but ignore case in regex
 
 				if(islist(matching_token)) //delete this and all corresponding list entries from json if perf is an issue
 					matching_token = pick(matching_token)
@@ -183,7 +194,7 @@
 	var/final_text = jointext(modded_tokens, " ")
 	return html_encode(final_text)
 
-/proc/apply_accent_modifications(var/text, list/accent_list)
+/proc/apply_accent_modifications(text, list/accent_list)
 	//These are barely okay because they aren't yet 1000 words like fullword. Use these sparingly or preferably not at all until we can offload regex to rustg
 	//it is inarguably incorrect behaviour to break the prefix/suffix loops on the first match but for the sake of performance we break and
 	//trust the accent json is structured intelligently
@@ -225,15 +236,53 @@
 		text = replacetextEx_char(text, uppertext(syllable), uppertext(picked_syllable))
 		text = replacetextEx_char(text, syllable, picked_syllable)
 
+	if(accent_list["syllable_once"])
+		text = ta_apply_accent_syllables_once(text, accent_list["syllable_once"])
+
 	return text
+
+/proc/ta_apply_accent_syllables_once(message, list/replacements)
+	if(!istext(message) || !length_char(message) || !length(replacements))
+		return message
+
+	var/output = ""
+	var/message_length = length_char(message)
+	var/position = 1
+
+	while(position <= message_length)
+		var/match_length = 0
+		var/matched_replacement
+		for(var/sequence in replacements)
+			var/sequence_length = length_char(sequence)
+			if(sequence_length <= match_length || position + sequence_length - 1 > message_length)
+				continue
+			var/original_segment = copytext_char(message, position, position + sequence_length)
+			if(LOWER_TEXT(original_segment) != sequence)
+				continue
+			match_length = sequence_length
+			matched_replacement = replacements[sequence]
+
+		if(match_length)
+			var/original_segment = copytext_char(message, position, position + match_length)
+			if(match_length == 1 && original_segment == uppertext(original_segment) && original_segment != LOWER_TEXT(original_segment))
+				output += capitalize(matched_replacement)
+			else
+				output += match_case(original_segment, matched_replacement)
+			position += match_length
+			continue
+
+		output += copytext_char(message, position, position + 1)
+		position++
+
+	return output
 
 // TA EDIT END
 
-/proc/match_case(var/original, var/replacement)
+/proc/match_case(original, replacement)
 	if(original == uppertext(original))
 		return uppertext(replacement)
-	if(original == lowertext(original))
-		return lowertext(replacement)
+	if(original == LOWER_TEXT(original))
+		return LOWER_TEXT(replacement)
 	if(original == capitalize(original))
 		return capitalize(replacement)
 	return replacement

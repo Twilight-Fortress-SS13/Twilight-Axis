@@ -10,7 +10,7 @@
 	vice_restrictions = list(/datum/charflaw/unintelligible, /datum/charflaw/wanted)
 	forbidden_races = list(RACES_DESPISED)
 	allowed_ages = ALL_AGES_LIST
-	cmode_music = 'sound/music/cmode/towner/combat_towner3.ogg'
+	cmode_music = sound("sound/music/cmode/towner/combat_towner3.ogg")
 
 	outfit = /datum/outfit/job/roguetown/archivist
 	display_order = JDO_ARCHIVIST
@@ -18,6 +18,7 @@
 	min_pq = 2 // Please do not read smut while brewing bottle bombs. It upsets the maids when they have to scrape archivists off the ceiling.
 	max_pq = null
 	round_contrib_points = 3
+	quest_claim_barred = TRUE
 
 	job_traits = list(
 		TRAIT_ARCYNE,
@@ -35,12 +36,20 @@
 	job_subclasses = list(
 		/datum/advclass/archivist
 	)
+	has_subprefs = FALSE // only one subclass
 
 /datum/advclass/archivist
 	name = "Archivist"
 	tutorial = "The Archivist meticulously preserves and organizes ancient scrolls and tomes, safeguarding the collective knowledge of the realm for generations to come. Nobles and Peasants alike often seek your expertise on matters of history and fact, and your keenly-kept records on the events of this week will likely stand a testament to your Duke's benevolence and their realm's prosperity...or not. After all, you hold the true power: \
 	The power to dictate how the future generations will look back on these coming days."
 	outfit = /datum/outfit/job/roguetown/archivist/basic
+	subclass_spells = list(
+		/obj/effect/proc_holder/spell/invoked/teach,
+		/obj/effect/proc_holder/spell/invoked/refocusstudies,
+		/obj/effect/proc_holder/spell/invoked/takeapprentice,
+		/obj/effect/proc_holder/spell/invoked/learn,
+		/obj/effect/proc_holder/spell/invoked/silence/archivist_silence,
+	)
 	subclass_languages = list(
 		/datum/language/oldazurian,//YOU LIVE HERE
 		/datum/language/elvish,
@@ -58,6 +67,8 @@
 		/datum/language/draconic,
 		/datum/language/undercommon,
 		/datum/language/aavnic, // All but beast, which is associated with werewolves.
+		/datum/language/gyedzenese, //TA EDIT
+		/datum/language/valorian, //TA EDIT
 	)
 	category_tags = list(CTAG_ARCHIVIST)
 	subclass_stats = list(
@@ -66,7 +77,7 @@
 		STATKEY_STR = -1
 	)
 	age_mod = /datum/class_age_mod/archivist
-	subclass_mage_aspects = list("mastery" = FALSE, "major" = 1, "minor" = 1, "utilities" = 2, "ward" = TRUE)
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 1, "minor" = 1, "utilities" = 4, "ward" = TRUE)
 	subclass_skills = list(
 		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/arcyne = SKILL_LEVEL_JOURNEYMAN,
@@ -74,7 +85,6 @@
 		/datum/skill/craft/alchemy = SKILL_LEVEL_LEGENDARY,
 		/datum/skill/magic/arcane = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/misc/riding = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_NOVICE,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/swimming = SKILL_LEVEL_NOVICE,
@@ -87,7 +97,7 @@
 	H.adjust_blindness(-3)
 	if(should_wear_femme_clothes(H))
 		shirt = /obj/item/clothing/suit/roguetown/shirt/robe/archivist
-		head  = /obj/item/clothing/head/roguetown/roguehood/black
+		head	= /obj/item/clothing/head/roguetown/roguehood/black
 	else
 		shirt = /obj/item/clothing/suit/roguetown/shirt/robe/archivist
 		armor = /obj/item/clothing/suit/roguetown/armor/leather/vest/sailor/nightman
@@ -110,11 +120,5 @@
 		/obj/item/rogueweapon/spellbook
 	)
 
-	if(H.mind)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/teach)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/refocusstudies)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/takeapprentice)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/learn)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/silence/archivist_silence)
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_UPPER_CLASS, H)

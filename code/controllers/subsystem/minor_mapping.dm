@@ -7,18 +7,19 @@ SUBSYSTEM_DEF(minor_mapping)
 	//Minor mapping comes quite late in the init list so it should be safe to add here. We want this long after everything else is done
 	SSmapping.load_marks()
 	SSregionthreat.on_map_ready() //TA EDIT
+	SSquestpool.on_map_ready() // TA EDIT
 
 //	place_sunlight()
 	return ..()
 
 // /proc/find_sun_suitable_turfs()
-// 	var/list/suitable = list()
+//	var/list/suitable = list()
 
-// 	for(var/z in SSmapping.levels_by_trait(ZTRAIT_STATION))
-// 		for(var/t in block(locate(1,1,z), locate(world.maxx,world.maxy,z)))
-// 			if(isfloorturf(t))
-// 				var/area/A = get_area(t)
-// 				if(istype(A, /area/rogue/outdoors))
-// 					suitable += t
+//	for(var/z in SSmapping.levels_by_trait(ZTRAIT_STATION))
+//		for(var/t in block(locate(1,1,z), locate(world.maxx,world.maxy,z)))
+//			if(isfloorturf(t))
+//				var/area/A = get_area(t)
+//				if(istype(A, /area/rogue/outdoors))
+//					suitable += t
 
-// 	return shuffle(suitable)
+//	return shuffle(suitable)

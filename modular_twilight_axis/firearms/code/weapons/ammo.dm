@@ -1,5 +1,5 @@
 #define MIN_BULLET_RANGE		0
-#define MAX_BULLET_RANGE		20 // overriden by firearm in all cases, besides runelock
+#define MAX_BULLET_RANGE		20 // overriden by firearm in all cases
 
 #define AP_FALLOFF_BULLET		0.5
 #define DMG_FALLOFF_BULLET		0.5
@@ -14,6 +14,7 @@
 	var/critfactor = 1
 	var/gunpowder_npc_critfactor = 1
 	var/gunpowder
+	var/obj/item/twilight_powderflask/real_gunpowder
 
 	min_range = MIN_BULLET_RANGE
 	max_range = MAX_BULLET_RANGE
@@ -21,6 +22,7 @@
 
 /obj/item/ammo_casing
 	var/obj/item/quiver/twilight_bullet/runicbag/linked_bag = null
+	var/breech_loaded = FALSE
 
 /**
  * Generic ammo used by handgonnes and arquebuses
@@ -33,7 +35,7 @@
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "musketball_proj"
 	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_lead
-	range = 12		
+	range = 12
 	hitsound = 'sound/combat/hits/hi_arrow2.ogg'
 	embedchance = 100
 	woundclass = BCLASS_PIERCE
@@ -62,7 +64,7 @@
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "musketball_proj"
 	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_cannonball
-	range = 16		
+	range = 16
 	hitsound = 'sound/combat/hits/hi_arrow2.ogg'
 	embedchance = 0
 	woundclass = BCLASS_PIERCE
@@ -108,7 +110,8 @@
 	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
 	icon_state = "musketball_runed"
 	ammo_type = /obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock
-	range = 50
+	max_range = 7
+	range = 12
 	hitsound = 'sound/combat/hits/hi_bolt (2).ogg'
 	embedchance = 100
 	woundclass = BCLASS_PIERCE
@@ -128,14 +131,22 @@
 
 /atom/movable/screen/alert/status_effect/debuff/psypowder
 	name = "Runed Poison"
-	desc = "This powder is killing my eyes and body. I cant see and move..."
-	icon_state = "blind"
+	desc = "This powder is killing my eyes and body. I barely can see and move..."
+	icon = 'modular_twilight_axis/icons/mob/screen_alert.dmi'
+	icon_state = "runed_poison"
 
 /datum/status_effect/debuff/psypowder
-	id = "blind"
+	id = "runed_poison"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/psypowder
-	effectedstats = list(STATKEY_STR = -5, STATKEY_SPD = -5, STATKEY_CON = -3)
+	effectedstats = list(STATKEY_STR = -3, STATKEY_SPD = -3, STATKEY_CON = -2, STATKEY_PER = -2)
 	duration = 15 SECONDS
+
+/datum/status_effect/debuff/psypowder/on_apply()
+	. = ..()
+
+/datum/status_effect/debuff/psypowder/on_remove()
+	. = ..()
+	to_chat(owner, span_warning("My vision returns...!"))
 
 /atom/movable/screen/alert/status_effect/debuff/thunderpowder
 	name = "Struck by Thunder"
@@ -176,7 +187,7 @@
 				continue
 			if(bp && istype(bp, /obj/item/clothing))
 				armor += bp
-		if(armor)
+		if(armor.len)
 			var/obj/item/clothing/C = pick(armor)
 			if(C.obj_integrity > (C.max_integrity * 0.03))
 				C.take_damage(damage_amount = (C.max_integrity * 0.03), damage_type = BURN, damage_flag = "fire")
@@ -184,16 +195,18 @@
 /obj/projectile/bullet/fire(angle, atom/direct_target)
 	if(istype(fired_from, /obj/item/gun/ballistic/twilight_firearm))
 		var/obj/item/gun/ballistic/twilight_firearm/gun = fired_from
-		if(isliving(firer))
-			var/mob/living/L = firer
-			var/per_scaling = 1 + ((min(L.STAPER, RANGED_STAT_SOFTCAP) - 10) * RANGED_STAT_MULT) + (max(0, L.STAPER - RANGED_STAT_SOFTCAP) * RANGED_STAT_CAPPEDMULT)
-			damage *= gun.damfactor * per_scaling
-		else
-			damage *= gun.damfactor
+		damage *= gun.damfactor
 		critfactor *= gun.critfactor
 		gunpowder_npc_critfactor *= gun.npcdamfactor
 		gunpowder = gun.gunpowder
-		max_range = gun.effective_range
+		if(isliving(firer))
+			var/mob/living/F = firer
+			if(F.buckled)
+				max_range = max(ceil(gun.effective_range / 2), 2)
+			else
+				max_range = gun.effective_range
+		else
+			max_range = gun.effective_range
 	..()
 
 /obj/projectile/bullet/on_hit(atom/target, blocked = FALSE)
@@ -204,84 +217,11 @@
 			if(is_within_effective_range)
 				var/has_projectile_shield = istype(T.get_inactive_held_item(), /obj/item/rogueweapon/shield) || istype(T.get_active_held_item(), /obj/item/rogueweapon/shield)
 				var/armor_softened = blocked > 0
-				if(!has_projectile_shield && !armor_softened)
-					switch(gunpowder) //Handle gunpowder types that are BLOCKED by shields and armor
-						if("fyrepowder")
-							if(istype(src, /obj/projectile/bullet/twilight_grapeshot))
-								T.adjust_fire_stacks(2)
-							else
-								T.adjust_fire_stacks(5)
-							T.ignite_mob()
-						if("holy fyrepowder")
-							if(HAS_TRAIT(T, TRAIT_SILVER_WEAK))
-								if(!T.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder))
-									if(T.patron)
-										to_chat(T, span_danger("The trice-cursed Otavan silver! By [T.patron.name], it hurts!!"))
-									else
-										to_chat(T, span_danger("The trice-cursed Otavan silver! By all that's holy, it hurts!!"))
-								if(istype(src, /obj/projectile/bullet/twilight_grapeshot))
-									T.adjust_fire_stacks(2, /datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
-								else
-									T.adjust_fire_stacks(5, /datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
-							else
-								if(istype(src, /obj/projectile/bullet/twilight_grapeshot))
-									T.adjust_fire_stacks(2, /datum/status_effect/fire_handler/fire_stacks/divine)
-								else
-									T.adjust_fire_stacks(5, /datum/status_effect/fire_handler/fire_stacks/divine)
-							T.ignite_mob()
-						if("thunderpowder")
-							T.Immobilize(30)
-							T.apply_status_effect(/datum/status_effect/debuff/thunderpowder)
-						if("psypowder")
-							T.apply_status_effect(/datum/status_effect/debuff/psypowder)
-							T.apply_status_effect(/datum/status_effect/debuff/blindness)
-						if("corrosive gunpowder")
-							playsound(src, 'sound/misc/drink_blood.ogg', 100)
-							T.apply_status_effect(/datum/status_effect/debuff/corrosivesplash)
-							new /obj/effect/temp_visual/acidsplash(get_turf(T))
-						if("arcyne gunpowder")
-							if(ishuman(T))
-								var/mob/living/carbon/human/H = T
-								H.set_silence(5 SECONDS)
-						if("terrorpowder")
-							gunpowder_npc_critfactor += 1
-				else
-					switch(gunpowder) //Handle gunpowder types that are NOT BLOCKED by shields and armor
-						if("fyrepowder")
-							if(istype(src, /obj/projectile/bullet/twilight_grapeshot))
-								T.adjust_fire_stacks(1)
-							else
-								T.adjust_fire_stacks(3)
-							T.ignite_mob()
-						if("holy fyrepowder")
-							if(HAS_TRAIT(T, TRAIT_SILVER_WEAK))
-								if(!T.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder))
-									if(T.patron)
-										to_chat(T, span_danger("The trice-cursed Otavan silver! By [T.patron.name], it hurts!!"))
-									else
-										to_chat(T, span_danger("The trice-cursed Otavan silver! By all that's holy, it hurts!!"))
-								if(istype(src, /obj/projectile/bullet/twilight_grapeshot))
-									T.adjust_fire_stacks(1, /datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
-								else
-									T.adjust_fire_stacks(3, /datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
-							else
-								if(istype(src, /obj/projectile/bullet/twilight_grapeshot))
-									T.adjust_fire_stacks(1, /datum/status_effect/fire_handler/fire_stacks/divine)
-								else
-									T.adjust_fire_stacks(3, /datum/status_effect/fire_handler/fire_stacks/divine)
-							T.ignite_mob()
-						if("corrosive gunpowder")
-							playsound(src, 'sound/misc/drink_blood.ogg', 100)
-							T.apply_status_effect(/datum/status_effect/debuff/corrosivesplash)
-							new /obj/effect/temp_visual/acidsplash(get_turf(T))
-						if("thunderpowder")
-							T.Immobilize(10)
-							T.apply_status_effect(/datum/status_effect/debuff/thunderpowder)
-						if("psypowder")
-							T.apply_status_effect(/datum/status_effect/debuff/psypowder)
-							T.apply_status_effect(/datum/status_effect/debuff/blindness/psy)
-						if("terrorpowder")
-							gunpowder_npc_critfactor += 1
+				var/is_blocked = has_projectile_shield && armor_softened
+				real_gunpowder.on_mob_hit(T,src,is_blocked)
+				if(gunpowder == "terrorpowder")
+					gunpowder_npc_critfactor += 1
+
 				if(!T.mind)
 					damage *= gunpowder_npc_critfactor
 			else
@@ -295,9 +235,9 @@
 			var/mob/living/T = target
 			if(skill >= 1 && M.mind) //Exp gain from firing a gun
 				if(isanimal(T) && (T.stat != DEAD || (T.stat == DEAD && T.timeofdeath == world.time)))
-					M.mind.add_sleep_experience(/datum/skill/combat/twilight_firearms, M.STAINT * 2)
+					M.mind.add_sleep_experience(/datum/skill/combat/twilight_firearms, M.STAINT / 3)
 				else if(ishuman(T) && (T.stat != DEAD || (T.stat == DEAD && T.timeofdeath == world.time)))
-					M.mind.add_sleep_experience(/datum/skill/combat/twilight_firearms, M.STAINT * 4)
+					M.mind.add_sleep_experience(/datum/skill/combat/twilight_firearms, M.STAINT / 2)
 			if(silver && HAS_TRAIT(T, TRAIT_SILVER_WEAK))
 				if(blessed)
 					if(!T.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder))
@@ -369,37 +309,10 @@
 	if(!L)
 		return
 
-	switch(gunpowder)
-		if("fyrepowder")
-			L.adjust_fire_stacks(2)
-			L.ignite_mob()
+	if(gunpowder == "arcyne gunpowder")
+		real_gunpowder.on_mob_hit(L,src,FALSE)
 
-		if("holy fyrepowder")
-			if(HAS_TRAIT(L, TRAIT_SILVER_WEAK))
-				if(!L.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder))
-					if(L.patron)
-						to_chat(L, span_danger("The trice-cursed Otavan silver! By [L.patron.name], it hurts!!"))
-					else
-						to_chat(L, span_danger("The trice-cursed Otavan silver! By all that's holy, it hurts!!"))
-				L.adjust_fire_stacks(2, /datum/status_effect/fire_handler/fire_stacks/sunder/blessed)
-			else
-				L.adjust_fire_stacks(2, /datum/status_effect/fire_handler/fire_stacks/divine)
-			L.ignite_mob()
-
-		if("corrosive gunpowder")
-			L.apply_status_effect(/datum/status_effect/debuff/corrosivesplash)
-			new /obj/effect/temp_visual/acidsplash(get_turf(L))
-
-		if("thunderpowder")
-			L.Immobilize(10)
-			L.apply_status_effect(/datum/status_effect/debuff/thunderpowder)
-		if("psypowder")
-			L.apply_status_effect(/datum/status_effect/debuff/psypowder)
-			L.apply_status_effect(/datum/status_effect/debuff/blindness)
-		if("arcyne gunpowder")
-			if(ishuman(L))
-				var/mob/living/carbon/human/H = L
-				H.set_silence(5 SECONDS)
+	real_gunpowder.on_mob_hit(L,src,TRUE)
 
 /obj/projectile/bullet/twilight_cannonball/on_hit(atom/target, blocked = FALSE)
 	. = ..(target, blocked)
@@ -482,7 +395,7 @@
 	icon_state = "musketball_silver"
 
 /obj/item/ammo_casing/caseless/rogue/twilight_lead/runelock/blessed
-	name = "blessed sphere"
+	name = "blessed runed sphere"
 	desc = "Небольшой, идеально круглый шар, изготовленный из чистого серебра. Такие боеприпасы создаются лучшими из отаванских кузнецов и освящяются лично Великим Магистром. Смертоностны против нежити, но весьма эффективны и против других еретиков."
 	projectile_type = /obj/projectile/bullet/twilight_lead/twilight_runelock/blessed
 	icon_state = "musketball_blessed"
@@ -503,7 +416,7 @@
 	ammo_weight = 1
 
 /obj/item/ammo_casing/caseless/rogue/twilight_cannonball/grapeshot
-	name = "grapeshot"
+	name = "lead grapeshot"
 	desc = "Плотно упакованный в бумагу набор небольших металлических шариков. Хорошо сочетается с порохом."
 	projectile_type = /obj/projectile/bullet/twilight_grapeshot
 	caliber = "cannonball"
@@ -513,3 +426,11 @@
 	max_integrity = 0.1
 	pellets = 6
 	variance = 30
+
+/obj/item/ammo_casing/caseless/rogue/twilight_lead/paper
+	name = "paper cartridge"
+	desc = "Фундаментально, бумажный патрон мало чем отличается от обычного сочетания пороха и пули - но использовать его значительно удобнее."
+	projectile_type = /obj/projectile/bullet/twilight_lead
+	icon = 'modular_twilight_axis/firearms/icons/ammo.dmi'
+	icon_state = "paper_bullet"
+	breech_loaded = TRUE

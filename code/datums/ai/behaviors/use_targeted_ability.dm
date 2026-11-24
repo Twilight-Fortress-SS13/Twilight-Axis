@@ -1,3 +1,5 @@
+#define MOB_ABILITY_RETRY_DELAY (4 SECONDS)
+
 /**
  * # Targeted Mob Ability
  * Attempts to use a mob's cooldown ability on a target
@@ -7,18 +9,23 @@
 
 /datum/ai_behavior/targeted_mob_ability/perform(seconds_per_tick, datum/ai_controller/controller, ability_key, target_key)
 	//var/obj/effect/proc_holder/spell/ability = controller.blackboard[ability_key]
-	var/datum/action/cooldown/mob_cooldown/ability = controller.blackboard[ability_key]
+	var/datum/action/cooldown/ability = controller.blackboard[ability_key]
 	var/mob/living/target = controller.blackboard[target_key]
 	if(QDELETED(ability) || QDELETED(target))
-		finish_action(controller, FALSE, ability_key, target_key)
-		return
+		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
 	var/mob/pawn = controller.pawn
 	pawn.face_atom(target)
-	var/result = ability.Trigger(target = target)
+	ability.set_ai_aim_lock(get_turf(target))
+	var/result = ability.Trigger(target = ability.npc_cast_target(target))
+	if(result)
+		var/commit = ability.ai_commit_time()
+		if(commit > 0)
+			controller.set_blackboard_key(BB_ABILITY_COMMITTED_UNTIL, world.time + commit)
+		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_SUCCEEDED
 
-
+	ability.npc_retry_at = world.time + MOB_ABILITY_RETRY_DELAY
 	//var/result = ability.perform(list(target), TRUE, pawn)
-	finish_action(controller, result, ability_key, target_key)
+	return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
 /datum/ai_behavior/targeted_mob_ability/finish_action(datum/ai_controller/controller, succeeded, ability_key, target_key)
 	. = ..()
 	var/atom/target = controller.blackboard[target_key]
@@ -47,3 +54,5 @@
 	if(QDELETED(target))
 		return FALSE
 	set_movement_target(controller, target, new_movement)
+
+#undef MOB_ABILITY_RETRY_DELAY

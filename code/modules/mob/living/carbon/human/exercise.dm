@@ -4,7 +4,7 @@ Exercise Verbs
 
 /mob/living/carbon/human/verb/pushup()
 	set name = "Отжиматься"
-	set desc = "Makes you do a pushup."
+	set desc = "Makes you do a push-up."
 	set category = "Emotes"
 
 	do_pushups()
@@ -27,7 +27,7 @@ Exercise Verbs
 /mob/living/carbon/human/proc/stop_pushups()
 	setDir(null)
 
-/mob/living/carbon/human/proc/execute_pushups(var/on_knees = FALSE)
+/mob/living/carbon/human/proc/execute_pushups(on_knees = FALSE)
 	if(!can_do_pushup())
 		return
 	var/target_y = -5
@@ -76,11 +76,11 @@ Exercise Verbs
 		return FALSE
 
 	if(!resting)
-		to_chat(src, span_warning("You need to lie on the floor to do a pushup."))
+		to_chat(src, span_warning("You need to lie on the floor to do a push-up."))
 		return FALSE
 
 	if(buckling)
-		to_chat(src, span_warning("You need to lie on the floor to do a pushup."))
+		to_chat(src, span_warning("You need to lie on the floor to do a push-up."))
 		return FALSE
 
 	var/list/missing_limbs = get_missing_limbs()
@@ -94,7 +94,7 @@ Exercise Verbs
 
 	return TRUE
 
-/mob/living/carbon/human/proc/calculate_stamina_loss_per_pushup(var/on_knees = FALSE)
+/mob/living/carbon/human/proc/calculate_stamina_loss_per_pushup(on_knees = FALSE)
 	var/stamina_loss = 8 - get_skill_level(/datum/skill/misc/athletics)
 
 	if(istype(head, /obj/item/clothing))

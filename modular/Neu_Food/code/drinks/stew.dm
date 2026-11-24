@@ -1,4 +1,4 @@
-/*	........   Reagents   ................ */// These are for the pot, if more vegetables are added and need to be integrated into the pot brewing you need to add them here
+/*	........	Reagents	................ */// These are for the pot, if more vegetables are added and need to be integrated into the pot brewing you need to add them here
 /datum/reagent/consumable/soup // so you get hydrated without the flavor system messing it up. Works like water with less hydration
 	var/hydration = 6
 /datum/reagent/consumable/soup/on_mob_life(mob/living/carbon/M)
@@ -44,6 +44,7 @@
 	metabolization_rate = 0.8
 	alpha = 222
 	quality = DRINK_GOOD
+	cuisine = CUISINE_RANESHENI
 
 /datum/reagent/consumable/soup/porridge/thickpudding
 	name = "thick berried porridge-pudding"
@@ -54,6 +55,7 @@
 	metabolization_rate = 0.6
 	alpha = 222
 	quality = DRINK_VERYGOOD
+	cuisine = CUISINE_RANESHENI
 
 /datum/reagent/consumable/soup/porridge/frostedpudding
 	name = "frosted porridge-pudding"
@@ -64,6 +66,7 @@
 	metabolization_rate = 0.8
 	alpha = 222
 	quality = DRINK_GOOD
+	cuisine = CUISINE_NORTHERN
 
 /datum/reagent/consumable/soup/porridge/thickfrostedpudding
 	name = "thick frosted porridge-pudding"
@@ -74,6 +77,7 @@
 	metabolization_rate = 0.6
 	alpha = 222
 	quality = DRINK_VERYGOOD
+	cuisine = CUISINE_NORTHERN
 
 /datum/reagent/consumable/soup/porridge/poisonfrostedpudding //Evil variant for poisoned jackberry treats.
 	name = "frosted porridge-pudding"
@@ -84,6 +88,7 @@
 	metabolization_rate = 0.8
 	alpha = 222
 	quality = DRINK_GOOD
+	cuisine = CUISINE_NORTHERN
 
 /datum/reagent/consumable/soup/porridge/thickpoisonfrostedpudding //Ditto.
 	name = "thick frosted porridge-pudding"
@@ -94,6 +99,7 @@
 	metabolization_rate = 0.6
 	alpha = 222
 	quality = DRINK_VERYGOOD
+	cuisine = CUISINE_NORTHERN
 
 /datum/reagent/consumable/soup/porridge/fudgepudding
 	name = "chocolate porridge-pudding"
@@ -104,6 +110,7 @@
 	metabolization_rate = 0.8
 	alpha = 222
 	quality = DRINK_GOOD
+	cuisine = CUISINE_NORTHERN
 
 /datum/reagent/consumable/soup/porridge/thickfudgepudding
 	name = "thick chocolate porridge-pudding"
@@ -114,6 +121,7 @@
 	metabolization_rate = 0.6
 	alpha = 222
 	quality = DRINK_VERYGOOD
+	cuisine = CUISINE_NORTHERN
 
 /datum/reagent/consumable/soup/porridge/congee
 	name = "congee"
@@ -148,6 +156,7 @@
 	nutriment_factor = 20
 	metabolization_rate = 0.8
 	quality = DRINK_NICE
+	cuisine = CUISINE_NORTHERN
 	alpha = 200
 
 /datum/reagent/consumable/soup/veggie/onion
@@ -170,6 +179,7 @@
 	nutriment_factor = 20
 	metabolization_rate = 0.8
 	quality = DRINK_NICE
+	cuisine = CUISINE_NORTHERN
 	alpha = 200
 
 /datum/reagent/consumable/soup/veggie/cabbage
@@ -192,6 +202,7 @@
 	nutriment_factor = 15
 	metabolization_rate = 0.8
 	quality = DRINK_NICE
+	cuisine = CUISINE_NORTHERN
 	alpha = 200
 
 /datum/reagent/consumable/soup/veggie/turnip
@@ -215,51 +226,6 @@
 	nutriment_factor = 40
 	metabolization_rate = 4
 	alpha = 222
-
-/datum/reagent/consumable/soup/lemon
-	name = "juice of lemon"
-	color = "#FFE88F"
-	taste_description = "puckeringly bright lemoniness"
-	hydration = 8
-	nutriment_factor = 8
-	metabolization_rate = 1.2
-	quality = DRINK_NICE
-
-/datum/reagent/consumable/soup/lime
-	name = "juice of lime"
-	color = "#BAE88F"
-	taste_description = "puckeringly bright limeyness"
-	hydration = 8
-	nutriment_factor = 8
-	metabolization_rate = 1.2
-	quality = DRINK_NICE
-
-/datum/reagent/consumable/soup/pear
-	name = "juice of pear"
-	color = "#BAAE8F"
-	taste_description = "pleasantly crisp peariness"
-	hydration = 8
-	nutriment_factor = 8
-	metabolization_rate = 1.2
-	quality = DRINK_NICE
-
-/datum/reagent/consumable/soup/apple
-	name = "juice of apple"
-	color = "#E0BE6D"
-	taste_description = "pleasantly crisp appleness"
-	hydration = 8
-	nutriment_factor = 8
-	metabolization_rate = 1.2
-	quality = DRINK_NICE
-
-/datum/reagent/consumable/soup/tangerine_marmalade
-	name = "juice of tangerine"
-	color = "#f0935d"
-	taste_description = "extremely sweet tangerines"
-	hydration = 8
-	nutriment_factor = 8
-	metabolization_rate = 1.2
-	quality = DRINK_NICE
 
 /datum/reagent/consumable/soup/bone_broth
 	name = "bone broth"
@@ -323,6 +289,7 @@
 	nutriment_factor = 35
 	metabolization_rate = 1.2 //A little quicker, for breakfast!
 	quality = DRINK_GOOD
+	cuisine = CUISINE_RANESHENI
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/lavishfryegg
@@ -332,6 +299,7 @@
 	nutriment_factor = 40
 	metabolization_rate = 1.2 //A little quicker, for breakfast!
 	quality = DRINK_VERYGOOD
+	cuisine = CUISINE_RANESHENI
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/cheese
@@ -342,12 +310,13 @@
 
 /datum/reagent/consumable/soup/stew/thickcheese
 	name = "fondue"
-	description = "A ridiculously thick cheese soup. Creamy, comforting, and decadant."
+	description = "A ridiculously thick cheese soup. Creamy, comforting, and decadent."
 	color = "#c4be70"
 	taste_description = "velvety cheese"
 	nutriment_factor = 30 //You're throwing an entire wheel of cheese into this thing. It'd be criminal if you didn't get something in return!
 	metabolization_rate = 0.6
 	quality = DRINK_GOOD
+	cuisine = CUISINE_OTAVAIS
 	alpha = 222
 
 /datum/reagent/consumable/soup/stew/parmesan
@@ -359,12 +328,13 @@
 
 /datum/reagent/consumable/soup/stew/thickparmesan
 	name = "aged fondue"
-	description = "A ridiculously thick aged cheese soup. Creamy, comforting, and decadant."
+	description = "A ridiculously thick aged cheese soup. Creamy, comforting, and decadent."
 	color = "#A8AA70"
 	taste_description = "velvety aged cheese"
 	metabolization_rate = 0.6
 	nutriment_factor = 40
 	quality = DRINK_VERYGOOD
+	cuisine = CUISINE_OTAVAIS
 	alpha = 222
 
 /datum/reagent/consumable/soup/stew/chicken
@@ -383,6 +353,7 @@
 	color = "#A0781C"
 	taste_description = "savory chicken with flakes of crispy skin"
 	metabolization_rate = 0.8
+	cuisine = CUISINE_ETRUSCAN
 	quality = DRINK_NICE
 
 /datum/reagent/consumable/soup/stew/bakedthickchicken
@@ -392,6 +363,7 @@
 	nutriment_factor = 30
 	metabolization_rate = 0.8
 	quality = DRINK_GOOD
+	cuisine = CUISINE_ETRUSCAN
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/veggiethickchicken
@@ -401,6 +373,7 @@
 	nutriment_factor = 30
 	metabolization_rate = 0.8
 	quality = DRINK_GOOD
+	cuisine = CUISINE_ETRUSCAN
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/pepperchicken
@@ -410,6 +383,7 @@
 	nutriment_factor = 35
 	metabolization_rate = 0.8
 	quality = DRINK_VERYGOOD
+	cuisine = CUISINE_RANESHENI
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/lavishchicken
@@ -419,6 +393,7 @@
 	nutriment_factor = 40
 	metabolization_rate = 0.6
 	quality = DRINK_VERYGOOD
+	cuisine = CUISINE_ETRUSCAN
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/meat
@@ -432,6 +407,7 @@
 	taste_description = "slow-roasted meat"
 	metabolization_rate = 0.8
 	quality = DRINK_NICE
+	cuisine = CUISINE_NORTHERN
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/veggiefrymeat
@@ -441,6 +417,7 @@
 	nutriment_factor = 30
 	metabolization_rate = 0.8
 	quality = DRINK_GOOD
+	cuisine = CUISINE_NORTHERN
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/pepperfrymeat
@@ -450,6 +427,7 @@
 	nutriment_factor = 35
 	metabolization_rate = 0.8
 	quality = DRINK_VERYGOOD
+	cuisine = CUISINE_RANESHENI
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/lavishfrymeat
@@ -459,6 +437,7 @@
 	nutriment_factor = 40
 	metabolization_rate = 0.6
 	quality = DRINK_VERYGOOD
+	cuisine = CUISINE_NORTHERN
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/pork
@@ -479,6 +458,7 @@
 	nutriment_factor = 30
 	metabolization_rate = 0.8
 	quality = DRINK_NICE
+	cuisine = CUISINE_NORTHERN
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/thickfrypork
@@ -488,6 +468,7 @@
 	nutriment_factor = 35
 	metabolization_rate = 0.8
 	quality = DRINK_GOOD
+	cuisine = CUISINE_NORTHERN
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/viscera_broth
@@ -513,6 +494,7 @@
 	taste_description = "flaky fish in a gently creamy broth"
 	nutriment_factor = 25
 	quality = DRINK_NICE
+	cuisine = CUISINE_ETRUSCAN
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/veggiefryfish
@@ -521,6 +503,7 @@
 	taste_description = "flaky fish and slow-roasted vegetables in a gently creamy broth"
 	nutriment_factor = 30
 	quality = DRINK_GOOD
+	cuisine = CUISINE_ETRUSCAN
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/pepperfryfish
@@ -529,6 +512,7 @@
 	taste_description = "flaky fish in a sharp, creamy broth with tongue-tingling spices"
 	nutriment_factor = 35
 	quality = DRINK_VERYGOOD
+	cuisine = CUISINE_RANESHENI
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/lavishfryfish
@@ -538,6 +522,7 @@
 	nutriment_factor = 40
 	metabolization_rate = 0.8
 	quality = DRINK_VERYGOOD
+	cuisine = CUISINE_ETRUSCAN
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/evilfryfish
@@ -558,6 +543,7 @@
 	taste_description = "slow-roasted cabbit with a surprisingly pleasant aftertaste"
 	metabolization_rate = 0.8
 	quality = DRINK_NICE
+	cuisine = CUISINE_RANESHENI
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/veggiefryrabbit
@@ -567,6 +553,7 @@
 	metabolization_rate = 0.8
 	nutriment_factor = 30
 	quality = DRINK_GOOD
+	cuisine = CUISINE_RANESHENI
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/volf
@@ -580,6 +567,7 @@
 	taste_description = "slow-roasted and gamey meat"
 	metabolization_rate = 0.8
 	quality = DRINK_NICE
+	cuisine = CUISINE_RANESHENI
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/veggiefryvolf
@@ -589,6 +577,7 @@
 	nutriment_factor = 30
 	metabolization_rate = 0.8
 	quality = DRINK_GOOD
+	cuisine = CUISINE_RANESHENI
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/kingvolf
@@ -598,11 +587,12 @@
 	nutriment_factor = 35
 	metabolization_rate = 0.8
 	quality = DRINK_VERYGOOD
+	cuisine = CUISINE_NORTHERN
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/bisque
 	name = "bisque"
-	color = "#FFA74F" // Bisque like color I know bisque's more complicated than that 
+	color = "#FFA74F" // Bisque like color I know bisque's more complicated than that
 	taste_description = "shellfish"
 
 /datum/reagent/consumable/soup/stew/frybisque
@@ -612,6 +602,7 @@
 	nutriment_factor = 30
 	metabolization_rate = 0.8
 	quality = DRINK_GOOD
+	cuisine = CUISINE_SOUTH_IMPERIAL|CUISINE_OTAVAIS
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/lavishfrybisque
@@ -621,12 +612,13 @@
 	nutriment_factor = 35
 	metabolization_rate = 0.6
 	quality = DRINK_VERYGOOD
+	cuisine = CUISINE_SOUTH_IMPERIAL|CUISINE_OTAVAIS
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/seafoodbroil
 	name = "seabroil chowder"
 	color = "#FFA74F"
-	taste_description = "creamy shellfish with the occassional crunch"
+	taste_description = "creamy shellfish with the occasional crunch"
 	nutriment_factor = 25
 	alpha = 200
 
@@ -637,6 +629,7 @@
 	nutriment_factor = 30
 	metabolization_rate = 0.8
 	quality = DRINK_GOOD
+	cuisine = CUISINE_SOUTH_IMPERIAL|CUISINE_OTAVAIS
 	alpha = 222
 
 /datum/reagent/consumable/soup/stew/lavishfryseafoodbroil
@@ -646,6 +639,7 @@
 	nutriment_factor = 35
 	metabolization_rate = 0.6
 	quality = DRINK_VERYGOOD
+	cuisine = CUISINE_SOUTH_IMPERIAL|CUISINE_OTAVAIS
 	alpha = 222
 
 /datum/reagent/consumable/soup/stew/meatrice
@@ -655,6 +649,7 @@
 	nutriment_factor = 30
 	metabolization_rate = 0.8
 	quality = DRINK_GOOD
+	cuisine = CUISINE_SOUTHEASTERN
 	alpha = 250
 
 /datum/reagent/consumable/soup/stew/eggrice
@@ -664,6 +659,7 @@
 	nutriment_factor = 30
 	metabolization_rate = 0.8
 	quality = DRINK_GOOD
+	cuisine = CUISINE_SOUTHEASTERN
 	alpha = 250
 
 /datum/reagent/consumable/soup/stew/shrimprice
@@ -673,6 +669,7 @@
 	nutriment_factor = 30
 	metabolization_rate = 0.8
 	quality = DRINK_GOOD
+	cuisine = CUISINE_SOUTHEASTERN
 	alpha = 250
 
 /datum/reagent/consumable/soup/stew/cheeserice
@@ -682,15 +679,17 @@
 	nutriment_factor = 25
 	metabolization_rate = 0.6
 	quality = DRINK_NICE
+	cuisine = CUISINE_SOUTHEASTERN
 	alpha = 250
 
 /datum/reagent/consumable/soup/stew/lavishfryrice
-	name = "luxury congee"
+	name = "luxurious congee"
 	color = "#E0AF97"
 	taste_description = "sumptuous, pillowy rice with slow-braised meats with hints of butteriness and cheese"
 	nutriment_factor = 35
 	metabolization_rate = 0.6
 	quality = DRINK_VERYGOOD
+	cuisine = CUISINE_SOUTHEASTERN
 	alpha = 250
 
 /datum/reagent/consumable/soup/stew/yucky
@@ -704,6 +703,7 @@
 	taste_description = "a pleasantly implacable meat, somewhere between volf and chicken"
 	nutriment_factor = 30
 	quality = DRINK_NICE
+	cuisine = CUISINE_NORTHERN
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/berry
@@ -744,6 +744,7 @@
 	nutriment_factor = 25
 	metabolization_rate = 0.8
 	quality = DRINK_NICE
+	cuisine = CUISINE_ETRUSCAN|CUISINE_RANESHENI
 
 /datum/reagent/consumable/soup/stew/lavishaubergine_soup
 	name = "lavish aubergine stew"
@@ -752,6 +753,7 @@
 	nutriment_factor = 35
 	metabolization_rate = 0.6
 	quality = DRINK_GOOD
+	cuisine = CUISINE_ETRUSCAN|CUISINE_RANESHENI
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/carrot_stew
@@ -764,6 +766,7 @@
 	color = "#f26818"
 	taste_description = "savory and caramelized carrots"
 	quality = DRINK_NICE
+	cuisine = CUISINE_NORTHERN
 	alpha = 200
 
 /datum/reagent/consumable/soup/stew/nutty_stew
@@ -796,6 +799,7 @@
 	metabolization_rate = 0.8
 	nutriment_factor = 20
 	quality = DRINK_NICE
+	cuisine = CUISINE_NORTHERN
 
 /datum/reagent/consumable/soup/stew/survival_broth
 	name = "briquebroth"
@@ -907,11 +911,11 @@
 	if(wCount.len > 0)
 		M.heal_wounds(1)
 	if(volume > 0.99)
-		M.adjustBruteLoss(-0.1  * REAGENTS_EFFECT_MULTIPLIER, 0)
-		M.adjustFireLoss(-0.1  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustBruteLoss(-0.1	* REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustFireLoss(-0.1	* REAGENTS_EFFECT_MULTIPLIER, 0)
 		M.adjustOxyLoss(-0.1, 0)
-		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -0.1  * REAGENTS_EFFECT_MULTIPLIER)
-		M.adjustCloneLoss(-0.1  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -0.1	* REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustCloneLoss(-0.1	* REAGENTS_EFFECT_MULTIPLIER, 0)
 	..()
 
 /datum/reagent/consumable/soup/stew/bakedchicken/on_mob_life(mob/living/carbon/M)
@@ -923,11 +927,11 @@
 	if(wCount.len > 0)
 		M.heal_wounds(1)
 	if(volume > 0.99)
-		M.adjustBruteLoss(-0.15  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustBruteLoss(-0.15	* REAGENTS_EFFECT_MULTIPLIER, 0)
 		M.adjustFireLoss(-0.15 * REAGENTS_EFFECT_MULTIPLIER, 0)
 		M.adjustOxyLoss(-0.15, 0)
-		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -0.15  * REAGENTS_EFFECT_MULTIPLIER)
-		M.adjustCloneLoss(-0.15  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -0.15	* REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustCloneLoss(-0.15	* REAGENTS_EFFECT_MULTIPLIER, 0)
 	..()
 
 /datum/reagent/consumable/soup/stew/thickchicken/on_mob_life(mob/living/carbon/M)
@@ -939,11 +943,11 @@
 	if(wCount.len > 0)
 		M.heal_wounds(1)
 	if(volume > 0.99)
-		M.adjustBruteLoss(-0.15  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustBruteLoss(-0.15	* REAGENTS_EFFECT_MULTIPLIER, 0)
 		M.adjustFireLoss(-0.15 * REAGENTS_EFFECT_MULTIPLIER, 0)
 		M.adjustOxyLoss(-0.15, 0)
-		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -0.15  * REAGENTS_EFFECT_MULTIPLIER)
-		M.adjustCloneLoss(-0.15  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -0.15	* REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustCloneLoss(-0.15	* REAGENTS_EFFECT_MULTIPLIER, 0)
 	..()
 
 /datum/reagent/consumable/soup/stew/bakedthickchicken/on_mob_life(mob/living/carbon/M)
@@ -955,11 +959,11 @@
 	if(wCount.len > 0)
 		M.heal_wounds(1)
 	if(volume > 0.99)
-		M.adjustBruteLoss(-0.2  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustBruteLoss(-0.2	* REAGENTS_EFFECT_MULTIPLIER, 0)
 		M.adjustFireLoss(-0.2 * REAGENTS_EFFECT_MULTIPLIER, 0)
 		M.adjustOxyLoss(-0.15, 0)
-		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -0.2  * REAGENTS_EFFECT_MULTIPLIER)
-		M.adjustCloneLoss(-0.2  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -0.2	* REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustCloneLoss(-0.2	* REAGENTS_EFFECT_MULTIPLIER, 0)
 	..()
 
 /datum/reagent/consumable/soup/stew/veggiethickchicken/on_mob_life(mob/living/carbon/M)
@@ -971,11 +975,11 @@
 	if(wCount.len > 0)
 		M.heal_wounds(1)
 	if(volume > 0.99)
-		M.adjustBruteLoss(-0.2  * REAGENTS_EFFECT_MULTIPLIER, 0)
-		M.adjustFireLoss(-0.2  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustBruteLoss(-0.2	* REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustFireLoss(-0.2	* REAGENTS_EFFECT_MULTIPLIER, 0)
 		M.adjustOxyLoss(-0.15, 0)
-		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -0.2  * REAGENTS_EFFECT_MULTIPLIER)
-		M.adjustCloneLoss(-0.2  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -0.2	* REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustCloneLoss(-0.2	* REAGENTS_EFFECT_MULTIPLIER, 0)
 	..()
 
 /datum/reagent/consumable/soup/stew/pepperchicken/on_mob_life(mob/living/carbon/M)
@@ -987,11 +991,11 @@
 	if(wCount.len > 0)
 		M.heal_wounds(1)
 	if(volume > 0.99)
-		M.adjustBruteLoss(-0.25  * REAGENTS_EFFECT_MULTIPLIER, 0)
-		M.adjustFireLoss(-0.25  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustBruteLoss(-0.25	* REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustFireLoss(-0.25	* REAGENTS_EFFECT_MULTIPLIER, 0)
 		M.adjustOxyLoss(-0.15, 0)
-		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -0.25  * REAGENTS_EFFECT_MULTIPLIER)
-		M.adjustCloneLoss(-0.25  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -0.25	* REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustCloneLoss(-0.25	* REAGENTS_EFFECT_MULTIPLIER, 0)
 	..()
 
 /datum/reagent/consumable/soup/stew/lavishchicken/on_mob_life(mob/living/carbon/M)
@@ -1003,9 +1007,9 @@
 	if(wCount.len > 0)
 		M.heal_wounds(2)
 	if(volume > 0.99)
-		M.adjustBruteLoss(-0.3  * REAGENTS_EFFECT_MULTIPLIER, 0)
-		M.adjustFireLoss(-0.3  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustBruteLoss(-0.3	* REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustFireLoss(-0.3	* REAGENTS_EFFECT_MULTIPLIER, 0)
 		M.adjustOxyLoss(-0.15, 0)
-		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -0.3  * REAGENTS_EFFECT_MULTIPLIER)
-		M.adjustCloneLoss(-0.3  * REAGENTS_EFFECT_MULTIPLIER, 0)
+		M.adjustOrganLoss(ORGAN_SLOT_BRAIN, -0.3	* REAGENTS_EFFECT_MULTIPLIER)
+		M.adjustCloneLoss(-0.3	* REAGENTS_EFFECT_MULTIPLIER, 0)
 	..()

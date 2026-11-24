@@ -2,7 +2,7 @@
 	var/list/played_loops = list() //uses dlink to link to the sound
 
 
-/proc/playsound(atom/source, soundin, vol as num, vary, extrarange as num, falloff, frequency = null, channel, pressure_affected = FALSE, ignore_walls = TRUE, soundping = FALSE, repeat, animal_pref = FALSE, quiet = FALSE, pref_toggle)
+/proc/playsound(atom/source, soundin, vol as num, vary, extrarange as num, falloff, frequency = null, channel, pressure_affected = FALSE, ignore_walls = TRUE, soundping = FALSE, repeat, animal_pref = FALSE, quiet = FALSE, pref_toggle, list/blocked_z_levels)
 	if(isarea(source))
 		CRASH("playsound(): source is an area")
 
@@ -49,22 +49,22 @@
 		listeners = get_hearers_in_view(maxdistance, turf_source, RECURSIVE_CONTENTS_CLIENT_MOBS)
 	else
 		listeners = get_hearers_in_range(maxdistance, turf_source, RECURSIVE_CONTENTS_CLIENT_MOBS)
-		if(above_turf)
+		if(above_turf && (!blocked_z_levels || !(above_turf.z in blocked_z_levels)))
 			var/list/above_hearers = get_hearers_in_range(maxdistance, above_turf, RECURSIVE_CONTENTS_CLIENT_MOBS)
 			listeners += above_hearers
 			muffled_listeners += above_hearers
-		if(below_turf)
+		if(below_turf && (!blocked_z_levels || !(below_turf.z in blocked_z_levels)))
 			var/list/below_hearers = get_hearers_in_range(maxdistance, below_turf, RECURSIVE_CONTENTS_CLIENT_MOBS)
 			listeners += below_hearers
 			muffled_listeners += below_hearers
 
 	listeners += SSmobs.dead_players_by_zlevel[source_z]
 	if(ignore_walls)
-		if(above_turf)
+		if(above_turf && (!blocked_z_levels || !(above_turf.z in blocked_z_levels)))
 			var/list/above_dead = SSmobs.dead_players_by_zlevel[above_turf.z]
 			listeners += above_dead
 			muffled_listeners += above_dead
-		if(below_turf)
+		if(below_turf && (!blocked_z_levels || !(below_turf.z in blocked_z_levels)))
 			var/list/below_dead = SSmobs.dead_players_by_zlevel[below_turf.z]
 			listeners += below_dead
 			muffled_listeners += below_dead
@@ -79,6 +79,11 @@
 			var/datum/species/dullahan/dullahan = human.dna.species
 			if(dullahan.headless)
 				turf_check = get_turf(dullahan.my_head)
+
+		if(!turf_check)
+			continue
+		if(blocked_z_levels && (turf_check.z in blocked_z_levels))
+			continue
 
 		if(quiet)
 			if(turf_check.z != turf_source.z)
@@ -233,6 +238,7 @@
 						update_sound_volume(DS, S.volume)
 						if(client.played_loops[D]["MUTESTATUS"]) //we have sound so turn this off
 							client.played_loops[D]["MUTESTATUS"] = null
+			return TRUE
 		else
 			D.thingshearing += our_ref
 			client.played_loops[D] = list()
@@ -415,10 +421,20 @@
 				soundin = pick('sound/combat/hits/bladed/genslash (1).ogg','sound/combat/hits/bladed/genslash (2).ogg','sound/combat/hits/bladed/genslash (3).ogg')
 			if("bladewooshsmall")
 				soundin = pick('sound/combat/wooshes/bladed/wooshsmall (1).ogg','sound/combat/wooshes/bladed/wooshsmall (2).ogg','sound/combat/wooshes/bladed/wooshsmall (3).ogg')
+			if("bladewooshmed")
+				soundin = pick(BLADEWOOSH_MED)
+			if("bladewooshlarge")
+				soundin = pick(BLADEWOOSH_LARGE)
+			if("bladewooshhuge")
+				soundin = pick(BLADEWOOSH_HUGE)
 			if("bluntwooshmed")
 				soundin = pick('sound/combat/wooshes/blunt/wooshmed (1).ogg','sound/combat/wooshes/blunt/wooshmed (2).ogg','sound/combat/wooshes/blunt/wooshmed (3).ogg')
 			if("bluntwooshlarge")
 				soundin = pick('sound/combat/wooshes/blunt/wooshlarge (1).ogg','sound/combat/wooshes/blunt/wooshlarge (2).ogg','sound/combat/wooshes/blunt/wooshlarge (3).ogg')
+			if("bluntwooshhuge")
+				soundin = pick(BLUNTWOOSH_HUGE)
+			if("whipwoosh")
+				soundin = pick(WHIPWOOSH)
 			if("punchwoosh")
 				soundin = pick('sound/combat/wooshes/punch/punchwoosh (1).ogg','sound/combat/wooshes/punch/punchwoosh (2).ogg','sound/combat/wooshes/punch/punchwoosh (3).ogg')
 			if(SFX_CHAIN_STEP)
@@ -458,5 +474,16 @@
 							'sound/foley/footsteps/highheel2.ogg',
 							'sound/foley/footsteps/highheel3.ogg',
 							'sound/foley/footsteps/highheel4.ogg',
+							)
+			if(SFX_TRICK)
+				soundin = pick(
+							'sound/misc/trick/trick1.ogg',
+							'sound/misc/trick/trick2.ogg',
+							'sound/misc/trick/trick3.ogg',
+							'sound/misc/trick/trick4.ogg',
+							'sound/misc/trick/trick5.ogg',
+							'sound/misc/trick/trick6.ogg',
+							'sound/misc/trick/trick7.ogg',
+							'sound/misc/trick/trick8.ogg',
 							)
 	return soundin

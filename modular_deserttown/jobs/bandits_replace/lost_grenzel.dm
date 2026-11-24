@@ -18,7 +18,7 @@
 /datum/antagonist/bandit/lost_grenzel/on_gain()
 	. = ..()
 	owner.special_role = name
-	
+
 /datum/antagonist/bandit/lost_grenzel/finalize_bandit()
 	owner.current.playsound_local(get_turf(owner.current), 'sound/music/traitor.ogg', 60, FALSE, pressure_affected = FALSE)
 	var/mob/living/carbon/human/H = owner.current
@@ -64,11 +64,11 @@
 			L.remove_stress(/datum/stressevent/lost_grenzel_hate)
 			time_near_others = 0
 		return
-		
+
 	var/current_time = world.time
 	var/delta = current_time - last_process_time
 	last_process_time = current_time
-	
+
 	var/found_visible = FALSE
 	for(var/mob/living/carbon/human/H in oview(10, L))
 		if(H.stat == DEAD || H.alpha == 0 || H.rogue_sneaking)
@@ -81,14 +81,14 @@
 			if(H.dna?.species?.origin == "Grenzelhoft")
 				if(!H.GetComponent(/datum/component/lost_grenzel_fear))
 					H.AddComponent(/datum/component/lost_grenzel_fear)
-			
+
 	if(found_visible)
 		time_near_others += delta
 		if(time_near_others >= 3 MINUTES)
 			if(!has_debuff)
 				L.add_stress(/datum/stressevent/lost_grenzel_hate)
 				has_debuff = TRUE
-			
+
 			if(current_time >= last_message_time + 1 MINUTES)
 				to_chat(L, span_userdanger("Уберите, уберите этого швайнехунда от меня подальше!"))
 				last_message_time = current_time
@@ -129,11 +129,11 @@
 	if(!istype(L) || L.stat == DEAD)
 		qdel(src)
 		return
-		
+
 	var/current_time = world.time
 	var/delta = current_time - last_process_time
 	last_process_time = current_time
-	
+
 	var/found_lg = FALSE
 	for(var/mob/living/carbon/human/H in oview(10, L))
 		if(H.stat == DEAD || H.alpha == 0 || H.rogue_sneaking)
@@ -141,13 +141,13 @@
 		if(H.GetComponent(/datum/component/lost_grenzel_hate) || (H.mind && H.mind.has_antag_datum(/datum/antagonist/bandit/lost_grenzel)))
 			found_lg = TRUE
 			break
-			
+
 	if(found_lg)
 		time_near_lg = 1 MINUTES
 		if(!has_debuff)
 			L.add_stress(/datum/stressevent/lost_grenzel_fear)
 			has_debuff = TRUE
-		
+
 		if(current_time >= last_message_time + 1 MINUTES)
 			to_chat(L, span_userdanger("Это же безумный дезертир! Нужно уходить пока при памяти!"))
 			last_message_time = current_time
@@ -168,7 +168,7 @@
 	total_positions = 0
 	spawn_positions = 0
 	antag_job = TRUE
-	
+
 	tutorial = "Оставшись в одиночестве посреди окровавленных песков вас сплотила ненависть. Вас сплотила жажда мести. Вот уже несколько лет вы передвигаетесь от города к городу и мстите, за вами следует выжженная земля, кровь и кости, шок и трепет. Вас не пощадят - вас никогда не помилуют. Зибантийские свиньи не удосужатся вас даже похоронить с миром - и будут издеваться над телом. Вы умрёте, умрёте бесславно, но заберёте с собой десяток-другой швайхундов."
 
 	outfit = null
@@ -192,7 +192,7 @@
 	job_traits = list(TRAIT_SELF_SUSTENANCE, TRAIT_STEELHEARTED)
 	vice_restrictions = list(/datum/charflaw/mute, /datum/charflaw/limbloss/arm_r, /datum/charflaw/limbloss/arm_l)
 	same_job_respawn_delay = 30 MINUTES
-	cmode_music = 'sound/music/combat_lost_grenzel.ogg'
+	cmode_music = sound("sound/music/combat_lost_grenzel.ogg")
 	job_subclasses = list(
 		/datum/advclass/lost_grenzel/lost_halberdier,
 		/datum/advclass/lost_grenzel/lost_mage,

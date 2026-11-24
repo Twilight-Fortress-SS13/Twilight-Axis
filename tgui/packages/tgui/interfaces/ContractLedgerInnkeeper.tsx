@@ -2,6 +2,8 @@ import { type ReactNode, useState } from 'react';
 import type { BooleanLike } from 'tgui-core/react';
 
 import { useBackend } from '../backend';
+import { formatRatioPct } from './common/format';
+import { issueStatusSuffix, LedgerSubTabBar } from './ContractLedgerIssued';
 
 type RumorLogEntry = {
   title: string;
@@ -9,6 +11,8 @@ type RumorLogEntry = {
   region: string;
   in_hands: BooleanLike;
   day: number;
+  status?: string;
+  refund?: string;
 };
 
 type InnkeeperData = {
@@ -21,8 +25,9 @@ type InnkeeperData = {
   rumor_destinations: string[];
   rumor_log: RumorLogEntry[];
   rumor_lucrative_mult: number;
-  region_tp_multipliers: Record<string, number>;
-  region_delivery_multipliers: Record<string, number>;
+  region_scales_by_type: Record<string, Record<string, number>>;
+  veteran_types: string[];
+  veteran_threat_pct: number;
 };
 
 type DispatchMode = 'board' | 'hands';
@@ -32,11 +37,6 @@ const DISPATCH_DEBOUNCE_MS = 500;
 
 const pts = (n: number) => `${n}\u00A0pt${n === 1 ? '' : 's'}`;
 
-const formatMultiplierDelta = (delta: number): string => {
-  const pct = Math.round(delta * 100);
-  return `${pct}%`;
-};
-
 const regionRewardFlavor = (
   regionName: string,
   mult: number | undefined,
@@ -44,9 +44,9 @@ const regionRewardFlavor = (
   if (typeof mult !== 'number' || mult === 1) return null;
   if (mult > 1) {
     const descriptor = mult >= 1.4 ? 'bleak' : 'dangerous';
-    return `${regionName} is a ${descriptor} region - rumors from there tend to be ${formatMultiplierDelta(mult - 1)} more lucrative.`;
+    return `${regionName} is a ${descriptor} region. Rumors from it tend to pay ${formatRatioPct(mult - 1)} more.`;
   }
-  return `${regionName} is a settled region - rumors from there tend to be ${formatMultiplierDelta(1 - mult)} less lucrative.`;
+  return `${regionName} is a safe region. Rumors from it tend to pay ${formatRatioPct(1 - mult)} less.`;
 };
 
 const FormRow = (props: { label: string; children: ReactNode }) => (
@@ -100,35 +100,6 @@ const ModeRadio = (props: {
   </label>
 );
 
-const SubTabBar = (props: {
-  active: SubTab;
-  onSelect: (t: SubTab) => void;
-  historyCount: number;
-}) => {
-  const tabs: { id: SubTab; label: string }[] = [
-    { id: 'compose', label: 'Compose' },
-    { id: 'history', label: `History (${props.historyCount})` },
-  ];
-  return (
-    <div className="ContractLedger__InnkeeperSubTabBar">
-      {tabs.map((t) => (
-        <div
-          key={t.id}
-          className={
-            'ContractLedger__InnkeeperSubTab' +
-            (t.id === props.active
-              ? ' ContractLedger__InnkeeperSubTab--active'
-              : '')
-          }
-          onClick={() => props.onSelect(t.id)}
-        >
-          {t.label}
-        </div>
-      ))}
-    </div>
-  );
-};
-
 const HistoryView = (props: { log: RumorLogEntry[] }) => {
   if (!props.log.length) {
     return (
@@ -147,7 +118,8 @@ const HistoryView = (props: { log: RumorLogEntry[] }) => {
           </span>
           <span className="ContractLedger__InnkeeperHistoryMeta">
             {r.type} &middot; {r.region} &middot; day {r.day} &middot;{' '}
-            {r.in_hands ? 'in hands' : 'on board'}
+            {r.in_hands ? 'in hands' : 'on the Ledger'}
+            {issueStatusSuffix(r.status, r.refund)}
           </span>
         </div>
       ))}
@@ -164,8 +136,11 @@ const ComposeView = () => {
   const [destination, setDestination] = useState<string>('');
   const [mode, setMode] = useState<DispatchMode>('board');
   const [lucrative, setLucrative] = useState<boolean>(false);
+  const [veteran, setVeteran] = useState<boolean>(false);
   const [inflight, setInflight] = useState<boolean>(false);
 
+  const canVeteran = (data.veteran_types || []).includes(type);
+  const useVeteran = canVeteran && veteran;
   const regionsForType = data.rumor_regions_by_type?.[type] || [];
   const baseCost = data.rumor_costs?.[type] ?? 0;
   const lucrativeMult = data.rumor_lucrative_mult ?? 1.5;
@@ -188,7 +163,7 @@ const ComposeView = () => {
         : needsDestination && !destination
           ? "Pick whose shipment it's rumored to be."
           : data.rumor_points < cost
-            ? `Insufficient Rumor Points (need ${cost}, have ${data.rumor_points}).`
+            ? `Not enough Rumor Points (need ${cost}, have ${data.rumor_points}).`
             : undefined;
 
   const dispatch = () => {
@@ -200,6 +175,7 @@ const ComposeView = () => {
       destination: needsDestination ? destination : null,
       in_hands: mode === 'hands' ? 1 : 0,
       lucrative: lucrative ? 1 : 0,
+      veteran: useVeteran ? 1 : 0,
     });
     setTimeout(() => setInflight(false), DISPATCH_DEBOUNCE_MS);
   };
@@ -207,8 +183,8 @@ const ComposeView = () => {
   return (
     <>
       <div className="ContractLedger__InnkeeperFlavor">
-        A whisper to the Guild carries weight. Select a rumor to pass along;
-        point cost scales with the trouble it will bring.
+        Pick a rumor to pass to the Guild. The more trouble it brings, the more
+        points it costs.
       </div>
 
       <FormRow label="Rumor Type">
@@ -238,10 +214,7 @@ const ComposeView = () => {
               : '- pick a region -'}
           </option>
           {regionsForType.map((r) => {
-            const mult =
-              type === RECOVERY_TYPE
-                ? data.region_delivery_multipliers?.[r]
-                : data.region_tp_multipliers?.[r];
+            const mult = data.region_scales_by_type?.[type]?.[r];
             const suffix =
               typeof mult === 'number' && mult !== 1
                 ? ` (×${mult} reward)`
@@ -258,10 +231,7 @@ const ComposeView = () => {
 
       {region &&
         (() => {
-          const mult =
-            type === RECOVERY_TYPE
-              ? data.region_delivery_multipliers?.[region]
-              : data.region_tp_multipliers?.[region];
+          const mult = data.region_scales_by_type?.[type]?.[region];
           const flavor = regionRewardFlavor(region, mult);
           if (!flavor) return null;
           return (
@@ -296,7 +266,7 @@ const ComposeView = () => {
             value="board"
             selected={mode}
             onChange={setMode}
-            label="Post on public board"
+            label="Post on the Ledger"
           />
           <ModeRadio
             value="hands"
@@ -320,6 +290,20 @@ const ComposeView = () => {
         </label>
       </FormRow>
 
+      {canVeteran && (
+        <FormRow label="Veteran">
+          <label>
+            <input
+              type="checkbox"
+              checked={veteran}
+              onChange={(e) => setVeteran(e.target.checked)}
+            />
+            &nbsp;Increases threat by {data.veteran_threat_pct}% and rewards by
+            that proportionally.
+          </label>
+        </FormRow>
+      )}
+
       <div className="ContractLedger__InnkeeperFormFooter">
         <button
           type="button"
@@ -329,6 +313,7 @@ const ComposeView = () => {
           onClick={dispatch}
         >
           Whisper Rumor ({pts(cost)}){lucrative ? ' - lucrative' : ''}
+          {useVeteran ? ' - veteran' : ''}
         </button>
       </div>
     </>
@@ -367,17 +352,20 @@ export const InnkeeperRumorPanel = () => {
         </div>
       </div>
 
-      <SubTabBar
+      <LedgerSubTabBar
+        tabs={[
+          { id: 'compose', label: 'Compose' },
+          {
+            id: 'history',
+            label: `History (${(data.rumor_log || []).length})`,
+          },
+        ]}
         active={subTab}
         onSelect={setSubTab}
-        historyCount={(data.rumor_log || []).length}
       />
 
-      {subTab === 'compose' ? (
-        <ComposeView />
-      ) : (
-        <HistoryView log={data.rumor_log || []} />
-      )}
+      {subTab === 'compose' && <ComposeView />}
+      {subTab === 'history' && <HistoryView log={data.rumor_log || []} />}
     </div>
   );
 };

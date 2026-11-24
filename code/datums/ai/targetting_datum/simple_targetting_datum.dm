@@ -33,8 +33,12 @@
 
 	if(ismob(the_target)) //Target is in godmode, ignore it.
 		var/mob/M = the_target
-		if(M.status_flags & GODMODE)
+		if(GODMODE_HIDDEN(M))
 			return FALSE
+		if(istype(M, /mob/living/simple_animal/hostile/retaliate/rogue/ooze_blob/pure_form))
+			var/mob/living/simple_animal/hostile/retaliate/rogue/ooze_blob/pure_form/ooze = M
+			if(world.time < ooze.hostile_grace_until)
+				return FALSE // Grace period, mobs won't target player oozes for 15 seconds after their revival transformation.
 
 	if(living_mob.see_invisible < the_target.invisibility)//Target's invisible to us, forget it
 		return FALSE

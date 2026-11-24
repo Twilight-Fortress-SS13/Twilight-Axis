@@ -5,7 +5,7 @@
 	base_cost = 100
 	source_region_id = TRADE_REGION_KINGSFIELD
 
-/obj/item/roguebin/crackers/Initialize()
+/obj/item/roguebin/crackers/Initialize(mapload)
 	. = ..()
 	new /obj/item/reagent_containers/food/snacks/rogue/crackerscooked(src)
 	new /obj/item/reagent_containers/food/snacks/rogue/crackerscooked(src)
@@ -30,7 +30,7 @@
 	base_cost = 100
 	source_region_id = TRADE_REGION_ROCKHILL
 
-/obj/structure/closet/crate/chest/steward/redpotion/Initialize()
+/obj/structure/closet/crate/chest/steward/redpotion/Initialize(mapload)
 	. = ..()
 	new /obj/item/reagent_containers/glass/bottle/rogue/healthpot(src)
 	new /obj/item/reagent_containers/glass/bottle/rogue/healthpot(src)
@@ -40,79 +40,79 @@
 
 /datum/crown_import/rotpotion
 	name = "Crate of Rot Cure Potions"
-	desc = "A sought-after crate of rare potions of rot-curing."
+	desc = "A crate of rare rot cure potions."
 	item_type = /obj/structure/closet/crate/chest/steward/rotpotion
 	base_cost = 400		//Expensive, 200 each roughly. Four uses total, as only 5u needed to reverse rot. Each bottle is 10u.
 	source_region_id = TRADE_REGION_ROCKHILL
 
-/obj/structure/closet/crate/chest/steward/rotpotion/Initialize()
+/obj/structure/closet/crate/chest/steward/rotpotion/Initialize(mapload)
 	. = ..()
 	new /obj/item/reagent_containers/glass/bottle/alchemical/rogue/rotcure(src)
 	new /obj/item/reagent_containers/glass/bottle/alchemical/rogue/rotcure(src)
 
 /datum/crown_import/saigabuck
 	name = "Saigabuck"
-	desc = "One Saigabuck tamed with a saddle from a far away land."
+	desc = "A tame saigabuck with a saddle, from a faraway land."
 	item_type = /obj/structure/closet/crate/chest/steward/saigabuck
 	base_cost = 100
 
-/obj/structure/closet/crate/chest/steward/saigabuck/Initialize()
+/obj/structure/closet/crate/chest/steward/saigabuck/Initialize(mapload)
 	. = ..()
 	new /mob/living/simple_animal/hostile/retaliate/rogue/saiga/saigabuck/tame/saddled(src)
 	new /obj/item/caparison/azure(src)
 
 /datum/crown_import/cow
 	name = "Cow"
-	desc = "Farmer's best friend, reliable provider of milk and meat."
+	desc = "A farmer's best friend. A reliable source of milk and meat."
 	item_type = /obj/structure/closet/crate/chest/steward/cow
 	base_cost = 100
 	source_region_id = TRADE_REGION_KINGSFIELD
 
-/obj/structure/closet/crate/chest/steward/cow/Initialize()
+/obj/structure/closet/crate/chest/steward/cow/Initialize(mapload)
 	. = ..()
 	new /mob/living/simple_animal/hostile/retaliate/rogue/cow(src)
 
 /datum/crown_import/bull
 	name = "Bull"
-	desc = "Horned and aggressive, required to start a herd."
+	desc = "Horned and aggressive. You need one to start a herd."
 	item_type = /obj/structure/closet/crate/chest/steward/bull
 	base_cost = 100
 	source_region_id = TRADE_REGION_KINGSFIELD
 
-/obj/structure/closet/crate/chest/steward/bull/Initialize()
+/obj/structure/closet/crate/chest/steward/bull/Initialize(mapload)
 	. = ..()
 	new /mob/living/simple_animal/hostile/retaliate/rogue/bull(src)
 
 /datum/crown_import/goat
 	name = "Doe Goat"
-	desc = "An all-purpose source of milk, hide and fat."
+	desc = "A source of milk, hide and fat."
 	item_type = /obj/structure/closet/crate/chest/steward/goat
 	base_cost = 100
 	source_region_id = TRADE_REGION_KINGSFIELD
 
-/obj/structure/closet/crate/chest/steward/goat/Initialize()
+/obj/structure/closet/crate/chest/steward/goat/Initialize(mapload)
 	. = ..()
 	new /mob/living/simple_animal/hostile/retaliate/rogue/goat(src)
 
 /datum/crown_import/goatmale
 	name = "Billy Goat"
-	desc = "Bearded, male goat capable of saddling."
+	desc = "A bearded male goat that can be saddled."
 	item_type = /obj/structure/closet/crate/chest/steward/goatmale
 	base_cost = 100
 	source_region_id = TRADE_REGION_KINGSFIELD
 
-/obj/structure/closet/crate/chest/steward/goatmale/Initialize()
+/obj/structure/closet/crate/chest/steward/goatmale/Initialize(mapload)
 	. = ..()
 	new /mob/living/simple_animal/hostile/retaliate/rogue/goatmale(src)
 
 /datum/crown_import/chicken
 	name = "Chicken"
-	desc = "A reliable source of egg and meat."
+	desc = "A reliable source of eggs and meat."
 	item_type = /obj/structure/closet/crate/chest/steward/chicken
 	base_cost = 50
 	source_region_id = TRADE_REGION_KINGSFIELD
 
-/obj/structure/closet/crate/chest/steward/chicken/Initialize()
+/obj/structure/closet/crate/chest/steward/chicken/Initialize(mapload)
 	. = ..()
 	new /mob/living/simple_animal/hostile/retaliate/rogue/chicken(src)
 
@@ -123,7 +123,7 @@
 	base_cost = 100
 	source_region_id = TRADE_REGION_KINGSFIELD
 
-/obj/structure/closet/crate/chest/steward/farmequip/Initialize()
+/obj/structure/closet/crate/chest/steward/farmequip/Initialize(mapload)
 	. = ..()
 	new /obj/item/rogueweapon/hoe(src)
 	new /obj/item/rogueweapon/pitchfork(src)
@@ -134,12 +134,12 @@
 
 /datum/crown_import/blacksmith
 	name = "Smith Crate"
-	desc = "Stone, coal , iron ingot, wood bin, bucket with hammer and tongs."
+	desc = "Stone, coal, an iron ingot, a bin, a bucket, a hammer and tongs."
 	item_type = /obj/structure/closet/crate/chest/steward/blacksmith
 	base_cost = 100
 	source_region_id = TRADE_REGION_DAFTSMARCH
 
-/obj/structure/closet/crate/chest/steward/blacksmith/Initialize()
+/obj/structure/closet/crate/chest/steward/blacksmith/Initialize(mapload)
 	. = ..()
 	new /obj/item/rogueweapon/hammer/iron(src)
 	new /obj/item/rogueweapon/tongs(src)
@@ -164,7 +164,7 @@
 	base_cost = 60
 	source_region_id = TRADE_REGION_ROSAWOOD
 
-/obj/structure/closet/crate/chest/steward/craftsman/Initialize()
+/obj/structure/closet/crate/chest/steward/craftsman/Initialize(mapload)
 	. = ..()
 	new /obj/item/rogueweapon/hammer/wood(src)
 	new /obj/item/rogueweapon/chisel(src)
@@ -172,12 +172,12 @@
 
 /datum/crown_import/glasscrate
 	name = "Glass Crate"
-	desc = "A crate full of glass for windows, repairs, and works of art.."
+	desc = "A crate full of glass for windows, repairs, and works of art."
 	item_type = /obj/structure/closet/crate/chest/steward/glasscrate
 	base_cost = 150
 	source_region_id = TRADE_REGION_DAFTSMARCH
 
-/obj/structure/closet/crate/chest/steward/glasscrate/Initialize()
+/obj/structure/closet/crate/chest/steward/glasscrate/Initialize(mapload)
 	. = ..()
 	new /obj/item/natural/glass(src)
 	new /obj/item/natural/glass(src)
@@ -192,7 +192,7 @@
 	base_cost = 150
 	source_region_id = TRADE_REGION_ROSAWOOD
 
-/obj/structure/closet/crate/chest/steward/tailor/Initialize()
+/obj/structure/closet/crate/chest/steward/tailor/Initialize(mapload)
 	. = ..()
 	new /obj/item/rogueweapon/huntingknife/scissors/steel(src)
 	new /obj/item/needle(src)
@@ -204,11 +204,11 @@
 
 /datum/crown_import/alcoholset
 	name = "Alcohol Crate"
-	desc = "A crate with a selection of beers and liquors, fit for a party."
+	desc = "A crate with a selection of beers and liquors. Fit for a party."
 	item_type = /obj/structure/closet/crate/chest/steward/alcoholset
 	base_cost = 800
 
-/obj/structure/closet/crate/chest/steward/alcoholset/Initialize()
+/obj/structure/closet/crate/chest/steward/alcoholset/Initialize(mapload)
 	. = ..()
 	new /obj/item/reagent_containers/glass/bottle/rogue/beer/gronnmead(src)
 	new /obj/item/reagent_containers/glass/bottle/rogue/beer/nred(src)
@@ -226,12 +226,12 @@
 
 /datum/crown_import/minecarttracks
 	name = "Minecart Tracks"
-	desc = "A crate with One hundred minecart tracks and four break tracks"
+	desc = "A crate with one hundred minecart tracks and four brake tracks."
 	item_type = /obj/structure/closet/crate/chest/steward/minecarttracks
 	base_cost = 310
 	source_region_id = TRADE_REGION_DAFTSMARCH
 
-/obj/structure/closet/crate/chest/steward/minecarttracks/Initialize()
+/obj/structure/closet/crate/chest/steward/minecarttracks/Initialize(mapload)
 	. = ..()
 	for(var/i = 1 to 100)
 		new /obj/item/rotation_contraption/minecart_rail(src)
@@ -240,12 +240,12 @@
 
 /datum/crown_import/rotationalnetwork
 	name = "Rotational Network"
-	desc = "A crate of ten large gears, sixteen small gears, three gearboxes, three verticle gearboxes, and twenty shafts"
+	desc = "A crate of ten large gears, sixteen small gears, three gearboxes, three vertical gearboxes, and twenty shafts."
 	item_type = /obj/structure/closet/crate/chest/steward/rotationalnetwork
 	base_cost = 362
 	source_region_id = TRADE_REGION_DAFTSMARCH
 
-/obj/structure/closet/crate/chest/steward/rotationalnetwork/Initialize()
+/obj/structure/closet/crate/chest/steward/rotationalnetwork/Initialize(mapload)
 	. = ..()
 	for(var/i = 1 to 10)
 		new /obj/item/rotation_contraption/large_cog(src)
@@ -260,36 +260,36 @@
 
 /datum/crown_import/waterwheels
 	name = "Waterwheels"
-	desc = "A crate of five waterwheels"
+	desc = "A crate of five waterwheels."
 	item_type = /obj/structure/closet/crate/chest/steward/waterwheels
 	base_cost = 75
 	source_region_id = TRADE_REGION_ROSAWOOD
 
-/obj/structure/closet/crate/chest/steward/waterwheels/Initialize()
+/obj/structure/closet/crate/chest/steward/waterwheels/Initialize(mapload)
 	. = ..()
 	for(var/i = 1 to 5)
 		new /obj/item/rotation_contraption/waterwheel(src)
 
 /datum/crown_import/stoneblocks
 	name = "Stoneblocks"
-	desc = "A crate of twenty Stoneblocks, useful in building"
+	desc = "A crate of twenty stoneblocks for building."
 	item_type = /obj/structure/closet/crate/chest/steward/stoneblocks
 	base_cost = 40
 	source_region_id = TRADE_REGION_DAFTSMARCH
 
-/obj/structure/closet/crate/chest/steward/stoneblocks/Initialize()
+/obj/structure/closet/crate/chest/steward/stoneblocks/Initialize(mapload)
 	. = ..()
 	for(var/i = 1 to 20)
 		new /obj/item/natural/stoneblock(src)
 
 /datum/crown_import/planks
 	name = "Planks"
-	desc = "A crate of twenty planks, useful in building"
+	desc = "A crate of twenty planks for building."
 	item_type = /obj/structure/closet/crate/chest/steward/planks
 	base_cost = 60
 	source_region_id = TRADE_REGION_ROSAWOOD
 
-/obj/structure/closet/crate/chest/steward/planks/Initialize()
+/obj/structure/closet/crate/chest/steward/planks/Initialize(mapload)
 	. = ..()
 	for(var/i = 1 to 20)
 		new /obj/item/natural/wood/plank(src)
@@ -300,7 +300,7 @@
 	item_type = /obj/structure/closet/crate/chest/steward/keyringsset
 	base_cost = 100
 
-/obj/structure/closet/crate/chest/steward/keyringsset/Initialize()
+/obj/structure/closet/crate/chest/steward/keyringsset/Initialize(mapload)
 	. = ..()
 	new /obj/item/storage/keyring/manatarms(src)
 	new /obj/item/storage/keyring/manatarms(src)
@@ -308,12 +308,12 @@
 	new /obj/item/storage/keyring/manatarms(src)
 
 /datum/crown_import/crossbow
-	name = "Crossbows Crate"
-	desc = "A crate with 3 crossbows with 3 full quivers."
+	name = "Crossbow Crate"
+	desc = "A crate with three crossbows and three full quivers."
 	item_type = /obj/structure/closet/crate/chest/steward/crossbow
 	base_cost = 300
 
-/obj/structure/closet/crate/chest/steward/crossbow/Initialize()
+/obj/structure/closet/crate/chest/steward/crossbow/Initialize(mapload)
 	. = ..()
 	new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow(src)
 	new /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow(src)
@@ -329,7 +329,7 @@
 	base_cost = 300
 	source_region_id = TRADE_REGION_ROSAWOOD
 
-/obj/structure/closet/crate/chest/steward/warden/Initialize()
+/obj/structure/closet/crate/chest/steward/warden/Initialize(mapload)
 	. = ..()
 	new /obj/item/clothing/head/roguetown/helmet/bascinet/antler(src)
 	new /obj/item/clothing/cloak/wardencloak(src)
@@ -341,7 +341,7 @@
 	new /obj/item/clothing/shoes/roguetown/boots/leather/reinforced(src)
 	new /obj/item/rogueweapon/stoneaxe/woodcut/wardenpick(src)
 	new /obj/item/rogueweapon/huntingknife/idagger/warden_machete(src)
-	new /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve/warden(src)
+	new /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve/warden(src) //TA EDIT Bow -> Recurve Bow
 	new /obj/item/quiver/arrows(src)
 	new /obj/item/storage/belt/rogue/leather(src)
 	new /obj/item/storage/keyring/warden(src)//Different ring to the rest
@@ -352,7 +352,7 @@
 	item_type = /obj/structure/closet/crate/chest/steward/manatarms
 	base_cost = 300
 
-/obj/structure/closet/crate/chest/steward/manatarms/Initialize()
+/obj/structure/closet/crate/chest/steward/manatarms/Initialize(mapload)
 	. = ..()
 	new /obj/item/clothing/head/roguetown/helmet/sallet/visored(src)
 	new /obj/item/clothing/neck/roguetown/bevor(src)
@@ -373,7 +373,7 @@
 	item_type = /obj/structure/closet/crate/chest/steward/knight
 	base_cost = 500
 
-/obj/structure/closet/crate/chest/steward/knight/Initialize()
+/obj/structure/closet/crate/chest/steward/knight/Initialize(mapload)
 	. = ..()
 	new /obj/item/clothing/head/roguetown/helmet/heavy/knight(src)
 	new /obj/item/clothing/neck/roguetown/gorget/steel(src)

@@ -1,6 +1,18 @@
 /datum/emote/living/carbon
 	mob_type_allowed_typecache = list(/mob/living/carbon)
 
+/mob/proc/shoutbubble()
+	var/image/I = image('icons/mob/talk.dmi', src, "default3", FLY_LAYER)
+	I.appearance_flags = APPEARANCE_UI_IGNORE_ALPHA
+
+	var/list/listening = get_hearers_in_view(6, src, RECURSIVE_CONTENTS_CLIENT_MOBS)
+	var/list/speech_bubble_recipients = list()
+	for(var/mob/M in listening)
+		if(M.client)
+			speech_bubble_recipients.Add(M.client)
+
+	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(flick_overlay), I, speech_bubble_recipients, 30)
+
 /datum/emote/living/carbon/deathgurgle
 	key = "deathgurgle"
 	key_third_person = ""
@@ -8,7 +20,7 @@
 	only_forced_audio = TRUE
 	vary = TRUE
 	message = "gasps out their last breath."
-	message_simple =  "falls limp."
+	message_simple = "falls limp."
 	stat_allowed = UNCONSCIOUS
 	mob_type_ignore_stat_typecache = list(/mob/living/carbon/human)
 
@@ -36,7 +48,7 @@
 	vary = TRUE
 
 /mob/living/carbon/human/verb/emote_clap()
-	set name = "Хлопать"
+	set name = TA_EMOTE_NAME_EMOTE_CLAP
 	set category = "Emotes.Noises"
 
 	emote("clap", intentional = TRUE)
@@ -50,7 +62,7 @@
 	emote_type = EMOTE_AUDIBLE
 
 /mob/living/carbon/human/verb/emote_slowclap()
-	set name = "Медленно хлопать"
+	set name = TA_EMOTE_NAME_EMOTE_SLOWCLAP
 	set category = "Emotes.Noises"
 
 	emote("slowclap", intentional = TRUE)
@@ -64,7 +76,7 @@
 	restraint_check = TRUE
 
 /mob/living/carbon/human/verb/emote_clap1()
-	set name = "Хлопнуть"
+	set name = TA_EMOTE_NAME_EMOTE_CLAP1
 	set category = "Emotes.Noises"
 
 	emote("clap1", intentional = TRUE)
@@ -124,3 +136,4 @@
 	key = "wink"
 	key_third_person = "winks"
 	message = "winks."
+

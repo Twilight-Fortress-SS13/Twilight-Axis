@@ -3,7 +3,7 @@
 	dodgetime = 30
 	ambushable = FALSE
 
-/mob/living/carbon/human/species/npc/deadite/Initialize()
+/mob/living/carbon/human/species/npc/deadite/Initialize(mapload)
 	. = ..()
 	//picked from a list because 1: Races that look better w/deaditing here 2: We need deadite infectable races for immersion's sake I.E not sun elves 3: we can bias towards common azurian races
 	//Yes it requires spamming the list with several entries to weight it, if you can do better. please do so. this sucks.
@@ -46,7 +46,7 @@
 	random_hair_NPC()
 
 	var/list/deadite_firstnames = world.file2list("strings/rt/names/other/deaditenpcfirst.txt")
-	var/list/deadite_lastnames  = world.file2list("strings/rt/names/other/deaditenpclast.txt")
+	var/list/deadite_lastnames	= world.file2list("strings/rt/names/other/deaditenpclast.txt")
 
 
 	real_name = "[pick(deadite_firstnames)] [pick(deadite_lastnames)]"
@@ -100,14 +100,18 @@
 /mob/living/carbon/human/proc/try_do_deadite_bite(mob/living/victim)
 	if(!src || stat >= DEAD)
 		return FALSE
-	
+
 	var/obj/item/grabbing/bite/bite = get_item_by_slot(SLOT_MOUTH)
 	if(istype(bite))
-		// 50% chance to continue biting if already started
-		if(prob(50))
+		var/prone_player = victim?.mind && !(victim.mobility_flags & MOBILITY_STAND)
+		if(prone_player && bite.grabbed != victim)
+			qdel(bite) // let go of whoever else we have and go for them
+		// 50% chance to continue biting if already started, unless they're down
+		else if(prone_player || prob(50))
 			bite.bitelimb(src)
 			return TRUE
-		return FALSE // try something else like grappling
+		else
+			return FALSE // try something else like grappling
 
 	if(!victim) // if we aren't passed a target, find one at random from nearby. this is currently unused
 		for(var/mob/living/carbon/human in view(1, src))
@@ -120,7 +124,7 @@
 	if(!victim) // still no one to bite
 		return FALSE
 
-	if(!get_location_accessible(src, BODY_ZONE_PRECISE_MOUTH, grabs = TRUE)) // can't bite, mouth is covered!
+	if(!can_bite())
 		return FALSE
 
 	victim.onbite(src)
@@ -166,9 +170,6 @@
 	if(stat >= DEAD) //do shit the natural way i guess
 		return FALSE
 	if(HAS_TRAIT(src, TRAIT_ZOMBIE_IMMUNE))
-		return FALSE
-	if(HAS_TRAIT(src, TRAIT_BLACKBLOOD) && prob(90))
-		to_chat(src, span_danger("I feel something churning within my body... Luckily, it doesn't take hold."))
 		return FALSE
 	var/datum/status_effect/zombie_infection/infection = has_status_effect(/datum/status_effect/zombie_infection)
 	if(infection)

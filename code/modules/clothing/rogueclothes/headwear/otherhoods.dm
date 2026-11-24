@@ -27,7 +27,7 @@
 	item_state = "beekeeper"
 	icon = 'icons/roguetown/clothing/head.dmi'
 	mob_overlay_icon = 'icons/roguetown/clothing/onmob/head.dmi'
-	alternate_worn_layer  = 8.9 //On top of helmet
+	alternate_worn_layer	= 8.9 //On top of helmet
 	body_parts_covered = HEAD|HAIR|EARS|NECK
 	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_MASK
 	sleevetype = null
@@ -108,8 +108,7 @@
 	icon_state = "dungeoneer"
 	color = null
 
-/obj/item/clothing/head/roguetown/menacing/executioner/ComponentInitialize()
-	AddComponent(/datum/component/armour_filtering/positive, TRAIT_JAILOR, "dungeoneer")
+//TA EDIT
 
 /obj/item/clothing/head/roguetown/jester
 	name = "jester's hat"
@@ -128,7 +127,7 @@
 /obj/item/clothing/head/roguetown/jester/update_icon()
 	cut_overlays()
 	if(get_detail_tag())
-		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[get_detail_state(icon_state)][detail_tag]"))
 		pic.appearance_flags = RESET_COLOR
 		if(get_detail_color())
 			pic.color = get_detail_color()
@@ -139,7 +138,7 @@
 	color = primary
 	update_icon()
 
-/obj/item/clothing/head/roguetown/jester/Initialize()
+/obj/item/clothing/head/roguetown/jester/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_JINGLE_BELLS, 2)
 	if(GLOB.lordprimary)
@@ -150,12 +149,3 @@
 /obj/item/clothing/head/roguetown/jester/jester/Destroy()
 	GLOB.lordcolor -= src
 	return ..()
-
-/obj/item/clothing/head/roguetown/jester/MiddleClick(mob/user)
-	if(!ishuman(user))
-		return
-	if(flags_inv & HIDE_HEADTOP)
-		flags_inv &= ~HIDE_HEADTOP
-	else
-		flags_inv |= HIDE_HEADTOP
-	user.update_inv_head()

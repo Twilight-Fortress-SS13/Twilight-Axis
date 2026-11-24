@@ -12,19 +12,16 @@
 	maxHealth = 150
 	melee_damage_lower = 20
 	melee_damage_upper = 30
-	aggressive = 1
-	vision_range = 9
-	aggro_vision_range = 9
-	retreat_distance = 0
-	minimum_distance = 0
-	retreat_health = 0.1
 	base_intents = list(/datum/intent/simple/bite, /datum/intent/simple/claw)
+
+	ai_controller = /datum/ai_controller/revenant
 
 	var/target_alpha = 150
 	var/fade_time = 1.5 SECONDS
 
-/mob/living/simple_animal/hostile/retaliate/rogue/revenant/Initialize()
+/mob/living/simple_animal/hostile/retaliate/rogue/revenant/Initialize(mapload)
 	. = ..()
+	AddComponent(/datum/component/ai_aggro_system)
 	AddComponent(/datum/component/fog_entity)
 	appear_animated()
 	ADD_TRAIT(src, TRAIT_NOBREATH, TRAIT_GENERIC)
@@ -35,7 +32,7 @@
 	REMOVE_TRAIT(src, TRAIT_SIMPLE_WOUNDS, TRAIT_GENERIC)
 
 /mob/living/simple_animal/hostile/retaliate/rogue/revenant/proc/appear_animated()
-	move_to_delay = fade_time // Basically can't move until the animation is done!
+	add_movespeed_modifier(MOVESPEED_ID_REVENANT_FADE, TRUE, 100, override = TRUE, multiplicative_slowdown = fade_time) // Basically can't move until the animation is done!
 	animate(src, alpha = target_alpha, time = fade_time, easing = EASE_IN)
 	addtimer(CALLBACK(src, PROC_REF(finish_appearing)), fade_time)
 
@@ -44,7 +41,7 @@
 	addtimer(CALLBACK(src, PROC_REF(death)), fade_time)
 
 /mob/living/simple_animal/hostile/retaliate/rogue/revenant/proc/finish_appearing()
-	move_to_delay = initial(move_to_delay)
+	remove_movespeed_modifier(MOVESPEED_ID_REVENANT_FADE)
 
 /mob/living/simple_animal/hostile/retaliate/rogue/revenant/death(gibbed)
 	..()

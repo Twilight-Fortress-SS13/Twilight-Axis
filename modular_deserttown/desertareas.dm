@@ -12,7 +12,6 @@
 	ambientnight = AMB_TOWNNIGHT
 	spookysounds = SPOOKY_GEN
 	spookynight = SPOOKY_GEN
-	ambush_times = list("night")
 	ambush_mobs = list(
 		/mob/living/simple_animal/hostile/retaliate/rogue/badger  = 10,
 		/mob/living/simple_animal/hostile/retaliate/rogue/raccoon = 25,
@@ -50,7 +49,6 @@
 	droning_sound = 'sound/music/area/desert/Iberia1.ogg'
 	droning_sound_dusk = 'sound/music/area/desert/NightPrayer.ogg'
 	droning_sound_night = 'sound/music/area/desert/Moonrise.ogg'
-	ambush_times = list("night","dawn","dusk","day")	
 	ambush_mobs = list(
 		/mob/living/carbon/human/species/skeleton/npc/ambush = 30,
 		/mob/living/simple_animal/hostile/retaliate/rogue/bigrat = 60,
@@ -85,7 +83,6 @@
 
 /area/rogue/outdoors/desertdeep/safe
 	name = "Desert Pass"
-	ambush_times = null
 	ambush_mobs = null
 
 /area/rogue/outdoors/desertdeep/above
@@ -94,7 +91,6 @@
 	ambientnight = AMB_MOUNTAIN
 	soundenv = 17
 	first_time_text = null
-	ambush_times = null
 	ambush_mobs = null
 
 /area/rogue/outdoors/desert/above
@@ -103,7 +99,6 @@
 	ambientnight = AMB_MOUNTAIN
 	soundenv = 17
 	first_time_text = null
-	ambush_times = null
 	ambush_mobs = null
 
 //
@@ -390,7 +385,6 @@
 	droning_sound = 'sound/music/area/underdark.ogg'
 	droning_sound_dusk = null
 	droning_sound_night = null
-	ambush_times = list("night","dawn","dusk","day")
 	ambush_mobs = list(
 				/mob/living/simple_animal/hostile/retaliate/rogue/spider/mutated = 20,
 				/mob/living/carbon/human/species/elf/dark/drowraider/ambush = 10,

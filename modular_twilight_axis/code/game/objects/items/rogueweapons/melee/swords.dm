@@ -3,9 +3,9 @@
 	desc = "An ornate rapier, plated in a ceremonial veneer of silver. The barbs pierce your palm, and - for just a moment - you see red. Never forget that you are why Psydon wept."
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
 	icon_state = "psyrapier"
-	item_state = "psyrapier"
+	sheathe_icon = "silverrapier"
 	resistance_flags = FIRE_PROOF
-	force = 17
+	force = 20
 	force_wielded = 20
 	is_silver = TRUE
 
@@ -25,47 +25,38 @@
 	desc = "Дорогостоющий складной меч, сделанный специально по заказу для десницы. Можно носить как обычный меч в ножнах, так и в сумке или в поясе, если сложить."
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
 	icon_state = "folding_sword_on"
-	item_state = "folding_sword_on"
-	var/on = FALSE
-
-/obj/item/rogueweapon/sword/rapier/foldsword/update_icon()
-	if(on)
-		icon_state = "folding_sword_on"
-	else
-		icon_state = "folding_sword_off"
+	var/extended = FALSE
 
 /obj/item/rogueweapon/sword/rapier/foldsword/attack_self(mob/user)
-	if(on)
-		on = FALSE
+	extended = !extended
+	playsound(src.loc, 'sound/blank.ogg', 50, TRUE)
+	if(extended)
+		possible_item_intents = list(/datum/intent/sword/thrust/rapier, /datum/intent/sword/cut/rapier, /datum/intent/sword/thrust/rapier/lunge)
+		wlength = WLENGTH_NORMAL
+		w_class = WEIGHT_CLASS_BULKY
+		sharpness = IS_SHARP
+		slot_flags = ITEM_SLOT_HIP | ITEM_SLOT_BACK
+		equip_delay_self = initial(equip_delay_self)
+		unequip_delay_self = initial(unequip_delay_self)
+		inv_storage_delay = initial(inv_storage_delay)
+		icon_state = "foldingblade_on"
+		playsound(user, 'sound/items/knife_open.ogg', 100, TRUE)
+	else
 		possible_item_intents = list(/datum/intent/sword/strike)
 		wlength = WLENGTH_SHORT
 		w_class = WEIGHT_CLASS_SMALL
+		sharpness = IS_BLUNT
+		slot_flags = ITEM_SLOT_HIP
 		equip_delay_self = 0 SECONDS
 		unequip_delay_self = 0 SECONDS
 		inv_storage_delay = 0 SECONDS
-		slot_flags = ITEM_SLOT_HIP
-	else
-		on = TRUE
-		possible_item_intents = list(/datum/intent/sword/thrust/rapier, /datum/intent/sword/cut/rapier, /datum/intent/sword/peel)
-		wlength = WLENGTH_NORMAL
-		w_class = WEIGHT_CLASS_BULKY
-		equip_delay_self = 1.5 SECONDS
-		unequip_delay_self = 1.5 SECONDS
-		inv_storage_delay = 1.5 SECONDS
-		slot_flags = ITEM_SLOT_HIP | ITEM_SLOT_BACK
+		icon_state = "foldingblade_off"
 	if(user.a_intent)
 		var/datum/intent/I = user.a_intent
 		if(istype(I))
 			I.afterchange()
 	user.update_a_intents()
 	update_icon()
-
-/obj/item/rogueweapon/sword/long/kriegmesser/donat_astrata
-	name = "her verdict"
-	desc = "Wielded by the Paladins of the Punishing Light, these swords are forged from the same alloy of steel and silver used in the Eclipsum blades. While effective on the field of battle, this weapon is primarily known for it's use public executions.</br>'In the light of your rays I stand before you..' </br>'..with my blade raised and my soul bare..' </br>'..let you judge my verdict, and find it true..' </br>'..and let you guide my hand, O Radiant One.'"
-	icon = 'modular_twilight_axis/icons/obj/items/donor_weapons_64.dmi'
-	icon_state = "ast_kriegmesser"
-	sheathe_icon = "bs_swordregal"
 
 /obj/item/rogueweapon/greatsword/grenz/flamberge/relevement
 	name = "relevement"
@@ -81,7 +72,7 @@
 	is_silver = TRUE
 
 /obj/item/rogueweapon/sword/long/exe/berserk
-	special = /datum/special_intent/greatsword_swing
+	special = /datum/special_intent/wave_swing/greatsword
 	parrysound = list(
 		'sound/combat/parry/bladed/bladedlarge (1).ogg',
 		'sound/combat/parry/bladed/bladedlarge (2).ogg',
@@ -111,5 +102,211 @@
 			if("onback")
 				return list("shrink" = 0.6,"sx" = -1,"sy" = 2,"nx" = 0,"ny" = 2,"wx" = 2,"wy" = 1,"ex" = 0,"ey" = 1,"nturn" = 0,"sturn" = 0,"wturn" = 70,"eturn" = 15,"nflip" = 1,"sflip" = 1,"wflip" = 1,"eflip" = 1,"northabove" = 1,"southabove" = 0,"eastabove" = 0,"westabove" = 0)
 
-/datum/intent/sword/chop/cleave
-	icon_state = "incleave"
+/obj/item/rogueweapon/sword/rapier/psy/folding
+	name = "psydonian folding blade"
+	desc = "A costly folding blade commissioned for the rune volves of the Psydonian Inquisition. Built for investigators and executioners alike, it folds into a compact package for discreet carry before locking into a deadly dueling weapon."
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon_state = "psyfoldingblade_on"
+	sheathe_icon = "silverrapier"
+	var/extended = FALSE
+
+/obj/item/rogueweapon/sword/rapier/psy/folding/attack_self(mob/user)
+	extended = !extended
+	playsound(src.loc, 'sound/blank.ogg', 50, TRUE)
+	if(extended)
+		possible_item_intents = list(/datum/intent/sword/thrust/rapier, /datum/intent/sword/cut/rapier, /datum/intent/sword/thrust/rapier/lunge)
+		wlength = WLENGTH_NORMAL
+		w_class = WEIGHT_CLASS_BULKY
+		sharpness = IS_SHARP
+		slot_flags = ITEM_SLOT_HIP | ITEM_SLOT_BACK
+		equip_delay_self = initial(equip_delay_self)
+		unequip_delay_self = initial(unequip_delay_self)
+		inv_storage_delay = initial(inv_storage_delay)
+		icon_state = "psyfoldingblade_on"
+		playsound(user, 'sound/items/knife_open.ogg', 100, TRUE)
+	else
+		possible_item_intents = list(/datum/intent/sword/strike)
+		wlength = WLENGTH_SHORT
+		w_class = WEIGHT_CLASS_SMALL
+		sharpness = IS_BLUNT
+		slot_flags = ITEM_SLOT_HIP
+		equip_delay_self = 0 SECONDS
+		unequip_delay_self = 0 SECONDS
+		inv_storage_delay = 0 SECONDS
+		icon_state = "psyfoldingblade_off"
+	if(user.a_intent)
+		var/datum/intent/I = user.a_intent
+		if(istype(I))
+			I.afterchange()
+	user.update_a_intents()
+	update_icon()
+
+/obj/item/rogueweapon/sword/long/oathbreaker_matthios
+	name = "\"Kingslayer\""
+	desc = "The blade seems to be forged of pure gold, yet it cuts and blocks just as well as any steel blade would. </br>'Rise, now, stand and fight! Take your freedom, claim your right!' </br>'Rise, now, stand and sing! Storm the castle, kill the king!'"
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon_state = "oathbreakersword"
+	item_state = "oathbreakersword"
+	//sheathe_icon = "oathbreakersword" //Когда замержат #1569, буду это делать
+	force = 35
+	force_wielded = 40
+	max_blade_int = 400
+	max_integrity = 500
+	equip_delay_self = 0
+	unequip_delay_self = 0
+	wdefense_wbonus = 7
+	smeltresult = null
+	possible_item_intents = list(/datum/intent/sword/cut/krieg, /datum/intent/sword/chop/falx, /datum/intent/sword/strike, /datum/intent/rend/krieg)
+	gripped_intents = list(/datum/intent/sword/cut/krieg, /datum/intent/sword/thrust/long/deep, /datum/intent/sword/strike, /datum/intent/rend/krieg)
+	alt_grips = list(/datum/alt_grip/mordhau/sword/lesser, /datum/alt_grip/halfsword/lesser)
+
+/obj/item/rogueweapon/sword/long/oathbreaker_matthios/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_OATHBREAKER, "SWORD")
+
+/obj/item/rogueweapon/sword/long/oathbreaker_matthios/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_MATTHIOS_WEAPON)
+
+/obj/item/rogueweapon/sword/sabre/threaded
+	name = "threaded sword"
+	desc = "Изумительное творение неизвестного мастера. В тонком клинке проложена тонкая стальная нить, что при желании владельца способна вытянуть клинок вперёд, превращая оный в смертоносную плеть. Жаль, что он довольно хрупок.."
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon_state = "cane_sword"
+	sheathe_icon = "swordcande"
+	smeltresult = /obj/item/ingot/bronze
+	max_blade_int = 200
+	bigboy = TRUE
+	pixel_y = -16
+	pixel_x = -16
+	inhand_x_dimension = 64
+	inhand_y_dimension = 64
+	var/transformed = FALSE
+
+/obj/item/rogueweapon/sword/sabre/threaded/attack_self(mob/user)
+	transformed = !transformed
+	playsound(src.loc, 'sound/combat/armor_degrade_chain3.ogg', 50, TRUE)
+	if(transformed)
+		possible_item_intents = list(/datum/intent/whip/lash/master, /datum/intent/whip/crack, /datum/intent/whip/punish)
+		force = 20
+		throwforce = 5
+		wdefense = 3
+		icon_state = "cane_whip"
+		attack_verb = list("lashes", "cracks")
+		sharpness = IS_BLUNT
+		swingsound = WHIPWOOSH
+		update_force_dynamic()
+		update_wdefense_dynamic()
+		associated_skill = /datum/skill/combat/whipsflails
+		special = /datum/special_intent/whip_coil
+	else
+		possible_item_intents = list(/datum/intent/sword/cut/sabre, /datum/intent/sword/thrust/sabre, /datum/intent/sword/strike)
+		force = 22
+		throwforce = 10
+		wdefense = 7
+		icon_state = "cane_sword"
+		attack_verb = list("cuts", "slashes")
+		sharpness = IS_SHARP
+		swingsound = BLADEWOOSH_SMALL
+		update_force_dynamic()
+		update_wdefense_dynamic()
+		associated_skill = /datum/skill/combat/swords
+		special = /datum/special_intent/shin_swipe
+
+	if(user.a_intent)
+		var/datum/intent/I = user.a_intent
+		if(istype(I))
+			I.afterchange()
+	user.update_a_intents()
+
+/obj/item/rogueweapon/sword/sabre/threaded/getonmobprop(tag)
+	. = ..()
+	if(tag)
+		switch(tag)
+			if("gen")
+				return list("shrink" = 0.5,"sx" = -16,"sy" = -10,"nx" = 15,"ny" = -7,"wx" = -10,"wy" = -5,"ex" = 7,"ey" = -7,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = -13,"sturn" = 101,"wturn" = -60,"eturn" = -32,"nflip" = 1,"sflip" = 1,"wflip" = 8,"eflip" = 1)
+
+/obj/item/rogueweapon/sword/sabre/threaded/silver
+	name = "silver threaded sword"
+	desc = "Изумительное творение неизвестного мастера. В тонком клинке проложена тонкая стальная нить, что при желании владельца способна вытянуть клинок вперёд, превращая оный в смертоносную плеть. Жаль, что он довольно хрупок.."
+	icon_state = "cane_sword_s"
+	smeltresult = /obj/item/ingot/silver
+	transformed = FALSE
+	is_silver = TRUE
+
+/obj/item/rogueweapon/sword/sabre/threaded/silver/attack_self(mob/user)
+	transformed = !transformed
+	playsound(src.loc, 'sound/combat/armor_degrade_chain3.ogg', 50, TRUE)
+	if(transformed)
+		possible_item_intents = list(/datum/intent/whip/lash/master, /datum/intent/whip/crack, /datum/intent/whip/punish)
+		force = 20
+		throwforce = 5
+		wdefense = 3
+		icon_state = "cane_whip_s"
+		attack_verb = list("lashes", "cracks")
+		sharpness = IS_BLUNT
+		swingsound = WHIPWOOSH
+		update_force_dynamic()
+		update_wdefense_dynamic()
+		associated_skill = /datum/skill/combat/whipsflails
+		special = /datum/special_intent/whip_coil
+	else
+		possible_item_intents = list(/datum/intent/sword/cut/sabre, /datum/intent/sword/thrust/sabre, /datum/intent/sword/strike)
+		force = 22
+		throwforce = 10
+		wdefense = 7
+		icon_state = "cane_sword_s"
+		attack_verb = list("cuts", "slashes")
+		sharpness = IS_SHARP
+		swingsound = BLADEWOOSH_MED
+		update_force_dynamic()
+		update_wdefense_dynamic()
+		associated_skill = /datum/skill/combat/swords
+		special = /datum/special_intent/shin_swipe
+
+	if(user.a_intent)
+		var/datum/intent/I = user.a_intent
+		if(istype(I))
+			I.afterchange()
+	user.update_a_intents()
+
+/obj/item/rogueweapon/scabbard/sword/cane_bb
+	name = "cane sheath"
+	desc = "A piece of steel lined with wood. Great for batting away blows."
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon_state = "cane_sheath"
+	item_state = "cane_sheath"
+	force = 10
+	bigboy = TRUE
+	pixel_y = -16
+	pixel_x = -16
+	inhand_x_dimension = 64
+	inhand_y_dimension = 64
+	valid_blade = /obj/item/rogueweapon/sword/sabre/threaded
+	possible_item_intents = list(SHIELD_BASH, SHIELD_SMASH)
+	can_parry = TRUE
+	sewrepair = FALSE
+	anvilrepair = /datum/skill/craft/carpentry
+	wdefense = 5
+	special = /datum/special_intent/limbguard
+	slot_flags = NONE
+	cant_strip = TRUE
+	max_integrity = 100
+
+/obj/item/rogueweapon/scabbard/sword/cane_bb/getonmobprop(tag)
+	. = ..()
+	if(tag)
+		switch(tag)
+			if("gen")
+				return list("shrink" = 0.4,"sx" = -11,"sy" = -11,"nx" = 11,"ny" = 0,"wx" = -4,"wy" = 0,"ex" = 1,"ey" = -10,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 0,"sturn" = -110,"wturn" = 0,"eturn" = 109,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
+
+/obj/item/rogueweapon/sword/long/kriegmesser/donat_astrata
+	name = "\"Her Verdict\""
+	desc = "Wielded by the Paladins of the Punishing Light, these swords are forged from the same alloy of steel and silver used in the Eclipsum blades. While effective on the field of battle, this weapon is primarily known for it's use public executions.</br>'In the light of your rays I stand before you..' </br>'..with my blade raised and my soul bare..' </br>'..let you judge my verdict, and find it true..' </br>'..and let you guide my hand, O Radiant One.'"
+	icon = 'modular_twilight_axis/icons/obj/items/donor_weapons_64.dmi'
+	icon_state = "ast_kriegmesser"
+	sheathe = 'modular_twilight_axis/icons/obj/items/scabbard.dmi'
+	sheathe_icon = "ast_kriegmesser"
+
+/obj/item/rogueweapon/sword/rapier/silver/psy/smallsword
+	sheathe = 'modular_twilight_axis/icons/obj/items/scabbard.dmi'
+	sheathe_icon = "psysmallsword"

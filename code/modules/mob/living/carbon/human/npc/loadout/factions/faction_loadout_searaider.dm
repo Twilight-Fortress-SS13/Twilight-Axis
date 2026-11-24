@@ -1,0 +1,241 @@
+//** ARCHETYPES **//
+
+/datum/npc_archetype/searaider
+	name = "Sea Raider"
+	stat_modifiers = list("perception" = -2, "strength" = 1)
+	job = "Sea Raider"
+	category = FACTION_GRONNMEN
+	faction_tag = "raiders"
+	threat_point = THREAT_TOUGH
+	body = /datum/npc_body/northern_commoner/searaider
+	statpack = /datum/npc_statpack/line/t2
+	patron = list(
+		/datum/patron/inhumen/graggar = 40,
+		/datum/patron/inhumen/zizo = 20,
+		/datum/patron/inhumen/matthios = 20,
+		/datum/patron/inhumen/baotha = 20,
+	)
+	joins_cabal = FALSE
+	armor_training = ARMOR_CLASS_HEAVY
+	melee = SKILL_LEVEL_JOURNEYMAN
+	magic = SKILL_LEVEL_JOURNEYMAN
+	brawl = SKILL_LEVEL_JOURNEYMAN
+	survival = SKILL_LEVEL_APPRENTICE
+	loadouts = list(
+		/datum/npc_loadout/armor/medium/scavenged,
+		/datum/npc_loadout/kit/searaider_flavor,
+		list(
+			/datum/npc_loadout/weapon/searaider_melee = 5,
+			/datum/npc_loadout/weapon/searaider_dual_axes = 1,
+		),
+	)
+
+/datum/npc_archetype/searaider/archer
+	name = "Sea Raider Archer"
+	statpack = /datum/npc_statpack/marksman/t2
+	skills = list(/datum/skill/combat/bows = SKILL_LEVEL_JOURNEYMAN)
+	loadouts = list(
+		/datum/npc_loadout/armor/medium/scavenged/archer,
+		/datum/npc_loadout/kit/searaider_flavor/archer,
+		/datum/npc_loadout/weapon/searaider_bow,
+	)
+	ai_controller = /datum/ai_controller/human_npc/archer
+
+/datum/npc_archetype/searaider/archer/scarce
+	name = "Sea Raider Archer (Scarce Arrows)"
+	loadouts = list(
+		/datum/npc_loadout/armor/medium/scavenged/archer,
+		/datum/npc_loadout/kit/searaider_flavor/archer,
+		/datum/npc_loadout/weapon/searaider_bow/scarce,
+	)
+
+/datum/npc_archetype/searaider/archer/reaver
+	name = "Sea Raider Archer (Reaver Arrows)"
+	loadouts = list(
+		/datum/npc_loadout/armor/medium/scavenged/archer,
+		/datum/npc_loadout/kit/searaider_flavor/archer,
+		/datum/npc_loadout/weapon/searaider_bow/reaver,
+	)
+
+/datum/npc_archetype/searaider/huscarl
+	name = "Sea Raider Huscarl"
+	job = "Sea Raider Huscarl"
+	threat_point = THREAT_DEADLY
+	statpack = /datum/npc_statpack/line/t3
+	traits = list(TRAIT_BADTRAINER)
+	brawl = SKILL_LEVEL_EXPERT
+	skills = list(
+		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,
+		/datum/skill/combat/axes = SKILL_LEVEL_EXPERT,
+	)
+	loadouts = list(
+		/datum/npc_loadout/kit/searaider_flavor/huscarl,
+		/datum/npc_loadout/armor/heavy/iron_chain/scale,
+		/datum/npc_loadout/weapon/searaider_greatsword,
+	)
+
+/datum/npc_archetype/searaider/shaman
+	name = "Sea Raider Shaman"
+	job = "Sea Raider Shaman"
+	threat_point = THREAT_TOUGH + THREAT_CASTER_PREMIUM
+	patron = /datum/patron/inhumen/graggar
+	armor_training = ARMOR_CLASS_LIGHT
+	loadouts = list(
+		/datum/npc_loadout/kit/searaider_flavor,
+		/datum/npc_loadout/kit/searaider_shaman,
+	)
+	ai_controller = /datum/ai_controller/human_npc/caster/melee
+
+/datum/npc_archetype/searaider/caster
+	abstract_type = /datum/npc_archetype/searaider/caster
+	threat_point = THREAT_TOUGH + THREAT_CASTER_PREMIUM
+	statpack = /datum/npc_statpack/caster/t1
+	armor_training = ARMOR_CLASS_LIGHT
+	ai_controller = /datum/ai_controller/human_npc/caster
+
+/datum/npc_archetype/searaider/caster/mixed
+	name = "Sea Raider Mage"
+	variants = list(
+		/datum/npc_archetype/searaider/caster/pyromancer = 4,
+		/datum/npc_archetype/searaider/caster/ferramancer = 1,
+		/datum/npc_archetype/searaider/caster/cryomancer = 1,
+	)
+
+/datum/npc_archetype/searaider/caster/pyromancer
+	name = "Sea Raider Pyromancer"
+	job = "Sea Raider Pyromancer"
+	loadouts = list(
+		/datum/npc_loadout/kit/caster/pyromancer,
+		/datum/npc_loadout/kit/searaider_flavor/caster,
+	)
+
+/datum/npc_archetype/searaider/caster/cryomancer
+	name = "Sea Raider Cryomancer"
+	job = "Sea Raider Cryomancer"
+	loadouts = list(
+		/datum/npc_loadout/kit/caster/cryomancer,
+		/datum/npc_loadout/kit/searaider_flavor/caster,
+	)
+
+/datum/npc_archetype/searaider/caster/ferramancer
+	name = "Sea Raider Ferramancer"
+	job = "Sea Raider Ferramancer"
+	loadouts = list(
+		/datum/npc_loadout/kit/caster/ferramancer,
+		/datum/npc_loadout/kit/searaider_flavor/caster,
+	)
+	ai_controller = /datum/ai_controller/human_npc/caster/melee
+
+//** BODY **//
+
+/datum/npc_body/northern_commoner/searaider
+	male_name_file = "strings/rt/names/human/vikingm.txt"
+	female_name_file = "strings/rt/names/human/vikingf.txt"
+	aggro_lines_file = "strings/rt/searaideraggrolines.txt"
+	voicepack_chance = 100
+	voicepacks = list(
+		list(/datum/voicepack/male/warrior, /datum/voicepack/female/warrior),
+	)
+
+/datum/npc_body/northern_commoner/searaider/get_head_sellprice()
+	return HEAD_BOUNTY_SEARAIDER
+
+//** FLAVOR **//
+
+/datum/npc_loadout/kit/searaider_flavor
+	belt = /obj/item/storage/belt/rogue/leather //Cosmetic + Holding repair kits for looting mostly.
+	beltl = list(
+		/obj/item/repair_kit/bad = 15, //So you can get repair kits easier from looting them
+		NPC_NOTHING = 85,
+	)
+	shirt = list(
+		/obj/item/clothing/suit/roguetown/shirt/undershirt/vagrant,
+		/obj/item/clothing/suit/roguetown/shirt/undershirt/sailor, //We don't want anything that dips below waist, looks bad w/kilt
+	)
+	beltr = list(
+		NPC_PATRON_AMULET = 20, //SHATTER MY BINDS
+		NPC_NOTHING = 80,
+	)
+	cloak = list(
+		/obj/item/clothing/cloak/raincloak/furcloak/brown,
+		/obj/item/clothing/cloak/raincloak/furcloak/black,
+		/obj/item/clothing/cloak/raincloak/furcloak, //White
+		/obj/item/clothing/cloak/volfmantle,
+	)
+	shoes = list(
+		/obj/item/clothing/shoes/roguetown/boots/leather/reinforced = 70,
+		/obj/item/clothing/shoes/roguetown/boots/furlinedboots = 30,
+	)
+	mask = list(
+		/obj/item/clothing/mask/rogue/skullmask = 1,
+		/obj/item/clothing/mask/rogue/facemask/padded/shoddy = 1,
+	)
+
+/datum/npc_loadout/kit/searaider_flavor/archer
+	shirt = /obj/item/clothing/suit/roguetown/shirt/tunic
+	pants = /obj/item/clothing/under/roguetown/tights
+	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced
+
+/datum/npc_loadout/kit/searaider_flavor/caster
+	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/light
+
+/datum/npc_loadout/kit/searaider_flavor/huscarl
+	shoes = /obj/item/clothing/shoes/roguetown/boots/maille/iron
+	cloak = /obj/item/clothing/cloak/raincloak/furcloak/brown
+
+/datum/npc_loadout/kit/searaider_shaman
+	miracle_tier = CLERIC_T2
+	traits = list(TRAIT_CIVILIZEDBARBARIAN, TRAIT_IGNOREDAMAGESLOWDOWN, TRAIT_NOPAINSTUN)
+	skills = list(
+		/datum/skill/magic/holy = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/unarmed = SKILL_LEVEL_EXPERT,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
+	)
+	beltr = NPC_PATRON_AMULET
+	armor = list(
+		/obj/item/clothing/suit/roguetown/armor/leather/hide = 50,
+		/obj/item/clothing/suit/roguetown/armor/leather/heavy/coat = 50,
+	)
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
+	gloves = /obj/item/clothing/gloves/roguetown/leather
+	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants
+	neck = /obj/item/clothing/neck/roguetown/coif
+	head = list(
+		/obj/item/clothing/head/roguetown/helmet/leather/volfhelm = 60,
+		/obj/item/clothing/head/roguetown/helmet/leather = 40,
+	)
+	weapons = list(
+		list(/obj/item/rogueweapon/handclaw),
+		list(/obj/item/rogueweapon/handclaw/ironclaw),
+		list(/obj/item/rogueweapon/handclaw/ironclaw/blunt),
+	)
+
+//** WEAPONS **//
+
+/datum/npc_loadout/weapon/searaider_melee
+	weapons = list(
+		list(/obj/item/rogueweapon/sword/iron, /obj/item/rogueweapon/shield/wood),
+		list(/obj/item/rogueweapon/stoneaxe/handaxe, /obj/item/rogueweapon/shield/wood),
+		list(/obj/item/rogueweapon/spear),
+		list(/obj/item/rogueweapon/greataxe),
+		list(/obj/item/rogueweapon/greatsword/iron),
+	)
+
+/datum/npc_loadout/weapon/searaider_dual_axes
+	r_hand = /obj/item/rogueweapon/stoneaxe/handaxe/copper
+	l_hand = /obj/item/rogueweapon/stoneaxe/handaxe/copper
+	traits = list(TRAIT_DUALWIELDER)
+
+/datum/npc_loadout/weapon/searaider_bow
+	r_hand = /obj/item/rogueweapon/sword/iron
+	backr = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
+	backl = /obj/item/quiver/npc
+
+/datum/npc_loadout/weapon/searaider_bow/scarce
+	backl = /obj/item/quiver/arrows/scarce
+
+/datum/npc_loadout/weapon/searaider_bow/reaver
+	backl = /obj/item/quiver/randomfill/reaver
+
+/datum/npc_loadout/weapon/searaider_greatsword
+	r_hand = /obj/item/rogueweapon/greatsword/iron

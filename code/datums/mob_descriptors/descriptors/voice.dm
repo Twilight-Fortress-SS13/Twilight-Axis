@@ -5,7 +5,7 @@
 	prefix = "a"
 	suffix = "voice"
 
-/datum/mob_descriptor/voice/proc/get_speaking_name(var/voice_gender, mob/living/described = null)
+/datum/mob_descriptor/voice/proc/get_speaking_name(voice_gender, mob/living/described = null)
 	return "[name] [voice_gender]"
 
 /datum/mob_descriptor/voice/ordinary
@@ -40,7 +40,7 @@
 	name = "Androgynous"
 	prefix = "an"
 
-/datum/mob_descriptor/voice/androgynous/get_speaking_name(var/voice_gender)
+/datum/mob_descriptor/voice/androgynous/get_speaking_name(voice_gender)
 	return "Androgynous Person"
 
 /datum/mob_descriptor/voice/nasal
@@ -94,7 +94,7 @@
 /datum/mob_descriptor/voice/smoker
 	name = "Smoker's"
 
-/datum/mob_descriptor/voice/smoker/get_speaking_name(var/voice_gender)
+/datum/mob_descriptor/voice/smoker/get_speaking_name(voice_gender)
 	return "Gravelly [voice_gender]"
 
 /datum/mob_descriptor/voice/venomous
@@ -123,6 +123,9 @@
 	var/datum/custom_descriptor_entry/entry = described.custom_descriptors[custom_index]
 	return entry.content_text
 
+/datum/mob_descriptor/voice/custom/get_examine_description(mob/living/described)
+	return LOWER_TEXT(get_description(described))
+
 /datum/mob_descriptor/voice/custom/get_pre_string(mob/living/described)
 	var/datum/custom_descriptor_entry/entry = described.custom_descriptors[custom_index]
 	switch(entry.prefix_type)
@@ -132,7 +135,7 @@
 			return "an "
 	return null
 
-/datum/mob_descriptor/voice/custom/get_speaking_name(var/voice_gender, mob/living/described = null)
+/datum/mob_descriptor/voice/custom/get_speaking_name(voice_gender, mob/living/described = null)
 	if(!described || length(described.custom_descriptors) < custom_index)
 		return voice_gender
 	var/datum/custom_descriptor_entry/entry = described.custom_descriptors[custom_index]

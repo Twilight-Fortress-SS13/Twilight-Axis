@@ -18,10 +18,8 @@
 		"Wretch",\
 		"Gnoll",\
 		"Veteran",\
+		"Hag",\
 		"Guildmaster",\
-		"Court Magician",\
-		"Keeper",\
-		"Orthodoxist",\
 		"Druid",\
 		"Acolyte",\
 		"Man at Arms",\
@@ -32,4 +30,39 @@
 		"Watchman", \
 		"Town Watch", \
 		"Squire",\
+	)
+
+#define DEFAULT_ANTAG_BLACKLISTED_COMBAT_ROLES list(\
+		"Grand Duke",\
+		"Consort",\
+		"Steward",\
+		"Hand",\
+		"Court Magician",\
+		"Magicians Associate",\
+		"Marshal",\
+		"Knight",\
+		"Squire",\
+		"Bishop",\
+		"Martyr",\
+		"Templar",\
+		"Painter",\
+		"Keeper",\
+		"Inquisitor",\
+		"Absolver",\
+		"Orthodoxist",\
+		"Assassin",\
+		"Bandit",\
+		"Wretch",\
+		"Gnoll",\
+		"Veteran",\
+		"Guildmaster",\
+		"Guildsman",\
+		"Head Physician",\
+		"Mercenary",\
+		"Adventurer",\
+		"Court Agent",\
+		"Assassin",\
+		"Bandit",\
+		"Wretch",\
+		"Hag",\
 	)

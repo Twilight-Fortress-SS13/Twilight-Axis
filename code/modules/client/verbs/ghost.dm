@@ -22,7 +22,7 @@ GLOBAL_LIST_INIT(ghost_verbs, list(
 	set name = "Journey to the Underworld"
 	set category = "Spirit"
 
-	switch(alert("Descend to the Underworld?",,"Yes","No"))
+	switch(alert(usr, "Descend to the Underworld?",,"Yes","No"))
 		if("Yes")
 			if(istype(mob, /mob/living/carbon/spirit))
 				return
@@ -69,11 +69,20 @@ GLOBAL_LIST_INIT(ghost_verbs, list(
 	if(key)
 		GLOB.respawntimes[key] = world.time
 
+	LAZYREMOVE(GLOB.actors_list, mobid)
+
 	// Notify the job datum that this player is permanently leaving the round
 	if(mind?.assigned_role)
 		var/datum/job/my_job = SSjob.GetJob(mind.assigned_role)
 		if(my_job)
 			my_job.on_round_removal(src)
+
+	if(isobserver(src) && mind.current && ishuman(mind.current))
+		var/mob/living/carbon/human/H = mind.current
+		H.roundremove_restore_name()
+	else if(ishuman(src))
+		var/mob/living/carbon/human/H = src
+		H.roundremove_restore_name()
 
 	log_game("[key_name(usr)] respawned from underworld")
 

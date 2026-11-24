@@ -64,7 +64,7 @@
 	return
 
 //////////////////////
-///   TEN CURSES   ///
+///	TEN CURSES	///
 //////////////////////
 
 /datum/curse/astrata
@@ -74,7 +74,7 @@
 
 /datum/curse/noc
 	name = "Curse of Noc"
-	description = "I am forsaken by the Moon. I will find no salvation in His grace."
+	description = "I am forsaken by the Moon. I will find no salvation in Her grace." // TA EDIT
 	trait = TRAIT_CURSE_NOC
 
 /datum/curse/dendor
@@ -84,7 +84,7 @@
 
 /datum/curse/abyssor
 	name = "Curse of Abyssor"
-	description = "I am forsaken by the Dreamer. His domain will surely become my grave."
+	description = "I am forsaken by the Oceanfather. His domain will surely become my grave." // TA EDIT
 	trait = TRAIT_CURSE_ABYSSOR
 
 /datum/curse/ravox
@@ -118,11 +118,11 @@
 	trait = TRAIT_CURSE_EORA
 
 ////////////////////////////
-///   ASCENDANT CURSES   ///
+///	ASCENDANT CURSES	///
 ////////////////////////////
 /datum/curse/zizo
 	name = "Curse of Zizo"
-	description = "I am forsaken by the Architect. Her grasp reaches for my heart."
+	description = "I am forsaken by the Mistress of Darkness. Her grasp reaches for my heart." // TA EDIT
 	trait = TRAIT_CURSE_ZIZO
 
 /datum/curse/graggar
@@ -132,16 +132,16 @@
 
 /datum/curse/matthios
 	name = "Curse of Matthios"
-	description = "I am forsaken by the Dragon. Greed will be my only salvation."
+	description = "I am forsaken by the Father. Do I not deserve to be free?" // TA EDIT
 	trait = TRAIT_CURSE_MATTHIOS
 
 /datum/curse/baotha
 	name = "Curse of Baotha"
-	description = "I am forsaken by the Heartbreaker. I am drowning in her promises."
+	description = "I am forsaken by the Mistress of Pleasures. I am drowning in her promises that will never be." // TA EDIT
 	trait = TRAIT_CURSE_BAOTHA
 
 //////////////////////
-///	ON LIFE	 ///
+///	ON LIFE		///
 //////////////////////
 
 /datum/curse/astrata/on_life(mob/user)

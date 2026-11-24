@@ -22,7 +22,7 @@
 	if(!damage || (!forced && hit_percent <= 0))
 		return 0
 	clear_typing_indicator()
-	var/damage_amount =  forced ? damage : damage * hit_percent
+	var/damage_amount =	forced ? damage : damage * hit_percent
 	switch(damagetype)
 		if(BRUTE)
 			adjustBruteLoss(damage_amount, forced = forced)
@@ -175,7 +175,7 @@
 		return FALSE
 	if(mob_timers && amount > 0)
 		mob_timers["lastoxydam"] = world.time
-	if(HAS_TRAIT(src, TRAIT_NOBREATH)) // kinda needed here since we don't breathe at all nor suffocate to death on bloodloss, we die on integrity critzapping us to death
+	if(HAS_TRAIT(src, TRAIT_IRONMAN)) // kinda needed here since we don't breathe at all nor suffocate to death on bloodloss, we die on integrity critzapping us to death
 		amount = min(amount, 0)
 	if(has_status_effect(/datum/status_effect/buff/fortify) && amount < 0)
 		amount *= 1.3
@@ -232,7 +232,7 @@
 
 	if (!.)
 		return FALSE
-	
+
 	if(updating_health)
 		updatehealth()
 	return amount
@@ -294,6 +294,18 @@
 	adjustStaminaLoss(stamina, FALSE)
 	if(updating_health)
 		updatehealth()
+
+// heal MANY bodyparts, in random order, scaling from the damage. EXCLUSIVE FOR PSYDONITES.
+/mob/living/proc/heal_psydonite(brute = 0, burn = 0, stamina = 0, required_status, updating_health = TRUE)
+	brute += getBruteLoss() * 0.015
+	burn += getFireLoss() * 0.015
+	stamina += getStaminaLoss() * 0.015
+	adjustBruteLoss(-brute, FALSE)
+	adjustFireLoss(-burn, FALSE)
+	adjustStaminaLoss(-stamina, FALSE)
+	if(updating_health)
+		updatehealth()
+
 // heal MANY bodyparts, in random order
 /mob/living/proc/heal_overall_damage(brute = 0, burn = 0, stamina = 0, required_status, updating_health = TRUE)
 	adjustBruteLoss(-brute, FALSE) //zero as argument for no instant health update

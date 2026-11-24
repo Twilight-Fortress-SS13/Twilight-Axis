@@ -37,6 +37,8 @@
 	var/datum/ui_state/state = null
 	/// Rate limit client refreshes to prevent DoS.
 	COOLDOWN_DECLARE(refresh_cooldown)
+	/// Are byond mouse events beyond the window passed in to the ui
+	var/mouse_hooked = FALSE
 
 	/// The id of any ByondUi elements that we have opened
 	var/list/open_byondui_elements
@@ -60,7 +62,7 @@
  */
 /datum/tgui/New(mob/user, datum/src_object, interface, title, ui_x, ui_y)
 	log_tgui(user,
-		"new [interface] fancy [TRUE]",
+		"new [interface]",
 		src_object = src_object)
 	src.user = user
 	src.src_object = src_object
@@ -101,7 +103,6 @@
 	if(!window.is_ready())
 		window.initialize(
 			strict_mode = TRUE,
-			fancy = TRUE, // user.client.prefs.read_preference(/datum/preference/toggle/tgui_fancy),
 			assets = list(
 				get_asset_datum(/datum/asset/simple/tgui),
 			))
@@ -111,6 +112,8 @@
 	window.send_message("update", get_payload(
 		with_data = TRUE,
 		with_static_data = TRUE))
+	if(mouse_hooked)
+		window.set_mouse_macro()
 	SStgui.on_open(src)
 
 	return TRUE
@@ -161,7 +164,7 @@
  * public
  *
  * Closes all ByondUI elements, left dangling by a forceful TGUI exit,
- * such as via Alt+F4, closing in non-fancy mode, or terminating the process
+ * such as via Alt+F4, closing or terminating the process
  *
  */
 /datum/tgui/proc/terminate_byondui_elements()
@@ -179,6 +182,16 @@
  */
 /datum/tgui/proc/set_autoupdate(autoupdate)
 	src.autoupdate = autoupdate
+
+/**
+ * public
+ *
+ * Enable/disable passing through byond mouse events to the window
+ *
+ * required value bool Enable/disable hooking.
+ */
+/datum/tgui/proc/set_mouse_hook(value)
+	src.mouse_hooked = value
 
 /**
  * public
@@ -265,7 +278,6 @@
 		"window" = list(
 			"key" = window_key,
 			"size" = window_size,
-			"fancy" = user.client.prefs.tgui_fancy,
 			"locked" = user.client.prefs.tgui_lock,
 			"theme" = user.client.prefs.tgui_theme,
 			"parchment_skin" = user.client.prefs.parchment_skin,

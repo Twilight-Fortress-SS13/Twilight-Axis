@@ -17,17 +17,19 @@
 	min_pq = 1
 	max_pq = null
 	round_contrib_points = 3
-	cmode_music = 'sound/music/cmode/towner/combat_towner3.ogg'
+	cmode_music = sound("sound/music/cmode/towner/combat_towner3.ogg")
 	advclass_cat_rolls = list(CTAG_TAILOR = 2)
 	job_subclasses = list(
 		/datum/advclass/tailor
 	)
+	has_subprefs = FALSE // only one subclass
 
 /datum/advclass/tailor
 	name = "Tailor"
 	tutorial = "You have worked sleepless nights on honing your craft. From sacks, to tapestry and luxurious clothing, there is little you cannot sew into existence. Use your storefront to turn even the ugliest peasant into a proper gentleman; who knows, even the nobility may pay you a visit."
 	outfit = /datum/outfit/job/roguetown/tailor/basic
 	category_tags = list(CTAG_TAILOR)
+	subclass_spells = list(/obj/effect/proc_holder/spell/invoked/takeapprentice)
 	subclass_stats = list(
 		STATKEY_INT = 2,
 		STATKEY_PER = 1,
@@ -57,7 +59,7 @@
 	shoes = /obj/item/clothing/shoes/roguetown/shortboots
 	backr = /obj/item/storage/backpack/rogue/satchel
 	backpack_contents = list(
-		/obj/item/needle,
+		/obj/item/needle/tailor,
 		/obj/item/storage/keyring/tailor,
 		/obj/item/dye_brush,
 		/obj/item/recipe_book/sewing,
@@ -71,8 +73,6 @@
 	else if(should_wear_masc_clothes(H))
 		armor = /obj/item/clothing/suit/roguetown/shirt/tunic/random
 	if(H.mind)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/fittedclothing)
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/takeapprentice)
 		SStreasury.grant_savings(ECONOMIC_UPPER_MIDDLE_CLASS, H) //There is a better way to do this, do I care for it - of course not.
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/sewing/tailor/naledisash)
 		H.mind.teach_crafting_recipe(/datum/crafting_recipe/roguetown/sewing/tailor/halfrobe)

@@ -13,13 +13,14 @@
 	spread = 10
 	recoil = 3
 	force = 10
+	obj_flags = CAN_BE_HIT | UNIQUE_RENAME | CLAMP_BREAK
 	var/cocked = FALSE
 	cartridge_wording = "runed sphere"
 	load_sound = 'modular_twilight_axis/firearms/sound/musketload.ogg'
 	fire_sound = 'modular_twilight_axis/firearms/sound/musketfire2.ogg'
 	vary_fire_sound = TRUE
 	fire_sound_volume = 200
-	anvilrepair = null
+	anvilrepair = /datum/skill/craft/engineering
 	smeltresult = /obj/item/ingot/steel
 	/// Chance for the weapon to misfire
 	var/misfire_chance = 0
@@ -27,8 +28,18 @@
 	var/reload_time = 8
 	var/reload_stamina_cost = 15
 	damfactor = 1
+	per_scales_damage = TRUE
 	var/critfactor = 0.7
 	var/npcdamfactor = 4
+	equip_delay_self = 1 SECONDS
+	unequip_delay_self = 1 SECONDS
+	inv_storage_delay = 1 SECONDS
+
+/obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/proc/apply_firearm_ranged_accuracy(obj/projectile/BB, mob/living/user)
+	if(!BB || !user)
+		return
+	var/level = max(1, (user.STAPER - 9))
+	BB.aim_peak = (ACC_RANGED_BASE + (level * ACC_RANGED_PER_SKILL)) * accfactor
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/getonmobprop(tag)
 	. = ..()
@@ -62,14 +73,14 @@
 					var/skill = H.get_skill_level(/datum/skill/combat/twilight_firearms)
 					if(skill)
 						adj_reload_time = reload_time / skill
-				if(move_after(H, adj_reload_time SECONDS, target = H))
+				if(do_after(H, adj_reload_time SECONDS, src))
 					H.stamina_add(reload_stamina_cost)
 					playsound(H, 'modular_twilight_axis/firearms/sound/musketcock.ogg', 100, FALSE)
 					cocked = TRUE
 			else
-				to_chat(H, "<span class='warning'>Я совершенно не понимаю, как этим пользоваться!</span>")
+				to_chat(H, span_warning("Я совершенно не понимаю, как этим пользоваться!"))
 		else
-			to_chat(user, "<span class='warning'>Я совершенно не понимаю, как этим пользоваться!</span>")
+			to_chat(user, span_warning("Я совершенно не понимаю, как этим пользоваться!"))
 	else
 		if(alt_grips)
 			altgrip(user)
@@ -98,73 +109,41 @@
 			..()
 		else
 			to_chat(user, span_warning("I need to cock the runelock first!"))
-	if(istype(A, /obj/item/rogueweapon/hammer))
-		var/repair_percent = 0.025 // 2.5% Repairing per hammer smack
-		if(locate(/obj/machinery/anvil) in src.loc)
-			repair_percent *= 2 // Double the repair amount if we're using an anvil
-		var/exp_gained = 0
-		var/repair_skill = (user?.mind ? user.get_skill_level(/datum/skill/craft/engineering) : 1)
-		if((obj_integrity >= max_integrity) || !isturf(src.loc))
-			return
 
-		if(!src.ontable())
-			to_chat(user, span_warning("I should put this on a table or an anvil first."))
-			return
-
-		if(repair_skill <= 0)
-			if(HAS_TRAIT(user, TRAIT_SQUIRE_REPAIR))
-				if(locate(/obj/machinery/anvil) in src.loc)
-					repair_percent = 0.035
-				//Squires can repair on tables, but less efficiently
-				else if(src.ontable())
-					repair_percent = 0.015
-			else if(prob(30))
-				repair_percent = 0.01
-			else
-				repair_percent = 0
-		else
-			repair_percent *= repair_skill
-
-		playsound(src,'modular_twilight_axis/firearms/sound/arq_repair.ogg', 40, FALSE)
-		if(repair_percent)
-			repair_percent *= max_integrity
-			exp_gained = min(obj_integrity + repair_percent, max_integrity) - obj_integrity
-			obj_integrity = min(obj_integrity + repair_percent, max_integrity)
-			if(repair_percent == 0.01) // If an inexperienced repair attempt has been successful
-				to_chat(user, span_warning("You fumble your way into slightly repairing [src]."))
-			else
-				user.visible_message(span_info("[user] repairs [src]!"))
-			if(obj_broken && obj_integrity == max_integrity)
-				src.obj_fix()
-			adjust_experience(user, /datum/skill/craft/engineering, exp_gained/2) //We gain as much exp as we fix divided by 2
-			return
-		else
-			user.visible_message(span_warning("[user] fumbles trying to repair [src]!"))
-			if(do_after(user, CLICK_CD_MELEE, target = src))
-				attack_obj(src, user)
-			return
-
-/obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/examine(mob/user)
+/obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/examine(mob/living/carbon/human/user)
 	. = ..()
 	if(ishuman(user))
 		var/mob/living/carbon/human/u = user
 		if(HAS_TRAIT(u, TRAIT_INQUISITION) || (u.STAINT >= 15) || (u.merctype == 10))
-			. += span_info("Это оружие оснащено руническим замком — для стрельбы достаточно взвести курок, но зарядить его можно лишь специальными рунными пулями, изготавливаемыми из черной стали или серебра.")
 			if(cocked)
 				if(chambered)
-					. += span_bold("Взведено и готово к стрельбе.")
+					. += span_notice("Взведено и готово к стрельбе.")
 				else
-					. += span_bold("Руны напитаны энергией, но пуля не установлена.")
+					. += span_notice("Руны напитаны энергией, но пуля не установлена.")
 			else
-				. += span_bold("Не заряжено.")
+				. += span_notice("Не заряжено.")
 		else
-			. += span_info("Конструкция замка, установленного на этом оружии, вам незнакома.")
+			. += span_notice("Конструкция замка, установленного на этом оружии, вам незнакома.")
+
+/obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Рунные замки требуют специальную рунную пулю, после чего замок необходимо взвести перед стрельбой.")
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/process_fire/(atom/target, mob/living/user, message = TRUE, params = null, zone_override = "", bonus_spread = 0)
+	if(chambered && HAS_TRAIT(user, TRAIT_PACIFISM))
+		if(chambered.harmful)
+			to_chat(user, span_warning("[src] is lethally chambered! You don't want to risk harming anyone..."))
+			return
 	var/skill = user.get_skill_level(/datum/skill/combat/twilight_firearms)
 	if(skill)
 		misfire_chance = max(0, misfire_chance - (skill * 2))
-		spread = max(3, spread / skill)
+	if(user.client)
+		if(user.client.chargedprog >= 100)
+			spread = 0
+		else
+			spread = 150 - (150 * (user.client.chargedprog / 100))
+	else
+		spread = 0
 	if(prob(misfire_chance))
 		to_chat(user, span_warning("The [name] misfires!"))
 		explosion(src, light_impact_range = 2, heavy_impact_range = 1, smoke = FALSE, soundin = 'sound/misc/explode/bomb.ogg')
@@ -172,10 +151,10 @@
 		return
 	for(var/obj/item/ammo_casing/CB in get_ammo_list(FALSE, TRUE))
 		var/obj/projectile/bullet/BB = CB.BB
+		apply_firearm_ranged_accuracy(BB, user)
 		BB.gunpowder_npc_critfactor *= npcdamfactor
 		BB.critfactor *= critfactor
-		var/per_scaling = 1 + ((min(user.STAPER, RANGED_STAT_SOFTCAP) - 10) * RANGED_STAT_MULT) + (max(0, user.STAPER - RANGED_STAT_SOFTCAP) * RANGED_STAT_CAPPEDMULT)
-		BB.damage *= damfactor * per_scaling
+		BB.damage *= damfactor
 	cocked = FALSE
 	update_icon()
 	var/shoot_dir = get_dir(src, target)
@@ -189,40 +168,46 @@
 	start_empty = TRUE
 
 /datum/intent/shoot/twilight_runelock
+	ready_sound = "modular_twilight_axis/firearms/sound/musketcock.ogg"
 	chargedrain = 0
+	hold_grace = RANGED_HOLD_GRACE * 3
+	hold_ramp = 0
 
 /datum/intent/shoot/twilight_runelock/get_chargetime()
 	if(mastermob && chargetime)
 		var/newtime = chargetime
 		//skill block
 		newtime = newtime + 75
-		newtime = newtime - (mastermob.get_skill_level(/datum/skill/combat/twilight_firearms) * 15)
+		newtime = newtime / max(1, mastermob.get_skill_level(/datum/skill/combat/twilight_firearms))
 		//per block
 		newtime = newtime + 20
 		newtime = newtime - ((mastermob.STAPER)*1.5)
-		if(newtime > 0)
+		if(newtime > 10)
 			return newtime
 		else
-			return 0.1
+			return 10
 	return chargetime
 
 /datum/intent/arc/twilight_runelock
+	ready_sound = "modular_twilight_axis/firearms/sound/musketcock.ogg"
 	chargetime = 1
 	chargedrain = 0
+	hold_grace = RANGED_HOLD_GRACE * 3
+	hold_ramp = 0
 
 /datum/intent/arc/twilight_runelock/get_chargetime()
 	if(mastermob && chargetime)
 		var/newtime = chargetime
 		//skill block
 		newtime = newtime + 70
-		newtime = newtime - (mastermob.get_skill_level(/datum/skill/combat/twilight_firearms) * 15)
+		newtime = newtime / max(1, mastermob.get_skill_level(/datum/skill/combat/twilight_firearms))
 		//per block
 		newtime = newtime + 20
 		newtime = newtime - ((mastermob.STAPER)*1.5)
-		if(newtime > 0)
+		if(newtime > 10)
 			return newtime
 		else
-			return 1
+			return 10
 	return chargetime
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/rifle
@@ -233,7 +218,6 @@
 	icon_state_ready = "runelock_loaded"
 	default_icon_state = "runelock"
 	item_state = "runelock"
-	force = 10
 	force_wielded = 15
 	associated_skill = /datum/skill/combat/staves
 	possible_item_intents = list(/datum/intent/mace/strike/wood)
@@ -246,12 +230,14 @@
 	bigboy = TRUE
 	wlength = WLENGTH_LONG
 	slot_flags = ITEM_SLOT_BACK
-	w_class = WEIGHT_CLASS_BULKY
 	wdefense = 3
-	damfactor = 1.5
+	can_parry = TRUE
+	minstr = 6
+	walking_stick = TRUE
+	damfactor = 1.2
 	critfactor = 1
-	reload_time = 12
-	reload_stamina_cost = 20
+	reload_time = 15
+	reload_stamina_cost = 15
 
 /obj/item/gun/ballistic/revolver/grenadelauncher/twilight_runelock/rifle/getonmobprop(tag)
 	. = ..()

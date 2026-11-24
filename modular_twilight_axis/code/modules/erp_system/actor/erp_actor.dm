@@ -243,6 +243,10 @@
 /datum/erp_actor/proc/has_big_breasts()
 	return FALSE
 
+/// Hook: Returns whether this actor has a named visible anatomy/customization feature.
+/datum/erp_actor/proc/has_appearance_tag(tag)
+	return FALSE
+
 /// Hook: Returns whether current scene is dullahan-specific (implemented in subtypes).
 /datum/erp_actor/proc/is_dullahan_scene()
 	return FALSE

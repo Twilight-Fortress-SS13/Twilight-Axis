@@ -50,6 +50,10 @@
 
 	var/list/faction_list
 
+	if(!target.mind) //Trust the plan, until I can unfuck this or someone else. Its unable to be used on non-players
+		to_chat(owner, span_notice("You cannot declare something mindless an ally."))
+		return FALSE
+
 	if(target.mind?.current)
 		faction_list = target.mind.current.faction
 	else if(istype(target, /mob/living/simple_animal))
@@ -66,7 +70,7 @@
 		faction_list += faction_tag
 		owner.say("Amicus declaratus es.", language = /datum/language/common)
 
-	target.notify_faction_change()
+	target.ai_controller?.nudge_target_scan() // TA EDIT
 	return TRUE
 
 /datum/action/cooldown/spell/gravemark/no_sprite

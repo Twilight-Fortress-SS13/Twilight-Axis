@@ -13,7 +13,7 @@
 	playsound(src, 'sound/items/blackeye_warn.ogg', 80, FALSE, 4)
 	playsound(src, pick('sound/vo/mobs/bird/CROW_01.ogg','sound/vo/mobs/bird/CROW_02.ogg','sound/vo/mobs/bird/CROW_03.ogg'), 70, TRUE, 3)
 	if(holder)
-		to_chat(holder, "<span class='userdanger'>[bomb_word] dangle from the [zad_word] above your zadcage!</span>")
+		to_chat(holder, "<span class='userdanger'>Something dangles from the [zad_word] above your zadcage: [bomb_word]!</span>")
 	for(var/mob/living/M in range(3, src))
 		if(M == holder)
 			continue
@@ -37,9 +37,8 @@
 	for(var/turf/T in orange(1, target_turf))
 		tiles += T
 	var/turf/landing = pick(tiles)
-	var/obj/item/bomb/B = new(landing)
-	B.lit = TRUE
-	B.explode(TRUE)
+	var/obj/item/explosive/fused/bottle/B = new(landing)
+	B.detonate(TRUE)
 
 /proc/log_zad_bomb_dispatch(datum/zad_flight/flight, turf/origin_turf)
 	if(!flight)

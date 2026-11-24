@@ -71,10 +71,11 @@ GLOBAL_VAR_INIT(donatorLoaded, 0)
 // Procs goes here
 /datum/admins/proc/admin_add_donator_verb()
 	set name = "BC - Add Donator Ckey"
-	set category = "SERVER"
-	var/key = input("CKey to Add", "Add Donator CKey") as null|text
+	set category = "Server"
+
+	var/key = input(usr, "CKey to Add", "Add Donator CKey") as null|text
 	if(key)
-		var/confirm = alert("Add [key] to the donator list as tier 1?", , "Yes", "No")
+		var/confirm = alert(usr, "Add [key] to the donator list as tier 1?", , "Yes", "No")
 		if(confirm == "Yes")
 			message_admins("[key_name(usr)] added [key] to the donator list as tier 1.")
 			log_admin("[key_name(usr)] added [key] to the donator list as tier 1.")
@@ -82,7 +83,8 @@ GLOBAL_VAR_INIT(donatorLoaded, 0)
 
 /datum/admins/proc/admin_remove_donator_verb()
 	set name = "BC - Remove Donator Ckey"
-	set category = "SERVER"
+	set category = "Server"
+
 	if(!GLOB.PatreonsLoaded)
 		load_patreons()
 	if(!GLOB.donatorLoaded)
@@ -90,9 +92,9 @@ GLOBAL_VAR_INIT(donatorLoaded, 0)
 	var/list/current_donators = GLOB.allpatreons.Copy()
 	for(var/donator_key in GLOB.donatorCkeys)
 		current_donators |= donator_key
-	var/key = input("CKey to Remove", "Remove Donator CKey") as null|anything in current_donators
+	var/key = input(usr, "CKey to Remove", "Remove Donator CKey") as null|anything in current_donators
 	if(key)
-		var/confirm = alert("Remove [key] from the donator list?", , "Yes", "No")
+		var/confirm = alert(usr, "Remove [key] from the donator list?", , "Yes", "No")
 		if(confirm == "Yes")
 			message_admins("[key_name(usr)] removed [key] from the donator list.")
 			log_admin("[key_name(usr)] removed [key] from the donator list.")

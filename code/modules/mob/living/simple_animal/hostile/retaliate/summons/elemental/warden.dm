@@ -1,5 +1,6 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/elemental/warden
+	anatomy_type = /datum/anatomy/construct/standard
 	icon = 'icons/mob/summonable/32x32.dmi'
 	name = "earthen Warden"
 	desc = "An ever-watchful warden, a manner of earthen elemental dutiful in its protection \
@@ -14,9 +15,7 @@
 	emote_hear = null
 	emote_see = null
 	speak_chance = 1
-	turns_per_move = 3
 	see_in_dark = 6
-	move_to_delay = 12
 	base_intents = list(/datum/intent/simple/elemental_unarmed)
 	butcher_results = list()
 	death_loot = list(/obj/item/magic/elemental/shard = 2)
@@ -27,23 +26,15 @@
 	threat_point = 30
 	melee_damage_lower = 25
 	melee_damage_upper = 30
-	vision_range = 7
-	aggro_vision_range = 9
 	environment_smash = ENVIRONMENT_SMASH_STRUCTURES
 	simple_detect_bonus = 20
-	retreat_distance = 0
-	minimum_distance = 0
 	food_type = list()
 	footstep_type = FOOTSTEP_MOB_BAREFOOT
 	pooptype = null
 	simple_detect_bonus = 20
 	deaggroprob = 0
 	canparry = TRUE
-	defprob = 30
-	// del_on_deaggro = 44 SECONDS
-	retreat_health = 0
 	food = 0
-	rapid = TRUE
 	attack_sound = 'sound/combat/hits/onstone/wallhit.ogg'
 	dodgetime = 30
 	aggressive = 1
@@ -53,7 +44,10 @@
 	STASTR = 10
 	STASPD = 6
 
-/mob/living/simple_animal/hostile/retaliate/rogue/elemental/warden/Initialize()
+	ai_controller = /datum/ai_controller/elemental
+	move_base_delay = MOVEMENT_DELAY_SLOW
+
+/mob/living/simple_animal/hostile/retaliate/rogue/elemental/warden/Initialize(mapload)
 	src.adjust_skillrank(/datum/skill/combat/unarmed, 3, TRUE)
 	. = ..()
 

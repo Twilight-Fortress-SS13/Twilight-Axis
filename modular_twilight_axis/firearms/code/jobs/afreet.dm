@@ -1,10 +1,10 @@
-/datum/advclass/twilight_afreet
+/datum/advclass/bandit/twilight_afreet
 	name = "Afreet"
 	tutorial = "'Demon of Fire', the slaves used to call you, when you, dressed in black uniform, emerged from the sands, having shot their masters dead with weapons they could not comprehend. During the War, you were deployed deep within the Naledi lands, tasked with plundering Golden Empire's slave trade routes. Perhaps you found it too profitable and enjoyable to leave behind, or perhaps you still wage your war to this day — either way, you no longer answer to the Kaiser or his lackeys."
 	allowed_sexes = list(MALE, FEMALE)
 	outfit = /datum/outfit/job/roguetown/bandit/twilight_afreet
 	category_tags = list(CTAG_BANDIT)
-	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_corsair.ogg'
+	cmode_music = sound("modular_twilight_axis/firearms/sound/music/combat_corsair.ogg")
 	maximum_possible_slots = 2
 	subclass_languages = list(/datum/language/grenzelhoftian)
 	traits_applied = list(TRAIT_FIREARMS_MARKSMAN, TRAIT_STEELHEARTED, TRAIT_DODGEEXPERT)
@@ -46,18 +46,29 @@
 	if (!istype(H.patron, /datum/patron/inhumen/matthios))
 		to_chat(H, span_warning("My former deity has abandoned me.. Matthios is my new master."))
 		H.set_patron(/datum/patron/inhumen/matthios)	//We allow other heretics into the cool-kids club, but if you are a tennite/psydonian it sets you to matthiosan.
-	beltl = /obj/item/quiver/twilight_bullet/lead
 	neck = /obj/item/clothing/neck/roguetown/coif
 	shoes = /obj/item/clothing/shoes/roguetown/grenzelhoft
 	gloves = /obj/item/clothing/gloves/roguetown/angle/grenzelgloves
 	id = /obj/item/mattcoin
 	var/classes = list("Jäger Deserter", "Veteran")
-	var/classchoice = input("Choose your archetypes", "Available archetypes") as anything in classes
+	var/classchoice = input(H, "Choose your archetypes", "Available archetypes") as anything in classes
 	switch(classchoice)
 		if("Jäger Deserter")
 			mask = /obj/item/clothing/mask/rogue/facemask/steel
 			cloak = /obj/item/clothing/cloak/half/brown
-			backr = /obj/item/gun/ballistic/twilight_firearm/flintgonne
+			var/list/firearm_choices = list("Arquebus Rifle", "Culverin")
+			var/firearm_choice = input(H, "Choose your firearm", "Available firearms") as anything in firearm_choices
+			if(firearm_choice == "Culverin")
+				backr = /obj/item/gun/ballistic/twilight_firearm/handgonne
+				var/list/ammo_choices = list("Lead Cannonballs", "Lead Grapeshot")
+				var/ammo_choice = input(H, "Choose your ammunition", "Available ammunition") as anything in ammo_choices
+				if(ammo_choice == "Lead Grapeshot")
+					beltl = /obj/item/quiver/twilight_bullet/cannonball/grapeshot
+				else
+					beltl = /obj/item/quiver/twilight_bullet/cannonball/lead
+			else
+				backr = /obj/item/gun/ballistic/twilight_firearm/arquebus
+				beltl = /obj/item/quiver/twilight_bullet/lead
 			pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants
 			armor = /obj/item/clothing/suit/roguetown/armor/leather
 			pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants

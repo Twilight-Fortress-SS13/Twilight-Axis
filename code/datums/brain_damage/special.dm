@@ -99,7 +99,7 @@
 	var/obj/effect/hallucination/simple/bluespace_stream/linked_to
 	var/mob/living/carbon/seer
 
-/obj/effect/hallucination/simple/bluespace_stream/Initialize()
+/obj/effect/hallucination/simple/bluespace_stream/Initialize(mapload)
 	. = ..()
 	QDEL_IN(src, 300)
 
@@ -218,8 +218,8 @@
 	name = "Criminal"
 	desc = ""
 	scan_desc = ""
-	gain_text = "<span class='warning'>Justice is coming for you.</span>"
-	lose_text = "<span class='notice'>I were absolved for your crimes.</span>"
+	gain_text = "<span class='warning'>Justice is coming for me.</span>"
+	lose_text = "<span class='notice'>I was absolved of my crimes.</span>"
 	clonable = FALSE
 	random_gain = FALSE
 	var/obj/effect/hallucination/simple/securitron/beepsky

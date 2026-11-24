@@ -1,4 +1,5 @@
 /datum/action/cooldown/spell/air_strike
+	source_aspect = /datum/magic_aspect/pseudo/spellblade
 	name = "Air Strike"
 	desc = "Your blade passes into the immaterial and the leyline carries it forth, striking up to 4 tiles away. \
 	Brief telegraph before the strike lands - aim where they will be. \
@@ -84,7 +85,7 @@
 	var/list/affected_turfs = get_perpendicular_line(origin, facing)
 
 	for(var/turf/T in affected_turfs)
-		new /obj/effect/temp_visual/air_strike_telegraph(T)
+		new /obj/effect/temp_visual/telegraph/air_strike(T)
 
 	addtimer(CALLBACK(src, PROC_REF(resolve_cut_strike), H, weapon, empowered, affected_turfs, damage, def_zone, facing), 2)
 
@@ -103,7 +104,7 @@
 		for(var/mob/living/victim in T)
 			if(victim == H || victim.stat == DEAD)
 				continue
-			if(spell_guard_check(victim, FALSE, deflected ? null : H))
+			if(spell_guard_check(victim, FALSE, H, punish_caster = deflected ? FALSE : null))
 				deflected = TRUE
 				continue
 			if(empowered)
@@ -130,7 +131,7 @@
 	var/list/affected_turfs = get_forward_line(origin, facing, 3)
 
 	for(var/turf/T in affected_turfs)
-		new /obj/effect/temp_visual/air_strike_telegraph(T)
+		new /obj/effect/temp_visual/telegraph/air_strike(T)
 
 	addtimer(CALLBACK(src, PROC_REF(resolve_stab_strike), H, weapon, empowered, affected_turfs, damage, def_zone, facing), 2)
 
@@ -149,7 +150,7 @@
 		for(var/mob/living/victim in T)
 			if(victim == H || victim.stat == DEAD)
 				continue
-			if(spell_guard_check(victim, FALSE, deflected ? null : H))
+			if(spell_guard_check(victim, FALSE, H, punish_caster = deflected ? FALSE : null))
 				deflected = TRUE
 				continue
 			if(empowered)
@@ -173,7 +174,7 @@
 	var/def_zone = H.zone_selected || BODY_ZONE_CHEST
 	var/damage = empowered ? (blunt_damage * empowered_mult) : blunt_damage
 
-	new /obj/effect/temp_visual/air_strike_telegraph(origin)
+	new /obj/effect/temp_visual/telegraph/air_strike(origin)
 
 	addtimer(CALLBACK(src, PROC_REF(resolve_blunt_strike), H, weapon, empowered, origin, damage, def_zone), 2)
 
@@ -205,6 +206,30 @@
 		arcyne_strike(H, victim, weapon, damage, def_zone, BCLASS_BLUNT, spell_name = "Air Strike (Blunt)")
 	H.visible_message(span_danger("[H] slams [weapon.name] down, focusing all arcyne force into [victim]!"))
 
+/datum/action/cooldown/spell/air_strike/get_impact_turfs(atom/center)
+	var/turf/origin = get_turf(center)
+	var/mob/living/L = owner
+	if(!origin || !istype(L))
+		return list()
+	var/datum/intent/current_intent = L.a_intent
+	return strike_turfs(origin, get_dir(get_turf(L), origin) || L.dir, current_intent?.blade_class)
+
+/datum/action/cooldown/spell/air_strike/proc/strike_turfs(turf/origin, facing, blade_class)
+	switch(blade_class)
+		if(BCLASS_STAB, BCLASS_PICK)
+			return get_forward_line(origin, facing, 3)
+		if(BCLASS_BLUNT, BCLASS_SMASH)
+			return list(origin)
+	return get_perpendicular_line(origin, facing)
+
+/datum/action/cooldown/spell/air_strike/proc/strike_damage(blade_class)
+	switch(blade_class)
+		if(BCLASS_STAB, BCLASS_PICK)
+			return stab_damage
+		if(BCLASS_BLUNT, BCLASS_SMASH)
+			return blunt_damage
+	return cut_damage
+
 /datum/action/cooldown/spell/air_strike/proc/get_perpendicular_line(turf/center, facing)
 	var/list/turfs = list()
 	turfs += center
@@ -233,12 +258,9 @@
 		turfs += current
 	return turfs
 
-/obj/effect/temp_visual/air_strike_telegraph
-	icon = 'icons/effects/effects.dmi'
-	icon_state = "trap"
+/obj/effect/temp_visual/telegraph/air_strike
 	light_outer_range = 1
 	duration = 3
-	layer = MASSIVE_OBJ_LAYER
 
 /obj/effect/temp_visual/arcyne_strike_fx
 	icon = 'icons/effects/effects.dmi'

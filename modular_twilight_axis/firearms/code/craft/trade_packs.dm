@@ -1,5 +1,5 @@
 /datum/supply_pack/rogue/light_armor/padded_gambeson_cuisses
-	name = "Padded Gamboised Cuisses"
+	name = "Gamboised Cuisses, Padded"
 	cost = 60
 	contains = list(/obj/item/clothing/under/roguetown/gambeson/heavy)
 
@@ -23,21 +23,21 @@
 				)
 
 /datum/supply_pack/rogue/ranged_weapons/twilight_bullets
-	name = "Lead bullets (30)"
+	name = "Bag of Lead Bullets"
 	cost = 50
 	contains = list(
 					/obj/item/quiver/twilight_bullet/lead,
 				)
 
 /datum/supply_pack/rogue/ranged_weapons/twilight_cannonballs
-	name = "Lead cannonballs (20)"
+	name = "Bag of Lead Cannonballs"
 	cost = 60
 	contains = list(
 					/obj/item/quiver/twilight_bullet/cannonball/lead,
 				)
 
 /datum/supply_pack/rogue/ranged_weapons/twilight_grapeshot
-	name = "Grapeshot (20)"
+	name = "Bag of Lead Grapeshot"
 	cost = 60
 	contains = list(
 					/obj/item/quiver/twilight_bullet/cannonball/grapeshot,
@@ -222,31 +222,6 @@
 	cost = 20
 	contains = list(/obj/item/rogueweapon/stoneaxe/battle)
 
-/datum/supply_pack/rogue/Afreet/flintgonne
-	name = "Hakenbüchse"
-	cost = 100
-	contains = list(/obj/item/gun/ballistic/twilight_firearm/flintgonne)
-
-/datum/supply_pack/rogue/Afreet/mortar
-	name = "Hand mortar"
-	cost = 120
-	contains = list(/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol/mortar)
-
-/datum/supply_pack/rogue/Afreet/culverin
-	name = "Culverin"
-	cost = 250
-	contains = list(/obj/item/gun/ballistic/twilight_firearm/handgonne)
-
-/datum/supply_pack/rogue/Afreet/arquebuspistol
-	name = "Arquebus Pistol"
-	cost = 400
-	contains = list(/obj/item/gun/ballistic/twilight_firearm/arquebus_pistol)
-
-/datum/supply_pack/rogue/Afreet/arquebus
-	name = "Arquebus"
-	cost = 400
-	contains = list(/obj/item/gun/ballistic/twilight_firearm/arquebus)
-
 /datum/supply_pack/rogue/Afreet/bulletbag
 	name = "Bullet bag (empty)"
 	cost = 10
@@ -330,12 +305,12 @@
 /datum/supply_pack/rogue/Afreet/lockpicks
 	name = "Lockpick ring"
 	cost = 10
-	contains = list(/obj/item/lockpickring/mundane)	
+	contains = list(/obj/item/lockpickring/mundane)
 
 // BIG INQ SHOP
 
 /datum/inqports/equipment/twilight_runelock_bullets
-	name = "(10 bullets) Runelock Ammunition"
+	name = "10 Runed Spheres"
 	item_type = /obj/structure/closet/crate/chest/inqcrate/supplies/twilight_runelock_bullets
 	marquescost = 15
 
@@ -344,7 +319,7 @@
 	new /obj/item/quiver/twilight_bullet/runed(src)
 
 /datum/inqports/equipment/twilight_blessed_bullets
-	name = "(7 bullets) Runelock Blessed Ammunition"
+	name = "7 Blessed Runed Spheres"
 	item_type = /obj/structure/closet/crate/chest/inqcrate/supplies/twilight_blessed_bullets
 	marquescost = 30
 
@@ -353,7 +328,7 @@
 	new /obj/item/quiver/twilight_bullet/blessed(src)
 
 /datum/inqports/equipment/twilight_otavian_grapeshot
-	name = "(20 charges) Grapeshot"
+	name = "1 Bag of Grapeshot"
 	item_type = /obj/structure/closet/crate/chest/inqcrate/supplies/twilight_otavian_grapeshot
 	marquescost = 15
 
@@ -362,7 +337,7 @@
 	new /obj/item/quiver/twilight_bullet/cannonball/grapeshot(src)
 
 /datum/inqports/equipment/twilight_otavian_cannonballs
-	name = "(20 charges) Cannonballs"
+	name = "1 Bag of Cannonballs"
 	item_type = /obj/structure/closet/crate/chest/inqcrate/supplies/twilight_otavian_cannonball
 	marquescost = 15
 
@@ -371,7 +346,7 @@
 	new /obj/item/quiver/twilight_bullet/cannonball/lead(src)
 
 /datum/inqports/equipment/twilight_silver_bullets
-	name = "(10 bullets) Silver Ammunition"
+	name = "10 Silver Spheres"
 	item_type = /obj/structure/closet/crate/chest/inqcrate/supplies/twilight_silver_bullets
 	marquescost = 15
 

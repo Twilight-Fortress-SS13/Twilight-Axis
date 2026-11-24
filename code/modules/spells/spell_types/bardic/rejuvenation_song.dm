@@ -2,7 +2,7 @@
 	name = "Healing Hymn"
 	desc = "Recuperate your allies' bodies with your song! Refills health slowly over time!"
 	button_icon_state = "melody_t3_base"
-	invocations = list("plays a beautiful, stirring song. The world around them becomes more vivid.")
+	invocations = list("%CASTER plays a beautiful, stirring song. The world around them becomes more vivid.")
 	song_effect = /datum/status_effect/buff/playing_melody/rejuvenation
 
 /datum/status_effect/buff/playing_melody/rejuvenation
@@ -11,7 +11,7 @@
 	buff_to_apply_full = /datum/status_effect/buff/healing/rejuvenationsong/full
 
 /datum/status_effect/buff/healing/rejuvenationsong
-	id = "healingrejuvesong"
+	id = "rejuvination_song"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/healing
 	duration = 15 SECONDS
 	healing_on_tick = 0.6 // Lesser bard (66%)

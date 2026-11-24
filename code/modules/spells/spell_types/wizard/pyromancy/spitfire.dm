@@ -1,10 +1,10 @@
-#define SPITFIRE_DAMAGE 40
+#define SPITFIRE_DAMAGE 50
 /datum/action/cooldown/spell/projectile/spitfire
 	button_icon = 'icons/mob/actions/mage_pyromancy.dmi'
 	name = "Spitfire"
 	desc = "Shoot out a low-powered ball of fire that ignites a target with a small amount of fire on impact. \
-	Damage is increased by 100% versus simple-minded creechurs. \
-	Toggle arc mode (Shift+G) while the spell is active to fire it over intervening mobs. Arced attacks deal 25% less damage."
+	Toggle arc mode (Shift+G) while the spell is active to fire it over intervening mobs. Arced attacks deal 25% less damage.\n\
+	Fire spells apply scorched effects - at 4 scorched, an armor piercing wound is applied to the head or chest: whichever you are aiming at, and randomly if aiming elsewhere."
 	button_icon_state = "spitfire"
 	sound = 'sound/magic/whiteflame.ogg'
 	spell_color = GLOW_COLOR_FIRE
@@ -21,7 +21,7 @@
 	invocation_type = INVOCATION_SHOUT
 
 	charge_required = TRUE
-	charge_swingdelay_type = SWINGDELAY_PENALTY
+	charge_swingdelay_type = SWINGDELAY_NORMAL
 	weapon_cast_penalized = TRUE
 	charge_time = CHARGETIME_POKE
 	hold_drain = 1
@@ -42,8 +42,9 @@
 	light_color = "#f8af07"
 	light_outer_range = 2
 	speed = MAGE_PROJ_VERY_SLOW
-	damage = SPITFIRE_DAMAGE
-	npc_simple_damage_mult = 2
+	damage = SPELL_DMG(SPITFIRE_DAMAGE)
+	intdamfactor = SPELL_INTDAM(1)
+	spell_damage_scaled = TRUE
 	damage_type = BURN
 	woundclass = BCLASS_BURN
 	nodamage = FALSE
@@ -52,10 +53,10 @@
 
 /obj/projectile/magic/spitfire/arc
 	name = "arced spitfire"
-	damage = 27
+	damage = SPELL_DMG(38)
 	arcshot = TRUE
 
-/obj/projectile/magic/spitfire/on_hit(target)
+/obj/projectile/magic/spitfire/on_hit(target, blocked = FALSE)
 	..()
 	var/turf/epicenter = get_turf(target)
 	if(epicenter)
@@ -70,6 +71,8 @@
 			qdel(src)
 			return BULLET_ACT_BLOCK
 		if(out_of_effective_range())
+			return
+		if(blocked >= 100)
 			return
 		if(has_frost_stacks(M))
 			remove_frost_stack(M)

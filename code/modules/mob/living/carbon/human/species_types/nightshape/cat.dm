@@ -14,7 +14,7 @@
 		src.adjust_skillrank(/datum/skill/misc/athletics, 3, TRUE)
 		src.adjust_skillrank(/datum/skill/misc/sneaking, 5, TRUE)
 		src.adjust_skillrank(/datum/skill/misc/climbing, 5, TRUE)
-		src.adjust_skillrank(/datum/skill/misc/stealing, 3, TRUE)
+		src.adjust_skillrank(/datum/skill/misc/stealing, 3, TRUE) // TA EDIT
 		src.adjust_skillrank(/datum/skill/misc/tracking, 1, TRUE)
 
 		src.STASTR = 2
@@ -58,6 +58,7 @@
 		ORGAN_SLOT_LIVER = /obj/item/organ/liver,
 		ORGAN_SLOT_STOMACH = /obj/item/organ/stomach,
 		ORGAN_SLOT_APPENDIX = /obj/item/organ/appendix,
+		ORGAN_SLOT_GUTS = /obj/item/organ/guts,
 	)
 	languages = list(/datum/language/beast)
 
@@ -67,10 +68,6 @@
 	H.icon_state = "cat2"
 	H.update_damage_overlays()
 	return TRUE
-
-/datum/species/night_cat/on_species_gain(mob/living/carbon/C, datum/species/old_species)
-	. = ..()
-	RegisterSignal(C, COMSIG_MOB_SAY, PROC_REF(handle_speech))
 
 /datum/species/night_cat/update_damage_overlays(mob/living/carbon/human/H)
 	H.remove_overlay(DAMAGE_LAYER)

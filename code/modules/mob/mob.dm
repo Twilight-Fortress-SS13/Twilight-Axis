@@ -56,8 +56,6 @@ GLOBAL_VAR_INIT(mobids, 1)
 	for(var/datum/action/A in actions)
 		A.Remove(src)
 	actions = null
-	SScrediticons.processing -= src
-	SScrediticons.currentrun -= src
 	SStreasury.remove_person(src) // Call me overly cautious I dunno when they giving dogs bank account
 	if(skills && skills.current == src)
 		var/datum/skill_holder/my_skill = skills
@@ -87,7 +85,7 @@ GLOBAL_VAR_INIT(mobids, 1)
  * * set a random nutrition level
  * * Intialize the movespeed of the mob
  */
-/mob/Initialize()
+/mob/Initialize(mapload)
 	SEND_GLOBAL_SIGNAL(COMSIG_GLOB_MOB_CREATED, src)
 	GLOB.mob_list += src
 	GLOB.mob_directory[tag] = src
@@ -198,7 +196,7 @@ GLOBAL_VAR_INIT(mobids, 1)
 		ignored_mobs = list(ignored_mobs)
 	if(!isnum(vision_distance))
 		vision_distance = DEFAULT_MESSAGE_RANGE
-	var/list/hearers = hearers(vision_distance, src) //caches the hearers and then removes ignored mobs.
+	var/list/hearers = get_hearers_in_view(vision_distance, src) //caches the hearers and then removes ignored mobs.
 	hearers -= ignored_mobs
 	if(self_message)
 		hearers -= src
@@ -234,7 +232,7 @@ GLOBAL_VAR_INIT(mobids, 1)
  * * hearing_distance (optional) is the range, how many tiles away the message can be heard.
  */
 /atom/proc/audible_message(message, deaf_message, hearing_distance = DEFAULT_MESSAGE_RANGE, self_message, runechat_message = null, log_seen = NONE, log_seen_msg = null, custom_spans = list("emote"), used_language = /datum/language/common)
-	var/list/hearers = hearers(hearing_distance, src)
+	var/list/hearers = get_hearers_in_view(hearing_distance, src)
 	if(self_message)
 		hearers -= src
 	for(var/mob/M in hearers)
@@ -254,7 +252,7 @@ GLOBAL_VAR_INIT(mobids, 1)
  */
 
 /atom/proc/loud_message(message, hearing_distance = DEFAULT_MESSAGE_RANGE, directional = TRUE)
-	var/list/listening = hearers(hearing_distance, src)
+	var/list/listening = get_hearers_in_view(hearing_distance, src)
 	for(var/_M in GLOB.player_list)
 		var/mob/M = _M
 		if(!M.client) //client is so that ghosts don't have to listen to mice
@@ -431,6 +429,10 @@ GLOBAL_VAR_INIT(mobids, 1)
 			return 1
 
 	return 0
+/mob/proc/equip_to_appropriate_slot_or_hands(obj/item/equipping_item)
+	. = equip_to_appropriate_slot(equipping_item)
+	if(!.)
+		return put_in_hands(equipping_item, FALSE)
 /**
  * Reset the attached clients perspective (viewpoint)
  *
@@ -441,7 +443,7 @@ GLOBAL_VAR_INIT(mobids, 1)
 	if(client)
 		if(A)
 			if(ismovableatom(A))
-				//Set the the thing unless it's us
+				//Set the thing unless it's us
 				if(A != src)
 					client.perspective = EYE_PERSPECTIVE
 					client.eye = A
@@ -473,12 +475,12 @@ GLOBAL_VAR_INIT(mobids, 1)
 	return
 
 /**
-  * Examine a mob
-  *
-  * mob verbs are faster than object verbs. See
-  * [this byond forum post](https://secure.byond.com/forum/?post=1326139&page=2#comment8198716)
-  * for why this isn't atom/verb/examine()
-  */
+	* Examine a mob
+	*
+	* mob verbs are faster than object verbs. See
+	* [this byond forum post](https://secure.byond.com/forum/?post=1326139&page=2#comment8198716)
+	* for why this isn't atom/verb/examine()
+	*/
 /mob/verb/examinate(atom/A as mob|obj|turf in view()) //It used to be oview(12), but I can't really say why
 	set name = "Examine"
 	set hidden = 1
@@ -491,7 +493,7 @@ GLOBAL_VAR_INIT(mobids, 1)
 		to_chat(src, span_warning("Something is there but I can't see it!"))
 		return
 
-	if(isliving(src))
+	if(isliving(src) && stat != DEAD)
 		var/message = "[src] looks at"
 		var/target = "\the [A]"
 		if(!isturf(A))
@@ -512,6 +514,18 @@ GLOBAL_VAR_INIT(mobids, 1)
 			if(m_intent != MOVE_INTENT_SNEAK)
 				visible_message(span_emote("[message] [target]."))
 
+	if(client)
+		LAZYINITLIST(client.recent_examines)
+		var/ref_to_atom = REF(A)
+		var/examine_time = client.recent_examines[ref_to_atom]
+		if(examine_time && (world.time - examine_time < EXAMINE_MORE_WINDOW))
+			var/list/more = A.examine_more(src)
+			if(length(more))
+				to_chat(src, client.prefs.no_examine_blocks ? more.Join("\n") : examine_block(more.Join("\n")))
+				return
+		client.recent_examines[ref_to_atom] = world.time // set to when we last normal examine'd them
+		addtimer(CALLBACK(src, PROC_REF(clear_from_recent_examines), ref_to_atom), RECENT_EXAMINE_MAX_WINDOW)
+
 	var/list/result = A.examine(src)
 	if(result)
 		var/list/mechanics_result = A.get_mechanics_examine(src)
@@ -521,8 +535,24 @@ GLOBAL_VAR_INIT(mobids, 1)
 				mech_lines += "<span class='smallnotice'> - </span>[line]"
 			var/mechanics_result_str = "<details><summary><span class='smallnotice'>Mechanics</span></summary>[mech_lines.Join("<br>")]</details>"
 			result[result.len] += mechanics_result_str // append to last line so the join doesn't insert a blank line before the dropdown
+
+		var/obj/item/O = A
+		if(can_transmute(src) && isitem(A) && length(O.materia))
+			var/list/materia_lines = list()
+			for(var/path in O.materia)
+				var/datum/materia_aspect/aspect = path
+				materia_lines += "<span class='info'> - </span><span data-component=\"TooltipHTML\" data-html=\"[html_encode(aspect::desc)]\" class=\"tooltip info\">[aspect::name]</span>"
+			var/materia_result_str = "<details><summary><span class='smallnotice'>Prima Materia</span></summary>[materia_lines.Join("<br>")]</details>"
+			result[result.len] += materia_result_str // append to last line so the join doesn't insert a blank line before the dropdown
 		to_chat(src, usr.client.prefs.no_examine_blocks ? result.Join("\n") : examine_block(result.Join("\n")))
+
 	SEND_SIGNAL(src, COMSIG_MOB_EXAMINATE, A)
+
+/mob/proc/clear_from_recent_examines(ref_to_clear)
+	SIGNAL_HANDLER
+	if(!client)
+		return
+	LAZYREMOVE(client.recent_examines, ref_to_clear)
 
 ///Can this mob resist (default FALSE)
 /mob/proc/can_resist()
@@ -658,13 +688,13 @@ GLOBAL_VAR_INIT(mobids, 1)
 	unset_machine()
 
 //suppress the .click/dblclick macros so people can't use them to identify the location of items or aimbot
-/mob/verb/DisClick(argu = null as anything, sec = "" as text, number1 = 0 as num  , number2 = 0 as num)
+/mob/verb/DisClick(argu = null as anything, sec = "" as text, number1 = 0 as num	, number2 = 0 as num)
 	set name = ".click"
 	set hidden = TRUE
 	set category = null
 	return
 
-/mob/verb/DisDblClick(argu = null as anything, sec = "" as text, number1 = 0 as num  , number2 = 0 as num)
+/mob/verb/DisDblClick(argu = null as anything, sec = "" as text, number1 = 0 as num	, number2 = 0 as num)
 	set name = ".dblclick"
 	set hidden = TRUE
 	set category = null
@@ -677,6 +707,7 @@ GLOBAL_VAR_INIT(mobids, 1)
  * * handles the strip panel equip and unequip as well if "item" sent
  */
 /mob/Topic(href, href_list)
+	. = ..()
 	if(href_list["mach_close"])
 		var/t1 = text("window=[href_list["mach_close"]]")
 		unset_machine()
@@ -702,6 +733,13 @@ GLOBAL_VAR_INIT(mobids, 1)
 		else
 			usr.stripPanelEquip(what,src,slot)
 
+	if(href_list["strip_all"] && usr.canUseTopic(src, BE_CLOSE, NO_DEXTERITY))
+		var/loot_filter = href_list["strip_all"]
+		if(!(loot_filter in list(LOOT_FILTER_ALL, LOOT_FILTER_FABRIC, LOOT_FILTER_SMELT)))
+			loot_filter = LOOT_FILTER_ALL
+		usr.stripPanelUnequipAll(src, loot_filter)
+		return
+
 	if(usr.machine == src)
 		if(Adjacent(usr))
 			show_inv(usr)
@@ -711,6 +749,11 @@ GLOBAL_VAR_INIT(mobids, 1)
 // The src mob is trying to strip an item from someone
 // Defined in living.dm
 /mob/proc/stripPanelUnequip(obj/item/what, mob/who)
+	return
+
+// The src mob is trying to strip everything off an unclaimed corpse at once
+// Defined in living.dm
+/mob/proc/stripPanelUnequipAll(mob/who, loot_filter = LOOT_FILTER_ALL)
 	return
 
 // The src mob is trying to place an item on someone
@@ -892,7 +935,7 @@ GLOBAL_VAR_INIT(mobids, 1)
 	mob_spell_list += S
 	S.action.Grant(src)
 
-/mob/proc/HasSpell(var/spell_type)
+/mob/proc/HasSpell(spell_type)
 	for(var/obj/effect/proc_holder/spell/spell as anything in mob_spell_list)
 		if(spell.type == spell_type)
 			return spell
@@ -1006,6 +1049,8 @@ GLOBAL_VAR_INIT(mobids, 1)
 		return faction_check(faction_src, faction_target, TRUE)
 	if(HAS_TRAIT(target, TRAIT_NOPVE))
 		return TRUE // don't bother checking anyone who's exempt from pve entirely
+	if((mind || target.mind) && HAS_TRAIT(src, TRAIT_CONTRACT_HOSTILE) != HAS_TRAIT(target, TRAIT_CONTRACT_HOSTILE))
+		return FALSE
 	// Avoid lit allocations by scanning factions directly for better perf.
 	var/list/their_faction = target.faction
 	var/their_name = target.name
@@ -1135,11 +1180,12 @@ GLOBAL_VAR_INIT(mobids, 1)
  */
 /mob/vv_get_dropdown()
 	. = ..()
-	VV_DROPDOWN_OPTION("", "---------")
+	VV_DROPDOWN_OPTION("", "--- /mob ---")
 	VV_DROPDOWN_OPTION(VV_HK_GIB, "Gib")
 	VV_DROPDOWN_OPTION(VV_HK_GIVE_SPELL, "Give Spell")
 	VV_DROPDOWN_OPTION(VV_HK_REMOVE_SPELL, "Remove Spell")
 	VV_DROPDOWN_OPTION(VV_HK_GODMODE, "Toggle Godmode")
+	VV_DROPDOWN_OPTION(VV_HK_GODMODE_TARGETABLE, "Toggle Godmode (Targetable)")
 	VV_DROPDOWN_OPTION(VV_HK_DROP_ALL, "Drop Everything")
 	VV_DROPDOWN_OPTION(VV_HK_REGEN_ICONS, "Regenerate Icons")
 	VV_DROPDOWN_OPTION(VV_HK_PLAYER_PANEL, "Show player panel")
@@ -1160,6 +1206,10 @@ GLOBAL_VAR_INIT(mobids, 1)
 		if(!check_rights(R_ADMIN,0))
 			return
 		usr.client.cmd_admin_godmode(src)
+	if(href_list[VV_HK_GODMODE_TARGETABLE])
+		if(!check_rights(R_ADMIN,0))
+			return
+		usr.client.cmd_admin_godmode_targetable(src)
 	if(href_list[VV_HK_GIVE_SPELL])
 		if(!check_rights(NONE))
 			return
@@ -1207,6 +1257,28 @@ GLOBAL_VAR_INIT(mobids, 1)
 	var/datum/language_holder/H = get_language_holder()
 	H.open_language_menu(usr)
 
+///Show the sleep level up screen if available
+/mob/living/verb/open_sleep_adv_menu()
+	set name = "Open Dream Menu"
+	set category = "IC"
+	set hidden = FALSE
+
+	if(!mind || !mind.sleep_adv)
+		to_chat(src, span_warning("You have no dreams to contemplate."))
+		return
+
+	if(!IsSleeping())
+		to_chat(src, span_warning("You must be asleep to enter your dreams."))
+		return
+
+	var/datum/sleep_adv/SA = mind.sleep_adv
+
+	if(SA.sleep_adv_points <= 0)
+		to_chat(src, span_warning("You lack the inspiration granted by a proper rest in order to contemplate your dreams."))
+		return
+
+	SA.show_ui(src)
+
 /// Custom pose setting
 /mob/living/carbon/human/verb/set_pose()
 	set name = "Set Pose"
@@ -1235,9 +1307,18 @@ GLOBAL_VAR_INIT(mobids, 1)
 /mob/proc/adjust_nutrition(change) //Honestly FUCK the oldcoders for putting nutrition on /mob someone else can move it up because holy hell I'd have to fix SO many typechecks
 	if(HAS_TRAIT(src, TRAIT_NOHUNGER))
 		nutrition = NUTRITION_LEVEL_FULL
+	var/old_nutrition = nutrition
 	nutrition = max(0, nutrition + change)
 	if(nutrition > NUTRITION_LEVEL_FULL)
 		nutrition = NUTRITION_LEVEL_FULL
+	if(old_nutrition < 990 && nutrition >= 990)
+		to_chat(src, span_warning("I can't eat anymore!"))
+	else if(old_nutrition < 950 && nutrition >= 950)
+		to_chat(src, span_warning("I am stuffed."))
+	else if(old_nutrition < 900 && nutrition >= 900)
+		to_chat(src, span_notice("I feel very full."))
+	else if(old_nutrition < 800 && nutrition >= 800)
+		to_chat(src, span_notice("I feel full."))
 
 ///Force set the mob nutrition
 /mob/proc/set_nutrition(change) //Seriously fuck you oldcoders.
@@ -1249,14 +1330,23 @@ GLOBAL_VAR_INIT(mobids, 1)
 
 /mob/proc/adjust_hydration(change)
 	if(HAS_TRAIT(src, TRAIT_NOHUNGER))
-		nutrition = HYDRATION_LEVEL_FULL
+		hydration = HYDRATION_LEVEL_FULL
+	var/old_hydration = hydration
 	hydration = max(0, hydration + change)
 	if(hydration > HYDRATION_LEVEL_FULL)
 		hydration = HYDRATION_LEVEL_FULL
+	if(old_hydration < 990 && hydration >= 990)
+		to_chat(src, span_warning("I can't drink anymore!"))
+	else if(old_hydration < 950 && hydration >= 950)
+		to_chat(src, span_warning("I'm almost at my limit for drinking."))
+	else if(old_hydration < 900 && hydration >= 900)
+		to_chat(src, span_notice("I had plenty to drink."))
+	else if(old_hydration < 800 && hydration >= 800)
+		to_chat(src, span_notice("I don't feel thirsty anymore."))
 
 /mob/proc/set_hydration(change)
 	if(HAS_TRAIT(src, TRAIT_NOHUNGER))
-		nutrition = HYDRATION_LEVEL_FULL
+		hydration = HYDRATION_LEVEL_FULL
 	hydration = max(0, change)
 	if(hydration > HYDRATION_LEVEL_FULL)
 		hydration = HYDRATION_LEVEL_FULL
@@ -1300,7 +1390,7 @@ GLOBAL_VAR_INIT(mobids, 1)
 /mob/say_mod(input, message_mode)
 	var/customsayverb = findtext(input, "*")
 	if(customsayverb)
-		return lowertext(copytext(input, 1, customsayverb))
+		return LOWER_TEXT(copytext(input, 1, customsayverb))
 	. = ..()
 
 /atom/movable/proc/attach_spans(input, list/spans)
@@ -1329,11 +1419,16 @@ GLOBAL_VAR_INIT(mobids, 1)
 	SEND_SIGNAL(src, COMSIG_MOB_GET_STATUS_TAB_ITEMS, .)
 	if(client)
 		. += list(list("IC DATE: ", "[get_current_ic_date_as_string()] (CLICK FOR CALENDAR)", "src=[REF(client)];statbrowser_calendar=1"))
-		var/current_tod = GLOB.tod
+		// TA EDIT START
+		var/current_tod = get_current_ic_tod_as_string()
 		if(!istext(current_tod) || !length(current_tod))
-			current_tod = "day"
+			current_tod = "dae"
 		. += list(list("tod", current_tod, "IC TIME: [get_current_ic_time_as_string()]"))
+		// TA EDIT END
 	return .
 
 /mob/proc/get_stats_tab_items()
 	return list()
+
+/mob/proc/check_equipment_mood_penalty()
+	return

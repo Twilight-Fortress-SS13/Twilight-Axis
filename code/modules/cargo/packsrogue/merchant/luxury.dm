@@ -59,7 +59,7 @@
 /datum/supply_pack/rogue/luxury/silverdagger
 	name = "Silver Dagger"
 	cost = 250 //Note that the Merchant's abode always spawns with a free silver dagger.
-	contains = list(/obj/item/rogueweapon/huntingknife/idagger/silver)
+	contains = list(/obj/item/rogueweapon/huntingknife/idagger/steel/silver)
 
 /datum/supply_pack/rogue/luxury/nomag
 	name = "Ring of Null Magic"
@@ -110,11 +110,6 @@
 			/obj/item/reagent_containers/food/snacks/grown/manabloom,
 			/obj/item/reagent_containers/food/snacks/grown/manabloom,
 			)
-
-/datum/supply_pack/rogue/luxury/merctoken
-	name = "Writ of Commendation"
-	cost = 80
-	contains = list(/obj/item/merctoken)
 
 /datum/supply_pack/rogue/luxury/canvas
 	name = "Canvas"

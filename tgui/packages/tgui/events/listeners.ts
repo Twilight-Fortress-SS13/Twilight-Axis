@@ -5,6 +5,14 @@ import {
   acknowledgePayloadChunk,
   oversizePayloadResponse,
 } from './handlers/chunking';
+import {
+  byondCtrlDown,
+  byondCtrlUp,
+  byondMouseDown,
+  byondMouseUp,
+  byondRightMouseDown,
+  byondRightMouseUp,
+} from './handlers/mouse';
 import { ping } from './handlers/ping';
 import { suspend } from './handlers/suspense';
 import { update } from './handlers/update';
@@ -21,9 +29,16 @@ const listeners = {
   ping,
   suspend,
   update,
+  // Mouse hook
+  'byond/mousedown': byondMouseDown,
+  'byond/mouseup': byondMouseUp,
+  'byond/rightmousedown': byondRightMouseDown,
+  'byond/rightmouseup': byondRightMouseUp,
+  'byond/ctrldown': byondCtrlDown,
+  'byond/ctrlup': byondCtrlUp,
   // Chunking
   oversizePayloadResponse,
   acknowledgePayloadChunk,
 } as const;
 
-export const bus = new EventBus(listeners);
+export const bus = new EventBus(listeners as any);

@@ -43,12 +43,15 @@
 /datum/move_loop/proc/start_loop()
 	SHOULD_CALL_PARENT(TRUE)
 	SEND_SIGNAL(src, COMSIG_MOVELOOP_START)
-	//If this is our first time starting to move with this loop
-	//And we're meant to start instantly
+	//first moves align to the next visual tick so an atom is never moved twice before SendMaps
+	//(prevents teleport-instead-of-glide for freshly spawned/started loops)
 	if(!timer && flags & MOVEMENT_LOOP_START_FAST)
-		timer = world.time
+		timer = NEXT_VISUAL_TICK + world.tick_lag
 		return
-	timer = world.time + delay
+	if(!timer && flags & MOVEMENT_LOOP_START_INSTANT)
+		timer = NEXT_VISUAL_TICK
+		return
+	timer = NEXT_VISUAL_TICK + delay
 
 /datum/move_loop/proc/stop_loop()
 	SHOULD_CALL_PARENT(TRUE)
@@ -69,7 +72,7 @@
 
 ///Exists as a helper so outside code can modify delay while also modifying timer
 /datum/move_loop/proc/set_delay(new_delay)
-	delay =  max(new_delay, world.tick_lag)
+	delay =	max(new_delay, world.tick_lag)
 	timer = world.time + delay
 
 /datum/move_loop/process()
@@ -556,7 +559,7 @@
 		var/turf/moving_towards = get_step(moving, testdir)
 		var/atom/old_loc = moving.loc
 		moving.Move(moving_towards, testdir)
-		if(old_loc != moving.loc)  //If it worked, we're done
+		if(old_loc != moving.loc)	//If it worked, we're done
 			return TRUE
 		potential_dirs -= testdir
 	return FALSE

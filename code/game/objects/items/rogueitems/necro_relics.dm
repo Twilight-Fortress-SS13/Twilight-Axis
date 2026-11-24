@@ -21,7 +21,7 @@
 	else
 		. += span_danger("The crystal lies hollow and inert, its magic drained.")
 
-/obj/item/necro_relics/necro_crystal/Initialize()
+/obj/item/necro_relics/necro_crystal/Initialize(mapload)
 	..()
 	set_light(2, 2, 1, l_color = "#551c1c")
 
@@ -43,9 +43,9 @@
 
 /obj/item/necro_relics/necro_crystal/attack_self(mob/living/user)
 	..()
-	if(!user) 
+	if(!user)
 		return FALSE
-		
+
 	if(length(active_skeletons) >= max_summons)
 		to_chat(user, span_warning("The crystal emits an ominous thrumming. The power within is too strained to conjure another skeleton right now."))
 		return FALSE
@@ -92,6 +92,8 @@
 	var/mob/C = pick(candidates)
 	if(!C || !istype(C, /mob/dead))
 		return FALSE
+
+	C.stop_sound_channel(CHANNEL_LOBBYMUSIC)
 
 	if(istype(C, /mob/dead/new_player))
 		var/mob/dead/new_player/N = C

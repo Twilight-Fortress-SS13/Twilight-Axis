@@ -1,4 +1,5 @@
 /mob/living/simple_animal/hostile/retaliate/rogue/drider //lol
+	anatomy_type = /datum/anatomy/spider
 	icon = 'icons/roguetown/mob/monster/drider.dmi'
 	name = "drider spider"
 	desc = "A monstrously large spider utilised by drow as mounts, better suited \
@@ -17,16 +18,13 @@
 	animal_species = null
 	butcher_results = list(/obj/item/reagent_containers/food/snacks/rogue/meat/spider = 3, /obj/item/natural/bone = 3)
 	base_intents = list(/datum/intent/simple/bite/mirespider_lurker)
-	health = 660
-	maxHealth = 660
+	health = DRIDER_HEALTH
+	maxHealth = DRIDER_HEALTH
 	pass_flags = PASSTABLE | PASSMOB
 	mob_size = MOB_SIZE_SMALL
 	milkies = FALSE
 	melee_damage_lower = 60
 	melee_damage_upper = 90
-	retreat_distance = 0
-	minimum_distance = 0
-	retreat_health = 0.3
 	STASPD = 18
 	STACON = 8
 	STASTR = 10
@@ -35,14 +33,17 @@
 	bonus_tame_chance = 15
 	can_saddle = TRUE
 	can_buckle = TRUE
-	aggressive = 1
-	move_to_delay = 8
+	ride_move_delay = 8
+
+	ai_controller = /datum/ai_controller/spider/drider
 
 /mob/living/simple_animal/hostile/retaliate/rogue/drider/tame
 	tame = TRUE
 
-/mob/living/simple_animal/hostile/retaliate/rogue/drider/Initialize()
+/mob/living/simple_animal/hostile/retaliate/rogue/drider/Initialize(mapload)
 	. = ..()
+	AddComponent(/datum/component/ai_aggro_system)
+	ai_controller.set_blackboard_key(BB_BASIC_FOODS, food_typecache)
 	ADD_TRAIT(src, TRAIT_CRITICAL_RESISTANCE, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NOFALLDAMAGE2, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NOFIRE, TRAIT_GENERIC)
@@ -54,9 +55,8 @@
 		add_saddleicon("saddle-above", "saddle")
 		add_ridericon("drider_mounted")
 
-/mob/living/simple_animal/hostile/retaliate/rogue/drider/tamed()
-	..()
-	deaggroprob = 20
+/mob/living/simple_animal/hostile/retaliate/rogue/drider/tamed(mob/user) // TA EDIT
+	..(user) // TA EDIT
 	setup_mount()
 
 /mob/living/simple_animal/hostile/retaliate/rogue/drider/get_sound(input)
@@ -72,9 +72,7 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/drider/taunted(mob/user)
 	emote("aggro")
-	Retaliate()
-	GiveTarget(user)
-	return
+	ai_controller?.force_aggro(user)
 
 /mob/living/simple_animal/hostile/retaliate/rogue/drider/eat_plants()
 	..()
@@ -100,47 +98,7 @@
 			icon_state = "drider"
 			icon_living = "drider"
 
-/mob/living/simple_animal/hostile/retaliate/rogue/drider/simple_limb_hit(zone)
-	if(!zone)
-		return ""
-	switch(zone)
-		if(BODY_ZONE_PRECISE_R_EYE)
-			return "head"
-		if(BODY_ZONE_PRECISE_L_EYE)
-			return "head"
-		if(BODY_ZONE_PRECISE_NOSE)
-			return "snout"
-		if(BODY_ZONE_PRECISE_MOUTH)
-			return "snout"
-		if(BODY_ZONE_PRECISE_SKULL)
-			return "head"
-		if(BODY_ZONE_PRECISE_EARS)
-			return "head"
-		if(BODY_ZONE_PRECISE_NECK)
-			return "neck"
-		if(BODY_ZONE_PRECISE_L_HAND)
-			return "foreleg"
-		if(BODY_ZONE_PRECISE_R_HAND)
-			return "foreleg"
-		if(BODY_ZONE_PRECISE_L_FOOT)
-			return "leg"
-		if(BODY_ZONE_PRECISE_R_FOOT)
-			return "leg"
-		if(BODY_ZONE_PRECISE_STOMACH)
-			return "stomach"
-		if(BODY_ZONE_HEAD)
-			return "head"
-		if(BODY_ZONE_R_LEG)
-			return "leg"
-		if(BODY_ZONE_L_LEG)
-			return "leg"
-		if(BODY_ZONE_R_ARM)
-			return "foreleg"
-		if(BODY_ZONE_L_ARM)
-			return "foreleg"
-	return ..()
-
-/mob/living/simple_animal/hostile/retaliate/rogue/drider/tame/saddled/Initialize()
+/mob/living/simple_animal/hostile/retaliate/rogue/drider/tame/saddled/Initialize(mapload)
 	. = ..()
 	var/obj/item/natural/saddle/S = new(src)
 	ssaddle = S

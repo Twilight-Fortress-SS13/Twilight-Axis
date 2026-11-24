@@ -24,7 +24,9 @@
 		/datum/sprite_accessory/ears/fox,
 		/datum/sprite_accessory/ears/husky,
 		/datum/sprite_accessory/ears/otie,
-		/datum/sprite_accessory/ears/wolf
+		/datum/sprite_accessory/ears/wolf,
+		/datum/sprite_accessory/ears/big/fennec,
+		/datum/sprite_accessory/ears/big/fennec_bigger,
 		)
 
 // ---- Lupian
@@ -50,7 +52,7 @@
 
 /datum/customizer_choice/organ/ears/tajaran
 	name = "Tabaxi Ears"
-	organ_type = /obj/item/organ/ears/tajaran         // Renamed them IN GAME but in-code they're still 'tajaran' because im afraid of breaking shit
+	organ_type = /obj/item/organ/ears/tajaran			// Renamed them IN GAME but in-code they're still 'tajaran' because im afraid of breaking shit
 	sprite_accessories = list(
 		/datum/sprite_accessory/ears/cat_big,
 		/datum/sprite_accessory/ears/cat_normal,
@@ -86,7 +88,9 @@
 	sprite_accessories = list(
 		/datum/sprite_accessory/ears/elf,
 		/datum/sprite_accessory/ears/elfw,
-		/datum/sprite_accessory/ears/elf_short)
+		/datum/sprite_accessory/ears/elf_short,
+		/datum/sprite_accessory/ears/elf_long,
+		/datum/sprite_accessory/ears/elf_small)
 
 /datum/customizer/organ/ears/elf
 	customizer_choices = list(/datum/customizer_choice/organ/ears/elf)
@@ -100,6 +104,8 @@
 		/datum/sprite_accessory/ears/elf,
 		/datum/sprite_accessory/ears/elfw,
 		/datum/sprite_accessory/ears/elf_short,
+		/datum/sprite_accessory/ears/elf_long,
+		/datum/sprite_accessory/ears/elf_small,
 		/datum/sprite_accessory/ears/wispy,
 		/datum/sprite_accessory/ears/small)
 
@@ -173,6 +179,8 @@
 		/datum/sprite_accessory/ears/elfw,
 		/datum/sprite_accessory/ears/elephant,
 		/datum/sprite_accessory/ears/fennec,
+		/datum/sprite_accessory/ears/big/fennec,
+		/datum/sprite_accessory/ears/big/fennec_bigger,
 		/datum/sprite_accessory/ears/fish,
 		/datum/sprite_accessory/ears/fox,
 		/datum/sprite_accessory/ears/vulp,
@@ -195,6 +203,10 @@
 		/datum/sprite_accessory/ears/possum,
 		/datum/sprite_accessory/ears/raccoon,
 		/datum/sprite_accessory/ears/mouse,
+		/datum/sprite_accessory/ears/dormouse,
+		/datum/sprite_accessory/ears/dormouse_skin,
+		/datum/sprite_accessory/ears/dormouse_rings,
+		/datum/sprite_accessory/ears/dormouse_skin_rings,
 		/datum/sprite_accessory/ears/big/acrador_long,
 		/datum/sprite_accessory/ears/big/acrador_short,
 		/datum/sprite_accessory/ears/big/sandfox_large,
@@ -241,6 +253,8 @@
 		/datum/sprite_accessory/ears/elfw,
 		/datum/sprite_accessory/ears/elephant,
 		/datum/sprite_accessory/ears/fennec,
+		/datum/sprite_accessory/ears/big/fennec,
+		/datum/sprite_accessory/ears/big/fennec_bigger,
 		/datum/sprite_accessory/ears/fish,
 		/datum/sprite_accessory/ears/fox,
 		/datum/sprite_accessory/ears/vulp,
@@ -270,6 +284,10 @@
 		/datum/sprite_accessory/ears/possum,
 		/datum/sprite_accessory/ears/raccoon,
 		/datum/sprite_accessory/ears/mouse,
+		/datum/sprite_accessory/ears/dormouse,
+		/datum/sprite_accessory/ears/dormouse_skin,
+		/datum/sprite_accessory/ears/dormouse_rings,
+		/datum/sprite_accessory/ears/dormouse_skin_rings,
 		/datum/sprite_accessory/ears/big/acrador_long,
 		/datum/sprite_accessory/ears/big/acrador_short,
 		/datum/sprite_accessory/ears/big/sandfox_large,
@@ -308,8 +326,9 @@
 	sprite_accessories = list(
 		/datum/sprite_accessory/ears/elf,
 		/datum/sprite_accessory/ears/elfw,
-		/datum/sprite_accessory/ears/elf_short
-		)
+		/datum/sprite_accessory/ears/elf_short,
+		/datum/sprite_accessory/ears/elf_long,
+		/datum/sprite_accessory/ears/elf_small)
 
 // ---- Dullahan
 /datum/customizer/organ/ears/dullahan
@@ -342,6 +361,8 @@
 		/datum/sprite_accessory/ears/elfw,
 		/datum/sprite_accessory/ears/elephant,
 		/datum/sprite_accessory/ears/fennec,
+		/datum/sprite_accessory/ears/big/fennec,
+		/datum/sprite_accessory/ears/big/fennec_bigger,
 		/datum/sprite_accessory/ears/fish,
 		/datum/sprite_accessory/ears/fox,
 		/datum/sprite_accessory/ears/vulp,
@@ -369,6 +390,10 @@
 		/datum/sprite_accessory/ears/possum,
 		/datum/sprite_accessory/ears/raccoon,
 		/datum/sprite_accessory/ears/mouse,
+		/datum/sprite_accessory/ears/dormouse,
+		/datum/sprite_accessory/ears/dormouse_skin,
+		/datum/sprite_accessory/ears/dormouse_rings,
+		/datum/sprite_accessory/ears/dormouse_skin_rings,
 		/datum/sprite_accessory/ears/big/acrador_long,
 		/datum/sprite_accessory/ears/big/acrador_short,
 		/datum/sprite_accessory/ears/big/sandfox_large,
@@ -406,6 +431,8 @@
 		/datum/sprite_accessory/ears/elfw,
 		/datum/sprite_accessory/ears/elephant,
 		/datum/sprite_accessory/ears/fennec,
+		/datum/sprite_accessory/ears/big/fennec,
+		/datum/sprite_accessory/ears/big/fennec_bigger,
 		/datum/sprite_accessory/ears/fish,
 		/datum/sprite_accessory/ears/fox,
 		/datum/sprite_accessory/ears/vulp,
@@ -433,6 +460,10 @@
 		/datum/sprite_accessory/ears/possum,
 		/datum/sprite_accessory/ears/raccoon,
 		/datum/sprite_accessory/ears/mouse,
+		/datum/sprite_accessory/ears/dormouse,
+		/datum/sprite_accessory/ears/dormouse_skin,
+		/datum/sprite_accessory/ears/dormouse_rings,
+		/datum/sprite_accessory/ears/dormouse_skin_rings,
 		/datum/sprite_accessory/ears/big/acrador_long,
 		/datum/sprite_accessory/ears/big/acrador_short,
 		/datum/sprite_accessory/ears/big/sandfox_large,

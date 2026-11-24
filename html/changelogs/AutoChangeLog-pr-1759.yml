@@ -1,0 +1,4 @@
+author: "voorex2"
+delete-after: True
+changes:
+  - bugfix: "Починил выдачу подклассов модульных иконоборца."

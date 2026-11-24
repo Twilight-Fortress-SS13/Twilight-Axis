@@ -83,7 +83,7 @@
 	contains = list(
 					/obj/item/reagent_containers/food/snacks/grown/rogue/rosa_petals_dried,
 					/obj/item/reagent_containers/food/snacks/grown/rogue/rosa_petals_dried,
-					/obj/item/reagent_containers/food/snacks/grown/rogue/rosa_petals_dried, 
+					/obj/item/reagent_containers/food/snacks/grown/rogue/rosa_petals_dried,
 					/obj/item/reagent_containers/food/snacks/grown/rogue/rosa_petals_dried,
 					/obj/item/reagent_containers/food/snacks/grown/rogue/rosa_petals_dried,
 					/obj/item/reagent_containers/food/snacks/grown/rogue/rosa_petals_dried,
@@ -129,6 +129,26 @@
 	contains = list(
 					/obj/item/reagent_containers/food/snacks/sugar,
 					/obj/item/reagent_containers/food/snacks/sugar,
+					/obj/item/reagent_containers/food/snacks/sugar,
+					/obj/item/reagent_containers/food/snacks/sugar,
+					/obj/item/reagent_containers/food/snacks/sugar,
+				)
+
+
+/datum/supply_pack/rogue/food/murkling_jelly
+	name = "Primordial Jelly"
+	cost = 30
+	contains = list(
+					/obj/item/reagent_containers/food/snacks/rogue/murkling_jelly,
+					/obj/item/reagent_containers/food/snacks/rogue/murkling_jelly,
+					/obj/item/reagent_containers/food/snacks/rogue/murkling_jelly,
+				)
+
+/datum/supply_pack/rogue/food/allspice
+	name = "Allspice"
+	cost = 50 //about double the price of its crafting ingredients
+	contains = list(
+					/obj/item/reagent_containers/food/snacks/allspice,
 				)
 
 /datum/supply_pack/rogue/food/chocolate

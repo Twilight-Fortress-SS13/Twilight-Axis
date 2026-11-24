@@ -1,3 +1,5 @@
+import { atomWithTguiStorage } from 'common/storage';
+import { useAtom } from 'jotai';
 import { memo, useCallback, useMemo, useState } from 'react';
 import {
   Button,
@@ -75,6 +77,10 @@ const UNASSIGNED_ROLE_LABEL = 'Unassigned';
 const TRAILING_MASKED_DESCRIPTOR_REGEX = / \[[^\]]+\]$/;
 const TRAILING_DUPLICATE_SUFFIX_REGEX = / \(\d+\)$/;
 const EMPTY_TARGETS: OrbitTarget[] = [];
+const openSectionsAtom = atomWithTguiStorage<Partial<Record<string, boolean>>>(
+  'orbit-open-sections',
+  {},
+);
 const ROLE_GROUP_COLORS: Record<string, RoleColor> = {
   'Ducal Family': {
     backgroundColor: '#aa83b9',
@@ -472,6 +478,13 @@ function getRoleGroupKey(department: string | undefined, roleLabel: string) {
     return 'Ducal Family';
   }
 
+  if (
+    normalizedDepartment === 'ATC' ||
+    normalizedDepartment === 'Azurian Trading Company'
+  ) {
+    return 'Burghers';
+  }
+
   return normalizedDepartment || roleLabel;
 }
 
@@ -558,6 +571,7 @@ export const Orbit = () => {
   const { act, data } = useBackend<OrbitData>();
   const [query, setQuery] = useState('');
   const [colorMode, setColorMode] = useState<'role' | 'health'>('role');
+  const [openSections, setOpenSections] = useAtom(openSectionsAtom);
   const orbitRef = data.orbiting_ref;
   const isRoleColorMode = colorMode === 'role';
   const aliveTargets = data.alive || EMPTY_TARGETS;

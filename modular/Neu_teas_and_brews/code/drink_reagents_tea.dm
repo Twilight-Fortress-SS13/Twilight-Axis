@@ -2,7 +2,8 @@
 // basic tea, utilises adjusted soup code
 // PORT TO AZURE COMMENT: When I originally added this to vanderlin, I had to axe existing teas, In good conciousness I refuse to touch it here because it doest conflict and I refuse to refactor entire thing. Goodluck to whoever does tho.
 /datum/reagent/consumable/tea/
-	name = "Generic tea"
+	drink_type = DRINKTYPE_CAFFEINE
+	name = "generic tea"
 	description = "A common concept of a generic tea made from whatever, by whoever."
 	reagent_state = LIQUID
 	color = "#c38553"
@@ -12,7 +13,7 @@
 	taste_mult = 3
 	nutriment_factor = 1
 	hydration_factor = 1
-	quality = 1
+	quality = DRINK_VERYGOOD
 	alpha = 153
 
 /datum/reagent/consumable/tea/on_mob_life(mob/living/carbon/M)
@@ -21,7 +22,8 @@
 	..()
 
 /datum/reagent/consumable/tea/taraxamint
-	name = "Taraxacum-Mentha tea"
+	cuisine = CUISINE_SOUTHEASTERN
+	name = "taraxacum-mentha tea"
 	description = "Soothing herbal green tea, rumored to help ease burns, liver issues and help with head traumas"
 	color = "#acaf01"
 	nutriment_factor = 2
@@ -43,7 +45,8 @@
 	..()
 
 /datum/reagent/consumable/tea/utricasalvia
-	name = "Urtica-Salvia tea"
+	cuisine = CUISINE_SOUTHEASTERN
+	name = "urtica-salvia tea"
 	description = "Deep, velvet tea. Taste of tingling sour fruits. Used by a traditional remedy by common folk to recover from bruises and burns. Some even say it can heal wounds."
 	color = "#451853"
 	nutriment_factor = 2
@@ -89,7 +92,7 @@
 
 /datum/reagent/consumable/tea/fourtwenty
 	name = "swampweed brew"
-	description = "Swampweed leaf brewed into a drink. Used by shamans and other spiritual guides. Its gemerald color hides its true earhty taste. "
+	description = "Swampweed leaf brewed into a drink. Used by shamans and other spiritual guides. Its gemerald color hides its true earthy taste. "
 	color = "#04750a"
 	nutriment_factor = 2
 	metabolization_rate = 1
@@ -105,7 +108,7 @@
 	return ..()
 
 /datum/reagent/consumable/tea/manabloom
-	name = "Manabloom tea"
+	name = "manabloom tea"
 	description = "Manabloom flower is tossed into hot, boiling water. A crude, inefficient but cheap method to extract its properties."
 	color = "#5986b1"
 	nutriment_factor = 2
@@ -128,24 +131,27 @@
 	. = 1
 
 /datum/reagent/consumable/tea/compot
-	name = "Compot"
-	description = "Drink of Gronnic origin, dried fruit is made into nutritious sweet delicacy they partake regardless of status."
+	cuisine = CUISINE_NORTHERN
+	drink_type = DRINKTYPE_JUICE
+	name = "compot"
+	description = "Drink of Hammerholdian origin, dried fruit is made into nutritious sweet delicacy they partake regardless of status." //TA EDIT
 	color = "#cca358"
 	nutriment_factor = 2
 	metabolization_rate = 0.2 // 20% of normal metab
 	taste_description = "strong berry taste, its very sweet"
 	taste_mult = 4
-	hydration_factor = 3 //a hydrating, nutritious and convinient drink made of raisins
+	hydration_factor = 3 //a hydrating, nutritious and convenient drink made of raisins
 	nutriment_factor = 2
 	quality = 2
 
 /datum/reagent/consumable/tea/compot/on_mob_life(mob/living/carbon/M)
-	M.apply_status_effect(/atom/movable/screen/alert/status_effect/buff/sweet)
+	M.apply_status_effect(/datum/status_effect/buff/sweet) //TA EDIT
 	..()
 
 /datum/reagent/consumable/tea/sbiten
-	name = "Sbiten" //not a typo
-	description = "Marvel of Gronnic cuisine, rivals even well aged liquors in how enjoyable it is. Honey is infused with spices and then diluted in hot water. Highly luxurious item in the North."
+	cuisine = CUISINE_NORTHERN
+	name = "sbiten" //not a typo
+	description = "Marvel of Hammerholdian cuisine, rivals even well aged liquors in how enjoyable it is. Honey is infused with spices and then diluted in hot water. Highly luxurious item in the North." //TA EDIT
 	reagent_state = LIQUID
 	color = "#f0dba3"
 	nutriment_factor = 2
@@ -158,5 +164,5 @@
 	alpha = 153
 
 /datum/reagent/consumable/tea/sbiten/on_mob_life(mob/living/carbon/M)
-	M.apply_status_effect(/atom/movable/screen/alert/status_effect/buff/sweet)
+	M.apply_status_effect(/datum/status_effect/buff/sweet) //TA EDIT
 	..()

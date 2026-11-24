@@ -37,10 +37,13 @@
 				preserve = TRUE
 		if(!preserve)
 			owner.remove_status_effect(/datum/status_effect/buff/clergybuff)
-	
+
 /mob/living/carbon/human
 	var/priest_timer_check = 0
 	var/matthios_banner_timer_check = 0
+
+/area/rogue
+	var/holy_area = FALSE
 
 /area/rogue/Entered(mob/living/carbon/human/guy)
 
@@ -48,7 +51,7 @@
 	if((src.holy_area == TRUE) && HAS_TRAIT(guy, TRAIT_CLERGY_TA) && !guy.has_status_effect(/datum/status_effect/buff/clergybuff) && !HAS_TRAIT(guy, TRAIT_EXCOMMUNICATED) && !HAS_TRAIT(guy, TRAIT_HERESIARCH))
 		guy.apply_status_effect(/datum/status_effect/buff/clergybuff)
 
-/datum/status_effect/buff/mist_form 
+/datum/status_effect/buff/mist_form
 	id = "mist_form"
 	duration = 6666
 	alert_type = /atom/movable/screen/alert/status_effect/buff/dagger_dash
@@ -56,8 +59,8 @@
 /datum/status_effect/buff/mist_form/on_apply()
 	if(!isliving(owner)) return FALSE
 	var/mob/living/L = owner
-	
-	L.alpha = 100 
+
+	L.alpha = 100
 
 	ADD_TRAIT(L, "ethereal", MAGIC_TRAIT)
 	ADD_TRAIT(L, TRAIT_PACIFISM, MAGIC_TRAIT)
@@ -70,24 +73,24 @@
 	L.status_flags |= GODMODE
 
 
-	L.density = FALSE 
-	
+	L.density = FALSE
+
 
 	L.pass_flags |= LETPASSTHROW
 
 	L.pass_flags |= PASSMOB
-	
+
 	return ..()
 
 /datum/status_effect/buff/mist_form/on_remove()
 	var/mob/living/L = owner
 	if(!L) return
-	
+
 	L.alpha = 255
-	
+
 
 	L.density = TRUE
-	
+
 
 	REMOVE_TRAIT(L, "ethereal", MAGIC_TRAIT)
 	REMOVE_TRAIT(L, TRAIT_PACIFISM, MAGIC_TRAIT)
@@ -99,7 +102,7 @@
 	L.status_flags &= ~GODMODE
 	L.pass_flags &= ~LETPASSTHROW
 	L.pass_flags &= ~PASSMOB
-	
+
 	..()
 
 /atom/movable/screen/alert/status_effect/buff/smartium
@@ -142,10 +145,10 @@
 		if(!HAS_TRAIT(owner, TRAIT_IGNORESLOWDOWN))
 			ignore_slowdown = 1
 			ADD_TRAIT(owner, TRAIT_IGNORESLOWDOWN, TRAIT_GENERIC)
-		addtimer(CALLBACK(src, PROC_REF(remove_traits)), 30 SECONDS)
+		addtimer(CALLBACK(src, PROC_REF(remove_corps_dust_traits)), 30 SECONDS)
 		owner.hallucination = min(owner.hallucination + 10, 50)
 
-/datum/status_effect/buff/corps_dust/proc/remove_traits() //do not remove any owner standart traits. Only drug buffs.
+/datum/status_effect/buff/corps_dust/proc/remove_corps_dust_traits() //do not remove any owner standart traits. Only drug buffs.
 	if(ignor_damage_slowdown == 1)
 		REMOVE_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, TRAIT_GENERIC)
 	if(ignor_grab == 1)
@@ -192,29 +195,33 @@
 	if(owner)
 		to_chat(owner, span_warning("AHAHAHA!! AHAHAHAHAHAHAHAH!!!!"))
 		if(owner.cmode)
+			owner.reagents?.remove_reagent(/datum/reagent/grave_powder, 100)
 			return
 		if(HAS_TRAIT(owner, TRAIT_IRONMAN))
+			owner.reagents?.remove_reagent(/datum/reagent/grave_powder, 100)
 			return
 		owner.hallucination = min(owner.hallucination + 10, 50)
 
 /datum/status_effect/buff/grave_powder/tick()
 	if(owner) //heal and immobilize owner
 		if(owner.cmode)
+			owner.reagents?.remove_reagent(/datum/reagent/grave_powder, 100)
 			return
 		if(HAS_TRAIT(owner, TRAIT_IRONMAN))
+			owner.reagents?.remove_reagent(/datum/reagent/grave_powder, 100)
 			return
 		var/obj/effect/temp_visual/heal/H = new /obj/effect/temp_visual/heal_blood(get_turf(owner))
 		H.color = "#fbbebe"
 		if(owner.blood_volume < BLOOD_VOLUME_NORMAL)
-			owner.blood_volume = min(owner.blood_volume+5, BLOOD_VOLUME_NORMAL)
+			owner.blood_volume = min(owner.blood_volume+10, BLOOD_VOLUME_NORMAL)
 		var/list/wCount = owner.get_wounds()
 		if(length(wCount))
 			owner.heal_wounds(1)
 			owner.update_damage_overlays()
-		owner.adjustBruteLoss(-5, 0)
-		owner.adjustFireLoss(-5, 0)
-		owner.adjustOxyLoss(-5, 0)
-		owner.adjustToxLoss(-5, 0)
+		owner.adjustBruteLoss(-10, 0)
+		owner.adjustFireLoss(-10, 0)
+		owner.adjustOxyLoss(-10, 0)
+		owner.adjustToxLoss(-10, 0)
 		owner.adjustOrganLoss(ORGAN_SLOT_BRAIN, -5)
 		owner.adjustCloneLoss(-5, 0)
 
@@ -282,7 +289,7 @@
 	ADD_TRAIT(owner, TRAIT_NOPAIN, id)
 	ADD_TRAIT(owner, TRAIT_CRITICAL_RESISTANCE, id)
 	originalcmode = owner.cmode_music
-	owner.cmode_music = 'sound/music/combat_ozium.ogg'
+	owner.cmode_music = sound("sound/music/combat_ozium.ogg")
 
 /datum/status_effect/buff/herozium/on_remove()
 	owner.remove_stress(/datum/stressevent/ozium)

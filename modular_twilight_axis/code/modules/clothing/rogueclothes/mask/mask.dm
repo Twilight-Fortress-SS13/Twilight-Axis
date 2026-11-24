@@ -196,3 +196,36 @@
 	smeltresult = /obj/item/ingot/steel
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/masks.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/masks.dmi'
+
+// TAT Items я короче маски красивые хочу
+/obj/item/clothing/mask/rogue/yoruku_kitsune/armored
+	name = "wooden kitsune mask"
+	armor = ARMOR_BRIGANDINE
+	anvilrepair = /datum/skill/craft/armorsmithing
+	smeltresult = /obj/item/natural/ash
+	max_integrity = 50
+
+/obj/item/clothing/mask/rogue/yoruku_oni/armored
+	name = "wooden oni mask"
+	armor = ARMOR_BRIGANDINE
+	anvilrepair = /datum/skill/craft/armorsmithing
+	smeltresult = /obj/item/natural/ash
+	max_integrity = 50
+
+/obj/item/clothing/mask/rogue/overseer_gold
+	name = "golden confessor mask"
+	desc = "Знаменитая металлическая маска цвета латуни, изображающая лик Плачущего Бога. Слишком громоздкая, чтобы носить со шлемами."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/overseer.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/onmob/overseer_onmob.dmi'
+	icon_state = "overseermask"
+	item_state = "overseermask"
+	color = null
+
+/obj/item/clothing/mask/rogue/overseer_silver
+	name = "silver confessor mask"
+	desc = "Серебряная металлическая маска, покрытая защитными рунами, изображающими лик Плачущего Бога. Слишком громоздкая, чтобы носить со шлемами."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/overseer.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/onmob/overseer_onmob.dmi'
+	icon_state = "viceseermask"
+	item_state = "viceseermask"
+	color = null

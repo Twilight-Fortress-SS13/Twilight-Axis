@@ -1,5 +1,3 @@
-#define SCORCH_ADAPTATION_DURATION (3 SECONDS)
-#define SCORCH_ADAPTATION_KEY "scorch_adaptation"
 #define SCORCH_OVERLAY_COLOR rgb(255, 138, 61)
 #define SCORCH_BURN_DAMAGE 60
 
@@ -16,13 +14,14 @@
 	var/final_tier = 0
 	for(var/i in 1 to stacks)
 		if(target.has_status_effect(/datum/status_effect/debuff/scorched4))
-			apply_scorch_burn(target, zone_override)
-			final_tier = 4
+			if(apply_scorch_burn(target, zone_override))
+				remove_all_scorch_stacks(target)
 			break
 		if(target.has_status_effect(/datum/status_effect/debuff/scorched3))
 			target.remove_status_effect(/datum/status_effect/debuff/scorched3)
 			target.apply_status_effect(/datum/status_effect/debuff/scorched4)
-			apply_scorch_burn(target, zone_override)
+			if(apply_scorch_burn(target, zone_override))
+				remove_all_scorch_stacks(target)
 			final_tier = 4
 			break
 		if(target.has_status_effect(/datum/status_effect/debuff/scorched2))
@@ -41,42 +40,30 @@
 		if(1)
 			target.balloon_alert_to_viewers("<font color='#ff8a3d'>scorched I</font>")
 		if(2)
-			target.balloon_alert_to_viewers("<font color='#ff8a3d'>scorched II (-1 con)</font>")
+			target.balloon_alert_to_viewers("<font color='#ff8a3d'>scorched II</font>")
 		if(3)
-			target.balloon_alert_to_viewers("<font color='#ff8a3d'>scorched III (-2 con)</font>")
+			target.balloon_alert_to_viewers("<font color='#ff8a3d'>scorched III</font>")
 
 /proc/apply_scorch_burn(mob/living/target, zone_override = null)
 	if(!isliving(target))
 		return FALSE
-	if(target.mob_timers[SCORCH_ADAPTATION_KEY] && world.time < target.mob_timers[SCORCH_ADAPTATION_KEY])
-		var/remaining = round((target.mob_timers[SCORCH_ADAPTATION_KEY] - world.time) / 10)
-		target.balloon_alert_to_viewers("<font color='#ff8a3d'>fire adapted ([remaining]s)</font>")
-		return FALSE
-	var/target_zone = BODY_ZONE_CHEST
+	var/target_zone = prob(50) ? BODY_ZONE_HEAD : BODY_ZONE_CHEST
+	var/aimed_zone = zone_override ? check_zone(zone_override) : null
+	if(aimed_zone == BODY_ZONE_HEAD || aimed_zone == BODY_ZONE_CHEST)
+		target_zone = aimed_zone
 	var/mob/living/carbon/carbon_target
 	if(iscarbon(target))
 		carbon_target = target
-		var/aimed_zone = zone_override ? check_zone(zone_override) : null
-		if(aimed_zone && carbon_target.get_bodypart(aimed_zone))
-			target_zone = aimed_zone
-		else
-			var/obj/item/bodypart/most_wounded
-			for(var/obj/item/bodypart/BP as anything in carbon_target.bodyparts)
-				if(QDELETED(BP))
-					continue
-				if(!most_wounded || (BP.brute_dam + BP.burn_dam) > (most_wounded.brute_dam + most_wounded.burn_dam))
-					most_wounded = BP
-			if(most_wounded && (most_wounded.brute_dam + most_wounded.burn_dam) > 0)
-				target_zone = most_wounded.body_zone
-	target.apply_damage(SCORCH_BURN_DAMAGE, BURN, target_zone, 0)
+		if(target_zone == BODY_ZONE_HEAD && !carbon_target.get_bodypart(BODY_ZONE_HEAD))
+			target_zone = BODY_ZONE_CHEST
+	target.apply_damage(SPELL_DMG_VS(target, SPELL_DMG(SCORCH_BURN_DAMAGE)), BURN, target_zone, 0)
 	if(carbon_target)
 		var/obj/item/bodypart/affecting = carbon_target.get_bodypart(check_zone(target_zone))
 		if(affecting)
 			var/datum/wound/dynamic/burn/burn_wound = affecting.has_wound(/datum/wound/dynamic/burn)
 			if(!burn_wound)
 				burn_wound = affecting.add_wound(/datum/wound/dynamic/burn)
-			burn_wound?.upgrade(SCORCH_BURN_DAMAGE, 0, FALSE)
-	target.mob_timers[SCORCH_ADAPTATION_KEY] = world.time + SCORCH_ADAPTATION_DURATION
+			burn_wound?.upgrade(SPELL_DMG(SCORCH_BURN_DAMAGE), 0, FALSE)
 	var/hit_zone_name = parse_zone(target_zone)
 	target.balloon_alert_to_viewers("<font color='#ff4a2a'>CHARRED!</font>")
 	target.visible_message(
@@ -136,7 +123,7 @@
 /datum/status_effect/debuff/scorched1
 	id = "scorched1"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/scorched1
-	duration = 25 SECONDS
+	duration = 15 SECONDS
 
 /atom/movable/screen/alert/status_effect/debuff/scorched1
 	name = "Scorched"
@@ -154,8 +141,7 @@
 /datum/status_effect/debuff/scorched2
 	id = "scorched2"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/scorched2
-	duration = 25 SECONDS
-	effectedstats = list(STATKEY_CON = -1)
+	duration = 15 SECONDS
 
 /atom/movable/screen/alert/status_effect/debuff/scorched2
 	name = "Scorched II"
@@ -173,8 +159,7 @@
 /datum/status_effect/debuff/scorched3
 	id = "scorched3"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/scorched3
-	duration = 25 SECONDS
-	effectedstats = list(STATKEY_CON = -2)
+	duration = 15 SECONDS
 
 /atom/movable/screen/alert/status_effect/debuff/scorched3
 	name = "Scorched III"
@@ -192,8 +177,7 @@
 /datum/status_effect/debuff/scorched4
 	id = "scorched4"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/scorched4
-	duration = 25 SECONDS
-	effectedstats = list(STATKEY_CON = -2)
+	duration = 15 SECONDS
 
 /atom/movable/screen/alert/status_effect/debuff/scorched4
 	name = "Scorched IV"
@@ -208,7 +192,5 @@
 	owner.remove_atom_colour(TEMPORARY_COLOUR_PRIORITY, SCORCH_OVERLAY_COLOR)
 	. = ..()
 
-#undef SCORCH_ADAPTATION_DURATION
-#undef SCORCH_ADAPTATION_KEY
 #undef SCORCH_OVERLAY_COLOR
 #undef SCORCH_BURN_DAMAGE

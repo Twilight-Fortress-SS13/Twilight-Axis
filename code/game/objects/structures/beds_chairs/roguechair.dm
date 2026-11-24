@@ -26,7 +26,7 @@
 /obj/structure/chair/bench/church/r
 	icon_state = "church_benchright"
 
-/obj/structure/chair/bench/Initialize()
+/obj/structure/chair/bench/Initialize(mapload)
 	. = ..()
 	var/static/list/loc_connections = list(COMSIG_ATOM_EXIT = PROC_REF(on_exit))
 	AddElement(/datum/element/connect_loc, loc_connections)
@@ -56,7 +56,7 @@
 	if(occupied)
 		to_chat(user, span_warning("Someone is already hiding under [src]!"))
 		return
-	if(!do_after(user, sneaktime, src))
+	if(!do_after(user, sneaktime, target = src))
 		return
 	user.forceMove(src)
 	occupied = TRUE
@@ -140,7 +140,7 @@
 /obj/structure/chair/bench/couchamagenta/r
 	icon_state = "couchamagentaright"
 
-/obj/structure/chair/bench/couch/Initialize()
+/obj/structure/chair/bench/couch/Initialize(mapload)
 	. = ..()
 	if(GLOB.lordprimary)
 		lordcolor(GLOB.lordprimary,GLOB.lordsecondary)
@@ -165,7 +165,7 @@
 	destroy_sound = 'sound/combat/hits/onwood/destroyfurniture.ogg'
 	attacked_sound = "woodimpact"
 
-/obj/structure/chair/wood/rogue/Initialize()
+/obj/structure/chair/wood/rogue/Initialize(mapload)
 	. = ..()
 	var/static/list/loc_connections = list(COMSIG_ATOM_EXIT = PROC_REF(on_exit))
 	AddElement(/datum/element/connect_loc, loc_connections)
@@ -228,16 +228,16 @@
 	. += span_info("Click-dragging yourself onto a seat, while on the same tile, will 'buckle' you in; this represents your character sitting down. Sitting down gradually restores energy, and can be used to prop up people who'd normally be unable to stand.")
 	. += span_info("Left-click on the seat to 'unbuckle' yourself; this represents your character getting up. You can alternatively get up by pressing the 'RESIST' hotkey.")
 	. += span_info("This can be done to other people, as well. Click-dragging someone onto a seat will sit them down, and left-clicking the seat will 'unbuckle' them once more.")
-	. += span_info("Restrained people are unable to 'unbuckle' themeselves, or otherwise get up from whatever they're tied to. Pressing the 'RESIST' hotkey will allow them to start struggling out of their restraints. The time needed to accomplish this scales with the character's Strength.")
+	. += span_info("Restrained people are unable to 'unbuckle' themselves, or otherwise get up from whatever they're tied to. Pressing the 'RESIST' hotkey will allow them to start struggling out of their restraints. The time needed to accomplish this scales with the character's Strength.")
 	. += span_info("Some chairs and stools can be used as improvised weapons, by click-dragging them onto yourself. Activating a chair or stool in your hand will set it down in whatever direction you're facing.")
 
 /obj/item/chair/rogue/getonmobprop(tag)
 	. = ..()
 	if(tag)
 		switch(tag)
-			if("gen") 
+			if("gen")
 				return list("shrink" = 0.7,"sx" = -1,"sy" = 0,"nx" = 11,"ny" = 1,"wx" = 0,"wy" = 1,"ex" = 4,"ey" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 15,"sturn" = 0,"wturn" = 0,"eturn" = 39,"nflip" = 8,"sflip" = 0,"wflip" = 0,"eflip" = 8)
-			if("wielded") 
+			if("wielded")
 				return list("shrink" = 0.7,"sx" = -9,"sy" = 4,"nx" = -7,"ny" = 0,"wx" = -7,"wy" = 2,"ex" = 8,"ey" = 5,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = -42,"sturn" = 190,"wturn" = -170,"eturn" = -10,"nflip" = -8,"sflip" = 1,"wflip" = 1,"eflip" = 0)
 
 /obj/structure/chair/wood/rogue/CanPass(atom/movable/mover, turf/target)
@@ -270,21 +270,21 @@
 		return FALSE
 
 /obj/structure/chair/wood/rogue/proc/on_exit(datum/source, atom/movable/leaving, atom/new_location)
-    SIGNAL_HANDLER
-    if(!isliving(leaving))
-        return
-    var/mob/living/M = leaving
-    if(!(M.mobility_flags & MOBILITY_STAND))
-        return
-    if(get_dir(leaving.loc, new_location) == REVERSE_DIR(dir))
-        if(!item_chair)
-            return
-        playsound(loc, 'sound/foley/chairfall.ogg', 100, FALSE)
-        var/obj/item/I = new item_chair(loc)
-        item_chair = null
-        I.dir = dir
-        qdel(src)
-        return COMPONENT_ATOM_BLOCK_EXIT
+	SIGNAL_HANDLER
+	if(!isliving(leaving))
+		return
+	var/mob/living/M = leaving
+	if(!(M.mobility_flags & MOBILITY_STAND))
+		return
+	if(get_dir(leaving.loc, new_location) == REVERSE_DIR(dir))
+		if(!item_chair)
+			return
+		playsound(loc, 'sound/foley/chairfall.ogg', 100, FALSE)
+		var/obj/item/I = new item_chair(loc)
+		item_chair = null
+		I.dir = dir
+		qdel(src)
+		return COMPONENT_ATOM_BLOCK_EXIT
 
 /obj/structure/chair/wood/rogue/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1)
 	if(damage_amount > 5 && item_chair != null)
@@ -375,10 +375,30 @@
 	. = ..()
 	if(tag)
 		switch(tag)
-			if("gen") 
+			if("gen")
 				return list("shrink" = 0.7,"sx" = -1,"sy" = 0,"nx" = 11,"ny" = 1,"wx" = 0,"wy" = 1,"ex" = 4,"ey" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 15,"sturn" = 0,"wturn" = 0,"eturn" = 39,"nflip" = 8,"sflip" = 0,"wflip" = 0,"eflip" = 8)
-			if("wielded") 
+			if("wielded")
 				return list("shrink" = 0.7, "sx" = -12, "sy" = -8, "nx" = 13, "ny" = -7, "wx" = -10, "wy" = -5, "ex" = 7, "ey" = -6, "northabove" = 0, "southabove" = 1, "eastabove" = 1, "westabove" = 0, "nturn" = -13, "sturn" = 110, "wturn" = -60, "eturn" = -30, "nflip" = 1, "sflip" = 1, "wflip" = 8, "eflip" = 1)
+
+/obj/structure/chair/stool/rogue/stone
+	name = "stone stool"
+	desc = "A sturdy seat carved from stone."
+	icon_state = "stonestool"
+	item_chair = /obj/item/chair/stool/bar/rogue/stone
+	max_integrity = 300
+	destroy_sound = 'sound/combat/hits/onstone/stonedeath.ogg'
+	attacked_sound = list('sound/combat/hits/onstone/wallhit.ogg', 'sound/combat/hits/onstone/wallhit2.ogg', 'sound/combat/hits/onstone/wallhit3.ogg')
+	debris = list(/obj/item/natural/stone = 1)
+
+/obj/item/chair/stool/bar/rogue/stone
+	name = "stone stool"
+	desc = "A sturdy seat carved from stone."
+	icon_state = "stonestoolfallen"
+	origin_type = /obj/structure/chair/stool/rogue/stone
+	max_integrity = 300
+	hitsound = 'sound/combat/hits/onstone/wallhit.ogg'
+	destroy_sound = 'sound/combat/hits/onstone/stonedeath.ogg'
+	attacked_sound = list('sound/combat/hits/onstone/wallhit.ogg', 'sound/combat/hits/onstone/wallhit2.ogg', 'sound/combat/hits/onstone/wallhit3.ogg')
 
 /obj/structure/bed/rogue
 	icon_state = "bed"
@@ -386,6 +406,7 @@
 	anchored = TRUE
 	can_buckle = TRUE
 	buckle_lying = 90
+	drag_slowdown = 5
 	sleepy = 3
 	debris = list(/obj/item/grown/log/tree/small = 1)
 	hidingspot = TRUE
@@ -401,6 +422,7 @@
 	. += span_info("Once awake, hit the 'RESIST' hotkey or left-click the bed to 'unbuckle' yourself. Once unbuckled, pressing the 'V' key will allow you to fully rise up.")
 	. += span_info("Note that you can still sleep anywhere you wish, even without a bed, by simply laying down and closing your eyes. While this can work in a pinch to stave off tiredness or bolster your characters to survive a critical wound, it's much less ideal.")
 	. += span_info("Some structures can be used as hiding places. Toggle the 'SNEAK' button on your HUD, then click the structure to hide in it. You can stop hiding by clicking the structure again, or by moving out of it.")
+	. += span_info("Beds can be unanchored with a stake in order to be dragged around. Use the stake on it again to re-anchor it.")
 
 /obj/structure/bed/rogue/OnCrafted(dirin)
 	dirin = turn(dirin, 180)
@@ -424,7 +446,7 @@
 	if(occupied)
 		to_chat(user, span_warning("Someone is already hiding under [src]!"))
 		return
-	if(!do_after(user, sneaktime, src))
+	if(!do_after(user, sneaktime, target = src))
 		return
 	user.forceMove(src)
 	occupied = TRUE
@@ -447,6 +469,21 @@
 	var/datum/component/simple_rotation/rotcomp = GetComponent(/datum/component/simple_rotation)
 	if(rotcomp)
 		rotcomp.HandRot(rotcomp,user,ROTATION_CLOCKWISE)
+
+/obj/structure/bed/rogue/attackby(obj/item/I, mob/living/user)
+	if(istype(I, /obj/item/grown/log/tree/stake))
+		if(hiddenguy)
+			to_chat(user, span_warning("Someone is hiding under there!"))
+			return
+		if(anchored)
+			anchored = FALSE
+			to_chat(user, span_warning("[src] can now be moved."))
+		else
+			anchored = TRUE
+			to_chat(user, span_warning("You anchor [src]."))
+		playsound(src,pick('sound/foley/woodclimb.ogg'), 100, TRUE)
+		return
+	..()
 
 /obj/structure/bed/rogue/shit
 	name = "straw bed"
@@ -548,7 +585,7 @@
 	pixel_y = 0
 	sleepy = 3
 	debris = list(/obj/item/grown/log/tree/small = 2)
-/*            ///////WIP  This will essentially allow for multiple mobs to buckle, just needs to change mousedrop function
+/*			///////WIP	This will essentially allow for multiple mobs to buckle, just needs to change mousedrop function
 /obj/structure/bed/rogue/inn/double
 	var/list/buckled_mobs = list()
 

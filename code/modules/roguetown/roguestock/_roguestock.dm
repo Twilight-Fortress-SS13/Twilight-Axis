@@ -6,6 +6,7 @@
 	var/payout_price = 1
 	var/withdraw_price = 1
 	var/withdraw_disabled = FALSE
+	var/autoexport_disabled = FALSE
 	var/stockpile_limit = 100
 	var/importexport_amt = 10
 	var/category = "Raw Materials"
@@ -25,6 +26,10 @@
 			recompute_market_reference_prices(tg)
 	return
 
+/datum/roguestock/proc/set_manual_limit(lim)
+	stockpile_limit = clamp(round(lim), 0, STOCKPILE_LIMIT_MANUAL_MAX)
+	automatic_limit = FALSE
+
 /datum/roguestock/proc/get_payout_price(obj/item/I)
 	return payout_price
 
@@ -36,9 +41,9 @@
 		"baseline" = baseline,
 		"q_mult" = 1.0,
 	)
-	if(!istype(I) || !I.has_item_quality)
+	if(!istype(I))
 		return out
-	var/q_mult = ITEM_QUALITY_MULT(I.item_quality)
+	var/q_mult = I.get_stockpile_quality_mult()
 	if(q_mult == 1.0)
 		return out
 	var/buy_price = baseline * q_mult
@@ -50,6 +55,8 @@
 	return out
 
 /datum/roguestock/proc/check_item(obj/item/I)
+	if(I.GetComponent(/datum/component/unsellable))
+		return FALSE
 	if(istype(I, /obj/item/reagent_containers/food/snacks))
 		var/obj/item/reagent_containers/food/snacks/food = I
 		if(food.eat_effect == /datum/status_effect/debuff/rotfood)

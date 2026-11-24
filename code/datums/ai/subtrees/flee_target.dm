@@ -25,6 +25,9 @@
 	target_key = BB_BASIC_MOB_FLEE_TARGET
 	hiding_place_key = BB_BASIC_MOB_FLEE_TARGET_HIDING_LOCATION
 
+/datum/ai_planning_subtree/flee_target/from_flee_key/retaliation
+	bb_key = BB_BASIC_MOB_FLEE_TARGET
+
 
 /// Try to escape from your current target, without performing any other actions.
 /// Reads from some fleeing-specific targetting keys rather than the current mob target.
@@ -38,7 +41,7 @@
 	if (!controller.blackboard[bb_key]) // this saves us like a micro second of processing time by early returning even though we check later.
 		return
 
-	var/list/filtered_targets = hearers(7, controller.pawn) -  controller.pawn
+	var/list/filtered_targets = hearers(7, controller.pawn) -	controller.pawn
 	var/turf/our_position = get_turf(controller.pawn)
 	controller.set_blackboard_key(BB_BASIC_MOB_FLEE_TARGET, get_closest_atom(/atom/, filtered_targets, our_position))
 	. = ..()

@@ -3,6 +3,7 @@
 #define UPGRADE_ARCYNE_INTEGRITY 300
 
 /datum/action/cooldown/spell/conjure_arcyne_ward
+	source_aspect = /datum/magic_aspect/pseudo/wards
 	name = "Conjure Arcyne Ward"
 	desc = "Conjure an invisible arcyne ward that covers your entire body. Cast again to dismiss it. \
 	The ward withdraws from areas where you wear real armor, leaving those to your equipment instead - \
@@ -82,7 +83,7 @@
 		var/mob/living/L = owner
 		var/adjusted = get_adjusted_cost(upfront_stamina_cost)
 		if(adjusted > 0)
-			L.stamina_add(adjusted)
+			INVOKE_ASYNC(L, TYPE_PROC_REF(/mob/living, stamina_add), adjusted) // TA EDIT
 
 /datum/action/cooldown/spell/conjure_arcyne_ward/Grant(mob/grant_to)
 	. = ..()
@@ -127,14 +128,21 @@
 
 	// Toggle on - conjure ward, no cooldown (button stays available for dismiss)
 	owner.visible_message(span_notice("An arcyne ward shimmers into existence around [owner]!"))
+	manifest_ward(H)
+	reset_spell_cooldown()
+	return TRUE
+
+/datum/action/cooldown/spell/conjure_arcyne_ward/npc_on_spawn(mob/living/carbon/human/H)
+	if(!H.skin_armor)
+		manifest_ward(H)
+
+/datum/action/cooldown/spell/conjure_arcyne_ward/proc/manifest_ward(mob/living/carbon/human/H)
 	conjured_ward = new ward_type(H)
 	H.skin_armor = conjured_ward
 	conjured_ward.setup_ward(H)
 	conjured_ward.linked_spell = src
-	reset_spell_cooldown()
 	// Wake the paired regen button up now that there's a live ward to mend
 	regen_action?.build_all_button_icons()
-	return TRUE
 
 /datum/action/cooldown/spell/conjure_arcyne_ward/Destroy()
 	if(conjured_ward && !QDELETED(conjured_ward))
@@ -146,7 +154,7 @@
 /datum/action/cooldown/spell/conjure_arcyne_ward/dragonhide
 	name = "Conjure Dragonhide Ward"
 	desc = "Conjure a dragonhide ward - an upgraded arcyne ward hardened with draconic scales. \
-	Grants fire resistance, halving fire damage and causing flames to burn out faster and bolsters constitution. 300 integrity. \
+	Grants fire resistance, halving fire damage and causing flames to burn out faster. 300 integrity. \
 	Otherwise functions as a standard arcyne ward - yields coverage to real armor, does not regenerate. \
 	Cast again to dismiss. Cooldown begins when dismissed or destroyed."
 	button_icon_state = "conjure_dragonhide"
@@ -162,9 +170,9 @@
 /datum/action/cooldown/spell/conjure_arcyne_ward/crystalhide
 	name = "Conjure Crystalhide Ward"
 	desc = "Conjure a crystalhide ward - an upgraded arcyne ward crystallized with leyline energy. \
-	Grants brigandine-tier protection and bolsters intelligence. Shatters violently when broken, knocking back nearby foes. 300 integrity. \
+	Grants chainmail-tier protection. Shatters violently when broken, knocking back nearby foes. 300 integrity. \
 	Otherwise functions as a standard arcyne ward - yields coverage to real armor, does not regenerate. \
-	Cast again to dismiss. Cooldown begins when dismissed or destroyed."
+	Cast again to dismiss. Cooldown begins when dismissed or destroyed." //TA_EDIT
 	button_icon_state = "conjure_dragonhide"
 	spell_color = GLOW_COLOR_ARCANE
 	invocations = list("Psymagia Congrego!")
@@ -180,6 +188,7 @@
 // --- Regenerate Arcyne Ward (paired spell, granted while a ward is active) ---
 
 /datum/action/cooldown/spell/regenerate_arcyne_ward
+	source_aspect = /datum/magic_aspect/pseudo/wards
 	name = "Regenerate Arcyne Ward"
 	desc = "Channel a restoration on my active Arcyne Ward, returning it to full integrity. \
 	The channel takes 10 seconds and costs stamina and energy proportional to how damaged the ward is - \
@@ -286,7 +295,7 @@
 		var/mob/living/L = owner
 		var/adjusted = get_adjusted_cost(upfront_stamina_cost)
 		if(adjusted > 0)
-			L.stamina_add(adjusted)
+			INVOKE_ASYNC(L, TYPE_PROC_REF(/mob/living, stamina_add), adjusted) // TA EDIT
 
 /datum/action/cooldown/spell/regenerate_arcyne_ward/cast(atom/cast_on)
 	. = ..()
@@ -367,7 +376,8 @@
 	if(has_real_armor(H.wear_shirt) && has_real_armor(H.wear_armor))
 		new_coverage &= ~(CHEST | GROIN | VITALS)
 
-	if(has_real_armor(H.wear_armor, ARM_LEFT | ARM_RIGHT) || has_real_armor(H.wear_shirt, ARM_LEFT | ARM_RIGHT))
+	// Arms only yield to a real piece in the wrist slot (bracers) now.
+	if(has_real_armor(H.wear_wrists, ARM_LEFT | ARM_RIGHT))
 		new_coverage &= ~(ARM_LEFT | ARM_RIGHT)
 
 	if(has_real_armor(H.gloves))
@@ -469,7 +479,7 @@
 /obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/crystalhide
 	name = "crystalhide ward"
 	desc = "An arcyne ward crystallized with leyline energy. Tough against blunt force but less rigid than plate. Shatters violently when broken."
-	armor = ARMOR_BRIGANDINE
+	armor = ARMOR_MAILLE //TA EDIT
 	max_integrity = UPGRADE_ARCYNE_INTEGRITY
 	ward_color = GLOW_COLOR_KINESIS
 	arcyne_armor_tier = ARCYNE_WARD_TIER_GREATER
@@ -494,7 +504,7 @@
 	for(var/mob/living/target in oview(1, wearer))
 		var/throwtarget = get_edge_target_turf(wearer, get_dir(wearer, get_step_away(target, wearer)))
 		target.safe_throw_at(throwtarget, 2, 1, wearer, spin = FALSE, force = MOVE_FORCE_EXTREMELY_STRONG)
-		target.adjustBruteLoss(20)
+		target.adjustBruteLoss(SPELL_DMG_VS(target, SPELL_DMG(20)))
 
 #undef ARCYNE_WARD_FILTER
 #undef BASE_ARCYNE_INTEGRITY

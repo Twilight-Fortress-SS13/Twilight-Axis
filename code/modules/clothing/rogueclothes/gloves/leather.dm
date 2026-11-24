@@ -53,6 +53,13 @@
 	max_integrity = ARMOR_INT_SIDE_HARDLEATHER
 	allowed_race = NON_DWARVEN_RACE_TYPES
 
+/obj/item/clothing/gloves/roguetown/fingerless/shadowgloves/elflock/loadout
+	name = "aesthetic shadowy fingerless gloves"
+
+/obj/item/clothing/gloves/roguetown/fingerless/shadowgloves/elflock/loadout/Initialize(mapload)
+	. = ..()
+	loadoutize()
+
 /obj/item/clothing/gloves/roguetown/fingerless_leather
 	name = "fingerless leather gloves"
 	desc = "A pair of protective gloves favored by lockshimmers, laborers, and smokers for maintaining \
@@ -96,7 +103,7 @@
 	armor = ARMOR_LEATHER
 	icon_state = "psydongloves"
 	item_state = "psydongloves"
-	salvage_result = /obj/item/natural/hide/cured	
+	salvage_result = /obj/item/natural/hide/cured
 	allowed_race = ALL_RACES_TYPES
 
 // Eastern gloves
@@ -157,7 +164,7 @@
 	detail_color = CLOTHING_RED
 	salvage_result = /obj/item/natural/silk
 
-/obj/item/clothing/gloves/roguetown/courtphysician/female/Initialize()
+/obj/item/clothing/gloves/roguetown/courtphysician/female/Initialize(mapload)
 	. = ..()
 	update_icon()
 
@@ -190,3 +197,48 @@
 /obj/item/clothing/gloves/roguetown/cloth/ComponentInitialize()
 	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FENCERDEXTERITY)
 	AddComponent(/datum/component/armour_filtering/positive, TRAIT_HONORBOUND)
+
+/obj/item/clothing/gloves/roguetown/rosa
+	name = "ivory gloves"
+	desc = "Finely crafted gloves of silk and leather."
+	icon_state = "rosagloves1"
+	icon = 'icons/roguetown/clothing/special/rosewood.dmi'
+	mob_overlay_icon = 'icons/roguetown/clothing/special/onmob/rosewood.dmi'
+	sleeved = 'icons/roguetown/clothing/special/onmob/rosewood.dmi'
+	salvage_result = /obj/item/natural/hide/cured
+
+/obj/item/clothing/gloves/roguetown/rosa/two
+	name = "scarlet gloves"
+	icon_state = "rosagloves2"
+
+/obj/item/clothing/gloves/roguetown/rosa/three
+	name = "silvered gloves"
+	icon_state = "rosagloves3"
+
+/obj/item/clothing/gloves/roguetown/rosa/four
+	name = "obsidian gloves"
+	icon_state = "rosagloves4"
+
+/obj/item/clothing/gloves/roguetown/rosa/five
+	name = "sable gloves"
+	icon_state = "rosagloves5"
+
+/obj/item/clothing/gloves/roguetown/rosa/six
+	name = "maroon gloves"
+	icon_state = "rosagloves6"
+
+/obj/item/clothing/gloves/roguetown/rosa/seven
+	name = "regal gloves"
+	icon_state = "rosagloves7"
+
+/obj/item/clothing/gloves/roguetown/rosa/eight
+	name = "courtly gloves"
+	icon_state = "rosagloves8"
+
+/obj/item/clothing/gloves/roguetown/rosa/nine
+	name = "royal gloves"
+	icon_state = "rosagloves9"
+
+/obj/item/clothing/gloves/roguetown/rosa/ten
+	name = "stately gloves"
+	icon_state = "rosagloves10"

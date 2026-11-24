@@ -19,7 +19,7 @@ Here is an example of the new formatting for anyone who wants to add more food i
 	name = "Xenoburger"													//Name that displays in the UI.
 	desc = ""						//Duh
 	icon_state = "xburger"												//Refers to an icon in food.dmi
-/obj/item/reagent_containers/food/snacks/xenoburger/Initialize()		//Don't mess with this. | nO I WILL MESS WITH THIS
+/obj/item/reagent_containers/food/snacks/xenoburger/Initialize(mapload)		//Don't mess with this. | nO I WILL MESS WITH THIS
 	. = ..()														//Same here.
 	reagents.add_reagent(/datum/reagent/xenomicrobes, 10)						//This is what is in the food item. you may copy/paste
 	reagents.add_reagent(/datum/reagent/consumable/nutriment, 2)							//this line of code for all the contents.
@@ -41,7 +41,7 @@ All foods are distributed among various categories. Use common sense.
 	var/bitesize = 3
 	var/bitecount = 0
 	var/trash = null
-	var/slice_path    // for sliceable food. path of the item resulting from the slicing
+	var/slice_path	// for sliceable food. path of the item resulting from the slicing
 	var/slice_bclass = BCLASS_CUT
 	var/slices_num
 	var/slice_name
@@ -51,20 +51,22 @@ All foods are distributed among various categories. Use common sense.
 	var/dry = 0
 	var/dunkable = FALSE // for dunkable food, make true
 	var/dunk_amount = 10 // how much reagent is transferred per dunk
-	var/cooked_type = null  //for overn cooking
+	var/cooked_type = null	//for overn cooking
 	/// How palatable is this food for a given social class? Also influences food quality
 	var/faretype = FARE_IMPOVERISHED
+	var/cuisine = NONE
+	var/dish_type = NONE
 	/// If false, this will inflict mood debuffs on nobles who eat it without being near a table.
 	var/portable = TRUE
 	var/fried_type = null	//instead of becoming
+	var/smoked_type = null
 	var/deep_fried_type = null
-	var/boiled_type = null
 	var/filling_color = "#FFFFFF" //color to use when added to custom food.
-	var/custom_food_type = null  //for food customizing. path of the custom food to create
-	var/junkiness = 0  //for junk food. used to lower human satiety.
+	var/custom_food_type = null	//for food customizing. path of the custom food to create
+	var/junkiness = 0	//for junk food. used to lower human satiety.
 	var/list/bonus_reagents //the amount of reagents (usually nutriment and vitamin) added to crafted/cooked snacks, on top of the ingredients reagents.
 	var/customfoodfilling = 1 // whether it can be used as filling in custom food
-	var/list/tastes  // for example list("crisps" = 2, "salt" = 1)
+	var/list/tastes	// for example list("crisps" = 2, "salt" = 1)
 
 	var/cooking = 0
 	var/cooktime = 0
@@ -84,7 +86,7 @@ All foods are distributed among various categories. Use common sense.
 	var/fertamount = 50
 
 	drop_sound = 'sound/foley/dropsound/food_drop.ogg'
-	smeltresult = /obj/item/ash
+	smeltresult = /obj/item/natural/ash
 	//Placeholder for effect that trigger on eating that aren't tied to reagents.
 
 	var/cooked_smell
@@ -111,7 +113,7 @@ All foods are distributed among various categories. Use common sense.
 /obj/item/reagent_containers/food/snacks/fire_act(added, maxstacks)
 	burning(1 MINUTES)
 
-/obj/item/reagent_containers/food/snacks/Initialize()
+/obj/item/reagent_containers/food/snacks/Initialize(mapload)
 	if(rotprocess)
 		SSticker.OnRoundstart(CALLBACK(src, PROC_REF(begin_rotting)))
 	if((cooked_type || fried_type) && !cooktime)
@@ -121,20 +123,32 @@ All foods are distributed among various categories. Use common sense.
 /obj/item/reagent_containers/food/snacks/proc/begin_rotting()
 	START_PROCESSING(SSobj, src)
 
+GLOBAL_LIST_INIT(food_preserving_locs, typecacheof(list(
+	/obj/structure/closet/crate/chest,
+	/obj/item/cooking/platter,
+	/obj/structure/roguemachine/vendor,
+	/obj/item/storage/backpack/rogue/artibackpack,
+	/obj/structure/table/cooling,
+	/obj/machinery/light/rogue/smoker,
+)))
+
+/obj/item/reagent_containers/food/snacks/proc/is_preserved()
+	if(is_type_in_typecache(loc, GLOB.food_preserving_locs))
+		return TRUE
+	var/obj/item/parcel/parcel = loc
+	return istype(parcel) && parcel.preserves_contents
+
 /obj/item/reagent_containers/food/snacks/process()
 	..()
-	if(rotprocess)
-		if(!istype(loc, /obj/structure/closet/crate/chest) && ! istype(loc, /obj/item/cooking/platter)  && !istype(loc, /obj/structure/roguemachine/vendor) && !istype (loc, /obj/item/storage/backpack/rogue/artibackpack)&& !istype (loc, /obj/structure/table/cooling))
-			if(!locate(/obj/structure/table) in loc)
-				warming -= 20 //ssobj processing has a wait of 20
-			else
-				if(locate(/obj/structure/table/cooling) in loc)
-					warming -= 0
-				else
-					warming -= 10
-			if(warming < (-1*rotprocess))
-				if(become_rotten())
-					STOP_PROCESSING(SSobj, src)
+	if(!rotprocess || is_preserved())
+		return
+	if(!locate(/obj/structure/table) in loc)
+		warming -= 20 //ssobj processing has a wait of 20
+	else if(!locate(/obj/structure/table/cooling) in loc)
+		warming -= 10
+	if(warming < (-1*rotprocess))
+		if(become_rotten())
+			STOP_PROCESSING(SSobj, src)
 
 /obj/item/reagent_containers/food/snacks/can_craft_with()
 	if(eat_effect == /datum/status_effect/debuff/rotfood)
@@ -217,7 +231,7 @@ All foods are distributed among various categories. Use common sense.
 			result = new /obj/item/reagent_containers/food/snacks/badrecipe(A)
 		initialize_cooked_food(result, 1)
 		return result
-	if(istype(A,/obj/machinery/light/rogue/hearth) || istype(A,/obj/machinery/light/rogue/firebowl) || istype(A,/obj/machinery/light/rogue/campfire) || istype(A,/obj/machinery/light/rogue/hearth/mobilestove) || istype(A,/mob/living/simple_animal/pet/familiar/infernal))
+	if(istype(A,/obj/machinery/light/rogue/hearth) || istype(A,/obj/machinery/light/rogue/firebowl) || istype(A,/obj/machinery/light/rogue/campfire) || istype(A,/obj/machinery/light/rogue/hearth/mobilestove) || istype(A,/mob/living/carbon/human/species/familiar/infernal))
 		var/obj/item/result
 		if(fried_type)
 			result = new fried_type(A)
@@ -270,59 +284,15 @@ All foods are distributed among various categories. Use common sense.
 	// check to see if what we're eating is appropriate fare for our "social class" (aka nobles shouldn't be eating sticks of butter you troglodytes)
 	if (ishuman(eater))
 		var/mob/living/carbon/human/human_eater = eater
-		if(!HAS_TRAIT(human_eater, TRAIT_NOREGEN) || !(human_eater.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder) || human_eater.has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed)))
-			if(HAS_TRAIT(human_eater, TRAIT_BLACKBLOOD))
-				var/datum/status_effect/buff/foodhealing/H = eater.has_status_effect(/datum/status_effect/buff/foodhealing)
-				if(H)
-					if(faretype > H.fare_power)
-						eater.remove_status_effect(/datum/status_effect/buff/foodhealing)
-						eater.apply_status_effect(/datum/status_effect/buff/foodhealing, faretype, faretype)
-					else if(faretype == H.fare_power)
-						H.duration += 2 SECONDS
-				else
-					eater.apply_status_effect(/datum/status_effect/buff/foodhealing, faretype, faretype)
-		
-		if(human_eater.culinary_preferences)
-			if(HAS_TRAIT(human_eater, TRAIT_ROTMAN) || HAS_TRAIT(human_eater, TRAIT_IRONMAN))
-				return
-			var/favorite_food_type = human_eater.culinary_preferences[CULINARY_FAVOURITE_FOOD]
-			if(favorite_food_type == type)
-				if(human_eater.add_stress(/datum/stressevent/favourite_food))
-					to_chat(human_eater, span_green("Yum! My favorite food!"))
-			else if(ispath(type, favorite_food_type))
-				var/obj/item/reagent_containers/food/snacks/favorite_food_instance = favorite_food_type
-				var/favorite_food_name = initial(favorite_food_instance.name)
-				if(favorite_food_name == name)
-					if(human_eater.add_stress(/datum/stressevent/favourite_food))
-						to_chat(human_eater, span_green("Yum! My favorite food!"))
-			else
-				var/obj/item/reagent_containers/food/snacks/favorite_food_instance = favorite_food_type
-				var/slice_path = initial(favorite_food_instance.slice_path)
-				if(slice_path && type == slice_path)
-					if(human_eater.add_stress(/datum/stressevent/favourite_food))
-						to_chat(human_eater, span_green("Yum! My favorite food!"))
-
-			var/hated_food_type = human_eater.culinary_preferences[CULINARY_HATED_FOOD]
-			if(hated_food_type == type)
-				if(human_eater.add_stress(/datum/stressevent/hated_food))
-					to_chat(human_eater, span_red("Yuck! My hated food!"))
-			else if(ispath(type, hated_food_type))
-				var/obj/item/reagent_containers/food/snacks/hated_food_instance = hated_food_type
-				var/hated_food_name = initial(hated_food_instance.name)
-				if(hated_food_name == name)
-					if(human_eater.add_stress(/datum/stressevent/hated_food))
-						to_chat(human_eater, span_red("Yuck! My hated food!"))
-			else
-				var/obj/item/reagent_containers/food/snacks/hated_food_instance = hated_food_type
-				var/slice_path = initial(hated_food_instance.slice_path)
-				if(slice_path && type == slice_path)
-					if(human_eater.add_stress(/datum/stressevent/hated_food))
-						to_chat(human_eater, span_red("Yuck! My hated food!"))
+		if(faretype >= FAVORITE_FOOD_MINFARE && ((cuisine & human_eater.favorite_cuisine) || (dish_type & human_eater.favorite_dish)))
+			if(human_eater.add_stress(/datum/stressevent/favourite_food))
+				new /obj/effect/temp_visual/heart(get_turf(human_eater))
+				to_chat(human_eater, span_green("Delicious - just the way I like it!"))
 
 		if (!HAS_TRAIT(human_eater, TRAIT_NASTY_EATER) && !HAS_TRAIT(human_eater, TRAIT_ORGAN_EATER))
 			if (human_eater.is_noble())
 				if (!portable)
-					if(!(locate(/obj/structure/table) in range(1, eater)))
+					if(!has_table_surface(range(1, eater)))
 						eater.add_stress(/datum/stressevent/noble_ate_without_table) // look i just had to okay?
 						if (prob(25))
 							to_chat(eater, span_red("I should really eat this at a table..."))
@@ -366,6 +336,12 @@ All foods are distributed among various categories. Use common sense.
 							to_chat(eater, span_red("This is rather bland. I deserve better food than this..."))
 					if (FARE_POOR to FARE_LAVISH)
 						eater.remove_stress(/datum/stressevent/noble_bland_food)
+
+		if((dish_type & DISH_MEAT) && HAS_TRAIT(human_eater, TRAIT_NISTEAN))
+			eater.add_stress(/datum/stressevent/nistean)
+
+		if(HAS_TRAIT(human_eater, TRAIT_VEGAN) && (dish_type & (DISH_MEAT | DISH_EGG | DISH_DAIRY | DISH_POULTRY | DISH_SEAFOOD | DISH_HONEY)))
+			eater.add_stress(/datum/stressevent/vegan)
 
 	if(eat_effect && apply_effect && bitecount >= bitesize)
 		eater.apply_status_effect(eat_effect)
@@ -462,7 +438,7 @@ All foods are distributed among various categories. Use common sense.
 				to_chat(user, span_warning("[M] doesn't seem to have a mouth!"))
 				return
 
-		if(reagents)								//Handle ingestion of the reagent.
+		if(reagents && !istype(M, /mob/living/carbon/human/species/familiar/fae)) //Handle ingestion of the reagent.
 			if(M.satiety > -200)
 				M.satiety -= junkiness
 			playsound(M.loc,'sound/misc/eat.ogg', rand(30,60), TRUE)
@@ -529,10 +505,10 @@ All foods are distributed among various categories. Use common sense.
 	var/list/parts = list()
 	switch(faretype)
 		if(FARE_IMPOVERISHED) parts += "Quality: Impoverished"
-		if(FARE_POOR)         parts += "Quality: Poor"
-		if(FARE_NEUTRAL)      parts += "Quality: Neutral"
-		if(FARE_FINE)         parts += "Quality: Fine"
-		if(FARE_LAVISH)       parts += "Quality: Lavish"
+		if(FARE_POOR)			parts += "Quality: Poor"
+		if(FARE_NEUTRAL)		parts += "Quality: Neutral"
+		if(FARE_FINE)			parts += "Quality: Fine"
+		if(FARE_LAVISH)		parts += "Quality: Lavish"
 	parts += "Nutrition: [get_nutrition_to_text()]"
 	if(!portable)
 		parts += "Table: Required (For Nobles)"
@@ -541,17 +517,17 @@ All foods are distributed among various categories. Use common sense.
 	else
 		var/rot_label
 		switch(initial(rotprocess))
-			if(0 to SHELFLIFE_TINY)               rot_label = "Rot: Rots quickly"
-			if(SHELFLIFE_TINY to SHELFLIFE_SHORT)  rot_label = "Rot: Lasts about half a dae"
+			if(0 to SHELFLIFE_TINY)				rot_label = "Rot: Rots quickly"
+			if(SHELFLIFE_TINY to SHELFLIFE_SHORT)	rot_label = "Rot: Lasts about half a dae"
 			if(SHELFLIFE_SHORT to SHELFLIFE_DECENT) rot_label = "Rot: Lasts a dae"
-			if(SHELFLIFE_DECENT to SHELFLIFE_LONG)  rot_label = "Rot: Lasts ~a dae and a half"
+			if(SHELFLIFE_DECENT to SHELFLIFE_LONG)	rot_label = "Rot: Lasts ~a dae and a half"
 			if(SHELFLIFE_LONG to SHELFLIFE_EXTREME) rot_label = "Rot: Lasts ~three daes"
 			else rot_label = "Rot: long shelf life"
 		switch(-1 * warming / initial(rotprocess))
 			if(-INFINITY to 0.25) rot_label += " - very fresh"
-			if(0.25 to 0.5)       rot_label += " - fairly fresh"
-			if(0.5 to 0.75)       rot_label += " - going stale"
-			if(0.75 to 1)         rot_label += " - about to rot"
+			if(0.25 to 0.5)		rot_label += " - fairly fresh"
+			if(0.5 to 0.75)		rot_label += " - going stale"
+			if(0.75 to 1)			rot_label += " - about to rot"
 		parts += rot_label
 	switch(eat_effect)
 		if(/datum/status_effect/buff/snackbuff, /datum/status_effect/buff/mealbuff)
@@ -562,6 +538,14 @@ All foods are distributed among various categories. Use common sense.
 	var/list/lines = list()
 	var/info = parts.Join(" | ")
 	lines += span_smallnotice("[info].")
+	var/list/tag_parts = list()
+	if(cuisine)
+		tag_parts += "Cuisine: [english_list(culinary_flags_names(GLOB.culinary_cuisines, cuisine))]"
+	var/list/dish_names = culinary_flags_names(GLOB.culinary_dishes, dish_type)
+	if(length(dish_names))
+		tag_parts += "Dish: [english_list(dish_names)]"
+	if(length(tag_parts))
+		lines += span_smallnotice("[tag_parts.Join(" | ")].")
 	switch(eat_effect)
 		if(/datum/status_effect/debuff/uncookedfood)
 			lines += span_smallred("It is raw!")
@@ -610,7 +594,7 @@ All foods are distributed among various categories. Use common sense.
 			return 0
 	if(user.used_intent.blade_class == slice_bclass && W.wlength == WLENGTH_SHORT)
 		if(slice_bclass == BCLASS_CHOP)
-			//	RTD meat chopping noise  The 66% random bit is just annoying
+			//	RTD meat chopping noise	The 66% random bit is just annoying
 			if(prob(66))
 				user.visible_message(span_warning("[user] chops [src]!"))
 				return 0
@@ -650,7 +634,7 @@ All foods are distributed among various categories. Use common sense.
 
 	if ( \
 			!isturf(src.loc) || \
-			!(locate(/obj/structure/table) in src.loc) && \
+			!has_table_surface(src.loc) && \
 			!(locate(/obj/structure/table/optable) in src.loc) && \
 			!(locate(/obj/item/storage/bag/tray) in src.loc) \
 		)
@@ -662,7 +646,7 @@ All foods are distributed among various categories. Use common sense.
 	if(chopping_sound)
 		playsound(get_turf(user), 'modular/Neu_Food/sound/chopping_block.ogg', 60, TRUE, -1) // added some choppy sound
 	if(slice_batch)
-		var/cd = get_cooktime_divisor(user.get_skill_level(/datum/skill/craft/cooking))
+		var/cd = get_skill_speed_divisor(user.get_skill_level(/datum/skill/craft/cooking))
 		if(!do_after(user, 1 SECONDS / cd, target = src))
 			return FALSE
 		var/reagents_per_slice = reagents.total_volume/slices_num
@@ -699,14 +683,22 @@ All foods are distributed among various categories. Use common sense.
 	slice.create_reagents(slice.volume)
 	reagents.trans_to(slice,reagents_per_slice)
 	slice.filling_color = filling_color
+	slice.dish_type |= dish_type // slices of meat pie are still meat, etc.
 	slice.name = slice_name ? slice_name : slice.name
 	slice.update_snack_overlays(src)
 //	if(name != initial(name))
 //		slice.name = "slice of [name]"
 //	if(desc != initial(desc))
 //		slice.desc = ""
-//	if(foodtype != initial(foodtype))
-//		slice.foodtype = foodtype //if something happens that overrode our food type, make sure the slice carries that over
+
+/obj/item/reagent_containers/food/snacks/proc/set_tastes(list/new_tastes)
+	if(!length(new_tastes))
+		return
+	tastes = new_tastes.Copy()
+	if(!reagents)
+		return
+	for(var/datum/reagent/consumable/nutriment/N in reagents.reagent_list)
+		N.data = counterlist_normalise(new_tastes.Copy())
 
 /obj/item/reagent_containers/food/snacks/proc/generate_trash(atom/location)
 	if(trash)
@@ -810,7 +802,7 @@ All foods are distributed among various categories. Use common sense.
 
 /obj/item/reagent_containers/food/snacks/MouseDrop(atom/over)
 	var/turf/T = get_turf(src)
-	var/obj/structure/table/TB = locate(/obj/structure/table) in T
+	var/obj/structure/table/TB = has_table_surface(T)
 	if(TB)
 		TB.MouseDrop(over)
 	else
@@ -823,6 +815,6 @@ All foods are distributed among various categories. Use common sense.
 	icon_state = "badrecipe"
 	list_reagents = list(/datum/reagent/toxin/bad_food = 30)
 	filling_color = "#8B4513"
-	foodtype = GROSS
+	food_quality = GROSS
 	burntime = 0
 	cooktime = 0

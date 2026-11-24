@@ -1,18 +1,18 @@
 /**
-  * # Outfit datums
-  *
-  * This is a clean system of applying outfits to mobs, if you need to equip someone in a uniform
-  * this is the way to do it cleanly and properly.
-  *
-  * You can also specify an outfit datum on a job to have it auto equipped to the mob on join
-  *
-  * /mob/living/carbon/human/proc/equipOutfit(outfit) is the mob level proc to equip an outfit
-  * and you pass it the relevant datum outfit
-  *
-  * outfits can also be saved as json blobs downloadable by a client and then can be uploaded
-  * by that user to recreate the outfit, this is used by admins to allow for custom event outfits
-  * that can be restored at a later date
-  */
+	* # Outfit datums
+	*
+	* This is a clean system of applying outfits to mobs, if you need to equip someone in a uniform
+	* this is the way to do it cleanly and properly.
+	*
+	* You can also specify an outfit datum on a job to have it auto equipped to the mob on join
+	*
+	* /mob/living/carbon/human/proc/equipOutfit(outfit) is the mob level proc to equip an outfit
+	* and you pass it the relevant datum outfit
+	*
+	* outfits can also be saved as json blobs downloadable by a client and then can be uploaded
+	* by that user to recreate the outfit, this is used by admins to allow for custom event outfits
+	* that can be restored at a later date
+	*/
 /datum/outfit
 	///Name of the outfit (shows up in the equip admin verb)
 	var/name = "Naked"
@@ -84,10 +84,10 @@
 	var/armor = null
 
 	/**
-	  * Type path of item to go in suit storage slot
-	  *
-	  * (make sure it's valid for that suit)
-	  */
+		* Type path of item to go in suit storage slot
+		*
+		* (make sure it's valid for that suit)
+		*/
 	var/suit_store = null
 
 	///Type path of item to go in the right hand
@@ -103,23 +103,29 @@
 	var/internals_slot = null
 
 	/**
-	  * list of items that should go in the backpack of the user
-	  *
-	  * Format of this list should be: list(path=count,otherpath=count)
-	  */
+		* list of items that should go in the backpack of the user
+		*
+		* Format of this list should be: list(path=count,otherpath=count)
+		*/
 	var/list/backpack_contents = null
+
+	///Items to go in the armour decor slot.
+	var/list/chest_decor = null
+
+	///Items to go in the head armour's decor slot.
+	var/list/head_decor = null
 
 	/// Internals box. Will be inserted at the start of backpack_contents
 	var/box
 
 	/**
-	  * Any implants the mob should start implanted with
-	  *
-	  * Format of this list is (typepath, typepath, typepath)
-	  */
+		* Any implants the mob should start implanted with
+		*
+		* Format of this list is (typepath, typepath, typepath)
+		*/
 	var/list/implants = null
 
-  /// Any undershirt. While on humans it is a string, here we use paths to stay consistent with the rest of the equips.
+	/// Any undershirt. While on humans it is a string, here we use paths to stay consistent with the rest of the equips.
 	var/datum/sprite_accessory/undershirt = null
 
 	/// Any clothing accessory item
@@ -129,55 +135,59 @@
 	var/can_be_admin_equipped = TRUE
 
 	/**
-	  * extra types for chameleon outfit changes, mostly guns
-	  *
-	  * Format of this list is (typepath, typepath, typepath)
-	  *
-	  * These are all added and returns in the list for get_chamelon_diguise_info proc
-	  */
+		* extra types for chameleon outfit changes, mostly guns
+		*
+		* Format of this list is (typepath, typepath, typepath)
+		*
+		* These are all added and returns in the list for get_chamelon_diguise_info proc
+		*/
 	var/list/chameleon_extras
 
 	var/preload = TRUE
 
 /**
-  * Called at the start of the equip proc
-  *
-  * Override to change the value of the slots depending on client prefs, species and
-  * other such sources of change
-  *
-  * Extra Arguments
-  * * visualsOnly true if this is only for display (in the character setup screen)
-  *
-  * If visualsOnly is true, you can omit any work that doesn't visually appear on the character sprite
-  */
+	* Called at the start of the equip proc
+	*
+	* Override to change the value of the slots depending on client prefs, species and
+	* other such sources of change
+	*
+	* Extra Arguments
+	* * visualsOnly true if this is only for display (in the character setup screen)
+	*
+	* If visualsOnly is true, you can omit any work that doesn't visually appear on the character sprite
+	*/
 /datum/outfit/proc/pre_equip(mob/living/carbon/human/H, visualsOnly = FALSE)
 	//to be overridden for customization depending on client prefs,species etc
 	return
 
 /**
-  * Called after the equip proc has finished
-  *
-  * All items are on the mob at this point, use this proc to toggle internals
-  * fiddle with id bindings and accesses etc
-  *
-  * Extra Arguments
-  * * visualsOnly true if this is only for display (in the character setup screen)
-  *
-  * If visualsOnly is true, you can omit any work that doesn't visually appear on the character sprite
-  */
+	* Called after the equip proc has finished
+	*
+	* All items are on the mob at this point, use this proc to toggle internals
+	* fiddle with id bindings and accesses etc
+	*
+	* Extra Arguments
+	* * visualsOnly true if this is only for display (in the character setup screen)
+	*
+	* If visualsOnly is true, you can omit any work that doesn't visually appear on the character sprite
+	*/
 /datum/outfit/proc/post_equip(mob/living/carbon/human/H, visualsOnly = FALSE)
 	//to be overridden for toggling internals, id binding, access etc
 	return
 
 /**
-  * Equips all defined types and paths to the mob passed in
-  *
-  * Extra Arguments
-  * * visualsOnly true if this is only for display (in the character setup screen)
-  *
-  * If visualsOnly is true, you can omit any work that doesn't visually appear on the character sprite
-  */
+	* Equips all defined types and paths to the mob passed in
+	*
+	* Extra Arguments
+	* * visualsOnly true if this is only for display (in the character setup screen)
+	*
+	* If visualsOnly is true, you can omit any work that doesn't visually appear on the character sprite
+	*/
 /datum/outfit/proc/equip(mob/living/carbon/human/H, visualsOnly = FALSE)
+	// Move Forlorne owners first so anything dropped while equipping lands where they end up
+	if(!visualsOnly)
+		var/datum/charflaw/forlorne/forlorne_vice = H.get_flaw(/datum/charflaw/forlorne)
+		forlorne_vice?.send_away(H)
 	pre_equip(H, visualsOnly)
 
 	//Start with uniform,suit,backpack for additional slots
@@ -237,6 +247,8 @@
 			U.attach_accessory(SSwardrobe.provide_type(accessory, H))
 		else
 			WARNING("Unable to equip accessory [accessory] in outfit [name]. No uniform present!")
+	decorate(H, H.wear_armor, chest_decor, visualsOnly)
+	decorate(H, H.head, head_decor, visualsOnly)
 
 	if(!visualsOnly)
 		// gives a 50/50 chance for hands to be swapped
@@ -280,7 +292,7 @@
 							if(!item || !SEND_SIGNAL(item, COMSIG_TRY_STORAGE_INSERT, new_item, null, TRUE, TRUE))
 								item = H.get_item_by_slot(SLOT_CLOAK)
 								if(!item || !SEND_SIGNAL(item, COMSIG_TRY_STORAGE_INSERT, new_item, null, TRUE, TRUE))
-									addtimer(CALLBACK(src, PROC_REF(move_storage), new_item, H.loc), 3 SECONDS)
+									addtimer(CALLBACK(src, PROC_REF(move_storage), new_item, H), 3 SECONDS)
 
 	post_equip(H, visualsOnly)
 
@@ -298,11 +310,22 @@
 	H.update_body()
 	return TRUE
 
-/datum/outfit/proc/move_storage(obj/item/new_item, turf/T)
+/datum/outfit/proc/move_storage(obj/item/new_item, atom/dest)
+	var/turf/T = get_turf(dest)
 	if(!new_item || !T || QDELETED(new_item))
 		return FALSE
 	new_item.forceMove(T)
 	return TRUE
+
+/datum/outfit/proc/decorate(mob/living/carbon/human/H, obj/item/worn, list/paths, visualsOnly)
+	for(var/path in paths)
+		var/obj/item/decor = SSwardrobe.provide_type(path, H)
+		if(worn && SEND_SIGNAL(worn, COMSIG_TRY_STORAGE_CAN_INSERT, decor, null, TRUE) && SEND_SIGNAL(worn, COMSIG_TRY_STORAGE_INSERT, decor, null, TRUE))
+			continue
+		if(visualsOnly)
+			qdel(decor)
+			continue
+		addtimer(CALLBACK(src, PROC_REF(move_storage), decor, H), 3 SECONDS)
 
 /client/proc/test_spawn_outfits()
 	for(var/path in subtypesof(/datum/outfit/job/roguetown))
@@ -310,12 +333,12 @@
 		var/datum/outfit/new_outfit = new path()
 		new_outfit.equip(new_human)
 /**
-  * Apply a fingerprint from the passed in human to all items in the outfit
-  *
-  * Used for forensics setup when the mob is first equipped at roundstart
-  * essentially calls add_fingerprint to every defined item on the human
-  *
-  */
+	* Apply a fingerprint from the passed in human to all items in the outfit
+	*
+	* Used for forensics setup when the mob is first equipped at roundstart
+	* essentially calls add_fingerprint to every defined item on the human
+	*
+	*/
 /datum/outfit/proc/apply_fingerprints(mob/living/carbon/human/H)
 	if(!istype(H))
 		return
@@ -484,23 +507,13 @@
 				num_to_load = 1
 			for(var/i in 1 to num_to_load)
 				preload += type_to_load
+	preload += chest_decor
+	preload += head_decor
 
 	return preload
 
 /datum/outfit/proc/change_origin(mob/living/carbon/human/H, new_origin = /datum/virtue/none, wording = "Custom")
 	var/client/player = H?.client
 	if(player?.prefs)
-		var/origin_memory = player.prefs.virtue_origin
-		player.prefs.virtue_origin = new new_origin
 		H.dna.species.skin_tone_wording = wording
-		player.prefs.virtue_origin.job_origin = TRUE
-		player.prefs.virtue_origin.last_origin = origin_memory
-		player.prefs.virtue_origin.apply_to_human(H)
-		if(length(player.prefs.virtue_origin.added_languages))
-			for(var/L in player.prefs.virtue_origin.added_languages)
-				H.grant_language(L)
-		if(length(player.prefs.virtue_origin.last_origin.added_languages))
-			for(var/L in player.prefs.virtue_origin.last_origin.added_languages)
-				if(L != player.prefs.extra_language)
-					H.remove_language(L)
-		H.grant_language(player.prefs.extra_language)
+		force_character_origin(H, new_origin)

@@ -8,7 +8,7 @@
 // Crafting recipes for collars and leashes
 
 /datum/crafting_recipe/roguetown/leather/neck/catbell_collar
-	name = "catbell collar (1 cured leather, catbell)"
+	name = "catbell collar"
 	result = /obj/item/clothing/neck/roguetown/collar/bell/catbell
 	reqs = list(/obj/item/natural/hide/cured = 1, /obj/item/catbell = 1)
 	tools = list(/obj/item/needle)
@@ -18,7 +18,7 @@
 	always_availible = TRUE
 
 /datum/crafting_recipe/roguetown/leather/neck/cowbell_collar
-	name = "cowbell collar (1 curedleather, cowbell)"
+	name = "cowbell collar"
 	result = /obj/item/clothing/neck/roguetown/collar/bell/cowbell
 	reqs = list(/obj/item/natural/hide/cured = 1, /obj/item/catbell/cow = 1)
 	tools = list(/obj/item/needle)
@@ -29,7 +29,7 @@
 
 
 /datum/crafting_recipe/roguetown/leather/neck/leather_leash
-	name = "leather leash (1 leather)"
+	name = "leather leash"
 	result = /obj/item/leash/leather
 	reqs = list(/obj/item/natural/hide/cured = 1)
 	tools = list(/obj/item/needle)
@@ -66,9 +66,25 @@
 /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/moneta/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD, "Strange luck charm")
 
-/obj/item/clothing/neck/roguetown/chaincoif/full/iron
-	name = "iron full chain coif"
-	icon_state = "fchaincoif"
+/obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/spider
+	name = "carved talisman" //rising spider
+	desc = "'Sacrifice, purification through pain, healing through suffering, duty and fate woven together. If you reach out for every perishing soul, the web will tear, and everyone will drown.'  </br>  </br>The Rising Spider stands apart from the other Beasts of Gronn. Her Priestesses preach that the world is sick, and the sickness cannot be burned away without pain. She demands that suffering be accepted as the price of salvation: part of the tree must rot so that the trunk may survive. Due to alarming similarities between these teachings and the outsider Cult of Salvation, most Gronnic harbors and settlements barely tolerate the followers of the Spider: they are allowed to set up small shrines outside the walls, but are rarely accepted into a clan."
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/neck.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/neck.dmi'
-	max_integrity = ARMOR_INT_SIDE_IRON
+	icon_state = "gronnspider"
+	item_state = "gronnspider"
+
+/obj/item/clothing/neck/roguetown/chaincoif/chainmantle/bloodraider
+	name = "raider's chain mantle"
+	desc = "A thicker and more durable piece of neck protection that also covers the mouth when pulled up."
+	icon_state = "bloodchainmantle"
+	item_state = "bloodchainmantle"
+	icon = 'modular_twilight_axis/icons/clothing/bloodraider.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/bloodraider.dmi'
+
+/obj/item/clothing/neck/roguetown/chaincoif/chainmantle/bloodraider/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")
+
+/obj/item/clothing/neck/roguetown/chaincoif/chainmantle/bloodraider/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)

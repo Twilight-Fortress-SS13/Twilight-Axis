@@ -8,7 +8,7 @@
 
 	var/list/can_hold								//if this is set, only items, and their children, will fit
 	var/list/cant_hold								//if this is set, items, and their children, won't fit
-	var/list/exception_hold           //if set, these items will be the exception to the max size of object that can fit.
+	var/list/exception_hold			//if set, these items will be the exception to the max size of object that can fit.
 
 	var/dump_time = 10
 
@@ -36,6 +36,7 @@
 
 	var/collection_mode = COLLECT_EVERYTHING
 
+	var/insert_verb = "tuck"						//you "tuck" things into a bag
 	var/insert_preposition = "in"					//you put things "in" a bag, but "on" a tray.
 
 	var/display_numerical_stacking = FALSE			//stack things of the same type and show as a single object with a number.
@@ -65,6 +66,9 @@
 
 	var/intercept_parent_attack = TRUE
 	var/intercept_parent_mousedrop = TRUE
+
+	// Suppresses liquid spilling behavior for reagent containers held within
+	var/does_not_spill = FALSE
 
 /datum/component/storage/Initialize(datum/component/storage/concrete/master)
 	if(!isatom(parent))
@@ -171,7 +175,8 @@
 	for(var/mob/living/L in can_see_contents())
 		if(!L.CanReach(A))
 			hide_from(L)
-	spill_contents(A)
+	if(!does_not_spill)
+		spill_contents(A)
 
 /datum/component/storage/proc/spill_contents(atom/A)
 	for(var/obj/item/reagent_containers/I in A.contents)
@@ -186,7 +191,7 @@
 		quick_empty(M)
 
 /datum/component/storage/proc/preattack_intercept(datum/source, obj/O, mob/M, params)
-	if(!isitem(O) || !click_gather || SEND_SIGNAL(O, COMSIG_CONTAINS_STORAGE))
+	if(!isitem(O) || !click_gather || SEND_SIGNAL(O, COMSIG_CONTAINS_STORAGE) || O.get_dumping_location(src, M) == O)
 		return FALSE
 	. = COMPONENT_NO_ATTACK
 	if(locked)
@@ -440,6 +445,7 @@
 
 /datum/component/storage/proc/close(mob/M)
 	hide_from(M)
+	SEND_SIGNAL(parent, COMSIG_STORAGE_CLOSED, M)
 
 /datum/component/storage/proc/close_all()
 	. = FALSE
@@ -673,15 +679,15 @@
 		if(!stop_messages)
 			to_chat(M, span_warning("[host] is full, make some space!"))
 		return FALSE //Storage item is full
+	if(is_type_in_typecache(I, cant_hold)) //Check for specific items which this container can't hold.
+		if(!stop_messages)
+			to_chat(M, span_warning("[host] cannot hold [I]!"))
+		return FALSE
 	if(length(can_hold))
 		if(!is_type_in_typecache(I, can_hold))
 			if(!stop_messages)
 				to_chat(M, span_warning("[host] cannot hold [I]!"))
 			return FALSE
-	if(is_type_in_typecache(I, cant_hold)) //Check for specific items which this container can't hold.
-		if(!stop_messages)
-			to_chat(M, span_warning("[host] cannot hold [I]!"))
-		return FALSE
 	if(I.w_class > max_w_class && !is_type_in_typecache(I, exception_hold))
 		if(!stop_messages)
 			to_chat(M, span_warning("[I] is too big for [host]!"))
@@ -734,17 +740,19 @@
 	. = master.handle_item_insertion_from_slave(src, I, prevent_warning, M)
 
 /datum/component/storage/proc/mob_item_insertion_feedback(mob/user, mob/M, obj/item/I, override = FALSE)
-	if(silent && !override)
+	if(!length(is_using))
+		SEND_SIGNAL(parent, COMSIG_STORAGE_CLOSED, M)
+	if((silent && !override) || (I.item_flags & INHANDS_INVISIBLE))
 		return
 	if(rustle_sound)
 		playsound(parent, "rustle", 50, TRUE, -5)
 	for(var/mob/viewing in viewers(user, null))
 		if(M == viewing)
-			to_chat(usr, span_notice("I tuck [I] [insert_preposition]to [parent]."))
+			to_chat(usr, span_smallnotice("I [insert_verb] [I] [insert_preposition]to [parent]."))
 		else if(in_range(M, viewing)) //If someone is standing close enough, they can tell what it is...
-			viewing.show_message(span_notice("[M] tucks [I] [insert_preposition]to [parent]."), MSG_VISUAL)
+			viewing.show_message(span_smallnotice("[M] [insert_verb]s [I] [insert_preposition]to [parent]."), MSG_VISUAL)
 		else
-			viewing.show_message(span_notice("[M] tucks something [insert_preposition]to [parent]."), MSG_VISUAL)
+			viewing.show_message(span_smallnotice("[M] [insert_verb]s something [insert_preposition]to [parent]."), MSG_VISUAL)
 
 /datum/component/storage/proc/update_icon()
 	if(isobj(parent))

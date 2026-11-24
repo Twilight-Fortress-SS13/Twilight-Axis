@@ -25,6 +25,7 @@ const DENOMS_DUN_WORLD = [
 
 const DENOMS_ROCKHILL = [
   { id: 'GOLD', label: 'Gold', value: 14 },
+  { id: 'SILVER', label: 'Silver', value: 7 },
   { id: 'BRONZE', label: 'Bronze', value: 1 },
 ];
 // TA EDIT END
@@ -115,7 +116,7 @@ export const PersonalTab = ({ data, act }: TabProps) => {
             setCoinAmount('');
           }}
         >
-          Draw Coin
+          Withdraw
         </button>
       </div>
 

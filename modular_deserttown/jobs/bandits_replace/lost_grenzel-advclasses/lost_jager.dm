@@ -2,9 +2,9 @@
 	name = "Lost Jäger"
 	tutorial = "В пустынях Зибантии именно вы стали тем, кто помог выжить остальным товарищам - имея навыки к охоте и ориентированию на месте, вы смогли обеспечить своим товарищам безопасный проход."
 	allowed_sexes = list(MALE, FEMALE)
-	
+
 	outfit = /datum/outfit/job/roguetown/lost_grenzel/lost_jager
-	traits_applied = list(TRAIT_SURVIVAL_EXPERT, TRAIT_SLEUTH, TRAIT_DODGEEXPERT, TRAIT_BADTRAINER)
+	traits_applied = list(TRAIT_SURVIVAL_EXPERT, TRAIT_DODGEEXPERT, TRAIT_BADTRAINER)
 	category_tags = list(CTAG_LOSTGRENZEL)
 	subclass_languages = list(/datum/language/grenzelhoftian)
 	subclass_stats = list(
@@ -24,9 +24,9 @@
 		/datum/skill/combat/knives = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/labor/butchering = SKILL_LEVEL_JOURNEYMAN,	
+		/datum/skill/labor/butchering = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/tanning = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/craft/sewing = SKILL_LEVEL_APPRENTICE,	
+		/datum/skill/craft/sewing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/cooking = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/labor/lumberjacking = SKILL_LEVEL_APPRENTICE,
@@ -47,7 +47,7 @@
 			if("Light Brigandine")
 				armor = /obj/item/clothing/suit/roguetown/armor/brigandine/light
 			if("Studded Leather Vest")
-				armor = /obj/item/clothing/suit/roguetown/armor/leather/studded	
+				armor = /obj/item/clothing/suit/roguetown/armor/leather/studded
 		var/weapons = list("Crossbow & 20 Bolts","Heavy Crossbow & 8 Heavy Bolts","Arquebus & 30 Lead Bullets")
 		var/weapon_choice = input(H, "Choose your weapon.", "TOOLS OF THE TRADE") as anything in weapons
 		switch(weapon_choice)

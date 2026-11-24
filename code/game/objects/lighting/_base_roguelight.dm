@@ -15,7 +15,7 @@
 	var/roundstart_forbid = FALSE
 	var/refueling = FALSE
 
-/obj/machinery/light/rogue/Initialize()
+/obj/machinery/light/rogue/Initialize(mapload)
 	if(soundloop)
 		soundloop = new soundloop(src, FALSE)
 		soundloop.start()
@@ -80,9 +80,15 @@
 		GLOB.fires_list -= src
 
 /obj/machinery/light/rogue/Destroy()
-	QDEL_NULL(soundloop)
+	if(ispath(soundloop))
+		soundloop = null
+	else
+		QDEL_NULL(soundloop)
 	GLOB.fires_list -= src
 	. = ..()
+
+/obj/machinery/light/rogue/proc/on_ignited()
+	return
 
 /obj/machinery/light/rogue/fire_act(added, maxstacks)
 	if(!on && ((fueluse > 0) || (initial(fueluse) == 0)))
@@ -93,6 +99,7 @@
 		if(soundloop)
 			soundloop.start()
 		addtimer(CALLBACK(src, PROC_REF(trigger_weather)), rand(5,20))
+		on_ignited()
 		return TRUE
 
 /obj/proc/trigger_weather()
@@ -125,7 +132,7 @@
 
 /obj/machinery/light/rogue/attackby(obj/item/W, mob/living/user, params)
 	var/datum/skill/craft/cooking/cs = user?.get_skill_level(/datum/skill/craft/cooking)
-	var/cooktime_divisor = get_cooktime_divisor(cs)
+	var/cooktime_divisor = get_skill_speed_divisor(cs)
 	if(cookonme && on)
 		if(istype(W, /obj/item/seeds))
 			user.visible_message("<span class='notice'>[user] starts roasting [W] over [src]...</span>")
@@ -235,9 +242,7 @@
 			if(istype(W, /obj/item/natural/dirtclod))
 				if(!user.temporarilyRemoveItemFromInventory(W))
 					return
-				on = FALSE
-				set_light(0)
-				update_icon()
+				burn_out() // TA EDIT
 				qdel(W)
 				src.visible_message("<span class='warning'>[user] snuffs the fire.</span>")
 				return

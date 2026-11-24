@@ -9,7 +9,7 @@
 	wdefense = 1
 	possible_item_intents = list(/datum/intent/mace/strike/wood)
 	gripped_intents = null
-	smeltresult = /obj/item/ash
+	smeltresult = /obj/item/natural/ash
 	anvilrepair = /datum/skill/craft/sewing
 	max_integrity = 150 // The working man's parasol
 	minstr = 1
@@ -22,7 +22,7 @@
 	dropshrink = 0.75
 	var/active_item = FALSE
 
-/obj/item/rogueweapon/mace/parasol/Initialize()
+/obj/item/rogueweapon/mace/parasol/Initialize(mapload)
 	. = ..()
 	icon_state = "parasol[rand(1,6)]"
 
@@ -54,7 +54,7 @@
 	inhand_x_dimension = 64
 	inhand_y_dimension = 64
 
-/obj/item/rogueweapon/mace/parasol/noble/Initialize()
+/obj/item/rogueweapon/mace/parasol/noble/Initialize(mapload)
 	. = ..()
 	icon_state = "parasol[rand(1,2)]"
 

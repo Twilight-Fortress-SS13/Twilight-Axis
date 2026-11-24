@@ -35,9 +35,9 @@
 	//	G.open_orbit_menu() // TA EDIT
 	else
 		if(G.client)
-			if(isscryeye(G) || G.trapped)
+			if(isscryeye(G))
 				return
-			if(alert("Travel with the boatman?", "", "Yes", "No") == "Yes")
+			if(alert(usr, "Travel with the boatman?", "", "Yes", "No") == "Yes")
 				if(G.mind)
 					var/datum/job/target_job = SSjob.GetJob(G.mind.assigned_role)
 					if(target_job)
@@ -63,6 +63,26 @@
 /atom/movable/screen/ghost/teleport/Click()
 	var/mob/dead/observer/G = usr
 	G.dead_tele()
+
+/atom/movable/screen/ghost/hermes
+	name = "HERMES"
+	icon_state = "hermes"
+
+/atom/movable/screen/ghost/hermes/Click()
+	var/mob/dead/observer/G = usr
+	if(!G?.client?.holder) // TA EDIT
+		return // TA EDIT
+	GLOB.ghost_hermes.open(G)
+
+/atom/movable/screen/ghost/character
+	name = "Character Creator"
+	icon_state = "character"
+
+/atom/movable/screen/ghost/character/Click()
+	var/mob/dead/observer/G = usr
+	if(!G?.client?.holder) // TA EDIT
+		return // TA EDIT
+	G.client?.prefs?.ShowChoices(G, PREFERENCE_TAB_CHARACTER_CREATOR)
 
 /atom/movable/screen/ghost/moveup
 	name = "Move Up"
@@ -99,6 +119,23 @@
 	using.hud = src
 	static_inventory += using
 
+	if(owner.client?.holder) // TA EDIT START
+		using = new /atom/movable/screen/ghost/hermes(null, src)
+		using.screen_loc = ui_ghost_hermes
+		static_inventory += using
+
+		using = new /atom/movable/screen/ghost/character(null, src)
+		using.screen_loc = ui_ghost_character
+		static_inventory += using
+
+		using = new /atom/movable/screen/ghost/moveup(null, src)
+		using.screen_loc = ui_ghost_moveup
+		static_inventory += using
+
+		using = new /atom/movable/screen/ghost/movedown(null, src)
+		using.screen_loc = ui_ghost_movedown
+		static_inventory += using // TA EDIT END
+
 	grain = new /atom/movable/screen/grain
 	grain.hud = src
 	static_inventory += grain
@@ -131,6 +168,14 @@
 	using.screen_loc = ui_ghost_teleport
 	static_inventory += using
 
+	using = new /atom/movable/screen/ghost/hermes(null, src)
+	using.screen_loc = ui_ghost_hermes
+	static_inventory += using
+
+	using = new /atom/movable/screen/ghost/character(null, src)
+	using.screen_loc = ui_ghost_character
+	static_inventory += using
+
 	using = new /atom/movable/screen/ghost/moveup(null, src)
 	using.screen_loc = ui_ghost_moveup
 	static_inventory += using
@@ -153,16 +198,13 @@
 	if(!.)
 		return
 	var/mob/screenmob = viewmob || mymob
-	if(!screenmob.client.prefs.ghost_hud)
-		screenmob.client.screen -= static_inventory
-	else
-		screenmob.client.screen += static_inventory
+	screenmob.client.screen += static_inventory
 
 /datum/hud/eye/New(mob/owner)
 	..()
 	var/atom/movable/screen/using
 
-	using =  new /atom/movable/screen/backhudl/ghost()
+	using =	new /atom/movable/screen/backhudl/ghost()
 	using.hud = src
 	static_inventory += using
 
@@ -189,16 +231,13 @@
 	if(!.)
 		return
 	var/mob/screenmob = viewmob || mymob
-	if(!screenmob.client.prefs.ghost_hud)
-		screenmob.client.screen -= static_inventory
-	else
-		screenmob.client.screen += static_inventory
+	screenmob.client.screen += static_inventory
 
 /datum/hud/obs/New(mob/owner)
 	..()
 	var/atom/movable/screen/using
 
-	using =  new /atom/movable/screen/backhudl/obs()
+	using =	new /atom/movable/screen/backhudl/obs()
 	using.hud = src
 	static_inventory += using
 

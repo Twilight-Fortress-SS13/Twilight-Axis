@@ -19,6 +19,9 @@
 	var/word
 	var/style = "info"
 	switch(item_quality)
+		if(ITEM_QUALITY_WORN)
+			word = "worn"
+			style = "warning"
 		if(ITEM_QUALITY_LOOTED)
 			word = "scavenged"
 			style = "warning"
@@ -51,7 +54,7 @@
 	. = ..()
 	. += integrity_check()
 
-	var/derived_cat = GLOB.derived_categories ? GLOB.derived_categories[type] : null
+	var/derived_cat = get_derived_category(type)
 	var/display_cat = derived_cat
 	if(derived_cat)
 		var/bucket = get_navigator_bucket_for_item(src, derived_cat)
@@ -97,6 +100,9 @@
 		. += span_info("It appears to be crafted by the hand of a local artisan.")
 	else if(is_carved)
 		. += span_info("It is a carved item.")
+	var/datum/component/unsellable/nosell = GetComponent(/datum/component/unsellable)
+	if(nosell)
+		. += span_info("It [nosell.reason]; it is highly unlikely anyone will buy it. [smeltresult ? "Smelting alone is not enough to obfuscate its origin." : ""]")
 
 	var/show_craft = TRUE
 	if(isliving(user))
@@ -127,6 +133,23 @@
 		var/heresy_desc = get_examine_highlight_description(examine_highlight_status, itis = TRUE, allcaps = FALSE)
 		var/heresy_tooltip = get_examine_highlight_explanation(severity)
 		. += span_info(SPAN_TOOLTIP_DANGEROUS_HTML(heresy_tooltip, heresy_desc))
+
+	if(isbait)
+		var/baitquality
+		if(HAS_TRAIT(src, TRAIT_GREAT_QUALITY_BAIT))
+			baitquality = "excellent"
+		else if(HAS_TRAIT(src, TRAIT_GOOD_QUALITY_BAIT))
+			baitquality = "good"
+		else if(HAS_TRAIT(src, TRAIT_BASIC_QUALITY_BAIT))
+			baitquality = "passable"
+		var/quality_text = baitquality ? "It is \a [baitquality] bait for fish." : "It is bait for fish."
+		if(HAS_TRAIT(src, TRAIT_BAIT_UNCONSUMABLE))
+			. += span_info("[quality_text] It is never used up.")
+		else
+			var/catches = expected_bait_catches(user)
+			. += span_info("[quality_text] In my hands, this bait will last about [catches] [catches == 1 ? "catch" : "catches"].")
+		if(HAS_TRAIT(user, TRAIT_EXPERT_FISHER))
+			. += span_tinynotice("Thanks to your experience, you can examine it again to see what it catches.")
 
 	for(var/datum/examine_effect/E in examine_effects)
 		E.trigger(user)
@@ -180,3 +203,19 @@
 				if(80 to 99)
 					result = span_warning("It's a little damaged.")
 	return result
+
+/obj/item/examine_more(mob/user)
+	. = ..()
+	if(!isbait || !HAS_TRAIT(user, TRAIT_EXPERT_FISHER))
+		return
+	var/list/favoured_by = list()
+	for(var/obj/item/reagent_containers/food/snacks/fish/fish_type as anything in SSfishing.fish_properties)
+		if(!(initial(fish_type.fish_flags) & FISH_FLAG_SHOW_IN_CATALOG))
+			continue
+		for(var/identifier in SSfishing.fish_properties[fish_type][FISH_PROPERTIES_FAV_BAIT])
+			if(is_matching_bait(src, identifier))
+				favoured_by += capitalize(initial(fish_type.name))
+				break
+	if(!length(favoured_by))
+		return
+	. += span_info("Fish that favour this bait: [english_list(favoured_by)].")

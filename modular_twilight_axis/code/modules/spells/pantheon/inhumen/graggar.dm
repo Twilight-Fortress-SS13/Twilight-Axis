@@ -4,7 +4,7 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/graggarmiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/graggarmiracles.dmi'
 	overlay_state = "stomp"
-	glow_color = GLOW_COLOR_GRAGGAR
+	glow_color = PATRON_COLOR_GRAGGAR
 	glow_intensity = GLOW_INTENSITY_LOW
 	xp_gain = TRUE
 	releasedrain = 30
@@ -87,7 +87,7 @@
 						M.apply_status_effect(/datum/status_effect/debuff/clickcd, max(1.5 SECONDS + 2, 2.5 SECONDS))
 						M.Immobilize(0.5 SECONDS)
 						M.stamina_add(M.stamina * 0.1)
-						M.Slowdown(2)
+						M.apply_status_effect(/datum/status_effect/debuff/slowed, 2)
 					if(skill_level >= 5)
 						M.apply_status_effect(/datum/status_effect/debuff/heavy_stomp/ii)
 					if(skill_level >= 6)
@@ -101,7 +101,7 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/graggarmiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/graggarmiracles.dmi'
 	overlay_state = "call"
-	glow_color = GLOW_COLOR_GRAGGAR
+	glow_color = PATRON_COLOR_GRAGGAR
 	glow_intensity = GLOW_INTENSITY_LOW
 	miracle = TRUE
 	devotion_cost = 40
@@ -139,7 +139,7 @@
 		user.apply_status_effect(/datum/status_effect/debuff/clickcd, max(1.5 SECONDS + 2, 2.5 SECONDS))
 		user.Immobilize(0.5 SECONDS)
 		user.stamina_add(user.stamina * 0.1)
-		user.Slowdown(2)
+		user.apply_status_effect(/datum/status_effect/debuff/slowed, 2)
 		if(HAS_TRAIT(target, TRAIT_STEELHEARTED)) //all combat roles
 			perc -= 1
 		if(perc < 0)
@@ -150,7 +150,7 @@
 				target.apply_status_effect(/datum/status_effect/debuff/clickcd, max(1.5 SECONDS + 2, 2.5 SECONDS))
 				target.Immobilize(0.5 SECONDS)
 				target.stamina_add(user.stamina * 0.1)
-				target.Slowdown(2)
+				target.apply_status_effect(/datum/status_effect/debuff/slowed, 2)
 			if(perc == 2)
 				target.apply_status_effect(/datum/status_effect/debuff/blood_call, skill_level)
 			if(perc == 3)
@@ -171,7 +171,7 @@
 	action_icon = 'modular_twilight_axis/icons/mob/actions/graggarmiracles.dmi'
 	overlay_icon = 'modular_twilight_axis/icons/mob/actions/graggarmiracles.dmi'
 	overlay_state = "regenerate"
-	glow_color = GLOW_COLOR_GRAGGAR
+	glow_color = PATRON_COLOR_GRAGGAR
 	glow_intensity = GLOW_INTENSITY_LOW
 	releasedrain = 10
 	chargedrain = 0
@@ -245,7 +245,7 @@
 			if(last_water + 10 SECONDS <= world.time)
 				last_water = world.time
 				if(skill >= 3)
-					user.reagents.add_reagent(/datum/reagent/water, 3*skill) 
+					user.reagents.add_reagent(/datum/reagent/water, 3*skill)
 			for(var/i in 1 to 3)
 				var/obj/effect/temp_visual/heal/H = new /obj/effect/temp_visual/heal_blood(get_turf(owner))
 				H.color = "#bc0909"

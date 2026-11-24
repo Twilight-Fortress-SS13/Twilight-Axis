@@ -2,6 +2,7 @@
 	name = "Resolute Refrain"
 	desc = "A steadying melody that bolsters your allies' constitution."
 	button_icon_state = "melody_t1_base"
+	invocations = list("%CASTER plays a steady, grounded melody. The world around them feels more solid.")
 	song_effect = /datum/status_effect/buff/playing_melody/resolute_refrain
 
 /datum/status_effect/buff/playing_melody/resolute_refrain
@@ -15,7 +16,7 @@
 	icon_state = "buff"
 
 /datum/status_effect/buff/song/resolute_refrain
-	id = "resoluterefrain"
+	id = "resolute_song"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/song/resolute_refrain
 	duration = 15 SECONDS
 	effectedstats = list(STATKEY_CON = BARD_STAT_LESSER)

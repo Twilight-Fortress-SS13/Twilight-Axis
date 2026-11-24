@@ -34,6 +34,8 @@
 	grid_width = 32
 	grid_height = 32
 	//dropshrink = 0.75
+	// we store the overlay to avoid needless icon updates.
+	var/mutable_appearance/thread_overlay
 
 /obj/item/needle/examine()
 	. = ..()
@@ -53,24 +55,19 @@
 	. += span_info("Needles require fibers to stitch, which can be found by cutting grass or foraging through bushes.")
 	. += span_info("To rethread an emptied needle, left-click it with a strand of fiber. A fiber bundle works too, and will keep feeding strands in one at a time until the needle is full.")
 
-/obj/item/needle/Initialize()
+/obj/item/needle/Initialize(mapload)
 	. = ..()
-	update_icon()
-
-/obj/item/needle/update_overlays()
-	. = ..()
-	if(stringamt <= 0)
-		return
-	. += "[icon_state]string"
-
+	thread_overlay = mutable_appearance(icon, "[icon_state]string")
+	if(stringamt > 0)
+		add_overlay(thread_overlay)
 
 /obj/item/needle/use(used)
 	if(infinite)
 		return TRUE
-	stringamt = stringamt - used
-	update_icon()
-//	if(stringamt <= 0)
-//		qdel(src)
+	var/old_amt = stringamt
+	stringamt = max(0, stringamt - used)
+	if(old_amt > 0 && stringamt <= 0)
+		cut_overlay(thread_overlay)
 
 /obj/item/needle/attack(mob/living/M, mob/user)
 	sew(M, user)
@@ -86,9 +83,11 @@
 	return 6 SECONDS - user.get_skill_level(/datum/skill/craft/sewing)
 
 /obj/item/needle/proc/rethread()
+	var/old_amt = stringamt
 	var/gained = min(FIBER_THREAD_USES, (maxstring - stringamt))
 	stringamt += gained
-	update_icon()
+	if(old_amt <= 0 && stringamt > 0)
+		add_overlay(thread_overlay)
 	return gained
 
 /obj/item/needle/attackby(obj/item/I, mob/user, params)
@@ -325,7 +324,14 @@
 
 /obj/item/needle/pestra
 	name = "needle of pestra"
+	icon_state = "pestraneedle"
 	desc = span_green("This needle has been blessed by the goddess of medicine herself!")
+	infinite = TRUE
+
+/obj/item/needle/tailor
+	name = "tailor's needle"
+	icon_state = "tailorneedle"
+	desc = "An elongated needle made for the true professional of their craft - for no masterwork was born of a faulty tool."
 	infinite = TRUE
 
 /obj/item/needle/bronze

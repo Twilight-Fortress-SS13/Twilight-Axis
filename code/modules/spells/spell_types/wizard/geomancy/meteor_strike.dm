@@ -1,6 +1,7 @@
 /datum/action/cooldown/spell/grenzel_meteor
 	button_icon = 'icons/mob/actions/mage_geomancy.dmi'
 	name = "Meteor Strike"
+	expose_caster_on_deflect = FALSE
 	desc = "Call down a single massive meteor on a location after a short delay. It obliterates structures across a 5x5 area and caves in the skull of anyone caught beneath it."
 	button_icon_state = "meteor_strike"
 	sound = 'sound/magic/meteorstorm.ogg'
@@ -20,7 +21,7 @@
 	charge_required = TRUE
 	weapon_cast_penalized = TRUE
 	charge_time = CHARGETIME_MAJOR
-	charge_swingdelay_type = SWINGDELAY_CANCEL
+	charge_swingdelay_type = SWINGDELAY_PENALTY
 	hold_drain = 1
 	charge_slowdown = CHARGING_SLOWDOWN_MEDIUM
 	charge_sound = 'sound/magic/charging_fire.ogg'
@@ -31,11 +32,11 @@
 
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
-	var/blast_radius = 2
+	impact_radius = 2
 	var/impact_delay = 2 SECONDS
 	var/structural_damage = 1000
-	var/head_damage = 150
-	displayed_damage = 150
+	var/head_damage = SPELL_DMG(150)
+	displayed_damage = SPELL_DMG(150)
 
 /datum/action/cooldown/spell/grenzel_meteor/cast(atom/cast_on)
 	. = ..()
@@ -49,8 +50,8 @@
 		to_chat(H, span_warning("I can't cast where I can't see!"))
 		return FALSE
 
-	for(var/turf/T in range(blast_radius, center))
-		new /obj/effect/temp_visual/trap/meteor(T)
+	for(var/turf/T as anything in get_impact_turfs(center))
+		new /obj/effect/temp_visual/telegraph/meteor(T)
 	center.visible_message(span_boldwarning("The sky darkens - a meteor plummets down!"))
 	addtimer(CALLBACK(src, PROC_REF(drop_meteor), center), impact_delay)
 	return TRUE
@@ -67,13 +68,11 @@
 	playsound(center, 'sound/combat/hits/onstone/stonedeath.ogg', 100, TRUE, 6)
 	new /obj/effect/temp_visual/spell_impact(center, spell_color, spell_impact_intensity)
 
-	for(var/turf/T in range(blast_radius, center))
+	for(var/turf/T as anything in get_impact_turfs(center))
 		for(var/obj/structure/S in T.contents)
 			S.take_damage(structural_damage, BRUTE, "blunt", object_damage_multiplier = 2)
 		T.take_damage(structural_damage, BRUTE, "blunt", object_damage_multiplier = 2)
 		for(var/mob/living/L in T.contents)
-			if(L == owner)
-				continue
 			if(L.anti_magic_check())
 				L.visible_message(span_warning("The meteor fades away around [L]!"))
 				continue
@@ -81,8 +80,9 @@
 				L.visible_message(span_warning("[L] endures the meteor strike!"))
 				continue
 			if(istype(caster) && ishuman(L))
-				arcyne_strike(caster, L, null, head_damage, BODY_ZONE_HEAD, BCLASS_BLUNT, spell_name = "Meteor Strike", damage_type = BRUTE, skip_animation = TRUE, exact_zone = TRUE)
+				if(arcyne_strike(caster, L, null, head_damage, BODY_ZONE_HEAD, BCLASS_BLUNT, spell_name = "Meteor Strike", damage_type = BRUTE, skip_animation = TRUE, exact_zone = TRUE, SPELL_STRIKE_SCALING) == ARCYNE_STRIKE_WARDED)
+					continue
 			else
-				L.adjustBruteLoss(head_damage)
+				L.adjustBruteLoss(SPELL_DMG_VS(L, head_damage))
 			L.Knockdown(3)
 			new /obj/effect/temp_visual/spell_impact(get_turf(L), spell_color, spell_impact_intensity)

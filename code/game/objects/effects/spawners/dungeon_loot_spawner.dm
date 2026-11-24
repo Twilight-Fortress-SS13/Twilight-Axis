@@ -3,7 +3,7 @@
 	name = "dungeon spawner"
 	loot_value = LOOT_VALUE_DUNGEON_MIXED
 	junk_loot = list(
-		/obj/item/ash = 5,
+		/obj/item/natural/ash = 5,
 		/obj/item/natural/glass_shard = 5,
 		/obj/item/natural/stone = 3,
 		/obj/item/candle/yellow = 3,
@@ -33,8 +33,8 @@
 		/obj/item/clothing/gloves/roguetown/leather = 4,
 		/obj/item/clothing/shoes/roguetown/boots = 4,
 		/obj/item/clothing/shoes/roguetown/boots/leather = 4,
-		/obj/item/storage/belt/rogue/leather/knifebelt/iron = 2,
-		/obj/item/storage/belt/rogue/leather/knifebelt/black/steel = 1,
+		/obj/item/storage/belt/rogue/leather/tossbelt/blade/iron = 2,
+		/obj/item/storage/belt/rogue/leather/tossbelt/blade/black/steel = 1,
 
 		// Money
 		/obj/item/roguecoin/copper = 5,
@@ -46,7 +46,7 @@
 
 		// Garbage and Miscellanous
 		/obj/item/rogue/instrument/flute = 3,
-		/obj/item/ash = 5,
+		/obj/item/natural/ash = 5,
 		/obj/item/natural/glass_shard = 5,
 		/obj/item/candle/yellow = 3,
 		/obj/item/flashlight/flare/torch = 3,
@@ -79,7 +79,6 @@
 		/obj/item/rogueweapon/mace = 2,
 		/obj/item/rogueweapon/huntingknife/idagger/steel = 3,
 		/obj/item/gun/ballistic/revolver/grenadelauncher/bow = 2,
-		/obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve = 2,
 		/obj/item/gun/ballistic/revolver/grenadelauncher/crossbow = 2,
 		/obj/item/quiver/arrows = 2,
 		/obj/item/quiver/bolt/standard = 2,
@@ -178,7 +177,7 @@
 /obj/effect/spawner/lootdrop/roguetown/dungeon/clothing
 	icon_state = "clothing"
 	loot_value = LOOT_VALUE_DUNGEON_CLOTHING
-	junk_loot = list(/obj/item/natural/fibers = 5, /obj/item/ash = 5)
+	junk_loot = list(/obj/item/natural/fibers = 5, /obj/item/natural/ash = 5)
 	loot = list(
 		// Clothing
 		/obj/item/clothing/cloak/tabard/stabard = 3,
@@ -200,7 +199,7 @@
 /obj/effect/spawner/lootdrop/roguetown/dungeon/money
 	icon_state = "money"
 	loot_value = LOOT_VALUE_DUNGEON_MONEY
-	junk_loot = list(/obj/item/roguecoin/copper = 5, /obj/item/ash = 3)
+	junk_loot = list(/obj/item/roguecoin/copper = 5, /obj/item/natural/ash = 3)
 	loot = list(
 		// Money
 		/obj/item/roguecoin/copper = 5,
@@ -220,7 +219,7 @@
 		/obj/item/rogue/instrument/flute = 3,
 		/obj/item/rogue/instrument/lute = 3,
 		/obj/item/rogue/instrument/accord = 3,
-		/obj/item/ash = 5,
+		/obj/item/natural/ash = 5,
 		/obj/item/natural/glass_shard = 5,
 		/obj/item/candle/yellow = 3,
 		/obj/item/flashlight/flare/torch = 3,
@@ -252,7 +251,7 @@
 /obj/effect/spawner/lootdrop/roguetown/dungeon/medical
 	icon_state = "medical"
 	loot_value = LOOT_VALUE_DUNGEON_MEDICAL
-	junk_loot = list(/obj/item/natural/cloth/bandage = 5, /obj/item/ash = 3)
+	junk_loot = list(/obj/item/natural/cloth/bandage = 5, /obj/item/natural/ash = 3)
 	loot = list(
 		//medical
 		/obj/item/needle = 4,
@@ -270,7 +269,6 @@
 		/obj/item/rogueweapon/mace = 2,
 		/obj/item/rogueweapon/huntingknife/idagger/steel = 3,
 		/obj/item/gun/ballistic/revolver/grenadelauncher/bow = 2,
-		/obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve = 2,
 		/obj/item/gun/ballistic/revolver/grenadelauncher/crossbow = 2,
 		/obj/item/quiver/arrows = 2,
 		/obj/item/quiver/bolt/standard = 2,
@@ -297,6 +295,27 @@
 
 	)
 	lootcount = 1
+
+//dwarf dungeon stuff
+/obj/effect/spawner/lootdrop/roguetown/dungeon/weapons/bronze
+	loot = list(
+		//weapons
+		/obj/item/rogueweapon/mace/bronze = 4,
+		/obj/item/rogueweapon/huntingknife/bronze = 11,
+		/obj/item/gun/ballistic/revolver/grenadelauncher/bow = 2,
+		/obj/item/gun/ballistic/revolver/grenadelauncher/crossbow = 2,
+		/obj/item/quiver/bronzearrows = 2,
+		/obj/item/quiver/bolt/bronze = 2,
+		/obj/item/rogueweapon/mace/woodclub/crafted = 3,
+		/obj/item/rogueweapon/mace/warhammer/bronze = 4,
+		/obj/item/rogueweapon/mace/wsword = 3,
+		/obj/item/rogueweapon/woodstaff = 3,
+		/obj/item/rogueweapon/spear/bronze = 3,
+		/obj/item/rogueweapon/sword/bronze = 3,
+		/obj/item/rogueweapon/sword/long/broadsword/bronze = 3,
+		/obj/item/rogueweapon/katar/bronze = 1,
+		/obj/item/rogueweapon/flail/bronze = 1,
+	)
 
 /obj/effect/spawner/lootdrop/roguetown/dungeon/tools
 	icon_state = "tools"
@@ -354,10 +373,34 @@
 	)
 	lootcount = 1
 
+/obj/effect/spawner/lootdrop/roguetown/dungeon/armor/bronze
+	loot = list(
+		//armor
+		/obj/item/clothing/suit/roguetown/armor/leather/studded = 2,
+		/obj/item/clothing/suit/roguetown/armor/leather = 2,
+		/obj/item/clothing/suit/roguetown/armor/leather/hide = 2,
+		/obj/item/clothing/suit/roguetown/armor/leather/studded/bikini = 2,
+		/obj/item/clothing/suit/roguetown/armor/leather/hide/bikini = 2,
+		/obj/item/clothing/suit/roguetown/armor/gambeson = 2,
+		/obj/item/clothing/under/roguetown/chainlegs/kilt/bronze = 2,
+		/obj/item/clothing/gloves/roguetown/chain/bronze = 2,
+		/obj/item/clothing/suit/roguetown/armor/chainmail/bronze = 3,
+		/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/bronze = 1,
+		/obj/item/clothing/suit/roguetown/armor/plate/bronze = 2,
+		/obj/item/clothing/neck/roguetown/gorget/bronze = 1,
+		/obj/item/clothing/head/roguetown/helmet/heavy/bronze = 1,
+		/obj/item/clothing/head/roguetown/helmet/leather = 2,
+		/obj/item/clothing/head/roguetown/helmet/bronzegladiator = 1,
+		/obj/item/clothing/head/roguetown/helmet/bronze = 1,
+		/obj/item/clothing/suit/roguetown/armor/plate/bronze/light = 1,
+		/obj/item/clothing/suit/roguetown/armor/plate/bronze = 3,
+		/obj/item/clothing/suit/roguetown/armor/plate/cuirass/blacksteel = 1,
+	)
+
 /obj/effect/spawner/lootdrop/roguetown/dungeon/food
 	icon_state = "food"
 	loot_value = LOOT_VALUE_DUNGEON_FOOD
-	junk_loot = list(/obj/item/ash = 5, /obj/item/natural/stone = 3)
+	junk_loot = list(/obj/item/natural/ash = 5, /obj/item/natural/stone = 3)
 	loot = list(
 		//food
 		/obj/item/reagent_containers/food/snacks/rogue/crackerscooked = 3,
@@ -370,7 +413,7 @@
 /obj/effect/spawner/lootdrop/roguetown/dungeon/spells
 	icon_state = "spells"
 	loot_value = LOOT_VALUE_DUNGEON_SPELLS
-	junk_loot = list(/obj/item/paper/scroll = 5, /obj/item/ash = 3)
+	junk_loot = list(/obj/item/paper/scroll = 5, /obj/item/natural/ash = 3)
 	loot = list(
 		/obj/item/book/granter/spell/bonechill = 2,
 	)

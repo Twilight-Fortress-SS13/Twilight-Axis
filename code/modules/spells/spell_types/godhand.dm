@@ -1,7 +1,7 @@
 /obj/item/melee/touch_attack
 	name = "\improper outstretched hand"
 	desc = ""
-	var/catchphrase = "High Five!"
+	var/catchphrase = ""
 	var/on_use_sound = null
 	var/obj/effect/proc_holder/spell/targeted/touch/attached_spell
 	icon = 'icons/obj/balloons.dmi'
@@ -17,7 +17,7 @@
 	throw_speed = 0
 	var/charges = 1
 
-/obj/item/melee/touch_attack/Initialize()
+/obj/item/melee/touch_attack/Initialize(mapload)
 	. = ..()
 	ADD_TRAIT(src, TRAIT_NODROP, ABSTRACT_ITEM_TRAIT)
 

@@ -48,7 +48,7 @@
 		return
 	to_chat(user, span_notice("I plant \the [src] in \the [soil]. I should check back later when \the [src] has grown."))
 	addtimer(CALLBACK(src,TYPE_PROC_REF(/obj/item/herbseed,become_plant),soil,makes_herb),7.5 MINUTES)
-	soil.desc += span_info(" Something appears to be planted here, but I cannot descern what.")
+	soil.desc += span_info(" Something appears to be planted here, but I cannot discern what.")
 	src.forceMove(soil)
 	return
 
@@ -142,3 +142,8 @@
 	name = "manabloom seeds"
 	seed_identity = "manabloom seeds"
 	makes_herb = /obj/structure/flora/roguegrass/herb/manabloom
+
+/obj/item/herbseed/fyritius
+	name = "fyritius seeds"
+	seed_identity = "fyritius seeds"
+	makes_herb = /obj/structure/flora/roguegrass/herb/fyritius

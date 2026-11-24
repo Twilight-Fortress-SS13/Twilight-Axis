@@ -1,5 +1,6 @@
 //Cat
 /mob/living/simple_animal/pet/cat
+	anatomy_type = /datum/anatomy/quadruped/trash
 	name = "cat"
 	desc = "A nuisance and a valued, pest-killing companion. Also symbols of the benevolent side of Saint Pestra for their enmity with vermin."
 	icon = 'icons/mob/pets.dmi'
@@ -12,7 +13,6 @@
 	emote_hear = list("meows.", "mews.")
 	emote_see = list("shakes its head.", "shivers.")
 	speak_chance = 1
-	turns_per_move = 5
 	see_in_dark = 6
 	ventcrawler = VENTCRAWLER_ALWAYS
 	pass_flags = PASSTABLE
@@ -46,11 +46,10 @@
 	footstep_type = FOOTSTEP_MOB_CLAW
 
 	//new ai, old ai off
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
-	ai_controller = /datum/ai_controller/generic
+	ai_controller = /datum/ai_controller/generic/cat
+	move_base_delay = MOVEMENT_DELAY_SLOW
 
-/mob/living/simple_animal/pet/cat/Initialize()
+/mob/living/simple_animal/pet/cat/Initialize(mapload)
 	. = ..()
 	add_verb(src, /mob/living/proc/lay_down)
 
@@ -102,11 +101,11 @@
 	icon_dead = "cat_dead"
 
 /mob/living/simple_animal/pet/cat/rogue/black/academy
-    name = "Kalathrax the All Knowing"
-    desc = "Whispers around the Academy say that this cat was once an Associate that decided they had achieved enough knowledge to challenge the Court Wizard for their role and failed. (Or maybe it's just a cat)"
-    STAINT = 20
-    health = 5000
-    maxHealth = 5000
+	name = "Kalathrax the All Knowing"
+	desc = "Whispers around the Academy say that this cat was once an Associate that decided they had achieved enough knowledge to challenge the Court Wizard for their role and failed. (Or maybe it's just a cat)"
+	STAINT = 20
+	health = 5000
+	maxHealth = 5000
 
 /mob/living/simple_animal/pet/cat/original
 	name = "Batsy"
@@ -142,7 +141,7 @@
 	var/cats_deployed = 0
 	var/memory_saved = FALSE
 
-/mob/living/simple_animal/pet/cat/Runtime/Initialize()
+/mob/living/simple_animal/pet/cat/Runtime/Initialize(mapload)
 	if(prob(5))
 		icon_state = "original"
 		icon_living = "original"
@@ -214,11 +213,11 @@
 
 /mob/living/simple_animal/pet/cat/Life()
 	if(!stat && !buckled && !client)
-		if(prob(1))
+		if(!ai_controller?.blackboard[BB_FOLLOW_TARGET] && prob(1))
 			emote("me", 1, pick("stretches out for a belly rub.", "wags its tail.", "lies down."))
 			icon_state = "[icon_living]_rest"
 			set_resting(TRUE)
-		else if (prob(1))
+		else if (!ai_controller?.blackboard[BB_FOLLOW_TARGET] && prob(1))
 			emote("me", 1, pick("sits down.", "crouches on its hind legs.", "looks alert."))
 			icon_state = "[icon_living]_sit"
 			set_resting(TRUE)
@@ -258,16 +257,21 @@
 						sleep(3)
 						visible_message("<span class='notice'>\The [src] kills the rat!</span>")
 						M.obj_destruction()
-						stop_automated_movement = 0
 						break
 
 
 
 
+/mob/living/simple_animal/pet/cat/proc/ta_dislikes_person(mob/living/carbon/human/M) // TA EDIT START
+	if(isdarkelf(M))
+		return TRUE
+	if(M.dna && M.dna.species && (M.dna.species.name in list("Tiefling", "Revenant")))
+		return TRUE
+	return FALSE // TA EDIT END
 
 /mob/living/simple_animal/pet/cat/rogue/attack_hand(mob/living/carbon/human/M)
 	. = ..()
-	if( (isdarkelf(M)) ) // l´cursed bonbonbon
+	if(ta_dislikes_person(M)) // TA EDIT
 		wuv(-1, M)
 	else
 		switch(M.used_intent.type)
@@ -287,11 +291,11 @@
 					return
 		else
 			if(M && stat != DEAD)
-				emote("me", 1, "hisses!")
+				emote("me", 1, pick("hisses!", "snorts!")) // TA EDIT
 
 /mob/living/simple_animal/pet/cat/inn/attack_hand(mob/living/carbon/human/M) // Gato Basado - not all pets are welcome
 	. = ..()
-	if((isdarkelf(M)))  // l´cursed bonbonbon
+	if(ta_dislikes_person(M)) // TA EDIT
 		visible_message("<span class='notice'>The cat hisses at [M] and recoils in disgust.</span>")
 		icon_state = "[icon_living]"
 		set_resting(FALSE)

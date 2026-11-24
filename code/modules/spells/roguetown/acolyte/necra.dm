@@ -2,6 +2,8 @@
 	name = "Churn Undead"
 	desc = "Stuns and explodes undead."
 	range = 4	//Way lower, halved.
+	action_icon = 'icons/mob/actions/necramiracles.dmi'
+	overlay_icon = 'icons/mob/actions/necramiracles.dmi'
 	overlay_state = "necra"
 	releasedrain = 30
 	chargetime = 2 SECONDS
@@ -62,10 +64,12 @@
 
 /obj/effect/proc_holder/spell/invoked/deaths_door
 	name = "Death's Door"
-	desc = "Opens a one-way portal into a realm on the edge of death, People can be dragged into the portal to prevent their decay. Undead with be set aflame. Those whom enter the domain will find their Will to continue heavily weaken. <br>Necras domain can be left through a portal within to a shrine, or a grave/psycross marked with necra's sight."
+	desc = "Opens a one-way portal into a realm on the edge of death, People can be dragged into the portal to prevent their decay. Undead with be set aflame. Those whom enter the domain will find their Will to continue heavily weaken. <br>Necra's domain can be left through a portal within to a shrine, or a grave/psycross marked with necra's sight."
 	range = 6
 	no_early_release = TRUE
 	chargedrain = 0
+	action_icon = 'icons/mob/actions/necramiracles.dmi'
+	overlay_icon = 'icons/mob/actions/necramiracles.dmi'
 	overlay_state = "deathdoor"
 	charging_slowdown = 1
 	chargetime = 2 SECONDS
@@ -81,7 +85,7 @@
 	var/turf/T = get_turf(targets[1])
 	if(!isopenturf(T))
 		return FALSE
-	
+
 	if(istype(get_area(user), /area/rogue/indoors/ravoxarena))
 		to_chat(user, span_userdanger("I tried to escape, but something rebukes me! There's no escape until the end of the challenge!"))
 		revert_cast()
@@ -107,6 +111,8 @@
 /obj/effect/proc_holder/spell/targeted/soulspeak
 	name = "Speak with Soul"
 	range = 5
+	action_icon = 'icons/mob/actions/necramiracles.dmi'
+	overlay_icon = 'icons/mob/actions/necramiracles.dmi'
 	overlay_state = "speakwithdead"
 	releasedrain = 30
 	recharge_time = 30 SECONDS

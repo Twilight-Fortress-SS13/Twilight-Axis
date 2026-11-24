@@ -2,6 +2,7 @@
 	name = "Intellectual Interval"
 	desc = "A song for thinkers that sharpens the mind. Grants INT to audience members."
 	button_icon_state = "melody_t1_base"
+	invocations = list("%CASTER plays a soft, clinical tune! The world sharpens into focus!")
 	song_effect = /datum/status_effect/buff/playing_melody/intellectual_interval
 
 /datum/status_effect/buff/playing_melody/intellectual_interval
@@ -15,7 +16,7 @@
 	icon_state = "buff"
 
 /datum/status_effect/buff/song/intellectual_interval
-	id = "intellectualinterval"
+	id = "intellectual_song"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/song/intellectual_interval
 	duration = 15 SECONDS
 	effectedstats = list(STATKEY_INT = BARD_STAT_LESSER)

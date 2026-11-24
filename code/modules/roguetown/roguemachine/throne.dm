@@ -11,8 +11,6 @@ GLOBAL_VAR(king_throne)
 	max_integrity = 999999
 	buckle_lying = FALSE
 	obj_flags = NONE
-	var/rebel_leader_sit_time = 0
-	var/notified_rebel_able = FALSE
 	/// The currently active usurpation rite, if any
 	var/datum/usurpation_rite/active_rite
 	var/last_rite_announcement = 0
@@ -26,14 +24,10 @@ GLOBAL_VAR(king_throne)
 	..()
 	density = FALSE
 	M.reset_offsets("bed_buckle")
-	if(!active_rite)
-		return
-	if(active_rite.invoker == M && active_rite.stage == RITE_STAGE_GATHERING)
-		active_rite.on_invoker_unseated()
 	if(active_rite?.contester == M)
 		active_rite.cancel_counter_claim()
 
-/obj/structure/roguethrone/Initialize()
+/obj/structure/roguethrone/Initialize(mapload)
 	. = ..()
 	become_hearing_sensitive()
 	if(GLOB.king_throne == null)
@@ -52,37 +46,8 @@ GLOBAL_VAR(king_throne)
 	return ..()
 
 /obj/structure/roguethrone/process()
-	var/dt = 1 SECONDS
-	process_rebel_leader_sit(dt)
 	process_rite_announcements()
 	. = ..()
-
-/obj/structure/roguethrone/proc/process_rebel_leader_sit(dt)
-	if(!length(buckled_mobs))
-		return
-	var/mob/living/user = buckled_mobs[1]
-	if(user.stat != CONSCIOUS)
-		return
-	var/datum/antagonist/prebel/P = user.mind?.has_antag_datum(/datum/antagonist/prebel)
-	if(!P)
-		return
-	if(rebel_leader_sit_time == 0)
-		to_chat(user, span_notice("Finally, I'm sitting on the throne - when I get more comfortable here I'll be able to announce victory. Other rebels here will help me get comfortable faster."))
-	var/time_modifier = 1.0
-	/// Increase modifier for every other conscious rebel in view
-	for(var/mob/living/living_mob in view(7, loc))
-		if(living_mob == user)
-			continue
-		if(living_mob.stat != CONSCIOUS)
-			continue
-		var/datum/antagonist/prebel/rebel_antag = living_mob.mind?.has_antag_datum(/datum/antagonist/prebel)
-		if(!rebel_antag)
-			continue
-		time_modifier += REBEL_THRONE_SPEEDUP_PER_PERSON
-	rebel_leader_sit_time += (dt * time_modifier)
-	if(rebel_leader_sit_time >= REBEL_THRONE_TIME && !notified_rebel_able)
-		notified_rebel_able = TRUE
-		to_chat(user, span_notice("That's it - time to announce our victory!"))
 
 /obj/structure/roguethrone/proc/process_rite_announcements()
 	if(!active_rite || active_rite.stage < RITE_STAGE_GATHERING)
@@ -106,7 +71,7 @@ GLOBAL_VAR(king_throne)
 	if(active_rite.stage == RITE_STAGE_GATHERING && findtext(raw_message, "i assent"))
 		active_rite.try_assent(H)
 	else if(active_rite.stage <= RITE_STAGE_GATHERING && findtext(raw_message, "i abdicate"))
-		active_rite.try_abdication(H)
+		INVOKE_ASYNC(active_rite, TYPE_PROC_REF(/datum/usurpation_rite, try_abdication), H)
 	else if(active_rite.stage == RITE_STAGE_CONTESTING && findtext(raw_message, "stop ascent"))
 		if(!(H in buckled_mobs))
 			to_chat(H, span_warning("You must be seated on the throne to halt the succession."))
@@ -124,9 +89,7 @@ GLOBAL_VAR(king_throne)
 			if(RITE_STAGE_GATHERING)
 				. += span_warning("A claim is being made upon the throne. Say 'I assent' near the throne to support it, or act to stop [active_rite.invoker?.real_name].")
 			if(RITE_STAGE_CONTESTING)
-				var/elapsed = world.time - active_rite.contest_started_at
-				var/remaining = max(active_rite.contest_time_remaining - elapsed, 0)
-				. += span_warning("[active_rite.invoker?.real_name] is claiming the throne! Sit on the throne and say 'stop ascent' to halt the succession. Alternatively, kill, knock them unconscious or remove them far away from the throne room by the end of the rite. [round(remaining / (1 SECONDS))] second(s) remain.")
+				. += span_warning("[active_rite.invoker?.real_name] is claiming the throne! Sit on the throne and say 'stop ascent' to halt the succession. Alternatively, kill, knock them unconscious or remove them far away from the throne room by the end of the rite. [round(active_rite.get_contest_time_left() / (1 SECONDS))] second(s) remain.")
 
 /obj/structure/roguethrone/get_mechanics_examine(mob/user)
 	. = ..()
@@ -140,7 +103,7 @@ GLOBAL_VAR(king_throne)
 	. += span_info("'Remove Law (number)' - remove a specific law (requires crown, ruler only)")
 	. += span_info("'Purge Laws' - remove all laws (requires crown, ruler only)")
 	. += span_info("'Declare Outlaw' - outlaw someone (requires crown, ruler only)")
-	. += span_info("'Set Taxes' - set the tax rate (requires crown, ruler only)")
+	. += span_info("'Set Taxes' - set the tax rate or enact a poll levy (requires crown, ruler only)")
 	. += span_info("'Change Colors' - change the duchy's colors (requires crown, ruler only)")
 	. += span_info("'Become Regent' - claim regency when ruler is absent (requires crown, noble blood, regency position)")
 	. += span_info("'Summon Crown' / 'Summon Key' - retrieve royal items")

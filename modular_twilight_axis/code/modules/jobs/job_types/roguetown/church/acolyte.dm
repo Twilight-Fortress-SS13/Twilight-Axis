@@ -22,4 +22,4 @@
 				mask = /obj/item/clothing/mask/rogue/owlmask
 				pants = /obj/item/clothing/under/roguetown/tights/black
 				belt = /obj/item/storage/belt/rogue/leather/cloth/upgraded/lady
-				H.cmode_music = 'sound/music/combat_desertrider.ogg'
+				H.cmode_music = sound("sound/music/combat_desertrider.ogg")

@@ -1,14 +1,13 @@
-/obj/item/clothing/neck/roguetown/leather/blackpowder
+/obj/item/clothing/neck/roguetown/bevor/blackpowder
 	name = "blackpowder order coverall"
 	desc = "A robust coverall, worn by the warriors of the Otavan Blackpowder Order. A garnament fitting for the Final War."
 	icon = 'modular_twilight_axis/firearms/icons/obj_neck.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/firearms/icons/onmob_neck.dmi'
-	icon_state = "confessor_coif"
-	armor = ARMOR_PLATE
-	max_integrity = ARMOR_INT_SIDE_STEEL
-	resistance_flags = FIRE_PROOF
-	body_parts_inherent = NECK
-	slot_flags = ITEM_SLOT_NECK
-	body_parts_covered = NECK
-	equip_delay_self = 7 SECONDS
-	unequip_delay_self = 7 SECONDS
+	icon_state = "confessorcoif"
+	equip_delay_self = 4 SECONDS
+	unequip_delay_self = 4 SECONDS
+
+/obj/item/clothing/neck/roguetown/bevor/blackpowder/ComponentInitialize()
+	AddComponent(/datum/component/adjustable_clothing, NECK, null, null, "sound/foley/cloth_wipe (1).ogg", null, (UPD_HEAD|UPD_MASK|UPD_NECK))
+	AddComponent(/datum/component/armour_filtering/positive, TRAIT_FENCERDEXTERITY)
+	AddComponent(/datum/component/armour_filtering/negative, TRAIT_HONORBOUND)

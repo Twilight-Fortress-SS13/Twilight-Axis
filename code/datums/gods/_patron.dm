@@ -38,6 +38,15 @@ GLOBAL_LIST_EMPTY(prayers)
 	var/datum/storyteller/storyteller
 	var/list/added_verbs
 
+/datum/patron/proc/constant_ui_data()
+	return list(
+		"name" = name,
+		"domain" = domain,
+		"desc" = desc,
+		"worshippers" = worshippers,
+		"associated_faith" = associated_faith,
+	)
+
 /datum/patron/proc/on_gain(mob/living/pious)
 	for(var/trait in mob_traits)
 		ADD_TRAIT(pious, trait, "[type]")
@@ -107,15 +116,14 @@ GLOBAL_LIST_EMPTY(prayers)
 	if(!patron_name)
 		CRASH("check_prayer called with null patron")
 
-	if(follower.mob_timers[MT_PSYPRAY])
-		if(world.time < follower.mob_timers[MT_PSYPRAY] + 1 MINUTES)
-			follower.mob_timers[MT_PSYPRAY] = world.time
-			return FALSE
-	else
-		follower.mob_timers[MT_PSYPRAY] = world.time
+	var/last_prayer = follower.mob_timers[MT_PSYPRAY]
+	if(!isnull(last_prayer) && world.time < last_prayer + 1 MINUTES)
+		to_chat(follower, span_warning("I must wait [DisplayTimeText(last_prayer + 1 MINUTES - world.time)] before another prayer can be answered."))
+		return FALSE
+	follower.mob_timers[MT_PSYPRAY] = world.time
 
 	. = TRUE
-	GLOB.prayers |= prayer 
+	GLOB.prayers |= prayer
 	record_round_statistic(STATS_PRAYERS_MADE)
 	for(var/patron_namerus in rusgodnames)
 		var/regex/p_name = regex("([patron_namerus])", "im")

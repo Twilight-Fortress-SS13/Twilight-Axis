@@ -1,0 +1,873 @@
+import { atomWithTguiStorage } from 'common/storage';
+import { useAtom, useAtomValue } from 'jotai';
+import { unwrap } from 'jotai/utils';
+import { CollapsibleShared, LabeledGridList } from 'pm/components';
+import { useConstantPrefs } from 'pm/constant_data';
+import {
+  SubtabDescriptorsDownstream,
+  SubtabDescriptorsOtherInfoDownstream,
+  SubtabDescriptorsOtherInfoListDownstream,
+  SubtabDescriptorsTextDescriptionsDownstream,
+} from 'pm/downstream/tabs/CharacterCreator/subtabs/Descriptors';
+import { type ReactNode, useEffect, useState } from 'react';
+import { useBackendStrict, useSharedState } from 'tgui/backend';
+import { gameDataAtom } from 'tgui/events/store';
+import { LoadingScreen } from 'tgui/interfaces/common/LoadingScreen';
+import {
+  Box,
+  Button,
+  Dropdown,
+  Section,
+  Stack,
+  TextArea,
+} from 'tgui-core/components';
+import type { AllPagesData, DescriptorData } from '../data';
+
+export const SubtabDescriptors = () => {
+  return (
+    <Section
+      fill
+      scrollable
+      className="PreferencesMenu__Section__NoChildPadding"
+    >
+      <Stack vertical>
+        <Stack.Item>
+          <Box className="PreferencesMenu__Grid PreferencesMenu__TwoColumn">
+            <Box>
+              <MechanicalDescriptions />
+            </Box>
+            <Box>
+              <OtherInfo />
+            </Box>
+          </Box>
+        </Stack.Item>
+        <Stack.Item>
+          <TextDescriptions />
+        </Stack.Item>
+        <SubtabDescriptorsDownstream />
+      </Stack>
+    </Section>
+  );
+};
+
+const FormattingHelp = () => {
+  return (
+    <Box fontSize={1.1}>
+      <Box fontSize={1.2}>
+        Note: Previews only update on submit as BYOND must parse your text.
+      </Box>
+      <br />
+      You can use backslash (\\) to escape special characters.
+      <br /># text : Defines a header.
+      <br />
+      Ctrl-T: |text| : Centers the text.
+      <br />
+      Ctrl-B: **text** : Makes the text <b>bold</b>.<br />
+      Ctrl-I: *text* : Makes the text <i>italic</i>.<br />
+      Ctrl-6: ^text^ : Increases the{' '}
+      <Box inline fontSize={1.2}>
+        size
+      </Box>{' '}
+      of the text.
+      <br />
+      ((text)) : Decreases the{' '}
+      <Box inline fontSize={0.8}>
+        size
+      </Box>{' '}
+      of the text.
+      <br />* item : An unordered list item.
+      <br />
+      --- : Adds a horizontal rule.
+      <br />
+      -=FFFFFFtext=- : Adds a specific{' '}
+      <Box inline textColor="#FFF">
+        colour
+      </Box>{' '}
+      to text.
+    </Box>
+  );
+};
+
+const MechanicalDescriptions = () => {
+  const [constantData] = useConstantPrefs();
+  const { act, data } = useBackendStrict<DescriptorData>();
+  const { descriptors, descriptors_custom } = data;
+
+  if (!constantData) {
+    return (
+      <Section fill title="Mechanical Descriptions">
+        <LoadingScreen label="Loading descriptors..." />
+      </Section>
+    );
+  }
+
+  const { descriptors: constantDescriptors, descriptor_choices } = constantData;
+
+  return (
+    <Section fill title="Mechanical Descriptions">
+      <LabeledGridList>
+        {descriptors.map((desc) => {
+          const descriptor_choice = descriptor_choices[desc.type];
+          const options = descriptor_choice.descriptors.map((type) => ({
+            displayText: constantDescriptors[type].name,
+            value: type,
+          }));
+
+          return (
+            <LabeledGridList.Item key={desc.type} label={desc.name}>
+              <Dropdown
+                displayText={constantDescriptors[desc.selected].name}
+                options={options}
+                selected={desc.selected}
+                onSelected={(val) => {
+                  act('set_descriptor', {
+                    descriptor_choice: desc.type,
+                    mob_descriptor: val,
+                  });
+                }}
+              />
+            </LabeledGridList.Item>
+          );
+        })}
+      </LabeledGridList>
+      <Box bold inline mt={1}>
+        Custom descriptor rules:
+      </Box>
+      <Box inline mb={1}>
+        No proper nouns. No immersion breaking words. No overtly sexual
+        descriptors. Look at the pre-written descriptors for examples of what is
+        acceptable. Capitalization is handled automatically.
+      </Box>
+      <LabeledGridList>
+        {descriptors_custom.map((desc) => (
+          <LabeledGridList.Item key={desc.index} label={desc.name}>
+            <Stack>
+              {desc.prefix_display !== null ? (
+                <Stack.Item>
+                  <Button
+                    fluid
+                    onClick={() =>
+                      act('custom_descriptor_prefix', { index: desc.index })
+                    }
+                  >
+                    {desc.prefix_display}
+                  </Button>
+                </Stack.Item>
+              ) : null}
+              <Stack.Item grow minWidth={0}>
+                <Button
+                  fluid
+                  ellipsis
+                  tooltip={desc.content || 'Unset'}
+                  onClick={() =>
+                    act('custom_descriptor_content', { index: desc.index })
+                  }
+                >
+                  {desc.content || 'Unset'}
+                </Button>
+              </Stack.Item>
+            </Stack>
+          </LabeledGridList.Item>
+        ))}
+      </LabeledGridList>
+      <Button fluid mt={1} mb={1} onClick={() => act('print_descriptor_setup')}>
+        Print Descriptor Setup to Chat
+      </Button>
+    </Section>
+  );
+};
+
+const OtherInfo = () => {
+  const { act, data } = useBackendStrict<DescriptorData>();
+  const {
+    examine_theme,
+    ooc_extra,
+    song_artist,
+    song_title,
+    ooc_extra_img_link,
+    nsfw_ooc_extra_img_link,
+    img_gallery,
+    nsfw_img_gallery,
+  } = data;
+
+  return (
+    <Section fill scrollable title="Other Info">
+      <LabeledGridList>
+        <LabeledGridList.Item label="Examine Theme">
+          <Button onClick={() => act('examine_theme')} fluid>
+            {examine_theme || 'Unset'}
+          </Button>
+        </LabeledGridList.Item>
+        <LabeledGridList.Item label="Song">
+          <Stack vertical>
+            <Stack.Item>
+              <Button
+                ellipsis
+                fluid
+                tooltip={ooc_extra || 'No URL Set'}
+                onClick={() => act('ooc_extra')}
+              >
+                {ooc_extra || 'No URL Set'}
+              </Button>
+            </Stack.Item>
+            <Stack.Item>
+              <Stack align="center">
+                <Stack.Item grow minWidth={0}>
+                  <Button
+                    ellipsis
+                    fluid
+                    tooltip={song_title || 'None'}
+                    onClick={() => act('change_title')}
+                  >
+                    {song_title || 'None'}
+                  </Button>{' '}
+                </Stack.Item>
+                <Stack.Item>by</Stack.Item>
+                <Stack.Item grow minWidth={0}>
+                  <Button
+                    ellipsis
+                    fluid
+                    tooltip={song_artist || 'No One'}
+                    onClick={() => act('change_artist')}
+                  >
+                    {song_artist || 'No One'}
+                  </Button>
+                </Stack.Item>
+              </Stack>
+            </Stack.Item>
+          </Stack>
+        </LabeledGridList.Item>
+        <LabeledGridList.Item
+          label="OOC Media"
+          tooltip="Extra image, video, or GIF displayed with the character's flavor text."
+        >
+          <Button
+            fluid
+            tooltip={ooc_extra_img_link || 'No URL Set'}
+            onClick={() => act('ooc_extra_img')}
+          >
+            {ooc_extra_img_link ? 'Change' : 'Set'}
+          </Button>
+        </LabeledGridList.Item>
+        <LabeledGridList.Item
+          label="NSFW OOC Media"
+          tooltip="NSFW extra image, video, or GIF displayed with the character's flavor text."
+        >
+          <Button
+            fluid
+            tooltip={nsfw_ooc_extra_img_link || 'No URL Set'}
+            onClick={() => act('nsfw_ooc_extra_img')}
+          >
+            {nsfw_ooc_extra_img_link ? 'Change' : 'Set'}
+          </Button>
+
+        </LabeledGridList.Item>
+        <ImageGalleryEdit
+          label="Image Gallery"
+          list={img_gallery}
+          onAdd={() => {
+            act('add_img_gallery');
+          }}
+          onClear={() => {
+            act('clear_img_gallery');
+          }}
+          onSet={(i) => {
+            act('set_img_gallery', { index: i });
+          }}
+        />
+        <ImageGalleryEdit
+          label="NSFW Gallery"
+          list={nsfw_img_gallery}
+          onAdd={() => {
+            act('add_nsfw_img_gallery');
+          }}
+          onClear={() => {
+            act('clear_nsfw_img_gallery');
+          }}
+          onSet={(i) => {
+            act('set_nsfw_img_gallery', { index: i });
+          }}
+        />
+        <SubtabDescriptorsOtherInfoListDownstream />
+      </LabeledGridList>
+      <SubtabDescriptorsOtherInfoDownstream />
+    </Section>
+  );
+};
+
+const ImageGalleryEdit = (props: {
+  label: string;
+  list: string[];
+  onAdd: () => void;
+  onClear: () => void;
+  onSet: (i: number) => void;
+}) => {
+  const { label, list, onAdd, onClear, onSet } = props;
+
+  return (
+    <LabeledGridList.Item
+      label={label}
+      tooltip="Press enter in the textbox to submit. Empty entries will delete the entry."
+    >
+      <Stack vertical>
+        {list.map((link, i) => (
+          <Stack.Item key={i}>
+            <Button ellipsis fluid tooltip={link} onClick={() => onSet(i + 1)}>
+              {link}
+            </Button>
+          </Stack.Item>
+        ))}
+        {list.length < 3 ? (
+          <Stack.Item ml={list.length === 0 ? 0 : 2}>
+            <Button fluid onClick={onAdd}>
+              Add Image
+            </Button>
+          </Stack.Item>
+        ) : null}
+        <Stack.Item>
+          <Button fluid onClick={onClear}>
+            Clear
+          </Button>
+        </Stack.Item>
+      </Stack>
+    </LabeledGridList.Item>
+  );
+};
+
+const TextDescriptions = () => {
+  const [constantData] = useConstantPrefs();
+  const { act, data } = useBackendStrict<DescriptorData>();
+  const {
+    flavortext_cached,
+    flavortext,
+    erpprefs_cached,
+    erpprefs,
+    noble_gossip_cached,
+    noble_gossip,
+    nsfwflavortext_cached,
+    nsfwflavortext,
+    ooc_notes_cached,
+    ooc_notes,
+    rumour_cached,
+    rumour,
+  } = data;
+
+  return (
+    <Section
+      title="Text Descriptions"
+      buttons={
+        <Button onClick={() => act('preview_examine')}>
+          Preview Full Examine
+        </Button>
+      }
+    >
+      <Stack vertical mr={2}>
+        <Stack.Item>
+          <CollapsibleShared
+            stateKey="formatting-help"
+            transparent
+            title="Formatting Help"
+          >
+            <FormattingHelp />
+          </CollapsibleShared>
+        </Stack.Item>
+        <Stack.Item>
+          <TextEditor
+            name="Flavor Text"
+            warning="Flavortext should not include nonphysical nonsensory attributes such as backstory or the character's internal thoughts."
+            sharedStatePreview="preview_flavortext"
+            maxLength={constantData?.MAX_NOTE_SIZE}
+            requiredLength={constantData?.MINIMUM_FLAVOR_TEXT}
+            value={flavortext || ''}
+            preview={flavortext_cached}
+            onSave={(value) =>
+              act('save_markdown_text', { type: 'flavortext', value })
+            }
+          />
+        </Stack.Item>
+        <Stack.Item>
+          <TextEditor
+            name="OOC Notes"
+            warning="OOC notes should be used for roleplay hooks and general information about your character."
+            sharedStatePreview="preview_ooc_notes"
+            maxLength={constantData?.MAX_NOTE_SIZE}
+            requiredLength={constantData?.MINIMUM_OOC_NOTES}
+            value={ooc_notes || ''}
+            preview={ooc_notes_cached}
+            onSave={(value) =>
+              act('save_markdown_text', { type: 'ooc_notes', value })
+            }
+          />
+        </Stack.Item>
+        <Stack.Item>
+          <TextEditor
+            name="NSFW Flavor Text"
+            warning="NSFW Flavortext can be used for setting things like body descriptions and other physical details that may be conisdered explicit."
+            sharedStatePreview="preview_nsfwflavortext"
+            maxLength={constantData?.MAX_NOTE_SIZE}
+            value={nsfwflavortext || ''}
+            preview={nsfwflavortext_cached}
+            onSave={(value) =>
+              act('save_markdown_text', { type: 'nsfwflavortext', value })
+            }
+          />
+        </Stack.Item>
+        <Stack.Item>
+          <TextEditor
+            name="ERP Preferences"
+            warning="Erotic Roleplay preferences. If you put 'anything goes' or 'no limits' here, do not be surprised if people take you up on it."
+            sharedStatePreview="preview_erpprefs"
+            maxLength={constantData?.MAX_NOTE_SIZE}
+            value={erpprefs || ''}
+            preview={erpprefs_cached}
+            onSave={(value) =>
+              act('save_markdown_text', { type: 'erpprefs', value })
+            }
+          />
+        </Stack.Item>
+        <Stack.Divider mt={1} mb={1} />
+        <Stack.Item textAlign="right">
+          <Button onClick={() => act('rumour_preview')}>
+            Preview Rumours, Noble Gossip & Secrets in chat
+          </Button>
+        </Stack.Item>
+        <Stack.Item>
+          <TextEditor
+            name="Rumours"
+            warning={`Rumours are things others might know, or think they know about you, they don't necessarily have to be precise, or even true. But remember that they can provide a hint to another player on how to interact with, or even think about your character. Avoid explicit bodily descriptions, though rumors like "sleeps around a lot" are fine.`}
+            sharedStatePreview="preview_rumour"
+            maxLength={400}
+            value={rumour || ''}
+            preview={rumour_cached}
+            onSave={(value) =>
+              act('save_markdown_text', { type: 'rumour', value })
+            }
+          />
+        </Stack.Item>
+        <Stack.Item>
+          <TextEditor
+            name="Noble Gossip"
+            warning={`Gossip is rumours spread around, and known only in Noble circles, only other well-born individuals are aware of it. Gossip, similarly to standard rumours does not need to be precise or true, but remember that it can provide hints and avenues for other Nobles to interact with, and judge your Character. Avoid explicit bodily descriptions, though rumors like "sleeps around a lot" are fine.`}
+            sharedStatePreview="preview_gossip"
+            maxLength={400}
+            value={noble_gossip || ''}
+            preview={noble_gossip_cached}
+            onSave={(value) =>
+              act('save_markdown_text', { type: 'noble_gossip', value })
+            }
+          />
+        </Stack.Item>
+        <SecretsEditor />
+        <SubtabDescriptorsTextDescriptionsDownstream />
+      </Stack>
+    </Section>
+  );
+};
+
+const SECRET_TYPES = [
+  // Disabled or undesired antagonists can still be included but parked until support is restored for them.
+  /*
+  {
+    value: 'ascendant',
+    displayText: 'Ascendant',
+    editorName: 'Ascendant',
+    helpText: `Only Ascendants can see this information.`,
+  },
+  {
+    value: 'aspirant',
+    displayText: 'Aspirant',
+    editorName: 'Aspirant',
+    helpText: `Only Aspirants can see this information.`,
+  },
+  */
+  {
+    value: 'assassin',
+    displayText: 'Assassin (Targeted)',
+    editorName: 'Targeted',
+    helpText: `Only Assassins can see this information. Use it to provide a reason why your character had been targeted by the Assassins of the Dark Star.`,
+  },
+  {
+    value: 'bandit',
+    displayText: 'Bandit',
+    editorName: 'Bandit',
+    helpText: `Only Bandits can see this information. Use it to provide a weakness, valuable possession, hidden dealing, or other truth that may give them a reason to rob, threaten, or take an interest in your character.`,
+  },
+  {
+    value: 'dreamwalker',
+    displayText: 'Dreamwalker (Marked)',
+    editorName: 'Marked',
+    helpText: `Only Dreamwalkers can see this information. Use it to provide a truth that may be uncovered through their connection to your character.`,
+  },
+  {
+    value: 'gnoll',
+    displayText: 'Gnoll (Hunted)',
+    editorName: 'Hunted',
+    helpText: `Only Gnolls can see this information. Use it to provide a reason why your character is being hunted by the Chosen of the Sinistar.`,
+  },
+  {
+    value: 'hag',
+    displayText: 'Hag',
+    editorName: 'Hag',
+    helpText: `Only Hags can see this information. Use it to provide a truth they may exploit, bargain over, or use against your character.`,
+  },
+  {
+    value: 'lich',
+    displayText: 'Lich',
+    editorName: 'Lich',
+    helpText: `Only Liches can see this information. Use it to provide a forbidden truth, buried ambition, occult interest, or vulnerability that an ancient and unnatural mind may recognize and exploit.`,
+  },
+  {
+    value: 'maniac',
+    displayText: 'Maniac',
+    editorName: 'Maniac',
+    helpText: `Only Maniacs can see this information. Use it to provide a fear, fixation, past misdeed, or vulnerability that may draw their dangerous attention toward your character.`,
+  },
+  {
+    value: 'peasant_rebel',
+    displayText: 'Rebel',
+    editorName: 'Rebel',
+    helpText: `Only Peasant Rebels and the Head Rebel can see this information. Use it to provide an allegiance, betrayal, abuse of authority, hidden sympathy, or other truth that may matter to those conspiring against the established order.`,
+  },
+  {
+    value: 'vampire',
+    displayText: 'Vampire',
+    editorName: 'Vampire',
+    helpText: `Only Vampires can see this information. Use it to provide a truth that may be uncovered through their knowledge or supernatural influence over your character.`,
+  },
+  {
+    value: 'werewolf',
+    displayText: 'Werewolf',
+    editorName: 'Werewolf',
+    helpText: `Only Werewolves can see this information. Use it to provide a fear, weakness, transgression, or other hidden truth that may provoke their predatory interest in your character.`,
+  },
+  {
+    value: 'wretch',
+    displayText: 'Wretch',
+    editorName: 'Wretch',
+    helpText: `Only Wretches can see this information. Use it to provide a shame, forbidden connection, desperate bargain, or dark deed that another outcast may recognize and use against your character.`,
+  },
+] as const;
+
+type SecretType = (typeof SECRET_TYPES)[number]['value'];
+
+const SecretsEditor = () => {
+  const { act, data } = useBackendStrict<DescriptorData>();
+  const { secrets, secrets_cached } = data;
+
+  const [selectedSecretType, setSelectedSecretType] =
+    useState<SecretType>('assassin');
+
+  const [secretsOpen, setSecretsOpen] = useState(false);
+
+  const selectedSecretConfig =
+    SECRET_TYPES.find((secret) => secret.value === selectedSecretType) ??
+    SECRET_TYPES[0];
+
+  const selectedSecret = secrets?.[selectedSecretType] || '';
+
+  return (
+    <Stack.Item>
+      <Button
+        fluid
+        icon={secretsOpen ? 'chevron-down' : 'chevron-right'}
+        onClick={() => setSecretsOpen((open) => !open)}
+      >
+        Secrets
+      </Button>
+
+      {secretsOpen ? (
+        <TextEditor
+          key={selectedSecretType}
+          collapsible={false}
+          headerTitle="SECRETS"
+          warning={`A misdeed, bargain, shame, or surreptitious plan that only an antagonist may know about and use as a reason to judge or seek out your character. Unlike Rumours and Gossip, Secrets are a truth that an antagonist had learned about your character from their own sources such as "I bargained with the fey for the power to remake my family."`}
+          afterWarning={
+            <>
+              <Stack.Divider mt={3} mb={3} />
+
+              <Stack align="center">
+                <Stack.Item>Antagonist:</Stack.Item>
+
+                <Stack.Item>
+                  <Dropdown
+                    displayText={selectedSecretConfig.displayText}
+                    options={SECRET_TYPES.map((secret) => ({
+                      displayText: secret.displayText,
+                      value: secret.value,
+                    }))}
+                    selected={selectedSecretType}
+                    onSelected={(val) => {
+                      setSelectedSecretType(val as SecretType);
+                    }}
+                  />
+                </Stack.Item>
+              </Stack>
+
+              <Box italic fontSize={0.9} mt={1}>
+                {selectedSecretConfig.helpText}
+              </Box>
+            </>
+          }
+          name={selectedSecretConfig.editorName}
+          sharedStatePreview={`preview_secrets_${selectedSecretType}`}
+          maxLength={400}
+          value={selectedSecret}
+          preview={secrets_cached?.[selectedSecretType] ?? null}
+          onSave={(value) =>
+            act('save_markdown_text', {
+              type: 'save_secret',
+              secret_type: selectedSecretType,
+              value,
+            })
+          }
+        />
+      ) : null}
+    </Stack.Item>
+  );
+};
+
+// Index via `${sharedStatePreview}-${loaded_slot}`
+const persistedEditsAtom = atomWithTguiStorage<Record<string, string>>(
+  'pm-persisted-edits',
+  {},
+);
+const unwrappedPersistedEditsAtom = unwrap(persistedEditsAtom);
+
+const EDITOR_HEIGHT = 16;
+const TextEditor = (props: {
+  name: string;
+  warning?: string;
+  sharedStatePreview: string;
+  onSave: (val: string) => void;
+  maxLength?: number;
+  requiredLength?: number;
+  value: string;
+  preview: TrustedHTML | null;
+  collapsible?: boolean;
+  headerTitle?: ReactNode;
+  afterWarning?: ReactNode;
+}) => {
+  const {
+    name,
+    warning,
+    sharedStatePreview,
+    maxLength,
+    requiredLength,
+    value,
+    preview,
+    collapsible = true,
+    headerTitle,
+    afterWarning,
+  } = props;
+
+  const [showPreview, setShowPreview] = useSharedState(
+    sharedStatePreview,
+    false,
+  );
+
+  const [expanded, setExpanded] = useState(false);
+
+  // Persistent edits
+  const [persistedEdits, setPersistedEdits] = useAtom(
+    unwrappedPersistedEditsAtom,
+  );
+
+  // Input Handling
+  const { data } = useBackendStrict<AllPagesData>();
+  const { loaded_slot } = data;
+
+  const persistedEditKey = `${sharedStatePreview}-${loaded_slot}`;
+
+  const [input, setInput] = useState(value);
+
+  const updateInput = (val: string) => {
+    setInput(val);
+    setPersistedEdits(async (v) => {
+      const records = await v;
+      records[persistedEditKey] = val;
+      return records;
+    });
+  };
+
+  useEffect(() => {
+    if (persistedEdits?.[persistedEditKey]) {
+      setInput(persistedEdits[persistedEditKey]);
+    } else {
+      setInput(value);
+    }
+  }, [loaded_slot, value, persistedEdits]);
+
+  // Each time the user enters a character, persist it
+  const onType = (val: string) => {
+    updateInput(val);
+  };
+
+  // Reload handling
+  // have to depend specifically on this to listen for data updates instead of
+  // config updates
+  const gameData = useAtomValue(gameDataAtom);
+  const [reloading, setReloading] = useState(false);
+
+  const onSave = () => {
+    if (reloading) {
+      return;
+    }
+    setReloading(true);
+    props.onSave(input);
+  };
+
+  useEffect(() => {
+    setReloading(false);
+  }, [gameData]);
+
+  const unsaved = value.trim() !== input.trim();
+
+  let title: ReactNode = name;
+
+  if (requiredLength && input.length < requiredLength) {
+    title = (
+      <Box inline>
+        {title}{' '}
+        <Box inline color="bad">
+          {' '}
+          (Too Short! {input.length}/{requiredLength})
+        </Box>
+      </Box>
+    );
+  }
+
+  if (unsaved) {
+    title = (
+      <Box inline color="bad">
+        {title} (Edited!)
+      </Box>
+    );
+  }
+
+  let displayHeaderTitle = headerTitle ?? title;
+
+  if (headerTitle && unsaved) {
+    displayHeaderTitle = (
+      <Box inline color="bad">
+        {headerTitle} (EDITED!)
+      </Box>
+    );
+  }
+
+  const editorContent = (
+    <Stack vertical>
+      <Stack.Item>
+        <Stack height={2} align="center">
+          <Stack.Item grow className="Section__titleText">
+            {displayHeaderTitle}
+          </Stack.Item>
+          <Stack.Item>
+            <Button.Checkbox
+              checked={showPreview}
+              selected={showPreview}
+              onClick={() => setShowPreview(!showPreview)}
+            >
+              Preview
+            </Button.Checkbox>
+          </Stack.Item>
+
+          {unsaved ? (
+            <>
+              <Stack.Item>
+                <Button.Confirm
+                  confirmIcon="triangle-exclamation"
+                  confirmContent="Discard changes?"
+                  icon="rotate-left"
+                  tooltip="Reload editors from current game state."
+                  onClick={() => updateInput(value)}
+                >
+                  Undo
+                </Button.Confirm>
+              </Stack.Item>
+
+              <Stack.Item>
+                <Button
+                  disabled={reloading}
+                  icon={reloading ? 'rotate' : undefined}
+                  iconSpin
+                  onClick={onSave}
+                >
+                  Submit
+                </Button>
+              </Stack.Item>
+            </>
+          ) : null}
+
+          <Stack.Item>
+            <Button
+              icon="expand"
+              selected={expanded}
+              tooltip="Expand Textbox"
+              onClick={() => setExpanded((v) => !v)}
+            />
+          </Stack.Item>
+        </Stack>
+      </Stack.Item>
+
+      {warning ? (
+        <Stack.Item italic fontSize={0.9}>
+          {warning}
+        </Stack.Item>
+      ) : null}
+
+      {afterWarning ? <Stack.Item>{afterWarning}</Stack.Item> : null}
+
+      <Stack.Item>
+        <TextArea
+          fluid
+          maxLength={maxLength}
+          height={EDITOR_HEIGHT * (expanded ? 3 : 1)}
+          value={input}
+          className={
+            unsaved ? 'PreferencesMenu__TextEditor__Unsaved' : undefined
+          }
+          userMarkup={{ t: '|', b: '**', i: '*', '6': '^' }}
+          onChange={onType}
+        />
+      </Stack.Item>
+
+      {showPreview ? (
+        <Stack.Item>
+          <Section
+            fill
+            preserveWhitespace
+            scrollable
+            height={EDITOR_HEIGHT}
+            ml={1}
+            mr={1}
+            title="Preview"
+          >
+            {preview ? (
+              <div
+                // eslint-disable-next-line react/no-danger
+                dangerouslySetInnerHTML={{
+                  __html: `<span className='Chat'>${preview}</span>`,
+                }}
+              />
+            ) : (
+              <Box italic fontSize={0.8}>
+                Nothing to preview
+              </Box>
+            )}
+          </Section>
+        </Stack.Item>
+      ) : null}
+    </Stack>
+  );
+
+  return collapsible ? (
+    <CollapsibleShared
+      title={title}
+      stateKey={`collapse-${sharedStatePreview}`}
+    >
+      {editorContent}
+    </CollapsibleShared>
+  ) : (
+    editorContent
+  );
+};

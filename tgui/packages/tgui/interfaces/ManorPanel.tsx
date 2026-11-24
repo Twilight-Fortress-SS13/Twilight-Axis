@@ -418,7 +418,7 @@ const Scene = ({ kind }: { kind: string }) => {
   return null;
 };
 
-const WorkstationCard = ({ ws, act }: { ws: WorkstationData; act: (action: string, payload?: object) => void }) => {
+const WorkstationCard = ({ ws, act }: { ws: WorkstationData; act: (action: string, payload?: Record<string, unknown>) => void }) => {
   const theme = getKindTheme(ws.kind);
   const percent = ws.workers_max ? clamp((ws.workers_employed / ws.workers_max) * 100) : 0;
 

@@ -1,7 +1,9 @@
 // -------------- CHOCOLATE -----------------
 /obj/item/reagent_containers/food/snacks/chocolate
+	cuisine = CUISINE_OTAVAIS
+	dish_type = DISH_SWEET | DISH_DAIRY
 	name = "chocolate ingot"
-	desc = "An unbelievably decadant slab of fudge, made with Etrusca's cocoa beans and Aavnr's saiga milk. A \
+	desc = "An unbelievably decadent slab of fudge, made with Etrusca's cocoa beans and Aavnr's saiga milk. A \
 	recent trade agreement between the two realms has turned this once-expensive delicacy into a slightly-less-expensive \
 	treat for many. </br>Following a rather unfortunate diplomatic incident involving a Lupian nobleman and a box of chocolates, \
 	chocolate is also now-known to double as a potent 'humor rebalancer' for some of Dendor's children. </br>It looks like it can be \
@@ -9,7 +11,7 @@
 	icon = 'modular/Neu_Food/icons/others/sweet.dmi'
 	icon_state = "chocolate"
 	bitesize = 4
-	slices_num = 2
+	slices_num = 4
 	slice_path = /obj/item/reagent_containers/food/snacks/chocolate/slice
 	list_reagents = list(/datum/reagent/consumable/nutriment = NUTRITION_HALF_MEAL)
 	w_class = WEIGHT_CLASS_TINY
@@ -28,7 +30,7 @@
 		eater.adjustToxLoss(5)
 	return ..()
 
-/obj/item/reagent_containers/food/snacks/chocolate/Initialize()
+/obj/item/reagent_containers/food/snacks/chocolate/Initialize(mapload)
 	. = ..()
 	var/static/list/slapcraft_recipe_list = list(
 		/datum/crafting_recipe/roguetown/cooking/chocolatedry,
@@ -40,18 +42,19 @@
 		)
 
 /obj/item/reagent_containers/food/snacks/chocolate/slice
-	name = "halved chocolate ingot"
-	desc = "An unbelievably decadant halve of fudge, made with Etrusca's cocoa beans and Aavnr's saiga milk. A \
+	name = "quarter chocolate ingot"
+	desc = "An unbelievably decadent quarter of fudge, made with Etrusca's cocoa beans and Aavnr's saiga milk. A \
 	recent trade agreement between the two realms has turned this once-expensive delicacy into a slightly-less-expensive \
 	treat for many. </br>Following a rather unfortunate diplomatic incident involving a Lupian nobleman and a box of chocolates, \
 	chocolate is also now-known to double as a potent 'humor rebalancer' for some of Dendor's children. </br>When combined with \
 	pumpkin spice and tossed into a kettle, it makes for an absolutely divine drink."
-	bitesize = 3 //Sharing is caring!
-	icon_state = "chocolatehalf"
+	bitesize = 1 //is a literal bite
+	icon_state = "chocolatequarter"
 	slices_num = null
 	slice_path = null
 
 /obj/item/reagent_containers/food/snacks/jamtallow
+	dish_type = DISH_SWEET|DISH_MEAT
 	name = "stick of jamtallow"
 	desc = "An ingot of jammified blackberries, fit only for the finest slices of bread. It beckons to be sliced with proper cutlery."
 	icon = 'modular/Neu_Food/icons/others/sweet.dmi'
@@ -87,8 +90,9 @@
 			changefood(slice_path, eater)
 
 /obj/item/reagent_containers/food/snacks/jamtallowslice
+	dish_type = DISH_SWEET|DISH_MEAT
 	name = "slice of jamtallow"
-	desc = "A portion of jammy paradise, bearing the same hues as Azuria's morning skies. It yearns to be savored not by its lonesome, but upon a slice of bread - ideally, butterdoughed or toasted."
+	desc = "A portion of jammy paradise, bearing the same hues as Azuria's morning skies. It yearns to be savored not by its lonesome, but upon a slice of bread - ideally, bookbread or toasted."
 	icon = 'modular/Neu_Food/icons/others/sweet.dmi'
 	icon_state = "jamtallow_slice"
 	faretype = FARE_POOR
@@ -97,6 +101,7 @@
 	eat_effect = /datum/status_effect/buff/sweet
 
 /obj/item/reagent_containers/food/snacks/marmalade
+	dish_type = DISH_SWEET|DISH_MEAT
 	name = "stick of marmalade"
 	desc = "An ingot of jammified tangerines, fit only for the finest slices of bread. It beckons to be sliced with proper cutlery."
 	icon = 'modular/Neu_Food/icons/others/sweet.dmi'
@@ -132,8 +137,9 @@
 			changefood(slice_path, eater)
 
 /obj/item/reagent_containers/food/snacks/marmaladeslice
+	dish_type = DISH_SWEET|DISH_MEAT
 	name = "slice of marmalade"
-	desc = "A portion of jammy paradise, bearing the same hues as Azuria's evening seas. It yearns to be savored not by its lonesome, but upon a slice of bread - ideally, butterdoughed or toasted."
+	desc = "A portion of jammy paradise, bearing the same hues as Azuria's evening seas. It yearns to be savored not by its lonesome, but upon a slice of bread - ideally, bookbread or toasted."
 	icon = 'modular/Neu_Food/icons/others/sweet.dmi'
 	icon_state = "marmalade_slice"
 	faretype = FARE_POOR
@@ -142,10 +148,12 @@
 	eat_effect = /datum/status_effect/buff/sweet
 
 /obj/item/reagent_containers/food/snacks/caramel
+	cuisine = CUISINE_RANESHENI
+	dish_type = DISH_SWEET|DISH_MEAT
 	name = "caramel"
 	icon = 'modular/Neu_Food/icons/others/sweet.dmi'
 	icon_state = "caramel3"
-	desc = "Glassy droppings of tallow-fried sugar, oft-divvied out amongst the youth by Psydonia's wisest and kindliest elders."
+	desc = "Glassy droppings of deep-fried sugar, oft-divvied out amongst the youth by Psydonia's wisest and kindliest elders."
 	faretype = FARE_FINE
 	fried_type = null
 	bitesize = 3
@@ -165,10 +173,12 @@
 		icon_state = "caramel1"
 
 /obj/item/reagent_containers/food/snacks/dragee
+	cuisine = CUISINE_OTAVAIS
+	dish_type = DISH_SWEET|DISH_MEAT
 	name = "dragée"
 	icon = 'modular/Neu_Food/icons/others/sweet.dmi'
 	icon_state = "dragee3"
-	desc = "Glassy droppings of tallow-fried rocknuts, coated in sugary shells and laced with herbal medicine. Such candies are popular \
+	desc = "Glassy droppings of deep-fried rocknuts, coated in sugary shells and laced with herbal medicine. Such candies are popular \
 	amongst Psydonia's youth - both as a reward to Otavan children for remembering their scripture, and as a remedy to childhood ailments."
 	faretype = FARE_LAVISH
 	fried_type = null
@@ -190,6 +200,7 @@
 
 //SUGARSHAPES!!!
 /obj/item/reagent_containers/food/snacks/grown/sugarshape
+	dish_type = DISH_SWEET
 	name = "sugarshape"
 	desc = "A mound of sugar, shaped into a decorative treat. It yearns to be completed beneath an oven's heat, or to be milled back down into sugarpowder."
 	icon = 'modular/Neu_Food/icons/others/sweet.dmi'
@@ -296,6 +307,8 @@
 	cooked_type = /obj/item/reagent_containers/food/snacks/sugarstatue/tree
 
 /obj/item/reagent_containers/food/snacks/sugarstatue
+	cuisine = CUISINE_ETRUSCAN
+	dish_type = DISH_SWEET
 	name = "sugarglass statue"
 	desc = "A decorative piece of sugarglass, meticulously fashioned to mimic a statue. Deliciously regal!"
 	icon = 'modular/Neu_Food/icons/others/sweet.dmi'
@@ -419,3 +432,17 @@
 	desc = "A decorative piece of sugarglass, meticulously fashioned to mimic a thriving tree. Deliciously natural!"
 	icon_state = "sugarstatuetree"
 	bitesize = 3
+
+/* .............	Murkling Jelly	................ */
+/obj/item/reagent_containers/food/snacks/rogue/murkling_jelly
+	name = "primordial jelly"
+	desc = "A translucent, sweet jelly said to return Murklings to their first hue. Just don't ask how it's made."
+	icon = 'modular/Neu_Food/icons/others/sweet.dmi'
+	icon_state = "oozejelly" //Placeholder coder sprite.
+	dish_type = DISH_SWEET|DISH_MEAT
+	bitesize = 1
+	tastes = list("goop" = 1)
+	list_reagents = list(
+		/datum/reagent/consumable/nutriment = 2,
+		/datum/reagent/consumable/murkling_color_restore = 1,
+	)

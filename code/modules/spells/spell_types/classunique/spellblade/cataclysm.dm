@@ -1,5 +1,7 @@
 /datum/action/cooldown/spell/cataclysm
+	source_aspect = /datum/magic_aspect/pseudo/spellblade
 	name = "Cataclysm"
+	expose_caster_on_deflect = FALSE
 	desc = "Let the mountain fall. Conjure a hammer of pure arcyne force and hurl it at a target area. \
 		On impact it explodes, crushing everyone in a 5x5 area for 75 blunt damage and leaving them Vulnerable. \
 		Requires 7 momentum. Overcharged at 10 momentum: 135 damage. \
@@ -94,12 +96,16 @@
 	H.visible_message(span_boldwarning("[H] conjures a massive hammer out of arcyne force!"))
 
 	for(var/turf/affected_turf in get_hear(area_of_effect, T))
-		new /obj/effect/temp_visual/blade_storm_telegraph(affected_turf)
+		new /obj/effect/temp_visual/telegraph/blade_storm(affected_turf)
 
-	log_combat(H, cast_on, "used Cataclysm on")
+	log_combat(H, cast_on, "used Cataclysm on", zone=H.zone_selected)
 
 	addtimer(CALLBACK(src, PROC_REF(do_hammer_throw), H, held_weapon, T, final_damage, def_zone, empowered), delay)
 	. = ..()
+
+/datum/action/cooldown/spell/cataclysm/get_impact_turfs(atom/center)
+	. = get_visible_area_turfs(get_turf(center), area_of_effect)
+	. -= get_turf(owner)
 
 /datum/action/cooldown/spell/cataclysm/proc/do_hammer_throw(mob/living/carbon/human/user, obj/item/weapon, turf/dest, final_damage, def_zone, empowered)
 	if(QDELETED(user) || user.stat == DEAD)

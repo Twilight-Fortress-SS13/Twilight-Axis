@@ -1,11 +1,12 @@
 /datum/action/cooldown/spell/storm_of_psydon
+	source_aspect = /datum/magic_aspect/pseudo/spellfist
 	button_icon = 'icons/mob/actions/classuniquespells/spellfist.dmi'
 	button_icon_state = "storm_of_psydon"
 	name = "Storm of Psydon"
 	desc = "Channel mana into your legs to leap toward a target from a distance, closing the gap rapidly. \
 		Then, channel the mana into your fists to unleash a storm of blows. \
-		Requires 7 Momentum: 3 punches + 1 kick (20 damage each). \
-		Overcharged at 10 Momentum: 9 punches + 1 kick (20 damage each). \
+		Requires 7 Momentum: 3 punches + 1 kick. \
+		Overcharged at 10 Momentum: 9 punches + 1 kick. \
 		Cannot be parried or dodged - only Defend stance can interrupt. \
 		Consumes all momentum only on a successful hit. If you miss, your momentum is kept and half cooldown is applied.\n\n\
 		'Temper the storm within, and unleash it only upon those who stray from His ways.'"
@@ -45,6 +46,11 @@
 	var/punch_count_lame = 3
 	var/min_momentum = 7
 	var/empowered_momentum = 10
+
+/datum/action/cooldown/spell/storm_of_psydon/get_spell_statistics(mob/living/user)
+	var/list/stats = ..()
+	stats += span_info("Damage: [punch_damage] blunt per punch, [kick_damage] blunt kick")
+	return stats
 
 /datum/action/cooldown/spell/storm_of_psydon/can_cast_spell(feedback = TRUE)
 	. = ..()
@@ -119,7 +125,6 @@
 	H.pass_flags |= PASSMOB
 	H.throwing = TRUE
 	var/prev_pixel_z = H.pixel_z
-	var/prev_transform = H.transform
 
 	animate(H, pixel_z = prev_pixel_z + 18, time = 1, easing = EASE_OUT)
 
@@ -155,6 +160,7 @@
 			sleep(step_delay)
 
 	var/land_angle = pick(-20, -15, 15, 20)
+	var/matrix/prev_transform = matrix(H.transform)
 	animate(H, pixel_z = prev_pixel_z, transform = turn(prev_transform, land_angle), time = 1, easing = EASE_IN)
 	animate(transform = prev_transform, time = 2)
 
@@ -181,6 +187,23 @@
 		oraora_lame(H, hit_target)
 	StartCooldown(get_adjusted_cooldown())
 	return TRUE
+
+/datum/action/cooldown/spell/storm_of_psydon/proc/dash_reaches(atom/target)
+	var/turf/current = get_turf(owner)
+	var/turf/goal = get_turf(target)
+	if(!current || !goal || current.z != goal.z)
+		return FALSE
+	for(var/i in 1 to dash_range)
+		if(get_dist(current, goal) <= 1)
+			return TRUE
+		var/turf/next = get_step(current, get_dir(current, goal))
+		if(!next || next.density)
+			return FALSE
+		for(var/obj/structure/S in next.contents)
+			if(S.density && !S.climbable)
+				return FALSE
+		current = next
+	return get_dist(current, goal) <= 1
 
 /datum/action/cooldown/spell/storm_of_psydon/proc/release_momentum(mob/living/carbon/human/H, datum/status_effect/buff/arcyne_momentum/M, stacks)
 	if(M)
@@ -276,7 +299,7 @@
 			if(!combo_valid(user, target))
 				combo_broken = TRUE
 				break
-			if(spell_guard_check(target, FALSE, deflected ? null : user))
+			if(spell_guard_check(target, FALSE, user, punish_caster = deflected ? FALSE : null))
 				deflected = TRUE
 				combo_broken = TRUE
 				break
@@ -291,15 +314,15 @@
 
 	sleep(3)
 	if(!combo_broken && cling(user, target) && combo_valid(user, target))
-		if(!spell_guard_check(target, FALSE, deflected ? null : user))
+		if(!spell_guard_check(target, FALSE, user, punish_caster = deflected ? FALSE : null))
 			user.emote("attack", forced = TRUE)
-			arcyne_strike(user, target, null, kick_damage, target_zone, BCLASS_BLUNT, spell_name = "Storm of Psydon (Kick)", exact_zone = TRUE)
-			playsound(get_turf(target), pick('sound/combat/hits/blunt/genblunt (1).ogg','sound/combat/hits/blunt/genblunt (2).ogg','sound/combat/hits/blunt/genblunt (3).ogg'), 100, TRUE)
-			var/atom/throw_target = get_edge_target_turf(user, get_dir(user, target))
-			target.throw_at(throw_target, 3, 4)
+			if(arcyne_strike(user, target, null, kick_damage, target_zone, BCLASS_BLUNT, spell_name = "Storm of Psydon (Kick)", exact_zone = TRUE) != ARCYNE_STRIKE_WARDED)
+				playsound(get_turf(target), pick('sound/combat/hits/blunt/genblunt (1).ogg','sound/combat/hits/blunt/genblunt (2).ogg','sound/combat/hits/blunt/genblunt (3).ogg'), 100, TRUE)
+				var/atom/throw_target = get_edge_target_turf(user, get_dir(user, target))
+				target.throw_at(throw_target, 3, 4)
 
 	combo_cleanup(shadow_left, shadow_right)
-	log_combat(user, target, "used Storm of Psydon (full)")
+	log_combat(user, target, "used Storm of Psydon (full)", zone=user.zone_selected)
 
 /datum/action/cooldown/spell/storm_of_psydon/proc/oraora_lame(mob/living/carbon/human/user, mob/living/target)
 	user.changeNext_move(CLICK_CD_MELEE * 2)
@@ -314,7 +337,7 @@
 		if(!combo_valid(user, target))
 			combo_broken = TRUE
 			break
-		if(spell_guard_check(target, FALSE, deflected ? null : user))
+		if(spell_guard_check(target, FALSE, user, punish_caster = deflected ? FALSE : null))
 			deflected = TRUE
 			combo_broken = TRUE
 			break
@@ -323,11 +346,11 @@
 
 	sleep(1)
 	if(!combo_broken && cling(user, target) && combo_valid(user, target))
-		if(!spell_guard_check(target, FALSE, deflected ? null : user))
+		if(!spell_guard_check(target, FALSE, user, punish_caster = deflected ? FALSE : null))
 			user.emote("attack", forced = TRUE)
-			arcyne_strike(user, target, null, kick_damage, target_zone, BCLASS_BLUNT, spell_name = "Storm of Psydon (Kick)", exact_zone = TRUE)
-			playsound(get_turf(target), pick('sound/combat/hits/blunt/genblunt (1).ogg','sound/combat/hits/blunt/genblunt (2).ogg','sound/combat/hits/blunt/genblunt (3).ogg'), 100, TRUE)
-			var/atom/throw_target = get_edge_target_turf(user, get_dir(user, target))
-			target.throw_at(throw_target, 3, 4)
+			if(arcyne_strike(user, target, null, kick_damage, target_zone, BCLASS_BLUNT, spell_name = "Storm of Psydon (Kick)", exact_zone = TRUE) != ARCYNE_STRIKE_WARDED)
+				playsound(get_turf(target), pick('sound/combat/hits/blunt/genblunt (1).ogg','sound/combat/hits/blunt/genblunt (2).ogg','sound/combat/hits/blunt/genblunt (3).ogg'), 100, TRUE)
+				var/atom/throw_target = get_edge_target_turf(user, get_dir(user, target))
+				target.throw_at(throw_target, 3, 4)
 
-	log_combat(user, target, "used Storm of Psydon (lame)")
+	log_combat(user, target, "used Storm of Psydon (lame)", zone=user.zone_selected)

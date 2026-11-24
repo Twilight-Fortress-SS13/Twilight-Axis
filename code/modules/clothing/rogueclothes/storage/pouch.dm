@@ -5,7 +5,7 @@
 	mob_overlay_icon = null
 	icon_state = "pouch"
 	item_state = "pouch"
-	slot_flags = ITEM_SLOT_HIP|ITEM_SLOT_NECK
+	slot_flags = ITEM_SLOT_HIP|ITEM_SLOT_NECK|ITEM_SLOT_CLOAK
 	w_class = WEIGHT_CLASS_NORMAL
 	attack_verb = list("whips", "lashes")
 	max_integrity = 300
@@ -37,7 +37,10 @@
 	if(!storage_comp)
 		return
 
-	var/original_target_quantity = target_coin.quantity 	// Store original quantity for verification
+	if(target_coin.loc == storage_comp.real_location() || (target_coin in storage_comp.contents())) // TA EDIT
+		return
+
+	var/original_target_quantity = target_coin.quantity	// Store original quantity for verification
 	var/coins_to_collect = original_target_quantity
 
 	// First, try to find existing coin stacks of the same type that aren't full
@@ -104,9 +107,9 @@
 	grid_width = 32
 	component_type = /datum/component/storage/concrete/roguetown/coin_pouch/merchant
 
-/obj/item/storage/belt/rogue/pouch/merchant/coins/Initialize() //TA EDIT - Rockhill currency support
+/obj/item/storage/belt/rogue/pouch/merchant/coins/Initialize(mapload)
 	. = ..()
-	if(SSmapping.config.map_name == "Rockhill")
+	if(SSmapping.config.map_name == "Rockhill") // TA EDIT START
 		var/obj/item/roguecoin/goldkrona/mid_pile/H = new(loc)
 		if(istype(H))
 			if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, H, null, TRUE, TRUE))
@@ -128,7 +131,7 @@
 			H = new(loc)
 			if(istype(H))
 				if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, H, null, TRUE, TRUE))
-					qdel(H)
+					qdel(H) // TA EDIT END
 
 /obj/item/storage/belt/rogue/pouch/cloth
 	name = "cloth pouch"
@@ -149,12 +152,12 @@
 				SSwardrobe.recycle_object(new_item)
 
 /obj/item/storage/belt/rogue/pouch/coins/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/copper/pile
 	return to_preload
 
 /obj/item/storage/belt/rogue/pouch/coins/mid/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/silver/pile
 	return to_preload
 
@@ -170,7 +173,7 @@
 			SSwardrobe.recycle_object(C)
 
 /obj/item/storage/belt/rogue/pouch/coins/poor/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/copper/pile
 	return to_preload
 
@@ -189,7 +192,7 @@
 				SSwardrobe.recycle_object(H)
 
 /obj/item/storage/belt/rogue/pouch/coins/rich/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/silver/pile
 	return to_preload
 
@@ -210,7 +213,7 @@
 				SSwardrobe.recycle_object(H)
 
 /obj/item/storage/belt/rogue/pouch/coins/veryrich/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/gold/pile
 	return to_preload
 
@@ -231,7 +234,7 @@
 				SSwardrobe.recycle_object(H)
 
 /obj/item/storage/belt/rogue/pouch/coins/aspirantpouch/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/gold/aspirantpile
 	return to_preload
 
@@ -243,7 +246,7 @@
 			SSwardrobe.recycle_object(H)
 
 /obj/item/storage/belt/rogue/pouch/coins/bigandfat/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/gold/aspirantpile
 	return to_preload
 
@@ -257,7 +260,7 @@
 				break
 
 /obj/item/storage/belt/rogue/pouch/coins/virtuepouch/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/gold/virtuepile
 	return to_preload
 
@@ -269,7 +272,7 @@
 			SSwardrobe.recycle_object(H)
 
 /obj/item/storage/belt/rogue/pouch/coins/readyuppouch/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/silver/pile/readyuppile
 	return to_preload
 
@@ -283,7 +286,7 @@
 /obj/item/storage/belt/rogue/pouch/coins/aalloy
 
 /obj/item/storage/belt/rogue/pouch/coins/aalloy/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/aalloy/pile
 	return to_preload
 
@@ -294,10 +297,25 @@
 		if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, A, null, TRUE, TRUE))
 			SSwardrobe.recycle_object(A)
 
+/obj/item/storage/belt/rogue/pouch/coins/aalloy/mid
+
+/obj/item/storage/belt/rogue/pouch/coins/aalloy/mid/get_types_to_preload()
+	var/list/to_preload = list()
+	to_preload += /obj/item/roguecoin/aalloy/pile
+	return to_preload
+
+/obj/item/storage/belt/rogue/pouch/coins/aalloy/mid/PopulateContents()
+	. = ..()
+	for(var/i in 1 to 2) //hilarious
+		var/obj/item/roguecoin/aalloy/pile/A = SSwardrobe.provide_type(/obj/item/roguecoin/aalloy/pile, loc)
+		if(istype(A))
+			if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, A, null, TRUE, TRUE))
+				SSwardrobe.recycle_object(A)
+
 /obj/item/storage/belt/rogue/pouch/coins/aalloy/rich
 
 /obj/item/storage/belt/rogue/pouch/coins/aalloy/rich/get_types_to_preload()
-	var/list/to_preload = list() 
+	var/list/to_preload = list()
 	to_preload += /obj/item/roguecoin/aalloy/pile
 	return to_preload
 
@@ -313,19 +331,20 @@
 	new /obj/item/reagent_containers/food/snacks/rogue/crackerscooked(src)
 
 /obj/item/storage/belt/rogue/pouch/healing
-
-/obj/item/storage/belt/rogue/pouch/healing/PopulateContents()
-	new /obj/item/reagent_containers/glass/bottle/alchemical/healthpot(src)
-	new /obj/item/reagent_containers/glass/bottle/alchemical/healthpot(src)
-	new /obj/item/needle(src)
+	populate_contents = list(
+	/obj/item/reagent_containers/glass/bottle/alchemical/healthpot,
+	/obj/item/reagent_containers/glass/bottle/alchemical/healthpot,
+	/obj/item/reagent_containers/glass/bottle/alchemical/water,
+	/obj/item/needle
+	)
 
 /obj/item/storage/belt/rogue/pouch/alchemy
-
-/obj/item/storage/belt/rogue/pouch/alchemy/PopulateContents()
-	new /obj/item/reagent_containers/glass/bottle/alchemical(src)
-	new /obj/item/reagent_containers/glass/bottle/alchemical(src)
-	new /obj/item/reagent_containers/glass/bottle/alchemical(src)
-	new /obj/item/needle(src)
+	populate_contents = list(
+	/obj/item/reagent_containers/glass/bottle/alchemical,
+	/obj/item/reagent_containers/glass/bottle/alchemical,
+	/obj/item/reagent_containers/glass/bottle/alchemical,
+	/obj/item/needle
+	)
 
 /obj/item/storage/belt/rogue/pouch/zigarrete
 	name = "zig box"
@@ -333,30 +352,27 @@
 	icon_state = "smokebox"
 	item_state = "smokebox"
 	component_type = /datum/component/storage/concrete/roguetown/zig_box
+	dropshrink = 0.5
 
-/obj/item/storage/belt/rogue/pouch/zigarrete/nicotine/PopulateContents()
-	new /obj/item/clothing/mask/cigarette/rollie/nicotine(src)
-	new /obj/item/clothing/mask/cigarette/rollie/nicotine(src)
-	new /obj/item/clothing/mask/cigarette/rollie/nicotine(src)
-	new /obj/item/clothing/mask/cigarette/rollie/nicotine(src)
-	new /obj/item/clothing/mask/cigarette/rollie/nicotine(src)
-	new /obj/item/clothing/mask/cigarette/rollie/nicotine(src)
+/obj/item/storage/belt/rogue/pouch/zigarrete/nicotine
+	populate_contents = list(
+	/obj/item/clothing/mask/cigarette/rollie/nicotine,
+	/obj/item/clothing/mask/cigarette/rollie/nicotine,
+	/obj/item/clothing/mask/cigarette/rollie/nicotine,
+	/obj/item/clothing/mask/cigarette/rollie/nicotine,
+	/obj/item/clothing/mask/cigarette/rollie/nicotine,
+	/obj/item/clothing/mask/cigarette/rollie/nicotine
+	)
 
-/obj/item/storage/belt/rogue/pouch/zigarrete/trippy/PopulateContents()
-	new /obj/item/clothing/mask/cigarette/rollie/trippy(src)
-	new /obj/item/clothing/mask/cigarette/rollie/trippy(src)
-	new /obj/item/clothing/mask/cigarette/rollie/trippy(src)
-	new /obj/item/clothing/mask/cigarette/rollie/trippy(src)
-	new /obj/item/clothing/mask/cigarette/rollie/trippy(src)
-	new /obj/item/clothing/mask/cigarette/rollie/trippy(src)
-
-/obj/item/storage/belt/rogue/pouch/zigarrete/cannabis/PopulateContents()
-	new /obj/item/clothing/mask/cigarette/rollie/cannabis(src)
-	new /obj/item/clothing/mask/cigarette/rollie/cannabis(src)
-	new /obj/item/clothing/mask/cigarette/rollie/cannabis(src)
-	new /obj/item/clothing/mask/cigarette/rollie/cannabis(src)
-	new /obj/item/clothing/mask/cigarette/rollie/cannabis(src)
-	new /obj/item/clothing/mask/cigarette/rollie/cannabis(src)
+/obj/item/storage/belt/rogue/pouch/zigarrete/cannabis
+	populate_contents = list(
+	/obj/item/clothing/mask/cigarette/rollie/cannabis,
+	/obj/item/clothing/mask/cigarette/rollie/cannabis,
+	/obj/item/clothing/mask/cigarette/rollie/cannabis,
+	/obj/item/clothing/mask/cigarette/rollie/cannabis,
+	/obj/item/clothing/mask/cigarette/rollie/cannabis,
+	/obj/item/clothing/mask/cigarette/rollie/cannabis
+	)
 
 /obj/item/storage/belt/rogue/pouch/triumphlunch
 	name = "pouched luncheon"
@@ -369,10 +385,11 @@
 
 /obj/item/storage/belt/rogue/pouch/bombs
 
-/obj/item/storage/belt/rogue/pouch/bombs/PopulateContents()
-	new /obj/item/bomb/noshard(src)
-	new /obj/item/bomb/noshard(src)
-	new /obj/item/bomb/noshard(src)
+	populate_contents = list(
+	/obj/item/explosive/fused/bottle,
+	/obj/item/explosive/fused/bottle,
+	/obj/item/explosive/fused/bottle
+	)
 
 /obj/item/storage/belt/rogue/pouch/tailorscrap
 	name = "pouch of tailorscrap"

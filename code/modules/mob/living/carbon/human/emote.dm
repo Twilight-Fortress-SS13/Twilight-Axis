@@ -9,7 +9,7 @@
 	needs_emotion = TRUE
 
 /mob/living/carbon/human/verb/emote_cry()
-	set name = "Плакать"
+	set name = TA_EMOTE_NAME_EMOTE_CRY
 	set category = "Emotes.Noises"
 
 	emote("cry", intentional = TRUE)
@@ -63,7 +63,7 @@
 	emote_type = EMOTE_VISIBLE
 
 /mob/living/carbon/human/verb/emote_eyebrow()
-	set name = "Приподнять бровь"
+	set name = TA_EMOTE_NAME_EMOTE_EYEBROW
 	set category = "Emotes"
 
 	emote("eyebrow", intentional = TRUE)
@@ -75,7 +75,7 @@
 	nomsg = TRUE
 
 /mob/living/carbon/human/verb/emote_psst()
-	set name = "Пс-ст!"
+	set name = TA_EMOTE_NAME_EMOTE_PSST
 	set category = "Emotes.Noises"
 
 	emote("psst", intentional = TRUE)
@@ -88,7 +88,7 @@
 	emote_type = EMOTE_AUDIBLE
 
 /mob/living/carbon/human/verb/emote_grumble()
-	set name = "Бухтеть"
+	set name = TA_EMOTE_NAME_EMOTE_GRUMBLE
 	set category = "Emotes.Noises"
 
 	emote("grumble", intentional = TRUE)
@@ -195,7 +195,7 @@
 	return H.dna && H.dna.species && H.dna.species.can_flick_ears(user)
 
 /mob/living/carbon/human/verb/emote_eflick()
-	set name = "Ear Flick"
+	set name = TA_EMOTE_NAME_EAR_FLICK
 	set category = "Emotes"
 
 	emote("eflick", intentional = TRUE)
@@ -206,9 +206,10 @@
 	message = "gulps."
 	emote_type = EMOTE_AUDIBLE
 	show_runechat = TRUE
+	needs_emotion = TRUE
 
 /mob/living/carbon/human/verb/gulp()
-	set name = "Gulp"
+	set name = TA_EMOTE_NAME_GULP
 	set category = "Emotes.Noises"
 
 	emote("gulp", intentional = TRUE)
@@ -221,7 +222,7 @@
 	show_runechat = TRUE
 
 /mob/living/carbon/human/verb/crack()
-	set name = "Knuckles"
+	set name = TA_EMOTE_NAME_KNUCKLES
 	set category = "Emotes.Noises"
 
 	emote("crack", intentional = TRUE)
@@ -230,18 +231,18 @@
 	key = "facepalm"
 	key_third_person = "facepalms"
 	message = "facepalms."
-	emote_type =  EMOTE_AUDIBLE
+	emote_type =	EMOTE_AUDIBLE
 	show_runechat = TRUE
 
 /mob/living/carbon/human/verb/facepalm()
-	set name = "Facepalm"
+	set name = TA_EMOTE_NAME_FACEPALM
 	set category = "Emotes.Noises"
 
 	emote("facepalms", intentional = TRUE)
 
 
 /mob/living/carbon/human/verb/hand_games()
-	set name = "Игры руками"
+	set name = TA_EMOTE_NAME_HAND_GAMES
 	set desc = "Challenge another to a variety of handgames, which can either be done while standing next to each other or while across a table."
 	set category = "Emotes"
 
@@ -274,8 +275,11 @@
 	if(!nearby.len)
 		to_chat(src, span_warning("There is nobody nearby to play handgames with!"))
 
-	var/partner = tgui_input_list(src, "Who will you challenge with a handgame?", "FRIEND TO FOE.", nearby)
+	var/mob/living/carbon/human/partner = tgui_input_list(src, "Who will you challenge with a handgame?", "FRIEND TO FOE.", nearby)
 	if(!partner)
+		return
+	if(partner.cmode) //hand_games_check keeps watching for this, but say it out loud the first time.
+		to_chat(src, span_warning("[partner] is too tense for games!"))
 		return
 	var/choose_game = tgui_alert(src, "Choose a handgame to play with [partner]?", "A TOURNAMENT FOR TWO.", list("Rock, Paper, Shears", "Armwrestling", "Slaphands", "Thumbwars", "I Rescind"))
 
@@ -296,10 +300,12 @@
 
 // Checks to make sure everything is fine to continue playing.
 
-/mob/living/carbon/human/proc/hand_games_check(var/mob/living/carbon/human/player1, var/mob/living/carbon/human/player2)
+/mob/living/carbon/human/proc/hand_games_check(mob/living/carbon/human/player1, mob/living/carbon/human/player2)
 	if(!istype(player1) || !istype(player2))
 		return 0
 	if(player1.stat || player2.stat) //Make sure they're still standing.
+		return 0
+	if(player2.cmode)
 		return 0
 	if(!(player2 in range(player1,2))) //Make sure they're within two spaces still; should allow for cross-table gaming.
 		return 0
@@ -308,7 +314,7 @@
 
 ///// A simple game of Rock Paper Scissors, each player chooses an option and the choices are declared simultaneously.
 
-/mob/living/carbon/human/proc/game_rps(var/mob/living/carbon/human/player1, var/mob/living/carbon/human/player2)
+/mob/living/carbon/human/proc/game_rps(mob/living/carbon/human/player1, mob/living/carbon/human/player2)
 	if(!hand_games_check(player1,player2))
 		return
 	to_chat(player1, span_notice("Asking [player2] if they want to play Rock, Paper, Shears!"))
@@ -338,7 +344,7 @@
 
 /////// Armwrestling! Each player gets a modifier based on their size and can choose the strength of their character, then a weighted roll is made.
 
-/mob/living/carbon/human/proc/game_armwrestle(var/mob/living/carbon/human/player1, var/mob/living/carbon/human/player2)
+/mob/living/carbon/human/proc/game_armwrestle(mob/living/carbon/human/player1, mob/living/carbon/human/player2)
 	if(!hand_games_check(player1,player2))
 		return
 	to_chat(player1, span_notice("Asking [player2] if they want to play Armwrestling!"))
@@ -417,7 +423,7 @@
 
 /////// Slaphands! Each player gets a modifier based on their size and can choose the reaction time of their character, then a weighted roll is made. This one gives the advantage to smaller players.
 
-/mob/living/carbon/human/proc/game_slaphands(var/mob/living/carbon/human/player1, var/mob/living/carbon/human/player2)
+/mob/living/carbon/human/proc/game_slaphands(mob/living/carbon/human/player1, mob/living/carbon/human/player2)
 	if(!hand_games_check(player1,player2))
 		return
 	to_chat(player1, span_notice("Asking [player2] if they want to play Slaphands!"))
@@ -453,7 +459,7 @@
 
 ///// Thumbwars! This one is pure chance, and - in a pinch - can essentially work like a cointoss.
 
-/mob/living/carbon/human/proc/game_thumbwars(var/mob/living/carbon/human/player1, var/mob/living/carbon/human/player2)
+/mob/living/carbon/human/proc/game_thumbwars(mob/living/carbon/human/player1, mob/living/carbon/human/player2)
 	if(!hand_games_check(player1,player2))
 		return
 	to_chat(player1, span_notice("Asking [player2] if they want to play Thumbwars!"))
@@ -471,6 +477,8 @@
 		if(!hand_games_check(player1,player2))
 			return
 		if(prob(50))
-			player1.visible_message(span_notice("After a gruelling battle, [player1] eventually manages to subdue the thumb of [player2]!"))
+			player1.visible_message(span_notice("After a grueling battle, [player1] eventually manages to subdue the thumb of [player2]!"))
 		else
-			player2.visible_message(span_notice("After a gruelling battle, [player2] eventually manages to subdue the thumb of [player1]!"))
+			player2.visible_message(span_notice("After a grueling battle, [player2] eventually manages to subdue the thumb of [player1]!"))
+
+

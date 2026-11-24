@@ -9,7 +9,8 @@ GLOBAL_LIST_INIT(huds, alist(
 	ANTAG_HUD_REV = new/datum/atom_hud/antag(),
 	ANTAG_HUD_VAMPIRE = new/datum/atom_hud/antag(),
 	ANTAG_HUD_ZOMBIE = new/datum/atom_hud/antag(),
-	ANTAG_HUD_ZIZOID = new/datum/atom_hud/antag()
+	ANTAG_HUD_ZIZOID = new/datum/atom_hud/antag(),
+	ANTAG_HUD_WEREWOLF = new/datum/atom_hud/antag() // TA EDIT
 	))
 
 /datum/atom_hud
@@ -19,7 +20,7 @@ GLOBAL_LIST_INIT(huds, alist(
 
 	var/list/next_time_allowed = list() //mobs associated with the next time this hud can be added to them
 	var/list/queued_to_see = list() //mobs that have triggered the cooldown and are queued to see the hud, but do not yet
-	var/hud_exceptions = list() // huduser = list(ofatomswiththeirhudhidden) - aka everyone hates targeted invisiblity
+	var/hud_exceptions = list() // huduser = list(ofatomswiththeirhudhidden) - aka everyone hates targeted invisibility
 
 /datum/atom_hud/New()
 	GLOB.all_huds += src

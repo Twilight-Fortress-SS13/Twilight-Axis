@@ -35,6 +35,12 @@
 	reqs = list(/obj/item/natural/hide/cured = 2,
 				/obj/item/natural/fibers = 1)
 
+/datum/crafting_recipe/roguetown/leather/container/tailsatchel
+	name = "tail satchel"
+	result = /obj/item/storage/backpack/rogue/satchel/tailchel
+	reqs = list(/obj/item/natural/hide/cured = 2,
+				/obj/item/natural/fibers = 1)
+
 /datum/crafting_recipe/roguetown/leather/container/satchel/black
 	name = "black satchel"
 	result = /obj/item/storage/backpack/rogue/satchel/black
@@ -47,7 +53,7 @@
 
 /datum/crafting_recipe/roguetown/leather/container/satchelshort/black
 	name = "short black satchel"
-	result = /obj/item/storage/backpack/rogue/satchel/short
+	result = /obj/item/storage/backpack/rogue/satchel/short/black
 
 /datum/crafting_recipe/roguetown/leather/container/backpack
 	name = "backpack"
@@ -135,7 +141,7 @@
 
 /datum/crafting_recipe/roguetown/leather/container/belt/knifebelt
 	name = "tossblade belt"
-	result = /obj/item/storage/belt/rogue/leather/knifebelt
+	result = /obj/item/storage/belt/rogue/leather/tossbelt/blade
 	reqs = list(/obj/item/natural/hide/cured = 2,
 				/obj/item/natural/fibers = 2)
 
