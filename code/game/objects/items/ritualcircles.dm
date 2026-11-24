@@ -1560,6 +1560,9 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 			var/armor_choice = show_radial_menu(user, src, armor_options, require_near = TRUE, tooltips = TRUE)
 			if(!armor_choice)
 				armor_choice = "Avantyne Full-Plate"
+			var/weapon_choice = ta_select_rite_weapon(user, src, /datum/patron/inhumen/zizo) // TA EDIT START
+			if(!weapon_choice)
+				return // TA EDIT END
 
 			user.say("ZIZO! ZIZO! DAME OF PROGRESS!!")
 			playsound(user, 'sound/misc/carriage4.ogg', 100, FALSE, -1)
@@ -1581,7 +1584,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 				var/is_heretic = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic || /datum/advclass/wretch/heretic/spy || /datum/advclass/gnoll/shaman)
 				if(is_heretic)
 					user.apply_status_effect(/datum/status_effect/debuff/armamentrites)
-				zizoarmaments(target, helm_choice, armor_choice)
+				zizoarmaments(target, helm_choice, armor_choice, weapon_choice) // TA EDIT
 				spawn(115)
 					icon_state = "zizo_chalky"
 
@@ -1660,7 +1663,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	playsound(loc, 'sound/magic/zizo_snuff.ogg', 200, FALSE, -1)
 	loc.visible_message(span_cult("Suddenly a great cloud of cold fog pours out of the rune, engulfing all lights around it!"))
 
-/obj/structure/ritualcircle/zizo/proc/zizoarmaments(mob/living/carbon/human/target, helm_choice, armor_choice)
+/obj/structure/ritualcircle/zizo/proc/zizoarmaments(mob/living/carbon/human/target, helm_choice, armor_choice, weapon_choice) // TA EDIT
 	if(!HAS_TRAIT(target, TRAIT_CABAL))
 		loc.visible_message(span_cult("THE RITE REJECTS ONE NOT OF THE CABAL!!"))
 		return
@@ -1692,6 +1695,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 		playsound(loc, 'sound/combat/hits/onmetal/grille (2).ogg', 50)
 		var/datum/outfit/job/roguetown/darksteelrite/ritual_outfit = new outfit_path()
 		ritual_outfit.selected_helm_path = helm_path
+		ritual_outfit.ta_weapon_choice = weapon_choice // TA EDIT
 		target.equipOutfit(ritual_outfit)
 		tag_kit_items(target, list(
 			"armor" = target.get_item_by_slot(SLOT_ARMOR),
@@ -1730,6 +1734,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	head = selected_helm_path
 	neck = /obj/item/clothing/neck/roguetown/bevor/zizo
 	r_hand = /obj/item/rogueweapon/sword/long/zizo
+	ta_apply_weapon_choice() // TA EDIT
 
 	if(!istype(src, /datum/outfit/job/roguetown/darksteelrite/medium)) // TA EDIT
 		H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
@@ -1748,6 +1753,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	neck = /obj/item/clothing/neck/roguetown/bevor/zizo
 	r_hand = /obj/item/rogueweapon/sword/zizo
 	l_hand = /obj/item/rogueweapon/shield/tower/metal/zizo
+	ta_apply_weapon_choice() // TA EDIT
 
 	H.mind.RemoveSpell(new /datum/action/cooldown/spell/mending/lesser)
 
@@ -2005,6 +2011,9 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 			var/armor_choice = show_radial_menu(user, src, armor_options, require_near = TRUE, tooltips = TRUE)
 			if(!armor_choice)
 				armor_choice = "Vicious Full-Plate"
+			var/weapon_choice = ta_select_rite_weapon(user, src, /datum/patron/inhumen/graggar) // TA EDIT START
+			if(!weapon_choice)
+				return // TA EDIT END
 			user.say("MOTIVE FORCE, O' VIOLENCE!!")
 			if(!do_after(user, 5 SECONDS))
 				return
@@ -2019,7 +2028,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 			var/is_heretic = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic || /datum/advclass/wretch/heretic/spy || /datum/advclass/gnoll/shaman)
 			if(is_heretic)
 				user.apply_status_effect(/datum/status_effect/debuff/armamentrites)
-			graggararmor(target, helm_choice, armor_choice)
+			graggararmor(target, helm_choice, armor_choice, weapon_choice) // TA EDIT
 			spawn(120)
 				icon_state = "graggar_chalky"
 		if("War Ritual")
@@ -2043,7 +2052,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 			spawn(120)
 				icon_state = "graggar_chalky"
 
-/obj/structure/ritualcircle/graggar/proc/graggararmor(mob/living/carbon/human/target, helm_choice, armor_choice)
+/obj/structure/ritualcircle/graggar/proc/graggararmor(mob/living/carbon/human/target, helm_choice, armor_choice, weapon_choice) // TA EDIT
 	if(!HAS_TRAIT(target, TRAIT_HORDE))
 		loc.visible_message(span_cult("THE RITE REJECTS ONE WITHOUT SLAUGHTER IN THEIR HEART!!"))
 		return
@@ -2073,6 +2082,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 		playsound(loc, 'sound/combat/hits/onmetal/grille (2).ogg', 50)
 		var/datum/outfit/job/roguetown/viciousrite/ritual_outfit = new outfit_path()
 		ritual_outfit.selected_helm_path = helm_path
+		ritual_outfit.ta_weapon_choice = weapon_choice // TA EDIT
 		target.equipOutfit(ritual_outfit)
 		tag_kit_items(target, list(
 			"armor" = target.get_item_by_slot(SLOT_ARMOR),
@@ -2155,6 +2165,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	neck = /obj/item/clothing/neck/roguetown/gorget/steel/graggar
 	cloak = /obj/item/clothing/cloak/graggar
 	r_hand = /obj/item/rogueweapon/greataxe/steel/doublehead/graggar
+	ta_apply_weapon_choice() // TA EDIT
 
 	H.mind.RemoveSpell(new /datum/action/cooldown/spell/mending/lesser)
 
@@ -2172,6 +2183,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	cloak = /obj/item/clothing/cloak/graggar/heavy
 	r_hand = /obj/item/rogueweapon/stoneaxe/woodcut/steel/graggar
 	l_hand = /obj/item/rogueweapon/shield/iron/graggar
+	ta_apply_weapon_choice() // TA EDIT
 
 	H.mind.AddSpell(new /datum/action/cooldown/spell/mending) // TA EDIT
 	ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL) // TA EDIT

@@ -320,10 +320,12 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	icon_state = "Zaxe"
 	name = "cursed battle axe"
 	desc = "An axe for battles, which was maden by cursed steel."
+	force = 28
+	force_wielded = 32
 	wdefense = 5
-	max_blade_int = 350
+	max_blade_int = 400
 	max_integrity = 300
-	possible_item_intents = list(/datum/intent/axe/cut, /datum/intent/axe/chop)
+	possible_item_intents = list(/datum/intent/axe/cut/cult, /datum/intent/axe/chop/cult, /datum/intent/axe/bash/battle)
 	gripped_intents = list(/datum/intent/axe/cut/cult, /datum/intent/axe/chop/cult, /datum/intent/axe/chop/heavy, /datum/intent/axe/bash/battle)
 	smeltresult = /obj/item/ingot/steel/zizo
 
@@ -385,7 +387,15 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)
 
 /obj/item/rogueweapon/spear/zizo
+	name = "cursed spear"
+	desc = "A polearm reforged with cursed steel in the name of Zizo."
+	force = 25
+	force_wielded = 35
+	wdefense = 6
+	max_blade_int = 350
+	smeltresult = /obj/item/ingot/steel/zizo
 	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone_twoh.dmi'
+	special = /datum/special_intent/zizo_soul_piercer
 	icon_state = "Zspear"
 
 /obj/item/rogueweapon/spear/zizo/Initialize(mapload, ...)
@@ -417,7 +427,15 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_WEAPON)
 
 /obj/item/rogueweapon/halberd/glaive/zizo
+	name = "cursed glaive"
+	desc = "A polearm reforged with cursed steel in the name of Zizo."
+	force = 20
+	force_wielded = 35
+	wdefense = 7
+	max_blade_int = 400
+	smeltresult = /obj/item/ingot/steel/zizo
 	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone_twoh.dmi'
+	special = /datum/special_intent/zizo_reaping_crescent
 	icon_state = "Zglaive"
 
 /obj/item/rogueweapon/halberd/glaive/zizo/Initialize(mapload, ...)
@@ -426,6 +444,91 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 
 /obj/item/rogueweapon/halberd/glaive/zizo/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_WEAPON)
+
+/datum/special_intent/zizo_soul_piercer
+	name = "Soul Piercer"
+	desc = "Thrusts through three tiles directly ahead while retreating one tile. Slows struck targets for two seconds. Can be used with one or both hands. Aims for the targeted zone."
+	tile_coordinates = list(list(0,0), list(0,1), list(0,2))
+	post_icon_state = "stab"
+	sfx_pre_delay = 'sound/combat/polearm_woosh.ogg'
+	sfx_post_delay = 'sound/combat/parry/bladed/bladedsmall (3).ogg'
+	respect_adjacency = FALSE
+	delay = 0.5 SECONDS
+	cooldown = 45 SECONDS
+	stamcost = 15
+	var/dam
+
+/datum/special_intent/zizo_soul_piercer/npc_use_chance(mob/living/user, atom/target)
+	return npc_line_chance(user, 3)
+
+/datum/special_intent/zizo_soul_piercer/process_attack()
+	var/obj/item/rogueweapon/W = iparent
+	dam = W.force_dynamic * (W.wielded ? 1 : 1.6) * max(howner.STASTR / 10, 0.5)
+	. = ..()
+	var/turf/retreat = get_step(get_turf(howner), turn(howner.dir, 180))
+	if(retreat && !retreat.density)
+		howner.safe_throw_at(retreat, 1, 1, howner, force = MOVE_FORCE_EXTREMELY_STRONG)
+
+/datum/special_intent/zizo_soul_piercer/post_delay(list/turfs)
+	if(QDELETED(howner) || QDELETED(iparent) || howner.get_active_held_item() != iparent)
+		return
+	var/list/visible_turfs = view(4, howner)
+	. = ..(turfs & visible_turfs)
+
+/datum/special_intent/zizo_soul_piercer/apply_hit(turf/T)
+	for(var/mob/living/L in T)
+		if(L == howner)
+			continue
+		apply_generic_weapon_damage(L, dam, "stab", get_aimed_zone(L), bclass = BCLASS_STAB, no_pen = TRUE)
+		if(!QDELETED(L))
+			L.apply_slowdown(2 SECONDS)
+	..()
+
+/datum/special_intent/zizo_reaping_crescent
+	name = "Reaping Crescent"
+	desc = "Sweeps a wide arc up to two tiles ahead and to the sides, cutting foes and pushing them back one tile. Requires a two-handed grip. Aims for the targeted zone."
+	tile_coordinates = list(list(-1,-1), list(1,-1), list(-2,0), list(-1,0), list(0,0), list(1,0), list(2,0), list(-1,1), list(0,1), list(1,1))
+	post_icon_state = "sweep_fx"
+	sfx_pre_delay = 'sound/combat/polearm_woosh.ogg'
+	sfx_post_delay = 'sound/combat/sp_gsword_hit.ogg'
+	requires_wielding = TRUE
+	delay = 0.6 SECONDS
+	cooldown = 60 SECONDS
+	stamcost = 20
+	var/dam
+	var/list/hit_targets
+
+/datum/special_intent/zizo_reaping_crescent/npc_use_chance(mob/living/user, atom/target)
+	return npc_front_chance(user)
+
+/datum/special_intent/zizo_reaping_crescent/process_attack()
+	var/obj/item/rogueweapon/W = iparent
+	dam = W.force_dynamic * 1.2 * 0.8 * max(howner.STASTR / 10, 0.5)
+	. = ..()
+
+/datum/special_intent/zizo_reaping_crescent/post_delay(list/turfs)
+	var/obj/item/rogueweapon/W = iparent
+	if(QDELETED(howner) || QDELETED(W) || howner.get_active_held_item() != W || !W.wielded)
+		return
+	var/list/visible_turfs = view(2, howner)
+	hit_targets = list()
+	. = ..(turfs & visible_turfs)
+	hit_targets = null
+
+/datum/special_intent/zizo_reaping_crescent/apply_hit(turf/T)
+	for(var/mob/living/L in T)
+		if(L == howner || (L in hit_targets))
+			continue
+		hit_targets += L
+		apply_generic_weapon_damage(L, dam, "slash", get_aimed_zone(L), bclass = BCLASS_CUT, no_pen = TRUE)
+		if(QDELETED(L))
+			continue
+		var/throwdir = get_dir(howner, L)
+		if(throwdir)
+			var/turf/throwtarget = get_ranged_target_turf(get_turf(L), throwdir, 1)
+			if(throwtarget)
+				L.safe_throw_at(throwtarget, 1, 1, howner, force = MOVE_FORCE_EXTREMELY_STRONG)
+	..()
 
 /obj/item/ingot/steel/zizo
 	name = "cursed ancient ingot"
@@ -673,3 +776,214 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 				var/image/I = image('modular_twilight_axis/icons/mob/hud.dmi', src, "")
 				I.appearance_flags = RESET_COLOR|RESET_TRANSFORM
 				hud_list[hud] = I
+
+/obj/item/clothing/suit/roguetown/armor/brigandine/heavy/cult
+	name = "cursed coat of plates"
+	desc = "Armor reforged with cursed steel in the name of Zizo."
+	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zheavyicon.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zheavyonmob.dmi'
+	icon_state = "zcoatofplates"
+	item_state = "zcoatofplates"
+	max_integrity = 600
+	armor = list("blunt" = DR_HEAVY, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_HEAVY, "fire" = DR_NONE, "bullet" = DR_HEAVY)
+	smeltresult = /obj/item/ingot/steel/zizo
+	sellprice = 0
+	sleeved = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zheavysleeves.dmi'
+	boobed = FALSE
+	boobed_detail = FALSE
+	sleeved_detail = FALSE
+	allowed_sex = list(MALE, FEMALE)
+
+/obj/item/clothing/suit/roguetown/armor/brigandine/heavy/cult/Initialize(mapload, ...)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")
+
+/obj/item/clothing/suit/roguetown/armor/brigandine/heavy/cult/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)
+
+/obj/item/clothing/suit/roguetown/armor/brigandine/heavy/cult/attack_right(mob/user)
+	return
+
+/obj/item/clothing/suit/roguetown/armor/brigandine/cult
+	name = "cursed brigandine"
+	desc = "Armor reforged with cursed steel in the name of Zizo."
+	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zmediumicons.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zmediumonmob.dmi'
+	icon_state = "zbrigantine"
+	item_state = "zbrigantine"
+	max_integrity = 450
+	armor = list("blunt" = DR_HEAVY, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_HEAVY, "fire" = DR_NONE, "bullet" = DR_HEAVY)
+	smeltresult = /obj/item/ingot/steel/zizo
+	sellprice = 0
+	sleeved = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zmediumsleeves.dmi'
+	boobed = FALSE
+	boobed_detail = FALSE
+	sleeved_detail = FALSE
+	allowed_sex = list(MALE, FEMALE)
+
+/obj/item/clothing/suit/roguetown/armor/brigandine/cult/Initialize(mapload, ...)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")
+
+/obj/item/clothing/suit/roguetown/armor/brigandine/cult/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)
+
+/obj/item/clothing/suit/roguetown/armor/brigandine/cult/attack_right(mob/user)
+	return
+
+/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/cult
+	name = "cursed hauberk"
+	desc = "Armor reforged with cursed steel in the name of Zizo."
+	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zmediumicons.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zmediumonmob.dmi'
+	icon_state = "zhauberk"
+	item_state = "zhauberk"
+	max_integrity = 400
+	armor = list("blunt" = DR_HEAVY, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_MEDIUM, "fire" = DR_NONE, "bullet" = DR_MEDIUM)
+	smeltresult = /obj/item/ingot/steel/zizo
+	sellprice = 0
+	sleeved = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zmediumsleeves.dmi'
+	boobed = FALSE
+	boobed_detail = FALSE
+	sleeved_detail = FALSE
+	allowed_sex = list(MALE, FEMALE)
+
+/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/cult/Initialize(mapload, ...)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")
+
+/obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/cult/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)
+
+/obj/item/clothing/under/roguetown/chainlegs/cult
+	name = "cursed chain chausses"
+	desc = "Armor reforged with cursed steel in the name of Zizo."
+	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zmediumicons.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zmediumonmob.dmi'
+	icon_state = "zpants"
+	item_state = "zpants"
+	max_integrity = 400
+	armor = list("blunt" = DR_HEAVY, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_MEDIUM, "fire" = DR_NONE, "bullet" = DR_MEDIUM)
+	smeltresult = /obj/item/ingot/steel/zizo
+	sellprice = 0
+	sleeved = null
+
+/obj/item/clothing/under/roguetown/chainlegs/cult/Initialize(mapload, ...)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")
+
+/obj/item/clothing/under/roguetown/chainlegs/cult/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)
+
+/obj/item/clothing/suit/roguetown/armor/brigandine/light/cult
+	name = "cursed lightweight brigandine"
+	desc = "Armor reforged with cursed steel in the name of Zizo."
+	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zlighticon.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zlightonmob.dmi'
+	icon_state = "zlbrigantine"
+	item_state = "zlbrigantine"
+	max_integrity = 325
+	armor = list("blunt" = DR_HEAVY, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_HEAVY, "fire" = DR_NONE, "bullet" = DR_HEAVY)
+	smeltresult = /obj/item/ingot/steel/zizo
+	sellprice = 0
+	sleeved = null
+	boobed = TRUE
+	boobed_detail = FALSE
+	sleeved_detail = FALSE
+	allowed_sex = list(MALE, FEMALE)
+
+/obj/item/clothing/suit/roguetown/armor/brigandine/light/cult/Initialize(mapload, ...)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")
+
+/obj/item/clothing/suit/roguetown/armor/brigandine/light/cult/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)
+
+/obj/item/clothing/suit/roguetown/armor/brigandine/light/cult/attack_right(mob/user)
+	return
+
+/obj/item/clothing/suit/roguetown/armor/chainmail/besilked/cult
+	name = "cursed besilked haubergeon"
+	desc = "Armor reforged with cursed steel in the name of Zizo."
+	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zlighticon.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zlightonmob.dmi'
+	icon_state = "zhaubergeon"
+	item_state = "zhaubergeon"
+	max_integrity = 400
+	armor = list("blunt" = DR_MEDIUM, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_MEDIUM, "fire" = DR_NONE, "bullet" = DR_MEDIUM)
+	smeltresult = /obj/item/ingot/steel/zizo
+	sellprice = 0
+	sleeved = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zlightsleeves.dmi'
+	boobed = TRUE
+	boobed_detail = FALSE
+	sleeved_detail = FALSE
+	allowed_sex = list(MALE, FEMALE)
+
+/obj/item/clothing/suit/roguetown/armor/chainmail/besilked/cult/Initialize(mapload, ...)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")
+
+/obj/item/clothing/suit/roguetown/armor/chainmail/besilked/cult/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)
+
+/obj/item/clothing/under/roguetown/brigandinelegs/cult
+	name = "cursed brigandine chausses"
+	desc = "Armor reforged with cursed steel in the name of Zizo."
+	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zlighticon.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zlightonmob.dmi'
+	icon_state = "zbpants"
+	item_state = "zbpants"
+	max_integrity = 325
+	armor = list("blunt" = DR_HEAVY, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_HEAVY, "fire" = DR_NONE, "bullet" = DR_HEAVY)
+	smeltresult = /obj/item/ingot/steel/zizo
+	sellprice = 0
+	sleeved = null
+
+/obj/item/clothing/under/roguetown/brigandinelegs/cult/Initialize(mapload, ...)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")
+
+/obj/item/clothing/under/roguetown/brigandinelegs/cult/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)
+
+/obj/item/clothing/neck/roguetown/gorget/steel/cult
+	name = "cursed gorget"
+	desc = "Armor reforged with cursed steel in the name of Zizo."
+	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zlighticon.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zlightonmob.dmi'
+	icon_state = "zgorget"
+	item_state = "zgorget"
+	max_integrity = 450
+	armor = list("blunt" = DR_MEDIUM, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_HEAVY, "fire" = DR_NONE, "bullet" = DR_HEAVY)
+	smeltresult = /obj/item/ingot/steel/zizo
+	sellprice = 0
+
+/obj/item/clothing/neck/roguetown/gorget/steel/cult/Initialize(mapload, ...)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")
+
+/obj/item/clothing/neck/roguetown/gorget/steel/cult/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)
+
+/obj/item/clothing/neck/roguetown/chaincoif/cult
+	name = "cursed chain coif"
+	desc = "Armor reforged with cursed steel in the name of Zizo."
+	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zlighticon.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zlightonmob.dmi'
+	icon_state = "zcoif"
+	item_state = "zcoif"
+	max_integrity = 400
+	armor = list("blunt" = DR_MEDIUM, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_MEDIUM, "fire" = DR_NONE, "bullet" = DR_MEDIUM)
+	smeltresult = /obj/item/ingot/steel/zizo
+	sellprice = 0
+	body_parts_covered = NECK|MOUTH|NOSE|HAIR|EARS|HEAD
+	flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR|HIDESNOUT
+	equip_delay_self = 6 SECONDS
+	unequip_delay_self = 6 SECONDS
+
+/obj/item/clothing/neck/roguetown/chaincoif/cult/Initialize(mapload, ...)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "ARMOR")
+
+/obj/item/clothing/neck/roguetown/chaincoif/cult/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)
