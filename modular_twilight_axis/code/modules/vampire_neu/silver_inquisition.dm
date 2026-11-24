@@ -143,6 +143,30 @@ SUBSYSTEM_DEF(ta_silver_inquisition)
 		return
 	return ..()
 
+/datum/controller/subsystem/migrants
+	var/list/ta_cooldown_exempt = list()
+
+/datum/controller/subsystem/migrants/get_respawn_cooldown_remaining(client/player)
+	if(player && ta_cooldown_exempt[player.ckey])
+		return 0
+	return ..()
+
+/datum/controller/subsystem/migrants/can_be_role(client/player, role_type)
+	if(!player || !ispath(role_type, /datum/migrant_role/silver_inquisitor))
+		return ..()
+	var/player_ckey = player.ckey
+	ta_cooldown_exempt[player_ckey]++
+	. = ..()
+	ta_cooldown_exempt[player_ckey]--
+
+/datum/migrant_pref/queue_for(wave_type, role_type)
+	if(!prefs.parent || wave_type != /datum/migrant_wave/silver_inquisition)
+		return ..()
+	var/player_ckey = prefs.parent.ckey
+	SSmigrants.ta_cooldown_exempt[player_ckey]++
+	. = ..()
+	SSmigrants.ta_cooldown_exempt[player_ckey]--
+
 /mob/living/proc/ta_note_attacker(mob/living/attacker)
 	lastattacker = attacker.real_name
 	lastattackerckey = attacker.ckey
