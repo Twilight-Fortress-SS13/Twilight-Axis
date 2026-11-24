@@ -309,7 +309,13 @@
 		/datum/pollutant/smoke/health,
 		/datum/pollutant/smoke/mana,
 		/datum/pollutant/smoke/stam,
-		/datum/pollutant/smoke/restoration,
+		/datum/pollutant/smoke/fortune,
+		/datum/pollutant/smoke/strength,
+		/datum/pollutant/smoke/perception,
+		/datum/pollutant/smoke/endurance,
+		/datum/pollutant/smoke/speed,
+		/datum/pollutant/smoke/constitution,
+		/datum/pollutant/smoke/intelligence,
 	)
 
 /datum/status_effect/buff/hag_boon/pleasent_cloud/tick()
@@ -333,6 +339,30 @@
 	reagent = /datum/reagent/medicine/strongstam
 	reagent_count = 20
 
-/datum/pollutant/smoke/restoration
-	reagent = /datum/reagent/medicine/restoration
+/datum/pollutant/smoke/fortune
+	reagent = /datum/reagent/buff/fortune
+	reagent_count = 20
+
+/datum/pollutant/smoke/strength
+	reagent = /datum/reagent/buff/strength
+	reagent_count = 20
+
+/datum/pollutant/smoke/intelligence
+	reagent = /datum/reagent/buff/intelligence
+	reagent_count = 20
+
+/datum/pollutant/smoke/perception
+	reagent = /datum/reagent/buff/perception
+	reagent_count = 20
+
+/datum/pollutant/smoke/endurance
+	reagent = /datum/reagent/buff/endurance
+	reagent_count = 20
+
+/datum/pollutant/smoke/constitution
+	reagent = /datum/reagent/buff/constitution
+	reagent_count = 20
+
+/datum/pollutant/smoke/speed
+	reagent = /datum/reagent/buff/speed
 	reagent_count = 20
