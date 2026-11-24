@@ -9,6 +9,7 @@
 #define VL_AUTO_KNIGHT_SLOTS 1
 #define VL_AUTO_SERVANT_SLOTS 2
 #define VL_AUTO_CHANCE 25
+#define VL_AUTO_INTENSITY_POOLS list(GAMEMODE_POOL_EXTENDED, GAMEMODE_POOL_NOANTAG, GAMEMODE_POOL_GUARANTEED)
 #define VL_AUTO_ROLL_DELAY (2 SECONDS)
 #define VL_WARD_TICK (5 SECONDS)
 #define VL_WARD_ESCALATE_AFTER (20 SECONDS)
@@ -24,7 +25,6 @@ GLOBAL_VAR_INIT(ta_vampire_lord_auto_event, FALSE)
 GLOBAL_VAR_INIT(ta_vampire_lord_taken, FALSE)
 GLOBAL_VAR_INIT(ta_vampire_knights_taken, 0)
 GLOBAL_VAR_INIT(ta_vampire_servants_taken, 0)
-GLOBAL_VAR_INIT(ta_vampire_wretch_slots_refunded, FALSE)
 GLOBAL_VAR_INIT(ta_storyteller_vampire_lord, FALSE)
 GLOBAL_VAR_INIT(ta_vampire_lord_ascension_locked, FALSE)
 
@@ -60,8 +60,8 @@ SUBSYSTEM_DEF(ta_vampire_lord_expansion)
 	if(SSgamemode.halted_storyteller || SSgamemode.current_storyteller?.disable_distribution)
 		log_storyteller("Vampire Lord Expansion auto-event skipped: storyteller distribution is halted.")
 		return
-	if(SSgamemode.storyteller_is(/datum/storyteller/gamemode/no_antag/small_wretch, TRUE))
-		log_storyteller("Vampire Lord Expansion auto-event skipped: Low Intensity is active.")
+	if(!ta_vampire_lord_intensity_allowed())
+		log_storyteller("Vampire Lord Expansion auto-event skipped: the round is below Low Intensity.")
 		return
 	if(istype(SSgamemode.current_roundstart_event, /datum/round_event_control/antagonist/solo/vampires))
 		log_storyteller("Vampire Lord Expansion auto-event skipped: the storyteller already rolled the Vampire Lord.")
@@ -79,6 +79,13 @@ SUBSYSTEM_DEF(ta_vampire_lord_expansion)
 
 /proc/ta_vampire_lord_expansion_allowed()
 	return SSmapping.config?.map_name == VL_MAP_NAME
+
+/proc/ta_vampire_lord_intensity_allowed()
+	var/datum/storyteller/storyteller = SSgamemode.get_storyteller(TRUE)
+	return storyteller?.preset_pool in VL_AUTO_INTENSITY_POOLS
+
+/proc/ta_vampire_lord_expansion_active()
+	return (GLOB.ta_vampire_lord_expansion || GLOB.ta_vampire_lord_taken) && !ta_vampire_lord_ascension()
 
 /proc/ta_vampire_lord_ascension()
 	return GLOB.ta_storyteller_vampire_lord
@@ -317,48 +324,6 @@ GLOBAL_LIST_INIT(ta_astrata_extra_wards, typecacheof(list(
 		ta_vampire_lord_expansion_open_retinue()
 	ta_refresh_vampire_zone_watches()
 
-/proc/ta_vampire_lord_is_sole_major_antag()
-	var/found_lord = FALSE
-	for(var/datum/antagonist/antag as anything in GLOB.antagonists)
-		if(QDELETED(antag) || QDELETED(antag.owner))
-			continue
-		if(istype(antag, /datum/antagonist/vampire/lord))
-			found_lord = TRUE
-			continue
-		if(istype(antag, /datum/antagonist/lich) || istype(antag, /datum/antagonist/bandit))
-			return FALSE
-	return found_lord
-
-/proc/ta_vampire_lord_blocked_wretch_slots()
-	if(!GLOB.ta_vampire_lord_taken || ta_vampire_lord_ascension())
-		return 0
-	if(!ta_vampire_lord_is_sole_major_antag())
-		return 0
-	var/list/scaling = calculate_wretch_scaling()
-	if(!scaling["major_antag_active"])
-		return 0
-	var/cap = scaling["cap"]
-	var/tier1 = scaling["tier1_slots"]
-	if(tier1 < 10 || cap <= 10)
-		return 0
-	return min(max(0, scaling["combat_total"] - 10), 5, cap - tier1)
-
-/proc/ta_restore_stolen_wretch_slots()
-	if(GLOB.ta_vampire_wretch_slots_refunded)
-		return
-	var/datum/job/wretch_job = SSjob.GetJob("Wretch")
-	if(!wretch_job || wretch_job.admin_slot_override)
-		return
-	var/refund = ta_vampire_lord_blocked_wretch_slots()
-	if(refund <= 0)
-		return
-	GLOB.ta_vampire_wretch_slots_refunded = TRUE
-	var/list/scaling = calculate_wretch_scaling()
-	wretch_job.total_positions = max(wretch_job.current_positions, max(0, scaling["final_slots"]) + refund)
-	wretch_job.spawn_positions = wretch_job.total_positions
-	wretch_job.admin_slot_override = TRUE
-	log_game("Vampire Lord Expansion: returned [refund] Wretch slot(s) blocked by the expansion lord (now [wretch_job.total_positions]).")
-
 /proc/ta_vampire_lord_expansion_open_retinue()
 	if(!GLOB.ta_vampire_lord_expansion || !GLOB.ta_vampire_lord_taken)
 		return
@@ -372,7 +337,6 @@ GLOBAL_LIST_INIT(ta_astrata_extra_wards, typecacheof(list(
 	if(servant_job)
 		servant_job.total_positions = servant_job.current_positions + max(0, servant_limit - GLOB.ta_vampire_servants_taken)
 		servant_job.min_pq = VL_SERVANT_PQ
-	ta_restore_stolen_wretch_slots()
 
 /proc/ta_vampire_lord_expansion_close_retinue()
 	var/datum/job/knight_job = SSjob.GetJob("Vampire Guard")
@@ -530,6 +494,7 @@ GLOBAL_LIST_INIT(ta_astrata_extra_wards, typecacheof(list(
 #undef VL_AUTO_KNIGHT_SLOTS
 #undef VL_AUTO_SERVANT_SLOTS
 #undef VL_AUTO_CHANCE
+#undef VL_AUTO_INTENSITY_POOLS
 #undef VL_AUTO_ROLL_DELAY
 #undef VL_WARD_TICK
 #undef VL_WARD_ESCALATE_AFTER

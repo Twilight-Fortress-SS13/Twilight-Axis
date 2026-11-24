@@ -581,7 +581,10 @@
 	addtimer(CALLBACK(target, TYPE_PROC_REF(/mob/living/carbon/human, load_char_or_namechoice)), 3 SECONDS)
 	SSjob.EquipRank(target, role_type, TRUE)
 	var/servant_generation = (role_type == "Vampire Spawn") ? GENERATION_ANCILLAE : GENERATION_NEONATE
-	target.mind.add_antag_datum(new /datum/antagonist/vampire(incoming_clan = initiator_clan, forced_clan = TRUE, generation = servant_generation))
+	var/datum/antagonist/vampire/servant_antag = new /datum/antagonist/vampire(incoming_clan = initiator_clan, forced_clan = TRUE, generation = servant_generation)
+	if(ta_vampire_lord_expansion_active())
+		servant_antag.antag_flags |= FLAG_ANTAG_CAP_IGNORE
+	target.mind.add_antag_datum(servant_antag)
 	if(servant_generation == GENERATION_NEONATE)
 		ADD_TRAIT(target, TRAIT_NOVAMPMITOSIS, TRAIT_GENERIC)
 	ADD_TRAIT(target, TRAIT_QUICKSILVERRESISTANT, TRAIT_GENERIC)

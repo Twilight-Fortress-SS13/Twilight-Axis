@@ -1,5 +1,6 @@
 #define TA_DEATH_GIFT_DARKSIGHT_SEE_IN_DARK 15
 #define TA_DEATH_GIFT_DARKSIGHT_LIGHTING_ALPHA LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
+#define TA_DEATH_GIFT_CHOICE_TIME (2 MINUTES)
 #define TA_DEATH_GIFT_BERSERK_DURATION (1 MINUTES)
 #define TA_DEATH_GIFT_TIRED_DURATION (10 MINUTES)
 #define TA_DEATH_GIFT_BERSERK_SLEEP_DURATION (3 MINUTES)
@@ -143,7 +144,7 @@
 	return TRUE
 
 /mob/living/carbon/human/proc/ta_offer_death_gift(mob/living/carbon/human/sire, datum/antagonist/vampire/VDrinker)
-	if(QDELETED(src) || !mind || !istype(VDrinker) || !VDrinker.ta_can_offer_death_gift())
+	if(QDELETED(src) || !mind || QDELETED(VDrinker) || !VDrinker.ta_can_offer_death_gift())
 		return FALSE
 
 	var/list/available_gifts = list()
@@ -164,22 +165,27 @@
 	)
 
 	var/use_byond_alert = stat != CONSCIOUS || InCritical()
+	var/offer_expires = world.time + TA_DEATH_GIFT_CHOICE_TIME
 	var/list/options = available_gifts.Copy()
 	var/choice = ta_tgui_tooltip_alert(
 		src,
 		"Темное создание иссушило вашу душу и тело, но ваша воля позволила вам преодолеть его проклятье.\n\nВыберите темный дар, который вы похитите.",
 		"ДАР СМЕРТИ",
 		options,
-		2 MINUTES,
+		TA_DEATH_GIFT_CHOICE_TIME,
 		strict_byond = use_byond_alert,
 		ui_state = GLOB.tgui_always_state,
 		button_tooltips = death_gift_descriptions
 	)
 
-	if(QDELETED(src) || !mind || !istype(VDrinker) || !VDrinker.ta_can_offer_death_gift())
+	if(QDELETED(src) || !mind || stat == DEAD || QDELETED(VDrinker) || !VDrinker.ta_can_offer_death_gift())
 		return FALSE
 
 	if(!choice || !(choice in options))
+		return FALSE
+
+	if(world.time > offer_expires || !GetComponent(/datum/component/pallid_addiction))
+		to_chat(src, span_warning("Темный дар уже ускользнул от меня."))
 		return FALSE
 
 	if(!ta_apply_death_gift(choice, sire))
@@ -829,6 +835,7 @@
 
 #undef TA_DEATH_GIFT_DARKSIGHT_SEE_IN_DARK
 #undef TA_DEATH_GIFT_DARKSIGHT_LIGHTING_ALPHA
+#undef TA_DEATH_GIFT_CHOICE_TIME
 #undef TA_DEATH_GIFT_BERSERK_DURATION
 #undef TA_DEATH_GIFT_TIRED_DURATION
 #undef TA_DEATH_GIFT_BERSERK_SLEEP_DURATION

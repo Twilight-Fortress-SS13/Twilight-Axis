@@ -88,3 +88,96 @@
 
 /obj/item/clothing/neck/roguetown/chaincoif/chainmantle/bloodraider/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)
+
+/obj/item/clothing/neck/roguetown/psicross/silver/dendor
+	name = "silver amulet of Dendor"
+	desc = "The wilds know no undeath. What lies down must feed the roots."
+	icon_state = "dendor"
+	item_state = "dendor"
+
+/obj/item/clothing/neck/roguetown/psicross/silver/abyssor
+	name = "silver amulet of Abyssor"
+	desc = "Even the deep gives back its drowned. It does not let them walk."
+	icon_state = "abyssor"
+	item_state = "abyssor"
+
+/obj/item/clothing/neck/roguetown/psicross/silver/ravox
+	name = "silver amulet of Ravox"
+	desc = "The blood of the innocent calls for a verdict, and the verdict is silver."
+	icon_state = "ravox"
+	item_state = "ravox"
+
+/obj/item/clothing/neck/roguetown/psicross/silver/xylix
+	name = "silver amulet of Xylix"
+	desc = "The joke is old, the punchline is silver."
+	icon_state = "xylix"
+	item_state = "xylix"
+
+/obj/item/clothing/neck/roguetown/psicross/silver/pestra
+	name = "silver amulet of Pestra"
+	desc = "Vampirism is a disease. Every disease has its cure."
+	icon_state = "pestra"
+	item_state = "pestra"
+
+/obj/item/clothing/neck/roguetown/psicross/silver/malum
+	name = "silver amulet of Malum"
+	desc = "Forged pure, so that what is impure might break upon it."
+	icon_state = "malum"
+	item_state = "malum"
+
+/obj/item/clothing/neck/roguetown/psicross/silver/eora
+	name = "silver amulet of Eora"
+	desc = "A heart that does not beat cannot love. Let it rest."
+	icon_state = "eora"
+	item_state = "eora"
+
+/obj/item/clothing/neck/roguetown/psicross/silver/zizo
+	name = "silver inverted psycross"
+	desc = "Undeath is Her gift. The thieves of it shall be taught who owns the grave."
+	icon_state = "zcross_iron"
+	item_state = "zcross_iron"
+
+/obj/item/clothing/neck/roguetown/psicross/silver/zizo/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS, HERESYDESC_ZIZO_ICON)
+
+/obj/item/clothing/neck/roguetown/psicross/silver/graggar
+	name = "silver amulet of Graggar"
+	desc = "Strong prey makes for a worthy kill, and nothing is stronger than the dead that refuse to lie down."
+	icon_state = "graggar"
+	item_state = "graggar"
+
+/obj/item/clothing/neck/roguetown/psicross/silver/graggar/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS, HERESYDESC_GRAGGAR_ICON)
+
+/obj/item/clothing/neck/roguetown/psicross/silver/matthios
+	name = "silver amulet of Matthios"
+	desc = "No lord owns the blood of free men, least of all an undying one."
+	icon_state = "matthios"
+	item_state = "matthios"
+
+/obj/item/clothing/neck/roguetown/psicross/silver/matthios/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS, HERESYDESC_MATTHIOS_ICON)
+
+/obj/item/clothing/neck/roguetown/psicross/silver/baotha
+	name = "silver amulet of Baotha"
+	desc = "Cold lips know neither wine nor bliss. They only drink, and drink, and drink."
+	icon_state = "baotha"
+	item_state = "baotha"
+
+/obj/item/clothing/neck/roguetown/psicross/silver/baotha/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS, HERESYDESC_BAOTHA_ICON)
+
+/datum/action/cooldown/spell/ravox
+	required_items = list(/obj/item/clothing/neck/roguetown/psicross/ravox, /obj/item/clothing/neck/roguetown/psicross/silver/ravox, /obj/item/clothing/neck/roguetown/psicross/undivided, /obj/item/clothing/neck/roguetown/psicross/silver/undivided)
+
+/datum/action/cooldown/spell/projectile/ravox_tug
+	required_items = list(/obj/item/clothing/neck/roguetown/psicross/ravox, /obj/item/clothing/neck/roguetown/psicross/silver/ravox, /obj/item/clothing/neck/roguetown/psicross/undivided, /obj/item/clothing/neck/roguetown/psicross/silver/undivided)
+
+/datum/action/cooldown/spell/malum
+	required_items = list(/obj/item/clothing/neck/roguetown/psicross/malum, /obj/item/clothing/neck/roguetown/psicross/silver/malum, /obj/item/clothing/neck/roguetown/psicross/undivided, /obj/item/clothing/neck/roguetown/psicross/silver/undivided)
+
+/datum/action/cooldown/spell/miracle/ignition/malum
+	required_items = list(/obj/item/clothing/neck/roguetown/psicross/malum, /obj/item/clothing/neck/roguetown/psicross/silver/malum, /obj/item/clothing/neck/roguetown/psicross/undivided, /obj/item/clothing/neck/roguetown/psicross/silver/undivided)
+
+/datum/action/cooldown/spell/mending/malum
+	required_items = list(/obj/item/clothing/neck/roguetown/psicross/malum, /obj/item/clothing/neck/roguetown/psicross/silver/malum, /obj/item/clothing/neck/roguetown/psicross/undivided, /obj/item/clothing/neck/roguetown/psicross/silver/undivided)

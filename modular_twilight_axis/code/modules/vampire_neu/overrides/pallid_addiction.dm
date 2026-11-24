@@ -127,7 +127,7 @@
 /// COMPONENT
 
 /datum/component/pallid_addiction
-	var/mob/living/carbon/human/sire = null
+	var/datum/weakref/sire_ref
 	var/last_fed_time
 	var/buff_path
 	var/enhanced = FALSE
@@ -144,7 +144,7 @@
 	if(!ishuman(parent))
 		return COMPONENT_INCOMPATIBLE
 
-	sire = linked_sire
+	sire_ref = WEAKREF(linked_sire)
 	enhanced = enhanced_pallid
 	last_fed_time = world.time
 	current_blood_interval = PALLID_INITIAL_BLOOD_INTERVAL
@@ -164,8 +164,14 @@
 		if(buff_path)
 			owner.remove_status_effect(buff_path)
 		owner.remove_status_effect(/datum/status_effect/debuff/pallid_withdrawal)
-	suspended_death_gifts?.Cut()
+		if(!QDELETED(owner) && owner.stat != DEAD)
+			restore_death_gifts(owner)
+	suspended_death_gifts = null
+	sire_ref = null
 	return ..()
+
+/datum/component/pallid_addiction/proc/is_sire(mob/living/candidate)
+	return candidate && sire_ref?.resolve() == candidate
 
 /datum/component/pallid_addiction/proc/apply_pallid_buff(mob/living/carbon/human/owner, announce = FALSE)
 	if(!istype(owner) || !buff_path)
@@ -275,7 +281,7 @@
 /datum/component/pallid_addiction/proc/on_drink_blood(mob/living/drinker, mob/living/victim)
 	SIGNAL_HANDLER
 
-	if(victim != sire)
+	if(!is_sire(victim))
 		return
 
 	last_fed_time = world.time
@@ -290,7 +296,7 @@
 	if(!istype(drinker))
 		return FALSE
 
-	if(victim == sire)
+	if(is_sire(victim))
 		return TRUE
 	if(victim.mind?.has_antag_datum(/datum/antagonist/vampire))
 		stabilize_with_vampire_blood(drinker)
@@ -355,6 +361,58 @@
 	if(world.time >= next_withdrawal_effect_time)
 		apply_withdrawal_effects(owner)
 		next_withdrawal_effect_time = world.time + PALLID_WITHDRAWAL_REPEAT_INTERVAL
+
+/mob/living/carbon/human/proc/ta_clear_pallid_curse()
+	var/list/pallid_sources = status_traits?[TRAIT_PALLID]
+	for(var/source in pallid_sources?.Copy())
+		if(source != TRAIT_GENERIC && source != TRAIT_VIRTUE)
+			REMOVE_TRAIT(src, TRAIT_PALLID, source)
+
+	var/datum/component/pallid_addiction/addiction = GetComponent(/datum/component/pallid_addiction)
+	if(addiction)
+		qdel(addiction)
+
+	remove_status_effect(/datum/status_effect/buff/pallid_blood)
+	remove_status_effect(/datum/status_effect/buff/pallid_blood/str)
+	remove_status_effect(/datum/status_effect/buff/pallid_blood/spd)
+	remove_status_effect(/datum/status_effect/buff/pallid_blood/int)
+	remove_status_effect(/datum/status_effect/debuff/pallid_withdrawal)
+	remove_status_effect(/datum/status_effect/debuff/pallid_blood_high)
+
+	for(var/obj/effect/proc_holder/spell/self/pallid_sense/sense in mind?.spell_list)
+		mind.RemoveSpell(sense)
+
+/datum/antagonist/vampire/on_gain()
+	. = ..()
+	var/mob/living/carbon/human/vampire_body = owner?.current
+	if(istype(vampire_body))
+		vampire_body.ta_clear_pallid_curse()
+
+/datum/stressevent/pallid_outdoors
+	timer = 2 MINUTES
+	stressadd = 3
+	desc = span_red("Открытое небо давит на меня. Мне нужны стены и крыша над головой!")
+
+/mob/living/carbon/update_stress()
+	if(client && stat == CONSCIOUS)
+		var/area/current_area = get_area(src)
+		if(HAS_TRAIT(src, TRAIT_PALLID) && current_area?.outdoors)
+			add_stress(/datum/stressevent/pallid_outdoors)
+		else
+			remove_stress(/datum/stressevent/pallid_outdoors)
+	return ..()
+
+/obj/item/alchserum/matthios_kingsblood/examine(mob/user)
+	. = ..()
+	if(HAS_TRAIT(user, TRAIT_PALLID) && !HAS_TRAIT(user, TRAIT_ORGAN_EATER) && !user.mind?.has_antag_datum(/datum/antagonist/vampire))
+		. += span_warning("Это можно выпить: прицелиться в рот и применить на себе.")
+
+/obj/item/alchserum/matthios_kingsblood/attack(mob/living/carbon/human/target, mob/living/user)
+	if(!istype(target) || !HAS_TRAIT(target, TRAIT_PALLID))
+		return ..()
+	ADD_TRAIT(target, TRAIT_ORGAN_EATER, REF(src))
+	. = ..()
+	REMOVE_TRAIT(target, TRAIT_ORGAN_EATER, REF(src))
 
 #undef PALLID_INITIAL_BLOOD_INTERVAL
 #undef PALLID_SUBSEQUENT_BLOOD_INTERVAL

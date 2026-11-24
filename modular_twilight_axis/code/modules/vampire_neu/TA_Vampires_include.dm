@@ -28,6 +28,7 @@
 #include "./overrides/sunsteal.dm"
 #include "./rockhill_masquerade.dm"
 #include "./vampire_lord_expansion.dm"
+#include "./silver_inquisition.dm"
 #include "./overrides/pallid_addiction.dm"
 #include "./overrides/death_gifts.dm"
 #include "./overrides/pallid_spells.dm"

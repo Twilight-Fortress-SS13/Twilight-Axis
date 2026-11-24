@@ -676,6 +676,8 @@
 	if(client)
 		client.verbs.Remove(GLOB.ghost_verbs)
 	var/datum/antagonist/vampire/new_antag = new /datum/antagonist/vampire(incoming_clan = lord_body.clan, forced_clan = TRUE, generation = max(lord.generation - 1, GENERATION_THINBLOOD))
+	if(ta_vampire_lord_expansion_active())
+		new_antag.antag_flags |= (lord.antag_flags & FLAG_ANTAG_CAP_IGNORE)
 	mind.add_antag_datum(new_antag)
 	lord.register_thrall(new_antag)
 	ta_demonic_sire_ref = WEAKREF(lord_body)
