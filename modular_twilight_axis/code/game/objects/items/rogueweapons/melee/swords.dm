@@ -31,7 +31,7 @@
 	extended = !extended
 	playsound(src.loc, 'sound/blank.ogg', 50, TRUE)
 	if(extended)
-		possible_item_intents = list(/datum/intent/sword/thrust/rapier, /datum/intent/sword/cut/rapier)
+		possible_item_intents = list(/datum/intent/sword/thrust/rapier, /datum/intent/sword/cut/rapier, /datum/intent/sword/thrust/rapier/lunge)
 		wlength = WLENGTH_NORMAL
 		w_class = WEIGHT_CLASS_BULKY
 		sharpness = IS_SHARP
@@ -114,7 +114,7 @@
 	extended = !extended
 	playsound(src.loc, 'sound/blank.ogg', 50, TRUE)
 	if(extended)
-		possible_item_intents = list(/datum/intent/sword/thrust/rapier, /datum/intent/sword/cut/rapier)
+		possible_item_intents = list(/datum/intent/sword/thrust/rapier, /datum/intent/sword/cut/rapier, /datum/intent/sword/thrust/rapier/lunge)
 		wlength = WLENGTH_NORMAL
 		w_class = WEIGHT_CLASS_BULKY
 		sharpness = IS_SHARP

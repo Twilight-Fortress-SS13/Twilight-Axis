@@ -4069,6 +4069,7 @@
 #include "modular_twilight_axis\code\game\objects\items\rogueweapons\melee\polearms.dm"
 #include "modular_twilight_axis\code\game\objects\items\rogueweapons\melee\soundbreaker_proxy.dm"
 #include "modular_twilight_axis\code\game\objects\items\rogueweapons\melee\swords.dm"
+#include "modular_twilight_axis\code\game\objects\items\rogueweapons\melee\weapon_intent_filter.dm"
 #include "modular_twilight_axis\code\game\objects\items\rogueweapons\ranged\ammo_arrows.dm"
 #include "modular_twilight_axis\code\game\objects\items\rogueweapons\ranged\bows.dm"
 #include "modular_twilight_axis\code\game\objects\lighting\_base_roguestreet.dm"
