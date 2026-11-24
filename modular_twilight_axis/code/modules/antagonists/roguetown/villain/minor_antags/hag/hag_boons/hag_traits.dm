@@ -69,7 +69,7 @@
 	points = 50
 
 /datum/hag_boon/trait/sentinel_of_wits
-	name = "Trait - Sentinew Of Wits"
+	name = "Trait - Sentinel Of Wits"
 	trait_to_apply = TRAIT_SENTINELOFWITS
 	desc = "The bearer will gain bonus to parry/dodge the smarter he is."
 	points = 10
