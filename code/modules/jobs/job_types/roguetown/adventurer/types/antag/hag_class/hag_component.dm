@@ -416,18 +416,26 @@
 /datum/component/hag_curio_tracker/proc/antag_check(mob/living/carbon/C)
 	if(!C.mind)
 		return FALSE
-	if(C.mind.has_antag_datum(/datum/antagonist/vampire))
+	if(C.mind.has_antag_datum(/datum/antagonist/vampire/lord)) // TA EDIT - ORIGINAL: if(C.mind.has_antag_datum(/datum/antagonist/vampire))
 		return FALSE
 	if(C.mind.has_antag_datum(/datum/antagonist/werewolf))
 		return FALSE
+	// TA REMOVAL START
+	/*
 	if(C.mind.has_antag_datum(/datum/antagonist/gnoll))
 		return FALSE
+	*/
+	// TA REMOVAL END
 	if(C.mind.has_antag_datum(/datum/antagonist/hag))
 		return FALSE
-	if(C.mind.has_antag_datum(/datum/antagonist/skeleton))
+	if(C.mind.has_antag_datum(/datum/antagonist/lich)) // TA EDIT - ORIGINAL: if(C.mind.has_antag_datum(/datum/antagonist/skeleton))
 		return FALSE
+	// TA REMOVAL START
+	/*
 	if(C.mind.has_antag_datum(/datum/antagonist/assassin))
 		return FALSE
+	*/
+	// TA REMOVAL END
 	if(HAS_TRAIT(C, TRAIT_FEYBOUND) && !C.extra_boon_budget)
 		return FALSE
 	return TRUE
