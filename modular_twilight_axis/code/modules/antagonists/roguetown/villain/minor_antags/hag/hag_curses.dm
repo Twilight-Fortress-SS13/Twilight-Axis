@@ -30,6 +30,7 @@
 /datum/hag_boon/curse/awful_voice/apply_boon_effect(mob/living/L)
 	var/mob/living/carbon/human/H = L
 	H.AddComponent(/datum/component/annoying_voice)
+	ADD_TRAIT(H, TRAIT_SHAKY_SPEECH, TRAIT_HAG_BOON)
 	return
 
 /datum/hag_boon/curse/awful_voice/remove_boon_effect(mob/living/L)

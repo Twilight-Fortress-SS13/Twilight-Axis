@@ -89,6 +89,18 @@
 	L.adjust_skillrank(/datum/skill/combat/twilight_firearms, -2, TRUE)
 	return
 
+/datum/hag_boon/trait/intellectual
+	name = "Trait - Intellectual"
+	trait_to_apply = TRAIT_INTELLECTUAL
+	desc = "The bearer will see if someone smarter or dumber or him, and will see a little more information about enemy."
+	points = 10
+
+/datum/hag_boon/trait/noc_light_blessing
+	name = "Trait - Noc Blessing"
+	trait_to_apply = TRAIT_NOC_LIGHT_BLESSING
+	desc = "The bearer will become stronger at night."
+	points = 30
+
 /datum/hag_boon/trait/civil_barbarian
 	name = "Trait - Unarmed Amplifier"
 	trait_to_apply = TRAIT_CIVILIZEDBARBARIAN
@@ -103,10 +115,13 @@
 
 // I don't think this should cost SO much
 /datum/hag_boon/trait/wood_walker
-	points = 20
+	points = 10
 
 // Same
 /datum/hag_boon/trait/azure_native
+	points = 20
+
+/datum/hag_boon/trait/crackhead
 	points = 20
 
 /datum/hag_boon/trait/civil_barbarian/apply_boon_effect(mob/living/L)
