@@ -341,7 +341,7 @@
 			max_points = 85
 		else
 			max_victims = 12 // TA EDIT - ORIGINAL: 6
-			max_points = 120
+			max_points = 120 // TA EDIT - ORIGINAL: 110
 
 	var/mob/living/carbon/C = L
 	if(istype(C) && HAS_TRAIT(C, TRAIT_FEYBOUND)) // TA EDIT - ORIGINAL: if(istype(C) && HAS_TRAIT(C, TRAIT_FEYTOUCHED))
