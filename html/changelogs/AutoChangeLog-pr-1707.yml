@@ -1,0 +1,4 @@
+author: "Vladmar11"
+delete-after: True
+changes:
+  - balance: "Возвращен TRAIT_EASYDISMEMBER для скелетов лича"

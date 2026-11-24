@@ -1,202 +1,178 @@
-/obj/effect/proc_holder/spell/invoked/psydonvicariate
+/datum/action/cooldown/spell/psydon/lux/weep/oblate
+	desc = "Bear another's lesser wounds and blood loss through your own \
+		flesh. Requires a stationary 3-second channel; channeling leaves \
+		you exposed and is interrupted by attacks."
+	charge_swingdelay_type = SWINGDELAY_CANCEL
+
+/datum/action/cooldown/spell/psydon/lux/vicariate
 	name = "VICARIATE"
-	action_icon = 'modular_twilight_axis/icons/mob/actions/roguespells.dmi'
-	overlay_icon = 'modular_twilight_axis/icons/mob/actions/roguespells.dmi' // ДОБАВЛЕНО: не хватало для корректной работы overlay_state
-	overlay_state = "VICARIATE"
-	desc = "A lesser form of the mighty art of ABSOLUTION. You take upon yourself the wounds, sickness, and frailty of another. Use carefully."
-	releasedrain = 25
-	chargedrain = 0
-	chargetime = 0
-	range = 1
-	warnie = "sydwarning"
-	movement_interrupt = FALSE
+	button_icon = 'modular_twilight_axis/icons/mob/actions/roguespells.dmi'
+	button_icon_state = "VICARIATE"
+	desc = "A lesser form of ABSOLUTION. Bear another's wounds, sickness, \
+		and lost limbs through your own flesh. The dead are beyond its reach. \
+		Requires a stationary 5-second channel; channeling leaves you exposed \
+		and is interrupted by attacks."
 	sound = 'modular_twilight_axis/sound/magic/psyvicariate.ogg'
-	invocation_type = "none"
-	associated_skill = /datum/skill/magic/holy
-	antimagic_allowed = FALSE
-	recharge_time = 30 SECONDS // 60 seconds cooldown
-	miracle = TRUE
-	devotion_cost = 100
+	cast_range = 1
+	primary_resource_cost = 100
+	secondary_resource_cost = 25
+	charge_time = 5 SECONDS
+	charge_swingdelay_type = SWINGDELAY_CANCEL
+	invocation_type = INVOCATION_NONE
 
-/obj/effect/proc_holder/spell/invoked/psydonvicariate/cast(list/targets, mob/living/user)
+/datum/action/cooldown/spell/psydon/lux/vicariate/is_valid_target(atom/cast_on)
+	if(!..())
+		return FALSE
+	if(!ishuman(cast_on) || !ishuman(owner))
+		to_chat(owner, span_warning(
+			"VICARIATE is for those who walk in HIS image!"))
+		return FALSE
+	var/mob/living/carbon/human/target = cast_on
+	if(target.stat >= DEAD)
+		to_chat(owner, span_warning(
+			"The still and silent cannot be borne through VICARIATE."))
+		return FALSE
+	if(HAS_TRAIT(target, TRAIT_NOHEAL))
+		to_chat(owner, span_warning("Their Lux repels mine."))
+		return FALSE
+	return TRUE
 
-	if(!ishuman(targets[1]))
-		to_chat(user, span_warning("VICARIATE is for those who walk in HIS image!"))
-		revert_cast()
+/datum/action/cooldown/spell/psydon/lux/vicariate/before_cast(atom/cast_on)
+	if(!is_valid_target(cast_on))
+		return SPELL_CANCEL_CAST
+	if(get_dist(owner, cast_on) > cast_range)
+		return ..()
+
+	var/mob/living/carbon/human/target = cast_on
+	var/mob/living/carbon/human/caster = owner
+	var/list/warnings = list()
+	if(target.getOxyLoss() >= 150)
+		warnings += "THEIR BREATH IS NEARLY GONE. THIS BURDEN MAY SLAY YOU."
+
+	var/list/limb_zones = list(
+		BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG,
+	)
+	for(var/zone in limb_zones)
+		if(!target.get_bodypart(zone) && caster.get_bodypart(zone))
+			warnings += "YOU WILL SACRIFICE YOUR OWN LIMBS TO RESTORE THEIRS."
+			break
+
+	if(length(warnings))
+		warnings += "Continue?"
+		var/answer = alert(caster, warnings.Join("\n\n"),
+			"VICARIATE WARNING", "YES", "NO")
+		if(answer != "YES")
+			return SPELL_CANCEL_CAST
+
+	return ..()
+
+/datum/action/cooldown/spell/psydon/lux/vicariate/cast(atom/cast_on)
+	. = ..()
+	if(!is_valid_target(cast_on))
 		return FALSE
 
-	if(!ishuman(user))
-		revert_cast()
-		return FALSE
-
-	var/mob/living/carbon/human/H = targets[1]
-	var/mob/living/carbon/human/C = user
-
-	if(H == C)
-		to_chat(C, span_warning("You cannot bear your own burden through VICARIATE!"))
-		revert_cast()
-		return FALSE
-
-	if(H.stat >= DEAD)
-		to_chat(C, span_warning("The still and silent cannot be borne through VICARIATE."))
-		revert_cast()
-		return FALSE
-
-	// CONSEQUENCE WARNING CHECKS
-	var/will_die_oxy = FALSE
-	var/will_lose_limbs = FALSE
-
-	// Vicariate-exclusive: Oxygen damage warning instead of resurrection warning
-	if(H.getOxyLoss() >= 150)
-		will_die_oxy = TRUE
-
-	// Limb restoration costs your limbs.
-	var/list/warning_zones = list(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
-
-	for(var/zone in warning_zones)
-		if(!H.get_bodypart(zone))
-			if(C.get_bodypart(zone))
-				will_lose_limbs = TRUE
-				break
-
-	if(will_die_oxy || will_lose_limbs)
-
-		var/list/messages = list()
-
-		if(will_die_oxy)
-			messages += span_userdanger("THEIR BREATH IS NEARLY GONE. THIS BURDEN MAY SLAY YOU.")
-
-		if(will_lose_limbs)
-			messages += span_userdanger("THIS TARGET IS MISSING LIMBS. YOU WILL SACRIFICE YOUR OWN LIMBS.")
-
-		messages += ""
-		messages += "Continue?"
-
-		if(alert(C, messages.Join("\n"), "VICARIATE WARNING", "YES", "NO") != "YES")
-			revert_cast()
-			return FALSE
-
-	H.visible_message(span_red("[C] connects their Lux with [H]'s own."))
-
-	if(HAS_TRAIT(H, TRAIT_NOHEAL))
-		H.visible_message(span_artery("--But their Lux is forcefully repelled for some reason!"))
-		H.playsound_local(H, 'sound/magic/PSY.ogg', 100, FALSE, -1)
-		return FALSE
-
-	// INVOCATION AND IRONMAN REACTIONS
-	if(C.cmode)
-		C.say(pick("LET IT BE MINE...","I'LL BLEED IN YOUR STEAD!","I SHALL WEEP IN YOUR STEAD!","PERSIST, AS HE DOES!"))
-		if(HAS_TRAIT(C, TRAIT_IRONMAN))
-			C.electrocute_act(10, C)
+	var/mob/living/carbon/human/target = cast_on
+	var/mob/living/carbon/human/caster = owner
+	if(caster.cmode)
+		caster.say(pick(
+			"LET IT BE MINE...",
+			"I'LL BLEED IN YOUR STEAD!",
+			"I SHALL WEEP IN YOUR STEAD!",
+			"PERSIST, AS HE DOES!",
+		))
+		if(HAS_TRAIT(caster, TRAIT_IRONMAN))
+			caster.electrocute_act(10, caster)
 	else
-		C.say(pick("Let it be mine...","May your injuries be mine to bear!","I bear your wounds as my own."))
-		if(HAS_TRAIT(C, TRAIT_IRONMAN))
-			C.adjustFireLoss(25)
+		caster.say(pick(
+			"Let it be mine...",
+			"May your injuries be mine to bear!",
+			"I bear your wounds as my own.",
+		))
+		if(HAS_TRAIT(caster, TRAIT_IRONMAN))
+			caster.adjustFireLoss(25)
 
-	// LIMB TRANSFER
-	var/list/zones = list(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
-
-	for(var/zone in zones)
-		var/obj/item/bodypart/tBP = H.get_bodypart(zone)
-
-		if(!tBP)
-			H.regenerate_limb(zone)
-			var/obj/item/bodypart/cBP = C.get_bodypart(zone)
-			if(cBP)
-				cBP.dismember()
-				if(HAS_TRAIT(H, TRAIT_IRONMAN))
-					var/obj/item/bodypart/daChest = H.get_bodypart(BODY_ZONE_CHEST)
-					daChest.add_wound(/datum/wound/integrity/chest)
-				else
-					qdel(cBP)
-
-	// WOUND TRANSFER
-	var/list/wounds = H.get_wounds()
-
-	for(var/datum/wound/W in wounds)
-		if(!W.bodypart_owner)
+	var/list/limb_zones = list(
+		BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG,
+	)
+	for(var/zone in limb_zones)
+		if(target.get_bodypart(zone))
 			continue
-
-		var/obj/item/bodypart/cBP = C.get_bodypart(W.bodypart_owner.body_zone)
-		if(!cBP)
+		target.regenerate_limb(zone)
+		var/obj/item/bodypart/caster_part = caster.get_bodypart(zone)
+		if(!caster_part)
 			continue
-
-		var/new_type = translate_wound_for_target(W, C)
-
-		if(!new_type)
-			continue
-
-		var/datum/wound/newW = new new_type()
-
-		W.copy_to(newW)
-
-		if(W.is_clotted() || W.is_sewn())
-			newW.set_bleed_rate(0)
-
-		newW = cBP.add_wound(newW)
-
-		if(!newW)
-			cBP.receive_damage(W.whp)
-
-		var/obj/item/bodypart/tBP = H.get_bodypart(W.bodypart_owner.body_zone)
-
-		if(tBP)
-			tBP.remove_wound(W.type)
-
-	// DAMAGE TRANSFER
-	var/brute_transfer = H.getBruteLoss()
-	var/burn_transfer = H.getFireLoss()
-	var/tox_transfer = H.getToxLoss()
-	var/oxy_transfer = H.getOxyLoss()
-	var/clone_transfer = H.getCloneLoss()
-
-	H.adjustBruteLoss(-brute_transfer)
-	H.adjustFireLoss(-burn_transfer)
-	H.adjustToxLoss(-tox_transfer)
-	H.adjustOxyLoss(-oxy_transfer)
-	H.adjustCloneLoss(-clone_transfer)
-
-	C.adjustBruteLoss(brute_transfer)
-	C.adjustFireLoss(burn_transfer)
-	C.adjustToxLoss(tox_transfer)
-	C.adjustOxyLoss(oxy_transfer)
-	C.adjustCloneLoss(clone_transfer)
-
-	// BLOOD TRANSFER
-	var/blood_needed = max(0, BLOOD_VOLUME_NORMAL - H.blood_volume)
-
-	if(blood_needed)
-		if(NOBLOOD in C.dna?.species?.species_traits)
-			H.blood_volume = BLOOD_VOLUME_NORMAL
-			C.adjustFireLoss(round(blood_needed / 4))
+		caster_part.dismember()
+		if(HAS_TRAIT(target, TRAIT_IRONMAN))
+			var/obj/item/bodypart/target_chest = target.get_bodypart(
+				BODY_ZONE_CHEST)
+			target_chest.add_wound(/datum/wound/integrity/chest)
 		else
-			var/transferred = min(blood_needed, C.blood_volume)
+			qdel(caster_part)
 
+	for(var/datum/wound/target_wound in target.get_wounds())
+		if(!target_wound.bodypart_owner)
+			continue
+		var/zone = target_wound.bodypart_owner.body_zone
+		var/obj/item/bodypart/caster_part = caster.get_bodypart(zone)
+		if(!caster_part)
+			continue
+		var/wound_type = translate_wound_for_target(target_wound, caster)
+		if(!wound_type)
+			continue
+
+		var/datum/wound/transferred_wound = new wound_type()
+		target_wound.copy_to(transferred_wound)
+		if(target_wound.is_clotted() || target_wound.is_sewn())
+			transferred_wound.set_bleed_rate(0)
+		transferred_wound = caster_part.add_wound(transferred_wound)
+		if(!transferred_wound)
+			caster_part.receive_damage(target_wound.whp)
+
+		var/obj/item/bodypart/target_part = target.get_bodypart(zone)
+		if(target_part)
+			target_part.remove_wound(target_wound.type)
+
+	var/brute_transfer = target.getBruteLoss()
+	var/burn_transfer = target.getFireLoss()
+	var/tox_transfer = target.getToxLoss()
+	var/oxy_transfer = target.getOxyLoss()
+	var/clone_transfer = target.getCloneLoss()
+
+	target.adjustBruteLoss(-brute_transfer)
+	target.adjustFireLoss(-burn_transfer)
+	target.adjustToxLoss(-tox_transfer)
+	target.adjustOxyLoss(-oxy_transfer)
+	target.adjustCloneLoss(-clone_transfer)
+
+	caster.adjustBruteLoss(brute_transfer)
+	caster.adjustFireLoss(burn_transfer)
+	caster.adjustToxLoss(tox_transfer)
+	caster.adjustOxyLoss(oxy_transfer)
+	caster.adjustCloneLoss(clone_transfer)
+
+	var/blood_needed = max(0, BLOOD_VOLUME_NORMAL - target.blood_volume)
+	if(blood_needed)
+		if(NOBLOOD in caster.dna?.species?.species_traits)
+			target.blood_volume = BLOOD_VOLUME_NORMAL
+			caster.adjustFireLoss(round(blood_needed / 4))
+		else
+			var/transferred = min(blood_needed, caster.blood_volume)
 			if(transferred > 0)
-				H.blood_volume += transferred
-				C.blood_volume -= transferred
+				target.blood_volume += transferred
+				caster.blood_volume -= transferred
+			if(target.blood_volume < BLOOD_VOLUME_NORMAL)
+				var/remaining = BLOOD_VOLUME_NORMAL - target.blood_volume
+				target.blood_volume += remaining
+				caster.blood_volume -= remaining
+			if(caster.blood_volume <= 0)
+				caster.blood_volume = BLOOD_VOLUME_SURVIVE
 
-			if(H.blood_volume < BLOOD_VOLUME_NORMAL)
-				var/remaining = BLOOD_VOLUME_NORMAL - H.blood_volume
-
-				H.blood_volume += remaining
-				C.blood_volume -= remaining
-
-			if(C.blood_volume <= 0)
-				C.blood_volume = BLOOD_VOLUME_SURVIVE
-
-	// VISUALS
-	C.visible_message(span_danger("[C] assumes [H]'s suffering through VICARIATE!"))
-
-	new /obj/effect/temp_visual/psyheal_rogue(get_turf(H), "#5e1d1d")
-	new /obj/effect/temp_visual/psyheal_rogue(get_turf(H), "#5e1d1d")
-	new /obj/effect/temp_visual/psyheal_rogue(get_turf(H), "#5e1d1d")
-
-	new /obj/effect/temp_visual/psyheal_rogue(get_turf(C), "#5e1d1d")
-	new /obj/effect/temp_visual/psyheal_rogue(get_turf(C), "#5e1d1d")
-	new /obj/effect/temp_visual/psyheal_rogue(get_turf(C), "#5e1d1d")
-
-	to_chat(C, span_warning("You take [H]'s suffering into your own flesh."))
-	to_chat(H, span_notice("[C] bears your wounds as their own."))
-
+	caster.visible_message(span_danger(
+		"[caster] assumes [target]'s suffering through VICARIATE!"))
+	for(var/iteration in 1 to 3)
+		new /obj/effect/temp_visual/psyheal_rogue(get_turf(target), "#5e1d1d")
+		new /obj/effect/temp_visual/psyheal_rogue(get_turf(caster), "#5e1d1d")
+	to_chat(caster, span_warning(
+		"You take [target]'s suffering into your own flesh."))
+	to_chat(target, span_notice("[caster] bears your wounds as their own."))
 	return TRUE

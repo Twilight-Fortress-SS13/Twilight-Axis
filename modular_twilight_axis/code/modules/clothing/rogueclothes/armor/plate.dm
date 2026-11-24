@@ -121,6 +121,15 @@
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_DEPRAVED, "HELMET")
 
+//TA Addition start
+/obj/item/clothing/head/roguetown/helmet/baotha_ta/equipped(mob/user, slot)
+	RegisterSignal(user, COMSIG_CURSED_ITEM_BURNED)
+	. = ..()
+
+/obj/item/clothing/head/roguetown/helmet/baotha_ta/proc/demilitirize()
+	SIGNAL_HANDLER
+	max_integrity = 50
+//TA Addition end
 /obj/item/clothing/head/roguetown/helmet/baotha_ta/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_BAOTHA_ARMOR)
 

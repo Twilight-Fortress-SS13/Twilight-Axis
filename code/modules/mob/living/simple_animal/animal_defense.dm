@@ -18,11 +18,12 @@
 				pen = PEN_NONE
 				newforce *= EFF_RANGE_MISS_DAMFACTOR
 			var/haha = user.used_intent.item_d_type
-			var/armor = run_armor_check(null, haha, armor_penetration = I.armor_penetration, damage = newforce, used_weapon = I)
+			var/armor = run_armor_check(selzone, haha, armor_penetration = I.armor_penetration, damage = newforce, used_weapon = I) // TA EDIT
 			var/nodmg = FALSE
 			next_attack_msg.Cut()
 			if(armor > 0)
-				nodmg = TRUE
+				if(!mount_initialized || armor >= 95) // TA EDIT
+					nodmg = TRUE // TA EDIT
 				next_attack_msg += VISMSG_ARMOR_BLOCKED
 			// Exposed/vulnerable bonus damage against simple animals
 			if(has_status_effect(/datum/status_effect/debuff/exposed))
@@ -72,6 +73,14 @@
 	var/armorval = 0
 	if(bbarding && !bbarding.obj_broken)
 		armorval = bbarding.armor.getRating(type)
+		if(mount_initialized) // TA EDIT START
+			switch(check_zone(def_zone))
+				if(BODY_ZONE_HEAD)
+					armorval *= 0.85
+				if(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
+					armorval *= 0.45
+				else
+					armorval = min(100, armorval * 1.2) // TA EDIT END
 		var/intdamage = damage
 		if(type != "blunt")
 			if((damage + armor_penetration) > armorval)
@@ -130,7 +139,7 @@
 			var/selzone = resolve_melee_zone(M)
 			var/hitlim = simple_limb_hit(selzone)
 			var/haha = M.used_intent.item_d_type
-			var/armor = run_armor_check(null, haha, armor_penetration = M.used_intent.penfactor, damage = damage)
+			var/armor = run_armor_check(selzone, haha, armor_penetration = M.used_intent.penfactor, damage = damage) // TA EDIT
 			if(armor > 0)
 				next_attack_msg += VISMSG_ARMOR_BLOCKED
 			damage *= weakpoint_damage_mod(selzone)
@@ -225,7 +234,7 @@
 		var/selzone = resolve_melee_zone(M)
 		var/hitlim = simple_limb_hit(selzone)
 		var/haha = M.used_intent.item_d_type
-		var/armor = run_armor_check(null, haha, armor_penetration = M.used_intent.penfactor, damage = damage)
+		var/armor = run_armor_check(selzone, haha, armor_penetration = M.used_intent.penfactor, damage = damage) // TA EDIT
 		if(armor > 0)
 			next_attack_msg += VISMSG_ARMOR_BLOCKED
 		damage *= weakpoint_damage_mod(selzone)
@@ -246,7 +255,7 @@
 		var/hitlim = simple_limb_hit(selzone)
 		var/damage = rand(M.melee_damage_lower, M.melee_damage_upper)
 		var/haha = M.d_type
-		var/armor = run_armor_check(null, haha, armor_penetration = M.armor_penetration, damage = damage)
+		var/armor = run_armor_check(selzone, haha, armor_penetration = M.armor_penetration, damage = damage) // TA EDIT
 		if(armor > 0)
 			next_attack_msg += VISMSG_ARMOR_BLOCKED
 		damage *= weakpoint_damage_mod(selzone)
