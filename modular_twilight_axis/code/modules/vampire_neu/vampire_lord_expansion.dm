@@ -60,8 +60,8 @@ SUBSYSTEM_DEF(ta_vampire_lord_expansion)
 	if(SSgamemode.halted_storyteller || SSgamemode.current_storyteller?.disable_distribution)
 		log_storyteller("Vampire Lord Expansion auto-event skipped: storyteller distribution is halted.")
 		return
-	if(SSgamemode.storyteller_is(/datum/storyteller/gamemode/extended, TRUE))
-		log_storyteller("Vampire Lord Expansion auto-event skipped: Extended is active.")
+	if(SSgamemode.storyteller_is(/datum/storyteller/gamemode/no_antag/small_wretch, TRUE))
+		log_storyteller("Vampire Lord Expansion auto-event skipped: Low Intensity is active.")
 		return
 	if(istype(SSgamemode.current_roundstart_event, /datum/round_event_control/antagonist/solo/vampires))
 		log_storyteller("Vampire Lord Expansion auto-event skipped: the storyteller already rolled the Vampire Lord.")
@@ -454,7 +454,7 @@ GLOBAL_LIST_INIT(ta_astrata_extra_wards, typecacheof(list(
 	give_bank_account = FALSE
 	announce_latejoin = FALSE
 
-	obsfuscated_job = TRUE
+	obfuscated_job = TRUE
 	wanderer_examine = TRUE
 	advjob_examine = TRUE
 	cmode_music = 'sound/music/combat_weird.ogg'

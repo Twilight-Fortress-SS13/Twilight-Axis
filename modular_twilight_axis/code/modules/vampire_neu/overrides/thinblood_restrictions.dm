@@ -3,22 +3,27 @@
  * Scarlet-Reach/Scarlet-Reach#1616.
  */
 
+/proc/ta_custom_clan_coven_count(generation, default_count)
+	switch(generation)
+		if(GENERATION_NEONATE)
+			return COVENS_PER_WRETCH_CLAN
+		if(GENERATION_THINBLOOD)
+			return 0
+		if(GENERATION_THINNERBLOOD)
+			return COVENS_PER_VAGABOND
+	return default_count
+
 /datum/antagonist/vampire/create_custom_clan(mob/living/carbon/human/vampdude, custom_name = null)
-	custom_clan_name = (istext(custom_name) && length(custom_name)) ? custom_name : "Пользовательский клан"
+	if(clan_selected || QDELETED(src) || QDELETED(vampdude) || owner?.current != vampdude)
+		return
+	clan_selected = TRUE
+	custom_clan_name = ta_plain_text(custom_name, MAX_NAME_LEN) || "Пользовательский клан"
 
 	var/datum/clan/custom/new_clan = new /datum/clan/custom()
 	new_clan.name = custom_clan_name
-
-	switch(vampdude.get_vampire_generation())
-		if(GENERATION_NEONATE)
-			new_clan.covens_to_select = COVENS_PER_WRETCH_CLAN
-		if(GENERATION_THINBLOOD)
-			new_clan.covens_to_select = 0
-		if(GENERATION_THINNERBLOOD)
-			new_clan.covens_to_select = COVENS_PER_VAGABOND
+	new_clan.covens_to_select = ta_custom_clan_coven_count(vampdude.get_vampire_generation(), new_clan.covens_to_select)
 
 	vampdude.set_clan_direct(new_clan)
-	clan_selected = TRUE
 	after_gain()
 
-	to_chat(vampdude, span_notice("Теперь я принадлежу клану «[custom_clan_name]». Доступно дисциплин: [length(selected_covens)]."))
+	to_chat(vampdude, span_notice("Теперь я принадлежу клану «[custom_clan_name]». Доступно дисциплин: [new_clan.covens_to_select]."))
