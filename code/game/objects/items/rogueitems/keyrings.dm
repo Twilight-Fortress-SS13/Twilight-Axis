@@ -324,7 +324,7 @@
 	keys = list(/obj/item/roguekey/keeper, /obj/item/roguekey/keeper_inner)
 
 /obj/item/storage/keyring/acolyte //General access
-	keys = list(/obj/item/roguekey/church, /obj/item/roguekey/graveyard, /obj/item/roguekey/keeper)
+	keys = list(/obj/item/roguekey/church, /obj/item/roguekey/graveyard)
 
 //////////////
 // BURGHERS //
