@@ -4,19 +4,19 @@ SUBSYSTEM_DEF(rogueinfo)
 
 	var/list/role_visibility = list(
 		"blacksmith" = FALSE,
-		"artificer"  = FALSE,
-		"steward"    = FALSE,
-		"duke"       = FALSE,
+		"artificer"	= FALSE,
+		"steward"	= FALSE,
+		"duke"		= FALSE,
 		"apothecary" = FALSE,
-		"church"     = FALSE,
-		"fisher"     = FALSE,
+		"church"		= FALSE,
+		"fisher"		= FALSE,
 		"university" = FALSE,
-		"innkeeper"  = FALSE,
-		"tailor"     = FALSE,
-		"bathhouse"  = FALSE,
-		"merchant"   = FALSE,
-		"freeform1"  = FALSE,
-		"freeform2"  = FALSE
+		"innkeeper"	= FALSE,
+		"tailor"		= FALSE,
+		"bathhouse"	= FALSE,
+		"merchant"	= FALSE,
+		"freeform1"	= FALSE,
+		"freeform2"	= FALSE
 	)
 
 	var/list/role_data = list(
@@ -25,7 +25,7 @@ SUBSYSTEM_DEF(rogueinfo)
 			"note" = "No custom notes."
 		),
 		"artificer" = list(
-			"desc" = "The guild artificer, expert in magicraft and mechanics. crossbows, cogs and such.",
+			"desc" = "The guild artificer, expert in magicraft and mechanics. Crossbows, cogs, and such.",
 			"note" = "No custom notes."
 		),
 		"steward" = list(
@@ -53,7 +53,7 @@ SUBSYSTEM_DEF(rogueinfo)
 			"note" = "No custom notes."
 		),
 		"innkeeper" = list(
-			"desc" = "Proprietor of the local tavern, keeping the peace (through alcohol) while offering lodging, supper and spirits to travellers.",
+			"desc" = "Proprietor of the local tavern, keeping the peace (through alcohol) while offering lodging, supper, and spirits to travellers.",
 			"note" = "No custom notes."
 		),
 		"tailor" = list(
@@ -61,7 +61,7 @@ SUBSYSTEM_DEF(rogueinfo)
 			"note" = "No custom notes."
 		),
 		"bathhouse" = list(
-			"desc" = "The sanctuary of Eoran cleanliness, offering public sanitation and relaxation for the weary townsfolk. Unwind as our skilled attendants see to your every need.",
+			"desc" = "The sanctuary of Eoran cleanliness, offering public sanitation and relaxation for the weary townsfolk. Unwind as their skilled attendants see to your every need.",
 			"note" = "No custom notes."
 		),
 		"merchant" = list(
@@ -80,7 +80,7 @@ SUBSYSTEM_DEF(rogueinfo)
 
 	var/list/all_flags = list()
 
-/datum/controller/subsystem/rogueinfo/Initialize()
+/datum/controller/subsystem/rogueinfo/Initialize(mapload)
 	. = ..()
 
 /datum/controller/subsystem/rogueinfo/proc/set_role_visibility(role_name, new_status)

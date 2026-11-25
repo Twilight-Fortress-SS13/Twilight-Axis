@@ -32,7 +32,7 @@
 	var/grid = TRUE
 	var/storage_flags = NONE
 
-/obj/item/storage/Initialize()
+/obj/item/storage/Initialize(mapload)
 	. = ..()
 	var/datum/component/storage/STR = GetComponent(/datum/component/storage)
 	if(STR)
@@ -120,9 +120,6 @@
 
 				stored_item.mouse_opacity = MOUSE_OPACITY_OPAQUE
 				bound_underlay = get_bound_underlay(used_gridwidth, used_gridheight)
-				if(!bound_underlay)
-					bound_underlay = generate_bound_underlay(used_gridwidth, used_gridheight)
-					underlay_appearances_by_size["[used_gridwidth]x[used_gridheight]"] = bound_underlay
 				stored_item.underlays += bound_underlay
 				screen_loc = LAZYACCESSASSOC(master.item_to_grid_coordinates, stored_item, 1)
 				screen_loc = master.grid_coordinates_to_screen_loc(screen_loc)
@@ -146,9 +143,6 @@
 				var/used_gridwidth = stored_item.grid_width
 				var/used_gridheight = stored_item.grid_height
 				bound_underlay = get_bound_underlay(used_gridwidth, used_gridheight)
-				if(!bound_underlay)
-					bound_underlay = generate_bound_underlay(used_gridwidth, used_gridheight)
-					underlay_appearances_by_size["[used_gridwidth]x[used_gridheight]"] = bound_underlay
 				stored_item.underlays += bound_underlay
 				screen_loc = LAZYACCESSASSOC(master.item_to_grid_coordinates, stored_item, 1)
 				screen_loc = master.grid_coordinates_to_screen_loc(screen_loc)
@@ -536,8 +530,13 @@
 			if(existing_item && (!dragged_item || (existing_item != dragged_item)))
 				return FALSE
 	return TRUE
-/datum/component/storage/proc/get_bound_underlay(grid_width = world.icon_size, grid_height = world.icon_size, enchanted)
-	return LAZYACCESS(underlay_appearances_by_size, "[grid_width]x[grid_height]_[enchanted]")
+/datum/component/storage/proc/get_bound_underlay(grid_width = world.icon_size, grid_height = world.icon_size, enchanted = FALSE)
+	var/underlay_key = "[grid_width]x[grid_height]_[enchanted]"
+	var/mutable_appearance/bound_underlay = underlay_appearances_by_size[underlay_key]
+	if(!bound_underlay)
+		bound_underlay = generate_bound_underlay(grid_width, grid_height, enchanted)
+		underlay_appearances_by_size[underlay_key] = bound_underlay
+	return bound_underlay
 
 /**
  * Generates and caches an underlay for the given width and height.
@@ -706,7 +705,7 @@
 			else
 				storing.forceMove(parent.drop_location())
 		return FALSE
-	storing.on_enter_storage(master)
+	storing.on_enter_storage(master, user)
 	storing.item_flags |= IN_STORAGE
 	storing.mouse_opacity = MOUSE_OPACITY_OPAQUE //So you can click on the area around the item to equip it, instead of having to pixel hunt
 	if(user)
@@ -772,6 +771,9 @@
 		seeing_mob.client.screen -= removed
 	if(isitem(removed))
 		var/obj/item/removed_item = removed
+		if(!(removed_item.item_flags & FLOATING_ITEM))
+			addtimer(CALLBACK(removed_item, TYPE_PROC_REF(/obj/item, remove_floating)), 1)
+			removed_item.item_flags |= FLOATING_ITEM
 		removed_item.item_flags &= ~IN_STORAGE
 		if(ismob(parent.loc))
 			carrying_mob = parent.loc
@@ -787,6 +789,7 @@
 		removed.moveToNullspace()
 	removed.update_icon()
 	SEND_SIGNAL(removed, COMSIG_AFTER_STORAGE_REMOVE, parent, carrying_mob, src)
+	SEND_SIGNAL(parent, COMSIG_STORAGE_REMOVED, removed)
 	update_icon()
 	refresh_mob_views()
 	return TRUE

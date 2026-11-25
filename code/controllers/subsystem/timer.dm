@@ -55,7 +55,7 @@ SUBSYSTEM_DEF(timer)
 	bucket_resolution = world.tick_lag
 
 /datum/controller/subsystem/timer/stat_entry(msg)
-	msg = "\n  B:[bucket_count] P:[length(second_queue)] H:[length(hashes)] C:[length(clienttime_timers)] S:[length(timer_id_dict)] RST:[bucket_reset_count]"
+	msg = "\n	B:[bucket_count] P:[length(second_queue)] H:[length(hashes)] C:[length(clienttime_timers)] S:[length(timer_id_dict)] RST:[bucket_reset_count]"
 	return ..()
 
 /datum/controller/subsystem/timer/proc/dump_timer_buckets(full = TRUE)
@@ -396,6 +396,11 @@ SUBSYSTEM_DEF(timer)
 	src.flags = flags
 	src.hash = hash
 	src.source = source
+
+	if(!callBack || isnull(wait) || isnull(flags))
+		spent = TRUE
+		return
+
 	src.timer_subsystem = timer_subsystem || SStimer
 
 	// Determine time at which the timer's callback should be invoked

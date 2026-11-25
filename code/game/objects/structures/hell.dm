@@ -54,6 +54,9 @@ GLOBAL_LIST_EMPTY(hellspawns)
 	var/isinhell
 	var/last_helld = 0
 
+/mob/dead/observer/should_hear_dsay()
+	return TRUE
+
 /mob/dead/observer/proc/go2hell()
 	var/obj/effect/landmark/L = pick(GLOB.hellspawns)
 	if(L)
@@ -74,7 +77,7 @@ GLOBAL_LIST_EMPTY(hellspawns)
 	var/spawn_time
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF
 
-/obj/structure/fluff/psyexit/Initialize()
+/obj/structure/fluff/psyexit/Initialize(mapload)
 	spawn_time = world.time
 	START_PROCESSING(SSobj, src)
 	..()
@@ -115,7 +118,7 @@ GLOBAL_LIST_EMPTY(hellspawns)
 			O.last_helld = world.time
 			O.go2hell()
 
-/obj/structure/fluff/helljailer/Initialize()
+/obj/structure/fluff/helljailer/Initialize(mapload)
 	last_move = world.time
 	START_PROCESSING(SSobj, src)
 	..()

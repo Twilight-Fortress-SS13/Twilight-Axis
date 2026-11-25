@@ -46,13 +46,12 @@
  * After a brief period, injects the scripts into
  * the window to listen for open commands.
  */
-/datum/tgui_say/proc/initialize()
+/datum/tgui_say/proc/Initialize(mapload)
 	set waitfor = FALSE
 	// Sleep to defer initialization to after client constructor
 	sleep(3 SECONDS)
 	window.initialize(
 			strict_mode = TRUE,
-			fancy = TRUE,
 			inline_css = file("tgui/public/tgui-say.bundle.css"),
 			inline_js = file("tgui/public/tgui-say.bundle.js"),
 	);

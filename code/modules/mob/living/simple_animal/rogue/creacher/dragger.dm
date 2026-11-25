@@ -1,4 +1,6 @@
 /mob/living/simple_animal/hostile/rogue/dragger
+	threat_point = THREAT_MODERATE
+	anatomy_type = /datum/anatomy/biped
 	icon = 'icons/roguetown/underworld/enigma_dragger.dmi'
 	icon_state = "dragger"
 	icon_living = "dragger"
@@ -13,20 +15,14 @@
 	base_intents = list(/datum/intent/simple/dragger)
 	gender = FEMALE
 	speak_chance = 0
-	turns_per_move = 5
 	response_help_continuous = "passes through"
 	response_help_simple = "pass through"
 	maxHealth = DRAGGER_HEALTH
 	health = DRAGGER_HEALTH
-	stat_attack = UNCONSCIOUS
-	robust_searching = 1
-	speed = 1
-	move_to_delay = 5 //delay for the automated movement.
 	harm_intent_damage = 1
 	obj_damage = 1
 	melee_damage_lower = 30
 	melee_damage_upper = 45
-	attack_same = FALSE
 	attack_sound = 'sound/combat/wooshes/bladed/wooshmed (1).ogg'
 	dodge_sound = 'sound/combat/dodge.ogg'
 	parry_sound = "bladedmedium"
@@ -39,74 +35,25 @@
 	minbodytemp = 0
 	faction = list(FACTION_UNDEAD)
 	footstep_type = null
-	defprob = 50 //decently skilled
-	canparry = TRUE
-	retreat_health = null
 
-	can_have_ai = FALSE //disable native ai
-	AIStatus = AI_OFF
 	ai_controller = /datum/ai_controller/dragger
+	move_base_delay = MOVEMENT_DELAY_LUMBERING
 
 /mob/living/simple_animal/hostile/rogue/dragger/electrocute_act(shock_damage, source, siemens_coeff = 1, flags = NONE)
 	return FALSE
 
-/mob/living/simple_animal/hostile/rogue/dragger/simple_limb_hit(zone)
-	if(!zone)
-		return ""
-	switch(zone)
-		if(BODY_ZONE_PRECISE_R_EYE)
-			return "head"
-		if(BODY_ZONE_PRECISE_L_EYE)
-			return "head"
-		if(BODY_ZONE_PRECISE_NOSE)
-			return "head"
-		if(BODY_ZONE_PRECISE_MOUTH)
-			return "head"
-		if(BODY_ZONE_PRECISE_SKULL)
-			return "head"
-		if(BODY_ZONE_PRECISE_EARS)
-			return "head"
-		if(BODY_ZONE_PRECISE_NECK)
-			return "neck"
-		if(BODY_ZONE_PRECISE_L_HAND)
-			return "hand"
-		if(BODY_ZONE_PRECISE_R_HAND)
-			return "hand"
-		if(BODY_ZONE_PRECISE_L_FOOT)
-			return "tail"
-		if(BODY_ZONE_PRECISE_R_FOOT)
-			return "tail"
-		if(BODY_ZONE_PRECISE_STOMACH)
-			return "body"
-		if(BODY_ZONE_PRECISE_GROIN)
-			return "body"
-		if(BODY_ZONE_HEAD)
-			return "head"
-		if(BODY_ZONE_R_LEG)
-			return "tail"
-		if(BODY_ZONE_L_LEG)
-			return "tail"
-		if(BODY_ZONE_R_ARM)
-			return "arm"
-		if(BODY_ZONE_L_ARM)
-			return "arm"
-		if(BODY_ZONE_CHEST)
-			return "chest"
-
-	return ..()
-
 /mob/living/simple_animal/hostile/rogue/dragger/taunted(mob/user)
-	GiveTarget(user)
+	ai_controller?.force_aggro(user)
 	return
 
-/mob/living/simple_animal/hostile/rogue/dragger/Initialize()
+/mob/living/simple_animal/hostile/rogue/dragger/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/ai_aggro_system)
 	set_light(2, 2, 2, l_color = "#c0523f")
 	ADD_TRAIT(src, TRAIT_IGNOREDAMAGESLOWDOWN, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NOPAINSTUN, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_SILVER_WEAK, TRAIT_GENERIC)
-
+	ADD_TRAIT(src, TRAIT_NPC_EXAMINE, TRAIT_GENERIC)
 
 /mob/living/simple_animal/hostile/rogue/dragger/death(gibbed)
 	emote("death")
@@ -136,7 +83,6 @@
 		C.visible_message(span_danger("\The [src] paralyzes \the [C] in fear!"), \
 				span_danger("\The [src] paralyzes me!"))
 		emote("laugh")
-
 
 /obj/effect/landmark/underworldsafe/Crossed(atom/movable/AM, oldloc)
 	if(istype(AM, /mob/living/simple_animal/hostile/rogue/dragger))

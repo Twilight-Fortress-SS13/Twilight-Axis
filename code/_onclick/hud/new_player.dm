@@ -158,7 +158,7 @@
 	if(!.)
 		return
 
-	hud.mymob.client?.setup_character()
+	hud.mymob.client?.prefs?.ShowChoices(hud.mymob, PREFERENCE_TAB_CHARACTER_CREATOR)
 
 /atom/movable/screen/lobby/button/character_setup/proc/enable_character_setup()
 	SIGNAL_HANDLER
@@ -213,6 +213,9 @@
 		new_player.ready = PLAYER_NOT_READY
 		base_icon_state = "not_ready"
 		GLOB.ready_player_list -= new_player.ckey
+		if(SSvote.mode == STORYTELLER_VOTE)
+			SSvote.remove_vote_for_ckey(new_player.ckey)
+			SSvote.show_vote(new_player.client)
 	//update_appearance(UPDATE_ICON)
 	update_wretch_slots()
 	update_mercenary_slots()
@@ -296,8 +299,9 @@
 	if(!.)
 		return
 
-	var/datum/preferences/prefs = hud.mymob.client?.prefs
-	prefs?.LorePopup(hud.mymob)
+	if(istype(hud.mymob, /mob/dead/new_player))
+		var/mob/dead/new_player/new_player = hud.mymob
+		new_player.do_rp_prompt()
 
 /atom/movable/screen/lobby/button/migration
 	name = "Migration"

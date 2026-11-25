@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 import { Box } from 'tgui-core/components';
 
@@ -12,8 +12,6 @@ const BG_SELF = 'rgba(62, 102, 46, 0.42)';
 const SHADOW_DEFAULT = '0 2px 8px rgba(0, 0, 0, 0.35)';
 const SHADOW_HOVER = '0 6px 18px rgba(0, 0, 0, 0.55)';
 const NAME_SHADOW = '0 0 8px rgba(0, 0, 0, 0.7)';
-
-const descriptorCache: Record<string, string> = {};
 
 const labelStyle = {
   color: '#f4e9d3',
@@ -71,21 +69,10 @@ export const FamilyTreeCard = ({
         : BG_DEFAULT;
 
   const [hovered, setHovered] = useState(false);
-  const cacheKeyRef = useRef<string | null>(null);
-
-  const ref = node.personRef;
-  const rawDescriptor = node.descriptor;
-  const cacheKey = ref || node.name;
-
-  if (rawDescriptor && cacheKey) {
-    descriptorCache[cacheKey] = rawDescriptor;
-    cacheKeyRef.current = cacheKey;
-  }
-  const cachedDescriptor = cacheKey ? descriptorCache[cacheKey] : null;
-  const tooltipText = rawDescriptor || cachedDescriptor || null;
+  const tooltipText = node.descriptor || null;
 
   return (
-    <Box
+    <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -138,6 +125,6 @@ export const FamilyTreeCard = ({
         </Box>
       )}
       {hovered && !!tooltipText && <Box style={tooltipStyle}>{tooltipText}</Box>}
-    </Box>
+    </div>
   );
 };

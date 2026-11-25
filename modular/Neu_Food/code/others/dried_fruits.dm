@@ -1,9 +1,11 @@
 
 // -------------- RAISINS, SWEETGLASS ------------------
 /obj/item/reagent_containers/food/snacks/rogue/raisins
+	cuisine = CUISINE_RANESHENI
+	dish_type = DISH_FRUIT
 	name = "raisins"
 	desc = "Jackberries that've been pruned of their juiciness, and turned into flavorful nuggets. Like the humble hardtack, so \
-	too will these raisins outlast their creators.  When combined with honey and doused in a pot of boiling fat, it can birth \
+	too will these raisins outlast their creators.	When combined with honey and doused in a pot of boiling fat, it can birth \
 	'sweetglass'; a shatteringly sweet candy, popular amongst the elders and children-of-nobility."
 	icon = 'icons/roguetown/items/produce.dmi'
 	icon_state = "raisins5"
@@ -14,7 +16,6 @@
 	faretype = FARE_POOR
 	eat_effect = null
 	rotprocess = null
-	foodtype = FRUIT
 
 /obj/item/reagent_containers/food/snacks/rogue/raisins/On_Consume(mob/living/eater)
 	..()
@@ -113,6 +114,8 @@
 //
 
 /obj/item/reagent_containers/food/snacks/rogue/raisins/sweetglass
+	cuisine = CUISINE_RANESHENI
+	dish_type = DISH_FRUIT|DISH_SWEET|DISH_HONEY|DISH_MEAT
 	name = "sweetglass"
 	desc = "A palmful of crystallized dried raisins, popular amongst the elders and children-of-nobility. Their tendancy to only \
 	spoil under very specific circumstances makes it a favored treat for those traveling afar; so long as they can afford it, of course."
@@ -124,7 +127,6 @@
 	faretype = FARE_LAVISH
 	color = "#A060FF" //Placeholder until someone wants to twiddle it for themselves. Should be fine, otherwise.
 	eat_effect = /datum/status_effect/buff/sweet
-	foodtype = FRUIT
 
 /obj/item/reagent_containers/food/snacks/rogue/raisins/sweetglass/On_Consume(mob/living/eater)
 	..()
@@ -197,8 +199,9 @@
 
 // -------------- Trail-mix -----------------
 /obj/item/reagent_containers/food/snacks/rogue/trailmix
+	dish_type = DISH_FRUIT|DISH_VEGETABLE
 	name = "trail-mix"
-	desc = "A collection of dried and long lasting snacks tucked into a neat package to be indulged in as needed. Favorite of rangers due to its simplicity and availability."
+	desc = "A collection of dried and long-lasting snacks tucked into a neat package to be indulged in as needed. Favorite of rangers due to its simplicity and availability."
 	icon = 'modular/Neu_food/icons/cookware/ration.dmi'
 	icon_state = "ration_large"//Prob give it'S own subtype later
 	eat_effect = null

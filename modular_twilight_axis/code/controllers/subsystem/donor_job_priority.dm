@@ -136,8 +136,8 @@ GLOBAL_VAR_INIT(donor_job_boost_round_index_loaded, FALSE)
 	if(length(job.virtue_restrictions) && ((player.client.prefs.virtue?.type in job.virtue_restrictions) || (player.client.prefs.virtuetwo?.type in job.virtue_restrictions) || (player.client.prefs.virtue_origin?.type in job.virtue_restrictions)))
 		return FALSE
 	if(length(job.vice_restrictions))
-		for(var/datum/charflaw/cf in player.client.prefs.charflaws)
-			if(cf.type in job.vice_restrictions)
+		for(var/flaw_type in player.client.prefs.charflaws)
+			if(flaw_type in job.vice_restrictions)
 				return FALSE
 	#ifdef USES_PQ
 	if(!isnull(job.min_pq) && (get_playerquality(player.ckey) < job.min_pq))
@@ -146,8 +146,6 @@ GLOBAL_VAR_INIT(donor_job_boost_round_index_loaded, FALSE)
 		return FALSE
 	#endif
 	if((player.client.prefs.lastclass == job.title) && !job.bypass_lastclass)
-		return FALSE
-	if(check_blacklist(player.client.ckey) && !job.bypass_jobban)
 		return FALSE
 	if(CONFIG_GET(flag/usewhitelist) && job.whitelist_req && !player.client.whitelisted())
 		return FALSE

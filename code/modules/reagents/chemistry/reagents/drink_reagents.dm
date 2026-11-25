@@ -1,11 +1,13 @@
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////// DRINKS BELOW, Beer is up there though, along with cola. Cap'n Pete's Cuban Spiced Rum////////////////////////////////
+///////////////////////The old header is gone, take that. Its drinky time.///////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Rougetown Reagents - Ported from Dreamkeep
+//Roguetown Reagents - Ported from Dreamkeep
 /datum/reagent/consumable/acorn_powder
-	name = "Acorn Powder"
+	cuisine = CUISINE_NORTHERN
+	drink_type = DRINKTYPE_CAFFEINE
+	name = "acorn powder"
 	description = "A bitter fine powder."
 	color = "#dcb137"
 	quality = DRINK_VERYGOOD
@@ -16,7 +18,9 @@
 	..()
 
 /datum/reagent/consumable/Acoffee
-	name = "Acorn Coffee"
+	cuisine = CUISINE_NORTHERN
+	drink_type = DRINKTYPE_CAFFEINE
+	name = "acorn coffee"
 	description = "A nice bitter stimulating brew"
 	color = "#800000"
 	quality = DRINK_VERYGOOD
@@ -79,8 +83,8 @@
 		container.reagents.del_reagent(/datum/reagent/water)
 
 /datum/reagent/consumable/milk
-	name = "Milk"
-	description = "An opaque white liquid produced by the mammary glands of mammals."
+	name = "milk"
+	description = "Ichor of the udder."
 	color = "#DFDFDF" // rgb: 223, 223, 223
 	taste_description = "milk"
 	glass_icon_state = "glass_white"
@@ -98,3 +102,189 @@
 		if(H.blood_volume < BLOOD_VOLUME_NORMAL)
 			H.blood_volume = min(H.blood_volume+10, BLOOD_VOLUME_NORMAL)
 	..()
+
+
+//additions for the drink mixing
+//base liquids - juiced in mortar and pestle
+
+/datum/reagent/consumable/juice
+	name = "juice"
+	drink_type = DRINKTYPE_JUICE
+	quality = DRINK_GOOD
+	metabolization_rate = 0.5 * REAGENTS_METABOLISM
+	overdose_threshold = null
+	reagent_state = LIQUID
+	hydration_factor = 10
+
+/datum/reagent/consumable/juice/lemon
+	name = "juice of lemon"
+	description = "The sweet juice of a crushed lemon."
+	color = "#FFFF00"
+	quality = DRINK_NICE
+	cuisine = CUISINE_ETRUSCAN
+	taste_description = "citrused sweetness"
+	metabolization_rate = 0.8 * REAGENTS_METABOLISM
+	hydration_factor = 8
+
+/datum/reagent/consumable/juice/lime
+	name = "juice of lime"
+	description = "The sweetly tart juice of a crushed lime."
+	color = "#00FF00"
+	quality = DRINK_NICE
+	cuisine = CUISINE_RANESHENI
+	taste_description = "citrused tartness"
+	metabolization_rate = 0.8 * REAGENTS_METABOLISM
+	hydration_factor = 8
+
+/datum/reagent/consumable/juice/tomato
+	name = "juice of tomato"
+	description = "The tangy juice of a crushed tomato, better suited for mixing drinks over saucing meals."
+	color = "#CD5320"
+	quality = DRINK_NICE
+	cuisine = CUISINE_ETRUSCAN
+	taste_description = "tangy tomatoness"
+	metabolization_rate = 0.8 * REAGENTS_METABOLISM
+	hydration_factor = 8
+
+/datum/reagent/consumable/juice/strawberry
+	name = "juice of strawberry"
+	description = "The overwhemingly sweet juice of a crushed strawberry."
+	color = "#9A1B00"
+	quality = DRINK_NICE
+	cuisine = CUISINE_NORTH_IMPERIAL
+	taste_description = "extreme sweetness"
+
+/datum/reagent/consumable/juice/pear
+	name = "juice of pear"
+	description = "The slightly tart and bittersweet juice of a crushed pear."
+	color = "#D2B48C"
+	cuisine = CUISINE_SOUTHEASTERN
+	taste_description = "tarty sweetness"
+
+/datum/reagent/consumable/juice/apple
+	name = "juice of apple"
+	description = "The crisp and sweet juice of a crushed apple."
+	color = "#E0BE6D"
+	cuisine = CUISINE_SOUTHEASTERN
+	taste_description = "pleasantly crisp appleness"
+
+/datum/reagent/consumable/juice/plum
+	name = "juice of plum"
+	description = "The very tart and bittersweet juice of a crushed plum."
+	color = "#8B008B"
+	cuisine = CUISINE_SOUTHEASTERN
+	taste_description = "very tart with a little sweet"
+
+/datum/reagent/consumable/juice/blackberry
+	name = "juice of blackberry"
+	description = "The slightly sweet and tart juice of a crushed blackberry."
+	color = "#272C3F"
+	cuisine = CUISINE_NORTH_IMPERIAL|CUISINE_OTAVAIS
+	taste_description = "slightly tart and very sweet"
+
+/datum/reagent/consumable/juice/raspberry
+	name = "juice of raspberry"
+	description = "The slightly tart and sweet juice of a crushed raspberry."
+	color = "#A01600"
+	cuisine = CUISINE_SOUTHEASTERN
+	taste_description = "slightly tart and a bit sweet"
+
+/datum/reagent/consumable/juice/jackberry
+	name = "juice of jacksberry"
+	description = "Juiced jacksberries, churned from Azuria's favorite fruit."
+	color = "#4A3D63"
+	cuisine = CUISINE_SOUTH_IMPERIAL
+	taste_description = "quintessential fruitiness"
+
+/datum/reagent/consumable/juice/pomegranate
+	name = "juice of pomegranate"
+	description = "Born from Eora's own blessed fruits, this juice is said to be the most romantic of all juices."
+	color = "#B3163A"
+	taste_description = "refreshingly tart"
+	cuisine = CUISINE_SOUTH_IMPERIAL
+	hydration_factor = 20
+
+/datum/reagent/consumable/juice/orange
+	name = "juice of orange"
+	description = "The tangy and energizing juice of a crushed tangerine."
+	color = "#FFA500"
+	taste_description = "citrused sweetness"
+	cuisine = CUISINE_SOUTH_IMPERIAL
+	hydration_factor = 12
+
+//drink mixes - post reagent reaction
+
+/datum/reagent/consumable/virgin_drink
+	name = "virgin drink"
+	drink_type = DRINKTYPE_VIRGIN
+	quality = DRINK_VERYGOOD
+	metabolization_rate = 0.5 * REAGENTS_METABOLISM
+	overdose_threshold = null
+	reagent_state = LIQUID
+	hydration_factor = 15
+
+/datum/reagent/consumable/virgin_drink/lemonade
+	cuisine = CUISINE_ETRUSCAN
+	name = "Lemonade"
+	description = "A sweet and slightly tangy joy to the senses. Tastes like summer."
+	color = "#FFFEEE"
+	taste_description = "sweet tangy-ness"
+	hydration_factor = 14
+
+/datum/chemical_reaction/alch/lemonade
+	name = "Lemonade"
+	mix_sound = 'sound/items/fillbottle.ogg'
+	id = /datum/reagent/consumable/virgin_drink/lemonade
+	results = list(/datum/reagent/consumable/virgin_drink/lemonade = 3)
+	required_reagents = list(/datum/reagent/water = 1, /datum/reagent/consumable/juice/lemon = 1, /datum/reagent/consumable/sugar = 1)
+
+/datum/reagent/consumable/virgin_drink/strawberry_lemonade
+	cuisine = CUISINE_RANESHENI
+	name = "Strawberry Lemonade"
+	description = "A sweet, fruity, and slightly tangy joy to the senses. Tastes like a romantic summer."
+	color = "#FFD1C9"
+	quality = DRINK_FANTASTIC
+	taste_description = "a sweet strawberry and lemon mix."
+
+/datum/chemical_reaction/alch/strawlemonade
+	name = "strawberry lemonade"
+	mix_sound = 'sound/items/fillbottle.ogg'
+	id = /datum/reagent/consumable/virgin_drink/strawberry_lemonade
+	results = list(/datum/reagent/consumable/virgin_drink/strawberry_lemonade = 2)
+	required_reagents = list(/datum/reagent/consumable/juice/strawberry = 1, /datum/reagent/consumable/virgin_drink/lemonade = 1)
+
+/datum/reagent/consumable/virgin_drink/abyssors_rest
+	cuisine = CUISINE_RANESHENI
+	name = "Abyssor's rest"
+	description = "A soft mix of chamomilesque herbs, honey, and a little mint. You should probably not take this in the field."
+	color = "#9FC4D6"
+	quality = DRINK_GOOD
+	taste_description = "a soft and minty herbaceous mix."
+	metabolization_rate = 1 * REAGENTS_METABOLISM
+
+/datum/reagent/consumable/virgin_drink/abyssors_rest/on_mob_metabolize(mob/living/carbon/M)
+	M.apply_status_effect(/datum/status_effect/debuff/knockout)
+	..()
+
+/datum/chemical_reaction/alch/abyssorsrest
+	name = "Abyssor's rest"
+	mix_sound = 'sound/items/fillbottle.ogg'
+	id = /datum/reagent/consumable/virgin_drink/abyssors_rest
+	results = list(/datum/reagent/consumable/virgin_drink/abyssors_rest = 4)
+	required_reagents = list(/datum/reagent/medicine/trait/sleepdraught = 1, /datum/reagent/sleep_powder = 1, /datum/reagent/consumable/caffeine/tea = 1, /datum/reagent/consumable/honey = 1)
+
+/datum/reagent/consumable/virgin_drink/fruit_punch
+	cuisine = CUISINE_NORTH_IMPERIAL|CUISINE_SOUTH_IMPERIAL|CUISINE_OTAVAIS|CUISINE_NORTHERN|CUISINE_ETRUSCAN|CUISINE_SOUTHEASTERN|CUISINE_RANESHENI
+	name = "Fruit punch"
+	description = "A testament to true peace, the most refreshing mix of all the fruits."
+	color = "#8A0B0B"
+	quality = DRINK_FANTASTIC
+	taste_description = "an overwhelming fruitiness."
+	hydration_factor = 20
+
+/datum/chemical_reaction/alch/fruitpunch
+	name = "Fruit punch"
+	mix_sound = 'sound/items/fillbottle.ogg'
+	id = /datum/reagent/consumable/virgin_drink/fruit_punch
+	results = list(/datum/reagent/consumable/virgin_drink/fruit_punch = 10)
+	required_reagents = list(/datum/reagent/consumable/juice/strawberry = 1, /datum/reagent/consumable/juice/lemon = 1, /datum/reagent/consumable/juice/lime = 1, /datum/reagent/consumable/juice/pear = 1, /datum/reagent/consumable/juice/plum = 1, /datum/reagent/consumable/juice/blackberry = 1, /datum/reagent/consumable/juice/raspberry = 1, /datum/reagent/consumable/juice/jackberry = 1, /datum/reagent/consumable/juice/orange = 1)

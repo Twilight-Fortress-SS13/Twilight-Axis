@@ -146,7 +146,7 @@
 	owner.adjustCloneLoss(-healing_strength, 0)
 
 /atom/movable/screen/alert/status_effect/buff/pestra_care
-	name = "Pestra's embrace"
+	name = "Pestra's Embrace"
 	desc = "It's like something is wriggling around inside of me, but it's making me feel better..."
 	icon_state = "buff"
 
@@ -158,12 +158,15 @@
 	duration = 60 SECONDS
 	tick_interval = 3 SECONDS
 	effectedstats = list(STATKEY_CON = -1,
-						 STATKEY_STR = -3)
+							STATKEY_STR = -2)
 	var/outline_colour = "#095000"
 
 /datum/status_effect/debuff/pestilent_plague/on_apply()
 	. = ..()
-	owner.adjustBruteLoss(30)
+	if(owner.mind)
+		owner.adjustBruteLoss(10)
+	else
+		owner.adjustBruteLoss(40)
 	to_chat(owner, span_danger("My body is wracked by malaise!"))
 	var/filter = owner.get_filter(PLAGUE_GLOW_FILTER)
 	if (!filter)
@@ -175,7 +178,10 @@
 
 /datum/status_effect/debuff/pestilent_plague/tick()
 	var/mob/living/target = owner
-	target.adjustBruteLoss(2)
+	if(owner.mind)
+		target.adjustBruteLoss(1)
+	else
+		target.adjustBruteLoss(5)
 
 	if(prob(10))
 		var/message = pick(
@@ -202,7 +208,7 @@
 	examine_text = "SUBJECTPRONOUN is surrounded by an ominous aura of disease."
 
 /atom/movable/screen/alert/status_effect/black_rot_carrier
-	name = "Pestra's blessing"
+	name = "Pestra's Blessing"
 	desc = "I carry Pestra's blessing, people should avoid my touch."
 
 /datum/status_effect/black_rot_debility

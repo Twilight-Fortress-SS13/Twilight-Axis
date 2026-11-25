@@ -9,7 +9,6 @@
 	close_sound = 'sound/misc/chestclose.ogg'
 	keylock = TRUE
 	locked = FALSE
-	sellprice = 1
 	max_integrity = 200
 	blade_dulling = DULLING_BASHCHOP
 	mob_storage_capacity = 1
@@ -29,7 +28,7 @@
 	name = "otavan chest"
 	desc = "A foreboding red chest with black dye-washed silver embellishments."
 	icon_state = "chestweird2"
-	base_icon_state = "chestweird2"	
+	base_icon_state = "chestweird2"
 
 //obj/structure/closet/crate/chest/Initialize(mapload)
 //	. = ..()
@@ -43,7 +42,7 @@
 
 /obj/structure/closet/crate/chest/lootbox/PopulateContents()
 	var/list/loot = list(/obj/item/cooking/pan=33,
-		/obj/item/bomb=6,
+		/obj/item/explosive/fused/bottle=6,
 		/obj/item/rogueweapon/huntingknife/idagger=33,
 		/obj/item/clothing/suit/roguetown/armor/gambeson=33,
 		/obj/item/clothing/suit/roguetown/armor/leather=33,
@@ -86,6 +85,10 @@
 	dense_when_open = FALSE
 	mob_storage_capacity = 2
 
+/obj/structure/closet/crate/roguecloset/attack_right(mob/user)
+	handle_special_items_retrieval(user, src)
+	return
+
 /obj/structure/closet/crate/roguecloset/inn/south
 	base_icon_state = "closet3"
 	icon_state = "closet3"
@@ -126,8 +129,7 @@
 		/obj/item/clothing/suit/roguetown/armor/plate/cuirass = 30,
 		/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fluted = 4,
 		/obj/item/rogueweapon/greatsword/grenz/flamberge/blacksteel = 1,
-		/obj/item/rogueweapon/halberd/glaive = 4,
-		/obj/item/heelkit = 11
+		/obj/item/rogueweapon/halberd/glaive = 4
 	)
 
 /obj/structure/closet/crate/roguecloset/dark/squire/can_open(mob/living/user)
@@ -164,7 +166,6 @@
 	close_sound = 'sound/misc/chestclose.ogg'
 	keylock = FALSE
 	locked = FALSE
-	sellprice = 1
 	max_integrity = 50
 	blade_dulling = DULLING_BASHCHOP
 	mob_storage_capacity = 1
@@ -199,7 +200,7 @@
 	name = "sun-bleached wicker basket"
 	desc = "Fibers interwoven to make a cheap storage bin. This one smells rather funny."
 
-/obj/structure/closet/crate/chest/wicker/bait/Initialize()
+/obj/structure/closet/crate/chest/wicker/bait/Initialize(mapload)
 	. = ..()
 	for(var/i = 1 to 9)
 		new /obj/item/natural/worms(src)
@@ -231,7 +232,7 @@
 	base_icon_state = "drawer1"
 	pixel_y = 8
 
-/obj/structure/closet/crate/drawer/random/Initialize()
+/obj/structure/closet/crate/drawer/random/Initialize(mapload)
 	. = ..()
 	if(icon_state == "drawer1")
 		base_icon_state = "drawer[rand(1,4)]"
@@ -249,7 +250,7 @@
 	/// Set to TRUE after it has spawned the gear.
 	var/has_spawned_gear = FALSE
 
-/obj/structure/closet/crate/roguecloset/lord/duke_preset/Initialize()
+/obj/structure/closet/crate/roguecloset/lord/duke_preset/Initialize(mapload)
 	. = ..()
 	RegisterSignal(SSdcs, COMSIG_TICKER_RULERMOB_SET, PROC_REF(spawn_blacksteel))
 
@@ -300,6 +301,9 @@
 		/obj/item/roguegem/yellow = 10,
 		/obj/item/roguestatue/bronze = 10,
 		/obj/item/roguestatue/iron = 5,
+		/obj/item/ccg_card_generator/common = 3,
+		/obj/item/ccg_card_booster = 2,
+		/obj/item/ccg_card_booster/premium = 1,
 		/obj/item/clothing/mask/cigarette/rollie/nicotine = 20, //Misc stuff
 		/obj/item/reagent_containers/food/snacks/butter = 10,
 		/obj/item/reagent_containers/food/snacks/rogue/raisins = 10,
@@ -324,7 +328,7 @@
 	name = "coffin"
 	desc = "A coffin of some burgher."
 	icon_state = "vcasket" //Fancy casket
-	base_icon_state = "vcasket" 
+	base_icon_state = "vcasket"
 	locked = TRUE
 
 /obj/structure/closet/crate/chest/coffinlootbox_middle/PopulateContents()
@@ -342,6 +346,10 @@
 		/obj/item/roguegem/violet = 10,
 		/obj/item/roguestatue/gold/loot = 10,
 		/obj/item/roguestatue/aalloy = 5,
+		/obj/item/ccg_card_generator/common = 4,
+		/obj/item/ccg_card_generator/rare = 3,
+		/obj/item/ccg_card_booster = 2,
+		/obj/item/ccg_card_booster/premium = 1,
 		/obj/item/storage/belt/rogue/pouch/zigarrete/nicotine = 15, //Misc stuff
 		/obj/item/reagent_containers/food/snacks/butter = 15,
 		/obj/item/reagent_containers/food/snacks/canned = 15,
@@ -381,6 +389,11 @@
 		/obj/item/roguestatue/gold = 10,
 		/obj/item/roguestatue/silver = 10,
 		/obj/item/roguestatue/blacksteel = 5,
+		/obj/item/ccg_card_generator/common = 1,
+		/obj/item/ccg_card_generator/rare = 3,
+		/obj/item/ccg_card_generator/unique = 2,
+		/obj/item/ccg_card_booster = 2,
+		/obj/item/ccg_card_booster/premium = 1,
 		/obj/item/storage/belt/rogue/pouch/zigarrete/nicotine = 10, //Misc stuff
 		/obj/item/reagent_containers/food/snacks/canned = 20,
 		/obj/item/reagent_containers/food/snacks/rogue/crackerscooked = 5,
@@ -401,3 +414,41 @@
 		)
 	var/I = pickweight(loot)
 	new I(src)
+
+/obj/structure/closet/crate/chest/wickertrunk
+	name = "wicker trunk"
+	desc = "Fibers interwoven to make a somewhat sturdy trunk."
+	base_icon_state = "wickertrunk"
+	icon_state = "wickertrunk"
+	open_sound = 'sound/items/book_open.ogg'
+	close_sound = 'sound/items/book_close.ogg'
+	sellprice = 0
+
+/obj/structure/closet/crate/chest/wickertrunk/blue
+	name = "decorated wicker trunk"
+	desc = "A somewhat sturdy wicker trunk covered in a linen throw rug, \
+		quaint."
+	base_icon_state = "bluewickertrunk"
+	icon_state = "bluewickertrunk"
+	open_sound = 'sound/items/book_open.ogg'
+	close_sound = 'sound/items/book_close.ogg'
+	sellprice = 0
+
+/obj/structure/closet/crate/chest/wickertrunk/red
+	name = "decorated wicker trunk"
+	desc = "A somewhat sturdy wicker trunk covered in a linen throw rug, \
+		quaint."
+	base_icon_state = "redwickertrunk"
+	icon_state = "redwickertrunk"
+	open_sound = 'sound/items/book_open.ogg'
+	close_sound = 'sound/items/book_close.ogg'
+	sellprice = 0
+
+/obj/structure/closet/crate/chest/shippingcrate
+	name = "shipping crate"
+	desc = "A sturdy wooden crate held together with bronze nails."
+	base_icon_state = "shippingcrate"
+	icon_state = "shippingcrate"
+	open_sound = 'sound/foley/doors/windowup.ogg'
+	close_sound = 'sound/foley/doors/shittyclose.ogg'
+	sellprice = 0

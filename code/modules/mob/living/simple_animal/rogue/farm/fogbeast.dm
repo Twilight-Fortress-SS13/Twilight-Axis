@@ -12,9 +12,8 @@ GLOBAL_LIST_INIT(valid_fogbeast_colors, list("White" = COLOR_WHITE, "Gray" = COL
 	blood_toll_bucket = STATS_KILLED_LIVESTOCK
 	emote_see = list("looks around.", "chews some leaves.", "neighs")
 	speak_chance = 1
-	turns_per_move = 5
 	see_in_dark = 6
-	move_to_delay = 8
+	ride_move_delay = 8
 	butcher_results = list(
 		/obj/item/reagent_containers/food/snacks/rogue/meat/steak = 4,
 		/obj/item/reagent_containers/food/snacks/fat = 2,
@@ -25,7 +24,7 @@ GLOBAL_LIST_INIT(valid_fogbeast_colors, list("White" = COLOR_WHITE, "Gray" = COL
 	animal_species = /mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/male
 	health = 380
 	maxHealth = 380
-	food_type = list(/obj/item/reagent_containers/food/snacks/grown/wheat, /obj/item/reagent_containers/food/snacks/grown/oat, /obj/item/reagent_containers/food/snacks/grown/apple)
+	food_type = list(/obj/item/reagent_containers/food/snacks/grown/wheat, /obj/item/reagent_containers/food/snacks/grown/oat, /obj/item/reagent_containers/food/snacks/grown/apple,/obj/item/reagent_containers/food/snacks/grown/maize)
 	tame_chance = 15
 	bonus_tame_chance = 15
 	footstep_type = FOOTSTEP_MOB_SHOE
@@ -35,8 +34,6 @@ GLOBAL_LIST_INIT(valid_fogbeast_colors, list("White" = COLOR_WHITE, "Gray" = COL
 	attack_verb_simple = "kicks"
 	melee_damage_lower = 50
 	melee_damage_upper = 70
-	retreat_distance = 0
-	minimum_distance = 10
 	milkies = FALSE
 	STASPD = 15
 	STACON = 8
@@ -52,13 +49,16 @@ GLOBAL_LIST_INIT(valid_fogbeast_colors, list("White" = COLOR_WHITE, "Gray" = COL
 	buckle_lying = 0
 	can_saddle = TRUE
 	max_buckled_mobs = 2
-	aggressive = TRUE
 	remains_type = /obj/effect/decal/remains/saiga
+
+	ai_controller = /datum/ai_controller/generic/retaliate
 
 	var/fogbeast_color
 
-/mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/Initialize(mapload, var/set_fogbeast_color)
+/mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/Initialize(mapload, set_fogbeast_color)
 	. = ..()
+	AddElement(/datum/element/ai_retaliate)
+	ai_controller.set_blackboard_key(BB_BASIC_FOODS, food_typecache)
 	fogbeast_color = set_fogbeast_color
 	if(!fogbeast_color)
 		fogbeast_color = pick(GLOB.valid_fogbeast_colors)
@@ -67,7 +67,7 @@ GLOBAL_LIST_INIT(valid_fogbeast_colors, list("White" = COLOR_WHITE, "Gray" = COL
 /mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/tame
 	tame = TRUE
 
-/mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/tame/saddled/Initialize()
+/mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/tame/saddled/Initialize(mapload)
 	. = ..()
 	var/obj/item/natural/saddle/S = new(src)
 	ssaddle = S
@@ -95,12 +95,10 @@ GLOBAL_LIST_INIT(valid_fogbeast_colors, list("White" = COLOR_WHITE, "Gray" = COL
 
 /mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/taunted(mob/user)
 	emote("aggro")
-	Retaliate()
-	GiveTarget(user)
+	ai_controller?.force_aggro(user)
 
-/mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/tamed()
-	..()
-	deaggroprob = 20
+/mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/tamed(mob/user) // TA EDIT
+	..(user) // TA EDIT
 	setup_mount()
 
 /mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/death()
@@ -149,15 +147,18 @@ GLOBAL_LIST_INIT(valid_fogbeast_colors, list("White" = COLOR_WHITE, "Gray" = COL
 
 /// If we're a mount and are hit while sprinting, throw our rider off
 /// Also called if the rider is hit
-/mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/proc/check_sprint_dismount()
+/mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/proc/check_sprint_dismount(datum/source, damage, damagetype, def_zone) // TA EDIT START
 	SIGNAL_HANDLER
+	if(source == src || damage < 15 || world.time < mount_next_hit_fear || world.time < mount_fear_until)
+		return
 	for(var/mob/living/carbon/human/rider in buckled_mobs)
 		if(rider.m_intent != MOVE_INTENT_RUN)
 			continue
 		var/rider_skill = rider.get_skill_level(/datum/skill/misc/riding)
 		if(rider_skill >= SKILL_LEVEL_MASTER)
 			continue
-		violent_dismount(rider)
+		if(mount_startle(rider, 3 SECONDS, max(4, 16 - rider_skill * 2)))
+			mount_next_hit_fear = world.time + 12 SECONDS // TA EDIT END
 
 /mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/post_buckle_mob(mob/living/M)
 	. = ..()
@@ -185,7 +186,7 @@ GLOBAL_LIST_INIT(valid_fogbeast_colors, list("White" = COLOR_WHITE, "Gray" = COL
 /mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/male/tame
 	tame = TRUE
 
-/mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/male/tame/saddled/Initialize()
+/mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/male/tame/saddled/Initialize(mapload)
 	. = ..()
 	var/obj/item/natural/saddle/S = new(src)
 	ssaddle = S
@@ -217,7 +218,7 @@ GLOBAL_LIST_INIT(valid_fogbeast_colors, list("White" = COLOR_WHITE, "Gray" = COL
 	tame = TRUE
 	can_buckle = FALSE
 	can_saddle = FALSE
-	aggressive = TRUE
+	ai_controller = /datum/ai_controller/generic/skittish
 
 /mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/kid/male
 	name = "fogbeast colt"
@@ -228,7 +229,7 @@ GLOBAL_LIST_INIT(valid_fogbeast_colors, list("White" = COLOR_WHITE, "Gray" = COL
 	name = "horse"
 	icon_state = "instrike"
 	attack_verb = list("tramples", "rams", "kicks")
-	animname = "blank22"
+	animname = "kick"
 	blade_class = BCLASS_BLUNT
 	hitsound = "punch_hard"
 	chargetime = 0

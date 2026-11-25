@@ -6,6 +6,10 @@
 #define TRANQUILITY_SHROUD_MODE_DEADITE "deadite"
 #define TRANQUILITY_SHROUD_MODE_VAMPIRE "vampire"
 #define TRANQUILITY_SHROUD_SUN_BURN_DAMAGE 3
+#define TRANQUILITY_SHROUD_REMOVAL_HALLOWED "hallowed_ground"
+
+/area/rogue/under/cave/licharena
+	var/hallowed_against_undead_disguise = TRUE
 
 /datum/stressevent/tranquility_shroud/restless
 	stressadd = 2
@@ -227,6 +231,10 @@
 /datum/status_effect/tranquility_shroud/on_apply()
 	if(!owner || QDELETED(owner) || owner.stat != CONSCIOUS || (owner.mob_biotypes & MOB_UNDEAD) || owner.mind?.has_antag_datum(/datum/antagonist/zombie))
 		return FALSE
+	var/area/rogue/under/cave/licharena/arena = get_area(owner)
+	if(istype(arena) && arena.hallowed_against_undead_disguise)
+		to_chat(owner, span_warning("Освящённая земля отвергает саван - здесь чужая личина мёртвых не ляжет."))
+		return FALSE
 	mask_active = TRUE
 	protection_active = (shroud_mode == TRANQUILITY_SHROUD_MODE_RESTLESS && shroud_tier >= CLERIC_T1)
 	owner.AddElement(/datum/element/tranquility_shroud)
@@ -241,7 +249,9 @@
 		remove_shroud_disguise()
 		owner.RemoveElement(/datum/element/tranquility_shroud)
 		if(!suppress_remove_message)
-			if(removal_reason)
+			if(removal_reason == TRANQUILITY_SHROUD_REMOVAL_HALLOWED)
+				to_chat(owner, span_boldwarning("Владения Архилича раздирают украденную личину - саван спадает с меня!"))
+			else if(removal_reason)
 				to_chat(owner, span_warning("Туман рвётся и больше не может сокрыть от нежити."))
 			else
 				to_chat(owner, span_notice("Туман рассеивается вокруг меня."))
@@ -321,6 +331,7 @@
 	RegisterSignal(owner, COMSIG_HUMAN_LIFE, PROC_REF(on_owner_life))
 	RegisterSignal(owner, COMSIG_PARENT_EXAMINE, PROC_REF(on_owner_examine))
 	RegisterSignal(owner, "mob_ai_target_check", PROC_REF(on_owner_ai_target_check))
+	RegisterSignal(owner, COMSIG_ENTER_AREA, PROC_REF(on_owner_enter_area))
 	owner.tranquility_shroud_hide_from_nearby_undead()
 
 /datum/element/tranquility_shroud/Detach(datum/source, ...)
@@ -333,8 +344,15 @@
 		COMSIG_HUMAN_LIFE,
 		COMSIG_PARENT_EXAMINE,
 		"mob_ai_target_check",
+		COMSIG_ENTER_AREA,
 	))
 	return ..()
+
+/datum/element/tranquility_shroud/proc/on_owner_enter_area(mob/living/source, area/rogue/under/cave/licharena/arena)
+	SIGNAL_HANDLER
+	if(!istype(arena) || !arena.hallowed_against_undead_disguise)
+		return
+	source.remove_tranquility_shroud(TRANQUILITY_SHROUD_REMOVAL_HALLOWED)
 
 /datum/element/tranquility_shroud/proc/break_from_incoming_attack(atom/target, atom/attacker)
 	if(!isliving(target) || !isliving(attacker))
@@ -500,9 +518,6 @@
 /mob/living/proc/tranquility_shroud_respects_deadites()
 	if(!tranquility_shroud_is_npc_undead())
 		return FALSE
-	var/mob/living/simple_animal/hostile/hostile_mob = src
-	if(istype(hostile_mob) && hostile_mob.attack_same)
-		return FALSE
 	var/datum/targetting_datum/basic/ignore_faction/ignore_faction_targeting = ai_controller?.blackboard[BB_TARGETTING_DATUM]
 	if(istype(ignore_faction_targeting))
 		return FALSE
@@ -550,6 +565,5 @@
 		if(aggro_table && aggro_table[target])
 			aggro_table -= target
 		ai_controller.CancelActions()
-	var/mob/living/simple_animal/hostile/hostile_mob = src
-	if(istype(hostile_mob) && hostile_mob.target == target)
-		hostile_mob.LoseTarget()
+	if(ai_controller?.blackboard[BB_BASIC_MOB_CURRENT_TARGET] == target)
+		ai_controller.clear_aggro()

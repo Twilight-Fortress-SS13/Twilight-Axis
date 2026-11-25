@@ -2,6 +2,7 @@
 /// Uses a name-keyed associative list (gear_list) with per-item metadata for color, custom name, and custom description.
 /// Based on Bay / Eris / Sojourn loadout menu with a different UI but the same save format.
 #define LOADOUT_MAX_POINTS 10
+#define LOADOUT_MAX_NAME_LEN 64
 #define LOADOUT_MAX_DESC_LEN 1024
 #define LOADOUT_TRIUMPH_DISCOUNT 3 // donators get this many triumph points free in loadout
 #define LOADOUT_DONATOR_BONUS 5 // donators get this many extra loadout points
@@ -38,7 +39,7 @@
 
 	for(var/item_name as anything in GLOB.loadout_items_by_name)
 		var/datum/loadout_item/LI = GLOB.loadout_items_by_name[item_name]
-		if(LI.donoritem && !LI.donator_ckey_check(user.ckey))
+		if(LI.donoritem && !LI.donator_ckey_check(user.ckey, user?.client))
 			continue
 
 		var/cat = LI.sort_category
@@ -47,11 +48,13 @@
 		// Detect color channels dynamically from the item's compiled defaults
 		var/obj/item/target = LI.path
 		var/list/color_channels = list("primary")
+		var/list/preview_layers
 		if(ispath(LI.path, /obj/item))
 			if(initial(target.detail_tag))
 				color_channels += "detail"
 			if(initial(target.altdetail_tag))
 				color_channels += "altdetail"
+			preview_layers = preview_layers_for(target)
 
 		if(LI.name == "Parent loadout datum")
 			continue
@@ -62,10 +65,11 @@
 			"category" = cat,
 			"cost" = LI.cost,
 			"triumph_cost" = LI.triumph_cost,
-			"color_channels" = color_channels
+			"color_channels" = color_channels,
+			"preview_layers" = preview_layers
 		))
 
-	var/donator = is_donator(user.ckey)
+	var/donator = (is_donator(user.ckey) || user.client?.holder)
 	data["categories"] = categories
 	data["items"] = items
 	data["max_points"] = LOADOUT_MAX_POINTS + (donator ? LOADOUT_DONATOR_BONUS : 0)
@@ -73,6 +77,27 @@
 	data["triumph_discount"] = donator ? LOADOUT_TRIUMPH_DISCOUNT : 0
 	data["donator_bonus"] = donator ? LOADOUT_DONATOR_BONUS : 0
 	return data
+
+/datum/loadout_menu/proc/preview_layers_for(obj/item/target)
+	var/icon_file = initial(target.icon)
+	var/icon_state = initial(target.icon_state)
+	if(!icon_exists(icon_file, icon_state))
+		return null
+	var/list/layers = list(preview_layer(icon_file, icon_state, initial(target.color)))
+	var/detail_tag = initial(target.detail_tag)
+	if(detail_tag && icon_exists(icon_file, "[icon_state][detail_tag]"))
+		layers += list(preview_layer(icon_file, "[icon_state][detail_tag]", initial(target.detail_color)))
+	var/altdetail_tag = initial(target.altdetail_tag)
+	if(altdetail_tag && icon_exists(icon_file, "[icon_state][altdetail_tag]"))
+		layers += list(preview_layer(icon_file, "[icon_state][altdetail_tag]", initial(target.altdetail_color)))
+	return layers
+
+/datum/loadout_menu/proc/preview_layer(icon_file, icon_state, layer_color)
+	return list(
+		"icon" = "[icon_file]",
+		"icon_state" = icon_state,
+		"color" = istext(layer_color) ? layer_color : null
+	)
 
 /datum/loadout_menu/ui_data(mob/user)
 	var/list/data = list()
@@ -91,16 +116,24 @@
 		var/list/meta = gear_list[item_name]
 		if(!islist(meta))
 			meta = list()
+		if(meta["custom_name"] && !meta["custom_name_parsed"]) // handling for older savefiles
+			meta["custom_name_parsed"] = sanitize(meta["custom_name"])
+			gear_list[item_name] = meta
+		if(meta["custom_desc"] && !meta["custom_desc_parsed"]) // handling for older savefiles
+			meta["custom_desc_parsed"] = html_encode(meta["custom_desc"])
+			gear_list[item_name] = meta
 		selected += list(list(
 			"name" = item_name,
 			"color" = meta["color"],
 			"detail_color" = meta["detail_color"],
 			"altdetail_color" = meta["altdetail_color"],
 			"custom_name" = meta["custom_name"],
-			"custom_desc" = meta["custom_desc"]
+			"custom_name_parsed" = meta["custom_name_parsed"],
+			"custom_desc" = meta["custom_desc"],
+			"custom_desc_parsed" = meta["custom_desc_parsed"]
 		))
 
-	var/triumph_discount = is_donator(user.ckey) ? LOADOUT_TRIUMPH_DISCOUNT : 0
+	var/triumph_discount = (is_donator(user.ckey) || user?.client?.holder) ? LOADOUT_TRIUMPH_DISCOUNT : 0
 	data["selected"] = selected
 	data["total_cost"] = total_cost
 	data["total_triumph_cost"] = total_triumph_cost
@@ -128,7 +161,7 @@
 					var/datum/loadout_item/existing = GLOB.loadout_items_by_name[existing_name]
 					if(existing)
 						total_cost += existing.cost
-				var/max_points = LOADOUT_MAX_POINTS + (is_donator(owner?.ckey) ? LOADOUT_DONATOR_BONUS : 0)
+				var/max_points = LOADOUT_MAX_POINTS + ((is_donator(owner?.ckey) || owner?.holder) ? LOADOUT_DONATOR_BONUS : 0)
 				if((total_cost + LI.cost) <= max_points)
 					gear_list[item_name] = list()
 			return TRUE
@@ -143,23 +176,24 @@
 				gear_list[item_name] = meta
 			// Determine which meta key to set
 			var/meta_key
+			var/title
 			switch(action)
 				if("set_color")
 					meta_key = "color"
+					title = "Main Color"
 				if("set_detail_color")
 					meta_key = "detail_color"
+					title = "Detail Color"
 				if("set_altdetail_color")
 					meta_key = "altdetail_color"
+					title = "Alt. Detail Color"
 			if(params["clear"])
 				meta -= meta_key
 			else
 				// Open color picker modal with dye presets
 				var/current = meta[meta_key] || "#FFFFFF"
-				var/picked = tgui_color_picker(ui.user, "Choose color for [item_name]", "Color Picker", current, named_presets = COLOR_MAP)
+				var/picked = tgui_color_picker(ui.user, "Choose color for [item_name]", "Loadout Item [title]", current, named_presets = COLOR_MAP)
 				if(picked)
-					// sanitize_hexcolor returns without #, so prepend it
-					if(picked[1] != "#")
-						picked = "#[picked]"
 					meta[meta_key] = picked
 			return TRUE
 
@@ -172,10 +206,15 @@
 			if(!islist(meta))
 				meta = list()
 				gear_list[item_name] = meta
+			custom_name = replacetext(custom_name, "\n", "")
 			if(custom_name)
-				meta["custom_name"] = copytext(custom_name, 1, MAX_NAME_LEN)
+				meta["custom_name"] = copytext(custom_name, 1, LOADOUT_MAX_NAME_LEN + 1)
+				meta["custom_name_parsed"] = parsemarkdown_basic(html_encode(meta["custom_name"]), limited = TRUE)
+				if(findtext(meta["custom_name_parsed"], "\\improper") == 1) // \improper at the start of a string - convert it to a byond macro
+					meta["custom_name_parsed"] = ("\improper"+copytext(meta["custom_name_parsed"], 10)) // this is useful for when you have lowercase text encased in markdown tags
 			else
 				meta -= "custom_name"
+				meta -= "custom_name_parsed"
 			return TRUE
 
 		if("set_custom_desc")
@@ -188,9 +227,12 @@
 				meta = list()
 				gear_list[item_name] = meta
 			if(custom_desc)
-				meta["custom_desc"] = copytext(custom_desc, 1, LOADOUT_MAX_DESC_LEN)
+				meta["custom_desc"] = copytext(custom_desc, 1, LOADOUT_MAX_DESC_LEN + 1)
+				meta["custom_desc_parsed"] = parsemarkdown_basic(html_encode(meta["custom_desc"]))
+				meta["custom_desc_parsed"] = replacetext(meta["custom_desc_parsed"], "\n", "<br/>") // markdown processor eats newlines otherwise
 			else
 				meta -= "custom_desc"
+				meta -= "custom_desc_parsed"
 			return TRUE
 
 		if("clear_all")
@@ -201,10 +243,12 @@
 			if(owner?.prefs)
 				owner.prefs.gear_list = gear_list
 				owner.prefs.save_character()
+				owner.prefs.update_pref_data_for_all_viewers()
 			ui.close()
 			return TRUE
 
 #undef LOADOUT_MAX_POINTS
+#undef LOADOUT_MAX_NAME_LEN
 #undef LOADOUT_MAX_DESC_LEN
 #undef LOADOUT_TRIUMPH_DISCOUNT3
 #undef LOADOUT_DONATOR_BONUS

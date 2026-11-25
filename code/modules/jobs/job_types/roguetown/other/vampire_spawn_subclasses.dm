@@ -16,7 +16,8 @@
 //They aren't supposed to be too common, feel free to jakk up the prices in bloodpool.ddm in neu vampires if they are too common. Worst case they somehow still are, I might see to trying to limit them.
 //Due to their more, richer status they don't meddle with a mix of gilbranze, they use steel of the century. Vlord gets a full enchanted set but these guys just get steel, plain and simple.
 
-
+/datum/advclass/vampchamp
+	tempo_capable = TRUE
 
 //The fragbeast class, powerful, jack-of-all-trades. Similar to knight banneret or knight with town buff.
 //Pretty insane when you look at it, but you need to remember unlike wretches, these guys absolutely WILL dust upon dying due to being bloodpool vampires. +5000 vitae cost.
@@ -24,10 +25,10 @@
 //Pretty much very good at everything fighting related; gets pretty stupidly strong once vlord upgrades to full power. But at that point you've bigger issues than 2 of these guys.
 /datum/advclass/vampdeathknight
 	name = "Vampiric Death Knight"
-	tutorial = "A knighted champion of a fallen and forgotten kingdom. You can almost remember the old tymes since your last great battle, your unmatched prowess, your elegence with any-would-be weapon and all the dread your mere presence brought; now you arise from a fallen kingdom in servitude to your lord, once more. Make their vision, become reality."
+	tutorial = "A knighted champion of a fallen and forgotten kingdom. You can almost remember the old tymes since your last great battle, your unmatched prowess, your elegance with any-would-be weapon and all the dread your mere presence brought; now you arise from a fallen kingdom in servitude to your lord, once more. Make their vision, become reality."
 	allowed_sexes = list(MALE, FEMALE)
 	outfit = /datum/outfit/job/roguetown/other/vampdeathknight
-	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_NOBLE, TRAIT_HEAVYARMOR)
+	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_NOBLE, TRAIT_HEAVYARMOR, TRAIT_UNCONVERTIBLE)
 	category_tags = list(CTAG_VAMPSPAWN)
 	subclass_stats = list(
 		STATKEY_STR = 2,
@@ -66,7 +67,7 @@
 
 /datum/outfit/job/roguetown/other/vampdeathknight/pre_equip(mob/living/carbon/human/H)
 	..()
-	to_chat(H, span_warning("A knighted champion of a fallen and forgotten kingdom. You can almost remember the old tymes since your last great battle, your unmatched prowess, your elegence with any-would-be weapon and all the dread your mere presence brought; now you arise from a fallen kingdom in servitude to your lord, once more. Make their vision, become reality."))
+	to_chat(H, span_warning("A knighted champion of a fallen and forgotten kingdom. You can almost remember the old tymes since your last great battle, your unmatched prowess, your elegance with any-would-be weapon and all the dread your mere presence brought; now you arise from a fallen kingdom in servitude to your lord, once more. Make their vision, become reality."))
 
 	add_verb(H, /mob/proc/haltyell_exhausting) //Knight gets to halt people
 	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/knight] //Aura
@@ -83,12 +84,12 @@
 	if(H.mind)
 		var/weapons = list(
 			"Longsword + Crossbow",
-			"Billhook + Recurve Bow",
+			"Billhook + Bow",
 			"Mace + Shield",
 			"Flail + Shield",
 			"Longsword + Shield",
-			"Grand Mace + Longsword", 
-			"Sabre + Recurve Bow",
+			"Grand Mace + Longsword",
+			"Sabre + Bow",
 			"Flamberge",
 			"Poleaxe",
 			"Estoc",
@@ -112,21 +113,21 @@
 			if("Flail + Shield")
 				beltr = /obj/item/rogueweapon/flail/sflail
 				backl = /obj/item/rogueweapon/shield/tower/metal
-			if("Billhook + Recurve Bow")
+			if("Billhook + Bow")
 				r_hand = /obj/item/rogueweapon/spear/billhook
 				backl = /obj/item/rogueweapon/scabbard/gwstrap
 				beltr = /obj/item/quiver/arrows
-				beltl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
+				beltl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow
 			if("Grand Mace + Longsword")
 				r_hand = /obj/item/rogueweapon/sword/long
 				beltl = /obj/item/rogueweapon/scabbard/sword/noble
 				l_hand = /obj/item/rogueweapon/mace/goden/steel
 				backl = /obj/item/rogueweapon/scabbard/gwstrap
-			if("Sabre + Recurve Bow")
+			if("Sabre + Bow")
 				l_hand = /obj/item/rogueweapon/scabbard/sword/noble
 				r_hand = /obj/item/rogueweapon/sword/sabre
 				beltr = /obj/item/quiver/arrows
-				beltl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve
+				beltl = /obj/item/gun/ballistic/revolver/grenadelauncher/bow
 			if("Flamberge")
 				r_hand = /obj/item/rogueweapon/greatsword/grenz/flamberge
 				backr = /obj/item/rogueweapon/scabbard/gwstrap
@@ -144,7 +145,7 @@
 				backl = /obj/item/rogueweapon/scabbard/gwstrap
 
 		var/helmets = list(
-			"Pigface Bascinet" 	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface,
+			"Pigface Bascinet"	= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface,
 			"Guard Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/guard,
 			"Barred Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/sheriff,
 			"Bucket Helmet"		= /obj/item/clothing/head/roguetown/helmet/heavy/bucket,
@@ -152,12 +153,15 @@
 			"Knight's Helmet"	= /obj/item/clothing/head/roguetown/helmet/heavy/knight/old,
 			"Knight's Greatplumed Armet"		= /obj/item/clothing/head/roguetown/helmet/heavy/knight/greatplume,
 			"Visored Sallet"			= /obj/item/clothing/head/roguetown/helmet/sallet/visored,
+			"Snouted Visored Sallet"			= /obj/item/clothing/head/roguetown/helmet/sallet/visored/snouted,
 			"Armet"				= /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet,
-			"Hounskull Bascinet" 		= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull,
-			"Etruscan Bascinet" 		= /obj/item/clothing/head/roguetown/helmet/bascinet/etruscan,
+			"Snouted Armet"				= /obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/snouted,
+			"Hounskull Bascinet"		= /obj/item/clothing/head/roguetown/helmet/bascinet/pigface/hounskull,
+			"Etruscan Bascinet"		= /obj/item/clothing/head/roguetown/helmet/bascinet/etruscan,
 			"Slitted Kettle"		= /obj/item/clothing/head/roguetown/helmet/heavy/knight/skettle,
 			"Visored Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/visor,
 			"Great Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/barbute/great,
+			"Snouted Burgonet" = /obj/item/clothing/head/roguetown/helmet/heavy/burgonet,
 			"Volfskulle Bascinet"		= /obj/item/clothing/head/roguetown/helmet/heavy/volfplate,
 			"None"
 		)
@@ -184,16 +188,16 @@
 		)
 
 //Spy class, has very good agility, ability to slip around, listening, lockpicking and melee talents. Formidable and best played by sly players, they've a lot of tools at their hand, including the same amount of wealth as a vlord to work with.
-//On top of decent-ish staying power in combat skill, a very good statline. They're supposed to be quite powerful in roleplay-created authority and able to pull strings in town and cause problems independantly to the vlord, under their command.
+//On top of decent-ish staying power in combat skill, a very good statline. They're supposed to be quite powerful in roleplay-created authority and able to pull strings in town and cause problems independently to the vlord, under their command.
 
 //Played right this class could probably cause more damage than the vampire lord themselves without even being close to their statline, traits and whatever else, this is completely fine and honestly if it happens. Good for them, you get to impersonate a style of either a foreign noble, a suitor or a foreign royal.
 //TLDR: specialises in sabotage via roleplay hooks, power, coin and tools but it also inherently has decent traits to stand their own ground or even bring the fight themselves through martal and ranged arts combined. On top of T3 vamp magics from their generation.
 /datum/advclass/vampnoble
 	name = "Vampiric Noble Spy"
-	tutorial = "You are a noble of a long fallen and forgotten kingdom, trained in maile and footwork alike. You can almost remember the days of listening to the quietest whispers in your court, you were once a vault of intrique in your own right before the previous collapse. Yet your talents will see another era of use and with it, your master's vision shalt become reality."
+	tutorial = "You are a noble of a long fallen and forgotten kingdom, trained in maile and footwork alike. You can almost remember the days of listening to the quietest whispers in your court, you were once a vault of intrigue in your own right before the previous collapse. Yet your talents will see another era of use and with it, your master's vision shalt become reality."
 	outfit = /datum/outfit/job/roguetown/other/vampnoble
 	subclass_languages = list(/datum/language/thievescant)
-	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_MEDIUMARMOR, TRAIT_NOBLE, TRAIT_CICERONE, TRAIT_NUTCRACKER, TRAIT_LIGHT_STEP, TRAIT_KEENEARS, TRAIT_PERFECT_TRACKER) //The perfect spy, advisor and assassin, all in one.
+	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_MEDIUMARMOR, TRAIT_NOBLE, TRAIT_CICERONE, TRAIT_NUTCRACKER, TRAIT_LIGHT_STEP, TRAIT_KEENEARS, TRAIT_PERFECT_TRACKER, TRAIT_UNCONVERTIBLE) //The perfect spy, advisor and assassin, all in one.
 	category_tags = list(CTAG_VAMPSPAWN)
 	subclass_stats = list(
 		STATKEY_INT = 2,
@@ -201,7 +205,7 @@
 		STATKEY_SPD = 2,
 		STATKEY_PER = 3,
 		STATKEY_LCK = 4, //only the lucky outlive the ranks of common fodder in a vamp's court
-		// 13 (9 without luck factored in for flavor) point statline, mostly put into speed + int; still no con buff though, the luckiest person to ever outlyve you by who-knows-how-many-yills
+		// 13 (9 without luck factored in for flavor) point statline, mostly put into speed + int; still no con buff though, the luckiest person to ever outlyve you by who-knows-how-many-yils
 	)
 	subclass_skills = list(
 		/datum/skill/combat/knives = SKILL_LEVEL_EXPERT,
@@ -214,7 +218,7 @@
 		/datum/skill/misc/riding = SKILL_LEVEL_EXPERT, //Commanding role
 		/datum/skill/misc/reading = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_LEGENDARY, //Very, talented spy
-		/datum/skill/misc/stealing = SKILL_LEVEL_MASTER,
+		/datum/skill/misc/stealing = SKILL_LEVEL_MASTER, // TA EDIT
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_MASTER,
 		/datum/skill/misc/medicine = SKILL_LEVEL_JOURNEYMAN, //Practiced kidnapper, good at sewing people back up.
 		/datum/skill/misc/music = SKILL_LEVEL_JOURNEYMAN, //Nobility Sovl
@@ -227,7 +231,7 @@
 
 /datum/outfit/job/roguetown/other/vampnoble/pre_equip(mob/living/carbon/human/H)
 	..()
-	to_chat(H, span_warning("You are a noble of a long fallen and forgotten kingdom, trained in maile and footwork alike. You can almost remember the days of listening to the quietest whispers in your court, you were once a vault of intrique in your own right before the previous collapse. Yet your talents will see another era of use and with it, your master's vision shalt become reality."))
+	to_chat(H, span_warning("You are a noble of a long fallen and forgotten kingdom, trained in maile and footwork alike. You can almost remember the days of listening to the quietest whispers in your court, you were once a vault of intrigue in your own right before the previous collapse. Yet your talents will see another era of use and with it, your master's vision shalt become reality."))
 	H.set_blindness(0)
 
 	if(H.mind)
@@ -315,7 +319,7 @@
 	color = "#883030"
 
 /obj/item/clothing/cloak/tabard/vamp
-	desc = "A checkered pattern of white fabrics and red silks, inlined seamlessly with silks befit for one under a lord with true opulance, not any mere dull-blooded or otherwise, branded with a crest of a forgotten empire."
+	desc = "A checkered pattern of white fabrics and red silks, inlaid seamlessly with silks befit for one under a lord with true opulence, not any mere dull-blooded or otherwise, branded with a crest of a forgotten empire."
 	color = CLOTHING_WHITE
 	detail_tag = "_quad"
 	detail_color = CLOTHING_RED

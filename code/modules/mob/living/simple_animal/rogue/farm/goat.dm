@@ -1,4 +1,4 @@
-/mob/living/simple_animal/hostile/retaliate/rogue/goat/Initialize()
+/mob/living/simple_animal/hostile/retaliate/rogue/goat/Initialize(mapload)
 	. = ..()
 	GLOB.farm_animals++
 	if(tame)
@@ -10,16 +10,8 @@
 	GLOB.farm_animals = max(GLOB.farm_animals - 1, 0)
 	return ..()
 
-/mob/living/simple_animal/hostile/retaliate/rogue/goat/find_food()
-	..()
-	var/obj/structure/vine/SV = locate(/obj/structure/vine) in loc
-	if(SV)
-		SV.eat(src)
-		food = max(food + 30, 100)
-
-/mob/living/simple_animal/hostile/retaliate/rogue/goat/tamed()
-	..()
-	deaggroprob = 50
+/mob/living/simple_animal/hostile/retaliate/rogue/goat/tamed(mob/user) // TA EDIT
+	..(user) // TA EDIT
 	setup_mount(
 		list(TEXT_NORTH = list(0, 6), TEXT_SOUTH = list(0, 6), TEXT_EAST = list(-2, 6), TEXT_WEST = list(2, 6)),
 		MOB_LAYER+0.1,
@@ -59,9 +51,8 @@
 	mob_biotypes = MOB_ORGANIC|MOB_BEAST
 	emote_see = list("shakes her head.", "chews her cud.")
 	speak_chance = 1
-	turns_per_move = 5
 	see_in_dark = 6
-	move_to_delay = 8
+	ride_move_delay = 8
 	animal_species = /mob/living/simple_animal/hostile/retaliate/rogue/goatmale
 	botched_butcher_results = list(/obj/item/reagent_containers/food/snacks/rogue/meat/steak = 2,
 									/obj/item/reagent_containers/food/snacks/fat = 1,
@@ -107,14 +98,13 @@
 	remains_type = /obj/effect/decal/remains/cow
 
 	//new ai, old ai off
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
 	ai_controller = /datum/ai_controller/generic/goat //slightly more agressive retaliation
+	move_base_delay = MOVEMENT_DELAY_SLOW
 
 /mob/living/simple_animal/hostile/retaliate/rogue/goat/tame
 	tame = TRUE
 
-/mob/living/simple_animal/hostile/retaliate/rogue/goat/tame/saddled/Initialize()
+/mob/living/simple_animal/hostile/retaliate/rogue/goat/tame/saddled/Initialize(mapload)
 	. = ..()
 	ssaddle = new /obj/item/natural/saddle(src)
 	// excuse me please fucking compile again thank you
@@ -152,7 +142,6 @@
 	STACON = 5
 	STASTR = 5
 	STASPD = 5
-	defprob = 50
 	adult_growth = /mob/living/simple_animal/hostile/retaliate/rogue/goat
 	can_buckle = FALSE
 	buckle_lying = 0
@@ -211,9 +200,8 @@
 	gender = MALE
 	emote_see = list("shakes his head.", "chews his cud.")
 	speak_chance = 1
-	turns_per_move = 3
 	see_in_dark = 6
-	move_to_delay = 8
+	ride_move_delay = 8
 	base_intents = list(/datum/intent/simple/headbutt)
 	botched_butcher_results = list(/obj/item/reagent_containers/food/snacks/rogue/meat/steak = 2,
 									/obj/item/reagent_containers/food/snacks/fat = 1,
@@ -239,8 +227,6 @@
 	melee_damage_lower = 25
 	melee_damage_upper = 50
 	environment_smash = ENVIRONMENT_SMASH_NONE
-	retreat_distance = 0
-	minimum_distance = 0
 	milkies = FALSE
 	food_type = list(
 		/obj/item/reagent_containers/food/snacks/grown/wheat,
@@ -261,14 +247,13 @@
 	remains_type = /obj/effect/decal/remains/cow
 
 	//new ai, old ai off
-	AIStatus = AI_OFF
-	can_have_ai = FALSE
 	ai_controller = /datum/ai_controller/generic
+	move_base_delay = MOVEMENT_DELAY_SLOW
 
 /mob/living/simple_animal/hostile/retaliate/rogue/goatmale/tame
 	tame = TRUE
 
-/mob/living/simple_animal/hostile/retaliate/rogue/goatmale/tame/saddled/Initialize()
+/mob/living/simple_animal/hostile/retaliate/rogue/goatmale/tame/saddled/Initialize(mapload)
 	. = ..()
 	ssaddle = new /obj/item/natural/saddle(src)
 	update_icon()
@@ -280,15 +265,14 @@
 		add_saddleicon("saddle-above", "saddle")
 		add_ridericon("goatmale_mounted")
 
-/mob/living/simple_animal/hostile/retaliate/rogue/goatmale/tamed()
-	..()
-	deaggroprob = 20
+/mob/living/simple_animal/hostile/retaliate/rogue/goatmale/tamed(mob/user) // TA EDIT
+	..(user) // TA EDIT
 	setup_mount(
 		list(TEXT_NORTH = list(0, 6), TEXT_SOUTH = list(0, 6), TEXT_EAST = list(-2, 6), TEXT_WEST = list(2, 6)),
 		MOB_LAYER+0.1,
 	)
 
-/mob/living/simple_animal/hostile/retaliate/rogue/goatmale/Initialize()
+/mob/living/simple_animal/hostile/retaliate/rogue/goatmale/Initialize(mapload)
 	. = ..()
 	GLOB.farm_animals++
 	if(tame)
@@ -313,8 +297,7 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/goatmale/taunted(mob/user)
 	emote("aggro")
-	Retaliate()
-	GiveTarget(user)
+	ai_controller?.force_aggro(user)
 	return
 
 /mob/living/simple_animal/hostile/retaliate/rogue/goatmale/eat_plants()

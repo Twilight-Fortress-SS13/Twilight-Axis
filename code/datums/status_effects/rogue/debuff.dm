@@ -83,6 +83,26 @@
 	desc = "I urgently need to drink something! Anything!"
 	icon_state = "thirst3"
 
+/datum/status_effect/debuff/spell_vampire_block
+	id = "spell_vampire_block"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/spell_vampire_block
+	duration = 60 SECONDS
+	status_type = STATUS_EFFECT_REFRESH
+
+/datum/status_effect/debuff/spell_vampire_block/on_apply()
+	. = ..()
+	if(.)
+		ADD_TRAIT(owner, TRAIT_SPELL_VAMPIRE_BLOCK, STATUS_EFFECT_TRAIT)
+
+/datum/status_effect/debuff/spell_vampire_block/on_remove()
+	REMOVE_TRAIT(owner, TRAIT_SPELL_VAMPIRE_BLOCK, STATUS_EFFECT_TRAIT)
+	return ..()
+
+/atom/movable/screen/alert/status_effect/debuff/spell_vampire_block
+	name = "Vitae Surge"
+	desc = "My vampiric power blocks the flow of the arcyne in my vein - I cannot utilize conventional magick until it subsides."
+	icon_state = "debuff"
+
 
 
 /datum/status_effect/debuff/vthirstt1
@@ -262,16 +282,16 @@
 	id = "net"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/netted
 	effectedstats = list(STATKEY_SPD = -5, STATKEY_WIL = -2)
- 
+
 /datum/status_effect/debuff/netted/on_creation(mob/living/new_owner, newdur)
 	if(newdur)
 		duration = newdur
 	. = ..()
 
 /datum/status_effect/debuff/netted/on_apply()
-		. = ..()
-		var/mob/living/carbon/C = owner
-		C.add_movespeed_modifier(MOVESPEED_ID_NET_SLOWDOWN, multiplicative_slowdown = 3)
+	. = ..()
+	var/mob/living/carbon/C = owner
+	C.add_movespeed_modifier(MOVESPEED_ID_NET_SLOWDOWN, multiplicative_slowdown = 3)
 
 /datum/status_effect/debuff/netted/on_remove()
 	. = ..()
@@ -333,7 +353,7 @@
 
 /atom/movable/screen/alert/status_effect/debuff/devitalised
 	name = "Devitalised"
-	desc = "Something vital has been taken from me; my heart beats in arrythmia, as it struggles to restore what has been lost."
+	desc = "Something vital has been taken from me; my heart beats in arrhythmia, as it struggles to restore what has been lost."
 	icon_state = "lux"
 
 /datum/status_effect/debuff/vamp_dreams
@@ -403,6 +423,16 @@
 	desc = "I can barely feel my limbs!"
 	icon_state = "chilled"
 
+/datum/status_effect/debuff/slip_recovery
+	id = "slip_recovery"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/slip_recovery
+	duration = 30 SECONDS // Lower than the CD
+
+/atom/movable/screen/alert/status_effect/debuff/slip_recovery
+	name = "Winded"
+	desc = "I am too winded to slip between spaces again!"
+	icon_state = "debuff"
+
 /// RITUOS DEBUFFS
 /datum/status_effect/debuff/ritesexpended
 	id = "ritesexpended"
@@ -418,17 +448,6 @@
 	name = "Rituos Fatigatio"
 	desc = "My ritual is complete, yet not without cost. I must gift my lux tyme to recover, before I can conduct another rite."
 	icon_state = "rituos_cooldown"
-
-/datum/status_effect/debuff/lux_exhausted
-	id = "lux_exhausted"
-	alert_type = /atom/movable/screen/alert/status_effect/debuff/lux_exhausted
-	effectedstats = list(STATKEY_STR = -2, STATKEY_WIL = -2, STATKEY_LCK = -2)
-	duration = 2 HOURS
-
-/atom/movable/screen/alert/status_effect/debuff/lux_exhausted
-	name = "Rituos Langouria"
-	desc = "Body and will alike, sacrificed to complete the rites for another. Your will shall be done, but it will be quite some time before your lux can sustain another rite."
-	icon_state = "rituos_exchange"
 
 /datum/status_effect/debuff/ritesexpended_heavy
 	id = "ritesexpended_heavy"
@@ -455,12 +474,69 @@
 	desc = "My spirit is momentarily stretched thin!"
 	icon_state = "luxstrain"
 
+/// CRITICAL INJURY DEBUFF - Higher cmode drain, for those cleric-healable.
+
+/datum/status_effect/debuff/critwounded
+	id = "critically_dazed" //For crits + revival - you did suffer fatal damage, this one is a shorter time. - Meant to punish people who linger in combat after they've been already beaten, even if healers got you up.
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/critwounded
+	duration = CRITICAL_WOUNDED_DEBUFF_DURATION
+
+/atom/movable/screen/alert/status_effect/debuff/critwounded
+	name = "Critically Dazed" //Effectively a 'Critical Sickness' designed to prevent people bumrushing back into fights. - Undead do not suffer this, nor does anyone with supernatural means to ignore bloodloss, or fatigue.
+	desc = "My body has taken a crippling blow, I feel increasingly sluggish, my head spins and my feet are unsteady. I must give myself tyme to recover from fighting as being in a defensive stance is more exhausting."
+	icon_state = "critwounded"
+
+/datum/status_effect/debuff/critwounded/on_apply()
+	. = ..()
+	ADD_TRAIT(owner, TRAIT_HIGHER_CMODE_DRAIN, id)
+
+/datum/status_effect/debuff/critwounded/on_remove()
+	. = ..()
+	REMOVE_TRAIT(owner, TRAIT_HIGHER_CMODE_DRAIN, id)
+
+/// CASTIFICO DEBUFFS
+
+/// Pacification is reserved for the highest possible bounties, at 500 mammon or more.
+/// All lesser bounties apply a stat debuff scaled to the bounty amount.
+/// The severity of the debuff is entirely determined by the bounty itself,
+/// meaning players have direct control over the consequences of their capture.
+/// At this point, I genuinely cannot make this system any more forgiving without removing any consequences for capture entirely.
+
+// TIER 1 (100-250 mammon bounty)
+/datum/status_effect/debuff/castificot1
+	id = "castificot1"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/castifico
+	effectedstats = list(STATKEY_STR = -3, STATKEY_WIL = -3, STATKEY_CON = -3, STATKEY_SPD = -3, STATKEY_LCK = -3)
+	duration = -1
+	needs_processing = FALSE
+
+// TIER 2 (250-400 mammon bounty)
+/datum/status_effect/debuff/castificot2
+	id = "castificot2"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/castifico
+	effectedstats = list(STATKEY_STR = -4, STATKEY_WIL = -4, STATKEY_CON = -4, STATKEY_SPD = -4, STATKEY_LCK = -4)
+	duration = -1
+	needs_processing = FALSE
+
+// TIER 3 (400-500 mammon bounty)
+/datum/status_effect/debuff/castificot3
+	id = "castificot3"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/castifico
+	effectedstats = list(STATKEY_STR = -5, STATKEY_WIL = -5, STATKEY_CON = -5, STATKEY_SPD = -5, STATKEY_LCK = -5)
+	duration = -1
+	needs_processing = FALSE
+
+/atom/movable/screen/alert/status_effect/debuff/castifico
+	name = "Weakened"
+	desc = "This accursed collar saps my energy, weakening my body..."
+	icon_state = "collar"
+
 /// RESURRECTION DEBUFFS
 /datum/status_effect/debuff/revived
 	id = "revived" //For revive - your body DIDN'T rot, but it did suffer damage. Unlike being rotted, this one is only timed. Not forever.
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/revived
 	effectedstats = list(STATKEY_STR = -1, STATKEY_PER = -1, STATKEY_INT = -1, STATKEY_WIL = -1, STATKEY_CON = -1, STATKEY_SPD = -1, STATKEY_LCK = -1)
-	duration = 15 MINUTES		//Should be long enough to stop someone from running back into battle. Plus, this stacks with body-rot debuff. RIP.
+	duration = REVIVED_DEBUFF_DURATION		//Should be long enough to stop someone from running back into battle. Plus, this stacks with body-rot debuff. RIP.
 
 /atom/movable/screen/alert/status_effect/debuff/revived
 	name = "Revived" //Formerly 'Revival Sickness'.
@@ -495,14 +571,14 @@
 			to_chat(owner, span_gamedeadsay("The rushing currents swept me down, down. Down towards the sleeping God. My lungs cried out in pain as I took saltwater into them. Vision clouding with red and black. His eye opened. His eye opened his eye opened HIS EYE OPENED HIS EYE OPENED HE WAS STIRRING-"))
 		if(/datum/patron/divine/ravox)
 			to_chat(owner, span_gamedeadsay("One by one - the injustices I committed were set upon the scales. Sweat ran down my back as I watched those that I saved plead my case. One by one - the scale lifted so slowly. The line of petitioners growing shorter.."))
-		if(/datum/patron/inhumen/matthios) //Pseudoplaceholder. Feel free to rewrite, if desired.
-			to_chat(owner, span_gamedeadsay("It was so cold without Her light. I felt it in my bones and my skin and my insides. Permeating darkness - consuming what little light I took with me. I will never take Her warmth for granted again.."))
-		if(/datum/patron/inhumen/graggar) //Pseudoplaceholder. Feel free to rewrite, if desired.
-			to_chat(owner, span_gamedeadsay("One by one - the injustices I committed were set upon the scales. Sweat ran down my back as I watched those that I saved plead my case. One by one - the scale lifted so slowly. The line of petitioners growing shorter.."))
-		if(/datum/patron/inhumen/baotha) //Pseudoplaceholder. Feel free to rewrite, if desired.
-			to_chat(owner, span_gamedeadsay("I woke upon a bed of silken sheets and creamy pillows, surrounded by my family. They looked overjoyed to see me - but I could hardly see their faces. They smiled and spoke, reaching out to welcome me. I wish I could remember what they looked like.."))
-		if(/datum/patron/inhumen/zizo) //Pseudoplaceholder. Feel free to rewrite, if desired.
-			to_chat(owner, span_gamedeadsay("There, at the edge of reality, laid a singular point of light. The more I focused upon it, the more it expanded. A tapestry of stars, speckled amongst a sea of phlogiston, forming indecipherable truths for me to ponder. I shouldn't have stared for so long.."))
+		if(/datum/patron/inhumen/matthios) // Slightly better placeholder, feel free to rewrite.
+			to_chat(owner, span_gamedeadsay("Darkness, cold, my body curled around a fading golden flame. The endless void fades into a spiral of flickering lights, blazing together against the dark."))
+		if(/datum/patron/inhumen/graggar) // Slightly better placeholder. Graggar is going to ultrakill you. Might be too long
+			to_chat(owner, span_gamedeadsay("The Sinistar screamed and raged and wept in ten thousand voices as my body was crushed and torn within its jaws. I felt my self being torn away, victory, defeat, my mortal lyfe all sinking into a river of wrath and regret.."))
+		if(/datum/patron/inhumen/baotha) // Slightly better placeholder, feel free to rewrite
+			to_chat(owner, span_gamedeadsay("I woke upon a bed of silk and roses, my body weightless as a lyfetime of pain and heartbreak melted away into a blissful haze. I want to go back.. "))
+		if(/datum/patron/inhumen/zizo)
+			to_chat(owner, span_gamedeadsay(" I rise, the twice dammed carcass world shrinks below me. My mind expands, filling with forbidden truth as my body is drawn towards a twisting bloody vortex. I sink into the endless storm, it screams its hate in a million voices.."))
 		if(/datum/patron/godless) //Pseudoplaceholder. Feel free to rewrite, if desired.
 			to_chat(owner, span_gamedeadsay("I saw my entire lyfe flash before my eyes, and then-.. nothing. No light, no darkness; complete, utter nothingness - save for a single thought, sinking into the inky-blackness.. and into whatever awaited on the other side. Suddenly, I feel myself yanked in a non-existing direction!"))
 		else
@@ -512,25 +588,12 @@
 	. = ..()
 	owner.remove_stress(/datum/stressevent/resurrected)
 
-// /datum/status_effect/debuff/revived_addendum
-//	id = "revived_addendum"
-//	alert_type = /atom/movable/screen/alert/status_effect/debuff/revived_addendum
-//	duration = 5 MINUTES		//If timed right, it should naturally end alongside the 'Death's Door' debuff. Purely cosmetic, for the sake of keeping some continuity with the effects of resurrection.
-
-//	/atom/movable/screen/alert/status_effect/debuff/revived_addendum
-//	name = "Resurr.."
-//	desc = "You can feel yourself, in both body and soul, becoming fully grounded once more. Tyme will tell if you'll lyve to see tomorrow, however, or if this is merely an intermission.."
-//	icon_state = "revived_addendum"
-
-// /datum/status_effect/debuff/revived/on_remove()
-//	owner.apply_status_effect(/datum/status_effect/debuff/revival_addendum) //Cosmetic continuance, to ensure it ends with the 'Permadeath' debuff.*/ //Readd when someone can figure out how to un-errorify this.
-//	. = ..()
-
 /datum/status_effect/debuff/rotted
 	id = "rotted_body" //For de-rot - your body ROTTED. Harsher penalty for longer, can be fully off-set with a cure-rot potion.
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/rotted
 	effectedstats = list(STATKEY_STR = -2, STATKEY_PER = -2, STATKEY_INT = -2, STATKEY_WIL = -2, STATKEY_CON = -2, STATKEY_SPD = -2, STATKEY_LCK = -2)
 	duration = 30 MINUTES	// Back to a temporary 30 minute duration. It hurts.
+	examine_text = "<font color='#008b56'>SUBJECTPRONOUN looks frail and unnaturally pale, as if they recently got brought back from death.</font>"
 
 /atom/movable/screen/alert/status_effect/debuff/rotted
 	name = "Atrophia"
@@ -538,23 +601,25 @@
 	icon_state = "revived_rot"
 
 /datum/status_effect/debuff/rotted_zombie
-	id = "rotted_zombie" //Replaces the flat-stat change, this should ONLY apply to zombies who have been dead for some time. Makes them easier to kill.
+	id = "rotted_zombie" //Replaces the flat-stat change, this should ONLY apply to zombies, makes them easier to kill
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/rotted_zombie
-	effectedstats = list(STATKEY_CON = -8) //No duration = infinate in time - this is removed on de-rot miricle OR de-rot surgery. Won't be applied unless you've been a zombie for ~20 min.
+	effectedstats = list(STATKEY_CON = -3, STATKEY_INT = -8) //No duration = infinate in time - this is removed on de-rot miricle OR de-rot surgery. Won't be applied unless you're rotting long enough to zombify.
+	examine_text = "<font color='#2c8b00'>SUBJECTPRONOUN's flesh bears the unmistakable signs of unnatural decay. An ill omen whispers that this corpse may yet walk again.</font>"
 
 /atom/movable/screen/alert/status_effect/debuff/rotted_zombie
 	name = "Decomposing"
-	desc = "Rotting flesh, dangling innards - the decay of what once was, no longer guarded by lyfe's thrumbings. Your spirit is struggling to remain rooted within this world.."
+	desc = "Rotting flesh, dangling innards - the decay of what once was, no longer guarded by lyfe's thrummings. Your spirit is struggling to remain rooted within this world.."
 	icon_state = "rot"
 
 /datum/status_effect/debuff/permadeath
 	id = "permadeath"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/permadeath
-	duration = 60 MINUTES //Effectively determines how long a character is threatened with permadeath. Kicks into gear once the initial deathmark-imposed grace period completes. Timed to match Revival Sickness.
+	duration = PERMADEATH_DURATION //Effectively determines how long a character is threatened with permadeath. Kicks into gear once the initial deathmark-imposed grace period completes. Timed to match Revival Sickness.
+	examine_text = "<font color='#b40000'>SUBJECTPRONOUN seems mentally and spiritually unstable. Another death could well be their last.</font>"
 
 /atom/movable/screen/alert/status_effect/debuff/permadeath
 	name = "Death's Door"
-	desc = "Your heart beats with arrythmic fright, as an otherworldly chill rolls through your very spirit. Should you perish again within a half-dae's tyme, nothing will be able to bring you back from death's grasp."
+	desc = "Your heart beats with arrhythmic fright, as an otherworldly chill rolls through your very spirit. Should you perish again within a half-dae's tyme, nothing will be able to bring you back from death's grasp."
 	icon_state = "permadeath"
 
 /datum/status_effect/debuff/permadeath/on_apply()
@@ -564,9 +629,21 @@
 
 /datum/status_effect/debuff/permadeath/on_remove()
 	. = ..()
-	REMOVE_TRAIT(owner, TRAIT_DNR, id)
+	if(owner.stat != DEAD) //removing DNR if the user is dead means they'll just be able to get rezzed after 10 mins elapse
+		REMOVE_TRAIT(owner, TRAIT_DNR, id)
 	owner.remove_stress(/datum/stressevent/permadeath_threat)
 	owner.add_stress(/datum/stressevent/permadeath_end)
+
+/datum/status_effect/debuff/permadeath/permanent
+	duration = -1
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/permadeath/permanent
+
+/datum/status_effect/debuff/permadeath/permanent/on_apply()
+	. = ..()
+	REMOVE_TRAIT(owner, TRAIT_LASTLEGS, null) // no need to have both this AND dnr
+
+/atom/movable/screen/alert/status_effect/debuff/permadeath/permanent
+	desc = "Your heart beats with arrhythmic fright, as an otherworldly chill rolls through your very spirit. Should you perish again, nothing will be able to bring you back from death's grasp."
 
 /// CONT. DEBUFFS
 /datum/status_effect/debuff/dazed
@@ -587,6 +664,17 @@
 /datum/status_effect/debuff/dazed/smite
 	effectedstats = list(STATKEY_PER = -1, STATKEY_INT = -2, STATKEY_SPD = -1)
 	duration = 1 MINUTES
+
+/datum/status_effect/debuff/jester_flip_dazed
+	id = "flip_cooldown"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/jester_flip_dazed
+	duration = 5 SECONDS
+	status_type = STATUS_EFFECT_REFRESH
+
+/atom/movable/screen/alert/status_effect/debuff/jester_flip_dazed
+	name = "Hazy"
+	desc = "...woah...! I feel a little uneasy!"
+	icon_state = "dazed"
 
 /atom/movable/screen/alert/status_effect/debuff/dazed
 	name = "Dazed"
@@ -611,6 +699,35 @@
 	desc = "Something has chilled me to the bone! It's hard to move."
 	icon_state = "muscles"
 
+/datum/status_effect/debuff/blackvitae
+	id = "blackvitae"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/blackvitae
+	duration = 20 SECONDS
+
+/atom/movable/screen/alert/status_effect/debuff/blackvitae
+	name = "Bloodrot"
+	desc = span_bloody("BLACKENED ROT SEEPS INTO MY WOUNDS! IT HURTS, IT HURTS, IT HURTS, IT HURTS!!")
+	icon_state = "ritesexpended"
+
+/datum/status_effect/debuff/blackvitae/on_apply()
+	. = ..()
+	if(iscarbon(owner))
+		var/mob/living/carbon/human/target = owner
+		var/newcolor = rgb(67, 67, 67)
+		var/datum/physiology/phy = target.physiology
+		phy.bleed_mod *= 1.5
+		phy.pain_mod *= 1.5
+		target.add_atom_colour(newcolor, TEMPORARY_COLOUR_PRIORITY)
+		addtimer(CALLBACK(target, TYPE_PROC_REF(/atom, remove_atom_colour), TEMPORARY_COLOUR_PRIORITY, newcolor), 20 SECONDS)
+
+/datum/status_effect/debuff/blackvitae/on_remove()
+	. = ..()
+	if(iscarbon(owner))
+		var/mob/living/carbon/human/target = owner
+		var/datum/physiology/phy = target.physiology
+		phy.bleed_mod /= 1.5
+		phy.pain_mod /= 1.5
+
 /datum/status_effect/debuff/cold/greater
 	id = "Frozen"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/cold/greater
@@ -623,25 +740,16 @@
 	desc = "An intense cold has seized my body! I can barely move."
 	icon_state = "muscles"
 
-/// wrestler verison of daze////
-/datum/status_effect/debuff/dazed/stunner
-	id = "discombobulated"
-	alert_type = /atom/movable/screen/alert/status_effect/debuff/dazed
-	effectedstats = list(STATKEY_CON = -2, STATKEY_INT = -2)
-	duration = 15 SECONDS
-	status_type = STATUS_EFFECT_REFRESH
-
 ///// Freifechter Daze Variants /////
 /datum/status_effect/debuff/dazed/longsword
 	id = "durchlauffen"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/dazed/longsword
-	effectedstats = list(STATKEY_WIL = -4, STATKEY_INT = -1)
-	duration = 18 SECONDS
+	effectedstats = list(STATKEY_PER = -3, STATKEY_INT = -3)
 	status_type = STATUS_EFFECT_REFRESH
 
 /atom/movable/screen/alert/status_effect/debuff/dazed/longsword
-	name = "CAN'T FUCKING BREATHE"
-	desc = "WHAT THE HELL DID THEY DO TO ME?! I NEED TO ATTACK THEM WHILE THEY'RE SWINGING SO THEY CAN'T SHATTER MY WINDPIPE!!"
+	name = "VERY Dazed"
+	desc = "You've been smacked in the face very, very hard. Everything is spinning!"
 	icon_state = "mstrike"
 
 /datum/status_effect/debuff/dazed/longsword2h
@@ -671,8 +779,8 @@
 /datum/status_effect/debuff/dazed/swipe
 	id = "clinch & swipe"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/dazed/swipe
-	effectedstats = list(STATKEY_CON = -4, STATKEY_STR = -1)
-	duration = 1.5 SECONDS	//Should last BARELY ENOUGH for someone who's actively grappling and swiping you to get a constant refresh of the dedbuff, otherwise it's useless.
+	effectedstats = list(STATKEY_STR = -2) // Grappling escapes are dependent on their STR/Wrestling vs your CON/Wrestling. We only reduce the victim's STR.
+	duration = 1.5 SECONDS
 	status_type = STATUS_EFFECT_REFRESH
 
 /atom/movable/screen/alert/status_effect/debuff/dazed/swipe
@@ -697,15 +805,55 @@
 	icon_state = "dazed"
 
 /datum/status_effect/debuff/staggered/on_apply()
-		. = ..()
-		var/mob/living/carbon/C = owner
-		C.add_movespeed_modifier(MOVESPEED_ID_DAMAGE_SLOWDOWN, multiplicative_slowdown = 1.5)
+	. = ..()
+	var/mob/living/carbon/C = owner
+	C.add_movespeed_modifier(MOVESPEED_ID_DAMAGE_SLOWDOWN, multiplicative_slowdown = 1.5)
 
 /datum/status_effect/debuff/staggered/on_remove()
 	. = ..()
 	if(iscarbon(owner))
 		var/mob/living/carbon/C = owner
 		C.remove_movespeed_modifier(MOVESPEED_ID_DAMAGE_SLOWDOWN)
+
+/atom/movable/screen/alert/status_effect/debuff/slowed
+	name = "Slowed"
+	desc = "I am slowed."
+	icon_state = "slowdown"
+
+/datum/status_effect/debuff/slowed
+	id = "slowed"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/slowed
+	var/severity = SLOWDOWN_SEVERITY_MODERATE
+
+/datum/status_effect/debuff/slowed/on_creation(mob/living/new_owner, new_duration, new_severity)
+	duration = new_duration
+	if(new_severity)
+		severity = new_severity
+	return ..()
+
+/datum/status_effect/debuff/slowed/on_apply()
+	if(!(owner.status_flags & CANSTUN) || HAS_TRAIT(owner, TRAIT_STUNIMMUNE))
+		return FALSE
+	. = ..()
+	update_modifier()
+
+/datum/status_effect/debuff/slowed/on_remove()
+	owner.remove_movespeed_modifier(MOVESPEED_ID_SLOWED)
+	return ..()
+
+/datum/status_effect/debuff/slowed/refresh(mob/living/new_owner, new_duration, new_severity = SLOWDOWN_SEVERITY_MODERATE)
+	if(new_severity < severity)
+		return
+	var/new_end = world.time + new_duration
+	if(new_severity > severity)
+		severity = new_severity
+		duration = new_end
+		update_modifier()
+		return
+	duration = max(duration, new_end)
+
+/datum/status_effect/debuff/slowed/proc/update_modifier()
+	owner.add_movespeed_modifier(MOVESPEED_ID_SLOWED, update = TRUE, priority = 100, override = TRUE, multiplicative_slowdown = severity, movetypes = GROUND)
 
 /datum/status_effect/debuff/excomm
 	id = "Excommunicated!"
@@ -809,15 +957,7 @@
 	name = "Lost Hood"
 	desc = "The sacred hood is lost. I feel frail and sapped without it."
 
-/datum/status_effect/debuff/lost_dungeoneer_hood
-	id = "dungeoneerhood"
-	alert_type = /atom/movable/screen/alert/status_effect/debuff/dungeoneer_hood
-	effectedstats = list(STATKEY_STR = -3, STATKEY_LCK = -3)
-
-/atom/movable/screen/alert/status_effect/debuff/dungeoneer_hood
-	name = "Gnarly Visage"
-	desc = "I am a repulsive freek looked down upon by everyone else. I'd do best to hide my visage once more."
-	icon_state = "muscles"
+//TA EDIT
 
 ///////////////////////
 /// CLIMBING STUFF ///
@@ -833,8 +973,8 @@
 	var/mob/living/carbon/human/climber
 
 /datum/status_effect/debuff/climbing_lfwb/on_creation(mob/living/new_owner, new_stamcost)
-    stamcost = new_stamcost
-    return ..()
+	stamcost = new_stamcost || round(initial(stamcost) / max(new_owner.get_skill_level(/datum/skill/misc/climbing), SKILL_LEVEL_NOVICE), 1)
+	return ..()
 
 /datum/status_effect/debuff/climbing_lfwb/on_apply()
 	. = ..()
@@ -845,13 +985,6 @@
 /datum/status_effect/debuff/climbing_lfwb/tick() // do we wanna do this shit every single second? I guess we do boss
 	. = ..()
 	climber = owner
-	if((istype(climber.backr, /obj/item/clothing/climbing_gear)) || (istype(climber.backl, /obj/item/clothing/climbing_gear)))
-		stamcost_final = stamcost / 2
-		climber.stamina_add(stamcost_final) // every tick interval this much stamina is deducted
-	else
-		stamcost_final = stamcost
-		climber.stamina_add(stamcost_final) // every tick interval this much stamina is deducted
-//	to_chat(climber, span_warningbig("[stamcost_final] REMOVED!")) // debug msg
 	var/turf/tile_under_climber = climber.loc
 	var/list/random_shit_under_climber = list()
 	for(var/obj/structure/flora/newbranch/branch in climber.loc)
@@ -860,11 +993,13 @@
 		random_shit_under_climber += chandelier
 	for(var/obj/structure/kybraxor/fucking_hatch in climber.loc)
 		random_shit_under_climber += fucking_hatch
-	if(!istype(tile_under_climber, /turf/open/transparent/openspace))// if we aren't on open space turf, remove debuff (aka our feet are on solid shi or water)
+	// if we aren't on open space turf (feet on solid shi or water), or standing on a branch/chandelier/hatch, we're done climbing
+	if(!istype(tile_under_climber, /turf/open/transparent/openspace) || random_shit_under_climber.len)
 		climber.remove_status_effect(/datum/status_effect/debuff/climbing_lfwb)
-	if(random_shit_under_climber.len) // branches dont remove open space turf, so we have to check for it separately
-		climber.remove_status_effect(/datum/status_effect/debuff/climbing_lfwb)
-	else if(climber.stamina >= climber.max_stamina) // if we run out of green bar stamina, we fall
+		return
+	stamcost_final = stamcost
+	climber.stamina_add(stamcost_final) // every tick interval this much stamina is deducted
+	if(climber.stamina >= climber.max_stamina) // if we run out of green bar stamina, we fall
 		to_chat(climber, span_dead("I can't hold onto the ledge for any longer!"))
 		climber.remove_status_effect(/datum/status_effect/debuff/climbing_lfwb)
 		tile_under_climber.zFall(climber)
@@ -894,7 +1029,7 @@
 
 /atom/movable/screen/alert/status_effect/debuff/mesmerised
 	name = "Mesmerised"
-	desc = span_warning("Their beauty is otherwordly..")
+	desc = span_warning("Their beauty is otherworldly..")
 	icon_state = "acid"
 
 /datum/status_effect/debuff/liver_failure
@@ -979,7 +1114,7 @@
 /datum/status_effect/debuff/impure_vitae/on_apply()
 	. = ..()
 	owner.add_stress(/datum/stressevent/high)
-	
+
 /datum/status_effect/debuff/impure_vitae/on_remove()
 	owner.remove_stress(/datum/stressevent/high)
 
@@ -998,7 +1133,7 @@
 	owner.overlay_fullscreen("joybringer_weeds", /atom/movable/screen/fullscreen/weedsm)
 	owner.overlay_fullscreen("joybringer_druqks", /atom/movable/screen/fullscreen/druqks)
 
-	ADD_TRAIT(owner, TRAIT_DRUQK, src)
+	ADD_TRAIT(owner, TRAIT_DRUQK, REF(src))
 
 	if(owner.client)
 		SSdroning.play_area_sound(get_area(owner), owner.client)
@@ -1008,7 +1143,7 @@
 	owner.clear_fullscreen("joybringer_druqks")
 	owner.clear_fullscreen("joybringer_weeds")
 
-	REMOVE_TRAIT(owner, TRAIT_DRUQK, src)
+	REMOVE_TRAIT(owner, TRAIT_DRUQK, REF(src))
 
 	if(owner.hallucination > 0)
 		owner.hallucination = max(0, owner.hallucination - 15)
@@ -1166,27 +1301,27 @@
 	if(!ishuman(owner))
 		return FALSE
 	var/mob/living/carbon/human/H = owner
-	var/datum/physiology/phy = H.physiology 
+	var/datum/physiology/phy = H.physiology
 	var/con_mod = H.STACON - 10
 	// con mod needs to be greater than 1 for scaling
 	if(con_mod > 0)
 		// ensure their gotten con mod does not go below 1 or exceed the bleedrate cap.
 		con_mod = clamp(con_mod, 1, CONSTITUTION_BLEEDRATE_CAP - 10)
-		// this ""equalizes"" high con ppl into bleeding more, but they SHOULD generally still 
+		// this ""equalizes"" high con ppl into bleeding more, but they SHOULD generally still
 		// bleed less than if they had just 10 con. remember: this numbers gets sent THRU their con score after.
 		phy.bleed_mod = 1.15 + (con_mod * 0.1) // at 15 con you'll bleed from a wound by .825
 	else
 		phy.bleed_mod = 1.15 // if you already have low con, we're not going to turbofuck you. ok?
-	H.visible_message(span_warning("[owner]'s blood runs thin and begins GUSHING out of their wounds!"), span_danger("A FOUL SPELL IS CAUSING ME TO BLEED EN MASSE!"))
+	H.visible_message(span_artery("[owner]'s blood runs thin and begins GUSHING out of their wounds!"), span_danger("I CAN'T STOP THIS BLEEDING!"))
 
 /datum/status_effect/debuff/bloody_mess/on_remove()
 	. = ..()
 	if(!ishuman(owner))
 		return FALSE
 	var/mob/living/carbon/human/H = owner
-	var/datum/physiology/phy = H.physiology 
+	var/datum/physiology/phy = H.physiology
 	phy.bleed_mod = initial(phy.bleed_mod) // con can lower from the bleeding so we want it to just directly be set back to the initial
-	H.visible_message(span_warning("[owner] has their wounds calm..."), span_warning("My wounds stop bleeding so heavily!"))
+	H.visible_message(span_warning("[owner]'s blood thickens a little, returning to normal."), span_warning("My wounds stop bleeding so heavily!"))
 
 
 /atom/movable/screen/alert/status_effect/debuff/bloody_mess
@@ -1203,20 +1338,20 @@
 	if(!ishuman(owner))
 		return FALSE
 	var/mob/living/carbon/human/H = owner
-	var/datum/physiology/phy = H.physiology 
+	var/datum/physiology/phy = H.physiology
 	var/pain_mod = phy.pain_mod
 	phy.pain_mod = pain_mod * 1.15 // this then gets reduced by wil, among other things. change as needed.
-	H.visible_message(span_warning("[owner] looks to be in great pain, their wounds BLACKENING!"), span_danger("EVERYTHING HURTS!! MY WOUNDS PAIN HAS INCREASED!!"))
+	H.visible_message(span_artery("[owner] stiffens, blackening streaks crawling through their wounds!"), span_danger("I AM IN MISERY! EVERYTHING HURTS WORSE!"))
 
 /datum/status_effect/debuff/sensitive_nerves/on_remove()
 	. = ..()
 	if(!ishuman(owner))
 		return FALSE
 	var/mob/living/carbon/human/H = owner
-	var/datum/physiology/phy = H.physiology 
+	var/datum/physiology/phy = H.physiology
 	var/pain_mod = phy.pain_mod
 	phy.pain_mod = pain_mod / 1.15 // this should be a define fuuuck
-	H.visible_message(span_warning("[owner]'s wounds suddenly return to normal!"), span_warning("My magickally induced pain subsides!"))
+	H.visible_message(span_warning("[owner]'s wounds slowly return to normal!"), span_warning("The unnaturally induced pain subsides!"))
 
 
 /atom/movable/screen/alert/status_effect/debuff/sensitive_nerves
@@ -1256,9 +1391,9 @@
 
 		if(5)
 			if(prob(50))
-				owner.Slowdown(20)
+				owner.apply_slowdown(39 SECONDS)
 			else
-				owner.Slowdown(10)
+				owner.apply_slowdown(19 SECONDS)
 		if(8)
 			if(iscarbon(owner))
 				var/mob/living/carbon/C = owner

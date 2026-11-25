@@ -1,6 +1,7 @@
 #define PHALANX_FILTER "phalanx_glow"
 
 /datum/action/cooldown/spell/azurean_phalanx
+	source_aspect = /datum/magic_aspect/pseudo/spellblade
 	name = "Azurean Phalanx"
 	desc = "Prime your next melee strike with arcyne force. On hit, the blow pierces through, \
 		striking enemies in a line behind the target. Builds 1 momentum on hit. \
@@ -128,7 +129,7 @@
 		for(var/mob/living/victim in T)
 			if(victim == user || victim == struck || victim.stat == DEAD || (victim in already_hit))
 				continue
-			if(spell_guard_check(victim, FALSE, deflected ? null : user))
+			if(spell_guard_check(victim, FALSE, user, punish_caster = deflected ? FALSE : null))
 				deflected = TRUE
 				continue
 			arcyne_strike(user, victim, weapon, damage, def_zone, BCLASS_STAB, spell_name = "Azurean Phalanx", skip_animation = TRUE)

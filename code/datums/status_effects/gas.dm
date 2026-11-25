@@ -49,7 +49,6 @@
 		if(hascall(owner, "update_icon"))
 			call(owner, "update_icon")() //TA EDIT END
 
-	owner.adjust_bodytemperature(100)
 	owner.update_mobility()
 	UnregisterSignal(owner, COMSIG_LIVING_RESIST)
 

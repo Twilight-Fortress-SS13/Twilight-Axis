@@ -12,7 +12,7 @@
 	var/current_cat = "1"
 
 
-/obj/structure/roguemachine/Hoardmaster/Initialize()
+/obj/structure/roguemachine/Hoardmaster/Initialize(mapload)
 	. = ..()
 	update_icon()
 	var/namechance = rand(1,6)
@@ -70,11 +70,12 @@
 			hmasteritem.flags_1 |= HOARDMASTER_SPAWNED_1
 			if(istype(hmasteritem, /obj/item))
 				var/obj/item/newitem = hmasteritem
+				newitem.mark_as_worn()
 				newitem.sellprice = 0
 				if(newitem.smeltresult)
-					newitem.smeltresult = /obj/item/ash
+					newitem.smeltresult = /obj/item/natural/ash
 				if(newitem.salvage_result)
-					newitem.salvage_result = /obj/item/ash
+					newitem.salvage_result = /obj/item/natural/ash
 	if(href_list["changecat"])
 		current_cat = href_list["changecat"]
 	return attack_hand(usr)
@@ -110,7 +111,7 @@
 			unlocked_cats+="Knave"
 		if("Iconoclast", "Mujizat-Musaid") // TA EDIT
 			unlocked_cats+="Iconoclast"
-   
+
 	if(current_cat == "1")
 		contents += "<center>"
 		for(var/X in unlocked_cats)

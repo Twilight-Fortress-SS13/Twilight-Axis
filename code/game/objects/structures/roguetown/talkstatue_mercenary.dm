@@ -1,8 +1,83 @@
-/obj/structure/roguemachine/talkstatue/mercenary/Initialize()
+/obj/structure/roguemachine/talkstatue/mercenary/Initialize(mapload)
 	. = ..()
 	if(SSroguemachine.mercenary_statue == null)
 		SSroguemachine.mercenary_statue = src
 	SSroguemachine.mercenary_statues |= src
+	next_advert = world.time + rand(MERC_STATUE_ADVERT_MIN, MERC_STATUE_ADVERT_MAX)
+	START_PROCESSING(SSroguemachine, src)
+
+/obj/structure/roguemachine/talkstatue/mercenary/Destroy()
+	STOP_PROCESSING(SSroguemachine, src)
+	return ..()
+
+/obj/structure/roguemachine/talkstatue/mercenary/process()
+	if(world.time < next_advert)
+		return
+	next_advert = world.time + rand(MERC_STATUE_ADVERT_MIN, MERC_STATUE_ADVERT_MAX)
+	advertise()
+
+/obj/structure/roguemachine/talkstatue/mercenary/examine(mob/user)
+	. = ..()
+	if(mutable)
+		. += span_info("Right click to [muted ? "unmute" : "mute"] its calls for hire.")
+
+/obj/structure/roguemachine/talkstatue/mercenary/attack_right(mob/user)
+	user.changeNext_move(CLICK_CD_INTENTCAP)
+	if(!mutable)
+		to_chat(user, span_warning("This statue cannot be muted."))
+		return
+	muted = !muted
+	playsound(loc, 'sound/misc/beep.ogg', 100, FALSE, -1)
+	to_chat(user, span_info("I [muted ? "mute" : "unmute"] the statue."))
+
+/obj/structure/roguemachine/talkstatue/mercenary/proc/advertise()
+	if(muted)
+		return
+	var/has_listener = FALSE
+	for(var/mob/living/L in hearers(MERC_STATUE_ADVERT_RANGE, src))
+		if(L.client)
+			has_listener = TRUE
+			break
+	if(!has_listener)
+		return
+	var/list/candidates = list()
+	for(var/merc_key in mercenary_status)
+		var/list/merc_data = mercenary_status[merc_key]
+		var/mob/living/carbon/human/merc = merc_data["mob"]
+		if(QDELETED(merc) || merc.stat == DEAD || merc_data["status"] != "Available")
+			continue
+		candidates += list(merc_data)
+	if(!length(candidates))
+		return
+	var/list/chosen = pick(candidates)
+	var/mob/living/carbon/human/merc = chosen["mob"]
+	var/class_text = merc.advjob ? ", [merc.advjob]," : ""
+	var/ad_text = chosen["message"] ? " \"[chosen["message"]]\"" : ""
+	say("[merc.real_name][class_text] is for hire.[ad_text]")
+
+/obj/structure/roguemachine/talkstatue/mercenary/proc/sync_mercenary_status(mob/living/carbon/human/merc, new_status)
+	var/list/merc_data = mercenary_status[merc.real_name]
+	if(!merc_data)
+		merc_data = list("status" = new_status, "mob" = merc, "message" = "")
+		mercenary_status[merc.real_name] = merc_data
+	if(new_status == "Available" && merc_data["status"] == "Do not Disturb")
+		return
+	merc_data["status"] = new_status
+	merc_data["mob"] = merc
+
+/mob/living/carbon/human/proc/mercenary_statusupdate()
+	set name = "Update Mercenary Status"
+	set category = "RoleUnique.Mercenary"
+	set desc = "Set your status at the mercenary statue from anywhere."
+	var/obj/structure/roguemachine/talkstatue/mercenary/statue = SSroguemachine.mercenary_statue
+	if(!statue)
+		to_chat(src, span_warning("There is no mercenary statue to hear me."))
+		return
+	var/list/options = list("Available", "Contracted", "Do not Disturb")
+	var/choice = tgui_input_list(src, "Set my status at the mercenary statue.", "Mercenary Status", options)
+	if(!choice)
+		return
+	statue.set_role_status(src, statue.mercenary_status, options, "Available", choice)
 
 /obj/structure/roguemachine/talkstatue/mercenary/proc/cycle_mercenary_status(mob/living/carbon/human/user)
 	var/list/merc_data = mercenary_status[user.real_name]
@@ -93,7 +168,13 @@
 		pending_direct_responses[response_id] = list("responder" = target_merc, "sender" = sender)
 		addtimer(CALLBACK(src, PROC_REF(expire_direct_response), response_id), response_timeout)
 
-	to_chat(target_merc, span_boldnotice("The mercenary statue whispers in my mind: <i>[message]</i> - [sender.real_name]<br><a href='?src=[REF(src)];direct_response=yae;response_id=[response_id]'>\[YAE\]</a> | <a href='?src=[REF(src)];direct_response=nae;response_id=[response_id]'>\[NAE\]</a>"))
+	// wretches always show up as their aliases, whether they sent or received a message
+	var/sender_name = sender.real_name
+
+	if(wretch_status[sender_name])
+		sender_name = (wretch_status[sender_name]["nom_de_guerre"] || sender_name)
+
+	to_chat(target_merc, span_boldnotice("The mercenary statue whispers in my mind: <i>[message]</i> - [sender_name]<br><a href='?src=[REF(src)];direct_response=yae;response_id=[response_id]'>\[YAE\]</a> | <a href='?src=[REF(src)];direct_response=nae;response_id=[response_id]'>\[NAE\]</a>"))
 	to_chat(sender, span_notice("My message has been sent to [target_merc.real_name]."))
 	playsound(target_merc.loc, 'sound/misc/notice (2).ogg', 100, FALSE, -1)
 
@@ -143,6 +224,12 @@
 	for(var/mob/living/carbon/human/merc in valid_recipients)
 		recipient_keys += key_name(merc)
 
+	// wretches always show up as their aliases, whether they sent or received a message
+	var/sender_name = sender.real_name
+
+	if(wretch_status[sender_name])
+		sender_name = (wretch_status[sender_name]["nom_de_guerre"] || sender_name)
+
 	for(var/mob/living/carbon/human/merc in valid_recipients)
 		response_id_counter++
 		var/response_id = "[merc.real_name]_[world.time]_[response_id_counter]"
@@ -150,12 +237,12 @@
 			pending_broadcast_responses[response_id] = list("responder" = merc, "sender" = sender)
 			addtimer(CALLBACK(src, PROC_REF(expire_broadcast_response), response_id), response_timeout)
 
-		to_chat(merc, span_boldannounce("The mercenary statue calls out: <i>[message]</i> - [sender.real_name]<br><a href='?src=[REF(src)];broadcast_interest=[response_id]'>\[Signal Interest\]</a>"))
+		to_chat(merc, span_boldannounce("The mercenary statue calls out: <i>[message]</i> - [sender_name]<br><a href='?src=[REF(src)];broadcast_interest=[response_id]'>\[Signal Interest\]</a>"))
 		playsound(merc.loc, 'sound/misc/notice (2).ogg', 100, FALSE, -1)
 
 	var/merc_count = valid_recipients.len
 	to_chat(sender, span_notice("My message has been broadcast to [merc_count] mercenary[merc_count == 1 ? "" : "s"]."))
-	src.bark(1)
+	src.speak(1)
 
 	sender.log_talk(message, LOG_SAY, tag="mercenary statue broadcast (to [recipient_keys.Join(", ")])")
 
@@ -169,7 +256,7 @@
 		if(!pending_registrations[H.key])
 			to_chat(usr, span_warning("That registration link has expired."))
 			return
-		if(H.mind?.assigned_role != "Mercenary")
+		if(!role_matches(H, "Mercenary"))
 			to_chat(usr, span_warning("I am no longer a mercenary."))
 			pending_registrations -= H.key
 			return
@@ -206,7 +293,7 @@
 			to_chat(usr, span_warning("I am not registered with the mercenary statue network."))
 			pending_message_links -= H.key
 			return
-		if(H.mind?.assigned_role != "Mercenary")
+		if(!role_matches(H, "Mercenary"))
 			to_chat(usr, span_warning("I am no longer a mercenary."))
 			pending_message_links -= H.key
 			return
@@ -246,16 +333,25 @@
 			pending_broadcast_responses -= response_id
 			return
 
-		if(!responder.mind || responder.mind.assigned_role != "Mercenary")
+		if(!role_matches(responder, "Mercenary"))
 			to_chat(responder, span_warning("I am not a mercenary."))
 			return
 
+		// wretches always show up as their aliases, whether they sent or received a message
+		var/responder_name = responder.real_name
+		var/sender_name = sender.real_name
+
+		if(wretch_status[responder_name])
+			responder_name = (wretch_status[responder_name]["nom_de_guerre"] || responder_name)
+		if(wretch_status[sender_name])
+			sender_name = (wretch_status[sender_name]["nom_de_guerre"] || sender_name)
+
 		pending_broadcast_responses -= response_id
 
-		to_chat(sender, span_notice("[responder.real_name] signaled [responder.p_their()] interest in my missive."))
+		to_chat(sender, span_notice("[responder_name] signaled [responder.p_their()] interest in my missive."))
 		playsound(sender.loc, 'sound/misc/notice (2).ogg', 100, FALSE, -1)
 
-		to_chat(responder, span_notice("I signaled my interest to [sender.real_name]."))
+		to_chat(responder, span_notice("I signaled my interest to [sender_name]."))
 		playsound(responder.loc, 'sound/misc/beep.ogg', 100, FALSE, -1)
 
 		responder.log_talk("signaled interest", LOG_SAY, tag="mercenary statue broadcast response (to [key_name(sender)])")
@@ -285,14 +381,23 @@
 			pending_direct_responses -= response_id
 			return
 
+		// wretches always show up as their aliases, whether they sent or received a message
+		var/responder_name = responder.real_name
+		var/sender_name = sender.real_name
+
+		if(wretch_status[responder_name])
+			responder_name = (wretch_status[responder_name]["nom_de_guerre"] || responder_name)
+		if(wretch_status[sender_name])
+			sender_name = (wretch_status[sender_name]["nom_de_guerre"] || sender_name)
+
 		pending_direct_responses -= response_id
 
 		if(response_type == "yae")
-			to_chat(sender, span_notice("[responder.real_name] responded in affirmation to my message."))
-			to_chat(responder, span_notice("I responded in affirmation to [sender.real_name]."))
+			to_chat(sender, span_notice("[responder_name] responded in affirmation to my message."))
+			to_chat(responder, span_notice("I responded in affirmation to [sender_name]."))
 		else
-			to_chat(sender, span_notice("[responder.real_name] responded negatively to my message."))
-			to_chat(responder, span_notice("I responded negatively to [sender.real_name]."))
+			to_chat(sender, span_notice("[responder_name] responded negatively to my message."))
+			to_chat(responder, span_notice("I responded negatively to [sender_name]."))
 
 		playsound(sender.loc, 'sound/misc/notice (2).ogg', 100, FALSE, -1)
 		playsound(responder.loc, 'sound/misc/beep.ogg', 100, FALSE, -1)
@@ -316,7 +421,7 @@
 	if(pending_direct_responses[response_id])
 		pending_direct_responses -= response_id
 
-/obj/structure/roguemachine/talkstatue/mercenary/proc/bark(var/mode)
+/obj/structure/roguemachine/talkstatue/mercenary/proc/speak(mode)
 	if(mode == 1)
 		var/random = rand(1,4)
 		switch(random)

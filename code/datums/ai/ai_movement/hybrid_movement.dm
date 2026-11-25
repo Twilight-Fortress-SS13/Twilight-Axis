@@ -20,6 +20,7 @@
 	var/next_resolve = 0
 	var/max_basic_failures = 3 // How many consecutive basic movement failures before switching to A*
 	var/always_advanced = FALSE
+	var/advanced_adjacent_proc = TYPE_PROC_REF(/turf, reachableTurftest) // TA EDIT
 
 /datum/ai_movement/hybrid_pathing/process(delta_time)
 	if(world.time < next_resolve)
@@ -35,7 +36,7 @@
 			controller.add_blackboard_key(future_path_blackboard_key, null)
 		if(!COOLDOWN_FINISHED(controller, movement_cooldown))
 			continue
-		COOLDOWN_START(controller, movement_cooldown, controller.movement_delay)
+		controller.advance_movement_cooldown()
 
 		if(!controller.can_move())
 			continue
@@ -47,6 +48,9 @@
 		var/turf/end_turf = get_turf(controller.current_movement_target)
 		var/advanced = TRUE
 		var/turf/current_turf = get_turf(movable_pawn)
+		if(!end_turf) // TA EDIT START
+			controller.CancelActions()
+			continue // TA EDIT END
 
 		var/mob/cliented_mob = controller.current_movement_target
 		var/cliented = FALSE
@@ -86,17 +90,18 @@
 					continue
 
 		// Basic movement for targets on the same z-level with no existing path
-		if(end_turf?.z == movable_pawn?.z && !length(controller.movement_path) && !cliented && !always_advanced)
+		if(end_turf?.z == movable_pawn?.z && !length(controller.movement_path) && !cliented && !always_advanced && !swim_needs_planning(movable_pawn, current_turf, target_turf))
 			advanced = FALSE
 			var/can_move = controller.can_move()
 
 			var/current_loc = get_turf(movable_pawn)
 
 			if(!is_type_in_typecache(target_turf, GLOB.dangerous_turfs) && can_move)
-				step_to(movable_pawn, target_turf, controller.blackboard[BB_CURRENT_MIN_MOVE_DISTANCE], controller.movement_delay)
+				step_to(movable_pawn, target_turf, controller.blackboard[BB_CURRENT_MIN_MOVE_DISTANCE])
 
 				// Check if movement was successful
 				if(current_loc != get_turf(movable_pawn))
+					charge_diagonal_step(controller, current_loc)
 					// Successful basic movement - reset failure counter and clear fallback state
 					controller.pathing_attempts = 0
 					var/datum/weakref/weak = WEAKREF(controller)
@@ -173,6 +178,7 @@
 					// Only move if we can legitimately transition, otherwise regenerate path
 					if(can_transition)
 						movable_pawn.Move(next_step)
+						charge_diagonal_step(controller, current_turf)
 					else
 						// Can't reach next step legitimately, need new path
 						generate_path = TRUE
@@ -181,7 +187,12 @@
 					// Use step() with explicit direction rather than step_to().
 					// Step will fail if we can't move in that direction and allow us to climb.
 					var/move_dir = get_dir(movable_pawn, next_step)
-					if(!step(movable_pawn, move_dir, controller.movement_delay) && controller.can_climb_structures && world.time >= controller.next_climb_time)
+					var/stepped = step(movable_pawn, move_dir)
+					if(stepped)
+						charge_diagonal_step(controller, current_turf)
+						controller.climb_windup_turf = null
+						controller.climb_failed_turf = null
+					if(!stepped && controller.can_climb_structures)
 						// climbable/climb_structure are declared on /obj/structure and /obj/machinery separately, so iterate both.
 						var/obj/structure/struct_target
 						var/obj/machinery/mach_target
@@ -204,12 +215,12 @@
 								if(M.climbable)
 									mach_target = M
 									break
-						if(struct_target)
+						var/turf/climb_turf = get_turf(struct_target || mach_target)
+						if(climb_turf && controller.climb_windup_done(climb_turf) && world.time >= controller.next_climb_time)
 							controller.next_climb_time = world.time + controller.climb_interval
-							struct_target.climb_structure(movable_pawn)
-						else if(mach_target)
-							controller.next_climb_time = world.time + controller.climb_interval
-							mach_target.climb_structure(movable_pawn)
+							controller.climb_windup_turf = null
+							var/climbed = struct_target ? struct_target.climb_structure(movable_pawn) : mach_target.climb_structure(movable_pawn)
+							controller.climb_failed_turf = climbed ? null : climb_turf
 
 				// Check if target has moved significantly from the end of our path
 				if(last_turf != get_turf(controller.current_movement_target))
@@ -263,7 +274,7 @@
 					COOLDOWN_START(controller, repath_cooldown, 0.3 SECONDS) // AP: aggressive anticipatory repath
 					// Generate the future path and store it in the controller's blackboard
 					var/list/new_future_path = get_path_to(movable_pawn, controller.current_movement_target, TYPE_PROC_REF(/turf, Heuristic_cardinal_3d),
-						max_path_distance + 1, max_path_distance + 1, minimum_distance, id=controller.get_access())
+						max_path_distance + 1, max_path_distance + 1, minimum_distance, adjacent = advanced_adjacent_proc, id=controller.get_access()) // TA EDIT
 					// Strip the caller's own turf if AStar included it — see note on main path gen below
 					if(length(new_future_path) && new_future_path[1] == get_turf(movable_pawn))
 						new_future_path.Cut(1, 2)
@@ -285,10 +296,19 @@
 					continue
 				COOLDOWN_START(controller, repath_cooldown, 0.5 SECONDS) // AP: aggressive repath
 				controller.movement_path = get_path_to(movable_pawn, controller.current_movement_target, TYPE_PROC_REF(/turf, Heuristic_cardinal_3d),
-					max_path_distance + 1, max_path_distance + 1, minimum_distance, id=controller.get_access())
+					max_path_distance + 1, max_path_distance + 1, minimum_distance, adjacent = advanced_adjacent_proc, id=controller.get_access()) // TA EDIT
 				// AStar includes the caller's current turf as path[1] — strip it so path[1] is
 				// always the next tile to step to. Matches old _npc.dm:503 behavior.
 				if(length(controller.movement_path) && controller.movement_path[1] == get_turf(movable_pawn))
 					controller.movement_path.Cut(1, 2)
 				controller.clear_blackboard_key(future_path_blackboard_key) // Clear any future path as we have a fresh main path
 				SEND_SIGNAL(controller.pawn, COMSIG_AI_PATH_GENERATED, controller.movement_path)
+
+/datum/ai_movement/hybrid_pathing/proc/swim_needs_planning(atom/movable/pawn, turf/current_turf, turf/target_turf)
+	if(!isliving(pawn))
+		return FALSE
+	var/move_dir = get_dir(current_turf, target_turf)
+	for(var/turf/open/water/water_turf in list(current_turf, target_turf))
+		if(water_turf.is_swim_exhausting(pawn, move_dir))
+			return TRUE
+	return FALSE

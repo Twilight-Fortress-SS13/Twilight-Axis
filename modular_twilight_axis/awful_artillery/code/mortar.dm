@@ -29,6 +29,7 @@
 		T = GET_TURF_BELOW(T)
 	
 	playsound(src, 'modular_twilight_axis/awful_artillery/sound/fallingonyou.ogg', 100, 0, 10, 1, null, null, FALSE, TRUE)
+	mount_notify_loud_noise(T, 11, 30, 6 SECONDS)
 	sleep(0.5 SECONDS)
 
 	for(var/mob/M in GLOB.player_list)
@@ -91,14 +92,12 @@
 	name = "mortar carriage wheel"
 	icon = 'modular_twilight_axis/awful_artillery/icons/artillery.dmi'
 	icon_state = "mortar_wheel"
-	sellprice = 5
 	
 
 /obj/item/mortar_barrel 
 	name = "barrel of the mortar"
 	icon = 'modular_twilight_axis/awful_artillery/icons/artillery.dmi'
 	icon_state = "barrel"
-	sellprice = 150
 	w_class = WEIGHT_CLASS_HUGE
 
 /obj/item/mortar_used_barrel

@@ -21,7 +21,7 @@ plus talkstatue_tgui.dm (TGUI surface shared across all three roles).
 
 /obj/structure/roguemachine/talkstatue/mercenary
 	name = "mercenary statue"
-	desc = "A gilbronze warrior erupts from the stone bell that homes them; foreign garb, horns of stone, claws of deathly metals. The perfect central-point of a proud warrior extrinsic to this place and tyme."
+	desc = "A gilbranze warrior erupts from the stone bell that homes them; foreign garb, horns of stone, claws of deathly metals. The perfect central-point of a proud warrior extrinsic to this place and tyme."
 	var/static/list/mercenary_status = list()
 	var/static/list/pending_registrations = list()
 	var/static/list/pending_message_links = list()
@@ -35,13 +35,21 @@ plus talkstatue_tgui.dm (TGUI surface shared across all three roles).
 	var/single_cooldown = 10 MINUTES
 	var/broadcast_cooldown_time = 20 MINUTES
 	var/static/response_id_counter = 0
+	var/next_advert = 0
+	var/mutable = TRUE
+	var/muted = FALSE
+
+/obj/structure/roguemachine/talkstatue/mercenary/tavern
+	name = "tavern mercenary statue"
+	desc = "A gilbranze warrior erupts from the stone bell that homes them; foreign garb, horns of stone, claws of deathly metals. The perfect central-point of a proud warrior extrinsic to this place and tyme. This one cannot be muted."
+	mutable = FALSE
 
 /obj/structure/roguemachine/talkstatue/church
 	name = "church statue"
 	desc = "A blessed stone statue radiating divine presence."
 	icon_state = "goldvendor" //TODO: Get proper sprite
 
-/obj/structure/roguemachine/talkstatue/church/Initialize()
+/obj/structure/roguemachine/talkstatue/church/Initialize(mapload)
 	. = ..()
 	if(SSroguemachine.church_statue == null)
 		SSroguemachine.church_statue = src

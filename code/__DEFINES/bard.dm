@@ -17,12 +17,15 @@
 // Rhythm system (on-hit melee effects for bards)
 #define RHYTHM_COOLDOWN 7 SECONDS // Shared cooldown after a rhythm successfully procs
 #define RHYTHM_WINDOW 8 SECONDS // Time to land a hit after activating rhythm
-#define RHYTHM_ACTIVATION_COST 10 // Stamina cost to activate rhythm
+#define RHYTHM_ACTIVATION_COST 5 // Stamina cost to activate rhythm
 #define CRESCENDO_STACKS 3 // Rhythm procs needed to unlock Crescendo
 #define CRESCENDO_DECAY 20 SECONDS // Time before Crescendo stacks decay
 
 // Rhythm shared cooldown group
 #define RHYTHM_SHARED_COOLDOWN "bardic_rhythm"
+
+// Not bard feature but no idea where else to put it rn and I am not making a new file for it
+#define LEADERSHIP_ORDER_SHARED_COOLDOWN "leadership_order_cooldown"
 
 // Rhythm picks per tier
 #define RHYTHM_PICKS_T1 2

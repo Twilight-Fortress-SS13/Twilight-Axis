@@ -31,16 +31,6 @@
 
 	if(ishuman(victim))
 		var/mob/living/carbon/human/human_victim = victim
-		var/silvercross = FALSE
-		for(var/obj/item/clothing/neck/roguetown/psicross/silver/I in human_victim.contents)
-			silvercross = TRUE
-			break
-		if(VDrinker && silvercross)
-			to_chat(src, span_userdanger("SILVER CROSS! HISSS!!!"))
-			return
-		if(VDrinker && HAS_TRAIT(human_victim, TRAIT_SILVER_BLESSED))
-			to_chat(src, span_userdanger("SILVER IN THE BLOOD! HISSS!!!"))
-			return
 		human_victim.add_bite_animation()
 
 	last_drinkblood_use = world.time
@@ -62,8 +52,8 @@
 		victim.adjustToxLoss(-tox_drained)
 		src.adjustToxLoss(tox_drained)
 
-	if(!(VDrinker || HAS_TRAIT(src, TRAIT_BLACKBLOOD)))
-		if(!(HAS_TRAIT(src, TRAIT_HORDE) || HAS_TRAIT(src, TRAIT_NASTY_EATER)))
+	if(!VDrinker)
+		if(!(HAS_TRAIT(src, TRAIT_HORDE) || HAS_TRAIT(src, TRAIT_NASTY_EATER) || HAS_TRAIT(src, TRAIT_SANGUIVORE)))
 			to_chat(src, span_warning("I'm going to puke..."))
 			addtimer(CALLBACK(src, TYPE_PROC_REF(/mob/living/carbon, vomit), 0, TRUE), rand(8 SECONDS, 15 SECONDS))
 		src.reagents.add_reagent(/datum/reagent/medicine/strongmana, 5) //TA EDIT START
@@ -71,7 +61,15 @@
 		src.reagents.add_reagent(/datum/reagent/medicine/stronghealth, 5) //TA EDIT END
 		return
 
-	if(HAS_TRAIT(victim, TRAIT_BLACKBLOOD) || victim.mind?.has_antag_datum(/datum/antagonist/werewolf) || (victim.stat != DEAD && victim.mind?.has_antag_datum(/datum/antagonist/zombie)))
+	if(VDrinker && istype(victim.wear_neck, /obj/item/clothing/neck/roguetown/psicross/silver) || HAS_TRAIT(victim, TRAIT_SILVER_BLESSED))
+		to_chat(src, span_silver("SILVER! MY BANE!"))
+		src.adjust_fire_stacks(5, /datum/status_effect/fire_handler/fire_stacks/sunder)
+		src.Stun(5)
+		src.ignite_mob()
+		addtimer(CALLBACK(src, TYPE_PROC_REF(/mob/living/carbon, vomit), 0, TRUE), rand(1 SECONDS, 2 SECONDS))
+		return
+
+	if(victim.mind?.has_antag_datum(/datum/antagonist/werewolf) || (victim.stat != DEAD && victim.mind?.has_antag_datum(/datum/antagonist/zombie)))
 		to_chat(src, span_danger("I'm going to puke..."))
 		addtimer(CALLBACK(src, TYPE_PROC_REF(/mob/living/carbon, vomit), 0, TRUE), rand(8 SECONDS, 15 SECONDS))
 		return
@@ -88,8 +86,6 @@
 	if(B)
 		B.data = victim.get_blood_data()
 	temp.trans_to(src, blood_amount, TRUE, TRUE, FALSE, src, FALSE, INGEST)
-	if(HAS_TRAIT(src, TRAIT_BLACKBLOOD))
-		return
 
 	if(VVictim)
 		to_chat(src, span_userdanger("<b>YOU TRY TO COMMIT DIABLERIE ON [uppertext(victim)].</b>"))
@@ -106,14 +102,14 @@
 		blood_handle |= BLOOD_PREFERENCE_FANCY //More variety
 	if(VVictim)
 		blood_handle |= BLOOD_PREFERENCE_KIN
-		blood_handle  &= ~BLOOD_PREFERENCE_LIVING
+		blood_handle	&= ~BLOOD_PREFERENCE_LIVING
 
 	clan.handle_bloodsuck(src, blood_handle)
 
 	if(victim.bloodpool > 0)
 		var/used_vitae = 150
 		victim.blood_volume = max(victim.blood_volume - 45, 0) // good fucking lord vampires are hungy, 50 blood per cycle?
-		if(victim.bloodpool < used_vitae)  // We assume they're left with 250 vitae or less, so we take it all
+		if(victim.bloodpool < used_vitae)	// We assume they're left with 250 vitae or less, so we take it all
 			used_vitae = victim.bloodpool
 			to_chat(src, span_warning("...But alas, only leftovers..."))
 		victim.adjust_bloodpool(-used_vitae)
@@ -130,10 +126,12 @@
 			to_chat(src, span_danger("I have... Consumed my kindred!"))
 			if(VVictim.generation > VDrinker.generation)
 				VDrinker.generation = VVictim.generation
-			VDrinker.research_points += VVictim.research_points
+			VDrinker.research_points += VVictim.research_spent
 			victim.death()
 			victim.adjustBruteLoss(-50, TRUE)
 			victim.adjustFireLoss(-50, TRUE)
+			to_chat(victim, span_userdanger("I have been consumed by my kindred!"))
+			visible_message(span_danger("Some dark energy begins to flow from [victim] into [src]...")) //reverse of siring, teehehe
 			return
 		else if(victim.blood_volume < BLOOD_VOLUME_SURVIVE && victim.stat != DEAD)
 			to_chat(src, span_warning("This sad sacrifice for your own pleasure affects something deep in your mind."))
@@ -143,11 +141,11 @@
 
 	if(!victim.clan && victim.mind && ishuman(victim) && VDrinker.generation > GENERATION_THINBLOOD && victim.blood_volume <= BLOOD_VOLUME_BAD)
 		var/datum/antagonist/vampire/vdrinker = mind?.has_antag_datum(/datum/antagonist/vampire)
-		if((vdrinker.max_thralls <= 0) || (isnull(vdrinker.max_thralls || VDrinker.generation <= GENERATION_THINBLOOD))) //thin bloods or low level vampires can't make thralls, incase they get past the last check by leveling up off others
+		if((vdrinker.max_thralls <= 0) || (isnull(vdrinker.max_thralls || VDrinker.generation <= GENERATION_THINBLOOD))) //thin bloods or low level vampires can't make thralls, in case they get past the last check by leveling up off others
 			to_chat(src, span_warning("I cannot sire thralls, my blood is too weak!"))
 		else
 			if(vdrinker.thrall_count >= vdrinker.max_thralls) //you've hit your max
-				to_chat(src, span_warning("I cannot sire anymore thralls.."))
+				to_chat(src, span_warning("I cannot sire any more thralls.."))
 			else
 				if(alert(src, "Would you like to sire a new spawn?", "THE CURSE OF ASTRATA", "MAKE IT SO", "I RESCIND") != "MAKE IT SO")
 					to_chat(src, span_warning("I decide [victim] is unworthy."))
@@ -192,7 +190,7 @@
 
 	var/vampire_choice = tgui_alert(
 		src,
-		"Would you like to rise as a lycker spawn? Warning: refusal may or may not mortally wound you.",
+		"Would you like to rise as a lycker spawn?", //we don't mortally wound you, the vampyre does.
 		"THE CURSE OF ASTRATA",
 		list("MAKE IT SO", "I RESCIND"),
 		VAMP_CONVERT_TIMEOUT
@@ -247,7 +245,7 @@
 		client.init_verbs()
 
 	visible_message(span_danger("Some dark energy begins to flow from [sire] into [src]..."))
-	visible_message(span_red("[src] rises as a new spawn!"))
+	visible_message(span_red("[src] takes on a deathly paleness..."))
 
 	original_mind?.transfer_to(src, TRUE)
 
@@ -263,7 +261,19 @@
 	apply_status_effect(/datum/status_effect/incapacitating/stun, VAMP_CONVERT_POST_STUN)
 
 	vampire_conversion_prompt_active = FALSE
+
+	//rid the vamp reagents
+	src.reagents.remove_reagent(/datum/reagent/vampsolution, 30) //remove all of our vamp bite reagents
+	remove_status_effect(/datum/status_effect/debuff/vampbite) //status effect itself too
+
+	Unconscious(20 SECONDS)
+	sleep(10 SECONDS)
+	to_chat(src, span_narsie("Death is not the end..."))
+	visible_message(span_warning("[src] convulses on the floor momentarily..."))
+	src.Jitter(15) //Convulse a bit.
+	sleep(15 SECONDS)
+	src.flash_fullscreen("redflash3")
+	to_chat(src, span_cult("I arise anew, through death into a second lyfe, as an unnatural craving for blood and unbreakable enthrallment to another's will floods my mynd and senses."))
+	to_chat(src, span_hypnophrase("My will is <b>[sire.clan.clan_leader]'s</b> command."))
+	visible_message(span_red("[src]'s' eyes light up with an eerie crimson glow..."))
 	return
-
-
-

@@ -142,12 +142,12 @@
 
 /mob/living/carbon/human/species/skeleton/npc/necra_garden
 	threat_point = THREAT_MODERATE
-	skel_outfit = /datum/outfit/job/roguetown/skeleton/npc/necra_garden
 	ai_controller = /datum/ai_controller/human_npc/necra_garden
 	pass_flags = PASSCLOSEDTURF
 
 /mob/living/carbon/human/species/skeleton/npc/necra_garden/after_creation()
-	..()
+	. = ..()
+	equipOutfit(new /datum/outfit/job/roguetown/skeleton/npc/necra_garden)
 	pass_flags |= PASSCLOSEDTURF
 	ADD_TRAIT(src, TRAIT_NOPAIN, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NOPAINSTUN, TRAIT_GENERIC)

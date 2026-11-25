@@ -32,7 +32,7 @@ SUBSYSTEM_DEF(statpanels)
 			global_data = list("Map: [SSmapping.config.map_name]")
 
 		// if(SSmapping.config?.mapping_url)
-		// 	global_data += list(list("same_line", " | (View in Browser)", "action=openWebMap"))
+		//	global_data += list(list("same_line", " | (View in Browser)", "action=openWebMap"))
 
 		if(cached)
 			global_data += "Next Map: [cached.map_name]"
@@ -51,6 +51,8 @@ SUBSYSTEM_DEF(statpanels)
 		if(SSgamemode.roundvoteend)
 			var/time_left = SSgamemode.round_ends_at - world.time
 			global_data += "Round End: [DisplayTimeText(time_left, 1)]"
+
+		global_data += "Round Type: [SSgamemode.current_storyteller ? SSgamemode.current_storyteller.name : "Unknown"]"
 
 		if(SSticker.ready_for_reboot)
 			global_data += "Reboot: DELAYED"
@@ -84,8 +86,11 @@ SUBSYSTEM_DEF(statpanels)
 			target.update_listed_turf()
 
 		if(!target.holder)
-			target.stat_panel.send_message("remove_admin_tabs")
+			if(target.statbrowser_admin_tabs_shown)
+				target.stat_panel.send_message("remove_admin_tabs")
+				target.statbrowser_admin_tabs_shown = FALSE
 		else
+			target.statbrowser_admin_tabs_shown = TRUE
 			if(!("MC" in target.panel_tabs) || !("Tickets" in target.panel_tabs))
 				target.stat_panel.send_message("add_admin_tabs", target.holder.href_token)
 
@@ -109,11 +114,11 @@ SUBSYSTEM_DEF(statpanels)
 			var/update_actions = FALSE
 			// // We're on a spell tab, update the tab so we can see cooldowns progressing and such
 			// if(target.stat_tab in target.spell_tabs)
-			// 	update_actions = TRUE
+			//	update_actions = TRUE
 			// // We're not on a spell tab per se, but we have cooldown actions, and we've yet to
 			// // set up our spell tabs at all
 			// if(!length(target.spell_tabs) && locate(/datum/action/cooldown) in target_mob.actions)
-			// 	update_actions = TRUE
+			//	update_actions = TRUE
 
 			if(update_actions && num_fires % default_wait == 0)
 				set_action_tabs(target, target_mob)
@@ -179,7 +184,7 @@ SUBSYSTEM_DEF(statpanels)
 	// target.spell_tabs.Cut()
 
 	// for(var/action_data in actions)
-	// 	target.spell_tabs |= action_data[1]
+	//	target.spell_tabs |= action_data[1]
 
 	// target.stat_panel.send_message("update_spells", list(spell_tabs = target.spell_tabs, actions = actions))
 
@@ -213,7 +218,8 @@ SUBSYSTEM_DEF(statpanels)
 		return TRUE
 
 	if(target.mob?.listed_turf && target.stat_tab == "[target.mob.listed_turf]")
-		target.send_listed_turf()
+		//TA EDIT - listed-turf tab is dead on the JS side, skip the appearance build entirely
+		//target.send_listed_turf()
 		return TRUE
 
 	var/mob/target_mob = target.mob
@@ -245,7 +251,7 @@ SUBSYSTEM_DEF(statpanels)
 /// Stat panel window declaration
 /client/var/datum/tgui_window/stat/stat_panel
 
-/datum/tgui_window/stat/initialize(strict_mode, fancy, assets, inline_html, inline_js, inline_css)
+/datum/tgui_window/stat/initialize(strict_mode, assets, inline_html, inline_js, inline_css)
 	. = ..()
 	send_message("build_topbar") // This is the best way of doing it... don't @ me
 

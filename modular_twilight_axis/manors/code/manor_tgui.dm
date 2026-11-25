@@ -94,8 +94,11 @@
 	if(J)
 		if(J.department_flag & NOBLEMEN)
 			return FALSE
-	
+
 	if(HAS_TRAIT(user, TRAIT_OUTLAW))
+		return FALSE
+
+	if(HAS_TRAIT(user, TRAIT_NOBLE_UNLANDED))
 		return FALSE
 
 	if(user.mind && (user.mind.has_antag_datum(/datum/antagonist/skeleton) || user.mind.has_antag_datum(/datum/antagonist/lich) || user.mind.has_antag_datum(/datum/antagonist/vampire) || user.mind.has_antag_datum(/datum/antagonist/vampire/lord)))

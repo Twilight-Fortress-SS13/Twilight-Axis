@@ -1,17 +1,23 @@
-#define BB_KICK_COOLDOWN           "bb_kick_cooldown"
-#define BB_GRAB_REACTION_AT        "bb_grab_reaction_at"
-#define BB_GRAB_REACTION_GRABBER   "bb_grab_reaction_grabber"
-#define KICK_COOLDOWN              (20 SECONDS)
-#define KICK_WALLED_CHANCE         30  // target backed against a wall
-#define KICK_CHOKEPOINT_CHANCE     25  // target in a doorway/corridor (2+ dense neighbors)
-#define KICK_STACKED_ENEMY_CHANCE  20  // non-allied mob behind target to knock into
-#define KICK_OPPORTUNISTIC_CHANCE  10  // target is off-balanced, prone, or stunned
-#define KICK_EXHAUSTED_CHANCE      35  // target is fatigued - kick guarantees knockdown
-#define KICK_EXHAUSTED_THRESHOLD   1 // 1 = fully exhausted, guarantees knockdown per species.dm
-#define KICK_CHOKEPOINT_THRESHOLD  2   // minimum dense cardinal neighbors to count as chokepoint
-#define GRAB_REACTION_BASE         20  // deciseconds; reduced by (STAINT + STAPER)
-#define GRAB_REACTION_MIN          3   // floor so even maxed stats can't be frame-perfect
-#define GRAB_REACTION_JITTER       2   // +/- deciseconds of randomness
+#define BB_KICK_COOLDOWN			"bb_kick_cooldown"
+#define BB_GRAB_REACTION_AT		"bb_grab_reaction_at"
+#define BB_GRAB_REACTION_GRABBER	"bb_grab_reaction_grabber"
+#define BB_KICK_NOTICED_AT		"bb_kick_noticed_at"
+#define BB_KICK_NOTICED_TURF		"bb_kick_noticed_turf"
+#define BB_KICK_COMMIT_TURF		"bb_kick_commit_turf"
+#define KICK_COOLDOWN				(20 SECONDS)
+#define KICK_REACTION_MIN			4
+#define KICK_REACTION_MAX			8
+#define KICK_REACTION_STALE			(1 SECONDS)
+#define KICK_WALLED_CHANCE			30	// target backed against a wall
+#define KICK_CHOKEPOINT_CHANCE		25	// target in a doorway/corridor (2+ dense neighbors)
+#define KICK_STACKED_ENEMY_CHANCE	20	// non-allied mob behind target to knock into
+#define KICK_OPPORTUNISTIC_CHANCE	10	// target is off-balanced, prone, or stunned
+#define KICK_EXHAUSTED_CHANCE		35	// target is fatigued - kick guarantees knockdown
+#define KICK_EXHAUSTED_THRESHOLD	1 // 1 = fully exhausted, guarantees knockdown per species.dm
+#define KICK_CHOKEPOINT_THRESHOLD	2	// minimum dense cardinal neighbors to count as chokepoint
+#define GRAB_REACTION_BASE			20	// deciseconds; reduced by (STAINT + STAPER)
+#define GRAB_REACTION_MIN			3	// floor so even maxed stats can't be frame-perfect
+#define GRAB_REACTION_JITTER		2	// +/- deciseconds of randomness
 
 /datum/ai_planning_subtree/kick_attack
 
@@ -21,11 +27,25 @@
 	if(!target || QDELETED(target))
 		return
 	var/mob/living/pawn = controller.pawn
-	if(!pawn.Adjacent(target))
-		return
-	if(pawn.IsOffBalanced())
-		return
-	if(pawn.get_num_legs() < 2)
+	var/able = !pawn.incapacitated(ignore_restraints = TRUE) && !pawn.is_carried() && !pawn.is_legbound() && !pawn.IsOffBalanced() && pawn.get_num_legs() >= 2
+
+	var/noticed_at = controller.blackboard[BB_KICK_NOTICED_AT]
+	if(noticed_at)
+		if(world.time < noticed_at)
+			return
+		var/stale = world.time > noticed_at + KICK_REACTION_STALE
+		if(!stale && able && pawn.next_move > world.time)
+			return
+		var/turf/noticed_turf = controller.blackboard[BB_KICK_NOTICED_TURF]
+		controller.clear_blackboard_key(BB_KICK_NOTICED_AT)
+		controller.clear_blackboard_key(BB_KICK_NOTICED_TURF)
+		if(stale || !able || !isturf(noticed_turf) || !pawn.Adjacent(noticed_turf))
+			return
+		controller.set_blackboard_key(BB_KICK_COMMIT_TURF, noticed_turf)
+		controller.queue_behavior(/datum/ai_behavior/npc_kick_attack, BB_KICK_COMMIT_TURF)
+		return SUBTREE_RETURN_FINISH_PLANNING
+
+	if(!pawn.Adjacent(target) || !able)
 		return
 	// Don't kick a downed target you cruel bastard
 	if(!(target.mobility_flags & MOBILITY_STAND))
@@ -44,6 +64,7 @@
 	var/turf/target_turf = get_turf(target)
 	var/kick_dir = get_dir(pawn, target)
 	var/should_kick = FALSE
+	var/grab_reaction = FALSE
 
 	// Situation 0: Being passive-grabbed - instinctive self-preservation. Skill-gated
 	// reaction delay so a dim goblin (low INT+PER) is slow to respond; sharp NPCs react fast.
@@ -55,8 +76,9 @@
 			reaction_delay += rand(-GRAB_REACTION_JITTER, GRAB_REACTION_JITTER)
 			controller.set_blackboard_key(BB_GRAB_REACTION_AT, world.time + reaction_delay)
 			controller.set_blackboard_key(BB_GRAB_REACTION_GRABBER, pawn.pulledby)
-		else if(world.time >= controller.blackboard[BB_GRAB_REACTION_AT])
+		else if(world.time >= controller.blackboard[BB_GRAB_REACTION_AT] && pawn.next_move <= world.time)
 			should_kick = TRUE
+			grab_reaction = TRUE
 	else if(stored_grabber)
 		// No longer grabbed - clear so next grab gets a fresh roll.
 		controller.clear_blackboard_key(BB_GRAB_REACTION_AT)
@@ -117,60 +139,68 @@
 	if(!should_kick)
 		return
 
-	controller.queue_behavior(/datum/ai_behavior/npc_kick_attack, BB_BASIC_MOB_CURRENT_TARGET)
+	if(!grab_reaction)
+		controller.set_blackboard_key(BB_KICK_NOTICED_AT, world.time + rand(KICK_REACTION_MIN, KICK_REACTION_MAX))
+		controller.set_blackboard_key(BB_KICK_NOTICED_TURF, target_turf)
+		return
+
+	controller.set_blackboard_key(BB_KICK_COMMIT_TURF, target_turf)
+	controller.queue_behavior(/datum/ai_behavior/npc_kick_attack, BB_KICK_COMMIT_TURF)
 	return SUBTREE_RETURN_FINISH_PLANNING
 
 /datum/ai_behavior/npc_kick_attack
 	action_cooldown = 0.5 SECONDS
-	behavior_flags = AI_BEHAVIOR_REQUIRE_MOVEMENT | AI_BEHAVIOR_REQUIRE_REACH | AI_BEHAVIOR_CAN_PLAN_DURING_EXECUTION
-
-/datum/ai_behavior/npc_kick_attack/setup(datum/ai_controller/controller, target_key)
-	. = ..()
-	var/atom/target = controller.blackboard[target_key]
-	if(!target)
-		return FALSE
-	set_movement_target(controller, target)
+	behavior_flags = AI_BEHAVIOR_CAN_PLAN_DURING_EXECUTION
 
 /datum/ai_behavior/npc_kick_attack/perform(seconds_per_tick, datum/ai_controller/controller, target_key)
-	. = ..()
 	var/mob/living/pawn = controller.pawn
-	var/mob/living/target = controller.blackboard[target_key]
+	var/turf/kick_turf = controller.blackboard[BB_KICK_COMMIT_TURF]
+	var/mob/living/target = controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET]
 
-	if(!target || QDELETED(target) || !pawn.Adjacent(target))
-		finish_action(controller, FALSE, target_key)
-		return
+	if(!isturf(kick_turf) || !pawn.Adjacent(kick_turf))
+		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
 
-	if(!pawn.can_kick(target, do_message = FALSE))
-		finish_action(controller, FALSE, target_key)
-		return
+	if(pawn.incapacitated(ignore_restraints = TRUE) || pawn.is_carried() || pawn.is_legbound())
+		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
+
+	if(!pawn.can_kick(kick_turf, do_message = FALSE))
+		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
 
 	// Aim low when prone - kick at feet/legs
 	if(!(pawn.mobility_flags & MOBILITY_STAND))
 		pawn.aimheight_change(rand(1, 4))
 
-	// Set up kick intent
-	var/old_mmb = pawn.mmb_intent
-	pawn.mmb_intent = new INTENT_KICK(pawn)
-	pawn.try_kick(target)
-	QDEL_NULL(pawn.mmb_intent)
-	pawn.mmb_intent = old_mmb
-
-	controller.set_blackboard_key(BB_KICK_COOLDOWN, world.time + KICK_COOLDOWN)
+	var/kick_cd = npc_technique_cd(pawn, KICK_COOLDOWN)
+	controller.set_blackboard_key(BB_KICK_COOLDOWN, world.time + kick_cd)
 	controller.set_blackboard_key(BB_HUMAN_NPC_TECHNIQUE_CD, world.time + 3 SECONDS)
+	propagate_technique_cd(pawn, target, BB_KICK_COOLDOWN, world.time + kick_cd)
 	// Kick is a committed action; block the next melee swing briefly so they don't immediately
 	// combo into a full attack right after.
 	if(pawn.next_click < world.time + 1.2 SECONDS)
 		pawn.next_click = world.time + 1.2 SECONDS
-	AI_THINK(pawn, "KICK: kicked [target]!")
-	finish_action(controller, TRUE, target_key)
+
+	// Set up kick intent
+	var/old_mmb = pawn.mmb_intent
+	pawn.mmb_intent = new INTENT_KICK(pawn)
+	pawn.try_kick(kick_turf)
+	QDEL_NULL(pawn.mmb_intent)
+	pawn.mmb_intent = old_mmb
+
+	AI_THINK(pawn, "KICK: kicked at [kick_turf]!")
+	return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_SUCCEEDED
 
 /datum/ai_behavior/npc_kick_attack/finish_action(datum/ai_controller/controller, succeeded, target_key)
 	. = ..()
-	if(!succeeded)
-		controller.clear_blackboard_key(target_key)
+	controller.clear_blackboard_key(BB_KICK_COMMIT_TURF)
 
 #undef BB_KICK_COOLDOWN
 #undef BB_GRAB_REACTION_AT
+#undef BB_KICK_NOTICED_AT
+#undef BB_KICK_NOTICED_TURF
+#undef BB_KICK_COMMIT_TURF
+#undef KICK_REACTION_MIN
+#undef KICK_REACTION_MAX
+#undef KICK_REACTION_STALE
 #undef BB_GRAB_REACTION_GRABBER
 #undef KICK_COOLDOWN
 #undef KICK_WALLED_CHANCE

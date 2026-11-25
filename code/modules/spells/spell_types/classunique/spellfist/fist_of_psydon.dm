@@ -1,7 +1,9 @@
 /datum/action/cooldown/spell/fist_of_psydon
+	source_aspect = /datum/magic_aspect/pseudo/spellfist
 	button_icon = 'icons/mob/actions/classuniquespells/spellfist.dmi'
 	button_icon_state = "fist_of_psydon"
 	name = "Fist of Psydon"
+	expose_caster_on_deflect = FALSE
 	desc = "Slam your fist downward, sending arcyne force crashing into a 3x3 target area up to 5 paces away. \
 		Brief telegraph before the strike lands. Deals blunt damage to the aimed bodypart. \
 		At 3+ momentum: consumes 3 to double damage. \
@@ -40,6 +42,15 @@
 	var/area_of_effect = 1 // 1-tile radius = 3x3
 	var/telegraph_delay = TELEGRAPH_DODGEABLE
 
+/datum/action/cooldown/spell/fist_of_psydon/get_spell_statistics(mob/living/user)
+	var/list/stats = ..()
+	stats += span_info("Damage: [base_damage] blunt ([base_damage * empowered_mult] at [momentum_cost]+ momentum)")
+	return stats
+
+/datum/action/cooldown/spell/fist_of_psydon/get_impact_turfs(atom/center)
+	. = get_visible_area_turfs(get_turf(center), area_of_effect)
+	. -= get_turf(owner)
+
 /datum/action/cooldown/spell/fist_of_psydon/cast(atom/cast_on)
 	. = ..()
 	var/mob/living/carbon/human/H = owner
@@ -63,7 +74,7 @@
 
 	// Telegraph on 3x3 area
 	for(var/turf/affected_turf in get_hear(area_of_effect, T))
-		new /obj/effect/temp_visual/air_strike_telegraph(affected_turf)
+		new /obj/effect/temp_visual/telegraph/air_strike(affected_turf)
 	playsound(T, pick('sound/combat/ground_smash1.ogg', 'sound/combat/ground_smash2.ogg', 'sound/combat/ground_smash3.ogg'), 60, TRUE)
 	H.emote("attackgrunt", forced = TRUE)
 
@@ -80,10 +91,11 @@
 		for(var/mob/living/victim in affected_turf)
 			if(victim == H || victim.stat == DEAD)
 				continue
-			if(spell_guard_check(victim, FALSE, deflected ? null : H))
+			if(spell_guard_check(victim, FALSE, H, punish_caster = deflected ? FALSE : null))
 				deflected = TRUE
 				continue
-			arcyne_strike(H, victim, null, damage, def_zone, BCLASS_BLUNT, spell_name = "Fist of Psydon")
+			if(arcyne_strike(H, victim, null, damage, def_zone, BCLASS_BLUNT, spell_name = "Fist of Psydon") == ARCYNE_STRIKE_WARDED)
+				continue
 			hit_count++
 
 	playsound(T, pick('sound/combat/ground_smash1.ogg', 'sound/combat/ground_smash2.ogg', 'sound/combat/ground_smash3.ogg'), 100, TRUE)

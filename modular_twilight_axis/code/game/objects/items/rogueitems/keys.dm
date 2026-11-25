@@ -31,7 +31,7 @@
 /obj/item/roguekey/garrison/Initialize()
 	. = ..()
 	if(SSmapping.config.map_name == "Rockhill")
-		name = "garisson key"
+		name = "garrison key"
 		desc = "This key opens many garrison doors in manor."
 
 /obj/item/roguekey/walls/Initialize()
@@ -76,7 +76,7 @@
 	desc = "This key opens the Mayor office."
 	icon_state = "cheesekey"
 	lockid = "mayor"
-	
+
 /obj/item/roguekey/bailiff
 	name = "Mayor mansion key"
 	desc = "This key opens doors in Mayor mansion."
@@ -88,3 +88,27 @@
 	desc = "This key opens the Town Watch armory."
 	icon_state = "spikekey"
 	lockid = "watcharmory"
+
+/obj/item/roguekey/rh_mage_1
+	name = "Magicians quarter I"
+	desc = "This key opens door in Magician Tower."
+	icon_state = "greenkey"
+	lockid = "rh_mage_1"
+
+/obj/item/roguekey/rh_mage_2
+	name = "Magicians quarter II"
+	desc = "This key opens door in Magician Tower."
+	icon_state = "greenkey"
+	lockid = "rh_mage_2"
+
+/obj/item/roguekey/rh_mage_3
+	name = "Magicians quarter III"
+	desc = "This key opens door in Magician Tower."
+	icon_state = "greenkey"
+	lockid = "rh_mage_3"
+
+/obj/item/roguekey/rh_mage_4
+	name = "Magicians quarter IV"
+	desc = "This key opens door in Magician Tower."
+	icon_state = "greenkey"
+	lockid = "rh_mage_4"

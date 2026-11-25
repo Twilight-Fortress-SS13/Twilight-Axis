@@ -9,7 +9,7 @@
 	baseturfs = /turf/open/lava //lava all the way down
 	slowdown = 2
 
-	light_outer_range =  4
+	light_outer_range =	4
 	light_power = 0.75
 	light_color = LIGHT_COLOR_LAVA
 	bullet_bounce_sound = 'sound/blank.ogg'
@@ -19,13 +19,16 @@
 	clawfootstep = FOOTSTEP_LAVA
 	heavyfootstep = FOOTSTEP_LAVA
 	smooth = SMOOTH_TRUE
+	// cardinal_smooth()/roguesmooth() only ever reads cardinal adjacency bits - see the same note
+	// on /turf/open/floor/rogue.
+	smooth_diag = FALSE
 	canSmoothWith = list(/turf/closed, /turf/open/floor/rogue/volcanic, /turf/open/floor/rogue/dirt, /turf/open/floor/rogue/dirt/road,/turf/open/floor/rogue/naturalstone)
 	neighborlay_override = "lavedge"
 
 /turf/open/lava/nosmooth
 	smooth = SMOOTH_FALSE
 
-/turf/open/lava/Initialize()
+/turf/open/lava/Initialize(mapload)
 	. = ..()
 	dir = pick(GLOB.cardinals)
 
@@ -147,9 +150,16 @@
 				continue
 
 			if(L)
-				L.adjustFireLoss(100)
-				L.adjust_fire_stacks(100)
-				L.ignite_mob()
+				var/def_zone_random = pick(BODY_ZONE_CHEST, BODY_ZONE_HEAD, BODY_ZONE_L_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_ARM, BODY_ZONE_R_LEG)
+				L.adjustFireLoss(30)
+				L.adjustOxyLoss(30)
+				L.fire_act(99, 99)
+				arcyne_strike(L, L, null, 70, def_zone_random, BCLASS_BURN, PEN_BSTEEL, "acid", TRUE, FALSE, FALSE, BURN, 0, 0, 10)
+				to_chat(L, span_userdanger("THE LAVA BURNS!"))
+				if(prob(50))
+					L.emote("superagony")
+				if(!L.mind && L.getFireLoss() > 300)
+					L.dust(TRUE, FALSE, TRUE)
 
 /turf/open/lava/onbite(mob/user)
 	if(isliving(user))
@@ -164,12 +174,13 @@
 		user.visible_message(span_info("[user] starts to drink from [src]."))
 		if(do_after(L, 25, target = src))
 			var/mob/living/carbon/C = user
-			to_chat(C, span_userdanger("OH SWEET PSYDON, WHY DID I THINK THIS WAS A GOOD IDEA???"))
+			to_chat(C, span_userdanger("OH SWEET PSYDON, WHY DID I THINK THIS WAS A GOOD IDEA?!"))
 			C.flash_fullscreen("redflash3")
 			C.emote("superagony", forced = TRUE)
 			C.adjust_fire_stacks(500) //you deserve this.
 			C.ignite_mob()
 			C.adjustFireLoss(1000) //you, literally, deserve this.
+			C.death()
 
 /turf/open/lava/smooth
 	name = "lava"
@@ -187,8 +198,9 @@
 
 /turf/open/lava/acid
 	name = "acid"
+	desc = "Thick, viscous bubbles swell and burst, spewing clouds of choking fumes. What once lay dormant now seethes and gurgles, eating away at all it touches with a merciless hiss. If you touch it, you will regret it."
 	icon_state = "acid"
-	light_outer_range =  4
+	light_outer_range =	4
 	light_power = 1
 	light_color = "#56ff0d"
 
@@ -208,7 +220,7 @@
 				continue
 			O.obj_integrity -= O.max_integrity * 0.1
 			if(O.obj_integrity <= 0)
-				qdel(O)	
+				qdel(O)
 			. = 1
 
 		else if (isliving(thing))
@@ -233,10 +245,17 @@
 				C.obj_integrity -= C.max_integrity * 0.1
 				if(C.obj_integrity <= 0)
 					to_chat(L, span_danger("Your [C.name] is destroyed by the acid!"))
-					qdel(C)	
-
-			L.adjustFireLoss(100)
+					qdel(C)
+			var/def_zone_random = pick(BODY_ZONE_CHEST, BODY_ZONE_HEAD, BODY_ZONE_L_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_ARM, BODY_ZONE_R_LEG)
+			L.adjustFireLoss(30)
+			L.adjustToxLoss(15)
+			L.adjustOxyLoss(15)
+			arcyne_strike(L, L, null, 70, def_zone_random, BCLASS_BURN, PEN_BSTEEL, "acid", TRUE, FALSE, FALSE, BURN, 0, 0, 10)
 			to_chat(L, span_userdanger("THE ACID BURNS!"))
+			if(prob(50))
+				L.emote("superagony")
+			if(!L.mind && L.getFireLoss() > 300)
+				L.dust(TRUE, FALSE, TRUE)
 
 /turf/open/lava/acid/onbite(mob/user)
 	if(isliving(user))

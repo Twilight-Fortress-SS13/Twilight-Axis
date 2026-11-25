@@ -326,7 +326,7 @@
 	backpack_contents = list(
 		/obj/item/reagent_containers/glass/bottle/rogue/wine = 1,
 		/obj/item/reagent_containers/powder/moondust = 1,
-		/obj/item/toy/cards/deck = 1,
+		/obj/item/deck/playing_cards = 1,
 		/obj/item/rogueweapon/huntingknife/idagger/steel = 1,
 		/obj/item/storage/keyring/harem = 1,
 	)
@@ -377,7 +377,7 @@
 	belt = /obj/item/storage/belt/rogue/leather/black
 	backpack_contents = list(
 		/obj/item/storage/pill_bottle/dice = 1,
-		/obj/item/toy/cards/deck/tarot = 1,
+		/obj/item/deck/tarot/includes_minor_arcana = 1,
 		/obj/item/reagent_containers/food/snacks/grown/coffeebeans = 4,
 		/obj/item/rogueweapon/huntingknife/idagger/steel = 1,
 		/obj/item/storage/keyring/harem = 1,

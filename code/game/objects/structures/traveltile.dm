@@ -8,7 +8,7 @@
 	max_integrity = 0
 	var/aportalloc = "a"
 
-/obj/structure/fluff/testportal/Initialize()
+/obj/structure/fluff/testportal/Initialize(mapload)
 	name = aportalloc
 	..()
 
@@ -51,7 +51,7 @@
 	var/travel_access_hint = null
 	var/watchable = TRUE
 
-/obj/structure/fluff/traveltile/Initialize()
+/obj/structure/fluff/traveltile/Initialize(mapload)
 	GLOB.traveltiles += src
 	. = ..()
 
@@ -132,6 +132,8 @@
 		return FALSE
 	if(L.pulledby)
 		return FALSE
+	if(has_caretrip_observer(L)) // TA EDIT
+		return FALSE // TA EDIT
 	if(leashed_by_other(L))
 		to_chat(L, span_warning("I can't travel! Someone is holding my leash!"))
 		return FALSE
@@ -140,6 +142,8 @@
 		if(L.pulledby)
 			to_chat(L, span_warning("I can't go, something's holding onto me."))
 			return FALSE
+		if(has_caretrip_observer(L)) // TA EDIT
+			return FALSE // TA EDIT
 		if(leashed_by_other(L))
 			to_chat(L, span_warning("I can't go, somebody has me on their leash."))
 			return FALSE
@@ -157,7 +161,7 @@
 
 /obj/structure/fluff/traveltile/proc/perform_travel(obj/structure/fluff/traveltile/T, mob/living/L)
 	var/list/access_traits = get_required_traits()
-	if(watchable && grants_access_on_use && !L.restrained(ignore_grab = TRUE) && length(access_traits)) // Heavy-handedly prevents using prisoners to metagame camp locations. pulledby would stop this but prisoners can also be kicked/thrown into the tile repeatedly
+	if(watchable && grants_access_on_use && !HAS_TRAIT(L, TRAIT_CAREFULTRIP) && !L.restrained(ignore_grab = TRUE) && length(access_traits)) // TA EDIT
 		var/watch_trait = access_traits[1]
 		for(var/mob/living/carbon/human/H in hearers(6,src))
 			if(H == L)
@@ -247,6 +251,22 @@
 			return FALSE
 	return TRUE
 
+/obj/structure/fluff/traveltile/proc/has_caretrip_observer(mob/living/L)
+	if(!HAS_TRAIT(L, TRAIT_CAREFULTRIP))
+		return FALSE
+
+	for(var/mob/living/carbon/human/H in viewers(14, L))
+		if(H == L || H.stat == DEAD)
+			continue
+		if(has_access(H))
+			continue
+
+		message_admins("[ADMIN_LOOKUPFLW(L)] attempted to travel through [src] while [ADMIN_LOOKUPFLW(H)] was nearby without access.")
+		to_chat(L, span_warning("Someone nearby could discover the path. I cannot risk travelling."))
+		return TRUE
+
+	return FALSE
+
 /obj/structure/fluff/traveltile/examine(mob/user)
 	. = ..()
 	if(travel_access_hint && has_access(user))
@@ -301,7 +321,7 @@
 
 /obj/structure/fluff/traveltile/drow
 	required_traits = list(TRAIT_CAVEDWELLER)
-	
+
 /obj/structure/fluff/traveltile/dungeon
 	name = "gate"
 	desc = "This gate's enveloping darkness is so opressive you dread to step through it."

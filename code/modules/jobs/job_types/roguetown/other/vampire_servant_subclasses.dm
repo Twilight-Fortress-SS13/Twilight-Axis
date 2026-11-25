@@ -1,6 +1,6 @@
 //VAMPIRE SERVANT CLASSES//
 // These classes are high in skills/traits to give them potental to be good drivers for roleplay gimmics under the vlord. Such as making a feast, where the town shows up and finds themselves the feast suddenly.
-//Or perhaps hosting tournies where the victors get turned into vampyric champions hand-picked by the vlord. Or perhaps as a smithing operation where people mysteriously disappear delivering materials but then show up fighting in good  gear later.
+//Or perhaps hosting tournies where the victors get turned into vampyric champions hand-picked by the vlord. Or perhaps as a smithing operation where people mysteriously disappear delivering materials but then show up fighting in good	gear later.
 
 //The general shtick behind these classes is that they are absolute statbeasts for crafting, or utility. In the case of servantry, a lot of skills usually pretty useless to antagonists when it comes to large-scale fighting, like farming.
 //Or music despite not getting bard mechanics (which is intentional), they're also able to make disguises.
@@ -17,7 +17,7 @@
 	tutorial = "Servitude unto death, was your motto; O' how long it has been since you've died, how sweet the taste of blood; yet you still serve your master's tireless chores. Tend the mansion, heed your lord's command, assist with construction, their will be done."
 	allowed_sexes = list(MALE, FEMALE)
 	outfit = /datum/outfit/job/roguetown/other/vampservant
-	traits_applied = list(TRAIT_CICERONE, TRAIT_SEEDKNOW, TRAIT_SEWING_EXPERT, TRAIT_HOMESTEAD_EXPERT, TRAIT_KEENEARS) //Very good utility, leaning towards RP gimmics.
+	traits_applied = list(TRAIT_CICERONE, TRAIT_SEEDKNOW, TRAIT_SEWING_EXPERT, TRAIT_HOMESTEAD_EXPERT, TRAIT_KEENEARS, TRAIT_UNCONVERTIBLE) //Very good utility, leaning towards RP gimmics.
 	category_tags = list(CTAG_VAMPSERVANT)
 	subclass_stats = list(
 		STATKEY_SPD = 2,
@@ -32,7 +32,7 @@
 		/datum/skill/combat/wrestling = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/misc/stealing = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/stealing = SKILL_LEVEL_JOURNEYMAN, // TA EDIT
 		/datum/skill/misc/medicine = SKILL_LEVEL_JOURNEYMAN, //Vampire maids also have to tend the bloodbags.
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_JOURNEYMAN, //Lets them do spy stuff, since they're just a "harmless" maid to most. Still need the actual lockpick set though.
@@ -88,10 +88,10 @@
 
 /datum/advclass/vampforgemaster
 	name = "Vampiric Forgemaster"
-	tutorial = "You were promised forever to perfect your craft and you recieved it, at a cost of eternal servitude and a never-ending taste for blood. Now you solely smith for your lord's army and allies, their will be done."
+	tutorial = "You were promised forever to perfect your craft and you received it, at a cost of eternal servitude and a never-ending taste for blood. Now you solely smith for your lord's army and allies, their will be done."
 	allowed_sexes = list(MALE, FEMALE)
 	outfit = /datum/outfit/job/roguetown/other/vampforgemaster
-	traits_applied = list(TRAIT_TRAINED_SMITH, TRAIT_SMITHING_EXPERT, TRAIT_HOMESTEAD_EXPERT) //Extra for price-checking since your role might also be to fund your master, homestead for lumberjack skill
+	traits_applied = list(TRAIT_TRAINED_SMITH, TRAIT_SMITHING_EXPERT, TRAIT_HOMESTEAD_EXPERT, TRAIT_UNCONVERTIBLE) //Extra for price-checking since your role might also be to fund your master, homestead for lumberjack skill
 	category_tags = list(CTAG_VAMPSERVANT)
 	subclass_stats = list(
 		STATKEY_WIL = 2,
@@ -127,7 +127,7 @@
 
 /datum/outfit/job/roguetown/other/vampforgemaster/pre_equip(mob/living/carbon/human/H)
 	..()
-	to_chat(H, span_warning("You were promised forever to perfect your craft and you recieved it, at a cost of eternal servitude and a never-ending taste for blood. Now you solely smith for your lord's army and allies, their will be done."))
+	to_chat(H, span_warning("You were promised forever to perfect your craft and you received it, at a cost of eternal servitude and a never-ending taste for blood. Now you solely smith for your lord's army and allies, their will be done."))
 	if(H.mind)
 		H.set_blindness(0)
 		var/choice_list = list("Smith", "Artificer") //Doesn't get arcayne, inherently. Sorry but I'm not having servants do enchantments.
@@ -169,10 +169,10 @@
 //Exists so vampires have something to revive people they accidentally kill from feeding, any allies or potentally slip into the clinic and process their vamp allies through. Weakest of laboring outside of their medical niché vs other servants
 /datum/advclass/vampphysician
 	name = "Vampiric Physician"
-	tutorial = "You were promised forever to further your medical research and perfect your art of needle and scapel alike and recieve it at the cost of eternal servitude and a never ending taste for blood. Now you serve your lord eternal, from a fatal feeding frenzy to granting fallen travellers that very same chance you had. Now you'll be sewing and stitching a future, in your lord's vision."
+	tutorial = "You were promised forever to further your medical research and perfect your art of needle and scalpel alike and receive it at the cost of eternal servitude and a never ending taste for blood. Now you serve your lord eternal, from a fatal feeding frenzy to granting fallen travellers that very same chance you had. Now you'll be sewing and stitching a future, in your lord's vision."
 	allowed_sexes = list(MALE, FEMALE)
 	outfit = /datum/outfit/job/roguetown/other/vampphysician
-	traits_applied = list(TRAIT_MEDICINE_EXPERT, TRAIT_ALCHEMY_EXPERT, TRAIT_NOSTINK, TRAIT_HOMESTEAD_EXPERT, TRAIT_EMPATH, TRAIT_STEELHEARTED) //Medical class, specialises in accidental killings or reviving fallen allies. !!!UNTIL LUX REVIVALS WORK ON VAMPS OR A MAP REWORK HAPPENS. YOU'LL NEED TO EITHER HAVE ZURCH ACCESS OR BREAK INTO THE CLINIC FOR A CHAIR TO REVIVE VAMPS!!!
+	traits_applied = list(TRAIT_MEDICINE_EXPERT, TRAIT_ALCHEMY_EXPERT, TRAIT_NOSTINK, TRAIT_HOMESTEAD_EXPERT, TRAIT_EMPATH, TRAIT_STEELHEARTED, TRAIT_UNCONVERTIBLE) //Medical class, specialises in accidental killings or reviving fallen allies. !!!UNTIL LUX REVIVALS WORK ON VAMPS OR A MAP REWORK HAPPENS. YOU'LL NEED TO EITHER HAVE ZURCH ACCESS OR BREAK INTO THE CLINIC FOR A CHAIR TO REVIVE VAMPS!!!
 	category_tags = list(CTAG_VAMPSERVANT)
 	subclass_stats = list(
 		STATKEY_SPD = 2, //Corpse thievery duty
@@ -202,7 +202,7 @@
 
 /datum/outfit/job/roguetown/other/vampphysician/pre_equip(mob/living/carbon/human/H)
 	..()
-	to_chat(H, span_warning("You were promised forever to further your medical research and perfect your art of needle and scapel alike and recieve it at the cost of eternal servitude and a never ending taste for blood. Now you serve your lord eternal, from a fatal feeding frenzy to granting fallen travellers that very same chance you had. Now you'll be sewing and stitching a future, in your lord's vision."))
+	to_chat(H, span_warning("You were promised forever to further your medical research and perfect your art of needle and scalpel alike and receive it at the cost of eternal servitude and a never ending taste for blood. Now you serve your lord eternal, from a fatal feeding frenzy to granting fallen travellers that very same chance you had. Now you'll be sewing and stitching a future, in your lord's vision."))
 	mask = /obj/item/clothing/mask/rogue/physician //intentional look, rest is intentionally closer to barber doc appearance with a mix of the OG court physician getup from old roguetown code.
 	head = /obj/item/clothing/head/roguetown/physician
 	neck = /obj/item/clothing/neck/roguetown/coif //Non-combat role, get it upgraded

@@ -8,7 +8,7 @@
 	icon_dead = "goose_dead"
 	mob_biotypes = MOB_ORGANIC|MOB_BEAST
 	speak_chance = 0
-	turns_per_move = 5
+	ai_controller = /datum/ai_controller/goose
 	butcher_results = list(/obj/item/reagent_containers/food/snacks/rogue/meat/steak = 2)
 	response_help_continuous = "pets"
 	response_help_simple = "pet"
@@ -18,7 +18,6 @@
 	response_harm_simple = "kick"
 	emote_taunt = list("hisses")
 	taunt_chance = 30
-	speed = 0
 	maxHealth = 25
 	health = 25
 	harm_intent_damage = 5
@@ -29,20 +28,15 @@
 	attack_sound = "goose"
 	speak_emote = list("honks")
 	faction = list(FACTION_NEUTRAL)
-	attack_same = TRUE
 	gold_core_spawnable = HOSTILE_SPAWN
-	var/random_retaliate = TRUE
 	var/icon_vomit_start = "vomit_start"
 	var/icon_vomit = "vomit"
 	var/icon_vomit_end = "vomit_end"
 	var/message_cooldown = 0
 
-/mob/living/simple_animal/hostile/retaliate/goose/handle_automated_movement()
+/mob/living/simple_animal/hostile/retaliate/goose/Initialize(mapload)
 	. = ..()
-	if (stat == DEAD)
-		return
-	if(prob(5) && random_retaliate == TRUE)
-		Retaliate()
+	AddElement(/datum/element/ai_retaliate)
 
 /mob/living/simple_animal/hostile/retaliate/goose/vomit
 	name = "Birdboat"
@@ -56,13 +50,13 @@
 	response_harm_continuous = "kicks"
 	response_harm_simple = "kick"
 	gold_core_spawnable = NO_SPAWN
-	random_retaliate = FALSE
+	ai_controller = /datum/ai_controller/goose/birdboat
 	var/vomiting = FALSE
 	var/vomitCoefficient = 1
 	var/vomitTimeBonus = 0
 	var/datum/action/cooldown/vomit/goosevomit
 
-/mob/living/simple_animal/hostile/retaliate/goose/vomit/Initialize()
+/mob/living/simple_animal/hostile/retaliate/goose/vomit/Initialize(mapload)
 	. = ..()
 	goosevomit = new
 	goosevomit.Grant(src)
@@ -94,7 +88,7 @@
 			visible_message(span_notice("[src] looks too full to eat \the [tasty]!"))
 			message_cooldown = world.time + 5 SECONDS
 		return
-	if (tasty.foodtype & GROSS)
+	if (tasty.food_quality & GROSS)
 		visible_message(span_notice("[src] hungrily gobbles up \the [tasty]!"))
 		tasty.forceMove(src)
 		playsound(src,'sound/blank.ogg', 70, TRUE)
@@ -176,13 +170,13 @@
 
 /// A proc to make it easier for admins to make the goose playable by deadchat.
 /mob/living/simple_animal/hostile/retaliate/goose/vomit/proc/deadchat_plays_goose()
-	stop_automated_movement = TRUE
+	QDEL_NULL(ai_controller)
 	AddComponent(/datum/component/deadchat_control, ANARCHY_MODE, list(
-	 "up" = CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(_step), src, NORTH),
-	 "down" = CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(_step), src, SOUTH),
-	 "left" = CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(_step), src, WEST),
-	 "right" = CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(_step), src, EAST),
-	 "vomit" = CALLBACK(src, PROC_REF(vomit_prestart), 25)), 12 SECONDS, 4 SECONDS)
+		"up" = CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(_step), src, NORTH),
+		"down" = CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(_step), src, SOUTH),
+		"left" = CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(_step), src, WEST),
+		"right" = CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(_step), src, EAST),
+		"vomit" = CALLBACK(src, PROC_REF(vomit_prestart), 25)), 12 SECONDS, 4 SECONDS)
 
 /datum/action/cooldown/vomit
 	name = "Vomit"
@@ -191,7 +185,7 @@
 	button_icon = 'icons/mob/animal.dmi'
 	cooldown_time = 250
 
-/datum/action/cooldown/vomit/Trigger()
+/datum/action/cooldown/vomit/Trigger(trigger_flags, atom/target)
 	if(!..())
 		return FALSE
 	if(!istype(owner, /mob/living/simple_animal/hostile/retaliate/goose/vomit))

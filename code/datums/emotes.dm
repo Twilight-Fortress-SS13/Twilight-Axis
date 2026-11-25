@@ -36,7 +36,7 @@
 	var/needs_emotion = FALSE
 
 	/// For ranged targeted emotes, range of 2 is for adjacents
-	var/targetrange = 2 
+	var/targetrange = 2
 
 	/// Whether this emote will ONLY go through a few walls on the same z-level.
 	var/is_quiet = FALSE
@@ -64,7 +64,10 @@
 /datum/emote/proc/adjacentaction(mob/user, mob/target)
 	return
 
-/datum/emote/proc/run_emote(mob/user, params, type_override, intentional = FALSE, targetted = FALSE, animal = FALSE)
+/datum/emote/proc/get_env(mob/user)
+	return null
+
+/datum/emote/proc/run_emote(mob/user, params, type_override, intentional = FALSE, targetted = FALSE, animal = FALSE, quiet = FALSE)
 	. = TRUE
 	if(!can_run_emote(user, TRUE, intentional))
 		return FALSE
@@ -74,17 +77,17 @@
 		var/list/mobsadjacent = list()
 		var/mob/chosenmob
 		for(var/mob/living/M in range(user, targetrange))
-			if(M != user)
+			if(M != user && !M.rogue_sneaking && (M.name != "Unknown"))
 				mobsadjacent += M
 		if(mobsadjacent.len)
-			chosenmob = input("[key] who?") in mobsadjacent
+			chosenmob = input(user, "[key] who?") as null|anything in mobsadjacent
+			if(!chosenmob)
+				return FALSE
 		if(chosenmob)
-			if(user.Adjacent(chosenmob))
+			if(user.Adjacent(chosenmob) || targetrange > 2)
 				params = chosenmob.name
 				adjacentaction(user, chosenmob)
-			else if(targetrange > 2) //if it's a ranged targeted emote
-				params = chosenmob.name
-				adjacentaction(user, chosenmob)
+
 	var/raw_msg = select_message_type(user, intentional)
 	var/msg = raw_msg
 	if(params && message_param)
@@ -118,7 +121,8 @@
 	var/sound/tmp_sound = get_sound(user)
 	if(!istype(tmp_sound))
 		tmp_sound = sound(get_sfx(tmp_sound))
-	tmp_sound.frequency = pitch
+	if(tmp_sound) // TA EDIT
+		tmp_sound.frequency = pitch // TA EDIT
 	if(tmp_sound && tmp_sound.file && (!only_forced_audio || !intentional))
 		// Specifying what bodyparts are needed to run an emote is a desireable replacement.
 		// Band-aid so emotes with sound aren't misplaced. You can still point with your head, for example.
@@ -128,10 +132,14 @@
 				emotelocation = dullahan.my_head
 			else// if(!vision.viewing_head)
 				emotelocation = user
+		var/sound_range = snd_range
+		if(quiet)
+			sound_range = -6
 
-		playsound(emotelocation, tmp_sound, snd_vol, FALSE, snd_range, soundping = soundping, animal_pref = animal, quiet = is_quiet)
+		playsound(emotelocation, tmp_sound, snd_vol, FALSE, sound_range, soundping = soundping, animal_pref = animal, quiet = is_quiet)
 	if(!nomsg)
-		user.log_message(msg, LOG_EMOTE)
+		if(user.key)
+			user.log_message(msg, LOG_EMOTE)
 		var/pre_color_msg = msg
 		if (use_params_for_runechat) // apply puncutation stripping here where appropriate
 			var/static/regex/regex = regex(@"[,.!?]", "g")
@@ -143,7 +151,7 @@
 			var/color_to_use = human.voice_color
 			if(human.voicecolor_override)
 				color_to_use = human.voicecolor_override
-			styled_name = "<span style='color:#[color_to_use];text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;'><b>[emotelocation]</b></span>"
+			styled_name = "<span style='color:[color_to_use];text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;'><b>[emotelocation]</b></span>"
 		else
 			styled_name = "<b>[emotelocation]</b>"
 
@@ -153,37 +161,17 @@
 			pre_color_msg = trim(replacetext(pre_color_msg, "$n", "[emotelocation]"))
 		else
 			msg = "[styled_name] [msg]"
-
-		msg = "<span class='game-emote'>[msg]</span>"
-		for(var/mob/M in GLOB.dead_mob_list)
-			if(!M.client || isnewplayer(M))
-				continue
-			var/T = get_turf(emotelocation)
-			if(M.stat == DEAD && M.client && (M.client.prefs?.chat_toggles & CHAT_GHOSTSIGHT) && !(M in viewers(T, null)))
-				M.show_message(msg)
 		var/runechat_msg_to_use = null
 		if(show_runechat)
-			runechat_msg_to_use = runechat_msg ? runechat_msg : pre_color_msg
+			runechat_msg_to_use = (runechat_msg && !use_params_for_runechat) ? runechat_msg : pre_color_msg
+
 		if(emote_type == EMOTE_AUDIBLE)
-			emotelocation.audible_message(msg, runechat_message = runechat_msg_to_use, log_seen = SEEN_LOG_EMOTE)
+			emotelocation.audible_message(msg, runechat_message = runechat_msg_to_use, log_seen = SEEN_LOG_EMOTE, hearing_distance = (quiet ? 1 : DEFAULT_MESSAGE_RANGE))
 		else
-			emotelocation.visible_message(msg, runechat_message = runechat_msg_to_use, log_seen = SEEN_LOG_EMOTE)
+			emotelocation.visible_message(msg, runechat_message = runechat_msg_to_use, log_seen = SEEN_LOG_EMOTE, vision_distance = (quiet ? 1 : DEFAULT_MESSAGE_RANGE))
 
 /mob/living/proc/get_emote_pitch()
 	return clamp(voice_pitch, 0.5, 2)
-
-/mob/living/carbon/human/get_emote_pitch()
-	var/final_pitch = ..()
-	var/pitch_modifier = 0
-	if(STASTR > 10)
-		pitch_modifier -= (STASTR - 10) * 0.03
-	else if(STASTR < 10)
-		pitch_modifier += (10 - STASTR) * 0.03
-	return clamp(final_pitch + pitch_modifier, 0.5, 2)
-
-/datum/emote/proc/get_env(mob/living/user)
-	return
-
 
 
 
@@ -210,22 +198,30 @@
 			var/modifier
 			if(H.age == AGE_OLD)
 				modifier = "old"
-			if((!ignore_silent && (H.silent)) || (!ignore_silent && !is_emote_muffled(H)) || (!ignore_silent && HAS_TRAIT(H, TRAIT_MUTE)) ||  (!ignore_silent && HAS_TRAIT(H, TRAIT_BAGGED)))
+			if((!ignore_silent && (H.silent)) || (!ignore_silent && !is_emote_muffled(H)) || (!ignore_silent && HAS_TRAIT(H, TRAIT_MUTE)) ||	(!ignore_silent && HAS_TRAIT(H, TRAIT_BAGGED)))
 				modifier = "silenced"
-			if(user.gender == FEMALE && H.dna.species.soundpack_f)
-				possible_sounds = H.dna.species.soundpack_f.get_sound(key,modifier)
-			else if(H.dna.species.soundpack_m)
-				possible_sounds = H.dna.species.soundpack_m.get_sound(key,modifier)
-			 // LETHALSTONE ADDITION BEGIN: use preference-set voice types where possible
+			// Species can still hold a voicepack type path until their voice packs are initialized.
+			var/datum/voicepack/male_pack = H.dna.species.soundpack_m // TA EDIT START
+			var/datum/voicepack/female_pack = H.dna.species.soundpack_f
+			if(ispath(male_pack, /datum/voicepack))
+				male_pack = GLOB.voice_packs[male_pack]
+			if(ispath(female_pack, /datum/voicepack))
+				female_pack = GLOB.voice_packs[female_pack]
+			if(user.gender == FEMALE && istype(female_pack))
+				possible_sounds = female_pack.get_sound(key, modifier)
+			else if(istype(male_pack))
+				possible_sounds = male_pack.get_sound(key, modifier)
+			// LETHALSTONE ADDITION BEGIN: use preference-set voice types where possible
 			if(H.voice_type)
-				switch (H.voice_type)
-					if (VOICE_TYPE_MASC)
-						possible_sounds = H.dna.species.soundpack_m.get_sound(key, modifier)
+				switch(H.voice_type)
+					if(VOICE_TYPE_MASC)
+						if(istype(male_pack))
+							possible_sounds = male_pack.get_sound(key, modifier)
 					else
-						if (H.dna.species.soundpack_f)
-							possible_sounds = H.dna.species.soundpack_f.get_sound(key, modifier)
-						else
-							possible_sounds = H.dna.species.soundpack_m.get_sound(key, modifier)
+						if(istype(female_pack))
+							possible_sounds = female_pack.get_sound(key, modifier)
+						else if(istype(male_pack))
+							possible_sounds = male_pack.get_sound(key, modifier) // TA EDIT END
 			// LETHALSTONE ADDITION END
 			if(possible_sounds)
 				if(islist(possible_sounds))
@@ -240,20 +236,15 @@
 					used_sound = possible_sounds
 				H.last_sound = used_sound
 				return used_sound
-		else
-			// familiars get to do emotes with their weird planar being anatomy, so that they can caw and such
-			if(istype(user, /mob/living/simple_animal/pet/familiar))
-				var/mob/living/simple_animal/pet/familiar/fam = user
-				if(!fam.voice_pack)
-					return
-				var/possible_sounds = fam.voice_pack.get_sound(key)
-				var/used_sound
-				if(islist(possible_sounds))
-					used_sound = pick(possible_sounds)
-				else
-					used_sound = possible_sounds
-				return used_sound
-			return user.get_sound(key)
+		else if(user.mind && isanimal(user))
+			var/mob/living/simple_animal/A = user
+			var/datum/voicepack/VP = A.get_animal_voicepack()
+			if(VP)
+				var/possible_sounds = VP.get_sound(key)
+				if(possible_sounds)
+					if(islist(possible_sounds))
+						return pick(possible_sounds)
+					return possible_sounds
 
 /mob/living/proc/get_sound(input)
 	return

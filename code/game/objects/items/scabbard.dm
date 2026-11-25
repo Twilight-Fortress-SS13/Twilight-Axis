@@ -38,6 +38,9 @@
 	/// Stores the holster component
 	var/datum/component/holster/hol_comp
 
+	var/holster_empty_item_state = null // TA EDIT
+	var/holster_sheathed_item_state = null // TA EDIT
+
 	var/sheathe_time = 0.1 SECONDS
 	var/sheathe_sound = 'sound/foley/equip/scabbard_holster.ogg'
 	/// If true, this weapon's examine highlights (see `get_examine_highlight_status()`) will not reveal the weapon stored in it.
@@ -52,7 +55,7 @@
 	. += span_info("Middle click to transform it into a strap, which allows for a weapon to be openly carried without any delays to drawing or sheathing.")
 	. += span_info("Straps cannot be transformed back into scabbards or sheaths.")
 
-/obj/item/rogueweapon/scabbard/Initialize()
+/obj/item/rogueweapon/scabbard/Initialize(mapload)
 	. = ..()
 
 	hol_comp = GetComponent(/datum/component/holster)
@@ -76,6 +79,18 @@
 
 /obj/item/rogueweapon/scabbard/attack_obj(obj/O, mob/living/user)
 	return FALSE
+
+/obj/item/rogueweapon/scabbard/proc/can_sheathe_item(obj/item/I, mob/user)
+	var/datum/component/martyrweapon/martyr_weapon = I.GetComponent(/datum/component/martyrweapon)
+	if(martyr_weapon?.is_active)
+		to_chat(user, span_warning("The burning relic refuses to be stowed while my Oath is invoked!"))
+		return FALSE
+	return TRUE
+
+/obj/item/rogueweapon/scabbard/attackby(obj/item/I, mob/user, params)
+	if(!can_sheathe_item(I, user))
+		return TRUE
+	return ..()
 
 /obj/item/rogueweapon/scabbard/MouseDrop(atom/over)
 	..()
@@ -168,7 +183,7 @@
 
 
 //////////////////////
-//	DAGGER SHEATHS  //
+//	DAGGER SHEATHS	//
 //////////////////////
 
 /obj/item/rogueweapon/scabbard/sheath
@@ -190,7 +205,8 @@
 
 	invalid_blades = list(
 		/obj/item/rogueweapon/huntingknife/idagger/stake,
-		/obj/item/rogueweapon/huntingknife/idagger/silver/stake)
+		/obj/item/rogueweapon/huntingknife/idagger/steel/silver/stake,
+		)
 
 /obj/item/rogueweapon/scabbard/sheath/getonmobprop(tag)
 	..()
@@ -288,23 +304,8 @@
 	icon_state = "beltstrapl"
 	item_state = "beltstrapl"
 
-/obj/item/rogueweapon/scabbard/sheath/strap/update_icon(mob/living/user)
-	if(hol_comp.sheathed)
-		icon = hol_comp.sheathed.icon
-		icon_state = hol_comp.sheathed.icon_state
-		experimental_onback = TRUE
-		experimental_onhip = TRUE
-	else
-		icon = initial(icon)
-		icon_state = initial(icon_state)
-		experimental_onback = FALSE
-		experimental_onhip = FALSE
-	if(user)
-		user.update_inv_hands()
-		user.update_inv_back()
-		user.update_inv_belt()
-
-	getonmobprop(tag)
+/obj/item/rogueweapon/scabbard/sheath/strap/ComponentInitialize()
+	AddComponent(/datum/component/holster/simplestrap, (valid_blade ? valid_blade : null), (length(valid_blades) ? valid_blades : null), (length(invalid_blades) ? invalid_blades : null))
 
 /obj/item/rogueweapon/scabbard/sheath/getonmobprop(tag)
 	..()
@@ -408,7 +409,7 @@
 	resistance_flags = null
 
 ///////////////////////
-//	SWORD SCABBARDS  //
+//	SWORD SCABBARDS	//
 ///////////////////////
 
 /obj/item/rogueweapon/scabbard/sword
@@ -575,7 +576,18 @@
 	special = /datum/special_intent/limbguard
 	cant_strip = TRUE
 
-	max_integrity = 0
+	max_integrity = 200
+
+/obj/item/rogueweapon/scabbard/sword/kazengun/MiddleClick(mob/user)
+	if(hol_comp?.sheathed)
+		to_chat(user, span_notice("There's something inside!"))
+		return FALSE
+	return FALSE
+
+/obj/item/rogueweapon/scabbard/sword/kazengun/obj_fix(mob/user, full_repair = TRUE)
+	obj_broken = FALSE
+	if(full_repair)
+		obj_integrity = max_integrity
 
 /obj/item/rogueweapon/scabbard/sword/kazengun/noparry
 	name = "ceremonial kazengun scabbard"
@@ -583,9 +595,8 @@
 
 	valid_blade = /obj/item/rogueweapon/sword/long/kriegmesser/ssangsudo
 	can_parry = FALSE
-	sewrepair = TRUE
 	special = null
-
+	max_integrity = 0
 
 /obj/item/rogueweapon/scabbard/sword/kazengun/steel
 	name = "hwang scabbard"
@@ -619,14 +630,16 @@
 	desc = "A simple lacquered sheath, for shorter eastern-styled blades."
 	icon_state = "kazscabdagger"
 	item_state = "kazscabdagger"
-	valid_blade = /obj/item/rogueweapon/huntingknife/idagger/steel/kazengun
 	associated_skill = /datum/skill/combat/knives
-	possible_item_intents = list(SHIELD_BASH, SHIELD_BLOCK)
+	possible_item_intents = list(SHIELD_BASH, SHIELD_SMASH)
 	can_parry = TRUE
 	sewrepair = FALSE
 	anvilrepair = /datum/skill/craft/carpentry
-	wdefense = 4
+	wdefense = 6
 	max_integrity = 220
+	valid_blades = list(
+		/obj/item/rogueweapon/huntingknife/idagger/steel/kazengun,
+		/obj/item/rogueweapon/huntingknife/idagger/blacksteel/kazengun)
 
 
 /obj/item/rogueweapon/scabbard/sheath/courtphysician
@@ -703,6 +716,7 @@
 	valid_blade = /obj/item/rogueweapon/sword/rapier/hand
 	implement_tier = IMPLEMENT_TIER_GREATER
 	implement_refund = IMPLEMENT_REFUND_GREATER
+	is_implement = TRUE
 	sellprice = 100
 
 /obj/item/rogueweapon/scabbard/sheath/courtphysician/hand/ComponentInitialize()
@@ -735,7 +749,7 @@
 
 	equip_delay_self = 5 SECONDS
 	unequip_delay_self = 5 SECONDS
-	strip_delay = 2 SECONDS
+	strip_delay = STRIP_DELAY_FAST
 	sheathe_time = 2 SECONDS
 
 	max_integrity = 0
@@ -770,6 +784,77 @@
 					"sflip" = 1,
 					"wflip" = 1,
 					"eflip" = 1,
+					"northabove" = 1,
+					"southabove" = 0,
+					"eastabove" = 0,
+					"westabove" = 0
+				)
+	else
+		switch(tag)
+			if("onback")
+				return list(
+					"shrink" = 0.7,
+					"sx" = 1,
+					"sy" = -1,
+					"nx" = 1,
+					"ny" = -1,
+					"wx" = 4,
+					"wy" = -1,
+					"ex" = -1,
+					"ey" = -1,
+					"nturn" = 0,
+					"sturn" = 0,
+					"wturn" = 0,
+					"eturn" = 0,
+					"nflip" = 8,
+					"sflip" = 0,
+					"wflip" = 0,
+					"eflip" = 0,
+					"northabove" = 1,
+					"southabove" = 0,
+					"eastabove" = 0,
+					"westabove" = 0
+				)
+
+/obj/item/rogueweapon/scabbard/gwstrap/nodachi
+	name = "saya"
+	desc = "A well maintained strap connected to a lacquered wood scabbard with a metal finish. It appears designed to hold an exceptionally long blade."
+
+	icon_state = "nodachi0"
+	item_state = "nodachi0"
+	valid_blade = /obj/item/rogueweapon/greatsword/nodachi
+	experimental_onback = TRUE
+
+/obj/item/rogueweapon/scabbard/gwstrap/nodachi/ComponentInitialize()
+	AddComponent(/datum/component/holster, valid_blade, null, null, sheathe_time)
+
+/obj/item/rogueweapon/scabbard/gwstrap/nodachi/getonmobprop(tag)
+	..()
+	if(!hol_comp)
+		return
+	if(!hol_comp.sheathed)
+		return
+	if(istype(hol_comp.sheathed, /obj/item/rogueweapon/estoc) || istype(hol_comp.sheathed, /obj/item/rogueweapon/greatsword))
+		switch(tag)
+			if("onback")
+				return list(
+					"shrink" = 0.6,
+					"sx" = -1,
+					"sy" = 2,
+					"nx" = 0,
+					"ny" = 2,
+					"wx" = 2,
+					"wy" = 1,
+					"ex" = 0,
+					"ey" = 1,
+					"nturn" = 0,
+					"sturn" = 0,
+					"wturn" = -70,
+					"eturn" = -15,
+					"nflip" = 0,
+					"sflip" = 0,
+					"wflip" = 0,
+					"eflip" = 0,
 					"northabove" = 1,
 					"southabove" = 0,
 					"eastabove" = 0,

@@ -1,13 +1,11 @@
 
-#define DUALWIELD_PENALTY_EXTRA_MULTIPLIER 1.4
-
 /obj/item/gun
 	name = "gun"
 	desc = ""
 	icon = 'icons/obj/guns/projectile.dmi'
 	icon_state = "detective"
 	item_state = "gun"
-	flags_1 =  CONDUCT_1
+	flags_1 =	CONDUCT_1
 	slot_flags = ITEM_SLOT_BELT
 	w_class = WEIGHT_CLASS_NORMAL
 	possible_item_intents = list(INTENT_GENERIC, RANGED_FIRE)
@@ -74,6 +72,10 @@
 		shake_camera(user, recoil + 1, recoil)
 
 	playsound(user, fire_sound, fire_sound_volume, vary_fire_sound)
+	if(istype(src, /obj/item/gun/ballistic) && fire_sound_volume >= 30 && fire_sound && fire_sound != 'sound/blank.ogg') // TA EDIT START
+		var/obj/item/gun/ballistic/twilight_firearm/twilight_gun = src
+		if(!istype(twilight_gun) || !twilight_gun.silenced)
+			mount_notify_loud_noise(user, 9, 15, 4 SECONDS) // TA EDIT END
 	if(message)
 		user.visible_message("<span class='danger'>[user] shoots [src]!</span>", \
 						"<span class='danger'>I shoot [src]!</span>", \
@@ -125,6 +127,8 @@
 /obj/item/gun/proc/process_fire(atom/target, mob/living/user, message = TRUE, params = null, zone_override = "", bonus_spread = 0)
 	add_fingerprint(user)
 	SEND_SIGNAL(src, COMSIG_ITEM_GUN_PROCESS_FIRE, user, target)
+	if(user)
+		SEND_SIGNAL(user, COMSIG_MOB_FIRED_GUN, src, target, params, zone_override)
 	var/sprd = 0
 	var/randomized_gun_spread = 0
 	if(spread)
@@ -140,7 +144,7 @@
 			user.mob_timers[MT_FOUNDSNEAK] = world.time
 			user.update_sneak_invis(reset = TRUE)
 		user.changeNext_inCombat(IN_COMBAT_DELAY)
-		sprd = round((rand() - 0.5) * DUALWIELD_PENALTY_EXTRA_MULTIPLIER * (randomized_gun_spread + randomized_bonus_spread))
+		sprd = round((rand() - 0.5) * RANGED_SPREAD_JITTER * (randomized_gun_spread + randomized_bonus_spread))
 		before_firing(target,user)
 		if(!chambered.fire_casing(target, user, params, , FALSE, zone_override, sprd, src))
 			shoot_with_empty_chamber(user)
@@ -194,5 +198,3 @@
 //Happens before the actual projectile creation
 /obj/item/gun/proc/before_firing(atom/target,mob/user)
 	return
-
-#undef DUALWIELD_PENALTY_EXTRA_MULTIPLIER

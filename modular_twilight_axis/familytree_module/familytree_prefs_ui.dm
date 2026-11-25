@@ -1,4 +1,5 @@
 /datum/preferences
+	var/family = FAMILY_NONE
 	var/setspouse = ""
 	var/datum/family_options/family_options
 	var/gender_choice_pref = ANY_GENDER
@@ -34,10 +35,17 @@
 	var/allow_low_status_marriage = FALSE
 	var/tmp/familytree_module_signal_bound = FALSE
 	var/tmp/familytree_assignment_scheduled = FALSE
+	var/tmp/familytree_wake_timerid
+	var/tmp/familytree_next_wake_time = 0
+	var/tmp/datum/familytree_prefs/familytree_round_prefs
 	var/tmp/familytree_confirmation_pending = FALSE
 	var/tmp/familytree_opted_out = FALSE
 	var/tmp/familytree_setspouse_timeout_offered = FALSE
 	var/tmp/familytree_setspouse_retries = 0
+	var/tmp/familytree_setspouse_wait_started = 0
+	var/tmp/familytree_consecutive_match_failures = 0
+	var/tmp/familytree_confirm_timerid
+	var/tmp/datum/family_confirm_prompt/familytree_confirm_prompt
 	var/allow_relatives_in_family = TRUE
 	var/know_your_fate = FALSE
 	var/familytree_father_name = ""
@@ -47,6 +55,7 @@
 	var/familytree_random_siblings = 0
 	var/familytree_random_children = 0
 	var/tmp/list/familytree_blocked_ckeys = list()
+	var/tmp/list/familytree_timeout_blocks = list()
 
 /proc/familytree_pref_mask(pref)
 	if(isnum(pref))
@@ -227,7 +236,10 @@
 	if(!istext(setspouse))
 		setspouse = ""
 	else
-		setspouse = copytext(setspouse, 1, 65)
+		setspouse = replacetext(setspouse, "\"", "")
+		setspouse = replacetext(setspouse, "\n", " ")
+		setspouse = replacetext(setspouse, ascii2text(13), " ")
+		setspouse = trim(copytext(setspouse, 1, 65))
 
 	polygamy_mode = sanitize_integer(polygamy_mode, POLYGAMY_DISABLED, POLYGAMY_ALLOW_BOTH, POLYGAMY_DISABLED)
 	desired_relative_role = sanitize_integer(desired_relative_role, RELATIVE_ANY, RELATIVE_SPOUSE, RELATIVE_ANY)

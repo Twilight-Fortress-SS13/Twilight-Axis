@@ -23,6 +23,8 @@
 
 /obj/item/clothing/head/roguetown/grenzelhofthat/decorated
 	armor = null
+	equip_delay_self = 0
+	unequip_delay_self = 0
 
 /obj/item/clothing/head/roguetown/twilight_elven_hat
 	name = "elven burka"
@@ -186,7 +188,7 @@
 	var/picked = FALSE
 	var/rogavid = list("halo", "knighty")
 	var/antlers_final_icon = null
-	
+
 /obj/item/clothing/head/roguetown/antlers/attack_right(mob/user)
 	..()
 	if(!picked)
@@ -305,10 +307,9 @@
 				/obj/item/natural/silk = 2)
 	tools = list(/obj/item/needle)
 	craftdiff = 3
-	sellprice = 20
 
 /obj/item/clothing/head/roguetown/duelhat/etrusca
-	name = "etruscian duelist hat"
+	name = "etruscan duelist hat"
 	desc = "A dainty looking feathered hat that is actually quite heavy and thick, Duelists from Etrusca are known to value winning fights without dirtying the white feather on top"
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/head.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/onmob/head.dmi'
@@ -332,7 +333,6 @@
 	reqs = list(/obj/item/natural/silk = 4)
 	tools = list(/obj/item/needle)
 	craftdiff = 2
-	sellprice = 15
 
 /obj/item/clothing/head/roguetown/duelhat/etrhat
 	name = "wanderer's hat"
@@ -342,3 +342,13 @@
 	icon_state = "etrhat"
 	item_state = "etrhat"
 	color = null
+
+/obj/item/clothing/head/roguetown/roguehood/psydon/confessor/overseer
+	name = "closed hood"
+	desc = "Вы бы не скрывали свое лицо, если бы на то не было причины."
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/overseer.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/inquisition_overseer/onmob/overseer_onmob.dmi'
+	icon_state = "overseerhood"
+	item_state = "overseerhood"
+	color = null
+	toggle_icon_state = FALSE

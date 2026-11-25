@@ -27,7 +27,7 @@ type Data = {
   is_admin: BooleanLike;
 };
 
-export const AdminHelpChat = (props) => {
+export const AdminHelpChat = () => {
   const { act, data } = useBackend<Data>();
   const {
     ticket_id,

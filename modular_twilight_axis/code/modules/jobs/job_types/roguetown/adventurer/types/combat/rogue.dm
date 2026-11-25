@@ -2,7 +2,7 @@
 	name = "Soundbreaker"
 	tutorial = "You are a brawling bard who turns rhythm and motion into weapons. Your fists, feet, and music break bones and shatter morale."
 	outfit = /datum/outfit/job/roguetown/adventurer/soundbreaker
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander3.ogg'
+	cmode_music = sound("sound/music/cmode/adventurer/combat_outlander3.ogg")
 	traits_applied = list(
 		TRAIT_GOODLOVER, TRAIT_EMPATH, TRAIT_NOPAINSTUN, TRAIT_CIVILIZEDBARBARIAN
 	)
@@ -41,7 +41,6 @@
 	beltl = /obj/item/flashlight/flare/torch/lantern
 
 	backpack_contents = list(
-		/obj/item/book/rogue/soundbreaker_codex = 1,
 		/obj/item/recipe_book/survival = 1,
 	)
 

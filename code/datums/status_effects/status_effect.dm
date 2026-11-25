@@ -2,10 +2,6 @@
 //This file contains their code, plus code for applying and removing them.
 //When making a new status effect, add a define to status_effects.dm in __DEFINES for ease of use!
 
-/mob/living
-	/// ass list [id] = /datum/status_effect. ATTENTION THE CODER IS A RETARD THIS IS NOT SUPPOSED TO BE HERE I REPEART!!!!!!
-	var/alist/status_effects_by_id
-
 /datum/status_effect
 	/// The ID of the effect. ID is used in adding and removing effects to check for duplicates, among other things.
 	var/id = "effect"
@@ -194,6 +190,18 @@
 		if(attached_effect.effectedstats[S] < 0)
 			var/newnum = attached_effect.effectedstats[S] * -1
 			inspec += "<br><span class='danger'>[S]</span> \Roman [newnum]"
+
+	if(attached_effect && attached_effect.duration != -1 && attached_effect.duration > world.time)
+		var/remaining = attached_effect.duration - world.time
+		var/total_secs = round(remaining / (1 SECONDS))
+		var/timestring
+		if(total_secs >= 60)
+			var/mins = round(total_secs / 60)
+			var/secs = total_secs % 60
+			timestring = "[mins]:[secs < 10 ? "0[secs]" : "[secs]"]"
+		else
+			timestring = "[total_secs]s"
+		inspec += "<br><span class='smallnotice'>Time remaining: [timestring]</span>"
 
 	inspec += "<br>----------------------"
 	to_chat(user, "[inspec.Join()]")

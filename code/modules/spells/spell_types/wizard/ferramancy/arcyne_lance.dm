@@ -3,7 +3,7 @@
 	name = "Arcyne Lance"
 	desc = "Hurl a spectral arcyne lance that pierces through up to 3 targets without losing momentum. \
 	Toggle arc mode (Shift+G) to lob over obstacles at reduced damage. Arced projectiles will not pierce multiple targets."
-	button_icon_state = "arcyne_lance"
+	button_icon_state = "sorcerers_lance"
 	sound = 'sound/magic/scrapeblade.ogg'
 	spell_color = GLOW_COLOR_METAL
 	glow_intensity = GLOW_INTENSITY_MEDIUM
@@ -23,7 +23,7 @@
 	charge_required = TRUE
 	weapon_cast_penalized = TRUE
 	charge_time = CHARGETIME_POKE
-	charge_swingdelay_type = SWINGDELAY_PENALTY
+	charge_swingdelay_type = SWINGDELAY_NORMAL
 	hold_drain = 1
 	charge_slowdown = CHARGING_SLOWDOWN_SMALL
 	charge_sound = 'sound/magic/charging.ogg'
@@ -43,11 +43,12 @@
 	icon_state = "air_blade_stab"
 	guard_deflectable = TRUE
 	expose_caster_on_deflect = TRUE
-	damage = 66
+	damage = SPELL_DMG(66)
 	damage_type = BRUTE
 	woundclass = BCLASS_STAB
-	npc_simple_damage_mult = 1.5
 	nodamage = FALSE
+	intdamfactor = SPELL_INTDAM(1)
+	spell_damage_scaled = TRUE
 	speed = MAGE_PROJ_MEDIUM
 	armor_penetration = PEN_LIGHT
 	movement_type = UNSTOPPABLE
@@ -59,13 +60,9 @@
 	/// Max mob targets before stopping
 	var/max_hits = 3
 
-/obj/projectile/magic/arcyne_lance/greatbow
-	damage = 90
-	max_hits = 5
-
 /obj/projectile/magic/arcyne_lance/arc
 	name = "arced arcyne lance"
-	damage = 50
+	damage = SPELL_DMG(50)
 	arcshot = TRUE
 	max_hits = 1 // Arced version does not pierce
 

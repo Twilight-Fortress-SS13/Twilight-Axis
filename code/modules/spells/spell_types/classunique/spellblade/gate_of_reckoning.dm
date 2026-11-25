@@ -1,6 +1,7 @@
 #define GATE_PHALANX_FILTER "gate_phalanx_glow"
 
 /datum/action/cooldown/spell/gate_of_reckoning
+	source_aspect = /datum/magic_aspect/pseudo/spellblade
 	name = "Gate of Reckoning"
 	desc = "Porta Iudicii - the Gate of Judgement. Summon two phantom spears that flank you in formation. \
 		For the next 12 seconds, each melee hit you land sends the phantom spears thrusting forward \
@@ -115,7 +116,7 @@
 		for(var/mob/living/victim in T)
 			if(victim == user || victim.stat == DEAD)
 				continue
-			if(spell_guard_check(victim, FALSE, deflected ? null : user))
+			if(spell_guard_check(victim, FALSE, user, punish_caster = deflected ? FALSE : null))
 				deflected = TRUE
 				continue
 			arcyne_strike(user, victim, weapon, phantom_damage, BODY_ZONE_CHEST, BCLASS_STAB, \

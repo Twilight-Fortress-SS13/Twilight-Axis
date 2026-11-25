@@ -18,10 +18,10 @@
 	outfit = /datum/outfit/job/roguetown/mercenary/twilight_conquistador
 	maximum_possible_slots = 2
 	min_pq = 25 // Все мерки в данный момент с 25 открываются
-	cmode_music = 'modular_twilight_axis/firearms/sound/music/combat_conquistador.ogg'
+	cmode_music = sound("modular_twilight_axis/firearms/sound/music/combat_conquistador.ogg")
 	class_select_category = CLASS_CAT_ETRUSCA
 	subclass_languages = list(/datum/language/etruscan)
-	category_tags = list(CTAG_MERCENARY)
+	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
 	traits_applied = list(TRAIT_NOBLE)
 	classes = list("Tercio" = "Волею судьбы ваш путь лежал в авангарде, вместе с вашей верной алебардой.",
 					"Hidalgo" = "Волею судьбы ваш путь связан с порохом и дестрезой.")
@@ -84,11 +84,10 @@
 		if("Hidalgo (Light Armor & Rapier + Pistol)")
 			to_chat(H, span_warning("Волею судьбы ваш путь связан с порохом и дестрезой."))
 			H.adjust_skillrank(/datum/skill/combat/swords, 4, TRUE)
-			H.adjust_skillrank(/datum/skill/combat/twilight_firearms, 5, TRUE)
+			H.adjust_skillrank(/datum/skill/combat/twilight_firearms, 4, TRUE)
 			H.change_stat(STATKEY_SPD, 3)
 			H.change_stat(STATKEY_INT, 2)
 			H.change_stat(STATKEY_PER, 3)
-			ADD_TRAIT(H, TRAIT_FIREARMS_MARKSMAN, TRAIT_GENERIC)
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 			beltl = /obj/item/quiver/twilight_bullet/lead
 			beltr = /obj/item/gun/ballistic/twilight_firearm/arquebus_pistol

@@ -4,7 +4,6 @@
 	icon_state = "crow"
 	icon = 'icons/roguetown/mob/monster/crow.dmi'
 	list_reagents = list(/datum/reagent/consumable/nutriment = 4)
-	foodtype = RAW
 	verb_say = "squeaks"
 	verb_yell = "squeaks"
 	obj_flags = CAN_BE_HIT
@@ -44,7 +43,7 @@
 	dead = TRUE
 	rotprocess = SHELFLIFE_SHORT
 
-/obj/item/reagent_containers/food/snacks/crow/Initialize()
+/obj/item/reagent_containers/food/snacks/crow/Initialize(mapload)
 	. = ..()
 	START_PROCESSING(SSobj, src)
 	if(dead)

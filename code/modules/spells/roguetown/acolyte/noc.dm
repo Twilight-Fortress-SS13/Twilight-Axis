@@ -1,7 +1,7 @@
 /datum/action/cooldown/spell/noc
 	background_icon = 'icons/mob/actions/nocmiracles.dmi'
 	button_icon = 'icons/mob/actions/nocmiracles.dmi'
-	spell_color = GLOW_COLOR_NOC
+	spell_color = PATRON_COLOR_NOC
 
 	ignore_armor_penalty = TRUE
 
@@ -208,7 +208,7 @@
 	background_icon = 'icons/mob/actions/nocmiracles.dmi'
 	button_icon = 'icons/mob/actions/nocmiracles.dmi'
 	button_icon_state = "blindness"
-	spell_color = GLOW_COLOR_NOC
+	spell_color = PATRON_COLOR_NOC
 	glow_intensity = GLOW_INTENSITY_LOW
 
 	projectile_type = /obj/projectile/magic/noc_owl
@@ -218,7 +218,7 @@
 	primary_resource_cost = SPELLCOST_MIRACLE
 
 	secondary_resource_type = SPELL_COST_STAMINA
-	primary_resource_cost = SPELLCOST_MINOR_PROJECTILE
+	secondary_resource_cost = SPELLCOST_MINOR_PROJECTILE
 
 	invocation_type = INVOCATION_SHOUT
 	invocations = list("Blackest nite, blind!")
@@ -258,8 +258,9 @@
 	range = 8
 	hitsound = 'sound/magic/owlhoot.ogg'
 	guard_deflectable = TRUE
+	expose_caster_on_deflect = TRUE
 
-/obj/projectile/magic/noc_owl/on_hit(target)
+/obj/projectile/magic/noc_owl/on_hit(target, blocked = FALSE)
 	if(ismob(target))
 		var/mob/living/M = target
 		if(M.anti_magic_check(TRUE, TRUE))
@@ -306,7 +307,7 @@
 	desc = "Allows you to learn a set of spells. \n \
 	<b>MAGISTER</b>: Greater Arcyne Bolt, Arc Bolt, Phase, Message, Campfire \n \
 	<b>ENCHANTER</b>: Stygian Efflorescence, Geas, Rune Ward, Forcewall, Blood Rush \n \
-	<b>SEER</b>: Attune Giant, Guidance, Attune Haste, Fortitude, Mindlink"
+	<b>SEER</b>: Bestow Ward, Guidance, Precognition, Surge, Mindlink"
 	button_icon_state = "spellpack"
 //Magister = Generic magos, low utility mostly damage; Enchanter = Area denial beast, some utility; Seer = Full support with practically 0 offensive capacity.
 	click_to_activate = FALSE
@@ -335,10 +336,10 @@
 		/datum/action/cooldown/spell/augment_buff/blood_rush,
 	)
 	var/list/seer_bundle = list(
-		/datum/action/cooldown/spell/augment_buff/attune_giant,
+		/datum/action/cooldown/spell/bestow_ward,
 		/datum/action/cooldown/spell/augment_buff/guidance,
-		/datum/action/cooldown/spell/augment_buff/attune_haste,
-		/datum/action/cooldown/spell/augment_buff/fortitude,
+		/datum/action/cooldown/spell/augment_buff/precognition,
+		/datum/action/cooldown/spell/augment_buff/surge,
 		/datum/action/cooldown/spell/mindlink
 	)
 
@@ -396,64 +397,7 @@
 //////////////////
 
 // =====================
-// Moonlight Component
-// =====================
-
-/datum/component/moonlight
-	var/mob/living/carbon/caster
-	var/duration = 60 SECONDS
-	var/adjacency_range = 1
-	var/next_process = 0
-	var/list/affected_mobs = list()
-	can_transfer = FALSE
-
-/datum/component/moonlight/Initialize(mob/living/carbon/caster_mob)
-	if(!istype(caster_mob, /mob/living/carbon))
-		return COMPONENT_INCOMPATIBLE
-
-	caster = caster_mob
-
-	// Start processing
-	START_PROCESSING(SSprocessing, src)
-	
-	// Apply visual effect to caster
-	caster.apply_status_effect(/datum/status_effect/moonlight, TRUE)
-
-/datum/component/moonlight/process()
-	if(!istype(caster) || caster.stat != CONSCIOUS)
-		remove_moonlight()
-		return FALSE
-
-	var/list/current_adjacent = list()
-
-	// Check for adjacent mobs and apply moonlight to them
-	for(var/mob/living/L in range(adjacency_range, caster))
-		if(L == caster || L.stat == DEAD)
-			continue
-		current_adjacent[L] = TRUE
-		// Apply moonlight effect if they don't have it yet
-		if(!L.has_status_effect(/datum/status_effect/moonlight))
-			L.apply_status_effect(/datum/status_effect/moonlight, FALSE)
-
-	. = ..()
-
-	affected_mobs = current_adjacent
-
-	return TRUE
-
-/datum/component/moonlight/proc/remove_moonlight()
-	if(!QDELETED(src))
-		for(var/mob/living/L in affected_mobs)
-			L?.remove_status_effect(/datum/status_effect/moonlight)
-		affected_mobs.Cut()
-		if(caster)
-			caster.remove_status_effect(/datum/status_effect/moonlight)
-			UnregisterSignal(caster, COMSIG_PARENT_QDELETING)
-		STOP_PROCESSING(SSprocessing, src)
-		qdel(src)
-
-// =====================
-// T4 - Moonlight - Grant antimagic to adjacent allies... and some other stuff.
+// T4 - Moonlight - Grant antimagic to adjacent allies for one minute.
 // =====================
 
 /datum/action/cooldown/spell/noc/moonlight
@@ -484,33 +428,20 @@
 
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
-	var/datum/component/moonlight/moonlight_component
-
 /datum/action/cooldown/spell/noc/moonlight/cast(atom/cast_on)
 	. = ..()
 	var/mob/living/carbon/human/H = owner
 	if(!istype(H))
 		return FALSE
 
-	// Remove previous moonlight effect if it exists
-	if(moonlight_component && !QDELETED(moonlight_component))
-		qdel(moonlight_component)
-
-	// Create and attach the moonlight component
-	var/datum/component/moonlight/component = H.AddComponent(/datum/component/moonlight, H)
-	moonlight_component = component
+	H.remove_status_effect(/datum/status_effect/moonlight)
+	H.apply_status_effect(/datum/status_effect/moonlight)
 
 	H.visible_message(span_blue("[H] is bathed in silvery moonlight, protection radiating outward!"))
 	return TRUE
 
-/datum/action/cooldown/spell/noc/moonlight/Destroy()
-	if(moonlight_component && !QDELETED(moonlight_component))
-		qdel(moonlight_component)
-	moonlight_component = null
-	return ..()
-
 // =====================
-// Moonlight Status Effect
+// Moonlight Status Effects
 // =====================
 
 /atom/movable/screen/alert/status_effect/moonlight
@@ -520,26 +451,40 @@
 
 /datum/status_effect/moonlight
 	id = "moonlight"
-	duration = -1
+	duration = 60 SECONDS
+	tick_interval = 1 SECONDS
 	alert_type = /atom/movable/screen/alert/status_effect/moonlight
-	var/is_caster = FALSE
-
-/datum/status_effect/moonlight/on_creation(mob/living/new_owner, caster)
-	is_caster = caster
-	. = ..()
+	/// Caster range.
+	var/aura_range = 1
 
 /datum/status_effect/moonlight/on_apply()
-	// Grant the TRAIT_ANTIMAGIC
 	ADD_TRAIT(owner, TRAIT_ANTIMAGIC, "moonlight_spell")
-	
-	// Visual feedback
-	if(is_caster)
-		owner.visible_message(span_blue("[owner] is surrounded by a protective aura of silvery moonlight!"))
-	else
-		return TRUE
+	owner.visible_message(span_blue("[owner] is surrounded by a protective aura of silvery moonlight!"))
+	return TRUE
+
+/datum/status_effect/moonlight/tick()
+	if(QDELETED(owner) || owner.stat != CONSCIOUS)
+		qdel(src)
+		return
+
+	for(var/mob/living/L in range(aura_range, owner))
+		if(L == owner || L.stat == DEAD)
+			continue
+		L.apply_status_effect(/datum/status_effect/moonlight/sheltered)
 
 /datum/status_effect/moonlight/on_remove()
 	REMOVE_TRAIT(owner, TRAIT_ANTIMAGIC, "moonlight_spell")
+
+/datum/status_effect/moonlight/sheltered
+	duration = 3 SECONDS
+	status_type = STATUS_EFFECT_REFRESH
+
+/datum/status_effect/moonlight/sheltered/on_apply()
+	ADD_TRAIT(owner, TRAIT_ANTIMAGIC, "moonlight_spell")
+	return TRUE
+
+/datum/status_effect/moonlight/sheltered/tick()
+	return
 
 /obj/effect/temp_visual/moon/spell
 	icon_state = "spellwarning"

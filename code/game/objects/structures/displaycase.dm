@@ -16,7 +16,7 @@
 	var/list/start_showpieces = list() //Takes sublists in the form of list("type" = /obj/item/bikehorn, "trophy_message" = "henk")
 	var/trophy_message = ""
 
-/obj/structure/displaycase/Initialize()
+/obj/structure/displaycase/Initialize(mapload)
 	. = ..()
 	if(start_showpieces.len && !start_showpiece_type)
 		var/list/showpiece_entry = pick(start_showpieces)
@@ -77,10 +77,10 @@
 /obj/structure/displaycase/attackby(obj/item/W, mob/user, params)
 	if(W.GetID() && !obj_broken && openable)
 		if(allowed(user))
-			to_chat(user,  "<span class='notice'>I [open ? "close":"open"] [src].</span>")
+			to_chat(user,	"<span class='notice'>I [open ? "close":"open"] [src].</span>")
 			toggle_lock(user)
 		else
-			to_chat(user,  "<span class='alert'>Access denied.</span>")
+			to_chat(user,	"<span class='alert'>Access denied.</span>")
 	else if(W.tool_behaviour == TOOL_WELDER && user.used_intent.type == INTENT_HELP && !obj_broken)
 		if(obj_integrity < max_integrity)
 			if(!W.tool_start_check(user, amount=5))
@@ -104,7 +104,7 @@
 		else
 			to_chat(user, "<span class='notice'>I start to [open ? "close":"open"] [src]...</span>")
 			if(W.use_tool(src, user, 20))
-				to_chat(user,  "<span class='notice'>I [open ? "close":"open"] [src].</span>")
+				to_chat(user,	"<span class='notice'>I [open ? "close":"open"] [src].</span>")
 				toggle_lock(user)
 	else if(open && !showpiece)
 		if(user.transferItemToLoc(W, src))
@@ -131,7 +131,7 @@
 		update_icon()
 		return
 	else
-	    //prevents remote "kicks" with TK
+		//prevents remote "kicks" with TK
 		if (!Adjacent(user))
 			return
 		if (user.used_intent.type == INTENT_HELP)
@@ -153,7 +153,7 @@
 	integrity_failure = 0
 	openable = FALSE
 
-/obj/structure/displaycase/trophy/Initialize()
+/obj/structure/displaycase/trophy/Initialize(mapload)
 	. = ..()
 	GLOB.trophy_cases += src
 
@@ -177,7 +177,7 @@
 		return
 
 	if(is_locked)
-		to_chat(user, "<span class='warning'>The case is shut tight with an old fashioned physical lock. Maybe you should ask the curator for the key?</span>")
+		to_chat(user, "<span class='warning'>The case is shut tight with an old-fashioned physical lock. Maybe you should ask the curator for the key?</span>")
 		return
 
 	if(!added_roundstart)
@@ -205,7 +205,7 @@
 				trophy_message = chosen_plaque
 				to_chat(user, "<span class='notice'>I set the plaque's text.</span>")
 			else
-				to_chat(user, "<span class='warning'>I are too far to set the plaque's text!</span>")
+				to_chat(user, "<span class='warning'>I am too far to set the plaque's text!</span>")
 
 		SSpersistence.SaveTrophy(src)
 		return TRUE
@@ -219,7 +219,7 @@
 	if (showpiece)
 		if(added_roundstart)
 			visible_message("<span class='danger'>The [showpiece] crumbles to dust!</span>")
-			new /obj/item/ash(loc)
+			new /obj/item/natural/ash(loc)
 			QDEL_NULL(showpiece)
 		else
 			..()

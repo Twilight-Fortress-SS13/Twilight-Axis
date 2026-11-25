@@ -26,11 +26,13 @@
 	if(stat != DEAD && istype(loc, /turf/open/water))
 		var/turf/open/water/W = loc
 		handle_inwater(W)
-	
+
 	var/bprv = handle_bodyparts()
 	if(bprv & BODYPART_LIFE_UPDATE_HEALTH)
 		update_stamina() //needs to go before updatehealth to remove stamcrit
 		updatehealth()
+	if(client)
+		update_damage_hud()
 	if (times_fired % 3 == 0) // every 3rd tick, fire stress handler. it isn't time-critical, so we don't particularly need it to go EVERY tick
 		update_stress()
 	handle_nausea()
@@ -76,7 +78,7 @@
 					emote("painmoan")
 			else
 				if(painpercent >= 100)
-					if(prob(25) && (HAS_TRAIT(src, TRAIT_PSYDONIAN_GRIT) || STAWIL >= 15) && !HAS_TRAIT(src, TRAIT_NOPAINSTUN)) // PSYDONIC WEIGHTED COINFLIP. TWEAK THIS AS THOU WILT. DON'T LET THEM BE BROKEN, PSYDON WILLING. THROW CON-MAXXERS A BONE, TOO.
+					if(prob(25) && (HAS_TRAIT(src, TRAIT_PSYDONIAN_GRIT) || STAWIL >= 15) && (!HAS_TRAIT(src, TRAIT_NOPAINSTUN) && !HAS_TRAIT(src, TRAIT_IRONMAN))) // PSYDONIC WEIGHTED COINFLIP. TWEAK THIS AS THOU WILT. DON'T LET THEM BE BROKEN, PSYDON WILLING. THROW CON-MAXXERS A BONE, TOO.
 						Immobilize(15) // EAT A MICROSTUN. YOU'RE AVOIDING A PAINCRIT.
 						if(HAS_TRAIT(src, TRAIT_PSYDONIAN_GRIT))
 							visible_message(span_info("[src] audibly grits [src.p_their()] teeth, ENDURING through [src.p_their()] pain."), span_info("Through my faith in HIM, I ENDURE."))
@@ -93,9 +95,9 @@
 						addtimer(CALLBACK(src, PROC_REF(Stun), 110), 10)
 						addtimer(CALLBACK(src, PROC_REF(Knockdown), 110), 10)
 						mob_timers["painstun"] = world.time + 160
-					if(prob(probby) && HAS_TRAIT(src, TRAIT_NOPAINSTUN) && !HAS_TRAIT(src, TRAIT_LYCANRESILENCE)  && (has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder) || has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed)))
+					if(prob(probby) && HAS_TRAIT(src, TRAIT_NOPAINSTUN) && !HAS_TRAIT(src, TRAIT_LYCANRESILENCE)	&& (has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder) || has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed)))
 						Immobilize(10)
-						emote("painscream")
+						emote("superagony")
 						to_chat(src, span_userdanger("THE SACRED FLAMES, I FEEL PAIN AGAIN!"))
 						stuttering += 5
 						cultslurring += 10 //To indicate this isn't a natural kind of agony
@@ -136,30 +138,53 @@
 				next_smell = world.time + 30 SECONDS
 				T.pollution.smell_act(src)
 
-/mob/living/proc/handle_inwater()
-	extinguish_mob()
+/mob/living/proc/handle_inwater(turf/onturf, extinguish = TRUE, force_drown = FALSE)
+	if(extinguish)
+		extinguish_mob()
+	return FALSE
 
 /mob/living/carbon/handle_inwater(turf/onturf, extinguish = TRUE, force_drown = FALSE)
-	..()
+	. = ..(onturf, extinguish, force_drown)
+
+	if(QDELETED(src) || stat == DEAD)
+		return FALSE
+
 	if(!(mobility_flags & MOBILITY_STAND) || force_drown)
 		if(HAS_TRAIT(src, TRAIT_NOBREATH) || HAS_TRAIT(src, TRAIT_WATERBREATHING) || HAS_TRAIT(src, TRAIT_HOLDBREATH))
 			return TRUE
-		if(stat == DEAD && client)
-			record_round_statistic(STATS_PEOPLE_DROWNED)
+
+		var/was_alive = stat != DEAD
 		var/drown_damage = has_world_trait(/datum/world_trait/abyssor_rage) ? 10 : 5
+
 		adjustOxyLoss(drown_damage)
-		emote("drown")
-	return TRUE
+
+		if(was_alive && stat == DEAD && client)
+			record_round_statistic(STATS_PEOPLE_DROWNED)
+
+		if(!QDELETED(src) && stat != DEAD)
+			emote("drown")
+
+		return TRUE
+
+	return FALSE
 
 /mob/living/carbon/human/handle_inwater(turf/onturf, extinguish = TRUE, force_drown = FALSE)
-	. = ..()
+	. = ..(onturf, extinguish, force_drown)
+
+	if(QDELETED(src) || stat == DEAD)
+		return FALSE
 
 	if(istype(onturf, /turf/open/water/sewer) && !HAS_TRAIT(src, TRAIT_NOSTINK))
 		if(!HAS_TRAIT(src, TRAIT_HOLDBREATH))
 			add_stress(/datum/stressevent/sewertouched)
 
+	if(istype(onturf, /turf/open/water/swamp) && HAS_TRAIT(src, TRAIT_NOBLE_UNLANDED))
+		add_stress(/datum/stressevent/sewertouched)
+
 	if(istype(onturf, /turf/open/water/bath) && !wear_armor && !wear_shirt && !wear_pants)
 		add_stress(/datum/stressevent/bathwater)
+
+	return TRUE
 
 #define BURN_PAIN_WEIGHT 0.6
 
@@ -232,7 +257,7 @@ In addition, severe effects won't always trigger unless the drink is poisonously
 All effects don't start immediately, but rather get worse over time; the rate is affected by the imbiber's alcohol tolerance
 
 0: Non-alcoholic
-1-10: Barely classifiable as alcohol - occassional slurring
+1-10: Barely classifiable as alcohol - occasional slurring
 11-20: Slight alcohol content - slurring
 21-30: Below average - imbiber begins to look slightly drunk
 31-40: Just below average - no unique effects
@@ -327,8 +352,9 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 	if(hallucination)
 		handle_hallucinations()
 
-	if(drunkenness)
-		drunkenness = max(drunkenness - (drunkenness * 0.04) - 0.01, 0)
+	if(drunkenness) // TA EDIT START
+		if(!has_booze())
+			drunkenness = max(drunkenness - 0.2, 0)
 		if(drunkenness >= 3)
 			if(prob(3))
 				slurring += 2
@@ -337,8 +363,15 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 			add_stress(/datum/stressevent/drunk)
 		else
 			remove_stress(/datum/stressevent/drunk)
+			remove_status_effect(/datum/status_effect/buff/drunk)
 		if(drunkenness >= 11 && slurring < 5)
 			slurring += 1.2
+
+		if(drunkenness >= 21 && prob(2))
+			emote("sway")
+		if(drunkenness >= 7) //TA EDIT
+			if(has_flaw(/datum/charflaw/addiction/alcoholic))
+				sate_addiction(/datum/charflaw/addiction/alcoholic)
 
 		if(drunkenness >= 41)
 			if(prob(25))
@@ -346,81 +379,68 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 			Dizzy(10)
 
 		if(drunkenness >= 51)
-			adjustToxLoss(1)
 			if(prob(3))
 				confused += 15
 				vomit() // vomiting clears toxloss, consider this a blessing
 			Dizzy(25)
 
 		if(drunkenness >= 61)
-			adjustToxLoss(1)
 			if(prob(50))
 				blur_eyes(5)
 
 		if(drunkenness >= 71)
-			adjustToxLoss(1)
 			if(prob(10))
 				blur_eyes(5)
+			if(prob(4) && !stat && !IsKnockdown())
+				to_chat(src, span_warning("Я на мгновение теряю равновесие!"))
+				Knockdown(10)
 
 		if(drunkenness >= 81)
-			adjustToxLoss(3)
+			if(prob(5))
+				drowsyness = min(drowsyness + 10, 100)
 			if(prob(5) && !stat)
 				to_chat(src, span_warning("Maybe I should lie down for a bit..."))
 
 		if(drunkenness >= 91)
-			adjustToxLoss(5)
+			if(has_booze() && prob(10))
+				adjustToxLoss(0.5)
 //			adjustOrganLoss(ORGAN_SLOT_BRAIN, 0.4)
-			if(prob(20) && !stat)
+			if(prob(10) && !stat)
 				to_chat(src, span_warning("Just a quick nap..."))
-				Sleeping(900)
+				Sleeping(300)
 
-		if(drunkenness >= 101)
-			adjustToxLoss(5) //Let's be honest you shouldn't be alive by now
+		if(drunkenness >= 101 && has_booze() && prob(15))
+			adjustToxLoss(1) //Let's be honest you shouldn't be alive by now
 
 //WE HANDLE SUNDERSTACKS HERE
-	if(sunder_stacks)
+	if(sunder_stacks) // TA EDIT END
 		sunder_stacks = max(sunder_stacks - 1, 0) //Takes a bit to shrug off
-		if(cultslurring < 5) //Fucks up our ability to talk, completely until all sunderstacks are gone
-			cultslurring += 1.2
+
+		apply_status_effect(/datum/status_effect/debuff/sunder_stacks) //You survived an EXTREMELY lethal blow, you might want to keep back for now
 
 		if(sunder_stacks >= 21)
-			apply_status_effect(/datum/status_effect/debuff/sunder_stacks) //You survived an EXTREMELY lethal blow, you might want to keep back for now
+			if(cultslurring < 5) //Fucks up our ability to talk, completely until we're below 20 stacks
+				cultslurring += 1.2
 
-		if(sunder_stacks >= 41)
+		if(sunder_stacks >= 31)
 			adjustBruteLoss(1)
-			if(prob(3)) //5% chance of random dizziness
-				vomit(blood = TRUE, stun = FALSE) // vomiting blood, because you are actually pretty fucked up sire. No immobilise yet.
-				Dizzy(3)
+			if(prob(3)) //3% chance of blood vomiting
+				vomit(blood = TRUE, stun = FALSE) // vomiting blood, because you are actually pretty fucked up sire.
+				Dizzy(5) //Tiny bit of Dizzy
 
-		if(sunder_stacks >= 71) //At this point you've taken (2) blows or more and shouldn't be escaping death this easily.
+		if(sunder_stacks >= 41) //At this point you've taken (2) blows (or are a vampire) or more and shouldn't be escaping death this easily.
 			adjustBruteLoss(1)
 			if(prob(12)) //12% chance to have random movement + stun + dizziness
 				confused += 8
 				vomit(blood = TRUE, stun = FALSE) // vomiting blood, because you are actually pretty fucked up sire.
-				Dizzy(15)
-			if(prob(5)) //5% chance to collapse randomly
-				vomit(blood = TRUE, stun = FALSE) // vomiting blood, because you are actually pretty fucked up sire.
-				Knockdown(15)
+				Dizzy(5)
 
 		if(sunder_stacks >= 101) //We are beyond the point of lethal, somehow. This will cripple you severely.
 			adjustBruteLoss(1)
 			if(prob(50))
 				blur_eyes(5)
+				Knockdown(5) //can't stand at all hardly, mortality almost forced upon a form that cannot sustain it.
 			Dizzy(25)//You are completely fucked up at this point, any more stacks of SUNDER and you're DEAD.
-
-
-//used in human and monkey handle_environment()
-/mob/living/carbon/proc/natural_bodytemperature_stabilization()
-	var/body_temperature_difference = BODYTEMP_NORMAL - bodytemperature
-	switch(bodytemperature)
-		if(-INFINITY to BODYTEMP_COLD_DAMAGE_LIMIT) //Cold damage limit is 50 below the default, the temperature where you start to feel effects.
-			return max((body_temperature_difference * metabolism_efficiency / BODYTEMP_AUTORECOVERY_DIVISOR), BODYTEMP_AUTORECOVERY_MINIMUM)
-		if(BODYTEMP_COLD_DAMAGE_LIMIT to BODYTEMP_NORMAL)
-			return max(body_temperature_difference * metabolism_efficiency / BODYTEMP_AUTORECOVERY_DIVISOR, min(body_temperature_difference, BODYTEMP_AUTORECOVERY_MINIMUM/4))
-		if(BODYTEMP_NORMAL to BODYTEMP_HEAT_DAMAGE_LIMIT) // Heat damage limit is 50 above the default, the temperature where you start to feel effects.
-			return min(body_temperature_difference * metabolism_efficiency / BODYTEMP_AUTORECOVERY_DIVISOR, max(body_temperature_difference, -BODYTEMP_AUTORECOVERY_MINIMUM/4))
-		if(BODYTEMP_HEAT_DAMAGE_LIMIT to INFINITY)
-			return min((body_temperature_difference / BODYTEMP_AUTORECOVERY_DIVISOR), -BODYTEMP_AUTORECOVERY_MINIMUM)	//We're dealing with negative numbers
 
 /////////
 //LIVER//
@@ -438,7 +458,7 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 	if(HAS_TRAIT(src, TRAIT_STABLELIVER) || HAS_TRAIT(src, TRAIT_NOMETABOLISM))
 		return
 
-	adjustToxLoss(4, TRUE,  TRUE)
+	adjustToxLoss(4, TRUE,	TRUE)
 
 /////////////
 //CREMATION//
@@ -577,20 +597,21 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 	if (!client) // not really relevant to NPCs at the moment
 		return
 
-	var/datum/charflaw/sleepless/sleepless_flaw = get_flaw()
-	if(!istype(sleepless_flaw, /datum/charflaw/sleepless))
-		sleepless_flaw = null
+	var/datum/charflaw/sleepless/sleepless_flaw = get_flaw(/datum/charflaw/sleepless)
 	if(HAS_TRAIT(src, TRAIT_NOSLEEP))
 		if(!(mobility_flags & MOBILITY_STAND))
 			energy_add(5)
-		if(mind?.has_antag_datum(/datum/antagonist/vampire))
-			if(!(mobility_flags & MOBILITY_STAND))
-				energy_add(10)
-			energy_add(4)
 	//Healing while sleeping in a bed
 	if(IsSleeping())
+		dualwield_attack_count = 0
+
+		if(drunkenness) // TA EDIT START
+			drunkenness = max(drunkenness - 2, 0) // TA EDIT END
 		if(HAS_TRAIT(src, TRAIT_NOREGEN) || HAS_TRAIT(src, TRAIT_IRONMAN))
 			return
+		if(HAS_TRAIT(src, TRAIT_DEATHLESS) || HAS_TRAIT(src, TRAIT_ZOMBIE_IMMUNE)) // To prevent a softlock involving blood loss.
+			if(blood_volume < BLOOD_VOLUME_BAD)
+				blood_volume += (BLOOD_VOLUME_NORMAL * 0.002)
 		var/sleepy_mod = 0.5
 		var/doesnt_hunger = HAS_TRAIT(src, TRAIT_NOHUNGER)
 		if(HAS_TRAIT(src, TRAIT_BETTER_SLEEP))
@@ -603,9 +624,9 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 			var/list/limb_list = list(BODY_ZONE_R_ARM, BODY_ZONE_L_ARM, BODY_ZONE_R_LEG, BODY_ZONE_L_LEG)
 			for(var/zone in limb_list)
 				var/obj/item/bodypart/limb = get_bodypart(zone)
-				if(!limb && nutrition > 250)
+				if(!limb && nutrition > 100)
 					regenerate_limb(zone)
-					nutrition -= 250
+					nutrition -= 100
 		else if(isturf(loc)) //No illegal tech.
 			var/obj/structure/bed/rogue/bed = locate() in loc
 			if(bed)
@@ -615,6 +636,8 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 					var/obj/structure/flora/newbranch/branch = locate() in loc
 					if(branch)
 						sleepy_mod = 2 // just equivalent to a bedroll
+				if(HAS_TRAIT(src, TRAIT_WATERSLEEP) && istype(loc, /turf/open/water))
+					sleepy_mod = 2 // ditto
 		if(nutrition > 0 || doesnt_hunger)
 			energy_add(sleepy_mod * 15)
 		if(hydration > 0 || doesnt_hunger)
@@ -622,7 +645,7 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 				blood_volume = min(blood_volume + (4 * sleepy_mod), BLOOD_VOLUME_NORMAL)
 			for(var/obj/item/bodypart/affecting as anything in bodyparts)
 				//for context, it takes 5 small cuts (0.2 x 5) or 3 normal cuts (0.4 x 3) for a bodypart to not be able to heal itself
-				if(affecting.get_bleed_rate() >= 1)
+				if(affecting.get_bleed_rate() >= 1 && !HAS_TRAIT(src, TRAIT_ZOMBIE_IMMUNE)) // however, if you're undead - and therefore won't deadite - we let you get back up after a VERY long time, bcs otherwise any artery can be an RR
 					continue
 				if(affecting.heal_damage(sleepy_mod, sleepy_mod, required_status = BODYPART_ORGANIC))
 					src.update_damage_overlays()
@@ -642,6 +665,7 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 			var/obj/structure/bed/rogue/bed = locate() in loc
 			if(bed)
 				SEND_SIGNAL(bed, COMSIG_SLEEPING_ON_BED, src)
+				SEND_SIGNAL(src, COMSIG_SLEEPING_ON_BED, src) // send this to both the mob and bed, they're used for different things
 				sleepy_mod = bed.sleepy
 			else
 				sleepy_mod = 1
@@ -649,6 +673,8 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 					var/obj/structure/flora/newbranch/branch = locate() in loc
 					if(branch)
 						sleepy_mod = 2 //Worse than a bedroll, better than nothing.
+				if(HAS_TRAIT(src, TRAIT_WATERSLEEP) && istype(loc, /turf/open/water))
+					sleepy_mod = 2 // ditto
 		if(sleepy_mod > 0)
 			if(eyesclosed)
 				if(HAS_TRAIT(src, TRAIT_NOSLEEP) && !sleepless_flaw)
@@ -667,6 +693,14 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 					if(armor_blocked && !fallingas)
 						to_chat(src, span_warning("I can't sleep like this. My armor is burdening me."))
 						fallingas = TRUE
+					// TA start begin - TAT system
+					if(HAS_TRAIT(src, TRAIT_NUDE_SLEEPER) && (H.wear_armor || H.wear_pants || H.wear_shirt || H.wear_wrists || H.cloak || H.gloves || H.shoes))
+						message = "I am unable to sleep in clothes. I should remove them."
+						if(!fallingas)
+							to_chat(src, span_warning(message))
+						fallingas = TRUE
+						return
+					// TA start end - TAT system
 				if(!armor_blocked)
 					if (sleepy_mod > 1)
 						sleep_threshold = 30
@@ -691,6 +725,10 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 						if(!is_asleep) //to not spam chat
 							to_chat(src, span_blue("I've fallen asleep."))
 							is_asleep = TRUE
+						if((sleepy_mod < 3 || !istype(get_area(src), /area/rogue/indoors)) && HAS_TRAIT(src, TRAIT_NOBLE_UNLANDED)) // nobles need good beds and a proper room or they complain
+							add_stress(/datum/stressevent/unlanded_noble_poor_sleep)
+						else if (sleepy_mod>=3 && has_stress_event(/datum/stressevent/unlanded_noble_poor_sleep))
+							remove_stress(/datum/stressevent/unlanded_noble_poor_sleep) // a good night's sleep fixes it
 						// those who have gazed upon zuranus may have... odd dreams.
 						if(has_status_effect(/datum/status_effect/zuranus))
 							var/zizo_dream = has_status_effect(/datum/status_effect/zuranus) // this is stupid im sorry
@@ -717,9 +755,11 @@ GLOBAL_LIST_INIT(ballmer_windows_me_msg, list("Yo man, what if, we like, uh, put
 							sleepless_flaw.dream_prob += 500
 							sleepless_flaw.drugged_up = FALSE
 							Sleeping(250)
+							SEND_SIGNAL(src, COMSIG_MOB_SLEEP)
 						else
 							teleport_to_dream(src, 10000, dream_prob)
 							Sleeping(300)
+							SEND_SIGNAL(src, COMSIG_MOB_SLEEP)
 
 			else
 				is_asleep = FALSE

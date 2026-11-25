@@ -1,21 +1,21 @@
 /mob/living/simple_animal/hostile/retaliate/rogue/infernal/watcher
+	anatomy_type = /datum/anatomy/orb
 	threat_point = 70
+	boss_class = BOSS_CLASS_WATCHER
 	icon = 'icons/mob/summonable/32x32.dmi'
 	name = "infernal watcher"
 	icon_state = "watcher"
 	icon_living = "watcher"
 	desc = "A vast floating orb of what looks like coalesced magma, or perhaps molten metal. Its sole eye does not blink, \
 	nor break its gaze from its targets."
-	summon_primer = "You are an infernal watcher, a creature of lava and rock. You have watched over the chaos of the infernal plane long enough that it was been pointless to keep count."
+	summon_primer = "You are an infernal watcher, a creature of lava and rock. You have watched over the chaos of the infernal plane long enough that it has been pointless to keep count."
 	summon_tier = 3
 	icon_dead = "vvd"
 	gender = MALE
 	emote_hear = null
 	emote_see = null
 	speak_chance = 1
-	turns_per_move = 6
 	see_in_dark = 6
-	move_to_delay = 5
 	base_intents = list(/datum/intent/simple/bite)
 	butcher_results = list()
 	death_loot = list(/obj/item/magic/infernal/core = 1)
@@ -25,12 +25,8 @@
 	maxHealth = 600
 	melee_damage_lower = 20
 	melee_damage_upper = 30
-	vision_range = 7
-	aggro_vision_range = 9
 	environment_smash = ENVIRONMENT_SMASH_STRUCTURES
 	simple_detect_bonus = 20
-	retreat_distance = 2
-	minimum_distance = 1
 	food_type = list()
 	footstep_type = FOOTSTEP_MOB_BAREFOOT
 	pooptype = null
@@ -40,25 +36,17 @@
 	simple_detect_bonus = 20
 	deaggroprob = 0
 	canparry = TRUE
-	defprob = 35
-	// del_on_deaggro = 44 SECONDS
-	retreat_health = 0
 	food = 0
 	attack_sound = list('sound/misc/lava_death.ogg')
 	dodgetime = 30
 	aggressive = 1
-//	stat_attack = UNCONSCIOUS
-	ranged = TRUE
-	ranged_cooldown_time = 80
-	projectiletype = /obj/projectile/magic/aoe/fireball/rogue
-	ranged_message = "stares"
+	ai_controller = /datum/ai_controller/infernal/harasser
+	move_base_delay = MOVEMENT_DELAY_SPD_10
 
-/mob/living/simple_animal/hostile/retaliate/rogue/infernal/watcher/Initialize()
+/mob/living/simple_animal/hostile/retaliate/rogue/infernal/watcher/Initialize(mapload)
 	. = ..()
-	ADD_TRAIT(src, TRAIT_SILVER_WEAK, TRAIT_GENERIC)
-
-/mob/living/simple_animal/hostile/retaliate/rogue/infernal/watcher/simple_add_wound(datum/wound/wound, silent = FALSE, crit_message = FALSE)	//no wounding the watcher
-	return
+	var/datum/action/cooldown/spell/projectile/fireball/mob_ability/watcher/great/eyefire = new(src)
+	eyefire.Grant(src)
 
 /mob/living/simple_animal/hostile/retaliate/rogue/infernal/watcher/death(gibbed)
 	..()

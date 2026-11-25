@@ -20,6 +20,7 @@
 			"counterparty" = counterparty,
 			"amount" = E.amount,
 			"reason" = E.reason || "",
+			"count" = E.count || 1,
 		))
 	return out
 
@@ -39,14 +40,10 @@
 	var/mob/living/carbon/human/H = user
 	var/list/data = list()
 	data["max_issuance_day"] = SStreasury.loan_max_issuance_day
-	data["poll_tax_static"] = list(
-		"max_advance_days" = POLL_TAX_MAX_ADVANCE_DAYS,
-		"fallback_rate" = POLL_TAX_ADVANCE_FALLBACK_RATE,
-	)
-	var/poll_category = istype(H) ? SStreasury.get_poll_tax_category(H) : null
-	data["poll_tax_user"] = list(
+	var/poll_category = istype(H) ? SStreasury.get_poll_levy_category(H) : null
+	data["poll_levy_user"] = list(
 		"category" = poll_category || "",
-		"category_label" = poll_category ? SStreasury.get_poll_tax_category_pretty_name(poll_category) : "",
+		"category_label" = poll_category ? SStreasury.get_poll_levy_category_pretty_name(poll_category) : "",
 	)
 	var/list/funds = list()
 	var/list/patron_rosters_static = list()
@@ -102,14 +99,11 @@
 	else
 		data["active_loan"] = null
 
-	var/poll_category = SStreasury.get_poll_tax_category(H)
-	var/poll_rate = poll_category ? SStreasury.get_poll_tax_rate_for(H, poll_category) : 0
-	var/poll_exempt = poll_category ? SStreasury.is_poll_tax_charter_exempt(H, poll_category) : FALSE
-	var/existing_advance = SStreasury.poll_tax_advance_days[H] || 0
-	data["poll_tax"] = list(
-		"rate" = poll_rate,
+	var/poll_category = SStreasury.get_poll_levy_category(H)
+	var/poll_exempt = poll_category ? SStreasury.is_tax_exempt(H, TAX_CATEGORY_POLL_LEVY) : FALSE
+	data["poll_levy"] = list(
 		"exempt" = poll_exempt ? TRUE : FALSE,
-		"advance_days_held" = existing_advance,
+		"owed" = SStreasury.poll_levy_owed[H] || 0,
 	)
 
 	var/has_any_institutional_access = FALSE
@@ -164,8 +158,30 @@
 	data["personal_log"] = build_log_entries(H.real_name)
 	data["bathhouse_ordinance_active"] = SStreasury.bathhouse_ordinance_active ? TRUE : FALSE
 	data["bathhouse_tithe_round_total"] = SStreasury.round_bathhouse_tithe_total
+	var/list/fund_allowances = list()
+	for(var/fid in ALL_FUND_IDS)
+		var/obj/structure/roguemachine/vaultbank/V = SStreasury.find_jawbank_for_fund_id(fid)
+		var/datum/fund/F = SStreasury.resolve_fund_by_id(fid)
+		if(!V || !F || !length(V.allowance_groups) || !V.can_view(user))
+			continue
+		var/list/groups = list()
+		for(var/group in V.allowance_groups)
+			groups += list(list(
+				"id" = group,
+				"label" = V.allowance_groups[group],
+				"limit" = LAZYACCESS(F.allowance_limits, group) || 0,
+				"suspended" = LAZYACCESS(F.allowance_suspended, group) ? TRUE : FALSE,
+			))
+		var/limit_hit = V.draws_on_allowance(H) && !V.are_withdrawals_suspended(H) && V.get_withdrawal_remaining(H) <= 0
+		fund_allowances[fid] = list(
+			"header" = V.allowance_header,
+			"groups" = groups,
+			"viewer_limit_hit" = limit_hit ? TRUE : FALSE,
+		)
+	data["fund_allowances"] = fund_allowances
 	var/bh_cooldown_left_ds = max(0, SStreasury.bathhouse_ordinance_next_toggle_time - world.time)
 	data["bathhouse_ordinance_cooldown_seconds"] = round(bh_cooldown_left_ds / 10)
+	data["bathhouse_ordinance_cooldown_minutes"] = BATHHOUSE_ORDINANCE_TOGGLE_COOLDOWN / (1 MINUTES)
 
 	var/list/patron_rosters = list()
 	if(has_any_patronage_authority)
@@ -186,7 +202,8 @@
 				"patrons" = roster_data,
 			)
 	data["patron_rosters"] = patron_rosters
-	data["ta_map"] = SSmapping.config.map_name //TA EDIT
+	data["merc"] = merc_meister_data(H)
+	data["ta_map"] = SSmapping.config.map_name // TA EDIT
 
 	return data
 
@@ -206,10 +223,6 @@
 			return TRUE
 		if("repay_loan")
 			handle_repay_loan(H, params)
-			SStgui.update_uis(src)
-			return TRUE
-		if("advance_poll_tax")
-			handle_advance_poll_tax(H, params)
 			SStgui.update_uis(src)
 			return TRUE
 		if("withdraw_institutional")
@@ -236,12 +249,51 @@
 			handle_toggle_bathhouse_ordinance(H)
 			SStgui.update_uis(src)
 			return TRUE
+		if("set_withdraw_limit")
+			handle_set_withdraw_limit(H, params)
+			SStgui.update_uis(src)
+			return TRUE
+		if("toggle_withdrawals")
+			handle_toggle_withdrawals(H, params)
+			SStgui.update_uis(src)
+			return TRUE
+		if("request_merc_contract")
+			handle_request_merc_contract(H)
+			SStgui.update_uis(src)
+			return TRUE
+		if("merc_end_contract")
+			handle_merc_end_contract(H, params, FALSE)
+			return TRUE
+		if("merc_propose_end")
+			handle_merc_end_contract(H, params, TRUE)
+			SStgui.update_uis(src)
+			return TRUE
+
+/obj/structure/roguemachine/atm/proc/handle_merc_end_contract(mob/living/carbon/human/H, list/params, agreed)
+	var/datum/merc_contract/contract = locate(params["ref"])
+	if(!istype(contract) || !(contract in GLOB.merc_contracts))
+		return
+	if(agreed)
+		contract.propose_agreed_end(H)
+		return
+	INVOKE_ASYNC(contract, TYPE_PROC_REF(/datum/merc_contract, try_end_early), H)
+
+/obj/structure/roguemachine/atm/proc/handle_request_merc_contract(mob/living/carbon/human/H)
+	if(!is_mercenary_job(H))
+		return
+	var/datum/merc_contract/contract = get_merc_contract(H)
+	if(contract)
+		to_chat(H, span_warning("You are under contract with [contract.hirer_name]."))
+		return
+	grant_merc_contract(H, in_hand = TRUE)
+	playsound(src, 'sound/misc/machinetalk.ogg', 100, FALSE, -1)
+	say("A new mercenary contract for [H.real_name].")
 
 /obj/structure/roguemachine/atm/proc/handle_toggle_bathhouse_ordinance(mob/living/carbon/human/H)
 	if(!istype(H))
 		return
 	if(H.job != "Bishop" && H.job != "Bathmaster")
-		to_chat(H, span_warning("Only the Bishop or the Bathmaster may set the terms of the Ordinance of the Baths."))
+		to_chat(H, span_warning("Only the Bishop or the Bathmaster can break or restore the Ordinance of the Baths."))
 		return
 	if(world.time < SStreasury.bathhouse_ordinance_next_toggle_time)
 		var/remaining_minutes = CEILING((SStreasury.bathhouse_ordinance_next_toggle_time - world.time) / (1 MINUTES), 1)
@@ -266,6 +318,45 @@
 	log_admin("ORDINANCE OF THE BATHS: [key_name(H)] toggled to [now_active ? "IN FORCE" : "BROKEN"].")
 	message_admins("[key_name_admin(H)] toggled the Ordinance of the Baths to [now_active ? "IN FORCE" : "BROKEN"].")
 
+/obj/structure/roguemachine/atm/proc/handle_set_withdraw_limit(mob/living/carbon/human/H, list/params)
+	var/obj/structure/roguemachine/vaultbank/V = SStreasury.find_jawbank_for_fund_id("[params["fund_id"]]")
+	var/datum/fund/F = V?.get_linked_fund()
+	var/group = "[params["group"]]"
+	if(!F || !(group in V.allowance_groups))
+		return
+	if(!V.can_issue_loan(H))
+		to_chat(H, span_warning("Only [V.get_authority_label()] may set [V.get_faction_label()]'s withdrawal terms."))
+		return
+	if(isnull(params["amount"]))
+		to_chat(H, span_warning("Set a daily withdrawal limit between 0 and [ALLOWANCE_LIMIT_MAX]m."))
+		return
+	var/limit = round(text2num("[params["amount"]]"))
+	if(limit < 0 || limit > ALLOWANCE_LIMIT_MAX)
+		to_chat(H, span_warning("A daily withdrawal limit must be between 0 and [ALLOWANCE_LIMIT_MAX]m."))
+		return
+	LAZYSET(F.allowance_limits, group, limit)
+	V.log_allowance_policy("[capitalize(group)] daily withdrawal limit set to [limit]m", H)
+	playsound(src, 'sound/misc/beep.ogg', 60, FALSE, -1)
+	log_admin("WITHDRAWAL LIMIT: [key_name(H)] set the [F.name] [group] daily limit to [limit]m.")
+	message_admins("[key_name_admin(H)] set the [F.name] [group] daily withdrawal limit to [limit]m.")
+
+/obj/structure/roguemachine/atm/proc/handle_toggle_withdrawals(mob/living/carbon/human/H, list/params)
+	var/obj/structure/roguemachine/vaultbank/V = SStreasury.find_jawbank_for_fund_id("[params["fund_id"]]")
+	var/datum/fund/F = V?.get_linked_fund()
+	var/group = "[params["group"]]"
+	if(!F || !(group in V.allowance_groups))
+		return
+	if(!V.can_issue_loan(H))
+		to_chat(H, span_warning("Only [V.get_authority_label()] may suspend [V.get_faction_label()]'s withdrawals."))
+		return
+	var/is_suspended = !LAZYACCESS(F.allowance_suspended, group)
+	LAZYSET(F.allowance_suspended, group, is_suspended)
+	var/state_text = is_suspended ? "suspended" : "resumed"
+	V.log_allowance_policy("Withdrawals for [group]s [state_text]", H)
+	playsound(src, 'sound/misc/beep.ogg', 60, FALSE, -1)
+	log_admin("WITHDRAWALS: [key_name(H)] [state_text] [F.name] [group] withdrawals.")
+	message_admins("[key_name_admin(H)] [state_text] [F.name] [group] withdrawals.")
+
 /obj/structure/roguemachine/atm/proc/handle_withdraw_personal(mob/living/carbon/human/H, list/params)
 	var/coin_amt = round(text2num("[params["amount"]]"))
 	var/denom = "[params["denomination"]]"
@@ -279,16 +370,18 @@
 		playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
 		return
 	var/mod = 1
-	if(denom == "GOLD" && SSmapping.config.map_name == "Rockhill") //TA EDIT
+	if(denom == "GOLD" && SSmapping.config.map_name == "Rockhill") // TA EDIT START
 		mod = 14
-	else if(denom == "GOLD") //TA EDIT
+	else if(denom == "GOLD")
 		mod = 10
+	else if(denom == "SILVER" && SSmapping.config.map_name == "Rockhill")
+		mod = 7 // TA EDIT END
 	else if(denom == "SILVER")
 		mod = 5
 	var/total = coin_amt * mod
 	if(SStreasury.get_balance(H) < total)
 		playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
-		to_chat(H, span_warning("Your balance is insufficient."))
+		to_chat(H, span_warning("You don't have enough in your account."))
 		return
 	if(!SStreasury.withdraw_money_account(total, H))
 		playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
@@ -315,7 +408,7 @@
 	var/paid = SStreasury.repay_loan(H, pay_amt)
 	if(!paid)
 		playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
-		say("The ledger refused the transfer.")
+		say("The transfer failed.")
 		return
 	playsound(src, 'sound/misc/coininsert.ogg', 100, FALSE, -1)
 	if(!SStreasury.get_loan_for(H))
@@ -324,51 +417,13 @@
 		var/datum/loan/still = SStreasury.get_loan_for(H)
 		say("[paid]m transferred. [still.get_remaining_due()]m remains.")
 
-/obj/structure/roguemachine/atm/proc/handle_advance_poll_tax(mob/living/carbon/human/H, list/params)
-	var/poll_category = SStreasury.get_poll_tax_category(H)
-	if(!poll_category)
-		say("The Crown does not tax your class.")
-		return
-	if(SStreasury.is_poll_tax_charter_exempt(H, poll_category))
-		say("Your class is exempt from poll tax by decree.")
-		return
-	var/days = round(text2num("[params["days"]]"))
-	if(isnull(days) || days < 1)
-		return
-	var/eff_rate = SStreasury.get_poll_tax_rate_for(H, poll_category)
-	if(eff_rate <= 0)
-		eff_rate = POLL_TAX_ADVANCE_FALLBACK_RATE
-	var/balance = SStreasury.get_balance(H)
-	if(balance <= 0)
-		say("Your balance is nothing.")
-		playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
-		return
-	var/existing = SStreasury.poll_tax_advance_days[H] || 0
-	var/cap_remaining = POLL_TAX_MAX_ADVANCE_DAYS - existing
-	if(cap_remaining <= 0)
-		say("You already hold the maximum [POLL_TAX_MAX_ADVANCE_DAYS] days of advance.")
-		playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
-		return
-	var/affordable = floor(balance / eff_rate)
-	days = min(days, cap_remaining, affordable)
-	if(days < 1)
-		say("You cannot afford a single day at [eff_rate]m.")
-		playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
-		return
-	if(!SStreasury.poll_tax_pay_advance(H, days))
-		playsound(src, 'sound/misc/machineno.ogg', 100, FALSE, -1)
-		say("The ledger refused the advance.")
-		return
-	playsound(src, 'sound/misc/coininsert.ogg', 100, FALSE, -1)
-	say("[days] day\s of poll tax advanced for [H.real_name].")
-
 /obj/structure/roguemachine/atm/proc/handle_withdraw_institutional(mob/living/carbon/human/H, list/params)
 	var/fund_id = "[params["fund_id"]]"
 	var/obj/structure/roguemachine/vaultbank/V = SStreasury.find_jawbank_for_fund_id(fund_id)
 	if(!V)
-		to_chat(H, span_warning("That institution has no coffers to draw from."))
+		to_chat(H, span_warning("That institution has no fund to draw from."))
 		return
-	if(!V.can_withdraw(H))
+	if(!V.can_withdraw(H) && !V.draws_on_allowance(H))
 		to_chat(H, span_warning("You are not authorised to withdraw from [V.get_patron_label() || V.get_faction_label()]."))
 		return
 	V.disburse(H, params)
@@ -377,7 +432,7 @@
 	var/fund_id = "[params["fund_id"]]"
 	var/obj/structure/roguemachine/vaultbank/V = SStreasury.find_jawbank_for_fund_id(fund_id)
 	if(!V)
-		to_chat(H, span_warning("That institution has no coffers to lend from."))
+		to_chat(H, span_warning("That institution has no fund to lend from."))
 		return
 	if(!V.can_issue_loan(H))
 		to_chat(H, span_warning("You are not authorised to draft loans for [V.get_faction_label()]."))
@@ -388,7 +443,7 @@
 	var/fund_id = "[params["fund_id"]]"
 	var/obj/structure/roguemachine/vaultbank/V = SStreasury.find_jawbank_for_fund_id(fund_id)
 	if(!V)
-		to_chat(H, span_warning("That institution has no coffers to lend from."))
+		to_chat(H, span_warning("That institution has no fund to lend from."))
 		return
 	if(!V.can_issue_loan(H))
 		to_chat(H, span_warning("You are not authorised to draft indentures for [V.get_faction_label()]."))

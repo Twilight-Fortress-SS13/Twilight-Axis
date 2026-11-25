@@ -14,6 +14,7 @@ import {
 } from 'react';
 import { type Box, KeyListener } from 'tgui-core/components';
 import { UI_DISABLED, UI_INTERACTIVE } from 'tgui-core/constants';
+import { globalEvents } from 'tgui-core/events';
 import { KEY_ALT } from 'tgui-core/keycodes';
 import { type BooleanLike, classes } from 'tgui-core/react';
 import { decodeHtmlEntities } from 'tgui-core/string';
@@ -37,9 +38,11 @@ const DEFAULT_SIZE: [number, number] = [400, 600];
 type Props = Partial<{
   buttons: ReactNode;
   canClose: BooleanLike;
+  chromeless: boolean;
   height: number;
   theme: string;
   title: string;
+  titleClassName: string;
   width: number;
 }> &
   PropsWithChildren;
@@ -47,8 +50,10 @@ type Props = Partial<{
 export function Window(props: Props) {
   const {
     canClose = true,
+    chromeless = false,
     theme,
     title,
+    titleClassName,
     children,
     buttons,
     width,
@@ -88,6 +93,9 @@ export function Window(props: Props) {
         Byond.winset(Byond.windowId, {
           'is-visible': true,
         });
+        Byond.sendMessage('visible');
+        globalEvents.emit('window-geometry-finished');
+
         logger.log('set to visible');
       };
 
@@ -111,36 +119,44 @@ export function Window(props: Props) {
 
   return suspended ? null : (
     <Layout className="Window" theme={theme || config.window?.theme}>
-      <TitleBar
-        title={title || decodeHtmlEntities(config.title)}
-        status={config.status}
-        onDragStart={dragStartHandler}
-        onClose={suspendStart}
-        canClose={canClose}
-      >
-        {buttons}
-      </TitleBar>
+      {!chromeless && (
+        <TitleBar
+          className={titleClassName}
+          title={title || decodeHtmlEntities(config.title)}
+          status={config.status}
+          onDragStart={dragStartHandler}
+          onClose={suspendStart}
+          canClose={canClose}
+        >
+          {buttons}
+        </TitleBar>
+      )}
       <div
         className={classes([
           'Window__rest',
+          chromeless && 'Window__rest--chromeless',
           debug.debugLayout && 'debug-layout',
         ])}
       >
         {!suspended && children}
         {showDimmer && <div className="Window__dimmer" />}
       </div>
-      <div
-        className="Window__resizeHandle__e"
-        onMouseDown={resizeStartHandler(1, 0) as any}
-      />
-      <div
-        className="Window__resizeHandle__s"
-        onMouseDown={resizeStartHandler(0, 1) as any}
-      />
-      <div
-        className="Window__resizeHandle__se"
-        onMouseDown={resizeStartHandler(1, 1) as any}
-      />
+      {!chromeless && (
+        <>
+          <div
+            className="Window__resizeHandle__e"
+            onMouseDown={resizeStartHandler(1, 0) as any}
+          />
+          <div
+            className="Window__resizeHandle__s"
+            onMouseDown={resizeStartHandler(0, 1) as any}
+          />
+          <div
+            className="Window__resizeHandle__se"
+            onMouseDown={resizeStartHandler(1, 1) as any}
+          />
+        </>
+      )}
     </Layout>
   );
 }
@@ -163,6 +179,18 @@ function WindowContent(props: ContentProps) {
       dragStartHandler(event);
     }
   }
+
+  // Reset alt when alt-tabing
+  useEffect(() => {
+    function onBlur() {
+      setAltDown(false);
+    }
+
+    window.addEventListener('blur', onBlur);
+    return () => {
+      window.removeEventListener('blur', onBlur);
+    };
+  }, []);
 
   Byond.subscribeTo('resetposition', (payload) => {
     setWindowPosition([0, 0]);

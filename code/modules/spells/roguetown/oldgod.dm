@@ -1,7 +1,7 @@
 /datum/action/cooldown/spell/psydon
 	background_icon = 'icons/mob/actions/psydonmiracles.dmi'
 	button_icon = 'icons/mob/actions/psydonmiracles.dmi'
-	spell_color = GLOW_COLOR_ASTRATA
+	spell_color = PATRON_COLOR_PSYDON //the glow is invisible anyway but it's fine
 	glow_intensity = null
 
 	ignore_armor_penalty = TRUE
@@ -25,7 +25,7 @@
 	required_items = list(/obj/item/clothing/neck/roguetown/psicross) //He is dead so yeah we need something to INVOKE IT
 
 /////////////////////
-// T0 - BOOTCHECK  //
+// T0 - BOOTCHECK	//
 /////////////////////
 
 /datum/action/cooldown/spell/psydon/bootcheck
@@ -104,7 +104,7 @@
 	var/obj/item/found_thing
 	if(H.get_stress_amount() < 0 && H.STALUC > 10)
 		found_thing = new /obj/item/roguecoin/gold(T)
-	else if(H.STALUC == 10)
+	else if(H.STALUC >= 10)
 		found_thing = new /obj/item/roguecoin/silver(T)
 	else
 		found_thing = new /obj/item/roguecoin/copper(T)
@@ -128,7 +128,7 @@
 
 /datum/action/cooldown/spell/psydon/endure
 	name = "ENDURE"
-	desc = "Invoke an envigoring prayer for those who're faltering in willpower. </br>‎  </br>Provides minor wound regeneration, staunches the target's bleeding, and helps to alleviate those who're struggling to breathe. The more valuable a caster's psycross is, the more health that is restored unto the target - this is further increased if they have been mortally wounded."
+	desc = "Invoke an envigoring prayer for those who're faltering in willpower. </br>‎	</br>Mends minor wounds, dulls the target's pain, slows their bleeding, and helps to alleviate those who're struggling to breathe. Grievous wounds, such as broken bones and severed arteries, are beyond its reach. The more valuable a caster's psycross is, the more health that is restored unto the target - this is further increased if they have been mortally wounded."
 	button_icon_state = "ENDURE"
 	sound = 'sound/magic/ENDVRE.ogg'
 
@@ -169,7 +169,7 @@
 
 		if(H.patron?.undead_hater && (target.mob_biotypes & MOB_UNDEAD)) // YOU ARE NO LONGER MORTAL. NO LONGER OF HIM. PSYDON WEEPS.
 			// We do nothing to avoid meta checking for undead
-			target.visible_message(span_info("A strange stirring feeling pours from [target]!"), span_info("Sentimental thoughts drive away my pain..."))		
+			target.visible_message(span_info("A strange stirring feeling pours from [target]!"), span_info("Sentimental thoughts drive away my pain..."))
 			return TRUE
 		if(HAS_TRAIT(target, TRAIT_UNFORGIVABLE)) //ANCIENT ENEMY, I DO NOT FEAR YOU.
 			target.visible_message(span_info("[target] stirs for a moment, the miracle is reformed into unmaking flame!"), span_notice("A dull warmth passes through your hollow husk of a body, only to be corrupted and rebuked back at its caster!"))
@@ -178,7 +178,7 @@
 			H.adjust_fire_stacks(8, /datum/status_effect/fire_handler/fire_stacks/vheslyn) //Unique violet firestacks, ANCIENT ENEMY
 			H.ignite_mob()
 			H.adjustBruteLoss(25)
-			owner.visible_message(span_warning("[owner] shuddered. Something's very wrong."), span_userdanger("Cold shoots through my spine, yet my body catches aflame. a feeling of ominious dread washes over me."))
+			owner.visible_message(span_warning("[owner] shuddered. Something's very wrong."), span_userdanger("Cold shoots through my spine, yet my body catches aflame. a feeling of ominous dread washes over me."))
 			return TRUE
 
 		// Bonuses! Flavour! SOVL!
@@ -200,29 +200,29 @@
 					sleep(10)
 					owner.gib()
 					return FALSE
-				
+
 				switch(current_item.type) // Target-based worn Psicross Piety bonus. For fun.
 					if(/obj/item/clothing/neck/roguetown/psicross/wood)
-						psicross_bonus = 0.1				
+						psicross_bonus = 0.1
 					if(/obj/item/clothing/neck/roguetown/psicross/aalloy)
-						psicross_bonus = 0.2	
+						psicross_bonus = 0.2
 					if(/obj/item/clothing/neck/roguetown/psicross)
 						psicross_bonus = 0.3
 					if(/obj/item/clothing/neck/roguetown/psicross/silver)
-						psicross_bonus = 0.4	
+						psicross_bonus = 0.4
 					if(/obj/item/clothing/neck/roguetown/psicross/g) // PURITY AFLOAT.
 						psicross_bonus = 0.5
 					if(/obj/item/clothing/neck/roguetown/psicross/weeping)
 						psicross_bonus = 0.7
 					if(/obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy)
-						zcross_trigger = TRUE	
+						zcross_trigger = TRUE
 
 		if(damtotal >= 300) // ARE THEY ENDURING MUCH, IN ONE WAY OR ANOTHER?
 			situational_bonus += 0.3
 
-		if(wAmount.len > 5)	
-			situational_bonus += 0.3		
-	
+		if(wAmount.len > 5)
+			situational_bonus += 0.3
+
 		if (situational_bonus > 0)
 			conditional_buff = TRUE
 
@@ -232,17 +232,15 @@
 		if (conditional_buff & !zcross_trigger)
 			to_chat(owner, "In <b>ENDURING</b> so much, become <b>EMBOLDENED</b>!")
 			psyhealing += situational_bonus
-	
+
 		if (zcross_trigger)
 			owner.visible_message(span_warning("[owner] shuddered. Something's very wrong."), span_userdanger("Cold shoots through my spine. Something laughs at me for trying."))
 			owner.playsound_local(owner, 'sound/misc/zizo.ogg', 25, FALSE)
-			H.adjustBruteLoss(25)		
+			H.adjustBruteLoss(25)
 			return FALSE
 
 		target.apply_status_effect(/datum/status_effect/buff/psyhealing, psyhealing)
-		for(var/datum/wound/W as anything in wAmount)
-			if(W?.bleed_rate > 0)
-				W.set_bleed_rate(0)
+		target.apply_status_effect(/datum/status_effect/buff/adrenaline_rush/psydon)
 
 		return TRUE
 
@@ -254,7 +252,7 @@
 
 /datum/action/cooldown/spell/psydon/prayer
 	name = "PRAYER"
-	desc = "Recite a psalm betwixt huffs, so that your wits do not succumb to more worldly ailments. </br>‎  </br>Provides minor health regeneration while standing still. The more damage that a caster has sustained - and the more valuable that their worn psycross is, the more health that they'll regenerate with each cycle."
+	desc = "Recite a psalm betwixt huffs, so that your wits do not succumb to more worldly ailments. </br>‎	</br>Provides minor health regeneration while standing still. The more damage that a caster has sustained - and the more valuable that their worn psycross is, the more health that they'll regenerate with each cycle."
 	button_icon_state = "PRAYER"
 	sound = null
 
@@ -364,7 +362,7 @@
 
 /datum/action/cooldown/spell/psydon/respite
 	name = "RESPITE"
-	desc = "Gather yourself, so that you may ready yourself for whatever lies next. </br>‎  </br>Provides health regeneration while standing still. The more damage that a caster has sustained - and the more valuable that their worn psycross is, the more health that they'll regenerate with each cycle."
+	desc = "Gather yourself, so that you may ready yourself for whatever lies next. </br>‎	</br>Provides health regeneration while standing still. The more damage that a caster has sustained - and the more valuable that their worn psycross is, the more health that they'll regenerate with each cycle."
 	button_icon_state = "RESPITE"
 	sound = null
 
@@ -474,7 +472,7 @@
 
 /datum/action/cooldown/spell/psydon/persist
 	name = "PERSIST"
-	desc = "Gather yourself, so that you may ready yourself for whatever lies next. </br>‎  </br>Provides health regeneration while standing still. The more damage that a caster has sustained - and the more valuable that their worn psycross is, the more health that they'll regenerate with each cycle."
+	desc = "Gather yourself, so that you may ready yourself for whatever lies next. </br>‎	</br>Provides health regeneration while standing still. The more damage that a caster has sustained - and the more valuable that their worn psycross is, the more health that they'll regenerate with each cycle."
 	button_icon_state = "PERSIST"
 	sound = null
 
@@ -580,43 +578,55 @@
 
 //
 
-/obj/effect/proc_holder/spell/invoked/psydonlux_tamper
+/datum/action/cooldown/spell/psydon/lux
+	click_to_activate = TRUE
+	cast_range = 3
+	self_cast_possible = FALSE
+	required_items = null
+	charge_required = TRUE
+	channel_cast = TRUE
+	charge_swingdelay_type = SWINGDELAY_NORMAL // TA EDIT
+	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z | SPELL_REQUIRES_NO_MOVE
+	cooldown_time = 30 SECONDS
+
+// TA EDIT - Lux miracles no longer require Golgatha.
+
+/datum/action/cooldown/spell/psydon/lux/do_after_checks(mob/owner, atom/cast_on)
+	. = ..()
+	if(. && world.time >= next_hold_shake)
+		var/mob/living/L = owner
+		L.do_jitter_animation(100)
+		next_hold_shake = world.time + 1.4 SECONDS
+
+/datum/action/cooldown/spell/psydon/lux/weep
 	name = "WEEP"
-	action_icon = 'icons/mob/actions/psydonmiracles.dmi'
-	overlay_icon = 'icons/mob/actions/psydonmiracles.dmi'
-	overlay_state = "WEEP" //Absolver-exclusive. Classified as 'lux-magicka', rather than a traditional miracle. Same line of thought as the Naledians.
-	releasedrain = 33
-	chargedrain = 0
-	chargetime = 0
-	range = 3
-	warnie = "sydwarning"
-	desc = "Lesser lux-magicka. Endure the wounds of another, for their sake. </br>‎  </br>Siphons away lesser injuries, such as gashes and fractures, from the target. In exchange, any siphoned injuries are subsequently imposed onto you. If the target has lost any blood, they will be fully replenished through your own veins."
-	movement_interrupt = FALSE
+	button_icon_state = "WEEP" //Absolver-exclusive. Classified as 'lux-magicka', rather than a traditional miracle. Same line of thought as the Naledians.
+	// TA EDIT START
+	desc = "Lesser lux-magicka. Endure the wounds of another, for their sake. \
+		<br><br>Siphons away lesser injuries, such as gashes and fractures, \
+		from the target. In exchange, any siphoned injuries are subsequently \
+		imposed onto you. If the target has lost any blood, they will be fully \
+		replenished through your own veins. <br><br>Requires a stationary \
+		3-second channel."
+	// TA EDIT END
 	sound = 'sound/magic/psydonbleeds.ogg'
-	associated_skill = /datum/skill/magic/holy
-	antimagic_allowed = FALSE
-	recharge_time = 30 SECONDS
-	miracle = TRUE
-	devotion_cost = 80
+	primary_resource_cost = 80
+	secondary_resource_cost = 33
+	charge_time = 3 SECONDS
 
-/obj/effect/proc_holder/spell/invoked/psydonlux_tamper/cast(list/targets, mob/living/user)
+/datum/action/cooldown/spell/psydon/lux/weep/cast(atom/cast_on)
+	. = ..()
+	var/mob/living/user = owner
 
-	if(!ishuman(targets[1]))
+	if(!ishuman(cast_on))
 		to_chat(user, span_warning("Their Lux cannot be interacted with."))
-		revert_cast()
 		return FALSE
 
-	var/mob/living/carbon/human/H = targets[1]
-
-	if(H == user)
-		to_chat(user, span_warning("I cannot interact with my own Lux."))
-		revert_cast()
-		return FALSE
+	var/mob/living/carbon/human/H = cast_on
 
 	if(!H.key && !H.get_ghost(FALSE, TRUE))
 		to_chat(user, span_warning("[H] is irreversibly gone... There's nothing we can do to bring them back anymore!"))
 		user.emote("cry")
-		revert_cast()
 
 	if(HAS_TRAIT(H, TRAIT_UNFORGIVABLE)) //ANCIENT ENEMY, I DO NOT FEAR YOU.
 		H.visible_message(span_info("[H] stirs for a moment, the miracle is reformed into unmaking flame!"), span_notice("A dull warmth passes through your hollow husk of a body, only to be corrupted and rebuked back at its caster!"))
@@ -631,16 +641,14 @@
 		if(!HAS_TRAIT(user, TRAIT_NOMOOD))
 			user.freak_out()
 		to_chat(user, span_userdanger("I recoil as I'm violently SMITED by profane flame as I attempt to purify their lux by the merging of-.. wait, where's THEIR LUX?!"))
-		return
+		return FALSE
 
 	if(H.stat == DEAD || HAS_TRAIT(H, TRAIT_DEADITE))
 		to_chat(user, span_warning("[H]'s Lux is extinguished... What can I do?!"))
 		user.emote("cry")
-		revert_cast()
 		return FALSE
 
 	if(!ishuman(user))
-		revert_cast()
 		return FALSE
 
 	var/mob/living/carbon/human/C_target = H
@@ -652,7 +660,7 @@
 	if(HAS_TRAIT(H, TRAIT_NOHEAL))
 		H.visible_message(span_artery("--But their Lux is forcefully repelled for some reason!"))
 		H.playsound_local(H, 'sound/magic/PSY.ogg', 100, FALSE, -1)
-		return
+		return FALSE
 
 	if(user.cmode)
 		user.say(pick("RESPITE FOR THY WOUNDS!", "BLEED STANDING!", "I BLEED SO YOU MAY ENDURE!", "PERSIST AGAINST THE PAIN!","LET YOUR WOUNDS WEEP NO MORE!","THIS IS OUR TRIAL!"))
@@ -662,6 +670,14 @@
 		user.say(pick("Psydon endures, so we must!","May your wounds weep no more!","Psydon provides respite for thy wounds!","I shall endure for you!","Allfather, let me bleed in their stead!"))
 		if(HAS_TRAIT(user, TRAIT_IRONMAN))
 			user.adjustFireLoss(25)
+
+	// CMODE FATIGUE TRANSFER
+	if(H.has_status_effect(/datum/status_effect/debuff/critwounded))
+		user.apply_status_effect(/datum/status_effect/debuff/critwounded)
+		H.remove_status_effect(/datum/status_effect/debuff/critwounded)
+		to_chat(H, span_blue("I feel the daze of being critically wounded lift from my body."))
+		if(!user.has_status_effect(/datum/status_effect/debuff/critwounded))
+			to_chat(user, span_artery("I feel myself clouded with dizziness and fatigue as I connect my lux with [H]'s'."))
 
 	// WOUND TRANSFER
 	for(var/datum/wound/targetwound in tw_List)
@@ -703,7 +719,7 @@
 			if(!(c_BP in BPs_to_check))
 				LAZYADD(BPs_to_check, c_BP)
 
-		if((HAS_TRAIT(C_caster, TRAIT_NOPAIN) || HAS_TRAIT(C_caster, TRAIT_NOPAINSTUN)) && HAS_TRAIT(C_caster, TRAIT_BLOODLOSS_IMMUNE))
+		if((HAS_TRAIT(C_caster, TRAIT_NOPAIN) || HAS_TRAIT(C_caster, TRAIT_NOPAINSTUN)) && HAS_TRAIT(C_caster, TRAIT_BLOODLOSS_IMMUNE) && HAS_TRAIT(C_caster, TRAIT_IRONMAN))
 			if(!(c_BP in BPs_to_check))
 				c_BP.receive_damage(targetwound.whp)
 				LAZYADD(BPs_to_check, c_BP)
@@ -784,38 +800,34 @@
 
 //
 
-/obj/effect/proc_holder/spell/invoked/psydonabsolve	
+/datum/action/cooldown/spell/psydon/lux/absolve
 	name = "ABSOLVE"
-	action_icon = 'icons/mob/actions/psydonmiracles.dmi'
-	overlay_icon = 'icons/mob/actions/psydonmiracles.dmi'
-	overlay_state = "ABSOLVE" //Absolver-exclusive. Classified as 'lux-magicka', rather than a traditional miracle. Same line of thought as the Naledians.
-	desc = "Greater lux-magicka. Exchange your vitality for the sake of another. </br>‎  </br>Siphons away all injuries - be it physical damage, blood loss, or dismemberment - from the target, completely healing them. In exchange, all siphoned injuries are subsequently inflicted unto you. Using this on a target who's dead will fully resurrect them, albeit at the cost of your own lyfe."
-	releasedrain = 50
-	chargedrain = 0
-	chargetime = 0
-	range = 3
-	warnie = "sydwarning"
-	movement_interrupt = FALSE
+	button_icon_state = "ABSOLVE" //Absolver-exclusive. Classified as 'lux-magicka', rather than a traditional miracle. Same line of thought as the Naledians.
+	// TA EDIT START
+	desc = "Greater lux-magicka. Exchange your vitality for the sake of \
+		another. <br><br>Siphons away all injuries - be it physical damage, \
+		blood loss, or dismemberment - from the target, completely healing \
+		them. In exchange, all siphoned injuries are subsequently inflicted \
+		unto you. Using this on a target who's dead will fully resurrect them, \
+		albeit at the cost of your own lyfe. <br><br>Requires a stationary \
+		5-second channel."
+	// TA EDIT END
 	sound = 'sound/magic/psyabsolution.ogg'
-	associated_skill = /datum/skill/magic/holy
-	antimagic_allowed = FALSE
-	recharge_time = 30 SECONDS // 60 seconds cooldown
-	miracle = TRUE
-	devotion_cost = 100
+	primary_resource_cost = 100
+	secondary_resource_cost = 50
+	charge_time = 5 SECONDS
+	/// Whether the caster agreed to trade their lyfe for a dead target this cast
+	var/reviving = FALSE
 
-/obj/effect/proc_holder/spell/invoked/psydonabsolve/cast(list/targets, mob/living/user)
-
-	if(!ishuman(targets[1]))
-		to_chat(user, span_warning("ABSOLUTION is for those who walk in HIS image!"))
-		revert_cast()
-		return FALSE
-
-	if(!ishuman(user))
-		revert_cast()
-		return FALSE
-
-	var/mob/living/carbon/human/H = targets[1]
-	var/mob/living/carbon/human/C = user
+/datum/action/cooldown/spell/psydon/lux/absolve/before_cast(atom/cast_on)
+	reviving = FALSE
+	var/mob/living/carbon/human/H = cast_on
+	var/mob/living/carbon/human/C = owner
+	if(!istype(H) || !istype(C))
+		to_chat(owner, span_warning("ABSOLUTION is for those who walk in HIS image!"))
+		return SPELL_CANCEL_CAST
+	if(get_dist(C, H) > cast_range)
+		return ..()
 
 	// CONSEQUENCE WARNING CHECKS
 
@@ -849,37 +861,44 @@
 		messages += "Continue?"
 
 		if(alert(C, messages.Join("\n"), "ABSOLUTION WARNING", "YES", "NO") != "YES")
-			revert_cast()
-			return FALSE
+			return SPELL_CANCEL_CAST
 
-	if(H == C)
-		to_chat(C, span_warning("You cannot ABSOLVE yourself!"))
-		revert_cast()
-		return FALSE
-
-	H.visible_message(span_red("[user] <i>dangerously</i> connects their Lux with [H]'s own."))
+	H.visible_message(span_red("[C] <i>dangerously</i> connects their Lux with [H]'s own."))
 
 	if(HAS_TRAIT(H, TRAIT_NOHEAL))
 		H.visible_message(span_artery("--But their Lux is forcefully repelled for some reason!"))
 		H.playsound_local(H, 'sound/magic/PSY.ogg', 100, FALSE, -1)
+		return SPELL_CANCEL_CAST
+
+	if(H.stat >= DEAD)
+		if(!H.key && !H.get_ghost(FALSE, TRUE))
+			to_chat(C, span_warning("[H] is irreversibly gone... there's nothing we can do to bring them back anymore!"))
+			C.emote("cry")
+			return SPELL_CANCEL_CAST
+		if(!H.check_revive(C))
+			return SPELL_CANCEL_CAST
+		if(alert(C,"REACH OUT AND PULL?","THERE'S NO LUX IN THERE","YES","NO") != "YES")
+			return SPELL_CANCEL_CAST
+		C.visible_message(span_danger("[C] grabs [H] by the wrists, attempting to ABSOLVE them!"))
+		C.emote("whimper")
+		if(alert(H,"They want to ABSOLVE you. Will you let them?","ABSOLUTION","I accept!","I refuse..") != "I accept!")
+			return SPELL_CANCEL_CAST
+		reviving = TRUE
+
+	return ..()
+
+/datum/action/cooldown/spell/psydon/lux/absolve/cast(atom/cast_on)
+	. = ..()
+	var/mob/living/carbon/human/H = cast_on
+	var/mob/living/carbon/human/C = owner
+	var/mob/living/user = owner
+	if(!istype(H) || !istype(C))
 		return FALSE
 
 	// REVIVE PATH
 	if(H.stat >= DEAD)
-		if(!H.key && !H.get_ghost(FALSE, TRUE))
-			to_chat(user, span_warning("[H] is irreversibly gone... there's nothing we can do to bring them back anymore!"))
-			user.emote("cry")
-			revert_cast()
-			return FALSE
-		if(!H.check_revive(C))
-			revert_cast()
-			return FALSE
-		if(alert(C,"REACH OUT AND PULL?","THERE'S NO LUX IN THERE","YES","NO") != "YES")
-			revert_cast()
-			return FALSE
-		C.visible_message(span_danger("[C] grabs [H] by the wrists, attempting to ABSOLVE them!"))
-		C.emote("whimper")
-		if(alert(H,"They want to ABSOLVE you. Will you let them?","ABSOLUTION","I accept!","I refuse..") != "I accept!")
+		if(!reviving)
+			to_chat(C, span_warning("[H]'s Lux slipped away before I could reach it..."))
 			return FALSE
 		H.apply_status_effect(/datum/status_effect/buff/psyvived)
 		C.say("MY LYFE FOR YOURS! LYVE, AS DOES HE!", forced=TRUE, language=/datum/language/common)
@@ -899,6 +918,9 @@
 		H.mind.remove_antag_datum(/datum/antagonist/zombie)
 		H.remove_status_effect(/datum/status_effect/debuff/rotted_zombie)	//Removes the rotted-zombie debuff if they have it - Failsafe for it.
 		H.apply_status_effect(/datum/status_effect/debuff/revived)	//Temp debuff on revive, your stats get hit temporarily. Doubly so if having rotted.
+		if(HAS_TRAIT(H, TRAIT_IRONMAN))
+			H.apply_status_effect(/datum/status_effect/debuff/integrity_rig, 11 MINUTES)
+			H.visible_message(span_danger("[H] is looking on the verge of exploding again! Their core may need an extra whack from a hammer."))
 		return TRUE
 
 	if(user.cmode)
@@ -960,6 +982,14 @@
 		if(tBP)
 			tBP.remove_wound(W.type)
 
+	// CMODE FATIGUE TRANSFER
+	if(H.has_status_effect(/datum/status_effect/debuff/critwounded))
+		C.apply_status_effect(/datum/status_effect/debuff/critwounded)
+		H.remove_status_effect(/datum/status_effect/debuff/critwounded)
+		to_chat(H, span_blue("I feel the daze of being critically wounded lift from my body."))
+		if(!user.has_status_effect(/datum/status_effect/debuff/critwounded))
+			to_chat(user, span_artery("I feel myself clouded with dizziness and fatigue as I connect my lux with [H]'s'."))
+
 	// DAMAGE TRANSFER
 	var/brute_transfer = H.getBruteLoss()
 	var/burn_transfer = H.getFireLoss()
@@ -1001,6 +1031,9 @@
 
 			if(C.blood_volume <= 0)
 				C.blood_volume = BLOOD_VOLUME_SURVIVE
+
+	H.remove_CC()
+	H.update_stat()
 
 	// VISUALS
 	C.visible_message(span_danger("[C] absolves [H]'s suffering!"))

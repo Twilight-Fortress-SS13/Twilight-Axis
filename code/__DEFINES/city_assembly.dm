@@ -12,7 +12,7 @@
 #define ASSEMBLY_WEIGHT_4 8
 
 // Removal motion floors (doubled weight + mob count).
-#define ASSEMBLY_REMOVAL_WEIGHT_FLOOR 8   // i.e. 4 in displayed terms
+#define ASSEMBLY_REMOVAL_WEIGHT_FLOOR 8	// i.e. 4 in displayed terms
 #define ASSEMBLY_REMOVAL_MOB_FLOOR 2
 
 // Session-wide quorum: minimum distinct voters across all motions. Below this, status quo.
@@ -35,17 +35,10 @@
 #define ASSEMBLY_TRADE_BRACKETS list(0, 150, 300, 450, 600, 750, 900)
 // Defense authority brackets, in burgher pledge equivalent/day.
 #define ASSEMBLY_DEFENSE_BRACKETS list(0, 250, 500, 750, 1000)
-// Poll tax brackets, in mammon/payer (per levy).
-#define ASSEMBLY_POLL_BRACKETS list(0, 5, 10, 15, 20)
-
-// Poll-tax -> pledge fund magic multiplier. Intentional mint-knob.
-#define ASSEMBLY_POLL_PLEDGE_MULTIPLIER 2
-
 // Motion ids.
 #define ASSEMBLY_MOTION_ELECTION "election"
 #define ASSEMBLY_MOTION_TRADE_AUTH "trade_auth"
 #define ASSEMBLY_MOTION_DEFENSE_AUTH "defense_auth"
-#define ASSEMBLY_MOTION_POLL_TAX "poll_tax"
 #define ASSEMBLY_MOTION_RECALL "recall"
 #define ASSEMBLY_MOTION_CENSURE "censure"
 
@@ -62,9 +55,6 @@
 #define ASSEMBLY_SESSION_OPEN "open"
 #define ASSEMBLY_SESSION_RESOLVED "resolved"
 
-// Poll tax debt behavior on failure: if payer cannot afford, skip quietly (no trait/debt).
-#define ASSEMBLY_POLL_SKIP_INSOLVENT TRUE
-
-// These jobs cannot hold office due to abuse potentials by 
+// These jobs cannot hold office due to abuse potentials by
 // direct import / export that benefits their roles massively
 #define ASSEMBLY_OFFICE_INELIGIBLE_JOBS list("Merchant", "Shophand", "Bathmaster", "Bathhouse Attendant")

@@ -43,6 +43,20 @@
 	verbage = "strings together"
 	craftdiff = 2
 
+/datum/crafting_recipe/roguetown/survival/hornbow
+	name = "horn bow"
+	display_category = ITEM_CAT_WEAPONS_AMMO
+	category = "Ranged"
+	result = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve/goat
+	reqs = list(
+		/obj/item/natural/bowstring = 1,
+		/obj/item/natural/goathorn = 1,
+		)
+	verbage_simple = "string together"
+	verbage = "strings together"
+	// Components are difficult enough to obtain
+	craftdiff = 2
+
 /datum/crafting_recipe/roguetown/survival/recurvepartial
 	name = "unstrung recurve bow"
 	display_category = ITEM_CAT_WEAPONS_AMMO
@@ -73,7 +87,7 @@
 	craftdiff = 3
 
 /datum/crafting_recipe/roguetown/survival/longbowpartial
-	name = "unstrung long bow"
+	name = "unstrung longbow"
 	display_category = ITEM_CAT_WEAPONS_AMMO
 	category = "Ranged"
 	result = /obj/item/grown/log/tree/bowpartial/longbow
@@ -89,7 +103,7 @@
 	craftdiff = 4
 
 /datum/crafting_recipe/roguetown/survival/longbow
-	name = "long bow"
+	name = "longbow"
 	display_category = ITEM_CAT_WEAPONS_AMMO
 	category = "Ranged"
 	result = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/longbow
@@ -100,6 +114,20 @@
 	verbage_simple = "string together"
 	verbage = "strings together"
 	craftdiff = 4
+
+/datum/crafting_recipe/roguetown/survival/huntinglongbow
+	name = "hunting longbow"
+	display_category = ITEM_CAT_WEAPONS_AMMO
+	category = "Ranged"
+	result = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/longbow/towner
+	reqs = list(
+		/obj/item/gun/ballistic/revolver/grenadelauncher/bow/longbow = 1,
+		/obj/item/gun/ballistic/revolver/grenadelauncher/bow/towner = 1,
+		/obj/item/natural/silk = 1,
+	)
+	verbage_simple = "re-string"
+	verbage = "re-strings"
+	craftdiff = 2
 
 /datum/crafting_recipe/roguetown/survival/longbow_warden
 	name = "blackhorn longbow"
@@ -125,8 +153,8 @@
 		)
 	req_table = TRUE
 
-/datum/crafting_recipe/roguetown/survival/stonearrow_five
-	name = "stone arrow (x5)"
+/datum/crafting_recipe/roguetown/survival/stonearrow_six
+	name = "stone arrow (x6)"
 	display_category = ITEM_CAT_WEAPONS_AMMO
 	category = "Ranged"
 	result = list(
@@ -134,11 +162,12 @@
 		/obj/item/ammo_casing/caseless/rogue/arrow/stone,
 		/obj/item/ammo_casing/caseless/rogue/arrow/stone,
 		/obj/item/ammo_casing/caseless/rogue/arrow/stone,
-		/obj/item/ammo_casing/caseless/rogue/arrow/stone
+		/obj/item/ammo_casing/caseless/rogue/arrow/stone,
+		/obj/item/ammo_casing/caseless/rogue/arrow/stone,
 		)
 	reqs = list(
-		/obj/item/grown/log/tree/stick = 5,
-		/obj/item/natural/stone = 5,
+		/obj/item/grown/log/tree/stick = 6,
+		/obj/item/natural/stone = 6,
 		)
 	req_table = TRUE
 
@@ -153,8 +182,8 @@
 	)
 	req_table = TRUE
 
-/datum/crafting_recipe/roguetown/survival/bluntarrow_five
-	name = "blunt arrow (x5)"
+/datum/crafting_recipe/roguetown/survival/bluntarrow_six
+	name = "blunt arrow (x6)"
 	display_category = ITEM_CAT_WEAPONS_AMMO
 	category = "Ranged"
 	result = list(
@@ -163,10 +192,11 @@
 		/obj/item/ammo_casing/caseless/rogue/arrow/blunt,
 		/obj/item/ammo_casing/caseless/rogue/arrow/blunt,
 		/obj/item/ammo_casing/caseless/rogue/arrow/blunt,
-	)
+		/obj/item/ammo_casing/caseless/rogue/arrow/blunt,
+		)
 	reqs = list(
-		/obj/item/grown/log/tree/stick = 5,
-		/obj/item/natural/stone = 5,
+		/obj/item/grown/log/tree/stick = 6,
+		/obj/item/natural/stone = 6,
 		)
 	req_table = TRUE
 
@@ -203,11 +233,12 @@
 				)
 	req_table = TRUE
 
-/datum/crafting_recipe/roguetown/survival/poisonarrow_five //Arrows and bolts can be smithed in batches of five. Makes sense for them to be dipped in batches of five, too
-	name = "poisoned arrow (x5)"
+/datum/crafting_recipe/roguetown/survival/poisonarrow_six
+	name = "poisoned arrow (x6)"
 	display_category = ITEM_CAT_WEAPONS_AMMO
 	category = "Ranged"
 	result = list(
+		/obj/item/ammo_casing/caseless/rogue/arrow/poison,
 		/obj/item/ammo_casing/caseless/rogue/arrow/poison,
 		/obj/item/ammo_casing/caseless/rogue/arrow/poison,
 		/obj/item/ammo_casing/caseless/rogue/arrow/poison,
@@ -215,17 +246,17 @@
 		/obj/item/ammo_casing/caseless/rogue/arrow/poison,
 		)
 	reqs = list(
-		/obj/item/ammo_casing/caseless/rogue/arrow/iron = 5,
-		/datum/reagent/stampoison = 25,
+		/obj/item/ammo_casing/caseless/rogue/arrow/iron = 6,
+		/datum/reagent/stampoison = 30,
 		)
-
 	req_table = TRUE
 
-/datum/crafting_recipe/roguetown/survival/poisonarrow_five_stone
-	name = "poisoned stone arrow (x5)"
+/datum/crafting_recipe/roguetown/survival/poisonarrow_six_stone
+	name = "poisoned stone arrow (x6)"
 	display_category = ITEM_CAT_WEAPONS_AMMO
 	category = "Ranged"
 	result = list(
+		/obj/item/ammo_casing/caseless/rogue/arrow/stone/poison,
 		/obj/item/ammo_casing/caseless/rogue/arrow/stone/poison,
 		/obj/item/ammo_casing/caseless/rogue/arrow/stone/poison,
 		/obj/item/ammo_casing/caseless/rogue/arrow/stone/poison,
@@ -233,15 +264,14 @@
 		/obj/item/ammo_casing/caseless/rogue/arrow/stone/poison,
 		)
 	reqs = list(
-		/obj/item/ammo_casing/caseless/rogue/arrow/stone = 5,
-		/datum/reagent/stampoison = 25,
+		/obj/item/ammo_casing/caseless/rogue/arrow/stone = 6,
+		/datum/reagent/stampoison = 30,
 		)
-
 	req_table = TRUE
 
 
-/datum/crafting_recipe/roguetown/survival/waterbolt_ten
-	name = "water bolt (x10)"
+/datum/crafting_recipe/roguetown/survival/waterbolt_eight
+	name = "water bolt (x8)"
 	display_category = ITEM_CAT_WEAPONS_AMMO
 	category = "Ranged"
 	result = list(
@@ -253,27 +283,20 @@
 		/obj/item/ammo_casing/caseless/rogue/bolt/water,
 		/obj/item/ammo_casing/caseless/rogue/bolt/water,
 		/obj/item/ammo_casing/caseless/rogue/bolt/water,
-		/obj/item/ammo_casing/caseless/rogue/bolt/water,
-		/obj/item/ammo_casing/caseless/rogue/bolt/water,
-	)
+		)
 	reqs = list(
 		/obj/item/natural/glass_shard = 1,
-		/obj/item/grown/log/tree/stick = 10,
+		/obj/item/grown/log/tree/stick = 8,
 		)
 	req_table = TRUE
 	craftdiff = 0
 	skillcraft = /datum/skill/craft/engineering
 
-/datum/crafting_recipe/roguetown/survival/waterbolt_twenty
-	name = "water bolt (x20)"
+/datum/crafting_recipe/roguetown/survival/waterbolt_sixteen
+	name = "water bolt (x16)"
 	display_category = ITEM_CAT_WEAPONS_AMMO
 	category = "Ranged"
 	result = list(
-		/obj/item/ammo_casing/caseless/rogue/bolt/water,
-		/obj/item/ammo_casing/caseless/rogue/bolt/water,
-		/obj/item/ammo_casing/caseless/rogue/bolt/water,
-		/obj/item/ammo_casing/caseless/rogue/bolt/water,
-		/obj/item/ammo_casing/caseless/rogue/bolt/water,
 		/obj/item/ammo_casing/caseless/rogue/bolt/water,
 		/obj/item/ammo_casing/caseless/rogue/bolt/water,
 		/obj/item/ammo_casing/caseless/rogue/bolt/water,
@@ -293,17 +316,19 @@
 		)
 	reqs = list(
 		/obj/item/natural/glass_shard = 2,
-		/obj/item/grown/log/tree/stick = 10,
+		/obj/item/grown/log/tree/stick = 16,
 		)
 	req_table = TRUE
 	craftdiff = 0
 	skillcraft = /datum/skill/craft/engineering
 
-/datum/crafting_recipe/roguetown/survival/waterarrow_ten
-	name = "water arrow (x10)"
+/datum/crafting_recipe/roguetown/survival/waterarrow_twelve
+	name = "water arrow (x12)"
 	display_category = ITEM_CAT_WEAPONS_AMMO
 	category = "Ranged"
 	result = list(
+		/obj/item/ammo_casing/caseless/rogue/arrow/water,
+		/obj/item/ammo_casing/caseless/rogue/arrow/water,
 		/obj/item/ammo_casing/caseless/rogue/arrow/water,
 		/obj/item/ammo_casing/caseless/rogue/arrow/water,
 		/obj/item/ammo_casing/caseless/rogue/arrow/water,
@@ -317,17 +342,21 @@
 		)
 	reqs = list(
 		/obj/item/natural/glass_shard = 1,
-		/obj/item/grown/log/tree/stick = 10,
+		/obj/item/grown/log/tree/stick = 12,
 		)
 	req_table = TRUE
 	craftdiff = 0
 	skillcraft = /datum/skill/craft/engineering
 
-/datum/crafting_recipe/roguetown/survival/waterarrow_twenty
-	name = "water arrow (x20)"
+/datum/crafting_recipe/roguetown/survival/waterarrow_sheaf
+	name = "water arrow (x24)"
 	display_category = ITEM_CAT_WEAPONS_AMMO
 	category = "Ranged"
 	result = list(
+		/obj/item/ammo_casing/caseless/rogue/arrow/water,
+		/obj/item/ammo_casing/caseless/rogue/arrow/water,
+		/obj/item/ammo_casing/caseless/rogue/arrow/water,
+		/obj/item/ammo_casing/caseless/rogue/arrow/water,
 		/obj/item/ammo_casing/caseless/rogue/arrow/water,
 		/obj/item/ammo_casing/caseless/rogue/arrow/water,
 		/obj/item/ammo_casing/caseless/rogue/arrow/water,
@@ -351,7 +380,7 @@
 		)
 	reqs = list(
 		/obj/item/natural/glass_shard = 2,
-		/obj/item/grown/log/tree/stick = 20,
+		/obj/item/grown/log/tree/stick = 24,
 		)
 	req_table = TRUE
 	craftdiff = 0
@@ -464,7 +493,7 @@
 	verbage_simple = "twist"
 	verbage = "twists"
 	craftdiff = 1 //you should make some ammo first!
-	
+
 /datum/crafting_recipe/roguetown/survival/slingpouchcraft
 	name = "sling bullet pouch"
 	display_category = ITEM_CAT_WEAPONS_AMMO
@@ -490,7 +519,7 @@
 	verbage_simple = "smooth"
 	verbage = "smooths"
 	craftdiff = 0
-	
+
 /datum/crafting_recipe/roguetown/survival/stonebullets10x
 	name = "sling bullets - stone (x10)"
 	display_category = ITEM_CAT_WEAPONS_AMMO
@@ -521,7 +550,7 @@
 				/obj/item/ammo_casing/caseless/rogue/stake/silver,
 				/obj/item/ammo_casing/caseless/rogue/stake/silver,
 				)
-	reqs = list(/obj/item/rogueweapon/huntingknife/idagger/silver/stake = 1)
+	reqs = list(/obj/item/rogueweapon/huntingknife/idagger/steel/silver/stake = 1)
 	structurecraft = /obj/machinery/light/rogue
 	craftdiff = 0
 	craftsound = 'sound/misc/frying.ogg'
@@ -535,7 +564,7 @@
 				/obj/item/ammo_casing/caseless/rogue/stake/silver,
 				/obj/item/ammo_casing/caseless/rogue/stake/silver,
 				)
-	reqs = list(/obj/item/rogueweapon/huntingknife/idagger/silver/stake/psy = 1)
+	reqs = list(/obj/item/rogueweapon/huntingknife/idagger/steel/silver/stake/psy = 1)
 	structurecraft = /obj/machinery/light/rogue
 	craftdiff = 0
 	craftsound = 'sound/misc/frying.ogg'

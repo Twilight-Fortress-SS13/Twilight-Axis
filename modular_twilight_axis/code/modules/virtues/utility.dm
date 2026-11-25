@@ -2,6 +2,9 @@
 	. = ..()
 	if(visualsOnly)
 		return
+	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(resident_manuscript_grant_deferred), H)
+
+/proc/resident_manuscript_grant_deferred(mob/living/carbon/human/H)
 	grant_roundstart_faction_manuscript(H)
 	resident_manuscript_place_resident_in_tavern(H)
 

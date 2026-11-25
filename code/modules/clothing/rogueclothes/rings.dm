@@ -16,6 +16,7 @@
 	alternate_worn_layer = NECK_LAYER
 	no_loot_taint = TRUE
 	var/overarmor
+	materia = list(/datum/materia_aspect/solar) // in absence of other traits, they're valuable
 
 /obj/item/clothing/ring/MiddleClick(mob/user, params)
 	. = ..()
@@ -29,18 +30,19 @@
 	user.update_inv_gloves()
 
 /obj/item/clothing/ring/get_mechanics_examine(mob/user)
-    . = ..()
-    . += span_info("Middle click to adjust whether the ring is layered above or below your character's sleeves. This is an experimental feature, and might require some fidgeting to get working.")
+	. = ..()
+	. += span_info("Middle click to adjust whether the ring is layered above or below your character's sleeves. This is an experimental feature, and might require some fidgeting to get working.")
 
 /obj/item/clothing/ring/aalloy
 	name = "decrepit ring"
-	desc = "A coil of frayed bronze."
+	desc = "A coil of rotted metal."
 	icon_state = "ring_a"
 
 /obj/item/clothing/ring/bronze
 	name = "bronze ring"
-	desc = "A ring of bronzen resiliance."
+	desc = "A ring of bronzen resilience."
 	icon_state = "ring_b"
+	materia = list(/datum/materia_aspect/motion)
 
 /obj/item/clothing/ring/silver
 	name = "silver ring"
@@ -48,6 +50,7 @@
 	icon_state = "ring_s"
 	is_silver = TRUE
 	is_lesser_silver = TRUE
+	materia = list(/datum/materia_aspect/lunar)
 
 /obj/item/clothing/ring/silver/cleric
 	name = "clerical silver ring"
@@ -64,11 +67,11 @@
 	name = "blacksteel ring"
 	desc = "A ring of mythical blacksteel."
 	icon_state = "ring_bs"
-	sellprice = 70
+	materia = list(/datum/materia_aspect/defense)
 
 /obj/item/clothing/ring/jade
 	name = "jade ring"
-	desc = "A ring of emeraldesque wisdom."
+	desc = "A ring of emeraldine wisdom."
 	icon_state = "ring_jade"
 
 /obj/item/clothing/ring/coral
@@ -103,14 +106,14 @@
 
 /obj/item/clothing/ring/opal
 	name = "opal ring"
-	desc = "A ring of evershifting hues."
+	desc = "A ring of ever-shifting hues."
 	icon_state = "ring_opal"
 
 /obj/item/clothing/ring/porcelain
 	name = "porcelain ring"
 	desc = "A ring of shining porcelain."
 	icon_state = "ring_porcelain"
-	sellprice = 10
+	toggle_icon_state = FALSE
 
 /obj/item/clothing/ring/active
 	var/active = FALSE
@@ -175,10 +178,10 @@
 		magcom.ClearFromParent()
 
 /obj/item/clothing/ring/active/nomag/get_mechanics_examine(mob/user)
-    . = ..()
-    . += span_info("Right click to activate the ring's ward, which provides temporary invulnerability against all direct magical attacks for thirty seconds.")
-    . += span_info("Wearers with unholy ailments are also rendered invulnerable to being sundered by silver weaponry, for the ward's duration.")
-    . += span_info("Once the ring's ward is exhausted, it'll require ten minutes to recharge enough power for another activation.")
+	. = ..()
+	. += span_info("Right click to activate the ring's ward, which provides temporary invulnerability against all direct magical attacks for thirty seconds.")
+	. += span_info("Wearers with unholy ailments are also rendered invulnerable to being sundered by silver weaponry, for the ward's duration.")
+	. += span_info("Once the ring's ward is exhausted, it'll require ten minutes to recharge enough power for another activation.")
 
 //gold rings
 /obj/item/clothing/ring/emerald
@@ -227,9 +230,9 @@
 	var/tallow_color = "red"
 
 /obj/item/clothing/ring/signet/get_mechanics_examine(mob/user)
-    . = ..()
-    . += span_info("Certain letters can be folded and stamped with the ring, which proves minor financial benefits.")
-    . += span_info("Pressed upon a quest scroll by a Steward, Clerk, or Grand Duke, the ring stamps it LEVY EXEMPT - waiving the Crown's Contract Levy on its reward.")
+	. = ..()
+	. += span_info("Certain letters can be folded and stamped with the ring, which proves minor financial benefits.")
+	. += span_info("Pressed upon a quest scroll by a Steward, Clerk, or Grand Duke, the ring stamps it LEVY EXEMPT - waiving the Crown's Contract Levy on its reward.")
 
 /obj/item/clothing/ring/signet/attack_right(mob/user)
 	. = ..()
@@ -259,9 +262,9 @@
 	is_silver = TRUE
 
 /obj/item/clothing/ring/signet/psy/get_mechanics_examine(mob/user)
-    . = ..()
-    . += span_info("Stamping a folded ACCUSATION or CONFESSION will increase the amount of MARQUES it'll reward, once sent through the HERMES.")
-    . += span_info("Packing an INDEXER into an ACCUSATION or CONFESSION before folding-and-stamping it will further amplify this financial bonus.")
+	. = ..()
+	. += span_info("Stamping a folded ACCUSATION or CONFESSION will increase the amount of MARQUES it'll reward, once sent through the HERMES.")
+	. += span_info("Packing an INDEXER into an ACCUSATION or CONFESSION before folding-and-stamping it will further amplify this financial bonus.")
 
 /obj/item/clothing/ring/signet/psy/g
 	name = "psydonian gold signet ring"
@@ -331,10 +334,9 @@
 // These are meant to not be smelted down for anything or sell for much. Loadout items for roleplay, kinda simple.
 // Also, can rename their name/desc to put parnters name in it and stuff. Some customization. TODO: allow sprite selection between 2-3 types of wedding band sprites.
 /obj/item/clothing/ring/band
-	name = "silver weddingband"
-	desc = "A glimmering weddingband of silver, ornately decorated with the engravings of a lover's name."
+	name = "silver wedding band"
+	desc = "A glimmering wedding band of silver, ornately decorated with the engravings of a lover's name."
 	icon_state = "s_ring_wedding"
-	sellprice = 3
 	var/choicename = FALSE
 	var/choicedesc = FALSE
 	is_silver = FALSE //Love wins.
@@ -359,34 +361,34 @@
 		return
 
 /obj/item/clothing/ring/band/get_mechanics_examine(mob/user)
-    . = ..()
-    . += span_info("Right-click to add a custom name and description to the weddingband.")
-    . += span_info("If your character is meant to be already married to someone else, offer the ring to them while they are offering theirs to you. This will mark you as spouses, but will not change your names.")
+	. = ..()
+	. += span_info("Right-click to add a custom name and description to the wedding band.")
+	. += span_info("If your character is meant to be already married to someone else, offer the ring to them while they are offering theirs to you. This will mark you as spouses, but will not change your names.")
 
 /obj/item/clothing/ring/band/gold
-	name = "gold weddingband"
-	desc = "A beautiful weddingband of gold, ornately decorated with the engravings of a lover's name."
+	name = "gold wedding band"
+	desc = "A beautiful wedding band of gold, ornately decorated with the engravings of a lover's name."
 	icon_state = "g_ring_wedding"
 
 /obj/item/clothing/ring/band/bronze
-	name = "bronze weddingband"
-	desc = "A resilient weddingband of bronze, ornately decorated with the engravings of a lover's name."
+	name = "bronze wedding band"
+	desc = "A resilient wedding band of bronze, ornately decorated with the engravings of a lover's name."
 	icon_state = "b_ring_wedding"
 
 /obj/item/clothing/ring/band/aalloy
-	name = "decrepit weddingband"
-	desc = "A decaying weddingband of tarnished bronze, ornately decorated with the engravings of a lover's name."
+	name = "decrepit wedding band"
+	desc = "A decaying wedding band of rotted metal, ornately decorated with the engravings of a lover's name."
 	icon_state = "a_ring_wedding"
 	color = "#bb9696"
 	anvilrepair = null
 
 /obj/item/clothing/ring/band/paalloy
-	name = "ancient weddingband"
-	desc = "An enchanting weddingband of polished gilbranze, ornately decorated with the engravings of a lover's name."
+	name = "ancient wedding band"
+	desc = "An enchanting wedding band of polished gilbranze, ornately decorated with the engravings of a lover's name."
 	icon_state = "a_ring_wedding"
 
 /////////////////////////
-// Blacksteel Rings    //
+// Blacksteel Rings	//
 /////////////////////////
 
 /obj/item/clothing/ring/emeraldbs
@@ -543,7 +545,7 @@
 
 /obj/item/clothing/ring/statgemerald/antiquarian
 	sellprice = 30
-	desc = "A gemerald ring, glimmering with verdant brilliance. The closer your hand drifts to it, the stronger that the wind howls. The precious stone has chipped with long use, and is quite worthless except in its magick."	
+	desc = "A gemerald ring, glimmering with verdant brilliance. The closer your hand drifts to it, the stronger that the wind howls. The precious stone has chipped with long use, and is quite worthless except in its magick."
 /obj/item/clothing/ring/statonyx/antiquarian
 	sellprice = 30
 	desc = "An onyx ring, shining with violet determination. The closer your hand drifts to it, the faster your heart pounds. The precious stone has chipped with long use, and is quite worthless except in its magick."
@@ -635,3 +637,9 @@
 		icon_state = "factive"
 	else
 		icon_state = "dragonring"
+
+/obj/item/clothing/ring/lief_ring
+	name = "Blortz Blacksteel Engagement Ring"
+	desc = "A promise bound in blacksteel and a memory to stand the tests of time. The glimmering gem winks back at you to remind you of a time unchanged. Delicately engraved on the inside of the band, Always there for you. -Lief."
+	icon_state = "blacksteel_blortz"
+	sellprice = 0

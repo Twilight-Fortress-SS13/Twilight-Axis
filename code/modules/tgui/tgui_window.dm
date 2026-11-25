@@ -20,13 +20,30 @@
 	var/sent_assets = list()
 	// Vars passed to initialize proc (and saved for later)
 	var/initial_strict_mode
-	var/initial_fancy
 	var/initial_assets
 	var/initial_inline_html
 	var/initial_inline_js
 	var/initial_inline_css
+	var/mouse_event_macro_set = FALSE
 
 	var/list/oversized_payloads = list()
+
+	/**
+	 * Static list used to map in macros that will then emit execute events to the tgui window
+	 * A small disclaimer though I'm no tech wiz: I don't think it's possible to map in right or middle
+	 * clicks in the current state, as they're keywords rather than modifiers.
+	 */
+	var/static/list/byondToTguiEventMap = list(
+		"MouseDown" = "byond/mousedown",
+		"MouseUp" = "byond/mouseup",
+		"Ctrl" = "byond/ctrldown",
+		"Ctrl+UP" = "byond/ctrlup",
+	)
+	var/static/list/mouse_macro_sets = list(
+		SKIN_MACROSET_HOTKEYS,
+		SKIN_MACROSET_CLASSIC_HOTKEYS,
+		SKIN_MACROSET_CLASSIC_INPUT,
+	)
 
 /**
  * public
@@ -65,7 +82,6 @@
  * will be put into the queue until the window finishes loading.
  *
  * optional strict_mode bool - Enables strict error handling and BSOD.
- * optional fancy bool - If TRUE and if this is NOT a panel, will hide the window titlebar.
  * optional assets list - List of assets to load during initialization.
  * optional inline_html string - Custom HTML to inject.
  * optional inline_js string - Custom JS to inject.
@@ -73,7 +89,6 @@
  */
 /datum/tgui_window/proc/initialize(
 		strict_mode = FALSE,
-		fancy = FALSE,
 		assets = list(),
 		inline_html = "",
 		inline_js = "",
@@ -83,7 +98,6 @@
 		window = src)
 	if(!client)
 		return
-	src.initial_fancy = fancy
 	src.initial_assets = assets
 	src.initial_inline_html = inline_html
 	src.initial_inline_js = inline_js
@@ -91,12 +105,7 @@
 	status = TGUI_WINDOW_LOADING
 	fatally_errored = FALSE
 	// Build window options
-	var/options = "file=[id].html;can_minimize=0;auto_format=0;"
-	// Remove titlebar and resize handles for a fancy window
-	if(fancy)
-		options += "titlebar=0;can_resize=0;"
-	else
-		options += "titlebar=1;can_resize=1;"
+	var/options = "file=[id].html;can_minimize=0;auto_format=0;titlebar=0;can_resize=0;"
 	// Generate page html
 	var/html = SStgui.basehtml
 	html = replacetextEx(html, "\[tgui:windowId]", id)
@@ -143,7 +152,6 @@
 /datum/tgui_window/proc/reinitialize()
 	initialize(
 		strict_mode = initial_strict_mode,
-		fancy = initial_fancy,
 		assets = initial_assets,
 		inline_html = initial_inline_html,
 		inline_js = initial_inline_js,
@@ -235,6 +243,8 @@
 /datum/tgui_window/proc/close(can_be_suspended = TRUE)
 	if(!client)
 		return
+	if(mouse_event_macro_set)
+		remove_mouse_macro()
 	if(can_be_suspended && can_be_suspended())
 		log_tgui(client,
 			context = "[id]/close (suspending)",
@@ -317,8 +327,8 @@
 		var/datum/asset/spritesheet/spritesheet = asset
 		send_message("asset/stylesheet", spritesheet.css_filename())
 	// else if(istype(asset, /datum/asset/spritesheet_batched))
-	// 	var/datum/asset/spritesheet_batched/spritesheet = asset
-	// 	send_message("asset/stylesheet", spritesheet.css_filename())
+	//	var/datum/asset/spritesheet_batched/spritesheet = asset
+	//	send_message("asset/stylesheet", spritesheet.css_filename())
 	send_raw_message(asset.get_serialized_url_mappings())
 
 /**
@@ -394,7 +404,7 @@
 		if("cacheReloaded")
 			reinitialize()
 		// if("chat/resend")
-		// 	SSchat.handle_resend(client, payload)
+		//	SSchat.handle_resend(client, payload)
 		if("oversizedPayloadRequest")
 			var/payload_id = payload["id"]
 			var/chunk_count = payload["chunkCount"]
@@ -438,3 +448,33 @@
 
 /datum/tgui_window/proc/remove_oversized_payload(payload_id)
 	oversized_payloads -= payload_id
+
+/datum/tgui_window/proc/set_mouse_macro()
+	if(mouse_event_macro_set)
+		return
+
+	for(var/mouseMacro in byondToTguiEventMap)
+		var/command_template = ".output CONTROL PAYLOAD"
+		var/event_message = TGUI_CREATE_MESSAGE(byondToTguiEventMap[mouseMacro], null)
+		var/target_control = is_browser \
+			? "[id]:update" \
+			: "[id].browser:update"
+		var/with_id = replacetext(command_template, "CONTROL", target_control)
+		var/full_command = replacetext(with_id, "PAYLOAD", event_message)
+
+		for(var/macro_set in mouse_macro_sets)
+			var/list/params = list()
+			params["parent"] = macro_set
+			params["name"] = mouseMacro
+			params["command"] = full_command
+
+			winset(client, "[macro_set][mouseMacro]Window[id]Macro", params)
+	mouse_event_macro_set = TRUE
+
+/datum/tgui_window/proc/remove_mouse_macro()
+	if(!mouse_event_macro_set)
+		stack_trace("Unsetting mouse macro on tgui window that has none")
+	for(var/mouseMacro in byondToTguiEventMap)
+		for(var/macro_set in mouse_macro_sets)
+			winset(client, null, "[macro_set][mouseMacro]Window[id]Macro.parent=null")
+	mouse_event_macro_set = FALSE

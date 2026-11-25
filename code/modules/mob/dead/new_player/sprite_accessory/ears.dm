@@ -122,6 +122,20 @@
 	color_keys = 2
 	color_key_names = list("Ears", "Inner")
 
+/datum/sprite_accessory/ears/big/fennec
+	icon_state = "fenbig"
+	name = "Fennec (Big)"
+	color_keys = 3
+	color_key_names = list("Ears", "Inner", "Fluff")
+	relevant_layers = list(BODY_ADJ_LAYER)
+
+/datum/sprite_accessory/ears/big/fennec_bigger
+	icon_state = "fenbig2"
+	name = "Fennec (Bigger)"
+	color_keys = 3
+	color_key_names = list("Ears", "Inner", "Fluff")
+	relevant_layers = list(BODY_ADJ_LAYER)
+
 /datum/sprite_accessory/ears/fish
 	name = "Fish"
 	icon_state = "fish"
@@ -338,6 +352,30 @@
 	color_keys = 2
 	color_key_names = list("Ears", "Inner")
 
+/datum/sprite_accessory/ears/dormouse
+	name = "Mouse (Dormouse Grayscaled)"
+	icon_state = "dormouse"
+	color_keys = 2
+	color_key_names = list("Ears", "Inner")
+
+/datum/sprite_accessory/ears/dormouse_skin
+	name = "Mouse (Dormouse Skin Grayscaled)"
+	icon_state = "dormouse2"
+	color_keys = 2
+	color_key_names = list("Ears", "Inner")
+
+/datum/sprite_accessory/ears/dormouse_rings
+	name = "Mouse (Dormouse Grayscaled, Rings)"
+	icon_state = "dormouse"
+	color_keys = 3
+	color_key_names = list("Ears", "Inner", "Piercing")
+
+/datum/sprite_accessory/ears/dormouse_skin_rings
+	name = "Mouse (Dormouse Skin Grayscaled, Rings)"
+	icon_state = "dormouse2"
+	color_keys = 3
+	color_key_names = list("Ears", "Inner", "Piercing")
+
 /datum/sprite_accessory/ears/elf
 	name = "Elf"
 	icon = 'icons/mob/sprite_accessory/elf.dmi'
@@ -357,6 +395,20 @@
 	icon_state = "elfshort"
 	color_key_defaults = list(KEY_SKIN_COLOR)
 
+/datum/sprite_accessory/ears/elf_long
+	name = "Elf (Long)"
+	icon = 'icons/mob/sprite_accessory/elf.dmi'
+	icon_state = "elflong"
+	color_key_defaults = list(KEY_SKIN_COLOR)
+	can_flick = TRUE
+
+/datum/sprite_accessory/ears/elf_small
+	name = "Elf (Small)"
+	icon = 'icons/mob/sprite_accessory/elf.dmi'
+	icon_state = "elfsmall"
+	color_key_defaults = list(KEY_SKIN_COLOR)
+	can_flick = TRUE
+
 /datum/sprite_accessory/ears/halforc
 	name = "Half Orc"
 	icon = 'icons/mob/sprite_accessory/halforc.dmi'
@@ -370,13 +422,13 @@
 	color_key_defaults = list(KEY_SKIN_COLOR)
 
 /datum/sprite_accessory/ears/goblin_alt
-	name = "Goblin Alt"
+	name = "Goblin (Alt)"
 	icon = 'icons/mob/sprite_accessory/halforc.dmi'
 	icon_state = "goblinalt"
 	color_key_defaults = list(KEY_SKIN_COLOR)
 
 /datum/sprite_accessory/ears/goblin_small
-	name = "Goblin Small"
+	name = "Goblin (Small)"
 	icon = 'icons/mob/sprite_accessory/halforc.dmi'
 	icon_state = "goblinsmall"
 	color_key_defaults = list(KEY_SKIN_COLOR)

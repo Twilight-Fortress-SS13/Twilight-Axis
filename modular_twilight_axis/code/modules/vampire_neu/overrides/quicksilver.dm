@@ -14,15 +14,16 @@
 		replacement.success = success
 		return INITIALIZE_HINT_QDEL
 
-/obj/item/quicksilver/TA
-	name = "ртутная припарка"
-
 /obj/item/quicksilver/TA/luxinfused
-	name = "очищающее серебро"
+	name = "absolving silver"
 	icon_state = "quicksilverlux"
-	desc = "Смелая смесь очищающего люкса, аномальной крови и божественного серебра. Эта панацея укрепляет тело помазанного благословенной серебряной пылью, защищая от проклятий вампиризма и ликантропии."
+	desc = "A daring blend of trace amounts of purifying lux, aberrant blood, and divine silver. This panacea fortifies the anointed's body with blessed silverdust, protecting them from the curses of vampyrism and lycanthropy."
 
 /obj/item/quicksilver/TA/anoint(mob/living/carbon/human/M, mob/living/carbon/human/user)
+	if(ta_find_active_demonic_lord())
+		to_chat(user, span_warning("Серебро мертвеет в моих руках - кровавая тьма не даёт ему исцелять."))
+		return
+
 	. = ..()
 	if(HAS_TRAIT(M, TRAIT_SILVER_BLESSED))
 		cleanse_pallid(M, user)
@@ -56,7 +57,7 @@
 			M.mind.RemoveSpell(S)
 
 	if(has_generic)
-		to_chat(M, span_warning("Часть моего проклятия была очищена, но другая его часть слишком глубоко въелась в душу и тело."))
+		to_chat(M, span_warning("A portion of my curse has been purged, yet the rest runs too deep within my soul and body."))
 	else
-		to_chat(M, span_notice("Серебро выжигает проклятие из моих вен! Я чувствую себя свободным."))
-	to_chat(user, span_notice("Скверна покидает тело [M]."))
+		to_chat(M, span_notice("The silver sears the curse from my veins! I feel free."))
+	to_chat(user, span_notice("The corruption leaves [M]'s body."))

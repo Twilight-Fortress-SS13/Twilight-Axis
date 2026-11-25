@@ -2,38 +2,33 @@
 	name = "quest landmark"
 	icon = 'code/modules/roguetown/roguemachine/questing/questing.dmi'
 	icon_state = "quest_marker"
-	var/list/quest_type = list(QUEST_RETRIEVAL, QUEST_COURIER, QUEST_CLEAR_OUT, QUEST_RAID, QUEST_KILL_EASY, QUEST_BOUNTY, QUEST_RECOVERY, QUEST_BLOCKADE_DEFENSE, QUEST_TOWNER_SMITH_CARAVAN, QUEST_TOWNER_MINER_OREVEIN)
 	var/region
 	var/datum/weakref/claimed_by
 	var/locked_at = 0
 	var/cooldown_until = 0
 
-/obj/effect/landmark/quest_spawner/Initialize()
+/obj/effect/landmark/quest_spawner/Initialize(mapload)
 	. = ..()
 	GLOB.quest_landmarks_list += src
 	if(!region)
 		var/area/A = get_area(src)
 		if(A)
 			region = A.threat_region
-	// Register in the per-type index so find_quest_landmark can skip the full-list scan.
-	// If SSquestpool hasn't come up yet (landmarks mapload before subsystems init), it
-	// backfills from GLOB.quest_landmarks_list in its own Initialize().
-	SSquestpool?.register_landmark(src)
 
 /obj/effect/landmark/quest_spawner/Destroy()
 	GLOB.quest_landmarks_list -= src
-	SSquestpool?.unregister_landmark(src)
 	return ..()
-
-/obj/effect/landmark/quest_spawner/proc/add_quest_faction_to_nearby_mobs(turf/center)
-	for(var/mob/living/M in view(7, center))
-		if(!M.ckey && !("quest" in M.faction))
-			M.faction |= "quest"
 
 /obj/effect/landmark/quest_spawner/proc/get_safe_spawn_turf()
 	var/list/possible_turfs = list()
+	var/turf/origin = get_turf(src)
+	if(!origin)
+		return null
 	for(var/turf/open/floor/T in view(7, src))
-		if(T.density || istransparentturf(T))
+		if(T.z != origin.z)
+			continue
+
+		if(T.density)
 			continue
 
 		if(get_area(T) != get_area(src)) //No more spawning in guild room...
@@ -48,17 +43,11 @@
 			continue
 
 		possible_turfs += T
-	return length(possible_turfs) ? pick(possible_turfs) : get_turf(src)
+	return length(possible_turfs) ? pick(possible_turfs) : origin
 
 /obj/effect/landmark/quest_spawner/generic
 	name = "generic quest landmark"
 	icon_state = "quest_marker_low"
-	quest_type = list(QUEST_RETRIEVAL, QUEST_COURIER, QUEST_KILL_EASY, QUEST_CLEAR_OUT, QUEST_RAID, QUEST_BOUNTY, QUEST_RECOVERY, QUEST_BLOCKADE_DEFENSE, QUEST_TOWNER_SMITH_CARAVAN, QUEST_TOWNER_MINER_OREVEIN)
-
-/obj/effect/landmark/quest_spawner/defense
-	name = "defense quest landmark"
-	icon_state = "quest_marker_high"
-	quest_type = list(QUEST_BLOCKADE_DEFENSE)
 
 /obj/effect/landmark/quest_spawner/proc/is_available_for_quest()
 	if(claimed_by?.resolve())
@@ -67,11 +56,16 @@
 		return FALSE
 	return TRUE
 
+/proc/count_available_quest_landmarks(region)
+	. = 0
+	for(var/obj/effect/landmark/quest_spawner/landmark as anything in GLOB.quest_landmarks_list)
+		if(QDELETED(landmark) || landmark.region != region)
+			continue
+		if(landmark.is_available_for_quest())
+			.++
+
 /proc/find_quest_landmark(type, region = null, datum/quest/claiming_quest = null)
-	// Pre-filtered by type via the landmarks_by_type index. The type-in-landmark.quest_type
-	// check from the old passes is now implicit in the index membership, and pick() at the
-	// end of each pass randomizes without shuffling the full global list every call.
-	var/list/candidates = SSquestpool?.landmarks_by_type?[type]
+	var/list/candidates = GLOB.quest_landmarks_list
 	if(!length(candidates))
 		return null
 

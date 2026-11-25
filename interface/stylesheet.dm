@@ -66,7 +66,7 @@ h1.alert, h2.alert	{color: #c9c1ba;font-family: Mookmania, TrueType;}
 .userdanger				{color: #c71d76;	font-weight: bold;	font-size: 120%;}
 .danger					{color: #b9322b;	font-weight: bold;}
 .warning				{color: #bb4e28;	font-size: 75%;}
-.warningbig 			{color: #ad1f1a;	font-size: 110%;}
+.warningbig			{color: #ad1f1a;	font-size: 110%;}
 .boldwarning			{color: #bb4e28;	font-weight: bold}
 .announce				{color: #c51e1e;	font-weight: bold;}
 .boldannounce			{color: #c51e1e;	font-weight: bold;}
@@ -96,9 +96,9 @@ h1.alert, h2.alert	{color: #c9c1ba;font-family: Mookmania, TrueType;}
 .cult					{color: #960000;}
 .cultlarge				{color: #960000;	font-weight: bold;	font-size: 3;}
 .cultsmall				{color: #960000;	font-size: 75%;}
-.narsie					{color: #960000;	font-weight: bold;	font-size: 12;}
-.narsiesmall			{color: #960000;	font-weight: bold;	font-size: 6;}
-.colossus				{color: #7F282A;	font-size: 5;}
+.narsie					{color: #960000;	font-weight: bold;}
+.narsiesmall			{color: #960000;	font-weight: bold;	font-size: 310%;}
+.colossus				{color: #7F282A;	font-size: 310%;}
 .hierophant				{color: #660099;	font-weight: bold;	font-style: italic;}
 .hierophant_warning		{color: #660099;	font-style: italic;}
 .purple					{color: #5e2d79;}

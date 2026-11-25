@@ -2,7 +2,7 @@
 #define FLAG_FAKE_ANTAG					(1 << 0)
 //The storyteller will ignore this antag datum as counting against the antag cap.
 #define FLAG_ANTAG_CAP_IGNORE			(1 << 1)
-//  The storyteller will count everyone on this antag's team as a singular antag instead.
+//	The storyteller will count everyone on this antag's team as a singular antag instead.
 #define FLAG_ANTAG_CAP_TEAM				(1 << 2)
 
 
@@ -65,3 +65,14 @@
 
 #define CONTRACT_UPLINK_PAGE_CONTRACTS "CONTRACTS"
 #define CONTRACT_UPLINK_PAGE_HUB "HUB"
+
+/// When the midround Renegade check fires, measured from round setup.
+#define RENEGADE_MIDROUND_DELAY (90 MINUTES)
+/// Most Renegades the midround check hands out.
+#define RENEGADE_MIDROUND_COUNT 2
+/// Psila a Renegade starts the round with.
+#define RENEGADE_STARTING_PSILA 20
+/// Mammon worth of Vheslie goods one psilen buys through the Boon Menu.
+#define RENEGADE_PSILEN_WORTH 10
+/// Jobs that can never roll Renegade.
+#define RENEGADE_BLACKLISTED_ROLES list("Wretch", "Mercenary", "Adventurer", "Marshal", "Grand Duke", "Bishop")

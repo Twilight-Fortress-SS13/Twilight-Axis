@@ -45,6 +45,7 @@
 
 #define STATUS_EFFECT_OFFBALANCED /datum/status_effect/incapacitating/off_balanced
 #define STATUS_EFFECT_BALL_KICK_RECOVERY /datum/status_effect/ball_kick_recovery // TA EDIT
+#define STATUS_EFFECT_PSYPOWDER /datum/status_effect/debuff/psypowder // TA EDIT
 
 #define STATUS_EFFECT_STUN /datum/status_effect/incapacitating/stun //the affected is unable to move or use items
 
@@ -116,7 +117,7 @@
 #define STATUS_EFFECT_BOUNTY /datum/status_effect/bounty //rewards the person who added this to the target with refreshed spells and a fair heal
 
 /////////////
-//  SLIME  //
+//	SLIME	//
 /////////////
 
 #define STATUS_EFFECT_RAINBOWPROTECTION /datum/status_effect/rainbow_protection //Invulnerable and pacifistic

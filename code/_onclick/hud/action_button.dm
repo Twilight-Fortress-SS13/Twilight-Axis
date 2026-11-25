@@ -1,4 +1,35 @@
 #define AB_MAX_COLUMNS 12
+#define AB_REARRANGE_TINT "#96ff96"
+#define AB_DROP_TINT "#40ff40"
+#define AB_POSITION_TINT "#80c8ff" // TA EDIT
+
+/atom/movable/screen/action_button_toggle
+	var/datum/hud/our_hud
+
+	icon = 'icons/mob/actions.dmi'
+	icon_state = "hide"
+	screen_loc = "WEST:-32,SOUTH:0"
+	layer = ABOVE_HUD_LAYER
+	mouse_opacity = MOUSE_OPACITY_OPAQUE
+
+/atom/movable/screen/action_button_toggle/New(loc, datum/hud/hud)
+	our_hud = hud
+	var/matrix/M = matrix()
+	M.Scale(0.75, 0.75)
+	M.Translate(-4, -5)
+	transform = M
+	..()
+
+/atom/movable/screen/action_button_toggle/Click(location, control, params)
+	if(!our_hud || !our_hud.mymob)
+		return
+
+	our_hud.mymob.toggle_action_buttons()
+	return TRUE
+
+/atom/movable/screen/action_button_toggle/Destroy()
+	our_hud = null
+	return ..()
 
 /atom/movable/screen/movable/action_button
 	var/datum/action/linked_action
@@ -19,15 +50,19 @@
 	locked = TRUE
 	/// A unique bitflag, combined with the name of our linked action this lets us persistently remember any user changes to our position
 	var/id
-	var/ordered = TRUE //If the button gets placed into the default bar
 	/// A weakref of the last thing we hovered over
 	var/datum/weakref/last_hovored_ref
 
 	/// AP: maptext holder for cooldown display on old proc_holder spells
 	var/atom/movable/screen/maptext_holder/maptext_holder
 
+	var/atom/movable/screen/hotkey_label_holder/hotkey_label_holder
+	var/atom/movable/screen/wheel_selection_holder/wheel_selection_holder // TA EDIT
+
 /atom/movable/screen/movable/action_button/Destroy()
 	if(our_hud)
+		if(our_hud.wheel_selected_action == linked_action) // TA EDIT START
+			our_hud.wheel_selected_action = null // TA EDIT END
 		var/mob/viewer = our_hud.mymob
 		viewer?.client?.screen -= src
 		linked_action?.viewers -= our_hud
@@ -35,6 +70,8 @@
 		our_hud = null
 	linked_action = null
 	QDEL_NULL(maptext_holder)
+	QDEL_NULL(hotkey_label_holder)
+	QDEL_NULL(wheel_selection_holder) // TA EDIT
 	return ..()
 
 /atom/movable/screen/movable/action_button/proc/can_use(mob/user)
@@ -46,41 +83,116 @@
 	else
 		return TRUE
 
-/atom/movable/screen/movable/action_button/MouseDrop(over_object)
-	if(!can_use(usr))
+/atom/movable/screen/movable/action_button/proc/get_layout_key() // TA EDIT START
+	if(!linked_action)
+		return null
+	return "[linked_action.type]|[linked_action.name]|[id]" // TA EDIT END
+
+/atom/movable/screen/movable/action_button/proc/set_drag_highlight(on)
+	if(!our_hud?.rearrange_mode)
+		linked_action?.build_all_button_icons(UPDATE_BUTTON_STATUS)
 		return
-	if((istype(over_object, /atom/movable/screen/movable/action_button) && !istype(over_object, /atom/movable/screen/movable/action_button/hide_toggle)))
-		if(locked)
-			to_chat(usr, span_warning("Action button \"[name]\" is locked, unlock it first."))
+	color = on ? AB_DROP_TINT : AB_REARRANGE_TINT
+
+/atom/movable/screen/movable/action_button/MouseDrag(atom/over_object, src_location, over_location, src_control, over_control, params)
+	. = ..()
+	if(!can_use(usr) || !our_hud?.rearrange_mode)
+		return
+	var/atom/movable/screen/movable/action_button/old_button = last_hovored_ref?.resolve()
+	if(old_button == over_object)
+		return
+	if(istype(old_button))
+		old_button.set_drag_highlight(FALSE)
+	last_hovored_ref = null
+	if(over_object != src && istype(over_object, /atom/movable/screen/movable/action_button))
+		var/atom/movable/screen/movable/action_button/target = over_object
+		target.set_drag_highlight(TRUE)
+		last_hovored_ref = WEAKREF(target)
+
+/atom/movable/screen/movable/action_button/MouseDrop(atom/over_object, src_location, over_location, src_control, over_control, params) // TA EDIT
+	var/atom/movable/screen/movable/action_button/hovered = last_hovored_ref?.resolve()
+	if(istype(hovered))
+		hovered.set_drag_highlight(FALSE)
+	last_hovored_ref = null
+	if(!can_use(usr))
+		return // TA EDIT START
+	if(our_hud?.free_position_mode)
+		var/previous_position = screen_loc
+		..()
+		if(screen_loc == previous_position)
 			return
-		var/atom/movable/screen/movable/action_button/B = over_object
+		if(!istext(screen_loc) || length(screen_loc) > 80)
+			screen_loc = previous_position
+			moved = previous_position
+			return
+		var/datum/preferences/P = usr.client?.prefs
+		if(P)
+			P.action_button_positions[get_layout_key()] = screen_loc
+			P.save_preferences() // TA EDIT END
+		return
+	if(!our_hud?.rearrange_mode)
+		return
+	if(!istype(over_object, /atom/movable/screen/movable/action_button))
+		return
+	var/atom/movable/screen/movable/action_button/B = over_object
+	if(B == src)
+		return
+	if(!usr.mind?.swap_spell_order(src.linked_action, B.linked_action))
 		var/list/actions = usr.actions
-		actions.Swap(actions.Find(src.linked_action), actions.Find(B.linked_action))
-		moved = FALSE
-		ordered = TRUE
-		B.moved = FALSE
-		B.ordered = TRUE
+		var/first_idx = actions.Find(src.linked_action)
+		var/second_idx = actions.Find(B.linked_action)
+		if(!first_idx || !second_idx)
+			return
+		actions.Swap(first_idx, second_idx)
+		usr.mind?.sync_spell_list_to_actions()
 		usr.update_action_buttons()
-	else
-		return ..()
+
+
+/client/MouseWheel(object, delta_x, delta_y, location, control, params) // TA EDIT START
+	var/on_game_map = control == "mapwindow.map" || isturf(location) || istype(object, /atom/movable/screen/movable/action_button)
+	var/list/modifiers = params2list(params)
+	if(keys_held["Ctrl"])
+		modifiers["ctrl"] = TRUE
+	if(keys_held["Shift"])
+		modifiers["shift"] = TRUE
+	if(keys_held["Alt"])
+		modifiers["alt"] = TRUE
+	var/modifier_matches = prefs?.matches_action_wheel_modifier(modifiers)
+	var/handled = FALSE
+	if(delta_y && isliving(mob) && on_game_map && modifier_matches)
+		handled = mob.hud_used?.cycle_wheel_action(delta_y > 0 ? -1 : 1)
+	if(handled)
+		return TRUE
+	return ..() // TA EDIT END
 
 /atom/movable/screen/movable/action_button/Click(location,control,params)
 	if (!can_use(usr))
 		return
 
 	var/list/modifiers = params2list(params)
+	var/datum/preferences/P = usr.client?.prefs // TA EDIT
+	if(modifiers["ctrl"] && modifiers["alt"]) // TA EDIT START
+		if(P)
+			P.action_button_positions = list()
+			P.save_preferences()
+		for(var/datum/action/A as anything in usr.actions)
+			var/atom/movable/screen/movable/action_button/B = A.viewers[our_hud]
+			if(B)
+				B.moved = FALSE
+		usr.update_action_buttons()
+		return TRUE
+	if(modifiers["ctrl"] && modifiers["shift"])
+		our_hud?.toggle_free_position_mode()
+		return TRUE // TA EDIT END
 	if(modifiers["alt"])
-		if(locked)
-			to_chat(usr, span_warning("Action button \"[name]\" is locked, unlock it first."))
-			return TRUE
-		moved = 0
-		usr.update_action_buttons() //redraw buttons that are no longer considered "moved"
+		moved = FALSE // TA EDIT START
+		if(P)
+			P.action_button_positions -= get_layout_key()
+			P.save_preferences()
+		usr.update_action_buttons() // TA EDIT END
 		return TRUE
 	if(modifiers["ctrl"])
-		locked = !locked
-		to_chat(usr, span_notice("Action button \"[name]\" [locked ? "" : "un"]locked."))
-		if(id && usr.client) //try to (un)remember position
-			usr.client.prefs.action_buttons_screen_locs["[name]_[id]"] = locked ? moved : null
+		our_hud?.toggle_rearrange_mode()
 		return TRUE
 	if(modifiers["shift"])
 		var/datum/action/spell_action/SA = linked_action
@@ -93,6 +205,9 @@
 			else
 				examine_ui(usr)
 		return TRUE
+	if(our_hud?.rearrange_mode || our_hud?.free_position_mode) // TA EDIT
+		our_hud.rearrange_hint(usr)
+		return TRUE
 	if(usr.next_click > world.time)
 		return
 	usr.next_click = world.time + 1
@@ -101,109 +216,6 @@
 		M.playsound_local(M, 'sound/misc/click.ogg', 100)
 	linked_action.Trigger()
 	return TRUE
-
-//Hide/Show Action Buttons ... Button
-/atom/movable/screen/movable/action_button/hide_toggle
-	name = "Hide Buttons"
-	desc = ""
-	icon = 'icons/mob/actions.dmi'
-	icon_state = "bg_default"
-	locked = TRUE
-	var/hidden = 0
-	var/hide_icon = 'icons/mob/actions.dmi'
-	var/hide_state = "hide"
-	var/show_state = "show"
-	var/mutable_appearance/hide_appearance
-	var/mutable_appearance/show_appearance
-
-/atom/movable/screen/movable/action_button/hide_toggle/Initialize()
-	. = ..()
-	var/static/list/icon_cache = list()
-
-	var/cache_key = "[hide_icon][hide_state]"
-	hide_appearance = icon_cache[cache_key]
-	if(!hide_appearance)
-		hide_appearance = icon_cache[cache_key] = mutable_appearance(hide_icon, hide_state)
-
-	cache_key = "[hide_icon][show_state]"
-	show_appearance = icon_cache[cache_key]
-	if(!show_appearance)
-		show_appearance = icon_cache[cache_key] = mutable_appearance(hide_icon, show_state)
-
-
-/atom/movable/screen/movable/action_button/hide_toggle/Click(location,control,params)
-	if (!can_use(usr))
-		return
-
-	var/list/modifiers = params2list(params)
-	if(modifiers["shift"])
-		if(locked)
-			to_chat(usr, span_warning("Action button \"[name]\" is locked, unlock it first."))
-			return TRUE
-		moved = FALSE
-		usr.update_action_buttons(TRUE)
-		return TRUE
-	if(modifiers["ctrl"])
-		locked = !locked
-		to_chat(usr, span_notice("Action button \"[name]\" [locked ? "" : "un"]locked."))
-		if(id && usr.client) //try to (un)remember position
-			usr.client.prefs.action_buttons_screen_locs["[name]_[id]"] = locked ? moved : null
-		return TRUE
-	if(modifiers["alt"])
-		var/datum/hud/usr_hud = usr.hud_used
-		for(var/datum/action/A as anything in usr.actions)
-			var/atom/movable/screen/movable/action_button/B = A.viewers[usr_hud]
-			if(!B)
-				continue
-			B.moved = FALSE
-			if(B.id && usr.client)
-				usr.client.prefs.action_buttons_screen_locs["[B.name]_[B.id]"] = null
-			B.locked = usr.client.prefs.buttons_locked
-		locked = usr.client.prefs.buttons_locked
-		moved = FALSE
-		if(id && usr.client)
-			usr.client.prefs.action_buttons_screen_locs["[name]_[id]"] = null
-		usr.update_action_buttons(TRUE)
-		to_chat(usr, span_notice("Action button positions have been reset."))
-		return TRUE
-	usr.hud_used.action_buttons_hidden = !usr.hud_used.action_buttons_hidden
-
-	hidden = usr.hud_used.action_buttons_hidden
-	if(hidden)
-		name = "Show Buttons"
-	else
-		name = "Hide Buttons"
-	update_icon()
-	usr.update_action_buttons()
-
-/atom/movable/screen/movable/action_button/hide_toggle/AltClick(mob/user)
-	var/datum/hud/user_hud = user.hud_used
-	for(var/datum/action/A as anything in user.actions)
-		var/atom/movable/screen/movable/action_button/B = A.viewers[user_hud]
-		if(!B)
-			continue
-		B.moved = FALSE
-	if(moved)
-		moved = FALSE
-	user.update_action_buttons(TRUE)
-	to_chat(user, span_notice("Action button positions have been reset."))
-
-
-/atom/movable/screen/movable/action_button/hide_toggle/proc/InitialiseIcon(datum/hud/owner_hud)
-	var/settings = owner_hud.get_action_buttons_icons()
-	icon = settings["bg_icon"]
-	icon_state = settings["bg_state"]
-	hide_icon = settings["toggle_icon"]
-	hide_state = settings["toggle_hide"]
-	show_state = settings["toggle_show"]
-	update_icon()
-
-/atom/movable/screen/movable/action_button/hide_toggle/update_overlays()
-	. = ..()
-	if(hidden)
-		. += show_appearance
-	else
-		. += hide_appearance
 
 /atom/movable/screen/movable/action_button/MouseExited()
 	..()
@@ -229,11 +241,18 @@
 /mob/proc/update_action_buttons(reload_screen)
 	if(!hud_used || !client)
 		return
-
+	if(hud_used.action_button_toggle)
+		if(actions.len && hud_used.hud_shown == HUD_STYLE_STANDARD)
+			client.screen += hud_used.action_button_toggle
+		else
+			client.screen -= hud_used.action_button_toggle
+	if(hud_used.action_button_toggle)
+		hud_used.action_button_toggle.icon_state = hud_used.action_buttons_hidden ? "show" : "hide"
 	if(hud_used.hud_shown != HUD_STYLE_STANDARD)
 		return
 
 	var/button_number = 0
+	var/list/saved_positions = client.prefs?.action_button_positions // TA EDIT
 
 	if(hud_used.action_buttons_hidden)
 		for(var/datum/action/A as anything in actions)
@@ -242,6 +261,8 @@
 			if(!B)
 				continue
 			B.screen_loc = null
+			B.set_hotkey_label(null)
+			B.set_wheel_selected(FALSE) // TA EDIT
 			if(reload_screen)
 				client.screen += B
 	else
@@ -250,14 +271,130 @@
 			var/atom/movable/screen/movable/action_button/B = A.viewers[hud_used]
 			if(!B)
 				continue
-			if(B.ordered)
-				button_number++
-			if(B.moved)
-				B.screen_loc = B.moved
-			else
-				B.screen_loc = hud_used.ButtonNumberToScreenCoords(button_number)
+			B.locked = !(hud_used.rearrange_mode || hud_used.free_position_mode) // TA EDIT
+			if(hud_used.rearrange_mode)
+				B.color = AB_REARRANGE_TINT
+			else if(hud_used.free_position_mode) // TA EDIT START
+				B.color = AB_POSITION_TINT
+			if(!B.moved && islist(saved_positions))
+				var/saved_loc = saved_positions[B.get_layout_key()]
+				if(istext(saved_loc))
+					B.moved = saved_loc // TA EDIT END
+			button_number++
+			B.screen_loc = B.moved ? B.moved : hud_used.ButtonNumberToScreenCoords(button_number) // TA EDIT
+			B.set_hotkey_label(button_number <= 9 ? button_number : null)
+			B.set_wheel_selected(A == hud_used.wheel_selected_action) // TA EDIT
 			if(reload_screen)
 				client.screen += B
+
+/datum/action/proc/is_wheel_selectable() // TA EDIT START
+	return FALSE
+
+/datum/action/cooldown/spell/is_wheel_selectable()
+	return click_to_activate && charge_required
+
+/datum/action/spell_action/is_wheel_selectable()
+	var/obj/effect/proc_holder/spell/S = target
+	return (istype(S, /obj/effect/proc_holder/spell/invoked) || istype(S, /obj/effect/proc_holder/spell/aimed)) && S.get_chargetime() > 0
+
+/datum/action/proc/select_for_wheel()
+	return FALSE
+
+/datum/action/cooldown/spell/select_for_wheel()
+	if(!is_wheel_selectable())
+		return FALSE
+	if(owner?.click_intercept == src)
+		return TRUE
+	return Trigger()
+
+/datum/action/spell_action/select_for_wheel()
+	var/obj/effect/proc_holder/S = target
+	if(!is_wheel_selectable() || !istype(S))
+		return FALSE
+	if(S.active && S.ranged_ability_user == owner)
+		return TRUE
+	return Trigger()
+
+/datum/hud/proc/cycle_wheel_action(direction, datum/action/start_action)
+	if(!mymob?.client || !length(mymob.actions) || !direction || rearrange_mode || free_position_mode || hud_shown != HUD_STYLE_STANDARD || action_buttons_hidden)
+		return FALSE
+	var/list/available = list()
+	for(var/datum/action/A as anything in mymob.actions)
+		if(A.owner != mymob || !A.viewers[src] || !A.is_wheel_selectable())
+			continue
+		available += A
+	if(!length(available))
+		wheel_selected_action = null
+		return FALSE
+	var/datum/action/current = wheel_selected_action
+	if(!(current in available))
+		current = start_action
+	var/index = available.Find(current)
+	if(!index)
+		index = direction > 0 ? 0 : 1
+	var/next_index = index + direction
+	if(next_index > length(available))
+		next_index = 1
+	else if(next_index < 1)
+		next_index = length(available)
+	for(var/attempt in 1 to length(available))
+		var/datum/action/selected = available[next_index]
+		if(selected.IsAvailable() && selected.select_for_wheel())
+			wheel_selected_action = selected
+			for(var/datum/action/A as anything in mymob.actions)
+				var/atom/movable/screen/movable/action_button/B = A.viewers[src]
+				if(B)
+					B.set_wheel_selected(A == wheel_selected_action)
+			return TRUE
+		next_index += direction
+		if(next_index > length(available))
+			next_index = 1
+		else if(next_index < 1)
+			next_index = length(available)
+	return FALSE // TA EDIT END
+
+/mob/proc/toggle_action_buttons()
+	if(!hud_used)
+		return
+	hud_used.action_buttons_hidden = !hud_used.action_buttons_hidden
+	if(hud_used.action_button_toggle)
+		hud_used.action_button_toggle.icon_state = hud_used.action_buttons_hidden ? "show" : "hide"
+	update_action_buttons()
+	if(hud_used.action_buttons_hidden)
+		to_chat(src, "Action buttons hidden.")
+	else
+		to_chat(src, "Action buttons shown.")
+
+/datum/hud/proc/toggle_rearrange_mode()
+	if(free_position_mode) // TA EDIT
+		free_position_mode = FALSE // TA EDIT
+	rearrange_mode = !rearrange_mode
+	if(rearrange_mode)
+		mymob?.mind?.sync_spell_list_to_actions()
+		mymob?.balloon_alert(mymob, "<span style='color:#ff6666'>rearrangement mode - spells disabled!</span>")
+	else
+		mymob?.balloon_alert(mymob, "<span style='color:#96ff96'>rearrangement mode off - spells enabled</span>")
+	mymob?.update_action_buttons()
+
+/datum/hud/proc/toggle_free_position_mode() // TA EDIT START
+	if(rearrange_mode)
+		rearrange_mode = FALSE
+	free_position_mode = !free_position_mode
+	if(free_position_mode)
+		mymob?.balloon_alert(mymob, "<span style='color:#80c8ff'>free positioning - drag spells anywhere!</span>")
+	else
+		mymob?.balloon_alert(mymob, "<span style='color:#96ff96'>positioning off - spells enabled</span>")
+	mymob?.update_action_buttons() // TA EDIT END
+
+/// Reminds why clicks aren't casting, at most once per few seconds so drag-arranging isn't spammed.
+/datum/hud/proc/rearrange_hint(mob/user)
+	if(world.time < next_rearrange_hint)
+		return
+	next_rearrange_hint = world.time + 4 SECONDS
+	if(free_position_mode) // TA EDIT START
+		user?.balloon_alert(user, "<span style='color:#ff6666'>spells disabled - ctrl-shift-click to unlock!</span>")
+	else
+		user?.balloon_alert(user, "<span style='color:#ff6666'>spells disabled - ctrl-click to unlock!</span>") // TA EDIT END
 
 /datum/hud/proc/ButtonNumberToScreenCoords(number) // TODO : Make this zero-indexed for readabilty
 	var/row = round((number - 1)/AB_MAX_COLUMNS)
@@ -270,40 +407,79 @@
 
 	return "WEST[coord_col]:[coord_col_offset],SOUTH[coord_row]:3"
 
-/datum/hud/proc/SetButtonCoords(atom/movable/screen/button,number)
-	var/row = round((number-1)/AB_MAX_COLUMNS)
-	var/col = ((number - 1)%(AB_MAX_COLUMNS)) + 1
-	var/x_offset = 32*(col-1) + 4 + 2*col
-	var/y_offset = -32*(row+1) + 26
-
-	var/matrix/M = matrix()
-	M.Translate(x_offset,y_offset)
-	button.transform = M
-
 /atom/movable/screen/movable/action_button/proc/update_maptext(cd_time_deciseconds, color_cd = "#800000", color_neutral = "#ffffff")
 	if(!istype(maptext_holder))
-		maptext_holder = new(src)
+		maptext_holder = new /atom/movable/screen/maptext_holder/cooldown(src)
 		vis_contents.Add(maptext_holder)
 
 	maptext_holder.update_maptext(cd_time_deciseconds, color_cd, color_neutral)
 
+/atom/movable/screen/movable/action_button/proc/set_hotkey_label(number)
+	if(isnull(number))
+		if(hotkey_label_holder)
+			hotkey_label_holder.maptext = null
+		return
+	if(!istype(hotkey_label_holder))
+		hotkey_label_holder = new(src)
+		vis_contents.Add(hotkey_label_holder)
+	hotkey_label_holder.maptext = MAPTEXT("<span style='color: #ffe14d; -dm-text-outline: 1 #000000; font-weight: bold;'>[number]</span>")
+
+/atom/movable/screen/movable/action_button/proc/set_wheel_selected(selected) // TA EDIT START
+	if(!selected)
+		if(wheel_selection_holder)
+			wheel_selection_holder.maptext = null
+		return
+	if(!wheel_selection_holder)
+		wheel_selection_holder = new(src)
+		vis_contents.Add(wheel_selection_holder)
+	wheel_selection_holder.maptext = MAPTEXT("<span style='color: #80eaff; -dm-text-outline: 1 #000000; font-weight: bold;'>◆</span>")
+
+/atom/movable/screen/wheel_selection_holder
+	layer = ABOVE_HUD_LAYER
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	maptext_x = 22
+	maptext_y = 21
+	maptext_width = 12
+	maptext_height = 11 // TA EDIT END
+
+/atom/movable/screen/hotkey_label_holder
+	layer = ABOVE_HUD_LAYER
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	maptext_x = 1
+	maptext_y = 20
+	maptext_width = 12
+	maptext_height = 11
+
 /atom/movable/screen/maptext_holder
 	layer = ABOVE_HUD_LAYER
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	maptext_x = 8
 	maptext_y = 4
 
+/atom/movable/screen/maptext_holder/cooldown
+	maptext_x = 0
+	maptext_y = 0
+	maptext_width = 32
+	maptext_height = 32
+
 /atom/movable/screen/maptext_holder/proc/update_maptext(cd_time_deciseconds, color_cd = "#800000", color_neutral = "#ffffff")
 	if(cd_time_deciseconds <= 0)
-		maptext = null
-		color = color_neutral
+		if(maptext)
+			maptext = null
+			color = color_neutral
 		return
 	var/seconds_left = round(cd_time_deciseconds / (1 SECONDS), 0.1)
+	var/cd_text
 	if(seconds_left >= 60)
 		var/mins = round(seconds_left / 60)
 		var/secs = round(seconds_left) % 60
-		maptext = MAPTEXT("[mins]:[secs < 10 ? "0[secs]" : "[secs]"]")
+		cd_text = "[mins]:[secs < 10 ? "0[secs]" : "[secs]"]"
 	else
-		maptext = MAPTEXT("[seconds_left]s")
+		cd_text = "[seconds_left]s"
+	maptext = "<div align='center' valign='middle' class='maptext'>[cd_text]</div>"
 	color = color_cd
 
 #undef AB_MAX_COLUMNS
+#undef AB_REARRANGE_TINT
+#undef AB_DROP_TINT
+#undef AB_POSITION_TINT // TA EDIT

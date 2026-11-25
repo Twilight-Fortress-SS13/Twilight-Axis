@@ -23,21 +23,18 @@
 	display_category = ITEM_CAT_ARMOR_BRACERS
 	result = /obj/item/clothing/wrists/roguetown/bracers/leather
 	reqs = list(/obj/item/natural/hide/cured = 1)
-	sellprice = 10
 
 /datum/crafting_recipe/roguetown/leather/armor/pants
 	name = "leather pants"
 	display_category = ITEM_CAT_ARMOR_LEGS
 	result = /obj/item/clothing/under/roguetown/trou/leather
 	reqs = list(/obj/item/natural/hide/cured = 2)
-	sellprice = 10
 
 /datum/crafting_recipe/roguetown/leather/armor/volfhelm
 	name = "volf helm"
 	display_category = ITEM_CAT_ARMOR_HELMETS
 	result = list(/obj/item/clothing/head/roguetown/helmet/leather/volfhelm)
-	reqs = list(/obj/item/natural/hide/cured = 1, /obj/item/natural/fur/wolf = 1, /obj/item/natural/head/volf = 1)
-	sellprice = 20
+	reqs = list(/obj/item/natural/hide/cured = 1, /obj/item/natural/fur = 1, /obj/item/natural/head/volf = 1)
 
 /datum/crafting_recipe/roguetown/leather/armor/volfmantle
 	name = "volf mantle"
@@ -53,7 +50,6 @@
 	display_category = ITEM_CAT_ARMOR_HELMETS
 	result = list(/obj/item/clothing/head/roguetown/helmet/leather/saiga)
 	reqs = list(/obj/item/natural/hide/cured = 1, /obj/item/natural/hide = 2, /obj/item/natural/head/saiga = 1)
-	sellprice = 20
 
 /datum/crafting_recipe/roguetown/leather/armor/heavy_leather_pants
 	name = "hardened leather pants"
@@ -64,7 +60,6 @@
 		/obj/item/reagent_containers/food/snacks/tallow = 1,
 		/obj/item/natural/fibers = 1,
 		)
-	sellprice = 20
 	craftdiff = 3
 
 /datum/crafting_recipe/roguetown/leather/armor/heavy_leather_pants/shorts
@@ -76,7 +71,6 @@
 		/obj/item/reagent_containers/food/snacks/tallow = 1,
 		/obj/item/natural/fibers = 1,
 		)
-	sellprice = 20
 	craftdiff = 3
 
 /datum/crafting_recipe/roguetown/leather/armor/helmet/advanced
@@ -144,6 +138,11 @@
 		/obj/item/natural/fibers = 1,
 		)
 	craftdiff = 4
+/datum/crafting_recipe/roguetown/leather/armor/furheadband
+	name = "Fur Headband"
+	display_category = ITEM_CAT_ARMOR_HELMETS
+	result = /obj/item/clothing/head/roguetown/headband/fur
+	reqs = list(/obj/item/natural/hide/cured = 1) // is just a piece of rawhide, so it should be cheap to make like a helmet is
 
 /datum/crafting_recipe/roguetown/leather/armor/helmet
 	name = "leather helmet"
@@ -152,7 +151,7 @@
 	reqs = list(/obj/item/natural/hide/cured = 1)
 
 /datum/crafting_recipe/roguetown/leather/armor/heavy_leather_armor/coat/tailcoat
-	name =  "tailcoat"
+	name =	"tailcoat"
 	result = /obj/item/clothing/suit/roguetown/armor/leather/heavy/tailcoat
 	reqs = list(
 		/obj/item/natural/hide/cured = 2,

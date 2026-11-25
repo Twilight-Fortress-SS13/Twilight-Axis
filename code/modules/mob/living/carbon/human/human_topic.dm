@@ -11,10 +11,16 @@ GLOBAL_VAR_INIT(year_integer, text2num(year)) // = 2013???
 	if(href_list["task"] == "view_headshot")
 		if(!ismob(usr))
 			return
-		var/datum/examine_panel/mob_examine_panel = new(src)
+		var/mob/M = usr
+		var/datum/examine_panel/mob_examine_panel = new(src, (href_list["overridevisible"] && M.mind?.do_i_know(mind)))
 		mob_examine_panel.holder = src
 		mob_examine_panel.viewing = usr
 		mob_examine_panel.ui_interact(usr)
+		return
+
+	if(href_list["task"] == "gnoll_recall_secret")
+		var/mob/living/secret_target = locate(href_list["secret_target"])
+		gnoll_recall_tracked_secret(secret_target)
 		return
 
 	if(href_list["inspect_limb"] && (observer_privilege || usr.canUseTopic(src, BE_CLOSE, NO_DEXTERITY)))
@@ -106,15 +112,16 @@ GLOBAL_VAR_INIT(year_integer, text2num(year)) // = 2013???
 		return
 
 	if(href_list["origin_lore"])
-		if(!client || !client.prefs.virtue_origin.origin_desc || !client.prefs.virtue_origin.origin_name)
-			to_chat(usr, span_ooc("Characters must have a functional client for origin descriptions to be accessed."))
-			return
-		var/datum/browser/popup = new(usr, "origin_info", "<center>[client.prefs.virtue_origin.origin_name]</center>", 460, 550)
-		popup.set_content(client.prefs.virtue_origin.origin_desc)
+		var/oname = (dna.species.origin || "Elsewhere")
+		var/origin_desc = GLOB.origins[oname]
+		var/datum/browser/popup = new(usr, "origin_info", "<center>[oname]</center>", 460, 550)
+		popup.set_content(origin_desc)
 		popup.open()
 		return
 
 	if(href_list["undiesthing"]) //canUseTopic check for this is handled by mob/Topic()
+		if(NO_UNDERWEAR in dna.species.species_traits)
+			return
 		if(!get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
 			to_chat(usr, span_warning("I can't reach that! Something is covering it."))
 			return
@@ -131,6 +138,8 @@ GLOBAL_VAR_INIT(year_integer, text2num(year)) // = 2013???
 			underwear = null
 
 	if(href_list["legwearsthing"]) //canUseTopic check for this is handled by mob/Topic()
+		if(NO_UNDERWEAR in dna.species.species_traits)
+			return
 		if(!get_location_accessible(src, BODY_ZONE_PRECISE_GROIN, skipundies = TRUE))
 			to_chat(usr, span_warning("I can't reach that! Something is covering it."))
 			return
@@ -153,17 +162,21 @@ GLOBAL_VAR_INIT(year_integer, text2num(year)) // = 2013???
 		var/obj/item/place_item = usr.get_active_held_item() // Item to place in the pocket, if it's empty
 
 		var/delay_denominator = 1
+		var/pocket_delay_mult = 1 // Only scales looting
 		if(pocket_item && !(pocket_item.item_flags & ABSTRACT))
 			if(HAS_TRAIT(pocket_item, TRAIT_NODROP))
 				to_chat(usr, "<span class='warning'>I try to empty [src]'s [pocket_side] pocket, it seems to be stuck!</span>")
 			to_chat(usr, "<span class='notice'>I try to empty [src]'s [pocket_side] pocket.</span>")
+			if(isliving(usr))
+				var/mob/living/rummager = usr
+				pocket_delay_mult = rummager.get_strip_delay_mult(src, pocket_item)
 		else if(place_item && place_item.mob_can_equip(src, usr, pocket_id, 1) && !(place_item.item_flags & ABSTRACT))
 			to_chat(usr, "<span class='notice'>I try to place [place_item] into [src]'s [pocket_side] pocket.</span>")
 			delay_denominator = 4
 		else
 			return
 
-		if(do_mob(usr, src, POCKET_STRIP_DELAY/delay_denominator)) //placing an item into the pocket is 4 times faster
+		if(do_mob(usr, src, POCKET_STRIP_DELAY * pocket_delay_mult / delay_denominator)) //placing an item into the pocket is 4 times faster
 			if(pocket_item)
 				if(pocket_item == (pocket_id == SLOT_R_STORE ? r_store : l_store)) //item still in the pocket we search
 					dropItemToGround(pocket_item)
@@ -270,7 +283,7 @@ GLOBAL_VAR_INIT(year_integer, text2num(year)) // = 2013???
 						readable_coverage = body_parts_covered2organ_names(C.body_parts_covered_dynamic, verbose = TRUE)
 					for(var/coverageflag in readable_coverage)
 						for(var/type in damtypes)
-							switch(type)			//We get the max armor  values for this coverage flag
+							switch(type)			//We get the max armor	values for this coverage flag
 								if("blunt")
 									blunt_max[coverageflag] = max(C.armor.getRating(type), blunt_max[coverageflag])
 								if("slash")
@@ -365,7 +378,7 @@ GLOBAL_VAR_INIT(year_integer, text2num(year)) // = 2013???
 				else
 					dat += "<tr><td colspan='6'><b><center>I don't know! Just hit them!</center></b></td></tr>"
 			else
-				dat += "<tr><td colspan='6'><b><center>They're wearing nothing. The naked man fears no pickpocket.</center></b></td></tr>"
+				dat += "<tr><td colspan='6'><b><center>They're wearing nothing.</center></b></td></tr>"
 			dat += "</table></span>"
 
 			dat += "<span style='width:30%;text-align:center;vertical-align: text-top;box-sizing:border-box'>"
@@ -425,22 +438,112 @@ GLOBAL_VAR_INIT(year_integer, text2num(year)) // = 2013???
 		if(!ismob(usr))
 			return
 		var/msg = ""
-		if(rumour && length(rumour))
-			var/rumour_display = rumour
-			rumour_display = html_encode(rumour_display)
-			rumour_display = parsemarkdown_basic(rumour_display, hyperlink = TRUE)
-			msg += "<b>You recall what you heard around Town about [src]...</b><br>[rumour_display]"
-		if(((HAS_TRAIT(usr, TRAIT_NOBLE)) || observer_privilege) && length(noble_gossip))
+		if(length(rumour_cached))
+			msg += "<b>You recall what you heard around Town about [src]...</b><br>[rumour_cached]"
+		if(((HAS_TRAIT(usr, TRAIT_NOBLE)) || observer_privilege) && length(noble_gossip_cached))
 			if(msg)
 				msg += "<br><br>"
-			var/gossip_display = noble_gossip
-			gossip_display = html_encode(gossip_display)
-			gossip_display = parsemarkdown_basic(gossip_display, hyperlink = TRUE)
-			msg += "<b>You recall what the other Blue-bloods hushed about [src]...</b><br>[gossip_display]"
+			msg += "<b>You recall what the other Blue-bloods hushed about [src]...</b><br>[noble_gossip_cached]"
 		if(msg)
 			to_chat(usr, "<span class='info'>[msg]</span>")
 		else	//Edge-case of there being ONLY noble gossip, but we aren't a noble.
 			to_chat(usr, "<span class='info'>Any tales of intrigue of this one are reserved to the nobility...</span>")
+		return
+
+	// Dreamwalker and Vampire remote Secret links.
+	if(href_list["task"] == "view_remote_secret")
+		if(!ismob(usr))
+			return
+		var/secret_type = href_list["secret_type"]
+		if(!(secret_type in list("dreamwalker", "vampire")))
+			return
+		var/secret = get_secret_for(usr, secret_type)
+		if(!secret)
+			to_chat(usr, span_info("You recall nothing secret about this one."))
+			return
+		var/secret_intro
+		switch(secret_type)
+			if("dreamwalker")
+				secret_intro = "The mark pulls a buried truth from [src]'s dreaming mind..."
+			if("vampire")
+				secret_intro = "Your supernatural presence draws a hidden truth from [src]..."
+		var/parsed_secret = parsemarkdown_basic(html_encode(secret), hyperlink = TRUE)
+		to_chat(usr, "<span class='info'><b>[secret_intro]</b><br>[parsed_secret]</span>")
+		return
+
+	if(href_list["task"] == "view_secrets")
+		if(!ismob(usr))
+			return
+		var/list/known_secrets = get_examine_secrets_for(usr)
+		if(!length(known_secrets))
+			to_chat(usr, span_info("You recall nothing secret about this one."))
+			return
+		var/static/list/secret_labels = list(
+			"assassin" = "Assassin (Targeted)",
+			"bandit" = "Bandit",
+			"dreamwalker" = "Dreamwalker (Marked)",
+			"gnoll" = "Gnoll (Hunted)",
+			"hag" = "Hag",
+			"lich" = "Lich",
+			"maniac" = "Maniac",
+			"peasant_rebel" = "Rebel",
+			"vampire" = "Vampire",
+			"werewolf" = "Werewolf",
+			"wretch" = "Wretch",
+		)
+		var/secret_recall_msg = ""
+		var/has_secret = FALSE
+		var/generic_intro_added = FALSE
+
+		if(isobserver(usr) || usr.client?.holder)
+			secret_recall_msg = "<b>You recall the secrets recorded about [src]...</b><br>"
+		for(var/secret_type in known_secrets)
+			var/secret = known_secrets[secret_type]
+			if(!secret)
+				continue
+			var/secret_label = secret_labels[secret_type]
+			if(!secret_label)
+				secret_label = "[secret_type]"
+			if(has_secret)
+				secret_recall_msg += "<br><br>"
+			var/parsed_secret = parsemarkdown_basic(html_encode(secret), hyperlink = TRUE)
+			var/secret_intro
+			if(!(isobserver(usr) || usr.client?.holder))
+				switch(secret_type)
+					if("assassin")
+						secret_intro = "You recall what the profane dagger whispered about [src]..."
+					if("dreamwalker")
+						secret_intro = "The mark pulls a buried truth from [src]'s dreaming mind..."
+					if("gnoll")
+						secret_intro = "You recall what the pack knows about [src]..."
+					if("hag")
+						secret_intro = "The roots whisper what they know about [src]..."
+					if("vampire")
+						secret_intro = "Your supernatural presence draws a hidden truth from [src]..."
+			if(secret_intro)
+				secret_recall_msg += "<b>[secret_intro]</b><br>[parsed_secret]"
+			else
+				if(isobserver(usr) || usr.client?.holder)
+					secret_recall_msg += "<b>[secret_label]:</b><br>[parsed_secret]"
+				else
+					if(!generic_intro_added)
+						secret_recall_msg += "<b>You recall what you know about [src]...</b><br>"
+						generic_intro_added = TRUE
+					secret_recall_msg += "[parsed_secret]"
+			has_secret = TRUE
+		if(!has_secret)
+			to_chat(usr, span_info("You recall nothing secret about this one."))
+			return
+		to_chat(usr, "<span class='info'>[secret_recall_msg]</span>")
+		return
+
+	if(href_list["task"] == "view_fam_headshot")
+		if(!ismob(usr))
+			return
+		var/datum/examine_panel/familiar/mob_examine_panel = new(src)
+		mob_examine_panel.holder = src
+		mob_examine_panel.viewing = usr
+		mob_examine_panel.ui_interact(usr)
 		return
 
 	return ..() //end of this massive fucking chain. TODO: make the hud chain not spooky. - Yeah, great job doing that. - I made it worse sorry guys.
@@ -477,7 +580,8 @@ GLOBAL_VAR_INIT(year_integer, text2num(year)) // = 2013???
 			dots += "<font color='#404040'>&#9675;</font>"
 	return "<font color='[color]'>[label]</font> [dots]"
 
-/proc/skilldiff_report(var/input)
+/proc/skilldiff_report(input)
+	input = clamp(round(input, 1), -SKILL_LEVEL_LEGENDARY, SKILL_LEVEL_LEGENDARY)
 	switch (input)
 		if(-6)
 			return "<font color = '#ff4ad2'>I know nothing. They -- everything</font>"

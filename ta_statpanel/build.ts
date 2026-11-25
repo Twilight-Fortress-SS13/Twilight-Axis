@@ -8,11 +8,25 @@ const result = await build({
   target: "browser",
   minify: true,
 
-  jsx: "automatic",
-  jsxImportSource: "preact",
+  jsx: {
+    runtime: "automatic",
+    importSource: "preact",
+  },
 });
 
-const js = await result.outputs[0].text();
+if (!result.success) {
+  for (const log of result.logs) {
+    console.error(log);
+  }
+  process.exit(1);
+}
+
+const output = result.outputs[0];
+if (!output) {
+  throw new Error("TA StatPanel build produced no JavaScript output.");
+}
+
+const js = await output.text();
 const css = await Bun.file("ta_statpanel/main.css").text();
 
 const minifiedCss = transform({

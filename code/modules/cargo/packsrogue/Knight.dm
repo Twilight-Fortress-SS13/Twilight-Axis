@@ -23,6 +23,11 @@
 	cost = 60
 	contains = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet)
 
+/datum/supply_pack/rogue/Knight/armet_snouted
+	name = "Snouted Armet"
+	cost = 60
+	contains = list(/obj/item/clothing/head/roguetown/helmet/heavy/knight/armet/snouted)
+
 /datum/supply_pack/rogue/Knight/froggy
 	name = "Froggemund Helm"
 	cost = 100
@@ -158,6 +163,21 @@
 	cost = 30
 	contains = list(/obj/item/rogueweapon/sword/long)
 
+/datum/supply_pack/rogue/Knight/sabre
+	name = "Sabre"
+	cost = 40
+	contains = list(/obj/item/rogueweapon/sword/sabre)
+
+/datum/supply_pack/rogue/Knight/shamshir
+	name = "Shamshir"
+	cost = 50
+	contains = list(/obj/item/rogueweapon/sword/sabre/shamshir)
+
+/datum/supply_pack/rogue/Knight/rapier
+	name = "Rapier"
+	cost = 50
+	contains = list(/obj/item/rogueweapon/sword/rapier)
+
 /datum/supply_pack/rogue/Knight/greatsword
 	name = "Greatsword"
 	cost = 60
@@ -213,6 +233,6 @@
 
 // The hedge-knight can buy tamed saigas now to make use of their riding skill.
 
-/obj/structure/closet/crate/chest/saigabuck/Initialize()
+/obj/structure/closet/crate/chest/saigabuck/Initialize(mapload)
 	. = ..()
 	new /mob/living/simple_animal/hostile/retaliate/rogue/saiga/saigabuck/tame/saddled(src)

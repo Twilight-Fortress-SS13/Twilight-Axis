@@ -17,6 +17,7 @@
 	update_spd()
 
 	update_sight()
+	RegisterSignal(src, GLOB.sight_trait_signals, PROC_REF(on_sight_trait_change), override = TRUE)
 //	if (client && (stat == DEAD))
 //		client.ghostize()
 
@@ -30,6 +31,9 @@
 
 	if(ranged_ability)
 		ranged_ability.deactivate()
+
+	last_logout_time = 0
+	cancel_disconnected_admin_alert()
 
 	set_ssd_indicator(FALSE)
 

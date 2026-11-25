@@ -1,15 +1,18 @@
-#define DEAD_TO_ZOMBIE_TIME 7 MINUTES	//Time before death -> raised as zombie (when outside of the city)
 										//(This isn't exact time. Extended 5 -> 7 because only takes 2-3 min in testing at 5.)
 
 #define CORPSE_ROT_START_TIME 5 MINUTES
-#define CORPSE_SKELETONIZE_TIME 12 MINUTES
-#define CORPSE_DUST_TIME 20 MINUTES
+#define CORPSE_SKELETONIZE_TIME 15 MINUTES
+#define CORPSE_DUST_TIME 25 MINUTES
 
-#define SIMPLE_CORPSE_ROT_START 12 MINUTES
-#define SIMPLE_CORPSE_DUST_TIME 15 MINUTES
+#define SIMPLE_CORPSE_ROT_START 15 MINUTES
+#define SIMPLE_CORPSE_DUST_TIME 20 MINUTES
 
 #define HUNT_CORPSE_ROT_START 20 MINUTES
 #define HUNT_CORPSE_DUST_TIME 35 MINUTES
+
+// Give a longer limit for tamed animals
+#define TAME_CORPSE_ROT_START 45 MINUTES
+#define TAME_CORPSE_DUST_TIME 60 MINUTES
 
 /datum/component/rot
 	var/amount = 0
@@ -35,19 +38,19 @@
 
 /datum/component/rot/process()
 
-	var/amt2add = 10 // 1 Second. Base increment. 
+	var/amt2add = 10 // 1 Second. Base increment.
 	var/current_time = world.time
-    
+
 	// time elapsed since the last rot/process
 	var/elapsed_time = last_process ? (current_time - last_process) : 0
 	last_process = current_time
 
 	// Add amount based on the time elapsed. This is used to calculate when to wake/decompose
-	amount += (elapsed_time / 10) * amt2add 
+	amount += (elapsed_time / 10) * amt2add
 
 	return
 
-/datum/component/rot/corpse/Initialize()
+/datum/component/rot/corpse/Initialize(mapload)
 	if(!iscarbon(parent))
 		return COMPONENT_INCOMPATIBLE
 	. = ..()
@@ -105,14 +108,14 @@
 					B.rotted = TRUE
 					findonerotten = TRUE
 					shouldupdate = TRUE
-					C.apply_status_effect(/datum/status_effect/debuff/rotted_zombie)	//-8 con to rotting zombie corpse.
+					C.apply_status_effect(/datum/status_effect/debuff/rotted_zombie)	//-3 con, -8 int to rotting zombie corpse.
 			else
 				if(amount > CORPSE_SKELETONIZE_TIME)
 					if(!is_zombie)
 						B.skeletonize()
 						if(C.dna && C.dna.species)
 							C.dna.species.species_traits |= NOBLOOD
-						C.apply_status_effect(/datum/status_effect/debuff/rotted_zombie)	//-8 con to rotting zombie corpse - duplicate as a failsafe.
+						C.apply_status_effect(/datum/status_effect/debuff/rotted_zombie)	//-3 con, -8 int to rotting zombie corpse - duplicate as a failsafe.
 						shouldupdate = TRUE
 				else
 					findonerotten = TRUE
@@ -158,6 +161,15 @@
 	var/rot_start = SIMPLE_CORPSE_ROT_START
 	var/dust_time = SIMPLE_CORPSE_DUST_TIME
 
+/datum/component/rot/simple/Initialize(new_amount)
+	. = ..()
+	if(.)
+		return
+	var/mob/living/simple_animal/animal = parent
+	if(istype(animal) && (animal.tame || animal.ssaddle))
+		rot_start = TAME_CORPSE_ROT_START
+		dust_time = TAME_CORPSE_DUST_TIME
+
 /datum/component/rot/simple/process()
 	..()
 	var/mob/living/L = parent
@@ -190,7 +202,6 @@
 	volume = 50
 	extra_range = 0
 
-#undef DEAD_TO_ZOMBIE_TIME
 #undef CORPSE_ROT_START_TIME
 #undef CORPSE_SKELETONIZE_TIME
 #undef CORPSE_DUST_TIME
@@ -198,3 +209,5 @@
 #undef SIMPLE_CORPSE_DUST_TIME
 #undef HUNT_CORPSE_ROT_START
 #undef HUNT_CORPSE_DUST_TIME
+#undef TAME_CORPSE_ROT_START
+#undef TAME_CORPSE_DUST_TIME

@@ -1,5 +1,6 @@
 // -------------- FAT -----------------
 /obj/item/reagent_containers/food/snacks/fat
+	dish_type = DISH_MEAT
 	icon = 'modular/Neu_Food/icons/others/fat.dmi'
 	name = "fat"
 	desc = "A lump of animal fat, fit for oiling and sausage-stuffing."
@@ -10,7 +11,7 @@
 	fat_yield = 20
 
 /obj/item/reagent_containers/food/snacks/fat/attackby(obj/item/I, mob/living/user, params)
-	var/found_table = locate(/obj/structure/table) in (loc)
+	var/found_table = has_table_surface(loc)
 	update_cooktime(user)
 	if(istype(I, /obj/item/reagent_containers/food/snacks/rogue/meat/mince))
 		if(isturf(loc)&& (found_table))
@@ -33,7 +34,7 @@
 	if(!isliving(M) || (M != user))
 		return ..()
 
-	user.visible_message("[user] starts to oil up [M]", "You start to oil up [M]")
+	user.visible_message(span_info("[user] starts to oil up [M]."), span_info("You start to oil up [M]."))
 	if(!do_after(user, 5 SECONDS, M))
 		return
 	M.apply_status_effect(/datum/status_effect/buff/oiled)
@@ -44,6 +45,7 @@
 
 // TALLOW is used as an intermediate crafting ingredient for other recipes.
 /obj/item/reagent_containers/food/snacks/tallow
+	dish_type = DISH_MEAT
 	name = "tallow"
 	desc = "Fatty tissue is harvested from slain creachurs and rendered of its membraneous sinew to produce a hard shelf-stable \
 	grease."
@@ -58,7 +60,7 @@
 	dropshrink = 0.75
 	var/wax_pigment = "white" //Default pigment for tallow, can be changed by mixing with other reagents
 
-/obj/item/reagent_containers/food/snacks/tallow/Initialize()
+/obj/item/reagent_containers/food/snacks/tallow/Initialize(mapload)
 	. = ..()
 	var/static/list/slapcraft_recipe_list = list(
 		/datum/crafting_recipe/roguetown/survival/soap,
@@ -84,7 +86,6 @@
 		slapcraft_recipes = slapcraft_recipe_list,\
 		)
 
-// TA EDIT START
 /obj/item/reagent_containers/food/snacks/tallow/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Mixing tallow with a filled glass of red wine can make 'redtallow', a crimson-tinged wax that's popular for sealing folded letters of ducal- and religious importance.")
@@ -111,8 +112,8 @@
 /obj/item/reagent_containers/food/snacks/tallow/green
 	name = "greentallow"
 	desc = "Fatty tissue is harvested from slain creachurs and rendered of its membraneous sinew to produce a hard shelf-stable \
-    grease. To satisfy the bean-counters of Azuria, it has been infused with ground tea leaves, creating a sickly green hue \
-    synonymous with coin and corruption. It's the smell of a balanced ledger and dried tea."
+	grease. To satisfy the bean-counters of Azuria, it has been infused with ground tea leaves, creating a sickly green hue \
+	synonymous with coin and corruption. It's the smell of a balanced ledger and dried tea."
 	icon_state = "greentallow"
 	tastes = list("grease" = 1, "oil" = 1, "regret" = 1, "bitterness" = 1,)
 	wax_pigment = "green"
@@ -138,12 +139,12 @@
 		return TRUE
 
 	// Try to make blacktallow with ash
-	if(istype(I, /obj/item/ash))
+	if(is_ash_item(I)) // TA EDIT
 		if(tgui_alert(user, "Soak the tallow in ash to make blacktallow?", "Make Blacktallow", list("Yes", "No")) != "Yes")
 			return TRUE
 
+		consume_ash_unit(I) // TA EDIT
 		changefood(/obj/item/reagent_containers/food/snacks/tallow/black, user)
-		qdel(I)
 		to_chat(user, span_notice("You stain the tallow with ash, turning it into blacktallow."))
 		return TRUE
 
@@ -238,5 +239,3 @@
 			return TRUE
 
 	return FALSE
-
-// TA EDIT END

@@ -1,3 +1,6 @@
+/mob/living/proc/has_extractable_lux()
+	return !HAS_TRAIT(src, TRAIT_CONJURED_SUMMON)
+
 /datum/surgery/extract_lux
 	steps = list(
 		/datum/surgery_step/incise,
@@ -14,6 +17,7 @@
 	name = "Extract Lux"
 	implements = list(
 		TOOL_SCALPEL = 80,
+		TOOL_SHARP = 40,
 	)
 	target_mobtypes = list(/mob/living/carbon/human)
 	time = 8 SECONDS
@@ -25,11 +29,22 @@
 
 /datum/surgery_step/extract_lux/validate_target(mob/user, mob/living/target, target_zone, datum/intent/intent)
 	. = ..()
+	if(!.)
+		return
+	if(user == target)
+		to_chat(user, span_warning("I cannot carve the lux from my own heart."))
+		return FALSE
 	if(target.stat == DEAD)
 		to_chat(user, "They're dead!")
 		return FALSE
+	if(!target.has_extractable_lux())
+		to_chat(user, span_warning("There's no true lifeforce within this conjuration. There is no Lux to extract."))
+		return FALSE
 	if(istiefling(target) || isdullahan(target)) //TA EDIT
 		to_chat(user, span_warning("Their Lux is infernal. It will not do."))
+		return FALSE
+	if(HAS_TRAIT(target, TRAIT_TAINTEDLUX))
+		to_chat(user, span_warning("Their lux is tainted; it will not do."))
 		return FALSE
 	if(HAS_TRAIT(target, TRAIT_UNFORGIVABLE))
 		to_chat(user, span_warning("There's violet-ochre flames flickering inside of the cracks in their ribs, there is no Lux to extract, a <b>Vheslynite abomination.</b>"))
@@ -54,10 +69,10 @@
 			"[user] extracts lux from [target]'s innards.")
 
 		var/apply_greater
-		if(isaasimar(target) && !(HAS_TRAIT(target, TRAIT_ANCIENT_HAG) || HAS_TRAIT(target, TRAIT_FEYTOUCHED)))
+		if(isaasimar(target) && !(HAS_TRAIT(target, TRAIT_ANCIENT_HAG) || HAS_TRAIT(target, TRAIT_FEYBOUND)))
 			new /obj/item/reagent_containers/lux(target.loc)
 			apply_greater = TRUE
-		else if(HAS_TRAIT(target, TRAIT_ANCIENT_HAG) || HAS_TRAIT(target, TRAIT_FEYTOUCHED))
+		else if(HAS_TRAIT(target, TRAIT_ANCIENT_HAG) || HAS_TRAIT(target, TRAIT_FEYBOUND))
 			new /obj/item/reagent_containers/lux_moss(target.loc)
 		else
 			new /obj/item/reagent_containers/lux_impure(target.loc)
@@ -66,4 +81,6 @@
 		//record_featured_stat(FEATURED_STATS_CRIMINALS, user)	- This.. isn't normally criminal.
 		record_round_statistic(STATS_LUX_HARVESTED)
 		target.apply_status_effect((apply_greater ? /datum/status_effect/debuff/devitalised/greater : /datum/status_effect/debuff/devitalised))
+		if(!target.mind)
+			target.death()
 	return TRUE

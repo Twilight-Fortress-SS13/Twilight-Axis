@@ -6,7 +6,7 @@
 /obj/item/
 	var/aura_color = null
 
-/obj/item/Initialize()
+/obj/item/Initialize(mapload)
 	. = ..()
 	if(aura_color)
 		apply_aura()
@@ -36,7 +36,7 @@
 /obj/item/alchserum
 	var/current_color = "#ffffff"
 
-/obj/item/alchserum/Initialize()
+/obj/item/alchserum/Initialize(mapload)
 	. = ..()
 	update_icon()
 
@@ -54,7 +54,7 @@
 	smoke.set_up(radius, T)
 	smoke.start()
 
-var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (2).ogg','sound/foley/bubb (3).ogg','sound/foley/bubb (4).ogg','sound/foley/bubb (5).ogg')
+GLOBAL_LIST_INIT(da_bubbles, list('sound/foley/bubb (1).ogg','sound/foley/bubb (2).ogg','sound/foley/bubb (3).ogg','sound/foley/bubb (4).ogg','sound/foley/bubb (5).ogg'))
 
 // admin spawnable only
 /obj/item/matthios_canister
@@ -69,7 +69,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	var/list/ingredient_colors = list()
 	var/result_path = null
 
-/obj/item/matthios_canister/Initialize()
+/obj/item/matthios_canister/Initialize(mapload)
 	. = ..()
 	update_icon()
 
@@ -153,7 +153,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	var/impure_lux_count = 0
 	var/lux_blood = 0
 
-/obj/item/matthios_canister/lyfestruth/Initialize()
+/obj/item/matthios_canister/lyfestruth/Initialize(mapload)
 	. = ..()
 	required_herbs = required_herbs.Copy()
 
@@ -416,7 +416,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 
 	to_chat(user, span_notice("You begin pouring the lyfestruth over [target.name]..."))
 
-	if(do_after(user, 6 SECONDS, target))
+	if(do_after(user, 6 SECONDS, target = target)) // TA EDIT
 		if(!target || target.stat != DEAD)
 			return
 		apply_effect(target, user)
@@ -446,7 +446,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 
 	var/turf/T = get_turf(target)
 	if(T)
-		explosion(T, devastation_range = null, heavy_impact_range = null, light_impact_range = 4, flame_range = 8, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg'))
+		explosion(T, extreme_impact_range = null, heavy_impact_range = null, light_impact_range = 4, flame_range = 8, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg'))
 
 	for(var/mob/living/M in range(4, target))
 		if(M == target)
@@ -493,15 +493,15 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 
 	if(istype(I, /obj/item/rogueore))
 		var/obj/item/rogueore/O = I
-		return O.sellprice
+		return O.get_real_price()
 
 	if(istype(I, /obj/item/roguegem))
 		var/obj/item/roguegem/G = I
-		return G.sellprice
+		return G.get_real_price()
 
 	if(istype(I, /obj/item/riddleofsteel))
 		var/obj/item/riddleofsteel/R = I
-		return R.sellprice
+		return R.get_real_price()
 
 	return 0
 
@@ -689,7 +689,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 //Uses up to 10 organic items and converts them into 1 lavish food of choice. It can fail and become bread or worse.
 
 /obj/item/matthios_canister/kingsfeast
-	name = "vial of kingsfeast base"
+	name = "vial of freeman's feast base" //TA EDIT
 	desc = "The brew within sloshes thick as spoiled blood. A stench rises from it most foul, resembling a mixture of rot and brine. The very vapours of said tincture can dissolve organic matter."
 
 	var/max_ingredients = 10
@@ -772,7 +772,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 			"The [I] yields entirely, reduced and recomposed within the vessel's thick contents..."
 		)
 		qdel(I)
-		playsound(user, pick(da_bubbles), 30, FALSE)
+		playsound(user, pick(GLOB.da_bubbles), 30, FALSE)
 		to_chat(user, span_notice(pick(absorb_flavor)))
 		update_icon()
 		check_completion(user)
@@ -788,7 +788,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 /obj/item/matthios_canister/kingsfeast/alch_transform(mob/user)
 	var/ishungry = user.nutrition < NUTRITION_LEVEL_HUNGRY
 	var/miraclecheck = 10 * user.get_skill_level(/datum/skill/magic/holy)
-	to_chat(user, span_notice("You begin channeling your greed into the mixture..."))
+	to_chat(user, span_notice("You begin channeling your need into the mixture...")) //TA EDIT
 
 	var/list/options = list(
 		"Ducal Peppersteak" = /obj/item/reagent_containers/food/snacks/rogue/peppersteak/ducal,
@@ -802,7 +802,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 		"Meat Handpie" = /obj/item/reagent_containers/food/snacks/rogue/handpie/meat,
 	)
 
-	var/choice = input(user, "What form shall your greed take?", "Kingsfeast") as null|anything in options
+	var/choice = input(user, "What form shall your feast take?", "Feast of the Free") as null|anything in options  //TA EDIT
 	if(!choice)
 		return
 
@@ -816,7 +816,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 		return
 
 	if(!ishungry && prob(80 - miraclecheck)) // bread troll
-		to_chat(user, span_warning("The mixture shifts... simplifying itself into something more befitting your greed."))
+		to_chat(user, span_warning("The mixture shifts... simplifying itself into something more befitting your reality.")) //TA EDIT
 		new /obj/item/reagent_containers/food/snacks/rogue/bread(get_turf(src))
 		if(prob(20))
 			user.emote(pick("sigh","groan"))
@@ -826,9 +826,9 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 
 	if(ishungry && prob(25))
 		to_chat(user, span_notice("Matthios takes pity on your mortal limitations. You compulsively shout in gratitude!"))
-		user.say(pick("PRAISE YOU, O' GENEROUS MATTHIOS!!","AT LAST, THE TRUE GOLD OF CULINARY ALCHEMY!!","BLESSED BE THY HANDS WHICH GRANT ME SUSTENANCE, MATTHIOS!!","I SHALL GIVE ALL FOR THY SMILE, LORD OF FREEDOM!!"), language = /datum/language/common)
+		user.say(pick("PRAISE YOU, O' GENEROUS MATTHIOS!!","AT LAST, THE TRUE GOLD OF CULINARY ALCHEMY!!","BLESSED BE THY HANDS WHICH GRANT ME SUSTENANCE, MATTHIOS!!","I SHALL GIVE ALL FOR THY SMILE, LORD OF NO REALM!!"), language = /datum/language/common) //TA EDIT
 
-	to_chat(user, span_notice("The mixture responds to your greed, shaping and taking the desired form. It feels warm and tasty!"))
+	to_chat(user, span_notice("The mixture responds to your needs, shaping and taking the desired form. It feels warm and tasty!")) //TA EDIT
 
 	new result_type(get_turf(src))
 	funny_smoke(src)
@@ -839,7 +839,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 		to_chat(user, span_warning("It is not yet ready."))
 		return
 
-	to_chat(user, span_notice("The mixture churns expectantly, awaiting the weight of your greed..."))
+	to_chat(user, span_notice("The mixture churns expectantly, awaiting the weight of your desires...")) //TA EDIT
 	alch_transform(user)
 
 /obj/item/matthios_canister/goodnite
@@ -908,7 +908,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 			current_color = color_to_use
 
 		qdel(I)
-		playsound(user, pick(da_bubbles), 30, FALSE)
+		playsound(user, pick(GLOB.da_bubbles), 30, FALSE)
 
 		var/list/absorb_flavor = list(
 			"The mixture receives [I], its form dissolving into a calm, pale suspension...",
@@ -955,7 +955,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	else
 		to_chat(user, span_notice("You begin administering the vial to your own forehead..."))
 
-	if(do_after(user, 6 SECONDS, target))
+	if(do_after(user, 6 SECONDS, target = target)) // TA EDIT
 		apply_firstlaw_insight(target, user)
 
 /obj/item/alchserum/matthios_insight/proc/apply_firstlaw_insight(mob/living/carbon/human/T, mob/user)
@@ -991,7 +991,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 
 	to_chat(user, span_notice("You begin gently administering the concoction to [target.name]'s eyes..."))
 
-	if(do_after(user, 6 SECONDS, target))
+	if(do_after(user, 6 SECONDS, target = target)) // TA EDIT
 		apply_sleep(target, user)
 
 /obj/item/alchserum/matthios_goodnite/proc/apply_sleep(mob/living/target, mob/user)
@@ -1004,6 +1004,10 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 
 	to_chat(target, span_notice("A heavy calm overtakes your body..."))
 	sleep(5)
+	if(!user || !target || user.z != target.z || get_dist(user, target) > 1) // TA EDIT START
+		return
+	if(target != user)
+		log_combat(user, target, "put to sleep", src) // TA EDIT END
 	visible_message(span_notice("[target.name] suddenly goes limp, overtaken by unnatural sleep."))
 
 	target.SetSleeping(600)
@@ -1302,7 +1306,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 
 			qdel(I)
 			current_color = "#9c3b1f"
-			playsound(user, pick(da_bubbles), 30, FALSE)
+			playsound(user, pick(GLOB.da_bubbles), 30, FALSE)
 			to_chat(user, span_notice("The mixture ferments the offering. ([current_liquid]/[needed_liquid])"))
 			update_icon()
 			check_completion(user)
@@ -1495,7 +1499,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 /obj/item/alchserum/matthios_kingsblood/examine(mob/user)
 	. = ..()
 
-	if(user?.mind?.has_antag_datum(/datum/antagonist/vampire) || HAS_TRAIT(user, TRAIT_PALLID) || HAS_TRAIT(user, TRAIT_ORGAN_EATER))
+	if(user?.mind?.has_antag_datum(/datum/antagonist/vampire) || HAS_TRAIT(user, TRAIT_ORGAN_EATER))
 		. += span_warning("TIP: You could drink this instead of applying it. Aim for your mouth and use it on yourself.")
 
 /obj/item/alchserum/matthios_kingsblood/attack(mob/living/carbon/human/target, mob/living/user)
@@ -1503,7 +1507,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 		return ..()
 
 	var/is_vampire = target.mind?.has_antag_datum(/datum/antagonist/vampire)
-	var/is_blood_drinker = is_vampire || HAS_TRAIT(target, TRAIT_PALLID) || HAS_TRAIT(target, TRAIT_ORGAN_EATER)
+	var/is_blood_drinker = is_vampire || HAS_TRAIT(target, TRAIT_ORGAN_EATER)
 
 	if(target == user && user.zone_selected == BODY_ZONE_PRECISE_MOUTH && is_blood_drinker)
 		if(do_after(user, 2 SECONDS, target = target))
@@ -1559,47 +1563,69 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	desc = "He was ever the one to make you ask questions: Why are we still here? Just to suffer? Nae. We are here to make a change. And a change we shall make, together."
 	icon_state = "matthios"
 	resistance_flags = FIRE_PROOF
-	slot_flags = ITEM_SLOT_NECK || ITEM_SLOT_RING
-	smeltresult = /obj/item/ash
+	slot_flags = ITEM_SLOT_NECK | ITEM_SLOT_RING
+	smeltresult = /obj/item/natural/ash
 	aura_color = "#ffe761"
+	var/stolen_fyre = FALSE
 	var/grant_chant = FALSE
 	var/active_item = FALSE
-	var/stolen_fyre = FALSE
+	var/swap_type = /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gilded/astrata
+	var/swap_message = "The gilded amulet transmutates to a different form. You feel a smile, as you profane Her fyre the same way as He did."
+	is_important = TRUE
+
+/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gilded/proc/swap_form(mob/living/carbon/human/user)
+	var/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gilded/new_amulet = new swap_type(user.loc)
+	if(user.is_holding(src))
+		user.temporarilyRemoveItemFromInventory(src)
+		user.put_in_hands(new_amulet)
+	else
+		new_amulet.forceMove(get_turf(user))
+	qdel(src)
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gilded/examine(mob/user)
 	. = ..()
-	if(HAS_TRAIT(user, TRAIT_FREEMAN) && stolen_fyre)
-		. += span_notice("<i>As coin begets coin, so too does Her pride beget ruin. She believes Her will absolute, yet She stands as anything but. The theft of Her fyre was merely the first proof. The future belongs to the free. To humenkind. Not to the rule of a weak tyrant and their blood-bound puppets.</i>")
 	if(HAS_TRAIT(user, TRAIT_FREEMAN))
+		. += span_notice("<i>As coin begets coin, so too does Her pride beget ruin. She believes Her will absolute, yet She stands as anything but. The theft of Her fyre was merely the first proof. The future belongs to the free. To humenkind. Not to the rule of a weak tyrant and their blood-bound puppets.</i>")
 		. += span_warning("This amulet can be swapped into another form by using it on your hand.")
+		. += span_warning("Grants +1 LUC if you use it while undisguised.")
 
-/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gilded/attack_self(mob/user)
+/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gilded/attack_self(mob/living/carbon/human/user)
 	if(!HAS_TRAIT(user, TRAIT_FREEMAN))
 		return
 	if(!do_after(user, 1 SECONDS))
 		return
-	stolen_fyre = !stolen_fyre
+	playsound(user.loc, 'sound/magic/swap.ogg', 25, TRUE, -2)
+	if(findtext(LOWER_TEXT(name), "ruined"))
+		to_chat(user, span_warning("[src] crumbles into ash in your hands."))
+		new /obj/item/natural/ash(get_turf(src))
+		qdel(src)
+		return
+	to_chat(user, span_warning(swap_message))
+	swap_form(user)
 
-	if(stolen_fyre)
-		name = "ornate amulet of Astrata"
-		desc = "Her command is absolute, and Her tyranny is unmarrable. Reclaim this world, child of mine, from those who'd seek to destroy it."
-		icon_state = "astrata_g"
-		to_chat(user, span_warning("The gilded amulet transmutates to a different form. You feel a smile, as you profane Her fyre the same way as He did."))
-		playsound(user.loc, 'sound/magic/swap.ogg', 25, TRUE, -2)
-	else
-		name = "ornate amulet of Matthios"
-		desc = "He was ever the one to make you ask questions: Why are we still here? Just to suffer? Nae. We are here to make a change. And a change we shall make, together."
-		icon_state = "matthios"
-		to_chat(user, span_warning("The gilded amulet settles back into familiar weight. You feel a grin, as He commends you for your boldness."))
-		playsound(user.loc, 'sound/magic/swap.ogg', 25, TRUE, -2)
+/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gilded/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_MATTHIOS_ICON)
 
-	update_icon()
+/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gilded/astrata
+	name = "ornate amulet of Astrata"
+	desc = "Her command is absolute, and Her tyranny is unmarrable. Reclaim this world, child of mine, from those who'd seek to destroy it."
+	icon_state = "astrata_g"
+	aura_color = null
+	swap_type = /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gilded
+	swap_message = "The gilded amulet settles back into familiar weight. You feel a grin, as He commends you for your boldness."
+	stolen_fyre = TRUE
+	is_important = TRUE
+
+/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gilded/astrata/get_examine_highlight_status()
+	return null
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gilded/equipped(mob/living/carbon/human/user, slot)
 	. = ..()
 	if(obj_broken || active_item)
 		return
-	if((slot == SLOT_NECK || slot == SLOT_RING) && HAS_TRAIT(user, TRAIT_FREEMAN))
+	if((slot == SLOT_NECK || slot == SLOT_RING) && user.patron && (user.patron.type in ALL_INHUMEN_PATRONS))
+		if(!stolen_fyre && HAS_TRAIT(user, TRAIT_FREEMAN))
+			user.change_stat(STATKEY_LCK, 1, "matthios_boldness")
 		active_item = TRUE
 		if(!user.has_language(/datum/language/thievescant))
 			to_chat(user, span_info("You gain insight on Thieves' Cant.<br><br><i>Keep in mind these are 'words' that come out as gestures, so blend it between normal speech to make it not so obvious.<br><font color=yellow>(Prefix: ,y)</font></i>"))
@@ -1613,27 +1639,22 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	if(!active_item)
 		return
 	active_item = FALSE
+	if(!stolen_fyre && HAS_TRAIT(user, TRAIT_FREEMAN))
+		user.change_stat(STATKEY_LCK, 0, "matthios_boldness")
 	if(grant_chant)
 		to_chat(user, span_info("The knowledge fades from my mind."))
 		user.remove_language(/datum/language/thievescant)
 		grant_chant = FALSE
 
-/obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/gilded/get_examine_highlight_status()
-	// If we have stolen fyre, it looks like an ornate Astratan amulet. Disguised...
-	if(stolen_fyre)
-		return null
-	// Otherwise, it's an undisguised and GAUDY Matthiosian amulet. Very obvious.
-	else
-		return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS, HERESYDESC_MATTHIOS_ICON)
-
 /obj/item/clothing/gloves/roguetown/fingerless_leather/muffle_matthios
 	name = "gilded fingerless gloves"
-	desc = "Those who grasp at Fyre, are bount to be burned."
+	desc = "Those who grasp at Fyre, are bound to be burned."
 	sewrepair = TRUE
 	armor = ARMOR_LEATHER
 	color = "#fce517" // we golden
 	aura_color = "#fff385"
 	var/active_item = FALSE
+	is_important = TRUE
 
 /obj/item/clothing/gloves/roguetown/fingerless_leather/muffle_matthios/equipped(mob/living/carbon/human/user, slot)
 	. = ..()
@@ -1662,6 +1683,8 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	color = "#faf5cb"
 	aura_color = "#fffb00"
 	var/active_item = FALSE
+	is_important = TRUE
+	attachable = FALSE
 
 /obj/item/clothing/mask/rogue/spectacles/matthios/equipped(mob/living/carbon/human/user, slot)
 	. = ..()
@@ -1748,6 +1771,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	armor = ARMOR_LEATHER
 	color = "#fff9c0" // we golden
 	aura_color = "#ffe600"
+	is_important = TRUE
 
 /obj/item/clothing/shoes/roguetown/boots/muffle_matthios/equipped(mob/living/carbon/human/user, slot)
 	. = ..()
@@ -1767,113 +1791,29 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_MATTHIOS_ARMOR) //These were always meant to be valid I don't get why this was forgotten about
 
 //THROWABLES
-/obj/item/impact_grenade/truthsnuke/lesser
-	name = "Incomplete TRUTHSNUKE"
-	desc = "A fragile canister, filled with an explosive surprise. Shards of flint line its thin sleeve, aching to ignite at the slightest disturbance. The fire of Astrata does not seem to be imbuing it, but..."
-
-/obj/item/impact_grenade/truthsnuke/lesser/explodes()
-	STOP_PROCESSING(SSfastprocess, src)
-
-	var/turf/T = get_turf(src)
-	if(!T)
-		qdel(src)
-		return
-
-	// Affect mobs
-	for(var/mob/living/target in range(3, T))
-
-		if(QDELETED(target))
-			continue
-
-		if(HAS_TRAIT(target, TRAIT_NOBLE) || HAS_TRAIT(target, TRAIT_CLERGY))
-			target.visible_message(
-				span_danger("[target]'s skin begins to SLOUGH AND BURN HORRIFICALLY, glowing like molten metal!"),
-				span_userdanger("MY LIMBS BURN IN AGONY...")
-			)
-
-			target.Stun(8 SECONDS)
-			target.emote("agony")
-			target.adjustFireLoss(50)
-			target.adjust_fire_stacks(9, /datum/status_effect/fire_handler/fire_stacks/divine)
-			target.ignite_mob()
-
-			playsound(target, 'sound/magic/churn.ogg', 100, TRUE)
-			explosion(get_turf(target), light_impact_range = 1, flame_range = 1, smoke = FALSE)
-
-			addtimer(CALLBACK(src, PROC_REF(truthsnuke_transmute_target), target), 8 SECONDS)
-			continue
-
-		var/is_heretic = HAS_TRAIT(target, TRAIT_FREEMAN) || HAS_TRAIT(target, TRAIT_CABAL) || HAS_TRAIT(target, TRAIT_HORDE) || HAS_TRAIT(target, TRAIT_DEPRAVED)
-
-		target.apply_status_effect(/datum/status_effect/buff/alch/fire_resist)
-
-		if(is_heretic)
-			to_chat(target, span_artery("They called us Inhumen. They called this Heresy. Yet here we stand—unbroken, unburned. Let the world choke on truth."))
-			target.visible_message(span_notice("[target] stands untouched amidst the inferno."))
-			target.emote("laugh")
-		else
-			target.emote("agony")
-			target.Stun(2 SECONDS)
-			target.Knockdown(2 SECONDS)
-			target.adjustFireLoss(40)
-			to_chat(target, span_artery("IT BURNS! THE TRUTH! IT BURNS!!!"))
-
-	// Affect structures / turfs
-	for(var/turf/affected in range(3, T))
-
-		for(var/obj/structure/mineral_door/D in affected)
-			if(!(D.resistance_flags & INDESTRUCTIBLE))
-				qdel(D)
-
-		for(var/obj/structure/roguewindow/W in affected)
-			if(!(W.resistance_flags & INDESTRUCTIBLE))
-				qdel(W)
-
-		for(var/obj/O in affected)
-			if(QDELETED(O))
-				continue
-			if(O == src)
-				continue
-			if(!(O.resistance_flags & INDESTRUCTIBLE))
-				O.visible_message(span_danger("[O] is torn apart by the blast!"))
-				qdel(O)
-
-		if(istype(affected, /turf/closed) && !istype(affected, /turf/closed/indestructible))
-			var/turf/closed/C = affected
-			C.ChangeTurf(/turf/open/floor/rogue/dirt)
-			continue
-
-		if(istype(affected, /turf/open) && !istype(affected, /turf/open/floor/rogue/dirt))
-			var/turf/open/O = affected
-			O.ChangeTurf(/turf/open/floor/rogue/dirt)
-
-	// Throw mobs outward
-	for(var/mob/living/M in range(3, T))
-		if(QDELETED(M))
-			continue
-		var/dir = get_dir(T, M)
-		M.throw_at(get_edge_target_turf(M, dir), 6, 3)
-
-	explosion(T,devastation_range = 0,heavy_impact_range = 0,light_impact_range = 4,flame_range = 8,flash_range = 8,smoke = TRUE,soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg'))
-
-	qdel(src)
-
 //I'll leave it as an admin spawnable cause why not, but as is right now there's no way anything can get access to this.
-/obj/item/impact_grenade/truthsnuke
+/obj/item/explosive/impact/truthsnuke
 	name = "TRUTHSNUKE"
 	desc = "A fragile canister, filled with an explosive surprise. Shards of flint line its thin sleeve, aching to ignite at the slightest disturbance. It glows with a divine might, and once again stolen fire."
 	aura_color = "#fbff00"
+	/// Radius in which mobs are judged and the land is razed
+	var/nukerange = 15
+	/// Radius in which mobs are flung outwards
+	var/fling = 12
+	var/lightrange = 10
+	var/flamerange = 15
 
-/obj/item/impact_grenade/truthsnuke/explodes()
-	STOP_PROCESSING(SSfastprocess, src)
+/obj/item/explosive/impact/truthsnuke/lesser
+	name = "Incomplete TRUTHSNUKE"
+	desc = "A fragile canister, filled with an explosive surprise. Shards of flint line its thin sleeve, aching to ignite at the slightest disturbance. The fire of Astrata does not seem to be imbuing it, but..."
+	nukerange = 3
+	fling = 3
+	lightrange = 4
+	flamerange = 8
 
-	var/turf/T = get_turf(src)
-	if(!T)
-		qdel(src)
-		return
-
+/obj/item/explosive/impact/truthsnuke/blast(turf/T, forced)
 	// Affect mobs
-	for(var/mob/living/target in range(15, T))
+	for(var/mob/living/target in range(nukerange, T))
 
 		if(QDELETED(target))
 			continue
@@ -1894,7 +1834,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 			playsound(target, 'sound/magic/churn.ogg', 100, TRUE)
 			explosion(get_turf(target), light_impact_range = 1, flame_range = 1, smoke = FALSE)
 
-			addtimer(CALLBACK(src, PROC_REF(truthsnuke_transmute_target), target), 8 SECONDS)
+			addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(truthsnuke_transmute), target), 8 SECONDS)
 			continue
 
 		var/is_heretic = HAS_TRAIT(target, TRAIT_FREEMAN) || HAS_TRAIT(target, TRAIT_CABAL) || HAS_TRAIT(target, TRAIT_HORDE) || HAS_TRAIT(target, TRAIT_DEPRAVED)
@@ -1902,7 +1842,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 		target.apply_status_effect(/datum/status_effect/buff/alch/fire_resist)
 
 		if(is_heretic)
-			to_chat(target, span_artery("They called us Inhumen. They called this Heresy. Yet here we stand—unbroken, unburned. Let the world choke on truth."))
+			to_chat(target, span_artery("They called us Inhumen. They called this Heresy. Yet here we stand, unbroken, unburned. Let the world choke on truth."))
 			target.visible_message(span_notice("[target] stands untouched amidst the inferno."))
 			target.emote("laugh")
 		else
@@ -1913,7 +1853,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 			to_chat(target, span_artery("IT BURNS! THE TRUTH! IT BURNS!!!"))
 
 	// Affect structures / turfs
-	for(var/turf/affected in range(15, T))
+	for(var/turf/affected in range(nukerange, T))
 
 		for(var/obj/structure/mineral_door/D in affected)
 			if(!(D.resistance_flags & INDESTRUCTIBLE))
@@ -1942,17 +1882,15 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 			O.ChangeTurf(/turf/open/floor/rogue/dirt)
 
 	// Throw mobs outward
-	for(var/mob/living/M in range(12, T))
+	for(var/mob/living/M in range(fling, T))
 		if(QDELETED(M))
 			continue
 		var/dir = get_dir(T, M)
 		M.throw_at(get_edge_target_turf(M, dir), 6, 3)
 
-	explosion(T,devastation_range = 0,heavy_impact_range = 0,light_impact_range = 10,flame_range = 15,flash_range = 15,smoke = TRUE,soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg'))
+	explosion(T, light_impact_range = lightrange, flame_range = flamerange, flash_range = flamerange, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg'))
 
-	qdel(src)
-
-/obj/item/impact_grenade/truthsnuke/proc/truthsnuke_transmute_target(mob/living/target)
+/proc/truthsnuke_transmute(mob/living/target)
 	if(!target || QDELETED(target))
 		return
 
@@ -1990,30 +1928,26 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 
 	target.death()
 
-/obj/item/impact_grenade/pocketsand
+/obj/item/explosive/impact/pocketsand
 	name = "pocket sand"
 	desc = "A fistful of fine, irritating sand. Guaranteed to be clawing at the eyes of the unwise."
 	icon_state = "clod1"
 	icon = 'icons/roguetown/items/natural.dmi'
 
-/obj/item/impact_grenade/pocketsand/explodes()
-	STOP_PROCESSING(SSfastprocess, src)
-	var/turf/T = get_turf(src)
-	if(T)
-		for(var/mob/living/target in range(0, T))
-			if(!target.mind || istype(target, /mob/living/simple_animal))
-				target.adjustBruteLoss(5)
-			if(iscarbon(target))
-				target.blur_eyes(5)
-				target.adjust_blurriness(10)
-				target.blind_eyes(1.5)
-			target.visible_message(
-				span_warning("[target] is blasted with a cloud of sand!"),
-				span_warning("Sand gets into my eyes! I can't see!")
-			)
-			target.emote("pain")
-			target.apply_status_effect(/datum/status_effect/debuff/clickcd, 3 SECONDS)
-		qdel(src)
+/obj/item/explosive/impact/pocketsand/blast(turf/T, forced)
+	for(var/mob/living/target in T)
+		if(!target.mind || istype(target, /mob/living/simple_animal))
+			target.adjustBruteLoss(5)
+		if(iscarbon(target))
+			target.blur_eyes(5)
+			target.adjust_blurriness(10)
+			target.blind_eyes(1.5)
+		target.visible_message(
+			span_warning("[target] is blasted with a cloud of sand!"),
+			span_warning("Sand gets into my eyes! I can't see!")
+		)
+		target.emote("pain")
+		target.apply_status_effect(/datum/status_effect/debuff/clickcd, 3 SECONDS)
 
 //MISC
 
@@ -2026,7 +1960,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	desc = "A small sack with a drawstring that allows it to be worn around the neck. Or at the hips, provided you have a belt. It has a strange, gilded glow to it."
 	component_type = /datum/component/storage/concrete/roguetown/pouch/matthios
 
-/obj/item/storage/belt/rogue/pouch/matthios/Initialize()
+/obj/item/storage/belt/rogue/pouch/matthios/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, (TRAIT_FREEMAN||TRAIT_XYLIX), "BLESSED POUCH")
 
@@ -2042,7 +1976,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	component_type = /datum/component/storage/concrete/roguetown/backpack
 	max_integrity = 100
 
-/obj/item/storage/backpack/rogue/backpack/matthios/Initialize()
+/obj/item/storage/backpack/rogue/backpack/matthios/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, (TRAIT_FREEMAN||TRAIT_XYLIX), "BLESSED RUCKSACK")
 
@@ -2055,7 +1989,7 @@ var/global/list/da_bubbles = list('sound/foley/bubb (1).ogg','sound/foley/bubb (
 	color = "#fdff86"
 	aura_color = "#fff385"
 	matthios_chains = TRUE
-	smeltresult = /obj/item/ash
+	smeltresult = /obj/item/natural/ash
 
 /obj/item/rope/chain/matthios/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_MATTHIOS_RELIC)

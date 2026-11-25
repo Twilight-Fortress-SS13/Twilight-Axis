@@ -4,7 +4,7 @@
 	switch(origin_name)
 		if("Aavnr") //TA EDIT
 			return REALM_AAVNR
-		if("Raneshan")
+		if("Raneshen")
 			return REALM_RANESHEN
 		if("Grenzelhoft")
 			return REALM_GRENZELHOFT
@@ -59,7 +59,7 @@
 			continue
 		if(ship.realm_id == realm_id)
 			available_kin += ship
-		else
+		else if(!ship.sent_for)
 			available_other += ship
 	if(length(available_kin))
 		return

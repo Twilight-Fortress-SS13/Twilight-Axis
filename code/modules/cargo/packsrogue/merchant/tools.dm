@@ -85,8 +85,13 @@
 
 /datum/supply_pack/rogue/tools/surgeonsbag
 	name = "Surgeon's bag, Full"
-	cost = 80
+	cost = 45
 	contains = list(/obj/item/storage/belt/rogue/surgery_bag)
+
+/datum/supply_pack/rogue/tools/surgeonsbagempty
+	name = "Surgeon's bag, Empty"
+	cost = 15
+	contains = list(/obj/item/storage/belt/rogue/surgery_bag/empty)
 
 /datum/supply_pack/rogue/tools/soapps
 	name = "Soap"
@@ -174,6 +179,119 @@
 					/obj/item/natural/worms/leech,
 				)
 
+/datum/supply_pack/rogue/tools/fishingrod
+	name = "Fishing Rod"
+	cost = 10
+	contains = list(/obj/item/fishingrod)
+
+/datum/supply_pack/rogue/tools/creel
+	name = "Fisherman's Creel"
+	cost = 13
+	contains = list(/obj/item/storage/meatbag/creel)
+
+/datum/supply_pack/rogue/tools/fishinghooks
+	name = "Iron Fishing Hooks (x3)"
+	cost = 10
+	contains = list(
+					/obj/item/fishing/hook/iron,
+					/obj/item/fishing/hook/iron,
+					/obj/item/fishing/hook/iron,
+				)
+
+/datum/supply_pack/rogue/tools/fishingline
+	name = "Silk Fishing Line"
+	cost = 30
+	contains = list(/obj/item/fishing/reel/silk)
+
+/datum/supply_pack/rogue/tools/fishingfloats
+	name = "Bobber and Sinker"
+	cost = 5
+	contains = list(
+					/obj/item/fishing/line/bobber,
+					/obj/item/fishing/line/sinker,
+				)
+
+/datum/supply_pack/rogue/tools/fishinglinedeluxe
+	name = "Deluxe Fishing Line"
+	cost = 100
+	contains = list(/obj/item/fishing/reel/deluxe)
+
+/datum/supply_pack/rogue/tools/fishinglure
+	name = "Carved Minnow Hook"
+	cost = 100
+	contains = list(/obj/item/fishing/hook/deluxe)
+
+/datum/supply_pack/rogue/tools/baitenchanted
+	name = "Enchanted Bait (x5)"
+	cost = 20
+	contains = list(
+					/obj/item/fishing/bait/deluxe,
+					/obj/item/fishing/bait/deluxe,
+					/obj/item/fishing/bait/deluxe,
+					/obj/item/fishing/bait/deluxe,
+					/obj/item/fishing/bait/deluxe,
+				)
+
+/datum/supply_pack/rogue/tools/baitred
+	name = "Red Bait (x6)"
+	cost = 6
+	contains = list(
+					/obj/item/fishing/bait/meat,
+					/obj/item/fishing/bait/meat,
+					/obj/item/fishing/bait/meat,
+					/obj/item/fishing/bait/meat,
+					/obj/item/fishing/bait/meat,
+					/obj/item/fishing/bait/meat,
+				)
+
+/datum/supply_pack/rogue/tools/baitdough
+	name = "Doughy Bait (x6)"
+	cost = 6
+	contains = list(
+					/obj/item/fishing/bait/dough,
+					/obj/item/fishing/bait/dough,
+					/obj/item/fishing/bait/dough,
+					/obj/item/fishing/bait/dough,
+					/obj/item/fishing/bait/dough,
+					/obj/item/fishing/bait/dough,
+				)
+
+/datum/supply_pack/rogue/tools/baitgray
+	name = "Gray Bait (x6)"
+	cost = 10
+	contains = list(
+					/obj/item/fishing/bait/gray,
+					/obj/item/fishing/bait/gray,
+					/obj/item/fishing/bait/gray,
+					/obj/item/fishing/bait/gray,
+					/obj/item/fishing/bait/gray,
+					/obj/item/fishing/bait/gray,
+				)
+
+/datum/supply_pack/rogue/tools/baitspeckled
+	name = "Speckled Bait (x6)"
+	cost = 18
+	contains = list(
+					/obj/item/fishing/bait/speckled,
+					/obj/item/fishing/bait/speckled,
+					/obj/item/fishing/bait/speckled,
+					/obj/item/fishing/bait/speckled,
+					/obj/item/fishing/bait/speckled,
+					/obj/item/fishing/bait/speckled,
+				)
+
+/datum/supply_pack/rogue/tools/baitshell
+	name = "Shell Bait (x6)"
+	cost = 12
+	contains = list(
+					/obj/item/fishing/bait/shell,
+					/obj/item/fishing/bait/shell,
+					/obj/item/fishing/bait/shell,
+					/obj/item/fishing/bait/shell,
+					/obj/item/fishing/bait/shell,
+					/obj/item/fishing/bait/shell,
+				)
+
 
 /datum/supply_pack/rogue/tools/bottl
 	name = "Glass Bottles"
@@ -247,19 +365,36 @@
 /datum/supply_pack/rogue/tools/prbronze
 	name = "Prosthetic (Bronze)"
 	cost = 60
-	contains = list(/obj/item/contraption/bronzeprosthetic)
+	contains = list(/obj/item/rogueweapon/contraption/bronzeprosthetic)
 
 /datum/supply_pack/rogue/tools/priron
 	name = "Prosthetic (Iron)"
 	cost = 60
-	contains = list(/obj/item/contraption/ironprosthetic)
+	contains = list(/obj/item/rogueweapon/contraption/ironprosthetic)
 
 /datum/supply_pack/rogue/tools/prsteel
 	name = "Prosthetic (Steel)"
 	cost = 80
-	contains = list(/obj/item/contraption/steelprosthetic)
+	contains = list(/obj/item/rogueweapon/contraption/steelprosthetic)
 
 /datum/supply_pack/rogue/tools/pot
 	name = "Iron Pot"
 	cost = 12
 	contains = list(/obj/item/reagent_containers/glass/bucket/pot)
+
+/datum/supply_pack/rogue/tools/cart_upgrade
+	name = "Woodcutters Wheelbrace (Cart Capacity Upgrade)"
+	cost = 25
+	contains = list(/obj/item/cart_upgrade/level_1)
+
+/datum/supply_pack/rogue/tools/cart_upgrade2
+	name = "Reinforced Woodcutters Wheelbrace (Cart Capacity Upgrade)"
+	cost = 50
+	contains = list(/obj/item/cart_upgrade/level_2)
+
+/datum/supply_pack/rogue/tools/steel_pick
+	name = "Steel Pick"
+	cost = 40
+	contains = list(/obj/item/rogueweapon/pick/steel)
+	// i forgot why we decided no steel pick in the public face but we did. i think this was when it was way easier to game gems...? idfk im keeping it.
+	not_in_public = TRUE

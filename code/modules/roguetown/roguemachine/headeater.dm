@@ -9,18 +9,23 @@
 	pixel_y = 32
 	var/topay = 0
 
+/obj/structure/roguemachine/headeater/get_mechanics_examine(mob/user)
+	. = ..()
+	if(!istype(src, /obj/structure/roguemachine/headeater/treasureseeker))
+		. += span_info("Left-click to deposit a head into the machine. Right-click to deposit all heads in front of the machine.")
+
 /obj/structure/roguemachine/headeater/examine()
 	. = ..()
-	. += span_info("Left-click to deposit a head into the machine, and right-click to deposit all heads in front of the machine.")
-	. += span_smallnotice("Crown's Headeater Levy: [round(SStreasury.get_tax_rate(TAX_CATEGORY_HEADEATER_LEVY) * 100)]%")
+	if(!istype(src, /obj/structure/roguemachine/headeater/treasureseeker))
+		. += span_smallnotice("Crown's Headeater Levy: [round(SStreasury.get_tax_rate(TAX_CATEGORY_HEADEATER_LEVY) * 100)]%")
 
 /obj/structure/roguemachine/headeater/attackby(obj/item/H, mob/user, params)
 	. = ..()
-	if(!istype(H, /obj/item/natural/head) && !istype(H, /obj/item/bodypart/head))
-		to_chat(user, span_danger("It seems uninterested by [H]"))
+	if(!istype(H, /obj/item/natural/head) && !istype(H, /obj/item/bodypart/head) && !istype(H, /obj/item/doppel_heart))
+		to_chat(user, span_danger("It seems uninterested in [H]."))
 		return
 	if(!SStreasury.has_account(user))
-		to_chat(user, span_warning("[src] refuses the head - to benefit from the Crown's bounties you must be registered with a Meister."))
+		to_chat(user, span_warning("[src] refuses the head. You need a Meister account to collect the Crown's bounties."))
 		return
 	eathead(H, user)
 
@@ -30,7 +35,7 @@
 	var/datum/fund/account = SStreasury.get_account(user)
 	if(!account)
 		return 0
-	SStreasury.mint(account, gross, "headeater bounty ([src.name])")
+	SStreasury.mint(account, gross, "headeater bounty ([src.name])", null, LEDGER_CITIZEN_CONTRACTS)
 	var/tax_amt = SStreasury.apply_tax(account, gross, TAX_CATEGORY_HEADEATER_LEVY, src.name)
 	if(tax_amt > 0)
 		record_featured_stat(FEATURED_STATS_TAX_PAYERS, user, tax_amt)
@@ -47,6 +52,8 @@
 	else if(istype(H, /obj/item/natural/head))
 		var/obj/item/natural/head/A = H
 		sellprice = A.sellprice
+	else if(istype(H, /obj/item/doppel_heart))
+		sellprice = H.sellprice
 	else
 		return
 	if(sellprice <= 0)
@@ -56,9 +63,9 @@
 		if(!supress_message)
 			var/levy = sellprice - net
 			if(levy > 0)
-				to_chat(user, span_danger("the [src] consumes [H], crediting [net] mammons to your account, less [levy] mammon to the Crown's Levy."))
+				to_chat(user, span_danger("The [src] consumes [H]. It credits [net] mammon to your account after taking [levy] mammon for the Headeater Levy."))
 			else
-				to_chat(user, span_danger("the [src] consumes [H], crediting [sellprice] mammons to your account."))
+				to_chat(user, span_danger("The [src] consumes [H] and credits [sellprice] mammon to your account."))
 	else
 		topay += sellprice
 	qdel(H)
@@ -73,11 +80,13 @@
 				eathead(I, user, TRUE, FALSE)
 			if(istype(I, /obj/item/bodypart/head))
 				eathead(I, user, TRUE, FALSE)
+			if(istype(I, /obj/item/doppel_heart))
+				eathead(I, user, TRUE, FALSE)
 	if(topay > 0)
 		var/net = payout(user, topay)
 		var/levy = topay - net
 		if(levy > 0)
-			to_chat(user, span_danger("The [src] credits [net] mammons to your account, less [levy] mammon to the Crown's Levy."))
+			to_chat(user, span_danger("The [src] credits [net] mammon to your account after taking [levy] mammon for the Headeater Levy."))
 		else
-			to_chat(user, span_danger("The [src] credits [net] mammons to your account."))
+			to_chat(user, span_danger("The [src] credits [net] mammon to your account."))
 		topay = 0

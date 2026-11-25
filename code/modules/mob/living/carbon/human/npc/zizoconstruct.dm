@@ -20,7 +20,7 @@ GLOBAL_LIST_INIT(zizoconstruct_aggro, world.file2list("strings/rt/zconstructaggr
 
 
 
-/mob/living/carbon/human/species/construct/metal/zizoconstruct/Initialize()
+/mob/living/carbon/human/species/construct/metal/zizoconstruct/Initialize(mapload)
 	. = ..()
 	cut_overlays()
 	spawn(10)
@@ -65,14 +65,14 @@ GLOBAL_LIST_INIT(zizoconstruct_aggro, world.file2list("strings/rt/zconstructaggr
 	H.STAWIL = 20
 	H.STAPER = 8
 	H.STAINT = 1
-	H.adjust_skillrank(/datum/skill/combat/unarmed, 5, TRUE)
-	H.adjust_skillrank(/datum/skill/combat/wrestling, 5, TRUE)
-	H.adjust_skillrank(/datum/skill/misc/swimming, 2, TRUE)
-	H.adjust_skillrank(/datum/skill/misc/climbing, 2, TRUE)
+	H.adjust_skillrank_up_to(/datum/skill/combat/unarmed, SKILL_LEVEL_MASTER, TRUE)
+	H.adjust_skillrank_up_to(/datum/skill/combat/wrestling, SKILL_LEVEL_MASTER, TRUE)
+	H.adjust_skillrank_up_to(/datum/skill/misc/swimming, SKILL_LEVEL_APPRENTICE, TRUE)
+	H.adjust_skillrank_up_to(/datum/skill/misc/climbing, SKILL_LEVEL_APPRENTICE, TRUE)
 
 /obj/item/clothing/gloves/roguetown/knuckles/bronze/zizoconstruct //Gives construct NPC a lootable knuckle item
 	name = "construct knuckles"
-	desc = "A vicous pair of bronze knuckles designed specifically for constructs. There is a terrifying, hollow spike in the center of the grip. There doesn't seem to be a way to wield it without impaling yourself."
+	desc = "A vicious pair of bronze knuckles designed specifically for constructs. There is a terrifying, hollow spike in the center of the grip. There doesn't seem to be a way to wield it without impaling yourself."
 	color = "#5f1414"
 	max_integrity = 500
 	anvilrepair = /datum/skill/craft/engineering

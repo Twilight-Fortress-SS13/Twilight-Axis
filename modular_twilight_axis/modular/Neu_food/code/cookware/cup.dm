@@ -10,11 +10,9 @@
 	desc = "A tin goblet, cheaper than silver, but with a similar shine!"
 	icon = 'modular_twilight_axis/icons/modular/Neu_Food/icons/cookware/cup.dmi'
 	icon_state = "tgoblet"
-	sellprice = 12
 
 /obj/item/reagent_containers/glass/cup/tin/small
 	name = "tin cup"
 	desc = "A tin cup, cheaper than silver, but with a similar shine!"
 	icon = 'modular_twilight_axis/icons/modular/Neu_Food/icons/cookware/cup.dmi'
 	icon_state = "tcup"
-	sellprice = 8

@@ -14,13 +14,13 @@
  * This keeps the first few days focused on lower-tier encounters.
  *
  * Leyline types:
- *   Tamed (hamlet/tower) — 4 uses/day, T1 only, neutral alignment.
- *     Neutral = not aligned with anything, so rituals always get -1 mob (training wheels).
- *   Normal (coast/grove/decap) — 2 uses/day, up to T4. Realm-aligned.
- *     Matching ritual alignment = full mob count. Wrong alignment = -1 mob.
- *   Powerful (bog) — 2 uses/day, up to T5. Void-aligned. Always +1 primary mob.
- *     Wrong alignment in Bog nets to normal — the +1 and -1 cancel out.
- *     Only leyline type that supports the T5 Void Dragon ritual (uses a T4 circle).
+ *	Tamed (hamlet/tower) — 4 uses/day, T1 only, neutral alignment.
+ *		Neutral = not aligned with anything, so rituals always get -1 mob (training wheels).
+ *	Normal (coast/grove/decap) — 2 uses/day, up to T4. Realm-aligned.
+ *		Matching ritual alignment = full mob count. Wrong alignment = -1 mob.
+ *	Powerful (bog) — 2 uses/day, up to T5. Void-aligned. Always +1 primary mob.
+ *		Wrong alignment in Bog nets to normal — the +1 and -1 cancel out.
+ *		Only leyline type that supports the T5 Void Dragon ritual (uses a T4 circle).
  */
 
 GLOBAL_LIST_EMPTY(leyline_sites)
@@ -28,7 +28,7 @@ GLOBAL_LIST_EMPTY(leyline_activations)
 
 /proc/get_leyline_charges(mob/living/user)
 	var/used = GLOB.leyline_activations[user.real_name] || 0
-	return max(GLOB.dayspassed + 1 - used, 0)
+	return max(GLOB.dayspassed + (HAS_TRAIT(user, TRAIT_LEYLINE_EXPERTISE) ? 3 : 1) - used, 0)
 
 /proc/spend_leyline_charge(mob/living/user)
 	if(!GLOB.leyline_activations[user.real_name])
@@ -62,11 +62,47 @@ GLOBAL_LIST_EMPTY(leyline_activations)
 	var/last_reset_day = 0
 	var/max_tier = 0
 
-/obj/structure/leyline/Initialize()
+/obj/structure/leyline/Initialize(mapload)
 	. = ..()
 	last_process = world.time
 	GLOB.leyline_sites += src
 	set_light(l_outer_range = 3, l_power = 1, l_color = color, l_on = TRUE)
+	if(!istype(src, /obj/structure/leyline/tamed))
+		spawn_wild_tulips() //TA EDIT
+
+/// Наша штука, спавним тюльпаны у лейлиний
+/// Только на открытом грунте и траве в радиусе двух тайлов от лейлинии.
+/obj/structure/leyline/proc/spawn_wild_tulips()
+	var/turf/origin = get_turf(src)
+	if(!origin)
+		return
+	var/list/valid_turfs = list(
+		/turf/open/floor/rogue/dirt,
+		/turf/open/floor/rogue/dirt/road,
+		/turf/open/floor/rogue/grass,
+		/turf/open/floor/rogue/grasscold,
+		/turf/open/floor/rogue/grasspurple,
+		/turf/open/floor/rogue/grassyel,
+		/turf/open/floor/rogue/grassred,
+		/turf/open/floor/rogue/grassgrey,
+		/turf/open/floor/rogue/snowpatchy,
+		)
+	var/list/candidates = list()
+	for(var/turf/open/T in range(5, origin))
+		if(T == origin)
+			continue
+		if(!is_type_in_list(T, valid_turfs))
+			continue
+		if(T.is_blocked_turf(TRUE))
+			continue
+		candidates += T
+	if(!length(candidates))
+		return
+	for(var/i in 1 to rand(1, 2))
+		if(!length(candidates))
+			return
+		var/turf/T = pick_n_take(candidates)
+		new /obj/structure/flora/roguegrass/herb/tulip(T)
 
 /obj/structure/leyline/Destroy()
 	GLOB.leyline_sites -= src
@@ -87,8 +123,8 @@ GLOBAL_LIST_EMPTY(leyline_activations)
 
 /obj/structure/leyline/examine(mob/living/user)
 	. = ..()
-	if(istype(user, /mob/living/simple_animal/pet/familiar))
-		var/mob/living/simple_animal/pet/familiar/fam = user
+	if(istype(user, /mob/living/carbon/human/species/familiar))
+		var/mob/living/carbon/human/species/familiar/fam = user
 		if(istype(src, /obj/structure/leyline/powerful))
 			. += span_info("A leyline convergence of singular power! I could efficiently heal this body by resting within.")
 		else
@@ -149,6 +185,15 @@ GLOBAL_LIST_EMPTY(leyline_activations)
 	max_uses_per_day = 4
 	max_tier = 1
 	color = "#C0C0FF" // soft blue-white — tame, safe
+
+/obj/structure/leyline/tamed/Initialize(mapload)
+	. = ..()
+	if(istype(get_area(src), /area/rogue/indoors/town/magician) && (SSmapping.config.map_name != "Dun World")) // hacky temp measure
+		new /obj/item/trans_table_upgrade(loc)
+		new /obj/item/alch/catalyst/florid(loc)
+		new /obj/item/alch/catalyst/terran(loc)
+		new /obj/item/alch/catalyst/nigredo(loc)
+		new /obj/item/storage/roguebag/trans(loc)
 
 /obj/structure/leyline/normal
 	leyline_type = "normal"

@@ -20,10 +20,10 @@
 	has_visual_effects = FALSE
 	sound = null
 	var/order_range = 12
-	var/faction_ordering = FALSE
+	var/faction_ordering = FALSE // TA EDIT
 
-/datum/action/cooldown/spell/minion_order/lich
-	faction_ordering = TRUE
+/datum/action/cooldown/spell/minion_order/lich // TA EDIT
+	faction_ordering = TRUE // TA EDIT
 
 /datum/action/cooldown/spell/minion_order/cast(atom/cast_on)
 	. = ..()
@@ -120,6 +120,8 @@
 					minion.faction += "neutral"
 					minion.pet_passive = TRUE
 					msg = "only retaliate when attacked."
+		minion.ai_controller.nudge_target_scan() // TA EDIT
+		minion.ai_controller.wake_for_combat() // TA EDIT
 
 	if(count > 0)
 		to_chat(owner, "Ordered [count] minions to [msg]")

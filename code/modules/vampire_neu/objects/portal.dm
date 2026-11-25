@@ -1,7 +1,7 @@
 /obj/structure/vampire/portalmaker
 	name = "Rift Gate"
 	icon_state = "obelisk"
-	desc = "A large ominious oblisk of unknown and impossible design, runic letters and shapes flicker before your eyes within an endless void, sometimes stare long enough into the void within <font color='FF0000'>...and something will stare back.</font>"
+	desc = "A large ominous obelisk of unknown and impossible design, runic letters and shapes flicker before your eyes within an endless void, sometimes stare long enough into the void within <font color='FF0000'>...and something will stare back.</font>"
 	var/sending = FALSE
 
 /obj/structure/vampire/portalmaker/examine(mob/user) //Currently unusable but it still gets text on how it /would/ have been. PLACEHOLDERY for now until someone else fixes this since I don't want to cobble together shitcode that might not work lol. //Sradar
@@ -74,7 +74,7 @@
 	var/spawntime = null
 	density = FALSE
 
-/obj/structure/vampire/portal/Initialize()
+/obj/structure/vampire/portal/Initialize(mapload)
 	. = ..()
 	set_light(3, 2, 20, l_color = LIGHT_COLOR_BLOOD_MAGIC)
 	playsound(loc, 'sound/misc/portalopen.ogg', 100, FALSE, pressure_affected = FALSE)
@@ -109,7 +109,7 @@
 	for(var/obj/effect/landmark/vteleportsenddest/V in GLOB.landmarks_list)
 		qdel(V)
 	for(var/obj/structure/vampire/portalmaker/P in GLOB.vampire_objects)
-		P.sending =  FALSE
+		P.sending =	FALSE
 	return ..()
 
 /obj/structure/vampire/portalmaker/proc/create_portal_return(aname,duration)
@@ -133,7 +133,7 @@
 	icon = 'icons/roguetown/clothing/neck.dmi'
 	var/uses = 3
 
-/obj/item/clothing/neck/portalamulet/Initialize()
+/obj/item/clothing/neck/portalamulet/Initialize(mapload)
 	GLOB.vampire_objects |= src
 	. = ..()
 

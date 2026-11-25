@@ -15,3 +15,7 @@
 			P.apply_customizer_organs_to_mob(H)
 
 		SEND_SIGNAL(H, COMSIG_ERP_ANATOMY_CHANGED)
+
+/datum/species/gnoll/on_species_loss(mob/living/carbon/C)
+	. = ..()
+	UnregisterSignal(C, COMSIG_MOB_SAY)

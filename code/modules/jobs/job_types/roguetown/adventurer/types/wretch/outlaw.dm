@@ -2,18 +2,23 @@
 	name = "Outlaw"
 	tutorial = "You are the person folk fear at night - use your cunning and speed to strike fast and get out with your spoils before anyone notices."
 	allowed_sexes = list(MALE, FEMALE)
-	
+
 	outfit = /datum/outfit/job/roguetown/wretch/outlaw
-	cmode_music = 'sound/music/cmode/antag/combat_cutpurse.ogg'
+	cmode_music = sound("sound/music/cmode/antag/combat_cutpurse.ogg")
 	class_select_category = CLASS_CAT_ROGUE
 	category_tags = list(CTAG_WRETCH)
 	subclass_languages = list(/datum/language/thievescant)
 	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_MEDIUMARMOR, TRAIT_GRAVEROBBER, TRAIT_SEEPRICES_SHITTY) //Doubt you have much to say about robbing graves
-	extra_context = "Fleet-Footed grants Light Steps and +1 to Sneaking, Marksmanship grants +1 PERCEPTION and +1 to Crossbows, Athleticism grants +1 CONSTITUTION and +1 to Athletics, Night-Burglar grants Night Vision and +1 to Lockpicking, Master-Tracker grants Perfect Tracker + Sleuth and +1 to Tracking, Dualist grants Dual-Wielder and Guarded (Decieving Meekness)."
+	extra_context = "Fleet-Footed grants Light Steps and +1 to Sneaking, Marksmanship grants +1 PERCEPTION and +1 to Crossbows, Athleticism grants +1 CONSTITUTION and +1 to Athletics, Night-Burglar grants Night Vision and +1 to Lockpicking, Master-Tracker grants Perfect Tracker + Sleuth and +1 to Tracking, Dualist grants Dual-Wielder and Guarded (Deceiving Meekness)."
 	subclass_stats = list(
 		STATKEY_SPD = 3,
 		STATKEY_WIL = 2,
 		STATKEY_PER = 1
+	)
+	subclass_stashed_items = list(
+		"Wax Putty I" = /obj/item/waxputty,
+		"Wax Putty II" = /obj/item/waxputty,
+		"Wax Putty III" = /obj/item/waxputty,
 	)
 	subclass_skills = list(
 		/datum/skill/misc/tracking = SKILL_LEVEL_MASTER,
@@ -28,13 +33,14 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_LEGENDARY,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_MASTER,
-		/datum/skill/misc/stealing = SKILL_LEVEL_MASTER,
+		/datum/skill/misc/stealing = SKILL_LEVEL_MASTER, // TA EDIT
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_MASTER,
 		/datum/skill/craft/traps = SKILL_LEVEL_MASTER,
 	)
 	subclass_stashed_items = list(
-        "Sewing Kit" =  /obj/item/repair_kit,
-    )
+		"Sewing Kit" =	/obj/item/repair_kit,
+		"Stashed Funds" = /obj/item/roguecoin/silver/pile/wretchpile,
+	)
 
 /datum/outfit/job/roguetown/wretch/outlaw/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -44,7 +50,7 @@
 	cloak = /obj/item/clothing/cloak/tabard/stabard/dungeon
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson
 	backl = /obj/item/storage/backpack/rogue/satchel/short
-	belt = /obj/item/storage/belt/rogue/leather/knifebelt/black/steel
+	belt = /obj/item/storage/belt/rogue/leather/tossbelt/blade/black/steel
 	gloves = /obj/item/clothing/gloves/roguetown/fingerless_leather
 	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced
 	neck = /obj/item/clothing/neck/roguetown/coif/heavypadding
@@ -99,15 +105,18 @@
 				ADD_TRAIT(H, TRAIT_DARKVISION, TRAIT_GENERIC)
 			if("Master-Tracker")
 				H.adjust_skillrank_up_to(/datum/skill/misc/tracking, SKILL_LEVEL_LEGENDARY, TRUE)
-				ADD_TRAIT(H, TRAIT_SLEUTH, TRAIT_GENERIC)
 				ADD_TRAIT(H, TRAIT_PERFECT_TRACKER, TRAIT_GENERIC)
 			if("Dualist")//Yes the typo is intentional
 				ADD_TRAIT(H, TRAIT_DUALWIELDER, TRAIT_GENERIC)
-				ADD_TRAIT(H, TRAIT_DECEIVING_MEEKNESS, TRAIT_GENERIC)
+
+				ADD_TRAIT(H, TRAIT_DECEIVING_MEEKNESS, TRAIT_VIRTUE)
+				add_verb(H, /mob/living/carbon/human/proc/toggle_descriptors)
+				add_verb(H, /mob/living/carbon/human/proc/emote_ffsalute)
+				add_verb(H, /mob/living/carbon/human/proc/toggle_guarded)
+
 		wretch_select_bounty(H)
 
 //Keep it as is from now on, this is kind of overbloated as it be but the entire point of this class is catchall no good doer (speed).
 //It is mostly reverted to how it originally was with some boons to not be worse than heretic spy (that is limited, this is not).
 //Kettle and Hardened Leather should be maintained in spite of the medium armour it's more there as an option.
 //A true hybrid of Melee and Ranged (Xbow / Tossblades)
-		wretch_select_bounty(H)

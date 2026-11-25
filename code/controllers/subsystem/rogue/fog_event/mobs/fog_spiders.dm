@@ -7,14 +7,8 @@
 	icon_dead = "revenant"
 	mob_biotypes = MOB_UNDEAD | MOB_BEAST
 
-	turns_per_move = 2
-	move_to_delay = 3
 	see_in_dark = 10
-	vision_range = 10
-	aggro_vision_range = 9
-	retreat_distance = 0
-	minimum_distance = 0
-	retreat_health = 0
+	move_base_delay = MOVEMENT_DELAY_SPD_17
 
 	health = MIRESPIDER_CRAWLER_HEALTH
 	maxHealth = MIRESPIDER_CRAWLER_HEALTH
@@ -29,7 +23,7 @@
 	base_intents = list(/datum/intent/simple/bite/mirespider)
 	attack_sound = list('sound/vo/mobs/spider/attack (1).ogg','sound/vo/mobs/spider/attack (2).ogg','sound/vo/mobs/spider/attack (3).ogg','sound/vo/mobs/spider/attack (4).ogg')
 
-/mob/living/simple_animal/hostile/retaliate/rogue/revenant/mirespider/Initialize()
+/mob/living/simple_animal/hostile/retaliate/rogue/revenant/mirespider/Initialize(mapload)
 	. = ..()
 	ADD_TRAIT(src, TRAIT_NOPAINSTUN, TRAIT_GENERIC)
 
@@ -43,10 +37,8 @@
 	pixel_x = -4
 	mob_biotypes = MOB_UNDEAD | MOB_BEAST
 
-	move_to_delay = 3
-	retreat_distance = 0
-	minimum_distance = 1
-	retreat_health = 0
+	move_base_delay = MOVEMENT_DELAY_SPD_17
+	ai_controller = /datum/ai_controller/revenant/lurker
 
 	health = MIRESPIDER_LURKER_HEALTH
 	maxHealth = MIRESPIDER_LURKER_HEALTH
@@ -67,6 +59,6 @@
 	base_intents = list(/datum/intent/simple/bite/mirespider_lurker)
 	attack_sound = list('sound/vo/mobs/spider/attack (1).ogg','sound/vo/mobs/spider/attack (2).ogg','sound/vo/mobs/spider/attack (3).ogg','sound/vo/mobs/spider/attack (4).ogg')
 
-/mob/living/simple_animal/hostile/retaliate/rogue/revenant/mirespider_lurker/Initialize()
+/mob/living/simple_animal/hostile/retaliate/rogue/revenant/mirespider_lurker/Initialize(mapload)
 	. = ..()
 	ADD_TRAIT(src, TRAIT_NOPAINSTUN, TRAIT_GENERIC)

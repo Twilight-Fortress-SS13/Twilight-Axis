@@ -41,7 +41,6 @@
 	reqs = list(/obj/item/natural/hide/cured = 1,
 				/obj/item/natural/fibers = 1)
 	tools = list(/obj/item/needle)
-	sellprice = 15
 	craftdiff = 2
 
 /datum/crafting_recipe/roguetown/leather/gloves
@@ -49,14 +48,12 @@
 	display_category = ITEM_CAT_ARMOR_GLOVES
 	result = /obj/item/clothing/gloves/roguetown/leather
 	reqs = list(/obj/item/natural/hide/cured = 1)
-	sellprice = 10
 
 /datum/crafting_recipe/roguetown/leather/heavygloves
 	name = "hardened leather gloves"
 	display_category = ITEM_CAT_ARMOR_GLOVES
 	result = /obj/item/clothing/gloves/roguetown/angle
 	reqs = list(/obj/item/natural/fur = 1)
-	sellprice = 20
 	craftdiff = 3
 
 /datum/crafting_recipe/roguetown/leather/heavyglovesphys
@@ -64,7 +61,6 @@
 	display_category = ITEM_CAT_ARMOR_GLOVES
 	result = /obj/item/clothing/gloves/roguetown/angle/phys
 	reqs = list(/obj/item/natural/fur = 1)
-	sellprice = 30
 	craftdiff = 3
 
 /datum/crafting_recipe/roguetown/leather/heavyglovesfeld
@@ -72,7 +68,6 @@
 	display_category = ITEM_CAT_ARMOR_GLOVES
 	result = /obj/item/clothing/gloves/roguetown/angle/feld
 	reqs = list(/obj/item/natural/fur = 1)
-	sellprice = 30
 	craftdiff = 4
 
 /datum/crafting_recipe/roguetown/leather/fingerless_leather_gloves
@@ -84,14 +79,12 @@
 		/obj/item/reagent_containers/food/snacks/tallow = 1,
 		/obj/item/natural/fibers = 1,
 		)
-	sellprice = 10 //TA EDIT
 
 /datum/crafting_recipe/roguetown/leather/bandana
 	name = "leather bandana"
 	display_category = ITEM_CAT_ARMOR_HELMETS
 	result = /obj/item/clothing/head/roguetown/helmet/bandana
 	reqs = list(/obj/item/natural/hide/cured = 1)
-	sellprice = 7 //TA EDIT
 	craftdiff = 0
 
 /datum/crafting_recipe/roguetown/leather/tricorn
@@ -99,7 +92,6 @@
 	display_category = ITEM_CAT_ARMOR_HELMETS
 	result = /obj/item/clothing/head/roguetown/helmet/tricorn
 	reqs = list(/obj/item/natural/hide/cured = 1)
-	sellprice = 7 //TA EDIT
 
 /datum/crafting_recipe/roguetown/leather/vest
 	name = "leather vest"
@@ -110,14 +102,12 @@
 	name = "leather corslet"
 	result = /obj/item/clothing/suit/roguetown/armor/leather/bikini
 	reqs = list(/obj/item/natural/hide/cured = 2)
-	sellprice = 16 //TA EDIT
 
 /datum/crafting_recipe/roguetown/leather/hidebikini
 	name = "hide corslet"
 	result = /obj/item/clothing/suit/roguetown/armor/leather/hide/bikini
 	reqs = list(/obj/item/natural/hide/cured = 2,
 				/obj/item/natural/fur = 1)
-	sellprice = 16 //TA EDIT
 
 /datum/crafting_recipe/roguetown/leather/cloak
 	name = "rain cloak"
@@ -144,7 +134,6 @@
 	reqs = list(/obj/item/natural/fur = 1, /obj/item/natural/fibers = 2)
 
 /obj/item/clothing/head/roguetown/papakha/crafted
-	sellprice = 10
 
 /datum/crafting_recipe/roguetown/leather/saddle
 	name = "saddle"
@@ -157,7 +146,6 @@
 	display_category = ITEM_CAT_WEAPONS_FLAILS
 	result = /obj/item/rogueweapon/whip
 	reqs = list(/obj/item/natural/hide/cured = 2,/obj/item/natural/stone = 1)
-	sellprice = 18 //TA EDIT
 
 /datum/crafting_recipe/roguetown/leather/drum
 	name = "Drum"
@@ -176,7 +164,6 @@
 	reqs = list(/obj/item/natural/fur = 2,
 				/obj/item/natural/hide/cured = 4)
 	craftdiff = 5
-	sellprice = 80
 
 /datum/crafting_recipe/roguetown/leather/bearcloak
 	name = "direbear cloak"
@@ -184,7 +171,6 @@
 	reqs = list(/obj/item/natural/fur/direbear = 1,
 				/obj/item/natural/hide/cured = 4)
 	craftdiff = 3
-	sellprice = 80
 
 /datum/crafting_recipe/roguetown/leather/lightbearcloak
 	name = "light direbear cloak"
@@ -192,7 +178,6 @@
 	reqs = list(/obj/item/natural/fur/direbear = 1,
 				/obj/item/natural/hide/cured = 4)
 	craftdiff = 3
-	sellprice = 80
 
 /datum/crafting_recipe/roguetown/leather/leathertights
 	name = "leather tights"
@@ -201,7 +186,6 @@
 	reqs = list(/obj/item/natural/hide/cured = 2)
 	tools = list(/obj/item/needle)
 	craftdiff = 3
-	sellprice = 10
 
 /datum/crafting_recipe/roguetown/leather/doctormask
 	name = "plague mask"
@@ -269,7 +253,7 @@
 	reqs = list(
 		/obj/item/natural/hide/cured = 2
 	)
-	result = /obj/item/clothing/shoes/courtphysician
+	result = /obj/item/clothing/shoes/roguetown/courtphysician
 	craftdiff = 3
 
 /datum/crafting_recipe/roguetown/leather/sanguineheels
@@ -278,7 +262,7 @@
 	reqs = list(
 		/obj/item/natural/hide/cured = 2
 	)
-	result = /obj/item/clothing/shoes/courtphysician/female
+	result = /obj/item/clothing/shoes/roguetown/courtphysician/female
 	craftdiff = 3
 
 /datum/crafting_recipe/roguetown/leather/belt
@@ -302,12 +286,127 @@
 	)
 	result = /obj/item/clothing/cloak/suspenders
 	craftdiff = 3
+	subtype_reqs = TRUE
 
 /datum/crafting_recipe/roguetown/leather/leathermask
 	name = "leather mask"
 	display_category = ITEM_CAT_ARMOR_MASKS
-	result = /obj/item/clothing/mask/rogue/leather
+	result = /obj/item/clothing/mask/rogue/facemask/leather
 	reqs = list(/obj/item/natural/hide/cured = 2)
 	tools = list(/obj/item/needle)
 	craftdiff = 1
-	sellprice = 10
+
+/datum/crafting_recipe/roguetown/leather/rosagloves
+	name = "ivory gloves"
+	display_category = ITEM_CAT_GARMENT_FINE
+	reqs = list(
+		/obj/item/natural/hide/cured = 1,
+		/obj/item/natural/silk = 2
+	)
+	result = list(/obj/item/clothing/gloves/roguetown/rosa)
+	craftdiff = 5
+
+/datum/crafting_recipe/roguetown/leather/rosagloves/two
+	name = "scarlet gloves"
+	result = list(/obj/item/clothing/gloves/roguetown/rosa/two)
+
+/datum/crafting_recipe/roguetown/leather/rosagloves/three
+	name = "velvet gloves"
+	result = list(/obj/item/clothing/gloves/roguetown/rosa/three)
+
+/datum/crafting_recipe/roguetown/leather/rosagloves/four
+	name = "obsidian gloves"
+	result = list(/obj/item/clothing/gloves/roguetown/rosa/four)
+
+/datum/crafting_recipe/roguetown/leather/rosagloves/five
+	name = "sable gloves"
+	result = list(/obj/item/clothing/gloves/roguetown/rosa/five)
+
+/datum/crafting_recipe/roguetown/leather/rosagloves/six
+	name = "maroon gloves"
+	result = list(/obj/item/clothing/gloves/roguetown/rosa/six)
+
+/datum/crafting_recipe/roguetown/leather/rosagloves/seven
+	name = "regal gloves"
+	result = list(/obj/item/clothing/gloves/roguetown/rosa/seven)
+
+/datum/crafting_recipe/roguetown/leather/rosagloves/eight
+	name = "courtly gloves"
+	result = list(/obj/item/clothing/gloves/roguetown/rosa/eight)
+
+/datum/crafting_recipe/roguetown/leather/rosagloves/nine
+	name = "royal gloves"
+	result = list(/obj/item/clothing/gloves/roguetown/rosa/nine)
+
+/datum/crafting_recipe/roguetown/leather/rosagloves/ten
+	name = "stately gloves"
+	result = list(/obj/item/clothing/gloves/roguetown/rosa/ten)
+
+/datum/crafting_recipe/roguetown/leather/rosashoes
+	name = "ivory shoes"
+	display_category = ITEM_CAT_GARMENT_FINE
+	reqs = list(
+		/obj/item/natural/hide/cured = 1,
+		/obj/item/natural/silk = 2
+	)
+	result = list(/obj/item/clothing/shoes/roguetown/rosa)
+	craftdiff = 5
+
+/datum/crafting_recipe/roguetown/leather/rosashoes/two
+	name = "scarlet shoes"
+	result = list(/obj/item/clothing/shoes/roguetown/rosa/two)
+
+/datum/crafting_recipe/roguetown/leather/rosashoes/three
+	name = "velvet shoes"
+	result = list(/obj/item/clothing/shoes/roguetown/rosa/three)
+
+/datum/crafting_recipe/roguetown/leather/rosashoes/four
+	name = "obsidian shoes"
+	result = list(/obj/item/clothing/shoes/roguetown/rosa/four)
+
+/datum/crafting_recipe/roguetown/leather/rosashoes/five
+	name = "sable shoes"
+	result = list(/obj/item/clothing/shoes/roguetown/rosa/five)
+
+/datum/crafting_recipe/roguetown/leather/rosashoes/six
+	name = "maroon shoes"
+	result = list(/obj/item/clothing/shoes/roguetown/rosa/six)
+
+/datum/crafting_recipe/roguetown/leather/rosashoes/seven
+	name = "regal shoes"
+	result = list(/obj/item/clothing/shoes/roguetown/rosa/seven)
+
+/datum/crafting_recipe/roguetown/leather/rosashoes/eight
+	name = "courtly shoes"
+	result = list(/obj/item/clothing/shoes/roguetown/rosa/eight)
+
+/datum/crafting_recipe/roguetown/leather/rosashoes/nine
+	name = "royal shoes"
+	result = list(/obj/item/clothing/shoes/roguetown/rosa/nine)
+
+/datum/crafting_recipe/roguetown/leather/rosashoes/ten
+	name = "stately shoes"
+	result = list(/obj/item/clothing/shoes/roguetown/rosa/ten)
+
+/datum/crafting_recipe/roguetown/leather/rosacoat
+	name = "regal coat"
+	display_category = ITEM_CAT_GARMENT_FINE
+	reqs = list(
+		/obj/item/natural/hide/cured = 2,
+		/obj/item/natural/silk = 2,
+		/obj/item/alch/rosa = 1
+	)
+	result = list(/obj/item/clothing/suit/roguetown/shirt/tunic/rosacoat)
+	craftdiff = 5
+
+/datum/crafting_recipe/roguetown/leather/rosacoat/two
+	name = "courtly coat"
+	result = list(/obj/item/clothing/suit/roguetown/shirt/tunic/rosacoat/two)
+
+/datum/crafting_recipe/roguetown/leather/rosacoat/three
+	name = "royal coat"
+	result = list(/obj/item/clothing/suit/roguetown/shirt/tunic/rosacoat/three)
+
+/datum/crafting_recipe/roguetown/leather/rosacoat/four
+	name = "stately coat"
+	result = list(/obj/item/clothing/suit/roguetown/shirt/tunic/rosacoat/four)

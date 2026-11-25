@@ -3,14 +3,20 @@
 	tutorial = "Originating in the vibrant Kingdom of Etrusca, a 'vaquero' had originally been a mere cattle-driver... Now, though, it has become a title for roaming swashbucklers. Whether they set out as a defender of the commonfolk or a pilferer of purses, the Vaquero is defined by the tale they carve across continents - and more frequently - by their story's violent end."
 	outfit = /datum/outfit/job/roguetown/mercenary/vaquero
 	class_select_category = CLASS_CAT_ETRUSCA
-	cmode_music = 'sound/music/combat_vaquero.ogg'
-	category_tags = list(CTAG_MERCENARY)
+	cmode_music = sound("sound/music/combat_vaquero.ogg")
+	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_BRAVO)
 	subclass_languages = list(/datum/language/etruscan)
-	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_DECEIVING_MEEKNESS)
+	traits_applied = list(TRAIT_DODGEEXPERT)
+	subclass_virtues = list(
+		/datum/virtue/combat/guarded
+	)
 	subclass_stats = list(
 		STATKEY_SPD = 3,
 		STATKEY_INT = 2,
 		STATKEY_WIL = 1
+	)
+	subclass_stashed_items = list(
+		"Wax Putty" = /obj/item/waxputty,
 	)
 	subclass_skills = list(
 		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,
@@ -24,19 +30,11 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/misc/stealing = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/stealing = SKILL_LEVEL_JOURNEYMAN, // TA EDIT
 		/datum/skill/misc/riding = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/music = SKILL_LEVEL_EXPERT,
 	)
-	subclass_virtues = list(
-		/datum/virtue/utility/riding
-	)
-
-/datum/advclass/mercenary/vaquero/equipme(mob/living/carbon/human/H, dummy)
-	if(should_wear_femme_clothes(H))
-		horse = /mob/living/simple_animal/hostile/retaliate/rogue/saiga/tame/saddled
-	return ..()
 
 /datum/outfit/job/roguetown/mercenary/vaquero/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -60,7 +58,7 @@
 					/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
 					/obj/item/rogueweapon/huntingknife/idagger/navaja = 1,
 					/obj/item/lockpick = 1,
-					/obj/item/flashlight/flare/torch = 1,
+					/obj/item/flashlight/flare/torch/lantern = 1,
 					/obj/item/roguekey/mercenary = 1,
 					/obj/item/rogueweapon/scabbard/sheath = 1
 					)
@@ -100,4 +98,12 @@
 				var/datum/inspiration/I = new /datum/inspiration(H)
 				I.grant_inspiration(H, bard_tier = BARD_T1)
 				H.mind?.AddSpell(new /datum/action/cooldown/spell/projectile/vicious_mockery) //I guess all the other bards have it too?
+	H.mind?.AddSpell(new /obj/effect/proc_holder/spell/self/choose_riding_virtue_mount/vaquero)
 	H.merctype = 13
+
+/obj/effect/proc_holder/spell/self/choose_riding_virtue_mount/vaquero
+	desc = "Recall the form of your treasured Vaquero's mount."
+	vaquero = TRUE
+
+/obj/effect/proc_holder/spell/self/saddleborn/whistle/vaquero
+	recharge_time = 30 MINUTES

@@ -1,4 +1,4 @@
-// Wretch, soft antagonists. Giving them 9 points as stat (matching mercs) on average since they're a driving antagonist on AP or assistant antagonist. 
+// Wretch, soft antagonists. Giving them 9 points as stat (matching mercs) on average since they're a driving antagonist on AP or assistant antagonist.
 /datum/job/roguetown/wretch
 	title = "Wretch"
 	flag = WRETCH
@@ -15,7 +15,7 @@
 	min_pq = 20
 	max_pq = null
 
-	obsfuscated_job = TRUE
+	obfuscated_job = TRUE
 	class_categories = TRUE
 
 	advclass_cat_rolls = list(CTAG_WRETCH = 20)
@@ -28,12 +28,12 @@
 	always_show_on_latechoices = TRUE
 	job_reopens_slots_on_death = FALSE
 	same_job_respawn_delay = 30 MINUTES
-	virtue_restrictions = list(/datum/virtue/heretic/zchurch_keyholder) //all wretch classes automatically get this
+	virtue_restrictions = list(/datum/virtue/utility/zchurch_keyholder) // TA EDIT
 	job_traits = list(TRAIT_STEELHEARTED, TRAIT_OUTLAW, TRAIT_HERESIARCH, TRAIT_SELF_SUSTENANCE, TRAIT_ZURCH)
 	job_subclasses = list(
 		/datum/advclass/wretch/licker,
+		/datum/advclass/wretch/deserter_knight,
 		/datum/advclass/wretch/deserter,
-		/datum/advclass/wretch/deserter/generic,
 		/datum/advclass/wretch/berserker,
 		/datum/advclass/wretch/roguemage,
 		/datum/advclass/wretch/necromancer,
@@ -47,12 +47,63 @@
 		/datum/advclass/wretch/vigilante,
 		/datum/advclass/wretch/munitioneer,
 		/datum/advclass/wretch/pariah,
+		/datum/advclass/wretch/profane_champion,
 		/datum/advclass/wretch/heretic_spellblade,
 		/datum/advclass/wretch/ancient_spellblade,
-	//	/datum/advclass/wretch/ancient_deathknight,
+		/datum/advclass/wretch/ancient_deathknight,
 		/datum/advclass/wretch/slasher,
-		/datum/advclass/wretch/maestro
+		/datum/advclass/wretch/maestro,
+		/datum/advclass/wretch/freeblade
 	)
+	has_subprefs = TRUE
+	default_subprefs = list("bounty_poster_key" = null, "bounty_severity_key" = null, "my_crime" = null, "favorite_advclass" = null)
+/datum/advclass/wretch
+	tempo_capable = TRUE
+
+// for future viewers, here's how you add subprefs to a job. adventurer provides a simpler example for how to merely add subclass favoriting.
+/datum/job/roguetown/wretch/Topic(href, list/href_list)
+	var/client/C = usr.client // gettin the usual vars setup
+	if(!C || !C.prefs)
+		return
+	var/list/roleprefs = get_roleprefs(C)
+	if(href_list["poster"]) // here, we handle the actual user input. in this case, poster is a tgui select
+		var/list/poster_choices = list()
+		for(var/key in GLOB.bounty_posters)
+			poster_choices[GLOB.bounty_posters[key]] = key
+		roleprefs["bounty_poster_key"] = poster_choices[tgui_input_list(usr, "Who placed a bounty on you?", "Bounty Poster", poster_choices)]
+		update_subprefs_window(usr) // make sure to call this every time you change data so the ui will actually reflect it!
+	if(href_list["severity"]) // ...and same for severity
+		var/list/sev_choices = list()
+		for(var/key in GLOB.wretch_severities)
+			sev_choices[GLOB.wretch_severities[key]] = key
+		roleprefs["bounty_severity_key"] = sev_choices[tgui_input_list(usr, "How severe are your crimes?", "Bounty Amount", sev_choices)]
+		update_subprefs_window(usr)
+	if(href_list["crime"])
+		roleprefs["my_crime"] = tgui_input_text(usr, "What is your crime?", "Crime", roleprefs["my_crime"], multiline=TRUE, encode=FALSE) // this is filtered with html_encode later; doing so twice would lead to strangeness
+		update_subprefs_window(usr)
+	. = ..()
+
+// this is where we put the actual window setup. it'll be called once each update, to keep the information up-to-date, so just read from prefs n display it
+/datum/job/roguetown/wretch/update_subprefs_window(mob/user)
+	var/client/C = usr.client
+	if(!C || !C.prefs)
+		return
+	var/list/roleprefs = get_roleprefs(C)
+	var/HTML = {"
+		[subprefs_subclass_html(C)]
+		<i>Set your [title]-specific bounty here. If a global bounty is set, this will override it.</i><br><i>Any fields set here will not prompt you at roundstart.</i><br/><br/>
+		<b>Bounty Poster:</b> <a href="?src=[REF(src)];poster=1">[roleprefs["bounty_poster_key"]?GLOB.bounty_posters[roleprefs["bounty_poster_key"]]:"Unset"]</a><br/>
+		<b>Bounty Severity:</b> <a href="?src=[REF(src)];severity=1">[roleprefs["bounty_severity_key"]?GLOB.wretch_severities[roleprefs["bounty_severity_key"]]:"Unset"]</a><br/>
+		<b>Bounty Reason:</b> <a href="?src=[REF(src)];crime=1">[roleprefs["my_crime"]?"Edit":"Unset"]</a><br/>
+		[roleprefs["my_crime"]?"<hr/>[roleprefs["my_crime"]]<hr/>":""]<br/>
+		<center><a href="?src=[REF(src)];subprefsexit=1">EXIT</a>\t\t<a href="?src=[REF(src)];subprefsreset=1">RESET</a></center>
+	"}
+	// the fact that the window width/height will be different each time is the main reason this isn't all done in a parent proc on /datum/job
+	var/datum/browser/popup = new(user, "[JOB_SUBPREFS_WINDOW_ID]", "<div align='center'>[title] Preferences</div>", 500, 500)
+	popup.set_content(HTML)
+	popup.open(FALSE)
+	if(winexists(usr, "[JOB_SUBPREFS_WINDOW_ID]"))
+		winset(usr, "[JOB_SUBPREFS_WINDOW_ID]", "focus=true")
 
 /datum/job/roguetown/wretch/special_job_check(mob/dead/new_player/player)
 	if(is_storyteller_soft_antag_blocked())
@@ -99,8 +150,12 @@
 	var/bounty_poster_key
 	var/bounty_severity_key
 	var/my_crime
-
-	if(P?.preset_bounty_enabled)
+	var/list/roleprefs = P?.job_subprefs?["Wretch"]
+	if(roleprefs && length(roleprefs))
+		bounty_poster_key = roleprefs["bounty_poster_key"]
+		bounty_severity_key = roleprefs["bounty_severity_key"]
+		my_crime = roleprefs["my_crime"]
+	else if(P?.preset_bounty_enabled)
 		bounty_poster_key = P.preset_bounty_poster_key
 		bounty_severity_key = P.preset_bounty_severity_key
 		my_crime = P.preset_bounty_crime
@@ -129,7 +184,7 @@
 
 	var/list/sev_data = GLOB.wretch_bounty_severities[bounty_severity_key]
 	var/bounty_total = rand(sev_data["min"], sev_data["max"])
-	if(bounty_severity_key == "ATROCITY")
+	if(bounty_severity_key == "ATROCITY" || bounty_severity_key == "UNFORGIVABLE")
 		if(bounty_poster_key == "AZURIA")
 			GLOB.outlawed_players += H.real_name
 		else
@@ -152,7 +207,7 @@
 	var/descriptor_voice = build_coalesce_description_nofluff(
 		d_list, H, list(MOB_DESCRIPTOR_SLOT_VOICE), "%DESC1%"
 	)
-	add_bounty(H.real_name, race, gender, descriptor_height, descriptor_body, descriptor_voice, bounty_total, FALSE, my_crime, bounty_poster)
+	add_bounty(H.real_name, race, gender, descriptor_height, descriptor_body, descriptor_voice, bounty_total, my_crime, bounty_poster, null, TRUE)
 	if(H.has_flaw(/datum/charflaw/wanted))
 		to_chat(H, span_danger("You are wanted; you have a price on your head. Expect conflict to find you whether you seek it or not."))
 	else
@@ -225,6 +280,39 @@
 
 	result["tier2_extra"] = tier2_max
 	result["final_slots"] = max(0, min(slots, cap))
+
+	// TA EDIT BEGIN НЕРФ ЛОУПОП ВРЕТЧИКОВ)))
+	//как же ща сгорит у каких нибудь любителей заходить раз в 3 месяца, вретчей занерфили блин((9
+	if(SSticker.IsRoundInProgress() && player_count < 40)
+		result["combat_positions_alive"] = SSgamemode.combat_positions_alive
+		result["final_slots"] = max(0, min(result["final_slots"], SSgamemode.combat_positions_alive, cap))
+	// TA EDIT END
+
+	// TA EDIT BEGIN
+	var/antag_death_bonus = 0
+	var/werewolves_existed = FALSE
+	var/werewolf_threat_alive = FALSE
+	for(var/datum/antagonist/antag as anything in GLOB.antagonists)
+		if(QDELETED(antag) || QDELETED(antag.owner))
+			continue
+		if(istype(antag, /datum/antagonist/lich))
+			var/datum/antagonist/lich/lich_antag = antag
+			if(lich_antag.out_of_lives)
+				antag_death_bonus += 2
+		else if(istype(antag, /datum/antagonist/vampire/lord))
+			var/mob/living/lord_body = antag.owner.current
+			if(!lord_body || lord_body.stat == DEAD)
+				antag_death_bonus += 2
+		else if(!werewolf_threat_alive && istype(antag, /datum/antagonist/werewolf))
+			werewolves_existed = TRUE
+			var/mob/living/wolf_body = antag.owner.current
+			if(wolf_body && wolf_body.stat != DEAD && !HAS_TRAIT(wolf_body, TRAIT_SILVER_BLESSED))
+				werewolf_threat_alive = TRUE
+	if(werewolves_existed && !werewolf_threat_alive)
+		antag_death_bonus += 4
+	result["antag_death_bonus"] = antag_death_bonus
+	result["final_slots"] = max(0, result["final_slots"] + antag_death_bonus)
+	// TA EDIT END
 
 	return result
 

@@ -3,7 +3,7 @@
 	tutorial = "Azure population's tendency to take up arms and become unwashed beastslayers had forced you to take up jobs, small and large of most professions.\n A jack of all trades, what will you be known as this week?"
 	allowed_sexes = list(MALE, FEMALE)
 	forbidden_races = list(RACES_DESPISED)
-	
+
 	outfit = /datum/outfit/job/roguetown/homesteader
 	traits_applied = list(TRAIT_JACKOFALLTRADES,
 		TRAIT_ALCHEMY_EXPERT,
@@ -14,6 +14,10 @@
 		// No hunting, as it's a specialty skill.
 	)
 	category_tags = list(CTAG_PILGRIM, CTAG_TOWNER)
+	subclass_spells = list(
+		/obj/effect/proc_holder/spell/invoked/diagnose/secular,
+		/obj/effect/proc_holder/spell/invoked/takeapprentice,
+	)
 	adaptive_name = TRUE
 	subclass_stats = list(
 		STATKEY_INT = 3,	//This guy's here to grind = baby.
@@ -32,7 +36,7 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/misc/stealing = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/stealing = SKILL_LEVEL_APPRENTICE, // TA EDIT
 		/datum/skill/misc/music = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/reading = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/medicine = SKILL_LEVEL_APPRENTICE,
@@ -41,7 +45,7 @@
 		/datum/skill/misc/tracking = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/misc/riding = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/riding = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/hunting = SKILL_LEVEL_NOVICE,
 
 		/datum/skill/craft/crafting = SKILL_LEVEL_APPRENTICE,
@@ -154,20 +158,17 @@
 	if(H.mind)
 		H.mind.special_items["Hammer"] = /obj/item/rogueweapon/hammer/steel
 		H.mind.special_items["Sheathe"] = /obj/item/rogueweapon/scabbard/sheath
-		H.mind.special_items["Hunting Knife"] = /obj/item/rogueweapon/huntingknife
+		H.mind.special_items["Laborer's Knife"] = /obj/item/rogueweapon/huntingknife/throwingknife/triumph
 		H.mind.special_items["Woodcutter's Axe"] = /obj/item/rogueweapon/stoneaxe/woodcut/steel/woodcutter
 		H.mind.special_items["[pick("Good", "Bad", "Normal")] Day's Wine"] = /obj/item/reagent_containers/glass/bottle/rogue/wine
 		H.mind.special_items["Barber's Innocuous Bag"] = /obj/item/storage/belt/rogue/surgery_bag/full
-		H.mind.special_items["Trusty Pick"] = /obj/item/rogueweapon/pick
-		H.mind.special_items["Hoe"] = /obj/item/rogueweapon/hoe
+		H.mind.special_items["Trusty Pick"] = /obj/item/rogueweapon/pick/bronze
 		H.mind.special_items["Tuneful Instrument"] = pick(subtypesof(/obj/item/rogue/instrument))
-		H.mind.special_items["Fishing Rod"] = /obj/item/fishingrod/crafted
+		H.mind.special_items["Fishing Rod"] = /obj/item/fishingrod
 		H.mind.special_items["Pan for Frying"] = /obj/item/cooking/pan
 
 		H.adaptive_name_title = "Homesteader"
 		add_verb(H, /datum/advclass/homesteader/proc/choose_homesteader_title)
-
-		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/diagnose/secular)
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_LOWER_CLASS, H)
 

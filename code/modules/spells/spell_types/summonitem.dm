@@ -28,7 +28,7 @@
 					continue
 				if(HAS_TRAIT(item, TRAIT_NODROP))
 					message += "Though it feels redundant, "
-				marked_item = 		item
+				marked_item =		item
 				message += "You mark [item] for recall.</span>"
 				name = "Recall [item]"
 				break
@@ -42,12 +42,12 @@
 		else if(marked_item && (marked_item in hand_items)) //unlinking item to the spell
 			message = span_notice("I remove the mark on [marked_item] to use elsewhere.")
 			name = "Instant Summons"
-			marked_item = 		null
+			marked_item =		null
 
 		else if(marked_item && QDELETED(marked_item)) //the item was destroyed at some point
 			message = span_warning("I sense my marked item has been destroyed!")
 			name = "Instant Summons"
-			marked_item = 		null
+			marked_item =		null
 
 		else	//Getting previously marked item
 			var/obj/item_to_retrieve = marked_item
@@ -58,7 +58,7 @@
 					var/obj/item/organ/organ = item_to_retrieve
 					if(organ.owner)
 						// If this code ever runs I will be happy
-						log_combat(L, organ.owner, "magically removed [organ.name] from", addition="INTENT: [uppertext(L.a_intent)]")
+						log_combat(L, organ.owner, "magically removed [organ.name] from", zone=L.zone_selected, intent=L.a_intent)
 						organ.Remove(organ.owner)
 			else
 				while(!isturf(item_to_retrieve.loc) && infinite_recursion < 10) //if it's in something you get the whole thing.
@@ -77,7 +77,11 @@
 									part.remove_embedded_object(item_to_retrieve)
 									to_chat(C, span_warning("The [item_to_retrieve] that was embedded in your [L] has mysteriously vanished. How fortunate!"))
 									break
-						item_to_retrieve = item_to_retrieve.loc
+						else if(isliving(M))
+							var/mob/living/simple_holder = M
+							simple_holder.simple_remove_embedded_object(item_to_retrieve)
+						if(!isturf(item_to_retrieve.loc))
+							item_to_retrieve = item_to_retrieve.loc
 					infinite_recursion += 1
 			if(!item_to_retrieve)
 				return

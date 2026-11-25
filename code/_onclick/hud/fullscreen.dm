@@ -42,7 +42,7 @@
 
 	if(animated)
 		animate(screen, alpha = 0, time = animated)
-		addtimer(CALLBACK(src, PROC_REF(clear_fullscreen_after_animate), screen), animated, TIMER_CLIENT_TIME, flags = ANIMATION_PARALLEL)
+		addtimer(CALLBACK(src, PROC_REF(clear_fullscreen_after_animate), screen), animated, TIMER_CLIENT_TIME | ANIMATION_PARALLEL) // TA edit - TAT system (runtime fix)
 	else
 		if(client)
 			client.screen -= screen
@@ -144,15 +144,18 @@
 	nomouseover = FALSE
 
 /atom/movable/screen/fullscreen/crit/zeth/Click()
-	if(isliving(usr))
-		var/mob/living/L = usr
-		if(L.stat != DEAD)
-			if(alert("Are you done living?", "", "Yes", "No") == "Yes")
-				if(!L.succumb_timer || (world.time < L.succumb_timer + 1 SECONDS) ) //TA_Edit
-					var/ttime =  round(((L.succumb_timer + 1 SECONDS) - world.time) / 10) //TA edit
-					to_chat(L, span_redtext("I'm not dead enough yet. [ttime]"))
-				else
-					L.succumb(reaper = TRUE)
+	if(!isliving(usr))
+		return
+	var/mob/living/L = usr
+	if(L.stat == DEAD)
+		return
+	if(alert(usr, "Are you done living?", "", "Yes", "No") == "No")
+		return
+	if(!L.succumb_timer || (world.time < L.succumb_timer + 1 SECONDS) ) //TA_Edit
+		var/ttime =  round(((L.succumb_timer + 1 SECONDS) - world.time) / 10) //TA edit
+		to_chat(L, span_redtext("I'm not dead enough yet. [ttime]"))
+	else
+		L.succumb(reaper = TRUE)
 
 /atom/movable/screen/fullscreen/crit/death
 	icon_state = "DD"

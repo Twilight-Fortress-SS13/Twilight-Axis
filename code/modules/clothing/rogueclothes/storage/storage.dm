@@ -25,6 +25,18 @@
 		return TRUE
 	..()
 
+/obj/item/storage/belt/rogue/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Middle-clicking a belt adjusts its layer..")
+
+/obj/item/storage/belt/rogue/MiddleClick(mob/user)
+	if(!ishuman(user))
+		return
+	var/under_tabard = (alternate_worn_layer != UNDER_TABARD_LAYER)
+	alternate_worn_layer = under_tabard ? UNDER_TABARD_LAYER : initial(alternate_worn_layer)
+	to_chat(user, span_info("I wear [src] [under_tabard ? "under" : "over"] my tabard."))
+	user.update_inv_belt()
+
 /obj/item/storage/belt/rogue/leather
 	name = "belt"
 	desc = "A fine leather strap notched with holes for a buckle to secure itself."
@@ -32,7 +44,6 @@
 	item_state = "leather"
 	equip_sound = 'sound/blank.ogg'
 	sewrepair = TRUE
-	sellprice = 10
 	resistance_flags = FIRE_PROOF
 
 /obj/item/storage/belt/rogue/leather/plaquegold
@@ -51,7 +62,6 @@
 	name = "black belt"
 	icon_state = "blackbelt"
 	item_state = "blackbelt"
-	sellprice = 10
 
 /obj/item/storage/belt/rogue/leather/double
 	name = "pair of belts"
@@ -77,7 +87,7 @@
 	name = "cloth military skirt"
 	desc = "A fine leather strap notched with holes for a buckle to secure itself, notched above a flared military skirt."
 	icon_state = "battleskirt"
-	sewrepair = FALSE
+	sewrepair = TRUE
 	detail_tag = "_belt"
 
 /obj/item/storage/belt/rogue/leather/battleskirt/update_icon()
@@ -102,7 +112,6 @@
 	name = "belt with faulds"
 	desc = "A fine leather strap notched with holes for a buckle to secure itself, notched above a halved military skirt."
 	icon_state = "faulds"
-	sewrepair = FALSE
 	detail_tag = "_belt"
 
 /obj/item/storage/belt/rogue/leather/battleskirt/faulds/red
@@ -113,7 +122,6 @@
 	desc = "A fine leather strap notched with holes for a buckle to secure itself, and nestled above a halved tabard's coverings."
 	icon_state = "breechcloth"
 	flags_inv = HIDECROTCH
-	sewrepair = FALSE
 	detail_tag = "_belt"
 
 /obj/item/storage/belt/rogue/leather/battleskirt/breechcloth/blackbelt
@@ -121,11 +129,26 @@
 	desc = "A fine black-leather strap notched with holes for a buckle to secure itself, and nestled above a halved tabard's coverings."
 	icon_state = "breechclothalt"
 	flags_inv = HIDECROTCH
-	sewrepair = FALSE
 	detail_tag = "_belt"
 
 /obj/item/storage/belt/rogue/leather/battleskirt/breechcloth/red
 	color = CLOTHING_RED
+
+/obj/item/storage/belt/rogue/leather/battleskirt/loincloth
+	name = "cloth loincloth"
+	desc = "A fine leather strap with a crude cloth covering, notched above the loincloth."
+	icon_state = "loincloth"
+	detail_tag = "_detail"
+	detail_color = CLOTHING_WHITE
+
+/obj/item/storage/belt/rogue/leather/battleskirt/loincloth/update_icon()
+	cut_overlays()
+	if(get_detail_tag())
+		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		pic.appearance_flags = RESET_COLOR
+		if(get_detail_color())
+			pic.color = get_detail_color()
+		add_overlay(pic)
 
 /obj/item/storage/belt/rogue/leather/steel
 	name = "steel belt"
@@ -172,6 +195,7 @@
 	name = "cloth sash"
 	desc = "A strip of cloth tied together at the ends into a makeshift belt. It's better than nothing."
 	icon_state = "cloth"
+	sewrepair = TRUE
 	component_type = /datum/component/storage/concrete/roguetown/belt/cloth
 
 /obj/item/storage/belt/rogue/leather/cloth/upgraded
@@ -251,7 +275,6 @@
 	name = "black satchel"
 	icon_state = "bsatchel"
 	item_state = "bsatchel"
-	sellprice = 10
 
 /obj/item/storage/backpack/rogue/attack_right(mob/user)
 	var/datum/component/storage/CP = GetComponent(/datum/component/storage)
@@ -308,7 +331,7 @@
 	component_type = /datum/component/storage/concrete/roguetown/backpack
 
 /obj/item/storage/backpack/rogue/artibackpack
-	name = "Cooling backpack"
+	name = "cooling backpack"
 	desc = "A leather backpack with complex pipework coursing through it. It hums and vibrates constantly."
 	icon_state = "artibackpack"
 	item_state = "artibackpack"
@@ -320,6 +343,7 @@
 	equip_sound = 'sound/blank.ogg'
 	bloody_icon_state = "bodyblood"
 	sewrepair = FALSE
+	anvilrepair = /datum/skill/craft/engineering
 	component_type = /datum/component/storage/concrete/roguetown/backpack
 
 /obj/item/storage/backpack/rogue/backpack/bagpack
@@ -363,53 +387,67 @@
 	else
 		icon_state = "rucksack_untied"
 
-/obj/item/storage/belt/rogue/leather/plaquegold/steward
+/obj/item/storage/belt/rogue/leather/plaquegold/noble
 	name = "fancy gold belt"
 	desc = "A dark belt with real gold making up the buckle and highlights. How bougie."
 	icon_state = "stewardbelt"
 	item_state = "stewardbelt"
 
 //Knifeblade belts, act as quivers mixed with belts. Lower storage size of a belt, but holds knives without taking space.
-/obj/item/storage/belt/rogue/leather/knifebelt
-	name = "tossblade belt"
-	desc = "A five-slotted belt meant for tossblades. Little room left over."
+/obj/item/storage/belt/rogue/leather/tossbelt
+	name = "tossbelt"
+	desc = "A belt with loops for hanging throwing weapons. Little room left over."
 	icon_state = "knife"
 	item_state = "knife"
-	strip_delay = 20
-	var/max_storage = 5			//Javelin bag is 4 and they can't hold items. So, more fair having it like this since these are pretty decent weapons.
-	var/list/knives = list()
+	strip_delay = STRIP_DELAY_FAST
+	var/max_storage = 5		//Javelin bag is 4 and they can't hold items. So, more fair having it like this since these are pretty decent weapons.
+	var/list/held = list()
+	///Types this belt slots in place of normal storage.
+	var/list/accepts = list()
+	///Type the belt spawns full of, if any.
+	var/fill
 	sewrepair = TRUE
-	component_type = /datum/component/storage/concrete/roguetown/belt/knife_belt
+	component_type = /datum/component/storage/concrete/roguetown/belt/tossbelt
 
-/obj/item/storage/belt/rogue/leather/knifebelt/attack_turf(turf/T, mob/living/user)
-	if(knives.len >= max_storage)
+/obj/item/storage/belt/rogue/leather/tossbelt/Initialize(mapload)
+	. = ..()
+	if(!fill)
+		return
+	for(var/i in 1 to max_storage)
+		held += new fill()
+	update_icon()
+
+/obj/item/storage/belt/rogue/leather/tossbelt/attack_turf(turf/T, mob/living/user)
+	if(held.len >= max_storage)
 		to_chat(user, span_warning("Your [src.name] is full!"))
 		return
 	to_chat(user, span_notice("You begin to gather the ammunition..."))
-	for(var/obj/item/rogueweapon/huntingknife/throwingknife/K in T.contents)
+	for(var/obj/item/K in T.contents)
+		if(!is_type_in_list(K, accepts))
+			continue
 		if(do_after(user, 5))
-			if(!eatknife(K))
+			if(!stow(K))
 				break
 
-/obj/item/storage/belt/rogue/leather/knifebelt/proc/eatknife(obj/A)
-	if(A.type in typesof(/obj/item/rogueweapon/huntingknife/throwingknife))
-		if(knives.len < max_storage)
+/obj/item/storage/belt/rogue/leather/tossbelt/proc/stow(obj/A)
+	if(is_type_in_list(A, accepts))
+		if(held.len < max_storage)
 			A.forceMove(src)
-			knives += A
+			held += A
 			update_icon()
 			return TRUE
 		else
 			return FALSE
 
-/obj/item/storage/belt/rogue/leather/knifebelt/attackby(obj/A, loc, params)
-	if(A.type in typesof(/obj/item/rogueweapon/huntingknife/throwingknife))
-		if(knives.len < max_storage)
+/obj/item/storage/belt/rogue/leather/tossbelt/attackby(obj/A, loc, params)
+	if(is_type_in_list(A, accepts))
+		if(held.len < max_storage)
 			if(ismob(loc))
 				var/mob/M = loc
 				M.doUnEquip(A, TRUE, src, TRUE, silent = TRUE)
 			else
 				A.forceMove(src)
-			knives += A
+			held += A
 			update_icon()
 			to_chat(usr, span_notice("I discreetly slip [A] into [src]."))
 		else
@@ -417,89 +455,82 @@
 		return
 	..()
 
-/obj/item/storage/belt/rogue/leather/knifebelt/attack_right(mob/user)
-	if(knives.len)
-		var/obj/O = knives[knives.len]
-		knives -= O
+/obj/item/storage/belt/rogue/leather/tossbelt/attack_right(mob/user)
+	if(held.len)
+		var/obj/O = held[held.len]
+		held -= O
 		O.forceMove(user.loc)
 		user.put_in_hands(O)
 		update_icon()
 		return TRUE
 
-/obj/item/storage/belt/rogue/leather/knifebelt/examine(mob/user)
+/obj/item/storage/belt/rogue/leather/tossbelt/examine(mob/user)
 	. = ..()
-	if(knives.len)
-		. += span_notice("[knives.len] inside.")
+	if(held.len)
+		. += span_notice("[held.len] inside.")
 
-/obj/item/storage/belt/rogue/leather/knifebelt/ai_get_custom_inventory()
-	return knives
+/obj/item/storage/belt/rogue/leather/tossbelt/ai_get_custom_inventory()
+	return held
 
-/obj/item/storage/belt/rogue/leather/knifebelt/ai_withdraw_item(obj/item/it, mob/living/user)
-	if(it in knives)
-		knives -= it
+/obj/item/storage/belt/rogue/leather/tossbelt/ai_withdraw_item(obj/item/it, mob/living/user)
+	if(it in held)
+		held -= it
 		update_icon()
 		return TRUE
 	return FALSE
 
-/obj/item/storage/belt/rogue/leather/knifebelt/iron/Initialize()
-	. = ..()
-	for(var/i in 1 to max_storage)
-		var/obj/item/rogueweapon/huntingknife/throwingknife/K = new()
-		knives += K
-	update_icon()
+/obj/item/storage/belt/rogue/leather/tossbelt/blade
+	name = "tossblade belt"
+	desc = "A seven-slotted belt meant for tossblades. Little room left over."
+	max_storage = 7
+	accepts = list(/obj/item/rogueweapon/huntingknife/throwingknife)
 
-/obj/item/storage/belt/rogue/leather/knifebelt/black
+/obj/item/storage/belt/rogue/leather/tossbelt/blade/iron
+	fill = /obj/item/rogueweapon/huntingknife/throwingknife
+
+/obj/item/storage/belt/rogue/leather/tossbelt/blade/black
 	icon_state = "blackknife"
 	item_state = "blackknife"
 
-/obj/item/storage/belt/rogue/leather/knifebelt/black/iron/Initialize()
-	. = ..()
-	for(var/i in 1 to max_storage)
-		var/obj/item/rogueweapon/huntingknife/throwingknife/K = new()
-		knives += K
-	update_icon()
+/obj/item/storage/belt/rogue/leather/tossbelt/blade/black/iron
+	fill = /obj/item/rogueweapon/huntingknife/throwingknife
 
-/obj/item/storage/belt/rogue/leather/knifebelt/black/steel/Initialize()
-	. = ..()
-	for(var/i in 1 to max_storage)
-		var/obj/item/rogueweapon/huntingknife/throwingknife/steel/K = new()
-		knives += K
-	update_icon()
+/obj/item/storage/belt/rogue/leather/tossbelt/blade/black/steel
+	fill = /obj/item/rogueweapon/huntingknife/throwingknife/steel
 
-/obj/item/storage/belt/rogue/leather/knifebelt/black/silver/Initialize()
-	. = ..()
-	for(var/i in 1 to max_storage)
-		var/obj/item/rogueweapon/huntingknife/throwingknife/silver/K = new()
-		knives += K
-	update_icon()
+/obj/item/storage/belt/rogue/leather/tossbelt/blade/black/silver
+	fill = /obj/item/rogueweapon/huntingknife/throwingknife/steel/silver
 
-/obj/item/storage/belt/rogue/leather/knifebelt/black/silver_blessed/Initialize()
-	. = ..()
-	for(var/i in 1 to max_storage)
-		var/obj/item/rogueweapon/huntingknife/throwingknife/silver/preblessed/K = new()
-		knives += K
-	update_icon()
+/obj/item/storage/belt/rogue/leather/tossbelt/blade/black/silver/preblessed
+	fill = /obj/item/rogueweapon/huntingknife/throwingknife/steel/silver/preblessed
 
-/obj/item/storage/belt/rogue/leather/knifebelt/black/psydon/Initialize()
-	. = ..()
-	for(var/i in 1 to max_storage)
-		var/obj/item/rogueweapon/huntingknife/throwingknife/psydon/K = new()
-		knives += K
-	update_icon()
+/obj/item/storage/belt/rogue/leather/tossbelt/blade/black/silver/psy
+	fill = /obj/item/rogueweapon/huntingknife/throwingknife/steel/silver/psy
 
-/obj/item/storage/belt/rogue/leather/knifebelt/black/psydon_blessed/Initialize()
-	. = ..()
-	for(var/i in 1 to max_storage)
-		var/obj/item/rogueweapon/huntingknife/throwingknife/psydon/preblessed/K = new()
-		knives += K
-	update_icon()
+/obj/item/storage/belt/rogue/leather/tossbelt/blade/black/silver/psy/preblessed
+	max_storage = 15 // TA EDIT
+	fill = /obj/item/rogueweapon/huntingknife/throwingknife/steel/silver/psy/preblessed
 
-/obj/item/storage/belt/rogue/leather/knifebelt/black/kazengun/Initialize()
-	. = ..()
-	for(var/i in 1 to max_storage)
-		var/obj/item/rogueweapon/huntingknife/throwingknife/kazengun/K = new()
-		knives += K
-	update_icon()
+/obj/item/storage/belt/rogue/leather/tossbelt/blade/black/kazengun
+	fill = /obj/item/rogueweapon/huntingknife/throwingknife/kazengun
+
+/obj/item/storage/belt/rogue/leather/tossbelt/tomahawk
+	name = "tomahawk belt"
+	desc = "A four-slotted belt with leather loops for hanging tomahawks. Little room left over."
+	icon_state = "tomahawk"
+	item_state = "tomahawk"
+	max_storage = 4
+	accepts = list(/obj/item/rogueweapon/stoneaxe/handaxe/silver, /obj/item/rogueweapon/stoneaxe/woodcut/steel/graggar)
+
+/obj/item/storage/belt/rogue/leather/tossbelt/tomahawk/black
+	icon_state = "blacktomahawk"
+	item_state = "blacktomahawk"
+
+/obj/item/storage/belt/rogue/leather/tossbelt/tomahawk/black/silver
+	fill = /obj/item/rogueweapon/stoneaxe/handaxe/silver
+
+/obj/item/storage/belt/rogue/leather/tossbelt/tomahawk/black/psy
+	fill = /obj/item/rogueweapon/stoneaxe/handaxe/silver/psy
 
 /obj/item/storage/belt/rogue/leather/silkbelt
 	name = "giltsilk belt"
@@ -556,9 +587,23 @@
 	inhand_mod = FALSE
 	slot_flags = ITEM_SLOT_BACK
 
+
+/obj/item/clothing/climbing_gear/get_mechanics_examine(mob/living/carbon/human/user)
+	. = ..()
+	. += span_info("Adds the ability to jump/leap towards a wall and climb it.")
+	. += span_info("Gives you the leaper trait.")
+
 /obj/item/clothing/climbing_gear/equipped(mob/living/carbon/human/user, slot)
 	. = ..()
 	playsound(loc, 'sound/items/garrotegrab.ogg', 100, TRUE)
+	if(slot == SLOT_BACK_L || slot == SLOT_BACK_R)
+		ADD_TRAIT(user, TRAIT_LEAPER, REF(src))
+
+/obj/item/clothing/climbing_gear/dropped(mob/living/carbon/human/user)
+	. = ..()
+	REMOVE_TRAIT(user, TRAIT_LEAPER, REF(src))
+
+
 
 /obj/item/clothing/wall_grab
 	name = "wall"
@@ -581,8 +626,8 @@
 	openspace.zFall(user) // slop?
 
 /obj/item/clothing/wall_grab/intercept_zImpact(atom/movable/AM, levels = 1) // with this shit it doesn't generate "X falls through open space". thank u guppyluxx
-    . = ..()
-    . |= FALL_NO_MESSAGE
+	. = ..()
+	. |= FALL_NO_MESSAGE
 
 /obj/item/storage/hip/orestore/bronze
 	name = "mechanized ore bag"
@@ -591,7 +636,7 @@
 	//mob_overlay_icon = 'icons/roguetown/clothing/onmob/belts.dmi'
 	icon_state = "rucksack"
 	item_state = "rucksack"
-	slot_flags = ITEM_SLOT_HIP|ITEM_SLOT_BACK 
+	slot_flags = ITEM_SLOT_HIP|ITEM_SLOT_BACK
 	w_class = WEIGHT_CLASS_NORMAL
 	max_integrity = 400
 	equip_sound = 'sound/blank.ogg'
@@ -702,12 +747,12 @@
 	equip_sound = 'sound/blank.ogg'
 	bloody_icon_state = "bodyblood"
 	alternate_worn_layer = UNDER_CLOAK_LAYER
-	strip_delay = 20
+	strip_delay = STRIP_DELAY_FAST
 	component_type = /datum/component/storage/concrete/roguetown/zig_bandolier
 
 /obj/item/storage/belt/rogue/leather/suspenders
 	name = "suspenders"
-	desc = "A pair of suspenders which go over the shoulders. Used for keeping one's pants in place in an admittably fashionable style."
+	desc = "A pair of suspenders which go over the shoulders. Used for keeping one's pants in place in an admittedly fashionable style."
 	icon_state = "suspenders"
 	alternate_worn_layer = ARMOR_LAYER
 
@@ -715,4 +760,18 @@
 	name = "cloth belt"
 	desc = "This belt has been sewn out of cloth, as opposed to tied. Which makes it superior. Obviously."
 	icon_state = "clothsash"
+	sewrepair = TRUE
 	salvage_result = /obj/item/natural/cloth
+
+/obj/item/storage/belt/rogue/leather/belthooks
+	name = "belt hooks"
+	desc = "Etruscan-designed leather-wrapped hooks with an actuating hinge. To clip things to other things."
+	icon_state = "belthooks"
+	// belt + empty onmob sprite = welcome to fashion 💀
+
+/obj/item/storage/backpack/rogue/satchel/tailchel
+	name = "tail satchel"
+	desc = "Modest, really easy on the shoulders since is tied to your tail, preferred by many to have freedom of movement while holds a respectable amount."
+	icon_state = "tailchel"
+	item_state = "tailchel"
+	icon = 'icons/roguetown/clothing/storage.dmi'

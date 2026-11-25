@@ -55,14 +55,14 @@
 	/datum/skill/misc/climbing,
 	/datum/skill/misc/reading,
 	/datum/skill/misc/swimming,
-	/datum/skill/misc/stealing,
+	/datum/skill/misc/stealing, // TA EDIT
 	/datum/skill/misc/sneaking,
 	/datum/skill/misc/lockpicking,
 	/datum/skill/misc/riding,
 	/datum/skill/misc/music,
 	/datum/skill/misc/medicine,
 	/datum/skill/misc/tracking,
-    )
+	)
 	for(var/i = 1, i <= skill_choices.len, i++)
 		var/datum/skill/learn_item = skill_choices[i]
 		if((L.get_skill_level(learn_item) < SKILL_LEVEL_JOURNEYMAN))
@@ -81,7 +81,7 @@
 				var/chosen_skill = input(L, "Choose which skills to sacrifice, you will get back 3 sleep points and a buff to help you study", "Choose a skill") as null|anything in choices
 				var/datum/skill/item = choices[chosen_skill]
 				if(!item)
-					return  // student canceled
+					return	// student canceled
 				if(alert(L, "Are you sure> you want lose a level in [item.name]?", "Learning", "Sacrifice", "Cancel") == "Cancel")
 					return
 				if(L.has_status_effect(/datum/status_effect/buff/refocus))
@@ -90,7 +90,7 @@
 					return // cannot teach the same student twice
 				if(L.get_skill_level(item) < SKILL_LEVEL_JOURNEYMAN)
 					to_chat(L, span_warning("I don't have enough skill in [item.name] to sacrifice it."))
-					to_chat(usr, span_warning("I try teaching [L] [item.name] but my student couldnt grasp the lesson!"))
+					to_chat(usr, span_warning("I try teaching [L] [item.name] but my student couldn't grasp the lesson!"))
 					return // some basic skill will not require you novice level
 				else
 					to_chat(L, span_notice("[usr] starts teach me how to refocus my efforts, I slowly lose my grasp on [item.name]!"))

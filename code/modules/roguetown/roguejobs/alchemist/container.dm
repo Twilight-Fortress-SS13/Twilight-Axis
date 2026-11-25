@@ -1,15 +1,12 @@
 
 /obj/item/reagent_containers/glass/bottle/rogue/healthpot
 	list_reagents = list(/datum/reagent/medicine/healthpot = 50)
-	flags_ai_inventory = AI_ITEM_HEALING_DRINK | AI_ITEM_DRINK
 
 /obj/item/reagent_containers/glass/bottle/rogue/healthpotnew
 	list_reagents = list(/datum/reagent/medicine/stronghealth = 50)
-	flags_ai_inventory = AI_ITEM_HEALING_DRINK | AI_ITEM_DRINK
 
 /obj/item/reagent_containers/glass/bottle/rogue/restoration
 	list_reagents = list(/datum/reagent/medicine/restoration = 50)
-	flags_ai_inventory = AI_ITEM_HEALING_DRINK | AI_ITEM_DRINK
 
 /obj/item/reagent_containers/glass/bottle/rogue/manapot
 	list_reagents = list(/datum/reagent/medicine/manapot = 50)
@@ -43,10 +40,10 @@
 	list_reagents = list(/datum/reagent/medicine/strongmana = 50)
 
 /obj/item/reagent_containers/glass/bottle/rogue/stampot
-	list_reagents = list(/datum/reagent/medicine/stampot = 50)
+	list_reagents = list(/datum/reagent/medicine/stampot = 30)
 
 /obj/item/reagent_containers/glass/bottle/rogue/strongstampot
-	list_reagents = list(/datum/reagent/medicine/strongstam = 50)
+	list_reagents = list(/datum/reagent/medicine/strongstam = 30)
 
 /obj/item/reagent_containers/glass/bottle/rogue/antidote
 	list_reagents = list(/datum/reagent/medicine/antidote = 50)
@@ -65,6 +62,9 @@
 
 /obj/item/reagent_containers/glass/bottle/rogue/strongstampoison
 	list_reagents = list(/datum/reagent/strongstampoison = 15)
+
+/obj/item/reagent_containers/glass/bottle/rogue/sleeppoison
+	list_reagents = list(/datum/reagent/sleep_powder = 15)
 
 /obj/item/reagent_containers/glass/bottle/alchemical/strpot
 	list_reagents = list(/datum/reagent/buff/strength = 30)
@@ -107,6 +107,9 @@
 
 /obj/item/reagent_containers/glass/bottle/alchemical/restoration
 	list_reagents = list(/datum/reagent/medicine/restoration = 30)
+
+/obj/item/reagent_containers/glass/bottle/alchemical/water
+	list_reagents = list(/datum/reagent/water = 30)
 
 //////////////////////////
 /// ALCOHOLIC BOTTLES ///
@@ -272,7 +275,7 @@
 	name = "bottle of Shieldmaiden Mead"
 	icon_state = "red_wine"
 	list_reagents = list(/datum/reagent/consumable/ethanol/gronnmead = 50)
-	desc = "A bottle with a Shieldmaiden Berewrey cork-seal. A deep red honey-wine, refined with the red berries native to Gronns highlands."
+	desc = "A bottle with a Shieldmaiden Brewery cork-seal. A deep red honey-wine, refined with the red berries native to Gronns highlands."
 
 /obj/item/reagent_containers/glass/bottle/rogue/beer/avarmead
 	name = "bottle of Zögiin Bal Mead"
@@ -302,7 +305,7 @@
 	name = "bottle of Junmai-Ginjo"
 	icon_state = "white_wine"
 	list_reagents = list(/datum/reagent/consumable/ethanol/kgunsake = 50)
-	desc = "A bottle with a Golden Swan cork-seal. A translucient, pale-blue liquid made from rice. A favourite drink of the warlords and nobles of Kazengun."
+	desc = "A bottle with a Golden Swan cork-seal. A translucent, pale-blue liquid made from rice. A favourite drink of the warlords and nobles of Kazengun."
 
 /obj/item/reagent_containers/glass/bottle/rogue/beer/kgunplum
 	name = "bottle of Umeshu"
@@ -387,7 +390,7 @@
 
 /obj/item/reagent_containers/glass/bottle/claybottle/gronnmead
 	list_reagents = list(/datum/reagent/consumable/ethanol/gronnmead = 75)
-	desc = "A clay bottle with a Shieldmaiden Berewrey cork-seal. A deep red honey-wine, refined with the red berries native to Gronns highlands."
+	desc = "A clay bottle with a Shieldmaiden Brewery cork-seal. A deep red honey-wine, refined with the red berries native to Gronns highlands."
 
 /obj/item/reagent_containers/glass/bottle/claybottle/whitewine
 	list_reagents = list(/datum/reagent/consumable/ethanol/whitewine = 75)

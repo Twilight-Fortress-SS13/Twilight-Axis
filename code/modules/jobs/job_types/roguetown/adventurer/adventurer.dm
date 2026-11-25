@@ -11,7 +11,7 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 	faction = "Station"
 	total_positions = 20
 	spawn_positions = 20
-	
+
 	tutorial = "Hero of nothing, a wanderer in foreign lands in search of fame and riches. Whatever led you to this fate is up to the wind to decide, and you've never fancied yourself for much other than the thrill. Some day your pride is going to catch up to you, and you're going to find out why most men don't end up in the annals of history."
 	class_categories = TRUE
 	townie_contract_gate_exempt = TRUE
@@ -35,7 +35,7 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 	job_reopens_slots_on_death = FALSE
 	same_job_respawn_delay = 30 MINUTES
 
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander2.ogg'
+	cmode_music = sound("sound/music/cmode/adventurer/combat_outlander2.ogg")
 
 	job_subclasses = list(
 		/datum/advclass/cleric,
@@ -53,16 +53,14 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 		/datum/advclass/rogue/bard,
 		/datum/advclass/rogue/swashbuckler,
 		/datum/advclass/rogue/antiquarian,
-		/datum/advclass/mystic,
-		/datum/advclass/mystic/resilientsoul,
-		/datum/advclass/mystic/holyblade,
 		/datum/advclass/mage,
 		/datum/advclass/mage/spellsinger,
 		/datum/advclass/mage/spellblade,
 		/datum/advclass/mage/spellfist,
+		/datum/advclass/mage/spellthief,
 		/datum/advclass/ranger,
 		/datum/advclass/ranger/wayfarer,
-		/datum/advclass/ranger/bombadier,
+		/datum/advclass/ranger/bombardier,
 		/datum/advclass/ranger/bwanderer,
 		/datum/advclass/noble,
 		/datum/advclass/noble/knighte,
@@ -77,6 +75,37 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 		/datum/advclass/foreigner/bronzeclad,
 		/datum/advclass/foreigner/lesserblackoak
 	)
+	has_subprefs = TRUE
+
+/datum/status_effect/advclass_selection
+	id = "advclass_selection"
+	duration = -1
+	tick_interval = 2 SECONDS
+	alert_type = null
+
+/datum/status_effect/advclass_selection/on_apply()
+	. = ..()
+	owner.Stun(5 SECONDS)
+
+/datum/status_effect/advclass_selection/tick()
+	var/mob/living/carbon/human/H = owner
+	if(!istype(H) || !H.advsetup)
+		qdel(src)
+		return
+	H.Stun(5 SECONDS)
+
+/datum/status_effect/advclass_selection/on_remove()
+	if(owner)
+		owner.SetStun(0)
+
+/mob/living/carbon/human/proc/set_advsetup(new_value)
+	if(advsetup == new_value)
+		return
+	advsetup = new_value
+	if(advsetup)
+		apply_status_effect(/datum/status_effect/advclass_selection)
+	else
+		remove_status_effect(/datum/status_effect/advclass_selection)
 
 /mob/living/carbon/human/proc/adv_hugboxing_start()
 	to_chat(src, span_warning("I will be in danger once I start moving."))

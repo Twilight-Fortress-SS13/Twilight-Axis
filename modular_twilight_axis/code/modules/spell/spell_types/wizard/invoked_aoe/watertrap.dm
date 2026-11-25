@@ -54,7 +54,7 @@
 		return FALSE
 
 	for(var/turf/affected_turf in get_hear(area_of_effect, T))
-		new /obj/effect/temp_visual/trap(affected_turf)
+		new /obj/effect/temp_visual/telegraph(affected_turf, delay)
 		playsound(T, 'sound/magic/blade_burst.ogg', 80, TRUE, soundping = TRUE)
 
 	sleep(delay)

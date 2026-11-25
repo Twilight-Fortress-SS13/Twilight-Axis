@@ -125,6 +125,8 @@
 				used = 'sound/vo/psst.ogg'
 			if("meow")
 				used = list('sound/vo/mobs/cat/cat_meow1.ogg', 'sound/vo/mobs/cat/cat_meow2.ogg', 'sound/vo/mobs/cat/cat_meow3.ogg', 'sound/vo/mobs/cat/cat_meow4.ogg')
+			if("mreow")
+				used = list('sound/vo/mobs/cat/cat_meow4.ogg')
 			if("mrrp")
 				used = list('sound/vo/mobs/cat/mrrp.ogg')
 			if("caw")
@@ -195,6 +197,13 @@
 				used = list('sound/vo/LizardSqueal.ogg')
 			if("thump")
 				used = list('sound/vo/LizardThump.ogg')
+			if("tick")
+				used = list('sound/misc/clockloop.ogg')
+			if("creak")
+				used = list('sound/foley/trap.ogg')
+			if("spark")
+				used = list('sound/foley/machinebreak.ogg')
+
 			//MODULAR TWILIGHT AXIS
 			if("softmoan")
 				used = list('sound/misc/mat/sex_moans/fem_man/SWFMoan213.ogg')

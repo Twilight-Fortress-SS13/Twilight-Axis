@@ -12,6 +12,7 @@ export type CatalogEntry = {
   price: number;
   ingot: string;
   materials: RecipeMaterial[];
+  has_stats?: BooleanLike;
 };
 
 export type ManifestLine = {
@@ -40,7 +41,8 @@ export type Order = {
   ref: string;
   commissioner_name: string;
   smith_name: string;
-  deposited: number;
+  price: number;
+  is_backed: BooleanLike;
   status: OrderStatus;
   lines: OrderLine[];
   materials: RecipeMaterial[];
@@ -67,7 +69,8 @@ export type CommissionerData = {
   can_read: BooleanLike;
   is_guildmaster: BooleanLike;
   budget: number;
-  my_deposit: number;
+  has_account: BooleanLike;
+  my_balance: number;
   percent_margin: number;
   flat_margin: number;
   item_cap_per_order: number;

@@ -11,6 +11,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	spawn_positions = 1
 	selection_color = JCOLOR_NOBLE
 	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED RACES_OOZE)
+	allowed_patrons = NON_PSYDON_PATRONS
 	allowed_sexes = list(MALE, FEMALE)
 	advclass_cat_rolls = list(CTAG_LORD = 20)
 
@@ -30,12 +31,13 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	min_pq = 10
 	max_pq = null
 	round_contrib_points = 4
+	quest_claim_barred = TRUE
 	give_bank_account = 250
-	cmode_music = 'sound/music/combat_noble.ogg'
+	cmode_music = sound("sound/music/combat_noble.ogg")
 	same_job_respawn_delay = 30 MINUTES
 
 	// Can't use the Throat when you can't talk properly or.. at all for that matter.
-	vice_restrictions = list(/datum/charflaw/mute, /datum/charflaw/unintelligible)
+	vice_restrictions = list(/datum/charflaw/mute, /datum/charflaw/unintelligible, /datum/charflaw/wanted)
 
 	job_subclasses = list(
 		/datum/advclass/lord/warrior,
@@ -43,11 +45,48 @@ GLOBAL_LIST_EMPTY(lord_titles)
 		/datum/advclass/lord/mage,
 		/datum/advclass/lord/inbred
 	)
-	
+	default_subprefs = list("favorite_advclass" = null, "primcolor" = null, "seccolor" = null)
 
 /datum/outfit/job/roguetown/lord
 	job_bitflag = BITFLAG_ROYALTY
 	has_loadout = TRUE
+
+/datum/job/roguetown/lord/update_subprefs_window(mob/user)
+	var/client/C = usr.client
+	if(!C || !C.prefs)
+		return
+	var/list/roleprefs = get_roleprefs(C)
+	var/HTML = {"
+		[subprefs_subclass_html(C)]
+		<hr>
+		<i>You can choose your ducal colors here; this will only take effect if both are set.</i><br/>
+		<b>Primary color:</b> <a href="?src=[REF(src)];primcolor=1">[roleprefs["primcolor"] || "Choose"]</a><br/>
+		<b>Secondary color:</b> <a href="?src=[REF(src)];seccolor=1">[roleprefs["seccolor"] || "Choose"]</a><br/>
+		<center><a href="?src=[REF(src)];subprefsexit=1">EXIT</a>\t\t<a href="?src=[REF(src)];subprefsreset=1">RESET</a></center>
+	"}
+	// the fact that the window width/height will be different each time is the main reason this isn't all done in a parent proc on /datum/job
+	var/datum/browser/popup = new(user, "[JOB_SUBPREFS_WINDOW_ID]", "<div align='center'>[title] Preferences</div>", 500, 400)
+	popup.set_content(HTML)
+	popup.open(FALSE)
+	if(winexists(usr, "[JOB_SUBPREFS_WINDOW_ID]"))
+		winset(usr, "[JOB_SUBPREFS_WINDOW_ID]", "focus=true")
+
+/datum/job/roguetown/lord/Topic(href, list/href_list)
+	. = ..()
+	var/client/C = usr.client
+	if(!C || !C.prefs)
+		return
+	var/list/roleprefs = get_roleprefs(C)
+	if(href_list["primcolor"])
+		var/choice = input(usr, "Choose a Primary Color", "ROYAL STANDARD") as anything in COLOR_MAP
+		if(choice)
+			roleprefs["primcolor"] = choice
+			update_subprefs_window(usr)
+	if(href_list["seccolor"])
+		var/choice = input(usr, "Choose a Secondary Color", "ROYAL STANDARD") as anything in COLOR_MAP
+		if(choice)
+			roleprefs["seccolor"] = choice
+			update_subprefs_window(usr)
 
 /datum/job/roguetown/lord/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	. = ..()
@@ -60,24 +99,37 @@ GLOBAL_LIST_EMPTY(lord_titles)
 			GLOB.lordsurname = "of [L.real_name]"
 		SSticker.set_ruler_mob(L)
 		var/realm = SSticker.realm_name || "Azure Peak"
-		to_chat(world, "<b><span class='notice'><span class='big'>[L.real_name] is [SSticker.rulertype] of [realm].</span></span></b>")
+		to_world("<b><span class='notice'><span class='big'>[L.real_name] is [SSticker.rulertype] of [realm].</span></span></b>")
 		if(istype(SSticker.regentmob, /mob/living/carbon/human))
 			var/mob/living/carbon/human/regentbuddy = SSticker.regentmob
 			to_chat(L, span_notice("Word reached me on the approach that [regentbuddy.real_name], the [regentbuddy.job], served as regent in my absence."))
 		SSticker.regentmob = null //Time for regent to give up the position.
 
 		addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, lord_marriage_choice)), 50)
-		addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, lord_suitor_choice)), 50)
-		addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, lord_color_choice)), 50)
-
+		//addtimer(CALLBACK(L, TYPE_PROC_REF(/mob, lord_suitor_choice)), 50) //TA EDIT
+		if(STATION_TIME_PASSED() <= 30 MINUTES) //Late to the party? Stuck with default colors, sorry!
+			spawn(50){
+				var/list/prefs = get_roleprefs(L.client)
+				if(prefs && prefs["primcolor"] && prefs["seccolor"])
+					var/prim = COLOR_MAP[prefs["primcolor"]]
+					var/sec = COLOR_MAP[prefs["seccolor"]]
+					GLOB.lordprimary = prim
+					GLOB.lordsecondary = sec
+					for(var/obj/O in GLOB.lordcolor)
+						O.lordcolor(prim,sec)
+					for(var/turf/T in GLOB.lordcolor)
+						T.lordcolor(prim,sec)
+				else
+					L.lord_color_choice()
+			}
 
 /datum/outfit/job/roguetown/lord
-	neck = /obj/item/storage/belt/rogue/pouch/coins/rich
-	cloak = /obj/item/clothing/cloak/lordcloak
+	neck = /obj/item/clothing/neck/roguetown/ornateamulet/noble
 	belt = /obj/item/storage/belt/rogue/leather/plaquegold
-	beltl = /obj/item/storage/keyring/lord
 	beltr = /obj/item/rogueweapon/scabbard/sword/royal
-	backpack_contents = list(/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1, /obj/item/blueprint/mace_mushroom = 1, /obj/item/hunting_map/white_stag = 1)
+	pants = /obj/item/clothing/under/roguetown/tights/puritan
+	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/lord/heavy //DNR guarrenteed role, won't save you since your legs are unarmored by default, but it at least prevents a cheap swift-intent gutspill ending you.
+	shoes = /obj/item/clothing/shoes/roguetown/rosa/nine
 	id = /obj/item/scomstone/garrison
 
 /datum/outfit/job/roguetown/lord/pre_equip(mob/living/carbon/human/H)
@@ -88,17 +140,12 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	else
 		to_chat(H, span_warning("My crown must be yet in the realm. I shall search it out."))
 	if(should_wear_femme_clothes(H))
-		pants = /obj/item/clothing/under/roguetown/tights/black
-		shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/black
 		armor = /obj/item/clothing/suit/roguetown/shirt/dress/royal
 		cloak = /obj/item/clothing/cloak/lordcloak/ladycloak
 		wrists = /obj/item/clothing/wrists/roguetown/royalsleeves
-		shoes = /obj/item/clothing/shoes/roguetown/shortboots
 	else if(should_wear_masc_clothes(H))
-		pants = /obj/item/clothing/under/roguetown/tights/black
-		shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/black
-		armor = /obj/item/clothing/suit/roguetown/armor/leather/vest/black
-		shoes = /obj/item/clothing/shoes/roguetown/boots
+		armor = /obj/item/clothing/suit/roguetown/shirt/dress/royal/prince/lord
+		cloak = /obj/item/clothing/cloak/lordcloak
 	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes/gold
 	if(H.wear_mask)
 		if(istype(H.wear_mask, /obj/item/clothing/mask/rogue/eyepatch))
@@ -108,37 +155,6 @@ GLOBAL_LIST_EMPTY(lord_titles)
 			qdel(H.wear_mask)
 			mask = /obj/item/clothing/mask/rogue/lordmask/l
 	ADD_TRAIT(H, TRAIT_NOBLE, TRAIT_GENERIC)
-
-/datum/outfit/job/roguetown/lord/choose_loadout(mob/living/carbon/human/H)
-	. = ..()
-	var/client/player = H?.client
-	if(player.prefs)
-		if(SSmapping.config.map_name == "Rockhill")
-			if(!istype(player.prefs.virtue_origin, /datum/virtue/origin/enigma) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/valorian) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/zybantian))
-				var/list/new_origins = list("Enigma" = /datum/virtue/origin/enigma, 
-				"Valoria" = /datum/virtue/origin/valorian,
-				"Zybantu" = /datum/virtue/origin/zybantian)
-				var/new_origin
-				var/choice = input(player, "Your origins are not compatible with the Kingdom. Where do you hail from?", "ANCESTRY") as anything in new_origins
-				if(choice)
-					new_origin = new_origins[choice]
-				else
-					to_chat(player, span_notice("No choice detected. Picking a random compatible origin."))
-					new_origin = pick(/datum/virtue/origin/enigma, /datum/virtue/origin/valorian, /datum/virtue/origin/zybantian)
-				change_origin(H, new_origin, "Royal line")
-		else
-			if(!istype(player.prefs.virtue_origin, /datum/virtue/origin/azuria) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/grenzelhoft) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/valorian))
-				var/list/new_origins = list("Azuria" = /datum/virtue/origin/azuria, 
-				"Grenzelhoft" = /datum/virtue/origin/grenzelhoft,
-				"Valoria" = /datum/virtue/origin/valorian)
-				var/new_origin
-				var/choice = input(player, "Your origins are not compatible with the Duchy. Where do you hail from?", "ANCESTRY") as anything in new_origins
-				if(choice)
-					new_origin = new_origins[choice]
-				else
-					to_chat(player, span_notice("No choice detected. Picking a random compatible origin."))
-					new_origin = pick(/datum/virtue/origin/grenzelhoft, /datum/virtue/origin/valorian, /datum/virtue/origin/azuria)
-				change_origin(H, new_origin, "Royal line")
 
 //	SSticker.rulermob = H
 /**
@@ -178,7 +194,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	subclass_virtues = list(
 		/datum/virtue/utility/riding
 	)
-	
+
 	subclass_stashed_items = list(
 		"Ducal Caparison (Saiga)" = /obj/item/caparison/azure,
 		"Fogbeast Caparison" = /obj/item/caparison/fogbeast)
@@ -186,6 +202,16 @@ GLOBAL_LIST_EMPTY(lord_titles)
 /datum/outfit/job/roguetown/lord/warrior/pre_equip(mob/living/carbon/human/H)
 	..()
 	l_hand = /obj/item/rogueweapon/lordscepter
+	//assigned per subclass to prevent duplication glitches with items
+	backr = /obj/item/storage/backpack/rogue/satchel/black
+	backpack_contents = list(
+		/obj/item/storage/keyring/lord = 1,
+		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 1,
+		/obj/item/rogueweapon/huntingknife/idagger/steel/decorated = 1,
+		/obj/item/blueprint/mace_mushroom = 1,
+		/obj/item/hunting_map/white_stag = 1,
+		/obj/item/rogueweapon/scabbard/sheath/royal = 1
+	)
 
 /**
 	Merchant Lord subclass. Consider this an evolution from Sheltered Aristocrat.
@@ -235,6 +261,16 @@ GLOBAL_LIST_EMPTY(lord_titles)
 /datum/outfit/job/roguetown/lord/merchant/pre_equip(mob/living/carbon/human/H)
 	..()
 	l_hand = /obj/item/rogueweapon/lordscepter
+	//assigned per subclass to prevent duplication glitches with items
+	backr = /obj/item/storage/backpack/rogue/satchel/black
+	backpack_contents = list(
+		/obj/item/storage/keyring/lord = 1,
+		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 1,
+		/obj/item/rogueweapon/huntingknife/idagger/steel/decorated = 1,
+		/obj/item/blueprint/mace_mushroom = 1,
+		/obj/item/hunting_map/white_stag = 1,
+		/obj/item/rogueweapon/scabbard/sheath/royal = 1
+	)
 	if(H.mind)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/appraise/secular)
 
@@ -259,7 +295,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 		STATKEY_PER = 2,
 		STATKEY_WIL = 1,
 	)
-	subclass_mage_aspects = list("mastery" = FALSE, "major" = 1, "minor" = 1, "utilities" = 4, "ward" = TRUE)
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 1, "minor" = 1, "utilities" = 5, "ward" = TRUE)
 	subclass_skills = list(
 		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/arcyne = SKILL_LEVEL_EXPERT,
@@ -269,7 +305,6 @@ GLOBAL_LIST_EMPTY(lord_titles)
 		/datum/skill/combat/knives = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/reading = SKILL_LEVEL_MASTER,
-		/datum/skill/misc/riding = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/magic/arcane = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/alchemy = SKILL_LEVEL_APPRENTICE,
 	)
@@ -285,9 +320,17 @@ GLOBAL_LIST_EMPTY(lord_titles)
 /datum/outfit/job/roguetown/lord/mage/pre_equip(mob/living/carbon/human/H)
 	..()
 	l_hand = /obj/item/rogueweapon/lordscepter
-	backr = /obj/item/storage/backpack/rogue/satchel
-
-	backpack_contents = list(/obj/item/rogueweapon/huntingknife/idagger/steel/special = 1, /obj/item/rogueweapon/spellbook = 1, /obj/item/blueprint/mace_mushroom = 1, /obj/item/chalk = 1, /obj/item/hunting_map/white_stag = 1,)
+	//assigned per subclass to prevent duplication glitches with items
+	backr = /obj/item/storage/backpack/rogue/satchel/black
+	backpack_contents = list(
+		/obj/item/storage/keyring/lord = 1,
+		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 1,
+		/obj/item/rogueweapon/huntingknife/idagger/steel/silver/arcyne = 1,
+		/obj/item/rogueweapon/scabbard/sheath/royal = 1,
+		/obj/item/blueprint/mace_mushroom = 1,
+		/obj/item/hunting_map/white_stag = 1,
+		/obj/item/rogueweapon/spellbook/greater = 1
+	)
 
 /**
 	Inbred Lord subclass. A joke class, evolution of the Inbred Wastrel.
@@ -312,7 +355,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	)
 	subclass_skills = list(
 		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/misc/riding = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/riding = SKILL_LEVEL_LEGENDARY,
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/craft/cooking = SKILL_LEVEL_NOVICE,
 		/datum/skill/craft/sewing = SKILL_LEVEL_NOVICE,
@@ -329,6 +372,16 @@ GLOBAL_LIST_EMPTY(lord_titles)
 /datum/outfit/job/roguetown/lord/inbred/pre_equip(mob/living/carbon/human/H)
 	..()
 	l_hand = /obj/item/rogueweapon/lordscepter
+	//assigned per subclass to prevent duplication glitches with items
+	backr = /obj/item/storage/backpack/rogue/satchel/black
+	backpack_contents = list(
+		/obj/item/storage/keyring/lord = 1,
+		/obj/item/storage/belt/rogue/pouch/coins/veryrich = 1,
+		/obj/item/rogueweapon/huntingknife/idagger/steel/decorated = 1,
+		/obj/item/blueprint/mace_mushroom = 1,
+		/obj/item/hunting_map/white_stag = 1,
+		/obj/item/rogueweapon/scabbard/sheath/royal = 1
+	)
 	H.adjust_skillrank(/datum/skill/combat/crossbows, pick(0,1), TRUE)
 	H.adjust_skillrank(/datum/skill/misc/climbing, pick(0,0,1), TRUE)
 	H.adjust_skillrank(/datum/skill/misc/athletics, pick(0,1), TRUE)
@@ -586,7 +639,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	accept_message = "FOR THE CROWN!"
 	refuse_message = "I refuse."
 	recharge_time = 100
-	applied_traits = list(TRAIT_FOOD_STIPEND)
+	applied_traits = list(TRAIT_ROYAL_SUBSIDY)
 
 /obj/effect/proc_holder/spell/self/convertrole/bog
 	name = "Recruit Warden"

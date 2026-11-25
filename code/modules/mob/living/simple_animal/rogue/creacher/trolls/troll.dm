@@ -1,6 +1,9 @@
 /mob/living/simple_animal/hostile/retaliate/rogue/troll
+	attack_aim = MOB_AIM_HIGH
+	anatomy_type = /datum/anatomy/biped/tough
 	icon = 'icons/roguetown/mob/monster/trolls/trolls.dmi'
 	name = "troll"
+	mob_size = MOB_SIZE_LARGE
 	desc = "Elven legends say these monsters were servants of Dendor tasked to guard his realm; nowadays they are sometimes found in the company of orcs. It's said that fire curbs their almost magical regeneration."
 	icon_state = "troll"
 	icon_living = "troll"
@@ -19,15 +22,11 @@
 	verb_exclaim = "roars"
 	verb_yell = "roars"
 
-	turns_per_move = 2
 	see_in_dark = 10
-	move_to_delay = 7
-	vision_range = 6
-	aggro_vision_range = 6
 	botched_butcher_results = list (
 		/obj/item/reagent_containers/food/snacks/rogue/meat/steak/troll = 2,
 		/obj/item/natural/bundle/bone/full = 1,
-		/obj/item/alch/horn = 1, 
+		/obj/item/alch/horn = 1,
 		/obj/item/natural/hide = 2)
 	butcher_results = list(
 		/obj/item/reagent_containers/food/snacks/rogue/meat/steak/troll = 3,
@@ -64,26 +63,18 @@
 	STASPD = 2
 	STAWIL = 17
 
-	retreat_distance = 0
-	minimum_distance = 0
 	deaggroprob = 0
-	defprob = 20
-	del_on_deaggro = 99 SECONDS
-	retreat_health = 0
 	food = 0
 	dodgetime = 20
 	aggressive = TRUE
-//	stat_attack = UNCONSCIOUS
 	remains_type = /obj/effect/decal/remains/troll
-	
-	can_have_ai = FALSE //disable native ai
-	AIStatus = AI_OFF
+
 	ai_controller = /datum/ai_controller/troll
-	melee_cooldown = TROLL_ATTACK_SPEED
+	move_base_delay = MOVEMENT_DELAY_SPD_17
 
 	var/critvuln = FALSE
 
-/mob/living/simple_animal/hostile/retaliate/rogue/troll/Initialize()
+/mob/living/simple_animal/hostile/retaliate/rogue/troll/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/ai_aggro_system)
 	if(critvuln)
@@ -93,7 +84,7 @@
 /mob/living/simple_animal/hostile/retaliate/rogue/troll/death(gibbed)
 	..()
 	update_icon()
-	if(!QDELETED(src))
+	if(!QDELETED(src) && !no_reanimate)
 		src.AddComponent(/datum/component/deadite_animal_reanimation)
 
 /mob/living/simple_animal/hostile/retaliate/rogue/troll/get_sound(input)
@@ -111,89 +102,33 @@
 
 /mob/living/simple_animal/hostile/retaliate/rogue/troll/taunted(mob/user)
 	emote("aggro")
-	Retaliate()
-	GiveTarget(user)
+	ai_controller?.force_aggro(user)
 	return
 
 /mob/living/simple_animal/hostile/retaliate/rogue/troll/Life()
 	..()
 	if(pulledby)
-		Retaliate()
-		GiveTarget(pulledby)
+		ai_controller?.force_aggro(pulledby)
 	if(has_status_effect(/datum/status_effect/fire_handler))
 		adjustHealth(-rand(20,35))
 
+// these procs apply to all trolls. that being said; if you want your regular trolls to hide, USE BOG TROLLS!!
+// normal trolls DO NOT have the overrides to make these function right.
 /mob/living/simple_animal/hostile/retaliate/rogue/troll/proc/hide()
 	flick("troll_hiding", src)
-	sleep(1 SECONDS)
 	icon_state = "troll_hide"
 
 /mob/living/simple_animal/hostile/retaliate/rogue/troll/proc/ambush()
-	flick("troll_ambush", src)
-	sleep(1 SECONDS)
-	icon_state = initial(icon_state)
-
-/mob/living/simple_animal/hostile/retaliate/rogue/troll/bog/LoseTarget()
-	..()
-	if(health > 0)
-		hide()
-
-/mob/living/simple_animal/hostile/retaliate/rogue/troll/bog/Moved()
-	. = ..()
-	if(icon_state != initial(icon_state))
+	// find out a better way to do hide & ambush procs on trolls if youre adding another thats going to use these
+	if(src.icon_state == "troll_hide")
+		flick("troll_ambush", src)
 		icon_state = initial(icon_state)
-
-/mob/living/simple_animal/hostile/retaliate/rogue/troll/bog/GiveTarget()
-	..()
-	ambush()
-
-/mob/living/simple_animal/hostile/retaliate/rogue/troll/simple_limb_hit(zone)
-	if(!zone)
-		return ""
-	switch(zone)
-		if(BODY_ZONE_PRECISE_R_EYE)
-			return "head"
-		if(BODY_ZONE_PRECISE_L_EYE)
-			return "head"
-		if(BODY_ZONE_PRECISE_NOSE)
-			return "nose"
-		if(BODY_ZONE_PRECISE_MOUTH)
-			return "mouth"
-		if(BODY_ZONE_PRECISE_SKULL)
-			return "head"
-		if(BODY_ZONE_PRECISE_EARS)
-			return "head"
-		if(BODY_ZONE_PRECISE_NECK)
-			return "neck"
-		if(BODY_ZONE_PRECISE_L_HAND)
-			return "foreleg"
-		if(BODY_ZONE_PRECISE_R_HAND)
-			return "foreleg"
-		if(BODY_ZONE_PRECISE_L_FOOT)
-			return "leg"
-		if(BODY_ZONE_PRECISE_R_FOOT)
-			return "leg"
-		if(BODY_ZONE_PRECISE_STOMACH)
-			return "stomach"
-		if(BODY_ZONE_PRECISE_GROIN)
-			return "tail"
-		if(BODY_ZONE_HEAD)
-			return "head"
-		if(BODY_ZONE_R_LEG)
-			return "leg"
-		if(BODY_ZONE_L_LEG)
-			return "leg"
-		if(BODY_ZONE_R_ARM)
-			return "foreleg"
-		if(BODY_ZONE_L_ARM)
-			return "foreleg"
-	return ..()
 
 /obj/effect/decal/remains/troll
 	name = "remains"
 	gender = PLURAL
 	icon_state = "Trolld"
-	
+
 /datum/intent/unarmed/claw/troll
 	clickcd = TROLL_ATTACK_SPEED
 	penfactor = PEN_LIGHT

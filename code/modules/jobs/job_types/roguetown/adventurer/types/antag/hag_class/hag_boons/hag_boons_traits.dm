@@ -40,11 +40,21 @@
 	desc = "Grants unearthly beauty."
 	points = 5
 
+/datum/hag_boon/trait/beautiful/apply_boon_effect(mob/living/L) // these traits are all mutually exclusive
+	. = ..()
+	REMOVE_TRAIT(L, TRAIT_DISFIGURED, null)
+	REMOVE_TRAIT(L, TRAIT_BEAUTIFUL_UNCANNY, null)
+
 /datum/hag_boon/trait/beautiful_uncanny
 	name = "Trait - Angelic beauty"
 	trait_to_apply = TRAIT_BEAUTIFUL_UNCANNY
 	desc = "Causes the bearer to randomly appear either beautiful or repulsive."
 	points = 25
+
+/datum/hag_boon/trait/beautiful_uncanny/apply_boon_effect(mob/living/L) // these traits are all mutually exclusive
+	. = ..()
+	REMOVE_TRAIT(L, TRAIT_DISFIGURED, null)
+	REMOVE_TRAIT(L, TRAIT_BEAUTIFUL, null)
 
 /datum/hag_boon/trait/leaper
 	name = "Trait - Leaper"
@@ -79,7 +89,7 @@
 /datum/hag_boon/trait/dodge_expert
 	name = "Trait - Dodge Expert"
 	trait_to_apply = TRAIT_DODGEEXPERT
-	desc = "Enhances the bearer's abiliy to dodge, so long as they are not wearing medium or heavy armor."
+	desc = "Enhances the bearer's ability to dodge, so long as they are not wearing medium or heavy armor."
 	points = 30
 
 /datum/hag_boon/trait/bleed_resistance
@@ -125,10 +135,10 @@
 	points = 75
 
 // /datum/hag_boon/trait/counter_counterspell
-// 	name = "Trait - Counter Counterspell"
-// 	trait_to_apply = TRAIT_COUNTERCOUNTERSPELL
-// 	desc = "Prevents Counterspells from affecting the bearer."
-// 	points = 40
+//	name = "Trait - Counter Counterspell"
+//	trait_to_apply = TRAIT_COUNTERCOUNTERSPELL
+//	desc = "Prevents Counterspells from affecting the bearer."
+//	points = 40
 
 /datum/hag_boon/trait/keen_ears
 	name = "Trait - Keen Ears"
@@ -174,9 +184,9 @@
 
 // Disabled for now, they have a blessing for stamina.
 // /datum/hag_boon/trait/infinite_energy
-// 	name = "Trait - No Fatigue"
-// 	trait_to_apply = TRAIT_INFINITE_ENERGY
-// 	points = 100
+//	name = "Trait - No Fatigue"
+//	trait_to_apply = TRAIT_INFINITE_ENERGY
+//	points = 100
 
 /datum/hag_boon/trait/unbound_strength
 	name = "Trait - Unbound Strength"

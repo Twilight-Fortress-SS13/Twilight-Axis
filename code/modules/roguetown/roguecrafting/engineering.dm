@@ -133,6 +133,10 @@
 	skillcraft = /datum/skill/craft/engineering
 	ignoredensity = TRUE
 
+/datum/crafting_recipe/roguetown/engineering/shopbars/shoptwo
+	name = "trade window bars"
+	result = /obj/structure/bars/shoptwo
+
 /datum/crafting_recipe/roguetown/engineering/distiller
 	name = "copper distiller"
 	category = "Machines"
@@ -218,9 +222,10 @@
 		/obj/item/natural/fibers = 1,
 		/obj/item/natural/wood/plank = 1,
 	)
+	subtype_reqs = TRUE
 	structurecraft = /obj/structure/artificer_table
 	skillcraft = /datum/skill/craft/engineering
-	craftdiff = 4
+	craftdiff = 2 //It's a brush. The consumable cream still needs expert, so this can drop to apprentice.
 
 /datum/crafting_recipe/roguetown/engineering/polishcream
 	name = "Polish Cream"
@@ -234,17 +239,19 @@
 	)
 	structurecraft = /obj/structure/artificer_table
 	skillcraft = /datum/skill/craft/engineering
-	craftdiff = 4
+	craftdiff = 4 //high, but we dont want polishing to be come commonplace or an expectation.
 
 //crossbows, crossbow bolts, and specialized arrows and bolts
 
 
-//Arrows, mostly standard arrows are 10x and special ones are 5x per ingot. fewer than bolts
-/datum/crafting_recipe/roguetown/engineering/ironarrow_ten
-	name = "iron arrow (x10)"
+//Arrows, mostly standard arrows are 12x and special ones are 6x per ingot. fewer than bolts
+/datum/crafting_recipe/roguetown/engineering/ironarrow_twelve
+	name = "iron arrow (x12)"
 	category = "Ammo"
 	display_category = ITEM_CAT_ENG_COMBAT
 	result = list(
+		/obj/item/ammo_casing/caseless/rogue/arrow/iron,
+		/obj/item/ammo_casing/caseless/rogue/arrow/iron,
 		/obj/item/ammo_casing/caseless/rogue/arrow/iron,
 		/obj/item/ammo_casing/caseless/rogue/arrow/iron,
 		/obj/item/ammo_casing/caseless/rogue/arrow/iron,
@@ -264,11 +271,13 @@
 	craftdiff = 3
 	skillcraft = /datum/skill/craft/engineering
 
-/datum/crafting_recipe/roguetown/engineering/bronzearrow_ten
-	name = "bronze arrow (x10)"
+/datum/crafting_recipe/roguetown/engineering/bronzearrow_twelve
+	name = "bronze arrow (x12)"
 	category = "Ammo"
 	display_category = ITEM_CAT_ENG_COMBAT
 	result = list(
+		/obj/item/ammo_casing/caseless/rogue/arrow/bronze,
+		/obj/item/ammo_casing/caseless/rogue/arrow/bronze,
 		/obj/item/ammo_casing/caseless/rogue/arrow/bronze,
 		/obj/item/ammo_casing/caseless/rogue/arrow/bronze,
 		/obj/item/ammo_casing/caseless/rogue/arrow/bronze,
@@ -288,11 +297,13 @@
 	craftdiff = 3
 	skillcraft = /datum/skill/craft/engineering
 
-/datum/crafting_recipe/roguetown/engineering/steelarrow_ten
-	name = "steel arrow (x10)"
+/datum/crafting_recipe/roguetown/engineering/steelarrow_twelve
+	name = "steel arrow (x12)"
 	category = "Ammo"
 	display_category = ITEM_CAT_ENG_COMBAT
 	result = list(
+		/obj/item/ammo_casing/caseless/rogue/arrow/steel,
+		/obj/item/ammo_casing/caseless/rogue/arrow/steel,
 		/obj/item/ammo_casing/caseless/rogue/arrow/steel,
 		/obj/item/ammo_casing/caseless/rogue/arrow/steel,
 		/obj/item/ammo_casing/caseless/rogue/arrow/steel,
@@ -312,11 +323,12 @@
 	craftdiff = 3
 	skillcraft = /datum/skill/craft/engineering
 
-/datum/crafting_recipe/roguetown/engineering/poisonarrow_five
-	name = "poison arrow (x5)"
+/datum/crafting_recipe/roguetown/engineering/poisonarrow_six
+	name = "poison arrow (x6)"
 	category = "Ammo"
 	display_category = ITEM_CAT_ENG_COMBAT
 	result = list(
+		/obj/item/ammo_casing/caseless/rogue/arrow/poison,
 		/obj/item/ammo_casing/caseless/rogue/arrow/poison,
 		/obj/item/ammo_casing/caseless/rogue/arrow/poison,
 		/obj/item/ammo_casing/caseless/rogue/arrow/poison,
@@ -331,11 +343,13 @@
 	craftdiff = 3
 	skillcraft = /datum/skill/craft/engineering
 
-/datum/crafting_recipe/roguetown/engineering/poisonarrow_ten
-	name = "poison arrow (x10)"
+/datum/crafting_recipe/roguetown/engineering/poisonarrow_twelve
+	name = "poison arrow (x12)"
 	category = "Ammo"
 	display_category = ITEM_CAT_ENG_COMBAT
 	result = list(
+		/obj/item/ammo_casing/caseless/rogue/arrow/poison,
+		/obj/item/ammo_casing/caseless/rogue/arrow/poison,
 		/obj/item/ammo_casing/caseless/rogue/arrow/poison,
 		/obj/item/ammo_casing/caseless/rogue/arrow/poison,
 		/obj/item/ammo_casing/caseless/rogue/arrow/poison,
@@ -518,25 +532,26 @@
 	craftdiff = 3
 	skillcraft = /datum/skill/craft/engineering
 
-/datum/crafting_recipe/roguetown/engineering/pyrobolt_three
-	name = "pyroclastic bolt (x3)"
+/datum/crafting_recipe/roguetown/engineering/pyrobolt_four
+	name = "pyroclastic bolt (x4)"
 	category = "Ammo"
 	display_category = ITEM_CAT_ENG_COMBAT
 	result = list(
 		/obj/item/ammo_casing/caseless/rogue/bolt/pyro,
 		/obj/item/ammo_casing/caseless/rogue/bolt/pyro,
 		/obj/item/ammo_casing/caseless/rogue/bolt/pyro,
+		/obj/item/ammo_casing/caseless/rogue/bolt/pyro,
 	)
 	reqs = list(
-		/obj/item/ammo_casing/caseless/rogue/bolt = 3,
+		/obj/item/ammo_casing/caseless/rogue/bolt = 4,
 		/obj/item/alch/solardust = 1,
 	)
 	structurecraft = /obj/structure/artificer_table
 	craftdiff = 3
 	skillcraft = /datum/skill/craft/engineering
 
-/datum/crafting_recipe/roguetown/engineering/pyrobolt_five
-	name = "pyroclastic bolt (x5)"
+/datum/crafting_recipe/roguetown/engineering/pyrobolt_eight
+	name = "pyroclastic bolt (x8)"
 	category = "Ammo"
 	display_category = ITEM_CAT_ENG_COMBAT
 	result = list(
@@ -545,16 +560,18 @@
 		/obj/item/ammo_casing/caseless/rogue/bolt/pyro,
 		/obj/item/ammo_casing/caseless/rogue/bolt/pyro,
 		/obj/item/ammo_casing/caseless/rogue/bolt/pyro,
+		/obj/item/ammo_casing/caseless/rogue/bolt/pyro,
+		/obj/item/ammo_casing/caseless/rogue/bolt/pyro,
+		/obj/item/ammo_casing/caseless/rogue/bolt/pyro,
 	)
 	reqs = list(
-		/obj/item/ammo_casing/caseless/rogue/bolt = 5,
+		/obj/item/ammo_casing/caseless/rogue/bolt = 8,
 		/obj/item/reagent_containers/food/snacks/grown/rogue/fyritius = 1,
 	)
 	structurecraft = /obj/structure/artificer_table
 	craftdiff = 3
 	skillcraft = /datum/skill/craft/engineering
 
-//siegebow stuff
 /datum/crafting_recipe/roguetown/engineering/heavycrossbow
 	name = "siegebow with heavy bolt pouch"
 	category = "Weapons"
@@ -797,6 +814,22 @@
 	tools = list(/obj/item/rogueweapon/huntingknife = 1)
 	craftdiff = 4
 
+/datum/crafting_recipe/roguetown/engineering/windmill
+	name = "windmill"
+	category = "Rotational"
+	display_category = ITEM_CAT_ENG_MACHINERY
+	result = list(/obj/item/rotation_contraption/windmill)
+	reqs = list(
+		/obj/item/natural/wood/plank = 4,
+		/obj/item/natural/cloth = 2,
+		/obj/item/grown/log/tree/stick = 2,
+	)
+	verbage_simple = "engineer"
+	verbage = "engineers"
+	skillcraft = /datum/skill/craft/engineering
+	tools = list(/obj/item/rogueweapon/huntingknife = 1)
+	craftdiff = 4
+
 /datum/crafting_recipe/roguetown/engineering/large_cog
 	name = "large wooden cogwheel (3x)"
 	category = "Rotational"
@@ -1000,7 +1033,7 @@
 	name = "blastpowder stick"
 	category = "Explosives"
 	display_category = ITEM_CAT_ENG_COMBAT
-	result = /obj/item/tntstick
+	result = /obj/item/explosive/fused/powder/stick
 	reqs = list(
 		/obj/item/paper = 2,
 		/obj/item/alch/coaldust = 1,
@@ -1015,10 +1048,10 @@
 	name = "blastpowder satchel"
 	category = "Explosives"
 	display_category = ITEM_CAT_ENG_COMBAT
-	result = /obj/item/satchel_bomb
+	result = /obj/item/explosive/fused/powder/satchel
 	reqs = list(
 		/obj/item/storage/backpack/rogue/satchel = 1,
-		/obj/item/tntstick = 3,
+		/obj/item/explosive/fused/powder/stick = 3,
 		/obj/item/alch/firedust = 1,
 		/obj/item/natural/fibers = 1,
 	)
@@ -1032,9 +1065,9 @@
 	category = "Explosives"
 	display_category = ITEM_CAT_ENG_COMBAT
 	result = list(
-		/obj/item/impact_grenade/explosion,
-		/obj/item/impact_grenade/explosion,
-		/obj/item/impact_grenade/explosion,
+		/obj/item/explosive/impact/shrapnel,
+		/obj/item/explosive/impact/shrapnel,
+		/obj/item/explosive/impact/shrapnel,
 	)
 	reqs = list(
 		/obj/item/natural/clay = 1,
@@ -1052,14 +1085,14 @@
 	category = "Explosives"
 	display_category = ITEM_CAT_ENG_COMBAT
 	result = list(
-		/obj/item/impact_grenade/smoke,
-		/obj/item/impact_grenade/smoke,
-		/obj/item/impact_grenade/smoke,
+		/obj/item/explosive/impact/smoke,
+		/obj/item/explosive/impact/smoke,
+		/obj/item/explosive/impact/smoke,
 	)
 	reqs = list(
 		/obj/item/smokeshell = 3,
 		/obj/item/alch/coaldust = 1,
-		/obj/item/ash = 1,
+		/obj/item/natural/ash = 1,
 		/datum/reagent/water = 48,
 	)
 	structurecraft = /obj/structure/artificer_table
@@ -1071,14 +1104,14 @@
 	category = "Explosives"
 	display_category = ITEM_CAT_ENG_COMBAT
 	result = list(
-		/obj/item/impact_grenade/smoke/poison_gas,
-		/obj/item/impact_grenade/smoke/poison_gas,
-		/obj/item/impact_grenade/smoke/poison_gas,
+		/obj/item/explosive/impact/smoke/poison_gas,
+		/obj/item/explosive/impact/smoke/poison_gas,
+		/obj/item/explosive/impact/smoke/poison_gas,
 	)
 	reqs = list(
 		/obj/item/smokeshell = 3,
 		/obj/item/alch/coaldust = 1,
-		/obj/item/ash = 1,
+		/obj/item/natural/ash = 1,
 		/datum/reagent/berrypoison = 5,
 		/obj/item/alch/airdust = 1,
 		/datum/reagent/water = 48,
@@ -1092,14 +1125,14 @@
 	category = "Explosives"
 	display_category = ITEM_CAT_ENG_COMBAT
 	result = list(
-		/obj/item/impact_grenade/smoke/fire_gas,
-		/obj/item/impact_grenade/smoke/fire_gas,
-		/obj/item/impact_grenade/smoke/fire_gas,
+		/obj/item/explosive/impact/smoke/fire_gas,
+		/obj/item/explosive/impact/smoke/fire_gas,
+		/obj/item/explosive/impact/smoke/fire_gas,
 	)
 	reqs = list(
 		/obj/item/smokeshell = 3,
 		/obj/item/alch/coaldust = 2,
-		/obj/item/ash = 1,
+		/obj/item/natural/ash = 1,
 		/obj/item/alch/firedust = 1,
 		/obj/item/alch/solardust = 1,
 		/datum/reagent/water = 48,
@@ -1113,14 +1146,14 @@
 	category = "Explosives"
 	display_category = ITEM_CAT_ENG_COMBAT
 	result = list(
-		/obj/item/impact_grenade/smoke/blind_gas,
-		/obj/item/impact_grenade/smoke/blind_gas,
-		/obj/item/impact_grenade/smoke/blind_gas,
+		/obj/item/explosive/impact/smoke/blind_gas,
+		/obj/item/explosive/impact/smoke/blind_gas,
+		/obj/item/explosive/impact/smoke/blind_gas,
 	)
 	reqs = list(
 		/obj/item/smokeshell = 3,
 		/obj/item/alch/coaldust = 1,
-		/obj/item/ash = 1,
+		/obj/item/natural/ash = 1,
 		/obj/item/reagent_containers/food/snacks/rogue/veg/onion_sliced = 1,
 		/obj/item/natural/dirtclod = 1,
 		/datum/reagent/water = 48,
@@ -1134,14 +1167,14 @@
 	category = "Explosives"
 	display_category = ITEM_CAT_ENG_COMBAT
 	result = list(
-		/obj/item/impact_grenade/smoke/mute_gas,
-		/obj/item/impact_grenade/smoke/mute_gas,
-		/obj/item/impact_grenade/smoke/mute_gas,
+		/obj/item/explosive/impact/smoke/mute_gas,
+		/obj/item/explosive/impact/smoke/mute_gas,
+		/obj/item/explosive/impact/smoke/mute_gas,
 	)
 	reqs = list(
 		/obj/item/smokeshell = 3,
 		/obj/item/alch/coaldust = 1,
-		/obj/item/ash = 1,
+		/obj/item/natural/ash = 1,
 		/obj/item/alch/irondust = 1,
 		/obj/item/rogueore/cinnabar = 1,
 		/datum/reagent/water = 48,
@@ -1155,14 +1188,14 @@
 	category = "Explosives"
 	display_category = ITEM_CAT_ENG_COMBAT
 	result = list(
-		/obj/item/impact_grenade/smoke/healing_gas,
-		/obj/item/impact_grenade/smoke/healing_gas,
-		/obj/item/impact_grenade/smoke/healing_gas,
+		/obj/item/explosive/impact/smoke/healing_gas,
+		/obj/item/explosive/impact/smoke/healing_gas,
+		/obj/item/explosive/impact/smoke/healing_gas,
 	)
 	reqs = list(
 		/obj/item/smokeshell = 3,
 		/obj/item/alch/coaldust = 1,
-		/obj/item/ash = 1,
+		/obj/item/natural/ash = 1,
 		/obj/item/alch/viscera = 2,
 		/obj/item/alch/bonemeal = 2,
 		/datum/reagent/water = 48,
@@ -1172,7 +1205,7 @@
 	craftdiff = 4
 
 // ------------ Craftable Traps ----------
-//setting these up as a more "arcane" alternative to trap making done with engineering. 
+//setting these up as a more "arcane" alternative to trap making done with engineering.
 
 /datum/crafting_recipe/roguetown/engineering/rocktrap
 	name = "rock trap (engineered)"
@@ -1239,7 +1272,67 @@
 		/obj/item/roguegear = 1,
 		/obj/item/natural/clay = 1,
 		/obj/item/roguegem/amethyst = 1,
-		/obj/item/impact_grenade/explosion = 1,
+		/obj/item/explosive/impact/shrapnel = 1,
 	)
 	skillcraft = /datum/skill/craft/engineering
 	craftdiff = 6
+
+/datum/crafting_recipe/roguetown/engineering/bbomb_expert
+	name = "bottle bomb (clod jury rig)"
+	category = "Explosives"
+	required_trait = TRAIT_BOMBER_EXPERT
+	display_category = ITEM_CAT_ENG_COMBAT
+	result = list(/obj/item/explosive/fused/bottle)
+	reqs = list(/obj/item/natural/dirtclod = 3, /obj/item/natural/ash = 2, /obj/item/natural/fibers = 2)
+	skillcraft = /datum/skill/craft/engineering
+	craftdiff = 4
+
+/datum/crafting_recipe/roguetown/engineering/bbomb_expert_2
+	name = "bottle bomb (glass jury rig)"
+	category = "Explosives"
+	required_trait = TRAIT_BOMBER_EXPERT
+	display_category = ITEM_CAT_ENG_COMBAT
+	result = list(/obj/item/explosive/fused/bottle)
+	reqs = list(/obj/item/natural/glass_shard = 1, /obj/item/natural/ash = 2, /obj/item/natural/fibers = 2)
+	skillcraft = /datum/skill/craft/engineering
+	craftdiff = 4
+
+/datum/crafting_recipe/roguetown/engineering/bbomb_expert_3
+	name = "bottle bomb (shard jury rig)"
+	category = "Explosives"
+	required_trait = TRAIT_BOMBER_EXPERT
+	display_category = ITEM_CAT_ENG_COMBAT
+	result = list(/obj/item/explosive/fused/bottle)
+	reqs = list(/obj/item/natural/glass_shard/shrapnel = 1, /obj/item/natural/ash = 2, /obj/item/natural/fibers = 2)
+	skillcraft = /datum/skill/craft/engineering
+	craftdiff = 4
+
+/datum/crafting_recipe/roguetown/engineering/impactexplosive_expert
+	name = "impact grenades (fyritius jury rig)"
+	category = "Explosives"
+	required_trait = TRAIT_BOMBER_EXPERT
+	display_category = ITEM_CAT_ENG_COMBAT
+	result = list(/obj/item/explosive/impact/shrapnel)
+	reqs = list(/obj/item/scrap = 1, /obj/item/reagent_containers/food/snacks/grown/rogue/fyritius = 1, /obj/item/natural/fibers = 3)
+	skillcraft = /datum/skill/craft/engineering
+	craftdiff = 4
+
+/datum/crafting_recipe/roguetown/engineering/impactexplosive_expert_2
+	name = "impact grenades (infernal jury rig)"
+	category = "Explosives"
+	required_trait = TRAIT_BOMBER_EXPERT
+	display_category = ITEM_CAT_ENG_COMBAT
+	result = list(/obj/item/explosive/impact/shrapnel)
+	reqs = list(/obj/item/scrap = 1, /obj/item/magic/infernal/ash = 1, /obj/item/natural/fibers = 3)
+	skillcraft = /datum/skill/craft/engineering
+	craftdiff = 4
+
+/datum/crafting_recipe/roguetown/engineering/impactexplosive_expert_3
+	name = "impact grenades (coal dust jury rig)"
+	category = "Explosives"
+	required_trait = TRAIT_BOMBER_EXPERT
+	display_category = ITEM_CAT_ENG_COMBAT
+	result = list(/obj/item/explosive/impact/shrapnel)
+	reqs = list(/obj/item/scrap = 1, /obj/item/alch/coaldust = 1, /obj/item/natural/fibers = 3)
+	skillcraft = /datum/skill/craft/engineering
+	craftdiff = 4

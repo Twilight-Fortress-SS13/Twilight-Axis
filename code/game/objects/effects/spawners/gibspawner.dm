@@ -2,7 +2,7 @@
 /obj/effect/gibspawner
 	var/sparks = 0 //whether sparks spread
 	var/virusProb = 20 //the chance for viruses to spread on the gibs
-	var/gib_mob_type  //generate a fake mob to transfer DNA from if we weren't passed a mob.
+	var/gib_mob_type	//generate a fake mob to transfer DNA from if we weren't passed a mob.
 	var/sound_to_play = 'sound/blank.ogg'
 	var/sound_vol = 60
 	var/list/gibtypes = list() //typepaths of the gib decals to spawn
@@ -64,13 +64,23 @@
 	gibamounts = list(2, 2, 1)
 	sound_vol = 40
 
-/obj/effect/gibspawner/generic/Initialize()
+/obj/effect/gibspawner/generic/Initialize(mapload)
 	if(!gibdirections.len)
 		gibdirections = list(list(WEST, NORTHWEST, SOUTHWEST, NORTH),list(EAST, NORTHEAST, SOUTHEAST, SOUTH), list())
 	return ..()
 
 /obj/effect/gibspawner/generic/animal
 	gib_mob_type = /mob/living/simple_animal/pet
+
+/obj/effect/gibspawner/beast
+	gibtypes = list(/obj/effect/decal/cleanable/blood/gibs/beast, /obj/effect/decal/cleanable/blood/gibs/beast, /obj/effect/decal/cleanable/blood/gibs/beast/head, /obj/effect/decal/cleanable/blood/gibs/beast/core)
+	gibamounts = list(2, 2, 1, 1)
+	sound_vol = 50
+
+/obj/effect/gibspawner/beast/Initialize(mapload)
+	if(!gibdirections.len)
+		gibdirections = list(list(WEST, NORTHWEST, SOUTHWEST, NORTH), list(EAST, NORTHEAST, SOUTHEAST, SOUTH), GLOB.alldirs, list())
+	return ..()
 
 
 
@@ -80,7 +90,7 @@
 	gib_mob_type = /mob/living/carbon/human
 	sound_vol = 50
 
-/obj/effect/gibspawner/human/Initialize()
+/obj/effect/gibspawner/human/Initialize(mapload)
 	if(!gibdirections.len)
 		gibdirections = list(list(NORTH, NORTHEAST, NORTHWEST),list(SOUTH, SOUTHEAST, SOUTHWEST),list(WEST, NORTHWEST, SOUTHWEST),list(EAST, NORTHEAST, SOUTHEAST), GLOB.alldirs, GLOB.alldirs, list())
 	return ..()
@@ -90,12 +100,12 @@
 	gibtypes = list(/obj/effect/decal/cleanable/blood/gibs, /obj/effect/decal/cleanable/blood/gibs/core, /obj/effect/decal/cleanable/blood/gibs, /obj/effect/decal/cleanable/blood/gibs/core, /obj/effect/decal/cleanable/blood/gibs, /obj/effect/decal/cleanable/blood/gibs/torso)
 	gibamounts = list(1, 1, 1, 1, 1, 1)
 
-/obj/effect/gibspawner/human/bodypartless/Initialize()
+/obj/effect/gibspawner/human/bodypartless/Initialize(mapload)
 	if(!gibdirections.len)
 		gibdirections = list(list(NORTH, NORTHEAST, NORTHWEST),list(SOUTH, SOUTHEAST, SOUTHWEST),list(WEST, NORTHWEST, SOUTHWEST),list(EAST, NORTHEAST, SOUTHEAST), GLOB.alldirs, list())
 	return ..()
 
-/obj/effect/gibspawner/robot/Initialize()
+/obj/effect/gibspawner/robot/Initialize(mapload)
 	if(!gibdirections.len)
 		gibdirections = list(list(NORTH, NORTHEAST, NORTHWEST),list(SOUTH, SOUTHEAST, SOUTHWEST),list(WEST, NORTHWEST, SOUTHWEST),list(EAST, NORTHEAST, SOUTHEAST), GLOB.alldirs, GLOB.alldirs)
 	gibamounts[6] = pick(0, 1, 2)

@@ -28,7 +28,7 @@
 	max_pq = null
 	round_contrib_points = 4
 	give_bank_account = 1000
-	cmode_music = 'sound/music/combat_noble.ogg'
+	cmode_music = sound("sound/music/combat_noble.ogg")
 	// Can't use the Throat when you can't talk properly or.. at all for that matter.
 	vice_restrictions = list(/datum/charflaw/mute, /datum/charflaw/unintelligible)
 
@@ -42,7 +42,7 @@
 
 /datum/outfit/job/roguetown/sultan
 	job_bitflag = BITFLAG_ROYALTY
-	
+
 /datum/job/roguetown/sultan/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	. = ..()
 	if(ishuman(L))
@@ -69,7 +69,7 @@
 		else
 			GLOB.lordsurname = "of [L.real_name]"
 		SSticker.set_ruler_mob(L)
-		
+
 		var/display_title = title
 		if(ishuman(L))
 			var/mob/living/carbon/human/H = L
@@ -93,7 +93,7 @@
 		if(player?.prefs)
 			if(SSmapping.config.map_name == "Desert Town")
 				if(!istype(player.prefs.virtue_origin, /datum/virtue/origin/raneshen) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/naledi) && !istype(player.prefs.virtue_origin, /datum/virtue/origin/zybantian))
-					var/list/new_origins = list("Raneshen" = /datum/virtue/origin/raneshen, 
+					var/list/new_origins = list("Raneshen" = /datum/virtue/origin/raneshen,
 					"Naledi" = /datum/virtue/origin/naledi,
 					"Zybantu" = /datum/virtue/origin/zybantian)
 					var/new_origin
@@ -105,7 +105,6 @@
 						new_origin = pick(/datum/virtue/origin/raneshen, /datum/virtue/origin/naledi, /datum/virtue/origin/zybantian)
 					var/datum/virtue/origin/applied_origin = new new_origin()
 					player.prefs.virtue_origin = applied_origin
-					apply_virtue(H, applied_origin)
 
 /datum/outfit/job/roguetown/sultan
 	neck = /obj/item/storage/belt/rogue/pouch/coins/rich
@@ -364,7 +363,7 @@
 		GLOB.lord_titles -= recruit.real_name
 		return FALSE
 	recruiter.say("I HEREBY GRANT YOU, [uppertext(recruit.name)], THE TITLE OF [uppertext(granted_title)]!")
-	REMOVE_TRAIT(recruit, TRAIT_OUTLANDER, ADVENTURER_TRAIT)
+	REMOVE_TRAIT(recruit, TRAIT_OUTLANDER, JOB_TRAIT)
 	REMOVE_TRAIT(recruit, TRAIT_OUTLANDER, TRAIT_GENERIC)
 	GLOB.lord_titles[recruit.real_name] = granted_title
 	return TRUE

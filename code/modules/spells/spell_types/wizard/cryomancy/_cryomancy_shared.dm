@@ -22,7 +22,7 @@
 			target.visible_message(span_danger("The frost on [target] exposes and slow them down!"), span_userdanger("The frost exposes my weakness and slow me down!"))
 			target.balloon_alert_to_viewers("<font color='#4cadee'>SHATTERED - EXPOSED!</font>")
 			playsound(get_turf(target), 'sound/spellbooks/crystal.ogg', 80, TRUE)
-			target.Slowdown(2)
+			target.apply_slowdown(3 SECONDS)
 			final_tier = 0
 			break
 		if(target.has_status_effect(/datum/status_effect/debuff/frosted2))
@@ -171,13 +171,14 @@
 
 // Temp visuals
 
-/obj/effect/temp_visual/trapice
+/obj/effect/temp_visual/telegraph/ice
 	icon = 'icons/effects/effects.dmi'
 	icon_state = "frost"
 	light_outer_range = 2
 	light_color = "#4cadee"
 	duration = 11
 	layer = MASSIVE_OBJ_LAYER
+	plane = GAME_PLANE
 
 /obj/effect/temp_visual/snap_freeze
 	icon = 'icons/effects/effects.dmi'

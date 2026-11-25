@@ -109,7 +109,8 @@
 				return
 			else if(msg) // you want to continue if there's no message instead of returning now
 				if(current_ticket)
-					current_ticket.MessageNoRecipient(msg)
+					if(!current_ticket.SendPlayerMessage(msg)) // TA EDIT
+						return
 				else
 					to_chat(src, span_danger("I can no longer reply to this ticket, please open another one by using the Adminhelp verb if need be."))
 					to_chat(src, span_notice("Message: [msg]"))
@@ -136,18 +137,19 @@
 				if(holder)
 					to_chat(src, span_danger("Error: Admin-PM: Client not found."))
 				else if(current_ticket)
-					current_ticket.MessageNoRecipient(msg)
+					if(!current_ticket.SendPlayerMessage(msg)) // TA EDIT
+						return
 				else
 					to_chat(src, span_danger("I can no longer reply to this ticket, please open another one by using the Adminhelp verb if need be."))
 					to_chat(src, span_notice("Message: [msg]"))
 				return
 
-	if (src.handle_spam_prevention(msg,MUTE_ADMINHELP))
+	if((!recipient || !recipient.holder) && src.handle_spam_prevention(msg, MUTE_ADMINHELP)) // TA EDIT
 		return
 
 	//clean the message if it's not sent by a high-rank admin
 	if(!check_rights(R_SERVER|R_DEBUG,0)||irc)//no sending html to the poor bots
-		msg = trim(sanitize(copytext(msg,1,MAX_MESSAGE_LEN)))
+		msg = trim(sanitize(copytext(msg,1,MAX_MESSAGE_LEN), irc ? null : list("\t"="#")))
 		if(!msg)
 			return
 
@@ -177,23 +179,29 @@
 				//omg this is dumb, just fill in both their tickets
 				var/interaction_message = "<font color='purple'>PM from-<b>[name_key_with_link]</b> to-<b>[key_name(recipient, TRUE, TRUE)]</b>: [keywords_lookup(msg)]</font>"
 				var/player_interaction_message = "<font color='purple'>PM from-<b>[key_name(src, TRUE, FALSE)]</b> to-<b>[key_name(recipient, TRUE, FALSE)]</b>: [msg]</font>"
-				admin_ticket_log(src,
-				interaction_message,
-				player_message = player_interaction_message)
+				var/datum/admin_help/sender_ticket = admin_ticket_log(src,
+					interaction_message,
+					player_message = player_interaction_message)
+				if(sender_ticket)
+					sender_ticket.AddInteraction(interaction_message, player_interaction_message)
+				if(recipient != src)
+					var/datum/admin_help/recipient_ticket = admin_ticket_log(recipient,
+						interaction_message,
+						player_message = player_interaction_message)
+					if(recipient_ticket && recipient_ticket != sender_ticket)
+						recipient_ticket.AddInteraction(interaction_message, player_interaction_message)
 
 			else		//recipient is an admin but sender is not
 				if(current_ticket)
-					current_ticket.MessageNoRecipient(keywordparsedmsg)
+					if(!current_ticket.SendPlayerMessage(keywordparsedmsg)) // TA EDIT
+						return
 				else
 					to_chat(src, span_danger("I can no longer reply to this ticket, please open another one by using the Adminhelp verb if need be."))
 					to_chat(src, span_notice("Message: [rawmsg]"))
 					return
 
-			SEND_SOUND(recipient, sound('sound/adminhelp.ogg'))
-
-			//play the receiving admin the adminhelp sound (if they have them enabled)
-			if(recipient.prefs.toggles & SOUND_ADMINHELP)
-				SEND_SOUND(recipient, sound('sound/blank.ogg'))
+			if(holder && (recipient.prefs.toggles & SOUND_ADMINHELP)) // TA EDIT
+				SEND_SOUND(recipient, sound('sound/adminhelp.ogg')) // TA EDIT
 
 		else if(holder)	//sender is an admin but recipient is not. Do BIG RED TEXT
 			var/datum/admin_help/created_ticket
@@ -268,7 +276,7 @@
 	var/client/C = GLOB.directory[target]
 
 	var/datum/admin_help/ticket = C ? C.current_ticket : GLOB.ahelp_tickets.CKey2ActiveTicket(target)
-	var/compliant_msg = trim(lowertext(msg))
+	var/compliant_msg = trim(LOWER_TEXT(msg))
 	var/irc_tagged = "[sender](IRC)"
 	var/list/splits = splittext(compliant_msg, " ")
 	if(splits.len && splits[1] == "ticket")

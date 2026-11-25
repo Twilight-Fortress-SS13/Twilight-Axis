@@ -4,7 +4,7 @@
 	icon_state = "butterfly"
 	icon_living = "butterfly"
 	icon_dead = "butterfly_dead"
-	turns_per_move = 1
+	ai_controller = /datum/ai_controller/generic/critter
 	response_help_continuous = "shoos"
 	response_help_simple = "shoo"
 	response_disarm_continuous = "brushes aside"
@@ -29,7 +29,7 @@
 	verb_exclaim = "flutters intensely"
 	verb_yell = "flutters intensely"
 
-/mob/living/simple_animal/butterfly/Initialize()
+/mob/living/simple_animal/butterfly/Initialize(mapload)
 	. = ..()
 	var/newcolor = rgb(rand(0, 255), rand(0, 255), rand(0, 255))
 	add_atom_colour(newcolor, FIXED_COLOUR_PRIORITY)

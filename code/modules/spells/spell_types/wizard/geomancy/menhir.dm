@@ -4,6 +4,7 @@
 /datum/action/cooldown/spell/menhir
 	button_icon = 'icons/mob/actions/mage_geomancy.dmi'
 	name = "Menhir"
+	expose_caster_on_deflect = FALSE
 	desc = "Hurl a massive boulder that shatters into stone fragments and deals double damage to structures.\n\
 	HEAVE flings it in a flat line at a target - immediate, but stopped by walls and cover.\n\
 	DROP calls it down from directly above you.\n\
@@ -39,13 +40,14 @@
 
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
+	impact_radius = 1
 	var/boulder_mode = BOULDER_MODE_HEAVE
-	var/heave_damage = 90
+	var/heave_damage = SPELL_DMG(90)
 	var/drop_damage = 90
 	var/drop_splash = 35
 	var/drop_telegraph_time = 3
 	var/frag_count = 8
-	var/frag_damage = 15
+	var/frag_damage = SPELL_DMG(15)
 	var/pillar_lifetime = 15 SECONDS
 	var/static/list/mode_labels = list(BOULDER_MODE_HEAVE = "HEAVE", BOULDER_MODE_DROP = "DROP")
 
@@ -73,6 +75,22 @@
 		holder.maptext = MAPTEXT(label)
 		holder.maptext_x = 5
 		holder.color = GLOW_COLOR_EARTHEN
+
+/datum/action/cooldown/spell/menhir/proc/is_drop_mode()
+	return boulder_mode == BOULDER_MODE_DROP
+
+/datum/action/cooldown/spell/menhir/proc/set_drop_mode(drop)
+	var/wanted = drop ? BOULDER_MODE_DROP : BOULDER_MODE_HEAVE
+	if(boulder_mode == wanted)
+		return
+	boulder_mode = wanted
+	update_mode_maptext()
+
+/datum/action/cooldown/spell/menhir/get_impact_turfs(atom/center)
+	if(is_drop_mode())
+		return ..()
+	var/turf/epicenter = get_turf(center)
+	return epicenter ? list(epicenter) : list()
 
 /datum/action/cooldown/spell/menhir/cast(atom/cast_on)
 	. = ..()
@@ -103,7 +121,7 @@
 	B.fire()
 
 /datum/action/cooldown/spell/menhir/proc/do_drop(mob/living/carbon/human/H, turf/target)
-	new /obj/effect/temp_visual/trap/geomancy(target)
+	new /obj/effect/temp_visual/telegraph/geomancy(target)
 	target.visible_message(span_boldwarning("A shadow spreads over [target] - a boulder plummets from the sky!"))
 	playsound(target, 'sound/combat/wooshes/blunt/wooshhuge (2).ogg', 60, TRUE)
 	addtimer(CALLBACK(src, PROC_REF(drop_fall), target, H), drop_telegraph_time)
@@ -121,12 +139,12 @@
 	for(var/obj/structure/S in target)
 		S.take_damage(drop_damage, BRUTE, "blunt", object_damage_multiplier = 2)
 	for(var/mob/living/L in target)
-		strike_mob(H, L, drop_damage)
-	for(var/turf/T in range(1, target))
+		strike_mob(H, L, SPELL_DMG(drop_damage))
+	for(var/turf/T in range(impact_radius, target))
 		if(T == target)
 			continue
 		for(var/mob/living/L in T)
-			strike_mob(H, L, drop_splash)
+			strike_mob(H, L, SPELL_DMG(drop_splash))
 	fragment_burst(target, H)
 	leave_pillar(target, H)
 
@@ -143,17 +161,18 @@
 	QDEL_IN(pillar, pillar_lifetime)
 
 /datum/action/cooldown/spell/menhir/proc/strike_mob(mob/living/carbon/human/H, mob/living/L, dmg)
-	if(L == H || QDELETED(L))
+	if(QDELETED(L))
 		return
 	if(L.anti_magic_check())
 		return
 	if(spell_guard_check(L, TRUE))
 		return
 	if(ishuman(L))
-		arcyne_strike(H, L, null, dmg, H.zone_selected || BODY_ZONE_CHEST, BCLASS_BLUNT, \
-			spell_name = name, damage_type = BRUTE, npc_simple_damage_mult = 2, skip_animation = TRUE)
+		if(arcyne_strike(H, L, null, dmg, H.zone_selected || BODY_ZONE_CHEST, BCLASS_BLUNT, \
+			spell_name = name, damage_type = BRUTE, skip_animation = TRUE, SPELL_STRIKE_SCALING) == ARCYNE_STRIKE_WARDED)
+			return
 	else
-		L.adjustBruteLoss(dmg * (L.mind ? 1 : 2))
+		L.adjustBruteLoss(SPELL_DMG_VS(L, dmg))
 	new /obj/effect/temp_visual/spell_impact(get_turf(L), spell_color, spell_impact_intensity)
 
 /datum/action/cooldown/spell/menhir/proc/fragment_burst(turf/T, mob/living/carbon/human/H)
@@ -175,21 +194,21 @@
 	name = "boulder"
 	icon = 'icons/obj/magic_projectiles.dmi'
 	icon_state = "boulder"
-	damage = 100
+	damage = SPELL_DMG(100)
 	nodamage = FALSE
 	damage_type = BRUTE
 	woundclass = BCLASS_BLUNT
 	flag = "blunt"
-	intdamfactor = SPELL_BLUNT_INT_DAMAGEFACTOR
+	intdamfactor = SPELL_INTDAM(SPELL_BLUNT_INT_DAMAGEFACTOR)
+	spell_damage_scaled = TRUE
 	range = SPELL_RANGE_PROJECTILE
 	speed = 3.5
-	accuracy = 30
 	guard_deflectable = TRUE
 	expose_caster_on_deflect = TRUE
 	object_damage_multiplier = 2
 	hitsound = 'sound/combat/hits/onstone/stonedeath.ogg'
 	var/frag_count = 8
-	var/frag_damage = 15
+	var/frag_damage = SPELL_DMG(15)
 	var/pillar_lifetime = 0
 
 /obj/projectile/magic/boulder/on_hit(target)

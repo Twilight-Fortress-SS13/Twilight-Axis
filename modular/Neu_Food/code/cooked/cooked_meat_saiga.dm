@@ -11,6 +11,7 @@
 	rotprocess = SHELFLIFE_LONG
 	fried_type = null
 	cooked_type = null
+	smoked_type = null
 
 /obj/item/reagent_containers/food/snacks/rogue/meat/saiga_ribs/cooked
 	name = "succulent venison ribs"
@@ -25,10 +26,11 @@
 	rotprocess = SHELFLIFE_LONG
 	fried_type = null
 	cooked_type = null
+	smoked_type = null
 
 /obj/item/reagent_containers/food/snacks/rogue/meat/saiga_loins/cooked
 	name = "tender venison loins"
-	desc = "Tender, the meat oozes delectable juices when squeezed. One of the best cuts of venison, cherised by nobility. The skilled butcher reaps their reward."
+	desc = "Tender, the meat oozes delectable juices when squeezed. One of the best cuts of venison, cherished by nobility. The skilled butcher reaps their reward."
 	icon = 'modular/Neu_Food/icons/cooked/cooked_meat_saiga.dmi'
 	icon_state = "loin"
 	eat_effect = /datum/status_effect/buff/mealbuff
@@ -39,10 +41,11 @@
 	rotprocess = SHELFLIFE_LONG
 	fried_type = null
 	cooked_type = null
+	smoked_type = null
 
 /obj/item/reagent_containers/food/snacks/rogue/meat/saiga_prime/cooked
 	name = "venison prime steak"
-	desc = "A cut worked free from a beast like it is art. A meal fit for royalty, with a bite sufficient to feel like one is back in those woods, staring down that saiga. Often nomikered as 'poacher's demise'."
+	desc = "A cut worked free from a beast like it is art. A meal fit for royalty, with a bite sufficient to feel like one is back in those woods, staring down that saiga. Often monikered as 'poacher's demise'."
 	icon = 'modular/Neu_Food/icons/cooked/cooked_meat_saiga.dmi'
 	icon_state = "ossobuco"
 	eat_effect = /datum/status_effect/buff/greatmealbuff
@@ -53,6 +56,7 @@
 	rotprocess = SHELFLIFE_LONG
 	fried_type = null
 	cooked_type = null
+	smoked_type = null
 
 /obj/item/reagent_containers/food/snacks/rogue/meat/saiga_z/cooked
 	name = "vile venison steak"
@@ -67,6 +71,7 @@
 	rotprocess = SHELFLIFE_LONG
 	fried_type = null
 	cooked_type = null
+	smoked_type = null
 	cooked_smell = /datum/pollutant/food/rotten_meat
 
 /obj/item/reagent_containers/food/snacks/rogue/meat/saiga_ribs_z/cooked
@@ -82,6 +87,7 @@
 	rotprocess = SHELFLIFE_LONG
 	fried_type = null
 	cooked_type = null
+	smoked_type = null
 	cooked_smell = /datum/pollutant/food/rotten_meat
 
 /obj/item/reagent_containers/food/snacks/rogue/meat/saiga_loins_z/cooked
@@ -98,6 +104,7 @@
 	rotprocess = SHELFLIFE_LONG
 	fried_type = null
 	cooked_type = null
+	smoked_type = null
 	cooked_smell = /datum/pollutant/food/rotten_meat
 
 /obj/item/reagent_containers/food/snacks/rogue/meat/saiga_prime_z/cooked
@@ -114,6 +121,7 @@
 	rotprocess = SHELFLIFE_LONG
 	fried_type = null
 	cooked_type = null
+	smoked_type = null
 	cooked_smell = /datum/pollutant/food/rotten_meat
 
 /obj/item/reagent_containers/food/snacks/rogue/meat/saiga_w/cooked
@@ -128,6 +136,7 @@
 	bonus_reagents = list(/datum/reagent/consumable/nutriment = NUTRITION_TWO_AND_HALF_MEALS)
 	fried_type = null
 	cooked_type = null
+	smoked_type = null
 
 /obj/item/reagent_containers/food/snacks/rogue/meat/saiga_ribs_w/cooked
 	name = "royal venison ribs"
@@ -142,10 +151,11 @@
 	volume = 100
 	fried_type = null
 	cooked_type = null
+	smoked_type = null
 
 /obj/item/reagent_containers/food/snacks/rogue/meat/saiga_loins_w/cooked
 	name = "royal venison loins"
-	desc = "A welt forms under the touch. It takes little to dent, it swells back to shape in a satisfying manner. The beast may not bleed, yet the abscence of grease does not detract from the heavenly taste."
+	desc = "A welt forms under the touch. It takes little to dent, it swells back to shape in a satisfying manner. The beast may not bleed, yet the absence of grease does not detract from the heavenly taste."
 	icon = 'modular/Neu_Food/icons/cooked/cooked_meat_saiga.dmi'
 	icon_state = "loin_w"
 	eat_effect = /datum/status_effect/buff/greatmealbuff
@@ -155,6 +165,7 @@
 	bonus_reagents = list(/datum/reagent/consumable/nutriment = NUTRITION_TWO_AND_HALF_MEALS)
 	fried_type = null
 	cooked_type = null
+	smoked_type = null
 
 /obj/item/reagent_containers/food/snacks/rogue/meat/saiga_prime_w/cooked
 	name = "royal venison prime steak"
@@ -169,6 +180,7 @@
 	volume = 100
 	fried_type = null
 	cooked_type = null
+	smoked_type = null
 
 /obj/item/reagent_containers/food/snacks/rogue/meat/saiga_prime_w/cooked/Initialize(mapload)
 	AddComponent(/datum/component/stag_essence)

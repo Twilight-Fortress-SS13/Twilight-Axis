@@ -40,65 +40,65 @@
 	var/voice_choice = rand(1, 30)
 	switch(voice_choice)
 		if(1)
-			src.voice_color = "0bb1e4"
+			src.voice_color = "#0bb1e4"
 		if(2)
-			src.voice_color = "d30c0c"
+			src.voice_color = "#d30c0c"
 		if(3)
-			src.voice_color = "4d4afc"
+			src.voice_color = "#4d4afc"
 		if(4)
-			src.voice_color = "da40c0"
+			src.voice_color = "#da40c0"
 		if(5)
-			src.voice_color = "51e251"
+			src.voice_color = "#51e251"
 		if(6)
-			src.voice_color = "a059cf"
+			src.voice_color = "#a059cf"
 		if(7)
-			src.voice_color = "8700c5"
+			src.voice_color = "#8700c5"
 		if(8)
-			src.voice_color = "cfc886"
+			src.voice_color = "#cfc886"
 		if(9)
-			src.voice_color = "ff9100"
+			src.voice_color = "#ff9100"
 		if(10)
-			src.voice_color = "a0a0a0"
+			src.voice_color = "#a0a0a0"
 		if(11)
-			src.voice_color = "797979"
+			src.voice_color = "#797979"
 		if(12)
-			src.voice_color = "ff5e00"
+			src.voice_color = "#ff5e00"
 		if(13)
-			src.voice_color = "cf855a"
+			src.voice_color = "#cf855a"
 		if(14)
-			src.voice_color = "50b854"
+			src.voice_color = "#50b854"
 		if(15)
-			src.voice_color = "575ec5"
+			src.voice_color = "#575ec5"
 		if(16)
-			src.voice_color = "9b51ad"
+			src.voice_color = "#9b51ad"
 		if(17)
-			src.voice_color = "ad4b79"
+			src.voice_color = "#ad4b79"
 		if(18)
-			src.voice_color = "a5ac46"
+			src.voice_color = "#a5ac46"
 		if(19)
-			src.voice_color = "aaaaaa"
+			src.voice_color = "#aaaaaa"
 		if(20)
-			src.voice_color = "727272"
+			src.voice_color = "#727272"
 		if(21)
-			src.voice_color = "c98f8f"
+			src.voice_color = "#c98f8f"
 		if(22)
-			src.voice_color = "fff9a4"
+			src.voice_color = "#fff9a4"
 		if(23)
-			src.voice_color = "c389d1"
+			src.voice_color = "#c389d1"
 		if(24)
-			src.voice_color = "6b88da"
+			src.voice_color = "#6b88da"
 		if(25)
-			src.voice_color = "ffffff"
+			src.voice_color = "#ffffff"
 		if(26)
-			src.voice_color = "7bbb40"
+			src.voice_color = "#7bbb40"
 		if(27)
-			src.voice_color = "ff7627"
+			src.voice_color = "#ff7627"
 		if(28)
-			src.voice_color = "c7c7c7"
+			src.voice_color = "#c7c7c7"
 		if(29)
-			src.voice_color = "6e77aa"
+			src.voice_color = "#6e77aa"
 		if(30)
-			src.voice_color = "b3ae72"
+			src.voice_color = "#b3ae72"
 
 //BEARDED HAIR VERSION//
 
@@ -112,18 +112,18 @@
 						/datum/sprite_accessory/hair/head/hime,
 						/datum/sprite_accessory/hair/head/stacy,
 						/datum/sprite_accessory/hair/head/sabitsuki,
-						/datum/sprite_accessory/hair/head/sabitsuki_ponytail, 
+						/datum/sprite_accessory/hair/head/sabitsuki_ponytail,
 						/datum/sprite_accessory/hair/head/kusanagi_alt,
 						/datum/sprite_accessory/hair/head/fluffy,
 						/datum/sprite_accessory/hair/head/fluffylong))
 	var/hairm = pick(list(
 						/datum/sprite_accessory/hair/head/ponytailwitcher,
-						/datum/sprite_accessory/hair/head/bowlcut, 
+						/datum/sprite_accessory/hair/head/bowlcut,
 						/datum/sprite_accessory/hair/head/bowlcut2,
 						/datum/sprite_accessory/hair/head/lowbraid,
 						/datum/sprite_accessory/hair/head/emo,
 						/datum/sprite_accessory/hair/head/sabitsuki,
-						/datum/sprite_accessory/hair/head/sabitsuki_ponytail, 
+						/datum/sprite_accessory/hair/head/sabitsuki_ponytail,
 						/datum/sprite_accessory/hair/head/rogue))
 	var/beard = pick(list(/datum/sprite_accessory/hair/facial/stubble,
 						/datum/sprite_accessory/hair/facial/manly,
@@ -211,18 +211,18 @@
 						/datum/sprite_accessory/hair/head/hime,
 						/datum/sprite_accessory/hair/head/stacy,
 						/datum/sprite_accessory/hair/head/sabitsuki,
-						/datum/sprite_accessory/hair/head/sabitsuki_ponytail, 
+						/datum/sprite_accessory/hair/head/sabitsuki_ponytail,
 						/datum/sprite_accessory/hair/head/kusanagi_alt,
 						/datum/sprite_accessory/hair/head/fluffy,
 						/datum/sprite_accessory/hair/head/fluffylong))
 	var/hairm = pick(list(
 						/datum/sprite_accessory/hair/head/ponytailwitcher,
-						/datum/sprite_accessory/hair/head/bowlcut, 
+						/datum/sprite_accessory/hair/head/bowlcut,
 						/datum/sprite_accessory/hair/head/bowlcut2,
 						/datum/sprite_accessory/hair/head/lowbraid,
 						/datum/sprite_accessory/hair/head/emo,
 						/datum/sprite_accessory/hair/head/sabitsuki,
-						/datum/sprite_accessory/hair/head/sabitsuki_ponytail, 
+						/datum/sprite_accessory/hair/head/sabitsuki_ponytail,
 						/datum/sprite_accessory/hair/head/rogue))
 	//Next up, we add hair
 	var/datum/bodypart_feature/hair/head/new_hair = new()
@@ -289,9 +289,40 @@
 
 	dna.update_ui_block(DNA_HAIR_COLOR_BLOCK)
 
-//MAKE DEADITE - TODO make this work for all NPCs + forcefully change their AI//
+//Is this a bad place to put it. yes, but I want you know where these lines are called, so it goes above our make_deadite() Proc
+//Anything that isn't in zizocant (,w) is automatically translated to RGGGHH, UHHHH, GRRRGHH
+GLOBAL_LIST_INIT(zombie_aggro, list(
+	"I feel quite hungry!",
+	"I feel quite hungry!",
+	"I feel quite hungry!",
+	",w Kill...",
+	",w Consume...",
+	",w Cold...",
+	",w Join...",
+	",w Hunger...",
+	",w Flesh...",
+	",w Brains...",
+	",w Die...",
+	"*scream",
+	"*scream",
+	"*groan",
+	"*groan",
+	"*groan",
+	"*groan",
+	"*sigh",
+	"*sigh",
+	"*rage",
+	"*rage",
+	"*rage",
+	"*rage",
+)) //Single Words or noises, feral and empty of mind.
 
+//MAKE DEADITE - TODO make this work for all NPCs + forcefully change their AI//
 /mob/living/carbon/human/proc/make_deadite()
+	if(mob_biotypes & MOB_UNDEAD) //Already a deadite, or undead of another kind like skeletons.
+		return
+
+	drop_all_held_items() //Clear weapons from spawned NPCs, players should already be dead.
 
 	blood_toll_bucket = STATS_KILLED_DEADITES //change to deadite kills
 
@@ -337,6 +368,8 @@
 	if(organ_ears)
 		organ_ears.accessory_colors = "#868e79"
 	src.regenerate_icons()
+	if(!isooze(src)) //murklings retain their slime colors, instead of rotted blood
+		src.dna.species.blood_color = "#161616"
 
 	//now we take every trait an actual deadite has and apply it.
 	ADD_TRAIT(src, TRAIT_LIMBATTACHMENT, TRAIT_GENERIC)
@@ -370,9 +403,11 @@
 	src.STAPER = 12 //1 less than players
 
 	//Give the body deadite AI - Override the AI too.
-	src.ai_controller = /datum/ai_controller/human_npc //TODO someone kill this for custom AI
+	QDEL_NULL(ai_controller) //upgrade_ai_controller would keep subtypes like archer
+	upgrade_ai_controller(/datum/ai_controller/human_npc) //TODO someone kill this for custom AI
 	src.d_intent = INTENT_DODGE //To simulate that deadites CANNOT parry
 	src.dodgetime = 10
 
 	//lastly, nessessity for ALL NPCs -> our examine trait
 	ADD_TRAIT(src, TRAIT_NPC_EXAMINE, TRAIT_GENERIC)
+	SEND_SIGNAL(src, COMSIG_MOB_MODIFY_AGGRO_LINES, GLOB.skeleton_aggro, TRUE)

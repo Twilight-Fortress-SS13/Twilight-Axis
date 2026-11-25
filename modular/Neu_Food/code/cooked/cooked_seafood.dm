@@ -1,5 +1,7 @@
 // Cooked seafood. Not including special meals.
 /obj/item/reagent_containers/food/snacks/rogue/fryfish
+	cuisine = CUISINE_SOUTH_IMPERIAL
+	dish_type = DISH_SEAFOOD
 	icon = 'modular/Neu_Food/icons/cooked/cooked_seafood.dmi'
 	trash = null
 	list_reagents = list(/datum/reagent/consumable/nutriment = 10)
@@ -8,33 +10,68 @@
 	faretype = FARE_POOR
 	desc = "A charred fish, crisped to perfection."
 	icon_state = "carpcooked"
-	foodtype = MEAT
 	warming = 5 MINUTES
 	dropshrink = 0.6
+	var/fish_name
+	var/list/filet_tastes
+	var/fish_quality_mult = 1
+	var/rarity_rank = FISH_RARITY_COMMON
+	var/rarity_label
+
+/obj/item/reagent_containers/food/snacks/rogue/fryfish/get_stockpile_quality_mult()
+	return fish_quality_mult
+
+/obj/item/reagent_containers/food/snacks/rogue/fryfish/initialize_slice(obj/item/reagent_containers/food/snacks/slice, reagents_per_slice)
+	. = ..()
+	slice.faretype = faretype
+	slice.cuisine = cuisine
+	if(fish_name && istype(slice, /obj/item/reagent_containers/food/snacks/rogue/meat/fish))
+		slice.desc = "A filet of [fish_name], fried golden."
+	var/obj/item/reagent_containers/food/snacks/rogue/meat/cut = slice
+	if(istype(cut))
+		cut.fish_name = fish_name
+		cut.set_tastes(filet_tastes)
+		cut.fish_quality_mult = fish_quality_mult
+		cut.rarity_rank = rarity_rank
+		cut.rarity_label = rarity_label
+
+/obj/item/reagent_containers/food/snacks/rogue/smokefish
+	name = "smoked fish"
+	desc = "Heavens and seas met to bring you this smoked, aquatic treat."
+	icon = 'modular/Neu_Food/icons/cooked/cooked_seafood.dmi'
+	icon_state = "fish_smoked"
+	cuisine = CUISINE_SOUTH_IMPERIAL
+	dish_type = DISH_SEAFOOD
+	trash = null
+	list_reagents = list(/datum/reagent/consumable/nutriment = 10)
+	tastes = list("smoky fish" = 1)
+	faretype = FARE_NEUTRAL
+	warming = 5 MINUTES
+	dropshrink = 0.8
 
 /obj/item/reagent_containers/food/snacks/rogue/fryfish/carp
 	name = "cooked carp"
 	desc = "A charred and crisped carp. With a mild flavor and firm texture. Fit for the poor."
 	icon_state = "carpcooked"
-	faretype = FARE_IMPOVERISHED
+	faretype = FARE_POOR
 
 /obj/item/reagent_containers/food/snacks/rogue/fryfish/clownfish
 	name = "cooked clownfish"
 	desc = "A cooked clownfish, its former vibrant colors gone."
 	icon_state = "clownfishcooked"
-	faretype = FARE_POOR
+	faretype = FARE_FINE
 
 /obj/item/reagent_containers/food/snacks/rogue/fryfish/angler
 	name = "cooked anglerfish"
 	desc = "A cooked anglerfish, with a sweet and dense flavor that is sure to please."
 	icon_state = "anglercooked"
-	faretype = FARE_NEUTRAL
+	faretype = FARE_FINE
 
 /obj/item/reagent_containers/food/snacks/rogue/fryfish/eel
 	name = "cooked eel"
 	desc = "A cooked eel. With its rich flavor and flaky texture, it's a delicacy."
 	icon_state = "eelcooked"
-	faretype = FARE_NEUTRAL
+	faretype = FARE_POOR
 	fried_type = /obj/item/reagent_containers/food/snacks/rogue/jelliedeel
 
 /obj/item/reagent_containers/food/snacks/rogue/fryfish/sole
@@ -51,22 +88,21 @@
 
 /obj/item/reagent_containers/food/snacks/rogue/fryfish/lobster
 	name = "cooked lobster"
-	desc = "A cooked lobster. It has a rich and sweet flavor, but not much meat. On its own it is considered\
-	food for the poor, but buttered or peppered it is a delicacy."
+	desc = "A cooked lobster. It has a rich and sweet flavor, but not much meat. On its own it is sweet and succulent, but they are best buttered or peppered to turn it into a delicacy."
 	icon_state = "lobstercooked"
-	faretype = FARE_POOR
+	faretype = FARE_FINE
 
 /obj/item/reagent_containers/food/snacks/rogue/fryfish/salmon
 	name = "cooked salmon"
-	desc = "A cooked salmon. Less terrifying now that it is cooked. It has rich and oily flesh, making it quite popular once spiced."
+	desc = "A cooked salmon. It has rich, oily and savory flesh, making it quite popular once spiced."
 	icon_state = "salmoncooked"
-	faretype = FARE_NEUTRAL
+	faretype = FARE_FINE
 
 /obj/item/reagent_containers/food/snacks/rogue/fryfish/plaice
 	name = "cooked plaice"
 	desc = "A cooked plaice. With a mild and sweet flavor. Popular with the rich."
 	icon_state = "plaicecooked"
-	faretype = FARE_NEUTRAL
+	faretype = FARE_FINE
 
 /obj/item/reagent_containers/food/snacks/rogue/fryfish/mudskipper
 	name = "cooked mudskipper"
@@ -90,7 +126,7 @@
 	name = "cooked clam"
 	desc = "A cooked clam. With a sweet and briny flavor, clams are often used in soup."
 	icon_state = "clamcooked"
-	faretype = FARE_NEUTRAL
+	faretype = FARE_FINE
 
 /obj/item/reagent_containers/food/snacks/rogue/fryfish/shrimp
 	name = "cooked shrimp"
@@ -111,44 +147,49 @@
 /obj/item/reagent_containers/food/snacks/rogue/fryfish/salmon/black_headed
 	name = "black-headed salmon"
 	icon_state = "salmon_black"
-	faretype = FARE_NEUTRAL
+	faretype = FARE_FINE
 
 /obj/item/reagent_containers/food/snacks/rogue/fryfish/flounder
 	name = "flounder"
 	icon_state = "flounder"
-	faretype = FARE_NEUTRAL
+	faretype = FARE_POOR
 
 /obj/item/reagent_containers/food/snacks/rogue/fryfish/swamp_shrimp
 	name = "swamp shrimp"
 	icon_state = "swamp_shrimp"
-	faretype = FARE_NEUTRAL
+	faretype = FARE_POOR
 
 /obj/item/reagent_containers/food/snacks/rogue/fryfish/swamp_mother
 	name = "swamp mother"
 	icon_state = "swamp_mother"
-	faretype = FARE_NEUTRAL
+	faretype = FARE_FINE
 
 /obj/item/reagent_containers/food/snacks/rogue/fryfish/black_bass
 	name = "black bass"
 	icon_state = "black_bass"
 	faretype = FARE_NEUTRAL
 
-/obj/item/reagent_containers/food/snacks/rogue/fryfish/zizo_abberation
-	name = "zizo abberation"
-	icon_state = "zizo_abberation"
+/obj/item/reagent_containers/food/snacks/rogue/fryfish/murkfang
+	name = "cooked murkfang"
+	icon_state = "murkfang"
 	faretype = FARE_NEUTRAL
 
 /obj/item/reagent_containers/food/snacks/rogue/fryfish/sturgeon
 	name = "sturgeon"
 	icon_state = "sturgeon"
-	faretype = FARE_NEUTRAL
+	faretype = FARE_LAVISH
 
 /obj/item/reagent_containers/food/snacks/rogue/fryfish/mackerel
 	name = "mackerel"
 	icon_state = "mackerel"
-	faretype = FARE_NEUTRAL
+	faretype = FARE_POOR
 
 /obj/item/reagent_containers/food/snacks/rogue/fryfish/beaksnapper
 	name = "beaksnapper"
 	icon_state = "beaksnapper"
-	faretype = FARE_NEUTRAL
+	faretype = FARE_FINE
+
+/obj/item/reagent_containers/food/snacks/rogue/fryfish/swordfish
+	name = "cooked swordfish"
+	icon_state = "swordfishcooked"
+	faretype = FARE_FINE

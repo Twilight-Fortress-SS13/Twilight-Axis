@@ -4,6 +4,11 @@
 	path = /obj/item/clothing/cloak/tabard
 	sort_category = "Cloaks"
 
+/datum/loadout_item/saigatabard
+	name = "Saiga Tabard"
+	path = /obj/item/clothing/cloak/tabard/saiga
+	sort_category = "Cloaks"
+
 /datum/loadout_item/surcoat
 	name = "Surcoat"
 	path = /obj/item/clothing/cloak/tabard/stabard
@@ -32,6 +37,11 @@
 /datum/loadout_item/halfcloak
 	name = "Halfcloak"
 	path = /obj/item/clothing/cloak/half
+	sort_category = "Cloaks"
+
+/datum/loadout_item/scoutcloak
+	name = "Scout Cloak"
+	path = /obj/item/clothing/cloak/scout
 	sort_category = "Cloaks"
 
 /datum/loadout_item/ridercloak
@@ -119,9 +129,9 @@
 	path = /obj/item/clothing/cloak/poncho
 	sort_category = "Cloaks"
 
-/datum/loadout_item/toga
-	name = "Toga"
-	path = /obj/item/clothing/cloak/tabard/toga
+/datum/loadout_item/traditionaltabard
+	name = "Traditional Tabard, Psydonic"
+	path = /obj/item/clothing/cloak/tabard/psydontabard/white
 	sort_category = "Cloaks"
 
 /datum/loadout_item/aproncook
@@ -134,19 +144,24 @@
 	path = /obj/item/clothing/cloak/poncho/fancycoat
 	sort_category = "Cloaks"
 
+/datum/loadout_item/fancycoattrimmed
+	name = "Trimmed Fancy Coat"
+	path = /obj/item/clothing/cloak/poncho/fancycoat/trimmed
+	sort_category = "Cloaks"
+
 /datum/loadout_item/cloakgoldenorder
 	name = "Cloak, Golden Order"
-	path = /obj/item/clothing/cloak/cape/inquisitorgold
+	path = /obj/item/clothing/cloak/cape/puritan/gold
 	sort_category = "Cloaks"
 
 /datum/loadout_item/cloaksilverorder
 	name = "Cloak, Silver Order"
-	path = /obj/item/clothing/cloak/cape/inquisitorsilver
+	path = /obj/item/clothing/cloak/cape/puritan/silver
 	sort_category = "Cloaks"
 
 /datum/loadout_item/surcoatheavy
 	name = "Surcoat, Overvestments"
-	path = /obj/item/clothing/cloak/tabard/stabard/crusader/heavy
+	path = /obj/item/clothing/cloak/tabard/stabard/overvestments
 	sort_category = "Cloaks"
 
 /datum/loadout_item/surcoatgoldenorder
@@ -179,6 +194,11 @@
 	path = /obj/item/clothing/cloak/tabard/stabard/crusader/t/undivided
 	sort_category = "Cloaks"
 
+/datum/loadout_item/frayedcloak
+	name = "Frayed Cloak"
+	path = /obj/item/clothing/cloak/templar/astratancleric/grey
+	sort_category = "Cloaks"
+
 /datum/loadout_item/scaledcloak
 	name = "Scaled Cloak"
 	path = /obj/item/clothing/cloak/scaledcloak
@@ -198,4 +218,40 @@
 	name = "Wicker Cloak"
 	path = /obj/item/clothing/cloak/wickercloak
 	sort_category = "Cloaks"
+
+/datum/loadout_item/sash
+	name = "Sash"
+	path = /obj/item/clothing/cloak/sash
+	sort_category = "Cloaks"
+
+/datum/loadout_item/sash_dupatta
+	name = "Sash, Dupatta"
+	path = /obj/item/clothing/cloak/sash/dupatta
+	sort_category = "Cloaks"
+
+/datum/loadout_item/ranger_cloak
+	name = "Ranger Cloak, Forest Green"
+	path = /obj/item/clothing/cloak/rangercloak
+	sort_category = "Cloaks"
+
+/datum/loadout_item/ranger_cloak_gray
+	name = "Ranger Cloak, Neutral Gray"
+	path = /obj/item/clothing/cloak/rangercloak/gray
+	sort_category = "Cloaks"
+
+/datum/loadout_item/duelistscloak
+	name = "Duelist's Cape"
+	path = /obj/item/clothing/cloak/half/duelcape
+	sort_category = "Cloaks"
+
+/datum/loadout_item/toga
+	name = "Toga, Robed"
+	path = /obj/item/clothing/cloak/tabard/toga
+	sort_category = "Cloaks"
+
+/datum/loadout_item/toga_dress
+	name = "Toga, Dress"
+	path = /obj/item/clothing/cloak/tabard/toga/dress
+	sort_category = "Cloaks"
+
 */

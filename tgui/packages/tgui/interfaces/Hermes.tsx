@@ -2,9 +2,12 @@ import { useState } from 'react';
 import {
   Box,
   Button,
+  Dropdown,
+  Floating,
   Input,
   Section,
   Stack,
+  Table,
   TextArea,
 } from 'tgui-core/components';
 
@@ -19,9 +22,105 @@ type Data = {
   free_send_ready: 0 | 1;
   free_send_remaining_ds: number;
   has_tube?: boolean;
-  // TA EDIT
+  ghost_mode?: boolean;
+  delay_min?: number;
+  delay_max?: number;
+  letter_count?: number;
+  real_name: string;
+  pen_name: string | null;
   is_court_agent?: boolean;
 };
+
+type Signature = 'real' | 'pen' | 'anon';
+
+type SignaturePickerProps = {
+  value: Signature;
+  onChange: (value: Signature) => void;
+  realName: string;
+  penName: string | null;
+};
+
+const SignaturePicker = (props: SignaturePickerProps) => {
+  const { value, onChange, realName, penName } = props;
+  const options = [
+    { displayText: `From: ${realName}`, value: 'real' },
+    ...(penName ? [{ displayText: `From: ${penName}`, value: 'pen' }] : []),
+    { displayText: 'From: Anonymous', value: 'anon' },
+  ];
+  const selected = options.find((option) => option.value === value);
+  return (
+    <Dropdown
+      width="100%"
+      options={options}
+      selected={value}
+      displayText={selected?.displayText}
+      onSelected={(picked) => onChange(picked as Signature)}
+    />
+  );
+};
+
+const FORMATTING_HELP: [string, string][] = [
+  ['# text', 'Defines a header.'],
+  ['|text|', 'Centers the text.'],
+  ['**text**', 'Makes the text bold.'],
+  ['*text*', 'Makes the text italic.'],
+  ['^text^', 'Increases the size of the text.'],
+  ['((text))', 'Decreases the size of the text.'],
+  ['%s', 'Inserts a signature of your name in a foolproof way.'],
+  [
+    '%f',
+    'Inserts an invisible field which lets you start typing from there. Useful for forms.',
+  ],
+  ['* item', 'An unordered list item.'],
+  ['  * item', 'An unordered list child item.'],
+  ['---', 'Adds a horizontal rule.'],
+  ['-=FFFFFFtext=-', 'Adds a specific colour to text.'],
+];
+
+const FormattingHelp = () => (
+  <Box>
+    <Table>
+      {FORMATTING_HELP.map(([syntax, description], index) => {
+        const divider =
+          index < FORMATTING_HELP.length - 1
+            ? '1px solid rgba(255, 255, 255, 0.1)'
+            : undefined;
+        return (
+          <Table.Row key={syntax}>
+            <Table.Cell
+              collapsing
+              pr={1}
+              style={{
+                fontFamily: 'monospace',
+                whiteSpace: 'pre',
+                borderBottom: divider,
+              }}
+            >
+              {syntax}
+            </Table.Cell>
+            <Table.Cell style={{ borderBottom: divider }}>
+              {description}
+            </Table.Cell>
+          </Table.Row>
+        );
+      })}
+    </Table>
+    <Box
+      mt={1}
+      pt={1}
+      color="label"
+      style={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}
+    >
+      The From field signs the letter (or a package's wrapping note) with your
+      real name or your pen name. Anonymous letters go out unsigned. A pen name
+      is set in character setup and cannot be changed during the round.
+    </Box>
+  </Box>
+);
+
+const HERMES_TITLE = `${'\u00A0'.repeat(6)}HERMES`;
+
+const dsToMinutes = (ds: number) => Math.round(ds / 600);
 
 const dsToClock = (ds: number) => {
   if (ds <= 0) return '0s';
@@ -42,12 +141,47 @@ export const Hermes = (props: any, context: any) => {
     free_send_ready,
     free_send_remaining_ds,
     has_tube,
+    ghost_mode,
+    delay_min,
+    delay_max,
+    letter_count,
+    real_name,
+    pen_name,
     is_court_agent,
   } = data;
 
   const [recipient, setRecipient] = useState('');
-  const [sender, setSender] = useState('');
+  const [signature, setSignature] = useState<Signature>('real');
   const [letterContent, setLetterContent] = useState('');
+
+  const helpButton = (
+    <Box
+      style={{
+        position: 'fixed',
+        top: '2px',
+        left: '8px',
+        height: '32px',
+        display: 'flex',
+        alignItems: 'center',
+      }}
+    >
+      <Floating
+        hoverOpen
+        placement="bottom-start"
+        content={<FormattingHelp />}
+        contentStyles={{
+          width: '340px',
+          padding: '6px 8px',
+          textAlign: 'left',
+          background: 'rgba(15, 15, 15, 0.97)',
+          border: '1px solid rgba(255, 255, 255, 0.15)',
+          borderRadius: '4px',
+        }}
+      >
+        <Button compact icon="question-circle" color="transparent" />
+      </Floating>
+    </Box>
+  );
 
   const isFree = !!free_send_ready;
   // TA EDIT
@@ -58,8 +192,94 @@ export const Hermes = (props: any, context: any) => {
   const canBuyQuill = balance >= quill_cost;
   const canSendTube = letterContent.length > 0;
 
+  if (ghost_mode) {
+    const canPost = recipient.length > 0 && letterContent.length > 0;
+    const delayLabel =
+      delay_min && delay_max
+        ? `${dsToMinutes(delay_min)}-${dsToMinutes(delay_max)} minutes`
+        : 'some time';
+
+    return (
+      <Window title={HERMES_TITLE} width={400} height={440} buttons={helpButton}>
+        <Window.Content>
+          <Stack vertical fill>
+            <Stack.Item>
+              <Box italic color="label">
+                A letter posted from beyond takes {delayLabel} to arrive.
+              </Box>
+            </Stack.Item>
+            {!!letter_count && (
+              <Stack.Item>
+                <Button
+                  fluid
+                  icon="envelope-open-text"
+                  onClick={() => act('read_letters')}
+                >
+                  Read My Letters ({letter_count})
+                </Button>
+              </Stack.Item>
+            )}
+            <Stack.Item grow>
+              <Section title="Post a Letter" fill>
+                <Stack vertical fill>
+                  <Stack.Item>
+                    <Stack>
+                      <Stack.Item grow>
+                        <Input
+                          fluid
+                          placeholder="To: Name or #number"
+                          value={recipient}
+                          onChange={(value) => setRecipient(value)}
+                        />
+                      </Stack.Item>
+                      <Stack.Item grow>
+                        <SignaturePicker
+                          value={signature}
+                          onChange={setSignature}
+                          realName={real_name}
+                          penName={pen_name}
+                        />
+                      </Stack.Item>
+                    </Stack>
+                  </Stack.Item>
+                  <Stack.Item grow>
+                    <TextArea
+                      fluid
+                      height="100%"
+                      placeholder="Write your letter here..."
+                      value={letterContent}
+                      maxLength={2000}
+                      onChange={(value) => setLetterContent(value)}
+                    />
+                  </Stack.Item>
+                  <Stack.Item>
+                    <Button
+                      fluid
+                      icon="paper-plane"
+                      color="good"
+                      disabled={!canPost}
+                      onClick={() =>
+                        act('send_letter', {
+                          recipient: recipient,
+                          signature: signature,
+                          content: letterContent,
+                        })
+                      }
+                    >
+                      Post Letter
+                    </Button>
+                  </Stack.Item>
+                </Stack>
+              </Section>
+            </Stack.Item>
+          </Stack>
+        </Window.Content>
+      </Window>
+    );
+  }
+
   return (
-    <Window title="HERMES" width={400} height={480}>
+    <Window title={HERMES_TITLE} width={400} height={480} buttons={helpButton}>
       <Window.Content>
         <Stack vertical fill>
           <Stack.Item>
@@ -128,11 +348,11 @@ export const Hermes = (props: any, context: any) => {
                       />
                     </Stack.Item>
                     <Stack.Item grow>
-                      <Input
-                        fluid
-                        placeholder="From: Anonymous"
-                        value={sender}
-                        onChange={(value) => setSender(value)}
+                      <SignaturePicker
+                        value={signature}
+                        onChange={setSignature}
+                        realName={real_name}
+                        penName={pen_name}
                       />
                     </Stack.Item>
                   </Stack>
@@ -158,7 +378,7 @@ export const Hermes = (props: any, context: any) => {
                         onClick={() =>
                           act('send_letter', {
                             recipient: recipient,
-                            sender: sender || 'Anonymous',
+                            signature: signature,
                             content: letterContent,
                           })
                         }
@@ -175,7 +395,6 @@ export const Hermes = (props: any, context: any) => {
                           disabled={!canSendTube}
                           onClick={() =>
                             act('send_tube', {
-                              sender: sender || 'Anonymous',
                               content: letterContent,
                             })
                           }

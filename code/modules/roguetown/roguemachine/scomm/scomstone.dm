@@ -1,4 +1,4 @@
-//SCOMSTONE                 SCOMSTONE
+//SCOMSTONE					SCOMSTONE
 
 /obj/item/scomstone
 	name = "scomstone"
@@ -17,7 +17,7 @@
 	muteinmouth = TRUE
 	var/cooldown = 60 SECONDS
 	var/on_cooldown = FALSE
-	var/cooldown_end_time 
+	var/cooldown_end_time
 	var/listening = TRUE
 	var/speaking = TRUE
 	var/messagereceivedsound = 'sound/misc/scom.ogg'
@@ -42,7 +42,7 @@
 /obj/item/scomstone/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Most SCOMSTONEs function as handheld SCOMs. The only exception are HOUNDSTONES, which have access to an exclusive SCOMline for the Keep's royalty and guards.")
-	. += span_info("SCOMSTONEs, like their immobile forefathers, have a unique number attached to them. If someone knows this number, they can directly open a private SCOMline with the SCOMSTONE-in-question.")
+	// . += span_info("SCOMSTONEs, like their immobile forefathers, have a unique number attached to them. If someone knows this number, they can directly open a private SCOMline with the SCOMSTONE-in-question.") // commented until readdition
 	. += span_info("Right-click a SCOMSTONE or CROWNSTONE to prepare a message. This message will be heard through every SCOM in the kingdom-and-abroad, but comes with a minor cooldown.")
 	. += span_info("Middle-click a SCOMSTONE to mute or unmute it.")
 	. += span_info("Activate a CROWNSTONE in your hand to swap between the general SCOMline and the royal SCOMline. The latter is denoted by crimson lettering, and is exclusively heard by those with either a HOUNDSTONE or retuned SCOM.")
@@ -61,6 +61,7 @@
 	if(user.voicecolor_override)
 		usedcolor = user.voicecolor_override
 	user.whisper(input_text)
+	user.log_talk(input_text, LOG_GAME, tag="SCOMSTONE #[scomstone_number]") // TA EDIT
 	if(length(input_text) > 100) //When these people talk too much, put that shit in slow motion, yeah
 		input_text = "<small>[input_text]</small>"
 	for(var/obj/structure/roguemachine/scomm/S in SSroguemachine.scomm_machines)
@@ -94,7 +95,7 @@
 	lose_hearing_sensitivity()
 	return ..()
 
-/obj/item/scomstone/Initialize()
+/obj/item/scomstone/Initialize(mapload)
 	. = ..()
 	become_hearing_sensitive()
 	update_icon()
@@ -184,6 +185,10 @@
 	if(user.voicecolor_override)
 		usedcolor = user.voicecolor_override
 	user.whisper(input_text)
+	if(garrisonline) // TA EDIT START
+		user.log_talk(input_text, LOG_GAME, tag="CROWNSTONE GARRISON SCOM #[scomstone_number]")
+	else
+		user.log_talk(input_text, LOG_GAME, tag="CROWNSTONE SCOM #[scomstone_number]") // TA EDIT END
 	if(length(input_text) > 100) //When these people talk too much, put that shit in slow motion, yeah
 		input_text = "<small>[input_text]</small>"
 	playsound(loc, 'sound/misc/garrisonscom.ogg', 100, FALSE, -1)

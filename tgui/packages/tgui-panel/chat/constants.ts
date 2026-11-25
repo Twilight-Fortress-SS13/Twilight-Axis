@@ -13,13 +13,11 @@ export const COMBINE_MAX_TIME_WINDOW = 5000;
 export const IMAGE_RETRY_DELAY = 250;
 export const IMAGE_RETRY_LIMIT = 10;
 export const IMAGE_RETRY_MESSAGE_AGE = 60000;
-
 // Default message type
 export const MESSAGE_TYPE_UNKNOWN = 'unknown';
 
 // Internal message type
 export const MESSAGE_TYPE_INTERNAL = 'internal';
-
 // Must match the set of defines in code/__DEFINES/chat.dm
 export const MESSAGE_TYPE_SYSTEM = 'system';
 export const MESSAGE_TYPE_LOCALCHAT = 'localchat';
@@ -38,7 +36,6 @@ export const MESSAGE_TYPE_EVENTCHAT = 'eventchat';
 export const MESSAGE_TYPE_ADMINLOG = 'adminlog';
 export const MESSAGE_TYPE_ATTACKLOG = 'attacklog';
 export const MESSAGE_TYPE_DEBUG = 'debug';
-
 type MessageType = {
   type: string;
   name: string;
@@ -48,7 +45,6 @@ type MessageType = {
   important: boolean;
   admin: boolean;
 }>;
-
 // Metadata for each message type
 export const MESSAGE_TYPES: MessageType[] = [
   // Always-on types
@@ -141,6 +137,7 @@ export const MESSAGE_TYPES: MessageType[] = [
     type: MESSAGE_TYPE_PRAYER,
     name: 'Prayers',
     description: 'Prayers from players',
+    selector: '.prayer',
     admin: true,
   },
   {

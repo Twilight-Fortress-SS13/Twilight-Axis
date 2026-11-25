@@ -143,17 +143,18 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 	var/magic_power = 0
 	sharpening_factor = 12
 	spark_chance = 35
+	materia = list(/datum/materia_aspect/earth)
 
 /obj/item/natural/stone/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Left-click a bladed weapon to begin sharpening it. Sharpening automatically stops once you move, or once the bladed weapon has been completely resharpened.")
-	. += span_info("Left-clicking a bladed weapon, another stone, or a rock has a chance to spawn sparks. Sparks can be used to reignite extinguished torches, lampterns, hearths, and other igniteable structures.")
-	. += span_info("Sharpening a bladed weapon will permenantly remove a very small amount of its maximum sharpness, with each pass. This can be avoided by sharpening it at a blacksmith's grindstone.")
+	. += span_info("Left-clicking a bladed weapon, another stone, or a rock has a chance to spawn sparks. Sparks can be used to reignite extinguished torches, lampterns, hearths, and other ignitable structures.")
+	. += span_info("Sharpening a bladed weapon will permanently remove a very small amount of its maximum sharpness, with each pass. This can be avoided by sharpening it at a blacksmith's grindstone.")
 	. += span_info("Left-clicking a stone with a chisel will turn it into a stone block, which can be used for masonry and construction.")
 	. += span_info("Stones can be 'slapcrafted' into new items by left-clicking them with certain tools and materials. 'Slapcrafted' items don't require a Crafting skill to make.")
 	. += span_info("'Slapcrafts' for stones include tools and pots.")
 
-/obj/item/natural/stone/Initialize()
+/obj/item/natural/stone/Initialize(mapload)
 	. = ..()
 	stone_lore()
 	update_force_dynamic() // Else it will not display the force properly.
@@ -187,19 +188,19 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 	w_class = WEIGHT_CLASS_TINY
 	experimental_inhand = FALSE
 	mill_result = /obj/item/reagent_containers/powder/mineral
-	possible_item_intents = list(/datum/intent/hit, /datum/intent/mace/smash/wood, /datum/intent/dagger/cut)
+	possible_item_intents = list(/datum/intent/hit, /datum/intent/mace/smash/wood/stone, /datum/intent/dagger/cut)
 	sharpening_factor = 21
 	spark_chance = 80
 
 /obj/item/natural/whetstone/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Left-click a bladed weapon to begin sharpening it. Sharpening automatically stops once you move, or once the bladed weapon has been completely resharpened.")
-	. += span_info("Left-clicking a bladed weapon, another stone, or a rock has a chance to spawn sparks. Sparks can be used to reignite extinguished torches, lampterns, hearths, and other igniteable structures.")
-	. += span_info("Sharpening a bladed weapon will permenantly remove a very small amount of its maximum sharpness, with each pass. This can be avoided by sharpening it at a blacksmith's grindstone.")
+	. += span_info("Left-clicking a bladed weapon, another stone, or a rock has a chance to spawn sparks. Sparks can be used to reignite extinguished torches, lampterns, hearths, and other ignitable structures.")
+	. += span_info("Sharpening a bladed weapon will permanently remove a very small amount of its maximum sharpness, with each pass. This can be avoided by sharpening it at a blacksmith's grindstone.")
 	. += span_info("Whetstones can be 'slapcrafted' into new items by left-clicking them with certain tools and materials. 'Slapcrafted' items don't require a Crafting skill to make.")
 	. += span_info("'Slapcrafts' for whestones include tools, and - if used with hunting knives and farming tools - unique weapons.")
 
-/obj/item/natural/whetstone/Initialize()
+/obj/item/natural/whetstone/Initialize(mapload)
 	. = ..()
 	var/static/list/slapcraft_recipe_list = list(
 		/datum/crafting_recipe/roguetown/survival/peasantry/thresher/whetstone,
@@ -233,8 +234,8 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 	var/bonus_force = 0 // Total bonus force the rock will be getting
 	var/list/given_intent_list = list(/datum/intent/hit) // By default you get this at least
 	var/list/extra_intent_list = list() // List of intents that we can possibly give it by the end of this
-	var/list/blunt_intents = list(/datum/intent/mace/strike/wood, /datum/intent/mace/smash/wood)
-	var/list/sharp_intents = list(/datum/intent/dagger/cut, /datum/intent/dagger/chop) // TA edit
+	var/list/blunt_intents = list(/datum/intent/mace/strike/wood, /datum/intent/mace/smash/wood/stone)
+	var/list/sharp_intents = list(/datum/intent/dagger/cut, /datum/intent/dagger/chop)
 
 	var/bluntness_rating = rand(0,10)
 	var/sharpness_rating = rand(0,10)
@@ -307,6 +308,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 		stone_desc += " [pick(GLOB.stone_magic_descs)]"
 		bonus_force += magic_force // Add on the magic force modifier
 		magic_power += magic_force
+		materia += /datum/materia_aspect/arcyne
 
 	if(extra_intent_list.len)
 		for(var/i in 1 to min(4, extra_intent_list.len))
@@ -354,10 +356,10 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 				return
 		return
 	else if(istype(W, /obj/item/rogueweapon/chisel/assembly))
-		to_chat(user, span_warning("You most use both hands to chisel blocks."))
+		to_chat(user, span_warning("You must use both hands to chisel blocks."))
 	else
 		..()
-		
+
 //rock munching
 /obj/item/natural/stone/attack(mob/living/M, mob/user)
 	if(!user.cmode)
@@ -391,12 +393,13 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 	minstr = 11
 	destroy_sound = 'sound/foley/smash_rock.ogg'
 	attacked_sound = 'sound/foley/hit_rock.ogg'
+	materia = list(/datum/materia_aspect/earth)
 
 
 /obj/item/natural/rock/get_mechanics_examine(mob/user)
 	. = ..()
 	. += span_info("Rocks can be destroyed by left-clicking them with an item that has the 'PICK' intent selected. Hidden inside can be anything from stones and salt to ores and gems.")
-	. += span_info("Left-clicking a rock with a stone has a chance to spawn sparks. Sparks can be used to reignite extinguished torches, lampterns, hearths, and other igniteable structures.")
+	. += span_info("Left-clicking a rock with a stone has a chance to spawn sparks. Sparks can be used to reignite extinguished torches, lampterns, hearths, and other ignitable structures.")
 	. += span_info("Left-clicking a rock with a chisel will turn it into a stone block, which can be used for masonry and construction.")
 
 /obj/item/natural/rock/Initialize(mapload, autodeconstruct, hp_override)
@@ -410,6 +413,18 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 
 /obj/item/natural/rock/Crossed(mob/living/L)
 	if(istype(L) && !L.throwing)
+		var/mob/living/simple_animal/mount // TA EDIT START
+		if(istype(L, /mob/living/simple_animal))
+			mount = L
+		else if(istype(L.buckled, /mob/living/simple_animal))
+			mount = L.buckled
+		var/running = L.m_intent == MOVE_INTENT_RUN
+		if(!running && mount?.has_buckled_mobs())
+			var/mob/living/driver = mount.buckled_mobs[1]
+			running = driver?.m_intent == MOVE_INTENT_RUN
+		if(mount?.mount_initialized && running)
+			mount.mount_stumble()
+			return ..() // TA EDIT END
 		if(L.m_intent == MOVE_INTENT_RUN)
 			L.visible_message(span_warning("[L] trips over the boulder!"),span_warning("I trip over the boulder!"))
 			L.Knockdown(10)
@@ -433,6 +448,8 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 	if(.)
 		if(!was_destroyed && obj_destroyed)
 			record_featured_stat(FEATURED_STATS_MINERS, user)
+		if(user.mind && (user.used_intent?.blade_class in list(BCLASS_PICK, BCLASS_SMASH, BCLASS_BLUNT)))
+			user.mind.add_sleep_experience(/datum/skill/labor/mining, user.STAINT * 0.2)
 
 /obj/item/natural/rock/deconstruct(disassembled = FALSE)
 	if(!disassembled)
@@ -479,8 +496,8 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 			S.set_up(1, 1, front)
 			S.start()
 		return
-	if(istype(W, /obj/item/contraption/pick/drill) && user.used_intent.type == /datum/intent/drill)
-		var/obj/item/contraption/pick/drill/drillitem = W
+	if(istype(W, /obj/item/rogueweapon/contraption/pick/drill) && user.used_intent.type == /datum/intent/drill)
+		var/obj/item/rogueweapon/contraption/pick/drill/drillitem = W
 		if(drillitem.current_charge < 10)
 			to_chat(user, span_warning("Not enough fuel."))
 			return
@@ -512,7 +529,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 			qdel(src)
 		return
 	else if(istype(W, /obj/item/rogueweapon/chisel/assembly))
-		to_chat(user, span_warning("You most use both hands to chisel blocks."))
+		to_chat(user, span_warning("You must use both hands to chisel blocks."))
 	..()
 
 //begin ore loot rocks
@@ -559,7 +576,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 	icon_state = "dungeon_rock"
 
 // actually random
-/obj/item/natural/rock/random_ore/Initialize()
+/obj/item/natural/rock/random_ore/Initialize(mapload)
 	. = ..()
 	var/obj/item/natural/rock/theboi = pick(list(
 		/obj/item/natural/rock/copper,
@@ -578,7 +595,7 @@ GLOBAL_LIST_INIT(stone_personality_descs, list(
 BECAUSE this is a dungeon reward, and you're SUPPOSED to get SOMETHING, they've got a pretty high chance for good stuff.
 - MUMBLEMANCER
 */
-/obj/item/natural/rock/dungeon/Initialize()
+/obj/item/natural/rock/dungeon/Initialize(mapload)
 	. = ..()
 	// The amounts are going to be weird BC I wanted a % out of 100 and it's a 7 layer list.
 	// I am considering gems to be less problematic than gold BC gold can be melted into way more
@@ -614,30 +631,6 @@ BECAUSE this is a dungeon reward, and you're SUPPOSED to get SOMETHING, they've 
 	if(item_flags & IN_STORAGE)
 		return
 	. = ..()
-
-/obj/item/natural/stoneblock/attack_right(mob/user)
-	. = ..()
-	if(user.get_active_held_item())
-		return
-	to_chat(user, span_warning("I start to collect [src]..."))
-	if(move_after(user, bundling_time, target = src))
-		var/stackcount = 0
-		for(var/obj/item/natural/stoneblock/F in get_turf(src))
-			stackcount++
-		while(stackcount > 0)
-			if(stackcount == 1)
-				var/obj/item/natural/stoneblock/S = new(get_turf(user))
-				user.put_in_hands(S)
-				stackcount--
-			else if(stackcount >= 2)
-				var/obj/item/natural/bundle/stoneblock/B = new(get_turf(user))
-				B.amount = clamp(stackcount, 2, 4)
-				B.update_bundle()
-				stackcount -= clamp(stackcount, 2, 4)
-				user.put_in_hands(B)
-		for(var/obj/item/natural/stoneblock/F in get_turf(src))
-			playsound(get_turf(user.loc), 'sound/foley/stone_scrape.ogg', 100)
-			qdel(F)
 
 //................ Stone block stack	............... //
 /obj/item/natural/bundle/stoneblock
@@ -684,4 +677,4 @@ BECAUSE this is a dungeon reward, and you're SUPPOSED to get SOMETHING, they've 
 			qdel(src)
 		return
 	else if(istype(W, /obj/item/rogueweapon/chisel/assembly))
-		to_chat(user, span_warning("You most use both hands to chisel blocks."))
+		to_chat(user, span_warning("You must use both hands to chisel blocks."))

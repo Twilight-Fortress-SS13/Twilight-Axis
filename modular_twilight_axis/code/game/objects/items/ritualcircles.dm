@@ -144,12 +144,9 @@
 			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
 			ADD_TRAIT(target, TRAIT_NOPAIN, TRAIT_RITUAL)
 			ADD_TRAIT(target, TRAIT_DODGEEXPERT, TRAIT_RITUAL)
-			var/is_heretic = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic)
+			var/is_heretic = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic || /datum/advclass/wretch/heretic/spy || /datum/advclass/gnoll/shaman)
 			if(is_heretic)
 				user.apply_status_effect(/datum/status_effect/debuff/armamentrites)
-			if(is_heretic && target != user)
-				user.apply_status_effect(/datum/status_effect/debuff/lux_exhausted)
-				target.apply_status_effect(/datum/status_effect/debuff/lux_exhausted)
 			baothaarmamentsta(target)
 			spawn(120)
 				icon_state = "baotha_chalky"
@@ -158,7 +155,7 @@
 				return FALSE
 			user.say("Let the wine flow, let the music crash!")
 			if(!do_after(user, 5 SECONDS))
-				return FALSE	
+				return FALSE
 			user.say("Away with tears, away with shame!")
 			to_chat(user, span_notice("The memory of sorrow fades into a haze of bliss."))
 			if(!do_after(user, 5 SECONDS))
@@ -201,7 +198,7 @@
 				if("Purified Moondust x2")
 					choose = /obj/item/reagent_containers/powder/moondust_purest
 					count = 2
-				if("Star shugar x2")
+				if("Starsugar x2")
 					choose = /obj/item/reagent_containers/powder/starsugar
 					count = 2
 				if("Spice x2")
@@ -240,7 +237,7 @@
 				playsound(src, 'sound/magic/mending.ogg', 35, TRUE, -2)
 				sleep(1 SECONDS)
 			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
-			return TRUE 
+			return TRUE
 		if("Masquarade")
 			if(!do_after(user, 5 SECONDS))
 				return FALSE
@@ -316,4 +313,5 @@
 	backr = /obj/item/rogueweapon/spear/partizan/baotha_ta
 
 	if(H.mind)
-		H.mind.AddSpell(new /datum/action/cooldown/spell/mending/lesser)
+		H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
+		ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL)

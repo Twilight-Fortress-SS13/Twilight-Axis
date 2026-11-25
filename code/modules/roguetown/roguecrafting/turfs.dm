@@ -87,6 +87,19 @@
 	adminlog = TRUE
 	category = "Walls"
 
+/datum/crafting_recipe/roguetown/turfs/wood/wall/woodbark
+	name = "Bark Wall"
+	result = /turf/closed/wall/mineral/rogue/woodbark
+
+/datum/crafting_recipe/roguetown/turfs/wood/wall/woodbark/TurfCheck(mob/user, turf/T)
+	var/datum/patron/user_patron
+	if(istype(user, /mob/living))
+		user_patron = user.vars["patron"]
+	if(!iself(user) && !iswildkin(user) && user.job != "Druid" && !istype(user_patron, /datum/patron/divine/dendor))
+		to_chat(user, span_warning("Only Elves, Wild-Kin, Druids, and followers of Dendor can master the art of natural wood walls."))
+		return FALSE
+	return ..()
+
 /datum/crafting_recipe/roguetown/turfs/wood/wall/alt
 	name = "wall alt(wood)"
 	reqs = list(/obj/item/natural/wood/plank = 2)
@@ -112,6 +125,10 @@
 	adminlog = TRUE
 	category = "Windows"
 
+/datum/crafting_recipe/roguetown/turfs/wood/murderhole/woodbark
+	name = "Bark Window"
+	result = /turf/closed/wall/mineral/rogue/woodbark/window
+
 /datum/crafting_recipe/roguetown/turfs/wood/murderhole/alt
 	name = "murder hole alt(wood)"
 	reqs = list(/obj/item/natural/wood/plank = 2)
@@ -122,7 +139,7 @@
 /datum/crafting_recipe/roguetown/turfs/carpet
 	name = "carpet(inn)"
 	result = /turf/open/floor/carpet/inn
-	reqs = list(/obj/item/natural/silk= 2)	
+	reqs = list(/obj/item/natural/silk= 2)
 	skillcraft = /datum/skill/craft/carpentry
 	verbage_simple = "construct"
 	verbage = "constructs"
@@ -132,7 +149,7 @@
 /datum/crafting_recipe/roguetown/turfs/carpet/purple
 	name = "carpet(purple)"
 	result = /turf/open/floor/carpet/purple
-	reqs = list(/obj/item/natural/silk= 2)	
+	reqs = list(/obj/item/natural/silk= 2)
 	skillcraft = /datum/skill/craft/carpentry
 	verbage_simple = "construct"
 	verbage = "constructs"
@@ -142,7 +159,7 @@
 /datum/crafting_recipe/roguetown/turfs/carpet/red
 	name = "carpet(red)"
 	result = /turf/open/floor/carpet/red
-	reqs = list(/obj/item/natural/silk= 2)	
+	reqs = list(/obj/item/natural/silk= 2)
 	skillcraft = /datum/skill/craft/carpentry
 	verbage_simple = "construct"
 	verbage = "constructs"
@@ -152,7 +169,7 @@
 /datum/crafting_recipe/roguetown/turfs/carpet/stellar
 	name = "carpet(stellar)"
 	result = /turf/open/floor/carpet/stellar
-	reqs = list(/obj/item/natural/silk= 2)	
+	reqs = list(/obj/item/natural/silk= 2)
 	skillcraft = /datum/skill/craft/carpentry
 	verbage_simple = "construct"
 	verbage = "constructs"
@@ -162,7 +179,7 @@
 /datum/crafting_recipe/roguetown/turfs/carpet/royalblack
 	name = "carpet(royal black)"
 	result = /turf/open/floor/carpet/royalblack
-	reqs = list(/obj/item/natural/silk= 2)	
+	reqs = list(/obj/item/natural/silk= 2)
 	skillcraft = /datum/skill/craft/carpentry
 	verbage_simple = "construct"
 	verbage = "constructs"
@@ -345,10 +362,10 @@
 	display_category = ITEM_CAT_ENG_CONSTRUCTION
 	result = /obj/structure/roguewindow/openclose/reinforced/brick
 	reqs = list(
-	  /obj/item/natural/brick = 2,
-	  /obj/item/ingot/iron = 1,
-	  /obj/item/natural/glass = 1,
-	  /obj/item/natural/dirtclod = 1,
+		/obj/item/natural/brick = 2,
+		/obj/item/ingot/iron = 1,
+		/obj/item/natural/glass = 1,
+		/obj/item/natural/dirtclod = 1,
 	)
 	skillcraft = /datum/skill/craft/blacksmithing
 	craftsound = 'sound/items/bsmith1.ogg'
@@ -378,10 +395,10 @@
 	display_category = ITEM_CAT_ENG_CONSTRUCTION
 	result = /obj/structure/roguewindow/openclose
 	reqs = list(
-	  /obj/item/grown/log/tree/small = 2,
-	  /obj/item/natural/stone = 1,
-	  /obj/item/natural/glass = 1,
-	  /obj/item/natural/dirtclod = 1,
+		/obj/item/grown/log/tree/small = 2,
+		/obj/item/natural/stone = 1,
+		/obj/item/natural/glass = 1,
+		/obj/item/natural/dirtclod = 1,
 	)
 	skillcraft = /datum/skill/craft/carpentry
 	craftsound = 'sound/foley/Building-01.ogg'
@@ -408,7 +425,7 @@
 	craftdiff = 2
 	adminlog = TRUE
 	category = "Windows"
-	
+
 /// HAY, TWIG AND TENT
 
 /datum/crafting_recipe/roguetown/turfs/hay
@@ -468,7 +485,7 @@
 				/obj/item/natural/cloth = 3,
 				/obj/item/rope = 1)
 	skillcraft = /datum/skill/craft/crafting
-	verbage_simple = "set up"	
+	verbage_simple = "set up"
 	verbage = "sets up"
 	craftdiff = 1
 	adminlog = TRUE
@@ -576,3 +593,139 @@
 	craftdiff = 3
 	adminlog = TRUE
 	category = "Windows"
+
+/datum/crafting_recipe/roguetown/turfs/stone/masonic
+	abstract_type = /datum/crafting_recipe/roguetown/turfs/stone/masonic
+	reqs = list(/obj/item/natural/stoneblock = 2)
+	tools = list(/obj/item/rogueweapon/hammer)
+	craftdiff = 3
+
+/datum/crafting_recipe/roguetown/turfs/stone/masonic/moonbw
+	name = "Black and White Moon Masonic Tile"
+	result = /turf/open/floor/rogue/tile/masonic/moonbw
+
+/datum/crafting_recipe/roguetown/turfs/stone/masonic/moondark
+	name = "Dark Moon Masonic Tile"
+	result = /turf/open/floor/rogue/tile/masonic/moondark
+
+/datum/crafting_recipe/roguetown/turfs/stone/masonic/sun
+	name = "Sun Tile"
+	result = /turf/open/floor/rogue/tile/masonic/sun
+
+/datum/crafting_recipe/roguetown/turfs/tentdoor/colored
+	name = "Blue Tent Door"
+	result = /obj/structure/roguetent/colored
+	tools = list(/obj/item/rogueweapon/huntingknife)
+
+/datum/crafting_recipe/roguetown/turfs/tentdoor/colored/bluedeco
+	name = "Decorated Blue Tent Door"
+	result = /obj/structure/roguetent/colored/bluedeco
+
+/datum/crafting_recipe/roguetown/turfs/tentdoor/colored/brown
+	name = "Brown Tent Door"
+	result = /obj/structure/roguetent/colored/brown
+
+/datum/crafting_recipe/roguetown/turfs/tentdoor/colored/browndeco
+	name = "Decorated Brown Tent Door"
+	result = /obj/structure/roguetent/colored/browndeco
+
+/datum/crafting_recipe/roguetown/turfs/tentdoor/colored/cyan
+	name = "Cyan Tent Door"
+	result = /obj/structure/roguetent/colored/cyan
+
+/datum/crafting_recipe/roguetown/turfs/tentdoor/colored/cyandeco
+	name = "Decorated Cyan Tent Door"
+	result = /obj/structure/roguetent/colored/cyandeco
+
+/datum/crafting_recipe/roguetown/turfs/tentdoor/colored/green
+	name = "Green Tent Door"
+	result = /obj/structure/roguetent/colored/green
+
+/datum/crafting_recipe/roguetown/turfs/tentdoor/colored/greendeco
+	name = "Decorated Green Tent Door"
+	result = /obj/structure/roguetent/colored/greendeco
+
+/datum/crafting_recipe/roguetown/turfs/tentdoor/colored/noc
+	name = "Decorated Navy Tent Door"
+	result = /obj/structure/roguetent/colored/noc
+
+/datum/crafting_recipe/roguetown/turfs/tentdoor/colored/purple
+	name = "Purple Tent Door"
+	result = /obj/structure/roguetent/colored/purple
+
+/datum/crafting_recipe/roguetown/turfs/tentdoor/colored/purpledeco
+	name = "Decorated Purple Tent Door"
+	result = /obj/structure/roguetent/colored/purpledeco
+
+/datum/crafting_recipe/roguetown/turfs/tentdoor/colored/red
+	name = "Red Tent Door"
+	result = /obj/structure/roguetent/colored/red
+
+/datum/crafting_recipe/roguetown/turfs/tentdoor/colored/reddeco
+	name = "Decorated Red Tent Door"
+	result = /obj/structure/roguetent/colored/reddeco
+
+/datum/crafting_recipe/roguetown/turfs/tentwall/blue
+	name = "Blue Tent Wall"
+	result = /turf/closed/wall/mineral/rogue/tent/blue
+	tools = list(/obj/item/rogueweapon/huntingknife)
+
+/datum/crafting_recipe/roguetown/turfs/tentwall/bluedeco
+	name = "Decorated Blue Tent Wall"
+	result = /turf/closed/wall/mineral/rogue/tent/bluedeco
+	tools = list(/obj/item/rogueweapon/huntingknife)
+
+/datum/crafting_recipe/roguetown/turfs/tentwall/brown
+	name = "Brown Tent Wall"
+	result = /turf/closed/wall/mineral/rogue/tent/brown
+	tools = list(/obj/item/rogueweapon/huntingknife)
+
+/datum/crafting_recipe/roguetown/turfs/tentwall/browndeco
+	name = "Decorated Brown Tent Wall"
+	result = /turf/closed/wall/mineral/rogue/tent/browndeco
+	tools = list(/obj/item/rogueweapon/huntingknife)
+
+/datum/crafting_recipe/roguetown/turfs/tentwall/cyan
+	name = "Cyan Tent Wall"
+	result = /turf/closed/wall/mineral/rogue/tent/cyan
+	tools = list(/obj/item/rogueweapon/huntingknife)
+
+/datum/crafting_recipe/roguetown/turfs/tentwall/cyandeco
+	name = "Decorated Cyan Tent Wall"
+	result = /turf/closed/wall/mineral/rogue/tent/cyandeco
+	tools = list(/obj/item/rogueweapon/huntingknife)
+
+/datum/crafting_recipe/roguetown/turfs/tentwall/green
+	name = "Green Tent Wall"
+	result = /turf/closed/wall/mineral/rogue/tent/green
+	tools = list(/obj/item/rogueweapon/huntingknife)
+
+/datum/crafting_recipe/roguetown/turfs/tentwall/greendeco
+	name = "Decorated Green Tent Wall"
+	result = /turf/closed/wall/mineral/rogue/tent/greendeco
+	tools = list(/obj/item/rogueweapon/huntingknife)
+
+/datum/crafting_recipe/roguetown/turfs/tentwall/noc
+	name = "Decorated Navy Tent Wall"
+	result = /turf/closed/wall/mineral/rogue/tent/noc
+	tools = list(/obj/item/rogueweapon/huntingknife)
+
+/datum/crafting_recipe/roguetown/turfs/tentwall/purple
+	name = "Purple Tent Wall"
+	result = /turf/closed/wall/mineral/rogue/tent/purple
+	tools = list(/obj/item/rogueweapon/huntingknife)
+
+/datum/crafting_recipe/roguetown/turfs/tentwall/purpledeco
+	name = "Decorated Purple Tent Wall"
+	result = /turf/closed/wall/mineral/rogue/tent/purpledeco
+	tools = list(/obj/item/rogueweapon/huntingknife)
+
+/datum/crafting_recipe/roguetown/turfs/tentwall/red
+	name = "Red Tent Wall"
+	result = /turf/closed/wall/mineral/rogue/tent/red
+	tools = list(/obj/item/rogueweapon/huntingknife)
+
+/datum/crafting_recipe/roguetown/turfs/tentwall/reddeco
+	name = "Decorated Red Tent Wall"
+	result = /turf/closed/wall/mineral/rogue/tent/reddeco
+	tools = list(/obj/item/rogueweapon/huntingknife)

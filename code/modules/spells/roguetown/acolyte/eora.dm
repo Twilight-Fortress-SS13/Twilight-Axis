@@ -5,6 +5,8 @@
 /obj/effect/proc_holder/spell/invoked/eora_blessing
 	name = "Eora's Blessing"
 	desc = "Bestow a person with Eora's calm, if only for a little while. Restores their mood, as well as a tinge of hunger and thirst."
+	action_icon = 'icons/mob/actions/eoramiracles.dmi'
+	overlay_icon = 'icons/mob/actions/eoramiracles.dmi'
 	sound = 'sound/magic/eora_bless.ogg'
 	devotion_cost = 80
 	recharge_time = 5 MINUTES
@@ -50,11 +52,11 @@
 	// someone out of starvation even with no food, though they'll have to make sure they dont exert themselves.
 	// AS this is recastable, and a secondary effect, its kinda eh.
 	*/
-	
+
 	// EXPECTED RANGE FOR FORMULA: 102 -> 172 (DEVOTEE TO LEGENDARY)
 	H.adjust_nutrition(100 + ((assocskill * assocskill)*2))
 	// Adjust hydration based on skill
-	// Same as above, but adjusts thirst. 
+	// Same as above, but adjusts thirst.
 	H.adjust_hydration(100 + ((assocskill * assocskill)*2))
 
 
@@ -70,7 +72,7 @@
 	. = ..()
 
 	// Add trait
-	ADD_TRAIT(owner, TRAIT_EORAN_SERENE, TRAIT_GENERIC)  //Generic origin so other Eorans do not have their innate traits overridden (they use TRAIT_MIRACLE)
+	ADD_TRAIT(owner, TRAIT_EORAN_SERENE, TRAIT_GENERIC)	//Generic origin so other Eorans do not have their innate traits overridden (they use TRAIT_MIRACLE)
 
 /datum/status_effect/eora_blessing/on_remove()
 	REMOVE_TRAIT(owner, TRAIT_EORAN_SERENE, TRAIT_GENERIC)
@@ -97,7 +99,7 @@
 	// I hate this but let's be consistent.
 	var/datum/patron/patron
 
-/datum/component/blessed_food/Initialize(mob/living/_caster, var/holy_skill, var/patron_init)
+/datum/component/blessed_food/Initialize(mob/living/_caster, holy_skill, patron_init)
 	if(!isitem(parent) || !istype(parent, /obj/item/reagent_containers/food/snacks))
 		return COMPONENT_INCOMPATIBLE
 
@@ -108,12 +110,12 @@
 	quality = F.faretype
 	bitesize_mod = 1 / F.bitesize
 	patron = patron_init
-	F.faretype = clamp(skill, 1, 5)
+	F.faretype = max(clamp(skill, 1, 5), quality)
 	if(skill < 5 || patron.type != /datum/patron/divine/eora)
 		F.add_filter(BLESSED_FOOD_FILTER, 1, list("type" = "outline", "color" = "#ff00ff", "size" = 1))
 	else
 		F.add_filter(BLESSED_FOOD_FILTER, 1, list("type" = "outline", "color" = "#f0b000", "size" = 1))
-	RegisterSignal(F, COMSIG_FOOD_EATEN, .proc/on_food_eaten)
+	RegisterSignal(F, COMSIG_FOOD_EATEN, PROC_REF(on_food_eaten))
 
 /datum/component/blessed_food/proc/on_food_eaten(datum/source, mob/living/eater, mob/living/feeder)
 	SIGNAL_HANDLER
@@ -133,6 +135,8 @@
 	req_items = list(/obj/item/clothing/neck/roguetown/psicross)
 	devotion_cost = 25
 	recharge_time = 90 SECONDS
+	action_icon = 'icons/mob/actions/eoramiracles.dmi'
+	overlay_icon = 'icons/mob/actions/eoramiracles.dmi'
 	overlay_state = "bread"
 	associated_skill = /datum/skill/magic/holy
 	var/base_recharge_time = 90 SECONDS
@@ -171,7 +175,7 @@
 
 /obj/item/clothing/head/peaceflower//Eora content from Stonekeep
 	name = "eoran bud"
-	desc = "A flower of gentle petals, associated with Eora or Necra. Usually adorned as a headress or laid at graves as a symbol of love or peace."
+	desc = "A flower of gentle petals, associated with Eora or Necra. Usually adorned as a headdress or laid at graves as a symbol of love or peace."
 	icon = 'icons/roguetown/items/produce.dmi'
 	mob_overlay_icon = 'icons/roguetown/clothing/onmob/head_items.dmi'
 	icon_state = "peaceflower"
@@ -228,6 +232,8 @@
 	desc = "Tries to grow an Eoran bud on the target tile or on the targets head, forcing their thoughts away from violence until removed."
 	clothes_req = FALSE
 	range = 3
+	action_icon = 'icons/mob/actions/eoramiracles.dmi'
+	overlay_icon = 'icons/mob/actions/eoramiracles.dmi'
 	overlay_state = "love"
 	sound = list('sound/magic/magnet.ogg')
 	req_items = list(/obj/item/clothing/neck/roguetown/psicross)
@@ -277,6 +283,8 @@
 /obj/effect/proc_holder/spell/invoked/eoracurse
 	name = "Eora's Curse"
 	desc = "Makes the target both high and drunk."
+	action_icon = 'icons/mob/actions/eoramiracles.dmi'
+	overlay_icon = 'icons/mob/actions/eoramiracles.dmi'
 	overlay_state = "curse2"
 	releasedrain = 50
 	chargetime = 30
@@ -322,7 +330,7 @@
 /datum/component/eora_bond/partner
 	ispartner = TRUE
 
-/datum/component/eora_bond/Initialize(mob/living/partner_mob, mob/living/caster_mob, var/holy_skill)
+/datum/component/eora_bond/Initialize(mob/living/partner_mob, mob/living/caster_mob, holy_skill)
 	if(!isliving(parent) || !isliving(partner_mob))
 		return COMPONENT_INCOMPATIBLE
 
@@ -347,7 +355,7 @@
 	RegisterSignal(parent, COMSIG_PARENT_QDELETING, PROC_REF(on_deletion))
 
 	START_PROCESSING(SSprocessing, src)
-	addtimer(CALLBACK(src, .proc/remove_bond), duration)
+	addtimer(CALLBACK(src, PROC_REF(remove_bond)), duration)
 
 	var/mob/living/L = parent
 	L.apply_status_effect(/datum/status_effect/eora_bond)
@@ -431,6 +439,8 @@
 	name = "Heartweave"
 	desc = "Interlinks the caster's vitality with a chosen target, sharing any incoming healing-or-damage with each other. </br>If one interlinked person is healed, the other interlinked person will \
 	be healed as well. </br>Likewise, if one interlinked person is damaged, the other interlinked person will be damaged as well."
+	action_icon = 'icons/mob/actions/eoramiracles.dmi'
+	overlay_icon = 'icons/mob/actions/eoramiracles.dmi'
 	overlay_state = "bliss"
 	range = 1
 	chargetime = 0.5 SECONDS
@@ -504,12 +514,14 @@
 /obj/effect/proc_holder/spell/invoked/pomegranate
 	name = "Amaranth Sanctuary"
 	invocations = list("Eora, provide sanctuary for your beauty!")
-	desc = "Grow a pomegrenate tree that when tended to grows Aurils with variety of effects. Additionally heals beatiful people and HEAVILY debuffs both STR and PER for everyone in visible range."
+	desc = "Grow a pomegranate tree that when tended to grows Aurils with variety of effects. Additionally heals beautiful people and HEAVILY debuffs both STR and PER for everyone in visible range."
 	sound = 'sound/magic/magnet.ogg'
 	req_items = list(/obj/item/clothing/neck/roguetown/psicross)
 	devotion_cost = 500
 	recharge_time = 5 SECONDS
 	chargetime = 1 SECONDS
+	action_icon = 'icons/mob/actions/eoramiracles.dmi'
+	overlay_icon = 'icons/mob/actions/eoramiracles.dmi'
 	overlay_state = "tree"
 	associated_skill = /datum/skill/magic/holy
 	var/obj/structure/eoran_pomegranate_tree/my_little_tree = null
@@ -602,7 +614,7 @@
 		if(iscarbon(user))
 			var/mob/living/carbon/human/sacrifice = user
 			visible_message(span_danger("[user] begins altruistically channeling the crimson aril's power to restore the tree."),
-	 		 span_info("I begin channeling the crimson aril's power into the tree using my own blood."))
+					span_info("I begin channeling the crimson aril's power into the tree using my own blood."))
 			if(!do_after(sacrifice, 15 SECONDS))
 				return
 			// same blood loss as using it to heal someone
@@ -612,7 +624,7 @@
 			qdel(I)
 			update_icon()
 			return TRUE
-	if(istype(I, /obj/item/ash))
+	if(is_ash_item(I))
 		if(iscarbon(user))
 			var/mob/living/carbon/c = user
 			if(c.patron.type != /datum/patron/divine/eora)
@@ -620,12 +632,12 @@
 				return TRUE
 		if(ash_offered)
 			to_chat(user, span_warning("Covering the tree in additional ash seems to anger it, leaves flare out and the ash flutters to the floor. The aura is renewed."))
-			qdel(I)
+			consume_ash_unit(I)
 			ash_offered = FALSE
 			aura_range = 7
 			return TRUE
 
-		qdel(I)
+		consume_ash_unit(I)
 		ash_offered = TRUE
 		ash_effect_start_time = world.time
 		to_chat(user, span_notice("The tree shudders as you coats its leaves in ash. The leaves seem to wilt ever so slightly whilst its aura starts to wane."))
@@ -656,7 +668,7 @@
 			if(iscarbon(user))
 				var/mob/living/carbon/C = user
 				add_sleep_experience(user, /datum/skill/labor/farming, C.STAINT * 0.5)
-			
+
 			to_chat(user, span_notice("You prune some branches."))
 			update_icon()
 			return TRUE
@@ -681,7 +693,7 @@
 
 		var/remaining_cap = 25 - water_happiness
 		var/skill = get_farming_skill(user)
-		var/potential_gain = 10 + (skill * 5)  // 10 at skill 0, 25 at skill 3+
+		var/potential_gain = 10 + (skill * 5)	// 10 at skill 0, 25 at skill 3+
 		var/actual_gain = min(potential_gain, remaining_cap)
 		var/action_time = get_skill_delay(skill, fastest = 0.5, slowest = 3)
 
@@ -740,7 +752,7 @@
 
 		qdel(I)
 		tree_offerings += I.type
-		
+
 		happiness = min(happiness + 10, 100)
 		update_happiness_tier()
 
@@ -768,7 +780,7 @@
 	if(ash_offered)
 		ash_offered = FALSE
 		aura_range = 7
-		visible_message(span_notice("The tree shudders as it is harmmed, ash previously covering the leaves is shaken off, and the aura ignites once more."))
+		visible_message(span_notice("The tree shudders as it is harmed, ash previously covering the leaves is shaken off, and the aura ignites once more."))
 	else
 		visible_message(span_notice("The tree shudders as it is harmed. You feel dread emanating from it."))
 	. = ..()
@@ -800,7 +812,7 @@
 		. += span_info("It is fully sated.")
 
 	if(prune_count < 4)
-		. += span_info("The branches look messy. Perhaps a scissor can right this mess.")
+		. += span_info("The branches look messy. Perhaps scissors can right this mess.")
 	else
 		. += span_info("The branches are elaborately pruned.")
 
@@ -911,13 +923,13 @@
 		spawn_fruit()
 
 /obj/structure/eoran_pomegranate_tree/proc/spawn_fruit()
-	if(fruit)  // Already has fruit
+	if(fruit)	// Already has fruit
 		return
 
 	fruit = TRUE
 	fruit_ready = FALSE
 	update_icon()
-	addtimer(CALLBACK(src, .proc/ripen_fruit), rand(10 SECONDS, 15 SECONDS))
+	addtimer(CALLBACK(src, PROC_REF(ripen_fruit)), rand(10 SECONDS, 15 SECONDS))
 
 /obj/structure/eoran_pomegranate_tree/proc/ripen_fruit()
 	fruit_ready = TRUE
@@ -1095,7 +1107,7 @@
 	if(!opened && I.get_sharpness())
 		if ( \
 			!isturf(src.loc) || \
-			!(locate(/obj/structure/table) in src.loc) && \
+			!has_table_surface(src.loc) && \
 			!(locate(/obj/structure/table/optable) in src.loc) && \
 			!(locate(/obj/item/storage/bag/tray) in src.loc) \
 			)

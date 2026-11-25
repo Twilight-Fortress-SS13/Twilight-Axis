@@ -1,5 +1,8 @@
 //Look Sir, free crabs!
 /mob/living/simple_animal/hostile/retaliate/rogue/mudcrab
+	threat_point = THREAT_TRASH
+	anatomy_type = /datum/anatomy/quadruped/trash
+	attack_aim = MOB_AIM_GROUND
 	name = "mudcrab"
 	desc = "A large species of crab populous in both marine and freshwater habitats across the world. It is said that untold millions lurk in the depths, where no crabber could ever reach them! None but Abyssor himself may do more than guess at the contents of the abyss - but they are quite tasty once fried."
 	icon_state = "mudcrab"
@@ -9,7 +12,6 @@
 	emote_hear = list("clicks.")
 	emote_see = list("clacks.")
 	speak_chance = 1
-	turns_per_move = 5
 	base_intents = list(/datum/intent/use)
 	maxHealth = MUDCRAB_HEALTH
 	health = MUDCRAB_HEALTH
@@ -24,30 +26,21 @@
 	response_disarm_simple = "gently push aside"
 	response_harm_continuous = "stomps"
 	response_harm_simple = "stomp"
-	stop_automated_movement = 1
 	friendly_verb_continuous = "pinches"
 	friendly_verb_simple = "pinch"
 	ventcrawler = VENTCRAWLER_ALWAYS
 	var/obj/item/inventory_head
 	var/obj/item/inventory_mask
 	gold_core_spawnable = FRIENDLY_SPAWN
-	
 
-	can_have_ai = FALSE //disable native ai
-	AIStatus = AI_OFF
+
 	ai_controller = /datum/ai_controller/mudcrab
-	
-/mob/living/simple_animal/hostile/retaliate/rogue/mudcrab/Initialize()
+	move_base_delay = MOVEMENT_DELAY_CRAWLING
+
+/mob/living/simple_animal/hostile/retaliate/rogue/mudcrab/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/ai_aggro_system)
 	ai_controller.set_blackboard_key(BB_BASIC_FOODS, food_type)
-	
-/mob/living/simple_animal/mudcrabcrab/Life()
-	..()
-	//CRAB movement
-	if(!ckey && !stat)
-		if(isturf(loc) && !resting && !buckled)		//This is so it only moves if it's not inside a closet, gentics machine, etc.
-			turns_since_move++
 
 /mob/living/simple_animal/hostile/retaliate/rogue/mudcrab/get_sound(input)
 	switch(input)
@@ -70,7 +63,7 @@
 	var/spawning = FALSE
 	attacked_sound = null
 
-/obj/structure/crabnest/Initialize()
+/obj/structure/crabnest/Initialize(mapload)
 	. = ..()
 	spawn_crab()
 

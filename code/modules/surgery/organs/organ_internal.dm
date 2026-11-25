@@ -12,8 +12,8 @@
 	var/maxHealth = STANDARD_ORGAN_THRESHOLD
 	var/damage = 0		//total damage this organ has sustained
 	///Healing factor and decay factor function on % of maxhealth, and do not work by applying a static number per tick
-	var/healing_factor 	= 0										//fraction of maxhealth healed per on_life(), set to 0 for generic organs
-	var/decay_factor 	= 0										//same as above but when without a living owner, set to 0 for generic organs
+	var/healing_factor	= 0										//fraction of maxhealth healed per on_life(), set to 0 for generic organs
+	var/decay_factor	= 0										//same as above but when without a living owner, set to 0 for generic organs
 	var/high_threshold	= STANDARD_ORGAN_THRESHOLD * 0.45		//when severe organ damage occurs
 	var/low_threshold	= STANDARD_ORGAN_THRESHOLD * 0.1		//when minor organ damage occurs
 
@@ -49,6 +49,8 @@
 	var/food_type = /obj/item/reagent_containers/food/snacks/organ
 	/// Whether this organ has ever been inside a mob
 	var/had_owner = FALSE
+
+	embedding = list("embed_chance" = 0) // ...they're not sharp
 
 	grid_width = 32
 	grid_height = 32
@@ -160,21 +162,22 @@
 	return S
 
 /obj/item/reagent_containers/food/snacks/organ
+	dish_type = DISH_MEAT
 	name = "appendix"
 	icon_state = "appendix"
 	icon = 'icons/obj/surgery.dmi'
 	list_reagents = list(/datum/reagent/consumable/nutriment = 5, /datum/reagent/organpoison = 1)
-	foodtype = RAW | MEAT | GROSS
+	food_quality = GROSS
 	eat_effect = /datum/status_effect/debuff/uncookedfood
 	var/obj/item/organ/organ_inside
 
 /obj/item/reagent_containers/food/snacks/organ/On_Consume(mob/living/eater)		//Graggarites looove eating organs, they loooove eating organs!
 	if(HAS_TRAIT(eater, TRAIT_ORGAN_EATER))
 		eat_effect = /datum/status_effect/buff/snackbuff
-		foodtype = RAW | MEAT
+		food_quality = NONE
 	else
 		eat_effect = initial(eat_effect)
-		foodtype = initial(foodtype)
+		food_quality = initial(food_quality)
 	if(bitecount >= bitesize)
 		record_featured_stat(FEATURED_STATS_CRIMINALS, eater)
 		record_round_statistic(STATS_ORGANS_EATEN)
@@ -211,7 +214,7 @@
 			D.process_win(winner = eater, loser = challenger)
 			return TRUE
 
-/obj/item/organ/Initialize()
+/obj/item/organ/Initialize(mapload)
 	. = ..()
 	if(accessory_type && owner)
 		set_accessory_type(accessory_type)
@@ -256,11 +259,11 @@
 	applyOrganDamage(d - damage)
 
 /** check_damage_thresholds
-  * input: M (a mob, the owner of the organ we call the proc on)
-  * output: returns a message should get displayed.
-  * description: By checking our current damage against our previous damage, we can decide whether we've passed an organ threshold.
-  *				 If we have, send the corresponding threshold message to the owner, if such a message exists.
-  */
+	* input: M (a mob, the owner of the organ we call the proc on)
+	* output: returns a message should get displayed.
+	* description: By checking our current damage against our previous damage, we can decide whether we've passed an organ threshold.
+	*					If we have, send the corresponding threshold message to the owner, if such a message exists.
+	*/
 /obj/item/organ/proc/check_damage_thresholds(mob/M)
 	if(damage == prev_damage)
 		return

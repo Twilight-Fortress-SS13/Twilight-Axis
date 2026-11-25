@@ -1,4 +1,5 @@
 /datum/action/cooldown/spell/blink/shadowstep
+	source_aspect = /datum/magic_aspect/pseudo/spellfist
 	name = "Shadowstep"
 	desc = "Project your shadow to swap places with it, teleporting several paces away. Limited to a range of 5 paces. Only works on the same plane as the caster.\n\
 	A variation on the common Blink Spell, developed and perfected by the Yogi of Naledi to requires a much less forceful, whispered invocation and not alert their enemies, while retaining the same utility."
@@ -10,6 +11,10 @@
 	phase_sound = 'sound/magic/shadowstep.ogg'
 	phase_beam = null
 	charge_slowdown = 0
+	cooldown_time = 16 SECONDS
+
+/datum/action/cooldown/spell/blink/shadowstep/vizier
+	cooldown_time = 24 SECONDS
 
 /obj/effect/temp_visual/blink/shadowstep
 	icon_state = "curse"

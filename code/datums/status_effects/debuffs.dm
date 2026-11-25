@@ -82,31 +82,53 @@
 //SLEEPING
 /datum/status_effect/incapacitating/sleeping
 	id = "sleeping"
+	status_type = STATUS_EFFECT_REFRESH
 	alert_type = /atom/movable/screen/alert/status_effect/asleep
 	needs_update_stat = TRUE
 	var/mob/living/carbon/carbon_owner
 	var/mob/living/carbon/human/human_owner
 	var/sleptonground = FALSE
+	var/const/wake_grace = 2 SECONDS
 
-/datum/status_effect/incapacitating/sleeping/on_creation(mob/living/new_owner, updating_canmove)
+/datum/status_effect/incapacitating/sleeping/refresh(mob/living/new_owner, set_duration)
+	if(duration == -1 || !isnum(set_duration)) // never turn an infinite sleep into a finite one cos we're apparently controlled by procs
+		return
+	duration = max(duration, world.time + set_duration)
+
+/datum/status_effect/incapacitating/sleeping/on_creation(mob/living/new_owner, set_duration, updating_canmove)
 	. = ..()
-	if(.)
-		if(owner.cmode)
-			owner.cmode = 0
-		SSdroning.kill_droning(owner.client)
-		SSdroning.kill_loop(owner.client)
-		SSdroning.kill_rain(owner.client)
-		owner.clear_typing_indicator()
-		if(iscarbon(owner)) //to avoid repeated istypes
-			carbon_owner = owner
-		if(ishuman(owner))
-			human_owner = owner
+	if(!.)
+		return
+	if(owner.cmode)
+		owner.cmode = 0
+	SSdroning.kill_droning(owner.client)
+	SSdroning.kill_loop(owner.client)
+	SSdroning.kill_rain(owner.client)
+	owner.clear_typing_indicator()
+	if(owner.sleep_wake_timer) // we were about to wake up? shut fuck
+		deltimer(owner.sleep_wake_timer)
+		owner.sleep_wake_timer = null
+	else if(owner.m_intent != MOVE_INTENT_SNEAK)
+		owner.visible_message(span_info("[owner] falls asleep."), vision_distance = 3)
+	if(iscarbon(owner)) //to avoid repeated istypes
+		carbon_owner = owner
+	if(ishuman(owner))
+		human_owner = owner
 
 /datum/status_effect/incapacitating/sleeping/on_remove()
-	if(ishuman(owner))
-		SSdroning.play_area_sound(get_area(src), owner.client)
-		SSdroning.play_loop(get_area(src), owner.client)
+	if(ishuman(owner) && !QDELETED(owner))
+		owner.sleep_wake_timer = addtimer(CALLBACK(owner, TYPE_PROC_REF(/mob/living, finish_waking)), wake_grace, TIMER_STOPPABLE)
 	. = ..()
+
+/mob/living/proc/finish_waking() // this way we let the grace period do its trick, ideally this will only happen once and that is only if we dont receive another eep within 2 secs, unsure how this will interact with procs forcing sleep tho, if it hits in the 2sec gap, alas, it fixes at least the most egrigious bit
+	sleep_wake_timer = null
+	if(QDELETED(src) || IsSleeping())
+		return
+	SSdroning.play_area_sound(get_area(src), client)
+	SSdroning.play_loop(get_area(src), client)
+	if(m_intent != MOVE_INTENT_SNEAK)
+		visible_message(span_info("[src] stirs, waking up."), vision_distance = 3)
+
 
 /datum/status_effect/incapacitating/sleeping/Destroy()
 	carbon_owner = null
@@ -119,7 +141,7 @@
 		var/healing = -0.2
 		if((locate(/obj/structure/bed) in owner.loc))
 			healing -= 0.3
-		else if((locate(/obj/structure/table) in owner.loc))
+		else if(has_table_surface(owner.loc))
 			healing -= 0.1
 		for(var/obj/item/bedsheet/bedsheet in range(owner.loc,0))
 			if(bedsheet.loc != owner.loc) //bedsheets in my backpack/neck don't give you comfort
@@ -184,35 +206,6 @@
 //GOLEM GANG
 
 //OTHER DEBUFFS
-/datum/status_effect/strandling //get it, strand as in durathread strand + strangling = strandling hahahahahahahahahahhahahaha i want to die
-	id = "strandling"
-	status_type = STATUS_EFFECT_UNIQUE
-	alert_type = /atom/movable/screen/alert/status_effect/strandling
-
-/datum/status_effect/strandling/on_apply()
-	ADD_TRAIT(owner, TRAIT_MAGIC_CHOKE, "dumbmoron")
-	return ..()
-
-/datum/status_effect/strandling/on_remove()
-	REMOVE_TRAIT(owner, TRAIT_MAGIC_CHOKE, "dumbmoron")
-	return ..()
-
-/atom/movable/screen/alert/status_effect/strandling
-	name = "Choking strand"
-	desc = ""
-	icon_state = "his_grace"
-	alerttooltipstyle = "hisgrace"
-
-/atom/movable/screen/alert/status_effect/strandling/Click(location, control, params)
-	. = ..()
-	to_chat(mob_viewer, "<span class='notice'>I attempt to remove the durathread strand from around my neck.</span>")
-	if(do_after(mob_viewer, 35, null, mob_viewer))
-		if(isliving(mob_viewer))
-			var/mob/living/L = mob_viewer
-			to_chat(mob_viewer, "<span class='notice'>I succesfuly remove the durathread strand.</span>")
-			L.remove_status_effect(STATUS_EFFECT_CHOKINGSTRAND)
-
-
 /datum/status_effect/pacify/on_creation(mob/living/new_owner, set_duration)
 	if(isnum(set_duration))
 		duration = set_duration
@@ -285,24 +278,6 @@
 
 /obj/effect/temp_visual/curse
 	icon_state = "curse"
-
-/datum/status_effect/gonbolaPacify
-	id = "gonbolaPacify"
-	status_type = STATUS_EFFECT_MULTIPLE
-	tick_interval = -1
-	alert_type = null
-
-/datum/status_effect/gonbolaPacify/on_apply()
-	ADD_TRAIT(owner, TRAIT_PACIFISM, "gonbolaPacify")
-	ADD_TRAIT(owner, TRAIT_MUTE, "gonbolaMute")
-	ADD_TRAIT(owner, TRAIT_JOLLY, "gonbolaJolly")
-	to_chat(owner, "<span class='notice'>I suddenly feel at peace and feel no need to make any sudden or rash actions...</span>")
-	return ..()
-
-/datum/status_effect/gonbolaPacify/on_remove()
-	REMOVE_TRAIT(owner, TRAIT_PACIFISM, "gonbolaPacify")
-	REMOVE_TRAIT(owner, TRAIT_MUTE, "gonbolaMute")
-	REMOVE_TRAIT(owner, TRAIT_JOLLY, "gonbolaJolly")
 
 /datum/status_effect/trance
 	id = "trance"
@@ -799,7 +774,7 @@
 	if(new_dur)
 		duration = new_dur
 	return ..()
-	
+
 
 /atom/movable/screen/alert/status_effect/debuff/feintcd
 	name = "Feint Cool down"

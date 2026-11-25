@@ -8,7 +8,7 @@
 	speak = list("ribbit","croak")
 	emote_see = list("hops in a circle.", "shakes.")
 	speak_chance = 1
-	turns_per_move = 5
+	ai_controller = /datum/ai_controller/generic/critter/retaliate
 	maxHealth = 15
 	health = 15
 	melee_damage_lower = 5
@@ -30,8 +30,9 @@
 	gold_core_spawnable = HOSTILE_SPAWN
 	var/stepped_sound = 'sound/blank.ogg'
 
-/mob/living/simple_animal/hostile/retaliate/frog/Initialize()
+/mob/living/simple_animal/hostile/retaliate/frog/Initialize(mapload)
 	. = ..()
+	AddElement(/datum/element/ai_retaliate)
 	if(prob(1))
 		name = "rare frog"
 		desc = ""

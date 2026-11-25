@@ -1,7 +1,7 @@
 /datum/patron/old_god
 	name = "Psydon"
-	domain = "Otava, Naledi, Rockhill, and most of Psydonia's outermost fiefs."
-	desc = "  </br>''God. The manifestation of maximal good, and the father of all.'' \
+	domain = "Otava, Naledi, and most of Psydonia's outermost fiefs."
+	desc = "''God. The manifestation of maximal good, and the father of all.'' \
 	</br>''He, who created reality for His children to frollick within.'' \
 	</br>''He, who breathed lyfe into the Pantheon to shepherd His virtues.'' \
 	</br>''He, who sacrificed His strength to strike down the Archdevil with the Comet Syon.'' \
@@ -28,7 +28,12 @@
 
 	titles = list(
 		"God", // people call him this for. some reason. he has a name, y'all
-		"Saidon"
+		"Architect",
+		"Allfather",
+		"Creator",
+		"Father",
+		"Saidon",
+		"Saidun" // lingyue
 	)
 
 /////////////////////////////////
@@ -42,7 +47,7 @@
 	// Allows prayer near psycross.
 	for(var/obj/structure/fluff/psycross/cross in view(4, get_turf(follower)))
 		if(cross.divine == FALSE)
-			to_chat(follower, span_danger("That defiled cross interupts my prayers!"))
+			to_chat(follower, span_danger("That defiled cross interrupts my prayers!"))
 			return FALSE
 		return TRUE
 	// Allows prayer if raining and outside. Psydon weeps.

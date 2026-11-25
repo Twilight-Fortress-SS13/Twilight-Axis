@@ -280,7 +280,7 @@
 	return remove_link_for_pair(L.btm, penis_org, penis_unit_id, who_pulled = actor, forceful = FALSE)
 
 /// Removes a single link with all bookkeeping and effects.
-/datum/component/erp_knotting/proc/remove_single_link(datum/erp_knot_link/L, forceful = FALSE, who_pulled = null)
+/datum/component/erp_knotting/proc/remove_single_link(datum/erp_knot_link/L, forceful = FALSE, who_pulled = null, silent = FALSE)
 	if(!L)
 		return FALSE
 
@@ -290,11 +290,6 @@
 	_remove_from_index(L)
 	_unregister_btm_moved(L.btm)
 
-	if(!L.is_valid())
-		qdel(L)
-		_finalize_if_empty()
-		return TRUE
-
 	var/mob/living/top = L.top
 	var/mob/living/btm = L.btm
 
@@ -302,8 +297,14 @@
 	var/remove_top_status = !has_any_links_for_top(top)
 
 	var/datum/erp_knot_effects/E = SSerp.knot_effects
-	if(E)
+	if(E && !silent && L.is_valid())
 		E.on_knot_removed(src, L, forceful, who_pulled, remove_top_status, remove_btm_status)
+	else
+		// Anatomy changes and invalid links still need to release both participants.
+		if(remove_top_status && !QDELETED(top))
+			top.remove_status_effect(/datum/status_effect/knotted)
+		if(remove_btm_status && !QDELETED(btm))
+			btm.remove_status_effect(/datum/status_effect/knot_tied)
 
 	qdel(L)
 	_finalize_if_empty()
@@ -333,15 +334,14 @@
 
 /// Clears all links and unregisters signals/timers.
 /datum/component/erp_knotting/proc/clear_all_links()
+	stop_decay()
 	if(!active_links || !active_links.len)
 		return
 
 	for(var/i = active_links.len; i >= 1; i--)
 		var/datum/erp_knot_link/L = active_links[i]
 		if(istype(L))
-			_remove_from_index(L)
-			_unregister_btm_moved(L.btm)
-			qdel(L)
+			remove_single_link(L, silent = TRUE)
 
 	active_links.Cut()
 

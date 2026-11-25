@@ -9,24 +9,16 @@
 	icon = 'icons/mob/baroness.dmi'
 	icon_state = "baroness"
 	icon_dead = "baronessdead"
-	wander = 0 //some vars kept for balance tweaking but are default var values
-	vision_range = 8
-	aggro_vision_range = 24
+	ai_controller = /datum/ai_controller/baroness
+	move_base_delay = MOVEMENT_DELAY_SPD_10
 	ranged = 1
 	rapid = 3
 	rapid_fire_delay = 10
 	ranged_message = "casts a spell"
 	ranged_cooldown = 0
 	ranged_cooldown_time = 90
-	ranged_ignores_vision = TRUE
 	check_friendly_fire = 1
 	environment_smash = 0
-	minimum_distance = 1
-	retreat_distance = 0
-	retreat_health = 0.5
-	dodging = TRUE
-	dodge_prob = 10
-	move_to_delay = 3
 	obj_damage = 100
 	base_intents = list(/datum/intent/simple/baroness)
 	melee_damage_lower = 30
@@ -34,7 +26,7 @@
 	health = 3333
 	maxHealth = 3333 //Increased from 3000.
 	speak_chance = 3
-	speak = list("An invader in my fortress?! I will feed your corpse to my pit!", 
+	speak = list("An invader in my fortress?! I will feed your corpse to my pit!",
 	"Disgusting creature, you aren't worth the sum of your parts.",
 	"I will flay your flesh and ensure you are conscious for every agonizing moment!",
 	"Your soul will belong to me - my toy for eternity!")
@@ -52,36 +44,27 @@
 	var/allowed_projectile_types = list(/obj/projectile/magic/lightning, /obj/projectile/magic/frostbolt, /obj/projectile/energy/rogue3, /obj/projectile/magic/acidsplash)
 	patron = /datum/patron/inhumen/zizo
 	footstep_type = FOOTSTEP_MOB_SHOE
-	stat_attack = UNCONSCIOUS
 
 	var/mob_type
 	var/mob/new_mob
-	var/next_cast = 0
 	var/spawned_mobs = 0
 	var/minions_to_spawn = 1
-	var/next_summon = 0
+	var/phase_two_health = 1500
 	var/list/minions = list( /mob/living/carbon/human/species/dwarfskeleton/ambush/knight/summoned = 100)
 
-/mob/living/simple_animal/hostile/boss/baroness/Initialize()
+/mob/living/simple_animal/hostile/boss/baroness/Initialize(mapload)
 	. = ..()
 	//REMOVE_TRAIT(src, TRAIT_SIMPLE_WOUNDS, TRAIT_GENERIC) //Increased damage malus from silver. Minor over-time damage increase from bleeding wounds. Un-// if it's too easy.
 	ADD_TRAIT(src, TRAIT_SILVER_WEAK, TRAIT_GENERIC)
+	ADD_TRAIT(src, TRAIT_NPC_EXAMINE, TRAIT_GENERIC)
+	ADD_TRAIT(src, TRAIT_NOZIZORECRUIT, TRAIT_GENERIC) //Not undead but if we ever change this.
+	AddComponent(/datum/component/ai_aggro_system, aggro_range = 8, maintain_range = 24)
+	var/datum/action/cooldown/spell/baroness_summon/summon = new(src)
+	summon.Grant(src)
 
 /mob/living/simple_animal/hostile/boss/baroness/Shoot()
 	projectiletype = pick(allowed_projectile_types)
 	..()
-
-/mob/living/simple_animal/hostile/boss/baroness/handle_automated_action()
-	. = ..()
-	if(health < 1500)
-		minimum_distance = 3
-		retreat_distance = 3
-		if(target && next_cast < world.time && next_summon < world.time)
-			spawn_minions(minions_to_spawn)
-			INVOKE_ASYNC(src, TYPE_PROC_REF(/atom/movable, say), "Defend your Matriarch!", null, list("colossus", "yell"))
-			next_cast = world.time + 10
-			next_summon = world.time + 1800
-			return .
 
 /obj/projectile/magic/frostbolt/Baroness
 	speed = 11
@@ -178,7 +161,7 @@
 	duration = 10
 	randomdir = FALSE
 
-/obj/effect/temp_visual/baroness_dying/Initialize()
+/obj/effect/temp_visual/baroness_dying/Initialize(mapload)
 	. = ..()
 	visible_message(span_boldannounce("The Baroness' staff shatters and she crumples to the floor."))
 	INVOKE_ASYNC(src, TYPE_PROC_REF(/atom/movable, say), "Mistress!...", null, list("colossus", "yell"))
@@ -192,7 +175,7 @@
 	new /obj/item/clothing/neck/roguetown/ornateamulet(T)
 	return ..()
 
-/mob/living/simple_animal/hostile/retaliate/rogue/boss/baroness/simple_limb_hit(zone)
+/mob/living/simple_animal/hostile/boss/baroness/simple_limb_hit(zone)
 	if(!zone)
 		return ""
 	switch(zone)
@@ -238,7 +221,7 @@
 	name = "baroness"
 	icon_state = "instrike"
 	attack_verb = list("magically slashes", "magically cuts", "magically stabs")
-	animname = "blank22"
+	animname = "cut"
 	blade_class = BCLASS_CUT
 	hitsound = 'sound/combat/hits/bladed/genchop (1).ogg'
 	chargetime = 15

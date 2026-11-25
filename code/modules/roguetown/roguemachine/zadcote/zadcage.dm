@@ -1,3 +1,5 @@
+GLOBAL_LIST_EMPTY(cagent_zadcages)
+
 /obj/item/zadcage
 	name = "zadcage"
 	desc = "A small cage made to ride on a belt. Empty perches inside. Too awkward to fit in most containers."
@@ -59,7 +61,7 @@
 		empty.arrival_time = world.time + ZAD_FLIGHT_OUTBOUND_TIME
 		cote.receive_return(empty)
 		play_zad_ascend(src, current_occupancy.zads_capacity)
-		visible_message(span_warning("The zad lifts from [src] empty - the window closed."))
+		visible_message(span_warning("The zad gives up waiting and lifts from [src] empty."))
 	clear_occupancy()
 	STOP_PROCESSING(SSroguemachine, src)
 
@@ -153,7 +155,7 @@
 		if(active && active != src && !istype(active, /obj/item/zadcage) && "\ref[active]" == payload_ref)
 			var/max_weight = zad_max_weight_for_tier(current_occupancy.zads_capacity)
 			if(active.w_class > max_weight)
-				to_chat(sender, span_warning("[active] is too heavy for the [current_occupancy.zads_capacity] zad return tier."))
+				to_chat(sender, span_warning("[active] is too heavy for [current_occupancy.zads_capacity] zad\s to carry."))
 				return FALSE
 			items += active
 	var/datum/zad_flight/return_flight = new(cote, link, current_occupancy.zads_capacity, current_occupancy.reply_message, items, 0)
@@ -288,3 +290,10 @@
 			if(do_after(usr, ZAD_MANUAL_SEND_DOAFTER, target = src))
 				cote.request_summon(link, usr, zads)
 			return TRUE
+
+/obj/item/zadcage/cagent/Initialize(mapload)
+	. = ..()
+	GLOB.cagent_zadcages += src
+	if(GLOB.hand_zadcote)
+		var/obj/item/roguemachine/zadcote/hand/handcote = GLOB.hand_zadcote
+		handcote.attach_cage(src, null)

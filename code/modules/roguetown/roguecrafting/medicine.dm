@@ -41,6 +41,40 @@
 	skillcraft = /datum/skill/misc/medicine
 	craftdiff = 2
 
+/datum/crafting_recipe/roguetown/survival/decant_heartblood
+	name = "decant heartblood (canister)"
+	display_category = ITEM_CAT_POTION
+	result = list(
+		/obj/item/heart_blood_vial,
+		/obj/item/heart_blood_vial,
+		/obj/item/heart_blood_vial,
+		/obj/item/heart_blood_canister/filled
+		)
+	reqs = list(
+		/obj/item/heart_blood_canister = 1,
+		/obj/item/heart_blood_vial/filled = 3
+		)
+	skillcraft = /datum/skill/misc/medicine
+	craftdiff = 1
+	xp_modifier = 0
+
+/datum/crafting_recipe/roguetown/survival/decant_heartblood_vials
+	name = "decant heartblood (vials)"
+	display_category = ITEM_CAT_POTION
+	result = list(
+		/obj/item/heart_blood_vial/filled,
+		/obj/item/heart_blood_vial/filled,
+		/obj/item/heart_blood_vial/filled,
+		/obj/item/heart_blood_canister
+		)
+	reqs = list(
+		/obj/item/heart_blood_canister/filled = 1,
+		/obj/item/heart_blood_vial = 3
+		)
+	skillcraft = /datum/skill/misc/medicine
+	craftdiff = 1
+	xp_modifier = 0
+
 /datum/crafting_recipe/roguetown/survival/bandage
 	name = "bandages (medicine)"
 	display_category = ITEM_CAT_TOOLS_SUNDRIES
@@ -50,7 +84,7 @@
 	reqs = list(
 		/obj/item/natural/cloth = 1,
 		/obj/item/natural/silk = 1,
-		/obj/item/ash = 1)
+		/obj/item/natural/ash = 1)
 	skillcraft = /datum/skill/misc/medicine
 	craftdiff = 2
 

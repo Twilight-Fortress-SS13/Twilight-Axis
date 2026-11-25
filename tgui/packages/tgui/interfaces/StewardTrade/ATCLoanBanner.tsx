@@ -69,7 +69,7 @@ export const ATCLoanBanner = (props: { atc_loan: AtcLoanState }) => {
       <div style={{ color: INK, marginBottom: '6px' }}>
         {atc_loan.available ? (
           <>
-            The clerk receives applications for emergency loan of{' '}
+            The ATC receives applications for an emergency loan of{' '}
             <b>
               {atc_loan.min}m to {atc_loan.max}m
             </b>{' '}
@@ -81,7 +81,7 @@ export const ATCLoanBanner = (props: { atc_loan: AtcLoanState }) => {
             {atc_loan.closed_day}.
           </>
         ) : (
-          atc_loan.blocker || 'The clerk is unavailable.'
+          atc_loan.blocker || 'No loan available right now.'
         )}
       </div>
       {!!atc_loan.arrears_consumed && (
@@ -102,7 +102,7 @@ export const ATCLoanBanner = (props: { atc_loan: AtcLoanState }) => {
         <div
           style={{ color: INK_FAINT, fontSize: FONT_BODY, marginBottom: '6px' }}
         >
-          Loans drawn this week: {atc_loan.loans_drawn}.
+          Loans taken this week: {atc_loan.loans_drawn}.
         </div>
       )}
       {!!atc_loan.available && (
@@ -120,7 +120,7 @@ export const ATCLoanBanner = (props: { atc_loan: AtcLoanState }) => {
               : undefined
           }
         >
-          <span>Draw:</span>
+          <span>Amount:</span>
           <NumberInput
             value={amount}
             minValue={atc_loan.min}
@@ -139,7 +139,7 @@ export const ATCLoanBanner = (props: { atc_loan: AtcLoanState }) => {
             disabled={aldermanActing}
             onClick={() => act('take_atc_loan', { amount })}
           >
-            Approach the Clerk
+            Take Loan
           </Button.Confirm>
         </div>
       )}

@@ -35,6 +35,11 @@
 	appearance_flags = NO_CLIENT_COLOR
 	var/blood_timer
 	var/blood_color = BLOOD_COLOR_RED
+	var/is_gibs = FALSE
+	/// Whether this blood has dried and can no longer be stepped through
+	var/dry = FALSE
+	/// Whether this blood is nudged off-centre when it spawns
+	var/jitter = TRUE
 
 /obj/effect/decal/cleanable/blood/proc/set_blood_color(new_blood_color)
 	blood_color = new_blood_color || BLOOD_COLOR_RED
@@ -47,10 +52,10 @@
 	GLOB.weather_act_upon_list += src
 	if(. == INITIALIZE_HINT_QDEL)
 		return .
-	pixel_x = rand(-5,5)
-	pixel_y = rand(5,5)
+	if(jitter)
+		pixel_x = rand(-5,5)
+		pixel_y = rand(5,5)
 	blood_timer = addtimer(CALLBACK(src, PROC_REF(become_dry)), rand(5 MINUTES,8 MINUTES), TIMER_STOPPABLE)
-
 
 /obj/effect/decal/cleanable/blood/proc/become_dry()
 	if(QDELETED(src))
@@ -58,9 +63,13 @@
 	name = "dry [initial(name)]"
 	icon = initial(icon)
 	var/list/RGB = ReadRGB(blood_color)
-	if(RGB)
+	if(RGB && !is_gibs)
 		color = rgb(RGB[1] * 0.5, RGB[2] * 0.5, RGB[3] * 0.5)
+	if(is_gibs)
+		// Very soft darkening.
+		color = "#cfbebe"
 	bloodiness = 0
+	dry = TRUE
 
 /obj/effect/decal/cleanable/blood/replace_decal(obj/effect/decal/cleanable/C)
 	. = ..()
@@ -82,11 +91,22 @@
 		return
 	qdel(src)
 
+/obj/effect/decal/cleanable/blood/Crossed(atom/movable/O)
+	. = ..()
+	if(dry || !isliving(O) || istype(src, /obj/effect/decal/cleanable/blood/footprints) || istype(src, /obj/effect/decal/cleanable/blood/bigprint))
+		return
+	var/mob/living/L = O
+	if(L.mob_size < MOB_SIZE_LARGE || (L.movement_type & FLYING))
+		return
+	L.bloodsteps = BIGPRINT_STEPS
+	L.stepcolour = blood_color
+
 /obj/effect/decal/cleanable/blood/old
 	name = "dried blood"
 	desc = ""
 	bloodiness = 0
 	icon_state = "floor1-old"
+	dry = TRUE
 
 /obj/effect/decal/cleanable/blood/old/Initialize(mapload)
 	add_blood_DNA(list("Non-human DNA" = random_blood_type())) // Needs to happen before ..()
@@ -118,6 +138,42 @@
 	desc = ""
 	random_icon_states = null
 	beauty = -50
+
+/obj/effect/decal/cleanable/blood/squirt
+	icon_state = "squirt_greyscale"
+	random_icon_states = null
+	mergeable_decal = FALSE
+	jitter = FALSE
+
+/obj/effect/decal/cleanable/blood/spray
+	icon_state = "splatter_greyscale"
+	random_icon_states = list("splatter_greyscale", "splatterbloodalt_greyscale")
+	jitter = FALSE
+
+/obj/effect/decal/cleanable/blood/spray/wall
+	plane = GAME_PLANE
+	layer = BULLET_HOLE_LAYER
+
+/obj/effect/decal/cleanable/blood/spray/wall/Initialize(mapload, color, sdir)
+	. = ..()
+	setDir(sdir)
+	if(sdir & NORTH)
+		pixel_y = 32
+	else if(sdir & SOUTH)
+		pixel_y = -32
+	if(sdir & EAST)
+		pixel_x = 32
+	else if(sdir & WEST)
+		pixel_x = -32
+
+/obj/effect/decal/cleanable/blood/bigprint
+	name = "bloody prints"
+	icon_state = "bubblegumfoot"
+	random_icon_states = null
+	bloodiness = 0
+	alpha = 160
+	beauty = -50
+	jitter = FALSE
 
 /obj/effect/decal/cleanable/trail_holder //not a child of blood on purpose
 	name = "blood"
@@ -169,9 +225,31 @@
 	layer = LOW_OBJ_LAYER
 	random_icon_states = list("gib1", "gib2", "gib3", "gib4", "gib5", "gib6")
 	mergeable_decal = FALSE
+	is_gibs = TRUE
 
 	var/already_rotting = FALSE
 
+/obj/effect/decal/cleanable/blood/gibs/Initialize(mapload, new_color)
+	. = ..()
+	if(!new_color || new_color == BLOOD_COLOR_RED)
+		remove_atom_colour(WASHABLE_COLOUR_PRIORITY) // Clears it from atom_colours list
+		remove_atom_colour(FIXED_COLOUR_PRIORITY)
+		color = null
+		blood_color = null
+	// Aka, if there's no custom species blood color set, keep these as the nice default sprite.
+	if(color == BLOOD_COLOR_RED)
+		color = null
+		blood_color = null
+
+/obj/effect/decal/cleanable/blood/gibs/set_blood_color(new_blood_color)
+	if(!new_blood_color || new_blood_color == BLOOD_COLOR_RED)
+		remove_atom_colour(WASHABLE_COLOUR_PRIORITY)
+		remove_atom_colour(FIXED_COLOUR_PRIORITY)
+		color = null
+		blood_color = null
+	else
+		blood_color = new_blood_color
+		color = blood_color
 
 /obj/effect/decal/cleanable/blood/gibs/Crossed(mob/living/L)
 	if(istype(L))
@@ -213,6 +291,18 @@
 /obj/effect/decal/cleanable/blood/gibs/core
 	icon_state = "gibmid1"
 	random_icon_states = list("gibmid1", "gibmid2", "gibmid3")
+
+/obj/effect/decal/cleanable/blood/gibs/beast
+	icon_state = "gibbear1"
+	random_icon_states = list("gibbear1", "gibbear2", "gibbear3", "gibbear4", "gibbear5")
+
+/obj/effect/decal/cleanable/blood/gibs/beast/head
+	icon_state = "gibbearhead"
+	random_icon_states = null
+
+/obj/effect/decal/cleanable/blood/gibs/beast/core
+	icon_state = "gibbearcore"
+	random_icon_states = null
 
 /obj/effect/decal/cleanable/blood/gibs/old
 	name = "old rotting gibs"
@@ -270,6 +360,16 @@
 		else
 			P.update_icon()
 		return TRUE
+
+/obj/effect/decal/cleanable/blood/drip/big
+	name = "drops of blood"
+	icon_state = "bigdrip_1"
+	random_icon_states = list("bigdrip_1", "bigdrip_2", "bigdrip_3", "bigdrip_4")
+
+/obj/effect/decal/cleanable/blood/drip/big/update_icon()
+	var/state = icon_state
+	..()
+	icon_state = state
 
 /obj/effect/decal/cleanable/blood/puddle
 	name = "puddle of blood"
@@ -365,7 +465,7 @@
 		var/obj/item/clothing/shoes/S = H.shoes
 		if(istype(S) && S.bloody_shoes[blood_state])
 			S.bloody_shoes[blood_state] = max(S.bloody_shoes[blood_state] - BLOOD_LOSS_PER_STEP, 0)
-			shoe_types  |= S.type
+			shoe_types	|= S.type
 			if (!(exited_dirs & H.dir))
 				exited_dirs |= H.dir
 				update_icon()
@@ -425,7 +525,7 @@
 		return 1
 	return 0
 
-//For fancy wall messes... 
+//For fancy wall messes...
 /obj/effect/decal/cleanable/blood/splatter/walls
 	icon_state = "splatter1"
 	plane = GAME_PLANE
@@ -449,4 +549,3 @@
 
 /obj/effect/decal/cleanable/blood/splatter/walls/replace_decal(obj/effect/decal/cleanable/C)
 	return //We don't want to replace decals for wall turfs since these are unique. May be changed in the future if it's too much.
-	

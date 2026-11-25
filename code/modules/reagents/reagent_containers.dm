@@ -55,6 +55,12 @@
 	if(!iscarbon(eater))
 		return FALSE
 	var/mob/living/carbon/C = eater
+	//TA edit - Bard chages start
+	if(C.is_blocked_by_music_consumption())
+		if(!silent)
+			to_chat(user || eater, span_warning("I can't eat or drink while performing music."))
+		return FALSE
+	//TA edit - Bard chages end
 
 	var/obj/item/bodypart/head/dullahan/eaterrelay
 	if(ishuman(src))
@@ -100,11 +106,6 @@
 	. = ..()
 	SplashReagents(hit_atom, TRUE)
 
-/obj/item/reagent_containers/proc/bartender_check(atom/target)
-	. = FALSE
-	if(target.CanPass(src, get_turf(src)) && thrownby && HAS_TRAIT(thrownby, TRAIT_BOOZE_SLIDER))
-		. = TRUE
-
 /obj/item/reagent_containers/proc/SplashReagents(atom/target, thrown = FALSE)
 	if(!reagents || !reagents.total_volume || !spillable)
 		return
@@ -117,15 +118,11 @@
 		target.visible_message(span_danger("[M] has been splashed with something!"), \
 						span_danger("[M] has been splashed with something!"))
 		for(var/datum/reagent/A in reagents.reagent_list)
-			R += "[A.type]  ([num2text(A.volume)]),"
+			R += "[A.type]	([num2text(A.volume)]),"
 
 		if(thrownby)
 			log_combat(thrownby, M, "splashed", R)
 		reagents.reaction(target, TOUCH)
-
-	else if(bartender_check(target) && thrown)
-		visible_message(span_notice("[src] lands onto the [target.name] without spilling a single drop."))
-		return
 
 	else
 		if(isturf(target) && reagents.reagent_list.len && thrownby)

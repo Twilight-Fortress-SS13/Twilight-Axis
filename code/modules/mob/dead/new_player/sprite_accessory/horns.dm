@@ -6,7 +6,7 @@
 	default_colors = list("#555555")
 
 /datum/sprite_accessory/horns/is_visible(obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
-	return is_human_part_visible(owner, HIDEEARS|HIDEHAIR)
+	return is_human_part_visible(owner, HIDEHORNS)
 
 /datum/sprite_accessory/horns/adjust_appearance_list(list/appearance_list, obj/item/organ/organ, obj/item/bodypart/bodypart, mob/living/carbon/owner)
 	generic_gender_feature_adjust(appearance_list, organ, bodypart, owner, OFFSET_FACE, OFFSET_FACE_F)
@@ -141,7 +141,7 @@
 	icon_state = "ramcurledsmall"
 
 /datum/sprite_accessory/horns/smallramhornsalt
-	name  = "Small Ram Horns Alt"
+	name = "Small Ram Horns Alt"
 	icon_state = "ramcurledsmallalt"
 
 /datum/sprite_accessory/horns/smallramhornsthree
@@ -274,6 +274,10 @@
 	name = "Tiefling Alt"
 	icon_state = "tiebhornsalt"
 
+/datum/sprite_accessory/horns/sarkaz
+	name = "Sarkaz"
+	icon_state = "sarkaz"
+
 /datum/sprite_accessory/horns/halforc
 	name = "Orc"
 	icon = 'icons/mob/sprite_accessory/halforc.dmi'
@@ -285,3 +289,19 @@
 	icon = 'icons/mob/sprite_accessory/halforc.dmi'
 	icon_state = "longtusk"
 	default_colors = list("#F4F4BE")
+
+/datum/sprite_accessory/horns/zard
+	name = "Zardish"
+	icon_state = "zard"
+
+/datum/sprite_accessory/horns/zard_cloth
+	name = "Zardish (Cloth)"
+	icon_state = "zard_cloth"
+	color_keys = 2
+	color_key_names = list("Horns", "Cloth")
+	default_colors = list("#555555", "#B41919")
+	relevant_layers = list(BODY_ADJ_LAYER)
+
+/datum/sprite_accessory/horns/goblin
+	name = "Goblin"
+	icon_state = "goblinhorns"
