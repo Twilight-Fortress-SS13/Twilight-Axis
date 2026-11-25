@@ -603,6 +603,69 @@
 
 	GLOB.bogged_players -= L.real_name
 
+// --- Hag Desertzoomerzone mechanics ---
+
+/datum/status_effect/buff/hag_boon/natural_communion/New()
+	..()
+	natural_turfs |= list(/turf/open/floor/rogue/crimsondunes, /turf/open/floor/rogue/darkpath)
+
+/datum/status_effect/buff/hag_boon/creeping_moss/New()
+	..()
+	natural_turfs |= list(/turf/open/floor/rogue/crimsondunes, /turf/open/floor/rogue/darkpath)
+
+/obj/effect/proc_holder/spell/self/wildshape/hag_true_form/cast(list/targets, mob/living/carbon/human/user = usr)
+	if(!COOLDOWN_FINISHED(user, hag_transform_lockout))
+		to_chat(user, span_warning("My essence is too scattered to reform yet. Wait [DisplayTimeText(COOLDOWN_TIMELEFT(user, hag_transform_lockout))]."))
+		revert_cast(user)
+		return FALSE
+
+	var/area/A = get_area(user)
+	if(!istype(A, /area/rogue/outdoors/bog) && !istype(A, /area/rogue/indoors/shelter/bog) && !istype(A, /area/rogue/indoors/shelter/bog_hag) && !istype(A, /area/rogue/outdoors/bograt) && !istype(A, /area/rogue/under/cavewet) && !istype(A, /area/rogue/outdoors/desertzoomerzone))
+		to_chat(user, span_warning("The air here is too pure. I can only reveal my true self within the Terrorbog or my Hut!"))
+		revert_cast(user)
+		return FALSE
+
+	. = ..()
+	return TRUE
+
+/datum/status_effect/debuff/hag_bog_tether/wildshape/tick()
+	var/mob/living/carbon/human/species/wildshape/hag/H = owner
+	if(!istype(H))
+		return
+
+	var/area/A = get_area(H)
+	if(!istype(A, /area/rogue/outdoors/bog) && !istype(A, /area/rogue/indoors/shelter/bog) && !istype(A, /area/rogue/indoors/shelter/bog_hag) && !istype(A, /area/rogue/outdoors/bograt) && !istype(A, /area/rogue/under/cavewet) && !istype(A, /area/rogue/outdoors/desertzoomerzone))
+		to_chat(H, span_userdanger("The purity of the air shatters my form!"))
+
+		var/mob/living/carbon/human/original = H.stored_mob
+		if(original)
+			COOLDOWN_START(original, hag_transform_lockout, 2 MINUTES)
+
+		H.wildshape_untransform()
+		H.remove_status_effect(/datum/status_effect/debuff/hag_bog_tether/wildshape)
+
+/datum/status_effect/debuff/hag_bog_tether/tick()
+	var/mob/living/L = owner
+	if(!L)
+		return
+
+	var/area/A = get_area(L)
+
+	if(!istype(A, /area/rogue/outdoors/bog) && !istype(A, /area/rogue/indoors/shelter/bog) && !istype(A, /area/rogue/indoors/shelter/bog_hag) && !istype(A, /area/rogue/outdoors/desertzoomerzone))
+		to_chat(L, span_userdanger("The air is too pure! My monstrous form cannot sustain itself away from the Mother's roots!"))
+
+		var/obj/shapeshift_holder/H = locate() in L
+		if(H)
+			var/mob/living/carbon/human/hum = H.stored
+			COOLDOWN_START(hum, hag_transform_lockout, 2 MINUTES)
+			H.restore()
+		return
+
+/mob/living/consider_ambush(always = FALSE, ignore_cooldown = FALSE, min_dist = 1, max_dist = 9, silent = FALSE, budget_multiplier_floor = 0)
+	if(!always && HAS_TRAIT(src, TRAIT_BOGWALKER) && istype(get_area(src), /area/rogue/outdoors/desertzoomerzone))
+		return FALSE
+	return ..()
+
 /area/rogue/under/dungeon/alLuqmani
 	name = "Kuzaim al-Luqmani tomb"
 	loot_budget = LOOT_BUDGET_RH_FOREST_SOUTH

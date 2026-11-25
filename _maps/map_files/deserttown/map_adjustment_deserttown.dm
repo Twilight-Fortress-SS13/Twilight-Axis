@@ -73,7 +73,7 @@
 	)
 	/// Jobs that this map won't use
 	blacklist = list(
-		/datum/job/roguetown/hag,
+		// /datum/job/roguetown/hag,
 		// /datum/job/roguetown/adventurer//Adventurers (Could rename which are 'foreigners but who cares)'
 		// /datum/job/roguetown/wretch,
 		/datum/job/roguetown/bandit,
