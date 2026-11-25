@@ -85,6 +85,8 @@
 	if(ishuman(H))
 		var/mob/living/carbon/human/Hu = H
 		Hu.verbs += /mob/living/carbon/human/verb/hold_breath
+		Hu.verbs += /mob/living/carbon/human/verb/emote_hag_cackle
+		Hu.verbs += /mob/living/carbon/human/verb/emote_hag_laugh
 
 /mob/living/carbon/human/verb/hold_breath()
 	set name = "Задержать дыхание"
@@ -111,4 +113,38 @@
 			span_notice("Ты задерживаешь свое дыхание.")
 		)
 
+
+/datum/emote/living/hag_cackle
+	key = "hag_cackle"
+	key_third_person = "злобно хихикает"
+	message_muffled = "злобно хихикает!"
+	emote_type = EMOTE_AUDIBLE
+	nomsg = TRUE
+	show_runechat = FALSE
+
+/mob/living/carbon/human/verb/emote_hag_cackle()
+	set name = "Хихиканье карги"
+	set category = "Emotes.Noises"
+
+	if(!mind || mind.assigned_role != "Hag")
+		return
+
+	emote("hag_cackle", intentional = TRUE)
+
+/datum/emote/living/hag_laugh
+	key = "hag_laugh"
+	key_third_person = "злобно смеётся"
+	message_muffled = "злобно смеётся!"
+	emote_type = EMOTE_AUDIBLE
+	nomsg = TRUE
+	show_runechat = FALSE
+
+/mob/living/carbon/human/verb/emote_hag_laugh()
+	set name = "Смех карги"
+	set category = "Emotes.Noises"
+
+	if(!mind || mind.assigned_role != "Hag")
+		return
+
+	emote("hag_laugh", intentional = TRUE)
 // TA EDIT END
