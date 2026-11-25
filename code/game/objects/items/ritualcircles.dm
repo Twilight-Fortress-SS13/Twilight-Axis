@@ -718,7 +718,7 @@
 	var/obj/upgraded_rune_type = /obj/structure/active_abyssor_rune/greater
 
 /obj/item/abyssal_marker/get_examine_highlight_status()
-	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, "Оно раскалывает барьер между реальностью и КОШМАРОМ")
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, "Оно раскалывает барьер между реальностью и КОШМАРОМ") // TA EDIT
 
 /obj/item/abyssal_marker/volatile
 	name = "volatile abyssal marker"

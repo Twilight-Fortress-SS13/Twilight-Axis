@@ -50,7 +50,7 @@
 		return null
 	return list("text" = "Quality: <b>[capitalize(word)]</b> ([qpct]% value)", "style" = style)
 
-/obj/item/proc/can_reveal_heresy(mob/user, severity) //TA EDIT START
+/obj/item/proc/can_reveal_heresy(mob/user, severity) // TA EDIT START
 	if(!user)
 		return FALSE
 	if(isliving(user))
@@ -66,7 +66,7 @@
 		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD)
 			if(HAS_TRAIT(user, TRAIT_INQUISITION))
 				return TRUE*/
-	return TRUE //TA EDIT END
+	return TRUE // TA EDIT END
 
 /obj/item/examine(mob/user)
 	. = ..()
@@ -148,10 +148,10 @@
 	var/examine_highlight_status = get_examine_highlight_status()
 	if(examine_highlight_status)
 		var/severity = examine_highlight_status[1]
-		if(can_reveal_heresy(user, severity)) //TA EDIT
+		if(can_reveal_heresy(user, severity)) // TA EDIT START
 			var/heresy_desc = get_examine_highlight_description(examine_highlight_status, itis = FALSE, allcaps = FALSE)
 			var/heresy_tooltip = get_examine_highlight_explanation(severity)
-			. += span_info(SPAN_TOOLTIP_DANGEROUS_HTML(heresy_tooltip, heresy_desc))
+			. += span_info(SPAN_TOOLTIP_DANGEROUS_HTML(heresy_tooltip, heresy_desc)) // TA EDIT END
 
 	if(isbait)
 		var/baitquality
