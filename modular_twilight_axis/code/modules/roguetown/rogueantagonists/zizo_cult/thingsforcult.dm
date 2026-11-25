@@ -883,7 +883,7 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zlightonmob.dmi'
 	icon_state = "zlbrigantine"
 	item_state = "zlbrigantine"
-	max_integrity = 300
+	max_integrity = 325
 	armor = ARMOR_BRIGANDINE
 	smeltresult = /obj/item/ingot/steel/zizo
 	sellprice = 0
@@ -910,7 +910,7 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zlightonmob.dmi'
 	icon_state = "zhaubergeon"
 	item_state = "zhaubergeon"
-	max_integrity = 250
+	max_integrity = 325
 	armor = ARMOR_MAILLE
 	smeltresult = /obj/item/ingot/steel/zizo
 	sellprice = 0
@@ -934,7 +934,7 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zlightonmob.dmi'
 	icon_state = "zbpants"
 	item_state = "zbpants"
-	max_integrity = 250
+	max_integrity = 275
 	armor = ARMOR_BRIGANDINE
 	smeltresult = /obj/item/ingot/steel/zizo
 	sellprice = 0
@@ -973,7 +973,7 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zlightonmob.dmi'
 	icon_state = "zcoif"
 	item_state = "zcoif"
-	max_integrity = 400
+	max_integrity = 350
 	armor = ARMOR_MAILLE
 	smeltresult = /obj/item/ingot/steel/zizo
 	sellprice = 0
