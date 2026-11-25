@@ -2,8 +2,8 @@
 	if(!check_rights())
 		return
 	log_admin("[key_name(usr)] checked the player panel.")
-	message_admins("[key_name_admin(usr)] checked the player panel.")
-	var/dat = "<html><head><meta http-equiv='X-UA-Compatible' content='IE=edge'/><title>Player Panel</title></head>"
+	message_admins("[key_name_admin(usr)] checked the player panel.") // TA EDIT
+	var/dat = "<html><head><meta charset='UTF-8'><meta http-equiv='X-UA-Compatible' content='IE=edge'/><title>Player Panel</title></head>"
 
 	//javascript, the part that does most of the work~
 	dat += {"

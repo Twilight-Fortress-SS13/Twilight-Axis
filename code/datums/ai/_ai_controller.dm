@@ -87,6 +87,10 @@ have ways of interacting with a specific atom and control it. They posses a blac
 	var/next_climb_time = 0
 	///Delay between climb attempts so AI doesn't rapidly hop back and forth across fences.
 	var/climb_interval = 10 SECONDS
+	var/climb_windup = 0
+	var/turf/climb_windup_turf
+	var/climb_ready_time = 0
+	var/turf/climb_failed_turf
 	///
 	var/movement_displacement_time = 0
 
@@ -248,6 +252,15 @@ have ways of interacting with a specific atom and control it. They posses a blac
 /datum/ai_controller/proc/ai_can_interact()
 	SHOULD_CALL_PARENT(TRUE)
 	return !QDELETED(pawn)
+
+/datum/ai_controller/proc/climb_windup_done(turf/climb_turf)
+	if(!climb_windup)
+		return TRUE
+	if(climb_windup_turf != climb_turf)
+		climb_windup_turf = climb_turf
+		climb_ready_time = world.time + climb_windup
+		return FALSE
+	return world.time >= climb_ready_time
 
 ///Interact with objects
 /datum/ai_controller/proc/ai_interact(target, combat_mode, nextmove = FALSE, list/modifiers)
@@ -518,6 +531,9 @@ have ways of interacting with a specific atom and control it. They posses a blac
 	set_ai_status(AI_STATUS_ON)
 
 /datum/ai_controller/proc/force_aggro(mob/living/target, threat = AGGRO_THREAT_TAUNT)
+	var/mob/living/simple_animal/forced_mount = pawn // TA EDIT START
+	if(istype(forced_mount) && forced_mount.mount_initialized)
+		return FALSE // TA EDIT END
 	if(QDELETED(target) || target == pawn)
 		return FALSE
 	insert_blackboard_key_lazylist(BB_BASIC_MOB_RETALIATE_LIST, target)

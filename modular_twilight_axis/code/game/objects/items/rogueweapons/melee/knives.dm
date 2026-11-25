@@ -107,7 +107,7 @@
 	smeltresult = /obj/item/ingot/silver
 	is_silver = TRUE
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/baotha
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/poison
 	name = "snakes sting"
 	desc = "The blade is skillfully crafted and appears to be designed for stealthy assassinations. There are visible streaks of a bubbling substance on its blade."
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/32.dmi'
@@ -116,23 +116,21 @@
 	throwforce = 40
 	force = 25
 	wdefense = 4
-	var/last_cut = 0
-	var/last_drug = 0
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/get_examine_highlight_status()
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/poison/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_BAOTHA_WEAPON)
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/Initialize()
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/poison/Initialize()
 	. = ..()
 	icon_state = "baotha_knife1"
 	addtimer(CALLBACK(src, "icon_proc"), wait = (1 SECONDS))
 	AddComponent(/datum/component/cursed_item, TRAIT_CRACKHEAD, "KNIFE")
 	RegisterSignal(src, COMSIG_ITEM_ATTACK_EFFECT_SELF, PROC_REF(on_hit_effects))
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/proc/icon_proc()
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/poison/proc/icon_proc()
 	icon_state = "baotha_knife2"
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/attack_self(var/mob/living/carbon/human/user)
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/poison/attack_self(mob/living/carbon/human/user)
 	if(user.patron.type == /datum/patron/inhumen/baotha)
 		if(do_after(user, 10, target = src))
 			var/obj/item/clothing/ring/baotha/S = new/obj/item/clothing/ring/baotha(get_turf(src.loc))
@@ -144,8 +142,7 @@
 		else
 			to_chat(user, "<span class='notice'>I losing concentration!</span>")
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/proc/on_hit_effects(obj/item/source, mob/living/user, obj/item/bodypart/affecting, intent, mob/living/victim, selzone)
-	SIGNAL_HANDLER
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/poison/proc/on_hit_effects(obj/item/source, mob/living/user, obj/item/bodypart/affecting, intent, mob/living/victim, selzone)
 
 	if(!istype(victim, /mob/living/carbon))
 		return
@@ -167,25 +164,23 @@
 
 	if(!HAS_TRAIT(target, TRAIT_PSYCHOSIS))
 		ADD_TRAIT(target, TRAIT_PSYCHOSIS, "baothaknife")
-		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(baothapsychosis), target), wait = 1 MINUTES)
+		addtimer(CALLBACK(src, PROC_REF(baothapsychosis), target), wait = 1 MINUTES)
 
 	target.hallucination = rand(1,60)
 	to_chat(target, span_warning(selected_hallucination))
 	target.Jitter(5)
 
 	if(prob(50))
-		addtimer(CALLBACK(target, "emote", pick("giggle","laugh","chuckle")), 0)
+		victim.emote(pick("giggle","laugh","chuckle"), forced = TRUE)
 
-	if(last_cut + 10 SECONDS >= world.time) return
-	//target.blur_eyes(5)
-	//target.adjust_blurriness(10)
-	target.adjustToxLoss(9)
-	last_cut = world.time
-	if(last_drug + 8 SECONDS >= world.time) return
-	target.reagents.add_reagent(drug, 1.6)
-	last_drug = world.time
+	if(TIMER_COOLDOWN_FINISHED(user,"baothaknife_tox"))
+		TIMER_COOLDOWN_START(user,"baothaknife_tox", 10 SECONDS)
+		target.adjustToxLoss(9)
+	if(TIMER_COOLDOWN_FINISHED(user,"baothaknife_drug"))
+		TIMER_COOLDOWN_START(user,"baothaknife_drug", 8 SECONDS)
+		target.reagents.add_reagent(drug, 1.6)
 
-/proc/baothapsychosis(mob/living/carbon/target)
+/obj/item/rogueweapon/huntingknife/idagger/steel/baotha/poison/proc/baothapsychosis(mob/living/carbon/target)
 	if(QDELETED(target))
 		return
 
@@ -211,7 +206,7 @@
 		if(prob(15))
 			to_chat(M, span_warning("I'M SO WEAK NOW! STOP IT!!.."))
 		M.apply_status_effect(/datum/status_effect/debuff/exposed)
-		M.Slowdown(5)
+		M.apply_status_effect(/datum/status_effect/debuff/slowed, 5)
 
 	else if(amt >= 5)
 		M.energy_add(-20)
