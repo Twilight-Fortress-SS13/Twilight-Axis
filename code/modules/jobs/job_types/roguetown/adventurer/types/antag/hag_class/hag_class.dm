@@ -9,9 +9,9 @@
 							TRAIT_HOMESTEAD_EXPERT, TRAIT_SEWING_EXPERT,
 							TRAIT_ZOMBIE_IMMUNE, TRAIT_NOMOOD,
 							TRAIT_UNLYCKERABLE, TRAIT_BOGWALKER,
-							TRAIT_NITEVISION, TRAIT_NOHUNGER, // TA EDIT - ORIGINAL: TRAIT_DARKVISION, TRAIT_NOHUNGER,
+							TRAIT_DARKVISION, TRAIT_NOHUNGER,
 							TRAIT_TECHNOPHOBE, TRAIT_NOPVE, TRAIT_UNCONVERTIBLE,
-							TRAIT_NOWW, TRAIT_NODISMEMBER, TRAIT_DEATHSIGHT, TRAIT_SOUL_EXAMINE)// TA EDIT - ORIGINAL: TRAIT_NOWW, TRAIT_NODISMEMBER) // decapping does in fact bug the hell out of revives and thelike
+							TRAIT_NOWW, TRAIT_NODISMEMBER) // decapping does in fact bug the hell out of revives and thelike
 	reset_stats = TRUE
 	subclass_stats = list(
 		STATKEY_STR = -7,
@@ -41,6 +41,7 @@
 		/datum/skill/magic/holy = SKILL_LEVEL_MASTER,
 		/datum/skill/labor/farming = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/labor/butchering = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/labor/lumberjacking = SKILL_LEVEL_JOURNEYMAN
 		// TA ADDITION END
 	)
 	subclass_languages = list(
@@ -63,7 +64,11 @@
 	beltl = /obj/item/storage/belt/rogue/pouch/coins/aalloy
 	beltr = /obj/item/roguekey/hag
 	backpack_contents = list(
-		/obj/item/handmirror = 1
+		/obj/item/handmirror = 1,
+		// TA ADDITION START
+		/obj/item/chalk = 1,
+		/obj/item/ritechalk = 1,
+		// TA ADDITION END
 	)
 	if(H.mind)
 		add_verb(H, /mob/living/carbon/human/proc/commune_with_roots)
