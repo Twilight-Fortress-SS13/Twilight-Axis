@@ -350,13 +350,14 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone.dmi'
 	icon_state = "Zmaul"
 	name = "cursed mace"
-	force = 30
-	force_wielded = 38
+	force = 25
+	force_wielded = 32
 	wdefense = 5
 	max_integrity = 320
 	special = /datum/special_intent/ground_smash/cult
 
 /datum/special_intent/ground_smash/cult
+	requires_wielding = TRUE
 	cooldown = 60 SECONDS
 	tile_coordinates = list(list(0,0), list(0,1, 0.1 SECONDS), list(0,2, 0.2 SECONDS), list(1,0), list(1,1, 0.1 SECONDS), list(1,2, 0.1 SECONDS), list(-1,0), list(-1,1, 0.1 SECONDS), list(-1,2, 0.1 SECONDS))
 
@@ -882,8 +883,8 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zlightonmob.dmi'
 	icon_state = "zlbrigantine"
 	item_state = "zlbrigantine"
-	max_integrity = 325
-	armor = list("blunt" = DR_HEAVY, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_HEAVY, "fire" = DR_NONE, "bullet" = DR_HEAVY)
+	max_integrity = 300
+	armor = ARMOR_BRIGANDINE
 	smeltresult = /obj/item/ingot/steel/zizo
 	sellprice = 0
 	sleeved = null
@@ -909,8 +910,8 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zlightonmob.dmi'
 	icon_state = "zhaubergeon"
 	item_state = "zhaubergeon"
-	max_integrity = 400
-	armor = list("blunt" = DR_MEDIUM, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_MEDIUM, "fire" = DR_NONE, "bullet" = DR_MEDIUM)
+	max_integrity = 250
+	armor = ARMOR_MAILLE
 	smeltresult = /obj/item/ingot/steel/zizo
 	sellprice = 0
 	sleeved = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zlightsleeves.dmi'
@@ -933,8 +934,8 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zlightonmob.dmi'
 	icon_state = "zbpants"
 	item_state = "zbpants"
-	max_integrity = 325
-	armor = list("blunt" = DR_HEAVY, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_HEAVY, "fire" = DR_NONE, "bullet" = DR_HEAVY)
+	max_integrity = 250
+	armor = ARMOR_BRIGANDINE
 	smeltresult = /obj/item/ingot/steel/zizo
 	sellprice = 0
 	sleeved = null
@@ -973,7 +974,7 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	icon_state = "zcoif"
 	item_state = "zcoif"
 	max_integrity = 400
-	armor = list("blunt" = DR_MEDIUM, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_MEDIUM, "fire" = DR_NONE, "bullet" = DR_MEDIUM)
+	armor = ARMOR_MAILLE
 	smeltresult = /obj/item/ingot/steel/zizo
 	sellprice = 0
 	body_parts_covered = NECK|MOUTH|NOSE|HAIR|EARS|HEAD
