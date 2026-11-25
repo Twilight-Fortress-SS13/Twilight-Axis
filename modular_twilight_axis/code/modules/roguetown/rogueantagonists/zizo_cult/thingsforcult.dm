@@ -987,3 +987,14 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 
 /obj/item/clothing/neck/roguetown/chaincoif/cult/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)
+
+
+/obj/item/clothing/shoes/roguetown/boots/armor/zizo/rite_light
+	armor_class = ARMOR_CLASS_LIGHT
+	armor = ARMOR_PLATE
+
+/obj/item/clothing/gloves/roguetown/plate/zizo/rite_light
+	armor_class = ARMOR_CLASS_LIGHT
+
+/obj/item/clothing/wrists/roguetown/bracers/zizo/rite_light
+	armor_class = ARMOR_CLASS_LIGHT
