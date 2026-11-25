@@ -1221,7 +1221,8 @@
 	current_cycle++
 	if(holder)
 		holder.remove_reagent(type, metabolization_rate)
-	M.apply_status_effect(/datum/status_effect/buff/desert_spice)
+	if(!M.has_status_effect(/datum/status_effect/buff/desert_spice))
+		M.apply_status_effect(/datum/status_effect/buff/desert_spice)
 	return TRUE
 
 /datum/reagent/druqks/desert_spice/on_mob_metabolize(mob/living/M)
@@ -1237,6 +1238,7 @@
 
 /datum/status_effect/buff/desert_spice
 	id = "desert_spice"
+	status_type = STATUS_EFFECT_UNIQUE
 	alert_type = /atom/movable/screen/alert/status_effect/buff/desert_spice
 	effectedstats = list(STATKEY_STR = 3, STATKEY_PER = 3, STATKEY_INT = 3, STATKEY_CON = 3, STATKEY_WIL = 3, STATKEY_SPD = 3)
 	duration = 3 MINUTES
