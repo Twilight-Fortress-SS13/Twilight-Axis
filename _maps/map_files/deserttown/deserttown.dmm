@@ -3640,6 +3640,10 @@
 	},
 /turf/open/floor/carpet/royalblack,
 /area/rogue/indoors/town/bath/desert)
+"aJO" = (
+/obj/effect/landmark/forlorne,
+/turf/open/floor/rogue/lightpath,
+/area/rogue/outdoors/desertdeep)
 "aJV" = (
 /mob/living/carbon/human/species/elf/dark/drowraider,
 /obj/machinery/light/rogue/candle/blue/r,
@@ -5977,6 +5981,12 @@
 /obj/structure/fluff/railing/corner,
 /turf/open/floor/rogue/ruinedwood/herringbone_clear,
 /area/rogue/indoors/town/manor/desert)
+"bhK" = (
+/obj/effect/landmark/forlorne,
+/turf/open/floor/rogue/tile/brownbrick{
+	icon = 'modular_deserttown/icons/alt/roguefloor.dmi'
+	},
+/area/rogue/under/town/sewer/alashur)
 "bhO" = (
 /obj/structure/table/wood/poor{
 	pixel_y = -4
@@ -8409,6 +8419,10 @@
 	},
 /turf/open/floor/carpet/purple,
 /area/rogue/indoors/town/shop/desert)
+"bGq" = (
+/obj/effect/landmark/forlorne,
+/turf/open/floor/rogue/lightpath,
+/area/rogue/outdoors/desertdeepwest/above)
 "bGr" = (
 /obj/structure/bookcase/random,
 /turf/open/floor/rogue/ruinedwood{
@@ -17978,6 +17992,10 @@
 	dir = 1
 	},
 /area/rogue/outdoors/desertdeepwest/above)
+"dwJ" = (
+/obj/effect/landmark/forlorne,
+/turf/open/floor/rogue/naturalstone,
+/area/rogue/under/desertdark)
 "dwR" = (
 /obj/structure/closet/crate/chest,
 /obj/item/paper{
@@ -22115,6 +22133,10 @@
 	},
 /turf/closed/wall/mineral/rogue/decostone,
 /area/rogue/indoors/town/church)
+"emo" = (
+/obj/effect/landmark/forlorne,
+/turf/open/floor/rogue/dunes,
+/area/rogue/outdoors/desertdeepwest/above)
 "ems" = (
 /obj/structure/closet/crate/chest/wicker,
 /obj/item/reagent_containers/food/snacks/rogue/meat/steak,
@@ -45683,6 +45705,10 @@
 /obj/machinery/light/rogue/firebowl/stump,
 /turf/open/floor/rogue/dirt/road/desert,
 /area/rogue/outdoors/desert)
+"iNI" = (
+/obj/effect/landmark/forlorne,
+/turf/open/floor/rogue/naturalstone/sandstone,
+/area/rogue/under/cave)
 "iNJ" = (
 /obj/structure/chair/smallbench{
 	dir = 1
@@ -55228,6 +55254,10 @@
 	},
 /turf/open/floor/rogue/churchbrick,
 /area/rogue/outdoors/caves)
+"kDO" = (
+/obj/effect/landmark/forlorne,
+/turf/open/floor/rogue/church,
+/area/rogue/indoors/shelter/desertdeep)
 "kDQ" = (
 /obj/structure/spider/stickyweb{
 	plane = -3
@@ -60109,6 +60139,10 @@
 	icon = 'modular_deserttown/icons/alt/roguefloor.dmi'
 	},
 /area/rogue/indoors/town/academy/desert)
+"lBA" = (
+/obj/effect/landmark/forlorne,
+/turf/open/floor/rogue/lightpath,
+/area/rogue/under/cave)
 "lBI" = (
 /obj/structure/fluff/statue/femalestatue1{
 	pixel_y = -7
@@ -96771,6 +96805,10 @@
 /obj/structure/spider/stickyweb,
 /turf/open/floor/rogue/naturalstone,
 /area/rogue/under/dungeon/alLuqmani)
+"sum" = (
+/obj/effect/landmark/forlorne,
+/turf/open/floor/rogue/dirt,
+/area/rogue/under/town/sewer/alashur)
 "suB" = (
 /obj/effect/decal/cleanable/blood/gibs/up,
 /turf/open/floor/rogue/darkpath,
@@ -119549,6 +119587,10 @@
 	},
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/indoors/town/desert/warden)
+"wJg" = (
+/obj/effect/landmark/forlorne,
+/turf/open/floor/rogue/lightpath,
+/area/rogue/outdoors/desertdeep/above)
 "wJj" = (
 /obj/effect/decal/desertgrassedge{
 	dir = 8
@@ -163515,7 +163557,7 @@ pbN
 pbN
 kqF
 lpr
-lpr
+dwJ
 lJg
 lJg
 rez
@@ -184976,7 +185018,7 @@ lpr
 lpr
 lpr
 lpr
-lpr
+dwJ
 lpr
 lpr
 lpr
@@ -225749,7 +225791,7 @@ xHE
 xHE
 sNw
 sNw
-xHE
+sum
 xHE
 xHE
 xHE
@@ -253624,7 +253666,7 @@ kvr
 kvr
 kvr
 eBo
-eBo
+lBA
 eBo
 kvr
 kvr
@@ -269823,7 +269865,7 @@ vdE
 vdE
 wWU
 aqx
-vmB
+aJO
 vmB
 eWR
 vmB
@@ -300169,7 +300211,7 @@ kvr
 kvr
 kvr
 vmB
-vmB
+aJO
 vmB
 vmB
 vmB
@@ -304765,7 +304807,7 @@ uBv
 uBv
 ngG
 uBv
-uBv
+iNI
 wPj
 wPj
 qVX
@@ -318410,7 +318452,7 @@ ikJ
 oYM
 qRs
 bOg
-vao
+bhK
 isK
 qVX
 qVX
@@ -494167,7 +494209,7 @@ mQK
 mQK
 mQK
 mQK
-xUA
+emo
 xUA
 xUA
 xUA
@@ -495047,7 +495089,7 @@ lak
 lak
 lak
 lak
-lak
+bGq
 lak
 lak
 lak
@@ -507743,7 +507785,7 @@ mQK
 mQK
 mQK
 mQK
-xUA
+emo
 xUA
 xUA
 xUA
@@ -566615,7 +566657,7 @@ dMO
 dMO
 dMO
 dMO
-dMO
+wJg
 dMO
 dMO
 dMO
@@ -586881,7 +586923,7 @@ xRy
 dMO
 dMO
 dMO
-dMO
+wJg
 dMO
 dMO
 dMO
@@ -617898,7 +617940,7 @@ mQK
 mQK
 mQK
 lak
-lak
+bGq
 lak
 lak
 lak
@@ -640245,7 +640287,7 @@ eNG
 lak
 lak
 lak
-lak
+bGq
 lAU
 pnr
 mQK
@@ -662708,7 +662750,7 @@ kme
 kme
 bWH
 xrk
-xrk
+kDO
 xrk
 rNc
 kme
