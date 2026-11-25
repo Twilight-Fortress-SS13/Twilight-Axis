@@ -1196,13 +1196,115 @@
 
 /obj/item/desert_spice
 	name = "desert spice"
-	desc = "A handful of unrefined desert spice. Valued by merchants."
+	desc = "A handful of unrefined desert spice. Highly intoxicating and valued by merchants."
 	icon = 'modular_deserttown/icons/desert_spice.dmi'
 	icon_state = "desert_spice"
+	item_state = "spice"
+	parent_type = /obj/item/reagent_containers/powder
+	volume = 15
+	list_reagents = list(/datum/reagent/druqks/desert_spice = 15)
+	grind_results = list(/datum/reagent/druqks/desert_spice = 15)
 	grid_width = 32
 	grid_height = 32
 	w_class = WEIGHT_CLASS_SMALL
-	sellprice = 25
+	sellprice = 55
+	materia = list(/datum/materia_aspect/air)
+
+/datum/reagent/druqks/desert_spice
+	name = "desert spice"
+	description = "An unrefined yet extraordinarily potent narcotic spice from the deep desert."
+	color = "#60A584"
+	overdose_threshold = 16
+	metabolization_rate = 0.05
+
+/datum/reagent/druqks/desert_spice/on_mob_life(mob/living/carbon/M)
+	current_cycle++
+	if(holder)
+		holder.remove_reagent(type, metabolization_rate)
+	M.apply_status_effect(/datum/status_effect/buff/desert_spice)
+	return TRUE
+
+/datum/reagent/druqks/desert_spice/on_mob_metabolize(mob/living/M)
+	return
+
+/datum/reagent/druqks/desert_spice/on_mob_end_metabolize(mob/living/M)
+	return
+
+/atom/movable/screen/alert/status_effect/buff/desert_spice
+	name = "Desert Spice High"
+	desc = "A furious surge of unrefined desert spice courses through your body. Your body and senses are pushed far beyond their natural limits, but the strain is lethal."
+	icon_state = "acid"
+
+/datum/status_effect/buff/desert_spice
+	id = "desert_spice"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/desert_spice
+	effectedstats = list(STATKEY_STR = 3, STATKEY_PER = 3, STATKEY_INT = 3, STATKEY_CON = 3, STATKEY_WIL = 3, STATKEY_SPD = 3)
+	duration = 3 MINUTES
+	tick_interval = 2 SECONDS
+
+/datum/status_effect/buff/desert_spice/on_apply()
+	. = ..()
+	if(owner?.client)
+		owner.overlay_fullscreen("druqk", /atom/movable/screen/fullscreen/druqks)
+		owner.set_drugginess(35)
+		ADD_TRAIT(owner, TRAIT_DRUQK, "desert_spice")
+		SSdroning.area_entered(get_area(owner), owner.client)
+		if(owner.client.screen && owner.client.screen.len)
+			var/atom/movable/screen/plane_master/game_world/PM = locate(/atom/movable/screen/plane_master/game_world) in owner.client.screen
+			PM?.backdrop(owner)
+			PM = locate(/atom/movable/screen/plane_master/game_world_fov_hidden) in owner.client.screen
+			PM?.backdrop(owner)
+			PM = locate(/atom/movable/screen/plane_master/game_world_above) in owner.client.screen
+			PM?.backdrop(owner)
+		owner.add_stress(/datum/stressevent/high)
+		to_chat(owner, span_notice("A rush of scorching energy courses through your veins! Your senses and strength soar to unnatural heights!"))
+	owner.sate_addiction(/datum/charflaw/addiction/junkie)
+
+/datum/status_effect/buff/desert_spice/tick(wait)
+	if(!owner)
+		return
+	owner.set_drugginess(35)
+	if(prob(5))
+		if(owner.gender == FEMALE)
+			owner.emote(pick("twitch_s", "giggle"))
+		else
+			owner.emote(pick("twitch_s", "chuckle"))
+	if(duration != -1)
+		var/time_left = duration - world.time
+		if(time_left <= 30 SECONDS && time_left > 26 SECONDS)
+			to_chat(owner, span_warning("Your body feels like a raging furnace on the brink of tearing itself apart!"))
+
+/datum/status_effect/buff/desert_spice/on_remove()
+	if(owner?.client)
+		owner.clear_fullscreen("druqk")
+		owner.set_drugginess(0)
+		REMOVE_TRAIT(owner, TRAIT_DRUQK, "desert_spice")
+		SSdroning.play_area_sound(get_area(owner), owner.client)
+		if(owner.client.screen && owner.client.screen.len)
+			var/atom/movable/screen/plane_master/game_world/PM = locate(/atom/movable/screen/plane_master/game_world) in owner.client.screen
+			PM?.backdrop(owner)
+			PM = locate(/atom/movable/screen/plane_master/game_world_fov_hidden) in owner.client.screen
+			PM?.backdrop(owner)
+			PM = locate(/atom/movable/screen/plane_master/game_world_above) in owner.client.screen
+			PM?.backdrop(owner)
+		owner.remove_stress(/datum/stressevent/high)
+	if(iscarbon(owner))
+		var/mob/living/carbon/C = owner
+		if(C.can_heartattack() && !C.undergoing_cardiac_arrest())
+			C.set_heartattack(TRUE)
+			C.visible_message(span_danger("[C] clutches at [C.p_their()] chest as [C.p_their()] heart suddenly gives out!"), \
+				span_userdanger("An agonizing pang shoots through your chest! Your overworked heart violently stops beating!"))
+			C.adjustOxyLoss(25)
+		else
+			C.visible_message(span_danger("[C] violently spasms as the unrefined spice tears [C.p_them()] apart from within!"), \
+				span_userdanger("The sheer unnatural strain of the spice tears through your form, extinguishing your life!"))
+			C.death()
+	else if(isliving(owner))
+		var/mob/living/L = owner
+		L.visible_message(span_danger("[L] collapses lifelessly as the spice completely overwhelms [L.p_them()]!"))
+		L.death()
+	. = ..()
+
 
 //Throne
 /obj/structure/roguethrone/desert
