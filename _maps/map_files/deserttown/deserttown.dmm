@@ -94306,6 +94306,13 @@
 /obj/structure/fluff/railing/corner/north_east,
 /turf/open/floor/rogue/hexstone,
 /area/rogue/under/cave/dwarffortress)
+"rWH" = (
+/obj/structure/roguemachine/hag_ward{
+	pixel_x = -7;
+	pixel_y = 12
+	},
+/turf/open/floor/rogue/grassred,
+/area/rogue/outdoors/desertzoomerzone)
 "rWN" = (
 /turf/open/floor/rogue/darkpath,
 /area/rogue/indoors/shelter/desertdeep)
@@ -105248,6 +105255,10 @@
 	},
 /turf/open/floor/rogue/tile/harem,
 /area/rogue/indoors/town/manor/desert)
+"tUH" = (
+/obj/structure/roguemachine/hag_ward,
+/turf/open/floor/rogue/grassred,
+/area/rogue/outdoors/desertzoomerzone)
 "tUL" = (
 /obj/effect/decal/remains/human,
 /turf/open/floor/rogue/lightpath,
@@ -495544,9 +495555,9 @@ xQC
 oIg
 xQC
 dwe
-dPn
 dwe
-dPn
+rWH
+dwe
 xQC
 xQC
 xQC
@@ -495856,8 +495867,8 @@ oIg
 tFy
 dwe
 ewh
-tFy
-dPn
+dwe
+dwe
 xQC
 xQC
 xQC
@@ -495933,7 +495944,7 @@ dwe
 dwe
 gCC
 dwe
-dwe
+tUH
 dwe
 dwe
 dPn
@@ -498732,7 +498743,7 @@ wwF
 wwF
 wwF
 wwF
-dwe
+tUH
 dPn
 dPn
 dwe
