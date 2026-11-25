@@ -22,11 +22,6 @@
 	reqs = list(/obj/item/alch/hag_moss/lullaby = 1, /obj/item/alch/manabloompowder = 1)
 	craftdiff = 6
 
-/datum/crafting_recipe/roguetown/alchemy/hag/smoke_moss
-	name = "moss smoke"
-	result = list(/obj/item/alch/hag_moss/enchanted/smoke = 1)
-	reqs = list(/obj/item/alch/hag_moss/sorrow = 1, /obj/item/natural/cloth = 1)
-
 /datum/crafting_recipe/roguetown/alchemy/hag/rage_moss
 	name = "moss rage"
 	result = list(/obj/item/alch/hag_moss/enchanted/rage = 1)
@@ -36,12 +31,6 @@
 	name = "moss power"
 	result = list(/obj/item/alch/hag_moss/enchanted/power = 1)
 	reqs = list(/obj/item/alch/hag_moss/fury = 1, /obj/item/alch/hag_moss/envy = 1)
-
-/obj/item/alch/hag_moss/enchanted/smoke
-	name = "Smoke Moss"
-	boon_path = /datum/hag_boon/buff/pleasent_cloud
-	desc = "This moss feels like powder to the touch, and it smells like herbs."
-	color = "#408d8d"
 
 /obj/item/alch/hag_moss/enchanted/boned
 	name = "Boned Moss"

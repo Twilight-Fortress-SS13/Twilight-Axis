@@ -95,11 +95,25 @@
 	desc = "The bearer will see if someone smarter or dumber or him, and will see a little more information about enemy."
 	points = 10
 
+/datum/hag_boon/trait/party_leader
+	name = "Trait - Party Leader"
+	desc = "The bearer will become good leader, giving boosts while he is leader of fellowship."
+	points = 30
+
+/datum/hag_boon/trait/party_leader/apply_boon_effect(mob/living/L)
+	L.LoadComponent(/datum/component/tat_party_leader)
+	return
+
+/datum/hag_boon/trait/party_leader/remove_boon_effect(mob/living/L)
+	var/datum/component/tat_party_leader/component = L.GetComponent(/datum/component/tat_party_leader)
+	qdel(component)
+	return
+
 /datum/hag_boon/trait/noc_light_blessing
 	name = "Trait - Noc Blessing"
 	trait_to_apply = TRAIT_NOC_LIGHT_BLESSING
 	desc = "The bearer will become stronger at night."
-	points = 30
+	points = 40
 
 /datum/hag_boon/trait/civil_barbarian
 	name = "Trait - Unarmed Amplifier"
@@ -137,14 +151,14 @@
 
 /datum/hag_boon/trait/civil_barbarian/apply_boon_effect(mob/living/L)
 	. = ..()
-	L.adjust_skillrank(/datum/skill/combat/unarmed, 2, TRUE)
-	L.adjust_skillrank(/datum/skill/combat/wrestling, 2, TRUE)
+	L.adjust_skillrank_up_to(/datum/skill/combat/unarmed, 4, TRUE)
+	L.adjust_skillrank_up_to(/datum/skill/combat/wrestling, 4, TRUE)
 	return
 
 /datum/hag_boon/trait/civil_barbarian/remove_boon_effect(mob/living/L)
 	. = ..()
-	L.adjust_skillrank(/datum/skill/combat/unarmed, 2, TRUE)
-	L.adjust_skillrank(/datum/skill/combat/wrestling, 2, TRUE)
+	L.adjust_skillrank(/datum/skill/combat/unarmed, -2, TRUE)
+	L.adjust_skillrank(/datum/skill/combat/wrestling, -2, TRUE)
 	return
 
 /datum/hag_boon/trait/expert_smithing/apply_boon_effect(mob/living/L)
