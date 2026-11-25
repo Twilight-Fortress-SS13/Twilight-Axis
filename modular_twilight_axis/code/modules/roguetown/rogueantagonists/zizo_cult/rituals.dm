@@ -742,7 +742,14 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 		target.regenerate_limbs()
 		target.heal_wounds(500)
 		if(target.stat == DEAD)
-			target.revive()
+			if(!target.revive())
+				return
+			var/datum/antagonist/zombie/zombie_antag = target.mind?.has_antag_datum(/datum/antagonist/zombie)
+			if(zombie_antag)
+				zombie_antag.become_rotman = FALSE
+				target.mind.remove_antag_datum(/datum/antagonist/zombie)
+				target.remove_status_effect(/datum/status_effect/zombie_infection)
+				clean_body_parts(target)
 		target.apply_status_effect(/datum/status_effect/debuff/fleshmend_exhaustion)
 		to_chat(target, span_notice("ZIZO EMPOWERS ME!"))
 
