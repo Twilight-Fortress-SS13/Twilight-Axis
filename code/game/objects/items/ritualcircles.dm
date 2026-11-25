@@ -1530,10 +1530,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 				return
 			var/onrune = view(1, loc)
 			var/list/folksonrune = list()
-			var/is_spy = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic/spy)
-			for(var/mob/living/carbon/human/persononrune in onrune)
-				if(is_spy && persononrune == user)
-					continue
+			for(var/mob/living/carbon/human/persononrune in onrune) // TA EDIT
 				if(HAS_TRAIT(persononrune, TRAIT_CABAL))
 					folksonrune += persononrune
 			var/mob/living/carbon/human/target = input(user, "Choose a host") as null|anything in folksonrune
@@ -1777,10 +1774,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 				return
 			var/onrune = view(1, loc)
 			var/list/folksonrune = list()
-			var/is_spy = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic/spy)
-			for(var/mob/living/carbon/human/persononrune in onrune)
-				if(is_spy && persononrune == user)
-					continue
+			for(var/mob/living/carbon/human/persononrune in onrune) // TA EDIT
 				if(HAS_TRAIT(persononrune, TRAIT_FREEMAN))
 					folksonrune += persononrune
 			var/mob/living/carbon/human/target = input(user, "Choose a host") as null|anything in folksonrune
@@ -1799,7 +1793,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 				return
 			icon_state = "matthios_active"
 			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
-			var/is_heretic = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic || /datum/advclass/wretch/heretic/spy || /datum/advclass/gnoll/shaman)
+			var/is_heretic = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic) || istype(user.mind?.picked_advclass, /datum/advclass/gnoll/shaman) // TA EDIT
 			if(is_heretic)
 				user.apply_status_effect(/datum/status_effect/debuff/armamentrites)
 			matthiosarmaments(target)
@@ -1975,10 +1969,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 				return
 			var/onrune = view(1, loc)
 			var/list/folksonrune = list()
-			var/is_spy = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic/spy)
-			for(var/mob/living/carbon/human/persononrune in onrune)
-				if(is_spy && persononrune == user)
-					continue
+			for(var/mob/living/carbon/human/persononrune in onrune) // TA EDIT
 				if(HAS_TRAIT(persononrune, TRAIT_HORDE))
 					folksonrune += persononrune
 			var/mob/living/carbon/human/target = input(user, "Choose a host") as null|anything in folksonrune
@@ -2015,7 +2006,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 				return
 			icon_state = "graggar_active"
 			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
-			var/is_heretic = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic || /datum/advclass/wretch/heretic/spy || /datum/advclass/gnoll/shaman)
+			var/is_heretic = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic) || istype(user.mind?.picked_advclass, /datum/advclass/gnoll/shaman) // TA EDIT
 			if(is_heretic)
 				user.apply_status_effect(/datum/status_effect/debuff/armamentrites)
 			graggararmor(target, helm_choice, armor_choice, weapon_choice) // TA EDIT
