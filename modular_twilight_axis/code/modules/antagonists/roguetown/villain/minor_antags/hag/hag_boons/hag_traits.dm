@@ -107,6 +107,17 @@
 	desc = "The bearer will parry far more effectively with bracers, knuckles, and bandages, strike harder with unarmed attacks, and be able to reach any limb with their fists and feet."
 	points = 30
 
+/datum/hag_boon/trait/woodsman
+	name = "Trait - Woodsman"
+	trait_to_apply = TRAIT_WOODSMAN
+	desc = "The bearer's senses will be sharpened while outside of town."
+	points = 40
+
+/datum/hag_boon/trait/guardsman
+	name = "Trait - Guardsman"
+	trait_to_apply = TRAIT_GUARDSMAN
+	desc = "The bearer's senses will be sharpened while in the town."
+	points = 40
 
 // MODULAR CHANGES
 // Anyone can use this with just having magica, why do it cost 40???
