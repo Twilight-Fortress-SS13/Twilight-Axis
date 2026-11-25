@@ -139,7 +139,7 @@
 		C.ta_climate_dry_over_fire(src, user) // TA EDIT
 		return TRUE // TA EDIT
 	var/datum/skill/craft/cooking/cs = user?.get_skill_level(/datum/skill/craft/cooking)
-	var/cooktime_divisor = get_cooktime_divisor(cs)
+	var/cooktime_divisor = get_skill_speed_divisor(cs)
 	if(cookonme && on)
 		if(istype(W, /obj/item/seeds))
 			user.visible_message("<span class='notice'>[user] starts roasting [W] over [src]...</span>")

@@ -239,6 +239,11 @@
 	icon_state = "albootsb"
 	item_state = "albootsb"
 
+// For NPC usage
+/obj/item/clothing/shoes/roguetown/boots/leather/reinforced/shoddy
+	name = "shoddy hardened leather boots"
+	max_integrity = 75
+
 /obj/item/clothing/shoes/roguetown/boots/otavan
 	name = "otavan leather boots"
 	desc = "Boots of outstanding craft, your fragile feet have never felt so protected and comfortable before."
@@ -527,7 +532,7 @@
 
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha
 	name = "saccharine heels"
-	desc = "Yet, as the lepers begged for comfort from Eora, she gave them naught but love and platitude; and Belladoth's heart throbbed with pity."
+	desc = "She cared not for weeping and suffering of her subjects, for they cared not for her own struggle." //TA EDIT
 	icon_state = "baothaboots"
 	item_state = "baothaboots"
 	chunkcolor = "#6d1c87"

@@ -31,7 +31,7 @@
 		return 1
 	if(mover.throwing)
 		return 1
-	if(locate(/obj/structure/table) in get_turf(mover))
+	if(has_table_surface(get_turf(mover)))
 		return 1
 	return !density
 
@@ -149,6 +149,20 @@
 		burn_out()
 		return TRUE
 	return ..()
+
+/obj/machinery/light/rogue/campfire/fireplace/OnCrafted(dirin)
+	pixel_x = 0
+	pixel_y = 0
+	switch(dirin)
+		if(NORTH)
+			pixel_y = 32
+		if(SOUTH)
+			pixel_y = -32
+		if(EAST)
+			pixel_x = 32
+		if(WEST)
+			pixel_x = -32
+	. = ..()
 
 /obj/machinery/light/rogue/candle
 	name = "candles"
@@ -469,7 +483,7 @@
 		return 1
 	if(mover.throwing)
 		return 1
-	if(locate(/obj/structure/table) in get_turf(mover))
+	if(has_table_surface(get_turf(mover)))
 		return 1
 	else
 		return !density
@@ -490,7 +504,7 @@
 
 /obj/machinery/light/rogue/hearth/attack_right(mob/user)
 	var/datum/skill/craft/cooking/cs = user?.get_skill_level(/datum/skill/craft/cooking)
-	var/cooktime_divisor = get_cooktime_divisor(cs)
+	var/cooktime_divisor = get_skill_speed_divisor(cs)
 	var/fan_time = 2 SECONDS / cooktime_divisor
 	if(!on)
 		to_chat(user, span_notice("[src] is not lit."))
@@ -785,7 +799,7 @@
 
 /obj/machinery/light/rogue/campfire/attack_right(mob/user)
 	var/datum/skill/craft/cooking/cs = user?.get_skill_level(/datum/skill/craft/cooking)
-	var/cooktime_divisor = get_cooktime_divisor(cs)
+	var/cooktime_divisor = get_skill_speed_divisor(cs)
 	var/fan_time = 2 SECONDS / cooktime_divisor
 	if(!on)
 		to_chat(user, span_notice("[src] is not lit."))
@@ -799,6 +813,19 @@
 		fan_crafts(FAN_PROGRESS_BONUS)
 
 /obj/machinery/light/rogue/campfire/attackby(obj/item/W, mob/living/user, params)
+	// TA ADDITION START
+	if(istype(W, /obj/item/alch))
+		var/obj/item/alch/alch_item = W
+		if(alch_item.smoke_type)
+			var/datum/pollutant/smoke/smoke = alch_item.smoke_type
+			alch_item.create_cloud(smoke, alch_item, src)
+		return
+	else if(istype(W, /obj/item/natural/worms/leech))
+		var/obj/item/natural/worms/leech/alch_item = W
+		var/datum/pollutant/smoke/smoke = alch_item.smoke_type
+		alch_item.create_cloud(smoke, alch_item, src)
+		return
+	// TA ADDITION END
 	if(!attachment)
 		if(istype(W, /obj/item/reagent_containers/glass/bucket/pot/kettle))
 			// TA eddit start - check crafting for turnin (important for pig-spit)
@@ -960,7 +987,7 @@
 		return 1
 	if(mover.throwing)
 		return 1
-	if(locate(/obj/structure/table) in get_turf(mover))
+	if(has_table_surface(get_turf(mover)))
 		return 1
 	if(locate(/obj/machinery/light/rogue/firebowl) in get_turf(mover))
 		return 1
@@ -997,3 +1024,21 @@
 
 
 #undef FAN_PROGRESS_BONUS
+
+/obj/machinery/light/rogue/candle/incense
+	name = "incense"
+	icon_state = "incense1"
+	base_state = "incense"
+	bulb_colour = "#ffa35c"
+
+/obj/machinery/light/rogue/candle/silver
+	name = "silver candle"
+	icon_state = "silvercandle1"
+	base_state = "silvercandle"
+	bulb_colour = "#ffa35c"
+
+/obj/machinery/light/rogue/candle/goldcandle
+	name = "gold candle"
+	icon_state = "goldcandle1"
+	base_state = "goldcandle"
+	bulb_colour = "#ffa35c"

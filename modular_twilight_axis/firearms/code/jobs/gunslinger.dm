@@ -9,7 +9,7 @@
 	class_select_category = CLASS_CAT_OTAVA
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
 	subclass_languages = list(/datum/language/otavan)
-	traits_applied = list(TRAIT_FIREARMS_MARKSMAN, TRAIT_MEDIUMARMOR)
+	traits_applied = list(TRAIT_MEDIUMARMOR)
 	subclass_stats = list(
 		STATKEY_STR = 1,
 		STATKEY_PER = 2,

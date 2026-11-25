@@ -88,6 +88,7 @@ export const SubtabIdentityCardInfo = () => {
     clothes_pref,
     highlight_color,
     nickname,
+    pen_name,
     pronouns,
     race_bonus,
     real_name,
@@ -172,6 +173,28 @@ export const SubtabIdentityCardInfo = () => {
             </Stack.Item>
           </Stack>
         </LabeledGridList.Item>
+        <LabeledGridList.Item label="Pen Name">
+          <Stack>
+            <Stack.Item grow>
+              <Button
+                fluid
+                style={{
+                  wordBreak: 'break-word',
+                  whiteSpace: 'wrap',
+                }}
+                onClick={() => act('pen_name')}
+              >
+                {pen_name || 'None'}
+              </Button>
+            </Stack.Item>
+            <Stack.Item>
+              <Button
+                icon="question-circle"
+                tooltip="You can select this name for sending letters"
+              />
+            </Stack.Item>
+          </Stack>
+        </LabeledGridList.Item>
         <LabeledGridList.Item label="Pronouns">
           <Button
             fluid
@@ -235,6 +258,7 @@ export const SubtabIdentityCardGameplay = () => {
   const { act, data } = useBackendStrict<IdentityData>();
   const {
     age,
+    birthday, // TA EDIT
     combat_music,
     defiant,
     domhand,
@@ -293,6 +317,18 @@ export const SubtabIdentityCardGameplay = () => {
                 {age}
               </Button>
             </LabeledGridList.Item>
+            <LabeledGridList.Item label="Birthday">
+              {/* TA EDIT START */}
+              <Button
+                fluid
+                icon="cake-candles"
+                tooltip="Shown to people who know you, on the calendar and in the people you know list."
+                onClick={() => act('birthday')}
+              >
+                {birthday}
+              </Button>
+            </LabeledGridList.Item>
+            {/* TA EDIT END */}
             <LabeledGridList.Item label="Dominance">
               <Button fluid onClick={() => act('domhand')}>
                 {domhand === 2 ? 'Right-handed' : 'Left-handed'}

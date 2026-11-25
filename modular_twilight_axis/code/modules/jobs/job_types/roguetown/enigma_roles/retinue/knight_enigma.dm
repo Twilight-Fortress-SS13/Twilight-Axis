@@ -86,6 +86,9 @@
 		STATKEY_WIL = 2,
 		STATKEY_SPD = -2,
 	)
+
+	tempo_capable = TRUE
+
 	subclass_skills = list(
 		/datum/skill/combat/polearms = SKILL_LEVEL_MASTER,
 		/datum/skill/combat/swords = SKILL_LEVEL_MASTER,

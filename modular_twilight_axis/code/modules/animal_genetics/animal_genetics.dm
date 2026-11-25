@@ -562,3 +562,10 @@
 /mob/living/simple_animal/hostile/retaliate/rogue/mirespider
 	generate_genetics = TRUE
 	can_receive_livestock_commands = TRUE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/drider
+	can_receive_livestock_commands = TRUE
+
+/mob/living/simple_animal/hostile/retaliate/rogue/drider/tame/Initialize(mapload)
+	. = ..()
+	setup_livestock_commands()

@@ -1,5 +1,6 @@
 // Roundstart bandit slots use flat caps per gamemode without population scaling.
 /datum/antagonist/bandit
+	overrides_forlorne_vice = TRUE
 	name = "Bandit"
 	roundend_category = "bandits"
 	antagpanel_category = "Bandit"
@@ -54,6 +55,7 @@
 	ADD_TRAIT(H, TRAIT_FREEMAN, TRAIT_GENERIC)
 	ADD_TRAIT(H, TRAIT_OUTLANDER, TRAIT_GENERIC) //TA EDIT
 	ADD_TRAIT(H, TRAIT_OUTLAW, TRAIT_GENERIC)		//Just to stop them from using mesiters like Wretches.
+	ADD_TRAIT(H, TRAIT_NONAMESTEAL, TRAIT_GENERIC)
 	to_chat(H, span_alertsyndie("I am a BANDIT!"))
 	to_chat(H, span_boldwarning("Long ago I did a crime worthy of my bounty being hung on the wall outside of the local inn. I live now with fellow free men in reverence to MATTHIOS whose idol grants us boons and wishes when fed the money, treasures, and metals of the civilized wretches. As a member of the free men, I worship MATTHIOS first and foremost, though I may have allegiance to other deities."))
 

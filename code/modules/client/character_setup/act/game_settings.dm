@@ -11,7 +11,7 @@
 			if(be_special_type in be_special)
 				be_special -= be_special_type
 			else
-				if(be_special_type in GLOB.special_roles_rogue)
+				if((be_special_type in GLOB.special_roles_rogue) && !is_banned_from(user.ckey, be_special_type))
 					be_special += be_special_type
 			return TRUE
 		// these are fine because the other one is in ui_act_character_creator and that's
@@ -56,6 +56,13 @@
 				clientfps = desiredfps
 				parent.fps = desiredfps
 			return TRUE
+		if("action_wheel_modifier") // TA EDIT START
+			var/modifier = params["modifier"]
+			if(!(modifier in list("ctrl", "shift", "alt", "none")))
+				return TRUE
+			action_wheel_modifier = modifier
+			save_preferences()
+			return TRUE // TA EDIT END
 		if("auto_fit_viewport")
 			auto_fit_viewport = !auto_fit_viewport
 			if(auto_fit_viewport && parent)
@@ -153,7 +160,7 @@
 		if("asaycolor")
 			var/new_asaycolor = tgui_color_picker(user, "Choose your ASAY color:", "ASAY Color", asaycolor)
 			if(new_asaycolor)
-				asaycolor = sanitize_hexcolor(new_asaycolor) // TA EDIT
+				asaycolor = sanitize_ooccolor(new_asaycolor) // TA EDIT
 				save_preferences() // TA EDIT
 			return TRUE
 

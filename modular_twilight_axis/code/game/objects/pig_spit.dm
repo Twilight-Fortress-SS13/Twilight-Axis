@@ -130,7 +130,7 @@
 		to_chat(user, span_warning("The pig must be dead, fresh and unbutchered."))
 		return FALSE
 	var/turf/pig_turf = get_turf(pig)
-	var/speed = get_cooktime_divisor(cooking_skill) / get_cooktime_divisor(SKILL_LEVEL_APPRENTICE)
+	var/speed = 1 + (clamp(cooking_skill, SKILL_LEVEL_APPRENTICE, SKILL_LEVEL_LEGENDARY) - SKILL_LEVEL_APPRENTICE) * 0.25
 	user.visible_message(span_notice("[user] begins mounting [pig] on the spit."))
 	if(!do_after(user, (10 SECONDS) / speed, target = src))
 		return FALSE

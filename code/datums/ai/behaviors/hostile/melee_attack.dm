@@ -37,7 +37,8 @@
 	var/forced_zone = controller.blackboard[BB_FORCED_ATTACK_ZONE]
 	if(forced_zone)
 		basic_mob.zone_selected = forced_zone
-	basic_mob.a_intent = pick(basic_mob.possible_a_intents) //randomized intent
+	if(length(basic_mob.possible_a_intents)) // TA EDIT
+		basic_mob.a_intent = pick(basic_mob.possible_a_intents) // TA EDIT
 
 	var/atom/swing_at = resolve_swing_target(controller, basic_mob, target, target_key, hiding_target)
 	if(!swing_at)
@@ -155,11 +156,11 @@
 
 	controller.set_blackboard_key(hiding_location_key, hiding_target)
 
+	var/atom/shoot_at = hiding_target || target
+	if(!can_see(basic_mob, shoot_at, controller.max_target_distance))
+		return AI_BEHAVIOR_DELAY
 	basic_mob.face_atom(target)
-	if(hiding_target) //Shoot it!
-		basic_mob.RangedAttack(hiding_target)
-	else
-		basic_mob.RangedAttack(target)
+	basic_mob.RangedAttack(shoot_at)
 	return AI_BEHAVIOR_DELAY
 
 /datum/ai_behavior/basic_ranged_attack/finish_action(datum/ai_controller/controller, succeeded, target_key, targetting_datum_key, hiding_location_key)
@@ -181,6 +182,8 @@
 	var/atom/target = controller.blackboard[target_key]
 	var/datum/targetting_datum/targetting_datum = controller.blackboard[targetting_datum_key]
 	if(!istype(basic_mob) || QDELETED(target) || target == basic_mob || !targetting_datum?.can_attack(basic_mob, target))
+		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
+	if(!can_see(basic_mob, target, controller.max_target_distance))
 		return AI_BEHAVIOR_DELAY | AI_BEHAVIOR_FAILED
 	basic_mob.face_atom(target)
 	basic_mob.RangedAttack(target)

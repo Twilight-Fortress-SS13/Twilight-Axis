@@ -228,7 +228,7 @@
 			D.p_y = 16
 			D.fire()
 
-		explosion(T, devastation_range = 0, heavy_impact_range = 3, light_impact_range = 6, flame_range = 0, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg'))
+		explosion(T, extreme_impact_range = 0, heavy_impact_range = 3, light_impact_range = 6, flame_range = 0, smoke = TRUE, soundin = pick('sound/misc/explode/bottlebomb (1).ogg','sound/misc/explode/bottlebomb (2).ogg'))
 
 		qdel(src)
 		return BULLET_ACT_HIT
@@ -472,6 +472,7 @@
 			shake_camera(M, 4, 2)
 
 	playsound(src, 'modular_twilight_axis/awful_artillery/sound/launch.ogg', 100, 0, 20, 1, null, null, FALSE, TRUE)
+	mount_notify_loud_noise(src, 15, 35, 7 SECONDS)
 
 	for(var/turf/AT in get_adjacent_turfs(src.loc))
 		new /obj/effect/particle_effect/smoke/arquebus(AT)

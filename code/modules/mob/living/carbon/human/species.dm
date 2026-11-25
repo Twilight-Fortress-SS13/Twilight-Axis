@@ -815,7 +815,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 				if(istype(H.wear_shirt, I.type))
 					return FALSE
 				if(I.blocksound)
-					if(I.blocksound == H.wear_shirt.blocksound && !(istype(incoming_armor) && is_type_in_list(H.wear_shirt, incoming_armor.underlayers)))
+					if(I.blocksound == H.wear_shirt.blocksound && !((I.blocking_behavior & SAMEWEAR) || (H.wear_shirt.blocking_behavior & SAMEWEAR)) && !(istype(incoming_armor) && is_type_in_list(H.wear_shirt, incoming_armor.underlayers))) //TA EDIT
 						return FALSE
 			if( !(I.slot_flags & ITEM_SLOT_ARMOR) )
 				return FALSE
@@ -838,7 +838,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 			if( !(I.slot_flags & ITEM_SLOT_SHOES) )
 				return FALSE
 			var/obj/item/clothing/shoes = I
-			if(is_taur && (!istype(shoes) || !(shoes.clothing_flags & TAUR_COMPATIBLE)))
+			if(is_taur && (!istype(shoes) || (!(shoes.clothing_flags & TAUR_COMPATIBLE) && !shoes.get_taur_worn_state(H))))
 				return FALSE
 			if(num_legs < 1)
 				return FALSE
@@ -911,7 +911,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 					if(!(I.blocking_behavior & SAMEWEAR))
 						return FALSE
 				if(I.blocksound)
-					if(I.blocksound == H.wear_armor.blocksound && !is_type_in_list(I, H.wear_armor.underlayers))
+					if(I.blocksound == H.wear_armor.blocksound && !((I.blocking_behavior & SAMEWEAR) || (H.wear_armor.blocking_behavior & SAMEWEAR)) && !is_type_in_list(I, H.wear_armor.underlayers)) //TA EDIT
 						return FALSE
 			if( !(I.slot_flags & ITEM_SLOT_SHIRT) )
 				return FALSE
@@ -1354,9 +1354,6 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 			user.bad_guard(span_suicide("I tried to strike while focused on defense whole! It drains me!"), cheesy = TRUE)
 			return
 
-		var/mob/living/carbon/human/H = target
-		H.process_golgatha_rebuke(user)
-
 		if(user.mob_biotypes & MOB_UNDEAD)
 			if(target.has_status_effect(/datum/status_effect/buff/necras_vow))
 				if(isnull(user.mind))
@@ -1394,7 +1391,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 		if(!target.lying_attack_check(user))
 			return 0
 
-		user.break_invisibility_from_combat()
+		user.break_invisibility_from_combat() // TA EDIT
 		var/obj/item/clothing/gloves/roguetown/worn_gloves = user.get_item_by_slot(SLOT_GLOVES)
 		var/glove_intdamfactor_mult = 1
 		if(istype(worn_gloves))
@@ -1413,7 +1410,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 		target.lastattackerckey = user.ckey
 		target.lastattacker_weakref = WEAKREF(user)
 		user.dna.species.spec_unarmedattacked(user, target)
-		user.break_invisibility_from_combat()
+		user.break_invisibility_from_combat() // TA EDIT
 
 		target.next_attack_msg.Cut()
 
@@ -1542,7 +1539,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 			else
 				target.Move(target_shove_turf, shove_dir)
 				if(get_turf(target) == target_oldturf)
-					target_table = locate(/obj/structure/table) in target_shove_turf.contents
+					target_table = has_table_surface(target_shove_turf.contents)
 	//				target_disposal_bin = locate(/obj/machinery/disposal/bin) in target_shove_turf.contents
 					if(target_table)
 						shove_blocked = TRUE
@@ -1681,7 +1678,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 
 //shameless copypaste
 /datum/species/proc/kicked(mob/living/carbon/human/user, mob/living/carbon/human/target)
-	SEND_SIGNAL(user, COMSIG_MOB_KICK_ATTACK, target) //Ta edit
+	SEND_SIGNAL(user, COMSIG_MOB_KICK_ATTACK, target) // TA EDIT
 	if(HAS_TRAIT(user, TRAIT_PACIFISM))
 		to_chat(user, span_warning("I don't want to harm [target]!"))
 		return FALSE
@@ -1705,7 +1702,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 		stander = FALSE
 	if(!get_dist(user, target))
 		if(!stander)
-			user.break_invisibility_from_combat()
+			user.break_invisibility_from_combat() // TA EDIT
 			target.lastattacker = user.real_name
 			target.lastattackerckey = user.ckey
 			target.lastattacker_weakref = WEAKREF(user)
@@ -1743,7 +1740,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 	else
 		if(!target.kick_attack_check(user))
 			kickchest = TRUE
-		user.break_invisibility_from_combat()
+		user.break_invisibility_from_combat() // TA EDIT
 		user.do_attack_animation_simple(target, ATTACK_EFFECT_KICK, TRUE)
 		playsound(target, 'sound/combat/hits/kick/kick.ogg', 100, TRUE, -1)
 
@@ -1769,7 +1766,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 
 		if(get_turf(target) == target_oldturf)
 			if(stander)
-				target_table = locate(/obj/structure/table) in target_shove_turf.contents
+				target_table = has_table_surface(target_shove_turf.contents)
 				shove_blocked = TRUE
 		else
 			if(HAS_TRAIT(user, TRAIT_STRONGKICK))
@@ -1974,7 +1971,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 			aim_text = prob(10) ? "<i>I can't tell...</i>" : null
 		user.resolve_combataware(H, "[bodyzone2readablezone(selzone)]...", aim_text)
 
-	if(H.client?.prefs.combat_toggles & HITZONE_TEXT)
+	if((H.client?.prefs.combat_toggles & HITZONE_TEXT) && HAS_TRAIT(user, TRAIT_COMBAT_AWARE)) // TA EDIT - ORIGINAL: if(H.client?.prefs.combat_toggles & HITZONE_TEXT)
 		H.balloon_alert(H, "[bodyzone2readablezone(selzone)]...")
 
 	var/pen_info_check = get_pen_info(H, user, H.get_best_worn_armor(def_zone, int.item_d_type), def_zone, int.item_d_type, int.penfactor, I)
@@ -2135,7 +2132,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 			H.stop_pulling(TRUE)
 
 	if(user != H && user.mind && H.mind)	// Maso / Sadism check. No self-hits, it's already very easy to fulfill like this.
-		var/painpercent = H.get_complex_pain() / H.pain_threshold
+		var/painpercent = (H.get_complex_pain() / H.pain_threshold) * 100
 		if(painpercent >= 100)
 			if(H.get_flaw(/datum/charflaw/addiction/masochist))
 				H.sate_addiction(/datum/charflaw/addiction/masochist)
@@ -2185,7 +2182,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 					shake_camera(H, 2, 2)
 					H.stuttering += 5
 				if(damage_amount > 10 && !HAS_TRAIT(H, TRAIT_NOPAINSTUN) && !HAS_TRAIT(H, TRAIT_IRONMAN) && !HAS_TRAIT(H, TRAIT_IGNOREDAMAGESLOWDOWN))
-					H.Slowdown(clamp(damage_amount/10, 1, 5))
+					H.apply_slowdown(clamp(damage_amount / 5, 3, 9) SECONDS)
 					shake_camera(H, 1, 1)
 				if(H.show_redflash())
 					if(damage_amount < 10)
@@ -2262,15 +2259,6 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 /datum/species/proc/breathe(mob/living/carbon/human/H)
 	if(HAS_TRAIT(H, TRAIT_NOBREATH))
 		return TRUE
-
-
-/datum/species/proc/handle_environment(mob/living/carbon/human/H)
-	var/turf/cur_turf = get_turf(H) // TA EDIT
-	if(!cur_turf) // TA EDIT
-		return // TA EDIT
-	var/loc_temp = cur_turf.temperature + H.ta_climate_ambient_temperature_offset(cur_turf) // TA EDIT
-	H.ta_climate_handle_environment_temperature(cur_turf, loc_temp) // TA EDIT
-	H.ta_climate_temperature_tick() // TA EDIT
 
 // A general-purpose proc used to centralise checks to skip turf, movement, step, etc.
 // For if a mob is floating, flying, intangible, etc.

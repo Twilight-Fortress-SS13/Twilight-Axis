@@ -29,7 +29,6 @@
 
 	L.ta_climate_weather_temperature(-rand(10, 15) / 10) // TA EDIT
 
-
 /datum/particle_weather/snow_storm
 	name = "Snowstorm" // TA EDIT
 	desc = "Сильный снегопад и порывистый ветер ухудшают видимость." // TA EDIT
@@ -53,6 +52,5 @@
 	probability = 10
 	target_trait = PARTICLEWEATHER_SNOW
 
-//Makes you a lot little chilly
-/datum/particle_weather/snow_storm/weather_act(mob/living/L)
+/datum/particle_weather/snow_storm/weather_act(mob/living/L) // TA EDIT
 	L.ta_climate_weather_temperature(-rand(15, 25) / 10) // TA EDIT

@@ -21,10 +21,8 @@
 	. = slowdown
 	if(platform_atom_count > 0)
 		return
-	for(var/obj/obj in contents)
-		if(istype(obj, /obj/structure/ta_snowdrift) && user?.is_floor_hazard_immune()) // TA EDIT
-			continue // TA EDIT
-		. += obj.object_slowdown
+	if(ta_snow_slowdown && !user?.is_floor_hazard_immune()) // TA EDIT
+		. += ta_snow_slowdown // TA EDIT
 	if(active_hotspot)
 		. += 15
 

@@ -80,6 +80,7 @@
 	damage = 20
 	damage_type = BRUTE
 	armor_penetration = PEN_NONE
+	antibeast_factor = ANTIBEAST_DEFAULT
 	icon = 'icons/roguetown/weapons/ranged/arrow_proj.dmi'
 	icon_state = "arrow_proj"
 	ammo_type = /obj/item/ammo_casing/caseless/rogue/arrow
@@ -327,7 +328,7 @@
 		return
 	var/mob/living/M = target
 	M.electrocute_act(1, src, 1, SHOCK_NOSTUN)
-	M.Slowdown(1 SECONDS)
+	M.apply_slowdown(1 SECONDS)
 	to_chat(M, span_danger("Arcyne thunder sears through my body!"))
 
 // --- KINETIC --- (Arcyne sprite)

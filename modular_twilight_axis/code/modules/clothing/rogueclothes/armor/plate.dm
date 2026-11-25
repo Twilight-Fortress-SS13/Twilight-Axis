@@ -109,7 +109,7 @@
 
 /obj/item/clothing/head/roguetown/helmet/baotha_ta
 	name = "saccharine sallet"
-	desc = "Lo', the twins of beauty; Eora and Belladoth, they sought a prize which but one may have.."
+	desc = "Lo', the Last Empress of the Elves; the one who was destined to take the throne of Holy Celestia, yet rejected it mere minutes after her ascention.."
 	icon_state = "baothahelm"
 	item_state = "baothahelm"
 	body_parts_covered = HEAD | HAIR | EARS | MOUTH | EYES
@@ -121,12 +121,21 @@
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_DEPRAVED, "HELMET")
 
+//TA Addition start
+/obj/item/clothing/head/roguetown/helmet/baotha_ta/equipped(mob/user, slot)
+	RegisterSignal(user, COMSIG_CURSED_ITEM_BURNED)
+	. = ..()
+
+/obj/item/clothing/head/roguetown/helmet/baotha_ta/proc/demilitirize()
+	SIGNAL_HANDLER
+	max_integrity = 50
+//TA Addition end
 /obj/item/clothing/head/roguetown/helmet/baotha_ta/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_BAOTHA_ARMOR)
 
 /obj/item/clothing/neck/roguetown/coif/baotha_ta
 	name = "saccharine veil"
-	desc = "And yet, their methods differed; Belladoth proposed with Her lust and temptation, Eora with Her love and warmth.."
+	desc = "For she did not care for the people who caused her naught but suffering; she only cared to numb her sorrows, and make them understand.."
 	icon_state = "baothacoif"
 	item_state = "baothacoif"
 	armor = ARMOR_MAILLE
@@ -158,7 +167,7 @@
 
 /obj/item/clothing/suit/roguetown/armor/plate/fluted/baotha_ta
 	name = "saccharine plate armor"
-	desc = "Is it not obvious what Ravox would've chosen? Yet upon the dae of His choice, She refused to gift any chance to Her sister.."
+	desc = "She promised to guide and protect them, yet suffered nothing but pain from their misguided adherence to the Old Order.."
 	icon_state = "baothaplate"
 	item_state = "baothaplate"
 	max_integrity = ARMOR_INT_CHEST_PLATE_ANTAG - 250 //TA EDIT
@@ -184,7 +193,7 @@
 
 /obj/item/clothing/suit/roguetown/armor/gambeson/baotha_ta
 	name = "saccharine vestments"
-	desc = "A gemmed chalice, Eora's own, swilled with Psydonia's most noxious venoms - and but a simple sip was enough to bring Her to death's door.."
+	desc = "So upon her lover's deathbed, she had declared that no soul must live in suffering, for life exists to bring joy, not sorrow.."
 	icon_state = "baothagamb"
 	armor_class = ARMOR_CLASS_LIGHT
 	armor = ARMOR_BRIGANDINE
@@ -214,7 +223,7 @@
 
 /obj/item/clothing/wrists/roguetown/bracers/leather/baotha_ta
 	name = "saccharine cuffs"
-	desc = "A betrayal without compare, and a sin without redemption; or so, She believed.."
+	desc = "A betrayal without compare, yet was it truly? For the Empire was long since forefit to the War in Heaven.."
 	icon_state = "baothabracers"
 	chunkcolor = "#6d1c87"
 	armor = ARMOR_MAILLE
@@ -238,7 +247,7 @@
 
 /obj/item/clothing/under/roguetown/skirt/baotha_ta
 	name = "saccharine fauldcoat"
-	desc = "Only did Belladona's haze clear, once She heard Eora's gasps and Ravox's fright; what else could She've done besides fleeing the heavens?"
+	desc = "So why should she suffer for the people who destroyed everything she held dear?"
 	armor = ARMOR_MAILLE
 	icon_state = "baothaskirt"
 	chunkcolor = "#6d1c87"
@@ -264,7 +273,7 @@
 
 /obj/item/clothing/gloves/roguetown/plate/baotha_ta
 	name = "saccharine gauntlets"
-	desc = "Belladonna's ego died on that dae, and Baotha's venomous id rose in Her stead; for it was better to numb the regret than to face the guilt.."
+	desc = "The Last Empress of the Elves died upon that dae, and Baotha was ascended not for her people, but for her own gains; for it was better to numb the regret than to face the guilt.."
 	icon_state = "baothagloves"
 	item_state = "baothagloves"
 	chunkcolor = "#6d1c87"
@@ -288,7 +297,7 @@
 
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha_ta
 	name = "saccharine heels"
-	desc = "..yet, even as She indulges and mourns beneath the stars, one must wonder; is She truly damned by the Pantheon, or by Herself alone?"
+	desc = "..yet, even as She indulges and mourns beneath the stars, one must wonder; is She truly damned by her people, or by Herself alone?"
 	icon_state = "baothaboots"
 	item_state = "baothaboots"
 	chunkcolor = "#6d1c87"

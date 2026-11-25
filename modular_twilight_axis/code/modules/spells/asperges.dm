@@ -254,16 +254,18 @@
 
 	var/convert_message = "[caster.real_name] is trying to guide you onto PSYDON's path. Will you embrace Him, and forswear any lesser gods'? THIS WILL CHANGE YOUR PATRON."
 
-	var/list/result = list(new_convert)
+	var/list/result = list()
+	var/list/poll_done = list()
 	if(istype(new_convert.patron, /datum/patron/old_god))
 		to_chat(caster, span_info("[new_convert] already walks PSYDON's path."))
 		return FALSE
-	showCandidatePollWindow(new_convert, 10 SECONDS, convert_message, result, null, world.time, flashwindow = FALSE)
+	INVOKE_ASYNC(src, PROC_REF(poll_conversion), new_convert, convert_message, result, poll_done)
 
 	if(!do_mob(caster, new_convert, 10 SECONDS, can_move = FALSE) || caster.cmode || new_convert.cmode)
 		to_chat(caster, span_info("I lose focus! The rite fails."))
 		return FALSE
 
+	UNTIL(length(poll_done))
 	if(!length(result))
 		to_chat(caster, span_warning("[new_convert] clings still to their misguided faith... or they already walk PSYDON's path."))
 		return FALSE

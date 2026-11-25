@@ -35,7 +35,7 @@
 		return // Too weak to have any effect
 	var/scaling = CLAMP((chungus_khan_str - 10), 1, maxrange)
 	H.apply_status_effect(/datum/status_effect/debuff/yeetcd)
-	H.Slowdown(scaling)
+	H.apply_slowdown((scaling * 2 - 1) SECONDS)
 	// Copypasta from knockback proc cuz I don't want the math there
 	var/knockback_tiles = scaling // 1 to 4 tiles based on strength
 	if(H.resting)
@@ -1230,7 +1230,7 @@
 /datum/component/mushroom_mace/proc/mushroom_boom(mob/living/target, mob/living/user)
 	var/turf/T = get_turf(target)
 	T.visible_message(span_boldwarning("The mushroom mace releases a massive fungal detonation!"))
-	explosion(T, devastation_range = 0, heavy_impact_range = 0, light_impact_range = 4, smoke = TRUE, soundin = pick('sound/misc/explode/explosion.ogg'))
+	explosion(T, extreme_impact_range = 0, heavy_impact_range = 0, light_impact_range = 4, smoke = TRUE, soundin = pick('sound/misc/explode/explosion.ogg'))
 
 	for(var/mob/living/L in range(2, T))
 		var/damage = 25
@@ -1314,6 +1314,7 @@
 	wdefense_wbonus = 3
 	experimental_onhip = TRUE
 	experimental_onback = TRUE
+	can_parry = TRUE
 	brute_attack = TRUE
 	smeltresult = /obj/item/ingot/bronze
 	w_class = WEIGHT_CLASS_NORMAL

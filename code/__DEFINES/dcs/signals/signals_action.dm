@@ -13,6 +13,7 @@
 /// From /datum/action/apply_button_overlay()
 #define COMSIG_ACTION_OVERLAY_APPLY "action_overlay_applied"
 
+#define COMSIG_CURSED_ITEM_BURNED "cursed_item_burned" //TA Addition
 // Cooldown action signals
 
 /// From base of /datum/action/cooldown/proc/PreActivate(), sent to the action owner: (datum/action/cooldown/activated)

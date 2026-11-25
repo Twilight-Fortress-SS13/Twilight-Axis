@@ -863,17 +863,6 @@
 	ta_climate_stop_all_weather_sounds()
 	return ..()
 
-/datum/particle_weather/dust_storm/start(color)
-	if(SSParticleWeather?.runningWeather != src)
-		return
-	return ..()
-
-/datum/particle_weather/dust_storm/end()
-	if(SSParticleWeather?.runningWeather != src)
-		return
-	ta_climate_stop_all_weather_sounds()
-	return ..()
-
 /datum/particle_weather/rain_gentle/can_weather_act_obj(obj/O)
 	if(!O || !isturf(O.loc) || !ta_climate_valid_outdoors(get_turf(O)))
 		return FALSE

@@ -18,4 +18,7 @@
 /// Add an attacking atom to a blackboard list of things which attacked us
 /datum/element/ai_retaliate/proc/on_attacked(mob/victim, atom/attacker)
 	SIGNAL_HANDLER
+	var/mob/living/simple_animal/mount = victim // TA EDIT START
+	if(istype(mount) && mount.mount_initialized)
+		return // TA EDIT END
 	victim.ai_controller?.insert_blackboard_key_lazylist(BB_BASIC_MOB_RETALIATE_LIST, attacker)

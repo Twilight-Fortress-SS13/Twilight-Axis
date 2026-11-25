@@ -20,6 +20,14 @@ GLOBAL_VAR_INIT(ta_climate_cold_breath_overlay, mutable_appearance(
             return
     adjust_bodytemperature(min(amount, limit - bodytemperature))
 
+/mob/living/carbon/human/proc/ta_climate_handle_life_temperature()
+	var/turf/cur_turf = get_turf(src)
+	if(!cur_turf)
+		return
+	var/loc_temp = cur_turf.temperature + ta_climate_ambient_temperature_offset(cur_turf)
+	ta_climate_handle_environment_temperature(cur_turf, loc_temp)
+	ta_climate_temperature_tick()
+
 /mob/living/carbon/human/proc/ta_climate_handle_environment_temperature(turf/cur_turf, loc_temp)
 	if(!cur_turf || on_fire || stat == DEAD)
 		if(on_fire || stat == DEAD)

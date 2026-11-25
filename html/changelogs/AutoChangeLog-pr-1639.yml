@@ -1,8 +1,0 @@
-author: "Corde50"
-delete-after: True
-changes:
-  - qol: "Temporal Hourglass & Shimmering lens отображают свой кулдаун."
-  - balance: "Temporal Hourglass получает КД в 3 минуты и ими не могут воспользоваться Лич/ВЛ."
-  - balance: "Shimmering lens КД 15 минут > 3 минуты."
-  - sound: "Temporal Hourlgass издает звуки при активации и деактивации."
-  - refactor: "Sending stones теперь оповещают своего носителя звуком и его слышно только на расстоянии шёпота."

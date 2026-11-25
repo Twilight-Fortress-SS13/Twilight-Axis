@@ -1,3 +1,13 @@
+/turf/open
+	var/tmp/ta_snow_slowdown = 0
+
+/turf/open/proc/ta_set_snow_slowdown(new_slowdown)
+	if(ta_snow_slowdown == new_slowdown)
+		return
+	ta_snow_slowdown = new_slowdown
+	for(var/mob/living/L in src)
+		L.update_turf_movespeed(src)
+
 SUBSYSTEM_DEF(ta_snowdrifts)
 	name = "Snowdrifts"
 	flags = SS_BACKGROUND
@@ -260,16 +270,34 @@ SUBSYSTEM_DEF(ta_snowdrifts)
 	if(!isturf(loc))
 		return INITIALIZE_HINT_QDEL
 	SSta_snowdrifts.snowdrifts += src
+	RegisterSignal(loc, COMSIG_TURF_CHANGE, PROC_REF(on_snow_turf_change))
 	update_snow_slowdown()
 	update_snow_appearance()
 	update_snow_submersion()
 	update_neighbours(null, 0, depth)
 
 /obj/structure/ta_snowdrift/Destroy()
+	var/turf/open/T = loc
+	if(isturf(loc))
+		UnregisterSignal(loc, COMSIG_TURF_CHANGE)
+	if(istype(T))
+		T.ta_set_snow_slowdown(0)
 	update_snow_submersion(FALSE)
 	SSta_snowdrifts.snowdrifts -= src
 	update_neighbours(src, depth, 0)
 	return ..()
+
+/obj/structure/ta_snowdrift/proc/on_snow_turf_change(turf/source, path, list/new_baseturfs, flags, list/post_change_callbacks)
+	SIGNAL_HANDLER
+	post_change_callbacks += CALLBACK(src, PROC_REF(after_snow_turf_change))
+
+/obj/structure/ta_snowdrift/proc/after_snow_turf_change(turf/new_turf)
+	if(QDELETED(src) || loc != new_turf)
+		return
+	if(!SSta_snowdrifts.valid_snow_turf(new_turf, TRUE))
+		qdel(src)
+		return
+	update_snow_slowdown()
 
 /obj/structure/ta_snowdrift/get_mechanics_examine(mob/user)
 	. = ..()
@@ -292,7 +320,9 @@ SUBSYSTEM_DEF(ta_snowdrifts)
 	set_depth(depth - 1)
 
 /obj/structure/ta_snowdrift/proc/update_snow_slowdown()
-	object_slowdown = foot_traffic >= 2 ? 0 : 1.5 * depth
+	var/turf/open/T = loc
+	if(istype(T))
+		T.ta_set_snow_slowdown(foot_traffic >= 2 ? 0 : 1.5 * depth)
 
 /obj/structure/ta_snowdrift/proc/add_snow(amount)
 	progression += amount
@@ -370,6 +400,7 @@ SUBSYSTEM_DEF(ta_snowdrifts)
 	if(!istype(T, /turf/open/floor) || !SSta_snowdrifts.valid_snow_turf(T, TRUE))
 		qdel(src)
 		return
+	update_snow_slowdown()
 	var/thawing = (!snowing && SSseason?.current_season != SEASON_WINTER) || heated || SSta_snowdrifts.heated_snow_turfs[T]
 	if(!thawing)
 		last_melt = 0

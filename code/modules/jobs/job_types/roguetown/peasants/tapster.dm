@@ -45,7 +45,7 @@
 		/datum/skill/combat/unarmed = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/misc/stealing = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/stealing = SKILL_LEVEL_JOURNEYMAN, // TA EDIT
 		/datum/skill/misc/swimming = SKILL_LEVEL_NOVICE,
 		/datum/skill/misc/athletics = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/climbing = SKILL_LEVEL_APPRENTICE,
@@ -79,6 +79,8 @@
 		/obj/item/reagent_containers/glass/bucket/pot/kettle/tankard,
 		/obj/item/reagent_containers/glass/bucket/pot/kettle/tankard,
 		/obj/item/mini_flagpole/innkeeper,
+		/obj/item/bill_of_fare,
+		/obj/item/natural/feather,
 	)
 	if(H.mind)
 		SStreasury.grant_savings(ECONOMIC_LOWER_MIDDLE_CLASS, H)

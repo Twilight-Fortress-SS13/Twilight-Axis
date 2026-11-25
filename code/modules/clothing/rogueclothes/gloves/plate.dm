@@ -109,7 +109,7 @@
 
 /obj/item/clothing/gloves/roguetown/plate/baotha
 	name = "saccharine gauntlets"
-	desc = "Belladoth took the priestess in Her holy embrace and took her pain, and the pain of the her congregation. The greatest taboo; combination of divinity and mortalkind to create something not quite either. Baotha was born."
+	desc = "Baotha took her dying lover in her embrace, and in his dying breath, he shared the secrets of Divinity upon her. The greatest taboo; combination of divinity and mortalkind to create something not quite either." //TA EDIT
 	icon_state = "baothagloves"
 	item_state = "baothagloves"
 	chunkcolor = "#6d1c87"
