@@ -41,6 +41,7 @@
 	can_buckle = TRUE
 	aggressive = 1
 	move_base_delay = MOVEMENT_DELAY_SPD_17
+	ride_move_delay = 8
 	ai_controller = /datum/ai_controller/mirespider
 	remains_type = /obj/effect/decal/remains/antlion
 
