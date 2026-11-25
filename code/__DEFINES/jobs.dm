@@ -123,6 +123,7 @@
 #define INQUISITOR	(1<<0)
 #define ABSOLVER	(1<<1)
 #define ORTHODOXIST	(1<<2)
+#define ORDINATOR	(1<<3) // TA EDIT
 
 #define ANTAGONIST			(1<<12)
 
@@ -268,6 +269,7 @@
 #define JDO_INQUISITOR 10
 #define JDO_ORTHODOXIST 10.1
 #define JDO_ABSOLVER 10.2
+#define JDO_ORDINATOR 10.3 // TA EDIT
 
 // Antagonists
 #define JDO_ASSASSIN 11

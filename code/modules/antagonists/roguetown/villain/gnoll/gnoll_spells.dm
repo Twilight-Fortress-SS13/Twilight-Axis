@@ -27,6 +27,7 @@
 	var/alist/combat_roles = list(
 		"Orthodoxist" = TRUE,
 		"Absolver" = TRUE,
+		"Ordinator" = TRUE, // TA EDIT
 		"Templar" = TRUE,
 		"Sergeant" = TRUE,
 		"Man at Arms" = TRUE,

@@ -1212,6 +1212,11 @@
 /obj/structure/roguemachine/mail/proc/inqlock()
 	inqonly = !inqonly
 
+/obj/structure/roguemachine/mail/proc/marquette_price(datum/inqports/PA, mob/user) // TA EDIT START
+	if(!istype(PA, /datum/inqports/supplies/litany) && SSmapping.map_adjustment?.map_file_name == "rockhill.dmm" && (user?.mind?.assigned_role in GLOB.inquisition_positions))
+		return max(1, round(PA.marquescost * 0.75))
+	return PA.marquescost // TA EDIT END
+
 /obj/structure/roguemachine/mail/proc/decreaseremaining(datum/inqports/PA)
 	PA.remaining -= 1
 	PA.name = "[initial(PA.name)] ([PA.remaining]/[PA.maximum]) - ᛉ [PA.marquescost] ᛉ"
@@ -1258,8 +1263,12 @@
 					items -= GLOB.inqsupplies[pack]
 		for(var/pack in sortNames(items, order=0))
 			var/datum/inqports/PA = pack
+			var/price = marquette_price(PA, user) // TA EDIT START
 			var/name = uppertext(PA.name)
-			if(inqonly && !HAS_TRAIT(user, TRAIT_PURITAN) || (PA.maximum && !PA.remaining) || inqcoins < PA.marquescost)
+			if(price != PA.marquescost)
+				var/stock_text = PA.maximum ? (PA.remaining ? " ([PA.remaining]/[PA.maximum])" : " (OUT OF STOCK)") : ""
+				name = "[uppertext(initial(PA.name))][stock_text] - ᛉ [price] ᛉ"
+			if(inqonly && !HAS_TRAIT(user, TRAIT_PURITAN) || (PA.maximum && !PA.remaining) || inqcoins < price) // TA EDIT END
 				contents += "[name]<BR>"
 			else
 				contents += "<a href='?src=[REF(src)];buy=[PA.type]'>[name]</a><BR>"
@@ -1311,10 +1320,11 @@
 		var/datum/inqports/PA = GLOB.inqsupplies[path]
 		if(!PA)
 			return
-		if(inqcoins < PA.marquescost || (PA.maximum && PA.remaining <= 0) || !PA.can_purchase(usr)) // TA EDIT
-			return display_marquette(usr) // TA EDIT
+		var/price = marquette_price(PA, usr) // TA EDIT START
+		if(inqcoins < price || (PA.maximum && PA.remaining <= 0) || !PA.can_purchase(usr))
+			return display_marquette(usr)
 
-		inqcoins -= PA.marquescost
+		inqcoins -= price // TA EDIT END
 		if(PA.maximum)
 			decreaseremaining(PA)
 		visible_message(span_warning("[usr] sends something."))

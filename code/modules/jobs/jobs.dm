@@ -255,6 +255,7 @@ GLOBAL_LIST_INIT(inquisition_positions, list( //Self explanatory
 	"Inquisitor",
 	"Absolver",
 	"Orthodoxist",
+	"Ordinator", // TA EDIT
 ))
 
 GLOBAL_LIST_INIT(aspirant_eligible_positions, list(ASPIRANT_ELIGIBLE_POSITIONS))
@@ -283,6 +284,7 @@ GLOBAL_LIST_INIT(foreign_positions, list(
 	"Inquisitor",
 	"Suitor",
 	"Orthodoxist",
+	"Ordinator", // TA EDIT
 	"Migrant",
 ))
 

@@ -334,7 +334,8 @@ SUBSYSTEM_DEF(ta_rockhill_masquerade)
 		var/datum/job/candidate_job = ta_get_assigned_job_datum(candidate)
 		if(!istype(candidate_job, /datum/job/roguetown/inquisitor) \
 			&& !istype(candidate_job, /datum/job/roguetown/orthodoxist) \
-			&& !istype(candidate_job, /datum/job/roguetown/absolver))
+			&& !istype(candidate_job, /datum/job/roguetown/absolver) \
+			&& !istype(candidate_job, /datum/job/roguetown/ordinator))
 			continue
 		targets += candidate
 		if(istype(candidate_job, /datum/job/roguetown/inquisitor))
@@ -416,6 +417,8 @@ SUBSYSTEM_DEF(ta_rockhill_masquerade)
 		return "Ортодокс"
 	if(istype(role, /datum/job/roguetown/absolver))
 		return "Абсолвер"
+	if(istype(role, /datum/job/roguetown/ordinator))
+		return "Ординатор"
 	if(istype(role, /datum/job/roguetown/lord))
 		return "Король или королева"
 	if(istype(role, /datum/job/roguetown/lady))

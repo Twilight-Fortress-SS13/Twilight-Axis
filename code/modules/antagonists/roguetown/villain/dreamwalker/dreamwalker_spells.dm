@@ -21,6 +21,7 @@
 	var/static/list/valid_target_roles = list(
 		"Orthodoxist",
 		"Absolver",
+		"Ordinator", // TA EDIT
 		"Templar",
 		"Sergeant",
 		"Royal Guard Sergeant",

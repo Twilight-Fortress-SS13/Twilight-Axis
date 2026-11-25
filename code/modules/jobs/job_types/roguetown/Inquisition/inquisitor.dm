@@ -17,7 +17,7 @@
 
 	outfit = /datum/outfit/job/roguetown/inquisitor
 	display_order = JDO_INQUISITOR
-	advclass_cat_rolls = list(CTAG_INQUSITOR = 20)
+	advclass_cat_rolls = list(CTAG_INQUSITOR = 20, CTAG_ORDINATOR = 1) // TA EDIT
 	give_bank_account = 30
 	min_pq = 18
 	max_pq = null
@@ -29,6 +29,38 @@
 		/datum/advclass/inquisitor/ordinator
 	)
 	same_job_respawn_delay = 30 MINUTES
+
+/datum/job/roguetown/ordinator // TA EDIT START
+	title = "Ordinator"
+	flag = ORDINATOR
+	department_flag = INQUISITION
+	faction = "Station"
+	total_positions = 0
+	spawn_positions = 0
+	forbidden_races = list(RACES_CONSTRUCT RACES_DESPISED RACES_OOZE)
+	allowed_patrons = list(/datum/patron/old_god)
+	tutorial = "You are an Ordinator of the Holy Psydonic Orders, sworn to defend the Inquisition and destroy the enemies of Psydon. Serve under the Inquisitor and protect your brethren."
+	whitelist_req = TRUE
+	cmode_music = sound("sound/music/combat_inqordinator.ogg")
+	selection_color = JCOLOR_INQUISITION
+	outfit = /datum/outfit/job/roguetown/ordinator
+	display_order = JDO_ORDINATOR
+	advclass_cat_rolls = list(CTAG_ORDINATOR = 1)
+	give_bank_account = 15
+	min_pq = 18
+	max_pq = null
+	round_contrib_points = 2
+	quest_claim_barred = TRUE
+	vice_restrictions = list(/datum/charflaw/silverweakness, /datum/charflaw/wanted)
+	job_traits = list(TRAIT_OUTLANDER)
+	job_subclasses = list(/datum/advclass/inquisitor/ordinator)
+	has_subprefs = FALSE
+	same_job_respawn_delay = 30 MINUTES
+
+/datum/outfit/job/roguetown/ordinator
+	parent_type = /datum/outfit/job/roguetown/inquisitor
+	name = "Ordinator"
+	jobtype = /datum/job/roguetown/ordinator // TA EDIT END
 
 /datum/outfit/job/roguetown/inquisitor
 	name = "Inquisitor"
@@ -198,7 +230,7 @@
 	subclass_languages = list(/datum/language/otavan)
 	cmode_music = sound("sound/music/combat_inqordinator.ogg")
 
-	category_tags = list(CTAG_INQUSITOR)
+	category_tags = list(CTAG_ORDINATOR) // TA EDIT
 	traits_applied = list(
 		TRAIT_STEELHEARTED,
 		TRAIT_HEAVYARMOR,

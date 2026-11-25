@@ -10,6 +10,7 @@
 	realm_type = "Kingdom"
 	realm_type_short = "Kingdom"
 	blacklist = list(
+		/datum/job/roguetown/absolver, // TA EDIT
 		/datum/job/roguetown/manorguard,
 		/datum/job/roguetown/warden,
 		/datum/job/roguetown/knight,
@@ -29,6 +30,7 @@
 		)
 	slot_adjust = list(
 	/datum/job/roguetown/squire = 2,
+	/datum/job/roguetown/ordinator = 1, // TA EDIT
 	)
 	title_adjust = list(
 		/datum/job/roguetown/lord = list(display_title = "King", f_title = "Queen")
@@ -43,3 +45,9 @@
 		THREAT_REGION_ROCKHILL_WOODS_NORTH,
 		THREAT_REGION_ROCKHILL_WOODS_SOUTH
 	)
+
+/datum/map_adjustment/template/rockhill/job_change() // TA EDIT START
+	. = ..()
+	var/datum/job/inquisitor = SSjob.GetJobType(/datum/job/roguetown/inquisitor)
+	inquisitor.job_subclasses -= /datum/advclass/inquisitor/ordinator
+	inquisitor.advclass_cat_rolls -= CTAG_ORDINATOR // TA EDIT END

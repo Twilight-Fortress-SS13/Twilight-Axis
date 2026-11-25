@@ -12,6 +12,7 @@
 		"Keeper",\
 		"Inquisitor",\
 		"Absolver",\
+		"Ordinator", /* TA EDIT */ \
 		"Orthodoxist",\
 		"Assassin",\
 		"Bandit",\
@@ -49,6 +50,7 @@
 		"Keeper",\
 		"Inquisitor",\
 		"Absolver",\
+		"Ordinator", /* TA EDIT */ \
 		"Orthodoxist",\
 		"Assassin",\
 		"Bandit",\

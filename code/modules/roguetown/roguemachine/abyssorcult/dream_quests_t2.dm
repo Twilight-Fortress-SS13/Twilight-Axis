@@ -102,7 +102,7 @@
 		"Dendor cares for Him",
 		"Psydon stirs"
 	)
-	valid_roles = list("Orthodoxist","Inquisitor","Absolver")
+	valid_roles = list("Orthodoxist","Inquisitor","Absolver","Ordinator") // TA EDIT
 
 /datum/vision_quest/tier_2/the_lost_city
 	name = "Shal'Ghur"

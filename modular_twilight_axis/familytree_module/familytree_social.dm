@@ -87,6 +87,7 @@
 		/datum/job/roguetown/inquisitor,
 		/datum/job/roguetown/orthodoxist,
 		/datum/job/roguetown/absolver,
+		/datum/job/roguetown/ordinator,
 	)
 
 	// Town military and garrison
