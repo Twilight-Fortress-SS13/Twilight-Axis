@@ -1346,7 +1346,7 @@
 	boobed = TRUE
 	slot_flags = ITEM_SLOT_ARMOR|ITEM_SLOT_CLOAK
 	flags_inv = HIDECROTCH|HIDEBOOB
-	storage = TRUE
+	storage = null
 	sellprice = 300
 
 // Helpers

@@ -166,29 +166,47 @@
 		return
 	var/mob/living/L = AM
 	var/atom/movable/pulling = L.pulling
-	var/was_pulled_buckled = FALSE
 	var/obj/item/inqarticles/garrote/cord
-	if(pulling)
-		if(pulling in L.buckled_mobs)
-			was_pulled_buckled = TRUE
+	if(pulling && !(pulling in L.buckled_mobs))
 		for(var/obj/item/inqarticles/garrote/G in L.held_items)
 			if(G.victim == pulling)
 				cord = G
 				REMOVE_TRAIT(pulling, TRAIT_GARROTED, TRAIT_GENERIC)
 				break
-	L.forceMove(newtarg)
-	if(pulling)
-		L.stop_pulling()
-		pulling.stair_dragged = TRUE // TA EDIT
-		pulling.forceMove(newtarg)
-		pulling.stair_dragged = FALSE // TA EDIT
+	L.travel_z_with_riders(newtarg)
+	if(L.loc != newtarg)
+		return
+	if(pulling && !(pulling in L.buckled_mobs))
+		L.stop_pulling() // TA EDIT START
+		var/was_stair_dragged = pulling.stair_dragged
+		pulling.stair_dragged = TRUE // TA EDIT END
+		if(isliving(pulling))
+			var/mob/living/pulled_mob = pulling
+			pulled_mob.travel_z_with_riders(newtarg)
+		else
+			pulling.forceMove(newtarg)
+		if(!QDELETED(pulling)) // TA EDIT
+			pulling.stair_dragged = was_stair_dragged // TA EDIT
 		if(cord)
 			if(!cord.wrap(L, pulling))
 				cord.wipeslate(L)
-		else
-			L.start_pulling(pulling, supress_message = TRUE)
-		if(was_pulled_buckled) // Assume this was a fireman carry since piggybacking is not a thing
-			L.buckle_mob(pulling, TRUE, TRUE, 90, 0, 0)
+
+/mob/living/proc/travel_z_with_riders(turf/destination)
+	var/atom/origin = loc
+	forceMove(destination)
+	if(loc != destination || !has_buckled_mobs())
+		return
+	for(var/mob/living/rider as anything in buckled_mobs.Copy())
+		if(QDELETED(rider) || rider.buckled != src || rider.loc != origin)
+			continue
+		var/was_zfalling = rider.zfalling
+		rider.zfalling = TRUE
+		var/was_stair_dragged = rider.stair_dragged // TA EDIT
+		rider.stair_dragged = TRUE // TA EDIT
+		rider.forceMove(destination)
+		if(!QDELETED(rider)) // TA EDIT START
+			rider.stair_dragged = was_stair_dragged
+			rider.zfalling = was_zfalling // TA EDIT END
 
 #undef STAIR_STAMINA_COST // TA EDIT
 #undef STAIR_STAMINA_PULLING_MULTIPLIER // TA EDIT

@@ -260,7 +260,7 @@ GLOBAL_LIST_INIT(tat_virtue_choice_trait_rules, TAT_VIRTUE_CHOICE_TRAIT_RULES)
 	TAT_TRAIT_DIVINE_BOON_1 = TAT_TRAIT_ENTRY("Divine Boon I", 1, "Requires Divine Initiate. Raises your miracle package by one tier."), \
 	TAT_TRAIT_DIVINE_BOON_2 = TAT_TRAIT_ENTRY("Divine Boon II", 2, "Requires Divine Initiate and Divine Boon I. Raises your miracle package by one tier."), \
 	TAT_TRAIT_DIVINE_BOON_3 = TAT_TRAIT_ENTRY("Divine Boon III", 2, "Requires Divine Initiate and Divine Boon II. Raises your miracle package by one tier."), \
-	TAT_TRAIT_DIVINE_BLAST = TAT_TRAIT_ENTRY("Divine Blast", 1, "Requires Divine Boon III. Grants Divine Blast to divine faithful, or Unholy Blast to inhumen faithful."), \
+	TAT_TRAIT_DIVINE_BLAST = TAT_TRAIT_ENTRY("Divine Blast", 1, "Requires Divine Boon III. Grants Divine Blast to divine faithful, or Profane Blast to inhumen faithful."), \
 	TAT_TRAIT_MAGE_INITIATE = TAT_TRAIT_ENTRY("Mage Initiate", 2, "Grants one minor spell, three utility spells, +1 Arcane, Arcyne Armament training, and a Reading bonus equal to Magic direction points, up to +4. Also grants one extra utility spell per Arcane skill level."), \
 	TAT_TRAIT_MAGE_MAJOR_SLOT = TAT_TRAIT_ENTRY("Arcane Major Slot", 2, "Requires Mage Initiate. Grants +1 major spell slot."), \
 	TAT_TRAIT_MAGE_MINOR_SLOT_1 = TAT_TRAIT_ENTRY("Arcane Minor Slot I", 1, "Requires Mage Initiate. Grants +1 minor spell slot."), \

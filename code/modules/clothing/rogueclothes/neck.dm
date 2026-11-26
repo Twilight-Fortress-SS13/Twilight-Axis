@@ -558,6 +558,7 @@
 	grid_height = 32
 	/// Used to see whether or not we display the wrist icon or the neck icon regardless.
 	var/wrist_display = FALSE
+	no_loot_taint = TRUE
 
 /obj/item/clothing/neck/roguetown/psicross/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
 	if(slot == SLOT_WRISTS || (wrist_display && slot != SLOT_NECK))
@@ -1428,6 +1429,7 @@
 	item_state = "matthioschainmantle"
 	smeltresult = /obj/item/ingot/component/matthios
 	unenchantable = TRUE
+	no_loot_taint = TRUE //heretic stuff, in case it somehow ends up on a skele/NPC or w/e
 
 /obj/item/clothing/neck/roguetown/chaincoif/chainmantle/matthios/Initialize(mapload)
 	. = ..()
@@ -1448,6 +1450,7 @@
 	armor_class = ARMOR_CLASS_MEDIUM
 	smeltresult = /obj/item/ingot/component/zizo
 	unenchantable = TRUE
+	no_loot_taint = TRUE //heretic stuff, in case it somehow ends up on a skele/NPC or w/e
 
 /obj/item/clothing/neck/roguetown/bevor/zizo/Initialize(mapload)
 	. = ..()
@@ -1467,6 +1470,7 @@
 	item_state = "graggargorget"
 	smeltresult = /obj/item/ingot/component/graggar
 	unenchantable = TRUE
+	no_loot_taint = TRUE //heretic stuff, in case it somehow ends up on a skele/NPC or w/e
 
 /obj/item/clothing/neck/roguetown/gorget/steel/graggar/Initialize(mapload)
 	. = ..()
@@ -1496,6 +1500,7 @@
 	color = null
 	chunkcolor = "#645567"
 	smeltresult = /obj/item/ingot/component/baotha
+	no_loot_taint = TRUE //heretic stuff, in case it somehow ends up on a skele/NPC or w/e
 
 /obj/item/clothing/neck/roguetown/coif/baotha/Initialize(mapload)
 	. = ..()

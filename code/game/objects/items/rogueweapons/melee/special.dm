@@ -452,6 +452,7 @@
 	max_integrity = 333
 	sharpness_mod = 2
 	smeltresult = /obj/item/ingot/component/graggar
+	no_loot_taint = TRUE //heretic stuff, in case it somehow ends up on a skele/NPC or w/e
 
 /obj/item/rogueweapon/handclaw/steel/graggaredged/Initialize(mapload)
 	. = ..()
@@ -473,6 +474,7 @@
 	max_blade_int = 333
 	max_integrity = 333
 	smeltresult = /obj/item/ingot/component/graggar
+	no_loot_taint = TRUE //heretic stuff, in case it somehow ends up on a skele/NPC or w/e
 
 /obj/item/rogueweapon/handclaw/steel/graggarblunt/Initialize(mapload)
 	. = ..()
