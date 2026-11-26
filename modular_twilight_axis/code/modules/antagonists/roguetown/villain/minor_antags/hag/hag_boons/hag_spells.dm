@@ -153,3 +153,59 @@
 		/mob/living/carbon/human/species/wildshape/fox,
 	)
 	disallowed_equipment_type = list(/obj/item/rogueweapon)
+
+// Make Fey spell
+/obj/effect/proc_holder/spell/invoked/feytouch
+	name = "Fairy Touch"
+	desc = "Touch a mortal and offer him to become a feytouched, depriving him of all his debts to you."
+	invocation_type = "whisper"
+	invocations = list("Give up your soul and be free from debt.")
+	recharge_time = 5 SECONDS
+	range = 4
+	overlay_icon = 'icons/mob/actions/hagspells.dmi'
+	action_icon = 'icons/mob/actions/hagspells.dmi'
+	overlay_state = "hand_up"
+	var/confirmed_read = FALSE
+
+/obj/effect/proc_holder/spell/invoked/feytouch/cast(list/targets, mob/user)
+	var/datum/component/hag_curio_tracker/H = user.GetComponent(/datum/component/hag_curio_tracker)
+	if(!H)
+		to_chat(user, span_warning("How did you even get access to this without being a hag?"))
+		return FALSE
+
+
+	var/mob/living/carbon/human/victim = targets[1]
+	if(!ishuman(victim))
+		to_chat(user, span_warning("I need to cast this on a person!"))
+		return FALSE
+	if(!victim.client)
+		to_chat(user, span_warning("They're not aware enough to give me their name!"))
+		return FALSE
+	if(user == victim)
+		to_chat(user, span_warning("I can't make yourself a fey!"))
+		return FALSE
+	if(HAS_TRAIT(victim, TRAIT_FEYTOUCHED) || HAS_TRAIT(victim, TRAIT_FEYBOUND) || HAS_TRAIT(victim, TRAIT_ANCIENT_HAG))
+		to_chat(user, span_warning("I can't make fey a fey..?"))
+		return FALSE
+	if(alert(victim, "[user] is attempting to take your soul! You will become a feytouched and you WILL HAVE to LISTEN to the hag, but your debts will be payed. Do you want to allow this? Nothing bad will happen if you say no.", "FAIRY TOUCH", "Yes", "No") != "Yes")
+		to_chat(user, span_warning("They refused to your attempts."))
+		to_chat(victim, span_warning("Your soul is safe, for now."))
+		log_game("FEYTOUCH: [victim.real_name] ([victim.ckey]) has rejected to become fey of [user.real_name] ([user.ckey]).")
+		return TRUE
+	var/list/registry = H.boon_registry[victim.real_name]
+	for(var/datum/hag_boon/B in registry)
+		if(B.transmutable)
+			B.transmutable = FALSE
+			B.cursed = TRUE
+	// Make it feybound, but they can't refuse to be vessel.
+	ADD_TRAIT(victim, TRAIT_FEYBOUND, TRAIT_HAG_BOON)
+	GLOB.fey_vessels[victim] = TRUE
+	victim.extra_boon_budget = 60
+	for(var/mob/living/hag_mob in GLOB.active_hags)
+		var/datum/mind/hag_mind = hag_mob.mind
+		if(!hag_mind)
+			continue
+		hag_mind.i_know_person(victim)
+		victim.mind.i_know_person(hag_mind)
+	to_chat(victim, span_boldnotice("The Mossmother's gaze lingers upon you. You are recognized by her daughters."))
+	return TRUE

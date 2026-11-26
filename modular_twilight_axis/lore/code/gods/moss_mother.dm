@@ -30,3 +30,22 @@
 )
 	*message_out = span_info("[target] being covering in strange moss, that's knits it's wounds.")
 	*message_self = span_notice("My wounds being restored by strange moss...")
+
+	var/bonus = 1
+
+	if(HAS_TRAIT(target, TRAIT_FEYBOUND) || HAS_TRAIT(target, TRAIT_FEYTOUCHED) || HAS_TRAIT(target, TRAIT_ANCIENT_HAG))
+		bonus += 0.5
+
+	if(istype(target, /area/rogue/outdoors/bog) && istype(target, /area/rogue/indoors/shelter/bog) && istype(target, /area/rogue/indoors/shelter/bog_hag) && istype(target, /area/rogue/outdoors/bograt) && istype(target, /area/rogue/under/cavewet))
+		bonus += 0.5
+
+	for(var/obj/structure/roguemachine/mossmother/roots in range(5, user))
+		bonus += 0.5
+
+	if(bonus < 1)
+		return
+
+	*conditional_buff = TRUE
+	*situational_bonus = bonus
+	target.adjustToxLoss(-*situational_bonus*15)
+	target.blood_volume = min(target.blood_volume + (BLOOD_VOLUME_SURVIVE / 3), BLOOD_VOLUME_NORMAL)
