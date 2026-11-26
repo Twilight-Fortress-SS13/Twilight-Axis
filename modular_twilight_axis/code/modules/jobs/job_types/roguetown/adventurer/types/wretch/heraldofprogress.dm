@@ -34,6 +34,7 @@
 	)
 	subclass_stashed_items = list(
 		"Sewing Kit" = /obj/item/repair_kit,
+		"Stashed Funds" = /obj/item/roguecoin/silver/pile/wretchpile
 	)
 
 /datum/outfit/job/roguetown/wretch/herald_of_progress/pre_equip(mob/living/carbon/human/H)
@@ -50,7 +51,7 @@
 	beltr  = /obj/item/rogueweapon/huntingknife/idagger/steel
 	gloves = /obj/item/clothing/gloves/roguetown/fingerless_leather
 	id = /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult
-	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced
+	shoes = /obj/item/clothing/shoes/roguetown/boots/maille/iron
 	backpack_contents = list(
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
 		/obj/item/flashlight/flare/torch/lantern/prelit = 1,
@@ -131,7 +132,10 @@
 	"Be the lightning" = 'modular_twilight_axis/sound/music/instruments/ztrato (6).ogg',
 	"The last stand" = 'modular_twilight_axis/sound/music/instruments/ztrato (7).ogg',
 	"The bell rings for Psydon" = 'modular_twilight_axis/sound/music/instruments/ztrato (8).ogg',
-	"I came from hell" = 'modular_twilight_axis/sound/music/instruments/ztrato (9).ogg')
+	"I came from hell" = 'modular_twilight_axis/sound/music/instruments/ztrato (9).ogg',
+	"Your punishment" = 'modular_twilight_axis/sound/music/instruments/ztrato (10).ogg',
+	"Breaking in" = 'modular_twilight_axis/sound/music/instruments/ztrato (11).ogg',
+	"Disgraceful" = 'modular_twilight_axis/sound/music/instruments/ztrato (12).ogg')
 	blade_dulling = DULLING_BASHCHOP
 	w_class = WEIGHT_CLASS_HUGE
 	minstr = 8
@@ -142,7 +146,7 @@
 	integrity_failure = 0.2
 	smeltresult = null
 	wdefense = 7
-	wbalance = WBALANCE_HEAVY
+	wbalance = WBALANCE_NORMAL
 
 /obj/item/rogue/instrument/ztratocaster/Initialize(mapload)
 	. = ..()
