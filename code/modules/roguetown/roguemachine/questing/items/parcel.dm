@@ -51,9 +51,10 @@
 		/area/rogue/indoors/town/church = GLOB.church_positions,
 		/area/rogue/indoors/town/dwarfin = list("Guildmaster", "Guildsman"),
 		/area/rogue/indoors/town/shop = GLOB.atc_positions,
-		/area/rogue/indoors/town/manor = GLOB.noble_positions + GLOB.courtier_positions + GLOB.retinue_positions + list("Consort Dowager", "Servant"),
+		/area/rogue/indoors/town/manor = GLOB.noble_positions + GLOB.courtier_positions + GLOB.retinue_positions + list("Consort Dowager", "Servant", "Royal Knight", "Sultan", "Vizier", "Cataphract", "Sheikh"), // TA EDIT
 		/area/rogue/indoors/town/magician = list("Court Magician", "Magicians Associate", "Archivist"),
-		/area/rogue/indoors/town/physician = list("Head Physician", "Apothecary"),
+		/area/rogue/indoors/town/physician = list("Head Physician", "Apothecary", "Court Physician"), // TA EDIT
+		/area/rogue/indoors/town = list("Guild Handler") // TA EDIT
 	)
 	return area_jobs[area_type] || list("Steward", "Merchant")
 

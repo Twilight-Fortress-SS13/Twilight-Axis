@@ -37,7 +37,7 @@
 	if(!storage_comp)
 		return
 
-	if(target_coin.loc == storage_comp.real_location())
+	if(target_coin.loc == storage_comp.real_location() || (target_coin in storage_comp.contents())) // TA EDIT
 		return
 
 	var/original_target_quantity = target_coin.quantity	// Store original quantity for verification
@@ -107,21 +107,31 @@
 	grid_width = 32
 	component_type = /datum/component/storage/concrete/roguetown/coin_pouch/merchant
 
-/obj/item/storage/belt/rogue/pouch/merchant/coins/Initialize(mapload) //Same as coins/rich
+/obj/item/storage/belt/rogue/pouch/merchant/coins/Initialize(mapload)
 	. = ..()
-	var/obj/item/roguecoin/silver/pile/H = new(loc)
-	if(istype(H))
-		if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, H, null, TRUE, TRUE))
-			qdel(H)
-	H = new(loc)
-	if(istype(H))
-		if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, H, null, TRUE, TRUE))
-			qdel(H)
-	if(prob(50))
+	if(SSmapping.config.map_name == "Rockhill") // TA EDIT START
+		var/obj/item/roguecoin/goldkrona/mid_pile/H = new(loc)
+		if(istype(H))
+			if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, H, null, TRUE, TRUE))
+				qdel(H)
 		H = new(loc)
 		if(istype(H))
 			if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, H, null, TRUE, TRUE))
 				qdel(H)
+	else
+		var/obj/item/roguecoin/silver/pile/H = new(loc)
+		if(istype(H))
+			if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, H, null, TRUE, TRUE))
+				qdel(H)
+		H = new(loc)
+		if(istype(H))
+			if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, H, null, TRUE, TRUE))
+				qdel(H)
+		if(prob(50))
+			H = new(loc)
+			if(istype(H))
+				if(!SEND_SIGNAL(src, COMSIG_TRY_STORAGE_INSERT, H, null, TRUE, TRUE))
+					qdel(H) // TA EDIT END
 
 /obj/item/storage/belt/rogue/pouch/cloth
 	name = "cloth pouch"

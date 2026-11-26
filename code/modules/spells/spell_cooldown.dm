@@ -299,7 +299,8 @@
 		if(!can_cast_spell(TRUE))
 			cancel_casting()
 			return PROCESS_KILL
-		if(is_held_ready())
+		/*
+		if(is_held_ready()) // TA EDIT START
 			if(!fully_charged_at)
 				fully_charged_at = world.time
 			var/held_for = world.time - fully_charged_at
@@ -323,6 +324,7 @@
 				cancel_casting(voluntary = is_held_ready())
 				return PROCESS_KILL
 			invoke_resource_cost(primary_resource_type, ramped_drain)
+		*/ // TA EDIT END
 		refresh_charge_intent()
 		return
 
@@ -914,6 +916,7 @@
 	// If cast() returns FALSE, the spell fizzled - skip cooldown, cost, and feedback
 	if(cast_result == FALSE)
 		weapon_penalty_active = FALSE
+		cancel_casting() // TA EDIT
 		if(charge_required && click_to_activate && !channel_cast && owner?.client)
 			UnregisterSignal(owner.client, list(COMSIG_CLIENT_MOUSEDOWN, COMSIG_CLIENT_MOUSEUP))
 			RegisterSignal(owner.client, COMSIG_CLIENT_MOUSEDOWN, PROC_REF(start_casting))
@@ -1229,6 +1232,7 @@
 	show_cast_effect(owner)
 
 	// Spell glow light
+	QDEL_NULL(spell_glow_light)
 	if(glow_intensity && spell_color && isliving(owner))
 		if(spell_glow_light)
 			QDEL_NULL(spell_glow_light)
@@ -1270,6 +1274,10 @@
 
 /// End the charging cycle
 /datum/action/cooldown/spell/proc/end_charging()
+	QDEL_NULL(spell_glow_light)
+	if(!currently_charging)
+		return
+
 	currently_charging = FALSE
 	fully_charged = FALSE
 	fully_charged_at = 0
@@ -1371,7 +1379,7 @@
 	return charge_required && click_to_activate && !channel_cast && !npc_controlled()
 
 /datum/action/cooldown/spell/proc/has_hold_cap()
-	return is_held_ready() && !charge_then_click && hold_max_time > hold_grace_time
+	return FALSE // TA EDIT
 
 /datum/action/cooldown/spell/proc/handle_hold_instability(held_for)
 	if(!has_hold_cap())
@@ -1404,11 +1412,7 @@
 	cancel_casting(voluntary = TRUE, cost_mult_override = SPELL_HOLD_TEAR_COST)
 
 /datum/action/cooldown/spell/proc/is_cancel_penalized()
-	if(!cancel_penalty_mult)
-		return FALSE
-	if(!source_aspect || ispath(source_aspect, /datum/magic_aspect/pseudo))
-		return FALSE
-	return TRUE
+	return FALSE // TA EDIT
 
 /// Whether the charge window has elapsed. Credits real held time so tick lag can't eat a full charge.
 /datum/action/cooldown/spell/proc/charge_complete()

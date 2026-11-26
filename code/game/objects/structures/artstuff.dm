@@ -167,6 +167,11 @@
 	overlay_to_index = list()
 	current_overlays = 0
 
+/obj/item/canvas/proc/upload_painting(mob/user)
+	if(!author || !title || !user)
+		return
+	flatten()
+
 /atom/movable/screen/canvas
 	icon = 'icons/roguetown/items/paint_supplies/canvas_32x32.dmi'
 	icon_state = "canvas"
@@ -181,6 +186,7 @@
 
 	/// per painter drag/erase/shade state, keyed by mob
 	var/list/painter_states = list()
+	var/max_ink = 50 //TA EDIT
 
 /atom/movable/screen/canvas/Destroy()
 	host = null
@@ -200,7 +206,7 @@
 /atom/movable/screen/canvas/proc/get_painter_state(mob/user)
 	var/list/state = painter_states[user]
 	if(!state)
-		state = list("drawing" = FALSE, "erasing" = FALSE, "shading" = FALSE, "last_x" = null, "last_y" = null)
+		state = list("drawing" = FALSE, "erasing" = FALSE, "shading" = FALSE, "last_x" = null, "last_y" = null, "ink" = 0)
 		painter_states[user] = state
 	return state
 
@@ -284,12 +290,18 @@
 		state["erasing"] = FALSE
 		to_chat(usr, span_notice("I am [state["drawing"] ? "" : "no longer"] drawing."))
 
+	if(state["drawing"])
+		state["ink"] = 0
+
 	state["last_x"] = x
 	state["last_y"] = y
 
 /// paints or erases one brush stamp of cells, returns TRUE if the baked icon was mutated and needs reassigning
-/atom/movable/screen/canvas/proc/draw_pixel(x, y, color, is_erasing, brush_size = 1, shading = FALSE)
+/atom/movable/screen/canvas/proc/draw_pixel(x, y, color, is_erasing, brush_size = 1, shading = FALSE, mob/user)
 	. = FALSE
+	var/list/state = painter_states[user]
+	if(!state || !state["drawing"])
+		return
 	var/lo = round((brush_size - 1) / 2)
 	var/hi = brush_size - 1 - lo
 	for(var/px = x - lo to x + hi)
@@ -312,6 +324,12 @@
 					. = TRUE
 				host.erase_cell(px, py, was_painted)
 				continue
+
+			if(state["ink"] >= max_ink)
+				state["drawing"] = FALSE
+				state["last_x"] = null
+				state["last_y"] = null
+				return
 
 			var/cell_color = color
 			var/pre_merge = host.modified_areas[key]
@@ -339,6 +357,7 @@
 			if(!old)
 				current_overlays++
 
+			state["ink"]++
 			host.update_drawing(px, py, cell_color)
 			if(current_overlays > 150)
 				flatten()
@@ -359,7 +378,7 @@
 	overlay_to_index = list()
 	current_overlays = 0
 
-/atom/movable/screen/canvas/proc/draw_line(start_x, start_y, end_x, end_y, color, is_erasing, brush_size = 1)
+/atom/movable/screen/canvas/proc/draw_line(start_x, start_y, end_x, end_y, color, is_erasing, brush_size = 1, mob/user)
 	// AI suggested implementing bresenham and it blew my mind because i hadn't done that shit since college lol - Ryan
 	. = FALSE
 	var/dx = abs(end_x - start_x)
@@ -370,9 +389,12 @@
 
 	var/cx = start_x
 	var/cy = start_y
+	var/list/state = painter_states[user]
 
 	while(TRUE)
-		if(draw_pixel(cx, cy, color, is_erasing, brush_size))
+		if(!state || !state["drawing"])
+			break
+		if(draw_pixel(cx, cy, color, is_erasing, brush_size, FALSE, user))
 			. = TRUE
 		if(cx == end_x && cy == end_y)
 			break
@@ -407,6 +429,8 @@
 	state["last_y"] = null
 
 /atom/movable/screen/canvas/proc/handle_paint_move(mob/user, params)
+	if(world.cpu > 90)
+		return
 	if(!can_paint(user))
 		return
 	var/list/state = painter_states[user]
@@ -434,7 +458,7 @@
 
 	if(state["shading"])
 		if("[x],[y]" in host.modified_areas)
-			draw_pixel(x, y, current_color, FALSE, brush.brush_size, TRUE)
+			draw_pixel(x, y, current_color, FALSE, brush.brush_size, TRUE, user)
 			state["last_x"] = x
 			state["last_y"] = y
 		return
@@ -444,9 +468,9 @@
 	var/last_x = state["last_x"]
 	var/last_y = state["last_y"]
 	if(last_x != null && last_y != null && (last_x != x || last_y != y))
-		dirty = draw_line(last_x, last_y, x, y, current_color, is_erasing, brush.brush_size)
+		dirty = draw_line(last_x, last_y, x, y, current_color, is_erasing, brush.brush_size, user)
 	else
-		dirty = draw_pixel(x, y, current_color, is_erasing, brush.brush_size)
+		dirty = draw_pixel(x, y, current_color, is_erasing, brush.brush_size, FALSE, user)
 
 	if(dirty)
 		icon = draw

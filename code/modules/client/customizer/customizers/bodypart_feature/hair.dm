@@ -1102,7 +1102,21 @@
 		/datum/sprite_accessory/hair/head/mcsqueeb,
 		/datum/sprite_accessory/hair/head/ziegler,
 		/datum/sprite_accessory/hair/head/zoey,
-		/datum/sprite_accessory/hair/head/zone
+		/datum/sprite_accessory/hair/head/zone,
+
+		//TA Hairs
+		/datum/sprite_accessory/hair/head/ta/dreadlocks_accurate, // TA EDIT START
+		/datum/sprite_accessory/hair/head/ta/dreadlocks_accurate_tied,
+		/datum/sprite_accessory/hair/head/ta/cactus,
+		/datum/sprite_accessory/hair/head/ta/choppy,
+		/datum/sprite_accessory/hair/head/ta/elize,
+		/datum/sprite_accessory/hair/head/ta/floof,
+		/datum/sprite_accessory/hair/head/ta/wavy_tied,
+		/datum/sprite_accessory/hair/head/ta/wavy,
+		/datum/sprite_accessory/hair/head/ta/wavy_medium,
+		/datum/sprite_accessory/hair/head/ta/charlotta,
+		/datum/sprite_accessory/hair/head/ta/volaju_alt,
+		/datum/sprite_accessory/hair/head/ta/long_twist, // TA EDIT END
 		)
 
 /datum/customizer_choice/bodypart_feature/hair/head/humanoid/get_random_accessory(datum/customizer_entry/entry, datum/preferences/prefs)

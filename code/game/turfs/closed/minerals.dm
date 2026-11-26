@@ -30,6 +30,7 @@
 	break_sound = 'sound/combat/hits/onstone/stonedeath.ogg'
 	attacked_sound = list('sound/combat/hits/onrock/onrock (1).ogg', 'sound/combat/hits/onrock/onrock (2).ogg', 'sound/combat/hits/onrock/onrock (3).ogg', 'sound/combat/hits/onrock/onrock (4).ogg')
 	neighborlay = "dirtedge"
+	explosion_block = 2
 
 /turf/closed/mineral/Initialize(mapload)
 	if (!canSmoothWith)
@@ -104,7 +105,7 @@
 			return
 
 		var/mob/living/L = user
-		user.doing = FALSE
+		user.stop_all_doing() // TA EDIT
 		if(istype(I, /obj/item/rogueweapon/contraption/pick/drill)&& L.used_intent.type == /datum/intent/drill)
 			var/obj/item/rogueweapon/contraption/pick/drill/drillitem = I
 			// we're holding a drill and on drill intent

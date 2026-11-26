@@ -123,49 +123,9 @@ GLOBAL_LIST(round_end_notifiees)
 	set waitfor = FALSE
 	load_admins()
 
-// Whitelist Commands
-/datum/tgs_chat_command/whitelist_add
-	name = "whitelist_add"
-	help_text = "adds a ckey to the whitelist"
-
-/datum/tgs_chat_command/whitelist_add/Run(datum/tgs_chat_user/sender, params)
-	params = trim(params)
-	if(!params)
-		return "Insufficient parameters"
-
-	if(sender.channel.custom_tag != CONFIG_GET(string/chat_command_whitelist))
-		return "This command is not allowed in this channel."
-
-	BC_WhitelistKey(params)
-	message_admins("[chat_sender_name(sender)] added [params] to the border whitelist.")
-	log_admin("[chat_sender_name(sender)] added [params] to the border whitelist.")
-	if(CONFIG_GET(string/chat_announce_whitelist))
-		send2chat(new /datum/tgs_message_content("[chat_sender_name(sender)] added [params] to the border whitelist via Discord."), CONFIG_GET(string/chat_announce_whitelist))
-
-	return "added [params] to the border whitelist."
-
-/datum/tgs_chat_command/whitelist_remove
-	name = "whitelist_remove"
-	help_text = "removes a ckey from the whitelist"
-
-/datum/tgs_chat_command/whitelist_remove/Run(datum/tgs_chat_user/sender, params)
-	params = trim(params)
-	if(!params)
-		return "Insufficient parameters"
-
-	if(sender.channel.custom_tag != CONFIG_GET(string/chat_command_whitelist))
-		return "This command is not allowed in this channel."
-
-	BC_RemoveKey(params)
-	message_admins("[chat_sender_name(sender)] removed [params] from the border whitelist.")
-	log_admin("[chat_sender_name(sender)] removed [params] from the border whitelist.")
-	if(CONFIG_GET(string/chat_announce_whitelist))
-		send2chat(new /datum/tgs_message_content("[chat_sender_name(sender)] removed [params] from the border whitelist via Discord."), CONFIG_GET(string/chat_announce_whitelist))
-
-	return "removed [params] from the border whitelist."
-
 /datum/tgs_chat_command/asay
 	name = "asay"
+	admin_only = TRUE // TA EDIT
 	help_text = "<message> sends a message to in-game admin chat"
 
 /datum/tgs_chat_command/asay/Run(datum/tgs_chat_user/sender, params)
@@ -184,6 +144,7 @@ GLOBAL_LIST(round_end_notifiees)
 // Notes commands
 /datum/tgs_chat_command/notes
 	name = "notes"
+	admin_only = TRUE // TA EDIT
 	help_text = "<ckey> lists all of a players notes"
 
 /datum/tgs_chat_command/notes/Run(datum/tgs_chat_user/sender, params)
@@ -248,6 +209,7 @@ GLOBAL_LIST(round_end_notifiees)
 
 /datum/tgs_chat_command/note_add
 	name = "note_add"
+	admin_only = TRUE // TA EDIT
 	help_text = "<ckey> <high|medium|minor|none> <text> adds a note to a player"
 
 /datum/tgs_chat_command/note_add/Run(datum/tgs_chat_user/sender, params)
@@ -299,6 +261,7 @@ GLOBAL_LIST(round_end_notifiees)
 
 /datum/tgs_chat_command/note_remove
 	name = "note_remove"
+	admin_only = TRUE // TA EDIT
 	help_text = "<note id> deletes a player note, the id is shown by the notes command"
 
 /datum/tgs_chat_command/note_remove/Run(datum/tgs_chat_user/sender, params)

@@ -64,7 +64,7 @@
 				belt = /obj/item/storage/belt/rogue/leather/black
 				beltr = /obj/item/flashlight/flare/torch/lantern
 				id = /obj/item/clothing/ring/silver
-				H.cmode_music = 'sound/music/combat_noble.ogg'
+				H.cmode_music = sound("sound/music/combat_noble.ogg")
 			if("Azuria") //Azurian Nobility in Style. Unlike Courtiers, you're more in your fanciest of attire.
 				if(should_wear_masc_clothes(H))
 					cloak = /obj/item/clothing/cloak/half/azuria
@@ -84,7 +84,7 @@
 				belt = /obj/item/storage/belt/rogue/leather/plaquesilver //On-part with courtier noblilty
 				beltr = /obj/item/flashlight/flare/torch/lantern
 				id = /obj/item/clothing/ring/gold
-				H.cmode_music = 'sound/music/combat_noble.ogg'
+				H.cmode_music = sound("sound/music/combat_noble.ogg")
 				//No unique language cause true Azurian-Origin Azurians know the tongue. Keeps the idea of foreign marrages, same courts
 			if("Underdark") //Matron vs halfcloak fits
 				if(should_wear_masc_clothes(H))
@@ -101,7 +101,7 @@
 				belt = /obj/item/storage/belt/rogue/leather/plaquegold/noble
 				beltr = /obj/item/flashlight/flare/torch/lantern
 				id = /obj/item/clothing/ring/gold
-				H.cmode_music = 'sound/music/combat_delf.ogg'
+				H.cmode_music = sound("sound/music/combat_delf.ogg")
 				change_origin(H, /datum/virtue/origin/racial/underdark) //Yeah obviously
 			if("Grenzelhoft") //Half-cloak and grenzelshirt, with fancy cloak - Gender Neutral.
 				armor = /obj/item/clothing/suit/roguetown/shirt/tunic/noblecoat/astrocrat
@@ -115,7 +115,7 @@
 				beltr = /obj/item/flashlight/flare/torch/lantern
 				id = /obj/item/clothing/ring/blacksteel //Most Grenzelhoftian ass ring you can get
 				neck = /obj/item/clothing/neck/roguetown/psicross/undivided //The Ten Undivided!
-				H.cmode_music = 'sound/music/combat_grenzelhoft.ogg'
+				H.cmode_music = sound("sound/music/combat_grenzelhoft.ogg")
 				H.grant_language(/datum/language/grenzelhoftian) //Duh
 				backl = /obj/item/storage/backpack/rogue/satchel/black
 			if("Otava") //Rosa-Attire, Meant to be quite Silver-Lined mixed w/ Psydonic culture, Uniquely stands out.
@@ -133,7 +133,7 @@
 				beltr = /obj/item/flashlight/flare/torch/lantern
 				id = /obj/item/clothing/ring/signet
 				wrists = /obj/item/clothing/neck/roguetown/psicross //Purity afloat!
-				H.cmode_music = 'sound/music/combat_inqcommander.ogg' //ENDVRE
+				H.cmode_music = sound("sound/music/combat_inqcommander.ogg") //ENDVRE
 				H.grant_language(/datum/language/otavan) //Duh
 				backl = /obj/item/storage/backpack/rogue/satchel/otavan
 			if("Aavnr") //Gender Neutral Fit Mostly
@@ -156,7 +156,7 @@
 						neck = /obj/item/clothing/neck/roguetown/psicross/reform //GOD IS DEAD, YET I FOLLOW HIS WORD!!
 					else
 						neck = null //fallback is nothing, heretic
-				H.cmode_music = 'sound/music/frei_lancer.ogg'
+				H.cmode_music = sound("sound/music/frei_lancer.ogg")
 				H.grant_language(/datum/language/aavnic) //Duh
 				backl = /obj/item/storage/backpack/rogue/satchel/black
 			if("Ranesheni") //Gender Neutral Fit Mostly (To avoid excessive mechanical differences)
@@ -173,7 +173,7 @@
 				cloak = /obj/item/clothing/cloak/half/rider/red
 				beltr = /obj/item/flashlight/flare/torch/lantern
 				//No ring cause its the best fit for armor - unintended but w/e
-				H.cmode_music = 'sound/music/combat_desertrider.ogg'
+				H.cmode_music = sound("sound/music/combat_desertrider.ogg")
 				H.grant_language(/datum/language/raneshi) //Duh
 				backl = /obj/item/storage/backpack/rogue/satchel/black
 			if("Gronn") //Noble dress or rugged cloak and hat, nordic-esc nobility
@@ -191,14 +191,23 @@
 				shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced/atgervi
 				pants = /obj/item/clothing/under/roguetown/trou/leather/gronn
 				beltr = /obj/item/flashlight/flare/torch/lantern
-				H.cmode_music = 'sound/music/combat_vagarian.ogg'
+				H.cmode_music = sound("sound/music/combat_vagarian.ogg")
 				H.grant_language(/datum/language/gronnic) //Duh
 				H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/warrior] //Barbaric nobles
 				H.dna.species.soundpack_f = GLOB.voice_packs[/datum/voicepack/female/warrior]
 				backl = /obj/item/storage/backpack/rogue/satchel
 				switch(H.patron?.type) //If you are in the gronnic pantheon, you get a lucky charm.
 					if(/datum/patron/inhumen/zizo)
-						neck = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
+						if(H.mind) //TA EDIT START
+							var/talismans = list("The Wolf, Plotting", "The Spider, Rising")
+							var/talismanschoice = input(H, "Choose your path", "Beasts of the North") as anything in talismans
+							switch(talismanschoice)
+								if("The Wolf, Plotting")
+									id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
+								if("The Spider, Rising")
+									id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/spider
+						else
+							id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn //TA EDIT END
 					if(/datum/patron/inhumen/graggar)
 						neck = /obj/item/clothing/neck/roguetown/psicross/inhumen/graggar/gronn
 					if(/datum/patron/inhumen/matthios)
@@ -227,7 +236,7 @@
 				belt = /obj/item/storage/belt/rogue/leather/plaquesilver
 				beltr = /obj/item/flashlight/flare/torch/lantern
 				id = /obj/item/clothing/ring/gold
-				H.cmode_music = 'sound/music/frei_lancer.ogg'
+				H.cmode_music = sound("sound/music/frei_lancer.ogg")
 				H.grant_language(/datum/language/etruscan) //Duh
 				backl = /obj/item/storage/backpack/rogue/satchel/black
 			if("Naledi") //100% Gender neutral fit, just like the warscholars and refugees
@@ -240,7 +249,7 @@
 				beltr = /obj/item/flashlight/flare/torch/lantern
 				wrists = /obj/item/clothing/neck/roguetown/psicross/naledi
 				neck = /obj/item/clothing/neck/roguetown/psicross/g //Not warded or anything, just raw psydonic status vs ring
-				H.cmode_music = 'sound/music/warscholar.ogg'
+				H.cmode_music = sound("sound/music/warscholar.ogg")
 				id = /obj/item/clothing/neck/roguetown/psicross/naledi //you get the psybracelet too, sire.
 				H.grant_language(/datum/language/celestial) //Yes
 				backl = /obj/item/storage/backpack/rogue/satchel/black
@@ -262,7 +271,7 @@
 				belt = /obj/item/storage/belt/rogue/leather/plaquesilver
 				beltr = /obj/item/flashlight/flare/torch/lantern
 				id = /obj/item/clothing/ring/gold
-				H.cmode_music = 'sound/music/combat_Kazengun_Runaway_Chariot.ogg'
+				H.cmode_music = sound("sound/music/combat_Kazengun_Runaway_Chariot.ogg")
 				H.grant_language(/datum/language/kazengunese) //Duh
 				backl = /obj/item/storage/backpack/rogue/satchel/black
 

@@ -1,4 +1,5 @@
 /datum/component/riding
+	var/current_move_delay // TA EDIT
 	var/vehicle_move_delay = 4 //tick delay between movements, lower = faster, higher = slower
 	var/keytype
 	var/riding_xp_move_counter = 0 //Plays with the new EXP-obtaining mechanic, courtesy of PR #768 from Ophaq.
@@ -34,10 +35,12 @@
 
 /datum/component/riding/proc/vehicle_mob_buckle(datum/source, mob/living/M, force = FALSE)
 	var/atom/movable/AM = parent
+	update_vehicle_glide_size()
 	M.set_glide_size(AM.glide_size)
 	M.updating_glide_size = FALSE
 	if(!driver && !M.incapacitated())
 		driver = M
+	sync_rider_glide_sizes() // TA EDIT
 	handle_vehicle_layer()
 	handle_vehicle_offsets()
 
@@ -47,12 +50,29 @@
 	M.updating_glide_size = TRUE
 	if(M == driver)
 		driver = null
+		momentum = 0 // TA EDIT
+		riding_xp_move_counter = 0 // TA EDIT
 	if(AM.has_buckled_mobs())
 		handle_vehicle_offsets()
 		return
 	var/mob/living/L = AM
 	if(!istype(L) || !L.lying)
 		AM.layer = initial(AM.layer)
+
+/datum/component/riding/proc/update_vehicle_glide_size() // TA EDIT START
+	var/atom/movable/AM = parent
+	AM.set_glide_size(DELAY_TO_GLIDE_SIZE(current_move_delay || vehicle_move_delay))
+
+/datum/component/riding/proc/sync_rider_glide_sizes()
+	var/atom/movable/AM = parent
+	if(!AM.has_buckled_mobs())
+		return
+	for(var/mob/M in AM.buckled_mobs)
+		if(!istype(M, /mob/living))
+			continue
+		var/mob/living/rider = M
+		rider.set_glide_size(AM.glide_size)
+		rider.updating_glide_size = FALSE // TA EDIT END
 
 /datum/component/riding/proc/handle_vehicle_layer()
 	var/atom/movable/AM = parent
@@ -67,6 +87,7 @@
 	var/atom/movable/AM = parent
 	if(!AM.has_buckled_mobs())
 		return
+	sync_rider_glide_sizes() // TA EDIT
 	if(driver?.m_intent == MOVE_INTENT_RUN)
 		riding_xp_move_counter++
 		if(riding_xp_move_counter >= 5)					// Determines how many steps are needed before Riding-type EXP is rewarded. In this case, you obtain EXP every time you travel five tiles while riding a mount.
@@ -127,6 +148,8 @@
 		if((driver && !driver.incapacitated()) || user.incapacitated())
 			return
 		driver = user
+		momentum = 0 // TA EDIT
+		riding_xp_move_counter = 0 // TA EDIT
 		handle_vehicle_offsets()
 	if(user.incapacitated())
 		user.visible_message(span_warning("[user] falls off of [AM]!"), span_warning("I fall off of [AM]!"))
@@ -150,6 +173,13 @@
 		momentum = 0
 		return
 
+	// TA EDIT START
+	if(istype(AM, /mob/living/simple_animal))
+		var/mob/living/simple_animal/mount = AM
+		if(mount.IsImmobilized())
+			momentum = 0
+			return // TA EDIT END
+
 	if(world.time > nextmove + 0.5 SECONDS)
 		momentum = 0
 	else if(heading && direction != heading)
@@ -163,7 +193,9 @@
 	if(ISDIAGONALDIR(direction))
 		delay *= 2
 	nextmove = world.time + delay
+	current_move_delay = delay // TA EDIT START
 	AM.set_glide_size(DELAY_TO_GLIDE_SIZE(delay))
+	sync_rider_glide_sizes() // TA EDIT END
 
 	step(AM, direction)
 	if(AM.loc == current)

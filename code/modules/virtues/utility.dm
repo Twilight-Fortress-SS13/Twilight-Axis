@@ -6,7 +6,7 @@ GLOBAL_LIST_EMPTY(fey_vessels)
 	ui_fa_icon = "crown"
 	restricted = TRUE
 	max_choices = 1
-	races = list(/datum/species/construct, /datum/species/dullahan)
+	races = list(/datum/species/construct, /datum/species/dullahan, /datum/species/ooze) //TA EDIT
 	added_traits = list(TRAIT_NOBLE, TRAIT_EXPERT_HUNTER)
 	added_skills = list(list(/datum/skill/misc/reading, 1, 6))
 	added_stashed_items = list("Hefty Coinpurse" = /obj/item/storage/belt/rogue/pouch/coins/virtuepouch)
@@ -89,6 +89,7 @@ GLOBAL_LIST_EMPTY(fey_vessels)
 			if(NOTABLE_RESIDENCY)
 				ADD_TRAIT(recipient, TRAIT_RESIDENT, TRAIT_VIRTUE)
 				ADD_TRAIT(recipient, TRAIT_WELLKNOWN, TRAIT_VIRTUE)
+				recipient.mind?.special_items["Грамота горожанина"] = /obj/item/book/granter/resident_manuscript/commoner
 				if(recipient.mind)
 					for(var/X in (GLOB.peasant_positions + GLOB.burgher_positions + GLOB.retinue_positions + GLOB.garrison_positions + GLOB.noble_positions + GLOB.inquisition_positions))
 						for(var/datum/mind/MF in get_minds(X))
@@ -153,7 +154,7 @@ GLOBAL_LIST_EMPTY(fey_vessels)
 	choice_costs = list(0, 0, 0, 2, 4)
 	extra_choices = list(
 	SOCIALITE_BEAUTIFUL,
-	SOCIALITE_MASSAGE,
+//	SOCIALITE_MASSAGE,
 	SOCIALITE_NUTCRACKER,
 	SOCIALITE_EMPATH,
 	SOCIALITE_PERFORMER,
@@ -192,6 +193,9 @@ GLOBAL_LIST_EMPTY(fey_vessels)
 	..()
 	for(var/choice in picked_choices)
 		switch(choice)
+		//	if(SOCIALITE_MASSAGE)
+		//		if(recipient.mind)
+		//			recipient.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/massage)
 			if(SOCIALITE_BEAUTIFUL)
 				if(isdullahan(recipient))
 					ADD_TRAIT(recipient, TRAIT_BEAUTIFUL_UNCANNY, TRAIT_VIRTUE)
@@ -204,9 +208,6 @@ GLOBAL_LIST_EMPTY(fey_vessels)
 				ADD_TRAIT(recipient, TRAIT_EMPATH, TRAIT_VIRTUE)
 			if(SOCIALITE_PERFORMER)
 				recipient.adjust_skillrank_up_to(/datum/skill/misc/music, SKILL_LEVEL_EXPERT, silent = TRUE)
-			if(SOCIALITE_MASSAGE)
-				if(recipient.mind)
-					recipient.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/massage)
 			else
 				recipient.mind.special_items[choice] = extra_choices[choice]
 
@@ -255,8 +256,9 @@ GLOBAL_LIST_EMPTY(fey_vessels)
 		"Orcish" = /datum/language/orcish,
 		"Infernal" = /datum/language/hellspeak,
 		"Draconic" = /datum/language/draconic,
-		"Celestial" = /datum/language/celestial,
-		"Ranesheni" = /datum/language/raneshi,
+		"Valorian" = /datum/language/valorian, //TA EDIT
+		"Sama'glos" = /datum/language/raneshi, //TA EDIT
+		"Gyedzenese" = /datum/language/gyedzenese, //TA EDIT
 		"Grenzelhoftian" = /datum/language/grenzelhoftian,
 		"Kazengunese" = /datum/language/kazengunese,
 		"Lingyuese" = /datum/language/lingyuese,
@@ -374,8 +376,7 @@ GLOBAL_LIST_EMPTY(fey_vessels)
 /datum/virtue/utility/homesteader
 	name = "Pilgrim (-3 TRI)"
 	added_traits = list(TRAIT_HOMESTEAD_EXPERT)
-	softcap = TRUE
-	hardcapped_skills = list(/datum/skill/misc/athletics, /datum/skill/combat/knives)
+	softcap = FALSE // TA EDIT
 	desc= "As they say, 'hearth is where the heart is'. You are intimately familiar with the labors of lyfe, and have stowed away everything necessary to start anew: a hunting dagger, your trusty hoe, and a sack of assorted supplies."
 	ui_fa_icon = "house-fire"
 	triumph_cost = 3

@@ -1,50 +1,50 @@
 {
 	"lawsets": {
 		"tennite_decalogue": {
-			"name": "The Decalogue",
+			"name": "Декалог",
 			"laws": [
-				"Honor the Ten and no other gods before them.",
-				"Keep holy the sacred days of each deity, and offer proper sacrifice and prayer.",
-				"Speak no blasphemy against the gods, nor take their names in vain, nor invoke the names of demons or other dark powers.",
-				"Honor thy father and mother, for through them Astrata gave thee lyfe",
-				"Give tithes and offerings to the temples, and respect the clergy of the gods, for they are the gods' servants.",
-				"Thou shalt not murder",
-				"Thou shalt not commit adultery.",
-				"Thou shalt not steal.",
-				"Thou shalt not bear false witness against thy neighbor.",
-				"Thou shalt not covet thy neighbour's house, thou shalt not covet thy neighbour's wife, nor his manservant, nor his maidservant, nor his ox, nor his ass, nor any thing that is thy neighbors."
+				"Основой правосудия является «Книга Правосудия». Нижеследующие законы суть особые дополнения к ней.",
+				"Почитай Десятерых, и да не будет у тебя других богов пред ними.",
+				"Свято чти священные дни каждого божества, и возноси надлежащие жертвы и молитвы.",
+				"Не произноси хулы на богов, не поминай имен их всуе, и не призывай имен демонов или иных темных сил.",
+				"Почитай отца твоего и матерь твою, ибо через них Астрата даровала тебе жизнь.",
+				"Давай десятину и приношения храмам, и уважай духовенство богов, ибо они суть слуги божьи.",
+				"Не убий.",
+				"Не укради.",
+				"Не произноси ложного свидетельства на ближнего твоего.",
+				"Не желай дома ближнего твоего; не желай жены ближнего твоего, ни раба его, ни рабыни его, ни вола его, ни осла его, ничего, что у ближнего твоего."
 			],
 			"weight": 3
 		},
 		"code of hammurabi": {
-			"name": "Code of Hamurabi",
+			"name": "Кодекс Хаммураби",
 			"laws": [
-				"If a man put out the eye of another man, his eye shall be put out.",
-				"If any one is committing a robbery and is caught, then he shall be put to death.",
-				"If a man has betrothed a bride to his son and his son has known her, and if afterwards he (the father) lies in her bosom, and they seize him, this man shall be put to death; the woman shall go free.",
-				"If a builder builds a house for a man and does not make its construction firm, and the house which he has built collapses and causes the death of the owner of the house, that builder shall be put to death.",
-				"If any one take over a field to till it as a renter, he shall pay the corn rent of the field to its owner.",
-				"If any one place his property with another for safekeeping, and there at the place of safekeeping the property be lost, the owner of the house shall make restitution to the owner for the property that was lost.",
-				"If any one take a male or female slave of the court, or a male or female slave of a freed man, outside the city gates, he shall be put to death.",
-				"If a son strike his father, his hands shall be hewn off.",
-				"If any one be too lazy to maintain his dam and does not strengthen it, and a break be made in his dam and the water flood the plantation, the man in whose dam the break has been made shall replace the grain which he has caused to be ruined.",
-				"If any one steal cattle or sheep, or an ass, or a pig or a goat, if it belong to a god or to the court, the thief shall pay thirtyfold; if they belonged to a freed man of the king he shall pay tenfold; if the thief has nothing with which to pay he shall be put to death."
+				"Основой правосудия является «Книга Правосудия». Нижеследующие законы суть особые дополнения к ней.",
+				"Если человек выбьет глаз другому человеку, то должно выбить глаз ему.",
+				"Если кто-либо совершит грабеж и будет пойман, то он должен быть предан смерти.",
+				"Если строитель построит человеку дом и не сделает его конструкцию прочной, и дом, который он построил, обрушится и причинит смерть хозяину дома, то этого строителя должно предать смерти.",
+				"Если кто-либо возьмет поле в аренду для возделывания, то он должен уплатить зерновую ренту за поле его владельцу.",
+				"Если кто-либо отдаст свое имущество другому на хранение, и там, в месте хранения, имущество пропадет, то хозяин дома должен возместить владельцу пропавшее имущество.",
+				"Если кто-либо выведет раба или рабыню дворца, либо раба или рабыню свободного человека за городские ворота, то он должен быть предан смерти.",
+				"Если сын ударит своего отца, то должно отрубить ему руки.",
+				"Если кто-либо будет слишком ленив, чтобы поддерживать свою плотину, и не укрепит её, и в его плотине произойдет прорыв, и вода затопит посевы, то человек, в чьей плотине произошел прорыв, должен возместить зерно, погубленное по его вине.",
+				"Если кто-либо украдет вола или овцу, или осла, или свинью, или козу, и если это принадлежит богам или дворцу, то вор должен заплатить в тридцатикратном размере; если они принадлежали свободному человеку государя, он должен заплатить в десятикратном размере; если вору нечем платить, то он должен быть предан смерти."
 			],
 			"weight": 1
 		},
 		"the_great_charter": {
-			"name": "The Great Charter",
+			"name": "Великая хартия",
 			"laws": [
-				"The Church shall be free from interference by the Crown, its rights undiminished and protected. The Crown shalt not interfere with the elections or appointments of bishops, administration of church property nor the discipline of the clergy and heretics.",
-				"The Inquisition may only investigate and try commoners for crimes of heresy. Burghers and nobles shall be tried only under the Bishop's supervision and by a jury of their peers and clergy.",
-				"No burgher or nobleman shall be seized or imprisoned, or stripped of his rights or possessions, or outlawed or exiled, or deprived of his standing in any other way, nor will we proceed with force against him, or send others to do so, except by the lawful judgement of his equals or by the law of the land.",
-				"To no one will we sell, to no one will we refuse or delay, right or justice.",
-				"All merchants shall have safe and secure exit from, and entry to the Realm, with the freedom to conduct their trade unhindered, except in time of war, when it shall be with the special license of the Crown.",
-				"No tax or levy shall be imposed upon the Realm without the consent of a Council of Knights and Nobles, save for ransom of the Crown's person.",
-				"No sheriff or baliff of ours, or other person, shall take the properties of any yeoman, against the will of said yeoman, without due compensation.",
-				"Common lands and waters shall be held and used in common by all yeomen of the Realm.",
-				"No man shall be compelled to perform greater service than is due from his tenure.",
-				"Burghers and Nobles retain the right to bear arms, save when such right is revoked for crimes against the Crown."
+				"Основой правосудия является «Книга Правосудия». Нижеследующие законы суть особые дополнения к ней.",
+				"Церковь должна быть свободна от вмешательства Короны, права ее не умалены и защищены. Корона не должна вмешиваться ни в выборы или назначения епископов, ни в управление церковным имуществом, ни в суд над духовенством и еретиками.",
+				"Инквизиция может расследовать и судить за преступления ереси только простолюдинов. Горожане и дворяне могут быть судимы только под надзором епископа и судом равных им и духовенства.",
+				"Ни один горожанин или дворянин не будет схвачен или брошен в темницу, или лишен своих прав или владений, или объявлен вне закона или изгнан, или иным образом лишен своего положения, и мы не применим к нему силу и не пошлем других сделать это, иначе как по законному приговору равных ему или по закону страны.",
+				"Никому не будем продавать, никому не будем отказывать или задерживать право или правосудие.",
+				"Все купцы должны иметь безопасный и беспрепятственный выезд из Государства и въезд в него, со свободой вести свою торговлю без помех, кроме как в военное время, когда на то должно быть особое дозволение Короны.",
+				"Никакой налог или сбор не должен взиматься в Государстве без согласия Совета Рыцарей и Дворян, за исключением выкупа за особу Короны.",
+				"Ни наш шериф, ни бейлиф, ни иное лицо не должно брать имущество любого йомена против воли оного йомена без надлежащего возмещения.",
+				"Общинные земли и воды должны находиться в совместном владении и использовании всех йоменов Государства.",
+				"Горожане и дворяне сохраняют право на ношение оружия, за исключением случаев, когда таковое право отозвано за преступления против Короны."
 			],
 			"weight": 5
 		}

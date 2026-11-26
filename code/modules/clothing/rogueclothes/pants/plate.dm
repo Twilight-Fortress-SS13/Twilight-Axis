@@ -108,6 +108,7 @@
 	smeltresult = /obj/item/ingot/component/zizo
 	unenchantable = TRUE
 	no_loot_taint = TRUE //heretic stuff, in case it somehow ends up on a skele/NPC or w/e
+	alternate_worn_layer = ARMOR_LAYER // TA EDIT
 
 /obj/item/clothing/under/roguetown/platelegs/zizo/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ARMOR)

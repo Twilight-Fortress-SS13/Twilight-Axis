@@ -62,21 +62,21 @@ const lowTake = (row: ContractStatRow) => {
 
 const sumRows = (rows: ContractStatRow[], players: number): ContractStatRow =>
   rows.reduce(
-    (acc, r) => ({
-      ...acc,
-      posted: acc.posted + r.posted,
-      taken: acc.taken + r.taken,
-      lapsed: acc.lapsed + r.lapsed,
-      completed: acc.completed + r.completed,
-      failed: acc.failed + r.failed,
-      abandoned: acc.abandoned + r.abandoned,
-      withdrawn: acc.withdrawn + r.withdrawn,
-      paid: acc.paid + r.paid,
-      wait_ds: acc.wait_ds + r.wait_ds,
-      run_ds: acc.run_ds + r.run_ds,
-      party: acc.party + r.party,
-      deaths: acc.deaths + r.deaths,
-    }),
+    (acc, r) => {
+      acc.posted += r.posted;
+      acc.taken += r.taken;
+      acc.lapsed += r.lapsed;
+      acc.completed += r.completed;
+      acc.failed += r.failed;
+      acc.abandoned += r.abandoned;
+      acc.withdrawn += r.withdrawn;
+      acc.paid += r.paid;
+      acc.wait_ds += r.wait_ds;
+      acc.run_ds += r.run_ds;
+      acc.party += r.party;
+      acc.deaths += r.deaths;
+      return acc;
+    },
     {
       name: 'All contracts',
       posted: 0,

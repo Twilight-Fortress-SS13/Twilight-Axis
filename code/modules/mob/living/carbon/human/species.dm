@@ -815,7 +815,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 				if(istype(H.wear_shirt, I.type))
 					return FALSE
 				if(I.blocksound)
-					if(I.blocksound == H.wear_shirt.blocksound && !(istype(incoming_armor) && is_type_in_list(H.wear_shirt, incoming_armor.underlayers)))
+					if(I.blocksound == H.wear_shirt.blocksound && !((I.blocking_behavior & SAMEWEAR) || (H.wear_shirt.blocking_behavior & SAMEWEAR)) && !(istype(incoming_armor) && is_type_in_list(H.wear_shirt, incoming_armor.underlayers))) //TA EDIT
 						return FALSE
 			if( !(I.slot_flags & ITEM_SLOT_ARMOR) )
 				return FALSE
@@ -838,7 +838,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 			if( !(I.slot_flags & ITEM_SLOT_SHOES) )
 				return FALSE
 			var/obj/item/clothing/shoes = I
-			if(is_taur && (!istype(shoes) || !(shoes.clothing_flags & TAUR_COMPATIBLE)))
+			if(is_taur && (!istype(shoes) || (!(shoes.clothing_flags & TAUR_COMPATIBLE) && !shoes.get_taur_worn_state(H))))
 				return FALSE
 			if(num_legs < 1)
 				return FALSE
@@ -911,7 +911,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 					if(!(I.blocking_behavior & SAMEWEAR))
 						return FALSE
 				if(I.blocksound)
-					if(I.blocksound == H.wear_armor.blocksound && !is_type_in_list(I, H.wear_armor.underlayers))
+					if(I.blocksound == H.wear_armor.blocksound && !((I.blocking_behavior & SAMEWEAR) || (H.wear_armor.blocking_behavior & SAMEWEAR)) && !is_type_in_list(I, H.wear_armor.underlayers)) //TA EDIT
 						return FALSE
 			if( !(I.slot_flags & ITEM_SLOT_SHIRT) )
 				return FALSE
@@ -1387,6 +1387,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 		if(!target.lying_attack_check(user))
 			return 0
 
+		user.break_invisibility_from_combat() // TA EDIT
 		var/obj/item/clothing/gloves/roguetown/worn_gloves = user.get_item_by_slot(SLOT_GLOVES)
 		var/glove_intdamfactor_mult = 1
 		if(istype(worn_gloves))
@@ -1405,6 +1406,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 		target.lastattackerckey = user.ckey
 		target.lastattacker_weakref = WEAKREF(user)
 		user.dna.species.spec_unarmedattacked(user, target)
+		user.break_invisibility_from_combat() // TA EDIT
 
 		target.next_attack_msg.Cut()
 
@@ -1672,6 +1674,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 
 //shameless copypaste
 /datum/species/proc/kicked(mob/living/carbon/human/user, mob/living/carbon/human/target)
+	SEND_SIGNAL(user, COMSIG_MOB_KICK_ATTACK, target) // TA EDIT
 	if(HAS_TRAIT(user, TRAIT_PACIFISM))
 		to_chat(user, span_warning("I don't want to harm [target]!"))
 		return FALSE
@@ -1695,6 +1698,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 		stander = FALSE
 	if(!get_dist(user, target))
 		if(!stander)
+			user.break_invisibility_from_combat() // TA EDIT
 			target.lastattacker = user.real_name
 			target.lastattackerckey = user.ckey
 			target.lastattacker_weakref = WEAKREF(user)
@@ -1732,6 +1736,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 	else
 		if(!target.kick_attack_check(user))
 			kickchest = TRUE
+		user.break_invisibility_from_combat() // TA EDIT
 		user.do_attack_animation_simple(target, ATTACK_EFFECT_KICK, TRUE)
 		playsound(target, 'sound/combat/hits/kick/kick.ogg', 100, TRUE, -1)
 
@@ -1962,7 +1967,7 @@ GLOBAL_LIST_INIT(body_builds, init_body_builds())
 			aim_text = prob(10) ? "<i>I can't tell...</i>" : null
 		user.resolve_combataware(H, "[bodyzone2readablezone(selzone)]...", aim_text)
 
-	if(H.client?.prefs.combat_toggles & HITZONE_TEXT)
+	if((H.client?.prefs.combat_toggles & HITZONE_TEXT) && HAS_TRAIT(user, TRAIT_COMBAT_AWARE)) // TA EDIT - ORIGINAL: if(H.client?.prefs.combat_toggles & HITZONE_TEXT)
 		H.balloon_alert(H, "[bodyzone2readablezone(selzone)]...")
 
 	var/pen_info_check = get_pen_info(H, user, H.get_best_worn_armor(def_zone, int.item_d_type), def_zone, int.item_d_type, int.penfactor, I)

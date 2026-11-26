@@ -4,7 +4,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 
 	outfit = /datum/outfit/job/roguetown/adventurer/sfighter
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander2.ogg'
+	cmode_music = sound("sound/music/cmode/adventurer/combat_outlander2.ogg")
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_MEDIUMARMOR)
 	class_select_category = CLASS_CAT_WARRIOR
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT, CTAG_LICKER_WRETCH)
@@ -132,7 +132,7 @@
 	name = "Duelist"
 	tutorial = "You are an esteemed swordsman who foregoes armor in exchange for a more nimble fighting style."
 	outfit = /datum/outfit/job/roguetown/adventurer/duelist
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander2.ogg'
+	cmode_music = sound("sound/music/cmode/adventurer/combat_outlander2.ogg")
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_DODGEEXPERT)
 	subclass_virtues = list(
 		/datum/virtue/combat/guarded
@@ -230,8 +230,8 @@
 	name = "Barbarian"
 	tutorial = "You are a brutal warrior, who has foregone armor in favor of pure strength. Crush your enemies, see them driven before you, and hear the lamentations of their women! Oh, and you can specialize in unarmed combat and wrestling."
 	outfit = /datum/outfit/job/roguetown/adventurer/barbarian
-	cmode_music = 'sound/music/cmode/antag/combat_darkstar.ogg'
-	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_IGNOREDAMAGESLOWDOWN, TRAIT_BLOOD_RESISTANCE, TRAIT_NOPAINSTUN, TRAIT_RAGE)
+	cmode_music = sound("sound/music/cmode/antag/combat_darkstar.ogg")
+	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN, TRAIT_RAGE)
 	extra_context = "This subclass gains access to the RAGE ability."
 	subclass_stats = list(
 		STATKEY_STR = 3,
@@ -310,6 +310,8 @@
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 	if(should_wear_masc_clothes(H))
 		H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/warrior]
+	if(should_wear_femme_clothes(H)) // TA EDIT
+		H.dna.species.soundpack_f = new /datum/voicepack/female/warrior() // TA EDIT
 	var/armors = list("Hides","Muscles")
 	var/armor_choice = input(H, "Choose your armor.", "TAKE UP ARMOR") as anything in armors
 	switch(armor_choice)
@@ -482,7 +484,7 @@
 	name = "Exorcist"
 	tutorial = "You are a specialist who hunts terrible monsters; nitebeasts, vampyres, deadites and more. Your humenity might be limiting - but with silver weapons and steel maille, you may yet slight the odds in your favor."
 	outfit = /datum/outfit/job/roguetown/adventurer/mhunter
-	cmode_music = 'sound/music/cmode/adventurer/combat_outlander2.ogg'
+	cmode_music = sound("sound/music/cmode/adventurer/combat_outlander2.ogg")
 	category_tags = list(CTAG_ADVENTURER, CTAG_COURTAGENT)
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_PURITAN_ADVENTURER, TRAIT_ALCHEMY_EXPERT, TRAIT_EXPERT_HUNTER)
 	maximum_possible_slots = 5 //Not a Wretch or Towner, but still conditionally lethal for an Adventurer - especially with steel coverage and round-start access to silver weapons. Adjust the amount of available slots as needed.
@@ -515,7 +517,7 @@
 	add_verb(H, /mob/living/carbon/human/proc/faith_test) //Allows the Exorcist to interrogate others for their faith. Trait's agnostically worded, to allow more flexiable usage by Pantheoneers and Ascendants in this role.
 	add_verb(H, /mob/living/carbon/human/proc/torture_victim) //Not as scary as it sounds. Mostly. Okay, just a little bit.
 	if(H.mind)
-		var/silver = list("Silver Dagger","Silver Shortsword","Silver Arming Sword","Silver Rapier","Silver Longsword","Silver Broadsword","Silver Executioner Sword","Silver Mace","Silver Warhammer","Silver Morningstar","Silver Whip","Silver War Axe","Silver Tomahawk","Silver Poleaxe","Silver Spear","Silver Halberd","Silver Quarterstaff","Silver Katar (+1 Athletics)","Silver Claws (+1 Athletics)","Silver Knuckledusters (+1 Athletics)", "Stake Launcher + 24 Shotstakes")
+		var/silver = list("Silver Dagger","Silver Shortsword","Silver Arming Sword","Silver Rapier","Silver Longsword","Silver Broadsword","Silver Executioner Sword","Silver Mace","Silver Warhammer","Silver Morningstar","Silver Whip","Silver War Axe","Silver Tomahawk","Silver Poleaxe","Silver Spear","Silver Halberd","Silver Quarterstaff","Silver Katar (+1 Athletics)","Silver Claws (+1 Athletics)","Silver Knuckledusters (+1 Athletics)", "Stake Launcher + 24 Shotstakes", "Silver Threaded Sword-Whip")
 		var/silver_choice = input(H, "Choose your WEAPON.", "PREPARE YOUR ARMS.") as anything in silver //Trim down to five or six choices, later? See what's the most popular, first. Gives people a chance to experiment with all of the new silver weapons.
 		switch(silver_choice)
 			if("Silver Dagger")
@@ -595,6 +597,12 @@
 				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_JOURNEYMAN, TRUE)
 				r_hand = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/staker
 				beltr = /obj/item/quiver/bolt/stake/standard
+			if("Silver Threaded Sword-Whip")			//TA - EDIT
+				H.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, SKILL_LEVEL_JOURNEYMAN, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_JOURNEYMAN, TRUE)
+				r_hand = /obj/item/rogueweapon/sword/sabre/threaded/silver
+				l_hand = /obj/item/rogueweapon/scabbard/sword/cane_bb
+
 
 		var/sidearm = list("Dagger", "Parrying Dagger", "Heavy Dagger", "Broadsword", "Greatshield", "Stake Launcher", "Blessed Silver Stake", "Blessed Silver Hunting Knife", "Blessed Silver Shovel")
 		var/sidearm_choice = input(H, "Choose your SIDEARM.", "SAY YOUR PRAYERS.") as anything in sidearm
@@ -698,6 +706,7 @@
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
 		/obj/item/rogueweapon/huntingknife = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
+		/obj/item/book/rogue/trophy_rules = 1 //TA edit - added trophy_hunter component
 		)
 
 	H.set_blindness(0)
@@ -713,13 +722,15 @@
 		else
 			wrists = /obj/item/clothing/neck/roguetown/psicross/silver/undivided
 
+	H.AddComponent(/datum/component/trophy_hunter) //TA edit - added trophy_hunter component
+
 	//Old people get the option to become glass cannons. Expert Knives + Expert in their chosen weapon, but a permenant -I STR, -I PER, -2 SPD and -2 CON debuff.
 
 /datum/advclass/sfighter/deprived
 	name = "Deprived"
 	tutorial = "You are a vagrant. Your skin itches at the thought of wearing proper armor. Not after everything was taken from you. Armed with a piece of wood, it's only through your body that you endure. At least you aren't bothered by the lack of comfort like most others."
 	outfit = /datum/outfit/job/roguetown/adventurer/deprived
-	cmode_music = 'sound/music/cmode/antag/combat_darkstar.ogg'
+	cmode_music = sound("sound/music/cmode/antag/combat_darkstar.ogg")
 	traits_applied = list(TRAIT_STEELHEARTED, TRAIT_CRITICAL_RESISTANCE, TRAIT_NOPAINSTUN, TRAIT_SHIRTLESS, TRAIT_WILD_EATER, TRAIT_OUTDOORSMAN, TRAIT_HOMESTEAD_EXPERT, TRAIT_TECHNOPHOBE, TRAIT_HARDSOLE)
 	subclass_stats = list(
 		STATKEY_STR = 3,

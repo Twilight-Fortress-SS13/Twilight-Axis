@@ -9,7 +9,7 @@
 	outfit = /datum/outfit/job/roguetown/adventurer/thug/goon
 	category_tags = list(CTAG_TOWNER)
 	traits_applied = list(TRAIT_SEEPRICES_SHITTY)
-	cmode_music = 'sound/music/combat_bum.ogg'
+	cmode_music = sound("sound/music/combat_bum.ogg")
 	maximum_possible_slots = 2 // i dont want an army of towner thugs
 	category_tags = list(CTAG_PILGRIM, CTAG_TOWNER)
 	subclass_stats = list(
@@ -36,6 +36,7 @@
 		/datum/skill/labor/farming = SKILL_LEVEL_NOVICE,
 		/datum/skill/labor/fishing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/misc/stealing = SKILL_LEVEL_JOURNEYMAN, // TA EDIT
 		/datum/skill/misc/hunting = SKILL_LEVEL_NOVICE,
 	)
 
@@ -86,7 +87,7 @@
 	outfit = /datum/outfit/job/roguetown/adventurer/thug/wiseguy
 	category_tags = list(CTAG_TOWNER)
 	traits_applied = list(TRAIT_SEEPRICES_SHITTY, TRAIT_CICERONE, TRAIT_NUTCRACKER, TRAIT_ALCHEMY_EXPERT)
-	cmode_music = 'sound/music/combat_bum.ogg'
+	cmode_music = sound("sound/music/combat_bum.ogg")
 	maximum_possible_slots = 2 // i dont want an army of towner thugs
 	category_tags = list(CTAG_PILGRIM, CTAG_TOWNER)
 	subclass_stats = list(
@@ -111,6 +112,7 @@
 		/datum/skill/labor/farming = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/labor/fishing = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/misc/stealing = SKILL_LEVEL_JOURNEYMAN, // TA EDIT
 	)
 
 /datum/outfit/job/roguetown/adventurer/thug/wiseguy/pre_equip(mob/living/carbon/human/H)
@@ -141,6 +143,7 @@
 			H.adjust_skillrank_up_to(/datum/skill/magic/arcane, SKILL_LEVEL_EXPERT, TRUE) // i fear not the man that has practiced a thousand moves one time, but the man that has practiced one move a thousand times
 			H.mind.AddSpell(new /datum/action/cooldown/spell/magicians_brick)
 		if("Lockpicking Equipment")
+			H.adjust_skillrank_up_to(/datum/skill/misc/stealing, SKILL_LEVEL_EXPERT, TRUE) // TA EDIT
 			H.adjust_skillrank_up_to(/datum/skill/misc/lockpicking, SKILL_LEVEL_EXPERT, TRUE)
 			ADD_TRAIT(H, TRAIT_LIGHT_STEP, TRAIT_GENERIC)
 			r_hand = /obj/item/lockpickring/mundane
@@ -155,7 +158,7 @@
 	outfit = /datum/outfit/job/roguetown/adventurer/thug/bigman
 	category_tags = list(CTAG_TOWNER)
 	traits_applied = list(TRAIT_SEEPRICES_SHITTY, TRAIT_STEELHEARTED, TRAIT_HARDDISMEMBER)
-	cmode_music = 'sound/music/combat_bum.ogg'
+	cmode_music = sound("sound/music/combat_bum.ogg")
 	maximum_possible_slots = 1 // i dont want an army of towner thugs
 	category_tags = list(CTAG_PILGRIM, CTAG_TOWNER)
 	subclass_stats = list(

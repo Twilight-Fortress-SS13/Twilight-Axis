@@ -253,7 +253,7 @@ SUBSYSTEM_DEF(wardrobe)
 	var/datum/callback/do_on_insert = stock_info[WARDROBE_STOCK_CALL_INSERT]
 	if(do_on_insert)
 		do_on_insert.object = object
-		do_on_insert.Invoke()
+		do_on_insert.InvokeAsync() // TA EDIT
 		do_on_insert.object = null
 
 	object.moveToNullspace()
@@ -284,7 +284,7 @@ SUBSYSTEM_DEF(wardrobe)
 	var/datum/callback/do_on_removal = stock_info[WARDROBE_STOCK_CALL_REMOVAL]
 	if(do_on_removal)
 		do_on_removal.object = requested_object
-		do_on_removal.Invoke()
+		do_on_removal.InvokeAsync() // TA EDIT
 		do_on_removal.object = null
 
 	stock_hit++

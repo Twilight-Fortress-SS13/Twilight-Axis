@@ -300,7 +300,7 @@
 	force = 10 //Doubled from the regular torch, to reflect its sturdier construction. Classified as an improvised weapon, as it shouldn't scale off any weapon skill.
 	on_damage = 15
 	wdefense = 1 //Metal rod. Offers a pittance-of-a-chance to parry an incoming strike.
-	smeltresult = /obj/item/rogueore/coal
+	smeltresult = null
 	max_integrity = 100
 	fuel = 120 MINUTES
 	should_self_destruct = FALSE
@@ -504,7 +504,7 @@
 	light_color = "#ceff72ff"
 
 /obj/item/flashlight/flare/torch/lantern/pumpkin/zizo/get_examine_highlight_status()
-	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS, "GREAT GOOGLY MOOGLY, THAT PUMPKIN IS PRAISING SHE OF Z!")
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS, "РАДИ ВСЕГО СВЯТОГО, ЭТА ТЫКВА ПРОСЛАВЛЯЕТ ЗИЗО!") // TA EDIT
 
 /obj/item/flashlight/flare/torch/lantern/pumpkin/grin
 	name = "smiling pumpkin lamptern"

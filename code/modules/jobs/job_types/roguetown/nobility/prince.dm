@@ -11,17 +11,18 @@
 	allowed_sexes = list(MALE, FEMALE)
 	allowed_ages = list(AGE_ADULT)
 	advclass_cat_rolls = list(CTAG_HEIR = 20)
+	same_job_respawn_delay = 30 MINUTES
 
 	tutorial = "You've never felt the gnawing of the winter, never known the bite of hunger and certainly have never known a honest day's work. You are as free as any bird in the sky, and you may revel in your debauchery for as long as your parents remain upon the throne: But someday you'll have to grow up, and that will be the day your carelessness will cost you more than a few mammons."
 
 	display_order = JDO_PRINCE
 	give_bank_account = TRUE
 	noble_income = 20
-	min_pq = 1
+	min_pq = 6
 	max_pq = null
 	round_contrib_points = 3
-	quest_claim_barred = TRUE
-	cmode_music = 'sound/music/combat_noble.ogg'
+	quest_claim_barred = TRUE // TA EDIT
+	cmode_music = sound("sound/music/combat_noble.ogg")
 	job_traits = list(TRAIT_NOBLE)
 	job_subclasses = list(
 		/datum/advclass/heir/daring,
@@ -44,6 +45,7 @@
 	tutorial = "You're a somebody, someone important. It only makes sense you want to make a name for yourself, to gain your own glory so people see how great you really are beyond your bloodline. Plus, if you're beloved by the people for your exploits you'll be chosen! Probably. Shame you're as useful and talented as a squire, despite your delusions to the contrary."
 	outfit = /datum/outfit/job/roguetown/heir/daring
 	category_tags = list(CTAG_HEIR)
+	traits_applied = list(TRAIT_MEDIUMARMOR)
 	subclass_stats = list(
 		STATKEY_STR = 1,
 		STATKEY_PER = 1,
@@ -54,8 +56,8 @@
 	subclass_skills = list(
 		/datum/skill/combat/maces = SKILL_LEVEL_NOVICE,
 		/datum/skill/combat/bows = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/combat/crossbows = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/combat/swords = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/combat/crossbows = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/wrestling = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/combat/knives = SKILL_LEVEL_NOVICE,
@@ -165,6 +167,7 @@
 	)
 
 
+
 /datum/advclass/heir/aristocrat
 	name = "Sheltered Aristocrat"
 	tutorial = "Life has been kind to you; you've an entire keep at your disposal, servants to wait on you, and a whole retinue of guards to guard you. You've nothing to prove; just live the good life and you'll be a lord someday, too. A lack of ambition translates into a lacking skillset beyond schooling, though, and your breaks from boredom consist of being a damsel or court gossip."
@@ -193,6 +196,7 @@
 		/datum/skill/craft/sewing = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/hunting = SKILL_LEVEL_APPRENTICE,
 	)
+	noble_income = 80
 
 /datum/outfit/job/roguetown/heir/aristocrat/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -211,7 +215,6 @@
 	if(should_wear_femme_clothes(H))
 		gloves = /obj/item/clothing/gloves/roguetown/rosa/six
 		head = /obj/item/clothing/head/roguetown/hennin
-		l_hand = /obj/item/clothing/head/roguetown/circlet // So we still get one.
 		armor = /obj/item/clothing/suit/roguetown/armor/silkcoat
 		shirt = /obj/item/clothing/suit/roguetown/shirt/dress/royal/princess
 	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes/gold
@@ -297,6 +300,7 @@
 	subclass_skills = list(
 		/datum/skill/misc/sneaking = SKILL_LEVEL_MASTER,
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
+		/datum/skill/misc/stealing = SKILL_LEVEL_EXPERT, // TA EDIT
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/slings = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_JOURNEYMAN,

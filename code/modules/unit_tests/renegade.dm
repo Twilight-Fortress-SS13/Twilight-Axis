@@ -64,3 +64,16 @@
 			qdel(A)
 
 	H.mind.remove_antag_datum(/datum/antagonist/renegade)
+
+/datum/unit_test/renegade_storyteller/Run() // TA EDIT START
+	var/datum/round_event_control/antagonist/solo/renegade/event = allocate(/datum/round_event_control/antagonist/solo/renegade)
+	TEST_ASSERT(!event.consumes_hard_antag_slot, "Renegades consume a hard antagonist slot")
+	TEST_ASSERT(!(event.storyteller_antag_flags & STORYTELLER_ANTAG_VILLAIN), "Renegades are classified as major antagonists")
+	TEST_ASSERT_EQUAL(SSgamemode.storyteller_event_weight(event, 100, /datum/storyteller/gamemode/guaranteed_antag), 0, "Renegades can enter the High Intensity main roll")
+	TEST_ASSERT_EQUAL(SSgamemode.storyteller_event_weight(event, 100, /datum/storyteller/gamemode/no_antag), 0, "Renegades can enter the Medium Intensity main roll")
+	TEST_ASSERT_EQUAL(SSgamemode.story_antag_slot_cap(/datum/antagonist/renegade, TRUE, /datum/storyteller/gamemode/no_antag/small_wretch), 1, "Low Intensity has the wrong Renegade cap")
+	TEST_ASSERT_EQUAL(SSgamemode.story_antag_slot_cap(/datum/antagonist/renegade, TRUE, /datum/storyteller/gamemode/no_antag/standard), 2, "Standard Intensity has the wrong Renegade cap")
+	TEST_ASSERT_EQUAL(SSgamemode.story_antag_slot_cap(/datum/antagonist/renegade, TRUE, /datum/storyteller/gamemode/no_antag), 3, "Medium Intensity has the wrong Renegade cap")
+	TEST_ASSERT_EQUAL(SSgamemode.story_antag_slot_cap(/datum/antagonist/renegade, TRUE, /datum/storyteller/gamemode/guaranteed_antag), 0, "High Intensity opens Renegades")
+	TEST_ASSERT_EQUAL(SSgamemode.story_antag_slot_cap(/datum/antagonist/renegade, TRUE, /datum/storyteller/gamemode/guaranteed_antag/low_wretch), 0, "Tempered Intensity opens Renegades")
+	TEST_ASSERT_EQUAL(SSgamemode.story_antag_slot_cap(/datum/antagonist/renegade, TRUE, /datum/storyteller/gamemode/admin), 0, "Admin Sandbox opens Renegades without an override") // TA EDIT END

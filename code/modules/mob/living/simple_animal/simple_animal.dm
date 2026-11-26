@@ -155,6 +155,8 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	var/list/food_type
 	///A typecache used for faster lookups of food_type.
 	var/list/food_typecache
+	var/list/tame_food_type // TA EDIT
+	var/list/tame_food_typecache // TA EDIT
 	///Starting success chance for taming.
 	var/tame_chance
 	///Added success chance after every failed tame attempt.
@@ -202,25 +204,39 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 /mob/living/simple_animal/get_mechanics_examine(mob/user)
 	. = ..()
 	var/datum/component/riding/R = GetComponent(/datum/component/riding)
-	if(!R || !can_buckle || !max_buckled_mobs)
-		return
-	. += span_info("This can carry up to [max_buckled_mobs] rider[max_buckled_mobs == 1 ? "" : "s"].")
-	. += span_info("Drag yourself onto the mount to ride it, and press the 'RESIST' hotkey to get off. Riding skill shortens mounting, and Expert riders mount instantly.")
-	. += span_info("The first conscious rider takes the reins. If the driver gets off, passengers keep their seats, and a passenger who steers takes the empty reins.")
-	. += span_info("Mounts start slow and reach full speed after [R.ramp] tiles of travel. Turning around or running into something loses all speed, and while galloping any turn sheds speed.")
-	. += span_info("Riders can parry, but cannot dodge.")
-	. += span_info("Riders below Journeyman in Riding may be thrown off whenever they or their mount take damage. The harder the hit and the lower the skill, the likelier the fall.")
-	. += span_info("Riding a mount that is not bonded to you counts your Riding skill as Apprentice at most. Feeding a mount until it takes to you bonds it to you.")
-	. += span_info("Riding through a door that is not wide enough throws off anyone without the Saddleborn virtue.")
-	if(gallops)
-		. += span_info("Activate the 'RUN' button to gallop after a short wind-up that skill shortens. Galloping riders below Master are thrown off when they or their mount are hurt.")
-		. += span_info("A person can own only one steed at a time. Taming a new one is only possible once the old one has died, and it eases the grief of a lost Saddleborn mount.")
-	. += span_info("Drag an incapacitated or tied up mob onto the mount to load them as a passenger.")
-	. += span_info("Click the mount on help intent to pull an incapacitated or tied up passenger off.")
-	if(ssaddle)
-		. += span_info("Use middle-mouse button on the mount to open its inventory.")
-	if(owner && user != owner)
-		. += span_warning("This mount belongs to [owner.real_name].")
+	if(R && can_buckle && max_buckled_mobs) // TA EDIT START
+		. += span_info("This can carry up to [max_buckled_mobs] rider[max_buckled_mobs == 1 ? "" : "s"].")
+		. += span_info("Drag yourself onto the mount to ride it, and press the 'RESIST' hotkey to get off. Riding skill shortens mounting, and Expert riders mount instantly.")
+		. += span_info("The first conscious rider takes the reins. If the driver gets off, passengers keep their seats, and a passenger who steers takes the empty reins.")
+		. += span_info("Mounts start slow and reach full speed after [R.ramp] tiles of travel. Turning around or running into something loses all speed, and while galloping any turn sheds speed.")
+		. += span_info("Riders can parry, but cannot dodge.")
+		. += span_info("Riders below Journeyman in Riding may be thrown off whenever they or their mount take damage. The harder the hit and the lower the skill, the likelier the fall.")
+		. += span_info("Riding a mount that is not bonded to you counts your Riding skill as Apprentice at most. Feeding a mount until it takes to you bonds it to you.")
+		. += span_info("Riding through a door that is not wide enough throws off anyone without the Saddleborn virtue.")
+		if(gallops)
+			. += span_info("Activate the 'RUN' button to gallop after a short wind-up that skill shortens. Injuries can make a galloping mount panic or throw an inexperienced rider off.")
+			. += span_info("A person can tame only one steed at a time. Taming a new one eases the grief of a lost Saddleborn mount.")
+		. += span_info("Drag an incapacitated or tied up mob onto the mount to load them as a passenger.")
+		. += span_info("Click the mount on help intent to pull an incapacitated or tied up passenger off.")
+		if(ssaddle)
+			. += span_info("Use middle-mouse button on the mount to open its inventory.")
+		if(owner && user != owner)
+			. += span_warning("This mount belongs to [owner.real_name].") // TA EDIT END
+	// TA EDIT START
+	if(generate_genetics)
+		if(gender == MALE)
+			. += span_info("Sex: Male.")
+		else if(gender == FEMALE)
+			. += span_info("Sex: Female.")
+	var/genetics_text = get_genetics_examine()
+	if(genetics_text)
+		. += genetics_text
+	if(can_receive_livestock_commands)
+		if(owner == user)
+			. += span_info("Alt-click this animal to issue livestock commands.")
+		else if(tame && !owner && !adult_growth)
+			. += span_info("This animal has no recognized handler. Alt-click it while adjacent to bond with it.")
+	// TA EDIT END
 
 /mob/living/simple_animal/get_blood_color()
 	return blood_color
@@ -237,12 +253,17 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	apply_anatomy_traits()
 	if(length(food_type))
 		food_typecache = typecacheof(food_type)
+	if(length(tame_food_type)) // TA EDIT
+		tame_food_typecache = typecacheof(tame_food_type) // TA EDIT
+	initialize_animal_genetics() // TA EDIT
 //	if(dextrous)
 //		AddComponent(/datum/component/personal_crafting)
 	for(var/spell in inherent_spells)
 		var/obj/effect/proc_holder/spell/newspell = new spell()
 		AddSpell(newspell)
 	initial_butcher_count = length(butcher_results)
+	if(mount_fear_enabled) // TA EDIT
+		mount_initialize() // TA EDIT
 	add_verb(src, list(
 		/mob/living/proc/emote_squeak,
 		/mob/living/proc/emote_mrrp,
@@ -260,6 +281,8 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	QDEL_NULL(ccaparison)
 	QDEL_NULL(bbarding)
 
+	if(genetics && !ispath(genetics)) // TA EDIT
+		QDEL_NULL(genetics) // TA EDIT
 	return ..()
 
 /mob/living/simple_animal/proc/drop_tack()
@@ -283,19 +306,20 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 			qdel(O)
 			food = min(food + 30, 100)
 			adjustHealth(-rand(10,20))
-			if(tame && owner == user)
+			if(tame) // TA EDIT
 				return
 			var/mob/living/simple_animal/steed = user.mind?.steed?.resolve()
 			if(gallops && steed && steed != src && steed.stat != DEAD)
 				to_chat(user, span_warning("I already have a steed in [steed]."))
 				return
-			var/realchance = tame_chance
+			var/can_tame_with_food = !length(tame_food_typecache) || tame_food_typecache[O.type] // TA EDIT
+			var/realchance = can_tame_with_food ? clamp(tame_chance + genetic_tame_chance_bonus, 0, 95) : 0 // TA EDIT
 			if(realchance)
 				if(prob(realchance))
 					tamed(user)
 					record_round_statistic(STATS_ANIMALS_TAMED)
 				else
-					tame_chance += bonus_tame_chance
+					tame_chance += max(0, bonus_tame_chance + genetic_bonus_tame_bonus) // TA EDIT
 
 /mob/living/simple_animal/attack_right(mob/user, params)
 	if(ccaparison)
@@ -383,14 +407,21 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 
 ///Extra effects to add when the mob is tamed, such as adding a riding component
 /mob/living/simple_animal/proc/tamed(mob/user)
+	if(tame && owner && user && owner != user) // TA EDIT
+		return // TA EDIT
 	INVOKE_ASYNC(src, PROC_REF(emote), "lower_head", null, null, null, TRUE)
 	tame = TRUE
 	if(user)
-		claim(user)
+		assign_livestock_owner(user) // TA EDIT
 		if(gallops)
 			user.remove_stress(/datum/stressevent/precious_mob_died)
 		SEND_SIGNAL(user, COMSIG_ANIMAL_TAMED, src)
 	pet_passive = TRUE
+	if(ai_controller) // TA EDIT START
+		ai_controller.clear_blackboard_key(BB_BASIC_MOB_CURRENT_TARGET)
+		ai_controller.clear_blackboard_key(BB_BASIC_MOB_RETALIATE_LIST)
+		ai_controller.set_blackboard_key(BB_BASIC_MOB_TAMED, TRUE)
+	setup_livestock_commands() // TA EDIT END
 
 //mob/living/simple_animal/examine(mob/user)
 //	. = ..()
@@ -401,6 +432,7 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	..()
 	update_damage_overlays()
 	show_damage_stage()
+	mount_update_health_movement() // TA EDIT
 	if(istype(hud_used, /datum/hud/dextrous/oozeling))
 		var/datum/hud/dextrous/oozeling/oozeling_hud = hud_used
 		oozeling_hud.update_health_indicator(src)
@@ -563,7 +595,7 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	var/normal_count = 0
 
 	for(var/path in butcher_results)
-		var/amount = butcher_results[path]
+		var/amount = max(1, round(butcher_results[path] * genetic_butcher_scale)) // TA EDIT
 		if(!do_after(user, time_per_cut, target = src))
 			if(botch_count || normal_count || perfect_count)
 				to_chat(user, "<span class='notice'>I stop butchering: [butcher_summary(botch_count, normal_count, perfect_count, botch_chance, perfect_chance)].</span>")
@@ -575,13 +607,13 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 		if(prob(botch_chance))
 			botch_count++
 			if(length(botched_butcher_results) && (path in botched_butcher_results))
-				amount = botched_butcher_results[path]
+				amount = max(1, round(botched_butcher_results[path] * genetic_butcher_scale)) // TA EDIT
 			else
 				amount = 0
 
 		// Otherwise check for perfect
 		else if(length(perfect_butcher_results) && (path in perfect_butcher_results) && prob(perfect_chance))
-			amount = perfect_butcher_results[path]
+			amount = max(1, round(perfect_butcher_results[path] * genetic_butcher_scale)) // TA EDIT
 			perfect_count++
 
 		else
@@ -639,11 +671,11 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 		rotstuff = TRUE
 
 	for(var/path in butcher_results)
-		var/amount = butcher_results[path]
+		var/amount = max(1, round(butcher_results[path] * genetic_butcher_scale)) // TA EDIT
 
 		if(prob(botch_chance))
 			if(length(botched_butcher_results) && (path in botched_butcher_results))
-				amount = botched_butcher_results[path]
+				amount = max(1, round(botched_butcher_results[path] * genetic_butcher_scale)) // TA EDIT
 			else
 				amount = 0
 
@@ -714,6 +746,7 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 
 /mob/living/simple_animal/proc/get_move_base_delay()
 	var/base = isnull(move_base_delay) ? SIMPLEMOB_DEFAULT_MOVE_DELAY : move_base_delay
+	base += genetic_speed_delta // TA EDIT
 	return clamp(base, SIMPLEMOB_MINIMUM_MOVE_DELAY, SIMPLEMOB_MAXIMUM_MOVE_DELAY)
 
 /mob/living/simple_animal/update_move_intent_slowdown()
@@ -727,6 +760,7 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	var/spd = get_effective_speed()
 	if(spd < 10)
 		mod += (10 - spd) * SPEED_MOVSPD_MOD
+	mod += mount_health_movement_penalty() + mount_limb_movement_penalty() // TA EDIT
 	add_movespeed_modifier(MOVESPEED_ID_MOB_WALK_RUN_CONFIG_SPEED, TRUE, 100, override = TRUE, multiplicative_slowdown = mod)
 
 /mob/living/simple_animal/update_movespeed(resort = TRUE)
@@ -789,37 +823,35 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 		setMovetype(initial(movement_type))
 
 /mob/living/simple_animal/proc/make_babies() // <3 <3 <3
+	// TA EDIT START
 	if(gender != FEMALE || stat || next_scan_time > world.time || !childtype || !animal_species || !SSticker.IsRoundInProgress())
 		return
-	if(GLOB.farm_animals >= MAX_FARM_ANIMALS)
-		return
-	if(food < 10)
+	if(GLOB.farm_animals >= MAX_FARM_ANIMALS || food < 10)
 		return
 	if(next_scan_time == 0)
-		next_scan_time = world.time + breedcd
+		next_scan_time = world.time + get_genetic_breed_cooldown()
 		return
 	if(breedchildren <= 0)
 		childtype = null //we no longer can br33d bro
 		return
-	next_scan_time = world.time + breedcd
-	var/alone = TRUE
-	var/children = 0
+
 	var/mob/living/simple_animal/partner
-	for(var/mob/M in view(7, src))
-		if(M.stat != CONSCIOUS) //Check if it's conscious FIRST.
+	for(var/mob/living/simple_animal/candidate in view(7, src))
+		if(candidate == src || candidate.stat != CONSCIOUS || candidate.ckey || candidate.adult_growth)
 			continue
-		else if(istype(M, childtype)) //Check for children SECOND.
-			children++
-		else if(istype(M, animal_species))
-			if(M.ckey)
-				continue
-			else if(!istype(M, childtype) && M.gender == MALE && !(M.flags_1 & HOLOGRAM_1)) //Better safe than sorry ;_;
-				partner = M
-	if(alone && partner && children < 3)
-		var/childspawn = pickweight(childtype)
-		var/turf/target = get_turf(loc)
-		if(target)
-			return new childspawn(target)
+		if(candidate.gender != MALE || (candidate.flags_1 & HOLOGRAM_1))
+			continue
+		if(istype(candidate, animal_species))
+			partner = candidate
+			break
+
+	if(partner)
+		var/spawned = make_babies_with(partner)
+		if(!spawned)
+			next_scan_time = world.time + get_genetic_breed_cooldown()
+		return spawned
+	next_scan_time = world.time + get_genetic_breed_cooldown()
+	// TA EDIT END
 
 /mob/living/simple_animal/canUseTopic(atom/movable/M, be_close=FALSE, no_dexterity=FALSE, no_tk=FALSE)
 	if(incapacitated())
@@ -828,9 +860,9 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	if(be_close && !in_range(M, src))
 		to_chat(src, span_warning("I am too far away!"))
 		return FALSE
-	if(!(no_dexterity || dextrous))
-		to_chat(src, span_warning("I don't have the dexterity to do this!"))
-		return FALSE
+	// if(!(no_dexterity || dextrous))
+	// 	to_chat(src, span_warning("I don't have the dexterity to do this!"))
+	// 	return FALSE
 	return TRUE
 
 /mob/living/simple_animal/stripPanelUnequip(obj/item/what, mob/who, where)
@@ -1017,9 +1049,21 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	mounted_overlay.appearance_flags = RESET_ALPHA
 	add_overlay(mounted_overlay)
 
+/mob/living/simple_animal/proc/get_riding_datum()
+	var/datum/component/riding/riding_datum = GetComponent(/datum/component/riding/no_ocean)
+	if(!riding_datum)
+		riding_datum = GetComponent(/datum/component/riding)
+	return riding_datum
+
 /mob/living/simple_animal/proc/adjust_speed(mob/living/driver)
-	var/delay = ride_move_delay
-	if(driver?.m_intent == MOVE_INTENT_RUN)
+	var/delay = ride_move_delay // TA EDIT
+	if(!isnum(delay))
+		delay = 3
+	if(!can_buckle && !HAS_TRAIT(src, TRAIT_RIGIDMOVEMENT) && !HAS_TRAIT(src, TRAIT_IGNOREDAMAGESLOWDOWN)) // TA EDIT
+		var/health_deficiency = getBruteLoss() + getFireLoss()
+		if(health_deficiency >= (maxHealth - (maxHealth * 0.50)))
+			delay += 2
+	if(driver?.m_intent == MOVE_INTENT_RUN && !mount_has_broken_leg() && world.time >= mount_slow_until) // TA EDIT
 		delay -= 1
 	if(driver?.mind)
 		var/amt = ride_skill(driver)
@@ -1027,7 +1071,9 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 			delay -= 5 + amt/6
 		else
 			delay -= 3
-	return max(delay, 1)
+	if(mount_fear_enabled) // TA EDIT START
+		delay += mount_movement_penalty()
+	return max(delay, 1) + mount_health_movement_penalty() // TA EDIT END
 
 /mob/living/simple_animal/user_unbuckle_mob(mob/living/M, mob/user)
 	if(user != M)
@@ -1075,12 +1121,22 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	var/datum/component/riding/riding_datum = GetComponent(/datum/component/riding)
 	if(stat == DEAD || !tame || !riding_datum)
 		return
+	if(riding_datum.driver && riding_datum.driver != user && !riding_datum.driver.incapacitated()) // TA EDIT START
+		return
+	if(mount_initialized)
+		if(world.time < mount_fear_until && prob(65))
+			return
+		if(BODY_ZONE_HEAD in broken_parts && prob(35))
+			direction = turn(direction, pick(-90, 90, 180))
+			if(world.time >= mount_confusion_notice_until)
+				mount_confusion_notice_until = world.time + 3 SECONDS
+				to_chat(user, span_warning("My mount is disoriented and veers the wrong way!")) // TA EDIT END
 	var/oldloc = loc
 	riding_datum.vehicle_move_delay = adjust_speed(user)
 	if(!riding_datum.handle_ride(user, direction) || loc == oldloc)
 		return
 	var/turf/open/T = loc
-	if(do_footstep || !T.footstep)
+	if(do_footstep || !istype(T) || !T.footstep) // TA EDIT
 		do_footstep = FALSE
 	else
 		do_footstep = TRUE
@@ -1100,6 +1156,11 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 		if(rider.restrained(TRUE) || rider.incapacitated(FALSE, TRUE))
 			continue
 		var/skill = ride_skill(rider)
+		if(mount_initialized && gallops && rider.m_intent == MOVE_INTENT_RUN) // TA EDIT START
+			if(source == rider && damage >= 15 && skill < SKILL_LEVEL_MASTER && world.time >= mount_next_hit_fear && world.time >= mount_fear_until)
+				if(mount_startle(rider, 3 SECONDS, max(4, 16 - skill * 2)))
+					mount_next_hit_fear = world.time + 12 SECONDS
+			continue // TA EDIT END
 		if(gallops && rider.m_intent == MOVE_INTENT_RUN && skill < SKILL_LEVEL_MASTER)
 			violent_dismount(rider)
 		else if((source == src || source == rider) && skill < SKILL_LEVEL_JOURNEYMAN && prob(min(damage, 25) * (SKILL_LEVEL_JOURNEYMAN - skill)))
@@ -1133,7 +1194,22 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 /mob/living/simple_animal/Move(NewLoc, Dir, step_x, step_y)
 	if(binded)
 		return FALSE
-	return ..()
+	var/oldloc = loc
+	. = ..()
+	if(. && loc != oldloc)
+		if(client)
+			// client/Move re-sets glide from cached_multiplicative_slowdown right after this; mirror the same cadence so any path bypassing it stays in step
+			set_glide_size(DELAY_TO_GLIDE_SIZE(max(cached_multiplicative_slowdown, world.tick_lag)))
+		else
+			var/datum/component/riding/riding_datum = get_riding_datum()
+			if(riding_datum && has_buckled_mobs())
+				set_glide_size(DELAY_TO_GLIDE_SIZE(riding_datum.current_move_delay || riding_datum.vehicle_move_delay)) // TA EDIT
+			else if(ai_controller)
+				// ai_movement gates steps on ai_controller.movement_delay (cached_multiplicative_slowdown ceiled to SSai_movement.wait), not the raw modifier sum
+				set_glide_size(DELAY_TO_GLIDE_SIZE(ai_controller.movement_delay))
+			else
+				set_glide_size(DELAY_TO_GLIDE_SIZE(get_move_base_delay())) // TA EDIT
+	return .
 
 /mob/living/simple_animal/proc/eat_plants()
 
@@ -1152,9 +1228,9 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 		if(stat == CONSCIOUS && ai_controller?.ai_status == AI_STATUS_ON)
 			handle_automated_speech()
 		if(food > 0)
-			food--
+			food = max(0, food - genetic_food_consumption_multiplier) // TA EDIT
 			pooprog++
-			production++
+			production += genetic_production_multiplier // TA EDIT
 			production = min(production, 100)
 			if(pooprog >= 100)
 				pooprog = 0
@@ -1210,6 +1286,9 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 		voicepack = shared_animal_vp
 
 	return voicepack
+
+/proc/get_max_farm_animals() // TA EDIT
+	return MAX_FARM_ANIMALS // TA EDIT
 
 #undef MAX_FARM_ANIMALS
 #undef BUTCHERING_UNSKILLED_PRE_TIME

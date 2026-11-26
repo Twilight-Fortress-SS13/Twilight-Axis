@@ -6,7 +6,7 @@
 	outfit = /datum/outfit/job/roguetown/mercenary/gronn
 	class_select_category = CLASS_CAT_GRONN
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_VANGUARD)
-	cmode_music = 'sound/music/combat_vagarian.ogg'
+	cmode_music = sound("sound/music/combat_vagarian.ogg")
 	subclass_languages = list(/datum/language/gronnic)
 	extra_context = "This subclass has 2 loadouts with various stats, skills & equipment."
 	subclass_skills = list(
@@ -40,7 +40,16 @@
 
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
-			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
+			if(H.mind) //TA EDIT START
+				var/talismans = list("The Wolf, Plotting", "The Spider, Rising")
+				var/talismanschoice = input(H, "Choose your path", "Beasts of the North") as anything in talismans
+				switch(talismanschoice)
+					if("The Wolf, Plotting")
+						id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
+					if("The Spider, Rising")
+						id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/spider
+			else
+				id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn //TA EDIT END
 		if(/datum/patron/inhumen/graggar)
 			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/graggar/gronn
 		if(/datum/patron/inhumen/matthios)
@@ -136,7 +145,7 @@
 	class_select_category = CLASS_CAT_GRONN
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_BULWARK)
 	traits_applied = list(TRAIT_HEAVYARMOR)
-	cmode_music = 'sound/music/combat_vagarian.ogg'
+	cmode_music = sound("sound/music/combat_vagarian.ogg")
 	subclass_languages = list(/datum/language/gronnic)
 	subclass_stats = list(
 		STATKEY_WIL = 3, //People see big numbers and start shitting their pants, but their weighted stats are 7 and it's limited to one, singular slot. This is fine.
@@ -185,7 +194,16 @@
 
 	switch(H.patron?.type)
 		if(/datum/patron/inhumen/zizo)
-			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
+			if(H.mind) //TA EDIT START
+				var/talismans = list("The Wolf, Plotting", "The Spider, Rising")
+				var/talismanschoice = input(H, "Choose your path", "Beasts of the North") as anything in talismans
+				switch(talismanschoice)
+					if("The Wolf, Plotting")
+						id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn
+					if("The Spider, Rising")
+						id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/spider
+			else
+				id = /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn //TA EDIT END
 		if(/datum/patron/inhumen/graggar)
 			id = /obj/item/clothing/neck/roguetown/psicross/inhumen/graggar/gronn
 		if(/datum/patron/inhumen/matthios)

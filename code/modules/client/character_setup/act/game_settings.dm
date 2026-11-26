@@ -56,6 +56,13 @@
 				clientfps = desiredfps
 				parent.fps = desiredfps
 			return TRUE
+		if("action_wheel_modifier") // TA EDIT START
+			var/modifier = params["modifier"]
+			if(!(modifier in list("ctrl", "shift", "alt", "none")))
+				return TRUE
+			action_wheel_modifier = modifier
+			save_preferences()
+			return TRUE // TA EDIT END
 		if("auto_fit_viewport")
 			auto_fit_viewport = !auto_fit_viewport
 			if(auto_fit_viewport && parent)
@@ -69,9 +76,25 @@
 								Good voices will be rewarded with PQ for answering meditations, while bad ones are punished at the discretion of The Management."))
 			else
 				to_chat(user, span_warning("You are no longer a voice."))
+			save_preferences() // TA EDIT
 			return TRUE
 		if("no_storyteller_events")
 			no_storyteller_events = !no_storyteller_events
+			return TRUE
+		if("donor_ooc_color")
+			if(!check_patreon_lvl(user.ckey) && !is_donator(user.ckey))
+				return TRUE
+			donor_ooc_color = !donor_ooc_color
+			return TRUE
+		if("donor_ooc_icon")
+			if(!check_patreon_lvl(user.ckey) && !is_donator(user.ckey))
+				return TRUE
+			donor_ooc_icon = !donor_ooc_icon
+			return TRUE
+		if("donor_examine_icon")
+			if(!check_patreon_lvl(user.ckey) && !is_donator(user.ckey))
+				return TRUE
+			donor_examine_icon = !donor_examine_icon
 			return TRUE
 		if("verbose_character_creator")
 			verbose_character_creator = !verbose_character_creator
@@ -123,6 +146,7 @@
 
 		if("combohud_lighting")
 			toggles ^= COMBOHUD_LIGHTING
+			save_preferences() // TA EDIT
 			return TRUE
 
 		if("toggle_dead_chat")
@@ -136,20 +160,23 @@
 		if("asaycolor")
 			var/new_asaycolor = tgui_color_picker(user, "Choose your ASAY color:", "ASAY Color", asaycolor)
 			if(new_asaycolor)
-				asaycolor = sanitize_ooccolor(new_asaycolor)
-				save_preferences()
+				asaycolor = sanitize_ooccolor(new_asaycolor) // TA EDIT
+				save_preferences() // TA EDIT
 			return TRUE
 
 		if("toggle_deadmin_always")
 			toggles ^= DEADMIN_ALWAYS
+			save_preferences() // TA EDIT
 			return TRUE
 
 		if("toggle_deadmin_antag")
 			toggles ^= DEADMIN_ANTAGONIST
+			save_preferences() // TA EDIT
 			return TRUE
 
 		if("toggle_deadmin_head")
 			toggles ^= DEADMIN_POSITION_HEAD
+			save_preferences() // TA EDIT
 			return TRUE
 
 		if("vv_dark_mode")

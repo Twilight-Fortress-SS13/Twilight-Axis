@@ -41,6 +41,7 @@
 		storedarea.always_unpowered = 0
 		storedarea.name = areaname
 		areaimage.loc = storedarea // color our area
+		BM.log_action("created area template [storedarea] ([storedarea.type]) for area edit mode.") // TA EDIT
 
 /datum/buildmode_mode/area_edit/handle_click(client/c, params, object)
 	var/list/pa = params2list(params)
@@ -52,10 +53,12 @@
 			to_chat(c, span_warning("Configure or select the area you want to paint first!"))
 			return
 		var/turf/T = get_turf(object)
-		if(get_area(T) != storedarea)
-			log_admin("Build Mode: [key_name(c)] added [AREACOORD(T)] to [storedarea]")
+		var/area/old_area = get_area(T) // TA EDIT
+		if(old_area != storedarea) // TA EDIT
 			storedarea.contents.Add(T)
+			BM.log_action("moved turf [T] ([T.type]) at [AREACOORD(T)] from area [old_area] ([old_area.type]) to [storedarea] ([storedarea.type]).") // TA EDIT
 	else if(right_click)
 		var/turf/T = get_turf(object)
 		storedarea = get_area(T)
 		areaimage.loc = storedarea // color our area
+		BM.log_action("selected existing area [storedarea] ([storedarea.type]) from [AREACOORD(T)] for area edit mode.") // TA EDIT

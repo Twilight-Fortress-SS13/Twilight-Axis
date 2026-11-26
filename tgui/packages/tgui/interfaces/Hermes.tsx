@@ -28,6 +28,7 @@ type Data = {
   letter_count?: number;
   real_name: string;
   pen_name: string | null;
+  is_court_agent?: boolean;
 };
 
 type Signature = 'real' | 'pen' | 'anon';
@@ -146,6 +147,7 @@ export const Hermes = (props: any, context: any) => {
     letter_count,
     real_name,
     pen_name,
+    is_court_agent,
   } = data;
 
   const [recipient, setRecipient] = useState('');
@@ -182,8 +184,10 @@ export const Hermes = (props: any, context: any) => {
   );
 
   const isFree = !!free_send_ready;
+  // TA EDIT
   const canSendLetter =
-    recipient.length > 0 && (isFree || balance >= letter_cost);
+    recipient.length > 0 &&
+    (isFree || balance >= letter_cost || is_court_agent);
   const canBuyPaper = balance >= paper_cost;
   const canBuyQuill = balance >= quill_cost;
   const canSendTube = letterContent.length > 0;

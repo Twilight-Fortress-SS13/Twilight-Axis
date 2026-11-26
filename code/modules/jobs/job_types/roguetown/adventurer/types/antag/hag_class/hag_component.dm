@@ -40,6 +40,8 @@
 	/// List of names the hag's taken and can give out
 	var/list/datum/hag_identity/stored_names = list()
 
+	var/heavy_curse = TRUE // TA ADDITION - If toggled, our curse will remove all boons.
+
 /datum/component/hag_curio_tracker/Initialize(mapload)
 	if(!isliving(parent))
 		return COMPONENT_INCOMPATIBLE
@@ -54,6 +56,7 @@
 		var/mob/living/carbon/human/H = parent
 		if(H.client)
 			add_verb(parent, /mob/living/carbon/human/proc/remember_fey)
+			add_verb(parent, /mob/living/carbon/human/proc/heavy_curse) // TA ADDITION
 
 	// Let's avoid lagging the server on round start.
 	addtimer(CALLBACK(src, PROC_REF(recognize_fey)), 10 SECONDS)
@@ -212,9 +215,23 @@
 
 /datum/component/hag_curio_tracker/proc/transmute_boons_to_curse(true_name, list/boons, curse_path, points)
 	var/list/name_list = boon_registry[true_name]
+
+	// TA EDIT - ORIGINAL:
+	/*
 	for(var/datum/hag_boon/B in boons)
 		name_list -= B
 		qdel(B)
+	*/
+	// ORIGINAL END
+	if(heavy_curse)
+		for(var/datum/hag_boon/B in boons)
+			name_list -= B
+			qdel(B)
+	else
+		for(var/datum/hag_boon/B in boons)
+			B.cursed = TRUE
+			B.transmutable = FALSE
+	// TA EDIT END
 
 	var/datum/hag_boon/curse/C = new curse_path(true_name, src, points)
 	name_list += C
@@ -289,7 +306,7 @@
 		var/has_real_boon = FALSE
 		for(var/datum/hag_boon/B in boon_registry[v_name])
 			// If they have a valid hag boon that IS NOT a curse and IS NOT a scar
-			if(B.hag_is_valid && !B.hag_curse && !istype(B, /datum/hag_boon/curse_scar))
+			if(B.hag_is_valid && !B.hag_curse && !istype(B, /datum/hag_boon/curse_scar) && !B.cursed) // TA EDIT - ORIGINAL: if(B.hag_is_valid && !B.hag_curse && !istype(B, /datum/hag_boon/curse_scar))
 				has_real_boon = TRUE
 				break
 
@@ -318,7 +335,7 @@
 	var/target_has_boon = FALSE
 	if(boon_registry[name_to_check])
 		for(var/datum/hag_boon/B in boon_registry[name_to_check])
-			if(B.hag_is_valid && !B.hag_curse && !istype(B, /datum/hag_boon/curse_scar))
+			if(B.hag_is_valid && !B.hag_curse && !istype(B, /datum/hag_boon/curse_scar) && !B.cursed) // TA EDIT - ORIGINAL: if(B.hag_is_valid && !B.hag_curse && !istype(B, /datum/hag_boon/curse_scar) && !B.cursed)
 				target_has_boon = TRUE
 				break
 

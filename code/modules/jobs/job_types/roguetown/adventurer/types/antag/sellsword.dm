@@ -1,11 +1,11 @@
-/datum/advclass/sellsword //Hybrid STR / SPD class with specialized weapon options
+/datum/advclass/bandit/sellsword //Hybrid STR / SPD class with specialized weapon options
 	name = "Sellsword"
 	tutorial = "Anything for coin rings true for many, but only you pushed it to its ultimate conclusion, a band of merrymen at your back and any morals left behind - you will retire in wealth or die as a mere footnote in history."
 	allowed_sexes = list(MALE, FEMALE)
 
 	outfit = /datum/outfit/job/roguetown/bandit/sellsword
 	category_tags = list(CTAG_BANDIT)
-	cmode_music = 'sound/music/cmode/antag/combat_cutpurse.ogg' // cutpurse or deadly shadows...?
+	cmode_music = sound("sound/music/cmode/antag/combat_cutpurse.ogg") // cutpurse or deadly shadows...?
 	traits_applied = list(TRAIT_MEDIUMARMOR)
 	subclass_stats = list(
 		STATKEY_STR = 2,

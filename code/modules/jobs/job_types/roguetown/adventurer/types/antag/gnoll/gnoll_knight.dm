@@ -27,7 +27,7 @@
 		/datum/skill/labor/butchering = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/craft/cooking = SKILL_LEVEL_NOVICE,
 	)
-	cmode_music = 'sound/music/cmode/antag/combat_thewall.ogg'
+	cmode_music = sound("sound/music/cmode/antag/combat_thewall.ogg") // TA EDIT
 
 /datum/outfit/job/roguetown/gnoll/knight
 	vamp_armor_type = /obj/item/clothing/suit/roguetown/armor/vampiric/gnoll/knight
@@ -38,8 +38,8 @@
 /datum/outfit/job/roguetown/gnoll/knight/pre_equip(mob/living/carbon/human/H)
 	if(H.mind)
 		H.set_species(/datum/species/gnoll)
-		H.skin_armor = new vamp_armor_type(H)
-		H.AddComponent(/datum/component/vampiric_striker, shard_threshold, shard_repair_value, max_fury_stacks)
+		H.skin_armor = new /obj/item/clothing/suit/roguetown/armor/regenerating/skin/gnoll_armor(H) // TA EDIT - ORIGINAL: new vamp_armor_type(H)
+		// TA REMOVAL: H.AddComponent(/datum/component/vampiric_striker, shard_threshold, shard_repair_value, max_fury_stacks)
 		neck = /obj/item/storage/belt/rogue/pouch/healing
 		backr = /obj/item/storage/backpack/rogue/satchel/gnoll
 		don_pelt(H)

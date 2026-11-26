@@ -6,9 +6,10 @@
 	)
 	roundstart = TRUE
 	antag_flag = ROLE_RENEGADE
-	shared_occurence_type = SHARED_HIGH_THREAT
-	storyteller_antag_flags = STORYTELLER_ANTAG_VILLAIN | STORYTELLER_ANTAG_ROUNDSTART
-	storyteller_rumour_name = "renegades"
+	shared_occurence_type = SHARED_MINOR_THREAT // TA EDIT START
+	storyteller_antag_flags = STORYTELLER_ANTAG_SOFT
+	consumes_hard_antag_slot = FALSE
+	track = EVENT_TRACK_CHARACTER_INJECTION // TA EDIT END
 
 	maximum_antags = 0
 	max_occurrences = 1
@@ -19,40 +20,15 @@
 
 	restricted_roles = RENEGADE_BLACKLISTED_ROLES
 
-/datum/round_event_control/antagonist/solo/renegade/preRunEvent()
-	if((storyteller_antag_flags & STORYTELLER_ANTAG_VILLAIN) && is_storyteller_villain_blocked())
-		return EVENT_CANT_RUN
-	return ..()
-
 /datum/round_event_control/antagonist/solo/renegade/get_antag_amount()
-	if(storyteller_antag_flags & STORYTELLER_ANTAG_LITE)
-		return ..()
 	var/admin_slot = SSgamemode.get_admin_slot(antag_datum, storyteller_slot_key)
 	if(!isnull(admin_slot))
 		return max(0, admin_slot)
 	return SSgamemode.story_antag_slot_cap(antag_datum, roundstart = roundstart)
 
-/datum/round_event_control/antagonist/solo/renegade/lite
-	name = "Renegade lite"
-	storyteller_antag_flags = STORYTELLER_ANTAG_LITE
-	storyteller_pill_label = "Renegade"
-	storyteller_rumour_name = null
-	weight = 8
-
-/proc/renegade_midround()
-	var/datum/storyteller/preset = active_preset()
-	if(!preset?.midround_renegades || SSgamemode.halted_storyteller)
-		log_storyteller("Renegade midround check skipped under preset [preset?.name || "none"].")
-		return
-	var/list/candidates = SSgamemode.get_candidates(ROLE_RENEGADE, ROLE_RENEGADE, FALSE, FALSE, TRUE, midround_antag_pref = TRUE, restricted_roles = RENEGADE_BLACKLISTED_ROLES)
+/datum/round_event_control/antagonist/solo/renegade/get_candidates() // TA EDIT START
+	var/list/candidates = ..()
 	for(var/mob/living/carbon/human/H in candidates)
-		if(H.stat == DEAD || H.advsetup || H.client?.is_afk() || is_banned_from(H.ckey, ROLE_RENEGADE))
+		if(H.stat == DEAD || H.advsetup || H.client?.is_afk() || H.mind?.special_role)
 			candidates -= H
-	if(!length(candidates))
-		log_storyteller("Renegade midround check found no valid candidates.")
-		return
-	for(var/i in 1 to min(preset.midround_renegades, length(candidates)))
-		var/mob/living/carbon/human/H = pick_n_take(candidates)
-		H.mind.add_antag_datum(/datum/antagonist/renegade)
-		message_admins("STORYTELLER: [ADMIN_LOOKUPFLW(H)] was made a midround Renegade.")
-		log_storyteller("Renegade midround check made [key_name(H)] a Renegade.")
+	return candidates // TA EDIT END

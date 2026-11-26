@@ -1669,7 +1669,7 @@
 	wdefense_wbonus = 5
 	smeltresult = /obj/item/ingot/avantyne
 
-/obj/item/rogueweapon/sword/zizo/get_examine_highlight_status()
+/obj/item/rogueweapon/sword/long/avantyne/get_examine_highlight_status() // TA EDIT
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_WEAPON)
 
 /obj/item/rogueweapon/sword/long/heirloom
@@ -1757,6 +1757,7 @@
 	. = ..()
 	SEND_GLOBAL_SIGNAL(COMSIG_NEW_ICHOR_FANG_SPAWNED, src)
 	RegisterSignal(SSdcs, COMSIG_NEW_ICHOR_FANG_SPAWNED, PROC_REF(on_recall))
+	add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_VAMPIRIC, "alpha" = 120, "size" = 2)) // TA EDIT
 
 /obj/item/rogueweapon/sword/long/judgement/vlord/get_examine_highlight_status() //Its an unholy longsword sire, what did you expect?
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_VERYODD, HERESYDESC_VAMPIRE_SWORD)
@@ -1789,10 +1790,6 @@
 	. = ..()
 	if(user.mind?.has_antag_datum(/datum/antagonist/vampire))
 		. += span_notice("You can feel the unholy blade's enchantment resonate with your cursed nature, anyone that does not bear your curse will be unable to touch it.")
-
-/obj/item/rogueweapon/sword/long/judgement/vlord/Initialize(mapload)
-	..()
-	add_filter(FORCE_FILTER, 2, list("type" = "outline", "color" = GLOW_COLOR_VAMPIRIC, "alpha" = 120, "size" = 2)) //Its a cursed blade, it gets to glow ominously now.
 
 /obj/item/rogueweapon/sword/long/marlin
 	name = "shalal sabre"
@@ -1840,29 +1837,6 @@
 	max_blade_int = 330
 	smelt_bar_num = 2 // 1 bar loss
 	vorpal = TRUE // snicker snack this shit cuts heads off effortlessly (DO NOT PUT THIS ON ANYTHING ELSE UNLESS IT'S SUPER FUCKING RARE!!!)
-
-/datum/intent/sword/thrust/exe
-	swingdelay = 4	//Slight delay to stab; big and heavy.
-	penfactor = PEN_NONE //Flat tip? I don't know, man. This intent is won't penetrate anything but it damages armor more.
-	intent_intdamage_factor = 1.3 //This is basically like getting hit by a mace.
-
-/datum/intent/sword/cut/exe/cleave
-	name = "cleaving cut"
-	icon_state = "incleave"
-	attack_verb = list("cleaves", "carves through")
-	clickcd = CLICK_CD_MASSIVE // Distinguished from GSword by being sluggish
-	damfactor = 1.2
-	cleave = /datum/cleave_pattern/forward_cleave
-	desc = "A heavy cleave that cuts through a second target behind the first."
-
-/datum/intent/sword/cut/exe/sweep
-	name = "sweeping cut"
-	icon_state = "insweep"
-	attack_verb = list("sweeps through", "cuts across")
-	clickcd = CLICK_CD_GLACIAL
-	damfactor = 1.2 // Hits harder but clunkier
-	cleave = /datum/cleave_pattern/horizontal_sweep
-	desc = "A heavy sweep that cuts through targets to the front."
 
 /obj/item/rogueweapon/sword/long/exe/astrata
 	name = "\"Solar Judge\""
@@ -2134,6 +2108,7 @@
 	max_integrity = 350
 	max_blade_int = 400
 	awakens = FALSE
+	gripped_intents = list(/datum/intent/sword/cut/zwei, /datum/intent/sword/chop/heavy, /datum/intent/sword/thrust/long/deep, /datum/intent/sword/thrust/estoc) // TA EDIT
 
 /obj/item/rogueweapon/sword/long/broadsword/silver/psy/forgotten/relic/ComponentInitialize()
 	AddComponent(\

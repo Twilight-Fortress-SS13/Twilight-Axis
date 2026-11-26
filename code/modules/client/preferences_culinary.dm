@@ -1,14 +1,14 @@
 
 GLOBAL_LIST_INIT(culinary_cuisines, list(
-	"North Imperial" = CUISINE_NORTH_IMPERIAL,
-	"South Imperial" = CUISINE_SOUTH_IMPERIAL,
+	"Grenzelhoftian" = CUISINE_NORTH_IMPERIAL,
+	"Azurian" = CUISINE_SOUTH_IMPERIAL,
 	"Otavais" = CUISINE_OTAVAIS,
 	"Northern" = CUISINE_NORTHERN,
-	"Etruscan" = CUISINE_ETRUSCAN,
-	"Southeastern" = CUISINE_SOUTHEASTERN,
-	"Ranesheni" = CUISINE_RANESHENI,
-	"Naledi" = CUISINE_NALEDI,
-))
+	"Oceanic" = CUISINE_ETRUSCAN,
+	"Eastern" = CUISINE_SOUTHEASTERN,
+	"Aavnic" = CUISINE_RANESHENI,
+	"Zybantu" = CUISINE_NALEDI,
+)) //TA EDIT
 
 GLOBAL_LIST_INIT(culinary_dishes, list(
 	"Meat" = DISH_MEAT,

@@ -1,6 +1,7 @@
 /obj/item/organ/breasts
 	name = "breasts"
-	icon_state = "severedtail" //placeholder
+	icon = 'modular_twilight_axis/icons/roguetown/items/surgery.dmi' //TA_EDIT
+	icon_state = "breasts" //TA_EDIT
 	visible_organ = TRUE
 	zone = BODY_ZONE_CHEST
 	slot = ORGAN_SLOT_BREASTS

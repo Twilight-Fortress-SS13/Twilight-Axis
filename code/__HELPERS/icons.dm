@@ -1566,16 +1566,9 @@ GLOBAL_LIST_EMPTY(headshot_cache)
 
 	var/image/dummy = image(target.icon, target, target.icon_state, target.layer, target.dir)
 	dummy.appearance = target.appearance
-	dummy.dir = SOUTH
+	dummy.dir = SOUTH // TA EDIT
 
-	target.update_inv_hands()
-	target.update_inv_belt()
-	target.update_inv_back()
-	target.update_inv_head()
-	// if(was_typing)
-	//	target.set_typing_indicator(TRUE)
-
-	var/icon/headshot = getFlatIcon(dummy, SOUTH, no_anim = TRUE)
+	var/icon/headshot = getFlatIcon(dummy, SOUTH, no_anim = TRUE) // TA EDIT
 	headshot.Scale(size, size)
 	headshot.Crop(1, size - crop_height + 1, size, size)
 

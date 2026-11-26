@@ -7,7 +7,7 @@
 	class_select_category = CLASS_CAT_ETRUSCA
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_BRAVO)
 	subclass_languages = list(/datum/language/etruscan, /datum/language/thievescant)
-	cmode_music = 'sound/music/combat_condottiero.ogg'
+	cmode_music = sound("sound/music/combat_condottiero.ogg")
 	traits_applied = list(TRAIT_MEDIUMARMOR)
 	subclass_stats = list(
 		STATKEY_WIL = 1,
@@ -20,7 +20,7 @@
 		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
@@ -83,7 +83,7 @@
 	class_select_category = CLASS_CAT_ETRUSCA
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_MARKSMAN)
 	subclass_languages = list(/datum/language/etruscan, /datum/language/thievescant)
-	cmode_music = 'sound/music/combat_condottiero.ogg'
+	cmode_music = sound("sound/music/combat_condottiero.ogg")
 	traits_applied = list(TRAIT_DODGEEXPERT)
 	subclass_stats = list(
 		STATKEY_WIL = 2,
@@ -105,6 +105,7 @@
 		/datum/skill/misc/swimming = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
 		/datum/skill/misc/reading = SKILL_LEVEL_NOVICE,
+		/datum/skill/misc/stealing = SKILL_LEVEL_JOURNEYMAN, // TA EDIT
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/tracking = SKILL_LEVEL_EXPERT,
 		/datum/skill/craft/traps = SKILL_LEVEL_JOURNEYMAN,

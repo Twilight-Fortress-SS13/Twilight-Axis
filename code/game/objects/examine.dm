@@ -50,6 +50,24 @@
 		return null
 	return list("text" = "Quality: <b>[capitalize(word)]</b> ([qpct]% value)", "style" = style)
 
+/obj/item/proc/can_reveal_heresy(mob/user, severity) // TA EDIT START
+	if(!user)
+		return FALSE
+	if(isliving(user))
+		var/mob/living/L = user
+		if(istype(L.patron, /datum/patron/inhumen))
+			return FALSE
+	/*switch(severity)
+		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING)
+			return TRUE
+		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS)
+			if(HAS_TRAIT(user, TRAIT_INQUISITION) || HAS_TRAIT(user, TRAIT_CLERGY))
+				return TRUE
+		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD)
+			if(HAS_TRAIT(user, TRAIT_INQUISITION))
+				return TRUE*/
+	return TRUE // TA EDIT END
+
 /obj/item/examine(mob/user)
 	. = ..()
 	. += integrity_check()
@@ -72,6 +90,7 @@
 	else if(HAS_TRAIT(user, TRAIT_SEEPRICES_SHITTY))
 		var/real_value = appraise_price()
 		if(real_value > 0)
+			// Shitty price sense fumbles the value by up to 25% either way.
 			var/static/fumbling_seed = text2num(GLOB.rogue_round_id)
 			var/fumbled_value = max(1, round(real_value + (real_value * clamp(noise_hash(real_value, fumbling_seed) - 0.25, -0.25, 0.25)), 1))
 			value_line = "Value: ~[fumbled_value] mammon (uncertain)"
@@ -129,9 +148,10 @@
 	var/examine_highlight_status = get_examine_highlight_status()
 	if(examine_highlight_status)
 		var/severity = examine_highlight_status[1]
-		var/heresy_desc = get_examine_highlight_description(examine_highlight_status, itis = TRUE, allcaps = FALSE)
-		var/heresy_tooltip = get_examine_highlight_explanation(severity)
-		. += span_info(SPAN_TOOLTIP_DANGEROUS_HTML(heresy_tooltip, heresy_desc))
+		if(can_reveal_heresy(user, severity)) // TA EDIT START
+			var/heresy_desc = get_examine_highlight_description(examine_highlight_status, itis = FALSE, allcaps = FALSE)
+			var/heresy_tooltip = get_examine_highlight_explanation(severity)
+			. += span_info(SPAN_TOOLTIP_DANGEROUS_HTML(heresy_tooltip, heresy_desc)) // TA EDIT END
 
 	if(isbait)
 		var/baitquality

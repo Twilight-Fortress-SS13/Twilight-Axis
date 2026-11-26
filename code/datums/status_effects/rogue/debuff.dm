@@ -981,6 +981,8 @@
 	name = "Lost Hood"
 	desc = "The sacred hood is lost. I feel frail and sapped without it."
 
+//TA EDIT
+
 ///////////////////////
 /// CLIMBING STUFF ///
 /////////////////////
@@ -1125,6 +1127,24 @@
 	name = "Vampyrebiten"
 	desc = "You are feeling something... Interesting.."
 	icon_state = "acid"
+
+//TA EDIT
+/datum/status_effect/debuff/impure_vitae
+	id = "impurevitae"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/impure_vitae
+	effectedstats = list(STATKEY_CON = -1, STATKEY_INT = -1)
+	duration = 1 MINUTES
+
+/datum/status_effect/debuff/impure_vitae/on_apply()
+	. = ..()
+	owner.add_stress(/datum/stressevent/high)
+
+/datum/status_effect/debuff/impure_vitae/on_remove()
+	owner.remove_stress(/datum/stressevent/high)
+
+/atom/movable/screen/alert/status_effect/debuff/impure_vitae
+	name = "Invigorated"
+	desc = "AGH.. My heart is hurt... My head... This sinful soul stirs my thoughts and body in sin.."
 
 /datum/status_effect/debuff/joybringer_druqks
 	id = "joybringer_druqks"

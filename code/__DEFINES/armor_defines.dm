@@ -7,6 +7,7 @@
 // If penfactor == armor tier: 20% of damage penetrates armor.
 // If penfactor < armor tier: fully blocked (0 through).
 // Blunt and Fire use DR Absorb — damage multiplied by 1 / (1 + 0.2 * DR tier), all absorbed by armor (none to HP).
+// Bullets use DR Pierce — damage is reduced by 20% by tier, but still reaches HP; armor also takes integrity damage.
 
 // Penetration tiers (0-4). Weapon attacks.
 #define PEN_NONE			0	// No penetration. Training weapons, base cuts/chops.
@@ -22,10 +23,10 @@
 #define DBLOCK_HEAVY		3	// Brigandine, mail, cuirass, plate.
 #define DBLOCK_BSTEEL		4	// Blacksteel, antagonist.
 
-// Damage reduction tiers (0-5). Used by blunt and fire (all DR Absorb).
+// Damage reduction tiers (0-5). Used by blunt and fire (DR Absorb) and bullets (DR Pierce).
 // Note that blunt by default have 1.6x Integrity Multiplier.
-// Damage multiplier = 1 / (1 + 0.2 * tier)
-// All damage absorbed by armor (none to HP); armor takes the DR-reduced amount.
+// Damage multiplier = 1 / (1 + 0.2 * tier) for blunt and fire, 1 - (0.2 * tier) for bullets.
+// Blunt and fire: all damage is absorbed by armor. Bullets: reduced damage still reaches HP.
 #define DR_NONE				0	// Nothing. 100% damage. EDPS: 160%
 #define DR_LIGHT			1	// Plate / Metal. 20% EHP increase. EDPS: 133%
 #define DR_MEDIUM			2	// Mail. 40% EHP increase. EDPS: 114%
@@ -35,9 +36,12 @@
 
 // Armor damage type categories
 // DR Absorb: damage reduced by tier, ALL damage goes to armor integrity (none to HP). Blunt, fire.
+// DR Pierce: damage reduced by tier, reduced damage STILL hits HP. Armor also takes integrity damage. Bullets.
 // DBLOCK: tier pass/fail penetration system. Slash, stab, piercing.
-#define ARMOR_DR_TYPES list("blunt", "fire")
-// Resist DR types: worn real armor absorbs these even at a 0 rating (metal shows no fire pips but still
+#define ARMOR_DR_ABSORB_TYPES list("blunt", "fire")
+#define ARMOR_DR_PIERCE_TYPES list("bullet")
+#define ARMOR_DR_TYPES list("blunt", "fire", "bullet")
+// Resist DR types: worn real armor absorbs these even at a 0 rating (metal shows no fire pips but still)
 #define ARMOR_DR_RESIST_TYPES list("fire")
 // DR types that land on a single armor layer instead of distributing across every worn layer. Blunt still distributes.
 #define ARMOR_DR_SINGLE_LAYER_TYPES list("fire")
@@ -72,8 +76,8 @@
 #define ARMOR_INT_HELMET_BRONZE 350 //More integrity, less protection.
 #define ARMOR_INT_HELMET_STEEL 300
 #define ARMOR_INT_HELMET_IRON 225
-#define ARMOR_INT_HELMET_HARDLEATHER 200
-#define ARMOR_INT_HELMET_LEATHER 150
+#define ARMOR_INT_HELMET_HARDLEATHER 250 // TA EDIT
+#define ARMOR_INT_HELMET_LEATHER 200 // TA EDIT
 #define ARMOR_INT_HELMET_CLOTH 100
 
 // Chest / Armor Pieces
@@ -96,18 +100,18 @@
 #define ARMOR_INT_CHEST_MEDIUM_IRON 225
 #define ARMOR_INT_CHEST_MEDIUM_SCALE 200 // More coverage, less integrity
 #define ARMOR_INT_CHEST_PLATE_BRIGANDINE 350 //weaker protection, more integrity.
-#define ARMOR_INT_CHEST_PLATE_BRIGANDINE_WEIGHT_MODIFIER 100 //Deducted from Light AC brigandine parts, added to Heavy AC brigandine parts.
+#define ARMOR_INT_CHEST_PLATE_BRIGANDINE_WEIGHT_MODIFIER 50 //Deducted from Light AC brigandine parts, added to Heavy AC brigandine parts. // TA EDIT
 #define ARMOR_INT_CHEST_MEDIUM_DECREPIT 150
 
 // LIGHT
 #define ARMOR_INT_CHEST_LIGHT_ANTAG 360 //1.5x Master.
 #define ARMOR_INT_CHEST_LIGHT_ELITE 300 //1.25x Master. Snowflake top-tier light armor
-#define ARMOR_INT_CHEST_LIGHT_MASTER 240 // High tier cloth / leather armor
-#define ARMOR_INT_CHEST_LIGHT_MEDIUM 200 // Medium tier cloth / leather armor
-#define ARMOR_INT_CHEST_LIGHT_BASE 160
+#define ARMOR_INT_CHEST_LIGHT_MASTER 300 // High tier cloth / leather armor // TA EDIT
+#define ARMOR_INT_CHEST_LIGHT_MEDIUM 250 // Medium tier cloth / leather armor // TA EDIT
+#define ARMOR_INT_CHEST_LIGHT_BASE 200 // TA EDIT
 #define ARMOR_INT_CHEST_LIGHT_BRONZE 180
 #define ARMOR_INT_CHEST_LIGHT_STEEL 180
-#define ARMOR_INT_CHEST_LIGHT_IRON 150
+#define ARMOR_INT_CHEST_LIGHT_IRON 180 // TA EDIT
 #define ARMOR_INT_CHEST_CIVILIAN 100
 #define ARMOR_INT_LIGHT_FENCER_MODIFIER 30 //bonus integrity for Fencer items over standard light armor.
 #define ARMOR_INT_LIGHT_BETWEENTIER_MODIFIER 25 //Penalty for studded leather, bonus for various other variants.
@@ -123,8 +127,8 @@
 #define ARMOR_INT_LEG_BRIGANDINE 250
 #define ARMOR_INT_LEG_IRON_CHAIN 225
 #define ARMOR_INT_LEG_DECREPIT_CHAIN 150
-#define ARMOR_INT_LEG_HARDLEATHER 200
-#define ARMOR_INT_LEG_LEATHER 150
+#define ARMOR_INT_LEG_HARDLEATHER 250 // TA EDIT
+#define ARMOR_INT_LEG_LEATHER 200 // TA EDIT
 #define ARMOR_INT_LEG_CLOTH 10
 
 // SIDE PIECES - Non-Chest armor
@@ -133,8 +137,8 @@
 #define ARMOR_INT_SIDE_BRONZE 250 // Integrity for bronze pieces
 #define ARMOR_INT_SIDE_STEEL 300 // Integrity for steel pieces
 #define ARMOR_INT_SIDE_IRON 225 // Integrity for iron pieces
-#define ARMOR_INT_SIDE_HARDLEATHER 200
-#define ARMOR_INT_SIDE_LEATHER 150 // Integrity for leather / copper pieces
+#define ARMOR_INT_SIDE_HARDLEATHER 250 // TA EDIT
+#define ARMOR_INT_SIDE_LEATHER 200 // Integrity for leather / copper pieces // TA EDIT
 #define ARMOR_INT_SIDE_DECREPIT 150 // Integrity for decrepit pieces
 #define ARMOR_INT_SIDE_CLOTH 100 // Integrity for cloth / aesthetic oriented pieces
 #define ARMOR_INT_SIDE_GOLDPLUS 10 // Integrity for royal variants of golden / cermemonial pieces
@@ -158,56 +162,58 @@
 | ARMOR VALUE DEFINES |
 \--------------------*/
 // Misc defines. These are here just in case. Inherited by their relevant subtypes.
-#define ARMOR_MACHINERY list("blunt" = DR_LIGHT, "slash" = DBLOCK_LIGHT, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_LIGHT, "fire" = DR_MEDIUM)
-#define ARMOR_STRUCTURE list("blunt" = DR_NONE, "slash" = DBLOCK_NONE, "stab" = DBLOCK_NONE, "piercing" = DBLOCK_NONE, "fire" = DR_MEDIUM)
-#define ARMOR_DISPLAYCASE list("blunt" = DR_LIGHT, "slash" = DBLOCK_LIGHT, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_NONE, "fire" = DR_HEAVY)
-#define ARMOR_CLOSET list("blunt" = DR_LIGHT, "slash" = DBLOCK_LIGHT, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_LIGHT, "fire" = DR_HEAVY)
-#define ARMOR_BLACKBAG list("blunt" = DR_ULTRA, "slash" = DBLOCK_BSTEEL, "stab" = DBLOCK_BSTEEL, "piercing" = DBLOCK_BSTEEL, "fire" = DR_SUPER)
+#define ARMOR_MACHINERY list("blunt" = DR_LIGHT, "slash" = DBLOCK_LIGHT, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_LIGHT, "fire" = DR_MEDIUM, "bullet" = DR_ULTRA)
+#define ARMOR_STRUCTURE list("blunt" = DR_NONE, "slash" = DBLOCK_NONE, "stab" = DBLOCK_NONE, "piercing" = DBLOCK_NONE, "fire" = DR_MEDIUM, "bullet" = DR_ULTRA)
+#define ARMOR_DISPLAYCASE list("blunt" = DR_LIGHT, "slash" = DBLOCK_LIGHT, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_NONE, "fire" = DR_HEAVY, "bullet" = DR_ULTRA)
+#define ARMOR_CLOSET list("blunt" = DR_LIGHT, "slash" = DBLOCK_LIGHT, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_LIGHT, "fire" = DR_HEAVY, "bullet" = DR_ULTRA)
+#define ARMOR_BLACKBAG list("blunt" = DR_ULTRA, "slash" = DBLOCK_BSTEEL, "stab" = DBLOCK_BSTEEL, "piercing" = DBLOCK_BSTEEL, "fire" = DR_SUPER, "bullet" = DR_ULTRA)
 
 // TRASH — Cloth, bad leather, NPC trash.
-#define ARMOR_CLOTHING list("blunt" = DR_NONE, "slash" = DBLOCK_NONE, "stab" = DBLOCK_NONE, "piercing" = DBLOCK_NONE, "fire" = DR_NONE)
-#define ARMOR_PADDED_BAD list("blunt" = DR_MEDIUM, "slash" = DBLOCK_LIGHT, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_LIGHT, "fire" = DR_NONE)
+#define ARMOR_CLOTHING list("blunt" = DR_NONE, "slash" = DBLOCK_NONE, "stab" = DBLOCK_NONE, "piercing" = DBLOCK_NONE, "fire" = DR_NONE, "bullet" = DR_NONE)
+#define ARMOR_PADDED_BAD list("blunt" = DR_MEDIUM, "slash" = DBLOCK_LIGHT, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_LIGHT, "fire" = DR_NONE, "bullet" = DR_NONE)
 
 // LIGHT ARMOR - Split into two sidegrades: PADDED VS LEATHER
 // PADDED: Best Blunt protection, Bodkin immune. But Axe CHOP (MEDIUM) and most thrusts (LIGHT) get through.
 // LEATHER: Decent Blunt DR. Axe CHOP (MEDIUM), sword thrust (MEDIUM) and bodkin (HEAVY) get through. Better vs stab than padded, worse vs piercing.
-#define ARMOR_PADDED list("blunt" = DR_SUPER, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_BSTEEL, "fire" = DR_LIGHT)
-#define ARMOR_LEATHER_NPC list("blunt" = DR_HEAVY, "slash" = DBLOCK_LIGHT, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_MEDIUM, "fire" = DR_MEDIUM)
-#define ARMOR_LEATHER list("blunt" = DR_ULTRA, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_HEAVY, "fire" = DR_MEDIUM)
+#define ARMOR_PADDED list("blunt" = DR_SUPER, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_BSTEEL, "fire" = DR_LIGHT, "bullet" = DR_LIGHT)
+#define ARMOR_LEATHER_NPC list("blunt" = DR_HEAVY, "slash" = DBLOCK_LIGHT, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_MEDIUM, "fire" = DR_MEDIUM, "bullet" = DR_LIGHT)
+#define ARMOR_LEATHER list("blunt" = DR_ULTRA, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_HEAVY, "fire" = DR_MEDIUM, "bullet" = DR_LIGHT)
 
 // LIGHT ARMOR - SNOWFLAKE. Not comfortable with them, but not touching it atm.
-#define ARMOR_DRAGONHIDE list("blunt" = DR_SUPER, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_LIGHT, "fire" = DR_MEDIUM) // snowflake armor for dragonhide - a bit worse than hard leather but w/ decent fire resist
+#define ARMOR_DRAGONHIDE list("blunt" = DR_SUPER, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_LIGHT, "fire" = DR_MEDIUM, "bullet" = DR_LIGHT) // snowflake armor for dragonhide - a bit worse than hard leather but w/ decent fire resist
+
+#define ARMOR_CULTNECK list("blunt" = DR_LIGHT, "slash" = DR_SUPER, "stab" = DR_SUPER, "piercing" = DR_SUPER, "fire" = DR_HEAVY, "bullet" = DR_SUPER) // snowflake armor for dragonhide - a bit worse than hard leather but w/ decent fire resist
 
 // BRIGANDINE — All brigandine parts. Better blunt and arrow padding than plate, but sword stabs and above will pen. Best light armor gets for melee. Medium/heavy classes should still wear maille under it!
-#define ARMOR_BRIGANDINE list("blunt" = DR_HEAVY, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_HEAVY, "fire" = DR_NONE)
+#define ARMOR_BRIGANDINE list("blunt" = DR_HEAVY, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_HEAVY, "fire" = DR_NONE, "bullet" = DR_HEAVY)
 
 // BRONZE - All bronze armor. Not particularly good against any specialized AP intent, but uniquely resistant to fire damage from mage spells and the like. THIS SHOULD BE USING IRON INTEGRITY.
-#define ARMOR_BRONZE list("blunt" = DR_MEDIUM, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_MEDIUM, "fire" = DR_MEDIUM)
+#define ARMOR_BRONZE list("blunt" = DR_MEDIUM, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_MEDIUM, "fire" = DR_MEDIUM, "bullet" = DR_LIGHT)
 
 // MAILLE — Chainmail. Medium: Plate level protection but weak vs Bodkin (100% through)
-#define ARMOR_MAILLE list("blunt" = DR_MEDIUM, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_LIGHT, "fire" = DR_NONE)
+#define ARMOR_MAILLE list("blunt" = DR_MEDIUM, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_LIGHT, "fire" = DR_NONE, "bullet" = DR_MEDIUM)
 
 // PLATE — Cuirass, plate. All plate-tier items; differentiated by integrity, not rating. Spear (PEN_HEAVY) gets 20% through stab. Bodkin goes through 100% - MEDIUM rating. Weak vs Blunt.
-#define ARMOR_PLATE list("blunt" = DR_LIGHT, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_MEDIUM, "fire" = DR_NONE)
+#define ARMOR_PLATE list("blunt" = DR_LIGHT, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_MEDIUM, "fire" = DR_NONE, "bullet" = DR_HEAVY)
 
 // BSTEEL — Blacksteel, antagonist. DBLOCK_BSTEEL (4).
 // Halfsword (PEN_BSTEEL) gets 20% through. Blunt still works decently (DR_MEDIUM only).
-#define ARMOR_PLATE_BSTEEL list("blunt" = DR_MEDIUM, "slash" = DBLOCK_BSTEEL, "stab" = DBLOCK_BSTEEL, "piercing" = DBLOCK_BSTEEL, "fire" = DR_LIGHT)
+#define ARMOR_PLATE_BSTEEL list("blunt" = DR_MEDIUM, "slash" = DBLOCK_BSTEEL, "stab" = DBLOCK_BSTEEL, "piercing" = DBLOCK_BSTEEL, "fire" = DR_LIGHT, "bullet" = DR_ULTRA)
 
 //Antag / Special / Unique armor defines
 // If you DO NOT have a VERY VERY good design reasons for why your armor should varies
 // Please do not add it and use an existing one, so to prevent armor bloat and keep armor
 // reasonable and intuitive.
-#define ARMOR_REGENERATING_BROKEN list("blunt" = DR_LIGHT, "slash" = DBLOCK_LIGHT, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_LIGHT, "fire" = DR_NONE)
-#define ARMOR_VAMP list("blunt" = DR_ULTRA, "slash" = DBLOCK_BSTEEL, "stab" = DBLOCK_BSTEEL, "piercing" = DBLOCK_BSTEEL, "fire" = DR_ULTRA) //Some of the most cracked armor in the game, exclusive to vlord.
-#define ARMOR_WWOLF list("blunt" = DR_SUPER, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_MEDIUM, "fire" = DR_MEDIUM)
-#define ARMOR_GNOLL_WEAK list("blunt" = DR_ULTRA, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_MEDIUM, "fire" = DR_MEDIUM)
-#define ARMOR_GNOLL_STANDARD list("blunt" = DR_SUPER, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_HEAVY, "fire" = DR_MEDIUM)
-#define ARMOR_GNOLL_STRONG list("blunt" = DR_MEDIUM, "slash" = DBLOCK_BSTEEL, "stab" = DBLOCK_BSTEEL, "piercing" = DBLOCK_HEAVY, "fire" = DR_MEDIUM)
-#define ARMOR_BLACKOAK list("blunt" = DR_ULTRA, "slash" = DBLOCK_LIGHT, "stab" = DBLOCK_BSTEEL, "piercing" = DBLOCK_MEDIUM, "fire" = DR_NONE) // Wood: great vs blunt/stab, bad vs slash
-#define ARMOR_INSULATED_BRIGANDINE list("blunt" = DR_HEAVY, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_HEAVY, "fire" = DR_ULTRA)
-#define ARMOR_INSULATED_LEATHER list("blunt" = DR_ULTRA, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_HEAVY, "fire" = DR_ULTRA)
+#define ARMOR_REGENERATING_BROKEN list("blunt" = DR_LIGHT, "slash" = DBLOCK_LIGHT, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_LIGHT, "fire" = DR_NONE, "bullet" = DR_NONE)
+#define ARMOR_VAMP list("blunt" = DR_ULTRA, "slash" = DBLOCK_BSTEEL, "stab" = DBLOCK_BSTEEL, "piercing" = DBLOCK_BSTEEL, "fire" = DR_ULTRA, "bullet" = DR_ULTRA) //Some of the most cracked armor in the game, exclusive to vlord.
+#define ARMOR_WWOLF list("blunt" = DR_SUPER, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_MEDIUM, "fire" = DR_MEDIUM, "bullet" = DR_HEAVY)
+#define ARMOR_GNOLL_WEAK list("blunt" = DR_ULTRA, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_MEDIUM, "fire" = DR_MEDIUM, "bullet" = DR_MEDIUM)
+#define ARMOR_GNOLL_STANDARD list("blunt" = DR_SUPER, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_HEAVY, "piercing" = DBLOCK_HEAVY, "fire" = DR_MEDIUM, "bullet" = DR_SUPER)
+#define ARMOR_GNOLL_STRONG list("blunt" = DR_MEDIUM, "slash" = DBLOCK_BSTEEL, "stab" = DBLOCK_BSTEEL, "piercing" = DBLOCK_HEAVY, "fire" = DR_MEDIUM, "bullet" = DR_ULTRA)
+#define ARMOR_BLACKOAK list("blunt" = DR_ULTRA, "slash" = DBLOCK_LIGHT, "stab" = DBLOCK_BSTEEL, "piercing" = DBLOCK_MEDIUM, "fire" = DR_NONE, "bullet" = DR_MEDIUM) // Wood: great vs blunt/stab, bad vs slash
+#define ARMOR_INSULATED_BRIGANDINE list("blunt" = DR_HEAVY, "slash" = DBLOCK_HEAVY, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_HEAVY, "fire" = DR_ULTRA, "bullet" = DR_HEAVY)
+#define ARMOR_INSULATED_LEATHER list("blunt" = DR_ULTRA, "slash" = DBLOCK_MEDIUM, "stab" = DBLOCK_MEDIUM, "piercing" = DBLOCK_HEAVY, "fire" = DR_ULTRA, "bullet" = DR_LIGHT)
 
 // Indestructible / Meme
-#define ARMOR_INDESTRUCTIBLE list("blunt" = DR_ULTRA, "slash" = DBLOCK_BSTEEL, "stab" = DBLOCK_BSTEEL, "piercing" = DBLOCK_BSTEEL, "fire" = DR_ULTRA) // Magical / indestructible items
-#define ARMOR_BUCKET list("blunt" = DR_LIGHT, "slash" = DBLOCK_LIGHT, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_NONE, "fire" = DR_HEAVY) // It's a bucket. On your head.
+#define ARMOR_INDESTRUCTIBLE list("blunt" = DR_ULTRA, "slash" = DBLOCK_BSTEEL, "stab" = DBLOCK_BSTEEL, "piercing" = DBLOCK_BSTEEL, "fire" = DR_ULTRA, "bullet" = DR_ULTRA) // Magical / indestructible items
+#define ARMOR_BUCKET list("blunt" = DR_LIGHT, "slash" = DBLOCK_LIGHT, "stab" = DBLOCK_LIGHT, "piercing" = DBLOCK_NONE, "fire" = DR_HEAVY, "bullet" = DR_LIGHT) // It's a bucket. On your head.

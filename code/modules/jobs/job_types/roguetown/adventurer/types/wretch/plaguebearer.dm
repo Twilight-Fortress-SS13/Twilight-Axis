@@ -3,7 +3,7 @@
 	tutorial = "A disgraced physician forced into exile and years of hardship, you have turned to a private practice. Operating beyond the bounds of the law, you work with traitors, heretics, and common criminals as easily as your peers would treat a peasant or craftsman."
 
 	outfit = /datum/outfit/job/roguetown/wretch/plaguebearer
-	cmode_music = 'sound/music/combat_physician.ogg'
+	cmode_music = sound("sound/music/combat_physician.ogg")
 	class_select_category = CLASS_CAT_ROGUE
 	category_tags = list(CTAG_WRETCH)
 	traits_applied = list(TRAIT_CICERONE, TRAIT_NOSTINK, TRAIT_MEDICINE_EXPERT, TRAIT_ALCHEMY_EXPERT)
@@ -18,7 +18,7 @@
 	subclass_skills = list(
 		/datum/skill/combat/knives = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/swimming = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/combat/wrestling = SKILL_LEVEL_JOURNEYMAN, // To escape grapplers, fuck you
+		/datum/skill/combat/wrestling = SKILL_LEVEL_EXPERT, // To escape grapplers, fuck you
 		/datum/skill/combat/unarmed = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
 		/datum/skill/craft/crafting = SKILL_LEVEL_JOURNEYMAN,
