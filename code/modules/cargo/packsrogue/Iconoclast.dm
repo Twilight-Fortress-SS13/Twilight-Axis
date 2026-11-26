@@ -206,7 +206,7 @@
 /datum/supply_pack/rogue/Iconoclast/steelflail
 	name = "Steel Flail"
 	cost = 60
-	contains =	list(/obj/item/rogueweapon/flail/sflail)
+	contains =	list(/obj/item/rogueweapon/flail/steel)
 
 /datum/supply_pack/rogue/Iconoclast/lsword //TA EDIT START
 	name = "Longsword"
@@ -255,4 +255,4 @@
 /datum/supply_pack/rogue/Iconoclast/kiteshield
 	name = "Kite Shield"
 	cost = 40
-	contains = list(/obj/item/rogueweapon/shield/tower/metal)
+	contains = list(/obj/item/rogueweapon/shield/kite)

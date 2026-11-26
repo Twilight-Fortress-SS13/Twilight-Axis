@@ -1281,13 +1281,13 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 
 /datum/ritual/weaponary/cross/invoke(mob/living/user, turf/center)
 	. = ..()
-	new /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult(center)
+	new /obj/item/clothing/neck/roguetown/psicross/inhumen/ancient/decrepit/cult(center)
 	to_chat(user, span_notice("The psycross is transmuted into an amulet of Zizo."))
 
 /datum/ritual/weaponary/repaircross
 	name = "Восполнить амулет"
 	desk = "Восполняет амулет зизо, возвращая его защиту."
-	center_requirement = /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult
+	center_requirement = /obj/item/clothing/neck/roguetown/psicross/inhumen/ancient/decrepit/cult
 
 	w_req = /obj/item/natural/bone
 	e_req = /obj/item/natural/bone
@@ -1300,7 +1300,7 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 
 	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
 
-	new /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult(center)
+	new /obj/item/clothing/neck/roguetown/psicross/inhumen/ancient/decrepit/cult(center)
 	to_chat(user, span_notice("Крест вновь может защитить вас.."))
 
 /datum/ritual/weaponary/zdagger

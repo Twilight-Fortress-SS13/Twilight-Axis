@@ -1747,7 +1747,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	gloves = /obj/item/clothing/gloves/roguetown/plate/zizo
 	neck = /obj/item/clothing/neck/roguetown/bevor/zizo
 	r_hand = /obj/item/rogueweapon/sword/zizo
-	l_hand = /obj/item/rogueweapon/shield/tower/metal/zizo
+	l_hand = /obj/item/rogueweapon/shield/kite/zizo
 
 	H.mind.RemoveSpell(new /datum/action/cooldown/spell/mending/lesser)
 
@@ -1944,7 +1944,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	gloves = /obj/item/clothing/gloves/roguetown/plate/matthios
 	head = /obj/item/clothing/head/roguetown/helmet/heavy/matthios
 	neck = /obj/item/clothing/neck/roguetown/chaincoif/chainmantle/matthios
-	backr = /obj/item/rogueweapon/flail/peasantwarflail/matthios
+	backr = /obj/item/rogueweapon/flail/great/matthios
 
 	H.mind.AddSpell(new /datum/action/cooldown/spell/mending) // TA EDIT
 	ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL) // TA EDIT

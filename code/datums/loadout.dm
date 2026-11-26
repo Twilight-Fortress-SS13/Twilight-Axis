@@ -1290,7 +1290,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/psicross/zizo
 	name = "Decrepit Zcross"
 	category = "Аксессуары"
-	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy
+	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/ancient/decrepit
 
 /datum/loadout_item/zcross_iron
 	name = "Iron Zcross"
@@ -4238,7 +4238,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/psicross/decrepit
 	name = "Decrepit Psycross"
 	category = "Аксессуары"
-	path = /obj/item/clothing/neck/roguetown/psicross/aalloy
+	path = /obj/item/clothing/neck/roguetown/psicross/ancient/decrepit
 
 /datum/loadout_item/psicross/naledi
 	name = "Naledian Psy-Bracelet"
@@ -4265,7 +4265,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/wedding_band_ancient
 	name = "Wedding Band, Ancient"
 	category = "Аксессуары"
-	path = /obj/item/clothing/ring/band/paalloy
+	path = /obj/item/clothing/ring/band/ancient
 	donatitem = TRUE
 
 /datum/loadout_item/triumph_satchel
@@ -4331,19 +4331,19 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/psicross/paalloy
 	name = "Ancient Psycross"
 	category = list("Триумфы")
-	path = /obj/item/clothing/neck/roguetown/psicross/paalloy
+	path = /obj/item/clothing/neck/roguetown/psicross/ancient
 	triumph_cost = 2
 
 /datum/loadout_item/psicross/inhumen/paalloy
 	name = "Ancient Inverted Psycross"
 	category = list("Триумфы")
-	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/paalloy
+	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/ancient
 	triumph_cost = 2
 
 /datum/loadout_item/psicross/noc/paalloy
 	name = "Ancient Amulet of Noc"
 	category = list("Триумфы")
-	path = /obj/item/clothing/neck/roguetown/psicross/noc/paalloy
+	path = /obj/item/clothing/neck/roguetown/psicross/noc/ancient
 	triumph_cost = 2
 
 /datum/loadout_item/triumph_winterdress
