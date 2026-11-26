@@ -1303,6 +1303,21 @@
 				heretic_text += " To share with. To take with. For all, and us."
 		else if(HAS_TRAIT(examiner, TRAIT_FREEMAN))
 			heretic_text += "Fellow Free Man!"
+ 			else if((HAS_TRAIT(src, TRAIT_CABAL)))
+		if(seer)
+			heretic_text += "A member of Zizo's cabal."
+			if(HAS_TRAIT(examiner, TRAIT_CABAL))
+				heretic_text += " May their ambitions not interfere with mine."
+		else if((HAS_TRAIT(src, TRAIT_HORDE)))
+		if(seer)
+			heretic_text += "Hardened by Graggar's Rituals."
+			if(HAS_TRAIT(examiner, TRAIT_HORDE))
+				heretic_text += " Mine were a glorious memory."
+		else if((HAS_TRAIT(src, TRAIT_DEPRAVED)))
+		if(seer)
+			heretic_text += "Baotha's Touched."
+			if(HAS_TRAIT(examiner, TRAIT_DEPRAVED))
+				heretic_text += " She leads us to the greatest ends."
 
 	return heretic_text
 
@@ -1314,12 +1329,6 @@
 	if(HAS_TRAIT(src, TRAIT_FREEMAN) && HAS_TRAIT(examiner, TRAIT_FREEMAN))
 		heretic_text += "⚖️" //♠ is the original
 	//Defunct as of *fsalute changes, leaving here as a symbol reference.
-	else if(HAS_TRAIT(src, TRAIT_CABAL) && HAS_TRAIT(examiner, TRAIT_CABAL))
-		heretic_text += "♦"
-	else if(HAS_TRAIT(src, TRAIT_HORDE) && HAS_TRAIT(examiner, TRAIT_HORDE))
-		heretic_text += "♠"
-	else if(HAS_TRAIT(src, TRAIT_DEPRAVED) && HAS_TRAIT(examiner, TRAIT_DEPRAVED))
-		heretic_text += "♥"
 	if((HAS_TRAIT(src, TRAIT_FEYTOUCHED) || HAS_TRAIT(src, TRAIT_FEYBOUND)) && (HAS_TRAIT(examiner, TRAIT_ANCIENT_HAG) || HAS_TRAIT(examiner, TRAIT_FEYTOUCHED) || HAS_TRAIT(examiner, TRAIT_FEYBOUND)))
 		heretic_text += "🌿"
 	if(HAS_TRAIT(src, TRAIT_ANCIENT_HAG) && (HAS_TRAIT(examiner, TRAIT_ANCIENT_HAG) || HAS_TRAIT(examiner, TRAIT_FEYTOUCHED) || HAS_TRAIT(examiner, TRAIT_FEYBOUND)))
