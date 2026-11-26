@@ -1948,21 +1948,21 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 /obj/item/proc/get_examine_highlight_adjective(highlight_type)
 	switch(highlight_type)
 		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING)
-			return "HERETICAL"
+			return "ЕРЕСЬ" // TA EDIT
 		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS)
-			return "SUSPICIOUS"
+			return "ВЕРОЯТНАЯ ЕРЕСЬ" // TA EDIT
 		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD)
-			return "Odd"
+			return "Нечто необычное" // TA EDIT
 		if(EXAMINEHIGHLIGHT_VIBE_FRIEND)
-			return "Sworn Ally"
+			return "Верный союзник" // TA EDIT
 		if(EXAMINEHIGHLIGHT_VIBE_FOE)
-			return "Sworn Enemy"
+			return "Заклятый противник" // TA EDIT
 		if(EXAMINEHIGHLIGHT_VIBE_CROWN)
-			return "Divine"
+			return "Священное" // TA EDIT
 		if(EXAMINEHIGHLIGHT_VIBE_GOLGATHA)
-			return "Blessed"
+			return "Благословленное" // TA EDIT
 		if(EXAMINEHIGHLIGHT_HERESYSEVERITY_VERYODD)
-			return "ALARMINGLY ODD"
+			return "ОЧЕНЬ ПОДОЗРИТЕЛЬНО" // TA EDIT
 	return null
 
 /// See `proc/get_examine_highlight_status()` and `code\__DEFINES\highlight_examine_defines.dm`.
