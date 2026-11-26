@@ -64,7 +64,7 @@
 	. = ..()
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios/moneta/get_examine_highlight_status()
-	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD, "Strange luck charm")
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD, "Странный талисман")
 
 /obj/item/clothing/neck/roguetown/psicross/inhumen/gronn/spider
 	name = "carved talisman" //rising spider

@@ -36,7 +36,7 @@
 /obj/item/clothing/neck/roguetown/psicross/hag/get_examine_highlight_status()
 	// If the cross is not disguised
 	if(!mimic_type)
-		return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS, "The cross's silhouette shifts. That's no psycross... What is that?!")
+		return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS, "Силуэт креста, кажется, постоянно искажается... Что это такое?!") // TA EDIT
 	// If it is disguised, check to see if it appears like one of the heretical amulets and present it accordingly
 	else
 		if(is_zizo_amulet(mimic_type))
@@ -119,7 +119,7 @@
 		src.slot_flags = initial(C.slot_flags)
 		// I'm not implementing this yet for brevity.
 		src.wrist_display = initial(C.wrist_display)
-		
+
 		to_chat(user, span_notice("The strange cross shudders, mimicking the weight and presence of \a [name]."))
 
 	// Ensure the floor and in-hand sprites update

@@ -1,0 +1,4 @@
+author: "Quinalion"
+delete-after: True
+changes:
+  - code_imp: "Модульные иконки статусов собраны в icons/mob/screen_alert.dmi."

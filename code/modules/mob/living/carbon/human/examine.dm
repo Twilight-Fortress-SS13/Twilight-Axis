@@ -1,7 +1,7 @@
 /mob/living/carbon/human/proc/on_examine_face(mob/living/carbon/human/user)
 	if(!istype(user))
 		return
-	if(user.mind)
+	if(user.mind && src.client)
 		user.mind.i_know_person(src)
 	if(user.has_flaw(/datum/charflaw/paranoid))	//The weak should fear the strong..
 		if((STASTR - user.STASTR) > 1 && !has_flaw(/datum/charflaw/paranoid))
@@ -29,15 +29,19 @@
 	var/obscure_name = FALSE
 	var/race_name = "<a href='?src=[REF(src)];species_lore=1'><u>[dna.species.name]</u></A> "
 	var/origin_name = "<a href='?src=[REF(src)];origin_lore=1'><u>[dna.species.origin]</u></A>"
-	var/datum/antagonist/maniac/maniac = user.mind?.has_antag_datum(/datum/antagonist/maniac)
-	var/datum/antagonist/skeleton/skeleton = user.mind?.has_antag_datum(/datum/antagonist/skeleton)
+	var/datum/antagonist/maniac/maniac = user.mind?.has_antag_datum(/datum/antagonist/maniac) // TA EDIT START
 	var/datum/antagonist/zombie/zombie = user.mind?.has_antag_datum(/datum/antagonist/zombie)
-	if(maniac && (user != src))
+	var/datum/antagonist/skeleton/skeleton = mind?.has_antag_datum(/datum/antagonist/skeleton)
+	var/datum/antagonist/lich/lich = mind?.has_antag_datum(/datum/antagonist/lich)
+	if(maniac && user != src && !isobserver(user))
 		race_name = "disgusting pig"
-	if(skeleton && (user != src))
-		race_name = "[pick("shambling", "taut", "decrepit")]"
-	if(zombie && (user != src))
-		race_name = "[pick("shambling thing", "taut thing", "decrepit thing", "wyrd thing", "UHHHHHHH...")]"
+	if(zombie && user != src && !isobserver(user))
+		race_name = span_boldred("[pick("Shambling Thing", "Taut Thing", "Decrepit Thing", "Wyrd thing", "UHHHHHHH...", "Something", "Walking Thing", "Decaying Thing")]")
+		origin_name = "[pick("what..", "huh..", "remember..", "home..", "hell..", "heaven..", "where..", "here..", "somewhere..", "where am I..")]"
+	if(skeleton && !lich)
+		race_name = span_boldred("[pick("Shambling Skeleton", "Ancient Skeleton", "Taut Skeleton", "Decrepit Skeleton")]")
+	if(lich)
+		race_name = span_boldred("[pick("Ancient Skeleton", "Unnatural Skeleton", "Decrepit Skeleton")]") // TA EDIT END
 
 	var/m1 = "[t_He] [t_is]"
 	var/m2 = "[t_his]"
@@ -57,7 +61,7 @@
 		"Unknown Man",
 		"Unknown Woman",
 	)
-	if(get_face_name() != real_name)
+	if(get_face_name("U") != get_unmasked_name()) // 'U' is an impossible name to actually enter; thus, setting that as the default will properly differentiate between having the name 'Unknown' and being masked
 		obscure_name = TRUE
 
 	if(observer_privilege)
@@ -109,8 +113,8 @@
 			if(HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS))
 				guarded = TRUE
 
-	if(HAS_TRAIT(user, TRAIT_DEADITE) && !HAS_TRAIT(src, TRAIT_ZOMBIE_IMMUNE) && src.stat == CONSCIOUS)
-		. += span_narsie(pick("KILL IT. KILL IT", "FLESH. HUNGER.", "KILL. CONSUME.", "CONSUME.", "KILL THE RASPING THING.", "HUNGER.", "EAT IT.", "MUST HAVE FLESH."))
+	if(HAS_TRAIT(user, TRAIT_DEADITE) && !HAS_TRAIT(src, TRAIT_ZOMBIE_IMMUNE) && src.stat != DEAD) // TA EDIT
+		. += span_cult(pick("KILL IT. KILL IT", "FLESH. HUNGER.", "KILL. CONSUME.", "CONSUME.", "CLAW. BITE. KILL.", "EAT. FLESH. HUNGER.", "KILL THE RASPING THING.", "HUNGER.", "EAT IT.", "MUST HAVE FLESH.")) // TA EDIT
 
 	if(user != src)
 		var/datum/mind/Umind = user.mind
@@ -142,7 +146,7 @@
 		. += span_warning("[src]'s hollow expression is filled with mindless anger!")
 
 	if(wear_shirt && !(SLOT_SHIRT in obscured))
-		var/str = "[m3] [wear_shirt.generate_tooltip(wear_shirt.get_examine_string(user))]. "
+		var/str = "[m3] [wear_shirt.generate_tooltip(wear_shirt.get_examine_string(user), user)]. " // TA EDIT
 		str += "[wear_shirt.integrity_check(is_smart, guarded)]"
 		if(is_stupid)
 			str = "[m3] some kind of shirt!"
@@ -154,14 +158,14 @@
 			var/obj/item/clothing/under/U = wear_pants
 			if(U.attached_accessory)
 				accessory_msg += " with [icon2html(U.attached_accessory, user)] \a [U.attached_accessory]"
-		var/str = "[m3] [wear_pants.generate_tooltip(wear_pants.get_examine_string(user))][accessory_msg]. "
+		var/str = "[m3] [wear_pants.generate_tooltip(wear_pants.get_examine_string(user), user)][accessory_msg]. " // TA EDIT
 		str += wear_pants.integrity_check(is_smart, guarded)
 		if(is_stupid)
 			str = "[m3] a pair of some pants! "
 		. += str
 
 	if(head && !(SLOT_HEAD in obscured))
-		var/str = "[m3] [head.generate_tooltip(head.get_examine_string(user))] on [m2] head. "
+		var/str = "[m3] [head.generate_tooltip(head.get_examine_string(user), user)] on [m2] head. " // TA EDIT
 		str += head.integrity_check(is_smart)
 		if(is_stupid)
 			if(istype(head,/obj/item/clothing/head/roguetown/helmet))
@@ -171,7 +175,7 @@
 		. += str
 
 	if(wear_armor && !(SLOT_ARMOR in obscured))
-		var/str = "[m3] [wear_armor.generate_tooltip(wear_armor.get_examine_string(user))]. "
+		var/str = "[m3] [wear_armor.generate_tooltip(wear_armor.get_examine_string(user), user)]. " // TA EDIT
 		if(is_smart || is_normal)
 			str += wear_armor.integrity_check(is_smart, guarded)
 		else if (is_stupid)
@@ -195,7 +199,7 @@
 		var/str
 		if(istype(cloak, /obj/item/clothing))
 			var/obj/item/clothing/CL = cloak
-			str = "[m3] [CL.generate_tooltip(CL.get_examine_string(user))] on [m2] shoulders. "
+			str = "[m3] [CL.generate_tooltip(CL.get_examine_string(user), user)] on [m2] shoulders. " // TA EDIT
 		else
 			str = "[m3] [cloak.get_examine_string(user)] on [m2] shoulders. "
 		str += cloak.integrity_check(is_smart, guarded)
@@ -273,14 +277,14 @@
 
 	//Hands
 	for(var/obj/item/I in held_items)
-		if(!(I.item_flags & ABSTRACT))
+		if(!(I.item_flags & ABSTRACT) && !(I.item_flags & INHANDS_INVISIBLE))
 			var/str = "[m1] holding [get_item_examine_label(I, user)] in [m2] [get_held_index_name(get_held_index_of_item(I))]. "
 			str += I.integrity_check(is_smart, guarded)
 			. += str
 
 	var/datum/component/forensics/FR = GetComponent(/datum/component/forensics)
 	if(gloves && !(SLOT_GLOVES in obscured))
-		var/str = "[m3] [gloves.generate_tooltip(gloves.get_examine_string(user))] on [m2] hands. "
+		var/str = "[m3] [gloves.generate_tooltip(gloves.get_examine_string(user), user)] on [m2] hands. " // TA EDIT
 		str += gloves.integrity_check(is_smart, guarded)
 		if(is_stupid)
 			str = "[m3] a pair of gloves of some kind!"
@@ -309,14 +313,14 @@
 		. += str
 
 	if(shoes && !(SLOT_SHOES in obscured))
-		var/str = "[m3] [shoes.generate_tooltip(shoes.get_examine_string(user))] on [m2] feet. "
+		var/str = "[m3] [shoes.generate_tooltip(shoes.get_examine_string(user), user)] on [m2] feet. " // TA EDIT
 		str += shoes.integrity_check(is_smart, guarded)
 		if(is_stupid)
 			str = "[m3] some shoes on [m2] feet!"
 		. += str
 
 	if(wear_mask && !(SLOT_WEAR_MASK in obscured))
-		var/str = "[m3] [wear_mask.generate_tooltip(wear_mask.get_examine_string(user))] on [m2] face. "
+		var/str = "[m3] [wear_mask.generate_tooltip(wear_mask.get_examine_string(user), user)] on [m2] face. " // TA EDIT
 		str += wear_mask.integrity_check(is_smart, guarded)
 		if(is_stupid)
 			str = "[m3] some kinda thing on [m2] face!"
@@ -326,7 +330,7 @@
 		var/str
 		if(istype(mouth, /obj/item/clothing))
 			var/obj/item/clothing/CM = mouth
-			str = "[m3] [CM.generate_tooltip(CM.get_examine_string(user))] in [m2] mouth. "
+			str = "[m3] [CM.generate_tooltip(CM.get_examine_string(user), user)] in [m2] mouth. " // TA EDIT
 		else
 			str = "[m3] [get_item_examine_label(mouth, user)] in [m2] mouth. "
 		str += mouth.integrity_check(is_smart, guarded)
@@ -335,7 +339,7 @@
 		. += str
 
 	if(wear_neck && !(SLOT_NECK in obscured))
-		var/str = "[m3] [wear_neck.generate_tooltip(wear_neck.get_examine_string(user))] around [m2] neck. "
+		var/str = "[m3] [wear_neck.generate_tooltip(wear_neck.get_examine_string(user), user)] around [m2] neck. " // TA EDIT
 		str += wear_neck.integrity_check(is_smart, guarded)
 		if (is_stupid)
 			str = "[m3] something on [m2] neck!"
@@ -351,7 +355,7 @@
 		. += "[m3] [get_item_examine_label(ears, user)] on [m2] ears."
 
 	if(wear_ring && !(SLOT_RING in obscured))
-		var/str = "[m3] [wear_ring.generate_tooltip(wear_ring.get_examine_string(user))] on [m2] hands. "
+		var/str = "[m3] [wear_ring.generate_tooltip(wear_ring.get_examine_string(user), user)] on [m2] hands. " // TA EDIT
 		if(is_smart && istype(wear_ring, /obj/item/clothing/ring/active))
 			var/obj/item/clothing/ring/active/AR = wear_ring
 			if(AR.cooldowny)
@@ -364,7 +368,7 @@
 		. += str
 
 	if(wear_wrists && !(SLOT_WRISTS in obscured))
-		var/str = "[m3] [wear_wrists.generate_tooltip(wear_wrists.get_examine_string(user))] on [m2] wrists."
+		var/str = "[m3] [wear_wrists.generate_tooltip(wear_wrists.get_examine_string(user), user)] on [m2] wrists." // TA EDIT
 		str += wear_wrists.integrity_check(is_smart, guarded)
 		if (is_stupid)
 			str = "[m3] something on [m2] wrists!"
@@ -372,7 +376,7 @@
 
 	if(istype(skin_armor, /obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward))
 		var/obj/item/clothing/suit/roguetown/armor/manual/arcyne_ward/ward = skin_armor
-		var/str = "[m3] <font color='[ward.ward_color]'>[ward.generate_tooltip(ward.get_examine_string(user))] shimmering around [user == src ? "me" : p_them()].</font>"
+		var/str = "[m3] <font color='[ward.ward_color]'>[ward.generate_tooltip(ward.get_examine_string(user), user)] shimmering around [user == src ? "me" : p_them()].</font>" // TA EDIT
 		str += ward.integrity_check(is_smart, guarded)
 		if (is_stupid)
 			str = "[m3] some weird shiny thing!"
@@ -452,6 +456,8 @@
 		if(length(rumour) || length(noble_gossip))
 			if(!obscure_name || (obscure_name && client?.prefs.masked_examine) || observer_privilege)
 				examine_links += "<a href='?src=[REF(src)];task=view_rumours_gossip;'>Recall Rumours & Gossip</a>"
+		if(length(get_examine_secrets_for(user))) // TA EDIT
+			examine_links += "<a href='?src=[REF(src)];task=view_secrets;'>Recall Secrets</a>" // TA EDIT
 		if(length(examine_links))
 			. += jointext(examine_links, " | ")
 
@@ -821,7 +827,7 @@
 
 	if(show_descriptors)
 		var/list/lines
-		if((get_face_name() != real_name) && !observer_privilege)
+		if((get_face_name("U") != get_unmasked_name()) && !observer_privilege)
 			lines = build_cool_description_unknown(get_mob_descriptors_unknown(obscure_name, user), src)
 		else
 			lines = build_cool_description(get_mob_descriptors(obscure_name, user), src)
@@ -881,7 +887,8 @@
 
 /mob/living/carbon/human/proc/generate_main_examine_body(mob/user, m1, m2, m3, obscure_name, race_name, origin_name, observer_privilege, list/unknown_names)
 	. = list()
-	if(name in unknown_names)
+	var/datum/component/hag_name/HN = GetComponent(/datum/component/hag_name)
+	if((name in unknown_names) && !HN) // the identity datum can set your name to 'unknown' but we do still want full examine unless they're masked
 		. += span_info("ø ------------ ø\nThis is <EM>[name]</EM>.")
 		. += deadite_examine()
 		. += blackoak_examine(user)
@@ -912,10 +919,10 @@
 				used_title = "Ancient Lord"
 		var/display_as_wanderer = FALSE
 		if(observer_privilege)
-			used_name = real_name
+			used_name = get_unmasked_name()
 		if(migrant_type)
 			var/datum/migrant_role/migrant = MIGRANT_ROLE(migrant_type)
-			if(migrant.show_wanderer_examine)
+			if(migrant?.job_type == /datum/job/roguetown/migrant && migrant.show_wanderer_examine) // TA EDIT
 				display_as_wanderer = TRUE
 		else if(job)
 			var/datum/job/J = SSjob.GetJob(job)
@@ -934,6 +941,9 @@
 			. += (span_info("ø ------------ ø\nThis is <EM>[used_name]</EM>, the [race_name] [used_title]."))
 		else
 			. += (span_info("ø ------------ ø\nThis is the <EM>[used_name]</EM>, the [race_name]."))
+
+		if(HN && HN.identity.name == "Unknown")
+			. += (span_redtext("Surely they must have a name, but... I can't seem to recall it?")) // freaky
 
 		var/pronoun
 		if(!dna.species.use_skin_tone_wording_for_examine)
@@ -1004,6 +1014,11 @@
 
 		if(HAS_TRAIT(src, TRAIT_AGENT_MERCHANT))
 			. += span_notice("An agent of the Azurian Trading Company.")
+
+		if(HAS_TRAIT_FROM(src, TRAIT_BADTRAINER, REF(user))) // TA EDIT START
+			. += span_nicegreen("This is my protégé.")
+		else if(HAS_TRAIT_FROM(user, TRAIT_BADTRAINER, REF(src)))
+			. += span_nicegreen("This is my mentor.") // TA EDIT END
 
 		// only bath-house workers and other bath-house agents can recognize bath-house agents
 		if(HAS_TRAIT(src, TRAIT_AGENT_BATHHOUSE) && ishuman(user))
@@ -1320,6 +1335,10 @@
 		heretic_text += "♠"
 	else if(HAS_TRAIT(src, TRAIT_DEPRAVED) && HAS_TRAIT(examiner, TRAIT_DEPRAVED))
 		heretic_text += "♥"
+	if((HAS_TRAIT(src, TRAIT_FEYTOUCHED) || HAS_TRAIT(src, TRAIT_FEYBOUND)) && (HAS_TRAIT(examiner, TRAIT_ANCIENT_HAG) || HAS_TRAIT(examiner, TRAIT_FEYTOUCHED) || HAS_TRAIT(examiner, TRAIT_FEYBOUND)))
+		heretic_text += "🌿"
+	if(HAS_TRAIT(src, TRAIT_ANCIENT_HAG) && (HAS_TRAIT(examiner, TRAIT_ANCIENT_HAG) || HAS_TRAIT(examiner, TRAIT_FEYTOUCHED) || HAS_TRAIT(examiner, TRAIT_FEYBOUND)))
+		heretic_text += "🌳"
 
 	return heretic_text
 
@@ -1393,6 +1412,7 @@
 	var/item_examine_string = I.get_examine_string(user)
 	if(examine_highlight_status)
 		var/severity = examine_highlight_status[1]
-		var/heresy_examine_tooltip = I.get_examine_highlight_description(examine_highlight_status) + "<br>" + I.get_examine_highlight_explanation(severity)
-		item_examine_string = SPAN_TOOLTIP_DANGEROUS_HTML(heresy_examine_tooltip, I.get_examine_highlight_labeled_string(severity, item_examine_string))
+		if(I.can_reveal_heresy(user, severity)) // TA EDIT START
+			var/heresy_examine_tooltip = I.get_examine_highlight_description(examine_highlight_status) + "<br>" + I.get_examine_highlight_explanation(severity)
+			item_examine_string = SPAN_TOOLTIP_DANGEROUS_HTML(heresy_examine_tooltip, I.get_examine_highlight_labeled_string(severity, item_examine_string)) // TA EDIT END
 	return item_examine_string

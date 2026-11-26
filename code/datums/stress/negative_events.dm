@@ -444,10 +444,7 @@
 	desc = span_boldred("I have lost my hood! My faith wavers without it. I feel ashamed.")
 	timer = 999 MINUTES
 
-/datum/stressevent/dungeoneerhoodlost
-	stressadd = 3
-	desc = span_boldred("I have lost my hood! It's not right. I feel ashamed.")
-	timer = 999 MINUTES
+//TA EDIT
 
 /datum/stressevent/headless
 	stressadd = 3
@@ -461,7 +458,7 @@
 
 /datum/stressevent/fermented_crab_bad
 	stressadd = 2
-	desc = span_red("That fermented crab was truly rancid, abhorrent and disgusting.")
+	desc = span_red("That fermented crab was truly rancid, abhorrent, and disgusting.")
 	timer = 3 MINUTES
 
 /datum/stressevent/vampiric_reality

@@ -44,6 +44,7 @@
 			if(!index)
 				index = H.real_name
 			S.name = "veteran cloak ([index])"
+		H.mind?.AddSpell(new /datum/action/cooldown/spell/vetprotege)
 
 
 /datum/advclass/veteran/battlemaster
@@ -358,7 +359,7 @@
 	subclass_languages = list(/datum/language/grenzelhoftian)
 	cmode_music = sound("sound/music/combat_grenzelhoft.ogg")
 	category_tags = list(CTAG_VETERAN)
-	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_STEELHEARTED)
+	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_STEELHEARTED, TRAIT_BADTRAINER) //I am sick of fullplate grenzelvets
 	subclass_stats = list(
 		STATKEY_WIL = 3,
 		STATKEY_STR = 2,
@@ -467,6 +468,9 @@
 		STATKEY_CON = 1,
 		STATKEY_SPD = 2,
 	)
+	subclass_stashed_items = list(
+		"Wax Putty" = /obj/item/waxputty,
+	)
 	subclass_skills = list(
 		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/axes = SKILL_LEVEL_LEGENDARY,
@@ -565,6 +569,9 @@
 		STATKEY_CON = 1,
 		STATKEY_SPD = 3,
 		STATKEY_WIL = 2,
+	)
+	subclass_stashed_items = list(
+		"Wax Putty" = /obj/item/waxputty,
 	)
 	subclass_skills = list(
 		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,

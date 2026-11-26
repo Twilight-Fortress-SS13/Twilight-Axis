@@ -83,7 +83,7 @@
 		/obj/item/roguekey/mercenary = 1,
 		/obj/item/flashlight/flare/torch = 1,
 		)
-	H.merctype = 10
+	H.merctype = 4
 
 	if(H.mind)
 		var/helmets = list(

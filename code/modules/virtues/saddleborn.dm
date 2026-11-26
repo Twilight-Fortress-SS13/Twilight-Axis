@@ -367,6 +367,7 @@ GLOBAL_LIST_INIT(virtue_mount_choices_anthrax, (list(
 		return TRUE
 
 /datum/status_effect/buff/healing/saddleborn
+	id = "saddleborn_healing" // TA EDIT
 	healing_on_tick = 0.25
 	duration = 5 MINUTES
 	examine_text = "SUBJECTPRONOUN looks well-rested!"
@@ -456,7 +457,7 @@ GLOBAL_LIST_INIT(virtue_mount_choices_anthrax, (list(
 		to_chat(user, span_warning("Mount Decapitation is a dangerous place for a mount to navigate alone..."))
 	if (place.warden_area)
 		callback_time += 5 SECONDS
-		to_chat(user, span_warning("The murderwoods are a dangerous place for a mount to navigate alone..."))
+		to_chat(user, span_warning("The woods are a dangerous place for a mount to navigate alone..."))
 		dangerous_summon = TRUE
 	if (place.drow_area)
 		callback_time += 30 SECONDS

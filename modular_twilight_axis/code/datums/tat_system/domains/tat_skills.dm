@@ -578,15 +578,19 @@
 	if(!is_limited_combat_skill(skill_type))
 		return FALSE
 
-	var/expert_count = get_hypothetical_combat_threshold_count(TAT_SKILL_COMBAT_CAP_TRAIT_EXPERT, skill_type, invested_value)
-	if(expert_count > TAT_COMBAT_EXPERT_SKILL_LIMIT)
-		return TRUE
+	var/expert_count = 0
+	var/master_count = 0
+	for(var/combat_skill_type in TAT_SKILLS_COMBAT)
+		if(!is_limited_combat_skill(combat_skill_type))
+			continue
+		var/invested_override = combat_skill_type == skill_type ? invested_value : null
+		var/total_value = get_raw_total_value(combat_skill_type, invested_override)
+		if(total_value >= TAT_SKILL_COMBAT_CAP_TRAIT_EXPERT)
+			expert_count++
+		if(total_value >= TAT_SKILL_COMBAT_CAP_TRAIT_MASTER)
+			master_count++
 
-	var/master_count = get_hypothetical_combat_threshold_count(TAT_SKILL_COMBAT_CAP_TRAIT_MASTER, skill_type, invested_value)
-	if(master_count > TAT_COMBAT_MASTER_SKILL_LIMIT)
-		return TRUE
-
-	return FALSE
+	return expert_count > TAT_COMBAT_EXPERT_SKILL_LIMIT || master_count > TAT_COMBAT_MASTER_SKILL_LIMIT
 
 /datum/tat_skills/proc/get_combat_threshold_overflow_skill(threshold)
 	var/limit = (threshold >= TAT_SKILL_COMBAT_CAP_TRAIT_MASTER) ? TAT_COMBAT_MASTER_SKILL_LIMIT : TAT_COMBAT_EXPERT_SKILL_LIMIT
@@ -603,17 +607,18 @@
 		if(invested_value <= 0)
 			continue
 
-		var/total_value = get_raw_total_value(skill_type)
+		var/bonus_value = get_raw_bonus_value(skill_type)
+		var/total_value = invested_value + bonus_value
 		if(total_value < threshold)
 			continue
 
 		// Prefer removing the point that actually drops the skill below the overflowing threshold.
 		// Bonus-only skills still count against the quota, but they cannot be fixed by stripping TAT points.
-		var/drops_below_threshold = (get_raw_total_value(skill_type, invested_value - 1) < threshold)
+		var/drops_below_threshold = (total_value - 1 < threshold)
 		var/score = 0
 		if(drops_below_threshold)
 			score += 10000
-		score += get_raw_bonus_value(skill_type) * 100
+		score += bonus_value * 100
 		score += invested_value
 
 		if(score > best_score)

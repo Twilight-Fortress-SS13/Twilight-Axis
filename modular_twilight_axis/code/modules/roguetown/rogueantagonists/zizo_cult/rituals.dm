@@ -1380,6 +1380,21 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 	new /obj/item/rogueweapon/sword/sabre/zizo(center)
 	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
 
+/datum/ritual/weaponary/summonarapier
+	name = "Создание рапиры"
+	desk = "Призывает авантиновую рапиру."
+	center_requirement = /obj/item/rogueweapon/sword/rapier
+
+	n_req = /obj/item/ingot/steel/zizo
+
+/datum/ritual/weaponary/summonarapier/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/rogueweapon/sword/rapier/avantyne(center)
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
 /datum/ritual/weaponary/summonmace
 	name = "Призыв булавы"
 	desk = "Призывает особую булаву Зизо."

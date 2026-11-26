@@ -59,7 +59,7 @@
 		/obj/item/lockpickring/mundane = 1,
 		/obj/item/storage/belt/rogue/pouch/coins/poor
 		)
-	H.merctype = 2
+	H.merctype = 4
 
 /datum/outfit/job/roguetown/mercenary/twilight_miragefen_rogue/choose_loadout(mob/living/carbon/human/H)
 	. = ..()

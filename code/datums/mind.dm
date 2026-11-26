@@ -212,6 +212,8 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 		if(H.dna && H.dna.species)
 			known_people[H.real_name]["FSPECIES"] = H.dna.species.name
 		known_people[H.real_name]["FAGE"] = H.age
+		known_people[H.real_name]["FBMONTH"] = H.birthday_month // TA EDIT
+		known_people[H.real_name]["FBDAY"] = H.birthday_day // TA EDIT
 		if(ishuman(current))
 			var/mob/living/carbon/human/C = current
 			var/heretic_text = H.get_heretic_symbol(C)
@@ -251,6 +253,8 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 						referred_gender = "Androgynous"
 				M.known_people[H.real_name]["FGENDER"] = referred_gender
 				M.known_people[H.real_name]["FAGE"] = H.age
+				M.known_people[H.real_name]["FBMONTH"] = H.birthday_month // TA EDIT
+				M.known_people[H.real_name]["FBDAY"] = H.birthday_day // TA EDIT
 				if(ishuman(M.current))
 					var/mob/living/carbon/human/C = M.current
 					var/heretic_text = C.get_heretic_symbol(H)
@@ -383,10 +387,10 @@ GLOBAL_LIST_EMPTY(personal_objective_minds)
 	transfer_antag_huds(hud_to_transfer)				//inherit the antag HUD
 	transfer_actions(new_character)
 	transfer_martial_arts(new_character)
-	if(old_current.skills)
+	if(old_current?.skills)
 		old_current.skills.set_current(new_character)
 
-	RegisterSignal(new_character, COMSIG_MOB_DEATH, PROC_REF(set_death_time))
+	RegisterSignal(new_character, COMSIG_MOB_DEATH, PROC_REF(set_death_time), TRUE)
 	if(active || force_key_move)
 
 		new_character.key = key		//now transfer the key to link the client to our new body

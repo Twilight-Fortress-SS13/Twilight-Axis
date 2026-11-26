@@ -334,7 +334,7 @@
 				user.Beam(target, icon_state = "chain", time = 5)
 			else
 				H.visible_message(span_warning("[H] holds firm!"))
-			H.Slowdown(slowdown)
+			H.apply_status_effect(/datum/status_effect/debuff/slowed, slowdown)
 			return TRUE
 		revert_cast()
 		return FALSE
