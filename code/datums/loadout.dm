@@ -6146,3 +6146,38 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/dominion_cestus
 	donatitem = TRUE
 	donat_tier = 2
+
+/datum/loadout_item/donator_white_knight_armour
+	name = "Donator Kit - white-armored knight armor - Required: Iron, Steel or Blacksteel Plate/Half-Plate"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/white_knight_armour
+	donatitem = TRUE
+	ckeywhitelist = list("n1ght1ngale")
+
+/datum/loadout_item/donator_white_knight_helmet
+	name = "Donator Kit - white-armored knight helmet - Required: Barbute"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/white_knight_helmet
+	donatitem = TRUE
+	ckeywhitelist = list("n1ght1ngale")
+
+/datum/loadout_item/donator_white_knight_gloves
+	name = "Donator Kit - white-armored knight gauntlets - Required: Plate Gauntlets"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/white_knight_gloves
+	donatitem = TRUE
+	ckeywhitelist = list("n1ght1ngale")
+
+/datum/loadout_item/donator_white_knight_greaves
+	name = "Donator Kit - white-armored knight greaves - Required: Plated Boots"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/white_knight_greaves
+	donatitem = TRUE
+	ckeywhitelist = list("n1ght1ngale")
+
+/datum/loadout_item/donator_white_knight_cape
+	name = "Donator Kit - white-armored knight cape - Required: Cape"
+	category = list("Плащи", "Донат")
+	path = /obj/item/enchantingkit/white_knight_cape
+	donatitem = TRUE
+	ckeywhitelist = list("n1ght1ngale")
