@@ -257,12 +257,6 @@
 	H.apply_status_effect(/datum/status_effect/buff/twilight_freedom)
 	return TRUE
 
-/atom/movable/screen/alert/status_effect/buff/twilight_freedom
-	name = "FREEDOM"
-	desc = "Freed by the Father's grace, now run for it!"
-	icon_state = "shacklebreaker_buff"
-	icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
-
 /datum/status_effect/buff/twilight_freedom
 	id = "twilight_freedom"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/twilight_freedom
@@ -363,12 +357,6 @@
 	src.effectedstats = list(STATKEY_SPD = -1 * (has_chains * 2))
 	return ..()
 
-/atom/movable/screen/alert/status_effect/debuff/twilight_weightofchains
-	name = "Weight of Chains"
-	desc = "I feel the symbols of my authority weight down on me!"
-	icon_state = "weightofchains_debuff"
-	icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
-
 /datum/status_effect/debuff/twilight_weightofchains/on_apply()
 	. = ..()
 	owner.add_filter(WEIGHTOFCHAINS_GLOW, 2, list("type" = "outline", "color" = outline_colour, "alpha" = 200, "size" = 1))
@@ -443,12 +431,6 @@
 	if(statchange != 0)
 		src.effectedstats = list("[stat_to_change]" = statchange)
 	return ..()
-
-/atom/movable/screen/alert/status_effect/buff/twilight_equalized
-	name = "Equalized"
-	desc = "Matthios grants you strength to face even the most wicked of tyrants."
-	icon_state = "equalize_buff"
-	icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
 
 /datum/status_effect/buff/twilight_equalizebuff/on_apply()
 	. = ..()
@@ -827,14 +809,6 @@
 		qdel(F)
 	owner.remove_overlay(FIRE_LAYER)
 
-/atom/movable/screen/alert/status_effect/debuff/twilight_crownfortheking
-	name = "Crown for the King"
-	desc = "There is molten gold all over me! It burns!!"
-	icon_state = "crownfortheking_debuff"
-	icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
-
-//T3
-
 /obj/effect/proc_holder/spell/invoked/twilight_commieflag
 	name = "The People's Banner"
 	desc = "Summon a Matthian banner and rally your comrades. So long as the banner is in your hands, you and your allies cannot be slowed down, and your will to fight strenghtens."
@@ -917,12 +891,6 @@
 	if(do_after(user, 3 SECONDS, src))
 		qdel(src)
 
-/atom/movable/screen/alert/status_effect/buff/twilight_peoplesbanner
-	name = "The People's Banner"
-	desc = "The sigil of Matthios inspires me to fight on!"
-	icon_state = "peoplesbanner_buff"
-	icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
-
 /datum/status_effect/buff/twilight_peoplesbanner
 	id = "twilight_peoplesbanner"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/twilight_peoplesbanner
@@ -969,12 +937,6 @@
 				preserve = TRUE
 		if(!preserve)
 			owner.remove_status_effect(/datum/status_effect/debuff/twilight_peoplesbanner)
-
-/atom/movable/screen/alert/status_effect/debuff/twilight_peoplesbanner
-	name = "The People's Banner"
-	desc = "That horrid sigil! How dare they?!"
-	icon_state = "peoplesbanner_debuff"
-	icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
 
 /datum/status_effect/debuff/twilight_peoplesbanner/on_apply()
 	. = ..()
@@ -1292,12 +1254,6 @@
 	alert_type = /atom/movable/screen/alert/status_effect/buff/twilight_dragon_form
 	duration = 30 SECONDS
 
-/atom/movable/screen/alert/status_effect/buff/twilight_dragon_form
-	name = "Dragon Form"
-	desc = "Burn them! Burn them all!"
-	icon_state = "wingsoffreedom_buff"
-	icon = 'modular_twilight_axis/icons/mob/actions/matthios_miracles.dmi'
-
 /datum/status_effect/buff/twilight_dragon_form/on_remove()
 	. = ..()
 	if(ishuman(owner))
@@ -1500,11 +1456,6 @@
 		effectedstats = list()
 	return ..()
 
-/atom/movable/screen/alert/status_effect/debuff/twilight_matthios_revival
-	name = "Shackles of Necra"
-	desc = "Matthios has cleaved a way for your soul to escape Necra's unholy grasp. Hopefully, enough of your comrades were there to light the path."
-	icon_state = "pom_regret"
-
 /datum/status_effect/debuff/twilight_matthios_revival/on_apply()
 	. = ..()
 	owner.visible_message("<font size=9 color=9c830b>Некра не властна над моими детьми. Восстань, сын Свободы.</font><br>", "<font size=9 color=9c830b>Твои товарищи нуждаются в тебе. Восстань, сын Свободы.</font><br>")
@@ -1513,3 +1464,52 @@
 #undef FREEDOM_FILTER
 #undef CROWNFORTHEKING_GLOW
 #undef WEIGHTOFCHAINS_GLOW
+
+/atom/movable/screen/alert/status_effect/buff/twilight_freedom
+	name = "FREEDOM"
+	desc = "Freed by the Father's grace, now run for it!"
+	icon_state = "shacklebreaker_buff"
+	icon = 'modular_twilight_axis/icons/mob/screen_alert.dmi'
+
+/atom/movable/screen/alert/status_effect/debuff/twilight_weightofchains
+	name = "Weight of Chains"
+	desc = "I feel the symbols of my authority weight down on me!"
+	icon_state = "weightofchains_debuff"
+	icon = 'modular_twilight_axis/icons/mob/screen_alert.dmi'
+
+/atom/movable/screen/alert/status_effect/buff/twilight_equalized
+	name = "Equalized"
+	desc = "Matthios grants you strength to face even the most wicked of tyrants."
+	icon_state = "equalize_buff"
+	icon = 'modular_twilight_axis/icons/mob/screen_alert.dmi'
+
+/atom/movable/screen/alert/status_effect/debuff/twilight_crownfortheking
+	name = "Crown for the King"
+	desc = "There is molten gold all over me! It burns!!"
+	icon_state = "crownfortheking_debuff"
+	icon = 'modular_twilight_axis/icons/mob/screen_alert.dmi'
+
+//T3
+
+/atom/movable/screen/alert/status_effect/buff/twilight_peoplesbanner
+	name = "The People's Banner"
+	desc = "The sigil of Matthios inspires me to fight on!"
+	icon_state = "peoplesbanner_buff"
+	icon = 'modular_twilight_axis/icons/mob/screen_alert.dmi'
+
+/atom/movable/screen/alert/status_effect/debuff/twilight_peoplesbanner
+	name = "The People's Banner"
+	desc = "That horrid sigil! How dare they?!"
+	icon_state = "peoplesbanner_debuff"
+	icon = 'modular_twilight_axis/icons/mob/screen_alert.dmi'
+
+/atom/movable/screen/alert/status_effect/buff/twilight_dragon_form
+	name = "Dragon Form"
+	desc = "Burn them! Burn them all!"
+	icon_state = "wingsoffreedom_buff"
+	icon = 'modular_twilight_axis/icons/mob/screen_alert.dmi'
+
+/atom/movable/screen/alert/status_effect/debuff/twilight_matthios_revival
+	name = "Shackles of Necra"
+	desc = "Matthios has cleaved a way for your soul to escape Necra's unholy grasp. Hopefully, enough of your comrades were there to light the path."
+	icon_state = "pom_regret"

@@ -568,7 +568,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/surcoatheavy
 	name = "Surcoat, Overvestments"
 	category = list("Плащи", "Триумфы")
-	path = /obj/item/clothing/cloak/tabard/stabard/crusader/heavy
+	path = /obj/item/clothing/cloak/tabard/stabard/overvestments
 	triumph_cost = 3
 
 /datum/loadout_item/surcoatgoldenorder
@@ -802,6 +802,11 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Desert Hood"
 	category = "Головные уборы"
 	path = /obj/item/clothing/head/roguetown/deserthood
+
+/datum/loadout_item/bandithood
+	name = "Bandit Hood"
+	category = "Головные уборы"
+	path = /obj/item/clothing/head/roguetown/menacing/bandit
 
 /datum/loadout_item/desertskirt
 	name = "Desert Skirt"
@@ -1041,7 +1046,27 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Loincloth"
 	category = "Аксессуары"
 	path = /obj/item/clothing/under/roguetown/loincloth
+//TA EDIT START
+/datum/loadout_item/spectacles_fancy
+	name = "Fancy Spectacles"
+	category = "Аксессуары"
+	path = /obj/item/clothing/mask/rogue/spectacles/fancy
 
+/datum/loadout_item/spectacles_fancy_dark
+	name = "Fancy Tinted Spectacles"
+	category = "Аксессуары"
+	path = /obj/item/clothing/mask/rogue/spectacles/fancy/dark
+
+/datum/loadout_item/spectacles_monocle
+	name = "Silver Monocle"
+	category = "Аксессуары"
+	path = /obj/item/clothing/mask/rogue/spectacles/monocle
+
+/datum/loadout_item/spectacles_onyxa
+	name = "Smokey Onyxa Spectacles"
+	category = "Аксессуары"
+	path = /obj/item/clothing/mask/rogue/spectacles/sglasses
+//TA EDIT END
 /datum/loadout_item/spectacles
 	name = "Spectacles"
 	category = "Аксессуары"
@@ -1858,6 +1883,12 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/donator_strudel3
 	name = "Donator Kit - Etruscan Design Cloak - Required: Poncho (No Small Races)"
 	category = list("Плащи", "Донат")
+	path = /obj/item/enchantingkit/strudel3_etruscan
+	donatitem = TRUE
+
+/datum/loadout_item/donator_strudel3_fellowshippe
+	name = "Donator Kit - Experimental Azurian Fellowshippe Staff - Required: Mage Staff"
+	category = list("Оружие", "Донат")
 	path = /obj/item/enchantingkit/strudel3
 	donatitem = TRUE
 
@@ -3831,14 +3862,14 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/cloakgoldenorder
 	name = "Cloak, Golden Order"
 	category = list("Плащи", "Донат")
-	path = /obj/item/clothing/cloak/cape/inquisitorgold
+	path = /obj/item/clothing/cloak/cape/puritan/gold
 	donatitem = TRUE
 	donat_tier = 2
 
 /datum/loadout_item/cloaksilverorder
 	name = "Cloak, Silver Order"
 	category = list("Плащи", "Донат")
-	path = /obj/item/clothing/cloak/cape/inquisitorsilver
+	path = /obj/item/clothing/cloak/cape/puritan/silver
 	donatitem = TRUE
 	donat_tier = 2
 
@@ -3865,6 +3896,48 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	category = list("Разное", "Донат")
 	path = /obj/item/bouquet/rosa/azure
 	donatitem = TRUE
+
+/datum/loadout_item/donator/universal/tulip
+	name = "Donator Item - Tulip Flower"
+	category = list("Разное", "Донат")
+	path = /obj/item/alch/tulip
+	donatitem = TRUE
+	donat_tier = 1
+
+/datum/loadout_item/donator/universal/tulip_seeds
+	name = "Donator Item - Tulip Flower, Seeds"
+	category = list("Разное", "Донат")
+	path = /obj/item/storage/belt/rogue/pouch/tulip_seeds
+	donatitem = TRUE
+	donat_tier = 1
+
+/datum/loadout_item/donator/universal/tulip_bouquet
+	name = "Donator Item - Tulip Flowers, Bouquet"
+	category = list("Разное", "Донат")
+	path = /obj/item/bouquet/tulip
+	donatitem = TRUE
+	donat_tier = 1
+
+/datum/loadout_item/donator/universal/tulip_black
+	name = "Donator Item - Black Tulip Flower"
+	category = list("Разное", "Донат")
+	path = /obj/item/alch/tulip/black
+	donatitem = TRUE
+	donat_tier = 1
+
+/datum/loadout_item/donator/universal/tulip_black_seeds
+	name = "Donator Item - Black Tulip Flower, Seeds"
+	category = list("Разное", "Донат")
+	path = /obj/item/storage/belt/rogue/pouch/tulip_seeds/black
+	donatitem = TRUE
+	donat_tier = 1
+
+/datum/loadout_item/donator/universal/tulip_black_bouquet
+	name = "Donator Item - Black Tulip Flowers, Bouquet"
+	category = list("Разное", "Донат")
+	path = /obj/item/bouquet/tulip/black
+	donatitem = TRUE
+	donat_tier = 1
 
 /datum/loadout_item/donator/universal/cackledagger
 	name = "Donator Kit - Cackledagger - Required: Steel Dagger or Decorated Dagger"
@@ -6073,3 +6146,38 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/dominion_cestus
 	donatitem = TRUE
 	donat_tier = 2
+
+/datum/loadout_item/donator_white_knight_armour
+	name = "Donator Kit - white-armored knight armor - Required: Iron, Steel or Blacksteel Plate/Half-Plate"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/white_knight_armour
+	donatitem = TRUE
+	ckeywhitelist = list("n1ght1ngale")
+
+/datum/loadout_item/donator_white_knight_helmet
+	name = "Donator Kit - white-armored knight helmet - Required: Barbute"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/white_knight_helmet
+	donatitem = TRUE
+	ckeywhitelist = list("n1ght1ngale")
+
+/datum/loadout_item/donator_white_knight_gloves
+	name = "Donator Kit - white-armored knight gauntlets - Required: Plate Gauntlets"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/white_knight_gloves
+	donatitem = TRUE
+	ckeywhitelist = list("n1ght1ngale")
+
+/datum/loadout_item/donator_white_knight_greaves
+	name = "Donator Kit - white-armored knight greaves - Required: Plated Boots"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/white_knight_greaves
+	donatitem = TRUE
+	ckeywhitelist = list("n1ght1ngale")
+
+/datum/loadout_item/donator_white_knight_cape
+	name = "Donator Kit - white-armored knight cape - Required: Cape"
+	category = list("Плащи", "Донат")
+	path = /obj/item/enchantingkit/white_knight_cape
+	donatitem = TRUE
+	ckeywhitelist = list("n1ght1ngale")

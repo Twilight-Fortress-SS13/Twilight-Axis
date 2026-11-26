@@ -58,13 +58,6 @@
 	user.update_a_intents()
 	update_icon()
 
-/obj/item/rogueweapon/sword/long/kriegmesser/donat_astrata
-	name = "her verdict"
-	desc = "Wielded by the Paladins of the Punishing Light, these swords are forged from the same alloy of steel and silver used in the Eclipsum blades. While effective on the field of battle, this weapon is primarily known for it's use public executions.</br>'In the light of your rays I stand before you..' </br>'..with my blade raised and my soul bare..' </br>'..let you judge my verdict, and find it true..' </br>'..and let you guide my hand, O Radiant One.'"
-	icon = 'modular_twilight_axis/icons/obj/items/donor_weapons_64.dmi'
-	icon_state = "ast_kriegmesser"
-	sheathe_icon = "bs_swordregal"
-
 /obj/item/rogueweapon/greatsword/grenz/flamberge/relevement
 	name = "relevement"
 	desc = "The grave wounds caused by flame-bladed swords make them a highly sought-after weapon among the Dark Elves - the charges of dishonorable warfare notwithstanding. Consequentially, these weapons are often wielded by both sides of the Underdark Feud Wars."
@@ -305,3 +298,15 @@
 		switch(tag)
 			if("gen")
 				return list("shrink" = 0.4,"sx" = -11,"sy" = -11,"nx" = 11,"ny" = 0,"wx" = -4,"wy" = 0,"ex" = 1,"ey" = -10,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 0,"sturn" = -110,"wturn" = 0,"eturn" = 109,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
+
+/obj/item/rogueweapon/sword/long/kriegmesser/donat_astrata
+	name = "\"Her Verdict\""
+	desc = "Wielded by the Paladins of the Punishing Light, these swords are forged from the same alloy of steel and silver used in the Eclipsum blades. While effective on the field of battle, this weapon is primarily known for it's use public executions.</br>'In the light of your rays I stand before you..' </br>'..with my blade raised and my soul bare..' </br>'..let you judge my verdict, and find it true..' </br>'..and let you guide my hand, O Radiant One.'"
+	icon = 'modular_twilight_axis/icons/obj/items/donor_weapons_64.dmi'
+	icon_state = "ast_kriegmesser"
+	sheathe = 'modular_twilight_axis/icons/obj/items/scabbard.dmi'
+	sheathe_icon = "ast_kriegmesser"
+
+/obj/item/rogueweapon/sword/rapier/silver/psy/smallsword
+	sheathe = 'modular_twilight_axis/icons/obj/items/scabbard.dmi'
+	sheathe_icon = "psysmallsword"

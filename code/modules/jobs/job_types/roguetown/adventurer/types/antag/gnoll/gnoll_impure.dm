@@ -39,9 +39,18 @@
 		H.mind.add_antag_datum(new_antag)
 		add_verb(H, /mob/living/carbon/human/proc/gnoll_inspect_skin)
 	H.set_species(/datum/species/gnoll)
-	H.skin_armor = new vamp_armor_type(H)
-	H.AddComponent(/datum/component/vampiric_striker, shard_threshold, shard_repair_value, max_fury_stacks)
+	H.skin_armor = new /obj/item/clothing/suit/roguetown/armor/regenerating/skin/gnoll_armor/impure(H) // TA EDIT - ORIGINAL: new vamp_armor_type(H)
+	// TA REMOVAL: H.AddComponent(/datum/component/vampiric_striker, shard_threshold, shard_repair_value, max_fury_stacks)
 	don_pelt(H)
+
+// TA ADDITION START
+/obj/item/clothing/suit/roguetown/armor/regenerating/skin/gnoll_armor/impure
+	icon_state = null
+	max_integrity = 400
+	auto_repair_mode_base = 90
+	armor = ARMOR_GNOLL_WEAK
+
+// TA ADDITION END
 
 /datum/outfit/job/roguetown/gnoll_impure/proc/don_pelt(mob/living/carbon/human/H)
 	if(H.mind)

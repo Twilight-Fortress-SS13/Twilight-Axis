@@ -130,6 +130,7 @@
 	var/self_cast_possible = TRUE
 	/// The casting range of our spell.
 	var/cast_range = 7
+	var/impact_radius
 	/// If TRUE, this spell may be cast at a target on a different Z-level. Defaults FALSE; only projectile spells opt in.
 	var/allow_cross_z = FALSE
 	/// Variable dictating if the spell will use turf based aim assist.
@@ -291,7 +292,8 @@
 		if(!can_cast_spell(TRUE))
 			cancel_casting()
 			return PROCESS_KILL
-		if(is_held_ready())
+		/*
+		if(is_held_ready()) // TA EDIT START
 			if(!fully_charged_at)
 				fully_charged_at = world.time
 			var/held_for = world.time - fully_charged_at
@@ -315,6 +317,7 @@
 				cancel_casting(voluntary = is_held_ready())
 				return PROCESS_KILL
 			invoke_resource_cost(primary_resource_type, ramped_drain)
+		*/ // TA EDIT END
 		refresh_charge_intent()
 		return
 
@@ -809,6 +812,23 @@
 
 	return TRUE
 
+/datum/action/cooldown/spell/proc/get_impact_turfs(atom/center)
+	. = list()
+	var/turf/epicenter = get_turf(center)
+	if(!epicenter || isnull(impact_radius))
+		return
+	for(var/turf/affected in range(impact_radius, epicenter))
+		. += affected
+
+/proc/get_visible_area_turfs(turf/center, radius)
+	. = list()
+	if(!center)
+		return
+	var/list/visible = get_hear(radius, center)
+	for(var/turf/T in range(radius, center))
+		if(T in visible)
+			. += T
+
 /**
  * Check if the target we're casting on is a valid target.
  * For self-casted spells, the target being checked (cast_on) is the caster.
@@ -988,15 +1008,24 @@
 		charge_started_at = world.time
 		charge_target_time = round(charge_time * get_implement_charge_mult()) // TA EDIT (Гримуары ускоряют каст)
 		apply_charge_intent()
+		var/kick_cancels = npc_controlled()
+		if(kick_cancels)
+			RegisterSignal(owner, COMSIG_MOB_KICKED_SUCCESSFUL, PROC_REF(signal_cancel), TRUE)
 		var/success = TRUE
 		if(!do_after(owner, charge_target_time, needhand = FALSE, extra_checks = CALLBACK(src, PROC_REF(do_after_checks), owner, cast_on), no_interrupt = !require_no_move, allow_movement = !require_no_move)) // TA EDIT (Гримуары ускоряют каст)
 			success = FALSE
 			sig_return |= SPELL_CANCEL_CAST
+		if(kick_cancels && owner)
+			UnregisterSignal(owner, COMSIG_MOB_KICKED_SUCCESSFUL)
 
 		if(currently_charging) // in case charging was interrupted elsewhere
 			on_end_charge(success)
 		if(channel_cast)
 			charged = FALSE
+
+	if(!(sig_return & SPELL_CANCEL_CAST) && npc_controlled() && !npc_cast_safe(cast_on))
+		npc_aborted = TRUE
+		sig_return |= SPELL_CANCEL_CAST
 
 	return sig_return
 
@@ -1342,7 +1371,7 @@
 	return charge_required && click_to_activate && !channel_cast && !npc_controlled()
 
 /datum/action/cooldown/spell/proc/has_hold_cap()
-	return is_held_ready() && !charge_then_click && hold_max_time > hold_grace_time
+	return FALSE // TA EDIT
 
 /datum/action/cooldown/spell/proc/handle_hold_instability(held_for)
 	if(!has_hold_cap())
@@ -1375,11 +1404,7 @@
 	cancel_casting(voluntary = TRUE, cost_mult_override = SPELL_HOLD_TEAR_COST)
 
 /datum/action/cooldown/spell/proc/is_cancel_penalized()
-	if(!cancel_penalty_mult)
-		return FALSE
-	if(!source_aspect || ispath(source_aspect, /datum/magic_aspect/pseudo))
-		return FALSE
-	return TRUE
+	return FALSE // TA EDIT
 
 /// Whether the charge window has elapsed. Credits real held time so tick lag can't eat a full charge.
 /datum/action/cooldown/spell/proc/charge_complete()

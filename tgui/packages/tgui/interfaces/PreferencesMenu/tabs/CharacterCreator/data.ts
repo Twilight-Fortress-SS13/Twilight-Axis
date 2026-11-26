@@ -222,6 +222,8 @@ export type ExamineData = {
   erpprefs: string | null; // null indicates unset
   rumour: string | null; // null indicates unset
   noble_gossip: string | null; // null indicates unset
+  secrets: Record<string, string | null>; // null indicates unset
+  secrets_cached: Record<string, TrustedHTML | null>;
 
   flavortext_cached: TrustedHTML | null; // null indicates unset
   nsfwflavortext_cached: TrustedHTML | null; // null indicates unset
@@ -251,6 +253,7 @@ export type IdentityData = {
   pen_name: string | null; // null indicates unset
   highlight_color: Color;
   age: string;
+  birthday: string; // TA EDIT
 
   pronouns: string;
   titles_pref: string;

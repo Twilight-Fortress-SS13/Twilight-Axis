@@ -3,6 +3,7 @@
 /turf/open/floor/rogue/grass/nospawn
 
 /turf/open/floor/rogue/grasspurple
+	smooth_diag = FALSE
 	name = "fungal 'grass'"
 	desc = "Thin fungal strands rising from the ground. Spongey to walk on."
 	icon_state = "grass_purple"
@@ -31,6 +32,7 @@
 	roguesmooth(adjacencies)
 
 /turf/open/floor/rogue/grassgrey
+	smooth_diag = FALSE
 	name = "dead grass"
 	desc = "Pale, like a bloated corpse."
 	icon_state = "grass_grey"

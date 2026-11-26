@@ -815,6 +815,46 @@
 		var/mob/living/carbon/C = owner
 		C.remove_movespeed_modifier(MOVESPEED_ID_DAMAGE_SLOWDOWN)
 
+/atom/movable/screen/alert/status_effect/debuff/slowed
+	name = "Slowed"
+	desc = "I am slowed."
+	icon_state = "slowdown"
+
+/datum/status_effect/debuff/slowed
+	id = "slowed"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/slowed
+	var/severity = SLOWDOWN_SEVERITY_MODERATE
+
+/datum/status_effect/debuff/slowed/on_creation(mob/living/new_owner, new_duration, new_severity)
+	duration = new_duration
+	if(new_severity)
+		severity = new_severity
+	return ..()
+
+/datum/status_effect/debuff/slowed/on_apply()
+	if(!(owner.status_flags & CANSTUN) || HAS_TRAIT(owner, TRAIT_STUNIMMUNE))
+		return FALSE
+	. = ..()
+	update_modifier()
+
+/datum/status_effect/debuff/slowed/on_remove()
+	owner.remove_movespeed_modifier(MOVESPEED_ID_SLOWED)
+	return ..()
+
+/datum/status_effect/debuff/slowed/refresh(mob/living/new_owner, new_duration, new_severity = SLOWDOWN_SEVERITY_MODERATE)
+	if(new_severity < severity)
+		return
+	var/new_end = world.time + new_duration
+	if(new_severity > severity)
+		severity = new_severity
+		duration = new_end
+		update_modifier()
+		return
+	duration = max(duration, new_end)
+
+/datum/status_effect/debuff/slowed/proc/update_modifier()
+	owner.add_movespeed_modifier(MOVESPEED_ID_SLOWED, update = TRUE, priority = 100, override = TRUE, multiplicative_slowdown = severity, movetypes = GROUND)
+
 /datum/status_effect/debuff/excomm
 	id = "Excommunicated!"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/excomm
@@ -917,15 +957,7 @@
 	name = "Lost Hood"
 	desc = "The sacred hood is lost. I feel frail and sapped without it."
 
-/datum/status_effect/debuff/lost_dungeoneer_hood
-	id = "dungeoneerhood"
-	alert_type = /atom/movable/screen/alert/status_effect/debuff/dungeoneer_hood
-	effectedstats = list(STATKEY_STR = -3, STATKEY_LCK = -3)
-
-/atom/movable/screen/alert/status_effect/debuff/dungeoneer_hood
-	name = "Gnarly Visage"
-	desc = "I am a repulsive freek looked down upon by everyone else. I'd do best to hide my visage once more."
-	icon_state = "muscles"
+//TA EDIT
 
 ///////////////////////
 /// CLIMBING STUFF ///
@@ -965,10 +997,7 @@
 	if(!istype(tile_under_climber, /turf/open/transparent/openspace) || random_shit_under_climber.len)
 		climber.remove_status_effect(/datum/status_effect/debuff/climbing_lfwb)
 		return
-	if((istype(climber.backr, /obj/item/clothing/climbing_gear)) || (istype(climber.backl, /obj/item/clothing/climbing_gear)))
-		stamcost_final = stamcost / 2
-	else
-		stamcost_final = stamcost
+	stamcost_final = stamcost
 	climber.stamina_add(stamcost_final) // every tick interval this much stamina is deducted
 	if(climber.stamina >= climber.max_stamina) // if we run out of green bar stamina, we fall
 		to_chat(climber, span_dead("I can't hold onto the ledge for any longer!"))
@@ -1362,9 +1391,9 @@
 
 		if(5)
 			if(prob(50))
-				owner.Slowdown(20)
+				owner.apply_slowdown(39 SECONDS)
 			else
-				owner.Slowdown(10)
+				owner.apply_slowdown(19 SECONDS)
 		if(8)
 			if(iscarbon(owner))
 				var/mob/living/carbon/C = owner

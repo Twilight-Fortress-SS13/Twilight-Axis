@@ -7,4 +7,7 @@
 	generic_random_pick = TRUE
 	sprite_accessories = list(
 		/datum/sprite_accessory/tail/aura/dragontail,
+		/datum/sprite_accessory/tail/aura/variant_a,
+		/datum/sprite_accessory/tail/aura/variant_b,
+		/datum/sprite_accessory/tail/aura/variant_c,
 		)

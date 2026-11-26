@@ -248,6 +248,8 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 		var/obj/effect/proc_holder/spell/newspell = new spell()
 		AddSpell(newspell)
 	initial_butcher_count = length(butcher_results)
+	if(mount_fear_enabled) // TA EDIT
+		mount_initialize() // TA EDIT
 	add_verb(src, list(
 		/mob/living/proc/emote_squeak,
 		/mob/living/proc/emote_mrrp,
@@ -260,21 +262,24 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 		nest.spawned_mobs -= src
 		nest = null
 
-	if(ssaddle)
-		QDEL_NULL(ssaddle)
-		ssaddle = null
-
-	if(ccaparison)
-		QDEL_NULL(ccaparison)
-		ccaparison = null
-
-	if(bbarding)
-		QDEL_NULL(bbarding)
-		bbarding = null
+	drop_tack()
+	QDEL_NULL(ssaddle)
+	QDEL_NULL(ccaparison)
+	QDEL_NULL(bbarding)
 
 	if(genetics && !ispath(genetics)) // TA EDIT
 		QDEL_NULL(genetics) // TA EDIT
 	return ..()
+
+/mob/living/simple_animal/proc/drop_tack()
+	var/turf/T = get_turf(src)
+	if(!T)
+		return
+	for(var/obj/item/gear as anything in list(ssaddle, bbarding, ccaparison))
+		gear?.forceMove(T)
+	ssaddle = null
+	bbarding = null
+	ccaparison = null
 
 /mob/living/simple_animal/attackby(obj/item/O, mob/user, params)
 	if(!food_typecache?[O.type])
@@ -407,6 +412,10 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	..()
 	update_damage_overlays()
 	show_damage_stage()
+	mount_update_health_movement() // TA EDIT
+	if(istype(hud_used, /datum/hud/dextrous/oozeling))
+		var/datum/hud/dextrous/oozeling/oozeling_hud = hud_used
+		oozeling_hud.update_health_indicator(src)
 
 /mob/living/simple_animal/hostile/forceMove(turf/T)
 	var/list/BM = list()
@@ -532,9 +541,7 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	..()
 
 /mob/living/simple_animal/proc/butcher(mob/living/user, on_meathook = FALSE)
-	if(ssaddle)
-		ssaddle.forceMove(get_turf(src))
-		ssaddle = null
+	drop_tack()
 
 	var/butchery_skill_level = user.get_skill_level(/datum/skill/labor/butchering)
 	var/time_per_cut = min(BUTCHERING_MAX_TIME_PER_STEP, BUTCHERING_BASE_TIME_PER_STEP - butchery_skill_level * BUTCHERING_TIME_REDUCTION_PER_SKILL) // 1.8 seconds for no skill, 0.2 seconds for legendary
@@ -558,7 +565,7 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 
 	var/rotstuff = FALSE
 	var/datum/component/rot/simple/CR = GetComponent(/datum/component/rot/simple)
-	if(CR && CR.amount >= 10 MINUTES)
+	if(CR && CR.amount >= CR.rot_start)
 		rotstuff = TRUE
 	var/atom/Tsec = drop_location()
 
@@ -640,7 +647,7 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	var/botch_chance = 50
 	var/rotstuff = FALSE
 	var/datum/component/rot/simple/CR = GetComponent(/datum/component/rot/simple)
-	if(CR && CR.amount >= 10 MINUTES)
+	if(CR && CR.amount >= CR.rot_start)
 		rotstuff = TRUE
 
 	for(var/path in butcher_results)
@@ -733,6 +740,7 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	var/spd = get_effective_speed()
 	if(spd < 10)
 		mod += (10 - spd) * SPEED_MOVSPD_MOD
+	mod += mount_health_movement_penalty() + mount_limb_movement_penalty() // TA EDIT
 	add_movespeed_modifier(MOVESPEED_ID_MOB_WALK_RUN_CONFIG_SPEED, TRUE, 100, override = TRUE, multiplicative_slowdown = mod)
 
 /mob/living/simple_animal/update_movespeed(resort = TRUE)
@@ -998,7 +1006,7 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	if(!has_buckled_mobs())
 		return
 	var/mutable_appearance/mounted_overlay = mutable_appearance(icon, mounted_state, overlay_layer)
-	mounted_overlay.appearance_flags = RESET_ALPHA|RESET_COLOR
+	mounted_overlay.appearance_flags = RESET_ALPHA
 	add_overlay(mounted_overlay)
 
 /mob/living/simple_animal/proc/get_riding_datum()
@@ -1011,11 +1019,11 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	var/delay = ride_move_delay // TA EDIT
 	if(!isnum(delay))
 		delay = 3
-	if(!HAS_TRAIT(src, TRAIT_RIGIDMOVEMENT) && !HAS_TRAIT(src, TRAIT_IGNOREDAMAGESLOWDOWN))
+	if(!can_buckle && !HAS_TRAIT(src, TRAIT_RIGIDMOVEMENT) && !HAS_TRAIT(src, TRAIT_IGNOREDAMAGESLOWDOWN)) // TA EDIT
 		var/health_deficiency = getBruteLoss() + getFireLoss()
 		if(health_deficiency >= (maxHealth - (maxHealth * 0.50)))
 			delay += 2
-	if(driver?.m_intent == MOVE_INTENT_RUN)
+	if(driver?.m_intent == MOVE_INTENT_RUN && !mount_has_broken_leg() && world.time >= mount_slow_until) // TA EDIT
 		delay -= 1
 	if(driver?.mind)
 		var/amt = driver.get_skill_level(/datum/skill/misc/riding)
@@ -1023,7 +1031,9 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 			delay -= 5 + amt/6
 		else
 			delay -= 3
-	return max(delay, 1)
+	if(mount_fear_enabled) // TA EDIT START
+		delay += mount_movement_penalty()
+	return max(delay, 1) + mount_health_movement_penalty() // TA EDIT END
 
 /mob/living/simple_animal/user_unbuckle_mob(mob/living/M, mob/user)
 	if(user != M)
@@ -1123,6 +1133,14 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 		driver = buckled_mobs[1]
 	if(!driver || user != driver)
 		return
+	if(mount_initialized) // TA EDIT START
+		if(world.time < mount_fear_until && prob(65))
+			return
+		if(BODY_ZONE_HEAD in broken_parts && prob(35))
+			direction = turn(direction, pick(-90, 90, 180))
+			if(world.time >= mount_confusion_notice_until)
+				mount_confusion_notice_until = world.time + 3 SECONDS
+				to_chat(driver, span_warning("My mount is disoriented and veers the wrong way!")) // TA EDIT END
 
 	riding_datum.vehicle_move_delay = adjust_speed(driver)
 	if(riding_datum.handle_ride(driver, direction))
