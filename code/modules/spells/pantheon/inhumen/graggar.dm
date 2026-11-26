@@ -268,8 +268,12 @@
 		return
 	if(out_of_effective_range())
 		return
+	// TA REMOVAL START
+	/*
 	if(blocked >= 100)
 		return
+	*/
+	// TA REMOVAL END
 	if(target)
 		ensnare(target)
 
