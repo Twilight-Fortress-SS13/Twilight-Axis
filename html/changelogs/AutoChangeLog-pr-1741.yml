@@ -1,0 +1,5 @@
+author: "Quinalion"
+delete-after: True
+changes:
+  - rscadd: "Оружию можно задать собственный DMI для отображения в ножнах через переменную sheathe."
+  - bugfix: "Исправлено отображение ножен miaodao."

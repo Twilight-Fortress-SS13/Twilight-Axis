@@ -518,6 +518,11 @@
 /obj/machinery/light/rogue/hearth/attackby(obj/item/W, mob/living/user, params)
 	if(!attachment)
 		if(istype(W, /obj/item/cooking/pan) || istype(W, /obj/item/reagent_containers/glass/bucket/pot))
+			// TA eddit start - check crafting for turnin (important for pig-spit)
+			if(locate(/obj/structure/pig_spit) in loc)
+				to_chat(user, span_warning("The roasting spit is in the way."))
+				return TRUE
+			// TA eddit start - check crafting for turnin (important for pig-spit)
 			playsound(get_turf(user), 'sound/foley/dropsound/shovel_drop.ogg', 40, TRUE, -1)
 			attachment = W
 			user.doUnEquip(W)
@@ -615,6 +620,7 @@
 			return TRUE
 
 /obj/machinery/light/rogue/hearth/process()
+	ta_burn_mobs_on_tile() // TA EDIT
 	if(isopenturf(loc))
 		var/turf/open/O = loc
 		if(IS_WET_OPEN_TURF(O))
@@ -804,8 +810,26 @@
 		fan_crafts(FAN_PROGRESS_BONUS)
 
 /obj/machinery/light/rogue/campfire/attackby(obj/item/W, mob/living/user, params)
+	// TA ADDITION START
+	if(istype(W, /obj/item/alch))
+		var/obj/item/alch/alch_item = W
+		if(alch_item.smoke_type)
+			var/datum/pollutant/smoke/smoke = alch_item.smoke_type
+			alch_item.create_cloud(smoke, alch_item, src)
+		return
+	else if(istype(W, /obj/item/natural/worms/leech))
+		var/obj/item/natural/worms/leech/alch_item = W
+		var/datum/pollutant/smoke/smoke = alch_item.smoke_type
+		alch_item.create_cloud(smoke, alch_item, src)
+		return
+	// TA ADDITION END
 	if(!attachment)
 		if(istype(W, /obj/item/reagent_containers/glass/bucket/pot/kettle))
+			// TA eddit start - check crafting for turnin (important for pig-spit)
+			if(locate(/obj/structure/pig_spit) in loc)
+				to_chat(user, span_warning("The roasting spit is in the way."))
+				return TRUE
+			// TA eddit start - check crafting for turnin (important for pig-spit)
 			playsound(get_turf(user), 'sound/foley/dropsound/shovel_drop.ogg', 40, TRUE, -1)
 			attachment = W
 			user.doUnEquip(W)

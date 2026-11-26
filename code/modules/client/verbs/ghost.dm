@@ -1,6 +1,6 @@
 GLOBAL_LIST_INIT(ghost_verbs, list(
-	/client/proc/ghost_up,
-	/client/proc/ghost_down,
+//	/client/proc/ghost_up,
+//	/client/proc/ghost_down,
 	/client/proc/descend,
 	/client/proc/reenter_corpse,
 	/client/proc/dead_observe
@@ -68,6 +68,8 @@ GLOBAL_LIST_INIT(ghost_verbs, list(
 
 	if(key)
 		GLOB.respawntimes[key] = world.time
+
+	LAZYREMOVE(GLOB.actors_list, mobid)
 
 	// Notify the job datum that this player is permanently leaving the round
 	if(mind?.assigned_role)

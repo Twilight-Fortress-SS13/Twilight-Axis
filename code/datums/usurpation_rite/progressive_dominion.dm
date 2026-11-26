@@ -19,14 +19,14 @@
  */
 
 /datum/usurpation_rite/progressive_dominion
-	name = "Rite of Progressive Dominion"
+	name = "Rite of Salvation" //TA EDIT
 	desc = "The rule of the ignorant must end! Only those who are not beholden to the past, who progress the world toward a bright future, shall rule!"
-	explanation = {"<p>A mage of sufficient power, a follower of Zizo, or the undead, may claim the throne through the assent of those who embrace progress.</p>\
+	explanation = {"<p>A mage of sufficient power, a follower of Zizo, or the undead, may claim the throne through the assent of those who embrace salvation from death itself.</p>\
 <p><b>Who may invoke:</b> Any mage with Apprentice-level Arcyne Training or higher, any follower of Zizo, or any undead.</p>\
 <p><b>How it works:</b> Mages trained in the Arcyne arts, followers of Zizo, or those touched by undeath, must gather near the throne and speak the words 'I assent' to support your claim.</p>\
 <p><b>Completion condition:</b> <b>5</b> voices must speak their assent. Once the threshold is reached, the realm is alerted and a contestation period begins — survive it and stay conscious while remaining near the throne, and it is yours.</p>\
-<p><b>Restrictions:</b> None. All who seek progress are welcome — the living, the undead, the outlaw.</p>\
-<p><b>Realm type if successful:</b> Dominion, ruled by an Exarch.</p>"}
+<p><b>Restrictions:</b> None. All who seek salvation are welcome — the living, the undead, the outlaw.</p>\
+<p><b>Realm type if successful:</b> Dominion, ruled by an Exarch.</p>"} //TA EDIT
 	new_ruler_title = "Exarch"
 	new_ruler_title_f = "Exarch"
 	new_realm_type = "Dominion"
@@ -34,7 +34,7 @@
 	required_assents = DOMINION_REQUIRED_ASSENTS
 	assenter_group = "enlightened"
 	council_name = "the Council of the Enlightened"
-	claim_basis = "in the name of progress"
+	claim_basis = "in the name of salvation" // TA EDIT
 
 /// Any mage with T2+ arcyne training, any Zizite follower, or any undead, can invoke.
 /datum/usurpation_rite/progressive_dominion/can_invoke(mob/living/carbon/human/user)
@@ -51,37 +51,56 @@
 		return TRUE
 	return FALSE
 
+/datum/usurpation_rite/progressive_dominion/on_gathering_started() // TA EDIT START
+	to_chat(invoker, span_notice("The rite has begun. Mages, followers of Zizo, and the undead must now speak 'I assent' near the throne. You require [get_required_assents()] voices within [RITE_GATHERING_DURATION / (1 MINUTES)] minutes. Alternatively, the current ruler may say 'I abdicate' near the throne to yield."))
+	phase_timer_id = addtimer(CALLBACK(src, PROC_REF(on_gathering_timeout)), RITE_GATHERING_DURATION, TIMER_STOPPABLE) // TA EDIT END
+
+/datum/usurpation_rite/progressive_dominion/on_gathering_timeout() // TA EDIT
+	fail("The voices of salvation did not grant sufficient assent.") // TA EDIT
+
 /datum/usurpation_rite/progressive_dominion/can_assent(mob/living/carbon/human/supporter)
 	if(!is_qualified_voice(supporter))
 		to_chat(supporter, span_warning("Only those trained in the arcyne arts, followers of Zizo, or touched by undeath may speak assent to this rite."))
 		return FALSE
 	return ..()
 
-/datum/usurpation_rite/progressive_dominion/get_contest_announcement()
-	return "In the name of Zizo, Mistress of Progress, a claim is made upon the throne of [SSticker.realm_name].\n\n" + \
-		"A Council of the Enlightened has affirmed this claim.\n\n" + \
-		"The future shall be decided in [RITE_CONTEST_DURATION / (1 MINUTES)] minutes -- unless the claim is struck down.\n\n"
+/datum/usurpation_rite/progressive_dominion/on_assent_accepted(mob/living/carbon/human/supporter, weight) // TA EDIT START
+	supporter.visible_message( \
+		span_notice("[supporter.get_unmasked_name()] speaks their assent to the Rite of Salvation."), \
+		span_notice("You speak your assent. Salvation demands no less."))
+	to_chat(invoker, span_notice("[supporter.get_unmasked_name()] has assented. ([get_assent_total()]/[get_required_assents()])")) // TA EDIT END
 
-/datum/usurpation_rite/progressive_dominion/get_roundend_epilogue()
+/datum/usurpation_rite/progressive_dominion/get_contest_announcement() // TA EDIT START
+	return "In the name of Zizo, One Who Brings Salvation, a claim is made upon the throne of [SSticker.realm_name].\n\n" + \
+		"A Council of the Enlightened has affirmed this claim.\n\n" + \
+		"The future shall be decided in [RITE_CONTEST_DURATION / (1 MINUTES)] minutes -- unless the claim is struck down.\n\n" // TA EDIT END
+
+/datum/usurpation_rite/progressive_dominion/get_roundend_epilogue() // TA EDIT START
 	if(is_undead(invoker))
 		return "One can conquer a realm on a tide of bones. " + \
 			"But the dead bear no children and hold no true will. " + \
 			"How long will the living -- even those who follow the Mistress of Progress -- tolerate their rule?"
-	return "And as suddenly as the Celestial Empire has fallen, " + \
-		"it has seemingly returned in [SSticker.realm_name]. " + \
-		"O Zizo! Dame of Progress! The future will be bright under your rule! " + \
+	return "The [SSticker.realm_name] has thus been destroyed, " + \
+		"and upon its ruins, a new order had risen. " + \
+		"O Zizo! One Who Brings Salvation! The future will be bright under your rule! " + \
 		"Grant us armaments! Grant us power! " + \
 		"Let us stand fast against the darkness of stagnation! " + \
 		"Let us stand fast against the rot of the old order! " + \
-		"Long live [invoker.get_unmasked_name()], [new_ruler_title] of [SSticker.realm_name]!"
+		"Long live [invoker.get_unmasked_name()], [new_ruler_title] of [SSticker.realm_name]!" // TA EDIT END
 
-/datum/usurpation_rite/progressive_dominion/get_victory_announcement(old_ruler_name)
-	return "To cling to the past is to rot in place. Progress waits for no one.\n\n" + \
-		"A Council of the Enlightened, under the gaze of Zizo, Mistress of Progress, " + \
-		"declares [invoker.get_unmasked_name()] the rightful [SSticker.rulertype] of [SSticker.realm_name], establishing a PROGRESSIVE rule of arcane enlightenment.\n\n" + \
+/datum/usurpation_rite/progressive_dominion/get_victory_announcement(old_ruler_name) // TA EDIT START
+	return "To cling to mortality is to rot in place. Salvation waits for no one.\n\n" + \
+		"A Council of the Enlightened, under the gaze of Zizo, One Who Brings Salvation, " + \
+		"declares [invoker.get_unmasked_name()] the rightful [SSticker.rulertype] of [SSticker.realm_name], establishing a DOMINION of arcane enlightenment.\n\n" + \
 		"[old_ruler_name], unable to contest this succession, has been found wanting in vision, " + \
-		"and their claim to rulership crumbles before the march of progress.\n\n" + \
-		"Long live [invoker.get_unmasked_name()], [SSticker.rulertype] of [SSticker.realm_name]!"
+		"and their claim to rulership crumbles before the march of true progress.\n\n" + \
+		"Long live [invoker.get_unmasked_name()], [SSticker.rulertype] of [SSticker.realm_name]!" // TA EDIT END
+
+/datum/usurpation_rite/progressive_dominion/on_fail(reason) // TA EDIT START
+	if(stage >= RITE_STAGE_CONTESTING)
+		priority_announce("The Rite of Salvation has failed. [reason] Salvation is halted - for now.", "Rite Failed", sound_failure)
+	if(invoker)
+		to_chat(invoker, span_warning("The Rite of Salvation has failed. [reason]")) // TA EDIT END
 
 /// Returns TRUE if the mob is a mage (any arcyne training), a Zizite follower, or undead.
 /datum/usurpation_rite/progressive_dominion/proc/is_qualified_voice(mob/living/carbon/human/user)

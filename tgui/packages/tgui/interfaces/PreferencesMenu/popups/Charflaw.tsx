@@ -192,6 +192,13 @@ const CharflawButton = (props: CharflawButtonProps) => {
                   Needs extra vice.
                 </Stack.Item>
               ) : null}
+              {/* TA EDIT START */}
+              {cf.requirements_warning ? (
+                <Stack.Item fontSize={0.9} color="yellow">
+                  {cf.requirements_warning}
+                </Stack.Item>
+              ) : null}
+              {/* TA EDIT END */}
             </Stack>
           </Stack.Item>
           <Stack.Item grow>

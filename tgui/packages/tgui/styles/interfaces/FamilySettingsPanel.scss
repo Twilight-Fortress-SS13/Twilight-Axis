@@ -1,0 +1,874 @@
+@use 'sass:color';
+
+// Family Settings Panel — modern two-pane layout with card-based family type picker.
+// Structural styles only, color tokens inline so the panel stays readable in any theme.
+
+$fsp-bg: #0f1420;
+$fsp-panel: #171c2a;
+$fsp-panel-raised: #1f2636;
+$fsp-card: #232a3d;
+$fsp-card-hover: #2a3249;
+$fsp-border: #2f3750;
+$fsp-border-subtle: #242a3d;
+$fsp-text: #e4e7ef;
+$fsp-text-dim: #8b92a5;
+$fsp-text-muted: #5f6578;
+$fsp-label: #c1c5d1;
+
+$fsp-accent-none: #6b7280;
+$fsp-accent-member: #4ade80;
+$fsp-accent-couple: #f472b6;
+$fsp-accent-primary: #3b82f6;
+
+.FamilySettingsPanel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: $fsp-bg;
+  color: $fsp-text;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 28px 16px 28px;
+    border-bottom: 1px solid $fsp-border-subtle;
+  }
+
+  &__header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  &__header-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #2a3249, #3a4463);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: $fsp-accent-member;
+  }
+
+  &__header-titles {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__title {
+    font-size: 20px;
+    font-weight: 600;
+    color: $fsp-text;
+    margin: 0;
+    letter-spacing: 0.2px;
+  }
+
+  &__subtitle {
+    font-size: 13px;
+    color: $fsp-text-dim;
+    margin: 0;
+  }
+
+  &__close {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    background: $fsp-panel-raised;
+    border: 1px solid $fsp-border;
+    color: $fsp-text-dim;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 16px;
+
+    &:hover {
+      background: $fsp-card-hover;
+      color: $fsp-text;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 20px 24px;
+    gap: 16px;
+    overflow: hidden;
+  }
+
+  &__pane {
+    background: $fsp-panel;
+    border: 1px solid $fsp-border-subtle;
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+    min-height: 0;
+  }
+
+  &__pane-top {
+    flex: 0 0 auto;
+  }
+
+  &__pane-bottom {
+    flex: 1 1 auto;
+  }
+
+  &__pane-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: $fsp-text;
+    margin: 0 0 6px 0;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__pane-title-icon {
+    color: $fsp-accent-primary;
+    font-size: 17px;
+  }
+
+  // ----- Tabs -----
+
+  &__tabs {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0 0 6px 0;
+    border-bottom: 1px solid $fsp-border-subtle;
+    padding-bottom: 4px;
+  }
+
+  &__tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px 8px 0 0;
+    color: $fsp-text-dim;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+    letter-spacing: 0.2px;
+
+    &:hover {
+      color: $fsp-text;
+      background: $fsp-panel-raised;
+    }
+
+    .FamilySettingsPanel__pane-title-icon {
+      color: inherit;
+      opacity: 0.85;
+    }
+
+    &--active {
+      color: $fsp-text;
+      background: $fsp-panel-raised;
+      border-color: $fsp-border-subtle;
+      border-bottom-color: $fsp-panel-raised;
+
+      .FamilySettingsPanel__pane-title-icon {
+        color: $fsp-accent-primary;
+        opacity: 1;
+      }
+    }
+  }
+
+  // ----- Family type cards -----
+
+  &__type-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    flex: 0 1 auto;
+  }
+
+  &__card {
+    position: relative;
+    background: $fsp-card;
+    border: 2px solid $fsp-border-subtle;
+    border-radius: 12px;
+    padding: 14px 18px;
+    cursor: pointer;
+    transition: all 0.18s;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    gap: 14px;
+    min-height: 76px;
+
+    &:hover {
+      background: $fsp-card-hover;
+      border-color: color.adjust($fsp-border, $lightness: 5%);
+      transform: translateY(-1px);
+    }
+
+    &--active {
+      background: $fsp-card-hover;
+    }
+
+    &--disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      filter: grayscale(0.5);
+
+      &:hover {
+        transform: none;
+      }
+    }
+  }
+
+  &__card-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  &__card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  &__card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: $fsp-text;
+    margin: 0;
+  }
+
+  &__card-desc {
+    font-size: 12px;
+    color: $fsp-text-dim;
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  // Per-type color themes
+  &__card--none {
+    .FamilySettingsPanel__card-icon {
+      color: $fsp-accent-none;
+    }
+    &.FamilySettingsPanel__card--active {
+      border-color: $fsp-accent-none;
+      box-shadow: 0 0 0 1px rgba(107, 114, 128, 0.5),
+        0 0 22px rgba(107, 114, 128, 0.22);
+    }
+  }
+
+  &__card--member {
+    .FamilySettingsPanel__card-icon {
+      color: $fsp-accent-member;
+    }
+    &.FamilySettingsPanel__card--active {
+      border-color: $fsp-accent-member;
+      box-shadow: 0 0 0 1px rgba(74, 222, 128, 0.4),
+        0 0 24px rgba(74, 222, 128, 0.22);
+    }
+  }
+
+  &__card--couple {
+    .FamilySettingsPanel__card-icon {
+      color: $fsp-accent-couple;
+    }
+    &.FamilySettingsPanel__card--active {
+      border-color: $fsp-accent-couple;
+      box-shadow: 0 0 0 1px rgba(244, 114, 182, 0.4),
+        0 0 24px rgba(244, 114, 182, 0.22);
+    }
+  }
+
+  // ----- Preferences form -----
+
+  &__form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 14px;
+    flex: 1 1 auto;
+    align-content: start;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 4px;
+    padding-bottom: 8px;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  &__field--full {
+    grid-column: 1 / -1;
+  }
+
+  &__field-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: $fsp-label;
+    letter-spacing: 0.2px;
+  }
+
+  &__field-input {
+    position: relative;
+    background: $fsp-panel-raised;
+    border: 1px solid $fsp-border;
+    border-radius: 8px;
+    padding: 0;
+    overflow: hidden;
+    transition: border-color 0.15s;
+
+    &:hover {
+      border-color: color.adjust($fsp-border, $lightness: 8%);
+    }
+
+    // Re-skin nested tgui Dropdown / Input
+    .Dropdown {
+      background: transparent !important;
+      border: none !important;
+    }
+
+    .Dropdown__control,
+    .Dropdown__selected-text {
+      background: transparent !important;
+      border: none !important;
+      color: $fsp-text !important;
+      padding: 9px 34px 9px 38px !important;
+      font-size: 13px !important;
+    }
+
+    .Dropdown__arrow-button {
+      background: transparent !important;
+      border: none !important;
+      color: $fsp-text-dim !important;
+    }
+
+    input[type='text'] {
+      background: transparent !important;
+      border: none !important;
+      color: $fsp-text !important;
+      padding: 9px 12px 9px 38px !important;
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 13px !important;
+      outline: none !important;
+
+      &::placeholder {
+        color: $fsp-text-muted;
+      }
+    }
+  }
+
+  &__field-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    text-align: center;
+    color: $fsp-text-dim;
+    font-size: 14px;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  // ----- Custom select (dropdown) -----
+  // Built in-panel so the menu can escape any overflow:hidden parent.
+
+  &__select {
+    position: relative;
+    background: $fsp-panel-raised;
+    border: 1px solid $fsp-border;
+    border-radius: 8px;
+    transition: border-color 0.15s;
+
+    &:hover {
+      border-color: color.adjust($fsp-border, $lightness: 8%);
+    }
+
+    &--open {
+      border-color: $fsp-accent-primary;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.18);
+    }
+
+    &--disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+
+  &__select-control {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 9px 34px 9px 38px;
+    cursor: pointer;
+    user-select: none;
+    min-height: 38px;
+    font-size: 13px;
+    color: $fsp-text;
+
+    .FamilySettingsPanel__field-icon {
+      pointer-events: none;
+    }
+  }
+
+  &__select-value {
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__select-arrow {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $fsp-text-dim;
+    font-size: 11px;
+    pointer-events: none;
+  }
+
+  &__select-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: $fsp-panel-raised;
+    border: 1px solid $fsp-border;
+    border-radius: 8px;
+    padding: 4px;
+    max-height: 240px;
+    overflow-y: auto;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45),
+      0 2px 8px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__select-option {
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    color: $fsp-text;
+    transition: background 0.1s, color 0.1s;
+    user-select: none;
+
+    &:hover {
+      background: $fsp-card-hover;
+    }
+
+    &--selected {
+      background: rgba(59, 130, 246, 0.18);
+      color: $fsp-accent-primary;
+      font-weight: 500;
+    }
+  }
+
+  // ----- Chip multi-select for species -----
+
+  &__field--species {
+    position: relative;
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px 32px 8px 38px;
+    min-height: 38px;
+    max-height: 78px;
+    overflow-y: auto;
+    align-items: center;
+    align-content: flex-start;
+    cursor: pointer;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: $fsp-border;
+      border-radius: 3px;
+    }
+  }
+
+  &__chips-arrow {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $fsp-text-dim;
+    font-size: 11px;
+    pointer-events: none;
+  }
+
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: rgba(59, 130, 246, 0.2);
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    color: $fsp-text;
+    font-size: 12px;
+    line-height: 1.2;
+
+    .close-x {
+      cursor: pointer;
+      color: $fsp-text-dim;
+      transition: color 0.1s;
+
+      &:hover {
+        color: $fsp-text;
+      }
+    }
+  }
+
+  &__chip-placeholder {
+    color: $fsp-text-muted;
+    font-size: 13px;
+  }
+
+  &__species-picker {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-height: 220px;
+    overflow-y: auto;
+    padding: 4px;
+    background: $fsp-panel-raised;
+    border: 1px solid $fsp-border;
+    border-radius: 8px;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45),
+      0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  &__species-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.1s;
+    font-size: 13px;
+    color: $fsp-text;
+
+    &:hover {
+      background: $fsp-card-hover;
+    }
+
+    &--selected {
+      background: rgba(74, 222, 128, 0.15);
+      color: $fsp-accent-member;
+    }
+  }
+
+  // ----- Checkbox rows -----
+
+  &__checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: $fsp-panel-raised;
+    border: 1px solid $fsp-border;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+
+    &:hover {
+      background: $fsp-card-hover;
+      border-color: color.adjust($fsp-border, $lightness: 8%);
+    }
+  }
+
+  &__checkbox-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: rgba(59, 130, 246, 0.12);
+    color: $fsp-accent-primary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  &__checkbox-label {
+    flex: 1 1 auto;
+    font-size: 12px;
+    color: $fsp-text;
+  }
+
+  &__checkbox-box {
+    width: 22px;
+    height: 22px;
+    border-radius: 5px;
+    border: 1px solid $fsp-border;
+    background: $fsp-bg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+
+    &--checked {
+      background: $fsp-accent-primary;
+      border-color: $fsp-accent-primary;
+      color: white;
+    }
+  }
+
+  // ----- Donator block & numeric counter -----
+
+  &__donator-block {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    background: linear-gradient(135deg,
+      rgba(201, 160, 78, 0.06),
+      rgba(244, 114, 182, 0.04));
+    border: 1px solid rgba(201, 160, 78, 0.28);
+    border-radius: 10px;
+  }
+
+  &__donator-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  &__donator-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: rgba(201, 160, 78, 0.18);
+    color: #f3c969;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  &__donator-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: $fsp-text;
+    flex: 1 1 auto;
+  }
+
+  &__donator-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: rgba(244, 114, 182, 0.15);
+    border: 1px solid rgba(244, 114, 182, 0.4);
+    color: #f8b4d8;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  &__donator-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  &__counter {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px 6px 38px;
+    min-height: 38px;
+    background: $fsp-panel-raised;
+    border: 1px solid $fsp-border;
+    border-radius: 8px;
+    transition: border-color 0.15s, opacity 0.15s;
+
+    &:hover {
+      border-color: color.adjust($fsp-border, $lightness: 8%);
+    }
+
+    &--disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+
+  &__counter-btn {
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border-radius: 6px;
+    border: 1px solid $fsp-border;
+    background: $fsp-panel;
+    color: $fsp-text-dim;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.12s;
+    font-family: inherit;
+
+    &:hover:not(:disabled) {
+      background: $fsp-card-hover;
+      color: $fsp-text;
+      border-color: $fsp-accent-primary;
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+  }
+
+  &__counter-value {
+    flex: 1 1 auto;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: $fsp-text;
+    min-width: 28px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  // ----- Hints -----
+
+  &__hint {
+    grid-column: 1 / -1;
+    padding: 8px 12px;
+    background: rgba(201, 160, 78, 0.08);
+    border: 1px solid rgba(201, 160, 78, 0.35);
+    border-radius: 8px;
+    font-size: 12px;
+    color: #c9a04e;
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  // ----- Footer -----
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px 20px 28px;
+    gap: 12px;
+    border-top: 1px solid $fsp-border-subtle;
+  }
+
+  &__footer-left {
+    display: flex;
+    gap: 10px;
+  }
+
+  &__footer-right {
+    display: flex;
+    gap: 10px;
+  }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: $fsp-panel-raised;
+    color: $fsp-text;
+
+    &:hover {
+      background: $fsp-card-hover;
+    }
+
+    &--icon-only {
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      border-radius: 50%;
+      color: $fsp-text-dim;
+      border-color: $fsp-border;
+
+      &:hover {
+        color: $fsp-text;
+      }
+    }
+
+    &--secondary {
+      background: $fsp-panel-raised;
+      border-color: $fsp-border;
+
+      &:hover {
+        background: $fsp-card-hover;
+      }
+    }
+
+    &--primary {
+      background: $fsp-accent-primary;
+      color: white;
+      border-color: $fsp-accent-primary;
+      padding: 10px 26px;
+
+      &:hover {
+        background: color.adjust($fsp-accent-primary, $lightness: 6%);
+      }
+    }
+  }
+}

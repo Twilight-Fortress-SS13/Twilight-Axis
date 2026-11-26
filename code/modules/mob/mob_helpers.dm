@@ -180,41 +180,76 @@
 /**
 	* Makes you speak like you're drunk
 	*/
-/proc/slur(n)
+/proc/slur(n) // TA EDIT START
 	var/phrase = STRIP_HTML_SIMPLE(n, MAX_MESSAGE_LEN)
 	var/leng = length_char(phrase)
-	var/counter=length_char(phrase)
-	var/newphrase=""
-	var/newletter=""
-	while(counter>=1)
-		newletter=copytext_char(phrase,(leng-counter)+1,(leng-counter)+2)
-		if(rand(1,3)==3)
-			if(LOWER_TEXT(newletter)=="o")
-				newletter="u"
-			if(LOWER_TEXT(newletter)=="s")
-				newletter="ch"
-			if(LOWER_TEXT(newletter)=="a")
-				newletter="ah"
-			if(LOWER_TEXT(newletter)=="u")
-				newletter="oo"
-			if(LOWER_TEXT(newletter)=="c")
-				newletter="k"
-		if(rand(1,20)==20)
-			if(newletter==" ")
-				newletter="...huuuhhh..."
-			if(newletter==".")
-				newletter=" *BURP*."
-		switch(rand(1,20))
-			if(1)
-				newletter+="'"
-			if(10)
-				newletter+="[newletter]"
-			if(20)
-				newletter+="[newletter][newletter]"
-			else
-				;;
-		newphrase+="[newletter]";counter-=1
-	return newphrase
+	var/has_cyrillic = FALSE
+	for(var/i = 1 to leng)
+		var/checkletter = LOWER_TEXT(copytext_char(phrase, i, i + 1))
+		if(checkletter in list("а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "к", "л", "м", "н", "о", "п", "р", "с", "т", "у", "ф", "х", "ц", "ч", "ш", "щ", "ъ", "ы", "ь", "э", "ю", "я"))
+			has_cyrillic = TRUE
+			break
+
+	var/counter = leng
+	var/newphrase = ""
+	var/newletter = ""
+	while(counter >= 1)
+		newletter = copytext_char(phrase, (leng - counter) + 1, (leng - counter) + 2)
+		var/lowerletter = LOWER_TEXT(newletter)
+
+		if(has_cyrillic)
+			if(prob(20))
+				switch(lowerletter)
+					if("с")
+						newletter = (newletter == uppertext(newletter)) ? "Ш" : "ш"
+					if("з")
+						newletter = (newletter == uppertext(newletter)) ? "Ж" : "ж"
+					if("ц")
+						newletter = (newletter == uppertext(newletter)) ? "С" : "с"
+					if("ч")
+						newletter = (newletter == uppertext(newletter)) ? "Щ" : "щ"
+
+			if(lowerletter in list("а", "е", "ё", "и", "о", "у", "ы", "э", "ю", "я"))
+				if(prob(12))
+					newletter += newletter
+					if(prob(20))
+						newletter += copytext_char(newletter, 1, 2)
+			else if(lowerletter in list("б", "в", "г", "д", "ж", "з", "к", "л", "м", "н", "п", "р", "с", "т", "ф", "х", "ц", "ч", "ш", "щ"))
+				if(prob(4))
+					newletter += newletter
+
+			if(newletter == " " && prob(7))
+				newletter = "... э-э... "
+			else if(newletter == "." && prob(5))
+				newletter = " *ИК*."
+		else
+			if(rand(1, 3) == 3)
+				if(lowerletter == "o")
+					newletter = "u"
+				if(lowerletter == "s")
+					newletter = "ch"
+				if(lowerletter == "a")
+					newletter = "ah"
+				if(lowerletter == "u")
+					newletter = "oo"
+				if(lowerletter == "c")
+					newletter = "k"
+			if(rand(1, 20) == 20)
+				if(newletter == " ")
+					newletter = "...huuuhhh..."
+				if(newletter == ".")
+					newletter = " *BURP*."
+			var/repeat_roll = rand(1, 20)
+			if(repeat_roll == 1)
+				newletter += "'"
+			else if(repeat_roll == 10)
+				newletter += "[newletter]"
+			else if(repeat_roll == 20)
+				newletter += "[newletter][newletter]"
+
+		newphrase += "[newletter]"
+		counter -= 1
+	return copytext_char(newphrase, 1, MAX_MESSAGE_LEN) // TA EDIT END
 
 /// Makes you talk like you got cult stunned, which is slurring but with some dark messages
 // Except up, its Psyphied so this is what you get from being sundered instead, thank you whoever left this, I will cook.
@@ -266,10 +301,16 @@
 	var/t = ""//placed before the message. Not really sure what it's for.
 	n = length_char(n)//length_char of the entire word
 	var/p = null
+	var/static/list/stutter_consonants = list( // TA EDIT START
+		"b","c","d","f","g","h","j","k","l","m","n","p","q","r","s","t","v","w","x","y","z",
+		"B","C","D","F","G","H","J","K","L","M","N","P","Q","R","S","T","V","W","X","Y","Z",
+		"б","в","г","д","ж","з","й","к","л","м","н","п","р","с","т","ф","х","ц","ч","ш","щ",
+		"Б","В","Г","Д","Ж","З","Й","К","Л","М","Н","П","Р","С","Т","Ф","Х","Ц","Ч","Ш","Щ",
+	) // TA EDIT END
 	p = 1//1 is the start of any word
 	while(p <= n)//while P, which starts at 1 is less or equal to N which is the length_char.
 		var/n_letter = copytext_char(te, p, p + 1)//copies text from a certain distance. In this case, only one letter at a time.
-		if (prob(80) && (ckey(n_letter) in list("b","c","d","f","g","h","j","k","l","m","n","p","q","r","s","t","v","w","x","y","z")))
+		if (prob(80) && (n_letter in stutter_consonants)) // TA EDIT
 			if (prob(10))
 				n_letter = text("[n_letter]-[n_letter]-[n_letter]-[n_letter]")//replaces the current letter with this instead.
 			else
@@ -283,6 +324,63 @@
 		t = text("[t][n_letter]")//since the above is ran through for each letter, the text just adds up back to the original word.
 		p++//for each letter p is increased to find where the next letter will be.
 	return copytext_char(t,1,MAX_MESSAGE_LEN)
+
+/proc/get_stutter_letter_position(word) // TA EDIT START
+	var/static/list/stutter_letters = list(
+		"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
+		"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
+		"а","б","в","г","д","е","ё","ж","з","и","й","к","л","м","н","о","п","р","с","т","у","ф","х","ц","ч","ш","щ","ъ","ы","ь","э","ю","я",
+		"А","Б","В","Г","Д","Е","Ё","Ж","З","И","Й","К","Л","М","Н","О","П","Р","С","Т","У","Ф","Х","Ц","Ч","Ш","Щ","Ъ","Ы","Ь","Э","Ю","Я",
+	)
+	for(var/position in 1 to length_char(word))
+		if(copytext_char(word, position, position + 1) in stutter_letters)
+			return position
+	return 0
+
+/proc/pain_stutter(message, strength)
+	if(!message || strength <= 0)
+		return message
+
+	strength = clamp(strength, 1, 100)
+	var/list/words = splittext_char(STRIP_HTML_SIMPLE(message, MAX_MESSAGE_LEN), " ")
+	var/list/candidates = list()
+
+	for(var/index in 1 to words.len)
+		if(get_stutter_letter_position(words[index]))
+			candidates += index
+
+	if(!candidates.len)
+		return message
+
+	var/target_words = round((candidates.len * strength) / 100)
+	if(target_words <= 0)
+		return message
+	target_words = min(target_words, candidates.len)
+
+	for(var/i in 1 to target_words)
+		var/index = pick_n_take(candidates)
+		var/word = words[index]
+		var/letter_position = get_stutter_letter_position(word)
+		if(!letter_position)
+			continue
+
+		var/letter = copytext_char(word, letter_position, letter_position + 1)
+		var/prefix = copytext_char(word, 1, letter_position)
+		var/body = copytext_char(word, letter_position)
+		var/repeats = 1
+
+		if(strength >= 80)
+			repeats = rand(2, 3)
+		else if(strength >= 45)
+			repeats = rand(1, 2)
+
+		var/stammer = ""
+		for(var/repeat in 1 to repeats)
+			stammer += "[letter]-"
+
+		words[index] = "[prefix][stammer][body]"
+
+	return copytext_char(jointext(words, " "), 1, MAX_MESSAGE_LEN) // TA EDIT END
 
 ///Convert a message to derpy speak
 /proc/derpspeech(message, stuttering)

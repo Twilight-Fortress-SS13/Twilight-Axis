@@ -9,8 +9,13 @@
 		"VHESLIE PAYS BETTER THAN YOUR LORD!",
 	)
 	rogue_enabled = TRUE
-	storyteller_antag_flags = STORYTELLER_ANTAG_VILLAIN | STORYTELLER_ANTAG_ROUNDSTART
-	storyteller_maxcaps = list(/datum/storyteller/gamemode/guaranteed_antag = 3)
+	storyteller_antag_flags = STORYTELLER_ANTAG_SOFT // TA EDIT START
+	storyteller_slot_default_cap = 0
+	storyteller_maxcaps = list(
+		/datum/storyteller/gamemode/no_antag/small_wretch = 1,
+		/datum/storyteller/gamemode/no_antag/standard = 2,
+		/datum/storyteller/gamemode/no_antag = 3,
+	) // TA EDIT END
 	/// Skill levels still owed, handed out in order.
 	var/list/picks = list(SKILL_LEVEL_MASTER, SKILL_LEVEL_EXPERT, SKILL_LEVEL_EXPERT, SKILL_LEVEL_JOURNEYMAN, SKILL_LEVEL_JOURNEYMAN, SKILL_LEVEL_JOURNEYMAN)
 	/// Skill types already picked, so none is picked twice.

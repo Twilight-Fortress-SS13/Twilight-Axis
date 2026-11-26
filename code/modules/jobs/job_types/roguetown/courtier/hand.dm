@@ -15,18 +15,21 @@
 	whitelist_req = TRUE
 	give_bank_account = TRUE
 	noble_income = 22
-	min_pq = 9 //The second most powerful person in the realm...
+	min_pq = 17 //The second most powerful person in the realm...
 	max_pq = null
 	round_contrib_points = 3
 	quest_claim_barred = TRUE
-	cmode_music = 'sound/music/cmode/nobility/combat_spymaster.ogg'
+	cmode_music = sound("sound/music/cmode/nobility/combat_spymaster.ogg")
 	job_traits = list(TRAIT_NOBLE, TRAIT_EXPERT_HUNTER)
 	vice_restrictions = list(/datum/charflaw/mute, /datum/charflaw/unintelligible, /datum/charflaw/wanted) //Needs to use the throat - sometimes
+	peopleiknow = list("Court Agent") // TA EDIT
+	peopleknowme = list("Court Agent") // TA EDIT
 	job_subclasses = list(
 		/datum/advclass/hand/blademaster,
 		/datum/advclass/hand/spymaster,
 		/datum/advclass/hand/advisor
 	)
+	same_job_respawn_delay = 30 MINUTES
 
 /datum/outfit/job/roguetown/hand
 	shoes = /obj/item/clothing/shoes/roguetown/rosa/ten
@@ -69,6 +72,9 @@
 		STATKEY_CON = 1,
 		STATKEY_LCK = 1, //less lucky than the rest... go figure
 	)
+
+	tempo_capable = TRUE
+
 	age_mod = /datum/class_age_mod/hand_blademaster
 	subclass_skills = list(
 		/datum/skill/combat/maces = SKILL_LEVEL_APPRENTICE,
@@ -121,6 +127,9 @@
 		STATKEY_INT = 2,
 		STATKEY_LCK = 2,
 	)
+
+	tempo_capable = TRUE
+
 	age_mod = /datum/class_age_mod/hand_spymaster
 	subclass_skills = list(
 		/datum/skill/combat/crossbows = SKILL_LEVEL_EXPERT,
@@ -136,6 +145,7 @@
 		/datum/skill/misc/reading = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/misc/tracking = SKILL_LEVEL_APPRENTICE,
 		/datum/skill/misc/sneaking = SKILL_LEVEL_MASTER,
+		/datum/skill/misc/stealing = SKILL_LEVEL_MASTER, // TA EDIT
 		/datum/skill/misc/lockpicking = SKILL_LEVEL_MASTER, // not like they're gonna break into the vault.
 		/datum/skill/misc/hunting = SKILL_LEVEL_APPRENTICE,
 	)

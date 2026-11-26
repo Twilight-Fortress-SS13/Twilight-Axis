@@ -18,6 +18,7 @@
 #define TAX_CATEGORY_RECOVERED_SPOILS "recovered spoils"
 #define TAX_CATEGORY_FINE "fine"
 #define TAX_CATEGORY_POLL_LEVY "poll levy"
+#define TAX_CATEGORY_ESTATE_LEVY "estate levy" // TA EDIT
 
 #define GENERIC_RATE_CAP 0.75
 #define STOCKPILE_CROWN_PURCHASE_FLOOR_DEFAULT 1000

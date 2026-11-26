@@ -3,7 +3,7 @@
 	real_name = "Unknown"
 	icon = 'icons/mob/human.dmi'
 	icon_state = "human_basic"
-	appearance_flags = KEEP_TOGETHER|TILE_BOUND|PIXEL_SCALE
+	appearance_flags = KEEP_TOGETHER|TILE_BOUND|PIXEL_SCALE|LONG_GLIDE
 	hud_possible = list(ANTAG_HUD)
 	hud_type = /datum/hud/human
 	base_intents = list(INTENT_HELP, INTENT_DISARM, INTENT_GRAB, INTENT_HARM)
@@ -53,6 +53,8 @@
 	var/lip_color = "white"
 
 	var/age = "Adult"		//Player's age
+	var/birthday_month = 0	//TA EDIT
+	var/birthday_day = 0	//TA EDIT
 
 	var/shavelevel = 0
 	var/breathe_tick = 0 // Used for gas mask delays.
@@ -131,6 +133,8 @@
 	var/pose_text = ""
 	var/ooc_notes = null
 	var/ooc_extra
+	var/ooc_extra_img
+	var/ooc_extra_img_link
 	var/rumour = null
 	var/noble_gossip = null
 	var/list/secrets = list()
@@ -139,6 +143,8 @@
 	var/song_artist
 	var/received_resident_key = FALSE
 	var/nsfwflavortext = null
+	var/nsfw_ooc_extra_img
+	var/nsfw_ooc_extra_img_link
 	var/erpprefs = null
 
 	// Cached version
@@ -152,10 +158,10 @@
 	/// Per-character theme override for examine panel viewers
 	var/examine_theme
 	var/list/img_gallery = list()
+
 	var/list/nsfw_img_gallery = list()
 
-	var/ooc_extra_img
-	var/nsfw_ooc_extra_img
+	var/has_confessed = FALSE // Used to track if they have confessed it was written onto a confession paper
 
 	possible_rmb_intents = list(/datum/rmb_intent/feint,\
 	/datum/rmb_intent/aimed,\

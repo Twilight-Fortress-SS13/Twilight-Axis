@@ -299,6 +299,14 @@ const SubtabAppearanceCardMarkings = () => {
             <Stack.Item>
               <Button onClick={() => act('marking_use_preset')}>Presets</Button>
             </Stack.Item>
+            <Stack.Item>{/* TA EDIT START */}
+              <Button
+                disabled={!marking_zones.some((zone) => zone.markings?.length)}
+                onClick={() => act('marking_set_all_colors')}
+              >
+                Set All Colors
+              </Button>
+            </Stack.Item>{/* TA EDIT END */}
             <Stack.Item>
               <Button onClick={() => act('marking_reset_all_colors')}>
                 Reset Colors

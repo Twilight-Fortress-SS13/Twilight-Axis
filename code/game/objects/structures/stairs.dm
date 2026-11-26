@@ -1,9 +1,14 @@
 #define STAIR_TERMINATOR_AUTOMATIC 0
 #define STAIR_TERMINATOR_NO 1
 #define STAIR_TERMINATOR_YES 2
+#define STAIR_STAMINA_COST 15 // TA EDIT
+#define STAIR_STAMINA_PULLING_MULTIPLIER 2 // TA EDIT
 
 // stairs require /turf/open/transparent/openspace as the tile above them to work
 // multiple stair objects can be chained together; the Z level transition will happen on the final stair object in the chain
+
+/atom/movable // TA EDIT
+	var/tmp/stair_dragged = FALSE // TA EDIT
 
 /obj/structure/stairs
 	name = "stairs"
@@ -30,6 +35,9 @@
 	if(isobserver(leaving))
 		return
 
+	if(leaving.stair_dragged) // TA EDIT
+		return
+
 	if(user_walk_into_target_loc(leaving, get_dir(src, new_location)))
 		return COMPONENT_ATOM_BLOCK_EXIT
 
@@ -52,12 +60,34 @@
 		if(partner.dir == dir)	//partner matches our dir
 			return newtarg
 
-/obj/structure/stairs/proc/user_walk_into_target_loc(atom/movable/AM, dirmove)
+/obj/structure/stairs/proc/user_walk_into_target_loc(atom/movable/AM, dirmove) // TA EDIT START
 	var/turf/newtarg = get_target_loc(dirmove)
-	if(newtarg)
-		INVOKE_ASYNC(src, GLOBAL_PROC_REF(movable_travel_z_level), AM, newtarg)
-		return TRUE
-	return FALSE
+	if(!newtarg)
+		return FALSE
+
+	INVOKE_ASYNC(src, PROC_REF(travel_with_stamina_cost), AM, newtarg)
+	return TRUE
+
+/obj/structure/stairs/proc/travel_with_stamina_cost(atom/movable/AM, turf/newtarg)
+	if(!AM || QDELETED(AM) || !newtarg) // TA EDIT START
+		return
+
+	var/atom/movable/pulling
+	if(isliving(AM))
+		var/mob/living/L = AM
+		pulling = L.pulling
+
+	movable_travel_z_level(AM, newtarg)
+
+	if(!ishuman(AM) || QDELETED(AM))
+		return
+
+	var/mob/living/carbon/human/H = AM
+	if(H.mind)
+		var/stamina_cost = STAIR_STAMINA_COST
+		if(pulling && !QDELETED(pulling) && isliving(pulling))
+			stamina_cost *= STAIR_STAMINA_PULLING_MULTIPLIER
+		H.stamina_add(stamina_cost, null, FALSE) // TA EDIT END
 
 /obj/structure/stairs/stone
 	name = "stone stairs"
@@ -147,13 +177,16 @@
 	if(L.loc != newtarg)
 		return
 	if(pulling && !(pulling in L.buckled_mobs))
-		if(cord)
-			L.stop_pulling()
+		L.stop_pulling() // TA EDIT START
+		var/was_stair_dragged = pulling.stair_dragged
+		pulling.stair_dragged = TRUE // TA EDIT END
 		if(isliving(pulling))
 			var/mob/living/pulled_mob = pulling
 			pulled_mob.travel_z_with_riders(newtarg)
 		else
 			pulling.forceMove(newtarg)
+		if(!QDELETED(pulling)) // TA EDIT
+			pulling.stair_dragged = was_stair_dragged // TA EDIT
 		if(cord)
 			if(!cord.wrap(L, pulling))
 				cord.wipeslate(L)
@@ -168,9 +201,15 @@
 			continue
 		var/was_zfalling = rider.zfalling
 		rider.zfalling = TRUE
+		var/was_stair_dragged = rider.stair_dragged // TA EDIT
+		rider.stair_dragged = TRUE // TA EDIT
 		rider.forceMove(destination)
-		rider.zfalling = was_zfalling
+		if(!QDELETED(rider)) // TA EDIT START
+			rider.stair_dragged = was_stair_dragged
+			rider.zfalling = was_zfalling // TA EDIT END
 
+#undef STAIR_STAMINA_COST // TA EDIT
+#undef STAIR_STAMINA_PULLING_MULTIPLIER // TA EDIT
 #undef STAIR_TERMINATOR_AUTOMATIC
 #undef STAIR_TERMINATOR_NO
 #undef STAIR_TERMINATOR_YES

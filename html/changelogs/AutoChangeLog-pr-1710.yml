@@ -1,0 +1,11 @@
+author: "Chituka"
+delete-after: True
+changes:
+  - rscadd: "Mirage is now capable of changing your headshot image"
+  - rscdel: "Removed Tempo Capable from most of the roles"
+  - balance: "Half-plate integrity 500 -> 400"
+  - balance: "Mount gets immobolized when you shoot a firearm from it"
+  - balance: "Mount gets immobolized for 2 seconds when feinted"
+  - balance: "+1 Major and -1 Minor slot for Rogue Mage"
+  - bugfix: "Fixed 'Penance' - inquisition's unique duster"
+  - code_imp: "Witcher chain no longer sends a debug message on a special move"

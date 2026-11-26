@@ -14,11 +14,12 @@
 	give_bank_account = TRUE
 	noble_income = 16
 	quest_claim_barred = TRUE
-	min_pq = 3 //Please don't give the vault keys to somebody that's going to lock themselves in on accident
+	min_pq = 8 //Please don't give the vault keys to somebody that's going to lock themselves in on accident
 	max_pq = null
 	round_contrib_points = 3
-	cmode_music = 'sound/music/combat_noble.ogg'
+	cmode_music = sound("sound/music/combat_noble.ogg")
 	is_quest_giver = TRUE
+	same_job_respawn_delay = 30 MINUTES
 
 	advclass_cat_rolls = list(CTAG_STEWARD = 2)
 
@@ -65,13 +66,15 @@
 	..()
 	H.adjust_blindness(-3)
 	if(should_wear_femme_clothes(H))
-		armor = /obj/item/clothing/suit/roguetown/shirt/dress/silkdress/steward
+		shirt = /obj/item/clothing/suit/roguetown/shirt/dress/stewarddress
+		shoes = /obj/item/clothing/shoes/roguetown/boots/nobleboot
 	else if(should_wear_masc_clothes(H))
-		shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/guard
-		armor = /obj/item/clothing/suit/roguetown/shirt/tunic/silktunic
-	head = /obj/item/clothing/head/roguetown/chaperon/noble/steward
-	pants = /obj/item/clothing/under/roguetown/tights/puritan
-	shoes = /obj/item/clothing/shoes/roguetown/boots/nobleboot
+		shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/steward
+		pants = /obj/item/clothing/under/roguetown/tights/black
+		shoes = /obj/item/clothing/shoes/roguetown/boots/nobleboot
+	armor = /obj/item/clothing/suit/roguetown/armor/leather/jacket/artijacket/handjacket
+	head = /obj/item/clothing/head/roguetown/stewardtophat
+	shoes = /obj/item/clothing/shoes/roguetown/shortboots
 	saiga_shoes = /obj/item/clothing/shoes/roguetown/horseshoes/gold
 	belt = /obj/item/storage/belt/rogue/leather/plaquegold/noble
 	beltr = /obj/item/rogueweapon/scabbard/sheath/royal
@@ -88,6 +91,11 @@
 			mask = /obj/item/clothing/mask/rogue/lordmask/l
 	else
 		mask = /obj/item/clothing/mask/rogue/spectacles/fancy/dark
+	if(H.mind)
+		H.mind.special_items["Steward Tights"] = /obj/item/clothing/under/roguetown/tights/black
+		H.mind.special_items["Steward Tailcoat"] = /obj/item/clothing/suit/roguetown/armor/gambeson/steward
+		H.mind.special_items["Steward Silkdress"] = /obj/item/clothing/suit/roguetown/shirt/dress/silkdress/steward
+		H.mind.special_items["Steward Silktunic"] = /obj/item/clothing/suit/roguetown/shirt/tunic/silktunic
 	if(H.mind)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/appraise/secular)
 	add_verb(H, /mob/living/carbon/human/proc/adjust_taxes)

@@ -24,3 +24,6 @@ GLOBAL_LIST_EMPTY(weather_act_upon_list)
 		0, 0, 0, 0, \
 		0, 0, 0, 1			\
 	)
+
+/// Blur radius (px) on the sunlight plane master - the GPU-side sun falloff.
+#define SUNLIGHT_MASK_BLUR_SIZE 8

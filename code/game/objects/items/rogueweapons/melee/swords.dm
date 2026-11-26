@@ -1088,6 +1088,7 @@
 	max_integrity = 350
 	max_blade_int = 400
 	awakens = FALSE
+	gripped_intents = list(/datum/intent/sword/cut/zwei, /datum/intent/sword/chop/heavy, /datum/intent/sword/thrust/long/deep, /datum/intent/sword/thrust/estoc) // TA EDIT
 
 /obj/item/rogueweapon/sword/long/broadsword/silver/psy/forgotten/relic/ComponentInitialize()
 	AddComponent(\
@@ -1516,7 +1517,7 @@
 	clickcd = 7
 	damfactor = 1.25
 	penfactor = PEN_MEDIUM
-	max_intent_damage = 25
+	//max_intent_damage = 25 //TA EDIT
 
 /datum/intent/effect/daze/freisabre
 	name = "uszkodzić"

@@ -214,6 +214,25 @@
 				body_markings[zone][desired_marking] = marking_content
 				verbose_pref_log_change(user, "notice", "Marking in \"[capitalize(zone)]\"", changing_name, desired_marking)
 			return CHARACTER_ACT_PREVIEW_UPDATE
+		if("marking_set_all_colors") // TA EDIT START
+			var/list/current_markings = body_markings
+			var/default_color
+			for(var/zone in current_markings)
+				var/list/bml = current_markings[zone]
+				if(length(bml))
+					default_color = bml[bml[1]]
+					break
+			if(!default_color)
+				return CHARACTER_ACT_DATA_UPDATE
+			var/new_color = tgui_color_picker(user, "Choose a color for all markings:", "All Markings Color", "#[default_color]", include_crunch = FALSE)
+			if(!new_color || body_markings != current_markings)
+				return CHARACTER_ACT_DATA_UPDATE
+			for(var/zone in body_markings)
+				var/list/bml = body_markings[zone]
+				for(var/key in bml)
+					bml[key] = new_color
+			verbose_pref_log_notification(user, "notice", "All marking colors set to #[new_color]")
+			return CHARACTER_ACT_PREVIEW_UPDATE // TA EDIT END
 		if("marking_reset_all_colors")
 			reset_body_marking_colors()
 			verbose_pref_log_notification(user, "warning", "All marking colors reset")

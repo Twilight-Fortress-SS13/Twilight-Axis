@@ -348,6 +348,7 @@
 	anvilrepair = /datum/skill/craft/armorsmithing
 	sewrepair = FALSE
 	smeltresult = /obj/item/ingot/steel
+	sewrepair = FALSE
 
 /obj/item/clothing/shoes/roguetown/boots/armor/ComponentInitialize()
 	.=..()
@@ -534,7 +535,7 @@
 
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha
 	name = "saccharine heels"
-	desc = "Yet, as the lepers begged for comfort from Eora, she gave them naught but love and platitude; and Belladoth's heart throbbed with pity."
+	desc = "She cared not for weeping and suffering of her subjects, for they cared not for her own struggle." //TA EDIT
 	icon_state = "baothaboots"
 	item_state = "baothaboots"
 	chunkcolor = "#6d1c87"
@@ -550,8 +551,7 @@
 
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha/ComponentInitialize()
 	. = ..()
-	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_HEELS, 2)
-	stepnoise_flag = STEPNOISE_HEELS // This will prevent default footstep noise from being made by the heels (sounds odd)
+	stepnoise_flag = STEPNOISE_HEELS // TA EDIT
 
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha/dropped(mob/living/carbon/human/user)
 	. = ..()
@@ -700,7 +700,6 @@
 
 /obj/item/clothing/shoes/roguetown/boots/otavan/inqboots/heels/ComponentInitialize()
 	. = ..()
-	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_HEELS, 2)
 	stepnoise_flag = STEPNOISE_HEELS
 
 /obj/item/clothing/shoes/roguetown/boots/otavan/inqboots/heels/attack_self(mob/living/user)
@@ -809,6 +808,7 @@
 	sewrepair = FALSE
 	armor = ARMOR_PLATE
 	smeltresult = /obj/item/ingot/iron
+	anvilrepair = /datum/skill/craft/armorsmithing
 
 /obj/item/clothing/shoes/roguetown/horseshoes/build_worn_icon(default_layer, default_icon_file, isinhands, femaleuniform, override_state, female, customi, sleeveindex, boobed_overlay, icon/clip_mask)
 	var/mutable_appearance/image = ..()
@@ -894,8 +894,7 @@
 
 /obj/item/clothing/shoes/roguetown/courtphysician/female/ComponentInitialize()
 	. = ..()
-	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_HEELS, 2)
-	stepnoise_flag = STEPNOISE_HEELS // This will prevent default footstep noise from being made by the heels (sounds odd)
+	stepnoise_flag = STEPNOISE_HEELS // TA EDIT
 
 /obj/item/clothing/shoes/roguetown/courtphysician/female/update_icon()
 	cut_overlays()

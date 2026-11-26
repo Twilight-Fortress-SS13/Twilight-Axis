@@ -5,7 +5,7 @@
 	allowed_sexes = list(MALE, FEMALE)
 	forbidden_races = list(RACES_BLACKOAK)
 	outfit = /datum/outfit/job/roguetown/wretch/pariah
-	cmode_music = 'sound/music/combat_blackoak.ogg'
+	cmode_music = sound("sound/music/combat_blackoak.ogg")
 	maximum_possible_slots = 1
 	class_select_category = CLASS_CAT_RACIAL
 	category_tags = list(CTAG_WRETCH)

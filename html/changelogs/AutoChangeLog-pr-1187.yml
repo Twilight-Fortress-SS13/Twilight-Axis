@@ -1,0 +1,4 @@
+author: "UEDCommander"
+delete-after: True
+changes:
+  - rscadd: "Переведена механика опознания еретических предметов."
