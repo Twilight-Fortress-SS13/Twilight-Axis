@@ -85,7 +85,7 @@
 		)
 	result_item = null
 	custom_name = TRUE
-	icon_loadout = /obj/item/rogueweapon/stoneaxe/handaxe/triumph
+	icon_loadout = /obj/item/rogueweapon/stoneaxe/handaxe/old
 
 /obj/item/enchantingkit/triumph_weaponkit_axedouble
 	name = "'Doublehead' morphing elixir"
@@ -102,7 +102,7 @@
 		)
 	result_item = null
 	custom_name = TRUE
-	icon_loadout = /obj/item/rogueweapon/stoneaxe/battle/triumph
+	icon_loadout = /obj/item/rogueweapon/stoneaxe/battle/doublehead
 
 /obj/item/enchantingkit/triumph_weaponkit_fancymace
 	name = "'Rungu-Shishpar' morphing elixir"
@@ -151,7 +151,7 @@
 		/obj/item/rogueweapon/whip						= /obj/item/rogueweapon/whip/alloytip
 		)
 	result_item = null
-	icon_loadout = /obj/item/rogueweapon/whip/silver/triumph
+	icon_loadout = /obj/item/rogueweapon/whip/silver/alloytip
 
 /obj/item/enchantingkit/triumph_weaponkit_urumi
 	name = "'Urumi' morphing elixir"
@@ -283,7 +283,7 @@
 		)
 	result_item = null
 	custom_name = TRUE
-	icon_loadout = /obj/item/rogueweapon/huntingknife/idagger/steel/triumph_classic
+	icon_loadout = /obj/item/rogueweapon/huntingknife/idagger/steel/old
 
 /obj/item/enchantingkit/triumph_weaponkit_psyswords
 	name = "'Slimguarded Psydonic Longsword' morphing elixir"
