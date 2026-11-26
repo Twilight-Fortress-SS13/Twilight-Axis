@@ -37,12 +37,6 @@
 		/datum/skill/craft/alchemy = SKILL_LEVEL_LEGENDARY,
 		/datum/skill/craft/sewing = SKILL_LEVEL_MASTER,
 		/datum/skill/craft/cooking = SKILL_LEVEL_MASTER,
-		// TA ADDITION START
-		/datum/skill/magic/holy = SKILL_LEVEL_MASTER,
-		/datum/skill/labor/farming = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/labor/butchering = SKILL_LEVEL_APPRENTICE,
-		/datum/skill/labor/lumberjacking = SKILL_LEVEL_JOURNEYMAN
-		// TA ADDITION END
 	)
 	subclass_languages = list(
 		/datum/language/oldazurian, // (gerson voice) you're old!

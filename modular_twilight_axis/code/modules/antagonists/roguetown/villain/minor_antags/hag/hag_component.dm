@@ -18,3 +18,28 @@
 							TRAIT_HARDSOLE, TRAIT_BREADY, TRAIT_LONGSTRIDER,
 							TRAIT_ZURCH, TRAIT_COMBAT_NONEWSKILLS, TRAIT_SEEPRICES,
 							TRAIT_EXTEROCEPTION, TRAIT_EMPATH, TRAIT_HERETIC_SEER)
+
+	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 0, "utilities" = 6, "ward" = FALSE)
+
+	subclass_skills = list(
+		/datum/skill/misc/tracking = SKILL_LEVEL_LEGENDARY,
+		/datum/skill/misc/swimming = SKILL_LEVEL_EXPERT,
+		/datum/skill/combat/wrestling = SKILL_LEVEL_NOVICE,
+		/datum/skill/combat/unarmed = SKILL_LEVEL_NOVICE,
+		/datum/skill/misc/athletics = SKILL_LEVEL_EXPERT,
+		/datum/skill/misc/climbing = SKILL_LEVEL_EXPERT,
+		/datum/skill/misc/reading = SKILL_LEVEL_LEGENDARY,
+		/datum/skill/misc/sneaking = SKILL_LEVEL_LEGENDARY,
+		/datum/skill/misc/lockpicking = SKILL_LEVEL_MASTER,
+		/datum/skill/craft/traps = SKILL_LEVEL_LEGENDARY,
+		/datum/skill/misc/medicine = SKILL_LEVEL_LEGENDARY,
+		/datum/skill/craft/crafting = SKILL_LEVEL_LEGENDARY,
+		/datum/skill/craft/alchemy = SKILL_LEVEL_LEGENDARY,
+		/datum/skill/craft/sewing = SKILL_LEVEL_MASTER,
+		/datum/skill/craft/cooking = SKILL_LEVEL_MASTER,
+		/datum/skill/magic/holy = SKILL_LEVEL_MASTER,
+		/datum/skill/magic/arcane = SKILL_LEVEL_EXPERT,
+		/datum/skill/labor/farming = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/labor/butchering = SKILL_LEVEL_APPRENTICE,
+		/datum/skill/labor/lumberjacking = SKILL_LEVEL_JOURNEYMAN,
+	)
