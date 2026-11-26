@@ -43,15 +43,6 @@
 	// TA REMOVAL: H.AddComponent(/datum/component/vampiric_striker, shard_threshold, shard_repair_value, max_fury_stacks)
 	don_pelt(H)
 
-// TA ADDITION START
-/obj/item/clothing/suit/roguetown/armor/regenerating/skin/gnoll_armor/impure
-	icon_state = null
-	max_integrity = 400
-	auto_repair_mode_base = 90
-	armor = ARMOR_GNOLL_WEAK
-
-// TA ADDITION END
-
 /datum/outfit/job/roguetown/gnoll_impure/proc/don_pelt(mob/living/carbon/human/H)
 	if(H.mind)
 		var/pelts = list("firepelt", "rotpelt", "whitepelt", "bloodpelt", "nightpelt", "darkpelt")

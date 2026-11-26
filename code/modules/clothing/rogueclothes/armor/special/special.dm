@@ -24,6 +24,7 @@
 	var/shard_repair_value = 25
 	var/max_fury_stacks = 150
 	var/vamp_armor_type = /obj/item/clothing/suit/roguetown/armor/vampiric/gnoll
+	var/obj/effect/proc_holder/spell/self/claws/gnoll/gnoll_claw = /obj/effect/proc_holder/spell/self/claws/gnoll // TA ADDITION
 
 /obj/item/clothing/suit/roguetown/armor/vampiric/gnoll
 	name = "gnoll skin"
