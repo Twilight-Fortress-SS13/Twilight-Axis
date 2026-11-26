@@ -504,6 +504,7 @@ GLOBAL_LIST_EMPTY(round_join_times)
 #define CTAG_LICKER_WRETCH	"CAT_LICKER_WRETCH" // Licker wretch. Nuff said.
 #define CTAG_GNOLL			"CAT_GNOLL"			// Wretch-esque gnolls, graggar's chosen.
 #define CTAG_GNOLL_IMPURE	"CAT_GNOLL_IMPURE"	// Reward for beating enough gnolls.
+#define CTAG_WYVERN			"CAT_WYVERN"		// Literally a wyvern. // TA ADDITION
 #define CTAG_HAG			"CAT_HAG"
 #define CTAG_NO_OUTFIT		"CAT_NO_OUTFIT"		//VL and other blank slates
 

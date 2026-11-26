@@ -27,7 +27,7 @@
 		owner.update_mobility()
 		if(needs_update_stat) //silicons need stat updates in addition to normal canmove updates
 			owner.update_stat()
-
+		owner.regenerate_icons() // TA ADDITION
 //STUN
 /datum/status_effect/incapacitating/stun
 	id = "stun"

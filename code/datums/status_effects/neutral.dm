@@ -29,6 +29,13 @@
 	mob_effect_icon_state = cmode_involved ? initial(mob_effect_icon_state) : null
 	. = ..()
 
+// TA ADDITION START
+/datum/status_effect/incapacitating/off_balanced/on_remove()
+	. = ..()
+	owner.regenerate_icons()
+
+// TA ADDITION END
+
 /atom/movable/screen/alert/status_effect/off_balanced
 	name = "Off Balanced"
 	desc = ""

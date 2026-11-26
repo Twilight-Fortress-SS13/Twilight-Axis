@@ -147,6 +147,7 @@
 			playsound(user, 'sound/foley/climb.ogg', 100, TRUE)
 			if(L.mind) // idk just following whats going on above
 				L.mind.add_sleep_experience(/datum/skill/misc/climbing, exp_to_gain, FALSE)
+		L.regenerate_icons() // TA ADDITION
 
 /obj/structure/flora/newtree/attacked_by(obj/item/I, mob/living/user)
 	var/was_destroyed = obj_destroyed

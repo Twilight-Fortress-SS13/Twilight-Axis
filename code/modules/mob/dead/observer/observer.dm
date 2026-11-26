@@ -1250,6 +1250,9 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		/datum/antagonist/bandit,
 		/datum/antagonist/wretch,
 		/datum/antagonist/gnoll,
+		// TA ADDITION START
+		/datum/antagonist/wyvern,
+		// TA ADDITION END
 	))
 
 	var/has_minor = FALSE
@@ -1340,6 +1343,10 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		return list("priority" = 51, "group" = "minor", "label" = "Wretch")
 	if(istype(A, /datum/antagonist/gnoll))
 		return list("priority" = 52, "group" = "minor", "label" = "Gnoll")
+	// TA ADDITION START
+	if(istype(A, /datum/antagonist/wyvern))
+		return list("priority" = 52, "group" = "minor", "label" = "Wyvern")
+	// TA ADDITION END
 
 	var/list/extra_candidate = get_orbit_extra_antag_candidate(A, special_role)
 	if(extra_candidate)

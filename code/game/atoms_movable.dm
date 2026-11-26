@@ -531,6 +531,11 @@
 	if(H)
 		H.update_a_intents()
 
+	// TA ADDITION
+	if(H)
+		H.regenerate_icons()
+	// TA ADDITION
+
 /atom/movable/proc/moveToNullspace()
 	return doMove(null)
 

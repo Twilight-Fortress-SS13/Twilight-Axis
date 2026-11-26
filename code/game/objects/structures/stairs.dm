@@ -189,6 +189,7 @@
 			L.start_pulling(pulling, supress_message = TRUE)
 		if(was_pulled_buckled) // Assume this was a fireman carry since piggybacking is not a thing
 			L.buckle_mob(pulling, TRUE, TRUE, 90, 0, 0)
+	L.regenerate_icons() // TA ADDITION
 
 #undef STAIR_STAMINA_COST // TA EDIT
 #undef STAIR_STAMINA_PULLING_MULTIPLIER // TA EDIT

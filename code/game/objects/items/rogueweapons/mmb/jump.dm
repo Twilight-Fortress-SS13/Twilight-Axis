@@ -156,6 +156,7 @@
 		for(var/o in mob_offsets)
 			if(mob_offsets[o])
 				reset_offsets(o)
+	regenerate_icons() // TA ADDITION
 
 #undef FLIP_DIRECTION_CLOCKWISE
 #undef FLIP_DIRECTION_ANTICLOCKWISE

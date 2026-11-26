@@ -152,6 +152,10 @@
 		return
 	if(mind.has_antag_datum(/datum/antagonist/gnoll))
 		return
+	// TA ADDITION START
+	if(mind.has_antag_datum(/datum/antagonist/wyvern))
+		return
+	// TA ADDITION END
 	if(mind.has_antag_datum(/datum/antagonist/hag))
 		return
 	if(mind.has_antag_datum(/datum/antagonist/skeleton))

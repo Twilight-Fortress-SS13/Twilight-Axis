@@ -211,6 +211,11 @@
 			if(istype(user.dna.species, /datum/species/gnoll))
 				if(prob(30))
 					user.gnoll_feed(bite_victim, 10)
+			// TA ADDITION START
+			if(istype(user.dna.species, /datum/species/wyvern))
+				if(prob(30))
+					user.wyvern_feed(bite_victim, 30)
+			// TA ADDITION END
 			/*
 				ZOMBIE INFECTION VIA BITE
 			*/
