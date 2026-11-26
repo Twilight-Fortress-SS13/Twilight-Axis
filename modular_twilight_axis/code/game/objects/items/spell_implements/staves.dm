@@ -7,15 +7,20 @@
 	implement_tier = 0
 	force_wielded = 25
 
+	// Префикс модульных спрайтов "[gem_state_base]_[гем]"
+	var/gem_state_base
+
 /obj/item/rogueweapon/woodstaff/implement/apply_gem_stats(list/stats)
 	implement_refund = stats ? stats["refund"] : 0
 
 /obj/item/rogueweapon/woodstaff/implement/proc/get_gem_icon_state(key)
+	if(gem_state_base)  // Дефолтимся на оффовские стейты
+		return "[gem_state_base]_[key || "gemless"]"
 	return key ? "[key]staff" : "gemless"
 
 /obj/item/rogueweapon/woodstaff/implement/update_gem_icon(list/stats)
 	var/new_state = get_gem_icon_state(stats ? stats["key"] : null)
-	override_state = new_state // Wielded sprites are "[override_state]1".
+	override_state = new_state
 	icon_state = new_state
 	update_transform()
 	update_icon()
@@ -59,16 +64,13 @@
 /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel
 	icon = 'modular_twilight_axis/icons/obj/items/staffs.dmi'
 	icon_state = "blacksteelstaff_diamond"
+	gem_state_base = "blacksteelstaff"
 	starting_gem_type = /obj/item/roguegem/diamond
 	implement_noun = "blacksteel staff"
 	desc = "A fine wood staff reinforced with blacksteel rivets and furnishings, carried by War-Magos who graduated from the Celestial Academy of Magos. Its crown holds a focus-gem."
 	force_wielded = 30
 	max_integrity = 300
 	sellprice = 25
-
-// Спрайты наших модульных посохов названы по-человечески "[base]_[gem]", а не "[gem]staff" как у оффов
-/obj/item/rogueweapon/woodstaff/implement/greater/blacksteel/get_gem_icon_state(key)
-	return key ? "blacksteelstaff_[key]" : "blacksteelstaff_gemless"
 
 /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel/ruby
 	icon_state = "blacksteelstaff_ruby"
@@ -77,6 +79,59 @@
 /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel/empty
 	icon_state = "blacksteelstaff_gemless"
 	starting_gem_type = null
+
+// Косметические рескины деревянного посоха
+
+/obj/item/rogueweapon/woodstaff/implement/bone
+	name = "bone staff"
+	icon = 'modular_twilight_axis/icons/obj/items/staffs.dmi'
+	icon_state = "bone_staff_topaz"
+	gem_state_base = "bone_staff"
+	implement_noun = "bone staff"
+	desc = "Knuckles and vertebrae threaded along a bleached femur. Its crown holds a focus-gem that returns a share of spent spell energy to the wielder."
+
+/obj/item/rogueweapon/woodstaff/implement/bone/empty
+	icon_state = "bone_staff_gemless"
+	starting_gem_type = null
+	sellprice = 0
+
+/obj/item/rogueweapon/woodstaff/implement/wilted
+	name = "wilted staff"
+	icon = 'modular_twilight_axis/icons/obj/items/staffs.dmi'
+	icon_state = "wilted_topaz"
+	gem_state_base = "wilted"
+	implement_noun = "wilted staff"
+	desc = "A tree branch that somehow grew into a perfect staff. Its crown holds a focus-gem that returns a share of spent spell energy to the wielder."
+
+/obj/item/rogueweapon/woodstaff/implement/wilted/empty
+	icon_state = "wilted_gemless"
+	starting_gem_type = null
+	sellprice = 0
+
+/obj/item/rogueweapon/woodstaff/implement/wilted/druid
+	name = "druid staff"
+	icon_state = "druid_topaz"
+	gem_state_base = "druid"
+	implement_noun = "druid staff"
+	desc = "Living wood that never stopped growing, fresh leaves still budding along its length. Its crown holds a focus-gem that returns a share of spent spell energy to the wielder."
+
+/obj/item/rogueweapon/woodstaff/implement/wilted/druid/empty
+	icon_state = "druid_gemless"
+	starting_gem_type = null
+	sellprice = 0
+
+/obj/item/rogueweapon/woodstaff/implement/allmight
+	name = "allmight staff"
+	icon = 'modular_twilight_axis/icons/obj/items/staffs.dmi'
+	icon_state = "allmight_topaz"
+	gem_state_base = "allmight"
+	implement_noun = "allmight staff"
+	desc = "Holding this regal staff, you feel answerable to no one. Its crown holds a focus-gem that returns a share of spent spell energy to the wielder."
+
+/obj/item/rogueweapon/woodstaff/implement/allmight/empty
+	icon_state = "allmight_gemless"
+	starting_gem_type = null
+	sellprice = 0
 
 // Все случаи посохов внизу рассматриваются как уникальные и не являются составными посохами
 
