@@ -121,7 +121,22 @@
 	// decide between normal or bare step sounds based on shoe and armor coverage
 	var/list/used_step_list = feet_covered ? GLOB.footstep : GLOB.barefootstep
 	var/turf_used_step = feet_covered ? step_location.footstep : step_location.barefootstep
-	var/list/step_data = used_step_list[turf_used_step]
+	var/list/step_data = used_step_list[turf_used_step] // TA EDIT START
+	var/heeled = istype(humshoes) && (humshoes.stepnoise_flag & STEPNOISE_HEELS)
+	if(heeled)
+		var/heelstep_type = step_location.footstep
+		if(istype(step_location, /turf/open/floor/rogue))
+			var/turf/open/floor/rogue/rogue_floor = step_location
+			if(rogue_floor.snowy || istype(rogue_floor, /turf/open/floor/rogue/snowrough) || istype(rogue_floor, /turf/open/floor/rogue/snowpatchy))
+				heelstep_type = HEELSTEP_SNOW
+			else if(istype(rogue_floor, /turf/open/floor/rogue/dirt))
+				if(heelstep_type == FOOTSTEP_MUD)
+					heelstep_type = FOOTSTEP_SHALLOW
+				else if(heelstep_type == FOOTSTEP_GRASS)
+					heelstep_type = FOOTSTEP_MUD
+		var/list/heel_data = GLOB.heelstep[heelstep_type]
+		if(LAZYLEN(heel_data) >= 3)
+			step_data = heel_data // TA EDIT END
 	//SANITY CHECK, WILL NOT PLAY A SOUND IF THE LIST IS INVALID
 	if((LAZYLEN(step_data) < 3))
 		testing("SOME silly guy GAVE AN INVALID [feet_covered ? "FOOTSTEP" : "BAREFOOTSTEP"] VALUE ([turf_used_step]) TO [step_location.type]!!! FIX THIS SHIT!!!")
@@ -134,19 +149,8 @@
 	used_sound = pick(used_footsteps - last_sound) || last_sound
 	last_sound = used_sound
 
-	if(humshoes)
-		var/datum/component/item_equipped_movement_rustle/RSTL = humshoes.GetComponent(/datum/component/item_equipped_movement_rustle)
-		var/override_sound = FALSE
-		if(humshoes.stepnoise_flag & STEPNOISE_HEELS)	// Bit shoddy workaround, but this will still reveal all the footsteps to keen ears.
-			switch(turf_used_step)
-				if(FOOTSTEP_FLOOR, FOOTSTEP_STONE, FOOTSTEP_PLATING, FOOTSTEP_WOOD, FOOTSTEP_LAVA)
-					override_sound = TRUE
-		if(humshoes.stepnoise_flag & STEPNOISE_NONE)
-			override_sound = TRUE
-		if(override_sound)
-			used_sound = 'sound/blank.ogg'
-		if(RSTL && (humshoes.stepnoise_flag & STEPNOISE_HEELS))
-			RSTL.set_override(override_sound ? FALSE : TRUE)
+	if(humshoes && (humshoes.stepnoise_flag & STEPNOISE_NONE)) // TA EDIT
+		used_sound = 'sound/blank.ogg' // TA EDIT
 
 	var/list/heard = playsound(step_location, used_sound,
 		volume * used_volume,

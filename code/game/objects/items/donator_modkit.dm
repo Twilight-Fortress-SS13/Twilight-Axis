@@ -354,10 +354,7 @@
 	if(SFX)
 		qdel(SFX)
 	I.name += " (heeled)"
-	var/datum/component/item_equipped_movement_rustle/heels = I.AddComponent(/datum/component/item_equipped_movement_rustle, SFX_HEELS, 2)
-	if(ismob(I.loc))
-		heels.on_equip(I, I.loc)
-	var/obj/item/clothing/shoes/roguetown/SH = I
+	var/obj/item/clothing/shoes/roguetown/SH = I // TA EDIT
 	SH.stepnoise_flag = STEPNOISE_HEELS
 	do_sparks(2, TRUE, get_turf(SH))
 	qdel(src)
