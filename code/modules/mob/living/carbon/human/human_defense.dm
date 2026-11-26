@@ -55,6 +55,9 @@
 				if(armor_penetration > protection)
 					consume_debuff = FALSE
 					intdamage = damage * PEN_PASSTHROUGH_PROJ_MORE
+				if(istype(used_weapon, /obj/projectile)) //TA EDIT
+					var/obj/projectile/arrow_proj = used_weapon //TA EDIT
+					intdamage = arrow_proj.get_armor_intdamage(damage, intdamage, armor_penetration, protection) //TA EDIT
 
 			if(intdamfactor != 1)
 				intdamage *= intdamfactor
@@ -159,6 +162,10 @@
 
 	if(physiology)
 		protection += physiology.armor.getRating(d_type)
+
+	if(istype(used_weapon, /obj/projectile)) //TA EDIT
+		var/obj/projectile/struck_by = used_weapon //TA EDIT
+		struck_by.struck_armor_tier = protection //TA EDIT
 
 	if(dr_armor_present && protection < 1)
 		return protection + 1
@@ -306,7 +313,7 @@
 			if(can_embed(I) && prob(I.embedding.embed_chance) && !HAS_TRAIT(src, TRAIT_PIERCEIMMUNE))
 				//throw_alert("embeddedobject", /atom/movable/screen/alert/embeddedobject)
 				var/obj/item/bodypart/L = pick(bodyparts)
-				L.add_embedded_object(I, silent = FALSE, crit_message = TRUE)
+				L.add_embedded_object(I, silent = FALSE, crit_message = TRUE, entry_side = get_embed_entry_side(throwingdatum?.thrower || I.thrownby)) //TA EDIT
 				emote("embed")
 				L.receive_damage(I.w_class*I.embedding.embedded_impact_pain_multiplier)
 //					visible_message("<span class='danger'>[I] embeds itself in [src]'s [L.name]!</span>","<span class='danger'>[I] embeds itself in my [L.name]!</span>")

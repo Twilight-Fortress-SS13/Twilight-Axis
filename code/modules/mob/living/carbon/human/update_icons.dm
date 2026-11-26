@@ -348,6 +348,7 @@ There are several things that need to be remembered:
 		update_transform()
 		//damage overlays
 		update_damage_overlays()
+		update_embedded_arrow_overlays() //TA EDIT
 		// updates gargoyle type if it needs to be changed
 		update_gargoyle_gender()
 

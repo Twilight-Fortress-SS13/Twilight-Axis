@@ -611,13 +611,14 @@
 	return FALSE
 
 /// Embeds an object in this bodypart
-/obj/item/bodypart/proc/add_embedded_object(obj/item/embedder, silent = FALSE, crit_message = FALSE, ranged = FALSE, surgery_embed = FALSE)
+/obj/item/bodypart/proc/add_embedded_object(obj/item/embedder, silent = FALSE, crit_message = FALSE, ranged = FALSE, surgery_embed = FALSE, entry_side = null) //TA EDIT
 	if(!embedder || !can_embed(embedder))
 		return FALSE
 	if(owner && (owner.status_flags & GODMODE))
 		return FALSE
 	if(owner && HAS_TRAIT(owner, TRAIT_PIERCEIMMUNE) && !surgery_embed)
 		return FALSE
+	embedder.embedded_entry_side = entry_side //TA EDIT
 	if(istype(embedder, /obj/item/natural/worms/leech))
 		record_round_statistic(STATS_LEECHES_EMBEDDED)
 	LAZYADD(embedded_objects, embedder)
@@ -647,6 +648,7 @@
 			owner.adjust_fire_stacks(1, psyblessed?.is_blessed ? /datum/status_effect/fire_handler/fire_stacks/sunder/blessed : /datum/status_effect/fire_handler/fire_stacks/sunder)
 			owner.ignite_mob()
 			to_chat(owner, span_silver("The embedded [embedder] sunders you from within!"))
+		owner.refresh_embedded_arrows() //TA EDIT
 	return TRUE
 
 /// Removes an embedded object from this bodypart
@@ -661,12 +663,14 @@
 	LAZYREMOVE(embedded_objects, embedder)
 	embedder.is_embedded = FALSE
 	embedder.embedded_host = null
+	embedder.embedded_entry_side = null //TA EDIT
 	if(QDELETED(embedder))
 		if(owner)
 			if(!owner.has_embedded_objects())
 				owner.clear_alert("embeddedobject")
 			update_disabled()
 			update_bleed_hud()
+			owner.refresh_embedded_arrows() //TA EDIT
 		return TRUE
 
 	var/atom/drop_loc = owner?.drop_location() || drop_location()
@@ -683,6 +687,7 @@
 			owner.clear_alert("embeddedobject")
 		update_disabled()
 		update_bleed_hud()
+		owner.refresh_embedded_arrows() //TA EDIT
 	return TRUE
 
 /obj/item/bodypart/proc/update_bleed_hud()

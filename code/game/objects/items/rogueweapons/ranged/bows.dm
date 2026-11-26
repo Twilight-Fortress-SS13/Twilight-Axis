@@ -241,6 +241,8 @@
 		var/obj/projectile/BB = CB.BB
 		apply_ranged_accuracy(BB, user)
 		apply_early_release_penalty(BB, user)
+		if(!user.client || user.client.chargedprog >= 100) //TA EDIT
+			BB.armor_penetration = clamp(BB.armor_penetration + penfactor, PEN_NONE, PEN_BSTEEL) //TA EDIT
 		BB.damage *= damfactor * get_per_damage_scaling(user)
 	. = ..()
 	if(.)

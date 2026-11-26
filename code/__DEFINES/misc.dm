@@ -74,7 +74,7 @@
 #define SUNDER_LAYER			3
 #define FIRE_LAYER				2		//If you're on fire
 #define TURF_LAYER				1		//If you're on fire
-#define TOTAL_LAYERS			56		//KEEP THIS UP-TO-DATE OR SHIT WILL BREAK ;_;
+#define TOTAL_LAYERS			57		//KEEP THIS UP-TO-DATE OR SHIT WILL BREAK ;_; //TA EDIT
 
 #define INHAND_FRONT		1
 #define INHAND_BEHIND		2
