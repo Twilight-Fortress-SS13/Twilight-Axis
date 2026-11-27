@@ -56,7 +56,7 @@
 /datum/trade_good/equipment/crafted/flail
 	id = TRADE_GOOD_STEEL_FLAIL
 	name = "steel flail"
-	item_type = /obj/item/rogueweapon/flail/sflail
+	item_type = /obj/item/rogueweapon/flail/steel
 	base_price = SELLPRICE_STEEL_INGOT * 2
 
 // ============================================================================

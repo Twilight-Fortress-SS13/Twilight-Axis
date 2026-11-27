@@ -2,7 +2,7 @@
 	var/tmp/ta_is_golden_serpent = FALSE
 	var/tmp/ta_is_oathbreaker = FALSE
 
-/datum/advclass/iconoclast
+/datum/advclass/bandit/iconoclast
 	traits_applied = list(
 		TRAIT_CIVILIZEDBARBARIAN,
 		TRAIT_RITUALIST,
@@ -25,7 +25,7 @@
 		/datum/skill/misc/climbing = SKILL_LEVEL_JOURNEYMAN,
 	)
 
-/datum/advclass/iconoclast/post_equip(mob/living/carbon/human/human)
+/datum/advclass/bandit/iconoclast/post_equip(mob/living/carbon/human/human)
 	. = ..()
 
 	if(human.ta_is_golden_serpent)

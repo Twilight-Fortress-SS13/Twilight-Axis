@@ -532,3 +532,33 @@
 		/obj/item/clothing/head/roguetown/crown/serpcrown
 	)
 	result_item = /obj/item/clothing/head/roguetown/crown/serpcrown/mortosuncrown
+
+/obj/item/enchantingkit/white_knight_armour
+	name = "white-armored knight armor morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Plate armor"
+	target_items = list(/obj/item/clothing/suit/roguetown/armor/plate)
+	result_item = /obj/item/clothing/suit/roguetown/armor/plate/white_knight
+
+/obj/item/enchantingkit/white_knight_helmet
+	name = "white-armored knight helmet morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Barbute"
+	target_items = list(/obj/item/clothing/head/roguetown/helmet/heavy)
+	result_item = /obj/item/clothing/head/roguetown/helmet/heavy/white_knight
+
+/obj/item/enchantingkit/white_knight_gloves
+	name = "white-armored knight gauntlets morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Plate Gauntlets"
+	target_items = list(/obj/item/clothing/gloves/roguetown/plate)
+	result_item = /obj/item/clothing/gloves/roguetown/plate/white_knight
+
+/obj/item/enchantingkit/white_knight_greaves
+	name = "white-armored knight greaves morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Plated Boots"
+	target_items = list(/obj/item/clothing/shoes/roguetown/boots/armor)
+	result_item = /obj/item/clothing/shoes/roguetown/boots/armor/white_knight
+
+/obj/item/enchantingkit/white_knight_cape
+	name = "white-armored knight cape morphing elixir"
+	desc = "A small container of special morphing dust, perfect to make a specific item. Required: Cape"
+	target_items = list(/obj/item/clothing/cloak/cape)
+	result_item = /obj/item/clothing/cloak/cape/white_knight

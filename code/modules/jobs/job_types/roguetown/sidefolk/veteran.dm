@@ -196,7 +196,7 @@
 	beltl = /obj/item/rogueweapon/scabbard/sword
 	beltr = /obj/item/roguekey/veteran
 	backr = /obj/item/storage/backpack/rogue/satchel/black
-	backl = /obj/item/rogueweapon/shield/tower/metal
+	backl = /obj/item/rogueweapon/shield/kite
 	r_hand = /obj/item/rogueweapon/spear/billhook
 	belt = /obj/item/storage/belt/rogue/leather/black
 	cloak = /obj/item/clothing/cloak/half/duelcape
@@ -306,11 +306,11 @@
 			if("Longsword + Shield")
 				r_hand = /obj/item/rogueweapon/sword/long
 				beltr = /obj/item/rogueweapon/scabbard/sword
-				backl = /obj/item/rogueweapon/shield/tower/metal
+				backl = /obj/item/rogueweapon/shield/kite
 
 			if("Axe + Shield")
 				r_hand = /obj/item/rogueweapon/stoneaxe/woodcut/steel
-				backl = /obj/item/rogueweapon/shield/tower/metal
+				backl = /obj/item/rogueweapon/shield/kite
 
 			if ("Halberd")
 				r_hand = /obj/item/rogueweapon/halberd
@@ -318,11 +318,11 @@
 
 			if ("Mace + Shield")
 				beltr = /obj/item/rogueweapon/mace/steel
-				backl = /obj/item/rogueweapon/shield/tower/metal
+				backl = /obj/item/rogueweapon/shield/kite
 
 			if("flail + Shield")
-				beltr = /obj/item/rogueweapon/flail/sflail
-				backl = /obj/item/rogueweapon/shield/tower/metal
+				beltr = /obj/item/rogueweapon/flail/steel
+				backl = /obj/item/rogueweapon/shield/kite
 
 		var/retirement = list("Pursue Homesteading", "Dabble in Smithing", "Write an autobiography")
 		var/retirement_choice = input(H, "During your retirement, you decided to...", "PICK A HOBBY.") as anything in retirement

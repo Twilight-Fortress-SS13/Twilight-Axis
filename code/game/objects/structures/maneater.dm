@@ -96,8 +96,10 @@
 	update_icon()
 
 	buckle_mob(victim, TRUE, check_loc = FALSE)
-	if(isanimal(victim) && !victim.mind && victim.STASTR >= 12) // TA EDIT
-		INVOKE_ASYNC(victim, TYPE_PROC_REF(/mob/living, execute_resist)) // TA EDIT
+	if(istype(victim, /mob/living/simple_animal)) // TA EDIT START
+		var/mob/living/simple_animal/mount = victim
+		if(mount.can_buckle && !mount.mind)
+			mount.mount_schedule_maneater_resist() // TA EDIT END
 	playsound(loc, list('sound/vo/mobs/plant/attack (1).ogg','sound/vo/mobs/plant/attack (2).ogg','sound/vo/mobs/plant/attack (3).ogg','sound/vo/mobs/plant/attack (4).ogg'), 100, FALSE, -1)
 	visible_message(span_userdanger("[src] begins to gnaw on [victim]! RESIST as many times as possible, or risk being chewed apart!"))
 	addtimer(CALLBACK(src, PROC_REF(begin_eat), victim), 3 SECONDS, TIMER_OVERRIDE|TIMER_UNIQUE|TIMER_STOPPABLE)

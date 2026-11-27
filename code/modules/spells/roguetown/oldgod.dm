@@ -183,7 +183,7 @@
 
 		// Bonuses! Flavour! SOVL!
 		for(var/obj/item/clothing/neck/current_item in target.get_equipped_items(TRUE))
-			if(current_item.type in list(/obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy, /obj/item/clothing/neck/roguetown/psicross, /obj/item/clothing/neck/roguetown/psicross/wood, /obj/item/clothing/neck/roguetown/psicross/aalloy, /obj/item/clothing/neck/roguetown/psicross/silver,	/obj/item/clothing/neck/roguetown/psicross/g))
+			if(current_item.type in list(/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient, /obj/item/clothing/neck/roguetown/psicross, /obj/item/clothing/neck/roguetown/psicross/wood, /obj/item/clothing/neck/roguetown/psicross/silver, /obj/item/clothing/neck/roguetown/psicross/g))
 				pp += 1
 				if(pp >= 12 & target == owner) // A harmless easter-egg. Only applies on self-cast. You'd have to be pretty deliberate to wear 12 of them.
 					target.visible_message(span_danger("[target]'s many psycrosses reverberate with a strange, ephemeral sound..."), span_userdanger("HE must be waking up! I can hear it! I'm ENDURING so much!"))
@@ -204,7 +204,7 @@
 				switch(current_item.type) // Target-based worn Psicross Piety bonus. For fun.
 					if(/obj/item/clothing/neck/roguetown/psicross/wood)
 						psicross_bonus = 0.1
-					if(/obj/item/clothing/neck/roguetown/psicross/aalloy)
+					if(/obj/item/clothing/neck/roguetown/psicross/ancient)
 						psicross_bonus = 0.2
 					if(/obj/item/clothing/neck/roguetown/psicross)
 						psicross_bonus = 0.3
@@ -214,7 +214,7 @@
 						psicross_bonus = 0.5
 					if(/obj/item/clothing/neck/roguetown/psicross/weeping)
 						psicross_bonus = 0.7
-					if(/obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy)
+					if(/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient)
 						zcross_trigger = TRUE
 
 		if(damtotal >= 300) // ARE THEY ENDURING MUCH, IN ONE WAY OR ANOTHER?
@@ -290,11 +290,11 @@
 		var/psicross_bonus = 0
 
 		for(var/obj/item/clothing/neck/current_item in H.get_equipped_items(TRUE))
-			if(current_item.type in list(/obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy, /obj/item/clothing/neck/roguetown/psicross, /obj/item/clothing/neck/roguetown/psicross/wood, /obj/item/clothing/neck/roguetown/psicross/aalloy, /obj/item/clothing/neck/roguetown/psicross/silver, /obj/item/clothing/neck/roguetown/psicross/g))
+			if(current_item.type in list(/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient, /obj/item/clothing/neck/roguetown/psicross, /obj/item/clothing/neck/roguetown/psicross/wood, /obj/item/clothing/neck/roguetown/psicross/silver, /obj/item/clothing/neck/roguetown/psicross/g))
 				switch(current_item.type) // Worn Psicross Piety bonus. For fun.
 					if(/obj/item/clothing/neck/roguetown/psicross/wood)
 						psicross_bonus = -1
-					if(/obj/item/clothing/neck/roguetown/psicross/aalloy)
+					if(/obj/item/clothing/neck/roguetown/psicross/ancient)
 						psicross_bonus = -2
 					if(/obj/item/clothing/neck/roguetown/psicross)
 						psicross_bonus = -4
@@ -304,7 +304,7 @@
 						psicross_bonus = -7
 					if(/obj/item/clothing/neck/roguetown/psicross/weeping)
 						psicross_bonus = -9
-					if(/obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy)
+					if(/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient)
 						zcross_trigger = TRUE
 		if(zcross_trigger)
 			owner.visible_message(span_warning("[owner] shuddered. Something's very wrong."), span_userdanger("Cold shoots through my spine. Something laughs at me for trying."))
@@ -400,11 +400,11 @@
 		var/psicross_bonus = 0
 
 		for(var/obj/item/clothing/neck/current_item in H.get_equipped_items(TRUE))
-			if(current_item.type in list(/obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy, /obj/item/clothing/neck/roguetown/psicross, /obj/item/clothing/neck/roguetown/psicross/wood, /obj/item/clothing/neck/roguetown/psicross/aalloy, /obj/item/clothing/neck/roguetown/psicross/silver, /obj/item/clothing/neck/roguetown/psicross/g))
+			if(current_item.type in list(/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient, /obj/item/clothing/neck/roguetown/psicross, /obj/item/clothing/neck/roguetown/psicross/wood, /obj/item/clothing/neck/roguetown/psicross/ancient, /obj/item/clothing/neck/roguetown/psicross/silver, /obj/item/clothing/neck/roguetown/psicross/g))
 				switch(current_item.type) // Worn Psicross Piety bonus. For fun.
 					if(/obj/item/clothing/neck/roguetown/psicross/wood)
 						psicross_bonus = -2
-					if(/obj/item/clothing/neck/roguetown/psicross/aalloy)
+					if(/obj/item/clothing/neck/roguetown/psicross/ancient)
 						psicross_bonus = -4
 					if(/obj/item/clothing/neck/roguetown/psicross)
 						psicross_bonus = -5
@@ -414,7 +414,7 @@
 						psicross_bonus = -9
 					if(/obj/item/clothing/neck/roguetown/psicross/weeping)
 						psicross_bonus = -11
-					if(/obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy)
+					if(/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient)
 						zcross_trigger = TRUE
 		if(zcross_trigger)
 			user.visible_message(span_warning("[user] shuddered. Something's very wrong."), span_userdanger("Cold shoots through my spine. Something laughs at me for trying."))
@@ -510,11 +510,11 @@
 		var/psicross_bonus = 0
 
 		for(var/obj/item/clothing/neck/current_item in H.get_equipped_items(TRUE))
-			if(current_item.type in list(/obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy, /obj/item/clothing/neck/roguetown/psicross, /obj/item/clothing/neck/roguetown/psicross/wood, /obj/item/clothing/neck/roguetown/psicross/aalloy, /obj/item/clothing/neck/roguetown/psicross/silver, /obj/item/clothing/neck/roguetown/psicross/g))
+			if(current_item.type in list(/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient, /obj/item/clothing/neck/roguetown/psicross, /obj/item/clothing/neck/roguetown/psicross/wood, /obj/item/clothing/neck/roguetown/psicross/ancient, /obj/item/clothing/neck/roguetown/psicross/silver, /obj/item/clothing/neck/roguetown/psicross/g))
 				switch(current_item.type) // Worn Psicross Piety bonus. For fun.
 					if(/obj/item/clothing/neck/roguetown/psicross/wood)
 						psicross_bonus = -2
-					if(/obj/item/clothing/neck/roguetown/psicross/aalloy)
+					if(/obj/item/clothing/neck/roguetown/psicross/ancient)
 						psicross_bonus = -4
 					if(/obj/item/clothing/neck/roguetown/psicross)
 						psicross_bonus = -5
@@ -524,7 +524,7 @@
 						psicross_bonus = -9
 					if(/obj/item/clothing/neck/roguetown/psicross/weeping)
 						psicross_bonus = -11
-					if(/obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy)
+					if(/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient)
 						zcross_trigger = TRUE
 		if(zcross_trigger)
 			user.visible_message(span_warning("[user] shuddered. Something's very wrong."), span_userdanger("Cold shoots through my spine. Something laughs at me for trying."))
@@ -585,18 +585,11 @@
 	required_items = null
 	charge_required = TRUE
 	channel_cast = TRUE
-	charge_swingdelay_type = SWINGDELAY_CANCEL
+	charge_swingdelay_type = SWINGDELAY_NORMAL // TA EDIT
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z | SPELL_REQUIRES_NO_MOVE
 	cooldown_time = 30 SECONDS
 
-/datum/action/cooldown/spell/psydon/lux/can_cast_spell(feedback = TRUE)
-	. = ..()
-	if(!.)
-		return
-	if(!(locate(/obj/item/flashlight/flare/torch/lantern/psycenser) in owner.held_items))
-		if(feedback)
-			owner.balloon_alert(owner, "I need the Golgatha in hand!")
-		return FALSE
+// TA EDIT - Lux miracles no longer require Golgatha.
 
 /datum/action/cooldown/spell/psydon/lux/do_after_checks(mob/owner, atom/cast_on)
 	. = ..()
@@ -608,7 +601,14 @@
 /datum/action/cooldown/spell/psydon/lux/weep
 	name = "WEEP"
 	button_icon_state = "WEEP" //Absolver-exclusive. Classified as 'lux-magicka', rather than a traditional miracle. Same line of thought as the Naledians.
-	desc = "Lesser lux-magicka. Endure the wounds of another, for their sake. </br>‎	</br>Siphons away lesser injuries, such as gashes and fractures, from the target. In exchange, any siphoned injuries are subsequently imposed onto you. If the target has lost any blood, they will be fully replenished through your own veins. </br>‎	</br>Requires the Golgatha in hand and a brief channel, during which I must stand still; being struck or moving will interrupt the miracle."
+	// TA EDIT START
+	desc = "Lesser lux-magicka. Endure the wounds of another, for their sake. \
+		<br><br>Siphons away lesser injuries, such as gashes and fractures, \
+		from the target. In exchange, any siphoned injuries are subsequently \
+		imposed onto you. If the target has lost any blood, they will be fully \
+		replenished through your own veins. <br><br>Requires a stationary \
+		3-second channel."
+	// TA EDIT END
 	sound = 'sound/magic/psydonbleeds.ogg'
 	primary_resource_cost = 80
 	secondary_resource_cost = 33
@@ -803,7 +803,15 @@
 /datum/action/cooldown/spell/psydon/lux/absolve
 	name = "ABSOLVE"
 	button_icon_state = "ABSOLVE" //Absolver-exclusive. Classified as 'lux-magicka', rather than a traditional miracle. Same line of thought as the Naledians.
-	desc = "Greater lux-magicka. Exchange your vitality for the sake of another. </br>‎	</br>Siphons away all injuries - be it physical damage, blood loss, or dismemberment - from the target, completely healing them. In exchange, all siphoned injuries are subsequently inflicted unto you. Using this on a target who's dead will fully resurrect them, albeit at the cost of your own lyfe. </br>‎	</br>Requires the Golgatha in hand and a channel, during which I must stand still; being struck or moving will interrupt the miracle."
+	// TA EDIT START
+	desc = "Greater lux-magicka. Exchange your vitality for the sake of \
+		another. <br><br>Siphons away all injuries - be it physical damage, \
+		blood loss, or dismemberment - from the target, completely healing \
+		them. In exchange, all siphoned injuries are subsequently inflicted \
+		unto you. Using this on a target who's dead will fully resurrect them, \
+		albeit at the cost of your own lyfe. <br><br>Requires a stationary \
+		5-second channel."
+	// TA EDIT END
 	sound = 'sound/magic/psyabsolution.ogg'
 	primary_resource_cost = 100
 	secondary_resource_cost = 50

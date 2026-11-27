@@ -110,14 +110,14 @@
 		switch(weapon_choice)
 			if("Flail & Kite Shield")
 				beltr = /obj/item/rogueweapon/mace/cudgel
-				beltl = /obj/item/rogueweapon/flail/sflail
-				backl = /obj/item/rogueweapon/shield/tower/metal
+				beltl = /obj/item/rogueweapon/flail/steel
+				backl = /obj/item/rogueweapon/shield/kite
 				H.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, 5, TRUE)
 				H.change_stat(STATKEY_STR, 2)
 			if("Axe & Kite Shield")
 				beltr = /obj/item/rogueweapon/mace/cudgel
 				beltl = /obj/item/rogueweapon/stoneaxe/battle
-				backl = /obj/item/rogueweapon/shield/tower/metal
+				backl = /obj/item/rogueweapon/shield/kite
 				H.adjust_skillrank_up_to(/datum/skill/combat/axes, 5, TRUE)
 				H.change_stat(STATKEY_STR, 2)
 			if("Halberd & Heater")
@@ -137,7 +137,7 @@
 				H.change_stat(STATKEY_PER, 1)
 				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, 4, TRUE)
 			if("Sabre & Kite Shield")
-				backl = /obj/item/rogueweapon/shield/tower/metal
+				backl = /obj/item/rogueweapon/shield/kite
 				r_hand = /obj/item/rogueweapon/sword/sabre
 				l_hand = /obj/item/rogueweapon/scabbard/sword
 				beltr = /obj/item/rogueweapon/mace/cudgel

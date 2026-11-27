@@ -121,8 +121,6 @@
 
 	var/list/implants = null
 
-	var/datum/riding/riding_datum
-
 	var/datum/language/selected_default_language
 
 	var/last_words	//used for database logging
@@ -195,8 +193,6 @@
 
 	var/datum/sex_controller/sexcon
 
-	var/slowdown
-
 	var/last_integ_sound
 
 	var/last_dir_change = 0
@@ -268,3 +264,8 @@
 	/// Bypasses positioning and exposure checks entirely
 	var/freeuse = FALSE
 
+	/// ass list [id] = /datum/status_effect.
+	var/alist/status_effects_by_id // Now hopefully /living will lead to this again.
+
+	/// i hate this, AKA, grace window against wake/sleep spam
+	var/sleep_wake_timer

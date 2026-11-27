@@ -525,7 +525,7 @@
 /datum/component/combo_core/combat_style/proc/SafeSlow(mob/living/L, amount)
 	if(!L)
 		return
-	L.Slowdown(amount)
+	L.apply_status_effect(/datum/status_effect/debuff/slowed, amount)
 
 /datum/component/combo_core/combat_style/proc/GetEffectiveHitZone(mob/living/target, desired_zone, datum/skill_path = /datum/skill/combat/unarmed, datum/intent/used_intent = null, obj/item/I = null)
 	if(!desired_zone || !owner || !target)

@@ -145,6 +145,8 @@
 	if(!simple_add_wound(new_break, crit_message = TRUE) && !has_wound(break_path))
 		return
 	LAZYADD(broken_parts, norm_zone)
+	if(mount_fear_enabled) // TA EDIT
+		mount_on_crippled(norm_zone, user) // TA EDIT
 	if(user?.client)
 		record_round_statistic(STATS_CRITS_MADE)
 	announce_newly_exposed(profile)
@@ -186,6 +188,8 @@
 	if(part_damage)
 		part_damage[zone] = 0
 	LAZYREMOVE(broken_parts, zone)
+	if(mount_initialized) // TA EDIT
+		update_move_intent_slowdown() // TA EDIT
 
 /mob/living/simple_animal/proc/reset_part_damage()
 	for(var/datum/wound/cripple/crippled in simple_wounds?.Copy())
@@ -193,6 +197,8 @@
 	part_damage = null
 	broken_parts = null
 	announced_exposed = null
+	if(mount_initialized) // TA EDIT
+		update_move_intent_slowdown() // TA EDIT
 
 /mob/living/simple_animal/proc/topple(duration = 3 SECONDS)
 	Knockdown(duration, ignore_canstun = TRUE)
