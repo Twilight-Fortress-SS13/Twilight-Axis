@@ -3310,24 +3310,6 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	donatitem = TRUE
 	ckeywhitelist = list("imony", "uedhighcommand")
 
-// TA EDIT START
-/datum/loadout_item/donat/anthraxi_helmet
-	name = "Донат-кит — шлем антракси"
-	category = list("Головные уборы", "Донат")
-	path = /obj/item/enchantingkit/anthraxi_helmet
-	donatitem = TRUE
-	ckeywhitelist = list("imony", "uedhighcommand")
-	donat_ignore = list("imony", "uedhighcommand")
-
-/datum/loadout_item/donat/relevement
-	name = "Донат-кит — фламберг Relevement"
-	category = list("Оружие", "Донат")
-	path = /obj/item/enchantingkit/weapon/relevement
-	donatitem = TRUE
-	ckeywhitelist = list("imony", "uedhighcommand")
-	donat_ignore = list("imony", "uedhighcommand")
-// TA EDIT END
-
 // Aria Mrix Start
 
 /datum/loadout_item/aria_bikini
@@ -6199,3 +6181,17 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/white_knight_cape
 	donatitem = TRUE
 	ckeywhitelist = list("n1ght1ngale")
+
+/datum/loadout_item/donat/anthraxi_helmet
+	name = "Donator Kit - Anthraxi Helm"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/enchantingkit/anthraxi_helmet
+	donatitem = TRUE
+	ckeywhitelist = list("imony", "uedhighcommand")
+
+/datum/loadout_item/donat/relevement
+	name = "Donator Kit - Relevement"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/weapon/relevement
+	donatitem = TRUE
+	ckeywhitelist = list("imony", "uedhighcommand")
