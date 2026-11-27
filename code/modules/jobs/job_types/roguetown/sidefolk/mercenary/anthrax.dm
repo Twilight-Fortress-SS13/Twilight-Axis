@@ -418,7 +418,8 @@
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/anthrax64.dmi'
 	icon_state = "spiderflamberge"
 	max_integrity = 240
-	max_blade_int = 180
+	max_blade_int = 200
+	wdefense = 7 // Class-unique.
 	smeltresult = /obj/item/ingot/drow
 
 /obj/item/rogueweapon/flail/sflail/spiderflail
