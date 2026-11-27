@@ -208,14 +208,14 @@
 		if(A && A.loc == source_item)
 			A.forceMove(result_item)
 
-/obj/item/enchantingkit/pre_attack(obj/item/I, mob/user)
+/obj/item/enchantingkit/pre_attack(obj/item/I, mob/user, params, selected_result_type) // TA EDIT
 	if(!I || !user)
 		return ..()
 
 	if(!can_morph_item(I))
 		return ..()
 
-	var/result_type = get_result_type(I)
+	var/result_type = selected_result_type || get_result_type(I) // TA EDIT
 
 	if(!result_type)
 		to_chat(user, span_warning("[src] doesn't know how to morph [I]."))
