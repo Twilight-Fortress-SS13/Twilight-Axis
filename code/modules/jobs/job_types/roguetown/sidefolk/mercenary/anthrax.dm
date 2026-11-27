@@ -243,6 +243,7 @@
 
 /datum/outfit/job/roguetown/mercenary/anthrax_paladin/pre_equip(mob/living/carbon/human/H)
 	..()
+	head = /obj/item/clothing/head/roguetown/helmet/heavy/shadowvisage/shadowsavoyard
 	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced
 	belt = /obj/item/storage/belt/rogue/leather/black
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/shadowpants/shadowskirt
@@ -297,6 +298,37 @@
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/special/onmob/anthrax.dmi'
 	icon_state = "fshadowcoif"
 	smeltresult = /obj/item/ingot/drow
+
+/obj/item/clothing/neck/roguetown/chaincoif/full/shadowcoif/AdjustClothes(mob/user)
+	if(loc == user)
+		if(adjustable == CAN_CADJUST)
+			adjustable = CADJUSTED
+			if(toggle_icon_state)
+				icon_state = "shadowcoif"
+			flags_inv = HIDEEARS|HIDEHAIR
+			body_parts_covered = NECK|HAIR|EARS|HEAD
+			body_parts_covered_dynamic = body_parts_covered
+			if(ishuman(user))
+				var/mob/living/carbon/H = user
+				H.update_inv_neck()
+				H.update_inv_head()
+		else if(adjustable == CADJUSTED)
+			adjustable = CADJUSTED_MORE
+			if(toggle_icon_state)
+				icon_state = "shadowcoif_t"
+			flags_inv = null
+			body_parts_covered = NECK
+			body_parts_covered_dynamic = body_parts_covered
+			if(ishuman(user))
+				var/mob/living/carbon/H = user
+				H.update_inv_neck()
+				H.update_inv_head()
+		else if(adjustable == CADJUSTED_MORE)
+			ResetAdjust(user)
+		if(ishuman(user))
+			var/mob/living/carbon/H = user
+			H.update_inv_neck()
+			H.update_inv_head()
 
 /obj/item/clothing/neck/roguetown/chaincoif/chainmantle/shadowmantle
 	name = "darkplate mantle"
@@ -401,7 +433,7 @@
 	desc = "A slender, needle-pointed blade, made to find the gaps between plate and rib. Elegant in the hand, and more so in the deed."
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/anthrax.dmi'
 	icon_state = "spidersmallsword"
-	sheathe = "modular_twilight_axis/icons/obj/items/scabbard.dmi"
+	sheathe = 'modular_twilight_axis/icons/obj/items/scabbard.dmi'
 	sheathe_icon = "spidersmallsword"
 	grid_width = 32
 	grid_height = 64
