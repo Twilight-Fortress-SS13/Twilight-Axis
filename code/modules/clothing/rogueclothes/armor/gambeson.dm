@@ -360,7 +360,7 @@
 	icon_state = "shadowrobe"
 	color = null
 	armor = ARMOR_PADDED
-	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER //TA EDIT 225 -> 240
+	max_integrity = ARMOR_INT_CHEST_LIGHT_MASTER //TA EDIT - 225 -> 240
 
 /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/shadowrobe/loadout
 	name = "aesthetic stalker robe"
