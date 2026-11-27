@@ -6,7 +6,7 @@
 	outfit = /datum/outfit/job/roguetown/gnoll/templar
 	category_tags = list(CTAG_GNOLL)
 	traits_applied = list(TRAIT_HEAVYARMOR, TRAIT_UNCONVERTIBLE, TRAIT_HALLOWED)
-	reset_stats = TRUE
+	reset_stats = FALSE // TAEDIT - ORIGINAL: reset_stats = TRUE
 	subclass_stats = list(
 		STATKEY_CON = 4, // TA EDIT - ORIGINAL: 3
 		STATKEY_WIL = 2,

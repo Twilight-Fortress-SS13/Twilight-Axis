@@ -7,7 +7,7 @@
 	category_tags = list(CTAG_GNOLL)
 	traits_applied = list(TRAIT_HEAVYARMOR, TRAIT_UNCONVERTIBLE) // Flavoring
 
-	reset_stats = TRUE
+	reset_stats = FALSE // TAEDIT - ORIGINAL: reset_stats = TRUE
 	subclass_stats = list(
 		STATKEY_WIL = 5,
 		STATKEY_CON = 5,
