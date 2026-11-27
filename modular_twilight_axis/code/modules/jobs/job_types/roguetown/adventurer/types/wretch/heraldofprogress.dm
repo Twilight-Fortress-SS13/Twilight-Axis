@@ -1,6 +1,6 @@
 /datum/advclass/wretch/herald_of_progress
-	name = "Herald of Progress"
-	tutorial = "Your melodies bring about melancholy visions of the future. Your soliloquies are punctuated by whispered truths of the past. Dread change, the promises of tomorrow come to fruition all the same. You are the herald of progress, a soothsayer of what is to be. The realm is a stage, and you are Her voice."
+	name = "Herald of Salvation"
+	tutorial = "Your melodies bring about melancholy visions of the future. Your soliloquies are punctuated by whispered truths of the past. Dread change, the promises of tomorrow come to fruition all the same. You are the herald of salvation, a soothsayer of what is to be. The realm is a stage, and you are Her voice."
 	allowed_sexes = list(MALE, FEMALE)
 	outfit = /datum/outfit/job/roguetown/wretch/herald_of_progress
 	cmode_music = 'modular_twilight_axis/sound/music/combat/combatheraldprogress.ogg'
@@ -115,8 +115,8 @@
 	H.dna.species.soundpack_f = new /datum/voicepack/skeleton()
 
 /obj/item/rogue/instrument/ztratocaster
-	name = "ztratocaster"
-	desc = "A strange guitar-like instrument with two necks, and a body sharp enough to shred."
+	name = "Salus"
+	desc = "An guitar with two necks, which uses lost technologies of Celestial Empire, what is inaccessible for mortal creatures. She radiates a strange, cursed energy and her body sharp enough to shred."
 	icon = 'modular_twilight_axis/icons/obj/items/zizocazter.dmi'
 	icon_state = "ztratocaster"
 	force = 15
@@ -147,6 +147,8 @@
 	smeltresult = null
 	wdefense = 7
 	wbalance = WBALANCE_NORMAL
+	experimental_onhip = TRUE
+	experimental_onback = TRUE
 
 /obj/item/rogue/instrument/ztratocaster/Initialize(mapload)
 	. = ..()
@@ -154,6 +156,15 @@
 
 /obj/item/rogue/instrument/ztratocaster/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_WEAPON)
+
+/obj/item/rogue/instrument/ztratocaster/getonmobprop(tag)
+	. = ..()
+	if(tag)
+		switch(tag)
+			if("wielded")
+				return list("shrink" = 0.6,"sx" = 5,"sy" = -3,"nx" = -5,"ny" = -2,"wx" = -5,"wy" = -1,"ex" = 3,"ey" = -2,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 7,"sturn" = -7,"wturn" = 16,"eturn" = -22,"nflip" = 8,"sflip" = 0,"wflip" = 8,"eflip" = 0)
+			if("onbelt")
+				return list("shrink" = 0.3,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
 
 /obj/item/clothing/mask/rogue/lordmask/zizite
 	name = "fateful visage"

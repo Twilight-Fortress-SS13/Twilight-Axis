@@ -154,6 +154,8 @@
 	name = "guitar"
 	desc = "This is a guitar, chosen instrument of wanderers and the heartbroken."
 	icon_state = "guitar"
+	experimental_onhip = TRUE //TA EDIT
+	experimental_onback = TRUE
 	song_list = list(
 		"Fire-Cast Shadows" = sound("sound/music/instruments/guitar (1).ogg"),
 		"The Forced Hand" = sound("sound/music/instruments/guitar (2).ogg"),
