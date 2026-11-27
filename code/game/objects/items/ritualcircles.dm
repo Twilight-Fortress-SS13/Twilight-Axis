@@ -718,7 +718,7 @@
 	var/obj/upgraded_rune_type = /obj/structure/active_abyssor_rune/greater
 
 /obj/item/abyssal_marker/get_examine_highlight_status()
-	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, "It shatters the barrier between reality and NIGHTMARE")
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, "Оно раскалывает барьер между реальностью и КОШМАРОМ") // TA EDIT
 
 /obj/item/abyssal_marker/volatile
 	name = "volatile abyssal marker"
@@ -1094,7 +1094,7 @@
 	name = "Rune of Death"
 	desc = "A holy rune of <font color='425363'>Necra.</font> Quiet acceptance stirs within you."
 	icon_state = "necra_chalky"
-	var/deathrites = list("Undermaiden's Bargain", "The Toll", "Shatter the Binds")
+	var/list/deathrites = list("Undermaiden's Bargain", "The Toll", "Shatter the Binds")
 	var/coinslot = 0
 
 
@@ -1118,16 +1118,20 @@
 	if((user.patron?.type) != /datum/patron/divine/necra)
 		to_chat(user,span_warning("I hear angered whispering...I probably shouldn't touch this."))
 		return
-	if(!HAS_TRAIT(user, TRAIT_RITUALIST))
+	if(!(HAS_TRAIT(user, TRAIT_RITUALIST) || HAS_TRAIT(user, TRAIT_LESSER_RITUALIST)))
 		to_chat(user,span_warning("I don't know the proper rites for this..."))
 		return
 	if(user.has_status_effect(/datum/status_effect/debuff/ritesexpended))
 		to_chat(user,span_warning("I have performed enough rituals for the day... I must rest before communing more."))
 		return
-	var/list/current_rites = deathrites
+	var/list/current_rites = deathrites.Copy()
 	if(SSevent_scheduler.fog_scheduled)
 		current_rites += "Hollow the Mist"
+	if(HAS_TRAIT(user, TRAIT_LESSER_RITUALIST)) // only The Toll for you, ser.
+		current_rites = list("The Toll")
 	var/riteselection = input(user, "Rituals of Death", src) as null|anything in current_rites
+	if(!riteselection)
+		return
 	switch(riteselection) // put ur rite selection here
 		if("Hollow the Mist")
 			loc.visible_message(span_warning("[user] begins to chant in a low, vibrating hum, their voice sounding like grinding bone..."))
@@ -1164,7 +1168,7 @@
 				icon_state = "necra_chalky"
 		if("The Toll")
 			if(!coinslot)
-				to_chat(user, "This rite requires the toll to be prepared...")
+				to_chat(user, span_warning("This rite requires the toll to be prepared..."))
 				return
 			var/onrune = view(1, loc)
 			var/list/folksonrune = list()
@@ -1743,7 +1747,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	gloves = /obj/item/clothing/gloves/roguetown/plate/zizo
 	neck = /obj/item/clothing/neck/roguetown/bevor/zizo
 	r_hand = /obj/item/rogueweapon/sword/zizo
-	l_hand = /obj/item/rogueweapon/shield/tower/metal/zizo
+	l_hand = /obj/item/rogueweapon/shield/kite/zizo
 
 	H.mind.RemoveSpell(new /datum/action/cooldown/spell/mending/lesser)
 
@@ -1940,7 +1944,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	gloves = /obj/item/clothing/gloves/roguetown/plate/matthios
 	head = /obj/item/clothing/head/roguetown/helmet/heavy/matthios
 	neck = /obj/item/clothing/neck/roguetown/chaincoif/chainmantle/matthios
-	backr = /obj/item/rogueweapon/flail/peasantwarflail/matthios
+	backr = /obj/item/rogueweapon/flail/great/matthios
 
 	H.mind.AddSpell(new /datum/action/cooldown/spell/mending) // TA EDIT
 	ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL) // TA EDIT

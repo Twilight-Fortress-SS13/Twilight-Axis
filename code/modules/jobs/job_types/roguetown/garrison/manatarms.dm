@@ -217,7 +217,7 @@
 				wrists = /obj/item/clothing/wrists/roguetown/bracers
 				pants = /obj/item/clothing/under/roguetown/heavy_leather_pants
 				beltl = /obj/item/rogueweapon/scabbard/sheath
-				H.adjust_skillrank(/datum/skill/combat/knives, SKILL_LEVEL_EXPERT, TRUE)
+				H.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_EXPERT, TRUE)
 				ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 				var/sidearm = list(
 					"Dagger" = /obj/item/rogueweapon/huntingknife/idagger/steel/special,
@@ -318,7 +318,7 @@
 				backl = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow
 				beltr = /obj/item/quiver/bolt/standard
 			if("Flail & Shield")
-				beltr = /obj/item/rogueweapon/flail/sflail
+				beltr = /obj/item/rogueweapon/flail/steel
 				backl = /obj/item/rogueweapon/shield/tower
 			if("Lucerne & Whip")
 				r_hand = /obj/item/rogueweapon/eaglebeak/lucerne
@@ -358,7 +358,7 @@
 	maximum_possible_slots = 1 //Had one dungeoneer before, this is how many we get to keep still.
 
 	category_tags = list(CTAG_MENATARMS)
-	traits_applied = list(TRAIT_JAILOR, TRAIT_CIVILIZEDBARBARIAN, TRAIT_BLOOD_RESISTANCE, TRAIT_NOPAINSTUN)//This is surely going to be funny
+	traits_applied = list(TRAIT_CIVILIZEDBARBARIAN, TRAIT_BLOOD_RESISTANCE, TRAIT_NOPAINSTUN) //TA EDIT //This is surely going to be funny
 	subclass_stats = list(
 		STATKEY_STR = 3,
 		STATKEY_CON = 2,

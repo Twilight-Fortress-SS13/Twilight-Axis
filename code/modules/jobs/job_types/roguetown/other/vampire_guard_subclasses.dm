@@ -5,9 +5,11 @@
 //They should not exceed the capacity of wretches though, they're intended to be scarier in numbers but weaker than a solo wretch on average.
 //Also account for the fact they are neonites, they have 9RP to work with.
 
+/datum/advclass/vampguard
+	tempo_capable = TRUE
 
 //Jack of all trades fighter, gains expert in their chosen weapon pick
-/datum/advclass/vampguardsman
+/datum/advclass/vampguard/vampguardsman
 	name = "Vampiric Footsoldier"
 	tutorial = "You are a seasoned weapon specialist, clad in maille, with years of experience in warfare and battle under your belt, more than any mortal could ever claim."
 	allowed_sexes = list(MALE, FEMALE)
@@ -58,7 +60,7 @@
 			if("Flail & Shield")
 				H.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, SKILL_LEVEL_EXPERT, TRUE)
 				H.adjust_skillrank_up_to(/datum/skill/combat/shields, SKILL_LEVEL_EXPERT, TRUE)
-				r_hand = /obj/item/rogueweapon/flail/sflail
+				r_hand = /obj/item/rogueweapon/flail/steel
 				backl = /obj/item/rogueweapon/shield/iron
 			if("Sabre & Shield")
 				H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
@@ -109,10 +111,10 @@
 
 	cloak = /obj/item/clothing/cloak/tabard/stabard/vamp
 	mask = /obj/item/clothing/mask/rogue/facemask/steel //so they don't get sundered in the face
-	shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/paalloy
+	shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/ancient
 	pants = /obj/item/clothing/under/roguetown/chainlegs
 	armor = /obj/item/clothing/suit/roguetown/armor/brigandine/light
-	neck = /obj/item/clothing/neck/roguetown/chaincoif/paalloy
+	neck = /obj/item/clothing/neck/roguetown/chaincoif/ancient
 	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/iron
 	wrists = /obj/item/clothing/wrists/roguetown/bracers
 	gloves = /obj/item/clothing/gloves/roguetown/plate/iron //Intended semi-weakspot 4 more unarmed damage
@@ -128,7 +130,7 @@
 		)
 
 // Ranger, minifort class. Also doubles as a knockoff assassin, a good tracker for people that run from your conversion horde.
-/datum/advclass/vampskirmisher
+/datum/advclass/vampguard/vampskirmisher
 	name = "Vampiric Skirmisher"
 	tutorial = "You are a professional soldier, light in footwork, yet with years of experience in warfare and archery, far more than most mortals could claim. Your lord's will be done."
 	allowed_sexes = list(MALE, FEMALE)
@@ -172,9 +174,9 @@
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson //Less protection, due to archery's potental
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/brigandine
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants
-	neck = /obj/item/clothing/neck/roguetown/chaincoif/paalloy
+	neck = /obj/item/clothing/neck/roguetown/chaincoif/ancient
 	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced
-	gloves = /obj/item/clothing/gloves/roguetown/chain/paalloy
+	gloves = /obj/item/clothing/gloves/roguetown/chain/ancient
 
 	belt = /obj/item/storage/belt/rogue/leather/black
 	beltr = /obj/item/rogueweapon/stoneaxe/woodcut //demolishing fortifications or setting them up.
@@ -202,7 +204,7 @@
 				beltl = /obj/item/quiver/bolt/standard
 
 // Dodger melee class, excels in damage but also lacks the jack-of-all trades that is, guardsman and weaker tracking
-/datum/advclass/vampduelist
+/datum/advclass/vampguard/vampduelist
 	name = "Vampiric Duelist"
 	tutorial = "You are an professional swordsman and warrior who foregoes armor in exchange for a more nimble fighting style than most mortals could claim. Your lord's will be done."
 	outfit = /datum/outfit/job/roguetown/other/vampduelist
@@ -272,7 +274,7 @@
 	head = /obj/item/clothing/head/roguetown/duelhat/vamp //lowest of all guards in head armor in that only their coif really gives them any.
 	mask = /obj/item/clothing/mask/rogue/duelmask //I AM THE NIGHT
 	cloak = /obj/item/clothing/cloak/half/vamp //They get to auramax, as a treat
-	neck = /obj/item/clothing/neck/roguetown/chaincoif/paalloy
+	neck = /obj/item/clothing/neck/roguetown/chaincoif/ancient
 	gloves = /obj/item/clothing/gloves/roguetown/fingerless_leather
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy
@@ -297,7 +299,7 @@
 		//						//
 
 // Puglist arson experiment class, replacement for adventurer bombardier. Still despite going all-in they actually perform worst as a puglist class when fighting themselves over just using bombs, this is intended.
-/datum/advclass/vampbomber
+/datum/advclass/vampguard/vampbomber
 	name = "Vampiric Fyre-Pugilist"
 	tutorial = "There has been nothing more enchanting in unlyfe than the dance of flames upon an inferno of your alchemical mixes and the taste of blood freshly beaten out of a victim with your bare hands. Now your master arises once more and your talents shall see use again. Your lord's will be done."
 	outfit = /datum/outfit/job/roguetown/other/vampbomber
@@ -333,8 +335,8 @@
 
 	cloak = /obj/item/clothing/cloak/tabard/stabard/vamp
 	head = /obj/item/clothing/head/roguetown/helmet/heavy/guard //ancient-esc look
-	neck = /obj/item/clothing/neck/roguetown/chaincoif/paalloy
-	shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/paalloy
+	neck = /obj/item/clothing/neck/roguetown/chaincoif/ancient
+	shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/ancient
 	pants = /obj/item/clothing/under/roguetown/brigandinelegs
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy //Weaker to chest stabs, intentional, go upgrade your armor
 	backl = /obj/item/storage/backpack/rogue/satchel/black
@@ -351,7 +353,7 @@
 		)
 
 //A bunch of motherfuckin' draculas and they're all playin' flute. Buff-class lite duelist, doesn't perform as well as duelist in tradeoff for being able to buff up their teammates with music and perform vicious mockery.
-/datum/advclass/vampbard
+/datum/advclass/vampguard/vampbard
 	name = "Vampiric Bard"
 	tutorial = "Betwixt an occasional visit to a brothel, tavern or flophouse for your thirst for blood, you once told legends and myths of yils untold. One that someone could only dream of lyving, except you; yet now you've a prophecy to fulfil. Your lord's will be done."
 	outfit = /datum/outfit/job/roguetown/other/vampbard
@@ -363,6 +365,9 @@
 		STATKEY_WIL = 2,
 		//6 point statline, unchanged from adv save for +1 wil so they last longer in combat with music. Due to how strong bardic buffs can be in the hands of vampyres now they get numbers (I.E stam regen, health regen, etc) although they do still feel blue bar (excluding vlord) they have to retain being somewhat weak-ish
 	)
+
+	tempo_capable = FALSE
+
 	subclass_skills = list(
 		/datum/skill/combat/wrestling = SKILL_LEVEL_APPRENTICE, //Still not amazing, because you can buff up already pretty stacked classes.
 		/datum/skill/combat/unarmed = SKILL_LEVEL_APPRENTICE,
@@ -384,7 +389,7 @@
 	to_chat(H, span_warning("Betwixt an occasional visit to a brothel, tavern or flophouse for your thirst for blood, you once told legends and myths of yils untold. One that someone could only dream of lyving, except you; yet now you've a prophecy to fulfil. Your lord's will be done."))
 	head = /obj/item/clothing/head/roguetown/bardhat //Thou hath nae hat then thou art nae bard O' myne.
 	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced
-	neck = /obj/item/clothing/neck/roguetown/chaincoif/paalloy //Covers head, also semi-noticeable
+	neck = /obj/item/clothing/neck/roguetown/chaincoif/ancient //Covers head, also semi-noticeable
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants
 	mask = /obj/item/clothing/mask/rogue/ragmask/black //Obligary face coverage
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson //Less protection, due to support class.
@@ -433,7 +438,7 @@
 
 // No-Armor mage, basically vampire magos for the lord. Specialises in faster casting, as a sort of step-in replacement for the grenzelhoftian seige mage. They may be buffed, nerfed or replaced depending how they perform.
 // Despite decent wards, stabbing them w/silver should make them fall over to pain pretty fast or straight dust them on the spot after a few critical sunders. Expect them to lose a fair bit of blue w/ reliance on wards + spam casting.
-/datum/advclass/vampseigemage
+/datum/advclass/vampguard/vampseigemage
 	name = "Vampiric Battlemage"
 	tutorial = "You were a magos of old, ever since the embrace you've never had more time to practice your persuit of arcayne magicks, let alone revel in your taste for blood; now your master arises once more and your arcayne research shall see fruition. Your lord's will be done."
 	outfit = /datum/outfit/job/roguetown/other/vampseigemage
@@ -448,6 +453,9 @@
 		// 8 point statline, mostly put into perception + int, they lack on their baseline speed being slightly higher unlike most mages on top of weaker martal talent
 		// Yeah vampire mages are pretty insanely strong with some clan potencies but rule of cool honestly.
 	)
+
+	tempo_capable = FALSE
+
 	subclass_skills = list(
 		/datum/skill/combat/staves = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/arcyne = SKILL_LEVEL_EXPERT,
@@ -476,7 +484,7 @@
 	shirt = /obj/item/clothing/suit/roguetown/shirt/tunic/white
 	armor = /obj/item/clothing/cloak/tabard/stabard/vamp
 	pants = /obj/item/clothing/under/roguetown/skirt/vamp
-	neck = /obj/item/clothing/neck/roguetown/gorget/paalloy //No head armor but good anti-decap armor, intended.
+	neck = /obj/item/clothing/neck/roguetown/gorget/ancient //No head armor but good anti-decap armor, intended.
 	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced
 	belt = /obj/item/storage/belt/rogue/leather/battleskirt
 	beltl = /obj/item/rogueweapon/spellbook/greater

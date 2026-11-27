@@ -34,52 +34,28 @@
 
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN
 
-	var/current_mode = 1
 	var/flurry_shots = 4
 	var/flurry_shot_delay = 2
 	var/flurry_spread = 10
-	var/list/modes = list(
-		list("name" = "Cascade", "tag" = "CASC", "fire" = "stream", "proj" = /obj/projectile/magic/greater_arcyne_bolt/flurry, "per_fire" = 1, "cost" = SPELLCOST_MINOR_PROJECTILE, "cooldown" = 5.5 SECONDS, "charge" = CHARGETIME_POKE, "slowdown" = CHARGING_SLOWDOWN_SMALL, "sound" = 'sound/magic/vlightning.ogg', "invocation" = "Telum Magistri!", "icon" = "arcyne_bolt"),
-		list("name" = "Seeker", "tag" = "SEEK", "fire" = "homing", "proj" = /obj/projectile/magic/seeker_orb/greater, "per_fire" = 5, "cost" = SPELLCOST_MINOR_PROJECTILE, "cooldown" = 5.5 SECONDS, "charge" = CHARGETIME_POKE, "slowdown" = CHARGING_SLOWDOWN_SMALL, "sound" = 'sound/magic/vlightning.ogg', "invocation" = "Sequere, Telum!", "icon" = "seeker"),
-		list("name" = "Soulshot", "tag" = "SOUL", "fire" = "single", "proj" = /obj/projectile/magic/soulshot, "per_fire" = 1, "cost" = SPELLCOST_MAJOR_PROJECTILE, "cooldown" = 10 SECONDS, "charge" = CHARGETIME_MAJOR, "slowdown" = CHARGING_SLOWDOWN_SMALL, "sound" = 'sound/magic/soulshot.ogg', "invocation" = "Animus Ictus!", "icon" = "soulshot"), // Soulshot mode is a bit cheaper than basic offensive magyck for their budget
+	modes = list(
+		list("name" = "Cascade", "tag" = "CASC", "fire" = "stream", "proj" = /obj/projectile/magic/greater_arcyne_bolt/flurry, "per_fire" = 1, "cost" = SPELLCOST_MINOR_PROJECTILE, "cooldown" = 5.5 SECONDS, "charge" = CHARGETIME_POKE, "slowdown" = CHARGING_SLOWDOWN_SMALL, "color" = "#00ccff", "sound" = 'sound/magic/vlightning.ogg', "invocation" = "Telum Magistri!", "icon" = "arcyne_bolt"),
+		list("name" = "Seeker", "tag" = "SEEK", "fire" = "homing", "proj" = /obj/projectile/magic/seeker_orb/greater, "per_fire" = 5, "cost" = SPELLCOST_MINOR_PROJECTILE, "cooldown" = 5.5 SECONDS, "charge" = CHARGETIME_POKE, "slowdown" = CHARGING_SLOWDOWN_SMALL, "color" = "#00ccff", "sound" = 'sound/magic/vlightning.ogg', "invocation" = "Sequere, Telum!", "icon" = "seeker"),
+		list("name" = "Soulshot", "tag" = "SOUL", "fire" = "single", "proj" = /obj/projectile/magic/soulshot, "per_fire" = 1, "cost" = SPELLCOST_MAJOR_PROJECTILE, "cooldown" = 10 SECONDS, "charge" = CHARGETIME_MAJOR, "slowdown" = CHARGING_SLOWDOWN_SMALL, "color" = "#00ccff", "sound" = 'sound/magic/soulshot.ogg', "invocation" = "Animus Ictus!", "icon" = "soulshot"), // Soulshot mode is a bit cheaper than basic offensive magyck for their budget
 	)
 
-/datum/action/cooldown/spell/projectile/arcyne_volley/Grant(mob/grant_to)
-	. = ..()
-	update_mode_maptext(modes[current_mode]["tag"])
-
-/datum/action/cooldown/spell/projectile/arcyne_volley/proc/apply_mode(index)
-	var/list/mode = modes[index]
-	projectile_type = mode["proj"]
-	projectiles_per_fire = mode["per_fire"]
-	primary_resource_cost = mode["cost"]
-	cooldown_time = mode["cooldown"]
-	charge_time = mode["charge"]
-	charge_slowdown = mode["slowdown"]
-	sound = mode["sound"]
-	invocations = list(mode["invocation"])
-	button_icon_state = mode["icon"]
-	build_all_button_icons()
-	update_mode_maptext(mode["tag"])
-
-/datum/action/cooldown/spell/projectile/arcyne_volley/toggle_arc_mode(mob/user)
-	current_mode = (current_mode % length(modes)) + 1
-	apply_mode(current_mode)
-	var/list/mode = modes[current_mode]
-	to_chat(user, span_notice("[name]: [mode["name"]] mode."))
-
-/datum/action/cooldown/spell/projectile/arcyne_volley/proc/update_mode_maptext(tag)
-	for(var/datum/hud/hud as anything in viewers)
-		var/atom/movable/screen/movable/action_button/B = viewers[hud]
-		var/atom/movable/screen/arc_maptext_holder/holder
-		for(var/atom/movable/screen/arc_maptext_holder/existing in B.vis_contents)
-			holder = existing
-			break
-		if(!holder)
-			holder = new(B)
-			B.vis_contents.Add(holder)
-		holder.maptext = MAPTEXT(tag)
-		holder.color = "#00ccff"
+/datum/action/cooldown/spell/projectile/arcyne_volley/get_impact_turfs(atom/center)
+	. = list()
+	var/turf/start = get_turf(owner)
+	var/turf/epicenter = get_turf(center)
+	if(!start || !epicenter || start == epicenter)
+		return
+	switch(modes[current_mode]["fire"])
+		if("homing")
+			return
+		if("single")
+			epicenter = get_turf_in_angle(Get_Angle(start, epicenter), start, cast_range) || epicenter
+	. = getline(start, epicenter)
+	. -= start
 
 /datum/action/cooldown/spell/projectile/arcyne_volley/fire_projectile(atom/target)
 	switch(modes[current_mode]["fire"])

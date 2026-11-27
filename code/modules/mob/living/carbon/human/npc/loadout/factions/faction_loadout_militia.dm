@@ -53,6 +53,7 @@
 		/obj/item/clothing/gloves/roguetown/fingerless_leather = 65,
 		/obj/item/clothing/gloves/roguetown/angle = 35,
 	)
+	mask = /obj/item/clothing/mask/rogue/facemask/steel/visor/flimsy
 
 //** WEAPONS **//
 
@@ -68,6 +69,6 @@
 		list(/obj/item/rogueweapon/mace/cudgel),
 		list(/obj/item/rogueweapon/mace/goden),
 		list(/obj/item/rogueweapon/stoneaxe/woodcut, /obj/item/rogueweapon/shield/wood),
-		list(/obj/item/rogueweapon/flail/peasantwarflail),
+		list(/obj/item/rogueweapon/flail/great),
 		list(/obj/item/rogueweapon/huntingknife/idagger, /obj/item/rogueweapon/shield/wood),
 	)

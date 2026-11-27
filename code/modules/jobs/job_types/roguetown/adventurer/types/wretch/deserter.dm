@@ -70,6 +70,7 @@
 			"Lance + Kite Shield",
 			"Samshir",
 			"Ssangsudo",
+			"Nodachi",
 			"Shashka + Shield",
 			"Steel Poleaxe",
 			"Steel Flameberge",
@@ -88,13 +89,13 @@
 			if("Longsword + Shield")
 				beltr = /obj/item/rogueweapon/scabbard/sword
 				r_hand = /obj/item/rogueweapon/sword/long
-				backr = /obj/item/rogueweapon/shield/tower/metal
+				backr = /obj/item/rogueweapon/shield/kite
 			if("Mace + Shield")
 				beltr = /obj/item/rogueweapon/mace/steel
-				backr = /obj/item/rogueweapon/shield/tower/metal
+				backr = /obj/item/rogueweapon/shield/kite
 			if("Flail + Shield")
-				beltr = /obj/item/rogueweapon/flail/sflail
-				backr = /obj/item/rogueweapon/shield/tower/metal
+				beltr = /obj/item/rogueweapon/flail/steel
+				backr = /obj/item/rogueweapon/shield/kite
 			if("Lucerne")
 				r_hand = /obj/item/rogueweapon/eaglebeak/lucerne
 				backr = /obj/item/rogueweapon/scabbard/gwstrap
@@ -102,13 +103,16 @@
 				backr = /obj/item/rogueweapon/stoneaxe/battle
 			if("Lance + Kite Shield")
 				r_hand = /obj/item/rogueweapon/spear/lance
-				backr = /obj/item/rogueweapon/shield/tower/metal
+				backr = /obj/item/rogueweapon/shield/kite
 			if("Samshir")
 				r_hand = /obj/item/rogueweapon/sword/sabre/shamshir
 				beltr = /obj/item/rogueweapon/scabbard/sword
 			if("Ssangsudo")
 				r_hand = /obj/item/rogueweapon/sword/long/kriegmesser/ssangsudo
 				beltr = /obj/item/rogueweapon/scabbard/sword/kazengun/noparry
+			if("Nodachi")
+				r_hand = /obj/item/rogueweapon/greatsword/nodachi
+				backr = /obj/item/rogueweapon/scabbard/gwstrap/nodachi
 			if("Shashka + Shield")
 				r_hand = /obj/item/rogueweapon/sword/sabre/steppesman
 				beltr = /obj/item/rogueweapon/scabbard/sword

@@ -5,6 +5,7 @@
 
 	outfit = /datum/outfit/job/roguetown/adventurer/witch
 	category_tags = list(CTAG_PILGRIM, CTAG_TOWNER)
+	subclass_spells = list(/obj/effect/proc_holder/spell/invoked/takeapprentice)
 	traits_applied = list(TRAIT_DEATHSIGHT, TRAIT_WITCH, TRAIT_ALCHEMY_EXPERT)
 	townie_contract_gate_exempt = TRUE
 	subclass_stats = list(
@@ -31,7 +32,7 @@
 	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt/priest
 	gloves = /obj/item/clothing/gloves/roguetown/leather/black
 	belt = /obj/item/storage/belt/rogue/leather/black
-	beltr = /obj/item/storage/belt/rogue/pouch/coins/aalloy
+	beltr = /obj/item/storage/belt/rogue/pouch/coins/psila
 	beltl = /obj/item/storage/magebag/witch
 	pants = /obj/item/clothing/under/roguetown/trou
 	shoes = /obj/item/clothing/shoes/roguetown/shortboots

@@ -293,6 +293,8 @@ GLOBAL_LIST_EMPTY(created_sound_groups)
 		M.playsound_local(null, soundfile, 0, vary, frequency, falloff, channel, FALSE, null, src)
 
 /datum/looping_sound/proc/begin_loop()
+	if(stopped) // TA EDIT
+		return // TA EDIT
 	sound_loop()
 	START_PROCESSING(SSsoundloopers, src)
 

@@ -57,6 +57,7 @@
 		/obj/item/rogueweapon/huntingknife/throwingknife/triumph = 1,
 		/obj/item/signal_horn = 1,
 		/obj/item/paper/vinegar_healpot_recipe = 1,
+		/obj/item/bog_cream = 1,
 	)
 
 	to_chat(H, span_notice("<b>THE WEAPON I COULD SCROUNGE UP:</b>"))
@@ -125,7 +126,7 @@
 
 			if("MINE WAR THRESHER (Flail, 2H)")
 				H.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, SKILL_LEVEL_JOURNEYMAN, TRUE)
-				r_hand = /obj/item/rogueweapon/flail/peasantwarflail
+				r_hand = /obj/item/rogueweapon/flail/great
 				backr = /obj/item/rogueweapon/scabbard/gwstrap
 				gloves = /obj/item/clothing/gloves/roguetown/leather
 

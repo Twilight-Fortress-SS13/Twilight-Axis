@@ -21,4 +21,15 @@
 /datum/component/item_on_drop/dust/handle_drop(obj/item/source, mob/user)
 	if(QDELETED(source)) // We guard it so shit doesnt try to delete stuff twice and runtimes.
 		return
+	if(user && get(source, /mob) == user)
+		addtimer(CALLBACK(src, PROC_REF(check_carried), user), 1)
+		return
+	qdel(source)
+
+/datum/component/item_on_drop/dust/proc/check_carried(mob/user)
+	var/obj/item/source = parent
+	if(QDELETED(source))
+		return
+	if(!QDELETED(user) && get(source, /mob) == user)
+		return
 	qdel(source)

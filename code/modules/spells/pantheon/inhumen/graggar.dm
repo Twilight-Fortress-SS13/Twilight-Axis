@@ -268,8 +268,12 @@
 		return
 	if(out_of_effective_range())
 		return
+	// TA REMOVAL START
+	/*
 	if(blocked >= 100)
 		return
+	*/
+	// TA REMOVAL END
 	if(target)
 		ensnare(target)
 
@@ -495,6 +499,6 @@
 	owner.OffBalance(3 SECONDS)
 	owner.remove_filter(BLOODRAGE_FILTER)
 	owner.emote("breathgasp", forced = TRUE)
-	owner.Slowdown(3)
+	owner.apply_slowdown(3 SECONDS)
 
 #undef BLOODRAGE_FILTER

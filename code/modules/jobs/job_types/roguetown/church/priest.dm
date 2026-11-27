@@ -40,7 +40,9 @@ GLOBAL_LIST_EMPTY(heretical_players)
 	min_pq = 12 // You should know the basics of things if you're going to lead the town's entire religious sector
 	max_pq = null
 	round_contrib_points = 5
-	same_job_respawn_delay = 30 MINUTES
+	quest_claim_barred = TRUE
+	same_job_respawn_delay = 30 MINUTES // TA EDIT
+
 	//No nobility for you, being a member of the clergy means you gave UP your nobility. It says this in many of the church tutorial texts.
 	virtue_restrictions = list(/datum/virtue/utility/noble)
 	quirk_restrictions = list(/datum/quirk/noble)
@@ -54,7 +56,7 @@ GLOBAL_LIST_EMPTY(heretical_players)
 	name = "Bishop"
 	tutorial = "The Divine is all that matters in a world of the immoral. \
 	The Weeping God abandoned us, and in his stead the TEN rule over us mortals--and you will preach their wisdom to any who still heed their will. The faithless are growing in number. \
-	It is up to you to shepherd them toward a Gods-fearing future; for you are a Bishop of the Holy See."
+	It is up to you to shepherd them toward a Gods-fearing future; for you are the Bishop of Azuria, the leader of the faithful."
 	outfit = /datum/outfit/job/roguetown/priest/basic
 	subclass_languages = list(/datum/language/grenzelhoftian)
 	category_tags = list(CTAG_BISHOP)
@@ -207,6 +209,7 @@ GLOBAL_LIST_EMPTY(heretical_players)
 	department_flag = CHURCHMEN
 	total_positions = 0
 	spawn_positions = 0
+	quest_claim_barred = TRUE
 
 /mob/living/carbon/human/proc/coronate_lord()
 	set name = "Coronate"

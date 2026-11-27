@@ -35,40 +35,25 @@
 
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN
 
-	var/current_mode = 1
-	var/list/modes = list(
-		list("name" = "Ice Lance", "tag" = "LANCE", "proj" = /obj/projectile/magic/ice_lance, "sound" = 'sound/spellbooks/icicle.ogg', "invocation" = "Hasta Glaciei!"),
-		list("name" = "Ice Burst", "tag" = "BURST", "proj" = /obj/projectile/magic/ice_burst, "sound" = 'sound/spellbooks/crystal.ogg', "invocation" = "Glacies Frangor!"),
+	modes = list(
+		list("name" = "Ice Lance", "tag" = "LANCE", "proj" = /obj/projectile/magic/ice_lance, "sound" = 'sound/spellbooks/icicle.ogg', "color" = "#00ccff", "invocation" = "Hasta Glaciei!"),
+		list("name" = "Ice Burst", "tag" = "BURST", "proj" = /obj/projectile/magic/ice_burst, "sound" = 'sound/spellbooks/crystal.ogg', "color" = "#00ccff", "invocation" = "Glacies Frangor!"),
 	)
 
-/datum/action/cooldown/spell/projectile/rimecast/Grant(mob/grant_to)
-	. = ..()
-	apply_mode(current_mode)
-
-/datum/action/cooldown/spell/projectile/rimecast/proc/apply_mode(index)
-	var/list/mode = modes[index]
-	projectile_type = mode["proj"]
-	sound = mode["sound"]
-	invocations = list(mode["invocation"])
-	update_mode_maptext(mode["tag"])
-
-/datum/action/cooldown/spell/projectile/rimecast/toggle_arc_mode(mob/user)
-	current_mode = (current_mode % length(modes)) + 1
-	apply_mode(current_mode)
-	to_chat(user, span_notice("[name]: [modes[current_mode]["name"]] mode."))
-
-/datum/action/cooldown/spell/projectile/rimecast/proc/update_mode_maptext(tag)
-	for(var/datum/hud/hud as anything in viewers)
-		var/atom/movable/screen/movable/action_button/B = viewers[hud]
-		var/atom/movable/screen/arc_maptext_holder/holder
-		for(var/atom/movable/screen/arc_maptext_holder/existing in B.vis_contents)
-			holder = existing
-			break
-		if(!holder)
-			holder = new(B)
-			B.vis_contents.Add(holder)
-		holder.maptext = MAPTEXT(tag)
-		holder.color = "#00ccff"
+/datum/action/cooldown/spell/projectile/rimecast/get_impact_turfs(atom/center)
+	. = list()
+	var/turf/start = get_turf(owner)
+	var/turf/epicenter = get_turf(center)
+	if(!start || !epicenter || start == epicenter)
+		return
+	var/obj/projectile/magic/ice_burst/burst = modes[current_mode]["proj"]
+	if(ispath(burst, /obj/projectile/magic/ice_burst))
+		for(var/turf/T in range(initial(burst.aoe_radius), epicenter))
+			. += T
+		return
+	epicenter = get_turf_in_angle(Get_Angle(start, epicenter), start, cast_range) || epicenter
+	. = getline(start, epicenter)
+	. -= start
 
 /datum/action/cooldown/spell/projectile/rimecast/get_spell_statistics(mob/living/user)
 	var/list/stats = ..()

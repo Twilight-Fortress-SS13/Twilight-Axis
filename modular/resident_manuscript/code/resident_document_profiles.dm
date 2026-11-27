@@ -40,7 +40,7 @@
 /datum/resident_document_role_rule/heartfelt_noble
 	document_type = /obj/item/book/granter/resident_manuscript/heartfelt_noble
 	migrant_role_types = list(
-		/datum/migrant_role/heartfelt/lord,
+		/datum/migrant_role/heartfelt/count,
 		/datum/migrant_role/heartfelt/hand,
 		/datum/migrant_role/heartfelt/knight,
 	)

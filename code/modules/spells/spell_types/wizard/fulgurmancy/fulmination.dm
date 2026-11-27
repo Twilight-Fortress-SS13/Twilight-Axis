@@ -42,45 +42,10 @@
 	var/ts_radius = 2
 	var/ts_telegraph = TELEGRAPH_AREA_DENIAL
 
-	var/current_mode = 1
-	var/list/modes = list(
+	modes = list(
 		list("name" = "Heaven's Strike", "tag" = "SMITE", "icon" = "heavens_strike", "cost" = SPELLCOST_MAJOR_AOE, "cooldown" = 12 SECONDS, "charge" = CHARGETIME_MAJOR, "invocation" = "Caelum Feri!"),
 		list("name" = "Thunderstrike", "tag" = "STORM", "icon" = "thunderstrike", "cost" = SPELLCOST_MAJOR_AOE, "cooldown" = 20 SECONDS, "charge" = CHARGETIME_HEAVY, "invocation" = "Feri Fulmine Hostem!"),
 	)
-
-/datum/action/cooldown/spell/fulmination/Grant(mob/grant_to)
-	. = ..()
-	apply_mode(current_mode)
-
-/datum/action/cooldown/spell/fulmination/proc/apply_mode(index)
-	var/list/mode = modes[index]
-	button_icon_state = mode["icon"]
-	primary_resource_cost = mode["cost"]
-	cooldown_time = mode["cooldown"]
-	charge_time = mode["charge"]
-	invocations = list(mode["invocation"])
-	build_all_button_icons()
-	update_mode_maptext(mode["tag"])
-
-/datum/action/cooldown/spell/fulmination/toggle_alt_mode(mob/user)
-	current_mode = (current_mode % length(modes)) + 1
-	apply_mode(current_mode)
-	to_chat(user, span_notice("[name]: [modes[current_mode]["name"]] mode."))
-	return TRUE
-
-/datum/action/cooldown/spell/fulmination/proc/update_mode_maptext(tag)
-	for(var/datum/hud/hud as anything in viewers)
-		var/atom/movable/screen/movable/action_button/B = viewers[hud]
-		var/atom/movable/screen/arc_maptext_holder/holder
-		for(var/atom/movable/screen/arc_maptext_holder/existing in B.vis_contents)
-			holder = existing
-			break
-		if(!holder)
-			holder = new(B)
-			B.vis_contents.Add(holder)
-		holder.maptext = MAPTEXT(tag)
-		holder.maptext_x = 5
-		holder.color = GLOW_COLOR_LIGHTNING
 
 /datum/action/cooldown/spell/fulmination/get_spell_statistics(mob/living/user)
 	var/list/stats = ..()
@@ -112,6 +77,14 @@
 	else
 		cast_thunderstrike(centerpoint)
 	return TRUE
+
+/datum/action/cooldown/spell/fulmination/get_impact_turfs(atom/center)
+	var/turf/epicenter = get_turf(center)
+	if(!epicenter)
+		return list()
+	if(current_mode == 1)
+		return list(epicenter)
+	return get_visible_area_turfs(epicenter, ts_radius)
 
 /datum/action/cooldown/spell/fulmination/proc/cast_heavens_strike(turf/T)
 	new /obj/effect/temp_visual/telegraph/thunderstrike(T, hs_telegraph)
@@ -147,9 +120,7 @@
 		new /obj/effect/temp_visual/spell_impact(get_turf(L), spell_color, spell_impact_intensity)
 
 /datum/action/cooldown/spell/fulmination/proc/cast_thunderstrike(turf/centerpoint)
-	for(var/turf/T in range(ts_radius, centerpoint))
-		if(!(T in get_hear(ts_radius, centerpoint)))
-			continue
+	for(var/turf/T as anything in get_impact_turfs(centerpoint))
 		new /obj/effect/temp_visual/telegraph/pillar/fadein(T, ts_telegraph)
 	playsound(centerpoint, 'sound/magic/charging.ogg', 80, TRUE)
 	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(thunderstrike_erupt), centerpoint, owner, ts_radius, ts_damage, src, "Thunderstrike", SPELL_DAMAGE_INTEGRITY_MODIFIER), ts_telegraph)
@@ -159,9 +130,7 @@
 		return
 	playsound(centerpoint, 'sound/magic/lightning.ogg', 100, TRUE, 8)
 	var/static/list/random_zones = list(BODY_ZONE_HEAD, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM)
-	for(var/turf/T in range(radius, centerpoint))
-		if(!(T in get_hear(radius, centerpoint)))
-			continue
+	for(var/turf/T as anything in get_visible_area_turfs(centerpoint, radius))
 		new /obj/effect/temp_visual/thunderstrike_actual(T)
 		T.fire_act()
 		for(var/atom/A in T.contents)

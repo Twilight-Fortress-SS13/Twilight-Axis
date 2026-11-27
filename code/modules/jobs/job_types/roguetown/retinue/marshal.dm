@@ -23,12 +23,13 @@
 	min_pq = 17
 	max_pq = null
 	round_contrib_points = 3
+	quest_claim_barred = TRUE // TA EDIT
 	cmode_music = sound("sound/music/combat_knight.ogg")
 	advclass_cat_rolls = list (CTAG_MARSHAL = 20)
 	same_job_respawn_delay = 30 MINUTES
 
 	job_traits = list(TRAIT_NOBLE, TRAIT_STEELHEARTED, TRAIT_GUARDSMAN, TRAIT_EXPERT_HUNTER)
-	vice_restrictions = list(/datum/charflaw/mute, /datum/charflaw/unintelligible) //Needs to use the throat - sometimes
+	vice_restrictions = list(/datum/charflaw/mute, /datum/charflaw/unintelligible, /datum/charflaw/wanted) //Needs to use the throat - sometimes
 	job_subclasses = list(
 		/datum/advclass/marshal/classic,
 		/datum/advclass/marshal/kcommander
@@ -75,6 +76,9 @@
 		STATKEY_WIL = 1,
 		STATKEY_SPD = -1,
 	)
+
+	tempo_capable = TRUE
+
 	subclass_skills = list(
 		/datum/skill/combat/maces = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/axes = SKILL_LEVEL_EXPERT,
@@ -124,6 +128,9 @@
 		STATKEY_CON = 1,
 		STATKEY_WIL = 2,
 	)
+
+	tempo_capable = TRUE
+
 	subclass_skills = list(
 		/datum/skill/combat/swords = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/polearms = SKILL_LEVEL_EXPERT,

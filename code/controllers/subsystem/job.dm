@@ -24,16 +24,34 @@ SUBSYSTEM_DEF(job)
 	if(!occupations.len)
 		SetupOccupations()
 	set_overflow_role(CONFIG_GET(string/overflow_job))
-	build_townie_contract_gate_exempt_cache()
+	build_contract_signing_caches()
 	return ..()
 
 /datum/controller/subsystem/job/var/list/townie_contract_gate_exempt_names = list()
+/datum/controller/subsystem/job/var/list/quest_claim_barred_names = list()
+/datum/controller/subsystem/job/var/list/quest_claim_towner_names = list()
+/datum/controller/subsystem/job/var/list/quest_claim_lowpop_names = list()
+/datum/controller/subsystem/job/var/list/quest_claim_solo_names = list()
 
-/datum/controller/subsystem/job/proc/build_townie_contract_gate_exempt_cache()
+/datum/controller/subsystem/job/proc/build_contract_signing_caches()
 	townie_contract_gate_exempt_names = list()
+	quest_claim_barred_names = list()
+	quest_claim_towner_names = list()
+	quest_claim_lowpop_names = list()
+	quest_claim_solo_names = list()
 	for(var/datum/job/J as anything in occupations)
 		if(J.townie_contract_gate_exempt)
 			townie_contract_gate_exempt_names |= J.title
+		if(!J.quest_claim_barred)
+			continue
+		if(J.quest_claim_towner_allowed)
+			quest_claim_towner_names |= J.title
+		if(J.quest_claim_lowpop_allowed)
+			quest_claim_lowpop_names |= J.title
+		if(J.quest_claim_solo_allowed)
+			quest_claim_solo_names |= J.title
+		if(!J.quest_claim_towner_allowed && !J.quest_claim_lowpop_allowed && !J.quest_claim_solo_allowed)
+			quest_claim_barred_names |= J.title
 	for(var/path in subtypesof(/datum/advclass))
 		var/datum/advclass/AC = path
 		if(!initial(AC.townie_contract_gate_exempt) || !initial(AC.name))
@@ -42,9 +60,16 @@ SUBSYSTEM_DEF(job)
 			continue
 		townie_contract_gate_exempt_names |= initial(AC.name)
 	sortTim(townie_contract_gate_exempt_names, /proc/cmp_text_asc)
+	sortTim(quest_claim_barred_names, /proc/cmp_text_asc)
+	sortTim(quest_claim_towner_names, /proc/cmp_text_asc)
+	sortTim(quest_claim_lowpop_names, /proc/cmp_text_asc)
+	sortTim(quest_claim_solo_names, /proc/cmp_text_asc)
 
 /datum/controller/subsystem/job/proc/townie_contract_gate_exempt_display_names()
 	return townie_contract_gate_exempt_names
+
+/datum/controller/subsystem/job/proc/quest_claim_barred_display_names()
+	return quest_claim_barred_names
 
 /datum/controller/subsystem/job/proc/set_overflow_role(new_overflow_role)
 	var/datum/job/new_overflow = GetJob(new_overflow_role)
@@ -404,8 +429,6 @@ SUBSYSTEM_DEF(job)
 			key = "Church"
 		if(BURGHERS)
 			key = "Burghers"
-		if(GUILDSMAN)
-			key = "Guildsmen"
 		if(ATC)
 			key = "Azurian Trading Company"
 		if(PEASANTS)
@@ -895,8 +918,9 @@ SUBSYSTEM_DEF(job)
 	if(related_policy)
 		to_chat(M,related_policy)
 	if(job && H)
-		if(H.client && H.mind)
-			H.mind.job_subprefs = H.client.prefs?.job_subprefs?.Copy()
+		var/client/C = H.client || M.client
+		if(C && H.mind)
+			H.mind.job_subprefs = C.prefs?.job_subprefs?.Copy() || list()
 		job.after_spawn(H, M, joined_late) // note: this happens before the mob has a key! M will always have a client, H might not.
 
 	if(ishuman(H))

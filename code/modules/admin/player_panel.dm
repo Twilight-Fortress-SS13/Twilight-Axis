@@ -2,8 +2,8 @@
 	if(!check_rights())
 		return
 	log_admin("[key_name(usr)] checked the player panel.")
-	message_admins("[key_name_admin(usr)] checked the player panel.")
-	var/dat = "<html><head><meta http-equiv='X-UA-Compatible' content='IE=edge'/><title>Player Panel</title></head>"
+	message_admins("[key_name_admin(usr)] checked the player panel.") // TA EDIT
+	var/dat = "<html><head><meta charset='UTF-8'><meta http-equiv='X-UA-Compatible' content='IE=edge'/><title>Player Panel</title></head>"
 
 	//javascript, the part that does most of the work~
 	dat += {"
@@ -253,6 +253,7 @@
 			var/M_voice = ""
 			var/M_stature = ""
 			var/M_trait = ""
+			var/M_is_DCed = FALSE
 			if(isliving(M))
 				var/mob/living/L = M
 				if(istype(L, /mob/living/carbon/human))
@@ -281,6 +282,8 @@
 				var/datum/player_details/P = GLOB.player_details[ckey(M_key)]
 				if(P)
 					previous_names = P.played_names.Join(",")
+			if(!M.client)
+				M_is_DCed = TRUE
 			previous_names = html_encode(previous_names)
 
 			//output for each mob
@@ -292,7 +295,7 @@
 						<a id='link[i]'
 						onmouseover='expand("item[i]","[M_job]","[M_name]","[M_rname]","[previous_names]","[M_key]","[M.lastKnownIP]",[is_antagonist],"[REF(M)]")'
 						>
-						<b id='search[i]'>[M_name] - [M_rname] - [M_key] ([M_job])[M_stature ? " \[[capitalize(M_trait)] [capitalize(M_stature)]\]" : ""][M_voice ? " \[[M_voice]\]" : ""]</b>
+						<b id='search[i]'>[M_name] - [M_rname] - [M_key] ([M_job])[M_stature ? " \[[capitalize(M_trait)] [capitalize(M_stature)]\]" : ""][M_voice ? " \[[M_voice]\]" : ""] [M_is_DCed ? "<font color = '#ce1e1e'>(DC)</font>" : ""]</b>
 						<span hidden class='filter_data'>[M_name] [M_rname] [M_key] [M_job] [previous_names] [M_voice] [M_stature] [M_trait]</span>
 						</a>
 						<br><span id='item[i]'></span>

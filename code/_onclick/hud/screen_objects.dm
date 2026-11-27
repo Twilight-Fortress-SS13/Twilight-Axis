@@ -18,6 +18,7 @@
 	var/datum/hud/hud = null // A reference to the owner HUD, if any.
 	var/lastclick
 	var/category
+	var/list/meter_states
 
 	/**
 	 * Map name assigned to this object.
@@ -123,9 +124,13 @@
 						to_chat(M, "<span class='warning'>I don't know any languages.</span>")
 					to_chat(M, "*----*")
 		for(var/X in GLOB.roguetraits)
-			if(HAS_TRAIT(L, X))
-				to_chat(L, "[X] - <span class='info'>[GLOB.roguetraits[X]]</span>")
-				ht = TRUE
+			if(!HAS_TRAIT(L, X))
+				continue
+			ht = TRUE
+			if(X == TRAIT_BADTRAINER && HAS_TRAIT_FROM(L, X, PROTEGE_TRAIT))
+				to_chat(L, "Protégé - <span class='info'>A veteran has taken me under their wing and can teach me up to one skill level below their own. I am too green to pass it on, though.</span>")
+				continue
+			to_chat(L, "[X] - <span class='info'>[GLOB.roguetraits[X]]</span>")
 		if(!ht)
 			to_chat(L, "<span class='warning'>I have no special traits.</span>")
 		to_chat(L, "*----*")
@@ -852,12 +857,16 @@
 		var/mob/living/L = hud.mymob
 		if(L.eyesclosed)
 			L.eyesclosed = 0
+			if(L.stat < UNCONSCIOUS && L.m_intent != MOVE_INTENT_SNEAK)
+				L.visible_message(span_info("[L] opens [L.p_their()] eyes."), vision_distance = 3)
 			L.cure_blind("eyelids")
 
 	if(modifiers["left"])
 		if(_y>=29 || _y<=4)
 			if(isliving(hud.mymob))
 				var/mob/living/L = hud.mymob
+				if(L.stat < UNCONSCIOUS && L.m_intent != MOVE_INTENT_SNEAK)
+					L.visible_message(span_info("[L] closes [L.p_their()] eyes."), vision_distance = 3)
 				L.eyesclosed = 1
 				L.become_blind("eyelids")
 		else
@@ -2096,11 +2105,35 @@
 		if(R.stage == 2)
 			add_overlay("rainlay")
 
+/atom/movable/screen/proc/set_meter_fill(ratio)
+	ratio = clamp(ratio, 0, 1)
+	for(var/state in meter_states)
+		if(ratio <= meter_states[state])
+			if(icon_state != state)
+				icon_state = state
+			break
+	var/offset = -round((1 - ratio) * METER_BAR_FILL_HEIGHT)
+	var/list/fill = get_filter_data(METER_FILL_FILTER)
+	if(!fill)
+		add_filter(METER_FILL_FILTER, 1, alpha_mask_filter(y = offset, icon = icon(icon, meter_states[length(meter_states)], SOUTH, 1)))
+		return
+	if(fill["y"] == offset)
+		return
+	var/time = METER_BAR_ANIM_TIME + round(abs(offset - fill["y"]) / METER_BAR_FILL_HEIGHT * METER_BAR_ANIM_SCALE)
+	transition_filter(METER_FILL_FILTER, list("y" = offset), time, SINE_EASING)
+
 /atom/movable/screen/stamina
 	name = "stamina"
 	icon_state = "stam100"
 	icon = 'icons/mob/rogueheat.dmi'
 	screen_loc = rogueui_fat
+	meter_states = list(
+		"stam10" = 0.1,
+		"stam15" = 0.15,
+		"stam25" = 0.25,
+		"stam95" = 0.95,
+		"stam100" = 1,
+	)
 
 /atom/movable/screen/stamina/examine_ui(mob/user)
 	if(isliving(user))
@@ -2115,6 +2148,13 @@
 	icon_state = "energy100"
 	icon = 'icons/mob/rogueheat.dmi'
 	screen_loc = rogueui_fat
+	meter_states = list(
+		"energy10" = 0.1,
+		"energy15" = 0.15,
+		"energy25" = 0.25,
+		"energy95" = 0.95,
+		"energy100" = 1,
+	)
 
 /atom/movable/screen/energy/examine_ui(mob/user)
 	if(isliving(user))

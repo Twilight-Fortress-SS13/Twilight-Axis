@@ -123,7 +123,7 @@
 					continue
 				apply_scorch_stack(L, 1)
 				L.apply_status_effect(/datum/status_effect/debuff/vulnerable, WYRMFIRE_VULNERABLE_DURATION)
-				L.Slowdown(1)
+				L.apply_slowdown(1 SECONDS)
 
 	if(arcyne_aoe_radius > 0)
 		var/struct_radius = structural_damage_radius ? structural_damage_radius : arcyne_aoe_radius
@@ -151,11 +151,10 @@
 	Pillar of Flame: Ground-target a delayed eruption dealing 88 damage across a 3x3 after a short warning, leaving a lingering curtain of flame across the whole area.\n\
 	Fire spells apply scorched effects - at 4 scorched, an armor piercing wound is applied to the head or chest: whichever you are aiming at, and randomly if aiming elsewhere."
 	charge_swingdelay_type = SWINGDELAY_PENALTY
-	var/current_mode = 1
-	var/list/modes = list(
-		list("name" = "Fireball", "tag" = "BALL", "proj" = /obj/projectile/magic/aoe/fireball/rogue, "proj_arc" = /obj/projectile/magic/aoe/fireball/rogue/arc, "arc" = FALSE, "icon" = "fireball", "cost" = SPELLCOST_MAJOR_PROJECTILE, "cooldown" = 16 SECONDS, "charge" = CHARGETIME_MAJOR, "slowdown" = CHARGING_SLOWDOWN_MEDIUM, "sound" = 'sound/magic/fireball.ogg', "invocation" = "Sphaera Ignis!"),
-		list("name" = "Artillery Fireball", "tag" = "ARTY", "proj" = /obj/projectile/magic/aoe/fireball/rogue/artillery, "proj_arc" = /obj/projectile/magic/aoe/fireball/rogue/artillery/arc, "arc" = TRUE, "icon" = "fireball_artillery", "cost" = SPELLCOST_MAJOR_PROJECTILE, "cooldown" = 16 SECONDS, "charge" = CHARGETIME_HEAVY, "slowdown" = CHARGING_SLOWDOWN_HEAVY, "sound" = 'sound/magic/fireball.ogg', "invocation" = "Ignis Sphaera Bombardae!"),
-		list("name" = "Pillar of Flame", "tag" = "PILR", "proj" = /obj/projectile/magic/aoe/fireball/rogue, "proj_arc" = /obj/projectile/magic/aoe/fireball/rogue/arc, "arc" = FALSE, "ground" = TRUE, "icon" = "fireball_greater", "cost" = SPELLCOST_MAJOR_PROJECTILE, "cooldown" = 16 SECONDS, "charge" = CHARGETIME_HEAVY, "slowdown" = CHARGING_SLOWDOWN_HEAVY, "sound" = 'sound/magic/fireball.ogg', "invocation" = "Flamma Vorax!"),
+	modes = list(
+		list("name" = "Fireball", "tag" = "BALL", "proj" = /obj/projectile/magic/aoe/fireball/rogue, "proj_arc" = /obj/projectile/magic/aoe/fireball/rogue/arc, "arc" = FALSE, "icon" = "fireball", "cost" = SPELLCOST_MAJOR_PROJECTILE, "cooldown" = 16 SECONDS, "charge" = CHARGETIME_MAJOR, "slowdown" = CHARGING_SLOWDOWN_MEDIUM, "sound" = 'sound/magic/fireball.ogg', "invocation" = "Sphaera Ignis!", "color" = "#ff8a3d"),
+		list("name" = "Artillery Fireball", "tag" = "ARTY", "proj" = /obj/projectile/magic/aoe/fireball/rogue/artillery, "proj_arc" = /obj/projectile/magic/aoe/fireball/rogue/artillery/arc, "arc" = TRUE, "icon" = "fireball_artillery", "cost" = SPELLCOST_MAJOR_PROJECTILE, "cooldown" = 16 SECONDS, "charge" = CHARGETIME_HEAVY, "slowdown" = CHARGING_SLOWDOWN_HEAVY, "sound" = 'sound/magic/fireball.ogg', "invocation" = "Ignis Sphaera Bombardae!", "color" = "#ff8a3d"),
+		list("name" = "Pillar of Flame", "tag" = "PILR", "proj" = /obj/projectile/magic/aoe/fireball/rogue, "proj_arc" = /obj/projectile/magic/aoe/fireball/rogue/arc, "arc" = FALSE, "ground" = TRUE, "icon" = "fireball_greater", "cost" = SPELLCOST_MAJOR_PROJECTILE, "cooldown" = 16 SECONDS, "charge" = CHARGETIME_HEAVY, "slowdown" = CHARGING_SLOWDOWN_HEAVY, "sound" = 'sound/magic/fireball.ogg', "invocation" = "Flamma Vorax!", "color" = "#ff8a3d"),
 	)
 	var/pillar_radius = 1
 	var/pillar_delay = 2 SECONDS
@@ -170,43 +169,11 @@
 	stats += span_info("Firing mode (Shift+G): Fireball (direct) / Artillery Fireball (lobbed bombardment) / Pillar of Flame (ground-target eruption).")
 	return stats
 
-/datum/action/cooldown/spell/projectile/fireball/barrage/Grant(mob/grant_to)
-	. = ..()
-	apply_mode(current_mode)
-
-/datum/action/cooldown/spell/projectile/fireball/barrage/proc/apply_mode(index)
-	var/list/mode = modes[index]
-	projectile_type = mode["proj"]
-	projectile_type_arc = mode["proj_arc"]
-	arc_mode = mode["arc"]
-	button_icon_state = mode["icon"]
-	primary_resource_cost = mode["cost"]
-	cooldown_time = mode["cooldown"]
-	charge_time = mode["charge"]
-	charge_slowdown = mode["slowdown"]
-	sound = mode["sound"]
-	invocations = list(mode["invocation"])
-	build_all_button_icons()
-	update_mode_maptext(mode["tag"])
-
-/datum/action/cooldown/spell/projectile/fireball/barrage/toggle_arc_mode(mob/user)
-	current_mode = (current_mode % length(modes)) + 1
-	apply_mode(current_mode)
+/datum/action/cooldown/spell/projectile/fireball/barrage/apply_mode()
+	..()
 	var/list/mode = modes[current_mode]
-	to_chat(user, span_notice("[name]: [mode["name"]] mode."))
-
-/datum/action/cooldown/spell/projectile/fireball/barrage/proc/update_mode_maptext(tag)
-	for(var/datum/hud/hud as anything in viewers)
-		var/atom/movable/screen/movable/action_button/B = viewers[hud]
-		var/atom/movable/screen/arc_maptext_holder/holder
-		for(var/atom/movable/screen/arc_maptext_holder/existing in B.vis_contents)
-			holder = existing
-			break
-		if(!holder)
-			holder = new(B)
-			B.vis_contents.Add(holder)
-		holder.maptext = MAPTEXT(tag)
-		holder.color = "#ff8a3d"
+	var/obj/projectile/magic/aoe/fireball/rogue/ball = mode["proj"]
+	impact_radius = mode["ground"] ? pillar_radius : initial(ball.arcyne_aoe_radius)
 
 /datum/action/cooldown/spell/projectile/fireball/barrage/fire_projectile(atom/target)
 	if(!modes[current_mode]["ground"])
@@ -214,10 +181,11 @@
 	var/turf/epicenter = get_turf(target)
 	if(!epicenter)
 		return FALSE
-	for(var/turf/T in range(pillar_radius, epicenter))
+	var/list/pillar_turfs = get_impact_turfs(epicenter)
+	for(var/turf/T as anything in pillar_turfs)
 		new /obj/effect/temp_visual/telegraph/pillar/fadein(T, pillar_delay)
 	playsound(epicenter, 'sound/magic/charging_fire.ogg', 80, TRUE)
-	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(pillar_of_flame_erupt), epicenter, owner, pillar_radius, pillar_damage, owner.zone_selected), pillar_delay)
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(pillar_of_flame_erupt), epicenter, owner, pillar_turfs, pillar_damage, owner.zone_selected), pillar_delay)
 	return TRUE
 
 /obj/effect/temp_visual/telegraph/pillar
@@ -235,13 +203,13 @@
 	duration = 1 SECONDS
 	layer = MASSIVE_OBJ_LAYER
 
-/proc/pillar_of_flame_erupt(turf/epicenter, mob/living/carbon/human/caster, radius, damage, aim_zone)
+/proc/pillar_of_flame_erupt(turf/epicenter, mob/living/carbon/human/caster, list/turfs, damage, aim_zone)
 	if(!epicenter)
 		return
 	new /obj/effect/temp_visual/explosion(epicenter)
 	new /obj/effect/temp_visual/fire_pillar(epicenter)
 	playsound(epicenter, pick('sound/misc/explode/incendiary (1).ogg', 'sound/misc/explode/incendiary (2).ogg'), 100, TRUE, 5)
-	for(var/turf/T in range(radius, epicenter))
+	for(var/turf/T as anything in turfs)
 		new /obj/effect/temp_visual/dragonfire(T)
 		new /obj/effect/curtain_fire(T, PILLAR_OF_FLAME_CURTAIN_LIFE, caster, aim_zone)
 		T.fire_act()
@@ -381,7 +349,7 @@
 	if(!istype(caster))
 		return FALSE
 	var/list/warnings = list()
-	for(var/turf/T in blast_turfs(epicenter))
+	for(var/turf/T as anything in get_impact_turfs(epicenter))
 		warnings += new /obj/effect/temp_visual/telegraph/pillar/fadein(T, chant_time)
 	playsound(get_turf(caster), 'sound/magic/charging_fire.ogg', 80, TRUE)
 	INVOKE_ASYNC(src, PROC_REF(perform_chant), caster, epicenter, warnings)
@@ -440,7 +408,7 @@
 		if(dist > max_shake_dist)
 			continue
 		shake_camera(M, 25, CLAMP(6 - (dist * 0.5), 1, 6))
-	var/list/hit = blast_turfs(epicenter)
+	var/list/hit = get_impact_turfs(epicenter)
 	for(var/turf/T in hit)
 		new /obj/effect/temp_visual/dragonfire(T)
 		new /obj/effect/temp_visual/fire(T)
@@ -477,6 +445,10 @@
 		return
 	caster.energy_add(-caster.energy)
 	caster.stamina_add(caster.max_stamina)
+
+/datum/action/cooldown/spell/projectile/pyroclasm/get_impact_turfs(atom/center)
+	var/turf/epicenter = get_turf(center)
+	return epicenter ? blast_turfs(epicenter) : list()
 
 /datum/action/cooldown/spell/projectile/pyroclasm/proc/blast_turfs(turf/epicenter)
 	var/list/affected = list()

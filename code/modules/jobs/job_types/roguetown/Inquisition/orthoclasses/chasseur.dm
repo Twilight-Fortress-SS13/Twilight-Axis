@@ -1,4 +1,4 @@
-/datum/advclass/chasseur
+/datum/advclass/inq/chasseur
 	name = "Chasseur"
 	tutorial = "Psydonite skirmishers, clad in fluted steel and armed with the crossbow. A unique set of specialists, \
 	considering their origins in the bowels of the militari-du-país' karst regiments."

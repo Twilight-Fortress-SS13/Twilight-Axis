@@ -9,6 +9,7 @@
 #define FOOTSTEP_MUD "mud"
 #define FOOTSTEP_STONE "stone"
 #define FOOTSTEP_SHALLOW "shallow"
+#define HEELSTEP_SNOW "heel_snow" // TA EDIT
 
 //barefoot sounds
 #define FOOTSTEP_WOOD_BAREFOOT "woodbarefoot"
@@ -184,3 +185,84 @@ GLOBAL_LIST_INIT(heavyfootstep, list(
 		'sound/foley/footsteps/FTMUD (5).ogg'), 100, 0),
 ))
 
+GLOBAL_LIST_INIT(heelstep, list( // TA EDIT START
+	FOOTSTEP_WOOD = list(list(
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/wood1.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/wood2.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/wood3.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/wood4.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/wood5.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/wood6.ogg'), 84, 0),
+	FOOTSTEP_FLOOR = list(list(
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/tile1.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/tile2.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/tile3.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/tile4.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/tile5.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/tile6.ogg'), 100, 0),
+	FOOTSTEP_PLATING = list(list(
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/tile1.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/tile2.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/tile3.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/tile4.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/tile5.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/tile6.ogg'), 100, 0),
+	FOOTSTEP_CARPET = list(list(
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/carpet1.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/carpet2.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/carpet3.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/carpet4.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/carpet5.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/carpet6.ogg'), 24, 0),
+	FOOTSTEP_SAND = list(list(
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/sand1.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/sand2.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/sand3.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/sand4.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/sand5.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/sand6.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/sand7.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/sand8.ogg'), 20, 0),
+	FOOTSTEP_GRASS = list(list(
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/grass1.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/grass2.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/grass3.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/grass4.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/grass5.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/grass6.ogg'), 30, 0),
+	FOOTSTEP_WATER = list(list(
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/water1.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/water2.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/water3.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/water4.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/water5.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/water6.ogg'), 100, 0),
+	FOOTSTEP_SHALLOW = list(list(
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/water1.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/water2.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/water3.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/water4.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/water5.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/water6.ogg'), 100, 0),
+	FOOTSTEP_STONE = list(list(
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/tile1.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/tile2.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/tile3.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/tile4.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/tile5.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/tile6.ogg'), 100, 0),
+	FOOTSTEP_MUD = list(list(
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/dirt1.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/dirt2.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/dirt3.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/dirt4.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/dirt5.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/dirt6.ogg'), 80, 0),
+	HEELSTEP_SNOW = list(list(
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/snow1.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/snow2.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/snow3.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/snow4.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/snow5.ogg',
+		'modular_twilight_axis/sound/foley/footsteps/heelsteps/snow6.ogg'), 80, 0),
+)) // TA EDIT END

@@ -121,6 +121,15 @@
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_DEPRAVED, "HELMET")
 
+//TA Addition start
+/obj/item/clothing/head/roguetown/helmet/baotha_ta/equipped(mob/user, slot)
+	RegisterSignal(user, COMSIG_CURSED_ITEM_BURNED)
+	. = ..()
+
+/obj/item/clothing/head/roguetown/helmet/baotha_ta/proc/demilitirize()
+	SIGNAL_HANDLER
+	max_integrity = 50
+//TA Addition end
 /obj/item/clothing/head/roguetown/helmet/baotha_ta/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_BAOTHA_ARMOR)
 
@@ -298,8 +307,7 @@
 
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha_ta/ComponentInitialize()
 	. = ..()
-	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_HEELS, 2)
-	stepnoise_flag = STEPNOISE_HEELS // This will prevent default footstep noise from being made by the heels (sounds odd)
+	stepnoise_flag = STEPNOISE_HEELS
 
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha_ta/Initialize()
 	. = ..()

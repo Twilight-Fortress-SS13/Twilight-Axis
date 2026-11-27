@@ -93,7 +93,7 @@
 			shoes = /obj/item/clothing/shoes/roguetown/boots/armor/iron
 			belt = /obj/item/storage/belt/rogue/leather/battleskirt/black
 			beltl = /obj/item/storage/belt/rogue/pouch/coins/poor
-			id = /obj/item/clothing/ring/aalloy
+			id = /obj/item/clothing/ring/decrepit
 		if("Armbrustschütze")
 			ADD_TRAIT(H, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
 			H.adjust_skillrank(/datum/skill/combat/maces, 3, TRUE)
@@ -110,7 +110,7 @@
 					beltl = /obj/item/quiver/arrows
 			backl = /obj/item/storage/backpack/rogue/satchel
 			neck = /obj/item/clothing/neck/roguetown/leather
-			shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/aalloy
+			shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/ancient/decrepit
 			armor = /obj/item/clothing/suit/roguetown/armor/plate/bronze
 			cloak =	/obj/item/clothing/cloak/tabard/stabard/surcoat
 			wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
@@ -152,7 +152,7 @@
 		switch(weaponchoice)
 			if("Flameberge")
 				H.adjust_skillrank(/datum/skill/combat/swords, 4, TRUE)
-				var/obj/item/rogueweapon/greatsword/grenz/flamberge/paalloy/W = new(get_turf(H))
+				var/obj/item/rogueweapon/greatsword/grenz/flamberge/ancient/W = new(get_turf(H))
 				H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/gwstrap, SLOT_BACK_R, TRUE)
 				if(!H.put_in_hands(W))
 					W.forceMove(get_turf(H))
@@ -160,10 +160,10 @@
 				H.adjust_skillrank(/datum/skill/combat/shields, 3, TRUE)
 				H.adjust_skillrank(/datum/skill/combat/whipsflails, 3, TRUE)
 				H.equip_to_slot_or_del(new /obj/item/rogueweapon/shield/iron/bone, SLOT_BACK_R, TRUE)
-				H.equip_to_slot_or_del(new /obj/item/rogueweapon/flail/sflail/paflail, SLOT_BELT_R, TRUE)
+				H.equip_to_slot_or_del(new /obj/item/rogueweapon/flail/ancient, SLOT_BELT_R, TRUE)
 			if("Mace")
 				H.adjust_skillrank(/datum/skill/combat/maces, 3, TRUE)
-				var/obj/item/rogueweapon/mace/goden/aalloy/W = new(get_turf(H))
+				var/obj/item/rogueweapon/mace/goden/ancient/decrepit/W = new(get_turf(H))
 				H.equip_to_slot_or_del(new /obj/item/rogueweapon/scabbard/gwstrap, SLOT_BACK_R, TRUE)
 				if(!H.put_in_hands(W))
 					W.forceMove(get_turf(H))

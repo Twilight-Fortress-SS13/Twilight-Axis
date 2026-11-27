@@ -35,6 +35,7 @@
 	return list(
 		"server_time" = world.time,
 		"payout_mode" = F?.payout_mode,
+		"payout_locked" = !!(F && get_fellowship_merc_contract(F)),
 		"debug_local" = !!holder.client?.is_localhost(),
 	)
 
@@ -167,6 +168,9 @@
 	var/datum/fellowship/F = holder.current_fellowship
 	if(!F || !F.is_leader(holder))
 		return TRUE
+	if(get_fellowship_merc_contract(F))
+		to_chat(holder, span_warning("Rewards must be split while a sellsword is under contract."))
+		return TRUE
 	F.payout_mode = (F.payout_mode == FELLOWSHIP_PAYOUT_SPLIT) ? FELLOWSHIP_PAYOUT_LEADER : FELLOWSHIP_PAYOUT_SPLIT
 	if(F.payout_mode == FELLOWSHIP_PAYOUT_SPLIT)
 		F.notify_members("Contract rewards will now be split evenly among fellowship members.")
@@ -208,7 +212,7 @@
 	for(var/mob/living/carbon/human/H in view(7, holder))
 		if(H == holder)
 			continue
-		if(H.current_fellowship)
+		if(H.current_fellowship || HAS_TRAIT(H, TRAIT_CONJURED_SUMMON))
 			continue
 		if(F.has_member(H))
 			continue

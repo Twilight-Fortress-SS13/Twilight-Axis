@@ -244,7 +244,7 @@
 		if(/datum/patron/old_god)
 			cloak = /obj/item/clothing/cloak/tabard/psydontabard/black
 			helmets += list(
-				"Psydonic Armet" = /obj/item/clothing/head/roguetown/helmet/heavy/ornate,
+				"Psydonic Armet" = /obj/item/clothing/head/roguetown/helmet/heavy/ornate/armet,
 				"Psydonic Bucket Helm" = /obj/item/clothing/head/roguetown/helmet/heavy/ornate/bucket,
 				"Psydonic Volfskulle Bascinet" = /obj/item/clothing/head/roguetown/helmet/heavy/ornate/volfhelm,
 				"Greatplumed Psydonic Armet" = /obj/item/clothing/head/roguetown/helmet/heavy/ornate/knight/greatplume)
@@ -812,7 +812,7 @@
 	if(istype(H.patron, /datum/patron/divine))
 		H.mind?.AddSpell(new /datum/action/cooldown/spell/projectile/divine_blast)
 	if(istype(H.patron, /datum/patron/inhumen))
-		H.mind?.AddSpell(new /datum/action/cooldown/spell/projectile/unholy_blast)
+		H.mind?.AddSpell(new /datum/action/cooldown/spell/projectile/divine_blast/inhumen)
 	if(istype(H.patron, /datum/patron/old_god))
 		H.mind?.AddSpell(new /datum/action/cooldown/spell/psydon/enduring_blast) //99% rock chance, 1% boulder, hilarious.
 	neck = apply_cleric_pre_equip(H)

@@ -69,6 +69,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/datum/quirk/quirklesser = new /datum/quirk/none
 	var/datum/quirk/quirkgreater = new /datum/quirk/none
 	var/age = AGE_ADULT						//age of character
+	var/birthday_month = 0					//TA EDIT
+	var/birthday_day = 0					//TA EDIT
 	var/skin_tone = "caucasian1"		//Skin color
 	var/vampire_skin = null
 	var/vampire_eyes = null
@@ -168,6 +170,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/list/customizer_entries = list()
 	var/list/list/body_markings = list()
 	var/update_mutant_colors = TRUE // if TRUE, resets accessory and marking colors when mutant colors change
+	var/ooze_color_shifting = TRUE
 
 	///direct link to a headshot image on a whitelisted site. it would rather these 3 fields be a list, but that's actually less efficient at runtime
 	var/headshot_link
@@ -223,6 +226,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	var/noble_gossip
 	var/noble_gossip_cached
+
+	var/list/secrets = list()
 
 	var/list/img_gallery = list()
 	var/list/nsfw_img_gallery = list()
