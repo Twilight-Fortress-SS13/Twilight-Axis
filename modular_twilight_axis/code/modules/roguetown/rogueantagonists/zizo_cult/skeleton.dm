@@ -94,7 +94,7 @@ NECRO SKELETONS
 	H.STAPER = rand(10, 12)
 	H.STALUC = rand(8, 12)
 
-	shirt = prob(50) ? /obj/item/clothing/suit/roguetown/armor/chainmail/aalloy : /obj/item/clothing/suit/roguetown/armor/chainmail/paalloy
+	shirt = prob(50) ? /obj/item/clothing/suit/roguetown/armor/chainmail/ancient/decrepit : /obj/item/clothing/suit/roguetown/armor/chainmail/ancient
 	r_hand = /obj/item/rogueweapon/sword/zizo
 
 	H.energy = H.max_energy

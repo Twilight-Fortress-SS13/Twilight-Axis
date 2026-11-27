@@ -1362,3 +1362,272 @@
 	mob_overlay_icon = 'modular_twilight_axis/icons/obj/items/donor_weapons_64.dmi'
 	worn_x_dimension = 64
 	worn_y_dimension = 64
+
+/obj/item/herbseed/tulip
+	name = "tulip seeds"
+	seed_identity = "tulip seeds"
+	makes_herb = /obj/structure/flora/roguegrass/herb/tulip
+
+/obj/item/herbseed/tulip/black
+	name = "black tulip seeds"
+	seed_identity = "black tulip seeds"
+	makes_herb = /obj/structure/flora/roguegrass/herb/tulip/black
+
+/obj/item/storage/belt/rogue/pouch/tulip_seeds
+	name = "pouch of tulip seeds"
+	desc = "A small pouch of tulip seeds."
+	populate_contents = list(
+	/obj/item/herbseed/tulip,
+	/obj/item/herbseed/tulip,
+	/obj/item/herbseed/tulip,
+	/obj/item/herbseed/tulip,
+	)
+
+/obj/item/storage/belt/rogue/pouch/tulip_seeds/black
+	name = "pouch of black tulip seeds"
+	desc = "A small pouch of black tulip seeds."
+	populate_contents = list(
+	/obj/item/herbseed/tulip/black,
+	/obj/item/herbseed/tulip/black,
+	/obj/item/herbseed/tulip/black,
+	/obj/item/herbseed/tulip/black,
+	)
+
+/obj/structure/flora/roguegrass/herb/tulip
+	name = "tulip"
+	desc = "Originally a white tulip turned blue by the arcane experiments of the Grenzelhoft sages. Symbolizes passion and wisdom, admired amongst the empire's royalty and mages."
+	icon = 'modular_twilight_axis/icons/misc/tulpans.dmi'
+	icon_state = "tulip_flower"
+	herbtype = /obj/item/alch/tulip
+
+/obj/structure/flora/roguegrass/herb/tulip/black
+	name = "black tulip"
+	desc = "This specific flower grows exclusively in the most deep and obscure corners of the Underdark and while can be grown on the surface's soil any seeds extracted from it would turn to ash. That said, there are still a few foolish, desperate or brave who would venture for them and come back."
+	icon_state = "tulip_black_flower"
+	herbtype = /obj/item/alch/tulip/black
+
+/obj/item/alch/tulip
+	name = "tulip"
+	desc = "A blue flower purified by mana and will."
+	icon = 'modular_twilight_axis/icons/misc/tulpans.dmi'
+	icon_state = "tulip"
+	item_state = "tulip"
+	mob_overlay_icon = 'modular_twilight_axis/icons/misc/tulpans.dmi'
+	sellprice = SELLPRICE_HERB_COMMON
+	slot_flags = null
+
+/obj/item/alch/tulip/black
+	name = "black tulip"
+	desc = "An exceptionally rare and elegant flower, seemingly surrounded by mystery."
+	icon_state = "tulip_black"
+	item_state = "tulip_black"
+
+/obj/item/bouquet/tulip
+	name = "tulip bouquet"
+	desc = "Blue tulips bundled together with string and a scrap of parchment. Said to bring wisdom to whoever is handed one."
+	icon = 'modular_twilight_axis/icons/misc/tulpans.dmi'
+	item_state = "tulip_bouquet"
+	icon_state = "tulip_bouquet"
+
+/obj/item/bouquet/tulip/black
+	name = "black tulip bouquet"
+	desc = "Black tulips bundled together with string and a scrap of parchment. Beautiful, and more than a little unsettling."
+	item_state = "tulip_black_bouquet"
+	icon_state = "tulip_black_bouquet"
+
+/datum/crafting_recipe/roguetown/bouquet_tulip
+	name = "tulip bouquet"
+	result = /obj/item/bouquet/tulip
+	reqs = list(/obj/item/alch/tulip = 4,
+				/obj/item/natural/fibers = 2,
+				/obj/item/paper/scroll = 1)
+	craftdiff = 0
+	verbage_simple = "arranged"
+	verbage = "arranges"
+
+/datum/crafting_recipe/roguetown/bouquet_black_tulip
+	name = "black tulip bouquet"
+	result = /obj/item/bouquet/tulip/black
+	reqs = list(/obj/item/alch/tulip/black = 4,
+				/obj/item/natural/fibers = 2,
+				/obj/item/paper/scroll = 1)
+	craftdiff = 0
+	verbage_simple = "arranged"
+	verbage = "arranges"
+
+/datum/alch_grind_recipe/tulip_seed
+	name = "Herb Seed (Tulip)"
+	valid_input = /obj/item/alch/tulip
+	valid_outputs = list(/obj/item/herbseed/tulip = 1)
+
+/datum/alch_grind_recipe/black_tulip_seed
+	name = "Herb Seed (Black Tulip)"
+	valid_input = /obj/item/alch/tulip/black
+	valid_outputs = list(/obj/item/natural/ash = 1)
+
+/obj/item/clothing/suit/roguetown/armor/plate/white_knight
+	name = "white-armored knight armor"
+	desc = ""
+	icon_state = "white_knight_armour"
+	item_state = "white_knight_armour"
+	icon = 'modular_twilight_axis/icons/clothing/white_knight.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	color = null
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	sleevetype = null
+	boobed = FALSE
+
+/obj/item/clothing/suit/roguetown/armor/plate/fluted/white_knight
+	name = "white-armored knight armor"
+	desc = ""
+	icon_state = "white_knight_armour"
+	item_state = "white_knight_armour"
+	icon = 'modular_twilight_axis/icons/clothing/white_knight.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	color = null
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	sleevetype = null
+	boobed = FALSE
+
+/obj/item/clothing/suit/roguetown/armor/plate/full/white_knight
+	name = "white-armored knight armor"
+	desc = ""
+	icon_state = "white_knight_armour"
+	item_state = "white_knight_armour"
+	icon = 'modular_twilight_axis/icons/clothing/white_knight.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	color = null
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	sleevetype = null
+	boobed = FALSE
+
+/obj/item/clothing/suit/roguetown/armor/plate/full/fluted/white_knight
+	name = "white-armored knight armor"
+	desc = ""
+	icon_state = "white_knight_armour"
+	item_state = "white_knight_armour"
+	icon = 'modular_twilight_axis/icons/clothing/white_knight.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	color = null
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	sleevetype = null
+	boobed = FALSE
+
+/obj/item/clothing/suit/roguetown/armor/plate/iron/white_knight
+	name = "white-armored knight armor"
+	desc = ""
+	icon_state = "white_knight_armour"
+	item_state = "white_knight_armour"
+	icon = 'modular_twilight_axis/icons/clothing/white_knight.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	color = null
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	sleevetype = null
+	boobed = FALSE
+
+/obj/item/clothing/suit/roguetown/armor/plate/full/iron/white_knight
+	name = "white-armored knight armor"
+	desc = ""
+	icon_state = "white_knight_armour"
+	item_state = "white_knight_armour"
+	icon = 'modular_twilight_axis/icons/clothing/white_knight.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	color = null
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	sleevetype = null
+	boobed = FALSE
+
+/obj/item/clothing/suit/roguetown/armor/plate/blacksteel/white_knight
+	name = "white-armored knight armor"
+	desc = ""
+	icon_state = "white_knight_armour"
+	item_state = "white_knight_armour"
+	icon = 'modular_twilight_axis/icons/clothing/white_knight.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	color = null
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	sleevetype = null
+	boobed = FALSE
+
+/obj/item/clothing/suit/roguetown/armor/plate/blacksteel/modern/white_knight
+	name = "white-armored knight armor"
+	desc = ""
+	icon_state = "white_knight_armour"
+	item_state = "white_knight_armour"
+	icon = 'modular_twilight_axis/icons/clothing/white_knight.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	color = null
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	sleevetype = null
+	boobed = FALSE
+
+/obj/item/clothing/suit/roguetown/armor/plate/full/blacksteel/white_knight
+	name = "white-armored knight armor"
+	desc = ""
+	icon_state = "white_knight_armour"
+	item_state = "white_knight_armour"
+	icon = 'modular_twilight_axis/icons/clothing/white_knight.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	color = null
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	sleevetype = null
+	boobed = FALSE
+
+/obj/item/clothing/suit/roguetown/armor/plate/full/blacksteel/modern/white_knight
+	name = "white-armored knight armor"
+	desc = ""
+	icon_state = "white_knight_armour"
+	item_state = "white_knight_armour"
+	icon = 'modular_twilight_axis/icons/clothing/white_knight.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	color = null
+	sleeved = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	sleevetype = null
+	boobed = FALSE
+
+
+/obj/item/clothing/head/roguetown/helmet/heavy/white_knight
+	name = "white-armored knight helmet"
+	desc = ""
+	icon_state = "white_knight_helmet"
+	item_state = "white_knight_helmet"
+	icon = 'modular_twilight_axis/icons/clothing/white_knight.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	color = null
+	flags_inv = HIDE_HEADTOP|HIDEFACE|HIDESNOUT
+
+
+/obj/item/clothing/gloves/roguetown/plate/white_knight
+	name = "white-armored knight gauntlets"
+	desc = ""
+	icon_state = "white_knight_gloves"
+	item_state = "white_knight_gloves"
+	icon = 'modular_twilight_axis/icons/clothing/white_knight.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	color = null
+	sleeved = null
+	sleevetype = null
+
+
+/obj/item/clothing/shoes/roguetown/boots/armor/white_knight
+	name = "white-armored knight greaves"
+	desc = ""
+	icon_state = "white_knight_greaves"
+	item_state = "white_knight_greaves"
+	icon = 'modular_twilight_axis/icons/clothing/white_knight.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	color = null
+
+
+/obj/item/clothing/cloak/cape/white_knight
+	name = "white-armored knight cape"
+	desc = ""
+	icon_state = "white_knight_cape"
+	item_state = "white_knight_cape"
+	icon = 'modular_twilight_axis/icons/clothing/white_knight.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/white_knight.dmi'
+	color = null
+	sleeved = null
+	sleevetype = null
+	boobed = FALSE
+

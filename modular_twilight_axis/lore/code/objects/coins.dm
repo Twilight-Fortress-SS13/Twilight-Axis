@@ -5,7 +5,7 @@
 #define MAX_COIN_STACK_SIZE 20
 
 //OTAVAN MARQUE - WORTHLESS TO ANYONE BUT INQ.
-/obj/item/roguecoin/inqcoin
+/obj/item/roguecoin/marque
 	desc = "An unusual coin, minted primarily from base metals rather than gold or silver, finished with a unique wash of black dye and bearing the post-tsardom Psycross. Due to extreme export controls employed by Otava, most guilds refuse to trade in these coins, even at their face value."
 
 //GOLD

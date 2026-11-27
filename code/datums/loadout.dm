@@ -1046,7 +1046,27 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	name = "Loincloth"
 	category = "Аксессуары"
 	path = /obj/item/clothing/under/roguetown/loincloth
+//TA EDIT START
+/datum/loadout_item/spectacles_fancy
+	name = "Fancy Spectacles"
+	category = "Аксессуары"
+	path = /obj/item/clothing/mask/rogue/spectacles/fancy
 
+/datum/loadout_item/spectacles_fancy_dark
+	name = "Fancy Tinted Spectacles"
+	category = "Аксессуары"
+	path = /obj/item/clothing/mask/rogue/spectacles/fancy/dark
+
+/datum/loadout_item/spectacles_monocle
+	name = "Silver Monocle"
+	category = "Аксессуары"
+	path = /obj/item/clothing/mask/rogue/spectacles/monocle
+
+/datum/loadout_item/spectacles_onyxa
+	name = "Smokey Onyxa Spectacles"
+	category = "Аксессуары"
+	path = /obj/item/clothing/mask/rogue/spectacles/sglasses
+//TA EDIT END
 /datum/loadout_item/spectacles
 	name = "Spectacles"
 	category = "Аксессуары"
@@ -1270,7 +1290,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/psicross/zizo
 	name = "Decrepit Zcross"
 	category = "Аксессуары"
-	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy
+	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/ancient/decrepit
 
 /datum/loadout_item/zcross_iron
 	name = "Iron Zcross"
@@ -3877,6 +3897,48 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/bouquet/rosa/azure
 	donatitem = TRUE
 
+/datum/loadout_item/donator/universal/tulip
+	name = "Donator Item - Tulip Flower"
+	category = list("Разное", "Донат")
+	path = /obj/item/alch/tulip
+	donatitem = TRUE
+	donat_tier = 1
+
+/datum/loadout_item/donator/universal/tulip_seeds
+	name = "Donator Item - Tulip Flower, Seeds"
+	category = list("Разное", "Донат")
+	path = /obj/item/storage/belt/rogue/pouch/tulip_seeds
+	donatitem = TRUE
+	donat_tier = 1
+
+/datum/loadout_item/donator/universal/tulip_bouquet
+	name = "Donator Item - Tulip Flowers, Bouquet"
+	category = list("Разное", "Донат")
+	path = /obj/item/bouquet/tulip
+	donatitem = TRUE
+	donat_tier = 1
+
+/datum/loadout_item/donator/universal/tulip_black
+	name = "Donator Item - Black Tulip Flower"
+	category = list("Разное", "Донат")
+	path = /obj/item/alch/tulip/black
+	donatitem = TRUE
+	donat_tier = 1
+
+/datum/loadout_item/donator/universal/tulip_black_seeds
+	name = "Donator Item - Black Tulip Flower, Seeds"
+	category = list("Разное", "Донат")
+	path = /obj/item/storage/belt/rogue/pouch/tulip_seeds/black
+	donatitem = TRUE
+	donat_tier = 1
+
+/datum/loadout_item/donator/universal/tulip_black_bouquet
+	name = "Donator Item - Black Tulip Flowers, Bouquet"
+	category = list("Разное", "Донат")
+	path = /obj/item/bouquet/tulip/black
+	donatitem = TRUE
+	donat_tier = 1
+
 /datum/loadout_item/donator/universal/cackledagger
 	name = "Donator Kit - Cackledagger - Required: Steel Dagger or Decorated Dagger"
 	category = list("Оружие", "Донат")
@@ -4176,7 +4238,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/psicross/decrepit
 	name = "Decrepit Psycross"
 	category = "Аксессуары"
-	path = /obj/item/clothing/neck/roguetown/psicross/aalloy
+	path = /obj/item/clothing/neck/roguetown/psicross/ancient/decrepit
 
 /datum/loadout_item/psicross/naledi
 	name = "Naledian Psy-Bracelet"
@@ -4203,7 +4265,7 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/wedding_band_ancient
 	name = "Wedding Band, Ancient"
 	category = "Аксессуары"
-	path = /obj/item/clothing/ring/band/paalloy
+	path = /obj/item/clothing/ring/band/ancient
 	donatitem = TRUE
 
 /datum/loadout_item/triumph_satchel
@@ -4269,19 +4331,19 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 /datum/loadout_item/psicross/paalloy
 	name = "Ancient Psycross"
 	category = list("Триумфы")
-	path = /obj/item/clothing/neck/roguetown/psicross/paalloy
+	path = /obj/item/clothing/neck/roguetown/psicross/ancient
 	triumph_cost = 2
 
 /datum/loadout_item/psicross/inhumen/paalloy
 	name = "Ancient Inverted Psycross"
 	category = list("Триумфы")
-	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/paalloy
+	path = /obj/item/clothing/neck/roguetown/psicross/inhumen/ancient
 	triumph_cost = 2
 
 /datum/loadout_item/psicross/noc/paalloy
 	name = "Ancient Amulet of Noc"
 	category = list("Триумфы")
-	path = /obj/item/clothing/neck/roguetown/psicross/noc/paalloy
+	path = /obj/item/clothing/neck/roguetown/psicross/noc/ancient
 	triumph_cost = 2
 
 /datum/loadout_item/triumph_winterdress
@@ -6084,3 +6146,38 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/dominion_cestus
 	donatitem = TRUE
 	donat_tier = 2
+
+/datum/loadout_item/donator_white_knight_armour
+	name = "Donator Kit - white-armored knight armor - Required: Iron, Steel or Blacksteel Plate/Half-Plate"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/white_knight_armour
+	donatitem = TRUE
+	ckeywhitelist = list("n1ght1ngale")
+
+/datum/loadout_item/donator_white_knight_helmet
+	name = "Donator Kit - white-armored knight helmet - Required: Barbute"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/white_knight_helmet
+	donatitem = TRUE
+	ckeywhitelist = list("n1ght1ngale")
+
+/datum/loadout_item/donator_white_knight_gloves
+	name = "Donator Kit - white-armored knight gauntlets - Required: Plate Gauntlets"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/white_knight_gloves
+	donatitem = TRUE
+	ckeywhitelist = list("n1ght1ngale")
+
+/datum/loadout_item/donator_white_knight_greaves
+	name = "Donator Kit - white-armored knight greaves - Required: Plated Boots"
+	category = list("Броня", "Донат")
+	path = /obj/item/enchantingkit/white_knight_greaves
+	donatitem = TRUE
+	ckeywhitelist = list("n1ght1ngale")
+
+/datum/loadout_item/donator_white_knight_cape
+	name = "Donator Kit - white-armored knight cape - Required: Cape"
+	category = list("Плащи", "Донат")
+	path = /obj/item/enchantingkit/white_knight_cape
+	donatitem = TRUE
+	ckeywhitelist = list("n1ght1ngale")

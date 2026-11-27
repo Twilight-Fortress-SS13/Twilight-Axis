@@ -16,7 +16,7 @@
         if(!viewer.client || viewer.stat || viewer.mob_biotypes & MOB_UNDEAD)
             continue
 
-        viewer.Slowdown(3)
+        viewer.apply_status_effect(/datum/status_effect/debuff/slowed, 3)
         viewer.blind_eyes(1)
 
     COOLDOWN_START(src, effect_cooldown, 30 SECONDS)

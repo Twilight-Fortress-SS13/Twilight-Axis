@@ -78,7 +78,7 @@
 /obj/item/psydonmusicbox/examine(mob/user)
 	. = ..()
 	if(HAS_TRAIT(usr, TRAIT_INQUISITION))
-		desc = "Реликвия из недр тауматургических мастерских собора Инквизиции. Четырнадцать душ еретиков, связанных вместе, будут защищать вас от магии, искажая окружающий мир своими воплями. Стоит использовать её только в тяжелых обстоятельствах, чтобы еретики не прознали о её истинной природе."
+		desc = "Реликвия из недр тауматургических мастерских собора Инквизиции. Пятнадцать душ еретиков, связанных вместе, будут защищать вас от магии, искажая окружающий мир своими воплями. Стоит использовать её только в тяжелых обстоятельствах, чтобы еретики не прознали о её истинной природе." // TA EDIT
 	else
 		desc = "Жуткая музыкальная шкатулка с печатью Инквизиции на боковой стороне. Мелодия, издаваемая её недрами, звучит еще более жутко."
 
@@ -103,7 +103,7 @@
 		soundloop.start()
 		var/songhearers = view(7, user)
 		for(var/mob/living/carbon/human/target in songhearers)
-			to_chat(target,span_cultsmall("[user] begins cranking the melancholic crankbox.."))
+			to_chat(target,span_cultsmall("[user] begins cranking the melancholic crankbox..."))
 	if(!cranking)
 		soundloop.stop()
 		user.remove_status_effect(/datum/status_effect/buff/cranking_soulchurner)
@@ -341,7 +341,7 @@ Inquisitorial armory down here
 	new /obj/item/rogueweapon/greatsword/silver/psy(src)
 	new /obj/item/rogueweapon/halberd/silver/psy(src)
 	new /obj/item/rogueweapon/whip/silver/psy
-	new /obj/item/rogueweapon/flail/sflail/silver/psy
+	new /obj/item/rogueweapon/flail/steel/silver/psy
 	new /obj/item/rogueweapon/spear/silver/psy(src)
 	new /obj/item/rogueweapon/sword/long/silver/psy(src)
 	new /obj/item/rogueweapon/mace/goden/psy(src)
@@ -1492,14 +1492,18 @@ Inquisitorial armory down here
 		to_chat(user, span_warning("It looks like it needs blood to work properly."))
 		return
 	if(!active)
-		var/input = input(user, "WHO DO YOU SEEK?", "THE PRICE IS PAID") as text|null
+		var/other = "Someone else..."
+		var/list/names = list(other) + sortList(user.mind.known_people.Copy())
+		var/input = tgui_input_list(user, "WHOM DO YOU SEEK?", "THE PRICE IS PAID", names)
+		if(input == other)
+			input = tgui_input_text(user, "WHOM DO YOU SEEK?", "THE PRICE IS PAID", max_length = MAX_NAME_LEN, encode = FALSE)
 		if(!input)
 			return
 		if(!user.key)
 			return
+		input = strip_diacritics(input)
 		for(var/mob/living/carbon/human/HL in GLOB.player_list)
-		//	to_world("going through mob: [HL] | real_name: [HL.real_name] | input: [input] | [world.time]") Mirror-bugsplatter. Disregard this.
-			if(HL.real_name == input)
+			if(strip_diacritics(HL.real_name) == input)
 				if(HAS_TRAIT(HL, TRAIT_ANTISCRYING))
 					to_chat(user, span_warning("They are not within the gaze of the Mirror."))
 					return
@@ -1519,11 +1523,10 @@ Inquisitorial armory down here
 		playsound(src, 'sound/items/blackmirror_no.ogg', 100, FALSE)
 		to_chat(user, span_warning("[src] makes a grating sound."))
 		return
-	var/lookat = null
-	if(alert(user, "WHERE ARE YOU LOOKING?", "BLACK MIRROR", "BLOOD", "FIXATION") != "BLOOD")
-		lookat = target
-	else
-		lookat = whofedme
+	var/choice = tgui_alert(user, "WHERE ARE YOU LOOKING?", "BLACK MIRROR", list("BLOOD", "FIXATION"))
+	if(!choice)
+		return
+	var/lookat = choice == "BLOOD" ? whofedme : target
 	playsound(src, 'sound/items/blackmirror_use.ogg', 100, FALSE)
 	ADD_TRAIT(user, TRAIT_NOSSDINDICATOR, "blackmirror")
 	var/mob/dead/observer/eye/screye/blackmirror/S = user.scry_ghost()
@@ -1872,7 +1875,7 @@ GLOBAL_LIST_INIT(inquisition_used_ids, list())
 	report_html += "<hr>"
 	report_html += "<i>[pick(opening)]</i><br><br>"
 	report_html += "<b>INDEXED SUBJECT</b><br>"
-	report_html += "Name: [H.real_name]<br>"
+	report_html += "Name: [H.get_unmasked_name()]<br>"
 	report_html += "Race: [H.dna?.species?.name]<br>"
 	report_html += "Sex: [capitalize(H.gender)]<br>"
 	var/static/list/job_aliases = list(

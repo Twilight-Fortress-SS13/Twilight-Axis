@@ -68,6 +68,11 @@
 			to_chat(follower, span_danger("That accursed cross interrupts my prayers!"))
 			return FALSE
 		return TRUE
+	//allows prayers during Zizo mist events
+	var/datum/particle_weather/W = SSParticleWeather?.runningWeather
+	if(istype(W, /datum/particle_weather/fog/zizo) || istype(W, /datum/particle_weather/fog/zizo_short))
+		if(istype(get_area(follower), /area/rogue/outdoors))
+			return TRUE
 	// Allows prayer near a grave.
 	for(var/obj/structure/closet/dirthole/grave/G in view(4, get_turf(follower)))
 		return TRUE
@@ -77,11 +82,11 @@
 	// Allows praying atop ritual chalk of the god.
 	for(var/obj/structure/ritualcircle/zizo in view(1, get_turf(follower)))
 		return TRUE
-	
-	if(locate(/obj/effect/decal/cleanable/sigil) in T)
+
+	if(locate(/obj/effect/decal/cleanable/sigil) in T) // TA EDIT START
 		return TRUE
-	
-	to_chat(follower, span_danger("For Zizo to hear my prayers I must either be in the church of the abandoned, near an inverted psycross, atop a drawn Zizite symbol, stand in sigil, or while the sun is blotted from the sky!"))
+
+	to_chat(follower, span_danger("For Zizo to hear my prayers I must either be in the church of the abandoned, near an inverted psycross, atop a drawn Zizite symbol, stand in a sigil, near a grave, in unnatural fog or while the sun is blotted from the sky!")) // TA EDIT END
 	return FALSE
 
 /datum/patron/inhumen/zizo/on_lesser_heal(

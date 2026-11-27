@@ -10,9 +10,9 @@
 	reset_stats = TRUE
 	subclass_stats = list(
 		STATKEY_STR = 3,
-		STATKEY_CON = 3,
+		STATKEY_CON = 4, // TA EDIT - ORIGINAL: 3
 		STATKEY_WIL = 3,
-		STATKEY_SPD = 3,
+		STATKEY_SPD = 4, // TA EDIT - ORIGINAL: 3
 		STATKEY_INT = -3,
 		STATKEY_PER = -1
 	)
@@ -34,8 +34,8 @@
 /datum/outfit/job/roguetown/gnoll/berserker/pre_equip(mob/living/carbon/human/H)
 	if(H.mind)
 		H.set_species(/datum/species/gnoll)
-		H.skin_armor = new vamp_armor_type(H)
-		H.AddComponent(/datum/component/vampiric_striker, shard_threshold, shard_repair_value, max_fury_stacks)
+		H.skin_armor = new /obj/item/clothing/suit/roguetown/armor/regenerating/skin/gnoll_armor(H) // TA EDIT - ORIGINAL: new vamp_armor_type(H)
+		// TA REMOVAL: H.AddComponent(/datum/component/vampiric_striker, shard_threshold, shard_repair_value, max_fury_stacks)
 		neck = /obj/item/storage/belt/rogue/pouch/healing
 		backr = /obj/item/storage/backpack/rogue/satchel/gnoll
 		don_pelt(H)

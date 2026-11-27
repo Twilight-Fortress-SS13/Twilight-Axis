@@ -591,7 +591,7 @@
 "il" = (
 /obj/structure/table/wood/fancy/royalblack,
 /obj/structure/trap/curse,
-/obj/item/cooking/platter/aalloy,
+/obj/item/cooking/platter/decrepit,
 /obj/item/kitchen/fork/aalloy,
 /obj/item/reagent_containers/glass/cup/steel{
 	pixel_x = 9;
@@ -718,7 +718,7 @@
 "jK" = (
 /obj/structure/table/wood/fancy/royalblack,
 /obj/structure/trap/curse,
-/obj/item/cooking/platter/aalloy,
+/obj/item/cooking/platter/decrepit,
 /obj/item/kitchen/fork/aalloy,
 /obj/item/reagent_containers/glass/cup/steel{
 	pixel_x = -9;
@@ -785,7 +785,7 @@
 "kA" = (
 /obj/structure/table/wood/fancy/royalblack,
 /obj/structure/trap/curse,
-/obj/item/cooking/platter/aalloy,
+/obj/item/cooking/platter/decrepit,
 /obj/item/kitchen/fork/aalloy,
 /obj/item/reagent_containers/glass/cup/steel{
 	pixel_x = 9;
@@ -1007,7 +1007,7 @@
 /area/rogue/under/kingtomb/bossarena)
 "nE" = (
 /obj/structure/rack/rogue,
-/obj/item/rogueweapon/hoe/aalloy,
+/obj/item/rogueweapon/hoe/decrepit,
 /turf/open/floor/rogue/ruinedwood,
 /area/rogue/under/kingtomb/approaching)
 "nJ" = (
@@ -1127,7 +1127,7 @@
 "pC" = (
 /obj/structure/table/wood/fancy/royalblack,
 /obj/structure/trap/curse,
-/obj/item/cooking/platter/aalloy,
+/obj/item/cooking/platter/decrepit,
 /obj/item/kitchen/fork/aalloy,
 /obj/item/reagent_containers/glass/cup/steel{
 	pixel_x = 9;
@@ -1141,7 +1141,7 @@
 /obj/effect/decal/cleanable/debris/woody{
 	dir = 1
 	},
-/obj/item/rogueweapon/shovel/aalloy,
+/obj/item/rogueweapon/shovel/decrepit,
 /turf/open/floor/rogue/ruinedwood/spiral,
 /area/rogue/under/kingtomb/approaching)
 "pJ" = (
@@ -1157,7 +1157,7 @@
 "pV" = (
 /obj/structure/table/wood/fancy/royalblack,
 /obj/structure/trap/curse,
-/obj/item/cooking/platter/aalloy,
+/obj/item/cooking/platter/decrepit,
 /obj/item/kitchen/fork/aalloy,
 /obj/item/reagent_containers/glass/cup/steel{
 	pixel_x = -9;
@@ -1821,7 +1821,7 @@
 /area/rogue/under/kingtomb/approaching)
 "yh" = (
 /obj/structure/rack/rogue,
-/obj/item/rogueweapon/pitchfork/aalloy,
+/obj/item/rogueweapon/pitchfork/decrepit,
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/under/kingtomb/approaching)
 "yl" = (
@@ -1835,7 +1835,7 @@
 "yy" = (
 /obj/structure/table/wood/fancy/royalblack,
 /obj/structure/trap/curse,
-/obj/item/cooking/platter/aalloy,
+/obj/item/cooking/platter/decrepit,
 /obj/item/kitchen/fork/aalloy,
 /obj/item/reagent_containers/glass/cup/steel{
 	pixel_x = 9;
@@ -1879,7 +1879,7 @@
 /area/rogue/under/kingtomb/approaching)
 "yU" = (
 /obj/structure/table/wood/fancy/royalblack,
-/obj/item/rogueweapon/shield/tower/metal/gold,
+/obj/item/rogueweapon/shield/kite/gold,
 /obj/item/rogueweapon/sword/gold,
 /obj/item/rogueweapon/scabbard/sword/royal,
 /turf/open/floor/rogue/carpet/lord/center,
@@ -1902,7 +1902,7 @@
 /area/rogue/under/underdark/north)
 "zE" = (
 /obj/effect/decal/cleanable/debris/woody,
-/obj/item/rogueweapon/shovel/aalloy,
+/obj/item/rogueweapon/shovel/decrepit,
 /obj/machinery/light/rogue/oven/east,
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/under/kingtomb/approaching)
@@ -2190,7 +2190,7 @@
 "DX" = (
 /obj/structure/table/wood/fancy/royalblack,
 /obj/structure/trap/curse,
-/obj/item/cooking/platter/aalloy,
+/obj/item/cooking/platter/decrepit,
 /obj/item/kitchen/fork/aalloy,
 /obj/item/reagent_containers/glass/cup/steel{
 	pixel_x = -9;
@@ -2565,7 +2565,7 @@
 "LC" = (
 /obj/structure/rack/rogue/shelf/biggest,
 /obj/item/rogueweapon/hoe/copper,
-/obj/item/rogueweapon/shovel/aalloy,
+/obj/item/rogueweapon/shovel/decrepit,
 /turf/open/floor/rogue/cobble,
 /area/rogue/under/kingtomb)
 "LM" = (
@@ -2701,7 +2701,7 @@
 "Oi" = (
 /obj/structure/table/wood/fancy/royalblack,
 /obj/structure/trap/curse,
-/obj/item/cooking/platter/aalloy,
+/obj/item/cooking/platter/decrepit,
 /obj/item/kitchen/fork/aalloy,
 /obj/item/reagent_containers/glass/cup/steel{
 	pixel_x = -9;
@@ -2923,7 +2923,7 @@
 "Ry" = (
 /obj/structure/table/wood/fancy/royalblack,
 /obj/structure/trap/curse,
-/obj/item/cooking/platter/aalloy,
+/obj/item/cooking/platter/decrepit,
 /obj/item/kitchen/fork/aalloy,
 /obj/item/reagent_containers/glass/cup/steel{
 	pixel_x = -9;

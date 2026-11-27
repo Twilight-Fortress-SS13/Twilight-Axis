@@ -162,6 +162,8 @@
 			if(is_naked)
 				nsfw_img_gallery = holder_human.nsfw_img_gallery
 				nsfw_ooc_extra_image = holder_human.nsfw_ooc_extra_img
+		if(!headshot)
+			headshot = "headshot_red.png"
 	else if(istype(holder, /mob/living/simple_animal/hostile/retaliate/rogue/ooze_blob/pure_form))
 		var/mob/living/simple_animal/hostile/retaliate/rogue/ooze_blob/pure_form/pure_ooze = holder
 		is_naked = TRUE
