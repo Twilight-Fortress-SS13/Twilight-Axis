@@ -1,9 +1,9 @@
 /datum/advclass/mercenary/anthrax
-	name = "\"Scourge\" Pursuer" //TA EDIT
+	name = "\"Scourge\" Pursuer" // TA EDIT
 	tutorial = "Raised in the war halls of Underdark, Pursuers are the shield-wall of the noble Houses. Clad in darksteel, \
 	armed with flails and shields, they march first into the fray when a Matriarch commands it. \
 	You have been chosen for a mission to the surface, and while you are out there, you must earn coin to sustain yourself. \
-	Regardless of whom you work for, never forget where your true allegiance lies." //TA EDIT
+	Regardless of whom you work for, never forget where your true allegiance lies." // TA EDIT
 	forbidden_races = list(RACES_ANTHRAX)
 	outfit = /datum/outfit/job/roguetown/mercenary/anthrax
 	class_select_category = CLASS_CAT_RACIAL
@@ -11,7 +11,7 @@
 
 	cmode_music = sound("sound/music/combat_delf.ogg")
 
-	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_ANTHRAXI, TRAIT_ALCHEMY_EXPERT) //TA EDIT
+	traits_applied = list(TRAIT_MEDIUMARMOR, TRAIT_ANTHRAXI, TRAIT_ALCHEMY_EXPERT) // TA EDIT
 	subclass_stats = list(
 		STATKEY_STR = 2,
 		STATKEY_CON = 2,
@@ -49,7 +49,7 @@
 	belt = /obj/item/storage/belt/rogue/leather/black
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/shadowpants
 	backl = /obj/item/storage/backpack/rogue/satchel/black
-	head = /obj/item/clothing/head/roguetown/helmet/heavy/shadowvisage //TA EDIT
+	head = /obj/item/clothing/head/roguetown/helmet/heavy/shadowvisage // TA EDIT
 	backpack_contents = list(
 		/obj/item/roguekey/mercenary = 1,
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,
@@ -59,17 +59,17 @@
 	armor = /obj/item/clothing/suit/roguetown/armor/plate/fluted/shadowplate
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/shadowrobe
 	gloves = /obj/item/clothing/gloves/roguetown/plate/shadowgauntlets
-	wrists = /obj/item/clothing/wrists/roguetown/bracers/shadowbracers //TA EDIT
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/shadowbracers // TA EDIT
 	mask = /obj/item/clothing/mask/rogue/facemask/shadowfacemask
-	neck = /obj/item/clothing/neck/roguetown/chaincoif/chainmantle/shadowmantle //TA EDIT
+	neck = /obj/item/clothing/neck/roguetown/chaincoif/chainmantle/shadowmantle // TA EDIT
 	backr = /obj/item/rogueweapon/shield/tower/spidershield
 	beltr = /obj/item/rogueweapon/whip/spiderwhip
-	beltl = /obj/item/rogueweapon/flail/sflail/spiderflail //TA EDIT
+	beltl = /obj/item/rogueweapon/flail/sflail/spiderflail // TA EDIT
 
-	//H.faction += FACTION_SPIDER_LOWERS //TA EDIT
+	//H.faction += FACTION_SPIDER_LOWERS // TA EDIT
 
 	if(H.mind)
-		var/faction = list("Zizite Loyalists (Drow are Neutral & Darkvision)", "Tenebrite Rebels (Self-Sustenance Trait)") //TA EDIT START
+		var/faction = list("Zizite Loyalists (Drow are Neutral & Darkvision)", "Tenebrite Rebels (Self-Sustenance Trait)") // TA EDIT START
 		var/factionchoice = input(H, "The Underdark stands divided. Which side do you fight for?", "PLEDGE YOUR ALLEGIANCE.") as anything in faction
 		switch(factionchoice)
 			if("Zizite Loyalists (Drow are Neutral & Darkvision)")
@@ -81,7 +81,7 @@
 			if("Tenebrite Rebels (Self-Sustenance Trait)")
 				ADD_TRAIT(H, TRAIT_SELF_SUSTENANCE, TRAIT_GENERIC)
 				H.mind.special_items["Hammer"] = /obj/item/rogueweapon/hammer/iron
-				to_chat(H, span_warning("Our fight grows more desperate. I must gather resources and allies, so that the Underdark can be free from the tyrant goddess.")) //TA EDIT END
+				to_chat(H, span_warning("Our fight grows more desperate. I must gather resources and allies, so that the Underdark can be free from the tyrant goddess.")) // TA EDIT END
 		var/riding = list("Spidertamer (Tameable Spider Mount)", "Shroomwalker (+I to Athletics)")
 		var/ridingchoice = input(H, "Choose your TRAVELBOON.", "ROAM ABROAD AND ROAM FAR.") as anything in riding
 		switch(ridingchoice)
@@ -93,17 +93,17 @@
 	H.merctype = 15
 
 /datum/advclass/mercenary/anthrax_assassin
-	name = "\"Anthraxi\" Assassin" //TA EDIT
+	name = "\"Anthraxi\" Assassin" // TA EDIT
 	tutorial = "Every noble House keeps its knives in the dark, and you are one of them. Trained in the shadowed streets of Underdark, \
 	where success is measured by a massacre that leaves no witnesses, you kill with bolts from afar or with a pair of sabres up close. \
 	You have been chosen for a mission to the surface, and while you sell your blade to the highest bidder, you quietly listen for whispers your House will pay dearly to hear. \
-	Whatever the contract, never forget who holds your leash." //TA EDIT
+	Whatever the contract, never forget who holds your leash." // TA EDIT
 	outfit = /datum/outfit/job/roguetown/mercenary/anthrax_assassin
 	forbidden_races = list(RACES_ANTHRAX)
 	category_tags = list(CTAG_MERCENARY, CTAG_MERCPARTY_BRAVO)
 	class_select_category = CLASS_CAT_RACIAL
 	cmode_music = sound("sound/music/combat_delf.ogg")
-	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_ANTHRAXI, TRAIT_ALCHEMY_EXPERT) //TA EDIT
+	traits_applied = list(TRAIT_DODGEEXPERT, TRAIT_ANTHRAXI, TRAIT_ALCHEMY_EXPERT) // TA EDIT
 	subclass_stats = list(
 		STATKEY_WIL = 2,
 		STATKEY_PER = 2,
@@ -135,7 +135,7 @@
 
 /datum/outfit/job/roguetown/mercenary/anthrax_assassin/pre_equip(mob/living/carbon/human/H)
 	..()
-	head = /obj/item/clothing/neck/roguetown/chaincoif/full/shadowcoif //TA EDIT
+	head = /obj/item/clothing/neck/roguetown/chaincoif/full/shadowcoif // TA EDIT
 	backl = /obj/item/storage/backpack/rogue/satchel/black
 	backpack_contents = list(
 		/obj/item/roguekey/mercenary = 1,
@@ -149,17 +149,17 @@
 	gloves = /obj/item/clothing/gloves/roguetown/fingerless/shadowgloves/elflock
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/leather/heavy
 	mask = /obj/item/clothing/mask/rogue/shepherd/shadowmask/delf
-	neck = /obj/item/clothing/neck/roguetown/chaincoif/chainmantle/shadowmantle //TA EDIT
+	neck = /obj/item/clothing/neck/roguetown/chaincoif/chainmantle/shadowmantle // TA EDIT
 	beltl = /obj/item/rogueweapon/scabbard/sword
 	r_hand = /obj/item/rogueweapon/sword/sabre/stalker
 	shoes = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced
 	belt = /obj/item/storage/belt/rogue/leather/black
 	pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/shadowpants
 
-	//H.faction += FACTION_SPIDER_LOWERS //TA EDIT
+	//H.faction += FACTION_SPIDER_LOWERS // TA EDIT
 
 	if(H.mind)
-		var/faction = list("Zizite Loyalists (Drow are Neutral & Darkvision)", "Tenebrite Rebels (Self-Sustenance Trait)") //TA EDIT START
+		var/faction = list("Zizite Loyalists (Drow are Neutral & Darkvision)", "Tenebrite Rebels (Self-Sustenance Trait)") // TA EDIT START
 		var/factionchoice = input(H, "The Underdark stands divided. Which side do you fight for?", "PLEDGE YOUR ALLEGIANCE.") as anything in faction
 		switch(factionchoice)
 			if("Zizite Loyalists (Drow are Neutral & Darkvision)")
@@ -171,20 +171,20 @@
 			if("Tenebrite Rebels (Self-Sustenance Trait)")
 				ADD_TRAIT(H, TRAIT_SELF_SUSTENANCE, TRAIT_GENERIC)
 				H.mind.special_items["Hammer"] = /obj/item/rogueweapon/hammer/iron
-				to_chat(H, span_warning("Our fight grows more desperate. I must gather resources and allies, so that the Underdark can be free from the tyrant goddess.")) //TA EDIT END
-		var/weapon = list("Bow & Poisoned Arrows", "Crossbow & Smallsword", "Dual Sabres") //TA EDIT
+				to_chat(H, span_warning("Our fight grows more desperate. I must gather resources and allies, so that the Underdark can be free from the tyrant goddess.")) // TA EDIT END
+		var/weapon = list("Bow & Poisoned Arrows", "Crossbow & Smallsword", "Dual Sabres") // TA EDIT
 		var/weaponchoice = input(H, "Choose your WEAPON.", "PICK YOUR INSTRUMENTS.") as anything in weapon
 		switch(weaponchoice)
 			if("Bow & Poisoned Arrows")
 				backr = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/short
 				beltr = /obj/item/quiver/poisonarrows
-				H.adjust_skillrank_up_to(/datum/skill/combat/bows, SKILL_LEVEL_MASTER, TRUE) //TA EDIT
-			if("Crossbow & Smallsword") //TA EDIT START
+				H.adjust_skillrank_up_to(/datum/skill/combat/bows, SKILL_LEVEL_MASTER, TRUE) // TA EDIT
+			if("Crossbow & Smallsword") // TA EDIT START
 				r_hand = null
 				l_hand = /obj/item/rogueweapon/sword/rapier/stalker
 				backr = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/stalker
 				beltr = /obj/item/quiver/bolt/standard
-				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_MASTER, TRUE) //TA EDIT END
+				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_MASTER, TRUE) // TA EDIT END
 			if("Dual Sabres")
 				l_hand = /obj/item/rogueweapon/sword/sabre/stalker
 				beltr = /obj/item/rogueweapon/scabbard/sword
@@ -200,7 +200,7 @@
 
 	H.merctype = 15
 
-/datum/advclass/mercenary/anthrax_paladin //TA EDIT START
+/datum/advclass/mercenary/anthrax_paladin // TA EDIT START
 	name = "\"Spider Queen\" Baneblade"
 	tutorial = "Hailing primarily from the Undercity of Faerlin, the Baneblades are the Spider Queen's warrior-priests, wielding both Her blades and Her gifts with great proficiency. You have been chosen for a mission to the surface, and while you earn your bread and gather the information your clan requires, you are also expected to ensure the thoughts of your comrades stay true to the cause."
 	forbidden_races = list(RACES_ANTHRAX)
@@ -281,7 +281,7 @@
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_MINOR, devotion_limit = CLERIC_REQ_2)	//Capped to T2 miracles.
 
-	H.merctype = 15 //TA EDIT END
+	H.merctype = 15 // TA EDIT END
 
 /obj/item/clothing/under/roguetown/heavy_leather_pants/shadowpants/shadowskirt
 	name = "silk vestments"
