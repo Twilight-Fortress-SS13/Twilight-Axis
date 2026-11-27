@@ -46,12 +46,12 @@
 		if("nickname")
 			var/new_name = tgui_input_text(user, "Choose your character's nickname (For Highlighting):", "NICKNAME", nickname, encode = FALSE)
 			if(new_name)
-				new_name = reject_bad_name(new_name)
+				new_name = reject_bad_name(new_name, allow_cyrillic = TRUE) // TA EDIT
 				if(new_name)
 					verbose_pref_log_change(user, "notice", "Nickname", nickname, new_name)
 					nickname = new_name
 				else
-					to_chat(user, span_warning("Invalid name. Your name should be at least 2 and at most [MAX_NAME_LEN] characters long. It may only contain the characters A-Z, a-z, -, ', . and ,."))
+					to_chat(user, span_warning("Invalid nickname. It should be at least 2 and at most [MAX_NAME_LEN] characters long. It may contain Latin and Cyrillic letters, as well as -, ', . and ,.")) // TA EDIT
 			return CHARACTER_ACT_DATA_UPDATE
 
 		if("pen_name")

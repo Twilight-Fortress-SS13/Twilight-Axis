@@ -730,8 +730,8 @@
 	var/static/list/silver_smeltresults = list(
 		/obj/item/ingot/silver,
 		/obj/item/ingot/aaslag,
-		/obj/item/ingot/aalloy,
-		/obj/item/ingot/purifiedaalloy,
+		/obj/item/ingot/decrepit,
+		/obj/item/ingot/ancient,
 	)
 	if(!istype(weapon))
 		return FALSE

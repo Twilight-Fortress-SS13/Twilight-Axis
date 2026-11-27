@@ -1,0 +1,4 @@
+author: "Vladmar11"
+delete-after: True
+changes:
+  - balance: "ренегаты теперь падают во все режимы, не занимают слот мажор антага"

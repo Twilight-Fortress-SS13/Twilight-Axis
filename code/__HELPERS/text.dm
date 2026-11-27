@@ -175,7 +175,7 @@
 		return trim(html_encode(name), max_length)
 
 //Filters out undesirable characters from names
-/proc/reject_bad_name(t_in, allow_numbers=0, max_length=MAX_NAME_LEN)
+/proc/reject_bad_name(t_in, allow_numbers=0, max_length=MAX_NAME_LEN, allow_cyrillic = FALSE) // TA EDIT
 	if(!t_in || length(t_in) > max_length)
 		return //Rejects the input if it is null or if it is longer then the max length allowed
 
@@ -197,6 +197,16 @@
 				t_out += ascii2text(ascii_char)
 				number_of_alphanumeric++
 				last_char_group = 4
+
+			// TA EDIT START
+			// А .. Я + а .. я + Ё ё 
+			if(1040 to 1071, 1072 to 1103, 1025, 1105)
+				if(!allow_cyrillic)
+					return
+				t_out += ascii2text(ascii_char)
+				number_of_alphanumeric++
+				last_char_group = 4
+			// TA EDIT END
 
 			// special accented characters (diacritical)
 			if(192 to 383)
