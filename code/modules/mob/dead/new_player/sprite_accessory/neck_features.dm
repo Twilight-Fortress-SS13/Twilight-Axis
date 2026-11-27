@@ -15,6 +15,10 @@
 	name = "Plain"
 	icon_state = "plain"
 
+/datum/sprite_accessory/neck_feature/moth_fluff/none //TA EDIT
+	name = "None"
+	icon_state = null
+
 /datum/sprite_accessory/neck_feature/moth_fluff/monarch
 	name = "Monarch"
 	icon_state = "monarch"

@@ -10,13 +10,14 @@
 
 /datum/customizer/organ/antennas/moth
 	allows_disabling = TRUE
-	default_disabled = FALSE
+	default_disabled = TRUE
 	customizer_choices = list(/datum/customizer_choice/organ/antennas/moth)
 
 /datum/customizer_choice/organ/antennas/moth
 	name = "Fluvian Antennas"
 	organ_type = /obj/item/organ/antennas/moth
 	sprite_accessories = list(
+		/datum/sprite_accessory/antenna/moth/none, //TA EDIT
 		/datum/sprite_accessory/antenna/moth/plain,
 		/datum/sprite_accessory/antenna/moth/reddish,
 		/datum/sprite_accessory/antenna/moth/royal,

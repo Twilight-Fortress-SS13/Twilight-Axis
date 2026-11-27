@@ -19,6 +19,10 @@
 	name = "Plain"
 	icon_state = "plain"
 
+/datum/sprite_accessory/antenna/moth/none //TA EDIT
+	name = "None"
+	icon_state = null
+
 /datum/sprite_accessory/antenna/moth/reddish
 	name = "Reddish"
 	icon_state = "reddish"

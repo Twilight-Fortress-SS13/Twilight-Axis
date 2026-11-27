@@ -68,6 +68,9 @@
 		/datum/customizer/organ/tail/demihuman,
 		/datum/customizer/organ/neck_feature/anthro,
 		/datum/customizer/organ/testicles/anthro,
+		/datum/customizer/organ/wings/moth, //TA
+		/datum/customizer/organ/neck_feature/moth_fluff, //TA
+		/datum/customizer/organ/antennas/moth, //TA
 		/datum/customizer/organ/penis/anthro,
 		/datum/customizer/organ/breasts/animal,
 		/datum/customizer/organ/vagina/animal,
