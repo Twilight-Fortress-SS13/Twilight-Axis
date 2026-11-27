@@ -697,9 +697,9 @@
 	var/highest = 0
 	for(var/datum/ccg_played_card/played in board[enemy][CCG_ROW_INFANTRY])
 		var/datum/ccg_card/card = ccg_card(played.card_id)
+		row_total += played.current_power
 		if(card?.hero)
 			continue
-		row_total += played.current_power
 		highest = max(highest, played.current_power)
 	if(row_total < 10 || highest <= 0)
 		return
@@ -830,8 +830,8 @@
 				var/final_bond_count = bond_counts[played.card_id]
 				if(card.effect == CCG_EFFECT_BOND && final_bond_count > 1 && !card.hero)
 					value *= final_bond_count
-				if(card.effect != CCG_EFFECT_MORALE && !card.hero)
-					value += morale
+				if(!card.hero)
+					value += morale - (card.effect == CCG_EFFECT_MORALE ? 1 : 0)
 				if(horn && !card.hero)
 					value *= 2
 				played.current_power = value
