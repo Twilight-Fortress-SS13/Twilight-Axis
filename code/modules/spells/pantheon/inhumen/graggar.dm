@@ -229,7 +229,7 @@
 	charge_time = CHARGETIME_POKE
 	charge_slowdown = CHARGING_SLOWDOWN_NONE
 	charge_sound = 'sound/magic/chargingold.ogg'
-	cooldown_time = 1 MINUTES
+	cooldown_time = 45 SECONDS
 
 	associated_stat = null
 	associated_skill = /datum/skill/magic/holy
