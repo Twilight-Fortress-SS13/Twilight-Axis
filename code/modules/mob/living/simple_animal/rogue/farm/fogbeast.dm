@@ -14,6 +14,7 @@ GLOBAL_LIST_INIT(valid_fogbeast_colors, list("White" = COLOR_WHITE, "Gray" = COL
 	speak_chance = 1
 	see_in_dark = 6
 	ride_move_delay = 8
+	gallops = TRUE
 	butcher_results = list(
 		/obj/item/reagent_containers/food/snacks/rogue/meat/steak = 4,
 		/obj/item/reagent_containers/food/snacks/fat = 2,
@@ -101,10 +102,6 @@ GLOBAL_LIST_INIT(valid_fogbeast_colors, list("White" = COLOR_WHITE, "Gray" = COL
 	..(user) // TA EDIT
 	setup_mount()
 
-/mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/death()
-	unbuckle_all_mobs()
-	return ..()
-
 /mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/simple_limb_hit(zone)
 	if(!zone)
 		return ""
@@ -144,33 +141,6 @@ GLOBAL_LIST_INIT(valid_fogbeast_colors, list("White" = COLOR_WHITE, "Gray" = COL
 		if(BODY_ZONE_L_ARM)
 			return "foreleg"
 	return ..()
-
-/// If we're a mount and are hit while sprinting, throw our rider off
-/// Also called if the rider is hit
-/mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/proc/check_sprint_dismount(datum/source, damage, damagetype, def_zone) // TA EDIT START
-	SIGNAL_HANDLER
-	if(source == src || damage < 15 || world.time < mount_next_hit_fear || world.time < mount_fear_until)
-		return
-	for(var/mob/living/carbon/human/rider in buckled_mobs)
-		if(rider.m_intent != MOVE_INTENT_RUN)
-			continue
-		var/rider_skill = rider.get_skill_level(/datum/skill/misc/riding)
-		if(rider_skill >= SKILL_LEVEL_MASTER)
-			continue
-		if(mount_startle(rider, 3 SECONDS, max(4, 16 - rider_skill * 2)))
-			mount_next_hit_fear = world.time + 12 SECONDS // TA EDIT END
-
-/mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/post_buckle_mob(mob/living/M)
-	. = ..()
-	RegisterSignal(M, COMSIG_MOB_APPLY_DAMGE, PROC_REF(check_sprint_dismount))
-	if(!has_buckled_mobs())
-		RegisterSignal(src, COMSIG_MOB_APPLY_DAMGE, PROC_REF(check_sprint_dismount))
-
-/mob/living/simple_animal/hostile/retaliate/rogue/fogbeast/post_unbuckle_mob(mob/living/M)
-	. = ..()
-	UnregisterSignal(M, COMSIG_MOB_APPLY_DAMGE, PROC_REF(check_sprint_dismount))
-	if(!has_buckled_mobs())
-		UnregisterSignal(src, COMSIG_MOB_APPLY_DAMGE, PROC_REF(check_sprint_dismount))
 
 /obj/effect/decal/remains/fogbeast
 	name = "remains"

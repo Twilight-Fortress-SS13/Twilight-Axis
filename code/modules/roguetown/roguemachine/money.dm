@@ -106,15 +106,15 @@ GLOBAL_VAR(moneymaster)
 			budget2change(budget, user, inputt)
 			switch(inputt)
 				if("GOLD")
-					var/zenars = budget/10
+					var/zenars = floor(budget / (SSmapping.config.map_name == "Rockhill" ? 14 : 10)) // TA EDIT
 					if(zenars >= 1)
 						for(var/i in 1 to zenars)
-							budget -= 10
+							budget -= (SSmapping.config.map_name == "Rockhill" ? 14 : 10) // TA EDIT
 				if("SILVER")
-					var/zenars = budget/5
+					var/zenars = floor(budget / (SSmapping.config.map_name == "Rockhill" ? 7 : 5)) // TA EDIT
 					if(zenars >= 1)
 						for(var/i in 1 to zenars)
-							budget -= 5
+							budget -= (SSmapping.config.map_name == "Rockhill" ? 7 : 5) // TA EDIT
 				if("BRONZE")
 					if(budget >= 1)
 						for(var/i in 1 to budget)
@@ -138,17 +138,17 @@ GLOBAL_VAR(moneymaster)
 		if(specify)
 			switch(specify)
 				if("GOLD")
-					zenars_to_put = budget/14
+					zenars_to_put = floor(budget/14) // TA EDIT
 					type_to_put = /obj/item/roguecoin/goldkrona
 				if("SILVER")
-					zenars_to_put = budget/7
+					zenars_to_put = floor(budget/7) // TA EDIT
 					type_to_put = /obj/item/roguecoin/grout
 				if("BRONZE")
 					zenars_to_put = budget
 					type_to_put = /obj/item/roguecoin/copper
 				if("MARQUE")
 					zenars_to_put = budget
-					type_to_put = /obj/item/roguecoin/inqcoin
+					type_to_put = /obj/item/roguecoin/marque
 		else
 			var/highest_found = FALSE
 			var/zenars = floor(budget/14)
@@ -188,17 +188,17 @@ GLOBAL_VAR(moneymaster)
 		if(specify)
 			switch(specify)
 				if("GOLD")
-					zenars_to_put = budget/10
+					zenars_to_put = floor(budget/10) // TA EDIT
 					type_to_put = /obj/item/roguecoin/gold
 				if("SILVER")
-					zenars_to_put = budget/5
+					zenars_to_put = floor(budget/5) // TA EDIT
 					type_to_put = /obj/item/roguecoin/silver
 				if("BRONZE")
 					zenars_to_put = budget
 					type_to_put = /obj/item/roguecoin/copper
 				if("MARQUE")
 					zenars_to_put = budget
-					type_to_put = /obj/item/roguecoin/inqcoin
+					type_to_put = /obj/item/roguecoin/marque
 		else
 			var/highest_found = FALSE
 			var/zenars = floor(budget/10)

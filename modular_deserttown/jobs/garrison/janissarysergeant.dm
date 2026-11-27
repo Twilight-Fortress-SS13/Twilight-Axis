@@ -106,7 +106,7 @@
 				l_hand = /obj/item/rogueweapon/sword/long/rhomphaia
 				beltr = /obj/item/rogueweapon/mace/cudgel
 			if("Whip & Shield")
-				beltr = /obj/item/rogueweapon/flail/sflail
+				beltr = /obj/item/rogueweapon/flail/steel
 				backl = /obj/item/rogueweapon/shield/tower
 			if("Glaive")
 				r_hand = /obj/item/rogueweapon/halberd/glaive

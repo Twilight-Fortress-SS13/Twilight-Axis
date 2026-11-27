@@ -41,7 +41,7 @@
 	to_chat(H, span_warning("The Desert Riders are a slightly-infamous band of mercenaries, as old and prestigious as Grenzelhoft's own. They have fought on both sides of nearly every conflict since the fall of the Celestial Empire."))
 	head = /obj/item/clothing/head/roguetown/roguehood/shalal/hijab/raneshen
 	neck = /obj/item/clothing/neck/roguetown/leather
-	mask = /obj/item/clothing/mask/rogue/facemask/steel/paalloy
+	mask = /obj/item/clothing/mask/rogue/facemask/ancient
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/raneshen
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/raneshen
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/brigandine

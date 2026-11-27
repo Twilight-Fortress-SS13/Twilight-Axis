@@ -71,12 +71,18 @@
 		/datum/body_marking_set/aura/x,
 		/datum/body_marking_set/aura/c,
 		/datum/body_marking_set/aura/v,
+		/datum/body_marking_set/aura/variant_a,
+		/datum/body_marking_set/aura/variant_b,
+		/datum/body_marking_set/aura/variant_c,
 	)
 	body_markings = list(
 		/datum/body_marking/aura/z,
 		/datum/body_marking/aura/x,
 		/datum/body_marking/aura/c,
 		/datum/body_marking/aura/v,
+		/datum/body_marking/aura/variant_a,
+		/datum/body_marking/aura/variant_b,
+		/datum/body_marking/aura/variant_c,
 
 	)
 
@@ -112,4 +118,13 @@
 	return list(
 		"Азри" = SKIN_COLOR_GRENZELHOFT,
 		"Наиире" = SKIN_COLOR_TAFRAVMA,
+		"Штормовой сланец" = "656773",
+		"Сизая дымка" = "999cab",
+		"Северный туман" = "ced4e2",
+		"Мокрый песок" = "887073",
+		"Розовый коралл" = "bea8ab",
+		"Морская пена" = "efe7e8",
+		"Сумеречный аметист" = "a88fae",
+		"Сиреневый туман" = "bcb6d3",
+		"Лунный жемчуг" = "dbcce1",
 	)
