@@ -150,7 +150,6 @@
 
 	possible_shapes = list(
 		/mob/living/carbon/human/species/wildshape/rat,
-		/mob/living/carbon/human/species/wildshape/fox,
 	)
 	disallowed_equipment_type = list(/obj/item/rogueweapon)
 
@@ -165,15 +164,12 @@
 	overlay_icon = 'icons/mob/actions/hagspells.dmi'
 	action_icon = 'icons/mob/actions/hagspells.dmi'
 	overlay_state = "hand_up"
-	var/confirmed_read = FALSE
 
 /obj/effect/proc_holder/spell/invoked/feytouch/cast(list/targets, mob/user)
 	var/datum/component/hag_curio_tracker/H = user.GetComponent(/datum/component/hag_curio_tracker)
 	if(!H)
 		to_chat(user, span_warning("How did you even get access to this without being a hag?"))
 		return FALSE
-
-
 	var/mob/living/carbon/human/victim = targets[1]
 	if(!ishuman(victim))
 		to_chat(user, span_warning("I need to cast this on a person!"))

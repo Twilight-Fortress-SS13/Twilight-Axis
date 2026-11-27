@@ -17,7 +17,31 @@
 							TRAIT_TOXIMMUNE, TRAIT_ZOMBIE_IMMUNE, TRAIT_LIGHT_STEP,
 							TRAIT_HARDSOLE, TRAIT_BREADY, TRAIT_LONGSTRIDER,
 							TRAIT_ZURCH, TRAIT_COMBAT_NONEWSKILLS, TRAIT_SEEPRICES,
-							TRAIT_EXTEROCEPTION, TRAIT_EMPATH, TRAIT_HERETIC_SEER)
+							TRAIT_EXTEROCEPTION, TRAIT_EMPATH, TRAIT_HERETIC_SEER,
+							TRAIT_INTELLECTUAL)
+
+	subclass_languages = list(
+		/datum/language/oldazurian,
+		/datum/language/elvish,
+		/datum/language/dwarvish,
+		/datum/language/celestial,
+		/datum/language/raneshi,
+		/datum/language/hellspeak,
+		/datum/language/orcish,
+		/datum/language/grenzelhoftian,
+		/datum/language/otavan,
+		/datum/language/etruscan,
+		/datum/language/gronnic,
+		/datum/language/kazengunese,
+		/datum/language/lingyuese,
+		/datum/language/draconic,
+		/datum/language/undercommon,
+		/datum/language/aavnic,
+		/datum/language/gyedzenese,
+		/datum/language/valorian,
+		/datum/language/beast,
+		/datum/language/abyssal
+	)
 
 	subclass_mage_aspects = list("mastery" = FALSE, "major" = 0, "minor" = 0, "utilities" = 6, "ward" = FALSE)
 
