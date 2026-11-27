@@ -13,9 +13,9 @@
 	// Deserter are the knight-equivalence. They get a balanced, straightforward 2 2 3 statspread to endure and overcome.
 	subclass_stats = list(
 		STATKEY_WIL = 3,
-		STATKEY_CON = 2,
+		STATKEY_CON = 1, // TA EDIT - ORIGINAL: 2
 		STATKEY_STR = 2,
-		STATKEY_PER = 2,
+		STATKEY_PER = 1, // TA EDIT - ORIGINAL: 2
 		STATKEY_LCK = 1
 	)
 	subclass_skills = list(

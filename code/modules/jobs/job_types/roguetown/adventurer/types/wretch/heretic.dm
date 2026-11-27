@@ -194,7 +194,7 @@
 			H.cmode_music = sound("sound/music/combat_graggar.ogg")
 			H.equip_to_slot_or_del(new /obj/item/clothing/neck/roguetown/psicross/inhumen/graggar, SLOT_RING, TRUE)
 			H.change_stat(STATKEY_STR, 2)
-			H.change_stat(STATKEY_WIL, 1)
+			// TA REMOVAL START - ORIGINAL: H.change_stat(STATKEY_WIL, 1)
 			// TA ADDITION START - ADDS SKILLRANK BONUSES TO OTHER PATRONS
 			H.adjust_skillrank(/datum/skill/magic/holy, 1, TRUE)
 			H.adjust_skillrank(/datum/skill/misc/athletics, 1, TRUE)
@@ -359,7 +359,7 @@
 		STATKEY_WIL = 2,
 		STATKEY_SPD = 2,
 		STATKEY_INT = 1,
-		STATKEY_LCK = 1
+		// TA REMOVAL: STATKEY_LCK = 1
 	)
 	subclass_skills = list(
 		/datum/skill/magic/holy = SKILL_LEVEL_EXPERT,
