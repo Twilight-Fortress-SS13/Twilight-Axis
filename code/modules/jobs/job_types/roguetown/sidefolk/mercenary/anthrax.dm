@@ -1,7 +1,7 @@
 /datum/advclass/mercenary/anthrax
 	name = "\"Scourge\" Pursuer" //TA EDIT
 	tutorial = "Raised in the war halls of Underdark, Pursuers are the shield-wall of the noble Houses. Clad in darksteel, \
-	armed with flails and towering shields, they march first into the fray when a Matriarch commands it. \
+	armed with flails and shields, they march first into the fray when a Matriarch commands it. \
 	You have been chosen for a mission to the surface, and while you are out there, you must earn coin to sustain yourself. \
 	Regardless of whom you work for, never forget where your true allegiance lies." //TA EDIT
 	forbidden_races = list(RACES_ANTHRAX)
@@ -288,6 +288,7 @@
 	icon = 'modular_twilight_axis/icons/roguetown/clothing/special/anthrax.dmi'
 	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/special/onmob/anthrax.dmi'
 	icon_state = "shadowskirt"
+	armor = ARMOR_MAILLE
 
 /obj/item/clothing/neck/roguetown/chaincoif/full/shadowcoif
 	name = "full darkplate coif"
@@ -400,6 +401,8 @@
 	desc = "A slender, needle-pointed blade, made to find the gaps between plate and rib. Elegant in the hand, and more so in the deed."
 	icon = 'modular_twilight_axis/icons/roguetown/weapons/anthrax.dmi'
 	icon_state = "spidersmallsword"
+	sheathe = "modular_twilight_axis/icons/obj/items/scabbard.dmi"
+	sheathe_icon = "spidersmallsword"
 	grid_width = 32
 	grid_height = 64
 	dropshrink = 0
