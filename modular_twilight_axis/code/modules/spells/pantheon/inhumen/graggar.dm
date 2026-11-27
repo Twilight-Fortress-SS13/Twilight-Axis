@@ -7,6 +7,7 @@
 	glow_color = PATRON_COLOR_GRAGGAR
 	glow_intensity = GLOW_INTENSITY_LOW
 	xp_gain = TRUE
+	releasedrain = 15
 	range = 0
 	recharge_time = 1 MINUTES
 	warnie = "spellwarning"
