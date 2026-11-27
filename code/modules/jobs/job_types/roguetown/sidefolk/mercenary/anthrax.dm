@@ -184,7 +184,7 @@
 				l_hand = /obj/item/rogueweapon/sword/rapier/stalker
 				backr = /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow/stalker
 				beltr = /obj/item/quiver/bolt/standard
-				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_EXPERT, TRUE) //TA EDIT END
+				H.adjust_skillrank_up_to(/datum/skill/combat/crossbows, SKILL_LEVEL_MASTER, TRUE) //TA EDIT END
 			if("Dual Sabres")
 				l_hand = /obj/item/rogueweapon/sword/sabre/stalker
 				beltr = /obj/item/rogueweapon/scabbard/sword
