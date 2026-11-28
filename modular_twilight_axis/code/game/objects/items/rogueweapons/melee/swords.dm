@@ -235,17 +235,13 @@
 			var/mammonsonperson = get_mammons_in_atom(target)
 			var/mammonsinbank = SStreasury.get_balance(target)
 			var/totalvalue = mammonsinbank + mammonsonperson
-			if(totalvalue <=100)
-				return TRUE
-			if(totalvalue <=150)
-				target.Immobilize(1 SECONDS)
-				return TRUE
-			if(totalvalue <=300)
-				target.Immobilize(2 SECONDS)
-				return TRUE
-			else
-				target.Immobilize(4 SECONDS)
-				return TRUE
+			if(totalvalue >= 100)
+				if(totalvalue <= 200)
+					target.Immobilize(1 SECONDS)
+				else if(totalvalue <= 400)
+					target.Immobilize(2 SECONDS)
+				else
+					target.Immobilize(4 SECONDS)
 	..()
 
 /obj/item/rogueweapon/sword/sabre/threaded
