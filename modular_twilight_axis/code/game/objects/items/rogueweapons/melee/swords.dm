@@ -159,6 +159,7 @@
 	possible_item_intents = list(/datum/intent/sword/cut/krieg, /datum/intent/sword/chop/falx, /datum/intent/sword/strike, /datum/intent/rend/krieg)
 	gripped_intents = list(/datum/intent/sword/cut/krieg, /datum/intent/sword/thrust/long/deep, /datum/intent/sword/strike, /datum/intent/rend/krieg)
 	alt_grips = list(/datum/alt_grip/mordhau/sword/lesser, /datum/alt_grip/halfsword/lesser)
+	special = /datum/special_intent/kingslayer_peoples_judgement
 
 /obj/item/rogueweapon/sword/long/oathbreaker_matthios/Initialize(mapload)
 	. = ..()
@@ -166,6 +167,82 @@
 
 /obj/item/rogueweapon/sword/long/oathbreaker_matthios/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_MATTHIOS_WEAPON)
+
+/datum/special_intent/kingslayer_peoples_judgement
+	name = "People's Judgement"
+	desc = "Удар с широким замахом, задевающий всех противников перед паладином и обжигающий их. Если цель принадлежит к благородной крови, то она будет подожжена священным огнем Маттиоса; если цель хранит при себе много богатств, она будет оглушена."
+	tile_coordinates = list(
+				list(-1,0), list(0,0), list(1,0),
+	list(-2,1),	list(-1,1), list(0,1), list(1,1), list(2,1)
+	)
+	post_icon_state = "sweep_fx"
+	sfx_pre_delay = 'sound/combat/parry/bladed/bladedsmall (3).ogg'
+	sfx_post_delay = 'sound/magic/fireball.ogg'
+	use_clickloc = FALSE
+	respect_adjacency = TRUE
+	respect_dir = TRUE
+	delay = 0.6 SECONDS
+	cooldown = 60 SECONDS
+	stamcost = 25
+	var/dam
+	var/list/hit_targets
+
+	var/list/matthios_cries = list(
+		"Маттиос, узри виновных!",
+		"Отец Свободы покарает тебя! Гори!",
+		"Товарищи, низвергнем же наш приговор!",
+		"Пусть воля народа рассудит вас!"
+	)
+
+/datum/special_intent/kingslayer_peoples_judgement/npc_use_chance(mob/living/user, atom/target)
+	return npc_front_chance(user)
+
+/datum/special_intent/kingslayer_peoples_judgement/process_attack()
+	var/obj/item/rogueweapon/W = iparent
+	dam = W.force_dynamic * 1.2 * 0.8 * max(((howner.STASTR + howner.STAWIL) / 20), 1)
+	. = ..()
+
+/datum/special_intent/kingslayer_peoples_judgement/post_delay(list/turfs)
+	var/obj/item/rogueweapon/W = iparent
+	if(QDELETED(howner) || QDELETED(W) || howner.get_active_held_item() != W)
+		return
+	var/list/visible_turfs = view(2, howner)
+	hit_targets = list()
+	. = ..(turfs & visible_turfs)
+	hit_targets = null
+
+/datum/special_intent/kingslayer_peoples_judgement/on_create()
+	. = ..()
+	howner.Immobilize(1 SECONDS)
+	howner.apply_status_effect(/datum/status_effect/debuff/clickcd, 1 SECONDS)
+	howner.say(pick(matthios_cries))
+
+/datum/special_intent/kingslayer_peoples_judgement/apply_hit(turf/T)
+	for(var/mob/living/L in T)
+		if(L == howner || (L in hit_targets))
+			continue
+		hit_targets += L
+		apply_generic_weapon_damage(L, dam, "fire", get_aimed_zone(L), bclass = BCLASS_CUT)
+		if(QDELETED(L))
+			continue
+		if(ishuman(L))
+			var/mob/living/carbon/human/target = L
+			if(HAS_TRAIT(target, TRAIT_NOBLE))
+				target.visible_message(span_danger("[L] is burned by holy light!"), span_userdanger("I feel the weight of my wealth burning at my soul!"))
+				target.adjust_fire_stacks(3, /datum/status_effect/fire_handler/fire_stacks/divine)
+				target.ignite_mob()
+				playsound(target, 'sound/magic/churn.ogg', 100, TRUE)
+			var/mammonsonperson = get_mammons_in_atom(target)
+			var/mammonsinbank = SStreasury.get_balance(target)
+			var/totalvalue = mammonsinbank + mammonsonperson
+			if(totalvalue >= 100)
+				if(totalvalue <= 200)
+					target.Immobilize(1 SECONDS)
+				else if(totalvalue <= 400)
+					target.Immobilize(2 SECONDS)
+				else
+					target.Immobilize(4 SECONDS)
+	..()
 
 /obj/item/rogueweapon/sword/sabre/threaded
 	name = "threaded sword"
