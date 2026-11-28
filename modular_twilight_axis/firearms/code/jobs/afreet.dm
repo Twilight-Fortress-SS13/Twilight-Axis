@@ -8,7 +8,11 @@
 	maximum_possible_slots = 2
 	subclass_languages = list(/datum/language/grenzelhoftian)
 	traits_applied = list(TRAIT_FIREARMS_MARKSMAN, TRAIT_STEELHEARTED, TRAIT_DODGEEXPERT)
-	classes = list("Jäger Deserter" = "Ex-soldier with handgonne, excellent survival skills and axe to chop some wood and heads", "Veteran" = "Long ago you were a soldier...or pretend to be. Now you are a man from the road with your trusty pistol and dagger")
+	classes = list(
+	    "Jäger Deserter" = "Ex-soldier with handgonne, excellent survival skills and axe to chop some wood and heads", 
+		"Veteran" = "Long ago you were a soldier...or pretend to be. Now you are a man from the road with your trusty pistol and dagger",
+		"Zybantine Prisoner" = "Fate is a cruel joke. After the Twilight War, you were taken prisoner by the Empire. You had two choices: join the Empire’s forces or die. Some time later, you managed to escape",
+	)
 	subclass_stats = list(
 		STATKEY_STR = 1,
 		STATKEY_WIL = 2,
@@ -17,7 +21,7 @@
 		STATKEY_CON = 2,
 	)
 	subclass_skills = list(
-		/datum/skill/combat/twilight_firearms = SKILL_LEVEL_MASTER,
+		/datum/skill/combat/twilight_firearms = SKILL_LEVEL_EXPERT,
 		/datum/skill/combat/axes = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/knives = SKILL_LEVEL_JOURNEYMAN,
 		/datum/skill/combat/staves = SKILL_LEVEL_JOURNEYMAN,
@@ -50,10 +54,18 @@
 	shoes = /obj/item/clothing/shoes/roguetown/grenzelhoft
 	gloves = /obj/item/clothing/gloves/roguetown/angle/grenzelgloves
 	id = /obj/item/mattcoin
-	var/classes = list("Jäger Deserter", "Veteran")
+	var/classes = list("Jäger Deserter", "Veteran", "Zybantine Prisoner")
 	var/classchoice = input(H, "Choose your archetypes", "Available archetypes") as anything in classes
+
+	// adjust_skillrank_down_to некорректно отрабатывает на текущий момент в pre_equip - навык не изменяется
+	// Поэтому сверх выдаётся классам, что должны иметь мастера стрельбы
+	if(classchoice != "Zybantine Prisoner")
+		H.adjust_skillrank_up_to(/datum/skill/combat/twilight_firearms, SKILL_LEVEL_MASTER, TRUE)
+		
 	switch(classchoice)
 		if("Jäger Deserter")
+			change_origin(H, /datum/virtue/origin/grenzelhoft, "Empire")
+			
 			mask = /obj/item/clothing/mask/rogue/facemask/steel
 			cloak = /obj/item/clothing/cloak/half/brown
 			var/list/firearm_choices = list("Arquebus Rifle", "Culverin")
@@ -71,12 +83,10 @@
 				beltl = /obj/item/quiver/twilight_bullet/lead
 			pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants
 			armor = /obj/item/clothing/suit/roguetown/armor/leather
-			pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants
 			beltr = /obj/item/rogueweapon/stoneaxe/woodcut/steel
 			backl = /obj/item/storage/backpack/rogue/backpack
 			shirt = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/grenzelhoft
 			head = /obj/item/clothing/head/roguetown/grenzelhofthat
-			pants = /obj/item/clothing/under/roguetown/heavy_leather_pants/grenzelpants
 			wrists = /obj/item/clothing/wrists/roguetown/bracers/leather
 			belt = /obj/item/storage/belt/rogue/leather
 			backpack_contents = list(
@@ -87,7 +97,7 @@
 				/obj/item/natural/cloth/bandage = 1,
 				/obj/item/flashlight/flare/torch = 1
 			)
-			H.adjust_skillrank_up_to(/datum/skill/combat/axes, 4, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/combat/axes, SKILL_LEVEL_EXPERT, TRUE)
 		if("Veteran")
 			mask = /obj/item/clothing/mask/rogue/ragmask/red
 			armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat
@@ -103,8 +113,38 @@
 				/obj/item/needle/thorn = 1,
 				/obj/item/natural/cloth/bandage = 1,
 				/obj/item/flashlight/flare/torch = 1,
+				/obj/item/rogueweapon/scabbard/sheath = 1
+			)
+			H.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_EXPERT, TRUE)
+			H.adjust_skillrank_up_to(/datum/skill/craft/alchemy, SKILL_LEVEL_NOVICE, TRUE)
+		if("Zybantine Prisoner")
+			H.cmode_music = sound("sound/music/combat_desert2.ogg")
+			change_origin(H, /datum/virtue/origin/raneshen, "Desert")
+			
+			head   = /obj/item/clothing/head/roguetown/roguehood/shalal/hijab/raneshen
+			mask   = /obj/item/clothing/mask/rogue/ragmask/red
+			neck   = /obj/item/clothing/neck/roguetown/chaincoif/chainmantle
+			cloak  = /obj/item/clothing/cloak/dunestalker
+			armor  = /obj/item/clothing/suit/roguetown/armor/leather/heavy/coat/raneshen
+			shirt  = /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/chargah
+			backl  = /obj/item/storage/backpack/rogue/satchel
+			gloves = /obj/item/clothing/gloves/roguetown/fingerless_leather
+			belt   = /obj/item/storage/belt/rogue/leather/shalal
+			beltr  = /obj/item/rogueweapon/scabbard/sword
+			beltl  = /obj/item/quiver/twilight_bullet/lead
+			pants  = /obj/item/clothing/under/roguetown/trou/leather/pontifex/raneshen
+			shoes  = /obj/item/clothing/shoes/roguetown/boots/leather/reinforced
+			
+			backr  = /obj/item/gun/ballistic/twilight_firearm/arquebus/jezail
+			l_hand = /obj/item/rogueweapon/sword/sabre
+
+			backpack_contents = list(
+				/obj/item/twilight_powderflask = 1,
+				/obj/item/needle/thorn = 1,
+				/obj/item/natural/cloth/bandage = 1,
+				/obj/item/flashlight/flare/torch = 1,
 				/obj/item/rogueweapon/huntingknife/idagger/steel = 1,
 				/obj/item/rogueweapon/scabbard/sheath = 1
 			)
-			H.adjust_skillrank_up_to(/datum/skill/combat/knives, 4, TRUE)
-			H.adjust_skillrank_up_to(/datum/skill/craft/alchemy, 1, TRUE)
+
+			H.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
