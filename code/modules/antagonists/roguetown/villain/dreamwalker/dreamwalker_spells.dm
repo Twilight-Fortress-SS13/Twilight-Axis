@@ -422,5 +422,5 @@
 /datum/action/cooldown/spell/blink/dreamwalker
 	button_icon = 'icons/mob/actions/classuniquespells/dreamspells.dmi'
 	button_icon_state = "dream_blink"
-	cooldown_time = 45 SECONDS
+	cooldown_time = 24 SECONDS // TA EDIT - ORIGINAL: 45 SECONDS
 	invocations = list("Let me through!")

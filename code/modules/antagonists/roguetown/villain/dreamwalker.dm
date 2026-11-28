@@ -33,15 +33,21 @@
 		TRAIT_DREAMWALKER,
 		TRAIT_UNLYCKERABLE,
 		TRAIT_NOWW,
-		TRAIT_UNCONVERTIBLE
+		TRAIT_UNCONVERTIBLE,
+		// TA ADDITION START
+		TRAIT_NOPAIN,
+		TRAIT_NOLIMBDISABLE,
+		TRAIT_CRITICAL_RESISTANCE,
+		TRAIT_COUNTERCOUNTERSPELL
+		// TA ADDITION END
 		)
 
-	var/STASTR = 13
-	var/STASPD = 10
-	var/STAINT = 10
+	var/STASTR = 15 // TA EDIT - ORIGINAL: 13
+	var/STASPD = 12 // TA EDIT - ORIGINAL: 10
+	var/STAINT = 12 // TA EDIT - ORIGINAL: 10
 	var/STAWIL = 12
 	var/STACON = 12
-	var/STAPER = 10
+	var/STAPER = 12 // TA EDIT - ORIGINAL: 10
 	var/STALUC = 10
 
 /datum/antagonist/dreamwalker/on_gain()
@@ -107,10 +113,22 @@
 	H.adjust_skillrank(/datum/skill/combat/axes, 4, TRUE)
 	H.adjust_skillrank(/datum/skill/craft/crafting, 1, TRUE)
 	H.adjust_skillrank(/datum/skill/misc/medicine, 3, TRUE)
+	// TA EDIT - ORIGINAL:
+	/*
 	// Stats go
 	H.change_stat(STATKEY_STR, 3)
 	H.change_stat(STATKEY_CON, 2)
 	H.change_stat(STATKEY_WIL, 2)
+	*/
+	// ORIGINAL END
+	// We lose our statpack & racial, so bonuses are significant.
+	H.change_stat(STATKEY_STR, 5)
+	H.change_stat(STATKEY_INT, 2)
+	H.change_stat(STATKEY_CON, 2)
+	H.change_stat(STATKEY_PER, 2)
+	H.change_stat(STATKEY_SPD, 2)
+	H.change_stat(STATKEY_WIL, 2)
+	// TA EDIT END
 
 	if(H.mind)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/blink)

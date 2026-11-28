@@ -18,10 +18,10 @@
 	base_antags = 1
 	maximum_antags = 2
 
-	weight = 10
+	weight = 18 // TA EDIT - ORIGINAL: 10
 	max_occurrences = 2
 
-	earliest_start = 15 MINUTES
+	earliest_start = 20 SECONDS // TA EDIT - ORIGINAL: 15 MINUTES
 
 	typepath = /datum/round_event/antagonist/solo/dreamwalker
 	antag_datum = /datum/antagonist/dreamwalker
