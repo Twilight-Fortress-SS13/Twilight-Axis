@@ -2720,12 +2720,14 @@ GLOBAL_LIST_INIT(sight_trait_signals, build_sight_trait_signals())
 		return
 	if(!client.pixel_x && !client.pixel_y && client.perspective == MOB_PERSPECTIVE && client.eye == client.mob)
 		return
-	animate(client, pixel_x = 0, pixel_y = 0, 2, easing = SINE_EASING)
-	client.set_particle_weather_parallax_camera_offset(0, 0, 2, SINE_EASING)
-	client.set_particle_weather_world_camera_offset(0, 0, 2, SINE_EASING)
-	if(client)
+	if(client.pixel_x || client.pixel_y) // TA EDIT START
+		animate(client, pixel_x = 0, pixel_y = 0, 2, easing = SINE_EASING)
 		client.pixel_x = 0
 		client.pixel_y = 0
+	if(client.particle_weather_parallax_camera_offset_x || client.particle_weather_parallax_camera_offset_y)
+		client.set_particle_weather_parallax_camera_offset(0, 0, 2, SINE_EASING)
+	if(client.particle_weather_world_camera_offset_x || client.particle_weather_world_camera_offset_y)
+		client.set_particle_weather_world_camera_offset(0, 0, 2, SINE_EASING) // TA EDIT END
 	if(isdullahan(src))
 		var/mob/living/carbon/human/human = src
 		var/obj/item/organ/dullahan_vision/vision = human.getorganslot(ORGAN_SLOT_HUD)

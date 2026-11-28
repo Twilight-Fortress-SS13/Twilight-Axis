@@ -224,7 +224,7 @@
 	if(repeat && istype(repeat, /datum/looping_sound))
 		var/datum/looping_sound/D = repeat
 		var/datum/weakref/our_ref = WEAKREF(src)
-		if(our_ref in D.thingshearing) //we are already hearing this loop
+		if((our_ref in D.thingshearing) && client.played_loops[D]?["SOUND"]) // TA EDIT
 			if(client.played_loops[D])
 				var/sound/DS = client.played_loops[D]["SOUND"]
 				if(DS)
@@ -240,7 +240,7 @@
 							client.played_loops[D]["MUTESTATUS"] = null
 			return TRUE
 		else
-			D.thingshearing += our_ref
+			D.thingshearing |= our_ref // TA EDIT
 			client.played_loops[D] = list()
 			client.played_loops[D]["SOUND"] = S
 			client.played_loops[D]["VOL"] = S.volume
@@ -260,6 +260,8 @@
 			M.playsound_local(M, null, volume, vary, frequency, falloff, channel, pressure_affected, S)
 
 /mob/proc/stop_sound_channel(chan)
+	if(!chan) // TA EDIT
+		return // TA EDIT
 	SEND_SOUND(src, sound(null, repeat = 0, wait = 0, channel = chan))
 
 /mob/proc/set_sound_channel_volume(channel, volume)

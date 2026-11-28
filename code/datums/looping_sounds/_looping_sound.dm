@@ -319,7 +319,11 @@ GLOBAL_LIST_EMPTY(created_sound_groups)
 	else
 		var/mob/P = parent
 		if(P && P.client)
-			P.stop_sound_channel(channel) //This is mostly used for weather
+			var/list/direct_loop = P.client.played_loops[src] // TA EDIT START
+			var/sound/direct_sound = direct_loop?["SOUND"]
+			P.stop_sound_channel(direct_sound?.channel || channel)
+			P.client.played_loops -= src
+	thingshearing.Cut() // TA EDIT END
 
 /datum/looping_sound/proc/set_parent(new_parent)
 	if(parent)

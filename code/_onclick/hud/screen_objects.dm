@@ -2119,8 +2119,7 @@
 		return
 	if(fill["y"] == offset)
 		return
-	var/time = METER_BAR_ANIM_TIME + round(abs(offset - fill["y"]) / METER_BAR_FILL_HEIGHT * METER_BAR_ANIM_SCALE)
-	transition_filter(METER_FILL_FILTER, list("y" = offset), time, SINE_EASING)
+	modify_filter(METER_FILL_FILTER, list("y" = offset)) // TA EDIT
 
 /atom/movable/screen/stamina
 	name = "stamina"

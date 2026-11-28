@@ -11,6 +11,12 @@
 	key_mode = KEY_MODE_TEXT
 	value_mode = VALUE_MODE_FLAG
 
+/datum/config_entry/flag/staged_resource_preload // TA EDIT START
+	default = FALSE
+
+/datum/config_entry/flag/build_rsc_preload
+	default = FALSE // TA EDIT END
+
 /datum/config_entry/flag/asset_simple_preload
 
 /datum/config_entry/string/asset_transport
