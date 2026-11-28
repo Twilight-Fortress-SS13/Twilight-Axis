@@ -59,11 +59,20 @@
 	// Clear any existing song and its applied effects before starting a new one
 	for(var/datum/status_effect/buff/playing_melody/melodies in H.status_effects)
 		H.remove_status_effect(melodies)
+	// TA ADDITION
+	for(var/datum/status_effect/buff/playing_dirge/dirges in H.status_effects)
+		H.remove_status_effect(dirges)
+	// TA ADDITION END
 	// Explicitly clean up lingering song buffs from the old song
 	if(H.inspiration)
 		for(var/mob/living/carbon/human/guy in H.inspiration.audience)
 			for(var/datum/status_effect/buff/song/old_buff in guy.status_effects)
 				guy.remove_status_effect(old_buff)
+		// TA ADDITION START
+		for(var/mob/living/carbon/human/enemy in hearers(10, H))
+			for(var/datum/status_effect/debuff/song/old_debuff in enemy.status_effects)
+				enemy.remove_status_effect(old_debuff)
+		// TA ADDITION END
 	// Apply new song - on_apply will immediately grant effects
 	H.apply_status_effect(song_effect)
 	return TRUE
@@ -80,6 +89,10 @@
 	// No instrument - cancel song and clean up audience buffs
 	for(var/datum/status_effect/buff/playing_melody/melodies in owner.status_effects)
 		owner.remove_status_effect(melodies)
+	// TA ADDITION START
+	for(var/datum/status_effect/buff/playing_dirge/dirges in owner.status_effects)
+		owner.remove_status_effect(dirges)
+	// TA ADDITION END
 	for(var/mob/living/carbon/human/guy in owner.inspiration.audience)
 		for(var/datum/status_effect/buff/song/song2remove in guy.status_effects)
 			guy.remove_status_effect(song2remove)

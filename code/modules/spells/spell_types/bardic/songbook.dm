@@ -9,6 +9,12 @@ GLOBAL_LIST_INIT(learnable_songs, list(
 	/datum/action/cooldown/spell/song/recovery_song,
 	/datum/action/cooldown/spell/song/accelakathist,
 	/datum/action/cooldown/spell/song/rejuvenation_song,
+	// TA ADDITION START
+	// Debuff Dirges
+	/datum/action/cooldown/spell/song/discordant_dirge,
+	/datum/action/cooldown/spell/song/enervating_elegy,
+	/datum/action/cooldown/spell/song/rattling_requiem,
+	// TA ADDITION END
 	// Fluff Songs
 	/datum/action/cooldown/spell/song/muses_grace
 ))
@@ -146,6 +152,10 @@ GLOBAL_LIST_INIT(learnable_songs, list(
 			// Cancel active song if playing
 			for(var/datum/status_effect/buff/playing_melody/melody in owner.status_effects)
 				owner.remove_status_effect(melody)
+			// TA ADDITION START
+			for(var/datum/status_effect/buff/playing_dirge/dirge in owner.status_effects)
+				owner.remove_status_effect(dirge)
+			// TA ADDITION END
 			owner.mind.RemoveSpell(song_path)
 			owner.inspiration.songsbought = max(0, owner.inspiration.songsbought - 1)
 			owner.mob_timers["songbook_unlearn"] = world.time
