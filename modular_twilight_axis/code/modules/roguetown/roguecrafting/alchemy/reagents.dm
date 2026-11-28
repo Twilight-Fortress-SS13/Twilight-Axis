@@ -13,8 +13,9 @@
 		M.reagents.add_reagent(/datum/reagent/medicine/manapot, 1)
 		if(M.patron.type == /datum/patron/inhumen/graggar)
 			var/mob/living/carbon/human/H = M
-			H.reagents.add_reagent(/datum/reagent/medicine/stampot, 1)
-			H.devotion?.update_devotion(5)
+			if(isgnoll(H) || (ishuman(H) && H.devotion?.level >= CLERIC_T1))
+				H.reagents.add_reagent(/datum/reagent/medicine/stampot, 1)
+				H.devotion?.update_devotion(5)
 	if(!HAS_TRAIT(M, TRAIT_NASTY_EATER) && !HAS_TRAIT(M, TRAIT_ORGAN_EATER))
 		M.add_nausea(9)
 		M.adjustToxLoss(2)

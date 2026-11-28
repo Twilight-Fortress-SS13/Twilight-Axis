@@ -7,7 +7,7 @@
 	glow_color = PATRON_COLOR_GRAGGAR
 	glow_intensity = GLOW_INTENSITY_LOW
 	xp_gain = TRUE
-	releasedrain = 30
+	releasedrain = 15
 	range = 0
 	recharge_time = 1 MINUTES
 	warnie = "spellwarning"
@@ -209,6 +209,13 @@
 		user.apply_status_effect(/datum/status_effect/buff/graggar_regenerate)
 		recharge_time = 0
 	return TRUE
+
+/obj/effect/proc_holder/spell/self/graggar_regenerate/charge_check(mob/user, feedback = TRUE)
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		if(H.has_status_effect(/datum/status_effect/buff/graggar_regenerate))
+			return TRUE
+	return ..()
 
 /atom/movable/screen/alert/status_effect/buff/graggar_regenerate
 	name = "REGENERATE"
