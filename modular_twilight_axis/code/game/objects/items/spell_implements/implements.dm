@@ -42,7 +42,15 @@
 	morphed.implement_cast_speed = implement_cast_speed
 	morphed.implement_tier = implement_tier
 
-// Возвращает модификатор времени каста заклинаний.
+// Пустые посохи не морфятся, пусть донатеры удосужатся гем поискать
+/obj/item/enchantingkit/pre_attack(obj/item/I, mob/user)
+	var/obj/item/rogueweapon/implement = I
+	if(istype(implement) && implement.gem_socketable && !implement.socketed_gem && can_morph_item(I))
+		to_chat(user, span_warning("[I] needs a focus-gem fitted before it can be morphed."))
+		return TRUE
+	return ..()
+
+// Возвращает модификатор времени каста заклинаний
 /datum/action/cooldown/spell/proc/get_implement_charge_mult()
 	if(!ishuman(owner))
 		return 1
