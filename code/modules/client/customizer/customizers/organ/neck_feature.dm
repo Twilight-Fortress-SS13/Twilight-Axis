@@ -11,13 +11,14 @@
 /datum/customizer/organ/neck_feature/moth_fluff
 	name = "Fluvian Fluff"
 	allows_disabling = TRUE
-	default_disabled = FALSE
+	default_disabled = TRUE
 	customizer_choices = list(/datum/customizer_choice/organ/neck_feature/moth_fluff)
 
 /datum/customizer_choice/organ/neck_feature/moth_fluff
 	name = "Fluvian Fluff"
 	organ_type = /obj/item/organ/neck_feature/moth_fluff
 	sprite_accessories = list(
+		/datum/sprite_accessory/neck_feature/moth_fluff/none,
 		/datum/sprite_accessory/neck_feature/moth_fluff/plain,
 		/datum/sprite_accessory/neck_feature/moth_fluff/monarch,
 		/datum/sprite_accessory/neck_feature/moth_fluff/luna,

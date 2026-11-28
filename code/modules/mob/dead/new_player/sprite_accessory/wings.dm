@@ -66,6 +66,10 @@
 	name = "Plain"
 	icon_state = "plain"
 
+/datum/sprite_accessory/wings/moth/none //TA EDIT
+	name = "None"
+	icon_state = null
+
 /datum/sprite_accessory/wings/moth/monarch
 	name = "Monarch"
 	icon_state = "monarch"
