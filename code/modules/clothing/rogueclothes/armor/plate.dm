@@ -9,7 +9,7 @@
 	item_state = "halfplate"
 	armor = ARMOR_PLATE
 	nodismemsleeves = TRUE
-	max_integrity = ARMOR_INT_CHEST_PLATE_STEEL
+	max_integrity = ARMOR_INT_CHEST_PLATE_STEEL - 100
 	allowed_sex = list(MALE, FEMALE)
 	drop_sound = 'sound/foley/dropsound/armor_drop.ogg'
 	pickup_sound = 'sound/foley/equip/equip_armor_plate.ogg'
@@ -133,7 +133,7 @@
 	body_parts_covered = CHEST | VITALS | LEGS
 	max_integrity = ARMOR_INT_CHEST_PLATE_BRONZE //Halfplate analogue. Still heavy as hell.
 
-/obj/item/clothing/suit/roguetown/armor/plate/aalloy
+/obj/item/clothing/suit/roguetown/armor/plate/ancient/decrepit
 	name = "decrepit half-plate"
 	desc = "Rotted metal layers, wrought into plate armor. Once, the hauberk of a rising champion; now, nothing more than a fool's tomb."
 	icon_state = "ancientplate"
@@ -145,7 +145,7 @@
 	smeltresult = /obj/item/ingot/aaslag
 	anvilrepair = null
 
-/obj/item/clothing/suit/roguetown/armor/plate/paalloy
+/obj/item/clothing/suit/roguetown/armor/plate/ancient
 	name = "ancient half-plate"
 	desc = "Polished gilbranze layers, artificed into plate armor. Let none impede the march of progress, and let Her champions bring \
 	the unenlightened masses to kneel."
@@ -153,7 +153,7 @@
 	item_state = "ancientplate"
 	smeltresult = /obj/item/ingot/aaslag
 
-/obj/item/clothing/suit/roguetown/armor/plate/paalloy/artificer
+/obj/item/clothing/suit/roguetown/armor/plate/ancient/artificer
 	name = "artificed half-plate"
 	desc = "Forbidden knowledge, resurrected into a weightless vessel of gilbranze-and-magicka. It holds a slot for an arcyne meld to power it."
 	smeltresult = /obj/item/ingot/aaslag
@@ -167,11 +167,11 @@
 	var/legendaryarcane = FALSE
 	var/legendaryathletics = FALSE
 
-/obj/item/clothing/suit/roguetown/armor/plate/paalloy/artificer/Initialize(mapload)
+/obj/item/clothing/suit/roguetown/armor/plate/ancient/artificer/Initialize(mapload)
 	.=..()
 	update_description()
 
-/obj/item/clothing/suit/roguetown/armor/plate/paalloy/artificer/attackby(obj/item/I, mob/user, params)
+/obj/item/clothing/suit/roguetown/armor/plate/ancient/artificer/attackby(obj/item/I, mob/user, params)
 	if(istype(I, /obj/item/rogueweapon/contraption/linker))
 		if(user.get_skill_level(/datum/skill/craft/engineering) >= 3)
 			toggle_mode(user)
@@ -185,7 +185,7 @@
 			item_state = "artificerplate_powered"
 	.=..()
 
-/obj/item/clothing/suit/roguetown/armor/plate/paalloy/artificer/proc/toggle_mode(mob/user)
+/obj/item/clothing/suit/roguetown/armor/plate/ancient/artificer/proc/toggle_mode(mob/user)
 	if(!src.ontable())
 		to_chat(user, span_notice("I need to put this on a table first!")) //prevents stats staying on a person if tinkered on self
 	else
@@ -193,7 +193,7 @@
 		user.visible_message(span_notice("[user] tinkers with [src], adjusting its enhancements."))
 		update_description()
 
-/obj/item/clothing/suit/roguetown/armor/plate/paalloy/artificer/equipped(mob/living/user, slot)
+/obj/item/clothing/suit/roguetown/armor/plate/ancient/artificer/equipped(mob/living/user, slot)
 	. = ..()
 	if(!powered || active_item || slot != SLOT_ARMOR)
 		return
@@ -238,7 +238,7 @@
 		else
 			to_chat(user, span_warning("The cuirass feels unnervingly warm to the touch."))
 
-/obj/item/clothing/suit/roguetown/armor/plate/paalloy/artificer/dropped(mob/living/user)
+/obj/item/clothing/suit/roguetown/armor/plate/ancient/artificer/dropped(mob/living/user)
 	.=..()
 	if(active_item)
 		if(mode == 1)
@@ -266,13 +266,13 @@
 			else
 				return
 
-/obj/item/clothing/suit/roguetown/armor/plate/paalloy/artificer/proc/update_description()
+/obj/item/clothing/suit/roguetown/armor/plate/ancient/artificer/proc/update_description()
 	if(mode == 1)
 		desc = "Forbidden knowledge, resurrected into a weightless vessel of gilbranze-and-magicka. It crackles with raw magicka; the mind, empowered."
 	else
 		desc = "Forbidden knowledge, resurrected into a weightless vessel of gilbranze-and-magicka. It crackles with arcyne vigor; the body, emboldened."
 
-/obj/item/clothing/suit/roguetown/armor/plate/paalloy/artificer/get_examine_highlight_status()
+/obj/item/clothing/suit/roguetown/armor/plate/ancient/artificer/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ODD, HERESYDESC_ZIZO_ARTIFICE_RECLAIMED)
 
 /obj/item/clothing/suit/roguetown/armor/plate/fluted
@@ -285,7 +285,7 @@
 	equip_delay_self = 6 SECONDS
 	unequip_delay_self = 6 SECONDS
 
-	max_integrity = ARMOR_INT_CHEST_PLATE_STEEL
+	//max_integrity = ARMOR_INT_CHEST_PLATE_STEEL TA Edit
 	body_parts_covered = CHEST | VITALS | LEGS // Less durability than proper plate, more expensive to manufacture, and accurate to the sprite.
 	armor_class = ARMOR_CLASS_MEDIUM // TA EDIT - Half-plate ARMOR_CLASS_HEAVY -> ARMOR_CLASS_MEDIUM
 
@@ -300,6 +300,7 @@
 	armor = ARMOR_PLATE
 	smeltresult = /obj/item/ingot/component/graggar
 	unenchantable = TRUE
+	no_loot_taint = TRUE //heretic stuff, in case it somehow ends up on a skele/NPC or w/e
 
 /obj/item/clothing/suit/roguetown/armor/plate/fluted/graggar/Initialize(mapload)
 	. = ..()
@@ -319,6 +320,7 @@
 	material_category = ARMOR_MAT_PLATE
 	smeltresult = /obj/item/ingot/component/graggar
 	unenchantable = TRUE
+	no_loot_taint = TRUE //heretic stuff, in case it somehow ends up on a skele/NPC or w/e
 
 /obj/item/clothing/suit/roguetown/armor/plate/full/graggar/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_GRAGGAR_ARMOR)
@@ -353,7 +355,7 @@
 	. = ..()
 	. += span_info("With more blessed silver and an armorsmith's hammer, this armor can be further upgraded.")
 	. += span_info("If a character has the 'Maille Training' trait and has Psydon as their selected patron, they can comfortably wear Psydonic plate armor without suffering any downsides.")
-	. += span_hypnophrase("'..the thrumming of madness, to think that your suffering was all-for-naught to Adonai's sacrificial lamb..'")
+	. += span_hypnophrase("'..the thrumming of madness, to think that your suffering was all-for-naught to be His sacrificial lamb..'")
 
 // HEAVY
 /obj/item/clothing/suit/roguetown/armor/plate/full
@@ -491,6 +493,7 @@
 	max_integrity = ARMOR_INT_CHEST_PLATE_ANTAG
 	smeltresult = /obj/item/ingot/component/matthios
 	unenchantable = TRUE
+	no_loot_taint = TRUE //heretic stuff, in case it somehow ends up on a skele/NPC or w/e
 
 /obj/item/clothing/suit/roguetown/armor/plate/full/matthios/Initialize(mapload)
 	. = ..()
@@ -516,6 +519,7 @@
 	armor = ARMOR_PLATE
 	smeltresult = /obj/item/ingot/component/zizo
 	unenchantable = TRUE
+	no_loot_taint = TRUE //heretic stuff, in case it somehow ends up on a skele/NPC or w/e
 
 /obj/item/clothing/suit/roguetown/armor/plate/fluted/zizo/Initialize(mapload)
 	. = ..()
@@ -576,6 +580,7 @@
 	chunkcolor = "#dd2166"
 	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET
 	smeltresult = /obj/item/ingot/component/baotha
+	no_loot_taint = TRUE //heretic stuff, in case it somehow ends up on a skele/NPC or w/e
 
 /obj/item/clothing/suit/roguetown/armor/plate/fluted/baotha/Initialize(mapload)
 	. = ..()
@@ -775,7 +780,7 @@
 	icon_state = "ornatechestplate"
 	item_state = "ornatechestplate"
 
-/obj/item/clothing/suit/roguetown/armor/plate/cuirass/aalloy
+/obj/item/clothing/suit/roguetown/armor/plate/cuirass/ancient/decrepit
 	name = "decrepit cuirass"
 	desc = "Rotted metal, pounded into a breastplate. It feels more like a corset than a cuirass; there's barely enough width \
 	to let those aching lungs breathe."
@@ -787,7 +792,7 @@
 	smeltresult = /obj/item/ingot/aaslag
 	anvilrepair = null
 
-/obj/item/clothing/suit/roguetown/armor/plate/cuirass/paalloy
+/obj/item/clothing/suit/roguetown/armor/plate/cuirass/ancient
 	name = "ancient cuirass"
 	desc = "Polished gilbranze, curved into a breastplate. It is not for the heart that beats no more, but for the spirit that \
 	flows through luxless marrow; one of Her many gifts."
@@ -892,7 +897,7 @@
 	icon_state = "silverhalfplate"
 	item_state = "silverhalfplate"
 	armor = ARMOR_PLATE
-	max_integrity = ARMOR_INT_CHEST_PLATE_STEEL
+	//max_integrity = ARMOR_INT_CHEST_PLATE_STEEL   //TA Edit
 	allowed_sex = list(MALE, FEMALE)
 	anvilrepair = /datum/skill/craft/armorsmithing
 	smeltresult = /obj/item/ingot/steel

@@ -289,7 +289,7 @@
 	new /obj/item/skull(src)
 	new /obj/item/natural/bundle/bone/full(src)
 	var/list/loot = list(
-		/obj/item/clothing/ring/aalloy = 30, //Valuables
+		/obj/item/clothing/ring/decrepit = 30, //Valuables
 		/obj/item/clothing/ring/bronze = 20,
 		/obj/item/clothing/neck/roguetown/psicross/bronze = 10,
 		/obj/item/clothing/neck/roguetown/psicross/inhumen/bronze = 10,
@@ -297,7 +297,7 @@
 		/obj/item/clothing/neck/roguetown/psicross/malum/bronze = 10,
 		/obj/item/clothing/neck/roguetown/psicross/astrata/bronze = 10,
 		/obj/item/roguecoin/copper/pile = 5, //Valuables (materials)
-		/obj/item/roguecoin/aalloy/pile = 2,
+		/obj/item/roguecoin/psila/pile = 2,
 		/obj/item/roguegem/yellow = 10,
 		/obj/item/roguestatue/bronze = 10,
 		/obj/item/roguestatue/iron = 5,
@@ -342,10 +342,11 @@
 		/obj/item/clothing/neck/roguetown/psicross/pearl = 10,
 		/obj/item/clothing/neck/roguetown/psicross/g = 15,
 		/obj/item/roguecoin/silver/pile = 5, //Valuables (materials)
-		/obj/item/roguecoin/aalloy/pile = 2,
+		/obj/item/roguecoin/psila/pile = 2,
 		/obj/item/roguegem/violet = 10,
 		/obj/item/roguestatue/gold/loot = 10,
-		/obj/item/roguestatue/aalloy = 5,
+		/obj/item/roguestatue/decrepit = 5,
+		/obj/item/roguestatue/ancient = 3,
 		/obj/item/ccg_card_generator/common = 4,
 		/obj/item/ccg_card_generator/rare = 3,
 		/obj/item/ccg_card_booster = 2,
@@ -355,7 +356,7 @@
 		/obj/item/reagent_containers/food/snacks/canned = 15,
 		/obj/item/storage/backpack/rogue/satchel = 3,
 		/obj/item/storage/roguebag = 3, //Weapons / tools
-		/obj/item/rogueweapon/stoneaxe/woodcut/triumph = 5,
+		/obj/item/rogueweapon/stoneaxe/woodcut/old = 5,
 		/obj/item/rogueweapon/sword/broken = 5,
 		/obj/item/flashlight/flare/torch/lantern = 5,
 		/obj/item/rogue/instrument/lute = 5,
@@ -410,7 +411,45 @@
 		/obj/item/rogueweapon/huntingknife/idagger/steel/decorated = 5,
 		/obj/item/rogueweapon/shovel/bronze = 5,
 		/obj/item/rogue/instrument/shamisen = 2,
-		/obj/item/rogueweapon/greatsword/grenz/flamberge/paalloy = 2
+		/obj/item/rogueweapon/greatsword/grenz/flamberge/ancient = 2
 		)
 	var/I = pickweight(loot)
 	new I(src)
+
+/obj/structure/closet/crate/chest/wickertrunk
+	name = "wicker trunk"
+	desc = "Fibers interwoven to make a somewhat sturdy trunk."
+	base_icon_state = "wickertrunk"
+	icon_state = "wickertrunk"
+	open_sound = 'sound/items/book_open.ogg'
+	close_sound = 'sound/items/book_close.ogg'
+	sellprice = 0
+
+/obj/structure/closet/crate/chest/wickertrunk/blue
+	name = "decorated wicker trunk"
+	desc = "A somewhat sturdy wicker trunk covered in a linen throw rug, \
+		quaint."
+	base_icon_state = "bluewickertrunk"
+	icon_state = "bluewickertrunk"
+	open_sound = 'sound/items/book_open.ogg'
+	close_sound = 'sound/items/book_close.ogg'
+	sellprice = 0
+
+/obj/structure/closet/crate/chest/wickertrunk/red
+	name = "decorated wicker trunk"
+	desc = "A somewhat sturdy wicker trunk covered in a linen throw rug, \
+		quaint."
+	base_icon_state = "redwickertrunk"
+	icon_state = "redwickertrunk"
+	open_sound = 'sound/items/book_open.ogg'
+	close_sound = 'sound/items/book_close.ogg'
+	sellprice = 0
+
+/obj/structure/closet/crate/chest/shippingcrate
+	name = "shipping crate"
+	desc = "A sturdy wooden crate held together with bronze nails."
+	base_icon_state = "shippingcrate"
+	icon_state = "shippingcrate"
+	open_sound = 'sound/foley/doors/windowup.ogg'
+	close_sound = 'sound/foley/doors/shittyclose.ogg'
+	sellprice = 0

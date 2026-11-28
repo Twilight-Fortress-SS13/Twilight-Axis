@@ -1,4 +1,4 @@
-/datum/advclass/sellsword //Hybrid STR / SPD class with specialized weapon options
+/datum/advclass/bandit/sellsword //Hybrid STR / SPD class with specialized weapon options
 	name = "Sellsword"
 	tutorial = "Anything for coin rings true for many, but only you pushed it to its ultimate conclusion, a band of merrymen at your back and any morals left behind - you will retire in wealth or die as a mere footnote in history."
 	allowed_sexes = list(MALE, FEMALE)
@@ -66,7 +66,7 @@
 				beltr = /obj/item/rogueweapon/scabbard/sword
 			if("Falchion & Kite Shield") //Otavan
 				r_hand = /obj/item/rogueweapon/sword/short/falchion
-				backl= /obj/item/rogueweapon/shield/tower/metal
+				backl= /obj/item/rogueweapon/shield/kite
 				beltr = /obj/item/rogueweapon/scabbard/sword
 			if("Sword & Crossbow") //Etruscan
 				backl= /obj/item/gun/ballistic/revolver/grenadelauncher/crossbow

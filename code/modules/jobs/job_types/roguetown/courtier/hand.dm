@@ -72,6 +72,9 @@
 		STATKEY_CON = 1,
 		STATKEY_LCK = 1, //less lucky than the rest... go figure
 	)
+
+	tempo_capable = TRUE
+
 	age_mod = /datum/class_age_mod/hand_blademaster
 	subclass_skills = list(
 		/datum/skill/combat/maces = SKILL_LEVEL_APPRENTICE,
@@ -124,6 +127,9 @@
 		STATKEY_INT = 2,
 		STATKEY_LCK = 2,
 	)
+
+	tempo_capable = TRUE
+
 	age_mod = /datum/class_age_mod/hand_spymaster
 	subclass_skills = list(
 		/datum/skill/combat/crossbows = SKILL_LEVEL_EXPERT,
@@ -316,12 +322,9 @@
 		if(!agent || !istype(agent) || !agent.mind)
 			to_chat(user, span_warning("Invalid agent. This is a bug."))
 			return
-		var/list/agent_prefs = agent.mind.job_subprefs["Court Agent"]
-		if(!length(agent_prefs))
-			to_chat(user, span_warning("Invalid agent prefs. This is a bug."))
-			return
-		var/codename = agent_prefs["codename"]
-		var/hand_notes_html = agent_prefs["hand_file_notes"]
+		var/list/agent_prefs = agent.mind.job_subprefs?["Court Agent"]
+		var/codename = agent_prefs?["codename"]
+		var/hand_notes_html = agent_prefs?["hand_file_notes"]
 
 		var/list/d_list = agent.get_mob_descriptors()
 		var/trait_desc = "[capitalize(build_coalesce_description_nofluff(d_list, agent, list(MOB_DESCRIPTOR_SLOT_TRAIT), "%DESC1%"))]"

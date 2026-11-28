@@ -630,6 +630,11 @@ SUBSYSTEM_DEF(gamemode)
 	for(var/datum/round_event_control/antagonist/solo/ec in event_pools[EVENT_TRACK_CHARACTER_INJECTION])
 		if(!ec.roundstart || ec.occurrences)
 			continue
+		if(istype(ec, /datum/round_event_control/antagonist/solo/renegade)) // TA EDIT START
+			if(can_run_roundstart && ec.wizardevent == SSevents.wizardmode && ec.max_occurrences > 0 && pop >= ec.min_players && ec.get_antag_amount() > 0 && length(ec.get_candidates()))
+				log_storyteller("Spawning roundstart Renegades independently of the main roll.")
+				TriggerEvent(ec, TRUE)
+			continue // TA EDIT END
 		if((ec.storyteller_antag_flags & STORYTELLER_ANTAG_VILLAIN) && ec.consumes_hard_antag_slot)
 			continue	// hard villains are handled by the main roundstart roll
 		var/spawn_it = FALSE
@@ -783,7 +788,6 @@ SUBSYSTEM_DEF(gamemode)
 	refresh_alive_stats()
 	handle_post_setup_roundstart_events()
 	enforce_storyteller_soft_antag_slots()
-	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(renegade_midround)), RENEGADE_MIDROUND_DELAY)
 	roundstart_event_view = FALSE
 	return TRUE
 
@@ -1027,7 +1031,7 @@ SUBSYSTEM_DEF(gamemode)
 				continue
 			if((ec.storyteller_antag_flags & STORYTELLER_ANTAG_LITE) && !preset.lite_antags?[ec.type])
 				continue
-			if(preset.starting_point_multipliers[EVENT_TRACK_CHARACTER_INJECTION] <= 0 && !preset.guaranteed_hard)
+			if(preset.starting_point_multipliers[EVENT_TRACK_CHARACTER_INJECTION] <= 0 && !preset.guaranteed_hard && !istype(ec, /datum/round_event_control/antagonist/solo/renegade)) // TA EDIT
 				continue
 			if(istype(ec, /datum/round_event_control/antagonist/solo/dreamwalker) && !preset.allow_dreamwalker)
 				continue
@@ -1195,6 +1199,8 @@ SUBSYSTEM_DEF(gamemode)
 /datum/controller/subsystem/gamemode/proc/storyteller_event_weight(datum/round_event_control/event, base_weight, storyteller_type = null)
 	if(!event)
 		return 0
+	if(istype(event, /datum/round_event_control/antagonist/solo/renegade)) // TA EDIT
+		return 0 // TA EDIT
 	base_weight = max(0, round(base_weight))
 	// Roundstart antag events must declare a storyteller classification (VILLAIN/SOFT) to be rolled by the
 	// gamemode. Unclassified ones (rebellion, aspirants, etc.) are driven by their own systems, never the preset
@@ -1445,7 +1451,7 @@ SUBSYSTEM_DEF(gamemode)
 	var/list/opened = list()
 	if(allow_vote)
 		return opened
-	for(var/key in list("Lich", "VL", "Werewolf", "Rebel", "Renegade")) // TA EDIT
+	for(var/key in list("Lich", "VL", "Werewolf", "Rebel")) // TA EDIT
 		if((admin_slots[key] || 0) > 0)
 			opened += key
 	return opened
@@ -1538,6 +1544,8 @@ SUBSYSTEM_DEF(gamemode)
 			return "auto: [gs["final_slots"]]"
 		if("Hag")
 			return "auto: [current_storyteller?.hag_slots || 0]"
+		if("Renegade") // TA EDIT
+			return "auto: [story_antag_slot_cap(/datum/antagonist/renegade, roundstart = TRUE)]" // TA EDIT
 	// Hard antags + assassin roll via the injection system; the sandbox rolls nothing unless opened.
 	return (current_storyteller?.type == /datum/storyteller/gamemode/admin) ? "auto: 0" : "auto"
 
@@ -2146,7 +2154,7 @@ SUBSYSTEM_DEF(gamemode)
 			var/mob/living/carbon/human/human_mob = client.mob
 			record_round_statistic(STATS_TOTAL_POPULATION)
 			for(var/obj/item/clothing/neck/current_item in human_mob.get_equipped_items(TRUE))
-				if(current_item.type in list(/obj/item/clothing/neck/roguetown/psicross, /obj/item/clothing/neck/roguetown/psicross/wood, /obj/item/clothing/neck/roguetown/psicross/aalloy, /obj/item/clothing/neck/roguetown/psicross/silver,	/obj/item/clothing/neck/roguetown/psicross/g))
+				if(current_item.type in list(/obj/item/clothing/neck/roguetown/psicross, /obj/item/clothing/neck/roguetown/psicross/wood, /obj/item/clothing/neck/roguetown/psicross/ancient, /obj/item/clothing/neck/roguetown/psicross/silver,	/obj/item/clothing/neck/roguetown/psicross/g))
 					record_round_statistic(STATS_PSYCROSS_USERS)
 					break
 			switch(human_mob.pronouns)

@@ -1529,9 +1529,8 @@ var/static/list/shamanic_commit_fold_cache = list()
 			to_chat(user, span_warning("There is already something here!"))
 			return
 	user.visible_message(span_notice("[user] begins planting [src] into the ground."))
-	user.AddElement(/datum/element/interrupt_on_damage)
-	var/planted = do_after(user, 3 SECONDS, TRUE, src)
-	user.RemoveElement(/datum/element/interrupt_on_damage)
+	var/mob/living/carbon/human/human_user = user
+	var/planted = do_after(user, 3 SECONDS, TRUE, src, TRUE, CALLBACK(user, TYPE_PROC_REF(/mob/living, break_do_after_checks), list("health" = human_user.health), FALSE))
 	if(!planted)
 		return
 	var/turf/T2 = get_turf(src)

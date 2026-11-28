@@ -32,7 +32,7 @@
 		to_chat(usr, "<span class='warning'>I seem to be selecting a mob that doesn't exist anymore.</span>")
 		return
 
-	var/body = "<html><head><title>Options for [M.key]</title><style>"
+	var/body = "<html><head><meta charset='UTF-8'><title>Options for [M.key]</title><style>"
 	body += "<style>"
 	body += "html, body { height: 100%; margin: 0; padding: 0; overflow-x: hidden; }"
 	body += "#container { display: flex; flex-direction: row; align-items: flex-start; width: 100%; overflow-x: hidden; flex-wrap: nowrap; }"
@@ -720,7 +720,7 @@
 	else
 		for(var/i in 1 to amount)
 			var/atom/A = new chosen(T)
-			A.flags_1 |= ADMIN_SPAWNED_1
+			A.flags_1 |= ADMIN_SPAWNED_1 // TA EDIT
 
 	log_admin("[key_name(usr)] spawned [amount] x [chosen] at [AREACOORD(usr)]")
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Spawn Atom") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
@@ -743,7 +743,7 @@
 	else
 		var/obj/structure/closet/supplypod/centcompod/pod = new()
 		var/atom/A = new chosen(pod)
-		A.flags_1 |= ADMIN_SPAWNED_1
+		A.flags_1 |= ADMIN_SPAWNED_1 // TA EDIT
 		new /obj/effect/DPtarget(T, pod)
 
 	log_admin("[key_name(usr)] pod-spawned [chosen] at [AREACOORD(usr)]")

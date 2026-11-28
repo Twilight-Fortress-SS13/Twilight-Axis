@@ -100,8 +100,6 @@
 	var/allow_dreamwalker = FALSE
 	/// Lite antag events this preset can roll at roundstart, event type -> most antags it spawns.
 	var/list/lite_antags
-	/// Most Renegades the midround check hands out under this preset.
-	var/midround_renegades = 0
 	/// How many Hag slots this preset opens (0 or 1).
 	var/hag_slots = 0
 	/// If TRUE, all hard (villain) antags are blocked at roundstart.

@@ -1,4 +1,4 @@
-/datum/advclass/twilight_afreet
+/datum/advclass/bandit/twilight_afreet
 	name = "Afreet"
 	tutorial = "'Demon of Fire', the slaves used to call you, when you, dressed in black uniform, emerged from the sands, having shot their masters dead with weapons they could not comprehend. During the War, you were deployed deep within the Naledi lands, tasked with plundering Golden Empire's slave trade routes. Perhaps you found it too profitable and enjoyable to leave behind, or perhaps you still wage your war to this day — either way, you no longer answer to the Kaiser or his lackeys."
 	allowed_sexes = list(MALE, FEMALE)

@@ -1,4 +1,4 @@
-/datum/advclass/knave //sneaky bastards - ranged classes of two flavors archers and rogues
+/datum/advclass/bandit/knave //sneaky bastards - ranged classes of two flavors archers and rogues
 	name = "Knave"
 	tutorial = "Not all followers of Matthios take by force. Thieves, poachers, and ne'er-do-wells of all forms steal from others from the shadows, long gone before their marks realize their misfortune."
 	allowed_sexes = list(MALE, FEMALE)
@@ -14,6 +14,11 @@
 		STATKEY_STR = 1,
 		STATKEY_WIL = 1,
 		STATKEY_CON = 1
+	)
+	subclass_stashed_items = list(
+		"Wax Putty I" = /obj/item/waxputty,
+		"Wax Putty II" = /obj/item/waxputty,
+		"Wax Putty III" = /obj/item/waxputty,
 	)
 	subclass_skills = list(
 		/datum/skill/combat/polearms = SKILL_LEVEL_JOURNEYMAN,

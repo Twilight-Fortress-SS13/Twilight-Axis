@@ -21,7 +21,7 @@
 	var/mob/living/carbon/human/L = owner.current
 	L.become_skeleton()
 	ADD_TRAIT(L, TRAIT_HEAVYARMOR, TRAIT_GENERIC)
-	//TA_EDIT ADD_TRAIT(L, TRAIT_SHATTER_KILL, TRAIT_GENERIC)
+	ADD_TRAIT(L, TRAIT_NONAMESTEAL, TRAIT_GENERIC)
 	ADD_TRAIT(L, TRAIT_SKELETAL_GIB_ON_DEATH, TRAIT_GENERIC)
 
 /datum/antagonist/unbound_death_knight/proc/equip_knight()
@@ -161,11 +161,11 @@
 		if("Longsword")
 			beltl = /obj/item/rogueweapon/scabbard/sword
 			l_hand = /obj/item/rogueweapon/sword/long
-			backl = /obj/item/rogueweapon/shield/tower/metal
+			backl = /obj/item/rogueweapon/shield/kite
 			H.adjust_skillrank(/datum/skill/combat/swords, 1, TRUE)
 		if ("Warhammer")
 			beltr = /obj/item/rogueweapon/mace/warhammer/steel
-			backl = /obj/item/rogueweapon/shield/tower/metal
+			backl = /obj/item/rogueweapon/shield/kite
 			H.adjust_skillrank(/datum/skill/combat/maces, 1, TRUE)
 		if("Halberd")
 			backl = /obj/item/rogueweapon/scabbard/gwstrap

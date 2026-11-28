@@ -86,6 +86,9 @@
 		STATKEY_WIL = 2,
 		STATKEY_SPD = -2,
 	)
+
+	tempo_capable = TRUE
+
 	subclass_skills = list(
 		/datum/skill/combat/polearms = SKILL_LEVEL_MASTER,
 		/datum/skill/combat/swords = SKILL_LEVEL_MASTER,
@@ -125,7 +128,7 @@
 				r_hand = /obj/item/rogueweapon/mace/goden/steel
 			if("Battle Axe & Shield")
 				r_hand = /obj/item/rogueweapon/stoneaxe/battle
-				backl = /obj/item/rogueweapon/shield/tower/metal
+				backl = /obj/item/rogueweapon/shield/kite
 			if("Poleaxe")
 				r_hand = /obj/item/rogueweapon/greataxe/steel/knight
 				backl = /obj/item/rogueweapon/scabbard/gwstrap
@@ -141,17 +144,17 @@
 			if("Longsword & Shield")
 				beltl = /obj/item/rogueweapon/scabbard/sword/noble
 				r_hand = /obj/item/rogueweapon/sword/long
-				backl = /obj/item/rogueweapon/shield/tower/metal
+				backl = /obj/item/rogueweapon/shield/kite
 			if("Flail & Shield")
-				beltr = /obj/item/rogueweapon/flail/sflail
-				backl = /obj/item/rogueweapon/shield/tower/metal
+				beltr = /obj/item/rogueweapon/flail/steel
+				backl = /obj/item/rogueweapon/shield/kite
 			if("Warhammer & Shield")
 				beltr = /obj/item/rogueweapon/mace/warhammer/steel
-				backl = /obj/item/rogueweapon/shield/tower/metal
+				backl = /obj/item/rogueweapon/shield/kite
 			if("Sabre & Shield")
 				beltl = /obj/item/rogueweapon/scabbard/sword/noble
 				r_hand = /obj/item/rogueweapon/sword/sabre
-				backl = /obj/item/rogueweapon/shield/tower/metal
+				backl = /obj/item/rogueweapon/shield/kite
 
 	if(H.mind)
 		var/helmets = list(

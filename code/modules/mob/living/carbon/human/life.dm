@@ -60,6 +60,7 @@
 	handle_heart()
 	update_energy()
 	update_stamina()
+	update_health_hud()
 	for(var/datum/charflaw/cf in charflaws)
 		if(!cf.ephemeral && mind)
 			cf.flaw_on_life(src)
@@ -193,6 +194,8 @@
 	if(stat == DEAD)
 		return
 	if(HAS_TRAIT(src, TRAIT_NOBREATH))
+		return
+	if(m_intent == MOVE_INTENT_SNEAK) //TA EDIT
 		return
 	breathe_tick++
 	var/mask_sound

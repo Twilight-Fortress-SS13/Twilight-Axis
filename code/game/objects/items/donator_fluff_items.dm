@@ -1,7 +1,6 @@
 ///////////////////
 // UNIVERSAL	 //
 ///////////////////
-
 /obj/item/herbseed/rosa/azure
 	name = "azurosa seeds"
 	seed_identity = "azurosa seeds"
@@ -24,7 +23,6 @@
 	one thing: a donation from the inner lands."
 	icon_state = "azurosa_plant"
 	icon = 'icons/obj/items/donor_objects.dmi'
-
 	herbtype = /obj/item/alch/rosa/azure
 
 /obj/item/alch/rosa/azure
@@ -555,15 +553,6 @@
 	req_table = TRUE
 	bypass_dupe_test = TRUE
 
-/obj/item/clothing/suit/roguetown/armor/plate/cuirass/fencer/donator_gothic
-	name = "gothic chestplate"
-	desc = "A magnificent steel cuirass, assembled by an Azurian mastersmith. The intricate fluting and interlocked plates are clear \
-	signs of its Grenzelhoftian heritage; expensive, but second-to-none when it comes to what truly matters in life."
-	icon = 'icons/clothing/donor_clothes.dmi'
-	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
-	item_state = "gcuirass"
-	icon_state = "gcuirass"
-
 /obj/item/clothing/suit/roguetown/armor/plate/cuirass/fencer/ornate/donator_gothic
 	name = "gothic chestplate"
 	desc = "A magnificent ornate cuirass, assembled by an Azurian mastersmith. The intricate fluting and interlocked plates are clear \
@@ -828,7 +817,7 @@
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
 	sleeved = 'icons/clothing/onmob/donor_sleeves_armor.dmi'
 
-/obj/item/clothing/wrists/roguetown/bracers/aalloy/armharness
+/obj/item/clothing/wrists/roguetown/bracers/ancient/decrepit/armharness
 	name = "decrepit plate arm harness"
 	desc = "A frayed pair of interlocked bronze plate arm harnesses, composed of pauldrons, rerebraces, couters, and vambraces - all snugly latched around the limb and secured to one another thanks to a series of leather straps, metal aglets, and sliding rivets. The engineering is so meticulous that flexibility of the limb is hardly impeded."
 	item_state = "aarmharness"
@@ -837,7 +826,7 @@
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
 	sleeved = 'icons/clothing/onmob/donor_sleeves_armor.dmi'
 
-/obj/item/clothing/wrists/roguetown/bracers/paalloy/armharness
+/obj/item/clothing/wrists/roguetown/bracers/ancient/armharness
 	name = "ancient plate arm harness"
 	desc = "A polished pair of interlocked gilbranze plate arm harnesses, composed of pauldrons, rerebraces, couters, and vambraces - all snugly latched around the limb and secured to one another thanks to a series of leather straps, metal aglets, and sliding rivets. The engineering is so meticulous that flexibility of the limb is hardly impeded."
 	item_state = "aarmharness"
@@ -969,7 +958,7 @@
 	custom_design = TRUE
 	body_parts_covered = CHEST
 	slot_flags = ITEM_SLOT_HEAD | ITEM_SLOT_CLOAK
-	storage = FALSE
+	storage = null
 	grid_width = 32
 	grid_height = 32
 
@@ -1026,8 +1015,7 @@
 
 /obj/item/clothing/shoes/roguetown/simpleshoes/heels/ComponentInitialize()
 	. = ..()
-	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_HEELS, 2)
-	stepnoise_flag = STEPNOISE_HEELS // This will prevent default footstep noise from being made by the heels (sounds odd)
+	stepnoise_flag = STEPNOISE_HEELS // TA EDIT
 
 /obj/item/clothing/shoes/roguetown/simpleshoes/heels/update_icon()
 	cut_overlays()
@@ -1415,7 +1403,7 @@
 	icon_state = "donator_hammer"
 	icon = 'icons/obj/items/donor_weapons.dmi'
 
-/obj/item/rogueweapon/flail/sflail/donator_elegant
+/obj/item/rogueweapon/flail/steel/donator_elegant
 	name = "elegant flail"
 	desc = "An elegant flail for an elegant wielder."
 	icon_state = "donator_flail"
@@ -1587,7 +1575,7 @@
 	icon = 'icons/obj/items/donor_weapons_64.dmi'
 	bigboy = TRUE
 
-/obj/item/rogueweapon/shield/tower/metal/donator_elegant
+/obj/item/rogueweapon/shield/kite/donator_elegant
 	name = "elegant kite shield"
 	desc = "An elegant kite shield for an elegant wielder."
 	icon_state = "donatorsh"
@@ -1620,7 +1608,7 @@
 	icon = 'icons/obj/items/donor_weapons_64.dmi'
 	bigboy = TRUE
 
-/obj/item/rogueweapon/flail/peasantwarflail/iron/donator_elegant
+/obj/item/rogueweapon/flail/great/iron/donator_elegant
 	name = "elegant greatflail"
 	desc = "An elegant greatflail for an elegant wielder."
 	icon_state = "donatorgreatflail"
@@ -1636,7 +1624,7 @@
 
 //
 
-/obj/item/rogueweapon/donator_imbuedlongsword
+/obj/item/rogueweapon/example/donator_imbuedlongsword
 	name = "imbued longsword"
 	desc = "A lethal and perfectly balanced weapon, imbued with decorative flair. The longsword is the protagonist of endless tales and myths \
 	all across Psydonia, seen in the hands of noblemen and an ever-decreasing quantity of master duelists. \
@@ -1781,7 +1769,8 @@
 	detail_color = CLOTHING_WHITE
 
 /obj/item/rogueweapon/woodstaff/implement/fellowshippe
-	name = "Experimental Azurian Fellowshippe Staff"
+	name = "\improper Experimental Azurian Fellowshippe Staff"
+	base_implement_name = "\improper Experimental Azurian Fellowshippe Staff"
 	desc = "A sleek, purpose driven staff with a blacksteel shaft running the entirety of it's lenght. \
 	Using a special crystalization technique and a gating system, a thin feeder duct exists in \
 	the middle of the shaft allowing a alchemically synthetsized dorpel to run the full lenght,  \
@@ -1791,7 +1780,8 @@
 	icon = 'icons/obj/items/donor_weapons_64.dmi'
 
 /obj/item/rogueweapon/woodstaff/implement/greater/fellowshippe
-	name = "Experimental Azurian Fellowshippe Staff"
+	name = "\improper Experimental Azurian Fellowshippe Staff"
+	base_implement_name = "\improper Experimental Azurian Fellowshippe Staff"
 	desc = "A sleek, purpose driven staff with a blacksteel shaft running the entirety of it's lenght. \
 	Using a special crystalization technique and a gating system, a thin feeder duct exists in \
 	the middle of the shaft allowing a alchemically synthetsized dorpel to run the full lenght,  \
@@ -1801,7 +1791,8 @@
 	icon = 'icons/obj/items/donor_weapons_64.dmi'
 
 /obj/item/rogueweapon/woodstaff/implement/grand/fellowshippe
-	name = "Experimental Azurian Fellowshippe Staff"
+	name = "\improper Experimental Azurian Fellowshippe Staff"
+	base_implement_name = "\improper Experimental Azurian Fellowshippe Staff"
 	desc = "A sleek, purpose driven staff with a blacksteel shaft running the entirety of it's lenght. \
 	Using a special crystalization technique and a gating system, a thin feeder duct exists in \
 	the middle of the shaft allowing a alchemically synthetsized dorpel to run the full lenght,  \
@@ -1811,7 +1802,8 @@
 	icon = 'icons/obj/items/donor_weapons_64.dmi'
 
 /obj/item/rogueweapon/woodstaff/implement/grand/magos/fellowshippe
-	name = "Experimental Azurian Fellowshippe Staff"
+	name = "\improper Experimental Azurian Fellowshippe Staff"
+	base_implement_name = "\improper Experimental Azurian Fellowshippe Staff"
 	desc = "A sleek, purpose driven staff with a blacksteel shaft running the entirety of it's lenght. \
 	Using a special crystalization technique and a gating system, a thin feeder duct exists in \
 	the middle of the shaft allowing a alchemically synthetsized dorpel to run the full lenght,  \
@@ -2796,7 +2788,6 @@ As Excaliber."
 
 /obj/item/clothing/shoes/roguetown/boots/tabi/ComponentInitialize()
 	. = ..()
-	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_HEELS, 2) //Slay, sire.
 	stepnoise_flag = STEPNOISE_HEELS
 
 /obj/item/clothing/shoes/roguetown/boots/tabi/otavan
@@ -3361,7 +3352,7 @@ As Excaliber."
 			pic.color = get_detail_color()
 		add_overlay(pic)
 
-/obj/item/rogueweapon/flail/peasantwarflail/drow
+/obj/item/rogueweapon/flail/great/drow
 	name = "skikudic greatflail"
 	desc = "Bend the knee."
 	icon_state = "drowgreatflail"
@@ -3371,7 +3362,7 @@ As Excaliber."
 	anvilrepair = /datum/skill/craft/weaponsmithing
 	smeltresult = /obj/item/ingot/drow
 
-/obj/item/rogueweapon/flail/peasantwarflail/drow/alt
+/obj/item/rogueweapon/flail/great/drow/alt
 	icon_state = "drowgreatflailb"
 
 //Truill
@@ -3958,21 +3949,6 @@ As Excaliber."
 /obj/item/clothing/mask/rogue/facemask/steel/maille/birdmask/ComponentInitialize()
 	pass() // *flips the bird at you* (this isnt meant to be adjustable)
 
-/obj/item/clothing/head/roguetown/wizhat/bighat
-	name = "Eryn’s archwyzardly hat"
-	desc = "In the oldest days, a magos’s mastery of the Arcyne was documented by the size of their hat. This one is comically large."
-	icon = 'icons/clothing/donor_clothes.dmi'
-	icon_state = "bighat"
-	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes64.dmi'
-	bloody_icon = 'icons/effects/blood64.dmi'
-	detail_tag = "_detail"
-	altdetail_tag = "_detailalt"
-	dynamic_hair_suffix = "+generic"
-	color = "#660fcc"
-	detail_color = CLOTHING_GOLD
-	altdetail_color = CLOTHING_GOLD
-
-//ROSYSATURNIIDAE
 /obj/item/clothing/neck/roguetown/psicross/eora/rosecollar
 	name = "rosestone clasped collar"
 	desc = "A simple rigid collar fashioned out of rosestone.</br>\
@@ -4809,7 +4785,7 @@ As Excaliber."
 	altdetail_color = CLOTHING_GOLD
 
 /obj/item/clothing/cloak/templar/ravoxcleric/koruu
-	name = "Sefirot's Cloak"
+	name = "Sefirot's cloak"
 	desc = "A tattered red tabard dyed in the bold colors of Ravox. Its striking crimson fabric stands out on the front lines, signaling unyielding judgment. For a thousand yils, our ancestors have defied the darkness. May their descendants defy the darkness for a thousand more."
 	armor = ARMOR_CLOTHING
 
@@ -4820,7 +4796,7 @@ As Excaliber."
 	item_state = "ravoxclerichelmet"
 
 /obj/item/clothing/cloak/templar/astratancleric/koruu
-	name = "Cloak of the Order of the Sun"
+	name = "cloak of the Order of the Sun"
 	desc = "A golden-colored cloak with frayed edges, bearing the radiant hues of Astrata. It marks the wearer as a beacon of light amidst the chaos of battle."
 	armor = ARMOR_CLOTHING
 
@@ -4896,7 +4872,7 @@ As Excaliber."
 		add_overlay(pic2)
 
 /obj/item/rogueweapon/sword/sabre/donator_rezathedwarf
-	name = "The Enclave Blade"
+	name = "the Enclave Blade"
 	desc = "A decorated saber of gold and steel, with added gems to show wealth and majesty, heavily reinforced with blacksteel to \
 	keep its integrity and stopping power. Looted from the last living noble of an Astratan-blessed family. Taken after dueling the \
 	founder of the house in his days as a slave. On its handle reads, originally read, \"The Chosen Have Nothing to Fear,\" but a new \
@@ -4906,21 +4882,21 @@ As Excaliber."
 
 // LIMETEASE
 /obj/item/rogueweapon/sword/sabre/donator_limetease
-	name = "Malevolent Sabre"
+	name = "malevolent sabre"
 	desc = "A sinister-looking sabre with a deep malevolent aura. Its blade seems to pulse with an otherworldly energy only a god could imbue."
 	icon_state = "limesaber"
 	icon = 'icons/obj/items/donor_weapons.dmi'
 
 // LIMETEASE
 /obj/item/rogue/instrument/guitar/rosa_silveredguitar
-	name = "Silvered Rosa Guitar"
+	name = "silvered rosa guitar"
 	desc = "A guitar adorned with rosas, silvered strings, and a mauve body, crafted by the finest luthiers of Rosawood. Its sound resonates with a clarity that can soothe even the most troubled soul."
 	icon = 'icons/obj/items/donor_music.dmi'
 	icon_state = "rosa_silveredguitar"
 
 // LIMETEASE
 /obj/item/rogue/instrument/guitar/silveredguitar
-	name = "Silvered Guitar"
+	name = "silvered guitar"
 	desc = "A guitar adorned with silvered strings and a mauve body, crafted by the finest luthiers of Rosawood. Its sound resonates with a clarity that can soothe even the most troubled soul."
 	icon = 'icons/obj/items/donor_music.dmi'
 	icon_state = "silveredguitar"
@@ -4955,7 +4931,7 @@ As Excaliber."
 
 // LIMETEASE
 /obj/item/clothing/cloak/tabard/limeastratatabard
-	name = "Astratan Tabard"
+	name = "astratan tabard"
 	desc = "A unique tabard adorned with the golden markings of the sun monarch, the wearers of this tabard are often."
 	icon_state = "limeastratatabard"
 	icon = 'icons/clothing/donor_clothes.dmi'
@@ -4963,7 +4939,7 @@ As Excaliber."
 
 // LIMETEASE
 /obj/item/clothing/cloak/tabard/limetabard
-	name = "Leathery Tabard"
+	name = "leathery tabard"
 	desc = "A warm tabard that's snatched at the waist, inside that leathery coffin is ."
 	icon_state = "limetabard"
 	icon = 'icons/clothing/donor_clothes.dmi'
@@ -4971,7 +4947,7 @@ As Excaliber."
 
 // LIMETEASE
 /obj/item/clothing/head/roguetown/helmet/heavy/astratahelm/limeastratahelm
-	name = "The True Astratan Helmet"
+	name = "the True Astratan Helmet"
 	desc = "An ornate steel cap, adorned with a firey sun crown. Optionally worn with a coif, this fashionable statement of faith is usually given to astratans who give their nobility up in the sake of faith."
 	item_state = "limeastratahelm"
 	icon_state = "limeastratahelm"
@@ -4991,7 +4967,7 @@ As Excaliber."
 
 // LIMETEASE
 /obj/item/clothing/cloak/poncho/guidress
-	name = "Kazengun Silken Lounge Jacket"
+	name = "kazengun silken lounge jacket"
 	desc = "A fine silken jacket from the shores of Kazegun, although calling this garment a jacket is a stretch. Typically worn by courtesans or those of ill-repute. The long sleaves give an air of elegance while the low-cut in front bring the viewer's eyes to the wearer's more delicate 'assets'."
 	icon_state = "guidress"
 	icon = 'icons/clothing/donor_clothes.dmi'
@@ -5016,7 +4992,7 @@ As Excaliber."
 
 // LIMETEASE
 /obj/item/storage/belt/rogue/leather/ulqbelt
-	name = "Belt of the Potionkeeper"
+	name = "belt of the Potionkeeper"
 	desc = "Gronnic leather adorned with a golden volf-esque symbol, this belt carries heavy sloshing potions that radiate a terrible feeling."
 	icon_state = "ulqbelt"
 	icon = 'icons/clothing/donor_clothes.dmi'
@@ -5024,7 +5000,7 @@ As Excaliber."
 
 // LIMETEASE
 /obj/item/storage/belt/rogue/leather/ulqsusbelt
-	name = "Messy Belt of the Potionkeeper"
+	name = "messy belt of the Potionkeeper"
 	desc = "Gronnic leather adorned with a golden volf-esque symbol, this belt carries heavy sloshing waste that exudes a freeky feeling."
 	icon_state = "ulqsusbelt"
 	icon = 'icons/clothing/donor_clothes.dmi'
@@ -5032,7 +5008,7 @@ As Excaliber."
 
 // Solar Dominion Cestus
 /obj/item/clothing/gloves/roguetown/knuckles/dominion_cestus
-	name = "Dominion cestus"
+	name = "dominion cestus"
 	desc = "A sun-elven treasure, likely seized amid the rebellions in Raneshen. Intricately carved from dark onyxa and imbued with the strength of steel through arcyne craft."
 	icon_state = "dominion_cestus"
 	icon = 'icons/clothing/donor_clothes.dmi'
@@ -5095,7 +5071,7 @@ As Excaliber."
 	source.update_inv_gloves()
 
 /obj/item/clothing/gloves/roguetown/knuckles/bronze/dominion_cestus
-	name = "Dominion cestus"
+	name = "dominion cestus"
 	desc = "A sun-elven treasure, likely seized amid the rebellions in Raneshen. Intricately carved from dark onyxa and imbued with the strength of steel through arcyne craft."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
@@ -5108,7 +5084,7 @@ As Excaliber."
 	AddComponent(/datum/component/dominion_cestus_cycle)
 
 /obj/item/clothing/gloves/roguetown/knuckles/iron/dominion_cestus
-	name = "Dominion cestus"
+	name = "dominion cestus"
 	desc = "A sun-elven treasure, likely seized amid the rebellions in Raneshen. Intricately carved from dark onyxa and imbued with the strength of steel through arcyne craft."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
@@ -5121,7 +5097,7 @@ As Excaliber."
 	AddComponent(/datum/component/dominion_cestus_cycle)
 
 /obj/item/clothing/gloves/roguetown/knuckles/silver/dominion_cestus
-	name = "Dominion cestus"
+	name = "dominion cestus"
 	desc = "A sun-elven treasure, likely seized amid the rebellions in Raneshen. Intricately carved from dark onyxa and imbued with the strength of steel through arcyne craft."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
@@ -5134,7 +5110,7 @@ As Excaliber."
 	AddComponent(/datum/component/dominion_cestus_cycle)
 
 /obj/item/clothing/gloves/roguetown/knuckles/blacksteel/dominion_cestus
-	name = "Dominion cestus"
+	name = "dominion cestus"
 	desc = "A sun-elven treasure, likely seized amid the rebellions in Raneshen. Intricately carved from dark onyxa and imbued with the strength of steel through arcyne craft."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
@@ -5147,7 +5123,7 @@ As Excaliber."
 	AddComponent(/datum/component/dominion_cestus_cycle)
 
 /obj/item/clothing/gloves/roguetown/leather/dominion_cestus
-	name = "Dominion cestus"
+	name = "dominion cestus"
 	desc = "A sun-elven treasure, likely seized amid the rebellions in Raneshen. Intricately carved from dark onyxa and imbued with the strength of steel through arcyne craft."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
@@ -5160,7 +5136,7 @@ As Excaliber."
 	AddComponent(/datum/component/dominion_cestus_cycle)
 
 /obj/item/clothing/gloves/roguetown/angle/dominion_cestus
-	name = "Dominion cestus"
+	name = "dominion cestus"
 	desc = "A sun-elven treasure, likely seized amid the rebellions in Raneshen. Intricately carved from dark onyxa and imbued with the strength of steel through arcyne craft."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
@@ -5173,7 +5149,7 @@ As Excaliber."
 	AddComponent(/datum/component/dominion_cestus_cycle)
 
 /obj/item/clothing/gloves/roguetown/chain/dominion_cestus
-	name = "Dominion cestus"
+	name = "dominion cestus"
 	desc = "A sun-elven treasure, likely seized amid the rebellions in Raneshen. Intricately carved from dark onyxa and imbued with the strength of steel through arcyne craft."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
@@ -5186,7 +5162,7 @@ As Excaliber."
 	AddComponent(/datum/component/dominion_cestus_cycle)
 
 /obj/item/clothing/gloves/roguetown/plate/dominion_cestus
-	name = "Dominion cestus"
+	name = "dominion cestus"
 	desc = "A sun-elven treasure, likely seized amid the rebellions in Raneshen. Intricately carved from dark onyxa and imbued with the strength of steel through arcyne craft."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
@@ -5199,7 +5175,7 @@ As Excaliber."
 	AddComponent(/datum/component/dominion_cestus_cycle)
 
 /obj/item/clothing/gloves/roguetown/bandages/weighted/dominion_cestus
-	name = "Dominion cestus"
+	name = "dominion cestus"
 	desc = "A sun-elven treasure, likely seized amid the rebellions in Raneshen. Intricately carved from dark onyxa and imbued with the strength of steel through arcyne craft."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
@@ -5212,7 +5188,7 @@ As Excaliber."
 	AddComponent(/datum/component/dominion_cestus_cycle)
 
 /obj/item/clothing/gloves/roguetown/bandages/pugilist/dominion_cestus
-	name = "Dominion cestus"
+	name = "dominion cestus"
 	desc = "A sun-elven treasure, likely seized amid the rebellions in Raneshen. Intricately carved from dark onyxa and imbued with the strength of steel through arcyne craft."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
@@ -5229,6 +5205,8 @@ As Excaliber."
 	desc = "It doesn’t seem to serve it’s purpose well anymore, Aeon’s grip slowly fraying it’s structure. The inside of it is filled with scripture in an older, defunct Otavais tongue. Sometimes, it wheezes on its own, lending credence to the whispers of heresy surrounding its invention. Wearing it, you taste copper whenever you draw breath."
 	armor = null
 	smeltresult = null
+	block2add = null
+	body_parts_covered = null
 
 /obj/item/clothing/mask/rogue/facemask/steel/confessor/mrsaxyman/ComponentInitialize()
 	return
@@ -5255,3 +5233,80 @@ As Excaliber."
 	icon = 'icons/clothing/donor_clothes.dmi'
 	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
 	icon_state = "bluelily"
+
+/obj/item/clothing/head/roguetown/circlet/sigholt_coronet
+	name = "blacksteel coronet"
+	desc = "A blacksteel coronet inlaid with holy sylver. A mark of office, or ostentation?"
+	icon_state = "sigholtcoronet_0"
+	item_state = "sigholtcoronet_0"
+	icon = 'icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
+	unique_reskin = list(
+		"blacksteel" = "sigholtcoronet_0",
+		"gold" = "sigholtcoronet_1",
+		"silver" = "sigholtcoronet_2",
+	)
+	current_skin = "blacksteel"
+
+/obj/item/clothing/head/roguetown/circlet/sigholt_coronet/rmb_self(mob/user, keybind = FALSE)
+	. = ..()
+	if(unique_reskin && user.canUseTopic(src, BE_CLOSE, NO_DEXTERITY))
+		reskin_obj(user)
+
+/obj/item/clothing/head/roguetown/circlet/sigholt_coronet/reskin_obj(mob/M)
+	if(!unique_reskin || !length(unique_reskin))
+		return
+
+	var/list/keys = unique_reskin
+	var/idx = keys.Find(current_skin)
+	idx = idx ? (idx % length(keys)) + 1 : 1
+	var/choice = keys[idx]
+
+	current_skin = choice
+	icon_state = unique_reskin[choice]
+	item_state = icon_state
+
+	var/metal_name = choice
+	to_chat(M, span_info("You adjust the [src]."))
+	name = "[metal_name] coronet"
+	desc = "A [metal_name] coronet inlaid with holy sylver. A mark of office, or ostentation?"
+
+	if(ishuman(M))
+		var/mob/living/carbon/human/H = M
+		H.update_inv_head()
+		H.update_inv_hands()
+
+/obj/item/clothing/head/roguetown/circlet/sigholt_coronet/get_mechanics_examine(mob/user)
+	. = ..()
+	. += span_info("Right-clicking in hand allows you to select the coronet's metal between blacksteel, gold, and silver.")
+
+/obj/item/clothing/head/roguetown/circlet/sigholt_coronet/equipped(mob/user, slot, initial = FALSE)
+	. = ..()
+	if(current_skin && unique_reskin && unique_reskin[current_skin])
+		icon_state = unique_reskin[current_skin]
+		item_state = icon_state
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		H.update_inv_head()
+		H.update_inv_hands()
+
+/obj/item/clothing/head/roguetown/circlet/sigholt_coronet/update_icon()
+	if(current_skin && unique_reskin && unique_reskin[current_skin])
+		icon_state = unique_reskin[current_skin]
+		item_state = icon_state
+	return ..()
+
+// ClemTheDuck
+/obj/item/clothing/mask/rogue/lunarmuzzle
+	name = "ceremonial lunar muzzle"
+	desc = "A ceremonial mask often used by Noccite cultists, forged of blessed steel alloy with a blue hue. Shaped like a Lupian muzzle to cover the mouth, these masks remind their wearers to listen more than they speak."
+	icon = 'icons/clothing/donor_clothes.dmi'
+	mob_overlay_icon = 'icons/clothing/onmob/donor_clothes.dmi'
+	icon_state = "lunarmuzzle"
+	item_state = "lunarmuzzle"
+	resistance_flags = FIRE_PROOF
+	flags_inv = HIDEFACE|HIDESNOUT
+	body_parts_covered = FACE
+	block2add = FOV_DEFAULT
+	slot_flags = ITEM_SLOT_MASK|ITEM_SLOT_HEAD|ITEM_SLOT_MOUTH
+	experimental_onhip = TRUE

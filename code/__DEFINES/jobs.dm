@@ -166,12 +166,12 @@
 #define JCOLOR_BY_DEPARTMENT list(\
 	"Noblemen" = JCOLOR_NOBLE,\
 	"Courtiers" = JCOLOR_COURTIER,\
-	"RETINUE" = JCOLOR_RETINUE, \
+	"Retinue" = JCOLOR_RETINUE,\
 	"Garrison" = JCOLOR_GARRISON,\
 	"City Watch" = JCOLOR_CITYWATCH,\
 	"Vanguard" = JCOLOR_VANGUARD,\
 	"Church" = JCOLOR_CHURCH,\
-	"Burghres" = JCOLOR_BURGHER,\
+	"Burghers" = JCOLOR_BURGHER,\
 	"Azurian Trading Company" = JCOLOR_ATC,\
 	"Peasants" = JCOLOR_PEASANT,\
 	"Inquisition" = JCOLOR_INQUISITION,\

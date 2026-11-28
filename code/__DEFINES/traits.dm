@@ -171,6 +171,8 @@
 #define TRAIT_WYRD_LABOURER "Wyrd Labourer" // Hag boon
 #define TRAIT_CURSE_SCAR "Curse Scar"
 #define TRAIT_BOGWALKER "Bogwalker"
+#define TRAIT_NONAMESTEAL "Onomastic Freeze"
+#define TRAIT_POSSESSED "Vessel"
 
 //Deadites - Handles self healing + Examines + Combat/Mobility Shutdowns
 #define TRAIT_DEADITE "Deadite"
@@ -307,6 +309,7 @@
 
 #define TRAIT_NOFALLDAMAGE1 "Fall Damage Reduction"
 #define TRAIT_NOFALLDAMAGE2 "Fall Damage Immunity"
+#define TRAIT_AMORPHOUS_LANDING "Amorphous Landing"
 
 #define TRAIT_STRONGBITE "Strong Bite" //Higher critrate + damage
 #define TRAIT_STRONGKICK "Strong Kick" //Knockdown to the floor guarrenteed if it hits + knockback a tile
@@ -321,7 +324,6 @@
 #define TRAIT_WOODWALKER "Woodwalker" //Boak/Virtue
 
 //Role Unique flavor traits
-#define TRAIT_BLACKOAK "Heritage Vision" //Used to make the black oaken elves only like fellow non-sun elves
 #define TRAIT_MANORKEEPER "Manorkeeper" // Flavortext-related for the Absolver.
 #define TRAIT_MANIAC_AWOKEN "Awoken" //Trey Liam. No, He doesn't exist.
 
@@ -627,6 +629,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_SANGUIVORE = "I can drink blood without retching, though it does little to sate me.",
 	TRAIT_NOFALLDAMAGE1 = span_warning("I can easily handle minor falls."),
 	TRAIT_NOFALLDAMAGE2 = span_warning("I can handle a fall from any height."),
+	TRAIT_AMORPHOUS_LANDING = span_warning("I flatten into a puddle of ooze when I land from a fall."),
 	TRAIT_GRABIMMUNE = span_warning("My great strength, or slippery agility, prevents others from getting ahold of me!"),
 	TRAIT_DISFIGURED = span_warning("No one can recognize me..."),
 	TRAIT_MISSING_NOSE = span_warning("I struggle to breathe."),
@@ -694,14 +697,14 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_COUNTERCOUNTERSPELL = span_info("I automatically know when to counter Counterspells, and can do so without even thinking about it."),
 	TRAIT_UNSEEMLY = span_info("My face is ugly and makes everyone who looks at me miserable."),
 	TRAIT_HERETIC_SEER = span_info("I can tell other Ascendant followers without sharing their faith."),
-	TRAIT_DUALWIELDER = span_info("While wielding two one-hand weapons with at least Journeyman skill on each, I alternate attacks between them. After 4 strikes, I'll attack with both at once. My parry and dodge are reduced by 5% while holding two weapons."),
+	TRAIT_DUALWIELDER = span_info("While wielding two one-hand weapons with at least Journeyman skill on each, I alternate attacks between them. After 4 strikes, I'll attack with both at once. My parry and dodge are reduced by 5% while holding two weapons (or no weapons)."),
 	TRAIT_SENTINELOFWITS = span_info("My Intelligence aids in my defense. Every 2 points above 10 INT become an additional 10% chance to dodge or parry. Does not count positive buffs from potions or substances."),
 	TRAIT_KEENEARS = span_info("I've a good pair of ears, and can tell who is speaking, even when they're out of sight. I can also hear whispers from further away."),
 	TRAIT_SCREENSHAKE = span_suicide("I don't feel very steady anymore..."),
 	TRAIT_GRAVEROBBER = span_info("My experience with 'post-mortem artifact recovery' has allowed me to resist Necra's curse placed upon those who disturb resting places."),
 	TRAIT_PURITAN = span_info("I am an emissary of the Holy Otavan Inquisition, and the one who shepherds the local sect. With a silver psycross, I can force restrained heathens to kneel before a crucifix and proclaim their true allegiance."),
 	TRAIT_PURITAN_ADVENTURER = span_info("With a silver psycross, I can force the restrained to kneel before a crucifix and proclaim their true allegiance."),
-	TRAIT_HEARTFELT = span_info("I serve the interests of the Lord of Heartfelt."),
+	TRAIT_HEARTFELT = span_info("I serve the interests of the Count of Heartfelt."),
 	TRAIT_MIRROR_MAGIC = span_info("Mirror, mirror on the wall, who's the fairest of them all?"),
 	TRAIT_JUSTICARSIGHT = span_info("I am able to remember someone's crimes by looking at them, and how much their bounty is."),
 	TRAIT_CICERONE = span_info("I am well-versed in the differences of brews and spirits, and can tell them apart at a glance."),
@@ -741,6 +744,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_BOGWALKER = span_info("The bog's blessing graces me. Kneestingers and leeches will not harm me, and I cannot trigger ambushes within the bog unless sprinting."),
 	TRAIT_NO_AMBUSH = span_info("I cannot be ambushed."),
 	TRAIT_NOPVE = span_info("I am a true force of nature. No critter or creechur would dare harm me, and I can exert enough influence to deflect the ire of simple-minded mortals as well."),
+	TRAIT_POSSESSED = span_warning("This vessel is not empty; my possession of it is temporary. Should it perish, I will return to my original body."),
 	TRAIT_HARDSHELL = span_info("The bulk of this armor prevents me from parrying effectively, but I can still move out of the way."),
 	TRAIT_MATTHIOS_EYES = span_notice("I have a sense for what the most valuable item someone has is. I can also tell if someone is hoarding mammons, and with blessed gilded spectacles, I can even see how much they have in their bank."),
 	TRAIT_WOODWALKER = span_notice("I can climb trees quicker, and gain climbing experience twice as quickly. I can step on thorns and branches safely in the woods. I can stand on leaves in trees safely."),
@@ -800,7 +804,6 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_BLACKBLOOD = span_artery("I was once a creature of the night, but cured by the Otavan Inquisition at a heavy cost. My blood, tainted with tinctures, rites and concoctions, endures infection and holds an odd regenerative factor to it. Unfortunately, most healing miracles do not affect me at all, and I am sensitive to sunlight, aswell."), // TA EDIT
 	TRAIT_COMBAT_AWARE = span_notice("My honed senses and intuition allow me to spot notable things in the midst of battle with ease."),
 	TRAIT_TEMPO	= span_greentext("I can keep up with multiple opponents at once."),
-	TRAIT_BLACKOAK = span_warning("The Black Oaks can spot <b>any</b> foreigners and outsiders, no matter how long they've lived in Azuria. I can spot an invader at a glance."),
 	TRAIT_DREAMWALKER = span_warning("I walk the dream and reality at the same time. My mind frays, but my vision shall be reality."),
 	TRAIT_ENGINEERING_GOGGLES = span_warning("I can see structural details others can't."),
 	TRAIT_ASSASSIN = span_cult("Holy my Hecatomb. Holy my Hunger. Wholly I offer my flesh. The Sinistar has chosen me to be one of his huntsmen."),
@@ -836,7 +839,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_DUSTRUNNER = span_info("I run dust for the Thieves' Guild. Those in the trade know how to spot one of their own."),
 	TRAIT_INK_AFFINITY = span_info("I can thread sacred abyssorite paint splotches safely, and benefit from them."),
 	TRAIT_BLEED_PAINT = span_info("I bleed sacred abyssorite paint when I'm injured, as long as I can bleed."),
-	TRAIT_REGROW_LIMBS = span_info("I can regrow my limbs in my sleep, but doing so will make me hungry."),
+	TRAIT_REGROW_LIMBS = span_info("I can regrow my limbs, either by falling asleep or concetrating while awake. Doing so will make me hungry."),
 	TRAIT_MUSES_GRACE = span_info("I feel a sudden and powerful urge to break out into song."),
 	TRAIT_NOHEAL = span_artery("I cannot be healed by supernatural means. Healing magic has no effect."),
 	TRAIT_NOREGEN = span_artery("I cannot be healed by natural means. Rest and potions have no effect."),
@@ -973,8 +976,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_CLUMSY			"clumsy"
 #define TRAIT_CHUNKYFINGERS		"chunkyfingers" //means that you can't use weapons with normal trigger guards.
 #define TRAIT_GNARLYDIGITS		"gnarlydigits" //less aggressive version of chunky fingers to allow -some- fun.
-#define TRAIT_TINYPAWS			"tinypaws" // even less aggressive version of chunky fingers to allow familiars to perform repairs.
-#define TRAIT_WEAPONLESS		"weaponless" // reskinned variant of the above.
+#define TRAIT_WEAPONLESS		"weaponless" // even less aggressive version of chunky fingers to allow noncombat "weapon" use (think cutting down trees).
 #define TRAIT_NOTIGHTGRABMESSAGE "notightgrabmessage" // Hides grab tightening messages.
 #define TRAIT_NOSSDINDICATOR "nossdindicator" // Hides the SSD indicator. Used with scrying.
 #define TRAIT_NOSTRUGGLE "nostruggle" // Instant grabs on someone else.
@@ -989,6 +991,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_RIGIDMOVEMENT		"Ignore Natural Health Slowdown"
 #define TRAIT_DEATHCOMA			"Death Coma" //Causes death-like unconsciousness
 #define TRAIT_FRESHSPAWN "freshspawn"
+#define TRAIT_CONTRACT_HOSTILE "contract_hostile"
 #define TRAIT_RELAYING_ATTACKER "relaying_attacker"
 #define TRAIT_CHARGE_AIRBORNE "charge_airborne"
 #define TRAIT_FAKEDEATH			"Fake Death" //Makes the owner appear as dead to most forms of medical examination
@@ -1084,7 +1087,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_RITUAL "ritual"
 #define TRAIT_GAZE "gaze"
 #define TRAIT_NECRACON "necracon"
-#define TRAIT_HAG_BOON "hag boon"
+#define TRAIT_HAG_BOON ""
 #define TRAIT_ADMIN "admin"
 #define MERCILESS_ROUND "merciless_round"
 #define UNCONSCIOUS_BLIND "unconscious_blind"

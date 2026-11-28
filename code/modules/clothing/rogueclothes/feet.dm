@@ -41,16 +41,17 @@
 	salvage_result = /obj/item/natural/hide/cured
 	bootknife = TRUE
 
-/obj/item/clothing/shoes/roguetown/boots/aalloy
+/obj/item/clothing/shoes/roguetown/boots/ancient/decrepit
 	name = "decrepit boots"
 	desc = "Rotted metal greaves, shingled atop boots of rotted leather. The toebones of its former legionnaire remain within, rattling about with every step taken."
 	max_integrity = ARMOR_INT_SIDE_DECREPIT
 	armor = ARMOR_BRONZE
 	icon_state = "ancientboots"
 	smeltresult = /obj/item/ingot/aaslag
+	anvilrepair = null
 	color = "#bb9696"
 
-/obj/item/clothing/shoes/roguetown/boots/paalloy
+/obj/item/clothing/shoes/roguetown/boots/ancient
 	name = "ancient boots"
 	desc = "Polished gilbranze sabatons, curved around to loosely mimic the calves of another. </br>It looks chivalry is dead, after all.. and walking, no less!"
 	icon_state = "ancientboots"
@@ -181,7 +182,7 @@
 	salvage_result = /obj/item/natural/cloth
 	sewrepair = TRUE
 
-/obj/item/clothing/shoes/roguetown/sandals/aalloy
+/obj/item/clothing/shoes/roguetown/sandals/ancient/decrepit
 	name = "decrepit sandals"
 	desc = "Rotted metal platforms, curled about to cradle the feet. The beaches that these sandals once trod are no more; pearly sands, long since turnt to glass from the Comet Syon's impact."
 	icon_state = "ancientsandals"
@@ -189,7 +190,7 @@
 	max_integrity = ARMOR_INT_SIDE_DECREPIT
 	armor = ARMOR_BRONZE
 
-/obj/item/clothing/shoes/roguetown/sandals/paalloy
+/obj/item/clothing/shoes/roguetown/sandals/ancient
 	name = "ancient sandals"
 	desc = "Polished gilbranze platforms, laced with bog-reeds to remain secured beneath skeletal soles. A thousand yils later, and they still clack-and-clop like new."
 	icon_state = "ancientsandals"
@@ -238,6 +239,11 @@
 	desc = "A pair of sturdy boots stitched together from cured leather. These are shorter than usual, made for casual wear and dueling."
 	icon_state = "albootsb"
 	item_state = "albootsb"
+
+// For NPC usage
+/obj/item/clothing/shoes/roguetown/boots/leather/reinforced/shoddy
+	name = "shoddy hardened leather boots"
+	max_integrity = 75
 
 /obj/item/clothing/shoes/roguetown/boots/otavan
 	name = "otavan leather boots"
@@ -461,6 +467,7 @@
 	icon_state = "graggarplateboots"
 	smeltresult = /obj/item/ingot/component/graggar
 	unenchantable = TRUE
+	no_loot_taint = TRUE //heretic stuff, in case it somehow ends up on a skele/NPC or w/e
 
 /obj/item/clothing/shoes/roguetown/boots/armor/graggar/Initialize(mapload)
 	. = ..()
@@ -477,6 +484,7 @@
 	armor = ARMOR_PLATE_BSTEEL
 	smeltresult = /obj/item/ingot/component/matthios
 	unenchantable = TRUE
+	no_loot_taint = TRUE //heretic stuff, in case it somehow ends up on a skele/NPC or w/e
 
 /obj/item/clothing/shoes/roguetown/boots/armor/matthios/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_MATTHIOS_ARMOR)
@@ -502,6 +510,7 @@
 	armor_class = ARMOR_CLASS_MEDIUM
 	smeltresult = /obj/item/ingot/component/zizo
 	unenchantable = TRUE
+	no_loot_taint = TRUE //heretic stuff, in case it somehow ends up on a skele/NPC or w/e
 
 /obj/item/clothing/shoes/roguetown/boots/armor/zizo/Initialize(mapload)
 	. = ..()
@@ -534,6 +543,7 @@
 	max_integrity = ARMOR_INT_SIDE_ANTAG - 250
 	armor_class = ARMOR_CLASS_LIGHT
 	smeltresult = /obj/item/ingot/component/baotha
+	no_loot_taint = TRUE //heretic stuff, in case it somehow ends up on a skele/NPC or w/e
 
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha/Initialize(mapload)
 	. = ..()
@@ -542,8 +552,7 @@
 
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha/ComponentInitialize()
 	. = ..()
-	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_HEELS, 2)
-	stepnoise_flag = STEPNOISE_HEELS // This will prevent default footstep noise from being made by the heels (sounds odd)
+	stepnoise_flag = STEPNOISE_HEELS // TA EDIT
 
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha/dropped(mob/living/carbon/human/user)
 	. = ..()
@@ -692,7 +701,6 @@
 
 /obj/item/clothing/shoes/roguetown/boots/otavan/inqboots/heels/ComponentInitialize()
 	. = ..()
-	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_HEELS, 2)
 	stepnoise_flag = STEPNOISE_HEELS
 
 /obj/item/clothing/shoes/roguetown/boots/otavan/inqboots/heels/attack_self(mob/living/user)
@@ -887,8 +895,7 @@
 
 /obj/item/clothing/shoes/roguetown/courtphysician/female/ComponentInitialize()
 	. = ..()
-	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_HEELS, 2)
-	stepnoise_flag = STEPNOISE_HEELS // This will prevent default footstep noise from being made by the heels (sounds odd)
+	stepnoise_flag = STEPNOISE_HEELS // TA EDIT
 
 /obj/item/clothing/shoes/roguetown/courtphysician/female/update_icon()
 	cut_overlays()

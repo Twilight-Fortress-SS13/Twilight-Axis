@@ -166,6 +166,7 @@ const ALIVE_NORMAL_GROUP_ORDER = [
   'Church',
   'Inquisition',
   'Burghers',
+  'Azurian Trading Company',
   'Peasants',
   'Sidefolk',
   'Wanderers',

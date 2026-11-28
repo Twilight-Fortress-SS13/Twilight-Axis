@@ -99,8 +99,11 @@
 	spell_tier = CLERIC_T0
 	spell_requirements = SPELL_REQUIRES_NO_ANTIMAGIC | SPELL_REQUIRES_HUMAN | SPELL_REQUIRES_SAME_Z
 
-	var/spell_mode = IGNITION_MODE_FIRE
-	var/labels = list("IGNITE", "FOCUS", "STRIKE")
+	modes = list(
+		list("name" = "Ignite", "tag" = "IGNITE", "color" = GLOW_COLOR_FIRE, "maptext_x" = 5),
+		list("name" = "Focus", "tag" = "FOCUS", "color" = "#ff6a3d", "maptext_x" = 5),
+		list("name" = "Solar Strike", "tag" = "STRIKE", "color" = "#ff6a3d", "maptext_x" = 5),
+	)
 
 /datum/action/cooldown/spell/TAignition/proc/get_available_spell_tier(mob/living/carbon/caster)
 	var/applied_spell_tier = spell_tier
@@ -109,27 +112,6 @@
 		if(human_caster.devotion)
 			applied_spell_tier = max(applied_spell_tier, human_caster.devotion.level)
 	return applied_spell_tier
-
-/datum/action/cooldown/spell/TAignition/toggle_alt_mode(mob/user)
-	spell_mode = (spell_mode % IGNITION_MODE_SOLARSTRIKE) + 1
-	get_available_spell_tier()
-	update_mode_maptext()
-	return TRUE
-
-/datum/action/cooldown/spell/TAignition/proc/update_mode_maptext()
-	var/label_color = (spell_mode == IGNITION_MODE_FIRE) ? GLOW_COLOR_FIRE : "#ff6a3d"
-	for(var/datum/hud/hud as anything in viewers)
-		var/atom/movable/screen/movable/action_button/B = viewers[hud]
-		var/atom/movable/screen/arc_maptext_holder/holder
-		for(var/atom/movable/screen/arc_maptext_holder/existing in B.vis_contents)
-			holder = existing
-			break
-		if(!holder)
-			holder = new(B)
-			B.vis_contents.Add(holder)
-		holder.maptext = MAPTEXT(labels[spell_mode])
-		holder.maptext_x = 5
-		holder.color = label_color
 
 /datum/action/cooldown/spell/TAignition/cast(atom/cast_on, mob/user = usr, applied_spell_tier)
 	..()
@@ -142,7 +124,7 @@
 		var/skill_user = user.get_skill_level(associated_skill)
 		var/damage_final = 15*skill_user+30
 		var/def_zone = user.zone_selected
-		if(spell_mode == IGNITION_MODE_FIRE)
+		if(current_mode == IGNITION_MODE_FIRE)
 			if(!L)
 				return FALSE
 			if(L.anti_magic_check(TRUE, TRUE))
@@ -158,14 +140,14 @@
 					firebust = 10
 					L.apply_status_effect(/datum/status_effect/debuff/staggered, 6 SECONDS)
 					L.apply_status_effect(/datum/status_effect/debuff/exposed, 6 SECONDS)
-					L.Slowdown(6)
+					L.apply_status_effect(/datum/status_effect/debuff/slowed, 6)
 					L.OffBalance(1 SECONDS)
 					L.Immobilize(1 SECONDS)
 				L.adjust_fire_stacks(firebust, /datum/status_effect/fire_handler/fire_stacks/divine)
 				L.ignite_mob()
 			if(!L.mind || istype(L, /mob/living/simple_animal)) //Firestacks not effective VS carbon-AL enemy. Simple mobs don't take fire damage.
 				L.adjustFireLoss(10*(firebust*(user.get_skill_level(associated_skill) - 1))) //10 * skill-1. Legendary cast take 50 burn damage for non-minded creatures.
-		if(spell_mode == IGNITION_MODE_FOCUS)
+		if(current_mode == IGNITION_MODE_FOCUS)
 			if(applied_spell_tier <= CLERIC_T0)
 				to_chat(user, span_warning("You not skilled for use that form of this miracle!"))
 				return FALSE
@@ -182,7 +164,7 @@
 				L.apply_damage(damage_final, BURN, def_zone, 0)
 				L.ignite_mob()
 			apply_focus_stack(L, 1, def_zone)
-		if(spell_mode == IGNITION_MODE_SOLARSTRIKE)
+		if(current_mode == IGNITION_MODE_SOLARSTRIKE)
 			if(applied_spell_tier <= CLERIC_T2)
 				to_chat(user, span_warning("You not skilled for use that form of this miracle!"))
 				return FALSE

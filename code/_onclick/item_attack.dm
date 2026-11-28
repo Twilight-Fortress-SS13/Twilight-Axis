@@ -28,18 +28,6 @@
 				to_chat(user, span_warning("My fingers are too misshapen to use this puny implement."))
 				return
 		// even less aggressive; allows use of tools but not weapons
-		if(HAS_TRAIT(user, TRAIT_TINYPAWS))
-			var/obj/item/rogueweapon/weapon = src
-			if(istype(weapon) && (!weapon.is_tool || ismob(target)))
-				var/exception = FALSE
-				if(weapon.is_tool && istype(user, /mob/living/carbon/human/species/familiar/elemental))
-					var/datum/action/cooldown/spell/arcyne_forge/elementalt2/spell = user.mind?.get_spell(/datum/action/cooldown/spell/arcyne_forge/elementalt2, TRUE)
-					if(spell && (spell.conjured_item == src))
-						exception = TRUE // elemental familiars can swing, but ONLY their conjured shittyiron weapons.
-				if(!exception)
-					to_chat(user, span_warning("I am too small to properly wield a weapon."))
-					return
-		// Uniquely reskinned variant, for those who don't happen to be familiars.Add a comment on	line R34Add diff commentMarkdown input:	edit mode selected.WritePreviewAdd a suggestionHeadingBoldItalicQuoteCodeLinkUnordered listNumbered listTask listMentionReferenceMore Formatting tools items 0Saved repliesAdd FilesPaste, drop, or click to add filesCancelCommentStart a review
 		if(HAS_TRAIT(user, TRAIT_WEAPONLESS))
 			var/obj/item/rogueweapon/weapon = src
 			if(istype(weapon) && (!weapon.is_tool || ismob(target)))
@@ -540,6 +528,8 @@
 				obj_destruction(need_scrap ? BRUTE : BURN)
 				playsound(user, 'sound/surgery/cautery2.ogg', 100)
 				user.mind.add_sleep_experience(/datum/skill/craft/smelting, (user.STAINT*0.2))
+				to_chat(user,span_alert("I can feel my armor getting weaker and frailer without that crucial element!")) //TA Addition
+				SEND_SIGNAL(user,COMSIG_CURSED_ITEM_BURNED)
 				return
 
 	var/newforce = get_complex_damage(I, user, blade_dulling)
@@ -705,7 +695,7 @@
 	if(HAS_TRAIT(src, "ethereal")) //TA EDIT
 		user.visible_message(span_warning("The [I] passes harmlessly through [src]'s misty form!"))
 		return FALSE
-	
+
 	I.funny_attack_effects(src, user)
 	if(I.force_dynamic)
 		var/newforce = get_complex_damage(I, user)

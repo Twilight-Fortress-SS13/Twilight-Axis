@@ -75,7 +75,7 @@
 
 /datum/outfit/job/roguetown/human/species/human/northern/mad_touched_treasure_hunter/pre_equip(mob/living/carbon/human/H)
 	wrists = /obj/item/clothing/wrists/roguetown/bracers/iron
-	mask = /obj/item/clothing/mask/rogue/facemask/steel/paalloy/mad_touched
+	mask = /obj/item/clothing/mask/rogue/facemask/ancient/mad_touched
 	armor = /obj/item/clothing/suit/roguetown/armor/leather/heavy
 	pants = /obj/item/clothing/under/roguetown/platelegs/iron
 	belt = /obj/item/storage/belt/rogue/leather
@@ -86,11 +86,11 @@
 		var/amulet_choice = rand(1, 4)
 		switch(amulet_choice)
 			if(1)
-				id = /obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy //ZIZO. ZIZO. ZIZO.
+				id = /obj/item/clothing/neck/roguetown/psicross/inhumen/ancient/decrepit //ZIZO. ZIZO. ZIZO.
 			if(2)
-				id = /obj/item/clothing/neck/roguetown/psicross/aalloy
+				id = /obj/item/clothing/neck/roguetown/psicross/ancient/decrepit
 			if(3)
-				id = /obj/item/clothing/neck/roguetown/psicross/noc/aalloy
+				id = /obj/item/clothing/neck/roguetown/psicross/noc/ancient/decrepit
 			if(4)
 				id = /obj/item/clothing/neck/roguetown/psicross/inhumen/matthios //IS THIS TRVE?!
 	shirt = /obj/item/clothing/suit/roguetown/armor/gambeson
@@ -102,10 +102,10 @@
 	if(prob(50))
 		head = /obj/item/clothing/head/roguetown/menacing/bandit/mad_touched_treasure_hunter //IS THIS TRVE?!
 	if(prob(33))
-		r_hand = /obj/item/rogueweapon/greatsword/paalloy
+		r_hand = /obj/item/rogueweapon/greatsword/ancient
 	else if(prob(33))
 		r_hand = /obj/item/rogueweapon/shield/buckler
-		l_hand = /obj/item/rogueweapon/huntingknife/idagger/steel/padagger
+		l_hand = /obj/item/rogueweapon/huntingknife/idagger/ancient
 	else
 		r_hand = /obj/item/rogueweapon/sword/sabre/bronzekhopesh
 		l_hand = /obj/item/rogueweapon/sword/sabre/bronzekhopesh
@@ -144,17 +144,17 @@
 	color = "#999999"
 	armor = ARMOR_LEATHER
 
-/obj/item/clothing/mask/rogue/facemask/steel/paalloy/mad_touched
+/obj/item/clothing/mask/rogue/facemask/ancient/mad_touched
 	name = "eerie ancient mask"
 
-/obj/item/clothing/mask/rogue/facemask/steel/paalloy/mad_touched/equipped(mob/user, slot)
+/obj/item/clothing/mask/rogue/facemask/ancient/mad_touched/equipped(mob/user, slot)
 	. = ..()
 	if(slot == SLOT_WEAR_MASK)
 		ADD_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
 		var/mob/living/carbon/human/mad_touched = user
 		mad_touched.apply_damage(25, BRUTE, BODY_ZONE_HEAD)
 
-/obj/item/clothing/mask/rogue/facemask/steel/paalloy/mad_touched/dropped(mob/user)
+/obj/item/clothing/mask/rogue/facemask/ancient/mad_touched/dropped(mob/user)
 	. = ..()
 	REMOVE_TRAIT(src, TRAIT_NODROP, CURSED_ITEM_TRAIT)
 

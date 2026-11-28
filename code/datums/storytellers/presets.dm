@@ -5,41 +5,6 @@
 /datum/storyteller/gamemode
 	hag_slots = 1
 // ----------------------------------------------------------------------------------------------------------
-// PSYDON pool - lowest intensity. No hard antags. Extended opens nothing; Low Intensity opens a few wretches.
-// (Low Intensity is defined further down as no_antag/small_wretch but votes in this pool via preset_pool.)
-// ----------------------------------------------------------------------------------------------------------
-/datum/storyteller/gamemode/extended
-	name = "Extended"
-	vote_desc = "Maybe we were the true antagonists after all."
-	desc = "No hard antags, no soft antags (wretch/gnoll/assassin), no dreamwalker. Hag present."
-	welcome_text = "A temperate breeze rolls through the quiet streets.."
-	color_theme = "#80ced8"
-	preset_pool = GAMEMODE_POOL_EXTENDED
-	block_hard = TRUE
-	block_soft = TRUE
-	allow_dreamwalker = FALSE
-	preferred_gnoll_mode = GNOLL_SCALING_NONE
-	wretch_slot_cap = 0
-	roundstart_prob = 0
-	starting_point_multipliers = list(
-		EVENT_TRACK_MUNDANE = 1,
-		EVENT_TRACK_PERSONAL = 1,
-		EVENT_TRACK_MODERATE = 1,
-		EVENT_TRACK_INTERVENTION = 1,
-		EVENT_TRACK_CHARACTER_INJECTION = 0,
-		EVENT_TRACK_OMENS = 1,
-		EVENT_TRACK_RAIDS = 1,
-	)
-	point_gains_multipliers = list(
-		EVENT_TRACK_MUNDANE = 1,
-		EVENT_TRACK_PERSONAL = 1,
-		EVENT_TRACK_MODERATE = 1,
-		EVENT_TRACK_INTERVENTION = 1,
-		EVENT_TRACK_CHARACTER_INJECTION = 0,
-		EVENT_TRACK_OMENS = 1,
-		EVENT_TRACK_RAIDS = 1,
-	)
-// ----------------------------------------------------------------------------------------------------------
 // Admin sandbox - NOT votable. Admins pick before the 120s mark to disable player vote and
 // insert their own antags in.
 // ----------------------------------------------------------------------------------------------------------
@@ -89,7 +54,6 @@
 	block_hard = FALSE
 	block_soft = FALSE
 	allow_dreamwalker = TRUE
-	midround_renegades = RENEGADE_MIDROUND_COUNT
 	preferred_gnoll_mode = GNOLL_SCALING_FLAT	// max 2
 	wretch_slot_cap = 7 // TA EDIT
 	// TA EDIT START
@@ -133,9 +97,7 @@
 	allow_dreamwalker = TRUE // TA EDIT START
 	lite_antags = list(
 		/datum/round_event_control/antagonist/solo/masqueradelite = 6,
-		/datum/round_event_control/antagonist/solo/renegade/lite = 1,
 	)
-	midround_renegades = 1
 	preferred_gnoll_mode = GNOLL_SCALING_DYNAMIC	// max 3
 	wretch_slot_cap = 12
 	roundstart_prob = 50
@@ -148,7 +110,6 @@
 	vote_hidden = TRUE // TA EDIT
 	allow_dreamwalker = FALSE
 	lite_antags = null
-	midround_renegades = 0
 	preferred_gnoll_mode = GNOLL_SCALING_FLAT	// max 2
 	wretch_slot_cap = 6
 // ----------------------------------------------------------------------------------------------------------
@@ -164,7 +125,6 @@
 	preset_pool = GAMEMODE_POOL_EXTENDED
 	allow_dreamwalker = FALSE
 	lite_antags = null
-	midround_renegades = 0
 	preferred_gnoll_mode = GNOLL_SCALING_NONE
 	wretch_slot_cap = 4
 	// TA EDIT START
