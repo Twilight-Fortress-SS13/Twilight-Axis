@@ -113,6 +113,7 @@
 			if(L.anti_magic_check())
 				continue
 			apply_frost_stack(L, 1)
+			ta_climate_apply_single_exposure_cooling(L) // TA EDIT
 
 /obj/effect/frozen_mist/Destroy()
 	caster = null
@@ -142,6 +143,7 @@
 			if(L.anti_magic_check())
 				continue
 			apply_frost_stack(L, 1)
+			ta_climate_apply_single_exposure_cooling(L) // TA EDIT
 			var/actual_damage = SPELL_DMG(rand(5, tick_damage))
 			if(ishuman(L) && ishuman(caster))
 				if(arcyne_strike(caster, L, null, actual_damage, BODY_ZONE_CHEST, \

@@ -86,6 +86,8 @@
 	..()
 
 /obj/item/clothing/Initialize(mapload)
+	if(CHECK_BITFIELD(clothing_flags, VOICEBOX_TOGGLABLE))
+		actions_types += /datum/action/item_action/toggle_voice_box
 	. = ..()
 	if(!length(materia))
 		if(anvilrepair) // metal, cloth, and leather/fur items... approximately
@@ -96,6 +98,10 @@
 			materia = list(/datum/materia_aspect/animal)
 		if(smeltresult == /obj/item/ingot/aaslag && findtext(name, "ancient"))
 			materia += /datum/materia_aspect/ancient
+	ta_climate_apply_thermal_profile(src) // TA EDIT
+	ta_climate_register_wetness() // TA EDIT
+	if(ispath(pocket_storage_component_path))
+		LoadComponent(pocket_storage_component_path)
 
 /obj/item/clothing/examine(mob/user)
 	. = ..()
@@ -104,11 +110,6 @@
 			. += span_notice("It has one torn sleeve.")
 		else
 			. += span_notice("Both its sleeves have been torn!")
-
-	if(cold_protection)
-		. += span_info("It looks like it will protect me from the <b>cold</b>.")
-	if(heat_protection)
-		. += span_info("It looks like it will protect me from the <b>heat</b>.")
 
 /obj/item/clothing/proc/persist_inv_flags(flag)
 	adjusted_inv_mask |= flag
@@ -313,13 +314,6 @@
 			return TRUE
 		return FALSE
 
-/obj/item/clothing/Initialize(mapload)
-	if(CHECK_BITFIELD(clothing_flags, VOICEBOX_TOGGLABLE))
-		actions_types += /datum/action/item_action/toggle_voice_box
-	. = ..()
-	if(ispath(pocket_storage_component_path))
-		LoadComponent(pocket_storage_component_path)
-
 /obj/item/clothing/MouseDrop(atom/over_object)
 	. = ..()
 	var/mob/M = usr
@@ -366,6 +360,7 @@
 	return ..()
 
 /obj/item/clothing/Destroy()
+	ta_climate_unregister_wetness()
 	user_vars_remembered = null //Oh god somebody put REFERENCES in here? not to worry, we'll clean it up
 	return ..()
 
@@ -415,6 +410,7 @@
 
 /obj/item/clothing/examine(mob/user)
 	. = ..()
+	. += ta_climate_clothing_examine(src)
 //	switch (max_heat_protection_temperature)
 //		if (400 to 1000)
 /*			. += "[src] offers the wearer limited protection from fire."

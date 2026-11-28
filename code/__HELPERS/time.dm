@@ -108,45 +108,8 @@ GLOBAL_VAR_INIT(date_override_offset, 0)
 		GLOB.tod = "dusk"
 	if(GLOB.todoverride)
 		GLOB.tod = GLOB.todoverride
-	if((GLOB.tod != oldtod) && !GLOB.todoverride && (GLOB.dayspassed>1)) //weather check on tod changes
-		var/season = get_current_season()
-		if(!GLOB.forecast)
-			var/rain_scale = get_rain_scale_for_season(season)
-			switch(GLOB.tod)
-				if("dawn")
-					roll_dawn_weather(season, rain_scale)
-				if("day")
-					roll_day_weather(season, rain_scale)
-				if("dusk")
-					roll_dusk_weather(season, rain_scale)
-				if("night")
-					roll_night_weather(season, rain_scale)
-			if(GLOB.forecast != SSParticleWeather?.runningWeather?.target_trait)
-				switch(GLOB.forecast)
-					if(PARTICLEWEATHER_RAIN)
-						SSParticleWeather?.run_weather(pick(/datum/particle_weather/rain_gentle, /datum/particle_weather/rain_storm,/datum/particle_weather/fog))
-					if(PARTICLEWEATHER_LEAVES)
-						SSParticleWeather?.run_weather(pick(/datum/particle_weather/leaves_gentle, /datum/particle_weather/leaves_storm))
-					if(PARTICLEWEATHER_BLOODRAIN)
-						SSParticleWeather?.run_weather(pick(/datum/particle_weather/blood_rain_gentle, /datum/particle_weather/blood_rain_storm))
-					if(PARTICLEWEATHER_SAKURA)
-						SSParticleWeather?.run_weather(pick(/datum/particle_weather/sakura_gentle, /datum/particle_weather/sakura_storm))
-					if(PARTICLEWEATHER_SNOW)
-						// The Autumn "rare early flurry" is always light; true Winter snow can be either tier.
-						if(season == SEASON_AUTUMN)
-							SSParticleWeather?.run_weather(/datum/particle_weather/snow_gentle)
-						else
-							SSParticleWeather?.run_weather(pick(/datum/particle_weather/snow_gentle, /datum/particle_weather/snow_storm))
-
-		else
-			switch(GLOB.forecast) //end the weather now
-				if(PARTICLEWEATHER_RAIN)
-					if(GLOB.tod == "day" && season == SEASON_AUTUMN)
-						GLOB.forecast = PARTICLEWEATHER_LEAVES
-					else
-						GLOB.forecast = null
-				else
-					GLOB.forecast = null //clears leaves/snow/sakura/bloodrain forecasts too
+	if(GLOB.tod != oldtod && !GLOB.todoverride) // TA EDIT
+		SSta_climate_weather?.check_forecast(GLOB.tod) // TA EDIT
 
 	if(GLOB.tod != oldtod)
 		if(GLOB.tod == "dawn" && SSticker?.current_state == GAME_STATE_PLAYING)

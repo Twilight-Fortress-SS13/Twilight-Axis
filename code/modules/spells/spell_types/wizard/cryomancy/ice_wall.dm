@@ -37,5 +37,6 @@
 			continue
 		L.mob_timers[ICEWALL_FROST_PASS_KEY] = world.time
 		apply_frost_stack(L)
+		ta_climate_icewall_cooling(L) // TA EDIT
 
 #undef ICEWALL_FROST_PASS_KEY

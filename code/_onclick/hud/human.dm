@@ -116,6 +116,14 @@
 	bloods.screen_loc = rogueui_blood
 	static_inventory += bloods
 
+	temperature = new /atom/movable/screen/temperature() // TA EDIT
+	temperature.hud = src // TA EDIT
+	infodisplay += temperature // TA EDIT
+	tempover = new /atom/movable/screen/tempbase() // TA EDIT
+	tempover.hud = src // TA EDIT
+	static_inventory += tempover // TA EDIT
+	ta_climate_apply_temperature_palette(owner.client?.prefs) // TA EDIT
+
 	quad_intents = new /atom/movable/screen/quad_intents
 	quad_intents.hud = src
 	static_inventory += quad_intents

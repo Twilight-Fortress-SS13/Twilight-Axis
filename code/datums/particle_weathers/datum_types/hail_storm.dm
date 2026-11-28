@@ -24,6 +24,9 @@
 /datum/particle_weather/hail/weather_act(mob/living/L)
 	if(issimple(L))
 		return
+
+	if(L.bodytemperature > BODYTEMP_COLD_LEVEL_ONE_MAX + 2) // TA EDIT
+		L.ta_climate_weather_temperature(-rand(2, 3)) // TA EDIT
 	var/armor_block = L.run_armor_check(BODY_ZONE_HEAD, "blunt", blade_dulling=BCLASS_BLUNT)
 	if(L.apply_damage(rand(5, 10), UNARMED_ATTACK, BODY_ZONE_HEAD, armor_block))
 		if(prob(25))

@@ -81,7 +81,9 @@
 
 	var/old_plane
 
-/datum/particle_weather/dust_storm/start()
+/datum/particle_weather/dust_storm/start(color)
+	if(SSParticleWeather?.runningWeather != src)
+		return
 	. = ..()
 	for(var/area/area as anything in GLOB.areas)
 		if(area.outdoors)
@@ -94,6 +96,9 @@
 			area.invisibility = INVISIBILITY_LIGHTING
 
 /datum/particle_weather/dust_storm/end()
+	if(SSParticleWeather?.runningWeather != src)
+		return
+	ta_climate_stop_all_weather_sounds()
 	. = ..()
 	for(var/area/area as anything in GLOB.areas)
 		if(area.outdoors)

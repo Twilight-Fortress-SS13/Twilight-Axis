@@ -21,6 +21,8 @@
 	. = slowdown
 	if(platform_atom_count > 0)
 		return
+	if(ta_snow_slowdown && !user?.is_floor_hazard_immune()) // TA EDIT
+		. += ta_snow_slowdown // TA EDIT
 	if(active_hotspot)
 		. += 15
 

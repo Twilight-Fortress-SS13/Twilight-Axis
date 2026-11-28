@@ -2,6 +2,7 @@
 #define PRESTI_SPARK "presti_spark"
 #define PRESTI_MOTE "presti_mote"
 #define PRESTI_SENSE "presti_sense"
+#define PRESTI_SPLASH "presti_splash" // TA EDIT
 
 /// Tints the Prestidigitation magelight mote can be shifted between (use the hand in hand with Light selected). Name -> light colour.
 /// The first entry is the mote's original colour. The rest are slightly deeper counterparts of the Light orb's tints (see orb_light_tints in light.dm).
@@ -71,6 +72,9 @@ GLOBAL_LIST_INIT(mote_tint_messages, list(
 		if(/datum/intent/hand/sense)
 			if(presti_hand.sense_leylines(caster))
 				handle_presti_cost(caster, PRESTI_SENSE)
+		if(/datum/intent/hand/splash) // TA EDIT
+			if(presti_hand.ta_climate_shoot_waterbolt(caster, victim)) // TA EDIT
+				handle_presti_cost(caster, PRESTI_SPLASH) // TA EDIT
 
 	return FALSE // don't consume the hand
 
@@ -86,6 +90,8 @@ GLOBAL_LIST_INIT(mote_tint_messages, list(
 			extra_fatigue = 15
 		if(PRESTI_SENSE)
 			extra_fatigue = 10
+		if(PRESTI_SPLASH) // TA EDIT
+			extra_fatigue = 15 // TA EDIT
 
 	user.stamina_add(fatigue_used + extra_fatigue)
 
@@ -348,6 +354,7 @@ GLOBAL_LIST_INIT(mote_tint_messages, list(
 #undef PRESTI_SPARK
 #undef PRESTI_MOTE
 #undef PRESTI_SENSE
+#undef PRESTI_SPLASH // TA EDIT
 
 /obj/effect/temp_visual/cleaning_pulse
 	name = "cleaning pulse"

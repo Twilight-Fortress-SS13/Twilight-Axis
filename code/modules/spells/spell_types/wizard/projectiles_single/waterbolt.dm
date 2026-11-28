@@ -59,6 +59,8 @@
 			M.adjust_fire_stacks(-10)
 			if(M.fire_stacks <= 0)
 				M.extinguish_mob()
+		if(iscarbon(M) && M.bodytemperature > BODYTEMP_NORMAL_MIN + 30) // TA EDIT
+			M.adjust_bodytemperature(-30) // TA EDIT
 		if(ishuman(M))
 			var/mob/living/carbon/human/H = M
 			if(zone_aimed in list(

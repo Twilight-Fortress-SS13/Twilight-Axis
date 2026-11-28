@@ -478,6 +478,7 @@ SUBSYSTEM_DEF(ticker)
 
 /datum/controller/subsystem/ticker/proc/PostSetup()
 	set waitfor = FALSE
+	SSta_climate_weather?.ta_climate_roll_round_weather_modifier() // TA EDIT
 
 	SSgamemode.current_storyteller?.process(STORYTELLER_WAIT_TIME * 0.1) // we want this asap
 	SSgamemode.current_storyteller?.round_started = TRUE
