@@ -34,7 +34,7 @@
 			maxsongs = 2
 		if(BARD_T2)
 			maxaudience = 6
-			maxsongs = 4
+			maxsongs = 5 // TA EDIT = ORIGINAL: 4
 			rhythm_tracker = new /datum/rhythm_tracker()
 			var/datum/action/cooldown/spell/crescendo/C = new()
 			C.tracker = rhythm_tracker
