@@ -315,3 +315,133 @@
 	if(H.mind)
 		H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
 		ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL)
+
+/atom/movable/screen/radial/slice/proc/ta_show_choice_tooltip()
+	maptext_width = 224
+	maptext_height = 20
+	var/relative_y = pixel_y - (parent ? parent.py_shift : 0)
+	var/text_align = "center"
+	maptext_x = (32 - maptext_width) / 2
+	if(pixel_x && abs(pixel_x) >= abs(relative_y))
+		maptext_y = (32 - maptext_height) / 2
+		if(pixel_x > 0)
+			maptext_x = 36
+			text_align = "left"
+		else
+			maptext_x = -maptext_width - 4
+			text_align = "right"
+	else if(relative_y >= 0)
+		maptext_y = 34
+	else
+		maptext_y = -maptext_height - 2
+	var/tooltip_text = MAPTEXT_PIXELLARI(html_encode(name))
+	maptext = "<div style='text-align:[text_align];color:#ffffff'>[tooltip_text]</div>"
+
+/atom/movable/screen/radial/slice/proc/ta_hide_choice_tooltip()
+	maptext = null
+
+/proc/ta_select_zizo_armor(mob/living/user, atom/anchor)
+	var/list/armor_options = list(
+		"Avantyne Light Armor" = image(icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/cursed_armor/zlighticon.dmi', icon_state = "zlbrigantine"),
+		"Avantyne Half-Plate" = image(icon = 'icons/roguetown/clothing/armor.dmi', icon_state = "zizoplatechest_med"),
+		"Avantyne Full-Plate" = image(icon = 'icons/roguetown/clothing/armor.dmi', icon_state = "zizoplate"),
+	)
+	return show_radial_menu(user, anchor, armor_options, require_near = TRUE, tooltips = TRUE)
+
+/proc/ta_select_zizo_helm(mob/living/user, atom/anchor, armor_choice)
+	if(armor_choice == "Avantyne Light Armor")
+		return "Ascension's Hood"
+	var/list/helm_options = list(
+		"Avantyne Barbute" = image(icon = 'icons/roguetown/clothing/head.dmi', icon_state = "zizobarbute"),
+		"Avantyne Froggemund" = image(icon = 'icons/roguetown/clothing/head.dmi', icon_state = "zizofrogmouth"),
+		"Avantyne Volf-Plate" = image(icon = 'icons/roguetown/clothing/head.dmi', icon_state = "volfplate_avantyne"),
+		"Avantyne Bascinet" = image(icon = 'icons/roguetown/clothing/head.dmi', icon_state = "zizobascinet"),
+	)
+	return show_radial_menu(user, anchor, helm_options, require_near = TRUE, tooltips = TRUE)
+
+/proc/ta_select_rite_weapon(mob/living/user, atom/anchor, patron_type)
+	var/list/weapon_options = list()
+	switch(patron_type)
+		if(/datum/patron/inhumen/zizo)
+			weapon_options = list(
+				"Avantyne Longsword" = image(icon = 'icons/roguetown/weapons/swords64.dmi', icon_state = "zizosword"),
+				"Cursed Greatsword" = image(icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone_twoh.dmi', icon_state = "zgtsword"),
+				"Avantyne Sword and Shield" = image(icon = 'icons/roguetown/weapons/swords32.dmi', icon_state = "zizoarming"),
+				"Avantyne Rapier" = image(icon = 'icons/roguetown/weapons/swords64.dmi', icon_state = "zizorapier"),
+				"Cursed Axe and Shield" = image(icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone.dmi', icon_state = "Zaxe"),
+				"Cursed Greataxe" = image(icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone_twoh.dmi', icon_state = "Ztaxe"),
+				"Cursed Spear" = image(icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone_twoh.dmi', icon_state = "Zspear"),
+				"Cursed Glaive" = image(icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone_twoh.dmi', icon_state = "Zglaive"),
+				"Cursed Mace and Shield" = image(icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/zizo_weapone.dmi', icon_state = "Zmaul"),
+			)
+		if(/datum/patron/inhumen/graggar)
+			weapon_options = list(
+				"Vicious Greataxe" = image(icon = 'icons/roguetown/weapons/axes64.dmi', icon_state = "graggargaxe"),
+				"Vicious Axe and Shield" = image(icon = 'icons/roguetown/weapons/axes32.dmi', icon_state = "graggartomahawk"),
+			)
+	if(!length(weapon_options))
+		return null
+	return show_radial_menu(user, anchor, weapon_options, radius = patron_type == /datum/patron/inhumen/zizo ? 64 : 32, require_near = TRUE, tooltips = TRUE)
+
+/datum/outfit/job/roguetown/darksteelrite
+	var/ta_weapon_choice
+	var/ta_weapon_skill = /datum/skill/combat/swords
+
+/datum/outfit/job/roguetown/darksteelrite/proc/ta_apply_weapon_choice()
+	ta_weapon_skill = /datum/skill/combat/swords
+	switch(ta_weapon_choice)
+		if("Avantyne Longsword")
+			r_hand = /obj/item/rogueweapon/sword/long/zizo
+			l_hand = null
+		if("Avantyne Sword and Shield")
+			r_hand = /obj/item/rogueweapon/sword/zizo
+			l_hand = /obj/item/rogueweapon/shield/kite/zizo
+		if("Cursed Greatsword")
+			r_hand = /obj/item/rogueweapon/greatsword/zizo
+			l_hand = null
+		if("Avantyne Rapier")
+			r_hand = /obj/item/rogueweapon/sword/rapier/avantyne
+			l_hand = null
+		if("Cursed Axe and Shield")
+			r_hand = /obj/item/rogueweapon/stoneaxe/battle/zizo
+			l_hand = /obj/item/rogueweapon/shield/kite/zizo
+			ta_weapon_skill = /datum/skill/combat/axes
+		if("Cursed Greataxe")
+			r_hand = /obj/item/rogueweapon/greataxe/steel/doublehead/zizo
+			l_hand = null
+			ta_weapon_skill = /datum/skill/combat/axes
+		if("Cursed Spear")
+			r_hand = /obj/item/rogueweapon/spear/zizo
+			l_hand = null
+			ta_weapon_skill = /datum/skill/combat/polearms
+		if("Cursed Glaive")
+			r_hand = /obj/item/rogueweapon/halberd/glaive/zizo
+			l_hand = null
+			ta_weapon_skill = /datum/skill/combat/polearms
+		if("Cursed Mace and Shield")
+			r_hand = /obj/item/rogueweapon/mace/steel/zizo
+			l_hand = /obj/item/rogueweapon/shield/kite/zizo
+			ta_weapon_skill = /datum/skill/combat/maces
+
+/datum/outfit/job/roguetown/viciousrite
+	var/ta_weapon_choice
+
+/datum/outfit/job/roguetown/viciousrite/proc/ta_apply_weapon_choice()
+	switch(ta_weapon_choice)
+		if("Vicious Greataxe")
+			r_hand = /obj/item/rogueweapon/greataxe/steel/doublehead/graggar
+			l_hand = null
+		if("Vicious Axe and Shield")
+			r_hand = /obj/item/rogueweapon/stoneaxe/woodcut/steel/graggar
+			l_hand = /obj/item/rogueweapon/shield/iron/graggar
+
+/datum/outfit/job/roguetown/darksteelrite/light/pre_equip(mob/living/carbon/human/H, visualsOnly = FALSE)
+	..()
+	armor = /obj/item/clothing/suit/roguetown/armor/brigandine/light/cult
+	shirt = /obj/item/clothing/suit/roguetown/armor/chainmail/besilked/cult
+	pants = /obj/item/clothing/under/roguetown/brigandinelegs/cult
+	head = /obj/item/clothing/head/roguetown/helmet/skullcap/cult
+	neck = /obj/item/clothing/neck/roguetown/chaincoif/cult
+	shoes = /obj/item/clothing/shoes/roguetown/boots/armor/zizo/rite_light
+	gloves = /obj/item/clothing/gloves/roguetown/plate/zizo/rite_light
+	wrists = /obj/item/clothing/wrists/roguetown/bracers/zizo/rite_light

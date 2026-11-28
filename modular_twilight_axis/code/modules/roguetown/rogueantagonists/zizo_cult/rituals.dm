@@ -742,7 +742,14 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 		target.regenerate_limbs()
 		target.heal_wounds(500)
 		if(target.stat == DEAD)
-			target.revive()
+			if(!target.revive())
+				return
+			var/datum/antagonist/zombie/zombie_antag = target.mind?.has_antag_datum(/datum/antagonist/zombie)
+			if(zombie_antag)
+				zombie_antag.become_rotman = FALSE
+				target.mind.remove_antag_datum(/datum/antagonist/zombie)
+				target.remove_status_effect(/datum/status_effect/zombie_infection)
+				clean_body_parts(target)
 		target.apply_status_effect(/datum/status_effect/debuff/fleshmend_exhaustion)
 		to_chat(target, span_notice("ZIZO EMPOWERS ME!"))
 
@@ -1468,4 +1475,189 @@ GLOBAL_LIST_INIT(ritual_counters, list())
 
 	new /obj/item/rope(center)
 
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
+/datum/ritual/weaponary/cult_zcoatofplates
+	name = "Создание панциря из пластин Зизо"
+	desk = "Преобразует обычное снаряжение в проклятое снаряжение Зизо."
+	center_requirement = /obj/item/clothing/suit/roguetown/armor/brigandine/heavy
+
+	n_req = /obj/item/ingot/steel/zizo
+	e_req = /obj/item/ingot/steel/zizo
+	w_req = /obj/item/ingot/steel/zizo
+
+/datum/ritual/weaponary/cult_zcoatofplates/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/clothing/suit/roguetown/armor/brigandine/heavy/cult(center)
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
+/datum/ritual/weaponary/cult_zbrigantine
+	name = "Создание бригантины Зизо"
+	desk = "Преобразует обычное снаряжение в проклятое снаряжение Зизо."
+	center_requirement = /obj/item/clothing/suit/roguetown/armor/brigandine
+
+	e_req = /obj/item/ingot/steel/zizo
+	w_req = /obj/item/ingot/steel/zizo
+
+/datum/ritual/weaponary/cult_zbrigantine/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/clothing/suit/roguetown/armor/brigandine/cult(center)
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
+/datum/ritual/weaponary/cult_zhauberk
+	name = "Создание длинной кольчуги Зизо"
+	desk = "Преобразует обычное снаряжение в проклятое снаряжение Зизо."
+	center_requirement = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
+
+	e_req = /obj/item/ingot/steel/zizo
+	w_req = /obj/item/ingot/steel/zizo
+
+/datum/ritual/weaponary/cult_zhauberk/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk/cult(center)
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
+/datum/ritual/weaponary/cult_zpants
+	name = "Создание кольчужных поножей Зизо"
+	desk = "Преобразует обычное снаряжение в проклятое снаряжение Зизо."
+	center_requirement = /obj/item/clothing/under/roguetown/chainlegs
+
+	n_req = /obj/item/ingot/steel/zizo
+
+/datum/ritual/weaponary/cult_zpants/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/clothing/under/roguetown/chainlegs/cult(center)
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
+/datum/ritual/weaponary/cult_zlbrigantine
+	name = "Создание легкой бригантины Зизо"
+	desk = "Преобразует обычное снаряжение в проклятое снаряжение Зизо."
+	center_requirement = /obj/item/clothing/suit/roguetown/armor/brigandine/light
+
+	n_req = /obj/item/ingot/steel/zizo
+
+/datum/ritual/weaponary/cult_zlbrigantine/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/clothing/suit/roguetown/armor/brigandine/light/cult(center)
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
+/datum/ritual/weaponary/cult_zhaubergeon
+	name = "Создание легкой кольчуги Зизо"
+	desk = "Преобразует обычное снаряжение в проклятое снаряжение Зизо."
+	center_requirement = /obj/item/clothing/suit/roguetown/armor/chainmail/besilked
+
+	n_req = /obj/item/ingot/steel/zizo
+
+/datum/ritual/weaponary/cult_zhaubergeon/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/clothing/suit/roguetown/armor/chainmail/besilked/cult(center)
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
+/datum/ritual/weaponary/cult_zbpants
+	name = "Создание легких поножей Зизо"
+	desk = "Преобразует обычное снаряжение в проклятое снаряжение Зизо."
+	center_requirement = /obj/item/clothing/under/roguetown/brigandinelegs
+
+	n_req = /obj/item/ingot/steel/zizo
+
+/datum/ritual/weaponary/cult_zbpants/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/clothing/under/roguetown/brigandinelegs/cult(center)
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
+/datum/ritual/weaponary/cult_zgorget
+	name = "Создание горжета Зизо"
+	desk = "Преобразует обычное снаряжение в проклятое снаряжение Зизо."
+	center_requirement = /obj/item/clothing/neck/roguetown/gorget/steel
+
+	n_req = /obj/item/ingot/steel/zizo
+
+/datum/ritual/weaponary/cult_zgorget/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/clothing/neck/roguetown/gorget/steel/cult(center)
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
+/datum/ritual/weaponary/cult_zcoif
+	name = "Создание кольчужного капюшона Зизо"
+	desk = "Преобразует обычное снаряжение в проклятое снаряжение Зизо."
+	center_requirement = /obj/item/clothing/neck/roguetown/chaincoif/full
+
+	n_req = /obj/item/ingot/steel/zizo
+
+/datum/ritual/weaponary/cult_zcoif/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/clothing/neck/roguetown/chaincoif/cult(center)
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
+/datum/ritual/weaponary/cult_zspear
+	name = "Создание копья Зизо"
+	desk = "Преобразует обычное снаряжение в проклятое снаряжение Зизо."
+	center_requirement = /obj/item/rogueweapon/spear
+
+	n_req = /obj/item/ingot/steel/zizo
+
+/datum/ritual/weaponary/cult_zspear/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/rogueweapon/spear/zizo(center)
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
+/datum/ritual/weaponary/cult_zglaive
+	name = "Создание глефы Зизо"
+	desk = "Преобразует обычное снаряжение в проклятое снаряжение Зизо."
+	center_requirement = /obj/item/rogueweapon/halberd/glaive
+
+	n_req = /obj/item/ingot/steel/zizo
+
+/datum/ritual/weaponary/cult_zglaive/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/rogueweapon/halberd/glaive/zizo(center)
+	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)
+
+/datum/ritual/weaponary/cult_zgreatsword
+	name = "Создание двуручного меча Зизо"
+	desk = "Преобразует двуручный меч в проклятый двуручный меч Зизо."
+	center_requirement = /obj/item/rogueweapon/greatsword
+
+	e_req = /obj/item/ingot/steel/zizo
+	w_req = /obj/item/ingot/steel/zizo
+
+/datum/ritual/weaponary/cult_zgreatsword/invoke(mob/living/user, turf/center)
+	var/datum/effect_system/spark_spread/S = new(center)
+	S.set_up(1, 1, center)
+	S.start()
+
+	new /obj/item/rogueweapon/greatsword/zizo(center)
 	playsound(get_turf(center), pick('sound/items/bsmith1.ogg','sound/items/bsmith2.ogg','sound/items/bsmith3.ogg','sound/items/bsmith4.ogg'), 100, FALSE)

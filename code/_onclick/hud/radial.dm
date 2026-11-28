@@ -18,10 +18,13 @@ GLOBAL_LIST_EMPTY(radial_menus)
 /atom/movable/screen/radial/slice/MouseEntered(location, control, params)
 	. = ..()
 	icon_state = "radial_slice_focus"
+	if(tooltips && choice && !next_page) // TA EDIT
+		ta_show_choice_tooltip() // TA EDIT
 
 /atom/movable/screen/radial/slice/MouseExited(location, control, params)
 	. = ..()
 	icon_state = "radial_slice"
+	ta_hide_choice_tooltip() // TA EDIT
 
 /atom/movable/screen/radial/slice/Click(location, control, params)
 	if(usr.client == parent.current_user)

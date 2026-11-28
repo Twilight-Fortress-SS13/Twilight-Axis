@@ -1530,10 +1530,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 				return
 			var/onrune = view(1, loc)
 			var/list/folksonrune = list()
-			var/is_spy = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic/spy)
-			for(var/mob/living/carbon/human/persononrune in onrune)
-				if(is_spy && persononrune == user)
-					continue
+			for(var/mob/living/carbon/human/persononrune in onrune) // TA EDIT
 				if(HAS_TRAIT(persononrune, TRAIT_CABAL))
 					folksonrune += persononrune
 			var/mob/living/carbon/human/target = input(user, "Choose a host") as null|anything in folksonrune
@@ -1541,25 +1538,15 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 				return
 			if(!do_after(user, 5 SECONDS))
 				return
-			var/list/helm_options = list(
-				"Avantyne Barbute" = image(icon = 'icons/roguetown/clothing/head.dmi', icon_state = "zizobarbute"),
-				"Avantyne Froggemund" = image(icon = 'icons/roguetown/clothing/head.dmi', icon_state = "zizofrogmouth"),
-				"Avantyne Volf-Plate" = image(icon = 'icons/roguetown/clothing/head.dmi', icon_state = "volfplate_avantyne"),
-				"Avantyne Bascinet" = image(icon = 'icons/roguetown/clothing/head.dmi', icon_state = "zizobascinet")
-			)
-
-			var/helm_choice = show_radial_menu(user, src, helm_options, require_near = TRUE, tooltips = TRUE)
-			if(!helm_choice)
-				helm_choice = "Avantyne Barbute"
-
-			var/list/armor_options = list(
-				"Avantyne Half-Plate" = image(icon = 'icons/roguetown/clothing/armor.dmi', icon_state = "zizoplatechest_med"),
-				"Avantyne Full-Plate" = image(icon = 'icons/roguetown/clothing/armor.dmi', icon_state = "zizoplate")
-			)
-
-			var/armor_choice = show_radial_menu(user, src, armor_options, require_near = TRUE, tooltips = TRUE)
+			var/armor_choice = ta_select_zizo_armor(user, src) // TA EDIT START
 			if(!armor_choice)
-				armor_choice = "Avantyne Full-Plate"
+				return
+			var/helm_choice = ta_select_zizo_helm(user, src, armor_choice)
+			if(!helm_choice)
+				return
+			var/weapon_choice = ta_select_rite_weapon(user, src, /datum/patron/inhumen/zizo)
+			if(!weapon_choice)
+				return // TA EDIT END
 
 			user.say("ZIZO! ZIZO! DAME OF PROGRESS!!")
 			playsound(user, 'sound/misc/carriage4.ogg', 100, FALSE, -1)
@@ -1578,10 +1565,10 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 			spawn(5)
 				new /obj/effect/temp_visual/zizorite(get_turf(target))
 				user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
-				var/is_heretic = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic || /datum/advclass/wretch/heretic/spy || /datum/advclass/gnoll/shaman)
+				var/is_heretic = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic) || istype(user.mind?.picked_advclass, /datum/advclass/gnoll/shaman) // TA EDIT
 				if(is_heretic)
 					user.apply_status_effect(/datum/status_effect/debuff/armamentrites)
-				zizoarmaments(target, helm_choice, armor_choice)
+				zizoarmaments(target, helm_choice, armor_choice, weapon_choice) // TA EDIT
 				spawn(115)
 					icon_state = "zizo_chalky"
 
@@ -1660,11 +1647,11 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	playsound(loc, 'sound/magic/zizo_snuff.ogg', 200, FALSE, -1)
 	loc.visible_message(span_cult("Suddenly a great cloud of cold fog pours out of the rune, engulfing all lights around it!"))
 
-/obj/structure/ritualcircle/zizo/proc/zizoarmaments(mob/living/carbon/human/target, helm_choice, armor_choice)
+/obj/structure/ritualcircle/zizo/proc/zizoarmaments(mob/living/carbon/human/target, helm_choice, armor_choice, weapon_choice = null) // TA EDIT
 	if(!HAS_TRAIT(target, TRAIT_CABAL))
 		loc.visible_message(span_cult("THE RITE REJECTS ONE NOT OF THE CABAL!!"))
 		return
-	var/obj/item/clothing/head/roguetown/helmet/heavy/helm_path
+	var/obj/item/clothing/head/roguetown/helmet/helm_path // TA EDIT
 	var/outfit_path = /datum/outfit/job/roguetown/darksteelrite
 	switch(helm_choice)
 		if("Avantyne Barbute")
@@ -1676,6 +1663,9 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 		if("Avantyne Bascinet")
 			helm_path = /obj/item/clothing/head/roguetown/helmet/heavy/zizo/bascinet
 	switch(armor_choice)
+		if("Avantyne Light Armor") // TA EDIT START
+			outfit_path = /datum/outfit/job/roguetown/darksteelrite/light
+			helm_path = /obj/item/clothing/head/roguetown/helmet/skullcap/cult // TA EDIT END
 		if("Avantyne Half-Plate")
 			outfit_path = /datum/outfit/job/roguetown/darksteelrite/medium
 		if("Avantyne Full-Plate")
@@ -1692,6 +1682,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 		playsound(loc, 'sound/combat/hits/onmetal/grille (2).ogg', 50)
 		var/datum/outfit/job/roguetown/darksteelrite/ritual_outfit = new outfit_path()
 		ritual_outfit.selected_helm_path = helm_path
+		ritual_outfit.ta_weapon_choice = weapon_choice // TA EDIT
 		target.equipOutfit(ritual_outfit)
 		tag_kit_items(target, list(
 			"armor" = target.get_item_by_slot(SLOT_ARMOR),
@@ -1706,12 +1697,12 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 			"r_hand" = target.get_item_for_held_index(2),
 			"l_hand" = target.get_item_for_held_index(1),
 		), list("armor", "shirt", "pants", "shoes", "wrists", "gloves", "head", "neck", "backr", "r_hand", "l_hand"))
-		target.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_EXPERT, TRUE)
+		target.adjust_skillrank_up_to(ritual_outfit.ta_weapon_skill, SKILL_LEVEL_EXPERT, TRUE) // TA EDIT
 		spawn(40)
 			to_chat(target, span_purple("<br>They are ignorant, backwards, without hope. You. You will be powerful.<br>"))
 
 /datum/outfit/job/roguetown/darksteelrite
-	var/obj/item/clothing/head/roguetown/helmet/heavy/selected_helm_path = /obj/item/clothing/head/roguetown/helmet/heavy/zizo
+	var/obj/item/clothing/head/roguetown/helmet/selected_helm_path = /obj/item/clothing/head/roguetown/helmet/heavy/zizo // TA EDIT
 	var/selected_weapon_choice = "Avantyne Longsword"
 
 /datum/outfit/job/roguetown/darksteelrite/pre_equip(mob/living/carbon/human/H, visualsOnly = FALSE)
@@ -1730,8 +1721,9 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	head = selected_helm_path
 	neck = /obj/item/clothing/neck/roguetown/bevor/zizo
 	r_hand = /obj/item/rogueweapon/sword/long/zizo
+	ta_apply_weapon_choice() // TA EDIT
 
-	if(!istype(src, /datum/outfit/job/roguetown/darksteelrite/medium)) // TA EDIT
+	if(type == /datum/outfit/job/roguetown/darksteelrite && H.mind) // TA EDIT
 		H.mind.AddSpell(new /datum/action/cooldown/spell/mending)
 		ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL) // TA EDIT
 //	if(!H.mind.has_spell(/datum/action/cooldown/spell/miracle/intervention) && H.devotion.max_devotion == CLERIC_REQ_4)	// Devotion check to make sure we give it to the HWretch not some Guy
@@ -1748,6 +1740,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	neck = /obj/item/clothing/neck/roguetown/bevor/zizo
 	r_hand = /obj/item/rogueweapon/sword/zizo
 	l_hand = /obj/item/rogueweapon/shield/kite/zizo
+	ta_apply_weapon_choice() // TA EDIT
 
 	H.mind.RemoveSpell(new /datum/action/cooldown/spell/mending/lesser)
 
@@ -1781,10 +1774,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 				return
 			var/onrune = view(1, loc)
 			var/list/folksonrune = list()
-			var/is_spy = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic/spy)
-			for(var/mob/living/carbon/human/persononrune in onrune)
-				if(is_spy && persononrune == user)
-					continue
+			for(var/mob/living/carbon/human/persononrune in onrune) // TA EDIT
 				if(HAS_TRAIT(persononrune, TRAIT_FREEMAN))
 					folksonrune += persononrune
 			var/mob/living/carbon/human/target = input(user, "Choose a host") as null|anything in folksonrune
@@ -1803,7 +1793,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 				return
 			icon_state = "matthios_active"
 			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
-			var/is_heretic = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic || /datum/advclass/wretch/heretic/spy || /datum/advclass/gnoll/shaman)
+			var/is_heretic = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic) || istype(user.mind?.picked_advclass, /datum/advclass/gnoll/shaman) // TA EDIT
 			if(is_heretic)
 				user.apply_status_effect(/datum/status_effect/debuff/armamentrites)
 			matthiosarmaments(target)
@@ -1979,10 +1969,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 				return
 			var/onrune = view(1, loc)
 			var/list/folksonrune = list()
-			var/is_spy = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic/spy)
-			for(var/mob/living/carbon/human/persononrune in onrune)
-				if(is_spy && persononrune == user)
-					continue
+			for(var/mob/living/carbon/human/persononrune in onrune) // TA EDIT
 				if(HAS_TRAIT(persononrune, TRAIT_HORDE))
 					folksonrune += persononrune
 			var/mob/living/carbon/human/target = input(user, "Choose a host") as null|anything in folksonrune
@@ -2005,6 +1992,9 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 			var/armor_choice = show_radial_menu(user, src, armor_options, require_near = TRUE, tooltips = TRUE)
 			if(!armor_choice)
 				armor_choice = "Vicious Full-Plate"
+			var/weapon_choice = ta_select_rite_weapon(user, src, /datum/patron/inhumen/graggar) // TA EDIT START
+			if(!weapon_choice)
+				return // TA EDIT END
 			user.say("MOTIVE FORCE, O' VIOLENCE!!")
 			if(!do_after(user, 5 SECONDS))
 				return
@@ -2016,10 +2006,10 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 				return
 			icon_state = "graggar_active"
 			user.apply_status_effect(/datum/status_effect/debuff/ritesexpended)
-			var/is_heretic = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic || /datum/advclass/wretch/heretic/spy || /datum/advclass/gnoll/shaman)
+			var/is_heretic = istype(user.mind?.picked_advclass, /datum/advclass/wretch/heretic) || istype(user.mind?.picked_advclass, /datum/advclass/gnoll/shaman) // TA EDIT
 			if(is_heretic)
 				user.apply_status_effect(/datum/status_effect/debuff/armamentrites)
-			graggararmor(target, helm_choice, armor_choice)
+			graggararmor(target, helm_choice, armor_choice, weapon_choice) // TA EDIT
 			spawn(120)
 				icon_state = "graggar_chalky"
 		if("War Ritual")
@@ -2043,7 +2033,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 			spawn(120)
 				icon_state = "graggar_chalky"
 
-/obj/structure/ritualcircle/graggar/proc/graggararmor(mob/living/carbon/human/target, helm_choice, armor_choice)
+/obj/structure/ritualcircle/graggar/proc/graggararmor(mob/living/carbon/human/target, helm_choice, armor_choice, weapon_choice) // TA EDIT
 	if(!HAS_TRAIT(target, TRAIT_HORDE))
 		loc.visible_message(span_cult("THE RITE REJECTS ONE WITHOUT SLAUGHTER IN THEIR HEART!!"))
 		return
@@ -2073,6 +2063,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 		playsound(loc, 'sound/combat/hits/onmetal/grille (2).ogg', 50)
 		var/datum/outfit/job/roguetown/viciousrite/ritual_outfit = new outfit_path()
 		ritual_outfit.selected_helm_path = helm_path
+		ritual_outfit.ta_weapon_choice = weapon_choice // TA EDIT
 		target.equipOutfit(ritual_outfit)
 		tag_kit_items(target, list(
 			"armor" = target.get_item_by_slot(SLOT_ARMOR),
@@ -2155,6 +2146,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	neck = /obj/item/clothing/neck/roguetown/gorget/steel/graggar
 	cloak = /obj/item/clothing/cloak/graggar
 	r_hand = /obj/item/rogueweapon/greataxe/steel/doublehead/graggar
+	ta_apply_weapon_choice() // TA EDIT
 
 	H.mind.RemoveSpell(new /datum/action/cooldown/spell/mending/lesser)
 
@@ -2172,6 +2164,7 @@ More uniquely, her rites always cut out the light in the room, then proc. 10 sec
 	cloak = /obj/item/clothing/cloak/graggar/heavy
 	r_hand = /obj/item/rogueweapon/stoneaxe/woodcut/steel/graggar
 	l_hand = /obj/item/rogueweapon/shield/iron/graggar
+	ta_apply_weapon_choice() // TA EDIT
 
 	H.mind.AddSpell(new /datum/action/cooldown/spell/mending) // TA EDIT
 	ADD_TRAIT(H, TRAIT_UNCONVERTIBLE, TRAIT_RITUAL) // TA EDIT
