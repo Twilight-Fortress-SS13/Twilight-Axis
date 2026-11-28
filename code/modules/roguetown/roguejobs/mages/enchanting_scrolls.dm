@@ -498,6 +498,8 @@ T1 Enchantments below here*/
 	else
 		to_chat(user, span_notice("You don't think [O] will take to the enchantment. Best not to waste the ink."))
 
+// TA REMOVAL START (Тинктуры апгрейдов и тиры имплементов)
+/*
 /obj/item/enchantmentscroll/implement
 	name = "runic tincture of focus"
 	desc = "A vial of quicksilver ink that improves the focus of an arcyne implement, allowing it to recapture more mana."
@@ -538,3 +540,5 @@ T1 Enchantments below here*/
 	color = "#ffd27a"
 	upgrade_tier = IMPLEMENT_TIER_GRAND
 	sellprice = 30
+*/
+// TA REMOVAL END

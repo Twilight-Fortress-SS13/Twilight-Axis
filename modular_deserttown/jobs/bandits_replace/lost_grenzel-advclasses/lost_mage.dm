@@ -35,7 +35,7 @@
 /datum/outfit/job/roguetown/lost_grenzel/lost_mage/pre_equip(mob/living/carbon/human/H)
 	..()
 	belt = /obj/item/storage/belt/rogue/leather/battleskirt
-	backl = /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel
+	backl = /obj/item/rogueweapon/woodstaff/implement/greater/blacksteel/ruby
 	mask = /obj/item/clothing/mask/rogue/ragmask
 	cloak = /obj/item/clothing/cloak/tabard/stabard/grenzelmage
 	armor = /obj/item/clothing/suit/roguetown/armor/brigandine/light
@@ -53,7 +53,7 @@
 		/obj/item/flashlight/flare/torch = 1,
 		/obj/item/rogueweapon/huntingknife = 1,
 		/obj/item/rogueweapon/scabbard/sheath = 1,
-		/obj/item/rogueweapon/spellbook = 1,
+		/obj/item/rogueweapon/spellbook/ruby = 1,
 		/obj/item/chalk = 1
 		)
 	if(H.mind)
