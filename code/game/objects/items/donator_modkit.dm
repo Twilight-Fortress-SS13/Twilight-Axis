@@ -298,7 +298,9 @@
 	TI.override_state = RI::icon_state
 	TI.lefthand_file = RI::lefthand_file
 	TI.righthand_file = RI::righthand_file
-	TI.sheathe_icon = RI::sheathe_icon ? RI::sheathe_icon : TI.sheathe_icon
+	if(RI::sheathe_icon) // TA EDIT START
+		TI.sheathe = RI::sheathe
+		TI.sheathe_icon = RI::sheathe_icon // TA EDIT END
 	TI.bigboy = RI::bigboy
 	TI.gripsprite = RI::gripsprite
 	if(!TI.gripsprite)

@@ -100,7 +100,7 @@ GLOBAL_LIST_INIT(tat_donation_access_all_ckeys, TAT_DONATION_ACCESS_ALL_CKEYS)
 	/obj/item/rogueweapon/huntingknife/combat/iron = TAT_ITEM_ENTRY("Bauernwehr", 2, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "knife"), \
 	/obj/item/rogueweapon/huntingknife/idagger = TAT_ITEM_ENTRY("Iron Dagger", 1, "weapon", "weapon_supply", TAT_SUPPLY_IRON, "knife"), \
 	/obj/item/rogueweapon/huntingknife/idagger/navaja = TAT_ITEM_ENTRY("Navaja", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "knife"), \
-	/obj/item/rogueweapon/huntingknife/idagger/silver = TAT_ITEM_ENTRY("Silver Dagger", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "knife"), \
+	/obj/item/rogueweapon/huntingknife/idagger/steel/silver = TAT_ITEM_ENTRY("Silver Dagger", 3, "weapon", "weapon_supply", TAT_SUPPLY_SILVER, "knife"), \
 	/obj/item/rogueweapon/huntingknife/idagger/steel = TAT_ITEM_ENTRY("Steel Dagger", 2, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "knife"), \
 	/obj/item/rogueweapon/huntingknife/idagger/steel/rondel = TAT_ITEM_ENTRY("Steel Dagger", 2.5, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "knife"), \
 	/obj/item/rogueweapon/huntingknife/idagger/steel/parrying = TAT_ITEM_ENTRY("Parrying Dagger", 3, "weapon", "weapon_supply", TAT_SUPPLY_STEEL, "knife"), \

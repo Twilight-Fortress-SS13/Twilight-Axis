@@ -205,7 +205,7 @@
 /datum/supply_pack/rogue/Afreet/elfdagger
 	name = "Elven Dagger"
 	cost = 40
-	contains = list(/obj/item/rogueweapon/huntingknife/idagger/silver/elvish)
+	contains = list(/obj/item/rogueweapon/huntingknife/idagger/steel/silver/elvish)
 
 /datum/supply_pack/rogue/Afreet/axe
 	name = "Iron Axe"

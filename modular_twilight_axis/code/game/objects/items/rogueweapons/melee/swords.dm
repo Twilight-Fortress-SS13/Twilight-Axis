@@ -1,76 +1,3 @@
-/obj/item/rogueweapon/sword/rapier/psyrapier
-	name = "psydonian rapier"
-	desc = "An ornate rapier, plated in a ceremonial veneer of silver. The barbs pierce your palm, and - for just a moment - you see red. Never forget that you are why Psydon wept."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
-	icon_state = "psyrapier"
-	sheathe_icon = "silverrapier"
-	resistance_flags = FIRE_PROOF
-	force = 20
-	force_wielded = 20
-	is_silver = TRUE
-
-/obj/item/rogueweapon/sword/rapier/psyrapier/ComponentInitialize()
-	AddComponent(\
-		/datum/component/silverbless,\
-		pre_blessed = BLESSING_NONE,\
-		silver_type = SILVER_PSYDONIAN,\
-		added_force = 0,\
-		added_blade_int = 100,\
-		added_int = 50,\
-		added_def = 2,\
-	)
-
-/obj/item/rogueweapon/sword/rapier/foldsword
-	name = "pathmaker"
-	desc = "Дорогостоющий складной меч, сделанный специально по заказу для десницы. Можно носить как обычный меч в ножнах, так и в сумке или в поясе, если сложить."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
-	icon_state = "folding_sword_on"
-	var/extended = FALSE
-
-/obj/item/rogueweapon/sword/rapier/foldsword/attack_self(mob/user)
-	extended = !extended
-	playsound(src.loc, 'sound/blank.ogg', 50, TRUE)
-	if(extended)
-		possible_item_intents = list(/datum/intent/sword/thrust/rapier, /datum/intent/sword/cut/rapier, /datum/intent/sword/thrust/rapier/lunge)
-		wlength = WLENGTH_NORMAL
-		w_class = WEIGHT_CLASS_BULKY
-		sharpness = IS_SHARP
-		slot_flags = ITEM_SLOT_HIP | ITEM_SLOT_BACK
-		equip_delay_self = initial(equip_delay_self)
-		unequip_delay_self = initial(unequip_delay_self)
-		inv_storage_delay = initial(inv_storage_delay)
-		icon_state = "foldingblade_on"
-		playsound(user, 'sound/items/knife_open.ogg', 100, TRUE)
-	else
-		possible_item_intents = list(/datum/intent/sword/strike)
-		wlength = WLENGTH_SHORT
-		w_class = WEIGHT_CLASS_SMALL
-		sharpness = IS_BLUNT
-		slot_flags = ITEM_SLOT_HIP
-		equip_delay_self = 0 SECONDS
-		unequip_delay_self = 0 SECONDS
-		inv_storage_delay = 0 SECONDS
-		icon_state = "foldingblade_off"
-	if(user.a_intent)
-		var/datum/intent/I = user.a_intent
-		if(istype(I))
-			I.afterchange()
-	user.update_a_intents()
-	update_icon()
-
-/obj/item/rogueweapon/greatsword/grenz/flamberge/relevement
-	name = "relevement"
-	desc = "The grave wounds caused by flame-bladed swords make them a highly sought-after weapon among the Dark Elves - the charges of dishonorable warfare notwithstanding. Consequentially, these weapons are often wielded by both sides of the Underdark Feud Wars."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
-	icon_state = "drowflamberge"
-	item_state = "drowflamberge"
-	max_integrity = 240
-	max_blade_int = 240
-	smeltresult = /obj/item/ingot/drow
-
-/obj/item/rogueweapon/sword/long/exe/silver
-	is_silver = TRUE
-
 /obj/item/rogueweapon/sword/long/exe/berserk
 	special = /datum/special_intent/wave_swing/greatsword
 	parrysound = list(
@@ -102,49 +29,10 @@
 			if("onback")
 				return list("shrink" = 0.6,"sx" = -1,"sy" = 2,"nx" = 0,"ny" = 2,"wx" = 2,"wy" = 1,"ex" = 0,"ey" = 1,"nturn" = 0,"sturn" = 0,"wturn" = 70,"eturn" = 15,"nflip" = 1,"sflip" = 1,"wflip" = 1,"eflip" = 1,"northabove" = 1,"southabove" = 0,"eastabove" = 0,"westabove" = 0)
 
-/obj/item/rogueweapon/sword/rapier/psy/folding
-	name = "psydonian folding blade"
-	desc = "A costly folding blade commissioned for the rune volves of the Psydonian Inquisition. Built for investigators and executioners alike, it folds into a compact package for discreet carry before locking into a deadly dueling weapon."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
-	icon_state = "psyfoldingblade_on"
-	sheathe_icon = "silverrapier"
-	var/extended = FALSE
-
-/obj/item/rogueweapon/sword/rapier/psy/folding/attack_self(mob/user)
-	extended = !extended
-	playsound(src.loc, 'sound/blank.ogg', 50, TRUE)
-	if(extended)
-		possible_item_intents = list(/datum/intent/sword/thrust/rapier, /datum/intent/sword/cut/rapier, /datum/intent/sword/thrust/rapier/lunge)
-		wlength = WLENGTH_NORMAL
-		w_class = WEIGHT_CLASS_BULKY
-		sharpness = IS_SHARP
-		slot_flags = ITEM_SLOT_HIP | ITEM_SLOT_BACK
-		equip_delay_self = initial(equip_delay_self)
-		unequip_delay_self = initial(unequip_delay_self)
-		inv_storage_delay = initial(inv_storage_delay)
-		icon_state = "psyfoldingblade_on"
-		playsound(user, 'sound/items/knife_open.ogg', 100, TRUE)
-	else
-		possible_item_intents = list(/datum/intent/sword/strike)
-		wlength = WLENGTH_SHORT
-		w_class = WEIGHT_CLASS_SMALL
-		sharpness = IS_BLUNT
-		slot_flags = ITEM_SLOT_HIP
-		equip_delay_self = 0 SECONDS
-		unequip_delay_self = 0 SECONDS
-		inv_storage_delay = 0 SECONDS
-		icon_state = "psyfoldingblade_off"
-	if(user.a_intent)
-		var/datum/intent/I = user.a_intent
-		if(istype(I))
-			I.afterchange()
-	user.update_a_intents()
-	update_icon()
-
 /obj/item/rogueweapon/sword/long/oathbreaker_matthios
 	name = "\"Kingslayer\""
 	desc = "The blade seems to be forged of pure gold, yet it cuts and blocks just as well as any steel blade would. </br>'Rise, now, stand and fight! Take your freedom, claim your right!' </br>'Rise, now, stand and sing! Storm the castle, kill the king!'"
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords64.dmi'
 	icon_state = "oathbreakersword"
 	item_state = "oathbreakersword"
 	//sheathe_icon = "oathbreakersword" //Когда замержат #1569, буду это делать
@@ -167,10 +55,67 @@
 /obj/item/rogueweapon/sword/long/oathbreaker_matthios/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_MATTHIOS_WEAPON)
 
+/obj/item/rogueweapon/sword/rapier/proc/update_folding_state(mob/user, extended, open_icon, closed_icon)
+	if(extended)
+		possible_item_intents = list(
+			/datum/intent/sword/thrust/rapier,
+			/datum/intent/sword/cut/rapier,
+			/datum/intent/sword/thrust/rapier/lunge,
+		)
+		force = 22
+		wdefense = 7
+		wlength = WLENGTH_NORMAL
+		w_class = WEIGHT_CLASS_BULKY
+		throwforce = 10
+		icon_state = open_icon
+		attack_verb = list(
+			"slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut",
+		)
+		sharpness = IS_SHARP
+		slot_flags = ITEM_SLOT_HIP | ITEM_SLOT_BACK
+		equip_delay_self = initial(equip_delay_self)
+		unequip_delay_self = initial(unequip_delay_self)
+		inv_storage_delay = initial(inv_storage_delay)
+		playsound(user, 'sound/items/knife_open.ogg', 100, TRUE)
+	else
+		possible_item_intents = list(/datum/intent/sword/strike)
+		force = 5
+		wdefense = 2
+		wlength = WLENGTH_SHORT
+		w_class = WEIGHT_CLASS_SMALL
+		throwforce = 5
+		icon_state = closed_icon
+		attack_verb = list("stubbed", "poked")
+		sharpness = IS_BLUNT
+		slot_flags = ITEM_SLOT_HIP
+		equip_delay_self = 0
+		unequip_delay_self = 0
+		inv_storage_delay = 0
+	update_force_dynamic()
+	update_wdefense_dynamic()
+	var/datum/intent/intent = user.a_intent
+	if(istype(intent))
+		intent.afterchange()
+	user.update_a_intents()
+	user.update_inv_hands()
+
+/obj/item/rogueweapon/sword/rapier/folding
+	name = "pathmaker"
+	desc = "Дорогостоющий складной меч, сделанный специально по заказу для \
+		десницы. Можно носить как обычный меч в ножнах, так и в сумке \
+		или в поясе, если сложить."
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords64.dmi'
+	icon_state = "folding_sword_on"
+	var/extended = TRUE
+
+/obj/item/rogueweapon/sword/rapier/folding/attack_self(mob/user)
+	extended = !extended
+	update_folding_state(user, extended, "folding_sword_on", "folding_sword_off")
+
 /obj/item/rogueweapon/sword/sabre/threaded
 	name = "threaded sword"
 	desc = "Изумительное творение неизвестного мастера. В тонком клинке проложена тонкая стальная нить, что при желании владельца способна вытянуть клинок вперёд, превращая оный в смертоносную плеть. Жаль, что он довольно хрупок.."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords64.dmi'
 	icon_state = "cane_sword"
 	sheathe_icon = "swordcande"
 	smeltresult = /obj/item/ingot/bronze
@@ -269,10 +214,62 @@
 			I.afterchange()
 	user.update_a_intents()
 
+/obj/item/rogueweapon/sword/rapier/silver/psy/folding
+	name = "psydonic folding blade"
+	desc = "A costly folding blade commissioned for the rune volves of the \
+		Psydonian Inquisition. Built for investigators and executioners \
+		alike, it folds into a compact package for discreet carry before \
+		locking into a deadly dueling weapon."
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords64.dmi'
+	icon_state = "psyfoldingblade_on"
+	sheathe_icon = "silverrapier"
+	var/extended = TRUE
+
+/obj/item/rogueweapon/sword/rapier/silver/psy/folding/attack_self(mob/user)
+	extended = !extended
+	update_folding_state(user, extended, "psyfoldingblade_on", "psyfoldingblade_off")
+
+/obj/item/rogueweapon/sword/rapier/silver/psy/smallsword
+	name = "psydonic smallsword"
+	desc = "A slender silver smallsword crafted for swift and precise strikes. \
+	Though elegant in form, it was forged with a singular purpose: to pierce both the hearts of men and the blasphemies that lurk beyond them."
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/swords32.dmi'
+	icon_state = "psysmallsword"
+	sheathe = 'modular_twilight_axis/icons/obj/items/scabbard.dmi'
+	sheathe_icon = "psysmallsword"
+	max_blade_int = 200
+	grid_width = 32
+	grid_height = 64
+	dropshrink = 0
+	bigboy = FALSE
+
+/obj/item/rogueweapon/sword/rapier/silver/psy/smallsword/ComponentInitialize()
+	AddComponent(\
+		/datum/component/silverbless,\
+		pre_blessed = BLESSING_NONE,\
+		silver_type = SILVER_PSYDONIAN,\
+	)
+
+/obj/item/rogueweapon/sword/rapier/silver/psy/folding/relic
+	max_integrity = 250
+	max_blade_int = 250
+	name = "\"Testament\""
+	desc = "Commissioned by the Inquisition and wrought by the blacksmiths of Arkenfeit, this peculiar blade was made for those \
+	who could ill afford to announce their calling before the time came to draw steel. Its silvered edge folds neatly into \
+	the hilt, concealing a weapon fit for the most delicate of investigations. Many a heretic has mistaken its bearer for \
+	a harmless clerk, only to learn that the Inquisition keeps its sharpest judgements close at hand."
+
+/obj/item/rogueweapon/sword/rapier/silver/psy/folding/relic/ComponentInitialize()
+	AddComponent(\
+		/datum/component/silverbless,\
+		pre_blessed = BLESSING_PSYDONIAN,\
+		silver_type = SILVER_PSYDONIAN,\
+	)
+
 /obj/item/rogueweapon/scabbard/sword/cane_bb
 	name = "cane sheath"
 	desc = "A piece of steel lined with wood. Great for batting away blows."
-	icon = 'modular_twilight_axis/icons/roguetown/weapons/64.dmi'
+	icon = 'modular_twilight_axis/icons/obj/items/gwstrap.dmi'
 	icon_state = "cane_sheath"
 	item_state = "cane_sheath"
 	force = 10
@@ -306,7 +303,3 @@
 	icon_state = "ast_kriegmesser"
 	sheathe = 'modular_twilight_axis/icons/obj/items/scabbard.dmi'
 	sheathe_icon = "ast_kriegmesser"
-
-/obj/item/rogueweapon/sword/rapier/silver/psy/smallsword
-	sheathe = 'modular_twilight_axis/icons/obj/items/scabbard.dmi'
-	sheathe_icon = "psysmallsword"
