@@ -372,9 +372,9 @@
 		// Determine roll count
 		var/rolls = 1
 		if(is_impure)
-			rolls = tree.mother_tree ? 4 : 3 // TA EDIT - ORIGINAL 2 : 1
+			rolls = tree.mother_tree ? 5 : 4 // TA EDIT - ORIGINAL 2 : 1
 		else
-			rolls = tree.mother_tree ? 7 : 4 // TA EDIT - ORIGINAL 5 : 2
+			rolls = tree.mother_tree ? 10 : 6 // TA EDIT - ORIGINAL 5 : 2
 		// Perform the rolls
 		for(var/i in 1 to rolls)
 			tree.roll_for_moss(is_impure)

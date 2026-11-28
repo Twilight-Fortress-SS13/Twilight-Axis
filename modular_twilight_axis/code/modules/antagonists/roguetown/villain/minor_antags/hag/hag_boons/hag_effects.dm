@@ -11,37 +11,41 @@
 /datum/status_effect/buff/hag_boon/bard_initiate/on_apply()
 	var/mob/living/carbon/human/H = owner
 	H.adjust_skillrank(/datum/skill/misc/music, 4, TRUE)
-	var/datum/inspiration/I = new /datum/inspiration(H)
-	I.grant_inspiration(H, bard_tier = BARD_T2)
-	if(H.mind)
-		var/instruments = list("Harp","Lute","Accordion","Guitar","Hurdy-Gurdy","Viola","Vocal Talisman", "Psyaltery", "Flute", "Drum", "Shamisen")
-		var/instrument_choice = tgui_input_list(H, "Choose your instrument.", "TAKE UP ARMS", instruments)
-		var/obj/item/rogue/instrument/instrument
-		switch(instrument_choice)
-			if("Harp")
-				instrument = /obj/item/rogue/instrument/harp
-			if("Lute")
-				instrument = /obj/item/rogue/instrument/lute
-			if("Accordion")
-				instrument = /obj/item/rogue/instrument/accord
-			if("Guitar")
-				instrument = /obj/item/rogue/instrument/guitar
-			if("Hurdy-Gurdy")
-				instrument = /obj/item/rogue/instrument/hurdygurdy
-			if("Viola")
-				instrument = /obj/item/rogue/instrument/viola
-			if("Vocal Talisman")
-				instrument = /obj/item/rogue/instrument/vocals
-			if("Psyaltery")
-				instrument = /obj/item/rogue/instrument/psyaltery
-			if("Flute")
-				instrument = /obj/item/rogue/instrument/flute
-			if("Drum")
-				instrument = /obj/item/rogue/instrument/drum
-			if("Shamisen")
-				instrument = /obj/item/rogue/instrument/shamisen
+	if(!H.inspiration)
+		var/datum/inspiration/I = new /datum/inspiration(H)
+		I.grant_inspiration(H, bard_tier = BARD_T2)
+		if(H.mind)
+			var/instruments = list("Harp","Lute","Accordion","Guitar","Hurdy-Gurdy","Viola","Vocal Talisman", "Psyaltery", "Flute", "Drum", "Shamisen")
+			var/instrument_choice = tgui_input_list(H, "Choose your instrument.", "TAKE UP ARMS", instruments)
+			var/obj/item/rogue/instrument/instrument
+			switch(instrument_choice)
+				if("Harp")
+					instrument = /obj/item/rogue/instrument/harp
+				if("Lute")
+					instrument = /obj/item/rogue/instrument/lute
+				if("Accordion")
+					instrument = /obj/item/rogue/instrument/accord
+				if("Guitar")
+					instrument = /obj/item/rogue/instrument/guitar
+				if("Hurdy-Gurdy")
+					instrument = /obj/item/rogue/instrument/hurdygurdy
+				if("Viola")
+					instrument = /obj/item/rogue/instrument/viola
+				if("Vocal Talisman")
+					instrument = /obj/item/rogue/instrument/vocals
+				if("Psyaltery")
+					instrument = /obj/item/rogue/instrument/psyaltery
+				if("Flute")
+					instrument = /obj/item/rogue/instrument/flute
+				if("Drum")
+					instrument = /obj/item/rogue/instrument/drum
+				if("Shamisen")
+					instrument = /obj/item/rogue/instrument/shamisen
 
-		new instrument(H.loc)
+			new instrument(H.loc)
+	else
+		H.inspiration.bonus_rhythm_picks = 2
+		H.inspiration.maxsongs += 2
 
 /datum/hag_boon/buff/devotee
 	name = "Devotee"
@@ -335,3 +339,6 @@
 		var/total_value = (damage * 0.4)
 		budget2change(total_value, owner, putinhands = FALSE, custom_turf = owner.loc)
 		return TRUE
+
+/datum/hag_boon/buff/storm_rebirth
+	points = 50

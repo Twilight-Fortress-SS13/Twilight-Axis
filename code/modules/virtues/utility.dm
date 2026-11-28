@@ -544,7 +544,7 @@ GLOBAL_LIST_EMPTY(fey_vessels)
 	GLOB.fey_vessels[recipient] = TRUE
 	var/hag_message = "A familiar rhythm pulses in the roots... [recipient.real_name], a feybound, is walking the lands this week."
 	add_verb(recipient, /mob/living/carbon/human/proc/toggle_vessel)
-	recipient.extra_boon_budget = 60
+	recipient.extra_boon_budget = 120
 	// TA EDIT END
 	for(var/mob/living/hag_mob in GLOB.active_hags)
 		var/datum/mind/hag_mind = hag_mob.mind

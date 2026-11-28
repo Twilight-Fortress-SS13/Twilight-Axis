@@ -196,7 +196,7 @@
 	// Make it feybound, but they can't refuse to be vessel.
 	ADD_TRAIT(victim, TRAIT_FEYBOUND, TRAIT_HAG_BOON)
 	GLOB.fey_vessels[victim] = TRUE
-	victim.extra_boon_budget = 60
+	victim.extra_boon_budget = 120
 	for(var/mob/living/hag_mob in GLOB.active_hags)
 		var/datum/mind/hag_mind = hag_mob.mind
 		if(!hag_mind)

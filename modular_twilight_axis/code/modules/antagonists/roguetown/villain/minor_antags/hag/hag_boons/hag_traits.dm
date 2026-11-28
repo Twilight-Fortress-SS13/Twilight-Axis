@@ -66,7 +66,7 @@
 	name = "Trait - Strong Kick"
 	trait_to_apply = TRAIT_STRONGKICK
 	desc = "The bearer will be guaranteed to knockdown the victim on kick."
-	points = 50
+	points = 40
 
 /datum/hag_boon/trait/sentinel_of_wits
 	name = "Trait - Sentinel Of Wits"
@@ -98,7 +98,7 @@
 /datum/hag_boon/trait/party_leader
 	name = "Trait - Party Leader"
 	desc = "The bearer will become good leader, giving boosts while he is leader of fellowship."
-	points = 30
+	points = 10
 
 /datum/hag_boon/trait/party_leader/apply_boon_effect(mob/living/L)
 	L.LoadComponent(/datum/component/tat_party_leader)
@@ -148,6 +148,9 @@
 
 /datum/hag_boon/trait/crackhead
 	points = 20
+
+/datum/hag_boon/trait/good_trainer
+	points = 30
 
 /datum/hag_boon/trait/civil_barbarian/apply_boon_effect(mob/living/L)
 	. = ..()

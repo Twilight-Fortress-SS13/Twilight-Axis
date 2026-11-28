@@ -29,8 +29,8 @@
 
 /datum/crafting_recipe/roguetown/alchemy/hag/power_moss
 	name = "moss power"
-	result = list(/obj/item/alch/hag_moss/enchanted/power = 1)
-	reqs = list(/obj/item/alch/hag_moss/fury = 1, /obj/item/alch/hag_moss/envy = 1)
+	result = list(/obj/item/alch/hag_moss/enchanted/power, /obj/item/alch/hag_moss/enchanted/power)
+	reqs = list(/obj/item/alch/hag_moss/sorrow = 1, /obj/item/alch/salvia = 1)
 
 /obj/item/alch/hag_moss/enchanted/boned
 	name = "Boned Moss"
