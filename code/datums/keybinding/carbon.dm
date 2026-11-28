@@ -89,7 +89,7 @@
 	hotkey_keys = list("ShiftG")
 	name = "toggle_arc_mode"
 	full_name = "Toggle Spell Alt Mode"
-	description = "Toggle alt mode on the currently active spell - arc mode for projectiles, ward type cycling, etc."
+	description = "Toggle alt mode on the currently active spell - arc mode for projectiles, ward type cycling, etc. With no spell active and an empty hand, switches your unarmed balance stance if proficient enough." //TA EDIT
 	category = CATEGORY_CARBON
 
 /datum/keybinding/carbon/toggle_arc_mode/down(client/user)
@@ -111,6 +111,20 @@
 	// Fall back to old proc_holder system
 	var/obj/effect/proc_holder/spell/invoked/projectile/spell = H.ranged_ability
 	if(!istype(spell))
+		//TA EDIT START - no spell alt mode: toggle unarmed balance stance instead
+		if(!H.get_active_held_item())
+			if(H.get_skill_level(/datum/skill/combat/unarmed) < SKILL_LEVEL_JOURNEYMAN)
+				to_chat(H, span_warning("i'm not proficient enough to change stances."))
+				return TRUE
+			if(H.unarmed_balance == WBALANCE_SWIFT)
+				H.unarmed_balance = WBALANCE_HEAVY
+				to_chat(H, span_notice("I shift into a heavy stance."))
+			else
+				H.unarmed_balance = WBALANCE_SWIFT
+				to_chat(H, span_notice("I shift into a swift stance."))
+			H.update_a_intents()
+			return TRUE
+		// TA EDIT END
 		to_chat(H, span_warning("No active spell with an alt mode."))
 		return TRUE
 	spell.toggle_arc_mode(H)

@@ -119,6 +119,7 @@
 	var/list/possible_rmb_intents = list()
 	var/list/base_intents = list() //bare hand intents
 	var/datum/special_intent/unarmed_special //fallback special intent when no weapon is held
+	var/unarmed_balance = WBALANCE_SWIFT //TA EDIT
 	var/l_index = 1
 	var/r_index = 1
 	var/r_ua_index = 1
