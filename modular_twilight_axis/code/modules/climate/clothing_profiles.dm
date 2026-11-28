@@ -1,5 +1,7 @@
 /obj/item/clothing
 	var/ta_climate_thermal_explicit = FALSE
+	var/ta_climate_padded_underarmor = FALSE
+	var/ta_climate_rain_shield = 0.5
 
 /proc/ta_climate_apply_thermal_profile(obj/item/clothing/C)
 	if(!C || C.ta_climate_thermal_explicit)
@@ -12,7 +14,7 @@
 	var/padded = findtext(path_name, "gambeson") || findtext(path_name, "padded") || findtext(path_name, "quilt") || findtext(path_name, "wool") || findtext(display_name, "шерст") || findtext(display_name, "утеплен")
 	var/metal = findtext(path_name, "plate") || findtext(path_name, "chainmail") || findtext(path_name, "blacksteel") || findtext(path_name, "helmet") || findtext(path_name, "steel") || findtext(path_name, "brigandine") || findtext(path_name, "cuirass") || findtext(path_name, "sabatons") || findtext(path_name, "gauntlet")
 	var/leather = findtext(path_name, "leather") || findtext(salvage_name, "/hide")
-	var/summer = findtext(path_name, "summer") || findtext(path_name, "desert") || findtext(path_name, "silk") || findtext(path_name, "linen") || findtext(path_name, "sandals") || findtext(display_name, "лёгк") || findtext(display_name, "шелк")
+	var/summer = findtext(path_name, "summer") || findtext(path_name, "desert") || findtext(path_name, "silk") || findtext(path_name, "linen") || findtext(path_name, "sandals") || findtext(display_name, "лёгк") || findtext(display_name, "шелк") || findtext(salvage_name, "/silk")
 	if(istype(C, /obj/item/clothing/cloak/tabard) || istype(C, /obj/item/clothing/ring) || istype(C, /obj/item/clothing/mask/cigarette))
 		return
 	if(istype(C, /obj/item/clothing/neck))
@@ -33,8 +35,11 @@
 			return
 	if(!covered)
 		return
-	if(metal && !padded && !fur)
+	if(C.ta_climate_has_metal() || (metal && !padded && !fur))
 		return
+	if(summer)
+		C.cold_protection = 0
+		C.min_cold_protection_temperature = BODYTEMP_NORMAL_MIN
 	var/allow_cold = !summer
 	var/allow_heat = summer || (!fur && !padded && !leather && !metal)
 	if(istype(C, /obj/item/clothing/shoes) || istype(C, /obj/item/clothing/gloves))
@@ -91,6 +96,8 @@
 	ta_climate_thermal_explicit = TRUE
 	cold_protection = CHEST | ARM_RIGHT | ARM_LEFT
 	min_cold_protection_temperature = 50
+	heat_protection = 0
+	max_heat_protection_temperature = BODYTEMP_NORMAL_MAX
 
 /obj/item/clothing/cloak/cape/blkknight
 	ta_climate_thermal_explicit = TRUE
@@ -193,8 +200,12 @@
 	heat_protection = 0
 	max_heat_protection_temperature = BODYTEMP_NORMAL_MAX
 
+/obj/item/clothing/cloak/raincloak
+	ta_climate_rain_shield = 0.8
+
 /obj/item/clothing/cloak/raincloak/furcloak
 	ta_climate_thermal_explicit = TRUE
+	ta_climate_rain_shield = 0.5
 	cold_protection = CHEST | GROIN | ARM_LEFT | ARM_RIGHT
 	min_cold_protection_temperature = 50
 	heat_protection = 0
@@ -563,6 +574,7 @@
 
 /obj/item/clothing/suit/roguetown/armor/gambeson
 	ta_climate_thermal_explicit = TRUE
+	ta_climate_padded_underarmor = TRUE
 	cold_protection = CHEST | GROIN
 	min_cold_protection_temperature = BODYTEMP_COLD_LEVEL_ONE_MAX
 
@@ -573,6 +585,7 @@
 
 /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/hierophant
 	ta_climate_thermal_explicit = TRUE
+	ta_climate_padded_underarmor = FALSE
 	cold_protection = 0
 	min_cold_protection_temperature = BODYTEMP_NORMAL_MIN
 	heat_protection = CHEST | GROIN | ARM_RIGHT | ARM_LEFT | LEG_RIGHT | LEG_LEFT
@@ -580,6 +593,7 @@
 
 /obj/item/clothing/suit/roguetown/armor/gambeson/heavy/pontifex
 	ta_climate_thermal_explicit = TRUE
+	ta_climate_padded_underarmor = FALSE
 	cold_protection = 0
 	min_cold_protection_temperature = BODYTEMP_NORMAL_MIN
 	heat_protection = CHEST | GROIN | ARM_RIGHT | ARM_LEFT | LEG_RIGHT | LEG_LEFT
@@ -680,17 +694,17 @@
 
 /obj/item/clothing/suit/roguetown/shirt/dress/gown/summergown
 	ta_climate_thermal_explicit = TRUE
-	heat_protection = CHEST | ARM_RIGHT | ARM_LEFT
+	heat_protection = CHEST | GROIN | ARMS
 	max_heat_protection_temperature = BODYTEMP_HEAT_LEVEL_ONE_MAX
 
 /obj/item/clothing/suit/roguetown/shirt/dress/gown/wintergown
 	ta_climate_thermal_explicit = TRUE
-	cold_protection = CHEST | ARM_RIGHT | ARM_LEFT
+	cold_protection = CHEST | GROIN | ARMS
 	min_cold_protection_temperature = BODYTEMP_COLD_LEVEL_ONE_MAX
 
 /obj/item/clothing/suit/roguetown/shirt/dress/silkdress
 	ta_climate_thermal_explicit = TRUE
-	heat_protection = CHEST | ARM_RIGHT | ARM_LEFT
+	heat_protection = CHEST | GROIN | LEGS
 	max_heat_protection_temperature = BODYTEMP_HEAT_LEVEL_ONE_MAX
 
 /obj/item/clothing/suit/roguetown/shirt/tunic/thinwinterdress
@@ -700,7 +714,8 @@
 
 /obj/item/clothing/suit/roguetown/shirt/freifechter
 	ta_climate_thermal_explicit = TRUE
-	cold_protection = 10
+	ta_climate_padded_underarmor = TRUE
+	cold_protection = CHEST | GROIN | ARMS
 	min_cold_protection_temperature = BODYTEMP_COLD_LEVEL_ONE_MAX
 
 /obj/item/clothing/suit/roguetown/shirt/robe
@@ -926,3 +941,40 @@
 
 /obj/item/clothing/suit/roguetown/armor/brigandine/light
 	cold_protection = CHEST | GROIN
+
+/obj/item/clothing/cloak/etrcape
+	ta_climate_rain_shield = 0.8
+
+/obj/item/clothing/cloak/twilight_desert
+	ta_climate_thermal_explicit = TRUE
+	cold_protection = 0
+	min_cold_protection_temperature = BODYTEMP_NORMAL_MIN
+	heat_protection = CHEST | ARMS
+	max_heat_protection_temperature = BODYTEMP_HEAT_LEVEL_ONE_MAX
+
+/obj/item/clothing/suit/roguetown/armor/gambeson/raneshen
+	ta_climate_padded_underarmor = FALSE
+	cold_protection = 0
+	min_cold_protection_temperature = BODYTEMP_NORMAL_MIN
+	heat_protection = CHEST | GROIN | ARMS
+	max_heat_protection_temperature = BODYTEMP_HEAT_LEVEL_ONE_MAX
+
+/obj/item/clothing/suit/roguetown/armor/gambeson/zyb
+	ta_climate_padded_underarmor = FALSE
+	cold_protection = 0
+	min_cold_protection_temperature = BODYTEMP_NORMAL_MIN
+	heat_protection = CHEST | GROIN | ARMS
+	max_heat_protection_temperature = BODYTEMP_HEAT_LEVEL_ONE_MAX
+
+/obj/item/clothing/suit/roguetown/armor/gambeson/heavy/raneshen
+	heat_protection = CHEST | GROIN | ARMS
+	max_heat_protection_temperature = BODYTEMP_HEAT_LEVEL_ONE_MAX
+
+/obj/item/clothing/suit/roguetown/armor/gambeson/heavy/inq
+	ta_climate_padded_underarmor = FALSE
+
+/obj/item/clothing/suit/roguetown/armor/gambeson/baotha_ta
+	ta_climate_padded_underarmor = FALSE
+
+/obj/item/clothing/suit/roguetown/armor/vestments_padded
+	ta_climate_padded_underarmor = TRUE

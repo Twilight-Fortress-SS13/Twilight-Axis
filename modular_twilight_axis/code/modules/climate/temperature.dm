@@ -70,10 +70,7 @@ GLOBAL_VAR_INIT(ta_climate_cold_breath_overlay, mutable_appearance(
 				var/turf/open/floor/heated_floor = cur_turf
 				ordinary_heat = heated_floor.heat > 0
 			if(!ordinary_heat && bodytemperature >= BODYTEMP_NORMAL_MAX - 1)
-				for(var/obj/machinery/light/rogue/heat_source in range(6, cur_turf))
-					if(heat_source.on && heat_source.heat_level > 0 && get_dist(heat_source, cur_turf) <= min(6, heat_source.heat_level))
-						ordinary_heat = TRUE
-						break
+				ordinary_heat = ta_climate_near_ordinary_heat(cur_turf)
 			if(ordinary_heat)
 				if(bodytemperature > BODYTEMP_NORMAL_MAX)
 					env_adjust = -min(2, bodytemperature - BODYTEMP_NORMAL_MAX)
@@ -103,10 +100,14 @@ GLOBAL_VAR_INIT(ta_climate_cold_breath_overlay, mutable_appearance(
 		var/turf/open/floor/F = cur_turf
 		if(F.heat > 0)
 			ta_climate_warm_from_source(F.heat * 4)
-	if(loc_temp >= 303.15 && bodytemperature < BODYTEMP_NORMAL_MAX)
+	var/metal_heat_limit = max(BODYTEMP_NORMAL_MAX, loc_temp)
+	if(loc_temp >= 303.15 && bodytemperature < metal_heat_limit)
 		var/metal_load = ta_climate_metal_heating_load()
 		if(metal_load > 0)
-			ta_climate_warm_from_source(0.40 * metal_load)
+			var/previous_temperature = bodytemperature
+			adjust_bodytemperature(min(0.40 * metal_load, metal_heat_limit - bodytemperature))
+			if(bodytemperature > previous_temperature)
+				ta_climate_independent_heat_floor = max(BODYTEMP_NORMAL_MAX, min(bodytemperature, ta_climate_independent_heat_floor + bodytemperature - previous_temperature))
 	if(isturf(loc))
 		for(var/obj/structure/hotspring/S in cur_turf)
 			if(!S.edge)
@@ -318,10 +319,7 @@ GLOBAL_VAR_INIT(ta_climate_cold_breath_overlay, mutable_appearance(
 		var/turf/open/floor/heated_floor = standing_turf
 		near_ordinary_heat = heated_floor.heat > 0
 	if(!near_ordinary_heat && bodytemperature > BODYTEMP_NORMAL_MAX)
-		for(var/obj/machinery/light/rogue/F in range(6, standing_turf))
-			if(F.on && F.heat_level > 0 && get_dist(F, standing_turf) <= min(6, F.heat_level))
-				near_ordinary_heat = TRUE
-				break
+		near_ordinary_heat = ta_climate_near_ordinary_heat(standing_turf)
 	if(!near_ordinary_heat)
 		ta_climate_independent_heat_floor = max(BODYTEMP_NORMAL_MAX, bodytemperature)
 		return
@@ -415,9 +413,7 @@ GLOBAL_VAR_INIT(ta_climate_cold_breath_overlay, mutable_appearance(
 		return "Жарко"
 	return "Нормальная температура"
 
-/mob/living/carbon/human/verb/check_temperature_state()
-	set name = "Ощутить температуру"
-	set category = "IC"
+/mob/living/carbon/human/proc/check_temperature_state()
 	if(ta_climate_undead_temperature_immune())
 		to_chat(src, span_notice("Ваше тело не реагирует на холод и жару."))
 		return
