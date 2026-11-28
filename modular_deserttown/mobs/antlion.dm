@@ -83,7 +83,7 @@
 	setup_mount(list(TEXT_NORTH = list(0, 9), TEXT_SOUTH = list(0, 9), TEXT_EAST = list(-1, 9), TEXT_WEST = list(-1, 9)), south_layer = OBJ_LAYER, north_layer = MOB_LAYER+0.5)
 	var/datum/component/riding/D = get_riding_datum()
 	if(D)
-		D.set_riding_offsets(2, list(TEXT_NORTH = list(0, 1), TEXT_SOUTH = list(0, 17), TEXT_EAST = list(-9, 9), TEXT_WEST = list(7, 9)))
+		D.riding_offsets["2"] = list(TEXT_NORTH = list(0, 1), TEXT_SOUTH = list(0, 17), TEXT_EAST = list(-9, 9), TEXT_WEST = list(7, 9))
 
 /mob/living/simple_animal/hostile/retaliate/rogue/antlion/death()
 	unbuckle_all_mobs()
@@ -161,7 +161,7 @@
 	setup_mount(list(TEXT_NORTH = list(0, 9), TEXT_SOUTH = list(0, 9), TEXT_EAST = list(-1, 9), TEXT_WEST = list(-1, 9)), south_layer = OBJ_LAYER, north_layer = MOB_LAYER+0.5)
 	var/datum/component/riding/D = get_riding_datum()
 	if(D)
-		D.set_riding_offsets(2, list(TEXT_NORTH = list(0, 1), TEXT_SOUTH = list(0, 17), TEXT_EAST = list(-9, 9), TEXT_WEST = list(7, 9)))
+		D.riding_offsets["2"] = list(TEXT_NORTH = list(0, 1), TEXT_SOUTH = list(0, 17), TEXT_EAST = list(-9, 9), TEXT_WEST = list(7, 9))
 	var/obj/item/natural/saddle/S = new(src)
 	ssaddle = S
 	update_icon()
