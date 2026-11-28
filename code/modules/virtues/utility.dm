@@ -154,7 +154,7 @@ GLOBAL_LIST_EMPTY(fey_vessels)
 	choice_costs = list(0, 0, 0, 2, 4)
 	extra_choices = list(
 	SOCIALITE_BEAUTIFUL,
-//	SOCIALITE_MASSAGE,
+	SOCIALITE_MASSAGE,
 	SOCIALITE_NUTCRACKER,
 	SOCIALITE_EMPATH,
 	SOCIALITE_PERFORMER,
@@ -193,9 +193,6 @@ GLOBAL_LIST_EMPTY(fey_vessels)
 	..()
 	for(var/choice in picked_choices)
 		switch(choice)
-		//	if(SOCIALITE_MASSAGE)
-		//		if(recipient.mind)
-		//			recipient.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/massage)
 			if(SOCIALITE_BEAUTIFUL)
 				if(isdullahan(recipient))
 					ADD_TRAIT(recipient, TRAIT_BEAUTIFUL_UNCANNY, TRAIT_VIRTUE)
@@ -208,6 +205,9 @@ GLOBAL_LIST_EMPTY(fey_vessels)
 				ADD_TRAIT(recipient, TRAIT_EMPATH, TRAIT_VIRTUE)
 			if(SOCIALITE_PERFORMER)
 				recipient.adjust_skillrank_up_to(/datum/skill/misc/music, SKILL_LEVEL_EXPERT, silent = TRUE)
+			if(SOCIALITE_MASSAGE)
+				if(recipient.mind)
+					recipient.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/massage)
 			else
 				recipient.mind.special_items[choice] = extra_choices[choice]
 
