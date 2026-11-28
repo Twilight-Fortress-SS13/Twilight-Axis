@@ -489,7 +489,7 @@
 	belt = /obj/item/storage/belt/rogue/leather/battleskirt
 	beltl = /obj/item/rogueweapon/spellbook/ruby // TA EDIT (Реворк магических имплементов)
 	backl = /obj/item/storage/backpack/rogue/satchel/black
-	backr = /obj/item/rogueweapon/woodstaff/implement/greater/ruby // TA EDIT (Реворк магических имплементов)
+	backr = choose_staff(H, /obj/item/roguegem/ruby) // TA EDIT (Реворк магических имплементов)
 
 	backpack_contents = list(
 		/obj/item/storage/belt/rogue/pouch/coins/poor = 1,

@@ -4050,6 +4050,7 @@
 #include "modular_twilight_axis\code\game\objects\items\scabbard.dm"
 #include "modular_twilight_axis\code\game\objects\items\spell_implements\implements.dm"
 #include "modular_twilight_axis\code\game\objects\items\spell_implements\recipes.dm"
+#include "modular_twilight_axis\code\game\objects\items\spell_implements\staff_skins.dm"
 #include "modular_twilight_axis\code\game\objects\items\spell_implements\staves.dm"
 #include "modular_twilight_axis\code\game\objects\items\spell_implements\tinctures.dm"
 #include "modular_twilight_axis\code\game\objects\items\spell_implements\tomes.dm"

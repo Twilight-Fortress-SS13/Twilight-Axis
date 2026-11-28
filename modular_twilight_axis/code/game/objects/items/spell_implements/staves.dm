@@ -80,59 +80,6 @@
 	icon_state = "blacksteelstaff_gemless"
 	starting_gem_type = null
 
-// Косметические рескины деревянного посоха
-
-/obj/item/rogueweapon/woodstaff/implement/bone
-	name = "bone staff"
-	icon = 'modular_twilight_axis/icons/obj/items/staffs.dmi'
-	icon_state = "bone_staff_topaz"
-	gem_state_base = "bone_staff"
-	implement_noun = "bone staff"
-	desc = "Knuckles and vertebrae threaded along a bleached femur. Its crown holds a focus-gem that returns a share of spent spell energy to the wielder."
-
-/obj/item/rogueweapon/woodstaff/implement/bone/empty
-	icon_state = "bone_staff_gemless"
-	starting_gem_type = null
-	sellprice = 0
-
-/obj/item/rogueweapon/woodstaff/implement/wilted
-	name = "wilted staff"
-	icon = 'modular_twilight_axis/icons/obj/items/staffs.dmi'
-	icon_state = "wilted_topaz"
-	gem_state_base = "wilted"
-	implement_noun = "wilted staff"
-	desc = "A tree branch that somehow grew into a perfect staff. Its crown holds a focus-gem that returns a share of spent spell energy to the wielder."
-
-/obj/item/rogueweapon/woodstaff/implement/wilted/empty
-	icon_state = "wilted_gemless"
-	starting_gem_type = null
-	sellprice = 0
-
-/obj/item/rogueweapon/woodstaff/implement/wilted/druid
-	name = "druid staff"
-	icon_state = "druid_topaz"
-	gem_state_base = "druid"
-	implement_noun = "druid staff"
-	desc = "Living wood that never stopped growing, fresh leaves still budding along its length. Its crown holds a focus-gem that returns a share of spent spell energy to the wielder."
-
-/obj/item/rogueweapon/woodstaff/implement/wilted/druid/empty
-	icon_state = "druid_gemless"
-	starting_gem_type = null
-	sellprice = 0
-
-/obj/item/rogueweapon/woodstaff/implement/allmight
-	name = "allmight staff"
-	icon = 'modular_twilight_axis/icons/obj/items/staffs.dmi'
-	icon_state = "allmight_topaz"
-	gem_state_base = "allmight"
-	implement_noun = "allmight staff"
-	desc = "Holding this regal staff, you feel answerable to no one. Its crown holds a focus-gem that returns a share of spent spell energy to the wielder."
-
-/obj/item/rogueweapon/woodstaff/implement/allmight/empty
-	icon_state = "allmight_gemless"
-	starting_gem_type = null
-	sellprice = 0
-
 // Все случаи посохов внизу рассматриваются как уникальные и не являются составными посохами
 
 // Посох придворного мага считается черносталевым с загадкой стали по умолчанию
