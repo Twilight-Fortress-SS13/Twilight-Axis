@@ -107,7 +107,7 @@
 	text += "<br><b>Hands:</b> [grip.is_two_handed(src) ? "Two-handed" : "One-handed"]"
 	var/trait_text = grip.get_trait_text()
 	text += "<br><b>Required Trait:</b> [trait_text ? trait_text : "None"]"
-	text += "<br><b>Intents:</b> [format_altgrip_intents(grip.get_grip_intents(src))]"
+	text += "<br><b>Intents:</b> [format_altgrip_intents(ta_get_grip_intents(grip))]" // TA EDIT
 	text += "<br><b>Weapon Stat Changes:</b> [format_altgrip_stats(grip, overrides)]"
 	return text.Join("")
 
@@ -211,12 +211,7 @@
 	return "Normal"
 
 /obj/item/proc/get_altgrip_intents()
-	if(!current_alt_grip)
-		return possible_item_intents
-	var/list/intents = current_alt_grip.get_grip_intents(src)
-	if(length(intents))
-		return intents
-	return possible_item_intents
+	return ta_get_grip_intents(current_alt_grip) // TA EDIT
 
 
 /obj/item/proc/get_altgrip_message(mob/user)

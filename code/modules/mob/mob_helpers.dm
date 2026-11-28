@@ -672,11 +672,7 @@
 	var/list/intents = list()
 	var/obj/item/Masteritem = get_active_held_item()
 	if(Masteritem)
-		intents = Masteritem.possible_item_intents
-		if(Masteritem.wielded)
-			intents = Masteritem.gripped_intents
-		if(Masteritem.altgripped)
-			intents = Masteritem.get_altgrip_intents()
+		intents = Masteritem.ta_get_current_weapon_intents() // TA EDIT
 	else
 		if(active_hand_index == 1)
 			l_index = l_ua_index
@@ -692,11 +688,7 @@
 		apply_intent_customizations(intent)
 	Masteritem = get_inactive_held_item()
 	if(Masteritem)
-		intents = Masteritem.possible_item_intents
-		if(Masteritem.wielded)
-			intents = Masteritem.gripped_intents
-		if(Masteritem.altgripped)
-			intents = Masteritem.get_altgrip_intents()
+		intents = Masteritem.ta_get_current_weapon_intents() // TA EDIT
 	else
 		if(active_hand_index == 1)
 			r_index = r_ua_index

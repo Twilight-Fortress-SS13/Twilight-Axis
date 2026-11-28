@@ -45,9 +45,10 @@
 	if(charges > 0)
 		examine_list += span_notice("It is coated in [charges]/[max_charges] layers of thick, viscous ichor.")
 		examine_list += span_notice("Black rot scales up to 100 stacks.")
-		if(parent_weapon.possible_item_intents && length(parent_weapon.possible_item_intents))
+		var/list/available_intents = parent_weapon.ta_get_available_weapon_intents(parent_weapon.possible_item_intents) // TA EDIT
+		if(length(available_intents)) // TA EDIT
 			examine_list += span_notice("Careful strikes will apply the following rot stacks:")
-			for(var/I_path in parent_weapon.possible_item_intents)
+			for(var/I_path in available_intents) // TA EDIT
 				if(!ispath(I_path))
 					continue
 				var/intent_name = initial(I_path:name)
