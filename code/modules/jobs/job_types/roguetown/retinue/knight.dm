@@ -735,6 +735,7 @@
 	gloves = /obj/item/clothing/gloves/roguetown/plate
 	wrists = /obj/item/clothing/wrists/roguetown/bracers
 	shoes = /obj/item/clothing/shoes/roguetown/boots/armor
+	id = /obj/item/scomstone/garrison //TA EDIT
 
 	job_bitflag = BITFLAG_ROYALTY | BITFLAG_GARRISON
 
