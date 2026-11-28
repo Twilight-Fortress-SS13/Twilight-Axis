@@ -63,3 +63,27 @@
 		var/turf/spawn_loc = pick(possible_spawns)
 		recipient.forceMove(spawn_loc)
 		to_chat(recipient, span_notice("Как житель города, вы оказываетесь в местной таверне."))
+
+/datum/virtue/utility/noble
+	desc = "By birth, blade or brain, I am noble known to the royalty of these lands, and have all the benefits associated with it. \
+	I've cleverly stashed away a healthy amount of coinage, alongside a familial heirloom.<br><br>\
+	Высокое положение обязывает: чем выше мой достаток, \
+	тем взыскательнее я отношусь к одежде, столу и домашним удобствам.<br><br>\
+	Если должность позволяет выбрать положение, я могу стать мелким дворянином, богатым дворянином \
+	или представителем высшей аристократии за 0, 20 или 40 триумфов соответственно.<br>\
+	Выбрав Nobility дважды, я получаю первые два варианта бесплатно, а высшее положение обойдётся в 20 триумфов.<br><br>\
+	Если дворянство уже положено мне по должности, я сохраняю её ранг и получаю выбранную семейную реликвию. \
+	Для остальных дворцовых должностей доступно лишь мелкое дворянство."
+	stackable = TRUE
+
+/datum/virtue/utility/noble/apply_to_human(mob/living/carbon/human/recipient)
+	. = ..()
+	if(!HAS_TRAIT(recipient, TRAIT_OUTLAW))
+		recipient.taApplyNobilityVirtue()
+
+/mob/living/carbon/human/proc/taApplyNobilityVirtue()
+	if(!mind)
+		return
+	mind.ta_nobility_virtue_picks = min(2, mind.ta_nobility_virtue_picks + 1)
+	if(isnull(taRoleNobilityTier()))
+		taPrepareNobility()

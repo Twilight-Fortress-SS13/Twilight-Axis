@@ -12,3 +12,17 @@
 
 /datum/preferences/proc/save_emote_favourites(savefile/preferences_file)
 	WRITE_FILE(preferences_file["emote_favourites"], emote_favourites)
+
+/datum/preferences/_load_quirk(savefile/S)
+	var/lesser_type
+	var/greater_type
+	S["quirklesser"] >> lesser_type
+	S["quirkgreater"] >> greater_type
+	. = ..()
+	if(greater_type != /datum/quirk/noble)
+		return
+	if(lesser_type && lesser_type != /datum/quirk/none)
+		return
+	QDEL_NULL(quirklesser)
+	quirklesser = quirkgreater
+	quirkgreater = new /datum/quirk/none
