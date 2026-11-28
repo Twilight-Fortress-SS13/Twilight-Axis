@@ -384,7 +384,8 @@
 /client/proc/ensure_particle_weather_parallax(force_reconfigure = FALSE)
 	var/datum/particle_weather/W = SSParticleWeather.runningWeather
 	if(!mob || !W || !W.running || !W.parallax_weather || !W.weather_icon_state)
-		clear_particle_weather_parallax()
+		if(particle_weather_parallax || particle_weather_parallax_weather || particle_weather_parallax_plane_master || particle_weather_parallax_bound_movable || has_particle_weather_parallax_visual()) // TA EDIT
+			clear_particle_weather_parallax() // TA EDIT
 		return FALSE
 	var/atom/current_eye = eye ? eye : mob
 	var/atom/movable/current_movable_eye = istype(current_eye, /atom/movable) ? current_eye : null

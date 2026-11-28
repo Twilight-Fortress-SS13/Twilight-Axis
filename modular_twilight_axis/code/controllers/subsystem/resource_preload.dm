@@ -49,6 +49,14 @@ SUBSYSTEM_DEF(resource_preload)
 	can_fire = FALSE
 	return SS_INIT_NO_NEED
 #else
+	if(!CONFIG_GET(flag/staged_resource_preload))
+		log_config("Staged resource preload disabled; using normal BYOND resource delivery")
+		can_fire = FALSE
+		return SS_INIT_NO_NEED
+	if(CONFIG_GET(flag/build_rsc_preload) || length(CONFIG_GET(keyed_list/external_rsc_urls)))
+		log_config("Staged resource preload skipped: full RSC URL configured")
+		can_fire = FALSE
+		return SS_INIT_NO_NEED
 	load_bundles()
 	if(!length(bundles))
 		can_fire = FALSE
@@ -100,10 +108,8 @@ SUBSYSTEM_DEF(resource_preload)
 	var/connection = REF(client)
 
 	if(connections[ckey] != connection)
-		// New connection: if the last bundle didn't get its full download window, the
-		// player probably dropped mid-download, so hand that one out again.
-		if(next_send[ckey] > world.time && progress[ckey])
-			progress[ckey]--
+		// A timeout cannot confirm download completion or that the new client still has the cache.
+		progress[ckey] = 0
 		connections[ckey] = connection
 		next_send[ckey] = world.time + connect_delay
 		return

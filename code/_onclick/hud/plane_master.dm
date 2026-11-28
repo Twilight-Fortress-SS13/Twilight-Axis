@@ -146,18 +146,31 @@
 	plane = GAME_PLANE_FOV_HIDDEN
 	appearance_flags = PLANE_MASTER
 	blend_mode = BLEND_OVERLAY
+	var/backdrop_initialized = FALSE // TA EDIT START
+	var/backdrop_ambient_occlusion
+	var/backdrop_blur
+	var/backdrop_druqks // TA EDIT END
 
-/atom/movable/screen/plane_master/game_world_fov_hidden/backdrop(mob/mymob)
+/atom/movable/screen/plane_master/game_world_fov_hidden/backdrop(mob/mymob, skip_unchanged = FALSE) // TA EDIT START
+	var/use_ambient_occlusion = !!(istype(mymob) && mymob.client && mymob.client.prefs && mymob.client.prefs.ambientocclusion)
+	var/blur = (istype(mymob) && mymob.eye_blurry) ? CLAMP(mymob.eye_blurry*0.1,0.6,3) : 0
+	var/use_druqks = FALSE
+	if(isliving(mymob))
+		var/mob/living/L = mymob
+		use_druqks = !!L.has_status_effect(/datum/status_effect/buff/druqks)
+	if(skip_unchanged && backdrop_initialized && length(filters) && backdrop_ambient_occlusion == use_ambient_occlusion && backdrop_blur == blur && backdrop_druqks == use_druqks)
+		return
+	backdrop_initialized = TRUE
+	backdrop_ambient_occlusion = use_ambient_occlusion
+	backdrop_blur = blur
+	backdrop_druqks = use_druqks // TA EDIT END
 	clear_filters()
-	if(istype(mymob) && mymob.client && mymob.client.prefs && mymob.client.prefs.ambientocclusion)
+	if(use_ambient_occlusion) // TA EDIT
 		filters += AMBIENT_OCCLUSION
-	if(istype(mymob) && mymob.eye_blurry)
-		filters += GAUSSIAN_BLUR(CLAMP(mymob.eye_blurry*0.1,0.6,3))
-	if(istype(mymob))
-		if(isliving(mymob))
-			var/mob/living/L = mymob
-			if(L.has_status_effect(/datum/status_effect/buff/druqks))
-				add_filter("druqks_color", 2, color_matrix_filter(list(0,0,1,0, 0,1,0,0, 1,0,0,0, 0,0,0,1, 0,0,0,0)))
+	if(blur) // TA EDIT START
+		filters += GAUSSIAN_BLUR(blur)
+	if(use_druqks)
+		add_filter("druqks_color", 2, color_matrix_filter(list(0,0,1,0, 0,1,0,0, 1,0,0,0, 0,0,0,1, 0,0,0,0))) // TA EDIT END
 	filters += filter(type = "alpha", render_source = FIELD_OF_VISION_BLOCKER_RENDER_TARGET, flags = MASK_INVERSE)
 
 /atom/movable/screen/plane_master/game_world_above

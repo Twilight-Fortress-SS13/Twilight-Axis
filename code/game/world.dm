@@ -70,6 +70,17 @@ GLOBAL_VAR(restart_counter)
 	else // We got a db connected, GLOB.round_id ticks up based on where its at on the db.
 		GLOB.rogue_round_id = "[pick(GLOB.roundid)][GLOB.round_id]-[timestamp]"
 	SetupLogs()
+#if (PRELOAD_RSC == 0) // TA EDIT START
+	if(CONFIG_GET(flag/build_rsc_preload))
+		if(fexists("ta_full_rsc_url.txt"))
+			var/url = trim(file2text("ta_full_rsc_url.txt"))
+			if(url && (findtext(url, "https://") == 1 || findtext(url, "http://") == 1))
+				GLOB.build_rsc_url = url
+		if(GLOB.build_rsc_url)
+			log_config("Build RSC preload: [GLOB.build_rsc_url]")
+		else
+			log_config("Build RSC URL missing; using on-demand BYOND resource delivery")
+#endif // TA EDIT END
 	load_poll_data()
 
 	if(CONFIG_GET(string/channel_announce_new_game_message))

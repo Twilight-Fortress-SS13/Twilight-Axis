@@ -377,6 +377,7 @@ GLOBAL_LIST_EMPTY(respawncounts)
 
 #if (PRELOAD_RSC == 0)
 GLOBAL_LIST_EMPTY(external_rsc_urls)
+GLOBAL_VAR(build_rsc_url) // TA EDIT
 #endif
 
 /client/New(TopicData)
@@ -728,6 +729,7 @@ GLOBAL_LIST_EMPTY(external_rsc_urls)
 
 /client/Destroy()
 	SSmouse_entered.hovers -= src
+	SSmouse_entered.hover_params -= src // TA EDIT
 	QDEL_NULL(game_master_menu)
 	. = ..() //Even though we're going to be hard deleted there are still some things that want to know the destroy is happening
 	STOP_PROCESSING(SSmousecharge, src)
@@ -1234,11 +1236,15 @@ GLOBAL_LIST_EMPTY(external_rsc_urls)
 /// Sends both game resources and browser assets.
 /client/proc/send_resources()
 #if (PRELOAD_RSC == 0)
-	var/static/next_external_rsc = 0
-	var/list/external_rsc_urls = CONFIG_GET(keyed_list/external_rsc_urls)
-	if(length(external_rsc_urls))
-		next_external_rsc = WRAP(next_external_rsc+1, 1, external_rsc_urls.len+1)
-		preload_rsc = external_rsc_urls[next_external_rsc]
+	if(CONFIG_GET(flag/build_rsc_preload)) // TA EDIT START
+		if(GLOB.build_rsc_url)
+			preload_rsc = GLOB.build_rsc_url
+	else
+		var/static/next_external_rsc = 0
+		var/list/external_rsc_urls = CONFIG_GET(keyed_list/external_rsc_urls)
+		if(length(external_rsc_urls))
+			next_external_rsc = WRAP(next_external_rsc+1, 1, external_rsc_urls.len+1)
+			preload_rsc = external_rsc_urls[next_external_rsc] // TA EDIT END
 #endif
 
 	spawn (10) //removing this spawn causes all clients to not get verbs. (this can't be addtimer because these assets may be needed before the mc inits)

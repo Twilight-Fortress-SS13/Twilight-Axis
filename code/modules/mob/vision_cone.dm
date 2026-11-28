@@ -211,7 +211,7 @@
 		hud_used.fov.alpha = 255
 		hud_used.fov_blocker.alpha = 255
 	var/atom/movable/screen/plane_master/game_world_fov_hidden/PM = locate(/atom/movable/screen/plane_master/game_world_fov_hidden) in client.screen
-	PM.backdrop(src)
+	PM?.backdrop(src, TRUE) // TA EDIT
 
 /mob/proc/hide_cone()
 	if(!client)
@@ -223,7 +223,7 @@
 		hud_used.fov.alpha = 0
 		hud_used.fov_blocker.alpha = 0
 	var/atom/movable/screen/plane_master/game_world_fov_hidden/PM = locate(/atom/movable/screen/plane_master/game_world_fov_hidden) in client.screen
-	PM.backdrop(src)
+	PM?.backdrop(src, TRUE) // TA EDIT
 
 /atom/movable/screen/fov_blocker
 	icon = 'icons/effects/fov/field_of_view.dmi'
