@@ -228,20 +228,10 @@
 	cost = 50
 	contains = list(/obj/item/rogueweapon/sword/rapier)
 
-/datum/supply_pack/rogue/Iconoclast/greatsword
-	name = "Greatsword"
-	cost = 60
-	contains = list(/obj/item/rogueweapon/greatsword)
-
-/datum/supply_pack/rogue/Iconoclast/estoc
-	name = "Estoc"
-	cost = 80
-	contains = list(/obj/item/rogueweapon/estoc)
-
-/datum/supply_pack/rogue/Iconoclast/SFlamberge
-	name = "Steel Flamberge"
-	cost = 100
-	contains = list(/obj/item/rogueweapon/greatsword/grenz/flamberge) //TA EDIT END
+/datum/supply_pack/rogue/Iconoclast/krieg
+	name = "Kriegsmesser"
+	cost = 50
+	contains = list(/obj/item/rogueweapon/sword/long/kriegmesser) //TA EDIT END
 
 /////////////
 // SHIELDS //

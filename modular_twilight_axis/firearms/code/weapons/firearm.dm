@@ -711,7 +711,6 @@
 	var/accident_chance = 0
 	var/firearm_skill = (user?.mind ? user.get_skill_level(/datum/skill/combat/twilight_firearms) : 1)
 	var/turf/knockback = get_ranged_target_turf(user, turn(user.dir, 180), rand(1,2))
-	spread = (spread_num - firearm_skill)
 	accident_chance = max(0, (70 - 20 * firearm_skill) )
 	if(user.client)
 		if(user.client.chargedprog >= 100)
@@ -773,7 +772,7 @@
 					BP.add_wound(/datum/wound/dislocation)
 		if(user.buckled && istype(user.buckled, /mob/living))
 			var/mob/living/mount = user.buckled
-			mount.Immobilize(50 - (firearm_skill * 5), ignore_canstun = TRUE)
+			mount.Immobilize((4 - (firearm_skill * 0.5)) SECONDS, ignore_canstun = TRUE)
 	else if(locktype == LOCKTYPE_FUSE)
 		if(advanced_icon_f)
 			icon = advanced_icon_f
@@ -821,8 +820,9 @@
 						var/def_zone = "[(user.active_hand_index == 2) ? "r" : "l" ]_arm"
 						var/obj/item/bodypart/BP = user.get_bodypart(def_zone)
 						BP.add_wound(/datum/wound/dislocation)
-			if(user.buckled)
-				user.Immobilize(50 - (firearm_skill * 5))
+			if(user.buckled && istype(user.buckled, /mob/living))
+				var/mob/living/mount = user.buckled
+				mount.Immobilize((4 - (firearm_skill * 0.5)) SECONDS, ignore_canstun = TRUE)
 
 /obj/item/gun/ballistic/twilight_firearm/can_shoot()
 	if (!reloaded)

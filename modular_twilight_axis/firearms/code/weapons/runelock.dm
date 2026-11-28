@@ -178,7 +178,7 @@
 		var/newtime = chargetime
 		//skill block
 		newtime = newtime + 75
-		newtime = newtime / max(1, mastermob.get_skill_level(/datum/skill/combat/twilight_firearms))
+		newtime = newtime - max(1, mastermob.get_skill_level(/datum/skill/combat/twilight_firearms))
 		//per block
 		newtime = newtime + 20
 		newtime = newtime - ((mastermob.STAPER)*1.5)
@@ -200,7 +200,7 @@
 		var/newtime = chargetime
 		//skill block
 		newtime = newtime + 70
-		newtime = newtime / max(1, mastermob.get_skill_level(/datum/skill/combat/twilight_firearms))
+		newtime = newtime - max(1, mastermob.get_skill_level(/datum/skill/combat/twilight_firearms))
 		//per block
 		newtime = newtime + 20
 		newtime = newtime - ((mastermob.STAPER)*1.5)
