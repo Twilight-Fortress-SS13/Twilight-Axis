@@ -137,4 +137,40 @@
 	interrupt_damount = 15
 	blue_to_integ_ratio = 0.6
 
+/obj/effect/proc_holder/spell/self/claws/gnoll/light
+	claw_type = /obj/item/rogueweapon/werewolf_claw/gnoll/light
+
+/obj/item/rogueweapon/werewolf_claw/gnoll/light
+	wbalance = WBALANCE_SWIFT
+
+/obj/item/rogueweapon/werewolf_claw/gnoll/light/right
+	icon_state = "claw_r"
+
+/obj/item/rogueweapon/werewolf_claw/gnoll/light/left
+	icon_state = "claw_l"
+
+/obj/item/clothing/suit/roguetown/armor/regenerating/skin/gnoll_armor/shaman
+	icon_state = "shaman"
+	max_integrity = 400
+	auto_repair_mode_base = 90
+
+/obj/item/clothing/suit/roguetown/armor/regenerating/skin/gnoll_armor/templar
+	icon_state = "templar"
+	max_integrity = 600
+	armor = ARMOR_GNOLL_STANDARD
+
+/obj/item/clothing/suit/roguetown/armor/regenerating/skin/gnoll_armor/knight
+	icon_state = "knight"
+	max_integrity = 800
+	armor = ARMOR_GNOLL_STRONG
+	// Stronger, so repair less armor when it repairs
+	auto_repair_mode_base = 75
+	relative_repair_interval = 25 SECONDS
+
+/obj/item/clothing/suit/roguetown/armor/regenerating/skin/gnoll_armor/impure
+	icon_state = null
+	max_integrity = 400
+	auto_repair_mode_base = 90
+	armor = ARMOR_GNOLL_WEAK
+
 // TA ADDITION END

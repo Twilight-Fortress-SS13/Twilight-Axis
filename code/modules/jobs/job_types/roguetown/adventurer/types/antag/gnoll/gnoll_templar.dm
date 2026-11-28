@@ -6,7 +6,7 @@
 	outfit = /datum/outfit/job/roguetown/gnoll/templar
 	category_tags = list(CTAG_GNOLL)
 	traits_applied = list(TRAIT_HEAVYARMOR, TRAIT_UNCONVERTIBLE, TRAIT_HALLOWED)
-	reset_stats = TRUE
+	reset_stats = FALSE // TAEDIT - ORIGINAL: reset_stats = TRUE
 	subclass_stats = list(
 		STATKEY_CON = 4, // TA EDIT - ORIGINAL: 3
 		STATKEY_WIL = 2,
@@ -37,7 +37,7 @@
 /datum/outfit/job/roguetown/gnoll/templar/pre_equip(mob/living/carbon/human/H)
 	if(H.mind)
 		H.set_species(/datum/species/gnoll)
-		H.skin_armor = new /obj/item/clothing/suit/roguetown/armor/regenerating/skin/gnoll_armor(H) // TA EDIT - ORIGINAL: new vamp_armor_type(H)
+		H.skin_armor = new /obj/item/clothing/suit/roguetown/armor/regenerating/skin/gnoll_armor/templar(H) // TA EDIT - ORIGINAL: new vamp_armor_type(H)
 		// TA REMOVAL: H.AddComponent(/datum/component/vampiric_striker, shard_threshold, shard_repair_value, max_fury_stacks)
 		neck = /obj/item/storage/belt/rogue/pouch/healing
 		backr = /obj/item/storage/backpack/rogue/satchel/gnoll

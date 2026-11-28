@@ -3,7 +3,7 @@
 	tutorial = "Leader in faith, often the main source of wisdom within a gnoll pack. Few are closer to Graggar himself than you are. You may choose to waylay the hunt, in order to nurture fallen opponents back to health so they may grow stronger, providing a true challenge in a future fight."
 	outfit = /datum/outfit/job/roguetown/gnoll/shaman
 	traits_applied = list(TRAIT_RITUALIST, TRAIT_DODGEEXPERT, TRAIT_ALCHEMY_EXPERT, TRAIT_UNCONVERTIBLE, TRAIT_HALLOWED) // Surely this won't be broken.
-	reset_stats = TRUE
+	reset_stats = FALSE // TAEDIT - ORIGINAL: reset_stats = TRUE
 	subclass_stats = list(
 		STATKEY_PER = 2,
 		STATKEY_WIL = 2,
@@ -38,11 +38,12 @@
 	max_fury_stacks = 79
 	shard_threshold = 44
 	shard_repair_value = 20
+	gnoll_claw = /obj/effect/proc_holder/spell/self/claws/gnoll/light // TA ADDITION
 
 /datum/outfit/job/roguetown/gnoll/shaman/pre_equip(mob/living/carbon/human/H)
 	if(H.mind)
 		H.set_species(/datum/species/gnoll)
-		H.skin_armor = new /obj/item/clothing/suit/roguetown/armor/regenerating/skin/gnoll_armor(H) // TA EDIT - ORIGINAL: new vamp_armor_type(H)
+		H.skin_armor = new /obj/item/clothing/suit/roguetown/armor/regenerating/skin/gnoll_armor/shaman(H) // TA EDIT - ORIGINAL: new vamp_armor_type(H)
 		// TA REMOVAL: H.AddComponent(/datum/component/vampiric_striker, shard_threshold, shard_repair_value, max_fury_stacks)
 		neck = /obj/item/storage/belt/rogue/pouch/healing
 		backr = /obj/item/storage/backpack/rogue/satchel/gnoll

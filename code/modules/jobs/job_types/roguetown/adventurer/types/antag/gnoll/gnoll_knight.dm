@@ -7,7 +7,7 @@
 	category_tags = list(CTAG_GNOLL)
 	traits_applied = list(TRAIT_HEAVYARMOR, TRAIT_UNCONVERTIBLE) // Flavoring
 
-	reset_stats = TRUE
+	reset_stats = FALSE // TAEDIT - ORIGINAL: reset_stats = TRUE
 	subclass_stats = list(
 		STATKEY_WIL = 5,
 		STATKEY_CON = 5,
@@ -34,11 +34,12 @@
 	max_fury_stacks = 100
 	shard_threshold = 44
 	shard_repair_value = 20
+	gnoll_claw = /obj/effect/proc_holder/spell/self/claws/gnoll/light // TA ADDITION
 
 /datum/outfit/job/roguetown/gnoll/knight/pre_equip(mob/living/carbon/human/H)
 	if(H.mind)
 		H.set_species(/datum/species/gnoll)
-		H.skin_armor = new /obj/item/clothing/suit/roguetown/armor/regenerating/skin/gnoll_armor(H) // TA EDIT - ORIGINAL: new vamp_armor_type(H)
+		H.skin_armor = new /obj/item/clothing/suit/roguetown/armor/regenerating/skin/gnoll_armor/knight(H) // TA EDIT - ORIGINAL: new vamp_armor_type(H)
 		// TA REMOVAL: H.AddComponent(/datum/component/vampiric_striker, shard_threshold, shard_repair_value, max_fury_stacks)
 		neck = /obj/item/storage/belt/rogue/pouch/healing
 		backr = /obj/item/storage/backpack/rogue/satchel/gnoll
