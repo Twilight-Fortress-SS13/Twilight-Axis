@@ -103,7 +103,7 @@
 		if(/datum/patron/inhumen/zizo)
 			H.cmode_music = sound("sound/music/combat_heretic.ogg")
 	if(H.mind)
-		backr = choose_staff(H, starting_gem) // TA EDIT (Реворк магических имплементов)
+		choose_staff(H, starting_gem) // TA EDIT (Реворк магических имплементов)
 		SStreasury.grant_savings(ECONOMIC_LOWER_MIDDLE_CLASS, H)
 	if(SSmapping.config.map_name == "Rockhill") //TA_EDIT
 		beltr = /obj/item/storage/keyring/apprenticeenigma

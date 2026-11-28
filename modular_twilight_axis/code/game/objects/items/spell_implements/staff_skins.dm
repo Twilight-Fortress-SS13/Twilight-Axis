@@ -27,8 +27,8 @@ GLOBAL_LIST_INIT(staff_skins, list(
 		'modular_twilight_axis/icons/obj/items/staffs.dmi', \
 		"druid" \
 	),
-	"allmight" = STAFF_SKIN( \
-		"allmight staff", \
+	"allmighty" = STAFF_SKIN( \
+		"allmighty staff", \
 		"Holding this regal staff, you feel answerable to no one. Its crown holds a focus-gem that returns a share of spent spell energy to the wielder.", \
 		'modular_twilight_axis/icons/obj/items/staffs.dmi', \
 		"allmight" \
@@ -49,13 +49,9 @@ GLOBAL_LIST_INIT(staff_skins, list(
 	update_gem_state()
 	return TRUE
 
-
-/datum/outfit
-	var/skinned_staff_type  // Посох для рескина после экипировки
-	var/staff_skin
-
-// Диалоговое окно с выбором скина при спавне
-/datum/outfit/proc/choose_staff(mob/living/carbon/human/H, staff_type)
+// Мы не можем присвоить скины в поле backr аутфита,
+// поэтому мы сразу создаём посох с гемом gem_type и вытаемся надеть его в slot.
+/proc/choose_staff(mob/living/carbon/human/H, gem_type, slot = SLOT_BACK_R)
 	var/static/list/choices
 
 	if(!choices)
@@ -63,19 +59,21 @@ GLOBAL_LIST_INIT(staff_skins, list(
 		for(var/key in GLOB.staff_skins)
 			choices["[capitalize(key)] staff"] = key
 
+	// Диалоговое окно с выбором скина при спавне
 	var/choice = tgui_input_list(H, "Choose your staff.", "STAFF", choices)
+
+	var/obj/item/rogueweapon/woodstaff/implement/staff = new(H)
+	if(gem_type != staff.starting_gem_type)
+		QDEL_NULL(staff.socketed_gem)
+		if(gem_type)
+			staff.socketed_gem = new gem_type(staff)
+		staff.update_gem_state()
+
 	if(choice)
-		skinned_staff_type = staff_type
-		staff_skin = choices[choice]
+		staff.apply_staff_skin(choices[choice])
 
-	return staff_type
-
-/datum/outfit/equip(mob/living/carbon/human/H, visualsOnly = FALSE)
-	. = ..()
-	if(!staff_skin)
-		return
-
-	for(var/obj/item/rogueweapon/woodstaff/implement/staff in H.get_all_contents())
-		if(staff.type == skinned_staff_type)
-			staff.apply_staff_skin(staff_skin)
-			break
+	// Обычно этот слот никогда не занят при спавне, но добавил проверку на всякий случай
+	if(!H.get_item_by_slot(slot))
+		H.equip_to_slot_or_del(staff, slot, TRUE)
+	else
+		H.put_in_hands(staff)

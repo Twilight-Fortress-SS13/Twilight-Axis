@@ -45,7 +45,7 @@
 	backl = /obj/item/storage/backpack/rogue/satchel
 	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/wizard]
 	if(H.mind)
-		backr = choose_staff(H, /obj/item/roguegem/yellow) // TA EDIT (Реворк магических имплементов)
+		choose_staff(H, /obj/item/roguegem/yellow) // TA EDIT (Реворк магических имплементов)
 		backpack_contents = list(
 			/obj/item/rogueweapon/spellbook/toper = 1, // TA EDIT (Реворк магических имплементов)
 			/obj/item/chalk = 1,
@@ -109,7 +109,7 @@
 	backl = /obj/item/storage/backpack/rogue/satchel
 	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/wizard]
 	if(H.mind)
-		backr = choose_staff(H, /obj/item/roguegem/yellow) // TA EDIT (Реворк магических имплементов)
+		choose_staff(H, /obj/item/roguegem/yellow) // TA EDIT (Реворк магических имплементов)
 	backpack_contents = list(
 			/obj/item/rogueweapon/spellbook/toper = 1, // TA EDIT (Реворк магических имплементов)
 			/obj/item/chalk = 1,

@@ -67,5 +67,5 @@
 	)
 	H.dna.species.soundpack_m = GLOB.voice_packs[/datum/voicepack/male/wizard]
 	if(H.mind)
-		backr = choose_staff(H, /obj/item/roguegem/ruby) // TA EDIT (Реворк магических имплементов)
+		choose_staff(H, /obj/item/roguegem/ruby) // TA EDIT (Реворк магических имплементов)
 		wretch_select_bounty(H)
