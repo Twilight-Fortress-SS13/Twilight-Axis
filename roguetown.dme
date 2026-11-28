@@ -4190,6 +4190,8 @@
 #include "modular_twilight_axis\code\modules\clothing\rogueclothes\shirts\shirts.dm"
 #include "modular_twilight_axis\code\modules\clothing\rogueclothes\storage\storage.dm"
 #include "modular_twilight_axis\code\modules\clothing\rogueclothes\wrists\wrists.dm"
+#include "modular_twilight_axis\code\modules\embedded_arrows\embedded_arrow_anchors.dm"
+#include "modular_twilight_axis\code\modules\embedded_arrows\embedded_arrows.dm"
 #include "modular_twilight_axis\code\modules\erp_system\_defines.dm"
 #include "modular_twilight_axis\code\modules\erp_system\actions\erp_action_core.dm"
 #include "modular_twilight_axis\code\game\objects\items\rogueitems\items.dm"

@@ -91,8 +91,10 @@
 	var/newdam = max(0, P.damage - blocked)
 	if(newdam <= 8)
 		return FALSE
+	if(!P.can_embed_through_armor()) //TA EDIT
+		return FALSE //TA EDIT
 	if(prob(P.embedchance) && P.dropped)
-		return BP.add_embedded_object(P.dropped, silent = FALSE, crit_message = TRUE, ranged = TRUE)
+		return BP.add_embedded_object(P.dropped, silent = FALSE, crit_message = TRUE, ranged = TRUE, entry_side = get_embed_entry_side(P.starting || P.firer)) //TA EDIT
 	return FALSE
 
 /mob/living/carbon/send_pull_message(mob/living/target)
