@@ -396,7 +396,7 @@
 
 /datum/crafting_recipe/roguetown/survival/peasantry/peasantwarflail_scrap
 	name = "scrap-lash a militia thresher"
-	result = /obj/item/rogueweapon/flail/peasantwarflail
+	result = /obj/item/rogueweapon/flail/great
 	reqs = list(
 		/obj/item/grown/log/tree/small = 1,
 		/obj/item/rope = 1,

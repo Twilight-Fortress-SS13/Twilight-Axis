@@ -307,8 +307,7 @@
 
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha_ta/ComponentInitialize()
 	. = ..()
-	AddComponent(/datum/component/item_equipped_movement_rustle, SFX_HEELS, 2)
-	stepnoise_flag = STEPNOISE_HEELS // This will prevent default footstep noise from being made by the heels (sounds odd)
+	stepnoise_flag = STEPNOISE_HEELS
 
 /obj/item/clothing/shoes/roguetown/boots/armor/baotha_ta/Initialize()
 	. = ..()

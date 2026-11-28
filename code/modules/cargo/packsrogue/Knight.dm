@@ -220,7 +220,7 @@
 /datum/supply_pack/rogue/Knight/kiteshield
 	name = "Kite Shield"
 	cost = 40
-	contains = list(/obj/item/rogueweapon/shield/tower/metal)
+	contains = list(/obj/item/rogueweapon/shield/kite)
 
 /////////////
 // UTILITY //

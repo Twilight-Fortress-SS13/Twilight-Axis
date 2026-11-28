@@ -71,7 +71,7 @@
 	to_chat(invoker, span_notice("[supporter.get_unmasked_name()] has assented. ([get_assent_total()]/[get_required_assents()])")) // TA EDIT END
 
 /datum/usurpation_rite/progressive_dominion/get_contest_announcement() // TA EDIT START
-	return "In the name of Zizo, One Who Brings Salvation, a claim is made upon the throne of [SSticker.realm_name].\n\n" + \
+	return "In the name of Zizo, Herald of Salvation, a claim is made upon the throne of [SSticker.realm_name].\n\n" + \
 		"A Council of the Enlightened has affirmed this claim.\n\n" + \
 		"The future shall be decided in [RITE_CONTEST_DURATION / (1 MINUTES)] minutes -- unless the claim is struck down.\n\n" // TA EDIT END
 
@@ -82,7 +82,7 @@
 			"How long will the living -- even those who follow the Mistress of Progress -- tolerate their rule?"
 	return "The [SSticker.realm_name] has thus been destroyed, " + \
 		"and upon its ruins, a new order had risen. " + \
-		"O Zizo! One Who Brings Salvation! The future will be bright under your rule! " + \
+		"O Zizo! Herald of Salvation! The future will be bright under your rule! " + \
 		"Grant us armaments! Grant us power! " + \
 		"Let us stand fast against the darkness of stagnation! " + \
 		"Let us stand fast against the rot of the old order! " + \
@@ -90,7 +90,7 @@
 
 /datum/usurpation_rite/progressive_dominion/get_victory_announcement(old_ruler_name) // TA EDIT START
 	return "To cling to mortality is to rot in place. Salvation waits for no one.\n\n" + \
-		"A Council of the Enlightened, under the gaze of Zizo, One Who Brings Salvation, " + \
+		"A Council of the Enlightened, under the gaze of Zizo, Herald of Salvation, " + \
 		"declares [invoker.get_unmasked_name()] the rightful [SSticker.rulertype] of [SSticker.realm_name], establishing a DOMINION of arcane enlightenment.\n\n" + \
 		"[old_ruler_name], unable to contest this succession, has been found wanting in vision, " + \
 		"and their claim to rulership crumbles before the march of true progress.\n\n" + \

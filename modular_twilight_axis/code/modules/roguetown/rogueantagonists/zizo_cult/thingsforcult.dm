@@ -310,7 +310,7 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 /obj/item/rogueweapon/huntingknife/idagger/steel/cursed/Initialize(mapload, ...)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "DAGGER")
-	AddElement(/datum/element/tipped_item)
+	AddElement(/datum/element/envenomed_blade)
 
 /obj/item/rogueweapon/huntingknife/idagger/steel/cursed/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_WEAPON)
@@ -391,7 +391,7 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 /obj/item/rogueweapon/spear/zizo/Initialize(mapload, ...)
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "SPEAR")
-	AddElement(/datum/element/tipped_item)
+	AddElement(/datum/element/envenomed_blade)
 
 /obj/item/rogueweapon/spear/zizo/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_WEAPON)
@@ -579,7 +579,7 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	icon_state = "debuff"
 
 
-/obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult
+/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient/decrepit/cult
 	name = "inverted psycross of ascension's"
 	desc = "This cursed zcross will give something good por followers of Zizo.."
 	mob_overlay_icon = 'modular_twilight_axis/code/modules/roguetown/rogueantagonists/zizo_cult/sprites/clothes/on_mob/zcross.dmi'
@@ -600,10 +600,7 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 	equip_delay_self = 5 SECONDS
 	unequip_delay_self = 5 SECONDS
 
-/obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult/get_examine_highlight_status()
-	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_ICON)
-
-/obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
+/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient/decrepit/cult/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
 	if(!M.can_equip(src, slot, disable_warning, bypass_equip_delay_self))
 		return FALSE
 
@@ -617,19 +614,19 @@ GLOBAL_DATUM_INIT(html_tags, /regex, regex(@"<.*?>", "g"))
 
 	return TRUE
 
-/obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult/Initialize()
+/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient/decrepit/cult/Initialize()
 	. = ..()
 	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "CROSS")
 
-/obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult/get_examine_highlight_status()
+/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient/decrepit/cult/get_examine_highlight_status()
 	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_SUSPICIOUS, HERESYDESC_ZIZO_ICON)
 
-/obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult/equipped(mob/living/carbon/human/user, slot)
+/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient/decrepit/cult/equipped(mob/living/carbon/human/user, slot)
 	. = ..()
 	if(slot == SLOT_RING || slot == SLOT_NECK || SLOT_WRISTS)
 		ADD_TRAIT(user, TRAIT_ZIZOSIGHT, TRAIT_GENERIC)
 
-/obj/item/clothing/neck/roguetown/psicross/inhumen/aalloy/cult/dropped(mob/living/carbon/human/user)
+/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient/decrepit/cult/dropped(mob/living/carbon/human/user)
 	. = ..()
 	REMOVE_TRAIT(user, TRAIT_ZIZOSIGHT, TRAIT_GENERIC)
 
