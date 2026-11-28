@@ -82,8 +82,8 @@
 /obj/item/clothing/head/roguetown/helmet/heavy/zizo/bascinet/bloodraider
 	name = "raider's helmet"
 	desc = "A darksteel helmet that doesn't obstruct the wearer's vision. Fitted with a sharp horn for the most desperate situations."
-	icon = 'modular_twilight_axis/icons/clothing/bloodraider.dmi'
-	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/bloodraider.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/special/bloodraider.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/special/onmob/bloodraider.dmi'
 	icon_state = "bloodhelmet"
 	item_state = "bloodhelmet"
 	armor_class = ARMOR_CLASS_LIGHT

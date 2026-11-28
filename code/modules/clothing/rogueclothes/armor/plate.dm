@@ -473,6 +473,7 @@
 	item_state = "shadowplate"
 	armor_class = ARMOR_CLASS_MEDIUM
 	allowed_race = NON_DWARVEN_RACE_TYPES
+	body_parts_covered = COVERAGE_ALL_BUT_HANDFEET //TA EDIT
 	smeltresult = /obj/item/ingot/drow
 	smelt_bar_num = 2
 

@@ -107,6 +107,13 @@
 	smeltresult = /obj/item/ingot/silver
 	is_silver = TRUE
 
+/obj/item/rogueweapon/huntingknife/idagger/steel/necra/ComponentInitialize()
+	AddComponent(\
+		/datum/component/silverbless,\
+		pre_blessed = BLESSING_TENNITE,\
+		silver_type = SILVER_TENNITE,\
+	)
+
 /obj/item/rogueweapon/huntingknife/idagger/steel/baotha/poison
 	name = "snakes sting"
 	desc = "The blade is skillfully crafted and appears to be designed for stealthy assassinations. There are visible streaks of a bubbling substance on its blade."
@@ -229,9 +236,18 @@
 	sellprice = 0
 	smeltresult = null
 
-/obj/item/rogueweapon/huntingknife/idagger/steel/necra/ComponentInitialize()
-	AddComponent(\
-		/datum/component/silverbless,\
-		pre_blessed = BLESSING_TENNITE,\
-		silver_type = SILVER_TENNITE,\
-	)
+/obj/item/rogueweapon/huntingknife/idagger/steel/stalker/bloodraider
+	name = "raider's dagger"
+	desc = "A wave-bladed dagger of the Underdark, its capillary channels long since clogged with dried red. The one who carries it has \
+	stopped asking whose blood it was. </br><font color='ff0000'>It always seems to know when the next mouthful is near.</font>"
+	icon = 'modular_twilight_axis/icons/roguetown/weapons/daggers32.dmi'
+	icon_state = "bloodknife"
+	sheathe_icon = "zizodagger"
+	smeltresult = /obj/item/ingot/component/zizo
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/stalker/bloodraider/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/cursed_item, TRAIT_CABAL, "DAGGER")
+
+/obj/item/rogueweapon/huntingknife/idagger/steel/stalker/bloodraider/get_examine_highlight_status()
+	return list(EXAMINEHIGHLIGHT_HERESYSEVERITY_ALARMING, HERESYDESC_ZIZO_WEAPON)

@@ -6181,3 +6181,19 @@ GLOBAL_LIST_EMPTY(loadout_items_by_category)
 	path = /obj/item/enchantingkit/white_knight_cape
 	donatitem = TRUE
 	ckeywhitelist = list("n1ght1ngale")
+
+/datum/loadout_item/donat/anthraxi_helmet
+	name = "Donator Kit - Anthraxi Helm"
+	category = list("Головные уборы", "Донат")
+	path = /obj/item/enchantingkit/anthraxi_helmet
+	donatitem = TRUE
+	donat_tier = 2
+	donat_ignore = list("uedhighcommand","imony")
+
+/datum/loadout_item/donat/relevement
+	name = "Donator Kit - Relevement"
+	category = list("Оружие", "Донат")
+	path = /obj/item/enchantingkit/weapon/relevement
+	donatitem = TRUE
+	donat_tier = 2
+	donat_ignore = list("uedhighcommand","imony")

@@ -74,8 +74,8 @@
 /obj/item/clothing/shoes/roguetown/boots/armor/zizo/bloodraider
 	name = "raider's boots"
 	desc = "Custom-fitted sabatons, made from a series of interlinking darksteel plates."
-	icon = 'modular_twilight_axis/icons/clothing/bloodraider.dmi'
-	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/bloodraider.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/special/bloodraider.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/special/onmob/bloodraider.dmi'
 	icon_state = "bloodboots"
 	item_state = "bloodboots"
 	armor = ARMOR_PLATE

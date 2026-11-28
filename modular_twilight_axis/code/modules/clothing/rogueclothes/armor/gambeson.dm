@@ -166,9 +166,9 @@
 /obj/item/clothing/suit/roguetown/armor/gambeson/bloodraider
 	name = "raider's gambeson"
 	desc = "A strong loosely worn quilted shirt that places little weight on the arms and legs, usually worn for protection from spiders "
-	icon = 'modular_twilight_axis/icons/clothing/bloodraider.dmi'
-	mob_overlay_icon = 'modular_twilight_axis/icons/clothing/onmob/bloodraider.dmi'
-	sleeved = 'modular_twilight_axis/icons/clothing/onmob/bloodraider.dmi'
+	icon = 'modular_twilight_axis/icons/roguetown/clothing/special/bloodraider.dmi'
+	mob_overlay_icon = 'modular_twilight_axis/icons/roguetown/clothing/special/onmob/bloodraider.dmi'
+	sleeved = 'modular_twilight_axis/icons/roguetown/clothing/special/onmob/bloodraider.dmi'
 	icon_state = "bloodgambeson"
 	color = null
 	max_integrity = ARMOR_INT_CHEST_LIGHT_ANTAG

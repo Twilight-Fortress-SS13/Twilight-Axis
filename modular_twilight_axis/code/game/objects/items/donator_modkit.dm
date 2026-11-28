@@ -83,6 +83,38 @@
 		/obj/item/rogueweapon/sword/long)
 	result_item = /obj/item/rogueweapon/sword/long/kriegmesser/donat_astrata
 
+/obj/item/enchantingkit/anthraxi_helmet
+	name = "'Anthraxi Helm' morphing elixir"
+	desc = "Changes the appearance of a heavy helmet. Choose between the Scourge Barbute and the Razormaw Helm."
+	target_items = list(/obj/item/clothing/head/roguetown/helmet/heavy)
+	icon_loadout = /obj/item/clothing/head/roguetown/helmet/heavy/twilight_drow
+
+/obj/item/enchantingkit/anthraxi_helmet/pre_attack(obj/item/I, mob/user, params)
+	if(!user || !can_morph_item(I))
+		return ..()
+
+	var/static/list/helmets = list(
+		"Scourge Barbute" = /obj/item/clothing/head/roguetown/helmet/heavy/twilight_drow,
+		"Razormaw Helm" = /obj/item/clothing/head/roguetown/helmet/heavy/twilight_drow/volf,
+	)
+	var/choice = tgui_input_list(user, "Choose a helmet style.", "Anthraxi Helm", helmets)
+	if(!choice || QDELETED(src) || QDELETED(I) || QDELETED(user))
+		return TRUE
+	if(user.incapacitated() || !user.is_holding(src) || !user.CanReach(I))
+		return TRUE
+	return ..(I, user, params, helmets[choice])
+
+/obj/item/enchantingkit/anthraxi_helmet/inherit_item_mechanics(obj/item/source_item, obj/item/result_item)
+	. = ..()
+	copy_item_var(source_item, result_item, "smeltresult")
+	copy_item_var(source_item, result_item, "smelt_bar_num")
+
+/obj/item/enchantingkit/weapon/relevement
+	name = "'Relevement' morphing elixir"
+	desc = "Changes the appearance of a flamberge to that of the Relevement."
+	target_items = list(/obj/item/rogueweapon/greatsword/grenz/flamberge)
+	result_item = /obj/item/rogueweapon/greatsword/grenz/flamberge/relevement
+
 //Zydras donator item - bathmatron padded dress
 /obj/item/enchantingkit/zydras
 	name = "'Gold-Black silky dress morphing elixir"
