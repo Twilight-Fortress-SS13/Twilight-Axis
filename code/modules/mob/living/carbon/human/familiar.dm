@@ -286,7 +286,7 @@
 		prefs.instantiate_examine_prefs()
 		return ret
 	if((valid_headshot_link(src, prefs.familiar_headshot_link[planar_origin], TRUE)) && (user.client?.prefs.chatheadshot))
-		ret.Insert(2, "<img src=[prefs.familiar_headshot_link[planar_origin]] width=100 height=100/>")
+		ret.Insert(2, "<img src=\"[html_encode(prefs.familiar_headshot_link[planar_origin])]\" width=100 height=100/>")
 	if(prefs.familiar_flavortext_display[planar_origin] || prefs.familiar_headshot_link[planar_origin] || prefs.familiar_ooc_notes_display[planar_origin])
 		ret.Insert(ret.len-1, "<a href='?src=[REF(src)];task=view_fam_headshot;'>Examine closer</a>")
 	return ret

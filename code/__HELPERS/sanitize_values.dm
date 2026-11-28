@@ -98,21 +98,18 @@
 	return "#[num2hex(RGB[1],2)][num2hex(RGB[2],2)][num2hex(RGB[3],2)]"
 
 /proc/valid_headshot_link(mob/user, value, silent = FALSE, list/valid_extensions = list("jpg", "png", "jpeg"))
-	var/static/link_regex = regex(@"i\.gyazo.com|.\.l3n\.co|images2\.imgbox\.com|thumbs2\.imgbox\.com|files\.catbox\.moe|file\.garden") //gyazo, discord, lensdump, imgbox, catbox, file garden
+	var/static/regex/url_chars = regex(@"^[A-Za-z0-9:/._~%+?=&-]+$")
+	var/static/regex/host_regex = regex(@"^https://(i\.gyazo\.com|i\.l3n\.co|images2\.imgbox\.com|thumbs2\.imgbox\.com|files\.catbox\.moe|file\.garden)/", "i")
 
 	if(!length(value))
 		return FALSE
 
-	var/find_index = findtext(value, "https://")
-	if(find_index != 1)
+	// Allowlist URL characters and pin the host; this also rejects quotes, spaces and tag characters.
+	if(!url_chars.Find(value) || !host_regex.Find(value))
 		if(!silent)
-			to_chat(user, "<span class='warning'>Your link must be https!</span>")
+			to_chat(user, "<span class='warning'>Invalid link! It must be an https link to one of: 'Gyazo, Lensdump, Imgbox, Catbox, File Garden'.</span>")
 		return FALSE
 
-	if(!findtext(value, ".") || findtext(value, "<") || findtext(value, ">") || findtext(value, "]") || findtext(value, "\["))	//there is no link in the world that would ever need < or >
-		if(!silent)
-			to_chat(user, "<span class='warning'>Invalid link!</span>")
-		return FALSE
 	var/list/value_split = splittext(value, ".")
 
 	// extension will always be the last entry
@@ -122,11 +119,6 @@
 			to_chat(usr, "<span class='warning'>The link must be one of the following extensions: '[english_list(valid_extensions)]'</span>")
 		return FALSE
 
-	find_index = findtext(value, link_regex)
-	if(find_index != 9)
-		if(!silent)
-			to_chat(usr, "<span class='warning'>The link must be hosted on one of the following sites: 'Gyazo, Lensdump, Imgbox, Catbox, File Garden'</span>")
-		return FALSE
 	return TRUE
 
 /// same as above, but without the site and extension checking. will prevent html injection and such, but will allow arbitrary links otherwise - use with caution

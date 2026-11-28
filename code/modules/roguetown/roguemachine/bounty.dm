@@ -236,7 +236,7 @@
 				scom_announce("[faction_name]'s bounty on [target] has increased by [amount] mammon to [existing_bounty.amount] mammon.")
 			else
 				scom_announce("[faction_name] has posted a bounty of [amount] mammon for [target].")
-			message_admins("[ADMIN_LOOKUPFLW(user)] has set a bounty on [ADMIN_LOOKUPFLW(target)] with the reason of: '[reason]'")
+			message_admins("[ADMIN_LOOKUPFLW(user)] has set a bounty on [ADMIN_LOOKUPFLW(target)] with the reason of: '[html_encode(reason)]'")
 			return TRUE
 
 		if("remove_bounty")

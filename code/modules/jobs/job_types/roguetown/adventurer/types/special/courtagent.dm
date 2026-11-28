@@ -35,7 +35,7 @@
 		update_subprefs_window(usr)
 	if(href_list["hand_file_notes"])
 		subprefs["hand_file_notes_raw"] = tgui_input_text(usr, "What does your file say?", "THY DEEDS ARE KNOWN", subprefs["hand_file_notes_raw"], multiline = TRUE, encode = FALSE)
-		subprefs["hand_file_notes"] = parsemarkdown(subprefs["hand_file_notes_raw"], usr)
+		subprefs["hand_file_notes"] = parsemarkdown(html_encode(subprefs["hand_file_notes_raw"]), usr)
 		update_subprefs_window(usr)
 	if(href_list["markdownhelp"])
 		var/list/dat = list()
@@ -75,7 +75,7 @@
 		</ul><br/>
 		<b>Codename:</b> <a href="?src=[REF(src)];codename=1">[subprefs["codename"]?subprefs["codename"]:"Unset"]</a><br/>
 		<b>Hand Notes:</b> <a href="?src=[REF(src)];hand_file_notes=1">Edit</a> <a href="?src=[REF(src)];markdownhelp=1">\[?\]</a><br/>
-		[subprefs["hand_file_notes_raw"]?parsemarkdown("---[subprefs["hand_file_notes_raw"]]\n---",usr):""]
+		[subprefs["hand_file_notes_raw"]?parsemarkdown("---[html_encode(subprefs["hand_file_notes_raw"])]\n---",usr):""]
 		<i>You can choose a favorite subclass here. You'll automatically select this subclass on roundstart if possible.</i><br/>
 		<b>Selected class:</b> <a href="?src=[REF(src)];class=1">[favorite_name]</a>
 		<center><a href="?src=[REF(src)];subprefsexit=1">EXIT</a>\t\t<a href="?src=[REF(src)];subprefsreset=1">RESET</a></center>
@@ -127,7 +127,9 @@
 	if(!prefs || prefs["hand_file_notes"] || !H.client)
 		return
 	to_chat(H, span_notice("Set your class preferences for Court Agent to disable this popup!"))
-	prefs["hand_file_notes"] = parsemarkdown(tgui_input_text(H, "What does your file say?", "THY DEEDS ARE KNOWN", multiline = TRUE, encode = FALSE), H)
+	var/raw_notes = tgui_input_text(H, "What does your file say?", "THY DEEDS ARE KNOWN", multiline = TRUE, encode = FALSE)
+	prefs["hand_file_notes_raw"] = raw_notes
+	prefs["hand_file_notes"] = parsemarkdown(html_encode(raw_notes), H)
 	prefs["codename"] = tgui_input_text(H, "Do you have a codename?", "CODENAME", null, MAX_NAME_LEN)
 
 /mob/living/carbon/human/proc/know_employer()

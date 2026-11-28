@@ -23,6 +23,9 @@
 	return missing_organs
 
 /mob/living/carbon/human/proc/change_name(new_name)
+	new_name = reject_bad_name(new_name, max_length = MAX_NAME_LEN)
+	if(!new_name)
+		return FALSE
 	for(var/mob/living/carbon/human/H in GLOB.player_list)
 		var/datum/mind/M = H.mind
 		if(M && (real_name in M.known_people))
@@ -30,6 +33,24 @@
 			M.known_people.Remove(real_name)
 	real_name = new_name
 	SStreasury?.rename_account(src, new_name)
+	return TRUE
+
+/// Post-factum cleanup for characters whose real_name was set before validation existed.
+/mob/living/carbon/human/proc/fix_dirty_name()
+	if(!real_name)
+		return
+	if(!findtext(real_name, "<") && !findtext(real_name, ">"))
+		return
+	var/decoded = html_decode(real_name)
+	var/tagless = replacetext(decoded, regex(@"<[^>]*>", "g"), "")
+	var/clean_name = reject_bad_name(tagless, max_length = MAX_NAME_LEN)
+	if(!clean_name)
+		clean_name = reject_bad_name(STRIP_HTML_SIMPLE(tagless, MAX_NAME_LEN), max_length = MAX_NAME_LEN)
+	if(!clean_name)
+		clean_name = "Unknown"
+	log_game("[key_name(src)] had an invalid character name '[real_name]', normalized to '[clean_name]'.")
+	real_name = clean_name
+	name = clean_name
 
 /mob/living/carbon/human/restrained(ignore_grab = TRUE)
 	. = ((wear_armor && wear_armor.breakouttime) || ..())

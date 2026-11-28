@@ -252,13 +252,13 @@
 			var/info
 			switch(ext)
 				if("jpg", "jpeg", "png", "gif")
-					familiar_ooc_extra[planar_origin] = "<div align='center'><br><img src='[link]'/></div>"
+					familiar_ooc_extra[planar_origin] = "<div align='center'><br><img src=\"[html_encode(link)]\"/></div>"
 					info = "an embedded image."
 				if("mp4")
-					familiar_ooc_extra[planar_origin] = "<div align='center'><br><video width='288' height='288' controls><source src='[link]' type='video/mp4'></video></div>"
+					familiar_ooc_extra[planar_origin] = "<div align='center'><br><video width='288' height='288' controls><source src=\"[html_encode(link)]\" type='video/mp4'></video></div>"
 					info = "a video."
 				if("mp3")
-					familiar_ooc_extra[planar_origin] = "<div align='center'><br><audio controls><source src='[link]' type='audio/mp3'>Your browser does not support the audio element.</audio></div>"
+					familiar_ooc_extra[planar_origin] = "<div align='center'><br><audio controls><source src=\"[html_encode(link)]\" type='audio/mp3'>Your browser does not support the audio element.</audio></div>"
 					info = "embedded audio."
 			to_chat(user, "<span class='notice'>Successfully updated Familiar OOC Extra with [info]</span>")
 			log_game("[user] has set their Familiar OOC Extra to '[link]'.")
@@ -353,7 +353,7 @@
 	var/list/dat = list()
 	dat += "<br><b>Familiar Headshot:</b> <a href='?_src_=familiar_prefs;preference=familiar_headshot;task=input;planar_origin=[planar_origin]'>Change</a>"
 	if (familiar_headshot_link[planar_origin])
-		dat += "<br><img src='[familiar_headshot_link[planar_origin]]' width='100px' height='100px'>"
+		dat += "<br><img src=\"[html_encode(familiar_headshot_link[planar_origin])]\" width='100px' height='100px'>"
 	dat += "<br><b>Flavortext:</b> <a href='?_src_=familiar_prefs;preference=formathelp;task=input'>(?)</a> <a href='?_src_=familiar_prefs;preference=familiar_flavortext;task=input;planar_origin=[planar_origin]'>Change</a>"
 	dat += "<br><b>OOC Notes:</b> <a href='?_src_=familiar_prefs;preference=formathelp;task=input'>(?)</a> <a href='?_src_=familiar_prefs;preference=familiar_ooc_notes;task=input;planar_origin=[planar_origin]'>Change</a>"
 	dat += "<br><b>Familiar OOC Extra:</b> <a href='?_src_=familiar_prefs;preference=formathelp;task=input'>(?)</a> <a href='?_src_=familiar_prefs;preference=familiar_ooc_extra;task=input;planar_origin=[planar_origin]'>Change</a>"

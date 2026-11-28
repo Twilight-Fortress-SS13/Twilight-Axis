@@ -232,7 +232,7 @@
 	if(!client)
 		examine_text += "<span class='big' style='color: #c71d76;'>The eyes look empty and soulless.</span>"
 	if(familiar_headshot_link && user.client?.prefs.chatheadshot && valid_headshot_link(src, familiar_headshot_link, TRUE))
-		examine_text.Insert(2, "<img src=[familiar_headshot_link] width=100 height=100/>")
+		examine_text.Insert(2, "<img src=\"[html_encode(familiar_headshot_link)]\" width=100 height=100/>")
 	if(flavortext_cached || ooc_notes_cached || familiar_headshot_link)
 		examine_text.Insert(examine_text.len - 1, "<a href='?src=[REF(src)];task=view_pure_ooze'>Examine closer</a>")
 	return examine_text

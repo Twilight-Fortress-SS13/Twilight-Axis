@@ -102,6 +102,7 @@
 
 /mob/living/carbon/human/Login()
 	. = ..()
+	fix_dirty_name()
 	if(!GetComponent(/datum/component/arousal))
 		AddComponent(/datum/component/arousal)
 

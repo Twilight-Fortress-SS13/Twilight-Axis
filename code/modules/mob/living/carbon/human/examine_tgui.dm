@@ -158,10 +158,12 @@
 				artist_credit = holder_human.headshot_artist_credit
 				artist_link = holder_human.headshot_artist_link
 			img_gallery = holder_human.img_gallery
-			ooc_extra_image = holder_human.ooc_extra_img
+			if(holder_human.ooc_extra_img_link && valid_headshot_link(null, holder_human.ooc_extra_img_link, TRUE, list("jpg", "jpeg", "png", "gif", "mp4")))
+				ooc_extra_image = holder_human.ooc_extra_img
 			if(is_naked)
 				nsfw_img_gallery = holder_human.nsfw_img_gallery
-				nsfw_ooc_extra_image = holder_human.nsfw_ooc_extra_img
+				if(holder_human.nsfw_ooc_extra_img_link && valid_headshot_link(null, holder_human.nsfw_ooc_extra_img_link, TRUE, list("jpg", "jpeg", "png", "gif", "mp4")))
+					nsfw_ooc_extra_image = holder_human.nsfw_ooc_extra_img
 		if(!headshot)
 			headshot = "headshot_red.png"
 	else if(istype(holder, /mob/living/simple_animal/hostile/retaliate/rogue/ooze_blob/pure_form))
@@ -199,8 +201,10 @@
 			artist_link = pref.headshot_artist_link
 		img_gallery = pref.img_gallery
 		nsfw_img_gallery = pref.nsfw_img_gallery
-		ooc_extra_image = pref.ooc_extra_img
-		nsfw_ooc_extra_image = pref.nsfw_ooc_extra_img
+		if(pref.ooc_extra_img_link && valid_headshot_link(null, pref.ooc_extra_img_link, TRUE, list("jpg", "jpeg", "png", "gif", "mp4")))
+			ooc_extra_image = pref.ooc_extra_img
+		if(pref.nsfw_ooc_extra_img_link && valid_headshot_link(null, pref.nsfw_ooc_extra_img_link, TRUE, list("jpg", "jpeg", "png", "gif", "mp4")))
+			nsfw_ooc_extra_image = pref.nsfw_ooc_extra_img
 		char_name = pref.real_name
 		song_url = pref.ooc_extra
 		if(!headshot)

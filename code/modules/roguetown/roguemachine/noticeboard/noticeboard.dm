@@ -418,7 +418,7 @@
 		to_chat(H, span_warning("Add a title, a message, and your name."))
 		return
 	noticeboard_add_posting(tier, title, body, poster_name, poster_title, H)
-	message_admins("[ADMIN_LOOKUPFLW(H)] has made a [tier] noticeboard post. The message was: [body]")
+	message_admins("[ADMIN_LOOKUPFLW(H)] has made a [tier] noticeboard post. The message was: [html_encode(body)]")
 
 /obj/structure/roguemachine/noticeboard/proc/handle_remove_post(mob/living/carbon/human/H, list/params)
 	var/posting_id = "[params["posting_id"]]"
