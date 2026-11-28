@@ -339,8 +339,8 @@
 			max-width: 800px;
 			margin: auto;
 			color: black;'>
-					<h2 style='margin: 4px; padding:0px;'>Agent File: [current_agent]</h2><hr>
-			<b>Agent Name:</b> [current_agent]<br/>[codename ? "<b>Codename:</b> [codename]<br/>":""][(descriptor_name!= " ") ? "<b>Appearance:</b> [descriptor_name]<br/>" : ""]<b>Profession:</b> [agent.get_role_title()]
+					<h2 style='margin: 4px; padding:0px;'>Agent File: [html_encode(current_agent)]</h2><hr>
+			<b>Agent Name:</b> [html_encode(current_agent)]<br/>[codename ? "<b>Codename:</b> [codename]<br/>":""][(descriptor_name!= " ") ? "<b>Appearance:</b> [descriptor_name]<br/>" : ""]<b>Profession:</b> [agent.get_role_title()]
 			<hr/>
 			[hand_notes_html]
 			<hr/>

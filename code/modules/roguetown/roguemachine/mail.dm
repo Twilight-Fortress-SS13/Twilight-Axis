@@ -302,7 +302,7 @@
 		logged_content = "(no text content)"
 	log_mail("[sender_desc] [what][via] to [recipient_desc][signed][contents_note] | CONTENT: [logged_content]")
 	var/link = archive_letter(recipient_desc, record?["content"], "[sender_desc][signed]", is_package)
-	message_admins("[sender_desc] [what][via] to [recipient_desc][signed][contents_note][link]") // TA EDIT END
+	message_admins("[html_encode(sender_desc)] [what][via] to [html_encode(recipient_desc)][html_encode(signed)][html_encode(contents_note)][link]") // TA EDIT END
 	return link
 
 /proc/mail_pen_name(mob/user)
@@ -368,7 +368,7 @@
 	sender_key = posted_by
 
 /datum/letter_record/proc/show_letter(mob/user)
-	var/header = "[is_package ? "<b>PACKAGE</b> to " : "Letter to "]<b>[recipient]</b><br>From [sender_key]"
+	var/header = "[is_package ? "<b>PACKAGE</b> to " : "Letter to "]<b>[html_encode(recipient)]</b><br>From [html_encode(sender_key)]"
 	return show_parchment(user, "<div style='font-style:normal;font-family:Verdana,Arial,sans-serif;font-size:13px;color:#1a1208'>[header]<hr>[content]</div>", "letterlog")
 
 /proc/archive_letter(recipient, content, sender_key, package = FALSE)
@@ -455,6 +455,9 @@
 /proc/deliver_mail(obj/item/I, destination, sender, sender_log)
 	if(QDELETED(I) || !destination)
 		return FALSE
+	destination = sanitize_mail_destination(destination)
+	if(!destination)
+		return FALSE
 	if(findtext(destination, "#"))
 		var/obj/structure/roguemachine/mail/box = find_mail_box(destination)
 		if(!box)
@@ -493,15 +496,30 @@
 /proc/sanitize_mail_sender(sender)
 	return sanitize(sender) || MAILER_ANONYMOUS
 
+/// Accepts a HERMES box number ("#12") or a valid character name. Returns canonical text or null.
+/proc/sanitize_mail_destination(destination)
+	if(!istext(destination))
+		return null
+	destination = trim(destination)
+	if(!length(destination))
+		return null
+	if(copytext(destination, 1, 2) == "#")
+		var/static/regex/box_regex = regex(@"^#[0-9]{1,5}$")
+		if(!box_regex.Find(destination))
+			return null
+		var/box_number = text2num(copytext(destination, 2))
+		if(box_number <= 0)
+			return null
+		return "#[box_number]"
+	return reject_bad_name(destination, max_length = MAX_HERMES_NAME_LEN)
+
 /// sender is the optional signature; blank means the letter goes out anonymous.
 /proc/build_sanitized_letter(mob/user, recipient, content, sender)
 	var/obj/item/paper/P = new
 	var/parsed_content = parsemarkdown(html_encode(content), user)
 	P.info += "<font face=\"[FOUNTAIN_PEN_FONT]\" color=#14103f>[parsed_content]</font>"
 	P.mailer = sanitize_mail_sender(sender)
-	if(!(findtext(recipient,"#")==1))
-		recipient = reject_bad_name(recipient, max_length=MAX_HERMES_NAME_LEN) // reject_bad_name doesn't let you use #s in names, so we only apply this if it's NOT a hermes number
-	P.mailedto = recipient
+	P.mailedto = sanitize_mail_destination(recipient)
 	P.reload_fields()
 	P.update_icon()
 	return P
@@ -574,8 +592,11 @@
 				to_chat(user, span_warning("I have no such name to sign with."))
 				return TRUE
 			var/obj/item/paper/P = build_sanitized_letter(user, params["recipient"], content, signed_as)
-			var/send2place = html_decode(P.mailedto) // TA EDIT END
-			P.mailedto = send2place // TA EDIT
+			var/send2place = P.mailedto
+			if(!send2place)
+				qdel(P)
+				to_chat(user, span_warning(mail_fail_msg(params["recipient"])))
+				return TRUE
 			var/free_send = check_free_send(user, send2place) // TA EDIT
 			var/is_free = free_send_ready(user)
 			if(!free_send && !is_free && coin_loaded < 1) // TA EDIT
@@ -966,9 +987,7 @@
 			to_chat(user, span_warning("The machine doesn't respond."))
 			return
 		if(alert(user, "Send Mail?",,"YES","NO") == "YES")
-			var/send2place = html_decode(sanitize(input(user, "Where to? (Person or #number)", "ROGUETOWN", null)))
-			if(!(findtext(send2place,"#")==1))
-				send2place = html_decode(reject_bad_name(send2place, max_length=MAX_HERMES_NAME_LEN)) // TA EDIT
+			var/send2place = sanitize_mail_destination(input(user, "Where to? (Person or #number)", "ROGUETOWN", null))
 			if(!send2place)
 				return
 			// TA EDIT BEGIN

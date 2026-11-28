@@ -1969,11 +1969,9 @@
 					// setting last names in code is always going to be a buggy mess idk why anyone even tried? we can just prompt them
 					var/list/names = list("groom" = FALSE, "bride" = FALSE)
 					spawn(0)
-						var/gname = input(thegroom, "What would you like your new name to be (leave blank to leave your name unchanged)?")
-						names["groom"] = (gname || thegroom.real_name)
+						names["groom"] = prompt_marriage_name(thegroom, "What would you like your new name to be (leave blank to leave your name unchanged)?")
 					spawn(0)
-						var/bname = input(thebride, "What would you like your new name to be (leave blank to leave your name unchanged)?")
-						names["bride"] = (bname || thebride.real_name)
+						names["bride"] = prompt_marriage_name(thebride, "What would you like your new name to be (leave blank to leave your name unchanged)?")
 
 					for(var/i in 1 to MARRIAGE_PROMPTS_TIMEOUT)
 						if(names["groom"] && names["bride"])
@@ -1985,7 +1983,7 @@
 							return ..()
 
 					consent = list("groom" = FALSE, "bride" = FALSE)
-					to_chat(participants, span_green("[thegroom.real_name] will become [names["groom"]].\n[thebride.real_name] will become [names["bride"]].\n\nIs this acceptable?"))
+					to_chat(participants, span_green("[html_encode(thegroom.real_name)] will become [html_encode(names["groom"])].\n[html_encode(thebride.real_name)] will become [html_encode(names["bride"])].\n\nIs this acceptable?"))
 
 					// need to give a confirm in case one of them misinputs or the names look ugly next to each other or something
 					spawn(0)
@@ -2007,8 +2005,10 @@
 						A.busy = FALSE
 						return ..()
 
-					thegroom.change_name(names["groom"])
-					thebride.change_name(names["bride"])
+					if(!thegroom.change_name(names["groom"]))
+						names["groom"] = thegroom.real_name
+					if(!thebride.change_name(names["bride"]))
+						names["bride"] = thebride.real_name
 
 					thegroom.marriedto = thebride.real_name
 					thebride.marriedto = thegroom.real_name
@@ -2023,6 +2023,18 @@
 	return ..()
 
 #undef MARRIAGE_PROMPTS_TIMEOUT
+
+/// Prompts a betrothed until a valid character name is entered; blank/cancel keeps the current name.
+/proc/prompt_marriage_name(mob/living/carbon/human/who, prompt)
+	while(!QDELETED(who))
+		var/entered = input(who, prompt, "Marriage") as text|null
+		if(!entered)
+			return who.real_name
+		var/clean_name = reject_bad_name(entered, max_length = MAX_NAME_LEN)
+		if(clean_name)
+			return clean_name
+		to_chat(who, span_warning("Invalid name. Use 2-[MAX_NAME_LEN] characters: letters, spaces, -, ', . or ,."))
+	return null
 
 /obj/structure/fluff/psycross/copper/Destroy()
 	addomen("psycross")

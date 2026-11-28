@@ -73,6 +73,7 @@
 #include "reagent_id_typos.dm"
 #include "reagent_recipe_collisions.dm"
 #include "renegade.dm"
+#include "security_text_inputs.dm"
 #include "spawn_humans.dm"
 #include "species_whitelists.dm"
 #include "tile_panel.dm"

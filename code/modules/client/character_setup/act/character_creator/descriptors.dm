@@ -321,9 +321,9 @@
 			var/ext = LOWER_TEXT(splittext(link, ".")[length(splittext(link, "."))])
 			switch(ext)
 				if("jpg", "jpeg", "png", "gif")
-					ooc_extra_img = "<div align='center'><br><img src='[link]' style='max-width: 100%;'/></div>"
+					ooc_extra_img = "<div align='center'><br><img src=\"[html_encode(link)]\" style='max-width: 100%;'/></div>"
 				if("mp4")
-					ooc_extra_img = "<div align='center'><br><video style='max-width: 100%;' controls><source src='[link]' type='video/mp4'></video></div>"
+					ooc_extra_img = "<div align='center'><br><video style='max-width: 100%;' controls><source src=\"[html_encode(link)]\" type='video/mp4'></video></div>"
 			verbose_pref_log_change(user, "notice", "OOC Extra Image", html_encode(old_link), html_encode(link))
 			log_game("[user] has set their OOC Extra Image to '[html_encode(link)]'.")
 			return CHARACTER_ACT_DATA_UPDATE
@@ -350,9 +350,9 @@
 			var/ext = LOWER_TEXT(splittext(link, ".")[length(splittext(link, "."))])
 			switch(ext)
 				if("jpg", "jpeg", "png", "gif")
-					nsfw_ooc_extra_img = "<div align='center'><br><img src='[link]' style='max-width: 100%;'/></div>"
+					nsfw_ooc_extra_img = "<div align='center'><br><img src=\"[html_encode(link)]\" style='max-width: 100%;'/></div>"
 				if("mp4")
-					nsfw_ooc_extra_img = "<div align='center'><br><video style='max-width: 100%;' controls><source src='[link]' type='video/mp4'></video></div>"
+					nsfw_ooc_extra_img = "<div align='center'><br><video style='max-width: 100%;' controls><source src=\"[html_encode(link)]\" type='video/mp4'></video></div>"
 			verbose_pref_log_change(user, "notice", "NSFW OOC Extra Image", html_encode(old_link), html_encode(link))
 			log_game("[user] has set their NSFW OOC Extra Image to '[html_encode(link)]'.")
 			return CHARACTER_ACT_DATA_UPDATE
